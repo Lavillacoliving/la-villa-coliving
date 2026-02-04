@@ -1,0 +1,274 @@
+import { useState } from 'react';
+import { useLanguage } from '@/contexts/LanguageContext';
+import { ArrowRight, Check } from 'lucide-react';
+
+export function JoinPageV4() {
+  const { language } = useLanguage();
+  const [submitted, setSubmitted] = useState(false);
+  const [formData, setFormData] = useState({
+    firstName: '',
+    lastName: '',
+    email: '',
+    phone: '',
+    birthDate: '',
+    job: '',
+    arrival: '',
+    duration: '',
+  });
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    setSubmitted(true);
+  };
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
+
+  if (submitted) {
+    return (
+      <main className="relative pt-20 min-h-screen flex items-center">
+        <div className="container-custom text-center">
+          <div className="w-20 h-20 border border-[#c44536] flex items-center justify-center mx-auto mb-8">
+            <Check className="w-10 h-10 text-[#c44536]" />
+          </div>
+          <h1 
+            className="text-4xl md:text-5xl font-light text-[#1a1a1a] mb-4"
+            style={{ fontFamily: 'Plus Jakarta Sans, sans-serif' }}
+          >
+            {language === 'en' ? 'Thank You!' : 'Merci !'}
+          </h1>
+          <p className="text-lg text-[#666] max-w-md mx-auto">
+            {language === 'en' 
+              ? 'We\'ve received your application. We\'ll be in touch soon.'
+              : 'Nous avons reçu votre candidature. Nous vous contacterons bientôt.'}
+          </p>
+        </div>
+      </main>
+    );
+  }
+
+  return (
+    <main className="relative pt-20">
+      {/* Hero */}
+      <section className="py-24 lg:py-32 bg-white">
+        <div className="container-custom text-center">
+          <span className="text-xs text-[#999] uppercase tracking-[0.3em] mb-4 block">
+            {language === 'en' ? 'Get Started' : 'Commencer'}
+          </span>
+          <h1 
+            className="text-5xl md:text-6xl lg:text-7xl font-light text-[#1a1a1a] mb-6"
+            style={{ fontFamily: 'Plus Jakarta Sans, sans-serif' }}
+          >
+            {language === 'en' ? (
+              <>
+                Join <span className="text-[#c44536]">La Villa</span>
+              </>
+            ) : (
+              <>
+                Rejoindre <span className="text-[#c44536]">La Villa</span>
+              </>
+            )}
+          </h1>
+          <p className="text-lg text-[#666] max-w-2xl mx-auto">
+            {language === 'en'
+              ? 'Your new home is waiting. Complete the form below and we\'ll guide you through every step.'
+              : 'Votre nouveau chez-vous vous attend. Complétez le formulaire ci-dessous et nous vous guiderons à chaque étape.'}
+          </p>
+        </div>
+      </section>
+
+      {/* Form */}
+      <section className="py-24 lg:py-32 bg-[#fafafa]">
+        <div className="container-custom max-w-3xl">
+          <form onSubmit={handleSubmit} className="bg-white border border-[#e5e5e5] p-8 md:p-12">
+            {/* Personal Info */}
+            <div className="mb-10">
+              <h2 className="text-xs uppercase tracking-widest text-[#999] mb-6">
+                {language === 'en' ? 'Personal Information' : 'Informations Personnelles'}
+              </h2>
+              <div className="grid md:grid-cols-2 gap-6">
+                <div>
+                  <label className="block text-sm text-[#666] mb-2">
+                    {language === 'en' ? 'First Name' : 'Prénom'}
+                  </label>
+                  <input
+                    type="text"
+                    name="firstName"
+                    value={formData.firstName}
+                    onChange={handleChange}
+                    required
+                    className="w-full px-4 py-3 border border-[#e5e5e5] focus:border-[#c44536] focus:outline-none transition-colors"
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm text-[#666] mb-2">
+                    {language === 'en' ? 'Last Name' : 'Nom'}
+                  </label>
+                  <input
+                    type="text"
+                    name="lastName"
+                    value={formData.lastName}
+                    onChange={handleChange}
+                    required
+                    className="w-full px-4 py-3 border border-[#e5e5e5] focus:border-[#c44536] focus:outline-none transition-colors"
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm text-[#666] mb-2">
+                    {language === 'en' ? 'Email' : 'Email'}
+                  </label>
+                  <input
+                    type="email"
+                    name="email"
+                    value={formData.email}
+                    onChange={handleChange}
+                    required
+                    className="w-full px-4 py-3 border border-[#e5e5e5] focus:border-[#c44536] focus:outline-none transition-colors"
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm text-[#666] mb-2">
+                    {language === 'en' ? 'Phone' : 'Téléphone'}
+                  </label>
+                  <input
+                    type="tel"
+                    name="phone"
+                    value={formData.phone}
+                    onChange={handleChange}
+                    required
+                    className="w-full px-4 py-3 border border-[#e5e5e5] focus:border-[#c44536] focus:outline-none transition-colors"
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm text-[#666] mb-2">
+                    {language === 'en' ? 'Date of Birth' : 'Date de Naissance'}
+                  </label>
+                  <input
+                    type="date"
+                    name="birthDate"
+                    value={formData.birthDate}
+                    onChange={handleChange}
+                    required
+                    className="w-full px-4 py-3 border border-[#e5e5e5] focus:border-[#c44536] focus:outline-none transition-colors"
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm text-[#666] mb-2">
+                    {language === 'en' ? 'Job Position' : 'Poste'}
+                  </label>
+                  <input
+                    type="text"
+                    name="job"
+                    value={formData.job}
+                    onChange={handleChange}
+                    required
+                    className="w-full px-4 py-3 border border-[#e5e5e5] focus:border-[#c44536] focus:outline-none transition-colors"
+                  />
+                </div>
+              </div>
+            </div>
+
+            {/* Stay Info */}
+            <div className="mb-10">
+              <h2 className="text-xs uppercase tracking-widest text-[#999] mb-6">
+                {language === 'en' ? 'Your Stay' : 'Votre Séjour'}
+              </h2>
+              <div className="grid md:grid-cols-2 gap-6">
+                <div>
+                  <label className="block text-sm text-[#666] mb-2">
+                    {language === 'en' ? 'When would you like to join?' : 'Quand souhaitez-vous nous rejoindre ?'}
+                  </label>
+                  <input
+                    type="date"
+                    name="arrival"
+                    value={formData.arrival}
+                    onChange={handleChange}
+                    required
+                    className="w-full px-4 py-3 border border-[#e5e5e5] focus:border-[#c44536] focus:outline-none transition-colors"
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm text-[#666] mb-2">
+                    {language === 'en' ? 'How long do you plan to stay?' : 'Combien de temps prévoyez-vous de rester ?'}
+                  </label>
+                  <select
+                    name="duration"
+                    value={formData.duration}
+                    onChange={handleChange}
+                    required
+                    className="w-full px-4 py-3 border border-[#e5e5e5] focus:border-[#c44536] focus:outline-none transition-colors bg-white"
+                  >
+                    <option value="">{language === 'en' ? 'Select duration' : 'Sélectionner la durée'}</option>
+                    <option value="2-3">{language === 'en' ? '2-3 months' : '2-3 mois'}</option>
+                    <option value="3-6">{language === 'en' ? '3-6 months' : '3-6 mois'}</option>
+                    <option value="6-12">{language === 'en' ? '6-12 months' : '6-12 mois'}</option>
+                    <option value="12+">{language === 'en' ? '12+ months' : '12+ mois'}</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+
+            {/* Submit */}
+            <button
+              type="submit"
+              className="w-full py-4 bg-[#1a1a1a] text-white font-bold hover:bg-[#c44536] transition-colors flex items-center justify-center gap-2"
+            >
+              {language === 'en' ? 'SUBMIT APPLICATION' : 'SOUMETTRE MA CANDIDATURE'}
+              <ArrowRight className="w-5 h-5" />
+            </button>
+          </form>
+        </div>
+      </section>
+
+      {/* Steps */}
+      <section className="py-24 lg:py-32 bg-white">
+        <div className="container-custom">
+          <div className="text-center mb-16">
+            <span className="text-xs text-[#999] uppercase tracking-[0.3em] mb-4 block">
+              {language === 'en' ? 'The Process' : 'Le Processus'}
+            </span>
+            <h2 
+              className="text-4xl md:text-5xl font-light text-[#1a1a1a]"
+              style={{ fontFamily: 'Plus Jakarta Sans, sans-serif' }}
+            >
+              {language === 'en' ? 'How It Works' : 'Comment Ça Marche'}
+            </h2>
+          </div>
+
+          <div className="grid md:grid-cols-3 gap-px bg-[#e5e5e5]">
+            {[
+              {
+                number: '01',
+                title: language === 'en' ? 'Apply' : 'Candidater',
+                description: language === 'en' 
+                  ? 'Fill out the application form with your details.'
+                  : 'Remplissez le formulaire de candidature avec vos coordonnées.',
+              },
+              {
+                number: '02',
+                title: language === 'en' ? 'Meet' : 'Rencontrer',
+                description: language === 'en'
+                  ? 'We\'ll schedule a video call to get to know you better.'
+                  : 'Nous planifierons un appel vidéo pour mieux vous connaître.',
+              },
+              {
+                number: '03',
+                title: language === 'en' ? 'Move In' : 'Emménager',
+                description: language === 'en'
+                  ? 'Welcome to your new home and community!'
+                  : 'Bienvenue dans votre nouveau chez-vous et communauté !',
+              },
+            ].map((step, index) => (
+              <div key={index} className="bg-white p-10 text-center">
+                <span className="text-6xl font-light text-[#e5e5e5] block mb-6">{step.number}</span>
+                <h3 className="text-xl font-medium text-[#1a1a1a] mb-4">{step.title}</h3>
+                <p className="text-[#666]">{step.description}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+    </main>
+  );
+}
