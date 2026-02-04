@@ -1,7 +1,7 @@
-import { Link } from 'react-router-dom';
-import { ArrowRight, MapPin, Users } from 'lucide-react';
-import { useLanguage } from '@/contexts/LanguageContext';
-import { Badge } from '@/components/ui/badge';
+import { Link } from "react-router-dom";
+import { ArrowRight, MapPin, Users } from "lucide-react";
+import { useLanguage } from "@/contexts/LanguageContext";
+import { Badge } from "@/components/ui/badge";
 
 export function HousesPreview() {
   const { t } = useLanguage();
@@ -9,27 +9,30 @@ export function HousesPreview() {
   const houses = [
     {
       ...t.houses.laVilla,
-      path: '/lavilla',
-      image: 'https://images.unsplash.com/photo-1613490493576-7fde63acd811?w=800&q=80',
+      path: "/lavilla",
+      image:
+        "https://images.unsplash.com/photo-1613490493576-7fde63acd811?w=800&q=80",
       available: true,
       badge: null,
-      badgeColor: '#10b981',
+      badgeColor: "#10b981",
     },
     {
       ...t.houses.leLoft,
-      path: '/leloft',
-      image: 'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=800&q=80',
+      path: "/leloft",
+      image:
+        "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=800&q=80",
       available: true,
       badge: null,
-      badgeColor: '#f97316',
+      badgeColor: "#f97316",
     },
     {
       ...t.houses.leLodge,
-      path: '/lelodge',
-      image: 'https://images.unsplash.com/photo-1600607687644-c7171b42498f?w=800&q=80',
+      path: "/lelodge",
+      image:
+        "https://images.unsplash.com/photo-1600607687644-c7171b42498f?w=800&q=80",
       available: false,
-      badge: t.houses.leLodge.badge as string,
-      badgeColor: '#f43f5e',
+      badge: null,
+      badgeColor: "#f43f5e",
     },
   ];
 
@@ -38,7 +41,7 @@ export function HousesPreview() {
       {/* Pop Background */}
       <div className="absolute top-20 right-0 w-[500px] h-[500px] bg-[#f97316]/10 blob hidden lg:block" />
       <div className="absolute bottom-10 left-0 w-[400px] h-[400px] bg-[#10b981]/10 blob-reverse hidden lg:block" />
-      
+
       <div className="container-custom relative">
         {/* Header */}
         <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-6 mb-16">
@@ -47,19 +50,18 @@ export function HousesPreview() {
               <span className="w-10 h-1.5 bg-[#f97316] rounded-full" />
               Our Homes
             </span>
-            <h2 
+            <h2
               className="text-4xl md:text-5xl lg:text-6xl text-[#0f172a]"
-              style={{ fontFamily: 'Plus Jakarta Sans, sans-serif' }}
+              style={{ fontFamily: "Plus Jakarta Sans, sans-serif" }}
             >
               {t.houses.title}
             </h2>
-            <p className="text-xl text-[#64748b] mt-4 font-medium">{t.houses.subtitle}</p>
+            <p className="text-xl text-[#64748b] mt-4 font-medium">
+              {t.houses.subtitle}
+            </p>
           </div>
-          
-          <Link
-            to="/our-houses"
-            className="btn-outline whitespace-nowrap"
-          >
+
+          <Link to="/our-houses" className="btn-outline whitespace-nowrap">
             {t.houses.viewAll}
             <ArrowRight size={18} className="ml-2" />
           </Link>
@@ -81,20 +83,20 @@ export function HousesPreview() {
                   className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
-                
+
                 {/* Badge */}
                 {house.badge && (
-                  <Badge 
+                  <Badge
                     className="absolute top-4 left-4 font-extrabold"
-                    style={{ background: house.badgeColor, color: 'white' }}
+                    style={{ background: house.badgeColor, color: "white" }}
                   >
                     {house.badge}
                   </Badge>
                 )}
                 {house.available && !house.badge && (
-                  <Badge 
+                  <Badge
                     className="absolute top-4 left-4 font-extrabold"
-                    style={{ background: house.badgeColor, color: 'white' }}
+                    style={{ background: house.badgeColor, color: "white" }}
                   >
                     Available
                   </Badge>
@@ -102,9 +104,9 @@ export function HousesPreview() {
 
                 {/* House Info Overlay */}
                 <div className="absolute bottom-4 left-4 right-4 text-white">
-                  <h3 
+                  <h3
                     className="text-2xl font-black mb-1"
-                    style={{ fontFamily: 'Plus Jakarta Sans, sans-serif' }}
+                    style={{ fontFamily: "Plus Jakarta Sans, sans-serif" }}
                   >
                     {house.name}
                   </h3>
@@ -123,10 +125,15 @@ export function HousesPreview() {
 
               {/* Content */}
               <div className="p-6">
-                <p className="text-[#64748b] mb-4 line-clamp-2">{house.description}</p>
+                <p className="text-[#64748b] mb-4 line-clamp-2">
+                  {house.description}
+                </p>
                 <div className="flex items-center justify-between">
                   <span className="text-sm text-[#94a3b8]">
-                    <span className="text-[#10b981] font-extrabold">Perfect for:</span> {house.perfectFor}
+                    <span className="text-[#10b981] font-extrabold">
+                      Perfect for:
+                    </span>{" "}
+                    {house.perfectFor}
                   </span>
                   <span className="flex items-center gap-1 text-[#10b981] font-extrabold group-hover:gap-2 transition-all">
                     {t.houses.cta}
