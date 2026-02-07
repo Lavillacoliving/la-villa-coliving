@@ -44,24 +44,49 @@ export function ColivingPageV4() {
 
   return (
     <main className="relative pt-20">
-      {/* Hero */}
-      <section className="relative py-24 lg:py-32 bg-white overflow-hidden">
-        <div className="container-custom">
-          <div className="max-w-4xl">
-            <span className="text-xs text-[#999] uppercase tracking-[0.3em] mb-6 block">
-              {t.colivingPage.hero.subtitle}
+      {/* Hero avec image de fond */}
+      <section className="relative py-24 lg:py-32 overflow-hidden">
+        {/* Image de fond */}
+        <div className="absolute inset-0">
+          <img
+            src="/images/la-villa-exterieur.jpg"
+            alt="La Villa Coliving - Maison avec piscine"
+            className="w-full h-full object-cover"
+          />
+          <div className="absolute inset-0 bg-black/40" />
+        </div>
+
+        {/* Contenu par-dessus */}
+        <div className="container-custom relative z-10">
+          <div className="max-w-4xl text-white">
+            <span className="text-xs uppercase tracking-[0.3em] mb-6 block">
+              {t.hero.subtitle}
             </span>
             <h1
-              className="text-5xl md:text-6xl lg:text-7xl font-light text-[#1a1a1a] mb-8"
+              className="text-5xl md:text-6xl lg:text-7xl font-light mb-8"
               style={{ fontFamily: "Plus Jakarta Sans, sans-serif" }}
             >
-              {t.colivingPage.hero.title}
+              {t.hero.title}
             </h1>
+            <p className="text-xl mb-8 text-white/90">
+              {language === "en"
+                ? "Experience premium coliving in our beautifully designed houses"
+                : "Vivez l'expérience coliving dans nos maisons magnifiquement designées"}
+            </p>
+            <Link
+              to="/our-houses"
+              className="inline-flex items-center gap-2 px-8 py-4 bg-white text-[#1a1a1a] font-bold hover:bg-[#c44536] hover:text-white transition-colors"
+            >
+              {language === "en"
+                ? "Explore Our Houses"
+                : "Découvrir Nos Maisons"}
+              <ArrowRight className="w-5 h-5" />
+            </Link>
           </div>
         </div>
       </section>
 
-      {/* What is Coliving */}
+      {/* PHOTO 1 : What is Coliving - ESPACE COMMUN */}
       <section className="py-24 lg:py-32 bg-[#fafafa]">
         <div className="container-custom">
           <div className="grid lg:grid-cols-2 gap-16 items-center">
@@ -85,9 +110,10 @@ export function ColivingPageV4() {
             <div className="relative">
               <div className="absolute -inset-4 border border-[#e5e5e5]" />
               <div className="relative aspect-[4/3] bg-[#f5f5f5]">
+                {/* PHOTO 1 : ESPACE COMMUN LUMINEUX */}
                 <img
-                  src="/images/what-is-coliving-and-why-is-it-so-popular-2.webp"
-                  alt="Coliving"
+                  src="/images/la-villa-salon.jpg"
+                  alt="Espace commun lumineux de La Villa - salon et cuisine ouverte"
                   className="w-full h-full object-cover"
                 />
               </div>
@@ -104,7 +130,7 @@ export function ColivingPageV4() {
               <div className="absolute -inset-4 border border-[#e5e5e5]" />
               <div className="relative aspect-[4/3] bg-[#f5f5f5]">
                 <img
-                  src="/images/le loft glamour.webp"
+                  src="/images/le-loft-glamour.webp"
                   alt="Modern living"
                   className="w-full h-full object-cover"
                 />
@@ -214,11 +240,78 @@ export function ColivingPageV4() {
               <div className="absolute -inset-4 border border-[#e5e5e5]" />
               <div className="relative aspect-[4/3] bg-[#f5f5f5]">
                 <img
-                  src="/images/la villa yoga.webp"
+                  src="/images/la-villa-yoga.webp"
                   alt="La Villa benefits"
                   className="w-full h-full object-cover"
                 />
               </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* PHOTO 2 : Section Communauté - ESPACE VIE */}
+      <section className="py-24 lg:py-32 bg-[#f5f5f5]">
+        <div className="container-custom">
+          <div className="grid lg:grid-cols-2 gap-16 items-center">
+            {/* Photo d'ambiance */}
+            <div className="relative">
+              <div className="absolute -inset-4 border border-[#c44536]" />
+              <div className="relative aspect-[4/3]">
+                <img
+                  src="/images/espace-commun.jpg"
+                  alt="Espace commun de La Villa - salon convivial et cuisine ouverte"
+                  className="w-full h-full object-cover"
+                />
+              </div>
+            </div>
+
+            {/* Texte */}
+            <div>
+              <span className="text-xs text-[#999] uppercase tracking-[0.3em] mb-4 block">
+                {language === "en" ? "Real Connections" : "Vraies Connexions"}
+              </span>
+              <h2
+                className="text-4xl md:text-5xl font-light text-[#1a1a1a] mb-6"
+                style={{ fontFamily: "Plus Jakarta Sans, sans-serif" }}
+              >
+                {language === "en"
+                  ? "More Than Roommates"
+                  : "Plus Que Des Colocataires"}
+              </h2>
+              <p className="text-lg text-[#666] leading-relaxed mb-6">
+                {language === "en"
+                  ? "At La Villa, our residents become family. Shared dinners, yoga mornings, ski weekends—our community creates bonds that last far beyond your stay."
+                  : "Chez La Villa, nos résidents deviennent famille. Dîners partagés, yoga matinal, weekends au ski—notre communauté crée des liens qui durent bien au-delà de votre séjour."}
+              </p>
+
+              {/* Stats au lieu de portraits */}
+              <div className="flex items-center gap-8 mb-6">
+                <div className="flex items-center gap-2">
+                  <Users className="w-5 h-5 text-[#c44536]" />
+                  <span className="text-sm text-[#666]">
+                    {language === "en"
+                      ? "50+ happy residents"
+                      : "50+ résidents heureux"}
+                  </span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <Star className="w-5 h-5 text-[#c44536]" />
+                  <span className="text-sm text-[#666]">
+                    {language === "en" ? "4.9/5 rating" : "Note 4.9/5"}
+                  </span>
+                </div>
+              </div>
+
+              <Link
+                to="/join-us"
+                className="inline-flex items-center gap-2 text-[#c44536] font-bold hover:text-[#1a1a1a] transition-colors"
+              >
+                {language === "en"
+                  ? "Join our community"
+                  : "Rejoindre notre communauté"}
+                <ArrowRight className="w-5 h-5" />
+              </Link>
             </div>
           </div>
         </div>
@@ -232,7 +325,7 @@ export function ColivingPageV4() {
               <div className="absolute -inset-4 border border-[#e5e5e5]" />
               <div className="relative aspect-[4/3] bg-[#f5f5f5]">
                 <img
-                  src="/images/le lodge.webp"
+                  src="/images/le-lodge.webp"
                   alt="Community members"
                   className="w-full h-full object-cover"
                 />
@@ -283,9 +376,21 @@ export function ColivingPageV4() {
             className="text-2xl md:text-3xl font-light text-white max-w-3xl mx-auto leading-relaxed"
             style={{ fontFamily: "Plus Jakarta Sans, sans-serif" }}
           >
-            "La Villa isn't just a place to live—it's a{" "}
-            <span className="text-[#c44536] font-medium">community</span> that
-            becomes <span className="text-[#c44536] font-medium">family</span>."
+            {language === "en" ? (
+              <>
+                "La Villa isn't just a place to live—it's a{" "}
+                <span className="text-[#c44536] font-medium">community</span>{" "}
+                that becomes{" "}
+                <span className="text-[#c44536] font-medium">family</span>."
+              </>
+            ) : (
+              <>
+                "La Villa n'est pas qu'un lieu de vie—c'est une{" "}
+                <span className="text-[#c44536] font-medium">communauté</span>{" "}
+                qui devient{" "}
+                <span className="text-[#c44536] font-medium">famille</span>."
+              </>
+            )}
           </p>
         </div>
       </section>
