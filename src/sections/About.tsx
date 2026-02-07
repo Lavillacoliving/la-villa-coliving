@@ -7,7 +7,7 @@ export function About() {
 
   const stats = [
     { icon: Users, value: "50+", label: "Happy Colivers", color: "#10b981" },
-    { icon: MapPin, value: "30min", label: "To Geneva", color: "#f97316" },
+    { icon: MapPin, value: "20min", label: "To Geneva", color: "#f97316" },
     { icon: Heart, value: "100%", label: "Satisfaction", color: "#f43f5e" },
   ];
 

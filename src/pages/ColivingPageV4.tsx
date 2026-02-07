@@ -49,7 +49,7 @@ export function ColivingPageV4() {
         {/* Image de fond */}
         <div className="absolute inset-0">
           <img
-            src="/images/la-villa-exterieur.jpg"
+            src="/images/la villa jardin.webp"
             alt="La Villa Coliving - Maison avec piscine"
             className="w-full h-full object-cover"
           />
@@ -58,12 +58,13 @@ export function ColivingPageV4() {
 
         {/* Contenu par-dessus */}
         <div className="container-custom relative z-10">
-          <div className="max-w-4xl text-white">
-            <span className="text-xs uppercase tracking-[0.3em] mb-6 block">
+          <div className="max-w-4xl">
+            {/* Tout le contenu en blanc explicitement */}
+            <span className="text-xs uppercase tracking-[0.3em] mb-6 block text-white">
               {t.hero.subtitle}
             </span>
             <h1
-              className="text-5xl md:text-6xl lg:text-7xl font-light mb-8"
+              className="text-5xl md:text-6xl lg:text-7xl font-light mb-8 text-white"
               style={{ fontFamily: "Plus Jakarta Sans, sans-serif" }}
             >
               {t.hero.title}
@@ -130,7 +131,7 @@ export function ColivingPageV4() {
               <div className="absolute -inset-4 border border-[#e5e5e5]" />
               <div className="relative aspect-[4/3] bg-[#f5f5f5]">
                 <img
-                  src="/images/le-loft-glamour.webp"
+                  src="/images/le loft glamour.webp"
                   alt="Modern living"
                   className="w-full h-full object-cover"
                 />
@@ -240,7 +241,7 @@ export function ColivingPageV4() {
               <div className="absolute -inset-4 border border-[#e5e5e5]" />
               <div className="relative aspect-[4/3] bg-[#f5f5f5]">
                 <img
-                  src="/images/la-villa-yoga.webp"
+                  src="/images/la villa yoga.webp"
                   alt="La Villa benefits"
                   className="w-full h-full object-cover"
                 />
@@ -256,7 +257,7 @@ export function ColivingPageV4() {
           <div className="grid lg:grid-cols-2 gap-16 items-center">
             {/* Photo d'ambiance */}
             <div className="relative">
-              <div className="absolute -inset-4 border border-[#c44536]" />
+              <div className="absolute -inset-4 border border-[#e5e5e5]" />
               <div className="relative aspect-[4/3]">
                 <img
                   src="/images/espace-commun.jpg"
@@ -325,7 +326,7 @@ export function ColivingPageV4() {
               <div className="absolute -inset-4 border border-[#e5e5e5]" />
               <div className="relative aspect-[4/3] bg-[#f5f5f5]">
                 <img
-                  src="/images/le-lodge.webp"
+                  src="/images/le lodge.webp"
                   alt="Community members"
                   className="w-full h-full object-cover"
                 />
