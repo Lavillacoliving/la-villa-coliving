@@ -171,12 +171,161 @@ export function HeroV7() {
               {/* Floating card 3 */}
               <div className="absolute top-1/2 -right-8 bg-[#d4897a] text-white p-4 rounded-2xl shadow-[0_10px40px_rgba(212,137,122,0.25)]">
                 <div className="text-sm font-medium">
-                  {language === "en" ? "Room Available" : "Chambres Disponibles"}
+                  {language === "en"
+                    ? "Room Available"
+                    : "Chambres Disponibles"}
                 </div>
                 <div className="text-xs opacity-90">
-                  {language === "en" ? "Spring 2026" : "Printemps 2026"}🗓  ️</div>
+                  {language === "en" ? "Spring 2026" : "Printemps 2026"}🗓 ️
+                </div>
               </div>
             </div>
+          </div>
+        </div>
+      </div>
+
+      {/* BANDEAU PREMIUM - Points Différenciants */}
+      <div className="relative bg-[#3d4a38] py-16 overflow-hidden">
+        {/* Background subtle pattern */}
+        <div className="absolute inset-0 opacity-5">
+          <div className="absolute top-0 left-0 w-full h-full bg-[radial-gradient(circle_at_50%_50%,_#7c9a6d_1px,_transparent_1px)] bg-[length:20px_20px]" />
+        </div>
+
+        <div className="container-custom relative z-10">
+          {/* Header text */}
+          <div className="text-center mb-12">
+            <span className="inline-flex items-center gap-2 px-4 py-2 bg-[#7c9a6d]/20 text-[#a8d695] text-sm font-medium rounded-full mb-4">
+              ✨{" "}
+              {language === "en"
+                ? "Why we're different"
+                : "Pourquoi nous sommes uniques"}
+            </span>
+            <h2
+              className="text-3xl md:text-4xl font-light text-[#faf9f5] mb-4"
+              style={{ fontFamily: "Plus Jakarta Sans, sans-serif" }}
+            >
+              {language === "en" ? (
+                <>
+                  Boutique hotel experience, <br />
+                  <span className="font-medium text-[#7c9a6d]">
+                    intimate community feel
+                  </span>
+                </>
+              ) : (
+                <>
+                  L'expérience d'un boutique hôtel, <br />
+                  <span className="font-medium text-[#7c9a6d]">
+                    l'âme d'une communauté intimiste
+                  </span>
+                </>
+              )}
+            </h2>
+            <p className="text-[#a8b5a0] max-w-2xl mx-auto">
+              {language === "en"
+                ? "Only 3 very exclusive homes. Each one designed like a premium retreat, not a crowded shared house."
+                : "Seulement 3 maisons exclusives. Chacune à taille humaine, pas une colocation bondée."}
+            </p>
+          </div>
+
+          {/* 5 Differentiators Grid */}
+          <div className="grid grid-cols-2 md:grid-cols-5 gap-6 md:gap-4">
+            {[
+              {
+                icon: "",
+                image: "/images/le loft glamour.webp",
+                title: language === "en" ? "Human Scale" : "Taille Humaine",
+                desc:
+                  language === "en"
+                    ? "12 colivers maximum"
+                    : "12 colivers maximum",
+                highlight:
+                  language === "en" ? "Intimate & Premium" : "Intime & Premium",
+              },
+              {
+                icon: "",
+                image: "/images/la villa coliving le loft piscine.jpg",
+                title: language === "en" ? "Swimming Pool" : "Piscine",
+                desc:
+                  language === "en"
+                    ? "Indoor or outdoor"
+                    : "Intérieure ou extérieure",
+                highlight:
+                  language === "en" ? "For you Only" : "Pour vous Seulement",
+              },
+              {
+                icon: "",
+                image: "/images/la villa coliving le lodge-sauna2.jpg",
+                title: "Sauna",
+                desc:
+                  language === "en"
+                    ? "Wellness & recovery"
+                    : "Bien-être & récupération",
+                highlight:
+                  language === "en" ? "Pure Relaxation" : "Relaxation Pure",
+              },
+              {
+                icon: "",
+                image: "/images/la villa coliving le lodge-gym.jpg",
+                title: language === "en" ? "Gym" : "Salle de Sport",
+                desc:
+                  language === "en" ? "Fully equipped" : "Entièrement équipée",
+                highlight: language === "en" ? "Stay Active" : "Restez Actif",
+              },
+              {
+                icon: "",
+                image: "/images/la villa yoga.webp",
+                title: language === "en" ? "Community Events" : "Événements",
+                desc:
+                  language === "en"
+                    ? "Yoga, dinners & more"
+                    : "Yoga, dîners & plus",
+                highlight:
+                  language === "en" ? "Real Connections" : "Vraies Connexions",
+              },
+            ].map((item, index) => (
+              <div key={index} className="group relative">
+                <div className="relative aspect-[3/4] rounded-2xl overflow-hidden bg-[#4a5744] shadow-[0_10px40px_rgba(0,0,0,0.3)]">
+                  {/* Image placeholder - replace src with your actual images */}
+                  <img
+                    src={item.image}
+                    alt={item.title}
+                    className="w-full h-full object-cover opacity-80 group-hover:opacity-100 group-hover:scale-105 transition-all duration-500"
+                  />
+                  {/* Gradient overlay */}
+                  <div className="absolute inset-0 bg-gradient-to-t from-[#3d4a38] via-[#3d4a38]/40 to-transparent" />
+
+                  {/* Content */}
+                  <div className="absolute inset-0 p-4 flex flex-col justify-end">
+                    <div className="mb-2">
+                      <span className="text-2xl">{item.icon}</span>
+                    </div>
+                    <h3 className="text-[#faf9f5] font-medium text-lg mb-1">
+                      {item.title}
+                    </h3>
+                    <p className="text-[#a8b5a0] text-sm mb-2">{item.desc}</p>
+                    <span className="inline-block px-3 py-1 bg-[#7c9a6d]/30 text-[#a8d695] text-xs font-medium rounded-full backdrop-blur-sm">
+                      {item.highlight}
+                    </span>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+
+          {/* Bottom CTA */}
+          <div className="mt-12 text-center">
+            <p className="text-[#a8b5a0] text-lg mb-4">
+              {language === "en"
+                ? "🌟 This level of amenities is rare in coliving. That's why we only have 3 homes."
+                : "🌟 Ce niveau d'équipements est rare en coliving. C'est pourquoi nous n'avons que 3 maisons."}
+            </p>
+            <Link
+              to="/our-houses"
+              className="inline-flex items-center gap-2 px-6 py-3 bg-[#7c9a6d] text-white font-medium rounded-full hover:bg-[#6b8560] transition-all duration-300 hover:shadow-[0_8px30px_rgba(124,154,109,0.4)]"
+            >
+              {language === "en" ? "See the houses" : "Voir les maisons"}
+              <ArrowRight className="w-4 h-4" />
+            </Link>
           </div>
         </div>
       </div>
@@ -195,7 +344,10 @@ export function HeroV7() {
               },
               {
                 value: "3",
-                label: language === "en" ? "Only Exclusives Homes" : "Maisons Uniquement",
+                label:
+                  language === "en"
+                    ? "Only Exclusives Homes"
+                    : "Maisons Uniquement",
               },
               {
                 value: "20 min max",

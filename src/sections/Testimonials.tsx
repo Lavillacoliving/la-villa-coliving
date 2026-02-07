@@ -1,5 +1,5 @@
-import { useLanguage } from '@/contexts/LanguageContext';
-import { Quote } from 'lucide-react';
+import { useLanguage } from "@/contexts/LanguageContext";
+import { Quote } from "lucide-react";
 
 export function Testimonials() {
   const { t } = useLanguage();
@@ -10,21 +10,21 @@ export function Testimonials() {
       author: t.testimonials.testimonial1.author,
       role: t.testimonials.testimonial1.role,
       house: t.testimonials.testimonial1.house,
-      color: 'bg-[#10b981]',
+      color: "bg-[#10b981]",
     },
     {
       quote: t.testimonials.testimonial2.quote,
       author: t.testimonials.testimonial2.author,
       role: t.testimonials.testimonial2.role,
       house: t.testimonials.testimonial2.house,
-      color: 'bg-[#f97316]',
+      color: "bg-[#f97316]",
     },
     {
       quote: t.testimonials.testimonial3.quote,
       author: t.testimonials.testimonial3.author,
       role: t.testimonials.testimonial3.role,
       house: t.testimonials.testimonial3.house,
-      color: 'bg-[#f43f5e]',
+      color: "bg-[#f43f5e]",
     },
   ];
 
@@ -53,7 +53,9 @@ export function Testimonials() {
               className="group relative bg-white rounded-3xl p-8 shadow-lg hover:shadow-2xl transition-all duration-500 border border-gray-100"
             >
               {/* Quote icon */}
-              <div className={`w-12 h-12 ${testimonial.color} rounded-xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300`}>
+              <div
+                className={`w-12 h-12 ${testimonial.color} rounded-xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300`}
+              >
                 <Quote className="w-6 h-6 text-white" />
               </div>
 
@@ -65,7 +67,9 @@ export function Testimonials() {
               {/* Author info */}
               <div className="flex items-center gap-4">
                 {/* Avatar placeholder */}
-                <div className={`w-12 h-12 ${testimonial.color} rounded-full flex items-center justify-center text-white font-bold text-lg`}>
+                <div
+                  className={`w-12 h-12 ${testimonial.color} rounded-full flex items-center justify-center text-white font-bold text-lg`}
+                >
                   {testimonial.author.charAt(0)}
                 </div>
                 <div>
@@ -82,7 +86,9 @@ export function Testimonials() {
               </div>
 
               {/* Decorative gradient */}
-              <div className={`absolute -bottom-4 -right-4 w-24 h-24 ${testimonial.color} opacity-0 group-hover:opacity-10 rounded-full blur-xl transition-opacity duration-500`} />
+              <div
+                className={`absolute -bottom-4 -right-4 w-24 h-24 ${testimonial.color} opacity-0 group-hover:opacity-10 rounded-full blur-xl transition-opacity duration-500`}
+              />
             </div>
           ))}
         </div>
