@@ -206,14 +206,14 @@ export function HeroV7() {
             >
               {language === "en" ? (
                 <>
-                  Boutique hotel experience, <br />
+                  The True Premium Coliving experience, <br />
                   <span className="font-medium text-[#7c9a6d]">
                     intimate community feel
                   </span>
                 </>
               ) : (
                 <>
-                  L'expérience d'un boutique hôtel, <br />
+                  L'Authentique Expérience du Coliving, <br />
                   <span className="font-medium text-[#7c9a6d]">
                     l'âme d'une communauté intimiste
                   </span>
