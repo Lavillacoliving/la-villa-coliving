@@ -1,6 +1,6 @@
-import { Link } from 'react-router-dom';
-import { ArrowRight } from 'lucide-react';
-import { useLanguage } from '@/contexts/LanguageContext';
+import { Link } from "react-router-dom";
+import { ArrowRight } from "lucide-react";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 /**
  * VERSION 7: JEUNE + NOMADE + ZEN + FRAIS
@@ -15,48 +15,54 @@ export function CTASectionV7() {
       {/* Organic shapes */}
       <div className="absolute top-0 left-1/4 w-96 h-96 bg-[#7c9a6d]/10 rounded-full blur-3xl" />
       <div className="absolute bottom-0 right-1/4 w-80 h-80 bg-[#d4897a]/10 rounded-full blur-3xl" />
-      
+
       <div className="container-custom relative">
         <div className="max-w-3xl mx-auto text-center">
           <span className="inline-block px-4 py-2 bg-white text-[#7c9a6d] text-sm font-medium rounded-full mb-8">
-            🌟 {language === 'en' ? 'Ready for a change?' : 'Prêt pour un changement ?'}
+            🌟{" "}
+            {language === "en"
+              ? "Ready for a change?"
+              : "Prêt pour un changement ?"}
           </span>
-          
+
           <h2 className="text-4xl md:text-5xl lg:text-6xl font-light text-[#3d4a38] mb-8 leading-tight">
-            {language === 'en' ? 'Your new home' : 'Ta nouvelle maison'}
+            {language === "en" ? "Your new home" : "Ta nouvelle maison"}
             <br />
-            <span className="font-medium text-[#7c9a6d]">{language === 'en' ? 'is waiting' : 't\'attend'}</span> 🏠
+            <span className="font-medium text-[#7c9a6d]">
+              {language === "en" ? "is waiting" : "t'attend"}
+            </span>{" "}
+            🏠
           </h2>
-          
+
           <p className="text-[#5a6355] text-lg leading-relaxed mb-12 max-w-xl mx-auto">
-            {language === 'en' 
-              ? 'Join 50+ nomads who found their people at La Villa. Limited spots for Winter 2025.'
-              : 'Rejoins 50+ nomades qui ont trouvé leur tribu à La Villa. Places limitées pour Hiver 2025.'}
+            {language === "en"
+              ? "Join 50+ nomads who found their people at La Villa. Limited spots for Spring 2026."
+              : "Rejoins 50+ nomades qui ont trouvé leur tribu à La Villa. Places limitées pour le printemps 2026."}
           </p>
 
           {/* CTAs */}
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-            <Link 
+            <Link
               to="/join-us"
               className="group inline-flex items-center gap-3 px-10 py-5 bg-[#7c9a6d] text-white font-medium rounded-full hover:bg-[#6b8560] transition-all duration-300 hover:shadow-[0_8px30px_rgba(124,154,109,0.4)]"
             >
-              {language === 'en' ? 'Apply now' : 'Candidater maintenant'}
+              {language === "en" ? "Apply now" : "Postuler maintenant"}
               <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform duration-300" />
             </Link>
-            
-            <Link 
+
+            <Link
               to="/our-houses"
               className="inline-flex items-center gap-3 px-10 py-5 border-2 border-[#3d4a38] text-[#3d4a38] font-medium rounded-full hover:bg-[#3d4a38] hover:text-white transition-all duration-300"
             >
-              {language === 'en' ? 'Explore houses' : 'Explorer les maisons'}
+              {language === "en" ? "Explore houses" : "Explorer les maisons"}
             </Link>
           </div>
 
           {/* Trust text */}
           <p className="mt-10 text-sm text-[#7c8a72]">
-            {language === 'en' 
-              ? 'No commitment. Apply to learn more 👋'
-              : 'Aucun engagement. Candidate pour en savoir plus 👋'}
+            {language === "en"
+              ? "No commitment. Apply to learn more 👋"
+              : "Aucun engagement. Candidate pour en savoir plus 👋"}
           </p>
         </div>
       </div>

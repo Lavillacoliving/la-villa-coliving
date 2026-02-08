@@ -61,7 +61,7 @@ export function HeroV7() {
               <p className="text-lg text-[#5a6355] max-w-lg leading-relaxed mb-8">
                 {language === "en"
                   ? "Fully furnished premium homes, instant community, all-inclusive living. Just bring your suitcase and good vibes ✨"
-                  : "Maisons Premiums toutes équipées, communauté instantanée, vie tout inclus. Amène juste ta valise et ta bonne humeur ✨"}
+                  : "Maisons Premiums toutes équipées, c  ommunauté instantanée, vie tout inclus. Amène juste ta valise et ta bonne humeur ✨"}
               </p>
 
               {/* Quick stats - style badges */}
@@ -117,8 +117,10 @@ export function HeroV7() {
                   ))}
                 </div>
                 <div className="text-sm text-[#5a6355]">
-                  <span className="font-medium text-[#7c9a6d]">50+</span>{" "}
-                  {language === "en" ? "happy colivers" : "colivers heureux"}
+                  <span className="font-medium text-[#7c9a6d]">100+</span>{" "}
+                  {language === "en"
+                    ? "happy colivers since 2021"
+                    : "colivers heureux depuis 2021"}
                 </div>
               </div>
             </div>
@@ -240,6 +242,7 @@ export function HeroV7() {
                     : "12 colivers maximum",
                 highlight:
                   language === "en" ? "Intimate & Premium" : "Intime & Premium",
+                link: "/the-coliving",
               },
               {
                 icon: "",
@@ -251,6 +254,7 @@ export function HeroV7() {
                     : "Intérieure ou extérieure",
                 highlight:
                   language === "en" ? "For you Only" : "Pour vous Seulement",
+                link: "/our-houses",
               },
               {
                 icon: "",
@@ -262,6 +266,7 @@ export function HeroV7() {
                     : "Bien-être & récupération",
                 highlight:
                   language === "en" ? "Pure Relaxation" : "Relaxation Pure",
+                link: "/our-houses",
               },
               {
                 icon: "",
@@ -270,6 +275,7 @@ export function HeroV7() {
                 desc:
                   language === "en" ? "Fully equipped" : "Entièrement équipée",
                 highlight: language === "en" ? "Stay Active" : "Restez Actif",
+                link: "/our-houses",
               },
               {
                 icon: "",
@@ -281,34 +287,35 @@ export function HeroV7() {
                     : "Yoga, dîners & plus",
                 highlight:
                   language === "en" ? "Real Connections" : "Vraies Connexions",
+                link: "/the-coliving",
               },
             ].map((item, index) => (
-              <div key={index} className="group relative">
+              <Link key={index} to={item.link} className="group relative block">
                 <div className="relative aspect-[3/4] rounded-2xl overflow-hidden bg-[#4a5744] shadow-[0_10px40px_rgba(0,0,0,0.3)]">
-                  {/* Image placeholder - replace src with your actual images */}
+                  {/* Image */}
                   <img
                     src={item.image}
                     alt={item.title}
                     className="w-full h-full object-cover opacity-80 group-hover:opacity-100 group-hover:scale-105 transition-all duration-500"
                   />
-                  {/* Gradient overlay */}
-                  <div className="absolute inset-0 bg-gradient-to-t from-[#3d4a38] via-[#3d4a38]/40 to-transparent" />
+                  {/* Gradient overlay - plus transparent */}
+                  <div className="absolute inset-0 bg-gradient-to-t from-[#3d4a38]/30 via-[#3d4a38]/10 to-transparent" />
 
                   {/* Content */}
                   <div className="absolute inset-0 p-4 flex flex-col justify-end">
                     <div className="mb-2">
                       <span className="text-2xl">{item.icon}</span>
                     </div>
-                    <h3 className="text-[#faf9f5] font-medium text-lg mb-1">
+                    <h3 className="text-[#faf9f5] font-medium text-lg mb-1 group-hover:text-[#7c9a6d] transition-colors">
                       {item.title}
                     </h3>
                     <p className="text-[#a8b5a0] text-sm mb-2">{item.desc}</p>
-                    <span className="inline-block px-3 py-1 bg-[#7c9a6d]/30 text-[#a8d695] text-xs font-medium rounded-full backdrop-blur-sm">
+                    <span className="inline-block px-3 py-1 bg-[#7c9a6d]/30 text-[#a8d695] text-xs font-medium rounded-full backdrop-blur-sm group-hover:bg-[#7c9a6d]/50 transition-colors">
                       {item.highlight}
                     </span>
                   </div>
                 </div>
-              </div>
+              </Link>
             ))}
           </div>
 
@@ -316,7 +323,7 @@ export function HeroV7() {
           <div className="mt-12 text-center">
             <p className="text-[#a8b5a0] text-lg mb-4">
               {language === "en"
-                ? "🌟 This level of amenities is rare in coliving. That's why we only have 3 homes."
+                ? "🌟 This level of amenities is rare in coliving. That's why we only have 3 homes. "
                 : "🌟 Ce niveau d'équipements est rare en coliving. C'est pourquoi nous n'avons que 3 maisons."}
             </p>
             <Link
