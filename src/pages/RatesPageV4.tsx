@@ -91,7 +91,7 @@ export function RatesPageV4() {
               "Séances de coaching sportif",
               "Dîners communautaires & événements",
               "Box communautaire livrée mensuellement",
-              "Support WhatsApp < 48h de réponse",
+              "Support WhatsApp",
             ],
     },
     {
@@ -187,11 +187,11 @@ export function RatesPageV4() {
           >
             {language === "en" ? (
               <>
-                Transparent <span className="text-[#129036]">Pricing</span>
+                Transparent <span className="text-[#699153]">Pricing</span>
               </>
             ) : (
               <>
-                Tarifs <span className="text-[#129036]">Transparents</span>
+                Tarifs <span className="text-[#49a62d9e]">Transparents</span>
               </>
             )}
           </h1>
@@ -212,7 +212,7 @@ export function RatesPageV4() {
       <section className="py-20 bg-[#1a1a1a]">
         <div className="container-custom">
           <div className="text-center mb-16">
-            <span className="inline-flex items-center gap-2 px-4 py-2 bg-[#c44536]/20 text-[#c44536] text-sm font-medium rounded-full mb-4">
+            <span className="inline-flex items-center gap-2 px-4 py-2 bg-[#c44536]/20 text-[#58a26c] text-sm font-medium rounded-full mb-4">
               💰{" "}
               {language === "en"
                 ? "Real Cost Comparison"
@@ -232,16 +232,16 @@ export function RatesPageV4() {
 
           <div className="grid md:grid-cols-2 gap-8 max-w-5xl mx-auto">
             {/* Geneva Studio */}
-            <div className="bg-[#2a2a2a] rounded-2xl p-8 border border-[#333]">
+            <div className="bg-[#930202a5] rounded-2xl p-8 border border-[#333]">
               <div className="flex items-center gap-3 mb-6">
                 <div className="w-12 h-12 rounded-full bg-[#666]/20 flex items-center justify-center">
-                  <Home className="w-6 h-6 text-[#999]" />
+                  <Home className="w-6 h-6 text-[#b3b2b2]" />
                 </div>
                 <div>
                   <h3 className="text-xl font-medium text-white">
                     {language === "en" ? "Geneva Studio" : "Studio Genève"}
                   </h3>
-                  <p className="text-sm text-[#666]">
+                  <p className="text-sm text-[#b3b2b2]">
                     {language === "en"
                       ? "Traditional rental"
                       : "Location traditionnelle"}
@@ -258,48 +258,48 @@ export function RatesPageV4() {
                   </span>
                   <span className="font-medium">1 400 CHF</span>
                 </div>
-                <div className="flex justify-between text-[#666]">
+                <div className="flex justify-between text-[#b3b2b2]">
                   <span className="flex items-center gap-2">
                     <X className="w-3 h-3" />{" "}
                     {language === "en" ? "Electricity" : "Électricité"}
                   </span>
                   <span>+ 80 CHF</span>
                 </div>
-                <div className="flex justify-between text-[#666]">
+                <div className="flex justify-between text-[#b3b2b2]">
                   <span className="flex items-center gap-2">
                     <X className="w-3 h-3" />{" "}
                     {language === "en" ? "Heating" : "Chauffage"}
                   </span>
                   <span>+ 100 CHF</span>
                 </div>
-                <div className="flex justify-between text-[#666]">
+                <div className="flex justify-between text-[#b3b2b2]">
                   <span className="flex items-center gap-2">
                     <X className="w-3 h-3" />{" "}
                     {language === "en" ? "Water" : "Eau"}
                   </span>
                   <span>+ 40 CHF</span>
                 </div>
-                <div className="flex justify-between text-[#666]">
+                <div className="flex justify-between text-[#b3b2b2]">
                   <span className="flex items-center gap-2">
                     <X className="w-3 h-3" /> Internet
                   </span>
                   <span>+ 60 CHF</span>
                 </div>
-                <div className="flex justify-between text-[#666]">
+                <div className="flex justify-between text-[#b3b2b2]">
                   <span className="flex items-center gap-2">
                     <X className="w-3 h-3" />{" "}
                     {language === "en" ? "Cleaning service" : "Service ménage"}
                   </span>
                   <span>+ 200 CHF</span>
                 </div>
-                <div className="flex justify-between text-[#666]">
+                <div className="flex justify-between text-[#b3b2b2]">
                   <span className="flex items-center gap-2">
                     <X className="w-3 h-3" />{" "}
                     {language === "en" ? "Gym membership" : "Abonnement gym"}
                   </span>
                   <span>+ 100 CHF</span>
                 </div>
-                <div className="flex justify-between text-[#666]">
+                <div className="flex justify-between text-[#b3b2b2]">
                   <span className="flex items-center gap-2">
                     <X className="w-3 h-3" />{" "}
                     {language === "en"
@@ -308,7 +308,7 @@ export function RatesPageV4() {
                   </span>
                   <span>+ 25 CHF</span>
                 </div>
-                <div className="flex justify-between text-[#666]">
+                <div className="flex justify-between text-[#b3b2b2]">
                   <span className="flex items-center gap-2">
                     <X className="w-3 h-3" />{" "}
                     {language === "en" ? "Taxes & fees" : "Taxes & frais"}
@@ -319,10 +319,10 @@ export function RatesPageV4() {
 
               <div className="border-t border-[#333] pt-4">
                 <div className="flex justify-between items-center">
-                  <span className="text-[#666]">
+                  <span className="text-[#d5d5d5]">
                     {language === "en" ? "Total monthly" : "Total mensuel"}
                   </span>
-                  <span className="text-2xl font-medium text-[#999]">
+                  <span className="text-2xl font-medium text-[#d5d5d5]">
                     2 045 CHF
                   </span>
                 </div>
@@ -330,8 +330,8 @@ export function RatesPageV4() {
             </div>
 
             {/* La Villa */}
-            <div className="bg-[#c44536] rounded-2xl p-8 relative overflow-hidden">
-              <div className="absolute top-4 right-4 bg-white text-[#c44536] text-xs font-bold px-3 py-1 rounded-full">
+            <div className="bg-[#699153] rounded-2xl p-8 relative overflow-hidden">
+              <div className="absolute top-4 right-4 bg-white text-[#377d22] text-xs font-bold px-3 py-1 rounded-full">
                 {language === "en"
                   ? "SAVE 665 CHF/MO"
                   : "ÉCONOMISEZ 665 CHF/MOIS"}
@@ -345,7 +345,7 @@ export function RatesPageV4() {
                   <h3 className="text-xl font-medium text-white">
                     La Villa Coliving
                   </h3>
-                  <p className="text-sm text-white/80">
+                  <p className="text-base text-white/80">
                     {language === "en" ? "All-inclusive" : "Tout-inclus"}
                   </p>
                 </div>
@@ -515,7 +515,7 @@ export function RatesPageV4() {
                   </p>
 
                   <div className="mb-8">
-                    <span className="text-4xl font-light text-[#1a1a1a]">
+                    <span className="text-4xl font-light text-[#51943d]">
                       1,380
                     </span>
                     <span className="text-[#999]">
@@ -686,7 +686,7 @@ export function RatesPageV4() {
           <p className="text-lg text-white/80 max-w-xl mx-auto mb-8">
             {language === "en"
               ? `Save ${monthlySavings} CHF/month and join 50+ happy colivers. Limited spots for Spring 2026.`
-              : `Économisez ${monthlySavings} CHF/mois et rejoignez 50+ colivers heureux. Places limitées pour Printemps 2026.`}
+              : `Économisez ${monthlySavings} CHF/mois et rejoignez 50+ colivers heureux. Places limitées pour le Printemps 2026.`}
           </p>
           <Link
             to="/join-us"

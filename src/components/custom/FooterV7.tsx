@@ -128,15 +128,15 @@ export function FooterV7() {
         <div className="mt-16 pt-8 border-t border-[#7c9a6d]/20 flex flex-col md:flex-row items-center justify-between gap-4">
           <p className="text-[#7c8a72] text-sm">
             &copy; {new Date().getFullYear()} La Villa Coliving.{" "}
-            {language === "en" ? "Made with" : "Fait avec"} 🌿{" "}
             {language === "en"
-              ? "in Grand Genève with love ❤️"
-              : "au Grand Genève avec amour ❤️"}
+              ? "Made in Grand Genève"
+              : "Fait au Grand Genève"}{" "}
+            {language === "en" ? "with love ❤️" : "avec amour ❤️"}
           </p>
           <p className="text-[#7c8a72] text-sm">
             {language === "en"
               ? "Nomad-friendly coliving"
-              : "Coliving pour nomades"}
+              : "Coliving pour nomades et frontaliers."}
           </p>
         </div>
       </div>
