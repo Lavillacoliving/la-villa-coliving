@@ -6,7 +6,6 @@ import {
   Waves,
   Dumbbell,
   Tv,
-  Scooter,
   Package,
   UtensilsCrossed,
   MessageCircle,
