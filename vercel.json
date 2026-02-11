@@ -35,5 +35,14 @@
       "destination": "/services",
       "permanent": true
     }
+  ],
+  "routes": [
+    {
+      "handle": "filesystem"
+    },
+    {
+      "src": "/(.*)",
+      "dest": "/app/index.html"
+    }
   ]
 }
