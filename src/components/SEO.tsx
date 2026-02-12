@@ -13,7 +13,7 @@ export function SEO({
   title,
   description,
   image = "/images/la villa jardin.webp",
-  url = "https://lavillacoliving.com",
+  url = "https://www.lavillacoliving.com",
   type = "website",
 }: SEOProps) {
   const { language } = useLanguage();
@@ -80,8 +80,8 @@ export function SEO({
           "@context": "https://schema.org",
           "@type": "Organization",
           name: "La Villa Coliving",
-          url: "https://lavillacoliving.com",
-          logo: "https://lavillacoliving.com/logo.png",
+          url: "https://www.lavillacoliving.com",
+          logo: "https://www.lavillacoliving.com/logo.png",
           description: siteDescription,
           address: {
             "@type": "PostalAddress",
