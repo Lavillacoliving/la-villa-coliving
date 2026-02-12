@@ -50,6 +50,11 @@ export function SEO({
       <meta name="language" content={language} />
       <link rel="canonical" href={url} />
 
+      {/* Hreflang tags pour le SEO multilingue */}
+      <link rel="alternate" hrefLang="en" href={url} />
+      <link rel="alternate" hrefLang="fr" href={url} />
+      <link rel="alternate" hrefLang="x-default" href={url} />
+
       {/* Open Graph / Facebook */}
       <meta property="og:type" content={type} />
       <meta property="og:url" content={url} />
