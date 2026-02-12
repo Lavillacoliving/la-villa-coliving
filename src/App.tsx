@@ -10,6 +10,7 @@ import { RatesPageV4 as RatesPage } from "@/pages/RatesPageV4";
 import { FAQPageV4 as FAQPage } from "@/pages/FAQPageV4";
 import { JoinPageV4 as JoinPage } from "@/pages/JoinPageV4";
 import { HouseDetailPage } from "@/pages/HouseDetailPage";
+import { BlogPage } from "@/pages/BlogPage";
 import { ScrollToTop } from "@/components/ScrollToTop"; // ← AJOUTEZ CETTE LIGNE
 
 function App() {
@@ -27,6 +28,7 @@ function App() {
             <Route path="/rates" element={<RatesPage />} />
             <Route path="/faq" element={<FAQPage />} />
             <Route path="/join-us" element={<JoinPage />} />
+            <Route path="/blog" element={<BlogPage />} />
             <Route path="/:id" element={<HouseDetailPage />} />
           </Routes>
           <Footer />

@@ -37,6 +37,8 @@ export function NavbarV7() {
     },
     { path: "/rates", label: language === "en" ? "Rates" : "Tarifs" },
     { path: "/faq", label: "FAQ" },
+    // TODO: Uncomment to publish blog
+    // { path: "/blog", label: "Blog" },
   ];
 
   const isActive = (path: string) => location.pathname === path;
