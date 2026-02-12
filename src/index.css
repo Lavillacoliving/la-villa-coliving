@@ -57,13 +57,16 @@
   body {
     @apply bg-white text-foreground antialiased;
     font-family: 'Inter', sans-serif;
+    letter-spacing: 0.01em;
+    word-spacing: 0.05em;
   }
   
   h1, h2, h3, h4, h5, h6 {
     font-family: 'Plus Jakarta Sans', sans-serif;
     font-weight: 800;
-    line-height: 1.05;
-    letter-spacing: -0.04em;
+    line-height: 1.1;
+    letter-spacing: -0.01em;
+    word-spacing: 0.05em;
     color: hsl(220 40% 10%);
   }
   
@@ -81,7 +84,9 @@
   }
   
   p {
-    line-height: 1.7;
+    line-height: 1.75;
+    letter-spacing: 0.01em;
+    word-spacing: 0.05em;
     color: hsl(220 9% 40%);
   }
 }
@@ -126,7 +131,7 @@
     background: linear-gradient(135deg, hsl(158 85% 42%), hsl(158 90% 38%));
     color: white;
     font-family: 'Plus Jakarta Sans', sans-serif;
-    letter-spacing: -0.02em;
+    letter-spacing: -0.01em;
     box-shadow: 0 4px 16px -2px hsl(158 85% 42% / 0.5);
   }
   
@@ -143,7 +148,7 @@
     background: linear-gradient(135deg, hsl(345 95% 58%), hsl(345 100% 52%));
     color: white;
     font-family: 'Plus Jakarta Sans', sans-serif;
-    letter-spacing: -0.02em;
+    letter-spacing: -0.01em;
     box-shadow: 0 4px 16px -2px hsl(345 95% 58% / 0.5);
   }
   
@@ -160,7 +165,7 @@
     background: linear-gradient(135deg, hsl(32 100% 58%), hsl(24 95% 52%));
     color: white;
     font-family: 'Plus Jakarta Sans', sans-serif;
-    letter-spacing: -0.02em;
+    letter-spacing: -0.01em;
     box-shadow: 0 4px 16px -2px hsl(32 100% 58% / 0.5);
   }
   
@@ -178,7 +183,7 @@
     border: 2.5px solid hsl(158 85% 42%);
     color: hsl(158 85% 42%);
     font-family: 'Plus Jakarta Sans', sans-serif;
-    letter-spacing: -0.02em;
+    letter-spacing: -0.01em;
   }
   
   .btn-outline:hover {
