@@ -1,0 +1,45 @@
+{
+  "rewrites": [
+    {
+      "source": "/(.*)",
+      "destination": "/index.html"
+    }
+  ],
+  "redirects": [
+    {
+      "source": "/fr",
+      "destination": "/",
+      "permanent": true
+    },
+    {
+      "source": "/fr/rates",
+      "destination": "/rates",
+      "permanent": true
+    },
+    {
+      "source": "/fr/our-houses",
+      "destination": "/our-houses",
+      "permanent": true
+    },
+    {
+      "source": "/fr/faq",
+      "destination": "/faq",
+      "permanent": true
+    },
+    {
+      "source": "/fr/join-us",
+      "destination": "/join-us",
+      "permanent": true
+    },
+    {
+      "source": "/fr/the-coliving",
+      "destination": "/the-coliving",
+      "permanent": true
+    },
+    {
+      "source": "/fr/services",
+      "destination": "/services",
+      "permanent": true
+    }
+  ]
+}
