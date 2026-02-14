@@ -11,6 +11,7 @@ import { FAQPageV4 as FAQPage } from "@/pages/FAQPageV4";
 import { JoinPageV4 as JoinPage } from "@/pages/JoinPageV4";
 import { HouseDetailPage } from "@/pages/HouseDetailPage";
 import { BlogPage } from "@/pages/BlogPage";
+import { BlogPostPage } from "@/pages/BlogPostPage";
 import { ScrollToTop } from "@/components/ScrollToTop"; // ← AJOUTEZ CETTE LIGNE
 
 function App() {
@@ -29,6 +30,7 @@ function App() {
             <Route path="/faq" element={<FAQPage />} />
             <Route path="/join-us" element={<JoinPage />} />
             <Route path="/blog" element={<BlogPage />} />
+            <Route path="/blog/:slug" element={<BlogPostPage />} />
             <Route path="/:id" element={<HouseDetailPage />} />
           </Routes>
           <Footer />
