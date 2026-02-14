@@ -27,8 +27,8 @@ export function FooterV7() {
       path: "/join-us",
       label: language === "en" ? "Join us" : "Nous rejoindre",
     },
-    // TODO: Uncomment to publish blog
-    // { path: "/blog", label: "Blog" },
+    
+    { path: "/blog", label: "Blog" },
   ];
 
   return (
