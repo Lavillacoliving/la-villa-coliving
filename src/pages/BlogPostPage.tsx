@@ -3,6 +3,7 @@ import { useParams, Link } from "react-router-dom";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { supabase } from "@/lib/supabase";
 import { Clock, Calendar, User, ArrowLeft } from "lucide-react";
+import ReactMarkdown from "react-markdown";
 
 interface Post {
   id:string; slug:string;
@@ -85,8 +86,38 @@ export function BlogPostPage() {
             </div>
           )}
 
-          <div className="prose prose-lg max-w-none text-[#333] leading-relaxed" style={{fontSize:"1.1rem",lineHeight:"1.8"}}>
-            {content.split("\n").map((p,i) => p.trim() ? <p key={i} className="mb-6">{p}</p> : null)}
+          <div className="blog-content max-w-none text-[#333]" style={{fontSize:"1.1rem",lineHeight:"1.8"}}>
+            <ReactMarkdown
+              components={{
+                h2: ({children}) => (
+                  <h2 className="text-2xl md:text-3xl font-semibold text-[#1a1a1a] mt-12 mb-4" style={{fontFamily:"Plus Jakarta Sans, sans-serif"}}>{children}</h2>
+                ),
+                h3: ({children}) => (
+                  <h3 className="text-xl md:text-2xl font-semibold text-[#1a1a1a] mt-8 mb-3" style={{fontFamily:"Plus Jakarta Sans, sans-serif"}}>{children}</h3>
+                ),
+                p: ({children}) => <p className="mb-6 leading-relaxed">{children}</p>,
+                strong: ({children}) => <strong className="font-semibold text-[#1a1a1a]">{children}</strong>,
+                ul: ({children}) => <ul className="list-disc pl-6 mb-6 space-y-2">{children}</ul>,
+                ol: ({children}) => <ol className="list-decimal pl-6 mb-6 space-y-2">{children}</ol>,
+                li: ({children}) => <li className="leading-relaxed">{children}</li>,
+                a: ({href, children}) => (
+                  <a href={href} className="text-[#c44536] hover:underline" target="_blank" rel="noopener noreferrer">{children}</a>
+                ),
+                table: ({children}) => (
+                  <div className="overflow-x-auto my-8">
+                    <table className="w-full border-collapse text-sm">{children}</table>
+                  </div>
+                ),
+                thead: ({children}) => <thead className="bg-[#f5f5f5]">{children}</thead>,
+                th: ({children}) => <th className="border border-[#e5e5e5] px-4 py-3 text-left font-semibold text-[#1a1a1a]">{children}</th>,
+                td: ({children}) => <td className="border border-[#e5e5e5] px-4 py-3">{children}</td>,
+                blockquote: ({children}) => (
+                  <blockquote className="border-l-4 border-[#c44536] pl-6 italic text-[#666] my-6">{children}</blockquote>
+                ),
+              }}
+            >
+              {content}
+            </ReactMarkdown>
           </div>
 
           {post.tags&&post.tags.length>0&&(
