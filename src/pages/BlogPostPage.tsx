@@ -4,6 +4,7 @@ import { useLanguage } from "@/contexts/LanguageContext";
 import { supabase } from "@/lib/supabase";
 import { Clock, Calendar, User, ArrowLeft } from "lucide-react";
 import ReactMarkdown from "react-markdown";
+import remarkGfm from "remark-gfm";
 
 interface Post {
   id:string; slug:string;
@@ -92,6 +93,7 @@ export function BlogPostPage() {
 
           <div className="blog-content max-w-none text-[#333]" style={{fontSize:"1.1rem",lineHeight:"1.8"}}>
             <ReactMarkdown
+              remarkPlugins={[remarkGfm]}
               components={{
                 h2: ({children}) => (
                   <h2 className="text-2xl md:text-3xl font-semibold text-[#1a1a1a] mt-12 mb-4" style={{fontFamily:"Plus Jakarta Sans, sans-serif"}}>{children}</h2>
