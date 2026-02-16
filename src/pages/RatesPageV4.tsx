@@ -1,6 +1,7 @@
 import { useLanguage } from "@/contexts/LanguageContext";
 import { Check, ArrowRight, Home, Sparkles, X } from "lucide-react";
 import { Link } from "react-router-dom";
+import { SEO } from "@/components/SEO";
 
 export function RatesPageV4() {
   const { language } = useLanguage();
@@ -175,6 +176,13 @@ export function RatesPageV4() {
 
   return (
     <main className="relative pt-20">
+      <SEO
+        title={language === "en" ? "Rates & Pricing" : "Tarifs & Prix"}
+        description={language === "en"
+          ? "Transparent all-inclusive pricing from 1,380 CHF/month. Rent, utilities, gym, pool, sauna, yoga, internet, cleaning - everything included."
+          : "Tarifs tout inclus transparents d\u00e8s 1 380 CHF/mois. Loyer, charges, gym, piscine, sauna, yoga, internet, m\u00e9nage - tout inclus."}
+        url="https://www.lavillacoliving.com/rates"
+      />
       {/* Hero */}
       <section className="py-24 lg:py-32 bg-white">
         <div className="container-custom text-center">

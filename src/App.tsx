@@ -12,13 +12,14 @@ import { JoinPageV4 as JoinPage } from "@/pages/JoinPageV4";
 import { HouseDetailPage } from "@/pages/HouseDetailPage";
 import { BlogPage } from "@/pages/BlogPage";
 import { BlogPostPage } from "@/pages/BlogPostPage";
-import { ScrollToTop } from "@/components/ScrollToTop"; // ← AJOUTEZ CETTE LIGNE
+import { NotFoundPage } from "@/pages/NotFoundPage";
+import { ScrollToTop } from "@/components/ScrollToTop";
 
 function App() {
   return (
     <LanguageProvider>
       <BrowserRouter>
-        <ScrollToTop /> {/* ← AJOUTEZ CETTE LIGNE ICI */}
+        <ScrollToTop />
         <div className="min-h-screen bg-background">
           <Navbar />
           <Routes>
@@ -31,7 +32,10 @@ function App() {
             <Route path="/join-us" element={<JoinPage />} />
             <Route path="/blog" element={<BlogPage />} />
             <Route path="/blog/:slug" element={<BlogPostPage />} />
-            <Route path="/:id" element={<HouseDetailPage />} />
+            <Route path="/lavilla" element={<HouseDetailPage />} />
+            <Route path="/leloft" element={<HouseDetailPage />} />
+            <Route path="/lelodge" element={<HouseDetailPage />} />
+            <Route path="*" element={<NotFoundPage />} />
           </Routes>
           <Footer />
         </div>

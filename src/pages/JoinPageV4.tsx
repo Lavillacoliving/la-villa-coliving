@@ -1,11 +1,19 @@
 import { useLanguage } from "@/contexts/LanguageContext";
 import { ArrowRight } from "lucide-react";
+import { SEO } from "@/components/SEO";
 
 export function JoinPageV4() {
   const { language } = useLanguage();
 
   return (
     <main className="relative pt-20">
+      <SEO
+        title={language === "en" ? "Join Our Community" : "Rejoignez Notre Communaut\u00e9"}
+        description={language === "en"
+          ? "Apply to join La Villa Coliving near Geneva. Simple application process, curated community, move in within weeks."
+          : "Postulez pour rejoindre La Villa Coliving pr\u00e8s de Gen\u00e8ve. Processus simple, communaut\u00e9 s\u00e9lectionn\u00e9e, emm\u00e9nagement en quelques semaines."}
+        url="https://www.lavillacoliving.com/join-us"
+      />
       {/* Hero */}
       <section className="py-24 lg:py-32 bg-white">
         <div className="container-custom text-center">

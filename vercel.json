@@ -40,6 +40,56 @@
       "source": "/fr/services",
       "destination": "/services",
       "permanent": true
+    },
+    {
+      "source": "/fr/blog",
+      "destination": "/blog",
+      "permanent": true
+    },
+    {
+      "source": "/fr/lavilla",
+      "destination": "/lavilla",
+      "permanent": true
+    },
+    {
+      "source": "/fr/leloft",
+      "destination": "/leloft",
+      "permanent": true
+    },
+    {
+      "source": "/fr/lelodge",
+      "destination": "/lelodge",
+      "permanent": true
+    },
+    {
+      "source": "/community",
+      "destination": "/the-coliving",
+      "permanent": true
+    },
+    {
+      "source": "/location",
+      "destination": "/our-houses",
+      "permanent": true
+    }
+  ],
+  "headers": [
+    {
+      "source": "/sitemap.xml",
+      "headers": [
+        {
+          "key": "Content-Type",
+          "value": "application/xml"
+        }
+      ]
+    },
+    {
+      "source": "/robots.txt",
+      "headers": [
+        {
+          "key": "Content-Type",
+          "value": "text/plain"
+        }
+      ]
     }
   ]
 }

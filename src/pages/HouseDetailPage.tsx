@@ -1,4 +1,4 @@
-import { useParams, Link } from "react-router-dom";
+import { useLocation, Link } from "react-router-dom";
 import {
   MapPin,
   Users,
@@ -19,6 +19,7 @@ import { useLanguage } from "@/contexts/LanguageContext";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { HouseGallery } from "@/sections/HouseGallery";
+import { SEO } from "@/components/SEO";
 import {
   Carousel,
   CarouselContent,
@@ -1162,7 +1163,8 @@ const housesData: Record<string, HouseData> = {
 };
 
 export function HouseDetailPage() {
-  const { id } = useParams<{ id: string }>();
+  const location = useLocation();
+  const id = location.pathname.replace("/", "");
   const { t, language } = useLanguage();
 
   const house = id ? housesData[id] : null;
@@ -1185,6 +1187,12 @@ export function HouseDetailPage() {
 
   return (
     <main className="relative">
+      <SEO
+        title={`${house.name} - Premium Coliving ${house.location}`}
+        description={house.description}
+        url={`https://www.lavillacoliving.com/${id}`}
+        image={`https://www.lavillacoliving.com${house.image}`}
+      />
       {/* Hero Gallery */}
       <section className="relative pt-20">
         <Carousel className="w-full">

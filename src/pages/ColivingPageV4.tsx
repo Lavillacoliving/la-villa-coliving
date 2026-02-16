@@ -1,6 +1,7 @@
 import { useLanguage } from "@/contexts/LanguageContext";
 import { Users, Zap, Heart, Check, ArrowRight, Star } from "lucide-react";
 import { Link } from "react-router-dom";
+import { SEO } from "@/components/SEO";
 
 export function ColivingPageV4() {
   const { t, language } = useLanguage();
@@ -44,6 +45,13 @@ export function ColivingPageV4() {
 
   return (
     <main className="relative pt-20">
+      <SEO
+        title={language === "en" ? "The Coliving Experience" : "L'Exp\u00e9rience Coliving"}
+        description={language === "en"
+          ? "Discover our premium coliving concept near Geneva. Community living with all-inclusive services, wellness facilities, and curated events."
+          : "D\u00e9couvrez notre concept de coliving premium pr\u00e8s de Gen\u00e8ve. Vie en communaut\u00e9 avec services tout inclus, bien-\u00eatre et \u00e9v\u00e9nements."}
+        url="https://www.lavillacoliving.com/the-coliving"
+      />
       {/* Hero avec image de fond */}
       <section className="relative py-24 lg:py-32 overflow-hidden">
         {/* Image de fond */}

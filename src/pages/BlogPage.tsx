@@ -3,6 +3,7 @@ import { useState, useEffect } from "react";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { supabase } from "@/lib/supabase";
 import { Search, Clock, Calendar, User } from "lucide-react";
+import { SEO } from "@/components/SEO";
 
 interface BlogPost {
   id: string; slug: string;
@@ -16,7 +17,7 @@ interface BlogPost {
 const CL:Record<string,Record<string,string>>={
   all:{en:"All",fr:"Tous"},coliving:{en:"Coliving",fr:"Coliving"},
   lifestyle:{en:"Lifestyle",fr:"Lifestyle"},tips:{en:"Tips",fr:"Conseils"},
-  geneva:{en:"Geneva",fr:"Genève"},community:{en:"Community",fr:"Communauté"},
+  geneva:{en:"Geneva",fr:"Gen\u00e8ve"},community:{en:"Community",fr:"Communaut\u00e9"},
 };
 
 export function BlogPage() {
@@ -52,10 +53,17 @@ export function BlogPage() {
 
   return (
     <main className="relative pt-20">
+      <SEO
+        title={language === "en" ? "Blog - Coliving Tips & News" : "Blog - Conseils & Actualit\u00e9s Coliving"}
+        description={language === "en"
+          ? "Read our latest articles about coliving, community living near Geneva, tips for expats, and La Villa Coliving news."
+          : "Lisez nos derniers articles sur le coliving, la vie en communaut\u00e9 pr\u00e8s de Gen\u00e8ve, conseils pour expatri\u00e9s et actualit\u00e9s La Villa."}
+        url="https://www.lavillacoliving.com/blog"
+      />
       <section className="py-24 lg:py-32 bg-white">
         <div className="container-custom text-center">
           <span className="text-xs text-[#999] uppercase tracking-[0.3em] mb-4 block">
-            {language==="en"?"Insights & Stories":"Articles & Récits"}
+            {language==="en"?"Insights & Stories":"Articles & R\u00e9cits"}
           </span>
           <h1 className="text-5xl md:text-6xl lg:text-7xl font-light text-[#1a1a1a] mb-6" style={{fontFamily:"Plus Jakarta Sans, sans-serif"}}>
             {language==="en"?<>Our <span className="text-[#c44536]">Blog</span></>:<>Notre <span className="text-[#c44536]">Blog</span></>}
@@ -63,7 +71,7 @@ export function BlogPage() {
           <p className="text-lg text-[#666] max-w-2xl mx-auto mb-10">
             {language==="en"
               ?"Stories, tips, and insights about coliving, community life, and the Geneva cross-border lifestyle."
-              :"Récits, conseils et perspectives sur le coliving, la vie en communauté et le mode de vie transfrontalier genevois."}
+              :"R\u00e9cits, conseils et perspectives sur le coliving, la vie en communaut\u00e9 et le mode de vie transfrontalier genevois."}
           </p>
           <div className="max-w-2xl mx-auto relative">
             <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-[#999]" />
@@ -85,7 +93,7 @@ export function BlogPage() {
           {loading ? (
             <div className="text-center py-16"><p className="text-[#666] text-lg">{language==="en"?"Loading...":"Chargement..."}</p></div>
           ) : fp.length===0 ? (
-            <div className="text-center py-16"><p className="text-[#666] text-lg">{language==="en"?"No articles found.":"Aucun article trouvé."}</p></div>
+            <div className="text-center py-16"><p className="text-[#666] text-lg">{language==="en"?"No articles found.":"Aucun article trouv\u00e9."}</p></div>
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
               {fp.map((post)=>(

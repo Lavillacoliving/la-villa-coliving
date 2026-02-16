@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { MapPin, Users, ArrowRight } from "lucide-react";
+import { SEO } from "@/components/SEO";
 
 export function HousesPageV4() {
   const { language } = useLanguage();
@@ -50,6 +51,13 @@ export function HousesPageV4() {
 
   return (
     <main className="relative pt-20">
+      <SEO
+        title={language === "en" ? "Our Coliving Houses" : "Nos Maisons de Coliving"}
+        description={language === "en"
+          ? "Explore our 3 premium coliving houses near Geneva: La Villa, Le Loft, and Le Lodge. Furnished rooms, pool, gym, and community living."
+          : "Explorez nos 3 maisons de coliving premium pr\u00e8s de Gen\u00e8ve : La Villa, Le Loft et Le Lodge. Chambres meubl\u00e9es, piscine, gym et vie communautaire."}
+        url="https://www.lavillacoliving.com/our-houses"
+      />
       {/* Hero */}
       <section className="py-24 lg:py-32 bg-white">
         <div className="container-custom text-center">

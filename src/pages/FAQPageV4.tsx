@@ -8,6 +8,7 @@ import {
 } from "@/components/ui/accordion";
 import { faqData, faqCategories } from "@/data/faqData";
 import { Search, MessageCircle } from "lucide-react";
+import { SEO } from "@/components/SEO";
 
 export function FAQPageV4() {
   const { language } = useLanguage();
@@ -45,6 +46,13 @@ export function FAQPageV4() {
 
   return (
     <main className="relative pt-20">
+      <SEO
+        title={language === "en" ? "Frequently Asked Questions" : "Questions Fr\u00e9quentes"}
+        description={language === "en"
+          ? "Find answers to common questions about La Villa Coliving: pricing, move-in process, house rules, community life, and more."
+          : "Trouvez les r\u00e9ponses aux questions fr\u00e9quentes sur La Villa Coliving : tarifs, emm\u00e9nagement, r\u00e8gles, vie communautaire et plus."}
+        url="https://www.lavillacoliving.com/faq"
+      />
       {/* Hero */}
       <section className="py-24 lg:py-32 bg-white">
         <div className="container-custom text-center">

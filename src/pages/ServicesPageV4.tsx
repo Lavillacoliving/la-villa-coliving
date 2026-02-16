@@ -18,6 +18,7 @@ import {
   Users,
 } from "lucide-react";
 import { Link } from "react-router-dom";
+import { SEO } from "@/components/SEO";
 
 export function ServicesPageV4() {
   const { t, language } = useLanguage();
@@ -140,6 +141,13 @@ export function ServicesPageV4() {
 
   return (
     <main className="relative pt-20">
+      <SEO
+        title={language === "en" ? "All-Inclusive Services" : "Services Tout Inclus"}
+        description={language === "en"
+          ? "All-inclusive coliving services: gym, pool, sauna, yoga classes, housekeeping, fiber internet, community events. Everything included from 1,380 CHF/month."
+          : "Services coliving tout inclus : gym, piscine, sauna, cours de yoga, m\u00e9nage, fibre internet, \u00e9v\u00e9nements communautaires. Tout inclus d\u00e8s 1 380 CHF/mois."}
+        url="https://www.lavillacoliving.com/services"
+      />
       {/* HERO - Plus impactant avec visuel immersif */}
       <section className="relative min-h-[70vh] flex items-center overflow-hidden">
         {/* Background image avec overlay */}
