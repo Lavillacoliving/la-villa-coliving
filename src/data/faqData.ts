@@ -241,8 +241,8 @@ export const faqData: FAQItem[] = [
       fr: 'Un parking est-il disponible ?',
     },
     answer: {
-      en: 'Yes, all our houses have parking available for residents. La Villa and Le Loft offer on-site parking, while Le Lodge has dedicated parking spaces. Please let us know your parking needs when applying so we can ensure availability.',
-      fr: 'Oui, toutes nos maisons disposent d\'un parking pour les résidents. La Villa et Le Loft offrent un parking sur place, tandis que Le Lodge dispose de places de parking dédiées. Veuillez nous informer de vos besoins de parking lors de votre candidature pour que nous puissions assurer la disponibilité.',
+      en: 'Yes, all our houses have parking available for residents. La Villa, Le Lodge and Le Loft offer on-site parking. Please let us know your parking needs when applying so we can ensure availability.',
+      fr: 'Oui, toutes nos maisons disposent d\'un parking pour les résidents. La Villa, Le Lodge et Le Loft offrent un parking sur place. Veuillez nous informer de vos besoins de parking lors de votre candidature pour que nous puissions assurer la disponibilité.',
     },
   },
   {
@@ -315,8 +315,8 @@ export const faqData: FAQItem[] = [
       fr: 'Quels modes de paiement acceptez-vous ?',
     },
     answer: {
-      en: 'We accept bank transfers, SEPA direct debit, and major credit cards. Rent is due monthly in advance. We can also accommodate employer-sponsored housing programs and provide invoices for expense reimbursement.',
-      fr: 'Nous acceptons les virements bancaires, le prélèvement SEPA et les principales cartes de crédit. Le loyer est dû mensuellement à l\'avance. Nous pouvons également accommoder les programmes de logement parrainés par les employeurs et fournir des factures pour le remboursement des frais.',
+      en: 'We accept bank transfers and SEPA. Rent is due monthly in advance. We can also accommodate employer-sponsored housing programs and provide invoices for expense reimbursement.',
+      fr: 'Nous acceptons les virements bancaires et le prélèvement SEPA. Le loyer est dû mensuellement à l\'avance. Nous pouvons également accommoder les programmes de logement parrainés par les employeurs et fournir des factures pour le remboursement des frais.',
     },
   },
   {
@@ -365,8 +365,8 @@ export const faqData: FAQItem[] = [
       fr: 'Quel type d\'événements communautaires sont organisés ?',
     },
     answer: {
-      en: 'We organize regular community events including monthly dinners, yoga and fitness classes, movie nights, game nights, seasonal celebrations, workshops, and networking events. Participation is always optional—we respect your need for both social time and personal space.',
-      fr: 'Nous organisons régulièrement des événements communautaires incluant des dîners mensuels, des cours de yoga et fitness, des soirées cinéma, des soirées jeux, des célébrations saisonnières, des ateliers et des événements de networking. La participation est toujours optionnelle—nous respectons votre besoin de temps social et d\'espace personnel.',
+      en: 'We organize regular community events including monthly dinners, yoga and fitness classes, Pizza parties and seasonal celebrations and networking events. Participation is always optional—we respect your need for both social time and personal space.',
+      fr: 'Nous organisons régulièrement des événements communautaires incluant des dîners mensuels, des cours de yoga et fitness, des soirées pizza, des célébrations saisonnières et des événements de networking. La participation est toujours optionnelle—nous respectons votre besoin de temps social et d\'espace personnel.',
     },
   },
   {
@@ -487,8 +487,8 @@ export const faqData: FAQItem[] = [
       fr: 'Y a-t-il des espaces de coworking dédiés ?',
     },
     answer: {
-      en: 'Yes, each house has dedicated work areas designed for productivity. These include quiet zones for focused work, comfortable desks and chairs, good lighting, and power outlets. Some houses also have private call booths or meeting spaces for video conferences.',
-      fr: 'Oui, chaque maison dispose d\'espaces de travail dédiés conçus pour la productivité. Ceux-ci incluent des zones calmes pour le travail concentré, des bureaux et chaises confortables, un bon éclairage et des prises électriques. Certaines maisons disposent également de cabines d\'appel privées ou d\'espaces de réunion pour les conférences vidéo.',
+      en: 'Yes, each room has its own desk, chair, good lighting, and power outlets to work properly for long hours when needed. There are no dedicated work areas but enough space for you to find a quiet spot.',
+      fr: 'Oui, chaque chambre dispose de son propre bureau, chaise, bon éclairage et prises électriques pour travailler confortablement pendant de longues heures si nécessaire. Il n\'y a pas d\'espaces de travail dédiés mais suffisamment d\'espace pour trouver un coin tranquille.',
     },
   },
   {
@@ -573,8 +573,8 @@ export const faqData: FAQItem[] = [
       fr: 'Puis-je amener ma voiture ?',
     },
     answer: {
-      en: 'Yes, all our houses have parking available. La Villa and Le Loft offer on-site parking, while Le Lodge has dedicated parking spaces. If you plan to bring a car, please let us know when applying so we can ensure a parking spot is available.',
-      fr: 'Oui, toutes nos maisons disposent d\'un parking. La Villa et Le Loft offrent un parking sur place, tandis que Le Lodge dispose de places de parking dédiées. Si vous prévoyez d\'amener une voiture, veuillez nous en informer lors de votre candidature pour que nous puissions assurer la disponibilité d\'une place.',
+      en: 'Yes, all our houses have parking available. La Villa, Le Lodge and Le Loft offer on-site parking. If you plan to bring a car, please let us know when applying so we can ensure a parking spot is available.',
+      fr: 'Oui, toutes nos maisons disposent d\'un parking. La Villa, Le Lodge et Le Loft offrent un parking sur place. Si vous prévoyez d\'amener une voiture, veuillez nous en informer lors de votre candidature pour que nous puissions assurer la disponibilité d\'une place.',
     },
   },
   {
