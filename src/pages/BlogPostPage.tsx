@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { useParams, Link } from "react-router-dom";
+import { useParams, useSearchParams, Link } from "react-router-dom";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { supabase } from "@/lib/supabase";
 import { Clock, Calendar, User, ArrowLeft } from "lucide-react";
@@ -26,15 +26,19 @@ export function BlogPostPage() {
   const { language } = useLanguage();
   const [post, setPost] = useState<Post|null>(null);
   const [loading, setLoading] = useState(true);
+  const [searchParams] = useSearchParams();
+  const isPreview = searchParams.get("preview") === "lavilla2026";
 
   useEffect(() => {
     if(slug) loadPost(slug);
   }, [slug]);
   async function loadPost(s:string) {
     try {
-      const { data, error } = await supabase
+      let query = supabase
         .from("blog_posts").select("*")
-        .eq("slug", s).eq("is_published", true).single();
+        .eq("slug", s);
+      if (!isPreview) query = query.eq("is_published", true);
+      const { data, error } = await query.single();
       if (error) throw error;
       setPost(data);
     } catch(e) { console.error("Blog post load:",e); }
