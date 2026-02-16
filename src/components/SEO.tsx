@@ -81,7 +81,7 @@ export function SEO({
           "@type": "Organization",
           name: "La Villa Coliving",
           url: "https://www.lavillacoliving.com",
-          logo: "https://www.lavillacoliving.com/logo.png",
+          logo: "https://www.lavillacoliving.com/logos/logo-full.png",
           description: siteDescription,
           address: {
             "@type": "PostalAddress",

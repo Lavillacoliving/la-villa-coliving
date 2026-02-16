@@ -377,7 +377,7 @@ export function ServicesPageV4() {
             {stats.map((stat, index) => (
               <div key={index} className="text-center">
                 <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-[#c44536]/20 mb-4">
-                  <stat.icon className="w-8 h-8 text-[  ]" />
+                  <stat.icon className="w-8 h-8 text-[#c44536]" />
                 </div>
                 <div className="text-4xl font-light text-white mb-2">
                   {stat.value}

@@ -1391,19 +1391,19 @@ export function HouseDetailPage() {
                   <div className="space-y-3">
                     <div className="flex items-center gap-3 text-[#475569]">
                       <Clock size={18} className="text-[#10b981]" />
-                      <span className="text-sm">20 min to Geneva</span>
+                      <span className="text-sm">{language === "en" ? "20 min to Geneva" : "20 min de Genève"}</span>
                     </div>
                     <div className="flex items-center gap-3 text-[#475569]">
                       <Wifi size={18} className="text-[#f97316]" />
-                      <span className="text-sm">8Gbps Fiber</span>
+                      <span className="text-sm">{language === "en" ? "8Gbps Fiber" : "Fibre 8Gbps"}</span>
                     </div>
                     <div className="flex items-center gap-3 text-[#475569]">
                       <Car size={18} className="text-[#f43f5e]" />
-                      <span className="text-sm">Parking Available</span>
+                      <span className="text-sm">{language === "en" ? "Parking Available" : "Parking disponible"}</span>
                     </div>
                     <div className="flex items-center gap-3 text-[#475569]">
                       <Coffee size={18} className="text-[#84cc16]" />
-                      <span className="text-sm">All-inclusive</span>
+                      <span className="text-sm">{language === "en" ? "All-inclusive" : "Tout inclus"}</span>
                     </div>
                   </div>
                 </div>

@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { Helmet } from "react-helmet";
 import { useLanguage } from "@/contexts/LanguageContext";
 import {
   Accordion,
@@ -53,6 +54,22 @@ export function FAQPageV4() {
           : "Trouvez les r\u00e9ponses aux questions fr\u00e9quentes sur La Villa Coliving : tarifs, emm\u00e9nagement, r\u00e8gles, vie communautaire et plus."}
         url="https://www.lavillacoliving.com/faq"
       />
+      <Helmet>
+        <script type="application/ld+json">
+          {JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "FAQPage",
+            mainEntity: faqData.map((item) => ({
+              "@type": "Question",
+              name: item.question[language],
+              acceptedAnswer: {
+                "@type": "Answer",
+                text: item.answer[language],
+              },
+            })),
+          })}
+        </script>
+      </Helmet>
       {/* Hero */}
       <section className="py-24 lg:py-32 bg-white">
         <div className="container-custom text-center">
