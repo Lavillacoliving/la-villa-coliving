@@ -52,10 +52,10 @@ export function HousesPageV4() {
   return (
     <main className="relative pt-20">
       <SEO
-        title={language === "en" ? "Our Coliving Houses" : "Nos Maisons de Coliving"}
+        title={language === "en" ? "Our 3 Coliving Houses Near Geneva" : "Nos 3 Maisons de Colocation près de Genève"}
         description={language === "en"
-          ? "Explore our 3 premium coliving houses near Geneva: La Villa, Le Loft, and Le Lodge. Furnished rooms, pool, gym, and community living."
-          : "Explorez nos 3 maisons de coliving premium pr\u00e8s de Gen\u00e8ve : La Villa, Le Loft et Le Lodge. Chambres meubl\u00e9es, piscine, gym et vie communautaire."}
+          ? "Explore our 3 premium coliving houses: La Villa (Ville-la-Grand), Le Loft (Ambilly), Le Lodge (Annemasse). 29 furnished rooms, all 15 min from Geneva."
+          : "Explorez nos 3 maisons de colocation premium : La Villa (Ville-la-Grand), Le Loft (Ambilly), Le Lodge (Annemasse). 29 chambres meublées, toutes à 15 min de Genève."}
         url="https://www.lavillacoliving.com/our-houses"
       />
       {/* Hero */}

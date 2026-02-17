@@ -5,6 +5,7 @@ import { supabase } from "@/lib/supabase";
 import { Clock, Calendar, User, ArrowLeft } from "lucide-react";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
+import { SEO } from "@/components/SEO";
 
 interface Post {
   id:string; slug:string;
@@ -63,11 +64,50 @@ export function BlogPostPage() {
   );
 
   const title = (language==="en"&&post.title_en)?post.title_en:post.title_fr;
+  const excerpt = (language==="en"&&post.excerpt_en)?post.excerpt_en:post.excerpt_fr;
   const content = (language==="en"&&post.content_en)?post.content_en:post.content_fr;
   const fmtD = (d:string) => new Date(d).toLocaleDateString(language==="en"?"en-US":"fr-FR",{year:"numeric",month:"long",day:"numeric"});
 
+  // BlogPosting structured data
+  const blogPostingSchema = {
+    "@context": "https://schema.org",
+    "@type": "BlogPosting",
+    headline: title,
+    description: excerpt,
+    image: post.image_url || "https://www.lavillacoliving.com/images/la villa jardin.webp",
+    author: {
+      "@type": "Person",
+      name: post.author,
+    },
+    publisher: {
+      "@type": "Organization",
+      name: "La Villa Coliving",
+      logo: {
+        "@type": "ImageObject",
+        url: "https://www.lavillacoliving.com/logos/logo-full.png",
+      },
+    },
+    datePublished: post.published_at,
+    dateModified: post.published_at,
+    mainEntityOfPage: {
+      "@type": "WebPage",
+      "@id": `https://www.lavillacoliving.com/blog/${post.slug}`,
+    },
+    keywords: post.tags?.join(", ") || "coliving, genève, colocation",
+    wordCount: content.split(/\s+/).length,
+    inLanguage: language === "en" ? "en" : "fr",
+  };
+
   return (
     <main className="relative pt-20">
+      <SEO
+        title={title}
+        description={excerpt}
+        url={`https://www.lavillacoliving.com/blog/${post.slug}`}
+        image={post.image_url || undefined}
+        type="article"
+        jsonLd={blogPostingSchema}
+      />
       <article className="py-16 lg:py-24">
         <div className="max-w-3xl mx-auto px-6">
           <Link to="/blog" className="inline-flex items-center gap-2 text-[#666] hover:text-[#c44536] mb-8 text-sm transition-colors">

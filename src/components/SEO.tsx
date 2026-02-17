@@ -7,26 +7,28 @@ interface SEOProps {
   image?: string;
   url?: string;
   type?: string;
+  jsonLd?: Record<string, unknown>;
 }
 
 export function SEO({
   title,
   description,
-  image = "/images/la villa jardin.webp",
+  image = "https://www.lavillacoliving.com/images/la villa jardin.webp",
   url = "https://www.lavillacoliving.com",
   type = "website",
+  jsonLd,
 }: SEOProps) {
   const { language } = useLanguage();
 
   const defaultTitle =
     language === "en"
       ? "La Villa Coliving | Premium Coliving Near Geneva"
-      : "La Villa Coliving | Coliving Premium près de Genève";
+      : "Colocation & Coliving Premium près de Genève | La Villa Coliving";
 
   const defaultDescription =
     language === "en"
-      ? "Fully furnished homes designed for community living. All-inclusive, flexible stays, just 30 minutes from Geneva. Join 50+ happy colivers at La Villa."
-      : "Maisons entièrement meublées conçues pour la vie communautaire. Tout inclus, séjours flexibles, à 30 minutes de Genève. Rejoignez 50+ colivers heureux à La Villa.";
+      ? "Premium coliving near Geneva. 29 furnished rooms, all-inclusive from 1,380 CHF/month. Heated pool, gym, sauna, fiber internet. Ideal for expats, cross-border workers & young professionals."
+      : "Colocation et coliving premium près de Genève. 29 chambres meublées tout inclus dès 1 380 CHF/mois. Piscine chauffée, salle de sport, sauna, fibre optique. Idéal frontaliers, expats et jeunes professionnels.";
 
   const siteTitle = title ? `${title} | La Villa Coliving` : defaultTitle;
   const siteDescription = description || defaultDescription;
@@ -41,12 +43,12 @@ export function SEO({
         name="keywords"
         content={
           language === "en"
-            ? "coliving, geneva, shared housing, community living, furnished apartments, expat housing, digital nomad, remote work, la villa"
-            : "coliving, genève, colocation, vie communautaire, appartements meublés, logement expat, nomade digital, télétravail, la villa"
+            ? "coliving geneva, shared housing geneva, coliving near geneva, furnished rooms geneva, expat housing geneva, cross-border worker housing, digital nomad geneva, coliving grand geneve, all-inclusive coliving, la villa coliving"
+            : "colocation genève, coliving genève, colocation annemasse, colocation frontalier genève, chambre meublée genève, coliving près de genève, colocation tout inclus genève, logement frontalier genève, colocation ville-la-grand, la villa coliving"
         }
       />
       <meta name="author" content="La Villa Coliving" />
-      <meta name="robots" content="index, follow" />
+      <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1" />
       <meta name="language" content={language} />
       <link rel="canonical" href={url} />
 
@@ -74,7 +76,7 @@ export function SEO({
       <meta property="twitter:description" content={siteDescription} />
       <meta property="twitter:image" content={image} />
 
-      {/* Structured Data */}
+      {/* Structured Data - Organization (default) */}
       <script type="application/ld+json">
         {JSON.stringify({
           "@context": "https://schema.org",
@@ -85,17 +87,28 @@ export function SEO({
           description: siteDescription,
           address: {
             "@type": "PostalAddress",
-            addressLocality: "Grand Genève",
+            addressLocality: "Ville-la-Grand",
+            addressRegion: "Haute-Savoie",
+            postalCode: "74100",
             addressCountry: "FR",
           },
           contactPoint: {
             "@type": "ContactPoint",
             email: "contact@lavillacoliving.com",
+            telephone: "+33626235336",
             contactType: "customer service",
+            availableLanguage: ["French", "English"],
           },
           sameAs: ["https://www.instagram.com/lavillacoliving/"],
         })}
       </script>
+
+      {/* Additional Structured Data (page-specific) */}
+      {jsonLd && (
+        <script type="application/ld+json">
+          {JSON.stringify(jsonLd)}
+        </script>
+      )}
     </Helmet>
   );
 }

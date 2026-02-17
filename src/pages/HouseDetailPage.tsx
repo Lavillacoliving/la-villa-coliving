@@ -1188,8 +1188,12 @@ export function HouseDetailPage() {
   return (
     <main className="relative">
       <SEO
-        title={`${house.name} - Premium Coliving ${house.location}`}
-        description={house.description}
+        title={language === "en"
+          ? `${house.name} — Premium Coliving ${house.location}, Near Geneva`
+          : `${house.name} — Colocation Premium ${house.location}, près de Genève`}
+        description={language === "en"
+          ? `${house.description} All-inclusive furnished rooms from ${house.price} CHF/month near Geneva.`
+          : `${house.description} Chambres meublées tout inclus dès ${house.price} CHF/mois près de Genève.`}
         url={`https://www.lavillacoliving.com/${id}`}
         image={`https://www.lavillacoliving.com${house.image}`}
       />

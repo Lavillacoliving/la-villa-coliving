@@ -142,10 +142,10 @@ export function ServicesPageV4() {
   return (
     <main className="relative pt-20">
       <SEO
-        title={language === "en" ? "All-Inclusive Services" : "Services Tout Inclus"}
+        title={language === "en" ? "All-Inclusive Coliving Services Near Geneva" : "Services Tout Inclus — Colocation Genève"}
         description={language === "en"
-          ? "All-inclusive coliving services: gym, pool, sauna, yoga classes, housekeeping, fiber internet, community events. Everything included from 1,380 CHF/month."
-          : "Services coliving tout inclus : gym, piscine, sauna, cours de yoga, m\u00e9nage, fibre internet, \u00e9v\u00e9nements communautaires. Tout inclus d\u00e8s 1 380 CHF/mois."}
+          ? "All-inclusive coliving services near Geneva: heated pool, gym, sauna, yoga, housekeeping, fiber internet, community events. Everything included from 1,380 CHF/month."
+          : "Services colocation tout inclus près de Genève : piscine chauffée, gym, sauna, yoga, ménage, fibre internet, événements. Tout compris dès 1 380 CHF/mois."}
         url="https://www.lavillacoliving.com/services"
       />
       {/* HERO - Plus impactant avec visuel immersif */}

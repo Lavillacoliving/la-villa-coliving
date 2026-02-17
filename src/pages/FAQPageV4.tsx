@@ -48,10 +48,10 @@ export function FAQPageV4() {
   return (
     <main className="relative pt-20">
       <SEO
-        title={language === "en" ? "Frequently Asked Questions" : "Questions Fr\u00e9quentes"}
+        title={language === "en" ? "FAQ — Coliving Near Geneva" : "FAQ — Colocation & Coliving près de Genève"}
         description={language === "en"
-          ? "Find answers to common questions about La Villa Coliving: pricing, move-in process, house rules, community life, and more."
-          : "Trouvez les r\u00e9ponses aux questions fr\u00e9quentes sur La Villa Coliving : tarifs, emm\u00e9nagement, r\u00e8gles, vie communautaire et plus."}
+          ? "Answers to common questions about coliving at La Villa near Geneva: pricing, move-in process, services included, transport to Geneva, community life."
+          : "Réponses aux questions fréquentes sur la colocation à La Villa près de Genève : tarifs, emménagement, services inclus, transport vers Genève, vie communautaire."}
         url="https://www.lavillacoliving.com/faq"
       />
       <Helmet>

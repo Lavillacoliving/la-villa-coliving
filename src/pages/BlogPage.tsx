@@ -54,10 +54,10 @@ export function BlogPage() {
   return (
     <main className="relative pt-20">
       <SEO
-        title={language === "en" ? "Blog - Coliving Tips & News" : "Blog - Conseils & Actualit\u00e9s Coliving"}
+        title={language === "en" ? "Blog — Coliving & Expat Life Near Geneva" : "Blog — Colocation, Coliving & Vie Frontalière Genève"}
         description={language === "en"
-          ? "Read our latest articles about coliving, community living near Geneva, tips for expats, and La Villa Coliving news."
-          : "Lisez nos derniers articles sur le coliving, la vie en communaut\u00e9 pr\u00e8s de Gen\u00e8ve, conseils pour expatri\u00e9s et actualit\u00e9s La Villa."}
+          ? "Tips, guides & news about coliving near Geneva. Budget guides, best neighborhoods for cross-border workers, expat advice, and La Villa community stories."
+          : "Conseils, guides et actualités sur la colocation près de Genève. Guides budget, meilleurs quartiers frontaliers, conseils expats et vie à La Villa."}
         url="https://www.lavillacoliving.com/blog"
       />
       <section className="py-24 lg:py-32 bg-white">

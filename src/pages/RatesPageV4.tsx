@@ -177,10 +177,10 @@ export function RatesPageV4() {
   return (
     <main className="relative pt-20">
       <SEO
-        title={language === "en" ? "Rates & Pricing" : "Tarifs & Prix"}
+        title={language === "en" ? "Rates — All-Inclusive Coliving from 1,380 CHF/month" : "Tarifs Colocation Genève — Tout Inclus dès 1 380 CHF/mois"}
         description={language === "en"
-          ? "Transparent all-inclusive pricing from 1,380 CHF/month. Rent, utilities, gym, pool, sauna, yoga, internet, cleaning - everything included."
-          : "Tarifs tout inclus transparents d\u00e8s 1 380 CHF/mois. Loyer, charges, gym, piscine, sauna, yoga, internet, m\u00e9nage - tout inclus."}
+          ? "Transparent all-inclusive coliving pricing near Geneva from 1,380 CHF/month. Rent, utilities, gym, pool, sauna, yoga, internet, cleaning — everything included. Compare with Geneva studios."
+          : "Tarifs colocation tout inclus près de Genève dès 1 380 CHF/mois. Loyer, charges, gym, piscine, sauna, yoga, internet, ménage — tout compris. Comparez avec les studios à Genève."}
         url="https://www.lavillacoliving.com/rates"
       />
       {/* Hero */}

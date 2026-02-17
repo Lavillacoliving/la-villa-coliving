@@ -8,10 +8,10 @@ export function JoinPageV4() {
   return (
     <main className="relative pt-20">
       <SEO
-        title={language === "en" ? "Join Our Community" : "Rejoignez Notre Communaut\u00e9"}
+        title={language === "en" ? "Apply — Join Our Coliving Community" : "Candidater — Rejoindre Notre Colocation près de Genève"}
         description={language === "en"
-          ? "Apply to join La Villa Coliving near Geneva. Simple application process, curated community, move in within weeks."
-          : "Postulez pour rejoindre La Villa Coliving pr\u00e8s de Gen\u00e8ve. Processus simple, communaut\u00e9 s\u00e9lectionn\u00e9e, emm\u00e9nagement en quelques semaines."}
+          ? "Apply to join La Villa Coliving near Geneva. Simple process, curated community, move in within 2 weeks. Furnished rooms, all-inclusive, ideal for cross-border workers & expats."
+          : "Postulez pour La Villa Coliving près de Genève. Processus simple, communauté sélectionnée, emménagement en 2 semaines. Chambres meublées tout inclus, idéal frontaliers et expats."}
         url="https://www.lavillacoliving.com/join-us"
       />
       {/* Hero */}
