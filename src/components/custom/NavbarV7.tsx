@@ -31,6 +31,10 @@ export function NavbarV7() {
       label: language === "en" ? "Geneva Housing" : "Colocation Genève",
     },
     {
+      path: "/the-coliving",
+      label: language === "en" ? "The Coliving" : "Le Coliving",
+    },
+    {
       path: "/our-houses",
       label: language === "en" ? "Our Houses" : "Nos Maisons",
     },

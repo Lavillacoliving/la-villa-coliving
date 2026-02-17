@@ -17,6 +17,8 @@ import {
   Shield,
   ChevronDown,
   ChevronUp,
+  Tv,
+  UtensilsCrossed,
 } from "lucide-react";
 import { useState } from "react";
 
@@ -24,7 +26,7 @@ import { useState } from "react";
 const colocationFAQ = [
   {
     q: "Combien coûte une colocation près de Genève chez La Villa ?",
-    a: "Nos chambres privatives tout inclus commencent à 1 380 CHF/mois (environ 1 430 €/mois). Ce prix comprend le loyer, les charges, la fibre internet, le ménage hebdomadaire, l'accès à la piscine, la salle de sport, le sauna, les cours de yoga et les événements communautaires. C'est en moyenne 30 à 40% moins cher qu'un studio équivalent à Genève.",
+    a: "Nos chambres privatives tout inclus sont à 1 380 CHF/mois. Ce prix comprend le loyer, les charges, la fibre internet, le ménage 2x/semaine, l'accès à la piscine, la salle de sport, le sauna, les cours de yoga et de sport hebdomadaires, les événements communautaires mensuels et les paniers repas mensuels. C'est en moyenne 30 à 40% moins cher qu'un studio équivalent à Genève.",
   },
   {
     q: "Quel est le temps de trajet entre La Villa et le centre de Genève ?",
@@ -39,8 +41,8 @@ const colocationFAQ = [
     a: "Le canton de Genève a un accord fiscal spécifique : les frontaliers sont imposés à la source en Suisse (à un taux souvent inférieur au taux français). De plus, le coût de la vie (loyer, courses, loisirs) est 30 à 50% moins cher côté France qu'à Genève. En vivant chez La Villa, vous bénéficiez d'un salaire suisse avec des charges de vie françaises.",
   },
   {
-    q: "Quelle est la durée minimum de séjour ?",
-    a: "La durée minimum est de 3 mois. Nous proposons des baux flexibles (3, 6, 9 ou 12 mois) avec possibilité de renouvellement. C'est idéal pour les frontaliers qui débutent une mission ou qui veulent tester la vie en zone frontalière avant de s'engager.",
+    q: "Quelle est la durée du bail ?",
+    a: "Le bail est un contrat meublé de 12 mois, renouvelable, avec un préavis de départ d'1 mois. C'est idéal pour les frontaliers qui s'installent durablement près de Genève.",
   },
   {
     q: "Les chambres sont-elles meublées ?",
@@ -80,8 +82,8 @@ export function ColocationGenevePage() {
         }
         description={
           language === "en"
-            ? "Premium shared housing 15 min from Geneva. 29 furnished all-inclusive rooms in 3 houses. Heated pool, gym, sauna. Ideal for cross-border workers, expats & young professionals."
-            : "Colocation premium à 15 min de Genève. 29 chambres meublées tout inclus dans 3 maisons. Piscine chauffée, gym, sauna. Idéal frontaliers, expats et jeunes professionnels."
+            ? "Premium shared housing 15 min from Geneva. 29 furnished all-inclusive rooms in 3 houses. Pool, gym, sauna. Ideal for cross-border workers, expats & young professionals."
+            : "Colocation premium à 15 min de Genève. 29 chambres meublées tout inclus dans 3 maisons. Piscine, gym, sauna. Idéal frontaliers, expats et jeunes professionnels."
         }
         url="https://www.lavillacoliving.com/colocation-geneve"
         image="https://www.lavillacoliving.com/images/villa_portrait.webp"
@@ -113,8 +115,8 @@ export function ColocationGenevePage() {
           </h1>
           <p className="text-lg md:text-xl text-[#666] max-w-3xl mx-auto mb-10 leading-relaxed">
             {language === "en"
-              ? "Live on the French side, work in Geneva. 29 fully furnished, all-inclusive rooms across 3 designer houses in Ville-la-Grand, Ambilly and Annemasse. Heated pool, gym, sauna, fiber internet — everything included."
-              : "Vivez côté France, travaillez à Genève. 29 chambres meublées tout inclus dans 3 maisons design à Ville-la-Grand, Ambilly et Annemasse. Piscine chauffée, gym, sauna, fibre optique — tout est compris."}
+              ? "Live on the French side, work in Geneva. 29 fully furnished, all-inclusive rooms across 3 designer houses in Ville-la-Grand, Ambilly and Annemasse. Pool, gym, sauna, fiber internet — everything included."
+              : "Vivez côté France, travaillez à Genève. 29 chambres meublées tout inclus dans 3 maisons design à Ville-la-Grand, Ambilly et Annemasse. Piscine, gym, sauna, fibre optique — tout est compris."}
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Link
@@ -181,8 +183,8 @@ export function ColocationGenevePage() {
               </h3>
               <p className="text-[#666] leading-relaxed mb-4">
                 {language === "en"
-                  ? "A studio in Geneva starts at 1,800 CHF/month — without furniture or services. At La Villa, you get a fully furnished room with pool, gym, sauna, cleaning, and community events from 1,380 CHF/month."
-                  : "Un studio à Genève coûte minimum 1 800 CHF/mois — sans meubles ni services. Chez La Villa, vous avez une chambre meublée avec piscine, gym, sauna, ménage et événements communautaires dès 1 380 CHF/mois."}
+                  ? "A studio in Geneva starts at 1,800 CHF/month — without furniture or services. At La Villa, you get a fully furnished room with pool, gym, sauna, cleaning 2x/week, weekly yoga & sports classes, monthly community events and meal baskets — from 1,380 CHF/month."
+                  : "Un studio à Genève coûte minimum 1 800 CHF/mois — sans meubles ni services. Chez La Villa, vous avez une chambre meublée avec piscine, gym, sauna, ménage 2x/semaine, cours de yoga et sport hebdomadaires, événements communautaires et paniers repas mensuels — dès 1 380 CHF/mois."}
               </p>
               <div className="bg-white p-4 border border-[#e5e5e5]">
                 <div className="flex justify-between items-center mb-2">
@@ -279,8 +281,8 @@ export function ColocationGenevePage() {
               </h3>
               <p className="text-[#666] leading-relaxed">
                 {language === "en"
-                  ? "Forget the isolation of a tiny studio. At La Villa, you live in designer houses with heated pool, gym, sauna, garden, coworking spaces, and a vibrant international community. Weekly yoga classes, community events, and everything is taken care of — cleaning, maintenance, streaming subscriptions."
-                  : "Oubliez l'isolement d'un petit studio. Chez La Villa, vous vivez dans des maisons design avec piscine chauffée, salle de sport, sauna, jardin, espaces coworking et une communauté internationale dynamique. Cours de yoga hebdomadaires, événements communautaires — ménage, entretien, abonnements streaming inclus."}
+                  ? "Forget the isolation of a tiny studio. At La Villa, you live in designer houses with pool, gym, sauna, garden, coworking spaces, and a vibrant international community. Weekly yoga & sports classes, monthly community events, monthly meal baskets — cleaning 2x/week, maintenance, streaming subscriptions all included."
+                  : "Oubliez l'isolement d'un petit studio. Chez La Villa, vous vivez dans des maisons design avec piscine, salle de sport, sauna, jardin, espaces coworking et une communauté internationale dynamique. Cours de yoga et sport hebdomadaires, événements communautaires mensuels, paniers repas mensuels — ménage 2x/semaine, entretien, abonnements streaming inclus."}
               </p>
             </div>
           </div>
@@ -321,8 +323,8 @@ export function ColocationGenevePage() {
                 </p>
                 <p className="text-sm text-[#666] mb-4">
                   {language === "en"
-                    ? "400m² designer house on 2,000m² estate. Heated pool, sauna, gym. 10 rooms."
-                    : "Maison design de 400m² sur domaine de 2 000m². Piscine chauffée, sauna, gym. 10 chambres."}
+                    ? "370m² designer house on 2,000m² estate. Heated pool, sauna, gym. 10 rooms."
+                    : "Maison design de 370m² sur domaine de 2 000m². Piscine chauffée, sauna, gym. 10 chambres."}
                 </p>
                 <div className="flex items-center gap-4 text-xs text-[#999]">
                   <span className="flex items-center gap-1"><Waves className="w-3 h-3" /> {language === "en" ? "Pool" : "Piscine"}</span>
@@ -348,8 +350,8 @@ export function ColocationGenevePage() {
                 </p>
                 <p className="text-sm text-[#666] mb-4">
                   {language === "en"
-                    ? "Charming townhouse with indoor pool, sauna, gym. Spacious designer rooms. 9 rooms."
-                    : "Maison de ville charmante avec piscine intérieure, sauna, gym. Chambres design spacieuses. 9 chambres."}
+                    ? "Charming townhouse with indoor pool, sauna, gym. Spacious designer rooms. 7 rooms."
+                    : "Maison de ville charmante avec piscine intérieure, sauna, gym. Chambres design spacieuses. 7 chambres."}
                 </p>
                 <div className="flex items-center gap-4 text-xs text-[#999]">
                   <span className="flex items-center gap-1"><Waves className="w-3 h-3" /> {language === "en" ? "Pool" : "Piscine"}</span>
@@ -364,7 +366,7 @@ export function ColocationGenevePage() {
               <div className="aspect-[4/3] overflow-hidden">
                 <img
                   src="/images/le lodge piscine.webp"
-                  alt="Le Lodge Coliving — colocation avec piscine et sauna à Annemasse, à 10 min de Genève"
+                  alt="Le Lodge Coliving — colocation avec piscine et salle de sport à Annemasse, à 10 min de Genève"
                   className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                 />
               </div>
@@ -375,8 +377,8 @@ export function ColocationGenevePage() {
                 </p>
                 <p className="text-sm text-[#666] mb-4">
                   {language === "en"
-                    ? "Spacious house near Annemasse centre. Pool, sauna, gym, large garden. 10 rooms."
-                    : "Maison spacieuse proche du centre d'Annemasse. Piscine, sauna, gym, grand jardin. 10 chambres."}
+                    ? "Spacious estate near Annemasse centre. Pool house, fitness chalet, large garden. 12 rooms."
+                    : "Domaine spacieux proche du centre d'Annemasse. Pool house, chalet fitness, grand jardin. 12 chambres."}
                 </p>
                 <div className="flex items-center gap-4 text-xs text-[#999]">
                   <span className="flex items-center gap-1"><Waves className="w-3 h-3" /> {language === "en" ? "Pool" : "Piscine"}</span>
@@ -421,12 +423,13 @@ export function ColocationGenevePage() {
               { icon: Home, label: language === "en" ? "Furnished private room" : "Chambre privée meublée" },
               { icon: Euro, label: language === "en" ? "Rent & all utilities" : "Loyer & toutes les charges" },
               { icon: Wifi, label: language === "en" ? "Pro fiber internet" : "Internet fibre Pro" },
-              { icon: Waves, label: language === "en" ? "Heated pool access" : "Accès piscine chauffée" },
+              { icon: Waves, label: language === "en" ? "Pool access" : "Accès piscine" },
               { icon: Dumbbell, label: language === "en" ? "Gym & sauna" : "Salle de sport & sauna" },
-              { icon: Star, label: language === "en" ? "Weekly yoga classes" : "Cours de yoga hebdomadaires" },
-              { icon: Users, label: language === "en" ? "Community events" : "Événements communautaires" },
-              { icon: Check, label: language === "en" ? "Weekly housekeeping" : "Ménage hebdomadaire" },
-              { icon: Shield, label: language === "en" ? "Streaming subscriptions" : "Abonnements streaming" },
+              { icon: Star, label: language === "en" ? "Weekly yoga & sports classes" : "Cours de yoga & sport hebdomadaires" },
+              { icon: Users, label: language === "en" ? "Monthly community events" : "Événements communautaires mensuels" },
+              { icon: Check, label: language === "en" ? "Housekeeping 2x/week" : "Ménage 2x/semaine" },
+              { icon: UtensilsCrossed, label: language === "en" ? "Monthly meal baskets" : "Paniers repas mensuels" },
+              { icon: Tv, label: language === "en" ? "Streaming subscriptions" : "Abonnements streaming" },
             ].map((item, i) => (
               <div key={i} className="flex items-center gap-4 p-4 bg-[#fafafa]">
                 <item.icon className="w-5 h-5 text-[#c44536] flex-shrink-0" />
@@ -534,13 +537,13 @@ export function ColocationGenevePage() {
                 {[
                   [language === "en" ? "Monthly cost" : "Coût mensuel", language === "en" ? "From 1,380 CHF (all-incl.)" : "Dès 1 380 CHF (tout compris)", "1 800 - 2 500 CHF + charges"],
                   [language === "en" ? "Furnished" : "Meublé", "✓ " + (language === "en" ? "Fully furnished" : "Entièrement meublé"), language === "en" ? "Usually unfurnished" : "Généralement non meublé"],
-                  [language === "en" ? "Pool" : "Piscine", "✓ " + (language === "en" ? "Heated pool" : "Piscine chauffée"), "✗"],
+                  [language === "en" ? "Pool" : "Piscine", "✓ " + (language === "en" ? "Pool included" : "Piscine incluse"), "✗"],
                   ["Gym / Sauna", "✓ " + (language === "en" ? "Included" : "Inclus"), "✗ " + (language === "en" ? "Extra 80-150 CHF/month" : "En plus : 80-150 CHF/mois")],
                   ["Internet", "✓ " + (language === "en" ? "Pro fiber included" : "Fibre Pro incluse"), "~50 CHF/" + (language === "en" ? "month" : "mois")],
-                  [language === "en" ? "Cleaning" : "Ménage", "✓ " + (language === "en" ? "Weekly, included" : "Hebdomadaire, inclus"), language === "en" ? "You manage" : "À votre charge"],
-                  [language === "en" ? "Community" : "Communauté", "✓ " + (language === "en" ? "Events, yoga, coworking" : "Événements, yoga, coworking"), "✗ " + (language === "en" ? "Isolated" : "Isolé")],
-                  [language === "en" ? "Flexibility" : "Flexibilité", language === "en" ? "From 3 months" : "Dès 3 mois", language === "en" ? "12+ months lease" : "Bail 12+ mois"],
-                  [language === "en" ? "Deposit" : "Caution", language === "en" ? "1 month" : "1 mois", language === "en" ? "3 months typical" : "3 mois généralement"],
+                  [language === "en" ? "Cleaning" : "Ménage", "✓ " + (language === "en" ? "2x/week, included" : "2x/semaine, inclus"), language === "en" ? "You manage" : "À votre charge"],
+                  [language === "en" ? "Community" : "Communauté", "✓ " + (language === "en" ? "Monthly events, yoga & sports, meal baskets" : "Événements mensuels, yoga & sport, paniers repas"), "✗ " + (language === "en" ? "Isolated" : "Isolé")],
+                  [language === "en" ? "Lease" : "Bail", language === "en" ? "12 months, renewable" : "12 mois, renouvelable", language === "en" ? "12+ months lease" : "Bail 12+ mois"],
+                  [language === "en" ? "Deposit" : "Caution", language === "en" ? "2 months" : "2 mois", language === "en" ? "3 months typical" : "3 mois généralement"],
                 ].map(([label, villa, studio], i) => (
                   <tr key={i} className={i % 2 === 0 ? "bg-white" : "bg-[#fafafa]"}>
                     <td className="border border-[#e5e5e5] px-6 py-3 font-medium text-[#1a1a1a]">{label}</td>
