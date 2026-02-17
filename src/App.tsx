@@ -12,6 +12,7 @@ import { JoinPageV4 as JoinPage } from "@/pages/JoinPageV4";
 import { HouseDetailPage } from "@/pages/HouseDetailPage";
 import { BlogPage } from "@/pages/BlogPage";
 import { BlogPostPage } from "@/pages/BlogPostPage";
+import { ColocationGenevePage } from "@/pages/ColocationGenevePage";
 import { NotFoundPage } from "@/pages/NotFoundPage";
 import { ScrollToTop } from "@/components/ScrollToTop";
 
@@ -24,6 +25,7 @@ function App() {
           <Navbar />
           <Routes>
             <Route path="/" element={<HomePage />} />
+            <Route path="/colocation-geneve" element={<ColocationGenevePage />} />
             <Route path="/the-coliving" element={<ColivingPage />} />
             <Route path="/services" element={<ServicesPage />} />
             <Route path="/our-houses" element={<HousesPage />} />

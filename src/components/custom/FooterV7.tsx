@@ -13,21 +13,24 @@ export function FooterV7() {
   const navLinks = [
     { path: "/", label: language === "en" ? "Home" : "Accueil" },
     {
+      path: "/colocation-geneve",
+      label: language === "en" ? "Shared Housing Geneva" : "Colocation Genève",
+    },
+    {
       path: "/the-coliving",
       label: language === "en" ? "The Coliving" : "Le Coliving",
     },
-    { path: "/services", label: language === "en" ? "Services" : "Services" },
     {
       path: "/our-houses",
       label: language === "en" ? "Our Houses" : "Nos Maisons",
     },
+    { path: "/services", label: language === "en" ? "Services" : "Services" },
     { path: "/rates", label: language === "en" ? "Rates" : "Tarifs" },
     { path: "/faq", label: "FAQ" },
     {
       path: "/join-us",
       label: language === "en" ? "Join us" : "Nous rejoindre",
     },
-    
     { path: "/blog", label: "Blog" },
   ];
 
