@@ -47,7 +47,7 @@ export function FooterV7() {
             <Link to="/" className="inline-block mb-6">
               <img
                 src="/logos/NEW Logo La Villa-12.png"
-                alt="La Villa Coliving"
+                alt="La Villa Coliving — colocation et coliving premium près de Genève"
                 className="h-20 w-auto brightness-0 invert"
               />
             </Link>

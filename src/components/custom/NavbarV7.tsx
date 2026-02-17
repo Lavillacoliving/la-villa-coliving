@@ -60,7 +60,7 @@ export function NavbarV7() {
           <Link to="/" className="flex items-center group">
             <img
               src="/logos/NEW Logo La Villa-14.png"
-              alt="La Villa Coliving"
+              alt="La Villa Coliving — colocation et coliving premium près de Genève"
               className="h-16 w-auto transition-transform duration-300 group-hover:scale-105"
             />
           </Link>

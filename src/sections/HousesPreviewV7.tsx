@@ -22,6 +22,9 @@ export function HousesPreviewV7() {
         language === "en"
           ? "Garden, pool & good vibes"
           : "Jardin, piscine & bonnes vibes",
+      alt: language === "en"
+        ? "La Villa — premium coliving house with garden and pool in Ville-la-Grand, near Geneva"
+        : "La Villa — maison de colocation premium avec jardin et piscine à Ville-la-Grand, près de Genève",
     },
     {
       id: "leloft",
@@ -34,6 +37,9 @@ export function HousesPreviewV7() {
         language === "en"
           ? "Urban style in the city center"
           : "Style urbain en centre-ville",
+      alt: language === "en"
+        ? "Le Loft — urban coliving house with indoor pool in Ambilly, near Geneva"
+        : "Le Loft — colocation urbaine avec piscine intérieure à Ambilly, près de Genève",
     },
     {
       id: "lelodge",
@@ -46,6 +52,9 @@ export function HousesPreviewV7() {
         language === "en"
           ? "Cozy retreat...in the middle of the city !"
           : "Refuge cosy...en pleine ville !",
+      alt: language === "en"
+        ? "Le Lodge — coliving house with pool and gym in Annemasse, 10 min from Geneva"
+        : "Le Lodge — maison de colocation avec piscine et salle de sport à Annemasse, 10 min de Genève",
     },
   ];
 
@@ -83,7 +92,7 @@ export function HousesPreviewV7() {
               <div className="relative aspect-[4/5] rounded-[2rem] overflow-hidden mb-6 shadow-[0_10px40px_rgba(124,154,109,0.1)]">
                 <img
                   src={house.image}
-                  alt={house.name}
+                  alt={house.alt}
                   className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" loading="lazy"
                 />
                 {/* Overlay */}

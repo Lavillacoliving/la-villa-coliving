@@ -58,7 +58,7 @@ export function ColivingPageV4() {
         <div className="absolute inset-0">
           <img
             src="/images/la villa jardin.webp"
-            alt="La Villa Coliving - Maison avec piscine"
+            alt={language === "en" ? "La Villa Coliving — premium coliving house with garden and pool near Geneva" : "La Villa Coliving — maison de colocation premium avec jardin et piscine près de Genève"}
             className="w-full h-full object-cover" loading="lazy"
           />
           <div className="absolute inset-0 bg-black/40" />
@@ -122,7 +122,7 @@ export function ColivingPageV4() {
                 {/* PHOTO 1 : ESPACE COMMUN LUMINEUX */}
                 <img
                   src="/images/la-villa-salon.webp"
-                  alt="Espace commun lumineux de La Villa - salon et cuisine ouverte"
+                  alt={language === "en" ? "Bright common space at La Villa — open kitchen and living room in coliving near Geneva" : "Espace commun lumineux de La Villa — salon et cuisine ouverte en colocation près de Genève"}
                   className="w-full h-full object-cover" loading="lazy"
                 />
               </div>
@@ -140,7 +140,7 @@ export function ColivingPageV4() {
               <div className="relative aspect-[4/3] bg-[#f5f5f5]">
                 <img
                   src="/images/le loft glamour.webp"
-                  alt="Modern living"
+                  alt={language === "en" ? "Le Loft — modern coliving interior design near Geneva" : "Le Loft — intérieur design de colocation moderne près de Genève"}
                   className="w-full h-full object-cover" loading="lazy"
                 />
               </div>
@@ -250,7 +250,7 @@ export function ColivingPageV4() {
               <div className="relative aspect-[4/3] bg-[#f5f5f5]">
                 <img
                   src="/images/la villa yoga.webp"
-                  alt="La Villa benefits"
+                  alt={language === "en" ? "Yoga class at La Villa Coliving — weekly wellness included in colocation near Geneva" : "Cours de yoga à La Villa Coliving — bien-être hebdomadaire inclus en colocation près de Genève"}
                   className="w-full h-full object-cover" loading="lazy"
                 />
               </div>
@@ -269,7 +269,7 @@ export function ColivingPageV4() {
               <div className="relative aspect-[4/3]">
                 <img
                   src="/images/espace-commun.webp"
-                  alt="Espace commun de La Villa - salon convivial et cuisine ouverte"
+                  alt={language === "en" ? "Shared living space at La Villa — friendly community atmosphere in coliving near Geneva" : "Espace de vie partagé à La Villa — ambiance communautaire conviviale en coliving près de Genève"}
                   className="w-full h-full object-cover" loading="lazy"
                 />
               </div>
@@ -335,7 +335,7 @@ export function ColivingPageV4() {
               <div className="relative aspect-[4/3] bg-[#f5f5f5]">
                 <img
                   src="/images/le lodge.webp"
-                  alt="Community members"
+                  alt={language === "en" ? "Le Lodge — coliving community for expats and cross-border workers near Geneva" : "Le Lodge — communauté coliving pour expats et frontaliers près de Genève"}
                   className="w-full h-full object-cover" loading="lazy"
                 />
               </div>

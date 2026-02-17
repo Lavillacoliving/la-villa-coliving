@@ -154,7 +154,7 @@ export function ServicesPageV4() {
         <div className="absolute inset-0">
           <img
             src="/images/le loft piscine_interieur_500x200.webp"
-            alt="Services"
+            alt={language === "en" ? "Le Loft indoor pool — all-inclusive coliving services near Geneva" : "Piscine intérieure du Loft — services colocation tout inclus près de Genève"}
             className="w-full h-full object-cover" loading="lazy"
           />
           <div className="absolute inset-0 bg-gradient-to-r from-[#1a1a1a]/90 via-[#1a1a1a]/70 to-transparent" />
@@ -457,7 +457,7 @@ export function ServicesPageV4() {
               <div className="relative aspect-[4/5] rounded-2xl overflow-hidden shadow-[0_20px60px_rgba(0,0,0,0.15)]">
                 <img
                   src="/images/Le loft salon.webp"
-                  alt="Premium living"
+                  alt={language === "en" ? "Le Loft modern living room — premium all-inclusive coliving near Geneva" : "Salon moderne du Loft — coliving premium tout inclus près de Genève"}
                   className="w-full h-full object-cover" loading="lazy"
                 />
               </div>

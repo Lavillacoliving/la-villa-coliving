@@ -1206,7 +1206,7 @@ export function HouseDetailPage() {
                 <div className="relative h-[50vh] md:h-[70vh]">
                   <img
                     src={img}
-                    alt={`${house.name} - Image ${index + 1}`}
+                    alt={`${house.name} coliving ${house.location} — ${language === "en" ? "premium colocation near Geneva" : "colocation premium près de Genève"} (${index + 1})`}
                     className="w-full h-full object-cover"
                     loading={index === 0 ? "eager" : "lazy"}
                   />
@@ -1456,7 +1456,7 @@ export function HouseDetailPage() {
                 <div className="relative h-48 overflow-hidden">
                   <img
                     src={room.image}
-                    alt={room.type}
+                    alt={`${room.type} — ${language === "en" ? "furnished room in" : "chambre meublée à"} ${house.name} coliving ${house.location}`}
                     className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
                     loading="lazy"
                   />

@@ -57,7 +57,7 @@ export function WhyChooseUsV7() {
             <div className="aspect-[4/3] rounded-[2rem] overflow-hidden shadow-[0_20px60px_rgba(124,154,109,0.12)]">
               <img
                 src="/images/le lodge living room.webp"
-                alt="La Villa Coliving"
+                alt={language === "en" ? "Le Lodge living room — premium coliving common space near Geneva" : "Salon du Lodge — espace commun coliving premium près de Genève"}
                 className="w-full h-full object-cover" loading="lazy"
               />
             </div>

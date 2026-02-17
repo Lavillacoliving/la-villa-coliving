@@ -143,6 +143,9 @@ export function RatesPageV4() {
       name: "La Villa",
       location: "Ville-la-Grand",
       image: "/images/villa_portrait.webp",
+      alt: language === "en"
+        ? "La Villa coliving Ville-la-Grand — all-inclusive furnished rooms from 1,380 CHF near Geneva"
+        : "La Villa coliving Ville-la-Grand — chambres meublées tout inclus dès 1 380 CHF près de Genève",
       description:
         language === "en"
           ? "Elegant villa with pool & garden"
@@ -152,6 +155,9 @@ export function RatesPageV4() {
       name: "Le Loft",
       location: "Ambilly",
       image: "/images/le loft jardin.webp",
+      alt: language === "en"
+        ? "Le Loft coliving Ambilly — all-inclusive furnished rooms from 1,380 CHF near Geneva"
+        : "Le Loft coliving Ambilly — chambres meublées tout inclus dès 1 380 CHF près de Genève",
       description:
         language === "en"
           ? "Modern loft with big rooms"
@@ -161,6 +167,9 @@ export function RatesPageV4() {
       name: "Le Lodge",
       location: "Annemasse",
       image: "/images/le lodge piscine.webp",
+      alt: language === "en"
+        ? "Le Lodge coliving Annemasse — all-inclusive furnished rooms from 1,380 CHF near Geneva"
+        : "Le Lodge coliving Annemasse — chambres meublées tout inclus dès 1 380 CHF près de Genève",
       description:
         language === "en"
           ? "Calm & Cozy lodge in the city center"
@@ -502,7 +511,7 @@ export function RatesPageV4() {
                 <div className="relative h-64 overflow-hidden">
                   <img
                     src={house.image}
-                    alt={house.name}
+                    alt={house.alt}
                     className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" loading="lazy"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />

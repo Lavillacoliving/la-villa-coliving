@@ -131,7 +131,7 @@ export function HeroV7() {
               <div className="relative aspect-[4/5] rounded-[2rem] overflow-hidden shadow-[0_20px60px_rgba(124,154,109,0.15)]">
                 <img
                   src="/images/la villa jardin.webp"
-                  alt="La Villa Coliving"
+                  alt="La Villa Coliving — colocation premium avec jardin et piscine près de Genève"
                   className="w-full h-full object-cover"
                 />
                 {/* Soft overlay */}
@@ -236,6 +236,7 @@ export function HeroV7() {
                 icon: "",
                 image: "/images/le loft glamour.webp",
                 title: language === "en" ? "Human Scale" : "Taille Humaine",
+                alt: language === "en" ? "Le Loft Ambilly — intimate premium coliving near Geneva, 12 residents max" : "Le Loft Ambilly — coliving premium intimiste près de Genève, 12 résidents max",
                 desc:
                   language === "en"
                     ? "12 colivers maximum"
@@ -248,6 +249,7 @@ export function HeroV7() {
                 icon: "",
                 image: "/images/la villa coliving le loft piscine.webp",
                 title: language === "en" ? "Swimming Pool" : "Piscine",
+                alt: language === "en" ? "Indoor swimming pool at Le Loft coliving house near Geneva" : "Piscine intérieure du Loft, maison de colocation près de Genève",
                 desc:
                   language === "en"
                     ? "Indoor or outdoor"
@@ -260,6 +262,7 @@ export function HeroV7() {
                 icon: "",
                 image: "/images/la villa coliving le lodge-sauna2.webp",
                 title: "Sauna",
+                alt: language === "en" ? "Sauna at Le Lodge coliving — wellness included in Geneva area colocation" : "Sauna du Lodge coliving — bien-être inclus dans la colocation près de Genève",
                 desc:
                   language === "en"
                     ? "Wellness & recovery"
@@ -272,6 +275,7 @@ export function HeroV7() {
                 icon: "",
                 image: "/images/la villa coliving le lodge-gym.webp",
                 title: language === "en" ? "Gym" : "Salle de Sport",
+                alt: language === "en" ? "Fully equipped gym at Le Lodge coliving Annemasse, near Geneva" : "Salle de sport équipée du Lodge coliving Annemasse, près de Genève",
                 desc:
                   language === "en" ? "Fully equipped" : "Entièrement équipée",
                 highlight: language === "en" ? "Stay Active" : "Restez Actif",
@@ -281,6 +285,7 @@ export function HeroV7() {
                 icon: "",
                 image: "/images/la villa yoga.webp",
                 title: language === "en" ? "Community Events" : "Événements",
+                alt: language === "en" ? "Yoga class and community events at La Villa Coliving near Geneva" : "Cours de yoga et événements communautaires à La Villa Coliving près de Genève",
                 desc:
                   language === "en"
                     ? "Yoga, dinners & more"
@@ -295,7 +300,7 @@ export function HeroV7() {
                   {/* Image */}
                   <img
                     src={item.image}
-                    alt={item.title}
+                    alt={item.alt}
                     className="w-full h-full object-cover opacity-80 group-hover:opacity-100 group-hover:scale-105 transition-all duration-500"
                   />
                   {/* Gradient overlay - plus transparent */}

@@ -16,6 +16,9 @@ export function HousesPageV4() {
           ? "400m² of designed living on a 2000m² estate bordering a nature reserve. Heated pool, sauna, gym, and more."
           : "400m² de vie design sur un domaine de 2000m² bordant une réserve naturelle. Piscine chauffée, sauna, gym et plus.",
       image: "/images/la villa.webp",
+      alt: language === "en"
+        ? "La Villa — premium coliving with heated pool, gym and sauna in Ville-la-Grand near Geneva"
+        : "La Villa — colocation premium avec piscine chauffée, gym et sauna à Ville-la-Grand près de Genève",
       capacity: "10",
       price: "1,380",
       available: true,
@@ -29,6 +32,9 @@ export function HousesPageV4() {
           ? "A charming townhouse with urban sophistication. Indoor pool, sauna, gym, and spacious designer rooms."
           : "Une maison de ville charmante avec sophistication urbaine. Piscine intérieure, sauna, gym et chambres design spacieuses.",
       image: "/images/le loft jardin.webp",
+      alt: language === "en"
+        ? "Le Loft — urban coliving with indoor pool and designer rooms in Ambilly near Geneva"
+        : "Le Loft — colocation urbaine avec piscine intérieure et chambres design à Ambilly près de Genève",
       capacity: "7",
       price: "1,380",
       available: true,
@@ -42,6 +48,9 @@ export function HousesPageV4() {
           ? "Our newest and largest home. Outdoor pool, fitness chalet, pool house, and expansive gardens."
           : "Notre maison la plus récente et la plus grande. Piscine extérieure, chalet fitness, pool house et jardins spacieux.",
       image: "/images/le lodge.webp",
+      alt: language === "en"
+        ? "Le Lodge — coliving with pool, gym and gardens in Annemasse, 10 min from Geneva"
+        : "Le Lodge — colocation avec piscine, gym et jardins à Annemasse, 10 min de Genève",
       capacity: "12",
       price: "1,380",
       available: false,
@@ -104,7 +113,7 @@ export function HousesPageV4() {
                     <div className="relative aspect-[4/3] bg-[#f5f5f5] overflow-hidden">
                       <img
                         src={house.image}
-                        alt={house.name}
+                        alt={house.alt}
                         className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" loading="lazy"
                       />
                       {house.badge && (
