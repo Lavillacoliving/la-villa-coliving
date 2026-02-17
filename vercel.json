@@ -70,6 +70,31 @@
       "source": "/location",
       "destination": "/our-houses",
       "permanent": true
+    },
+    {
+      "source": "/colocation-geneva",
+      "destination": "/colocation-geneve",
+      "permanent": true
+    },
+    {
+      "source": "/colocation",
+      "destination": "/colocation-geneve",
+      "permanent": true
+    },
+    {
+      "source": "/coliving-geneve",
+      "destination": "/colocation-geneve",
+      "permanent": true
+    },
+    {
+      "source": "/coliving-geneva",
+      "destination": "/colocation-geneve",
+      "permanent": true
+    },
+    {
+      "source": "/fr/colocation-geneve",
+      "destination": "/colocation-geneve",
+      "permanent": true
     }
   ],
   "headers": [
