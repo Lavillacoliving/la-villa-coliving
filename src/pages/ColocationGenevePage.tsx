@@ -313,7 +313,7 @@ export function ColocationGenevePage() {
                 <img
                   src="/images/la villa jardin.webp"
                   alt="La Villa Coliving — colocation premium avec piscine chauffée à Ville-la-Grand, près de Genève"
-                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" loading="lazy"
                 />
               </div>
               <div className="p-6">
@@ -340,7 +340,7 @@ export function ColocationGenevePage() {
                 <img
                   src="/images/le loft glamour.webp"
                   alt="Le Loft Coliving — colocation moderne avec piscine intérieure à Ambilly, près de Genève"
-                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" loading="lazy"
                 />
               </div>
               <div className="p-6">
@@ -367,7 +367,7 @@ export function ColocationGenevePage() {
                 <img
                   src="/images/le lodge piscine.webp"
                   alt="Le Lodge Coliving — colocation avec piscine et salle de sport à Annemasse, à 10 min de Genève"
-                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" loading="lazy"
                 />
               </div>
               <div className="p-6">

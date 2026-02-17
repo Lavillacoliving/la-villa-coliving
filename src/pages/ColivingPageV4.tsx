@@ -59,7 +59,7 @@ export function ColivingPageV4() {
           <img
             src="/images/la villa jardin.webp"
             alt="La Villa Coliving - Maison avec piscine"
-            className="w-full h-full object-cover"
+            className="w-full h-full object-cover" loading="lazy"
           />
           <div className="absolute inset-0 bg-black/40" />
         </div>
@@ -121,9 +121,9 @@ export function ColivingPageV4() {
               <div className="relative aspect-[4/3] bg-[#f5f5f5]">
                 {/* PHOTO 1 : ESPACE COMMUN LUMINEUX */}
                 <img
-                  src="/images/la-villa-salon.jpg"
+                  src="/images/la-villa-salon.webp"
                   alt="Espace commun lumineux de La Villa - salon et cuisine ouverte"
-                  className="w-full h-full object-cover"
+                  className="w-full h-full object-cover" loading="lazy"
                 />
               </div>
             </div>
@@ -141,7 +141,7 @@ export function ColivingPageV4() {
                 <img
                   src="/images/le loft glamour.webp"
                   alt="Modern living"
-                  className="w-full h-full object-cover"
+                  className="w-full h-full object-cover" loading="lazy"
                 />
               </div>
             </div>
@@ -251,7 +251,7 @@ export function ColivingPageV4() {
                 <img
                   src="/images/la villa yoga.webp"
                   alt="La Villa benefits"
-                  className="w-full h-full object-cover"
+                  className="w-full h-full object-cover" loading="lazy"
                 />
               </div>
             </div>
@@ -268,9 +268,9 @@ export function ColivingPageV4() {
               <div className="absolute -inset-4 border border-[#e5e5e5]" />
               <div className="relative aspect-[4/3]">
                 <img
-                  src="/images/espace-commun.jpg"
+                  src="/images/espace-commun.webp"
                   alt="Espace commun de La Villa - salon convivial et cuisine ouverte"
-                  className="w-full h-full object-cover"
+                  className="w-full h-full object-cover" loading="lazy"
                 />
               </div>
             </div>
@@ -336,7 +336,7 @@ export function ColivingPageV4() {
                 <img
                   src="/images/le lodge.webp"
                   alt="Community members"
-                  className="w-full h-full object-cover"
+                  className="w-full h-full object-cover" loading="lazy"
                 />
               </div>
             </div>

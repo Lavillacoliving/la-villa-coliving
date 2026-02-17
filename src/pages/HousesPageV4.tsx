@@ -15,7 +15,7 @@ export function HousesPageV4() {
         language === "en"
           ? "400m² of designed living on a 2000m² estate bordering a nature reserve. Heated pool, sauna, gym, and more."
           : "400m² de vie design sur un domaine de 2000m² bordant une réserve naturelle. Piscine chauffée, sauna, gym et plus.",
-      image: "/images/la villa.png",
+      image: "/images/la villa.webp",
       capacity: "10",
       price: "1,380",
       available: true,
@@ -105,7 +105,7 @@ export function HousesPageV4() {
                       <img
                         src={house.image}
                         alt={house.name}
-                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
+                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" loading="lazy"
                       />
                       {house.badge && (
                         <div className="absolute top-4 left-4 px-4 py-2 bg-[#1a1a1a] text-white text-xs uppercase tracking-wider">

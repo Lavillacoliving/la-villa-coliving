@@ -59,7 +59,7 @@ export const blogPosts: BlogPost[] = [
     author: "La Villa Team",
     date: "2025-02-01",
     category: "lifestyle",
-    image: "/images/la villa event.jpg",
+    image: "/images/la villa event.webp",
     readTime: 7,
   },
 ];

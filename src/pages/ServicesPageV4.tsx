@@ -76,7 +76,7 @@ export function ServicesPageV4() {
         {
           key: "support",
           icon: MessageCircle,
-          image: "/images/logo-whatsapp-histoire.jpg.webp",
+          image: "/images/logo-whatsapp-histoire.webp.webp",
           highlight:
             language === "en" ? "< 48h response" : "Réponse en 48h max.",
         },
@@ -106,7 +106,7 @@ export function ServicesPageV4() {
         {
           key: "community",
           icon: UtensilsCrossed,
-          image: "/images/la villa event.jpg",
+          image: "/images/la villa event.webp",
           highlight: language === "en" ? "Yoga & dinners" : "Yoga & dîners",
         },
       ],
@@ -155,7 +155,7 @@ export function ServicesPageV4() {
           <img
             src="/images/le loft piscine_interieur_500x200.webp"
             alt="Services"
-            className="w-full h-full object-cover"
+            className="w-full h-full object-cover" loading="lazy"
           />
           <div className="absolute inset-0 bg-gradient-to-r from-[#1a1a1a]/90 via-[#1a1a1a]/70 to-transparent" />
         </div>
@@ -337,7 +337,7 @@ export function ServicesPageV4() {
                         <img
                           src={service.image}
                           alt={data.title}
-                          className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
+                          className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" loading="lazy"
                         />
                         <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent" />
 
@@ -458,7 +458,7 @@ export function ServicesPageV4() {
                 <img
                   src="/images/Le loft salon.webp"
                   alt="Premium living"
-                  className="w-full h-full object-cover"
+                  className="w-full h-full object-cover" loading="lazy"
                 />
               </div>
               {/* Floating badge */}

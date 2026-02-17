@@ -127,7 +127,7 @@ export function BlogPostPage() {
           </div>
           {post.image_url && (
             <div className="mb-10 overflow-hidden">
-              <img src={post.image_url} alt={title} className="w-full h-auto object-cover" />
+              <img src={post.image_url} alt={title} className="w-full h-auto object-cover" loading="lazy" />
             </div>
           )}
 

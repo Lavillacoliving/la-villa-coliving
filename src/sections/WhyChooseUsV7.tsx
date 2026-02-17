@@ -58,7 +58,7 @@ export function WhyChooseUsV7() {
               <img
                 src="/images/le lodge living room.webp"
                 alt="La Villa Coliving"
-                className="w-full h-full object-cover"
+                className="w-full h-full object-cover" loading="lazy"
               />
             </div>
             {/* Floating card */}

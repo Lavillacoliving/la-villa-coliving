@@ -100,7 +100,7 @@ export function BlogPage() {
                 <Link to={`/blog/${post.slug}`} key={post.id} className="group bg-white border border-[#e5e5e5] overflow-hidden transition-all duration-300 hover:border-[#c44536]/30 hover:shadow-lg">
                   <div className="aspect-[16/10] overflow-hidden bg-[#f5f5f5]">
                     {post.image_url ? (
-                      <img src={post.image_url} alt={gT(post)} className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" />
+                      <img src={post.image_url} alt={gT(post)} className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" loading="lazy" />
                     ) : (
                       <div className="w-full h-full flex items-center justify-center text-[#ccc] text-4xl">&#128221;</div>
                     )}

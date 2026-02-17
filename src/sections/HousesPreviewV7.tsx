@@ -84,7 +84,7 @@ export function HousesPreviewV7() {
                 <img
                   src={house.image}
                   alt={house.name}
-                  className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+                  className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" loading="lazy"
                 />
                 {/* Overlay */}
                 <div className="absolute inset-0 bg-gradient-to-t from-[#3d4a38]/50 via-transparent to-transparent" />

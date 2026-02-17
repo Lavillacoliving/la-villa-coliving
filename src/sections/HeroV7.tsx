@@ -246,7 +246,7 @@ export function HeroV7() {
               },
               {
                 icon: "",
-                image: "/images/la villa coliving le loft piscine.jpg",
+                image: "/images/la villa coliving le loft piscine.webp",
                 title: language === "en" ? "Swimming Pool" : "Piscine",
                 desc:
                   language === "en"
@@ -258,7 +258,7 @@ export function HeroV7() {
               },
               {
                 icon: "",
-                image: "/images/la villa coliving le lodge-sauna2.jpg",
+                image: "/images/la villa coliving le lodge-sauna2.webp",
                 title: "Sauna",
                 desc:
                   language === "en"
@@ -270,7 +270,7 @@ export function HeroV7() {
               },
               {
                 icon: "",
-                image: "/images/la villa coliving le lodge-gym.jpg",
+                image: "/images/la villa coliving le lodge-gym.webp",
                 title: language === "en" ? "Gym" : "Salle de Sport",
                 desc:
                   language === "en" ? "Fully equipped" : "Entièrement équipée",
