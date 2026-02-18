@@ -291,7 +291,7 @@ export function ColivingPageV4() {
               <p className="text-lg text-[#666] leading-relaxed mb-6">
                 {language === "en"
                   ? "At La Villa, our residents become family. Shared dinners, yoga mornings, ski weekends—our community creates bonds that last far beyond your stay."
-                  : "Chez La Villa, nos résidents deviennent famille. Dîners partagés, yoga matinal, weekends au ski—notre communauté crée des liens qui durent bien au-delà de votre séjour."}
+                  : "Chez La Villa, nos résidents deviennent famille. Dîners partagés, yoga matinal, weekends au ski—notre communauté crée des liens qui durent bien au-delà de ton séjour."}
               </p>
 
               {/* Stats au lieu de portraits */}
@@ -343,7 +343,7 @@ export function ColivingPageV4() {
 
             <div className="order-1 lg:order-2">
               <span className="text-xs text-[#999] uppercase tracking-[0.3em] mb-4 block">
-                {language === "en" ? "For You?" : "Pour Vous ?"}
+                {language === "en" ? "For You?" : "Pour Toi ?"}
               </span>
               <h2
                 className="text-4xl md:text-5xl font-light text-[#1a1a1a] mb-6"

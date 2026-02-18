@@ -7,23 +7,23 @@ export function TrustBadges() {
   const badges = [
     {
       icon: Users,
-      value: '50+',
-      label: t.trustBadges.members,
+      value: '127',
+      label: t.trustBadges.badge1.title,
     },
     {
       icon: Star,
       value: '4.9/5',
-      label: t.trustBadges.rating,
+      label: t.trustBadges.badge2.title,
     },
     {
       icon: Clock,
-      value: '30min',
-      label: t.trustBadges.commute,
+      value: '20min',
+      label: t.trustBadges.badge3.title,
     },
     {
       icon: Home,
       value: '3',
-      label: t.trustBadges.houses,
+      label: t.trustBadges.badge4.title,
     },
   ];
 

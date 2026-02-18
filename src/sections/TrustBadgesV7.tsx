@@ -12,34 +12,34 @@ export function TrustBadgesV7() {
   const badges = [
     {
       icon: Shield,
-      emoji: "🔒",
+      emoji: "\uD83D\uDD12",
       title:
         language === "en"
-          ? "No stress,No Surprise"
-          : "Aucun Stress, Aucune Surprise",
+          ? "Zero Surprise"
+          : "Z\u00E9ro surprise",
       description:
         language === "en"
-          ? "All bills included"
-          : "Tout est inclus dans le loyer",
+          ? "Everything's in the rent. Period."
+          : "Tout est dans le loyer, point.",
     },
     {
       icon: Users,
-      emoji: "🤝",
-      title: language === "en" ? "Instant Friends" : "Amitiés Instantanées",
+      emoji: "\uD83E\uDD1D",
+      title: language === "en" ? "Your Tribe, Day 1" : "Ta tribu, d\u00E8s le jour 1",
       description:
-        language === "en" ? "Curated Community" : "Communauté Sélectionnée",
+        language === "en" ? "Curated community of pros" : "Communaut\u00E9 s\u00E9lectionn\u00E9e de pros",
     },
     {
       icon: Home,
-      emoji: "🏠",
-      title: language === "en" ? "Move-in Ready" : "Prêt à Emménager",
-      description: language === "en" ? "Fully Furnished" : "Entièrement Meublé",
+      emoji: "\uD83C\uDFE0",
+      title: language === "en" ? "Drop Your Bags" : "Pose ta valise",
+      description: language === "en" ? "Fully furnished, move-in ready" : "Enti\u00E8rement meubl\u00E9, pr\u00EAt \u00E0 vivre",
     },
     {
       icon: Zap,
-      emoji: "⚡",
-      title: language === "en" ? "Fast WiFi" : "WiFi Rapide",
-      description: language === "en" ? "Pro Fiber Optic" : "Pro Fibre Optique",
+      emoji: "\u26A1",
+      title: language === "en" ? "Pro Fiber" : "Fibre Pro",
+      description: language === "en" ? "Symmetric, unlimited, included" : "Sym\u00E9trique, illimit\u00E9e, incluse",
     },
   ];
 

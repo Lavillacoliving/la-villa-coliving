@@ -134,9 +134,8 @@ export function FooterV7() {
           <p className="text-[#7c8a72] text-sm">
             &copy; {new Date().getFullYear()} La Villa Coliving.{" "}
             {language === "en"
-              ? "Made in Grand Genève"
-              : "Fait au Grand Genève"}{" "}
-            {language === "en" ? "with love ❤️" : "avec amour ❤️"}
+              ? "Made in Grand Gen\u00E8ve with love"
+              : "Fait au Grand Gen\u00E8ve avec amour"}
           </p>
           <p className="text-[#7c8a72] text-sm">
             {language === "en"

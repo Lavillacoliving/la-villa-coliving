@@ -90,7 +90,7 @@ export function HousesPageV4() {
           <p className="text-xl text-[#666] max-w-2xl mx-auto">
             {language === "en"
               ? "Each designed for modern community living. Choose the one that fits your lifestyle."
-              : "Chacune conçue pour la vie communautaire moderne. Choisissez celle qui correspond à votre style de vie."}
+              : "Chacune conçue pour la vie communautaire moderne. Choisis celle qui correspond à ton style de vie."}
           </p>
         </div>
       </section>
@@ -198,7 +198,7 @@ export function HousesPageV4() {
           <p className="text-lg text-[#666] max-w-xl mx-auto mb-8">
             {language === "en"
               ? "Contact us and we'll help you find the perfect home for your lifestyle."
-              : "Contactez-nous et nous vous aiderons à trouver la maison parfaite pour votre style de vie."}
+              : "Contacte-nous et on t'aidera à trouver la maison parfaite pour ton style de vie."}
           </p>
           <Link
             to="/faq"

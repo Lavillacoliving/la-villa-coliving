@@ -20,8 +20,8 @@ export function HousesPreviewV7() {
       image: "/images/villa_portrait.webp",
       description:
         language === "en"
-          ? "Garden, pool & good vibes"
-          : "Jardin, piscine & bonnes vibes",
+          ? "10 rooms \u2022 The pioneer with pool"
+          : "10 chambres \u2022 La pionni\u00E8re avec piscine",
       alt: language === "en"
         ? "La Villa — premium coliving house with garden and pool in Ville-la-Grand, near Geneva"
         : "La Villa — maison de colocation premium avec jardin et piscine à Ville-la-Grand, près de Genève",
@@ -35,8 +35,8 @@ export function HousesPreviewV7() {
       image: "/images/le loft jardin.webp",
       description:
         language === "en"
-          ? "Urban style in the city center"
-          : "Style urbain en centre-ville",
+          ? "7 rooms \u2022 Urban style with sauna"
+          : "7 chambres \u2022 L\u2019urbain avec sauna",
       alt: language === "en"
         ? "Le Loft — urban coliving house with indoor pool in Ambilly, near Geneva"
         : "Le Loft — colocation urbaine avec piscine intérieure à Ambilly, près de Genève",
@@ -50,8 +50,8 @@ export function HousesPreviewV7() {
       image: "/images/le lodge piscine.webp",
       description:
         language === "en"
-          ? "Cozy retreat...in the middle of the city !"
-          : "Refuge cosy...en pleine ville !",
+          ? "12 rooms \u2022 The new, the grand"
+          : "12 chambres \u2022 Le nouveau, le grand",
       alt: language === "en"
         ? "Le Lodge — coliving house with pool and gym in Annemasse, 10 min from Geneva"
         : "Le Lodge — maison de colocation avec piscine et salle de sport à Annemasse, 10 min de Genève",
