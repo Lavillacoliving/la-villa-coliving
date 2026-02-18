@@ -66,7 +66,7 @@ export function NavbarV7() {
           </Link>
 
           {/* Desktop Navigation - style plus léger */}
-          <div className="hidden lg:flex items-center gap-8">
+          <div className="hidden lg:flex items-center gap-5">
             {navLinks.map((link) => (
               <Link
                 key={link.path}
@@ -83,7 +83,7 @@ export function NavbarV7() {
           </div>
 
           {/* Right Section */}
-          <div className="hidden lg:flex items-center gap-6">
+          <div className="hidden lg:flex items-center gap-4">
             {/* Language Toggle */}
             <button
               onClick={toggleLanguage}
