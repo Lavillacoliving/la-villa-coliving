@@ -93,7 +93,7 @@ export const faqData: FAQItem[] = [
       fr: 'Le coliving est-il cher ?',
     },
     answer: {
-      en: 'When you factor in all costs—rent, utilities, internet, furniture, gym membership, cleaning services, and entertainment—coliving is often more economical than traditional renting. At La Villa, our all-inclusive rates start from 1,380 CHF/month, which is competitive with Geneva studio prices while offering significantly more value and amenities.',
+      en: 'When you factor in all costs—rent, utilities, internet, furniture, gym membership, cleaning services, and entertainment—coliving is often more economical than traditional renting. At La Villa, our all-inclusive rates start from 1,380 CHF/month, which is competitive with Geneva studio prices while including: heated pool, gym, sauna, weekly yoga classes, parking, monthly Pizza Party, meal baskets, streaming subscriptions, and more.',
       fr: 'Quand vous prenez en compte tous les coûts—loyer, charges, internet, meubles, abonnement de salle de sport, services de ménage et divertissement—le coliving est souvent plus économique que la location traditionnelle. Chez La Villa, nos tarifs tout inclus commencent à 1 380 CHF/mois, ce qui est compétitif avec les prix des studios à Genève tout en offrant beaucoup plus de valeur et d\'équipements.',
     },
   },
@@ -425,8 +425,8 @@ export const faqData: FAQItem[] = [
       fr: 'Les animaux sont-ils acceptés ?',
     },
     answer: {
-      en: 'Unfortunately, we cannot accommodate pets at La Villa due to the shared nature of our living spaces and potential allergies among residents. We appreciate your understanding on this matter.',
-      fr: 'Malheureusement, nous ne pouvons pas accommoder d\'animaux chez La Villa en raison de la nature partagée de nos espaces de vie et des allergies potentielles parmi les résidents. Nous apprécions votre compréhension sur ce point.',
+      en: 'Pets are considered on a case-by-case basis. For small pets, it's often possible — we check with current housemates first, especially regarding allergies. Just let us know what kind of pet you have and we'll look into it!',
+      fr: 'Les animaux sont acceptés au cas par cas. Pour les petits animaux de compagnie, c\'est souvent possible \u2014 on vérifie d\'abord avec les colocs actuels, notamment pour les questions d\'allergies. Dis-nous quel type d\'animal tu as et on se renseigne !',
     },
   },
   {

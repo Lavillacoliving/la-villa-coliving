@@ -107,7 +107,7 @@ export function ServicesPageV4() {
           key: "community",
           icon: UtensilsCrossed,
           image: "/images/la villa event.webp",
-          highlight: language === "en" ? "Yoga & dinners" : "Yoga & dîners",
+          highlight: language === "en" ? "Yoga, Pizza Party & more" : "Yoga, Pizza Party & plus",
         },
       ],
     },

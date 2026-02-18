@@ -91,8 +91,8 @@ export function HeroV7() {
                   className="group inline-flex items-center gap-3 px-8 py-4 bg-[#7c9a6d] text-white font-medium rounded-full hover:bg-[#6b8560] transition-all duration-300 hover:shadow-[0_8px30px_rgba(124,154,109,0.35)]"
                 >
                   {language === "en"
-                    ? "Shared housing near Geneva"
-                    : "Colocation près de Genève"}
+                    ? "Shared housing in Grand Genève, France"
+                    : "Colocation au Grand Genève, côté France"}
                   <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform duration-300" />
                 </Link>
 

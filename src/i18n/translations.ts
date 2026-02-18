@@ -90,7 +90,7 @@ export const translations = {
     about: {
       title: "About La Villa",
       description:
-        "La Villa brings together like-minded people in exceptional homes just 30 minutes from Geneva's city center (15 minutes from Eaux-Vives or Champel).",
+        "La Villa brings together like-minded people in exceptional homes on the French side of Grand Genève, just 15-30 minutes from Geneva center.",
       description2:
         "Our community is built on shared values: openness, collaboration, and genuine enthusiasm for collective living. Every member is carefully selected to ensure the perfect fit.",
       cta: "Learn About Our Houses",
@@ -110,7 +110,7 @@ export const translations = {
       },
       location: {
         title: "Prime Location",
-        description: "20 min to Geneva center | 45 min to the Alps",
+        description: "Grand Genève, France | 20 min to Geneva | 45 min to Alps",
       },
       comfort: {
         title: "Private Comfort",
@@ -196,7 +196,7 @@ export const translations = {
 
     // Footer
     footer: {
-      tagline: "Premium coliving near Geneva",
+      tagline: "Premium coliving in Grand Genève, France",
       contact: "Contact",
       followUs: "Follow Us",
       rights: "All rights reserved.",
@@ -225,7 +225,7 @@ export const translations = {
       difference: {
         title: "Our Curated Coliving Community",
         description:
-          "We bring together 7 to 12 carefully selected members in thoughtfully designed homes, just 20 minutes from Geneva's heart. Every detail—from the furniture to the community events—is intentional.",
+          "We bring together 7 to 12 carefully selected members in thoughtfully designed homes, on the French side, just 20 minutes from Geneva. Every detail—from the furniture to the community events—is intentional.",
         description2:
           "This isn't just shared housing. It's a lifestyle upgrade designed for modern professionals who refuse to compromise on quality, community, or convenience.",
       },
@@ -511,7 +511,7 @@ export const translations = {
     about: {
       title: "À Propos de La Villa",
       description:
-        "La Villa réunit des personnes partageant les mêmes valeurs dans des maisons exceptionnelles à seulement 30 minutes du centre de Genève (15 minutes d'Eaux-Vives ou Champel).",
+        "La Villa réunit des personnes partageant les mêmes valeurs dans des maisons exceptionnelles côté France, dans le Grand Genève, à seulement 15-30 min du centre de Genève.",
       description2:
         "Notre communauté repose sur des valeurs communes : ouverture, collaboration et enthousiasme authentique pour la vie collective. Chaque membre est soigneusement sélectionné pour garantir une parfaite harmonie.",
       cta: "Découvrir Nos Maisons",
@@ -531,7 +531,7 @@ export const translations = {
       },
       location: {
         title: "Emplacement Privilégié",
-        description: "30 min du centre de Genève | 45 min des Alpes",
+        description: "Grand Genève, côté France | 30 min de Genève | 45 min des Alpes",
       },
       comfort: {
         title: "Confort Privé",
@@ -619,7 +619,7 @@ export const translations = {
 
     // Footer
     footer: {
-      tagline: "Coliving premium près de Genève",
+      tagline: "Coliving premium au Grand Genève, côté France",
       contact: "Contact",
       followUs: "Suivez-Nous",
       rights: "Tous droits réservés.",
@@ -648,7 +648,7 @@ export const translations = {
       difference: {
         title: "Notre Communauté Coliving Sélectionnée",
         description:
-          "Nous réunissons 7 à 12 membres soigneusement sélectionnés dans des maisons pensées dans les moindres détails, à seulement 20 minutes du cœur de Genève. Chaque détail—du mobilier aux événements communautaires—est intentionnel.",
+          "Nous réunissons 7 à 12 membres soigneusement sélectionnés dans des maisons pensées dans les moindres détails, à seulement 20 minutes de Genève, côté France. Chaque détail—du mobilier aux événements communautaires—est intentionnel.",
         description2:
           "Ce n'est pas juste une colocation. C'est une véritable élévation de mode de vie conçue pour les professionnels qui refusent de compromettre sur la qualité, la communauté ou la commodité.",
       },
