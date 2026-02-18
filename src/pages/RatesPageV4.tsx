@@ -189,7 +189,7 @@ export function RatesPageV4() {
         title={language === "en" ? "Rates — All-Inclusive Coliving from 1,380 CHF/month" : "Tarifs Colocation Genève — Tout Inclus dès 1 380 CHF/mois"}
         description={language === "en"
           ? "Transparent all-inclusive coliving pricing near Geneva from 1,380 CHF/month. Rent, utilities, gym, pool, sauna, yoga, internet, cleaning — everything included. Compare with Geneva studios."
-          : "Tarifs colocation tout inclus près de Genève dès 1 380 CHF/mois. Loyer, charges, gym, piscine, sauna, yoga, internet, ménage — tout compris. Comparez avec les studios à Genève."}
+          : "Tarifs colocation tout inclus près de Genève dès 1 380 CHF/mois. Loyer, charges, gym, piscine, sauna, yoga, internet, ménage — tout compris. Compare avec les studios à Genève."}
         url="https://www.lavillacoliving.com/rates"
       />
       {/* Hero */}
@@ -243,7 +243,7 @@ export function RatesPageV4() {
             <p className="text-[#999] max-w-2xl mx-auto">
               {language === "en"
                 ? "See how much you actually save with our all-inclusive model"
-                : "Découvrez combien vous économisez réellement avec notre modèle tout-inclus"}
+                : "Découvre combien tu économises réellement avec notre modèle tout-inclus"}
             </p>
           </div>
 
@@ -351,7 +351,7 @@ export function RatesPageV4() {
               <div className="absolute top-4 right-4 bg-white text-[#377d22] text-xs font-bold px-3 py-1 rounded-full">
                 {language === "en"
                   ? "SAVE 665 CHF/MO"
-                  : "ÉCONOMISEZ 665 CHF/MOIS"}
+                  : "ÉCONOMISE 665 CHF/MOIS"}
               </div>
 
               <div className="flex items-center gap-3 mb-6">
@@ -373,7 +373,7 @@ export function RatesPageV4() {
                   <span>
                     {language === "en"
                       ? "Your room (furnished)"
-                      : "Votre chambre (meublée)"}
+                      : "Ta chambre (meublée)"}
                   </span>
                   <span>1 380 CHF</span>
                 </div>
@@ -463,7 +463,7 @@ export function RatesPageV4() {
                 <div className="text-sm opacity-90">
                   {language === "en"
                     ? "You save every month"
-                    : "Vous économisez chaque mois"}
+                    : "Tu économises chaque mois"}
                 </div>
                 <div className="text-3xl font-bold">{monthlySavings} CHF</div>
               </div>
@@ -609,13 +609,13 @@ export function RatesPageV4() {
             <p className="text-[#999] max-w-2xl mx-auto mb-6">
               {language === "en"
                 ? "For 1,380 CHF/month, you get a furnished room in a premium house, all utilities, cleaning, gym, pool, sauna, yoga classes, community events, and zero hassle. Compare that to 2,045+ CHF for a basic studio in Geneva."
-                : "Pour 1 380 CHF/mois, vous obtenez une chambre meublée dans une maison premium, toutes charges, ménage, sport, piscine, sauna, cours de yoga, événements communautaires, et zéro tracas. Comparez à 2 045+ CHF pour un studio basique à Genève."}
+                : "Pour 1 380 CHF/mois, tu obtiens une chambre meublée dans une maison premium, toutes charges, ménage, sport, piscine, sauna, cours de yoga, événements communautaires, et zéro tracas. Compare à 2 045+ CHF pour un studio basique à Genève."}
             </p>
             <div className="inline-flex items-center gap-2 px-6 py-3 bg-[#c44536] text-white rounded-full font-medium">
               <span>💡</span>
               {language === "en"
                 ? `You save ${monthlySavings} CHF every month`
-                : `Vous économisez ${monthlySavings} CHF chaque mois`}
+                : `Tu économises ${monthlySavings} CHF chaque mois`}
             </div>
           </div>
         </div>
@@ -635,7 +635,7 @@ export function RatesPageV4() {
               >
                 {language === "en"
                   ? "Everything You Need"
-                  : "Tout ce dont Vous Avez Besoin"}
+                  : "Tout ce dont Tu As Besoin"}
               </h2>
               <p className="text-lg text-[#666] leading-relaxed">
                 {language === "en"
@@ -682,7 +682,7 @@ export function RatesPageV4() {
               <p className="text-[#666] leading-relaxed">
                 {language === "en"
                   ? "There are absolutely no agency fees at La Villa Coliving. Our pricing is transparent and all-inclusive. What you see is what you pay."
-                  : "Il n'y a absolument aucun frais d'agence chez La Villa Coliving. Notre tarification est transparente et tout inclusive. Ce que vous voyez est ce que vous payez."}
+                  : "Il n'y a absolument aucun frais d'agence chez La Villa Coliving. Notre tarification est transparente et tout inclusive. Ce que tu vois est ce que tu payes."}
               </p>
             </div>
           </div>
@@ -703,7 +703,7 @@ export function RatesPageV4() {
           <p className="text-lg text-white/80 max-w-xl mx-auto mb-8">
             {language === "en"
               ? `Save ${monthlySavings} CHF/month and join 50+ happy colivers. Limited spots for Spring 2026.`
-              : `Économisez ${monthlySavings} CHF/mois et rejoignez 50+ colivers heureux. Places limitées pour le Printemps 2026.`}
+              : `Économise ${monthlySavings} CHF/mois et rejoins 50+ colivers heureux. Places limitées pour le Printemps 2026.`}
           </p>
           <Link
             to="/join-us"

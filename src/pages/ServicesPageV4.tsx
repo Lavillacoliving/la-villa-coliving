@@ -28,7 +28,7 @@ export function ServicesPageV4() {
     {
       title: language === "en" ? "Live" : "Vivre",
       subtitle:
-        language === "en" ? "Your daily comfort" : "Votre confort quotidien",
+        language === "en" ? "Your daily comfort" : "Ton confort quotidien",
       color: "bg-[#7c9a6d]",
       services: [
         {
@@ -57,7 +57,7 @@ export function ServicesPageV4() {
     },
     {
       title: language === "en" ? "Connect" : "Connecter",
-      subtitle: language === "en" ? "Stay connected" : "Restez connecté",
+      subtitle: language === "en" ? "Stay connected" : "Reste connecté",
       color: "bg-[#a8c5d9]",
       services: [
         {
@@ -95,7 +95,7 @@ export function ServicesPageV4() {
           highlight:
             language === "en"
               ? "Did you say Paradise?"
-              : "Vous avez dit Paradis ?",
+              : "T'as dit Paradis ?",
         },
         {
           key: "wellness",
@@ -185,7 +185,7 @@ export function ServicesPageV4() {
                   On gère{" "}
                   <span className="font-medium text-[#7c9a6d]">tout</span>.
                   <br />
-                  Vous vivez{" "}
+                  Tu vis{" "}
                   <span className="font-medium text-[#d4897a]">
                     sans soucis
                   </span>
@@ -236,7 +236,7 @@ export function ServicesPageV4() {
             <p className="text-[#5a6355] max-w-2xl mx-auto">
               {language === "en"
                 ? "We don't just check boxes. We create an environment where you can focus on what matters."
-                : "On ne coche pas juste des cases. On crée un environnement où vous pouvez vous concentrer sur l'essentiel."}
+                : "On ne coche pas juste des cases. On crée un environnement où tu peux te concentrer sur l'essentiel."}
             </p>
           </div>
 
@@ -260,7 +260,7 @@ export function ServicesPageV4() {
                 desc:
                   language === "en"
                     ? "No chores, no bills to manage, no maintenance headaches. Reclaim 10+ hours per week."
-                    : "Pas de corvées, pas de factures à gérer, pas de tracas de maintenance. Récupérez 10+ pour vous.",
+                    : "Pas de corvées, pas de factures à gérer, pas de tracas de maintenance. Récupère 10+ pour toi.",
               },
               {
                 icon: Users,
@@ -271,7 +271,7 @@ export function ServicesPageV4() {
                 desc:
                   language === "en"
                     ? "Move in alone, find your people. Curated events and shared spaces create natural connections."
-                    : "Emménagez seul, trouvez votre tribu. Des événements sélectionnés et des espaces partagés créent des connexions naturelles.",
+                    : "Emménage seul, trouve ta tribu. Des événements sélectionnés et des espaces partagés créent des connexions naturelles.",
               },
             ].map((item, index) => (
               <div
@@ -304,7 +304,7 @@ export function ServicesPageV4() {
             >
               {language === "en"
                 ? "Everything You Need"
-                : "Tout ce dont Vous Avez Besoin"}
+                : "Tout ce dont Tu As Besoin"}
             </h2>
           </div>
 
@@ -389,7 +389,7 @@ export function ServicesPageV4() {
         </div>
       </section>
 
-      {/* COMPARISON SILENCIEUSE - Ce que vous n'avez PAS à faire */}
+      {/* COMPARISON SILENCIEUSE - Ce que tu n'as PAS à faire */}
       <section className="py-24 bg-[#faf9f5]">
         <div className="container-custom">
           <div className="grid lg:grid-cols-2 gap-16 items-center">
@@ -403,7 +403,7 @@ export function ServicesPageV4() {
                 className="text-4xl md:text-5xl font-light text-[#3d4a38] mb-6"
                 style={{ fontFamily: "Plus Jakarta Sans, sans-serif" }}
               >
-                {language === "en" ? "Say goodbye to" : "Dites adieu aux"}{" "}
+                {language === "en" ? "Say goodbye to" : "Dis adieu aux"}{" "}
                 <span className="font-medium text-[#8c2c22] line-through">
                   {language === "en" ? "chores" : "corvées"}
                 </span>
@@ -413,7 +413,7 @@ export function ServicesPageV4() {
                 {[
                   language === "en"
                     ? "Cleaning your kitchen"
-                    : "Nettoyer votre cuisine",
+                    : "Nettoyer ta cuisine",
                   language === "en"
                     ? "Managing utility bills"
                     : "Gérer les factures",
@@ -443,12 +443,12 @@ export function ServicesPageV4() {
                 <p className="text-[#3d4a38] font-medium mb-2">
                   {language === "en"
                     ? "Instead, you get:"
-                    : "À la place, vous avez :"}
+                    : "À la place, tu as :"}
                 </p>
                 <p className="text-[#5a6355]">
                   {language === "en"
                     ? "More time to focus on your work, your passions, your people."
-                    : "Du temps pour vous concentrer sur votre travail, vos passions, vos proches."}
+                    : "Du temps pour te concentrer sur ton travail, tes passions, tes proches."}
                 </p>
               </div>
             </div>
@@ -493,7 +493,7 @@ export function ServicesPageV4() {
           <p className="text-xl text-white/80 max-w-2xl mx-auto mb-8">
             {language === "en"
               ? "Join 50+ colivers who've reclaimed their time. One price. Everything included."
-              : "Rejoignez 50+ colivers qui ont récupéré leur temps. Un prix. Tout inclus."}
+              : "Rejoins 50+ colivers qui ont récupéré leur temps. Un prix. Tout inclus."}
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Link

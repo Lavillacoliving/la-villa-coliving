@@ -49,7 +49,7 @@ export function ColivingPageV4() {
         title={language === "en" ? "The Coliving Experience Near Geneva" : "Coliving & Colocation près de Genève — L'Expérience La Villa"}
         description={language === "en"
           ? "Discover premium coliving near Geneva. Furnished rooms, curated community, heated pool, gym & all-inclusive services. The modern alternative to traditional shared housing."
-          : "Découvrez le coliving premium près de Genève. Chambres meublées, communauté sélectionnée, piscine chauffée, gym et services tout inclus. L'alternative moderne à la colocation traditionnelle."}
+          : "Découvre le coliving premium près de Genève. Chambres meublées, communauté sélectionnée, piscine chauffée, gym et services tout inclus. L'alternative moderne à la colocation traditionnelle."}
         url="https://www.lavillacoliving.com/the-coliving"
       />
       {/* Hero avec image de fond */}
@@ -80,7 +80,7 @@ export function ColivingPageV4() {
             <p className="text-xl mb-8 text-white/90">
               {language === "en"
                 ? "Experience premium coliving in our beautifully designed houses"
-                : "Vivez l'expérience coliving dans nos maisons magnifiquement designées"}
+                : "Vis l'expérience coliving dans nos maisons magnifiquement designées"}
             </p>
             <Link
               to="/our-houses"
@@ -291,7 +291,7 @@ export function ColivingPageV4() {
               <p className="text-lg text-[#666] leading-relaxed mb-6">
                 {language === "en"
                   ? "At La Villa, our residents become family. Shared dinners, yoga mornings, ski weekends—our community creates bonds that last far beyond your stay."
-                  : "Chez La Villa, nos résidents deviennent famille. Dîners partagés, yoga matinal, weekends au ski—notre communauté crée des liens qui durent bien au-delà de votre séjour."}
+                  : "Chez La Villa, nos résidents deviennent famille. Dîners partagés, yoga matinal, weekends au ski—notre communauté crée des liens qui durent bien au-delà de ton séjour."}
               </p>
 
               {/* Stats au lieu de portraits */}
@@ -343,7 +343,7 @@ export function ColivingPageV4() {
 
             <div className="order-1 lg:order-2">
               <span className="text-xs text-[#999] uppercase tracking-[0.3em] mb-4 block">
-                {language === "en" ? "For You?" : "Pour Vous ?"}
+                {language === "en" ? "For You?" : "Pour Toi ?"}
               </span>
               <h2
                 className="text-4xl md:text-5xl font-light text-[#1a1a1a] mb-6"

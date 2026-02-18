@@ -436,7 +436,7 @@ export const translations = {
     hero: {
       title: "Maisons Coliving Premium Genève | Vie Communautaire",
       subtitle:
-        "Vivez, travaillez & connectez-vous dans des maisons extraordinaires conçues pour une vie communautaire vibrante.",
+        "Vis, travaille & connecte-toi dans des maisons extraordinaires conçues pour une vie communautaire vibrante.",
       ctaPrimary: "Découvrir Nos Maisons",
       ctaSecondary: "Candidater",
       badge1: "Tout inclus",
@@ -457,26 +457,26 @@ export const translations = {
     // Why Choose Us - New Section
     whyChooseUs: {
       title: "Pourquoi Choisir La Villa ?",
-      subtitle: "Découvrez le coliving conçu pour les jeunes professionnels",
+      subtitle: "Découvre le coliving conçu pour les jeunes professionnels",
       item1: {
-        title: "Emménagez Demain",
+        title: "Emménage Demain",
         description:
-          "Maisons entièrement meublées, tout inclus. Pas d'achat de meubles, pas de configuration des services, pas de stress. Apportez juste votre valise et commencez à vivre.",
+          "Maisons entièrement meublées, tout inclus. Pas d'achat de meubles, pas de configuration des services, pas de stress. Amène juste ta valise et commence à vivre.",
       },
       item2: {
-        title: "Travaillez depuis le Paradis",
+        title: "Travaille depuis le Paradis",
         description:
-          "Fibre haut débit et zones calmes. Votre sanctuaire de productivité avec une communauté intégrée.",
+          "Fibre haut débit et zones calmes. Ton sanctuaire de productivité avec une communauté intégrée.",
       },
       item3: {
         title: "Amis Instantanés",
         description:
-          "Communautés sélectionnées de professionnels partageant les mêmes valeurs. Fini les soirées solitaires—votre tribu vous attend.",
+          "Communautés sélectionnées de professionnels partageant les mêmes valeurs. Fini les soirées solitaires—ta tribu t'attend.",
       },
       item4: {
         title: "Zéro Stress Administratif",
         description:
-          "Un paiement mensuel couvre tout. Nous gérons le ménage, la maintenance, les factures et les réparations. Vous vivez, c'est tout.",
+          "Un paiement mensuel couvre tout. On gère le ménage, la maintenance, les factures et les réparations. Tu vis, c'est tout.",
       },
     },
 
@@ -522,7 +522,7 @@ export const translations = {
       title: "Tout Est Inclus",
       community: {
         title: "Communauté Sélectionnée",
-        description: "Vivez avec des personnes qui partagent votre mode de vie",
+        description: "Vis avec des gens qui partagent ton mode de vie",
       },
       amenities: {
         title: "Équipements Premium",
@@ -590,21 +590,21 @@ export const translations = {
         number: "01",
         title: "Découvrir",
         description:
-          "Apprenez ce qui rend La Villa unique. Le coliving, c'est plus qu'une colocation—c'est un mode de vie conçu pour la connexion, l'épanouissement et le quotidien sans souci.",
+          "Apprends ce qui rend La Villa unique. Le coliving, c'est plus qu'une colocation—c'est un mode de vie conçu pour la connexion, l'épanouissement et le quotidien sans souci.",
         cta: "Explorer Le Concept",
       },
       step2: {
         number: "02",
         title: "Explorer",
         description:
-          "Visitez nos maisons magnifiquement designées, chacune conçue pour la vie communautaire moderne.",
+          "Visite nos maisons magnifiquement designées, chacune conçue pour la vie communautaire moderne.",
         cta: "Voir Nos Maisons",
       },
       step3: {
         number: "03",
         title: "Candidater",
         description:
-          "Complétez votre candidature et rencontrez votre future communauté.",
+          "Complète ta candidature et rencontre ta future communauté.",
         cta: "Commencer Ma Candidature",
       },
     },
@@ -613,7 +613,7 @@ export const translations = {
     cta: {
       title: "Prêt à Vivre le Vrai Coliving ?",
       subtitle:
-        "Votre nouveau chez-vous vous attend. Postulez maintenant et rejoignez notre communauté sélectionnée.",
+        "Ta nouvelle maison t'attend. Postule maintenant et rejoins notre communauté sélectionnée.",
       button: "Candidater",
     },
 
@@ -621,7 +621,7 @@ export const translations = {
     footer: {
       tagline: "Coliving premium au Grand Genève, côté France",
       contact: "Contact",
-      followUs: "Suivez-Nous",
+      followUs: "Suis-Nous",
       rights: "Tous droits réservés.",
     },
 
@@ -636,14 +636,14 @@ export const translations = {
         description:
           "Le coliving est une façon moderne de vivre où le confort privé rencontre les expériences partagées. C'est conçu pour ceux qui valorisent la communauté, la flexibilité et la qualité—sans les tracas de la location traditionnelle.",
         description2:
-          "Imaginez avoir votre propre chambre privée magnifiquement designée tout en partageant des équipements premium comme des piscines, des salles de sport et des espaces de coworking avec une communauté sélectionnée de professionnels partageant les mêmes valeurs. C'est le coliving.",
+          "Imagine avoir ta propre chambre privée magnifiquement designée tout en partageant des équipements premium comme des piscines, des salles de sport et des espaces de coworking avec une communauté sélectionnée de professionnels partageant les mêmes valeurs. C'est le coliving.",
       },
       notColocation: {
         title: "Le Coliving n'est Pas Juste une Colocation",
         description:
-          "La colocation traditionnelle signifie trouver des colocataires, acheter des meubles, configurer les services et tout gérer vous-même. C'est du travail.",
+          "La colocation traditionnelle signifie trouver des colocataires, acheter des meubles, configurer les services et tout gérer toi-même. C'est du travail.",
         description2:
-          "Le coliving est différent. Nous avons fait tout le travail pour vous. Votre maison est entièrement meublée, les services sont connectés, la communauté est sélectionnée et tout est géré professionnellement. Vous emménagez et commencez à vivre.",
+          "Le coliving est différent. On a fait tout le travail pour toi. Ta maison est entièrement meublée, les services sont connectés, la communauté est sélectionnée et tout est géré professionnellement. Tu emménages et commences à vivre.",
       },
       difference: {
         title: "Notre Communauté Coliving Sélectionnée",
@@ -662,7 +662,7 @@ export const translations = {
         value2: {
           title: "Vie Sans Effort",
           description:
-            "Tout est pris en charge pour que vous puissiez vous concentrer sur l'essentiel.",
+            "Tout est pris en charge pour que tu puisses te concentrer sur l'essentiel.",
         },
         value3: {
           title: "Connexions Significatives",
@@ -677,7 +677,7 @@ export const translations = {
         benefit3:
           "Communauté instantanée de personnes partageant les mêmes valeurs",
         benefit4:
-          "Équipements premium que vous ne pourriez pas vous offrir seul",
+          "Équipements premium que tu ne pourrais pas t'offrir seul",
         benefit5: "Ménage et maintenance professionnels",
         benefit6: "Conditions flexibles sans engagement à long terme",
         benefit7: "Espaces adaptés au travail avec internet haut débit",
@@ -699,9 +699,9 @@ export const translations = {
     servicesPage: {
       hero: {
         title: "Vie Tout Inclusive",
-        subtitle: "Tout ce dont vous avez besoin. Rien de superflu.",
+        subtitle: "Tout ce dont tu as besoin. Rien de superflu.",
         description:
-          "Chez La Villa, nous avons pensé à chaque détail pour que vous puissiez vous concentrer sur l'essentiel—vivre pleinement.",
+          "Chez La Villa, on a pensé à chaque détail pour que tu puisses te concentrer sur l'essentiel—vivre pleinement.",
       },
       services: {
         allInclusive: {
@@ -712,12 +712,12 @@ export const translations = {
         housekeeping: {
           title: "Entretien Sans Effort",
           description:
-            "Ménage hebdomadaire des espaces communs, plus entretien complet du jardin et de la piscine. Votre maison reste impeccable, sans effort.",
+            "Ménage hebdomadaire des espaces communs, plus entretien complet du jardin et de la piscine. Ta maison reste impeccable, sans effort.",
         },
         internet: {
           title: "Fibre Haut Débit",
           description:
-            "Internet fibre optique professionnel dans toute la maison. Travaillez, streamez, connectez-vous—sans limites.",
+            "Internet fibre optique professionnel dans toute la maison. Travaille, streame, connecte-toi—sans limites.",
         },
         pool: {
           title: "Piscine & Jardin",
@@ -750,9 +750,9 @@ export const translations = {
             "Dîners communautaires mensuels et événements réguliers conçus pour favoriser de véritables connexions.",
         },
         support: {
-          title: "Toujours Là pour Vous",
+          title: "Toujours Là pour Toi",
           description:
-            "Support WhatsApp direct pour des réponses rapides. Nous sommes à un message de distance.",
+            "Support WhatsApp direct pour des réponses rapides. On est à un message.",
         },
       },
     },
@@ -765,7 +765,7 @@ export const translations = {
         description:
           "Pas de frais cachés. Pas de surprises. Juste une valeur exceptionnelle.",
         description2:
-          "Quand vous additionnez loyer, charges, équipements et services, La Villa offre plus—pour moins cher qu'un studio à Genève.",
+          "Quand tu additionnes loyer, charges, équipements et services, La Villa offre plus—pour moins cher qu'un studio à Genève.",
       },
       included: {
         title: "Ce Qui Est Inclus",
@@ -790,9 +790,9 @@ export const translations = {
     faqPage: {
       hero: {
         title: "Des Questions ? Nous Avons les Réponses.",
-        subtitle: "Tout ce que vous devez savoir sur la vie à La Villa.",
+        subtitle: "Tout ce que tu dois savoir sur la vie à La Villa.",
         contact:
-          "Vous ne trouvez pas ce que vous cherchez ? Contactez-nous—nous serons ravis de vous aider.",
+          "Tu ne trouves pas ce que tu cherches ? Contacte-nous—on est là pour t'aider.",
       },
       categories: {
         title: "Parcourir par Catégorie",
@@ -806,9 +806,9 @@ export const translations = {
     joinPage: {
       hero: {
         title: "Rejoindre La Villa",
-        subtitle: "Votre nouveau chez-vous vous attend.",
+        subtitle: "Ta nouvelle maison t'attend.",
         description:
-          "Trois étapes simples pour rejoindre notre communauté. Nous vous accompagnons à chaque étape du parcours.",
+          "Trois étapes simples pour rejoindre notre communauté. On t'accompagne à chaque étape du parcours.",
         steps: "1. Candidater → 2. Rencontrer → 3. Emménager",
       },
       form: {
@@ -818,11 +818,11 @@ export const translations = {
         phone: "Téléphone",
         birthDate: "Date de Naissance",
         job: "Poste à Genève",
-        arrival: "Quand souhaitez-vous nous rejoindre ?",
-        duration: "Combien de temps prévoyez-vous de rester ?",
+        arrival: "Quand souhaites-tu nous rejoindre ?",
+        duration: "Combien de temps comptes-tu rester ?",
         submit: "Soumettre ma Candidature",
         submitting: "Envoi en cours...",
-        success: "Merci ! Nous vous contacterons bientôt.",
+        success: "Merci ! On te recontacte très vite.",
       },
     },
 

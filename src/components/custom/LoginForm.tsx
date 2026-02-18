@@ -4,15 +4,15 @@ import { useLanguage } from '@/contexts/LanguageContext';
 
 const t = {
   fr: {
-    title: 'Espace Locataire',
-    subtitle: 'Connectez-vous avec votre email de locataire',
+    title: 'Mon Espace',
+    subtitle: 'Connecte-toi avec ton email',
     email: 'Adresse email',
-    emailPlaceholder: 'votre.email@exemple.com',
+    emailPlaceholder: 'ton.email@exemple.com',
     submit: 'Recevoir le lien de connexion',
     sending: 'Envoi en cours...',
-    success: 'Un lien de connexion a été envoyé à votre adresse email. Vérifiez votre boîte de réception.',
-    error: 'Une erreur est survenue. Vérifiez votre email et réessayez.',
-    note: 'Utilisez l\'email renseigné dans votre bail La Villa Coliving.',
+    success: 'Un lien de connexion a été envoyé à ton adresse email. Vérifie ta boîte de réception.',
+    error: 'Une erreur est survenue. Vérifie ton email et réessaye.',
+    note: 'Utilise l\'email renseigné dans ton bail La Villa Coliving.',
   },
   en: {
     title: 'Tenant Space',

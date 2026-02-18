@@ -255,7 +255,7 @@ export function HeroV7() {
                     ? "Indoor or outdoor"
                     : "Intérieure ou extérieure",
                 highlight:
-                  language === "en" ? "For you Only" : "Pour vous Seulement",
+                  language === "en" ? "For you Only" : "Rien que pour toi",
                 link: "/our-houses",
               },
               {
@@ -278,7 +278,7 @@ export function HeroV7() {
                 alt: language === "en" ? "Fully equipped gym at Le Lodge coliving Annemasse, near Geneva" : "Salle de sport équipée du Lodge coliving Annemasse, près de Genève",
                 desc:
                   language === "en" ? "Fully equipped" : "Entièrement équipée",
-                highlight: language === "en" ? "Stay Active" : "Restez Actif",
+                highlight: language === "en" ? "Stay Active" : "Reste Actif",
                 link: "/our-houses",
               },
               {

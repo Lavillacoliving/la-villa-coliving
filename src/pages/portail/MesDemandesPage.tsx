@@ -44,7 +44,7 @@ export function MesDemandesPage() {
       type: 'Type de demande',
       subtype: 'Catégorie',
       description: 'Description',
-      descPlaceholder: 'Décrivez votre demande en détail...',
+      descPlaceholder: 'Décris ta demande en détail...',
       urgency: 'Urgence',
       normal: 'Normal',
       urgent: 'Urgent',

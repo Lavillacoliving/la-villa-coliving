@@ -29,11 +29,11 @@ export function PortailLayout() {
   const t = {
     fr: {
       title: 'Portail Locataire',
-      subtitle: 'Bienvenue dans votre espace La Villa Coliving',
+      subtitle: 'Bienvenue dans ton espace La Villa Coliving',
       loading: 'Chargement...',
-      noTenant: 'Aucun profil locataire trouvé pour cette adresse email. Si vous êtes locataire, contactez-nous.',
+      noTenant: 'Aucun profil locataire trouvé pour cette adresse email. Si tu es locataire, contacte-nous.',
       logout: 'Se déconnecter',
-      contact: 'Une question ? Contactez-nous à',
+      contact: 'Une question ? Contacte-nous à',
     },
     en: {
       title: 'Tenant Portal',
