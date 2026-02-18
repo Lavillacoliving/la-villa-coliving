@@ -92,12 +92,12 @@ export function NavbarV7() {
               {language === "en" ? "FR" : "EN"}
             </button>
 
-            {/* Mon Espace */}
+            {/* Portail */}
             <Link
-              to="/mon-espace"
+              to="/portail"
               className="text-sm text-[#5a6355] hover:text-[#7c9a6d] transition-all duration-300"
             >
-              {language === "en" ? "My Space" : "Mon Espace"}
+              {language === "en" ? "Portal" : "Portail"}
             </Link>
             {/* CTA Button - style organique */}
             <Link
@@ -140,11 +140,11 @@ export function NavbarV7() {
                 </Link>
               ))}
               <Link
-                to="/mon-espace"
+                to="/portail"
                 onClick={() => setIsMobileMenuOpen(false)}
                 className="text-lg py-3 px-4 rounded-xl text-[#5a6355] hover:text-[#7c9a6d]"
               >
-                {language === "en" ? "My Space" : "Mon Espace"}
+                {language === "en" ? "Portal" : "Portail"}
               </Link>
               <div className="flex items-center gap-4 pt-4 mt-4 border-t border-[#7c9a6d]/20">
                 <button

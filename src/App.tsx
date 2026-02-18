@@ -15,7 +15,12 @@ import { BlogPage } from "@/pages/BlogPage";
 import { BlogPostPage } from "@/pages/BlogPostPage";
 import { ColocationGenevePage } from "@/pages/ColocationGenevePage";
 import { NotFoundPage } from "@/pages/NotFoundPage";
-import { MonEspacePage } from "@/pages/MonEspacePage";
+import { Navigate } from "react-router-dom";
+import { PortailLayout } from "@/pages/portail/PortailLayout";
+import { MaMaisonPage } from "@/pages/portail/MaMaisonPage";
+import { MonBailPage } from "@/pages/portail/MonBailPage";
+import { MesDemandesPage } from "@/pages/portail/MesDemandesPage";
+import { CommunautePage } from "@/pages/portail/CommunautePage";
 import { ScrollToTop } from "@/components/ScrollToTop";
 
 function App() {
@@ -40,7 +45,14 @@ function App() {
             <Route path="/lavilla" element={<HouseDetailPage />} />
             <Route path="/leloft" element={<HouseDetailPage />} />
             <Route path="/lelodge" element={<HouseDetailPage />} />
-            <Route path="/mon-espace" element={<MonEspacePage />} />
+            <Route path="/mon-espace" element={<Navigate to="/portail" replace />} />
+            <Route path="/portail" element={<PortailLayout />}>
+              <Route index element={<Navigate to="/portail/ma-maison" replace />} />
+              <Route path="ma-maison" element={<MaMaisonPage />} />
+              <Route path="mon-bail" element={<MonBailPage />} />
+              <Route path="mes-demandes" element={<MesDemandesPage />} />
+              <Route path="communaute" element={<CommunautePage />} />
+            </Route>
             <Route path="*" element={<NotFoundPage />} />
           </Routes>
           <Footer />
