@@ -23,9 +23,9 @@ interface TenantInfo {
 interface RentPayment {
   id: string;
   month: string;
-  year: number;
-  amount_expected: number;
-  amount_received: number | null;
+
+  expected_amount: number;
+  received_amount: number | null;
   status: string;
   payment_date: string | null;
 }
@@ -136,10 +136,10 @@ export function MonEspacePage() {
 
         // Fetch recent payments (last 12 months)
         const { data: paymentsData } = await supabase
-          .from('rent_payments')
-          .select('id, month, year, amount_expected, amount_received, status, payment_date')
+          .from('payments')
+          .select('id, month, expected_amount, received_amount, status, payment_date')
           .eq('tenant_id', tenantData.id)
-          .order('year', { ascending: false })
+          
           .order('month', { ascending: false })
           .limit(12);
 
@@ -318,9 +318,9 @@ export function MonEspacePage() {
                 <tbody>
                   {payments.map((p) => (
                     <tr key={p.id} className="border-b border-gray-50">
-                      <td className="py-3">{months[parseInt(p.month) - 1]} {p.year}</td>
-                      <td className="py-3 text-right">{formatCurrency(p.amount_expected)}</td>
-                      <td className="py-3 text-right">{p.amount_received ? formatCurrency(p.amount_received) : '—'}</td>
+                      <td className="py-3">{(() => { const [y, m] = p.month.split("-"); return months[parseInt(m) - 1] + " " + y; })()}</td>
+                      <td className="py-3 text-right">{formatCurrency(p.expected_amount)}</td>
+                      <td className="py-3 text-right">{p.received_amount ? formatCurrency(p.received_amount) : '—'}</td>
                       <td className="py-3 text-right">{statusBadge(p.status)}</td>
                     </tr>
                   ))}
