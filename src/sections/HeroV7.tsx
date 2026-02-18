@@ -60,27 +60,27 @@ export function HeroV7() {
               {/* Description - ton conversationnel */}
               <p className="text-lg text-[#5a6355] max-w-lg leading-relaxed mb-8">
                 {language === "en"
-                  ? "Premium room. Curated community. All-inclusive."
-                  : "Chambre premium. Communauté triée. Tout inclus."}
+                  ? "Fully furnished premium homes, instant community, all-inclusive living. Just bring your suitcase and good vibes ✨"
+                  : "Maisons Premiums toutes équipées, c  ommunauté instantanée, vie tout inclus. Amène juste ta valise et ta bonne humeur ✨"}
               </p>
 
               {/* Quick stats - style badges */}
               <div className="flex flex-wrap gap-3 mb-10">
                 <span className="inline-flex items-center gap-2 px-4 py-2 bg-white border border-[#7c9a6d]/20 text-[#5a6355] text-sm rounded-full">
                   <Wifi className="w-4 h-4 text-[#7c9a6d]" />
-                  {language === "en" ? "300m² of shared spaces" : "300m² de communs"}
+                  {language === "en" ? "Great Outdoors" : "Grands Espaces"}
                 </span>
                 <span className="inline-flex items-center gap-2 px-4 py-2 bg-white border border-[#d4897a]/20 text-[#5a6355] text-sm rounded-full">
                   <Coffee className="w-4 h-4 text-[#d4897a]" />
                   {language === "en"
-                    ? "Pool \u2022 Sauna \u2022 Gym"
-                    : "Piscine \u2022 Sauna \u2022 Salle de sport"}
+                    ? "Pool, Gym & Sauna"
+                    : "Piscine, Sport & Sauna"}
                 </span>
                 <span className="inline-flex items-center gap-2 px-4 py-2 bg-white border border-[#a8c5d9]/30 text-[#5a6355] text-sm rounded-full">
                   <MapPin className="w-4 h-4 text-[#a8c5d9]" />
                   {language === "en"
-                    ? "20 min from Geneva"
-                    : "20 min de Genève"}
+                    ? "Geneva in 20 minutes"
+                    : "Genève en 20 minutes"}
                 </span>
               </div>
 
@@ -117,10 +117,10 @@ export function HeroV7() {
                   ))}
                 </div>
                 <div className="text-sm text-[#5a6355]">
-                  <span className="font-medium text-[#7c9a6d]">127</span>{" "}
+                  <span className="font-medium text-[#7c9a6d]">100+</span>{" "}
                   {language === "en"
-                    ? "members since 2021"
-                    : "membres depuis 2021"}
+                    ? "happy colivers since 2021"
+                    : "colivers heureux depuis 2021"}
                 </div>
               </div>
             </div>
@@ -208,16 +208,16 @@ export function HeroV7() {
             >
               {language === "en" ? (
                 <>
-                  The Authentic Coliving Experience, <br />
+                  The True Premium Coliving experience, <br />
                   <span className="font-medium text-[#7c9a6d]">
-                    not a flatshare, a community
+                    intimate community feel
                   </span>
                 </>
               ) : (
                 <>
-                  L'Authentique Exp\u00E9rience du Coliving, <br />
+                  L'Authentique Expérience du Coliving, <br />
                   <span className="font-medium text-[#7c9a6d]">
-                    pas une coloc, une communaut\u00E9
+                    l'âme d'une communauté intimiste
                   </span>
                 </>
               )}
@@ -255,7 +255,7 @@ export function HeroV7() {
                     ? "Indoor or outdoor"
                     : "Intérieure ou extérieure",
                 highlight:
-                  language === "en" ? "For you only" : "Rien que pour toi",
+                  language === "en" ? "For you Only" : "Pour vous Seulement",
                 link: "/our-houses",
               },
               {
@@ -278,7 +278,7 @@ export function HeroV7() {
                 alt: language === "en" ? "Fully equipped gym at Le Lodge coliving Annemasse, near Geneva" : "Salle de sport équipée du Lodge coliving Annemasse, près de Genève",
                 desc:
                   language === "en" ? "Fully equipped" : "Entièrement équipée",
-                highlight: language === "en" ? "Stay Active" : "Reste Actif",
+                highlight: language === "en" ? "Stay Active" : "Restez Actif",
                 link: "/our-houses",
               },
               {
@@ -348,26 +348,22 @@ export function HeroV7() {
           <div className="flex items-center justify-center gap-8 md:gap-16">
             {[
               {
-                value: "127",
+                value: "100+",
                 label:
                   language === "en"
-                    ? "Members since 2021"
-                    : "Membres depuis 2021",
+                    ? "Community members"
+                    : "Membres de la communauté",
               },
               {
                 value: "3",
                 label:
                   language === "en"
-                    ? "Exclusive homes"
-                    : "Maisons exclusives",
+                    ? "Only Exclusives Homes"
+                    : "Maisons Uniquement",
               },
               {
-                value: "20 min",
-                label: language === "en" ? "From Geneva center" : "Du centre de Gen\u00E8ve",
-              },
-              {
-                value: "99%",
-                label: language === "en" ? "Occupancy rate" : "Taux d\u2019occupation",
+                value: "20 min max",
+                label: language === "en" ? "From Geneva" : "De Genève",
               },
             ].map((stat, index) => (
               <div key={index} className="text-center">

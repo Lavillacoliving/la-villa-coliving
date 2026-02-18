@@ -63,31 +63,31 @@
   
   h1, h2, h3, h4, h5, h6 {
     font-family: 'Plus Jakarta Sans', sans-serif;
-    font-weight: 700;
+    font-weight: 800;
     line-height: 1.1;
-    letter-spacing: -0.02em;
+    letter-spacing: -0.01em;
     word-spacing: 0.05em;
     color: hsl(220 40% 10%);
   }
-
+  
   h1 {
-    font-size: clamp(2.5rem, 5vw, 4rem);
+    @apply text-5xl md:text-7xl lg:text-8xl;
   }
-
+  
   h2 {
-    font-size: clamp(2rem, 4vw, 3rem);
+    @apply text-4xl md:text-5xl lg:text-6xl;
   }
-
+  
   h3 {
-    font-size: clamp(1.5rem, 3vw, 2rem);
+    @apply text-2xl md:text-3xl;
     font-weight: 700;
   }
-
-  p, span, li {
-    line-height: 1.7;
+  
+  p {
+    line-height: 1.75;
     letter-spacing: 0.01em;
     word-spacing: 0.05em;
-    color: hsl(220 9% 46% / 0.85);
+    color: hsl(220 9% 40%);
   }
 }
 
@@ -233,15 +233,6 @@
     background: hsl(158 85% 42% / 0.1);
   }
   
-  /* Badge base typography */
-  .badge, [class*="badge-"] {
-    font-family: 'Inter', sans-serif;
-    font-weight: 500;
-    font-size: 0.75rem;
-    letter-spacing: 0.05em;
-    text-transform: uppercase;
-  }
-
   /* Ultra Bold Badges */
   .badge-emerald {
     @apply inline-flex items-center px-4 py-1.5 rounded-full text-sm font-extrabold;

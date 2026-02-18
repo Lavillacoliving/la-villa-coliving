@@ -93,7 +93,7 @@ export function FAQPageV4() {
           <p className="text-lg text-[#666] max-w-2xl mx-auto mb-10">
             {language === "en"
               ? "Everything you need to know about life at La Villa."
-              : "Tout ce que tu dois savoir sur la vie à La Villa."}
+              : "Tout ce que vous devez savoir sur la vie à La Villa."}
           </p>
 
           {/* Search Bar */}
@@ -165,13 +165,13 @@ export function FAQPageV4() {
                   <p className="text-sm text-[#666] mb-4">
                     {language === "en"
                       ? "Can't find what you're looking for? Reach out—we're happy to help."
-                      : "Tu ne trouves pas ce que tu cherches ? Contacte-nous."}
+                      : "Vous ne trouvez pas ce que vous cherchez ? Contactez-nous."}
                   </p>
                   <a
                     href="mailto:hello@lavillacoliving.com"
                     className="text-[#c44536] font-medium hover:underline"
                   >
-                    {language === "en" ? "Contact us" : "Contacte-nous"}
+                    {language === "en" ? "Contact us" : "Contactez-nous"}
                   </a>
                 </div>
               </div>
@@ -184,7 +184,7 @@ export function FAQPageV4() {
                   <p className="text-[#666]">
                     {language === "en"
                       ? "No questions found matching your search."
-                      : "Aucune question trouvée correspondant à ta recherche."}
+                      : "Aucune question trouvée correspondant à votre recherche."}
                   </p>
                 </div>
               ) : (

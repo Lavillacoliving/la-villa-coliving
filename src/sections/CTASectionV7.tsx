@@ -36,8 +36,8 @@ export function CTASectionV7() {
 
           <p className="text-[#5a6355] text-lg leading-relaxed mb-12 max-w-xl mx-auto">
             {language === "en"
-              ? "Join 127 nomads who found their tribe at La Villa. Limited spots for Spring 2026."
-              : "Rejoins 127 nomades qui ont trouv\u00E9 leur tribu \u00E0 La Villa. Places limit\u00E9es pour le printemps 2026."}
+              ? "Join 50+ nomads who found their people at La Villa. Limited spots for Spring 2026."
+              : "Rejoins 50+ nomades qui ont trouvé leur tribu à La Villa. Places limitées pour le printemps 2026."}
           </p>
 
           {/* CTAs */}

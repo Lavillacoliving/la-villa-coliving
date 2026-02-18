@@ -11,46 +11,46 @@ export function FeaturesV7() {
 
   const features = [
     {
-      emoji: '\uD83C\uDFE1',
-      title: language === 'en' ? 'Premium Properties' : 'Propri\u00E9t\u00E9s Premium',
-      description: language === 'en'
-        ? 'Sauna, pool, gym, cinema room, large outdoor areas and more.'
-        : 'Sauna, piscine, salle de sport, salle cin\u00E9ma, grands espaces ext\u00E9rieurs et plus encore.',
+      emoji: '🏡',
+      title: language === 'en' ? 'Premium Properties' : 'Propriétés Premium',
+      description: language === 'en' 
+        ? 'Sauna, Swimming Pool, Gym, Cinéma Room, Large Outdoor Areas... and More !'
+        : 'Sauna, Piscine, Salle de Sport, Salle Cinéma, Grand Espaces et Encore Plus !',
     },
     {
-      emoji: '\uD83D\uDE80',
-      title: language === 'en' ? 'Fully Equipped Homes' : 'Maisons Ultra \u00C9quip\u00E9es',
+      emoji: '🚀',
+      title: language === 'en' ? 'Highly Equipped Houses' : 'Maisons Ultra Equippées ',
       description: language === 'en'
-        ? 'Double kitchen, premium furnishing, gaming console, BBQ, foosball and more.'
-        : 'Double cuisine \u00E9quip\u00E9e, mobilier premium, console de jeu, BBQ, babyfoot et plus.',
+        ? 'Fully equipped double kitchen, Premium furnishing, Gaming Console, BBQ, Soocer Table ... and More ! '
+        : 'Double Cuisine équipée, Meubles Premium, Console de Jeu, BBQ, Babyfoot... et Plus !',
     },
     {
-      emoji: '\u2728',
-      title: language === 'en' ? 'Full Comfort & Privacy' : 'Confort Premium & Intimit\u00E9',
+      emoji: '✨',
+      title: language === 'en' ? 'Full Confort & Privacy' : 'Confort Premium & Intimité',
       description: language === 'en'
-        ? 'Spacious decorated rooms with Emma/Tediber mattress, designer furniture, silk sheets.'
-        : 'Chambres spacieuses et d\u00E9cor\u00E9es, matelas Emma/Tediber, mobilier design, draps en soie.',
+        ? 'Spacious and decorated rooms, with Emma Tediber mattress, Designer furnitures and silk sheets! '
+        : 'Chambres spacieuses et décorées, avec matelas Emma ou Tediber, mobilier design et draps en soie ! ',
     },
     {
-      emoji: '\uD83C\uDF89',
+      emoji: '🎊',
       title: language === 'en' ? 'Community Vibes' : 'Vibes Communautaires',
       description: language === 'en'
-        ? 'Dinners, activities, and spontaneous hangouts.'
-        : 'D\u00EEners, activit\u00E9s et moments spontan\u00E9s.',
+        ? 'Dinners, activities, and spontaneous hangouts'
+        : 'Dîners, activités et moments spontanés',
     },
     {
-      emoji: '\uD83C\uDFE1',
-      title: language === 'en' ? 'Truly All Inclusive' : 'Vraiment Tout Inclus',
+      emoji: '🏡',
+      title: language === 'en' ? 'Truly All Inclusive' : 'Vraiment Tout inclus',
       description: language === 'en'
-        ? 'Maintenance, fiber, energy, cleaning, yoga classes, monthly dinner, streaming and more.'
-        : 'Entretien, fibre, \u00E9nergie, m\u00E9nage, cours de yoga/fitness, repas communautaire, streaming et plus.',
+        ? 'Maintenance, fiber optics, energy charges, cleaning... but also Yoga/Fitness classes, monthly community meal, home entertainment memberships and more ! '
+        : 'Entretien, fibre optique, charges énergétiques, nettoyage... mais aussi Cours de Yoga et de Fitness, repas communautaire mensuel, abonnements  et plus encore !',
     },
     {
-      emoji: '\uD83D\uDC9A',
-      title: language === 'en' ? 'Good Energy' : 'Bonne \u00C9nergie',
+      emoji: '💚',
+      title: language === 'en' ? 'Good Energy' : 'Bonne Energie',
       description: language === 'en'
-        ? 'Positive people who respect shared spaces.'
-        : 'Des gens positifs qui respectent les espaces partag\u00E9s.',
+        ? 'Positive people who respect shared spaces'
+        : 'Des gens positifs qui respectent les espaces partagés',
     },
   ];
 

@@ -42,7 +42,7 @@ export function MonBailPage() {
       late: 'En retard',
       noPayments: 'Aucun paiement enregistré',
       documents: 'Documents signés',
-      docComingSoon: 'Tes documents seront bientôt disponibles ici (bail, état des lieux, attestations).',
+      docComingSoon: 'Vos documents seront bientôt disponibles ici (bail, état des lieux, attestations).',
       quittances: 'Quittances de loyer',
       quittComingSoon: 'La génération automatique de quittances arrive prochainement.',
     },

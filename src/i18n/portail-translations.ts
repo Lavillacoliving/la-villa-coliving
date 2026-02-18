@@ -99,7 +99,7 @@ Parking
 
 Courrier
 • Boîte aux lettres à l'entrée de la propriété
-• \u00C9tiqueter ton nom sur ta case`
+• Étiqueter votre nom sur votre case`
       },
       {
         section: 'emergency',

@@ -4,26 +4,26 @@ import { useLanguage } from '@/contexts/LanguageContext';
 
 const t = {
   fr: {
-    title: 'Mon Espace',
-    subtitle: 'Connecte-toi avec ton email',
+    title: 'Espace Locataire',
+    subtitle: 'Connectez-vous avec votre email de locataire',
     email: 'Adresse email',
-    emailPlaceholder: 'ton.email@exemple.com',
-    submit: 'Recevoir mon lien',
+    emailPlaceholder: 'votre.email@exemple.com',
+    submit: 'Recevoir le lien de connexion',
     sending: 'Envoi en cours...',
-    success: 'Un lien de connexion a \u00E9t\u00E9 envoy\u00E9 \u00E0 ton adresse email. V\u00E9rifie ta bo\u00EEte de r\u00E9ception.',
-    error: 'Une erreur est survenue. V\u00E9rifie ton email et r\u00E9essaye.',
-    note: 'Utilise l\'email renseign\u00E9 dans ton bail La Villa Coliving.',
+    success: 'Un lien de connexion a été envoyé à votre adresse email. Vérifiez votre boîte de réception.',
+    error: 'Une erreur est survenue. Vérifiez votre email et réessayez.',
+    note: 'Utilisez l\'email renseigné dans votre bail La Villa Coliving.',
   },
   en: {
-    title: 'My Space',
-    subtitle: 'Sign in with your email',
+    title: 'Tenant Space',
+    subtitle: 'Sign in with your tenant email',
     email: 'Email address',
     emailPlaceholder: 'your.email@example.com',
-    submit: 'Get my login link',
+    submit: 'Send login link',
     sending: 'Sending...',
-    success: 'A login link has been sent to your email. Check your inbox.',
+    success: 'A login link has been sent to your email address. Check your inbox.',
     error: 'An error occurred. Check your email and try again.',
-    note: 'Use the email from your La Villa Coliving lease.',
+    note: 'Use the email registered in your La Villa Coliving lease.',
   },
 };
 

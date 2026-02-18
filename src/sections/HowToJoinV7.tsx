@@ -12,28 +12,28 @@ export function HowToJoinV7() {
 
   const steps = [
     {
-      emoji: '\uD83D\uDCDD',
+      emoji: '📝',
       number: '01',
-      title: language === 'en' ? 'Apply online' : 'Postule en ligne',
+      title: language === 'en' ? 'Apply online' : 'Candidature en ligne',
       description: language === 'en'
-        ? 'Tell us about yourself in 2 minutes. No CV needed.'
-        : 'Parle-nous de toi en 2 minutes. Pas de CV requis.',
+        ? 'Tell us about yourself in 2 minutes. No CV required 😊'
+        : 'Parle-nous de toi en 2 minutes. Pas de CV requis 😊',
     },
     {
-      emoji: '\u260E\uFE0F',
+      emoji: '☕',
       number: '02',
-      title: language === 'en' ? 'Quick call' : 'Appel rapide',
+      title: language === 'en' ? 'Meet the crew' : 'Rencontre l\'équipe',
       description: language === 'en'
-        ? 'Quick video call to make sure we\'re a good fit.'
-        : 'Appel vid\u00E9o rapide pour voir si on match.',
+        ? 'Quick video call to make sure we\'re a good fit'
+        : 'Appel vidéo rapide pour voir si on match',
     },
     {
-      emoji: '\uD83D\uDEAA',
+      emoji: '🚪',
       number: '03',
-      title: language === 'en' ? 'Move in' : 'Emm\u00E9nage',
+      title: language === 'en' ? 'Move in' : 'Emménage',
       description: language === 'en'
-        ? 'Sign, pay deposit, and welcome home!'
-        : 'Signe, paye la caution, et bienvenue chez toi !',
+        ? 'Sign, pay deposit, and welcome home! 🏠'
+        : 'Signe, paye la caution, et bienvenue chez toi ! 🏠',
     },
   ];
 

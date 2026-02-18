@@ -37,7 +37,7 @@ export function JoinPageV4() {
           <p className="text-lg text-[#666] max-w-2xl mx-auto">
             {language === "en"
               ? "Your new home is waiting. Complete the form below and we'll guide you through every step."
-              : "Ta nouvelle maison t'attend. Complète le formulaire ci-dessous et on t'accompagne à chaque étape."}
+              : "Votre nouveau chez-vous vous attend. Complétez le formulaire ci-dessous et nous vous guiderons à chaque étape."}
           </p>
         </div>
       </section>
@@ -130,14 +130,14 @@ export function JoinPageV4() {
             {/* Stay Info */}
             <div className="mb-10">
               <h2 className="text-xs uppercase tracking-widest text-[#999] mb-6">
-                {language === "en" ? "Your Stay" : "Ton Séjour"}
+                {language === "en" ? "Your Stay" : "Votre Séjour"}
               </h2>
               <div className="grid md:grid-cols-2 gap-6">
                 <div>
                   <label className="block text-sm text-[#666] mb-2">
                     {language === "en"
                       ? "When would you like to join?"
-                      : "Quand souhaites-tu nous rejoindre ?"}
+                      : "Quand souhaitez-vous nous rejoindre ?"}
                   </label>
                   <input
                     type="date"
@@ -150,7 +150,7 @@ export function JoinPageV4() {
                   <label className="block text-sm text-[#666] mb-2">
                     {language === "en"
                       ? "How long do you plan to stay?"
-                      : "Combien de temps comptes-tu rester ?"}
+                      : "Combien de temps prévoyez-vous de rester ?"}
                   </label>
                   <select
                     name="duration"
@@ -216,7 +216,7 @@ export function JoinPageV4() {
                 description:
                   language === "en"
                     ? "Fill out the application form with your details."
-                    : "Remplis le formulaire de candidature avec tes coordonnées.",
+                    : "Remplissez le formulaire de candidature avec vos coordonnées.",
               },
               {
                 number: "02",
@@ -224,7 +224,7 @@ export function JoinPageV4() {
                 description:
                   language === "en"
                     ? "We'll schedule a video call to get to know you better."
-                    : "On planifiera un appel vidéo pour mieux te connaître.",
+                    : "Nous planifierons un appel vidéo pour mieux vous connaître.",
               },
               {
                 number: "03",
@@ -232,7 +232,7 @@ export function JoinPageV4() {
                 description:
                   language === "en"
                     ? "Welcome to your new home and community!"
-                    : "Bienvenue dans ton nouveau chez-toi et ta communauté !",
+                    : "Bienvenue dans votre nouveau chez-vous et communauté !",
               },
             ].map((step, index) => (
               <div key={index} className="bg-white p-10 text-center">

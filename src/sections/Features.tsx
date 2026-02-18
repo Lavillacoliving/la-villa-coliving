@@ -9,11 +9,11 @@ export function Features() {
   const { t } = useLanguage();
 
   const features = [
-    t.features.feature1,
-    t.features.feature2,
-    t.features.feature3,
-    t.features.feature4,
-    t.features.feature5,
+    t.features.community,
+    t.features.amenities,
+    t.features.location,
+    t.features.comfort,
+    t.features.allInclusive,
   ];
 
   const extraFeatures = [
