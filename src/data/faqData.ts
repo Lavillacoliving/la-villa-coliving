@@ -425,7 +425,7 @@ export const faqData: FAQItem[] = [
       fr: 'Les animaux sont-ils acceptés ?',
     },
     answer: {
-      en: 'Pets are considered on a case-by-case basis. For small pets, it's often possible — we check with current housemates first, especially regarding allergies. Just let us know what kind of pet you have and we'll look into it!',
+      en: "Pets are considered on a case-by-case basis. For small pets, it's often possible — we check with current housemates first, especially regarding allergies. Just let us know what kind of pet you have and we'll look into it!",
       fr: 'Les animaux sont acceptés au cas par cas. Pour les petits animaux de compagnie, c\'est souvent possible \u2014 on vérifie d\'abord avec les colocs actuels, notamment pour les questions d\'allergies. Dis-nous quel type d\'animal tu as et on se renseigne !',
     },
   },

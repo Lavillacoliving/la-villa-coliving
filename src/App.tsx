@@ -1,4 +1,5 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { AuthProvider } from "@/contexts/AuthContext";
 import { LanguageProvider } from "@/contexts/LanguageContext";
 import { NavbarV7 as Navbar } from "@/components/custom/NavbarV7";
 import { FooterV7 as Footer } from "@/components/custom/FooterV7";
@@ -14,11 +15,13 @@ import { BlogPage } from "@/pages/BlogPage";
 import { BlogPostPage } from "@/pages/BlogPostPage";
 import { ColocationGenevePage } from "@/pages/ColocationGenevePage";
 import { NotFoundPage } from "@/pages/NotFoundPage";
+import { MonEspacePage } from "@/pages/MonEspacePage";
 import { ScrollToTop } from "@/components/ScrollToTop";
 
 function App() {
   return (
     <LanguageProvider>
+      <AuthProvider>
       <BrowserRouter>
         <ScrollToTop />
         <div className="min-h-screen bg-background">
@@ -37,11 +40,13 @@ function App() {
             <Route path="/lavilla" element={<HouseDetailPage />} />
             <Route path="/leloft" element={<HouseDetailPage />} />
             <Route path="/lelodge" element={<HouseDetailPage />} />
+            <Route path="/mon-espace" element={<MonEspacePage />} />
             <Route path="*" element={<NotFoundPage />} />
           </Routes>
           <Footer />
         </div>
       </BrowserRouter>
+    </AuthProvider>
     </LanguageProvider>
   );
 }
