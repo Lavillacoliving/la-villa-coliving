@@ -1,10 +1,11 @@
 import { Link } from "react-router-dom";
-import { ArrowRight, MapPin, Wifi, Coffee } from "lucide-react";
+import { ArrowRight, MapPin, Waves, BedDouble, Home, Star } from "lucide-react";
 import { useLanguage } from "@/contexts/LanguageContext";
+import { STATS } from "@/data/stats";
 
 /**
- * VERSION 7: JEUNE + NOMADE + ZEN + FRAIS
- * Style: Lifestyle, décontracté, organique, plein de vie
+ * VERSION 7: PREMIUM + FACTUEL + USPs
+ * Style: Premium, chaleureux, factuel
  */
 
 export function HeroV7() {
@@ -23,17 +24,16 @@ export function HeroV7() {
           <div className="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center">
             {/* Left - Content */}
             <div className="relative z-10">
-              {/* Tagline fraîche */}
+              {/* Tagline */}
               <div className="mb-6">
                 <span className="inline-flex items-center gap-2 px-4 py-2 bg-[#7c9a6d]/15 text-[#7c9a6d] text-sm font-medium rounded-full">
-                  🌿{" "}
                   {language === "en"
-                    ? "Prémium Coliving - Grand Genève"
-                    : "Coliving Premium - Grand Genève"}
+                    ? "Premium Coliving — Grand Genève, France"
+                    : "Coliving Premium — Grand Genève, France"}
                 </span>
               </div>
 
-              {/* Title - ton décontracté */}
+              {/* Title */}
               <h1
                 className="text-5xl md:text-6xl lg:text-7xl font-light text-[#3d4a38] leading-[1.1] tracking-tight mb-8"
                 style={{ fontFamily: "Plus Jakarta Sans, sans-serif" }}
@@ -49,50 +49,50 @@ export function HeroV7() {
                   </>
                 ) : (
                   <>
-                    Ta maison,
+                    Votre maison.
                     <br />
-                    <span className="font-medium text-[#7c9a6d]">tes gens</span>
+                    <span className="font-medium text-[#7c9a6d]">Votre communauté</span>
                     <span className="text-[#d4897a]">.</span>
                   </>
                 )}
               </h1>
 
-              {/* Description - ton conversationnel */}
+              {/* Description */}
               <p className="text-lg text-[#5a6355] max-w-lg leading-relaxed mb-8">
                 {language === "en"
-                  ? "Fully furnished premium homes, instant community, all-inclusive living. Just bring your suitcase and good vibes ✨"
-                  : "Maisons Premiums toutes équipées, c  ommunauté instantanée, vie tout inclus. Amène juste ta valise et ta bonne humeur ✨"}
+                  ? `Rooms from ${STATS.roomSizeMin} to ${STATS.roomSizeMax} m² in houses with pool, sauna, and gym. A community of ${STATS.minResidentsPerHouse} to ${STATS.maxResidentsPerHouse} residents, all-inclusive from CHF ${STATS.priceChf.toLocaleString('en')}/month. Just bring your suitcase — we'll take care of the rest.`
+                  : `Chambres de ${STATS.roomSizeMin} à ${STATS.roomSizeMax} m² dans des maisons avec piscine, sauna et salle de sport. Communauté de ${STATS.minResidentsPerHouse} à ${STATS.maxResidentsPerHouse} résidents, tout inclus dès ${STATS.priceChf.toLocaleString('fr-FR')} CHF/mois. Apportez votre valise — on s'occupe du reste.`}
               </p>
 
               {/* Quick stats - style badges */}
               <div className="flex flex-wrap gap-3 mb-10">
                 <span className="inline-flex items-center gap-2 px-4 py-2 bg-white border border-[#7c9a6d]/20 text-[#5a6355] text-sm rounded-full">
-                  <Wifi className="w-4 h-4 text-[#7c9a6d]" />
-                  {language === "en" ? "Great Outdoors" : "Grands Espaces"}
+                  <Waves className="w-4 h-4 text-[#7c9a6d]" />
+                  {language === "en" ? "Pool, sauna & gym" : "Piscine, sauna & salle de sport"}
                 </span>
                 <span className="inline-flex items-center gap-2 px-4 py-2 bg-white border border-[#d4897a]/20 text-[#5a6355] text-sm rounded-full">
-                  <Coffee className="w-4 h-4 text-[#d4897a]" />
+                  <BedDouble className="w-4 h-4 text-[#d4897a]" />
                   {language === "en"
-                    ? "Pool, Gym & Sauna"
-                    : "Piscine, Sport & Sauna"}
+                    ? `${STATS.roomSizeMin}-${STATS.roomSizeMax} m² private rooms`
+                    : `Chambres privées de ${STATS.roomSizeMin}-${STATS.roomSizeMax} m²`}
                 </span>
                 <span className="inline-flex items-center gap-2 px-4 py-2 bg-white border border-[#a8c5d9]/30 text-[#5a6355] text-sm rounded-full">
                   <MapPin className="w-4 h-4 text-[#a8c5d9]" />
                   {language === "en"
-                    ? "Geneva in 20 minutes"
-                    : "Genève en 20 minutes"}
+                    ? `${STATS.genevaDistanceMin}-${STATS.genevaDistanceMax} min from Geneva`
+                    : `À ${STATS.genevaDistanceMin}-${STATS.genevaDistanceMax} min de Genève`}
                 </span>
               </div>
 
-              {/* CTAs - style organique */}
+              {/* CTAs */}
               <div className="flex flex-col sm:flex-row items-start gap-4">
                 <Link
                   to="/colocation-geneve"
                   className="group inline-flex items-center gap-3 px-8 py-4 bg-[#7c9a6d] text-white font-medium rounded-full hover:bg-[#6b8560] transition-all duration-300 hover:shadow-[0_8px30px_rgba(124,154,109,0.35)]"
                 >
                   {language === "en"
-                    ? "Shared housing in Grand Genève, France"
-                    : "Colocation au Grand Genève, côté France"}
+                    ? "Explore our houses"
+                    : "Découvrir nos maisons"}
                   <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform duration-300" />
                 </Link>
 
@@ -100,11 +100,11 @@ export function HeroV7() {
                   to="/join-us"
                   className="inline-flex items-center gap-3 px-8 py-4 border-2 border-[#d4897a] text-[#d4897a] font-medium rounded-full hover:bg-[#d4897a] hover:text-white transition-all duration-300"
                 >
-                  {language === "en" ? "Apply now" : "Postuler"}
+                  {language === "en" ? "Apply now" : "Candidater"}
                 </Link>
               </div>
 
-              {/* Social proof - style décontracté */}
+              {/* Social proof */}
               <div className="mt-10 flex items-center gap-4">
                 <div className="flex -space-x-3">
                   {[1, 2, 3, 4].map((i) => (
@@ -117,10 +117,10 @@ export function HeroV7() {
                   ))}
                 </div>
                 <div className="text-sm text-[#5a6355]">
-                  <span className="font-medium text-[#7c9a6d]">100+</span>{" "}
+                  <span className="font-medium text-[#7c9a6d]">{STATS.totalResidents}+</span>{" "}
                   {language === "en"
-                    ? "happy colivers since 2021"
-                    : "colivers heureux depuis 2021"}
+                    ? `residents welcomed since ${STATS.foundedYear}`
+                    : `résidents accueillis depuis ${STATS.foundedYear}`}
                 </div>
               </div>
             </div>
@@ -142,11 +142,11 @@ export function HeroV7() {
               <div className="absolute -bottom-6 -left-6 bg-white p-4 rounded-2xl shadow-[0_10px40px_rgba(124,154,109,0.12)]">
                 <div className="flex items-center gap-3">
                   <div className="w-10 h-10 rounded-full bg-[#7c9a6d]/15 flex items-center justify-center">
-                    <span className="text-lg">🏠</span>
+                    <Home className="w-5 h-5 text-[#7c9a6d]" />
                   </div>
                   <div>
                     <div className="text-sm font-medium text-[#3d4a38]">
-                      3 maisons
+                      {STATS.totalHouses} maisons
                     </div>
                     <div className="text-xs text-[#5a6355]">
                       {language === "en" ? "All Unique" : "Toutes Uniques"}
@@ -158,10 +158,10 @@ export function HeroV7() {
               {/* Floating card 2 */}
               <div className="absolute -top-4 -right-4 bg-white p-4 rounded-2xl shadow-[0_10px40px_rgba(212,137,122,0.12)]">
                 <div className="flex items-center gap-2">
-                  <span className="text-2xl">⭐</span>
+                  <Star className="w-6 h-6 text-[#d4897a] fill-[#d4897a]" />
                   <div>
                     <div className="text-lg font-medium text-[#3d4a38]">
-                      4.9
+                      {STATS.memberRating}
                     </div>
                     <div className="text-xs text-[#5a6355]">
                       {language === "en" ? "Rating" : "Note"}
@@ -174,11 +174,11 @@ export function HeroV7() {
               <div className="absolute top-1/2 -right-8 bg-[#d4897a] text-white p-4 rounded-2xl shadow-[0_10px40px_rgba(212,137,122,0.25)]">
                 <div className="text-sm font-medium">
                   {language === "en"
-                    ? "Room Available"
-                    : "Chambres Disponibles"}
+                    ? "Rooms available"
+                    : "Chambres disponibles"}
                 </div>
                 <div className="text-xs opacity-90">
-                  {language === "en" ? "Spring 2026" : "Printemps 2026"}🗓 ️
+                  {language === "en" ? "Spring 2026" : "Printemps 2026"}
                 </div>
               </div>
             </div>
@@ -197,10 +197,9 @@ export function HeroV7() {
           {/* Header text */}
           <div className="text-center mb-12">
             <span className="inline-flex items-center gap-2 px-4 py-2 bg-[#7c9a6d]/20 text-[#a8d695] text-sm font-medium rounded-full mb-4">
-              ✨{" "}
               {language === "en"
-                ? "Why we're different"
-                : "Pourquoi nous sommes uniques"}
+                ? "What makes us different"
+                : "Ce qui nous rend uniques"}
             </span>
             <h2
               className="text-3xl md:text-4xl font-light text-[#faf9f5] mb-4"
@@ -208,24 +207,24 @@ export function HeroV7() {
             >
               {language === "en" ? (
                 <>
-                  The True Premium Coliving experience, <br />
+                  Exceptional coliving. <br />
                   <span className="font-medium text-[#7c9a6d]">
-                    intimate community feel
+                    Intimate, curated communities.
                   </span>
                 </>
               ) : (
                 <>
-                  L'Authentique Expérience du Coliving, <br />
+                  Un coliving d'exception. <br />
                   <span className="font-medium text-[#7c9a6d]">
-                    l'âme d'une communauté intimiste
+                    Des maisons à taille humaine.
                   </span>
                 </>
               )}
             </h2>
             <p className="text-[#a8b5a0] max-w-2xl mx-auto">
               {language === "en"
-                ? "Only 3 very exclusive homes. Each one designed like a premium retreat, not a crowded shared house."
-                : "Seulement 3 maisons exclusives. Chacune à taille humaine, pas une colocation bondée."}
+                ? `${STATS.totalHouses} houses of ${STATS.minResidentsPerHouse} to ${STATS.maxResidentsPerHouse} residents. Pool, sauna, and gym in each one. Rooms from ${STATS.roomSizeMin} to ${STATS.roomSizeMax} m², grounds up to 2,000 m². Amenities you won't find anywhere else in coliving.`
+                : `${STATS.totalHouses} maisons de ${STATS.minResidentsPerHouse} à ${STATS.maxResidentsPerHouse} résidents. Piscine, sauna et salle de sport dans chacune. Chambres de ${STATS.roomSizeMin} à ${STATS.roomSizeMax} m², terrains jusqu'à 2 000 m². Des prestations que vous ne trouverez nulle part ailleurs en coliving.`}
             </p>
           </div>
 
@@ -233,33 +232,30 @@ export function HeroV7() {
           <div className="grid grid-cols-2 md:grid-cols-5 gap-6 md:gap-4">
             {[
               {
-                icon: "",
                 image: "/images/le loft glamour.webp",
                 title: language === "en" ? "Human Scale" : "Taille Humaine",
                 alt: language === "en" ? "Le Loft Ambilly — intimate premium coliving near Geneva, 12 residents max" : "Le Loft Ambilly — coliving premium intimiste près de Genève, 12 résidents max",
                 desc:
                   language === "en"
-                    ? "12 colivers maximum"
-                    : "12 colivers maximum",
+                    ? `${STATS.minResidentsPerHouse} to ${STATS.maxResidentsPerHouse} residents per house`
+                    : `${STATS.minResidentsPerHouse} à ${STATS.maxResidentsPerHouse} résidents par maison`,
                 highlight:
                   language === "en" ? "Intimate & Premium" : "Intime & Premium",
                 link: "/the-coliving",
               },
               {
-                icon: "",
                 image: "/images/la villa coliving le loft piscine.webp",
                 title: language === "en" ? "Swimming Pool" : "Piscine",
                 alt: language === "en" ? "Indoor swimming pool at Le Loft coliving house near Geneva" : "Piscine intérieure du Loft, maison de colocation près de Genève",
                 desc:
                   language === "en"
-                    ? "Indoor or outdoor"
-                    : "Intérieure ou extérieure",
+                    ? "Indoor or outdoor, depending on the house"
+                    : "Intérieure ou extérieure, selon la maison",
                 highlight:
-                  language === "en" ? "For you Only" : "Rien que pour toi",
+                  language === "en" ? "In every house" : "Dans chaque maison",
                 link: "/our-houses",
               },
               {
-                icon: "",
                 image: "/images/la villa coliving le lodge-sauna2.webp",
                 title: "Sauna",
                 alt: language === "en" ? "Sauna at Le Lodge coliving — wellness included in Geneva area colocation" : "Sauna du Lodge coliving — bien-être inclus dans la colocation près de Genève",
@@ -272,24 +268,22 @@ export function HeroV7() {
                 link: "/our-houses",
               },
               {
-                icon: "",
                 image: "/images/la villa coliving le lodge-gym.webp",
                 title: language === "en" ? "Gym" : "Salle de Sport",
                 alt: language === "en" ? "Fully equipped gym at Le Lodge coliving Annemasse, near Geneva" : "Salle de sport équipée du Lodge coliving Annemasse, près de Genève",
                 desc:
                   language === "en" ? "Fully equipped" : "Entièrement équipée",
-                highlight: language === "en" ? "Stay Active" : "Reste Actif",
+                highlight: language === "en" ? "Stay Active" : "Restez Actif",
                 link: "/our-houses",
               },
               {
-                icon: "",
                 image: "/images/la villa yoga.webp",
                 title: language === "en" ? "Community Events" : "Événements",
                 alt: language === "en" ? "Yoga class and community events at La Villa Coliving near Geneva" : "Cours de yoga et événements communautaires à La Villa Coliving près de Genève",
                 desc:
                   language === "en"
-                    ? "Yoga, dinners & more"
-                    : "Yoga, dîners & plus",
+                    ? "Yoga, fitness, pizza night & more"
+                    : "Yoga, fitness, pizza party & plus",
                 highlight:
                   language === "en" ? "Real Connections" : "Vraies Connexions",
                 link: "/the-coliving",
@@ -303,14 +297,11 @@ export function HeroV7() {
                     alt={item.alt}
                     className="w-full h-full object-cover opacity-80 group-hover:opacity-100 group-hover:scale-105 transition-all duration-500"
                   />
-                  {/* Gradient overlay - plus transparent */}
+                  {/* Gradient overlay */}
                   <div className="absolute inset-0 bg-gradient-to-t from-[#3d4a38]/30 via-[#3d4a38]/10 to-transparent" />
 
                   {/* Content */}
                   <div className="absolute inset-0 p-4 flex flex-col justify-end">
-                    <div className="mb-2">
-                      <span className="text-2xl">{item.icon}</span>
-                    </div>
                     <h3 className="text-[#faf9f5] font-medium text-lg mb-1 group-hover:text-[#7c9a6d] transition-colors">
                       {item.title}
                     </h3>
@@ -328,8 +319,8 @@ export function HeroV7() {
           <div className="mt-12 text-center">
             <p className="text-[#a8b5a0] text-lg mb-4">
               {language === "en"
-                ? "🌟 This level of amenities is rare in coliving. That's why we only have 3 homes. "
-                : "🌟 Ce niveau d'équipements est rare en coliving. C'est pourquoi nous n'avons que 3 maisons."}
+                ? "This level of amenities is exceptional in coliving. Pool, sauna, gym, private classes, pizza nights, jacuzzi — in every house."
+                : "Ce niveau de prestations est exceptionnel en coliving. Piscine, sauna, salle de sport, cours privés, pizza party, jacuzzi — dans chaque maison."}
             </p>
             <Link
               to="/our-houses"
@@ -342,27 +333,27 @@ export function HeroV7() {
         </div>
       </div>
 
-      {/* Bottom bar - style léger */}
+      {/* Bottom bar */}
       <div className="border-t border-[#7c9a6d]/10">
         <div className="container-custom py-6">
           <div className="flex items-center justify-center gap-8 md:gap-16">
             {[
               {
-                value: "100+",
+                value: `${STATS.totalResidents}+`,
                 label:
                   language === "en"
-                    ? "Community members"
-                    : "Membres de la communauté",
+                    ? `Residents welcomed since ${STATS.foundedYear}`
+                    : `Résidents accueillis depuis ${STATS.foundedYear}`,
               },
               {
-                value: "3",
+                value: String(STATS.totalHouses),
                 label:
                   language === "en"
-                    ? "Only Exclusives Homes"
-                    : "Maisons Uniquement",
+                    ? "Exclusive houses"
+                    : "Maisons exclusives",
               },
               {
-                value: "20 min max",
+                value: `${STATS.genevaDistanceMax} min max`,
                 label: language === "en" ? "From Geneva" : "De Genève",
               },
             ].map((stat, index) => (

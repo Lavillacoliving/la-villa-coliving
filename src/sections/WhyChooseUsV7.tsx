@@ -1,9 +1,11 @@
-// WhyChooseUs V7 - Lifestyle section
+// WhyChooseUs V7 - Premium section
+import { Wallet, Heart, CalendarHeart, Wifi, Sparkles, Globe, Car } from "lucide-react";
 import { useLanguage } from "@/contexts/LanguageContext";
+import { STATS } from "@/data/stats";
 
 /**
- * VERSION 7: JEUNE + NOMADE + ZEN + FRAIS
- * Why Choose Us style lifestyle et décontracté
+ * VERSION 7: PREMIUM + FACTUEL + USPs
+ * Why Choose Us — vouvoiement, icônes lucide-react, USPs renforcés
  */
 
 export function WhyChooseUsV7() {
@@ -11,37 +13,37 @@ export function WhyChooseUsV7() {
 
   const features = [
     {
-      emoji: "💰",
+      icon: Wallet,
       text:
         language === "en"
-          ? "One price, zero surprises"
-          : "Un prix, zéro surprise",
+          ? "One payment, everything included"
+          : "Un paiement unique, tout compris",
     },
     {
-      emoji: "🧘",
-      text: language === "en" ? "Zen living spaces" : "Espaces de vie zen",
+      icon: Heart,
+      text: language === "en" ? "Private yoga and fitness every week" : "Yoga et fitness privés chaque semaine",
     },
     {
-      emoji: "🎉",
+      icon: CalendarHeart,
       text:
-        language === "en" ? "Community events" : "Événements communautaires",
+        language === "en" ? "Pizza night, meal basket, events" : "Pizza Party, panier repas, événements",
     },
     {
-      emoji: "💻",
+      icon: Wifi,
       text:
-        language === "en" ? "Work-from-home friendly" : "Télétravail friendly",
+        language === "en" ? `${STATS.wifiBandwidth} fiber internet` : `WiFi fibre ${STATS.wifiBandwidth}`,
     },
     {
-      emoji: "🧹",
+      icon: Sparkles,
       text:
-        language === "en" ? "Weekly cleaning included" : "Ménage hebdo inclus",
+        language === "en" ? "Housekeeping twice a week" : "Ménage 2 fois par semaine",
     },
     {
-      emoji: "🌍",
+      icon: Globe,
       text:
         language === "en"
-          ? "International community"
-          : "Communauté internationale",
+          ? `${STATS.genevaDistanceMin}-${STATS.genevaDistanceMax} min from Geneva`
+          : `${STATS.genevaDistanceMin}-${STATS.genevaDistanceMax} min de Genève`,
     },
   ];
 
@@ -63,8 +65,8 @@ export function WhyChooseUsV7() {
             </div>
             {/* Floating card */}
             <div className="absolute -bottom-6 -right-6 bg-white p-5 rounded-2xl shadow-[0_10px40px_rgba(124,154,109,0.15)]">
-              <div className="text-4xl mb-1">🚗</div>
-              <div className="text-2xl font-medium text-[#7c9a6d]">20 min</div>
+              <Car className="w-8 h-8 text-[#7c9a6d] mb-1" />
+              <div className="text-2xl font-medium text-[#7c9a6d]">{STATS.genevaDistanceMin}-{STATS.genevaDistanceMax} min</div>
               <div className="text-sm text-[#7c8a72]">
                 {language === "en" ? "to Geneva" : "de Genève"}
               </div>
@@ -74,22 +76,21 @@ export function WhyChooseUsV7() {
           {/* Right - Content */}
           <div>
             <span className="inline-block px-4 py-2 bg-[#7c9a6d]/15 text-[#7c9a6d] text-sm font-medium rounded-full mb-6">
-              ✨ {language === "en" ? "Why La Villa?" : "Pourquoi La Villa ?"}
+              {language === "en" ? "Why La Villa?" : "Pourquoi La Villa ?"}
             </span>
 
             <h2 className="text-4xl md:text-5xl font-light text-[#3d4a38] mb-6 leading-tight">
-              {language === "en" ? "Live better," : "Vis mieux,"}
+              {language === "en" ? "Live better," : "Vivez mieux,"}
               <br />
               <span className="font-medium text-[#7c9a6d]">
                 {language === "en" ? "together" : "ensemble"}
-              </span>{" "}
-              🌿
+              </span>
             </h2>
 
             <p className="text-[#5a6355] text-lg leading-relaxed mb-10 max-w-lg">
               {language === "en"
-                ? "We're not just a place to sleep. We're a premium community of people who value freedom, connection, and good vibes."
-                : "On n'est pas juste un endroit pour dormir. On est une communauté premium de gens qui valorisent la liberté, la connexion et la bonne humeur."}
+                ? "We're not just a place to stay. We create exceptional living spaces with premium amenities and a curated community of professionals."
+                : "Nous ne sommes pas un simple hébergement. Nous créons des lieux de vie d'exception, avec des équipements premium et une communauté sélectionnée de professionnels."}
             </p>
 
             {/* Features grid */}
@@ -99,7 +100,7 @@ export function WhyChooseUsV7() {
                   key={index}
                   className="flex items-center gap-3 p-4 rounded-2xl bg-white border border-[#7c9a6d]/10 hover:border-[#7c9a6d]/30 hover:shadow-sm transition-all duration-300"
                 >
-                  <span className="text-xl">{feature.emoji}</span>
+                  <feature.icon className="w-5 h-5 text-[#7c9a6d] flex-shrink-0" />
                   <span className="text-sm text-[#5a6355]">{feature.text}</span>
                 </div>
               ))}

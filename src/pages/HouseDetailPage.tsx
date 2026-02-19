@@ -65,14 +65,18 @@ interface HouseData {
   badgeColor: string;
 }
 
-const housesData: Record<string, HouseData> = {
+function getHousesData(lang: string): Record<string, HouseData> {
+  const isEn = lang === "en";
+  return {
   lavilla: {
     name: "La Villa",
     location: "Ville-la-Grand, Grand Genève",
-    description:
-      "A beautiful house 100% designed and fitted for community living. Settled on a 2000sqm property adjoining a nature reserve, La Villa offers the perfect blend of nature and comfort.",
-    longDescription:
-      "La Villa is our flagship coliving space, designed from the ground up for modern community living. Nestled on a 2000m² estate bordering a nature reserve, this 400m² home offers the perfect balance between privacy and connection. Wake up to birdsong, work from our dedicated coworking spaces, unwind by the heated pool, and build lasting friendships with your housemates. Every detail has been thoughtfully considered to create an environment where you can thrive both personally and professionally.",
+    description: isEn
+      ? "370 m² of designed living on a 2,000 m² estate bordering a nature reserve. Heated pool, sauna, gym, and 10 spacious rooms."
+      : "370 m² de vie design sur un domaine de 2 000 m² bordant une réserve naturelle. Piscine chauffée, sauna, salle de sport et 10 chambres spacieuses.",
+    longDescription: isEn
+      ? "La Villa is our flagship coliving space, designed from the ground up for modern community living. Nestled on a 2,000 m² estate bordering a nature reserve, this 370 m² home offers the perfect balance between privacy and connection. The heated 12×5m pool, 5-seat sauna, and fully equipped gym make it feel like a premium retreat. Wake up to birdsong, work from quiet spaces, unwind by the pool, and build lasting friendships with your housemates. Every detail has been thoughtfully considered to create an environment where you can thrive — personally and professionally."
+      : "La Villa est notre maison phare, conçue de A à Z pour la vie communautaire moderne. Nichée sur un domaine de 2 000 m² bordant une réserve naturelle, cette maison de 370 m² offre l'équilibre parfait entre intimité et convivialité. La piscine chauffée de 12×5 m, le sauna 5 places et la salle de sport équipée en font un véritable lieu de villégiature. Réveillez-vous au chant des oiseaux, travaillez dans des espaces calmes, détendez-vous au bord de la piscine et tissez des amitiés durables. Chaque détail a été pensé pour créer un environnement où vous pouvez vous épanouir.",
     image: "/images/la villa jardin.webp",
     gallery: [
       "/images/la villa/amenities/La Villa-109.webp",
@@ -319,72 +323,117 @@ const housesData: Record<string, HouseData> = {
         category: "amenity",
       },
     ],
-    capacity: "10 colivers",
+    capacity: isEn ? "10 residents" : "10 résidents",
     price: "1,380",
     specs: {
-      size: "400 m²",
+      size: "370 m²",
       plot: "2,000 m²",
       dpe: "D",
     },
-    features: [
-      "12x5m Heated Swimming Pool",
-      "5-seat Sauna",
-      "Equipped Gym",
-      "TV & Video Games Room (PS5, PS4 & Switch)",
-      "XXL Barbecue & Multiple Terraces",
-      "Volleyball Field",
-      "3 Parking Spaces",
-      "Laundry & Storage Room",
-      "High Speed Fiber Internet",
-      "Vegetable Garden",
-      "Outdoor Yoga Deck",
+    features: isEn ? [
+      "Heated 12×5m swimming pool (mid-April to end of September)",
+      "5-seat sauna",
+      "Fully equipped gym",
+      "TV & gaming room (PS5, PS4 & Switch)",
+      "XXL barbecue & multiple terraces",
+      "Volleyball court",
+      "Parking included",
+      "Laundry & storage room",
+      "8 Gbps fiber internet",
+      "Vegetable garden & outdoor yoga deck",
+      "Double equipped kitchen",
+    ] : [
+      "Piscine chauffée 12×5 m (mi-avril à fin septembre)",
+      "Sauna 5 places",
+      "Salle de sport équipée",
+      "Salle TV & gaming (PS5, PS4 & Switch)",
+      "BBQ XXL & terrasses multiples",
+      "Terrain de volley",
+      "Parking inclus",
+      "Buanderie & espace rangement",
+      "Internet fibre 8 Gbps",
+      "Potager & terrasse yoga extérieure",
+      "Double cuisine équipée",
     ],
-    services: [
-      "Weekly private yoga/fitness classes",
-      "Monthly basic supplies delivery",
-      "Monthly Community Dinner",
-      "Regular Community Events & Workshops",
-      "WhatsApp Hotline Support",
-      "Professional housekeeping",
-      "Garden & pool maintenance",
+    services: isEn ? [
+      "Weekly private yoga & fitness classes",
+      "Monthly pizza party",
+      "Monthly meal basket delivery",
+      "Seasonal community events",
+      "WhatsApp direct support",
+      "Housekeeping twice a week",
+      "Pool, sauna & garden maintenance",
+      "Streaming subscriptions (Netflix, Canal+, etc.)",
+      "Bed linen set & towels provided",
+    ] : [
+      "Cours de yoga & fitness privés hebdomadaires",
+      "Pizza Party mensuelle",
+      "Panier repas mensuel livré",
+      "Événements communautaires saisonniers",
+      "Support WhatsApp direct",
+      "Ménage des communs 2 fois par semaine",
+      "Entretien piscine, sauna & jardin",
+      "Abonnements streaming (Netflix, Canal+, etc.)",
+      "Parure de linge de lit et serviettes fournie",
     ],
     rooms: [
       {
-        type: "Room with Private Bathroom",
+        type: isEn ? "Room with private bathroom" : "Chambre avec salle de bain privative",
         price: "1,380 CHF",
-        description:
-          "Your private sanctuary with double EMMA bed, ergonomic desk, spacious closet, and private bathroom. Most rooms offer a private outdoor terrace with garden views.",
+        description: isEn
+          ? "Your private sanctuary with double Emma bed, ergonomic desk, spacious closet, and private bathroom. Most rooms offer a terrace or balcony with garden views. 16 to 23 m²."
+          : "Votre espace privé avec lit double Emma, bureau ergonomique, placard spacieux et salle de bain privative. La plupart des chambres offrent une terrasse ou un balcon avec vue sur le jardin. 16 à 23 m².",
         image: "/images/la villa/rooms/La Villa-80.webp",
       },
       {
-        type: "Room with Shared Bathroom",
+        type: isEn ? "Room with shared bathroom" : "Chambre avec salle de bain partagée",
         price: "1,380 CHF",
-        description:
-          "Comfortable private room with double EMMA bed, workspace, and ample storage. Access to beautifully designed shared bathroom facilities.",
+        description: isEn
+          ? "Comfortable private room with double Emma bed, workspace, and ample storage. Access to beautifully designed shared bathroom (rooms CH3, CH4, CH7, CH8). 16 to 20 m²."
+          : "Chambre privée confortable avec lit double Emma, espace de travail et rangement. Accès à une salle de bain partagée design (chambres CH3, CH4, CH7, CH8). 16 à 20 m².",
         image: "/images/la villa/rooms/La Villa-92.webp",
       },
     ],
-    nearby: [
-      "8 min walk to CEVA train station (direct to Geneva)",
-      "15 min to Geneva Eaux-Vives by CEVA",
+    nearby: isEn ? [
+      "9 min walk to Annemasse station (Léman Express direct to Geneva)",
+      "15 min to Geneva Eaux-Vives by Léman Express",
       "Supermarkets within 5 min walk",
       "Nature reserve at your doorstep",
       "Local cafes and restaurants nearby",
       "Bike paths to Geneva",
+    ] : [
+      "Gare d'Annemasse à 9 min à pied (Léman Express direct Genève)",
+      "15 min de Genève Eaux-Vives en Léman Express",
+      "Supermarchés à 5 min à pied",
+      "Réserve naturelle au pas de la porte",
+      "Cafés et restaurants de proximité",
+      "Pistes cyclables vers Genève",
     ],
-    lifestyle: [
+    lifestyle: isEn ? [
       "Morning yoga by the pool",
       "Community BBQ dinners",
       "Weekend volleyball tournaments",
       "Garden-to-table cooking",
       "Movie nights in the TV room",
-      "Nature walks",
+      "Nature walks along the reserve",
+    ] : [
+      "Yoga matinal au bord de la piscine",
+      "Dîners BBQ communautaires",
+      "Tournois de volley le week-end",
+      "Cuisine du potager à l'assiette",
+      "Soirées cinéma dans la salle TV",
+      "Promenades nature le long de la réserve",
     ],
-    community: [
+    community: isEn ? [
       "International professionals",
-      "Remote workers & digital nomads",
+      "Remote workers & cross-border commuters",
       "Entrepreneurs & creatives",
       "Nature lovers & wellness enthusiasts",
+    ] : [
+      "Professionnels internationaux",
+      "Télétravailleurs & frontaliers",
+      "Entrepreneurs & créatifs",
+      "Amoureux de la nature & passionnés de bien-être",
     ],
     available: true,
     badgeColor: "#13a811",
@@ -392,10 +441,12 @@ const housesData: Record<string, HouseData> = {
   leloft: {
     name: "Le Loft",
     location: "Ambilly, Grand Genève",
-    description:
-      "A charming townhouse with urban sophistication. Le Loft features an indoor pool and spacious designer rooms perfect for urban professionals.",
-    longDescription:
-      "Le Loft brings urban sophistication to coliving. This stunning townhouse in Ambilly offers the perfect retreat for professionals who want city convenience with home comfort. The all-season indoor pool is the centerpiece of this unique property, allowing you to swim year-round regardless of the weather. With its designer interiors, spacious terraces, and prime location, Le Loft is ideal for those who appreciate the finer things in life while valuing genuine community connections.",
+    description: isEn
+      ? "A 300 m² townhouse with year-round heated indoor pool, Finnish sauna, outdoor kitchen, and 7 spacious designer rooms."
+      : "Maison de ville de 300 m² avec piscine intérieure chauffée toute l'année, sauna finlandais, cuisine extérieure et 7 chambres design spacieuses.",
+    longDescription: isEn
+      ? "Le Loft brings urban sophistication to coliving. This stunning 300 m² townhouse in Ambilly is the most intimate of our three houses, with just 7 residents. Its year-round heated indoor pool — virtually unique in European coliving — is the centerpiece of this exceptional property. The Finnish sauna, fully equipped gym, designer interiors, outdoor kitchen with TV, and spacious terraces make Le Loft ideal for those who appreciate the finer things while valuing genuine community."
+      : "Le Loft incarne la sophistication urbaine du coliving. Cette maison de ville de 300 m² à Ambilly est la plus intimiste de nos trois maisons, avec seulement 7 résidents. Sa piscine intérieure chauffée toute l'année — quasi unique en coliving européen — est la pièce maîtresse de ce bien d'exception. Le sauna finlandais, la salle de sport équipée, les intérieurs design, la cuisine extérieure avec TV et les terrasses spacieuses font du Loft un lieu idéal pour ceux qui apprécient le raffinement tout en valorisant la vraie communauté.",
     image: "/images/le loft/exterior/la villa coliving le loft.webp",
     gallery: [
       "/images/le loft/exterior/le loft jardin.webp",
@@ -688,60 +739,104 @@ const housesData: Record<string, HouseData> = {
         category: "amenity",
       },
     ],
-    capacity: "7 colivers",
+    capacity: isEn ? "7 residents" : "7 résidents",
     price: "1,380",
     specs: {
       size: "300 m²",
       dpe: "C",
     },
-    features: [
-      "All-Season Indoor Pool",
-      "2-seat Finnish Sauna",
-      "Fully Equipped Modern Gym",
-      "Large South-Facing Terraces",
-      "XXL Professional Barbecue",
-      "Dedicated Parking Spaces",
-      "In-House Laundry Room",
-      "High Speed Fiber Internet",
-      "Designer Kitchen",
+    features: isEn ? [
+      "Year-round heated indoor pool",
+      "Finnish sauna (2 seats) in the pool area",
+      "Fully equipped modern gym",
+      "Large south-facing terraces",
+      "XXL outdoor kitchen with TV",
+      "Parking included",
+      "In-house laundry room",
+      "8 Gbps fiber internet",
+      "Designer kitchen",
+      "Foosball table",
+    ] : [
+      "Piscine intérieure chauffée toute l'année",
+      "Sauna finlandais (2 places) dans l'espace piscine",
+      "Salle de sport moderne équipée",
+      "Grandes terrasses plein sud",
+      "Cuisine extérieure XXL avec TV",
+      "Parking inclus",
+      "Buanderie intégrée",
+      "Internet fibre 8 Gbps",
+      "Cuisine design",
+      "Babyfoot",
     ],
-    services: [
-      "Weekly yoga/Fitness classes",
-      "Monthly supplies delivery",
-      "Bi-weekly Community Events",
-      "WhatsApp Support Channel",
-      "Professional cleaning service",
+    services: isEn ? [
+      "Weekly private yoga & fitness classes",
+      "Monthly pizza party",
+      "Monthly meal basket delivery",
+      "Seasonal community events",
+      "WhatsApp direct support",
+      "Housekeeping twice a week",
       "Pool & sauna maintenance",
+      "Streaming subscriptions (Netflix, Canal+, etc.)",
+      "Bed linen set & towels provided",
+    ] : [
+      "Cours de yoga & fitness privés hebdomadaires",
+      "Pizza Party mensuelle",
+      "Panier repas mensuel livré",
+      "Événements communautaires saisonniers",
+      "Support WhatsApp direct",
+      "Ménage des communs 2 fois par semaine",
+      "Entretien piscine & sauna",
+      "Abonnements streaming (Netflix, Canal+, etc.)",
+      "Parure de linge de lit et serviettes fournie",
     ],
     rooms: [
       {
-        type: "Room with Private Bathroom",
+        type: isEn ? "Room with private bathroom" : "Chambre avec salle de bain privative",
         price: "1,380 CHF",
-        description:
-          "Elegant designer room with private en-suite bathroom, premium furnishings, workspace, and city views.",
+        description: isEn
+          ? "Elegant designer room (21 m², CH7 = 23 m²) with private en-suite bathroom, premium Emma or Tediber mattress, workspace, and terrace access. All 7 rooms have private bathrooms."
+          : "Chambre design élégante (21 m², CH7 = 23 m²) avec salle de bain privative, matelas premium Emma ou Tediber, espace de travail et accès terrasse. Les 7 chambres ont une salle de bain privative.",
         image: "/images/le loft/rooms/la villa coliving le loft-52.webp",
       },
     ],
-    nearby: [
-      "5 min walk to tram (direct to Geneva)",
-      "20 min to Geneva center",
+    nearby: isEn ? [
+      "5 min walk to Croix d'Ambilly tram (direct to Geneva)",
+      "14 min walk to Annemasse train station",
+      "15-20 min to Geneva center",
       "Restaurants within walking distance",
-      "Gym & sports center nearby",
-      "Easy access to la voie verte",
+      "Easy access to the Voie Verte bike path",
+    ] : [
+      "Tram Croix d'Ambilly à 5 min à pied (direct Genève)",
+      "Gare d'Annemasse à 14 min à pied",
+      "15-20 min du centre de Genève",
+      "Restaurants accessibles à pied",
+      "Accès facile à la Voie Verte (piste cyclable)",
     ],
-    lifestyle: [
+    lifestyle: isEn ? [
       "Morning swims in the indoor pool",
       "Terrace aperitifs at sunset",
       "Urban exploration weekends",
       "Cooking sessions in the designer kitchen",
       "Sauna & relaxation evenings",
-      "City nightlife nearby",
+      "Outdoor dining under the stars",
+    ] : [
+      "Baignades matinales dans la piscine intérieure",
+      "Apéros en terrasse au coucher du soleil",
+      "Explorations urbaines le week-end",
+      "Sessions cuisine dans la kitchen design",
+      "Soirées sauna & relaxation",
+      "Dîners en extérieur sous les étoiles",
     ],
-    community: [
+    community: isEn ? [
       "Urban professionals",
       "Finance & consulting experts",
       "International executives",
       "City lovers & culture enthusiasts",
+    ] : [
+      "Professionnels urbains",
+      "Experts finance & consulting",
+      "Cadres internationaux",
+      "Amoureux de la ville & passionnés de culture",
     ],
     available: true,
     badgeColor: "#13a811",
@@ -749,10 +844,12 @@ const housesData: Record<string, HouseData> = {
   lelodge: {
     name: "Le Lodge",
     location: "Annemasse, Grand Genève",
-    description:
-      "The newest and biggest house from La Villa Coliving. Le Lodge offers the most intense coliving experience with 4 buildings including a dedicated fitness chalet.",
-    longDescription:
-      "Le Lodge represents the future of coliving at La Villa. This expansive property spans 4 buildings across 1,500m² of gardens, offering our most comprehensive coliving experience yet. The dedicated fitness chalet with sauna, the stunning pool house, and the main residence create a village-like atmosphere where community truly thrives. With space for 12 members, Le Lodge is a vibrant hub of creativity, wellness, and connection.",
+    description: isEn
+      ? "Our newest and largest home, open since January 2026. 500 m² on 1,500 m², 4 buildings, fitness chalet with sauna & jacuzzi, pool house with outdoor kitchen."
+      : "Notre maison la plus récente et la plus grande, ouverte depuis janvier 2026. 500 m² sur 1 500 m², 4 bâtiments, chalet fitness avec sauna & jacuzzi, pool house avec cuisine d'été.",
+    longDescription: isEn
+      ? "Le Lodge represents the pinnacle of coliving at La Villa. Open since January 2026, this expansive 500 m² property spans 4 buildings across 1,500 m² of gardens — our largest and most comprehensive home. The dedicated fitness chalet with sauna and jacuzzi, the stunning pool house with full outdoor kitchen, and the main residence create a village-like atmosphere where community truly thrives. With 12 residents, DPE B energy rating, electric bike charging stations, and 130 m² of attic storage, Le Lodge sets a new standard."
+      : "Le Lodge représente le summum du coliving chez La Villa. Ouvert depuis janvier 2026, ce bien de 500 m² s'étend sur 4 bâtiments au cœur de 1 500 m² de jardins — notre maison la plus grande et la plus complète. Le chalet fitness dédié avec sauna et jacuzzi, le pool house avec cuisine d'été complète et la résidence principale créent une atmosphère de village où la communauté s'épanouit vraiment. Avec 12 résidents, un DPE B, des bornes de recharge vélo électrique et 130 m² de grenier de stockage, Le Lodge établit un nouveau standard.",
     image: "/images/le lodge/exterior/la villa coliving le lodge-14.webp",
     gallery: [
       "/images/le lodge/exterior/le lodge piscine.webp",
@@ -1100,73 +1197,122 @@ const housesData: Record<string, HouseData> = {
         category: "amenity",
       },
     ],
-    capacity: "12 colivers",
+    capacity: isEn ? "12 residents" : "12 résidents",
     price: "1,380",
     specs: {
       size: "500 m²",
       plot: "1,500 m²",
       dpe: "B",
     },
-    features: [
-      "12x5m Swimming Pool & Pool House",
-      "Dedicated Fitness Chalet with Sauna",
-      "State-of-the-Art Gym Equipment",
-      "Gaming & Entertainment Room",
-      "Beautiful Gardens & Outdoor Spaces",
-      "The Pool House (Additional Building)",
-      "Multiple Parking Spaces",
-      "High Speed Fiber Internet",
-      "Outdoor Kitchen & Dining Area",
+    features: isEn ? [
+      "12×5m outdoor swimming pool (mid-April to end of September)",
+      "Dedicated fitness chalet with sauna (5 seats) & jacuzzi",
+      "State-of-the-art gym equipment",
+      "Pool house with full outdoor kitchen, BBQ XXL",
+      "Gaming & entertainment room with arcade machine",
+      "Shuffleboard & foosball",
+      "Beautiful gardens & expansive outdoor spaces",
+      "Parking included + 2 electric bike charging stations",
+      "8 Gbps fiber internet",
+      "130 m² attic storage",
+      "DPE B energy rating",
+    ] : [
+      "Piscine extérieure 12×5 m (mi-avril à fin septembre)",
+      "Chalet fitness dédié avec sauna (5 places) & jacuzzi",
+      "Salle de sport très complète",
+      "Pool house avec cuisine d'été complète, BBQ XXL",
+      "Salle de jeux & divertissement avec jeu d'arcade",
+      "Jeux de palets & babyfoot",
+      "Grands jardins & vastes espaces extérieurs",
+      "Parking inclus + 2 bornes recharge vélo électrique",
+      "Internet fibre 8 Gbps",
+      "Grenier de stockage 130 m²",
+      "DPE B (performance énergétique)",
     ],
-    services: [
-      "weekly yoga/fitness classes",
-      "Monthly supplies & essentials",
-      "Monthly Community Dinners",
-      "Regular Events",
-      "WhatsApp Support",
-      "Full property maintenance",
-      "Garden & landscape care",
+    services: isEn ? [
+      "Weekly private yoga & fitness classes",
+      "Monthly pizza party",
+      "Monthly meal basket delivery",
+      "Seasonal community events",
+      "WhatsApp direct support",
+      "Housekeeping twice a week",
+      "Full property, garden & pool maintenance",
+      "Streaming subscriptions (Netflix, Canal+, etc.)",
+      "Bed linen set & towels provided",
+    ] : [
+      "Cours de yoga & fitness privés hebdomadaires",
+      "Pizza Party mensuelle",
+      "Panier repas mensuel livré",
+      "Événements communautaires saisonniers",
+      "Support WhatsApp direct",
+      "Ménage des communs 2 fois par semaine",
+      "Entretien complet propriété, jardin & piscine",
+      "Abonnements streaming (Netflix, Canal+, etc.)",
+      "Parure de linge de lit et serviettes fournie",
     ],
     rooms: [
       {
-        type: "Room with Private Bathroom",
+        type: isEn ? "Room with private bathroom" : "Chambre avec salle de bain privative",
         price: "1,380 CHF",
-        description:
-          "Premium private space in our newest house. Modern design, private bathroom, and garden access.",
+        description: isEn
+          ? "Premium private room (17 to 19 m²) in our newest house. Modern design, private bathroom, quality mattress, and garden access. All 12 rooms have private bathrooms."
+          : "Chambre privée premium (17 à 19 m²) dans notre maison la plus récente. Design moderne, salle de bain privative, matelas de qualité et accès jardin. Les 12 chambres ont une salle de bain privative.",
         image: "/images/le lodge/rooms/la villa coliving le lodge-78.webp",
       },
     ],
-    nearby: [
-      "10 min walk to train station",
-      "25 min to Geneva by train",
-      "Annemasse city center nearby",
+    nearby: isEn ? [
+      "1 min walk to Place de l'Étoile tram stop",
+      "8 min walk to Annemasse train station",
+      "15-25 min to Geneva center",
+      "Annemasse city center at your doorstep",
       "Shopping center 5 min away",
-      "Restaurants & bars in walking distance",
-      "Easy border crossing to Switzerland",
+      "Restaurants & bars within walking distance",
+    ] : [
+      "Tram Place de l'Étoile à 1 min à pied",
+      "Gare d'Annemasse à 8 min à pied",
+      "15-25 min du centre de Genève",
+      "Centre-ville d'Annemasse au pas de la porte",
+      "Centre commercial à 5 min",
+      "Restaurants & bars accessibles à pied",
     ],
-    lifestyle: [
+    lifestyle: isEn ? [
       "Pool parties in summer",
       "Fitness challenges in the chalet",
+      "Jacuzzi sessions under the stars",
       "Garden BBQs & outdoor dining",
-      "Creative workshops",
-      "Pizza Parties",
+      "Pizza party nights",
+      "Arcade & shuffleboard tournaments",
+    ] : [
+      "Pool parties en été",
+      "Défis fitness dans le chalet",
+      "Sessions jacuzzi sous les étoiles",
+      "BBQ & dîners au jardin",
+      "Soirées pizza party",
+      "Tournois arcade & jeux de palets",
     ],
-    community: [
-      "Large diverse community",
+    community: isEn ? [
+      "Large diverse community of 12",
       "Creative professionals",
       "Wellness enthusiasts",
-      "Social butterflies & connectors",
+      "Cross-border commuters & expats",
+    ] : [
+      "Grande communauté diversifiée de 12 résidents",
+      "Professionnels créatifs",
+      "Passionnés de bien-être",
+      "Frontaliers & expatriés",
     ],
     available: true,
     badgeColor: "#13a811",
   },
 };
+}
 
 export function HouseDetailPage() {
   const location = useLocation();
   const id = location.pathname.replace("/", "");
   const { t, language } = useLanguage();
 
+  const housesData = getHousesData(language);
   const house = id ? housesData[id] : null;
 
   if (!house) {
@@ -1396,11 +1542,11 @@ export function HouseDetailPage() {
                   <div className="space-y-3">
                     <div className="flex items-center gap-3 text-[#475569]">
                       <Clock size={18} className="text-[#10b981]" />
-                      <span className="text-sm">{language === "en" ? "20 min to Geneva" : "20 min de Genève"}</span>
+                      <span className="text-sm">{language === "en" ? "15-25 min to Geneva" : "15-25 min de Genève"}</span>
                     </div>
                     <div className="flex items-center gap-3 text-[#475569]">
                       <Wifi size={18} className="text-[#f97316]" />
-                      <span className="text-sm">{language === "en" ? "8Gbps Fiber" : "Fibre 8Gbps"}</span>
+                      <span className="text-sm">{language === "en" ? "8 Gbps Fiber" : "Fibre 8 Gbps"}</span>
                     </div>
                     <div className="flex items-center gap-3 text-[#475569]">
                       <Car size={18} className="text-[#f43f5e]" />

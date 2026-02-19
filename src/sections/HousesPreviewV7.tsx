@@ -3,8 +3,8 @@ import { ArrowRight, MapPin, Users } from "lucide-react";
 import { useLanguage } from "@/contexts/LanguageContext";
 
 /**
- * VERSION 7: JEUNE + NOMADE + ZEN + FRAIS
- * Houses preview style lifestyle
+ * VERSION 7: PREMIUM + FACTUEL
+ * Houses preview — descriptions factuelles, plus d'emojis
  */
 
 export function HousesPreviewV7() {
@@ -14,14 +14,14 @@ export function HousesPreviewV7() {
     {
       id: "lavilla",
       name: "La Villa",
-      emoji: "🏡",
+      initial: "V",
       location: "Ville-la-Grand",
       residents: "10",
       image: "/images/villa_portrait.webp",
       description:
         language === "en"
-          ? "Garden, pool & good vibes"
-          : "Jardin, piscine & bonnes vibes",
+          ? "Heated pool, 2,000 m² garden, nature reserve"
+          : "Piscine chauffée, 2 000 m² de jardin, réserve naturelle",
       alt: language === "en"
         ? "La Villa — premium coliving house with garden and pool in Ville-la-Grand, near Geneva"
         : "La Villa — maison de colocation premium avec jardin et piscine à Ville-la-Grand, près de Genève",
@@ -29,14 +29,14 @@ export function HousesPreviewV7() {
     {
       id: "leloft",
       name: "Le Loft",
-      emoji: "🏢",
+      initial: "L",
       location: "Ambilly",
       residents: "7",
       image: "/images/le loft jardin.webp",
       description:
         language === "en"
-          ? "Urban style in the city center"
-          : "Style urbain en centre-ville",
+          ? "Year-round heated indoor pool, 7 residents"
+          : "Piscine intérieure chauffée toute l'année, 7 résidents",
       alt: language === "en"
         ? "Le Loft — urban coliving house with indoor pool in Ambilly, near Geneva"
         : "Le Loft — colocation urbaine avec piscine intérieure à Ambilly, près de Genève",
@@ -44,14 +44,14 @@ export function HousesPreviewV7() {
     {
       id: "lelodge",
       name: "Le Lodge",
-      emoji: "🌲",
+      initial: "G",
       location: "Annemasse",
       residents: "12",
       image: "/images/le lodge piscine.webp",
       description:
         language === "en"
-          ? "Cozy retreat...in the middle of the city !"
-          : "Refuge cosy...en pleine ville !",
+          ? "The largest. 4 buildings, fitness chalet with jacuzzi, outdoor kitchen"
+          : "Le plus grand. 4 bâtiments, chalet fitness avec jacuzzi, cuisine d'été",
       alt: language === "en"
         ? "Le Lodge — coliving house with pool and gym in Annemasse, 10 min from Geneva"
         : "Le Lodge — maison de colocation avec piscine et salle de sport à Annemasse, 10 min de Genève",
@@ -65,15 +65,14 @@ export function HousesPreviewV7() {
         <div className="flex flex-col md:flex-row md:items-end md:justify-between mb-16">
           <div>
             <span className="inline-block px-4 py-2 bg-[#7c9a6d]/15 text-[#7c9a6d] text-sm font-medium rounded-full mb-6">
-              🏠 {language === "en" ? "Our homes" : "Nos maisons"}
+              {language === "en" ? "Our homes" : "Nos maisons"}
             </span>
             <h2 className="text-4xl md:text-5xl font-light text-[#3d4a38]">
-              {language === "en" ? "Pick your" : "Choisis ton"}
+              {language === "en" ? "Find your" : "Trouvez votre"}
               <span className="font-medium text-[#7c9a6d]">
                 {" "}
-                {language === "en" ? "spot" : "spot"}
-              </span>{" "}
-              🎯
+                {language === "en" ? "home" : "maison"}
+              </span>
             </h2>
           </div>
           <Link
@@ -98,9 +97,9 @@ export function HousesPreviewV7() {
                 {/* Overlay */}
                 <div className="absolute inset-0 bg-gradient-to-t from-[#3d4a38]/50 via-transparent to-transparent" />
 
-                {/* House emoji badge */}
-                <div className="absolute top-4 left-4 w-12 h-12 rounded-full bg-white/90 flex items-center justify-center text-2xl shadow-lg">
-                  {house.emoji}
+                {/* House initial badge */}
+                <div className="absolute top-4 left-4 w-12 h-12 rounded-full bg-white/90 flex items-center justify-center text-xl font-serif font-medium text-[#3d4a38] shadow-lg">
+                  {house.initial}
                 </div>
 
                 {/* Hover content */}

@@ -17,12 +17,12 @@ export const translations = {
       subtitle:
         "Live, work & connect in extraordinary homes designed for vibrant community life.",
       ctaPrimary: "Explore Our Houses",
-      ctaSecondary: "Apply Now",
+      ctaSecondary: "Check Availability",
       badge1: "All-inclusive living",
       badge2: "Curated community",
-      badge3: "Flexible stays",
+      badge3: "12-month lease",
       badge4: "Zero agency fees",
-      availability: "Next availability: Winter 2025",
+      availability: "",
     },
 
     // Trust Badges - New Section
@@ -90,7 +90,7 @@ export const translations = {
     about: {
       title: "About La Villa",
       description:
-        "La Villa brings together like-minded people in exceptional homes on the French side of Grand Genève, just 15-30 minutes from Geneva center.",
+        "La Villa brings together like-minded people in exceptional homes on the French side of Grand Genève, just 15-25 minutes from Geneva center.",
       description2:
         "Our community is built on shared values: openness, collaboration, and genuine enthusiasm for collective living. Every member is carefully selected to ensure the perfect fit.",
       cta: "Learn About Our Houses",
@@ -110,7 +110,7 @@ export const translations = {
       },
       location: {
         title: "Prime Location",
-        description: "Grand Genève, France | 20 min to Geneva | 45 min to Alps",
+        description: "Grand Genève, France | 15-25 min to Geneva | 45 min to the Alps",
       },
       comfort: {
         title: "Private Comfort",
@@ -132,7 +132,7 @@ export const translations = {
         name: "La Villa",
         location: "Ville-la-Grand",
         description:
-          "400m² of designed living on a 2000m² estate bordering a nature reserve.",
+          "370m² of designed living on a 2,000m² estate bordering a nature reserve.",
         features:
           "Heated pool, sauna, gym, game room, volleyball court & vegetable garden",
         perfectFor: "Nature enthusiasts",
@@ -142,17 +142,17 @@ export const translations = {
         name: "Le Loft",
         location: "Ambilly",
         description:
-          "A charming townhouse with urban sophistication and indoor pool.",
-        features: "Indoor pool, sauna, gym, terraces & spacious designer rooms",
+          "A 300m² townhouse with year-round heated indoor pool, Finnish sauna and outdoor kitchen.",
+        features: "Year-round heated indoor pool, Finnish sauna, gym, outdoor kitchen with TV, terraces & spacious designer rooms",
         perfectFor: "Urban professionals",
         capacity: "7 members",
       },
       leLodge: {
         name: "Le Lodge",
         location: "Annemasse",
-        description: "Our newest and largest home, opening January 2026.",
+        description: "Our newest and largest home, open since January 2026. 4 buildings, fitness chalet with sauna & jacuzzi, pool house with outdoor kitchen.",
         features:
-          "Outdoor pool, fitness chalet, pool house & expansive gardens",
+          "Outdoor pool, fitness chalet with sauna & jacuzzi, pool house with full outdoor kitchen, BBQ & expansive gardens",
         perfectFor: "Community seekers",
         capacity: "12 members",
       },
@@ -225,7 +225,7 @@ export const translations = {
       difference: {
         title: "Our Curated Coliving Community",
         description:
-          "We bring together 7 to 12 carefully selected members in thoughtfully designed homes, on the French side, just 20 minutes from Geneva. Every detail—from the furniture to the community events—is intentional.",
+          "We bring together 7 to 12 carefully selected members in thoughtfully designed homes, on the French side, just 15-25 minutes from Geneva. Every detail—from the furniture to the community events—is intentional.",
         description2:
           "This isn't just shared housing. It's a lifestyle upgrade designed for modern professionals who refuse to compromise on quality, community, or convenience.",
       },
@@ -254,7 +254,7 @@ export const translations = {
         benefit3: "Instant community of like-minded people",
         benefit4: "Premium amenities you couldn't afford alone",
         benefit5: "Professional cleaning and maintenance",
-        benefit6: "Flexible terms without long-term commitment",
+        benefit6: "12-month lease — settle in and make it home",
         benefit7: "Work-friendly spaces with high-speed internet",
         benefit8: "Regular community events and activities",
       },
@@ -286,7 +286,7 @@ export const translations = {
         housekeeping: {
           title: "Effortless Upkeep",
           description:
-            "BiWeekly housekeeping for common areas, plus full garden and pool maintenance. Your home stays pristine, effortlessly.",
+            "Twice-weekly professional housekeeping for all common areas — a light clean on Thursdays and a deep clean on Mondays. Your home stays pristine, effortlessly.",
         },
         internet: {
           title: "High-Speed Fiber",
@@ -308,8 +308,8 @@ export const translations = {
             "Cinema room with streaming subscriptions, gaming consoles, and spaces designed for connection.",
         },
         transport: {
-          title: "Yoga & Fitness for All",
-          description: "Stay fit with weekly yoga & fitness classes",
+          title: "Private Yoga & Fitness Classes",
+          description: "Weekly private yoga and fitness classes included in your rent. Stay active without leaving home.",
         },
         supplies: {
           title: "Monthly Essentials",
@@ -319,7 +319,7 @@ export const translations = {
         community: {
           title: "Community Events",
           description:
-            "Monthly community dinners and regular events designed to foster genuine connections.",
+            "Monthly pizza parties, seasonal community events, and a meal basket delivered to your house every month. Real connections, zero obligations.",
         },
         support: {
           title: "Always Here for You",
@@ -333,7 +333,7 @@ export const translations = {
     ratesPage: {
       hero: {
         title: "Transparent Pricing",
-        subtitle: "From 1,380 CHF/month — All inclusive",
+        subtitle: "1,380 CHF/month — All inclusive",
         description: "No hidden fees. No surprises. Just exceptional value.",
         description2:
           "When you add up rent, utilities, amenities, and services, La Villa offers more—for less than a Geneva studio.",
@@ -342,14 +342,23 @@ export const translations = {
         title: "What's Included",
         items: [
           "Rent & utilities (electricity, water, heating)",
-          "High-speed fiber internet",
-          "Weekly housekeeping",
-          "Pool & garden maintenance",
-          "Gym, sauna & wellness area",
-          "Weekly yoga & fitness classes",
-          "Streaming subscriptions",
-          "Community events",
-          "Monthly essentials delivery",
+          "Professional-grade fiber internet (8 Gbps)",
+          "Housekeeping twice a week",
+          "Pool, sauna & garden maintenance",
+          "Fully equipped gym",
+          "Weekly private yoga class",
+          "Weekly private fitness class",
+          "Monthly pizza party",
+          "Monthly meal basket delivered to your house",
+          "Streaming subscriptions (Netflix, Canal+, etc.)",
+          "Seasonal community events",
+          "Parking included",
+          "Full house, annex & grounds maintenance",
+          "Furniture & equipment upkeep",
+          "Basic supplies provided",
+          "Move-out management",
+          "Local taxes included",
+          "Bed linen set & towels provided",
           "WhatsApp support",
         ],
       },
@@ -436,14 +445,14 @@ export const translations = {
     hero: {
       title: "Maisons Coliving Premium Genève | Vie Communautaire",
       subtitle:
-        "Vis, travaille & connecte-toi dans des maisons extraordinaires conçues pour une vie communautaire vibrante.",
+        "Vivez, travaillez et connectez-vous dans des maisons extraordinaires conçues pour une vie communautaire vibrante.",
       ctaPrimary: "Découvrir Nos Maisons",
-      ctaSecondary: "Candidater",
+      ctaSecondary: "Voir les disponibilités",
       badge1: "Tout inclus",
       badge2: "Communauté sélectionnée",
-      badge3: "Séjours flexibles",
+      badge3: "Bail 12 mois",
       badge4: "Sans frais d'agence",
-      availability: "Prochaine disponibilité : Hiver 2025",
+      availability: "",
     },
 
     // Trust Badges - New Section
@@ -457,26 +466,26 @@ export const translations = {
     // Why Choose Us - New Section
     whyChooseUs: {
       title: "Pourquoi Choisir La Villa ?",
-      subtitle: "Découvre le coliving conçu pour les jeunes professionnels",
+      subtitle: "Découvrez le coliving conçu pour les jeunes professionnels",
       item1: {
-        title: "Emménage Demain",
+        title: "Emménagez Demain",
         description:
-          "Maisons entièrement meublées, tout inclus. Pas d'achat de meubles, pas de configuration des services, pas de stress. Amène juste ta valise et commence à vivre.",
+          "Maisons entièrement meublées, tout inclus. Pas d'achat de meubles, pas de configuration des services, pas de stress. Apportez votre valise et commencez à vivre.",
       },
       item2: {
-        title: "Travaille depuis le Paradis",
+        title: "Travaillez Depuis un Cadre d'Exception",
         description:
-          "Fibre haut débit et zones calmes. Ton sanctuaire de productivité avec une communauté intégrée.",
+          "Fibre haut débit et zones calmes. Votre sanctuaire de productivité avec une communauté intégrée.",
       },
       item3: {
-        title: "Amis Instantanés",
+        title: "Réseau Social Instantané",
         description:
-          "Communautés sélectionnées de professionnels partageant les mêmes valeurs. Fini les soirées solitaires—ta tribu t'attend.",
+          "Communautés sélectionnées de professionnels partageant les mêmes valeurs. Fini les soirées solitaires — votre communauté vous attend.",
       },
       item4: {
         title: "Zéro Stress Administratif",
         description:
-          "Un paiement mensuel couvre tout. On gère le ménage, la maintenance, les factures et les réparations. Tu vis, c'est tout.",
+          "Un paiement mensuel couvre tout. Nous gérons le ménage, la maintenance, les factures et les réparations. Vous vivez, c'est tout.",
       },
     },
 
@@ -493,14 +502,14 @@ export const translations = {
       },
       testimonial2: {
         quote:
-          "La meilleure décision que j'ai prise en déménageant à Genève. Tout inclus signifiait que je pouvais me concentrer sur mon nouveau travail au lieu de chercher un appartement.",
+          "La meilleure décision que j'ai prise en déménageant à Genève. Le tout inclus m'a permis de me concentrer sur mon nouveau travail au lieu de chercher un appartement.",
         author: "Thomas K.",
         role: "Ingénieur Logiciel",
         house: "Le Loft",
       },
       testimonial3: {
         quote:
-          "J'étais sceptique sur le coliving, mais La Villa m'a prouvé le contraire. La communauté sélectionnée signifie que tout le monde s'entend. C'est comme une famille.",
+          "J'étais sceptique sur le coliving, mais La Villa m'a prouvé le contraire. La communauté sélectionnée fait que tout le monde s'entend. C'est comme une famille.",
         author: "Emma L.",
         role: "Designer UX",
         house: "La Villa",
@@ -511,7 +520,7 @@ export const translations = {
     about: {
       title: "À Propos de La Villa",
       description:
-        "La Villa réunit des personnes partageant les mêmes valeurs dans des maisons exceptionnelles côté France, dans le Grand Genève, à seulement 15-30 min du centre de Genève.",
+        "La Villa réunit des personnes partageant les mêmes valeurs dans des maisons exceptionnelles côté France, dans le Grand Genève, à seulement 15-25 min du centre de Genève.",
       description2:
         "Notre communauté repose sur des valeurs communes : ouverture, collaboration et enthousiasme authentique pour la vie collective. Chaque membre est soigneusement sélectionné pour garantir une parfaite harmonie.",
       cta: "Découvrir Nos Maisons",
@@ -522,7 +531,7 @@ export const translations = {
       title: "Tout Est Inclus",
       community: {
         title: "Communauté Sélectionnée",
-        description: "Vis avec des gens qui partagent ton mode de vie",
+        description: "Vivez avec des personnes qui partagent votre mode de vie",
       },
       amenities: {
         title: "Équipements Premium",
@@ -531,7 +540,7 @@ export const translations = {
       },
       location: {
         title: "Emplacement Privilégié",
-        description: "Grand Genève, côté France | 30 min de Genève | 45 min des Alpes",
+        description: "Grand Genève, côté France | 15-25 min de Genève | 45 min des Alpes",
       },
       comfort: {
         title: "Confort Privé",
@@ -553,7 +562,7 @@ export const translations = {
         name: "La Villa",
         location: "Ville-la-Grand",
         description:
-          "400m² de vie design sur un domaine de 2000m² bordant une réserve naturelle.",
+          "370 m² de vie design sur un domaine de 2 000 m² bordant une réserve naturelle.",
         features:
           "Piscine chauffée, sauna, salle de sport, salle de jeux, terrain de volley & potager",
         perfectFor: "Amoureux de la nature",
@@ -563,9 +572,9 @@ export const translations = {
         name: "Le Loft",
         location: "Ambilly",
         description:
-          "Une maison de ville charmante avec sophistication urbaine et piscine intérieure.",
+          "Maison de ville de 300 m² avec piscine intérieure chauffée toute l'année, sauna finlandais et cuisine extérieure.",
         features:
-          "Piscine intérieure, sauna, salle de sport, terrasses & chambres design spacieuses",
+          "Piscine intérieure chauffée toute l'année, sauna finlandais, salle de sport, cuisine extérieure avec TV, terrasses & chambres design spacieuses",
         perfectFor: "Professionnels urbains",
         capacity: "7 membres",
       },
@@ -573,9 +582,9 @@ export const translations = {
         name: "Le Lodge",
         location: "Annemasse",
         description:
-          "Notre maison la plus récente et la plus grande, ouverture janvier 2026.",
+          "Notre maison la plus récente et la plus grande, ouverte depuis janvier 2026. 4 bâtiments, chalet fitness avec sauna & jacuzzi, pool house avec cuisine d'été.",
         features:
-          "Piscine extérieure, chalet fitness, pool house & jardins spacieux",
+          "Piscine extérieure, chalet fitness avec sauna & jacuzzi, pool house avec cuisine d'été complète, BBQ & grands jardins",
         perfectFor: "Chercheurs de communauté",
         capacity: "12 membres",
       },
@@ -590,22 +599,22 @@ export const translations = {
         number: "01",
         title: "Découvrir",
         description:
-          "Apprends ce qui rend La Villa unique. Le coliving, c'est plus qu'une colocation—c'est un mode de vie conçu pour la connexion, l'épanouissement et le quotidien sans souci.",
+          "Découvrez ce qui rend La Villa unique. Le coliving, c'est plus qu'une colocation — c'est un mode de vie conçu pour la connexion, l'épanouissement et le quotidien sans souci.",
         cta: "Explorer Le Concept",
       },
       step2: {
         number: "02",
         title: "Explorer",
         description:
-          "Visite nos maisons magnifiquement designées, chacune conçue pour la vie communautaire moderne.",
+          "Visitez nos maisons magnifiquement designées, chacune conçue pour la vie communautaire moderne.",
         cta: "Voir Nos Maisons",
       },
       step3: {
         number: "03",
         title: "Candidater",
         description:
-          "Complète ta candidature et rencontre ta future communauté.",
-        cta: "Commencer Ma Candidature",
+          "Complétez votre candidature et rencontrez votre future communauté.",
+        cta: "Commencer Votre Candidature",
       },
     },
 
@@ -613,7 +622,7 @@ export const translations = {
     cta: {
       title: "Prêt à Vivre le Vrai Coliving ?",
       subtitle:
-        "Ta nouvelle maison t'attend. Postule maintenant et rejoins notre communauté sélectionnée.",
+        "Votre nouvelle maison vous attend. Postulez maintenant et rejoignez notre communauté sélectionnée.",
       button: "Candidater",
     },
 
@@ -621,7 +630,7 @@ export const translations = {
     footer: {
       tagline: "Coliving premium au Grand Genève, côté France",
       contact: "Contact",
-      followUs: "Suis-Nous",
+      followUs: "Suivez-Nous",
       rights: "Tous droits réservés.",
     },
 
@@ -634,21 +643,21 @@ export const translations = {
       whatIs: {
         title: "Qu'est-ce que le Coliving ?",
         description:
-          "Le coliving est une façon moderne de vivre où le confort privé rencontre les expériences partagées. C'est conçu pour ceux qui valorisent la communauté, la flexibilité et la qualité—sans les tracas de la location traditionnelle.",
+          "Le coliving est une façon moderne de vivre où le confort privé rencontre les expériences partagées. C'est conçu pour ceux qui valorisent la communauté, la flexibilité et la qualité — sans les tracas de la location traditionnelle.",
         description2:
-          "Imagine avoir ta propre chambre privée magnifiquement designée tout en partageant des équipements premium comme des piscines, des salles de sport et des espaces de coworking avec une communauté sélectionnée de professionnels partageant les mêmes valeurs. C'est le coliving.",
+          "Imaginez avoir votre propre chambre privée magnifiquement designée tout en partageant des équipements premium comme des piscines, des salles de sport et des espaces de coworking avec une communauté sélectionnée de professionnels partageant les mêmes valeurs. C'est le coliving.",
       },
       notColocation: {
         title: "Le Coliving n'est Pas Juste une Colocation",
         description:
-          "La colocation traditionnelle signifie trouver des colocataires, acheter des meubles, configurer les services et tout gérer toi-même. C'est du travail.",
+          "La colocation traditionnelle signifie trouver des colocataires, acheter des meubles, configurer les services et tout gérer soi-même. C'est du travail.",
         description2:
-          "Le coliving est différent. On a fait tout le travail pour toi. Ta maison est entièrement meublée, les services sont connectés, la communauté est sélectionnée et tout est géré professionnellement. Tu emménages et commences à vivre.",
+          "Le coliving est différent. Nous avons fait tout le travail pour vous. Votre maison est entièrement meublée, les services sont connectés, la communauté est sélectionnée et tout est géré professionnellement. Vous emménagez et commencez à vivre.",
       },
       difference: {
         title: "Notre Communauté Coliving Sélectionnée",
         description:
-          "Nous réunissons 7 à 12 membres soigneusement sélectionnés dans des maisons pensées dans les moindres détails, à seulement 20 minutes de Genève, côté France. Chaque détail—du mobilier aux événements communautaires—est intentionnel.",
+          "Nous réunissons 7 à 12 membres soigneusement sélectionnés dans des maisons pensées dans les moindres détails, à seulement 15-25 minutes de Genève, côté France. Chaque détail — du mobilier aux événements communautaires — est intentionnel.",
         description2:
           "Ce n'est pas juste une colocation. C'est une véritable élévation de mode de vie conçue pour les professionnels qui refusent de compromettre sur la qualité, la communauté ou la commodité.",
       },
@@ -662,7 +671,7 @@ export const translations = {
         value2: {
           title: "Vie Sans Effort",
           description:
-            "Tout est pris en charge pour que tu puisses te concentrer sur l'essentiel.",
+            "Tout est pris en charge pour que vous puissiez vous concentrer sur l'essentiel.",
         },
         value3: {
           title: "Connexions Significatives",
@@ -677,9 +686,9 @@ export const translations = {
         benefit3:
           "Communauté instantanée de personnes partageant les mêmes valeurs",
         benefit4:
-          "Équipements premium que tu ne pourrais pas t'offrir seul",
+          "Équipements premium que vous ne pourriez pas vous offrir seul",
         benefit5: "Ménage et maintenance professionnels",
-        benefit6: "Conditions flexibles sans engagement à long terme",
+        benefit6: "Bail de 12 mois — le temps de vous installer vraiment",
         benefit7: "Espaces adaptés au travail avec internet haut débit",
         benefit8: "Événements communautaires et activités régulières",
       },
@@ -699,25 +708,25 @@ export const translations = {
     servicesPage: {
       hero: {
         title: "Vie Tout Inclusive",
-        subtitle: "Tout ce dont tu as besoin. Rien de superflu.",
+        subtitle: "Tout ce dont vous avez besoin. Rien de superflu.",
         description:
-          "Chez La Villa, on a pensé à chaque détail pour que tu puisses te concentrer sur l'essentiel—vivre pleinement.",
+          "Chez La Villa, nous avons pensé à chaque détail pour que vous puissiez vous concentrer sur l'essentiel — vivre pleinement.",
       },
       services: {
         allInclusive: {
           title: "Vraiment Tout Inclus",
           description:
-            "Loyer, charges, entretien et remplacements—tout est couvert. Un paiement. Zéro surprise.",
+            "Loyer, charges, entretien et remplacements — tout est couvert. Un paiement. Zéro surprise.",
         },
         housekeeping: {
           title: "Entretien Sans Effort",
           description:
-            "Ménage hebdomadaire des espaces communs, plus entretien complet du jardin et de la piscine. Ta maison reste impeccable, sans effort.",
+            "Ménage professionnel des communs 2 fois par semaine — nettoyage léger le jeudi, approfondi le lundi. Votre maison reste impeccable, sans effort.",
         },
         internet: {
           title: "Fibre Haut Débit",
           description:
-            "Internet fibre optique professionnel dans toute la maison. Travaille, streame, connecte-toi—sans limites.",
+            "Internet fibre optique professionnel dans toute la maison. Travaillez, streamez, connectez-vous — sans limites.",
         },
         pool: {
           title: "Piscine & Jardin",
@@ -727,7 +736,7 @@ export const translations = {
         wellness: {
           title: "Bien-être Inclus",
           description:
-            "Salle de sport équipée, sauna parce que l'équilibre compte.",
+            "Salle de sport équipée et sauna, parce que l'équilibre compte.",
         },
         entertainment: {
           title: "Espace Divertissement",
@@ -735,24 +744,24 @@ export const translations = {
             "Salle cinéma avec abonnements streaming, consoles de jeu et espaces conçus pour la connexion.",
         },
         transport: {
-          title: "Yoga et Coaching Sportif",
+          title: "Cours de Yoga & Fitness Privés",
           description:
-            "Cours de yoga ou de fitness hebdomadaires pour que rester toujours en forme.",
+            "Cours de yoga et de fitness privés chaque semaine, inclus dans votre loyer. Restez en forme sans quitter la maison.",
         },
         supplies: {
           title: "Essentiels Mensuels",
           description:
-            "Fournitures de base livrées mensuellement—produits d'entretien, papeterie et essentiels domestiques.",
+            "Fournitures de base livrées mensuellement — produits d'entretien, papeterie et essentiels domestiques.",
         },
         community: {
           title: "Événements Communautaires",
           description:
-            "Dîners communautaires mensuels et événements réguliers conçus pour favoriser de véritables connexions.",
+            "Pizza Party mensuelle, événements saisonniers, et un panier repas livré chaque mois dans votre maison. De vraies connexions, zéro obligation.",
         },
         support: {
-          title: "Toujours Là pour Toi",
+          title: "Toujours Là pour Vous",
           description:
-            "Support WhatsApp direct pour des réponses rapides. On est à un message.",
+            "Support WhatsApp direct pour des réponses rapides. Nous sommes à un message.",
         },
       },
     },
@@ -761,24 +770,33 @@ export const translations = {
     ratesPage: {
       hero: {
         title: "Tarifs Transparents",
-        subtitle: "À partir de 1 380 CHF/mois — Tout inclus",
+        subtitle: "1 380 CHF/mois — Tout inclus",
         description:
           "Pas de frais cachés. Pas de surprises. Juste une valeur exceptionnelle.",
         description2:
-          "Quand tu additionnes loyer, charges, équipements et services, La Villa offre plus—pour moins cher qu'un studio à Genève.",
+          "Quand vous additionnez loyer, charges, équipements et services, La Villa offre plus — pour moins cher qu'un studio à Genève.",
       },
       included: {
         title: "Ce Qui Est Inclus",
         items: [
           "Loyer & charges (électricité, eau, chauffage)",
-          "Internet fibre haut débit",
-          "Ménage hebdomadaire",
-          "Entretien piscine & jardin",
-          "Salle de sport, sauna & espace bien-être",
-          "Cours de yoga & fitness hebdomadaires",
-          "Abonnements streaming",
-          "Événements communautaires",
-          "Livraison essentiels mensuels",
+          "Internet fibre pro (8 Gbps)",
+          "Ménage des communs 2 fois par semaine",
+          "Entretien piscine, sauna & jardin",
+          "Salle de sport équipée",
+          "Cours de yoga privé hebdomadaire",
+          "Cours de fitness privé hebdomadaire",
+          "Pizza Party mensuelle",
+          "Panier repas mensuel livré par maison",
+          "Abonnements streaming (Netflix, Canal+, etc.)",
+          "Événements communautaires saisonniers",
+          "Parking inclus",
+          "Entretien complet maison, annexes & espaces extérieurs",
+          "Entretien du mobilier et équipements",
+          "Fournitures de base fournies",
+          "Gestion des départs",
+          "Taxes locales incluses",
+          "Parure de linge de lit et serviettes fournie",
           "Support WhatsApp",
         ],
       },
@@ -790,9 +808,9 @@ export const translations = {
     faqPage: {
       hero: {
         title: "Des Questions ? Nous Avons les Réponses.",
-        subtitle: "Tout ce que tu dois savoir sur la vie à La Villa.",
+        subtitle: "Tout ce que vous devez savoir sur la vie à La Villa.",
         contact:
-          "Tu ne trouves pas ce que tu cherches ? Contacte-nous—on est là pour t'aider.",
+          "Vous ne trouvez pas ce que vous cherchez ? Contactez-nous — nous sommes là pour vous aider.",
       },
       categories: {
         title: "Parcourir par Catégorie",
@@ -806,9 +824,9 @@ export const translations = {
     joinPage: {
       hero: {
         title: "Rejoindre La Villa",
-        subtitle: "Ta nouvelle maison t'attend.",
+        subtitle: "Votre nouvelle maison vous attend.",
         description:
-          "Trois étapes simples pour rejoindre notre communauté. On t'accompagne à chaque étape du parcours.",
+          "Trois étapes simples pour rejoindre notre communauté. Nous vous accompagnons à chaque étape du parcours.",
         steps: "1. Candidater → 2. Rencontrer → 3. Emménager",
       },
       form: {
@@ -818,11 +836,11 @@ export const translations = {
         phone: "Téléphone",
         birthDate: "Date de Naissance",
         job: "Poste à Genève",
-        arrival: "Quand souhaites-tu nous rejoindre ?",
-        duration: "Combien de temps comptes-tu rester ?",
+        arrival: "Quand souhaitez-vous nous rejoindre ?",
+        duration: "Combien de temps comptez-vous rester ?",
         submit: "Soumettre ma Candidature",
         submitting: "Envoi en cours...",
-        success: "Merci ! On te recontacte très vite.",
+        success: "Merci ! Nous vous recontactons très vite.",
       },
     },
 

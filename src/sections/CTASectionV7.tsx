@@ -1,10 +1,11 @@
 import { Link } from "react-router-dom";
 import { ArrowRight } from "lucide-react";
 import { useLanguage } from "@/contexts/LanguageContext";
+import { STATS } from "@/data/stats";
 
 /**
- * VERSION 7: JEUNE + NOMADE + ZEN + FRAIS
- * CTA section style lifestyle
+ * VERSION 7: PREMIUM + FACTUEL
+ * CTA section — vouvoiement, USPs, plus d'emojis
  */
 
 export function CTASectionV7() {
@@ -19,25 +20,23 @@ export function CTASectionV7() {
       <div className="container-custom relative">
         <div className="max-w-3xl mx-auto text-center">
           <span className="inline-block px-4 py-2 bg-white text-[#7c9a6d] text-sm font-medium rounded-full mb-8">
-            🌟{" "}
             {language === "en"
-              ? "Ready for a change?"
-              : "Prêt pour un changement ?"}
+              ? "Ready to join us?"
+              : "Prêt à nous rejoindre ?"}
           </span>
 
           <h2 className="text-4xl md:text-5xl lg:text-6xl font-light text-[#3d4a38] mb-8 leading-tight">
-            {language === "en" ? "Your new home" : "Ta nouvelle maison"}
+            {language === "en" ? "Your next home" : "Votre prochaine maison"}
             <br />
             <span className="font-medium text-[#7c9a6d]">
-              {language === "en" ? "is waiting" : "t'attend"}
-            </span>{" "}
-            🏠
+              {language === "en" ? "is waiting" : "vous attend"}
+            </span>
           </h2>
 
           <p className="text-[#5a6355] text-lg leading-relaxed mb-12 max-w-xl mx-auto">
             {language === "en"
-              ? "Join 50+ nomads who found their people at La Villa. Limited spots for Spring 2026."
-              : "Rejoins 50+ nomades qui ont trouvé leur tribu à La Villa. Places limitées pour le printemps 2026."}
+              ? `Over ${STATS.totalResidents} residents have trusted us since ${STATS.foundedYear}. Pool, sauna, gym, private classes — everything is included.`
+              : `Plus de ${STATS.totalResidents} résidents nous ont fait confiance depuis ${STATS.foundedYear}. Piscine, sauna, salle de sport, cours privés — tout est inclus.`}
           </p>
 
           {/* CTAs */}
@@ -46,7 +45,7 @@ export function CTASectionV7() {
               to="/join-us"
               className="group inline-flex items-center gap-3 px-10 py-5 bg-[#7c9a6d] text-white font-medium rounded-full hover:bg-[#6b8560] transition-all duration-300 hover:shadow-[0_8px30px_rgba(124,154,109,0.4)]"
             >
-              {language === "en" ? "Apply now" : "Postuler maintenant"}
+              {language === "en" ? "Check availability" : "Voir les disponibilités"}
               <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform duration-300" />
             </Link>
 
@@ -61,8 +60,8 @@ export function CTASectionV7() {
           {/* Trust text */}
           <p className="mt-10 text-sm text-[#7c8a72]">
             {language === "en"
-              ? "No commitment. Apply to learn more 👋"
-              : "Aucun engagement. Candidate pour en savoir plus 👋"}
+              ? "Quick application, no commitment."
+              : "Candidature rapide et sans engagement."}
           </p>
         </div>
       </div>
