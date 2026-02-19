@@ -28,6 +28,8 @@ import DashboardLocatairesPage from "@/pages/dashboard/DashboardLocatairesPage";
 import DashboardDepensesPage from "@/pages/dashboard/DashboardDepensesPage";
 import DashboardMaintenancePage from "@/pages/dashboard/DashboardMaintenancePage";
 import DashboardProspectsPage from "@/pages/dashboard/DashboardProspectsPage";
+import DashboardRoadmapPage from "@/pages/dashboard/DashboardRoadmapPage";
+import DashboardDocumentsPage from "@/pages/dashboard/DashboardDocumentsPage";
 
 function App() {
   return (
@@ -66,6 +68,8 @@ function App() {
               <Route path="depenses" element={<DashboardDepensesPage />} />
               <Route path="maintenance" element={<DashboardMaintenancePage />} />
               <Route path="prospects" element={<DashboardProspectsPage />} />
+              <Route path="roadmap" element={<DashboardRoadmapPage />} />
+              <Route path="documents" element={<DashboardDocumentsPage />} />
             </Route>
             <Route path="*" element={<NotFoundPage />} />
           </Routes>

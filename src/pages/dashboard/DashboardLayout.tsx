@@ -10,6 +10,8 @@ const TABS = [
   { id: 'depenses', label: 'Dépenses', path: '/dashboard/depenses' },
   { id: 'maintenance', label: 'Maintenance', path: '/dashboard/maintenance' },
   { id: 'prospects', label: 'Prospects', path: '/dashboard/prospects' },
+  { id: 'roadmap', label: 'Roadmap', path: '/dashboard/roadmap' },
+  { id: 'documents', label: 'Documents', path: '/dashboard/documents' },
 ];
 
 export default function DashboardLayout() {
