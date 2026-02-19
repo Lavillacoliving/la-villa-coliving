@@ -55,14 +55,10 @@ export function MesDemandesPage() {
       myTickets: 'Mes demandes en cours',
       noTickets: 'Aucune demande pour le moment.',
       status: 'Statut',
-      open: 'Envoyé',
-      acknowledged: 'Pris en compte',
+      submitted: 'Envoyé',
       in_progress: 'En cours',
-      waiting_parts: 'En attente pièces',
-      scheduled: 'Planifié',
       resolved: 'Résolu',
       closed: 'Fermé',
-      cancelled: 'Annulé',
       created: 'Créée le',
       comment: 'Commentaire gestionnaire',
       departureWarning: 'Rappel : le préavis est d\'1 mois. Un état des lieux de sortie sera planifié.',
@@ -85,14 +81,10 @@ export function MesDemandesPage() {
       myTickets: 'My current requests',
       noTickets: 'No requests yet.',
       status: 'Status',
-      open: 'Submitted',
-      acknowledged: 'Acknowledged',
+      submitted: 'Submitted',
       in_progress: 'In progress',
-      waiting_parts: 'Waiting for parts',
-      scheduled: 'Scheduled',
       resolved: 'Resolved',
       closed: 'Closed',
-      cancelled: 'Cancelled',
       created: 'Created on',
       comment: 'Manager comment',
       departureWarning: 'Reminder: 1-month notice required. An exit inventory will be scheduled.',
@@ -127,14 +119,10 @@ export function MesDemandesPage() {
   };
 
   const statusColors: Record<string, string> = {
-    open: 'bg-blue-100 text-blue-800',
-    acknowledged: 'bg-indigo-100 text-indigo-800',
+    submitted: 'bg-blue-100 text-blue-800',
     in_progress: 'bg-yellow-100 text-yellow-800',
-    waiting_parts: 'bg-orange-100 text-orange-800',
-    scheduled: 'bg-purple-100 text-purple-800',
     resolved: 'bg-green-100 text-green-800',
     closed: 'bg-gray-100 text-gray-600',
-    cancelled: 'bg-red-100 text-red-600',
   };
 
   const statusLabel = (s: string) => (lang as any)[s] || s;
@@ -273,8 +261,8 @@ export function MesDemandesPage() {
         ) : (
           <div className="space-y-3">
             {tickets.map((ticket) => {
-              const { type: ticketType, subtype: ticketSubtype } = getTicketType(ticket);
-              const typeInfo = ticketTypes[ticketType as keyof typeof ticketTypes];
+              const { type: tType, subtype: tSub } = getTicketType(ticket);
+              const typeInfo = ticketTypes[tType as keyof typeof ticketTypes];
               return (
                 <div key={ticket.id} className="bg-white rounded-xl shadow-sm border border-gray-100 p-4">
                   <div className="flex items-start justify-between mb-2">
@@ -283,12 +271,27 @@ export function MesDemandesPage() {
                       <span className="font-medium text-sm text-gray-900">
                         {language === 'en' ? typeInfo?.en : typeInfo?.fr || ticket.category}
                       </span>
-                      {ticketSubtype && (
-                        <span className=": 'bg-className=": 'bg-classNmtange-1-700'
-         </di-gre           <s        rder border-gray-100 p-6">
-   </p>
+                      {tSub && (
+                        <span className="text-xs text-gray-500">({tSub})</span>
+                      )}
+                    </div>
+                    <span className={`px-2 py-1 rounded-full text-xs font-medium ${statusColors[ticket.status] || statusColors.open}`}>
+                      {statusLabel(ticket.status)}
+                    </span>
+                  </div>
+                  <p className="text-sm text-gray-700 mb-2">{ticket.description}</p>
+                  <p className="text-xs text-gray-400">{lang.created} {new Date(ticket.created_at).toLocaleDateString(language === 'en' ? 'en-GB' : 'fr-FR')}</p>
+                  {ticket.resolution_notes && (
+                    <div className="mt-2 bg-blue-50 rounded-lg p-3 text-sm text-blue-800">
+                      <span className="font-medium">{lang.comment} :</span> {ticket.resolution_notes}
+                    </div>
+                  )}
+                </div>
+              );
+            })}
           </div>
-  ? typeInyour r} :,
-    ack                   <spa <div key={ticket.id} className="bg-white roundcenter gap-2">
-    className="bg-white rtton>
-        <})}Name="w-full py-3 bg-[#b886ype="chec py-3 bg-[c py-3 bg)    
+        )}
+      </div>
+    </div>
+  );
+}
