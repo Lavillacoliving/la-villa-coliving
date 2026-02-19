@@ -24,6 +24,10 @@ import { CommunautePage } from "@/pages/portail/CommunautePage";
 import { ScrollToTop } from "@/components/ScrollToTop";
 import DashboardLayout from "@/pages/dashboard/DashboardLayout";
 import DashboardLoyersPage from "@/pages/dashboard/DashboardLoyersPage";
+import DashboardLocatairesPage from "@/pages/dashboard/DashboardLocatairesPage";
+import DashboardDepensesPage from "@/pages/dashboard/DashboardDepensesPage";
+import DashboardMaintenancePage from "@/pages/dashboard/DashboardMaintenancePage";
+import DashboardProspectsPage from "@/pages/dashboard/DashboardProspectsPage";
 
 function App() {
   return (
@@ -58,6 +62,10 @@ function App() {
             <Route path="/dashboard" element={<DashboardLayout />}>
               <Route index element={<Navigate to="/dashboard/loyers" replace />} />
               <Route path="loyers" element={<DashboardLoyersPage />} />
+              <Route path="locataires" element={<DashboardLocatairesPage />} />
+              <Route path="depenses" element={<DashboardDepensesPage />} />
+              <Route path="maintenance" element={<DashboardMaintenancePage />} />
+              <Route path="prospects" element={<DashboardProspectsPage />} />
             </Route>
             <Route path="*" element={<NotFoundPage />} />
           </Routes>
