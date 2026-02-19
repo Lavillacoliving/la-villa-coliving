@@ -3,66 +3,54 @@ import { ArrowRight } from "lucide-react";
 import { useLanguage } from "@/contexts/LanguageContext";
 
 /**
- * VERSION 7: JEUNE + NOMADE + ZEN + FRAIS
- * CTA section style lifestyle
+ * VERSION 9: BOUTIQUE HOSPITALITY
+ * CTA section — forest-deep background, gold CTA
  */
 
 export function CTASectionV7() {
   const { language } = useLanguage();
 
   return (
-    <section className="py-24 bg-[#f5f2ed] relative overflow-hidden">
-      {/* Organic shapes */}
-      <div className="absolute top-0 left-1/4 w-96 h-96 bg-[#7c9a6d]/10 rounded-full blur-3xl" />
-      <div className="absolute bottom-0 right-1/4 w-80 h-80 bg-[#d4897a]/10 rounded-full blur-3xl" />
-
+    <section className="py-24 md:py-32 bg-[#1B4332] relative overflow-hidden">
       <div className="container-custom relative">
         <div className="max-w-3xl mx-auto text-center">
-          <span className="inline-block px-4 py-2 bg-white text-[#7c9a6d] text-sm font-medium rounded-full mb-8">
-            🌟{" "}
-            {language === "en"
-              ? "Ready for a change?"
-              : "Prêt pour un changement ?"}
+          <span className="text-[#D4B87A] text-sm font-semibold tracking-[0.08em] uppercase mb-8 block">
+            {language === "en" ? "READY TO JOIN?" : "PRÊT À NOUS REJOINDRE ?"}
           </span>
 
-          <h2 className="text-4xl md:text-5xl lg:text-6xl font-light text-[#3d4a38] mb-8 leading-tight">
-            {language === "en" ? "Your new home" : "Ta nouvelle maison"}
-            <br />
-            <span className="font-medium text-[#7c9a6d]">
-              {language === "en" ? "is waiting" : "t'attend"}
-            </span>{" "}
-            🏠
+          <h2 className="text-3xl md:text-4xl lg:text-5xl text-white mb-8 leading-tight" style={{ fontFamily: "'DM Serif Display', serif" }}>
+            {language === "en" ? "Your next home is waiting" : "Votre prochaine maison vous attend"}
           </h2>
 
-          <p className="text-[#5a6355] text-lg leading-relaxed mb-12 max-w-xl mx-auto">
+          <p className="text-white/70 text-lg leading-relaxed mb-12 max-w-xl mx-auto">
             {language === "en"
-              ? "Join 50+ nomads who found their people at La Villa. Limited spots for Spring 2026."
-              : "Rejoins 50+ nomades qui ont trouvé leur tribu à La Villa. Places limitées pour le printemps 2026."}
+              ? "Over 100 residents have chosen our houses since 2021. Pool, sauna, gym, private yoga and fitness classes, pizza nights — all included in 3 human-scale houses."
+              : "Plus de 100 résidents ont choisi nos maisons depuis 2021. Piscine, sauna, salle de sport, cours de yoga et fitness privés, pizza party — tout inclus dans 3 maisons à taille humaine."}
           </p>
 
           {/* CTAs */}
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
             <Link
               to="/join-us"
-              className="group inline-flex items-center gap-3 px-10 py-5 bg-[#7c9a6d] text-white font-medium rounded-full hover:bg-[#6b8560] transition-all duration-300 hover:shadow-[0_8px30px_rgba(124,154,109,0.4)]"
+              className="group inline-flex items-center gap-3 px-10 py-5 bg-[#B5914A] text-white font-semibold rounded-lg hover:bg-[#D4B87A] hover:translate-y-[-2px] hover:shadow-[0_8px_32px_rgba(181,145,74,0.3)] transition-all duration-300"
             >
-              {language === "en" ? "Apply now" : "Postuler maintenant"}
+              {language === "en" ? "Check availability" : "Voir les disponibilités"}
               <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform duration-300" />
             </Link>
 
             <Link
               to="/our-houses"
-              className="inline-flex items-center gap-3 px-10 py-5 border-2 border-[#3d4a38] text-[#3d4a38] font-medium rounded-full hover:bg-[#3d4a38] hover:text-white transition-all duration-300"
+              className="inline-flex items-center gap-3 px-10 py-5 border-[1.5px] border-white/30 text-white font-semibold rounded-lg hover:border-white hover:bg-white/10 transition-all duration-300"
             >
               {language === "en" ? "Explore houses" : "Explorer les maisons"}
             </Link>
           </div>
 
           {/* Trust text */}
-          <p className="mt-10 text-sm text-[#7c8a72]">
+          <p className="mt-10 text-sm text-white/40">
             {language === "en"
-              ? "No commitment. Apply to learn more 👋"
-              : "Aucun engagement. Candidate pour en savoir plus 👋"}
+              ? "Quick 2-minute application — no commitment"
+              : "Candidature rapide en 2 minutes — sans engagement"}
           </p>
         </div>
       </div>

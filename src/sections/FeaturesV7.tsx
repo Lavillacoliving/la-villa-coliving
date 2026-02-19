@@ -1,9 +1,9 @@
-// Features V7 - Lifestyle section
-import { useLanguage } from '@/contexts/LanguageContext';
+import { Waves, Sofa, BedDouble, Users, CheckCircle, TreePine } from "lucide-react";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 /**
- * VERSION 7: JEUNE + NOMADE + ZEN + FRAIS
- * Features style lifestyle
+ * VERSION 9: BOUTIQUE HOSPITALITY
+ * Features — "wow factor" section, no organic shapes
  */
 
 export function FeaturesV7() {
@@ -11,82 +11,79 @@ export function FeaturesV7() {
 
   const features = [
     {
-      emoji: '🏡',
-      title: language === 'en' ? 'Premium Properties' : 'Propriétés Premium',
-      description: language === 'en' 
-        ? 'Sauna, Swimming Pool, Gym, Cinéma Room, Large Outdoor Areas... and More !'
-        : 'Sauna, Piscine, Salle de Sport, Salle Cinéma, Grand Espaces et Encore Plus !',
+      icon: Waves,
+      title: language === "en" ? "Pool, sauna & gym" : "Piscine, sauna & salle de sport",
+      description: language === "en"
+        ? "In every house: pool (indoor at Le Loft, outdoor at La Villa and Le Lodge), sauna, fully equipped gym. At Le Lodge: jacuzzi."
+        : "Dans chaque maison : piscine (intérieure au Loft, extérieure à La Villa et au Lodge), sauna, salle de sport. Au Lodge : jacuzzi.",
     },
     {
-      emoji: '🚀',
-      title: language === 'en' ? 'Highly Equipped Houses' : 'Maisons Ultra Equippées ',
-      description: language === 'en'
-        ? 'Fully equipped double kitchen, Premium furnishing, Gaming Console, BBQ, Soocer Table ... and More ! '
-        : 'Double Cuisine équipée, Meubles Premium, Console de Jeu, BBQ, Babyfoot... et Plus !',
+      icon: Sofa,
+      title: language === "en" ? "Fully equipped houses" : "Maisons ultra-équipées",
+      description: language === "en"
+        ? "Double kitchen, designer furniture, TV & gaming room, foosball, BBQ, outdoor kitchen. At Le Lodge: arcade machine."
+        : "Double cuisine, mobilier design, salle TV & gaming, babyfoot, BBQ XXL, cuisine extérieure. Au Lodge : jeu d'arcade.",
     },
     {
-      emoji: '✨',
-      title: language === 'en' ? 'Full Confort & Privacy' : 'Confort Premium & Intimité',
-      description: language === 'en'
-        ? 'Spacious and decorated rooms, with Emma Tediber mattress, Designer furnitures and silk sheets! '
-        : 'Chambres spacieuses et décorées, avec matelas Emma ou Tediber, mobilier design et draps en soie ! ',
+      icon: BedDouble,
+      title: language === "en" ? "Spacious rooms from 16 to 23 m²" : "Chambres spacieuses de 16 à 23 m²",
+      description: language === "en"
+        ? "50% larger than the coliving average. Emma or Tediber mattress, designer furniture. Most with private bathroom."
+        : "50% plus grandes que la moyenne coliving. Matelas Emma ou Tediber, mobilier design. La plupart avec salle de bain privative.",
     },
     {
-      emoji: '🎊',
-      title: language === 'en' ? 'Community Vibes' : 'Vibes Communautaires',
-      description: language === 'en'
-        ? 'Dinners, activities, and spontaneous hangouts'
-        : 'Dîners, activités et moments spontanés',
+      icon: Users,
+      title: language === "en" ? "Active community life" : "Vie communautaire active",
+      description: language === "en"
+        ? "Monthly pizza party, meal basket, private yoga and fitness classes, board games, foosball. All included, all optional."
+        : "Pizza Party mensuelle, panier repas, cours de yoga et fitness privés, jeux de société, babyfoot. Tout inclus, tout optionnel.",
     },
     {
-      emoji: '🏡',
-      title: language === 'en' ? 'Truly All Inclusive' : 'Vraiment Tout inclus',
-      description: language === 'en'
-        ? 'Maintenance, fiber optics, energy charges, cleaning... but also Yoga/Fitness classes, monthly community meal, home entertainment memberships and more ! '
-        : 'Entretien, fibre optique, charges énergétiques, nettoyage... mais aussi Cours de Yoga et de Fitness, repas communautaire mensuel, abonnements  et plus encore !',
+      icon: CheckCircle,
+      title: language === "en" ? "Truly all inclusive" : "Vraiment tout inclus",
+      description: language === "en"
+        ? "Utilities, 8 Gbps fiber, housekeeping 2×/week, parking, streaming, fitness classes, bed linen — 20 items in one payment."
+        : "Charges, fibre 8 Gbps, ménage 2×/semaine, parking, streaming, cours de sport, linge de lit — 20 postes couverts en un seul paiement.",
     },
     {
-      emoji: '💚',
-      title: language === 'en' ? 'Good Energy' : 'Bonne Energie',
-      description: language === 'en'
-        ? 'Positive people who respect shared spaces'
-        : 'Des gens positifs qui respectent les espaces partagés',
+      icon: TreePine,
+      title: language === "en" ? "Stable community" : "Communauté stable",
+      description: language === "en"
+        ? "12-month leases — your housemates stay. Build lasting friendships, not passing acquaintances."
+        : "Baux de 12 mois — vos colivers restent. Ici on construit des amitiés durables, pas des relations de passage.",
     },
   ];
 
   return (
-    <section className="py-24 bg-[#f5f2ed] relative overflow-hidden">
-      {/* Organic shapes */}
-      <div className="absolute top-20 left-10 w-64 h-64 bg-[#7c9a6d]/10 rounded-full blur-3xl" />
-      <div className="absolute bottom-20 right-10 w-80 h-80 bg-[#d4897a]/10 rounded-full blur-3xl" />
-      
+    <section className="py-24 md:py-32 bg-[#F0F4F1] relative overflow-hidden">
       <div className="container-custom relative">
         {/* Header */}
         <div className="text-center max-w-2xl mx-auto mb-16">
-          <span className="inline-block px-4 py-2 bg-white text-[#7c9a6d] text-sm font-medium rounded-full mb-6">
-            🎁 {language === 'en' ? "What's included" : 'Ce qui est inclus'}
+          <span className="text-[#2D6A4F] text-sm font-semibold tracking-[0.08em] uppercase mb-6 block">
+            {language === "en" ? "ALL INCLUSIVE — 20 ITEMS" : "TOUT INCLUS — 20 POSTES"}
           </span>
-          <h2 className="text-4xl md:text-5xl font-light text-[#3d4a38] mb-6">
-            {language === 'en' ? 'Everything you' : 'Tout ce dont tu'}
-            <span className="font-medium text-[#7c9a6d]"> {language === 'en' ? 'need' : 'as besoin'}</span> ✨
+          <h2 className="text-3xl md:text-4xl text-[#1A1A1A] mb-6" style={{ fontFamily: "'DM Serif Display', serif" }}>
+            {language === "en" ? "One payment. Zero surprises." : "Un seul paiement. Zéro surprise."}
           </h2>
-          <p className="text-[#5a6355] text-lg">
-            {language === 'en' 
-              ? 'Show up with your suitcase. We\'ve got the rest covered.'
-              : 'Amène juste ta valise. On s\'occupe du reste.'}
+          <p className="text-[#4A4A4A] text-lg">
+            {language === "en"
+              ? "Bring your suitcase. We take care of everything else — 20 expense items covered in a single rent of CHF 1,380/month."
+              : "Apportez votre valise. Nous nous occupons de tout le reste — 20 postes de dépenses couverts en un seul loyer de 1 380 CHF/mois."}
           </p>
         </div>
 
         {/* Features grid */}
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
           {features.map((feature, index) => (
-            <div 
+            <div
               key={index}
-              className="group p-6 rounded-3xl bg-white border border-[#7c9a6d]/10 hover:border-[#7c9a6d]/30 hover:shadow-[0_10px40px_rgba(124,154,109,0.1)] transition-all duration-500"
+              className="group p-6 rounded-2xl bg-white border border-[#E8E5DF] shadow-[0_2px_8px_rgba(27,67,50,0.06)] hover:shadow-[0_12px_48px_rgba(27,67,50,0.12)] hover:translate-y-[-4px] transition-all duration-400"
             >
-              <div className="text-4xl mb-4">{feature.emoji}</div>
-              <h3 className="text-lg font-medium text-[#3d4a38] mb-2">{feature.title}</h3>
-              <p className="text-[#7c8a72] text-sm leading-relaxed">{feature.description}</p>
+              <div className="w-12 h-12 bg-[#F0F4F1] rounded-full flex items-center justify-center mb-4">
+                <feature.icon className="w-6 h-6 text-[#2D6A4F]" />
+              </div>
+              <h3 className="text-lg font-bold text-[#1A1A1A] mb-2">{feature.title}</h3>
+              <p className="text-[#4A4A4A] text-sm leading-relaxed">{feature.description}</p>
             </div>
           ))}
         </div>

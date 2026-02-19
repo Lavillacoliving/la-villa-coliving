@@ -1,58 +1,91 @@
 <!doctype html>
-<html lang="en">
+<html lang="fr">
   <head>
+    <!-- Google tag (gtag.js) -->
+    <script
+      async
+      src="https://www.googletagmanager.com/gtag/js?id=G-HW98R11W6M"
+    ></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag() {
+        dataLayer.push(arguments);
+      }
+      gtag("js", new Date());
+
+      gtag("config", "G-HW98R11W6M");
+    </script>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="description" content="Experience premium coliving near Geneva. All-inclusive homes with pool, gym & curated community. From 1,380 CHF/month. No agency fees. Apply now!" />
-    <meta name="keywords" content="coliving geneva, coliving genève, shared housing geneva, all inclusive housing, premium coliving, community living, digital nomad housing" />
-    <meta name="author" content="La Villa Coliving" />
-    <meta name="robots" content="index, follow" />
-    
-    <!-- Open Graph -->
-    <meta property="og:title" content="La Villa Coliving | Premium Coliving in Geneva" />
-    <meta property="og:description" content="Live, work & connect in extraordinary homes designed for vibrant community life. All-inclusive from 1,380 CHF/month." />
-    <meta property="og:type" content="website" />
-    <meta property="og:url" content="https://lavillacoliving.com" />
-    <meta property="og:image" content="https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=1200&q=80" />
-    
-    <!-- Twitter Card -->
-    <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content="La Villa Coliving | Premium Coliving in Geneva" />
-    <meta name="twitter:description" content="Live, work & connect in extraordinary homes. All-inclusive from 1,380 CHF/month." />
-    <meta name="twitter:image" content="https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=1200&q=80" />
-    
+    <meta name="theme-color" content="#000000" />
+
     <!-- Favicon -->
-    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🏡</text></svg>" />
-    
-    <title>La Villa Coliving | Premium Coliving in Geneva</title>
-    
+    <link
+      rel="icon"
+      type="image/svg+xml"
+      href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🏡</text></svg>"
+    />
+
+    <title>Colocation &amp; Coliving Premium près de Genève | La Villa Coliving</title>
+
     <!-- Schema.org Structured Data -->
     <script type="application/ld+json">
-    {
-      "@context": "https://schema.org",
-      "@type": "LocalBusiness",
-      "name": "La Villa Coliving",
-      "image": "https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=1200&q=80",
-      "@id": "https://lavillacoliving.com",
-      "url": "https://lavillacoliving.com",
-      "telephone": "+33XXXXXXXXX",
-      "address": {
-        "@type": "PostalAddress",
-        "addressLocality": "Ville-la-Grand",
-        "postalCode": "74100",
-        "addressCountry": "FR"
-      },
-      "geo": {
-        "@type": "GeoCoordinates",
-        "latitude": 46.2000,
-        "longitude": 6.2500
-      },
-      "priceRange": "€€€",
-      "description": "Premium coliving homes near Geneva. All-inclusive living with curated community, heated pool, gym, and wellness facilities."
-    }
+      {
+        "@context": "https://schema.org",
+        "@type": "LodgingBusiness",
+        "name": "La Villa Coliving",
+        "alternateName": "La Villa Colocation Genève",
+        "image": "https://www.lavillacoliving.com/images/villa_portrait.webp",
+        "@id": "https://www.lavillacoliving.com",
+        "url": "https://www.lavillacoliving.com",
+        "telephone": "+33626235336",
+        "email": "contact@lavillacoliving.com",
+        "address": {
+          "@type": "PostalAddress",
+          "streetAddress": "Ville-la-Grand",
+          "addressLocality": "Ville-la-Grand",
+          "addressRegion": "Haute-Savoie",
+          "postalCode": "74100",
+          "addressCountry": "FR"
+        },
+        "geo": {
+          "@type": "GeoCoordinates",
+          "latitude": 46.2022,
+          "longitude": 6.2497
+        },
+        "priceRange": "€€€",
+        "currenciesAccepted": "EUR, CHF",
+        "description": "Colocation et coliving premium près de Genève. 29 chambres meublées tout inclus à Ville-la-Grand, Ambilly et Annemasse. Piscine chauffée, salle de sport, sauna, fibre optique. Idéal frontaliers, expats et jeunes professionnels. À 15 min de Genève.",
+        "amenityFeature": [
+          {"@type": "LocationFeatureSpecification", "name": "Piscine chauffée", "value": true},
+          {"@type": "LocationFeatureSpecification", "name": "Salle de sport", "value": true},
+          {"@type": "LocationFeatureSpecification", "name": "Sauna", "value": true},
+          {"@type": "LocationFeatureSpecification", "name": "Internet fibre optique", "value": true},
+          {"@type": "LocationFeatureSpecification", "name": "Espace coworking", "value": true},
+          {"@type": "LocationFeatureSpecification", "name": "Cours de yoga", "value": true},
+          {"@type": "LocationFeatureSpecification", "name": "Jardin", "value": true},
+          {"@type": "LocationFeatureSpecification", "name": "Parking", "value": true}
+        ],
+        "numberOfRooms": 29,
+        "petsAllowed": false,
+        "checkinTime": "14:00",
+        "checkoutTime": "11:00",
+        "areaServed": [
+          {"@type": "City", "name": "Genève"},
+          {"@type": "City", "name": "Annemasse"},
+          {"@type": "City", "name": "Ville-la-Grand"},
+          {"@type": "City", "name": "Ambilly"}
+        ],
+        "sameAs": [
+          "https://www.instagram.com/lavillacoliving/"
+        ]
+      }
     </script>
-    <script type="module" crossorigin src="./assets/index-B94nz6yd.js"></script>
-    <link rel="stylesheet" crossorigin href="./assets/index-Dt8nrr6s.css">
+    <meta name="description" content="Colocation et coliving premium près de Genève. 29 chambres meublées tout inclus à Ville-la-Grand, Ambilly et Annemasse. Piscine, gym, sauna. Idéal frontaliers." />
+    <meta name="keywords" content="colocation genève, coliving genève, colocation annemasse, colocation ville-la-grand, colocation frontalier genève, chambre meublée genève, coliving près de genève, colocation tout inclus genève, logement frontalier genève" />
+      <script src="https://cdn.sheetjs.com/xlsx-0.20.3/package/dist/xlsx.full.min.js"></script>
+    <script type="module" crossorigin src="/assets/index-Zoz4dgqj.js"></script>
+    <link rel="stylesheet" crossorigin href="/assets/index-BnD6T6Kk.css">
   </head>
   <body>
     <div id="root"></div>

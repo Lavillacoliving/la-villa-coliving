@@ -1,5 +1,5 @@
 // VERSION 7: JEUNE + NOMADE + ZEN + FRAIS
-// Palette: Sauge (#7c9a6d) + Terracotta doux (#d4897a) + Crème frais (#faf9f5) + Bleu ciel (#a8c5d9)
+// Palette: Forest #2D6A4F + Gold #B5914A + Cream #FAF8F3
 // Style: Lifestyle, décontracté, organique
 
 export { HeroV7 as Hero } from './HeroV7';

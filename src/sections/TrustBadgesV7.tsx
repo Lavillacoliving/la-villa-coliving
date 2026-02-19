@@ -2,8 +2,8 @@ import { Shield, Users, Home, Zap } from "lucide-react";
 import { useLanguage } from "@/contexts/LanguageContext";
 
 /**
- * VERSION 7: JEUNE + NOMADE + ZEN + FRAIS
- * Trust badges style lifestyle
+ * VERSION 9: BOUTIQUE HOSPITALITY
+ * Trust badges — clean, no emojis
  */
 
 export function TrustBadgesV7() {
@@ -12,49 +12,38 @@ export function TrustBadgesV7() {
   const badges = [
     {
       icon: Shield,
-      emoji: "🔒",
-      title:
-        language === "en"
-          ? "No stress,No Surprise"
-          : "Aucun Stress, Aucune Surprise",
-      description:
-        language === "en"
-          ? "All bills included"
-          : "Tout est inclus dans le loyer",
+      title: language === "en" ? "Zero stress, zero surprises" : "Zéro stress, zéro surprise",
+      description: language === "en" ? "All inclusive" : "Tout inclus",
     },
     {
       icon: Users,
-      emoji: "🤝",
-      title: language === "en" ? "Instant Friends" : "Amitiés Instantanées",
-      description:
-        language === "en" ? "Curated Community" : "Communauté Sélectionnée",
+      title: language === "en" ? "Curated community" : "Communauté sélectionnée",
+      description: language === "en" ? "7 to 12 residents per house" : "7 à 12 résidents par maison",
     },
     {
       icon: Home,
-      emoji: "🏠",
-      title: language === "en" ? "Move-in Ready" : "Prêt à Emménager",
-      description: language === "en" ? "Fully Furnished" : "Entièrement Meublé",
+      title: language === "en" ? "Move-in ready" : "Prêt à emménager",
+      description: language === "en" ? "Fully furnished" : "Entièrement meublé",
     },
     {
       icon: Zap,
-      emoji: "⚡",
-      title: language === "en" ? "Fast WiFi" : "WiFi Rapide",
-      description: language === "en" ? "Pro Fiber Optic" : "Pro Fibre Optique",
+      title: language === "en" ? "8 Gbps fiber WiFi" : "WiFi fibre 8 Gbps",
+      description: language === "en" ? "Professional-grade internet" : "Internet professionnel",
     },
   ];
 
   return (
-    <section className="py-16 bg-[#faf9f5] relative overflow-hidden">
+    <section className="py-16 bg-[#FAF8F3] relative overflow-hidden">
       <div className="container-custom">
         <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
           {badges.map((badge, index) => (
             <div
               key={index}
-              className="group text-center p-6 rounded-3xl bg-white border border-[#7c9a6d]/10 hover:border-[#7c9a6d]/30 hover:shadow-[0_10px40px_rgba(124,154,109,0.1)] transition-all duration-500"
+              className="group text-center p-6 rounded-2xl bg-white border border-[#E8E5DF] hover:shadow-[0_12px_48px_rgba(27,67,50,0.12)] hover:translate-y-[-4px] transition-all duration-400"
             >
-              <div className="text-3xl mb-3">{badge.emoji}</div>
-              <h3 className="text-[#3d4a38] font-medium mb-1">{badge.title}</h3>
-              <p className="text-sm text-[#7c8a72]">{badge.description}</p>
+              <badge.icon className="w-6 h-6 text-[#2D6A4F] mx-auto mb-3" />
+              <h3 className="text-[#1A1A1A] font-semibold text-sm mb-1">{badge.title}</h3>
+              <p className="text-sm text-[#4A4A4A]">{badge.description}</p>
             </div>
           ))}
         </div>

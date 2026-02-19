@@ -29,7 +29,7 @@ export function ServicesPageV4() {
       title: language === "en" ? "Live" : "Vivre",
       subtitle:
         language === "en" ? "Your daily comfort" : "Votre confort quotidien",
-      color: "bg-[#7c9a6d]",
+      color: "bg-[#2D6A4F]",
       services: [
         {
           key: "allInclusive",
@@ -58,7 +58,7 @@ export function ServicesPageV4() {
     {
       title: language === "en" ? "Connect" : "Connecter",
       subtitle: language === "en" ? "Stay connected" : "Restez connecté",
-      color: "bg-[#a8c5d9]",
+      color: "bg-[#40916C]",
       services: [
         {
           key: "internet",
@@ -86,7 +86,7 @@ export function ServicesPageV4() {
       title: language === "en" ? "Thrive" : "S'épanouir",
       subtitle:
         language === "en" ? "Wellness & community" : "Bien-être & communauté",
-      color: "bg-[#d4897a]",
+      color: "bg-[#B5914A]",
       services: [
         {
           key: "pool",
@@ -174,19 +174,19 @@ export function ServicesPageV4() {
               {language === "en" ? (
                 <>
                   We handle{" "}
-                  <span className="font-medium text-[#7c9a6d]">everything</span>
+                  <span className="font-medium text-[#2D6A4F]">everything</span>
                   .
                   <br />
                   You just{" "}
-                  <span className="font-medium text-[#d4897a]">live</span>.
+                  <span className="font-medium text-[#B5914A]">live</span>.
                 </>
               ) : (
                 <>
                   On gère{" "}
-                  <span className="font-medium text-[#7c9a6d]">tout</span>.
+                  <span className="font-medium text-[#2D6A4F]">tout</span>.
                   <br />
                   Vous vivez{" "}
-                  <span className="font-medium text-[#d4897a]">
+                  <span className="font-medium text-[#B5914A]">
                     sans soucis
                   </span>
                   .
@@ -205,7 +205,7 @@ export function ServicesPageV4() {
               {stats.slice(0, 2).map((stat, index) => (
                 <div key={index} className="flex items-center gap-3">
                   <div className="w-12 h-12 rounded-full bg-white/10 flex items-center justify-center">
-                    <stat.icon className="w-5 h-5 text-[#7c9a6d]" />
+                    <stat.icon className="w-5 h-5 text-[#2D6A4F]" />
                   </div>
                   <div>
                     <div className="text-2xl font-bold text-white">
@@ -221,10 +221,10 @@ export function ServicesPageV4() {
       </section>
 
       {/* VALUE PROPOSITION - Pourquoi c'est différent */}
-      <section className="py-20 bg-[#faf9f5]">
+      <section className="py-20 bg-[#FAF8F3]">
         <div className="container-custom">
           <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-light text-[#3d4a38] mb-4">
+            <h2 className="text-3xl md:text-4xl font-light text-[#1A1A1A] mb-4">
               {language === "en"
                 ? "Not just services."
                 : "Pas juste des services."}
@@ -233,7 +233,7 @@ export function ServicesPageV4() {
                 {language === "en" ? "A lifestyle." : "Un mode de vie."}
               </span>
             </h2>
-            <p className="text-[#5a6355] max-w-2xl mx-auto">
+            <p className="text-[#4A4A4A] max-w-2xl mx-auto">
               {language === "en"
                 ? "We don't just check boxes. We create an environment where you can focus on what matters."
                 : "On ne coche pas juste des cases. On crée un environnement où vous pouvez vous concentrer sur l'essentiel."}
@@ -276,15 +276,15 @@ export function ServicesPageV4() {
             ].map((item, index) => (
               <div
                 key={index}
-                className="bg-white rounded-2xl p-8 shadow-[0_4px20px_rgba(124,154,109,0.08)] border border-[#7c9a6d]/10 hover:shadow-[0_8px30px_rgba(124,154,109,0.12)] transition-shadow"
+                className="bg-white rounded-2xl p-8 shadow-[0_4px20px_rgba(45,106,79,0.08)] border border-[#2D6A4F]/10 hover:shadow-[0_8px30px_rgba(45,106,79,0.12)] transition-shadow"
               >
-                <div className="w-14 h-14 rounded-xl bg-[#7c9a6d]/10 flex items-center justify-center mb-6">
-                  <item.icon className="w-7 h-7 text-[#7c9a6d]" />
+                <div className="w-14 h-14 rounded-xl bg-[#2D6A4F]/10 flex items-center justify-center mb-6">
+                  <item.icon className="w-7 h-7 text-[#2D6A4F]" />
                 </div>
-                <h3 className="text-xl font-medium text-[#3d4a38] mb-3">
+                <h3 className="text-xl font-medium text-[#1A1A1A] mb-3">
                   {item.title}
                 </h3>
-                <p className="text-[#5a6355] leading-relaxed">{item.desc}</p>
+                <p className="text-[#4A4A4A] leading-relaxed">{item.desc}</p>
               </div>
             ))}
           </div>
@@ -390,7 +390,7 @@ export function ServicesPageV4() {
       </section>
 
       {/* COMPARISON SILENCIEUSE - Ce que vous n'avez PAS à faire */}
-      <section className="py-24 bg-[#faf9f5]">
+      <section className="py-24 bg-[#FAF8F3]">
         <div className="container-custom">
           <div className="grid lg:grid-cols-2 gap-16 items-center">
             <div>
@@ -400,7 +400,7 @@ export function ServicesPageV4() {
                   : "La Différence La Villa"}
               </span>
               <h2
-                className="text-4xl md:text-5xl font-light text-[#3d4a38] mb-6"
+                className="text-4xl md:text-5xl font-light text-[#1A1A1A] mb-6"
                 style={{ fontFamily: "Plus Jakarta Sans, sans-serif" }}
               >
                 {language === "en" ? "Say goodbye to" : "Dites adieu aux"}{" "}
@@ -429,7 +429,7 @@ export function ServicesPageV4() {
                 ].map((item, index) => (
                   <div
                     key={index}
-                    className="flex items-center gap-3 text-[#5a6355]"
+                    className="flex items-center gap-3 text-[#4A4A4A]"
                   >
                     <div className="w-6 h-6 rounded-full bg-[#c44536]/10 flex items-center justify-center">
                       <span className="text-[#8c2c22] text-xs">✕</span>
@@ -439,13 +439,13 @@ export function ServicesPageV4() {
                 ))}
               </div>
 
-              <div className="p-6 bg-[#7c9a6d]/10 rounded-xl border border-[#7c9a6d]/20">
-                <p className="text-[#3d4a38] font-medium mb-2">
+              <div className="p-6 bg-[#2D6A4F]/10 rounded-xl border border-[#2D6A4F]/20">
+                <p className="text-[#1A1A1A] font-medium mb-2">
                   {language === "en"
                     ? "Instead, you get:"
                     : "À la place, vous avez :"}
                 </p>
-                <p className="text-[#5a6355]">
+                <p className="text-[#4A4A4A]">
                   {language === "en"
                     ? "More time to focus on your work, your passions, your people."
                     : "Du temps pour vous concentrer sur votre travail, vos passions, vos proches."}
