@@ -97,7 +97,7 @@ export function TestimonialsCarouselV7() {
 
               {/* Dots */}
               <div className="flex gap-2">
-                { testimonials.map((_, index) => (
+                { mestimonials.map((_, index) => (
                   <button
                     key={index}
                     onClick={() => setCurrentIndex(index)}
