@@ -22,6 +22,8 @@ import { MonBailPage } from "@/pages/portail/MonBailPage";
 import { MesDemandesPage } from "@/pages/portail/MesDemandesPage";
 import { CommunautePage } from "@/pages/portail/CommunautePage";
 import { ScrollToTop } from "@/components/ScrollToTop";
+import DashboardLayout from "@/pages/dashboard/DashboardLayout";
+import DashboardLoyersPage from "@/pages/dashboard/DashboardLoyersPage";
 
 function App() {
   return (
@@ -52,6 +54,10 @@ function App() {
               <Route path="mon-bail" element={<MonBailPage />} />
               <Route path="mes-demandes" element={<MesDemandesPage />} />
               <Route path="communaute" element={<CommunautePage />} />
+            </Route>
+            <Route path="/dashboard" element={<DashboardLayout />}>
+              <Route index element={<Navigate to="/dashboard/loyers" replace />} />
+              <Route path="loyers" element={<DashboardLoyersPage />} />
             </Route>
             <Route path="*" element={<NotFoundPage />} />
           </Routes>
