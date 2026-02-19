@@ -28,7 +28,7 @@ const DOMAINS: Domain[] = [
   ]},
   {id:'d2',name:'Gestion locataires',icon:'\ud83c\udfe0',tasks:[
     {id:'2.1',name:'Demandes quotidiennes WhatsApp',state:'yellow',priority:'P1',phase:'phase-1a',status:'in_progress',doc:'Analyse WhatsApp + FAQ'},
-    {id:'2.2',name:'Coordination maintenance',state:'red',priority:'P1',phase:'phase-1a',status:'not_started',doc:''},
+    {id:'2.2',name:'Coordination maintenance',state:'green',priority:'P1',phase:'phase-1a',status:'completed',doc:'6 prestataires + tickets'},
     {id:'2.3',name:'Check-in (emménagements)',state:'green',priority:'P1',phase:'phase-1a',status:'completed',doc:'Livret_Accueil_LaVilla.md'},
     {id:'2.4',name:'Check-out (départs)',state:'green',priority:'P1',phase:'phase-1a',status:'completed',doc:'Procedure check-out caution'},
     {id:'2.5',name:'Règlement Intérieur (Bibles Coliver)',state:'green',priority:'P1',phase:'phase-1a',status:'completed',doc:'Bible_Coliver_LaVilla.docx'},
@@ -36,12 +36,12 @@ const DOMAINS: Domain[] = [
     {id:'2.7',name:'Documents / dossiers locataires',state:'green',priority:'P1',phase:'phase-1a',status:'completed',doc:'Checklist_Documents_Entree.md'},
     {id:'2.8',name:'WhatsApp Business Bot',state:'red',priority:'P1',phase:'phase-2',status:'not_started',doc:''},
     {id:'2.9',name:'Table escalations + dashboard',state:'red',priority:'P1',phase:'phase-2',status:'not_started',doc:''},
-    {id:'2.10',name:'Portail locataire (MVP déployé)',state:'yellow',priority:'P2',phase:'phase-2',status:'in_progress',doc:'4 sections — Magic Link Auth'},
+    {id:'2.10',name:'Portail locataire (MVP déployé)',state:'green',priority:'P2',phase:'phase-2',status:'completed',doc:'MVP Magic Link — Magic Link Auth'},
     {id:'2.11',name:'Onboarding communication canaux',state:'red',priority:'P2',phase:'phase-2',status:'not_started',doc:''},
     {id:'2.12',name:'Templates WhatsApp Meta',state:'red',priority:'P2',phase:'phase-2',status:'not_started',doc:''},
   ]},
   {id:'d3',name:'Gestion financière',icon:'\ud83d\udcb0',tasks:[
-    {id:'3.1',name:'Encaissement loyers',state:'yellow',priority:'P1',phase:'phase-1b',status:'in_progress',doc:'3 workflows n8n Cloud actifs'},
+    {id:'3.1',name:'Encaissement loyers',state:'green',priority:'P1',phase:'phase-1b',status:'completed',doc:'3 workflows n8n Cloud actifs'},
     {id:'3.2',name:'Factures fournisseurs (V2)',state:'green',priority:'P2',phase:'phase-2',status:'completed',doc:'PROCESS_FACTURES_V2.md'},
     {id:'3.3',name:'Paiement fournisseurs/charges',state:'green',priority:'P2',phase:'phase-1a',status:'completed',doc:'Repertoire prestataires'},
     {id:'3.4',name:'Gestion cautions',state:'green',priority:'P2',phase:'phase-1a',status:'completed',doc:'Procedure_Caution_LaVilla.md'},
@@ -64,9 +64,9 @@ const DOMAINS: Domain[] = [
   {id:'d6',name:'Infrastructure technique',icon:'\u2699\ufe0f',tasks:[
     {id:'6.1',name:'Dashboard → One Stop Shop (7 onglets)',state:'green',priority:'P1',phase:'phase-1b',status:'completed',doc:'React 7 onglets + export Excel'},
     {id:'6.2',name:'VPS (scripts+crons)',state:'green',priority:'P2',phase:'phase-1b',status:'completed',doc:'VPS Hostinger operationnel'},
-    {id:'6.3',name:'Site web',state:'green',priority:'P3',phase:'phase-3',status:'completed',doc:''},
+    {id:'6.3',name:'Site web',state:'yellow',priority:'P3',phase:'phase-3',status:'in_progress',doc:'SEO meta tags'},
     {id:'6.4',name:'Backups et sécurité',state:'green',priority:'P2',phase:'phase-2',status:'completed',doc:'VPS scripts fixes post-D3'},
-    {id:'6.5',name:'Site web → Supabase SoT',state:'red',priority:'P2',phase:'phase-2',status:'not_started',doc:''},
+    {id:'6.5',name:'Site web → Supabase SoT',state:'green',priority:'P2',phase:'phase-2',status:'completed',doc:'hooks+FAQ+RLS'},
     {id:'6.6',name:'Fusion 2 Supabase → 1',state:'green',priority:'P1',phase:'phase-1b',status:'completed',doc:'FAIT - Supabase unifie'},
     {id:'6.7',name:'Migration n8n → Cloud',state:'green',priority:'P2',phase:'phase-2',status:'completed',doc:'FAIT - n8n Cloud 24e/mois'},
     {id:'6.8',name:'Migration dashboard → React (7 onglets)',state:'green',priority:'P2',phase:'phase-2',status:'completed',doc:'Commit c4848521 — 7 onglets React'},
@@ -126,7 +126,7 @@ export default function DashboardRoadmapPage() {
     <div>
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px', flexWrap: 'wrap', gap: '12px' }}>
         <h2 style={{ margin: 0, fontSize: '20px', color: '#1a1a2e' }}>Roadmap Transition</h2>
-        <span style={{ fontSize: '13px', color: '#888' }}>Dernière mise à jour : 15/02/2026</span>
+        <span style={{ fontSize: '13px', color: '#888' }}>Dernière mise à jour : 19/02/2026</span>
       </div>
 
       {/* KPIs */}
