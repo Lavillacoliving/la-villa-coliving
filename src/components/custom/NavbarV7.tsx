@@ -4,9 +4,9 @@ import { Menu, X } from "lucide-react";
 import { useLanguage } from "@/contexts/LanguageContext";
 
 /**
- * VERSION 9: BOUTIQUE HOSPITALITY
- * Palette: Forest #2D6A4F + Gold #B5914A + Cream #FAF8F3
- * Style: Intimate, premium, warm
+ * VERSION 7: JEUNE + NOMADE + ZEN + FRAIS
+ * Palette: Sauge (#7c9a6d) + Terracotta doux (#d4897a) + Crème frais (#faf9f5) + Bleu ciel (#a8c5d9)
+ * Style: Lifestyle, décontracté, organique
  */
 
 export function NavbarV7() {
@@ -50,7 +50,7 @@ export function NavbarV7() {
     <header
       className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${
         isScrolled
-          ? "bg-[#FAF8F3]/95 backdrop-blur-md shadow-[0_2px_20px_rgba(45,106,79,0.08)]"
+          ? "bg-[#faf9f5]/95 backdrop-blur-md shadow-[0_2px_20px_rgba(124,154,109,0.08)]"
           : "bg-transparent"
       }`}
     >
@@ -73,8 +73,8 @@ export function NavbarV7() {
                 to={link.path}
                 className={`relative text-sm transition-all duration-300 ${
                   isActive(link.path)
-                    ? "text-[#2D6A4F] font-medium"
-                    : "text-[#4A4A4A] hover:text-[#2D6A4F]"
+                    ? "text-[#7c9a6d] font-medium"
+                    : "text-[#5a6355] hover:text-[#7c9a6d]"
                 }`}
               >
                 {link.label}
@@ -87,7 +87,7 @@ export function NavbarV7() {
             {/* Language Toggle */}
             <button
               onClick={toggleLanguage}
-              className="text-sm text-[#4A4A4A] hover:text-[#2D6A4F] transition-colors duration-300"
+              className="text-sm text-[#5a6355] hover:text-[#7c9a6d] transition-colors duration-300"
             >
               {language === "en" ? "FR" : "EN"}
             </button>
@@ -95,14 +95,14 @@ export function NavbarV7() {
             {/* Portail */}
             <Link
               to="/portail"
-              className="text-sm text-[#4A4A4A] hover:text-[#2D6A4F] transition-all duration-300"
+              className="text-sm text-[#5a6355] hover:text-[#7c9a6d] transition-all duration-300"
             >
               {language === "en" ? "Portal" : "Portail"}
             </Link>
             {/* CTA Button - style organique */}
             <Link
               to="/join-us"
-              className="px-6 py-2.5 bg-[#2D6A4F] text-white text-sm font-medium rounded-lg hover:bg-[#1B4332] transition-all duration-300 hover:shadow-[0_4px_15px_rgba(45,106,79,0.3)]"
+              className="px-6 py-2.5 bg-[#7c9a6d] text-white text-sm font-medium rounded-full hover:bg-[#6b8560] transition-all duration-300 hover:shadow-[0_4px15px_rgba(124,154,109,0.3)]"
             >
               {language === "en" ? "Join us" : "Nous rejoindre"}
             </Link>
@@ -110,20 +110,20 @@ export function NavbarV7() {
 
           {/* Mobile Menu Button */}
           <button
-            className="lg:hidden p-2 hover:bg-[#2D6A4F]/10 rounded-full transition-colors"
+            className="lg:hidden p-2 hover:bg-[#7c9a6d]/10 rounded-full transition-colors"
             onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
           >
             {isMobileMenuOpen ? (
-              <X className="text-[#4A4A4A]" size={24} />
+              <X className="text-[#5a6355]" size={24} />
             ) : (
-              <Menu className="text-[#4A4A4A]" size={24} />
+              <Menu className="text-[#5a6355]" size={24} />
             )}
           </button>
         </div>
 
         {/* Mobile Menu */}
         {isMobileMenuOpen && (
-          <div className="lg:hidden absolute top-full left-0 right-0 bg-[#FAF8F3] shadow-[0_10px_40px_rgba(45,106,79,0.1)] rounded-b-3xl">
+          <div className="lg:hidden absolute top-full left-0 right-0 bg-[#faf9f5] shadow-[0_10px_40px_rgba(124,154,109,0.1)] rounded-b-3xl">
             <div className="py-6 px-6 flex flex-col gap-2">
               {navLinks.map((link) => (
                 <Link
@@ -131,8 +131,8 @@ export function NavbarV7() {
                   to={link.path}
                   className={`text-lg py-3 px-4 rounded-xl transition-all duration-300 ${
                     isActive(link.path)
-                      ? "text-[#2D6A4F] font-medium bg-[#2D6A4F]/10"
-                      : "text-[#4A4A4A] hover:text-[#2D6A4F] hover:bg-[#2D6A4F]/5"
+                      ? "text-[#7c9a6d] font-medium bg-[#7c9a6d]/10"
+                      : "text-[#5a6355] hover:text-[#7c9a6d] hover:bg-[#7c9a6d]/5"
                   }`}
                   onClick={() => setIsMobileMenuOpen(false)}
                 >
@@ -142,21 +142,21 @@ export function NavbarV7() {
               <Link
                 to="/portail"
                 onClick={() => setIsMobileMenuOpen(false)}
-                className="text-lg py-3 px-4 rounded-xl text-[#4A4A4A] hover:text-[#2D6A4F]"
+                className="text-lg py-3 px-4 rounded-xl text-[#5a6355] hover:text-[#7c9a6d]"
               >
                 {language === "en" ? "Portal" : "Portail"}
               </Link>
-              <div className="flex items-center gap-4 pt-4 mt-4 border-t border-[#2D6A4F]/20">
+              <div className="flex items-center gap-4 pt-4 mt-4 border-t border-[#7c9a6d]/20">
                 <button
                   onClick={toggleLanguage}
-                  className="text-sm text-[#4A4A4A] px-4"
+                  className="text-sm text-[#5a6355] px-4"
                 >
                   {language === "en" ? "FR" : "EN"}
                 </button>
                 <Link
                   to="/join-us"
                   onClick={() => setIsMobileMenuOpen(false)}
-                  className="flex-1 px-6 py-3 bg-[#2D6A4F] text-white text-center font-medium rounded-lg"
+                  className="flex-1 px-6 py-3 bg-[#7c9a6d] text-white text-center font-medium rounded-full"
                 >
                   {language === "en" ? "Join us" : "Nous rejoindre"}
                 </Link>

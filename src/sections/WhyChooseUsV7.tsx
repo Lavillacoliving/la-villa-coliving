@@ -1,9 +1,9 @@
-import { Wallet, Heart, CalendarDays, Wifi, Sparkles, Shield, MapPin } from "lucide-react";
+// WhyChooseUs V7 - Lifestyle section
 import { useLanguage } from "@/contexts/LanguageContext";
 
 /**
- * VERSION 9: BOUTIQUE HOSPITALITY
- * Why Choose Us — clean, no organic shapes
+ * VERSION 7: JEUNE + NOMADE + ZEN + FRAIS
+ * Why Choose Us style lifestyle et décontracté
  */
 
 export function WhyChooseUsV7() {
@@ -11,41 +11,50 @@ export function WhyChooseUsV7() {
 
   const features = [
     {
-      icon: Wallet,
-      text: language === "en" ? "One payment, everything included" : "Un paiement unique, tout compris",
+      emoji: "💰",
+      text:
+        language === "en"
+          ? "One price, zero surprises"
+          : "Un prix, zéro surprise",
     },
     {
-      icon: Heart,
-      text: language === "en" ? "Private yoga and fitness every week" : "Yoga et fitness privés chaque semaine",
+      emoji: "🧘",
+      text: language === "en" ? "Zen living spaces" : "Espaces de vie zen",
     },
     {
-      icon: CalendarDays,
-      text: language === "en" ? "Pizza night, meal basket, events" : "Pizza Party, panier repas, événements",
+      emoji: "🎉",
+      text:
+        language === "en" ? "Community events" : "Événements communautaires",
     },
     {
-      icon: Wifi,
-      text: language === "en" ? "8 Gbps fiber internet" : "WiFi fibre 8 Gbps",
+      emoji: "💻",
+      text:
+        language === "en" ? "Work-from-home friendly" : "Télétravail friendly",
     },
     {
-      icon: Sparkles,
-      text: language === "en" ? "Housekeeping twice a week" : "Ménage 2 fois par semaine",
+      emoji: "🧹",
+      text:
+        language === "en" ? "Weekly cleaning included" : "Ménage hebdo inclus",
     },
     {
-      icon: Shield,
-      text: language === "en" ? "Founder-managed" : "Gérés par les fondateurs",
-      desc: language === "en"
-        ? "No impersonal helpdesk. Jérôme and Fanny manage all 3 houses. A WhatsApp message is all it takes."
-        : "Pas de support impersonnel. Jérôme et Fanny gèrent les 3 maisons. Un WhatsApp suffit.",
+      emoji: "🌍",
+      text:
+        language === "en"
+          ? "International community"
+          : "Communauté internationale",
     },
   ];
 
   return (
-    <section className="py-24 md:py-32 bg-[#FAF8F3] relative overflow-hidden">
+    <section className="py-24 bg-[#faf9f5] relative overflow-hidden">
+      {/* Organic shapes */}
+      <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-[#a8c5d9]/10 rounded-full blur-3xl -translate-y-1/2" />
+
       <div className="container-custom relative">
         <div className="grid lg:grid-cols-2 gap-16 items-center">
           {/* Left - Image */}
           <div className="relative">
-            <div className="aspect-[4/3] rounded-2xl overflow-hidden shadow-[0_2px_8px_rgba(27,67,50,0.06)]">
+            <div className="aspect-[4/3] rounded-[2rem] overflow-hidden shadow-[0_20px60px_rgba(124,154,109,0.12)]">
               <img
                 src="/images/le lodge living room.webp"
                 alt={language === "en" ? "Le Lodge living room — premium coliving common space near Geneva" : "Salon du Lodge — espace commun coliving premium près de Genève"}
@@ -53,29 +62,34 @@ export function WhyChooseUsV7() {
               />
             </div>
             {/* Floating card */}
-            <div className="absolute -bottom-6 -right-6 bg-white p-5 rounded-2xl shadow-[0_12px_48px_rgba(27,67,50,0.12)] border border-[#E8E5DF]">
-              <MapPin className="w-6 h-6 text-[#2D6A4F] mb-2" />
-              <div className="text-2xl font-semibold text-[#2D6A4F]" style={{ fontFamily: "'DM Serif Display', serif" }}>15-25 min</div>
-              <div className="text-sm text-[#4A4A4A]">
-                {language === "en" ? "from Geneva" : "de Genève"}
+            <div className="absolute -bottom-6 -right-6 bg-white p-5 rounded-2xl shadow-[0_10px40px_rgba(124,154,109,0.15)]">
+              <div className="text-4xl mb-1">🚗</div>
+              <div className="text-2xl font-medium text-[#7c9a6d]">20 min</div>
+              <div className="text-sm text-[#7c8a72]">
+                {language === "en" ? "to Geneva" : "de Genève"}
               </div>
             </div>
           </div>
 
           {/* Right - Content */}
           <div>
-            <span className="text-[#2D6A4F] text-sm font-semibold tracking-[0.08em] uppercase mb-6 block">
-              {language === "en" ? "WHY LA VILLA" : "POURQUOI LA VILLA"}
+            <span className="inline-block px-4 py-2 bg-[#7c9a6d]/15 text-[#7c9a6d] text-sm font-medium rounded-full mb-6">
+              ✨ {language === "en" ? "Why La Villa?" : "Pourquoi La Villa ?"}
             </span>
 
-            <h2 className="text-3xl md:text-4xl text-[#1A1A1A] mb-6 leading-tight" style={{ fontFamily: "'DM Serif Display', serif" }}>
-              {language === "en" ? "A home, not a building." : "Une maison, pas un immeuble."}
+            <h2 className="text-4xl md:text-5xl font-light text-[#3d4a38] mb-6 leading-tight">
+              {language === "en" ? "Live better," : "Vis mieux,"}
+              <br />
+              <span className="font-medium text-[#7c9a6d]">
+                {language === "en" ? "together" : "ensemble"}
+              </span>{" "}
+              🌿
             </h2>
 
-            <p className="text-[#4A4A4A] text-lg leading-relaxed mb-10 max-w-lg">
+            <p className="text-[#5a6355] text-lg leading-relaxed mb-10 max-w-lg">
               {language === "en"
-                ? "Mega-colivings house 300 people in residences. We welcome 7 to 12 professionals in real houses with gardens, pools, and terraces. Bonds form naturally, without forcing it."
-                : "Les méga-colivings logent 300 personnes dans des résidences. Nous accueillons 7 à 12 professionnels dans de vraies maisons avec jardin, piscine et terrasses. Les liens se créent naturellement, sans forcer."}
+                ? "We're not just a place to sleep. We're a premium community of people who value freedom, connection, and good vibes."
+                : "On n'est pas juste un endroit pour dormir. On est une communauté premium de gens qui valorisent la liberté, la connexion et la bonne humeur."}
             </p>
 
             {/* Features grid */}
@@ -83,10 +97,10 @@ export function WhyChooseUsV7() {
               {features.map((feature, index) => (
                 <div
                   key={index}
-                  className="flex items-center gap-3 p-4 rounded-2xl bg-white border border-[#E8E5DF] hover:shadow-[0_12px_48px_rgba(27,67,50,0.12)] hover:translate-y-[-4px] transition-all duration-300"
+                  className="flex items-center gap-3 p-4 rounded-2xl bg-white border border-[#7c9a6d]/10 hover:border-[#7c9a6d]/30 hover:shadow-sm transition-all duration-300"
                 >
-                  <feature.icon className="w-5 h-5 text-[#2D6A4F] flex-shrink-0" />
-                  <span className="text-sm text-[#4A4A4A]">{feature.text}</span>
+                  <span className="text-xl">{feature.emoji}</span>
+                  <span className="text-sm text-[#5a6355]">{feature.text}</span>
                 </div>
               ))}
             </div>

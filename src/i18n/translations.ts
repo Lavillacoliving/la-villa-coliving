@@ -17,10 +17,10 @@ export const translations = {
       subtitle:
         "Live, work & connect in extraordinary homes designed for vibrant community life.",
       ctaPrimary: "Explore Our Houses",
-      ctaSecondary: "Check Availability",
+      ctaSecondary: "Apply Now",
       badge1: "All-inclusive living",
       badge2: "Curated community",
-      badge3: "12-month lease",
+      badge3: "Flexible stays",
       badge4: "Zero agency fees",
       availability: "Next availability: Winter 2025",
     },
@@ -110,7 +110,7 @@ export const translations = {
       },
       location: {
         title: "Prime Location",
-        description: "Grand Genève, France | 15-25 min to Geneva | 45 min to Alps",
+        description: "Grand Genève, France | 20 min to Geneva | 45 min to Alps",
       },
       comfort: {
         title: "Private Comfort",
@@ -132,7 +132,7 @@ export const translations = {
         name: "La Villa",
         location: "Ville-la-Grand",
         description:
-          "370m² of designed living on a 2000m² estate bordering a nature reserve.",
+          "400m² of designed living on a 2000m² estate bordering a nature reserve.",
         features:
           "Heated pool, sauna, gym, game room, volleyball court & vegetable garden",
         perfectFor: "Nature enthusiasts",
@@ -142,7 +142,7 @@ export const translations = {
         name: "Le Loft",
         location: "Ambilly",
         description:
-          "A 300m² townhouse with year-round heated indoor pool, Finnish sauna and outdoor kitchen.",
+          "A charming townhouse with urban sophistication and indoor pool.",
         features: "Indoor pool, sauna, gym, terraces & spacious designer rooms",
         perfectFor: "Urban professionals",
         capacity: "7 members",
@@ -150,7 +150,7 @@ export const translations = {
       leLodge: {
         name: "Le Lodge",
         location: "Annemasse",
-        description: "Our newest and largest home, open since January 2026. 4 buildings, fitness chalet with sauna & jacuzzi, pool house with outdoor kitchen.",
+        description: "Our newest and largest home, opening January 2026.",
         features:
           "Outdoor pool, fitness chalet, pool house & expansive gardens",
         perfectFor: "Community seekers",
@@ -254,7 +254,7 @@ export const translations = {
         benefit3: "Instant community of like-minded people",
         benefit4: "Premium amenities you couldn't afford alone",
         benefit5: "Professional cleaning and maintenance",
-        benefit6: "12-month lease — settle in and make it home",
+        benefit6: "Flexible terms without long-term commitment",
         benefit7: "Work-friendly spaces with high-speed internet",
         benefit8: "Regular community events and activities",
       },
@@ -333,7 +333,7 @@ export const translations = {
     ratesPage: {
       hero: {
         title: "Transparent Pricing",
-        subtitle: "1,380 CHF/month — All inclusive in a house, not a residence",
+        subtitle: "From 1,380 CHF/month — All inclusive",
         description: "No hidden fees. No surprises. Just exceptional value.",
         description2:
           "When you add up rent, utilities, amenities, and services, La Villa offers more—for less than a Geneva studio.",
@@ -342,25 +342,15 @@ export const translations = {
         title: "What's Included",
         items: [
           "Rent & utilities (electricity, water, heating)",
-          "Professional-grade fiber internet (8 Gbps)",
-          "Housekeeping twice a week",
-          "Pool, sauna & garden maintenance",
-          "Fully equipped gym",
-          "Weekly private yoga class",
-          "Weekly private fitness class",
-          "Monthly pizza party",
-          "Monthly meal basket delivered to your house",
-          "Streaming subscriptions (Netflix, Canal+, etc.)",
-          "Seasonal community events",
-          "Parking included",
-          "Full house, annex & grounds maintenance",
-          "Furniture & equipment upkeep",
-          "Basic supplies provided",
-          "Move-out management",
-          "Local taxes included",
-          "Bed linen set & towels provided",
+          "High-speed fiber internet",
+          "Weekly housekeeping",
+          "Pool & garden maintenance",
+          "Gym, sauna & wellness area",
+          "Weekly yoga & fitness classes",
+          "Streaming subscriptions",
+          "Community events",
+          "Monthly essentials delivery",
           "WhatsApp support",
-          "E-bike charging stations (Le Lodge)",
         ],
       },
       deposit: "Security deposit: 2 months rent",
@@ -451,7 +441,7 @@ export const translations = {
       ctaSecondary: "Candidater",
       badge1: "Tout inclus",
       badge2: "Communauté sélectionnée",
-      badge3: "Bail 12 mois",
+      badge3: "Séjours flexibles",
       badge4: "Sans frais d'agence",
       availability: "Prochaine disponibilité : Hiver 2025",
     },
@@ -541,7 +531,7 @@ export const translations = {
       },
       location: {
         title: "Emplacement Privilégié",
-        description: "Grand Genève, côté France | 15-25 min de Genève | 45 min des Alpes",
+        description: "Grand Genève, côté France | 30 min de Genève | 45 min des Alpes",
       },
       comfort: {
         title: "Confort Privé",
@@ -563,7 +553,7 @@ export const translations = {
         name: "La Villa",
         location: "Ville-la-Grand",
         description:
-          "370m² de vie design sur un domaine de 2000m² bordant une réserve naturelle.",
+          "400m² de vie design sur un domaine de 2000m² bordant une réserve naturelle.",
         features:
           "Piscine chauffée, sauna, salle de sport, salle de jeux, terrain de volley & potager",
         perfectFor: "Amoureux de la nature",
@@ -573,7 +563,7 @@ export const translations = {
         name: "Le Loft",
         location: "Ambilly",
         description:
-          "Maison de ville de 300 m² avec piscine intérieure chauffée toute l'année, sauna finlandais et cuisine extérieure.",
+          "Une maison de ville charmante avec sophistication urbaine et piscine intérieure.",
         features:
           "Piscine intérieure, sauna, salle de sport, terrasses & chambres design spacieuses",
         perfectFor: "Professionnels urbains",
@@ -583,7 +573,7 @@ export const translations = {
         name: "Le Lodge",
         location: "Annemasse",
         description:
-          "Notre maison la plus récente et la plus grande, ouverte depuis janvier 2026. 4 bâtiments, chalet fitness avec sauna & jacuzzi, pool house avec cuisine extérieure.",
+          "Notre maison la plus récente et la plus grande, ouverture janvier 2026.",
         features:
           "Piscine extérieure, chalet fitness, pool house & jardins spacieux",
         perfectFor: "Chercheurs de communauté",
@@ -689,7 +679,7 @@ export const translations = {
         benefit4:
           "Équipements premium que vous ne pourriez pas vous offrir seul",
         benefit5: "Ménage et maintenance professionnels",
-        benefit6: "Bail de 12 mois — le temps de vous installer vraiment",
+        benefit6: "Conditions flexibles sans engagement à long terme",
         benefit7: "Espaces adaptés au travail avec internet haut débit",
         benefit8: "Événements communautaires et activités régulières",
       },
@@ -771,7 +761,7 @@ export const translations = {
     ratesPage: {
       hero: {
         title: "Tarifs Transparents",
-        subtitle: "1 380 CHF/mois — Tout inclus dans une maison, pas une résidence",
+        subtitle: "À partir de 1 380 CHF/mois — Tout inclus",
         description:
           "Pas de frais cachés. Pas de surprises. Juste une valeur exceptionnelle.",
         description2:
@@ -781,25 +771,15 @@ export const translations = {
         title: "Ce Qui Est Inclus",
         items: [
           "Loyer & charges (électricité, eau, chauffage)",
-          "Internet fibre pro (8 Gbps)",
-          "Ménage des communs 2 fois par semaine",
-          "Entretien piscine, sauna & jardin",
-          "Salle de sport équipée",
-          "Cours de yoga privé hebdomadaire",
-          "Cours de fitness privé hebdomadaire",
-          "Pizza Party mensuelle",
-          "Panier repas mensuel livré par maison",
-          "Abonnements streaming (Netflix, Canal+, etc.)",
-          "Événements communautaires saisonniers",
-          "Parking inclus",
-          "Entretien complet maison, annexes & espaces extérieurs",
-          "Entretien du mobilier et équipements",
-          "Fournitures de base fournies",
-          "Gestion des départs",
-          "Taxes locales incluses",
-          "Parure de linge de lit et serviettes fournie",
+          "Internet fibre haut débit",
+          "Ménage hebdomadaire",
+          "Entretien piscine & jardin",
+          "Salle de sport, sauna & espace bien-être",
+          "Cours de yoga & fitness hebdomadaires",
+          "Abonnements streaming",
+          "Événements communautaires",
+          "Livraison essentiels mensuels",
           "Support WhatsApp",
-          "Bornes recharge vélo électrique (Le Lodge)",
         ],
       },
       deposit: "Caution : 2 mois de loyer",
