@@ -14,6 +14,7 @@ import { HouseDetailPage } from "@/pages/HouseDetailPage";
 import { BlogPage } from "@/pages/BlogPage";
 import { BlogPostPage } from "@/pages/BlogPostPage";
 import { ColocationGenevePage } from "@/pages/ColocationGenevePage";
+import { InvestisseursPage } from "@/pages/InvestisseursPage";
 import { NotFoundPage } from "@/pages/NotFoundPage";
 import { Navigate } from "react-router-dom";
 import { PortailLayout } from "@/pages/portail/PortailLayout";
@@ -58,6 +59,7 @@ function AppLayout() {
           <Route path="/le-coliving" element={<Navigate to="/the-coliving" replace />} />
           <Route path="/nos-maisons" element={<Navigate to="/our-houses" replace />} />
           <Route path="/nous-rejoindre" element={<Navigate to="/join-us" replace />} />
+          <Route path="/investisseurs" element={<InvestisseursPage />} />
           <Route path="/tarifs" element={<Navigate to="/rates" replace />} />
           <Route path="/lavilla" element={<HouseDetailPage />} />
           <Route path="/leloft" element={<HouseDetailPage />} />

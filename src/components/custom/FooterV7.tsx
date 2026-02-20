@@ -32,6 +32,10 @@ export function FooterV7() {
       label: language === "en" ? "Join us" : "Nous rejoindre",
     },
     { path: "/blog", label: "Blog" },
+    {
+      path: "/investisseurs",
+      label: language === "en" ? "Investors" : "Investisseurs",
+    },
   ];
 
   return (
