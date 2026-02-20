@@ -95,6 +95,86 @@
       "source": "/fr/colocation-geneve",
       "destination": "/colocation-geneve",
       "permanent": true
+    },
+    {
+      "source": "/apply",
+      "destination": "/join-us",
+      "permanent": true
+    },
+    {
+      "source": "/la-villa",
+      "destination": "/lavilla",
+      "permanent": true
+    },
+    {
+      "source": "/le-loft",
+      "destination": "/leloft",
+      "permanent": true
+    },
+    {
+      "source": "/fr/la-villa",
+      "destination": "/lavilla",
+      "permanent": true
+    },
+    {
+      "source": "/fr/le-loft",
+      "destination": "/leloft",
+      "permanent": true
+    },
+    {
+      "source": "/copie-de-le-loft-new",
+      "destination": "/leloft",
+      "permanent": true
+    },
+    {
+      "source": "/fr/copie-de-le-loft",
+      "destination": "/leloft",
+      "permanent": true
+    },
+    {
+      "source": "/fr/copie-de-le-loft-new",
+      "destination": "/leloft",
+      "permanent": true
+    },
+    {
+      "source": "/fr/copie-de-la-villa-new",
+      "destination": "/lavilla",
+      "permanent": true
+    },
+    {
+      "source": "/lavillanew",
+      "destination": "/lavilla",
+      "permanent": true
+    },
+    {
+      "source": "/understandtheprices",
+      "destination": "/rates",
+      "permanent": true
+    },
+    {
+      "source": "/fr/thebigcolivingguide",
+      "destination": "/the-coliving",
+      "permanent": true
+    },
+    {
+      "source": "/fr/definingcoliving",
+      "destination": "/the-coliving",
+      "permanent": true
+    },
+    {
+      "source": "/fr/product-page/swimming-pool",
+      "destination": "/services",
+      "permanent": true
+    },
+    {
+      "source": "/fr/product-page/:slug",
+      "destination": "/rates",
+      "permanent": true
+    },
+    {
+      "source": "/product-page/:slug",
+      "destination": "/rates",
+      "permanent": true
     }
   ],
   "headers": [
