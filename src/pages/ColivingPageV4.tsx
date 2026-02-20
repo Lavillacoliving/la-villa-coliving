@@ -46,10 +46,10 @@ export function ColivingPageV4() {
   return (
     <main className="relative pt-20">
       <SEO
-        title={language === "en" ? "The Coliving Experience Near Geneva" : "Coliving & Colocation près de Genève — L'Expérience La Villa"}
+        title={language === "en" ? "What is Coliving? — La Villa Coliving" : "Qu'est-ce que le Coliving ? — La Villa Coliving"}
         description={language === "en"
-          ? "Discover premium coliving near Geneva. Furnished rooms, curated community, heated pool, gym & all-inclusive services. The modern alternative to traditional shared housing."
-          : "Découvre le coliving premium près de Genève. Chambres meublées, communauté sélectionnée, piscine chauffée, gym et services tout inclus. L'alternative moderne à la colocation traditionnelle."}
+          ? "Discover premium coliving at La Villa: designer houses, curated community, all-inclusive. Different from traditional shared housing."
+          : "Découvrez le coliving premium La Villa : maisons design, communauté sélectionnée, tout inclus. Différent d'une colocation classique."}
         url="https://www.lavillacoliving.com/the-coliving"
       />
       {/* Hero avec image de fond */}

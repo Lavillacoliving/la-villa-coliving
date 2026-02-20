@@ -23,6 +23,7 @@ export function HousesPreviewV7() {
       alt: language === "en"
         ? "La Villa — premium coliving house with garden and pool in Ville-la-Grand, near Geneva"
         : "La Villa — maison de colocation premium avec jardin et piscine à Ville-la-Grand, près de Genève",
+      availability: "Complet" as const,
     },
     {
       id: "leloft",
@@ -36,6 +37,7 @@ export function HousesPreviewV7() {
       alt: language === "en"
         ? "Le Loft — urban coliving house with indoor pool in Ambilly, near Geneva"
         : "Le Loft — colocation urbaine avec piscine intérieure à Ambilly, près de Genève",
+      availability: (language === "en" ? "1 room available" : "1 chambre disponible") as string,
     },
     {
       id: "lelodge",
@@ -49,6 +51,7 @@ export function HousesPreviewV7() {
       alt: language === "en"
         ? "Le Lodge — coliving house with pool and gym in Annemasse, near Geneva"
         : "Le Lodge — maison de colocation avec piscine et salle de sport à Annemasse, près de Genève",
+      availability: "Complet" as const,
     },
   ];
 
@@ -92,6 +95,14 @@ export function HousesPreviewV7() {
                 {/* Tag transport */}
                 <span className="absolute top-4 right-4 bg-black/60 backdrop-blur-sm text-white text-xs font-medium px-3 py-1.5 rounded-lg">
                   {language === "en" ? "20 min Geneva center" : "20 min centre Genève"}
+                </span>
+                {/* Availability badge */}
+                <span className={`absolute bottom-4 left-4 backdrop-blur-sm text-white text-xs font-semibold px-3 py-1.5 rounded-lg ${
+                  house.availability === "Complet"
+                    ? "bg-[#78716C]/90"
+                    : "bg-[#D4A574]/90"
+                }`}>
+                  {house.availability}
                 </span>
               </div>
 

@@ -11,34 +11,51 @@ export function TestimonialsCarouselV7() {
   const { language } = useLanguage();
   const [currentIndex, setCurrentIndex] = useState(0);
 
-  {/* TODO: remplacer par vrais témoignages — voir avis Google ou WhatsApp */}
   const testimonials = [
     {
-      name: 'Claire',
-      role: language === 'en' ? 'Resident' : 'Résidente',
-      location: 'Le Loft',
-      quote: language === 'en'
-        ? 'What convinced me was the size. 10 people in a house with a pool — you won\'t find that anywhere else.'
-        : 'Ce qui m\'a convaincue, c\'est la taille. 10 personnes dans une maison avec piscine — ça n\'existe nulle part ailleurs.',
-      initials: 'C',
-    },
-    {
-      name: 'Marc',
-      role: language === 'en' ? 'Resident' : 'Résident',
+      name: 'Gary',
+      role: language === 'en' ? 'Resident for 2 years' : 'Résident depuis 2 ans',
       location: 'La Villa',
       quote: language === 'en'
-        ? 'After two years of regular coliving, La Villa is a different world. The space, the amenities, the community — everything is different.'
-        : 'Après deux ans de coliving classique, La Villa c\'est un autre monde. L\'espace, les équipements, la communauté — tout est différent.',
-      initials: 'M',
+        ? 'What I love is the balance between privacy and community. I have my own space, but there\'s always someone to share a meal or a laugh with.'
+        : 'Ce que j\'aime, c\'est l\'équilibre entre intimité et vie en communauté. J\'ai mon espace, mais il y a toujours quelqu\'un pour partager un repas ou un fou rire.',
+      initials: 'G',
     },
     {
-      name: 'Laura',
-      role: language === 'en' ? 'Resident' : 'Résidente',
+      name: 'Aude',
+      role: language === 'en' ? 'Resident for 1 year' : 'Résidente depuis 1 an',
+      location: 'Le Loft',
+      quote: language === 'en'
+        ? 'Moving into Le Loft was the best decision of my move to Geneva. Everything is taken care of, I just enjoy living here.'
+        : 'Emménager au Loft a été la meilleure décision de mon installation à Genève. Tout est pris en charge, je profite juste de la vie ici.',
+      initials: 'A',
+    },
+    {
+      name: 'Ines',
+      role: language === 'en' ? 'Resident for 6 months' : 'Résidente depuis 6 mois',
+      location: 'La Villa',
+      quote: language === 'en'
+        ? 'Pool, sauna, gym, yoga... and above all, an incredible community. It\'s nothing like what you\'d imagine for a shared house.'
+        : 'Piscine, sauna, sport, yoga… et surtout une communauté incroyable. Ça n\'a rien à voir avec ce qu\'on imagine d\'une colocation.',
+      initials: 'I',
+    },
+    {
+      name: 'Florian',
+      role: language === 'en' ? 'Resident for 1.5 years' : 'Résident depuis 1 an et demi',
       location: 'Le Lodge',
       quote: language === 'en'
-        ? 'I work in Geneva and live in a house with a garden, pool, and sauna for CHF 1,380. My colleagues can\'t believe it.'
-        : 'Je travaille à Genève et je vis dans une maison avec jardin, piscine et sauna pour 1 380 CHF. Mes collègues n\'en reviennent pas.',
-      initials: 'L',
+        ? 'I work in Geneva and live 20 min away in a house with pool, gym, and incredible people. My colleagues can\'t believe it.'
+        : 'Je travaille à Genève et je vis à 20 min dans une maison avec piscine, salle de sport et des gens incroyables. Mes collègues n\'en reviennent pas.',
+      initials: 'F',
+    },
+    {
+      name: 'Marcos',
+      role: language === 'en' ? 'Resident for 8 months' : 'Résident depuis 8 mois',
+      location: 'Le Loft',
+      quote: language === 'en'
+        ? 'The indoor pool sold me, but the community made me stay. This is a whole lifestyle, not just a room.'
+        : 'La piscine intérieure m\'a convaincu, mais c\'est la communauté qui m\'a fait rester. C\'est un vrai mode de vie, pas juste une chambre.',
+      initials: 'M',
     },
   ];
 

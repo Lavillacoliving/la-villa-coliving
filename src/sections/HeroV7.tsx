@@ -67,8 +67,8 @@ export function HeroV7() {
           {/* Description */}
           <p className="text-base md:text-lg text-white/80 max-w-xl mb-8 leading-relaxed font-light">
             {language === "en"
-              ? `Rooms from ${STATS.roomSizeMin} to ${STATS.roomSizeMax} m² in real houses with pool, sauna, and gym — shared with 10 people, not 300. ${STATS.genevaCenterMinutes} min from Geneva city center by train or tram. All-inclusive from CHF ${STATS.priceChf.toLocaleString('en')}/month.`
-              : `Des chambres de ${STATS.roomSizeMin} à ${STATS.roomSizeMax} m² dans de vraies maisons avec piscine, sauna et salle de sport — partagées avec 10 personnes, pas 300. À ${STATS.genevaCenterMinutes} min du centre de Genève en CEVA ou tram. Tout inclus dès ${STATS.priceChf.toLocaleString('fr-FR')} CHF/mois.`}
+              ? "Your private room in a house with pool, 20 min from Geneva. All-inclusive from CHF 1,380/month."
+              : "Votre chambre privée dans une maison avec piscine, à 20 min de Genève. Tout inclus dès 1 380 CHF/mois."}
           </p>
 
           {/* CTAs */}

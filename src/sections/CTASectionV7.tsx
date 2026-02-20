@@ -56,6 +56,18 @@ export function CTASectionV7() {
               ? '2-minute application — no commitment'
               : 'Candidature en 2 minutes — sans engagement'}
           </p>
+
+          {/* WhatsApp CTA */}
+          <a
+            href="https://wa.me/33664315134"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="mt-4 inline-block text-sm text-white/40 hover:text-[#E0BB8A] transition-colors duration-300"
+          >
+            {language === 'en'
+              ? 'Or ask us a question directly on WhatsApp →'
+              : 'Ou posez-nous directement une question sur WhatsApp →'}
+          </a>
         </div>
       </div>
     </section>

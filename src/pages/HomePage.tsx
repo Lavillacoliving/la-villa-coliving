@@ -20,11 +20,11 @@ export function HomePage() {
     <main>
       <SEO
         title={language === "en"
-          ? "Premium Coliving Near Geneva"
+          ? "Premium Coliving & Shared Housing Near Geneva"
           : "Colocation & Coliving Premium près de Genève"}
         description={language === "en"
-          ? "Premium coliving near Geneva. 29 furnished rooms in 3 houses, all-inclusive from 1,380 CHF/month. Heated pool, gym, sauna. Ideal for cross-border workers, expats & young professionals."
-          : "Colocation et coliving premium à 15 min de Genève. 29 chambres meublées dans 3 maisons, tout inclus dès 1 380 CHF/mois. Piscine chauffée, gym, sauna. Idéal frontaliers, expats et jeunes pros."}
+          ? "29 furnished rooms in 3 houses with pool, sauna & gym. All-inclusive from CHF 1,380/month. Ideal for cross-border workers & expats."
+          : "29 chambres meublées dans 3 maisons avec piscine, sauna et salle de sport. Tout inclus dès 1 380 CHF/mois. Idéal frontaliers et expats."}
         url="https://www.lavillacoliving.com/"
         image="https://www.lavillacoliving.com/images/villa_portrait.webp"
       />

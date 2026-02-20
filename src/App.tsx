@@ -22,6 +22,7 @@ import { MonBailPage } from "@/pages/portail/MonBailPage";
 import { MesDemandesPage } from "@/pages/portail/MesDemandesPage";
 import { CommunautePage } from "@/pages/portail/CommunautePage";
 import { ScrollToTop } from "@/components/ScrollToTop";
+import { WhatsAppButton } from "@/components/WhatsAppButton";
 import DashboardLayout from "@/pages/dashboard/DashboardLayout";
 import DashboardLoyersPage from "@/pages/dashboard/DashboardLoyersPage";
 import DashboardLocatairesPage from "@/pages/dashboard/DashboardLocatairesPage";
@@ -34,6 +35,8 @@ import DashboardDocumentsPage from "@/pages/dashboard/DashboardDocumentsPage";
 function AppLayout() {
   const location = useLocation();
   const isDashboard = location.pathname.startsWith('/dashboard');
+  const isPortail = location.pathname.startsWith('/portail');
+  const showChrome = !isDashboard && !isPortail;
 
   return (
     <>
@@ -80,6 +83,7 @@ function AppLayout() {
           <Route path="*" element={<NotFoundPage />} />
         </Routes>
         {!isDashboard && <Footer />}
+        {showChrome && <WhatsAppButton />}
       </div>
     </>
   );

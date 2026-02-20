@@ -435,8 +435,9 @@ function getHousesData(lang: string): Record<string, HouseData> {
       "Entrepreneurs & créatifs",
       "Amoureux de la nature & passionnés de bien-être",
     ],
-    available: true,
-    badgeColor: "#D4A574",
+    available: false,
+    badge: "Complet",
+    badgeColor: "#78716C",
   },
   leloft: {
     name: "Le Loft",
@@ -839,6 +840,7 @@ function getHousesData(lang: string): Record<string, HouseData> {
       "Amoureux de la ville & passionnés de culture",
     ],
     available: true,
+    badge: isEn ? "1 room available" : "1 chambre disponible",
     badgeColor: "#D4A574",
   },
   lelodge: {
@@ -1301,8 +1303,9 @@ function getHousesData(lang: string): Record<string, HouseData> {
       "Passionnés de bien-être",
       "Frontaliers & expatriés",
     ],
-    available: true,
-    badgeColor: "#D4A574",
+    available: false,
+    badge: "Complet",
+    badgeColor: "#78716C",
   },
 };
 }
@@ -1519,12 +1522,29 @@ export function HouseDetailPage() {
                     {t.houseDetail.perMonth}
                   </p>
 
+                  {/* Availability badge */}
+                  <div className="mb-4">
+                    {house.available ? (
+                      <span className="inline-flex items-center gap-2 px-3 py-1.5 bg-[#D4A574]/10 text-[#D4A574] text-sm font-semibold rounded-lg">
+                        <span className="w-2 h-2 bg-[#D4A574] rounded-full animate-pulse" />
+                        {house.badge || (language === "en" ? "Available" : "Disponible")}
+                      </span>
+                    ) : (
+                      <span className="inline-flex items-center gap-2 px-3 py-1.5 bg-[#78716C]/10 text-[#78716C] text-sm font-semibold rounded-lg">
+                        <span className="w-2 h-2 bg-[#78716C] rounded-full" />
+                        {house.badge || "Complet"}
+                      </span>
+                    )}
+                  </div>
+
                   <div className="flex flex-col gap-3">
                     <Link
                       to="/join-us"
                       className="w-full inline-flex items-center justify-center gap-2 px-6 py-3 bg-[#1C1917] text-white font-semibold rounded-xl hover:bg-[#D4A574] transition-colors"
                     >
-                      {t.houseDetail.apply}
+                      {house.available
+                        ? t.houseDetail.apply
+                        : language === "en" ? "Join waitlist" : "Liste d'attente"}
                       <ArrowRight size={18} />
                     </Link>
                     <Link
@@ -1533,6 +1553,16 @@ export function HouseDetailPage() {
                     >
                       {t.houseDetail.checkRates}
                     </Link>
+                    <a
+                      href="https://wa.me/33664315134"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="w-full text-center text-sm text-[#78716C] hover:text-[#D4A574] transition-colors"
+                    >
+                      {language === "en"
+                        ? "Or ask us on WhatsApp →"
+                        : "Ou posez-nous une question sur WhatsApp →"}
+                    </a>
                   </div>
                 </div>
 

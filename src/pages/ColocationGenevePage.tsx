@@ -80,13 +80,13 @@ export function ColocationGenevePage() {
       <SEO
         title={
           language === "en"
-            ? "Shared Housing Near Geneva — Premium Coliving from 1,380 CHF/month"
-            : "Colocation près de Genève — Coliving Premium dès 1 380 CHF/mois"
+            ? "Shared Housing Geneva — Furnished Rooms from CHF 1,380"
+            : "Colocation Genève — Chambres Meublées dès 1 380 CHF"
         }
         description={
           language === "en"
-            ? "Premium shared housing 15 min from Geneva. 29 furnished all-inclusive rooms in 3 houses. Pool, gym, sauna. Ideal for cross-border workers, expats & young professionals."
-            : "Colocation premium à 15 min de Genève. 29 chambres meublées tout inclus dans 3 maisons. Piscine, gym, sauna. Idéal frontaliers, expats et jeunes professionnels."
+            ? "Premium shared housing in a house with pool, 20 min from Geneva. All-inclusive. Ideal for cross-border workers, expats & young professionals."
+            : "Colocation premium en maison avec piscine à 20 min de Genève. Tout inclus. Idéal frontaliers, expats et jeunes professionnels."
         }
         url="https://www.lavillacoliving.com/colocation-geneve"
         image="https://www.lavillacoliving.com/images/villa_portrait.webp"

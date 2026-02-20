@@ -53,10 +53,10 @@ export function FAQPageV4() {
   return (
     <main className="relative pt-20">
       <SEO
-        title={language === "en" ? "FAQ — Coliving Near Geneva" : "FAQ — Colocation & Coliving près de Genève"}
+        title={language === "en" ? "FAQ — Your Questions About Coliving" : "FAQ — Vos Questions sur le Coliving"}
         description={language === "en"
-          ? "Answers to common questions about coliving at La Villa near Geneva: pricing, move-in process, services included, transport to Geneva, community life."
-          : "Réponses aux questions fréquentes sur la colocation à La Villa près de Genève : tarifs, emménagement, services inclus, transport vers Genève, vie communautaire."}
+          ? "Answers to all your questions about La Villa Coliving: pricing, duration, community, amenities, application process."
+          : "Réponses à toutes vos questions sur La Villa Coliving : prix, durée, communauté, équipements, processus de candidature."}
         url="https://www.lavillacoliving.com/faq"
       />
       <Helmet>
@@ -170,7 +170,7 @@ export function FAQPageV4() {
                   <p className="text-sm text-[#57534E] mb-4">
                     {language === "en"
                       ? "Can't find what you're looking for? Reach out—we're happy to help."
-                      : "Tu ne trouves pas ce que tu cherches ? Contacte-nous."}
+                      : "Vous ne trouvez pas ce que vous cherchez ? Contactez-nous."}
                   </p>
                   <a
                     href="mailto:hello@lavillacoliving.com"

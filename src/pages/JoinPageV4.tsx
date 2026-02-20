@@ -8,10 +8,10 @@ export function JoinPageV4() {
   return (
     <main className="relative pt-20">
       <SEO
-        title={language === "en" ? "Apply — Join Our Coliving Community" : "Candidater — Rejoindre Notre Colocation près de Genève"}
+        title={language === "en" ? "Apply — Join La Villa Coliving" : "Candidater — Rejoindre La Villa Coliving"}
         description={language === "en"
           ? "Apply to join La Villa Coliving near Geneva. Simple process, curated community, move in within 2 weeks. Furnished rooms, all-inclusive, ideal for cross-border workers & expats."
-          : "Postule pour La Villa Coliving près de Genève. Processus simple, communauté sélectionnée, emménagement en 2 semaines. Chambres meublées tout inclus, idéal frontaliers et expats."}
+          : "Postulez en 2 minutes. Communauté sélectionnée, emménagement en 2 semaines. Chambres meublées tout inclus près de Genève."}
         url="https://www.lavillacoliving.com/join-us"
       />
       {/* Hero */}
@@ -66,6 +66,7 @@ export function JoinPageV4() {
                     type="text"
                     name="firstName"
                     required
+                    autoComplete="given-name"
                     className="w-full px-4 py-3 border border-[#E7E5E4] focus:border-[#D4A574] focus:outline-none transition-colors"
                   />
                 </div>
@@ -77,6 +78,7 @@ export function JoinPageV4() {
                     type="text"
                     name="lastName"
                     required
+                    autoComplete="family-name"
                     className="w-full px-4 py-3 border border-[#E7E5E4] focus:border-[#D4A574] focus:outline-none transition-colors"
                   />
                 </div>
@@ -88,6 +90,7 @@ export function JoinPageV4() {
                     type="email"
                     name="email"
                     required
+                    autoComplete="email"
                     className="w-full px-4 py-3 border border-[#E7E5E4] focus:border-[#D4A574] focus:outline-none transition-colors"
                   />
                 </div>
@@ -99,6 +102,7 @@ export function JoinPageV4() {
                     type="tel"
                     name="phone"
                     required
+                    autoComplete="tel"
                     className="w-full px-4 py-3 border border-[#E7E5E4] focus:border-[#D4A574] focus:outline-none transition-colors"
                   />
                 </div>
@@ -110,6 +114,7 @@ export function JoinPageV4() {
                     type="date"
                     name="birthDate"
                     required
+                    autoComplete="bday"
                     className="w-full px-4 py-3 border border-[#E7E5E4] focus:border-[#D4A574] focus:outline-none transition-colors"
                   />
                 </div>
@@ -176,6 +181,30 @@ export function JoinPageV4() {
                     </option>
                   </select>
                 </div>
+                <div className="md:col-span-2">
+                  <label className="block text-sm text-[#57534E] mb-2">
+                    {language === "en"
+                      ? "How did you hear about us?"
+                      : "Comment avez-vous entendu parler de nous ?"}
+                  </label>
+                  <select
+                    name="source"
+                    className="w-full px-4 py-3 border border-[#E7E5E4] focus:border-[#D4A574] focus:outline-none transition-colors bg-white"
+                  >
+                    <option value="">
+                      {language === "en" ? "Select" : "Sélectionner"}
+                    </option>
+                    <option value="google">Google</option>
+                    <option value="instagram">Instagram</option>
+                    <option value="word-of-mouth">
+                      {language === "en" ? "Word of mouth" : "Bouche à oreille"}
+                    </option>
+                    <option value="leboncoin">Leboncoin</option>
+                    <option value="other">
+                      {language === "en" ? "Other" : "Autre"}
+                    </option>
+                  </select>
+                </div>
               </div>
             </div>
 
@@ -189,6 +218,11 @@ export function JoinPageV4() {
                 : "SOUMETTRE MA CANDIDATURE"}
               <ArrowRight className="w-5 h-5" />
             </button>
+            <p className="text-sm text-[#78716C] text-center mt-4">
+              {language === "en"
+                ? "Response within 48h. Your data remains confidential."
+                : "Réponse sous 48h. Vos données restent confidentielles."}
+            </p>
           </form>
         </div>
       </section>
