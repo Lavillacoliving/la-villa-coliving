@@ -3,8 +3,8 @@ import { ArrowRight, PenLine, Video, KeyRound } from 'lucide-react';
 import { useLanguage } from '@/contexts/LanguageContext';
 
 /**
- * VERSION 7: PREMIUM + FACTUEL
- * How to join — vouvoiement, icônes lucide-react
+ * VERSION 9: STONE & BRASS — CONDO PREMIUM
+ * How to join — 3-col grid, brass step numbers, icon boxes
  */
 
 export function HowToJoinV7() {
@@ -14,9 +14,9 @@ export function HowToJoinV7() {
     {
       icon: PenLine,
       number: '01',
-      title: language === 'en' ? 'Apply online' : 'Candidature en ligne',
+      title: language === 'en' ? 'Online application' : 'Candidature en ligne',
       description: language === 'en'
-        ? 'Tell us about yourself in 2 minutes. No CV required.'
+        ? 'Tell us about yourself in 2 minutes. No CV needed.'
         : 'Parlez-nous de vous en 2 minutes. Sans CV.',
     },
     {
@@ -24,75 +24,70 @@ export function HowToJoinV7() {
       number: '02',
       title: language === 'en' ? 'Meet the team' : 'Échange avec l\'équipe',
       description: language === 'en'
-        ? 'A quick video call to get to know each other.'
-        : 'Un appel vidéo rapide pour faire connaissance.',
+        ? 'A quick 15-minute video call to get to know each other.'
+        : 'Un appel vidéo de 15 minutes pour faire connaissance.',
     },
     {
       icon: KeyRound,
       number: '03',
       title: language === 'en' ? 'Move in' : 'Emménagez',
       description: language === 'en'
-        ? 'Sign, pay deposit, and welcome home.'
+        ? 'Sign, deposit, and welcome home.'
         : 'Signature, caution, et bienvenue chez vous.',
     },
   ];
 
   return (
-    <section className="py-24 bg-[#faf9f5] relative overflow-hidden">
-      {/* Organic shapes */}
-      <div className="absolute top-20 right-10 w-72 h-72 bg-[#7c9a6d]/10 rounded-full blur-3xl" />
+    <section className="py-24 bg-[#F5F2ED]">
+      <div className="container-custom">
+        {/* Header */}
+        <div className="text-center mb-14">
+          <span className="text-[13px] font-semibold tracking-wider uppercase text-[#78716C] mb-5 block">
+            {language === 'en' ? 'HOW TO JOIN' : 'COMMENT NOUS REJOINDRE'}
+          </span>
+          <h2 className="text-3xl md:text-4xl font-bold text-[#1C1917] tracking-tight mb-4">
+            {language === 'en' ? 'Joining is simple' : 'Nous rejoindre est simple'}
+          </h2>
+          <p className="text-[#78716C] text-lg max-w-lg mx-auto">
+            {language === 'en'
+              ? 'Three steps. Quick application, no commitment.'
+              : 'Trois étapes. Candidature rapide, sans engagement.'}
+          </p>
+        </div>
 
-      <div className="container-custom relative">
-        <div className="grid lg:grid-cols-2 gap-16 items-center">
-          {/* Left - Content */}
-          <div>
-            <span className="inline-block px-4 py-2 bg-[#7c9a6d]/15 text-[#7c9a6d] text-sm font-medium rounded-full mb-6">
-              {language === 'en' ? 'How to join' : 'Comment nous rejoindre'}
-            </span>
-
-            <h2 className="text-4xl md:text-5xl font-light text-[#3d4a38] mb-6 leading-tight">
-              {language === 'en' ? 'Joining is' : 'Nous rejoindre est'}
-              <span className="font-medium text-[#7c9a6d]"> {language === 'en' ? 'simple' : 'simple'}</span>
-            </h2>
-
-            <p className="text-[#5a6355] text-lg leading-relaxed mb-10 max-w-lg">
-              {language === 'en'
-                ? 'Three simple steps. Quick application, no commitment.'
-                : 'Trois étapes simples. Candidature rapide, sans engagement.'}
-            </p>
-
-            {/* CTA */}
-            <Link
-              to="/join-us"
-              className="group inline-flex items-center gap-3 px-8 py-4 bg-[#7c9a6d] text-white font-medium rounded-full hover:bg-[#6b8560] transition-all duration-300 hover:shadow-[0_8px30px_rgba(124,154,109,0.35)]"
+        {/* Steps — 3 columns */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-5 mb-12">
+          {steps.map((step, index) => (
+            <div
+              key={index}
+              className="bg-white rounded-2xl border border-[#E7E5E4] p-8 hover:border-[#44403C]/20 hover:shadow-[0_4px_24px_rgba(0,0,0,0.06)] hover:translate-y-[-2px] transition-all duration-300"
             >
-              {language === 'en' ? 'Start your application' : 'Commencer votre candidature'}
-              <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform duration-300" />
-            </Link>
-          </div>
+              {/* Step number */}
+              <span className="text-[13px] font-semibold tracking-wider uppercase text-[#D4A574] mb-4 block">
+                {language === 'en' ? `Step ${step.number}` : `Étape ${step.number}`}
+              </span>
 
-          {/* Right - Steps */}
-          <div className="space-y-6">
-            {steps.map((step, index) => (
-              <div
-                key={index}
-                className="group flex gap-6 p-6 rounded-3xl bg-white border border-[#7c9a6d]/10 hover:border-[#7c9a6d]/30 hover:shadow-[0_10px40px_rgba(124,154,109,0.1)] transition-all duration-500"
-              >
-                <div className="flex-shrink-0">
-                  <div className="w-16 h-16 rounded-2xl bg-[#7c9a6d]/10 flex items-center justify-center">
-                    <step.icon className="w-7 h-7 text-[#7c9a6d]" />
-                  </div>
-                </div>
-                <div className="flex-1">
-                  <div className="flex items-center gap-3 mb-2">
-                    <span className="text-xs text-[#7c9a6d] font-medium">{step.number}</span>
-                    <h3 className="text-lg font-medium text-[#3d4a38]">{step.title}</h3>
-                  </div>
-                  <p className="text-[#7c8a72] text-sm leading-relaxed">{step.description}</p>
-                </div>
+              {/* Icon box */}
+              <div className="w-10 h-10 bg-[#FAF9F6] rounded-xl flex items-center justify-center mb-5">
+                <step.icon className="w-5 h-5 text-[#44403C]" />
               </div>
-            ))}
-          </div>
+
+              {/* Content */}
+              <h3 className="text-lg font-semibold text-[#1C1917] mb-2">{step.title}</h3>
+              <p className="text-[#78716C] text-sm leading-relaxed">{step.description}</p>
+            </div>
+          ))}
+        </div>
+
+        {/* CTA */}
+        <div className="text-center">
+          <Link
+            to="/join-us"
+            className="group inline-flex items-center gap-3 px-8 py-4 bg-[#44403C] text-white font-semibold rounded-lg hover:bg-[#1C1917] transition-all duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#44403C] focus-visible:ring-offset-2"
+          >
+            {language === 'en' ? 'Apply now' : 'Rejoindre La Villa'}
+            <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform duration-300" />
+          </Link>
         </div>
       </div>
     </section>

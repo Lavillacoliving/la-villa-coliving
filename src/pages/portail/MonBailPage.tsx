@@ -84,7 +84,7 @@ export function MonBailPage() {
 
   const statusBadge = (status: string) => {
     const colors: Record<string, string> = {
-      paid: 'bg-green-100 text-green-800',
+      paid: 'bg-[#F5F2ED] text-[#44403C]',
       partial: 'bg-yellow-100 text-yellow-800',
       pending: 'bg-gray-100 text-gray-600',
       late: 'bg-red-100 text-red-800',
@@ -114,7 +114,7 @@ export function MonBailPage() {
       {/* Lease Info Card */}
       <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
         <h2 className="text-lg font-semibold text-gray-900 mb-4 flex items-center gap-2">
-          <span className="text-xl">📋</span> {lang.leaseInfo}
+{lang.leaseInfo}
         </h2>
         <div className="grid sm:grid-cols-2 gap-4 text-sm">
           <div className="flex justify-between sm:flex-col sm:gap-1">
@@ -163,7 +163,7 @@ export function MonBailPage() {
       {/* Payments Table */}
       <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
         <h2 className="text-lg font-semibold text-gray-900 mb-4 flex items-center gap-2">
-          <span className="text-xl">💰</span> {lang.payments}
+{lang.payments}
         </h2>
         {paymentsLoading ? (
           <div className="animate-pulse text-sm text-gray-400">...</div>
@@ -198,7 +198,7 @@ export function MonBailPage() {
       {/* Documents placeholder */}
       <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
         <h2 className="text-lg font-semibold text-gray-900 mb-3 flex items-center gap-2">
-          <span className="text-xl">📄</span> {lang.documents}
+{lang.documents}
         </h2>
         <p className="text-sm text-gray-500">{lang.docComingSoon}</p>
       </div>
@@ -206,7 +206,7 @@ export function MonBailPage() {
       {/* Quittances placeholder */}
       <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
         <h2 className="text-lg font-semibold text-gray-900 mb-3 flex items-center gap-2">
-          <span className="text-xl">🧾</span> {lang.quittances}
+{lang.quittances}
         </h2>
         <p className="text-sm text-gray-500">{lang.quittComingSoon}</p>
       </div>

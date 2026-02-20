@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Inter:wght@300;400;500;600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Inter:wght@300;400;500;600;700&display=swap');
 
 @tailwind base;
 @tailwind components;
@@ -6,42 +6,28 @@
 
 @layer base {
   :root {
-    /* La Villa Coliving - Pop & Modern Palette */
-    --background: 0 0% 100%;
-    --foreground: 220 30% 8%;
+    /* Stone & Brass + Sage — V9 */
+    --background: 30 17% 98%;      /* #FAF9F6 */
+    --foreground: 20 12% 9%;       /* #1C1917 */
     --card: 0 0% 100%;
-    --card-foreground: 220 30% 8%;
+    --card-foreground: 20 12% 9%;
     --popover: 0 0% 100%;
-    --popover-foreground: 220 30% 8%;
-    --primary: 158 85% 42%;
+    --popover-foreground: 20 12% 9%;
+    --primary: 20 6% 25%;          /* #44403C */
     --primary-foreground: 0 0% 100%;
-    --secondary: 32 100% 58%;
-    --secondary-foreground: 0 0% 100%;
-    --muted: 220 14% 96%;
-    --muted-foreground: 220 9% 46%;
-    --accent: 345 95% 58%;
-    --accent-foreground: 0 0% 100%;
+    --secondary: 30 47% 64%;       /* #D4A574 */
+    --secondary-foreground: 20 12% 9%;
+    --muted: 30 14% 94%;           /* #F5F2ED */
+    --muted-foreground: 20 6% 44%; /* #78716C */
+    --accent: 30 47% 64%;          /* #D4A574 */
+    --accent-foreground: 20 12% 9%;
+    --sage: 100 13% 49%;           /* #7C8E6E */
     --destructive: 0 84% 60%;
     --destructive-foreground: 0 0% 98%;
-    --border: 220 13% 91%;
-    --input: 220 13% 91%;
-    --ring: 158 85% 42%;
-    --radius: 1rem;
-    
-    /* Pop & Modern Colors */
-    --emerald: 158 85% 42%;      /* #10b981 - Vert émeraude pop */
-    --emerald-dark: 158 90% 32%;
-    --emerald-light: 158 75% 92%;
-    --mango: 32 100% 58%;        /* #f59e0b -> #f97316 orange mangue */
-    --mango-dark: 24 95% 50%;
-    --mango-light: 32 95% 92%;
-    --coral: 345 95% 58%;        /* #f43f5e - Rose corail framboise */
-    --coral-dark: 345 100% 48%;
-    --coral-light: 345 90% 95%;
-    --lime: 82 85% 48%;          /* #84cc16 - Vert lime accent */
-    --cyan: 190 95% 50%;         /* #06b6d4 - Cyan pop */
-    --navy: 220 40% 10%;
-    --gray: 220 9% 46%;
+    --border: 20 6% 90%;           /* #E7E5E4 */
+    --input: 20 6% 90%;
+    --ring: 20 6% 25%;
+    --radius: 0.75rem;
   }
 }
 
@@ -49,260 +35,96 @@
   * {
     @apply border-border;
   }
-  
+
   html {
     scroll-behavior: smooth;
   }
-  
+
   body {
-    @apply bg-white text-foreground antialiased;
-    font-family: 'Inter', sans-serif;
-    letter-spacing: 0.01em;
-    word-spacing: 0.05em;
+    @apply bg-background text-foreground antialiased;
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    color: #1C1917;
+    -webkit-font-smoothing: antialiased;
   }
-  
-  h1, h2, h3, h4, h5, h6 {
-    font-family: 'Plus Jakarta Sans', sans-serif;
-    font-weight: 800;
-    line-height: 1.1;
-    letter-spacing: -0.01em;
-    word-spacing: 0.05em;
-    color: hsl(220 40% 10%);
-  }
-  
+
   h1 {
-    @apply text-5xl md:text-7xl lg:text-8xl;
+    font-family: 'DM Serif Display', Georgia, serif;
+    font-weight: 400;
+    line-height: 1.08;
+    letter-spacing: -0.02em;
   }
-  
+
   h2 {
-    @apply text-4xl md:text-5xl lg:text-6xl;
-  }
-  
-  h3 {
-    @apply text-2xl md:text-3xl;
+    font-family: 'Inter', sans-serif;
     font-weight: 700;
+    line-height: 1.15;
+    letter-spacing: -0.025em;
+    color: #1C1917;
   }
-  
+
+  h3, h4, h5, h6 {
+    font-family: 'Inter', sans-serif;
+    font-weight: 600;
+    line-height: 1.25;
+    letter-spacing: -0.01em;
+    color: #1C1917;
+  }
+
   p {
-    line-height: 1.75;
-    letter-spacing: 0.01em;
-    word-spacing: 0.05em;
-    color: hsl(220 9% 40%);
+    line-height: 1.7;
+    color: #78716C;
   }
 }
 
 @layer components {
-  /* Sharp Shadows */
-  .shadow-sharp {
-    box-shadow: 
-      0 1px 2px 0 hsl(220 40% 10% / 0.05),
-      0 4px 8px -2px hsl(220 40% 10% / 0.1),
-      0 12px 24px -4px hsl(220 40% 10% / 0.08);
-  }
-  
-  .shadow-sharp-lg {
-    box-shadow: 
-      0 2px 4px 0 hsl(220 40% 10% / 0.06),
-      0 8px 16px -4px hsl(220 40% 10% / 0.12),
-      0 20px 40px -8px hsl(220 40% 10% / 0.1);
-  }
-  
-  .shadow-colored {
-    box-shadow: 
-      0 4px 14px -2px hsl(158 85% 42% / 0.45),
-      0 8px 28px -4px hsl(158 85% 42% / 0.3);
-  }
-  
-  .shadow-coral {
-    box-shadow: 
-      0 4px 14px -2px hsl(345 95% 58% / 0.45),
-      0 8px 28px -4px hsl(345 95% 58% / 0.3);
-  }
-  
-  .shadow-mango {
-    box-shadow: 
-      0 4px 14px -2px hsl(32 100% 58% / 0.45),
-      0 8px 28px -4px hsl(32 100% 58% / 0.3);
-  }
-  
-  /* Ultra Bold Buttons */
-  .btn-primary {
-    @apply inline-flex items-center justify-center px-8 py-4 rounded-xl font-extrabold transition-all duration-300;
-    background: linear-gradient(135deg, hsl(158 85% 42%), hsl(158 90% 38%));
-    color: white;
-    font-family: 'Plus Jakarta Sans', sans-serif;
-    letter-spacing: -0.01em;
-    box-shadow: 0 4px 16px -2px hsl(158 85% 42% / 0.5);
-  }
-  
-  .btn-primary:hover {
-    transform: translateY(-3px) scale(1.02);
-    background: linear-gradient(135deg, hsl(158 90% 38%), hsl(158 95% 32%));
-    box-shadow: 
-      0 8px 28px -4px hsl(158 85% 42% / 0.6),
-      0 16px 48px -8px hsl(158 85% 42% / 0.4);
-  }
-  
-  .btn-secondary {
-    @apply inline-flex items-center justify-center px-8 py-4 rounded-xl font-extrabold transition-all duration-300;
-    background: linear-gradient(135deg, hsl(345 95% 58%), hsl(345 100% 52%));
-    color: white;
-    font-family: 'Plus Jakarta Sans', sans-serif;
-    letter-spacing: -0.01em;
-    box-shadow: 0 4px 16px -2px hsl(345 95% 58% / 0.5);
-  }
-  
-  .btn-secondary:hover {
-    transform: translateY(-3px) scale(1.02);
-    background: linear-gradient(135deg, hsl(345 100% 52%), hsl(345 100% 48%));
-    box-shadow: 
-      0 8px 28px -4px hsl(345 95% 58% / 0.6),
-      0 16px 48px -8px hsl(345 95% 58% / 0.4);
-  }
-  
-  .btn-mango {
-    @apply inline-flex items-center justify-center px-8 py-4 rounded-xl font-extrabold transition-all duration-300;
-    background: linear-gradient(135deg, hsl(32 100% 58%), hsl(24 95% 52%));
-    color: white;
-    font-family: 'Plus Jakarta Sans', sans-serif;
-    letter-spacing: -0.01em;
-    box-shadow: 0 4px 16px -2px hsl(32 100% 58% / 0.5);
-  }
-  
-  .btn-mango:hover {
-    transform: translateY(-3px) scale(1.02);
-    background: linear-gradient(135deg, hsl(24 95% 52%), hsl(20 100% 48%));
-    box-shadow: 
-      0 8px 28px -4px hsl(32 100% 58% / 0.6),
-      0 16px 48px -8px hsl(32 100% 58% / 0.4);
-  }
-  
-  .btn-outline {
-    @apply inline-flex items-center justify-center px-8 py-4 rounded-xl font-extrabold transition-all duration-300;
-    background: white;
-    border: 2.5px solid hsl(158 85% 42%);
-    color: hsl(158 85% 42%);
-    font-family: 'Plus Jakarta Sans', sans-serif;
-    letter-spacing: -0.01em;
-  }
-  
-  .btn-outline:hover {
-    background: hsl(158 85% 42%);
-    color: white;
-    transform: translateY(-3px);
-    box-shadow: 0 8px 28px -4px hsl(158 85% 42% / 0.45);
-  }
-  
-  /* Ultra Bold Cards */
-  .card-ultra {
-    @apply rounded-2xl p-8 bg-white;
-    box-shadow: 
-      0 1px 3px 0 hsl(220 40% 10% / 0.08),
-      0 4px 12px -2px hsl(220 40% 10% / 0.1);
-    border: 1.5px solid hsl(220 13% 91%);
-    transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
-  }
-  
-  .card-ultra:hover {
-    transform: translateY(-8px);
-    box-shadow: 
-      0 8px 24px -4px hsl(158 85% 42% / 0.3),
-      0 16px 48px -8px hsl(158 85% 42% / 0.18);
-    border-color: hsl(158 85% 42% / 0.5);
-  }
-  
-  /* Section Styles */
-  .section-padding {
-    @apply py-20 md:py-28 lg:py-36;
-  }
-  
   .container-custom {
     @apply w-full max-w-6xl mx-auto px-4 sm:px-6 lg:px-8;
   }
-  
+
   /* Navigation */
   .nav-link {
-    @apply relative text-sm font-extrabold transition-all duration-300 rounded-lg px-4 py-2;
-    font-family: 'Plus Jakarta Sans', sans-serif;
-    color: hsl(220 9% 46%);
-    letter-spacing: -0.01em;
+    @apply relative text-sm font-semibold transition-all duration-300 rounded-lg px-4 py-2;
+    font-family: 'Inter', sans-serif;
+    color: #78716C;
   }
-  
+
   .nav-link:hover {
-    color: hsl(158 85% 42%);
-    background: hsl(158 85% 42% / 0.1);
+    color: #1C1917;
+    background: rgba(68, 64, 60, 0.06);
   }
-  
-  /* Ultra Bold Badges */
-  .badge-emerald {
-    @apply inline-flex items-center px-4 py-1.5 rounded-full text-sm font-extrabold;
-    background: linear-gradient(135deg, hsl(158 85% 42%), hsl(158 90% 38%));
-    color: white;
-    box-shadow: 0 3px 10px -1px hsl(158 85% 42% / 0.55);
-  }
-  
-  .badge-mango {
-    @apply inline-flex items-center px-4 py-1.5 rounded-full text-sm font-extrabold;
-    background: linear-gradient(135deg, hsl(32 100% 58%), hsl(24 95% 52%));
-    color: white;
-    box-shadow: 0 3px 10px -1px hsl(32 100% 58% / 0.55);
-  }
-  
-  .badge-coral {
-    @apply inline-flex items-center px-4 py-1.5 rounded-full text-sm font-extrabold;
-    background: linear-gradient(135deg, hsl(345 95% 58%), hsl(345 100% 52%));
-    color: white;
-    box-shadow: 0 3px 10px -1px hsl(345 95% 58% / 0.55);
-  }
-  
-  .badge-lime {
-    @apply inline-flex items-center px-4 py-1.5 rounded-full text-sm font-extrabold;
-    background: linear-gradient(135deg, hsl(82 85% 48%), hsl(82 90% 42%));
-    color: hsl(220 40% 10%);
-    box-shadow: 0 3px 10px -1px hsl(82 85% 48% / 0.55);
-  }
-  
+
   /* Pixel Logo */
   .pixel-logo {
     image-rendering: pixelated;
     image-rendering: -moz-crisp-edges;
     image-rendering: crisp-edges;
   }
-  
-  /* Fun Animations */
-  .animate-bounce-soft {
-    animation: bounceSoft 2.5s ease-in-out infinite;
+
+  /* Animations */
+  @keyframes fadeInUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
   }
-  
-  .animate-float {
-    animation: float 4s ease-in-out infinite;
+
+  .animate-fade-in-up {
+    animation: fadeInUp 0.5s ease-out forwards;
   }
-  
-  @keyframes bounceSoft {
-    0%, 100% { transform: translateY(0); }
-    50% { transform: translateY(-8px); }
+
+  @keyframes scrollBounce {
+    0%, 100% { transform: translateY(0); opacity: 0.4; }
+    50% { transform: translateY(8px); opacity: 0.8; }
   }
-  
-  @keyframes float {
-    0%, 100% { transform: translateY(0); }
-    50% { transform: translateY(-12px); }
+
+  .scroll-indicator {
+    animation: scrollBounce 2s ease-in-out infinite;
   }
-  
-  /* Organic Shapes */
-  .blob {
-    border-radius: 60% 40% 30% 70% / 60% 30% 70% 40%;
-  }
-  
-  .blob-reverse {
-    border-radius: 30% 60% 70% 40% / 50% 60% 30% 60%;
-  }
-  
+
   /* Marquee Animation */
   @keyframes marquee {
     0% { transform: translateX(0); }
     100% { transform: translateX(-50%); }
   }
-  
+
   .animate-marquee {
     animation: marquee 20s linear infinite;
   }
@@ -314,17 +136,17 @@
     width: 8px;
     height: 8px;
   }
-  
+
   ::-webkit-scrollbar-track {
-    background: hsl(220 14% 96%);
+    background: #F5F2ED;
   }
-  
+
   ::-webkit-scrollbar-thumb {
-    background: hsl(158 60% 55%);
+    background: #78716C;
     border-radius: 4px;
   }
-  
+
   ::-webkit-scrollbar-thumb:hover {
-    background: hsl(158 85% 42%);
+    background: #44403C;
   }
 }

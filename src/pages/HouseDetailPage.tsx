@@ -16,7 +16,7 @@ import {
   Sun,
 } from "lucide-react";
 import { useLanguage } from "@/contexts/LanguageContext";
-import { Button } from "@/components/ui/button";
+
 import { Badge } from "@/components/ui/badge";
 import { HouseGallery } from "@/sections/HouseGallery";
 import { SEO } from "@/components/SEO";
@@ -381,16 +381,16 @@ function getHousesData(lang: string): Record<string, HouseData> {
         type: isEn ? "Room with private bathroom" : "Chambre avec salle de bain privative",
         price: "1,380 CHF",
         description: isEn
-          ? "Your private sanctuary with double Emma bed, ergonomic desk, spacious closet, and private bathroom. Most rooms offer a terrace or balcony with garden views. 16 to 23 m²."
-          : "Votre espace privé avec lit double Emma, bureau ergonomique, placard spacieux et salle de bain privative. La plupart des chambres offrent une terrasse ou un balcon avec vue sur le jardin. 16 à 23 m².",
+          ? "Your private sanctuary with double Emma bed, ergonomic desk, spacious closet, and private bathroom. Most rooms offer a terrace or balcony with garden views. 17 to 23 m²."
+          : "Votre espace privé avec lit double Emma, bureau ergonomique, placard spacieux et salle de bain privative. La plupart des chambres offrent une terrasse ou un balcon avec vue sur le jardin. 17 à 23 m².",
         image: "/images/la villa/rooms/La Villa-80.webp",
       },
       {
         type: isEn ? "Room with shared bathroom" : "Chambre avec salle de bain partagée",
         price: "1,380 CHF",
         description: isEn
-          ? "Comfortable private room with double Emma bed, workspace, and ample storage. Access to beautifully designed shared bathroom (rooms CH3, CH4, CH7, CH8). 16 to 20 m²."
-          : "Chambre privée confortable avec lit double Emma, espace de travail et rangement. Accès à une salle de bain partagée design (chambres CH3, CH4, CH7, CH8). 16 à 20 m².",
+          ? "Comfortable private room with double Emma bed, workspace, and ample storage. Access to beautifully designed shared bathroom (rooms CH3, CH4, CH7, CH8). 17 to 20 m²."
+          : "Chambre privée confortable avec lit double Emma, espace de travail et rangement. Accès à une salle de bain partagée design (chambres CH3, CH4, CH7, CH8). 17 à 20 m².",
         image: "/images/la villa/rooms/La Villa-92.webp",
       },
     ],
@@ -436,7 +436,7 @@ function getHousesData(lang: string): Record<string, HouseData> {
       "Amoureux de la nature & passionnés de bien-être",
     ],
     available: true,
-    badgeColor: "#13a811",
+    badgeColor: "#D4A574",
   },
   leloft: {
     name: "Le Loft",
@@ -839,14 +839,14 @@ function getHousesData(lang: string): Record<string, HouseData> {
       "Amoureux de la ville & passionnés de culture",
     ],
     available: true,
-    badgeColor: "#13a811",
+    badgeColor: "#D4A574",
   },
   lelodge: {
     name: "Le Lodge",
     location: "Annemasse, Grand Genève",
     description: isEn
-      ? "Our newest and largest home, open since January 2026. 500 m² on 1,500 m², 4 buildings, fitness chalet with sauna & jacuzzi, pool house with outdoor kitchen."
-      : "Notre maison la plus récente et la plus grande, ouverte depuis janvier 2026. 500 m² sur 1 500 m², 4 bâtiments, chalet fitness avec sauna & jacuzzi, pool house avec cuisine d'été.",
+      ? "Our newest and largest home, open since January 2026. 500 m² on 1,500 m², pool house, full fitness chalet with sauna, Jacuzzi® & arcade."
+      : "Notre maison la plus récente et la plus grande, ouverte depuis janvier 2026. 500 m² sur 1 500 m², pool house, chalet fitness complet avec sauna, Jacuzzi® et jeu d'arcade.",
     longDescription: isEn
       ? "Le Lodge represents the pinnacle of coliving at La Villa. Open since January 2026, this expansive 500 m² property spans 4 buildings across 1,500 m² of gardens — our largest and most comprehensive home. The dedicated fitness chalet with sauna and jacuzzi, the stunning pool house with full outdoor kitchen, and the main residence create a village-like atmosphere where community truly thrives. With 12 residents, DPE B energy rating, electric bike charging stations, and 130 m² of attic storage, Le Lodge sets a new standard."
       : "Le Lodge représente le summum du coliving chez La Villa. Ouvert depuis janvier 2026, ce bien de 500 m² s'étend sur 4 bâtiments au cœur de 1 500 m² de jardins — notre maison la plus grande et la plus complète. Le chalet fitness dédié avec sauna et jacuzzi, le pool house avec cuisine d'été complète et la résidence principale créent une atmosphère de village où la communauté s'épanouit vraiment. Avec 12 résidents, un DPE B, des bornes de recharge vélo électrique et 130 m² de grenier de stockage, Le Lodge établit un nouveau standard.",
@@ -1302,7 +1302,7 @@ function getHousesData(lang: string): Record<string, HouseData> {
       "Frontaliers & expatriés",
     ],
     available: true,
-    badgeColor: "#13a811",
+    badgeColor: "#D4A574",
   },
 };
 }
@@ -1319,10 +1319,10 @@ export function HouseDetailPage() {
     return (
       <main className="pt-32 pb-20 bg-white">
         <div className="container-custom text-center">
-          <h1 className="text-4xl mb-4 text-[#0f172a]">House not found</h1>
+          <h1 className="text-4xl mb-4 text-[#1C1917]">House not found</h1>
           <Link
             to="/our-houses"
-            className="text-[#10b981] hover:underline font-bold"
+            className="text-[#D4A574] hover:underline font-bold"
           >
             View all houses
           </Link>
@@ -1356,13 +1356,13 @@ export function HouseDetailPage() {
                     className="w-full h-full object-cover"
                     loading={index === 0 ? "eager" : "lazy"}
                   />
-                  <div className="absolute inset-0 bg-gradient-to-t from-[#f8fafc] via-transparent to-transparent" />
+                  <div className="absolute inset-0 bg-gradient-to-t from-[#FAF9F6] via-transparent to-transparent" />
                 </div>
               </CarouselItem>
             ))}
           </CarouselContent>
-          <CarouselPrevious className="left-4 bg-white/90 border-2 border-[#e2e8f0] text-[#0f172a] hover:bg-white shadow-sharp" />
-          <CarouselNext className="right-4 bg-white/90 border-2 border-[#e2e8f0] text-[#0f172a] hover:bg-white shadow-sharp" />
+          <CarouselPrevious className="left-4 bg-white/90 border-2 border-[#E7E5E4] text-[#1C1917] hover:bg-white shadow-sharp" />
+          <CarouselNext className="right-4 bg-white/90 border-2 border-[#E7E5E4] text-[#1C1917] hover:bg-white shadow-sharp" />
         </Carousel>
 
         {/* House Info Overlay */}
@@ -1387,29 +1387,29 @@ export function HouseDetailPage() {
               )}
               <Badge
                 variant="outline"
-                className="border-2 border-[#0f810d] text-[#00720d] font-bold"
+                className="border-2 border-[#D4A574] text-[#D4A574] font-bold"
               >
-                <Zap size={14} className="mr-1 text-[#20891e]" />
+                <Zap size={14} className="mr-1 text-[#D4A574]" />
                 DPE {house.specs.dpe}
               </Badge>
             </div>
             <h1
-              className="text-5xl md:text-7xl mb-4 text-[#0f172a]"
-              style={{ fontFamily: "Plus Jakarta Sans, sans-serif" }}
+              className="text-5xl md:text-7xl mb-4 text-[#1C1917]"
+              style={{ fontFamily: "DM Serif Display, serif" }}
             >
               {house.name}
             </h1>
-            <div className="flex flex-wrap items-center gap-6 text-[#64748b] font-medium">
+            <div className="flex flex-wrap items-center gap-6 text-[#78716C] font-medium">
               <span className="flex items-center gap-2">
-                <MapPin size={18} className="text-[#10b981]" />
+                <MapPin size={18} className="text-[#D4A574]" />
                 {house.location}
               </span>
               <span className="flex items-center gap-2">
-                <Users size={18} className="text-[#f97316]" />
+                <Users size={18} className="text-[#D4A574]" />
                 {house.capacity}
               </span>
               <span className="flex items-center gap-2">
-                <Maximize size={18} className="text-[#f43f5e]" />
+                <Maximize size={18} className="text-[#78716C]" />
                 {house.specs.size}
               </span>
             </div>
@@ -1424,29 +1424,29 @@ export function HouseDetailPage() {
             {/* Main Content */}
             <div className="lg:col-span-2">
               <h2
-                className="text-3xl md:text-4xl mb-6 text-[#0f172a]"
-                style={{ fontFamily: "Plus Jakarta Sans, sans-serif" }}
+                className="text-3xl md:text-4xl mb-6 text-[#1C1917]"
+                style={{ fontFamily: "DM Serif Display, serif" }}
               >
                 {language === "en"
                   ? `About ${house.name}`
                   : `À propos de ${house.name}`}
               </h2>
-              <p className="text-lg text-[#475569] leading-relaxed mb-8 font-medium">
+              <p className="text-lg text-[#57534E] leading-relaxed mb-8 font-medium">
                 {house.longDescription}
               </p>
 
               {/* Features */}
-              <h3 className="text-2xl font-black mb-6 text-[#0f172a]">
+              <h3 className="text-2xl font-black mb-6 text-[#1C1917]">
                 {t.houseDetail.features}
               </h3>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-12">
                 {house.features.map((feature, index) => (
                   <div key={index} className="flex items-start gap-3">
                     <Check
-                      className="text-[#10b981] mt-1 flex-shrink-0"
+                      className="text-[#D4A574] mt-1 flex-shrink-0"
                       size={18}
                     />
-                    <span className="text-[#475569] font-medium">
+                    <span className="text-[#57534E] font-medium">
                       {feature}
                     </span>
                   </div>
@@ -1454,17 +1454,17 @@ export function HouseDetailPage() {
               </div>
 
               {/* Services */}
-              <h3 className="text-2xl font-black mb-6 text-[#0f172a]">
+              <h3 className="text-2xl font-black mb-6 text-[#1C1917]">
                 {t.houseDetail.services}
               </h3>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-12">
                 {house.services.map((service, index) => (
                   <div key={index} className="flex items-start gap-3">
                     <Check
-                      className="text-[#f97316] mt-1 flex-shrink-0"
+                      className="text-[#D4A574] mt-1 flex-shrink-0"
                       size={18}
                     />
-                    <span className="text-[#475569] font-medium">
+                    <span className="text-[#57534E] font-medium">
                       {service}
                     </span>
                   </div>
@@ -1472,33 +1472,33 @@ export function HouseDetailPage() {
               </div>
 
               {/* Community */}
-              <h3 className="text-2xl font-black mb-6 text-[#0f172a]">
+              <h3 className="text-2xl font-black mb-6 text-[#1C1917]">
                 {t.houseDetail.community}
               </h3>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-12">
                 {house.community.map((item, index) => (
                   <div key={index} className="flex items-start gap-3">
                     <Star
-                      className="text-[#84cc16] mt-1 flex-shrink-0"
+                      className="text-[#D4A574] mt-1 flex-shrink-0"
                       size={18}
                     />
-                    <span className="text-[#475569] font-medium">{item}</span>
+                    <span className="text-[#57534E] font-medium">{item}</span>
                   </div>
                 ))}
               </div>
 
               {/* Lifestyle */}
-              <h3 className="text-2xl font-black mb-6 text-[#0f172a]">
+              <h3 className="text-2xl font-black mb-6 text-[#1C1917]">
                 {t.houseDetail.lifestyle}
               </h3>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 {house.lifestyle.map((item, index) => (
                   <div key={index} className="flex items-start gap-3">
                     <Sun
-                      className="text-[#f43f5e] mt-1 flex-shrink-0"
+                      className="text-[#78716C] mt-1 flex-shrink-0"
                       size={18}
                     />
-                    <span className="text-[#475569] font-medium">{item}</span>
+                    <span className="text-[#57534E] font-medium">{item}</span>
                   </div>
                 ))}
               </div>
@@ -1509,51 +1509,53 @@ export function HouseDetailPage() {
               <div className="sticky top-24 space-y-6">
                 {/* Pricing Card */}
                 <div className="card-ultra p-8">
-                  <p className="text-sm text-[#94a3b8] mb-2 font-bold">
+                  <p className="text-sm text-[#78716C] mb-2 font-bold">
                     {t.houseDetail.from}
                   </p>
-                  <p className="text-4xl font-black text-[#10b981] mb-2">
+                  <p className="text-4xl font-black text-[#D4A574] mb-2">
                     {house.price} CHF
                   </p>
-                  <p className="text-[#94a3b8] mb-6 font-medium">
+                  <p className="text-[#78716C] mb-6 font-medium">
                     {t.houseDetail.perMonth}
                   </p>
 
-                  <div className="space-y-3">
-                    <Link to="/join-us">
-                      <Button className="w-full btn-primary">
-                        {t.houseDetail.apply}
-                        <ArrowRight size={18} className="ml-2" />
-                      </Button>
+                  <div className="flex flex-col gap-3">
+                    <Link
+                      to="/join-us"
+                      className="w-full inline-flex items-center justify-center gap-2 px-6 py-3 bg-[#1C1917] text-white font-semibold rounded-xl hover:bg-[#D4A574] transition-colors"
+                    >
+                      {t.houseDetail.apply}
+                      <ArrowRight size={18} />
                     </Link>
-                    <Link to="/rates">
-                      <Button className="w-full btn-outline">
-                        {t.houseDetail.checkRates}
-                      </Button>
+                    <Link
+                      to="/rates"
+                      className="w-full text-center text-sm text-[#78716C] hover:text-[#1C1917] hover:underline transition-colors mt-1"
+                    >
+                      {t.houseDetail.checkRates}
                     </Link>
                   </div>
                 </div>
 
                 {/* Quick Info Card */}
                 <div className="card-ultra p-6">
-                  <h4 className="font-bold text-[#0f172a] mb-4">
+                  <h4 className="font-bold text-[#1C1917] mb-4">
                     {language === "en" ? "Quick Info" : "Infos Rapides"}
                   </h4>
                   <div className="space-y-3">
-                    <div className="flex items-center gap-3 text-[#475569]">
-                      <Clock size={18} className="text-[#10b981]" />
+                    <div className="flex items-center gap-3 text-[#57534E]">
+                      <Clock size={18} className="text-[#D4A574]" />
                       <span className="text-sm">{language === "en" ? "15-25 min to Geneva" : "15-25 min de Genève"}</span>
                     </div>
-                    <div className="flex items-center gap-3 text-[#475569]">
-                      <Wifi size={18} className="text-[#f97316]" />
+                    <div className="flex items-center gap-3 text-[#57534E]">
+                      <Wifi size={18} className="text-[#D4A574]" />
                       <span className="text-sm">{language === "en" ? "8 Gbps Fiber" : "Fibre 8 Gbps"}</span>
                     </div>
-                    <div className="flex items-center gap-3 text-[#475569]">
-                      <Car size={18} className="text-[#f43f5e]" />
+                    <div className="flex items-center gap-3 text-[#57534E]">
+                      <Car size={18} className="text-[#78716C]" />
                       <span className="text-sm">{language === "en" ? "Parking Available" : "Parking disponible"}</span>
                     </div>
-                    <div className="flex items-center gap-3 text-[#475569]">
-                      <Coffee size={18} className="text-[#84cc16]" />
+                    <div className="flex items-center gap-3 text-[#57534E]">
+                      <Coffee size={18} className="text-[#D4A574]" />
                       <span className="text-sm">{language === "en" ? "All-inclusive" : "Tout inclus"}</span>
                     </div>
                   </div>
@@ -1561,18 +1563,18 @@ export function HouseDetailPage() {
 
                 {/* Nearby Card */}
                 <div className="card-ultra p-6">
-                  <h4 className="font-bold text-[#0f172a] mb-4">
+                  <h4 className="font-bold text-[#1C1917] mb-4">
                     {t.houseDetail.nearby}
                   </h4>
                   <div className="space-y-3">
                     {house.nearby.map((item, index) => (
                       <div
                         key={index}
-                        className="flex items-start gap-3 text-[#475569]"
+                        className="flex items-start gap-3 text-[#57534E]"
                       >
                         <TreePine
                           size={18}
-                          className="text-[#10b981] mt-0.5 flex-shrink-0"
+                          className="text-[#D4A574] mt-0.5 flex-shrink-0"
                         />
                         <span className="text-sm">{item}</span>
                       </div>
@@ -1586,11 +1588,11 @@ export function HouseDetailPage() {
       </section>
 
       {/* Rooms */}
-      <section className="section-padding relative bg-[#f8fafc]">
+      <section className="section-padding relative bg-[#FAF9F6]">
         <div className="container-custom">
           <h2
-            className="text-3xl md:text-4xl mb-8 text-[#0f172a]"
-            style={{ fontFamily: "Plus Jakarta Sans, sans-serif" }}
+            className="text-3xl md:text-4xl mb-8 text-[#1C1917]"
+            style={{ fontFamily: "DM Serif Display, serif" }}
           >
             {t.houseDetail.rooms}
           </h2>
@@ -1612,19 +1614,19 @@ export function HouseDetailPage() {
                 {/* Room Content */}
                 <div className="p-8">
                   <div className="flex items-center gap-3 mb-4">
-                    <BedDouble className="text-[#10b981]" size={28} />
-                    <h3 className="text-xl font-black text-[#0f172a]">
+                    <BedDouble className="text-[#D4A574]" size={28} />
+                    <h3 className="text-xl font-black text-[#1C1917]">
                       {room.type}
                     </h3>
                   </div>
-                  <p className="text-[#64748b] mb-6 font-medium">
+                  <p className="text-[#78716C] mb-6 font-medium">
                     {room.description}
                   </p>
                   <div className="flex items-center justify-between">
-                    <p className="text-2xl font-black text-[#10b981]">
+                    <p className="text-2xl font-black text-[#D4A574]">
                       {room.price}
                     </p>
-                    <span className="text-[#94a3b8] font-medium">
+                    <span className="text-[#78716C] font-medium">
                       {t.houseDetail.perMonth}
                     </span>
                   </div>
@@ -1639,14 +1641,14 @@ export function HouseDetailPage() {
       <HouseGallery images={house.photoGallery} houseName={house.name} />
 
       {/* CTA Section */}
-      <section className="py-20 relative bg-[#10b981] overflow-hidden">
+      <section className="py-20 relative bg-[#1C1917] overflow-hidden">
         <div className="absolute top-10 left-10 w-32 h-32 bg-white/15 blob hidden lg:block" />
-        <div className="absolute bottom-10 right-10 w-24 h-24 bg-[#f97316]/40 blob-reverse hidden lg:block" />
+        <div className="absolute bottom-10 right-10 w-24 h-24 bg-[#D4A574]/40 blob-reverse hidden lg:block" />
 
         <div className="container-custom relative text-center">
           <h2
             className="text-3xl md:text-4xl mb-4 text-white font-black"
-            style={{ fontFamily: "Plus Jakarta Sans, sans-serif" }}
+            style={{ fontFamily: "DM Serif Display, serif" }}
           >
             {language === "en"
               ? `Ready to make ${house.name} your home?`
@@ -1659,7 +1661,7 @@ export function HouseDetailPage() {
           </p>
           <Link
             to="/join-us"
-            className="inline-flex items-center gap-2 px-8 py-4 bg-white text-[#10b981] font-bold rounded-full hover:bg-gray-100 transition-colors"
+            className="inline-flex items-center gap-2 px-8 py-4 bg-white text-[#1C1917] font-bold rounded-full hover:bg-gray-100 transition-colors"
           >
             {t.houseDetail.apply}
             <ArrowRight className="w-5 h-5" />

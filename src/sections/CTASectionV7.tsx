@@ -1,67 +1,60 @@
-import { Link } from "react-router-dom";
-import { ArrowRight } from "lucide-react";
-import { useLanguage } from "@/contexts/LanguageContext";
-import { STATS } from "@/data/stats";
+import { Link } from 'react-router-dom';
+import { ArrowRight } from 'lucide-react';
+import { useLanguage } from '@/contexts/LanguageContext';
+import { STATS } from '@/data/stats';
 
 /**
- * VERSION 7: PREMIUM + FACTUEL
- * CTA section — vouvoiement, USPs, plus d'emojis
+ * VERSION 9: STONE & BRASS — CONDO PREMIUM
+ * CTA section — dark bg, brass accent button, white outline secondary
  */
 
 export function CTASectionV7() {
   const { language } = useLanguage();
 
   return (
-    <section className="py-24 bg-[#f5f2ed] relative overflow-hidden">
-      {/* Organic shapes */}
-      <div className="absolute top-0 left-1/4 w-96 h-96 bg-[#7c9a6d]/10 rounded-full blur-3xl" />
-      <div className="absolute bottom-0 right-1/4 w-80 h-80 bg-[#d4897a]/10 rounded-full blur-3xl" />
-
-      <div className="container-custom relative">
+    <section className="py-24 bg-[#1C1917]">
+      <div className="container-custom">
         <div className="max-w-3xl mx-auto text-center">
-          <span className="inline-block px-4 py-2 bg-white text-[#7c9a6d] text-sm font-medium rounded-full mb-8">
-            {language === "en"
-              ? "Ready to join us?"
-              : "Prêt à nous rejoindre ?"}
+          {/* Eyebrow */}
+          <span className="text-[13px] font-semibold tracking-wider uppercase text-[#E0BB8A] mb-5 block">
+            {language === 'en' ? 'READY TO JOIN?' : 'PRÊT À NOUS REJOINDRE ?'}
           </span>
 
-          <h2 className="text-4xl md:text-5xl lg:text-6xl font-light text-[#3d4a38] mb-8 leading-tight">
-            {language === "en" ? "Your next home" : "Votre prochaine maison"}
-            <br />
-            <span className="font-medium text-[#7c9a6d]">
-              {language === "en" ? "is waiting" : "vous attend"}
-            </span>
+          {/* Heading */}
+          <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-white tracking-tight mb-6">
+            {language === 'en' ? 'Your next home is waiting' : 'Votre prochaine maison vous attend'}
           </h2>
 
-          <p className="text-[#5a6355] text-lg leading-relaxed mb-12 max-w-xl mx-auto">
-            {language === "en"
-              ? `Over ${STATS.totalResidents} residents have trusted us since ${STATS.foundedYear}. Pool, sauna, gym, private classes — everything is included.`
-              : `Plus de ${STATS.totalResidents} résidents nous ont fait confiance depuis ${STATS.foundedYear}. Piscine, sauna, salle de sport, cours privés — tout est inclus.`}
+          {/* Subtitle */}
+          <p className="text-white/60 text-lg leading-relaxed mb-12 max-w-xl mx-auto">
+            {language === 'en'
+              ? `Over ${STATS.totalResidents} residents have chosen our houses since ${STATS.foundedYear}. Pool, sauna, gym, private yoga and fitness classes, pizza nights — all included in ${STATS.totalHouses} human-scale houses, ${STATS.genevaCenterMinutes} min from Geneva city center.`
+              : `Plus de ${STATS.totalResidents} résidents ont choisi nos maisons depuis ${STATS.foundedYear}. Piscine, sauna, salle de sport, cours de yoga et fitness privés, pizza party — tout inclus dans ${STATS.totalHouses} maisons à taille humaine, à ${STATS.genevaCenterMinutes} min du centre de Genève.`}
           </p>
 
           {/* CTAs */}
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
             <Link
               to="/join-us"
-              className="group inline-flex items-center gap-3 px-10 py-5 bg-[#7c9a6d] text-white font-medium rounded-full hover:bg-[#6b8560] transition-all duration-300 hover:shadow-[0_8px30px_rgba(124,154,109,0.4)]"
+              className="group inline-flex items-center gap-3 px-10 py-4 bg-[#D4A574] text-[#1C1917] font-semibold rounded-lg hover:bg-[#E0BB8A] transition-all duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#D4A574] focus-visible:ring-offset-2 focus-visible:ring-offset-[#1C1917]"
             >
-              {language === "en" ? "Check availability" : "Voir les disponibilités"}
+              {language === 'en' ? 'Apply now' : 'Rejoindre La Villa'}
               <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform duration-300" />
             </Link>
 
             <Link
               to="/our-houses"
-              className="inline-flex items-center gap-3 px-10 py-5 border-2 border-[#3d4a38] text-[#3d4a38] font-medium rounded-full hover:bg-[#3d4a38] hover:text-white transition-all duration-300"
+              className="inline-flex items-center gap-3 px-10 py-4 border border-white/30 text-white font-semibold rounded-lg hover:border-white hover:bg-white/5 transition-all duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-[#1C1917]"
             >
-              {language === "en" ? "Explore houses" : "Explorer les maisons"}
+              {language === 'en' ? 'Explore our houses' : 'Découvrir nos maisons'}
             </Link>
           </div>
 
           {/* Trust text */}
-          <p className="mt-10 text-sm text-[#7c8a72]">
-            {language === "en"
-              ? "Quick application, no commitment."
-              : "Candidature rapide et sans engagement."}
+          <p className="mt-10 text-sm text-white/40">
+            {language === 'en'
+              ? '2-minute application — no commitment'
+              : 'Candidature en 2 minutes — sans engagement'}
           </p>
         </div>
       </div>

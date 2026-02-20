@@ -19,6 +19,9 @@ import {
   ChevronUp,
   Tv,
   UtensilsCrossed,
+  Globe,
+  Briefcase,
+  Laptop2,
 } from "lucide-react";
 import { useState } from "react";
 
@@ -91,29 +94,29 @@ export function ColocationGenevePage() {
       />
 
       {/* ===== HERO ===== */}
-      <section className="relative py-24 lg:py-32 bg-gradient-to-b from-white to-[#fafafa]">
+      <section className="relative py-24 lg:py-32 bg-gradient-to-b from-white to-[#FAF9F6]">
         <div className="max-w-5xl mx-auto px-6 text-center">
-          <span className="text-xs text-[#c44536] uppercase tracking-[0.3em] mb-4 block font-medium">
+          <span className="text-xs text-[#D4A574] uppercase tracking-[0.3em] mb-4 block font-medium">
             {language === "en" ? "Shared housing near Geneva" : "Colocation Grand Genève"}
           </span>
           <h1
-            className="text-4xl md:text-5xl lg:text-6xl font-light text-[#1a1a1a] mb-6 leading-tight"
-            style={{ fontFamily: "Plus Jakarta Sans, sans-serif" }}
+            className="text-4xl md:text-5xl lg:text-6xl font-light text-[#1C1917] mb-6 leading-tight"
+            style={{ fontFamily: "DM Serif Display, serif" }}
           >
             {language === "en" ? (
               <>
-                Premium <span className="text-[#c44536]">Shared Housing</span>
+                Premium <span className="text-[#D4A574]">Shared Housing</span>
                 <br />
                 15 Minutes from Geneva
               </>
             ) : (
               <>
-                <span className="text-[#c44536]">Colocation</span> Premium
+                <span className="text-[#D4A574]">Colocation</span> Premium
                 <br />à 15 Minutes de Genève
               </>
             )}
           </h1>
-          <p className="text-lg md:text-xl text-[#666] max-w-3xl mx-auto mb-10 leading-relaxed">
+          <p className="text-lg md:text-xl text-[#57534E] max-w-3xl mx-auto mb-10 leading-relaxed">
             {language === "en"
               ? "Live on the French side, work in Geneva. 29 fully furnished, all-inclusive rooms across 3 designer houses in Ville-la-Grand, Ambilly and Annemasse. Pool, gym, sauna, fiber internet — everything included."
               : "Vivez côté France, travaillez à Genève. 29 chambres meublées tout inclus dans 3 maisons design à Ville-la-Grand, Ambilly et Annemasse. Piscine, gym, sauna, fibre optique — tout est compris."}
@@ -121,21 +124,21 @@ export function ColocationGenevePage() {
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Link
               to="/join-us"
-              className="inline-flex items-center gap-2 bg-[#c44536] text-white px-8 py-4 text-sm uppercase tracking-wider hover:bg-[#a02c1f] transition-colors"
+              className="inline-flex items-center gap-2 bg-[#D4A574] text-white px-8 py-4 text-sm uppercase tracking-wider hover:bg-[#44403C] transition-colors"
             >
               {language === "en" ? "Apply Now" : "Candidater"}
               <ArrowRight className="w-4 h-4" />
             </Link>
             <Link
               to="/our-houses"
-              className="inline-flex items-center gap-2 border border-[#1a1a1a] text-[#1a1a1a] px-8 py-4 text-sm uppercase tracking-wider hover:bg-[#1a1a1a] hover:text-white transition-colors"
+              className="inline-flex items-center gap-2 border border-[#1C1917] text-[#1C1917] px-8 py-4 text-sm uppercase tracking-wider hover:bg-[#1C1917] hover:text-white transition-colors"
             >
               {language === "en" ? "View Our Houses" : "Voir Nos Maisons"}
             </Link>
           </div>
 
           {/* Trust badges */}
-          <div className="flex flex-wrap justify-center gap-8 mt-12 text-sm text-[#999]">
+          <div className="flex flex-wrap justify-center gap-8 mt-12 text-sm text-[#78716C]">
             <span className="flex items-center gap-2">
               <Home className="w-4 h-4" /> 29{" "}
               {language === "en" ? "rooms" : "chambres"}
@@ -161,14 +164,14 @@ export function ColocationGenevePage() {
       <section className="py-24 lg:py-32 bg-white">
         <div className="max-w-5xl mx-auto px-6">
           <h2
-            className="text-3xl md:text-4xl font-light text-[#1a1a1a] mb-4 text-center"
-            style={{ fontFamily: "Plus Jakarta Sans, sans-serif" }}
+            className="text-3xl md:text-4xl font-light text-[#1C1917] mb-4 text-center"
+            style={{ fontFamily: "DM Serif Display, serif" }}
           >
             {language === "en"
               ? "Why Choose Shared Housing on the French Side?"
               : "Pourquoi Choisir la Colocation Côté France ?"}
           </h2>
-          <p className="text-[#666] text-center max-w-3xl mx-auto mb-16">
+          <p className="text-[#57534E] text-center max-w-3xl mx-auto mb-16">
             {language === "en"
               ? "Geneva is one of the most expensive cities in the world for housing. Living across the border gives you Swiss salaries with French cost of living."
               : "Genève est l'une des villes les plus chères au monde pour se loger. Vivre côté France vous donne un salaire suisse avec un coût de vie français."}
@@ -176,39 +179,39 @@ export function ColocationGenevePage() {
 
           <div className="grid md:grid-cols-2 gap-12">
             {/* Card 1: Savings */}
-            <div className="bg-[#fafafa] p-8">
-              <Euro className="w-8 h-8 text-[#c44536] mb-4" />
-              <h3 className="text-xl font-medium text-[#1a1a1a] mb-3">
+            <div className="bg-[#FAF9F6] p-8">
+              <Euro className="w-8 h-8 text-[#D4A574] mb-4" />
+              <h3 className="text-xl font-medium text-[#1C1917] mb-3">
                 {language === "en" ? "Save 30-50% on Housing" : "Économisez 30 à 50% sur le Logement"}
               </h3>
-              <p className="text-[#666] leading-relaxed mb-4">
+              <p className="text-[#57534E] leading-relaxed mb-4">
                 {language === "en"
                   ? "A studio in Geneva starts at 1,800 CHF/month — without furniture or services. At La Villa, you get a fully furnished room with pool, gym, sauna, cleaning 2x/week, weekly yoga & sports classes, monthly community events and meal baskets — from 1,380 CHF/month."
                   : "Un studio à Genève coûte minimum 1 800 CHF/mois — sans meubles ni services. Chez La Villa, vous avez une chambre meublée avec piscine, gym, sauna, ménage 2x/semaine, cours de yoga et sport hebdomadaires, événements communautaires et paniers repas mensuels — dès 1 380 CHF/mois."}
               </p>
-              <div className="bg-white p-4 border border-[#e5e5e5]">
+              <div className="bg-white p-4 border border-[#E7E5E4]">
                 <div className="flex justify-between items-center mb-2">
-                  <span className="text-sm text-[#999]">
+                  <span className="text-sm text-[#78716C]">
                     Studio Genève
                   </span>
-                  <span className="font-medium text-[#1a1a1a]">
+                  <span className="font-medium text-[#1C1917]">
                     1 800 - 2 500 CHF
                   </span>
                 </div>
                 <div className="flex justify-between items-center mb-2">
-                  <span className="text-sm text-[#999]">
+                  <span className="text-sm text-[#78716C]">
                     + {language === "en" ? "Utilities & internet" : "Charges & internet"}
                   </span>
-                  <span className="font-medium text-[#1a1a1a]">
+                  <span className="font-medium text-[#1C1917]">
                     + 200 - 400 CHF
                   </span>
                 </div>
-                <div className="border-t border-[#e5e5e5] my-2 pt-2">
+                <div className="border-t border-[#E7E5E4] my-2 pt-2">
                   <div className="flex justify-between items-center">
-                    <span className="text-sm font-medium text-[#c44536]">
+                    <span className="text-sm font-medium text-[#D4A574]">
                       La Villa ({language === "en" ? "all included" : "tout compris"})
                     </span>
-                    <span className="font-medium text-[#c44536]">
+                    <span className="font-medium text-[#D4A574]">
                       1 380 CHF
                     </span>
                   </div>
@@ -217,12 +220,12 @@ export function ColocationGenevePage() {
             </div>
 
             {/* Card 2: Tax Benefits */}
-            <div className="bg-[#fafafa] p-8">
-              <Shield className="w-8 h-8 text-[#c44536] mb-4" />
-              <h3 className="text-xl font-medium text-[#1a1a1a] mb-3">
+            <div className="bg-[#FAF9F6] p-8">
+              <Shield className="w-8 h-8 text-[#D4A574] mb-4" />
+              <h3 className="text-xl font-medium text-[#1C1917] mb-3">
                 {language === "en" ? "Cross-Border Tax Benefits" : "Avantages Fiscaux Frontaliers"}
               </h3>
-              <p className="text-[#666] leading-relaxed">
+              <p className="text-[#57534E] leading-relaxed">
                 {language === "en"
                   ? "As a cross-border worker in Geneva, you're taxed at source in Switzerland — often at a lower rate than in France. You enjoy Swiss salaries while benefiting from French cost of living: groceries, leisure, transport, and healthcare costs are significantly lower on the French side."
                   : "En tant que frontalier à Genève, vous êtes imposé à la source en Suisse — souvent à un taux inférieur au taux français. Vous bénéficiez d'un salaire suisse avec un coût de vie français : courses, loisirs, transports et santé sont nettement moins chers côté France."}
@@ -230,39 +233,39 @@ export function ColocationGenevePage() {
             </div>
 
             {/* Card 3: Transport */}
-            <div className="bg-[#fafafa] p-8">
-              <Train className="w-8 h-8 text-[#c44536] mb-4" />
-              <h3 className="text-xl font-medium text-[#1a1a1a] mb-3">
+            <div className="bg-[#FAF9F6] p-8">
+              <Train className="w-8 h-8 text-[#D4A574] mb-4" />
+              <h3 className="text-xl font-medium text-[#1C1917] mb-3">
                 {language === "en" ? "15 min from Geneva Centre" : "15 min du Centre de Genève"}
               </h3>
-              <p className="text-[#666] leading-relaxed mb-4">
+              <p className="text-[#57534E] leading-relaxed mb-4">
                 {language === "en"
                   ? "Our houses are located in the heart of the cross-border area, with excellent connections to Geneva."
                   : "Nos maisons sont situées au cœur de la zone frontalière, avec d'excellentes connexions vers Genève."}
               </p>
-              <ul className="space-y-2 text-[#666]">
+              <ul className="space-y-2 text-[#57534E]">
                 <li className="flex items-center gap-2">
-                  <Check className="w-4 h-4 text-[#c44536] flex-shrink-0" />
+                  <Check className="w-4 h-4 text-[#D4A574] flex-shrink-0" />
                   <span>
                     <strong>Léman Express :</strong> Annemasse → Cornavin en 20 min
                   </span>
                 </li>
                 <li className="flex items-center gap-2">
-                  <Check className="w-4 h-4 text-[#c44536] flex-shrink-0" />
+                  <Check className="w-4 h-4 text-[#D4A574] flex-shrink-0" />
                   <span>
                     <strong>{language === "en" ? "By car" : "En voiture"} :</strong>{" "}
                     15 min {language === "en" ? "via Moillesulaz border" : "via la douane de Moillesulaz"}
                   </span>
                 </li>
                 <li className="flex items-center gap-2">
-                  <Check className="w-4 h-4 text-[#c44536] flex-shrink-0" />
+                  <Check className="w-4 h-4 text-[#D4A574] flex-shrink-0" />
                   <span>
                     <strong>Bus TAC / TPG :</strong>{" "}
                     {language === "en" ? "Direct lines to Geneva" : "Lignes directes vers Genève"}
                   </span>
                 </li>
                 <li className="flex items-center gap-2">
-                  <Check className="w-4 h-4 text-[#c44536] flex-shrink-0" />
+                  <Check className="w-4 h-4 text-[#D4A574] flex-shrink-0" />
                   <span>
                     <strong>{language === "en" ? "By bike" : "À vélo"} :</strong>{" "}
                     {language === "en"
@@ -274,12 +277,12 @@ export function ColocationGenevePage() {
             </div>
 
             {/* Card 4: Quality of Life */}
-            <div className="bg-[#fafafa] p-8">
-              <Star className="w-8 h-8 text-[#c44536] mb-4" />
-              <h3 className="text-xl font-medium text-[#1a1a1a] mb-3">
+            <div className="bg-[#FAF9F6] p-8">
+              <Star className="w-8 h-8 text-[#D4A574] mb-4" />
+              <h3 className="text-xl font-medium text-[#1C1917] mb-3">
                 {language === "en" ? "Premium Quality of Life" : "Qualité de Vie Premium"}
               </h3>
-              <p className="text-[#666] leading-relaxed">
+              <p className="text-[#57534E] leading-relaxed">
                 {language === "en"
                   ? "Forget the isolation of a tiny studio. At La Villa, you live in designer houses with pool, gym, sauna, garden, coworking spaces, and a vibrant international community. Weekly yoga & sports classes, monthly community events, monthly meal baskets — cleaning 2x/week, maintenance, streaming subscriptions all included."
                   : "Oubliez l'isolement d'un petit studio. Chez La Villa, vous vivez dans des maisons design avec piscine, salle de sport, sauna, jardin, espaces coworking et une communauté internationale dynamique. Cours de yoga et sport hebdomadaires, événements communautaires mensuels, paniers repas mensuels — ménage 2x/semaine, entretien, abonnements streaming inclus."}
@@ -290,17 +293,17 @@ export function ColocationGenevePage() {
       </section>
 
       {/* ===== NOS 3 RÉSIDENCES ===== */}
-      <section className="py-24 lg:py-32 bg-[#fafafa]">
+      <section className="py-24 lg:py-32 bg-[#FAF9F6]">
         <div className="max-w-5xl mx-auto px-6">
           <h2
-            className="text-3xl md:text-4xl font-light text-[#1a1a1a] mb-4 text-center"
-            style={{ fontFamily: "Plus Jakarta Sans, sans-serif" }}
+            className="text-3xl md:text-4xl font-light text-[#1C1917] mb-4 text-center"
+            style={{ fontFamily: "DM Serif Display, serif" }}
           >
             {language === "en"
               ? "3 Houses, 3 Locations, 1 Community"
               : "3 Maisons, 3 Adresses, 1 Communauté"}
           </h2>
-          <p className="text-[#666] text-center max-w-3xl mx-auto mb-16">
+          <p className="text-[#57534E] text-center max-w-3xl mx-auto mb-16">
             {language === "en"
               ? "All within the Grand Geneva cross-border area, 15 minutes from the Swiss border."
               : "Toutes dans la zone frontalière du Grand Genève, à 15 minutes de la frontière suisse."}
@@ -308,7 +311,7 @@ export function ColocationGenevePage() {
 
           <div className="grid md:grid-cols-3 gap-8">
             {/* La Villa */}
-            <Link to="/lavilla" className="group bg-white border border-[#e5e5e5] hover:border-[#c44536] transition-colors">
+            <Link to="/lavilla" className="group bg-white border border-[#E7E5E4] hover:border-[#D4A574] transition-colors">
               <div className="aspect-[4/3] overflow-hidden">
                 <img
                   src="/images/la villa jardin.webp"
@@ -317,16 +320,16 @@ export function ColocationGenevePage() {
                 />
               </div>
               <div className="p-6">
-                <h3 className="text-xl font-medium text-[#1a1a1a] mb-1">La Villa</h3>
-                <p className="text-sm text-[#c44536] flex items-center gap-1 mb-3">
+                <h3 className="text-xl font-medium text-[#1C1917] mb-1">La Villa</h3>
+                <p className="text-sm text-[#D4A574] flex items-center gap-1 mb-3">
                   <MapPin className="w-3 h-3" /> Ville-la-Grand
                 </p>
-                <p className="text-sm text-[#666] mb-4">
+                <p className="text-sm text-[#57534E] mb-4">
                   {language === "en"
                     ? "370m² designer house on 2,000m² estate. Heated pool, sauna, gym. 10 rooms."
                     : "Maison design de 370m² sur domaine de 2 000m². Piscine chauffée, sauna, gym. 10 chambres."}
                 </p>
-                <div className="flex items-center gap-4 text-xs text-[#999]">
+                <div className="flex items-center gap-4 text-xs text-[#78716C]">
                   <span className="flex items-center gap-1"><Waves className="w-3 h-3" /> {language === "en" ? "Pool" : "Piscine"}</span>
                   <span className="flex items-center gap-1"><Dumbbell className="w-3 h-3" /> Gym</span>
                   <span className="flex items-center gap-1"><Wifi className="w-3 h-3" /> Fibre</span>
@@ -335,7 +338,7 @@ export function ColocationGenevePage() {
             </Link>
 
             {/* Le Loft */}
-            <Link to="/leloft" className="group bg-white border border-[#e5e5e5] hover:border-[#c44536] transition-colors">
+            <Link to="/leloft" className="group bg-white border border-[#E7E5E4] hover:border-[#D4A574] transition-colors">
               <div className="aspect-[4/3] overflow-hidden">
                 <img
                   src="/images/le loft glamour.webp"
@@ -344,16 +347,16 @@ export function ColocationGenevePage() {
                 />
               </div>
               <div className="p-6">
-                <h3 className="text-xl font-medium text-[#1a1a1a] mb-1">Le Loft</h3>
-                <p className="text-sm text-[#c44536] flex items-center gap-1 mb-3">
+                <h3 className="text-xl font-medium text-[#1C1917] mb-1">Le Loft</h3>
+                <p className="text-sm text-[#D4A574] flex items-center gap-1 mb-3">
                   <MapPin className="w-3 h-3" /> Ambilly
                 </p>
-                <p className="text-sm text-[#666] mb-4">
+                <p className="text-sm text-[#57534E] mb-4">
                   {language === "en"
                     ? "Charming townhouse with indoor pool, sauna, gym. Spacious designer rooms. 7 rooms."
                     : "Maison de ville charmante avec piscine intérieure, sauna, gym. Chambres design spacieuses. 7 chambres."}
                 </p>
-                <div className="flex items-center gap-4 text-xs text-[#999]">
+                <div className="flex items-center gap-4 text-xs text-[#78716C]">
                   <span className="flex items-center gap-1"><Waves className="w-3 h-3" /> {language === "en" ? "Pool" : "Piscine"}</span>
                   <span className="flex items-center gap-1"><Dumbbell className="w-3 h-3" /> Gym</span>
                   <span className="flex items-center gap-1"><Wifi className="w-3 h-3" /> Fibre</span>
@@ -362,7 +365,7 @@ export function ColocationGenevePage() {
             </Link>
 
             {/* Le Lodge */}
-            <Link to="/lelodge" className="group bg-white border border-[#e5e5e5] hover:border-[#c44536] transition-colors">
+            <Link to="/lelodge" className="group bg-white border border-[#E7E5E4] hover:border-[#D4A574] transition-colors">
               <div className="aspect-[4/3] overflow-hidden">
                 <img
                   src="/images/le lodge piscine.webp"
@@ -371,16 +374,16 @@ export function ColocationGenevePage() {
                 />
               </div>
               <div className="p-6">
-                <h3 className="text-xl font-medium text-[#1a1a1a] mb-1">Le Lodge</h3>
-                <p className="text-sm text-[#c44536] flex items-center gap-1 mb-3">
+                <h3 className="text-xl font-medium text-[#1C1917] mb-1">Le Lodge</h3>
+                <p className="text-sm text-[#D4A574] flex items-center gap-1 mb-3">
                   <MapPin className="w-3 h-3" /> Annemasse
                 </p>
-                <p className="text-sm text-[#666] mb-4">
+                <p className="text-sm text-[#57534E] mb-4">
                   {language === "en"
                     ? "Spacious estate near Annemasse centre. Pool house, fitness chalet, large garden. 12 rooms."
                     : "Domaine spacieux proche du centre d'Annemasse. Pool house, chalet fitness, grand jardin. 12 chambres."}
                 </p>
-                <div className="flex items-center gap-4 text-xs text-[#999]">
+                <div className="flex items-center gap-4 text-xs text-[#78716C]">
                   <span className="flex items-center gap-1"><Waves className="w-3 h-3" /> {language === "en" ? "Pool" : "Piscine"}</span>
                   <span className="flex items-center gap-1"><Dumbbell className="w-3 h-3" /> Gym</span>
                   <span className="flex items-center gap-1"><Wifi className="w-3 h-3" /> Fibre</span>
@@ -392,7 +395,7 @@ export function ColocationGenevePage() {
           <div className="text-center mt-12">
             <Link
               to="/our-houses"
-              className="inline-flex items-center gap-2 text-[#c44536] font-medium hover:underline"
+              className="inline-flex items-center gap-2 text-[#D4A574] font-medium hover:underline"
             >
               {language === "en" ? "Explore all houses in detail" : "Explorer toutes nos maisons en détail"}
               <ArrowRight className="w-4 h-4" />
@@ -405,14 +408,14 @@ export function ColocationGenevePage() {
       <section className="py-24 lg:py-32 bg-white">
         <div className="max-w-5xl mx-auto px-6">
           <h2
-            className="text-3xl md:text-4xl font-light text-[#1a1a1a] mb-4 text-center"
-            style={{ fontFamily: "Plus Jakarta Sans, sans-serif" }}
+            className="text-3xl md:text-4xl font-light text-[#1C1917] mb-4 text-center"
+            style={{ fontFamily: "DM Serif Display, serif" }}
           >
             {language === "en"
               ? "Everything Included in Your Rent"
               : "Tout Est Compris dans Votre Loyer"}
           </h2>
-          <p className="text-[#666] text-center max-w-3xl mx-auto mb-16">
+          <p className="text-[#57534E] text-center max-w-3xl mx-auto mb-16">
             {language === "en"
               ? "No hidden fees, no surprise bills. One simple monthly payment covers everything."
               : "Pas de frais cachés, pas de mauvaises surprises. Un seul paiement mensuel couvre tout."}
@@ -431,9 +434,9 @@ export function ColocationGenevePage() {
               { icon: UtensilsCrossed, label: language === "en" ? "Monthly meal baskets" : "Paniers repas mensuels" },
               { icon: Tv, label: language === "en" ? "Streaming subscriptions" : "Abonnements streaming" },
             ].map((item, i) => (
-              <div key={i} className="flex items-center gap-4 p-4 bg-[#fafafa]">
-                <item.icon className="w-5 h-5 text-[#c44536] flex-shrink-0" />
-                <span className="text-[#1a1a1a]">{item.label}</span>
+              <div key={i} className="flex items-center gap-4 p-4 bg-[#FAF9F6]">
+                <item.icon className="w-5 h-5 text-[#D4A574] flex-shrink-0" />
+                <span className="text-[#1C1917]">{item.label}</span>
               </div>
             ))}
           </div>
@@ -441,7 +444,7 @@ export function ColocationGenevePage() {
           <div className="text-center mt-12">
             <Link
               to="/rates"
-              className="inline-flex items-center gap-2 text-[#c44536] font-medium hover:underline"
+              className="inline-flex items-center gap-2 text-[#D4A574] font-medium hover:underline"
             >
               {language === "en" ? "See detailed pricing" : "Voir les tarifs détaillés"}
               <ArrowRight className="w-4 h-4" />
@@ -451,11 +454,11 @@ export function ColocationGenevePage() {
       </section>
 
       {/* ===== POUR QUI ? ===== */}
-      <section className="py-24 lg:py-32 bg-[#fafafa]">
+      <section className="py-24 lg:py-32 bg-[#FAF9F6]">
         <div className="max-w-5xl mx-auto px-6">
           <h2
-            className="text-3xl md:text-4xl font-light text-[#1a1a1a] mb-16 text-center"
-            style={{ fontFamily: "Plus Jakarta Sans, sans-serif" }}
+            className="text-3xl md:text-4xl font-light text-[#1C1917] mb-16 text-center"
+            style={{ fontFamily: "DM Serif Display, serif" }}
           >
             {language === "en"
               ? "Who Lives at La Villa?"
@@ -465,28 +468,28 @@ export function ColocationGenevePage() {
           <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
             {[
               {
-                emoji: "🇨🇭",
+                Icon: MapPin,
                 title: language === "en" ? "Cross-Border Workers" : "Frontaliers",
                 desc: language === "en"
                   ? "Working in Geneva, living in France. Save on rent while enjoying Swiss salaries."
                   : "Travailler à Genève, vivre en France. Économisez sur le loyer tout en profitant d'un salaire suisse.",
               },
               {
-                emoji: "🌍",
+                Icon: Globe,
                 title: language === "en" ? "Expats & Internationals" : "Expats & Internationaux",
                 desc: language === "en"
                   ? "New to the area? Join a welcoming community. No need to furnish or deal with admin alone."
                   : "Nouveau dans la région ? Rejoignez une communauté accueillante. Pas besoin de meubler ni de gérer l'administratif seul.",
               },
               {
-                emoji: "💼",
+                Icon: Briefcase,
                 title: language === "en" ? "Young Professionals" : "Jeunes Professionnels",
                 desc: language === "en"
                   ? "Start your career near Geneva with flexible, affordable, premium housing."
                   : "Démarrez votre carrière près de Genève avec un logement flexible, abordable et premium.",
               },
               {
-                emoji: "💻",
+                Icon: Laptop2,
                 title: language === "en" ? "Remote Workers" : "Télétravailleurs",
                 desc: language === "en"
                   ? "Coworking spaces, fast fiber internet, and a community of like-minded professionals."
@@ -494,9 +497,9 @@ export function ColocationGenevePage() {
               },
             ].map((item, i) => (
               <div key={i} className="text-center">
-                <span className="text-4xl mb-4 block">{item.emoji}</span>
-                <h3 className="text-lg font-medium text-[#1a1a1a] mb-2">{item.title}</h3>
-                <p className="text-sm text-[#666] leading-relaxed">{item.desc}</p>
+                <div className="w-12 h-12 bg-[#F5F2ED] rounded-xl flex items-center justify-center mb-4 mx-auto"><item.Icon className="w-6 h-6 text-[#D4A574]" /></div>
+                <h3 className="text-lg font-medium text-[#1C1917] mb-2">{item.title}</h3>
+                <p className="text-sm text-[#57534E] leading-relaxed">{item.desc}</p>
               </div>
             ))}
           </div>
@@ -507,14 +510,14 @@ export function ColocationGenevePage() {
       <section className="py-24 lg:py-32 bg-white">
         <div className="max-w-5xl mx-auto px-6">
           <h2
-            className="text-3xl md:text-4xl font-light text-[#1a1a1a] mb-4 text-center"
-            style={{ fontFamily: "Plus Jakarta Sans, sans-serif" }}
+            className="text-3xl md:text-4xl font-light text-[#1C1917] mb-4 text-center"
+            style={{ fontFamily: "DM Serif Display, serif" }}
           >
             {language === "en"
               ? "Coliving vs Studio in Geneva: The Comparison"
               : "Colocation vs Studio à Genève : Le Comparatif"}
           </h2>
-          <p className="text-[#666] text-center max-w-3xl mx-auto mb-12">
+          <p className="text-[#57534E] text-center max-w-3xl mx-auto mb-12">
             {language === "en"
               ? "See why our coliving is the smartest choice for living near Geneva."
               : "Découvrez pourquoi notre colocation est le choix le plus malin pour vivre près de Genève."}
@@ -523,12 +526,12 @@ export function ColocationGenevePage() {
           <div className="overflow-x-auto">
             <table className="w-full border-collapse text-sm">
               <thead>
-                <tr className="bg-[#fafafa]">
-                  <th className="border border-[#e5e5e5] px-6 py-4 text-left font-medium text-[#1a1a1a]"></th>
-                  <th className="border border-[#e5e5e5] px-6 py-4 text-left font-medium text-[#c44536]">
+                <tr className="bg-[#FAF9F6]">
+                  <th className="border border-[#E7E5E4] px-6 py-4 text-left font-medium text-[#1C1917]"></th>
+                  <th className="border border-[#E7E5E4] px-6 py-4 text-left font-medium text-[#D4A574]">
                     La Villa Coliving
                   </th>
-                  <th className="border border-[#e5e5e5] px-6 py-4 text-left font-medium text-[#999]">
+                  <th className="border border-[#E7E5E4] px-6 py-4 text-left font-medium text-[#78716C]">
                     Studio Genève
                   </th>
                 </tr>
@@ -545,10 +548,10 @@ export function ColocationGenevePage() {
                   [language === "en" ? "Lease" : "Bail", language === "en" ? "12 months, renewable" : "12 mois, renouvelable", language === "en" ? "12+ months lease" : "Bail 12+ mois"],
                   [language === "en" ? "Deposit" : "Caution", language === "en" ? "2 months" : "2 mois", language === "en" ? "3 months typical" : "3 mois généralement"],
                 ].map(([label, villa, studio], i) => (
-                  <tr key={i} className={i % 2 === 0 ? "bg-white" : "bg-[#fafafa]"}>
-                    <td className="border border-[#e5e5e5] px-6 py-3 font-medium text-[#1a1a1a]">{label}</td>
-                    <td className="border border-[#e5e5e5] px-6 py-3 text-[#1a1a1a]">{villa}</td>
-                    <td className="border border-[#e5e5e5] px-6 py-3 text-[#666]">{studio}</td>
+                  <tr key={i} className={i % 2 === 0 ? "bg-white" : "bg-[#FAF9F6]"}>
+                    <td className="border border-[#E7E5E4] px-6 py-3 font-medium text-[#1C1917]">{label}</td>
+                    <td className="border border-[#E7E5E4] px-6 py-3 text-[#1C1917]">{villa}</td>
+                    <td className="border border-[#E7E5E4] px-6 py-3 text-[#57534E]">{studio}</td>
                   </tr>
                 ))}
               </tbody>
@@ -558,11 +561,11 @@ export function ColocationGenevePage() {
       </section>
 
       {/* ===== FAQ ===== */}
-      <section className="py-24 lg:py-32 bg-[#fafafa]">
+      <section className="py-24 lg:py-32 bg-[#FAF9F6]">
         <div className="max-w-3xl mx-auto px-6">
           <h2
-            className="text-3xl md:text-4xl font-light text-[#1a1a1a] mb-12 text-center"
-            style={{ fontFamily: "Plus Jakarta Sans, sans-serif" }}
+            className="text-3xl md:text-4xl font-light text-[#1C1917] mb-12 text-center"
+            style={{ fontFamily: "DM Serif Display, serif" }}
           >
             {language === "en"
               ? "Frequently Asked Questions"
@@ -571,20 +574,20 @@ export function ColocationGenevePage() {
 
           <div className="space-y-4">
             {colocationFAQ.map((item, i) => (
-              <div key={i} className="bg-white border border-[#e5e5e5]">
+              <div key={i} className="bg-white border border-[#E7E5E4]">
                 <button
                   onClick={() => setOpenFAQ(openFAQ === i ? null : i)}
                   className="w-full flex items-center justify-between px-6 py-5 text-left"
                 >
-                  <span className="font-medium text-[#1a1a1a] pr-4">{item.q}</span>
+                  <span className="font-medium text-[#1C1917] pr-4">{item.q}</span>
                   {openFAQ === i ? (
-                    <ChevronUp className="w-5 h-5 text-[#c44536] flex-shrink-0" />
+                    <ChevronUp className="w-5 h-5 text-[#D4A574] flex-shrink-0" />
                   ) : (
-                    <ChevronDown className="w-5 h-5 text-[#999] flex-shrink-0" />
+                    <ChevronDown className="w-5 h-5 text-[#78716C] flex-shrink-0" />
                   )}
                 </button>
                 {openFAQ === i && (
-                  <div className="px-6 pb-5 text-[#666] leading-relaxed border-t border-[#e5e5e5] pt-4">
+                  <div className="px-6 pb-5 text-[#57534E] leading-relaxed border-t border-[#E7E5E4] pt-4">
                     {item.a}
                   </div>
                 )}
@@ -595,17 +598,17 @@ export function ColocationGenevePage() {
       </section>
 
       {/* ===== CTA FINAL ===== */}
-      <section className="py-24 lg:py-32 bg-[#1a1a1a] text-white">
+      <section className="py-24 lg:py-32 bg-[#1C1917] text-white">
         <div className="max-w-3xl mx-auto px-6 text-center">
           <h2
             className="text-3xl md:text-4xl font-light mb-6"
-            style={{ fontFamily: "Plus Jakarta Sans, sans-serif" }}
+            style={{ fontFamily: "DM Serif Display, serif" }}
           >
             {language === "en"
               ? "Ready to Find Your Room Near Geneva?"
               : "Prêt à Trouver Votre Chambre près de Genève ?"}
           </h2>
-          <p className="text-[#999] text-lg mb-10 max-w-xl mx-auto">
+          <p className="text-[#78716C] text-lg mb-10 max-w-xl mx-auto">
             {language === "en"
               ? "Apply in 2 minutes. We'll get back to you within 48 hours. Move in within 2 weeks."
               : "Candidatez en 2 minutes. Réponse sous 48h. Emménagement en 2 semaines."}
@@ -613,14 +616,14 @@ export function ColocationGenevePage() {
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Link
               to="/join-us"
-              className="inline-flex items-center gap-2 bg-[#c44536] text-white px-8 py-4 text-sm uppercase tracking-wider hover:bg-[#a02c1f] transition-colors"
+              className="inline-flex items-center gap-2 bg-[#D4A574] text-white px-8 py-4 text-sm uppercase tracking-wider hover:bg-[#44403C] transition-colors"
             >
               {language === "en" ? "Apply Now" : "Candidater Maintenant"}
               <ArrowRight className="w-4 h-4" />
             </Link>
             <Link
               to="/rates"
-              className="inline-flex items-center gap-2 border border-white/30 text-white px-8 py-4 text-sm uppercase tracking-wider hover:bg-white hover:text-[#1a1a1a] transition-colors"
+              className="inline-flex items-center gap-2 border border-white/30 text-white px-8 py-4 text-sm uppercase tracking-wider hover:bg-white hover:text-[#1C1917] transition-colors"
             >
               {language === "en" ? "View Pricing" : "Voir les Tarifs"}
             </Link>

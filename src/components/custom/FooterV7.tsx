@@ -3,8 +3,8 @@ import { Instagram, Mail, MapPin } from "lucide-react";
 import { useLanguage } from "@/contexts/LanguageContext";
 
 /**
- * VERSION 7: JEUNE + NOMADE + ZEN + FRAIS
- * Footer style lifestyle et décontracté
+ * VERSION 9: STONE & BRASS — CONDO PREMIUM
+ * Footer — stone-deep bg, brass CTA, zero emoji
  */
 
 export function FooterV7() {
@@ -35,12 +35,8 @@ export function FooterV7() {
   ];
 
   return (
-    <footer className="bg-[#3d4a38] relative overflow-hidden">
-      {/* Organic shapes */}
-      <div className="absolute top-0 right-0 w-[400px] h-[400px] bg-[#7c9a6d]/10 rounded-full blur-3xl -translate-y-1/2" />
-      <div className="absolute bottom-0 left-0 w-[300px] h-[300px] bg-[#d4897a]/10 rounded-full blur-3xl translate-y-1/2" />
-
-      <div className="container-custom py-16 md:py-20 relative">
+    <footer className="bg-[#1C1917]">
+      <div className="container-custom py-16 md:py-20">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12">
           {/* Brand */}
           <div className="lg:col-span-2">
@@ -51,23 +47,23 @@ export function FooterV7() {
                 className="h-20 w-auto brightness-0 invert"
               />
             </Link>
-            <p className="text-[#a8b5a0] max-w-md mb-6 leading-relaxed">
+            <p className="text-[#78716C] max-w-md mb-6 leading-relaxed">
               {language === "en"
-                ? "Coliving homes for modern nomads. Community, comfort, and freedom in Grand Genève 🌿"
-                : "Maisons de coliving pour nomades modernes. Communauté, confort et liberté au Grand Genève 🌿"}
+                ? "Boutique coliving in Greater Geneva. 3 houses, 29 rooms, pool, sauna and gym in every house. All inclusive."
+                : "Coliving boutique au Grand Genève. 3 maisons, 29 chambres, piscine, sauna et salle de sport dans chaque maison. Tout inclus."}
             </p>
             <div className="flex items-center gap-3">
               <a
                 href="https://www.instagram.com/lavillacoliving/"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="w-11 h-11 rounded-full bg-[#7c9a6d]/20 flex items-center justify-center text-[#a8b5a0] hover:bg-[#7c9a6d] hover:text-white transition-all duration-300"
+                className="w-11 h-11 rounded-lg bg-white/[0.06] flex items-center justify-center text-[#78716C] hover:text-[#E0BB8A] hover:bg-white/[0.1] transition-all duration-300"
               >
                 <Instagram size={18} />
               </a>
               <a
                 href="mailto:contact@lavillacoliving.com"
-                className="w-11 h-11 rounded-full bg-[#7c9a6d]/20 flex items-center justify-center text-[#a8b5a0] hover:bg-[#7c9a6d] hover:text-white transition-all duration-300"
+                className="w-11 h-11 rounded-lg bg-white/[0.06] flex items-center justify-center text-[#78716C] hover:text-[#E0BB8A] hover:bg-white/[0.1] transition-all duration-300"
               >
                 <Mail size={18} />
               </a>
@@ -76,7 +72,7 @@ export function FooterV7() {
 
           {/* Navigation */}
           <div>
-            <h4 className="text-sm font-medium text-[#7c9a6d] mb-6">
+            <h4 className="text-sm font-semibold text-[#FAF9F6] mb-6">
               {language === "en" ? "Explore" : "Explorer"}
             </h4>
             <ul className="space-y-3">
@@ -84,7 +80,7 @@ export function FooterV7() {
                 <li key={link.path}>
                   <Link
                     to={link.path}
-                    className="text-[#a8b5a0] hover:text-white transition-colors duration-300 text-sm"
+                    className="text-[#78716C] hover:text-[#E0BB8A] transition-colors duration-300 text-sm"
                   >
                     {link.label}
                   </Link>
@@ -95,24 +91,24 @@ export function FooterV7() {
 
           {/* Contact */}
           <div>
-            <h4 className="text-sm font-medium text-[#7c9a6d] mb-6">
-              {language === "en" ? "Say hi" : "Dis bonjour"}
+            <h4 className="text-sm font-semibold text-[#FAF9F6] mb-6">
+              Contact
             </h4>
             <div className="space-y-4">
               <div className="flex items-start gap-3">
                 <MapPin
                   size={18}
-                  className="text-[#d4897a] mt-0.5 flex-shrink-0"
+                  className="text-[#D4A574] mt-0.5 flex-shrink-0"
                 />
-                <span className="text-[#a8b5a0] text-sm">
-                  Grand Genève, France 🇫🇷
+                <span className="text-[#78716C] text-sm">
+                  Grand Genève, France
                 </span>
               </div>
               <div className="flex items-center gap-3">
-                <Mail size={18} className="text-[#d4897a] flex-shrink-0" />
+                <Mail size={18} className="text-[#D4A574] flex-shrink-0" />
                 <a
                   href="mailto:contact@lavillacoliving.com"
-                  className="text-[#a8b5a0] hover:text-white transition-colors duration-300 text-sm"
+                  className="text-[#78716C] hover:text-[#E0BB8A] transition-colors duration-300 text-sm"
                 >
                   contact@lavillacoliving.com
                 </a>
@@ -122,7 +118,7 @@ export function FooterV7() {
             {/* CTA */}
             <Link
               to="/join-us"
-              className="inline-flex items-center gap-2 mt-6 px-5 py-2.5 bg-[#7c9a6d] text-white text-sm font-medium rounded-full hover:bg-[#6b8560] transition-all duration-300"
+              className="inline-flex items-center gap-2 mt-6 px-5 py-2.5 bg-[#D4A574] text-[#1C1917] text-sm font-semibold rounded-lg hover:bg-[#E0BB8A] transition-all duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#D4A574] focus-visible:ring-offset-2 focus-visible:ring-offset-[#1C1917]"
             >
               {language === "en" ? "Apply now" : "Candidater"}
             </Link>
@@ -130,18 +126,17 @@ export function FooterV7() {
         </div>
 
         {/* Bottom */}
-        <div className="mt-16 pt-8 border-t border-[#7c9a6d]/20 flex flex-col md:flex-row items-center justify-between gap-4">
-          <p className="text-[#7c8a72] text-sm">
+        <div className="mt-16 pt-8 border-t border-white/[0.08] flex flex-col md:flex-row items-center justify-between gap-4">
+          <p className="text-[#78716C] text-sm">
             &copy; {new Date().getFullYear()} La Villa Coliving.{" "}
             {language === "en"
-              ? "Made in Grand Genève"
-              : "Fait au Grand Genève"}{" "}
-            {language === "en" ? "with love ❤️" : "avec amour ❤️"}
+              ? "Made in Grand Genève."
+              : "Fait au Grand Genève."}
           </p>
-          <p className="text-[#7c8a72] text-sm">
+          <p className="text-[#78716C] text-sm">
             {language === "en"
-              ? "Nomad-friendly coliving"
-              : "Coliving pour nomades et frontaliers."}
+              ? "Boutique coliving near Geneva."
+              : "Coliving boutique près de Genève."}
           </p>
         </div>
       </div>

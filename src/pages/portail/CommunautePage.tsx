@@ -7,11 +7,11 @@ interface PortailContext {
   language: 'fr' | 'en';
 }
 
-const eventTypeIcons: Record<string, string> = {
-  sport: '🏋️',
-  yoga: '🧘',
-  party: '🎉',
-  other: '📅',
+const eventTypeLabels: Record<string, string> = {
+  sport: 'Sport',
+  yoga: 'Yoga',
+  party: 'Party',
+  other: 'Event',
 };
 
 // WhatsApp group links per property (hardcoded)
@@ -86,7 +86,7 @@ export function CommunautePage() {
       {/* Events */}
       <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
         <h2 className="text-lg font-semibold text-gray-900 mb-4 flex items-center gap-2">
-          <span>📅</span> {lang.events}
+{lang.events}
         </h2>
         {eventsLoading ? (
           <div className="animate-pulse text-sm text-gray-400">...</div>
@@ -96,7 +96,7 @@ export function CommunautePage() {
           <div className="space-y-3">
             {events.map((event) => (
               <div key={event.id} className="flex items-start gap-3 p-3 bg-gray-50 rounded-lg">
-                <div className="text-2xl">{eventTypeIcons[event.type] || eventTypeIcons.other}</div>
+                <div className="text-xs font-semibold text-[#44403C] bg-[#F5F2ED] px-2 py-1 rounded">{eventTypeLabels[event.type] || eventTypeLabels.other}</div>
                 <div className="flex-1 min-w-0">
                   <p className="font-medium text-gray-900 text-sm">
                     {language === 'en' ? (event.title_en || event.title_fr) : event.title_fr}
@@ -109,7 +109,7 @@ export function CommunautePage() {
                   <div className="flex items-center gap-3 mt-1 text-xs text-gray-400">
                     <span>{formatDate(event.date)}</span>
                     {event.time && <span>{event.time.substring(0, 5)}</span>}
-                    {event.location && <span>📍 {event.location}</span>}
+                    {event.location && <span>{event.location}</span>}
                   </div>
                 </div>
               </div>
@@ -121,7 +121,7 @@ export function CommunautePage() {
       {/* WhatsApp Groups */}
       <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
         <h2 className="text-lg font-semibold text-gray-900 mb-2 flex items-center gap-2">
-          <span>💬</span> {lang.whatsapp}
+{lang.whatsapp}
         </h2>
         <p className="text-sm text-gray-500 mb-4">{lang.whatsappDesc}</p>
 
@@ -135,10 +135,10 @@ export function CommunautePage() {
                 href={g.url}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex items-center justify-between p-3 bg-green-50 rounded-lg hover:bg-green-100 transition-colors"
+                className="flex items-center justify-between p-3 bg-[#F5F2ED] rounded-lg hover:bg-[#E7E5E4] transition-colors"
               >
-                <span className="text-sm font-medium text-green-800">{g.label}</span>
-                <span className="text-xs text-green-600 font-medium">{lang.join} →</span>
+                <span className="text-sm font-medium text-[#1C1917]">{g.label}</span>
+                <span className="text-xs text-[#44403C] font-medium">{lang.join} →</span>
               </a>
             ))}
           </div>
@@ -154,10 +154,10 @@ export function CommunautePage() {
                 href={g.url}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex items-center justify-between p-3 bg-green-50 rounded-lg hover:bg-green-100 transition-colors"
+                className="flex items-center justify-between p-3 bg-[#F5F2ED] rounded-lg hover:bg-[#E7E5E4] transition-colors"
               >
-                <span className="text-sm font-medium text-green-800">{language === 'en' ? g.label.en : g.label.fr}</span>
-                <span className="text-xs text-green-600 font-medium">{lang.join} →</span>
+                <span className="text-sm font-medium text-[#1C1917]">{language === 'en' ? g.label.en : g.label.fr}</span>
+                <span className="text-xs text-[#44403C] font-medium">{lang.join} →</span>
               </a>
             ))}
           </div>
@@ -167,7 +167,7 @@ export function CommunautePage() {
       {/* Coliver Directory - placeholder */}
       <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
         <h2 className="text-lg font-semibold text-gray-900 mb-2 flex items-center gap-2">
-          <span>👥</span> {lang.directory}
+{lang.directory}
         </h2>
         <p className="text-sm text-gray-500">{lang.directoryDesc}</p>
         <p className="text-sm text-gray-400 mt-2 italic">{lang.noVisible}</p>

@@ -4,12 +4,14 @@ import { useAuth } from '@/contexts/AuthContext';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { LoginForm } from '@/components/custom/LoginForm';
 import { useTenant } from '@/hooks/useTenant';
+import { Home, FileText, MessageSquare, Users } from 'lucide-react';
+import type { LucideIcon } from 'lucide-react';
 
-const tabs = [
-  { path: '/portail/ma-maison', icon: '🏠', labelFr: 'Ma Maison', labelEn: 'My Home' },
-  { path: '/portail/mon-bail', icon: '📋', labelFr: 'Mon Bail', labelEn: 'My Lease' },
-  { path: '/portail/mes-demandes', icon: '📝', labelFr: 'Mes Demandes', labelEn: 'My Requests' },
-  { path: '/portail/communaute', icon: '👥', labelFr: 'Communauté', labelEn: 'Community' },
+const tabs: { path: string; icon: LucideIcon; labelFr: string; labelEn: string }[] = [
+  { path: '/portail/ma-maison', icon: Home, labelFr: 'Ma Maison', labelEn: 'My Home' },
+  { path: '/portail/mon-bail', icon: FileText, labelFr: 'Mon Bail', labelEn: 'My Lease' },
+  { path: '/portail/mes-demandes', icon: MessageSquare, labelFr: 'Mes Demandes', labelEn: 'My Requests' },
+  { path: '/portail/communaute', icon: Users, labelFr: 'Communauté', labelEn: 'Community' },
 ];
 
 export function PortailLayout() {
@@ -116,7 +118,7 @@ export function PortailLayout() {
                     : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900'
                 }`}
               >
-                <span className={isActive ? 'grayscale-0' : ''}>{tab.icon}</span>
+                <tab.icon className="w-4 h-4" />
                 <span className="hidden sm:inline">{language === 'en' ? tab.labelEn : tab.labelFr}</span>
               </Link>
             );

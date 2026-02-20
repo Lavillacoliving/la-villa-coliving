@@ -9,12 +9,12 @@ interface PortailContext {
 }
 
 const ticketTypes = {
-  maintenance: { fr: 'Entretien / Réparation', en: 'Maintenance / Repair', icon: '🔧' },
-  admin: { fr: 'Demande administrative', en: 'Administrative Request', icon: '📋' },
-  cleaning: { fr: 'Ménage supplémentaire', en: 'Extra Cleaning', icon: '🧹' },
-  departure: { fr: 'Notification de départ', en: 'Departure Notice', icon: '🚪' },
-  incident: { fr: 'Déclaration de sinistre', en: 'Incident Report', icon: '⚠️' },
-  feedback: { fr: 'Feedback / Réclamation', en: 'Feedback / Complaint', icon: '💬' },
+  maintenance: { fr: 'Entretien / Réparation', en: 'Maintenance / Repair', icon: 'M' },
+  admin: { fr: 'Demande administrative', en: 'Administrative Request', icon: 'A' },
+  cleaning: { fr: 'Ménage supplémentaire', en: 'Extra Cleaning', icon: 'N' },
+  departure: { fr: 'Notification de départ', en: 'Departure Notice', icon: 'D' },
+  incident: { fr: 'Déclaration de sinistre', en: 'Incident Report', icon: 'I' },
+  feedback: { fr: 'Feedback / Réclamation', en: 'Feedback / Complaint', icon: 'F' },
 };
 
 const maintenanceSubtypes = {
@@ -121,7 +121,7 @@ export function MesDemandesPage() {
   const statusColors: Record<string, string> = {
     submitted: 'bg-blue-100 text-blue-800',
     in_progress: 'bg-yellow-100 text-yellow-800',
-    resolved: 'bg-green-100 text-green-800',
+    resolved: 'bg-[#F5F2ED] text-[#44403C]',
     closed: 'bg-gray-100 text-gray-600',
   };
 
@@ -132,7 +132,7 @@ export function MesDemandesPage() {
       {/* Header + New Request button */}
       <div className="flex items-center justify-between">
         <h2 className="text-xl font-bold text-gray-900 flex items-center gap-2">
-          <span>📝</span> {lang.title}
+{lang.title}
         </h2>
         <button
           onClick={() => setShowForm(!showForm)}
@@ -143,8 +143,8 @@ export function MesDemandesPage() {
       </div>
 
       {success && (
-        <div className="bg-green-50 border border-green-200 text-green-800 px-4 py-3 rounded-xl text-sm">
-          ✅ {lang.success}
+        <div className="bg-[#F5F2ED] border border-[#E7E5E4] text-[#44403C] px-4 py-3 rounded-xl text-sm">
+          {lang.success}
         </div>
       )}
 
@@ -267,7 +267,7 @@ export function MesDemandesPage() {
                 <div key={ticket.id} className="bg-white rounded-xl shadow-sm border border-gray-100 p-4">
                   <div className="flex items-start justify-between mb-2">
                     <div className="flex items-center gap-2">
-                      <span>{typeInfo?.icon || '📄'}</span>
+                      <span>{typeInfo?.icon || '?'}</span>
                       <span className="font-medium text-sm text-gray-900">
                         {language === 'en' ? typeInfo?.en : typeInfo?.fr || ticket.category}
                       </span>

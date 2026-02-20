@@ -1,5 +1,5 @@
 import { useLanguage } from "@/contexts/LanguageContext";
-import { Check, ArrowRight, Home, Sparkles, X } from "lucide-react";
+import { Check, ArrowRight, Home, Sparkles, X, Star, Droplets } from "lucide-react";
 import { Link } from "react-router-dom";
 import { SEO } from "@/components/SEO";
 
@@ -35,7 +35,7 @@ export function RatesPageV4() {
   const detailedServices = [
     {
       category: language === "en" ? "Water & Energy" : "Eau & Énergie",
-      icon: "💧",
+      icon: "water",
       items:
         language === "en"
           ? [
@@ -56,7 +56,7 @@ export function RatesPageV4() {
     {
       category:
         language === "en" ? "Cleaning & Maintenance" : "Ménage & Entretien",
-      icon: "✨",
+      icon: "clean",
       items:
         language === "en"
           ? [
@@ -77,7 +77,7 @@ export function RatesPageV4() {
     {
       category:
         language === "en" ? "Community & Wellness" : "Communauté & Bien-être",
-      icon: "🧘",
+      icon: "wellness",
       items:
         language === "en"
           ? [
@@ -97,7 +97,7 @@ export function RatesPageV4() {
     },
     {
       category: language === "en" ? "Subscriptions" : "Abonnements",
-      icon: "📺",
+      icon: "subscriptions",
       items:
         language === "en"
           ? [
@@ -117,7 +117,7 @@ export function RatesPageV4() {
     },
     {
       category: language === "en" ? "Taxes & Fees" : "Taxes & Frais",
-      icon: "📋",
+      icon: "taxes",
       items:
         language === "en"
           ? [
@@ -172,8 +172,8 @@ export function RatesPageV4() {
         : "Le Lodge coliving Annemasse — chambres meublées tout inclus dès 1 380 CHF près de Genève",
       description:
         language === "en"
-          ? "Calm & Cozy lodge in the city center"
-          : "Lodge cosy et calme en centre ville",
+          ? "Pool house, full fitness chalet with sauna, Jacuzzi® & arcade"
+          : "Pool house, chalet fitness complet avec sauna, Jacuzzi® et jeu d'arcade",
     },
   ];
 
@@ -195,29 +195,29 @@ export function RatesPageV4() {
       {/* Hero */}
       <section className="py-24 lg:py-32 bg-white">
         <div className="container-custom text-center">
-          <span className="text-xs text-[#999] uppercase tracking-[0.3em] mb-4 block">
+          <span className="text-xs text-[#78716C] uppercase tracking-[0.3em] mb-4 block">
             {language === "en" ? "Pricing" : "Tarification"}
           </span>
           <h1
-            className="text-5xl md:text-6xl lg:text-7xl font-light text-[#1a1a1a] mb-6"
-            style={{ fontFamily: "Plus Jakarta Sans, sans-serif" }}
+            className="text-5xl md:text-6xl lg:text-7xl font-light text-[#1C1917] mb-6"
+            style={{ fontFamily: "DM Serif Display, serif" }}
           >
             {language === "en" ? (
               <>
-                Transparent <span className="text-[#699153]">Pricing</span>
+                Transparent <span className="text-[#D4A574]">Pricing</span>
               </>
             ) : (
               <>
-                Tarifs <span className="text-[#49a62d9e]">Transparents</span>
+                Tarifs <span className="text-[#D4A574]">Transparents</span>
               </>
             )}
           </h1>
-          <p className="text-xl text-[#666] max-w-2xl mx-auto mb-4">
+          <p className="text-xl text-[#57534E] max-w-2xl mx-auto mb-4">
             {language === "en"
               ? "From 1,380 CHF/month — All inclusive"
               : "À partir de 1 380 CHF/mois — Tout inclus"}
           </p>
-          <p className="text-lg text-[#999]">
+          <p className="text-lg text-[#78716C]">
             {language === "en"
               ? "No hidden fees. No surprises. Just exceptional value."
               : "Pas de frais cachés. Pas de surprises. Juste une valeur exceptionnelle."}
@@ -226,11 +226,11 @@ export function RatesPageV4() {
       </section>
 
       {/* COMPARISON SECTION - Geneva vs La Villa */}
-      <section className="py-20 bg-[#1a1a1a]">
+      <section className="py-20 bg-[#1C1917]">
         <div className="container-custom">
           <div className="text-center mb-16">
-            <span className="inline-flex items-center gap-2 px-4 py-2 bg-[#c44536]/20 text-[#58a26c] text-sm font-medium rounded-full mb-4">
-              💰{" "}
+            <span className="inline-flex items-center gap-2 px-4 py-2 bg-[#D4A574]/20 text-[#E0BB8A] text-sm font-medium rounded-full mb-4">
+              <Star className="w-4 h-4" />{" "}
               {language === "en"
                 ? "Real Cost Comparison"
                 : "Comparaison Réelle des Coûts"}
@@ -240,7 +240,7 @@ export function RatesPageV4() {
                 ? "Geneva Studio vs La Villa"
                 : "Studio Genève vs La Villa"}
             </h2>
-            <p className="text-[#999] max-w-2xl mx-auto">
+            <p className="text-[#78716C] max-w-2xl mx-auto">
               {language === "en"
                 ? "See how much you actually save with our all-inclusive model"
                 : "Découvre combien tu économises réellement avec notre modèle tout-inclus"}
@@ -347,8 +347,8 @@ export function RatesPageV4() {
             </div>
 
             {/* La Villa */}
-            <div className="bg-[#699153] rounded-2xl p-8 relative overflow-hidden">
-              <div className="absolute top-4 right-4 bg-white text-[#377d22] text-xs font-bold px-3 py-1 rounded-full">
+            <div className="bg-[#1C1917] rounded-2xl p-8 relative overflow-hidden">
+              <div className="absolute top-4 right-4 bg-[#D4A574] text-[#1C1917] text-xs font-bold px-3 py-1 rounded-full">
                 {language === "en"
                   ? "SAVE 665 CHF/MO"
                   : "ÉCONOMISE 665 CHF/MOIS"}
@@ -379,64 +379,64 @@ export function RatesPageV4() {
                 </div>
                 <div className="flex justify-between text-white/90">
                   <span className="flex items-center gap-2">
-                    <Check className="w-4 h-4" />{" "}
+                    <Check className="w-4 h-4 text-[#D4A574]" />{" "}
                     {language === "en"
                       ? "All utilities included"
                       : "Toutes charges incluses"}
                   </span>
-                  <span className="text-white font-bold">
+                  <span className="text-[#E0BB8A] font-bold">
                     {language === "en" ? "INCLUDED" : "INCLUS"}
                   </span>
                 </div>
                 <div className="flex justify-between text-white/90">
                   <span className="flex items-center gap-2">
-                    <Check className="w-4 h-4" />{" "}
+                    <Check className="w-4 h-4 text-[#D4A574]" />{" "}
                     {language === "en"
                       ? "Yoga & fitness classes"
                       : "Cours yoga & fitness"}
                   </span>
-                  <span className="text-white font-bold">
+                  <span className="text-[#E0BB8A] font-bold">
                     {language === "en" ? "INCLUDED" : "INCLUS"}
                   </span>
                 </div>
                 <div className="flex justify-between text-white/90">
                   <span className="flex items-center gap-2">
-                    <Check className="w-4 h-4" />{" "}
+                    <Check className="w-4 h-4 text-[#D4A574]" />{" "}
                     {language === "en"
                       ? "Pool, sauna & gym"
                       : "Piscine, sauna & sport"}
                   </span>
-                  <span className="text-white font-bold">
+                  <span className="text-[#E0BB8A] font-bold">
                     {language === "en" ? "INCLUDED" : "INCLUS"}
                   </span>
                 </div>
                 <div className="flex justify-between text-white/90">
                   <span className="flex items-center gap-2">
-                    <Check className="w-4 h-4" />{" "}
+                    <Check className="w-4 h-4 text-[#D4A574]" />{" "}
                     {language === "en"
                       ? "Community events"
                       : "Événements communautaires"}
                   </span>
-                  <span className="text-white font-bold">
+                  <span className="text-[#E0BB8A] font-bold">
                     {language === "en" ? "INCLUDED" : "INCLUS"}
                   </span>
                 </div>
                 <div className="flex justify-between text-white/90">
                   <span className="flex items-center gap-2">
-                    <Check className="w-4 h-4" />{" "}
+                    <Check className="w-4 h-4 text-[#D4A574]" />{" "}
                     {language === "en"
                       ? "Cleaning 2x/week"
                       : "Ménage 2x/semaine"}
                   </span>
-                  <span className="text-white font-bold">
+                  <span className="text-[#E0BB8A] font-bold">
                     {language === "en" ? "INCLUDED" : "INCLUS"}
                   </span>
                 </div>
                 <div className="flex justify-between text-white/90">
                   <span className="flex items-center gap-2">
-                    <Check className="w-4 h-4" /> Internet & streaming
+                    <Check className="w-4 h-4 text-[#D4A574]" /> Internet & streaming
                   </span>
-                  <span className="text-white font-bold">
+                  <span className="text-[#E0BB8A] font-bold">
                     {language === "en" ? "INCLUDED" : "INCLUS"}
                   </span>
                 </div>
@@ -457,8 +457,8 @@ export function RatesPageV4() {
 
           {/* Savings Banner */}
           <div className="mt-12 text-center">
-            <div className="inline-flex flex-col sm:flex-row items-center gap-4 bg-[#129036] text-white px-8 py-6 rounded-2xl shadow-[0_10px40px_rgba(18,144,54,0.3)]">
-              <span className="text-3xl">💰</span>
+            <div className="inline-flex flex-col sm:flex-row items-center gap-4 bg-[#D4A574] text-white px-8 py-6 rounded-2xl shadow-[0_10px_40px_rgba(212,165,116,0.3)]">
+              <Star className="w-8 h-8 text-white" />
               <div className="text-center sm:text-left">
                 <div className="text-sm opacity-90">
                   {language === "en"
@@ -476,9 +476,9 @@ export function RatesPageV4() {
                   {yearlySavings.toLocaleString()} CHF
                 </div>
               </div>
-              <span className="text-3xl">🎉</span>
+              <Star className="w-8 h-8 text-[#D4A574]" />
             </div>
-            <p className="text-[#666] mt-4 text-sm">
+            <p className="text-[#57534E] mt-4 text-sm">
               {language === "en"
                 ? "+ An instant community, premium amenities & zero hassle!"
                 : "+ Une communauté instantanée, équipements premium & zéro tracas !"}
@@ -488,13 +488,13 @@ export function RatesPageV4() {
       </section>
 
       {/* Price Cards WITH IMAGES */}
-      <section className="py-24 lg:py-32 bg-[#fafafa]">
+      <section className="py-24 lg:py-32 bg-[#FAF9F6]">
         <div className="container-custom">
           <div className="text-center mb-12">
-            <h2 className="text-3xl font-light text-[#1a1a1a] mb-4">
+            <h2 className="text-3xl font-light text-[#1C1917] mb-4">
               {language === "en" ? "Our Houses" : "Nos Maisons"}
             </h2>
-            <p className="text-[#666]">
+            <p className="text-[#57534E]">
               {language === "en"
                 ? "Same premium experience, three unique locations"
                 : "Même expérience premium, trois lieux uniques"}
@@ -505,7 +505,7 @@ export function RatesPageV4() {
             {houses.map((house, index) => (
               <div
                 key={index}
-                className="bg-white border border-[#e5e5e5] overflow-hidden hover:shadow-xl transition-all duration-300 group"
+                className="bg-white border border-[#E7E5E4] overflow-hidden hover:shadow-xl transition-all duration-300 group"
               >
                 {/* Image Container */}
                 <div className="relative h-64 overflow-hidden">
@@ -527,15 +527,15 @@ export function RatesPageV4() {
 
                 {/* Content */}
                 <div className="p-8">
-                  <p className="text-[#666] text-sm mb-6">
+                  <p className="text-[#57534E] text-sm mb-6">
                     {house.description}
                   </p>
 
                   <div className="mb-8">
-                    <span className="text-4xl font-light text-[#51943d]">
+                    <span className="text-4xl font-light text-[#D4A574]">
                       1,380
                     </span>
-                    <span className="text-[#999]">
+                    <span className="text-[#78716C]">
                       {" "}
                       CHF/{language === "en" ? "mo" : "mois"}
                     </span>
@@ -543,7 +543,7 @@ export function RatesPageV4() {
 
                   <Link
                     to={`/${house.name.toLowerCase().replace(/\s+/g, "")}`}
-                    className="block w-full py-4 bg-[#1a1a1a] text-white text-center font-bold hover:bg-[#c44536] transition-colors"
+                    className="block w-full py-4 bg-[#1C1917] text-white text-center font-bold hover:bg-[#D4A574] transition-colors"
                   >
                     {language === "en" ? "VIEW DETAILS" : "VOIR LES DÉTAILS"}
                   </Link>
@@ -558,18 +558,18 @@ export function RatesPageV4() {
       <section className="py-24 lg:py-32 bg-white">
         <div className="container-custom">
           <div className="text-center mb-16">
-            <span className="text-xs text-[#999] uppercase tracking-[0.3em] mb-4 block">
+            <span className="text-xs text-[#78716C] uppercase tracking-[0.3em] mb-4 block">
               {language === "en" ? "Detailed Breakdown" : "Détail Complet"}
             </span>
             <h2
-              className="text-4xl md:text-5xl font-light text-[#1a1a1a] mb-4"
-              style={{ fontFamily: "Plus Jakarta Sans, sans-serif" }}
+              className="text-4xl md:text-5xl font-light text-[#1C1917] mb-4"
+              style={{ fontFamily: "DM Serif Display, serif" }}
             >
               {language === "en"
                 ? "What's Really Included"
                 : "Ce Qui Est Vraiment Inclus"}
             </h2>
-            <p className="text-lg text-[#666] max-w-2xl mx-auto">
+            <p className="text-lg text-[#57534E] max-w-2xl mx-auto">
               {language === "en"
                 ? "Every detail of our all-inclusive service. No surprises, no hidden costs."
                 : "Chaque détail de notre service tout-inclus. Pas de surprises, pas de frais cachés."}
@@ -580,19 +580,21 @@ export function RatesPageV4() {
             {detailedServices.map((service, index) => (
               <div
                 key={index}
-                className="bg-[#fafafa] rounded-2xl p-8 border border-[#e5e5e5] hover:border-[#c44536]/30 transition-colors"
+                className="bg-[#FAF9F6] rounded-2xl p-8 border border-[#E7E5E4] hover:border-[#D4A574]/30 transition-colors"
               >
-                <div className="text-3xl mb-4">{service.icon}</div>
-                <h3 className="text-xl font-medium text-[#1a1a1a] mb-4">
+                <div className="w-10 h-10 bg-[#F5F2ED] rounded-xl flex items-center justify-center mb-4">
+                  <Droplets className="w-5 h-5 text-[#44403C]" />
+                </div>
+                <h3 className="text-xl font-medium text-[#1C1917] mb-4">
                   {service.category}
                 </h3>
                 <ul className="space-y-3">
                   {service.items.map((item, i) => (
                     <li
                       key={i}
-                      className="flex items-start gap-3 text-sm text-[#666]"
+                      className="flex items-start gap-3 text-sm text-[#57534E]"
                     >
-                      <Check className="w-4 h-4 text-[#129036] mt-0.5 flex-shrink-0" />
+                      <Check className="w-4 h-4 text-[#D4A574] mt-0.5 flex-shrink-0" />
                       <span>{item}</span>
                     </li>
                   ))}
@@ -602,17 +604,17 @@ export function RatesPageV4() {
           </div>
 
           {/* Summary Box */}
-          <div className="mt-12 bg-[#1a1a1a] rounded-2xl p-8 md:p-12 text-center">
+          <div className="mt-12 bg-[#1C1917] rounded-2xl p-8 md:p-12 text-center">
             <h3 className="text-2xl font-light text-white mb-4">
               {language === "en" ? "The Bottom Line" : "En Résumé"}
             </h3>
-            <p className="text-[#999] max-w-2xl mx-auto mb-6">
+            <p className="text-[#78716C] max-w-2xl mx-auto mb-6">
               {language === "en"
                 ? "For 1,380 CHF/month, you get a furnished room in a premium house, all utilities, cleaning, gym, pool, sauna, yoga classes, community events, and zero hassle. Compare that to 2,045+ CHF for a basic studio in Geneva."
                 : "Pour 1 380 CHF/mois, tu obtiens une chambre meublée dans une maison premium, toutes charges, ménage, sport, piscine, sauna, cours de yoga, événements communautaires, et zéro tracas. Compare à 2 045+ CHF pour un studio basique à Genève."}
             </p>
-            <div className="inline-flex items-center gap-2 px-6 py-3 bg-[#c44536] text-white rounded-full font-medium">
-              <span>💡</span>
+            <div className="inline-flex items-center gap-2 px-6 py-3 bg-[#D4A574] text-white rounded-full font-medium">
+              <Sparkles className="w-5 h-5" />
               {language === "en"
                 ? `You save ${monthlySavings} CHF every month`
                 : `Tu économises ${monthlySavings} CHF chaque mois`}
@@ -622,22 +624,22 @@ export function RatesPageV4() {
       </section>
 
       {/* What's Included - Quick List */}
-      <section className="py-24 lg:py-32 bg-[#fafafa]">
+      <section className="py-24 lg:py-32 bg-[#FAF9F6]">
         <div className="container-custom">
           <div className="grid lg:grid-cols-2 gap-16">
             <div>
-              <span className="text-xs text-[#999] uppercase tracking-[0.3em] mb-4 block">
+              <span className="text-xs text-[#78716C] uppercase tracking-[0.3em] mb-4 block">
                 {language === "en" ? "Quick Overview" : "Aperçu Rapide"}
               </span>
               <h2
-                className="text-4xl md:text-5xl font-light text-[#1a1a1a] mb-8"
-                style={{ fontFamily: "Plus Jakarta Sans, sans-serif" }}
+                className="text-4xl md:text-5xl font-light text-[#1C1917] mb-8"
+                style={{ fontFamily: "DM Serif Display, serif" }}
               >
                 {language === "en"
                   ? "Everything You Need"
                   : "Tout ce dont Tu As Besoin"}
               </h2>
-              <p className="text-lg text-[#666] leading-relaxed">
+              <p className="text-lg text-[#57534E] leading-relaxed">
                 {language === "en"
                   ? "One monthly payment covers absolutely everything. No hidden costs, no surprise bills."
                   : "Un paiement mensuel couvre absolument tout. Pas de coûts cachés, pas de factures surprises."}
@@ -648,12 +650,12 @@ export function RatesPageV4() {
               {includedItems.map((item, index) => (
                 <div
                   key={index}
-                  className="flex items-start gap-4 bg-white p-4 rounded-xl border border-[#e5e5e5]"
+                  className="flex items-start gap-4 bg-white p-4 rounded-xl border border-[#E7E5E4]"
                 >
-                  <div className="w-6 h-6 bg-[#129036]/10 border border-[#129036] flex items-center justify-center flex-shrink-0 mt-0.5 rounded">
-                    <Check className="w-4 h-4 text-[#129036]" />
+                  <div className="w-6 h-6 bg-[#D4A574]/10 border border-[#D4A574] flex items-center justify-center flex-shrink-0 mt-0.5 rounded">
+                    <Check className="w-4 h-4 text-[#D4A574]" />
                   </div>
-                  <span className="text-[#1a1a1a] font-medium">{item}</span>
+                  <span className="text-[#1C1917] font-medium">{item}</span>
                 </div>
               ))}
             </div>
@@ -664,22 +666,22 @@ export function RatesPageV4() {
       {/* Additional Info */}
       <section className="py-24 lg:py-32 bg-white">
         <div className="container-custom">
-          <div className="grid md:grid-cols-2 gap-px bg-[#e5e5e5]">
-            <div className="bg-[#fafafa] p-10">
-              <h3 className="text-xl font-medium text-[#1a1a1a] mb-4">
+          <div className="grid md:grid-cols-2 gap-px bg-[#E7E5E4]">
+            <div className="bg-[#FAF9F6] p-10">
+              <h3 className="text-xl font-medium text-[#1C1917] mb-4">
                 {language === "en" ? "Security Deposit" : "Caution"}
               </h3>
-              <p className="text-[#666] leading-relaxed">
+              <p className="text-[#57534E] leading-relaxed">
                 {language === "en"
                   ? "We require a security deposit equivalent to two months' rent (2,760 CHF). This is returned within 30 days of move-out, minus any deductions for damages."
                   : "Nous exigeons une caution équivalente à deux mois de loyer (2 760 CHF). Elle est restituée dans les 30 jours suivant le départ, déduction faite des éventuels dommages."}
               </p>
             </div>
-            <div className="bg-[#fafafa] p-10">
-              <h3 className="text-xl font-medium text-[#1a1a1a] mb-4">
+            <div className="bg-[#FAF9F6] p-10">
+              <h3 className="text-xl font-medium text-[#1C1917] mb-4">
                 {language === "en" ? "No Agency Fees" : "Sans Frais d'Agence"}
               </h3>
-              <p className="text-[#666] leading-relaxed">
+              <p className="text-[#57534E] leading-relaxed">
                 {language === "en"
                   ? "There are absolutely no agency fees at La Villa Coliving. Our pricing is transparent and all-inclusive. What you see is what you pay."
                   : "Il n'y a absolument aucun frais d'agence chez La Villa Coliving. Notre tarification est transparente et tout inclusive. Ce que tu vois est ce que tu payes."}
@@ -690,11 +692,11 @@ export function RatesPageV4() {
       </section>
 
       {/* CTA */}
-      <section className="py-24 bg-[#c44536]">
+      <section className="py-24 bg-[#D4A574]">
         <div className="container-custom text-center">
           <h2
             className="text-3xl md:text-4xl font-light text-white mb-4"
-            style={{ fontFamily: "Plus Jakarta Sans, sans-serif" }}
+            style={{ fontFamily: "DM Serif Display, serif" }}
           >
             {language === "en"
               ? "Ready to Save & Join?"
@@ -707,7 +709,7 @@ export function RatesPageV4() {
           </p>
           <Link
             to="/join-us"
-            className="inline-flex items-center gap-2 px-8 py-4 bg-white text-[#c44536] font-bold hover:bg-[#1a1a1a] hover:text-white transition-colors"
+            className="inline-flex items-center gap-2 px-8 py-4 bg-white text-[#D4A574] font-bold hover:bg-[#1C1917] hover:text-white transition-colors"
           >
             {language === "en" ? "APPLY NOW" : "CANDIDATER"}
             <ArrowRight className="w-5 h-5" />

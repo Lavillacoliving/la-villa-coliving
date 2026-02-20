@@ -2,20 +2,22 @@ import { useState } from 'react';
 import { useOutletContext } from 'react-router-dom';
 import type { TenantInfo } from '@/hooks/useTenant';
 import { getPropertyContent, type PropertySection } from '@/i18n/portail-translations';
+import { BookOpen, LayoutGrid, Wifi, Info, AlertTriangle, Phone, Sparkles, Home } from 'lucide-react';
+import type { LucideIcon } from 'lucide-react';
 
 interface PortailContext {
   tenant: TenantInfo;
   language: 'fr' | 'en';
 }
 
-const sectionIcons: Record<string, string> = {
-  rules: '📜',
-  spaces: '🏊',
-  wifi: '📶',
-  practical: '🔧',
-  emergency: '🚨',
-  contacts: '📞',
-  cleaning: '🧹',
+const sectionIcons: Record<string, LucideIcon> = {
+  rules: BookOpen,
+  spaces: LayoutGrid,
+  wifi: Wifi,
+  practical: Info,
+  emergency: AlertTriangle,
+  contacts: Phone,
+  cleaning: Sparkles,
 };
 
 const sectionLabels: Record<string, { fr: string; en: string }> = {
@@ -61,7 +63,9 @@ export function MaMaisonPage() {
       {/* Property header */}
       <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6 mb-6">
         <div className="flex items-center gap-4">
-          <div className="w-12 h-12 bg-[#b8860b]/10 rounded-xl flex items-center justify-center text-2xl">🏠</div>
+          <div className="w-12 h-12 bg-[#D4A574]/10 rounded-xl flex items-center justify-center">
+            <Home className="w-6 h-6 text-[#D4A574]" />
+          </div>
           <div>
             <h2 className="text-xl font-bold text-gray-900">{lang.title}</h2>
             <p className="text-sm text-gray-500">{lang.subtitle}</p>
@@ -75,7 +79,7 @@ export function MaMaisonPage() {
         {Object.keys(sectionLabels).map((key) => {
           const isOpen = openSection === key;
           const label = sectionLabels[key][language] || sectionLabels[key].fr;
-          const icon = sectionIcons[key] || '📄';
+          const IconComponent = sectionIcons[key] || Info;
           const content = sections.find((s: PropertySection) => s.section === key);
 
           return (
@@ -85,12 +89,12 @@ export function MaMaisonPage() {
                 className="w-full flex items-center justify-between p-4 text-left hover:bg-gray-50 transition-colors"
               >
                 <div className="flex items-center gap-3">
-                  <span className="text-xl">{icon}</span>
+                  <IconComponent className="w-5 h-5 text-[#D4A574]" />
                   <span className="font-medium text-gray-900">{label}</span>
                 </div>
-                <span className={`text-gray-400 transition-transform duration-200 ${isOpen ? 'rotate-180' : ''}`}>
-                  ▼
-                </span>
+                <svg className={`w-4 h-4 text-gray-400 transition-transform duration-200 ${isOpen ? 'rotate-180' : ''}`} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                  <path strokeLinecap="round" strokeLinejoin="round" d="m19 9-7 7-7-7" />
+                </svg>
               </button>
               {isOpen && (
                 <div className="px-4 pb-4 border-t border-gray-50">

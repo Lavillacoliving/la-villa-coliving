@@ -62,63 +62,63 @@ export function BlogPage() {
       />
       <section className="py-24 lg:py-32 bg-white">
         <div className="container-custom text-center">
-          <span className="text-xs text-[#999] uppercase tracking-[0.3em] mb-4 block">
+          <span className="text-xs text-[#78716C] uppercase tracking-[0.3em] mb-4 block">
             {language==="en"?"Insights & Stories":"Articles & R\u00e9cits"}
           </span>
-          <h1 className="text-5xl md:text-6xl lg:text-7xl font-light text-[#1a1a1a] mb-6" style={{fontFamily:"Plus Jakarta Sans, sans-serif"}}>
-            {language==="en"?<>Our <span className="text-[#c44536]">Blog</span></>:<>Notre <span className="text-[#c44536]">Blog</span></>}
+          <h1 className="text-5xl md:text-6xl lg:text-7xl font-light text-[#1C1917] mb-6" style={{fontFamily:"DM Serif Display, serif"}}>
+            {language==="en"?<>Our <span className="text-[#D4A574]">Blog</span></>:<>Notre <span className="text-[#D4A574]">Blog</span></>}
           </h1>
-          <p className="text-lg text-[#666] max-w-2xl mx-auto mb-10">
+          <p className="text-lg text-[#57534E] max-w-2xl mx-auto mb-10">
             {language==="en"
               ?"Stories, tips, and insights about coliving, community life, and the Geneva cross-border lifestyle."
               :"R\u00e9cits, conseils et perspectives sur le coliving, la vie en communaut\u00e9 et le mode de vie transfrontalier genevois."}
           </p>
           <div className="max-w-2xl mx-auto relative">
-            <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-[#999]" />
+            <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-[#78716C]" />
             <input type="text" placeholder={language==="en"?"Search articles...":"Rechercher des articles..."} value={sq} onChange={(e)=>setSq(e.target.value)}
-              className="w-full pl-12 pr-4 py-4 border border-[#e5e5e5] focus:border-[#c44536] focus:outline-none transition-colors text-[#1a1a1a]" />
+              className="w-full pl-12 pr-4 py-4 border border-[#E7E5E4] focus:border-[#D4A574] focus:outline-none transition-colors text-[#1C1917]" />
           </div>
         </div>
       </section>
-      <section className="py-24 lg:py-32 bg-[#fafafa]">
+      <section className="py-24 lg:py-32 bg-[#FAF9F6]">
         <div className="container-custom">
           <div className="flex flex-wrap gap-3 mb-12 justify-center">
             {cats.map((k)=>(
               <button key={k} onClick={()=>setAc(k)}
-                className={`px-6 py-3 text-sm font-medium transition-all border ${ac===k?"border-[#c44536] bg-[#c44536] text-white":"border-[#e5e5e5] bg-white text-[#666] hover:border-[#1a1a1a] hover:text-[#1a1a1a]"}`}>
+                className={`px-6 py-3 text-sm font-medium transition-all border ${ac===k?"border-[#D4A574] bg-[#D4A574] text-white":"border-[#E7E5E4] bg-white text-[#57534E] hover:border-[#1C1917] hover:text-[#1C1917]"}`}>
                 {CL[k][language]||k}
               </button>
             ))}
           </div>
           {loading ? (
-            <div className="text-center py-16"><p className="text-[#666] text-lg">{language==="en"?"Loading...":"Chargement..."}</p></div>
+            <div className="text-center py-16"><p className="text-[#57534E] text-lg">{language==="en"?"Loading...":"Chargement..."}</p></div>
           ) : fp.length===0 ? (
-            <div className="text-center py-16"><p className="text-[#666] text-lg">{language==="en"?"No articles found.":"Aucun article trouv\u00e9."}</p></div>
+            <div className="text-center py-16"><p className="text-[#57534E] text-lg">{language==="en"?"No articles found.":"Aucun article trouv\u00e9."}</p></div>
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
               {fp.map((post)=>(
-                <Link to={`/blog/${post.slug}`} key={post.id} className="group bg-white border border-[#e5e5e5] overflow-hidden transition-all duration-300 hover:border-[#c44536]/30 hover:shadow-lg">
-                  <div className="aspect-[16/10] overflow-hidden bg-[#f5f5f5]">
+                <Link to={`/blog/${post.slug}`} key={post.id} className="group bg-white border border-[#E7E5E4] overflow-hidden transition-all duration-300 hover:border-[#D4A574]/30 hover:shadow-lg">
+                  <div className="aspect-[16/10] overflow-hidden bg-[#F5F2ED]">
                     {post.image_url ? (
                       <img src={post.image_url} alt={gT(post)} className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" loading="lazy" />
                     ) : (
-                      <div className="w-full h-full flex items-center justify-center text-[#ccc] text-4xl">&#128221;</div>
+                      <div className="w-full h-full flex items-center justify-center text-[#78716C] text-4xl">Blog</div>
                     )}
                   </div>
                   <div className="p-6">
-                    <span className="inline-block text-xs uppercase tracking-widest text-[#c44536] font-medium mb-3">
+                    <span className="inline-block text-xs uppercase tracking-widest text-[#D4A574] font-medium mb-3">
                       {CL[post.category]?.[language]||post.category}
                     </span>
-                    <h3 className="text-xl font-medium text-[#1a1a1a] mb-3 line-clamp-2 group-hover:text-[#c44536] transition-colors" style={{fontFamily:"Plus Jakarta Sans, sans-serif"}}>
+                    <h3 className="text-xl font-medium text-[#1C1917] mb-3 line-clamp-2 group-hover:text-[#D4A574] transition-colors" style={{fontFamily:"DM Serif Display, serif"}}>
                       {gT(post)}
                     </h3>
-                    <p className="text-[#666] text-sm leading-relaxed mb-4 line-clamp-3">{gE(post)}</p>
+                    <p className="text-[#57534E] text-sm leading-relaxed mb-4 line-clamp-3">{gE(post)}</p>
                     {post.tags&&post.tags.length>0&&(
                       <div className="flex flex-wrap gap-1.5 mb-4">
-                        {post.tags.slice(0,3).map((t)=><span key={t} className="text-xs px-2 py-0.5 bg-[#f0f0f0] text-[#666] rounded">{t}</span>)}
+                        {post.tags.slice(0,3).map((t)=><span key={t} className="text-xs px-2 py-0.5 bg-[#F5F2ED] text-[#57534E] rounded">{t}</span>)}
                       </div>
                     )}
-                    <div className="flex items-center gap-4 text-xs text-[#999] pt-4 border-t border-[#f0f0f0]">
+                    <div className="flex items-center gap-4 text-xs text-[#78716C] pt-4 border-t border-[#F5F2ED]">
                       <span className="flex items-center gap-1.5"><User className="w-3.5 h-3.5" />{post.author}</span>
                       <span className="flex items-center gap-1.5"><Calendar className="w-3.5 h-3.5" />{fmtD(post.published_at)}</span>
                       <span className="flex items-center gap-1.5"><Clock className="w-3.5 h-3.5" />{post.read_time_min} min</span>

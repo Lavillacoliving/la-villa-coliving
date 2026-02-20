@@ -3,8 +3,8 @@ import { ArrowRight, MapPin, Users } from "lucide-react";
 import { useLanguage } from "@/contexts/LanguageContext";
 
 /**
- * VERSION 7: PREMIUM + FACTUEL
- * Houses preview — descriptions factuelles, plus d'emojis
+ * VERSION 9: STONE & BRASS
+ * Houses preview — photo cards, tags overlay, CTA link
  */
 
 export function HousesPreviewV7() {
@@ -14,14 +14,12 @@ export function HousesPreviewV7() {
     {
       id: "lavilla",
       name: "La Villa",
-      initial: "V",
       location: "Ville-la-Grand",
       residents: "10",
       image: "/images/villa_portrait.webp",
-      description:
-        language === "en"
-          ? "Heated pool, 2,000 m² garden, nature reserve"
-          : "Piscine chauffée, 2 000 m² de jardin, réserve naturelle",
+      description: language === "en"
+        ? "20 min from Geneva city center by CEVA. Heated pool, 2,000 m² garden, nature reserve."
+        : "20 min du centre de Genève en CEVA. Piscine chauffée, 2 000 m² de jardin, réserve naturelle.",
       alt: language === "en"
         ? "La Villa — premium coliving house with garden and pool in Ville-la-Grand, near Geneva"
         : "La Villa — maison de colocation premium avec jardin et piscine à Ville-la-Grand, près de Genève",
@@ -29,14 +27,12 @@ export function HousesPreviewV7() {
     {
       id: "leloft",
       name: "Le Loft",
-      initial: "L",
       location: "Ambilly",
       residents: "7",
       image: "/images/le loft jardin.webp",
-      description:
-        language === "en"
-          ? "Year-round heated indoor pool, 7 residents"
-          : "Piscine intérieure chauffée toute l'année, 7 résidents",
+      description: language === "en"
+        ? "20 min from Geneva city center by tram. Year-round heated indoor pool, Finnish sauna."
+        : "20 min du centre de Genève en tram. Piscine intérieure chauffée toute l'année, sauna finlandais.",
       alt: language === "en"
         ? "Le Loft — urban coliving house with indoor pool in Ambilly, near Geneva"
         : "Le Loft — colocation urbaine avec piscine intérieure à Ambilly, près de Genève",
@@ -44,89 +40,83 @@ export function HousesPreviewV7() {
     {
       id: "lelodge",
       name: "Le Lodge",
-      initial: "G",
       location: "Annemasse",
       residents: "12",
       image: "/images/le lodge piscine.webp",
-      description:
-        language === "en"
-          ? "The largest. 4 buildings, fitness chalet with jacuzzi, outdoor kitchen"
-          : "Le plus grand. 4 bâtiments, chalet fitness avec jacuzzi, cuisine d'été",
+      description: language === "en"
+        ? "20 min from Geneva city center by CEVA. The largest: pool house, full fitness chalet with sauna, Jacuzzi® & arcade."
+        : "20 min du centre de Genève en CEVA. Le plus grand : pool house, chalet fitness complet avec sauna, Jacuzzi® et jeu d'arcade.",
       alt: language === "en"
-        ? "Le Lodge — coliving house with pool and gym in Annemasse, 10 min from Geneva"
-        : "Le Lodge — maison de colocation avec piscine et salle de sport à Annemasse, 10 min de Genève",
+        ? "Le Lodge — coliving house with pool and gym in Annemasse, near Geneva"
+        : "Le Lodge — maison de colocation avec piscine et salle de sport à Annemasse, près de Genève",
     },
   ];
 
   return (
-    <section className="py-24 bg-[#faf9f5] relative overflow-hidden">
+    <section className="py-24 md:py-32 bg-[#F5F2ED]">
       <div className="container-custom">
         {/* Header */}
-        <div className="flex flex-col md:flex-row md:items-end md:justify-between mb-16">
+        <div className="flex flex-col md:flex-row md:items-end md:justify-between mb-14 md:mb-16">
           <div>
-            <span className="inline-block px-4 py-2 bg-[#7c9a6d]/15 text-[#7c9a6d] text-sm font-medium rounded-full mb-6">
-              {language === "en" ? "Our homes" : "Nos maisons"}
+            <span className="text-[#78716C] text-[13px] font-semibold tracking-[0.1em] uppercase">
+              {language === "en" ? "OUR HOUSES" : "NOS MAISONS"}
             </span>
-            <h2 className="text-4xl md:text-5xl font-light text-[#3d4a38]">
-              {language === "en" ? "Find your" : "Trouvez votre"}
-              <span className="font-medium text-[#7c9a6d]">
-                {" "}
-                {language === "en" ? "home" : "maison"}
-              </span>
+            <h2 className="text-3xl md:text-4xl font-bold text-[#1C1917] mt-4" style={{ letterSpacing: '-0.025em' }}>
+              {language === "en" ? "3 houses, 3 personalities" : "3 maisons, 3 personnalités"}
             </h2>
           </div>
           <Link
             to="/our-houses"
-            className="group mt-6 md:mt-0 inline-flex items-center gap-2 text-[#7c9a6d] font-medium hover:gap-3 transition-all duration-300"
+            className="group mt-6 md:mt-0 inline-flex items-center gap-2 text-[#44403C] font-semibold text-sm hover:gap-3 transition-all duration-300 focus-visible:ring-2 focus-visible:ring-[#44403C] focus-visible:ring-offset-2 rounded-lg"
           >
             {language === "en" ? "See all houses" : "Voir toutes les maisons"}
-            <ArrowRight className="w-5 h-5" />
+            <ArrowRight className="w-4 h-4" />
           </Link>
         </div>
 
         {/* Houses grid */}
-        <div className="grid md:grid-cols-3 gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           {houses.map((house, index) => (
-            <Link key={index} to={`/${house.id}`} className="group block">
-              <div className="relative aspect-[4/5] rounded-[2rem] overflow-hidden mb-6 shadow-[0_10px40px_rgba(124,154,109,0.1)]">
+            <Link key={index} to={`/${house.id}`} className="group block bg-white rounded-2xl border border-[#E7E5E4] overflow-hidden hover:border-[#44403C]/20 hover:shadow-[0_4px_24px_rgba(0,0,0,0.06)] hover:translate-y-[-2px] transition-all duration-300">
+              {/* Photo */}
+              <div className="relative aspect-[16/10] overflow-hidden">
                 <img
                   src={house.image}
                   alt={house.alt}
-                  className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" loading="lazy"
+                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" loading="lazy"
                 />
-                {/* Overlay */}
-                <div className="absolute inset-0 bg-gradient-to-t from-[#3d4a38]/50 via-transparent to-transparent" />
-
-                {/* House initial badge */}
-                <div className="absolute top-4 left-4 w-12 h-12 rounded-full bg-white/90 flex items-center justify-center text-xl font-serif font-medium text-[#3d4a38] shadow-lg">
-                  {house.initial}
-                </div>
-
-                {/* Hover content */}
-                <div className="absolute bottom-0 left-0 right-0 p-6">
-                  <span className="inline-flex items-center gap-2 text-white text-sm font-medium opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                    {language === "en" ? "Discover" : "Découvrir"}
-                    <ArrowRight className="w-4 h-4" />
-                  </span>
-                </div>
+                {/* Tag résidents */}
+                <span className="absolute top-4 left-4 bg-white/90 backdrop-blur-sm text-[#1C1917] text-xs font-semibold px-3 py-1.5 rounded-lg">
+                  {house.residents} {language === "en" ? "residents" : "résidents"}
+                </span>
+                {/* Tag transport */}
+                <span className="absolute top-4 right-4 bg-black/60 backdrop-blur-sm text-white text-xs font-medium px-3 py-1.5 rounded-lg">
+                  {language === "en" ? "20 min Geneva center" : "20 min centre Genève"}
+                </span>
               </div>
 
-              {/* Info */}
-              <div>
-                <h3 className="text-xl font-medium text-[#3d4a38] mb-2 group-hover:text-[#7c9a6d] transition-colors duration-300">
+              {/* Content */}
+              <div className="p-5 md:p-6">
+                <h3 className="text-lg font-bold text-[#1C1917] mb-2 group-hover:text-[#44403C] transition-colors duration-300">
                   {house.name}
                 </h3>
-                <p className="text-[#7c8a72] text-sm mb-3">
+                <p className="text-[#78716C] text-sm mb-4">
                   {house.description}
                 </p>
-                <div className="flex items-center gap-4 text-sm text-[#7c8a72]">
-                  <span className="flex items-center gap-1.5">
-                    <MapPin className="w-4 h-4" />
-                    {house.location}
-                  </span>
-                  <span className="flex items-center gap-1.5">
-                    <Users className="w-4 h-4" />
-                    {house.residents}
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-4 text-xs text-[#78716C]">
+                    <span className="flex items-center gap-1.5">
+                      <MapPin className="w-3.5 h-3.5" />
+                      {house.location}
+                    </span>
+                    <span className="flex items-center gap-1.5">
+                      <Users className="w-3.5 h-3.5" />
+                      {house.residents}
+                    </span>
+                  </div>
+                  <span className="inline-flex items-center gap-1.5 text-[13px] font-semibold text-[#44403C] group-hover:gap-2.5 transition-all duration-300">
+                    {language === "en" ? "Discover" : "Découvrir"}
+                    <ArrowRight className="w-3.5 h-3.5" />
                   </span>
                 </div>
               </div>

@@ -1,6 +1,6 @@
-// VERSION 7: JEUNE + NOMADE + ZEN + FRAIS
-// Palette: Sauge (#7c9a6d) + Terracotta doux (#d4897a) + Crème frais (#faf9f5) + Bleu ciel (#a8c5d9)
-// Style: Lifestyle, décontracté, organique
+// VERSION 9: STONE & BRASS — CONDO PREMIUM
+// Palette: Stone (#44403C) + Brass (#D4A574) + Sage (#7C8E6E) + Cream (#FAF9F6)
+// Style: Condo premium contemporain
 
 export { HeroV7 as Hero } from './HeroV7';
 export { TrustBadgesV7 as TrustBadges } from './TrustBadgesV7';

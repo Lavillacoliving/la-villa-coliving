@@ -17,7 +17,7 @@ export const translations = {
       subtitle:
         "Live, work & connect in extraordinary homes designed for vibrant community life.",
       ctaPrimary: "Explore Our Houses",
-      ctaSecondary: "Check Availability",
+      ctaSecondary: "Check availability",
       badge1: "All-inclusive living",
       badge2: "Curated community",
       badge3: "12-month lease",
@@ -90,7 +90,7 @@ export const translations = {
     about: {
       title: "About La Villa",
       description:
-        "La Villa brings together like-minded people in exceptional homes on the French side of Grand Genève, just 15-25 minutes from Geneva center.",
+        "La Villa brings together like-minded people in exceptional homes on the French side of Grand Genève, just 20 minutes from Geneva city center.",
       description2:
         "Our community is built on shared values: openness, collaboration, and genuine enthusiasm for collective living. Every member is carefully selected to ensure the perfect fit.",
       cta: "Learn About Our Houses",
@@ -110,7 +110,7 @@ export const translations = {
       },
       location: {
         title: "Prime Location",
-        description: "Grand Genève, France | 15-25 min to Geneva | 45 min to the Alps",
+        description: "20 min from Geneva city center by train or tram",
       },
       comfort: {
         title: "Private Comfort",
@@ -142,7 +142,7 @@ export const translations = {
         name: "Le Loft",
         location: "Ambilly",
         description:
-          "A 300m² townhouse with year-round heated indoor pool, Finnish sauna and outdoor kitchen.",
+          "A 300 m² townhouse with year-round heated indoor pool, Finnish sauna, and outdoor kitchen.",
         features: "Year-round heated indoor pool, Finnish sauna, gym, outdoor kitchen with TV, terraces & spacious designer rooms",
         perfectFor: "Urban professionals",
         capacity: "7 members",
@@ -150,9 +150,9 @@ export const translations = {
       leLodge: {
         name: "Le Lodge",
         location: "Annemasse",
-        description: "Our newest and largest home, open since January 2026. 4 buildings, fitness chalet with sauna & jacuzzi, pool house with outdoor kitchen.",
+        description: "Our newest and largest home, open since January 2026. 4 buildings, fitness chalet with Jacuzzi® infrared sauna, pool house with outdoor kitchen.",
         features:
-          "Outdoor pool, fitness chalet with sauna & jacuzzi, pool house with full outdoor kitchen, BBQ & expansive gardens",
+          "Outdoor pool, fitness chalet with Jacuzzi® infrared sauna, pool house with full outdoor kitchen, BBQ & expansive gardens",
         perfectFor: "Community seekers",
         capacity: "12 members",
       },
@@ -225,7 +225,7 @@ export const translations = {
       difference: {
         title: "Our Curated Coliving Community",
         description:
-          "We bring together 7 to 12 carefully selected members in thoughtfully designed homes, on the French side, just 15-25 minutes from Geneva. Every detail—from the furniture to the community events—is intentional.",
+          "We bring together 7 to 12 carefully selected members in thoughtfully designed homes, on the French side, just 20 minutes from Geneva city center. Every detail—from the furniture to the community events—is intentional.",
         description2:
           "This isn't just shared housing. It's a lifestyle upgrade designed for modern professionals who refuse to compromise on quality, community, or convenience.",
       },
@@ -254,7 +254,7 @@ export const translations = {
         benefit3: "Instant community of like-minded people",
         benefit4: "Premium amenities you couldn't afford alone",
         benefit5: "Professional cleaning and maintenance",
-        benefit6: "12-month lease — settle in and make it home",
+        benefit6: "Our residents stay from 6 months to 3 years — time to live, not just pass through",
         benefit7: "Work-friendly spaces with high-speed internet",
         benefit8: "Regular community events and activities",
       },
@@ -333,7 +333,7 @@ export const translations = {
     ratesPage: {
       hero: {
         title: "Transparent Pricing",
-        subtitle: "1,380 CHF/month — All inclusive",
+        subtitle: "CHF 1,380/month — All inclusive in a house, not a residence",
         description: "No hidden fees. No surprises. Just exceptional value.",
         description2:
           "When you add up rent, utilities, amenities, and services, La Villa offers more—for less than a Geneva studio.",
@@ -356,10 +356,11 @@ export const translations = {
           "Full house, annex & grounds maintenance",
           "Furniture & equipment upkeep",
           "Basic supplies provided",
-          "Move-out management",
+          "Move-out management (check-out, room reset)",
           "Local taxes included",
           "Bed linen set & towels provided",
-          "WhatsApp support",
+          "Direct WhatsApp support with founders",
+          "E-bike charging stations (Le Lodge)",
         ],
       },
       deposit: "Security deposit: 2 months rent",
@@ -520,7 +521,7 @@ export const translations = {
     about: {
       title: "À Propos de La Villa",
       description:
-        "La Villa réunit des personnes partageant les mêmes valeurs dans des maisons exceptionnelles côté France, dans le Grand Genève, à seulement 15-25 min du centre de Genève.",
+        "La Villa réunit des personnes partageant les mêmes valeurs dans des maisons exceptionnelles côté France, dans le Grand Genève, à seulement 20 min du centre de Genève.",
       description2:
         "Notre communauté repose sur des valeurs communes : ouverture, collaboration et enthousiasme authentique pour la vie collective. Chaque membre est soigneusement sélectionné pour garantir une parfaite harmonie.",
       cta: "Découvrir Nos Maisons",
@@ -540,7 +541,7 @@ export const translations = {
       },
       location: {
         title: "Emplacement Privilégié",
-        description: "Grand Genève, côté France | 15-25 min de Genève | 45 min des Alpes",
+        description: "20 min du centre de Genève en CEVA ou tram",
       },
       comfort: {
         title: "Confort Privé",
@@ -582,9 +583,9 @@ export const translations = {
         name: "Le Lodge",
         location: "Annemasse",
         description:
-          "Notre maison la plus récente et la plus grande, ouverte depuis janvier 2026. 4 bâtiments, chalet fitness avec sauna & jacuzzi, pool house avec cuisine d'été.",
+          "Notre maison la plus récente et la plus grande, ouverte depuis janvier 2026. 4 bâtiments, chalet fitness avec sauna infrarouge Jacuzzi®, pool house avec cuisine d'été.",
         features:
-          "Piscine extérieure, chalet fitness avec sauna & jacuzzi, pool house avec cuisine d'été complète, BBQ & grands jardins",
+          "Piscine extérieure, chalet fitness avec sauna infrarouge Jacuzzi®, pool house avec cuisine d'été complète, BBQ & grands jardins",
         perfectFor: "Chercheurs de communauté",
         capacity: "12 membres",
       },
@@ -657,7 +658,7 @@ export const translations = {
       difference: {
         title: "Notre Communauté Coliving Sélectionnée",
         description:
-          "Nous réunissons 7 à 12 membres soigneusement sélectionnés dans des maisons pensées dans les moindres détails, à seulement 15-25 minutes de Genève, côté France. Chaque détail — du mobilier aux événements communautaires — est intentionnel.",
+          "Nous réunissons 7 à 12 membres soigneusement sélectionnés dans des maisons pensées dans les moindres détails, à seulement 20 minutes du centre de Genève, côté France. Chaque détail — du mobilier aux événements communautaires — est intentionnel.",
         description2:
           "Ce n'est pas juste une colocation. C'est une véritable élévation de mode de vie conçue pour les professionnels qui refusent de compromettre sur la qualité, la communauté ou la commodité.",
       },
@@ -688,7 +689,7 @@ export const translations = {
         benefit4:
           "Équipements premium que vous ne pourriez pas vous offrir seul",
         benefit5: "Ménage et maintenance professionnels",
-        benefit6: "Bail de 12 mois — le temps de vous installer vraiment",
+        benefit6: "Nos résidents restent de 6 mois à 3 ans — le temps de vivre, pas juste de passer",
         benefit7: "Espaces adaptés au travail avec internet haut débit",
         benefit8: "Événements communautaires et activités régulières",
       },
@@ -770,7 +771,7 @@ export const translations = {
     ratesPage: {
       hero: {
         title: "Tarifs Transparents",
-        subtitle: "1 380 CHF/mois — Tout inclus",
+        subtitle: "1 380 CHF/mois — Tout inclus dans une maison, pas une résidence",
         description:
           "Pas de frais cachés. Pas de surprises. Juste une valeur exceptionnelle.",
         description2:
@@ -794,10 +795,11 @@ export const translations = {
           "Entretien complet maison, annexes & espaces extérieurs",
           "Entretien du mobilier et équipements",
           "Fournitures de base fournies",
-          "Gestion des départs",
+          "Gestion des départs (check-out, remise en état)",
           "Taxes locales incluses",
           "Parure de linge de lit et serviettes fournie",
-          "Support WhatsApp",
+          "Support WhatsApp direct avec les fondateurs",
+          "Bornes recharge vélo électrique (Le Lodge)",
         ],
       },
       deposit: "Caution : 2 mois de loyer",

@@ -203,7 +203,7 @@ export function MonEspacePage() {
 
   const statusBadge = (status: string) => {
     const colors: Record<string, string> = {
-      paid: 'bg-green-100 text-green-800',
+      paid: 'bg-[#F5F2ED] text-[#44403C]',
       partial: 'bg-yellow-100 text-yellow-800',
       pending: 'bg-gray-100 text-gray-600',
       late: 'bg-red-100 text-red-800',

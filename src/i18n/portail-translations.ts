@@ -16,16 +16,16 @@ const propertyContent: PropertyContent = {
         section: 'rules',
         content: `Règlement intérieur — La Villa Coliving (Ville-la-Grand)
 
-🔇 Horaires de calme : 22h → 8h (pas de bruit excessif, musique au casque)
-🧹 Espaces communs : chacun nettoie après utilisation (cuisine, salle de bain partagée, salon)
-🍽️ Vaisselle : laver et ranger le jour même — ne rien laisser dans l'évier
-🗑️ Poubelles : chacun contribue à sortir les poubelles quand elles sont pleines
-🚭 Non-fumeur : interdiction de fumer à l'intérieur. Espace fumeur extérieur disponible.
-🐾 Animaux : non autorisés (sauf accord écrit préalable)
-👥 Invités : autorisés en journée. Nuit = prévenir le gestionnaire + max 2 nuits/semaine.
-🔑 Portes : fermer la porte d'entrée à clé après 22h.
-📦 Espaces personnels : chaque chambre est privative. Ne pas entrer dans les chambres des autres.
-🎉 Événements : toute fête/rassemblement doit être validé par le gestionnaire.`
+— Horaires de calme : 22h → 8h (pas de bruit excessif, musique au casque)
+— Espaces communs : chacun nettoie après utilisation (cuisine, salle de bain partagée, salon)
+— Vaisselle : laver et ranger le jour même — ne rien laisser dans l'évier
+— Poubelles : chacun contribue à sortir les poubelles quand elles sont pleines
+— Non-fumeur : interdiction de fumer à l'intérieur. Espace fumeur extérieur disponible.
+— Animaux : non autorisés (sauf accord écrit préalable)
+— Invités : autorisés en journée. Nuit = prévenir le gestionnaire + max 2 nuits/semaine.
+— Portes : fermer la porte d'entrée à clé après 22h.
+— Espaces personnels : chaque chambre est privative. Ne pas entrer dans les chambres des autres.
+— Événements : toute fête/rassemblement doit être validé par le gestionnaire.`
       },
       {
         section: 'spaces',
@@ -103,7 +103,7 @@ Courrier
       },
       {
         section: 'emergency',
-        content: `🚨 En cas d'urgence
+        content: `En cas d'urgence
 
 Fuite d'eau
 1. Couper la vanne d'arrêt (sous-sol, à gauche de l'escalier)
@@ -135,19 +135,19 @@ Numéros d'urgence
         section: 'contacts',
         content: `Contacts essentiels
 
-👩 Fanny (Gestionnaire)
+Fanny (Gestionnaire)
 • WhatsApp : +33 6 XX XX XX XX
 • Email : fanny@lavillacoliving.com
 • Disponible lundi-vendredi 9h-18h
 
-🔧 Urgence maintenance
+Urgence maintenance
 • En dehors des heures → WhatsApp Fanny (elle redirige)
 
-👨 Jérôme (Propriétaire)
+Jérôme (Propriétaire)
 • Email uniquement : jerome@lavillacoliving.com
 • Pour sujets administratifs/contractuels uniquement
 
-🧹 Ménage (Bouameur)
+Ménage (Bouameur)
 • Planning affiché dans la cuisine
 • Pas de contact direct — passer par Fanny`
       },
@@ -174,16 +174,16 @@ Interventions planifiées
         section: 'rules',
         content: `House Rules — La Villa Coliving (Ville-la-Grand)
 
-🔇 Quiet hours: 10pm → 8am (no excessive noise, headphones for music)
-🧹 Common areas: clean after use (kitchen, shared bathroom, living room)
-🍽️ Dishes: wash and put away the same day — nothing left in the sink
-🗑️ Trash: everyone helps take out the trash when bins are full
-🚭 Non-smoking: no smoking indoors. Outdoor smoking area available.
-🐾 Pets: not allowed (unless prior written agreement)
-👥 Guests: allowed during the day. Overnight = notify manager + max 2 nights/week.
-🔑 Doors: lock the front door after 10pm.
-📦 Personal spaces: each room is private. Do not enter other rooms.
-🎉 Events: any party/gathering must be approved by the manager.`
+— Quiet hours: 10pm → 8am (no excessive noise, headphones for music)
+— Common areas: clean after use (kitchen, shared bathroom, living room)
+— Dishes: wash and put away the same day — nothing left in the sink
+— Trash: everyone helps take out the trash when bins are full
+— Non-smoking: no smoking indoors. Outdoor smoking area available.
+— Pets: not allowed (unless prior written agreement)
+— Guests: allowed during the day. Overnight = notify manager + max 2 nights/week.
+— Doors: lock the front door after 10pm.
+— Personal spaces: each room is private. Do not enter other rooms.
+— Events: any party/gathering must be approved by the manager.`
       },
       {
         section: 'spaces',
@@ -261,7 +261,7 @@ Mail
       },
       {
         section: 'emergency',
-        content: `🚨 In Case of Emergency
+        content: `In Case of Emergency
 
 Water Leak
 1. Turn off the water valve (basement, left of the stairs)
@@ -293,19 +293,19 @@ Emergency Numbers
         section: 'contacts',
         content: `Key Contacts
 
-👩 Fanny (Property Manager)
+Fanny (Property Manager)
 • WhatsApp: +33 6 XX XX XX XX
 • Email: fanny@lavillacoliving.com
 • Available Monday-Friday 9am-6pm
 
-🔧 Emergency Maintenance
+Emergency Maintenance
 • After hours → WhatsApp Fanny (she will redirect)
 
-👨 Jérôme (Owner)
+Jérôme (Owner)
 • Email only: jerome@lavillacoliving.com
 • For administrative/contractual matters only
 
-🧹 Cleaning (Bouameur)
+Cleaning (Bouameur)
 • Schedule displayed in the kitchen
 • No direct contact — go through Fanny`
       },
@@ -333,15 +333,15 @@ Planned Maintenance
     fr: [
       { section: 'rules', content: `Règlement intérieur — Le Loft (Ambilly)
 
-🔇 Horaires de calme : 22h → 8h
-🧹 Espaces communs : chacun nettoie après utilisation
-🍽️ Vaisselle : laver et ranger le jour même
-🗑️ Poubelles : chacun contribue à sortir les poubelles
-🚭 Non-fumeur à l'intérieur
-🐾 Animaux : non autorisés
-👥 Invités : prévenir le gestionnaire pour les nuitées (max 2 nuits/semaine)
-🔑 Fermer la porte d'entrée à clé après 22h
-🎉 Événements soumis à validation` },
+— Horaires de calme : 22h → 8h
+— Espaces communs : chacun nettoie après utilisation
+— Vaisselle : laver et ranger le jour même
+— Poubelles : chacun contribue à sortir les poubelles
+— Non-fumeur à l'intérieur
+— Animaux : non autorisés
+— Invités : prévenir le gestionnaire pour les nuitées (max 2 nuits/semaine)
+— Fermer la porte d'entrée à clé après 22h
+— Événements soumis à validation` },
       { section: 'spaces', content: `Piscine (extérieure)
 • Ouverte mi-avril → fin septembre, 8h-22h
 • Douche obligatoire, pas de verre autour du bassin
@@ -371,7 +371,7 @@ Chauffage : thermostat couloir, ne pas modifier, 20°C/18°C
 Tableau électrique : entrée RDC
 Parking : places dans la cour, rack vélos disponible
 Courrier : boîte aux lettres à l'entrée` },
-      { section: 'emergency', content: `🚨 Urgences
+      { section: 'emergency', content: `Urgences
 Fuite d'eau → vanne sous-sol → WhatsApp Fanny
 Coupure électrique → disjoncteur entrée RDC
 Incendie → évacuer → 18/112 → Fanny
@@ -389,15 +389,15 @@ Piscine : entretien hebdomadaire | Jardin : tonte bimensuelle` },
     en: [
       { section: 'rules', content: `House Rules — Le Loft (Ambilly)
 
-🔇 Quiet hours: 10pm → 8am
-🧹 Clean common areas after use
-🍽️ Wash dishes same day
-🗑️ Help take out the trash
-🚭 No smoking indoors
-🐾 No pets
-👥 Overnight guests: notify manager (max 2 nights/week)
-🔑 Lock front door after 10pm
-🎉 Events subject to approval` },
+— Quiet hours: 10pm → 8am
+— Clean common areas after use
+— Wash dishes same day
+— Help take out the trash
+— No smoking indoors
+— No pets
+— Overnight guests: notify manager (max 2 nights/week)
+— Lock front door after 10pm
+— Events subject to approval` },
       { section: 'spaces', content: `Swimming Pool (outdoor)
 • Open mid-April → end September, 8am-10pm
 • Shower required, no glass around pool
@@ -415,7 +415,7 @@ Heating: hallway thermostat, do not adjust, 20°C/18°C
 Electrical panel: ground floor entrance
 Parking: courtyard spots, bike rack available
 Mail: mailbox at entrance` },
-      { section: 'emergency', content: `🚨 Emergencies
+      { section: 'emergency', content: `Emergencies
 Water leak → basement valve → WhatsApp Fanny
 Power outage → breaker at entrance
 Fire → evacuate → 18/112 → Fanny
@@ -436,15 +436,15 @@ Pool: weekly | Garden: bi-monthly` },
     fr: [
       { section: 'rules', content: `Règlement intérieur — Le Lodge (Annemasse)
 
-🔇 Horaires de calme : 22h → 8h
-🧹 Espaces communs : chacun nettoie après utilisation
-🍽️ Vaisselle : laver et ranger le jour même
-🗑️ Poubelles : chacun contribue
-🚭 Non-fumeur à l'intérieur (terrasse disponible)
-🐾 Animaux : non autorisés
-👥 Invités : prévenir le gestionnaire pour les nuitées (max 2 nuits/semaine)
-🔑 Badge d'accès : ne pas prêter, signaler toute perte
-🎉 Événements soumis à validation` },
+— Horaires de calme : 22h → 8h
+— Espaces communs : chacun nettoie après utilisation
+— Vaisselle : laver et ranger le jour même
+— Poubelles : chacun contribue
+— Non-fumeur à l'intérieur (terrasse disponible)
+— Animaux : non autorisés
+— Invités : prévenir le gestionnaire pour les nuitées (max 2 nuits/semaine)
+— Badge d'accès : ne pas prêter, signaler toute perte
+— Événements soumis à validation` },
       { section: 'spaces', content: `Piscine intérieure chauffée
 • Ouverte toute l'année, 7h-22h
 • Douche obligatoire, pas de verre
@@ -481,7 +481,7 @@ Tableau électrique : local technique -1
 Parking souterrain : 1 place par chambre (badge)
 Courrier : boîtes aux lettres hall d'entrée
 Bornes recharge EV : 2 bornes au -1` },
-      { section: 'emergency', content: `🚨 Urgences
+      { section: 'emergency', content: `Urgences
 Fuite → vanne locale technique -1 → Fanny
 Coupure électrique → local technique -1
 Incendie → escaliers de secours → 18/112
@@ -500,15 +500,15 @@ Parties communes : nettoyage quotidien` },
     en: [
       { section: 'rules', content: `House Rules — Le Lodge (Annemasse)
 
-🔇 Quiet hours: 10pm → 8am
-🧹 Clean common areas after use
-🍽️ Wash dishes same day
-🗑️ Help with trash
-🚭 No smoking indoors (terrace available)
-🐾 No pets
-👥 Overnight guests: notify manager (max 2 nights/week)
-🔑 Access badge: do not lend, report any loss
-🎉 Events subject to approval` },
+— Quiet hours: 10pm → 8am
+— Clean common areas after use
+— Wash dishes same day
+— Help with trash
+— No smoking indoors (terrace available)
+— No pets
+— Overnight guests: notify manager (max 2 nights/week)
+— Access badge: do not lend, report any loss
+— Events subject to approval` },
       { section: 'spaces', content: `Indoor Heated Pool
 • Open year-round, 7am-10pm
 • Shower required, no glass
@@ -528,7 +528,7 @@ Electrical panel: technical room level -1
 Underground parking: 1 spot per room (badge)
 Mail: mailboxes in entrance hall
 EV charging: 2 stations at level -1` },
-      { section: 'emergency', content: `🚨 Emergencies
+      { section: 'emergency', content: `Emergencies
 Water leak → valve in tech room -1 → Fanny
 Power outage → tech room -1
 Fire → emergency stairs → 18/112
