@@ -70,7 +70,7 @@ export function HousesPageV4() {
     },
     {
       label: language === "en" ? "Plot" : "Terrain",
-      values: ["2,000 m²", "—", "1,500 m²"],
+      values: ["2,000 m²", "330 m²", "1,500 m²"],
     },
     {
       label: language === "en" ? "Residents" : "Résidents",
@@ -89,7 +89,7 @@ export function HousesPageV4() {
       values: [
         language === "en" ? "Infrared (5 seats)" : "Infrarouge (5 places)",
         language === "en" ? "Finnish (2 seats)" : "Finlandais (2 places)",
-        language === "en" ? "Sauna + Jacuzzi®" : "Sauna + Jacuzzi®",
+        language === "en" ? "Finnish sauna (5 seats) + Jacuzzi®" : "Sauna finlandais 5 places + Jacuzzi®",
       ],
     },
     {
@@ -111,9 +111,9 @@ export function HousesPageV4() {
     {
       label: language === "en" ? "Transport to Geneva" : "Transport vers Genève",
       values: [
-        language === "en" ? "CEVA train 15 min" : "CEVA 15 min",
-        language === "en" ? "Tram 20 min" : "Tram 20 min",
-        language === "en" ? "Tram 1 min walk" : "Tram 1 min à pied",
+        language === "en" ? "CEVA — 9 min walk" : "CEVA à 9 minutes à pied",
+        language === "en" ? "Tram Croix d'Ambilly — 5 min walk" : "Tram Croix d'Ambilly à 5 minutes à pied",
+        language === "en" ? "CEVA — 9 min walk" : "CEVA à 9 minutes à pied",
       ],
     },
     {
