@@ -43,8 +43,6 @@ export function FAQPageV4() {
     {} as Record<string, typeof faqData>,
   );
 
-  const categories = faqCategories[language];
-
   // Map English category keys to localized display names
   const categoryDisplayName = (categoryKey: string): string => {
     const enIndex = faqCategories.en.indexOf(categoryKey);
