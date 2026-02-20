@@ -44,7 +44,7 @@ export function FooterV7() {
               <img
                 src="/logos/NEW Logo La Villa-12.png"
                 alt="La Villa Coliving — colocation et coliving premium près de Genève"
-                className="h-20 w-auto brightness-0 invert"
+                className="h-32 w-auto brightness-0 invert"
               />
             </Link>
             <p className="text-[#78716C] max-w-md mb-6 leading-relaxed">

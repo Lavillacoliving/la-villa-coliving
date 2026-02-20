@@ -180,7 +180,7 @@ export function HousesPageV4() {
                     {house.capacity} {language === "en" ? "residents" : "résidents"}
                   </span>
                   <span className="absolute top-4 right-4 bg-black/60 backdrop-blur-sm text-white text-xs font-medium px-3 py-1.5 rounded-lg">
-                    {language === "en" ? "20 min Geneva" : "20 min Genève"}
+                    {language === "en" ? "20 min Geneva center" : "20 min Genève centre"}
                   </span>
                 </Link>
 

@@ -381,6 +381,39 @@ export function RatesPageV4() {
                   <span className="flex items-center gap-2">
                     <Check className="w-4 h-4 text-[#D4A574]" />{" "}
                     {language === "en"
+                      ? "Room from 17 to 23 m²"
+                      : "Chambre de 17 à 23 m²"}
+                  </span>
+                  <span className="text-[#E0BB8A] font-bold">
+                    {language === "en" ? "INCLUDED" : "INCLUS"}
+                  </span>
+                </div>
+                <div className="flex justify-between text-white/90">
+                  <span className="flex items-center gap-2">
+                    <Check className="w-4 h-4 text-[#D4A574]" />{" "}
+                    {language === "en"
+                      ? "Premium home & furniture"
+                      : "Logement d'exception et mobilier premium"}
+                  </span>
+                  <span className="text-[#E0BB8A] font-bold">
+                    {language === "en" ? "INCLUDED" : "INCLUS"}
+                  </span>
+                </div>
+                <div className="flex justify-between text-white/90">
+                  <span className="flex items-center gap-2">
+                    <Check className="w-4 h-4 text-[#D4A574]" />{" "}
+                    {language === "en"
+                      ? "All maintenance & repairs"
+                      : "Tout entretien et réparations"}
+                  </span>
+                  <span className="text-[#E0BB8A] font-bold">
+                    {language === "en" ? "INCLUDED" : "INCLUS"}
+                  </span>
+                </div>
+                <div className="flex justify-between text-white/90">
+                  <span className="flex items-center gap-2">
+                    <Check className="w-4 h-4 text-[#D4A574]" />{" "}
+                    {language === "en"
                       ? "All utilities included"
                       : "Toutes charges incluses"}
                   </span>
@@ -714,8 +747,8 @@ export function RatesPageV4() {
           </h2>
           <p className="text-lg text-white/80 max-w-xl mx-auto mb-8">
             {language === "en"
-              ? `Save ${monthlySavings} CHF/month and join 50+ happy colivers. Limited spots for Spring 2026.`
-              : `Économisez ${monthlySavings} CHF/mois et rejoignez 50+ colivers heureux. Places limitées pour le Printemps 2026.`}
+              ? `Save ${monthlySavings} CHF/month and join 100+ happy colivers. Limited spots for Spring 2026.`
+              : `Économisez ${monthlySavings} CHF/mois et rejoignez 100+ colivers heureux. Places limitées pour le Printemps 2026.`}
           </p>
           <Link
             to="/join-us"
