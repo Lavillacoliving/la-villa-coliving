@@ -14,47 +14,50 @@ export function TestimonialsCarouselV7() {
   const testimonials = [
     {
       name: 'Gary',
-      role: language === 'en' ? 'Resident for 2 years' : 'Résident depuis 2 ans',
-      location: 'La Villa',
-      quote: language === 'en'
-        ? 'What I love is the balance between privacy and community. I have my own space, but there\'s always someone to share a meal or a laugh with.'
-        : 'Ce que j\'aime, c\'est l\'équilibre entre intimité et vie en communauté. J\'ai mon espace, mais il y a toujours quelqu\'un pour partager un repas ou un fou rire.',
+      role: 'Résident depuis janvier 2026',
+      location: 'Le Lodge',
+      subtitle: 'Moved back from the US',
+      quote: 'The space looks perfect. I recently moved back home to Europe after working in the US. Will be pursuing a new career and think the space would be an amazing opportunity to build a new community and start a new chapter.',
       initials: 'G',
     },
     {
       name: 'Aude',
-      role: language === 'en' ? 'Resident for 1 year' : 'Résidente depuis 1 an',
-      location: 'Le Loft',
-      quote: language === 'en'
-        ? 'Moving into Le Loft was the best decision of my move to Geneva. Everything is taken care of, I just enjoy living here.'
-        : 'Emménager au Loft a été la meilleure décision de mon installation à Genève. Tout est pris en charge, je profite juste de la vie ici.',
+      role: 'Résidente depuis juillet 2025',
+      location: 'La Villa',
+      subtitle: "Aujourd'hui au Lodge",
+      quote: "L'emplacement est vraiment top, et les colocs ont l'air très sympas, ça donne envie !",
       initials: 'A',
     },
     {
-      name: 'Ines',
-      role: language === 'en' ? 'Resident for 6 months' : 'Résidente depuis 6 mois',
-      location: 'La Villa',
-      quote: language === 'en'
-        ? 'Pool, sauna, gym, yoga... and above all, an incredible community. It\'s nothing like what you\'d imagine for a shared house.'
-        : 'Piscine, sauna, sport, yoga… et surtout une communauté incroyable. Ça n\'a rien à voir avec ce qu\'on imagine d\'une colocation.',
-      initials: 'I',
+      name: 'Marcos',
+      role: 'Résident depuis décembre 2024',
+      location: 'Le Loft',
+      subtitle: '',
+      quote: 'Je me sentais déjà chez moi !',
+      initials: 'M',
+    },
+    {
+      name: 'Gary',
+      role: 'Résident depuis janvier 2026',
+      location: 'Le Lodge',
+      subtitle: 'Soirée inter-maisons',
+      quote: 'Thank you so much for organizing the soirée pizza last night, I really enjoyed it, and it was great to spend time with everyone from all the residences.',
+      initials: 'G',
     },
     {
       name: 'Florian',
-      role: language === 'en' ? 'Resident for 1.5 years' : 'Résident depuis 1 an et demi',
-      location: 'Le Lodge',
-      quote: language === 'en'
-        ? 'I work in Geneva and live 20 min away in a house with pool, gym, and incredible people. My colleagues can\'t believe it.'
-        : 'Je travaille à Genève et je vis à 20 min dans une maison avec piscine, salle de sport et des gens incroyables. Mes collègues n\'en reviennent pas.',
+      role: 'Résident depuis plus de 2 ans',
+      location: 'La Villa',
+      subtitle: '',
+      quote: 'C\'était vraiment vraiment super 🫶',
       initials: 'F',
     },
     {
       name: 'Marcos',
-      role: language === 'en' ? 'Resident for 8 months' : 'Résident depuis 8 mois',
+      role: 'Résident depuis décembre 2024',
       location: 'Le Loft',
-      quote: language === 'en'
-        ? 'The indoor pool sold me, but the community made me stay. This is a whole lifestyle, not just a room.'
-        : 'La piscine intérieure m\'a convaincu, mais c\'est la communauté qui m\'a fait rester. C\'est un vrai mode de vie, pas juste une chambre.',
+      subtitle: 'After work inter-maisons',
+      quote: 'Merci pour l\'after work c\'était génial ✨',
       initials: 'M',
     },
   ];
@@ -103,8 +106,13 @@ export function TestimonialsCarouselV7() {
               <div>
                 <div className="text-[#1C1917] font-semibold">{testimonials[currentIndex].name}</div>
                 <div className="text-[#78716C] text-sm">
-                  {testimonials[currentIndex].role} &bull; {testimonials[currentIndex].location}
+                  {testimonials[currentIndex].location} &bull; {testimonials[currentIndex].role}
                 </div>
+                {testimonials[currentIndex].subtitle && (
+                  <div className="text-[#D4A574] text-xs mt-0.5">
+                    {testimonials[currentIndex].subtitle}
+                  </div>
+                )}
               </div>
             </div>
           </div>
