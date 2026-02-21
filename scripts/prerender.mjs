@@ -9,8 +9,8 @@
  *   npm run prerender        (run locally on Mac after vite build)
  *   Automatically called by "npm run build" — skips gracefully if no Chrome
  *
- * The pre-rendered HTML files are committed to git (public/prerendered/)
- * so Vercel serves them without needing Chrome at build time.
+ * Output goes to public/prerendered/ (committed to git).
+ * Vercel conditional rewrites serve these files to bots.
  */
 
 import fs from 'fs/promises';
@@ -20,6 +20,7 @@ import http from 'http';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const DIST_DIR = path.join(__dirname, '..', 'dist');
+const OUTPUT_DIR = path.join(__dirname, '..', 'public', 'prerendered');
 const PORT = 3456;
 const BASE_URL = `http://localhost:${PORT}`;
 
@@ -137,11 +138,11 @@ async function renderRoute(browser, route) {
 
     const html = await page.content();
 
-    const outputPath = route === '/'
-      ? path.join(DIST_DIR, 'index.html')
-      : path.join(DIST_DIR, route, 'index.html');
+    // Save to public/prerendered/ (committed to git, served by Vercel to bots)
+    const fileName = route === '/' ? 'index.html' : `${route.slice(1).replace(/\//g, '-')}.html`;
+    const outputPath = path.join(OUTPUT_DIR, fileName);
 
-    await fs.mkdir(path.dirname(outputPath), { recursive: true });
+    await fs.mkdir(OUTPUT_DIR, { recursive: true });
     await fs.writeFile(outputPath, html, 'utf-8');
 
     const textContent = html.replace(/<[^>]*>/g, ' ').replace(/\s+/g, ' ');
@@ -175,7 +176,8 @@ async function main() {
   await browser.close();
   server.close();
 
-  console.log(`\n🎉 Pre-rendering complete! All ${ROUTES.length} pages saved to dist/\n`);
+  console.log(`\n🎉 Pre-rendering complete! All ${ROUTES.length} pages saved to public/prerendered/`);
+  console.log(`  💡 Commit these files to git so Vercel serves them to crawlers.\n`);
 }
 
 main().catch(err => { console.error('Fatal:', err); process.exit(1); });
