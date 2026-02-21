@@ -312,9 +312,9 @@ async function generateSitemap(blogSlugs) {
   console.log('  🗺️  Generating sitemap.xml...');
   const today = new Date().toISOString().slice(0, 10);
 
-  function sitemapEntry(frPath, enPath, priority, changefreq, lastmod) {
+  function sitemapEntry(locPath, frPath, enPath, priority, changefreq, lastmod) {
     return `  <url>
-    <loc>${SITE_URL}${frPath}</loc>
+    <loc>${SITE_URL}${locPath}</loc>
     <xhtml:link rel="alternate" hreflang="fr" href="${SITE_URL}${frPath}" />
     <xhtml:link rel="alternate" hreflang="en" href="${SITE_URL}${enPath}" />
     <lastmod>${lastmod}</lastmod>
@@ -330,7 +330,7 @@ async function generateSitemap(blogSlugs) {
   for (const route of STATIC_ROUTES_FR) {
     const config = STATIC_PAGE_CONFIG[route] || { priority: '0.5', changefreq: 'monthly' };
     const enRoute = route === '/' ? '/en' : `/en${route}`;
-    entries.push(sitemapEntry(route, enRoute, config.priority, config.changefreq, today));
+    entries.push(sitemapEntry(route, route, enRoute, config.priority, config.changefreq, today));
   }
 
   // EN static pages (lower priority than FR equivalents)
@@ -338,8 +338,9 @@ async function generateSitemap(blogSlugs) {
   for (const route of STATIC_ROUTES_FR) {
     const config = STATIC_PAGE_CONFIG[route] || { priority: '0.5', changefreq: 'monthly' };
     const enRoute = route === '/' ? '/en' : `/en${route}`;
+    const frRoute = route;  // FR path = the original route
     const enPriority = (parseFloat(config.priority) - 0.1).toFixed(1);
-    entries.push(sitemapEntry(enRoute, enRoute, enPriority, config.changefreq, today));
+    entries.push(sitemapEntry(enRoute, frRoute, enRoute, enPriority, config.changefreq, today));
   }
 
   // Blog articles (FR + EN) — only FR slugs, we generate both
@@ -348,12 +349,12 @@ async function generateSitemap(blogSlugs) {
     entries.push('\n  <!-- ═══ BLOG ARTICLES — FR ═══ -->');
     for (const slug of frBlogSlugs) {
       const enSlug = `/en${slug}`;
-      entries.push(sitemapEntry(slug, enSlug, '0.6', 'monthly', today));
+      entries.push(sitemapEntry(slug, slug, enSlug, '0.6', 'monthly', today));
     }
     entries.push('\n  <!-- ═══ BLOG ARTICLES — EN ═══ -->');
     for (const slug of frBlogSlugs) {
       const enSlug = `/en${slug}`;
-      entries.push(sitemapEntry(enSlug, enSlug, '0.5', 'monthly', today));
+      entries.push(sitemapEntry(enSlug, slug, enSlug, '0.5', 'monthly', today));
     }
   }
 
