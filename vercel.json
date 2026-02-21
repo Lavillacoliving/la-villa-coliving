@@ -105,6 +105,70 @@
       "destination": "/prerendered/en-investisseurs.html"
     },
     {
+      "source": "/blog/choc-culturel-franco-suisse-expatrie-geneve",
+      "destination": "/prerendered/blog-choc-culturel-franco-suisse-expatrie-geneve.html"
+    },
+    {
+      "source": "/blog/coliving-pour-qui-profil-ideal",
+      "destination": "/prerendered/blog-coliving-pour-qui-profil-ideal.html"
+    },
+    {
+      "source": "/blog/vie-quotidienne-frontalier-courses-sport-sorties",
+      "destination": "/prerendered/blog-vie-quotidienne-frontalier-courses-sport-sorties.html"
+    },
+    {
+      "source": "/blog/se-faire-reseau-geneve-arriver-seul",
+      "destination": "/prerendered/blog-se-faire-reseau-geneve-arriver-seul.html"
+    },
+    {
+      "source": "/blog/arnaques-logement-frontalier-geneve-eviter",
+      "destination": "/prerendered/blog-arnaques-logement-frontalier-geneve-eviter.html"
+    },
+    {
+      "source": "/blog/banque-telephone-internet-frontalier-bons-plans",
+      "destination": "/prerendered/blog-banque-telephone-internet-frontalier-bons-plans.html"
+    },
+    {
+      "source": "/blog/dossier-location-frontalier-suisse-france",
+      "destination": "/prerendered/blog-dossier-location-frontalier-suisse-france.html"
+    },
+    {
+      "source": "/blog/arriver-seul-geneve-guide-30-jours",
+      "destination": "/prerendered/blog-arriver-seul-geneve-guide-30-jours.html"
+    },
+    {
+      "source": "/blog/teletravail-frontalier-geneve-regles-2026",
+      "destination": "/prerendered/blog-teletravail-frontalier-geneve-regles-2026.html"
+    },
+    {
+      "source": "/blog/organisations-internationales-geneve-ou-habiter",
+      "destination": "/prerendered/blog-organisations-internationales-geneve-ou-habiter.html"
+    },
+    {
+      "source": "/blog/cout-transport-frontalier-geneve-2026",
+      "destination": "/prerendered/blog-cout-transport-frontalier-geneve-2026.html"
+    },
+    {
+      "source": "/blog/temps-trajet-annemasse-geneve-par-quartier",
+      "destination": "/prerendered/blog-temps-trajet-annemasse-geneve-par-quartier.html"
+    },
+    {
+      "source": "/blog/fiscalite-frontalier-geneve-impots-2026",
+      "destination": "/prerendered/blog-fiscalite-frontalier-geneve-impots-2026.html"
+    },
+    {
+      "source": "/blog/assurance-sante-frontalier-lamal-cmu-budget",
+      "destination": "/prerendered/blog-assurance-sante-frontalier-lamal-cmu-budget.html"
+    },
+    {
+      "source": "/blog/economies-coliving-tout-inclus-geneve",
+      "destination": "/prerendered/blog-economies-coliving-tout-inclus-geneve.html"
+    },
+    {
+      "source": "/blog/studio-geneve-vs-colocation-france-budget",
+      "destination": "/prerendered/blog-studio-geneve-vs-colocation-france-budget.html"
+    },
+    {
       "source": "/blog/vie-communautaire-coliving-temoignages",
       "destination": "/prerendered/blog-vie-communautaire-coliving-temoignages.html"
     },
@@ -167,6 +231,70 @@
     {
       "source": "/blog/what-is-coliving-and-why-it-matters",
       "destination": "/prerendered/blog-what-is-coliving-and-why-it-matters.html"
+    },
+    {
+      "source": "/en/blog/choc-culturel-franco-suisse-expatrie-geneve",
+      "destination": "/prerendered/en-blog-choc-culturel-franco-suisse-expatrie-geneve.html"
+    },
+    {
+      "source": "/en/blog/coliving-pour-qui-profil-ideal",
+      "destination": "/prerendered/en-blog-coliving-pour-qui-profil-ideal.html"
+    },
+    {
+      "source": "/en/blog/vie-quotidienne-frontalier-courses-sport-sorties",
+      "destination": "/prerendered/en-blog-vie-quotidienne-frontalier-courses-sport-sorties.html"
+    },
+    {
+      "source": "/en/blog/se-faire-reseau-geneve-arriver-seul",
+      "destination": "/prerendered/en-blog-se-faire-reseau-geneve-arriver-seul.html"
+    },
+    {
+      "source": "/en/blog/arnaques-logement-frontalier-geneve-eviter",
+      "destination": "/prerendered/en-blog-arnaques-logement-frontalier-geneve-eviter.html"
+    },
+    {
+      "source": "/en/blog/banque-telephone-internet-frontalier-bons-plans",
+      "destination": "/prerendered/en-blog-banque-telephone-internet-frontalier-bons-plans.html"
+    },
+    {
+      "source": "/en/blog/dossier-location-frontalier-suisse-france",
+      "destination": "/prerendered/en-blog-dossier-location-frontalier-suisse-france.html"
+    },
+    {
+      "source": "/en/blog/arriver-seul-geneve-guide-30-jours",
+      "destination": "/prerendered/en-blog-arriver-seul-geneve-guide-30-jours.html"
+    },
+    {
+      "source": "/en/blog/teletravail-frontalier-geneve-regles-2026",
+      "destination": "/prerendered/en-blog-teletravail-frontalier-geneve-regles-2026.html"
+    },
+    {
+      "source": "/en/blog/organisations-internationales-geneve-ou-habiter",
+      "destination": "/prerendered/en-blog-organisations-internationales-geneve-ou-habiter.html"
+    },
+    {
+      "source": "/en/blog/cout-transport-frontalier-geneve-2026",
+      "destination": "/prerendered/en-blog-cout-transport-frontalier-geneve-2026.html"
+    },
+    {
+      "source": "/en/blog/temps-trajet-annemasse-geneve-par-quartier",
+      "destination": "/prerendered/en-blog-temps-trajet-annemasse-geneve-par-quartier.html"
+    },
+    {
+      "source": "/en/blog/fiscalite-frontalier-geneve-impots-2026",
+      "destination": "/prerendered/en-blog-fiscalite-frontalier-geneve-impots-2026.html"
+    },
+    {
+      "source": "/en/blog/assurance-sante-frontalier-lamal-cmu-budget",
+      "destination": "/prerendered/en-blog-assurance-sante-frontalier-lamal-cmu-budget.html"
+    },
+    {
+      "source": "/en/blog/economies-coliving-tout-inclus-geneve",
+      "destination": "/prerendered/en-blog-economies-coliving-tout-inclus-geneve.html"
+    },
+    {
+      "source": "/en/blog/studio-geneve-vs-colocation-france-budget",
+      "destination": "/prerendered/en-blog-studio-geneve-vs-colocation-france-budget.html"
     },
     {
       "source": "/en/blog/vie-communautaire-coliving-temoignages",
