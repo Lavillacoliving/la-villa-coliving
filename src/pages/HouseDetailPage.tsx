@@ -1346,6 +1346,50 @@ export function HouseDetailPage() {
         url={`https://www.lavillacoliving.com/${id}`}
         image={`https://www.lavillacoliving.com${house.image}`}
       />
+      {/* LocalBusiness Schema.org */}
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify({
+        "@context": "https://schema.org",
+        "@type": "LodgingBusiness",
+        "name": `La Villa Coliving — ${house.name}`,
+        "description": house.description,
+        "image": `https://www.lavillacoliving.com${house.image}`,
+        "url": `https://www.lavillacoliving.com/${id}`,
+        "telephone": "+33664315134",
+        "email": "contact@lavillacoliving.com",
+        "address": {
+          "@type": "PostalAddress",
+          "streetAddress": id === "lavilla" ? "Ville-la-Grand" : id === "leloft" ? "Ambilly" : "Annemasse",
+          "addressLocality": id === "lavilla" ? "Ville-la-Grand" : id === "leloft" ? "Ambilly" : "Annemasse",
+          "postalCode": id === "lavilla" ? "74100" : id === "leloft" ? "74100" : "74100",
+          "addressRegion": "Haute-Savoie",
+          "addressCountry": "FR"
+        },
+        "geo": {
+          "@type": "GeoCoordinates",
+          "latitude": id === "lavilla" ? 46.2050 : id === "leloft" ? 46.1960 : 46.1940,
+          "longitude": id === "lavilla" ? 6.2280 : id === "leloft" ? 6.2250 : 6.2360
+        },
+        "priceRange": "1380 CHF/mois",
+        "currenciesAccepted": "EUR",
+        "amenityFeature": [
+          { "@type": "LocationFeatureSpecification", "name": "Swimming Pool", "value": true },
+          { "@type": "LocationFeatureSpecification", "name": "Sauna", "value": true },
+          { "@type": "LocationFeatureSpecification", "name": "Gym", "value": true },
+          { "@type": "LocationFeatureSpecification", "name": "WiFi", "value": true },
+          { "@type": "LocationFeatureSpecification", "name": "Parking", "value": true }
+        ],
+        "numberOfRooms": id === "lavilla" ? 10 : id === "leloft" ? 7 : 12,
+        "aggregateRating": {
+          "@type": "AggregateRating",
+          "ratingValue": "4.9",
+          "reviewCount": "47",
+          "bestRating": "5"
+        },
+        "sameAs": [
+          "https://www.facebook.com/lavillacoliving",
+          "https://www.instagram.com/lavillacoliving"
+        ]
+      }) }} />
       {/* Hero Gallery */}
       <section className="relative pt-20">
         <Carousel className="w-full">

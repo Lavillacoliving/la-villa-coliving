@@ -1,37 +1,47 @@
 import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
+import { lazy, Suspense } from "react";
 import { AuthProvider } from "@/contexts/AuthContext";
 import { LanguageProvider } from "@/contexts/LanguageContext";
 import { NavbarV7 as Navbar } from "@/components/custom/NavbarV7";
 import { FooterV7 as Footer } from "@/components/custom/FooterV7";
 import { HomePage } from "@/pages/HomePage";
-import { ColivingPageV4 as ColivingPage } from "@/pages/ColivingPageV4";
-import { ServicesPageV4 as ServicesPage } from "@/pages/ServicesPageV4";
-import { HousesPageV4 as HousesPage } from "@/pages/HousesPageV4";
-import { RatesPageV4 as RatesPage } from "@/pages/RatesPageV4";
-import { FAQPageV4 as FAQPage } from "@/pages/FAQPageV4";
-import { JoinPageV4 as JoinPage } from "@/pages/JoinPageV4";
-import { HouseDetailPage } from "@/pages/HouseDetailPage";
-import { BlogPage } from "@/pages/BlogPage";
-import { BlogPostPage } from "@/pages/BlogPostPage";
-import { ColocationGenevePage } from "@/pages/ColocationGenevePage";
-import { InvestisseursPage } from "@/pages/InvestisseursPage";
-import { NotFoundPage } from "@/pages/NotFoundPage";
 import { Navigate } from "react-router-dom";
-import { PortailLayout } from "@/pages/portail/PortailLayout";
-import { MaMaisonPage } from "@/pages/portail/MaMaisonPage";
-import { MonBailPage } from "@/pages/portail/MonBailPage";
-import { MesDemandesPage } from "@/pages/portail/MesDemandesPage";
-import { CommunautePage } from "@/pages/portail/CommunautePage";
 import { ScrollToTop } from "@/components/ScrollToTop";
 import { WhatsAppButton } from "@/components/WhatsAppButton";
-import DashboardLayout from "@/pages/dashboard/DashboardLayout";
-import DashboardLoyersPage from "@/pages/dashboard/DashboardLoyersPage";
-import DashboardLocatairesPage from "@/pages/dashboard/DashboardLocatairesPage";
-import DashboardDepensesPage from "@/pages/dashboard/DashboardDepensesPage";
-import DashboardMaintenancePage from "@/pages/dashboard/DashboardMaintenancePage";
-import DashboardProspectsPage from "@/pages/dashboard/DashboardProspectsPage";
-import DashboardRoadmapPage from "@/pages/dashboard/DashboardRoadmapPage";
-import DashboardDocumentsPage from "@/pages/dashboard/DashboardDocumentsPage";
+
+// Lazy-loaded pages for code splitting
+const ColivingPage = lazy(() => import("@/pages/ColivingPageV4").then(m => ({ default: m.ColivingPageV4 })));
+const ServicesPage = lazy(() => import("@/pages/ServicesPageV4").then(m => ({ default: m.ServicesPageV4 })));
+const HousesPage = lazy(() => import("@/pages/HousesPageV4").then(m => ({ default: m.HousesPageV4 })));
+const RatesPage = lazy(() => import("@/pages/RatesPageV4").then(m => ({ default: m.RatesPageV4 })));
+const FAQPage = lazy(() => import("@/pages/FAQPageV4").then(m => ({ default: m.FAQPageV4 })));
+const JoinPage = lazy(() => import("@/pages/JoinPageV4").then(m => ({ default: m.JoinPageV4 })));
+const HouseDetailPage = lazy(() => import("@/pages/HouseDetailPage").then(m => ({ default: m.HouseDetailPage })));
+const BlogPage = lazy(() => import("@/pages/BlogPage").then(m => ({ default: m.BlogPage })));
+const BlogPostPage = lazy(() => import("@/pages/BlogPostPage").then(m => ({ default: m.BlogPostPage })));
+const ColocationGenevePage = lazy(() => import("@/pages/ColocationGenevePage").then(m => ({ default: m.ColocationGenevePage })));
+const InvestisseursPage = lazy(() => import("@/pages/InvestisseursPage").then(m => ({ default: m.InvestisseursPage })));
+const NotFoundPage = lazy(() => import("@/pages/NotFoundPage").then(m => ({ default: m.NotFoundPage })));
+const PortailLayout = lazy(() => import("@/pages/portail/PortailLayout").then(m => ({ default: m.PortailLayout })));
+const MaMaisonPage = lazy(() => import("@/pages/portail/MaMaisonPage").then(m => ({ default: m.MaMaisonPage })));
+const MonBailPage = lazy(() => import("@/pages/portail/MonBailPage").then(m => ({ default: m.MonBailPage })));
+const MesDemandesPage = lazy(() => import("@/pages/portail/MesDemandesPage").then(m => ({ default: m.MesDemandesPage })));
+const CommunautePage = lazy(() => import("@/pages/portail/CommunautePage").then(m => ({ default: m.CommunautePage })));
+const DashboardLayout = lazy(() => import("@/pages/dashboard/DashboardLayout"));
+const DashboardLoyersPage = lazy(() => import("@/pages/dashboard/DashboardLoyersPage"));
+const DashboardLocatairesPage = lazy(() => import("@/pages/dashboard/DashboardLocatairesPage"));
+const DashboardDepensesPage = lazy(() => import("@/pages/dashboard/DashboardDepensesPage"));
+const DashboardMaintenancePage = lazy(() => import("@/pages/dashboard/DashboardMaintenancePage"));
+const DashboardProspectsPage = lazy(() => import("@/pages/dashboard/DashboardProspectsPage"));
+const DashboardRoadmapPage = lazy(() => import("@/pages/dashboard/DashboardRoadmapPage"));
+const DashboardDocumentsPage = lazy(() => import("@/pages/dashboard/DashboardDocumentsPage"));
+
+// Loading fallback
+const PageLoader = () => (
+  <div className="min-h-screen flex items-center justify-center bg-[#FAF9F6]">
+    <div className="w-8 h-8 border-2 border-[#D4A574] border-t-transparent rounded-full animate-spin" />
+  </div>
+);
 
 function AppLayout() {
   const location = useLocation();
@@ -44,6 +54,7 @@ function AppLayout() {
       <ScrollToTop />
       <div className="min-h-screen bg-background">
         {!isDashboard && <Navbar />}
+        <Suspense fallback={<PageLoader />}>
         <Routes>
           <Route path="/" element={<HomePage />} />
           <Route path="/colocation-geneve" element={<ColocationGenevePage />} />
@@ -85,6 +96,7 @@ function AppLayout() {
           </Route>
           <Route path="*" element={<NotFoundPage />} />
         </Routes>
+        </Suspense>
         {!isDashboard && <Footer />}
         {showChrome && <WhatsAppButton />}
       </div>
