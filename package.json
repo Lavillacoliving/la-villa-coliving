@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "tsc -b && vite build",
+    "build": "tsc -b && vite build && node scripts/prerender.mjs",
     "build:prerender": "tsc -b && vite build && node scripts/prerender.mjs",
     "lint": "eslint .",
     "preview": "vite preview"
@@ -63,7 +63,6 @@
     "zod": "^4.3.5"
   },
   "devDependencies": {
-    "puppeteer": "^23.0.0",
     "@eslint/js": "^9.39.1",
     "@types/node": "^24.10.1",
     "@types/react": "^19.2.5",
@@ -76,6 +75,7 @@
     "globals": "^16.5.0",
     "kimi-plugin-inspect-react": "^1.0.3",
     "postcss": "^8.5.6",
+    "puppeteer": "^23.11.1",
     "sharp": "^0.34.5",
     "tailwindcss": "^3.4.19",
     "tailwindcss-animate": "^1.0.7",
