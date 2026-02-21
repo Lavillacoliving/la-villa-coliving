@@ -7,19 +7,13 @@
  * What it does:
  * 1. Reads dist/index.html (has correct asset references for THIS build)
  * 2. For each pre-rendered file in dist/prerendered/:
- *    - Extracts the #root innerHTML and page-specific meta tags
+ *    - Extracts the #root innerHTML
+ *    - Extracts ALL SEO tags from the pre-rendered <head> (title, meta,
+ *      canonical, hreflang, OG, Twitter, JSON-LD, keywords)
  *    - Injects them into a fresh copy of dist/index.html
  *    - Overwrites the file with the corrected version
  * 3. Renames dist/index.html → dist/_spa.html so Vercel's static file
- *    matching doesn't bypass the "/" rewrite (which should serve the
- *    pre-rendered homepage, not the empty SPA shell)
- *
- * Why step 3 matters:
- * Vercel serves static files BEFORE processing rewrites. Without renaming,
- * dist/index.html matches "/" directly, bypassing the rewrite to
- * /prerendered/index.html. Renaming to _spa.html forces Vercel to use
- * the rewrite rules for "/" while the catch-all "/(.*)" → "/_spa.html"
- * still serves the SPA shell for non-pre-rendered routes (dashboard, etc.).
+ *    matching doesn't bypass the "/" rewrite
  */
 
 import fs from 'fs/promises';
@@ -29,10 +23,10 @@ import { fileURLToPath } from 'url';
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const DIST_DIR = path.join(__dirname, '..', 'dist');
 const PRERENDERED_DIR = path.join(DIST_DIR, 'prerendered');
+const SITE_URL = 'https://www.lavillacoliving.com';
 
 /**
  * Extract innerHTML of <div id="root"> using depth tracking
- * (handles nested divs correctly)
  */
 function extractRootContent(html) {
   const startTag = '<div id="root">';
@@ -59,8 +53,147 @@ function extractRootContent(html) {
   return html.substring(contentStart, i);
 }
 
+/**
+ * Extract ALL SEO-relevant tags from pre-rendered <head>
+ * Returns an object with all extracted data
+ */
+function extractSeoTags(html) {
+  const headEnd = html.indexOf('</head>');
+  if (headEnd === -1) return {};
+  const head = html.substring(0, headEnd);
+
+  const seo = {};
+
+  // Title
+  const titleMatch = head.match(/<title>(.*?)<\/title>/);
+  if (titleMatch) seo.title = titleMatch[1];
+
+  // Meta name tags (description, keywords, robots, author, language)
+  const metaNamePattern = /<meta\s+name="([^"]+)"\s+content="([^"]*)"\s*\/?>/g;
+  seo.metaName = {};
+  let m;
+  while ((m = metaNamePattern.exec(head)) !== null) {
+    seo.metaName[m[1]] = m[2];
+  }
+
+  // Canonical
+  const canonicalMatch = head.match(/<link\s+rel="canonical"\s+href="([^"]*)"/);
+  if (canonicalMatch) seo.canonical = canonicalMatch[1];
+
+  // Meta property tags (OG + Twitter)
+  const metaPropPattern = /<meta\s+property="([^"]+)"\s+content="([^"]*)"\s*\/?>/g;
+  seo.metaProperty = {};
+  while ((m = metaPropPattern.exec(head)) !== null) {
+    seo.metaProperty[m[1]] = m[2];
+  }
+
+  // JSON-LD scripts (there can be multiple)
+  const jsonLdPattern = /<script\s+type="application\/ld\+json"[^>]*>([\s\S]*?)<\/script>/g;
+  seo.jsonLd = [];
+  while ((m = jsonLdPattern.exec(head)) !== null) {
+    // Also check body for JSON-LD (React-Helmet sometimes puts them there)
+    seo.jsonLd.push(m[1].trim());
+  }
+  // Also check full HTML for JSON-LD (in case they're in body via Helmet)
+  const jsonLdBodyPattern = /<script\s+type="application\/ld\+json"[^>]*>([\s\S]*?)<\/script>/g;
+  while ((m = jsonLdBodyPattern.exec(html)) !== null) {
+    const content = m[1].trim();
+    if (!seo.jsonLd.includes(content)) {
+      seo.jsonLd.push(content);
+    }
+  }
+
+  // Hreflang links
+  const hreflangPattern = /<link\s+rel="alternate"\s+hrefLang="([^"]+)"\s+href="([^"]*)"\s*\/?>/g;
+  seo.hreflang = [];
+  while ((m = hreflangPattern.exec(head)) !== null) {
+    seo.hreflang.push({ lang: m[1], href: m[2] });
+  }
+
+  return seo;
+}
+
+/**
+ * Build the SEO head tags string from extracted data + route info
+ */
+function buildSeoHeadTags(seo, route) {
+  const tags = [];
+
+  // Canonical URL (from pre-rendered or computed from route)
+  const canonicalUrl = seo.canonical || `${SITE_URL}${route}`;
+  tags.push(`<link rel="canonical" href="${canonicalUrl}" />`);
+
+  // Meta name tags (keywords, robots, author, language)
+  for (const [name, content] of Object.entries(seo.metaName || {})) {
+    // Skip description — handled separately via replace
+    if (name === 'description') continue;
+    tags.push(`<meta name="${name}" content="${content}" />`);
+  }
+
+  // OG tags
+  const ogDefaults = {
+    'og:type': 'website',
+    'og:site_name': 'La Villa Coliving',
+    'og:locale': route.startsWith('/en') ? 'en_US' : 'fr_FR',
+    'og:url': canonicalUrl,
+    'og:title': seo.title || 'La Villa Coliving',
+    'og:description': seo.metaName?.description || '',
+    'og:image': 'https://www.lavillacoliving.com/images/la villa jardin.webp',
+  };
+
+  // Merge pre-rendered OG tags over defaults
+  const ogTags = { ...ogDefaults, ...Object.fromEntries(
+    Object.entries(seo.metaProperty || {}).filter(([k]) => k.startsWith('og:'))
+  )};
+
+  for (const [prop, content] of Object.entries(ogTags)) {
+    if (content) tags.push(`<meta property="${prop}" content="${content}" />`);
+  }
+
+  // Twitter cards
+  const twitterDefaults = {
+    'twitter:card': 'summary_large_image',
+    'twitter:url': canonicalUrl,
+    'twitter:title': ogTags['og:title'],
+    'twitter:description': ogTags['og:description'],
+    'twitter:image': ogTags['og:image'],
+  };
+
+  const twitterTags = { ...twitterDefaults, ...Object.fromEntries(
+    Object.entries(seo.metaProperty || {}).filter(([k]) => k.startsWith('twitter:'))
+  )};
+
+  for (const [prop, content] of Object.entries(twitterTags)) {
+    if (content) tags.push(`<meta property="${prop}" content="${content}" />`);
+  }
+
+  // Hreflang tags (from pre-rendered or computed from route)
+  if (seo.hreflang && seo.hreflang.length > 0) {
+    for (const { lang, href } of seo.hreflang) {
+      tags.push(`<link rel="alternate" hreflang="${lang}" href="${href}" />`);
+    }
+  } else {
+    // Compute hreflang from route
+    const isEn = route.startsWith('/en');
+    const frPath = isEn ? (route === '/en' ? '/' : route.replace(/^\/en/, '')) : route;
+    const enPath = isEn ? route : (route === '/' ? '/en' : `/en${route}`);
+    tags.push(`<link rel="alternate" hreflang="fr" href="${SITE_URL}${frPath}" />`);
+    tags.push(`<link rel="alternate" hreflang="en" href="${SITE_URL}${enPath}" />`);
+    tags.push(`<link rel="alternate" hreflang="x-default" href="${SITE_URL}${frPath}" />`);
+  }
+
+  // JSON-LD scripts
+  for (const jsonLd of (seo.jsonLd || [])) {
+    if (jsonLd) {
+      tags.push(`<script type="application/ld+json">${jsonLd}</script>`);
+    }
+  }
+
+  return tags.join('\n    ');
+}
+
 async function main() {
-  console.log('\n🔧 Post-build: injecting pre-rendered content...\n');
+  console.log('\n🔧 Post-build: injecting pre-rendered content + SEO tags...\n');
 
   // Read the built index.html (has correct asset references)
   const indexPath = path.join(DIST_DIR, 'index.html');
@@ -77,7 +210,6 @@ async function main() {
     await fs.access(PRERENDERED_DIR);
   } catch {
     console.log('  ⚠️  No dist/prerendered/ directory — skipping injection.');
-    // Still rename index.html to _spa.html for consistency
     await fs.rename(indexPath, path.join(DIST_DIR, '_spa.html'));
     console.log('  📦 Renamed dist/index.html → dist/_spa.html');
     process.exit(0);
@@ -95,7 +227,7 @@ async function main() {
     }
     console.log(`  📋 Route map loaded: ${routeMap.size} routes from vercel.json`);
   } catch {
-    console.log('  ⚠️  Could not read vercel.json — hreflang tags will be skipped');
+    console.log('  ⚠️  Could not read vercel.json — route detection will be limited');
   }
 
   const files = await fs.readdir(PRERENDERED_DIR);
@@ -109,6 +241,7 @@ async function main() {
   }
 
   let successCount = 0;
+  let seoTagCount = 0;
 
   for (const file of htmlFiles) {
     const filePath = path.join(PRERENDERED_DIR, file);
@@ -121,83 +254,45 @@ async function main() {
       continue;
     }
 
-    // Extract page-specific title
-    const titleMatch = prerenderedHtml.match(/<title>(.*?)<\/title>/);
-    const title = titleMatch ? titleMatch[1] : null;
+    // Extract ALL SEO tags from pre-rendered HTML
+    const seo = extractSeoTags(prerenderedHtml);
 
-    // Extract page-specific meta description
-    const descMatch = prerenderedHtml.match(/<meta\s+name="description"\s+content="([^"]*)"/);
-    const description = descMatch ? descMatch[1] : null;
-
-    // Extract page-specific OG tags
-    const ogTitleMatch = prerenderedHtml.match(/<meta\s+property="og:title"\s+content="([^"]*)"/);
-    const ogDescMatch = prerenderedHtml.match(/<meta\s+property="og:description"\s+content="([^"]*)"/);
+    // Determine route for this file
+    const destFile = `/prerendered/${file}`;
+    const route = routeMap.get(destFile) || `/${file.replace('.html', '').replace(/-/g, '/')}`;
+    const isEnglish = route.startsWith('/en');
 
     // Start with a fresh copy of index.html (correct asset references)
     let result = indexHtml;
 
-    // Inject pre-rendered content into <div id="root">
+    // 1. Inject pre-rendered content into <div id="root">
     result = result.replace(
       '<div id="root"></div>',
       `<div id="root">${rootContent}</div>`
     );
 
-    // Replace title if page has a specific one
-    if (title) {
-      result = result.replace(/<title>.*?<\/title>/, `<title>${title}</title>`);
+    // 2. Replace title if page has a specific one
+    if (seo.title) {
+      result = result.replace(/<title>.*?<\/title>/, `<title>${seo.title}</title>`);
     }
 
-    // Replace meta description if page has a specific one
-    if (description) {
+    // 3. Replace meta description if page has a specific one
+    if (seo.metaName?.description) {
       result = result.replace(
         /<meta\s+name="description"\s+content="[^"]*"/,
-        `<meta name="description" content="${description}"`
+        `<meta name="description" content="${seo.metaName.description}"`
       );
     }
 
-    // Replace OG tags if available
-    if (ogTitleMatch) {
-      result = result.replace(
-        /<meta\s+property="og:title"\s+content="[^"]*"/,
-        `<meta property="og:title" content="${ogTitleMatch[1]}"`
-      );
-    }
-    if (ogDescMatch) {
-      result = result.replace(
-        /<meta\s+property="og:description"\s+content="[^"]*"/,
-        `<meta property="og:description" content="${ogDescMatch[1]}"`
-      );
-    }
+    // 4. Build and inject all SEO tags (canonical, OG, Twitter, hreflang, JSON-LD)
+    const seoHeadTags = buildSeoHeadTags(seo, route);
+    result = result.replace('</head>', `    ${seoHeadTags}\n  </head>`);
+    const tagCount = (seoHeadTags.match(/<(meta|link|script)/g) || []).length;
+    seoTagCount += tagCount;
 
-    // Add hreflang tags for bilingual SEO (using route map from vercel.json)
-    const SITE_URL = 'https://www.lavillacoliving.com';
-    const destFile = `/prerendered/${file}`;
-    const route = routeMap.get(destFile);
-
-    if (route) {
-      const isEnglish = route.startsWith('/en');
-      let frPath, enPath;
-
-      if (isEnglish) {
-        enPath = route;
-        frPath = route === '/en' ? '/' : route.replace(/^\/en/, '');
-      } else {
-        frPath = route;
-        enPath = route === '/' ? '/en' : `/en${route}`;
-      }
-
-      const hreflangTags = [
-        `<link rel="alternate" hreflang="fr" href="${SITE_URL}${frPath}" />`,
-        `<link rel="alternate" hreflang="en" href="${SITE_URL}${enPath}" />`,
-        `<link rel="alternate" hreflang="x-default" href="${SITE_URL}${frPath}" />`,
-      ].join('\n    ');
-
-      result = result.replace('</head>', `    ${hreflangTags}\n  </head>`);
-
-      // Set html lang attribute for English pages
-      if (isEnglish) {
-        result = result.replace(/<html\s+lang="[^"]*"/, '<html lang="en"');
-      }
+    // 5. Set html lang attribute for English pages
+    if (isEnglish) {
+      result = result.replace(/<html\s+lang="[^"]*"/, '<html lang="en"');
     }
 
     // Overwrite the file with the corrected version
@@ -205,18 +300,15 @@ async function main() {
 
     const textContent = rootContent.replace(/<[^>]*>/g, ' ').replace(/\s+/g, ' ');
     const wordCount = textContent.split(' ').filter(w => w.length > 2).length;
-    console.log(`  ✅ ${file} → ${wordCount} words injected`);
+    console.log(`  ✅ ${file} → ${wordCount} words + ${tagCount} SEO tags`);
     successCount++;
   }
 
   // CRITICAL: Rename dist/index.html → dist/_spa.html
-  // This prevents Vercel from serving the empty SPA shell for "/"
-  // (Vercel serves static files BEFORE processing rewrites)
   await fs.rename(indexPath, path.join(DIST_DIR, '_spa.html'));
   console.log(`\n  📦 Renamed dist/index.html → dist/_spa.html`);
-  console.log(`     (forces Vercel to use rewrite "/" → "/prerendered/index.html")`);
 
-  console.log(`\n🎉 Injection complete! ${successCount}/${htmlFiles.length} pages updated.\n`);
+  console.log(`\n🎉 Injection complete! ${successCount}/${htmlFiles.length} pages updated, ${seoTagCount} total SEO tags injected.\n`);
 }
 
 main().catch(err => { console.error('Fatal:', err); process.exit(1); });
