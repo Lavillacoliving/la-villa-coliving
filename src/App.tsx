@@ -76,6 +76,23 @@ function AppLayout() {
           <Route path="/lavilla" element={<HouseDetailPage />} />
           <Route path="/leloft" element={<HouseDetailPage />} />
           <Route path="/lelodge" element={<HouseDetailPage />} />
+
+          {/* English routes — same components, language auto-detected from /en/ prefix */}
+          <Route path="/en" element={<HomePage />} />
+          <Route path="/en/colocation-geneve" element={<ColocationGenevePage />} />
+          <Route path="/en/le-coliving" element={<ColivingPage />} />
+          <Route path="/en/services" element={<ServicesPage />} />
+          <Route path="/en/nos-maisons" element={<HousesPage />} />
+          <Route path="/en/tarifs" element={<RatesPage />} />
+          <Route path="/en/faq" element={<FAQPage />} />
+          <Route path="/en/candidature" element={<JoinPage />} />
+          <Route path="/en/blog" element={<BlogPage />} />
+          <Route path="/en/blog/:slug" element={<BlogPostPage />} />
+          <Route path="/en/investisseurs" element={<InvestisseursPage />} />
+          <Route path="/en/lavilla" element={<HouseDetailPage />} />
+          <Route path="/en/leloft" element={<HouseDetailPage />} />
+          <Route path="/en/lelodge" element={<HouseDetailPage />} />
+
           <Route path="/mon-espace" element={<Navigate to="/portail" replace />} />
           <Route path="/portail" element={<PortailLayout />}>
             <Route index element={<Navigate to="/portail/ma-maison" replace />} />

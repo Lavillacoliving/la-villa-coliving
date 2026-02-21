@@ -32,7 +32,7 @@ const SUPABASE_URL = 'https://tefpynkdxxfiefpkgitz.supabase.co';
 const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InRlZnB5bmtkeHhmaWVmcGtnaXR6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzA4OTg5NDksImV4cCI6MjA4NjQ3NDk0OX0.X_Z85w6L4i1IkVevMK73hpFRClCpgh0Gh0WMY9pdDtw';
 
 // Static pages to pre-render (manually maintained — rarely changes)
-const STATIC_ROUTES = [
+const STATIC_ROUTES_FR = [
   '/',
   '/colocation-geneve',
   '/le-coliving',
@@ -47,6 +47,11 @@ const STATIC_ROUTES = [
   '/lelodge',
   '/investisseurs',
 ];
+
+// English versions of all static pages (same paths with /en prefix)
+const STATIC_ROUTES_EN = STATIC_ROUTES_FR.map(r => r === '/' ? '/en' : `/en${r}`);
+
+const STATIC_ROUTES = [...STATIC_ROUTES_FR, ...STATIC_ROUTES_EN];
 
 // ─────────────────────────────────────────────
 // Supabase: fetch published blog slugs
@@ -78,8 +83,10 @@ async function fetchBlogSlugs() {
       'apikey': SUPABASE_ANON_KEY,
       'Accept': 'application/json',
     });
-    const slugs = posts.map(p => `/blog/${p.slug}`);
-    console.log(`  📝 Found ${slugs.length} published articles\n`);
+    const slugsFr = posts.map(p => `/blog/${p.slug}`);
+    const slugsEn = posts.map(p => `/en/blog/${p.slug}`);
+    const slugs = [...slugsFr, ...slugsEn];
+    console.log(`  📝 Found ${slugsFr.length} published articles (× 2 languages = ${slugs.length} routes)\n`);
     return slugs;
   } catch (err) {
     console.error(`  ⚠️  Failed to fetch blog slugs: ${err.message}`);
@@ -93,33 +100,41 @@ async function fetchBlogSlugs() {
 // ─────────────────────────────────────────────
 
 async function updateVercelJson(blogRoutes) {
-  console.log('  📦 Updating vercel.json with blog rewrites...');
+  console.log('  📦 Updating vercel.json with blog + EN rewrites...');
   const config = JSON.parse(await fs.readFile(VERCEL_JSON_PATH, 'utf-8'));
 
-  // Remove all existing blog/* rewrites (keep static rewrites + catch-all)
-  const staticRewrites = config.rewrites.filter(r =>
-    !r.source.startsWith('/blog/') // remove individual blog rewrites
+  // Remove all existing dynamic rewrites (blog/* and /en/*) — keep manually-set static FR rewrites + catch-all
+  const keepRewrites = config.rewrites.filter(r =>
+    !r.source.startsWith('/blog/') &&
+    !r.source.startsWith('/en')
   );
 
   // Find the catch-all position
-  const catchAllIndex = staticRewrites.findIndex(r => r.source === '/(.*)');
+  const catchAllIndex = keepRewrites.findIndex(r => r.source === '/(.*)');
   if (catchAllIndex === -1) {
     console.error('  ❌ No catch-all rewrite found in vercel.json!');
     return;
   }
 
-  // Generate blog rewrites
+  // Generate EN static rewrites
+  const enStaticRewrites = STATIC_ROUTES_EN.map(route => ({
+    source: route,
+    destination: `/prerendered/${route.slice(1).replace(/\//g, '-')}.html`,
+  }));
+
+  // Generate blog rewrites (FR + EN)
   const blogRewrites = blogRoutes.map(route => ({
     source: route,
     destination: `/prerendered/${route.slice(1).replace(/\//g, '-')}.html`,
   }));
 
-  // Insert blog rewrites before catch-all
-  staticRewrites.splice(catchAllIndex, 0, ...blogRewrites);
-  config.rewrites = staticRewrites;
+  // Insert all dynamic rewrites before catch-all
+  const allNewRewrites = [...enStaticRewrites, ...blogRewrites];
+  keepRewrites.splice(catchAllIndex, 0, ...allNewRewrites);
+  config.rewrites = keepRewrites;
 
   await fs.writeFile(VERCEL_JSON_PATH, JSON.stringify(config, null, 2) + '\n', 'utf-8');
-  console.log(`  ✅ vercel.json updated: ${blogRewrites.length} blog rewrites\n`);
+  console.log(`  ✅ vercel.json updated: ${enStaticRewrites.length} EN static + ${blogRewrites.length} blog rewrites\n`);
 }
 
 // ─────────────────────────────────────────────
@@ -279,13 +294,11 @@ async function main() {
   const blogRoutes = await fetchBlogSlugs();
   const allRoutes = [...STATIC_ROUTES, ...blogRoutes];
 
-  // Step 2: Update vercel.json
-  if (blogRoutes.length > 0) {
-    await updateVercelJson(blogRoutes);
-  }
+  // Step 2: Update vercel.json (always run — EN static routes + blog routes)
+  await updateVercelJson(blogRoutes);
 
   // Step 3: Check for browser
-  console.log(`  🔍 Preparing to render ${allRoutes.length} pages (${STATIC_ROUTES.length} static + ${blogRoutes.length} blog)...\n`);
+  console.log(`  🔍 Preparing to render ${allRoutes.length} pages (${STATIC_ROUTES_FR.length} FR static + ${STATIC_ROUTES_EN.length} EN static + ${blogRoutes.length} blog)...\n`);
 
   const browser = await launchBrowser();
 

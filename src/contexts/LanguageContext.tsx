@@ -10,8 +10,16 @@ interface LanguageContextType {
 
 const LanguageContext = createContext<LanguageContextType | undefined>(undefined);
 
+// Detect language from URL: /en/* → English, everything else → French
+function getInitialLanguage(): Language {
+  if (typeof window !== 'undefined' && window.location.pathname.match(/^\/en(\/|$)/)) {
+    return 'en';
+  }
+  return 'fr';
+}
+
 export function LanguageProvider({ children }: { children: React.ReactNode }) {
-  const [language, setLanguageState] = useState<Language>('fr');
+  const [language, setLanguageState] = useState<Language>(getInitialLanguage);
 
   const setLanguage = useCallback((lang: Language) => {
     setLanguageState(lang);

@@ -83,6 +83,21 @@ async function main() {
     process.exit(0);
   }
 
+  // Build route map from vercel.json (destination file → source route)
+  const VERCEL_JSON_PATH = path.join(__dirname, '..', 'vercel.json');
+  const routeMap = new Map();
+  try {
+    const vercelConfig = JSON.parse(await fs.readFile(VERCEL_JSON_PATH, 'utf-8'));
+    for (const rewrite of vercelConfig.rewrites || []) {
+      if (rewrite.destination && rewrite.destination.startsWith('/prerendered/')) {
+        routeMap.set(rewrite.destination, rewrite.source);
+      }
+    }
+    console.log(`  📋 Route map loaded: ${routeMap.size} routes from vercel.json`);
+  } catch {
+    console.log('  ⚠️  Could not read vercel.json — hreflang tags will be skipped');
+  }
+
   const files = await fs.readdir(PRERENDERED_DIR);
   const htmlFiles = files.filter(f => f.endsWith('.html'));
 
@@ -152,6 +167,37 @@ async function main() {
         /<meta\s+property="og:description"\s+content="[^"]*"/,
         `<meta property="og:description" content="${ogDescMatch[1]}"`
       );
+    }
+
+    // Add hreflang tags for bilingual SEO (using route map from vercel.json)
+    const SITE_URL = 'https://www.lavillacoliving.com';
+    const destFile = `/prerendered/${file}`;
+    const route = routeMap.get(destFile);
+
+    if (route) {
+      const isEnglish = route.startsWith('/en');
+      let frPath, enPath;
+
+      if (isEnglish) {
+        enPath = route;
+        frPath = route === '/en' ? '/' : route.replace(/^\/en/, '');
+      } else {
+        frPath = route;
+        enPath = route === '/' ? '/en' : `/en${route}`;
+      }
+
+      const hreflangTags = [
+        `<link rel="alternate" hreflang="fr" href="${SITE_URL}${frPath}" />`,
+        `<link rel="alternate" hreflang="en" href="${SITE_URL}${enPath}" />`,
+        `<link rel="alternate" hreflang="x-default" href="${SITE_URL}${frPath}" />`,
+      ].join('\n    ');
+
+      result = result.replace('</head>', `    ${hreflangTags}\n  </head>`);
+
+      // Set html lang attribute for English pages
+      if (isEnglish) {
+        result = result.replace(/<html\s+lang="[^"]*"/, '<html lang="en"');
+      }
     }
 
     // Overwrite the file with the corrected version
