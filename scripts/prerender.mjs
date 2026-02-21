@@ -5,13 +5,14 @@
  * so crawlers (Google, GPTBot, ClaudeBot) can read the content
  * without executing JavaScript.
  *
- * Uses @sparticuz/chromium in CI/Vercel (no system Chrome needed)
- * and falls back to regular puppeteer locally.
+ * USAGE:
+ *   npm run prerender        (run locally on Mac after vite build)
+ *   Automatically called by "npm run build" — skips gracefully if no Chrome
  *
- * Usage: node scripts/prerender.mjs (called automatically after vite build)
+ * The pre-rendered HTML files are committed to git (public/prerendered/)
+ * so Vercel serves them without needing Chrome at build time.
  */
 
-import puppeteerCore from 'puppeteer-core';
 import fs from 'fs/promises';
 import path from 'path';
 import { fileURLToPath } from 'url';
@@ -81,61 +82,45 @@ function startServer() {
   });
 }
 
-/** Get browser instance — @sparticuz/chromium for CI, local Chrome for dev */
+/** Try to get a working browser instance */
 async function launchBrowser() {
+  // Strategy 1: puppeteer (full, with bundled Chrome) — works on Mac/dev
   try {
-    // Try @sparticuz/chromium first (works in Vercel/Lambda/CI)
-    const chromium = await import('@sparticuz/chromium');
-    const chromiumMod = chromium.default || chromium;
-    console.log('  Using @sparticuz/chromium (CI mode)');
-    return await puppeteerCore.launch({
-      args: chromiumMod.args,
-      defaultViewport: chromiumMod.defaultViewport,
-      executablePath: await chromiumMod.executablePath(),
-      headless: chromiumMod.headless ?? 'new',
+    const puppeteer = await import('puppeteer');
+    const mod = puppeteer.default || puppeteer;
+    console.log('  Using puppeteer (local Chrome)');
+    return await mod.launch({
+      headless: 'new',
+      args: ['--no-sandbox', '--disable-setuid-sandbox', '--disable-gpu'],
     });
-  } catch {
-    // Fallback: try local Chrome/Chromium
-    console.log('  Using local Chrome (dev mode)');
+  } catch { /* not installed or no Chrome */ }
+
+  // Strategy 2: puppeteer-core with known Chrome paths
+  try {
+    const puppeteerCore = await import('puppeteer-core');
+    const mod = puppeteerCore.default || puppeteerCore;
     const possiblePaths = [
-      // macOS
       '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome',
       '/Applications/Chromium.app/Contents/MacOS/Chromium',
-      // Linux
       '/usr/bin/google-chrome',
       '/usr/bin/chromium-browser',
       '/usr/bin/chromium',
     ];
 
-    let execPath = null;
-    for (const p of possiblePaths) {
+    for (const execPath of possiblePaths) {
       try {
-        await fs.access(p);
-        execPath = p;
-        break;
-      } catch { /* skip */ }
-    }
-
-    if (!execPath) {
-      // Last resort: try regular puppeteer
-      try {
-        const puppeteer = await import('puppeteer');
-        const puppeteerMod = puppeteer.default || puppeteer;
-        return await puppeteerMod.launch({
+        await fs.access(execPath);
+        console.log(`  Using Chrome at ${execPath}`);
+        return await mod.launch({
+          executablePath: execPath,
           headless: 'new',
           args: ['--no-sandbox', '--disable-setuid-sandbox', '--disable-gpu'],
         });
-      } catch {
-        throw new Error('No Chrome/Chromium found. Install @sparticuz/chromium or puppeteer.');
-      }
+      } catch { /* try next */ }
     }
+  } catch { /* puppeteer-core not installed */ }
 
-    return await puppeteerCore.launch({
-      executablePath: execPath,
-      headless: 'new',
-      args: ['--no-sandbox', '--disable-setuid-sandbox', '--disable-gpu'],
-    });
-  }
+  return null; // No browser available
 }
 
 /** Pre-render a single route and save the HTML */
@@ -172,8 +157,16 @@ async function renderRoute(browser, route) {
 async function main() {
   console.log(`\n🚀 Pre-rendering ${ROUTES.length} routes...\n`);
 
-  const server = await startServer();
   const browser = await launchBrowser();
+
+  if (!browser) {
+    console.log('  ⚠️  No Chrome/Chromium found — skipping pre-rendering.');
+    console.log('  💡 Run "npm run prerender" locally on Mac to generate pre-rendered pages.');
+    console.log('  ℹ️  The site will work as a normal SPA without pre-rendering.\n');
+    process.exit(0); // Exit gracefully — build succeeds
+  }
+
+  const server = await startServer();
 
   for (const route of ROUTES) {
     await renderRoute(browser, route);
