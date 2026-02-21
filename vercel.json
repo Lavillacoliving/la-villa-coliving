@@ -13,7 +13,23 @@
     {"source": "/leloft", "destination": "/prerendered/leloft.html"},
     {"source": "/lelodge", "destination": "/prerendered/lelodge.html"},
     {"source": "/investisseurs", "destination": "/prerendered/investisseurs.html"},
-    {"source": "/(.*)", "destination": "/index.html"}
+    {"source": "/blog/vie-communautaire-coliving-temoignages", "destination": "/prerendered/blog-vie-communautaire-coliving-temoignages.html"},
+    {"source": "/blog/transport-annemasse-geneve-leman-express", "destination": "/prerendered/blog-transport-annemasse-geneve-leman-express.html"},
+    {"source": "/blog/avantages-coliving-jeunes-professionnels", "destination": "/prerendered/blog-avantages-coliving-jeunes-professionnels.html"},
+    {"source": "/blog/colocation-annemasse-ville-la-grand-ambilly", "destination": "/prerendered/blog-colocation-annemasse-ville-la-grand-ambilly.html"},
+    {"source": "/blog/demenager-geneve-frontalier-checklist", "destination": "/prerendered/blog-demenager-geneve-frontalier-checklist.html"},
+    {"source": "/blog/loyer-frontalier-geneve-combien-payer", "destination": "/prerendered/blog-loyer-frontalier-geneve-combien-payer.html"},
+    {"source": "/blog/coliving-vs-colocation-differences", "destination": "/prerendered/blog-coliving-vs-colocation-differences.html"},
+    {"source": "/blog/chambre-meublee-annemasse-geneve", "destination": "/prerendered/blog-chambre-meublee-annemasse-geneve.html"},
+    {"source": "/blog/grand-geneve-2026-nouveautes-frontaliers", "destination": "/prerendered/blog-grand-geneve-2026-nouveautes-frontaliers.html"},
+    {"source": "/blog/geneve-sans-voiture-mobilite-douce-frontaliers", "destination": "/prerendered/blog-geneve-sans-voiture-mobilite-douce-frontaliers.html"},
+    {"source": "/blog/budget-colocation-geneve-guide-complet", "destination": "/prerendered/blog-budget-colocation-geneve-guide-complet.html"},
+    {"source": "/blog/5-erreurs-logement-frontalier-geneve", "destination": "/prerendered/blog-5-erreurs-logement-frontalier-geneve.html"},
+    {"source": "/blog/meilleurs-quartiers-frontaliers-geneve", "destination": "/prerendered/blog-meilleurs-quartiers-frontaliers-geneve.html"},
+    {"source": "/blog/colocation-expats-geneve-guide", "destination": "/prerendered/blog-colocation-expats-geneve-guide.html"},
+    {"source": "/blog/living-in-france-working-in-geneva", "destination": "/prerendered/blog-living-in-france-working-in-geneva.html"},
+    {"source": "/blog/what-is-coliving-and-why-it-matters", "destination": "/prerendered/blog-what-is-coliving-and-why-it-matters.html"},
+    {"source": "/(.*)", "destination": "/_spa.html"}
   ],
   "redirects": [
     {

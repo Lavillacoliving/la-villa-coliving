@@ -1,23 +1,25 @@
 /**
  * Post-build injection script for pre-rendered pages
  *
- * Problem: Pre-rendered HTML files (generated locally by Puppeteer) contain
- * script/link tags referencing asset hashes from the LOCAL build. If Vercel's
- * build produces different hashes, those references break.
+ * Runs after "vite build" as part of the Vercel deploy pipeline.
+ * No Chrome/Puppeteer needed — pure file manipulation.
  *
- * Solution: After vite build, this script:
+ * What it does:
  * 1. Reads dist/index.html (has correct asset references for THIS build)
  * 2. For each pre-rendered file in dist/prerendered/:
- *    - Extracts the content inside <div id="root">...</div>
- *    - Extracts page-specific <title> and <meta description>
- *    - Injects both into a fresh copy of dist/index.html
+ *    - Extracts the #root innerHTML and page-specific meta tags
+ *    - Injects them into a fresh copy of dist/index.html
  *    - Overwrites the file with the corrected version
+ * 3. Renames dist/index.html → dist/_spa.html so Vercel's static file
+ *    matching doesn't bypass the "/" rewrite (which should serve the
+ *    pre-rendered homepage, not the empty SPA shell)
  *
- * This ensures pre-rendered pages ALWAYS have correct asset references,
- * regardless of which machine built them.
- *
- * USAGE: Runs automatically as part of "npm run build"
- *        No Chrome/Puppeteer needed — pure file manipulation.
+ * Why step 3 matters:
+ * Vercel serves static files BEFORE processing rewrites. Without renaming,
+ * dist/index.html matches "/" directly, bypassing the rewrite to
+ * /prerendered/index.html. Renaming to _spa.html forces Vercel to use
+ * the rewrite rules for "/" while the catch-all "/(.*)" → "/_spa.html"
+ * still serves the SPA shell for non-pre-rendered routes (dashboard, etc.).
  */
 
 import fs from 'fs/promises';
@@ -58,12 +60,13 @@ function extractRootContent(html) {
 }
 
 async function main() {
-  console.log('\n🔧 Injecting pre-rendered content into dist/index.html shell...\n');
+  console.log('\n🔧 Post-build: injecting pre-rendered content...\n');
 
   // Read the built index.html (has correct asset references)
+  const indexPath = path.join(DIST_DIR, 'index.html');
   let indexHtml;
   try {
-    indexHtml = await fs.readFile(path.join(DIST_DIR, 'index.html'), 'utf-8');
+    indexHtml = await fs.readFile(indexPath, 'utf-8');
   } catch {
     console.log('  ⚠️  dist/index.html not found — skipping injection.');
     process.exit(0);
@@ -74,6 +77,9 @@ async function main() {
     await fs.access(PRERENDERED_DIR);
   } catch {
     console.log('  ⚠️  No dist/prerendered/ directory — skipping injection.');
+    // Still rename index.html to _spa.html for consistency
+    await fs.rename(indexPath, path.join(DIST_DIR, '_spa.html'));
+    console.log('  📦 Renamed dist/index.html → dist/_spa.html');
     process.exit(0);
   }
 
@@ -81,7 +87,9 @@ async function main() {
   const htmlFiles = files.filter(f => f.endsWith('.html'));
 
   if (htmlFiles.length === 0) {
-    console.log('  ⚠️  No pre-rendered HTML files found — skipping.');
+    console.log('  ⚠️  No pre-rendered HTML files found — skipping injection.');
+    await fs.rename(indexPath, path.join(DIST_DIR, '_spa.html'));
+    console.log('  📦 Renamed dist/index.html → dist/_spa.html');
     process.exit(0);
   }
 
@@ -106,6 +114,10 @@ async function main() {
     const descMatch = prerenderedHtml.match(/<meta\s+name="description"\s+content="([^"]*)"/);
     const description = descMatch ? descMatch[1] : null;
 
+    // Extract page-specific OG tags
+    const ogTitleMatch = prerenderedHtml.match(/<meta\s+property="og:title"\s+content="([^"]*)"/);
+    const ogDescMatch = prerenderedHtml.match(/<meta\s+property="og:description"\s+content="([^"]*)"/);
+
     // Start with a fresh copy of index.html (correct asset references)
     let result = indexHtml;
 
@@ -128,14 +140,35 @@ async function main() {
       );
     }
 
+    // Replace OG tags if available
+    if (ogTitleMatch) {
+      result = result.replace(
+        /<meta\s+property="og:title"\s+content="[^"]*"/,
+        `<meta property="og:title" content="${ogTitleMatch[1]}"`
+      );
+    }
+    if (ogDescMatch) {
+      result = result.replace(
+        /<meta\s+property="og:description"\s+content="[^"]*"/,
+        `<meta property="og:description" content="${ogDescMatch[1]}"`
+      );
+    }
+
     // Overwrite the file with the corrected version
     await fs.writeFile(filePath, result, 'utf-8');
 
     const textContent = rootContent.replace(/<[^>]*>/g, ' ').replace(/\s+/g, ' ');
     const wordCount = textContent.split(' ').filter(w => w.length > 2).length;
-    console.log(`  ✅ ${file} → ${wordCount} words (assets from current build)`);
+    console.log(`  ✅ ${file} → ${wordCount} words injected`);
     successCount++;
   }
+
+  // CRITICAL: Rename dist/index.html → dist/_spa.html
+  // This prevents Vercel from serving the empty SPA shell for "/"
+  // (Vercel serves static files BEFORE processing rewrites)
+  await fs.rename(indexPath, path.join(DIST_DIR, '_spa.html'));
+  console.log(`\n  📦 Renamed dist/index.html → dist/_spa.html`);
+  console.log(`     (forces Vercel to use rewrite "/" → "/prerendered/index.html")`);
 
   console.log(`\n🎉 Injection complete! ${successCount}/${htmlFiles.length} pages updated.\n`);
 }

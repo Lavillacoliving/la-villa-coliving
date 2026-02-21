@@ -24,7 +24,7 @@ const OUTPUT_DIR = path.join(__dirname, '..', 'public', 'prerendered');
 const PORT = 3456;
 const BASE_URL = `http://localhost:${PORT}`;
 
-// Static pages to pre-render (dashboard/portail/blog-posts excluded)
+// Static pages to pre-render
 const ROUTES = [
   '/',
   '/colocation-geneve',
@@ -39,6 +39,28 @@ const ROUTES = [
   '/leloft',
   '/lelodge',
   '/investisseurs',
+];
+
+// Blog articles to pre-render (add new slugs here when publishing new articles)
+// NOTE: When a new blog post is published via n8n pipeline, add its slug here
+// and in vercel.json, then re-run: npm run build:local && git add/commit/push
+const BLOG_ROUTES = [
+  '/blog/vie-communautaire-coliving-temoignages',
+  '/blog/transport-annemasse-geneve-leman-express',
+  '/blog/avantages-coliving-jeunes-professionnels',
+  '/blog/colocation-annemasse-ville-la-grand-ambilly',
+  '/blog/demenager-geneve-frontalier-checklist',
+  '/blog/loyer-frontalier-geneve-combien-payer',
+  '/blog/coliving-vs-colocation-differences',
+  '/blog/chambre-meublee-annemasse-geneve',
+  '/blog/grand-geneve-2026-nouveautes-frontaliers',
+  '/blog/geneve-sans-voiture-mobilite-douce-frontaliers',
+  '/blog/budget-colocation-geneve-guide-complet',
+  '/blog/5-erreurs-logement-frontalier-geneve',
+  '/blog/meilleurs-quartiers-frontaliers-geneve',
+  '/blog/colocation-expats-geneve-guide',
+  '/blog/living-in-france-working-in-geneva',
+  '/blog/what-is-coliving-and-why-it-matters',
 ];
 
 /** Serve dist/ with SPA fallback (like Vercel does) */
@@ -156,7 +178,8 @@ async function renderRoute(browser, route) {
 }
 
 async function main() {
-  console.log(`\n🚀 Pre-rendering ${ROUTES.length} routes...\n`);
+  const allRoutes = [...ROUTES, ...BLOG_ROUTES];
+  console.log(`\n🚀 Pre-rendering ${allRoutes.length} routes (${ROUTES.length} static + ${BLOG_ROUTES.length} blog)...\n`);
 
   const browser = await launchBrowser();
 
@@ -169,14 +192,14 @@ async function main() {
 
   const server = await startServer();
 
-  for (const route of ROUTES) {
+  for (const route of allRoutes) {
     await renderRoute(browser, route);
   }
 
   await browser.close();
   server.close();
 
-  console.log(`\n🎉 Pre-rendering complete! All ${ROUTES.length} pages saved to public/prerendered/`);
+  console.log(`\n🎉 Pre-rendering complete! All ${allRoutes.length} pages saved to public/prerendered/`);
   console.log(`  💡 Commit these files to git so Vercel serves them to crawlers.\n`);
 }
 
