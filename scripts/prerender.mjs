@@ -5,10 +5,13 @@
  * so crawlers (Google, GPTBot, ClaudeBot) can read the content
  * without executing JavaScript.
  *
+ * Uses @sparticuz/chromium in CI/Vercel (no system Chrome needed)
+ * and falls back to regular puppeteer locally.
+ *
  * Usage: node scripts/prerender.mjs (called automatically after vite build)
  */
 
-import puppeteer from 'puppeteer';
+import puppeteerCore from 'puppeteer-core';
 import fs from 'fs/promises';
 import path from 'path';
 import { fileURLToPath } from 'url';
@@ -51,14 +54,12 @@ function startServer() {
       const ext = path.extname(url);
 
       try {
-        // Try the exact path first, then path/index.html
         let data;
         try {
           const stat = await fs.stat(filePath);
           if (stat.isDirectory()) filePath = path.join(filePath, 'index.html');
           data = await fs.readFile(filePath);
         } catch {
-          // SPA fallback for routes without extensions
           if (!ext) {
             data = await fs.readFile(path.join(DIST_DIR, 'index.html'));
           } else {
@@ -80,6 +81,63 @@ function startServer() {
   });
 }
 
+/** Get browser instance — @sparticuz/chromium for CI, local Chrome for dev */
+async function launchBrowser() {
+  try {
+    // Try @sparticuz/chromium first (works in Vercel/Lambda/CI)
+    const chromium = await import('@sparticuz/chromium');
+    const chromiumMod = chromium.default || chromium;
+    console.log('  Using @sparticuz/chromium (CI mode)');
+    return await puppeteerCore.launch({
+      args: chromiumMod.args,
+      defaultViewport: chromiumMod.defaultViewport,
+      executablePath: await chromiumMod.executablePath(),
+      headless: chromiumMod.headless ?? 'new',
+    });
+  } catch {
+    // Fallback: try local Chrome/Chromium
+    console.log('  Using local Chrome (dev mode)');
+    const possiblePaths = [
+      // macOS
+      '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome',
+      '/Applications/Chromium.app/Contents/MacOS/Chromium',
+      // Linux
+      '/usr/bin/google-chrome',
+      '/usr/bin/chromium-browser',
+      '/usr/bin/chromium',
+    ];
+
+    let execPath = null;
+    for (const p of possiblePaths) {
+      try {
+        await fs.access(p);
+        execPath = p;
+        break;
+      } catch { /* skip */ }
+    }
+
+    if (!execPath) {
+      // Last resort: try regular puppeteer
+      try {
+        const puppeteer = await import('puppeteer');
+        const puppeteerMod = puppeteer.default || puppeteer;
+        return await puppeteerMod.launch({
+          headless: 'new',
+          args: ['--no-sandbox', '--disable-setuid-sandbox', '--disable-gpu'],
+        });
+      } catch {
+        throw new Error('No Chrome/Chromium found. Install @sparticuz/chromium or puppeteer.');
+      }
+    }
+
+    return await puppeteerCore.launch({
+      executablePath: execPath,
+      headless: 'new',
+      args: ['--no-sandbox', '--disable-setuid-sandbox', '--disable-gpu'],
+    });
+  }
+}
+
 /** Pre-render a single route and save the HTML */
 async function renderRoute(browser, route) {
   const page = await browser.newPage();
@@ -92,10 +150,8 @@ async function renderRoute(browser, route) {
     // Give React + react-helmet a moment to finish
     await new Promise(r => setTimeout(r, 1500));
 
-    // page.content() returns the FULL rendered DOM including react-helmet tags
     const html = await page.content();
 
-    // Write to dist/route/index.html (or dist/index.html for /)
     const outputPath = route === '/'
       ? path.join(DIST_DIR, 'index.html')
       : path.join(DIST_DIR, route, 'index.html');
@@ -103,7 +159,6 @@ async function renderRoute(browser, route) {
     await fs.mkdir(path.dirname(outputPath), { recursive: true });
     await fs.writeFile(outputPath, html, 'utf-8');
 
-    // Quick sanity check: count words in rendered HTML
     const textContent = html.replace(/<[^>]*>/g, ' ').replace(/\s+/g, ' ');
     const wordCount = textContent.split(' ').filter(w => w.length > 2).length;
     console.log(`  ✅ ${route} → ${wordCount} words`);
@@ -118,11 +173,7 @@ async function main() {
   console.log(`\n🚀 Pre-rendering ${ROUTES.length} routes...\n`);
 
   const server = await startServer();
-
-  const browser = await puppeteer.launch({
-    headless: 'new',
-    args: ['--no-sandbox', '--disable-setuid-sandbox', '--disable-gpu'],
-  });
+  const browser = await launchBrowser();
 
   for (const route of ROUTES) {
     await renderRoute(browser, route);
