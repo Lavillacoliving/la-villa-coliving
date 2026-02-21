@@ -1312,7 +1312,8 @@ function getHousesData(lang: string): Record<string, HouseData> {
 
 export function HouseDetailPage() {
   const location = useLocation();
-  const id = location.pathname.replace("/", "");
+  // Extract house ID from path: /lavilla → "lavilla", /en/lavilla → "lavilla"
+  const id = location.pathname.split('/').filter(Boolean).pop() || "";
   const { t, language } = useLanguage();
 
   const housesData = getHousesData(language);
