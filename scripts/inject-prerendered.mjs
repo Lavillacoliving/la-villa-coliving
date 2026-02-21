@@ -64,12 +64,17 @@ function extractSeoTags(html) {
 
   const seo = {};
 
-  // Title
-  const titleMatch = head.match(/<title>(.*?)<\/title>/);
-  if (titleMatch) seo.title = titleMatch[1];
+  // Title — take the LAST <title> (React-Helmet's specific one overrides the Vite default)
+  // React-Helmet adds data-react-helmet="true" attribute, so we match <title[^>]*>
+  const titlePattern = /<title[^>]*>(.*?)<\/title>/g;
+  let titleMatch;
+  while ((titleMatch = titlePattern.exec(head)) !== null) {
+    seo.title = titleMatch[1]; // last one wins (React-Helmet's specific title)
+  }
 
   // Meta name tags (description, keywords, robots, author, language)
-  const metaNamePattern = /<meta\s+name="([^"]+)"\s+content="([^"]*)"\s*\/?>/g;
+  // [^>]* before > handles extra attributes like data-react-helmet="true"
+  const metaNamePattern = /<meta\s+name="([^"]+)"\s+content="([^"]*)"[^>]*>/g;
   seo.metaName = {};
   let m;
   while ((m = metaNamePattern.exec(head)) !== null) {
@@ -81,7 +86,8 @@ function extractSeoTags(html) {
   if (canonicalMatch) seo.canonical = canonicalMatch[1];
 
   // Meta property tags (OG + Twitter)
-  const metaPropPattern = /<meta\s+property="([^"]+)"\s+content="([^"]*)"\s*\/?>/g;
+  // [^>]* before > handles extra attributes like data-react-helmet="true"
+  const metaPropPattern = /<meta\s+property="([^"]+)"\s+content="([^"]*)"[^>]*>/g;
   seo.metaProperty = {};
   while ((m = metaPropPattern.exec(head)) !== null) {
     seo.metaProperty[m[1]] = m[2];
@@ -104,7 +110,8 @@ function extractSeoTags(html) {
   }
 
   // Hreflang links
-  const hreflangPattern = /<link\s+rel="alternate"\s+hrefLang="([^"]+)"\s+href="([^"]*)"\s*\/?>/g;
+  // [^>]* before > handles extra attributes like data-react-helmet="true"
+  const hreflangPattern = /<link\s+rel="alternate"\s+hrefLang="([^"]+)"\s+href="([^"]*)"[^>]*>/g;
   seo.hreflang = [];
   while ((m = hreflangPattern.exec(head)) !== null) {
     seo.hreflang.push({ lang: m[1], href: m[2] });
@@ -273,14 +280,14 @@ async function main() {
 
     // 2. Replace title if page has a specific one
     if (seo.title) {
-      result = result.replace(/<title>.*?<\/title>/, `<title>${seo.title}</title>`);
+      result = result.replace(/<title[^>]*>.*?<\/title>/, `<title>${seo.title}</title>`);
     }
 
     // 3. Replace meta description if page has a specific one
     if (seo.metaName?.description) {
       result = result.replace(
-        /<meta\s+name="description"\s+content="[^"]*"/,
-        `<meta name="description" content="${seo.metaName.description}"`
+        /<meta\s+name="description"\s+content="[^"]*"[^>]*>/,
+        `<meta name="description" content="${seo.metaName.description}" />`
       );
     }
 
