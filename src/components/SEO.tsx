@@ -53,9 +53,19 @@ export function SEO({
       <link rel="canonical" href={url} />
 
       {/* Hreflang tags pour le SEO multilingue */}
-      <link rel="alternate" hrefLang="en" href={url} />
-      <link rel="alternate" hrefLang="fr" href={url} />
-      <link rel="alternate" hrefLang="x-default" href={url} />
+      {(() => {
+        const base = "https://www.lavillacoliving.com";
+        const path = url.replace(base, "") || "/";
+        const frUrl = path.startsWith("/en") ? `${base}${path.replace(/^\/en(\/|$)/, "$1") || "/"}` : url;
+        const enUrl = path.startsWith("/en") ? url : `${base}/en${path === "/" ? "" : path}`;
+        return (
+          <>
+            <link rel="alternate" hrefLang="fr" href={frUrl} />
+            <link rel="alternate" hrefLang="en" href={enUrl} />
+            <link rel="alternate" hrefLang="x-default" href={frUrl} />
+          </>
+        );
+      })()}
 
       {/* Open Graph / Facebook */}
       <meta property="og:type" content={type} />
