@@ -148,7 +148,7 @@ export function ColocationGenevePage() {
               {language === "en" ? "houses" : "maisons"}
             </span>
             <span className="flex items-center gap-2">
-              <Clock className="w-4 h-4" /> 15 min{" "}
+              <Clock className="w-4 h-4" /> 20 min{" "}
               {language === "en" ? "from Geneva" : "de Genève"}
             </span>
             <span className="flex items-center gap-2">
@@ -236,7 +236,7 @@ export function ColocationGenevePage() {
             <div className="bg-[#FAF9F6] p-8">
               <Train className="w-8 h-8 text-[#D4A574] mb-4" />
               <h3 className="text-xl font-medium text-[#1C1917] mb-3">
-                {language === "en" ? "15 min from Geneva Centre" : "15 min du Centre de Genève"}
+                {language === "en" ? "20 min from Geneva Centre" : "20 min du Centre de Genève"}
               </h3>
               <p className="text-[#57534E] leading-relaxed mb-4">
                 {language === "en"
