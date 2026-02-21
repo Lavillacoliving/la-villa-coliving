@@ -1,0 +1,66 @@
+# Auto pre-render pipeline for La Villa Coliving
+#
+# Triggers:
+# 1. repository_dispatch from n8n (after blog approval) — immediate
+# 2. Daily schedule at 6h UTC (7h Paris) — safety net
+# 3. Manual from GitHub UI — troubleshooting
+#
+# What it does:
+# - Fetches published blog slugs from Supabase
+# - Updates vercel.json with blog rewrites
+# - Pre-renders all pages (static + blog) with Puppeteer
+# - Injects content into index.html shell
+# - Commits and pushes → triggers Vercel auto-deploy
+#
+# Cost: $0 (GitHub Actions is free for public repos, 2000 min/month for private)
+
+name: Pre-render & Deploy
+
+on:
+  repository_dispatch:
+    types: [prerender]
+  schedule:
+    - cron: '0 6 * * *'
+  workflow_dispatch:
+
+jobs:
+  prerender:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build site
+        run: npx tsc -b && npx vite build
+
+      - name: Pre-render all pages (Supabase sync + Puppeteer)
+        run: node scripts/prerender.mjs
+
+      - name: Inject pre-rendered content into build
+        run: node scripts/inject-prerendered.mjs
+
+      - name: Commit and push if changes
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add public/prerendered/ vercel.json
+          if git diff --staged --quiet; then
+            echo "✅ No changes — pre-rendered pages are up to date"
+          else
+            BLOG_COUNT=$(ls public/prerendered/blog-*.html 2>/dev/null | wc -l)
+            STATIC_COUNT=$(ls public/prerendered/*.html 2>/dev/null | wc -l)
+            git commit -m "auto-update pre-rendered pages (${STATIC_COUNT} pages, ${BLOG_COUNT} blog articles)"
+            git push
+            echo "🚀 Pushed — Vercel will auto-deploy"
+          fi

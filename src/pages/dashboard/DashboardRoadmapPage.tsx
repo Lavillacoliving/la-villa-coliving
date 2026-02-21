@@ -64,7 +64,7 @@ const DOMAINS: Domain[] = [
   {id:'d6',name:'Infrastructure technique',icon:'\u2699\ufe0f',tasks:[
     {id:'6.1',name:'Dashboard → One Stop Shop (7 onglets)',state:'green',priority:'P1',phase:'phase-1b',status:'completed',doc:'React 7 onglets + export Excel'},
     {id:'6.2',name:'VPS (scripts+crons)',state:'green',priority:'P2',phase:'phase-1b',status:'completed',doc:'VPS Hostinger operationnel'},
-    {id:'6.3',name:'Site web',state:'yellow',priority:'P3',phase:'phase-3',status:'in_progress',doc:'SEO meta tags'},
+    {id:'6.3',name:'Site web SEO + pre-rendering',state:'yellow',priority:'P2',phase:'phase-2',status:'in_progress',doc:'Code splitting, pre-rendering 13 pages, schema.org, maillage blog, textes GBP prêts'},
     {id:'6.4',name:'Backups et sécurité',state:'green',priority:'P2',phase:'phase-2',status:'completed',doc:'VPS scripts fixes post-D3'},
     {id:'6.5',name:'Site web → Supabase SoT',state:'green',priority:'P2',phase:'phase-2',status:'completed',doc:'hooks+FAQ+RLS'},
     {id:'6.6',name:'Fusion 2 Supabase → 1',state:'green',priority:'P1',phase:'phase-1b',status:'completed',doc:'FAIT - Supabase unifie'},
