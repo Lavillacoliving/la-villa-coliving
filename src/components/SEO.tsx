@@ -15,7 +15,7 @@ export function SEO({
   title,
   description,
   image = "https://www.lavillacoliving.com/images/la villa jardin.webp",
-  url = "https://www.lavillacoliving.com",
+  url: _url, // kept for backward compat — canonical is now computed from useLocation()
   type = "website",
   jsonLd,
 }: SEOProps) {
