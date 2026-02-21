@@ -12,13 +12,33 @@
       "permanent": true
     },
     {
+      "source": "/the-coliving",
+      "destination": "/le-coliving",
+      "permanent": true
+    },
+    {
+      "source": "/our-houses",
+      "destination": "/nos-maisons",
+      "permanent": true
+    },
+    {
+      "source": "/rates",
+      "destination": "/tarifs",
+      "permanent": true
+    },
+    {
+      "source": "/join-us",
+      "destination": "/candidature",
+      "permanent": true
+    },
+    {
       "source": "/fr/rates",
-      "destination": "/rates",
+      "destination": "/tarifs",
       "permanent": true
     },
     {
       "source": "/fr/our-houses",
-      "destination": "/our-houses",
+      "destination": "/nos-maisons",
       "permanent": true
     },
     {
@@ -28,12 +48,12 @@
     },
     {
       "source": "/fr/join-us",
-      "destination": "/join-us",
+      "destination": "/candidature",
       "permanent": true
     },
     {
       "source": "/fr/the-coliving",
-      "destination": "/the-coliving",
+      "destination": "/le-coliving",
       "permanent": true
     },
     {
@@ -63,12 +83,12 @@
     },
     {
       "source": "/community",
-      "destination": "/the-coliving",
+      "destination": "/le-coliving",
       "permanent": true
     },
     {
       "source": "/location",
-      "destination": "/our-houses",
+      "destination": "/nos-maisons",
       "permanent": true
     },
     {
@@ -98,7 +118,7 @@
     },
     {
       "source": "/apply",
-      "destination": "/join-us",
+      "destination": "/candidature",
       "permanent": true
     },
     {
@@ -148,17 +168,17 @@
     },
     {
       "source": "/understandtheprices",
-      "destination": "/rates",
+      "destination": "/tarifs",
       "permanent": true
     },
     {
       "source": "/fr/thebigcolivingguide",
-      "destination": "/the-coliving",
+      "destination": "/le-coliving",
       "permanent": true
     },
     {
       "source": "/fr/definingcoliving",
-      "destination": "/the-coliving",
+      "destination": "/le-coliving",
       "permanent": true
     },
     {
@@ -168,12 +188,12 @@
     },
     {
       "source": "/fr/product-page/:slug",
-      "destination": "/rates",
+      "destination": "/tarifs",
       "permanent": true
     },
     {
       "source": "/product-page/:slug",
-      "destination": "/rates",
+      "destination": "/tarifs",
       "permanent": true
     }
   ],

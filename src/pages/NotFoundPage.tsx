@@ -41,7 +41,7 @@ export function NotFoundPage() {
               {language === "en" ? "Back to Home" : "Retour \u00e0 l'accueil"}
             </Link>
             <Link
-              to="/our-houses"
+              to="/nos-maisons"
               className="inline-flex items-center gap-2 px-6 py-3 border-2 border-[#E7E5E4] text-[#1C1917] font-medium rounded-lg hover:border-[#44403C] transition-colors"
             >
               <ArrowLeft size={18} />

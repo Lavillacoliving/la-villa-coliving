@@ -74,7 +74,7 @@ export function HeroV7() {
           {/* CTAs */}
           <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3 sm:gap-4 mb-12 md:mb-14">
             <Link
-              to="/our-houses"
+              to="/nos-maisons"
               className="inline-flex items-center gap-2 bg-white text-[#1C1917] px-7 py-3.5 rounded-lg font-semibold text-[15px] hover:shadow-lg hover:translate-y-[-1px] transition-all duration-300 focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-[#1C1917] w-full sm:w-auto justify-center sm:justify-start"
             >
               {language === "en" ? "Explore our houses" : "Découvrir nos maisons"}

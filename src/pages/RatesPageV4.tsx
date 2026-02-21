@@ -190,7 +190,7 @@ export function RatesPageV4() {
         description={language === "en"
           ? "Transparent all-inclusive coliving pricing near Geneva from 1,380 CHF/month. Rent, utilities, gym, pool, sauna, yoga, internet, cleaning — everything included. Compare with Geneva studios."
           : "Tarifs colocation tout inclus près de Genève dès 1 380 CHF/mois. Loyer, charges, gym, piscine, sauna, yoga, internet, ménage — tout compris. Comparez avec les studios à Genève."}
-        url="https://www.lavillacoliving.com/rates"
+        url="https://www.lavillacoliving.com/tarifs"
       />
       {/* Hero */}
       <section className="py-24 lg:py-32 bg-white">
@@ -751,7 +751,7 @@ export function RatesPageV4() {
               : `Économisez ${monthlySavings} CHF/mois et rejoignez 100+ colivers heureux. Places limitées pour le Printemps 2026.`}
           </p>
           <Link
-            to="/join-us"
+            to="/candidature"
             className="inline-flex items-center gap-2 px-8 py-4 bg-white text-[#D4A574] font-bold hover:bg-[#1C1917] hover:text-white transition-colors"
           >
             {language === "en" ? "APPLY NOW" : "CANDIDATER"}

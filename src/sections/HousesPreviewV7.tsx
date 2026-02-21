@@ -69,7 +69,7 @@ export function HousesPreviewV7() {
             </h2>
           </div>
           <Link
-            to="/our-houses"
+            to="/nos-maisons"
             className="group mt-6 md:mt-0 inline-flex items-center gap-2 text-[#44403C] font-semibold text-sm hover:gap-3 transition-all duration-300 focus-visible:ring-2 focus-visible:ring-[#44403C] focus-visible:ring-offset-2 rounded-lg"
           >
             {language === "en" ? "See all houses" : "Voir toutes les maisons"}

@@ -47,20 +47,21 @@ function AppLayout() {
         <Routes>
           <Route path="/" element={<HomePage />} />
           <Route path="/colocation-geneve" element={<ColocationGenevePage />} />
-          <Route path="/the-coliving" element={<ColivingPage />} />
+          <Route path="/le-coliving" element={<ColivingPage />} />
           <Route path="/services" element={<ServicesPage />} />
-          <Route path="/our-houses" element={<HousesPage />} />
-          <Route path="/rates" element={<RatesPage />} />
+          <Route path="/nos-maisons" element={<HousesPage />} />
+          <Route path="/tarifs" element={<RatesPage />} />
           <Route path="/faq" element={<FAQPage />} />
-          <Route path="/join-us" element={<JoinPage />} />
+          <Route path="/candidature" element={<JoinPage />} />
           <Route path="/blog" element={<BlogPage />} />
           <Route path="/blog/:slug" element={<BlogPostPage />} />
-          {/* French URL redirects */}
-          <Route path="/le-coliving" element={<Navigate to="/the-coliving" replace />} />
-          <Route path="/nos-maisons" element={<Navigate to="/our-houses" replace />} />
-          <Route path="/nous-rejoindre" element={<Navigate to="/join-us" replace />} />
           <Route path="/investisseurs" element={<InvestisseursPage />} />
-          <Route path="/tarifs" element={<Navigate to="/rates" replace />} />
+          {/* English URL redirects (301 via React Navigate) */}
+          <Route path="/the-coliving" element={<Navigate to="/le-coliving" replace />} />
+          <Route path="/our-houses" element={<Navigate to="/nos-maisons" replace />} />
+          <Route path="/rates" element={<Navigate to="/tarifs" replace />} />
+          <Route path="/join-us" element={<Navigate to="/candidature" replace />} />
+          <Route path="/nous-rejoindre" element={<Navigate to="/candidature" replace />} />
           <Route path="/lavilla" element={<HouseDetailPage />} />
           <Route path="/leloft" element={<HouseDetailPage />} />
           <Route path="/lelodge" element={<HouseDetailPage />} />

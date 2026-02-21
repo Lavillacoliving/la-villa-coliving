@@ -17,19 +17,19 @@ export function FooterV7() {
       label: language === "en" ? "Shared Housing Geneva" : "Colocation Genève",
     },
     {
-      path: "/the-coliving",
+      path: "/le-coliving",
       label: language === "en" ? "The Coliving" : "Le Coliving",
     },
     {
-      path: "/our-houses",
+      path: "/nos-maisons",
       label: language === "en" ? "Our Houses" : "Nos Maisons",
     },
     { path: "/services", label: language === "en" ? "Services" : "Services" },
-    { path: "/rates", label: language === "en" ? "Rates" : "Tarifs" },
+    { path: "/tarifs", label: language === "en" ? "Rates" : "Tarifs" },
     { path: "/faq", label: "FAQ" },
     {
-      path: "/join-us",
-      label: language === "en" ? "Join us" : "Nous rejoindre",
+      path: "/candidature",
+      label: language === "en" ? "Apply" : "Candidater",
     },
     { path: "/blog", label: "Blog" },
     {
@@ -143,7 +143,7 @@ export function FooterV7() {
 
             {/* CTA */}
             <Link
-              to="/join-us"
+              to="/candidature"
               className="inline-flex items-center gap-2 mt-6 px-5 py-2.5 bg-[#D4A574] text-[#1C1917] text-sm font-semibold rounded-lg hover:bg-[#E0BB8A] transition-all duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#D4A574] focus-visible:ring-offset-2 focus-visible:ring-offset-[#1C1917]"
             >
               {language === "en" ? "Apply now" : "Candidater"}

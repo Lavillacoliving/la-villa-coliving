@@ -123,14 +123,14 @@ export function ColocationGenevePage() {
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Link
-              to="/join-us"
+              to="/candidature"
               className="inline-flex items-center gap-2 bg-[#D4A574] text-white px-8 py-4 text-sm uppercase tracking-wider hover:bg-[#44403C] transition-colors"
             >
               {language === "en" ? "Apply Now" : "Candidater"}
               <ArrowRight className="w-4 h-4" />
             </Link>
             <Link
-              to="/our-houses"
+              to="/nos-maisons"
               className="inline-flex items-center gap-2 border border-[#1C1917] text-[#1C1917] px-8 py-4 text-sm uppercase tracking-wider hover:bg-[#1C1917] hover:text-white transition-colors"
             >
               {language === "en" ? "View Our Houses" : "Voir Nos Maisons"}
@@ -394,7 +394,7 @@ export function ColocationGenevePage() {
 
           <div className="text-center mt-12">
             <Link
-              to="/our-houses"
+              to="/nos-maisons"
               className="inline-flex items-center gap-2 text-[#D4A574] font-medium hover:underline"
             >
               {language === "en" ? "Explore all houses in detail" : "Explorer toutes nos maisons en détail"}
@@ -443,7 +443,7 @@ export function ColocationGenevePage() {
 
           <div className="text-center mt-12">
             <Link
-              to="/rates"
+              to="/tarifs"
               className="inline-flex items-center gap-2 text-[#D4A574] font-medium hover:underline"
             >
               {language === "en" ? "See detailed pricing" : "Voir les tarifs détaillés"}
@@ -615,14 +615,14 @@ export function ColocationGenevePage() {
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Link
-              to="/join-us"
+              to="/candidature"
               className="inline-flex items-center gap-2 bg-[#D4A574] text-white px-8 py-4 text-sm uppercase tracking-wider hover:bg-[#44403C] transition-colors"
             >
               {language === "en" ? "Apply Now" : "Candidater Maintenant"}
               <ArrowRight className="w-4 h-4" />
             </Link>
             <Link
-              to="/rates"
+              to="/tarifs"
               className="inline-flex items-center gap-2 border border-white/30 text-white px-8 py-4 text-sm uppercase tracking-wider hover:bg-white hover:text-[#1C1917] transition-colors"
             >
               {language === "en" ? "View Pricing" : "Voir les Tarifs"}

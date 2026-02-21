@@ -1324,7 +1324,7 @@ export function HouseDetailPage() {
         <div className="container-custom text-center">
           <h1 className="text-4xl mb-4 text-[#1C1917]">House not found</h1>
           <Link
-            to="/our-houses"
+            to="/nos-maisons"
             className="text-[#D4A574] hover:underline font-bold"
           >
             View all houses
@@ -1539,7 +1539,7 @@ export function HouseDetailPage() {
 
                   <div className="flex flex-col gap-3">
                     <Link
-                      to="/join-us"
+                      to="/candidature"
                       className="w-full inline-flex items-center justify-center gap-2 px-6 py-3 bg-[#1C1917] text-white font-semibold rounded-xl hover:bg-[#D4A574] transition-colors"
                     >
                       {house.available
@@ -1548,7 +1548,7 @@ export function HouseDetailPage() {
                       <ArrowRight size={18} />
                     </Link>
                     <Link
-                      to="/rates"
+                      to="/tarifs"
                       className="w-full text-center text-sm text-[#78716C] hover:text-[#1C1917] hover:underline transition-colors mt-1"
                     >
                       {t.houseDetail.checkRates}
@@ -1690,7 +1690,7 @@ export function HouseDetailPage() {
               : "Rejoignez notre communauté sélectionnée et vivez le meilleur du coliving près de Genève."}
           </p>
           <Link
-            to="/join-us"
+            to="/candidature"
             className="inline-flex items-center gap-2 px-8 py-4 bg-white text-[#1C1917] font-bold rounded-full hover:bg-gray-100 transition-colors"
           >
             {t.houseDetail.apply}

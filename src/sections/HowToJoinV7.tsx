@@ -82,7 +82,7 @@ export function HowToJoinV7() {
         {/* CTA */}
         <div className="text-center">
           <Link
-            to="/join-us"
+            to="/candidature"
             className="group inline-flex items-center gap-3 px-8 py-4 bg-[#44403C] text-white font-semibold rounded-lg hover:bg-[#1C1917] transition-all duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#44403C] focus-visible:ring-offset-2"
           >
             {language === 'en' ? 'Apply now' : 'Rejoindre La Villa'}

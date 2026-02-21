@@ -50,7 +50,7 @@ export function ColivingPageV4() {
         description={language === "en"
           ? "Discover premium coliving at La Villa: designer houses, curated community, all-inclusive. Different from traditional shared housing."
           : "Découvrez le coliving premium La Villa : maisons design, communauté sélectionnée, tout inclus. Différent d'une colocation classique."}
-        url="https://www.lavillacoliving.com/the-coliving"
+        url="https://www.lavillacoliving.com/le-coliving"
       />
       {/* Hero avec image de fond */}
       <section className="relative py-24 lg:py-32 overflow-hidden">
@@ -83,7 +83,7 @@ export function ColivingPageV4() {
                 : "Vis l'expérience coliving dans nos maisons magnifiquement designées"}
             </p>
             <Link
-              to="/our-houses"
+              to="/nos-maisons"
               className="inline-flex items-center gap-2 px-8 py-4 bg-white text-[#1C1917] font-bold hover:bg-[#D4A574] hover:text-white transition-colors"
             >
               {language === "en"
@@ -235,7 +235,7 @@ export function ColivingPageV4() {
               </div>
 
               <Link
-                to="/our-houses"
+                to="/nos-maisons"
                 className="inline-flex items-center gap-2 mt-10 px-8 py-4 bg-[#1C1917] text-white font-bold hover:bg-[#D4A574] transition-colors"
               >
                 {language === "en"
@@ -313,7 +313,7 @@ export function ColivingPageV4() {
               </div>
 
               <Link
-                to="/join-us"
+                to="/candidature"
                 className="inline-flex items-center gap-2 text-[#D4A574] font-bold hover:text-[#1C1917] transition-colors"
               >
                 {language === "en"
@@ -367,7 +367,7 @@ export function ColivingPageV4() {
               </div>
 
               <Link
-                to="/join-us"
+                to="/candidature"
                 className="inline-flex items-center gap-2 mt-10 px-8 py-4 bg-[#D4A574] text-white font-bold hover:bg-[#1C1917] transition-colors"
               >
                 {language === "en" ? "Apply Now" : "Candidater"}

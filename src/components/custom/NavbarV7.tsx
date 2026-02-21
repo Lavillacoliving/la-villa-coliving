@@ -25,11 +25,11 @@ export function NavbarV7() {
 
   const navLinks = [
     {
-      path: "/our-houses",
+      path: "/nos-maisons",
       label: language === "en" ? "Our Houses" : "Nos Maisons",
     },
     { path: "/services", label: "Services" },
-    { path: "/rates", label: language === "en" ? "Rates" : "Tarifs" },
+    { path: "/tarifs", label: language === "en" ? "Rates" : "Tarifs" },
     { path: "/blog", label: "Blog" },
   ];
 
@@ -93,7 +93,7 @@ export function NavbarV7() {
             </Link>
             {/* CTA Button */}
             <Link
-              to="/join-us"
+              to="/candidature"
               className="px-6 py-2.5 bg-[#44403C] text-white text-sm font-medium rounded-lg hover:bg-[#57534E] transition-all duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#44403C] focus-visible:ring-offset-2"
             >
               {language === "en" ? "Join us" : "Nous rejoindre"}
@@ -146,7 +146,7 @@ export function NavbarV7() {
                   {language === "en" ? "FR" : "EN"}
                 </button>
                 <Link
-                  to="/join-us"
+                  to="/candidature"
                   onClick={() => setIsMobileMenuOpen(false)}
                   className="flex-1 px-6 py-3 bg-[#44403C] text-white text-center font-medium rounded-lg hover:bg-[#57534E] transition-all duration-300"
                 >

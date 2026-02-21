@@ -12,7 +12,7 @@ export function JoinPageV4() {
         description={language === "en"
           ? "Apply to join La Villa Coliving near Geneva. Simple process, curated community, move in within 2 weeks. Furnished rooms, all-inclusive, ideal for cross-border workers & expats."
           : "Postulez en 2 minutes. Communauté sélectionnée, emménagement en 2 semaines. Chambres meublées tout inclus près de Genève."}
-        url="https://www.lavillacoliving.com/join-us"
+        url="https://www.lavillacoliving.com/candidature"
       />
       {/* Hero */}
       <section className="py-24 lg:py-32 bg-white">

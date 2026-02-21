@@ -129,7 +129,7 @@ export function HousesPageV4() {
         description={language === "en"
           ? "La Villa, Le Loft, Le Lodge — 3 premium houses with pool, sauna & gym. 29 all-inclusive furnished rooms from CHF 1,380/month."
           : "La Villa, Le Loft, Le Lodge — 3 maisons premium avec piscine, sauna et gym. 29 chambres privées tout inclus dès 1 380 CHF/mois."}
-        url="https://www.lavillacoliving.com/our-houses"
+        url="https://www.lavillacoliving.com/nos-maisons"
       />
       {/* Hero */}
       <section className="py-24 lg:py-32 bg-[#F5F2ED]">
@@ -238,7 +238,7 @@ export function HousesPageV4() {
                         <ArrowRight className="w-4 h-4" />
                       </Link>
                       <Link
-                        to="/join-us"
+                        to="/candidature"
                         className="inline-flex items-center justify-center px-5 py-3 border border-[#1C1917] text-[#1C1917] text-sm font-semibold rounded-lg hover:bg-[#1C1917] hover:text-white transition-colors"
                       >
                         {language === "en" ? "Apply" : "Postuler"}
