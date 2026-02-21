@@ -283,6 +283,92 @@ async function cleanupOldFiles(allRoutes) {
   } catch { /* OUTPUT_DIR doesn't exist yet, nothing to clean */ }
 }
 
+
+// ─────────────────────────────────────────────
+// Auto-generate sitemap.xml with all routes + hreflang
+// ─────────────────────────────────────────────
+
+const SITEMAP_PATH = path.join(__dirname, '..', 'public', 'sitemap.xml');
+const SITE_URL = 'https://www.lavillacoliving.com';
+
+// Priority/frequency config for static pages
+const STATIC_PAGE_CONFIG = {
+  '/': { priority: '1.0', changefreq: 'weekly' },
+  '/colocation-geneve': { priority: '0.9', changefreq: 'weekly' },
+  '/le-coliving': { priority: '0.8', changefreq: 'monthly' },
+  '/nos-maisons': { priority: '0.8', changefreq: 'weekly' },
+  '/lavilla': { priority: '0.8', changefreq: 'weekly' },
+  '/leloft': { priority: '0.8', changefreq: 'weekly' },
+  '/lelodge': { priority: '0.8', changefreq: 'weekly' },
+  '/services': { priority: '0.7', changefreq: 'monthly' },
+  '/tarifs': { priority: '0.7', changefreq: 'monthly' },
+  '/faq': { priority: '0.7', changefreq: 'monthly' },
+  '/candidature': { priority: '0.7', changefreq: 'monthly' },
+  '/blog': { priority: '0.7', changefreq: 'weekly' },
+  '/investisseurs': { priority: '0.6', changefreq: 'monthly' },
+};
+
+async function generateSitemap(blogSlugs) {
+  console.log('  🗺️  Generating sitemap.xml...');
+  const today = new Date().toISOString().slice(0, 10);
+
+  function sitemapEntry(frPath, enPath, priority, changefreq, lastmod) {
+    return `  <url>
+    <loc>${SITE_URL}${frPath}</loc>
+    <xhtml:link rel="alternate" hreflang="fr" href="${SITE_URL}${frPath}" />
+    <xhtml:link rel="alternate" hreflang="en" href="${SITE_URL}${enPath}" />
+    <lastmod>${lastmod}</lastmod>
+    <changefreq>${changefreq}</changefreq>
+    <priority>${priority}</priority>
+  </url>`;
+  }
+
+  const entries = [];
+
+  // FR static pages
+  entries.push('  <!-- ═══ STATIC PAGES — FR ═══ -->');
+  for (const route of STATIC_ROUTES_FR) {
+    const config = STATIC_PAGE_CONFIG[route] || { priority: '0.5', changefreq: 'monthly' };
+    const enRoute = route === '/' ? '/en' : `/en${route}`;
+    entries.push(sitemapEntry(route, enRoute, config.priority, config.changefreq, today));
+  }
+
+  // EN static pages (lower priority than FR equivalents)
+  entries.push('\n  <!-- ═══ STATIC PAGES — EN ═══ -->');
+  for (const route of STATIC_ROUTES_FR) {
+    const config = STATIC_PAGE_CONFIG[route] || { priority: '0.5', changefreq: 'monthly' };
+    const enRoute = route === '/' ? '/en' : `/en${route}`;
+    const enPriority = (parseFloat(config.priority) - 0.1).toFixed(1);
+    entries.push(sitemapEntry(enRoute, enRoute, enPriority, config.changefreq, today));
+  }
+
+  // Blog articles (FR + EN) — only FR slugs, we generate both
+  const frBlogSlugs = blogSlugs.filter(s => !s.startsWith('/en/'));
+  if (frBlogSlugs.length > 0) {
+    entries.push('\n  <!-- ═══ BLOG ARTICLES — FR ═══ -->');
+    for (const slug of frBlogSlugs) {
+      const enSlug = `/en${slug}`;
+      entries.push(sitemapEntry(slug, enSlug, '0.6', 'monthly', today));
+    }
+    entries.push('\n  <!-- ═══ BLOG ARTICLES — EN ═══ -->');
+    for (const slug of frBlogSlugs) {
+      const enSlug = `/en${slug}`;
+      entries.push(sitemapEntry(enSlug, enSlug, '0.5', 'monthly', today));
+    }
+  }
+
+  const sitemap = `<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+        xmlns:xhtml="http://www.w3.org/1999/xhtml">
+${entries.join('\n')}
+</urlset>
+`;
+
+  await fs.writeFile(SITEMAP_PATH, sitemap, 'utf-8');
+  const totalUrls = (sitemap.match(/<url>/g) || []).length;
+  console.log(`  ✅ sitemap.xml updated: ${totalUrls} URLs (${STATIC_ROUTES_FR.length} FR static + ${STATIC_ROUTES_FR.length} EN static + ${frBlogSlugs.length * 2} blog)\n`);
+}
+
 // ─────────────────────────────────────────────
 // Main
 // ─────────────────────────────────────────────
@@ -296,6 +382,9 @@ async function main() {
 
   // Step 2: Update vercel.json (always run — EN static routes + blog routes)
   await updateVercelJson(blogRoutes);
+
+  // Step 2b: Generate sitemap.xml with all routes + hreflang
+  await generateSitemap(blogRoutes);
 
   // Step 3: Check for browser
   console.log(`  🔍 Preparing to render ${allRoutes.length} pages (${STATIC_ROUTES_FR.length} FR static + ${STATIC_ROUTES_EN.length} EN static + ${blogRoutes.length} blog)...\n`);
