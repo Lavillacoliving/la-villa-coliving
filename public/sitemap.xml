@@ -1,172 +1,218 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+        xmlns:xhtml="http://www.w3.org/1999/xhtml">
+  <!-- ═══ STATIC PAGES — FR ═══ -->
   <url>
     <loc>https://www.lavillacoliving.com/</loc>
-    <lastmod>2026-02-17</lastmod>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://www.lavillacoliving.com/" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.lavillacoliving.com/en" />
+    <lastmod>2026-02-21</lastmod>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
   </url>
   <url>
     <loc>https://www.lavillacoliving.com/colocation-geneve</loc>
-    <lastmod>2026-02-17</lastmod>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://www.lavillacoliving.com/colocation-geneve" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.lavillacoliving.com/en/colocation-geneve" />
+    <lastmod>2026-02-21</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
     <loc>https://www.lavillacoliving.com/le-coliving</loc>
-    <lastmod>2026-02-17</lastmod>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://www.lavillacoliving.com/le-coliving" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.lavillacoliving.com/en/le-coliving" />
+    <lastmod>2026-02-21</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://www.lavillacoliving.com/nos-maisons</loc>
-    <lastmod>2026-02-17</lastmod>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://www.lavillacoliving.com/nos-maisons" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.lavillacoliving.com/en/nos-maisons" />
+    <lastmod>2026-02-21</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://www.lavillacoliving.com/lavilla</loc>
-    <lastmod>2026-02-17</lastmod>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://www.lavillacoliving.com/lavilla" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.lavillacoliving.com/en/lavilla" />
+    <lastmod>2026-02-21</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://www.lavillacoliving.com/leloft</loc>
-    <lastmod>2026-02-17</lastmod>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://www.lavillacoliving.com/leloft" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.lavillacoliving.com/en/leloft" />
+    <lastmod>2026-02-21</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://www.lavillacoliving.com/lelodge</loc>
-    <lastmod>2026-02-17</lastmod>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://www.lavillacoliving.com/lelodge" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.lavillacoliving.com/en/lelodge" />
+    <lastmod>2026-02-21</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://www.lavillacoliving.com/services</loc>
-    <lastmod>2026-02-17</lastmod>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://www.lavillacoliving.com/services" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.lavillacoliving.com/en/services" />
+    <lastmod>2026-02-21</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
     <loc>https://www.lavillacoliving.com/tarifs</loc>
-    <lastmod>2026-02-17</lastmod>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://www.lavillacoliving.com/tarifs" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.lavillacoliving.com/en/tarifs" />
+    <lastmod>2026-02-21</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
     <loc>https://www.lavillacoliving.com/faq</loc>
-    <lastmod>2026-02-17</lastmod>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://www.lavillacoliving.com/faq" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.lavillacoliving.com/en/faq" />
+    <lastmod>2026-02-21</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
     <loc>https://www.lavillacoliving.com/candidature</loc>
-    <lastmod>2026-02-17</lastmod>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://www.lavillacoliving.com/candidature" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.lavillacoliving.com/en/candidature" />
+    <lastmod>2026-02-21</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
     <loc>https://www.lavillacoliving.com/blog</loc>
-    <lastmod>2026-02-17</lastmod>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://www.lavillacoliving.com/blog" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.lavillacoliving.com/en/blog" />
+    <lastmod>2026-02-21</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
-  <!-- Blog articles -->
   <url>
-    <loc>https://www.lavillacoliving.com/blog/budget-colocation-geneve-guide-complet</loc>
-    <lastmod>2026-02-17</lastmod>
+    <loc>https://www.lavillacoliving.com/investisseurs</loc>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://www.lavillacoliving.com/investisseurs" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.lavillacoliving.com/en/investisseurs" />
+    <lastmod>2026-02-21</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+
+  <!-- ═══ STATIC PAGES — EN ═══ -->
+  <url>
+    <loc>https://www.lavillacoliving.com/en</loc>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://www.lavillacoliving.com/" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.lavillacoliving.com/en" />
+    <lastmod>2026-02-21</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://www.lavillacoliving.com/en/colocation-geneve</loc>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://www.lavillacoliving.com/colocation-geneve" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.lavillacoliving.com/en/colocation-geneve" />
+    <lastmod>2026-02-21</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://www.lavillacoliving.com/en/le-coliving</loc>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://www.lavillacoliving.com/le-coliving" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.lavillacoliving.com/en/le-coliving" />
+    <lastmod>2026-02-21</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://www.lavillacoliving.com/en/nos-maisons</loc>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://www.lavillacoliving.com/nos-maisons" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.lavillacoliving.com/en/nos-maisons" />
+    <lastmod>2026-02-21</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://www.lavillacoliving.com/en/lavilla</loc>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://www.lavillacoliving.com/lavilla" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.lavillacoliving.com/en/lavilla" />
+    <lastmod>2026-02-21</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://www.lavillacoliving.com/en/leloft</loc>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://www.lavillacoliving.com/leloft" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.lavillacoliving.com/en/leloft" />
+    <lastmod>2026-02-21</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://www.lavillacoliving.com/en/lelodge</loc>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://www.lavillacoliving.com/lelodge" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.lavillacoliving.com/en/lelodge" />
+    <lastmod>2026-02-21</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://www.lavillacoliving.com/en/services</loc>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://www.lavillacoliving.com/services" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.lavillacoliving.com/en/services" />
+    <lastmod>2026-02-21</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://www.lavillacoliving.com/blog/meilleurs-quartiers-frontaliers-geneve</loc>
-    <lastmod>2026-02-15</lastmod>
+    <loc>https://www.lavillacoliving.com/en/tarifs</loc>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://www.lavillacoliving.com/tarifs" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.lavillacoliving.com/en/tarifs" />
+    <lastmod>2026-02-21</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://www.lavillacoliving.com/blog/colocation-expats-geneve-guide</loc>
-    <lastmod>2026-02-10</lastmod>
+    <loc>https://www.lavillacoliving.com/en/faq</loc>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://www.lavillacoliving.com/faq" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.lavillacoliving.com/en/faq" />
+    <lastmod>2026-02-21</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://www.lavillacoliving.com/blog/5-erreurs-logement-frontalier-geneve</loc>
-    <lastmod>2026-02-16</lastmod>
+    <loc>https://www.lavillacoliving.com/en/candidature</loc>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://www.lavillacoliving.com/candidature" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.lavillacoliving.com/en/candidature" />
+    <lastmod>2026-02-21</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://www.lavillacoliving.com/blog/living-in-france-working-in-geneva</loc>
-    <lastmod>2025-02-01</lastmod>
-    <changefreq>monthly</changefreq>
+    <loc>https://www.lavillacoliving.com/en/blog</loc>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://www.lavillacoliving.com/blog" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.lavillacoliving.com/en/blog" />
+    <lastmod>2026-02-21</lastmod>
+    <changefreq>weekly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://www.lavillacoliving.com/blog/what-is-coliving-and-why-it-matters</loc>
-    <lastmod>2025-01-15</lastmod>
+    <loc>https://www.lavillacoliving.com/en/investisseurs</loc>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://www.lavillacoliving.com/investisseurs" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.lavillacoliving.com/en/investisseurs" />
+    <lastmod>2026-02-21</lastmod>
     <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
+    <priority>0.5</priority>
   </url>
-  <url>
-    <loc>https://www.lavillacoliving.com/blog/geneve-sans-voiture-mobilite-douce-frontaliers</loc>
-    <lastmod>2026-02-19</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://www.lavillacoliving.com/blog/grand-geneve-2026-nouveautes-frontaliers</loc>
-    <lastmod>2026-02-19</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://www.lavillacoliving.com/blog/chambre-meublee-annemasse-geneve</loc>
-    <lastmod>2026-02-22</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://www.lavillacoliving.com/blog/coliving-vs-colocation-differences</loc>
-    <lastmod>2026-02-24</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://www.lavillacoliving.com/blog/loyer-frontalier-geneve-combien-payer</loc>
-    <lastmod>2026-02-26</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://www.lavillacoliving.com/blog/demenager-geneve-frontalier-checklist</loc>
-    <lastmod>2026-02-28</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://www.lavillacoliving.com/blog/colocation-annemasse-ville-la-grand-ambilly</loc>
-    <lastmod>2026-03-02</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://www.lavillacoliving.com/blog/avantages-coliving-jeunes-professionnels</loc>
-    <lastmod>2026-03-04</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://www.lavillacoliving.com/blog/transport-annemasse-geneve-leman-express</loc>
-    <lastmod>2026-03-06</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://www.lavillacoliving.com/blog/vie-communautaire-coliving-temoignages</loc>
-    <lastmod>2026-03-08</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
+
+  <!-- ═══ BLOG ARTICLES (auto-updated by prerender.mjs) ═══ -->
+  <!-- Blog articles are dynamically added below this line -->
 </urlset>
