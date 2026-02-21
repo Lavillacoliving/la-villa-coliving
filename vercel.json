@@ -1,74 +1,19 @@
 {
   "rewrites": [
-    {
-      "source": "/",
-      "has": [{"type": "header", "key": "user-agent", "value": "(?i).*(Googlebot|bingbot|GPTBot|ClaudeBot|Applebot|facebookexternalhit|Twitterbot|LinkedInBot|Slurp|DuckDuckBot|Baiduspider|yandex|Sogou|ia_archiver).*"}],
-      "destination": "/prerendered/index.html"
-    },
-    {
-      "source": "/colocation-geneve",
-      "has": [{"type": "header", "key": "user-agent", "value": "(?i).*(Googlebot|bingbot|GPTBot|ClaudeBot|Applebot|facebookexternalhit|Twitterbot|LinkedInBot|Slurp|DuckDuckBot|Baiduspider|yandex|Sogou|ia_archiver).*"}],
-      "destination": "/prerendered/colocation-geneve.html"
-    },
-    {
-      "source": "/le-coliving",
-      "has": [{"type": "header", "key": "user-agent", "value": "(?i).*(Googlebot|bingbot|GPTBot|ClaudeBot|Applebot|facebookexternalhit|Twitterbot|LinkedInBot|Slurp|DuckDuckBot|Baiduspider|yandex|Sogou|ia_archiver).*"}],
-      "destination": "/prerendered/le-coliving.html"
-    },
-    {
-      "source": "/nos-maisons",
-      "has": [{"type": "header", "key": "user-agent", "value": "(?i).*(Googlebot|bingbot|GPTBot|ClaudeBot|Applebot|facebookexternalhit|Twitterbot|LinkedInBot|Slurp|DuckDuckBot|Baiduspider|yandex|Sogou|ia_archiver).*"}],
-      "destination": "/prerendered/nos-maisons.html"
-    },
-    {
-      "source": "/services",
-      "has": [{"type": "header", "key": "user-agent", "value": "(?i).*(Googlebot|bingbot|GPTBot|ClaudeBot|Applebot|facebookexternalhit|Twitterbot|LinkedInBot|Slurp|DuckDuckBot|Baiduspider|yandex|Sogou|ia_archiver).*"}],
-      "destination": "/prerendered/services.html"
-    },
-    {
-      "source": "/tarifs",
-      "has": [{"type": "header", "key": "user-agent", "value": "(?i).*(Googlebot|bingbot|GPTBot|ClaudeBot|Applebot|facebookexternalhit|Twitterbot|LinkedInBot|Slurp|DuckDuckBot|Baiduspider|yandex|Sogou|ia_archiver).*"}],
-      "destination": "/prerendered/tarifs.html"
-    },
-    {
-      "source": "/faq",
-      "has": [{"type": "header", "key": "user-agent", "value": "(?i).*(Googlebot|bingbot|GPTBot|ClaudeBot|Applebot|facebookexternalhit|Twitterbot|LinkedInBot|Slurp|DuckDuckBot|Baiduspider|yandex|Sogou|ia_archiver).*"}],
-      "destination": "/prerendered/faq.html"
-    },
-    {
-      "source": "/candidature",
-      "has": [{"type": "header", "key": "user-agent", "value": "(?i).*(Googlebot|bingbot|GPTBot|ClaudeBot|Applebot|facebookexternalhit|Twitterbot|LinkedInBot|Slurp|DuckDuckBot|Baiduspider|yandex|Sogou|ia_archiver).*"}],
-      "destination": "/prerendered/candidature.html"
-    },
-    {
-      "source": "/blog",
-      "has": [{"type": "header", "key": "user-agent", "value": "(?i).*(Googlebot|bingbot|GPTBot|ClaudeBot|Applebot|facebookexternalhit|Twitterbot|LinkedInBot|Slurp|DuckDuckBot|Baiduspider|yandex|Sogou|ia_archiver).*"}],
-      "destination": "/prerendered/blog.html"
-    },
-    {
-      "source": "/lavilla",
-      "has": [{"type": "header", "key": "user-agent", "value": "(?i).*(Googlebot|bingbot|GPTBot|ClaudeBot|Applebot|facebookexternalhit|Twitterbot|LinkedInBot|Slurp|DuckDuckBot|Baiduspider|yandex|Sogou|ia_archiver).*"}],
-      "destination": "/prerendered/lavilla.html"
-    },
-    {
-      "source": "/leloft",
-      "has": [{"type": "header", "key": "user-agent", "value": "(?i).*(Googlebot|bingbot|GPTBot|ClaudeBot|Applebot|facebookexternalhit|Twitterbot|LinkedInBot|Slurp|DuckDuckBot|Baiduspider|yandex|Sogou|ia_archiver).*"}],
-      "destination": "/prerendered/leloft.html"
-    },
-    {
-      "source": "/lelodge",
-      "has": [{"type": "header", "key": "user-agent", "value": "(?i).*(Googlebot|bingbot|GPTBot|ClaudeBot|Applebot|facebookexternalhit|Twitterbot|LinkedInBot|Slurp|DuckDuckBot|Baiduspider|yandex|Sogou|ia_archiver).*"}],
-      "destination": "/prerendered/lelodge.html"
-    },
-    {
-      "source": "/investisseurs",
-      "has": [{"type": "header", "key": "user-agent", "value": "(?i).*(Googlebot|bingbot|GPTBot|ClaudeBot|Applebot|facebookexternalhit|Twitterbot|LinkedInBot|Slurp|DuckDuckBot|Baiduspider|yandex|Sogou|ia_archiver).*"}],
-      "destination": "/prerendered/investisseurs.html"
-    },
-    {
-      "source": "/(.*)",
-      "destination": "/index.html"
-    }
+    {"source": "/", "destination": "/prerendered/index.html"},
+    {"source": "/colocation-geneve", "destination": "/prerendered/colocation-geneve.html"},
+    {"source": "/le-coliving", "destination": "/prerendered/le-coliving.html"},
+    {"source": "/nos-maisons", "destination": "/prerendered/nos-maisons.html"},
+    {"source": "/services", "destination": "/prerendered/services.html"},
+    {"source": "/tarifs", "destination": "/prerendered/tarifs.html"},
+    {"source": "/faq", "destination": "/prerendered/faq.html"},
+    {"source": "/candidature", "destination": "/prerendered/candidature.html"},
+    {"source": "/blog", "destination": "/prerendered/blog.html"},
+    {"source": "/lavilla", "destination": "/prerendered/lavilla.html"},
+    {"source": "/leloft", "destination": "/prerendered/leloft.html"},
+    {"source": "/lelodge", "destination": "/prerendered/lelodge.html"},
+    {"source": "/investisseurs", "destination": "/prerendered/investisseurs.html"},
+    {"source": "/(.*)", "destination": "/index.html"}
   ],
   "redirects": [
     {
