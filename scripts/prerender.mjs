@@ -1,31 +1,38 @@
 /**
  * Pre-rendering script for La Villa Coliving SPA
  *
- * Renders each public route with Puppeteer and saves the full HTML
- * so crawlers (Google, GPTBot, ClaudeBot) can read the content
- * without executing JavaScript.
+ * FULLY AUTOMATED:
+ * 1. Fetches all published blog slugs from Supabase (no hardcoding)
+ * 2. Updates vercel.json with the correct blog rewrites
+ * 3. Pre-renders all static + blog pages with Puppeteer
  *
  * USAGE:
- *   npm run prerender        (run locally on Mac after vite build)
- *   Automatically called by "npm run build" — skips gracefully if no Chrome
+ *   npm run build:local    (build + prerender + inject — the full pipeline)
+ *   npm run prerender       (prerender only, after a vite build)
  *
  * Output goes to public/prerendered/ (committed to git).
- * Vercel conditional rewrites serve these files to bots.
+ * On Vercel, inject-prerendered.mjs re-wraps content in the current index.html.
  */
 
 import fs from 'fs/promises';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import http from 'http';
+import https from 'https';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const DIST_DIR = path.join(__dirname, '..', 'dist');
 const OUTPUT_DIR = path.join(__dirname, '..', 'public', 'prerendered');
+const VERCEL_JSON_PATH = path.join(__dirname, '..', 'vercel.json');
 const PORT = 3456;
 const BASE_URL = `http://localhost:${PORT}`;
 
-// Static pages to pre-render
-const ROUTES = [
+// Supabase config (same as src/lib/supabase.ts — anon key, read-only)
+const SUPABASE_URL = 'https://tefpynkdxxfiefpkgitz.supabase.co';
+const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InRlZnB5bmtkeHhmaWVmcGtnaXR6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzA4OTg5NDksImV4cCI6MjA4NjQ3NDk0OX0.X_Z85w6L4i1IkVevMK73hpFRClCpgh0Gh0WMY9pdDtw';
+
+// Static pages to pre-render (manually maintained — rarely changes)
+const STATIC_ROUTES = [
   '/',
   '/colocation-geneve',
   '/le-coliving',
@@ -41,29 +48,84 @@ const ROUTES = [
   '/investisseurs',
 ];
 
-// Blog articles to pre-render (add new slugs here when publishing new articles)
-// NOTE: When a new blog post is published via n8n pipeline, add its slug here
-// and in vercel.json, then re-run: npm run build:local && git add/commit/push
-const BLOG_ROUTES = [
-  '/blog/vie-communautaire-coliving-temoignages',
-  '/blog/transport-annemasse-geneve-leman-express',
-  '/blog/avantages-coliving-jeunes-professionnels',
-  '/blog/colocation-annemasse-ville-la-grand-ambilly',
-  '/blog/demenager-geneve-frontalier-checklist',
-  '/blog/loyer-frontalier-geneve-combien-payer',
-  '/blog/coliving-vs-colocation-differences',
-  '/blog/chambre-meublee-annemasse-geneve',
-  '/blog/grand-geneve-2026-nouveautes-frontaliers',
-  '/blog/geneve-sans-voiture-mobilite-douce-frontaliers',
-  '/blog/budget-colocation-geneve-guide-complet',
-  '/blog/5-erreurs-logement-frontalier-geneve',
-  '/blog/meilleurs-quartiers-frontaliers-geneve',
-  '/blog/colocation-expats-geneve-guide',
-  '/blog/living-in-france-working-in-geneva',
-  '/blog/what-is-coliving-and-why-it-matters',
-];
+// ─────────────────────────────────────────────
+// Supabase: fetch published blog slugs
+// ─────────────────────────────────────────────
 
-/** Serve dist/ with SPA fallback (like Vercel does) */
+function httpsGet(url, headers) {
+  return new Promise((resolve, reject) => {
+    const req = https.get(url, { headers }, (res) => {
+      let data = '';
+      res.on('data', chunk => data += chunk);
+      res.on('end', () => {
+        if (res.statusCode >= 200 && res.statusCode < 300) {
+          resolve(JSON.parse(data));
+        } else {
+          reject(new Error(`HTTP ${res.statusCode}: ${data}`));
+        }
+      });
+    });
+    req.on('error', reject);
+    req.setTimeout(10000, () => { req.destroy(); reject(new Error('Timeout')); });
+  });
+}
+
+async function fetchBlogSlugs() {
+  console.log('  📡 Fetching published blog slugs from Supabase...');
+  try {
+    const url = `${SUPABASE_URL}/rest/v1/blog_posts?select=slug&is_published=eq.true&order=published_at.desc`;
+    const posts = await httpsGet(url, {
+      'apikey': SUPABASE_ANON_KEY,
+      'Accept': 'application/json',
+    });
+    const slugs = posts.map(p => `/blog/${p.slug}`);
+    console.log(`  📝 Found ${slugs.length} published articles\n`);
+    return slugs;
+  } catch (err) {
+    console.error(`  ⚠️  Failed to fetch blog slugs: ${err.message}`);
+    console.log('  ℹ️  Continuing with static routes only.\n');
+    return [];
+  }
+}
+
+// ─────────────────────────────────────────────
+// Auto-update vercel.json with blog rewrites
+// ─────────────────────────────────────────────
+
+async function updateVercelJson(blogRoutes) {
+  console.log('  📦 Updating vercel.json with blog rewrites...');
+  const config = JSON.parse(await fs.readFile(VERCEL_JSON_PATH, 'utf-8'));
+
+  // Remove all existing blog/* rewrites (keep static rewrites + catch-all)
+  const staticRewrites = config.rewrites.filter(r =>
+    !r.source.startsWith('/blog/') // remove individual blog rewrites
+  );
+
+  // Find the catch-all position
+  const catchAllIndex = staticRewrites.findIndex(r => r.source === '/(.*)');
+  if (catchAllIndex === -1) {
+    console.error('  ❌ No catch-all rewrite found in vercel.json!');
+    return;
+  }
+
+  // Generate blog rewrites
+  const blogRewrites = blogRoutes.map(route => ({
+    source: route,
+    destination: `/prerendered/${route.slice(1).replace(/\//g, '-')}.html`,
+  }));
+
+  // Insert blog rewrites before catch-all
+  staticRewrites.splice(catchAllIndex, 0, ...blogRewrites);
+  config.rewrites = staticRewrites;
+
+  await fs.writeFile(VERCEL_JSON_PATH, JSON.stringify(config, null, 2) + '\n', 'utf-8');
+  console.log(`  ✅ vercel.json updated: ${blogRewrites.length} blog rewrites\n`);
+}
+
+// ─────────────────────────────────────────────
+// Local HTTP server (serves dist/ for Puppeteer)
+// ─────────────────────────────────────────────
+
 function startServer() {
   return new Promise((resolve) => {
     const MIME = {
@@ -105,7 +167,10 @@ function startServer() {
   });
 }
 
-/** Try to get a working browser instance */
+// ─────────────────────────────────────────────
+// Puppeteer: launch browser
+// ─────────────────────────────────────────────
+
 async function launchBrowser() {
   // Strategy 1: puppeteer (full, with bundled Chrome) — works on Mac/dev
   try {
@@ -146,7 +211,10 @@ async function launchBrowser() {
   return null; // No browser available
 }
 
-/** Pre-render a single route and save the HTML */
+// ─────────────────────────────────────────────
+// Pre-render a single route
+// ─────────────────────────────────────────────
+
 async function renderRoute(browser, route) {
   const page = await browser.newPage();
   try {
@@ -160,7 +228,7 @@ async function renderRoute(browser, route) {
 
     const html = await page.content();
 
-    // Save to public/prerendered/ (committed to git, served by Vercel to bots)
+    // Save to public/prerendered/ (committed to git, served by Vercel)
     const fileName = route === '/' ? 'index.html' : `${route.slice(1).replace(/\//g, '-')}.html`;
     const outputPath = path.join(OUTPUT_DIR, fileName);
 
@@ -177,9 +245,47 @@ async function renderRoute(browser, route) {
   }
 }
 
+// ─────────────────────────────────────────────
+// Clean up old pre-rendered files that are no longer needed
+// ─────────────────────────────────────────────
+
+async function cleanupOldFiles(allRoutes) {
+  try {
+    const existingFiles = await fs.readdir(OUTPUT_DIR);
+    const expectedFiles = new Set(
+      allRoutes.map(route =>
+        route === '/' ? 'index.html' : `${route.slice(1).replace(/\//g, '-')}.html`
+      )
+    );
+    expectedFiles.add('.gitkeep');
+
+    for (const file of existingFiles) {
+      if (!expectedFiles.has(file)) {
+        await fs.unlink(path.join(OUTPUT_DIR, file));
+        console.log(`  🗑️  Removed obsolete: ${file}`);
+      }
+    }
+  } catch { /* OUTPUT_DIR doesn't exist yet, nothing to clean */ }
+}
+
+// ─────────────────────────────────────────────
+// Main
+// ─────────────────────────────────────────────
+
 async function main() {
-  const allRoutes = [...ROUTES, ...BLOG_ROUTES];
-  console.log(`\n🚀 Pre-rendering ${allRoutes.length} routes (${ROUTES.length} static + ${BLOG_ROUTES.length} blog)...\n`);
+  console.log('\n🚀 La Villa Coliving — Pre-rendering pipeline\n');
+
+  // Step 1: Fetch blog slugs from Supabase
+  const blogRoutes = await fetchBlogSlugs();
+  const allRoutes = [...STATIC_ROUTES, ...blogRoutes];
+
+  // Step 2: Update vercel.json
+  if (blogRoutes.length > 0) {
+    await updateVercelJson(blogRoutes);
+  }
+
+  // Step 3: Check for browser
+  console.log(`  🔍 Preparing to render ${allRoutes.length} pages (${STATIC_ROUTES.length} static + ${blogRoutes.length} blog)...\n`);
 
   const browser = await launchBrowser();
 
@@ -187,9 +293,13 @@ async function main() {
     console.log('  ⚠️  No Chrome/Chromium found — skipping pre-rendering.');
     console.log('  💡 Run "npm run prerender" locally on Mac to generate pre-rendered pages.');
     console.log('  ℹ️  The site will work as a normal SPA without pre-rendering.\n');
-    process.exit(0); // Exit gracefully — build succeeds
+    process.exit(0);
   }
 
+  // Step 4: Clean up obsolete pre-rendered files
+  await cleanupOldFiles(allRoutes);
+
+  // Step 5: Pre-render all pages
   const server = await startServer();
 
   for (const route of allRoutes) {
@@ -199,8 +309,8 @@ async function main() {
   await browser.close();
   server.close();
 
-  console.log(`\n🎉 Pre-rendering complete! All ${allRoutes.length} pages saved to public/prerendered/`);
-  console.log(`  💡 Commit these files to git so Vercel serves them to crawlers.\n`);
+  console.log(`\n🎉 Pre-rendering complete! ${allRoutes.length} pages saved to public/prerendered/`);
+  console.log('  💡 Commit all changes (including vercel.json) and push to deploy.\n');
 }
 
 main().catch(err => { console.error('Fatal:', err); process.exit(1); });
