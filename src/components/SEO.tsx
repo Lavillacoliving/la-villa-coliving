@@ -1,4 +1,5 @@
 import { Helmet } from "react-helmet";
+import { useLocation } from "react-router-dom";
 import { useLanguage } from "@/contexts/LanguageContext";
 
 interface SEOProps {
@@ -19,6 +20,11 @@ export function SEO({
   jsonLd,
 }: SEOProps) {
   const { language } = useLanguage();
+  const location = useLocation();
+
+  // Always compute canonical from actual route (fixes EN pages getting FR canonical)
+  const computedUrl = `https://www.lavillacoliving.com${location.pathname}`;
+  const siteUrl = computedUrl;
 
   const defaultTitle =
     language === "en"
@@ -50,14 +56,14 @@ export function SEO({
       <meta name="author" content="La Villa Coliving" />
       <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1" />
       <meta name="language" content={language} />
-      <link rel="canonical" href={url} />
+      <link rel="canonical" href={siteUrl} />
 
       {/* Hreflang tags pour le SEO multilingue */}
       {(() => {
         const base = "https://www.lavillacoliving.com";
-        const path = url.replace(base, "") || "/";
-        const frUrl = path.startsWith("/en") ? `${base}${path.replace(/^\/en(\/|$)/, "$1") || "/"}` : url;
-        const enUrl = path.startsWith("/en") ? url : `${base}/en${path === "/" ? "" : path}`;
+        const urlPath = siteUrl.replace(base, "") || "/";
+        const frUrl = urlPath.startsWith("/en") ? `${base}${urlPath.replace(/^\/en(\/|$)/, "$1") || "/"}` : siteUrl;
+        const enUrl = urlPath.startsWith("/en") ? siteUrl : `${base}/en${urlPath === "/" ? "" : urlPath}`;
         return (
           <>
             <link rel="alternate" hrefLang="fr" href={frUrl} />
@@ -69,7 +75,7 @@ export function SEO({
 
       {/* Open Graph / Facebook */}
       <meta property="og:type" content={type} />
-      <meta property="og:url" content={url} />
+      <meta property="og:url" content={siteUrl} />
       <meta property="og:title" content={siteTitle} />
       <meta property="og:description" content={siteDescription} />
       <meta property="og:image" content={image} />
@@ -81,7 +87,7 @@ export function SEO({
 
       {/* Twitter */}
       <meta property="twitter:card" content="summary_large_image" />
-      <meta property="twitter:url" content={url} />
+      <meta property="twitter:url" content={siteUrl} />
       <meta property="twitter:title" content={siteTitle} />
       <meta property="twitter:description" content={siteDescription} />
       <meta property="twitter:image" content={image} />
