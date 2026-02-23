@@ -88,20 +88,6 @@ const EMPTY_ROOM: Partial<Room> = {
   notes: '',
 };
 
-const _EMPTY_PROPERTY: Partial<Property> = {
-  name: '',
-  address: '',
-  city: '',
-  legal_entity_name: '',
-  legal_entity_type: 'SCI',
-  siret: '',
-  tva: '',
-  siege_social: '',
-  id_fiscal: '',
-  common_areas: [],
-  contract_building_desc: '',
-  manager_name: '',
-};
 
 export default function DashboardMaisonsPage() {
   const [properties, setProperties] = useState<Property[]>([]);
