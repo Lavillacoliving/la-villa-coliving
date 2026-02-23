@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { supabase } from '@/lib/supabase';
+import { pdf } from '@react-pdf/renderer';
+import { BailPDF } from './BailPDF';
 
 interface Property {
   id: string;
@@ -499,39 +501,6 @@ async function fetchExchangeRate(): Promise<number> {
   }
   return 0.9400;
 }
-
-function generatePDF(contractHTML: string): void {
-  const css = [
-    "@page{size:A4;margin:20mm 15mm 25mm 15mm}",
-    "*{margin:0;padding:0;box-sizing:border-box}",
-    "body{font-family:Georgia,serif;font-size:11pt;line-height:1.5;color:#1a1a1a;background:#fff}",
-    "h1{font-size:18pt;text-align:center;margin:20px 0 10px}",
-    "h2{font-size:13pt;margin:18px 0 6px;border-bottom:1px solid #c9a96e;padding-bottom:4px}",
-    "p{margin:6px 0;text-align:justify}",
-    "table{width:100%;border-collapse:collapse;margin:8px 0}",
-    "td,th{padding:6px 8px;border-bottom:1px solid #e0e0e0;font-size:10pt}",
-    "ul,ol{margin:6px 0 6px 20px}li{margin:3px 0}",
-    ".page-break{page-break-before:always}",
-    "@media print{.no-print{display:none!important}}",
-    ".bar{position:fixed;top:0;left:0;right:0;background:#c9a96e;color:#fff;padding:12px 24px;display:flex;align-items:center;gap:16px;z-index:9999;font-family:Arial,sans-serif}",
-    ".bar button{background:#fff;color:#333;border:none;padding:8px 20px;border-radius:4px;font-weight:600;cursor:pointer}",
-    ".wrap{padding-top:60px;max-width:210mm;margin:0 auto;padding-left:15mm;padding-right:15mm}",
-  ].join("\n");
-  const html = [
-    "<!DOCTYPE html><html lang=fr><head><meta charset=UTF-8>",
-    "<title>Bail Meublé - La Villa Coliving</title>",
-    "<style>" + css + "</style></head><body>",
-    "<div class=bar><span>Bail La Villa Coliving</span>",
-    '<button class=no-print onclick="window.print()">Enregistrer PDF</button>',
-    '<button class=no-print onclick="window.close()">Fermer</button></div>',
-    "<div class=wrap>" + contractHTML + "</div>",
-    "</body></html>",
-  ].join("\n");
-  const blob = new Blob([html], { type: "text/html;charset=utf-8" });
-  const url = URL.createObjectURL(blob);
-  window.open(url, "_blank");
-}
-
 
 
 export default function DashboardNouveauBailPage() {
@@ -1088,8 +1057,8 @@ export default function DashboardNouveauBailPage() {
 
         <div style={{ display: 'flex', gap: '10px' }}>
           <button
-            onClick={() => contractHTML && generatePDF(contractHTML)}
-            disabled={!contractHTML}
+            onClick={async () => { if (!contractData) return; try { const blob = await pdf(BailPDF({ data: contractData })).toBlob(); const url = URL.createObjectURL(blob); const a = document.createElement('a'); a.href = url; a.download = `Bail_${form.locataire_nom || 'Locataire'}_${form.entry_date || 'date'}.pdf`; a.click(); URL.revokeObjectURL(url); } catch (e) { console.error('PDF error:', e); alert('Erreur PDF: ' + e); } }}
+            disabled={!contractData}
             style={{
               flex: 1,
               padding: '12px',
@@ -1098,7 +1067,7 @@ export default function DashboardNouveauBailPage() {
               border: 'none',
               borderRadius: '4px',
               fontWeight: '600',
-              cursor: contractHTML ? 'pointer' : 'not-allowed',
+              cursor: contractData ? 'pointer' : 'not-allowed',
               fontSize: '14px',
             }}
           >
