@@ -516,8 +516,7 @@ function generatePDF(contractHTML: string): void {
     ".bar{position:fixed;top:0;left:0;right:0;background:#c9a96e;color:#fff;padding:12px 24px;display:flex;align-items:center;gap:16px;z-index:9999;font-family:Arial,sans-serif}",
     ".bar button{background:#fff;color:#333;border:none;padding:8px 20px;border-radius:4px;font-weight:600;cursor:pointer}",
     ".wrap{padding-top:60px;max-width:210mm;margin:0 auto;padding-left:15mm;padding-right:15mm}",
-  ].join("
-");
+  ].join("\n");
   const html = [
     "<!DOCTYPE html><html lang=fr><head><meta charset=UTF-8>",
     "<title>Bail Meublé - La Villa Coliving</title>",
@@ -527,8 +526,7 @@ function generatePDF(contractHTML: string): void {
     '<button class=no-print onclick="window.close()">Fermer</button></div>',
     "<div class=wrap>" + contractHTML + "</div>",
     "</body></html>",
-  ].join("
-");
+  ].join("\n");
   const blob = new Blob([html], { type: "text/html;charset=utf-8" });
   const url = URL.createObjectURL(blob);
   window.open(url, "_blank");
