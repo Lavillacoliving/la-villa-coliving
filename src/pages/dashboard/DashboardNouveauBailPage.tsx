@@ -711,7 +711,7 @@ export default function DashboardNouveauBailPage() {
         due_day: 5,
         date_of_birth: form.locataire_dob || null,
         place_of_birth: form.locataire_birthplace || null,
-        entity_id: selectedProperty.entity_id || null,
+
         notes: 'Bail généré automatiquement le ' + new Date().toLocaleDateString('fr-FR'),
       });
 

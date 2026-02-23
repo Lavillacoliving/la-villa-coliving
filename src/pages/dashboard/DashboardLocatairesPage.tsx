@@ -78,7 +78,7 @@ export default function DashboardLocatairesPage() {
       date_of_birth:modal.date_of_birth||null, place_of_birth:modal.place_of_birth||null,
       bank_aliases:modal.bank_aliases, notes:modal.notes||null, updated_at:new Date().toISOString()
     };
-    if (prop) data.entity_id = prop.entity_id;
+
     let err;
     if (isNew) { ({error:err} = await supabase.from('tenants').insert(data)); }
     else { ({error:err} = await supabase.from('tenants').update(data).eq('id',modal.id)); }

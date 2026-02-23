@@ -23,8 +23,16 @@ const STATUS_COLORS: Record<string,string> = {
 const STATUS_LABELS: Record<string,string> = {
   paid:'Payé', partial:'Partiel', pending:'En attente', late:'En retard', unpaid:'Non payé'
 };
+const STATUS_ORDER = ['pending','paid','partial','late','unpaid'];
 const ENTITY_MAP: Record<string,string> = {
   'la-villa':'La Villa (LMP)', 'le-loft':'Le Loft — Sleep In SCI', 'le-lodge':'Le Lodge — Sleep In SCI'
+};
+
+// Entity grouping: which slugs belong to which entity filter
+const ENTITY_SLUGS: Record<string, string[]> = {
+  'la-villa': ['la-villa'],
+  'sleep-in': ['le-loft', 'le-lodge'],
+  'mont-blanc': ['mont-blanc'],
 };
 
 function fmt(n: number) { return n.toLocaleString('fr-FR',{minimumFractionDigits:2,maximumFractionDigits:2})+' €'; }
@@ -42,6 +50,10 @@ export default function DashboardLoyersPage() {
   const [loading, setLoading] = useState(true);
   const [notesModal, setNotesModal] = useState<{id:string,notes:string}|null>(null);
   const [notesSaving, setNotesSaving] = useState(false);
+  // Inline editing
+  const [editingPayment, setEditingPayment] = useState<string|null>(null);
+  const [editData, setEditData] = useState<{received_amount:number,adjusted_amount:number|null,status:string,payment_date:string|null}>({received_amount:0,adjusted_amount:null,status:'pending',payment_date:null});
+  const [editSaving, setEditSaving] = useState(false);
 
   const load = useCallback(async () => {
     setLoading(true);
@@ -54,7 +66,6 @@ export default function DashboardLoyersPage() {
     setPayments(pRes.data||[]);
     setTenants(tRes.data||[]);
     setProperties(prRes.data||[]);
-    // IRL
     const irl: Record<string,IRLEntry> = {};
     (irlRes.data||[]).forEach((d:any) => { irl[d.year+'-Q'+d.quarter] = {value:parseFloat(d.value),variation:parseFloat(d.variation_pct)}; });
     setIrlData(irl);
@@ -63,13 +74,18 @@ export default function DashboardLoyersPage() {
 
   useEffect(() => { load(); },[load]);
 
-  // Filtering
+  // Entity-based filtering (Sleep In = Le Loft + Le Lodge)
   const filtered = payments.filter(p => {
     const t = tenants.find(x => x.id === p.tenant_id);
     if (!t) return false;
     if (entityFilter !== 'all') {
       const prop = properties.find(pr => pr.id === t.property_id);
-      if (prop?.slug !== entityFilter) return false;
+      const allowedSlugs = ENTITY_SLUGS[entityFilter];
+      if (allowedSlugs) {
+        if (!prop || !allowedSlugs.includes(prop.slug)) return false;
+      } else {
+        if (prop?.slug !== entityFilter) return false;
+      }
     }
     if (statusFilter !== 'all' && p.status !== statusFilter) return false;
     if (search) {
@@ -99,7 +115,6 @@ export default function DashboardLoyersPage() {
     if (!grouped[prop.id]) grouped[prop.id] = {prop,payments:[]};
     grouped[prop.id].payments.push(p);
   });
-  // Sort groups: La Villa, Le Lodge, Le Loft
   const sortedGroups = Object.values(grouped).sort((a,b) => a.prop.name.localeCompare(b.prop.name));
 
   // IRL reminders
@@ -162,6 +177,46 @@ export default function DashboardLoyersPage() {
     load();
   };
 
+  // Inline edit: start editing a payment row
+  const startEdit = (p: Payment) => {
+    setEditingPayment(p.id);
+    setEditData({
+      received_amount: p.received_amount,
+      adjusted_amount: p.adjusted_amount,
+      status: p.status,
+      payment_date: p.payment_date,
+    });
+  };
+
+  const cancelEdit = () => {
+    setEditingPayment(null);
+  };
+
+  const saveEdit = async () => {
+    if (!editingPayment) return;
+    setEditSaving(true);
+    const update: any = {
+      received_amount: editData.received_amount,
+      adjusted_amount: editData.adjusted_amount,
+      status: editData.status,
+      payment_date: editData.payment_date || null,
+    };
+    const { error } = await supabase.from('payments').update(update).eq('id', editingPayment);
+    setEditSaving(false);
+    if (error) { alert('Erreur: ' + error.message); return; }
+    setEditingPayment(null);
+    load();
+  };
+
+  // Quick status change (click on badge)
+  const cycleStatus = async (paymentId: string, currentStatus: string) => {
+    const idx = STATUS_ORDER.indexOf(currentStatus);
+    const nextStatus = STATUS_ORDER[(idx + 1) % STATUS_ORDER.length];
+    const { error } = await supabase.from('payments').update({ status: nextStatus }).eq('id', paymentId);
+    if (error) { alert('Erreur: ' + error.message); return; }
+    load();
+  };
+
   const prevMonth = () => { const d=new Date(month+'-01'); d.setMonth(d.getMonth()-1); setMonth(d.toISOString().slice(0,7)); };
   const nextMonth = () => { const d=new Date(month+'-01'); d.setMonth(d.getMonth()+1); setMonth(d.toISOString().slice(0,7)); };
   const exportExcel = () => {
@@ -180,6 +235,7 @@ export default function DashboardLoyersPage() {
     irlBox:{background:'linear-gradient(135deg,#f0fdf4,#dcfce7)',border:'2px solid #86efac',borderRadius:'12px',padding:'16px 20px',marginBottom:'20px'},
     bdayBox:{background:'linear-gradient(135deg,#fefce8,#fef9c3)',border:'2px solid #fde047',borderRadius:'12px',padding:'16px 20px',marginBottom:'20px'},
     btn:{padding:'6px 14px',border:'none',borderRadius:'20px',cursor:'pointer',fontSize:'13px',transition:'all 0.2s'},
+    inlineInput:{padding:'4px 8px',border:'1px solid #ddd',borderRadius:'6px',fontSize:'13px',width:'100px',boxSizing:'border-box' as const},
   };
 
   if (loading) return <p style={{textAlign:'center',padding:'40px',color:'#b8860b'}}>Chargement...</p>;
@@ -194,7 +250,7 @@ export default function DashboardLoyersPage() {
           <button onClick={nextMonth} style={{border:'1px solid #ddd',background:'#fff',borderRadius:'6px',padding:'6px 12px',cursor:'pointer',fontSize:'16px'}}>→</button>
         </div>
         <div style={{display:'flex',gap:'8px',flexWrap:'wrap',alignItems:'center'}}>
-          {[{v:'all',l:'Toutes les entités'},{v:'la-villa',l:'La Villa (LMP)'},{v:'le-loft',l:'Sleep In (SCI)'},{v:'le-lodge',l:'Le Lodge'}].map(e=>(
+          {[{v:'all',l:'Toutes'},{v:'la-villa',l:'La Villa (LMP)'},{v:'sleep-in',l:'Sleep In (SCI)'},{v:'mont-blanc',l:'Mont-Blanc'}].map(e=>(
             <button key={e.v} onClick={()=>setEntityFilter(e.v)} style={{...S.btn,background:entityFilter===e.v?'#3D4A38':'#e5e7eb',color:entityFilter===e.v?'#fff':'#555',fontWeight:entityFilter===e.v?600:400}}>{e.l}</button>
           ))}
           <button onClick={exportExcel} style={{padding:'6px 14px',background:'#b8860b',color:'#fff',border:'none',borderRadius:'6px',cursor:'pointer',fontSize:'13px',fontWeight:600}}>Export Excel</button>
@@ -263,7 +319,7 @@ export default function DashboardLoyersPage() {
         <table style={{width:'100%',borderCollapse:'collapse',fontSize:'14px'}}>
           <thead>
             <tr style={{background:'#f8f8f8',borderBottom:'2px solid #e5e7eb'}}>
-              {['Chambre','Locataire','Loyer attendu','Statut','Date paiement','Montant reçu','Confiance','Notes'].map(h=>(
+              {['Chambre','Locataire','Loyer attendu','Statut','Date paiement','Montant reçu','Ajusté','Notes',''].map(h=>(
                 <th key={h} style={{padding:'12px 16px',textAlign:'left',fontWeight:600,color:'#555',fontSize:'12px',textTransform:'uppercase',letterSpacing:'0.05em'}}>{h}</th>
               ))}
             </tr>
@@ -271,31 +327,71 @@ export default function DashboardLoyersPage() {
           <tbody>
             {sortedGroups.map(g => (
               <>
-                <tr key={'h-'+g.prop.id}><td colSpan={8} style={{padding:'12px 16px',fontWeight:700,fontSize:'14px',background:'#fafaf8',borderBottom:'1px solid #e5e7eb'}}>🏠 {g.prop.name}{ENTITY_MAP[g.prop.slug]?' — '+ENTITY_MAP[g.prop.slug].split('—')[1]?.trim():''}</td></tr>
+                <tr key={'h-'+g.prop.id}><td colSpan={9} style={{padding:'12px 16px',fontWeight:700,fontSize:'14px',background:'#fafaf8',borderBottom:'1px solid #e5e7eb'}}>🏠 {g.prop.name}{ENTITY_MAP[g.prop.slug]?' — '+ENTITY_MAP[g.prop.slug].split('—')[1]?.trim():''}</td></tr>
                 {g.payments.sort((a,b)=>{const ta=tenants.find(x=>x.id===a.tenant_id);const tb=tenants.find(x=>x.id===b.tenant_id);return (ta?.room_number||0)-(tb?.room_number||0);}).map(p => {
                   const t = tenants.find(x=>x.id===p.tenant_id);
+                  const isEditing = editingPayment === p.id;
+
+                  if (isEditing) {
+                    return (
+                      <tr key={p.id} style={{borderBottom:'1px solid #f0f0f0',background:'#fffbeb'}}>
+                        <td style={{padding:'10px 16px',fontWeight:600}}>Ch. {t?.room_number}</td>
+                        <td style={{padding:'10px 16px'}}>{t?t.first_name+' '+t.last_name:'?'}</td>
+                        <td style={{padding:'10px 16px'}}>{fmt(p.expected_amount)}</td>
+                        <td style={{padding:'10px 16px'}}>
+                          <select value={editData.status} onChange={e=>setEditData({...editData,status:e.target.value})} style={{...S.inlineInput,width:'120px'}}>
+                            {STATUS_ORDER.map(s=><option key={s} value={s}>{STATUS_LABELS[s]}</option>)}
+                          </select>
+                        </td>
+                        <td style={{padding:'10px 16px'}}>
+                          <input type="date" value={editData.payment_date||''} onChange={e=>setEditData({...editData,payment_date:e.target.value||null})} style={S.inlineInput}/>
+                        </td>
+                        <td style={{padding:'10px 16px'}}>
+                          <input type="number" step="0.01" value={editData.received_amount} onChange={e=>setEditData({...editData,received_amount:parseFloat(e.target.value)||0})} style={S.inlineInput}/>
+                        </td>
+                        <td style={{padding:'10px 16px'}}>
+                          <input type="number" step="0.01" value={editData.adjusted_amount??''} onChange={e=>setEditData({...editData,adjusted_amount:e.target.value?parseFloat(e.target.value):null})} style={S.inlineInput} placeholder="—"/>
+                        </td>
+                        <td style={{padding:'10px 16px'}}>
+                          <button onClick={()=>setNotesModal({id:p.id,notes:p.notes||''})} style={{background:'none',border:'none',cursor:'pointer',fontSize:'16px'}} title="Notes">📝</button>
+                        </td>
+                        <td style={{padding:'10px 16px',whiteSpace:'nowrap'}}>
+                          <button onClick={saveEdit} disabled={editSaving} style={{padding:'4px 10px',background:'#22c55e',color:'#fff',border:'none',borderRadius:'4px',cursor:'pointer',fontSize:'12px',marginRight:'4px'}}>{editSaving?'...':'✓'}</button>
+                          <button onClick={cancelEdit} style={{padding:'4px 10px',background:'#ef4444',color:'#fff',border:'none',borderRadius:'4px',cursor:'pointer',fontSize:'12px'}}>✕</button>
+                        </td>
+                      </tr>
+                    );
+                  }
+
                   return (
                     <tr key={p.id} style={{borderBottom:'1px solid #f0f0f0'}}>
                       <td style={{padding:'10px 16px',fontWeight:600}}>Ch. {t?.room_number}</td>
-                      <td style={{padding:'10px 16px'}}>{t?t.first_name+' '+t.last_name:'?'}</td>
+                      <td style={{padding:'10px 16px'}}>{t?t.first_name+' '+t.last_name:'?'} {t?.phone && <a href={'tel:'+t.phone} style={{color:'#b8860b',textDecoration:'none'}} title="Appeler">📞</a>}</td>
                       <td style={{padding:'10px 16px'}}>{fmt(p.expected_amount)}</td>
                       <td style={{padding:'10px 16px'}}>
-                        <span style={{background:(STATUS_COLORS[p.status]||'#94a3b8')+'20',color:STATUS_COLORS[p.status]||'#94a3b8',padding:'4px 12px',borderRadius:'12px',fontSize:'12px',fontWeight:600,border:`1px solid ${STATUS_COLORS[p.status]||'#94a3b8'}40`}}>
+                        <span
+                          onClick={()=>cycleStatus(p.id, p.status)}
+                          style={{background:(STATUS_COLORS[p.status]||'#94a3b8')+'20',color:STATUS_COLORS[p.status]||'#94a3b8',padding:'4px 12px',borderRadius:'12px',fontSize:'12px',fontWeight:600,border:`1px solid ${STATUS_COLORS[p.status]||'#94a3b8'}40`,cursor:'pointer',userSelect:'none'}}
+                          title="Cliquer pour changer le statut"
+                        >
                           {p.status==='paid'?'✓ ':p.status==='partial'?'⚡ ':p.status==='late'?'⚠ ':''}{STATUS_LABELS[p.status]||p.status}
                         </span>
                       </td>
                       <td style={{padding:'10px 16px',color:'#888'}}>{p.payment_date?new Date(p.payment_date).toLocaleDateString('fr-FR'):'—'}</td>
-                      <td style={{padding:'10px 16px'}}>{p.received_amount>0?fmt(p.received_amount):'—'} {t?.phone && <a href={'tel:'+t.phone} style={{color:'#b8860b',textDecoration:'none'}} title="Appeler">📞</a>}</td>
-                      <td style={{padding:'10px 16px',color:'#888'}}>—</td>
+                      <td style={{padding:'10px 16px'}}>{p.received_amount>0?fmt(p.received_amount):'—'}</td>
+                      <td style={{padding:'10px 16px',color:'#888'}}>{p.adjusted_amount!==null?fmt(p.adjusted_amount):'—'}</td>
                       <td style={{padding:'10px 16px'}}>
                         <button onClick={()=>setNotesModal({id:p.id,notes:p.notes||''})} style={{background:'none',border:'none',cursor:'pointer',fontSize:'16px'}} title="Notes">📝</button>
+                      </td>
+                      <td style={{padding:'10px 16px'}}>
+                        <button onClick={()=>startEdit(p)} style={{background:'none',border:'none',cursor:'pointer',fontSize:'14px',color:'#b8860b'}} title="Modifier">✎</button>
                       </td>
                     </tr>
                   );
                 })}
               </>
             ))}
-            {sortedGroups.length===0 && <tr><td colSpan={8} style={{padding:'40px',textAlign:'center',color:'#888'}}>Aucun paiement pour ce mois</td></tr>}
+            {sortedGroups.length===0 && <tr><td colSpan={9} style={{padding:'40px',textAlign:'center',color:'#888'}}>Aucun paiement pour ce mois</td></tr>}
           </tbody>
         </table>
       </div>

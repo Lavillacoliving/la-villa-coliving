@@ -1,4 +1,5 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 import { AuthProvider } from "@/contexts/AuthContext";
 import { LanguageProvider } from "@/contexts/LanguageContext";
 import { NavbarV7 as Navbar } from "@/components/custom/NavbarV7";
@@ -33,52 +34,62 @@ import DashboardMaisonsPage from '@/pages/dashboard/DashboardMaisonsPage';
 import DashboardNouveauBailPage from '@/pages/dashboard/DashboardNouveauBailPage';
 import DashboardDocumentsPage from "@/pages/dashboard/DashboardDocumentsPage";
 
+function AppContent() {
+  const location = useLocation();
+  const isDashboard = location.pathname.startsWith('/dashboard');
+  const isPortail = location.pathname.startsWith('/portail');
+
+  return (
+    <div className="min-h-screen bg-background">
+      {!isDashboard && !isPortail && <Navbar />}
+      <Routes>
+        <Route path="/" element={<HomePage />} />
+        <Route path="/colocation-geneve" element={<ColocationGenevePage />} />
+        <Route path="/the-coliving" element={<ColivingPage />} />
+        <Route path="/services" element={<ServicesPage />} />
+        <Route path="/our-houses" element={<HousesPage />} />
+        <Route path="/rates" element={<RatesPage />} />
+        <Route path="/faq" element={<FAQPage />} />
+        <Route path="/join-us" element={<JoinPage />} />
+        <Route path="/blog" element={<BlogPage />} />
+        <Route path="/blog/:slug" element={<BlogPostPage />} />
+        <Route path="/lavilla" element={<HouseDetailPage />} />
+        <Route path="/leloft" element={<HouseDetailPage />} />
+        <Route path="/lelodge" element={<HouseDetailPage />} />
+        <Route path="/mon-espace" element={<Navigate to="/portail" replace />} />
+        <Route path="/portail" element={<PortailLayout />}>
+          <Route index element={<Navigate to="/portail/ma-maison" replace />} />
+          <Route path="ma-maison" element={<MaMaisonPage />} />
+          <Route path="mon-bail" element={<MonBailPage />} />
+          <Route path="mes-demandes" element={<MesDemandesPage />} />
+          <Route path="communaute" element={<CommunautePage />} />
+        </Route>
+        <Route path="/dashboard" element={<DashboardLayout />}>
+          <Route index element={<Navigate to="/dashboard/loyers" replace />} />
+          <Route path="loyers" element={<DashboardLoyersPage />} />
+          <Route path="locataires" element={<DashboardLocatairesPage />} />
+          <Route path="depenses" element={<DashboardDepensesPage />} />
+          <Route path="maintenance" element={<DashboardMaintenancePage />} />
+          <Route path="prospects" element={<DashboardProspectsPage />} />
+          <Route path="roadmap" element={<DashboardRoadmapPage />} />
+          <Route path="documents" element={<DashboardDocumentsPage />} />
+          <Route path="maisons" element={<DashboardMaisonsPage />} />
+          <Route path="nouveau-bail" element={<DashboardNouveauBailPage />} />
+        </Route>
+        <Route path="*" element={<NotFoundPage />} />
+      </Routes>
+      {!isDashboard && !isPortail && <Footer />}
+    </div>
+  );
+}
+
 function App() {
   return (
     <LanguageProvider>
       <AuthProvider>
       <BrowserRouter>
         <ScrollToTop />
-        <div className="min-h-screen bg-background">
-          <Navbar />
-          <Routes>
-            <Route path="/" element={<HomePage />} />
-            <Route path="/colocation-geneve" element={<ColocationGenevePage />} />
-            <Route path="/the-coliving" element={<ColivingPage />} />
-            <Route path="/services" element={<ServicesPage />} />
-            <Route path="/our-houses" element={<HousesPage />} />
-            <Route path="/rates" element={<RatesPage />} />
-            <Route path="/faq" element={<FAQPage />} />
-            <Route path="/join-us" element={<JoinPage />} />
-            <Route path="/blog" element={<BlogPage />} />
-            <Route path="/blog/:slug" element={<BlogPostPage />} />
-            <Route path="/lavilla" element={<HouseDetailPage />} />
-            <Route path="/leloft" element={<HouseDetailPage />} />
-            <Route path="/lelodge" element={<HouseDetailPage />} />
-            <Route path="/mon-espace" element={<Navigate to="/portail" replace />} />
-            <Route path="/portail" element={<PortailLayout />}>
-              <Route index element={<Navigate to="/portail/ma-maison" replace />} />
-              <Route path="ma-maison" element={<MaMaisonPage />} />
-              <Route path="mon-bail" element={<MonBailPage />} />
-              <Route path="mes-demandes" element={<MesDemandesPage />} />
-              <Route path="communaute" element={<CommunautePage />} />
-            </Route>
-            <Route path="/dashboard" element={<DashboardLayout />}>
-              <Route index element={<Navigate to="/dashboard/loyers" replace />} />
-              <Route path="loyers" element={<DashboardLoyersPage />} />
-              <Route path="locataires" element={<DashboardLocatairesPage />} />
-              <Route path="depenses" element={<DashboardDepensesPage />} />
-              <Route path="maintenance" element={<DashboardMaintenancePage />} />
-              <Route path="prospects" element={<DashboardProspectsPage />} />
-              <Route path="roadmap" element={<DashboardRoadmapPage />} />
-              <Route path="documents" element={<DashboardDocumentsPage />} />
-              <Route path="maisons" element={<DashboardMaisonsPage />} />
-              <Route path="nouveau-bail" element={<DashboardNouveauBailPage />} />
-            </Route>
-            <Route path="*" element={<NotFoundPage />} />
-          </Routes>
-          <Footer />
-        </div>
+        <AppContent />
       </BrowserRouter>
     </AuthProvider>
     </LanguageProvider>
