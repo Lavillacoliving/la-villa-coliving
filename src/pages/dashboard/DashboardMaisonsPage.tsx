@@ -88,7 +88,7 @@ const EMPTY_ROOM: Partial<Room> = {
   notes: '',
 };
 
-const EMPTY_PROPERTY: Partial<Property> = {
+const _EMPTY_PROPERTY: Partial<Property> = {
   name: '',
   address: '',
   city: '',
