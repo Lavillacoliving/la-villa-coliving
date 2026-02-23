@@ -448,6 +448,23 @@ export default function DashboardMaisonsPage() {
                       }
                     />
                   </div>
+                  <div style={{ marginTop: '16px', padding: '12px', background: '#f9f7f4', borderRadius: '8px', borderLeft: '3px solid #c9a96e' }}>
+                    <label style={{ fontSize: '13px', fontWeight: 600, color: '#c9a96e', marginBottom: '8px', display: 'block' }}>Charges forfaitaires mensuelles (CHF)</label>
+                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '8px' }}>
+                      <div>
+                        <label style={S.fieldLabel}>Énergie</label>
+                        <input type="number" style={S.input} value={editPropertyData?.charges_energy_chf || 0} onChange={e => setEditPropertyData({ ...editPropertyData, charges_energy_chf: parseInt(e.target.value) || 0 })} />
+                      </div>
+                      <div>
+                        <label style={S.fieldLabel}>Maintenance</label>
+                        <input type="number" style={S.input} value={editPropertyData?.charges_maintenance_chf || 0} onChange={e => setEditPropertyData({ ...editPropertyData, charges_maintenance_chf: parseInt(e.target.value) || 0 })} />
+                      </div>
+                      <div>
+                        <label style={S.fieldLabel}>Services</label>
+                        <input type="number" style={S.input} value={editPropertyData?.charges_services_chf || 0} onChange={e => setEditPropertyData({ ...editPropertyData, charges_services_chf: parseInt(e.target.value) || 0 })} />
+                      </div>
+                    </div>
+                  </div>
                   <div style={{ display: 'flex', gap: '8px', justifyContent: 'flex-end' }}>
                     <button
                       onClick={() => {
