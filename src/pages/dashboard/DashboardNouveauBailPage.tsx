@@ -500,51 +500,36 @@ async function fetchExchangeRate(): Promise<number> {
   return 0.9400;
 }
 
-async function generatePDF(contractHTML: string): Promise<void> {
-  const loadHtml2Pdf = (): Promise<any> =>
-    new Promise((resolve) => {
-      if ((window as any).html2pdf) return resolve((window as any).html2pdf);
-      const s = document.createElement('script');
-      s.src =
-        'https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js';
-      s.onload = () => resolve((window as any).html2pdf);
-      document.head.appendChild(s);
-    });
-
-  const html2pdf = await loadHtml2Pdf();
-  const container = document.createElement("div");
-  container.style.cssText = "position:fixed;left:-9999px;top:0;width:794px;background:#fff;z-index:-1";
-  container.innerHTML = contractHTML;
-  document.body.appendChild(container);
-  await new Promise(r => setTimeout(r, 800));
-
-
-  const options = {
-    margin: [10, 12, 14, 12],
-    filename: 'bail_meuble_lavilla.pdf',
-    image: { type: 'jpeg', quality: 0.98 },
-    html2canvas: {
-      scale: 2,
-      useCORS: true,
-      allowTaint: true,
-      backgroundColor: '#fff',
-    },
-    jsPDF: {
-      unit: 'mm',
-      format: 'a4',
-    },
-    pagebreak: {
-      mode: ['css', 'legacy'],
-      before: '.page-break',
-    },
-  };
-
-  await html2pdf()
-    .set(options)
-    .from(container)
-    .save('bail_meuble_lavilla.pdf');
-  document.body.removeChild(container);
+function generatePDF(contractHTML: string): void {
+  const w = window.open('', '_blank');
+  if (!w) { alert('Autorisez les popups pour ce site'); return; }
+  w.document.write('<!DOCTYPE html><html lang=fr><head>');
+  w.document.write('<meta charset=UTF-8>');
+  w.document.write('<title>Bail - La Villa Coliving</title>');
+  w.document.write('<style>');
+  w.document.write('@page{size:A4;margin:20mm 15mm 25mm 15mm}');
+  w.document.write('*{margin:0;padding:0;box-sizing:border-box}');
+  w.document.write('body{font-family:Georgia,serif;font-size:11pt;line-height:1.5;color:#1a1a1a;background:#fff}');
+  w.document.write('h1{font-size:18pt;text-align:center;margin:20px 0 10px}');
+  w.document.write('h2{font-size:13pt;margin:18px 0 6px;border-bottom:1px solid #c9a96e;padding-bottom:4px}');
+  w.document.write('p{margin:6px 0;text-align:justify}');
+  w.document.write('table{width:100%;border-collapse:collapse;margin:8px 0}');
+  w.document.write('td,th{padding:6px 8px;border-bottom:1px solid #e0e0e0;font-size:10pt}');
+  w.document.write('ul,ol{margin:6px 0 6px 20px}li{margin:3px 0}');
+  w.document.write('.page-break{page-break-before:always}');
+  w.document.write('@media print{body{padding:0}.no-print{display:none!important}}');
+  w.document.write('.bar{position:fixed;top:0;left:0;right:0;background:#c9a96e;color:#fff;padding:12px 24px;');
+  w.document.write('display:flex;align-items:center;gap:16px;z-index:9999;font-family:Arial,sans-serif}');
+  w.document.write('.bar button{background:#fff;color:#333;border:none;padding:8px 20px;border-radius:4px;font-weight:600;cursor:pointer}');
+  w.document.write('.wrap{padding-top:60px;max-width:210mm;margin:0 auto;padding-left:15mm;padding-right:15mm}');
+  w.document.write('</style></head><body>');
+  w.document.write('<div class="bar no-print"><span>Bail La Villa Coliving</span>');
+  w.document.write('<button onclick="window.print()">Enregistrer PDF / Imprimer</button>');
+  w.document.write('<button onclick="window.close()">Fermer</button></div>');
+  w.document.write('<div class=wrap>' + contractHTML + '</div></body></html>');
+  w.document.close();
 }
+
 
 export default function DashboardNouveauBailPage() {
   const [properties, setProperties] = useState<Property[]>([]);
