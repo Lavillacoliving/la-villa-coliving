@@ -13,6 +13,9 @@ interface Property {
   id_fiscal: string;
   common_areas: string[];
   contract_building_desc: string;
+  charges_energy_chf: number;
+  charges_maintenance_chf: number;
+  charges_services_chf: number;
 }
 
 interface Room {
@@ -363,7 +366,7 @@ function generateContractHTML(data: ContractData): string {
           </ul>
           <h3>Frais de dossier :</h3>
           <ul>
-            <li><strong>Montant :</strong> ${fEUR(form.frais_dossier / form.exchange_rate)} (${fCHF(form.frais_dossier)})</li>
+            <li><strong>Montant :</strong> ${fEUR(form.frais_dossier)} (${fCHF(form.frais_dossier * form.exchange_rate)})</li>
             <li><strong>Statut :</strong> OFFERTS par le bailleur</li>
           </ul>
           <h3>Modalités de paiement :</h3>
@@ -572,6 +575,16 @@ export default function DashboardNouveauBailPage() {
 
     const prop = properties.find((p) => p.id === pid);
     setSelectedProperty(prop || null);
+    if (prop) {
+      setForm((prev) => ({
+        ...prev,
+        property_id: pid,
+        room_id: "",
+        charges_energy: prop.charges_energy_chf || 130,
+        charges_maintenance: prop.charges_maintenance_chf || 200,
+        charges_services: prop.charges_services_chf || 90,
+      }));
+    }
 
     const propRooms = rooms.filter((r) => r.property_id === pid);
     setFilteredRooms(propRooms);

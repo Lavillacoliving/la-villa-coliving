@@ -91,7 +91,7 @@ function fEUR(n: number): string {
     style: "currency",
     currency: "EUR",
     maximumFractionDigits: 0,
-  }).format(n);
+  }).format(n).replace(/[  ]/g," ");
 }
 
 function fCHF(n: number): string {
@@ -99,7 +99,7 @@ function fCHF(n: number): string {
     style: "currency",
     currency: "CHF",
     maximumFractionDigits: 0,
-  }).format(n);
+  }).format(n).replace(/[  ]/g," ");
 }
 
 const gold = "#c9a96e";
@@ -382,7 +382,7 @@ export function BailPDF({ data }: { data: BailPDFData }) {
         <Bullet>{"La r\u00E9vision s\u2019effectue chaque ann\u00E9e \u00E0 la date anniversaire du contrat."}</Bullet>
 
         <Text style={s.subTitle}>Frais de dossier :</Text>
-        <Bullet>Montant : {fEUR(form.frais_dossier / rate)} ({fCHF(form.frais_dossier)}) — OFFERTS par le bailleur</Bullet>
+        <Bullet>Montant : {fEUR(form.frais_dossier)} ({fCHF(form.frais_dossier * rate)}) — OFFERTS par le bailleur</Bullet>
 
         <Text style={s.subTitle}>{"Modalit\u00E9s de paiement :"}</Text>
         <Bullet>{"Le loyer et les charges doivent \u00EAtre vers\u00E9s avant le 5 du mois."}</Bullet>

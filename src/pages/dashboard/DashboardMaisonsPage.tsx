@@ -26,6 +26,9 @@ interface Property {
   features_en: string | null;
   status: string;
   is_coliving: boolean;
+  charges_energy_chf: number;
+  charges_maintenance_chf: number;
+  charges_services_chf: number;
 }
 
 interface Room {
@@ -216,6 +219,9 @@ export default function DashboardMaisonsPage() {
       common_areas: editPropertyData.common_areas || [],
       contract_building_desc: editPropertyData.contract_building_desc || null,
       manager_name: editPropertyData.manager_name || null,
+      charges_energy_chf: editPropertyData.charges_energy_chf || 0,
+      charges_maintenance_chf: editPropertyData.charges_maintenance_chf || 0,
+      charges_services_chf: editPropertyData.charges_services_chf || 0,
     };
     const { error } = await supabase.from('properties').update(data).eq('id', selectedPropertyId);
     setSavingProperty(false);
