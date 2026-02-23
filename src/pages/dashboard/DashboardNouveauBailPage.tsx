@@ -512,12 +512,17 @@ async function generatePDF(contractHTML: string): Promise<void> {
     });
 
   const html2pdf = await loadHtml2Pdf();
+  const container = document.createElement("div");
+  container.style.cssText = "position:fixed;left:-9999px;top:0;width:794px;background:#fff;z-index:-1";
+  container.innerHTML = contractHTML;
+  document.body.appendChild(container);
+  await new Promise(r => setTimeout(r, 800));
 
-  const element = document.createElement('div');
-  element.innerHTML = contractHTML;
 
   const options = {
-    margin: [12, 14, 16, 14],
+    margin: [10, 12, 14, 12],
+    filename: 'bail_meuble_lavilla.pdf',
+    image: { type: 'jpeg', quality: 0.98 },
     html2canvas: {
       scale: 2,
       useCORS: true,
@@ -534,10 +539,11 @@ async function generatePDF(contractHTML: string): Promise<void> {
     },
   };
 
-  html2pdf()
+  await html2pdf()
     .set(options)
-    .from(element)
+    .from(container)
     .save('bail_meuble_lavilla.pdf');
+  document.body.removeChild(container);
 }
 
 export default function DashboardNouveauBailPage() {
