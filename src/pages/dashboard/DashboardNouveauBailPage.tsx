@@ -123,22 +123,22 @@ function generateContractHTML(data: ContractData): string {
       </tr>
       <tr style="border-bottom:1px solid #f0f0f0;">
         <td style="padding:8px;">Énergie (eau, chauffage, électricité)</td>
-        <td style="padding:8px;text-align:right;">${fEUR(form.charges_energy / 0.9400)}</td>
+        <td style="padding:8px;text-align:right;">${fEUR(form.charges_energy / form.exchange_rate)}</td>
         <td style="padding:8px;text-align:right;">${fCHF(form.charges_energy)}</td>
       </tr>
       <tr style="border-bottom:1px solid #f0f0f0;">
         <td style="padding:8px;">Maintenance & Entretien</td>
-        <td style="padding:8px;text-align:right;">${fEUR(form.charges_maintenance / 0.9400)}</td>
+        <td style="padding:8px;text-align:right;">${fEUR(form.charges_maintenance / form.exchange_rate)}</td>
         <td style="padding:8px;text-align:right;">${fCHF(form.charges_maintenance)}</td>
       </tr>
       <tr style="border-bottom:1px solid #f0f0f0;">
         <td style="padding:8px;">Services (ménage, yoga, support)</td>
-        <td style="padding:8px;text-align:right;">${fEUR(form.charges_services / 0.9400)}</td>
+        <td style="padding:8px;text-align:right;">${fEUR(form.charges_services / form.exchange_rate)}</td>
         <td style="padding:8px;text-align:right;">${fCHF(form.charges_services)}</td>
       </tr>
       <tr style="background:#f9f7f4;font-weight:600;border-bottom:2px solid #c9a96e;">
         <td style="padding:8px;">TOTAL CHARGES MENSUELLES</td>
-        <td style="padding:8px;text-align:right;">${fEUR((form.charges_energy + form.charges_maintenance + form.charges_services) / 0.9400)}</td>
+        <td style="padding:8px;text-align:right;">${fEUR((form.charges_energy + form.charges_maintenance + form.charges_services) / form.exchange_rate)}</td>
         <td style="padding:8px;text-align:right;">${fCHF(form.charges_energy + form.charges_maintenance + form.charges_services)}</td>
       </tr>
     </table>
@@ -566,7 +566,25 @@ export default function DashboardNouveauBailPage() {
     };
 
     loadData();
+    const onFocus = () => loadData();
+    window.addEventListener("focus", onFocus);
+    return () => window.removeEventListener("focus", onFocus);
   }, []);
+
+  // Sync charges when properties data refreshes
+  useEffect(() => {
+    if (form.property_id && properties.length > 0) {
+      const prop = properties.find((p) => p.id === form.property_id);
+      if (prop) {
+        setForm((prev) => ({
+          ...prev,
+          charges_energy: prop.charges_energy_chf || 130,
+          charges_maintenance: prop.charges_maintenance_chf || 200,
+          charges_services: prop.charges_services_chf || 90,
+        }));
+      }
+    }
+  }, [properties]);
 
   // Handle property change
   const handlePropertyChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
