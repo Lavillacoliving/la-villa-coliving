@@ -116,7 +116,6 @@ export default function DashboardLocatairesPage() {
     if (!modal.room_number) { toast.warning('Numéro de chambre obligatoire'); return; }
     if (!modal.current_rent) { toast.warning('Loyer obligatoire'); return; }
     setSaving(true);
-    const prop = properties.find(p=>p.id===modal.property_id);
     const data: any = {
       first_name:modal.first_name, last_name:modal.last_name, email:modal.email||null,
       phone:modal.phone||null, property_id:modal.property_id, room_number:modal.room_number,

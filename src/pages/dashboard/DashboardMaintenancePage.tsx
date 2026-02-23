@@ -132,12 +132,6 @@ export default function DashboardMaintenancePage() {
     load();
   };
 
-  const resolveReporter = (id: string|null): string => {
-    if (!id) return '-';
-    const t = tenantsLookup.find(t => t.id === id);
-    return t ? `${t.first_name} ${t.last_name}` : (id.length > 20 ? id.substring(0,8)+'...' : id);
-  };
-
   const S = {
     card:{background:"#fff",borderRadius:"12px",padding:"20px",boxShadow:"0 1px 3px rgba(0,0,0,0.1)"},
     label:{fontSize:"12px",color:"#888",marginBottom:"4px"},
