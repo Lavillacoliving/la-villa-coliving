@@ -24,15 +24,21 @@ interface Room {
   id: string;
   property_id: string;
   name: string;
+  room_number: number;
   surface_m2: number;
-  floor: number;
+  floor: string;
+  location_detail: string | null;
   description: string;
   bathroom_type: string;
+  bathroom_detail: string | null;
   has_parking: boolean;
   parking_detail: string | null;
+  has_balcony: boolean;
+  has_terrace: boolean;
+  has_private_entrance: boolean;
   rent_chf: number;
-  specifics: string | null;
-  furniture_inventory: string | null;
+  specifics: Record<string, any> | null;
+  furniture_inventory: Array<{item: string; qty: number}> | null;
 }
 
 interface FormData {
@@ -306,10 +312,14 @@ export function BailPDF({ data }: { data: BailPDFData }) {
         <Text style={s.body}>
           {"Le bailleur loue au locataire un logement meubl\u00E9 comprenant :"}
         </Text>
-        <Bullet>Chambre : {ph(room.name, "Chambre")} — Surface : {room.surface_m2} m² — {"\u00C9tage : "}{room.floor}</Bullet>
+<Bullet>Chambre : {ph(room.name, "Chambre")} — Surface : {room.surface_m2} m² — {"Étage : "}{room.floor}</Bullet>
+        {room.location_detail && <Bullet>Emplacement : {room.location_detail}</Bullet>}
         <Bullet>Description : {ph(room.description, "Description")}</Bullet>
-        <Bullet>Salle de bain : {ph(room.bathroom_type, "Type")}</Bullet>
+        <Bullet>Salle de bain : {ph(room.bathroom_type, "Type")}{room.bathroom_detail ? ` — ${room.bathroom_detail}` : ""}</Bullet>
         {room.has_parking && <Bullet>Parking : {room.parking_detail || "Oui"}</Bullet>}
+        {room.has_balcony && <Bullet>Balcon : Oui</Bullet>}
+        {room.has_terrace && <Bullet>Terrasse : Oui</Bullet>}
+        {room.has_private_entrance && <Bullet>{"Entr\u00e9e priv\u00e9e : Oui"}</Bullet>}
 
         <Text style={s.subTitle}>{"Acc\u00E8s aux parties communes :"}</Text>
         {(property.common_areas || []).map((area: string, i: number) => (
@@ -329,6 +339,15 @@ export function BailPDF({ data }: { data: BailPDFData }) {
         <Bullet>{"Acc\u00E8s streaming (Netflix, Spotify, etc.)"}</Bullet>
         <Bullet>Fournitures de base mensuelles</Bullet>
         <Bullet>{"Ordures m\u00E9nag\u00E8res, balayage, assainissement"}</Bullet>
+
+        {room.furniture_inventory && room.furniture_inventory.length > 0 && (
+          <View>
+            <Text style={s.subTitle}>{"Inventaire du mobilier fourni :"}</Text>
+            {room.furniture_inventory.map((fi: any, i: number) => (
+              <Bullet key={i}>{fi.item}{fi.qty > 1 ? ` (\u00d7${fi.qty})` : ""}</Bullet>
+            ))}
+          </View>
+        )}
 
         <Text style={s.articleTitle}>{"ARTICLE III \u2014 DATE DE PRISE D\u2019EFFET ET DUR\u00C9E"}</Text>
         <Text style={s.body}>

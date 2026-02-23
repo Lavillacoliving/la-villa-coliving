@@ -7,30 +7,42 @@ interface Property {
   id: string;
   name: string;
   legal_entity_name: string;
+  legal_entity_type: string;
   siret: string;
   tva: string;
   siege_social: string;
   id_fiscal: string;
+  address: string;
+  city: string;
   common_areas: string[];
   contract_building_desc: string;
   charges_energy_chf: number;
   charges_maintenance_chf: number;
   charges_services_chf: number;
+  deposit_months: number;
+  entity_id: string | null;
+  manager_name: string;
 }
 
 interface Room {
   id: string;
   property_id: string;
   name: string;
+  room_number: number;
   surface_m2: number;
-  floor: number;
+  floor: string;
+  location_detail: string | null;
   description: string;
   bathroom_type: string;
+  bathroom_detail: string | null;
   has_parking: boolean;
   parking_detail: string | null;
+  has_balcony: boolean;
+  has_terrace: boolean;
+  has_private_entrance: boolean;
   rent_chf: number;
-  specifics: string | null;
-  furniture_inventory: string | null;
+  specifics: Record<string, any> | null;
+  furniture_inventory: Array<{item: string; qty: number}> | null;
 }
 
 interface FormData {
@@ -314,10 +326,19 @@ function generateContractHTML(data: ContractData): string {
             <li><strong>Chambre :</strong> ${ph(room.name, 'Chambre')}</li>
             <li><strong>Surface :</strong> ${room.surface_m2} m²</li>
             <li><strong>Étage :</strong> ${room.floor}</li>
+            ${room.location_detail ? `<li><strong>Emplacement :</strong> ${room.location_detail}</li>` : ''}
             <li><strong>Description :</strong> ${ph(room.description, 'Description')}</li>
-            <li><strong>Salle de bain :</strong> ${ph(room.bathroom_type, 'Type')}</li>
+            <li><strong>Salle de bain :</strong> ${ph(room.bathroom_type, 'Type')}${room.bathroom_detail ? ` — ${room.bathroom_detail}` : ''}</li>
             ${room.has_parking ? `<li><strong>Parking :</strong> ${room.parking_detail || 'Oui'}</li>` : ''}
+            ${room.has_balcony ? '<li><strong>Balcon :</strong> Oui</li>' : ''}
+            ${room.has_terrace ? '<li><strong>Terrasse :</strong> Oui</li>' : ''}
+            ${room.has_private_entrance ? `<li><strong>Entrée privée :</strong> Oui</li>` : ''}
           </ul>
+          ${(room.furniture_inventory && room.furniture_inventory.length > 0) ? `
+          <p><strong>Inventaire du mobilier fourni :</strong></p>
+          <ul>
+            ${room.furniture_inventory.map((fi: any) => `<li>${fi.item}${fi.qty > 1 ? ' (\u00d7' + fi.qty + ')' : ''}</li>`).join('')}
+          </ul>` : ''}
           <p><strong>Accès aux parties communes :</strong></p>
           <ul>
             ${commonAreasList}
@@ -539,6 +560,7 @@ export default function DashboardNouveauBailPage() {
 
   const [selectedProperty, setSelectedProperty] = useState<Property | null>(null);
   const [selectedRoom, setSelectedRoom] = useState<Room | null>(null);
+  const [saving, setSaving] = useState(false);
 
   // Load fonts
   useEffect(() => {
@@ -636,7 +658,73 @@ export default function DashboardNouveauBailPage() {
   const depotEUR = loyerEUR * 2;
 
   // Generate contract data
-  const contractData: ContractData | null =
+  // === SAVE BAIL: create tenant + deactivate old ===
+  const handleSaveBail = async () => {
+    if (!selectedRoom || !selectedProperty) { alert('Sélectionnez une propriété et une chambre'); return; }
+    if (!form.locataire_nom || !form.locataire_prenom || !form.locataire_email || !form.entry_date) {
+      alert('Remplissez les champs obligatoires : Nom, Prénom, Email, Date d\'entrée'); return;
+    }
+    setSaving(true);
+    try {
+      // 1) Check for existing active tenant in this room
+      const { data: existing } = await supabase
+        .from('tenants').select('id, first_name, last_name')
+        .eq('property_id', form.property_id)
+        .eq('room_number', selectedRoom.room_number)
+        .eq('is_active', true);
+
+      if (existing && existing.length > 0) {
+        const old = existing[0];
+        const ok = window.confirm(
+          `${old.first_name} ${old.last_name} occupe actuellement cette chambre.\nVoulez-vous le désactiver et enregistrer le nouveau bail ?`
+        );
+        if (!ok) { setSaving(false); return; }
+        // Deactivate old tenant (keep all data)
+        await supabase.from('tenants').update({ is_active: false }).eq('id', old.id);
+      }
+
+      // 2) Calculate dates
+      const entryDate = new Date(form.entry_date + 'T00:00:00');
+      const bailEnd = new Date(entryDate);
+      bailEnd.setFullYear(bailEnd.getFullYear() + 1);
+      const bailEndStr = bailEnd.toISOString().split('T')[0];
+
+      // 3) Calculate amounts
+      const loyerEur = Math.round(form.loyer_chf / form.exchange_rate);
+      const depositMonths = selectedProperty.deposit_months || 2;
+      const depositEur = loyerEur * depositMonths;
+
+      // 4) Insert new tenant
+      const { error } = await supabase.from('tenants').insert({
+        first_name: form.locataire_prenom,
+        last_name: form.locataire_nom,
+        email: form.locataire_email,
+        phone: form.locataire_phone || null,
+        property_id: form.property_id,
+        room_number: selectedRoom.room_number,
+        current_rent: loyerEur,
+        is_active: true,
+        move_in_date: form.entry_date,
+        bail_end: bailEndStr,
+        deposit_amount: depositEur,
+        deposit_received_date: form.entry_date,
+        due_day: 5,
+        date_of_birth: form.locataire_dob || null,
+        place_of_birth: form.locataire_birthplace || null,
+        entity_id: selectedProperty.entity_id || null,
+        notes: 'Bail généré automatiquement le ' + new Date().toLocaleDateString('fr-FR'),
+      });
+
+      if (error) throw error;
+      alert(`Locataire ${form.locataire_prenom} ${form.locataire_nom} créé avec succès !\nChambre : ${selectedRoom.name}\nBail : ${form.entry_date} → ${bailEndStr}`);
+    } catch (err: any) {
+      alert('Erreur : ' + (err.message || err));
+    } finally {
+      setSaving(false);
+    }
+  };
+
+    const contractData: ContractData | null =
     selectedProperty && selectedRoom
       ? {
           property: selectedProperty,
@@ -748,13 +836,26 @@ export default function DashboardNouveauBailPage() {
                   <p>
                     <strong>Étage :</strong> {selectedRoom.floor}
                   </p>
+                  {selectedRoom.location_detail && (
+                    <p>
+                      <strong>Emplacement :</strong> {selectedRoom.location_detail}
+                    </p>
+                  )}
                   <p>
-                    <strong>SdB :</strong> {selectedRoom.bathroom_type}
+                    <strong>SdB :</strong> {selectedRoom.bathroom_type}{selectedRoom.bathroom_detail ? ` — ${selectedRoom.bathroom_detail}` : ""}
                   </p>
                   {selectedRoom.has_parking && (
                     <p>
                       <strong>Parking :</strong> {selectedRoom.parking_detail || 'Oui'}
                     </p>
+                  )}
+                  {selectedRoom.has_balcony && (<p><strong>Balcon :</strong> Oui</p>)}
+                  {selectedRoom.has_terrace && (<p><strong>Terrasse :</strong> Oui</p>)}
+                  {selectedRoom.has_private_entrance && (<p><strong>Entrée privée :</strong> Oui</p>)}
+                  {selectedRoom.furniture_inventory && selectedRoom.furniture_inventory.length > 0 && (
+                    <div style={{marginTop:"8px"}}><strong>Mobilier :</strong>{" "}
+                    {selectedRoom.furniture_inventory.map((fi: any) => fi.item + (fi.qty > 1 ? ` (×${fi.qty})` : "" )).join(", ")}
+                    </div>
                   )}
                 </div>
               </>
@@ -1120,6 +1221,20 @@ export default function DashboardNouveauBailPage() {
             }}
           >
             ⎙ Imprimer
+          </button>
+          <button
+            onClick={handleSaveBail}
+            disabled={!contractData || saving}
+            style={{
+              flex:1, padding:'12px',
+              background: saving ? '#999' : '#27AB9F',
+              color:'white', border:'none',
+              borderRadius:'4px', fontWeight:'600',
+              cursor: (!contractData||saving) ? 'not-allowed' : 'pointer',
+              fontSize:'14px',
+            }}
+          >
+            {saving ? 'Enregistrement...' : '✓ Enregistrer le bail'}
           </button>
         </div>
       </div>
