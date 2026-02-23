@@ -3,6 +3,8 @@ import { useOutletContext } from 'react-router-dom';
 import type { TenantInfo } from '@/hooks/useTenant';
 import { usePayments } from '@/hooks/usePayments';
 import { supabase } from '@/lib/supabase';
+import { pdf } from '@react-pdf/renderer';
+import { QuittancePDF } from './QuittancePDF';
 
 interface PortailContext {
   tenant: TenantInfo;
@@ -43,7 +45,59 @@ export function MonBailPage() {
     return (bytes / 1048576).toFixed(1) + ' Mo';
   };
 
+  const [generatingQuittance, setGeneratingQuittance] = useState<string | null>(null);
+
   const months = language === 'en' ? MONTHS_EN : MONTHS_FR;
+
+  const generateQuittance = async (payment: { month: string; received_amount: number | null; payment_date: string | null }) => {
+    if (!payment.received_amount || !payment.payment_date) return;
+    setGeneratingQuittance(payment.month);
+
+    try {
+      const parts = payment.month.split('-');
+      const year = parseInt(parts[0]);
+      const monthIdx = parseInt(parts[1]) - 1;
+      const monthLabel = `${MONTHS_FR[monthIdx]} ${year}`;
+      const lastDay = new Date(year, monthIdx + 1, 0).getDate();
+      const pad = (n: number) => n.toString().padStart(2, '0');
+
+      // Calculate charges vs loyer nu
+      // charges in CHF from property, convert roughly (1 CHF ~ 0.95 EUR approximate)
+      const totalChargesCHF = (tenant.charges_energy_chf || 0) + (tenant.charges_maintenance_chf || 0) + (tenant.charges_services_chf || 0);
+      // Approximate EUR conversion — use ratio of tenant rent to total
+      const chargesEUR = totalChargesCHF > 0 ? Math.round(totalChargesCHF * 0.95 * 100) / 100 : 0;
+      const loyerNu = Math.max(0, payment.received_amount - chargesEUR);
+
+      const data = {
+        bailleur_name: tenant.legal_entity_name || 'La Villa Coliving',
+        bailleur_address: tenant.siege_social || tenant.property_address,
+        bailleur_siret: tenant.siret || '',
+        locataire_name: `${tenant.first_name} ${tenant.last_name}`,
+        property_name: tenant.property_name,
+        property_address: tenant.property_address,
+        room_number: String(tenant.room_number),
+        month_label: monthLabel,
+        period_start: `${pad(1)}/${pad(monthIdx + 1)}/${year}`,
+        period_end: `${pad(lastDay)}/${pad(monthIdx + 1)}/${year}`,
+        loyer_nu: loyerNu,
+        charges: chargesEUR,
+        total: payment.received_amount,
+        payment_date: new Date(payment.payment_date).toLocaleDateString('fr-FR'),
+        generated_date: new Date().toLocaleDateString('fr-FR'),
+      };
+
+      const blob = await pdf(<QuittancePDF data={data} />).toBlob();
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `Quittance_${tenant.last_name}_${payment.month}.pdf`;
+      a.click();
+      URL.revokeObjectURL(url);
+    } catch (err) {
+      console.error('Quittance generation error:', err);
+    }
+    setGeneratingQuittance(null);
+  };
 
   const t = {
     fr: {
@@ -74,7 +128,9 @@ export function MonBailPage() {
       noDocuments: 'Aucun document disponible pour le moment.',
       download: 'Télécharger',
       quittances: 'Quittances de loyer',
-      quittComingSoon: 'La génération automatique de quittances arrive prochainement.',
+      noQuittances: 'Les quittances sont disponibles pour les mois payés.',
+      downloadQuittance: 'PDF',
+      generating: 'Génération...',
     },
     en: {
       leaseInfo: 'Lease Information',
@@ -104,7 +160,9 @@ export function MonBailPage() {
       noDocuments: 'No documents available yet.',
       download: 'Download',
       quittances: 'Rent Receipts',
-      quittComingSoon: 'Automatic rent receipt generation coming soon.',
+      noQuittances: 'Receipts are available for paid months.',
+      downloadQuittance: 'PDF',
+      generating: 'Generating...',
     },
   };
 
@@ -262,12 +320,41 @@ export function MonBailPage() {
         )}
       </div>
 
-      {/* Quittances placeholder */}
+      {/* Quittances */}
       <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
-        <h2 className="text-lg font-semibold text-gray-900 mb-3 flex items-center gap-2">
+        <h2 className="text-lg font-semibold text-gray-900 mb-4 flex items-center gap-2">
 {lang.quittances}
         </h2>
-        <p className="text-sm text-gray-500">{lang.quittComingSoon}</p>
+        {paymentsLoading ? (
+          <div className="animate-pulse text-sm text-gray-400">...</div>
+        ) : (() => {
+          const paidPayments = payments.filter(p => p.status === 'paid' && p.received_amount);
+          if (paidPayments.length === 0) {
+            return <p className="text-sm text-gray-500">{lang.noQuittances}</p>;
+          }
+          return (
+            <div className="space-y-2">
+              {paidPayments.map((p) => (
+                <div key={`q-${p.id}`} className="flex items-center justify-between p-3 rounded-lg border border-gray-100 hover:bg-gray-50 transition-colors">
+                  <div className="flex items-center gap-3">
+                    <span className="text-lg">\ud83d\udcc3</span>
+                    <div>
+                      <p className="text-sm font-medium text-gray-900">{formatMonth(p.month)}</p>
+                      <p className="text-xs text-gray-400">{formatCurrency(p.received_amount || 0)}</p>
+                    </div>
+                  </div>
+                  <button
+                    onClick={() => generateQuittance(p)}
+                    disabled={generatingQuittance === p.month}
+                    className="px-3 py-1.5 text-xs font-medium text-[#b8860b] bg-[#b8860b]/10 rounded-lg hover:bg-[#b8860b]/20 transition-colors disabled:opacity-50"
+                  >
+                    {generatingQuittance === p.month ? lang.generating : lang.downloadQuittance}
+                  </button>
+                </div>
+              ))}
+            </div>
+          );
+        })()}
       </div>
     </div>
   );

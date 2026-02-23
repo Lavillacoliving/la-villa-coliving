@@ -22,6 +22,13 @@ export interface TenantInfo {
   property_id: string;
   property_name: string;
   property_address: string;
+  property_city: string;
+  legal_entity_name: string;
+  siege_social: string;
+  siret: string;
+  charges_energy_chf: number;
+  charges_maintenance_chf: number;
+  charges_services_chf: number;
 }
 
 export function useTenant() {
@@ -44,7 +51,7 @@ export function useTenant() {
           current_rent, move_in_date, move_out_date, deposit_amount, due_day,
           bail_end, preavis_status, preavis_date, bio, is_visible_annuaire,
           property_id,
-          properties!inner(name, address)
+          properties!inner(name, address, city, legal_entity_name, siege_social, siret, charges_energy_chf, charges_maintenance_chf, charges_services_chf)
         `)
         .eq('email', user!.email!)
         .eq('is_active', true)
@@ -56,6 +63,13 @@ export function useTenant() {
           ...data,
           property_name: prop?.name || '',
           property_address: prop?.address || '',
+          property_city: prop?.city || '',
+          legal_entity_name: prop?.legal_entity_name || '',
+          siege_social: prop?.siege_social || '',
+          siret: prop?.siret || '',
+          charges_energy_chf: prop?.charges_energy_chf || 0,
+          charges_maintenance_chf: prop?.charges_maintenance_chf || 0,
+          charges_services_chf: prop?.charges_services_chf || 0,
         } as TenantInfo);
       }
       setLoading(false);
