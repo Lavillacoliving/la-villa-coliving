@@ -12,6 +12,8 @@ const TABS = [
   { id: 'prospects', label: 'Prospects', path: '/dashboard/prospects' },
   { id: 'roadmap', label: 'Roadmap', path: '/dashboard/roadmap' },
   { id: 'documents', label: 'Documents', path: '/dashboard/documents' },
+  { id: 'maisons', label: 'Maisons', path: '/dashboard/maisons' },
+  { id: 'nouveau-bail', label: 'Nouveau Bail', path: '/dashboard/nouveau-bail' },
 ];
 
 type AuthStep = 'loading' | 'login' | 'mfa-enroll' | 'mfa-verify' | 'ready';
