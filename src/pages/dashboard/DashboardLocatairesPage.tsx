@@ -1,6 +1,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import { supabase } from '@/lib/supabase';
 import { useToast } from '@/components/ui/Toast';
+import { ENTITY_FILTER_OPTIONS, filterByEntity } from '@/lib/entities';
 
 interface Tenant {
   id: string; first_name: string; last_name: string; email: string; phone: string;
@@ -60,10 +61,13 @@ export default function DashboardLocatairesPage() {
     } else { setTenantDocs([]); }
   }, []);
 
-  const filtered = tenants
-    .filter(t => statusFilter==='all' ? true : statusFilter==='active' ? t.is_active : !t.is_active)
-    .filter(t => filter==='all' || properties.find(p=>p.id===t.property_id)?.slug===filter)
-    .filter(t => !search || (t.first_name+' '+t.last_name).toLowerCase().includes(search.toLowerCase()));
+  const filtered = filterByEntity(
+    tenants
+      .filter(t => statusFilter==='all' ? true : statusFilter==='active' ? t.is_active : !t.is_active)
+      .filter(t => !search || (t.first_name+' '+t.last_name).toLowerCase().includes(search.toLowerCase())),
+    filter,
+    properties
+  );
 
   const activeCount = tenants.filter(t=>t.is_active).length;
   const totalRent = filtered.filter(t=>t.is_active).reduce((s,t)=>s+t.current_rent,0);
@@ -193,8 +197,8 @@ export default function DashboardLocatairesPage() {
 
       {/* Filters */}
       <div style={{display:'flex',gap:'8px',marginBottom:'16px',flexWrap:'wrap',alignItems:'center'}}>
-        {[{v:'all',l:'Toutes les entités'},{v:'la-villa',l:'La Villa (LMP)'},{v:'le-loft',l:'Sleep In (SCI)'},{v:'le-lodge',l:'Le Lodge'}].map(e=>(
-          <button key={e.v} onClick={()=>setFilter(e.v)} style={{...S.btn,background:filter===e.v?'#3D4A38':'#e5e7eb',color:filter===e.v?'#fff':'#555',fontWeight:filter===e.v?600:400}}>{e.l}</button>
+        {ENTITY_FILTER_OPTIONS.map(e=>(
+          <button key={e.value} onClick={()=>setFilter(e.value)} style={{...S.btn,background:filter===e.value?'#3D4A38':'#e5e7eb',color:filter===e.value?'#fff':'#555',fontWeight:filter===e.value?600:400}}>{e.label}</button>
         ))}
       </div>
       <div style={{display:'flex',gap:'8px',marginBottom:'16px',flexWrap:'wrap',alignItems:'center'}}>

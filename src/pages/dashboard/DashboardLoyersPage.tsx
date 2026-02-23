@@ -1,6 +1,8 @@
 import { useState, useEffect, useCallback } from 'react';
 import { supabase } from '@/lib/supabase';
 import { useToast } from '@/components/ui/Toast';
+import { ENTITY_SLUGS } from '@/lib/entities';
+import { logAudit } from '@/lib/auditLog';
 
 interface Payment {
   id: string; tenant_id: string; month: string;
@@ -29,12 +31,7 @@ const ENTITY_MAP: Record<string,string> = {
   'la-villa':'La Villa (LMP)', 'le-loft':'Le Loft — Sleep In SCI', 'le-lodge':'Le Lodge — Sleep In SCI'
 };
 
-// Entity grouping: which slugs belong to which entity filter
-const ENTITY_SLUGS: Record<string, string[]> = {
-  'la-villa': ['la-villa'],
-  'sleep-in': ['le-loft', 'le-lodge'],
-  'mont-blanc': ['mont-blanc'],
-};
+// ENTITY_SLUGS imported from @/lib/entities
 
 function fmt(n: number) { return n.toLocaleString('fr-FR',{minimumFractionDigits:2,maximumFractionDigits:2})+' €'; }
 
@@ -171,6 +168,7 @@ export default function DashboardLoyersPage() {
     if (!irlConfirm) return;
     const {error} = await supabase.from('tenants').update({current_rent:irlConfirm.newRent}).eq('id',irlConfirm.tenantId);
     if (error) { toast.error('Erreur: ' + error.message); setIrlConfirm(null); return; }
+    logAudit('irl_applied', 'tenant', irlConfirm.tenantId, { newRent: irlConfirm.newRent });
     setIrlConfirm(null); load();
   };
 
@@ -210,6 +208,7 @@ export default function DashboardLoyersPage() {
     const { error } = await supabase.from('payments').update(update).eq('id', editingPayment);
     setEditSaving(false);
     if (error) { toast.error('Erreur: ' + error.message); return; }
+    logAudit('payment_recorded', 'payment', editingPayment, { ...update, month });
     setEditingPayment(null);
     load();
   };

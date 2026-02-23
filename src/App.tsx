@@ -33,6 +33,7 @@ import DashboardRoadmapPage from "@/pages/dashboard/DashboardRoadmapPage";
 import DashboardMaisonsPage from '@/pages/dashboard/DashboardMaisonsPage';
 import DashboardNouveauBailPage from '@/pages/dashboard/DashboardNouveauBailPage';
 import DashboardDocumentsPage from "@/pages/dashboard/DashboardDocumentsPage";
+import DashboardEventsPage from "@/pages/dashboard/DashboardEventsPage";
 
 function AppContent() {
   const location = useLocation();
@@ -73,6 +74,7 @@ function AppContent() {
           <Route path="prospects" element={<DashboardProspectsPage />} />
           <Route path="roadmap" element={<DashboardRoadmapPage />} />
           <Route path="documents" element={<DashboardDocumentsPage />} />
+          <Route path="events" element={<DashboardEventsPage />} />
           <Route path="maisons" element={<DashboardMaisonsPage />} />
           <Route path="nouveau-bail" element={<DashboardNouveauBailPage />} />
         </Route>

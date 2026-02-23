@@ -3,6 +3,7 @@ import { supabase } from '@/lib/supabase';
 import { useToast } from '@/components/ui/Toast';
 import { pdf } from '@react-pdf/renderer';
 import { BailPDF } from './BailPDF';
+import { logAudit } from '@/lib/auditLog';
 
 interface Property {
   id: string;
@@ -703,6 +704,42 @@ export default function DashboardNouveauBailPage() {
       });
 
       if (error) throw error;
+
+      // Also persist lease record (P1.10)
+      try {
+        await supabase.from('leases').insert({
+          tenant_first_name: form.locataire_prenom,
+          tenant_last_name: form.locataire_nom,
+          tenant_email: form.locataire_email,
+          property_id: form.property_id,
+          room_number: selectedRoom.room_number,
+          rent_chf: form.loyer_chf,
+          rent_eur: loyerEur,
+          deposit_eur: depositEur,
+          start_date: form.entry_date,
+          end_date: bailEndStr,
+          exchange_rate: form.exchange_rate,
+          charges_energy_chf: selectedProperty.charges_energy_chf || 0,
+          charges_maintenance_chf: selectedProperty.charges_maintenance_chf || 0,
+          charges_services_chf: selectedProperty.charges_services_chf || 0,
+          status: 'active',
+          generated_at: new Date().toISOString(),
+        });
+      } catch (leaseErr) {
+        // Non-blocking: lease table may not exist yet, tenant is the priority
+        console.warn('Lease record not saved (table may not exist yet):', leaseErr);
+      }
+
+      logAudit('lease_generated', 'tenant', undefined, {
+        name: `${form.locataire_prenom} ${form.locataire_nom}`,
+        property: selectedProperty.name,
+        room: selectedRoom.room_number,
+        rent_chf: form.loyer_chf,
+        entry_date: form.entry_date,
+      });
+      if (oldTenantId) {
+        logAudit('tenant_deactivated', 'tenant', oldTenantId);
+      }
       toast.success(`Locataire ${form.locataire_prenom} ${form.locataire_nom} créé avec succès !`);
     } catch (err: any) {
       toast.error('Erreur: ' + (err.message || err));

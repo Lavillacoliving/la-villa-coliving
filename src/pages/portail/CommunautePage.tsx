@@ -21,6 +21,8 @@ export function CommunautePage() {
   const { events, loading: eventsLoading } = useEvents(tenant.property_id);
   const [whatsappUrl, setWhatsappUrl] = useState<string|null>(null);
   const [sharedGroups, setSharedGroups] = useState<{label:{fr:string,en:string},url:string}[]>([]);
+  const [colivers, setColivers] = useState<{first_name:string,bio:string|null,move_in_date:string|null}[]>([]);
+  const [coliversLoading, setColiversLoading] = useState(true);
 
   useEffect(() => {
     // Fetch WhatsApp group URL for this property
@@ -38,6 +40,18 @@ export function CommunautePage() {
             { label: { fr: 'Événements', en: 'Events' }, url: '#' },
           ]);
         }
+      });
+    // Fetch colivers for directory (P2.11)
+    setColiversLoading(true);
+    supabase.from('tenants')
+      .select('first_name, bio, move_in_date')
+      .eq('property_id', tenant.property_id)
+      .eq('is_active', true)
+      .eq('is_visible_annuaire', true)
+      .order('first_name')
+      .then(({ data, error }) => {
+        if (!error && data) setColivers(data);
+        setColiversLoading(false);
       });
   }, [tenant.property_id]);
 
@@ -166,13 +180,32 @@ export function CommunautePage() {
         </div>
       </div>
 
-      {/* Coliver Directory - placeholder */}
+      {/* Coliver Directory */}
       <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
         <h2 className="text-lg font-semibold text-gray-900 mb-2 flex items-center gap-2">
 {lang.directory}
         </h2>
-        <p className="text-sm text-gray-500">{lang.directoryDesc}</p>
-        <p className="text-sm text-gray-400 mt-2 italic">{lang.noVisible}</p>
+        <p className="text-sm text-gray-500 mb-4">{lang.directoryDesc}</p>
+        {coliversLoading ? (
+          <div className="animate-pulse text-sm text-gray-400">...</div>
+        ) : colivers.length === 0 ? (
+          <p className="text-sm text-gray-400 italic">{lang.noVisible}</p>
+        ) : (
+          <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
+            {colivers.map((c, i) => (
+              <div key={i} className="flex flex-col items-center p-4 bg-[#F5F2ED] rounded-lg text-center">
+                <div className="w-12 h-12 rounded-full bg-[#44403C] text-white flex items-center justify-center text-lg font-semibold mb-2">
+                  {c.first_name.charAt(0).toUpperCase()}
+                </div>
+                <p className="text-sm font-medium text-[#1C1917]">{c.first_name}</p>
+                {c.bio && <p className="text-xs text-gray-500 mt-1 line-clamp-2">{c.bio}</p>}
+                {c.move_in_date && (
+                  <p className="text-xs text-gray-400 mt-1">{lang.since} {new Date(c.move_in_date).toLocaleDateString(language === 'en' ? 'en-GB' : 'fr-FR', { month: 'short', year: 'numeric' })}</p>
+                )}
+              </div>
+            ))}
+          </div>
+        )}
       </div>
     </div>
   );

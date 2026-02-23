@@ -1,6 +1,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import { supabase } from '@/lib/supabase';
 import { useToast } from '@/components/ui/Toast';
+import { PROPERTY_FILTER_OPTIONS } from '@/lib/entities';
 
 interface Ticket {
   id: string; title: string; description: string;
@@ -52,6 +53,8 @@ export default function DashboardMaintenancePage() {
   const [isNew, setIsNew] = useState(false);
   const [saving, setSaving] = useState(false);
   const [deleteConfirm, setDeleteConfirm] = useState<{label:string,fn:()=>void}|null>(null);
+  const [photos, setPhotos] = useState<{name:string,url:string}[]>([]);
+  const [uploading, setUploading] = useState(false);
 
   const load = useCallback(async () => {
     setLoading(true);
@@ -77,9 +80,48 @@ export default function DashboardMaintenancePage() {
   const urgentCount = tickets.filter(t=>t.priority==="urgent"&&t.status!=="resolved"&&t.status!=="closed").length;
   const resolvedCount = tickets.filter(t=>t.status==="resolved"||t.status==="closed").length;
 
+  const loadPhotos = async (ticketId: string) => {
+    try {
+      const { data } = await supabase.storage.from('operations').list(`maintenance/${ticketId}`, { limit: 20, sortBy: { column: 'name', order: 'asc' } });
+      if (data && data.length > 0) {
+        const urls = await Promise.all(data.filter(f => f.name !== '.emptyFolderPlaceholder').map(async f => {
+          const { data: signed } = await supabase.storage.from('operations').createSignedUrl(`maintenance/${ticketId}/${f.name}`, 3600);
+          return { name: f.name, url: signed?.signedUrl || '' };
+        }));
+        setPhotos(urls.filter(u => u.url));
+      } else {
+        setPhotos([]);
+      }
+    } catch { setPhotos([]); }
+  };
+
+  const uploadPhotos = async (files: FileList | null) => {
+    if (!files || !modal?.id) return;
+    setUploading(true);
+    let ok = 0;
+    for (let i = 0; i < files.length; i++) {
+      const file = files[i];
+      const ext = file.name.split('.').pop() || 'jpg';
+      const fname = `${Date.now()}_${i}.${ext}`;
+      const { error } = await supabase.storage.from('operations').upload(`maintenance/${modal.id}/${fname}`, file, { upsert: false });
+      if (!error) ok++;
+    }
+    setUploading(false);
+    if (ok > 0) {
+      toast.success(`${ok} photo(s) ajoutée(s)`);
+      loadPhotos(modal.id);
+    }
+  };
+
+  const deletePhoto = async (name: string) => {
+    if (!modal?.id) return;
+    await supabase.storage.from('operations').remove([`maintenance/${modal.id}/${name}`]);
+    loadPhotos(modal.id);
+  };
+
   const openModal = (ticket?: Ticket) => {
-    if (ticket) { setModal({...ticket}); setIsNew(false); }
-    else { setModal({...EMPTY_TICKET}); setIsNew(true); }
+    if (ticket) { setModal({...ticket}); setIsNew(false); loadPhotos(ticket.id); }
+    else { setModal({...EMPTY_TICKET}); setIsNew(true); setPhotos([]); }
   };
 
   const saveModal = async () => {
@@ -154,10 +196,10 @@ export default function DashboardMaintenancePage() {
             }}>{e.l}</button>))}
         </div>
         <div style={{display:"flex",gap:"8px",flexWrap:"wrap",alignItems:"center"}}>
-          {[{v:"all",l:"Toutes"},{v:"la-villa",l:"La Villa"},{v:"le-loft",l:"Le Loft"},{v:"le-lodge",l:"Le Lodge"}].map(e=>(
-            <button key={e.v} onClick={()=>setPropFilter(e.v)} style={{
-              ...S.btn, background:propFilter===e.v?"#1a1a2e":"#e5e7eb",color:propFilter===e.v?"#fff":"#555"
-            }}>{e.l}</button>))}
+          {PROPERTY_FILTER_OPTIONS.map(e=>(
+            <button key={e.value} onClick={()=>setPropFilter(e.value)} style={{
+              ...S.btn, background:propFilter===e.value?"#1a1a2e":"#e5e7eb",color:propFilter===e.value?"#fff":"#555"
+            }}>{e.label}</button>))}
           <button onClick={()=>openModal()} style={{padding:"8px 20px",background:"#3D4A38",color:"#fff",border:"none",borderRadius:"8px",cursor:"pointer",fontSize:"14px",fontWeight:600}}>+ Nouveau ticket</button>
         </div>
       </div>
@@ -261,6 +303,29 @@ export default function DashboardMaintenancePage() {
             <div style={{marginBottom:'16px'}}>
               <label style={S.fieldLabel}>Description</label>
               <textarea style={{...S.input,height:'100px',resize:'vertical'}} value={modal.description||''} onChange={e=>setModal({...modal,description:e.target.value})} placeholder="Détails du problème..."/>
+            </div>
+
+            {/* Photos (P2.12) */}
+            <div style={{marginBottom:'16px'}}>
+              <label style={S.fieldLabel}>Photos</label>
+              {photos.length > 0 && (
+                <div style={{display:'flex',gap:'8px',flexWrap:'wrap',marginBottom:'8px'}}>
+                  {photos.map(p => (
+                    <div key={p.name} style={{position:'relative',width:'80px',height:'80px',borderRadius:'8px',overflow:'hidden',border:'1px solid #e5e7eb'}}>
+                      <img src={p.url} alt={p.name} style={{width:'100%',height:'100%',objectFit:'cover'}} />
+                      <button onClick={()=>deletePhoto(p.name)} style={{position:'absolute',top:'2px',right:'2px',background:'rgba(239,68,68,0.9)',color:'#fff',border:'none',borderRadius:'50%',width:'18px',height:'18px',fontSize:'11px',cursor:'pointer',lineHeight:'18px',padding:0}}>×</button>
+                    </div>
+                  ))}
+                </div>
+              )}
+              {!isNew && modal?.id ? (
+                <label style={{display:'inline-block',padding:'6px 14px',background:'#e5e7eb',borderRadius:'6px',cursor:uploading?'wait':'pointer',fontSize:'13px'}}>
+                  {uploading ? 'Upload...' : '📷 Ajouter des photos'}
+                  <input type="file" multiple accept="image/*" style={{display:'none'}} onChange={e=>uploadPhotos(e.target.files)} disabled={uploading} />
+                </label>
+              ) : (
+                <p style={{fontSize:'12px',color:'#aaa',fontStyle:'italic'}}>Enregistrez le ticket d'abord pour ajouter des photos.</p>
+              )}
             </div>
 
             {/* Resolved info */}

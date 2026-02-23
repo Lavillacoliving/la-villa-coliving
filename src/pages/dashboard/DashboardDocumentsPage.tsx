@@ -123,7 +123,7 @@ export default function DashboardDocumentsPage() {
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px', flexWrap: 'wrap', gap: '12px' }}>
         <h2 style={{ margin: 0, fontSize: '20px', color: '#1a1a2e' }}>Documents</h2>
         <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
-          {['compta', 'operations'].map(b => (
+          {['compta', 'operations', 'tenant-files'].map(b => (
             <button key={b} onClick={() => switchBucket(b)} style={{ ...S.btn, background: bucket === b ? '#3D4A38' : '#e5e7eb', color: bucket === b ? '#fff' : '#555', fontWeight: bucket === b ? 600 : 400, textTransform: 'capitalize' }}>{b}</button>
           ))}
         </div>

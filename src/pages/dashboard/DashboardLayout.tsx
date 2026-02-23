@@ -13,6 +13,7 @@ const TABS = [
   { id: 'prospects', label: 'Prospects', path: '/dashboard/prospects' },
   { id: 'roadmap', label: 'Roadmap', path: '/dashboard/roadmap' },
   { id: 'documents', label: 'Documents', path: '/dashboard/documents' },
+  { id: 'events', label: 'Événements', path: '/dashboard/events' },
   { id: 'maisons', label: 'Maisons', path: '/dashboard/maisons' },
   { id: 'nouveau-bail', label: 'Nouveau Bail', path: '/dashboard/nouveau-bail' },
 ];
