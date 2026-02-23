@@ -106,6 +106,7 @@ export default function DashboardMaisonsPage() {
   const [editingProperty, setEditingProperty] = useState(false);
   const [editPropertyData, setEditPropertyData] = useState<Partial<Property> | null>(null);
   const [savingProperty, setSavingProperty] = useState(false);
+  const [deleteConfirm, setDeleteConfirm] = useState<{label:string,fn:()=>void}|null>(null);
 
   const load = useCallback(async () => {
     setLoading(true);
@@ -189,16 +190,13 @@ export default function DashboardMaisonsPage() {
     load();
   };
 
-  const deleteRoom = async () => {
+  const deleteRoom = () => {
     if (!modalRoom?.id) return;
-    if (!confirm(`Supprimer la chambre ${modalRoom.room_number} ? Irréversible.`)) return;
-    const { error } = await supabase.from('rooms').delete().eq('id', modalRoom.id);
-    if (error) {
-      toast.error('Erreur: ' + error.message);
-      return;
-    }
-    setModalRoom(null);
-    load();
+    setDeleteConfirm({label:`Chambre ${modalRoom.room_number}`,fn:async()=>{
+      const { error } = await supabase.from('rooms').delete().eq('id', modalRoom.id);
+      if (error) { toast.error('Erreur: ' + error.message); return; }
+      setModalRoom(null); load();
+    }});
   };
 
   const saveProperty = async () => {
@@ -886,6 +884,20 @@ export default function DashboardMaisonsPage() {
                   {savingRoom ? '...' : 'Enregistrer'}
                 </button>
               </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Delete confirmation modal */}
+      {deleteConfirm && (
+        <div style={{position:'fixed',top:0,left:0,right:0,bottom:0,background:'rgba(0,0,0,0.6)',display:'flex',alignItems:'center',justifyContent:'center',zIndex:2000}} onClick={()=>setDeleteConfirm(null)}>
+          <div style={{background:'white',borderRadius:'12px',padding:'24px',width:'400px',maxWidth:'90vw'}} onClick={e=>e.stopPropagation()}>
+            <h3 style={{margin:'0 0 12px',fontSize:'16px'}}>⚠️ Confirmer la suppression</h3>
+            <p style={{fontSize:'14px',color:'#555',margin:'0 0 20px'}}>Supprimer <strong>{deleteConfirm.label}</strong> ? Cette action est irréversible.</p>
+            <div style={{display:'flex',gap:'8px',justifyContent:'flex-end'}}>
+              <button onClick={()=>setDeleteConfirm(null)} style={{padding:'8px 16px',border:'1px solid #ddd',background:'#fff',borderRadius:'6px',cursor:'pointer'}}>Annuler</button>
+              <button onClick={()=>{deleteConfirm.fn();setDeleteConfirm(null);}} style={{padding:'8px 16px',background:'#ef4444',color:'#fff',border:'none',borderRadius:'6px',cursor:'pointer',fontWeight:600}}>Supprimer</button>
             </div>
           </div>
         </div>

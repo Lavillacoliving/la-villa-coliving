@@ -42,6 +42,7 @@ export default function DashboardProspectsPage() {
   const [modal, setModal] = useState<Partial<Prospect>|null>(null);
   const [isNew, setIsNew] = useState(false);
   const [saving, setSaving] = useState(false);
+  const [deleteConfirm, setDeleteConfirm] = useState<{label:string,fn:()=>void}|null>(null);
 
   const load = useCallback(async () => {
     setLoading(true);
@@ -97,13 +98,31 @@ export default function DashboardProspectsPage() {
     load();
   };
 
-  const deleteProspect = async () => {
+  const deleteProspect = () => {
     if (!modal?.id) return;
-    if (!confirm(`Supprimer ${modal.first_name} ${modal.last_name} ?`)) return;
-    const { error } = await supabase.from('prospects').delete().eq('id', modal.id);
+    setDeleteConfirm({label:`${modal.first_name} ${modal.last_name}`,fn:async()=>{
+      const { error } = await supabase.from('prospects').delete().eq('id', modal.id);
+      if (error) { toast.error('Erreur: ' + error.message); return; }
+      setModal(null); load();
+    }});
+  };
+
+  const convertToTenant = async () => {
+    if (!modal?.id) return;
+    const data: any = {
+      first_name: modal.first_name, last_name: modal.last_name,
+      email: modal.email || null, phone: modal.phone || null,
+      room_number: 0, current_rent: modal.budget || 0,
+      property_id: '', is_active: true, due_day: 5,
+      move_in_date: modal.move_in_target || null,
+      notes: 'Converti depuis prospect. ' + (modal.notes || ''),
+    };
+    const { error } = await supabase.from('tenants').insert(data);
     if (error) { toast.error('Erreur: ' + error.message); return; }
-    setModal(null);
-    load();
+    // Mark prospect as signed
+    await supabase.from('prospects').update({ status: 'signed', last_contact: new Date().toISOString().split('T')[0] }).eq('id', modal.id);
+    toast.success(modal.first_name + ' converti en locataire');
+    setModal(null); load();
   };
 
   // Quick status change via pipeline drag-like click
@@ -277,12 +296,29 @@ export default function DashboardProspectsPage() {
               <textarea style={{...S.input,height:'80px',resize:'vertical'}} value={modal.notes||''} onChange={e=>setModal({...modal,notes:e.target.value||null})} placeholder="Notes internes sur le prospect..."/>
             </div>
 
-            <div style={{display:'flex',gap:'8px',justifyContent:'space-between'}}>
-              <div>{!isNew && <button onClick={deleteProspect} style={{padding:'8px 16px',background:'#ef4444',color:'#fff',border:'none',borderRadius:'6px',cursor:'pointer',fontSize:'13px'}}>Supprimer</button>}</div>
+            <div style={{display:'flex',gap:'8px',justifyContent:'space-between',flexWrap:'wrap'}}>
+              <div style={{display:'flex',gap:'8px'}}>
+                {!isNew && <button onClick={deleteProspect} style={{padding:'8px 16px',background:'#ef4444',color:'#fff',border:'none',borderRadius:'6px',cursor:'pointer',fontSize:'13px'}}>Supprimer</button>}
+                {!isNew && modal.status !== 'signed' && <button onClick={convertToTenant} style={{padding:'8px 16px',background:'#22c55e',color:'#fff',border:'none',borderRadius:'6px',cursor:'pointer',fontSize:'13px',fontWeight:600}}>✓ Convertir en locataire</button>}
+              </div>
               <div style={{display:'flex',gap:'8px'}}>
                 <button onClick={()=>setModal(null)} style={{padding:'8px 16px',border:'1px solid #ddd',background:'#fff',borderRadius:'6px',cursor:'pointer'}}>Annuler</button>
                 <button onClick={saveModal} disabled={saving} style={{padding:'8px 16px',background:'#b8860b',color:'#fff',border:'none',borderRadius:'6px',cursor:'pointer',fontWeight:600}}>{saving?'...':'Enregistrer'}</button>
               </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Delete confirmation modal */}
+      {deleteConfirm && (
+        <div style={{position:'fixed',top:0,left:0,right:0,bottom:0,background:'rgba(0,0,0,0.6)',display:'flex',alignItems:'center',justifyContent:'center',zIndex:2000}} onClick={()=>setDeleteConfirm(null)}>
+          <div style={{background:'white',borderRadius:'12px',padding:'24px',width:'400px',maxWidth:'90vw'}} onClick={e=>e.stopPropagation()}>
+            <h3 style={{margin:'0 0 12px',fontSize:'16px'}}>⚠️ Confirmer la suppression</h3>
+            <p style={{fontSize:'14px',color:'#555',margin:'0 0 20px'}}>Supprimer <strong>{deleteConfirm.label}</strong> ? Cette action est irréversible.</p>
+            <div style={{display:'flex',gap:'8px',justifyContent:'flex-end'}}>
+              <button onClick={()=>setDeleteConfirm(null)} style={{padding:'8px 16px',border:'1px solid #ddd',background:'#fff',borderRadius:'6px',cursor:'pointer'}}>Annuler</button>
+              <button onClick={()=>{deleteConfirm.fn();setDeleteConfirm(null);}} style={{padding:'8px 16px',background:'#ef4444',color:'#fff',border:'none',borderRadius:'6px',cursor:'pointer',fontWeight:600}}>Supprimer</button>
             </div>
           </div>
         </div>

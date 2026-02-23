@@ -1,6 +1,8 @@
+import { useState, useEffect } from 'react';
 import { useOutletContext } from 'react-router-dom';
 import type { TenantInfo } from '@/hooks/useTenant';
 import { useEvents } from '@/hooks/useEvents';
+import { supabase } from '@/lib/supabase';
 
 interface PortailContext {
   tenant: TenantInfo;
@@ -14,31 +16,30 @@ const eventTypeLabels: Record<string, string> = {
   other: 'Event',
 };
 
-// WhatsApp group links per property (hardcoded)
-const whatsappLinks: Record<string, { label: string; url: string }[]> = {
-  lavilla: [
-    { label: 'Groupe La Villa', url: '#' },
-  ],
-  leloft: [
-    { label: 'Groupe Le Loft', url: '#' },
-  ],
-  lelodge: [
-    { label: 'Groupe Le Lodge', url: '#' },
-  ],
-};
-
-const sharedGroups = [
-  { label: { fr: 'Sport & Fitness', en: 'Sport & Fitness' }, url: '#' },
-  { label: { fr: 'Yoga', en: 'Yoga' }, url: '#' },
-  { label: { fr: 'Événements', en: 'Events' }, url: '#' },
-];
-
 export function CommunautePage() {
   const { tenant, language } = useOutletContext<PortailContext>();
   const { events, loading: eventsLoading } = useEvents(tenant.property_id);
+  const [whatsappUrl, setWhatsappUrl] = useState<string|null>(null);
+  const [sharedGroups, setSharedGroups] = useState<{label:{fr:string,en:string},url:string}[]>([]);
 
-  const propertyKey = tenant.property_name.toLowerCase().replace(/\s+/g, '-')
-    .replace('la-villa', 'lavilla').replace('le-loft', 'leloft').replace('le-lodge', 'lelodge');
+  useEffect(() => {
+    // Fetch WhatsApp group URL for this property
+    supabase.from('properties').select('whatsapp_group_url').eq('id', tenant.property_id).single()
+      .then(({ data }) => { if (data?.whatsapp_group_url) setWhatsappUrl(data.whatsapp_group_url); });
+    // Fetch shared groups from community_groups table (fallback to hardcoded if table doesn't exist)
+    supabase.from('community_groups').select('*').order('sort_order')
+      .then(({ data, error }) => {
+        if (!error && data && data.length > 0) {
+          setSharedGroups(data.map((g: any) => ({ label: { fr: g.label_fr || g.name, en: g.label_en || g.name }, url: g.url || '#' })));
+        } else {
+          setSharedGroups([
+            { label: { fr: 'Sport & Fitness', en: 'Sport & Fitness' }, url: '#' },
+            { label: { fr: 'Yoga', en: 'Yoga' }, url: '#' },
+            { label: { fr: 'Événements', en: 'Events' }, url: '#' },
+          ]);
+        }
+      });
+  }, [tenant.property_id]);
 
   const t = {
     fr: {
@@ -129,18 +130,19 @@ export function CommunautePage() {
         <div className="mb-4">
           <h3 className="text-sm font-medium text-gray-700 mb-2">{lang.propertyGroup}</h3>
           <div className="space-y-2">
-            {(whatsappLinks[propertyKey] || []).map((g, i) => (
+            {whatsappUrl ? (
               <a
-                key={i}
-                href={g.url}
+                href={whatsappUrl}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="flex items-center justify-between p-3 bg-[#F5F2ED] rounded-lg hover:bg-[#E7E5E4] transition-colors"
               >
-                <span className="text-sm font-medium text-[#1C1917]">{g.label}</span>
+                <span className="text-sm font-medium text-[#1C1917]">{language === 'en' ? 'Group' : 'Groupe'} {tenant.property_name}</span>
                 <span className="text-xs text-[#44403C] font-medium">{lang.join} →</span>
               </a>
-            ))}
+            ) : (
+              <p className="text-sm text-gray-400 italic">{language === 'en' ? 'No group link available yet.' : 'Lien de groupe pas encore disponible.'}</p>
+            )}
           </div>
         </div>
 

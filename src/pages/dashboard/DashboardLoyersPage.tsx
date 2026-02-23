@@ -56,6 +56,7 @@ export default function DashboardLoyersPage() {
   const [editingPayment, setEditingPayment] = useState<string|null>(null);
   const [editData, setEditData] = useState<{received_amount:number,adjusted_amount:number|null,status:string,payment_date:string|null}>({received_amount:0,adjusted_amount:null,status:'pending',payment_date:null});
   const [editSaving, setEditSaving] = useState(false);
+  const [irlConfirm, setIrlConfirm] = useState<{tenantId:string,newRent:number}|null>(null);
 
   const load = useCallback(async () => {
     setLoading(true);
@@ -163,11 +164,14 @@ export default function DashboardLoyersPage() {
   });
   birthdayReminders.sort((a,b)=>a.daysUntil-b.daysUntil);
 
-  const applyIRL = async (tenantId:string,newRent:number) => {
-    if (!confirm('Appliquer le nouveau loyer de '+fmt(newRent)+' ?')) return;
-    const {error} = await supabase.from('tenants').update({current_rent:newRent}).eq('id',tenantId);
-    if (error) { toast.error('Erreur: ' + error.message); return; }
-    load();
+  const applyIRL = (tenantId:string,newRent:number) => {
+    setIrlConfirm({tenantId,newRent});
+  };
+  const confirmIRL = async () => {
+    if (!irlConfirm) return;
+    const {error} = await supabase.from('tenants').update({current_rent:irlConfirm.newRent}).eq('id',irlConfirm.tenantId);
+    if (error) { toast.error('Erreur: ' + error.message); setIrlConfirm(null); return; }
+    setIrlConfirm(null); load();
   };
 
   const saveNotes = async () => {
@@ -397,6 +401,20 @@ export default function DashboardLoyersPage() {
           </tbody>
         </table>
       </div>
+
+      {/* IRL confirmation modal */}
+      {irlConfirm && (
+        <div style={{position:'fixed',top:0,left:0,right:0,bottom:0,background:'rgba(0,0,0,0.6)',display:'flex',alignItems:'center',justifyContent:'center',zIndex:2000}} onClick={()=>setIrlConfirm(null)}>
+          <div style={{background:'white',borderRadius:'12px',padding:'24px',width:'400px',maxWidth:'90vw'}} onClick={e=>e.stopPropagation()}>
+            <h3 style={{margin:'0 0 12px',fontSize:'16px'}}>📈 Confirmer l'augmentation IRL</h3>
+            <p style={{fontSize:'14px',color:'#555',margin:'0 0 20px'}}>Appliquer le nouveau loyer de <strong>{fmt(irlConfirm.newRent)}</strong> ?</p>
+            <div style={{display:'flex',gap:'8px',justifyContent:'flex-end'}}>
+              <button onClick={()=>setIrlConfirm(null)} style={{padding:'8px 16px',border:'1px solid #ddd',background:'#fff',borderRadius:'6px',cursor:'pointer'}}>Annuler</button>
+              <button onClick={confirmIRL} style={{padding:'8px 16px',background:'#7C9A6D',color:'#fff',border:'none',borderRadius:'6px',cursor:'pointer',fontWeight:600}}>Appliquer</button>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Notes modal */}
       {notesModal && (

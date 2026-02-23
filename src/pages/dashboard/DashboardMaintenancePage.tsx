@@ -51,6 +51,7 @@ export default function DashboardMaintenancePage() {
   const [modal, setModal] = useState<Partial<Ticket>|null>(null);
   const [isNew, setIsNew] = useState(false);
   const [saving, setSaving] = useState(false);
+  const [deleteConfirm, setDeleteConfirm] = useState<{label:string,fn:()=>void}|null>(null);
 
   const load = useCallback(async () => {
     setLoading(true);
@@ -112,13 +113,13 @@ export default function DashboardMaintenancePage() {
     load();
   };
 
-  const deleteTicket = async () => {
+  const deleteTicket = () => {
     if (!modal?.id) return;
-    if (!confirm(`Supprimer le ticket "${modal.title}" ? Irréversible.`)) return;
-    const { error } = await supabase.from('maintenance_tickets').delete().eq('id', modal.id);
-    if (error) { toast.error('Erreur: ' + error.message); return; }
-    setModal(null);
-    load();
+    setDeleteConfirm({label:`"${modal.title}"`,fn:async()=>{
+      const { error } = await supabase.from('maintenance_tickets').delete().eq('id', modal.id);
+      if (error) { toast.error('Erreur: ' + error.message); return; }
+      setModal(null); load();
+    }});
   };
 
   // Quick status cycle on badge click
@@ -275,6 +276,20 @@ export default function DashboardMaintenancePage() {
                 <button onClick={()=>setModal(null)} style={{padding:'8px 16px',border:'1px solid #ddd',background:'#fff',borderRadius:'6px',cursor:'pointer'}}>Annuler</button>
                 <button onClick={saveModal} disabled={saving} style={{padding:'8px 16px',background:'#b8860b',color:'#fff',border:'none',borderRadius:'6px',cursor:'pointer',fontWeight:600}}>{saving?'...':'Enregistrer'}</button>
               </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Delete confirmation modal */}
+      {deleteConfirm && (
+        <div style={{position:'fixed',top:0,left:0,right:0,bottom:0,background:'rgba(0,0,0,0.6)',display:'flex',alignItems:'center',justifyContent:'center',zIndex:2000}} onClick={()=>setDeleteConfirm(null)}>
+          <div style={{background:'white',borderRadius:'12px',padding:'24px',width:'400px',maxWidth:'90vw'}} onClick={e=>e.stopPropagation()}>
+            <h3 style={{margin:'0 0 12px',fontSize:'16px'}}>⚠️ Confirmer la suppression</h3>
+            <p style={{fontSize:'14px',color:'#555',margin:'0 0 20px'}}>Supprimer <strong>{deleteConfirm.label}</strong> ? Cette action est irréversible.</p>
+            <div style={{display:'flex',gap:'8px',justifyContent:'flex-end'}}>
+              <button onClick={()=>setDeleteConfirm(null)} style={{padding:'8px 16px',border:'1px solid #ddd',background:'#fff',borderRadius:'6px',cursor:'pointer'}}>Annuler</button>
+              <button onClick={()=>{deleteConfirm.fn();setDeleteConfirm(null);}} style={{padding:'8px 16px',background:'#ef4444',color:'#fff',border:'none',borderRadius:'6px',cursor:'pointer',fontWeight:600}}>Supprimer</button>
             </div>
           </div>
         </div>

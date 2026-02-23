@@ -38,6 +38,7 @@ export default function DashboardLocatairesPage() {
   const [activeTab, setActiveTab] = useState<'info'|'documents'>('info');
   const [tenantDocs, setTenantDocs] = useState<{name:string,id:string|null,updated_at:string|null,metadata:{size?:number}|null}[]>([]);
   const [uploadingDoc, setUploadingDoc] = useState(false);
+  const [deleteConfirm, setDeleteConfirm] = useState<{type:'tenant'|'doc',label:string,fn:()=>void}|null>(null);
 
   const load = useCallback(async () => {
     setLoading(true);
@@ -101,12 +102,13 @@ export default function DashboardLocatairesPage() {
 
   const deleteTenantDoc = async (fileName: string) => {
     if (!modal?.id) return;
-    if (!confirm('Supprimer ' + fileName + ' ?')) return;
-    const fp = 'tenants/' + modal.id + '/' + fileName;
-    const { error } = await supabase.storage.from('operations').remove([fp]);
-    if (error) { toast.error('Erreur: ' + error.message); return; }
-    toast.success('Document supprimé');
-    loadTenantDocs(modal.id);
+    setDeleteConfirm({type:'doc',label:fileName,fn:async()=>{
+      const fp = 'tenants/' + modal.id + '/' + fileName;
+      const { error } = await supabase.storage.from('operations').remove([fp]);
+      if (error) { toast.error('Erreur: ' + error.message); return; }
+      toast.success('Document supprimé');
+      if (modal.id) loadTenantDocs(modal.id);
+    }});
   };
 
   const saveModal = async () => {
@@ -134,12 +136,13 @@ export default function DashboardLocatairesPage() {
     setModal(null); load();
   };
 
-  const deleteTenant = async () => {
+  const deleteTenant = () => {
     if (!modal?.id) return;
-    if (!confirm(`Supprimer ${modal.first_name} ${modal.last_name} ? Irréversible.`)) return;
-    const {error} = await supabase.from('tenants').delete().eq('id',modal.id);
-    if (error) { toast.error('Erreur: ' + error.message); return; }
-    setModal(null); load();
+    setDeleteConfirm({type:'tenant',label:`${modal.first_name} ${modal.last_name}`,fn:async()=>{
+      const {error} = await supabase.from('tenants').delete().eq('id',modal.id);
+      if (error) { toast.error('Erreur: ' + error.message); return; }
+      setModal(null); load();
+    }});
   };
 
   const confirmRefund = async () => {
@@ -350,6 +353,20 @@ export default function DashboardLocatairesPage() {
                 </div>
               </div>
             )}
+          </div>
+        </div>
+      )}
+
+      {/* Delete confirmation modal */}
+      {deleteConfirm && (
+        <div style={{position:'fixed',top:0,left:0,right:0,bottom:0,background:'rgba(0,0,0,0.6)',display:'flex',alignItems:'center',justifyContent:'center',zIndex:2000}} onClick={()=>setDeleteConfirm(null)}>
+          <div style={{background:'white',borderRadius:'12px',padding:'24px',width:'400px',maxWidth:'90vw'}} onClick={e=>e.stopPropagation()}>
+            <h3 style={{margin:'0 0 12px',fontSize:'16px'}}>⚠️ Confirmer la suppression</h3>
+            <p style={{fontSize:'14px',color:'#555',margin:'0 0 20px'}}>Supprimer <strong>{deleteConfirm.label}</strong> ? Cette action est irréversible.</p>
+            <div style={{display:'flex',gap:'8px',justifyContent:'flex-end'}}>
+              <button onClick={()=>setDeleteConfirm(null)} style={{padding:'8px 16px',border:'1px solid #ddd',background:'#fff',borderRadius:'6px',cursor:'pointer'}}>Annuler</button>
+              <button onClick={()=>{deleteConfirm.fn();setDeleteConfirm(null);}} style={{padding:'8px 16px',background:'#ef4444',color:'#fff',border:'none',borderRadius:'6px',cursor:'pointer',fontWeight:600}}>Supprimer</button>
+            </div>
           </div>
         </div>
       )}

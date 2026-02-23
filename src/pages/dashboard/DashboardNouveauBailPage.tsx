@@ -563,6 +563,7 @@ export default function DashboardNouveauBailPage() {
   const [selectedProperty, setSelectedProperty] = useState<Property | null>(null);
   const [selectedRoom, setSelectedRoom] = useState<Room | null>(null);
   const [saving, setSaving] = useState(false);
+  const [replaceConfirm, setReplaceConfirm] = useState<{oldTenant:{id:string,first_name:string,last_name:string}}|null>(null);
 
   // Load fonts
   useEffect(() => {
@@ -661,42 +662,27 @@ export default function DashboardNouveauBailPage() {
 
   // Generate contract data
   // === SAVE BAIL: create tenant + deactivate old ===
-  const handleSaveBail = async () => {
-    if (!selectedRoom || !selectedProperty) { toast.warning('Sélectionnez une propriété et une chambre'); return; }
-    if (!form.locataire_nom || !form.locataire_prenom || !form.locataire_email || !form.entry_date) {
-      toast.warning('Remplissez les champs obligatoires : Nom, Prénom, Email, Date d\'entrée'); return;
-    }
+  const doSaveBail = async (oldTenantId?: string) => {
+    if (!selectedRoom || !selectedProperty) return;
     setSaving(true);
     try {
-      // 1) Check for existing active tenant in this room
-      const { data: existing } = await supabase
-        .from('tenants').select('id, first_name, last_name')
-        .eq('property_id', form.property_id)
-        .eq('room_number', selectedRoom.room_number)
-        .eq('is_active', true);
-
-      if (existing && existing.length > 0) {
-        const old = existing[0];
-        const ok = window.confirm(
-          `${old.first_name} ${old.last_name} occupe actuellement cette chambre.\nVoulez-vous le désactiver et enregistrer le nouveau bail ?`
-        );
-        if (!ok) { setSaving(false); return; }
-        // Deactivate old tenant (keep all data)
-        await supabase.from('tenants').update({ is_active: false }).eq('id', old.id);
+      // Deactivate old tenant if confirmed
+      if (oldTenantId) {
+        await supabase.from('tenants').update({ is_active: false }).eq('id', oldTenantId);
       }
 
-      // 2) Calculate dates
+      // Calculate dates
       const entryDate = new Date(form.entry_date + 'T00:00:00');
       const bailEnd = new Date(entryDate);
       bailEnd.setFullYear(bailEnd.getFullYear() + 1);
       const bailEndStr = bailEnd.toISOString().split('T')[0];
 
-      // 3) Calculate amounts
+      // Calculate amounts
       const loyerEur = Math.round(form.loyer_chf / form.exchange_rate);
       const depositMonths = selectedProperty.deposit_months || 2;
       const depositEur = loyerEur * depositMonths;
 
-      // 4) Insert new tenant
+      // Insert new tenant
       const { error } = await supabase.from('tenants').insert({
         first_name: form.locataire_prenom,
         last_name: form.locataire_nom,
@@ -713,7 +699,6 @@ export default function DashboardNouveauBailPage() {
         due_day: 5,
         date_of_birth: form.locataire_dob || null,
         place_of_birth: form.locataire_birthplace || null,
-
         notes: 'Bail généré automatiquement le ' + new Date().toLocaleDateString('fr-FR'),
       });
 
@@ -723,6 +708,25 @@ export default function DashboardNouveauBailPage() {
       toast.error('Erreur: ' + (err.message || err));
     } finally {
       setSaving(false);
+    }
+  };
+
+  const handleSaveBail = async () => {
+    if (!selectedRoom || !selectedProperty) { toast.warning('Sélectionnez une propriété et une chambre'); return; }
+    if (!form.locataire_nom || !form.locataire_prenom || !form.locataire_email || !form.entry_date) {
+      toast.warning('Remplissez les champs obligatoires : Nom, Prénom, Email, Date d\'entrée'); return;
+    }
+    // Check for existing active tenant
+    const { data: existing } = await supabase
+      .from('tenants').select('id, first_name, last_name')
+      .eq('property_id', form.property_id)
+      .eq('room_number', selectedRoom.room_number)
+      .eq('is_active', true);
+
+    if (existing && existing.length > 0) {
+      setReplaceConfirm({ oldTenant: existing[0] });
+    } else {
+      doSaveBail();
     }
   };
 
@@ -1298,6 +1302,20 @@ export default function DashboardNouveauBailPage() {
           }
         }
       `}</style>
+
+      {/* Replace tenant confirmation modal */}
+      {replaceConfirm && (
+        <div style={{position:'fixed',top:0,left:0,right:0,bottom:0,background:'rgba(0,0,0,0.6)',display:'flex',alignItems:'center',justifyContent:'center',zIndex:2000}} onClick={()=>setReplaceConfirm(null)}>
+          <div style={{background:'white',borderRadius:'12px',padding:'24px',width:'440px',maxWidth:'90vw'}} onClick={e=>e.stopPropagation()}>
+            <h3 style={{margin:'0 0 12px',fontSize:'16px'}}>⚠️ Chambre occupée</h3>
+            <p style={{fontSize:'14px',color:'#555',margin:'0 0 20px'}}><strong>{replaceConfirm.oldTenant.first_name} {replaceConfirm.oldTenant.last_name}</strong> occupe actuellement cette chambre. Voulez-vous le désactiver et enregistrer le nouveau bail ?</p>
+            <div style={{display:'flex',gap:'8px',justifyContent:'flex-end'}}>
+              <button onClick={()=>setReplaceConfirm(null)} style={{padding:'8px 16px',border:'1px solid #ddd',background:'#fff',borderRadius:'6px',cursor:'pointer'}}>Annuler</button>
+              <button onClick={()=>{const id=replaceConfirm.oldTenant.id;setReplaceConfirm(null);doSaveBail(id);}} style={{padding:'8px 16px',background:'#b8860b',color:'#fff',border:'none',borderRadius:'6px',cursor:'pointer',fontWeight:600}}>Remplacer et enregistrer</button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
