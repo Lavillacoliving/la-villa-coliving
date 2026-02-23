@@ -1,6 +1,8 @@
+import { useState, useEffect, useCallback } from 'react';
 import { useOutletContext } from 'react-router-dom';
 import type { TenantInfo } from '@/hooks/useTenant';
 import { usePayments } from '@/hooks/usePayments';
+import { supabase } from '@/lib/supabase';
 
 interface PortailContext {
   tenant: TenantInfo;
@@ -13,6 +15,33 @@ const MONTHS_EN = ['January', 'February', 'March', 'April', 'May', 'June', 'July
 export function MonBailPage() {
   const { tenant, language } = useOutletContext<PortailContext>();
   const { payments, loading: paymentsLoading } = usePayments(tenant.id);
+  const [docs, setDocs] = useState<{name:string,updated_at:string|null,metadata:{size?:number}|null}[]>([]);
+  const [docsLoading, setDocsLoading] = useState(true);
+
+  const loadDocs = useCallback(async () => {
+    setDocsLoading(true);
+    const { data } = await supabase.storage.from('operations').list('tenants/' + tenant.id, { limit: 50, sortBy: { column: 'name', order: 'asc' } });
+    setDocs((data || []).filter(f => f.name !== '.emptyFolderPlaceholder'));
+    setDocsLoading(false);
+  }, [tenant.id]);
+
+  useEffect(() => { loadDocs(); }, [loadDocs]);
+
+  const downloadDoc = async (fileName: string) => {
+    const { data, error } = await supabase.storage.from('operations').download('tenants/' + tenant.id + '/' + fileName);
+    if (error || !data) return;
+    const url = URL.createObjectURL(data);
+    const a = document.createElement('a');
+    a.href = url; a.download = fileName; a.click();
+    URL.revokeObjectURL(url);
+  };
+
+  const formatSize = (bytes?: number) => {
+    if (!bytes) return '';
+    if (bytes < 1024) return bytes + ' o';
+    if (bytes < 1048576) return (bytes / 1024).toFixed(0) + ' Ko';
+    return (bytes / 1048576).toFixed(1) + ' Mo';
+  };
 
   const months = language === 'en' ? MONTHS_EN : MONTHS_FR;
 
@@ -42,7 +71,8 @@ export function MonBailPage() {
       late: 'En retard',
       noPayments: 'Aucun paiement enregistré',
       documents: 'Documents signés',
-      docComingSoon: 'Tes documents seront bientôt disponibles ici (bail, état des lieux, attestations).',
+      noDocuments: 'Aucun document disponible pour le moment.',
+      download: 'Télécharger',
       quittances: 'Quittances de loyer',
       quittComingSoon: 'La génération automatique de quittances arrive prochainement.',
     },
@@ -71,7 +101,8 @@ export function MonBailPage() {
       late: 'Late',
       noPayments: 'No payments recorded',
       documents: 'Signed Documents',
-      docComingSoon: 'Your documents will be available here soon (lease, inventory, certificates).',
+      noDocuments: 'No documents available yet.',
+      download: 'Download',
       quittances: 'Rent Receipts',
       quittComingSoon: 'Automatic rent receipt generation coming soon.',
     },
@@ -195,12 +226,40 @@ export function MonBailPage() {
         )}
       </div>
 
-      {/* Documents placeholder */}
+      {/* Documents */}
       <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
-        <h2 className="text-lg font-semibold text-gray-900 mb-3 flex items-center gap-2">
+        <h2 className="text-lg font-semibold text-gray-900 mb-4 flex items-center gap-2">
 {lang.documents}
         </h2>
-        <p className="text-sm text-gray-500">{lang.docComingSoon}</p>
+        {docsLoading ? (
+          <div className="animate-pulse text-sm text-gray-400">...</div>
+        ) : docs.length === 0 ? (
+          <p className="text-sm text-gray-500">{lang.noDocuments}</p>
+        ) : (
+          <div className="space-y-2">
+            {docs.map((doc) => {
+              const ext = doc.name.split('.').pop()?.toLowerCase() || '';
+              const icon = ext === 'pdf' ? '📄' : ext === 'jpg' || ext === 'jpeg' || ext === 'png' ? '🖼️' : '📎';
+              return (
+                <div key={doc.name} className="flex items-center justify-between p-3 rounded-lg border border-gray-100 hover:bg-gray-50 transition-colors">
+                  <div className="flex items-center gap-3 min-w-0 flex-1">
+                    <span className="text-lg flex-shrink-0">{icon}</span>
+                    <div className="min-w-0">
+                      <p className="text-sm font-medium text-gray-900 truncate">{doc.name}</p>
+                      <p className="text-xs text-gray-400">{formatSize(doc.metadata?.size)}{doc.updated_at ? ` — ${new Date(doc.updated_at).toLocaleDateString(language === 'en' ? 'en-GB' : 'fr-FR')}` : ''}</p>
+                    </div>
+                  </div>
+                  <button
+                    onClick={() => downloadDoc(doc.name)}
+                    className="ml-3 px-3 py-1.5 text-xs font-medium text-[#b8860b] bg-[#b8860b]/10 rounded-lg hover:bg-[#b8860b]/20 transition-colors flex-shrink-0"
+                  >
+                    {lang.download}
+                  </button>
+                </div>
+              );
+            })}
+          </div>
+        )}
       </div>
 
       {/* Quittances placeholder */}

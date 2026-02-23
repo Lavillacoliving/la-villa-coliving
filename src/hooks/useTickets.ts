@@ -29,22 +29,22 @@ export interface NewTicket {
 function mapCategory(type: string, subtype?: string): string {
   if (type === 'maintenance') {
     const map: Record<string, string> = {
-      plumbing: 'plomberie',
-      electricity: 'electricite',
-      furniture: 'mobilier',
-      wifi: 'wifi',
-      other: 'autre',
+      plumbing: 'Plomberie',
+      electricity: 'Électricité',
+      furniture: 'Mobilier',
+      wifi: 'WiFi/Réseau',
+      other: 'Autre',
     };
-    return map[subtype || ''] || 'autre';
+    return map[subtype || ''] || 'Autre';
   }
   const map: Record<string, string> = {
-    cleaning: 'menage',
-    admin: 'admin',
-    departure: 'departure',
-    incident: 'incident',
-    feedback: 'feedback',
+    cleaning: 'Ménage',
+    admin: 'Autre',
+    departure: 'Autre',
+    incident: 'Autre',
+    feedback: 'Autre',
   };
-  return map[type] || 'autre';
+  return map[type] || 'Autre';
 }
 
 // Map portail type to human-readable title
@@ -64,14 +64,16 @@ function mapTitle(type: string, subtype?: string): string {
 
 // Reverse map DB category back to portail type for display
 function reverseMapType(category: string): { type: string; subtype: string | null } {
+  const cat = category.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
   const subtypeMap: Record<string, string> = {
     plomberie: 'plumbing',
     electricite: 'electricity',
     mobilier: 'furniture',
+    'wifi/reseau': 'wifi',
     wifi: 'wifi',
   };
-  if (subtypeMap[category]) {
-    return { type: 'maintenance', subtype: subtypeMap[category] };
+  if (subtypeMap[cat]) {
+    return { type: 'maintenance', subtype: subtypeMap[cat] };
   }
   const typeMap: Record<string, string> = {
     menage: 'cleaning',
@@ -80,10 +82,10 @@ function reverseMapType(category: string): { type: string; subtype: string | nul
     incident: 'incident',
     feedback: 'feedback',
   };
-  if (typeMap[category]) {
-    return { type: typeMap[category], subtype: null };
+  if (typeMap[cat]) {
+    return { type: typeMap[cat], subtype: null };
   }
-  // For other maintenance categories (serrurerie, chauffage, etc.)
+  // For other maintenance categories (serrurerie, chauffage, electromenager, etc.)
   return { type: 'maintenance', subtype: 'other' };
 }
 
@@ -112,7 +114,7 @@ export function useTickets(tenantId: string | undefined) {
     // Map portail fields to DB columns
     const category = mapCategory(ticket.type, ticket.subtype);
     const title = mapTitle(ticket.type, ticket.subtype);
-    const priority = ticket.urgency === 'urgent' ? 'urgent' : 'normal';
+    const priority = ticket.urgency === 'urgent' ? 'urgent' : 'medium';
 
     // Build description with metadata
     let desc = ticket.description;

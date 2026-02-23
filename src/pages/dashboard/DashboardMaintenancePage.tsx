@@ -10,6 +10,7 @@ interface Ticket {
   created_at: string; resolved_at: string | null;
 }
 interface Property { id: string; name: string; slug: string; }
+interface TenantLookup { id: string; first_name: string; last_name: string; }
 
 const STATUS_COLORS: Record<string,string> = {
   open: '#ef4444', in_progress: '#eab308', resolved: '#22c55e', closed: '#94a3b8'
@@ -35,6 +36,7 @@ export default function DashboardMaintenancePage() {
   const [tickets, setTickets] = useState<Ticket[]>([]);
   const toast = useToast();
   const [properties, setProperties] = useState<Property[]>([]);
+  const [tenantsLookup, setTenantsLookup] = useState<TenantLookup[]>([]);
   const [statusFilter, setStatusFilter] = useState("active");
   const [propFilter, setPropFilter] = useState("all");
   const [loading, setLoading] = useState(true);
@@ -44,12 +46,14 @@ export default function DashboardMaintenancePage() {
 
   const load = useCallback(async () => {
     setLoading(true);
-    const [tRes,pRes] = await Promise.all([
+    const [tRes,pRes,tnRes] = await Promise.all([
       supabase.from("maintenance_tickets").select("*").order("created_at",{ascending:false}),
       supabase.from("properties").select("id,name,slug"),
+      supabase.from("tenants").select("id,first_name,last_name").eq("is_active",true),
     ]);
     setTickets(tRes.data||[]);
     setProperties(pRes.data||[]);
+    setTenantsLookup(tnRes.data||[]);
     setLoading(false);
   },[]);
 
@@ -118,6 +122,12 @@ export default function DashboardMaintenancePage() {
     const { error } = await supabase.from('maintenance_tickets').update(update).eq('id', ticketId);
     if (error) { toast.error('Erreur: ' + error.message); return; }
     load();
+  };
+
+  const resolveReporter = (id: string|null): string => {
+    if (!id) return '-';
+    const t = tenantsLookup.find(t => t.id === id);
+    return t ? `${t.first_name} ${t.last_name}` : (id.length > 20 ? id.substring(0,8)+'...' : id);
   };
 
   const S = {
@@ -238,7 +248,10 @@ export default function DashboardMaintenancePage() {
               </div>
               <div>
                 <label style={S.fieldLabel}>Signalé par</label>
-                <input style={S.input} value={modal.reported_by||''} onChange={e=>setModal({...modal,reported_by:e.target.value})} placeholder="Nom du locataire"/>
+                <select style={S.input} value={modal.reported_by||''} onChange={e=>setModal({...modal,reported_by:e.target.value})}>
+                  <option value="">— Aucun —</option>
+                  {tenantsLookup.map(t=><option key={t.id} value={t.id}>{t.first_name} {t.last_name}</option>)}
+                </select>
               </div>
             </div>
 
