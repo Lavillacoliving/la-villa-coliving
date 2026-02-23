@@ -20,15 +20,23 @@ const STATUS_LABELS: Record<string,string> = {
 };
 const STATUS_ORDER = ['open','in_progress','resolved','closed'];
 const PRIO_COLORS: Record<string,string> = {
-  urgent: '#ef4444', high: '#f97316', medium: '#eab308', low: '#22c55e'
+  urgent: '#ef4444', high: '#f97316', normal: '#eab308', low: '#22c55e'
 };
 const PRIO_LABELS: Record<string,string> = {
-  urgent: 'Urgent', high: 'Haute', medium: 'Moyenne', low: 'Basse'
+  urgent: 'Urgent', high: 'Haute', normal: 'Moyenne', low: 'Basse'
 };
-const CATEGORIES = ['Plomberie','Électricité','Serrurerie','Mobilier','Électroménager','WiFi/Réseau','Chauffage/Clim','Piscine/Sauna','Jardin','Ménage','Autre'];
+const CAT_LABELS: Record<string,string> = {
+  plomberie:'Plomberie',electricite:'Électricité',serrurerie:'Serrurerie',
+  mobilier:'Mobilier',electromenager:'Électroménager',wifi:'WiFi/Réseau',
+  chauffage:'Chauffage/Clim',piscine:'Piscine/Sauna',
+  jardin_exterieur:'Jardin/Extérieur',menage:'Ménage',
+  nuisible:'Nuisible',autre:'Autre',admin:'Admin',
+  departure:'Départ',incident:'Incident',feedback:'Feedback'
+};
+const CATEGORIES = ['plomberie','electricite','serrurerie','mobilier','electromenager','wifi','chauffage','piscine','jardin_exterieur','menage','nuisible','autre','admin','departure','incident','feedback'];
 
 const EMPTY_TICKET: Partial<Ticket> = {
-  title:'', description:'', status:'open', priority:'medium', category:'Autre',
+  title:'', description:'', status:'open', priority:'normal', category:'Autre',
   property_id:'', room_number:null, reported_by:null, assigned_to:null,
 };
 
@@ -82,8 +90,8 @@ export default function DashboardMaintenancePage() {
       title: modal.title,
       description: modal.description || '',
       status: modal.status || 'open',
-      priority: modal.priority || 'medium',
-      category: modal.category || 'Autre',
+      priority: modal.priority || 'normal',
+      category: modal.category || 'autre',
       property_id: modal.property_id,
       room_number: modal.room_number || null,
       reported_by: modal.reported_by || null,
@@ -187,7 +195,7 @@ export default function DashboardMaintenancePage() {
                     title="Cliquer pour changer le statut"
                   >{STATUS_LABELS[t.status]||t.status}</span>
                 </td>
-                <td style={{padding:"10px 16px",fontSize:"12px"}}>{t.category}</td>
+                <td style={{padding:"10px 16px",fontSize:"12px"}}>{CAT_LABELS[t.category] || t.category}</td>
                 <td style={{padding:"10px 16px",color:"#888",fontSize:"12px"}}>{new Date(t.created_at).toLocaleDateString("fr-FR")}</td>
                 <td style={{padding:"10px 16px",color:"#888"}}>{t.assigned_to||"-"}</td>
               </tr>);})}
@@ -225,15 +233,15 @@ export default function DashboardMaintenancePage() {
                 <label style={S.fieldLabel}>Priorité</label>
                 <select style={S.input} value={modal.priority||'medium'} onChange={e=>setModal({...modal,priority:e.target.value})}>
                   <option value="low">Basse</option>
-                  <option value="medium">Moyenne</option>
+                  <option value="normal">Moyenne</option>
                   <option value="high">Haute</option>
                   <option value="urgent">Urgent</option>
                 </select>
               </div>
               <div>
                 <label style={S.fieldLabel}>Catégorie</label>
-                <select style={S.input} value={modal.category||'Autre'} onChange={e=>setModal({...modal,category:e.target.value})}>
-                  {CATEGORIES.map(c=><option key={c} value={c}>{c}</option>)}
+                <select style={S.input} value={modal.category||'autre'} onChange={e=>setModal({...modal,category:e.target.value})}>
+                  {CATEGORIES.map(c=><option key={c} value={c}>{CAT_LABELS[c]||c}</option>)}
                 </select>
               </div>
               <div>

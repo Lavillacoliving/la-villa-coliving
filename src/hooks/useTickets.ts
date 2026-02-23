@@ -29,22 +29,22 @@ export interface NewTicket {
 function mapCategory(type: string, subtype?: string): string {
   if (type === 'maintenance') {
     const map: Record<string, string> = {
-      plumbing: 'Plomberie',
-      electricity: 'Électricité',
-      furniture: 'Mobilier',
-      wifi: 'WiFi/Réseau',
-      other: 'Autre',
+      plumbing: 'plomberie',
+      electricity: 'electricite',
+      furniture: 'mobilier',
+      wifi: 'wifi',
+      other: 'autre',
     };
-    return map[subtype || ''] || 'Autre';
+    return map[subtype || ''] || 'autre';
   }
   const map: Record<string, string> = {
-    cleaning: 'Ménage',
-    admin: 'Autre',
-    departure: 'Autre',
-    incident: 'Autre',
-    feedback: 'Autre',
+    cleaning: 'menage',
+    admin: 'admin',
+    departure: 'departure',
+    incident: 'incident',
+    feedback: 'feedback',
   };
-  return map[type] || 'Autre';
+  return map[type] || 'autre';
 }
 
 // Map portail type to human-readable title
@@ -114,7 +114,7 @@ export function useTickets(tenantId: string | undefined) {
     // Map portail fields to DB columns
     const category = mapCategory(ticket.type, ticket.subtype);
     const title = mapTitle(ticket.type, ticket.subtype);
-    const priority = ticket.urgency === 'urgent' ? 'urgent' : 'medium';
+    const priority = ticket.urgency === 'urgent' ? 'urgent' : 'normal';
 
     // Build description with metadata
     let desc = ticket.description;
