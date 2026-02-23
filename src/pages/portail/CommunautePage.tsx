@@ -17,20 +17,20 @@ const eventTypeLabels: Record<string, string> = {
 // WhatsApp group links per property (hardcoded)
 const whatsappLinks: Record<string, { label: string; url: string }[]> = {
   lavilla: [
-    { label: 'Groupe La Villa', url: 'https://chat.whatsapp.com/PLACEHOLDER_LAVILLA' },
+    { label: 'Groupe La Villa', url: '#' },
   ],
   leloft: [
-    { label: 'Groupe Le Loft', url: 'https://chat.whatsapp.com/PLACEHOLDER_LELOFT' },
+    { label: 'Groupe Le Loft', url: '#' },
   ],
   lelodge: [
-    { label: 'Groupe Le Lodge', url: 'https://chat.whatsapp.com/PLACEHOLDER_LELODGE' },
+    { label: 'Groupe Le Lodge', url: '#' },
   ],
 };
 
 const sharedGroups = [
-  { label: { fr: 'Sport & Fitness', en: 'Sport & Fitness' }, url: 'https://chat.whatsapp.com/PLACEHOLDER_SPORT' },
-  { label: { fr: 'Yoga', en: 'Yoga' }, url: 'https://chat.whatsapp.com/PLACEHOLDER_YOGA' },
-  { label: { fr: 'Événements', en: 'Events' }, url: 'https://chat.whatsapp.com/PLACEHOLDER_EVENTS' },
+  { label: { fr: 'Sport & Fitness', en: 'Sport & Fitness' }, url: '#' },
+  { label: { fr: 'Yoga', en: 'Yoga' }, url: '#' },
+  { label: { fr: 'Événements', en: 'Events' }, url: '#' },
 ];
 
 export function CommunautePage() {

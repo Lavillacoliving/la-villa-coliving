@@ -31,6 +31,9 @@ export default function DashboardDocumentsPage() {
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState('');
   const [uploading, setUploading] = useState(false);
+  const [folderModal, setFolderModal] = useState(false);
+  const [folderName, setFolderName] = useState('');
+  const [deleteTarget, setDeleteTarget] = useState<string|null>(null);
 
   const load = useCallback(async (p?: string) => {
     const prefix = p !== undefined ? p : path;
@@ -64,7 +67,7 @@ export default function DashboardDocumentsPage() {
   };
 
   const deleteFile = async (filePath: string) => {
-    if (!confirm('Supprimer ' + filePath.split('/').pop() + ' ?')) return;
+    // confirm handled by modal
     try {
       const { error } = await supabase.storage.from(bucket).remove([filePath]);
       if (error) { toast.error('Erreur: ' + error.message); return; }
@@ -92,12 +95,13 @@ export default function DashboardDocumentsPage() {
 
 
   const createFolder = async () => {
-    const name = window.prompt('Nom du dossier :');
-    if (!name || !name.trim()) return;
-    const folderPath = path ? path + '/' + name.trim() + '/.emptyFolderPlaceholder' : name.trim() + '/.emptyFolderPlaceholder';
+    if (!folderName.trim()) return;
+    const n = folderName.trim();
+    setFolderModal(false); setFolderName('');
+    const folderPath = path ? path + '/' + n + '/.emptyFolderPlaceholder' : n + '/.emptyFolderPlaceholder';
     const { error } = await supabase.storage.from(bucket).upload(folderPath, new Blob(['']));
     if (error) { toast.error('Erreur: ' + error.message); return; }
-    toast.success('Dossier "' + name.trim() + '" créé');
+    toast.success('Dossier "' + n + '" créé');
     load();
   };
 
@@ -143,7 +147,7 @@ export default function DashboardDocumentsPage() {
       {/* Search + Upload */}
       <div style={{ display: 'flex', gap: '12px', marginBottom: '20px', flexWrap: 'wrap', alignItems: 'center' }}>
         <input value={search} onChange={e => setSearch(e.target.value)} placeholder="Rechercher un fichier..." style={{ padding: '8px 14px', border: '1px solid #ddd', borderRadius: '8px', fontSize: '14px', minWidth: '250px' }} />
-        <button onClick={createFolder} style={{ padding: '8px 16px', background: '#3D4A38', color: '#fff', borderRadius: '8px', cursor: 'pointer', fontSize: '13px', fontWeight: 600, border: 'none' }}>+ Dossier</button>
+        <button onClick={() => { setFolderName(''); setFolderModal(true); }} style={{ padding: '8px 16px', background: '#3D4A38', color: '#fff', borderRadius: '8px', cursor: 'pointer', fontSize: '13px', fontWeight: 600, border: 'none' }}>+ Dossier</button>
         <label style={{ padding: '8px 16px', background: '#b8860b', color: '#fff', borderRadius: '8px', cursor: uploading ? 'wait' : 'pointer', fontSize: '13px', fontWeight: 600 }}>
           {uploading ? 'Upload...' : '📤 Ajouter des fichiers'}
           <input type="file" multiple style={{ display: 'none' }} onChange={e => uploadFiles(e.target.files)} disabled={uploading} />
@@ -181,12 +185,33 @@ export default function DashboardDocumentsPage() {
                   <div style={{ color: '#888', fontSize: '12px' }}>{sz}{dt ? ' — ' + dt : ''}</div>
                 </div>
                 <button onClick={() => downloadFile(fp)} style={{ background: 'none', border: 'none', cursor: 'pointer', fontSize: '18px', padding: '4px' }} title="Télécharger">⬇️</button>
-                <button onClick={() => deleteFile(fp)} style={{ background: 'none', border: 'none', cursor: 'pointer', fontSize: '18px', padding: '4px', color: '#ef4444' }} title="Supprimer">🗑️</button>
+                <button onClick={() => setDeleteTarget(fp)} style={{ background: 'none', border: 'none', cursor: 'pointer', fontSize: '18px', padding: '4px', color: '#ef4444' }} title="Supprimer">🗑️</button>
               </div>
             );
           })}
         </div>
       )}
+      {/* Folder creation modal */}
+{folderModal && (
+<div style={{position:"fixed",inset:0,background:"rgba(0,0,0,0.4)",display:"flex",alignItems:"center",justifyContent:"center",zIndex:999}} onClick={()=>setFolderModal(false)}>
+<div style={{background:"#fff",borderRadius:"12px",padding:"24px",width:"380px",maxWidth:"90vw"}} onClick={e=>e.stopPropagation()}>
+<h3 style={{margin:"0 0 16px",fontSize:"16px"}}>Nouveau dossier</h3>
+<input autoFocus value={folderName} onChange={e=>setFolderName(e.target.value)} onKeyDown={e=>{if(e.key==="Enter")createFolder()}} placeholder="Nom du dossier" style={{width:"100%",padding:"10px 12px",border:"1px solid #ddd",borderRadius:"8px",fontSize:"14px",boxSizing:"border-box"}} />
+<div style={{display:"flex",gap:"8px",justifyContent:"flex-end",marginTop:"16px"}}>
+<button onClick={()=>setFolderModal(false)} style={{padding:"8px 16px",border:"1px solid #ddd",borderRadius:"8px",cursor:"pointer",background:"#fff",fontSize:"13px"}}>Annuler</button>
+<button onClick={createFolder} style={{padding:"8px 16px",border:"none",borderRadius:"8px",cursor:"pointer",background:"#3D4A38",color:"#fff",fontSize:"13px",fontWeight:600}}>Créer</button>
+</div></div></div>)}
+{/* Delete confirmation modal */}
+{deleteTarget && (
+<div style={{position:"fixed",inset:0,background:"rgba(0,0,0,0.4)",display:"flex",alignItems:"center",justifyContent:"center",zIndex:999}} onClick={()=>setDeleteTarget(null)}>
+<div style={{background:"#fff",borderRadius:"12px",padding:"24px",width:"380px",maxWidth:"90vw"}} onClick={e=>e.stopPropagation()}>
+<h3 style={{margin:"0 0 8px",fontSize:"16px"}}>Confirmer la suppression</h3>
+<p style={{color:"#555",fontSize:"14px",margin:"0 0 20px"}}>Supprimer <strong>{deleteTarget.split("/").pop()}</strong> ?</p>
+<div style={{display:"flex",gap:"8px",justifyContent:"flex-end"}}>
+<button onClick={()=>setDeleteTarget(null)} style={{padding:"8px 16px",border:"1px solid #ddd",borderRadius:"8px",cursor:"pointer",background:"#fff",fontSize:"13px"}}>Annuler</button>
+<button onClick={()=>{const t=deleteTarget;setDeleteTarget(null);deleteFile(t);}} style={{padding:"8px 16px",border:"none",borderRadius:"8px",cursor:"pointer",background:"#ef4444",color:"#fff",fontSize:"13px",fontWeight:600}}>Supprimer</button>
+</div></div></div>)}
+
     </div>
   );
 }
