@@ -1,5 +1,6 @@
 import { useState, useEffect, useCallback } from 'react';
 import { supabase } from '@/lib/supabase';
+import { useToast } from '@/components/ui/Toast';
 
 interface Property {
   id: string;
@@ -94,6 +95,7 @@ const EMPTY_ROOM: Partial<Room> = {
 
 export default function DashboardMaisonsPage() {
   const [properties, setProperties] = useState<Property[]>([]);
+  const toast = useToast();
   const [rooms, setRooms] = useState<Room[]>([]);
   const [tenants, setTenants] = useState<Tenant[]>([]);
   const [selectedPropertyId, setSelectedPropertyId] = useState<string | null>(null);
@@ -142,11 +144,11 @@ export default function DashboardMaisonsPage() {
   const saveRoom = async () => {
     if (!modalRoom) return;
     if (!modalRoom.property_id) {
-      alert('Propriété manquante');
+      toast.warning('Propriété manquante');
       return;
     }
     if (!modalRoom.room_number || modalRoom.room_number <= 0) {
-      alert('Numéro de chambre invalide');
+      toast.warning('Numéro de chambre invalide');
       return;
     }
     setSavingRoom(true);
@@ -180,7 +182,7 @@ export default function DashboardMaisonsPage() {
     }
     setSavingRoom(false);
     if (err) {
-      alert('Erreur: ' + err.message);
+      toast.error('Erreur: ' + err.message);
       return;
     }
     setModalRoom(null);
@@ -192,7 +194,7 @@ export default function DashboardMaisonsPage() {
     if (!confirm(`Supprimer la chambre ${modalRoom.room_number} ? Irréversible.`)) return;
     const { error } = await supabase.from('rooms').delete().eq('id', modalRoom.id);
     if (error) {
-      alert('Erreur: ' + error.message);
+      toast.error('Erreur: ' + error.message);
       return;
     }
     setModalRoom(null);
@@ -202,7 +204,7 @@ export default function DashboardMaisonsPage() {
   const saveProperty = async () => {
     if (!editPropertyData || !selectedPropertyId) return;
     if (!editPropertyData.name) {
-      alert('Nom de propriété obligatoire');
+      toast.warning('Nom de propriété obligatoire');
       return;
     }
     setSavingProperty(true);
@@ -226,7 +228,7 @@ export default function DashboardMaisonsPage() {
     const { error } = await supabase.from('properties').update(data).eq('id', selectedPropertyId);
     setSavingProperty(false);
     if (error) {
-      alert('Erreur: ' + error.message);
+      toast.error('Erreur: ' + error.message);
       return;
     }
     setEditingProperty(false);

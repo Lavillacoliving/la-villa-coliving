@@ -1,5 +1,6 @@
 import { useState, useEffect, useCallback } from 'react';
 import { supabase } from '@/lib/supabase';
+import { useToast } from '@/components/ui/Toast';
 
 interface Tenant {
   id: string; first_name: string; last_name: string; email: string; phone: string;
@@ -23,6 +24,7 @@ const EMPTY_TENANT: Partial<Tenant> = {
 
 export default function DashboardLocatairesPage() {
   const [tenants, setTenants] = useState<Tenant[]>([]);
+  const toast = useToast();
   const [properties, setProperties] = useState<Property[]>([]);
   const [filter, setFilter] = useState('all');
   const [statusFilter, setStatusFilter] = useState<'all'|'active'|'inactive'>('all');
@@ -33,6 +35,9 @@ export default function DashboardLocatairesPage() {
   const [saving, setSaving] = useState(false);
   const [refundMode, setRefundMode] = useState(false);
   const [refundData, setRefundData] = useState({type:'full',amount:0,deductions:'',virementDone:false});
+  const [activeTab, setActiveTab] = useState<'info'|'documents'>('info');
+  const [tenantDocs, setTenantDocs] = useState<{name:string,id:string|null,updated_at:string|null,metadata:{size?:number}|null}[]>([]);
+  const [uploadingDoc, setUploadingDoc] = useState(false);
 
   const load = useCallback(async () => {
     setLoading(true);
@@ -47,6 +52,13 @@ export default function DashboardLocatairesPage() {
 
   useEffect(() => { load(); },[load]);
 
+  const loadTenantDocs = useCallback(async (tenantId: string) => {
+    const { data, error } = await supabase.storage.from('operations').list('tenants/' + tenantId, { limit: 100, sortBy: { column: 'name', order: 'asc' } });
+    if (!error && data) {
+      setTenantDocs(data.filter(f => f.name !== '.emptyFolderPlaceholder'));
+    } else { setTenantDocs([]); }
+  }, []);
+
   const filtered = tenants
     .filter(t => statusFilter==='all' ? true : statusFilter==='active' ? t.is_active : !t.is_active)
     .filter(t => filter==='all' || properties.find(p=>p.id===t.property_id)?.slug===filter)
@@ -56,17 +68,53 @@ export default function DashboardLocatairesPage() {
   const totalRent = filtered.filter(t=>t.is_active).reduce((s,t)=>s+t.current_rent,0);
 
   const openModal = (tenant?: Tenant) => {
-    if (tenant) { setModal({...tenant}); setIsNew(false); }
-    else { setModal({...EMPTY_TENANT}); setIsNew(true); }
+    if (tenant) { setModal({...tenant}); setIsNew(false); loadTenantDocs(tenant.id); }
+    else { setModal({...EMPTY_TENANT}); setIsNew(true); setTenantDocs([]); }
     setRefundMode(false);
+    setActiveTab('info');
+  };
+
+
+  const uploadTenantDoc = async (files: FileList | null) => {
+    if (!files || !modal?.id) return;
+    setUploadingDoc(true);
+    let ok = 0, fail = 0;
+    for (let i = 0; i < files.length; i++) {
+      const file = files[i];
+      const fp = 'tenants/' + modal.id + '/' + file.name;
+      const { error } = await supabase.storage.from('operations').upload(fp, file, { upsert: true });
+      if (error) { fail++; } else { ok++; }
+    }
+    setUploadingDoc(false);
+    if (ok > 0) toast.success(ok + ' document(s) ajouté(s)');
+    if (fail > 0) toast.error(fail + ' erreur(s) upload');
+    if (modal.id) loadTenantDocs(modal.id);
+  };
+
+  const downloadTenantDoc = async (fileName: string) => {
+    if (!modal?.id) return;
+    const fp = 'tenants/' + modal.id + '/' + fileName;
+    const { data, error } = await supabase.storage.from('operations').createSignedUrl(fp, 300);
+    if (error) { toast.error('Erreur: ' + error.message); return; }
+    window.open(data.signedUrl, '_blank');
+  };
+
+  const deleteTenantDoc = async (fileName: string) => {
+    if (!modal?.id) return;
+    if (!confirm('Supprimer ' + fileName + ' ?')) return;
+    const fp = 'tenants/' + modal.id + '/' + fileName;
+    const { error } = await supabase.storage.from('operations').remove([fp]);
+    if (error) { toast.error('Erreur: ' + error.message); return; }
+    toast.success('Document supprimé');
+    loadTenantDocs(modal.id);
   };
 
   const saveModal = async () => {
     if (!modal) return;
-    if (!modal.first_name || !modal.last_name) { alert('Prénom et nom obligatoires'); return; }
-    if (!modal.property_id) { alert('Choisissez une propriété'); return; }
-    if (!modal.room_number) { alert('Numéro de chambre obligatoire'); return; }
-    if (!modal.current_rent) { alert('Loyer obligatoire'); return; }
+    if (!modal.first_name || !modal.last_name) { toast.warning('Prénom et nom obligatoires'); return; }
+    if (!modal.property_id) { toast.warning('Choisissez une propriété'); return; }
+    if (!modal.room_number) { toast.warning('Numéro de chambre obligatoire'); return; }
+    if (!modal.current_rent) { toast.warning('Loyer obligatoire'); return; }
     setSaving(true);
     const prop = properties.find(p=>p.id===modal.property_id);
     const data: any = {
@@ -83,7 +131,7 @@ export default function DashboardLocatairesPage() {
     if (isNew) { ({error:err} = await supabase.from('tenants').insert(data)); }
     else { ({error:err} = await supabase.from('tenants').update(data).eq('id',modal.id)); }
     setSaving(false);
-    if (err) { alert('Erreur: '+err.message); return; }
+    if (err) { toast.error('Erreur: ' + err.message); return; }
     setModal(null); load();
   };
 
@@ -91,18 +139,18 @@ export default function DashboardLocatairesPage() {
     if (!modal?.id) return;
     if (!confirm(`Supprimer ${modal.first_name} ${modal.last_name} ? Irréversible.`)) return;
     const {error} = await supabase.from('tenants').delete().eq('id',modal.id);
-    if (error) { alert('Erreur: '+error.message); return; }
+    if (error) { toast.error('Erreur: ' + error.message); return; }
     setModal(null); load();
   };
 
   const confirmRefund = async () => {
     if (!modal?.id) return;
-    if (!refundData.amount || refundData.amount<=0) { alert('Montant invalide'); return; }
-    if (!refundData.virementDone) { alert('Confirmez le virement'); return; }
-    if (refundData.type==='partial' && !refundData.deductions) { alert('Détaillez les retenues'); return; }
+    if (!refundData.amount || refundData.amount<=0) { toast.warning('Montant invalide'); return; }
+    if (!refundData.virementDone) { toast.warning('Confirmez le virement'); return; }
+    if (refundData.type==='partial' && !refundData.deductions) { toast.warning('Détaillez les retenues'); return; }
     const today = new Date().toISOString().split('T')[0];
     const {error} = await supabase.from('tenants').update({deposit_refunded_amount:refundData.amount,deposit_refunded_date:today}).eq('id',modal.id);
-    if (error) { alert('Erreur: '+error.message); return; }
+    if (error) { toast.error('Erreur: ' + error.message); return; }
     // Also update deposits table
     await supabase.from('deposits').update({amount_returned:refundData.amount,date_returned:today,deductions:(modal.deposit_amount||0)-refundData.amount,deduction_details:refundData.deductions||null,status:refundData.type==='full'?'returned':'partial_return'}).eq('tenant_id',modal.id);
     // n8n webhook
@@ -201,7 +249,51 @@ export default function DashboardLocatairesPage() {
               <button onClick={()=>setModal(null)} style={{background:'none',border:'none',fontSize:'24px',cursor:'pointer',color:'#888'}}>×</button>
             </div>
 
-            {!refundMode ? (
+
+            {/* Tabs */}
+            <div style={{display:'flex',gap:'0',marginBottom:'20px',borderBottom:'2px solid #e5e7eb'}}>
+              <button onClick={()=>setActiveTab('info')} style={{padding:'8px 20px',border:'none',background:'none',cursor:'pointer',fontSize:'14px',fontWeight:activeTab==='info'?600:400,color:activeTab==='info'?'#b8860b':'#888',borderBottom:activeTab==='info'?'2px solid #b8860b':'2px solid transparent',marginBottom:'-2px'}}>Fiche</button>
+              {!isNew && <button onClick={()=>setActiveTab('documents')} style={{padding:'8px 20px',border:'none',background:'none',cursor:'pointer',fontSize:'14px',fontWeight:activeTab==='documents'?600:400,color:activeTab==='documents'?'#b8860b':'#888',borderBottom:activeTab==='documents'?'2px solid #b8860b':'2px solid transparent',marginBottom:'-2px'}}>Documents</button>}
+            </div>
+
+            {activeTab === 'documents' && !isNew ? (
+              /* Documents tab */
+              <div>
+                <div style={{display:'flex',justifyContent:'space-between',alignItems:'center',marginBottom:'16px'}}>
+                  <h3 style={{margin:0,fontSize:'16px'}}>Documents du locataire</h3>
+                  <label style={{padding:'6px 14px',background:'#b8860b',color:'#fff',borderRadius:'6px',cursor:uploadingDoc?'wait':'pointer',fontSize:'13px',fontWeight:600}}>
+                    {uploadingDoc ? 'Upload...' : '+ Ajouter'}
+                    <input type="file" multiple style={{display:'none'}} onChange={e=>uploadTenantDoc(e.target.files)} disabled={uploadingDoc}/>
+                  </label>
+                </div>
+                {tenantDocs.length === 0 ? (
+                  <div style={{textAlign:'center',padding:'40px',color:'#888',background:'#f9f9f9',borderRadius:'8px'}}>
+                    <p style={{fontSize:'24px',margin:'0 0 8px'}}>📂</p>
+                    <p>Aucun document</p>
+                    <p style={{fontSize:'12px'}}>Ajoutez bail, assurance, pièce d'identité...</p>
+                  </div>
+                ) : (
+                  <div style={{display:'flex',flexDirection:'column',gap:'8px'}}>
+                    {tenantDocs.map(doc => {
+                      const ext = doc.name.split('.').pop()?.toLowerCase() || '';
+                      const icon: Record<string,string> = {pdf:'📄',jpg:'📷',jpeg:'📷',png:'📷',docx:'📝',xlsx:'📊'};
+                      const sz = doc.metadata?.size ? (doc.metadata.size < 1048576 ? (doc.metadata.size/1024).toFixed(1)+' KB' : (doc.metadata.size/1048576).toFixed(1)+' MB') : '';
+                      return (
+                        <div key={doc.name} style={{display:'flex',alignItems:'center',gap:'10px',padding:'10px 12px',background:'#f9f9f9',borderRadius:'8px'}}>
+                          <span style={{fontSize:'20px'}}>{icon[ext]||'📄'}</span>
+                          <div style={{flex:1,minWidth:0}}>
+                            <div style={{fontWeight:500,fontSize:'14px',overflow:'hidden',textOverflow:'ellipsis',whiteSpace:'nowrap'}}>{doc.name}</div>
+                            <div style={{color:'#888',fontSize:'12px'}}>{sz}{doc.updated_at ? ' — '+new Date(doc.updated_at).toLocaleDateString('fr-FR') : ''}</div>
+                          </div>
+                          <button onClick={()=>downloadTenantDoc(doc.name)} style={{background:'none',border:'none',cursor:'pointer',fontSize:'16px'}} title="Télécharger">⬇️</button>
+                          <button onClick={()=>deleteTenantDoc(doc.name)} style={{background:'none',border:'none',cursor:'pointer',fontSize:'16px',color:'#ef4444'}} title="Supprimer">🗑️</button>
+                        </div>
+                      );
+                    })}
+                  </div>
+                )}
+              </div>
+            ) : !refundMode ? (
               <>
                 <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:'12px',marginBottom:'16px'}}>
                   <div><label style={S.fieldLabel}>Prénom *</label><input style={S.input} value={modal.first_name||''} onChange={e=>setModal({...modal,first_name:e.target.value})}/></div>

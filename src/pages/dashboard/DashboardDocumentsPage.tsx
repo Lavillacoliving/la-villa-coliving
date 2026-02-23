@@ -1,5 +1,6 @@
 import { useState, useEffect, useCallback } from 'react';
 import { supabase } from '@/lib/supabase';
+import { useToast } from '@/components/ui/Toast';
 
 interface StorageItem {
   name: string;
@@ -24,6 +25,7 @@ function getIcon(name: string, isFolder: boolean) {
 
 export default function DashboardDocumentsPage() {
   const [bucket, setBucket] = useState('compta');
+  const toast = useToast();
   const [path, setPath] = useState('');
   const [items, setItems] = useState<StorageItem[]>([]);
   const [loading, setLoading] = useState(true);
@@ -65,7 +67,7 @@ export default function DashboardDocumentsPage() {
     if (!confirm('Supprimer ' + filePath.split('/').pop() + ' ?')) return;
     try {
       const { error } = await supabase.storage.from(bucket).remove([filePath]);
-      if (error) { alert('Erreur: ' + error.message); return; }
+      if (error) { toast.error('Erreur: ' + error.message); return; }
       load();
     } catch (e) { console.error('delete error:', e); }
   };
@@ -84,7 +86,18 @@ export default function DashboardDocumentsPage() {
       } catch (e) { fail++; console.error('Upload exception:', e); }
     }
     setUploading(false);
-    alert(ok + ' fichier(s) ajouté(s)' + (fail > 0 ? ', ' + fail + ' erreur(s)' : ''));
+    toast.success(ok + ' fichier(s) ajouté(s)' + (fail > 0 ? ', ' + fail + ' erreur(s)' : ''));
+    load();
+  };
+
+
+  const createFolder = async () => {
+    const name = window.prompt('Nom du dossier :');
+    if (!name || !name.trim()) return;
+    const folderPath = path ? path + '/' + name.trim() + '/.emptyFolderPlaceholder' : name.trim() + '/.emptyFolderPlaceholder';
+    const { error } = await supabase.storage.from(bucket).upload(folderPath, new Blob(['']));
+    if (error) { toast.error('Erreur: ' + error.message); return; }
+    toast.success('Dossier "' + name.trim() + '" créé');
     load();
   };
 
@@ -130,6 +143,7 @@ export default function DashboardDocumentsPage() {
       {/* Search + Upload */}
       <div style={{ display: 'flex', gap: '12px', marginBottom: '20px', flexWrap: 'wrap', alignItems: 'center' }}>
         <input value={search} onChange={e => setSearch(e.target.value)} placeholder="Rechercher un fichier..." style={{ padding: '8px 14px', border: '1px solid #ddd', borderRadius: '8px', fontSize: '14px', minWidth: '250px' }} />
+        <button onClick={createFolder} style={{ padding: '8px 16px', background: '#3D4A38', color: '#fff', borderRadius: '8px', cursor: 'pointer', fontSize: '13px', fontWeight: 600, border: 'none' }}>+ Dossier</button>
         <label style={{ padding: '8px 16px', background: '#b8860b', color: '#fff', borderRadius: '8px', cursor: uploading ? 'wait' : 'pointer', fontSize: '13px', fontWeight: 600 }}>
           {uploading ? 'Upload...' : '📤 Ajouter des fichiers'}
           <input type="file" multiple style={{ display: 'none' }} onChange={e => uploadFiles(e.target.files)} disabled={uploading} />

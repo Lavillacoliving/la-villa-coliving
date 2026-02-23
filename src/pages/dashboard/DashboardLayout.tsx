@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { ToastProvider } from '@/components/ui/Toast';
 import { Outlet, useNavigate, useLocation } from 'react-router-dom';
 import { supabase } from '@/lib/supabase';
 
@@ -186,6 +187,7 @@ export default function DashboardLayout() {
   const activeTab = TABS.find(t => loc.pathname.startsWith(t.path))?.id || 'loyers';
 
   return (
+    <ToastProvider>
     <div style={{ background: '#FAF8F5', minHeight: '100vh' }}>
       <header style={{ background: '#1a1a2e', color: '#fff', padding: '16px 24px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
         <div>
@@ -208,5 +210,6 @@ export default function DashboardLayout() {
         <Outlet />
       </main>
     </div>
+    </ToastProvider>
   );
 }

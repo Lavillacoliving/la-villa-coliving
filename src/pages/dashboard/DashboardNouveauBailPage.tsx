@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { supabase } from '@/lib/supabase';
+import { useToast } from '@/components/ui/Toast';
 import { pdf } from '@react-pdf/renderer';
 import { BailPDF } from './BailPDF';
 
@@ -529,6 +530,7 @@ async function fetchExchangeRate(): Promise<number> {
 
 export default function DashboardNouveauBailPage() {
   const [properties, setProperties] = useState<Property[]>([]);
+  const toast = useToast();
   const [rooms, setRooms] = useState<Room[]>([]);
   const [filteredRooms, setFilteredRooms] = useState<Room[]>([]);
   const [exchangeRate, setExchangeRate] = useState(0.9400);
@@ -660,9 +662,9 @@ export default function DashboardNouveauBailPage() {
   // Generate contract data
   // === SAVE BAIL: create tenant + deactivate old ===
   const handleSaveBail = async () => {
-    if (!selectedRoom || !selectedProperty) { alert('Sélectionnez une propriété et une chambre'); return; }
+    if (!selectedRoom || !selectedProperty) { toast.warning('Sélectionnez une propriété et une chambre'); return; }
     if (!form.locataire_nom || !form.locataire_prenom || !form.locataire_email || !form.entry_date) {
-      alert('Remplissez les champs obligatoires : Nom, Prénom, Email, Date d\'entrée'); return;
+      toast.warning('Remplissez les champs obligatoires : Nom, Prénom, Email, Date d\'entrée'); return;
     }
     setSaving(true);
     try {
@@ -716,9 +718,9 @@ export default function DashboardNouveauBailPage() {
       });
 
       if (error) throw error;
-      alert(`Locataire ${form.locataire_prenom} ${form.locataire_nom} créé avec succès !\nChambre : ${selectedRoom.name}\nBail : ${form.entry_date} → ${bailEndStr}`);
+      toast.success(`Locataire ${form.locataire_prenom} ${form.locataire_nom} créé avec succès !`);
     } catch (err: any) {
-      alert('Erreur : ' + (err.message || err));
+      toast.error('Erreur: ' + (err.message || err));
     } finally {
       setSaving(false);
     }
@@ -1189,7 +1191,7 @@ export default function DashboardNouveauBailPage() {
 
         <div style={{ display: 'flex', gap: '10px' }}>
           <button
-            onClick={async () => { if (!contractData) return; try { const blob = await pdf(BailPDF({ data: contractData })).toBlob(); const url = URL.createObjectURL(blob); const a = document.createElement('a'); a.href = url; a.download = `Bail_${form.locataire_nom || 'Locataire'}_${form.entry_date || 'date'}.pdf`; a.click(); URL.revokeObjectURL(url); } catch (e) { console.error('PDF error:', e); alert('Erreur PDF: ' + e); } }}
+            onClick={async () => { if (!contractData) return; try { const blob = await pdf(BailPDF({ data: contractData })).toBlob(); const url = URL.createObjectURL(blob); const a = document.createElement('a'); a.href = url; a.download = `Bail_${form.locataire_nom || 'Locataire'}_${form.entry_date || 'date'}.pdf`; a.click(); URL.revokeObjectURL(url); } catch (e) { console.error('PDF error:', e); toast.error('Erreur PDF: ' + e); } }}
             disabled={!contractData}
             style={{
               flex: 1,

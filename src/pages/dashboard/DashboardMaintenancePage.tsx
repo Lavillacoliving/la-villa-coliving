@@ -1,5 +1,6 @@
 import { useState, useEffect, useCallback } from 'react';
 import { supabase } from '@/lib/supabase';
+import { useToast } from '@/components/ui/Toast';
 
 interface Ticket {
   id: string; title: string; description: string;
@@ -32,6 +33,7 @@ const EMPTY_TICKET: Partial<Ticket> = {
 
 export default function DashboardMaintenancePage() {
   const [tickets, setTickets] = useState<Ticket[]>([]);
+  const toast = useToast();
   const [properties, setProperties] = useState<Property[]>([]);
   const [statusFilter, setStatusFilter] = useState("active");
   const [propFilter, setPropFilter] = useState("all");
@@ -69,8 +71,8 @@ export default function DashboardMaintenancePage() {
 
   const saveModal = async () => {
     if (!modal) return;
-    if (!modal.title) { alert('Titre obligatoire'); return; }
-    if (!modal.property_id) { alert('Propriété obligatoire'); return; }
+    if (!modal.title) { toast.warning('Titre obligatoire'); return; }
+    if (!modal.property_id) { toast.warning('Propriété obligatoire'); return; }
     setSaving(true);
     const data: any = {
       title: modal.title,
@@ -93,7 +95,7 @@ export default function DashboardMaintenancePage() {
       ({ error: err } = await supabase.from('maintenance_tickets').update(data).eq('id', modal.id));
     }
     setSaving(false);
-    if (err) { alert('Erreur: ' + err.message); return; }
+    if (err) { toast.error('Erreur: ' + err.message); return; }
     setModal(null);
     load();
   };
@@ -102,7 +104,7 @@ export default function DashboardMaintenancePage() {
     if (!modal?.id) return;
     if (!confirm(`Supprimer le ticket "${modal.title}" ? Irréversible.`)) return;
     const { error } = await supabase.from('maintenance_tickets').delete().eq('id', modal.id);
-    if (error) { alert('Erreur: ' + error.message); return; }
+    if (error) { toast.error('Erreur: ' + error.message); return; }
     setModal(null);
     load();
   };
@@ -114,7 +116,7 @@ export default function DashboardMaintenancePage() {
     const update: any = { status: nextStatus };
     if (nextStatus === 'resolved') update.resolved_at = new Date().toISOString();
     const { error } = await supabase.from('maintenance_tickets').update(update).eq('id', ticketId);
-    if (error) { alert('Erreur: ' + error.message); return; }
+    if (error) { toast.error('Erreur: ' + error.message); return; }
     load();
   };
 

@@ -1,5 +1,6 @@
 import { useState, useEffect, useCallback } from 'react';
 import { supabase } from '@/lib/supabase';
+import { useToast } from '@/components/ui/Toast';
 
 interface Payment {
   id: string; tenant_id: string; month: string;
@@ -40,6 +41,7 @@ function fmt(n: number) { return n.toLocaleString('fr-FR',{minimumFractionDigits
 
 export default function DashboardLoyersPage() {
   const [payments, setPayments] = useState<Payment[]>([]);
+  const toast = useToast();
   const [tenants, setTenants] = useState<Tenant[]>([]);
   const [properties, setProperties] = useState<Property[]>([]);
   const [irlData, setIrlData] = useState<Record<string,IRLEntry>>({});
@@ -164,7 +166,7 @@ export default function DashboardLoyersPage() {
   const applyIRL = async (tenantId:string,newRent:number) => {
     if (!confirm('Appliquer le nouveau loyer de '+fmt(newRent)+' ?')) return;
     const {error} = await supabase.from('tenants').update({current_rent:newRent}).eq('id',tenantId);
-    if (error) { alert('Erreur: '+error.message); return; }
+    if (error) { toast.error('Erreur: ' + error.message); return; }
     load();
   };
 
@@ -203,7 +205,7 @@ export default function DashboardLoyersPage() {
     };
     const { error } = await supabase.from('payments').update(update).eq('id', editingPayment);
     setEditSaving(false);
-    if (error) { alert('Erreur: ' + error.message); return; }
+    if (error) { toast.error('Erreur: ' + error.message); return; }
     setEditingPayment(null);
     load();
   };
@@ -213,14 +215,14 @@ export default function DashboardLoyersPage() {
     const idx = STATUS_ORDER.indexOf(currentStatus);
     const nextStatus = STATUS_ORDER[(idx + 1) % STATUS_ORDER.length];
     const { error } = await supabase.from('payments').update({ status: nextStatus }).eq('id', paymentId);
-    if (error) { alert('Erreur: ' + error.message); return; }
+    if (error) { toast.error('Erreur: ' + error.message); return; }
     load();
   };
 
   const prevMonth = () => { const d=new Date(month+'-01'); d.setMonth(d.getMonth()-1); setMonth(d.toISOString().slice(0,7)); };
   const nextMonth = () => { const d=new Date(month+'-01'); d.setMonth(d.getMonth()+1); setMonth(d.toISOString().slice(0,7)); };
   const exportExcel = () => {
-    const XLSX=(window as any).XLSX; if(!XLSX){alert('SheetJS non chargé');return;}
+    const XLSX=(window as any).XLSX; if(!XLSX){toast.error('SheetJS non chargé');return;}
     const rows=filtered.map(p=>{const t=tenants.find(x=>x.id===p.tenant_id);const pr=properties.find(x=>x.id===t?.property_id);
     return{Mois:p.month,Propriété:pr?.name||'',Locataire:t?t.first_name+' '+t.last_name:'',Chambre:t?.room_number||'',Attendu:p.expected_amount,Reçu:p.received_amount,Ajusté:p.adjusted_amount,Statut:p.status,Date:p.payment_date||'',Notes:p.notes||''};});
     const ws=XLSX.utils.json_to_sheet(rows);const wb=XLSX.utils.book_new();XLSX.utils.book_append_sheet(wb,ws,'Loyers');XLSX.writeFile(wb,'loyers_'+month+'.xlsx');

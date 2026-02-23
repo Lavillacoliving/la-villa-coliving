@@ -1,5 +1,6 @@
 import { useState, useEffect, useCallback } from 'react';
 import { supabase } from '@/lib/supabase';
+import { useToast } from '@/components/ui/Toast';
 
 interface Prospect {
   id: string; first_name: string; last_name: string;
@@ -34,6 +35,7 @@ const EMPTY_PROSPECT: Partial<Prospect> = {
 
 export default function DashboardProspectsPage() {
   const [prospects, setProspects] = useState<Prospect[]>([]);
+  const toast = useToast();
   const [statusFilter, setStatusFilter] = useState("active");
   const [viewMode, setViewMode] = useState<'pipeline'|'table'>('pipeline');
   const [loading, setLoading] = useState(true);
@@ -68,7 +70,7 @@ export default function DashboardProspectsPage() {
 
   const saveModal = async () => {
     if (!modal) return;
-    if (!modal.first_name || !modal.last_name) { alert('Prénom et nom obligatoires'); return; }
+    if (!modal.first_name || !modal.last_name) { toast.warning('Prénom et nom obligatoires'); return; }
     setSaving(true);
     const data: any = {
       first_name: modal.first_name,
@@ -90,7 +92,7 @@ export default function DashboardProspectsPage() {
       ({ error: err } = await supabase.from('prospects').update(data).eq('id', modal.id));
     }
     setSaving(false);
-    if (err) { alert('Erreur: ' + err.message); return; }
+    if (err) { toast.error('Erreur: ' + err.message); return; }
     setModal(null);
     load();
   };
@@ -99,7 +101,7 @@ export default function DashboardProspectsPage() {
     if (!modal?.id) return;
     if (!confirm(`Supprimer ${modal.first_name} ${modal.last_name} ?`)) return;
     const { error } = await supabase.from('prospects').delete().eq('id', modal.id);
-    if (error) { alert('Erreur: ' + error.message); return; }
+    if (error) { toast.error('Erreur: ' + error.message); return; }
     setModal(null);
     load();
   };
@@ -108,13 +110,13 @@ export default function DashboardProspectsPage() {
   const moveToStage = async (prospectId: string, newStatus: string) => {
     const update: any = { status: newStatus, last_contact: new Date().toISOString().split('T')[0] };
     const { error } = await supabase.from('prospects').update(update).eq('id', prospectId);
-    if (error) { alert('Erreur: ' + error.message); return; }
+    if (error) { toast.error('Erreur: ' + error.message); return; }
     load();
   };
 
   const exportExcel = () => {
     const XLSX=(window as any).XLSX;
-    if(!XLSX){alert("SheetJS non chargé");return;}
+    if(!XLSX){toast.error('SheetJS non chargé');return;}
     const rows=filtered.map(p=>({Nom:p.first_name+" "+p.last_name,Email:p.email||"",Tél:p.phone||"",
       Source:p.source||"",Statut:STATUS_LABELS[p.status]||p.status,Intérêt:p.property_interest||"",
       Budget:p.budget||"",Cible:p.move_in_target||"",Contact:p.last_contact||"",Notes:p.notes||""}));
