@@ -3,6 +3,8 @@ import { supabase } from '@/lib/supabase';
 import { useToast } from '@/components/ui/Toast';
 import { ENTITY_SLUGS } from '@/lib/entities';
 import { logAudit } from '@/lib/auditLog';
+import { pdf } from '@react-pdf/renderer';
+import CourrierIRLPDF from './CourrierIRLPDF';
 
 interface Payment {
   id: string; tenant_id: string; month: string;
@@ -118,8 +120,10 @@ export default function DashboardLoyersPage() {
   const sortedGroups = Object.values(grouped).sort((a,b) => a.prop.name.localeCompare(b.prop.name));
 
   // IRL reminders
-  const irlReminders: {name:string;room:number;property:string;daysUntil:number;date:Date;currentRent:number;newRent:number;pct:string;tenantId:string}[] = [];
+  interface IRLReminder { name:string; firstName:string; lastName:string; room:number; property:string; propertyAddress:string; daysUntil:number; date:Date; currentRent:number; newRent:number; pct:string; tenantId:string; irlRef:string; irlOld:number; irlNew:number; }
+  const irlReminders: IRLReminder[] = [];
   const irlKeys = Object.keys(irlData).sort().reverse();
+  let latestIrlRef = '';
   if (irlKeys.length > 0) {
     const latestKey = irlKeys[0];
     const latest = irlData[latestKey];
@@ -129,7 +133,13 @@ export default function DashboardLoyersPage() {
     if (latest && prev) {
       const factor = latest.value / prev.value;
       const pct = ((factor-1)*100).toFixed(2);
+      latestIrlRef = `T${lQ} ${lY}`;
       const today = new Date();
+      const PROP_ADDRESSES: Record<string,string> = {
+        'La Villa': '25 rue de la Paix, 74100 Ville-la-Grand',
+        'Le Loft': '2 rue du Salève, 74100 Ambilly',
+        'Le Lodge': '15 avenue Émile Zola, 74100 Annemasse',
+      };
       tenants.filter(t=>t.is_active && t.move_in_date).forEach(t => {
         const moveIn = new Date(t.move_in_date!);
         let next = new Date(today.getFullYear(),moveIn.getMonth(),moveIn.getDate());
@@ -139,7 +149,8 @@ export default function DashboardLoyersPage() {
           const newRent = Math.round(t.current_rent * factor * 100)/100;
           if (newRent > t.current_rent) {
             const prop = properties.find(p=>p.id===t.property_id);
-            irlReminders.push({name:t.first_name+' '+t.last_name,room:t.room_number,property:prop?.name||'',daysUntil:days,date:next,currentRent:t.current_rent,newRent,pct,tenantId:t.id});
+            const propName = prop?.name||'';
+            irlReminders.push({name:t.first_name+' '+t.last_name,firstName:t.first_name,lastName:t.last_name,room:t.room_number,property:propName,propertyAddress:PROP_ADDRESSES[propName]||'',daysUntil:days,date:next,currentRent:t.current_rent,newRent,pct,tenantId:t.id,irlRef:latestIrlRef,irlOld:prev.value,irlNew:latest.value});
           }
         }
       });
@@ -166,10 +177,68 @@ export default function DashboardLoyersPage() {
   };
   const confirmIRL = async () => {
     if (!irlConfirm) return;
+    const reminder = irlReminders.find(r => r.tenantId === irlConfirm.tenantId);
     const {error} = await supabase.from('tenants').update({current_rent:irlConfirm.newRent}).eq('id',irlConfirm.tenantId);
     if (error) { toast.error('Erreur: ' + error.message); setIrlConfirm(null); return; }
+    // Log in rent_revisions
+    if (reminder) {
+      await supabase.from('rent_revisions').insert({
+        tenant_id: irlConfirm.tenantId,
+        previous_rent: reminder.currentRent,
+        new_rent: irlConfirm.newRent,
+        irl_reference: reminder.irlRef,
+        irl_old_value: reminder.irlOld,
+        irl_new_value: reminder.irlNew,
+        variation_pct: parseFloat(reminder.pct),
+        effective_date: reminder.date.toISOString().split('T')[0],
+        applied: true,
+        applied_at: new Date().toISOString(),
+      });
+    }
     logAudit('irl_applied', 'tenant', irlConfirm.tenantId, { newRent: irlConfirm.newRent });
+    toast.success('IRL appliqué — loyer mis à jour');
     setIrlConfirm(null); load();
+  };
+
+  const generateIRLPDF = async (r: IRLReminder) => {
+    const effectiveDate = r.date.toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' });
+    const firstMonth = new Date(r.date.getFullYear(), r.date.getMonth(), 1);
+    const firstPaymentMonth = firstMonth.toLocaleDateString('fr-FR', { month: 'long', year: 'numeric' });
+    try {
+      const blob = await pdf(
+        CourrierIRLPDF({
+          data: {
+            tenantFirstName: r.firstName,
+            tenantLastName: r.lastName,
+            roomNumber: r.room,
+            propertyName: r.property,
+            propertyAddress: r.propertyAddress,
+            currentRent: r.currentRent,
+            newRent: r.newRent,
+            variationPct: r.pct,
+            augmentation: Math.round((r.newRent - r.currentRent) * 100) / 100,
+            irlReference: r.irlRef,
+            irlOldValue: r.irlOld,
+            irlNewValue: r.irlNew,
+            effectiveDate,
+            firstPaymentMonth,
+            signataire: 'Jérôme Austin',
+          },
+        })
+      ).toBlob();
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `Courrier_IRL_${r.lastName}_${r.firstName}_${r.date.toISOString().split('T')[0]}.pdf`;
+      a.click();
+      URL.revokeObjectURL(url);
+      // Mark letter_generated in rent_revisions
+      await supabase.from('rent_revisions').update({ letter_generated: true }).eq('tenant_id', r.tenantId).eq('effective_date', r.date.toISOString().split('T')[0]);
+      toast.success('Courrier PDF généré');
+    } catch (e) {
+      toast.error('Erreur génération PDF');
+      console.error(e);
+    }
   };
 
   const saveNotes = async () => {
@@ -292,7 +361,10 @@ export default function DashboardLoyersPage() {
                 <span style={{fontSize:'13px'}}>{fmt(r.currentRent)} → <strong style={{color:'#5A6B52'}}>{fmt(r.newRent)}</strong></span>
                 <br/><span style={{fontSize:'12px',opacity:0.6}}>+{r.pct}%</span>
               </div>
-              <button onClick={()=>applyIRL(r.tenantId,r.newRent)} style={{padding:'6px 16px',background:'#7C9A6D',color:'white',border:'none',borderRadius:'6px',cursor:'pointer',fontSize:'13px'}}>Appliquer</button>
+              <div style={{display:'flex',gap:'6px',flexDirection:'column'}}>
+                <button onClick={()=>generateIRLPDF(r)} style={{padding:'5px 12px',background:'#3498DB',color:'white',border:'none',borderRadius:'6px',cursor:'pointer',fontSize:'12px'}}>📄 Courrier PDF</button>
+                <button onClick={()=>applyIRL(r.tenantId,r.newRent)} style={{padding:'5px 12px',background:'#7C9A6D',color:'white',border:'none',borderRadius:'6px',cursor:'pointer',fontSize:'12px'}}>✓ Appliquer</button>
+              </div>
             </div>
           ))}
         </div>
