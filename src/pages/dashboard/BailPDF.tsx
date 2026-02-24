@@ -57,6 +57,7 @@ interface FormData {
   entry_date: string;
   loyer_chf: number;
   exchange_rate: number;
+  exchange_rate_date: string;
   charges_energy: number;
   charges_maintenance: number;
   charges_services: number;
@@ -64,6 +65,7 @@ interface FormData {
   irl_trimestre: string;
   irl_indice: number;
   clauses_particulieres: string;
+  annexe_documents: string[];
 }
 
 export interface BailPDFData {
@@ -73,6 +75,10 @@ export interface BailPDFData {
   exit_date: string;
   loyer_eur: number;
   depot_eur: number;
+  prorata_eur: number;
+  prorata_chf: number;
+  prorata_days: number;
+  prorata_total_days: number;
 }
 
 function ph(val: string | undefined | null, placeholder: string): string {
@@ -268,7 +274,7 @@ function Numbered({ n, children }: { n: number; children: React.ReactNode }) {
 }
 
 export function BailPDF({ data }: { data: BailPDFData }) {
-  const { property, room, form, exit_date, loyer_eur, depot_eur } = data;
+  const { property, room, form, exit_date, loyer_eur, depot_eur, prorata_eur, prorata_chf, prorata_days, prorata_total_days } = data;
   const totalCharges = form.charges_energy + form.charges_maintenance + form.charges_services;
   const rate = form.exchange_rate || 0.94;
   const ville = property.siege_social?.split(",")[0]?.trim() || "[Ville]";
@@ -362,11 +368,21 @@ export function BailPDF({ data }: { data: BailPDFData }) {
         <Text style={s.articleTitle}>{"ARTICLE IV \u2014 CONDITIONS FINANCI\u00C8RES"}</Text>
 
         <Text style={s.subTitle}>Loyer mensuel :</Text>
-        <Bullet>En CHF : {fCHF(form.loyer_chf)} (au taux de {rate})</Bullet>
+        <Bullet>En CHF : {fCHF(form.loyer_chf)} (taux BCE du {form.exchange_rate_date || "—"} : {rate})</Bullet>
         <Bullet>En EUR : {fEUR(loyer_eur)}</Bullet>
-        <Text style={s.body}>
-          {"En cas d\u2019entr\u00E9e en cours de mois, le loyer du premier mois sera calcul\u00E9 au prorata des jours."}
-        </Text>
+        {prorata_days > 0 && prorata_total_days > 0 && prorata_days < prorata_total_days ? (
+          <View>
+            <Text style={[s.body, { marginTop: 6 }]}>
+              {"Prorata du premier mois : du "}{fDate(form.entry_date)}{" au dernier jour du mois ("}{prorata_days}{"/"}{prorata_total_days}{" jours) :"}
+            </Text>
+            <Bullet>En EUR : {fEUR(prorata_eur)}</Bullet>
+            <Bullet>En CHF : {fCHF(prorata_chf)}</Bullet>
+          </View>
+        ) : (
+          <Text style={s.body}>
+            {"Entr\u00E9e le 1er du mois \u2014 pas de prorata."}
+          </Text>
+        )}
 
         <Text style={s.subTitle}>{"Charges forfaitaires mensuelles :"}</Text>
         <View style={s.tableHeader}>
@@ -470,6 +486,9 @@ export function BailPDF({ data }: { data: BailPDFData }) {
         <Bullet>{"R\u00E8glement Int\u00E9rieur La Villa Coliving"}</Bullet>
         <Bullet>Diagnostics techniques</Bullet>
         <Bullet>{"Photos d\u2019\u00E9tat des lieux d\u2019entr\u00E9e"}</Bullet>
+        {(form.annexe_documents || []).map((doc: string, i: number) => (
+          <Bullet key={i}>{doc}</Bullet>
+        ))}
 
         {form.clauses_particulieres?.trim() ? (
           <View>

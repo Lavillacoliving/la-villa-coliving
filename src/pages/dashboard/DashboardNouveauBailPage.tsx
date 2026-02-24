@@ -63,6 +63,7 @@ interface FormData {
   entry_date: string;
   loyer_chf: number;
   exchange_rate: number;
+  exchange_rate_date: string;
   charges_energy: number;
   charges_maintenance: number;
   charges_services: number;
@@ -70,6 +71,7 @@ interface FormData {
   irl_trimestre: string;
   irl_indice: number;
   clauses_particulieres: string;
+  annexe_documents: string[];
 }
 
 interface ContractData {
@@ -79,6 +81,10 @@ interface ContractData {
   exit_date: string;
   loyer_eur: number;
   depot_eur: number;
+  prorata_eur: number;
+  prorata_chf: number;
+  prorata_days: number;
+  prorata_total_days: number;
 }
 
 function ph(val: string | undefined | null, placeholder: string): string {
@@ -375,10 +381,21 @@ function generateContractHTML(data: ContractData): string {
         <div class="article">
           <h3>Loyer mensuel :</h3>
           <ul>
-            <li><strong>En CHF :</strong> ${fCHF(form.loyer_chf)} (au taux de ${form.exchange_rate})</li>
+            <li><strong>En CHF :</strong> ${fCHF(form.loyer_chf)} (taux BCE du ${form.exchange_rate_date} : ${form.exchange_rate})</li>
             <li><strong>En EUR :</strong> ${fEUR(loyer_eur)}</li>
           </ul>
-          <p><strong>Prorata :</strong> En cas d'entrée en cours de mois, le loyer du premier mois sera calculé au prorata des jours.</p>
+          ${(() => {
+            const pd = data.prorata_days;
+            const pt = data.prorata_total_days;
+            if (!pd || !pt || pd >= pt) {
+              return '<p><em>Entrée le 1er du mois — pas de prorata.</em></p>';
+            }
+            return `<p><strong>Prorata du premier mois :</strong> Du ${fDate(form.entry_date)} au dernier jour du mois (${pd}/${pt} jours) :</p>
+            <ul>
+              <li><strong>En EUR :</strong> ${fEUR(data.prorata_eur)}</li>
+              <li><strong>En CHF :</strong> ${fCHF(data.prorata_chf)}</li>
+            </ul>`;
+          })()}
           <h3>Charges forfaitaires mensuelles :</h3>
           ${chargesTable}
           <h3>Révision annuelle (IRL) :</h3>
@@ -474,6 +491,7 @@ function generateContractHTML(data: ContractData): string {
             <li>Règlement Intérieur La Villa Coliving</li>
             <li>Diagnostics techniques</li>
             <li>Photos d'état des lieux d'entrée</li>
+            ${(form.annexe_documents || []).map((doc: string) => `<li>${doc}</li>`).join('')}
           </ul>
         </div>
 
@@ -501,12 +519,16 @@ function generateContractHTML(data: ContractData): string {
   return html;
 }
 
-async function fetchExchangeRate(): Promise<number> {
+async function fetchExchangeRate(): Promise<{ rate: number; date: string }> {
+  const todayStr = new Date().toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' });
   try {
     const res = await fetch('https://api.frankfurter.app/latest?from=EUR&to=CHF');
     if (res.ok) {
       const data = await res.json();
-      return data.rates?.CHF || 0.9400;
+      const rateDate = data.date
+        ? new Date(data.date + 'T00:00:00').toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' })
+        : todayStr;
+      return { rate: data.rates?.CHF || 0.9400, date: rateDate };
     }
   } catch {
     // Fallback to ECB SDMX API
@@ -519,13 +541,13 @@ async function fetchExchangeRate(): Promise<number> {
         const match = xml.match(
           /currency="CHF"[^>]*rate="([0-9.]+)"/
         );
-        if (match) return parseFloat(match[1]);
+        if (match) return { rate: parseFloat(match[1]), date: todayStr };
       }
     } catch {
       // Fallback
     }
   }
-  return 0.9400;
+  return { rate: 0.9400, date: todayStr };
 }
 
 
@@ -552,6 +574,7 @@ export default function DashboardNouveauBailPage() {
     entry_date: '',
     loyer_chf: 0,
     exchange_rate: exchangeRate,
+    exchange_rate_date: new Date().toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' }),
     charges_energy: 130,
     charges_maintenance: 200,
     charges_services: 90,
@@ -559,6 +582,7 @@ export default function DashboardNouveauBailPage() {
     irl_trimestre: '3ème trimestre 2025',
     irl_indice: 145.77,
     clauses_particulieres: '',
+    annexe_documents: [],
   });
 
   const [selectedProperty, setSelectedProperty] = useState<Property | null>(null);
@@ -586,9 +610,9 @@ export default function DashboardNouveauBailPage() {
       if (propsRes.data) setProperties(propsRes.data);
       if (roomsRes.data) setRooms(roomsRes.data);
 
-      const rate = await fetchExchangeRate();
+      const { rate, date: rateDate } = await fetchExchangeRate();
       setExchangeRate(rate);
-      setForm((prev) => ({ ...prev, exchange_rate: rate }));
+      setForm((prev) => ({ ...prev, exchange_rate: rate, exchange_rate_date: rateDate }));
     };
 
     loadData();
@@ -660,6 +684,22 @@ export default function DashboardNouveauBailPage() {
   // Calculate loyer EUR
   const loyerEUR = Math.round(form.loyer_chf / form.exchange_rate);
   const depotEUR = loyerEUR * 2;
+
+  // Calculate prorata first month
+  const computeProrata = () => {
+    if (!form.entry_date) return { days: 0, totalDays: 0, eur: 0, chf: 0 };
+    const entry = new Date(form.entry_date + 'T00:00:00');
+    const year = entry.getFullYear();
+    const month = entry.getMonth();
+    const totalDays = new Date(year, month + 1, 0).getDate(); // last day of month
+    const entryDay = entry.getDate();
+    const days = totalDays - entryDay + 1; // includes entry day
+    if (days >= totalDays) return { days: totalDays, totalDays, eur: loyerEUR, chf: form.loyer_chf };
+    const prorataEur = Math.round((loyerEUR * days) / totalDays);
+    const prorataChf = Math.round((form.loyer_chf * days) / totalDays);
+    return { days, totalDays, eur: prorataEur, chf: prorataChf };
+  };
+  const prorata = computeProrata();
 
   // Generate contract data
   // === SAVE BAIL: create tenant + deactivate old ===
@@ -817,6 +857,10 @@ export default function DashboardNouveauBailPage() {
           exit_date: exitDate,
           loyer_eur: loyerEUR,
           depot_eur: depotEUR,
+          prorata_eur: prorata.eur,
+          prorata_chf: prorata.chf,
+          prorata_days: prorata.days,
+          prorata_total_days: prorata.totalDays,
         }
       : null;
 
@@ -1119,7 +1163,7 @@ export default function DashboardNouveauBailPage() {
         />
 
         <label style={{ display: 'block', marginBottom: '8px', fontSize: '13px', color: '#666' }}>
-          Taux de change (1 EUR = X CHF)
+          Taux de change (1 EUR = X CHF) — <span style={{ color: '#999', fontStyle: 'italic' }}>taux BCE du {form.exchange_rate_date}</span>
         </label>
         <input
           type="number"
@@ -1253,6 +1297,99 @@ export default function DashboardNouveauBailPage() {
             fontSize: '14px',
           }}
         />
+
+        {/* Prorata info (read-only) */}
+        {form.entry_date && prorata.days > 0 && prorata.days < prorata.totalDays && (
+          <div style={{
+            background: '#f0f8f0', padding: '12px', borderRadius: '4px', marginBottom: '20px',
+            border: '1px solid #c9e4c9', fontSize: '13px',
+          }}>
+            <strong>Prorata 1er mois :</strong> {prorata.days}/{prorata.totalDays} jours →{' '}
+            {fEUR(prorata.eur)} / {fCHF(prorata.chf)}
+          </div>
+        )}
+
+        <h3 style={{ color: '#333', marginBottom: '15px' }}>Documents locataire (annexes)</h3>
+        <div style={{ marginBottom: '20px' }}>
+          {[
+            "Pièce d'identité du locataire",
+            "Justificatif de revenus (3 derniers bulletins)",
+            "Contrat de travail ou attestation d'emploi",
+            "Avis d'imposition",
+            "Justificatif de domicile actuel",
+            "Attestation d'assurance habitation",
+            "RIB du locataire",
+            "Pièce d'identité du garant",
+            "Justificatif de revenus du garant",
+          ].map((doc) => (
+            <label key={doc} style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '6px', fontSize: '13px', cursor: 'pointer' }}>
+              <input
+                type="checkbox"
+                checked={(form.annexe_documents || []).includes(doc)}
+                onChange={(e) => {
+                  setForm((prev) => ({
+                    ...prev,
+                    annexe_documents: e.target.checked
+                      ? [...(prev.annexe_documents || []), doc]
+                      : (prev.annexe_documents || []).filter((d) => d !== doc),
+                  }));
+                }}
+                style={{ width: '16px', height: '16px', accentColor: '#c9a96e' }}
+              />
+              {doc}
+            </label>
+          ))}
+          <div style={{ display: 'flex', gap: '8px', marginTop: '10px' }}>
+            <input
+              type="text"
+              placeholder="Autre document..."
+              id="custom-annexe-input"
+              style={{
+                flex: 1, padding: '8px', borderRadius: '4px', border: '1px solid #ddd', fontSize: '13px',
+              }}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter') {
+                  const input = e.target as HTMLInputElement;
+                  const val = input.value.trim();
+                  if (val && !(form.annexe_documents || []).includes(val)) {
+                    setForm((prev) => ({ ...prev, annexe_documents: [...(prev.annexe_documents || []), val] }));
+                    input.value = '';
+                  }
+                }
+              }}
+            />
+            <button
+              type="button"
+              onClick={() => {
+                const input = document.getElementById('custom-annexe-input') as HTMLInputElement;
+                const val = input?.value?.trim();
+                if (val && !(form.annexe_documents || []).includes(val)) {
+                  setForm((prev) => ({ ...prev, annexe_documents: [...(prev.annexe_documents || []), val] }));
+                  input.value = '';
+                }
+              }}
+              style={{ padding: '8px 14px', background: '#c9a96e', color: 'white', border: 'none', borderRadius: '4px', cursor: 'pointer', fontSize: '13px' }}
+            >
+              + Ajouter
+            </button>
+          </div>
+          {/* Show custom (non-preset) documents */}
+          {(form.annexe_documents || []).filter((d) => ![
+            "Pièce d'identité du locataire", "Justificatif de revenus (3 derniers bulletins)",
+            "Contrat de travail ou attestation d'emploi", "Avis d'imposition",
+            "Justificatif de domicile actuel", "Attestation d'assurance habitation",
+            "RIB du locataire", "Pièce d'identité du garant", "Justificatif de revenus du garant",
+          ].includes(d)).map((doc) => (
+            <div key={doc} style={{ display: 'flex', alignItems: 'center', gap: '8px', marginTop: '4px', fontSize: '13px', color: '#555' }}>
+              <span>✓ {doc}</span>
+              <button
+                type="button"
+                onClick={() => setForm((prev) => ({ ...prev, annexe_documents: prev.annexe_documents.filter((d) => d !== doc) }))}
+                style={{ background: 'none', border: 'none', color: '#c0392b', cursor: 'pointer', fontSize: '16px', padding: '0 4px' }}
+              >×</button>
+            </div>
+          ))}
+        </div>
 
         <h3 style={{ color: '#333', marginBottom: '15px' }}>Clauses particulières</h3>
         <textarea
