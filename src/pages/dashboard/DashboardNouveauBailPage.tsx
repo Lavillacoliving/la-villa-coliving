@@ -519,8 +519,9 @@ function generateContractHTML(data: ContractData): string {
   return html;
 }
 
-async function fetchExchangeRate(): Promise<{ rate: number; date: string }> {
+async function fetchExchangeRate(): Promise<{ rate: number; date: string; isLive: boolean }> {
   const todayStr = new Date().toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' });
+  // Try Frankfurter API (ECB-based, supports CORS)
   try {
     const res = await fetch('https://api.frankfurter.app/latest?from=EUR&to=CHF');
     if (res.ok) {
@@ -528,26 +529,36 @@ async function fetchExchangeRate(): Promise<{ rate: number; date: string }> {
       const rateDate = data.date
         ? new Date(data.date + 'T00:00:00').toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' })
         : todayStr;
-      return { rate: data.rates?.CHF || 0.9400, date: rateDate };
-    }
-  } catch {
-    // Fallback to ECB SDMX API
-    try {
-      const res = await fetch(
-        'https://www.ecb.europa.eu/stats/eurofxref/eurofxref-daily.xml'
-      );
-      if (res.ok) {
-        const xml = await res.text();
-        const match = xml.match(
-          /currency="CHF"[^>]*rate="([0-9.]+)"/
-        );
-        if (match) return { rate: parseFloat(match[1]), date: todayStr };
+      const rate = data.rates?.CHF;
+      if (rate) {
+        console.log('[Bail] Taux BCE chargé via Frankfurter:', rate, 'du', rateDate);
+        return { rate, date: rateDate, isLive: true };
       }
-    } catch {
-      // Fallback
     }
+  } catch (e) {
+    console.warn('[Bail] Frankfurter API failed:', e);
   }
-  return { rate: 0.9400, date: todayStr };
+  // Fallback: ECB XML direct
+  try {
+    const res = await fetch('https://www.ecb.europa.eu/stats/eurofxref/eurofxref-daily.xml');
+    if (res.ok) {
+      const xml = await res.text();
+      const match = xml.match(/currency="CHF"[^>]*rate="([0-9.]+)"/);
+      const dateMatch = xml.match(/time="(\d{4}-\d{2}-\d{2})"/);
+      if (match) {
+        const rate = parseFloat(match[1]);
+        const rateDate = dateMatch
+          ? new Date(dateMatch[1] + 'T00:00:00').toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' })
+          : todayStr;
+        console.log('[Bail] Taux BCE chargé via ECB XML:', rate, 'du', rateDate);
+        return { rate, date: rateDate, isLive: true };
+      }
+    }
+  } catch (e) {
+    console.warn('[Bail] ECB XML API failed:', e);
+  }
+  console.warn('[Bail] Using fallback rate 0.9145');
+  return { rate: 0.9145, date: todayStr + ' (fallback)', isLive: false };
 }
 
 
@@ -556,7 +567,7 @@ export default function DashboardNouveauBailPage() {
   const toast = useToast();
   const [rooms, setRooms] = useState<Room[]>([]);
   const [filteredRooms, setFilteredRooms] = useState<Room[]>([]);
-  const [exchangeRate, setExchangeRate] = useState(0.9400);
+  const [exchangeRate, setExchangeRate] = useState(0.9145);
 
   const [form, setForm] = useState<FormData>({
     property_id: '',
@@ -610,9 +621,10 @@ export default function DashboardNouveauBailPage() {
       if (propsRes.data) setProperties(propsRes.data);
       if (roomsRes.data) setRooms(roomsRes.data);
 
-      const { rate, date: rateDate } = await fetchExchangeRate();
+      const { rate, date: rateDate, isLive } = await fetchExchangeRate();
       setExchangeRate(rate);
       setForm((prev) => ({ ...prev, exchange_rate: rate, exchange_rate_date: rateDate }));
+      if (!isLive) console.warn('[Bail] Taux de change en mode fallback — vérifiez manuellement sur ecb.europa.eu');
     };
 
     loadData();
@@ -1170,7 +1182,7 @@ export default function DashboardNouveauBailPage() {
           step="0.0001"
           value={form.exchange_rate}
           onChange={(e) =>
-            setForm((prev) => ({ ...prev, exchange_rate: parseFloat(e.target.value) || 0.9400 }))
+            setForm((prev) => ({ ...prev, exchange_rate: parseFloat(e.target.value) || 0.9145 }))
           }
           style={{
             width: '100%',

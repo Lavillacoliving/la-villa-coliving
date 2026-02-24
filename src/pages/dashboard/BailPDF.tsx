@@ -276,7 +276,7 @@ function Numbered({ n, children }: { n: number; children: React.ReactNode }) {
 export function BailPDF({ data }: { data: BailPDFData }) {
   const { property, room, form, exit_date, loyer_eur, depot_eur, prorata_eur, prorata_chf, prorata_days, prorata_total_days } = data;
   const totalCharges = form.charges_energy + form.charges_maintenance + form.charges_services;
-  const rate = form.exchange_rate || 0.94;
+  const rate = form.exchange_rate || 0.9145;
   const ville = property.siege_social?.split(",")[0]?.trim() || "[Ville]";
 
   return (
