@@ -1,7 +1,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import { supabase } from '@/lib/supabase';
 import { useToast } from '@/components/ui/Toast';
-import { ENTITY_SLUGS } from '@/lib/entities';
+import { ENTITY_SLUGS, PROPERTY_ADDRESSES } from '@/lib/entities';
 import { logAudit } from '@/lib/auditLog';
 import { pdf } from '@react-pdf/renderer';
 import CourrierIRLPDF from './CourrierIRLPDF';
@@ -30,7 +30,7 @@ const STATUS_LABELS: Record<string,string> = {
 };
 const STATUS_ORDER = ['pending','paid','partial','late','unpaid'];
 const ENTITY_MAP: Record<string,string> = {
-  'la-villa':'La Villa (LMP)', 'le-loft':'Le Loft — Sleep In SCI', 'le-lodge':'Le Lodge — Sleep In SCI'
+  'lavilla':'La Villa (LMP)', 'leloft':'Le Loft — Sleep In SCI', 'lelodge':'Le Lodge — Sleep In SCI'
 };
 
 // ENTITY_SLUGS imported from @/lib/entities
@@ -135,11 +135,6 @@ export default function DashboardLoyersPage() {
       const pct = ((factor-1)*100).toFixed(2);
       latestIrlRef = `T${lQ} ${lY}`;
       const today = new Date();
-      const PROP_ADDRESSES: Record<string,string> = {
-        'La Villa': '25 rue de la Paix, 74100 Ville-la-Grand',
-        'Le Loft': '2 rue du Salève, 74100 Ambilly',
-        'Le Lodge': '15 avenue Émile Zola, 74100 Annemasse',
-      };
       tenants.filter(t=>t.is_active && t.move_in_date).forEach(t => {
         const moveIn = new Date(t.move_in_date!);
         let next = new Date(today.getFullYear(),moveIn.getMonth(),moveIn.getDate());
@@ -150,7 +145,8 @@ export default function DashboardLoyersPage() {
           if (newRent > t.current_rent) {
             const prop = properties.find(p=>p.id===t.property_id);
             const propName = prop?.name||'';
-            irlReminders.push({name:t.first_name+' '+t.last_name,firstName:t.first_name,lastName:t.last_name,room:t.room_number,property:propName,propertyAddress:PROP_ADDRESSES[propName]||'',daysUntil:days,date:next,currentRent:t.current_rent,newRent,pct,tenantId:t.id,irlRef:latestIrlRef,irlOld:prev.value,irlNew:latest.value});
+            const propSlug = prop?.slug||'';
+            irlReminders.push({name:t.first_name+' '+t.last_name,firstName:t.first_name,lastName:t.last_name,room:t.room_number,property:propName,propertyAddress:PROPERTY_ADDRESSES[propSlug]||'',daysUntil:days,date:next,currentRent:t.current_rent,newRent,pct,tenantId:t.id,irlRef:latestIrlRef,irlOld:prev.value,irlNew:latest.value});
           }
         }
       });

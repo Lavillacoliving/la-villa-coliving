@@ -827,7 +827,7 @@ export default function DashboardMaisonsPage() {
             </div>
 
             {/* Specifics for Le Lodge */}
-            {selectedProperty?.slug === 'le-lodge' && (
+            {selectedProperty?.slug === 'lelodge' && (
               <div style={{ marginBottom: '12px' }}>
                 <label style={S.fieldLabel}>Code d'accès porte</label>
                 <input

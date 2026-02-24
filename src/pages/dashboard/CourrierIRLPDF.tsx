@@ -44,7 +44,12 @@ const s = StyleSheet.create({
   footer: { position: "absolute" as const, bottom: 30, left: 50, right: 50, textAlign: "center" as const, fontSize: 8, color: "#aaa", borderTop: "1px solid #e0e0e0", paddingTop: 8 },
 });
 
-const fmt = (n: number) => n.toLocaleString("fr-FR", { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + " €";
+// Manual formatter — toLocaleString produces non-breaking spaces that @react-pdf renders as "/"
+const fmt = (n: number) => {
+  const [intPart, decPart] = Math.abs(n).toFixed(2).split('.');
+  const grouped = intPart.replace(/\B(?=(\d{3})+(?!\d))/g, ' ');
+  return (n < 0 ? '-' : '') + grouped + ',' + decPart + ' \u20AC';
+};
 
 export default function CourrierIRLPDF({ data }: { data: CourrierIRLData }) {
   const today = new Date();
