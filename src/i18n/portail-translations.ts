@@ -1,5 +1,18 @@
-// Portail Locataire — Contenu statique bilingue par propriété
-// Source: Bibles du Coliver, FAQ, documents opérationnels La Villa Coliving
+// ============================================================================
+// FALLBACK ONLY — NE PAS ÉDITER ICI
+// ============================================================================
+// La source de vérité est la table `property_content` dans Supabase (D4).
+// Ce fichier sert uniquement de :
+//   1. Fallback si la DB est indisponible (résilience)
+//   2. Seed initial via seedPropertyContent() dans usePropertyContent.ts
+//
+// Pour modifier le contenu du portail locataire :
+//   → Éditer directement dans Supabase (table property_content)
+//   → Ou via le dashboard admin quand l'UI d'édition sera disponible
+//
+// Dernière sync DB : 2026-02-23 (21 rows, 3 propriétés × 7 sections)
+// ============================================================================
+// Source originale: Bibles du Coliver, FAQ, documents opérationnels La Villa
 
 export interface PropertySection {
   section: string;
