@@ -25,14 +25,10 @@ on:
     branches: [main]
     paths:
       - 'src/**'
-      - 'public/**'
       - 'scripts/**'
       - 'index.html'
       - 'package.json'
       - 'vite.config.ts'
-    paths-ignore:
-      - 'public/prerendered/**'
-      - 'public/sitemap.xml'
   repository_dispatch:
     types: [prerender]
   schedule:
