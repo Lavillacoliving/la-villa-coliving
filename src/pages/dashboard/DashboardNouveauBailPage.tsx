@@ -601,6 +601,10 @@ export default function DashboardNouveauBailPage() {
   const [saving, setSaving] = useState(false);
   const [replaceConfirm, setReplaceConfirm] = useState<{oldTenant:{id:string,first_name:string,last_name:string}}|null>(null);
 
+  // Annexe file uploads — stored in memory until save
+  const [annexeFiles, setAnnexeFiles] = useState<{ file: File; label: string }[]>([]);
+  const fileInputRef = React.useRef<HTMLInputElement>(null);
+
   // Load fonts
   useEffect(() => {
     const link = document.createElement('link');
@@ -822,6 +826,34 @@ export default function DashboardNouveauBailPage() {
         }
       }
 
+      // Upload annexe files to Storage + create tenant_documents records
+      let uploadedCount = 0;
+      if (tenantId && annexeFiles.length > 0) {
+        for (const { file, label } of annexeFiles) {
+          try {
+            const safeName = file.name.replace(/[^a-zA-Z0-9._-]/g, '_');
+            const storagePath = `tenants/${tenantId}/annexes/${safeName}`;
+            const { error: upErr } = await supabase.storage
+              .from('operations')
+              .upload(storagePath, file, { contentType: file.type, upsert: true });
+            if (!upErr) {
+              await supabase.from('tenant_documents').insert({
+                tenant_id: tenantId,
+                document_type: 'annexe',
+                label: label || file.name,
+                file_url: storagePath,
+                uploaded_by: 'dashboard-bail-generator',
+              });
+              uploadedCount++;
+            } else {
+              console.warn(`Annexe upload failed for ${file.name}:`, upErr);
+            }
+          } catch (annexeErr) {
+            console.warn(`Annexe error for ${file.name}:`, annexeErr);
+          }
+        }
+      }
+
       logAudit('lease_generated', 'tenant', tenantId, {
         name: `${form.locataire_prenom} ${form.locataire_nom}`,
         property: selectedProperty.name,
@@ -829,11 +861,15 @@ export default function DashboardNouveauBailPage() {
         rent_chf: form.loyer_chf,
         entry_date: form.entry_date,
         document_url: documentUrl,
+        annexe_files_uploaded: uploadedCount,
       });
       if (oldTenantId) {
         logAudit('tenant_deactivated', 'tenant', oldTenantId);
       }
-      toast.success(`Locataire ${form.locataire_prenom} ${form.locataire_nom} créé avec succès !${documentUrl ? ' Bail PDF uploadé.' : ''}`);
+      const parts = [`Locataire ${form.locataire_prenom} ${form.locataire_nom} créé !`];
+      if (documentUrl) parts.push('Bail PDF uploadé.');
+      if (uploadedCount > 0) parts.push(`${uploadedCount} annexe(s) uploadée(s).`);
+      toast.success(parts.join(' '));
     } catch (err: any) {
       toast.error('Erreur: ' + (err.message || err));
     } finally {
@@ -1402,6 +1438,111 @@ export default function DashboardNouveauBailPage() {
             </div>
           ))}
         </div>
+
+        {/* File upload zone */}
+        <div style={{
+          border: '2px dashed #ddd', borderRadius: '8px', padding: '16px',
+          marginBottom: '20px', textAlign: 'center', cursor: 'pointer',
+          background: annexeFiles.length > 0 ? '#f9f7f4' : '#fafafa',
+          transition: 'background 0.2s',
+        }}
+          onClick={() => fileInputRef.current?.click()}
+          onDragOver={(e) => { e.preventDefault(); e.currentTarget.style.borderColor = '#c9a96e'; }}
+          onDragLeave={(e) => { e.currentTarget.style.borderColor = '#ddd'; }}
+          onDrop={(e) => {
+            e.preventDefault();
+            e.currentTarget.style.borderColor = '#ddd';
+            const files = Array.from(e.dataTransfer.files);
+            if (files.length > 0) {
+              const newFiles = files.map((f) => ({
+                file: f,
+                label: f.name.replace(/\.[^/.]+$/, '').replace(/[_-]/g, ' '),
+              }));
+              setAnnexeFiles((prev) => [...prev, ...newFiles]);
+              // Auto-add to annexe_documents list for the contract text
+              const newLabels = newFiles.map((nf) => nf.label);
+              setForm((prev) => ({
+                ...prev,
+                annexe_documents: [...prev.annexe_documents, ...newLabels.filter((l) => !prev.annexe_documents.includes(l))],
+              }));
+            }
+          }}
+        >
+          <input
+            ref={fileInputRef}
+            type="file"
+            multiple
+            accept=".pdf,.jpg,.jpeg,.png,.doc,.docx"
+            style={{ display: 'none' }}
+            onChange={(e) => {
+              const files = Array.from(e.target.files || []);
+              if (files.length > 0) {
+                const newFiles = files.map((f) => ({
+                  file: f,
+                  label: f.name.replace(/\.[^/.]+$/, '').replace(/[_-]/g, ' '),
+                }));
+                setAnnexeFiles((prev) => [...prev, ...newFiles]);
+                const newLabels = newFiles.map((nf) => nf.label);
+                setForm((prev) => ({
+                  ...prev,
+                  annexe_documents: [...prev.annexe_documents, ...newLabels.filter((l) => !prev.annexe_documents.includes(l))],
+                }));
+              }
+              e.target.value = ''; // reset for re-upload same file
+            }}
+          />
+          <div style={{ fontSize: '24px', marginBottom: '4px' }}>+</div>
+          <div style={{ fontSize: '13px', color: '#888' }}>
+            Glisser-déposer ou cliquer pour ajouter des fichiers
+          </div>
+          <div style={{ fontSize: '11px', color: '#aaa', marginTop: '4px' }}>
+            PDF, images, Word — max 10 Mo par fichier
+          </div>
+        </div>
+
+        {/* List of uploaded files */}
+        {annexeFiles.length > 0 && (
+          <div style={{ marginBottom: '20px' }}>
+            {annexeFiles.map((af, idx) => (
+              <div key={idx} style={{
+                display: 'flex', alignItems: 'center', gap: '8px', padding: '8px 10px',
+                background: '#faf8f5', borderRadius: '4px', marginBottom: '4px', fontSize: '13px',
+              }}>
+                <span style={{ color: '#c9a96e', fontWeight: 600 }}>
+                  {af.file.type.includes('pdf') ? '(pdf)' : af.file.type.includes('image') ? '(img)' : '(doc)'}
+                </span>
+                <input
+                  type="text"
+                  value={af.label}
+                  onChange={(e) => {
+                    const newLabel = e.target.value;
+                    setAnnexeFiles((prev) => prev.map((f, i) => i === idx ? { ...f, label: newLabel } : f));
+                  }}
+                  style={{
+                    flex: 1, border: 'none', background: 'transparent', fontSize: '13px',
+                    borderBottom: '1px solid #e0e0e0', padding: '2px 4px',
+                  }}
+                />
+                <span style={{ fontSize: '11px', color: '#999' }}>
+                  {(af.file.size / 1024).toFixed(0)} Ko
+                </span>
+                <button
+                  type="button"
+                  onClick={() => {
+                    const removed = annexeFiles[idx];
+                    setAnnexeFiles((prev) => prev.filter((_, i) => i !== idx));
+                    // Also remove from annexe_documents if it was auto-added
+                    setForm((prev) => ({
+                      ...prev,
+                      annexe_documents: prev.annexe_documents.filter((d) => d !== removed.label),
+                    }));
+                  }}
+                  style={{ background: 'none', border: 'none', color: '#c0392b', cursor: 'pointer', fontSize: '16px', padding: '0 4px' }}
+                >×</button>
+              </div>
+            ))}
+          </div>
+        )}
 
         <h3 style={{ color: '#333', marginBottom: '15px' }}>Clauses particulières</h3>
         <textarea
