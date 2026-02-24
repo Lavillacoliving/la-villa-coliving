@@ -1,32 +1,53 @@
 # Auto pre-render pipeline for La Villa Coliving
 #
 # Triggers:
-# 1. repository_dispatch from n8n (after blog approval) — immediate
-# 2. Daily schedule at 6h UTC (7h Paris) — safety net
-# 3. Manual from GitHub UI — troubleshooting
+# 1. Push to main (src/ or public/ changes only — NOT prerendered files)
+# 2. repository_dispatch from n8n (after blog approval) — immediate
+# 3. Weekly schedule Sunday 5h UTC (6h Paris) — safety net + blog sync
+# 4. Manual from GitHub UI — troubleshooting
 #
 # What it does:
 # - Fetches published blog slugs from Supabase
 # - Updates vercel.json with blog rewrites
+# - Generates sitemap.xml with all routes + hreflang
 # - Pre-renders all pages (static + blog) with Puppeteer
-# - Injects content into index.html shell
-# - Commits and pushes → triggers Vercel auto-deploy
+# - Commits and pushes changes → triggers Vercel auto-deploy
 #
-# Cost: $0 (GitHub Actions is free for public repos, 2000 min/month for private)
+# Loop prevention: pushes from github-actions[bot] don't trigger new workflows.
+# Extra safety: paths-ignore excludes prerendered files and sitemap.
+#
+# Cost: $0 (GitHub Actions free for public repos, 2000 min/month for private)
 
 name: Pre-render & Deploy
 
 on:
+  push:
+    branches: [main]
+    paths:
+      - 'src/**'
+      - 'public/**'
+      - 'scripts/**'
+      - 'index.html'
+      - 'package.json'
+      - 'vite.config.ts'
+    paths-ignore:
+      - 'public/prerendered/**'
+      - 'public/sitemap.xml'
   repository_dispatch:
     types: [prerender]
   schedule:
-    - cron: '0 6 * * *'
+    - cron: '0 5 * * 0'
   workflow_dispatch:
+
+permissions:
+  contents: write
 
 jobs:
   prerender:
     runs-on: ubuntu-latest
-    timeout-minutes: 10
+    timeout-minutes: 15
+    # Skip if the push was made by github-actions[bot] (loop prevention)
+    if: github.actor != 'github-actions[bot]'
 
     steps:
       - name: Checkout repository
@@ -47,9 +68,6 @@ jobs:
       - name: Pre-render all pages (Supabase sync + Puppeteer)
         run: node scripts/prerender.mjs
 
-      - name: Inject pre-rendered content into build
-        run: node scripts/inject-prerendered.mjs
-
       - name: Commit and push if changes
         run: |
           git config user.name "github-actions[bot]"
@@ -60,7 +78,18 @@ jobs:
           else
             BLOG_COUNT=$(ls public/prerendered/blog-*.html 2>/dev/null | wc -l)
             STATIC_COUNT=$(ls public/prerendered/*.html 2>/dev/null | wc -l)
-            git commit -m "auto-update pre-rendered pages (${STATIC_COUNT} pages, ${BLOG_COUNT} blog articles)"
+            git commit -m "auto-prerender: ${STATIC_COUNT} pages, ${BLOG_COUNT} blog articles
+
+            Triggered by: ${{ github.event_name }}
+            Co-Authored-By: github-actions[bot] <github-actions[bot]@users.noreply.github.com>"
             git push
             echo "🚀 Pushed — Vercel will auto-deploy"
           fi
+
+      - name: Ping Google & Bing with updated sitemap
+        if: success()
+        run: |
+          echo "📡 Notifying search engines of sitemap update..."
+          curl -s "https://www.google.com/ping?sitemap=https://www.lavillacoliving.com/sitemap.xml" -o /dev/null -w "Google: HTTP %{http_code}\n"
+          curl -s "https://www.bing.com/ping?sitemap=https://www.lavillacoliving.com/sitemap.xml" -o /dev/null -w "Bing: HTTP %{http_code}\n"
+          echo "✅ Search engines notified"
