@@ -1,6 +1,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import { supabase } from '@/lib/supabase';
 import { useToast } from '@/components/ui/Toast';
+import PropertyContentEditor from '@/components/PropertyContentEditor';
 
 interface Property {
   id: string;
@@ -570,6 +571,9 @@ export default function DashboardMaisonsPage() {
                 </div>
               )}
             </div>
+
+            {/* Property Content Editor — Portail Ma Maison */}
+            <PropertyContentEditor propertyId={selectedProperty.id} propertyName={selectedProperty.name} />
           </>
         ) : (
           <p style={{ color: '#888', textAlign: 'center', padding: '40px' }}>Sélectionnez une propriété</p>

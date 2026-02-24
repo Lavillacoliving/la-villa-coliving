@@ -44,18 +44,50 @@ export function useTenant() {
 
     async function fetchTenant() {
       setLoading(true);
-      const { data } = await supabase
-        .from('tenants')
-        .select(`
-          id, first_name, last_name, email, phone, room_number,
-          current_rent, move_in_date, move_out_date, deposit_amount, due_day,
-          bail_end, preavis_status, preavis_date, bio, is_visible_annuaire,
-          property_id,
-          properties!inner(name, address, city, legal_entity_name, siege_social, siret, charges_energy_chf, charges_maintenance_chf, charges_services_chf)
-        `)
-        .eq('email', user!.email!)
-        .eq('is_active', true)
-        .single();
+
+      // First try matching by user_id (most secure — M5 fix)
+      let data: any = null;
+      if (user?.id) {
+        const res = await supabase
+          .from('tenants')
+          .select(`
+            id, first_name, last_name, email, phone, room_number,
+            current_rent, move_in_date, move_out_date, deposit_amount, due_day,
+            bail_end, preavis_status, preavis_date, bio, is_visible_annuaire,
+            property_id,
+            properties!inner(name, address, city, legal_entity_name, siege_social, siret, charges_energy_chf, charges_maintenance_chf, charges_services_chf)
+          `)
+          .eq('user_id', user.id)
+          .eq('is_active', true)
+          .maybeSingle();
+        data = res.data;
+      }
+
+      // Fallback: match by email (backward compat for tenants without user_id)
+      if (!data && user?.email) {
+        const res = await supabase
+          .from('tenants')
+          .select(`
+            id, first_name, last_name, email, phone, room_number,
+            current_rent, move_in_date, move_out_date, deposit_amount, due_day,
+            bail_end, preavis_status, preavis_date, bio, is_visible_annuaire,
+            property_id,
+            properties!inner(name, address, city, legal_entity_name, siege_social, siret, charges_energy_chf, charges_maintenance_chf, charges_services_chf)
+          `)
+          .eq('email', user.email)
+          .eq('is_active', true)
+          .maybeSingle();
+        data = res.data;
+
+        // Auto-link user_id if found by email but user_id was empty (M5 self-healing)
+        if (data && user.id) {
+          supabase
+            .from('tenants')
+            .update({ user_id: user.id })
+            .eq('id', data.id)
+            .then(() => {});
+        }
+      }
 
       if (data) {
         const prop = (data as any).properties;
@@ -76,7 +108,7 @@ export function useTenant() {
     }
 
     fetchTenant();
-  }, [user?.email]);
+  }, [user?.email, user?.id]);
 
   return { tenant, loading };
 }

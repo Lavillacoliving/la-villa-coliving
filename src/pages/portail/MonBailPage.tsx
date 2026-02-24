@@ -2,9 +2,11 @@ import { useState, useEffect, useCallback } from 'react';
 import { useOutletContext } from 'react-router-dom';
 import type { TenantInfo } from '@/hooks/useTenant';
 import { usePayments } from '@/hooks/usePayments';
+import { useTenantDocuments, DOCUMENT_TYPES } from '@/hooks/useTenantDocuments';
 import { supabase } from '@/lib/supabase';
 import { pdf } from '@react-pdf/renderer';
 import { QuittancePDF } from './QuittancePDF';
+import { FileText, Download, ExternalLink } from 'lucide-react';
 
 interface PortailContext {
   tenant: TenantInfo;
@@ -17,24 +19,49 @@ const MONTHS_EN = ['January', 'February', 'March', 'April', 'May', 'June', 'July
 export function MonBailPage() {
   const { tenant, language } = useOutletContext<PortailContext>();
   const { payments, loading: paymentsLoading } = usePayments(tenant.id);
-  const [docs, setDocs] = useState<{name:string,updated_at:string|null,metadata:{size?:number}|null}[]>([]);
-  const [docsLoading, setDocsLoading] = useState(true);
+  const { documents: tenantDocs, loading: docsDbLoading } = useTenantDocuments(tenant.id);
+  const [storageDocs, setStorageDocs] = useState<{name:string,updated_at:string|null,metadata:{size?:number}|null}[]>([]);
+  const [_storageLoading, setStorageLoading] = useState(true);
 
-  const loadDocs = useCallback(async () => {
-    setDocsLoading(true);
-    const { data } = await supabase.storage.from('operations').list('tenants/' + tenant.id, { limit: 50, sortBy: { column: 'name', order: 'asc' } });
-    setDocs((data || []).filter(f => f.name !== '.emptyFolderPlaceholder'));
-    setDocsLoading(false);
+  // Fetch bail link from leases table
+  const [bailUrl, setBailUrl] = useState<string | null>(null);
+  useEffect(() => {
+    async function fetchBail() {
+      const { data } = await supabase
+        .from('leases')
+        .select('document_url')
+        .eq('tenant_id', tenant.id)
+        .eq('is_active', true)
+        .maybeSingle();
+      if (data?.document_url) setBailUrl(data.document_url);
+    }
+    fetchBail();
   }, [tenant.id]);
 
-  useEffect(() => { loadDocs(); }, [loadDocs]);
+  const loadStorageDocs = useCallback(async () => {
+    setStorageLoading(true);
+    const { data } = await supabase.storage.from('operations').list('tenants/' + tenant.id, { limit: 50, sortBy: { column: 'name', order: 'asc' } });
+    setStorageDocs((data || []).filter(f => f.name !== '.emptyFolderPlaceholder'));
+    setStorageLoading(false);
+  }, [tenant.id]);
 
-  const downloadDoc = async (fileName: string) => {
+  useEffect(() => { loadStorageDocs(); }, [loadStorageDocs]);
+
+  const downloadStorageDoc = async (fileName: string) => {
     const { data, error } = await supabase.storage.from('operations').download('tenants/' + tenant.id + '/' + fileName);
     if (error || !data) return;
     const url = URL.createObjectURL(data);
     const a = document.createElement('a');
     a.href = url; a.download = fileName; a.click();
+    URL.revokeObjectURL(url);
+  };
+
+  const downloadTenantDoc = async (fileUrl: string, label: string) => {
+    const { data, error } = await supabase.storage.from('operations').download(fileUrl);
+    if (error || !data) return;
+    const url = URL.createObjectURL(data);
+    const a = document.createElement('a');
+    a.href = url; a.download = label; a.click();
     URL.revokeObjectURL(url);
   };
 
@@ -61,10 +88,7 @@ export function MonBailPage() {
       const lastDay = new Date(year, monthIdx + 1, 0).getDate();
       const pad = (n: number) => n.toString().padStart(2, '0');
 
-      // Calculate charges vs loyer nu
-      // charges in CHF from property, convert roughly (1 CHF ~ 0.95 EUR approximate)
       const totalChargesCHF = (tenant.charges_energy_chf || 0) + (tenant.charges_maintenance_chf || 0) + (tenant.charges_services_chf || 0);
-      // Approximate EUR conversion — use ratio of tenant rent to total
       const chargesEUR = totalChargesCHF > 0 ? Math.round(totalChargesCHF * 0.95 * 100) / 100 : 0;
       const loyerNu = Math.max(0, payment.received_amount - chargesEUR);
 
@@ -124,9 +148,11 @@ export function MonBailPage() {
       pending: 'En attente',
       late: 'En retard',
       noPayments: 'Aucun paiement enregistré',
-      documents: 'Documents signés',
+      myDocuments: 'Mes documents',
+      signedDocuments: 'Documents signés',
       noDocuments: 'Aucun document disponible pour le moment.',
       download: 'Télécharger',
+      viewBail: 'Voir mon bail',
       quittances: 'Quittances de loyer',
       noQuittances: 'Les quittances sont disponibles pour les mois payés.',
       downloadQuittance: 'PDF',
@@ -156,9 +182,11 @@ export function MonBailPage() {
       pending: 'Pending',
       late: 'Late',
       noPayments: 'No payments recorded',
-      documents: 'Signed Documents',
+      myDocuments: 'My Documents',
+      signedDocuments: 'Signed Documents',
       noDocuments: 'No documents available yet.',
       download: 'Download',
+      viewBail: 'View my lease',
       quittances: 'Rent Receipts',
       noQuittances: 'Receipts are available for paid months.',
       downloadQuittance: 'PDF',
@@ -189,7 +217,6 @@ export function MonBailPage() {
   };
 
   const formatMonth = (monthStr: string) => {
-    // month format: "YYYY-MM"
     const parts = monthStr.split('-');
     if (parts.length === 2) {
       const monthIdx = parseInt(parts[1]) - 1;
@@ -198,12 +225,17 @@ export function MonBailPage() {
     return monthStr;
   };
 
+  const getDocTypeLabel = (type: string) => {
+    const dt = DOCUMENT_TYPES.find(d => d.value === type);
+    return dt ? (language === 'en' ? dt.label_en : dt.label_fr) : type;
+  };
+
   return (
     <div className="space-y-6">
       {/* Lease Info Card */}
       <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
         <h2 className="text-lg font-semibold text-gray-900 mb-4 flex items-center gap-2">
-{lang.leaseInfo}
+          {lang.leaseInfo}
         </h2>
         <div className="grid sm:grid-cols-2 gap-4 text-sm">
           <div className="flex justify-between sm:flex-col sm:gap-1">
@@ -247,12 +279,25 @@ export function MonBailPage() {
             </span>
           </div>
         </div>
+
+        {/* Bail PDF link */}
+        {bailUrl && (
+          <div className="mt-4 pt-4 border-t border-gray-100">
+            <button
+              onClick={() => downloadTenantDoc(bailUrl, `Bail_${tenant.last_name}.pdf`)}
+              className="inline-flex items-center gap-2 px-4 py-2 text-sm font-medium text-[#b8860b] bg-[#b8860b]/10 rounded-lg hover:bg-[#b8860b]/20 transition-colors"
+            >
+              <FileText className="w-4 h-4" />
+              {lang.viewBail}
+            </button>
+          </div>
+        )}
       </div>
 
       {/* Payments Table */}
       <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
         <h2 className="text-lg font-semibold text-gray-900 mb-4 flex items-center gap-2">
-{lang.payments}
+          {lang.payments}
         </h2>
         {paymentsLoading ? (
           <div className="animate-pulse text-sm text-gray-400">...</div>
@@ -284,18 +329,54 @@ export function MonBailPage() {
         )}
       </div>
 
-      {/* Documents */}
+      {/* Tenant Documents from DB */}
       <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
         <h2 className="text-lg font-semibold text-gray-900 mb-4 flex items-center gap-2">
-{lang.documents}
+          {lang.myDocuments}
         </h2>
-        {docsLoading ? (
+        {docsDbLoading ? (
           <div className="animate-pulse text-sm text-gray-400">...</div>
-        ) : docs.length === 0 ? (
+        ) : tenantDocs.length === 0 && storageDocs.length === 0 ? (
           <p className="text-sm text-gray-500">{lang.noDocuments}</p>
         ) : (
           <div className="space-y-2">
-            {docs.map((doc) => {
+            {/* Documents from tenant_documents table */}
+            {tenantDocs.map((doc) => (
+              <div key={doc.id} className="flex items-center justify-between p-3 rounded-lg border border-gray-100 hover:bg-gray-50 transition-colors">
+                <div className="flex items-center gap-3 min-w-0 flex-1">
+                  <FileText className="w-5 h-5 text-[#D4A574] flex-shrink-0" />
+                  <div className="min-w-0">
+                    <p className="text-sm font-medium text-gray-900 truncate">{doc.label}</p>
+                    <p className="text-xs text-gray-400">
+                      {getDocTypeLabel(doc.document_type)}
+                      {doc.uploaded_at ? ` — ${new Date(doc.uploaded_at).toLocaleDateString(language === 'en' ? 'en-GB' : 'fr-FR')}` : ''}
+                    </p>
+                  </div>
+                </div>
+                {doc.file_url ? (
+                  <button
+                    onClick={() => downloadTenantDoc(doc.file_url!, doc.label)}
+                    className="ml-3 px-3 py-1.5 text-xs font-medium text-[#b8860b] bg-[#b8860b]/10 rounded-lg hover:bg-[#b8860b]/20 transition-colors flex-shrink-0 inline-flex items-center gap-1"
+                  >
+                    <Download className="w-3 h-3" />
+                    {lang.download}
+                  </button>
+                ) : doc.external_url ? (
+                  <a
+                    href={doc.external_url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="ml-3 px-3 py-1.5 text-xs font-medium text-[#b8860b] bg-[#b8860b]/10 rounded-lg hover:bg-[#b8860b]/20 transition-colors flex-shrink-0 inline-flex items-center gap-1"
+                  >
+                    <ExternalLink className="w-3 h-3" />
+                    {lang.download}
+                  </a>
+                ) : null}
+              </div>
+            ))}
+
+            {/* Legacy documents from Storage (backward compat) */}
+            {storageDocs.map((doc) => {
               const ext = doc.name.split('.').pop()?.toLowerCase() || '';
               const icon = ext === 'pdf' ? '📄' : ext === 'jpg' || ext === 'jpeg' || ext === 'png' ? '🖼️' : '📎';
               return (
@@ -308,7 +389,7 @@ export function MonBailPage() {
                     </div>
                   </div>
                   <button
-                    onClick={() => downloadDoc(doc.name)}
+                    onClick={() => downloadStorageDoc(doc.name)}
                     className="ml-3 px-3 py-1.5 text-xs font-medium text-[#b8860b] bg-[#b8860b]/10 rounded-lg hover:bg-[#b8860b]/20 transition-colors flex-shrink-0"
                   >
                     {lang.download}
@@ -323,7 +404,7 @@ export function MonBailPage() {
       {/* Quittances */}
       <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
         <h2 className="text-lg font-semibold text-gray-900 mb-4 flex items-center gap-2">
-{lang.quittances}
+          {lang.quittances}
         </h2>
         {paymentsLoading ? (
           <div className="animate-pulse text-sm text-gray-400">...</div>
@@ -337,7 +418,7 @@ export function MonBailPage() {
               {paidPayments.map((p) => (
                 <div key={`q-${p.id}`} className="flex items-center justify-between p-3 rounded-lg border border-gray-100 hover:bg-gray-50 transition-colors">
                   <div className="flex items-center gap-3">
-                    <span className="text-lg">\ud83d\udcc3</span>
+                    <span className="text-lg">{'\ud83d\udcc3'}</span>
                     <div>
                       <p className="text-sm font-medium text-gray-900">{formatMonth(p.month)}</p>
                       <p className="text-xs text-gray-400">{formatCurrency(p.received_amount || 0)}</p>

@@ -683,8 +683,8 @@ export default function DashboardNouveauBailPage() {
       const depositMonths = selectedProperty.deposit_months || 2;
       const depositEur = loyerEur * depositMonths;
 
-      // Insert new tenant
-      const { error } = await supabase.from('tenants').insert({
+      // Insert new tenant and get back the ID
+      const { data: newTenant, error } = await supabase.from('tenants').insert({
         first_name: form.locataire_prenom,
         last_name: form.locataire_nom,
         email: form.locataire_email,
@@ -701,13 +701,37 @@ export default function DashboardNouveauBailPage() {
         date_of_birth: form.locataire_dob || null,
         place_of_birth: form.locataire_birthplace || null,
         notes: 'Bail généré automatiquement le ' + new Date().toLocaleDateString('fr-FR'),
-      });
+      }).select('id').single();
 
       if (error) throw error;
+      const tenantId = newTenant?.id;
 
-      // Also persist lease record (P1.10)
+      // Auto-generate and upload bail PDF to Storage
+      let documentUrl: string | null = null;
+      if (contractData && tenantId) {
+        try {
+          const pdfBlob = await pdf(BailPDF({ data: contractData })).toBlob();
+          const safeName = `Bail_${form.locataire_nom}_${form.locataire_prenom}_${form.entry_date}.pdf`;
+          const storagePath = `tenants/${tenantId}/${safeName}`;
+
+          const { error: uploadErr } = await supabase.storage
+            .from('operations')
+            .upload(storagePath, pdfBlob, { contentType: 'application/pdf', upsert: true });
+
+          if (!uploadErr) {
+            documentUrl = storagePath;
+          } else {
+            console.warn('Bail PDF upload failed:', uploadErr);
+          }
+        } catch (pdfErr) {
+          console.warn('Bail PDF generation/upload error:', pdfErr);
+        }
+      }
+
+      // Persist lease record with tenant_id and document_url
       try {
         await supabase.from('leases').insert({
+          tenant_id: tenantId || null,
           tenant_first_name: form.locataire_prenom,
           tenant_last_name: form.locataire_nom,
           tenant_email: form.locataire_email,
@@ -723,24 +747,41 @@ export default function DashboardNouveauBailPage() {
           charges_maintenance_chf: selectedProperty.charges_maintenance_chf || 0,
           charges_services_chf: selectedProperty.charges_services_chf || 0,
           status: 'active',
+          is_active: true,
+          document_url: documentUrl,
           generated_at: new Date().toISOString(),
         });
       } catch (leaseErr) {
-        // Non-blocking: lease table may not exist yet, tenant is the priority
-        console.warn('Lease record not saved (table may not exist yet):', leaseErr);
+        console.warn('Lease record not saved:', leaseErr);
       }
 
-      logAudit('lease_generated', 'tenant', undefined, {
+      // Also create a tenant_documents record for the bail
+      if (documentUrl && tenantId) {
+        try {
+          await supabase.from('tenant_documents').insert({
+            tenant_id: tenantId,
+            document_type: 'bail',
+            label: `Bail ${form.locataire_prenom} ${form.locataire_nom} — ${selectedProperty.name}`,
+            file_url: documentUrl,
+            uploaded_by: 'dashboard-bail-generator',
+          });
+        } catch (docErr) {
+          console.warn('Tenant document record not saved:', docErr);
+        }
+      }
+
+      logAudit('lease_generated', 'tenant', tenantId, {
         name: `${form.locataire_prenom} ${form.locataire_nom}`,
         property: selectedProperty.name,
         room: selectedRoom.room_number,
         rent_chf: form.loyer_chf,
         entry_date: form.entry_date,
+        document_url: documentUrl,
       });
       if (oldTenantId) {
         logAudit('tenant_deactivated', 'tenant', oldTenantId);
       }
-      toast.success(`Locataire ${form.locataire_prenom} ${form.locataire_nom} créé avec succès !`);
+      toast.success(`Locataire ${form.locataire_prenom} ${form.locataire_nom} créé avec succès !${documentUrl ? ' Bail PDF uploadé.' : ''}`);
     } catch (err: any) {
       toast.error('Erreur: ' + (err.message || err));
     } finally {

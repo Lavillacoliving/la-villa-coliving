@@ -1,8 +1,8 @@
 import { useState } from 'react';
 import { useOutletContext } from 'react-router-dom';
 import type { TenantInfo } from '@/hooks/useTenant';
-import { getPropertyContent, type PropertySection } from '@/i18n/portail-translations';
-import { BookOpen, LayoutGrid, Wifi, Info, AlertTriangle, Phone, Sparkles, Home } from 'lucide-react';
+import { usePropertyContent } from '@/hooks/usePropertyContent';
+import { BookOpen, LayoutGrid, Wifi, Info, AlertTriangle, Phone, Sparkles, Home, Loader2 } from 'lucide-react';
 import type { LucideIcon } from 'lucide-react';
 
 interface PortailContext {
@@ -39,7 +39,7 @@ export function MaMaisonPage() {
     .replace('le-loft', 'leloft')
     .replace('le-lodge', 'lelodge');
 
-  const sections = getPropertyContent(propertyKey, language);
+  const { sections, loading } = usePropertyContent(tenant.property_id, propertyKey, language);
 
   const t = {
     fr: {
@@ -57,6 +57,19 @@ export function MaMaisonPage() {
   };
 
   const lang = t[language] || t.fr;
+
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center py-16">
+        <Loader2 className="w-6 h-6 animate-spin text-[#D4A574]" />
+      </div>
+    );
+  }
+
+  // Determine which sections to show: from DB rows or fallback section keys
+  const sectionKeys = sections.length > 0
+    ? sections.map(s => s.section)
+    : Object.keys(sectionLabels);
 
   return (
     <div>
@@ -76,11 +89,11 @@ export function MaMaisonPage() {
 
       {/* Accordion sections */}
       <div className="space-y-2">
-        {Object.keys(sectionLabels).map((key) => {
+        {sectionKeys.map((key) => {
           const isOpen = openSection === key;
-          const label = sectionLabels[key][language] || sectionLabels[key].fr;
+          const label = sectionLabels[key]?.[language] || sectionLabels[key]?.fr || key;
           const IconComponent = sectionIcons[key] || Info;
-          const content = sections.find((s: PropertySection) => s.section === key);
+          const content = sections.find(s => s.section === key);
 
           return (
             <div key={key} className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
