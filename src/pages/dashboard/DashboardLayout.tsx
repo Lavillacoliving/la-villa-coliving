@@ -8,7 +8,9 @@ const ADMIN_EMAILS = ['jerome@lavillacoliving.com', 'fanny@lavillacoliving.com']
 const TABS = [
   { id: 'loyers', label: 'Suivi Loyers', path: '/dashboard/loyers' },
   { id: 'locataires', label: 'Locataires', path: '/dashboard/locataires' },
+  { id: 'rapprochement', label: 'Rapprochement', path: '/dashboard/rapprochement' },
   { id: 'depenses', label: 'Dépenses', path: '/dashboard/depenses' },
+  { id: 'cautions', label: 'Cautions', path: '/dashboard/cautions' },
   { id: 'maintenance', label: 'Maintenance', path: '/dashboard/maintenance' },
   { id: 'prospects', label: 'Prospects', path: '/dashboard/prospects' },
   { id: 'roadmap', label: 'Roadmap', path: '/dashboard/roadmap' },

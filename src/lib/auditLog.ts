@@ -25,11 +25,15 @@ export type AuditAction =
   | 'status_change' | 'payment_recorded'
   | 'lease_generated' | 'tenant_deactivated'
   | 'irl_applied' | 'prospect_converted'
-  | 'file_uploaded' | 'file_deleted';
+  | 'file_uploaded' | 'file_deleted'
+  | 'invoice_linked' | 'invoice_unlinked'
+  | 'transaction_classified' | 'transaction_flagged'
+  | 'deposit_returned' | 'split_group_created';
 
 export type AuditEntityType =
   | 'tenant' | 'prospect' | 'payment' | 'maintenance_ticket'
-  | 'event' | 'lease' | 'document' | 'room' | 'property';
+  | 'event' | 'lease' | 'document' | 'room' | 'property'
+  | 'bank_transaction' | 'invoice' | 'deposit';
 
 export async function logAudit(
   action: AuditAction,

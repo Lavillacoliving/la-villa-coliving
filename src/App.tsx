@@ -34,6 +34,8 @@ import DashboardMaisonsPage from '@/pages/dashboard/DashboardMaisonsPage';
 import DashboardNouveauBailPage from '@/pages/dashboard/DashboardNouveauBailPage';
 import DashboardDocumentsPage from "@/pages/dashboard/DashboardDocumentsPage";
 import DashboardEventsPage from "@/pages/dashboard/DashboardEventsPage";
+import DashboardRapprochementPage from "@/pages/dashboard/DashboardRapprochementPage";
+import DashboardCautionsPage from "@/pages/dashboard/DashboardCautionsPage";
 
 function AppContent() {
   const location = useLocation();
@@ -69,7 +71,9 @@ function AppContent() {
           <Route index element={<Navigate to="/dashboard/loyers" replace />} />
           <Route path="loyers" element={<DashboardLoyersPage />} />
           <Route path="locataires" element={<DashboardLocatairesPage />} />
+          <Route path="rapprochement" element={<DashboardRapprochementPage />} />
           <Route path="depenses" element={<DashboardDepensesPage />} />
+          <Route path="cautions" element={<DashboardCautionsPage />} />
           <Route path="maintenance" element={<DashboardMaintenancePage />} />
           <Route path="prospects" element={<DashboardProspectsPage />} />
           <Route path="roadmap" element={<DashboardRoadmapPage />} />

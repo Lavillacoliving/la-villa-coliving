@@ -53,6 +53,56 @@ export const PROPERTY_ADDRESSES: Record<string, string> = {
   'lelodge': '15 avenue Émile Zola, 74100 Annemasse',
 };
 
+// ==========================================
+// Transaction types & rapprochement statuses
+// ==========================================
+
+export const TRANSACTION_TYPES = [
+  { value: 'non_classe', label: 'Non classé', color: '#888' },
+  { value: 'loyer', label: 'Loyer', color: '#22c55e' },
+  { value: 'caution', label: 'Caution', color: '#3b82f6' },
+  { value: 'caution_retour', label: 'Retour caution', color: '#8b5cf6' },
+  { value: 'depense', label: 'Dépense', color: '#ef4444' },
+  { value: 'inter_entite', label: 'Inter-entité', color: '#f59e0b' },
+] as const;
+
+export const RAPPROCHEMENT_STATUSES = [
+  { value: 'non_rapproche', label: 'Non rapproché', color: '#dc2626', bg: '#fef2f2' },
+  { value: 'auto', label: 'Auto', color: '#16a34a', bg: '#f0fdf4' },
+  { value: 'manuel', label: 'Manuel', color: '#2563eb', bg: '#eff6ff' },
+  { value: 'flag', label: 'À revoir', color: '#d97706', bg: '#fffbeb' },
+] as const;
+
+export const INVOICE_CATEGORIES = [
+  'Consommable', 'Petit Mobilier', 'Mobilier', 'Telco Web & Abonnements',
+  'Note de Frais', 'Prestation', 'Eau et Energie', 'Assurances', 'Impots',
+] as const;
+
+export function getTransactionTypeLabel(type: string): string {
+  return TRANSACTION_TYPES.find(t => t.value === type)?.label || type;
+}
+
+export function getTransactionTypeColor(type: string): string {
+  return TRANSACTION_TYPES.find(t => t.value === type)?.color || '#888';
+}
+
+export function getRapprochementBadge(status: string): { label: string; color: string; bg: string } {
+  return RAPPROCHEMENT_STATUSES.find(s => s.value === status) || { label: status, color: '#888', bg: '#f5f5f5' };
+}
+
+// Entity IDs for direct Supabase queries (from entities table)
+export const ENTITY_IDS: Record<string, string> = {
+  'LMP': 'c882e0ab-c5bb-4e20-8c33-69a282097dde',
+  'SCI': '5ab46544-85e9-4779-a498-e4ef1e0e7e1e',
+  'MB': 'c7feadb6-7f96-4f3e-893a-47b95c35de6c',
+};
+
+export const ENTITY_CODE_TO_FILTER: Record<string, string> = {
+  'LMP': 'la-villa',
+  'SCI': 'sleep-in',
+  'MB': 'mont-blanc',
+};
+
 /**
  * Helper: filter an array of items by entity slug.
  * Items must have a property_id field; properties lookup provides slug mapping.
