@@ -1,7 +1,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import { supabase } from '@/lib/supabase';
 import { useToast } from '@/components/ui/Toast';
-import { ENTITY_FILTER_OPTIONS, filterByEntity } from '@/lib/entities';
+import { filterByEntity } from '@/lib/entities';
 import { logAudit } from '@/lib/auditLog';
 
 interface Tenant {
@@ -198,7 +198,7 @@ export default function DashboardLocatairesPage() {
 
       {/* Filters */}
       <div style={{display:'flex',gap:'8px',marginBottom:'16px',flexWrap:'wrap',alignItems:'center'}}>
-        {ENTITY_FILTER_OPTIONS.map(e=>(
+        {[{value:'all',label:'Toutes'},{value:'lavilla',label:'La Villa'},{value:'leloft',label:'Le Loft'},{value:'lelodge',label:'Le Lodge'},{value:'montblanc',label:'Mont-Blanc'}].map(e=>(
           <button key={e.value} onClick={()=>setFilter(e.value)} style={{...S.btn,background:filter===e.value?'#3D4A38':'#e5e7eb',color:filter===e.value?'#fff':'#555',fontWeight:filter===e.value?600:400}}>{e.label}</button>
         ))}
       </div>
