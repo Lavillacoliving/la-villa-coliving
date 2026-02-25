@@ -281,8 +281,8 @@ export default function DashboardMaisonsPage() {
               border: selectedPropertyId === p.id ? '2px solid #9a6d04' : '1px solid #e5e7eb',
             }}
           >
-            <div style={{ fontWeight: 600, marginBottom: '2px' }}>🏠 {p.name}</div>
-            <div style={{ fontSize: '11px', opacity: 0.85 }}>{p.room_count} chambres</div>
+            <div style={{ fontWeight: 600, marginBottom: '2px' }}>{p.is_coliving ? '🏠' : '🏢'} {p.name}</div>
+            <div style={{ fontSize: '11px', opacity: 0.85 }}>{p.is_coliving ? `${p.room_count} chambres` : 'Appartement'}</div>
             <div style={{ fontSize: '11px', opacity: 0.85 }}>{fmt(p.price_chf)}/mois</div>
           </div>
         ))}
@@ -475,7 +475,9 @@ export default function DashboardMaisonsPage() {
             {/* Rooms grid */}
             <div>
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '12px' }}>
-                <h3 style={{ margin: 0, fontSize: '14px', fontWeight: 600, color: '#1a1a2e' }}>Chambres ({propertyRooms.length})</h3>
+                <h3 style={{ margin: 0, fontSize: '14px', fontWeight: 600, color: '#1a1a2e' }}>
+                  {selectedProperty.is_coliving ? `Chambres (${propertyRooms.length})` : 'Logement'}
+                </h3>
               </div>
 
               {propertyRooms.length === 0 ? (
@@ -502,7 +504,7 @@ export default function DashboardMaisonsPage() {
                         onMouseOut={e => (e.currentTarget.style.boxShadow = '0 1px 3px rgba(0,0,0,0.1)')}
                       >
                         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '8px' }}>
-                          <h4 style={{ margin: 0, fontSize: '16px', fontWeight: 600, color: '#1a1a2e' }}>Ch. {room.room_number}</h4>
+                          <h4 style={{ margin: 0, fontSize: '16px', fontWeight: 600, color: '#1a1a2e' }}>{selectedProperty.is_coliving ? `Ch. ${room.room_number}` : (room.name || 'Appartement')}</h4>
                           <span
                             style={{
                               background: badgeColor,
@@ -518,7 +520,7 @@ export default function DashboardMaisonsPage() {
                           </span>
                         </div>
                         {room.name && <p style={{ margin: '0 0 8px', fontSize: '13px', color: '#666', fontStyle: 'italic' }}>"{room.name}"</p>}
-                        {room.surface_m2 && <p style={{ margin: '4px 0', fontSize: '12px', color: '#555' }}>📐 {room.surface_m2} m²</p>}
+                        {room.surface_m2 != null && room.surface_m2 > 0 && <p style={{ margin: '4px 0', fontSize: '12px', color: '#555' }}>📐 {room.surface_m2} m²</p>}
                         {room.floor && <p style={{ margin: '4px 0', fontSize: '12px', color: '#555' }}>🏢 Étage {room.floor}</p>}
                         {room.bathroom_type && <p style={{ margin: '4px 0', fontSize: '12px', color: '#555' }}>🚿 {room.bathroom_type === 'private' ? 'SDB privée' : 'SDB partagée'}</p>}
                         <div style={{ display: 'flex', gap: '8px', marginTop: '8px', flexWrap: 'wrap' }}>
