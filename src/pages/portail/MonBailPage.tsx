@@ -92,11 +92,12 @@ export function MonBailPage() {
       const chargesEUR = (tenant.charges_energy_chf || 0) + (tenant.charges_maintenance_chf || 0) + (tenant.charges_services_chf || 0);
       const loyerNu = Math.max(0, payment.received_amount - chargesEUR);
 
-      // Bailleur = "La Villa Coliving" pour toutes les propriétés
-      // Pour Sleep In SCI (Le Loft, Le Lodge), on ajoute "Sleep In SCI —" devant l'adresse
+      // Bailleur : "La Villa Coliving" pour coliving, nom propre pour non-coliving (Mont-Blanc)
       const isSleepIn = tenant.legal_entity_name?.toLowerCase().includes('sleep in');
+      const isColiving = tenant.is_coliving;
+      const bailleurName = isColiving ? 'La Villa Coliving' : (tenant.legal_entity_name || 'La Villa Coliving');
       const bailleurAddress = isSleepIn
-        ? 'Sleep In SCI — ' + (tenant.siege_social || tenant.property_address)
+        ? 'Sleep In SCI \u2014 ' + (tenant.siege_social || tenant.property_address)
         : (tenant.siege_social || tenant.property_address);
 
       // Build full property address with city
@@ -106,7 +107,7 @@ export function MonBailPage() {
       const fullAddress = addr.includes(city) ? addr : (addr + ', 74100 ' + city);
 
       const data = {
-        bailleur_name: 'La Villa Coliving',
+        bailleur_name: bailleurName,
         bailleur_address: bailleurAddress,
         bailleur_siret: tenant.siret || '',
         locataire_name: `${tenant.first_name} ${tenant.last_name}`,
