@@ -34,7 +34,7 @@ interface QuittanceData {
 const S = StyleSheet.create({
   page: { padding: 50, fontFamily: "Helvetica", fontSize: 10, color: "#1a1a1a" },
   header: { flexDirection: "row", alignItems: "center", marginBottom: 30, borderBottom: "2 solid #b8860b", paddingBottom: 15 },
-  logo: { width: 60, height: 60, marginRight: 15 },
+  logo: { width: 150, height: 55, marginRight: 15 },
   headerText: { flex: 1 },
   title: { fontSize: 20, fontFamily: "Helvetica-Bold", color: "#b8860b", marginBottom: 4 },
   subtitle: { fontSize: 11, color: "#666" },
@@ -76,10 +76,9 @@ export function QuittancePDF({ data }: { data: QuittanceData }) {
       <Page size="A4" style={S.page}>
         {/* Header with logo */}
         <View style={S.header}>
-          <Image style={S.logo} src="https://www.lavillacoliving.com/logos/NEW Logo La Villa-14.png" />
+          <Image style={S.logo} src="https://www.lavillacoliving.com/logos/NEW Logo La Villa-18.png" />
           <View style={S.headerText}>
             <Text style={S.title}>Quittance de Loyer</Text>
-            <Text style={S.subtitle}>La Villa Coliving</Text>
           </View>
         </View>
 
