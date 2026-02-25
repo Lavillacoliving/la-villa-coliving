@@ -34,7 +34,7 @@ interface QuittanceData {
 const S = StyleSheet.create({
   page: { padding: 50, fontFamily: "Helvetica", fontSize: 10, color: "#1a1a1a" },
   header: { flexDirection: "row", alignItems: "center", marginBottom: 30, borderBottom: "2 solid #b8860b", paddingBottom: 15 },
-  logo: { width: 150, height: 55, marginRight: 15 },
+  logo: { width: 140, marginRight: 15 },
   headerText: { flex: 1 },
   title: { fontSize: 20, fontFamily: "Helvetica-Bold", color: "#b8860b", marginBottom: 4 },
   subtitle: { fontSize: 11, color: "#666" },
