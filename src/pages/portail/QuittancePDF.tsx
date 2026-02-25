@@ -149,7 +149,7 @@ export function QuittancePDF({ data }: { data: QuittanceData }) {
             {"Document g\u00E9n\u00E9r\u00E9 automatiquement par La Villa Coliving \u2014 " + data.bailleur_name + (data.bailleur_siret ? " \u2014 SIRET " + data.bailleur_siret : "")}
           </Text>
           <Text style={S.footerText}>
-            {"Conform\u00E9ment \u00E0 la loi n\u00B089-462 du 6 juillet 1989 (art. 21)"}
+            {"Conform\u00E9ment \u00E0 la loi n\u00B089-462 du 6 juillet 1989 (art. 21) \u2014 www.lavillacoliving.com"}
           </Text>
         </View>
       </Page>
