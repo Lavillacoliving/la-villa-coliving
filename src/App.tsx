@@ -48,12 +48,16 @@ function AppContent() {
       <Routes>
         <Route path="/" element={<HomePage />} />
         <Route path="/colocation-geneve" element={<ColocationGenevePage />} />
-        <Route path="/the-coliving" element={<ColivingPage />} />
+        <Route path="/le-coliving" element={<ColivingPage />} />
+        <Route path="/the-coliving" element={<Navigate to="/le-coliving" replace />} />
         <Route path="/services" element={<ServicesPage />} />
-        <Route path="/our-houses" element={<HousesPage />} />
-        <Route path="/rates" element={<RatesPage />} />
+        <Route path="/nos-maisons" element={<HousesPage />} />
+        <Route path="/our-houses" element={<Navigate to="/nos-maisons" replace />} />
+        <Route path="/tarifs" element={<RatesPage />} />
+        <Route path="/rates" element={<Navigate to="/tarifs" replace />} />
         <Route path="/faq" element={<FAQPage />} />
-        <Route path="/join-us" element={<JoinPage />} />
+        <Route path="/candidature" element={<JoinPage />} />
+        <Route path="/join-us" element={<Navigate to="/candidature" replace />} />
         <Route path="/blog" element={<BlogPage />} />
         <Route path="/blog/:slug" element={<BlogPostPage />} />
         <Route path="/lavilla" element={<HouseDetailPage />} />

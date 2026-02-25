@@ -29,10 +29,6 @@
       "destination": "/prerendered/faq.html"
     },
     {
-      "source": "/candidature",
-      "destination": "/prerendered/candidature.html"
-    },
-    {
       "source": "/blog",
       "destination": "/prerendered/blog.html"
     },
@@ -79,10 +75,6 @@
     {
       "source": "/en/faq",
       "destination": "/prerendered/en-faq.html"
-    },
-    {
-      "source": "/en/candidature",
-      "destination": "/prerendered/en-candidature.html"
     },
     {
       "source": "/en/blog",
