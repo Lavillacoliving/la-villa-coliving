@@ -2,6 +2,7 @@ import { useState, useEffect, useCallback } from 'react';
 import { supabase } from '@/lib/supabase';
 import { useToast } from '@/components/ui/Toast';
 import { ENTITY_FILTER_OPTIONS, filterByEntity } from '@/lib/entities';
+import { logAudit } from '@/lib/auditLog';
 
 interface Tenant {
   id: string; first_name: string; last_name: string; email: string; phone: string;
@@ -39,7 +40,7 @@ export default function DashboardLocatairesPage() {
   const [activeTab, setActiveTab] = useState<'info'|'documents'>('info');
   const [tenantDocs, setTenantDocs] = useState<{name:string,id:string|null,updated_at:string|null,metadata:{size?:number}|null}[]>([]);
   const [uploadingDoc, setUploadingDoc] = useState(false);
-  const [deleteConfirm, setDeleteConfirm] = useState<{type:'tenant'|'doc',label:string,fn:()=>void}|null>(null);
+  // deleteConfirm removed — no deletion allowed from dashboard
 
   const load = useCallback(async () => {
     setLoading(true);
@@ -111,11 +112,7 @@ export default function DashboardLocatairesPage() {
     window.open(data.signedUrl, '_blank');
   };
 
-  // Documents are locked — delete disabled from dashboard (security: prevent accidental deletion)
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const deleteTenantDoc = async (_fileName: string) => {
-    toast.error('La suppression de documents est désactivée');
-  };
+  // Document & tenant deletion disabled from dashboard — data is permanent
 
   const saveModal = async () => {
     if (!modal) return;
@@ -366,11 +363,6 @@ export default function DashboardLocatairesPage() {
         </div>
       )}
 
-      {/* Delete confirmation modal — disabled, kept as placeholder */}
-      {false && deleteConfirm && (
-        <div></div>
-        </div>
-      )}
     </div>
   );
 }
