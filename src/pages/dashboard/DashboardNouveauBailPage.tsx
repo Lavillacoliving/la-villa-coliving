@@ -305,10 +305,12 @@ function generateContractHTML(data: ContractData): string {
         <div class="party-box">
           <strong>BAILLEUR :</strong><br/>
           ${ph(property.legal_entity_name, 'Entité juridique')}<br/>
+          ${property.is_coliving ? `
           SIRET : ${ph(property.siret, 'SIRET')}<br/>
           TVA : ${ph(property.tva, 'TVA')}<br/>
           Siège social : ${ph(property.siege_social, 'Siège social')}<br/>
-          Représenté par : Jérôme AUSTIN, Gérant
+          Représenté par : Jérôme AUSTIN, Gérant` : `
+          Domicilié(s) à : ${ph(property.siege_social, 'Adresse')}`}
         </div>
 
         <div class="party-box">
@@ -330,9 +332,10 @@ function generateContractHTML(data: ContractData): string {
 
         <h2>ARTICLE II — OBJET DU CONTRAT</h2>
         <div class="article">
-          Le bailleur loue au locataire un ${property.is_coliving ? 'logement meublé' : 'appartement meublé'} comprenant :
+          ${property.is_coliving ? `
+          Le bailleur loue au locataire un logement meublé comprenant :
           <ul>
-            <li><strong>${property.is_coliving ? 'Chambre' : 'Appartement'} :</strong> ${ph(room.name, property.is_coliving ? 'Chambre' : 'Logement')}</li>
+            <li><strong>Chambre :</strong> ${ph(room.name, 'Chambre')}</li>
             <li><strong>Surface :</strong> ${room.surface_m2} m²</li>
             <li><strong>Étage :</strong> ${room.floor}</li>
             ${room.location_detail ? `<li><strong>Emplacement :</strong> ${room.location_detail}</li>` : ''}
@@ -342,7 +345,21 @@ function generateContractHTML(data: ContractData): string {
             ${room.has_balcony ? '<li><strong>Balcon :</strong> Oui</li>' : ''}
             ${room.has_terrace ? '<li><strong>Terrasse :</strong> Oui</li>' : ''}
             ${room.has_private_entrance ? `<li><strong>Entrée privée :</strong> Oui</li>` : ''}
-          </ul>
+          </ul>` : `
+          <p>${ph(property.contract_building_desc, 'Description du bien')}, d'une surface habitable de ${room.surface_m2} m², comprenant : ${ph(room.description, 'Description')}</p>
+          ${room.specifics?.cadastre_section ? `
+          <h3>Désignation cadastrale :</h3>
+          <ul>
+            <li>Section cadastrale : ${room.specifics.cadastre_section}</li>
+            ${room.specifics.lots ? `<li>Lots de copropriété : ${room.specifics.lots}</li>` : ''}
+            ${room.specifics.tantiemes ? `<li>Tantièmes : ${room.specifics.tantiemes}</li>` : ''}
+          </ul>` : ''}
+          ${room.specifics?.parking_number ? `
+          <h3>Place de parking :</h3>
+          <ul>
+            <li>Place n°${room.specifics.parking_number}</li>
+            ${room.specifics.parking_id_fiscal ? `<li>ID fiscal parking : ${room.specifics.parking_id_fiscal}</li>` : ''}
+          </ul>` : ''}`}
           ${(!property.is_coliving && room.furniture_inventory && room.furniture_inventory.length > 0) ? `
           <p><strong>Inventaire du mobilier fourni :</strong></p>
           <ul>
@@ -367,11 +384,13 @@ function generateContractHTML(data: ContractData): string {
             <li>Fournitures de base mensuelles</li>
             <li>Ordures ménagères, balayage, assainissement</li>
           </ul>` : `
-          <p><strong>Charges comprises dans le forfait :</strong></p>
+          <p><strong>Charges récupérables (provisions avec régularisation annuelle) :</strong></p>
           <ul>
-            <li>Électricité, eau froide et chaude, chauffage</li>
-            <li>Ordures ménagères et assainissement</li>
+            <li>Chauffage et eau chaude collective</li>
+            <li>Eau froide</li>
+            <li>Ordures ménagères</li>
             <li>Entretien des parties communes de l'immeuble</li>
+            <li>Ascenseur</li>
           </ul>`}
         </div>
 
@@ -386,6 +405,7 @@ function generateContractHTML(data: ContractData): string {
 
         <h2>ARTICLE IV — CONDITIONS FINANCIÈRES</h2>
         <div class="article">
+          ${property.is_coliving ? `
           <h3>Loyer mensuel :</h3>
           <ul>
             <li><strong>En CHF :</strong> ${fCHF(form.loyer_chf)} (taux BCE du ${form.exchange_rate_date} : ${form.exchange_rate})</li>
@@ -397,24 +417,33 @@ function generateContractHTML(data: ContractData): string {
             if (!pd || !pt || pd >= pt) {
               return '<p><em>Entrée le 1er du mois — pas de prorata.</em></p>';
             }
-            return `<p><strong>Prorata du premier mois :</strong> Du ${fDate(form.entry_date)} au dernier jour du mois (${pd}/${pt} jours) :</p>
+            return \`<p><strong>Prorata du premier mois :</strong> Du \${fDate(form.entry_date)} au dernier jour du mois (\${pd}/\${pt} jours) :</p>
             <ul>
-              <li><strong>En EUR :</strong> ${fEUR(data.prorata_eur)}</li>
-              <li><strong>En CHF :</strong> ${fCHF(data.prorata_chf)}</li>
-            </ul>`;
+              <li><strong>En EUR :</strong> \${fEUR(data.prorata_eur)}</li>
+              <li><strong>En CHF :</strong> \${fCHF(data.prorata_chf)}</li>
+            </ul>\`;
           })()}
           <h3>Charges forfaitaires mensuelles :</h3>
           ${chargesTable}
+          <h3>Frais de dossier :</h3>
+          <ul>
+            <li><strong>Montant :</strong> ${fEUR(form.frais_dossier)} (${fCHF(form.frais_dossier * form.exchange_rate)})</li>
+            <li><strong>Statut :</strong> OFFERTS par le bailleur</li>
+          </ul>` : `
+          <h3>Loyer mensuel :</h3>
+          <ul>
+            <li><strong>Loyer :</strong> ${fEUR(loyer_eur)}</li>
+          </ul>
+          <h3>Provisions sur charges (avec régularisation annuelle) :</h3>
+          <ul>
+            <li><strong>Montant mensuel :</strong> ${fEUR(totalCharges)}</li>
+          </ul>
+          <p style="font-size:9px;color:#666;">La régularisation des charges est effectuée annuellement, au vu des dépenses réelles.</p>`}
           <h3>Révision annuelle (IRL) :</h3>
           <ul>
             <li>Trimestre de référence : ${ph(form.irl_trimestre, '3ème trimestre 2025')}</li>
             <li>Indice de référence : ${form.irl_indice}</li>
             <li>La révision s'effectue chaque année à la date anniversaire du contrat.</li>
-          </ul>
-          <h3>Frais de dossier :</h3>
-          <ul>
-            <li><strong>Montant :</strong> ${fEUR(form.frais_dossier)} (${fCHF(form.frais_dossier * form.exchange_rate)})</li>
-            <li><strong>Statut :</strong> OFFERTS par le bailleur</li>
           </ul>
           <h3>Modalités de paiement :</h3>
           <ul>
@@ -425,7 +454,9 @@ function generateContractHTML(data: ContractData): string {
 
         <h2>ARTICLE V — GARANTIES</h2>
         <div class="article">
-          Le locataire versera un dépôt de garantie égal à deux (2) mois de loyer, soit <strong>${fEUR(depot_eur)} (${fCHF(depot_eur * form.exchange_rate)})</strong>, restitué dans les deux (2) mois suivant la fin du contrat, selon l'état des lieux.
+          ${property.is_coliving
+            ? `Le locataire versera un dépôt de garantie égal à deux (2) mois de loyer, soit <strong>${fEUR(depot_eur)} (${fCHF(depot_eur * form.exchange_rate)})</strong>, restitué dans les deux (2) mois suivant la fin du contrat, selon l'état des lieux.`
+            : `Le locataire versera un dépôt de garantie égal à un (1) mois de loyer hors charges, soit <strong>${fEUR(depot_eur)}</strong>, restitué dans les deux (2) mois suivant la fin du contrat, déduction faite des sommes éventuellement dues.`}
         </div>
 
         <h2>ARTICLE VI — CLAUSE RÉSOLUTOIRE</h2>
@@ -465,7 +496,9 @@ function generateContractHTML(data: ContractData): string {
 
         <h2>ARTICLE IX — ÉTAT DES LIEUX</h2>
         <div class="article">
-          L'état des lieux d'entrée et de sortie sera établi par la société <strong>Nockee</strong>, prestataire mandaté par le bailleur. Le locataire reçoit un exemplaire.
+          ${property.is_coliving
+            ? "L'état des lieux d'entrée et de sortie sera établi par la société <strong>Nockee</strong>, prestataire mandaté par le bailleur. Le locataire reçoit un exemplaire."
+            : "Un état des lieux contradictoire sera établi lors de la remise des clés et lors de la restitution du logement. Il sera annexé au présent contrat."}
         </div>
 
         ${!property.is_coliving ? `
@@ -500,6 +533,8 @@ function generateContractHTML(data: ContractData): string {
             ${!property.is_coliving ? '<li>Inventaire du mobilier et équipements</li>' : ''}
             ${property.is_coliving ? '<li>Règlement Intérieur La Villa Coliving</li>' : ''}
             <li>Diagnostics techniques</li>
+            ${!property.is_coliving ? '<li>Notice d\'information relative aux droits et obligations des locataires et des bailleurs</li>' : ''}
+            ${!property.is_coliving ? '<li>RIB du bailleur</li>' : ''}
             ${(form.annexe_documents || []).map((doc: string) => `<li>${doc}</li>`).join('')}
           </ul>
         </div>
@@ -508,7 +543,7 @@ function generateContractHTML(data: ContractData): string {
           <div class="signature-box">
             <div>Fait à ${ph(property.siege_social?.split(',')[0] || '', 'Ville')}</div>
             <div style="font-size:9px;margin-top:15px;">Signature du bailleur</div>
-            <div style="font-size:9px;margin-top:30px;font-style:italic;">Jérôme AUSTIN</div>
+            <div style="font-size:9px;margin-top:30px;font-style:italic;">${property.manager_name || 'Jérôme AUSTIN'}</div>
           </div>
           <div class="signature-box">
             <div>Le ${fDate(form.entry_date)}</div>
