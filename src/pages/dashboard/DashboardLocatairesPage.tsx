@@ -111,15 +111,10 @@ export default function DashboardLocatairesPage() {
     window.open(data.signedUrl, '_blank');
   };
 
-  const deleteTenantDoc = async (fileName: string) => {
-    if (!modal?.id) return;
-    setDeleteConfirm({type:'doc',label:fileName,fn:async()=>{
-      const fp = 'tenants/' + modal.id + '/' + fileName;
-      const { error } = await supabase.storage.from('operations').remove([fp]);
-      if (error) { toast.error('Erreur: ' + error.message); return; }
-      toast.success('Document supprimé');
-      if (modal.id) loadTenantDocs(modal.id);
-    }});
+  // Documents are locked — delete disabled from dashboard (security: prevent accidental deletion)
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const deleteTenantDoc = async (_fileName: string) => {
+    toast.error('La suppression de documents est désactivée');
   };
 
   const saveModal = async () => {
@@ -301,7 +296,6 @@ export default function DashboardLocatairesPage() {
                             <div style={{color:'#888',fontSize:'12px'}}>{sz}{doc.updated_at ? ' — '+new Date(doc.updated_at).toLocaleDateString('fr-FR') : ''}</div>
                           </div>
                           <button onClick={()=>downloadTenantDoc(doc.name)} style={{background:'none',border:'none',cursor:'pointer',fontSize:'16px'}} title="Télécharger">⬇️</button>
-                          <button onClick={()=>deleteTenantDoc(doc.name)} style={{background:'none',border:'none',cursor:'pointer',fontSize:'16px',color:'#ef4444'}} title="Supprimer">🗑️</button>
                         </div>
                       );
                     })}
