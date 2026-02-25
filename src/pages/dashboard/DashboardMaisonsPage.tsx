@@ -239,18 +239,7 @@ export default function DashboardMaisonsPage() {
     return tenants.find(t => t.property_id === selectedPropertyId && t.room_number === roomNum && t.is_active);
   };
 
-  const roomStatusColor = (status: string) => {
-    switch (status) {
-      case 'active':
-        return '#22c55e';
-      case 'maintenance':
-        return '#f59e0b';
-      case 'unavailable':
-        return '#ef4444';
-      default:
-        return '#888';
-    }
-  };
+
 
   const S = {
     card: { background: '#fff', borderRadius: '12px', padding: '16px', boxShadow: '0 1px 3px rgba(0,0,0,0.1)' },
