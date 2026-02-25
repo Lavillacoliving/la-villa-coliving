@@ -24,6 +24,7 @@ interface Property {
   deposit_months: number;
   entity_id: string | null;
   manager_name: string;
+  is_coliving: boolean;
 }
 
 interface Room {
@@ -152,7 +153,7 @@ function generateContractHTML(data: ContractData): string {
         <td style="padding:8px;text-align:right;">${fCHF(form.charges_maintenance)}</td>
       </tr>
       <tr style="border-bottom:1px solid #f0f0f0;">
-        <td style="padding:8px;">Services (ménage, yoga, support)</td>
+        <td style="padding:8px;">${property.is_coliving ? 'Services (ménage, yoga, support)' : 'Charges diverses'}</td>
         <td style="padding:8px;text-align:right;">${fEUR(form.charges_services / form.exchange_rate)}</td>
         <td style="padding:8px;text-align:right;">${fCHF(form.charges_services)}</td>
       </tr>
@@ -329,9 +330,9 @@ function generateContractHTML(data: ContractData): string {
 
         <h2>ARTICLE II — OBJET DU CONTRAT</h2>
         <div class="article">
-          Le bailleur loue au locataire un logement meublé comprenant :
+          Le bailleur loue au locataire un ${property.is_coliving ? 'logement meublé' : 'appartement meublé'} comprenant :
           <ul>
-            <li><strong>Chambre :</strong> ${ph(room.name, 'Chambre')}</li>
+            <li><strong>${property.is_coliving ? 'Chambre' : 'Appartement'} :</strong> ${ph(room.name, property.is_coliving ? 'Chambre' : 'Logement')}</li>
             <li><strong>Surface :</strong> ${room.surface_m2} m²</li>
             <li><strong>Étage :</strong> ${room.floor}</li>
             ${room.location_detail ? `<li><strong>Emplacement :</strong> ${room.location_detail}</li>` : ''}
@@ -347,10 +348,10 @@ function generateContractHTML(data: ContractData): string {
           <ul>
             ${room.furniture_inventory.map((fi: any) => `<li>${fi.item}${fi.qty > 1 ? ' (\u00d7' + fi.qty + ')' : ''}</li>`).join('')}
           </ul>` : ''}
+          ${property.is_coliving && commonAreasList ? `
           <p><strong>Accès aux parties communes :</strong></p>
-          <ul>
-            ${commonAreasList}
-          </ul>
+          <ul>${commonAreasList}</ul>` : ''}
+          ${property.is_coliving ? `
           <p><strong>Services inclus au loyer :</strong></p>
           <ul>
             <li>Électricité, eau froide et chaude, chauffage</li>
@@ -359,13 +360,19 @@ function generateContractHTML(data: ContractData): string {
             <li>Entretien des espaces extérieurs</li>
             <li>Piscine (accès et entretien)</li>
             <li>Événements communautaires</li>
-            <li>Support WhatsApp/Email <48h</li>
+            <li>Support WhatsApp/Email &lt;48h</li>
             <li>Cours de yoga et coaching sportif</li>
             <li>Internet très haut débit</li>
             <li>Accès streaming (Netflix, Spotify, etc.)</li>
             <li>Fournitures de base mensuelles</li>
             <li>Ordures ménagères, balayage, assainissement</li>
-          </ul>
+          </ul>` : `
+          <p><strong>Charges comprises dans le forfait :</strong></p>
+          <ul>
+            <li>Électricité, eau froide et chaude, chauffage</li>
+            <li>Ordures ménagères et assainissement</li>
+            <li>Entretien des parties communes de l'immeuble</li>
+          </ul>`}
         </div>
 
         <h2>ARTICLE III — DATE DE PRISE D'EFFET ET DURÉE</h2>
@@ -436,8 +443,8 @@ function generateContractHTML(data: ContractData): string {
             <li>Maintenir le logement en bon état de propreté et d'entretien;</li>
             <li>Respecter le silence et bonnes mœurs, notamment entre 22h et 8h;</li>
             <li>Ne point inviter d'hôtes de manière prolongée sans accord préalable;</li>
-            <li>Utiliser les parties communes avec responsabilité et courtoisie;</li>
-            <li>Respecter le Règlement Intérieur La Villa (annexe au présent contrat);</li>
+            ${property.is_coliving ? '<li>Utiliser les parties communes avec responsabilité et courtoisie;</li>' : ''}
+            ${property.is_coliving ? '<li>Respecter le Règlement Intérieur La Villa (annexe au présent contrat);</li>' : ''}
             <li>Déclarer tout incident ou dommage auprès du bailleur dans les 48h;</li>
             <li>Rendre le logement en bon état à la fin du contrat (usure normale exceptée);</li>
             <li>Participer aux états des lieux d'entrée et de sortie.</li>
@@ -478,17 +485,19 @@ function generateContractHTML(data: ContractData): string {
           </ul>
         </div>
 
+        ${property.is_coliving ? `
         <h2>ARTICLE XII — RÈGLEMENT INTÉRIEUR</h2>
         <div class="article">
           Le locataire accepte le Règlement Intérieur La Villa Coliving (la "Bible du Coliver"), joint en annexe, qui précise les règles de vie commune, l'usage des parties communes et les procédures de gestion interne.
         </div>
 
-        <h2>ARTICLE XIII — ANNEXES</h2>
+        <h2>ARTICLE XIII — ANNEXES</h2>` : `
+        <h2>ARTICLE XII — ANNEXES</h2>`}
         <div class="article">
           Sont annexées au présent contrat :
           <ul>
             <li>Inventaire du mobilier et équipements</li>
-            <li>Règlement Intérieur La Villa Coliving</li>
+            ${property.is_coliving ? '<li>Règlement Intérieur La Villa Coliving</li>' : ''}
             <li>Diagnostics techniques</li>
             <li>Photos d'état des lieux d'entrée</li>
             ${(form.annexe_documents || []).map((doc: string) => `<li>${doc}</li>`).join('')}

@@ -18,6 +18,7 @@ interface Property {
   id_fiscal: string;
   common_areas: string[];
   contract_building_desc: string;
+  is_coliving: boolean;
 }
 
 interface Room {
@@ -316,9 +317,15 @@ export function BailPDF({ data }: { data: BailPDFData }) {
 
         <Text style={s.articleTitle}>{"ARTICLE II \u2014 OBJET DU CONTRAT"}</Text>
         <Text style={s.body}>
-          {"Le bailleur loue au locataire un logement meubl\u00E9 comprenant :"}
+          {property.is_coliving
+            ? "Le bailleur loue au locataire un logement meubl\u00E9 comprenant :"
+            : "Le bailleur loue au locataire un appartement meubl\u00E9 comprenant :"}
         </Text>
-<Bullet>Chambre : {ph(room.name, "Chambre")} — Surface : {room.surface_m2} m² — {"Étage : "}{room.floor}</Bullet>
+        {property.is_coliving ? (
+          <Bullet>Chambre : {ph(room.name, "Chambre")} — Surface : {room.surface_m2} m² — {"Étage : "}{room.floor}</Bullet>
+        ) : (
+          <Bullet>Appartement : {ph(room.name, "Logement")} — Surface : {room.surface_m2} m² — {"Étage : "}{room.floor}</Bullet>
+        )}
         {room.location_detail && <Bullet>Emplacement : {room.location_detail}</Bullet>}
         <Bullet>Description : {ph(room.description, "Description")}</Bullet>
         <Bullet>Salle de bain : {ph(room.bathroom_type, "Type")}{room.bathroom_detail ? ` — ${room.bathroom_detail}` : ""}</Bullet>
@@ -327,24 +334,39 @@ export function BailPDF({ data }: { data: BailPDFData }) {
         {room.has_terrace && <Bullet>Terrasse : Oui</Bullet>}
         {room.has_private_entrance && <Bullet>{"Entr\u00e9e priv\u00e9e : Oui"}</Bullet>}
 
-        <Text style={s.subTitle}>{"Acc\u00E8s aux parties communes :"}</Text>
-        {(property.common_areas || []).map((area: string, i: number) => (
-          <Bullet key={i}>{area}</Bullet>
-        ))}
+        {property.is_coliving && (property.common_areas || []).length > 0 && (
+          <View>
+            <Text style={s.subTitle}>{"Acc\u00E8s aux parties communes :"}</Text>
+            {(property.common_areas || []).map((area: string, i: number) => (
+              <Bullet key={i}>{area}</Bullet>
+            ))}
+          </View>
+        )}
 
-        <Text style={s.subTitle}>Services inclus au loyer :</Text>
-        <Bullet>{"\u00C9lectricit\u00E9, eau froide et chaude, chauffage"}</Bullet>
-        <Bullet>Linge de lit (fourniture et entretien)</Bullet>
-        <Bullet>{"M\u00E9nage 2 fois par semaine des parties communes"}</Bullet>
-        <Bullet>{"Entretien des espaces ext\u00E9rieurs"}</Bullet>
-        <Bullet>{"Piscine (acc\u00E8s et entretien)"}</Bullet>
-        <Bullet>{"Événements communautaires"}</Bullet>
-        <Bullet>Support WhatsApp/Email sous 48h</Bullet>
-        <Bullet>Cours de yoga et coaching sportif</Bullet>
-        <Bullet>{"Internet tr\u00E8s haut d\u00E9bit"}</Bullet>
-        <Bullet>{"Acc\u00E8s streaming (Netflix, Spotify, etc.)"}</Bullet>
-        <Bullet>Fournitures de base mensuelles</Bullet>
-        <Bullet>{"Ordures m\u00E9nag\u00E8res, balayage, assainissement"}</Bullet>
+        {property.is_coliving ? (
+          <View>
+            <Text style={s.subTitle}>Services inclus au loyer :</Text>
+            <Bullet>{"\u00C9lectricit\u00E9, eau froide et chaude, chauffage"}</Bullet>
+            <Bullet>Linge de lit (fourniture et entretien)</Bullet>
+            <Bullet>{"M\u00E9nage 2 fois par semaine des parties communes"}</Bullet>
+            <Bullet>{"Entretien des espaces ext\u00E9rieurs"}</Bullet>
+            <Bullet>{"Piscine (acc\u00E8s et entretien)"}</Bullet>
+            <Bullet>{"Événements communautaires"}</Bullet>
+            <Bullet>Support WhatsApp/Email sous 48h</Bullet>
+            <Bullet>Cours de yoga et coaching sportif</Bullet>
+            <Bullet>{"Internet tr\u00E8s haut d\u00E9bit"}</Bullet>
+            <Bullet>{"Acc\u00E8s streaming (Netflix, Spotify, etc.)"}</Bullet>
+            <Bullet>Fournitures de base mensuelles</Bullet>
+            <Bullet>{"Ordures m\u00E9nag\u00E8res, balayage, assainissement"}</Bullet>
+          </View>
+        ) : (
+          <View>
+            <Text style={s.subTitle}>{"Charges comprises dans le forfait :"}</Text>
+            <Bullet>{"\u00C9lectricit\u00E9, eau froide et chaude, chauffage"}</Bullet>
+            <Bullet>{"Ordures m\u00E9nag\u00E8res et assainissement"}</Bullet>
+            <Bullet>{"Entretien des parties communes de l\u2019immeuble"}</Bullet>
+          </View>
+        )}
 
         {room.furniture_inventory && room.furniture_inventory.length > 0 && (
           <View>
@@ -401,7 +423,7 @@ export function BailPDF({ data }: { data: BailPDFData }) {
           <Text style={[s.tableCell, { width: "25%", textAlign: "right" }]}>{fCHF(form.charges_maintenance)}</Text>
         </View>
         <View style={s.tableRow}>
-          <Text style={[s.tableCell, { width: "50%" }]}>{"Services (m\u00E9nage, yoga, support)"}</Text>
+          <Text style={[s.tableCell, { width: "50%" }]}>{property.is_coliving ? "Services (m\u00E9nage, yoga, support)" : "Charges diverses"}</Text>
           <Text style={[s.tableCell, { width: "25%", textAlign: "right" }]}>{fEUR(form.charges_services / rate)}</Text>
           <Text style={[s.tableCell, { width: "25%", textAlign: "right" }]}>{fCHF(form.charges_services)}</Text>
         </View>
@@ -441,11 +463,11 @@ export function BailPDF({ data }: { data: BailPDFData }) {
         <Numbered n={2}>{"Maintenir le logement en bon \u00E9tat de propret\u00E9 et d\u2019entretien ;"}</Numbered>
         <Numbered n={3}>{"Respecter le silence et bonnes m\u0153urs, notamment entre 22h et 8h ;"}</Numbered>
         <Numbered n={4}>{"Ne point inviter d\u2019h\u00F4tes de mani\u00E8re prolong\u00E9e sans accord pr\u00E9alable ;"}</Numbered>
-        <Numbered n={5}>{"Utiliser les parties communes avec responsabilit\u00E9 et courtoisie ;"}</Numbered>
-        <Numbered n={6}>{"Respecter le R\u00E8glement Int\u00E9rieur La Villa (annexe au pr\u00E9sent contrat) ;"}</Numbered>
-        <Numbered n={7}>{"D\u00E9clarer tout incident ou dommage aupr\u00E8s du bailleur dans les 48h ;"}</Numbered>
-        <Numbered n={8}>{"Rendre le logement en bon \u00E9tat \u00E0 la fin du contrat (usure normale except\u00E9e) ;"}</Numbered>
-        <Numbered n={9}>{"Participer aux \u00E9tats des lieux d\u2019entr\u00E9e et de sortie."}</Numbered>
+        {property.is_coliving && <Numbered n={5}>{"Utiliser les parties communes avec responsabilit\u00E9 et courtoisie ;"}</Numbered>}
+        {property.is_coliving && <Numbered n={property.is_coliving ? 6 : 5}>{"Respecter le R\u00E8glement Int\u00E9rieur La Villa (annexe au pr\u00E9sent contrat) ;"}</Numbered>}
+        <Numbered n={property.is_coliving ? 7 : 5}>{"D\u00E9clarer tout incident ou dommage aupr\u00E8s du bailleur dans les 48h ;"}</Numbered>
+        <Numbered n={property.is_coliving ? 8 : 6}>{"Rendre le logement en bon \u00E9tat \u00E0 la fin du contrat (usure normale except\u00E9e) ;"}</Numbered>
+        <Numbered n={property.is_coliving ? 9 : 7}>{"Participer aux \u00E9tats des lieux d\u2019entr\u00E9e et de sortie."}</Numbered>
 
         <Text style={s.articleTitle}>{"ARTICLE VIII \u2014 OBLIGATIONS DU BAILLEUR"}</Text>
         <Text style={s.body}>{"Le bailleur s\u2019engage \u00E0 :"}</Text>
@@ -475,15 +497,19 @@ export function BailPDF({ data }: { data: BailPDFData }) {
         <Bullet>Diagnostic Amiante</Bullet>
         <Bullet>Diagnostic Bruit</Bullet>
 
-        <Text style={s.articleTitle}>{"ARTICLE XII \u2014 R\u00C8GLEMENT INT\u00C9RIEUR"}</Text>
-        <Text style={s.body}>
-          {"Le locataire accepte le R\u00E8glement Int\u00E9rieur La Villa Coliving (la \u201CBible du Coliver\u201D), joint en annexe, qui pr\u00E9cise les r\u00E8gles de vie commune, l\u2019usage des parties communes et les proc\u00E9dures de gestion interne."}
-        </Text>
+        {property.is_coliving && (
+          <View>
+            <Text style={s.articleTitle}>{"ARTICLE XII \u2014 R\u00C8GLEMENT INT\u00C9RIEUR"}</Text>
+            <Text style={s.body}>
+              {"Le locataire accepte le R\u00E8glement Int\u00E9rieur La Villa Coliving (la \u201CBible du Coliver\u201D), joint en annexe, qui pr\u00E9cise les r\u00E8gles de vie commune, l\u2019usage des parties communes et les proc\u00E9dures de gestion interne."}
+            </Text>
+          </View>
+        )}
 
-        <Text style={s.articleTitle}>{"ARTICLE XIII \u2014 ANNEXES"}</Text>
+        <Text style={s.articleTitle}>{property.is_coliving ? "ARTICLE XIII \u2014 ANNEXES" : "ARTICLE XII \u2014 ANNEXES"}</Text>
         <Text style={s.body}>{"Sont annex\u00E9es au pr\u00E9sent contrat :"}</Text>
         <Bullet>{"Inventaire du mobilier et \u00E9quipements"}</Bullet>
-        <Bullet>{"R\u00E8glement Int\u00E9rieur La Villa Coliving"}</Bullet>
+        {property.is_coliving && <Bullet>{"R\u00E8glement Int\u00E9rieur La Villa Coliving"}</Bullet>}
         <Bullet>Diagnostics techniques</Bullet>
         <Bullet>{"Photos d\u2019\u00E9tat des lieux d\u2019entr\u00E9e"}</Bullet>
         {(form.annexe_documents || []).map((doc: string, i: number) => (

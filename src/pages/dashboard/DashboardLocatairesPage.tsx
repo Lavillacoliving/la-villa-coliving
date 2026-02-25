@@ -46,7 +46,7 @@ export default function DashboardLocatairesPage() {
     setLoading(true);
     const [tRes,pRes] = await Promise.all([
       supabase.from('tenants').select('*').order('room_number'),
-      supabase.from('properties').select('id,name,slug,entity_id'),
+      supabase.from('properties').select('id,name,slug,entity_id,is_coliving'),
     ]);
     setTenants(tRes.data||[]);
     setProperties(pRes.data||[]);
@@ -249,7 +249,7 @@ export default function DashboardLocatairesPage() {
               return (
                 <tr key={t.id} style={{borderBottom:'1px solid #f0f0f0',opacity:t.is_active?1:0.5,cursor:'pointer'}} onClick={()=>openModal(t)}>
                   <td style={{padding:'10px 16px',fontSize:'12px'}}>{prop?.name||''}</td>
-                  <td style={{padding:'10px 16px',fontWeight:600}}>Ch. {t.room_number}</td>
+                  <td style={{padding:'10px 16px',fontWeight:600}}>{properties.find(p=>p.id===t.property_id)?.is_coliving===false ? 'Appt.' : `Ch. ${t.room_number}`}</td>
                   <td style={{padding:'10px 16px',fontWeight:500}}>{t.first_name} {t.last_name}</td>
                   <td style={{padding:'10px 16px'}}>{fmt(t.current_rent)}</td>
                   <td style={{padding:'10px 16px',fontSize:'12px'}}>{t.email && <span title={t.email}>✉️</span>} {t.phone && <a href={'tel:'+t.phone} title={t.phone} style={{textDecoration:'none'}}>📞</a>}</td>
@@ -328,7 +328,7 @@ export default function DashboardLocatairesPage() {
                   <div><label style={S.fieldLabel}>Email</label><input type="email" style={S.input} value={modal.email||''} onChange={e=>setModal({...modal,email:e.target.value})}/></div>
                   <div><label style={S.fieldLabel}>Téléphone</label><input style={S.input} value={modal.phone||''} onChange={e=>setModal({...modal,phone:e.target.value})}/></div>
                   <div><label style={S.fieldLabel}>Propriété *</label><select style={S.input} value={modal.property_id||''} onChange={e=>setModal({...modal,property_id:e.target.value})}><option value="">Choisir...</option>{properties.map(p=><option key={p.id} value={p.id}>{p.name}</option>)}</select></div>
-                  <div><label style={S.fieldLabel}>Chambre *</label><input type="number" style={S.input} value={modal.room_number||''} onChange={e=>setModal({...modal,room_number:parseInt(e.target.value)||0})}/></div>
+                  <div><label style={S.fieldLabel}>{properties.find(p=>p.id===modal.property_id)?.is_coliving===false ? 'N° logement *' : 'Chambre *'}</label><input type="number" style={S.input} value={modal.room_number||''} onChange={e=>setModal({...modal,room_number:parseInt(e.target.value)||0})}/></div>
                   <div><label style={S.fieldLabel}>Loyer mensuel *</label><input type="number" step="0.01" style={S.input} value={modal.current_rent||''} onChange={e=>setModal({...modal,current_rent:parseFloat(e.target.value)||0})}/></div>
                   <div><label style={S.fieldLabel}>Jour d'échéance</label><input type="number" min="1" max="28" style={S.input} value={modal.due_day||5} onChange={e=>setModal({...modal,due_day:parseInt(e.target.value)||5})}/></div>
                   <div><label style={S.fieldLabel}>Date d'entrée</label><input type="date" style={S.input} value={modal.move_in_date||''} onChange={e=>setModal({...modal,move_in_date:e.target.value})}/></div>
