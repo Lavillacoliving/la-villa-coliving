@@ -16,8 +16,6 @@ const SECTION_LABELS: Record<string, string> = {
   emergency: 'Urgences',
   contacts: 'Contacts essentiels',
   cleaning: 'Entretien & ménage',
-  eco: 'Éco-responsabilité',
-  departure: 'Préparer ton départ',
 };
 
 export default function PropertyContentEditor({ propertyId, propertyName }: Props) {

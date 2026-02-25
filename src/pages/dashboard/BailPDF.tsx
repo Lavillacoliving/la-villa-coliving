@@ -295,9 +295,15 @@ export function BailPDF({ data }: { data: BailPDFData }) {
         <View style={s.partyBox}>
           <Text style={s.partyLabel}>BAILLEUR :</Text>
           <Text>{ph(property.legal_entity_name, "Entit\u00E9 juridique")}</Text>
-          <Text>SIRET : {ph(property.siret, "SIRET")} — TVA : {ph(property.tva, "TVA")}</Text>
-          <Text>{"Si\u00E8ge social : "}{ph(property.siege_social, "Si\u00E8ge social")}</Text>
-          <Text>{"Repr\u00E9sent\u00E9 par : J\u00E9r\u00F4me AUSTIN, G\u00E9rant"}</Text>
+          {property.is_coliving ? (
+            <View>
+              <Text>SIRET : {ph(property.siret, "SIRET")} — TVA : {ph(property.tva, "TVA")}</Text>
+              <Text>{"Si\u00E8ge social : "}{ph(property.siege_social, "Si\u00E8ge social")}</Text>
+              <Text>{"Repr\u00E9sent\u00E9 par : J\u00E9r\u00F4me AUSTIN, G\u00E9rant"}</Text>
+            </View>
+          ) : (
+            <Text>{"Domicili\u00E9(s) \u00E0 : "}{ph(property.siege_social, "Adresse")}</Text>
+          )}
         </View>
 
         <View style={s.partyBox}>
@@ -322,17 +328,38 @@ export function BailPDF({ data }: { data: BailPDFData }) {
             : "Le bailleur loue au locataire un appartement meubl\u00E9 comprenant :"}
         </Text>
         {property.is_coliving ? (
-          <Bullet>Chambre : {ph(room.name, "Chambre")} — Surface : {room.surface_m2} m² — {"Étage : "}{room.floor}</Bullet>
+          <View>
+            <Bullet>Chambre : {ph(room.name, "Chambre")} — Surface : {room.surface_m2} m² — {"Étage : "}{room.floor}</Bullet>
+            {room.location_detail && <Bullet>Emplacement : {room.location_detail}</Bullet>}
+            <Bullet>Description : {ph(room.description, "Description")}</Bullet>
+            <Bullet>Salle de bain : {ph(room.bathroom_type, "Type")}{room.bathroom_detail ? ` — ${room.bathroom_detail}` : ""}</Bullet>
+            {room.has_parking && <Bullet>Parking : {room.parking_detail || "Oui"}</Bullet>}
+            {room.has_balcony && <Bullet>Balcon : Oui</Bullet>}
+            {room.has_terrace && <Bullet>Terrasse : Oui</Bullet>}
+            {room.has_private_entrance && <Bullet>{"Entr\u00e9e priv\u00e9e : Oui"}</Bullet>}
+          </View>
         ) : (
-          <Bullet>Appartement : {ph(room.name, "Logement")} — Surface : {room.surface_m2} m² — {"Étage : "}{room.floor}</Bullet>
+          <View>
+            <Text style={s.body}>
+              {ph(property.contract_building_desc, "Description du bien")}{", d\u2019une surface habitable de "}{room.surface_m2}{" m\u00B2, comprenant : "}{ph(room.description, "Description")}
+            </Text>
+            {room.specifics?.cadastre_section && (
+              <View>
+                <Text style={s.subTitle}>{"D\u00E9signation cadastrale :"}</Text>
+                <Bullet>Section cadastrale : {room.specifics.cadastre_section}</Bullet>
+                {room.specifics.lots && <Bullet>Lots de copropri\u00E9t\u00E9 : {room.specifics.lots}</Bullet>}
+                {room.specifics.tantiemes && <Bullet>{"Tanti\u00E8mes : "}{room.specifics.tantiemes}</Bullet>}
+              </View>
+            )}
+            {room.specifics?.parking_number && (
+              <View>
+                <Text style={s.subTitle}>Place de parking :</Text>
+                <Bullet>{"Place n\u00B0"}{room.specifics.parking_number}</Bullet>
+                {room.specifics.parking_id_fiscal && <Bullet>ID fiscal parking : {room.specifics.parking_id_fiscal}</Bullet>}
+              </View>
+            )}
+          </View>
         )}
-        {room.location_detail && <Bullet>Emplacement : {room.location_detail}</Bullet>}
-        <Bullet>Description : {ph(room.description, "Description")}</Bullet>
-        <Bullet>Salle de bain : {ph(room.bathroom_type, "Type")}{room.bathroom_detail ? ` — ${room.bathroom_detail}` : ""}</Bullet>
-        {room.has_parking && <Bullet>Parking : {room.parking_detail || "Oui"}</Bullet>}
-        {room.has_balcony && <Bullet>Balcon : Oui</Bullet>}
-        {room.has_terrace && <Bullet>Terrasse : Oui</Bullet>}
-        {room.has_private_entrance && <Bullet>{"Entr\u00e9e priv\u00e9e : Oui"}</Bullet>}
 
         {property.is_coliving && (property.common_areas || []).length > 0 && (
           <View>
@@ -361,10 +388,12 @@ export function BailPDF({ data }: { data: BailPDFData }) {
           </View>
         ) : (
           <View>
-            <Text style={s.subTitle}>{"Charges comprises dans le forfait :"}</Text>
-            <Bullet>{"\u00C9lectricit\u00E9, eau froide et chaude, chauffage"}</Bullet>
-            <Bullet>{"Ordures m\u00E9nag\u00E8res et assainissement"}</Bullet>
+            <Text style={s.subTitle}>{"Charges r\u00E9cup\u00E9rables (provisions avec r\u00E9gularisation annuelle) :"}</Text>
+            <Bullet>{"Chauffage et eau chaude collective"}</Bullet>
+            <Bullet>{"Eau froide"}</Bullet>
+            <Bullet>{"Ordures m\u00E9nag\u00E8res"}</Bullet>
             <Bullet>{"Entretien des parties communes de l\u2019immeuble"}</Bullet>
+            <Bullet>{"Ascenseur"}</Bullet>
           </View>
         )}
 
@@ -389,57 +418,70 @@ export function BailPDF({ data }: { data: BailPDFData }) {
       <Page size="A4" style={s.page}>
         <Text style={s.articleTitle}>{"ARTICLE IV \u2014 CONDITIONS FINANCI\u00C8RES"}</Text>
 
-        <Text style={s.subTitle}>Loyer mensuel :</Text>
-        <Bullet>En CHF : {fCHF(form.loyer_chf)} (taux BCE du {form.exchange_rate_date || "—"} : {rate})</Bullet>
-        <Bullet>En EUR : {fEUR(loyer_eur)}</Bullet>
-        {prorata_days > 0 && prorata_total_days > 0 && prorata_days < prorata_total_days ? (
+        {property.is_coliving ? (
           <View>
-            <Text style={[s.body, { marginTop: 6 }]}>
-              {"Prorata du premier mois : du "}{fDate(form.entry_date)}{" au dernier jour du mois ("}{prorata_days}{"/"}{prorata_total_days}{" jours) :"}
-            </Text>
-            <Bullet>En EUR : {fEUR(prorata_eur)}</Bullet>
-            <Bullet>En CHF : {fCHF(prorata_chf)}</Bullet>
+            <Text style={s.subTitle}>Loyer mensuel :</Text>
+            <Bullet>En CHF : {fCHF(form.loyer_chf)} (taux BCE du {form.exchange_rate_date || "—"} : {rate})</Bullet>
+            <Bullet>En EUR : {fEUR(loyer_eur)}</Bullet>
+            {prorata_days > 0 && prorata_total_days > 0 && prorata_days < prorata_total_days ? (
+              <View>
+                <Text style={[s.body, { marginTop: 6 }]}>
+                  {"Prorata du premier mois : du "}{fDate(form.entry_date)}{" au dernier jour du mois ("}{prorata_days}{"/"}{prorata_total_days}{" jours) :"}
+                </Text>
+                <Bullet>En EUR : {fEUR(prorata_eur)}</Bullet>
+                <Bullet>En CHF : {fCHF(prorata_chf)}</Bullet>
+              </View>
+            ) : (
+              <Text style={s.body}>{"Entr\u00E9e le 1er du mois \u2014 pas de prorata."}</Text>
+            )}
+
+            <Text style={s.subTitle}>{"Charges forfaitaires mensuelles :"}</Text>
+            <View style={s.tableHeader}>
+              <Text style={[s.tableCellBold, { width: "50%" }]}>{"Cat\u00E9gorie"}</Text>
+              <Text style={[s.tableCellBold, { width: "25%", textAlign: "right" }]}>EUR</Text>
+              <Text style={[s.tableCellBold, { width: "25%", textAlign: "right" }]}>CHF</Text>
+            </View>
+            <View style={s.tableRow}>
+              <Text style={[s.tableCell, { width: "50%" }]}>{"Énergie (eau, chauffage, \u00E9lec.)"}</Text>
+              <Text style={[s.tableCell, { width: "25%", textAlign: "right" }]}>{fEUR(form.charges_energy / rate)}</Text>
+              <Text style={[s.tableCell, { width: "25%", textAlign: "right" }]}>{fCHF(form.charges_energy)}</Text>
+            </View>
+            <View style={s.tableRow}>
+              <Text style={[s.tableCell, { width: "50%" }]}>Maintenance et Entretien</Text>
+              <Text style={[s.tableCell, { width: "25%", textAlign: "right" }]}>{fEUR(form.charges_maintenance / rate)}</Text>
+              <Text style={[s.tableCell, { width: "25%", textAlign: "right" }]}>{fCHF(form.charges_maintenance)}</Text>
+            </View>
+            <View style={s.tableRow}>
+              <Text style={[s.tableCell, { width: "50%" }]}>{"Services (m\u00E9nage, yoga, support)"}</Text>
+              <Text style={[s.tableCell, { width: "25%", textAlign: "right" }]}>{fEUR(form.charges_services / rate)}</Text>
+              <Text style={[s.tableCell, { width: "25%", textAlign: "right" }]}>{fCHF(form.charges_services)}</Text>
+            </View>
+            <View style={[s.tableHeader, { marginBottom: 8 }]}>
+              <Text style={[s.tableCellBold, { width: "50%" }]}>TOTAL CHARGES</Text>
+              <Text style={[s.tableCellBold, { width: "25%", textAlign: "right" }]}>{fEUR(totalCharges / rate)}</Text>
+              <Text style={[s.tableCellBold, { width: "25%", textAlign: "right" }]}>{fCHF(totalCharges)}</Text>
+            </View>
+
+            <Text style={s.subTitle}>Frais de dossier :</Text>
+            <Bullet>Montant : {fEUR(form.frais_dossier)} ({fCHF(form.frais_dossier * rate)}) — OFFERTS par le bailleur</Bullet>
           </View>
         ) : (
-          <Text style={s.body}>
-            {"Entr\u00E9e le 1er du mois \u2014 pas de prorata."}
-          </Text>
-        )}
+          <View>
+            <Text style={s.subTitle}>Loyer mensuel :</Text>
+            <Bullet>Loyer : {fEUR(loyer_eur)}</Bullet>
 
-        <Text style={s.subTitle}>{"Charges forfaitaires mensuelles :"}</Text>
-        <View style={s.tableHeader}>
-          <Text style={[s.tableCellBold, { width: "50%" }]}>{"Cat\u00E9gorie"}</Text>
-          <Text style={[s.tableCellBold, { width: "25%", textAlign: "right" }]}>EUR</Text>
-          <Text style={[s.tableCellBold, { width: "25%", textAlign: "right" }]}>CHF</Text>
-        </View>
-        <View style={s.tableRow}>
-          <Text style={[s.tableCell, { width: "50%" }]}>{"Énergie (eau, chauffage, \u00E9lec.)"}</Text>
-          <Text style={[s.tableCell, { width: "25%", textAlign: "right" }]}>{fEUR(form.charges_energy / rate)}</Text>
-          <Text style={[s.tableCell, { width: "25%", textAlign: "right" }]}>{fCHF(form.charges_energy)}</Text>
-        </View>
-        <View style={s.tableRow}>
-          <Text style={[s.tableCell, { width: "50%" }]}>Maintenance et Entretien</Text>
-          <Text style={[s.tableCell, { width: "25%", textAlign: "right" }]}>{fEUR(form.charges_maintenance / rate)}</Text>
-          <Text style={[s.tableCell, { width: "25%", textAlign: "right" }]}>{fCHF(form.charges_maintenance)}</Text>
-        </View>
-        <View style={s.tableRow}>
-          <Text style={[s.tableCell, { width: "50%" }]}>{property.is_coliving ? "Services (m\u00E9nage, yoga, support)" : "Charges diverses"}</Text>
-          <Text style={[s.tableCell, { width: "25%", textAlign: "right" }]}>{fEUR(form.charges_services / rate)}</Text>
-          <Text style={[s.tableCell, { width: "25%", textAlign: "right" }]}>{fCHF(form.charges_services)}</Text>
-        </View>
-        <View style={[s.tableHeader, { marginBottom: 8 }]}>
-          <Text style={[s.tableCellBold, { width: "50%" }]}>TOTAL CHARGES</Text>
-          <Text style={[s.tableCellBold, { width: "25%", textAlign: "right" }]}>{fEUR(totalCharges / rate)}</Text>
-          <Text style={[s.tableCellBold, { width: "25%", textAlign: "right" }]}>{fCHF(totalCharges)}</Text>
-        </View>
+            <Text style={s.subTitle}>{"Provisions sur charges (avec r\u00E9gularisation annuelle) :"}</Text>
+            <Bullet>Montant mensuel : {fEUR(totalCharges)}</Bullet>
+            <Text style={[s.body, { fontSize: 9, color: "#666" }]}>
+              {"La r\u00E9gularisation des charges est effectu\u00E9e annuellement, au vu des d\u00E9penses r\u00E9elles. Le trop-per\u00E7u est restitu\u00E9 au locataire ou le compl\u00E9ment est demand\u00E9."}
+            </Text>
+          </View>
+        )}
 
         <Text style={s.subTitle}>{"R\u00E9vision annuelle (IRL) :"}</Text>
         <Bullet>{"Trimestre de r\u00E9f\u00E9rence : "}{ph(form.irl_trimestre, "3\u00E8me trimestre 2025")}</Bullet>
         <Bullet>{"Indice de r\u00E9f\u00E9rence : "}{form.irl_indice}</Bullet>
         <Bullet>{"La r\u00E9vision s\u2019effectue chaque ann\u00E9e \u00E0 la date anniversaire du contrat."}</Bullet>
-
-        <Text style={s.subTitle}>Frais de dossier :</Text>
-        <Bullet>Montant : {fEUR(form.frais_dossier)} ({fCHF(form.frais_dossier * rate)}) — OFFERTS par le bailleur</Bullet>
 
         <Text style={s.subTitle}>{"Modalit\u00E9s de paiement :"}</Text>
         <Bullet>{"Le loyer et les charges doivent \u00EAtre vers\u00E9s avant le 5 du mois."}</Bullet>
@@ -447,7 +489,10 @@ export function BailPDF({ data }: { data: BailPDFData }) {
 
         <Text style={s.articleTitle}>{"ARTICLE V \u2014 GARANTIES"}</Text>
         <Text style={s.body}>
-          {"Le locataire versera un d\u00E9p\u00F4t de garantie \u00E9gal \u00E0 deux (2) mois de loyer, soit "}{fEUR(depot_eur)} ({fCHF(depot_eur * rate)}){", restitu\u00E9 dans les deux (2) mois suivant la fin du contrat, selon l\u2019\u00E9tat des lieux."}
+          {property.is_coliving
+            ? <>{"Le locataire versera un d\u00E9p\u00F4t de garantie \u00E9gal \u00E0 deux (2) mois de loyer, soit "}{fEUR(depot_eur)} ({fCHF(depot_eur * rate)}){", restitu\u00E9 dans les deux (2) mois suivant la fin du contrat, selon l\u2019\u00E9tat des lieux."}</>
+            : <>{"Le locataire versera un d\u00E9p\u00F4t de garantie \u00E9gal \u00E0 un (1) mois de loyer hors charges, soit "}{fEUR(depot_eur)}{", restitu\u00E9 dans les deux (2) mois suivant la fin du contrat, d\u00E9duction faite des sommes \u00E9ventuellement dues."}</>
+          }
         </Text>
 
         <Text style={s.articleTitle}>{"ARTICLE VI \u2014 CLAUSE R\u00C9SOLUTOIRE"}</Text>
@@ -479,7 +524,9 @@ export function BailPDF({ data }: { data: BailPDFData }) {
 
         <Text style={s.articleTitle}>{"ARTICLE IX \u2014 \u00C9TAT DES LIEUX"}</Text>
         <Text style={s.body}>
-          {"L\u2019\u00E9tat des lieux d\u2019entr\u00E9e et de sortie sera \u00E9tabli par la soci\u00E9t\u00E9 Nockee, prestataire mandat\u00E9 par le bailleur. Le locataire re\u00E7oit un exemplaire."}
+          {property.is_coliving
+            ? "L\u2019\u00E9tat des lieux d\u2019entr\u00E9e et de sortie sera \u00E9tabli par la soci\u00E9t\u00E9 Nockee, prestataire mandat\u00E9 par le bailleur. Le locataire re\u00E7oit un exemplaire."
+            : "L\u2019\u00E9tat des lieux d\u2019entr\u00E9e et de sortie sera \u00E9tabli contradictoirement entre les parties. Le locataire re\u00E7oit un exemplaire."}
         </Text>
 
         {!property.is_coliving && (
@@ -513,6 +560,8 @@ export function BailPDF({ data }: { data: BailPDFData }) {
         <Text style={s.articleTitle}>{property.is_coliving ? "ARTICLE XII \u2014 ANNEXES" : "ARTICLE XII \u2014 ANNEXES"}</Text>
         <Text style={s.body}>{"Sont annex\u00E9es au pr\u00E9sent contrat :"}</Text>
         {!property.is_coliving && <Bullet>{"Inventaire du mobilier et \u00E9quipements"}</Bullet>}
+        {!property.is_coliving && <Bullet>{"Notice d\u2019information relative aux droits et obligations des locataires et des bailleurs"}</Bullet>}
+        {!property.is_coliving && <Bullet>{"RIB du bailleur"}</Bullet>}
         {property.is_coliving && <Bullet>{"R\u00E8glement Int\u00E9rieur La Villa Coliving"}</Bullet>}
         <Bullet>Diagnostics techniques</Bullet>
         {(form.annexe_documents || []).map((doc: string, i: number) => (
@@ -530,7 +579,7 @@ export function BailPDF({ data }: { data: BailPDFData }) {
           <View style={s.signatureBox}>
             <Text style={{ fontSize: 9 }}>{"Fait \u00E0 "}{ville}</Text>
             <Text style={s.signatureLabel}>Signature du bailleur</Text>
-            <Text style={s.signatureName}>{"J\u00E9r\u00F4me AUSTIN"}</Text>
+            <Text style={s.signatureName}>{property.manager_name || "J\u00E9r\u00F4me AUSTIN"}</Text>
           </View>
           <View style={s.signatureBox}>
             <Text style={{ fontSize: 9 }}>Le {fDate(form.entry_date)}</Text>
