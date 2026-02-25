@@ -500,7 +500,6 @@ function generateContractHTML(data: ContractData): string {
             ${!property.is_coliving ? '<li>Inventaire du mobilier et équipements</li>' : ''}
             ${property.is_coliving ? '<li>Règlement Intérieur La Villa Coliving</li>' : ''}
             <li>Diagnostics techniques</li>
-            <li>Photos d'état des lieux d'entrée</li>
             ${(form.annexe_documents || []).map((doc: string) => `<li>${doc}</li>`).join('')}
           </ul>
         </div>

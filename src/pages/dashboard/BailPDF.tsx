@@ -515,7 +515,6 @@ export function BailPDF({ data }: { data: BailPDFData }) {
         {!property.is_coliving && <Bullet>{"Inventaire du mobilier et \u00E9quipements"}</Bullet>}
         {property.is_coliving && <Bullet>{"R\u00E8glement Int\u00E9rieur La Villa Coliving"}</Bullet>}
         <Bullet>Diagnostics techniques</Bullet>
-        <Bullet>{"Photos d\u2019\u00E9tat des lieux d\u2019entr\u00E9e"}</Bullet>
         {(form.annexe_documents || []).map((doc: string, i: number) => (
           <Bullet key={i}>{doc}</Bullet>
         ))}
