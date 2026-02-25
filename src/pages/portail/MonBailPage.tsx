@@ -99,13 +99,19 @@ export function MonBailPage() {
         ? 'Sleep In SCI — ' + (tenant.siege_social || tenant.property_address)
         : (tenant.siege_social || tenant.property_address);
 
+      // Build full property address with city
+      // If city is not already in address, append "74100 City"
+      const addr = tenant.property_address || '';
+      const city = tenant.property_city || '';
+      const fullAddress = addr.includes(city) ? addr : (addr + ', 74100 ' + city);
+
       const data = {
         bailleur_name: 'La Villa Coliving',
         bailleur_address: bailleurAddress,
         bailleur_siret: tenant.siret || '',
         locataire_name: `${tenant.first_name} ${tenant.last_name}`,
         property_name: tenant.property_name,
-        property_address: tenant.property_address,
+        property_address: fullAddress,
         room_number: String(tenant.room_number),
         is_coliving: tenant.is_coliving,
         month_label: monthLabel,
