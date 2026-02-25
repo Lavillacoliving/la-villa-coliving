@@ -135,6 +135,8 @@ function generateContractHTML(data: ContractData): string {
     .map(area => `<li>${area}</li>`)
     .join('');
 
+  const totalCharges = (form.charges_energy + form.charges_maintenance + form.charges_services) / form.exchange_rate;
+
   const chargesTable = `
     <table style="width:100%;border-collapse:collapse;margin:10px 0;">
       <tr style="border-bottom:1px solid #e0e0e0;">

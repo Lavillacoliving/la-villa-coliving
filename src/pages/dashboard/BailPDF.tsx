@@ -19,6 +19,8 @@ interface Property {
   common_areas: string[];
   contract_building_desc: string;
   is_coliving: boolean;
+  manager_name: string | null;
+  deposit_months: number;
 }
 
 interface Room {
