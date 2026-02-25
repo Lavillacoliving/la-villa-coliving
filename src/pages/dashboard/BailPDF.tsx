@@ -368,7 +368,7 @@ export function BailPDF({ data }: { data: BailPDFData }) {
           </View>
         )}
 
-        {room.furniture_inventory && room.furniture_inventory.length > 0 && (
+        {!property.is_coliving && room.furniture_inventory && room.furniture_inventory.length > 0 && (
           <View>
             <Text style={s.subTitle}>{"Inventaire du mobilier fourni :"}</Text>
             {room.furniture_inventory.map((fi: any, i: number) => (
@@ -482,12 +482,16 @@ export function BailPDF({ data }: { data: BailPDFData }) {
           {"L\u2019\u00E9tat des lieux d\u2019entr\u00E9e et de sortie sera \u00E9tabli par la soci\u00E9t\u00E9 Nockee, prestataire mandat\u00E9 par le bailleur. Le locataire re\u00E7oit un exemplaire."}
         </Text>
 
-        <Text style={s.articleTitle}>{"ARTICLE X \u2014 INVENTAIRE DU MOBILIER"}</Text>
-        <Text style={s.body}>
-          {"L\u2019inventaire d\u00E9taill\u00E9 du mobilier et des \u00E9quipements fournis est joint en annexe au pr\u00E9sent contrat. Le locataire s\u2019engage \u00E0 en prendre soin et \u00E0 le restituer en bon \u00E9tat."}
-        </Text>
+        {!property.is_coliving && (
+          <View>
+            <Text style={s.articleTitle}>{"ARTICLE X \u2014 INVENTAIRE DU MOBILIER"}</Text>
+            <Text style={s.body}>
+              {"L\u2019inventaire d\u00E9taill\u00E9 du mobilier et des \u00E9quipements fournis est joint en annexe au pr\u00E9sent contrat. Le locataire s\u2019engage \u00E0 en prendre soin et \u00E0 le restituer en bon \u00E9tat."}
+            </Text>
+          </View>
+        )}
 
-        <Text style={s.articleTitle}>{"ARTICLE XI \u2014 DIAGNOSTICS TECHNIQUES"}</Text>
+        <Text style={s.articleTitle}>{property.is_coliving ? "ARTICLE X \u2014 DIAGNOSTICS TECHNIQUES" : "ARTICLE XI \u2014 DIAGNOSTICS TECHNIQUES"}</Text>
         <Text style={s.body}>
           {"Conform\u00E9ment \u00E0 la r\u00E9glementation fran\u00E7aise, le bailleur fournit au locataire :"}
         </Text>
@@ -499,16 +503,16 @@ export function BailPDF({ data }: { data: BailPDFData }) {
 
         {property.is_coliving && (
           <View>
-            <Text style={s.articleTitle}>{"ARTICLE XII \u2014 R\u00C8GLEMENT INT\u00C9RIEUR"}</Text>
+            <Text style={s.articleTitle}>{"ARTICLE XI \u2014 R\u00C8GLEMENT INT\u00C9RIEUR"}</Text>
             <Text style={s.body}>
               {"Le locataire accepte le R\u00E8glement Int\u00E9rieur La Villa Coliving (la \u201CBible du Coliver\u201D), joint en annexe, qui pr\u00E9cise les r\u00E8gles de vie commune, l\u2019usage des parties communes et les proc\u00E9dures de gestion interne."}
             </Text>
           </View>
         )}
 
-        <Text style={s.articleTitle}>{property.is_coliving ? "ARTICLE XIII \u2014 ANNEXES" : "ARTICLE XII \u2014 ANNEXES"}</Text>
+        <Text style={s.articleTitle}>{property.is_coliving ? "ARTICLE XII \u2014 ANNEXES" : "ARTICLE XII \u2014 ANNEXES"}</Text>
         <Text style={s.body}>{"Sont annex\u00E9es au pr\u00E9sent contrat :"}</Text>
-        <Bullet>{"Inventaire du mobilier et \u00E9quipements"}</Bullet>
+        {!property.is_coliving && <Bullet>{"Inventaire du mobilier et \u00E9quipements"}</Bullet>}
         {property.is_coliving && <Bullet>{"R\u00E8glement Int\u00E9rieur La Villa Coliving"}</Bullet>}
         <Bullet>Diagnostics techniques</Bullet>
         <Bullet>{"Photos d\u2019\u00E9tat des lieux d\u2019entr\u00E9e"}</Bullet>

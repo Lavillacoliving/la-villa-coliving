@@ -343,7 +343,7 @@ function generateContractHTML(data: ContractData): string {
             ${room.has_terrace ? '<li><strong>Terrasse :</strong> Oui</li>' : ''}
             ${room.has_private_entrance ? `<li><strong>Entrée privée :</strong> Oui</li>` : ''}
           </ul>
-          ${(room.furniture_inventory && room.furniture_inventory.length > 0) ? `
+          ${(!property.is_coliving && room.furniture_inventory && room.furniture_inventory.length > 0) ? `
           <p><strong>Inventaire du mobilier fourni :</strong></p>
           <ul>
             ${room.furniture_inventory.map((fi: any) => `<li>${fi.item}${fi.qty > 1 ? ' (\u00d7' + fi.qty + ')' : ''}</li>`).join('')}
@@ -468,12 +468,13 @@ function generateContractHTML(data: ContractData): string {
           L'état des lieux d'entrée et de sortie sera établi par la société <strong>Nockee</strong>, prestataire mandaté par le bailleur. Le locataire reçoit un exemplaire.
         </div>
 
+        ${!property.is_coliving ? `
         <h2>ARTICLE X — INVENTAIRE DU MOBILIER</h2>
         <div class="article">
           L'inventaire détaillé du mobilier et des équipements fournis est joint en annexe au présent contrat. Le locataire s'engage à en prendre soin et à le restituer en bon état.
-        </div>
+        </div>` : ''}
 
-        <h2>ARTICLE XI — DIAGNOSTICS TECHNIQUES</h2>
+        <h2>${property.is_coliving ? 'ARTICLE X' : 'ARTICLE XI'} — DIAGNOSTICS TECHNIQUES</h2>
         <div class="article">
           Conformément à la réglementation française, le bailleur fournit au locataire :
           <ul>
@@ -486,17 +487,17 @@ function generateContractHTML(data: ContractData): string {
         </div>
 
         ${property.is_coliving ? `
-        <h2>ARTICLE XII — RÈGLEMENT INTÉRIEUR</h2>
+        <h2>ARTICLE XI — RÈGLEMENT INTÉRIEUR</h2>
         <div class="article">
           Le locataire accepte le Règlement Intérieur La Villa Coliving (la "Bible du Coliver"), joint en annexe, qui précise les règles de vie commune, l'usage des parties communes et les procédures de gestion interne.
         </div>
 
-        <h2>ARTICLE XIII — ANNEXES</h2>` : `
+        <h2>ARTICLE XII — ANNEXES</h2>` : `
         <h2>ARTICLE XII — ANNEXES</h2>`}
         <div class="article">
           Sont annexées au présent contrat :
           <ul>
-            <li>Inventaire du mobilier et équipements</li>
+            ${!property.is_coliving ? '<li>Inventaire du mobilier et équipements</li>' : ''}
             ${property.is_coliving ? '<li>Règlement Intérieur La Villa Coliving</li>' : ''}
             <li>Diagnostics techniques</li>
             <li>Photos d'état des lieux d'entrée</li>
