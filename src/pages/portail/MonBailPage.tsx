@@ -104,7 +104,9 @@ export function MonBailPage() {
       // If city is not already in address, append "74100 City"
       const addr = tenant.property_address || '';
       const city = tenant.property_city || '';
-      const fullAddress = addr.includes(city) ? addr : (addr + ', 74100 ' + city);
+      const fullAddress = addr.includes(city)
+        ? (addr.includes('France') ? addr : addr + ' \u2013 France')
+        : (addr + ', 74100 ' + city + ' \u2013 France');
 
       const data = {
         bailleur_name: bailleurName,
