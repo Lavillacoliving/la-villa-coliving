@@ -59,9 +59,11 @@ export function LoginForm() {
         <div className="bg-white rounded-2xl border border-[#E7E5E4] shadow-[0_4px_24px_rgba(0,0,0,0.06)] p-8">
           {/* Logo / Brand */}
           <div className="text-center mb-8">
-            <div className="w-16 h-16 bg-[#F5F2ED] rounded-xl flex items-center justify-center mx-auto mb-4">
-              <Home className="w-7 h-7 text-[#44403C]" />
-            </div>
+            <img
+              src="/logos/NEW Logo La Villa-14.png"
+              alt="La Villa Coliving"
+              className="h-16 w-auto mx-auto mb-4"
+            />
             <h1 className="text-2xl font-bold text-[#1C1917]">{lang.title}</h1>
             <p className="text-sm text-[#78716C] mt-2">{lang.subtitle}</p>
           </div>

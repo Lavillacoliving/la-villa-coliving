@@ -89,9 +89,16 @@ export function PortailLayout() {
       {/* Header */}
       <div className="max-w-5xl mx-auto px-4 mb-6">
         <div className="flex justify-between items-start">
-          <div>
-            <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">{lang.title}</h1>
-            <p className="text-gray-500 mt-1 text-sm">{lang.subtitle}</p>
+          <div className="flex items-center gap-4">
+            <img
+              src="/logos/NEW Logo La Villa-14.png"
+              alt="La Villa Coliving"
+              className="h-14 w-auto"
+            />
+            <div>
+              <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">{lang.title}</h1>
+              <p className="text-gray-500 mt-1 text-sm">{lang.subtitle}</p>
+            </div>
           </div>
           <div className="text-right">
             <p className="text-sm text-gray-500">{tenant.first_name} {tenant.last_name}</p>
