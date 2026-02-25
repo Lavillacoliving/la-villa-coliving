@@ -142,13 +142,15 @@ export default function DashboardLocatairesPage() {
     setModal(null); load();
   };
 
-  const deleteTenant = () => {
+  // Tenant deletion disabled — archive to "ancien" instead
+  const archiveTenant = async () => {
     if (!modal?.id) return;
-    setDeleteConfirm({type:'tenant',label:`${modal.first_name} ${modal.last_name}`,fn:async()=>{
-      const {error} = await supabase.from('tenants').delete().eq('id',modal.id);
-      if (error) { toast.error('Erreur: ' + error.message); return; }
-      setModal(null); load();
-    }});
+    const today = new Date().toISOString().split('T')[0];
+    const { error } = await supabase.from('tenants').update({ is_active: false, move_out_date: modal.move_out_date || today }).eq('id', modal.id);
+    if (error) { toast.error('Erreur: ' + error.message); return; }
+    await logAudit({ action: 'tenant_deactivated', entity_type: 'tenant', entity_id: modal.id, details: { name: `${modal.first_name} ${modal.last_name}`, move_out_date: modal.move_out_date || today } });
+    toast.success(`${modal.first_name} ${modal.last_name} archivé(e)`);
+    setModal(null); load();
   };
 
   const confirmRefund = async () => {
@@ -337,7 +339,7 @@ export default function DashboardLocatairesPage() {
                 )}
 
                 <div style={{display:'flex',gap:'8px',justifyContent:'space-between'}}>
-                  <div>{!isNew && <button onClick={deleteTenant} style={{padding:'8px 16px',background:'#ef4444',color:'#fff',border:'none',borderRadius:'6px',cursor:'pointer',fontSize:'13px'}}>Supprimer</button>}</div>
+                  <div>{!isNew && modal.is_active !== false && <button onClick={archiveTenant} style={{padding:'8px 16px',background:'#6b7280',color:'#fff',border:'none',borderRadius:'6px',cursor:'pointer',fontSize:'13px'}}>Passer en ancien</button>}</div>
                   <div style={{display:'flex',gap:'8px'}}>
                     <button onClick={()=>setModal(null)} style={{padding:'8px 16px',border:'1px solid #ddd',background:'#fff',borderRadius:'6px',cursor:'pointer'}}>Annuler</button>
                     <button onClick={saveModal} disabled={saving} style={{padding:'8px 16px',background:'#b8860b',color:'#fff',border:'none',borderRadius:'6px',cursor:'pointer',fontWeight:600}}>{saving?'...':'Enregistrer'}</button>
@@ -364,17 +366,9 @@ export default function DashboardLocatairesPage() {
         </div>
       )}
 
-      {/* Delete confirmation modal */}
-      {deleteConfirm && (
-        <div style={{position:'fixed',top:0,left:0,right:0,bottom:0,background:'rgba(0,0,0,0.6)',display:'flex',alignItems:'center',justifyContent:'center',zIndex:2000}} onClick={()=>setDeleteConfirm(null)}>
-          <div style={{background:'white',borderRadius:'12px',padding:'24px',width:'400px',maxWidth:'90vw'}} onClick={e=>e.stopPropagation()}>
-            <h3 style={{margin:'0 0 12px',fontSize:'16px'}}>⚠️ Confirmer la suppression</h3>
-            <p style={{fontSize:'14px',color:'#555',margin:'0 0 20px'}}>Supprimer <strong>{deleteConfirm.label}</strong> ? Cette action est irréversible.</p>
-            <div style={{display:'flex',gap:'8px',justifyContent:'flex-end'}}>
-              <button onClick={()=>setDeleteConfirm(null)} style={{padding:'8px 16px',border:'1px solid #ddd',background:'#fff',borderRadius:'6px',cursor:'pointer'}}>Annuler</button>
-              <button onClick={()=>{deleteConfirm.fn();setDeleteConfirm(null);}} style={{padding:'8px 16px',background:'#ef4444',color:'#fff',border:'none',borderRadius:'6px',cursor:'pointer',fontWeight:600}}>Supprimer</button>
-            </div>
-          </div>
+      {/* Delete confirmation modal — disabled, kept as placeholder */}
+      {false && deleteConfirm && (
+        <div></div>
         </div>
       )}
     </div>
