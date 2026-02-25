@@ -298,6 +298,15 @@ export default function DashboardMaisonsPage() {
                 <>
                   <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '16px' }}>
                     <h2 style={{ margin: 0, fontSize: '24px', color: '#1a1a2e' }}>{selectedProperty.name}</h2>
+                    <button
+                      onClick={() => {
+                        setEditingProperty(true);
+                        setEditPropertyData({ ...selectedProperty });
+                      }}
+                      style={{ ...S.btn, background: '#b8860b', color: '#fff', fontSize: '12px' }}
+                    >
+                      Éditer
+                    </button>
                   </div>
                   <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
                     <div>
@@ -345,6 +354,17 @@ export default function DashboardMaisonsPage() {
                             {area}
                           </span>
                         ))}
+                      </div>
+                    </div>
+                  )}
+                  {selectedProperty.is_coliving && (
+                    <div style={{ marginTop: '16px', padding: '12px', background: '#f9f7f4', borderRadius: '8px', borderLeft: '3px solid #c9a96e' }}>
+                      <p style={{ ...S.label, color: '#c9a96e' }}>Charges forfaitaires mensuelles (EUR)</p>
+                      <div style={{ display: 'flex', gap: '20px', fontSize: '14px' }}>
+                        <span>Énergie : <strong>{selectedProperty.charges_energy_chf || 0} €</strong></span>
+                        <span>Maintenance : <strong>{selectedProperty.charges_maintenance_chf || 0} €</strong></span>
+                        <span>Services : <strong>{selectedProperty.charges_services_chf || 0} €</strong></span>
+                        <span style={{ color: '#b8860b', fontWeight: 700 }}>Total : {(selectedProperty.charges_energy_chf || 0) + (selectedProperty.charges_maintenance_chf || 0) + (selectedProperty.charges_services_chf || 0)} €</span>
                       </div>
                     </div>
                   )}
@@ -425,7 +445,7 @@ export default function DashboardMaisonsPage() {
                     />
                   </div>
                   <div style={{ marginTop: '16px', padding: '12px', background: '#f9f7f4', borderRadius: '8px', borderLeft: '3px solid #c9a96e' }}>
-                    <label style={{ fontSize: '13px', fontWeight: 600, color: '#c9a96e', marginBottom: '8px', display: 'block' }}>Charges forfaitaires mensuelles (CHF)</label>
+                    <label style={{ fontSize: '13px', fontWeight: 600, color: '#c9a96e', marginBottom: '8px', display: 'block' }}>Charges forfaitaires mensuelles (EUR)</label>
                     <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '8px' }}>
                       <div>
                         <label style={S.fieldLabel}>Énergie</label>

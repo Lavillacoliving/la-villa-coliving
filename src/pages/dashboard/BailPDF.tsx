@@ -445,23 +445,23 @@ export function BailPDF({ data }: { data: BailPDFData }) {
             </View>
             <View style={s.tableRow}>
               <Text style={[s.tableCell, { width: "50%" }]}>{"Énergie (eau, chauffage, \u00E9lec.)"}</Text>
-              <Text style={[s.tableCell, { width: "25%", textAlign: "right" }]}>{fEUR(form.charges_energy / rate)}</Text>
-              <Text style={[s.tableCell, { width: "25%", textAlign: "right" }]}>{fCHF(form.charges_energy)}</Text>
+              <Text style={[s.tableCell, { width: "25%", textAlign: "right" }]}>{fEUR(form.charges_energy)}</Text>
+              <Text style={[s.tableCell, { width: "25%", textAlign: "right" }]}>{fCHF(form.charges_energy * rate)}</Text>
             </View>
             <View style={s.tableRow}>
               <Text style={[s.tableCell, { width: "50%" }]}>Maintenance et Entretien</Text>
-              <Text style={[s.tableCell, { width: "25%", textAlign: "right" }]}>{fEUR(form.charges_maintenance / rate)}</Text>
-              <Text style={[s.tableCell, { width: "25%", textAlign: "right" }]}>{fCHF(form.charges_maintenance)}</Text>
+              <Text style={[s.tableCell, { width: "25%", textAlign: "right" }]}>{fEUR(form.charges_maintenance)}</Text>
+              <Text style={[s.tableCell, { width: "25%", textAlign: "right" }]}>{fCHF(form.charges_maintenance * rate)}</Text>
             </View>
             <View style={s.tableRow}>
               <Text style={[s.tableCell, { width: "50%" }]}>{"Services (m\u00E9nage, yoga, support)"}</Text>
-              <Text style={[s.tableCell, { width: "25%", textAlign: "right" }]}>{fEUR(form.charges_services / rate)}</Text>
-              <Text style={[s.tableCell, { width: "25%", textAlign: "right" }]}>{fCHF(form.charges_services)}</Text>
+              <Text style={[s.tableCell, { width: "25%", textAlign: "right" }]}>{fEUR(form.charges_services)}</Text>
+              <Text style={[s.tableCell, { width: "25%", textAlign: "right" }]}>{fCHF(form.charges_services * rate)}</Text>
             </View>
             <View style={[s.tableHeader, { marginBottom: 8 }]}>
               <Text style={[s.tableCellBold, { width: "50%" }]}>TOTAL CHARGES</Text>
-              <Text style={[s.tableCellBold, { width: "25%", textAlign: "right" }]}>{fEUR(totalCharges / rate)}</Text>
-              <Text style={[s.tableCellBold, { width: "25%", textAlign: "right" }]}>{fCHF(totalCharges)}</Text>
+              <Text style={[s.tableCellBold, { width: "25%", textAlign: "right" }]}>{fEUR(totalCharges)}</Text>
+              <Text style={[s.tableCellBold, { width: "25%", textAlign: "right" }]}>{fCHF(totalCharges * rate)}</Text>
             </View>
 
             <Text style={s.subTitle}>Frais de dossier :</Text>

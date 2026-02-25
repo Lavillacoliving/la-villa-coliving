@@ -135,7 +135,8 @@ function generateContractHTML(data: ContractData): string {
     .map(area => `<li>${area}</li>`)
     .join('');
 
-  const totalCharges = (form.charges_energy + form.charges_maintenance + form.charges_services) / form.exchange_rate;
+  // Charges are stored in EUR — convert to CHF for display
+  const totalChargesEUR = form.charges_energy + form.charges_maintenance + form.charges_services;
 
   const chargesTable = `
     <table style="width:100%;border-collapse:collapse;margin:10px 0;">
@@ -146,23 +147,23 @@ function generateContractHTML(data: ContractData): string {
       </tr>
       <tr style="border-bottom:1px solid #f0f0f0;">
         <td style="padding:8px;">Énergie (eau, chauffage, électricité)</td>
-        <td style="padding:8px;text-align:right;">${fEUR(form.charges_energy / form.exchange_rate)}</td>
-        <td style="padding:8px;text-align:right;">${fCHF(form.charges_energy)}</td>
+        <td style="padding:8px;text-align:right;">${fEUR(form.charges_energy)}</td>
+        <td style="padding:8px;text-align:right;">${fCHF(form.charges_energy * form.exchange_rate)}</td>
       </tr>
       <tr style="border-bottom:1px solid #f0f0f0;">
         <td style="padding:8px;">Maintenance & Entretien</td>
-        <td style="padding:8px;text-align:right;">${fEUR(form.charges_maintenance / form.exchange_rate)}</td>
-        <td style="padding:8px;text-align:right;">${fCHF(form.charges_maintenance)}</td>
+        <td style="padding:8px;text-align:right;">${fEUR(form.charges_maintenance)}</td>
+        <td style="padding:8px;text-align:right;">${fCHF(form.charges_maintenance * form.exchange_rate)}</td>
       </tr>
       <tr style="border-bottom:1px solid #f0f0f0;">
         <td style="padding:8px;">${property.is_coliving ? 'Services (ménage, yoga, support)' : 'Charges diverses'}</td>
-        <td style="padding:8px;text-align:right;">${fEUR(form.charges_services / form.exchange_rate)}</td>
-        <td style="padding:8px;text-align:right;">${fCHF(form.charges_services)}</td>
+        <td style="padding:8px;text-align:right;">${fEUR(form.charges_services)}</td>
+        <td style="padding:8px;text-align:right;">${fCHF(form.charges_services * form.exchange_rate)}</td>
       </tr>
       <tr style="background:#f9f7f4;font-weight:600;border-bottom:2px solid #c9a96e;">
         <td style="padding:8px;">TOTAL CHARGES MENSUELLES</td>
-        <td style="padding:8px;text-align:right;">${fEUR((form.charges_energy + form.charges_maintenance + form.charges_services) / form.exchange_rate)}</td>
-        <td style="padding:8px;text-align:right;">${fCHF(form.charges_energy + form.charges_maintenance + form.charges_services)}</td>
+        <td style="padding:8px;text-align:right;">${fEUR(totalChargesEUR)}</td>
+        <td style="padding:8px;text-align:right;">${fCHF(totalChargesEUR * form.exchange_rate)}</td>
       </tr>
     </table>
   `;
@@ -429,7 +430,7 @@ function generateContractHTML(data: ContractData): string {
           </ul>
           <h3>Provisions sur charges (avec régularisation annuelle) :</h3>
           <ul>
-            <li><strong>Montant mensuel :</strong> ${fEUR(totalCharges)}</li>
+            <li><strong>Montant mensuel :</strong> ${fEUR(totalChargesEUR)}</li>
           </ul>
           <p style="font-size:9px;color:#666;">La régularisation des charges est effectuée annuellement, au vu des dépenses réelles.</p>`}
           <h3>Révision annuelle (IRL) :</h3>

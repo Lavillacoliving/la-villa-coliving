@@ -76,7 +76,7 @@ export function QuittancePDF({ data }: { data: QuittanceData }) {
       <Page size="A4" style={S.page}>
         {/* Header with logo */}
         <View style={S.header}>
-          <Image style={S.logo} src="/logos/NEW Logo La Villa-14.png" />
+          <Image style={S.logo} src="https://www.lavillacoliving.com/logos/NEW Logo La Villa-14.png" />
           <View style={S.headerText}>
             <Text style={S.title}>Quittance de Loyer</Text>
             <Text style={S.subtitle}>La Villa Coliving</Text>
