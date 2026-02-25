@@ -139,6 +139,23 @@ export default function DashboardLocatairesPage() {
     setModal(null); load();
   };
 
+  // Auto-save on close: silently saves if the form has enough data, otherwise just closes
+  const closeModal = async () => {
+    if (modal && !isNew && modal.first_name && modal.last_name && modal.property_id && modal.room_number && modal.current_rent) {
+      const data: any = {
+        first_name:modal.first_name, last_name:modal.last_name, email:modal.email||null,
+        phone:modal.phone||null, property_id:modal.property_id, room_number:modal.room_number,
+        current_rent:modal.current_rent, due_day:modal.due_day||5, is_active:modal.is_active!==false,
+        move_in_date:modal.move_in_date||null, move_out_date:modal.move_out_date||null,
+        deposit_amount:modal.deposit_amount||null, deposit_received_date:modal.deposit_received_date||null,
+        date_of_birth:modal.date_of_birth||null, place_of_birth:modal.place_of_birth||null,
+        bank_aliases:modal.bank_aliases, notes:modal.notes||null, updated_at:new Date().toISOString()
+      };
+      await supabase.from('tenants').update(data).eq('id', modal.id);
+    }
+    setModal(null); load();
+  };
+
   // Tenant deletion disabled — archive to "ancien" instead
   const archiveTenant = async () => {
     if (!modal?.id) return;
@@ -249,11 +266,11 @@ export default function DashboardLocatairesPage() {
 
       {/* Tenant Modal */}
       {modal && (
-        <div style={{position:'fixed',top:0,left:0,right:0,bottom:0,background:'rgba(0,0,0,0.5)',display:'flex',alignItems:'center',justifyContent:'center',zIndex:1000,overflow:'auto',padding:'20px'}} onClick={()=>setModal(null)}>
+        <div style={{position:'fixed',top:0,left:0,right:0,bottom:0,background:'rgba(0,0,0,0.5)',display:'flex',alignItems:'center',justifyContent:'center',zIndex:1000,overflow:'auto',padding:'20px'}} onClick={closeModal}>
           <div style={{background:'white',borderRadius:'16px',padding:'28px',width:'600px',maxWidth:'95vw',maxHeight:'90vh',overflow:'auto'}} onClick={e=>e.stopPropagation()}>
             <div style={{display:'flex',justifyContent:'space-between',alignItems:'center',marginBottom:'20px'}}>
               <h2 style={{margin:0,fontSize:'20px'}}>{isNew?'Nouveau Locataire':'Fiche Locataire'}</h2>
-              <button onClick={()=>setModal(null)} style={{background:'none',border:'none',fontSize:'24px',cursor:'pointer',color:'#888'}}>×</button>
+              <button onClick={closeModal} style={{background:'none',border:'none',fontSize:'24px',cursor:'pointer',color:'#888'}}>×</button>
             </div>
 
 
@@ -338,7 +355,7 @@ export default function DashboardLocatairesPage() {
                 <div style={{display:'flex',gap:'8px',justifyContent:'space-between'}}>
                   <div>{!isNew && modal.is_active !== false && <button onClick={archiveTenant} style={{padding:'8px 16px',background:'#6b7280',color:'#fff',border:'none',borderRadius:'6px',cursor:'pointer',fontSize:'13px'}}>Passer en ancien</button>}</div>
                   <div style={{display:'flex',gap:'8px'}}>
-                    <button onClick={()=>setModal(null)} style={{padding:'8px 16px',border:'1px solid #ddd',background:'#fff',borderRadius:'6px',cursor:'pointer'}}>Annuler</button>
+                    <button onClick={closeModal} style={{padding:'8px 16px',border:'1px solid #ddd',background:'#fff',borderRadius:'6px',cursor:'pointer'}}>Fermer</button>
                     <button onClick={saveModal} disabled={saving} style={{padding:'8px 16px',background:'#b8860b',color:'#fff',border:'none',borderRadius:'6px',cursor:'pointer',fontWeight:600}}>{saving?'...':'Enregistrer'}</button>
                   </div>
                 </div>
