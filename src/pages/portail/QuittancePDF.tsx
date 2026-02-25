@@ -3,6 +3,7 @@ import {
   Page,
   Text,
   View,
+  Image,
   StyleSheet,
 } from "@react-pdf/renderer";
 
@@ -17,6 +18,7 @@ interface QuittanceData {
   property_name: string;
   property_address: string;
   room_number: string;
+  is_coliving: boolean;
   // Paiement
   month_label: string;      // "Février 2026"
   period_start: string;     // "01/02/2026"
@@ -31,7 +33,9 @@ interface QuittanceData {
 
 const S = StyleSheet.create({
   page: { padding: 50, fontFamily: "Helvetica", fontSize: 10, color: "#1a1a1a" },
-  header: { marginBottom: 30, borderBottom: "2 solid #b8860b", paddingBottom: 15 },
+  header: { flexDirection: "row", alignItems: "center", marginBottom: 30, borderBottom: "2 solid #b8860b", paddingBottom: 15 },
+  logo: { width: 60, height: 60, marginRight: 15 },
+  headerText: { flex: 1 },
   title: { fontSize: 20, fontFamily: "Helvetica-Bold", color: "#b8860b", marginBottom: 4 },
   subtitle: { fontSize: 11, color: "#666" },
   grid: { flexDirection: "row", justifyContent: "space-between", marginBottom: 25 },
@@ -56,23 +60,33 @@ const S = StyleSheet.create({
 });
 
 function fmt(n: number): string {
-  return n.toLocaleString("fr-FR", { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + " \u20ac";
+  const fixed = n.toFixed(2);
+  const [intPart, decPart] = fixed.split(".");
+  const formatted = intPart.replace(/\B(?=(\d{3})+(?!\d))/g, " ");
+  return formatted + "," + decPart + " \u20AC";
 }
 
 export function QuittancePDF({ data }: { data: QuittanceData }) {
+  const logement = data.is_coliving
+    ? data.property_name + " \u2014 Chambre " + data.room_number
+    : data.property_name;
+
   return (
     <Document>
       <Page size="A4" style={S.page}>
-        {/* Header */}
+        {/* Header with logo */}
         <View style={S.header}>
-          <Text style={S.title}>Quittance de Loyer</Text>
-          <Text style={S.subtitle}>La Villa Coliving</Text>
+          <Image style={S.logo} src="/logos/NEW Logo La Villa-14.png" />
+          <View style={S.headerText}>
+            <Text style={S.title}>Quittance de Loyer</Text>
+            <Text style={S.subtitle}>La Villa Coliving</Text>
+          </View>
         </View>
 
         {/* Period */}
         <View style={S.period}>
           <Text style={S.periodText}>
-            P\u00e9riode : {data.month_label} (du {data.period_start} au {data.period_end})
+            {"P\u00E9riode : " + data.month_label + " (du " + data.period_start + " au " + data.period_end + ")"}
           </Text>
         </View>
 
@@ -82,48 +96,48 @@ export function QuittancePDF({ data }: { data: QuittanceData }) {
             <Text style={S.label}>Bailleur</Text>
             <Text style={S.valueBold}>{data.bailleur_name}</Text>
             <Text style={S.value}>{data.bailleur_address}</Text>
-            {data.bailleur_siret ? <Text style={S.value}>SIRET : {data.bailleur_siret}</Text> : null}
+            {data.bailleur_siret ? <Text style={S.value}>{"SIRET : " + data.bailleur_siret}</Text> : null}
           </View>
           <View style={S.col}>
             <Text style={S.label}>Locataire</Text>
             <Text style={S.valueBold}>{data.locataire_name}</Text>
-            <Text style={S.value}>{data.property_name} \u2014 Chambre {data.room_number}</Text>
+            <Text style={S.value}>{logement}</Text>
             <Text style={S.value}>{data.property_address}</Text>
           </View>
         </View>
 
-        {/* D\u00e9tail du paiement */}
+        {/* Detail du paiement */}
         <View style={S.section}>
-          <Text style={S.sectionTitle}>D\u00e9tail du paiement</Text>
+          <Text style={S.sectionTitle}>{"D\u00E9tail du paiement"}</Text>
           <View style={S.row}>
             <Text style={S.rowLabel}>Loyer nu</Text>
             <Text style={S.rowValue}>{fmt(data.loyer_nu)}</Text>
           </View>
           <View style={S.row}>
-            <Text style={S.rowLabel}>Charges forfaitaires (provision)</Text>
+            <Text style={S.rowLabel}>Charges forfaitaires</Text>
             <Text style={S.rowValue}>{fmt(data.charges)}</Text>
           </View>
           <View style={S.totalRow}>
-            <Text style={S.totalLabel}>Total re\u00e7u</Text>
+            <Text style={S.totalLabel}>{"Total re\u00E7u"}</Text>
             <Text style={S.totalValue}>{fmt(data.total)}</Text>
           </View>
         </View>
 
         {/* Payment date */}
         <View style={{ marginBottom: 10 }}>
-          <Text style={S.value}>Date de paiement : {data.payment_date}</Text>
+          <Text style={S.value}>{"Date de paiement : " + data.payment_date}</Text>
         </View>
 
         {/* Attestation */}
         <View style={S.attestation}>
           <Text style={S.attestText}>
-            Je soussign\u00e9(e), repr\u00e9sentant(e) de {data.bailleur_name}, reconnais avoir re\u00e7u de {data.locataire_name} la somme de {fmt(data.total)} au titre du loyer et des charges forfaitaires pour la p\u00e9riode du {data.period_start} au {data.period_end}, pour le logement situ\u00e9 :\n{data.property_address}, Chambre {data.room_number}.
+            {"Je soussign\u00E9(e), repr\u00E9sentant(e) de " + data.bailleur_name + ", reconnais avoir re\u00E7u de " + data.locataire_name + " la somme de " + fmt(data.total) + " au titre du loyer et des charges forfaitaires pour la p\u00E9riode du " + data.period_start + " au " + data.period_end + ", pour le logement situ\u00E9 : " + data.property_address + ", " + logement + "."}
           </Text>
           <Text style={[S.attestText, { marginTop: 10 }]}>
-            Cette quittance annule tous les re\u00e7us qui auraient pu \u00eatre \u00e9tablis pr\u00e9c\u00e9demment en cas de paiement partiel du montant ci-dessus. Elle ne pr\u00e9juge pas des sommes restant dues au titre de loyers pr\u00e9c\u00e9dents impay\u00e9s.
+            {"Cette quittance annule tous les re\u00E7us qui auraient pu \u00EAtre \u00E9tablis pr\u00E9c\u00E9demment en cas de paiement partiel du montant ci-dessus. Elle ne pr\u00E9juge pas des sommes restant dues au titre de loyers pr\u00E9c\u00E9dents impay\u00E9s."}
           </Text>
           <Text style={[S.attestText, { marginTop: 15, fontFamily: "Helvetica-Bold" }]}>
-            Fait \u00e0 Annemasse, le {data.generated_date}
+            {"Fait \u00E0 Annemasse, le " + data.generated_date}
           </Text>
           <Text style={[S.attestText, { marginTop: 8 }]}>
             {data.bailleur_name}
@@ -133,10 +147,10 @@ export function QuittancePDF({ data }: { data: QuittanceData }) {
         {/* Footer */}
         <View style={S.footer}>
           <Text style={S.footerText}>
-            Document g\u00e9n\u00e9r\u00e9 automatiquement par La Villa Coliving \u2014 {data.bailleur_name} \u2014 SIRET {data.bailleur_siret}
+            {"Document g\u00E9n\u00E9r\u00E9 automatiquement par La Villa Coliving \u2014 " + data.bailleur_name + (data.bailleur_siret ? " \u2014 SIRET " + data.bailleur_siret : "")}
           </Text>
           <Text style={S.footerText}>
-            Conform\u00e9ment \u00e0 la loi n\u00b089-462 du 6 juillet 1989 (art. 21)
+            {"Conform\u00E9ment \u00E0 la loi n\u00B089-462 du 6 juillet 1989 (art. 21)"}
           </Text>
         </View>
       </Page>

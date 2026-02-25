@@ -92,14 +92,22 @@ export function MonBailPage() {
       const chargesEUR = totalChargesCHF > 0 ? Math.round(totalChargesCHF * 0.95 * 100) / 100 : 0;
       const loyerNu = Math.max(0, payment.received_amount - chargesEUR);
 
+      // Bailleur = "La Villa Coliving" pour toutes les propriétés
+      // Pour Sleep In SCI (Le Loft, Le Lodge), on ajoute "Sleep In SCI —" devant l'adresse
+      const isSleepIn = tenant.legal_entity_name?.toLowerCase().includes('sleep in');
+      const bailleurAddress = isSleepIn
+        ? 'Sleep In SCI — ' + (tenant.siege_social || tenant.property_address)
+        : (tenant.siege_social || tenant.property_address);
+
       const data = {
-        bailleur_name: tenant.legal_entity_name || 'La Villa Coliving',
-        bailleur_address: tenant.siege_social || tenant.property_address,
+        bailleur_name: 'La Villa Coliving',
+        bailleur_address: bailleurAddress,
         bailleur_siret: tenant.siret || '',
         locataire_name: `${tenant.first_name} ${tenant.last_name}`,
         property_name: tenant.property_name,
         property_address: tenant.property_address,
         room_number: String(tenant.room_number),
+        is_coliving: tenant.is_coliving,
         month_label: monthLabel,
         period_start: `${pad(1)}/${pad(monthIdx + 1)}/${year}`,
         period_end: `${pad(lastDay)}/${pad(monthIdx + 1)}/${year}`,

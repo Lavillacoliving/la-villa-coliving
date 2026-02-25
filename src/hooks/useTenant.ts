@@ -29,6 +29,7 @@ export interface TenantInfo {
   charges_energy_chf: number;
   charges_maintenance_chf: number;
   charges_services_chf: number;
+  is_coliving: boolean;
 }
 
 export function useTenant() {
@@ -55,7 +56,7 @@ export function useTenant() {
             current_rent, move_in_date, move_out_date, deposit_amount, due_day,
             bail_end, preavis_status, preavis_date, bio, is_visible_annuaire,
             property_id,
-            properties!inner(name, address, city, legal_entity_name, siege_social, siret, charges_energy_chf, charges_maintenance_chf, charges_services_chf)
+            properties!inner(name, address, city, legal_entity_name, siege_social, siret, charges_energy_chf, charges_maintenance_chf, charges_services_chf, is_coliving)
           `)
           .eq('user_id', user.id)
           .eq('is_active', true)
@@ -72,7 +73,7 @@ export function useTenant() {
             current_rent, move_in_date, move_out_date, deposit_amount, due_day,
             bail_end, preavis_status, preavis_date, bio, is_visible_annuaire,
             property_id,
-            properties!inner(name, address, city, legal_entity_name, siege_social, siret, charges_energy_chf, charges_maintenance_chf, charges_services_chf)
+            properties!inner(name, address, city, legal_entity_name, siege_social, siret, charges_energy_chf, charges_maintenance_chf, charges_services_chf, is_coliving)
           `)
           .eq('email', user.email)
           .eq('is_active', true)
@@ -102,6 +103,7 @@ export function useTenant() {
           charges_energy_chf: prop?.charges_energy_chf || 0,
           charges_maintenance_chf: prop?.charges_maintenance_chf || 0,
           charges_services_chf: prop?.charges_services_chf || 0,
+          is_coliving: prop?.is_coliving ?? true,
         } as TenantInfo);
       }
       setLoading(false);
