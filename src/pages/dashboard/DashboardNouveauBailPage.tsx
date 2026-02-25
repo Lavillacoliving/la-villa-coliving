@@ -681,7 +681,19 @@ export default function DashboardNouveauBailPage() {
 
     const propRooms = rooms.filter((r) => r.property_id === pid);
     setFilteredRooms(propRooms);
-    setSelectedRoom(null);
+
+    // Auto-select room for non-coliving properties (apartments with single room)
+    if (prop && !prop.is_coliving && propRooms.length === 1) {
+      const autoRoom = propRooms[0];
+      setSelectedRoom(autoRoom);
+      setForm((prev) => ({
+        ...prev,
+        room_id: autoRoom.id,
+        loyer_chf: autoRoom.rent_chf,
+      }));
+    } else {
+      setSelectedRoom(null);
+    }
   };
 
   // Handle room change
@@ -887,7 +899,7 @@ export default function DashboardNouveauBailPage() {
   };
 
   const handleSaveBail = async () => {
-    if (!selectedRoom || !selectedProperty) { toast.warning('Sélectionnez une propriété et une chambre'); return; }
+    if (!selectedRoom || !selectedProperty) { toast.warning(selectedProperty?.is_coliving === false ? 'Sélectionnez une propriété' : 'Sélectionnez une propriété et une chambre'); return; }
     if (!form.locataire_nom || !form.locataire_prenom || !form.locataire_email || !form.entry_date) {
       toast.warning('Remplissez les champs obligatoires : Nom, Prénom, Email, Date d\'entrée'); return;
     }
@@ -972,6 +984,7 @@ export default function DashboardNouveauBailPage() {
 
         {selectedProperty && (
           <>
+            {selectedProperty.is_coliving !== false && (
             <div style={{ marginBottom: '25px' }}>
               <label
                 style={{
@@ -1002,6 +1015,7 @@ export default function DashboardNouveauBailPage() {
                 ))}
               </select>
             </div>
+            )}
 
             {selectedRoom && (
               <>
