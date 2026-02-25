@@ -87,10 +87,14 @@ export default function DashboardLocatairesPage() {
     const errors: string[] = [];
     for (let i = 0; i < files.length; i++) {
       const file = files[i];
-      // Sanitize filename: remove accents, replace spaces with underscores
-      const safeName = file.name.normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/\s+/g, '_');
-      const fp = 'tenants/' + modal.id + '/' + safeName;
-      const { error } = await supabase.storage.from('operations').upload(fp, file, { upsert: true });
+      // Sanitize filename: remove accents & special chars, add timestamp for uniqueness
+      const dotIdx = file.name.lastIndexOf('.');
+      const ext = dotIdx > 0 ? file.name.slice(dotIdx) : '';
+      const baseName = dotIdx > 0 ? file.name.slice(0, dotIdx) : file.name;
+      const safeName = baseName.normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[^a-zA-Z0-9_-]/g, '_').replace(/_+/g, '_').replace(/^_|_$/g, '');
+      const ts = Date.now() + '_' + i;
+      const fp = 'tenants/' + modal.id + '/' + safeName + '_' + ts + ext;
+      const { error } = await supabase.storage.from('operations').upload(fp, file);
       if (error) { fail++; errors.push(`${file.name}: ${error.message}`); console.error('[upload]', fp, error); } else { ok++; }
     }
     setUploadingDoc(false);
@@ -287,11 +291,13 @@ export default function DashboardLocatairesPage() {
                       const ext = doc.name.split('.').pop()?.toLowerCase() || '';
                       const icon: Record<string,string> = {pdf:'📄',jpg:'📷',jpeg:'📷',png:'📷',docx:'📝',xlsx:'📊'};
                       const sz = doc.metadata?.size ? (doc.metadata.size < 1048576 ? (doc.metadata.size/1024).toFixed(1)+' KB' : (doc.metadata.size/1048576).toFixed(1)+' MB') : '';
+                      // Display clean name: strip timestamp suffix (_1740000000000_0) before extension
+                      const displayName = doc.name.replace(/_\d{13,}_\d+(\.[^.]+)$/, '$1').replace(/_/g, ' ');
                       return (
                         <div key={doc.name} style={{display:'flex',alignItems:'center',gap:'10px',padding:'10px 12px',background:'#f9f9f9',borderRadius:'8px'}}>
                           <span style={{fontSize:'20px'}}>{icon[ext]||'📄'}</span>
                           <div style={{flex:1,minWidth:0}}>
-                            <div style={{fontWeight:500,fontSize:'14px',overflow:'hidden',textOverflow:'ellipsis',whiteSpace:'nowrap'}}>{doc.name}</div>
+                            <div style={{fontWeight:500,fontSize:'14px',overflow:'hidden',textOverflow:'ellipsis',whiteSpace:'nowrap'}}>{displayName}</div>
                             <div style={{color:'#888',fontSize:'12px'}}>{sz}{doc.updated_at ? ' — '+new Date(doc.updated_at).toLocaleDateString('fr-FR') : ''}</div>
                           </div>
                           <button onClick={()=>downloadTenantDoc(doc.name)} style={{background:'none',border:'none',cursor:'pointer',fontSize:'16px'}} title="Télécharger">⬇️</button>
