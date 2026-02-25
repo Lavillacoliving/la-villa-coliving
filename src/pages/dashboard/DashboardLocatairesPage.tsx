@@ -145,7 +145,7 @@ export default function DashboardLocatairesPage() {
     const today = new Date().toISOString().split('T')[0];
     const { error } = await supabase.from('tenants').update({ is_active: false, move_out_date: modal.move_out_date || today }).eq('id', modal.id);
     if (error) { toast.error('Erreur: ' + error.message); return; }
-    await logAudit({ action: 'tenant_deactivated', entity_type: 'tenant', entity_id: modal.id, details: { name: `${modal.first_name} ${modal.last_name}`, move_out_date: modal.move_out_date || today } });
+    await logAudit('tenant_deactivated', 'tenant', modal.id, { name: `${modal.first_name} ${modal.last_name}`, move_out_date: modal.move_out_date || today });
     toast.success(`${modal.first_name} ${modal.last_name} archivé(e)`);
     setModal(null); load();
   };
