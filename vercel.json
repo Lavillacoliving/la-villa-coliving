@@ -77,6 +77,10 @@
       "destination": "/prerendered/en-faq.html"
     },
     {
+      "source": "/en/candidature",
+      "destination": "/prerendered/en-candidature.html"
+    },
+    {
       "source": "/en/blog",
       "destination": "/prerendered/en-blog.html"
     },
