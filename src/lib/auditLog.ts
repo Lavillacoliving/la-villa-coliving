@@ -28,7 +28,7 @@ export type AuditAction =
   | 'file_uploaded' | 'file_deleted'
   | 'invoice_linked' | 'invoice_unlinked'
   | 'transaction_classified' | 'transaction_flagged'
-  | 'deposit_returned' | 'split_group_created';
+  | 'deposit_returned' | 'deposit_adjusted' | 'split_group_created';
 
 export type AuditEntityType =
   | 'tenant' | 'prospect' | 'payment' | 'maintenance_ticket'

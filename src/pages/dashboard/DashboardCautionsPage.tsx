@@ -31,7 +31,7 @@ interface Property {
   entity_id: string;
 }
 
-type DepositStatus = 'detenue' | 'a_restituer' | 'restituee' | 'partielle';
+type DepositStatus = 'en_attente' | 'detenue' | 'a_restituer' | 'restituee' | 'partielle';
 
 interface DepositRow extends Tenant {
   deposit_status: DepositStatus;
@@ -50,14 +50,21 @@ function fmtDate(d: string | null) {
 }
 
 function computeStatus(t: Tenant): DepositStatus {
-  if (!t.deposit_amount || t.deposit_amount <= 0) return 'detenue'; // shouldn't happen
+  if (!t.deposit_amount || t.deposit_amount <= 0) return 'en_attente';
+  // Caution restituée en totalité
   if (t.deposit_refunded_date && t.deposit_refunded_amount && t.deposit_refunded_amount >= t.deposit_amount) return 'restituee';
+  // Caution partiellement restituée
   if (t.deposit_refunded_amount && t.deposit_refunded_amount > 0 && t.deposit_refunded_amount < t.deposit_amount) return 'partielle';
+  // Locataire parti → caution à restituer
   if (!t.is_active && t.move_out_date && new Date(t.move_out_date) <= new Date()) return 'a_restituer';
+  // Montant renseigné mais pas encore reçue (pas de date réception)
+  if (!t.deposit_received_date) return 'en_attente';
+  // Caution reçue et détenue
   return 'detenue';
 }
 
 const STATUS_CONFIG: Record<DepositStatus, { label: string; color: string; bg: string; emoji: string }> = {
+  en_attente: { label: 'En attente', color: '#9ca3af', bg: '#f9fafb', emoji: '⏳' },
   detenue: { label: 'Détenue', color: '#16a34a', bg: '#f0fdf4', emoji: '🟢' },
   a_restituer: { label: 'À restituer', color: '#d97706', bg: '#fffbeb', emoji: '🟠' },
   restituee: { label: 'Restituée', color: '#3b82f6', bg: '#eff6ff', emoji: '🔵' },
@@ -76,12 +83,18 @@ export default function DashboardCautionsPage() {
   const [statusFilter, setStatusFilter] = useState('all');
   const [search, setSearch] = useState('');
 
-  // Modal
+  // Refund Modal
   const [editRow, setEditRow] = useState<DepositRow | null>(null);
   const [refundAmount, setRefundAmount] = useState('');
   const [refundDate, setRefundDate] = useState('');
   const [refundNotes, setRefundNotes] = useState('');
   const [saving, setSaving] = useState(false);
+
+  // Adjust Modal (edit deposit amount + received date)
+  const [adjustRow, setAdjustRow] = useState<DepositRow | null>(null);
+  const [adjustAmount, setAdjustAmount] = useState('');
+  const [adjustReceivedDate, setAdjustReceivedDate] = useState('');
+  const [adjustNotes, setAdjustNotes] = useState('');
 
   // ─── Load data ──────────────────────────────────────
   const load = useCallback(async () => {
@@ -125,9 +138,11 @@ export default function DashboardCautionsPage() {
   }
 
   // ─── KPIs ─────────────────────────────────────────────
+  const enAttente = filtered.filter(r => r.deposit_status === 'en_attente');
   const detenues = filtered.filter(r => r.deposit_status === 'detenue');
   const aRestituer = filtered.filter(r => r.deposit_status === 'a_restituer');
   const restituees = filtered.filter(r => r.deposit_status === 'restituee' || r.deposit_status === 'partielle');
+  const totalEnAttente = enAttente.reduce((s, r) => s + (r.deposit_amount || 0), 0);
   const totalDetenu = detenues.reduce((s, r) => s + (r.deposit_amount || 0), 0);
   const totalARestituer = aRestituer.reduce((s, r) => s + (r.deposit_amount || 0), 0);
 
@@ -144,6 +159,48 @@ export default function DashboardCautionsPage() {
     setRefundAmount(String(row.deposit_amount || 0));
     setRefundDate(new Date().toISOString().slice(0, 10));
     setRefundNotes('');
+  };
+
+  // ─── Open adjust modal ──────────────────────────────────
+  const openAdjust = (row: DepositRow) => {
+    setAdjustRow(row);
+    setAdjustAmount(String(row.deposit_amount || ''));
+    setAdjustReceivedDate(row.deposit_received_date || '');
+    setAdjustNotes('');
+  };
+
+  // ─── Process adjust ────────────────────────────────────
+  const processAdjust = async () => {
+    if (!adjustRow) return;
+    const amount = parseFloat(adjustAmount);
+    if (isNaN(amount) || amount <= 0) { toast.error('Montant invalide'); return; }
+
+    setSaving(true);
+    const updateData: any = {
+      deposit_amount: amount,
+      deposit_received_date: adjustReceivedDate || null,
+    };
+
+    const { error } = await supabase.from('tenants').update(updateData).eq('id', adjustRow.id);
+
+    if (error) {
+      toast.error('Erreur: ' + error.message);
+      setSaving(false);
+      return;
+    }
+
+    await logAudit('deposit_adjusted', 'tenant', adjustRow.id, {
+      old_amount: adjustRow.deposit_amount,
+      new_amount: amount,
+      old_received_date: adjustRow.deposit_received_date,
+      new_received_date: adjustReceivedDate || null,
+      notes: adjustNotes,
+    });
+
+    toast.success('Caution mise à jour');
+    setAdjustRow(null);
+    setSaving(false);
+    load();
   };
 
   // ─── Process return ───────────────────────────────────
@@ -206,6 +263,7 @@ export default function DashboardCautionsPage() {
       const propRows = rows.filter(r => r.property_id === p.id);
       return {
         'Propriété': p.name,
+        'En attente': propRows.filter(r => r.deposit_status === 'en_attente').length,
         'Cautions détenues': propRows.filter(r => r.deposit_status === 'detenue').length,
         'Montant détenu': propRows.filter(r => r.deposit_status === 'detenue').reduce((s, r) => s + (r.deposit_amount || 0), 0),
         'À restituer': propRows.filter(r => r.deposit_status === 'a_restituer').length,
@@ -259,7 +317,14 @@ export default function DashboardCautionsPage() {
       )}
 
       {/* ─── KPI Cards ─── */}
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit,minmax(180px,1fr))', gap: '16px', marginBottom: '24px' }}>
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit,minmax(160px,1fr))', gap: '16px', marginBottom: '24px' }}>
+        {enAttente.length > 0 && (
+          <div style={S.card}>
+            <p style={S.label}>En attente</p>
+            <p style={{ ...S.val, color: '#9ca3af' }}>{enAttente.length}</p>
+            <p style={S.sub}>{fmt(totalEnAttente)}</p>
+          </div>
+        )}
         <div style={S.card}>
           <p style={S.label}>Cautions détenues</p>
           <p style={{ ...S.val, color: '#16a34a' }}>{detenues.length}</p>
@@ -285,6 +350,7 @@ export default function DashboardCautionsPage() {
       <div style={{ display: 'flex', gap: '8px', marginBottom: '16px', flexWrap: 'wrap', alignItems: 'center' }}>
         {[
           { v: 'all', l: `Toutes (${rows.length})` },
+          { v: 'en_attente', l: `En attente (${rows.filter(r => r.deposit_status === 'en_attente').length})` },
           { v: 'detenue', l: `Détenues (${rows.filter(r => r.deposit_status === 'detenue').length})` },
           { v: 'a_restituer', l: `À restituer (${rows.filter(r => r.deposit_status === 'a_restituer').length})` },
           { v: 'restituee', l: `Restituées (${rows.filter(r => r.deposit_status === 'restituee').length})` },
@@ -335,12 +401,19 @@ export default function DashboardCautionsPage() {
                       <span>{fmt(row.deposit_refunded_amount || 0)} le {fmtDate(row.deposit_refunded_date)}</span>
                     ) : '—'}
                   </td>
-                  <td style={{ padding: '8px 12px' }}>
-                    {(row.deposit_status === 'detenue' || row.deposit_status === 'a_restituer') && (
-                      <button onClick={() => openReturn(row)} style={{ background: '#f5f5f5', border: '1px solid #e5e7eb', borderRadius: '6px', padding: '4px 10px', cursor: 'pointer', fontSize: '12px' }}>
-                        Restituer
-                      </button>
-                    )}
+                  <td style={{ padding: '8px 12px', whiteSpace: 'nowrap' }}>
+                    <div style={{ display: 'flex', gap: '4px' }}>
+                      {(row.deposit_status === 'en_attente' || row.deposit_status === 'detenue') && (
+                        <button onClick={() => openAdjust(row)} style={{ background: '#f5f5f5', border: '1px solid #e5e7eb', borderRadius: '6px', padding: '4px 10px', cursor: 'pointer', fontSize: '12px' }}>
+                          Ajuster
+                        </button>
+                      )}
+                      {(row.deposit_status === 'detenue' || row.deposit_status === 'a_restituer') && (
+                        <button onClick={() => openReturn(row)} style={{ background: '#f5f5f5', border: '1px solid #e5e7eb', borderRadius: '6px', padding: '4px 10px', cursor: 'pointer', fontSize: '12px' }}>
+                          Restituer
+                        </button>
+                      )}
+                    </div>
                   </td>
                 </tr>
               );
@@ -383,6 +456,44 @@ export default function DashboardCautionsPage() {
 
             <button onClick={processReturn} disabled={saving} style={{ ...S.goldBtn, width: '100%', padding: '12px', opacity: saving ? 0.6 : 1 }}>
               {saving ? 'Enregistrement...' : 'Confirmer la restitution'}
+            </button>
+          </div>
+        </div>
+      )}
+
+      {/* ─── Adjust Modal ─── */}
+      {adjustRow && (
+        <div style={S.modal} onClick={() => setAdjustRow(null)}>
+          <div style={S.modalContent} onClick={e => e.stopPropagation()}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
+              <h3 style={{ margin: 0, fontSize: '18px', color: '#1a1a2e' }}>Ajuster la caution</h3>
+              <button onClick={() => setAdjustRow(null)} style={{ background: 'none', border: 'none', fontSize: '24px', cursor: 'pointer', color: '#888' }}>×</button>
+            </div>
+
+            <div style={{ background: '#f8f8f8', borderRadius: '8px', padding: '12px 16px', marginBottom: '20px', fontSize: '14px' }}>
+              <div><strong>{adjustRow.first_name} {adjustRow.last_name}</strong> — {adjustRow.property_name} (CH{adjustRow.room_number})</div>
+              <div style={{ color: '#888', fontSize: '13px' }}>
+                Statut actuel : {STATUS_CONFIG[adjustRow.deposit_status].emoji} {STATUS_CONFIG[adjustRow.deposit_status].label}
+                {adjustRow.deposit_amount ? ` — ${fmt(adjustRow.deposit_amount)}` : ''}
+              </div>
+            </div>
+
+            <label style={{ fontSize: '13px', fontWeight: 600, color: '#555', marginBottom: '4px', display: 'block' }}>Montant caution (€)</label>
+            <input type="number" step="0.01" value={adjustAmount} onChange={e => setAdjustAmount(e.target.value)} style={S.input} />
+
+            <label style={{ fontSize: '13px', fontWeight: 600, color: '#555', marginBottom: '4px', display: 'block' }}>Date de réception</label>
+            <input type="date" value={adjustReceivedDate} onChange={e => setAdjustReceivedDate(e.target.value)} style={S.input} />
+            {!adjustReceivedDate && (
+              <p style={{ fontSize: '12px', color: '#9ca3af', marginTop: '-8px', marginBottom: '12px' }}>
+                Laissez vide si la caution n'a pas encore été reçue
+              </p>
+            )}
+
+            <label style={{ fontSize: '13px', fontWeight: 600, color: '#555', marginBottom: '4px', display: 'block' }}>Notes (optionnel)</label>
+            <textarea value={adjustNotes} onChange={e => setAdjustNotes(e.target.value)} rows={2} placeholder="Ex: Caution reçue par virement le..." style={{ ...S.input, resize: 'vertical' as const }} />
+
+            <button onClick={processAdjust} disabled={saving} style={{ ...S.goldBtn, width: '100%', padding: '12px', opacity: saving ? 0.6 : 1 }}>
+              {saving ? 'Enregistrement...' : 'Enregistrer les modifications'}
             </button>
           </div>
         </div>

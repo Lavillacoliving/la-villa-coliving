@@ -84,15 +84,18 @@ export default function DashboardLocatairesPage() {
     if (!files || !modal?.id) return;
     setUploadingDoc(true);
     let ok = 0, fail = 0;
+    const errors: string[] = [];
     for (let i = 0; i < files.length; i++) {
       const file = files[i];
-      const fp = 'tenants/' + modal.id + '/' + file.name;
+      // Sanitize filename: remove accents, replace spaces with underscores
+      const safeName = file.name.normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/\s+/g, '_');
+      const fp = 'tenants/' + modal.id + '/' + safeName;
       const { error } = await supabase.storage.from('operations').upload(fp, file, { upsert: true });
-      if (error) { fail++; } else { ok++; }
+      if (error) { fail++; errors.push(`${file.name}: ${error.message}`); console.error('[upload]', fp, error); } else { ok++; }
     }
     setUploadingDoc(false);
     if (ok > 0) toast.success(ok + ' document(s) ajouté(s)');
-    if (fail > 0) toast.error(fail + ' erreur(s) upload');
+    if (fail > 0) toast.error(errors.join(' | ') || fail + ' erreur(s) upload');
     if (modal.id) loadTenantDocs(modal.id);
   };
 
