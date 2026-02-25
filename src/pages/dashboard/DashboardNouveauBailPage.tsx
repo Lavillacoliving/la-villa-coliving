@@ -411,18 +411,9 @@ function generateContractHTML(data: ContractData): string {
             <li><strong>En CHF :</strong> ${fCHF(form.loyer_chf)} (taux BCE du ${form.exchange_rate_date} : ${form.exchange_rate})</li>
             <li><strong>En EUR :</strong> ${fEUR(loyer_eur)}</li>
           </ul>
-          ${(() => {
-            const pd = data.prorata_days;
-            const pt = data.prorata_total_days;
-            if (!pd || !pt || pd >= pt) {
-              return '<p><em>Entrée le 1er du mois — pas de prorata.</em></p>';
-            }
-            return \`<p><strong>Prorata du premier mois :</strong> Du \${fDate(form.entry_date)} au dernier jour du mois (\${pd}/\${pt} jours) :</p>
-            <ul>
-              <li><strong>En EUR :</strong> \${fEUR(data.prorata_eur)}</li>
-              <li><strong>En CHF :</strong> \${fCHF(data.prorata_chf)}</li>
-            </ul>\`;
-          })()}
+          ${(!data.prorata_days || !data.prorata_total_days || data.prorata_days >= data.prorata_total_days)
+            ? '<p><em>Entrée le 1er du mois — pas de prorata.</em></p>'
+            : '<p><strong>Prorata du premier mois :</strong> Du ' + fDate(form.entry_date) + ' au dernier jour du mois (' + data.prorata_days + '/' + data.prorata_total_days + ' jours) :</p><ul><li><strong>En EUR :</strong> ' + fEUR(data.prorata_eur) + '</li><li><strong>En CHF :</strong> ' + fCHF(data.prorata_chf) + '</li></ul>'}
           <h3>Charges forfaitaires mensuelles :</h3>
           ${chargesTable}
           <h3>Frais de dossier :</h3>
