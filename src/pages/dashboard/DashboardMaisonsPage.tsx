@@ -309,20 +309,6 @@ export default function DashboardMaisonsPage() {
                 <>
                   <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '16px' }}>
                     <h2 style={{ margin: 0, fontSize: '24px', color: '#1a1a2e' }}>{selectedProperty.name}</h2>
-                    <button
-                      onClick={() => {
-                        setEditingProperty(true);
-                        setEditPropertyData({ ...selectedProperty });
-                      }}
-                      style={{
-                        ...S.btn,
-                        background: '#b8860b',
-                        color: '#fff',
-                        fontWeight: 600,
-                      }}
-                    >
-                      ✎ Éditer
-                    </button>
                   </div>
                   <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
                     <div>
@@ -330,7 +316,7 @@ export default function DashboardMaisonsPage() {
                       <p style={{ margin: 0, fontSize: '14px', color: '#1a1a2e' }}>{selectedProperty.address || '—'}</p>
                     </div>
                     <div>
-                      <p style={S.label}>{selectedProperty.city}</p>
+                      <p style={S.label}>Ville</p>
                       <p style={{ margin: 0, fontSize: '14px', color: '#1a1a2e' }}>{selectedProperty.city || '—'}</p>
                     </div>
                     <div>
@@ -501,17 +487,6 @@ export default function DashboardMaisonsPage() {
             <div>
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '12px' }}>
                 <h3 style={{ margin: 0, fontSize: '14px', fontWeight: 600, color: '#1a1a2e' }}>Chambres ({propertyRooms.length})</h3>
-                <button
-                  onClick={() => openRoomModal()}
-                  style={{
-                    ...S.btn,
-                    background: '#3D4A38',
-                    color: '#fff',
-                    fontWeight: 600,
-                  }}
-                >
-                  + Nouvelle chambre
-                </button>
               </div>
 
               {propertyRooms.length === 0 ? (
@@ -520,6 +495,10 @@ export default function DashboardMaisonsPage() {
                 <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: '12px' }}>
                   {propertyRooms.map(room => {
                     const tenant = getTenantForRoom(room.room_number);
+                    const isOccupied = !!tenant;
+                    const badgeColor = room.status === 'maintenance' ? '#f59e0b' : room.status === 'unavailable' ? '#ef4444' : isOccupied ? '#3b82f6' : '#22c55e';
+                    const badgeLabel = room.status === 'maintenance' ? 'Maintenance' : room.status === 'unavailable' ? 'Non dispo' : isOccupied ? 'Occupée' : 'Libre';
+                    const borderColor = room.status === 'maintenance' ? '#f59e0b' : room.status === 'unavailable' ? '#ef4444' : isOccupied ? '#3b82f6' : '#22c55e';
                     return (
                       <div
                         key={room.id}
@@ -527,7 +506,7 @@ export default function DashboardMaisonsPage() {
                         style={{
                           ...S.card,
                           cursor: 'pointer',
-                          border: `2px solid ${roomStatusColor(room.status)}`,
+                          border: `2px solid ${borderColor}`,
                           transition: 'all 0.2s',
                         }}
                         onMouseOver={e => (e.currentTarget.style.boxShadow = '0 4px 12px rgba(0,0,0,0.15)')}
@@ -537,7 +516,7 @@ export default function DashboardMaisonsPage() {
                           <h4 style={{ margin: 0, fontSize: '16px', fontWeight: 600, color: '#1a1a2e' }}>Ch. {room.room_number}</h4>
                           <span
                             style={{
-                              background: roomStatusColor(room.status),
+                              background: badgeColor,
                               color: '#fff',
                               padding: '2px 8px',
                               borderRadius: '4px',
@@ -546,7 +525,7 @@ export default function DashboardMaisonsPage() {
                               textTransform: 'uppercase',
                             }}
                           >
-                            {room.status === 'active' ? 'Libre' : room.status === 'maintenance' ? 'Maintenance' : 'Non dispo'}
+                            {badgeLabel}
                           </span>
                         </div>
                         {room.name && <p style={{ margin: '0 0 8px', fontSize: '13px', color: '#666', fontStyle: 'italic' }}>"{room.name}"</p>}
