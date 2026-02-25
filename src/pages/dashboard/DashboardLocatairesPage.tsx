@@ -12,7 +12,7 @@ interface Tenant {
   due_day: number|null; date_of_birth: string|null; place_of_birth: string|null;
   bank_aliases: string[]|null; notes: string|null; entity_id: string|null;
 }
-interface Property { id: string; name: string; slug: string; entity_id: string; }
+interface Property { id: string; name: string; slug: string; entity_id: string; is_coliving: boolean; }
 
 function fmt(n: number) { return n.toLocaleString('fr-FR',{minimumFractionDigits:2,maximumFractionDigits:2})+' €'; }
 
