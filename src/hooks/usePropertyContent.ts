@@ -119,6 +119,8 @@ export async function seedPropertyContent(propertyId: string, propertyKey: strin
     emergency: 'AlertTriangle',
     contacts: 'Phone',
     cleaning: 'Sparkles',
+    eco: 'Leaf',
+    departure: 'LogOut',
   };
 
   const titleMap: Record<string, { fr: string; en: string }> = {
@@ -129,6 +131,8 @@ export async function seedPropertyContent(propertyId: string, propertyKey: strin
     emergency: { fr: 'Urgences', en: 'Emergencies' },
     contacts: { fr: 'Contacts essentiels', en: 'Key Contacts' },
     cleaning: { fr: 'Entretien & ménage', en: 'Cleaning Schedule' },
+    eco: { fr: 'Éco-responsabilité', en: 'Eco-Responsibility' },
+    departure: { fr: 'Préparer ton départ', en: 'Preparing Your Departure' },
   };
 
   const rows = frSections.map((fr, idx) => {
