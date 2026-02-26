@@ -92,9 +92,9 @@ export function getRapprochementBadge(status: string): { label: string; color: s
 
 // Entity IDs for direct Supabase queries (from entities table)
 export const ENTITY_IDS: Record<string, string> = {
-  'LMP': 'c882e0ab-c5bb-4e20-8c33-69a282097dde',
-  'SCI': '5ab46544-85e9-4779-a498-e4ef1e0e7e1e',
-  'MB': 'c7feadb6-7f96-4f3e-893a-47b95c35de6c',
+  'LMP': 'c882e0ab-306b-490a-88cb-30578f3715fa',
+  'SCI': '5ab46544-9e4e-43de-9c8f-58721595c0db',
+  'MB': 'c7feadb6-f340-450d-ac67-924e8254eeab',
 };
 
 export const ENTITY_CODE_TO_FILTER: Record<string, string> = {
