@@ -1,8 +1,6 @@
 import { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
 import { supabase } from '@/lib/supabase';
 import { useToast } from '@/components/ui/Toast';
-import { getRapprochementBadge } from '@/lib/entities';
 
 interface Expense {
   transaction_id: string; entity_code: string; entity_name: string;
@@ -21,7 +19,6 @@ const ENTITY_BADGES: Record<string,{bg:string,color:string}> = {
 export default function DashboardDepensesPage() {
   const [expenses, setExpenses] = useState<Expense[]>([]);
   const toast = useToast();
-  const navigate = useNavigate();
   const [month, setMonth] = useState(() => new Date().toISOString().slice(0,7));
   const [entityFilter, setEntityFilter] = useState('all');
   const [search, setSearch] = useState('');
@@ -141,7 +138,7 @@ export default function DashboardDepensesPage() {
       <div style={{...S.card,padding:0,overflow:'auto'}}>
         <table style={{width:'100%',borderCollapse:'collapse',fontSize:'14px'}}>
           <thead><tr style={{background:'#f8f8f8',borderBottom:'2px solid #e5e7eb'}}>
-            {['Date','Libellé','Catégorie','Entité','Rapproch.','Montant'].map(h=>(
+            {['Date','Libellé','Catégorie','Entité','Montant'].map(h=>(
               <th key={h} style={{padding:'12px 16px',textAlign:h==='Montant'?'right':'left',fontWeight:600,color:'#555',fontSize:'12px',textTransform:'uppercase'}}>{h}</th>
             ))}
           </tr></thead>
@@ -154,23 +151,11 @@ export default function DashboardDepensesPage() {
                   <td style={{padding:'10px 16px',fontWeight:500}} title={e.details||e.label_operation}>{e.label_simple}</td>
                   <td style={{padding:'10px 16px'}}><span style={{fontSize:'13px'}}>{e.category}</span></td>
                   <td style={{padding:'10px 16px'}}><span style={{background:badge.bg,color:badge.color,padding:'2px 8px',borderRadius:'4px',fontSize:'12px',fontWeight:500}}>{e.entity_code}</span></td>
-                  <td style={{padding:'10px 16px'}}>{(() => {
-                    const rs = e.rapprochement_status || 'non_rapproche';
-                    const rb = getRapprochementBadge(rs);
-                    return (
-                      <span style={{display:'inline-flex',alignItems:'center',gap:'6px'}}>
-                        <span style={{background:rb.bg,color:rb.color,padding:'2px 8px',borderRadius:'4px',fontSize:'11px',fontWeight:500}}>{rb.label}</span>
-                        {rs === 'non_rapproche' && (
-                          <button onClick={()=>navigate('/dashboard/rapprochement')} style={{background:'none',border:'none',color:'#b8860b',fontSize:'11px',cursor:'pointer',textDecoration:'underline',padding:0}}>→ Rapprocher</button>
-                        )}
-                      </span>
-                    );
-                  })()}</td>
                   <td style={{padding:'10px 16px',textAlign:'right',fontWeight:600,color:'#ef4444'}}>{fmt(e.amount)}</td>
                 </tr>
               );
             })}
-            {filtered.length===0 && <tr><td colSpan={6} style={{padding:'40px',textAlign:'center',color:'#888'}}>Aucune dépense ce mois</td></tr>}
+            {filtered.length===0 && <tr><td colSpan={5} style={{padding:'40px',textAlign:'center',color:'#888'}}>Aucune dépense ce mois</td></tr>}
           </tbody>
         </table>
       </div>

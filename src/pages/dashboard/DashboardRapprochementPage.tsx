@@ -183,7 +183,7 @@ export default function DashboardRapprochementPage() {
   const pctColor = pct >= 90 ? '#16a34a' : pct >= 70 ? '#d97706' : '#dc2626';
   const pctVerified = kpi.total > 0 ? Math.round((kpi.verified / kpi.total) * 100) : 0;
   const pctVerifiedColor = pctVerified === 100 ? '#16a34a' : pctVerified >= 80 ? '#d97706' : '#dc2626';
-  const canExport = pctVerified === 100;
+  const canExport = true; // V6: export toujours disponible (consultation, pas gate)
 
   // ─── Filtered transactions ────────────────────────────
   let filtered = transactions;
@@ -348,11 +348,11 @@ export default function DashboardRapprochementPage() {
             <button key={e.v} onClick={() => setEntityFilter(e.v)} style={{ ...S.btn, background: entityFilter === e.v ? '#3D4A38' : '#e5e7eb', color: entityFilter === e.v ? '#fff' : '#555', fontWeight: entityFilter === e.v ? 600 : 400 }}>{e.l}</button>
           ))}
           <button
-            onClick={() => canExport ? exportExcel() : toast.error(`Export bloqué : ${pctVerified}% vérifié (100% requis)`)}
-            style={{ ...S.goldBtn, opacity: canExport ? 1 : 0.5 }}
-            title={canExport ? 'Exporter pour COGESTRA' : `${kpi.total - kpi.verified} transactions non vérifiées`}
+            onClick={() => exportExcel()}
+            style={{ ...S.goldBtn }}
+            title={`Exporter pour COGESTRA (${pctVerified}% vérifié)`}
           >
-            {canExport ? 'Export Excel COGESTRA' : `Export bloqué (${pctVerified}%)`}
+            Export Excel COGESTRA
           </button>
           {countByStatus('auto') > 0 && (
             <button onClick={() => startBatch('auto')} style={{ ...S.goldBtn, background: '#16a34a' }}>
