@@ -1,6 +1,5 @@
 import { useState, useMemo } from 'react';
 import InvoicePDFViewer from './InvoicePDFViewer';
-import InvoiceUploader from './InvoiceUploader';
 import CreateInvoiceForm from './CreateInvoiceForm';
 
 // ─── Types ──────────────────────────────────────────────
@@ -104,7 +103,7 @@ function computeScore(tx: BankTransaction, inv: Invoice): number {
 // ─── Component ──────────────────────────────────────────
 export default function VerificationTab({
   transaction, linkedInvoice, orphanInvoices, entities,
-  onVerify, onReject, onConfirmMatch, onUnlink, onLinkInvoice, onInvoiceCreated,
+  onVerify, onReject, onUnlink, onLinkInvoice, onInvoiceCreated,
 }: Props) {
   const [searchQuery, setSearchQuery] = useState('');
   const [showAdvanced, setShowAdvanced] = useState(false);

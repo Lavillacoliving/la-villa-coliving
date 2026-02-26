@@ -27,7 +27,7 @@ export type AuditAction =
   | 'irl_applied' | 'prospect_converted'
   | 'file_uploaded' | 'file_deleted'
   | 'invoice_linked' | 'invoice_unlinked'
-  | 'transaction_classified' | 'transaction_flagged'
+  | 'transaction_classified' | 'transaction_flagged' | 'transaction_verified'
   | 'deposit_returned' | 'deposit_adjusted' | 'split_group_created';
 
 export type AuditEntityType =
