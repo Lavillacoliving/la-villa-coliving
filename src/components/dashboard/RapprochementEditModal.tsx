@@ -42,6 +42,7 @@ interface Invoice {
   invoice_date: string;
   file_name: string | null;
   file_path: string | null;
+  storage_path: string | null;
   type_service: string | null;
   product: string | null;
   confidence_score: number | null;
@@ -209,6 +210,61 @@ export default function RapprochementEditModal({
     }
   };
 
+  const verifyTransaction = async (notes?: string) => {
+    setSaving(true);
+    const updates: Record<string, any> = {
+      rapprochement_status: 'verified',
+      verified_by: 'dashboard',
+      verified_at: new Date().toISOString(),
+      updated_by: 'dashboard',
+      updated_at: new Date().toISOString(),
+    };
+    if (notes) updates.rapprochement_notes = notes;
+
+    const { error } = await supabase.from('bank_transactions').update(updates).eq('id', transaction.id);
+    if (error) { toast.error('Erreur: ' + error.message); setSaving(false); return; }
+
+    // Also mark linked invoice as verified
+    if (transaction.matched_invoice_id) {
+      await supabase.from('invoices').update({ rapprochement_status: 'verified' }).eq('id', transaction.matched_invoice_id);
+    }
+
+    await logAudit('transaction_verified', 'bank_transaction', transaction.id, { notes, had_invoice: !!transaction.matched_invoice_id });
+    toast.success('Transaction vérifiée ✓');
+    setSaving(false);
+
+    // Auto-navigate to next in batch
+    if (batchTransactions && currentIndex !== undefined && onNavigate && currentIndex < batchTransactions.length - 1) {
+      onNavigate(currentIndex + 1);
+    } else {
+      onSave();
+    }
+  };
+
+  const rejectMatch = async () => {
+    if (!transaction.matched_invoice_id) return;
+    setSaving(true);
+    // Unlink invoice and reset both to non_rapproche
+    await supabase.from('invoices').update({ bank_transaction_id: null, rapprochement_status: 'non_rapproche' }).eq('id', transaction.matched_invoice_id);
+    await supabase.from('bank_transactions').update({
+      matched_invoice_id: null,
+      rapprochement_status: 'non_rapproche',
+      updated_by: 'dashboard',
+      updated_at: new Date().toISOString(),
+    }).eq('id', transaction.id);
+    await logAudit('invoice_unlinked', 'bank_transaction', transaction.id, { invoice_id: transaction.matched_invoice_id, reason: 'rejected_during_verification' });
+    toast.success('Match rejeté — facture déliée');
+    setLinkedInvoice(null);
+    setSaving(false);
+
+    // Auto-navigate to next in batch
+    if (batchTransactions && currentIndex !== undefined && onNavigate && currentIndex < batchTransactions.length - 1) {
+      onNavigate(currentIndex + 1);
+    } else {
+      onSave();
+    }
+  };
+
   const unlinkInvoice = async () => {
     if (!transaction.matched_invoice_id) return;
     setSaving(true);
@@ -325,7 +381,7 @@ export default function RapprochementEditModal({
           {/* ─── Tabs ─── */}
           <div style={{ display: 'flex', gap: '4px', marginBottom: '20px', borderBottom: '2px solid #e5e7eb', paddingBottom: '4px' }}>
             {([
-              { v: 'verification' as const, l: 'Vérification', dot: ['auto', 'non_rapproche'].includes(transaction.rapprochement_status) },
+              { v: 'verification' as const, l: 'Vérification', dot: transaction.rapprochement_status !== 'verified' },
               { v: 'classify' as const, l: 'Classifier', dot: false },
               { v: 'type' as const, l: 'Typer', dot: false },
               { v: 'flag' as const, l: 'Flagger', dot: false },
@@ -353,6 +409,8 @@ export default function RapprochementEditModal({
                 linkedInvoice={linkedInvoice}
                 orphanInvoices={orphanInvoices}
                 entities={entities}
+                onVerify={verifyTransaction}
+                onReject={rejectMatch}
                 onConfirmMatch={confirmMatch}
                 onUnlink={unlinkInvoice}
                 onLinkInvoice={linkInvoice}

@@ -43,6 +43,7 @@ interface Invoice {
   invoice_date: string;
   file_name: string | null;
   file_path: string | null;
+  storage_path: string | null;
   type_service: string | null;
   product: string | null;
   confidence_score: number | null;
@@ -61,6 +62,7 @@ interface KPI {
   entity_name: string;
   total: number;
   rapprochees: number;
+  verified: number;
   non_rapprochees: number;
   flaggees: number;
   total_debits: number;
@@ -98,7 +100,7 @@ export default function DashboardRapprochementPage() {
   const [editTx, setEditTx] = useState<BankTransaction | null>(null);
 
   // Batch mode
-  const [batchMode, setBatchMode] = useState<'none' | 'auto' | 'non_rapproche'>('none');
+  const [batchMode, setBatchMode] = useState<'none' | 'auto' | 'non_rapproche' | 'unverified'>('none');
   const [batchIndex, setBatchIndex] = useState(0);
 
   // YTD mode
@@ -151,10 +153,11 @@ export default function DashboardRapprochementPage() {
       const ent = entities.find(e => e.id === tx.entity_id);
       const key = tx.entity_id;
       if (!byEntity[key]) {
-        byEntity[key] = { entity_id: key, entity_name: ent?.name || '?', total: 0, rapprochees: 0, non_rapprochees: 0, flaggees: 0, total_debits: 0, total_credits: 0 };
+        byEntity[key] = { entity_id: key, entity_name: ent?.name || '?', total: 0, rapprochees: 0, verified: 0, non_rapprochees: 0, flaggees: 0, total_debits: 0, total_credits: 0 };
       }
       byEntity[key].total++;
-      if (['auto', 'manuel'].includes(tx.rapprochement_status)) byEntity[key].rapprochees++;
+      if (['auto', 'manuel', 'verified'].includes(tx.rapprochement_status)) byEntity[key].rapprochees++;
+      if (tx.rapprochement_status === 'verified') byEntity[key].verified++;
       if (tx.rapprochement_status === 'non_rapproche') byEntity[key].non_rapprochees++;
       if (tx.rapprochement_status === 'flag') byEntity[key].flaggees++;
       byEntity[key].total_debits += tx.debit || 0;
@@ -166,6 +169,7 @@ export default function DashboardRapprochementPage() {
       entity_id: 'all', entity_name: 'Toutes entités',
       total: arr.reduce((s, k) => s + k.total, 0),
       rapprochees: arr.reduce((s, k) => s + k.rapprochees, 0),
+      verified: arr.reduce((s, k) => s + k.verified, 0),
       non_rapprochees: arr.reduce((s, k) => s + k.non_rapprochees, 0),
       flaggees: arr.reduce((s, k) => s + k.flaggees, 0),
       total_debits: arr.reduce((s, k) => s + k.total_debits, 0),
@@ -177,6 +181,9 @@ export default function DashboardRapprochementPage() {
   const { global: kpi, byEntity: kpiByEntity } = computeKPI();
   const pct = kpi.total > 0 ? Math.round((kpi.rapprochees / kpi.total) * 100) : 0;
   const pctColor = pct >= 90 ? '#16a34a' : pct >= 70 ? '#d97706' : '#dc2626';
+  const pctVerified = kpi.total > 0 ? Math.round((kpi.verified / kpi.total) * 100) : 0;
+  const pctVerifiedColor = pctVerified === 100 ? '#16a34a' : pctVerified >= 80 ? '#d97706' : '#dc2626';
+  const canExport = pctVerified === 100;
 
   // ─── Filtered transactions ────────────────────────────
   let filtered = transactions;
@@ -202,16 +209,17 @@ export default function DashboardRapprochementPage() {
   };
 
   // ─── Batch mode helpers ───────────────────────────────
-  const batchList = batchMode === 'auto'
-    ? transactions.filter(tx => tx.rapprochement_status === 'auto')
-    : batchMode === 'non_rapproche'
-    ? transactions.filter(tx => tx.rapprochement_status === 'non_rapproche')
-    : [];
+  const getBatchList = (mode: string) => {
+    if (mode === 'auto') return transactions.filter(tx => tx.rapprochement_status === 'auto');
+    if (mode === 'non_rapproche') return transactions.filter(tx => tx.rapprochement_status === 'non_rapproche');
+    if (mode === 'unverified') return transactions.filter(tx => tx.rapprochement_status !== 'verified');
+    return [];
+  };
 
-  const startBatch = (mode: 'auto' | 'non_rapproche') => {
-    const list = mode === 'auto'
-      ? transactions.filter(tx => tx.rapprochement_status === 'auto')
-      : transactions.filter(tx => tx.rapprochement_status === 'non_rapproche');
+  const batchList = getBatchList(batchMode);
+
+  const startBatch = (mode: 'auto' | 'non_rapproche' | 'unverified') => {
+    const list = getBatchList(mode);
     if (list.length === 0) { toast.error('Aucune transaction à traiter'); return; }
     setBatchMode(mode);
     setBatchIndex(0);
@@ -219,9 +227,7 @@ export default function DashboardRapprochementPage() {
   };
 
   const handleBatchNavigate = (index: number) => {
-    const list = batchMode === 'auto'
-      ? transactions.filter(tx => tx.rapprochement_status === 'auto')
-      : transactions.filter(tx => tx.rapprochement_status === 'non_rapproche');
+    const list = getBatchList(batchMode);
     if (index >= 0 && index < list.length) {
       setBatchIndex(index);
       setEditTx(list[index]);
@@ -341,7 +347,13 @@ export default function DashboardRapprochementPage() {
           {[{ v: 'all', l: 'Toutes' }, { v: 'LMP', l: 'LMP' }, { v: 'SCI', l: 'SCI' }, { v: 'MB', l: 'MB' }].map(e => (
             <button key={e.v} onClick={() => setEntityFilter(e.v)} style={{ ...S.btn, background: entityFilter === e.v ? '#3D4A38' : '#e5e7eb', color: entityFilter === e.v ? '#fff' : '#555', fontWeight: entityFilter === e.v ? 600 : 400 }}>{e.l}</button>
           ))}
-          <button onClick={exportExcel} style={S.goldBtn}>Export Excel COGESTRA</button>
+          <button
+            onClick={() => canExport ? exportExcel() : toast.error(`Export bloqué : ${pctVerified}% vérifié (100% requis)`)}
+            style={{ ...S.goldBtn, opacity: canExport ? 1 : 0.5 }}
+            title={canExport ? 'Exporter pour COGESTRA' : `${kpi.total - kpi.verified} transactions non vérifiées`}
+          >
+            {canExport ? 'Export Excel COGESTRA' : `Export bloqué (${pctVerified}%)`}
+          </button>
           {countByStatus('auto') > 0 && (
             <button onClick={() => startBatch('auto')} style={{ ...S.goldBtn, background: '#16a34a' }}>
               Vérifier les auto ({countByStatus('auto')})
@@ -350,6 +362,11 @@ export default function DashboardRapprochementPage() {
           {countByStatus('non_rapproche') > 0 && (
             <button onClick={() => startBatch('non_rapproche')} style={{ ...S.goldBtn, background: '#dc2626' }}>
               Traiter non-rappr. ({countByStatus('non_rapproche')})
+            </button>
+          )}
+          {kpi.total > 0 && kpi.verified < kpi.total && (
+            <button onClick={() => startBatch('unverified')} style={{ ...S.goldBtn, background: '#7c3aed' }}>
+              Vérifier tout ({kpi.total - kpi.verified})
             </button>
           )}
         </div>
@@ -364,6 +381,14 @@ export default function DashboardRapprochementPage() {
             <div style={{ height: '100%', background: pctColor, borderRadius: '3px', width: pct + '%', transition: 'width 0.3s' }} />
           </div>
           <p style={S.sub}>{pct}% de couverture</p>
+        </div>
+        <div style={S.card}>
+          <p style={S.label}>Vérifié</p>
+          <p style={{ ...S.val, color: pctVerifiedColor }}>{kpi.verified}/{kpi.total}</p>
+          <div style={{ height: '6px', background: '#f0f0f0', borderRadius: '3px', marginTop: '8px' }}>
+            <div style={{ height: '100%', background: pctVerifiedColor, borderRadius: '3px', width: pctVerified + '%', transition: 'width 0.3s' }} />
+          </div>
+          <p style={S.sub}>{pctVerified}% — {canExport ? 'export OK' : 'export bloqué'}</p>
         </div>
         <div style={S.card}>
           <p style={S.label}>Non rapprochées</p>
@@ -422,6 +447,7 @@ export default function DashboardRapprochementPage() {
           { v: 'non_rapproche', l: `Non rapprochées (${countByStatus('non_rapproche')})` },
           { v: 'auto', l: `Auto (${countByStatus('auto')})` },
           { v: 'manuel', l: `Manuel (${countByStatus('manuel')})` },
+          { v: 'verified', l: `Vérifié (${countByStatus('verified')})` },
           { v: 'flag', l: `Flaggées (${countByStatus('flag')})` },
         ].map(s => (
           <button key={s.v} onClick={() => setStatusFilter(s.v)} style={{

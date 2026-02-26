@@ -3,6 +3,7 @@ import { supabase } from '@/lib/supabase';
 import { useToast } from '@/components/ui/Toast';
 import { logAudit } from '@/lib/auditLog';
 import { INVOICE_CATEGORIES } from '@/lib/entities';
+import InvoiceUploader from './InvoiceUploader';
 
 interface BankTransaction {
   id: string;
@@ -15,11 +16,12 @@ interface BankTransaction {
 
 interface Props {
   transaction: BankTransaction;
+  withUpload?: boolean;
   onCreated: (invoiceId: string) => void;
   onCancel: () => void;
 }
 
-export default function CreateInvoiceForm({ transaction, onCreated, onCancel }: Props) {
+export default function CreateInvoiceForm({ transaction, withUpload, onCreated, onCancel }: Props) {
   const toast = useToast();
   const [saving, setSaving] = useState(false);
 
@@ -29,16 +31,22 @@ export default function CreateInvoiceForm({ transaction, onCreated, onCancel }: 
   const [amountTtc, setAmountTtc] = useState(amount.toString());
   const [typeService, setTypeService] = useState('');
   const [product, setProduct] = useState('');
+  const [uploadedPath, setUploadedPath] = useState<string | null>(null);
+  const [uploadedFileName, setUploadedFileName] = useState<string | null>(null);
 
   const handleCreate = async () => {
     if (!supplier || !invoiceDate || !amountTtc || !typeService) {
       toast.error('Remplissez les champs obligatoires');
       return;
     }
+    if (withUpload && !uploadedPath) {
+      toast.error('Veuillez uploader le PDF de la facture');
+      return;
+    }
     setSaving(true);
 
     // INSERT invoice
-    const { data: inv, error } = await supabase.from('invoices').insert({
+    const insertData: Record<string, any> = {
       entity_id: transaction.entity_id,
       supplier,
       invoice_date: invoiceDate,
@@ -47,7 +55,11 @@ export default function CreateInvoiceForm({ transaction, onCreated, onCancel }: 
       product: product || null,
       rapprochement_status: 'manuel',
       bank_transaction_id: transaction.id,
-    }).select().single();
+    };
+    if (uploadedPath) insertData.storage_path = uploadedPath;
+    if (uploadedFileName) insertData.file_name = uploadedFileName;
+
+    const { data: inv, error } = await supabase.from('invoices').insert(insertData).select().single();
 
     if (error || !inv) {
       toast.error('Erreur création facture: ' + (error?.message || 'inconnue'));
@@ -111,6 +123,17 @@ export default function CreateInvoiceForm({ transaction, onCreated, onCancel }: 
 
       <label style={S.label}>Produit / description</label>
       <input value={product} onChange={e => setProduct(e.target.value)} style={S.input} placeholder="Optionnel" />
+
+      {withUpload && (
+        <div style={{ marginBottom: '12px' }}>
+          <label style={S.label}>Fichier PDF *</label>
+          <InvoiceUploader
+            entityId={transaction.entity_id}
+            onUploadSuccess={(path, name) => { setUploadedPath(path); setUploadedFileName(name); }}
+            onError={(msg) => toast.error(msg)}
+          />
+        </div>
+      )}
 
       <button onClick={handleCreate} disabled={saving} style={{ ...S.goldBtn, width: '100%', padding: '12px', opacity: saving ? 0.6 : 1 }}>
         {saving ? 'Création...' : 'Créer et lier la facture'}

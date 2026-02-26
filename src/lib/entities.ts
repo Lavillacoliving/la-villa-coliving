@@ -71,6 +71,7 @@ export const RAPPROCHEMENT_STATUSES = [
   { value: 'auto', label: 'Auto', color: '#16a34a', bg: '#f0fdf4' },
   { value: 'manuel', label: 'Manuel', color: '#2563eb', bg: '#eff6ff' },
   { value: 'flag', label: 'À revoir', color: '#d97706', bg: '#fffbeb' },
+  { value: 'verified', label: 'Vérifié', color: '#7c3aed', bg: '#faf5ff' },
 ] as const;
 
 export const INVOICE_CATEGORIES = [
@@ -89,6 +90,30 @@ export function getTransactionTypeColor(type: string): string {
 export function getRapprochementBadge(status: string): { label: string; color: string; bg: string } {
   return RAPPROCHEMENT_STATUSES.find(s => s.value === status) || { label: status, color: '#888', bg: '#f5f5f5' };
 }
+
+// ==========================================
+// Invoice storage (Supabase Storage bucket)
+// ==========================================
+
+export const INVOICE_STORAGE = {
+  bucket: 'compta',
+  pathPrefix: 'invoices',
+  maxFileSizeMB: 10,
+  allowedMimes: ['application/pdf'] as string[],
+  entityCodes: {
+    'c882e0ab-306b-490a-88cb-30578f3715fa': 'lmp',
+    '5ab46544-9e4e-43de-9c8f-58721595c0db': 'sci',
+    'c7feadb6-f340-450d-ac67-924e8254eeab': 'mb',
+  } as Record<string, string>,
+  /** Build storage path: invoices/{entityCode}/{YYYY-MM}/{timestamp}-{filename} */
+  buildPath(entityId: string, fileName: string): string {
+    const code = this.entityCodes[entityId] || 'unknown';
+    const now = new Date();
+    const ym = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}`;
+    const ts = Date.now();
+    return `${this.pathPrefix}/${code}/${ym}/${ts}-${fileName}`;
+  },
+};
 
 // Entity IDs for direct Supabase queries (from entities table)
 export const ENTITY_IDS: Record<string, string> = {
