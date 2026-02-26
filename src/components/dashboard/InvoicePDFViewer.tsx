@@ -8,19 +8,19 @@ interface Props {
   fileName?: string | null;
 }
 
+/** Drive folder ID for 01-Compta (root of invoice archive) */
+const DRIVE_COMPTA_FOLDER = '1GCa_b5CXK2wpVOBk-6zbsKKJQxRAELsV';
+
 /** Convert a file_path to a clickable Google Drive URL.
- *  file_path might be: a full URL, a Drive file ID, or a path like "folder_id/file_id" */
+ *  file_path formats: full URL, Drive file ID (25-60 chars), or relative path (factures/2026-01/file.pdf) */
 function toDriveUrl(fp: string): string {
   if (fp.startsWith('http')) return fp;
-  // Extract last segment as file ID (handles "folder/fileId" and plain "fileId")
-  const parts = fp.split('/').filter(Boolean);
-  const fileId = parts[parts.length - 1];
-  // Google Drive file IDs are typically 25-60 chars, alphanumeric + dash/underscore
-  if (/^[\w-]{20,}$/.test(fileId)) {
-    return `https://drive.google.com/file/d/${fileId}/view`;
+  // Pure Drive file ID (25-60 chars, alphanumeric + dash/underscore, no slashes)
+  if (/^[\w-]{20,}$/.test(fp)) {
+    return `https://drive.google.com/file/d/${fp}/view`;
   }
-  // Fallback: return as-is (won't be a valid link but better than nothing)
-  return fp;
+  // Relative path (e.g. "factures/2026-01/file.pdf") → link to compta folder
+  return `https://drive.google.com/drive/folders/${DRIVE_COMPTA_FOLDER}`;
 }
 
 export default function InvoicePDFViewer({ storagePath, filePath, fileName }: Props) {
@@ -80,9 +80,11 @@ export default function InvoicePDFViewer({ storagePath, filePath, fileName }: Pr
           </p>
           <a href={driveUrl || '#'} target="_blank" rel="noopener noreferrer"
             style={{ display: 'inline-block', padding: '8px 20px', background: '#b8860b', color: '#fff', borderRadius: '6px', fontSize: '13px', fontWeight: 600, textDecoration: 'none', marginBottom: '6px' }}>
-            📄 Ouvrir sur Google Drive
+            📄 Ouvrir le dossier Drive
           </a>
-          {fileName && <p style={{ fontSize: '11px', color: '#888', margin: '6px 0 0' }}>{fileName}</p>}
+          <p style={{ fontSize: '11px', color: '#888', margin: '6px 0 0', wordBreak: 'break-all' }}>
+            📂 {filePath}
+          </p>
         </div>
       </div>
     );
