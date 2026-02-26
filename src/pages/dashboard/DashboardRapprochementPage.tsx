@@ -3,10 +3,11 @@ import { supabase } from '@/lib/supabase';
 import { useToast } from '@/components/ui/Toast';
 import { logAudit } from '@/lib/auditLog';
 import {
-  TRANSACTION_TYPES, INVOICE_CATEGORIES,
+  TRANSACTION_TYPES,
   getTransactionTypeLabel, getTransactionTypeColor, getRapprochementBadge,
   ENTITY_IDS,
 } from '@/lib/entities';
+import RapprochementEditModal from '@/components/dashboard/RapprochementEditModal';
 
 // ─── Types ──────────────────────────────────────────────
 interface BankTransaction {
@@ -41,6 +42,9 @@ interface Invoice {
   amount_ttc: number;
   invoice_date: string;
   file_name: string | null;
+  file_path: string | null;
+  type_service: string | null;
+  product: string | null;
   confidence_score: number | null;
   rapprochement_status: string;
   bank_transaction_id: string | null;
@@ -92,14 +96,10 @@ export default function DashboardRapprochementPage() {
 
   // Modal
   const [editTx, setEditTx] = useState<BankTransaction | null>(null);
-  const [modalTab, setModalTab] = useState<'link' | 'classify' | 'type' | 'flag'>('classify');
-  const [editCategory, setEditCategory] = useState('');
-  const [editComment, setEditComment] = useState('');
-  const [editType, setEditType] = useState('');
-  const [editFlagReason, setEditFlagReason] = useState('');
-  const [editNotes, setEditNotes] = useState('');
-  const [suggestedInvoices, setSuggestedInvoices] = useState<Invoice[]>([]);
-  const [saving, setSaving] = useState(false);
+
+  // Batch mode
+  const [batchMode, setBatchMode] = useState<'none' | 'auto' | 'non_rapproche'>('none');
+  const [batchIndex, setBatchIndex] = useState(0);
 
   // YTD mode
   const [ytdMode, setYtdMode] = useState(false);
@@ -196,116 +196,45 @@ export default function DashboardRapprochementPage() {
   const countByStatus = (s: string) => transactions.filter(tx => tx.rapprochement_status === s).length;
 
   // ─── Open edit modal ──────────────────────────────────
-  const openEdit = async (tx: BankTransaction) => {
+  const openEdit = (tx: BankTransaction) => {
     setEditTx(tx);
-    setEditCategory(tx.manual_category || tx.category || '');
-    setEditComment(tx.manual_comment || '');
-    setEditType(tx.transaction_type || 'non_classe');
-    setEditFlagReason(tx.flagged_reason || '');
-    setEditNotes(tx.rapprochement_notes || '');
-    setModalTab('classify');
+    setBatchMode('none');
+  };
 
-    // Auto-suggest invoices
-    const amount = tx.debit > 0 ? tx.debit : tx.credit;
-    if (amount > 0) {
-      const { data } = await supabase.from('invoices').select('*')
-        .eq('rapprochement_status', 'non_rapproche')
-        .gte('amount_ttc', amount * 0.9)
-        .lte('amount_ttc', amount * 1.1)
-        .order('invoice_date', { ascending: false })
-        .limit(10);
-      setSuggestedInvoices(data || []);
-    } else {
-      setSuggestedInvoices([]);
+  // ─── Batch mode helpers ───────────────────────────────
+  const batchList = batchMode === 'auto'
+    ? transactions.filter(tx => tx.rapprochement_status === 'auto')
+    : batchMode === 'non_rapproche'
+    ? transactions.filter(tx => tx.rapprochement_status === 'non_rapproche')
+    : [];
+
+  const startBatch = (mode: 'auto' | 'non_rapproche') => {
+    const list = mode === 'auto'
+      ? transactions.filter(tx => tx.rapprochement_status === 'auto')
+      : transactions.filter(tx => tx.rapprochement_status === 'non_rapproche');
+    if (list.length === 0) { toast.error('Aucune transaction à traiter'); return; }
+    setBatchMode(mode);
+    setBatchIndex(0);
+    setEditTx(list[0]);
+  };
+
+  const handleBatchNavigate = (index: number) => {
+    const list = batchMode === 'auto'
+      ? transactions.filter(tx => tx.rapprochement_status === 'auto')
+      : transactions.filter(tx => tx.rapprochement_status === 'non_rapproche');
+    if (index >= 0 && index < list.length) {
+      setBatchIndex(index);
+      setEditTx(list[index]);
     }
   };
 
-  // ─── Save classification ──────────────────────────────
-  const saveClassification = async () => {
-    if (!editTx) return;
-    setSaving(true);
-    const updates: Record<string, any> = {
-      manual_category: editCategory || null,
-      manual_comment: editComment || null,
-      transaction_type: editType,
-      rapprochement_notes: editNotes || null,
-      updated_by: 'dashboard',
-      updated_at: new Date().toISOString(),
-    };
-
-    // If classified manually with category → mark as 'manuel'
-    if (editCategory && editTx.rapprochement_status === 'non_rapproche') {
-      updates.rapprochement_status = 'manuel';
-    }
-
-    const { error } = await supabase.from('bank_transactions').update(updates).eq('id', editTx.id);
-    if (error) { toast.error('Erreur: ' + error.message); setSaving(false); return; }
-
-    // Upsert supplier_defaults for auto-learning
-    if (editCategory && editTx.label_simple) {
-      const pattern = editTx.label_simple.split(' ').slice(0, 3).join(' ').toUpperCase();
-      await supabase.from('supplier_defaults').upsert({
-        supplier_pattern: pattern,
-        default_category: editCategory,
-        entity_id: editTx.entity_id,
-        times_used: 1,
-      }, { onConflict: 'supplier_pattern,entity_id' }).select();
-    }
-
-    await logAudit('transaction_classified', 'bank_transaction', editTx.id, { category: editCategory, type: editType, comment: editComment });
-    toast.success('Transaction mise à jour');
+  const handleModalSave = () => {
     setEditTx(null);
-    setSaving(false);
+    setBatchMode('none');
     load();
   };
 
-  // ─── Flag transaction ─────────────────────────────────
-  const flagTransaction = async () => {
-    if (!editTx || !editFlagReason) return;
-    setSaving(true);
-    const { error } = await supabase.from('bank_transactions').update({
-      rapprochement_status: 'flag',
-      flagged_reason: editFlagReason,
-      rapprochement_notes: editNotes || null,
-      updated_by: 'dashboard',
-      updated_at: new Date().toISOString(),
-    }).eq('id', editTx.id);
-
-    if (error) { toast.error('Erreur: ' + error.message); setSaving(false); return; }
-    await logAudit('transaction_flagged', 'bank_transaction', editTx.id, { reason: editFlagReason });
-    toast.success('Transaction flaggée');
-    setEditTx(null);
-    setSaving(false);
-    load();
-  };
-
-  // ─── Link invoice ─────────────────────────────────────
-  const linkInvoice = async (invoiceId: string) => {
-    if (!editTx) return;
-    setSaving(true);
-
-    // Update bank_transaction
-    await supabase.from('bank_transactions').update({
-      matched_invoice_id: invoiceId,
-      rapprochement_status: 'manuel',
-      updated_by: 'dashboard',
-      updated_at: new Date().toISOString(),
-    }).eq('id', editTx.id);
-
-    // Update invoice
-    await supabase.from('invoices').update({
-      bank_transaction_id: editTx.id,
-      rapprochement_status: 'manuel',
-    }).eq('id', invoiceId);
-
-    await logAudit('invoice_linked', 'bank_transaction', editTx.id, { invoice_id: invoiceId });
-    toast.success('Facture liée');
-    setEditTx(null);
-    setSaving(false);
-    load();
-  };
-
-  // ─── Unlink invoice ───────────────────────────────────
+  // ─── Unlink invoice (from table) ──────────────────────
   const unlinkInvoice = async (tx: BankTransaction) => {
     if (!tx.matched_invoice_id) return;
     await supabase.from('invoices').update({ bank_transaction_id: null, rapprochement_status: 'non_rapproche' }).eq('id', tx.matched_invoice_id);
@@ -389,10 +318,6 @@ export default function DashboardRapprochementPage() {
     sub: { fontSize: '12px', color: '#999', marginTop: '4px' },
     btn: { padding: '6px 14px', border: 'none', borderRadius: '20px', cursor: 'pointer', fontSize: '13px' } as React.CSSProperties,
     goldBtn: { padding: '6px 14px', background: '#b8860b', color: '#fff', border: 'none', borderRadius: '6px', cursor: 'pointer', fontSize: '13px', fontWeight: 600 } as React.CSSProperties,
-    modal: { position: 'fixed' as const, top: 0, left: 0, right: 0, bottom: 0, background: 'rgba(0,0,0,0.5)', display: 'flex', justifyContent: 'center', alignItems: 'center', zIndex: 1000 },
-    modalContent: { background: '#fff', borderRadius: '16px', padding: '32px', width: '600px', maxWidth: '95vw', maxHeight: '85vh', overflow: 'auto' } as React.CSSProperties,
-    input: { width: '100%', padding: '10px', border: '1px solid #ddd', borderRadius: '8px', fontSize: '14px', boxSizing: 'border-box' as const, marginBottom: '12px' },
-    select: { width: '100%', padding: '10px', border: '1px solid #ddd', borderRadius: '8px', fontSize: '14px', marginBottom: '12px', background: '#fff' },
   };
 
   if (loading) return <p style={{ textAlign: 'center', padding: '40px', color: '#b8860b' }}>Chargement...</p>;
@@ -417,6 +342,16 @@ export default function DashboardRapprochementPage() {
             <button key={e.v} onClick={() => setEntityFilter(e.v)} style={{ ...S.btn, background: entityFilter === e.v ? '#3D4A38' : '#e5e7eb', color: entityFilter === e.v ? '#fff' : '#555', fontWeight: entityFilter === e.v ? 600 : 400 }}>{e.l}</button>
           ))}
           <button onClick={exportExcel} style={S.goldBtn}>Export Excel COGESTRA</button>
+          {countByStatus('auto') > 0 && (
+            <button onClick={() => startBatch('auto')} style={{ ...S.goldBtn, background: '#16a34a' }}>
+              Vérifier les auto ({countByStatus('auto')})
+            </button>
+          )}
+          {countByStatus('non_rapproche') > 0 && (
+            <button onClick={() => startBatch('non_rapproche')} style={{ ...S.goldBtn, background: '#dc2626' }}>
+              Traiter non-rappr. ({countByStatus('non_rapproche')})
+            </button>
+          )}
         </div>
       </div>
 
@@ -562,126 +497,18 @@ export default function DashboardRapprochementPage() {
 
       <p style={{ textAlign: 'right', fontSize: '12px', color: '#aaa', marginTop: '8px' }}>{filtered.length} transaction{filtered.length > 1 ? 's' : ''} affichée{filtered.length > 1 ? 's' : ''}</p>
 
-      {/* ─── Edit Modal ─── */}
+      {/* ─── Edit Modal (extracted component) ─── */}
       {editTx && (
-        <div style={S.modal} onClick={() => setEditTx(null)}>
-          <div style={S.modalContent} onClick={e => e.stopPropagation()}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
-              <h3 style={{ margin: 0, fontSize: '18px', color: '#1a1a2e' }}>Modifier la transaction</h3>
-              <button onClick={() => setEditTx(null)} style={{ background: 'none', border: 'none', fontSize: '24px', cursor: 'pointer', color: '#888' }}>×</button>
-            </div>
-
-            {/* Transaction summary */}
-            <div style={{ background: '#f8f8f8', borderRadius: '8px', padding: '12px 16px', marginBottom: '20px', fontSize: '14px' }}>
-              <div><strong>{editTx.label_simple}</strong></div>
-              <div style={{ color: '#888', fontSize: '13px' }}>{fmtDate(editTx.accounting_date)} — {editTx.debit > 0 ? `-${fmt(editTx.debit)}` : `+${fmt(editTx.credit)}`}</div>
-              {editTx.label_operation && <div style={{ color: '#aaa', fontSize: '12px', marginTop: '4px' }}>{editTx.label_operation}</div>}
-            </div>
-
-            {/* Modal tabs */}
-            <div style={{ display: 'flex', gap: '4px', marginBottom: '20px', borderBottom: '2px solid #e5e7eb', paddingBottom: '4px' }}>
-              {[
-                { v: 'classify' as const, l: 'Classifier' },
-                { v: 'type' as const, l: 'Typer' },
-                { v: 'link' as const, l: 'Lier facture' },
-                { v: 'flag' as const, l: 'Flagger' },
-              ].map(t => (
-                <button key={t.v} onClick={() => setModalTab(t.v)} style={{
-                  padding: '8px 16px', border: 'none', borderRadius: '6px 6px 0 0', cursor: 'pointer', fontSize: '13px',
-                  background: modalTab === t.v ? '#1a1a2e' : 'transparent', color: modalTab === t.v ? '#fff' : '#888', fontWeight: modalTab === t.v ? 600 : 400,
-                }}>{t.l}</button>
-              ))}
-            </div>
-
-            {/* Tab: Classify */}
-            {modalTab === 'classify' && (
-              <div>
-                <label style={{ fontSize: '13px', fontWeight: 600, color: '#555', marginBottom: '4px', display: 'block' }}>Catégorie</label>
-                <select value={editCategory} onChange={e => setEditCategory(e.target.value)} style={S.select}>
-                  <option value="">— Aucune —</option>
-                  {INVOICE_CATEGORIES.map(c => <option key={c} value={c}>{c}</option>)}
-                </select>
-
-                <label style={{ fontSize: '13px', fontWeight: 600, color: '#555', marginBottom: '4px', display: 'block' }}>Commentaire</label>
-                <textarea value={editComment} onChange={e => setEditComment(e.target.value)} rows={3} placeholder="Note libre pour COGESTRA..." style={{ ...S.input, resize: 'vertical' as const }} />
-
-                <button onClick={saveClassification} disabled={saving} style={{ ...S.goldBtn, width: '100%', padding: '12px', opacity: saving ? 0.6 : 1 }}>
-                  {saving ? 'Sauvegarde...' : 'Enregistrer'}
-                </button>
-              </div>
-            )}
-
-            {/* Tab: Type */}
-            {modalTab === 'type' && (
-              <div>
-                <label style={{ fontSize: '13px', fontWeight: 600, color: '#555', marginBottom: '4px', display: 'block' }}>Type de transaction</label>
-                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2,1fr)', gap: '8px', marginBottom: '16px' }}>
-                  {TRANSACTION_TYPES.map(t => (
-                    <button key={t.value} onClick={() => setEditType(t.value)} style={{
-                      padding: '10px 14px', border: editType === t.value ? `2px solid ${t.color}` : '1px solid #e5e7eb',
-                      borderRadius: '8px', cursor: 'pointer', background: editType === t.value ? `${t.color}15` : '#fff',
-                      color: t.color, fontWeight: editType === t.value ? 700 : 400, fontSize: '13px',
-                    }}>{t.label}</button>
-                  ))}
-                </div>
-
-                <label style={{ fontSize: '13px', fontWeight: 600, color: '#555', marginBottom: '4px', display: 'block' }}>Notes</label>
-                <textarea value={editNotes} onChange={e => setEditNotes(e.target.value)} rows={2} placeholder="Notes de rapprochement..." style={{ ...S.input, resize: 'vertical' as const }} />
-
-                <button onClick={saveClassification} disabled={saving} style={{ ...S.goldBtn, width: '100%', padding: '12px', opacity: saving ? 0.6 : 1 }}>
-                  {saving ? 'Sauvegarde...' : 'Enregistrer le type'}
-                </button>
-              </div>
-            )}
-
-            {/* Tab: Link invoice */}
-            {modalTab === 'link' && (
-              <div>
-                {suggestedInvoices.length > 0 ? (
-                  <>
-                    <p style={{ fontSize: '14px', color: '#555', marginBottom: '12px' }}>Factures proches (±10% montant) :</p>
-                    {suggestedInvoices.map(inv => (
-                      <div key={inv.id} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '10px 12px', border: '1px solid #e5e7eb', borderRadius: '8px', marginBottom: '8px' }}>
-                        <div>
-                          <div style={{ fontWeight: 500, fontSize: '14px' }}>{inv.supplier}</div>
-                          <div style={{ fontSize: '12px', color: '#888' }}>{fmtDate(inv.invoice_date)} — {fmt(inv.amount_ttc)}</div>
-                          {inv.file_name && <div style={{ fontSize: '11px', color: '#aaa' }}>{inv.file_name}</div>}
-                        </div>
-                        <button onClick={() => linkInvoice(inv.id)} style={{ ...S.goldBtn, fontSize: '12px' }}>Lier</button>
-                      </div>
-                    ))}
-                  </>
-                ) : (
-                  <p style={{ textAlign: 'center', color: '#888', padding: '20px', fontSize: '14px' }}>
-                    Aucune facture non liée proche de ce montant.
-                  </p>
-                )}
-              </div>
-            )}
-
-            {/* Tab: Flag */}
-            {modalTab === 'flag' && (
-              <div>
-                <label style={{ fontSize: '13px', fontWeight: 600, color: '#555', marginBottom: '4px', display: 'block' }}>Raison du flag</label>
-                <select value={editFlagReason} onChange={e => setEditFlagReason(e.target.value)} style={S.select}>
-                  <option value="">— Sélectionner —</option>
-                  <option value="possible_duplicate">Doublon possible</option>
-                  <option value="wrong_entity">Mauvaise entité</option>
-                  <option value="unusual_amount">Montant inhabituel</option>
-                  <option value="date_gap">Écart de date suspect</option>
-                  <option value="manual_review">Revue manuelle nécessaire</option>
-                </select>
-
-                <label style={{ fontSize: '13px', fontWeight: 600, color: '#555', marginBottom: '4px', display: 'block' }}>Notes</label>
-                <textarea value={editNotes} onChange={e => setEditNotes(e.target.value)} rows={3} placeholder="Expliquer le problème..." style={{ ...S.input, resize: 'vertical' as const }} />
-
-                <button onClick={flagTransaction} disabled={saving || !editFlagReason} style={{ ...S.goldBtn, width: '100%', padding: '12px', opacity: (saving || !editFlagReason) ? 0.6 : 1, background: '#d97706' }}>
-                  {saving ? 'Sauvegarde...' : '⚠️ Flagger cette transaction'}
-                </button>
-              </div>
-            )}
-          </div>
-        </div>
+        <RapprochementEditModal
+          transaction={editTx}
+          entities={entities}
+          orphanInvoices={invoices}
+          onClose={() => { setEditTx(null); setBatchMode('none'); }}
+          onSave={handleModalSave}
+          batchTransactions={batchMode !== 'none' ? batchList : undefined}
+          currentIndex={batchMode !== 'none' ? batchIndex : undefined}
+          onNavigate={batchMode !== 'none' ? handleBatchNavigate : undefined}
+        />
       )}
     </div>
   );
