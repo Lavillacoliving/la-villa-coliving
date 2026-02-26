@@ -117,7 +117,10 @@ export default function DashboardRapprochementPage() {
 
     if (ytdMode) {
       const year = month.slice(0, 4);
-      txQuery = txQuery.gte('accounting_date', `${year}-01-01`).lte('accounting_date', `${month}-31`);
+      // Compute actual last day of the selected month
+      const [y, m] = month.split('-').map(Number);
+      const lastDay = new Date(y, m, 0).getDate(); // day 0 of next month = last day of current month
+      txQuery = txQuery.gte('accounting_date', `${year}-01-01`).lte('accounting_date', `${month}-${String(lastDay).padStart(2, '0')}`);
     } else {
       const nextMonth = new Date(month + '-01');
       nextMonth.setMonth(nextMonth.getMonth() + 1);

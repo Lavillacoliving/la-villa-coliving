@@ -30,7 +30,7 @@ const STATUS_LABELS: Record<string,string> = {
 };
 const STATUS_ORDER = ['pending','paid','partial','late','unpaid'];
 const ENTITY_MAP: Record<string,string> = {
-  'lavilla':'La Villa (LMP)', 'leloft':'Le Loft — Sleep In SCI', 'lelodge':'Le Lodge — Sleep In SCI'
+  'lavilla':'La Villa — LMP', 'leloft':'Le Loft — Sleep In SCI', 'lelodge':'Le Lodge — Sleep In SCI', 'montblanc':'Mont-Blanc — MB'
 };
 
 // ENTITY_SLUGS imported from @/lib/entities
