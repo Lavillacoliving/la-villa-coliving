@@ -205,6 +205,13 @@ export default function VerificationTab({
             {linkedInvoice.file_name && (
               <div style={{ marginTop: '6px' }}><div style={S.label}>Fichier</div><div style={{ fontSize: '12px', color: '#3b82f6' }}>{linkedInvoice.file_name}</div></div>
             )}
+            {/* File status indicator */}
+            <div style={{ marginTop: '8px', padding: '4px 8px', borderRadius: '4px', fontSize: '11px', fontWeight: 600,
+              background: linkedInvoice.storage_path ? '#f0fdf4' : linkedInvoice.file_path ? '#fffbeb' : '#fef2f2',
+              color: linkedInvoice.storage_path ? '#16a34a' : linkedInvoice.file_path ? '#92400e' : '#dc2626',
+            }}>
+              {linkedInvoice.storage_path ? '✓ PDF dans Supabase Storage' : linkedInvoice.file_path ? '📁 Drive uniquement (pas de preview)' : '⚠ Aucun fichier'}
+            </div>
           </div>
         </div>
 

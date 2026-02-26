@@ -4,8 +4,23 @@ import { INVOICE_STORAGE } from '@/lib/entities';
 
 interface Props {
   storagePath?: string | null;
-  filePath?: string | null;     // legacy Drive link (fallback)
+  filePath?: string | null;     // legacy Drive link or file ID (fallback)
   fileName?: string | null;
+}
+
+/** Convert a file_path to a clickable Google Drive URL.
+ *  file_path might be: a full URL, a Drive file ID, or a path like "folder_id/file_id" */
+function toDriveUrl(fp: string): string {
+  if (fp.startsWith('http')) return fp;
+  // Extract last segment as file ID (handles "folder/fileId" and plain "fileId")
+  const parts = fp.split('/').filter(Boolean);
+  const fileId = parts[parts.length - 1];
+  // Google Drive file IDs are typically 25-60 chars, alphanumeric + dash/underscore
+  if (/^[\w-]{20,}$/.test(fileId)) {
+    return `https://drive.google.com/file/d/${fileId}/view`;
+  }
+  // Fallback: return as-is (won't be a valid link but better than nothing)
+  return fp;
 }
 
 export default function InvoicePDFViewer({ storagePath, filePath, fileName }: Props) {
@@ -42,12 +57,14 @@ export default function InvoicePDFViewer({ storagePath, filePath, fileName }: Pr
     return () => { cancelled = true; };
   }, [storagePath]);
 
+  const driveUrl = filePath ? toDriveUrl(filePath) : null;
+
   // ─── No file at all ───
   if (!storagePath && !filePath) {
     return (
       <div style={S.box}>
         <div style={{ color: '#888', fontSize: '13px', textAlign: 'center', padding: '20px' }}>
-          Pas de fichier attaché
+          Pas de fichier attaché — uploadez un PDF via l'onglet "Uploader un PDF"
         </div>
       </div>
     );
@@ -59,12 +76,13 @@ export default function InvoicePDFViewer({ storagePath, filePath, fileName }: Pr
       <div style={{ ...S.box, background: '#fffbeb', borderColor: '#fbbf24' }}>
         <div style={{ padding: '16px', textAlign: 'center' }}>
           <p style={{ fontSize: '13px', color: '#92400e', margin: '0 0 8px' }}>
-            Fichier sur Drive uniquement — pas de preview disponible.
+            📁 Fichier sur Google Drive — pas de preview intégrée.
           </p>
-          <a href={filePath} target="_blank" rel="noopener noreferrer"
-            style={{ fontSize: '13px', color: '#b8860b', textDecoration: 'underline' }}>
+          <a href={driveUrl || '#'} target="_blank" rel="noopener noreferrer"
+            style={{ display: 'inline-block', padding: '8px 20px', background: '#b8860b', color: '#fff', borderRadius: '6px', fontSize: '13px', fontWeight: 600, textDecoration: 'none', marginBottom: '6px' }}>
             📄 Ouvrir sur Google Drive
           </a>
+          {fileName && <p style={{ fontSize: '11px', color: '#888', margin: '6px 0 0' }}>{fileName}</p>}
         </div>
       </div>
     );
@@ -87,8 +105,8 @@ export default function InvoicePDFViewer({ storagePath, filePath, fileName }: Pr
       <div style={{ ...S.box, background: '#fef2f2', borderColor: '#fecaca' }}>
         <div style={{ padding: '16px', textAlign: 'center' }}>
           <p style={{ fontSize: '13px', color: '#dc2626', margin: '0 0 8px' }}>{error}</p>
-          {filePath && (
-            <a href={filePath} target="_blank" rel="noopener noreferrer"
+          {driveUrl && (
+            <a href={driveUrl} target="_blank" rel="noopener noreferrer"
               style={{ fontSize: '12px', color: '#3b82f6', textDecoration: 'underline' }}>
               Fallback : ouvrir sur Drive
             </a>
@@ -98,8 +116,24 @@ export default function InvoicePDFViewer({ storagePath, filePath, fileName }: Pr
     );
   }
 
-  // ─── PDF iframe ───
-  if (!signedUrl) return null;
+  // ─── Signed URL not ready yet ───
+  if (!signedUrl) {
+    return (
+      <div style={S.box}>
+        <div style={{ color: '#888', fontSize: '13px', textAlign: 'center', padding: '20px' }}>
+          PDF non disponible en preview
+          {driveUrl && (
+            <div style={{ marginTop: '8px' }}>
+              <a href={driveUrl} target="_blank" rel="noopener noreferrer"
+                style={{ fontSize: '12px', color: '#3b82f6', textDecoration: 'underline' }}>
+                Ouvrir sur Drive
+              </a>
+            </div>
+          )}
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div>

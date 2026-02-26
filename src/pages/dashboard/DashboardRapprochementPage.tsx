@@ -137,8 +137,8 @@ export default function DashboardRapprochementPage() {
     const { data: txData } = await txQuery;
     setTransactions(txData || []);
 
-    // Orphan invoices (unmatched)
-    const { data: invData } = await supabase.from('invoices').select('*').eq('rapprochement_status', 'non_rapproche').order('invoice_date', { ascending: false }).limit(100);
+    // Orphan invoices (unmatched or available for re-linking)
+    const { data: invData } = await supabase.from('invoices').select('*').in('rapprochement_status', ['non_rapproche', 'auto', 'manuel']).order('invoice_date', { ascending: false }).limit(200);
     setInvoices(invData || []);
 
     setLoading(false);
