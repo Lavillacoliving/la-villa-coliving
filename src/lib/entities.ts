@@ -48,9 +48,9 @@ export const PROPERTY_FILTER_OPTIONS = [
 
 // Property slug → full address (for PDF generation, letters, etc.)
 export const PROPERTY_ADDRESSES: Record<string, string> = {
-  'lavilla': '25 rue de la Paix, 74100 Ville-la-Grand',
-  'leloft': '2 rue du Salève, 74100 Ambilly',
-  'lelodge': '15 avenue Émile Zola, 74100 Annemasse',
+  'lavilla': '34 rue du Foron, 74100 Ville-la-Grand',
+  'leloft': '2 rue des Marronniers, 74100 Ambilly',
+  'lelodge': '8 rue de Romagny, 74100 Annemasse',
 };
 
 // ==========================================
