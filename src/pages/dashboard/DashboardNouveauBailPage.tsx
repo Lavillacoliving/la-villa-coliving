@@ -138,32 +138,51 @@ function generateContractHTML(data: ContractData): string {
   // Charges are stored in EUR — convert to CHF for display
   const totalChargesEUR = form.charges_energy + form.charges_maintenance + form.charges_services;
 
-  const chargesTable = `
+  const chargesTable = property.is_coliving ? `
+    <p style="font-size:9px;color:#666;">Le montant mensuel des charges forfaitaires et des services est inclus dans le loyer principal.</p>
     <table style="width:100%;border-collapse:collapse;margin:10px 0;">
       <tr style="border-bottom:1px solid #e0e0e0;">
-        <td style="padding:8px;font-weight:600;width:50%;">Catégorie</td>
-        <td style="padding:8px;font-weight:600;text-align:right;width:25%;">Montant EUR</td>
-        <td style="padding:8px;font-weight:600;text-align:right;width:25%;">Montant CHF</td>
+        <td style="padding:8px;font-weight:600;width:60%;">Catégorie</td>
+        <td style="padding:8px;font-weight:600;text-align:right;width:40%;">Montant EUR</td>
       </tr>
       <tr style="border-bottom:1px solid #f0f0f0;">
         <td style="padding:8px;">Énergie (eau, chauffage, électricité)</td>
         <td style="padding:8px;text-align:right;">${fEUR(form.charges_energy)}</td>
-        <td style="padding:8px;text-align:right;">${fCHF(form.charges_energy * form.exchange_rate)}</td>
       </tr>
       <tr style="border-bottom:1px solid #f0f0f0;">
         <td style="padding:8px;">Maintenance & Entretien</td>
         <td style="padding:8px;text-align:right;">${fEUR(form.charges_maintenance)}</td>
-        <td style="padding:8px;text-align:right;">${fCHF(form.charges_maintenance * form.exchange_rate)}</td>
       </tr>
       <tr style="border-bottom:1px solid #f0f0f0;">
-        <td style="padding:8px;">${property.is_coliving ? 'Services (ménage, yoga, support)' : 'Charges diverses'}</td>
+        <td style="padding:8px;">Services (ménage, yoga, support)</td>
         <td style="padding:8px;text-align:right;">${fEUR(form.charges_services)}</td>
-        <td style="padding:8px;text-align:right;">${fCHF(form.charges_services * form.exchange_rate)}</td>
       </tr>
       <tr style="background:#f9f7f4;font-weight:600;border-bottom:2px solid #c9a96e;">
         <td style="padding:8px;">TOTAL CHARGES MENSUELLES</td>
         <td style="padding:8px;text-align:right;">${fEUR(totalChargesEUR)}</td>
-        <td style="padding:8px;text-align:right;">${fCHF(totalChargesEUR * form.exchange_rate)}</td>
+      </tr>
+    </table>
+  ` : `
+    <table style="width:100%;border-collapse:collapse;margin:10px 0;">
+      <tr style="border-bottom:1px solid #e0e0e0;">
+        <td style="padding:8px;font-weight:600;width:60%;">Catégorie</td>
+        <td style="padding:8px;font-weight:600;text-align:right;width:40%;">Montant EUR</td>
+      </tr>
+      <tr style="border-bottom:1px solid #f0f0f0;">
+        <td style="padding:8px;">Énergie (eau, chauffage, électricité)</td>
+        <td style="padding:8px;text-align:right;">${fEUR(form.charges_energy)}</td>
+      </tr>
+      <tr style="border-bottom:1px solid #f0f0f0;">
+        <td style="padding:8px;">Maintenance & Entretien</td>
+        <td style="padding:8px;text-align:right;">${fEUR(form.charges_maintenance)}</td>
+      </tr>
+      <tr style="border-bottom:1px solid #f0f0f0;">
+        <td style="padding:8px;">Charges diverses</td>
+        <td style="padding:8px;text-align:right;">${fEUR(form.charges_services)}</td>
+      </tr>
+      <tr style="background:#f9f7f4;font-weight:600;border-bottom:2px solid #c9a96e;">
+        <td style="padding:8px;">TOTAL CHARGES MENSUELLES</td>
+        <td style="padding:8px;text-align:right;">${fEUR(totalChargesEUR)}</td>
       </tr>
     </table>
   `;
@@ -349,20 +368,19 @@ function generateContractHTML(data: ContractData): string {
             ${room.has_terrace ? '<li><strong>Terrasse :</strong> Oui</li>' : ''}
             ${room.has_private_entrance ? `<li><strong>Entrée privée :</strong> Oui</li>` : ''}
           </ul>` : `
-          <p>${ph(property.contract_building_desc, 'Description du bien')}, d'une surface habitable de ${room.surface_m2} m², comprenant : ${ph(room.description, 'Description')}</p>
-          ${room.specifics?.cadastre_section ? `
-          <h3>Désignation cadastrale :</h3>
+          <h3>A. Consistance du logement</h3>
+          <p>Localisation du logement : 8 rue du Mont-Blanc - Annemasse, 5ème étage droite et face.</p>
+          <p>Surface habitable : 150 m2. Comprenant : 1 Double Salon, 3 chambres, 2 salles d'eau, 2 WC dont un avec lave main, cuisines équipée 2 balcons. Chauffage et eau chaude collective. Appartement meublé : référence à l'état des Lieux d'entrée.</p>
+          <p>Figurant ainsi au cadastre : Section N° Lieudit Surface - A 4276 Rue du Mont Blanc 00 ha 40 a 08 ca. Les lots de copropriété suivants :</p>
           <ul>
-            <li>Section cadastrale : ${room.specifics.cadastre_section}</li>
-            ${room.specifics.lots ? `<li>Lots de copropriété : ${room.specifics.lots}</li>` : ''}
-            ${room.specifics.tantiemes ? `<li>Tantièmes : ${room.specifics.tantiemes}</li>` : ''}
-          </ul>` : ''}
-          ${room.specifics?.parking_number ? `
-          <h3>Place de parking :</h3>
-          <ul>
-            <li>Place n°${room.specifics.parking_number}</li>
-            ${room.specifics.parking_id_fiscal ? `<li>ID fiscal parking : ${room.specifics.parking_id_fiscal}</li>` : ''}
-          </ul>` : ''}`}
+            <li>Lot numéro trente-huit (38) — Un parking situé au rez-de-chaussée portant le numéro 8 au plan, et les quatre/dix millièmes (4/10000èmes) des parties communes générales.</li>
+            <li>Lot numéro quatre cent trente-sept (437) — Et les quatre-vingt-treize/dix millièmes (93/10000èmes) des parties communes générales.</li>
+            <li>Lot numéro quatre cent trente-huit (438) — Et les soixante-deux/dix millièmes (62/10000èmes) des parties communes générales.</li>
+            <li>Identifiant fiscal du logement : 740120062912</li>
+          </ul>
+          <h3>B. Destination des locaux : usage d'habitation</h3>
+          <h3>C. Désignation des locaux et équipements accessoires de l'immeuble à usage privatif du locataire :</h3>
+          <p>Place de Parking Numéro 8 (Identifiant fiscal: 740120062917)</p>`}
           ${(!property.is_coliving && room.furniture_inventory && room.furniture_inventory.length > 0) ? `
           <p><strong>Inventaire du mobilier fourni :</strong></p>
           <ul>
@@ -372,20 +390,65 @@ function generateContractHTML(data: ContractData): string {
           <p><strong>Accès aux parties communes :</strong></p>
           <ul>${commonAreasList}</ul>` : ''}
           ${property.is_coliving ? `
-          <p><strong>Services inclus au loyer :</strong></p>
+          <p><strong>Charges & Services inclus dans le forfait location TOUT INCLUS à « La Villa »</strong></p>
+
+          <h3>EAU & ÉNERGIE :</h3>
           <ul>
-            <li>Électricité, eau froide et chaude, chauffage</li>
-            <li>Linge de lit (fourniture et entretien)</li>
-            <li>Ménage 2 fois par semaine des parties communes</li>
-            <li>Entretien des espaces extérieurs</li>
-            <li>Piscine (accès et entretien)</li>
-            <li>Événements communautaires</li>
-            <li>Support WhatsApp/Email &lt;48h</li>
-            <li>Cours de yoga et coaching sportif</li>
-            <li>Internet très haut débit</li>
-            <li>Accès streaming (Netflix, Spotify, etc.)</li>
-            <li>Fournitures de base mensuelles</li>
-            <li>Ordures ménagères, balayage, assainissement</li>
+            <li>Électricité</li>
+            <li>Eau froide et chaude</li>
+            <li>Eau nécessaire à l'entretien courant des parties communes</li>
+            <li>Eau nécessaire à l'entretien courant des espaces extérieurs</li>
+            <li>Produits nécessaires à l'exploitation, à l'entretien et au traitement de l'eau</li>
+            <li>Fourniture d'énergie quelle que soit sa nature</li>
+            <li>Chauffage et production d'eau chaude</li>
+            <li>Distribution d'eau dans les parties privatives (contrôle des raccordements, réglage de débit et températures, dépannage, remplacement des joints cloches des chasses d'eau)</li>
+            <li>Tout entretien</li>
+          </ul>
+
+          <h3>SERVICES</h3>
+          <ul>
+            <li>Mise à disposition d'une parure de linge de lit et serviette.</li>
+            <li>Ménage 2 fois par semaine dans les parties communes intérieur. Ménage de la chambre en option.</li>
+            <li>Entretien régulier des parties communes extérieur : pisciniste, jardinier, élagage, nettoyage</li>
+            <li>Box pour diner communautaire livrée 1 fois/mois</li>
+            <li>Évènements communautaires récurrents</li>
+            <li>Résolution des problèmes Contact via WhatsApp, réponse en moins de 48h.</li>
+            <li>Cours de yoga</li>
+            <li>Cours de remise en forme (coaching Sportif)</li>
+            <li>Fournitures de base : 1 panier de base livré chaque mois pour la communauté (papier toilette, Essuie-tout, lessive, produits d'entretiens, ..) en fonction de votre demande</li>
+            <li>Gestion des départs : à vous de rencontrer notre sélection de nouveaux candidats et de les sélectionner</li>
+          </ul>
+
+          <h3>ENTRETIEN</h3>
+          <p>Entretien des parties communes intérieures et extérieures : réparation et entretien et remplacement des éléments défectueux des parties communes de la maison. Entretien des extérieurs et de la piscine. Ménage effectué deux fois par semaine pour que les espaces communs brillent !</p>
+          <p style="font-weight:600;font-size:10px;">PARTIES COMMUNES INTÉRIEURES</p>
+          <ul>
+            <li>Fourniture de produits d'entretien (balais et sacs nécessaires à l'élimination des déchets) et de produits de désinsectisation et désinfection</li>
+            <li>Entretien de la minuterie, des tapis, des vide-ordures</li>
+            <li>Réparation des appareils d'entretien de propreté tels que l'aspirateur</li>
+            <li>Frais de personnel d'entretien.</li>
+          </ul>
+          <p style="font-weight:600;font-size:10px;">PARTIES COMMUNES EXTÉRIEURES</p>
+          <ul>
+            <li>Voies de circulation</li>
+            <li>Aires de stationnement</li>
+            <li>Abords des espaces verts</li>
+            <li>Équipements : piscine, terrasse, barbecue, jeux</li>
+          </ul>
+
+          <h3>ABONNEMENTS</h3>
+          <ul>
+            <li>Eau, Électricité, Gaz,</li>
+            <li>Entretien Chaudière</li>
+            <li>Internet</li>
+            <li>Abonnements numériques de divertissement</li>
+          </ul>
+
+          <h3>TAXES</h3>
+          <ul>
+            <li>Taxe ou redevance d'enlèvement des ordures ménagères</li>
+            <li>Taxe de balayage</li>
+            <li>Redevance assainissement.</li>
           </ul>` : `
           <p><strong>Charges récupérables (provisions avec régularisation annuelle) :</strong></p>
           <ul>
@@ -410,10 +473,7 @@ function generateContractHTML(data: ContractData): string {
         <div class="article">
           ${property.is_coliving ? `
           <h3>Loyer mensuel :</h3>
-          <ul>
-            <li><strong>En CHF :</strong> ${fCHF(form.loyer_chf)} (taux BCE du ${form.exchange_rate_date} : ${form.exchange_rate})</li>
-            <li><strong>En EUR :</strong> ${fEUR(loyer_eur)}</li>
-          </ul>
+          <p><strong>${fEUR(loyer_eur)}</strong> - (taux BCE du ${form.exchange_rate_date} : ${form.exchange_rate})</p>
           ${(!data.prorata_days || !data.prorata_total_days || data.prorata_days >= data.prorata_total_days)
             ? '<p><em>Entrée le 1er du mois — pas de prorata.</em></p>'
             : '<p><strong>Prorata du premier mois :</strong> Du ' + fDate(form.entry_date) + ' au dernier jour du mois (' + data.prorata_days + '/' + data.prorata_total_days + ' jours) :</p><ul><li><strong>En EUR :</strong> ' + fEUR(data.prorata_eur) + '</li><li><strong>En CHF :</strong> ' + fCHF(data.prorata_chf) + '</li></ul>'}
@@ -423,7 +483,8 @@ function generateContractHTML(data: ContractData): string {
           <ul>
             <li><strong>Montant :</strong> ${fEUR(form.frais_dossier)} (${fCHF(form.frais_dossier * form.exchange_rate)})</li>
             <li><strong>Statut :</strong> OFFERTS par le bailleur</li>
-          </ul>` : `
+          </ul>
+          <p style="font-size:9px;">En cas de départ à une date inférieure à 3 mois révolu à partir de la date de début du contrat, le locataire sera redevable auprès du bailleur des frais de dossier administratifs de services et d'états des lieux, offerts dans ce présent contrat.</p>` : `
           <h3>Loyer mensuel :</h3>
           <ul>
             <li><strong>Loyer :</strong> ${fEUR(loyer_eur)}</li>
@@ -491,7 +552,7 @@ function generateContractHTML(data: ContractData): string {
         <h2>ARTICLE IX — ÉTAT DES LIEUX</h2>
         <div class="article">
           ${property.is_coliving
-            ? "L'état des lieux d'entrée et de sortie sera établi par la société <strong>Nockee</strong>, prestataire mandaté par le bailleur. Le locataire reçoit un exemplaire."
+            ? "L'état des lieux d'entrée et de sortie sera établi via <strong>Etadly</strong>. Le locataire recevra un exemplaire après sa réalisation."
             : "Un état des lieux contradictoire sera établi lors de la remise des clés et lors de la restitution du logement. Il sera annexé au présent contrat."}
         </div>
 
@@ -524,7 +585,6 @@ function generateContractHTML(data: ContractData): string {
         <div class="article">
           Sont annexées au présent contrat :
           <ul>
-            ${!property.is_coliving ? '<li>Inventaire du mobilier et équipements</li>' : ''}
             ${property.is_coliving ? '<li>Règlement Intérieur La Villa Coliving</li>' : ''}
             <li>Diagnostics techniques</li>
             ${!property.is_coliving ? '<li>Notice d\'information relative aux droits et obligations des locataires et des bailleurs</li>' : ''}

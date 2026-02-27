@@ -314,8 +314,10 @@ export function BailPDF({ data }: { data: BailPDFData }) {
           <Text>{"N\u00E9(e) le "}{fDate(form.locataire_dob)}{" \u00E0 "}{ph(form.locataire_birthplace, "Lieu de naissance")}</Text>
           <Text>{"Nationalit\u00E9 : "}{ph(form.locataire_nationality, "Nationalit\u00E9")}</Text>
           <Text>{"Adresse pr\u00E9c\u00E9dente : "}{ph(form.locataire_previous_address, "Adresse")}</Text>
-          <Text>Email : {ph(form.locataire_email, "Email")} {" \u2014 T\u00E9l : "}{ph(form.locataire_phone, "T\u00E9l\u00E9phone")}</Text>
-          <Text>Profession : {ph(form.locataire_profession, "Profession")} {" \u2014 Employeur : "}{ph(form.locataire_employer, "Employeur")}</Text>
+          <Text>Email : {ph(form.locataire_email, "Email")}</Text>
+          <Text>{"\u2014 T\u00E9l : "}{ph(form.locataire_phone, "T\u00E9l\u00E9phone")}</Text>
+          <Text>Profession : {ph(form.locataire_profession, "Profession")}</Text>
+          <Text>Employeur : {ph(form.locataire_employer, "Employeur")}</Text>
         </View>
 
         <Text style={s.articleTitle}>{"ARTICLE I \u2014 D\u00C9SIGNATION DES PARTIES"}</Text>
@@ -342,24 +344,23 @@ export function BailPDF({ data }: { data: BailPDFData }) {
           </View>
         ) : (
           <View>
+            <Text style={s.subTitle}>{"A. Consistance du logement"}</Text>
             <Text style={s.body}>
-              {ph(property.contract_building_desc, "Description du bien")}{", d\u2019une surface habitable de "}{room.surface_m2}{" m\u00B2, comprenant : "}{ph(room.description, "Description")}
+              {"Localisation du logement : 8 rue du Mont-Blanc - Annemasse, 5\u00E8me \u00E9tage droite et face."}
             </Text>
-            {room.specifics?.cadastre_section && (
-              <View>
-                <Text style={s.subTitle}>{"D\u00E9signation cadastrale :"}</Text>
-                <Bullet>Section cadastrale : {room.specifics.cadastre_section}</Bullet>
-                {room.specifics.lots && <Bullet>Lots de copropri\u00E9t\u00E9 : {room.specifics.lots}</Bullet>}
-                {room.specifics.tantiemes && <Bullet>{"Tanti\u00E8mes : "}{room.specifics.tantiemes}</Bullet>}
-              </View>
-            )}
-            {room.specifics?.parking_number && (
-              <View>
-                <Text style={s.subTitle}>Place de parking :</Text>
-                <Bullet>{"Place n\u00B0"}{room.specifics.parking_number}</Bullet>
-                {room.specifics.parking_id_fiscal && <Bullet>ID fiscal parking : {room.specifics.parking_id_fiscal}</Bullet>}
-              </View>
-            )}
+            <Text style={s.body}>
+              {"Surface habitable : 150 m2. Comprenant : 1 Double Salon, 3 chambres, 2 salles d\u2019eau, 2 WC dont un avec lave main, cuisines \u00E9quip\u00E9e 2 balcons. Chauffage et eau chaude collective. Appartement meubl\u00E9 : r\u00E9f\u00E9rence \u00E0 l\u2019\u00E9tat des Lieux d\u2019entr\u00E9e."}
+            </Text>
+            <Text style={s.body}>
+              {"Figurant ainsi au cadastre : Section N\u00B0 Lieudit Surface - A 4276 Rue du Mont Blanc 00 ha 40 a 08 ca. Les lots de copropri\u00E9t\u00E9 suivants :"}
+            </Text>
+            <Bullet>{"Lot num\u00E9ro trente-huit (38) \u2014 Un parking situ\u00E9 au rez-de-chauss\u00E9e portant le num\u00E9ro 8 au plan, et les quatre/dix milli\u00E8mes (4/10000\u00E8mes) des parties communes g\u00E9n\u00E9rales."}</Bullet>
+            <Bullet>{"Lot num\u00E9ro quatre cent trente-sept (437) \u2014 Et les quatre-vingt-treize/dix milli\u00E8mes (93/10000\u00E8mes) des parties communes g\u00E9n\u00E9rales."}</Bullet>
+            <Bullet>{"Lot num\u00E9ro quatre cent trente-huit (438) \u2014 Et les soixante-deux/dix milli\u00E8mes (62/10000\u00E8mes) des parties communes g\u00E9n\u00E9rales."}</Bullet>
+            <Bullet>{"Identifiant fiscal du logement : 740120062912"}</Bullet>
+            <Text style={s.subTitle}>{"B. Destination des locaux : usage d\u2019habitation"}</Text>
+            <Text style={s.subTitle}>{"C. D\u00E9signation des locaux et \u00E9quipements accessoires de l\u2019immeuble \u00E0 usage privatif du locataire :"}</Text>
+            <Text style={s.body}>{"Place de Parking Num\u00E9ro 8 (Identifiant fiscal: 740120062917)"}</Text>
           </View>
         )}
 
@@ -374,19 +375,56 @@ export function BailPDF({ data }: { data: BailPDFData }) {
 
         {property.is_coliving ? (
           <View>
-            <Text style={s.subTitle}>Services inclus au loyer :</Text>
-            <Bullet>{"\u00C9lectricit\u00E9, eau froide et chaude, chauffage"}</Bullet>
-            <Bullet>Linge de lit (fourniture et entretien)</Bullet>
-            <Bullet>{"M\u00E9nage 2 fois par semaine des parties communes"}</Bullet>
-            <Bullet>{"Entretien des espaces ext\u00E9rieurs"}</Bullet>
-            <Bullet>{"Piscine (acc\u00E8s et entretien)"}</Bullet>
-            <Bullet>{"Événements communautaires"}</Bullet>
-            <Bullet>Support WhatsApp/Email sous 48h</Bullet>
-            <Bullet>Cours de yoga et coaching sportif</Bullet>
-            <Bullet>{"Internet tr\u00E8s haut d\u00E9bit"}</Bullet>
-            <Bullet>{"Acc\u00E8s streaming (Netflix, Spotify, etc.)"}</Bullet>
-            <Bullet>Fournitures de base mensuelles</Bullet>
-            <Bullet>{"Ordures m\u00E9nag\u00E8res, balayage, assainissement"}</Bullet>
+            <Text style={s.subTitle}>{"Charges & Services inclus dans le forfait location TOUT INCLUS à «La Villa»"}</Text>
+
+            <Text style={[s.subTitle, { fontSize: 9, marginTop: 8 }]}>{"EAU & ÉNERGIE :"}</Text>
+            <Bullet>{"\u00C9lectricit\u00E9"}</Bullet>
+            <Bullet>{"Eau froide et chaude"}</Bullet>
+            <Bullet>{"Eau n\u00E9cessaire \u00E0 l\u2019entretien courant des parties communes"}</Bullet>
+            <Bullet>{"Eau n\u00E9cessaire \u00E0 l\u2019entretien courant des espaces ext\u00E9rieurs"}</Bullet>
+            <Bullet>{"Produits n\u00E9cessaires \u00E0 l\u2019exploitation, \u00E0 l\u2019entretien et au traitement de l\u2019eau"}</Bullet>
+            <Bullet>{"Fourniture d\u2019\u00E9nergie quelle que soit sa nature"}</Bullet>
+            <Bullet>{"Chauffage et production d\u2019eau chaude"}</Bullet>
+            <Bullet>{"Distribution d\u2019eau dans les parties privatives (contr\u00F4le des raccordements, r\u00E9glage de d\u00E9bit et temp\u00E9ratures, d\u00E9pannage, remplacement des joints cloches des chasses d\u2019eau)"}</Bullet>
+            <Bullet>{"Tout entretien"}</Bullet>
+
+            <Text style={[s.subTitle, { fontSize: 9, marginTop: 8 }]}>SERVICES</Text>
+            <Bullet>{"Mise \u00E0 disposition d\u2019une parure de linge de lit et serviette."}</Bullet>
+            <Bullet>{"M\u00E9nage 2 fois par semaine dans les parties communes int\u00E9rieur. M\u00E9nage de la chambre en option."}</Bullet>
+            <Bullet>{"Entretien r\u00E9gulier des parties communes ext\u00E9rieur : pisciniste, jardinier, \u00E9lagage, nettoyage"}</Bullet>
+            <Bullet>{"Box pour diner communautaire livr\u00E9e 1 fois/mois"}</Bullet>
+            <Bullet>{"\u00C9v\u00E8nements communautaires r\u00E9currents"}</Bullet>
+            <Bullet>{"R\u00E9solution des probl\u00E8mes Contact via WhatsApp, r\u00E9ponse en moins de 48h."}</Bullet>
+            <Bullet>{"Cours de yoga"}</Bullet>
+            <Bullet>{"Cours de remise en forme (coaching Sportif)"}</Bullet>
+            <Bullet>{"Fournitures de base : 1 panier de base livr\u00E9 chaque mois pour la communaut\u00E9 (papier toilette, Essuie-tout, lessive, produits d\u2019entretiens, ..) en fonction de votre demande"}</Bullet>
+            <Bullet>{"Gestion des d\u00E9parts : \u00E0 vous de rencontrer notre s\u00E9lection de nouveaux candidats et de les s\u00E9lectionner"}</Bullet>
+
+            <Text style={[s.subTitle, { fontSize: 9, marginTop: 8 }]}>{"ENTRETIEN"}</Text>
+            <Text style={[s.body, { fontSize: 9 }]}>
+              {"Entretien des parties communes int\u00E9rieures et ext\u00E9rieures : r\u00E9paration et entretien et remplacement des \u00E9l\u00E9ments d\u00E9fectueux des parties communes de la maison. Entretien des ext\u00E9rieurs et de la piscine. M\u00E9nage effectu\u00E9 deux fois par semaine pour que les espaces communs brillent !"}
+            </Text>
+            <Text style={[s.subTitle, { fontSize: 8, marginTop: 4 }]}>{"PARTIES COMMUNES INT\u00C9RIEURES"}</Text>
+            <Bullet>{"Fourniture de produits d\u2019entretien (balais et sacs n\u00E9cessaires \u00E0 l\u2019\u00E9limination des d\u00E9chets) et de produits de d\u00E9sinsectisation et d\u00E9sinfection"}</Bullet>
+            <Bullet>{"Entretien de la minuterie, des tapis, des vide-ordures"}</Bullet>
+            <Bullet>{"R\u00E9paration des appareils d\u2019entretien de propret\u00E9 tels que l\u2019aspirateur"}</Bullet>
+            <Bullet>{"Frais de personnel d\u2019entretien."}</Bullet>
+            <Text style={[s.subTitle, { fontSize: 8, marginTop: 4 }]}>{"PARTIES COMMUNES EXT\u00C9RIEURES"}</Text>
+            <Bullet>{"Voies de circulation"}</Bullet>
+            <Bullet>{"Aires de stationnement"}</Bullet>
+            <Bullet>{"Abords des espaces verts"}</Bullet>
+            <Bullet>{"\u00C9quipements : piscine, terrasse, barbecue, jeux"}</Bullet>
+
+            <Text style={[s.subTitle, { fontSize: 9, marginTop: 8 }]}>ABONNEMENTS</Text>
+            <Bullet>{"Eau, \u00C9lectricit\u00E9, Gaz,"}</Bullet>
+            <Bullet>{"Entretien Chaudi\u00E8re"}</Bullet>
+            <Bullet>{"Internet"}</Bullet>
+            <Bullet>{"Abonnements num\u00E9riques de divertissement"}</Bullet>
+
+            <Text style={[s.subTitle, { fontSize: 9, marginTop: 8 }]}>TAXES</Text>
+            <Bullet>{"Taxe ou redevance d\u2019enl\u00E8vement des ordures m\u00E9nag\u00E8res"}</Bullet>
+            <Bullet>{"Taxe de balayage"}</Bullet>
+            <Bullet>{"Redevance assainissement."}</Bullet>
           </View>
         ) : (
           <View>
@@ -423,8 +461,7 @@ export function BailPDF({ data }: { data: BailPDFData }) {
         {property.is_coliving ? (
           <View>
             <Text style={s.subTitle}>Loyer mensuel :</Text>
-            <Bullet>En CHF : {fCHF(form.loyer_chf)} (taux BCE du {form.exchange_rate_date || "—"} : {rate})</Bullet>
-            <Bullet>En EUR : {fEUR(loyer_eur)}</Bullet>
+            <Text style={s.body}>{fEUR(loyer_eur)} - (taux BCE du {form.exchange_rate_date || "\u2014"} : {rate})</Text>
             {prorata_days > 0 && prorata_total_days > 0 && prorata_days < prorata_total_days ? (
               <View>
                 <Text style={[s.body, { marginTop: 6 }]}>
@@ -438,34 +475,35 @@ export function BailPDF({ data }: { data: BailPDFData }) {
             )}
 
             <Text style={s.subTitle}>{"Charges forfaitaires mensuelles :"}</Text>
+            <Text style={[s.body, { fontSize: 9, color: "#666" }]}>
+              {"Le montant mensuel des charges forfaitaires et des services est inclus dans le loyer principal."}
+            </Text>
             <View style={s.tableHeader}>
-              <Text style={[s.tableCellBold, { width: "50%" }]}>{"Cat\u00E9gorie"}</Text>
-              <Text style={[s.tableCellBold, { width: "25%", textAlign: "right" }]}>EUR</Text>
-              <Text style={[s.tableCellBold, { width: "25%", textAlign: "right" }]}>CHF</Text>
+              <Text style={[s.tableCellBold, { width: "60%" }]}>{"Cat\u00E9gorie"}</Text>
+              <Text style={[s.tableCellBold, { width: "40%", textAlign: "right" }]}>EUR</Text>
             </View>
             <View style={s.tableRow}>
-              <Text style={[s.tableCell, { width: "50%" }]}>{"Énergie (eau, chauffage, \u00E9lec.)"}</Text>
-              <Text style={[s.tableCell, { width: "25%", textAlign: "right" }]}>{fEUR(form.charges_energy)}</Text>
-              <Text style={[s.tableCell, { width: "25%", textAlign: "right" }]}>{fCHF(form.charges_energy * rate)}</Text>
+              <Text style={[s.tableCell, { width: "60%" }]}>{"Énergie (eau, chauffage, \u00E9lec.)"}</Text>
+              <Text style={[s.tableCell, { width: "40%", textAlign: "right" }]}>{fEUR(form.charges_energy)}</Text>
             </View>
             <View style={s.tableRow}>
-              <Text style={[s.tableCell, { width: "50%" }]}>Maintenance et Entretien</Text>
-              <Text style={[s.tableCell, { width: "25%", textAlign: "right" }]}>{fEUR(form.charges_maintenance)}</Text>
-              <Text style={[s.tableCell, { width: "25%", textAlign: "right" }]}>{fCHF(form.charges_maintenance * rate)}</Text>
+              <Text style={[s.tableCell, { width: "60%" }]}>Maintenance et Entretien</Text>
+              <Text style={[s.tableCell, { width: "40%", textAlign: "right" }]}>{fEUR(form.charges_maintenance)}</Text>
             </View>
             <View style={s.tableRow}>
-              <Text style={[s.tableCell, { width: "50%" }]}>{"Services (m\u00E9nage, yoga, support)"}</Text>
-              <Text style={[s.tableCell, { width: "25%", textAlign: "right" }]}>{fEUR(form.charges_services)}</Text>
-              <Text style={[s.tableCell, { width: "25%", textAlign: "right" }]}>{fCHF(form.charges_services * rate)}</Text>
+              <Text style={[s.tableCell, { width: "60%" }]}>{"Services (m\u00E9nage, yoga, support)"}</Text>
+              <Text style={[s.tableCell, { width: "40%", textAlign: "right" }]}>{fEUR(form.charges_services)}</Text>
             </View>
             <View style={[s.tableHeader, { marginBottom: 8 }]}>
-              <Text style={[s.tableCellBold, { width: "50%" }]}>TOTAL CHARGES</Text>
-              <Text style={[s.tableCellBold, { width: "25%", textAlign: "right" }]}>{fEUR(totalCharges)}</Text>
-              <Text style={[s.tableCellBold, { width: "25%", textAlign: "right" }]}>{fCHF(totalCharges * rate)}</Text>
+              <Text style={[s.tableCellBold, { width: "60%" }]}>TOTAL CHARGES</Text>
+              <Text style={[s.tableCellBold, { width: "40%", textAlign: "right" }]}>{fEUR(totalCharges)}</Text>
             </View>
 
             <Text style={s.subTitle}>Frais de dossier :</Text>
             <Bullet>Montant : {fEUR(form.frais_dossier)} ({fCHF(form.frais_dossier * rate)}) — OFFERTS par le bailleur</Bullet>
+            <Text style={[s.body, { marginTop: 6, fontSize: 9 }]}>
+              {"En cas de d\u00E9part \u00E0 une date inf\u00E9rieure \u00E0 3 mois r\u00E9volu \u00E0 partir de la date de d\u00E9but du contrat, le locataire sera redevable aupr\u00E8s du bailleur des frais de dossier administratifs de services et d\u2019\u00E9tats des lieux, offerts dans ce pr\u00E9sent contrat."}
+            </Text>
           </View>
         ) : (
           <View>
@@ -527,7 +565,7 @@ export function BailPDF({ data }: { data: BailPDFData }) {
         <Text style={s.articleTitle}>{"ARTICLE IX \u2014 \u00C9TAT DES LIEUX"}</Text>
         <Text style={s.body}>
           {property.is_coliving
-            ? "L\u2019\u00E9tat des lieux d\u2019entr\u00E9e et de sortie sera \u00E9tabli par la soci\u00E9t\u00E9 Nockee, prestataire mandat\u00E9 par le bailleur. Le locataire re\u00E7oit un exemplaire."
+            ? "L\u2019\u00E9tat des lieux d\u2019entr\u00E9e et de sortie sera \u00E9tabli via Etadly. Le locataire recevra un exemplaire apr\u00E8s sa r\u00E9alisation."
             : "L\u2019\u00E9tat des lieux d\u2019entr\u00E9e et de sortie sera \u00E9tabli contradictoirement entre les parties. Le locataire re\u00E7oit un exemplaire."}
         </Text>
 
@@ -561,7 +599,6 @@ export function BailPDF({ data }: { data: BailPDFData }) {
 
         <Text style={s.articleTitle}>{property.is_coliving ? "ARTICLE XII \u2014 ANNEXES" : "ARTICLE XII \u2014 ANNEXES"}</Text>
         <Text style={s.body}>{"Sont annex\u00E9es au pr\u00E9sent contrat :"}</Text>
-        {!property.is_coliving && <Bullet>{"Inventaire du mobilier et \u00E9quipements"}</Bullet>}
         {!property.is_coliving && <Bullet>{"Notice d\u2019information relative aux droits et obligations des locataires et des bailleurs"}</Bullet>}
         {!property.is_coliving && <Bullet>{"RIB du bailleur"}</Bullet>}
         {property.is_coliving && <Bullet>{"R\u00E8glement Int\u00E9rieur La Villa Coliving"}</Bullet>}
