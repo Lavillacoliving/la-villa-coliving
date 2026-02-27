@@ -6,7 +6,8 @@ import { useTenantDocuments, DOCUMENT_TYPES } from '@/hooks/useTenantDocuments';
 import { supabase } from '@/lib/supabase';
 import { pdf } from '@react-pdf/renderer';
 import { QuittancePDF } from './QuittancePDF';
-import { FileText, Download, ExternalLink } from 'lucide-react';
+import { AttestationResidencePDF } from './AttestationResidencePDF';
+import { FileText, Download, ExternalLink, Home } from 'lucide-react';
 
 interface PortailContext {
   tenant: TenantInfo;
@@ -73,6 +74,7 @@ export function MonBailPage() {
   };
 
   const [generatingQuittance, setGeneratingQuittance] = useState<string | null>(null);
+  const [generatingAttestation, setGeneratingAttestation] = useState(false);
 
   const months = language === 'en' ? MONTHS_EN : MONTHS_FR;
 
@@ -140,6 +142,61 @@ export function MonBailPage() {
     setGeneratingQuittance(null);
   };
 
+  const generateAttestation = async () => {
+    setGeneratingAttestation(true);
+    try {
+      const isSleepIn = tenant.legal_entity_name?.toLowerCase().includes('sleep in');
+      const structure = isSleepIn ? 'Sleep In SCI' : 'La Villa LMP';
+      const bailleurName = 'La Villa Coliving';
+
+      // Bailleur address = siege social or property address
+      const bailleurAddr = tenant.siege_social || tenant.property_address;
+
+      // Property full address
+      const addr = tenant.property_address || '';
+      const city = tenant.property_city || '';
+      const fullAddress = addr.includes(city)
+        ? addr
+        : (addr + ', 74100 ' + city);
+
+      // Civilité based on first name heuristic (or default M.)
+      const civilite = 'M./Mme';
+
+      const formatDateFR = (d: string) => new Date(d).toLocaleDateString('fr-FR');
+
+      const data = {
+        bailleur_name: bailleurName,
+        bailleur_gerant: 'Jérôme Austin',
+        bailleur_structure: structure,
+        bailleur_address: bailleurAddr,
+        bailleur_siret: tenant.siret || '',
+        locataire_civilite: civilite,
+        locataire_name: `${tenant.first_name} ${tenant.last_name}`,
+        locataire_birth_date: tenant.date_of_birth ? formatDateFR(tenant.date_of_birth) : '',
+        locataire_birth_place: tenant.place_of_birth || '',
+        property_name: tenant.property_name,
+        property_address: fullAddress,
+        room_number: String(tenant.room_number),
+        is_coliving: tenant.is_coliving,
+        bail_date: formatDateFR(tenant.move_in_date),
+        occupation_since: formatDateFR(tenant.move_in_date),
+        generated_city: 'Annemasse',
+        generated_date: new Date().toLocaleDateString('fr-FR'),
+      };
+
+      const blob = await pdf(<AttestationResidencePDF data={data} />).toBlob();
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `Attestation_Residence_${tenant.last_name}_${new Date().toISOString().slice(0, 10)}.pdf`;
+      a.click();
+      URL.revokeObjectURL(url);
+    } catch (err) {
+      console.error('Attestation generation error:', err);
+    }
+    setGeneratingAttestation(false);
+  };
+
   const t = {
     fr: {
       leaseInfo: 'Informations du bail',
@@ -174,6 +231,10 @@ export function MonBailPage() {
       noQuittances: 'Les quittances sont disponibles pour les mois payés.',
       downloadQuittance: 'PDF',
       generating: 'Génération...',
+      attestation: 'Attestation de résidence',
+      attestationDesc: 'Générer une attestation de résidence signée par votre bailleur.',
+      downloadAttestation: 'Télécharger l\'attestation',
+      generatingAttestation: 'Génération...',
     },
     en: {
       leaseInfo: 'Lease Information',
@@ -208,6 +269,10 @@ export function MonBailPage() {
       noQuittances: 'Receipts are available for paid months.',
       downloadQuittance: 'PDF',
       generating: 'Generating...',
+      attestation: 'Residence Certificate',
+      attestationDesc: 'Generate a residence certificate signed by your landlord.',
+      downloadAttestation: 'Download certificate',
+      generatingAttestation: 'Generating...',
     },
   };
 
@@ -453,6 +518,23 @@ export function MonBailPage() {
             </div>
           );
         })()}
+      </div>
+
+      {/* Attestation de résidence */}
+      <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
+        <h2 className="text-lg font-semibold text-gray-900 mb-2 flex items-center gap-2">
+          <Home className="w-5 h-5 text-[#b8860b]" />
+          {lang.attestation}
+        </h2>
+        <p className="text-sm text-gray-500 mb-4">{lang.attestationDesc}</p>
+        <button
+          onClick={generateAttestation}
+          disabled={generatingAttestation}
+          className="inline-flex items-center gap-2 px-4 py-2 text-sm font-medium text-[#b8860b] bg-[#b8860b]/10 rounded-lg hover:bg-[#b8860b]/20 transition-colors disabled:opacity-50"
+        >
+          <Download className="w-4 h-4" />
+          {generatingAttestation ? lang.generatingAttestation : lang.downloadAttestation}
+        </button>
       </div>
     </div>
   );

@@ -30,6 +30,8 @@ export interface TenantInfo {
   charges_maintenance_chf: number;
   charges_services_chf: number;
   is_coliving: boolean;
+  date_of_birth: string | null;
+  place_of_birth: string | null;
 }
 
 export function useTenant() {
@@ -55,7 +57,7 @@ export function useTenant() {
             id, first_name, last_name, email, phone, room_number,
             current_rent, move_in_date, move_out_date, deposit_amount, due_day,
             bail_end, preavis_status, preavis_date, bio, is_visible_annuaire,
-            property_id,
+            property_id, date_of_birth, place_of_birth,
             properties!inner(name, address, city, legal_entity_name, siege_social, siret, charges_energy_chf, charges_maintenance_chf, charges_services_chf, is_coliving)
           `)
           .eq('user_id', user.id)
@@ -72,7 +74,7 @@ export function useTenant() {
             id, first_name, last_name, email, phone, room_number,
             current_rent, move_in_date, move_out_date, deposit_amount, due_day,
             bail_end, preavis_status, preavis_date, bio, is_visible_annuaire,
-            property_id,
+            property_id, date_of_birth, place_of_birth,
             properties!inner(name, address, city, legal_entity_name, siege_social, siret, charges_energy_chf, charges_maintenance_chf, charges_services_chf, is_coliving)
           `)
           .eq('email', user.email)
