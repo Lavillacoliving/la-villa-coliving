@@ -35,14 +35,16 @@ const S = StyleSheet.create({
   page: { padding: 50, fontFamily: "Helvetica", fontSize: 10, color: "#1a1a1a" },
   header: { flexDirection: "row", alignItems: "center", marginBottom: 30, borderBottom: "2 solid #b8860b", paddingBottom: 15 },
   logo: { width: 140, marginRight: 15 },
-  headerText: { flex: 1 },
-  title: { fontSize: 20, fontFamily: "Helvetica-Bold", color: "#b8860b", marginBottom: 4 },
+  headerText: { flex: 1, justifyContent: "center" },
+  title: { fontSize: 20, fontFamily: "Helvetica-Bold", color: "#b8860b", marginTop: 20 },
   subtitle: { fontSize: 11, color: "#666" },
   grid: { flexDirection: "row", justifyContent: "space-between", marginBottom: 25 },
   col: { width: "45%" },
+  colRight: { width: "45%", paddingLeft: 30 },
   label: { fontSize: 8, color: "#999", textTransform: "uppercase", marginBottom: 3, letterSpacing: 0.5 },
   value: { fontSize: 10, marginBottom: 2 },
   valueBold: { fontSize: 10, fontFamily: "Helvetica-Bold", marginBottom: 2 },
+  valueColor: { fontSize: 10, color: "#333", marginBottom: 2 },
   section: { marginBottom: 20 },
   sectionTitle: { fontSize: 12, fontFamily: "Helvetica-Bold", marginBottom: 10, color: "#333" },
   row: { flexDirection: "row", justifyContent: "space-between", paddingVertical: 6, borderBottom: "0.5 solid #eee" },
@@ -52,7 +54,8 @@ const S = StyleSheet.create({
   totalLabel: { fontSize: 12, fontFamily: "Helvetica-Bold", color: "#1a1a1a" },
   totalValue: { fontSize: 12, fontFamily: "Helvetica-Bold", color: "#b8860b" },
   attestation: { marginTop: 30, padding: 15, backgroundColor: "#faf9f7", borderRadius: 4 },
-  attestText: { fontSize: 9, lineHeight: 1.5, color: "#444" },
+  attestText: { fontSize: 10.5, lineHeight: 1.5, color: "#444" },
+  attestAddress: { fontSize: 10.5, lineHeight: 1.5, color: "#444", fontFamily: "Helvetica-Bold", paddingLeft: 60 },
   footer: { position: "absolute", bottom: 30, left: 50, right: 50, borderTop: "0.5 solid #ddd", paddingTop: 8 },
   footerText: { fontSize: 7, color: "#999", textAlign: "center" },
   period: { marginBottom: 20, padding: 12, backgroundColor: "#f8f6f0", borderRadius: 4, borderLeft: "3 solid #b8860b" },
@@ -66,10 +69,36 @@ function fmt(n: number): string {
   return formatted + "," + decPart + " \u20AC";
 }
 
+// Split "8 rue du Mont-Blanc – 74100 Annemasse – France" into structured lines
+function parseAddress(addr: string): { street: string; cityZip: string; country: string } {
+  // Try splitting by " – " or " - "
+  const parts = addr.split(/\s*[\u2013\u2014-]\s*/);
+  if (parts.length >= 3) {
+    return { street: parts[0], cityZip: parts[1], country: parts[2] };
+  }
+  if (parts.length === 2) {
+    return { street: parts[0], cityZip: parts[1], country: "France" };
+  }
+  // Fallback: try to extract zip code pattern
+  const match = addr.match(/^(.+?),?\s+(\d{5}\s+.+?)(?:,?\s+(France))?$/i);
+  if (match) {
+    return { street: match[1], cityZip: match[2], country: match[3] || "France" };
+  }
+  return { street: addr, cityZip: "", country: "France" };
+}
+
+// Split "34 rue du Foron, 74100 Ville-la-Grand" into street + cityZip
+function parsePropertyAddress(addr: string): { street: string; cityZip: string } {
+  const match = addr.match(/^(.+?),\s*(\d{5}\s+.+)$/);
+  if (match) {
+    return { street: match[1] + ",", cityZip: match[2] };
+  }
+  return { street: addr, cityZip: "" };
+}
+
 export function QuittancePDF({ data }: { data: QuittanceData }) {
-  const logement = data.is_coliving
-    ? data.property_name + " \u2014 Chambre " + data.room_number
-    : data.property_name;
+  const bailleurAddr = parseAddress(data.bailleur_address);
+  const propAddr = parsePropertyAddress(data.property_address);
 
   return (
     <Document>
@@ -94,14 +123,25 @@ export function QuittancePDF({ data }: { data: QuittanceData }) {
           <View style={S.col}>
             <Text style={S.label}>Bailleur</Text>
             <Text style={S.valueBold}>{data.bailleur_name}</Text>
-            <Text style={S.value}>{data.bailleur_address}</Text>
+            <Text style={S.valueColor}>{bailleurAddr.street}</Text>
+            <Text style={S.valueColor}>{bailleurAddr.cityZip}</Text>
+            <Text style={S.valueColor}>{bailleurAddr.country}</Text>
             {data.bailleur_siret ? <Text style={S.value}>{"SIRET : " + data.bailleur_siret}</Text> : null}
           </View>
-          <View style={S.col}>
+          <View style={S.colRight}>
             <Text style={S.label}>Locataire</Text>
             <Text style={S.valueBold}>{data.locataire_name}</Text>
-            <Text style={S.value}>{logement}</Text>
-            <Text style={S.value}>{data.property_address}</Text>
+            {data.is_coliving ? (
+              <>
+                <Text style={S.valueColor}>{data.bailleur_name + " - " + data.property_name}</Text>
+                <Text style={S.valueColor}>{"Chambre " + data.room_number}</Text>
+              </>
+            ) : (
+              <Text style={S.valueColor}>{data.property_name}</Text>
+            )}
+            <Text style={S.valueColor}>{propAddr.street}</Text>
+            <Text style={S.valueColor}>{propAddr.cityZip}</Text>
+            <Text style={S.valueColor}>France</Text>
           </View>
         </View>
 
@@ -130,15 +170,28 @@ export function QuittancePDF({ data }: { data: QuittanceData }) {
         {/* Attestation */}
         <View style={S.attestation}>
           <Text style={S.attestText}>
-            {"Je soussign\u00E9(e), repr\u00E9sentant(e) de " + data.bailleur_name + ", reconnais avoir re\u00E7u de " + data.locataire_name + " la somme de " + fmt(data.total) + " au titre du loyer et des charges forfaitaires pour la p\u00E9riode du " + data.period_start + " au " + data.period_end + ", pour le logement situ\u00E9 : " + data.property_address + ", " + logement + "."}
+            {"Je soussign\u00E9(e), repr\u00E9sentant(e) de " + data.bailleur_name + ", reconnais avoir re\u00E7u de " + data.locataire_name + " la somme de " + fmt(data.total) + " au titre du loyer et des charges forfaitaires pour la p\u00E9riode du " + data.period_start + " au " + data.period_end + ", pour le logement situ\u00E9 :"}
           </Text>
-          <Text style={[S.attestText, { marginTop: 10 }]}>
+          {data.is_coliving ? (
+            <>
+              <Text style={S.attestAddress}>{data.property_name}</Text>
+              <Text style={S.attestAddress}>{"Chambre " + data.room_number}</Text>
+            </>
+          ) : (
+            <Text style={S.attestAddress}>{data.property_name}</Text>
+          )}
+          <Text style={S.attestAddress}>{propAddr.street}</Text>
+          <Text style={S.attestAddress}>{propAddr.cityZip + ","}</Text>
+          <Text style={S.attestAddress}>France</Text>
+
+          <Text style={[S.attestText, { marginTop: 15 }]}>
             {"Cette quittance annule tous les re\u00E7us qui auraient pu \u00EAtre \u00E9tablis pr\u00E9c\u00E9demment en cas de paiement partiel du montant ci-dessus. Elle ne pr\u00E9juge pas des sommes restant dues au titre de loyers pr\u00E9c\u00E9dents impay\u00E9s."}
           </Text>
-          <Text style={[S.attestText, { marginTop: 15, fontFamily: "Helvetica-Bold" }]}>
+
+          <Text style={[S.attestText, { marginTop: 20, fontFamily: "Helvetica-Bold" }]}>
             {"Fait \u00E0 Annemasse, le " + data.generated_date}
           </Text>
-          <Text style={[S.attestText, { marginTop: 8 }]}>
+          <Text style={[S.attestText, { marginTop: 8, textAlign: "right", paddingRight: 30 }]}>
             {data.bailleur_name}
           </Text>
         </View>
