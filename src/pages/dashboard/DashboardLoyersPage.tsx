@@ -56,6 +56,7 @@ export default function DashboardLoyersPage() {
   const [editData, setEditData] = useState<{received_amount:number,adjusted_amount:number|null,status:string,payment_date:string|null}>({received_amount:0,adjusted_amount:null,status:'pending',payment_date:null});
   const [editSaving, setEditSaving] = useState(false);
   const [irlConfirm, setIrlConfirm] = useState<{tenantId:string,newRent:number}|null>(null);
+  const [irlDismissed, setIrlDismissed] = useState<Set<string>>(new Set());
 
   const load = useCallback(async () => {
     setLoading(true);
@@ -167,6 +168,23 @@ export default function DashboardLoyersPage() {
     }
   });
   birthdayReminders.sort((a,b)=>a.daysUntil-b.daysUntil);
+
+  const dismissIRL = async (r: IRLReminder) => {
+    await supabase.from('rent_revisions').insert({
+      tenant_id: r.tenantId,
+      previous_rent: r.currentRent,
+      new_rent: r.newRent,
+      irl_reference: r.irlRef,
+      irl_old_value: r.irlOld,
+      irl_new_value: r.irlNew,
+      variation_pct: parseFloat(r.pct),
+      effective_date: r.date.toISOString().split('T')[0],
+      applied: false,
+    });
+    logAudit('irl_dismissed', 'tenant', r.tenantId, { reason: 'ignored', newRent: r.newRent });
+    setIrlDismissed(prev => new Set(prev).add(r.tenantId));
+    toast.success('Augmentation ignorée pour ' + r.name);
+  };
 
   const applyIRL = (tenantId:string,newRent:number) => {
     setIrlConfirm({tenantId,newRent});
@@ -347,7 +365,7 @@ export default function DashboardLoyersPage() {
       {irlReminders.length > 0 && (
         <div style={S.irlBox}>
           <strong>📈 Augmentations IRL à prévoir</strong>
-          {irlReminders.map((r,i) => (
+          {irlReminders.filter(r => !irlDismissed.has(r.tenantId)).map((r,i) => (
             <div key={i} style={{marginTop:'8px',padding:'10px',background:'white',borderRadius:'8px',display:'flex',justifyContent:'space-between',alignItems:'center',flexWrap:'wrap',gap:'8px'}}>
               <div>
                 <strong>{r.name}</strong> (Ch. {r.room}{r.property?' — '+r.property:''})
@@ -360,6 +378,7 @@ export default function DashboardLoyersPage() {
               <div style={{display:'flex',gap:'6px',flexDirection:'column'}}>
                 <button onClick={()=>generateIRLPDF(r)} style={{padding:'5px 12px',background:'#3498DB',color:'white',border:'none',borderRadius:'6px',cursor:'pointer',fontSize:'12px'}}>📄 Courrier PDF</button>
                 <button onClick={()=>applyIRL(r.tenantId,r.newRent)} style={{padding:'5px 12px',background:'#7C9A6D',color:'white',border:'none',borderRadius:'6px',cursor:'pointer',fontSize:'12px'}}>✓ Appliquer</button>
+                <button onClick={()=>dismissIRL(r)} style={{padding:'5px 12px',background:'#e74c3c',color:'white',border:'none',borderRadius:'6px',cursor:'pointer',fontSize:'12px'}}>✕ Ignorer</button>
               </div>
             </div>
           ))}
