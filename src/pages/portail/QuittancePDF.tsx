@@ -56,6 +56,7 @@ const S = StyleSheet.create({
   attestation: { marginTop: 30, padding: 15, backgroundColor: "#faf9f7", borderRadius: 4 },
   attestText: { fontSize: 10.5, lineHeight: 1.5, color: "#444" },
   attestAddress: { fontSize: 10.5, lineHeight: 1.5, color: "#444", fontFamily: "Helvetica-Bold", paddingLeft: 60 },
+  signatureImage: { width: 120, height: 66, marginTop: 8, alignSelf: "flex-end" as const, marginRight: 30 },
   footer: { position: "absolute", bottom: 30, left: 50, right: 50, borderTop: "0.5 solid #ddd", paddingTop: 8 },
   footerText: { fontSize: 7, color: "#999", textAlign: "center" },
   period: { marginBottom: 20, padding: 12, backgroundColor: "#f8f6f0", borderRadius: 4, borderLeft: "3 solid #b8860b" },
@@ -191,7 +192,11 @@ export function QuittancePDF({ data }: { data: QuittanceData }) {
           <Text style={[S.attestText, { marginTop: 20, fontFamily: "Helvetica-Bold" }]}>
             {"Fait \u00E0 Annemasse, le " + data.generated_date}
           </Text>
-          <Text style={[S.attestText, { marginTop: 8, textAlign: "right", paddingRight: 30 }]}>
+          <Image style={S.signatureImage} src="https://www.lavillacoliving.com/images/signature-jerome.png" />
+          <Text style={[S.attestText, { textAlign: "right", paddingRight: 30, marginTop: 4 }]}>
+            {"J\u00E9r\u00F4me Austin"}
+          </Text>
+          <Text style={[S.attestText, { textAlign: "right", paddingRight: 30 }]}>
             {data.bailleur_name}
           </Text>
         </View>
