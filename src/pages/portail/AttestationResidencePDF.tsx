@@ -55,6 +55,7 @@ const S = StyleSheet.create({
   signatureLine: { fontSize: 10.5, marginBottom: 3 },
   signatureBold: { fontSize: 10.5, fontFamily: "Helvetica-Bold", marginBottom: 3 },
   signatureRight: { fontSize: 10.5, textAlign: "right", paddingRight: 30, marginTop: 8 },
+  signatureImage: { width: 150, height: 82, marginTop: 15, alignSelf: "flex-end" as const, marginRight: 30 },
   // Footer
   footer: { position: "absolute", bottom: 30, left: 50, right: 50, borderTop: "0.5 solid #ddd", paddingTop: 8 },
   footerText: { fontSize: 7, color: "#999", textAlign: "center" },
@@ -138,7 +139,8 @@ export function AttestationResidencePDF({ data }: { data: AttestationData }) {
           <Text style={S.signatureBold}>
             {"Fait \u00E0 " + data.generated_city + ", le " + data.generated_date}
           </Text>
-          <Text style={[S.signatureRight, { marginTop: 30 }]}>
+          <Image style={S.signatureImage} src="https://www.lavillacoliving.com/images/signature-jerome.png" />
+          <Text style={S.signatureRight}>
             {data.bailleur_gerant}
           </Text>
           <Text style={S.signatureRight}>
