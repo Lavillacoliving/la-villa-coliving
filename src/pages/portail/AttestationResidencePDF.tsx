@@ -39,11 +39,11 @@ const S = StyleSheet.create({
   headerText: { flex: 1, justifyContent: "center" },
   title: { fontSize: 20, fontFamily: "Helvetica-Bold", color: "#b8860b", marginTop: 20 },
   // Bailleur block
-  bailleurBlock: { marginBottom: 30 },
+  bailleurBlock: { marginBottom: 20 },
   bailleurLine: { fontSize: 10, color: "#333", marginBottom: 2 },
   bailleurBold: { fontSize: 10, fontFamily: "Helvetica-Bold", color: "#1a1a1a", marginBottom: 2 },
   // Object
-  objet: { fontSize: 11, fontFamily: "Helvetica-Bold", marginBottom: 25, borderBottom: "1 solid #e0e0e0", paddingBottom: 8 },
+  objet: { fontSize: 11, fontFamily: "Helvetica-Bold", marginBottom: 18, borderBottom: "1 solid #e0e0e0", paddingBottom: 8 },
   // Body
   paragraph: { fontSize: 10.5, marginBottom: 14, textAlign: "justify" },
   paragraphBold: { fontSize: 10.5, marginBottom: 14, textAlign: "justify", fontFamily: "Helvetica-Bold" },
@@ -51,11 +51,11 @@ const S = StyleSheet.create({
   addressBlock: { marginTop: 8, marginBottom: 14, paddingLeft: 40 },
   addressLine: { fontSize: 10.5, fontFamily: "Helvetica-Bold", color: "#333", marginBottom: 2 },
   // Signature
-  signatureBlock: { marginTop: 40 },
+  signatureBlock: { marginTop: 15 },
   signatureLine: { fontSize: 10.5, marginBottom: 3 },
   signatureBold: { fontSize: 10.5, fontFamily: "Helvetica-Bold", marginBottom: 3 },
-  signatureRight: { fontSize: 10.5, textAlign: "right", paddingRight: 30, marginTop: 8 },
-  signatureImage: { width: 150, height: 82, marginTop: 15, alignSelf: "flex-end" as const, marginRight: 30 },
+  signatureRight: { fontSize: 10.5, textAlign: "right", paddingRight: 30, marginTop: 4 },
+  signatureImage: { width: 120, height: 66, marginTop: 8, alignSelf: "flex-end" as const, marginRight: 30 },
   // Footer
   footer: { position: "absolute", bottom: 30, left: 50, right: 50, borderTop: "0.5 solid #ddd", paddingTop: 8 },
   footerText: { fontSize: 7, color: "#999", textAlign: "center" },
