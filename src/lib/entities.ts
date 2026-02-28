@@ -75,8 +75,8 @@ export const RAPPROCHEMENT_STATUSES = [
 ] as const;
 
 export const INVOICE_CATEGORIES = [
-  'Consommable', 'Petit Mobilier', 'Mobilier', 'Telco Web & Abonnements',
-  'Note de Frais', 'Prestation', 'Eau et Energie', 'Assurances', 'Impots',
+  'Consommable', 'Petit Mobilier', 'Mobilier', 'Travaux', 'Telco Web & Abonnements',
+  'Note de Frais', 'Prestation', 'Eau et Energie', 'Assurances', 'Impots', 'Frais Bancaires',
 ] as const;
 
 export function getTransactionTypeLabel(type: string): string {
