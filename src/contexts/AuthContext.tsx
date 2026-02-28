@@ -31,6 +31,12 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         setUser(session?.user ?? null);
         setLoading(false);
 
+        // After password recovery, redirect to reset page
+        if (event === 'PASSWORD_RECOVERY') {
+          window.location.href = '/reset-password';
+          return;
+        }
+
         // After magic link sign-in, redirect to portail
         if (event === 'SIGNED_IN' && session) {
           const p = window.location.pathname;

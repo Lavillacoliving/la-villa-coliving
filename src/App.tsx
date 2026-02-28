@@ -36,15 +36,17 @@ import DashboardDocumentsPage from "@/pages/dashboard/DashboardDocumentsPage";
 import DashboardEventsPage from "@/pages/dashboard/DashboardEventsPage";
 import DashboardRapprochementPage from "@/pages/dashboard/DashboardRapprochementPage";
 import DashboardCautionsPage from "@/pages/dashboard/DashboardCautionsPage";
+import ResetPasswordPage from "@/pages/ResetPasswordPage";
 
 function AppContent() {
   const location = useLocation();
   const isDashboard = location.pathname.startsWith('/dashboard');
   const isPortail = location.pathname.startsWith('/portail');
+  const isResetPw = location.pathname === '/reset-password';
 
   return (
     <div className="min-h-screen bg-background">
-      {!isDashboard && !isPortail && <Navbar />}
+      {!isDashboard && !isPortail && !isResetPw && <Navbar />}
       <Routes>
         <Route path="/" element={<HomePage />} />
         <Route path="/colocation-geneve" element={<ColocationGenevePage />} />
@@ -63,6 +65,7 @@ function AppContent() {
         <Route path="/lavilla" element={<HouseDetailPage />} />
         <Route path="/leloft" element={<HouseDetailPage />} />
         <Route path="/lelodge" element={<HouseDetailPage />} />
+        <Route path="/reset-password" element={<ResetPasswordPage />} />
         <Route path="/mon-espace" element={<Navigate to="/portail" replace />} />
         <Route path="/portail" element={<PortailLayout />}>
           <Route index element={<Navigate to="/portail/ma-maison" replace />} />
@@ -88,7 +91,7 @@ function AppContent() {
         </Route>
         <Route path="*" element={<NotFoundPage />} />
       </Routes>
-      {!isDashboard && !isPortail && <Footer />}
+      {!isDashboard && !isPortail && !isResetPw && <Footer />}
     </div>
   );
 }
