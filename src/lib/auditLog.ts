@@ -33,7 +33,7 @@ export type AuditAction =
 export type AuditEntityType =
   | 'tenant' | 'prospect' | 'payment' | 'maintenance_ticket'
   | 'event' | 'lease' | 'document' | 'room' | 'property'
-  | 'bank_transaction' | 'invoice' | 'deposit';
+  | 'bank_transaction' | 'invoice' | 'deposit' | 'blog_post';
 
 export async function logAudit(
   action: AuditAction,
