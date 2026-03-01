@@ -160,7 +160,7 @@ export function HeroV7() {
               {
                 image: "/images/la villa coliving le lodge-sauna2.webp",
                 title: "Sauna",
-                desc: language === "en" ? "Finnish sauna at Le Loft, Jacuzzi® at Le Lodge and infrared at La Villa." : "Sauna finlandais au Loft, Jacuzzi® au Lodge et infrarouge à La Villa.",
+                desc: language === "en" ? "Finnish sauna at Le Loft and Le Lodge, and infrared at La Villa." : "Sauna finlandais au Loft et au Lodge et infrarouge à La Villa.",
                 highlight: language === "en" ? "In all 3 houses" : "Dans les 3 maisons",
               },
               {

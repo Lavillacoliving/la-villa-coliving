@@ -150,9 +150,9 @@ export const translations = {
       leLodge: {
         name: "Le Lodge",
         location: "Annemasse",
-        description: "Our newest and largest home, open since January 2026. 4 buildings, fitness chalet with Jacuzzi® infrared sauna, pool house with outdoor kitchen.",
+        description: "Our newest and largest home, open since January 2026. 4 buildings, fitness chalet with sauna, pool house with outdoor kitchen.",
         features:
-          "Outdoor pool, fitness chalet with Jacuzzi® infrared sauna, pool house with full outdoor kitchen, BBQ & expansive gardens",
+          "Outdoor pool, fitness chalet with sauna, pool house with full outdoor kitchen, BBQ & expansive gardens",
         perfectFor: "Community seekers",
         capacity: "12 members",
       },
@@ -583,9 +583,9 @@ export const translations = {
         name: "Le Lodge",
         location: "Annemasse",
         description:
-          "Notre maison la plus récente et la plus grande, ouverte depuis janvier 2026. 4 bâtiments, chalet fitness avec sauna infrarouge Jacuzzi®, pool house avec cuisine d'été.",
+          "Notre maison la plus récente et la plus grande, ouverte depuis janvier 2026. 4 bâtiments, chalet fitness avec sauna, pool house avec cuisine d'été.",
         features:
-          "Piscine extérieure, chalet fitness avec sauna infrarouge Jacuzzi®, pool house avec cuisine d'été complète, BBQ & grands jardins",
+          "Piscine extérieure, chalet fitness avec sauna, pool house avec cuisine d'été complète, BBQ & grands jardins",
         perfectFor: "Chercheurs de communauté",
         capacity: "12 membres",
       },

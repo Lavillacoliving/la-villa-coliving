@@ -46,8 +46,8 @@ export function HousesPreviewV7() {
       residents: "12",
       image: "/images/le lodge piscine.webp",
       description: language === "en"
-        ? "20 min from Geneva city center by CEVA. The largest: pool house, full fitness chalet with sauna, Jacuzzi® & arcade."
-        : "20 min du centre de Genève en CEVA. Le plus grand : pool house, chalet fitness complet avec sauna, Jacuzzi® et jeu d'arcade.",
+        ? "20 min from Geneva city center by CEVA. The largest: pool house, full fitness chalet with sauna & arcade."
+        : "20 min du centre de Genève en CEVA. Le plus grand : pool house, chalet fitness complet avec sauna et jeu d'arcade.",
       alt: language === "en"
         ? "Le Lodge — coliving house with pool and gym in Annemasse, near Geneva"
         : "Le Lodge — maison de colocation avec piscine et salle de sport à Annemasse, près de Genève",

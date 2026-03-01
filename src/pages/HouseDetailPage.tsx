@@ -847,11 +847,11 @@ function getHousesData(lang: string): Record<string, HouseData> {
     name: "Le Lodge",
     location: "Annemasse, Grand Genève",
     description: isEn
-      ? "Our newest and largest home, open since January 2026. 500 m² on 1,500 m², pool house, full fitness chalet with sauna, Jacuzzi® & arcade."
-      : "Notre maison la plus récente et la plus grande, ouverte depuis janvier 2026. 500 m² sur 1 500 m², pool house, chalet fitness complet avec sauna, Jacuzzi® et jeu d'arcade.",
+      ? "Our newest and largest home, open since January 2026. 500 m² on 1,500 m², pool house, full fitness chalet with sauna & arcade."
+      : "Notre maison la plus récente et la plus grande, ouverte depuis janvier 2026. 500 m² sur 1 500 m², pool house, chalet fitness complet avec sauna et jeu d'arcade.",
     longDescription: isEn
-      ? "Le Lodge represents the pinnacle of coliving at La Villa. Open since January 2026, this expansive 500 m² property spans 4 buildings across 1,500 m² of gardens — our largest and most comprehensive home. The dedicated fitness chalet with sauna and jacuzzi, the stunning pool house with full outdoor kitchen, and the main residence create a village-like atmosphere where community truly thrives. With 12 residents, DPE B energy rating, electric bike charging stations, and 130 m² of attic storage, Le Lodge sets a new standard."
-      : "Le Lodge représente le summum du coliving chez La Villa. Ouvert depuis janvier 2026, ce bien de 500 m² s'étend sur 4 bâtiments au cœur de 1 500 m² de jardins — notre maison la plus grande et la plus complète. Le chalet fitness dédié avec sauna et jacuzzi, le pool house avec cuisine d'été complète et la résidence principale créent une atmosphère de village où la communauté s'épanouit vraiment. Avec 12 résidents, un DPE B, des bornes de recharge vélo électrique et 130 m² de grenier de stockage, Le Lodge établit un nouveau standard.",
+      ? "Le Lodge represents the pinnacle of coliving at La Villa. Open since January 2026, this expansive 500 m² property spans 4 buildings across 1,500 m² of gardens — our largest and most comprehensive home. The dedicated fitness chalet with sauna, the stunning pool house with full outdoor kitchen, and the main residence create a village-like atmosphere where community truly thrives. With 12 residents, DPE B energy rating, electric bike charging stations, and 130 m² of attic storage, Le Lodge sets a new standard."
+      : "Le Lodge représente le summum du coliving chez La Villa. Ouvert depuis janvier 2026, ce bien de 500 m² s'étend sur 4 bâtiments au cœur de 1 500 m² de jardins — notre maison la plus grande et la plus complète. Le chalet fitness dédié avec sauna, le pool house avec cuisine d'été complète et la résidence principale créent une atmosphère de village où la communauté s'épanouit vraiment. Avec 12 résidents, un DPE B, des bornes de recharge vélo électrique et 130 m² de grenier de stockage, Le Lodge établit un nouveau standard.",
     image: "/images/le lodge/exterior/la villa coliving le lodge-14.webp",
     gallery: [
       "/images/le lodge/exterior/le lodge piscine.webp",
@@ -1208,7 +1208,7 @@ function getHousesData(lang: string): Record<string, HouseData> {
     },
     features: isEn ? [
       "12×5m outdoor swimming pool (mid-April to end of September)",
-      "Dedicated fitness chalet with sauna (5 seats) & jacuzzi",
+      "Dedicated fitness chalet with sauna (5 seats)",
       "State-of-the-art gym equipment",
       "Pool house with full outdoor kitchen, BBQ XXL",
       "Gaming & entertainment room with arcade machine",
@@ -1220,7 +1220,7 @@ function getHousesData(lang: string): Record<string, HouseData> {
       "DPE B energy rating",
     ] : [
       "Piscine extérieure 12×5 m (mi-avril à fin septembre)",
-      "Chalet fitness dédié avec sauna (5 places) & jacuzzi",
+      "Chalet fitness dédié avec sauna (5 places)",
       "Salle de sport très complète",
       "Pool house avec cuisine d'été complète, BBQ XXL",
       "Salle de jeux & divertissement avec jeu d'arcade",
@@ -1280,14 +1280,14 @@ function getHousesData(lang: string): Record<string, HouseData> {
     lifestyle: isEn ? [
       "Pool parties in summer",
       "Fitness challenges in the chalet",
-      "Jacuzzi sessions under the stars",
+      "Sauna sessions after a workout",
       "Garden BBQs & outdoor dining",
       "Pizza party nights",
       "Arcade & shuffleboard tournaments",
     ] : [
       "Pool parties en été",
       "Défis fitness dans le chalet",
-      "Sessions jacuzzi sous les étoiles",
+      "Sessions sauna après le sport",
       "BBQ & dîners au jardin",
       "Soirées pizza party",
       "Tournois arcade & jeux de palets",

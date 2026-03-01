@@ -172,8 +172,8 @@ export function RatesPageV4() {
         : "Le Lodge coliving Annemasse — chambres meublées tout inclus dès 1 380 CHF près de Genève",
       description:
         language === "en"
-          ? "Pool house, full fitness chalet with sauna, Jacuzzi® & arcade"
-          : "Pool house, chalet fitness complet avec sauna, Jacuzzi® et jeu d'arcade",
+          ? "Pool house, full fitness chalet with sauna & arcade"
+          : "Pool house, chalet fitness complet avec sauna et jeu d'arcade",
     },
   ];
 

@@ -49,8 +49,8 @@ export function HousesPageV4() {
       location: "Annemasse",
       description:
         language === "en"
-          ? "Our newest and largest home (Jan 2026). Pool house, full fitness chalet with sauna, Jacuzzi® & arcade."
-          : "Notre maison la plus récente et la plus grande (jan. 2026). Pool house, chalet fitness complet avec sauna, Jacuzzi® et jeu d'arcade.",
+          ? "Our newest and largest home (Jan 2026). Pool house, full fitness chalet with sauna & arcade."
+          : "Notre maison la plus récente et la plus grande (jan. 2026). Pool house, chalet fitness complet avec sauna et jeu d'arcade.",
       image: "/images/le lodge piscine.webp",
       alt: language === "en"
         ? "Le Lodge — coliving with pool, gym and gardens in Annemasse, 10 min from Geneva"
@@ -58,8 +58,8 @@ export function HousesPageV4() {
       capacity: "12",
       price: "1,380",
       features: language === "en"
-        ? ["Outdoor pool + pool house", "Sauna & Jacuzzi®", "Full fitness chalet", "Arcade & games"]
-        : ["Piscine + pool house", "Sauna & Jacuzzi®", "Chalet fitness complet", "Arcade & jeux"],
+        ? ["Outdoor pool + pool house", "Sauna", "Full fitness chalet", "Arcade & games"]
+        : ["Piscine + pool house", "Sauna", "Chalet fitness complet", "Arcade & jeux"],
     },
   ];
 
@@ -89,7 +89,7 @@ export function HousesPageV4() {
       values: [
         language === "en" ? "Infrared (5 seats)" : "Infrarouge (5 places)",
         language === "en" ? "Finnish (2 seats)" : "Finlandais (2 places)",
-        language === "en" ? "Finnish sauna (5 seats) + Jacuzzi®" : "Sauna finlandais 5 places + Jacuzzi®",
+        language === "en" ? "Finnish sauna (5 seats)" : "Sauna finlandais (5 places)",
       ],
     },
     {
