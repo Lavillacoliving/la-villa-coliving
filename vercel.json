@@ -551,6 +551,46 @@
       "source": "/product-page/:slug",
       "destination": "/tarifs",
       "permanent": true
+    },
+    {
+      "source": "/fr/",
+      "destination": "/",
+      "permanent": true
+    },
+    {
+      "source": "/fr/members",
+      "destination": "/le-coliving",
+      "permanent": true
+    },
+    {
+      "source": "/fr/category/all-products",
+      "destination": "/nos-maisons",
+      "permanent": true
+    },
+    {
+      "source": "/thebigcolivingguide",
+      "destination": "/le-coliving",
+      "permanent": true
+    },
+    {
+      "source": "/fr/nos-maisons",
+      "destination": "/nos-maisons",
+      "permanent": true
+    },
+    {
+      "source": "/fr/tarifs",
+      "destination": "/tarifs",
+      "permanent": true
+    },
+    {
+      "source": "/fr/candidature",
+      "destination": "/candidature",
+      "permanent": true
+    },
+    {
+      "source": "/fr/le-coliving",
+      "destination": "/le-coliving",
+      "permanent": true
     }
   ],
   "headers": [
