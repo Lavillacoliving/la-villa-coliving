@@ -37,6 +37,7 @@ import DashboardDocumentsPage from "@/pages/dashboard/DashboardDocumentsPage";
 import DashboardEventsPage from "@/pages/dashboard/DashboardEventsPage";
 import DashboardRapprochementPage from "@/pages/dashboard/DashboardRapprochementPage";
 import DashboardCautionsPage from "@/pages/dashboard/DashboardCautionsPage";
+import DashboardBlogPage from "@/pages/dashboard/DashboardBlogPage";
 import ResetPasswordPage from "@/pages/ResetPasswordPage";
 
 function AppContent() {
@@ -105,6 +106,7 @@ function AppContent() {
           <Route path="events" element={<DashboardEventsPage />} />
           <Route path="maisons" element={<DashboardMaisonsPage />} />
           <Route path="nouveau-bail" element={<DashboardNouveauBailPage />} />
+          <Route path="blog" element={<DashboardBlogPage />} />
         </Route>
         <Route path="*" element={<NotFoundPage />} />
       </Routes>

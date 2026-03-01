@@ -18,6 +18,7 @@ const TABS = [
   { id: 'events', label: 'Événements', path: '/dashboard/events' },
   { id: 'maisons', label: 'Maisons', path: '/dashboard/maisons' },
   { id: 'nouveau-bail', label: 'Nouveau Bail', path: '/dashboard/nouveau-bail' },
+  { id: 'blog', label: 'Blog', path: '/dashboard/blog' },
 ];
 
 type AuthStep = 'loading' | 'login' | 'mfa-enroll' | 'mfa-verify' | 'ready';
