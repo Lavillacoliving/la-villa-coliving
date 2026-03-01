@@ -375,6 +375,14 @@
     <priority>0.6</priority>
   </url>
   <url>
+    <loc>https://www.lavillacoliving.com/blog/coliving-geneve-frontaliers-guide-complet</loc>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://www.lavillacoliving.com/blog/coliving-geneve-frontaliers-guide-complet" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.lavillacoliving.com/en/blog/coliving-geneve-frontaliers-guide-complet" />
+    <lastmod>2026-03-01</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
     <loc>https://www.lavillacoliving.com/blog/demenager-geneve-frontalier-checklist</loc>
     <xhtml:link rel="alternate" hreflang="fr" href="https://www.lavillacoliving.com/blog/demenager-geneve-frontalier-checklist" />
     <xhtml:link rel="alternate" hreflang="en" href="https://www.lavillacoliving.com/en/blog/demenager-geneve-frontalier-checklist" />
@@ -628,6 +636,14 @@
     <loc>https://www.lavillacoliving.com/en/blog/colocation-annemasse-ville-la-grand-ambilly</loc>
     <xhtml:link rel="alternate" hreflang="fr" href="https://www.lavillacoliving.com/blog/colocation-annemasse-ville-la-grand-ambilly" />
     <xhtml:link rel="alternate" hreflang="en" href="https://www.lavillacoliving.com/en/blog/colocation-annemasse-ville-la-grand-ambilly" />
+    <lastmod>2026-03-01</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
+  </url>
+  <url>
+    <loc>https://www.lavillacoliving.com/en/blog/coliving-geneve-frontaliers-guide-complet</loc>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://www.lavillacoliving.com/blog/coliving-geneve-frontaliers-guide-complet" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.lavillacoliving.com/en/blog/coliving-geneve-frontaliers-guide-complet" />
     <lastmod>2026-03-01</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>

@@ -181,6 +181,10 @@
       "destination": "/prerendered/blog-colocation-annemasse-ville-la-grand-ambilly.html"
     },
     {
+      "source": "/blog/coliving-geneve-frontaliers-guide-complet",
+      "destination": "/prerendered/blog-coliving-geneve-frontaliers-guide-complet.html"
+    },
+    {
       "source": "/blog/demenager-geneve-frontalier-checklist",
       "destination": "/prerendered/blog-demenager-geneve-frontalier-checklist.html"
     },
@@ -307,6 +311,10 @@
     {
       "source": "/en/blog/colocation-annemasse-ville-la-grand-ambilly",
       "destination": "/prerendered/en-blog-colocation-annemasse-ville-la-grand-ambilly.html"
+    },
+    {
+      "source": "/en/blog/coliving-geneve-frontaliers-guide-complet",
+      "destination": "/prerendered/en-blog-coliving-geneve-frontaliers-guide-complet.html"
     },
     {
       "source": "/en/blog/demenager-geneve-frontalier-checklist",
