@@ -106,7 +106,7 @@ function fEUR(n: number): string {
     style: "currency",
     currency: "EUR",
     maximumFractionDigits: 0,
-  }).format(n).replace(/[  ]/g," ");
+  }).format(n).replace(/[  ]/g," ");
 }
 
 function fCHF(n: number): string {
@@ -114,7 +114,7 @@ function fCHF(n: number): string {
     style: "currency",
     currency: "CHF",
     maximumFractionDigits: 0,
-  }).format(n).replace(/[  ]/g," ");
+  }).format(n).replace(/[  ]/g," ");
 }
 
 const gold = "#c9a96e";
@@ -168,6 +168,10 @@ const s = StyleSheet.create({
     borderBottomWidth: 1,
     borderBottomColor: gold,
     paddingBottom: 4,
+  },
+  /* Keep article headings with their content — avoid orphaned titles at page bottom */
+  articleWrap: {
+    marginTop: 0,
   },
   body: {
     textAlign: "justify",
@@ -284,8 +288,11 @@ export function BailPDF({ data }: { data: BailPDFData }) {
 
   return (
     <Document>
-      <Page size="A4" style={s.page}>
-        <View style={s.headerBlock}>
+      {/* ===== SINGLE PAGE — react-pdf handles automatic page breaks ===== */}
+      <Page size="A4" style={s.page} wrap>
+
+        {/* ---------- HEADER ---------- */}
+        <View style={s.headerBlock} fixed={false}>
           <Image style={s.logo} src="https://www.lavillacoliving.com/logos/logo-full.png" />
           <Text style={{ fontSize: 10, fontFamily: "Helvetica-Bold" }}>
             {property.legal_entity_name}
@@ -294,6 +301,7 @@ export function BailPDF({ data }: { data: BailPDFData }) {
           <Text style={s.headerSub}>{"Loi n\u00B0 89-462 du 6 juillet 1989"}</Text>
         </View>
 
+        {/* ---------- BAILLEUR ---------- */}
         <View style={s.partyBox}>
           <Text style={s.partyLabel}>BAILLEUR :</Text>
           <Text>{ph(property.legal_entity_name, "Entit\u00E9 juridique")}</Text>
@@ -308,6 +316,7 @@ export function BailPDF({ data }: { data: BailPDFData }) {
           )}
         </View>
 
+        {/* ---------- LOCATAIRE ---------- */}
         <View style={s.partyBox}>
           <Text style={s.partyLabel}>LOCATAIRE :</Text>
           <Text>{ph(form.locataire_nom, "Nom")} {ph(form.locataire_prenom, "Pr\u00E9nom")}</Text>
@@ -320,17 +329,24 @@ export function BailPDF({ data }: { data: BailPDFData }) {
           <Text>Employeur : {ph(form.locataire_employer, "Employeur")}</Text>
         </View>
 
-        <Text style={s.articleTitle}>{"ARTICLE I \u2014 D\u00C9SIGNATION DES PARTIES"}</Text>
-        <Text style={s.body}>
-          {"Entre les parties ci-dessus d\u00E9sign\u00E9es, il est convenu ce qui suit."}
-        </Text>
+        {/* ---------- ARTICLE I ---------- */}
+        <View wrap={false} minPresenceAhead={40}>
+          <Text style={s.articleTitle}>{"ARTICLE I \u2014 D\u00C9SIGNATION DES PARTIES"}</Text>
+          <Text style={s.body}>
+            {"Entre les parties ci-dessus d\u00E9sign\u00E9es, il est convenu ce qui suit."}
+          </Text>
+        </View>
 
-        <Text style={s.articleTitle}>{"ARTICLE II \u2014 OBJET DU CONTRAT"}</Text>
-        <Text style={s.body}>
-          {property.is_coliving
-            ? "Le bailleur loue au locataire un logement meubl\u00E9 comprenant :"
-            : "Le bailleur loue au locataire un appartement meubl\u00E9 comprenant :"}
-        </Text>
+        {/* ---------- ARTICLE II ---------- */}
+        <View minPresenceAhead={60}>
+          <Text style={s.articleTitle}>{"ARTICLE II \u2014 OBJET DU CONTRAT"}</Text>
+          <Text style={s.body}>
+            {property.is_coliving
+              ? "Le bailleur loue au locataire un logement meubl\u00E9 comprenant :"
+              : "Le bailleur loue au locataire un appartement meubl\u00E9 comprenant :"}
+          </Text>
+        </View>
+
         {property.is_coliving ? (
           <View>
             <Bullet>Chambre : {ph(room.name, "Chambre")} — Surface : {room.surface_m2} m² — {"Étage : "}{room.floor}</Bullet>
@@ -364,6 +380,7 @@ export function BailPDF({ data }: { data: BailPDFData }) {
           </View>
         )}
 
+        {/* Parties communes */}
         {property.is_coliving && (property.common_areas || []).length > 0 && (
           <View>
             <Text style={s.subTitle}>{"Acc\u00E8s aux parties communes :"}</Text>
@@ -373,6 +390,7 @@ export function BailPDF({ data }: { data: BailPDFData }) {
           </View>
         )}
 
+        {/* Charges & Services coliving */}
         {property.is_coliving ? (
           <View>
             <Text style={s.subTitle}>{"Charges & Services inclus dans le forfait location TOUT INCLUS à «La Villa»"}</Text>
@@ -446,17 +464,21 @@ export function BailPDF({ data }: { data: BailPDFData }) {
           </View>
         )}
 
-        <Text style={s.articleTitle}>{"ARTICLE III \u2014 DATE DE PRISE D\u2019EFFET ET DUR\u00C9E"}</Text>
-        <Text style={s.body}>
-          {"La location prend effet le "}{fDate(form.entry_date)}{" pour une dur\u00E9e de douze (12) mois, soit jusqu\u2019au "}{fDate(exit_date)}.
-        </Text>
-        <Text style={s.body}>
-          {"\u00C0 l\u2019expiration de cette p\u00E9riode, le contrat se renouvelle par reconduction tacite pour des p\u00E9riodes successives de douze mois, sauf d\u00E9nonciation notifi\u00E9e au moins un mois avant l\u2019expiration du contrat par le locataire, ou trois mois par le bailleur."}
-        </Text>
-      </Page>
+        {/* ---------- ARTICLE III ---------- */}
+        <View wrap={false} minPresenceAhead={30}>
+          <Text style={s.articleTitle}>{"ARTICLE III \u2014 DATE DE PRISE D\u2019EFFET ET DUR\u00C9E"}</Text>
+          <Text style={s.body}>
+            {"La location prend effet le "}{fDate(form.entry_date)}{" pour une dur\u00E9e de douze (12) mois, soit jusqu\u2019au "}{fDate(exit_date)}.
+          </Text>
+          <Text style={s.body}>
+            {"\u00C0 l\u2019expiration de cette p\u00E9riode, le contrat se renouvelle par reconduction tacite pour des p\u00E9riodes successives de douze mois, sauf d\u00E9nonciation notifi\u00E9e au moins un mois avant l\u2019expiration du contrat par le locataire, ou trois mois par le bailleur."}
+          </Text>
+        </View>
 
-      <Page size="A4" style={s.page}>
-        <Text style={s.articleTitle}>{"ARTICLE IV \u2014 CONDITIONS FINANCI\u00C8RES"}</Text>
+        {/* ---------- ARTICLE IV ---------- */}
+        <View minPresenceAhead={60}>
+          <Text style={s.articleTitle}>{"ARTICLE IV \u2014 CONDITIONS FINANCI\u00C8RES"}</Text>
+        </View>
 
         {property.is_coliving ? (
           <View>
@@ -527,50 +549,64 @@ export function BailPDF({ data }: { data: BailPDFData }) {
         <Bullet>{"Le loyer et les charges doivent \u00EAtre vers\u00E9s avant le 5 du mois."}</Bullet>
         <Bullet>Virement bancaire sur le compte du bailleur.</Bullet>
 
-        <Text style={s.articleTitle}>{"ARTICLE V \u2014 GARANTIES"}</Text>
-        <Text style={s.body}>
-          {property.is_coliving
-            ? <>{"Le locataire versera un d\u00E9p\u00F4t de garantie \u00E9gal \u00E0 deux (2) mois de loyer, soit "}{fEUR(depot_eur)} ({fCHF(depot_eur * rate)}){", restitu\u00E9 dans les deux (2) mois suivant la fin du contrat, selon l\u2019\u00E9tat des lieux."}</>
-            : <>{"Le locataire versera un d\u00E9p\u00F4t de garantie \u00E9gal \u00E0 un (1) mois de loyer hors charges, soit "}{fEUR(depot_eur)}{", restitu\u00E9 dans les deux (2) mois suivant la fin du contrat, d\u00E9duction faite des sommes \u00E9ventuellement dues."}</>
-          }
-        </Text>
+        {/* ---------- ARTICLE V ---------- */}
+        <View wrap={false} minPresenceAhead={30}>
+          <Text style={s.articleTitle}>{"ARTICLE V \u2014 GARANTIES"}</Text>
+          <Text style={s.body}>
+            {property.is_coliving
+              ? <>{"Le locataire versera un d\u00E9p\u00F4t de garantie \u00E9gal \u00E0 deux (2) mois de loyer, soit "}{fEUR(depot_eur)} ({fCHF(depot_eur * rate)}){", restitu\u00E9 dans les deux (2) mois suivant la fin du contrat, selon l\u2019\u00E9tat des lieux."}</>
+              : <>{"Le locataire versera un d\u00E9p\u00F4t de garantie \u00E9gal \u00E0 un (1) mois de loyer hors charges, soit "}{fEUR(depot_eur)}{", restitu\u00E9 dans les deux (2) mois suivant la fin du contrat, d\u00E9duction faite des sommes \u00E9ventuellement dues."}</>
+            }
+          </Text>
+        </View>
 
-        <Text style={s.articleTitle}>{"ARTICLE VI \u2014 CLAUSE R\u00C9SOLUTOIRE"}</Text>
-        <Text style={s.body}>
-          {"Le bailleur se r\u00E9serve le droit de r\u00E9silier le contrat en cas de non-paiement du loyer ou des charges, sans pr\u00E9judice du droit de poursuivre le recouvrement des sommes dues."}
-        </Text>
-      </Page>
+        {/* ---------- ARTICLE VI ---------- */}
+        <View wrap={false} minPresenceAhead={30}>
+          <Text style={s.articleTitle}>{"ARTICLE VI \u2014 CLAUSE R\u00C9SOLUTOIRE"}</Text>
+          <Text style={s.body}>
+            {"Le bailleur se r\u00E9serve le droit de r\u00E9silier le contrat en cas de non-paiement du loyer ou des charges, sans pr\u00E9judice du droit de poursuivre le recouvrement des sommes dues."}
+          </Text>
+        </View>
 
-      <Page size="A4" style={s.page}>
-        <Text style={s.articleTitle}>{"ARTICLE VII \u2014 OBLIGATIONS DU LOCATAIRE"}</Text>
-        <Text style={s.body}>{"Le locataire s\u2019engage \u00E0 :"}</Text>
+        {/* ---------- ARTICLE VII ---------- */}
+        <View minPresenceAhead={60}>
+          <Text style={s.articleTitle}>{"ARTICLE VII \u2014 OBLIGATIONS DU LOCATAIRE"}</Text>
+          <Text style={s.body}>{"Le locataire s\u2019engage \u00E0 :"}</Text>
+        </View>
         <Numbered n={1}>{"Payer le loyer et les charges aux dates et lieux convenus ;"}</Numbered>
         <Numbered n={2}>{"Maintenir le logement en bon \u00E9tat de propret\u00E9 et d\u2019entretien ;"}</Numbered>
         <Numbered n={3}>{"Respecter le silence et bonnes m\u0153urs, notamment entre 22h et 8h ;"}</Numbered>
         <Numbered n={4}>{"Ne point inviter d\u2019h\u00F4tes de mani\u00E8re prolong\u00E9e sans accord pr\u00E9alable ;"}</Numbered>
         {property.is_coliving && <Numbered n={5}>{"Utiliser les parties communes avec responsabilit\u00E9 et courtoisie ;"}</Numbered>}
-        {property.is_coliving && <Numbered n={property.is_coliving ? 6 : 5}>{"Respecter le R\u00E8glement Int\u00E9rieur La Villa (annexe au pr\u00E9sent contrat) ;"}</Numbered>}
+        {property.is_coliving && <Numbered n={6}>{"Respecter le R\u00E8glement Int\u00E9rieur La Villa (annexe au pr\u00E9sent contrat) ;"}</Numbered>}
         <Numbered n={property.is_coliving ? 7 : 5}>{"D\u00E9clarer tout incident ou dommage aupr\u00E8s du bailleur dans les 48h ;"}</Numbered>
         <Numbered n={property.is_coliving ? 8 : 6}>{"Rendre le logement en bon \u00E9tat \u00E0 la fin du contrat (usure normale except\u00E9e) ;"}</Numbered>
         <Numbered n={property.is_coliving ? 9 : 7}>{"Participer aux \u00E9tats des lieux d\u2019entr\u00E9e et de sortie."}</Numbered>
 
-        <Text style={s.articleTitle}>{"ARTICLE VIII \u2014 OBLIGATIONS DU BAILLEUR"}</Text>
-        <Text style={s.body}>{"Le bailleur s\u2019engage \u00E0 :"}</Text>
-        <Numbered n={1}>Assurer la jouissance paisible du logement ;</Numbered>
-        <Numbered n={2}>{"Maintenir les lieux en bon \u00E9tat de r\u00E9paration et de viabilit\u00E9 ;"}</Numbered>
-        <Numbered n={3}>{"Fournir les services d\u00E9crits \u00E0 l\u2019article II ;"}</Numbered>
-        <Numbered n={4}>{"R\u00E9pondre aux demandes d\u2019entretien dans un d\u00E9lai raisonnable (max 48h) ;"}</Numbered>
-        <Numbered n={5}>{"Respecter la vie priv\u00E9e du locataire et donner un pr\u00E9avis de 48h avant visite."}</Numbered>
+        {/* ---------- ARTICLE VIII ---------- */}
+        <View wrap={false} minPresenceAhead={40}>
+          <Text style={s.articleTitle}>{"ARTICLE VIII \u2014 OBLIGATIONS DU BAILLEUR"}</Text>
+          <Text style={s.body}>{"Le bailleur s\u2019engage \u00E0 :"}</Text>
+          <Numbered n={1}>Assurer la jouissance paisible du logement ;</Numbered>
+          <Numbered n={2}>{"Maintenir les lieux en bon \u00E9tat de r\u00E9paration et de viabilit\u00E9 ;"}</Numbered>
+          <Numbered n={3}>{"Fournir les services d\u00E9crits \u00E0 l\u2019article II ;"}</Numbered>
+          <Numbered n={4}>{"R\u00E9pondre aux demandes d\u2019entretien dans un d\u00E9lai raisonnable (max 48h) ;"}</Numbered>
+          <Numbered n={5}>{"Respecter la vie priv\u00E9e du locataire et donner un pr\u00E9avis de 48h avant visite."}</Numbered>
+        </View>
 
-        <Text style={s.articleTitle}>{"ARTICLE IX \u2014 \u00C9TAT DES LIEUX"}</Text>
-        <Text style={s.body}>
-          {property.is_coliving
-            ? "L\u2019\u00E9tat des lieux d\u2019entr\u00E9e et de sortie sera \u00E9tabli via Etadly. Le locataire recevra un exemplaire apr\u00E8s sa r\u00E9alisation."
-            : "L\u2019\u00E9tat des lieux d\u2019entr\u00E9e et de sortie sera \u00E9tabli contradictoirement entre les parties. Le locataire re\u00E7oit un exemplaire."}
-        </Text>
+        {/* ---------- ARTICLE IX ---------- */}
+        <View wrap={false} minPresenceAhead={30}>
+          <Text style={s.articleTitle}>{"ARTICLE IX \u2014 \u00C9TAT DES LIEUX"}</Text>
+          <Text style={s.body}>
+            {property.is_coliving
+              ? "L\u2019\u00E9tat des lieux d\u2019entr\u00E9e et de sortie sera \u00E9tabli via Etadly. Le locataire recevra un exemplaire apr\u00E8s sa r\u00E9alisation."
+              : "L\u2019\u00E9tat des lieux d\u2019entr\u00E9e et de sortie sera \u00E9tabli contradictoirement entre les parties. Le locataire re\u00E7oit un exemplaire."}
+          </Text>
+        </View>
 
+        {/* ---------- ARTICLE X (Mont-Blanc only: Inventaire) ---------- */}
         {!property.is_coliving && (
-          <View>
+          <View wrap={false} minPresenceAhead={30}>
             <Text style={s.articleTitle}>{"ARTICLE X \u2014 INVENTAIRE DU MOBILIER"}</Text>
             <Text style={s.body}>
               {"L\u2019inventaire d\u00E9taill\u00E9 du mobilier et des \u00E9quipements fournis est joint en annexe au pr\u00E9sent contrat. Le locataire s\u2019engage \u00E0 en prendre soin et \u00E0 le restituer en bon \u00E9tat."}
@@ -578,18 +614,22 @@ export function BailPDF({ data }: { data: BailPDFData }) {
           </View>
         )}
 
-        <Text style={s.articleTitle}>{property.is_coliving ? "ARTICLE X \u2014 DIAGNOSTICS TECHNIQUES" : "ARTICLE XI \u2014 DIAGNOSTICS TECHNIQUES"}</Text>
-        <Text style={s.body}>
-          {"Conform\u00E9ment \u00E0 la r\u00E9glementation fran\u00E7aise, le bailleur fournit au locataire :"}
-        </Text>
-        <Bullet>{"Diagnostic de Performance \u00C9nerg\u00E9tique (DPE)"}</Bullet>
-        <Bullet>{"État du Risque et Pollution (ERP)"}</Bullet>
-        <Bullet>{"Constat de Risque d\u2019Exposition au Plomb (CREP)"}</Bullet>
-        <Bullet>Diagnostic Amiante</Bullet>
-        <Bullet>Diagnostic Bruit</Bullet>
+        {/* ---------- Diagnostics ---------- */}
+        <View wrap={false} minPresenceAhead={40}>
+          <Text style={s.articleTitle}>{property.is_coliving ? "ARTICLE X \u2014 DIAGNOSTICS TECHNIQUES" : "ARTICLE XI \u2014 DIAGNOSTICS TECHNIQUES"}</Text>
+          <Text style={s.body}>
+            {"Conform\u00E9ment \u00E0 la r\u00E9glementation fran\u00E7aise, le bailleur fournit au locataire :"}
+          </Text>
+          <Bullet>{"Diagnostic de Performance \u00C9nerg\u00E9tique (DPE)"}</Bullet>
+          <Bullet>{"État du Risque et Pollution (ERP)"}</Bullet>
+          <Bullet>{"Constat de Risque d\u2019Exposition au Plomb (CREP)"}</Bullet>
+          <Bullet>Diagnostic Amiante</Bullet>
+          <Bullet>Diagnostic Bruit</Bullet>
+        </View>
 
+        {/* ---------- Règlement intérieur (coliving only) ---------- */}
         {property.is_coliving && (
-          <View>
+          <View wrap={false} minPresenceAhead={30}>
             <Text style={s.articleTitle}>{"ARTICLE XI \u2014 R\u00C8GLEMENT INT\u00C9RIEUR"}</Text>
             <Text style={s.body}>
               {"Le locataire accepte le R\u00E8glement Int\u00E9rieur La Villa Coliving (la \u201CBible du Coliver\u201D), joint en annexe, qui pr\u00E9cise les r\u00E8gles de vie commune, l\u2019usage des parties communes et les proc\u00E9dures de gestion interne."}
@@ -597,39 +637,47 @@ export function BailPDF({ data }: { data: BailPDFData }) {
           </View>
         )}
 
-        <Text style={s.articleTitle}>{property.is_coliving ? "ARTICLE XII \u2014 ANNEXES" : "ARTICLE XII \u2014 ANNEXES"}</Text>
-        <Text style={s.body}>{"Sont annex\u00E9es au pr\u00E9sent contrat :"}</Text>
-        {!property.is_coliving && <Bullet>{"Notice d\u2019information relative aux droits et obligations des locataires et des bailleurs"}</Bullet>}
-        {!property.is_coliving && <Bullet>{"RIB du bailleur"}</Bullet>}
-        {property.is_coliving && <Bullet>{"R\u00E8glement Int\u00E9rieur La Villa Coliving"}</Bullet>}
-        <Bullet>Diagnostics techniques</Bullet>
-        {(form.annexe_documents || []).map((doc: string, i: number) => (
-          <Bullet key={i}>{doc}</Bullet>
-        ))}
+        {/* ---------- ANNEXES ---------- */}
+        <View wrap={false} minPresenceAhead={20}>
+          <Text style={s.articleTitle}>{property.is_coliving ? "ARTICLE XII \u2014 ANNEXES" : "ARTICLE XII \u2014 ANNEXES"}</Text>
+          <Text style={s.body}>{"Sont annex\u00E9es au pr\u00E9sent contrat :"}</Text>
+          {!property.is_coliving && <Bullet>{"Notice d\u2019information relative aux droits et obligations des locataires et des bailleurs"}</Bullet>}
+          {!property.is_coliving && <Bullet>{"RIB du bailleur"}</Bullet>}
+          {property.is_coliving && <Bullet>{"R\u00E8glement Int\u00E9rieur La Villa Coliving"}</Bullet>}
+          <Bullet>Diagnostics techniques</Bullet>
+          {(form.annexe_documents || []).map((doc: string, i: number) => (
+            <Bullet key={i}>{doc}</Bullet>
+          ))}
+        </View>
 
+        {/* ---------- Clauses particulières ---------- */}
         {form.clauses_particulieres?.trim() ? (
-          <View>
+          <View wrap={false} minPresenceAhead={30}>
             <Text style={s.articleTitle}>{"CLAUSES PARTICULI\u00C8RES"}</Text>
             <Text style={s.body}>{form.clauses_particulieres}</Text>
           </View>
         ) : null}
 
-        <View style={s.signatureSection}>
-          <View style={s.signatureBox}>
-            <Text style={{ fontSize: 9 }}>{"Fait \u00E0 "}{ville}</Text>
-            <Text style={s.signatureLabel}>Signature du bailleur</Text>
-            <Text style={s.signatureName}>{property.manager_name || "J\u00E9r\u00F4me AUSTIN"}</Text>
+        {/* ---------- SIGNATURES ---------- */}
+        <View wrap={false}>
+          <View style={s.signatureSection}>
+            <View style={s.signatureBox}>
+              <Text style={{ fontSize: 9 }}>{"Fait \u00E0 "}{ville}</Text>
+              <Text style={s.signatureLabel}>Signature du bailleur</Text>
+              <Text style={s.signatureName}>{property.manager_name || "J\u00E9r\u00F4me AUSTIN"}</Text>
+            </View>
+            <View style={s.signatureBox}>
+              <Text style={{ fontSize: 9 }}>Le {fDate(form.entry_date)}</Text>
+              <Text style={s.signatureLabel}>Signature du locataire</Text>
+              <Text style={s.signatureName}>{ph(form.locataire_prenom, "Pr\u00E9nom")} {ph(form.locataire_nom, "Nom")}</Text>
+            </View>
           </View>
-          <View style={s.signatureBox}>
-            <Text style={{ fontSize: 9 }}>Le {fDate(form.entry_date)}</Text>
-            <Text style={s.signatureLabel}>Signature du locataire</Text>
-            <Text style={s.signatureName}>{ph(form.locataire_prenom, "Pr\u00E9nom")} {ph(form.locataire_nom, "Nom")}</Text>
+
+          <View style={s.footer}>
+            <Text>{"Lu et approuv\u00E9"}</Text>
           </View>
         </View>
 
-        <View style={s.footer}>
-          <Text>{"Lu et approuv\u00E9"}</Text>
-        </View>
       </Page>
     </Document>
   );
