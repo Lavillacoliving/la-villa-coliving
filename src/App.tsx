@@ -15,6 +15,7 @@ import { HouseDetailPage } from "@/pages/HouseDetailPage";
 import { BlogPage } from "@/pages/BlogPage";
 import { BlogPostPage } from "@/pages/BlogPostPage";
 import { ColocationGenevePage } from "@/pages/ColocationGenevePage";
+import { InvestisseursPage } from "@/pages/InvestisseursPage";
 import { NotFoundPage } from "@/pages/NotFoundPage";
 import { Navigate } from "react-router-dom";
 import { PortailLayout } from "@/pages/portail/PortailLayout";
@@ -65,6 +66,22 @@ function AppContent() {
         <Route path="/lavilla" element={<HouseDetailPage />} />
         <Route path="/leloft" element={<HouseDetailPage />} />
         <Route path="/lelodge" element={<HouseDetailPage />} />
+        <Route path="/investisseurs" element={<InvestisseursPage />} />
+        {/* EN routes — same components, language detected from /en prefix */}
+        <Route path="/en" element={<HomePage />} />
+        <Route path="/en/colocation-geneve" element={<ColocationGenevePage />} />
+        <Route path="/en/le-coliving" element={<ColivingPage />} />
+        <Route path="/en/nos-maisons" element={<HousesPage />} />
+        <Route path="/en/services" element={<ServicesPage />} />
+        <Route path="/en/tarifs" element={<RatesPage />} />
+        <Route path="/en/faq" element={<FAQPage />} />
+        <Route path="/en/candidature" element={<JoinPage />} />
+        <Route path="/en/blog" element={<BlogPage />} />
+        <Route path="/en/blog/:slug" element={<BlogPostPage />} />
+        <Route path="/en/lavilla" element={<HouseDetailPage />} />
+        <Route path="/en/leloft" element={<HouseDetailPage />} />
+        <Route path="/en/lelodge" element={<HouseDetailPage />} />
+        <Route path="/en/investisseurs" element={<InvestisseursPage />} />
         <Route path="/reset-password" element={<ResetPasswordPage />} />
         <Route path="/mon-espace" element={<Navigate to="/portail" replace />} />
         <Route path="/portail" element={<PortailLayout />}>
