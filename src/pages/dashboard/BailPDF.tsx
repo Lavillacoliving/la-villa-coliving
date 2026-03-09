@@ -490,7 +490,6 @@ export function BailPDF({ data }: { data: BailPDFData }) {
                   {"Prorata du premier mois : du "}{fDate(form.entry_date)}{" au dernier jour du mois ("}{prorata_days}{"/"}{prorata_total_days}{" jours) :"}
                 </Text>
                 <Bullet>En EUR : {fEUR(prorata_eur)}</Bullet>
-                <Bullet>En CHF : {fCHF(prorata_chf)}</Bullet>
               </View>
             ) : (
               <Text style={s.body}>{"Entr\u00E9e le 1er du mois \u2014 pas de prorata."}</Text>
