@@ -106,7 +106,7 @@ function fEUR(n: number): string {
     style: "currency",
     currency: "EUR",
     maximumFractionDigits: 0,
-  }).format(n).replace(/[  ]/g," ");
+  }).format(n).replace(/[\s\u00A0\u202F\u2009]/g, " ");
 }
 
 function fCHF(n: number): string {
@@ -114,7 +114,7 @@ function fCHF(n: number): string {
     style: "currency",
     currency: "CHF",
     maximumFractionDigits: 0,
-  }).format(n).replace(/[  ]/g," ");
+  }).format(n).replace(/[\s\u00A0\u202F\u2009]/g, " ");
 }
 
 const gold = "#c9a96e";
