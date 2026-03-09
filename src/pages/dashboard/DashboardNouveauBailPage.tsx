@@ -476,7 +476,7 @@ function generateContractHTML(data: ContractData): string {
           <p><strong>${fEUR(loyer_eur)}</strong> - (taux BCE du ${form.exchange_rate_date} : ${form.exchange_rate})</p>
           ${(!data.prorata_days || !data.prorata_total_days || data.prorata_days >= data.prorata_total_days)
             ? '<p><em>Entrée le 1er du mois — pas de prorata.</em></p>'
-            : '<p><strong>Prorata du premier mois :</strong> Du ' + fDate(form.entry_date) + ' au dernier jour du mois (' + data.prorata_days + '/' + data.prorata_total_days + ' jours) :</p><ul><li><strong>En EUR :</strong> ' + fEUR(data.prorata_eur) + '</li><li><strong>En CHF :</strong> ' + fCHF(data.prorata_chf) + '</li></ul>'}
+            : '<p><strong>Prorata du premier mois :</strong> Du ' + fDate(form.entry_date) + ' au dernier jour du mois (' + data.prorata_days + '/' + data.prorata_total_days + ' jours) :</p><ul><li><strong>En EUR :</strong> ' + fEUR(data.prorata_eur) + '</li></ul>'}
           <h3>Charges forfaitaires mensuelles :</h3>
           ${chargesTable}
           <h3>Frais de dossier :</h3>
@@ -701,8 +701,6 @@ export default function DashboardNouveauBailPage() {
 
   // Annexe file uploads — stored in memory until save
   const [annexeFiles, setAnnexeFiles] = useState<{ file: File; label: string }[]>([]);
-  const [sendingSignature, setSendingSignature] = useState(false);
-  const [signingUrl, setSigningUrl] = useState<string | null>(null);
   const fileInputRef = React.useRef<HTMLInputElement>(null);
 
   // Load fonts
@@ -986,58 +984,6 @@ export default function DashboardNouveauBailPage() {
       toast.error('Erreur: ' + (err.message || err));
     } finally {
       setSaving(false);
-    }
-  };
-
-  const handleSendForSignature = async () => {
-    if (!contractData) return;
-    if (!form.locataire_email) {
-      toast.error('Email du locataire requis pour la signature');
-      return;
-    }
-    setSendingSignature(true);
-    setSigningUrl(null);
-    try {
-      const blob = await pdf(BailPDF({ data: contractData })).toBlob();
-      const reader = new FileReader();
-      const base64 = await new Promise<string>((resolve, reject) => {
-        reader.onload = () => {
-          const result = reader.result as string;
-          resolve(result.split(',')[1]);
-        };
-        reader.onerror = reject;
-        reader.readAsDataURL(blob);
-      });
-
-      const propertyName = selectedProperty?.name || 'La Villa';
-      const tenantName = `${form.locataire_prenom || ''} ${form.locataire_nom || ''}`.trim() || 'Locataire';
-
-      const res = await fetch('https://sign.lavillacoliving.com/docuseal/send-bail', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': 'Bearer lavilla-docuseal-2026',
-        },
-        body: JSON.stringify({
-          pdf_base64: base64,
-          tenant_email: form.locataire_email,
-          tenant_name: tenantName,
-          property_name: propertyName,
-          send_email: true,
-        }),
-      });
-      const data = await res.json();
-      if (data.success) {
-        setSigningUrl(data.signing_url);
-        toast.success(`Bail envoyé pour signature ! Email envoyé à ${form.locataire_email}`);
-      } else {
-        toast.error(`Erreur DocuSeal: ${data.error}`);
-      }
-    } catch (e: any) {
-      console.error('Signature error:', e);
-      toast.error('Erreur envoi signature: ' + (e.message || e));
-    } finally {
-      setSendingSignature(false);
     }
   };
 
@@ -1519,7 +1465,7 @@ export default function DashboardNouveauBailPage() {
             border: '1px solid #c9e4c9', fontSize: '13px',
           }}>
             <strong>Prorata 1er mois :</strong> {prorata.days}/{prorata.totalDays} jours →{' '}
-            {fEUR(prorata.eur)} / {fCHF(prorata.chf)}
+            {fEUR(prorata.eur)}
           </div>
         )}
 
@@ -1763,20 +1709,6 @@ export default function DashboardNouveauBailPage() {
             ⎙ Imprimer
           </button>
           <button
-            onClick={handleSendForSignature}
-            disabled={!contractData || sendingSignature || !form.locataire_email}
-            style={{
-              flex:1, padding:'12px',
-              background: sendingSignature ? '#999' : signingUrl ? '#27AB9F' : '#6366f1',
-              color:'white', border:'none',
-              borderRadius:'4px', fontWeight:'600',
-              cursor: (!contractData||sendingSignature||!form.locataire_email) ? 'not-allowed' : 'pointer',
-              fontSize:'14px',
-            }}
-          >
-            {sendingSignature ? 'Envoi...' : signingUrl ? '✓ Envoyé' : 'Envoyer pour signature'}
-          </button>
-          <button
             onClick={handleSaveBail}
             disabled={!contractData || saving}
             style={{
@@ -1791,14 +1723,6 @@ export default function DashboardNouveauBailPage() {
             {saving ? 'Enregistrement...' : '✓ Enregistrer le bail'}
           </button>
         </div>
-        {signingUrl && (
-          <div style={{ marginTop: '8px', padding: '10px', background: '#f0f0ff', borderRadius: '6px', fontSize: '13px' }}>
-            <strong>Lien de signature :</strong>{' '}
-            <a href={signingUrl} target="_blank" rel="noopener noreferrer" style={{ color: '#6366f1', textDecoration: 'underline' }}>
-              {signingUrl}
-            </a>
-          </div>
-        )}
       </div>
 
       {/* RIGHT PANEL — PREVIEW */}
