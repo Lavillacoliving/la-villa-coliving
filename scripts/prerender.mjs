@@ -241,7 +241,14 @@ async function renderRoute(browser, route) {
     // Give React + react-helmet a moment to finish
     await new Promise(r => setTimeout(r, 1500));
 
-    const html = await page.content();
+    let html = await page.content();
+
+    // Inject canonical URL (SEO: tells Google this is the authoritative URL)
+    const canonicalUrl = `${SITE_URL}${route === '/' ? '' : route}`;
+    const canonicalTag = `<link rel="canonical" href="${canonicalUrl}" />`;
+    if (!html.includes('rel="canonical"')) {
+      html = html.replace('</head>', `    ${canonicalTag}\n  </head>`);
+    }
 
     // Save to public/prerendered/ (committed to git, served by Vercel)
     const fileName = route === '/' ? 'index.html' : `${route.slice(1).replace(/\//g, '-')}.html`;

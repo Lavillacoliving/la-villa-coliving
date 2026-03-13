@@ -45,6 +45,10 @@
       "destination": "/prerendered/lelodge.html"
     },
     {
+      "source": "/candidature",
+      "destination": "/prerendered/candidature.html"
+    },
+    {
       "source": "/investisseurs",
       "destination": "/prerendered/investisseurs.html"
     },
@@ -598,6 +602,16 @@
     {
       "source": "/fr/le-coliving",
       "destination": "/le-coliving",
+      "permanent": true
+    },
+    {
+      "source": "/definingcoliving",
+      "destination": "/le-coliving",
+      "permanent": true
+    },
+    {
+      "source": "/fr/understandtheprices",
+      "destination": "/tarifs",
       "permanent": true
     }
   ],
