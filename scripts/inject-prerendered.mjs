@@ -93,18 +93,17 @@ function extractSeoTags(html) {
     seo.metaProperty[m[1]] = m[2];
   }
 
-  // JSON-LD scripts (there can be multiple)
-  const jsonLdPattern = /<script\s+type="application\/ld\+json"[^>]*>([\s\S]*?)<\/script>/g;
+  // JSON-LD scripts — collect from entire HTML, deduplicate by @type
+  const jsonLdFullPattern = /<script\s+type="application\/ld\+json"[^>]*>([\s\S]*?)<\/script>/g;
   seo.jsonLd = [];
-  while ((m = jsonLdPattern.exec(head)) !== null) {
-    // Also check body for JSON-LD (React-Helmet sometimes puts them there)
-    seo.jsonLd.push(m[1].trim());
-  }
-  // Also check full HTML for JSON-LD (in case they're in body via Helmet)
-  const jsonLdBodyPattern = /<script\s+type="application\/ld\+json"[^>]*>([\s\S]*?)<\/script>/g;
-  while ((m = jsonLdBodyPattern.exec(html)) !== null) {
+  const seenTypes = new Set();
+  while ((m = jsonLdFullPattern.exec(html)) !== null) {
     const content = m[1].trim();
-    if (!seo.jsonLd.includes(content)) {
+    // Deduplicate by @type to prevent multiple LodgingBusiness/Organization/FAQPage
+    const typeMatch = content.match(/"@type"\s*:\s*"([^"]+)"/);
+    const type = typeMatch ? typeMatch[1] : content.substring(0, 50);
+    if (!seenTypes.has(type)) {
+      seenTypes.add(type);
       seo.jsonLd.push(content);
     }
   }
@@ -271,6 +270,10 @@ async function main() {
 
     // Start with a fresh copy of index.html (correct asset references)
     let result = indexHtml;
+
+    // 0. Remove ALL existing JSON-LD scripts from the base template
+    //    (they will be replaced by the page-specific ones extracted from pre-rendered HTML)
+    result = result.replace(/<script\s+type="application\/ld\+json"[^>]*>[\s\S]*?<\/script>\s*/g, '');
 
     // 1. Inject pre-rendered content into <div id="root">
     result = result.replace(

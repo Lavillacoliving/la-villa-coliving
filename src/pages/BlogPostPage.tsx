@@ -17,6 +17,14 @@ interface Post {
   read_time_min:number; published_at:string;
   tags:string[];
 }
+
+interface RelatedPost {
+  id:string; slug:string;
+  title_fr:string; title_en:string|null;
+  excerpt_fr:string; excerpt_en:string|null;
+  image_url:string|null;
+  read_time_min:number; category:string;
+}
 const CL:Record<string,Record<string,string>>={
   coliving:{en:"Coliving",fr:"Coliving"},lifestyle:{en:"Lifestyle",fr:"Lifestyle"},
   tips:{en:"Tips",fr:"Conseils"},geneva:{en:"Geneva",fr:"Genève"},
@@ -27,6 +35,7 @@ export function BlogPostPage() {
   const { slug } = useParams<{slug:string}>();
   const { language } = useLanguage();
   const [post, setPost] = useState<Post|null>(null);
+  const [related, setRelated] = useState<RelatedPost[]>([]);
   const [loading, setLoading] = useState(true);
   const [searchParams] = useSearchParams();
   const isPreview = searchParams.get("preview") === "lavilla2026";
@@ -43,8 +52,28 @@ export function BlogPostPage() {
       const { data, error } = await query.single();
       if (error) throw error;
       setPost(data);
+      // Load related articles (same category or recent)
+      if (data) loadRelated(data.id, data.category);
     } catch(e) { console.error("Blog post load:",e); }
     finally { setLoading(false); }
+  }
+
+  async function loadRelated(postId:string, category:string) {
+    try {
+      const { data, error } = await supabase
+        .from("blog_posts")
+        .select("id,slug,title_fr,title_en,excerpt_fr,excerpt_en,image_url,read_time_min,category")
+        .eq("is_published", true)
+        .neq("id", postId)
+        .order("published_at", { ascending: false })
+        .limit(20);
+      if (error) throw error;
+      if (!data) return;
+      // Prioritize same-category articles, then fill with recent ones
+      const sameCategory = data.filter(p => p.category === category);
+      const others = data.filter(p => p.category !== category);
+      setRelated([...sameCategory, ...others].slice(0, 3));
+    } catch(e) { console.error("Related posts load:", e); }
   }
 
   if(loading) return (
@@ -173,6 +202,51 @@ export function BlogPostPage() {
           )}
         </div>
       </article>
+
+      {/* Related Articles — improves internal linking for SEO */}
+      {related.length > 0 && (
+        <section className="py-16 lg:py-24 bg-[#FAF9F6]">
+          <div className="max-w-5xl mx-auto px-6">
+            <h2
+              className="text-2xl md:text-3xl font-light text-[#1C1917] mb-8 text-center"
+              style={{ fontFamily: "DM Serif Display, serif" }}
+            >
+              {language === "en" ? "Related Articles" : "Articles Connexes"}
+            </h2>
+            <div className="grid md:grid-cols-3 gap-6">
+              {related.map((r) => {
+                const rTitle = (language === "en" && r.title_en) ? r.title_en : r.title_fr;
+                const rExcerpt = (language === "en" && r.excerpt_en) ? r.excerpt_en : r.excerpt_fr;
+                return (
+                  <Link
+                    to={`/blog/${r.slug}`}
+                    key={r.id}
+                    className="group bg-white border border-[#E7E5E4] overflow-hidden hover:border-[#D4A574]/30 hover:shadow-lg transition-all"
+                  >
+                    {r.image_url && (
+                      <div className="aspect-[16/10] overflow-hidden">
+                        <img src={r.image_url} alt={rTitle} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" loading="lazy" />
+                      </div>
+                    )}
+                    <div className="p-5">
+                      <span className="text-xs uppercase tracking-widest text-[#D4A574] font-medium mb-2 block">
+                        {CL[r.category]?.[language] || r.category}
+                      </span>
+                      <h3 className="text-base font-medium text-[#1C1917] mb-2 line-clamp-2 group-hover:text-[#D4A574] transition-colors" style={{ fontFamily: "DM Serif Display, serif" }}>
+                        {rTitle}
+                      </h3>
+                      <p className="text-sm text-[#57534E] line-clamp-2">{rExcerpt}</p>
+                      <span className="flex items-center gap-1 text-xs text-[#78716C] mt-3">
+                        <Clock className="w-3 h-3" /> {r.read_time_min} min
+                      </span>
+                    </div>
+                  </Link>
+                );
+              })}
+            </div>
+          </div>
+        </section>
+      )}
     </main>
   );
 }

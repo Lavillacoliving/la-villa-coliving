@@ -23,7 +23,8 @@ import {
   Briefcase,
   Laptop2,
 } from "lucide-react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { supabase } from "@/lib/supabase";
 
 // FAQ data specific to this page
 const colocationFAQ = [
@@ -57,9 +58,32 @@ const colocationFAQ = [
   },
 ];
 
+interface BlogPost {
+  id: string; slug: string;
+  title_fr: string; title_en: string | null;
+  image_url: string | null;
+  read_time_min: number; category: string;
+}
+
 export function ColocationGenevePage() {
   const { language } = useLanguage();
   const [openFAQ, setOpenFAQ] = useState<number | null>(null);
+  const [blogPosts, setBlogPosts] = useState<BlogPost[]>([]);
+
+  useEffect(() => {
+    async function loadBlogPosts() {
+      try {
+        const { data } = await supabase
+          .from("blog_posts")
+          .select("id,slug,title_fr,title_en,image_url,read_time_min,category")
+          .eq("is_published", true)
+          .order("published_at", { ascending: false })
+          .limit(4);
+        setBlogPosts(data || []);
+      } catch (e) { console.error(e); }
+    }
+    loadBlogPosts();
+  }, []);
 
   // FAQPage schema for rich snippets
   const faqSchema = {
@@ -596,6 +620,59 @@ export function ColocationGenevePage() {
           </div>
         </div>
       </section>
+
+      {/* ===== ARTICLES UTILES ===== */}
+      {blogPosts.length > 0 && (
+        <section className="py-24 lg:py-32 bg-white">
+          <div className="max-w-5xl mx-auto px-6">
+            <h2
+              className="text-3xl md:text-4xl font-light text-[#1C1917] mb-4 text-center"
+              style={{ fontFamily: "DM Serif Display, serif" }}
+            >
+              {language === "en"
+                ? "Useful Guides for Cross-Border Workers"
+                : "Guides Utiles pour les Frontaliers"}
+            </h2>
+            <p className="text-[#57534E] text-center max-w-3xl mx-auto mb-12">
+              {language === "en"
+                ? "Everything you need to know about living near Geneva."
+                : "Tout ce que vous devez savoir pour vivre près de Genève."}
+            </p>
+            <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
+              {blogPosts.map((post) => {
+                const title = (language === "en" && post.title_en) ? post.title_en : post.title_fr;
+                return (
+                  <Link
+                    to={`/blog/${post.slug}`}
+                    key={post.id}
+                    className="group bg-[#FAF9F6] border border-[#E7E5E4] overflow-hidden hover:border-[#D4A574]/30 hover:shadow-lg transition-all"
+                  >
+                    {post.image_url && (
+                      <div className="aspect-[16/10] overflow-hidden">
+                        <img src={post.image_url} alt={title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" loading="lazy" />
+                      </div>
+                    )}
+                    <div className="p-4">
+                      <h3 className="text-sm font-medium text-[#1C1917] line-clamp-2 group-hover:text-[#D4A574] transition-colors">
+                        {title}
+                      </h3>
+                      <span className="flex items-center gap-1 text-xs text-[#78716C] mt-2">
+                        <Clock className="w-3 h-3" /> {post.read_time_min} min
+                      </span>
+                    </div>
+                  </Link>
+                );
+              })}
+            </div>
+            <div className="text-center mt-8">
+              <Link to="/blog" className="inline-flex items-center gap-2 text-[#D4A574] font-medium hover:underline">
+                {language === "en" ? "View all articles" : "Voir tous les articles"}
+                <ArrowRight className="w-4 h-4" />
+              </Link>
+            </div>
+          </div>
+        </section>
+      )}
 
       {/* ===== CTA FINAL ===== */}
       <section className="py-24 lg:py-32 bg-[#1C1917] text-white">

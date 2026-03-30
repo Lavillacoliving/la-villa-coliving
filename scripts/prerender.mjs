@@ -238,8 +238,8 @@ async function renderRoute(browser, route) {
       timeout: 30000,
     });
 
-    // Give React + react-helmet a moment to finish
-    await new Promise(r => setTimeout(r, 1500));
+    // Give React + react-helmet + Supabase fetches a moment to finish
+    await new Promise(r => setTimeout(r, 3000));
 
     let html = await page.content();
 

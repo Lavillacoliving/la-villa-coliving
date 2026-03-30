@@ -10,6 +10,7 @@ import {
   HowToJoin,
   CTASection
 } from '@/sections/HomeSectionsV7';
+import { LatestBlogV7 } from '@/sections/LatestBlogV7';
 import { SEO } from '@/components/SEO';
 import { useLanguage } from '@/contexts/LanguageContext';
 
@@ -35,6 +36,7 @@ export function HomePage() {
       <HousesPreview />
       <TestimonialsCarousel />
       <HowToJoin />
+      <LatestBlogV7 />
       <CTASection />
     </main>
   );
