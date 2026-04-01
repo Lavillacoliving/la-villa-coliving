@@ -398,14 +398,14 @@ function generateContractHTML(data: ContractData): string {
       <div class="contract-container">
         <div class="contract-header">
           <img src="https://www.lavillacoliving.com/logos/logo-full.png" alt="La Villa Coliving" />
-          <p>${property.legal_entity_name}</p>
+          <p>${property.name || property.legal_entity_name}</p>
           <h1>CONTRAT DE LOCATION<br/>DE LOGEMENT MEUBLÉ</h1>
           <p class="subtitle">Loi n° 89-462 du 6 juillet 1989</p>
         </div>
 
         <div class="party-box">
           <strong>BAILLEUR :</strong><br/>
-          ${ph(property.legal_entity_name, 'Entité juridique')}<br/>
+          ${ph(property.name || property.legal_entity_name, 'Nom du bailleur')}<br/>
           ${property.is_coliving ? `
           SIRET : ${ph(property.siret, 'SIRET')}<br/>
           TVA : ${ph(property.tva, 'TVA')}<br/>

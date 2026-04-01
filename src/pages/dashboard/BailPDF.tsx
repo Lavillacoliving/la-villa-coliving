@@ -312,7 +312,7 @@ export function BailPDF({ data }: { data: BailPDFData }) {
         <View style={s.headerBlock} fixed={false}>
           <Image style={s.logo} src="https://www.lavillacoliving.com/logos/logo-full.png" />
           <Text style={{ fontSize: 10, fontFamily: "Helvetica-Bold" }}>
-            {property.legal_entity_name}
+            {property.name || property.legal_entity_name}
           </Text>
           <Text style={s.headerTitle}>{"CONTRAT DE LOCATION\nDE LOGEMENT MEUBL\u00C9"}</Text>
           <Text style={s.headerSub}>{"Loi n\u00B0 89-462 du 6 juillet 1989"}</Text>
@@ -321,7 +321,7 @@ export function BailPDF({ data }: { data: BailPDFData }) {
         {/* ---------- BAILLEUR ---------- */}
         <View style={s.partyBox}>
           <Text style={s.partyLabel}>BAILLEUR :</Text>
-          <Text>{ph(property.legal_entity_name, "Entit\u00E9 juridique")}</Text>
+          <Text>{ph(property.name || property.legal_entity_name, "Nom du bailleur")}</Text>
           {property.is_coliving ? (
             <View>
               <Text>SIRET : {ph(property.siret, "SIRET")} — TVA : {ph(property.tva, "TVA")}</Text>
@@ -570,21 +570,21 @@ export function BailPDF({ data }: { data: BailPDFData }) {
         {/* Bank Details */}
         {(property.name?.includes('Villa') || property.name?.includes('lavilla')) && (
           <View style={[s.partyBox, { marginTop: 12 }]}>
-            <Text style={s.partyLabel}>Coordonn\u00E9es bancaires du bailleur :</Text>
-            <Text style={{ marginBottom: 2, fontSize: 9 }}><Text style={{ fontFamily: "Helvetica-Bold" }}>Banque :</Text> Banque Palatine</Text>
-            <Text style={{ marginBottom: 2, fontSize: 9 }}><Text style={{ fontFamily: "Helvetica-Bold" }}>Titulaire :</Text> J\u00E9r\u00F4me Austin / Fanny Piot</Text>
-            <Text style={{ marginBottom: 2, fontSize: 9 }}><Text style={{ fontFamily: "Helvetica-Bold" }}>IBAN :</Text> FR76 4097 8000 4321 3287 5019 897</Text>
-            <Text style={{ fontSize: 9 }}><Text style={{ fontFamily: "Helvetica-Bold" }}>BIC :</Text> BSPFFRPPXXX</Text>
+            <Text style={s.partyLabel}>{"Coordonnées bancaires du bailleur :"}</Text>
+            <Text style={{ marginBottom: 2, fontSize: 9 }}><Text style={{ fontFamily: "Helvetica-Bold" }}>{"Banque : "}</Text>{"Banque Palatine"}</Text>
+            <Text style={{ marginBottom: 2, fontSize: 9 }}><Text style={{ fontFamily: "Helvetica-Bold" }}>{"Titulaire : "}</Text>{"Jérôme Austin / Fanny Piot"}</Text>
+            <Text style={{ marginBottom: 2, fontSize: 9 }}><Text style={{ fontFamily: "Helvetica-Bold" }}>{"IBAN : "}</Text>{"FR76 4097 8000 4321 3287 5019 897"}</Text>
+            <Text style={{ fontSize: 9 }}><Text style={{ fontFamily: "Helvetica-Bold" }}>{"BIC : "}</Text>{"BSPFFRPPXXX"}</Text>
           </View>
         )}
 
         {(property.name?.includes('Loft') || property.name?.includes('Lodge') || property.name?.includes('leloft') || property.name?.includes('lelodge')) && (
           <View style={[s.partyBox, { marginTop: 12 }]}>
-            <Text style={s.partyLabel}>Coordonn\u00E9es bancaires du bailleur :</Text>
-            <Text style={{ marginBottom: 2, fontSize: 9 }}><Text style={{ fontFamily: "Helvetica-Bold" }}>Banque :</Text> Banque Palatine</Text>
-            <Text style={{ marginBottom: 2, fontSize: 9 }}><Text style={{ fontFamily: "Helvetica-Bold" }}>Titulaire :</Text> SCI Sleep In</Text>
-            <Text style={{ marginBottom: 2, fontSize: 9 }}><Text style={{ fontFamily: "Helvetica-Bold" }}>IBAN :</Text> FR76 4097 8000 4321 3287 5921 415</Text>
-            <Text style={{ fontSize: 9 }}><Text style={{ fontFamily: "Helvetica-Bold" }}>BIC :</Text> BSPFFRPPXXX</Text>
+            <Text style={s.partyLabel}>{"Coordonnées bancaires du bailleur :"}</Text>
+            <Text style={{ marginBottom: 2, fontSize: 9 }}><Text style={{ fontFamily: "Helvetica-Bold" }}>{"Banque : "}</Text>{"Banque Palatine"}</Text>
+            <Text style={{ marginBottom: 2, fontSize: 9 }}><Text style={{ fontFamily: "Helvetica-Bold" }}>{"Titulaire : "}</Text>{"SCI Sleep In"}</Text>
+            <Text style={{ marginBottom: 2, fontSize: 9 }}><Text style={{ fontFamily: "Helvetica-Bold" }}>{"IBAN : "}</Text>{"FR76 4097 8000 4321 3287 5921 415"}</Text>
+            <Text style={{ fontSize: 9 }}><Text style={{ fontFamily: "Helvetica-Bold" }}>{"BIC : "}</Text>{"BSPFFRPPXXX"}</Text>
           </View>
         )}
 
@@ -717,10 +717,10 @@ export function BailPDF({ data }: { data: BailPDFData }) {
           </View>
 
           <View style={s.pageFooter} fixed>
-            <Text>{"La Villa Coliving - lavillacoliving.com"}</Text>
-            <Text>{"8 rue du Mont-Blanc"}</Text>
-            <Text>{"74100 Annemasse"}</Text>
-            <Text render={({ pageNumber, totalPages }) => `Page ${pageNumber} / ${totalPages}`} />
+            <Text render={({ pageNumber, totalPages }) => pageNumber < totalPages ? "La Villa Coliving - lavillacoliving.com" : ""} />
+            <Text render={({ pageNumber, totalPages }) => pageNumber < totalPages ? "8 rue du Mont-Blanc" : ""} />
+            <Text render={({ pageNumber, totalPages }) => pageNumber < totalPages ? "74100 Annemasse" : ""} />
+            <Text render={({ pageNumber, totalPages }) => pageNumber < totalPages ? `Page ${pageNumber} / ${totalPages}` : ""} />
           </View>
         </View>
 
