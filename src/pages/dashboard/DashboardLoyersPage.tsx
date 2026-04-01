@@ -85,7 +85,7 @@ function buildReminderEmail(
         + `Nous vous prions de bien vouloir procéder à la régularisation de ce solde par virement bancaire aux coordonnées suivantes :\n`
         + ribBlock + `\n`
         + `En cas de règlement déjà effectué, nous vous remercions de bien vouloir nous transmettre le justificatif afin de mettre à jour votre compte locataire.\n\n`
-        + `Restant à votre disposition,\n\nLa Villa Coliving\nGestion locative`;
+        + `Restant à votre disposition,\n\nLa Villa Coliving`;
     } else {
       subject = isColiving
         ? `Loyer impayé — ${propName} Chambre ${room} — ${monthLabel}`
@@ -97,7 +97,7 @@ function buildReminderEmail(
         + `Nous vous prions de bien vouloir procéder au règlement dans les meilleurs délais par virement bancaire aux coordonnées suivantes :\n`
         + ribBlock + `\n`
         + `En cas de règlement déjà effectué, nous vous remercions de bien vouloir nous transmettre le justificatif afin de mettre à jour votre compte locataire.\n\n`
-        + `Restant à votre disposition,\n\nLa Villa Coliving\nGestion locative`;
+        + `Restant à votre disposition,\n\nLa Villa Coliving`;
     }
   } else {
     const ribBlock = rib ? `\nAccount holder: ${rib.titulaire}\nIBAN: ${rib.iban}\nBIC: ${rib.bic}\nBank: ${rib.banque}\nReference: Rent ${monthLabel} — ${fullName}\n` : '';
@@ -113,7 +113,7 @@ function buildReminderEmail(
         + `Please arrange payment of the remaining balance by bank transfer to the following account:\n`
         + ribBlock + `\n`
         + `If this payment has already been made, please forward the confirmation so that we may update your tenant account accordingly.\n\n`
-        + `Yours sincerely,\n\nLa Villa Coliving\nProperty Management`;
+        + `Yours sincerely,\n\nLa Villa Coliving`;
     } else {
       subject = isColiving
         ? `Outstanding rent — ${propName} Room ${room} — ${monthLabel}`
@@ -125,7 +125,7 @@ function buildReminderEmail(
         + `Please arrange payment at your earliest convenience by bank transfer to the following account:\n`
         + ribBlock + `\n`
         + `If this payment has already been made, please forward the confirmation so that we may update your tenant account accordingly.\n\n`
-        + `Yours sincerely,\n\nLa Villa Coliving\nProperty Management`;
+        + `Yours sincerely,\n\nLa Villa Coliving`;
     }
   }
 
