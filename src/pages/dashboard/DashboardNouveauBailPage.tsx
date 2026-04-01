@@ -429,6 +429,8 @@ function generateContractHTML(data: ContractData): string {
           ${property.is_coliving ? `
           <strong>Le bailleur loue au locataire un logement meublé comprenant :</strong>
           <ul>
+            <li><strong>${ph(property.name, 'Nom du bien')}</strong></li>
+            <li><strong>${ph(property.address, 'Adresse du bien')}</strong></li>
             <li><strong>Chambre : ${ph(room.name, 'Chambre')}</strong></li>
             <li><strong>Surface :</strong> ${room.surface_m2} m²</li>
             <li><strong>Étage :</strong> ${room.floor}</li>

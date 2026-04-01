@@ -358,6 +358,8 @@ export function BailPDF({ data }: { data: BailPDFData }) {
 
         {property.is_coliving ? (
           <View>
+            <BoldBullet>{ph(property.name, "Nom du bien")}</BoldBullet>
+            <BoldBullet>{ph(property.address, "Adresse du bien")}</BoldBullet>
             <BoldBullet>Chambre : {ph(room.name, "Chambre")}</BoldBullet>
             <Bullet>Surface : {room.surface_m2} m² — {"Étage : "}{room.floor}</Bullet>
             {room.location_detail && <Bullet>Emplacement : {room.location_detail}</Bullet>}
