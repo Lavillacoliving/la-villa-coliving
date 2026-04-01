@@ -256,6 +256,13 @@ const s = StyleSheet.create({
     fontSize: 8,
     color: "#999",
   },
+  pageFooter: {
+    marginTop: 30,
+    textAlign: "center",
+    fontSize: 8,
+    color: "#999",
+    lineHeight: 1.6,
+  },
   logo: {
     width: 120,
     marginBottom: 6,
@@ -707,6 +714,13 @@ export function BailPDF({ data }: { data: BailPDFData }) {
 
           <View style={s.footer}>
             <Text>{"Lu et approuv\u00E9"}</Text>
+          </View>
+
+          <View style={s.pageFooter}>
+            <Text>{"La Villa Coliving - lavillacoliving.com"}</Text>
+            <Text>{"8 rue du Mont-Blanc"}</Text>
+            <Text>{"74100 Annemasse"}</Text>
+            <Text>{"Page 1"}</Text>
           </View>
         </View>
 

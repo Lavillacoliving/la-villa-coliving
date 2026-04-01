@@ -374,6 +374,13 @@ function generateContractHTML(data: ContractData): string {
         p strong {
           font-weight: bold;
         }
+        .page-footer {
+          margin-top: 40px;
+          text-align: center;
+          font-size: 9pt;
+          color: #999;
+          line-height: 1.6;
+        }
         @media print {
           body {
             margin: 0;
@@ -691,6 +698,13 @@ function generateContractHTML(data: ContractData): string {
 
         <div style="margin-top:40px;padding-top:20px;border-top:1px solid #c9a96e;text-align:center;font-size:9px;color:#999;">
           Lu et approuvé
+        </div>
+
+        <div class="page-footer">
+          La Villa Coliving - lavillacoliving.com<br/>
+          8 rue du Mont-Blanc<br/>
+          74100 Annemasse<br/>
+          Page 1
         </div>
       </div>
     </body>
