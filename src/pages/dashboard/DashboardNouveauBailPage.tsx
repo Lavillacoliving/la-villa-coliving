@@ -342,7 +342,7 @@ function generateContractHTML(data: ContractData): string {
           Nationalité : ${ph(form.locataire_nationality, 'Nationalité')}<br/>
           Adresse précédente : ${ph(form.locataire_previous_address, 'Adresse')}<br/>
           Email : ${ph(form.locataire_email, 'Email')}<br/>
-          Téléphone : ${ph(form.locataire_phone, 'Téléphone')}<br/>
+          Tél : ${ph(form.locataire_phone, 'Téléphone')}<br/>
           Profession : ${ph(form.locataire_profession, 'Profession')}<br/>
           Employeur : ${ph(form.locataire_employer, 'Employeur')}
         </div>
@@ -355,11 +355,9 @@ function generateContractHTML(data: ContractData): string {
         <h2>ARTICLE II — OBJET DU CONTRAT</h2>
         <div class="article">
           ${property.is_coliving ? `
-          Le bailleur loue au locataire un logement meublé comprenant :
+          <strong>Le bailleur loue au locataire un logement meublé comprenant :</strong>
           <ul>
-            <li><strong>${ph(property.name, 'Nom du bien')}</strong></li>
-            <li><strong>${ph(property.address, 'Adresse du bien')}</strong></li>
-            <li><strong>Chambre :</strong> ${ph(room.name, 'Chambre')}</li>
+            <li><strong>Chambre : ${ph(room.name, 'Chambre')}</strong></li>
             <li><strong>Surface :</strong> ${room.surface_m2} m²</li>
             <li><strong>Étage :</strong> ${room.floor}</li>
             ${room.location_detail ? `<li><strong>Emplacement :</strong> ${room.location_detail}</li>` : ''}
@@ -368,6 +366,7 @@ function generateContractHTML(data: ContractData): string {
             ${room.has_parking ? `<li><strong>Parking :</strong> ${room.parking_detail || 'Oui'}</li>` : ''}
             ${room.has_balcony ? '<li><strong>Balcon :</strong> Oui</li>' : ''}
             ${room.has_terrace ? '<li><strong>Terrasse :</strong> Oui</li>' : ''}
+            ${room.has_private_entrance ? `<li><strong>Entrée privée :</strong> Oui</li>` : ''}
           </ul>` : `
           <h3>A. Consistance du logement</h3>
           <p>Localisation du logement : 8 rue du Mont-Blanc - Annemasse, 5ème étage droite et face.</p>
@@ -391,7 +390,7 @@ function generateContractHTML(data: ContractData): string {
           <p><strong>Accès aux parties communes :</strong></p>
           <ul>${commonAreasList}</ul>` : ''}
           ${property.is_coliving ? `
-          <p><strong>Charges & Services inclus dans le forfait location TOUT INCLUS à « La Villa »</strong></p>
+          <p><strong style="color:#c9a96e;">Charges & Services inclus dans le forfait location TOUT INCLUS à « La Villa »</strong></p>
 
           <h3>EAU & ÉNERGIE :</h3>
           <ul>
@@ -421,23 +420,17 @@ function generateContractHTML(data: ContractData): string {
           </ul>
 
           <h3>ENTRETIEN</h3>
-          <p>Entretien des parties communes intérieures et extérieures : réparation et entretien et remplacement des éléments défectueux des parties communes de la maison.</p>
-          <p>Entretien des extérieurs et de la piscine.</p>
-          <p>Ménage effectué deux fois par semaine pour que les espaces communs brillent !</p>
+          <p>Entretien des parties communes intérieures et extérieures : réparation et entretien et remplacement des éléments défectueux des parties communes de la maison. Entretien des extérieurs et de la piscine. Ménage effectué deux fois par semaine pour que les espaces communs brillent !</p>
           <p style="font-weight:600;font-size:10px;">PARTIES COMMUNES INTÉRIEURES</p>
-          <ul>
-            <li>Fourniture de produits d'entretien (balais et sacs nécessaires à l'élimination des déchets) et de produits de désinsectisation et désinfection</li>
-            <li>Entretien de la minuterie, des tapis, des vide-ordures</li>
-            <li>Réparation des appareils d'entretien de propreté tels que l'aspirateur</li>
-            <li>Frais de personnel d'entretien.</li>
-          </ul>
-          <p style="font-weight:600;font-size:10px;">PARTIES COMMUNES EXTÉRIEURES</p>
-          <ul>
-            <li>Voies de circulation</li>
-            <li>Aires de stationnement</li>
-            <li>Abords des espaces verts</li>
-            <li>Équipements : piscine, terrasse, barbecue, jeux</li>
-          </ul>
+          <p style="margin-left:20px;">Fourniture de produits d'entretien (balais et sacs nécessaires à l'élimination des déchets) et de produits de désinsectisation et désinfection<br/>
+          Entretien de la minuterie, des tapis, des vide-ordures<br/>
+          Réparation des appareils d'entretien de propreté tels que l'aspirateur<br/>
+          Frais de personnel d'entretien.</p>
+          <p style="font-weight:600;font-size:10px;margin-top:10px;">PARTIES COMMUNES EXTÉRIEURES</p>
+          <p style="margin-left:20px;">Voies de circulation<br/>
+          Aires de stationnement<br/>
+          Abords des espaces verts<br/>
+          Équipements : piscine, terrasse, barbecue, jeux</p>
 
           <h3>ABONNEMENTS</h3>
           <ul>
@@ -465,7 +458,7 @@ function generateContractHTML(data: ContractData): string {
 
         <h2>ARTICLE III — DATE DE PRISE D'EFFET ET DURÉE</h2>
         <div class="article">
-          La location prend effet le <strong>${fDate(form.entry_date)}</strong> pour une durée de <strong>douze (12) mois</strong>, soit jusqu'au <strong>${fDate(exit_date)}</strong>.
+          <strong>La location prend effet le <span style="color:#c9a96e;">${fDate(form.entry_date)}</span> pour une durée de douze (12) mois, soit jusqu'au <span style="color:#c9a96e;">${fDate(exit_date)}</span>.</strong>
           <br/><br/>
           À l'expiration de cette période, le contrat se renouvelle par reconduction tacite pour des périodes successives de douze mois, sauf dénonciation notifiée au moins un mois avant l'expiration du contrat par le locataire, ou trois mois par le bailleur.
         </div>
@@ -475,18 +468,14 @@ function generateContractHTML(data: ContractData): string {
         <h2>ARTICLE IV — CONDITIONS FINANCIÈRES</h2>
         <div class="article">
           ${property.is_coliving ? `
-          <h3>Loyer mensuel :</h3>
-          <p><strong>${fEUR(loyer_eur)}</strong> - (taux BCE du ${form.exchange_rate_date} : ${form.exchange_rate})</p>
+          <h3><strong>Loyer mensuel :</strong> ${fEUR(loyer_eur)}</h3>
+          <p style="margin-top:5px;">- (taux BCE du ${form.exchange_rate_date} : ${form.exchange_rate})</p>
           ${(!data.prorata_days || !data.prorata_total_days || data.prorata_days >= data.prorata_total_days)
             ? '<p><em>Entrée le 1er du mois — pas de prorata.</em></p>'
-            : '<p><strong>Prorata du premier mois :</strong> Du ' + fDate(form.entry_date) + ' au dernier jour du mois (' + data.prorata_days + '/' + data.prorata_total_days + ' jours) :</p><ul><li><strong>En EUR :</strong> ' + fEUR(data.prorata_eur) + '</li></ul>'}
+            : '<p><strong>Prorata du premier mois :</strong> Du ' + fDate(form.entry_date) + ' au dernier jour du mois (' + data.prorata_days + '/' + data.prorata_total_days + ' jours) :</p><ul><li><strong>En EUR :</strong> <strong style="color:#c9a96e;">' + fEUR(data.prorata_eur) + '</strong></li></ul>'}
           <h3>Charges forfaitaires mensuelles :</h3>
           ${chargesTable}
-          <h3>Frais de dossier :</h3>
-          <ul>
-            <li><strong>Montant :</strong> ${fEUR(form.frais_dossier)} (${fCHF(form.frais_dossier * form.exchange_rate)})</li>
-            <li><strong>Statut :</strong> OFFERTS par le bailleur</li>
-          </ul>
+          <h3><strong>Frais de dossier :</strong> Montant : ${fEUR(form.frais_dossier)} (${fCHF(form.frais_dossier * form.exchange_rate)}) — OFFERTS par le bailleur</h3>
           <p style="font-size:9px;">En cas de départ à une date inférieure à 3 mois révolu à partir de la date de début du contrat, le locataire sera redevable auprès du bailleur des frais de dossier administratifs de services et d'états des lieux, offerts dans ce présent contrat.</p>` : `
           <h3>Loyer mensuel :</h3>
           <ul>
@@ -505,7 +494,7 @@ function generateContractHTML(data: ContractData): string {
           </ul>
           <h3>Modalités de paiement :</h3>
           <ul>
-            <li>Le loyer et les charges doivent être versés avant le 5 du mois.</li>
+            <li><strong style="color:#c9a96e;">Le loyer et les charges doivent être versés avant le 5 du mois.</strong></li>
             <li>Virement bancaire sur le compte du bailleur.</li>
           </ul>
         </div>
@@ -513,8 +502,8 @@ function generateContractHTML(data: ContractData): string {
         <h2>ARTICLE V — GARANTIES</h2>
         <div class="article">
           ${property.is_coliving
-            ? `Le locataire versera un dépôt de garantie égal à deux (2) mois de loyer, soit <strong>${fEUR(depot_eur)}</strong>, restitué dans les deux (2) mois suivant la fin du contrat, selon l'état des lieux.`
-            : `Le locataire versera un dépôt de garantie égal à un (1) mois de loyer hors charges, soit <strong>${fEUR(depot_eur)}</strong>, restitué dans les deux (2) mois suivant la fin du contrat, déduction faite des sommes éventuellement dues.`}
+            ? `Le locataire versera un dépôt de garantie égal à deux (2) mois de loyer, soit <strong style="color:#c9a96e;">${fEUR(depot_eur)} (${fCHF(depot_eur * form.exchange_rate)})</strong>, restitué dans les deux (2) mois suivant la fin du contrat, selon l'état des lieux.`
+            : `Le locataire versera un dépôt de garantie égal à un (1) mois de loyer hors charges, soit <strong style="color:#c9a96e;">${fEUR(depot_eur)}</strong>, restitué dans les deux (2) mois suivant la fin du contrat, déduction faite des sommes éventuellement dues.`}
         </div>
 
         <h2>ARTICLE VI — CLAUSE RÉSOLUTOIRE</h2>

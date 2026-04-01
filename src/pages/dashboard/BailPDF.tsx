@@ -11,7 +11,6 @@ import {
 interface Property {
   id: string;
   name: string;
-  address: string;
   legal_entity_name: string;
   siret: string;
   tva: string;
@@ -272,6 +271,15 @@ function Bullet({ children }: { children: React.ReactNode }) {
   );
 }
 
+function BoldBullet({ children }: { children: React.ReactNode }) {
+  return (
+    <View style={s.bullet}>
+      <Text style={s.bulletDot}>{"\u2022"}</Text>
+      <Text style={[s.bulletText, { fontFamily: "Helvetica-Bold" }]}>{children}</Text>
+    </View>
+  );
+}
+
 function Numbered({ n, children }: { n: number; children: React.ReactNode }) {
   return (
     <View style={s.numberedItem}>
@@ -325,7 +333,7 @@ export function BailPDF({ data }: { data: BailPDFData }) {
           <Text>{"Nationalit\u00E9 : "}{ph(form.locataire_nationality, "Nationalit\u00E9")}</Text>
           <Text>{"Adresse pr\u00E9c\u00E9dente : "}{ph(form.locataire_previous_address, "Adresse")}</Text>
           <Text>Email : {ph(form.locataire_email, "Email")}</Text>
-          <Text>{"\u2014 T\u00E9l : "}{ph(form.locataire_phone, "T\u00E9l\u00E9phone")}</Text>
+          <Text>{"T\u00E9l : "}{ph(form.locataire_phone, "T\u00E9l\u00E9phone")}</Text>
           <Text>Profession : {ph(form.locataire_profession, "Profession")}</Text>
           <Text>Employeur : {ph(form.locataire_employer, "Employeur")}</Text>
         </View>
@@ -341,7 +349,7 @@ export function BailPDF({ data }: { data: BailPDFData }) {
         {/* ---------- ARTICLE II ---------- */}
         <View minPresenceAhead={60}>
           <Text style={s.articleTitle}>{"ARTICLE II \u2014 OBJET DU CONTRAT"}</Text>
-          <Text style={s.body}>
+          <Text style={[s.body, { fontFamily: "Helvetica-Bold" }]}>
             {property.is_coliving
               ? "Le bailleur loue au locataire un logement meubl\u00E9 comprenant :"
               : "Le bailleur loue au locataire un appartement meubl\u00E9 comprenant :"}
@@ -350,15 +358,15 @@ export function BailPDF({ data }: { data: BailPDFData }) {
 
         {property.is_coliving ? (
           <View>
-            <Bullet>{ph(property.name, "Nom du bien")}</Bullet>
-            <Bullet>{ph(property.address, "Adresse du bien")}</Bullet>
-            <Bullet>Chambre : {ph(room.name, "Chambre")} — Surface : {room.surface_m2} m² — {"Étage : "}{room.floor}</Bullet>
+            <BoldBullet>Chambre : {ph(room.name, "Chambre")}</BoldBullet>
+            <Bullet>Surface : {room.surface_m2} m² — {"Étage : "}{room.floor}</Bullet>
             {room.location_detail && <Bullet>Emplacement : {room.location_detail}</Bullet>}
             <Bullet>Description : {ph(room.description, "Description")}</Bullet>
             <Bullet>Salle de bain : {ph(room.bathroom_type, "Type")}{room.bathroom_detail ? ` — ${room.bathroom_detail}` : ""}</Bullet>
             {room.has_parking && <Bullet>Parking : {room.parking_detail || "Oui"}</Bullet>}
             {room.has_balcony && <Bullet>Balcon : Oui</Bullet>}
             {room.has_terrace && <Bullet>Terrasse : Oui</Bullet>}
+            {room.has_private_entrance && <Bullet>{"Entr\u00e9e priv\u00e9e : Oui"}</Bullet>}
           </View>
         ) : (
           <View>
@@ -387,7 +395,7 @@ export function BailPDF({ data }: { data: BailPDFData }) {
           <View>
             <Text style={s.subTitle}>{"Acc\u00E8s aux parties communes :"}</Text>
             {(property.common_areas || []).map((area: string, i: number) => (
-              <Bullet key={i}>{area}</Bullet>
+              <Text key={i} style={[s.body, { paddingLeft: 10, marginBottom: 2 }]}>{area}</Text>
             ))}
           </View>
         )}
@@ -395,7 +403,7 @@ export function BailPDF({ data }: { data: BailPDFData }) {
         {/* Charges & Services coliving */}
         {property.is_coliving ? (
           <View>
-            <Text style={s.subTitle}>{"Charges & Services inclus dans le forfait location TOUT INCLUS à «La Villa»"}</Text>
+            <Text style={[s.subTitle, { color: gold }]}>{"Charges & Services inclus dans le forfait location TOUT INCLUS à «La Villa»"}</Text>
 
             <Text style={[s.subTitle, { fontSize: 9, marginTop: 8 }]}>{"EAU & ÉNERGIE :"}</Text>
             <Bullet>{"\u00C9lectricit\u00E9"}</Bullet>
@@ -422,24 +430,18 @@ export function BailPDF({ data }: { data: BailPDFData }) {
 
             <Text style={[s.subTitle, { fontSize: 9, marginTop: 8 }]}>{"ENTRETIEN"}</Text>
             <Text style={[s.body, { fontSize: 9 }]}>
-              {"Entretien des parties communes int\u00E9rieures et ext\u00E9rieures : r\u00E9paration et entretien et remplacement des \u00E9l\u00E9ments d\u00E9fectueux des parties communes de la maison."}
-            </Text>
-            <Text style={[s.body, { fontSize: 9 }]}>
-              {"Entretien des ext\u00E9rieurs et de la piscine."}
-            </Text>
-            <Text style={[s.body, { fontSize: 9 }]}>
-              {"M\u00E9nage effectu\u00E9 deux fois par semaine pour que les espaces communs brillent !"}
+              {"Entretien des parties communes int\u00E9rieures et ext\u00E9rieures : r\u00E9paration et entretien et remplacement des \u00E9l\u00E9ments d\u00E9fectueux des parties communes de la maison. Entretien des ext\u00E9rieurs et de la piscine. M\u00E9nage effectu\u00E9 deux fois par semaine pour que les espaces communs brillent !"}
             </Text>
             <Text style={[s.subTitle, { fontSize: 8, marginTop: 4 }]}>{"PARTIES COMMUNES INT\u00C9RIEURES"}</Text>
-            <Bullet>{"Fourniture de produits d\u2019entretien (balais et sacs n\u00E9cessaires \u00E0 l\u2019\u00E9limination des d\u00E9chets) et de produits de d\u00E9sinsectisation et d\u00E9sinfection"}</Bullet>
-            <Bullet>{"Entretien de la minuterie, des tapis, des vide-ordures"}</Bullet>
-            <Bullet>{"R\u00E9paration des appareils d\u2019entretien de propret\u00E9 tels que l\u2019aspirateur"}</Bullet>
-            <Bullet>{"Frais de personnel d\u2019entretien."}</Bullet>
+            <Text style={[s.body, { paddingLeft: 10, marginBottom: 2 }]}>{"Fourniture de produits d\u2019entretien (balais et sacs n\u00E9cessaires \u00E0 l\u2019\u00E9limination des d\u00E9chets) et de produits de d\u00E9sinsectisation et d\u00E9sinfection"}</Text>
+            <Text style={[s.body, { paddingLeft: 10, marginBottom: 2 }]}>{"Entretien de la minuterie, des tapis, des vide-ordures"}</Text>
+            <Text style={[s.body, { paddingLeft: 10, marginBottom: 2 }]}>{"R\u00E9paration des appareils d\u2019entretien de propret\u00E9 tels que l\u2019aspirateur"}</Text>
+            <Text style={[s.body, { paddingLeft: 10, marginBottom: 2 }]}>{"Frais de personnel d\u2019entretien."}</Text>
             <Text style={[s.subTitle, { fontSize: 8, marginTop: 4 }]}>{"PARTIES COMMUNES EXT\u00C9RIEURES"}</Text>
-            <Bullet>{"Voies de circulation"}</Bullet>
-            <Bullet>{"Aires de stationnement"}</Bullet>
-            <Bullet>{"Abords des espaces verts"}</Bullet>
-            <Bullet>{"\u00C9quipements : piscine, terrasse, barbecue, jeux"}</Bullet>
+            <Text style={[s.body, { paddingLeft: 10, marginBottom: 2 }]}>{"Voies de circulation"}</Text>
+            <Text style={[s.body, { paddingLeft: 10, marginBottom: 2 }]}>{"Aires de stationnement"}</Text>
+            <Text style={[s.body, { paddingLeft: 10, marginBottom: 2 }]}>{"Abords des espaces verts"}</Text>
+            <Text style={[s.body, { paddingLeft: 10, marginBottom: 2 }]}>{"\u00C9quipements : piscine, terrasse, barbecue, jeux"}</Text>
 
             <Text style={[s.subTitle, { fontSize: 9, marginTop: 8 }]}>ABONNEMENTS</Text>
             <Bullet>{"Eau, \u00C9lectricit\u00E9, Gaz,"}</Bullet>
@@ -475,7 +477,7 @@ export function BailPDF({ data }: { data: BailPDFData }) {
         {/* ---------- ARTICLE III ---------- */}
         <View wrap={false} minPresenceAhead={30}>
           <Text style={s.articleTitle}>{"ARTICLE III \u2014 DATE DE PRISE D\u2019EFFET ET DUR\u00C9E"}</Text>
-          <Text style={s.body}>
+          <Text style={[s.body, { fontFamily: "Helvetica-Bold" }]}>
             {"La location prend effet le "}{fDate(form.entry_date)}{" pour une dur\u00E9e de douze (12) mois, soit jusqu\u2019au "}{fDate(exit_date)}.
           </Text>
           <Text style={s.body}>
@@ -490,17 +492,17 @@ export function BailPDF({ data }: { data: BailPDFData }) {
 
         {property.is_coliving ? (
           <View>
-            <Text style={s.subTitle}>Loyer mensuel :</Text>
-            <Text style={s.body}>{fEUR(loyer_eur)} - (taux BCE du {form.exchange_rate_date || "\u2014"} : {rate})</Text>
+            <Text style={s.subTitle}><Text style={{ fontFamily: "Helvetica-Bold" }}>Loyer mensuel :</Text> {fEUR(loyer_eur)}</Text>
+            <Text style={[s.body, { marginTop: 0 }]}>- (taux BCE du {form.exchange_rate_date || "\u2014"} : {rate})</Text>
             {prorata_days > 0 && prorata_total_days > 0 && prorata_days < prorata_total_days ? (
               <View>
-                <Text style={[s.body, { marginTop: 6 }]}>
+                <Text style={[s.body, { marginTop: 6, fontFamily: "Helvetica-Bold" }]}>
                   {"Prorata du premier mois : du "}{fDate(form.entry_date)}{" au dernier jour du mois ("}{prorata_days}{"/"}{prorata_total_days}{" jours) :"}
                 </Text>
-                <Bullet>En EUR : {fEUR(prorata_eur)}</Bullet>
+                <Bullet>En EUR : <Text style={{ fontFamily: "Helvetica-Bold", color: gold }}>{fEUR(prorata_eur)}</Text></Bullet>
               </View>
             ) : (
-              <Text style={s.body}>{"Entr\u00E9e le 1er du mois \u2014 pas de prorata."}</Text>
+              <Text style={[s.body, { fontStyle: "italic" }]}>{"Entr\u00E9e le 1er du mois \u2014 pas de prorata."}</Text>
             )}
 
             <Text style={s.subTitle}>{"Charges forfaitaires mensuelles :"}</Text>
@@ -528,8 +530,7 @@ export function BailPDF({ data }: { data: BailPDFData }) {
               <Text style={[s.tableCellBold, { width: "40%", textAlign: "right" }]}>{fEUR(totalCharges)}</Text>
             </View>
 
-            <Text style={s.subTitle}>Frais de dossier :</Text>
-            <Bullet>Montant : {fEUR(form.frais_dossier)} ({fCHF(form.frais_dossier * rate)}) — OFFERTS par le bailleur</Bullet>
+            <Text style={s.subTitle}><Text style={{ fontFamily: "Helvetica-Bold" }}>Frais de dossier :</Text> Montant : {fEUR(form.frais_dossier)} ({fCHF(form.frais_dossier * rate)}) — OFFERTS par le bailleur</Text>
             <Text style={[s.body, { marginTop: 6, fontSize: 9 }]}>
               {"En cas de d\u00E9part \u00E0 une date inf\u00E9rieure \u00E0 3 mois r\u00E9volu \u00E0 partir de la date de d\u00E9but du contrat, le locataire sera redevable aupr\u00E8s du bailleur des frais de dossier administratifs de services et d\u2019\u00E9tats des lieux, offerts dans ce pr\u00E9sent contrat."}
             </Text>
@@ -553,7 +554,7 @@ export function BailPDF({ data }: { data: BailPDFData }) {
         <Bullet>{"La r\u00E9vision s\u2019effectue chaque ann\u00E9e \u00E0 la date anniversaire du contrat."}</Bullet>
 
         <Text style={s.subTitle}>{"Modalit\u00E9s de paiement :"}</Text>
-        <Bullet>{"Le loyer et les charges doivent \u00EAtre vers\u00E9s avant le 5 du mois."}</Bullet>
+        <Bullet><Text style={{ fontFamily: "Helvetica-Bold", color: gold }}>{"Le loyer et les charges doivent \u00EAtre vers\u00E9s avant le 5 du mois."}</Text></Bullet>
         <Bullet>Virement bancaire sur le compte du bailleur.</Bullet>
 
         {/* ---------- ARTICLE V ---------- */}
@@ -561,8 +562,8 @@ export function BailPDF({ data }: { data: BailPDFData }) {
           <Text style={s.articleTitle}>{"ARTICLE V \u2014 GARANTIES"}</Text>
           <Text style={s.body}>
             {property.is_coliving
-              ? <>{"Le locataire versera un d\u00E9p\u00F4t de garantie \u00E9gal \u00E0 deux (2) mois de loyer, soit "}{fEUR(depot_eur)}{", restitu\u00E9 dans les deux (2) mois suivant la fin du contrat, selon l\u2019\u00E9tat des lieux."}</>
-              : <>{"Le locataire versera un d\u00E9p\u00F4t de garantie \u00E9gal \u00E0 un (1) mois de loyer hors charges, soit "}{fEUR(depot_eur)}{", restitu\u00E9 dans les deux (2) mois suivant la fin du contrat, d\u00E9duction faite des sommes \u00E9ventuellement dues."}</>
+              ? <>{"Le locataire versera un d\u00E9p\u00F4t de garantie \u00E9gal \u00E0 deux (2) mois de loyer, soit "}<Text style={{ fontFamily: "Helvetica-Bold", color: gold }}>{fEUR(depot_eur)} ({fCHF(depot_eur * rate)})</Text>{", restitu\u00E9 dans les deux (2) mois suivant la fin du contrat, selon l\u2019\u00E9tat des lieux."}</>
+              : <>{"Le locataire versera un d\u00E9p\u00F4t de garantie \u00E9gal \u00E0 un (1) mois de loyer hors charges, soit "}<Text style={{ fontFamily: "Helvetica-Bold", color: gold }}>{fEUR(depot_eur)}</Text>{", restitu\u00E9 dans les deux (2) mois suivant la fin du contrat, d\u00E9duction faite des sommes \u00E9ventuellement dues."}</>
             }
           </Text>
         </View>
