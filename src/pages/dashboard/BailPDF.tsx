@@ -11,6 +11,7 @@ import {
 interface Property {
   id: string;
   name: string;
+  address: string;
   legal_entity_name: string;
   siret: string;
   tva: string;
@@ -349,6 +350,8 @@ export function BailPDF({ data }: { data: BailPDFData }) {
 
         {property.is_coliving ? (
           <View>
+            <Bullet>{ph(property.name, "Nom du bien")}</Bullet>
+            <Bullet>{ph(property.address, "Adresse du bien")}</Bullet>
             <Bullet>Chambre : {ph(room.name, "Chambre")} — Surface : {room.surface_m2} m² — {"Étage : "}{room.floor}</Bullet>
             {room.location_detail && <Bullet>Emplacement : {room.location_detail}</Bullet>}
             <Bullet>Description : {ph(room.description, "Description")}</Bullet>
@@ -356,7 +359,6 @@ export function BailPDF({ data }: { data: BailPDFData }) {
             {room.has_parking && <Bullet>Parking : {room.parking_detail || "Oui"}</Bullet>}
             {room.has_balcony && <Bullet>Balcon : Oui</Bullet>}
             {room.has_terrace && <Bullet>Terrasse : Oui</Bullet>}
-            {room.has_private_entrance && <Bullet>{"Entr\u00e9e priv\u00e9e : Oui"}</Bullet>}
           </View>
         ) : (
           <View>
@@ -420,7 +422,13 @@ export function BailPDF({ data }: { data: BailPDFData }) {
 
             <Text style={[s.subTitle, { fontSize: 9, marginTop: 8 }]}>{"ENTRETIEN"}</Text>
             <Text style={[s.body, { fontSize: 9 }]}>
-              {"Entretien des parties communes int\u00E9rieures et ext\u00E9rieures : r\u00E9paration et entretien et remplacement des \u00E9l\u00E9ments d\u00E9fectueux des parties communes de la maison. Entretien des ext\u00E9rieurs et de la piscine. M\u00E9nage effectu\u00E9 deux fois par semaine pour que les espaces communs brillent !"}
+              {"Entretien des parties communes int\u00E9rieures et ext\u00E9rieures : r\u00E9paration et entretien et remplacement des \u00E9l\u00E9ments d\u00E9fectueux des parties communes de la maison."}
+            </Text>
+            <Text style={[s.body, { fontSize: 9 }]}>
+              {"Entretien des ext\u00E9rieurs et de la piscine."}
+            </Text>
+            <Text style={[s.body, { fontSize: 9 }]}>
+              {"M\u00E9nage effectu\u00E9 deux fois par semaine pour que les espaces communs brillent !"}
             </Text>
             <Text style={[s.subTitle, { fontSize: 8, marginTop: 4 }]}>{"PARTIES COMMUNES INT\u00C9RIEURES"}</Text>
             <Bullet>{"Fourniture de produits d\u2019entretien (balais et sacs n\u00E9cessaires \u00E0 l\u2019\u00E9limination des d\u00E9chets) et de produits de d\u00E9sinsectisation et d\u00E9sinfection"}</Bullet>
@@ -553,7 +561,7 @@ export function BailPDF({ data }: { data: BailPDFData }) {
           <Text style={s.articleTitle}>{"ARTICLE V \u2014 GARANTIES"}</Text>
           <Text style={s.body}>
             {property.is_coliving
-              ? <>{"Le locataire versera un d\u00E9p\u00F4t de garantie \u00E9gal \u00E0 deux (2) mois de loyer, soit "}{fEUR(depot_eur)} ({fCHF(depot_eur * rate)}){", restitu\u00E9 dans les deux (2) mois suivant la fin du contrat, selon l\u2019\u00E9tat des lieux."}</>
+              ? <>{"Le locataire versera un d\u00E9p\u00F4t de garantie \u00E9gal \u00E0 deux (2) mois de loyer, soit "}{fEUR(depot_eur)}{", restitu\u00E9 dans les deux (2) mois suivant la fin du contrat, selon l\u2019\u00E9tat des lieux."}</>
               : <>{"Le locataire versera un d\u00E9p\u00F4t de garantie \u00E9gal \u00E0 un (1) mois de loyer hors charges, soit "}{fEUR(depot_eur)}{", restitu\u00E9 dans les deux (2) mois suivant la fin du contrat, d\u00E9duction faite des sommes \u00E9ventuellement dues."}</>
             }
           </Text>

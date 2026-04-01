@@ -357,6 +357,8 @@ function generateContractHTML(data: ContractData): string {
           ${property.is_coliving ? `
           Le bailleur loue au locataire un logement meublé comprenant :
           <ul>
+            <li><strong>${ph(property.name, 'Nom du bien')}</strong></li>
+            <li><strong>${ph(property.address, 'Adresse du bien')}</strong></li>
             <li><strong>Chambre :</strong> ${ph(room.name, 'Chambre')}</li>
             <li><strong>Surface :</strong> ${room.surface_m2} m²</li>
             <li><strong>Étage :</strong> ${room.floor}</li>
@@ -366,7 +368,6 @@ function generateContractHTML(data: ContractData): string {
             ${room.has_parking ? `<li><strong>Parking :</strong> ${room.parking_detail || 'Oui'}</li>` : ''}
             ${room.has_balcony ? '<li><strong>Balcon :</strong> Oui</li>' : ''}
             ${room.has_terrace ? '<li><strong>Terrasse :</strong> Oui</li>' : ''}
-            ${room.has_private_entrance ? `<li><strong>Entrée privée :</strong> Oui</li>` : ''}
           </ul>` : `
           <h3>A. Consistance du logement</h3>
           <p>Localisation du logement : 8 rue du Mont-Blanc - Annemasse, 5ème étage droite et face.</p>
@@ -420,7 +421,9 @@ function generateContractHTML(data: ContractData): string {
           </ul>
 
           <h3>ENTRETIEN</h3>
-          <p>Entretien des parties communes intérieures et extérieures : réparation et entretien et remplacement des éléments défectueux des parties communes de la maison. Entretien des extérieurs et de la piscine. Ménage effectué deux fois par semaine pour que les espaces communs brillent !</p>
+          <p>Entretien des parties communes intérieures et extérieures : réparation et entretien et remplacement des éléments défectueux des parties communes de la maison.</p>
+          <p>Entretien des extérieurs et de la piscine.</p>
+          <p>Ménage effectué deux fois par semaine pour que les espaces communs brillent !</p>
           <p style="font-weight:600;font-size:10px;">PARTIES COMMUNES INTÉRIEURES</p>
           <ul>
             <li>Fourniture de produits d'entretien (balais et sacs nécessaires à l'élimination des déchets) et de produits de désinsectisation et désinfection</li>
@@ -510,7 +513,7 @@ function generateContractHTML(data: ContractData): string {
         <h2>ARTICLE V — GARANTIES</h2>
         <div class="article">
           ${property.is_coliving
-            ? `Le locataire versera un dépôt de garantie égal à deux (2) mois de loyer, soit <strong>${fEUR(depot_eur)} (${fCHF(depot_eur * form.exchange_rate)})</strong>, restitué dans les deux (2) mois suivant la fin du contrat, selon l'état des lieux.`
+            ? `Le locataire versera un dépôt de garantie égal à deux (2) mois de loyer, soit <strong>${fEUR(depot_eur)}</strong>, restitué dans les deux (2) mois suivant la fin du contrat, selon l'état des lieux.`
             : `Le locataire versera un dépôt de garantie égal à un (1) mois de loyer hors charges, soit <strong>${fEUR(depot_eur)}</strong>, restitué dans les deux (2) mois suivant la fin du contrat, déduction faite des sommes éventuellement dues.`}
         </div>
 
