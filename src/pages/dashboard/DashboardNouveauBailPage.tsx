@@ -703,8 +703,7 @@ function generateContractHTML(data: ContractData): string {
         <div class="page-footer">
           La Villa Coliving - lavillacoliving.com<br/>
           8 rue du Mont-Blanc<br/>
-          74100 Annemasse<br/>
-          Page 1
+          74100 Annemasse
         </div>
       </div>
     </body>

@@ -716,11 +716,11 @@ export function BailPDF({ data }: { data: BailPDFData }) {
             <Text>{"Lu et approuv\u00E9"}</Text>
           </View>
 
-          <View style={s.pageFooter}>
+          <View style={s.pageFooter} fixed>
             <Text>{"La Villa Coliving - lavillacoliving.com"}</Text>
             <Text>{"8 rue du Mont-Blanc"}</Text>
             <Text>{"74100 Annemasse"}</Text>
-            <Text>{"Page 1"}</Text>
+            <Text render={({ pageNumber, totalPages }) => `Page ${pageNumber} / ${totalPages}`} />
           </View>
         </View>
 
