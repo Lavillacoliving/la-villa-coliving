@@ -11,6 +11,7 @@ import {
 interface Property {
   id: string;
   name: string;
+  address: string;
   legal_entity_name: string;
   siret: string;
   tva: string;
