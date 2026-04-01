@@ -193,114 +193,186 @@ function generateContractHTML(data: ContractData): string {
     <head>
       <meta charset="UTF-8" />
       <style>
+        * {
+          font-family: Arial, Helvetica, sans-serif;
+        }
         body {
-          font-family: 'Source Serif 4', Georgia, serif;
-          font-size: 11px;
-          line-height: 1.7;
+          font-family: Arial, Helvetica, sans-serif;
+          font-size: 13px;
+          line-height: 1.6;
           color: #333;
           margin: 0;
           padding: 0;
         }
         .contract-container {
           max-width: 210mm;
-          height: 297mm;
           margin: 0 auto;
           padding: 20mm 14mm;
           background: white;
+          page-break-after: always;
         }
         .contract-header {
           text-align: center;
-          margin-bottom: 30px;
+          margin-bottom: 25px;
           border-bottom: 2px solid #c9a96e;
           padding-bottom: 15px;
         }
         .contract-header img {
-          max-height: 50px;
-          margin-bottom: 10px;
-        }
-        .contract-header h1 {
-          font-family: 'Cormorant Garamond', Georgia, serif;
-          font-size: 18px;
-          font-weight: 700;
-          margin: 10px 0;
-          color: #333;
+          max-height: 130px;
+          margin-bottom: 12px;
         }
         .contract-header p {
           margin: 5px 0;
-          font-size: 10px;
+          font-size: 12pt;
+          font-weight: bold;
+          color: #333;
+        }
+        .contract-header h1 {
+          font-family: Arial, Helvetica, sans-serif;
+          font-size: 20pt;
+          font-weight: bold;
+          margin: 12px 0;
+          color: #333;
+          line-height: 1.4;
+        }
+        .contract-header .subtitle {
+          font-size: 9pt;
           color: #666;
+          margin: 8px 0 0 0;
         }
         .party-box {
           background: #faf8f5;
-          border-left: 3px solid #c9a96e;
-          padding: 10px;
+          border-left: 4px solid #c9a96e;
+          padding: 12px 10px;
           margin: 15px 0;
-          font-size: 10px;
+          font-size: 10pt;
+          line-height: 1.5;
         }
         .party-box strong {
           color: #c9a96e;
-          font-weight: 600;
+          font-weight: bold;
         }
         h2 {
-          font-family: 'Cormorant Garamond', Georgia, serif;
-          font-size: 14px;
-          font-weight: 700;
-          margin: 20px 0 10px 0;
-          color: #333;
-          border-bottom: 1px solid #c9a96e;
-          padding-bottom: 5px;
+          font-family: Arial, Helvetica, sans-serif;
+          font-size: 14pt;
+          font-weight: bold;
+          margin: 18px 0 10px 0;
+          color: #1a1a2e;
+          border-bottom: 2px solid #c9a96e;
+          padding-bottom: 6px;
+          text-transform: uppercase;
         }
         h3 {
-          font-family: 'Cormorant Garamond', Georgia, serif;
-          font-size: 12px;
-          font-weight: 600;
+          font-family: Arial, Helvetica, sans-serif;
+          font-size: 11pt;
+          font-weight: bold;
           margin: 12px 0 8px 0;
           color: #333;
         }
+        .gold {
+          color: #c9a96e;
+          font-weight: bold;
+        }
+        .bold-gold {
+          color: #c9a96e;
+          font-weight: bold;
+        }
         .article {
-          margin: 15px 0;
+          margin: 12px 0;
           text-align: justify;
+          font-size: 10pt;
         }
         .article-title {
-          font-weight: 600;
+          font-weight: bold;
           color: #333;
           margin-bottom: 8px;
         }
         ul, ol {
-          margin: 8px 0;
-          padding-left: 20px;
+          margin: 10px 0;
+          padding-left: 24px;
         }
         li {
-          margin: 4px 0;
+          margin: 6px 0;
+          font-size: 10pt;
+        }
+        ul li {
+          list-style: disc;
+        }
+        ol li {
+          list-style: decimal;
         }
         table {
           width: 100%;
           border-collapse: collapse;
-          margin: 10px 0;
+          margin: 12px 0;
+          font-size: 10pt;
         }
         td, th {
           padding: 8px;
           border: 1px solid #e0e0e0;
+          text-align: left;
         }
         th {
-          background: #f0f0f0;
-          font-weight: 600;
+          background: #f9f7f4;
+          font-weight: bold;
+          border-top: 2px solid #c9a96e;
+          border-bottom: 2px solid #c9a96e;
+        }
+        tr:last-child td {
+          border-bottom: 2px solid #c9a96e;
+        }
+        .section-header {
+          background: #f9f7f4;
+          padding: 10px 8px;
+          margin: 15px 0 10px 0;
+          font-weight: bold;
+          color: #c9a96e;
+          text-transform: uppercase;
+          font-size: 12pt;
+          border-top: 2px solid #c9a96e;
+          border-bottom: 1px solid #c9a96e;
+        }
+        .bank-details {
+          background: #faf8f5;
+          border-left: 4px solid #c9a96e;
+          padding: 12px 10px;
+          margin: 15px 0;
+          font-size: 10pt;
+          line-height: 1.5;
+        }
+        .bank-details h3 {
+          margin-top: 0;
+          color: #c9a96e;
+        }
+        .bank-details p {
+          margin: 4px 0;
         }
         .signature-section {
-          margin-top: 40px;
+          margin-top: 50px;
           display: flex;
-          justify-content: space-around;
-          font-size: 10px;
+          justify-content: space-between;
+          font-size: 10pt;
         }
         .signature-box {
-          width: 40%;
-          border-top: 1px solid #333;
+          width: 45%;
           text-align: center;
-          padding-top: 20px;
+          padding-top: 0;
+        }
+        .signature-box .line {
+          border-top: 1px solid #333;
+          height: 60px;
+          margin-bottom: 8px;
         }
         .page-break {
           page-break-before: always;
           margin-top: 40px;
+        }
+        p {
+          font-size: 10pt;
+          margin: 8px 0;
+        }
+        p strong {
+          font-weight: bold;
         }
         @media print {
           body {
@@ -309,7 +381,6 @@ function generateContractHTML(data: ContractData): string {
           }
           .contract-container {
             max-width: 100%;
-            height: auto;
             padding: 20mm 14mm;
             page-break-after: always;
           }
@@ -320,8 +391,9 @@ function generateContractHTML(data: ContractData): string {
       <div class="contract-container">
         <div class="contract-header">
           <img src="https://www.lavillacoliving.com/logos/logo-full.png" alt="La Villa Coliving" />
-          <p style="font-weight:600;">${property.legal_entity_name}</p>
+          <p>${property.legal_entity_name}</p>
           <h1>CONTRAT DE LOCATION<br/>DE LOGEMENT MEUBLÉ</h1>
+          <p class="subtitle">Loi n° 89-462 du 6 juillet 1989</p>
         </div>
 
         <div class="party-box">
@@ -497,6 +569,23 @@ function generateContractHTML(data: ContractData): string {
             <li><strong style="color:#c9a96e;">Le loyer et les charges doivent être versés avant le 5 du mois.</strong></li>
             <li>Virement bancaire sur le compte du bailleur.</li>
           </ul>
+          ${property.name?.includes('Villa') || property.name?.includes('lavilla')
+            ? `<div class="bank-details">
+              <h3>Coordonnées bancaires du bailleur :</h3>
+              <p><strong>Banque :</strong> Banque Palatine</p>
+              <p><strong>Titulaire :</strong> Jérôme Austin / Fanny Piot</p>
+              <p><strong>IBAN :</strong> FR76 4097 8000 4321 3287 5019 897</p>
+              <p><strong>BIC :</strong> BSPFFRPPXXX</p>
+            </div>`
+            : property.name?.includes('Loft') || property.name?.includes('Lodge') || property.name?.includes('leloft') || property.name?.includes('lelodge')
+            ? `<div class="bank-details">
+              <h3>Coordonnées bancaires du bailleur :</h3>
+              <p><strong>Banque :</strong> Banque Palatine</p>
+              <p><strong>Titulaire :</strong> SCI Sleep In</p>
+              <p><strong>IBAN :</strong> FR76 4097 8000 4321 3287 5921 415</p>
+              <p><strong>BIC :</strong> BSPFFRPPXXX</p>
+            </div>`
+            : ''}
         </div>
 
         <h2>ARTICLE V — GARANTIES</h2>

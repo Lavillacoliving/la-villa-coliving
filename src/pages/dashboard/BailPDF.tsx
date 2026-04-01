@@ -557,6 +557,27 @@ export function BailPDF({ data }: { data: BailPDFData }) {
         <Bullet><Text style={{ fontFamily: "Helvetica-Bold", color: gold }}>{"Le loyer et les charges doivent \u00EAtre vers\u00E9s avant le 5 du mois."}</Text></Bullet>
         <Bullet>Virement bancaire sur le compte du bailleur.</Bullet>
 
+        {/* Bank Details */}
+        {(property.name?.includes('Villa') || property.name?.includes('lavilla')) && (
+          <View style={[s.partyBox, { marginTop: 12 }]}>
+            <Text style={s.partyLabel}>Coordonn\u00E9es bancaires du bailleur :</Text>
+            <Text style={{ marginBottom: 2, fontSize: 9 }}><Text style={{ fontFamily: "Helvetica-Bold" }}>Banque :</Text> Banque Palatine</Text>
+            <Text style={{ marginBottom: 2, fontSize: 9 }}><Text style={{ fontFamily: "Helvetica-Bold" }}>Titulaire :</Text> J\u00E9r\u00F4me Austin / Fanny Piot</Text>
+            <Text style={{ marginBottom: 2, fontSize: 9 }}><Text style={{ fontFamily: "Helvetica-Bold" }}>IBAN :</Text> FR76 4097 8000 4321 3287 5019 897</Text>
+            <Text style={{ fontSize: 9 }}><Text style={{ fontFamily: "Helvetica-Bold" }}>BIC :</Text> BSPFFRPPXXX</Text>
+          </View>
+        )}
+
+        {(property.name?.includes('Loft') || property.name?.includes('Lodge') || property.name?.includes('leloft') || property.name?.includes('lelodge')) && (
+          <View style={[s.partyBox, { marginTop: 12 }]}>
+            <Text style={s.partyLabel}>Coordonn\u00E9es bancaires du bailleur :</Text>
+            <Text style={{ marginBottom: 2, fontSize: 9 }}><Text style={{ fontFamily: "Helvetica-Bold" }}>Banque :</Text> Banque Palatine</Text>
+            <Text style={{ marginBottom: 2, fontSize: 9 }}><Text style={{ fontFamily: "Helvetica-Bold" }}>Titulaire :</Text> SCI Sleep In</Text>
+            <Text style={{ marginBottom: 2, fontSize: 9 }}><Text style={{ fontFamily: "Helvetica-Bold" }}>IBAN :</Text> FR76 4097 8000 4321 3287 5921 415</Text>
+            <Text style={{ fontSize: 9 }}><Text style={{ fontFamily: "Helvetica-Bold" }}>BIC :</Text> BSPFFRPPXXX</Text>
+          </View>
+        )}
+
         {/* ---------- ARTICLE V ---------- */}
         <View wrap={false} minPresenceAhead={30}>
           <Text style={s.articleTitle}>{"ARTICLE V \u2014 GARANTIES"}</Text>
