@@ -15,8 +15,9 @@ interface Payment {
 interface Tenant {
   id: string; first_name: string; last_name: string;
   room_number: number; current_rent: number;
-  property_id: string; is_active: boolean; phone?: string;
+  property_id: string; is_active: boolean; phone?: string; email?: string;
   move_in_date: string | null; date_of_birth: string | null;
+  preferred_language?: string; due_day?: number;
   properties?: { name: string } | null;
 }
 interface Property { id: string; name: string; slug: string; entity_id: string; }
@@ -35,7 +36,101 @@ const ENTITY_MAP: Record<string,string> = {
 
 // ENTITY_SLUGS imported from @/lib/entities
 
+// RIB par entité (slug → coordonnées bancaires)
+const ENTITY_RIB: Record<string, { titulaire: string; iban: string; bic: string; banque: string } | null> = {
+  'lavilla': { titulaire: 'M. Austin Jérôme ou Mlle Fanny Piot', iban: 'FR76 4097 8000 4321 3287 5019 897', bic: 'BSPFFRPPXXX', banque: 'Banque Palatine' },
+  'leloft': { titulaire: 'SCI Sleep In', iban: 'FR76 4097 8000 4321 3287 5921 415', bic: 'BSPFFRPPXXX', banque: 'Banque Palatine' },
+  'lelodge': { titulaire: 'SCI Sleep In', iban: 'FR76 4097 8000 4321 3287 5921 415', bic: 'BSPFFRPPXXX', banque: 'Banque Palatine' },
+  'montblanc': null,
+};
+
+// Nom de maison par slug (pour personnalisation emails coliving)
+const PROPERTY_DISPLAY: Record<string, string> = {
+  'lavilla': 'La Villa', 'leloft': 'Le Loft', 'lelodge': 'Le Lodge', 'montblanc': 'Mont-Blanc',
+};
+
 function fmt(n: number) { return n.toLocaleString('fr-FR',{minimumFractionDigits:2,maximumFractionDigits:2})+' €'; }
+function fmtEn(n: number) { return '€' + n.toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2}); }
+
+function buildReminderEmail(
+  type: 'partial' | 'unpaid',
+  tenant: Tenant,
+  payment: Payment,
+  propSlug: string,
+  monthLabel: string,
+) {
+  const lang = tenant.preferred_language || 'fr';
+  const isColiving = propSlug !== 'montblanc';
+  const propName = PROPERTY_DISPLAY[propSlug] || '';
+  const rib = ENTITY_RIB[propSlug];
+  const fullName = tenant.first_name + ' ' + tenant.last_name;
+  const room = tenant.room_number;
+  const dueDay = tenant.due_day || 5;
+  const diff = payment.expected_amount - payment.received_amount;
+
+  let subject = '';
+  let body = '';
+
+  if (lang === 'fr') {
+    const ribBlock = rib ? `\nTitulaire : ${rib.titulaire}\nIBAN : ${rib.iban}\nBIC : ${rib.bic}\nBanque : ${rib.banque}\nRéférence : Loyer ${monthLabel} — ${fullName}\n` : '';
+
+    if (type === 'partial') {
+      subject = isColiving
+        ? `Régularisation loyer — ${propName} Chambre ${room} — ${monthLabel}`
+        : `Régularisation loyer — ${monthLabel}`;
+      body = `Bonjour ${tenant.first_name},\n\n`
+        + `Nous accusons réception de votre virement d'un montant de ${fmt(payment.received_amount)} au titre du loyer du mois de ${monthLabel}`
+        + (isColiving ? ` pour votre chambre ${room} à ${propName}` : '') + `.\n\n`
+        + `Toutefois, nous constatons un écart avec le montant contractuel de ${fmt(payment.expected_amount)}, soit un solde restant dû de ${fmt(diff)}.\n\n`
+        + `Nous vous prions de bien vouloir procéder à la régularisation de ce solde par virement bancaire aux coordonnées suivantes :\n`
+        + ribBlock + `\n`
+        + `En cas de règlement déjà effectué, nous vous remercions de bien vouloir nous transmettre le justificatif afin de mettre à jour votre compte locataire.\n\n`
+        + `Restant à votre disposition,\n\nLa Villa Coliving\nGestion locative`;
+    } else {
+      subject = isColiving
+        ? `Loyer impayé — ${propName} Chambre ${room} — ${monthLabel}`
+        : `Loyer impayé — ${monthLabel}`;
+      body = `Bonjour ${tenant.first_name},\n\n`
+        + `Sauf erreur de notre part, nous n'avons pas constaté la réception de votre loyer d'un montant de ${fmt(payment.expected_amount)} pour le mois de ${monthLabel}`
+        + (isColiving ? ` concernant votre chambre ${room} à ${propName}` : '')
+        + `, dont l'échéance était fixée au ${dueDay} du mois.\n\n`
+        + `Nous vous prions de bien vouloir procéder au règlement dans les meilleurs délais par virement bancaire aux coordonnées suivantes :\n`
+        + ribBlock + `\n`
+        + `En cas de règlement déjà effectué, nous vous remercions de bien vouloir nous transmettre le justificatif afin de mettre à jour votre compte locataire.\n\n`
+        + `Restant à votre disposition,\n\nLa Villa Coliving\nGestion locative`;
+    }
+  } else {
+    const ribBlock = rib ? `\nAccount holder: ${rib.titulaire}\nIBAN: ${rib.iban}\nBIC: ${rib.bic}\nBank: ${rib.banque}\nReference: Rent ${monthLabel} — ${fullName}\n` : '';
+
+    if (type === 'partial') {
+      subject = isColiving
+        ? `Rent balance — ${propName} Room ${room} — ${monthLabel}`
+        : `Rent balance — ${monthLabel}`;
+      body = `Dear ${tenant.first_name},\n\n`
+        + `We acknowledge receipt of your bank transfer of ${fmtEn(payment.received_amount)} for the rent of ${monthLabel}`
+        + (isColiving ? ` for your room ${room} at ${propName}` : '') + `.\n\n`
+        + `However, we note a discrepancy with the contractual amount of ${fmtEn(payment.expected_amount)}, leaving an outstanding balance of ${fmtEn(diff)}.\n\n`
+        + `Please arrange payment of the remaining balance by bank transfer to the following account:\n`
+        + ribBlock + `\n`
+        + `If this payment has already been made, please forward the confirmation so that we may update your tenant account accordingly.\n\n`
+        + `Yours sincerely,\n\nLa Villa Coliving\nProperty Management`;
+    } else {
+      subject = isColiving
+        ? `Outstanding rent — ${propName} Room ${room} — ${monthLabel}`
+        : `Outstanding rent — ${monthLabel}`;
+      body = `Dear ${tenant.first_name},\n\n`
+        + `Unless we are mistaken, we have not yet received your rent payment of ${fmtEn(payment.expected_amount)} for ${monthLabel}`
+        + (isColiving ? ` regarding your room ${room} at ${propName}` : '')
+        + `, which was due on the ${dueDay}th of the month.\n\n`
+        + `Please arrange payment at your earliest convenience by bank transfer to the following account:\n`
+        + ribBlock + `\n`
+        + `If this payment has already been made, please forward the confirmation so that we may update your tenant account accordingly.\n\n`
+        + `Yours sincerely,\n\nLa Villa Coliving\nProperty Management`;
+    }
+  }
+
+  return { subject, body };
+}
 
 
 export default function DashboardLoyersPage() {
@@ -66,12 +161,47 @@ export default function DashboardLoyersPage() {
       supabase.from('properties').select('id,name,slug,entity_id'),
       supabase.from('irl_indices').select('year,quarter,value,variation_pct').order('year').order('quarter'),
     ]);
-    setPayments(pRes.data||[]);
-    setTenants(tRes.data||[]);
+    const existingPayments = pRes.data || [];
+    const activeTenants = tRes.data || [];
+    setTenants(activeTenants);
     setProperties(prRes.data||[]);
     const irl: Record<string,IRLEntry> = {};
     (irlRes.data||[]).forEach((d:any) => { irl[d.year+'-Q'+d.quarter] = {value:parseFloat(d.value),variation:parseFloat(d.variation_pct)}; });
     setIrlData(irl);
+
+    // Auto-generate missing payment rows for active tenants
+    const existingTenantIds = new Set(existingPayments.map(p => p.tenant_id));
+    const [mYear, mMonth] = month.split('-').map(Number);
+    const daysInMonth = new Date(mYear, mMonth, 0).getDate();
+    const monthStart = new Date(mYear, mMonth - 1, 1);
+    const monthEnd = new Date(mYear, mMonth, 0);
+
+    const missing = activeTenants.filter(t => {
+      if (existingTenantIds.has(t.id)) return false;
+      if (!t.move_in_date) return false;
+      const moveIn = new Date(t.move_in_date);
+      // Tenant must have moved in during or before this month
+      return moveIn <= monthEnd;
+    });
+
+    if (missing.length > 0) {
+      const inserts = missing.map(t => {
+        const moveIn = new Date(t.move_in_date!);
+        let expected = t.current_rent;
+        let notes: string | null = null;
+        // Prorata if move-in is during this month
+        if (moveIn >= monthStart && moveIn <= monthEnd) {
+          const daysOccupied = daysInMonth - moveIn.getDate() + 1;
+          expected = Math.round((t.current_rent * daysOccupied / daysInMonth) * 100) / 100;
+          notes = `Prorata (entrée ${moveIn.toLocaleDateString('fr-FR')}, ${daysOccupied}j/${daysInMonth}j)`;
+        }
+        return { tenant_id: t.id, month, expected_amount: expected, received_amount: 0, status: 'pending', notes };
+      });
+      const { data: newPayments } = await supabase.from('payments').insert(inserts).select();
+      if (newPayments) existingPayments.push(...newPayments);
+    }
+
+    setPayments(existingPayments);
     setLoading(false);
   },[month]);
 
@@ -475,8 +605,22 @@ export default function DashboardLoyersPage() {
                       <td style={{padding:'10px 16px'}}>
                         <button onClick={()=>setNotesModal({id:p.id,notes:p.notes||''})} style={{background:'none',border:'none',cursor:'pointer',fontSize:'16px'}} title="Notes">📝</button>
                       </td>
-                      <td style={{padding:'10px 16px'}}>
+                      <td style={{padding:'10px 16px',whiteSpace:'nowrap'}}>
                         <button onClick={()=>startEdit(p)} style={{background:'none',border:'none',cursor:'pointer',fontSize:'14px',color:'#b8860b'}} title="Modifier">✎</button>
+                        {(p.status === 'partial' || p.status === 'late' || p.status === 'unpaid') && t?.email && (() => {
+                          const prop = properties.find(pr => pr.id === t.property_id);
+                          const slug = prop?.slug || '';
+                          const mLabel = new Date(month + '-01').toLocaleDateString(
+                            (t.preferred_language || 'fr') === 'fr' ? 'fr-FR' : 'en-US',
+                            { month: 'long', year: 'numeric' }
+                          );
+                          const emailType = p.status === 'partial' ? 'partial' as const : 'unpaid' as const;
+                          const { subject, body } = buildReminderEmail(emailType, t, p, slug, mLabel);
+                          const mailto = `mailto:${t.email}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+                          return (
+                            <a href={mailto} style={{marginLeft:'4px',textDecoration:'none',fontSize:'14px'}} title="Envoyer relance">✉️</a>
+                          );
+                        })()}
                       </td>
                     </tr>
                   );
