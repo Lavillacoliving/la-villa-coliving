@@ -257,7 +257,10 @@ const s = StyleSheet.create({
     color: "#999",
   },
   pageFooter: {
-    marginTop: 30,
+    position: "absolute",
+    bottom: 20,
+    left: 45,
+    right: 45,
     textAlign: "center",
     fontSize: 8,
     color: "#999",
@@ -312,7 +315,7 @@ export function BailPDF({ data }: { data: BailPDFData }) {
         <View style={s.headerBlock} fixed={false}>
           <Image style={s.logo} src="https://www.lavillacoliving.com/logos/logo-full.png" />
           <Text style={{ fontSize: 10, fontFamily: "Helvetica-Bold" }}>
-            {property.name || property.legal_entity_name}
+            {"La Villa Coliving"}
           </Text>
           <Text style={s.headerTitle}>{"CONTRAT DE LOCATION\nDE LOGEMENT MEUBL\u00C9"}</Text>
           <Text style={s.headerSub}>{"Loi n\u00B0 89-462 du 6 juillet 1989"}</Text>
@@ -321,7 +324,7 @@ export function BailPDF({ data }: { data: BailPDFData }) {
         {/* ---------- BAILLEUR ---------- */}
         <View style={s.partyBox}>
           <Text style={s.partyLabel}>BAILLEUR :</Text>
-          <Text>{ph(property.name || property.legal_entity_name, "Nom du bailleur")}</Text>
+          <Text>{"La Villa Coliving"}</Text>
           {property.is_coliving ? (
             <View>
               <Text>SIRET : {ph(property.siret, "SIRET")} — TVA : {ph(property.tva, "TVA")}</Text>
@@ -713,15 +716,16 @@ export function BailPDF({ data }: { data: BailPDFData }) {
           </View>
 
           <View style={s.footer}>
-            <Text>{"Lu et approuv\u00E9"}</Text>
+            <Text>{"Lu et approuvé"}</Text>
           </View>
+        </View>
 
-          <View style={s.pageFooter} fixed>
-            <Text render={({ pageNumber, totalPages }) => pageNumber < totalPages ? "La Villa Coliving - lavillacoliving.com" : ""} />
-            <Text render={({ pageNumber, totalPages }) => pageNumber < totalPages ? "8 rue du Mont-Blanc" : ""} />
-            <Text render={({ pageNumber, totalPages }) => pageNumber < totalPages ? "74100 Annemasse" : ""} />
-            <Text render={({ pageNumber, totalPages }) => pageNumber < totalPages ? `Page ${pageNumber} / ${totalPages}` : ""} />
-          </View>
+        {/* Fixed footer — direct child of Page for fixed positioning */}
+        <View style={s.pageFooter} fixed>
+          <Text render={({ pageNumber, totalPages }) => pageNumber < totalPages ? "La Villa Coliving - lavillacoliving.com" : ""} />
+          <Text render={({ pageNumber, totalPages }) => pageNumber < totalPages ? "8 rue du Mont-Blanc" : ""} />
+          <Text render={({ pageNumber, totalPages }) => pageNumber < totalPages ? "74100 Annemasse" : ""} />
+          <Text render={({ pageNumber, totalPages }) => pageNumber < totalPages ? `Page ${pageNumber} / ${totalPages}` : ""} />
         </View>
 
       </Page>
