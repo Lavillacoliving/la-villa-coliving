@@ -80,24 +80,28 @@ export default function DashboardComptesLocatairesPage() {
   const [filterEntity, setFilterEntity] = useState<string>('all');
   const [filterStatut, setFilterStatut] = useState<string>('all');
   const [search, setSearch] = useState('');
-  const [selectedTenant, setSelectedTenant] = useState<TenantBalance | null>(null);
+  const [selectedTenantId, setSelectedTenantId] = useState<string | null>(null);
+
+  const reload = async () => {
+    const [tRes, lRes] = await Promise.all([
+      supabase
+        .from('tenants')
+        .select('id,first_name,last_name,room_number,current_rent,property_id,move_in_date,is_active,properties(name,slug)')
+        .eq('is_active', true)
+        .order('last_name'),
+      supabase
+        .from('tenant_ledger')
+        .select('*')
+        .order('entry_date', { ascending: true }),
+    ]);
+    if (tRes.data) setTenants(tRes.data as any);
+    if (lRes.data) setLedger(lRes.data as any);
+  };
 
   useEffect(() => {
     (async () => {
       setLoading(true);
-      const [tRes, lRes] = await Promise.all([
-        supabase
-          .from('tenants')
-          .select('id,first_name,last_name,room_number,current_rent,property_id,move_in_date,is_active,properties(name,slug)')
-          .eq('is_active', true)
-          .order('last_name'),
-        supabase
-          .from('tenant_ledger')
-          .select('*')
-          .order('entry_date', { ascending: true }),
-      ]);
-      if (tRes.data) setTenants(tRes.data as any);
-      if (lRes.data) setLedger(lRes.data as any);
+      await reload();
       setLoading(false);
     })();
   }, []);
@@ -253,7 +257,7 @@ export default function DashboardComptesLocatairesPage() {
                 {grouped[propName].map(b => (
                   <tr
                     key={b.tenant.id}
-                    onClick={() => setSelectedTenant(b)}
+                    onClick={() => setSelectedTenantId(b.tenant.id)}
                     style={{ borderBottom: '1px solid #f1f5f9', cursor: 'pointer' }}
                     onMouseEnter={e => (e.currentTarget.style.background = '#f8fafc')}
                     onMouseLeave={e => (e.currentTarget.style.background = '#fff')}
@@ -307,9 +311,17 @@ export default function DashboardComptesLocatairesPage() {
       )}
 
       {/* Detail modal */}
-      {selectedTenant && (
-        <LedgerDetailModal balance={selectedTenant} onClose={() => setSelectedTenant(null)} />
-      )}
+      {selectedTenantId && (() => {
+        const current = balances.find(b => b.tenant.id === selectedTenantId);
+        if (!current) return null;
+        return (
+          <LedgerDetailModal
+            balance={current}
+            onClose={() => setSelectedTenantId(null)}
+            onRefresh={reload}
+          />
+        );
+      })()}
     </div>
   );
 }
@@ -331,8 +343,63 @@ function KpiCard({ label, value, color }: { label: string; value: string; color:
   );
 }
 
-function LedgerDetailModal({ balance, onClose }: { balance: TenantBalance; onClose: () => void }) {
+function LedgerDetailModal({
+  balance,
+  onClose,
+  onRefresh,
+}: {
+  balance: TenantBalance;
+  onClose: () => void;
+  onRefresh: () => Promise<void>;
+}) {
   const { tenant, entries, loyer, paiement, caution, solde, statut } = balance;
+  const [showForm, setShowForm] = useState(false);
+  const [saving, setSaving] = useState(false);
+  const today = new Date().toISOString().slice(0, 10);
+  const currentMonth = today.slice(0, 7);
+  const [form, setForm] = useState({
+    entry_date: today,
+    amount: '',
+    month: currentMonth,
+    label: '',
+  });
+
+  const handleSave = async () => {
+    const amt = parseFloat(form.amount.replace(',', '.'));
+    if (!form.label.trim() || isNaN(amt) || amt === 0) {
+      alert('Montant et libellé requis. Montant positif = dû au locataire (impayé ↑), négatif = en faveur du locataire.');
+      return;
+    }
+    setSaving(true);
+    const { error } = await supabase.from('tenant_ledger').insert({
+      tenant_id: tenant.id,
+      entry_date: form.entry_date,
+      type: 'regularisation',
+      amount: amt,
+      month: form.month || null,
+      label: form.label.trim(),
+      created_by: 'dashboard_manual',
+    });
+    setSaving(false);
+    if (error) {
+      alert('Erreur: ' + error.message);
+      return;
+    }
+    setForm({ entry_date: today, amount: '', month: currentMonth, label: '' });
+    setShowForm(false);
+    await onRefresh();
+  };
+
+  const handleDelete = async (entry: LedgerEntry) => {
+    if (entry.type !== 'regularisation') return;
+    if (!confirm(`Supprimer cette régularisation ?\n${entry.label} — ${fmt(Number(entry.amount))}`)) return;
+    const { error } = await supabase.from('tenant_ledger').delete().eq('id', entry.id);
+    if (error) {
+      alert('Erreur: ' + error.message);
+      return;
+    }
+    await onRefresh();
+  };
   // sort entries: by date, then by type priority (caution first, then loyer, then paiement, then regul)
   const sorted = [...entries].sort((a, b) => {
     if (a.entry_date !== b.entry_date) return a.entry_date.localeCompare(b.entry_date);
@@ -402,8 +469,69 @@ function LedgerDetailModal({ balance, onClose }: { balance: TenantBalance; onClo
           />
         </div>
 
-        {/* Ledger entries */}
-        <h3 style={{ fontSize: 16, fontWeight: 600, marginBottom: 8 }}>Détail du ledger ({sorted.length} écritures)</h3>
+        {/* Ledger entries header with add button */}
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 8 }}>
+          <h3 style={{ fontSize: 16, fontWeight: 600, margin: 0 }}>Détail du ledger ({sorted.length} écritures)</h3>
+          <button
+            onClick={() => setShowForm(v => !v)}
+            style={{
+              background: showForm ? '#e2e8f0' : '#f59e0b',
+              color: showForm ? '#475569' : '#fff',
+              border: 'none',
+              borderRadius: 8,
+              padding: '8px 14px',
+              fontSize: 13,
+              fontWeight: 600,
+              cursor: 'pointer',
+            }}
+          >
+            {showForm ? 'Annuler' : '+ Nouvelle régularisation'}
+          </button>
+        </div>
+
+        {showForm && (
+          <div style={{ background: '#fffbeb', border: '1px solid #fde68a', borderRadius: 8, padding: 14, marginBottom: 12 }}>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 10, marginBottom: 10 }}>
+              <div>
+                <label style={formLabel}>Date</label>
+                <input type="date" value={form.entry_date} onChange={e => setForm({ ...form, entry_date: e.target.value })} style={formInput} />
+              </div>
+              <div>
+                <label style={formLabel}>Mois (YYYY-MM)</label>
+                <input type="text" value={form.month} onChange={e => setForm({ ...form, month: e.target.value })} placeholder="2026-04" style={formInput} />
+              </div>
+              <div>
+                <label style={formLabel}>Montant (€)</label>
+                <input type="text" value={form.amount} onChange={e => setForm({ ...form, amount: e.target.value })} placeholder="+180 ou -15.92" style={formInput} />
+              </div>
+              <div>
+                <label style={formLabel}>Libellé</label>
+                <input type="text" value={form.label} onChange={e => setForm({ ...form, label: e.target.value })} placeholder="Rattrapage déc. 2025" style={formInput} />
+              </div>
+            </div>
+            <div style={{ fontSize: 11, color: '#92400e', marginBottom: 10 }}>
+              💡 Positif (+180) = dû par le locataire (augmente l'impayé). Négatif (−15.92) = en faveur du locataire (crédit).
+            </div>
+            <button
+              onClick={handleSave}
+              disabled={saving}
+              style={{
+                background: '#22c55e',
+                color: '#fff',
+                border: 'none',
+                borderRadius: 8,
+                padding: '8px 16px',
+                fontSize: 13,
+                fontWeight: 600,
+                cursor: saving ? 'wait' : 'pointer',
+                opacity: saving ? 0.6 : 1,
+              }}
+            >
+              {saving ? 'Enregistrement…' : 'Enregistrer'}
+            </button>
+          </div>
+        )}
+
         <div style={{ border: '1px solid #e2e8f0', borderRadius: 8, overflow: 'hidden' }}>
           <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: 13 }}>
             <thead>
@@ -413,6 +541,7 @@ function LedgerDetailModal({ balance, onClose }: { balance: TenantBalance; onClo
                 <th style={thStyle}>Mois</th>
                 <th style={thStyle}>Libellé</th>
                 <th style={{ ...thStyle, textAlign: 'right' }}>Montant</th>
+                <th style={{ ...thStyle, width: 40 }}></th>
               </tr>
             </thead>
             <tbody>
@@ -446,6 +575,24 @@ function LedgerDetailModal({ balance, onClose }: { balance: TenantBalance; onClo
                   >
                     {fmt(Number(e.amount))}
                   </td>
+                  <td style={{ ...tdStyle, textAlign: 'center' }}>
+                    {e.type === 'regularisation' && (
+                      <button
+                        onClick={() => handleDelete(e)}
+                        title="Supprimer cette régularisation"
+                        style={{
+                          background: 'transparent',
+                          border: 'none',
+                          cursor: 'pointer',
+                          color: '#ef4444',
+                          fontSize: 14,
+                          padding: 4,
+                        }}
+                      >
+                        🗑
+                      </button>
+                    )}
+                  </td>
                 </tr>
               ))}
             </tbody>
@@ -478,6 +625,26 @@ const thStyle: React.CSSProperties = {
 const tdStyle: React.CSSProperties = {
   padding: '10px 12px',
   color: '#1e293b',
+};
+
+const formLabel: React.CSSProperties = {
+  display: 'block',
+  fontSize: 11,
+  fontWeight: 600,
+  color: '#92400e',
+  textTransform: 'uppercase',
+  letterSpacing: 0.4,
+  marginBottom: 4,
+};
+
+const formInput: React.CSSProperties = {
+  width: '100%',
+  padding: '6px 10px',
+  borderRadius: 6,
+  border: '1px solid #fcd34d',
+  background: '#fff',
+  fontSize: 13,
+  boxSizing: 'border-box',
 };
 
 const selectStyle: React.CSSProperties = {
