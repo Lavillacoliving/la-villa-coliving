@@ -38,6 +38,7 @@ import DashboardEventsPage from "@/pages/dashboard/DashboardEventsPage";
 import DashboardRapprochementPage from "@/pages/dashboard/DashboardRapprochementPage";
 import DashboardCautionsPage from "@/pages/dashboard/DashboardCautionsPage";
 import DashboardBlogPage from "@/pages/dashboard/DashboardBlogPage";
+import DashboardComptesLocatairesPage from "@/pages/dashboard/DashboardComptesLocatairesPage";
 import ResetPasswordPage from "@/pages/ResetPasswordPage";
 
 function AppContent() {
@@ -96,6 +97,7 @@ function AppContent() {
           <Route index element={<Navigate to="/dashboard/loyers" replace />} />
           <Route path="loyers" element={<DashboardLoyersPage />} />
           <Route path="locataires" element={<DashboardLocatairesPage />} />
+          <Route path="comptes-locataires" element={<DashboardComptesLocatairesPage />} />
           <Route path="rapprochement" element={<DashboardRapprochementPage />} />
           <Route path="depenses" element={<DashboardDepensesPage />} />
           <Route path="cautions" element={<DashboardCautionsPage />} />
