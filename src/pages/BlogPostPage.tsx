@@ -220,7 +220,7 @@ export function BlogPostPage() {
           <div className="grid md:grid-cols-3 gap-6">
             {[
               { slug: "lavilla", labelFr: "La Villa", labelEn: "La Villa", img: "/images/la villa.webp", descFr: "9 chambres · piscine · jardin", descEn: "9 rooms · pool · garden" },
-              { slug: "lelodge", labelFr: "Le Lodge", labelEn: "Le Lodge", img: "/images/le lodge.webp", descFr: "11 chambres · sauna · gym", descEn: "11 rooms · sauna · gym" },
+              { slug: "lelodge", labelFr: "Le Lodge", labelEn: "Le Lodge", img: "/images/le lodge.webp", descFr: "12 chambres · sauna · gym", descEn: "12 rooms · sauna · gym" },
               { slug: "leloft", labelFr: "Le Loft", labelEn: "Le Loft", img: "/images/le loft glamour.webp", descFr: "9 chambres · home cinéma", descEn: "9 rooms · home cinema" },
             ].map((h) => (
               <Link
