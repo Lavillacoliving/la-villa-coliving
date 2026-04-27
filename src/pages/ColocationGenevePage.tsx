@@ -109,8 +109,8 @@ export function ColocationGenevePage() {
         }
         description={
           language === "en"
-            ? "Premium shared housing in a house with pool, 20 min from Geneva. All-inclusive. Ideal for cross-border workers, expats & young professionals."
-            : "Colocation premium en maison avec piscine à 20 min de Genève. Tout inclus. Idéal frontaliers, expats et jeunes professionnels."
+            ? "All-inclusive shared housing 15 min from Geneva, from CHF 1,380/month. Houses with pool, gym, sauna. Rent + utilities + WiFi included. Visit & application in 48h."
+            : "Colocation tout inclus à 15 min de Genève dès 1 380 CHF/mois. Maisons avec piscine, salle de sport, sauna. Loyer + charges + WiFi inclus. Visite & dossier en 48h."
         }
         url="https://www.lavillacoliving.com/colocation-geneve"
         image="https://www.lavillacoliving.com/images/villa_portrait.webp"

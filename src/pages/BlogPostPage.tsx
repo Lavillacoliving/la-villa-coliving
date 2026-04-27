@@ -203,6 +203,46 @@ export function BlogPostPage() {
         </div>
       </article>
 
+      {/* Discover our houses — internal linking from blog to conversion pages */}
+      <section className="py-16 lg:py-20 bg-white border-t border-[#E7E5E4]">
+        <div className="max-w-5xl mx-auto px-6">
+          <h2
+            className="text-2xl md:text-3xl font-light text-[#1C1917] mb-3 text-center"
+            style={{ fontFamily: "DM Serif Display, serif" }}
+          >
+            {language === "en" ? "Discover our houses" : "Découvrez nos maisons"}
+          </h2>
+          <p className="text-sm text-[#78716C] text-center mb-10">
+            {language === "en"
+              ? "Three premium coliving houses 15 min from Geneva, all-inclusive from CHF 1,380/month."
+              : "Trois maisons de coliving premium à 15 min de Genève, tout inclus dès 1 380 CHF/mois."}
+          </p>
+          <div className="grid md:grid-cols-3 gap-6">
+            {[
+              { slug: "lavilla", labelFr: "La Villa", labelEn: "La Villa", img: "/images/la villa.webp", descFr: "9 chambres · piscine · jardin", descEn: "9 rooms · pool · garden" },
+              { slug: "lelodge", labelFr: "Le Lodge", labelEn: "Le Lodge", img: "/images/le lodge.webp", descFr: "11 chambres · sauna · gym", descEn: "11 rooms · sauna · gym" },
+              { slug: "leloft", labelFr: "Le Loft", labelEn: "Le Loft", img: "/images/le loft glamour.webp", descFr: "9 chambres · home cinéma", descEn: "9 rooms · home cinema" },
+            ].map((h) => (
+              <Link
+                key={h.slug}
+                to={language === "en" ? `/en/${h.slug}` : `/${h.slug}`}
+                className="group bg-white border border-[#E7E5E4] overflow-hidden hover:border-[#D4A574]/40 hover:shadow-lg transition-all"
+              >
+                <div className="aspect-[16/10] overflow-hidden">
+                  <img src={h.img} alt={`${h.labelFr} — coliving près de Genève`} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" loading="lazy" />
+                </div>
+                <div className="p-5">
+                  <h3 className="text-lg font-medium text-[#1C1917] mb-1 group-hover:text-[#D4A574] transition-colors" style={{ fontFamily: "DM Serif Display, serif" }}>
+                    {language === "en" ? h.labelEn : h.labelFr}
+                  </h3>
+                  <p className="text-sm text-[#57534E]">{language === "en" ? h.descEn : h.descFr}</p>
+                </div>
+              </Link>
+            ))}
+          </div>
+        </div>
+      </section>
+
       {/* Related Articles — improves internal linking for SEO */}
       {related.length > 0 && (
         <section className="py-16 lg:py-24 bg-[#FAF9F6]">
