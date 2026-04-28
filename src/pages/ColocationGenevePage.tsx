@@ -109,8 +109,8 @@ export function ColocationGenevePage() {
         }
         description={
           language === "en"
-            ? "All-inclusive shared housing 15 min from Geneva, from CHF 1,380/month. Houses with pool, gym, sauna. Rent + utilities + WiFi included. Visit & application in 48h."
-            : "Colocation tout inclus à 15 min de Genève dès 1 380 CHF/mois. Maisons avec piscine, salle de sport, sauna. Loyer + charges + WiFi inclus. Visite & dossier en 48h."
+            ? "Shared housing 15 min from Geneva, all-inclusive from CHF 1,380/mo. 29 rooms, pool, gym, sauna. Direct Léman Express to Cornavin 15 min."
+            : "Colocation Genève côté France dès 1 380 CHF/mois tout inclus. 29 chambres meublées, piscine, gym, sauna. Léman Express direct Cornavin 15 min."
         }
         url="https://www.lavillacoliving.com/colocation-geneve"
         image="https://www.lavillacoliving.com/images/villa_portrait.webp"
