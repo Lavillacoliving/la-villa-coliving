@@ -1457,13 +1457,31 @@ export function HouseDetailPage() {
                   {language === "en" ? "Available" : "Disponible"}
                 </Badge>
               )}
-              <Badge
-                variant="outline"
-                className="border-2 border-[#D4A574] text-[#D4A574] font-bold"
-              >
-                <Zap size={14} className="mr-1 text-[#D4A574]" />
-                DPE {house.specs.dpe}
-              </Badge>
+              {(() => {
+                // DPE badge — couleur officielle ADEME selon la lettre (A vert foncé → G rouge).
+                // Filled style (fond coloré + texte) plutôt que outline, pour matcher le diagramme DPE standard.
+                const DPE_COLORS: Record<string, { bg: string; text: string }> = {
+                  A: { bg: "#319630", text: "white" },     // vert foncé
+                  B: { bg: "#33A357", text: "white" },     // vert moyen
+                  C: { bg: "#9CCB37", text: "#1C1917" },   // jaune-vert (texte foncé)
+                  D: { bg: "#FFEB1B", text: "#1C1917" },   // jaune (texte foncé)
+                  E: { bg: "#F39C2A", text: "white" },     // orange clair
+                  F: { bg: "#E66A26", text: "white" },     // orange foncé
+                  G: { bg: "#D7191C", text: "white" },     // rouge
+                };
+                const letter = house.specs.dpe?.toUpperCase() ?? "";
+                const c = DPE_COLORS[letter] ?? { bg: "#D4A574", text: "white" };
+                return (
+                  <Badge
+                    variant="default"
+                    className="font-bold border-0"
+                    style={{ backgroundColor: c.bg, color: c.text }}
+                  >
+                    <Zap size={14} className="mr-1" style={{ color: c.text }} />
+                    DPE {house.specs.dpe}
+                  </Badge>
+                );
+              })()}
             </div>
             <h1
               className="text-5xl md:text-7xl mb-4 text-[#1C1917]"
