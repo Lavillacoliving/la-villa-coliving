@@ -850,8 +850,8 @@ function getHousesData(lang: string): Record<string, HouseData> {
       ? "Our newest and largest home, open since January 2026. 500 m² on 1,500 m², pool house, full fitness chalet with sauna & arcade."
       : "Notre maison la plus récente et la plus grande, ouverte depuis janvier 2026. 500 m² sur 1 500 m², pool house, chalet fitness complet avec sauna et jeu d'arcade.",
     longDescription: isEn
-      ? "Le Lodge represents the pinnacle of coliving at La Villa. Open since January 2026, this expansive 500 m² property spans 4 buildings across 1,500 m² of gardens — our largest and most comprehensive home. The dedicated fitness chalet with sauna, the stunning pool house with full outdoor kitchen, and the main residence create a village-like atmosphere where community truly thrives. With 12 residents, DPE B energy rating, electric bike charging stations, and 130 m² of attic storage, Le Lodge sets a new standard."
-      : "Le Lodge représente le summum du coliving chez La Villa. Ouvert depuis janvier 2026, ce bien de 500 m² s'étend sur 4 bâtiments au cœur de 1 500 m² de jardins — notre maison la plus grande et la plus complète. Le chalet fitness dédié avec sauna, le pool house avec cuisine d'été complète et la résidence principale créent une atmosphère de village où la communauté s'épanouit vraiment. Avec 12 résidents, un DPE B, des bornes de recharge vélo électrique et 130 m² de grenier de stockage, Le Lodge établit un nouveau standard.",
+      ? "Le Lodge is our newest coliving in Annemasse, opened January 2026 in the quiet Romagny district. Across 500 m² spread over 4 buildings on 1,500 m² of gardens, 12 residents share a dedicated fitness chalet with Finnish sauna, a pool house with full outdoor kitchen, and a main residence designed for both privacy and community. Each furnished room has its own en-suite bathroom, ergonomic desk, and high-speed fiber. Annemasse station is 5 minutes by car — Léman Express direct to Geneva Cornavin in 15 minutes, no transfer. Ideal for cross-border workers commuting daily, French CDI tax residents seeking the Swiss salary / French cost-of-living arbitrage, and young professionals who value an actual community over a faceless apartment block. All-inclusive rent (utilities, fiber, weekly common cleaning, private fitness classes) starts at CHF 1,475/month. DPE B energy rating, electric bike charging, 130 m² of attic storage, no agency fees, flexible 1-12 month leases."
+      : "Le Lodge est notre coliving le plus récent à Annemasse, ouvert en janvier 2026 dans le quartier résidentiel calme de Romagny. Sur 500 m² répartis sur 4 bâtiments au cœur de 1 500 m² de jardins, 12 colocataires partagent un chalet fitness dédié avec sauna finlandais, un pool house avec cuisine d'été complète et une résidence principale conçue pour combiner intimité et vie communautaire. Chaque chambre meublée dispose de sa salle de bain privative, d'un bureau ergonomique et de la fibre. La gare d'Annemasse est à 5 minutes en voiture — Léman Express direct jusqu'à Genève Cornavin en 15 minutes, sans correspondance. Idéal pour les frontaliers qui font le trajet quotidien, les résidents fiscaux français en CDI qui jouent l'arbitrage salaire suisse / coût de la vie en France, et les jeunes pros qui valorisent une vraie communauté plutôt qu'un immeuble anonyme. Loyer tout inclus (charges, fibre, ménage commun hebdomadaire, cours de fitness privés) à partir de 1 475 CHF/mois. DPE B, bornes de recharge vélo électrique, 130 m² de grenier de stockage, sans frais d'agence, baux flexibles 1-12 mois.",
     image: "/images/le lodge/exterior/la villa coliving le lodge-14.webp",
     gallery: [
       "/images/le lodge/exterior/le lodge piscine.webp",
@@ -1469,7 +1469,25 @@ export function HouseDetailPage() {
               className="text-5xl md:text-7xl mb-4 text-[#1C1917]"
               style={{ fontFamily: "DM Serif Display, serif" }}
             >
-              {house.name}
+              {(() => {
+                // SEO H1 par maison : capture le keyword principal de la page
+                // (le `house.name` seul = trop maigre pour Google, audit P0-1).
+                const h1: Record<string, { en: string; fr: string }> = {
+                  lavilla: {
+                    en: "La Villa — Coliving 10 rooms in Ville-la-Grand",
+                    fr: "La Villa — Coliving 10 chambres à Ville-la-Grand",
+                  },
+                  leloft: {
+                    en: "Le Loft — Coliving 7 rooms in Ambilly",
+                    fr: "Le Loft — Coliving 7 chambres à Ambilly",
+                  },
+                  lelodge: {
+                    en: "Le Lodge — Coliving 12 rooms in Annemasse",
+                    fr: "Le Lodge — Coliving 12 chambres à Annemasse",
+                  },
+                };
+                return h1[id]?.[language === "en" ? "en" : "fr"] ?? house.name;
+              })()}
             </h1>
             <div className="flex flex-wrap items-center gap-6 text-[#78716C] font-medium">
               <span className="flex items-center gap-2">
@@ -1685,6 +1703,176 @@ export function HouseDetailPage() {
           </div>
         </div>
       </section>
+
+      {/* Location — custom section per house (audit P0-1: capture local SEO intent + Léman Express signal) */}
+      {(() => {
+        const LOCATION_DATA: Record<string, {
+          fr: { intro: string; address: string; transport: string[]; nearby: string[] };
+          en: { intro: string; address: string; transport: string[]; nearby: string[] };
+        }> = {
+          lavilla: {
+            fr: {
+              intro: "La Villa est située à Ville-la-Grand, commune résidentielle de l'agglomération d'Annemasse, à 6 km du centre de Genève. La frontière suisse est à 2 minutes en voiture.",
+              address: "34 rue du Foron, 74100 Ville-la-Grand, Haute-Savoie, France",
+              transport: [
+                "Genève Cornavin : 25 min en transport (bus + Léman Express depuis Annemasse), 15 min en voiture",
+                "Aéroport de Genève : 25 min en voiture",
+                "Frontière suisse de Moillesulaz : 2 km, 5 min à vélo",
+                "Bus TPN ligne 61 (arrêt à 200 m), correspondance directe vers Genève",
+              ],
+              nearby: [
+                "Commerces et restaurants du centre de Ville-la-Grand : 600 m à pied",
+                "Carrefour Annemasse, Decathlon, Centre commercial Étrembières : 5 min en voiture",
+                "Forêt de Salève et pistes de randonnée : 10 min",
+                "Réserve naturelle du Foron : à la porte de la maison",
+              ],
+            },
+            en: {
+              intro: "La Villa is located in Ville-la-Grand, a residential commune within the Annemasse agglomeration, 6 km from central Geneva. The Swiss border is a 2-minute drive.",
+              address: "34 rue du Foron, 74100 Ville-la-Grand, Haute-Savoie, France",
+              transport: [
+                "Geneva Cornavin: 25 min by transit (bus + Léman Express from Annemasse), 15 min by car",
+                "Geneva Airport: 25 min by car",
+                "Moillesulaz border crossing: 2 km, 5 min by bike",
+                "TPN bus line 61 (stop 200 m away), direct connection to Geneva",
+              ],
+              nearby: [
+                "Ville-la-Grand town center shops and restaurants: 600 m on foot",
+                "Carrefour Annemasse, Decathlon, Étrembières mall: 5 min by car",
+                "Salève forest and hiking trails: 10 min",
+                "Foron nature reserve: at the doorstep",
+              ],
+            },
+          },
+          leloft: {
+            fr: {
+              intro: "Le Loft est situé à Ambilly, la commune la plus proche de la frontière suisse dans l'agglomération d'Annemasse. La frontière de Moillesulaz est à 5 minutes à pied.",
+              address: "1 rue des Marronniers, 74100 Ambilly, Haute-Savoie, France",
+              transport: [
+                "Genève Cornavin : 20 min via Léman Express depuis Annemasse Gare (5 min en bus depuis Le Loft)",
+                "Tram 17 TPG (Lancy-Pont-Rouge ↔ Annemasse) : terminus à 10 min à pied",
+                "Aéroport de Genève : 25 min en voiture",
+                "Frontière suisse de Moillesulaz : 500 m, 5 min à pied",
+                "Pistes cyclables sécurisées vers Genève centre : 25 min en vélo",
+              ],
+              nearby: [
+                "Commerces du centre d'Ambilly : 200 m à pied",
+                "Carrefour Annemasse, Decathlon : 10 min en voiture",
+                "Parc Montessuit : 5 min à pied",
+                "Centre d'Annemasse (cinéma, restaurants, gare) : 10 min en voiture ou en vélo",
+              ],
+            },
+            en: {
+              intro: "Le Loft is located in Ambilly, the closest commune to the Swiss border within the Annemasse agglomeration. The Moillesulaz border crossing is a 5-minute walk away.",
+              address: "1 rue des Marronniers, 74100 Ambilly, Haute-Savoie, France",
+              transport: [
+                "Geneva Cornavin: 20 min via Léman Express from Annemasse Gare (5-min bus from Le Loft)",
+                "Tram 17 TPG (Lancy-Pont-Rouge ↔ Annemasse): terminus 10 min on foot",
+                "Geneva Airport: 25 min by car",
+                "Moillesulaz border: 500 m, 5 min walk",
+                "Secure bike paths to central Geneva: 25 min by bike",
+              ],
+              nearby: [
+                "Ambilly town center shops: 200 m on foot",
+                "Carrefour Annemasse, Decathlon: 10 min by car",
+                "Parc Montessuit: 5 min walk",
+                "Central Annemasse (cinema, restaurants, train station): 10 min by car or bike",
+              ],
+            },
+          },
+          lelodge: {
+            fr: {
+              intro: "Le Lodge est situé à Annemasse, dans le quartier résidentiel calme de Romagny. La gare d'Annemasse — terminus du Léman Express vers Genève Cornavin — est à 5 minutes en voiture.",
+              address: "8 rue de Romagny, 74100 Annemasse, Haute-Savoie, France",
+              transport: [
+                "Genève Cornavin : 15 min en Léman Express direct depuis la gare d'Annemasse, sans correspondance",
+                "Gare d'Annemasse : 5 min en voiture, 15 min à pied, ligne de bus 7 directe",
+                "Tram 17 TPG (Lancy-Pont-Rouge ↔ Annemasse) : 10 min en voiture",
+                "Aéroport de Genève : 30 min en voiture",
+                "Frontière suisse : 5 min en voiture",
+              ],
+              nearby: [
+                "Centre d'Annemasse (cinéma Ciné Actuel, restaurants, marché du mardi/vendredi) : 5 min en voiture",
+                "Carrefour Annemasse, Decathlon, La Poste, banques : à proximité",
+                "Pôle universitaire de Pierrevierge : 10 min",
+                "Quartier de Vétraz-Monthoux et Salève : 10 min",
+              ],
+            },
+            en: {
+              intro: "Le Lodge is located in Annemasse, in the quiet residential Romagny district. Annemasse station — terminus of the Léman Express to Geneva Cornavin — is a 5-minute drive away.",
+              address: "8 rue de Romagny, 74100 Annemasse, Haute-Savoie, France",
+              transport: [
+                "Geneva Cornavin: 15 min direct via Léman Express from Annemasse station, no transfer",
+                "Annemasse station: 5 min by car, 15 min on foot, direct bus line 7",
+                "Tram 17 TPG (Lancy-Pont-Rouge ↔ Annemasse): 10 min by car",
+                "Geneva Airport: 30 min by car",
+                "Swiss border: 5 min by car",
+              ],
+              nearby: [
+                "Central Annemasse (Ciné Actuel cinema, restaurants, Tuesday/Friday market): 5 min by car",
+                "Carrefour Annemasse, Decathlon, post office, banks: nearby",
+                "Pierrevierge university campus: 10 min",
+                "Vétraz-Monthoux district and Salève foothills: 10 min",
+              ],
+            },
+          },
+        };
+        const data = LOCATION_DATA[id]?.[language === "en" ? "en" : "fr"];
+        if (!data) return null;
+        return (
+          <section className="section-padding relative bg-white">
+            <div className="container-custom max-w-5xl">
+              <h2
+                className="text-3xl md:text-4xl mb-6 text-[#1C1917]"
+                style={{ fontFamily: "DM Serif Display, serif" }}
+              >
+                {language === "en"
+                  ? `Location: ${house.name} in ${house.location.split(',')[0]}`
+                  : `Localisation : ${house.name} à ${house.location.split(',')[0]}`}
+              </h2>
+              <p className="text-lg text-[#57534E] leading-relaxed mb-8 font-medium">{data.intro}</p>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
+                <div>
+                  <h3 className="text-xl font-black mb-4 text-[#1C1917] flex items-center gap-2">
+                    <MapPin size={20} className="text-[#D4A574]" />
+                    {language === "en" ? "Address" : "Adresse"}
+                  </h3>
+                  <p className="text-[#57534E] font-medium mb-6">{data.address}</p>
+
+                  <h3 className="text-xl font-black mb-4 text-[#1C1917] flex items-center gap-2">
+                    <Clock size={20} className="text-[#D4A574]" />
+                    {language === "en" ? "Transport & travel times" : "Transport & temps de trajet"}
+                  </h3>
+                  <ul className="space-y-2">
+                    {data.transport.map((line, i) => (
+                      <li key={i} className="flex items-start gap-2 text-[#57534E] font-medium">
+                        <Check className="text-[#D4A574] mt-1 flex-shrink-0" size={16} />
+                        <span>{line}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+
+                <div>
+                  <h3 className="text-xl font-black mb-4 text-[#1C1917] flex items-center gap-2">
+                    <Coffee size={20} className="text-[#D4A574]" />
+                    {language === "en" ? "Nearby shops & services" : "Commerces & services à proximité"}
+                  </h3>
+                  <ul className="space-y-2">
+                    {data.nearby.map((line, i) => (
+                      <li key={i} className="flex items-start gap-2 text-[#57534E] font-medium">
+                        <Check className="text-[#D4A574] mt-1 flex-shrink-0" size={16} />
+                        <span>{line}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </section>
+        );
+      })()}
 
       {/* Rooms */}
       <section className="section-padding relative bg-[#FAF9F6]">
