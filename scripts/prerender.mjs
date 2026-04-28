@@ -227,6 +227,140 @@ async function launchBrowser() {
 }
 
 // ─────────────────────────────────────────────
+// BreadcrumbList JSON-LD generation
+// ─────────────────────────────────────────────
+// Google rich-snippet policy : at least 2 levels, every item with "item" URL recommended.
+// Labels are localized (FR / EN) based on the route prefix.
+
+const BREADCRUMB_LABELS = {
+  fr: {
+    home: 'Accueil',
+    'colocation-geneve': 'Colocation Genève',
+    'le-coliving': 'Coliving',
+    'nos-maisons': 'Nos maisons',
+    lavilla: 'La Villa',
+    leloft: 'Le Loft',
+    lelodge: 'Le Lodge',
+    services: 'Services',
+    tarifs: 'Tarifs',
+    faq: 'FAQ',
+    candidature: 'Candidature',
+    blog: 'Blog',
+    investisseurs: 'Investisseurs',
+  },
+  en: {
+    home: 'Home',
+    'colocation-geneve': 'Colocation Geneva',
+    'le-coliving': 'Coliving',
+    'nos-maisons': 'Our Houses',
+    lavilla: 'La Villa',
+    leloft: 'Le Loft',
+    lelodge: 'Le Lodge',
+    services: 'Services',
+    tarifs: 'Pricing',
+    faq: 'FAQ',
+    candidature: 'Apply',
+    blog: 'Blog',
+    investisseurs: 'Investors',
+  },
+};
+
+// Pages that live under /nos-maisons in the breadcrumb tree (even though their URL is flat /lavilla).
+const HOUSE_SLUGS = new Set(['lavilla', 'leloft', 'lelodge']);
+
+function extractTitleFromHtml(html) {
+  // Captures content of <title>...</title>, returns trimmed text or null.
+  const match = html.match(/<title[^>]*>([^<]*)<\/title>/i);
+  if (!match) return null;
+  // Strip the auto-appended suffix " | La Villa Coliving" if present.
+  return match[1].replace(/\s*\|\s*La Villa Coliving\s*$/i, '').trim();
+}
+
+function generateBreadcrumbJsonLd(route, html) {
+  // Detect language from route prefix.
+  const isEn = route === '/en' || route.startsWith('/en/');
+  const lang = isEn ? 'en' : 'fr';
+  const labels = BREADCRUMB_LABELS[lang];
+  const homeUrl = isEn ? `${SITE_URL}/en` : `${SITE_URL}/`;
+
+  const items = [
+    { '@type': 'ListItem', position: 1, name: labels.home, item: homeUrl },
+  ];
+
+  // Strip /en prefix for the segment analysis — keeps the FR slug logic single-sourced.
+  const cleanRoute = isEn ? (route === '/en' ? '/' : route.replace(/^\/en/, '')) : route;
+
+  if (cleanRoute === '/') {
+    // Home only — Google requires ≥ 2 items for a valid BreadcrumbList. Skip.
+    return null;
+  }
+
+  const segments = cleanRoute.replace(/^\/+/, '').split('/');
+
+  // /blog/:slug → [Home > Blog > Article title]
+  if (segments[0] === 'blog' && segments.length === 2) {
+    const slug = segments[1];
+    items.push({
+      '@type': 'ListItem',
+      position: 2,
+      name: labels.blog,
+      item: `${SITE_URL}${isEn ? '/en' : ''}/blog`,
+    });
+    const title = extractTitleFromHtml(html) || slug;
+    items.push({
+      '@type': 'ListItem',
+      position: 3,
+      name: title,
+      item: `${SITE_URL}${route}`,
+    });
+    return { '@context': 'https://schema.org', '@type': 'BreadcrumbList', itemListElement: items };
+  }
+
+  // /lavilla, /leloft, /lelodge → [Home > Our Houses > House name]
+  if (segments.length === 1 && HOUSE_SLUGS.has(segments[0])) {
+    items.push({
+      '@type': 'ListItem',
+      position: 2,
+      name: labels['nos-maisons'],
+      item: `${SITE_URL}${isEn ? '/en' : ''}/nos-maisons`,
+    });
+    items.push({
+      '@type': 'ListItem',
+      position: 3,
+      name: labels[segments[0]],
+      item: `${SITE_URL}${route}`,
+    });
+    return { '@context': 'https://schema.org', '@type': 'BreadcrumbList', itemListElement: items };
+  }
+
+  // Generic /one-segment routes → [Home > Page]
+  if (segments.length === 1) {
+    const label = labels[segments[0]] || extractTitleFromHtml(html) || segments[0];
+    items.push({
+      '@type': 'ListItem',
+      position: 2,
+      name: label,
+      item: `${SITE_URL}${route}`,
+    });
+    return { '@context': 'https://schema.org', '@type': 'BreadcrumbList', itemListElement: items };
+  }
+
+  // Fallback: build segment by segment.
+  let acc = isEn ? '/en' : '';
+  for (let i = 0; i < segments.length; i++) {
+    acc += `/${segments[i]}`;
+    const label = labels[segments[i]] || (i === segments.length - 1 ? extractTitleFromHtml(html) : null) || segments[i];
+    items.push({
+      '@type': 'ListItem',
+      position: i + 2,
+      name: label,
+      item: `${SITE_URL}${acc}`,
+    });
+  }
+  return { '@context': 'https://schema.org', '@type': 'BreadcrumbList', itemListElement: items };
+}
+
+// ─────────────────────────────────────────────
 // Pre-render a single route
 // ─────────────────────────────────────────────
 
@@ -248,6 +382,13 @@ async function renderRoute(browser, route) {
     const canonicalTag = `<link rel="canonical" href="${canonicalUrl}" />`;
     if (!html.includes('rel="canonical"')) {
       html = html.replace('</head>', `    ${canonicalTag}\n  </head>`);
+    }
+
+    // Inject BreadcrumbList JSON-LD (rich-snippet fil d'ariane sur 100 % des pages — audit P0-1, 2026-04-28).
+    const breadcrumbJsonLd = generateBreadcrumbJsonLd(route, html);
+    if (breadcrumbJsonLd && !html.includes('"@type":"BreadcrumbList"') && !html.includes('"@type": "BreadcrumbList"')) {
+      const breadcrumbScript = `<script type="application/ld+json">${JSON.stringify(breadcrumbJsonLd)}</script>`;
+      html = html.replace('</head>', `    ${breadcrumbScript}\n  </head>`);
     }
 
     // Save to public/prerendered/ (committed to git, served by Vercel)
