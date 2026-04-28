@@ -850,8 +850,8 @@ function getHousesData(lang: string): Record<string, HouseData> {
       ? "Our newest and largest home, open since January 2026. 500 m² on 1,500 m², pool house, full fitness chalet with sauna & arcade."
       : "Notre maison la plus récente et la plus grande, ouverte depuis janvier 2026. 500 m² sur 1 500 m², pool house, chalet fitness complet avec sauna et jeu d'arcade.",
     longDescription: isEn
-      ? "Le Lodge is our newest coliving in Annemasse, opened January 2026 in the quiet Romagny district. Across 500 m² spread over 4 buildings on 1,500 m² of gardens, 12 residents share a dedicated fitness chalet with Finnish sauna, a pool house with full outdoor kitchen, and a main residence designed for both privacy and community. Each furnished room has its own en-suite bathroom, ergonomic desk, and high-speed fiber. Annemasse station is 5 minutes by car — Léman Express direct to Geneva Cornavin in 15 minutes, no transfer. Ideal for cross-border workers commuting daily, French CDI tax residents seeking the Swiss salary / French cost-of-living arbitrage, and young professionals who value an actual community over a faceless apartment block. All-inclusive rent (utilities, fiber, weekly common cleaning, private fitness classes) starts at CHF 1,475/month. DPE B energy rating, electric bike charging, 130 m² of attic storage, no agency fees, flexible 1-12 month leases."
-      : "Le Lodge est notre coliving le plus récent à Annemasse, ouvert en janvier 2026 dans le quartier résidentiel calme de Romagny. Sur 500 m² répartis sur 4 bâtiments au cœur de 1 500 m² de jardins, 12 colocataires partagent un chalet fitness dédié avec sauna finlandais, un pool house avec cuisine d'été complète et une résidence principale conçue pour combiner intimité et vie communautaire. Chaque chambre meublée dispose de sa salle de bain privative, d'un bureau ergonomique et de la fibre. La gare d'Annemasse est à 5 minutes en voiture — Léman Express direct jusqu'à Genève Cornavin en 15 minutes, sans correspondance. Idéal pour les frontaliers qui font le trajet quotidien, les résidents fiscaux français en CDI qui jouent l'arbitrage salaire suisse / coût de la vie en France, et les jeunes pros qui valorisent une vraie communauté plutôt qu'un immeuble anonyme. Loyer tout inclus (charges, fibre, ménage commun hebdomadaire, cours de fitness privés) à partir de 1 475 CHF/mois. DPE B, bornes de recharge vélo électrique, 130 m² de grenier de stockage, sans frais d'agence, baux flexibles 1-12 mois.",
+      ? "Le Lodge is our newest coliving in Annemasse, opened January 2026 in the quiet residential Romagny district. Within 500 m² spread across 4 buildings at the heart of 1,500 m² of gardens, 12 housemates share a dedicated fitness chalet with Finnish sauna, a pool house with full outdoor kitchen, and a main residence designed to combine privacy and community living. Each furnished room has its own en-suite bathroom, ergonomic desk and fiber internet. Annemasse station is a 9-minute walk away — direct Léman Express to Geneva Cornavin in 15 minutes, no transfer. Ideal for cross-border workers commuting daily, and young professionals who value a real community over a faceless apartment block. All-inclusive rent (utilities, fiber, weekly common cleaning, private fitness classes) from CHF 1,380/month. No agency fees."
+      : "Le Lodge est notre coliving le plus récent à Annemasse, ouvert en janvier 2026 dans le quartier résidentiel calme de Romagny. Dans 500 m² répartis sur 4 bâtiments au cœur de 1 500 m² de jardins, 12 colocataires partagent un chalet fitness dédié avec sauna finlandais, un pool house avec cuisine d'été complète et une résidence principale conçue pour combiner intimité et vie communautaire. Chaque chambre meublée dispose de sa salle de bain privative, d'un bureau ergonomique et de la fibre. La gare d'Annemasse est à 9 minutes à pied — Léman Express direct jusqu'à Genève Cornavin en 15 minutes, sans correspondance. Idéal pour les frontaliers qui font le trajet quotidien, et les jeunes pros qui valorisent une vraie communauté plutôt qu'un immeuble anonyme. Loyer tout inclus (charges, fibre, ménage commun hebdomadaire, cours de fitness privés) à partir de 1 380 CHF/mois. Sans frais d'agence.",
     image: "/images/le lodge/exterior/la villa coliving le lodge-14.webp",
     gallery: [
       "/images/le lodge/exterior/le lodge piscine.webp",
@@ -1264,14 +1264,14 @@ function getHousesData(lang: string): Record<string, HouseData> {
     ],
     nearby: isEn ? [
       "1 min walk to Place de l'Étoile tram stop",
-      "8 min walk to Annemasse train station",
+      "9 min walk to Annemasse train station",
       "15-25 min to Geneva center",
       "Annemasse city center at your doorstep",
       "Shopping center 5 min away",
       "Restaurants & bars within walking distance",
     ] : [
       "Tram Place de l'Étoile à 1 min à pied",
-      "Gare d'Annemasse à 8 min à pied",
+      "Gare d'Annemasse à 9 min à pied",
       "15-25 min du centre de Genève",
       "Centre-ville d'Annemasse au pas de la porte",
       "Centre commercial à 5 min",
@@ -1361,8 +1361,8 @@ export function HouseDetailPage() {
               fr: "Le Loft : 7 chambres premium à Ambilly. Piscine intérieure, design urbain, Tram 17 vers Genève. Tout inclus dès 1 380 CHF/mois.",
             },
             lelodge: {
-              en: "Le Lodge: 12 rooms in Annemasse, opened 2026. Pool, gym, sauna, Léman Express station 5 min. All-inclusive from CHF 1,380/month.",
-              fr: "Le Lodge : 12 chambres premium à Annemasse, ouvertes en 2026. Piscine, gym, sauna, gare Léman Express à 5 min. Tout inclus dès 1 380 CHF/mois.",
+              en: "Le Lodge: 12 rooms in Annemasse, opened 2026. Pool, gym, sauna, 9-min walk to Léman Express. All-inclusive from CHF 1,380/month.",
+              fr: "Le Lodge : 12 chambres premium à Annemasse, ouvertes en 2026. Piscine, gym, sauna, gare Léman Express à 9 min. Tout inclus dès 1 380 CHF/mois.",
             },
           };
           return descs[id]?.[language === "en" ? "en" : "fr"]
@@ -1800,11 +1800,11 @@ export function HouseDetailPage() {
           },
           lelodge: {
             fr: {
-              intro: "Le Lodge est situé à Annemasse, dans le quartier résidentiel calme de Romagny. La gare d'Annemasse — terminus du Léman Express vers Genève Cornavin — est à 5 minutes en voiture.",
+              intro: "Le Lodge est situé à Annemasse, dans le quartier résidentiel calme de Romagny. La gare d'Annemasse — terminus du Léman Express vers Genève Cornavin — est à 9 minutes à pied.",
               address: "8 rue de Romagny, 74100 Annemasse, Haute-Savoie, France",
               transport: [
                 "Genève Cornavin : 15 min en Léman Express direct depuis la gare d'Annemasse, sans correspondance",
-                "Gare d'Annemasse : 5 min en voiture, 15 min à pied, ligne de bus 7 directe",
+                "Gare d'Annemasse : 9 min à pied, ligne de bus 7 directe",
                 "Tram 17 TPG (Lancy-Pont-Rouge ↔ Annemasse) : 10 min en voiture",
                 "Aéroport de Genève : 30 min en voiture",
                 "Frontière suisse : 5 min en voiture",
@@ -1817,11 +1817,11 @@ export function HouseDetailPage() {
               ],
             },
             en: {
-              intro: "Le Lodge is located in Annemasse, in the quiet residential Romagny district. Annemasse station — terminus of the Léman Express to Geneva Cornavin — is a 5-minute drive away.",
+              intro: "Le Lodge is located in Annemasse, in the quiet residential Romagny district. Annemasse station — terminus of the Léman Express to Geneva Cornavin — is a 9-minute walk away.",
               address: "8 rue de Romagny, 74100 Annemasse, Haute-Savoie, France",
               transport: [
                 "Geneva Cornavin: 15 min direct via Léman Express from Annemasse station, no transfer",
-                "Annemasse station: 5 min by car, 15 min on foot, direct bus line 7",
+                "Annemasse station: 9 min on foot, direct bus line 7",
                 "Tram 17 TPG (Lancy-Pont-Rouge ↔ Annemasse): 10 min by car",
                 "Geneva Airport: 30 min by car",
                 "Swiss border: 5 min by car",
@@ -1987,16 +1987,16 @@ export function HouseDetailPage() {
           },
           lelodge: {
             fr: [
-              { q: "Quel est le loyer mensuel au Lodge et que comprend-il ?", a: "Les chambres du Lodge sont à partir de 1 475 CHF par mois tout inclus : charges (eau, électricité, chauffage), internet fibre 8 Gbps, ménage 2 fois par semaine des communs, abonnements streaming, entretien piscine et jardin, cours de yoga / fitness privés, parure de linge fournie, panier repas mensuel. Pas de supplément." },
-              { q: "Comment se rendre à Genève depuis Le Lodge à Annemasse ?", a: "Le Lodge est à 5 min en voiture (ou 15 min à pied) de la gare d'Annemasse, terminus du Léman Express. Genève Cornavin est à 15 min en Léman Express direct, sans correspondance. La frontière suisse est à 5 min en voiture. Aéroport de Genève : 30 min." },
+              { q: "Quel est le loyer mensuel au Lodge et que comprend-il ?", a: "Les chambres du Lodge sont à partir de 1 380 CHF par mois tout inclus : charges (eau, électricité, chauffage), internet fibre 8 Gbps, ménage 2 fois par semaine des communs, abonnements streaming, entretien piscine et jardin, cours de yoga / fitness privés, parure de linge fournie, panier repas mensuel. Pas de supplément." },
+              { q: "Comment se rendre à Genève depuis Le Lodge à Annemasse ?", a: "Le Lodge est à 9 min à pied de la gare d'Annemasse, terminus du Léman Express. Genève Cornavin est à 15 min en Léman Express direct, sans correspondance. La frontière suisse est à 5 min en voiture. Aéroport de Genève : 30 min." },
               { q: "Quelle est la durée minimale du bail au Lodge ?", a: "Bail flexible 1 à 12 mois. Le bail par défaut est de 12 mois pour la stabilité de la communauté, mais nous acceptons des séjours plus courts (1, 3, 6 mois) selon disponibilité." },
               { q: "Y a-t-il une caution et des frais d'agence ?", a: "Caution équivalente à 2 mois de loyer, restituée sous 30 jours après l'état des lieux. Aucun frais d'agence ni de dossier." },
               { q: "Combien de chambres y a-t-il au Lodge et sont-elles meublées ?", a: "12 chambres privatives, toutes meublées (lit, bureau ergonomique, placard sur mesure, salle de bain privative). Surface 17 à 19 m² par chambre. Le Lodge a ouvert en janvier 2026, tout est neuf." },
               { q: "Qu'est-ce qui rend Le Lodge unique parmi vos 3 maisons ?", a: "Le Lodge est notre maison la plus récente (ouverte janvier 2026) et la plus grande (500 m² sur 1 500 m²). Elle dispose de 4 bâtiments : la résidence principale, un chalet fitness dédié avec sauna finlandais, un pool house avec cuisine d'été complète et une zone de rangement de 130 m². DPE B (performance énergétique). C'est aussi la plus proche de la gare d'Annemasse pour le Léman Express." },
             ],
             en: [
-              { q: "What is the monthly rent at Le Lodge and what does it include?", a: "Rooms at Le Lodge start at CHF 1,475 per month all-inclusive: utilities (water, electricity, heating), 8 Gbps fiber internet, twice-weekly common-area cleaning, streaming subscriptions, pool & garden upkeep, private yoga/fitness classes, bedding included, monthly meal basket. No add-on fees." },
-              { q: "How do I get to Geneva from Le Lodge in Annemasse?", a: "Le Lodge is 5 min by car (or 15 min on foot) from Annemasse station, the Léman Express terminus. Geneva Cornavin is 15 min via direct Léman Express, no transfer. Swiss border: 5 min by car. Geneva Airport: 30 min." },
+              { q: "What is the monthly rent at Le Lodge and what does it include?", a: "Rooms at Le Lodge start at CHF 1,380 per month all-inclusive: utilities (water, electricity, heating), 8 Gbps fiber internet, twice-weekly common-area cleaning, streaming subscriptions, pool & garden upkeep, private yoga/fitness classes, bedding included, monthly meal basket. No add-on fees." },
+              { q: "How do I get to Geneva from Le Lodge in Annemasse?", a: "Le Lodge is a 9-minute walk from Annemasse station, the Léman Express terminus. Geneva Cornavin is 15 min via direct Léman Express, no transfer. Swiss border: 5 min by car. Geneva Airport: 30 min." },
               { q: "What is the minimum lease term at Le Lodge?", a: "Flexible leases from 1 to 12 months. The default is 12 months for community stability, but shorter stays (1, 3, 6 months) are accepted depending on availability." },
               { q: "Is there a deposit and any agency fees?", a: "Deposit equivalent to 2 months' rent, refunded within 30 days after the move-out inspection. No agency fees, no application fees." },
               { q: "How many rooms are there at Le Lodge and are they furnished?", a: "12 private rooms, all furnished (bed, ergonomic desk, custom wardrobe, en-suite bathroom). 17 to 19 m² per room. Le Lodge opened in January 2026 — everything is new." },
