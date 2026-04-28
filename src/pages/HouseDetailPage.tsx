@@ -1728,10 +1728,10 @@ export function HouseDetailPage() {
         }> = {
           lavilla: {
             fr: {
-              intro: "La Villa est située à Ville-la-Grand, commune résidentielle de l'agglomération d'Annemasse, à 6 km du centre de Genève. La frontière suisse est à 2 minutes en voiture.",
+              intro: "La Villa est située à Ville-la-Grand, commune résidentielle de l'agglomération d'Annemasse, à 6 km du centre de Genève. La frontière suisse est mitoyenne à La Villa.",
               address: "34 rue du Foron, 74100 Ville-la-Grand, Haute-Savoie, France",
               transport: [
-                "Genève Cornavin : 25 min en transport (bus + Léman Express depuis Annemasse), 15 min en voiture",
+                "Genève Cornavin : 25 min en transport (8 minutes à pied + Léman Express), 15 min en voiture",
                 "Aéroport de Genève : 25 min en voiture",
                 "Frontière suisse de Moillesulaz : 2 km, 5 min à vélo",
                 "Bus TPN ligne 61 (arrêt à 200 m), correspondance directe vers Genève",
@@ -1744,10 +1744,10 @@ export function HouseDetailPage() {
               ],
             },
             en: {
-              intro: "La Villa is located in Ville-la-Grand, a residential commune within the Annemasse agglomeration, 6 km from central Geneva. The Swiss border is a 2-minute drive.",
+              intro: "La Villa is located in Ville-la-Grand, a residential commune within the Annemasse agglomeration, 6 km from central Geneva. The Swiss border adjoins La Villa.",
               address: "34 rue du Foron, 74100 Ville-la-Grand, Haute-Savoie, France",
               transport: [
-                "Geneva Cornavin: 25 min by transit (bus + Léman Express from Annemasse), 15 min by car",
+                "Geneva Cornavin: 25 min by transit (8 min walk + Léman Express), 15 min by car",
                 "Geneva Airport: 25 min by car",
                 "Moillesulaz border crossing: 2 km, 5 min by bike",
                 "TPN bus line 61 (stop 200 m away), direct connection to Geneva",
@@ -1762,11 +1762,11 @@ export function HouseDetailPage() {
           },
           leloft: {
             fr: {
-              intro: "Le Loft est situé à Ambilly, la commune la plus proche de la frontière suisse dans l'agglomération d'Annemasse. La frontière de Moillesulaz est à 5 minutes à pied.",
+              intro: "Le Loft est situé à Ambilly, la commune la plus proche de la frontière suisse dans l'agglomération d'Annemasse. Le Tram 17 est situé à 5 minutes à pied.",
               address: "1 rue des Marronniers, 74100 Ambilly, Haute-Savoie, France",
               transport: [
                 "Genève Cornavin : 20 min via Léman Express depuis Annemasse Gare (5 min en bus depuis Le Loft)",
-                "Tram 17 TPG (Lancy-Pont-Rouge ↔ Annemasse) : terminus à 10 min à pied",
+                "Tram 17 TPG (Lancy-Pont-Rouge ↔ Annemasse) : 5 min à pied",
                 "Aéroport de Genève : 25 min en voiture",
                 "Frontière suisse de Moillesulaz : 500 m, 5 min à pied",
                 "Pistes cyclables sécurisées vers Genève centre : 25 min en vélo",
@@ -1779,11 +1779,11 @@ export function HouseDetailPage() {
               ],
             },
             en: {
-              intro: "Le Loft is located in Ambilly, the closest commune to the Swiss border within the Annemasse agglomeration. The Moillesulaz border crossing is a 5-minute walk away.",
+              intro: "Le Loft is located in Ambilly, the closest commune to the Swiss border within the Annemasse agglomeration. Tram 17 is a 5-minute walk away.",
               address: "1 rue des Marronniers, 74100 Ambilly, Haute-Savoie, France",
               transport: [
                 "Geneva Cornavin: 20 min via Léman Express from Annemasse Gare (5-min bus from Le Loft)",
-                "Tram 17 TPG (Lancy-Pont-Rouge ↔ Annemasse): terminus 10 min on foot",
+                "Tram 17 TPG (Lancy-Pont-Rouge ↔ Annemasse): 5 min on foot",
                 "Geneva Airport: 25 min by car",
                 "Moillesulaz border: 500 m, 5 min walk",
                 "Secure bike paths to central Geneva: 25 min by bike",
@@ -1968,7 +1968,7 @@ export function HouseDetailPage() {
           leloft: {
             fr: [
               { q: "Quel est le loyer mensuel au Loft et que comprend-il ?", a: "Les chambres du Loft sont à 1 380 CHF par mois tout inclus : charges, internet fibre 8 Gbps, ménage hebdo des communs, abonnements streaming, piscine intérieure, jardin, parure de linge. Pas de supplément caché." },
-              { q: "Comment se rendre à Genève depuis Le Loft à Ambilly ?", a: "Le Loft est à 5 min à pied de la frontière de Moillesulaz et à 10 min à pied du terminus du Tram 17 TPG (Lancy-Pont-Rouge ↔ Annemasse). Genève Cornavin est à 20 min via Léman Express depuis la gare d'Annemasse (5 min en bus). Pistes cyclables sécurisées vers Genève centre : 25 min en vélo." },
+              { q: "Comment se rendre à Genève depuis Le Loft à Ambilly ?", a: "Le Loft est à 5 min à pied de la frontière de Moillesulaz et à 5 minutes à pied du Tram 17 TPG (Lancy-Pont-Rouge ↔ Annemasse). Genève centre : 20 min via Tram 17. Pistes cyclables sécurisées vers Genève centre : 25 min en vélo." },
               { q: "Quelle est la durée minimale du bail au Loft ?", a: "Bail flexible 1 à 12 mois. Le bail par défaut est de 12 mois, mais nous acceptons des séjours plus courts selon disponibilité — pratique pour les frontaliers en mission ou en période d'essai à Genève." },
               { q: "Y a-t-il une caution et des frais d'agence ?", a: "Caution équivalente à 2 mois de loyer, restituée sous 30 jours après l'état des lieux de sortie. Aucun frais d'agence ni de dossier." },
               { q: "Combien de chambres y a-t-il au Loft et sont-elles meublées ?", a: "7 chambres privatives meublées (lit, bureau, placard, certaines avec salle de bain privative). Espaces communs design : cuisine ouverte, salon, terrasse, piscine intérieure chauffée toute l'année." },
@@ -1976,7 +1976,7 @@ export function HouseDetailPage() {
             ],
             en: [
               { q: "What is the monthly rent at Le Loft and what does it include?", a: "Rooms at Le Loft are CHF 1,380 per month all-inclusive: utilities, 8 Gbps fiber internet, weekly common-area cleaning, streaming subscriptions, indoor pool, garden, bedding included. No hidden fees." },
-              { q: "How do I get to Geneva from Le Loft in Ambilly?", a: "Le Loft is 5 min walk from the Moillesulaz border and 10 min walk from the TPG Tram 17 terminus (Lancy-Pont-Rouge ↔ Annemasse). Geneva Cornavin is 20 min via Léman Express from Annemasse station (5 min bus). Secure bike paths to central Geneva: 25 min by bike." },
+              { q: "How do I get to Geneva from Le Loft in Ambilly?", a: "Le Loft is 5 min walk from the Moillesulaz border and 5 min walk from TPG Tram 17 (Lancy-Pont-Rouge ↔ Annemasse). Central Geneva: 20 min via Tram 17. Secure bike paths to central Geneva: 25 min by bike." },
               { q: "What is the minimum lease term at Le Loft?", a: "Flexible leases from 1 to 12 months. The default is 12 months, but shorter stays are accepted depending on availability — useful for cross-border workers on assignment or CDI trial periods in Geneva." },
               { q: "Is there a deposit and any agency fees?", a: "Deposit equivalent to 2 months' rent, refunded within 30 days after the move-out inspection. No agency fees, no application fees." },
               { q: "How many rooms are there at Le Loft and are they furnished?", a: "7 private furnished rooms (bed, desk, wardrobe, some with en-suite bathroom). Designer common spaces: open kitchen, living room, terrace, year-round heated indoor pool." },

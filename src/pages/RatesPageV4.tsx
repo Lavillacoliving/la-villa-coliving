@@ -13,7 +13,7 @@ export function RatesPageV4() {
     language === "en"
       ? "High-speed Pro fiber internet"
       : "Internet fibre Pro haut débit",
-    language === "en" ? "Weekly housekeeping" : "Ménage hebdomadaire",
+    language === "en" ? "Twice-weekly housekeeping" : "Ménage 2 fois par semaine",
     language === "en"
       ? "Pool & garden maintenance"
       : "Entretien piscine & jardin",
@@ -716,8 +716,8 @@ export function RatesPageV4() {
               </h3>
               <p className="text-[#57534E] leading-relaxed">
                 {language === "en"
-                  ? "We require a security deposit equivalent to two months' rent (2,760 CHF). This is returned within 30 days of move-out, minus any deductions for damages."
-                  : "Nous exigeons une caution équivalente à deux mois de loyer (2 760 CHF). Elle est restituée dans les 30 jours suivant le départ, déduction faite des éventuels dommages."}
+                  ? "We require a security deposit equivalent to two months' rent. This is returned within 30 days of move-out, minus any deductions for damages."
+                  : "Nous exigeons une caution équivalente à deux mois de loyer. Elle est restituée dans les 30 jours suivant le départ, déduction faite des éventuels dommages."}
               </p>
             </div>
             <div className="bg-[#FAF9F6] p-10">
