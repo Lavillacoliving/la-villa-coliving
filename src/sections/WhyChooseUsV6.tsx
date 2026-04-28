@@ -14,7 +14,7 @@ export function WhyChooseUsV6() {
     language === 'en' ? 'No hidden fees' : 'Pas de frais cachés',
     language === 'en' ? 'Community events' : 'Événements communautaires',
     language === 'en' ? 'High-speed WiFi' : 'WiFi haut débit',
-    language === 'en' ? 'Weekly cleaning' : 'Ménage hebdomadaire',
+    language === 'en' ? 'Twice-weekly cleaning' : 'Ménage 2 fois par semaine',
     language === 'en' ? '24/7 support' : 'Support 24/7',
   ];
 

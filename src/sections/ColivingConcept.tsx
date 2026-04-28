@@ -20,8 +20,8 @@ export function ColivingConcept() {
           ? "Curated community of like-minded people"
           : "Communauté sélectionnée de personnes partageant les mêmes valeurs",
         language === "en"
-          ? "Weekly cleaning included"
-          : "Ménage hebdomadaire inclus",
+          ? "Twice-weekly cleaning included"
+          : "Ménage 2 fois par semaine inclus",
         language === "en"
           ? "Premium amenities (pool, gym, sauna)"
           : "Équipements premium (piscine, gym, sauna)",
