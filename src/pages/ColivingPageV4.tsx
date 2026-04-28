@@ -46,7 +46,7 @@ export function ColivingPageV4() {
   return (
     <main className="relative pt-20">
       <SEO
-        title={language === "en" ? "What is Coliving? — La Villa Coliving" : "Qu'est-ce que le Coliving ? — La Villa Coliving"}
+        title={language === "en" ? "Coliving Geneva: The Practical Guide" : "Coliving Genève : le guide pratique"}
         description={language === "en"
           ? "Discover premium coliving at La Villa: designer houses, curated community, all-inclusive. Different from traditional shared housing."
           : "Découvrez le coliving premium La Villa : maisons design, communauté sélectionnée, tout inclus. Différent d'une colocation classique."}

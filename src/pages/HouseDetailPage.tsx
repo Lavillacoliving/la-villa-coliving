@@ -1338,12 +1338,36 @@ export function HouseDetailPage() {
   return (
     <main className="relative">
       <SEO
-        title={language === "en"
-          ? `${house.name} — Premium Coliving ${house.location}, Near Geneva`
-          : `${house.name} — Colocation Premium ${house.location}, près de Genève`}
-        description={language === "en"
-          ? `${house.description} All-inclusive furnished rooms from ${house.price} CHF/month near Geneva.`
-          : `${house.description} Chambres meublées tout inclus dès ${house.price} CHF/mois près de Genève.`}
+        title={(() => {
+          // Titles compacts (≤ 40c) — le suffix " | La Villa Coliving" (~21c) est ajouté par <SEO>.
+          // Cibles SEO : /lelodge → "colocation annemasse" (880/mois), /lavilla et /leloft → brand + ville.
+          const titles: Record<string, { en: string; fr: string }> = {
+            lavilla: { en: "La Villa — 10 rooms in Ville-la-Grand", fr: "La Villa — 10 chambres à Ville-la-Grand" },
+            leloft:  { en: "Le Loft — 7 rooms in Ambilly",          fr: "Le Loft — 7 chambres à Ambilly" },
+            lelodge: { en: "Le Lodge — 12 rooms in Annemasse",       fr: "Le Lodge — 12 chambres à Annemasse" },
+          };
+          return titles[id]?.[language === "en" ? "en" : "fr"]
+            ?? `${house.name} — ${house.location}`;
+        })()}
+        description={(() => {
+          // Metas ≤ 155c, factuelles, chiffrées. Pas de "${house.description}" qui dépasse 200c.
+          const descs: Record<string, { en: string; fr: string }> = {
+            lavilla: {
+              en: "La Villa: 10 premium rooms in Ville-la-Grand. Heated pool, sauna, gym, fiber. All-inclusive from CHF 1,380/month. 15 min from Geneva.",
+              fr: "La Villa : 10 chambres premium à Ville-la-Grand. Piscine chauffée, sauna, gym, fibre. Tout inclus dès 1 380 CHF/mois. À 15 min de Genève.",
+            },
+            leloft: {
+              en: "Le Loft: 7 premium rooms in Ambilly. Indoor pool, urban design, Tram 17 to Geneva. All-inclusive from CHF 1,380/month.",
+              fr: "Le Loft : 7 chambres premium à Ambilly. Piscine intérieure, design urbain, Tram 17 vers Genève. Tout inclus dès 1 380 CHF/mois.",
+            },
+            lelodge: {
+              en: "Le Lodge: 12 rooms in Annemasse, opened 2026. Pool, gym, sauna, Léman Express station 5 min. All-inclusive from CHF 1,380/month.",
+              fr: "Le Lodge : 12 chambres premium à Annemasse, ouvertes en 2026. Piscine, gym, sauna, gare Léman Express à 5 min. Tout inclus dès 1 380 CHF/mois.",
+            },
+          };
+          return descs[id]?.[language === "en" ? "en" : "fr"]
+            ?? `${house.description} Tout inclus dès ${house.price} CHF/mois.`;
+        })()}
         url={`https://www.lavillacoliving.com/${id}`}
         image={`https://www.lavillacoliving.com${house.image}`}
       />
