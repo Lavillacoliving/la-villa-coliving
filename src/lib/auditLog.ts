@@ -24,10 +24,12 @@ export type AuditAction =
   | 'create' | 'update' | 'delete'
   | 'status_change' | 'payment_recorded'
   | 'lease_generated' | 'tenant_deactivated'
+  | 'lease_status_changed'
   | 'irl_applied' | 'irl_dismissed' | 'prospect_converted'
   | 'file_uploaded' | 'file_deleted'
   | 'invoice_linked' | 'invoice_unlinked'
   | 'transaction_classified' | 'transaction_flagged' | 'transaction_verified'
+  | 'deposit_received' | 'deposit_unreceived'
   | 'deposit_returned' | 'deposit_adjusted' | 'split_group_created';
 
 export type AuditEntityType =
