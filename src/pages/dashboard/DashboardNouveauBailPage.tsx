@@ -946,6 +946,8 @@ export default function DashboardNouveauBailPage() {
       const depositEur = loyerEur * depositMonths;
 
       // Insert new tenant and get back the ID
+      // ⚠️ Bail créé en mode 'draft' — pas encore envoyé Yousign, caution NON reçue.
+      // Jérôme confirmera les transitions a posteriori depuis la fiche locataire.
       const { data: newTenant, error } = await supabase.from('tenants').insert({
         first_name: form.locataire_prenom,
         last_name: form.locataire_nom,
@@ -955,13 +957,19 @@ export default function DashboardNouveauBailPage() {
         room_number: selectedRoom.room_number,
         current_rent: loyerEur,
         is_active: true,
+        lease_status: 'draft',
         move_in_date: form.entry_date,
         bail_end: bailEndStr,
         deposit_amount: depositEur,
-        deposit_received_date: form.entry_date,
+        deposit_received: false,
+        // deposit_received_date sera renseignée par Jérôme à la confirmation
         due_day: 5,
         date_of_birth: form.locataire_dob || null,
         place_of_birth: form.locataire_birthplace || null,
+        // Charges individualisées (override propriété — saisies dans le form)
+        charges_energy_chf: form.charges_energy,
+        charges_maintenance_chf: form.charges_maintenance,
+        charges_services_chf: form.charges_services,
         notes: 'Bail généré automatiquement le ' + new Date().toLocaleDateString('fr-FR'),
       }).select('id').single();
 
@@ -991,6 +999,7 @@ export default function DashboardNouveauBailPage() {
       }
 
       // Persist lease record with tenant_id and document_url
+      // Le bail est créé en 'draft' (PDF généré, pas encore envoyé Yousign).
       try {
         await supabase.from('leases').insert({
           tenant_id: tenantId || null,
@@ -1005,11 +1014,13 @@ export default function DashboardNouveauBailPage() {
           start_date: form.entry_date,
           end_date: bailEndStr,
           exchange_rate: form.exchange_rate,
-          charges_energy_chf: selectedProperty.charges_energy_chf || 0,
-          charges_maintenance_chf: selectedProperty.charges_maintenance_chf || 0,
-          charges_services_chf: selectedProperty.charges_services_chf || 0,
-          status: 'active',
-          is_active: true,
+          // Charges du bail (snapshot — utilise les valeurs du form, qui peuvent
+          // être l'override locataire OU le fallback propriété si jamais override)
+          charges_energy_chf: form.charges_energy,
+          charges_maintenance_chf: form.charges_maintenance,
+          charges_services_chf: form.charges_services,
+          status: 'draft',
+          is_active: false,
           document_url: documentUrl,
           generated_at: new Date().toISOString(),
         });
@@ -1072,9 +1083,10 @@ export default function DashboardNouveauBailPage() {
       if (oldTenantId) {
         logAudit('tenant_deactivated', 'tenant', oldTenantId);
       }
-      const parts = [`Locataire ${form.locataire_prenom} ${form.locataire_nom} créé !`];
+      const parts = [`Locataire ${form.locataire_prenom} ${form.locataire_nom} créé en BROUILLON.`];
       if (documentUrl) parts.push('Bail PDF uploadé.');
       if (uploadedCount > 0) parts.push(`${uploadedCount} annexe(s) uploadée(s).`);
+      parts.push('→ Confirme la signature et la réception de caution depuis sa fiche locataire.');
       toast.success(parts.join(' '));
     } catch (err: any) {
       toast.error('Erreur: ' + (err.message || err));

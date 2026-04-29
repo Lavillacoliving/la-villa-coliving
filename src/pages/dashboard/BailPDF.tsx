@@ -496,6 +496,9 @@ export function BailPDF({ data }: { data: BailPDFData }) {
           <Text style={s.body}>
             {"\u00C0 l\u2019expiration de cette p\u00E9riode, le contrat se renouvelle par reconduction tacite pour des p\u00E9riodes successives de douze mois, sauf d\u00E9nonciation notifi\u00E9e au moins un mois avant l\u2019expiration du contrat par le locataire, ou trois mois par le bailleur."}
           </Text>
+          <Text style={[s.body, { fontSize: 9, fontStyle: "italic", color: "#555", marginTop: 4 }]}>
+            {"Le pr\u00E9sent contrat est conclu en vue d\u2019affecter le logement \u00E0 la r\u00E9sidence principale du locataire au sens de l\u2019article 2 de la loi n\u00B0 89-462 du 6 juillet 1989."}
+          </Text>
         </View>
 
         {/* ---------- ARTICLE IV ---------- */}

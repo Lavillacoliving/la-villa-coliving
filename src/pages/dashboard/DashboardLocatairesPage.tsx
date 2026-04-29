@@ -4,24 +4,45 @@ import { useToast } from '@/components/ui/Toast';
 import { filterByEntity } from '@/lib/entities';
 import { logAudit } from '@/lib/auditLog';
 
+type LeaseStatus = 'draft' | 'sent_yousign' | 'signed' | 'active' | 'cancelled';
+
 interface Tenant {
   id: string; first_name: string; last_name: string; email: string; phone: string;
   room_number: number; current_rent: number; property_id: string; is_active: boolean;
   move_in_date: string|null; move_out_date: string|null; deposit_amount: number|null;
+  deposit_received: boolean|null;
   deposit_received_date: string|null; deposit_refunded_amount: number|null; deposit_refunded_date: string|null;
   due_day: number|null; date_of_birth: string|null; place_of_birth: string|null;
   bank_aliases: string[]|null; notes: string|null; entity_id: string|null;
+  // Charges individualisées (override propriété — NULL = hérite)
+  charges_energy_chf: number|null; charges_maintenance_chf: number|null; charges_services_chf: number|null;
+  // Cycle de vie du bail (workflow Yousign)
+  lease_status: LeaseStatus|null;
 }
-interface Property { id: string; name: string; slug: string; entity_id: string; is_coliving: boolean; }
+interface Property {
+  id: string; name: string; slug: string; entity_id: string; is_coliving: boolean;
+  charges_energy_chf?: number|null; charges_maintenance_chf?: number|null; charges_services_chf?: number|null;
+}
+
+// Métadonnées d'affichage du statut bail
+const LEASE_STATUS_META: Record<LeaseStatus, { label: string; color: string; bg: string }> = {
+  draft:        { label: 'Brouillon',         color: '#7c3aed', bg: '#ede9fe' },
+  sent_yousign: { label: 'Envoyé (Yousign)',  color: '#0891b2', bg: '#cffafe' },
+  signed:       { label: 'Signé',             color: '#0d9488', bg: '#ccfbf1' },
+  active:       { label: 'Actif',             color: '#16a34a', bg: '#dcfce7' },
+  cancelled:    { label: 'Annulé',            color: '#dc2626', bg: '#fee2e2' },
+};
 
 function fmt(n: number) { return n.toLocaleString('fr-FR',{minimumFractionDigits:2,maximumFractionDigits:2})+' €'; }
 
 const EMPTY_TENANT: Partial<Tenant> = {
   first_name:'',last_name:'',email:'',phone:'',room_number:0,current_rent:0,
   property_id:'',is_active:true,move_in_date:null,move_out_date:null,
-  deposit_amount:null,deposit_received_date:null,deposit_refunded_amount:null,
+  deposit_amount:null,deposit_received:false,deposit_received_date:null,deposit_refunded_amount:null,
   deposit_refunded_date:null,due_day:5,date_of_birth:null,place_of_birth:null,
-  bank_aliases:null,notes:null,entity_id:null
+  bank_aliases:null,notes:null,entity_id:null,
+  charges_energy_chf:null,charges_maintenance_chf:null,charges_services_chf:null,
+  lease_status:'draft'
 };
 
 export default function DashboardLocatairesPage() {
@@ -46,7 +67,7 @@ export default function DashboardLocatairesPage() {
     setLoading(true);
     const [tRes,pRes] = await Promise.all([
       supabase.from('tenants').select('*').order('room_number'),
-      supabase.from('properties').select('id,name,slug,entity_id,is_coliving'),
+      supabase.from('properties').select('id,name,slug,entity_id,is_coliving,charges_energy_chf,charges_maintenance_chf,charges_services_chf'),
     ]);
     setTenants(tRes.data||[]);
     setProperties(pRes.data||[]);
@@ -114,6 +135,25 @@ export default function DashboardLocatairesPage() {
 
   // Document & tenant deletion disabled from dashboard — data is permanent
 
+  // Construit le payload commun pour insert/update tenant
+  const buildTenantPayload = (m: Partial<Tenant>): any => ({
+    first_name:m.first_name, last_name:m.last_name, email:m.email||null,
+    phone:m.phone||null, property_id:m.property_id, room_number:m.room_number,
+    current_rent:m.current_rent, due_day:m.due_day||5, is_active:m.is_active!==false,
+    move_in_date:m.move_in_date||null, move_out_date:m.move_out_date||null,
+    deposit_amount:m.deposit_amount||null,
+    deposit_received: m.deposit_received===true,
+    deposit_received_date: m.deposit_received===true ? (m.deposit_received_date || new Date().toISOString().split('T')[0]) : null,
+    date_of_birth:m.date_of_birth||null, place_of_birth:m.place_of_birth||null,
+    bank_aliases:m.bank_aliases, notes:m.notes||null,
+    // Charges override (NULL = hérite propriété)
+    charges_energy_chf:      m.charges_energy_chf===null || m.charges_energy_chf===undefined || isNaN(Number(m.charges_energy_chf)) ? null : Number(m.charges_energy_chf),
+    charges_maintenance_chf: m.charges_maintenance_chf===null || m.charges_maintenance_chf===undefined || isNaN(Number(m.charges_maintenance_chf)) ? null : Number(m.charges_maintenance_chf),
+    charges_services_chf:    m.charges_services_chf===null || m.charges_services_chf===undefined || isNaN(Number(m.charges_services_chf)) ? null : Number(m.charges_services_chf),
+    lease_status: m.lease_status || 'active',
+    updated_at:new Date().toISOString(),
+  });
+
   const saveModal = async () => {
     if (!modal) return;
     if (!modal.first_name || !modal.last_name) { toast.warning('Prénom et nom obligatoires'); return; }
@@ -121,15 +161,7 @@ export default function DashboardLocatairesPage() {
     if (!modal.room_number) { toast.warning('Numéro de chambre obligatoire'); return; }
     if (!modal.current_rent) { toast.warning('Loyer obligatoire'); return; }
     setSaving(true);
-    const data: any = {
-      first_name:modal.first_name, last_name:modal.last_name, email:modal.email||null,
-      phone:modal.phone||null, property_id:modal.property_id, room_number:modal.room_number,
-      current_rent:modal.current_rent, due_day:modal.due_day||5, is_active:modal.is_active!==false,
-      move_in_date:modal.move_in_date||null, move_out_date:modal.move_out_date||null,
-      deposit_amount:modal.deposit_amount||null, deposit_received_date:modal.deposit_received_date||null,
-      date_of_birth:modal.date_of_birth||null, place_of_birth:modal.place_of_birth||null,
-      bank_aliases:modal.bank_aliases, notes:modal.notes||null, updated_at:new Date().toISOString()
-    };
+    const data = buildTenantPayload(modal);
 
     let err;
     if (isNew) { ({error:err} = await supabase.from('tenants').insert(data)); }
@@ -142,18 +174,46 @@ export default function DashboardLocatairesPage() {
   // Auto-save on close: silently saves if the form has enough data, otherwise just closes
   const closeModal = async () => {
     if (modal && !isNew && modal.first_name && modal.last_name && modal.property_id && modal.room_number && modal.current_rent) {
-      const data: any = {
-        first_name:modal.first_name, last_name:modal.last_name, email:modal.email||null,
-        phone:modal.phone||null, property_id:modal.property_id, room_number:modal.room_number,
-        current_rent:modal.current_rent, due_day:modal.due_day||5, is_active:modal.is_active!==false,
-        move_in_date:modal.move_in_date||null, move_out_date:modal.move_out_date||null,
-        deposit_amount:modal.deposit_amount||null, deposit_received_date:modal.deposit_received_date||null,
-        date_of_birth:modal.date_of_birth||null, place_of_birth:modal.place_of_birth||null,
-        bank_aliases:modal.bank_aliases, notes:modal.notes||null, updated_at:new Date().toISOString()
-      };
-      await supabase.from('tenants').update(data).eq('id', modal.id);
+      await supabase.from('tenants').update(buildTenantPayload(modal)).eq('id', modal.id);
     }
     setModal(null); load();
+  };
+
+  // Transition de statut bail (workflow Yousign)
+  const transitionLeaseStatus = async (next: LeaseStatus) => {
+    if (!modal?.id) return;
+    const prev = modal.lease_status || 'active';
+    // Si on passe à 'active', on s'assure que la caution est marquée reçue
+    const extra: any = { lease_status: next, updated_at: new Date().toISOString() };
+    if (next === 'cancelled') {
+      extra.is_active = false;
+    }
+    if (next === 'active') {
+      extra.is_active = true;
+    }
+    const { error } = await supabase.from('tenants').update(extra).eq('id', modal.id);
+    if (error) { toast.error('Erreur: ' + error.message); return; }
+    await logAudit('lease_status_changed', 'tenant', modal.id, { from: prev, to: next, name: `${modal.first_name} ${modal.last_name}` });
+    setModal({ ...modal, lease_status: next, is_active: next==='cancelled' ? false : next==='active' ? true : (modal.is_active!==false) });
+    toast.success(`Statut bail → ${LEASE_STATUS_META[next].label}`);
+    load();
+  };
+
+  // Confirmation explicite de réception caution (toggle)
+  const toggleDepositReceived = async (received: boolean) => {
+    if (!modal?.id) return;
+    const today = new Date().toISOString().split('T')[0];
+    const upd: any = {
+      deposit_received: received,
+      deposit_received_date: received ? (modal.deposit_received_date || today) : null,
+      updated_at: new Date().toISOString(),
+    };
+    const { error } = await supabase.from('tenants').update(upd).eq('id', modal.id);
+    if (error) { toast.error('Erreur: ' + error.message); return; }
+    await logAudit(received ? 'deposit_received' : 'deposit_unreceived', 'tenant', modal.id, { name: `${modal.first_name} ${modal.last_name}`, amount: modal.deposit_amount });
+    setModal({ ...modal, deposit_received: received, deposit_received_date: received ? (modal.deposit_received_date || today) : null });
+    toast.success(received ? 'Caution marquée comme reçue ✓' : 'Caution remise en attente');
+    load();
   };
 
   // Tenant deletion disabled — archive to "ancien" instead
@@ -185,8 +245,23 @@ export default function DashboardLocatairesPage() {
   const depositStatus = (t:Tenant) => {
     if (!t.deposit_amount) return {label:'—',color:'#888'};
     if (t.deposit_refunded_date) return {label:'Restituée',color:'#3b82f6'};
-    if (t.deposit_received_date) return {label:'Reçue',color:'#22c55e'};
+    if (t.deposit_received === true || (t.deposit_received === null && t.deposit_received_date)) return {label:'Reçue',color:'#22c55e'};
     return {label:'En attente',color:'#eab308'};
+  };
+
+  // Charges effectives = override locataire si rempli, sinon valeur propriété
+  const effectiveCharges = (m: Partial<Tenant>) => {
+    const prop = properties.find(p => p.id === m.property_id);
+    return {
+      energy:      m.charges_energy_chf      ?? prop?.charges_energy_chf      ?? 0,
+      maintenance: m.charges_maintenance_chf ?? prop?.charges_maintenance_chf ?? 0,
+      services:    m.charges_services_chf    ?? prop?.charges_services_chf    ?? 0,
+      isOverride: {
+        energy:      m.charges_energy_chf      !== null && m.charges_energy_chf      !== undefined,
+        maintenance: m.charges_maintenance_chf !== null && m.charges_maintenance_chf !== undefined,
+        services:    m.charges_services_chf    !== null && m.charges_services_chf    !== undefined,
+      }
+    };
   };
 
   const exportExcel = () => {
@@ -238,7 +313,7 @@ export default function DashboardLocatairesPage() {
       <div style={{...S.card,padding:0,overflow:'auto'}}>
         <table style={{width:'100%',borderCollapse:'collapse',fontSize:'14px'}}>
           <thead><tr style={{background:'#f8f8f8',borderBottom:'2px solid #e5e7eb'}}>
-            {['Propriété','Ch.','Locataire','Loyer','Contact','Entrée','Caution','Statut'].map(h=>(
+            {['Propriété','Ch.','Locataire','Loyer','Contact','Entrée','Bail','Caution','Statut'].map(h=>(
               <th key={h} style={{padding:'12px 16px',textAlign:'left',fontWeight:600,color:'#555',fontSize:'12px',textTransform:'uppercase'}}>{h}</th>
             ))}
           </tr></thead>
@@ -246,6 +321,7 @@ export default function DashboardLocatairesPage() {
             {filtered.map(t => {
               const prop = properties.find(p=>p.id===t.property_id);
               const ds = depositStatus(t);
+              const ls = LEASE_STATUS_META[(t.lease_status as LeaseStatus) || 'active'];
               return (
                 <tr key={t.id} style={{borderBottom:'1px solid #f0f0f0',opacity:t.is_active?1:0.5,cursor:'pointer'}} onClick={()=>openModal(t)}>
                   <td style={{padding:'10px 16px',fontSize:'12px'}}>{prop?.name||''}</td>
@@ -254,12 +330,13 @@ export default function DashboardLocatairesPage() {
                   <td style={{padding:'10px 16px'}}>{fmt(t.current_rent)}</td>
                   <td style={{padding:'10px 16px',fontSize:'12px'}}>{t.email && <span title={t.email}>✉️</span>} {t.phone && <a href={'tel:'+t.phone} title={t.phone} style={{textDecoration:'none'}}>📞</a>}</td>
                   <td style={{padding:'10px 16px',color:'#888',fontSize:'13px'}}>{t.move_in_date?new Date(t.move_in_date).toLocaleDateString('fr-FR'):'—'}</td>
+                  <td style={{padding:'10px 16px'}}><span style={{background:ls.bg,color:ls.color,padding:'2px 8px',borderRadius:'10px',fontSize:'11px',fontWeight:600}}>{ls.label}</span></td>
                   <td style={{padding:'10px 16px'}}><span style={{color:ds.color,fontSize:'12px',fontWeight:500}}>{ds.label}</span></td>
                   <td style={{padding:'10px 16px'}}><span style={{background:t.is_active?'#22c55e':'#94a3b8',color:'#fff',padding:'2px 10px',borderRadius:'12px',fontSize:'12px'}}>{t.is_active?'Actif':'Sorti'}</span></td>
                 </tr>
               );
             })}
-            {filtered.length===0 && <tr><td colSpan={8} style={{padding:'40px',textAlign:'center',color:'#888'}}>Aucun locataire</td></tr>}
+            {filtered.length===0 && <tr><td colSpan={9} style={{padding:'40px',textAlign:'center',color:'#888'}}>Aucun locataire</td></tr>}
           </tbody>
         </table>
       </div>
@@ -334,8 +411,93 @@ export default function DashboardLocatairesPage() {
                   <div><label style={S.fieldLabel}>Date d'entrée</label><input type="date" style={S.input} value={modal.move_in_date||''} onChange={e=>setModal({...modal,move_in_date:e.target.value})}/></div>
                   <div><label style={S.fieldLabel}>Date de sortie</label><input type="date" style={S.input} value={modal.move_out_date||''} onChange={e=>setModal({...modal,move_out_date:e.target.value})}/></div>
                   <div><label style={S.fieldLabel}>Caution (€)</label><input type="number" step="0.01" style={S.input} value={modal.deposit_amount||''} onChange={e=>setModal({...modal,deposit_amount:parseFloat(e.target.value)||null})}/></div>
-                  <div><label style={S.fieldLabel}>Date réception caution</label><input type="date" style={S.input} value={modal.deposit_received_date||''} onChange={e=>setModal({...modal,deposit_received_date:e.target.value})}/></div>
+                  <div>
+                    <label style={S.fieldLabel}>Réception caution</label>
+                    <div style={{display:'flex',alignItems:'center',gap:'10px',padding:'8px 10px',border:'1px solid #ddd',borderRadius:'6px',background:modal.deposit_received?'#f0fdf4':'#fffbeb'}}>
+                      <input type="checkbox" checked={modal.deposit_received===true} disabled={!modal.id} onChange={e=>{ if(modal.id){ toggleDepositReceived(e.target.checked); } else { setModal({...modal,deposit_received:e.target.checked}); } }}/>
+                      <span style={{fontSize:'13px',color:modal.deposit_received?'#16a34a':'#92400e'}}>
+                        {modal.deposit_received ? `Reçue${modal.deposit_received_date ? ' le '+new Date(modal.deposit_received_date).toLocaleDateString('fr-FR') : ''}` : 'En attente'}
+                      </span>
+                    </div>
+                  </div>
                 </div>
+
+                {/* === STATUT BAIL (workflow Yousign) === */}
+                {!isNew && (
+                  <div style={{background:'#fafafa',border:'1px solid #e5e7eb',borderRadius:'8px',padding:'12px',marginBottom:'16px'}}>
+                    <div style={{display:'flex',justifyContent:'space-between',alignItems:'center',marginBottom:'10px'}}>
+                      <strong style={{fontSize:'13px',color:'#374151'}}>Cycle de vie du bail</strong>
+                      {(() => { const ls = LEASE_STATUS_META[(modal.lease_status as LeaseStatus) || 'active']; return (
+                        <span style={{background:ls.bg,color:ls.color,padding:'3px 10px',borderRadius:'12px',fontSize:'11px',fontWeight:600}}>{ls.label}</span>
+                      ); })()}
+                    </div>
+                    <div style={{display:'flex',gap:'6px',flexWrap:'wrap'}}>
+                      {modal.lease_status === 'draft' && (
+                        <>
+                          <button onClick={()=>transitionLeaseStatus('sent_yousign')} style={{padding:'6px 12px',background:'#0891b2',color:'#fff',border:'none',borderRadius:'6px',cursor:'pointer',fontSize:'12px'}}>📤 Marquer envoyé Yousign</button>
+                          <button onClick={()=>transitionLeaseStatus('cancelled')} style={{padding:'6px 12px',background:'#fff',color:'#dc2626',border:'1px solid #fecaca',borderRadius:'6px',cursor:'pointer',fontSize:'12px'}}>✕ Annuler</button>
+                        </>
+                      )}
+                      {modal.lease_status === 'sent_yousign' && (
+                        <>
+                          <button onClick={()=>transitionLeaseStatus('signed')} style={{padding:'6px 12px',background:'#0d9488',color:'#fff',border:'none',borderRadius:'6px',cursor:'pointer',fontSize:'12px'}}>✓ Marquer signé</button>
+                          <button onClick={()=>transitionLeaseStatus('draft')} style={{padding:'6px 12px',background:'#fff',color:'#6b7280',border:'1px solid #ddd',borderRadius:'6px',cursor:'pointer',fontSize:'12px'}}>↩ Retour brouillon</button>
+                          <button onClick={()=>transitionLeaseStatus('cancelled')} style={{padding:'6px 12px',background:'#fff',color:'#dc2626',border:'1px solid #fecaca',borderRadius:'6px',cursor:'pointer',fontSize:'12px'}}>✕ Annuler</button>
+                        </>
+                      )}
+                      {modal.lease_status === 'signed' && (
+                        <>
+                          <button onClick={()=>transitionLeaseStatus('active')} style={{padding:'6px 12px',background:'#16a34a',color:'#fff',border:'none',borderRadius:'6px',cursor:'pointer',fontSize:'12px'}}>🚀 Activer le bail</button>
+                          <button onClick={()=>transitionLeaseStatus('cancelled')} style={{padding:'6px 12px',background:'#fff',color:'#dc2626',border:'1px solid #fecaca',borderRadius:'6px',cursor:'pointer',fontSize:'12px'}}>✕ Annuler</button>
+                        </>
+                      )}
+                      {modal.lease_status === 'active' && (
+                        <span style={{fontSize:'12px',color:'#6b7280',fontStyle:'italic'}}>Bail actif. Pour archiver, utilise « Passer en ancien » en bas.</span>
+                      )}
+                      {modal.lease_status === 'cancelled' && (
+                        <button onClick={()=>transitionLeaseStatus('draft')} style={{padding:'6px 12px',background:'#fff',color:'#7c3aed',border:'1px solid #ddd6fe',borderRadius:'6px',cursor:'pointer',fontSize:'12px'}}>↻ Réactiver en brouillon</button>
+                      )}
+                    </div>
+                    <div style={{marginTop:'8px',fontSize:'11px',color:'#9ca3af',lineHeight:1.4}}>
+                      Brouillon → Envoyé Yousign → Signé → Actif. La caution se confirme séparément (champ ci-dessus).
+                    </div>
+                  </div>
+                )}
+
+                {/* === CHARGES INDIVIDUALISÉES (override propriété) === */}
+                <div style={{background:'#fafafa',border:'1px solid #e5e7eb',borderRadius:'8px',padding:'12px',marginBottom:'16px'}}>
+                  <div style={{marginBottom:'8px'}}>
+                    <strong style={{fontSize:'13px',color:'#374151'}}>Charges individualisées</strong>
+                    <span style={{fontSize:'11px',color:'#9ca3af',marginLeft:'8px'}}>vide = hérite de la propriété</span>
+                  </div>
+                  {(() => {
+                    const ec = effectiveCharges(modal);
+                    return (
+                      <div style={{display:'grid',gridTemplateColumns:'1fr 1fr 1fr',gap:'10px'}}>
+                        {([
+                          { key:'charges_energy_chf' as const,      label:'Énergie',     value: modal.charges_energy_chf,      effective: ec.energy,      override: ec.isOverride.energy },
+                          { key:'charges_maintenance_chf' as const, label:'Maintenance', value: modal.charges_maintenance_chf, effective: ec.maintenance, override: ec.isOverride.maintenance },
+                          { key:'charges_services_chf' as const,    label:'Services',    value: modal.charges_services_chf,    effective: ec.services,    override: ec.isOverride.services },
+                        ]).map(f => (
+                          <div key={f.key}>
+                            <label style={{...S.fieldLabel,fontSize:'11px'}}>{f.label} (CHF)</label>
+                            <input type="number" step="1" style={{...S.input,background:f.override?'#fef3c7':'#fff'}}
+                              placeholder={`hérite (${f.effective})`}
+                              value={f.value === null || f.value === undefined ? '' : f.value}
+                              onChange={e=>{
+                                const v = e.target.value;
+                                setModal({...modal,[f.key]: v === '' ? null : parseFloat(v) || 0});
+                              }}/>
+                            <div style={{fontSize:'10px',color:f.override?'#b45309':'#9ca3af',marginTop:'2px'}}>
+                              {f.override ? '↳ override actif' : `↳ ${f.effective} CHF (propriété)`}
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    );
+                  })()}
+                </div>
+
                 <div style={{marginBottom:'12px'}}><label style={S.fieldLabel}>Alias bancaires (séparés par virgule)</label><input style={S.input} value={(modal.bank_aliases||[]).join(', ')} onChange={e=>setModal({...modal,bank_aliases:e.target.value?e.target.value.split(',').map(a=>a.trim()).filter(Boolean):null})}/></div>
                 <div style={{marginBottom:'12px'}}><label style={S.fieldLabel}>Notes</label><textarea style={{...S.input,height:'80px',resize:'vertical'}} value={modal.notes||''} onChange={e=>setModal({...modal,notes:e.target.value})}/></div>
                 <div style={{marginBottom:'16px'}}><label style={{display:'flex',alignItems:'center',gap:'8px',cursor:'pointer'}}><input type="checkbox" checked={modal.is_active!==false} onChange={e=>setModal({...modal,is_active:e.target.checked})}/> Actif</label></div>
