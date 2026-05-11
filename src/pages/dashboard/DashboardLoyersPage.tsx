@@ -52,6 +52,22 @@ const PROPERTY_DISPLAY: Record<string, string> = {
 function fmt(n: number) { return n.toLocaleString('fr-FR',{minimumFractionDigits:2,maximumFractionDigits:2})+' €'; }
 function fmtEn(n: number) { return '€' + n.toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2}); }
 
+// Returns the latest IRL quarter that should be available given today's date.
+// INSEE publication schedule (Journal Officiel) :
+//   T1 yyyy → published ~15/04/yyyy
+//   T2 yyyy → published ~15/07/yyyy
+//   T3 yyyy → published ~15/10/yyyy
+//   T4 yyyy → published ~15/01/(yyyy+1)
+function getExpectedLatestIRL(today: Date): { year: number; quarter: number; label: string } {
+  const y = today.getFullYear();
+  const m = today.getMonth() + 1;
+  const d = today.getDate();
+  if (m > 10 || (m === 10 && d >= 15)) return { year: y, quarter: 3, label: `T3 ${y}` };
+  if (m > 7  || (m === 7  && d >= 15)) return { year: y, quarter: 2, label: `T2 ${y}` };
+  if (m > 4  || (m === 4  && d >= 15)) return { year: y, quarter: 1, label: `T1 ${y}` };
+  return { year: y - 1, quarter: 4, label: `T4 ${y - 1}` };
+}
+
 function buildReminderEmail(
   type: 'partial' | 'unpaid',
   tenant: Tenant,
@@ -254,6 +270,11 @@ export default function DashboardLoyersPage() {
   interface IRLReminder { name:string; firstName:string; lastName:string; room:number; property:string; propertyAddress:string; daysUntil:number; date:Date; currentRent:number; newRent:number; pct:string; tenantId:string; irlRef:string; irlOld:number; irlNew:number; }
   const irlReminders: IRLReminder[] = [];
   const irlKeys = Object.keys(irlData).sort().reverse();
+  // Stale-IRL detection : compare table's latest index with what INSEE should have published by today
+  const expectedIRL = getExpectedLatestIRL(new Date());
+  const expectedIrlKey = expectedIRL.year + '-Q' + expectedIRL.quarter;
+  const latestIrlKey = irlKeys[0] || '';
+  const irlObsolete = irlKeys.length > 0 && latestIrlKey !== expectedIrlKey;
   let latestIrlRef = '';
   if (irlKeys.length > 0) {
     const latestKey = irlKeys[0];
@@ -488,6 +509,19 @@ export default function DashboardLoyersPage() {
         <div style={S.alert}>
           <strong>⚠️ Loyers impayés ou en retard</strong>
           <p style={{margin:'4px 0 0',fontSize:'14px',color:'#666'}}>Des loyers ne sont pas encore encaissés. Veuillez relancer les locataires en retard.</p>
+        </div>
+      )}
+
+      {/* Stale IRL banner */}
+      {irlObsolete && (
+        <div style={{background:'linear-gradient(135deg,#fff5f5,#ffe8e8)',border:'2px solid #fecaca',borderRadius:'12px',padding:'16px 20px',marginBottom:'20px'}}>
+          <strong>⚠️ Indice IRL obsolète</strong>
+          <p style={{margin:'4px 0 0',fontSize:'14px',color:'#666'}}>
+            Le dernier indice en base est <strong>{latestIrlRef || 'aucun'}</strong>, mais l'INSEE a publié <strong>{expectedIRL.label}</strong>. Les courriers de révision et calculs d'augmentation utilisent encore l'ancien indice.
+            <br/>
+            <a href="https://www.insee.fr/fr/statistiques/serie/001515333" target="_blank" rel="noreferrer" style={{color:'#b8860b',fontWeight:600}}>→ Récupérer la valeur officielle sur insee.fr</a>
+            {' '}puis l'ajouter dans Supabase (table <code>irl_indices</code>).
+          </p>
         </div>
       )}
 
