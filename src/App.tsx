@@ -15,6 +15,7 @@ import { HouseDetailPage } from "@/pages/HouseDetailPage";
 import { BlogPage } from "@/pages/BlogPage";
 import { BlogPostPage } from "@/pages/BlogPostPage";
 import { ColocationGenevePage } from "@/pages/ColocationGenevePage";
+import { AnnemasseColocationPage } from "@/pages/AnnemasseColocationPage";
 import { InvestisseursPage } from "@/pages/InvestisseursPage";
 import { NotFoundPage } from "@/pages/NotFoundPage";
 import { Navigate } from "react-router-dom";
@@ -53,6 +54,7 @@ function AppContent() {
       <Routes>
         <Route path="/" element={<HomePage />} />
         <Route path="/colocation-geneve" element={<ColocationGenevePage />} />
+        <Route path="/annemasse-colocation" element={<AnnemasseColocationPage />} />
         <Route path="/le-coliving" element={<ColivingPage />} />
         <Route path="/the-coliving" element={<Navigate to="/le-coliving" replace />} />
         <Route path="/services" element={<ServicesPage />} />

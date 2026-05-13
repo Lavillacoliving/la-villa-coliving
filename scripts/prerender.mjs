@@ -35,6 +35,7 @@ const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBh
 const STATIC_ROUTES_FR = [
   '/',
   '/colocation-geneve',
+  '/annemasse-colocation',
   '/le-coliving',
   '/nos-maisons',
   '/services',
@@ -236,6 +237,7 @@ const BREADCRUMB_LABELS = {
   fr: {
     home: 'Accueil',
     'colocation-geneve': 'Colocation Genève',
+    'annemasse-colocation': 'Colocation Annemasse',
     'le-coliving': 'Coliving',
     'nos-maisons': 'Nos maisons',
     lavilla: 'La Villa',
@@ -251,6 +253,7 @@ const BREADCRUMB_LABELS = {
   en: {
     home: 'Home',
     'colocation-geneve': 'Colocation Geneva',
+    'annemasse-colocation': 'Colocation Annemasse',
     'le-coliving': 'Coliving',
     'nos-maisons': 'Our Houses',
     lavilla: 'La Villa',
@@ -443,6 +446,7 @@ const SITE_URL = 'https://www.lavillacoliving.com';
 const STATIC_PAGE_CONFIG = {
   '/': { priority: '1.0', changefreq: 'weekly' },
   '/colocation-geneve': { priority: '0.9', changefreq: 'weekly' },
+  '/annemasse-colocation': { priority: '0.9', changefreq: 'weekly' },
   '/le-coliving': { priority: '0.8', changefreq: 'monthly' },
   '/nos-maisons': { priority: '0.8', changefreq: 'weekly' },
   '/lavilla': { priority: '0.8', changefreq: 'weekly' },
