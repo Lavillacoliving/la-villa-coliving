@@ -61,6 +61,14 @@
       "destination": "/prerendered/en-colocation-geneve.html"
     },
     {
+      "source": "/en/annemasse-colocation",
+      "destination": "/prerendered/en-annemasse-colocation.html"
+    },
+    {
+      "source": "/en/chambre-a-louer-annemasse",
+      "destination": "/prerendered/en-chambre-a-louer-annemasse.html"
+    },
+    {
       "source": "/en/le-coliving",
       "destination": "/prerendered/en-le-coliving.html"
     },

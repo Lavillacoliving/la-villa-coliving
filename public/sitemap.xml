@@ -19,6 +19,22 @@
     <priority>0.9</priority>
   </url>
   <url>
+    <loc>https://www.lavillacoliving.com/annemasse-colocation</loc>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://www.lavillacoliving.com/annemasse-colocation" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.lavillacoliving.com/en/annemasse-colocation" />
+    <lastmod>2026-05-13</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://www.lavillacoliving.com/chambre-a-louer-annemasse</loc>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://www.lavillacoliving.com/chambre-a-louer-annemasse" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.lavillacoliving.com/en/chambre-a-louer-annemasse" />
+    <lastmod>2026-05-13</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
     <loc>https://www.lavillacoliving.com/le-coliving</loc>
     <xhtml:link rel="alternate" hreflang="fr" href="https://www.lavillacoliving.com/le-coliving" />
     <xhtml:link rel="alternate" hreflang="en" href="https://www.lavillacoliving.com/en/le-coliving" />
@@ -123,6 +139,22 @@
     <lastmod>2026-05-13</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://www.lavillacoliving.com/en/annemasse-colocation</loc>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://www.lavillacoliving.com/annemasse-colocation" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.lavillacoliving.com/en/annemasse-colocation" />
+    <lastmod>2026-05-13</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://www.lavillacoliving.com/en/chambre-a-louer-annemasse</loc>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://www.lavillacoliving.com/chambre-a-louer-annemasse" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.lavillacoliving.com/en/chambre-a-louer-annemasse" />
+    <lastmod>2026-05-13</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
   </url>
   <url>
     <loc>https://www.lavillacoliving.com/en/le-coliving</loc>
