@@ -677,6 +677,21 @@
       "source": "/fr/understandtheprices",
       "destination": "/tarifs",
       "permanent": true
+    },
+    {
+      "source": "/category/all-products",
+      "destination": "/",
+      "permanent": true
+    },
+    {
+      "source": "/members",
+      "destination": "/candidature",
+      "permanent": true
+    },
+    {
+      "source": "/_api/:path*",
+      "destination": "/",
+      "permanent": true
     }
   ],
   "headers": [

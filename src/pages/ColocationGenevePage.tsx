@@ -740,6 +740,32 @@ export function ColocationGenevePage() {
         </div>
       </section>
 
+      {/* ===== INTERNAL LINKING — Essentials guides for un-crawled articles ===== */}
+      <section className="py-12 lg:py-16 bg-[#FAF9F6] border-t border-[#E7E5E4]">
+        <div className="max-w-5xl mx-auto px-6">
+          <h2 className="text-2xl md:text-3xl font-light text-[#1C1917] mb-8 text-center" style={{ fontFamily: "DM Serif Display, serif" }}>
+            {language === "en" ? "Essential reads for cross-border workers" : "Lectures essentielles pour les frontaliers"}
+          </h2>
+          <ul className="grid grid-cols-1 md:grid-cols-2 gap-3 text-sm max-w-3xl mx-auto">
+            {[
+              { fr: "Où habiter quand on est frontalier suisse — Top 7 villes côté France", en: "Where to live as a Swiss cross-border worker — Top 7 French towns", slug: "ou-habiter-frontalier-suisse-villes-france-pas-cher" },
+              { fr: "Télétravail frontalier Genève : règles 2026", en: "Cross-border remote work Geneva: 2026 rules", slug: "teletravail-frontalier-geneve-regles-2026" },
+              { fr: "Grand Genève 2026 : nouveautés pour les frontaliers", en: "Greater Geneva 2026: what's new for cross-border workers", slug: "grand-geneve-2026-nouveautes-frontaliers" },
+              { fr: "Organisations internationales à Genève : où habiter", en: "Geneva international organisations: where to live", slug: "organisations-internationales-geneve-ou-habiter" },
+              { fr: "Économies du coliving tout-inclus près de Genève", en: "All-inclusive coliving savings near Geneva", slug: "economies-coliving-tout-inclus-geneve" },
+              { fr: "Temps de trajet Annemasse ↔ Genève par quartier", en: "Annemasse ↔ Geneva travel times by district", slug: "temps-trajet-annemasse-geneve-par-quartier" },
+            ].map((item) => (
+              <li key={item.slug} className="flex items-start gap-2">
+                <span className="text-[#D4A574]">→</span>
+                <Link to={`/blog/${item.slug}`} className="text-[#1C1917] hover:text-[#D4A574] hover:underline transition-colors">
+                  {language === "en" ? item.en : item.fr}
+                </Link>
+              </li>
+            ))}
+          </ul>
+        </div>
+      </section>
+
       {/* ===== CTA FINAL ===== */}
       <section className="py-24 lg:py-32 bg-[#1C1917] text-white">
         <div className="max-w-3xl mx-auto px-6 text-center">
