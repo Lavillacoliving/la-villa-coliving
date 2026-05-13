@@ -674,6 +674,72 @@ export function ColocationGenevePage() {
         </section>
       )}
 
+      {/* ===== RELATED PAGES (maillage entrant vers /annemasse-colocation + /chambre-a-louer-annemasse) ===== */}
+      <section className="py-24 lg:py-32 bg-white">
+        <div className="max-w-5xl mx-auto px-6">
+          <h2
+            className="text-3xl md:text-4xl font-light text-[#1C1917] mb-4 text-center"
+            style={{ fontFamily: "DM Serif Display, serif" }}
+          >
+            {language === "en"
+              ? "Looking for the Annemasse-specific view?"
+              : "Vous cherchez la vue spécifique Annemasse ?"}
+          </h2>
+          <p className="text-[#57534E] text-center max-w-3xl mx-auto mb-12">
+            {language === "en"
+              ? "Our 3 houses are all located in Annemasse Agglo (Ville-la-Grand, Ambilly, Annemasse). If you're zooming in on the local angle, here are two dedicated pages."
+              : "Nos 3 maisons sont toutes situées dans Annemasse Agglo (Ville-la-Grand, Ambilly, Annemasse). Si vous zoomez sur l'angle local, voici deux pages dédiées."}
+          </p>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <Link
+              to="/annemasse-colocation"
+              className="group bg-[#FAF9F6] border border-[#E7E5E4] p-8 hover:border-[#D4A574]/30 hover:shadow-lg transition-all"
+            >
+              <span className="text-xs text-[#D4A574] uppercase tracking-[0.3em] mb-3 block font-medium">
+                {language === "en" ? "Annemasse coliving guide" : "Guide colocation Annemasse"}
+              </span>
+              <h3 className="text-xl font-medium text-[#1C1917] mb-3 group-hover:text-[#D4A574] transition-colors">
+                {language === "en"
+                  ? "Coliving in Annemasse — 29 rooms, 3 houses"
+                  : "Colocation Annemasse — 29 chambres, 3 maisons"}
+              </h3>
+              <p className="text-sm text-[#57534E] leading-relaxed mb-4">
+                {language === "en"
+                  ? "Why Annemasse Agglo, real travel times to Geneva, 3-house comparison, what's included in CHF 1,380/mo."
+                  : "Pourquoi Annemasse Agglo, temps de trajet réels vers Genève, comparatif des 3 maisons, ce qui est inclus dans 1 380 CHF/mois."}
+              </p>
+              <span className="inline-flex items-center gap-2 text-[#D4A574] text-sm font-medium group-hover:gap-3 transition-all">
+                {language === "en" ? "Read the guide" : "Lire le guide"}
+                <ArrowRight className="w-4 h-4" />
+              </span>
+            </Link>
+
+            <Link
+              to="/chambre-a-louer-annemasse"
+              className="group bg-[#FAF9F6] border border-[#E7E5E4] p-8 hover:border-[#D4A574]/30 hover:shadow-lg transition-all"
+            >
+              <span className="text-xs text-[#D4A574] uppercase tracking-[0.3em] mb-3 block font-medium">
+                {language === "en" ? "Furnished rooms Annemasse" : "Chambres meublées Annemasse"}
+              </span>
+              <h3 className="text-xl font-medium text-[#1C1917] mb-3 group-hover:text-[#D4A574] transition-colors">
+                {language === "en"
+                  ? "Furnished rooms to rent in Annemasse from CHF 1,380/mo"
+                  : "Chambres meublées à louer à Annemasse dès 1 380 CHF/mois"}
+              </h3>
+              <p className="text-sm text-[#57534E] leading-relaxed mb-4">
+                {language === "en"
+                  ? "Direct transactional view: room types, vs studio Annemasse, 4-step move-in process, current availability."
+                  : "Vue transactionnelle directe : types de chambres, vs studio Annemasse, process emménagement en 4 étapes, disponibilités actuelles."}
+              </p>
+              <span className="inline-flex items-center gap-2 text-[#D4A574] text-sm font-medium group-hover:gap-3 transition-all">
+                {language === "en" ? "Check availability" : "Voir les disponibilités"}
+                <ArrowRight className="w-4 h-4" />
+              </span>
+            </Link>
+          </div>
+        </div>
+      </section>
+
       {/* ===== CTA FINAL ===== */}
       <section className="py-24 lg:py-32 bg-[#1C1917] text-white">
         <div className="max-w-3xl mx-auto px-6 text-center">
