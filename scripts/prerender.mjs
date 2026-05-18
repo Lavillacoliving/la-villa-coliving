@@ -102,21 +102,21 @@ async function fetchBlogSlugs() {
 // ─────────────────────────────────────────────
 
 async function updateVercelJson(blogRoutes) {
-  console.log('  📦 Updating vercel.json with blog + EN rewrites...');
+  console.log('  📦 Updating vercel.json with ALL rewrites (FR static + EN static + blog)...');
   const config = JSON.parse(await fs.readFile(VERCEL_JSON_PATH, 'utf-8'));
 
-  // Remove all existing dynamic rewrites (blog/* and /en/*) — keep manually-set static FR rewrites + catch-all
-  const keepRewrites = config.rewrites.filter(r =>
-    !r.source.startsWith('/blog/') &&
-    !r.source.startsWith('/en')
-  );
-
-  // Find the catch-all position
-  const catchAllIndex = keepRewrites.findIndex(r => r.source === '/(.*)');
-  if (catchAllIndex === -1) {
+  // Keep ONLY the catch-all — regenerate everything else from STATIC_ROUTES + blogRoutes
+  const catchAll = config.rewrites.find(r => r.source === '/(.*)');
+  if (!catchAll) {
     console.error('  ❌ No catch-all rewrite found in vercel.json!');
     return;
   }
+
+  // Generate FR static rewrites (auto from STATIC_ROUTES_FR — no more manual maintenance!)
+  const frStaticRewrites = STATIC_ROUTES_FR.map(route => ({
+    source: route,
+    destination: route === '/' ? '/prerendered/index.html' : `/prerendered/${route.slice(1)}.html`,
+  }));
 
   // Generate EN static rewrites
   const enStaticRewrites = STATIC_ROUTES_EN.map(route => ({
@@ -130,13 +130,11 @@ async function updateVercelJson(blogRoutes) {
     destination: `/prerendered/${route.slice(1).replace(/\//g, '-')}.html`,
   }));
 
-  // Insert all dynamic rewrites before catch-all
-  const allNewRewrites = [...enStaticRewrites, ...blogRewrites];
-  keepRewrites.splice(catchAllIndex, 0, ...allNewRewrites);
-  config.rewrites = keepRewrites;
+  // Rebuild rewrites: FR static → EN static → blog → catch-all
+  config.rewrites = [...frStaticRewrites, ...enStaticRewrites, ...blogRewrites, catchAll];
 
   await fs.writeFile(VERCEL_JSON_PATH, JSON.stringify(config, null, 2) + '\n', 'utf-8');
-  console.log(`  ✅ vercel.json updated: ${enStaticRewrites.length} EN static + ${blogRewrites.length} blog rewrites\n`);
+  console.log(`  ✅ vercel.json updated: ${frStaticRewrites.length} FR static + ${enStaticRewrites.length} EN static + ${blogRewrites.length} blog rewrites\n`);
 }
 
 // ─────────────────────────────────────────────

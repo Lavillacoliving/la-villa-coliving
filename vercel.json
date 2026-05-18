@@ -45,6 +45,14 @@
       "destination": "/prerendered/lelodge.html"
     },
     {
+      "source": "/annemasse-colocation",
+      "destination": "/prerendered/annemasse-colocation.html"
+    },
+    {
+      "source": "/chambre-a-louer-annemasse",
+      "destination": "/prerendered/chambre-a-louer-annemasse.html"
+    },
+    {
       "source": "/candidature",
       "destination": "/prerendered/candidature.html"
     },

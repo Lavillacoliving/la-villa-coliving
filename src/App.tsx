@@ -76,6 +76,8 @@ function AppContent() {
         {/* EN routes — same components, language detected from /en prefix */}
         <Route path="/en" element={<HomePage />} />
         <Route path="/en/colocation-geneve" element={<ColocationGenevePage />} />
+        <Route path="/en/annemasse-colocation" element={<AnnemasseColocationPage />} />
+        <Route path="/en/chambre-a-louer-annemasse" element={<ChambreLouerAnnemassePage />} />
         <Route path="/en/le-coliving" element={<ColivingPage />} />
         <Route path="/en/nos-maisons" element={<HousesPage />} />
         <Route path="/en/services" element={<ServicesPage />} />
