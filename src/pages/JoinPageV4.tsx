@@ -1,5 +1,5 @@
 import { useLanguage } from "@/contexts/LanguageContext";
-import { ArrowRight } from "lucide-react";
+import { ArrowRight, Check, Clock, Shield } from "lucide-react";
 import { SEO } from "@/components/SEO";
 
 export function JoinPageV4() {
@@ -42,14 +42,104 @@ export function JoinPageV4() {
         </div>
       </section>
 
+      {/* Steps — shown before the form to reduce anxiety */}
+      <section className="py-24 lg:py-32 bg-white">
+        <div className="container-custom">
+          <div className="text-center mb-16">
+            <span className="text-xs text-[#78716C] uppercase tracking-[0.3em] mb-4 block">
+              {language === "en" ? "The Process" : "Le Processus"}
+            </span>
+            <h2
+              className="text-4xl md:text-5xl font-light text-[#1C1917]"
+              style={{ fontFamily: "DM Serif Display, serif" }}
+            >
+              {language === "en" ? "How It Works" : "Comment Ça Marche"}
+            </h2>
+          </div>
+
+          <div className="grid md:grid-cols-3 gap-px bg-[#E7E5E4]">
+            {[
+              {
+                number: "01",
+                title: language === "en" ? "Apply" : "Candidater",
+                description:
+                  language === "en"
+                    ? "Fill out the application form with your details."
+                    : "Remplissez le formulaire de candidature avec vos coordonnées.",
+              },
+              {
+                number: "02",
+                title: language === "en" ? "Meet" : "Rencontrer",
+                description:
+                  language === "en"
+                    ? "We'll schedule a video call to get to know you better."
+                    : "On planifiera un appel vidéo pour mieux vous connaître.",
+              },
+              {
+                number: "03",
+                title: language === "en" ? "Move In" : "Emménager",
+                description:
+                  language === "en"
+                    ? "Welcome to your new home and community!"
+                    : "Bienvenue dans votre nouveau chez-vous et votre communauté !",
+              },
+            ].map((step, index) => (
+              <div key={index} className="bg-white p-10 text-center">
+                <span className="text-6xl font-light text-[#E7E5E4] block mb-6">
+                  {step.number}
+                </span>
+                <h3 className="text-xl font-medium text-[#1C1917] mb-4">
+                  {step.title}
+                </h3>
+                <p className="text-[#57534E]">{step.description}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
       {/* Form */}
       <section className="py-24 lg:py-32 bg-[#FAF9F6]">
         <div className="container-custom max-w-3xl">
+          {/* Reassurance strip */}
+          <div className="flex flex-wrap justify-center gap-6 mb-8 text-sm text-[#57534E]">
+            <span className="flex items-center gap-2">
+              <Check className="w-4 h-4 text-[#D4A574]" />
+              {language === "en" ? "No commitment" : "Sans engagement"}
+            </span>
+            <span className="flex items-center gap-2">
+              <Clock className="w-4 h-4 text-[#D4A574]" />
+              {language === "en" ? "2 min to complete" : "2 min pour compléter"}
+            </span>
+            <span className="flex items-center gap-2">
+              <Shield className="w-4 h-4 text-[#D4A574]" />
+              {language === "en" ? "Response within 48h" : "Réponse sous 48h"}
+            </span>
+          </div>
+
           <form
             action="https://formspree.io/f/mreazaqz"
             method="POST"
             className="bg-white border border-[#E7E5E4] p-8 md:p-12"
           >
+            {/* Progress indicator */}
+            <div className="flex items-center gap-4 mb-8 pb-6 border-b border-[#E7E5E4]">
+              <div className="flex items-center gap-2">
+                <span className="w-6 h-6 bg-[#D4A574] text-white text-xs rounded-full flex items-center justify-center font-medium">1</span>
+                <span className="text-sm text-[#1C1917] font-medium">{language === "en" ? "Your info" : "Vos infos"}</span>
+              </div>
+              <div className="flex-1 h-px bg-[#E7E5E4]" />
+              <div className="flex items-center gap-2">
+                <span className="w-6 h-6 bg-[#D4A574] text-white text-xs rounded-full flex items-center justify-center font-medium">2</span>
+                <span className="text-sm text-[#1C1917] font-medium">{language === "en" ? "Your stay" : "Votre séjour"}</span>
+              </div>
+              <div className="flex-1 h-px bg-[#E7E5E4]" />
+              <div className="flex items-center gap-2">
+                <span className="w-6 h-6 bg-[#E7E5E4] text-[#78716C] text-xs rounded-full flex items-center justify-center font-medium">&#10003;</span>
+                <span className="text-sm text-[#78716C]">{language === "en" ? "Done!" : "Envoyé !"}</span>
+              </div>
+            </div>
+
             {/* Personal Info */}
             <div className="mb-10">
               <h2 className="text-xs uppercase tracking-widest text-[#78716C] mb-6">
@@ -108,24 +198,22 @@ export function JoinPageV4() {
                 </div>
                 <div>
                   <label className="block text-sm text-[#57534E] mb-2">
-                    {language === "en" ? "Date of Birth" : "Date de Naissance"}
+                    {language === "en" ? "Date of Birth (optional)" : "Date de Naissance (optionnel)"}
                   </label>
                   <input
                     type="date"
                     name="birthDate"
-                    required
                     autoComplete="bday"
                     className="w-full px-4 py-3 border border-[#E7E5E4] focus:border-[#D4A574] focus:outline-none transition-colors"
                   />
                 </div>
                 <div>
                   <label className="block text-sm text-[#57534E] mb-2">
-                    {language === "en" ? "Job Position" : "Poste"}
+                    {language === "en" ? "Job Position (optional)" : "Poste (optionnel)"}
                   </label>
                   <input
                     type="text"
                     name="job"
-                    required
                     className="w-full px-4 py-3 border border-[#E7E5E4] focus:border-[#D4A574] focus:outline-none transition-colors"
                   />
                 </div>
@@ -208,14 +296,26 @@ export function JoinPageV4() {
               </div>
             </div>
 
+            {/* Social proof */}
+            <div className="mb-6 p-4 bg-[#FAF9F6] border border-[#E7E5E4] text-center">
+              <p className="text-sm text-[#57534E] italic mb-1">
+                {language === "en"
+                  ? "\"The application process was super simple. I moved in 2 weeks later!\""
+                  : "\"Le processus de candidature était super simple. J'ai emménagé 2 semaines après !\""}
+              </p>
+              <p className="text-xs text-[#78716C]">
+                {language === "en" ? "— Sarah M., Marketing Manager" : "— Sarah M., Responsable Marketing"}
+              </p>
+            </div>
+
             {/* Submit */}
             <button
               type="submit"
               className="w-full py-4 bg-[#1C1917] text-white font-bold hover:bg-[#D4A574] transition-colors flex items-center justify-center gap-2"
             >
               {language === "en"
-                ? "SUBMIT APPLICATION"
-                : "SOUMETTRE MA CANDIDATURE"}
+                ? "SEND MY APPLICATION — IT'S FREE"
+                : "ENVOYER MA CANDIDATURE — C'EST GRATUIT"}
               <ArrowRight className="w-5 h-5" />
             </button>
             <p className="text-sm text-[#78716C] text-center mt-4">
@@ -227,61 +327,6 @@ export function JoinPageV4() {
         </div>
       </section>
 
-      {/* Steps */}
-      <section className="py-24 lg:py-32 bg-white">
-        <div className="container-custom">
-          <div className="text-center mb-16">
-            <span className="text-xs text-[#78716C] uppercase tracking-[0.3em] mb-4 block">
-              {language === "en" ? "The Process" : "Le Processus"}
-            </span>
-            <h2
-              className="text-4xl md:text-5xl font-light text-[#1C1917]"
-              style={{ fontFamily: "DM Serif Display, serif" }}
-            >
-              {language === "en" ? "How It Works" : "Comment Ça Marche"}
-            </h2>
-          </div>
-
-          <div className="grid md:grid-cols-3 gap-px bg-[#E7E5E4]">
-            {[
-              {
-                number: "01",
-                title: language === "en" ? "Apply" : "Candidater",
-                description:
-                  language === "en"
-                    ? "Fill out the application form with your details."
-                    : "Remplissez le formulaire de candidature avec vos coordonnées.",
-              },
-              {
-                number: "02",
-                title: language === "en" ? "Meet" : "Rencontrer",
-                description:
-                  language === "en"
-                    ? "We'll schedule a video call to get to know you better."
-                    : "On planifiera un appel vidéo pour mieux vous connaître.",
-              },
-              {
-                number: "03",
-                title: language === "en" ? "Move In" : "Emménager",
-                description:
-                  language === "en"
-                    ? "Welcome to your new home and community!"
-                    : "Bienvenue dans votre nouveau chez-vous et votre communauté !",
-              },
-            ].map((step, index) => (
-              <div key={index} className="bg-white p-10 text-center">
-                <span className="text-6xl font-light text-[#E7E5E4] block mb-6">
-                  {step.number}
-                </span>
-                <h3 className="text-xl font-medium text-[#1C1917] mb-4">
-                  {step.title}
-                </h3>
-                <p className="text-[#57534E]">{step.description}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
     </main>
   );
 }

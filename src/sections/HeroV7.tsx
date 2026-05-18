@@ -71,6 +71,22 @@ export function HeroV7() {
               : "Votre chambre privée dans une maison avec piscine, à 20 min de Genève. Tout inclus dès 1 380 CHF/mois."}
           </p>
 
+          {/* Social proof */}
+          <div className="flex items-center gap-3 mb-8">
+            <div className="flex items-center gap-1">
+              {[1,2,3,4,5].map(i => (
+                <svg key={i} className="w-4 h-4 text-[#E0BB8A]" fill="currentColor" viewBox="0 0 20 20">
+                  <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                </svg>
+              ))}
+            </div>
+            <span className="text-white/70 text-sm">
+              {language === "en"
+                ? "4.9/5 — 150+ residents since 2023"
+                : "4.9/5 — 150+ résidents depuis 2023"}
+            </span>
+          </div>
+
           {/* CTAs */}
           <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3 sm:gap-4 mb-12 md:mb-14">
             <Link
@@ -88,6 +104,14 @@ export function HeroV7() {
               <ArrowRight className="w-4 h-4" />
             </Link>
           </div>
+
+          {/* Availability signal */}
+          <p className="text-sm text-[#E0BB8A] mt-4 flex items-center gap-2">
+            <span className="w-2 h-2 bg-[#E0BB8A] rounded-full animate-pulse" />
+            {language === "en"
+              ? "3 rooms available for June 2026"
+              : "3 chambres disponibles pour juin 2026"}
+          </p>
 
           {/* Stats bar */}
           <div className="grid grid-cols-2 md:flex md:gap-12 gap-y-4 gap-x-8 pt-6 border-t border-white/12">
@@ -114,6 +138,18 @@ export function HeroV7() {
                 <span className="block text-xs text-white/50 uppercase tracking-wider mt-1">{stat.label}</span>
               </div>
             ))}
+          </div>
+
+          {/* Quick testimonial */}
+          <div className="mt-8 pt-6 border-t border-white/12">
+            <p className="text-white/60 text-sm italic max-w-lg">
+              {language === "en"
+                ? "\"Best decision I made when I moved to Geneva. The community, the pool, the location — everything is perfect.\""
+                : "\"La meilleure décision quand je me suis installé près de Genève. La communauté, la piscine, l'emplacement — tout est parfait.\""}
+            </p>
+            <p className="text-white/40 text-xs mt-2">
+              {language === "en" ? "— Thomas K., Developer at UN Geneva" : "— Thomas K., Développeur à l'ONU Genève"}
+            </p>
           </div>
         </div>
 
