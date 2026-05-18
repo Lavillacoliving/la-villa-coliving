@@ -51,7 +51,7 @@ export function PortailLayout() {
 
   if (authLoading) {
     return (
-      <div className="min-h-screen flex items-center justify-center pt-20">
+      <div className="min-h-screen flex items-center justify-center pt-16">
         <div className="animate-pulse text-lg text-gray-500">{lang.loading}</div>
       </div>
     );
@@ -63,7 +63,7 @@ export function PortailLayout() {
 
   if (tenantLoading) {
     return (
-      <div className="min-h-screen flex items-center justify-center pt-20">
+      <div className="min-h-screen flex items-center justify-center pt-16">
         <div className="animate-pulse text-lg text-gray-500">{lang.loading}</div>
       </div>
     );

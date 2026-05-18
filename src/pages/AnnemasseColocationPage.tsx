@@ -64,7 +64,7 @@ export function AnnemasseColocationPage() {
   };
 
   return (
-    <main className="relative pt-20">
+    <main className="relative pt-16">
       <SEO
         title={
           language === "en"

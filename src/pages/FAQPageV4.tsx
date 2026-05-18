@@ -52,7 +52,7 @@ export function FAQPageV4() {
   };
 
   return (
-    <main className="relative pt-20">
+    <main className="relative pt-16">
       <SEO
         title={language === "en" ? "FAQ — Your Questions About Coliving" : "FAQ — Vos Questions sur le Coliving"}
         description={language === "en"

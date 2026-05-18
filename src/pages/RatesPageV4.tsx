@@ -184,7 +184,7 @@ export function RatesPageV4() {
   const yearlySavings = monthlySavings * 12;
 
   return (
-    <main className="relative pt-20">
+    <main className="relative pt-16">
       <SEO
         title={language === "en" ? "Rates — All-Inclusive Coliving from 1,380 CHF/month" : "Tarifs Colocation Genève — Tout Compris dès 1 380 CHF/mois"}
         description={language === "en"

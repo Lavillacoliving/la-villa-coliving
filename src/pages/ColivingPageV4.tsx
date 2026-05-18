@@ -44,7 +44,7 @@ export function ColivingPageV4() {
   ];
 
   return (
-    <main className="relative pt-20">
+    <main className="relative pt-16">
       <SEO
         title={language === "en" ? "Coliving Geneva: The Practical Guide" : "Coliving Genève : le guide pratique"}
         description={language === "en"

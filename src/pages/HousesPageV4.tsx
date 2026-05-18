@@ -123,7 +123,7 @@ export function HousesPageV4() {
   ];
 
   return (
-    <main className="relative pt-20">
+    <main className="relative pt-16">
       <SEO
         title={language === "en" ? "Our 3 Coliving Houses Near Geneva" : "Nos 3 Maisons Coliving près de Genève"}
         description={language === "en"

@@ -52,7 +52,7 @@ export function BlogPage() {
   const cats = Object.keys(CL);
 
   return (
-    <main className="relative pt-20">
+    <main className="relative pt-16">
       <SEO
         title={language === "en" ? "Blog — Tips on Shared Housing & Life in Geneva" : "Blog — Conseils Colocation & Vie à Genève"}
         description={language === "en"

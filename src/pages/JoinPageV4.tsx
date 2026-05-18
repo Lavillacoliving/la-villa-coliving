@@ -6,7 +6,7 @@ export function JoinPageV4() {
   const { language } = useLanguage();
 
   return (
-    <main className="relative pt-20">
+    <main className="relative pt-16">
       <SEO
         title={language === "en" ? "Apply — Join La Villa Coliving" : "Candidater — Rejoindre La Villa Coliving"}
         description={language === "en"

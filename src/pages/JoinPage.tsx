@@ -30,7 +30,7 @@ export function JoinPage() {
 
   if (isSubmitted) {
     return (
-      <main className="min-h-screen flex items-center justify-center pt-20 bg-white">
+      <main className="min-h-screen flex items-center justify-center pt-16 bg-white">
         <div className="container-custom max-w-lg text-center py-20">
           <div className="w-20 h-20 rounded-2xl bg-[#d1fae5] flex items-center justify-center mx-auto mb-6">
             <Check className="text-[#10b981]" size={40} />

@@ -7,7 +7,7 @@ export function NotFoundPage() {
   const { language } = useLanguage();
 
   return (
-    <main className="relative pt-20">
+    <main className="relative pt-16">
       <SEO
         title="404 - Page Not Found"
         description="The page you are looking for does not exist."

@@ -77,14 +77,14 @@ export function BlogPostPage() {
   }
 
   if(loading) return (
-    <main className="relative pt-20">
+    <main className="relative pt-16">
       <div className="py-32 text-center text-[#57534E]">
         {language==="en"?"Loading...":"Chargement..."}
       </div>
     </main>
   );
   if(!post) return (
-    <main className="relative pt-20">
+    <main className="relative pt-16">
       <div className="py-32 text-center">
         <p className="text-[#57534E] text-lg mb-4">{language==="en"?"Article not found":"Article introuvable"}</p>
         <Link to="/blog" className="text-[#D4A574] hover:underline">{language==="en"?"Back to blog":"Retour au blog"}</Link>
@@ -128,7 +128,7 @@ export function BlogPostPage() {
   };
 
   return (
-    <main className="relative pt-20">
+    <main className="relative pt-16">
       <SEO
         title={title}
         description={excerpt}

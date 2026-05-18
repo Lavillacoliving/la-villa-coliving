@@ -1414,7 +1414,7 @@ export function HouseDetailPage() {
         ]
       }) }} />
       {/* Hero Gallery */}
-      <section className="relative pt-20">
+      <section className="relative pt-16">
         <Carousel className="w-full">
           <CarouselContent>
             {[house.image, ...house.gallery].map((img, index) => (

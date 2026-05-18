@@ -48,13 +48,13 @@ export function NavbarV7() {
       }`}
     >
       <nav className="container-custom">
-        <div className="flex items-center justify-between h-20">
+        <div className="flex items-center justify-between h-16">
           {/* Logo */}
           <Link to="/" className="flex items-center group">
             <img
               src="/logos/NEW Logo La Villa-14.png"
               alt="La Villa Coliving — colocation et coliving premium près de Genève"
-              className="h-16 w-auto transition-transform duration-300 group-hover:scale-105"
+              className="h-12 w-auto transition-transform duration-300 group-hover:scale-105"
             />
           </Link>
 

@@ -138,7 +138,7 @@ export function ServicesPageV4() {
   ];
 
   return (
-    <main className="relative pt-20">
+    <main className="relative pt-16">
       <SEO
         title={language === "en" ? "All-Inclusive Services — La Villa Coliving" : "Services Tout Inclus — La Villa Coliving"}
         description={language === "en"
