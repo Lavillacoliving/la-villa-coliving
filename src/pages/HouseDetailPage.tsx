@@ -2057,13 +2057,22 @@ export function HouseDetailPage() {
               ? "Join our curated community and experience the best of coliving near Geneva."
               : "Rejoignez notre communauté sélectionnée et vivez le meilleur du coliving près de Genève."}
           </p>
-          <Link
-            to="/candidature"
-            className="inline-flex items-center gap-2 px-8 py-4 bg-white text-[#1C1917] font-bold rounded-full hover:bg-gray-100 transition-colors"
-          >
-            {t.houseDetail.apply}
-            <ArrowRight className="w-5 h-5" />
-          </Link>
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
+            <Link
+              to="/candidature"
+              className="inline-flex items-center gap-2 px-8 py-4 bg-white text-[#1C1917] font-bold rounded-full hover:bg-gray-100 transition-colors"
+            >
+              {t.houseDetail.apply}
+              <ArrowRight className="w-5 h-5" />
+            </Link>
+            <Link
+              to="/colocation-geneve"
+              className="inline-flex items-center gap-2 px-8 py-4 border border-white/30 text-white font-medium rounded-full hover:bg-white/10 transition-colors"
+            >
+              {language === "en" ? "Shared housing Geneva" : "Colocation Genève"}
+              <ArrowRight className="w-5 h-5" />
+            </Link>
+          </div>
         </div>
       </section>
     </main>

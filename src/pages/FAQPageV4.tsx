@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { Link } from "react-router-dom";
 import { Helmet } from "react-helmet";
 import { useLanguage } from "@/contexts/LanguageContext";
 import {
@@ -159,8 +160,25 @@ export function FAQPageV4() {
                   ))}
                 </nav>
 
+                {/* Colocation Genève link — SEO maillage */}
+                <Link
+                  to="/colocation-geneve"
+                  className="mt-8 block p-6 bg-[#FAF9F6] border border-[#E7E5E4] hover:border-[#D4A574]/40 transition-colors group"
+                >
+                  <h4 className="font-medium text-[#1C1917] mb-2 group-hover:text-[#D4A574] transition-colors">
+                    {language === "en"
+                      ? "Shared Housing Geneva"
+                      : "Colocation Genève"}
+                  </h4>
+                  <p className="text-sm text-[#57534E]">
+                    {language === "en"
+                      ? "29 furnished rooms, all-inclusive from CHF 1,380/mo. See the full guide →"
+                      : "29 chambres meublées, tout inclus dès 1 380 CHF/mois. Voir le guide complet →"}
+                  </p>
+                </Link>
+
                 {/* Contact CTA */}
-                <div className="mt-8 p-6 bg-white border border-[#E7E5E4]">
+                <div className="mt-4 p-6 bg-white border border-[#E7E5E4]">
                   <MessageCircle className="w-6 h-6 text-[#D4A574] mb-4" />
                   <h4 className="font-medium text-[#1C1917] mb-2">
                     {language === "en"
