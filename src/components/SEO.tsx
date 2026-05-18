@@ -64,13 +64,11 @@ export function SEO({
         const urlPath = siteUrl.replace(base, "") || "/";
         const frUrl = urlPath.startsWith("/en") ? `${base}${urlPath.replace(/^\/en(\/|$)/, "$1") || "/"}` : siteUrl;
         const enUrl = urlPath.startsWith("/en") ? siteUrl : `${base}/en${urlPath === "/" ? "" : urlPath}`;
-        return (
-          <>
-            <link rel="alternate" hrefLang="fr" href={frUrl} />
-            <link rel="alternate" hrefLang="en" href={enUrl} />
-            <link rel="alternate" hrefLang="x-default" href={frUrl} />
-          </>
-        );
+        return [
+          <link key="hreflang-fr" rel="alternate" hrefLang="fr" href={frUrl} />,
+          <link key="hreflang-en" rel="alternate" hrefLang="en" href={enUrl} />,
+          <link key="hreflang-default" rel="alternate" hrefLang="x-default" href={frUrl} />,
+        ];
       })()}
 
       {/* Open Graph / Facebook */}
