@@ -9,6 +9,14 @@
       "destination": "/prerendered/colocation-geneve.html"
     },
     {
+      "source": "/annemasse-colocation",
+      "destination": "/prerendered/annemasse-colocation.html"
+    },
+    {
+      "source": "/chambre-a-louer-annemasse",
+      "destination": "/prerendered/chambre-a-louer-annemasse.html"
+    },
+    {
       "source": "/le-coliving",
       "destination": "/prerendered/le-coliving.html"
     },
@@ -29,6 +37,10 @@
       "destination": "/prerendered/faq.html"
     },
     {
+      "source": "/candidature",
+      "destination": "/prerendered/candidature.html"
+    },
+    {
       "source": "/blog",
       "destination": "/prerendered/blog.html"
     },
@@ -43,18 +55,6 @@
     {
       "source": "/lelodge",
       "destination": "/prerendered/lelodge.html"
-    },
-    {
-      "source": "/annemasse-colocation",
-      "destination": "/prerendered/annemasse-colocation.html"
-    },
-    {
-      "source": "/chambre-a-louer-annemasse",
-      "destination": "/prerendered/chambre-a-louer-annemasse.html"
-    },
-    {
-      "source": "/candidature",
-      "destination": "/prerendered/candidature.html"
     },
     {
       "source": "/investisseurs",
@@ -119,6 +119,22 @@
     {
       "source": "/en/investisseurs",
       "destination": "/prerendered/en-investisseurs.html"
+    },
+    {
+      "source": "/blog/coliving-communaute-reels-amis-geneve-annemasse",
+      "destination": "/prerendered/blog-coliving-communaute-reels-amis-geneve-annemasse.html"
+    },
+    {
+      "source": "/blog/coliving-vs-colocation-choisir-mode-vie-geneve-frontalier",
+      "destination": "/prerendered/blog-coliving-vs-colocation-choisir-mode-vie-geneve-frontalier.html"
+    },
+    {
+      "source": "/blog/annemasse-coliving-geneve-frontaliers-guide-complet",
+      "destination": "/prerendered/blog-annemasse-coliving-geneve-frontaliers-guide-complet.html"
+    },
+    {
+      "source": "/blog/coliving-geneve-frontaliers-guide-2024",
+      "destination": "/prerendered/blog-coliving-geneve-frontaliers-guide-2024.html"
     },
     {
       "source": "/blog/ou-habiter-frontalier-suisse-villes-france-pas-cher",
@@ -279,6 +295,22 @@
     {
       "source": "/blog/what-is-coliving-and-why-it-matters",
       "destination": "/prerendered/blog-what-is-coliving-and-why-it-matters.html"
+    },
+    {
+      "source": "/en/blog/coliving-communaute-reels-amis-geneve-annemasse",
+      "destination": "/prerendered/en-blog-coliving-communaute-reels-amis-geneve-annemasse.html"
+    },
+    {
+      "source": "/en/blog/coliving-vs-colocation-choisir-mode-vie-geneve-frontalier",
+      "destination": "/prerendered/en-blog-coliving-vs-colocation-choisir-mode-vie-geneve-frontalier.html"
+    },
+    {
+      "source": "/en/blog/annemasse-coliving-geneve-frontaliers-guide-complet",
+      "destination": "/prerendered/en-blog-annemasse-coliving-geneve-frontaliers-guide-complet.html"
+    },
+    {
+      "source": "/en/blog/coliving-geneve-frontaliers-guide-2024",
+      "destination": "/prerendered/en-blog-coliving-geneve-frontaliers-guide-2024.html"
     },
     {
       "source": "/en/blog/ou-habiter-frontalier-suisse-villes-france-pas-cher",
