@@ -697,6 +697,16 @@
       "permanent": true
     },
     {
+      "source": "/fr/book-online",
+      "destination": "/candidature",
+      "permanent": true
+    },
+    {
+      "source": "/book-online",
+      "destination": "/candidature",
+      "permanent": true
+    },
+    {
       "source": "/_api/:path*",
       "destination": "/",
       "permanent": true
