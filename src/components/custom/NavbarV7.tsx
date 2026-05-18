@@ -43,8 +43,8 @@ export function NavbarV7() {
     <header
       className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${
         isScrolled
-          ? "bg-white/95 backdrop-blur-md border-b border-[#E7E5E4]"
-          : "bg-transparent"
+          ? "bg-white/95 backdrop-blur-md border-b border-[#E7E5E4] shadow-sm"
+          : "bg-white/90 backdrop-blur-md border-b border-[#E7E5E4]/50"
       }`}
     >
       <nav className="container-custom">

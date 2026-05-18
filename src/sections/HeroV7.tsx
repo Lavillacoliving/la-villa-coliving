@@ -22,8 +22,8 @@ export function HeroV7() {
             alt="La Villa Coliving — maison premium avec piscine à 20 min du centre de Genève"
             className="w-full h-full object-cover"
           />
-          {/* Gradient overlay — warm black */}
-          <div className="absolute inset-0 bg-gradient-to-t from-[#1C1917] via-[#1C1917]/40 to-black/15" />
+          {/* Gradient overlay — warm black, stronger for text readability */}
+          <div className="absolute inset-0 bg-gradient-to-t from-[#1C1917] via-[#1C1917]/60 to-black/30" />
         </div>
 
         {/* Content — aligned bottom-left */}
@@ -65,7 +65,7 @@ export function HeroV7() {
           </h1>
 
           {/* Description */}
-          <p className="text-base md:text-lg text-white/80 max-w-xl mb-8 leading-relaxed font-light">
+          <p className="text-base md:text-lg text-white/90 max-w-xl mb-8 leading-relaxed font-light">
             {language === "en"
               ? "Your private room in a house with pool, 20 min from Geneva. All-inclusive from CHF 1,380/month."
               : "Votre chambre privée dans une maison avec piscine, à 20 min de Genève. Tout inclus dès 1 380 CHF/mois."}
@@ -80,7 +80,7 @@ export function HeroV7() {
                 </svg>
               ))}
             </div>
-            <span className="text-white/70 text-sm">
+            <span className="text-white/90 text-sm font-medium">
               {language === "en"
                 ? "4.9/5 — 150+ residents since 2023"
                 : "4.9/5 — 150+ résidents depuis 2023"}
@@ -114,7 +114,7 @@ export function HeroV7() {
           </p>
 
           {/* Stats bar */}
-          <div className="grid grid-cols-2 md:flex md:gap-12 gap-y-4 gap-x-8 pt-6 border-t border-white/12">
+          <div className="grid grid-cols-2 md:flex md:gap-12 gap-y-4 gap-x-8 pt-6 border-t border-white/20">
             {[
               {
                 value: `${STATS.totalResidents}+`,
@@ -135,19 +135,19 @@ export function HeroV7() {
             ].map((stat, index) => (
               <div key={index}>
                 <span className="text-xl md:text-2xl font-bold text-white">{stat.value}</span>
-                <span className="block text-xs text-white/50 uppercase tracking-wider mt-1">{stat.label}</span>
+                <span className="block text-xs text-white/70 uppercase tracking-wider mt-1">{stat.label}</span>
               </div>
             ))}
           </div>
 
           {/* Quick testimonial */}
-          <div className="mt-8 pt-6 border-t border-white/12">
-            <p className="text-white/60 text-sm italic max-w-lg">
+          <div className="mt-8 pt-6 border-t border-white/20">
+            <p className="text-white/80 text-sm italic max-w-lg">
               {language === "en"
                 ? "\"Best decision I made when I moved to Geneva. The community, the pool, the location — everything is perfect.\""
                 : "\"La meilleure décision quand je me suis installé près de Genève. La communauté, la piscine, l'emplacement — tout est parfait.\""}
             </p>
-            <p className="text-white/40 text-xs mt-2">
+            <p className="text-white/60 text-xs mt-2">
               {language === "en" ? "— Thomas K., Developer at UN Geneva" : "— Thomas K., Développeur à l'ONU Genève"}
             </p>
           </div>
