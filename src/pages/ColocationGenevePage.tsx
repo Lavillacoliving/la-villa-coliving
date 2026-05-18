@@ -30,7 +30,7 @@ import { supabase } from "@/lib/supabase";
 const colocationFAQ = [
   {
     q: "Combien coûte une colocation près de Genève chez La Villa ?",
-    a: "Nos chambres privatives tout inclus sont à 1 380 CHF/mois. Ce prix comprend le loyer, les charges, la fibre internet, le ménage 2x/semaine, l'accès à la piscine, la salle de sport, le sauna, les cours de yoga et de sport hebdomadaires, les événements communautaires mensuels et les paniers repas mensuels. C'est en moyenne 30 à 40% moins cher qu'un studio équivalent à Genève.",
+    a: "Nos chambres privatives tout inclus sont à 1 380 CHF/mois. Ce prix comprend le loyer, les charges, la fibre internet, le ménage 2x/semaine, l'accès à la piscine, la salle de sport, le sauna, les cours de yoga et de sport hebdomadaires, les événements communautaires mensuels et les dîners communautaires mensuels. C'est en moyenne 30 à 40% moins cher qu'un studio équivalent à Genève.",
   },
   {
     q: "Quel est le temps de trajet entre La Villa et le centre de Genève ?",
@@ -276,8 +276,8 @@ export function ColocationGenevePage() {
               </h3>
               <p className="text-[#57534E] leading-relaxed mb-4">
                 {language === "en"
-                  ? "A studio in Geneva starts at 1,800 CHF/month — without furniture or services. At La Villa, you get a fully furnished room with pool, gym, sauna, cleaning 2x/week, weekly yoga & sports classes, monthly community events and meal baskets — from 1,380 CHF/month."
-                  : "Un studio à Genève coûte minimum 1 800 CHF/mois — sans meubles ni services. Chez La Villa, vous avez une chambre meublée avec piscine, gym, sauna, ménage 2x/semaine, cours de yoga et sport hebdomadaires, événements communautaires et paniers repas mensuels — dès 1 380 CHF/mois."}
+                  ? "A studio in Geneva starts at 1,800 CHF/month — without furniture or services. At La Villa, you get a fully furnished room with pool, gym, sauna, cleaning 2x/week, weekly yoga & sports classes, monthly community events and community dinners — from 1,380 CHF/month."
+                  : "Un studio à Genève coûte minimum 1 800 CHF/mois — sans meubles ni services. Chez La Villa, vous avez une chambre meublée avec piscine, gym, sauna, ménage 2x/semaine, cours de yoga et sport hebdomadaires, événements communautaires et dîners communautaires mensuels — dès 1 380 CHF/mois."}
               </p>
               <div className="bg-white p-4 border border-[#E7E5E4]">
                 <div className="flex justify-between items-center mb-2">
@@ -374,8 +374,8 @@ export function ColocationGenevePage() {
               </h3>
               <p className="text-[#57534E] leading-relaxed">
                 {language === "en"
-                  ? "Forget the isolation of a tiny studio. At La Villa, you live in designer houses with pool, gym, sauna, garden, coworking spaces, and a vibrant international community. Weekly yoga & sports classes, monthly community events, monthly meal baskets — cleaning 2x/week, maintenance, streaming subscriptions all included."
-                  : "Oubliez l'isolement d'un petit studio. Chez La Villa, vous vivez dans des maisons design avec piscine, salle de sport, sauna, jardin, espaces coworking et une communauté internationale dynamique. Cours de yoga et sport hebdomadaires, événements communautaires mensuels, paniers repas mensuels — ménage 2x/semaine, entretien, abonnements streaming inclus."}
+                  ? "Forget the isolation of a tiny studio. At La Villa, you live in designer houses with pool, gym, sauna, garden, coworking spaces, and a vibrant international community. Weekly yoga & sports classes, monthly community events, monthly community dinners — cleaning 2x/week, maintenance, streaming subscriptions all included."
+                  : "Oubliez l'isolement d'un petit studio. Chez La Villa, vous vivez dans des maisons design avec piscine, salle de sport, sauna, jardin, espaces coworking et une communauté internationale dynamique. Cours de yoga et sport hebdomadaires, événements communautaires mensuels, dîners communautaires mensuels — ménage 2x/semaine, entretien, abonnements streaming inclus."}
               </p>
             </div>
           </div>
@@ -412,7 +412,7 @@ export function ColocationGenevePage() {
                   This situation has fueled the rise of cross-border living. The French side of the Greater Geneva area — towns like Annemasse, Ville-la-Grand, Ambilly, and Saint-Julien-en-Genevois — offers rents that are 30 to 50% lower than in Geneva itself. A cross-border worker (frontalier) earning a Swiss salary while living in France enjoys a dramatic improvement in purchasing power. The Leman Express rail link, which connects Annemasse to Geneva Cornavin station in just 20 minutes, has made this lifestyle more practical than ever. Today, over 100,000 frontaliers commute daily from France to work in the canton of Geneva.
                 </p>
                 <p>
-                  Within this context, coliving has emerged as a compelling alternative to traditional shared housing near Geneva. Unlike a standard colocation where tenants share an apartment and manage everything themselves, coliving offers a professionally managed environment with curated communities, fully furnished rooms, and comprehensive services included in a single monthly payment. At La Villa Coliving, residents enjoy premium shared housing from 1,380 CHF per month — all inclusive: rent, utilities, fiber internet, housekeeping twice a week, pool, gym, sauna, weekly yoga and sports classes, monthly community events, and meal baskets. This represents exceptional value compared to both a Geneva studio and a traditional cross-border colocation.
+                  Within this context, coliving has emerged as a compelling alternative to traditional shared housing near Geneva. Unlike a standard colocation where tenants share an apartment and manage everything themselves, coliving offers a professionally managed environment with curated communities, fully furnished rooms, and comprehensive services included in a single monthly payment. At La Villa Coliving, residents enjoy premium shared housing from 1,380 CHF per month — all inclusive: rent, utilities, fiber internet, housekeeping twice a week, pool, gym, sauna, weekly yoga and sports classes, monthly community events, and community dinners. This represents exceptional value compared to both a Geneva studio and a traditional cross-border colocation.
                 </p>
                 <p>
                   For professionals relocating to work in Geneva — whether as frontaliers, expats joining international organizations, or remote workers seeking a vibrant community — coliving on the French border offers the ideal balance: Swiss-level salaries with French-side affordability, premium amenities, and a ready-made social network. The demand for shared housing in Geneva and its surrounding area continues to grow, and modern coliving spaces like La Villa are leading this transformation.
@@ -430,7 +430,7 @@ export function ColocationGenevePage() {
                   Cette situation a alimenté l'essor de la vie transfrontalière. Le côté français du Grand Genève — des communes comme Annemasse, Ville-la-Grand, Ambilly ou Saint-Julien-en-Genevois — offre des loyers 30 à 50% moins chers qu'à Genève. Un frontalier touchant un salaire suisse tout en vivant en France bénéficie d'un gain de pouvoir d'achat considérable. Le Léman Express, qui relie Annemasse à la gare de Genève Cornavin en seulement 20 minutes, a rendu ce mode de vie plus pratique que jamais. Aujourd'hui, plus de 100 000 frontaliers font le trajet quotidien entre la France et le canton de Genève.
                 </p>
                 <p>
-                  Dans ce contexte, le coliving s'impose comme une alternative séduisante à la colocation classique près de Genève. Contrairement à une colocation traditionnelle où les locataires partagent un appartement et gèrent tout eux-mêmes, le coliving propose un environnement géré professionnellement avec des communautés sélectionnées, des chambres entièrement meublées et des services complets inclus dans un paiement mensuel unique. Chez La Villa Coliving, les résidents profitent d'une colocation premium dès 1 380 CHF par mois — tout compris : loyer, charges, fibre internet, ménage deux fois par semaine, piscine, gym, sauna, cours de yoga et sport hebdomadaires, événements communautaires mensuels et paniers repas. Cela représente un rapport qualité-prix exceptionnel comparé à un studio à Genève ou une colocation frontalière classique.
+                  Dans ce contexte, le coliving s'impose comme une alternative séduisante à la colocation classique près de Genève. Contrairement à une colocation traditionnelle où les locataires partagent un appartement et gèrent tout eux-mêmes, le coliving propose un environnement géré professionnellement avec des communautés sélectionnées, des chambres entièrement meublées et des services complets inclus dans un paiement mensuel unique. Chez La Villa Coliving, les résidents profitent d'une colocation premium dès 1 380 CHF par mois — tout compris : loyer, charges, fibre internet, ménage deux fois par semaine, piscine, gym, sauna, cours de yoga et sport hebdomadaires, événements communautaires mensuels et dîners communautaires. Cela représente un rapport qualité-prix exceptionnel comparé à un studio à Genève ou une colocation frontalière classique.
                 </p>
                 <p>
                   Pour les professionnels qui s'installent pour travailler à Genève — qu'ils soient frontaliers, expatriés rejoignant des organisations internationales ou télétravailleurs en quête d'une communauté dynamique — la colocation côté frontière française offre l'équilibre idéal : salaires suisses avec des coûts côté France, prestations premium et un réseau social prêt à l'emploi. La demande de colocation à Genève et dans sa périphérie continue de croître, et les espaces de coliving modernes comme La Villa sont à la pointe de cette transformation.
@@ -673,7 +673,7 @@ export function ColocationGenevePage() {
               { icon: Star, label: language === "en" ? "Weekly yoga & sports classes" : "Cours de yoga & sport hebdomadaires" },
               { icon: Users, label: language === "en" ? "Monthly community events" : "Événements communautaires mensuels" },
               { icon: Check, label: language === "en" ? "Housekeeping 2x/week" : "Ménage 2x/semaine" },
-              { icon: UtensilsCrossed, label: language === "en" ? "Monthly meal baskets" : "Paniers repas mensuels" },
+              { icon: UtensilsCrossed, label: language === "en" ? "Monthly community dinners" : "Dîners communautaires mensuels" },
               { icon: Tv, label: language === "en" ? "Streaming subscriptions" : "Abonnements streaming" },
             ].map((item, i) => (
               <div key={i} className="flex items-center gap-4 p-4 bg-[#FAF9F6]">
@@ -853,7 +853,7 @@ export function ColocationGenevePage() {
                   ["Gym / Sauna", "✓ " + (language === "en" ? "Included" : "Inclus"), "✗ " + (language === "en" ? "Extra 80-150 CHF/month" : "En plus : 80-150 CHF/mois")],
                   ["Internet", "✓ " + (language === "en" ? "Pro fiber included" : "Fibre Pro incluse"), "~50 CHF/" + (language === "en" ? "month" : "mois")],
                   [language === "en" ? "Cleaning" : "Ménage", "✓ " + (language === "en" ? "2x/week, included" : "2x/semaine, inclus"), language === "en" ? "You manage" : "À votre charge"],
-                  [language === "en" ? "Community" : "Communauté", "✓ " + (language === "en" ? "Monthly events, yoga & sports, meal baskets" : "Événements mensuels, yoga & sport, paniers repas"), "✗ " + (language === "en" ? "Isolated" : "Isolé")],
+                  [language === "en" ? "Community" : "Communauté", "✓ " + (language === "en" ? "Monthly events, yoga & sports, community dinners" : "Événements mensuels, yoga & sport, dîners communautaires"), "✗ " + (language === "en" ? "Isolated" : "Isolé")],
                   [language === "en" ? "Lease" : "Bail", language === "en" ? "12 months, renewable" : "12 mois, renouvelable", language === "en" ? "12+ months lease" : "Bail 12+ mois"],
                   [language === "en" ? "Deposit" : "Caution", language === "en" ? "2 months" : "2 mois", language === "en" ? "3 months typical" : "3 mois généralement"],
                 ].map(([label, villa, studio], i) => (

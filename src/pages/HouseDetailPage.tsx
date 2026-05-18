@@ -358,7 +358,7 @@ function getHousesData(lang: string): Record<string, HouseData> {
     services: isEn ? [
       "Weekly private yoga & fitness classes",
       "Monthly pizza party",
-      "Monthly meal basket delivery",
+      "Monthly community dinner",
       "Seasonal community events",
       "WhatsApp direct support",
       "Housekeeping twice a week",
@@ -772,7 +772,7 @@ function getHousesData(lang: string): Record<string, HouseData> {
     services: isEn ? [
       "Weekly private yoga & fitness classes",
       "Monthly pizza party",
-      "Monthly meal basket delivery",
+      "Monthly community dinner",
       "Seasonal community events",
       "WhatsApp direct support",
       "Housekeeping twice a week",
@@ -1232,7 +1232,7 @@ function getHousesData(lang: string): Record<string, HouseData> {
     services: isEn ? [
       "Weekly private yoga & fitness classes",
       "Monthly pizza party",
-      "Monthly meal basket delivery",
+      "Monthly community dinner",
       "Seasonal community events",
       "WhatsApp direct support",
       "Housekeeping twice a week",
@@ -1985,7 +1985,7 @@ export function HouseDetailPage() {
           },
           lelodge: {
             fr: [
-              { q: "Quel est le loyer mensuel au Lodge et que comprend-il ?", a: "Les chambres du Lodge sont à partir de 1 380 CHF par mois tout inclus : charges (eau, électricité, chauffage), internet fibre 8 Gbps, ménage 2 fois par semaine des communs, abonnements streaming, entretien piscine et jardin, cours de yoga / fitness privés, parure de linge fournie, panier repas mensuel. Pas de supplément." },
+              { q: "Quel est le loyer mensuel au Lodge et que comprend-il ?", a: "Les chambres du Lodge sont à partir de 1 380 CHF par mois tout inclus : charges (eau, électricité, chauffage), internet fibre 8 Gbps, ménage 2 fois par semaine des communs, abonnements streaming, entretien piscine et jardin, cours de yoga / fitness privés, parure de linge fournie, dîner communautaire mensuel. Pas de supplément." },
               { q: "Comment se rendre à Genève depuis Le Lodge à Annemasse ?", a: "Le Lodge est à 9 min à pied de la gare d'Annemasse, terminus du Léman Express. Genève Cornavin est à 15 min en Léman Express direct, sans correspondance. La frontière suisse est à 5 min en voiture. Aéroport de Genève : 30 min." },
               { q: "Quelle est la durée minimale du bail au Lodge ?", a: "Bail flexible 1 à 12 mois. Le bail par défaut est de 12 mois pour la stabilité de la communauté, mais nous acceptons des séjours plus courts (1, 3, 6 mois) selon disponibilité." },
               { q: "Y a-t-il une caution et des frais d'agence ?", a: "Caution équivalente à 2 mois de loyer, restituée sous 30 jours après l'état des lieux. Aucun frais d'agence ni de dossier." },
@@ -1993,7 +1993,7 @@ export function HouseDetailPage() {
               { q: "Qu'est-ce qui rend Le Lodge unique parmi vos 3 maisons ?", a: "Le Lodge est notre maison la plus récente (ouverte janvier 2026) et la plus grande (500 m² sur 1 500 m²). Elle dispose de 4 bâtiments : la résidence principale, un chalet fitness dédié avec sauna finlandais, un pool house avec cuisine d'été complète et une zone de rangement de 130 m². DPE B (performance énergétique). C'est aussi la plus proche de la gare d'Annemasse pour le Léman Express." },
             ],
             en: [
-              { q: "What is the monthly rent at Le Lodge and what does it include?", a: "Rooms at Le Lodge start at CHF 1,380 per month all-inclusive: utilities (water, electricity, heating), 8 Gbps fiber internet, twice-weekly common-area cleaning, streaming subscriptions, pool & garden upkeep, private yoga/fitness classes, bedding included, monthly meal basket. No add-on fees." },
+              { q: "What is the monthly rent at Le Lodge and what does it include?", a: "Rooms at Le Lodge start at CHF 1,380 per month all-inclusive: utilities (water, electricity, heating), 8 Gbps fiber internet, twice-weekly common-area cleaning, streaming subscriptions, pool & garden upkeep, private yoga/fitness classes, bedding included, monthly community dinner. No add-on fees." },
               { q: "How do I get to Geneva from Le Lodge in Annemasse?", a: "Le Lodge is a 9-minute walk from Annemasse station, the Léman Express terminus. Geneva Cornavin is 15 min via direct Léman Express, no transfer. Swiss border: 5 min by car. Geneva Airport: 30 min." },
               { q: "What is the minimum lease term at Le Lodge?", a: "Flexible leases from 1 to 12 months. The default is 12 months for community stability, but shorter stays (1, 3, 6 months) are accepted depending on availability." },
               { q: "Is there a deposit and any agency fees?", a: "Deposit equivalent to 2 months' rent, refunded within 30 days after the move-out inspection. No agency fees, no application fees." },

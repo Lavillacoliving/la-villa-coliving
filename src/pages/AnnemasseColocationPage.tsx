@@ -325,7 +325,7 @@ export function AnnemasseColocationPage() {
                   "Heated pool, sauna and gym access",
                   "Private weekly yoga and fitness classes",
                   "Streaming subscriptions (Netflix, Canal+, etc.)",
-                  "Monthly meal basket and pizza party",
+                  "Monthly community dinner and pizza party",
                   "Pool, garden and property maintenance",
                   "Bedding and towels provided",
                 ]

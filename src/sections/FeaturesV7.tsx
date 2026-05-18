@@ -37,8 +37,8 @@ export function FeaturesV7() {
       icon: Users,
       title: language === 'en' ? 'Active community life' : 'Vie communautaire active',
       description: language === 'en'
-        ? 'Monthly pizza party, meal basket, private yoga and fitness classes, board games, foosball. All included, all optional.'
-        : 'Pizza Party mensuelle, panier repas, cours de yoga et fitness privés, jeux de société, babyfoot. Tout inclus, tout optionnel.',
+        ? 'Monthly pizza party, community dinner, private yoga and fitness classes, board games, foosball. All included, all optional.'
+        : 'Pizza Party mensuelle, dîner communautaire, cours de yoga et fitness privés, jeux de société, babyfoot. Tout inclus, tout optionnel.',
     },
     {
       icon: CircleCheck,

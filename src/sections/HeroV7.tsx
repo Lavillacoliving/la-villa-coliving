@@ -105,12 +105,18 @@ export function HeroV7() {
             </Link>
           </div>
 
-          {/* Availability signal */}
+          {/* Availability signal — dynamic next month */}
           <p className="text-sm text-[#E0BB8A] mt-4 flex items-center gap-2">
             <span className="w-2 h-2 bg-[#E0BB8A] rounded-full animate-pulse" />
-            {language === "en"
-              ? "3 rooms available for June 2026"
-              : "3 chambres disponibles pour juin 2026"}
+            {(() => {
+              const now = new Date();
+              const next = new Date(now.getFullYear(), now.getMonth() + 1, 1);
+              const monthFr = next.toLocaleDateString("fr-FR", { month: "long", year: "numeric" });
+              const monthEn = next.toLocaleDateString("en-US", { month: "long", year: "numeric" });
+              return language === "en"
+                ? `3 rooms available for ${monthEn}`
+                : `3 chambres disponibles pour ${monthFr}`;
+            })()}
           </p>
 
           {/* Stats bar */}
