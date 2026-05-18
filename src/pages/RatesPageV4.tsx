@@ -249,7 +249,7 @@ export function RatesPageV4() {
 
           <div className="grid md:grid-cols-2 gap-8 max-w-5xl mx-auto">
             {/* Geneva Studio */}
-            <div className="bg-[#930202a5] rounded-2xl p-8 border border-[#333]">
+            <div className="bg-[#1C1917] rounded-2xl p-8 border border-[#333]">
               <div className="flex items-center gap-3 mb-6">
                 <div className="w-12 h-12 rounded-full bg-[#666]/20 flex items-center justify-center">
                   <Home className="w-6 h-6 text-[#b3b2b2]" />
@@ -347,29 +347,29 @@ export function RatesPageV4() {
             </div>
 
             {/* La Villa */}
-            <div className="bg-[#1C1917] rounded-2xl p-8 relative overflow-hidden">
-              <div className="absolute top-4 right-4 bg-[#D4A574] text-[#1C1917] text-xs font-bold px-3 py-1 rounded-full">
+            <div className="bg-white rounded-2xl p-8 relative overflow-hidden border border-[#E7E5E4] shadow-lg">
+              <div className="absolute top-4 right-4 bg-[#D4A574] text-white text-xs font-bold px-3 py-1 rounded-full">
                 {language === "en"
                   ? "SAVE 665 CHF/MO"
                   : "ÉCONOMISEZ 665 CHF/MOIS"}
               </div>
 
               <div className="flex items-center gap-3 mb-6">
-                <div className="w-12 h-12 rounded-full bg-white/20 flex items-center justify-center">
-                  <Sparkles className="w-6 h-6 text-white" />
+                <div className="w-12 h-12 rounded-full bg-[#FAF9F6] flex items-center justify-center">
+                  <Sparkles className="w-6 h-6 text-[#D4A574]" />
                 </div>
                 <div>
-                  <h3 className="text-xl font-medium text-white">
+                  <h3 className="text-xl font-medium text-[#1C1917]">
                     La Villa Coliving
                   </h3>
-                  <p className="text-base text-white/80">
+                  <p className="text-base text-[#57534E]">
                     {language === "en" ? "All-inclusive" : "Tout-inclus"}
                   </p>
                 </div>
               </div>
 
               <div className="space-y-3 mb-6 text-sm">
-                <div className="flex justify-between text-white font-medium text-base">
+                <div className="flex justify-between text-[#1C1917] font-medium text-base">
                   <span>
                     {language === "en"
                       ? "Your room (furnished)"
@@ -377,110 +377,110 @@ export function RatesPageV4() {
                   </span>
                   <span>1 380 CHF</span>
                 </div>
-                <div className="flex justify-between text-white/90">
+                <div className="flex justify-between text-[#44403C]">
                   <span className="flex items-center gap-2">
                     <Check className="w-4 h-4 text-[#D4A574]" />{" "}
                     {language === "en"
                       ? "Room from 17 to 23 m²"
                       : "Chambre de 17 à 23 m²"}
                   </span>
-                  <span className="text-[#E0BB8A] font-bold">
+                  <span className="text-[#D4A574] font-bold">
                     {language === "en" ? "INCLUDED" : "INCLUS"}
                   </span>
                 </div>
-                <div className="flex justify-between text-white/90">
+                <div className="flex justify-between text-[#44403C]">
                   <span className="flex items-center gap-2">
                     <Check className="w-4 h-4 text-[#D4A574]" />{" "}
                     {language === "en"
                       ? "Premium home & furniture"
                       : "Logement d'exception et mobilier premium"}
                   </span>
-                  <span className="text-[#E0BB8A] font-bold">
+                  <span className="text-[#D4A574] font-bold">
                     {language === "en" ? "INCLUDED" : "INCLUS"}
                   </span>
                 </div>
-                <div className="flex justify-between text-white/90">
+                <div className="flex justify-between text-[#44403C]">
                   <span className="flex items-center gap-2">
                     <Check className="w-4 h-4 text-[#D4A574]" />{" "}
                     {language === "en"
                       ? "All maintenance & repairs"
                       : "Tout entretien et réparations"}
                   </span>
-                  <span className="text-[#E0BB8A] font-bold">
+                  <span className="text-[#D4A574] font-bold">
                     {language === "en" ? "INCLUDED" : "INCLUS"}
                   </span>
                 </div>
-                <div className="flex justify-between text-white/90">
+                <div className="flex justify-between text-[#44403C]">
                   <span className="flex items-center gap-2">
                     <Check className="w-4 h-4 text-[#D4A574]" />{" "}
                     {language === "en"
                       ? "All utilities included"
                       : "Toutes charges incluses"}
                   </span>
-                  <span className="text-[#E0BB8A] font-bold">
+                  <span className="text-[#D4A574] font-bold">
                     {language === "en" ? "INCLUDED" : "INCLUS"}
                   </span>
                 </div>
-                <div className="flex justify-between text-white/90">
+                <div className="flex justify-between text-[#44403C]">
                   <span className="flex items-center gap-2">
                     <Check className="w-4 h-4 text-[#D4A574]" />{" "}
                     {language === "en"
                       ? "Yoga & fitness classes"
                       : "Cours yoga & fitness"}
                   </span>
-                  <span className="text-[#E0BB8A] font-bold">
+                  <span className="text-[#D4A574] font-bold">
                     {language === "en" ? "INCLUDED" : "INCLUS"}
                   </span>
                 </div>
-                <div className="flex justify-between text-white/90">
+                <div className="flex justify-between text-[#44403C]">
                   <span className="flex items-center gap-2">
                     <Check className="w-4 h-4 text-[#D4A574]" />{" "}
                     {language === "en"
                       ? "Pool, sauna & gym"
                       : "Piscine, sauna & sport"}
                   </span>
-                  <span className="text-[#E0BB8A] font-bold">
+                  <span className="text-[#D4A574] font-bold">
                     {language === "en" ? "INCLUDED" : "INCLUS"}
                   </span>
                 </div>
-                <div className="flex justify-between text-white/90">
+                <div className="flex justify-between text-[#44403C]">
                   <span className="flex items-center gap-2">
                     <Check className="w-4 h-4 text-[#D4A574]" />{" "}
                     {language === "en"
                       ? "Community events"
                       : "Événements communautaires"}
                   </span>
-                  <span className="text-[#E0BB8A] font-bold">
+                  <span className="text-[#D4A574] font-bold">
                     {language === "en" ? "INCLUDED" : "INCLUS"}
                   </span>
                 </div>
-                <div className="flex justify-between text-white/90">
+                <div className="flex justify-between text-[#44403C]">
                   <span className="flex items-center gap-2">
                     <Check className="w-4 h-4 text-[#D4A574]" />{" "}
                     {language === "en"
                       ? "Cleaning 2x/week"
                       : "Ménage 2x/semaine"}
                   </span>
-                  <span className="text-[#E0BB8A] font-bold">
+                  <span className="text-[#D4A574] font-bold">
                     {language === "en" ? "INCLUDED" : "INCLUS"}
                   </span>
                 </div>
-                <div className="flex justify-between text-white/90">
+                <div className="flex justify-between text-[#44403C]">
                   <span className="flex items-center gap-2">
                     <Check className="w-4 h-4 text-[#D4A574]" /> Internet & streaming
                   </span>
-                  <span className="text-[#E0BB8A] font-bold">
+                  <span className="text-[#D4A574] font-bold">
                     {language === "en" ? "INCLUDED" : "INCLUS"}
                   </span>
                 </div>
               </div>
 
-              <div className="border-t border-white/20 pt-4">
+              <div className="border-t border-[#E7E5E4] pt-4">
                 <div className="flex justify-between items-center">
-                  <span className="text-white/80">
+                  <span className="text-[#57534E]">
                     {language === "en" ? "Total monthly" : "Total mensuel"}
                   </span>
-                  <span className="text-3xl font-bold text-white">
+                  <span className="text-3xl font-bold text-[#1C1917]">
                     1 380 CHF
                   </span>
                 </div>
