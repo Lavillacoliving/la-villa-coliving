@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { useParams, useSearchParams, Link } from "react-router-dom";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { supabase } from "@/lib/supabase";
-import { Clock, Calendar, User, ArrowLeft } from "lucide-react";
+import { Clock, Calendar, User, ArrowLeft, ArrowRight } from "lucide-react";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import { SEO } from "@/components/SEO";
@@ -175,9 +175,17 @@ export function BlogPostPage() {
                 ul: ({children}) => <ul className="list-disc pl-6 mb-6 space-y-2">{children}</ul>,
                 ol: ({children}) => <ol className="list-decimal pl-6 mb-6 space-y-2">{children}</ol>,
                 li: ({children}) => <li className="leading-relaxed">{children}</li>,
-                a: ({href, children}) => (
-                  <a href={href} className="text-[#D4A574] hover:underline" target="_blank" rel="noopener noreferrer">{children}</a>
-                ),
+                a: ({href, children}) => {
+                  // Internal links use React Router for SPA navigation + better SEO signal
+                  if (href && (href.startsWith('/') || href.startsWith('https://www.lavillacoliving.com'))) {
+                    const internalPath = href.startsWith('https://www.lavillacoliving.com')
+                      ? href.replace('https://www.lavillacoliving.com', '')
+                      : href;
+                    return <Link to={internalPath} className="text-[#D4A574] hover:underline">{children}</Link>;
+                  }
+                  // External links open in new tab
+                  return <a href={href} className="text-[#D4A574] hover:underline" target="_blank" rel="noopener noreferrer">{children}</a>;
+                },
                 table: ({children}) => (
                   <div className="overflow-x-auto my-8">
                     <table className="w-full border-collapse text-sm">{children}</table>
@@ -202,6 +210,40 @@ export function BlogPostPage() {
           )}
         </div>
       </article>
+
+      {/* Colocation Genève CTA — SEO pillar page link from every blog article */}
+      <section className="py-12 lg:py-16 bg-[#FAF9F6] border-t border-[#E7E5E4]">
+        <div className="max-w-3xl mx-auto px-6 text-center">
+          <h2
+            className="text-xl md:text-2xl font-light text-[#1C1917] mb-3"
+            style={{ fontFamily: "DM Serif Display, serif" }}
+          >
+            {language === "en"
+              ? "Looking for shared housing near Geneva?"
+              : "Vous cherchez une colocation près de Genève ?"}
+          </h2>
+          <p className="text-sm text-[#78716C] mb-6 max-w-lg mx-auto">
+            {language === "en"
+              ? "29 furnished rooms in 3 premium houses, all-inclusive from CHF 1,380/month. Pool, gym, sauna — 15 min from Geneva."
+              : "29 chambres meublées dans 3 maisons premium, tout inclus dès 1 380 CHF/mois. Piscine, gym, sauna — à 15 min de Genève."}
+          </p>
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
+            <Link
+              to={language === "en" ? "/en/colocation-geneve" : "/colocation-geneve"}
+              className="inline-flex items-center gap-2 px-6 py-3 bg-[#44403C] text-white text-sm font-medium rounded-lg hover:bg-[#57534E] transition-all duration-300"
+            >
+              {language === "en" ? "Shared housing Geneva — Learn more" : "Colocation Genève — En savoir plus"}
+              <ArrowRight className="w-4 h-4" />
+            </Link>
+            <Link
+              to={language === "en" ? "/en/candidature" : "/candidature"}
+              className="inline-flex items-center gap-2 px-6 py-3 border border-[#E7E5E4] text-[#44403C] text-sm font-medium rounded-lg hover:border-[#D4A574] transition-all duration-300"
+            >
+              {language === "en" ? "Apply now" : "Candidater"}
+            </Link>
+          </div>
+        </div>
+      </section>
 
       {/* Discover our houses — internal linking from blog to conversion pages */}
       <section className="py-16 lg:py-20 bg-white border-t border-[#E7E5E4]">

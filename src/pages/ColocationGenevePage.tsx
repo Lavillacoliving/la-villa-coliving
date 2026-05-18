@@ -85,18 +85,45 @@ export function ColocationGenevePage() {
     loadBlogPosts();
   }, []);
 
-  // FAQPage schema for rich snippets
-  const faqSchema = {
+  // Combined schema: FAQPage + Offer for rich snippets
+  const pageSchema = {
     "@context": "https://schema.org",
-    "@type": "FAQPage",
-    mainEntity: colocationFAQ.map((item) => ({
-      "@type": "Question",
-      name: item.q,
-      acceptedAnswer: {
-        "@type": "Answer",
-        text: item.a,
+    "@graph": [
+      {
+        "@type": "FAQPage",
+        mainEntity: colocationFAQ.map((item) => ({
+          "@type": "Question",
+          name: item.q,
+          acceptedAnswer: {
+            "@type": "Answer",
+            text: item.a,
+          },
+        })),
       },
-    })),
+      {
+        "@type": "Offer",
+        name: language === "en"
+          ? "Furnished room in shared housing near Geneva"
+          : "Chambre meublée en colocation près de Genève",
+        description: language === "en"
+          ? "All-inclusive furnished room: rent, utilities, fiber internet, cleaning 2x/week, pool, gym, sauna, yoga classes, community events."
+          : "Chambre meublée tout inclus : loyer, charges, fibre internet, ménage 2x/semaine, piscine, gym, sauna, cours de yoga, événements communautaires.",
+        price: "1380",
+        priceCurrency: "CHF",
+        priceValidUntil: "2026-12-31",
+        availability: "https://schema.org/InStock",
+        url: "https://www.lavillacoliving.com/colocation-geneve",
+        seller: {
+          "@type": "Organization",
+          name: "La Villa Coliving",
+          url: "https://www.lavillacoliving.com",
+        },
+        areaServed: [
+          { "@type": "City", name: "Genève" },
+          { "@type": "City", name: "Annemasse" },
+        ],
+      },
+    ],
   };
 
   return (
@@ -114,7 +141,7 @@ export function ColocationGenevePage() {
         }
         url="https://www.lavillacoliving.com/colocation-geneve"
         image="https://www.lavillacoliving.com/images/villa_portrait.webp"
-        jsonLd={faqSchema}
+        jsonLd={pageSchema}
       />
 
       {/* ===== HERO ===== */}

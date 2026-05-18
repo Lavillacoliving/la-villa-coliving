@@ -25,6 +25,10 @@ export function NavbarV7() {
 
   const navLinks = [
     {
+      path: "/colocation-geneve",
+      label: language === "en" ? "Shared Housing Geneva" : "Colocation Genève",
+    },
+    {
       path: "/nos-maisons",
       label: language === "en" ? "Our Houses" : "Nos Maisons",
     },

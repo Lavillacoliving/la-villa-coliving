@@ -80,6 +80,13 @@ export function HeroV7() {
               {language === "en" ? "Explore our houses" : "Découvrir nos maisons"}
               <ArrowRight className="w-4 h-4" />
             </Link>
+            <Link
+              to="/colocation-geneve"
+              className="inline-flex items-center gap-2 border border-white/30 text-white px-7 py-3.5 rounded-lg font-semibold text-[15px] hover:border-white hover:bg-white/5 transition-all duration-300 w-full sm:w-auto justify-center sm:justify-start"
+            >
+              {language === "en" ? "Shared housing Geneva" : "Colocation Genève"}
+              <ArrowRight className="w-4 h-4" />
+            </Link>
           </div>
 
           {/* Stats bar */}
