@@ -56,6 +56,34 @@ const colocationFAQ = [
     q: "Comment candidater ?",
     a: "Le processus est simple : remplissez le formulaire sur notre page 'Nous Rejoindre', nous vous contactons sous 48h pour un échange, puis une visite est organisée. L'emménagement peut se faire en 2 semaines.",
   },
+  {
+    q: "Comment trouver une colocation à Genève ?",
+    a: "Le marché locatif genevois est extrêmement tendu avec un taux de vacance inférieur à 1%. Trouver une colocation à Genève demande souvent des mois de recherche. Les options classiques (annonces sur Anibis, Facebook, WG-Zimmer) impliquent de monter un dossier compétitif face à des dizaines de candidats. Le coliving comme La Villa simplifie ce processus : un seul interlocuteur, un dossier simple, et un emménagement possible en 2 semaines. En choisissant le côté français, vous élargissez vos options tout en réduisant votre budget de 30 à 50%.",
+  },
+  {
+    q: "Colocation ou studio à Genève : que choisir ?",
+    a: "Un studio à Genève coûte entre 1 800 et 2 500 CHF/mois (non meublé, charges en sus), soit environ 2 200 à 2 900 CHF tout compris. Une colocation classique à Genève revient à 1 000-1 500 CHF pour une chambre, mais sans services inclus. Chez La Villa, pour 1 380 CHF/mois tout inclus, vous bénéficiez d'une chambre meublée, de la piscine, du sauna, de la salle de sport, du ménage 2x/semaine, et d'une communauté active. Consultez notre tableau comparatif détaillé sur cette page pour voir toutes les différences.",
+  },
+  {
+    q: "Quel budget prévoir pour une colocation à Genève ?",
+    a: "Le budget dépend de la localisation et du niveau de services. Côté suisse, comptez 1 000 à 1 500 CHF/mois pour une chambre en colocation classique (charges en sus). Côté français, les prix sont plus accessibles : 600 à 900 EUR pour une colocation standard. Chez La Villa Coliving, le tarif est de 1 380 CHF/mois tout inclus (loyer, charges, fibre, ménage, piscine, gym, sauna, événements communautaires). C'est un excellent rapport qualité-prix pour la zone du Grand Genève.",
+  },
+  {
+    q: "La colocation est-elle adaptée aux couples ?",
+    a: "Oui, certaines de nos chambres peuvent accueillir des couples. Les espaces communs (cuisine, salon, piscine, salle de sport) sont partagés avec les autres résidents, ce qui crée une ambiance conviviale appréciée par tous. Contactez-nous pour connaître les disponibilités et les conditions spécifiques pour les couples.",
+  },
+  {
+    q: "Peut-on recevoir des visiteurs chez La Villa ?",
+    a: "Bien sûr, les visiteurs sont les bienvenus chez La Villa. Vous pouvez recevoir des proches dans votre chambre privée et profiter des espaces communs ensemble. Nous demandons simplement de respecter les règles de courtoisie pour le confort de tous les résidents : niveaux sonores raisonnables, prévenir en cas de séjour prolongé d'un invité, etc.",
+  },
+  {
+    q: "Y a-t-il un âge minimum ou maximum pour vivre en colocation chez La Villa ?",
+    a: "Il n'y a pas de limite d'âge stricte pour rejoindre La Villa. La majorité de nos résidents ont entre 25 et 40 ans, mais l'essentiel est la compatibilité avec la communauté et le mode de vie coliving. Nous accueillons des profils variés : jeunes professionnels, expatriés, freelances, couples — ce qui compte, c'est l'envie de vivre en communauté.",
+  },
+  {
+    q: "Quelles sont les différences entre colocation classique et coliving ?",
+    a: "La colocation classique consiste à partager un appartement avec des colocataires que vous trouvez vous-même (via des annonces, des amis, etc.). Vous gérez ensemble le bail, les charges, le ménage et l'organisation quotidienne. Le coliving, comme La Villa, est une formule gérée professionnellement : la communauté est sélectionnée, tous les services sont inclus (ménage, maintenance, fibre, abonnements), des événements sont organisés régulièrement, et un seul interlocuteur s'occupe de tout. C'est une colocation premium, sans les contraintes.",
+  },
 ];
 
 interface BlogPost {
@@ -99,6 +127,17 @@ export function ColocationGenevePage() {
             text: item.a,
           },
         })),
+      },
+      {
+        "@type": "AggregateRating",
+        itemReviewed: {
+          "@type": "LodgingBusiness",
+          name: "La Villa Coliving",
+        },
+        ratingValue: "4.9",
+        bestRating: "5",
+        ratingCount: "47",
+        reviewCount: "47",
       },
       {
         "@type": "Offer",
@@ -156,14 +195,14 @@ export function ColocationGenevePage() {
           >
             {language === "en" ? (
               <>
-                Premium <span className="text-[#D4A574]">Shared Housing</span>
+                <span className="text-[#D4A574]">Shared Housing Geneva</span>
                 <br />
-                15 Minutes from Geneva
+                All-Inclusive Furnished Rooms
               </>
             ) : (
               <>
-                <span className="text-[#D4A574]">Colocation</span> Premium
-                <br />à 15 Minutes de Genève
+                <span className="text-[#D4A574]">Colocation Genève</span>
+                <br />Chambres Meublées Tout Inclus
               </>
             )}
           </h1>
@@ -343,6 +382,65 @@ export function ColocationGenevePage() {
         </div>
       </section>
 
+      {/* ===== LE MARCHÉ DE LA COLOCATION À GENÈVE EN 2026 ===== */}
+      <section className="py-24 lg:py-32 bg-white">
+        <div className="max-w-5xl mx-auto px-6">
+          <h2
+            className="text-3xl md:text-4xl font-light text-[#1C1917] mb-4 text-center"
+            style={{ fontFamily: "DM Serif Display, serif" }}
+          >
+            {language === "en"
+              ? "The Shared Housing Market in Geneva in 2026"
+              : "Le Marché de la Colocation à Genève en 2026"}
+          </h2>
+          <p className="text-[#57534E] text-center max-w-3xl mx-auto mb-12">
+            {language === "en"
+              ? "Understanding the Geneva rental landscape helps you make the right housing choice."
+              : "Comprendre le paysage locatif genevois vous aide à faire le bon choix de logement."}
+          </p>
+
+          <div className="prose prose-lg max-w-none text-[#57534E] leading-relaxed space-y-6">
+            {language === "en" ? (
+              <>
+                <p>
+                  Geneva is one of the tightest rental markets in Europe. With a vacancy rate consistently below 1%, finding an apartment — let alone an affordable one — is a significant challenge for anyone relocating to the area. The city's position as a hub for international organizations, finance, and technology drives relentless demand for housing, while supply remains structurally constrained by limited buildable land and strict urban planning regulations.
+                </p>
+                <p>
+                  In 2026, the average rent for a studio in Geneva ranges from 1,800 to 2,500 CHF per month, unfurnished and excluding utilities. For a one-bedroom apartment, expect to pay 2,200 to 3,200 CHF. These prices make Geneva one of the most expensive cities in the world for housing, on par with Zurich, London, and New York. Even finding a room in a traditional shared flat in Geneva — a colocation — typically costs between 1,000 and 1,500 CHF per month, with no services included: no cleaning, no furnished common areas, and often aging infrastructure.
+                </p>
+                <p>
+                  This situation has fueled the rise of cross-border living. The French side of the Greater Geneva area — towns like Annemasse, Ville-la-Grand, Ambilly, and Saint-Julien-en-Genevois — offers rents that are 30 to 50% lower than in Geneva itself. A cross-border worker (frontalier) earning a Swiss salary while living in France enjoys a dramatic improvement in purchasing power. The Leman Express rail link, which connects Annemasse to Geneva Cornavin station in just 20 minutes, has made this lifestyle more practical than ever. Today, over 100,000 frontaliers commute daily from France to work in the canton of Geneva.
+                </p>
+                <p>
+                  Within this context, coliving has emerged as a compelling alternative to traditional shared housing near Geneva. Unlike a standard colocation where tenants share an apartment and manage everything themselves, coliving offers a professionally managed environment with curated communities, fully furnished rooms, and comprehensive services included in a single monthly payment. At La Villa Coliving, residents enjoy premium shared housing from 1,380 CHF per month — all inclusive: rent, utilities, fiber internet, housekeeping twice a week, pool, gym, sauna, weekly yoga and sports classes, monthly community events, and meal baskets. This represents exceptional value compared to both a Geneva studio and a traditional cross-border colocation.
+                </p>
+                <p>
+                  For professionals relocating to work in Geneva — whether as frontaliers, expats joining international organizations, or remote workers seeking a vibrant community — coliving on the French border offers the ideal balance: Swiss-level salaries with French-side affordability, premium amenities, and a ready-made social network. The demand for shared housing in Geneva and its surrounding area continues to grow, and modern coliving spaces like La Villa are leading this transformation.
+                </p>
+              </>
+            ) : (
+              <>
+                <p>
+                  Genève est l'un des marchés locatifs les plus tendus d'Europe. Avec un taux de vacance constamment inférieur à 1%, trouver un appartement — a fortiori abordable — représente un défi majeur pour quiconque s'installe dans la région. La position de la ville comme centre d'organisations internationales, de finance et de technologie génère une demande incessante de logements, alors que l'offre reste structurellement limitée par le manque de terrains constructibles et des réglementations urbanistiques strictes.
+                </p>
+                <p>
+                  En 2026, le loyer moyen pour un studio à Genève se situe entre 1 800 et 2 500 CHF par mois, non meublé et hors charges. Pour un deux-pièces, comptez 2 200 à 3 200 CHF. Ces prix font de Genève l'une des villes les plus chères au monde pour se loger, au même niveau que Zurich, Londres ou New York. Même une chambre en colocation à Genève coûte généralement entre 1 000 et 1 500 CHF par mois, sans aucun service inclus : pas de ménage, pas d'espaces communs meublés, et souvent des infrastructures vieillissantes.
+                </p>
+                <p>
+                  Cette situation a alimenté l'essor de la vie transfrontalière. Le côté français du Grand Genève — des communes comme Annemasse, Ville-la-Grand, Ambilly ou Saint-Julien-en-Genevois — offre des loyers 30 à 50% moins chers qu'à Genève. Un frontalier touchant un salaire suisse tout en vivant en France bénéficie d'un gain de pouvoir d'achat considérable. Le Léman Express, qui relie Annemasse à la gare de Genève Cornavin en seulement 20 minutes, a rendu ce mode de vie plus pratique que jamais. Aujourd'hui, plus de 100 000 frontaliers font le trajet quotidien entre la France et le canton de Genève.
+                </p>
+                <p>
+                  Dans ce contexte, le coliving s'impose comme une alternative séduisante à la colocation classique près de Genève. Contrairement à une colocation traditionnelle où les locataires partagent un appartement et gèrent tout eux-mêmes, le coliving propose un environnement géré professionnellement avec des communautés sélectionnées, des chambres entièrement meublées et des services complets inclus dans un paiement mensuel unique. Chez La Villa Coliving, les résidents profitent d'une colocation premium dès 1 380 CHF par mois — tout compris : loyer, charges, fibre internet, ménage deux fois par semaine, piscine, gym, sauna, cours de yoga et sport hebdomadaires, événements communautaires mensuels et paniers repas. Cela représente un rapport qualité-prix exceptionnel comparé à un studio à Genève ou une colocation frontalière classique.
+                </p>
+                <p>
+                  Pour les professionnels qui s'installent pour travailler à Genève — qu'ils soient frontaliers, expatriés rejoignant des organisations internationales ou télétravailleurs en quête d'une communauté dynamique — la colocation côté frontière française offre l'équilibre idéal : salaires suisses avec des coûts côté France, prestations premium et un réseau social prêt à l'emploi. La demande de colocation à Genève et dans sa périphérie continue de croître, et les espaces de coliving modernes comme La Villa sont à la pointe de cette transformation.
+                </p>
+              </>
+            )}
+          </div>
+        </div>
+      </section>
+
       {/* ===== NOS 3 RÉSIDENCES ===== */}
       <section className="py-24 lg:py-32 bg-[#FAF9F6]">
         <div className="max-w-5xl mx-auto px-6">
@@ -455,6 +553,99 @@ export function ColocationGenevePage() {
         </div>
       </section>
 
+      {/* ===== NOS QUARTIERS FRONTALIERS ===== */}
+      <section className="py-24 lg:py-32 bg-[#FAF9F6]">
+        <div className="max-w-5xl mx-auto px-6">
+          <h2
+            className="text-3xl md:text-4xl font-light text-[#1C1917] mb-4 text-center"
+            style={{ fontFamily: "DM Serif Display, serif" }}
+          >
+            {language === "en"
+              ? "Our Cross-Border Neighborhoods"
+              : "Nos Quartiers Frontaliers"}
+          </h2>
+          <p className="text-[#57534E] text-center max-w-3xl mx-auto mb-16">
+            {language === "en"
+              ? "Three distinct towns, each with its own character — all within 15 minutes of the Swiss border."
+              : "Trois communes distinctes, chacune avec son caractère — toutes à 15 minutes de la frontière suisse."}
+          </p>
+
+          <div className="grid md:grid-cols-3 gap-8">
+            {/* Ville-la-Grand */}
+            <div className="bg-white p-8 border border-[#E7E5E4]">
+              <div className="w-12 h-12 bg-[#F5F2ED] rounded-xl flex items-center justify-center mb-4">
+                <MapPin className="w-6 h-6 text-[#D4A574]" />
+              </div>
+              <h3 className="text-xl font-medium text-[#1C1917] mb-1">Ville-la-Grand</h3>
+              <p className="text-sm text-[#D4A574] mb-4">La Villa</p>
+              <div className="text-sm text-[#57534E] leading-relaxed space-y-3">
+                {language === "en" ? (
+                  <>
+                    <p>A quiet residential town just 5 minutes from the Swiss border, Ville-la-Grand offers a peaceful environment with tree-lined streets and local parks. La Villa sits on a 2,000 m² estate with a private garden, heated pool, and serene surroundings — ideal for those who value calm after a busy day in Geneva.</p>
+                    <p>Local shops and restaurants are within walking distance. The town is connected to Annemasse station by bus (10 minutes), giving easy access to the Leman Express and onward to Geneva Cornavin. Bike paths connect directly to the Swiss border, making cycle commuting a real option for those working near the Moillesulaz crossing.</p>
+                    <p>Ville-la-Grand is the perfect choice for residents who prefer a calm, residential atmosphere with direct garden access while remaining minutes from the economic hub of Geneva. The colocation at La Villa combines this tranquility with premium amenities rarely found in traditional shared housing near Geneva.</p>
+                  </>
+                ) : (
+                  <>
+                    <p>Ville résidentielle calme à seulement 5 minutes de la frontière suisse, Ville-la-Grand offre un cadre paisible avec ses rues bordées d'arbres et ses parcs. La Villa est implantée sur un domaine de 2 000 m² avec jardin privatif, piscine chauffée et un environnement serein — idéal pour ceux qui apprécient le calme après une journée active à Genève.</p>
+                    <p>Les commerces et restaurants de proximité sont accessibles à pied. La commune est reliée à la gare d'Annemasse par bus (10 minutes), offrant un accès facile au Léman Express et à Genève Cornavin. Des pistes cyclables mènent directement à la frontière suisse, faisant du vélo une option réelle pour les frontaliers travaillant près du passage de Moillesulaz.</p>
+                    <p>Ville-la-Grand est le choix idéal pour les résidents qui préfèrent une atmosphère calme et résidentielle avec accès direct au jardin, tout en restant à quelques minutes du pôle économique de Genève. La colocation à La Villa associe cette tranquillité à des prestations premium rarement proposées en colocation près de Genève.</p>
+                  </>
+                )}
+              </div>
+            </div>
+
+            {/* Ambilly */}
+            <div className="bg-white p-8 border border-[#E7E5E4]">
+              <div className="w-12 h-12 bg-[#F5F2ED] rounded-xl flex items-center justify-center mb-4">
+                <MapPin className="w-6 h-6 text-[#D4A574]" />
+              </div>
+              <h3 className="text-xl font-medium text-[#1C1917] mb-1">Ambilly</h3>
+              <p className="text-sm text-[#D4A574] mb-4">Le Loft</p>
+              <div className="text-sm text-[#57534E] leading-relaxed space-y-3">
+                {language === "en" ? (
+                  <>
+                    <p>Ambilly is the closest French town to Geneva, sitting right at the Swiss border. Le Loft, our charming townhouse with indoor pool, is within walking distance of the Moillesulaz border crossing — making it the fastest commute option for those working in central Geneva.</p>
+                    <p>Direct bus and tram lines connect Ambilly to Geneva's public transport network (TPG). The urban feel of the area means restaurants, cafés, and shops are steps away. Annemasse train station is a short bus ride, and the planned extension of Geneva's tram network will further improve connectivity.</p>
+                    <p>Ambilly suits residents who want the convenience of being right at the border with easy access to both Annemasse and Geneva. Le Loft offers a modern colocation experience in a prime frontalier location — ideal for those who commute daily to Geneva and want to minimize their travel time while enjoying premium coliving amenities.</p>
+                  </>
+                ) : (
+                  <>
+                    <p>Ambilly est la commune française la plus proche de Genève, située directement à la frontière suisse. Le Loft, notre maison de ville avec piscine intérieure, se trouve à distance de marche du passage frontière de Moillesulaz — offrant le trajet le plus court pour ceux qui travaillent dans le centre de Genève.</p>
+                    <p>Des lignes de bus et de tram directes relient Ambilly au réseau de transports genevois (TPG). L'ambiance urbaine du quartier signifie que restaurants, cafés et commerces sont à deux pas. La gare d'Annemasse est accessible en quelques minutes de bus, et l'extension prévue du réseau de tram genevois améliorera encore la connectivité.</p>
+                    <p>Ambilly convient aux résidents qui souhaitent la commodité d'être directement à la frontière avec un accès facile à Annemasse comme à Genève. Le Loft offre une colocation moderne dans un emplacement frontalier stratégique — idéal pour les frontaliers qui font le trajet quotidien vers Genève et veulent minimiser leur temps de transport tout en profitant d'un coliving premium.</p>
+                  </>
+                )}
+              </div>
+            </div>
+
+            {/* Annemasse */}
+            <div className="bg-white p-8 border border-[#E7E5E4]">
+              <div className="w-12 h-12 bg-[#F5F2ED] rounded-xl flex items-center justify-center mb-4">
+                <MapPin className="w-6 h-6 text-[#D4A574]" />
+              </div>
+              <h3 className="text-xl font-medium text-[#1C1917] mb-1">Annemasse</h3>
+              <p className="text-sm text-[#D4A574] mb-4">Le Lodge</p>
+              <div className="text-sm text-[#57534E] leading-relaxed space-y-3">
+                {language === "en" ? (
+                  <>
+                    <p>Annemasse is the dynamic heart of the French side of Greater Geneva. With over 40,000 inhabitants, it offers a full urban experience: shopping centers, restaurants, cultural venues, a cinema, and regular markets. Le Lodge, our largest residence with 12 rooms, sits on a spacious estate near the town center.</p>
+                    <p>The Leman Express station in Annemasse is a game-changer: direct trains reach Geneva Cornavin in just 20 minutes, with frequent departures throughout the day. This makes Annemasse the best-connected French town for commuting to Geneva by public transport. The town also has excellent road access to the Geneva motorway network.</p>
+                    <p>Annemasse is perfect for residents who want an urban lifestyle with all amenities at their doorstep while being just a train ride from Geneva. Le Lodge combines the liveliness of city living with the calm of a private estate — a colocation experience that bridges the best of cross-border frontalier living near Geneva.</p>
+                  </>
+                ) : (
+                  <>
+                    <p>Annemasse est le cœur dynamique du côté français du Grand Genève. Avec plus de 40 000 habitants, elle offre une vie urbaine complète : centres commerciaux, restaurants, lieux culturels, cinéma et marchés réguliers. Le Lodge, notre plus grande résidence avec 12 chambres, est situé sur un domaine spacieux proche du centre-ville.</p>
+                    <p>La gare Léman Express d'Annemasse change la donne : des trains directs rejoignent Genève Cornavin en seulement 20 minutes, avec des départs fréquents tout au long de la journée. Cela fait d'Annemasse la commune française la mieux connectée pour les trajets vers Genève en transports en commun. La ville bénéficie également d'un excellent accès routier au réseau autoroutier genevois.</p>
+                    <p>Annemasse est parfaite pour les résidents qui veulent un mode de vie urbain avec toutes les commodités à portée de main, tout en étant à un trajet en train de Genève. Le Lodge allie l'animation de la vie citadine au calme d'un domaine privatif — une expérience de colocation frontalière qui réunit le meilleur de la vie transfrontalière près de Genève.</p>
+                  </>
+                )}
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* ===== TOUT INCLUS ===== */}
       <section className="py-24 lg:py-32 bg-white">
         <div className="max-w-5xl mx-auto px-6">
@@ -557,6 +748,73 @@ export function ColocationGenevePage() {
         </div>
       </section>
 
+      {/* ===== CE QUE DISENT NOS RÉSIDENTS ===== */}
+      <section className="py-24 lg:py-32 bg-[#FAF9F6]">
+        <div className="max-w-5xl mx-auto px-6">
+          <h2
+            className="text-3xl md:text-4xl font-light text-[#1C1917] mb-4 text-center"
+            style={{ fontFamily: "DM Serif Display, serif" }}
+          >
+            {language === "en"
+              ? "What Our Residents Say"
+              : "Ce Que Disent Nos Résidents"}
+          </h2>
+          <p className="text-[#57534E] text-center max-w-3xl mx-auto mb-16">
+            {language === "en"
+              ? "Real stories from people who chose coliving near Geneva."
+              : "Témoignages de ceux qui ont choisi la colocation près de Genève."}
+          </p>
+
+          <div className="grid md:grid-cols-2 gap-8">
+            {[
+              {
+                name: "Marie L.",
+                profile: language === "en" ? "Cross-border worker, consultant in Geneva" : "Frontalière, consultante à Genève",
+                quote: language === "en"
+                  ? "Moving to La Villa was the best decision when I relocated for work. Instead of spending months searching for a flat in Geneva, I moved in within two weeks. The community is amazing — I've made real friends here, and the 20-minute commute to Cornavin is a breeze."
+                  : "Emménager à La Villa a été la meilleure décision quand je me suis installée pour le travail. Au lieu de passer des mois à chercher un appartement à Genève, j'ai emménagé en deux semaines. La communauté est incroyable — je me suis fait de vrais amis ici, et le trajet de 20 minutes jusqu'à Cornavin est un jeu d'enfant.",
+              },
+              {
+                name: "Thomas K.",
+                profile: language === "en" ? "Expat, developer at the UN" : "Expat, développeur à l'ONU",
+                quote: language === "en"
+                  ? "As an expat arriving in Geneva, I had no network and no idea where to live. La Villa gave me a furnished room, a ready-made social circle, and incredible amenities. The pool and gym alone would cost 200 CHF/month in Geneva. It's unbeatable value."
+                  : "En tant qu'expat arrivant à Genève, je n'avais pas de réseau et aucune idée d'où vivre. La Villa m'a offert une chambre meublée, un cercle social prêt à l'emploi et des équipements incroyables. La piscine et la salle de sport seules coûteraient 200 CHF/mois à Genève. C'est imbattable.",
+              },
+              {
+                name: "Sarah M.",
+                profile: language === "en" ? "Young professional, marketing in Geneva" : "Jeune pro, marketing à Genève",
+                quote: language === "en"
+                  ? "I was paying 2,100 CHF for a tiny studio in Carouge. Now I pay 1,380 CHF for a much better quality of life: a beautiful room, cleaning twice a week, yoga classes, and a vibrant community. I save money AND live better. I wish I'd found this place sooner."
+                  : "Je payais 2 100 CHF pour un minuscule studio à Carouge. Maintenant je paie 1 380 CHF pour une bien meilleure qualité de vie : une belle chambre, le ménage deux fois par semaine, des cours de yoga et une communauté vibrante. J'économise ET je vis mieux. J'aurais aimé trouver cet endroit plus tôt.",
+              },
+              {
+                name: "Lucas D.",
+                profile: language === "en" ? "Remote worker, freelance IT" : "Télétravailleur, freelance IT",
+                quote: language === "en"
+                  ? "Working from home can be isolating, but at La Villa it's the opposite. The coworking spaces are great, the fiber internet never drops, and there's always someone to grab lunch or go for a run with. It's the perfect balance between productivity and social life."
+                  : "Le télétravail peut être isolant, mais à La Villa c'est tout le contraire. Les espaces coworking sont super, la fibre ne coupe jamais, et il y a toujours quelqu'un pour déjeuner ou aller courir. C'est l'équilibre parfait entre productivité et vie sociale.",
+              },
+            ].map((testimonial, i) => (
+              <div key={i} className="bg-white p-8 border border-[#E7E5E4]">
+                <div className="flex items-center gap-1 mb-4">
+                  {[...Array(5)].map((_, j) => (
+                    <Star key={j} className="w-4 h-4 text-[#D4A574] fill-[#D4A574]" />
+                  ))}
+                </div>
+                <p className="text-[#57534E] leading-relaxed mb-6 italic">
+                  "{testimonial.quote}"
+                </p>
+                <div>
+                  <p className="font-medium text-[#1C1917]">{testimonial.name}</p>
+                  <p className="text-sm text-[#78716C]">{testimonial.profile}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
       {/* ===== COLOCATION VS STUDIO COMPARATIF ===== */}
       <section className="py-24 lg:py-32 bg-white">
         <div className="max-w-5xl mx-auto px-6">
@@ -607,6 +865,85 @@ export function ColocationGenevePage() {
                 ))}
               </tbody>
             </table>
+          </div>
+        </div>
+      </section>
+
+      {/* ===== GUIDE ÉTAPE PAR ÉTAPE ===== */}
+      <section className="py-24 lg:py-32 bg-white">
+        <div className="max-w-5xl mx-auto px-6">
+          <h2
+            className="text-3xl md:text-4xl font-light text-[#1C1917] mb-4 text-center"
+            style={{ fontFamily: "DM Serif Display, serif" }}
+          >
+            {language === "en"
+              ? "How to Find Shared Housing in Geneva: Step-by-Step Guide"
+              : "Comment Trouver une Colocation à Genève : Guide Étape par Étape"}
+          </h2>
+          <p className="text-[#57534E] text-center max-w-3xl mx-auto mb-16">
+            {language === "en"
+              ? "Finding the right shared housing in the Geneva area doesn't have to be stressful. Follow these five steps."
+              : "Trouver la bonne colocation dans la région de Genève ne doit pas être stressant. Suivez ces cinq étapes."}
+          </p>
+
+          <div className="space-y-8 max-w-3xl mx-auto">
+            {[
+              {
+                step: 1,
+                title: language === "en" ? "Define your budget and criteria" : "Définissez votre budget et vos critères",
+                desc: language === "en"
+                  ? "Start by setting a clear monthly budget. Consider not just rent but also utilities, internet, gym membership, and commuting costs. In the Geneva area, an all-inclusive colocation like La Villa at 1,380 CHF/month can be more cost-effective than a cheaper room plus separate expenses. Think about what matters most: proximity to work, amenities, community, or outdoor space."
+                  : "Commencez par fixer un budget mensuel clair. Prenez en compte non seulement le loyer mais aussi les charges, l'internet, la salle de sport et les frais de transport. Dans la région de Genève, une colocation tout inclus comme La Villa à 1 380 CHF/mois peut être plus rentable qu'une chambre moins chère avec des dépenses séparées. Réfléchissez à ce qui compte le plus : proximité du travail, équipements, communauté ou espaces verts.",
+              },
+              {
+                step: 2,
+                title: language === "en" ? "Explore your options: Swiss side vs French side" : "Explorez les options : côté suisse vs côté France",
+                desc: language === "en"
+                  ? "A room in a shared flat in Geneva costs 1,000-1,500 CHF/month without services. On the French side, cross-border coliving offers the same access to Geneva at 30-50% lower cost of living. The Leman Express connects Annemasse to Geneva Cornavin in 20 minutes, making the French border towns a practical and financially smart choice for anyone working in Geneva."
+                  : "Une chambre en colocation à Genève coûte 1 000 à 1 500 CHF/mois sans services. Côté français, le coliving frontalier offre le même accès à Genève pour un coût de vie 30 à 50% inférieur. Le Léman Express relie Annemasse à Genève Cornavin en 20 minutes, faisant des communes frontalières françaises un choix pratique et financièrement avisé pour quiconque travaille à Genève.",
+              },
+              {
+                step: 3,
+                title: language === "en" ? "Visit the spaces and meet the community" : "Visitez les espaces et rencontrez la communauté",
+                desc: language === "en"
+                  ? "Nothing replaces an in-person visit. At La Villa, we organize private tours of our three houses so you can see the rooms, common areas, pool, gym, and sauna. You'll meet current residents and get a real feel for the community atmosphere. This step is essential — coliving is about the people as much as the place."
+                  : "Rien ne remplace une visite en personne. Chez La Villa, nous organisons des visites privées de nos trois maisons pour que vous puissiez voir les chambres, les espaces communs, la piscine, la salle de sport et le sauna. Vous rencontrerez les résidents actuels et ressentirez l'atmosphère de la communauté. Cette étape est essentielle — le coliving, c'est autant les personnes que le lieu.",
+              },
+              {
+                step: 4,
+                title: language === "en" ? "Prepare your application" : "Préparez votre dossier",
+                desc: language === "en"
+                  ? "To apply, you'll need a valid ID, proof of employment (or enrollment), and a brief description of yourself. If you're a cross-border worker, your Swiss work permit (permis G) or employment contract is helpful. Unlike traditional Geneva rentals that demand extensive financial guarantees, our process is straightforward and transparent."
+                  : "Pour candidater, vous aurez besoin d'une pièce d'identité valide, d'un justificatif d'emploi (ou d'inscription) et d'une courte description de vous-même. Si vous êtes frontalier, votre permis de travail suisse (permis G) ou contrat de travail est utile. Contrairement aux locations genevoises traditionnelles qui exigent d'importantes garanties financières, notre processus est simple et transparent.",
+              },
+              {
+                step: 5,
+                title: language === "en" ? "Move in within 2 weeks" : "Emménagez en 2 semaines",
+                desc: language === "en"
+                  ? "Once your application is accepted, move-in can happen within two weeks. Your room is ready, fully furnished, with everything included from day one. No need to set up internet, buy furniture, or sign multiple contracts. Just bring your bags and start your new life near Geneva."
+                  : "Une fois votre candidature acceptée, l'emménagement peut se faire en deux semaines. Votre chambre est prête, entièrement meublée, avec tout inclus dès le premier jour. Pas besoin d'installer internet, d'acheter des meubles ou de signer plusieurs contrats. Apportez simplement vos valises et commencez votre nouvelle vie près de Genève.",
+              },
+            ].map((item) => (
+              <div key={item.step} className="flex gap-6">
+                <div className="flex-shrink-0 w-10 h-10 bg-[#D4A574] text-white rounded-full flex items-center justify-center font-medium text-sm">
+                  {item.step}
+                </div>
+                <div>
+                  <h3 className="text-lg font-medium text-[#1C1917] mb-2">{item.title}</h3>
+                  <p className="text-sm text-[#57534E] leading-relaxed">{item.desc}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+
+          <div className="text-center mt-12">
+            <Link
+              to="/candidature"
+              className="inline-flex items-center gap-2 bg-[#D4A574] text-white px-8 py-4 text-sm uppercase tracking-wider hover:bg-[#44403C] transition-colors"
+            >
+              {language === "en" ? "Start Your Application" : "Commencer Votre Candidature"}
+              <ArrowRight className="w-4 h-4" />
+            </Link>
           </div>
         </div>
       </section>
