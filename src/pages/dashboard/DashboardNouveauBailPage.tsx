@@ -4,6 +4,7 @@ import { useToast } from '@/components/ui/Toast';
 import { pdf } from '@react-pdf/renderer';
 import { BailPDF } from './BailPDF';
 import { logAudit } from '@/lib/auditLog';
+import { getBailleurLines } from '@/lib/entities';
 
 interface Property {
   id: string;
@@ -405,7 +406,7 @@ function generateContractHTML(data: ContractData): string {
 
         <div class="party-box">
           <strong>BAILLEUR :</strong><br/>
-          La Villa Coliving<br/>
+          ${getBailleurLines(property.entity_id).join('<br/>')}<br/>
           ${property.is_coliving ? `
           SIRET : ${ph(property.siret, 'SIRET')}<br/>
           TVA : ${ph(property.tva, 'TVA')}<br/>

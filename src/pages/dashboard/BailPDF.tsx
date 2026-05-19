@@ -7,6 +7,7 @@ import {
   StyleSheet,
   Image,
 } from "@react-pdf/renderer";
+import { getBailleurLines } from "@/lib/entities";
 
 interface Property {
   id: string;
@@ -22,6 +23,7 @@ interface Property {
   is_coliving: boolean;
   manager_name: string | null;
   deposit_months: number;
+  entity_id: string | null;
 }
 
 interface Room {
@@ -324,7 +326,9 @@ export function BailPDF({ data }: { data: BailPDFData }) {
         {/* ---------- BAILLEUR ---------- */}
         <View style={s.partyBox}>
           <Text style={s.partyLabel}>BAILLEUR :</Text>
-          <Text>{"La Villa Coliving"}</Text>
+          {getBailleurLines(property.entity_id).map((line, i) => (
+            <Text key={i}>{line}</Text>
+          ))}
           {property.is_coliving ? (
             <View>
               <Text>SIRET : {ph(property.siret, "SIRET")} — TVA : {ph(property.tva, "TVA")}</Text>

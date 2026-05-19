@@ -122,6 +122,28 @@ export const ENTITY_IDS: Record<string, string> = {
   'MB': 'c7feadb6-f340-450d-ac67-924e8254eeab',
 };
 
+/**
+ * Dénomination juridique du bailleur à afficher dans le contrat de bail,
+ * en fonction de l'entité propriétaire du bien.
+ *
+ * - SCI Sleep In (Le Loft + Le Lodge) → "La Villa Coliving" + ligne "SCI Sleep In"
+ * - La Villa LMP                       → "La Villa Coliving" (LMP en nom propre)
+ * - Mont-Blanc                         → "Jérôme AUSTIN" (personne physique)
+ *
+ * Renvoie un tableau de lignes pour permettre un affichage multi-lignes
+ * homogène en PDF (react-pdf) comme en HTML preview.
+ */
+export function getBailleurLines(entityId: string | null | undefined): string[] {
+  if (entityId === ENTITY_IDS.SCI) {
+    return ['La Villa Coliving', 'SCI Sleep In'];
+  }
+  if (entityId === ENTITY_IDS.MB) {
+    return ['Jérôme AUSTIN'];
+  }
+  // LMP (La Villa) ou fallback
+  return ['La Villa Coliving'];
+}
+
 export const ENTITY_CODE_TO_FILTER: Record<string, string> = {
   'LMP': 'la-villa',
   'SCI': 'sleep-in',
