@@ -686,7 +686,7 @@ export function BailPDF({ data }: { data: BailPDFData }) {
             </Text>
 
             <Text style={s.subTitle}>{"\u00A7 8 \u2014 Port\u00E9e"}</Text>
-            <Text style={[s.body, { fontSize: 9, fontStyle: "italic", color: "#555" }]}>
+            <Text style={s.body}>
               {"Les pr\u00E9sentes stipulations ne sauraient priver le Locataire de l\u2019exercice des droits qu\u2019il tient des dispositions l\u00E9gales d\u2019ordre public, ni exon\u00E9rer le Bailleur de son obligation l\u00E9gale de s\u00E9curit\u00E9 et de d\u00E9livrance d\u2019un logement d\u00E9cent."}
             </Text>
           </View>

@@ -664,7 +664,7 @@ function generateContractHTML(data: ContractData): string {
           <p><strong>§ 7 — Signalement et entretien</strong><br/>
           Le Locataire s'engage à signaler sans délai au Bailleur (ou au gestionnaire désigné) toute anomalie, dégradation ou risque constaté sur un équipement commun, afin que le Bailleur puisse exécuter son obligation d'entretien et de sécurité, laquelle reste intacte au titre du présent bail.</p>
 
-          <p style="font-size:9px;font-style:italic;color:#555;"><strong>§ 8 — Portée</strong><br/>
+          <p><strong>§ 8 — Portée</strong><br/>
           Les présentes stipulations ne sauraient priver le Locataire de l'exercice des droits qu'il tient des dispositions légales d'ordre public, ni exonérer le Bailleur de son obligation légale de sécurité et de délivrance d'un logement décent.</p>
         </div>` : ''}
 
