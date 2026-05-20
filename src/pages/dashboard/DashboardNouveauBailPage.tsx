@@ -640,7 +640,35 @@ function generateContractHTML(data: ContractData): string {
           </ol>
         </div>
 
-        <h2>ARTICLE IX — ÉTAT DES LIEUX</h2>
+        ${property.is_coliving ? `
+        <h2>ARTICLE IX — USAGE DES ÉQUIPEMENTS ET ESPACES COMMUNS — RESPONSABILITÉ DU LOCATAIRE</h2>
+        <div class="article">
+          <p><strong>§ 1 — Périmètre</strong><br/>
+          La maison met à disposition du Locataire, dans les espaces communs, des équipements premium dont notamment, sans que cette liste soit limitative : piscine, sauna, jacuzzi le cas échéant, salle de sport et matériel associé, cuisine équipée et électroménager, mobilier et équipements de détente, jardin et terrasses, ainsi que tout équipement ajouté en cours de bail.</p>
+
+          <p><strong>§ 2 — Usage sous la responsabilité personnelle du Locataire</strong><br/>
+          Le Locataire reconnaît être informé que l'utilisation de l'ensemble de ces équipements et espaces communs s'effectue sous sa responsabilité personnelle. Il s'engage à en faire un usage normal, raisonnable et conforme à leur destination, ainsi qu'aux règles d'usage figurant au Règlement Intérieur (« Bible du Coliver ») annexé au présent bail dont il déclare avoir pris connaissance et qu'il s'engage à respecter.</p>
+
+          <p><strong>§ 3 — Piscine, sauna et installations de bien-être</strong><br/>
+          Le Locataire est expressément informé que la piscine, le sauna et les éventuelles installations de bien-être sont des équipements à usage privé et <strong>NON SURVEILLÉS</strong>. Leur utilisation suppose l'aptitude physique et la vigilance personnelle de l'utilisateur. L'accès des mineurs s'effectue sous la responsabilité exclusive de l'adulte qui les accompagne. Il est rappelé qu'il est déconseillé d'utiliser ces équipements seul, sous l'effet de l'alcool, de substances ou en cas de contre-indication médicale.</p>
+
+          <p><strong>§ 4 — Salle de sport et matériel</strong><br/>
+          L'utilisation des équipements sportifs se fait sous la responsabilité du Locataire, qui déclare être apte physiquement à leur usage. Il lui est recommandé de consulter un médecin en cas de doute.</p>
+
+          <p><strong>§ 5 — Invités et tiers</strong><br/>
+          Le Locataire demeure responsable de ses invités et de toute personne qu'il introduit dans les lieux, et répond de leurs faits, gestes et dommages éventuels comme des siens propres.</p>
+
+          <p><strong>§ 6 — Assurance</strong><br/>
+          Conformément à l'article 7 g) de la loi n° 89-462 du 6 juillet 1989, le Locataire s'engage à souscrire et maintenir pendant toute la durée du bail une assurance multirisques habitation comprenant une garantie de responsabilité civile vie privée, et à en justifier sur simple demande du Bailleur.</p>
+
+          <p><strong>§ 7 — Signalement et entretien</strong><br/>
+          Le Locataire s'engage à signaler sans délai au Bailleur (ou au gestionnaire désigné) toute anomalie, dégradation ou risque constaté sur un équipement commun, afin que le Bailleur puisse exécuter son obligation d'entretien et de sécurité, laquelle reste intacte au titre du présent bail.</p>
+
+          <p style="font-size:9px;font-style:italic;color:#555;"><strong>§ 8 — Portée</strong><br/>
+          Les présentes stipulations ne sauraient priver le Locataire de l'exercice des droits qu'il tient des dispositions légales d'ordre public, ni exonérer le Bailleur de son obligation légale de sécurité et de délivrance d'un logement décent.</p>
+        </div>` : ''}
+
+        <h2>${property.is_coliving ? 'ARTICLE X' : 'ARTICLE IX'} — ÉTAT DES LIEUX</h2>
         <div class="article">
           ${property.is_coliving
             ? "L'état des lieux d'entrée et de sortie sera établi via <strong>Etadly</strong>. Le locataire recevra un exemplaire après sa réalisation."
@@ -653,7 +681,7 @@ function generateContractHTML(data: ContractData): string {
           L'inventaire détaillé du mobilier et des équipements fournis est joint en annexe au présent contrat. Le locataire s'engage à en prendre soin et à le restituer en bon état.
         </div>` : ''}
 
-        <h2>${property.is_coliving ? 'ARTICLE X' : 'ARTICLE XI'} — DIAGNOSTICS TECHNIQUES</h2>
+        <h2>ARTICLE XI — DIAGNOSTICS TECHNIQUES</h2>
         <div class="article">
           Conformément à la réglementation française, le bailleur fournit au locataire :
           <ul>
@@ -666,12 +694,12 @@ function generateContractHTML(data: ContractData): string {
         </div>
 
         ${property.is_coliving ? `
-        <h2>ARTICLE XI — RÈGLEMENT INTÉRIEUR</h2>
+        <h2>ARTICLE XII — RÈGLEMENT INTÉRIEUR</h2>
         <div class="article">
           Le locataire accepte le Règlement Intérieur La Villa Coliving (la "Bible du Coliver"), joint en annexe, qui précise les règles de vie commune, l'usage des parties communes et les procédures de gestion interne.
         </div>
 
-        <h2>ARTICLE XII — ANNEXES</h2>` : `
+        <h2>ARTICLE XIII — ANNEXES</h2>` : `
         <h2>ARTICLE XII — ANNEXES</h2>`}
         <div class="article">
           Sont annexées au présent contrat :
