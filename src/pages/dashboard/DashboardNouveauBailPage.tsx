@@ -780,8 +780,8 @@ async function fetchExchangeRate(): Promise<{ rate: number; date: string; isLive
   } catch (e) {
     console.warn('[Bail] ECB XML API failed:', e);
   }
-  console.warn('[Bail] Using fallback rate 0.9145');
-  return { rate: 0.9145, date: todayStr + ' (fallback)', isLive: false };
+  console.warn('[Bail] APIs BCE indisponibles — saisie manuelle requise');
+  return { rate: 0.9145, date: todayStr, isLive: false };
 }
 
 
@@ -791,6 +791,9 @@ export default function DashboardNouveauBailPage() {
   const [rooms, setRooms] = useState<Room[]>([]);
   const [filteredRooms, setFilteredRooms] = useState<Room[]>([]);
   const [exchangeRate, setExchangeRate] = useState(0.9145);
+  // 'live' : taux récupéré depuis l'API BCE | 'fallback' : APIs indisponibles, saisie manuelle requise | 'manual' : taux validé/saisi par le gestionnaire
+  const [rateStatus, setRateStatus] = useState<'live' | 'fallback' | 'manual'>('live');
+  const [rateLoading, setRateLoading] = useState(false);
 
   const [form, setForm] = useState<FormData>({
     property_id: '',
@@ -848,10 +851,13 @@ export default function DashboardNouveauBailPage() {
       if (propsRes.data) setProperties(propsRes.data);
       if (roomsRes.data) setRooms(roomsRes.data);
 
+      setRateLoading(true);
       const { rate, date: rateDate, isLive } = await fetchExchangeRate();
       setExchangeRate(rate);
       setForm((prev) => ({ ...prev, exchange_rate: rate, exchange_rate_date: rateDate }));
-      if (!isLive) console.warn('[Bail] Taux de change en mode fallback — vérifiez manuellement sur ecb.europa.eu');
+      setRateStatus(isLive ? 'live' : 'fallback');
+      setRateLoading(false);
+      if (!isLive) console.warn('[Bail] Taux BCE indisponible — saisie manuelle requise');
     };
 
     loadData();
@@ -1460,22 +1466,76 @@ export default function DashboardNouveauBailPage() {
         />
 
         <label style={{ display: 'block', marginBottom: '8px', fontSize: '13px', color: '#666' }}>
-          Taux de change (1 EUR = X CHF) — <span style={{ color: '#999', fontStyle: 'italic' }}>taux BCE du {form.exchange_rate_date}</span>
+          Taux de change (1 EUR = X CHF) — <span style={{ color: '#999', fontStyle: 'italic' }}>
+            {rateStatus === 'live' && `taux BCE du ${form.exchange_rate_date}`}
+            {rateStatus === 'manual' && `taux saisi manuellement le ${form.exchange_rate_date}`}
+            {rateStatus === 'fallback' && `⚠ API BCE indisponible — saisie manuelle requise`}
+          </span>
         </label>
+
+        {rateStatus === 'fallback' && (
+          <div style={{
+            padding: '12px 14px',
+            marginBottom: '10px',
+            background: '#FEF2F2',
+            border: '1px solid #FCA5A5',
+            borderRadius: '6px',
+            fontSize: '13px',
+            color: '#991B1B',
+            lineHeight: 1.5,
+          }}>
+            <strong>⚠ Taux BCE indisponible.</strong> Les APIs Frankfurter et BCE n'ont pas répondu. La valeur affichée (0.9145) est obsolète et ne doit PAS être utilisée telle quelle.
+            <br />
+            <strong>Action requise :</strong> consulte <a href="https://www.ecb.europa.eu/stats/policy_and_exchange_rates/euro_reference_exchange_rates/html/eurofxref-graph-chf.en.html" target="_blank" rel="noopener" style={{ color: '#991B1B', textDecoration: 'underline' }}>ecb.europa.eu</a> et saisis le taux du jour ci-dessous. Le bouton "Générer le PDF" sera débloqué automatiquement.
+            <br />
+            <button
+              type="button"
+              onClick={async () => {
+                setRateLoading(true);
+                const { rate, date: rateDate, isLive } = await fetchExchangeRate();
+                setExchangeRate(rate);
+                setForm((prev) => ({ ...prev, exchange_rate: rate, exchange_rate_date: rateDate }));
+                setRateStatus(isLive ? 'live' : 'fallback');
+                setRateLoading(false);
+              }}
+              disabled={rateLoading}
+              style={{
+                marginTop: '8px',
+                padding: '6px 12px',
+                background: '#991B1B',
+                color: 'white',
+                border: 'none',
+                borderRadius: '4px',
+                fontSize: '12px',
+                cursor: rateLoading ? 'wait' : 'pointer',
+              }}
+            >
+              {rateLoading ? '⏳ Tentative en cours…' : '↻ Réessayer la connexion BCE'}
+            </button>
+          </div>
+        )}
+
         <input
           type="number"
           step="0.0001"
           value={form.exchange_rate}
-          onChange={(e) =>
-            setForm((prev) => ({ ...prev, exchange_rate: parseFloat(e.target.value) || 0.9145 }))
-          }
+          onChange={(e) => {
+            const newRate = parseFloat(e.target.value) || 0.9145;
+            setForm((prev) => ({ ...prev, exchange_rate: newRate }));
+            // Toute saisie manuelle (différente du fallback initial 0.9145) débloque le bouton
+            if (rateStatus === 'fallback' && newRate !== 0.9145) {
+              setRateStatus('manual');
+              setForm((prev) => ({ ...prev, exchange_rate_date: new Date().toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' }) }));
+            }
+          }}
           style={{
             width: '100%',
             padding: '10px',
             marginBottom: '15px',
             borderRadius: '4px',
-            border: '1px solid #ddd',
+            border: rateStatus === 'fallback' ? '2px solid #FCA5A5' : '1px solid #ddd',
             fontSize: '14px',
+            background: rateStatus === 'fallback' ? '#FFFBEB' : 'white',
           }}
         />
 
@@ -1813,20 +1873,21 @@ export default function DashboardNouveauBailPage() {
         <div style={{ display: 'flex', gap: '10px' }}>
           <button
             onClick={async () => { if (!contractData) return; try { const blob = await pdf(BailPDF({ data: contractData })).toBlob(); const url = URL.createObjectURL(blob); const a = document.createElement('a'); a.href = url; a.download = `Bail_${form.locataire_nom || 'Locataire'}_${form.entry_date || 'date'}.pdf`; a.click(); URL.revokeObjectURL(url); } catch (e) { console.error('PDF error:', e); toast.error('Erreur PDF: ' + e); } }}
-            disabled={!contractData}
+            disabled={!contractData || rateStatus === 'fallback'}
+            title={rateStatus === 'fallback' ? 'Saisis manuellement le taux EUR/CHF du jour avant de générer le bail' : ''}
             style={{
               flex: 1,
               padding: '12px',
-              background: '#c9a96e',
+              background: (contractData && rateStatus !== 'fallback') ? '#c9a96e' : '#cccccc',
               color: 'white',
               border: 'none',
               borderRadius: '4px',
               fontWeight: '600',
-              cursor: contractData ? 'pointer' : 'not-allowed',
+              cursor: (contractData && rateStatus !== 'fallback') ? 'pointer' : 'not-allowed',
               fontSize: '14px',
             }}
           >
-            Générer le PDF
+            {rateStatus === 'fallback' ? '🔒 Taux BCE requis' : 'Générer le PDF'}
           </button>
           <button
             onClick={() => window.print()}
