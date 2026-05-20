@@ -742,6 +742,27 @@ function generateContractHTML(data: ContractData): string {
   return html;
 }
 
+/**
+ * Récupère le dernier IRL publié par l'INSEE via l'Edge Function get-irl.
+ * Retourne null si la fonction échoue (le formulaire garde alors ses valeurs par défaut).
+ */
+async function fetchIrl(): Promise<{ periodLabel: string; value: number; source: string } | null> {
+  try {
+    const { data, error } = await supabase.functions.invoke('get-irl');
+    if (error) {
+      console.warn('[Bail] Edge Function get-irl error:', error);
+      return null;
+    }
+    if (data?.ok && data?.period_label && typeof data?.value === 'number') {
+      console.log('[Bail] IRL chargé (source:', data.source, '):', data.value, data.period_label);
+      return { periodLabel: data.period_label, value: data.value, source: data.source };
+    }
+  } catch (e) {
+    console.warn('[Bail] Edge Function get-irl failed:', e);
+  }
+  return null;
+}
+
 async function fetchExchangeRate(): Promise<{ rate: number; date: string; isLive: boolean }> {
   const todayStr = new Date().toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' });
   // On appelle l'Edge Function get-exchange-rate qui interroge Frankfurter + BCE XML
@@ -776,6 +797,8 @@ export default function DashboardNouveauBailPage() {
   // 'live' : taux récupéré depuis l'API BCE | 'fallback' : APIs indisponibles, saisie manuelle requise | 'manual' : taux validé/saisi par le gestionnaire
   const [rateStatus, setRateStatus] = useState<'live' | 'fallback' | 'manual'>('live');
   const [rateLoading, setRateLoading] = useState(false);
+  // 'live' : IRL chargé depuis INSEE | 'cache' : depuis cache | 'manual' : valeur par défaut/saisie manuellement
+  const [irlStatus, setIrlStatus] = useState<'live' | 'cache' | 'manual'>('manual');
 
   const [form, setForm] = useState<FormData>({
     property_id: '',
@@ -840,6 +863,16 @@ export default function DashboardNouveauBailPage() {
       setRateStatus(isLive ? 'live' : 'fallback');
       setRateLoading(false);
       if (!isLive) console.warn('[Bail] Taux BCE indisponible — saisie manuelle requise');
+
+      // Récupération automatique du dernier IRL publié par l'INSEE
+      const irl = await fetchIrl();
+      if (irl) {
+        setForm((prev) => ({ ...prev, irl_trimestre: irl.periodLabel, irl_indice: irl.value }));
+        setIrlStatus(irl.source === 'insee' ? 'live' : 'cache');
+      } else {
+        console.warn('[Bail] IRL INSEE indisponible — valeur par défaut conservée');
+        setIrlStatus('manual');
+      }
     };
 
     loadData();
@@ -1602,12 +1635,20 @@ export default function DashboardNouveauBailPage() {
         />
 
         <label style={{ display: 'block', marginBottom: '8px', fontSize: '13px', color: '#666' }}>
-          IRL Trimestre de référence
+          IRL Trimestre de référence — <span style={{
+            color: irlStatus === 'live' ? '#0F766E' : irlStatus === 'cache' ? '#B45309' : '#999',
+            fontStyle: 'italic',
+            fontSize: '12px',
+          }}>
+            {irlStatus === 'live' && '✓ dernière publication INSEE'}
+            {irlStatus === 'cache' && '⚠ depuis le cache (INSEE momentanément indisponible)'}
+            {irlStatus === 'manual' && 'saisi manuellement'}
+          </span>
         </label>
         <input
           type="text"
           value={form.irl_trimestre}
-          onChange={(e) => setForm((prev) => ({ ...prev, irl_trimestre: e.target.value }))}
+          onChange={(e) => { setForm((prev) => ({ ...prev, irl_trimestre: e.target.value })); setIrlStatus('manual'); }}
           style={{
             width: '100%',
             padding: '10px',
@@ -1625,8 +1666,7 @@ export default function DashboardNouveauBailPage() {
           type="number"
           step="0.01"
           value={form.irl_indice}
-          onChange={(e) => setForm((prev) => ({ ...prev, irl_indice: parseFloat(e.target.value) || 0 }))
-          }
+          onChange={(e) => { setForm((prev) => ({ ...prev, irl_indice: parseFloat(e.target.value) || 0 })); setIrlStatus('manual'); }}
           style={{
             width: '100%',
             padding: '10px',
