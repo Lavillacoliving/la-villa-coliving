@@ -643,9 +643,58 @@ export function BailPDF({ data }: { data: BailPDFData }) {
           <Numbered n={5}>{"Respecter la vie priv\u00E9e du locataire et donner un pr\u00E9avis de 48h avant visite."}</Numbered>
         </View>
 
-        {/* ---------- ARTICLE IX ---------- */}
+        {/* ---------- ARTICLE IX (coliving only) \u2014 Usage des \u00E9quipements & responsabilit\u00E9 ---------- */}
+        {property.is_coliving && (
+          <View minPresenceAhead={60}>
+            <Text style={s.articleTitle}>{"ARTICLE IX \u2014 USAGE DES \u00C9QUIPEMENTS ET ESPACES COMMUNS \u2014 RESPONSABILIT\u00C9 DU LOCATAIRE"}</Text>
+
+            <Text style={s.subTitle}>{"\u00A7 1 \u2014 P\u00E9rim\u00E8tre"}</Text>
+            <Text style={s.body}>
+              {"La maison met \u00E0 disposition du Locataire, dans les espaces communs, des \u00E9quipements premium dont notamment, sans que cette liste soit limitative : piscine, sauna, jacuzzi le cas \u00E9ch\u00E9ant, salle de sport et mat\u00E9riel associ\u00E9, cuisine \u00E9quip\u00E9e et \u00E9lectrom\u00E9nager, mobilier et \u00E9quipements de d\u00E9tente, jardin et terrasses, ainsi que tout \u00E9quipement ajout\u00E9 en cours de bail."}
+            </Text>
+
+            <Text style={s.subTitle}>{"\u00A7 2 \u2014 Usage sous la responsabilit\u00E9 personnelle du Locataire"}</Text>
+            <Text style={s.body}>
+              {"Le Locataire reconna\u00EEt \u00EAtre inform\u00E9 que l\u2019utilisation de l\u2019ensemble de ces \u00E9quipements et espaces communs s\u2019effectue sous sa responsabilit\u00E9 personnelle. Il s\u2019engage \u00E0 en faire un usage normal, raisonnable et conforme \u00E0 leur destination, ainsi qu\u2019aux r\u00E8gles d\u2019usage figurant au R\u00E8glement Int\u00E9rieur (\u00AB Bible du Coliver \u00BB) annex\u00E9 au pr\u00E9sent bail dont il d\u00E9clare avoir pris connaissance et qu\u2019il s\u2019engage \u00E0 respecter."}
+            </Text>
+
+            <Text style={s.subTitle}>{"\u00A7 3 \u2014 Piscine, sauna et installations de bien-\u00EAtre"}</Text>
+            <Text style={s.body}>
+              {"Le Locataire est express\u00E9ment inform\u00E9 que la piscine, le sauna et les \u00E9ventuelles installations de bien-\u00EAtre sont des \u00E9quipements \u00E0 usage priv\u00E9 et "}
+              <Text style={{ fontFamily: "Helvetica-Bold" }}>{"NON SURVEILL\u00C9S"}</Text>
+              {". Leur utilisation suppose l\u2019aptitude physique et la vigilance personnelle de l\u2019utilisateur. L\u2019acc\u00E8s des mineurs s\u2019effectue sous la responsabilit\u00E9 exclusive de l\u2019adulte qui les accompagne. Il est rappel\u00E9 qu\u2019il est d\u00E9conseill\u00E9 d\u2019utiliser ces \u00E9quipements seul, sous l\u2019effet de l\u2019alcool, de substances ou en cas de contre-indication m\u00E9dicale."}
+            </Text>
+
+            <Text style={s.subTitle}>{"\u00A7 4 \u2014 Salle de sport et mat\u00E9riel"}</Text>
+            <Text style={s.body}>
+              {"L\u2019utilisation des \u00E9quipements sportifs se fait sous la responsabilit\u00E9 du Locataire, qui d\u00E9clare \u00EAtre apte physiquement \u00E0 leur usage. Il lui est recommand\u00E9 de consulter un m\u00E9decin en cas de doute."}
+            </Text>
+
+            <Text style={s.subTitle}>{"\u00A7 5 \u2014 Invit\u00E9s et tiers"}</Text>
+            <Text style={s.body}>
+              {"Le Locataire demeure responsable de ses invit\u00E9s et de toute personne qu\u2019il introduit dans les lieux, et r\u00E9pond de leurs faits, gestes et dommages \u00E9ventuels comme des siens propres."}
+            </Text>
+
+            <Text style={s.subTitle}>{"\u00A7 6 \u2014 Assurance"}</Text>
+            <Text style={s.body}>
+              {"Conform\u00E9ment \u00E0 l\u2019article 7 g) de la loi n\u00B0 89-462 du 6 juillet 1989, le Locataire s\u2019engage \u00E0 souscrire et maintenir pendant toute la dur\u00E9e du bail une assurance multirisques habitation comprenant une garantie de responsabilit\u00E9 civile vie priv\u00E9e, et \u00E0 en justifier sur simple demande du Bailleur."}
+            </Text>
+
+            <Text style={s.subTitle}>{"\u00A7 7 \u2014 Signalement et entretien"}</Text>
+            <Text style={s.body}>
+              {"Le Locataire s\u2019engage \u00E0 signaler sans d\u00E9lai au Bailleur (ou au gestionnaire d\u00E9sign\u00E9) toute anomalie, d\u00E9gradation ou risque constat\u00E9 sur un \u00E9quipement commun, afin que le Bailleur puisse ex\u00E9cuter son obligation d\u2019entretien et de s\u00E9curit\u00E9, laquelle reste intacte au titre du pr\u00E9sent bail."}
+            </Text>
+
+            <Text style={s.subTitle}>{"\u00A7 8 \u2014 Port\u00E9e"}</Text>
+            <Text style={[s.body, { fontSize: 9, fontStyle: "italic", color: "#555" }]}>
+              {"Les pr\u00E9sentes stipulations ne sauraient priver le Locataire de l\u2019exercice des droits qu\u2019il tient des dispositions l\u00E9gales d\u2019ordre public, ni exon\u00E9rer le Bailleur de son obligation l\u00E9gale de s\u00E9curit\u00E9 et de d\u00E9livrance d\u2019un logement d\u00E9cent."}
+            </Text>
+          </View>
+        )}
+
+        {/* ---------- ARTICLE IX (Mont-Blanc) / X (coliving) \u2014 \u00C9tat des lieux ---------- */}
         <View wrap={false} minPresenceAhead={30}>
-          <Text style={s.articleTitle}>{"ARTICLE IX \u2014 \u00C9TAT DES LIEUX"}</Text>
+          <Text style={s.articleTitle}>{property.is_coliving ? "ARTICLE X \u2014 \u00C9TAT DES LIEUX" : "ARTICLE IX \u2014 \u00C9TAT DES LIEUX"}</Text>
           <Text style={s.body}>
             {property.is_coliving
               ? "L\u2019\u00E9tat des lieux d\u2019entr\u00E9e et de sortie sera \u00E9tabli via Etadly. Le locataire recevra un exemplaire apr\u00E8s sa r\u00E9alisation."
@@ -665,7 +714,7 @@ export function BailPDF({ data }: { data: BailPDFData }) {
 
         {/* ---------- Diagnostics ---------- */}
         <View wrap={false} minPresenceAhead={40}>
-          <Text style={s.articleTitle}>{property.is_coliving ? "ARTICLE X \u2014 DIAGNOSTICS TECHNIQUES" : "ARTICLE XI \u2014 DIAGNOSTICS TECHNIQUES"}</Text>
+          <Text style={s.articleTitle}>{property.is_coliving ? "ARTICLE XI \u2014 DIAGNOSTICS TECHNIQUES" : "ARTICLE XI \u2014 DIAGNOSTICS TECHNIQUES"}</Text>
           <Text style={s.body}>
             {"Conform\u00E9ment \u00E0 la r\u00E9glementation fran\u00E7aise, le bailleur fournit au locataire :"}
           </Text>
@@ -679,7 +728,7 @@ export function BailPDF({ data }: { data: BailPDFData }) {
         {/* ---------- Règlement intérieur (coliving only) ---------- */}
         {property.is_coliving && (
           <View wrap={false} minPresenceAhead={30}>
-            <Text style={s.articleTitle}>{"ARTICLE XI \u2014 R\u00C8GLEMENT INT\u00C9RIEUR"}</Text>
+            <Text style={s.articleTitle}>{"ARTICLE XII \u2014 R\u00C8GLEMENT INT\u00C9RIEUR"}</Text>
             <Text style={s.body}>
               {"Le locataire accepte le R\u00E8glement Int\u00E9rieur La Villa Coliving (la \u201CBible du Coliver\u201D), joint en annexe, qui pr\u00E9cise les r\u00E8gles de vie commune, l\u2019usage des parties communes et les proc\u00E9dures de gestion interne."}
             </Text>
@@ -688,7 +737,7 @@ export function BailPDF({ data }: { data: BailPDFData }) {
 
         {/* ---------- ANNEXES ---------- */}
         <View wrap={false} minPresenceAhead={20}>
-          <Text style={s.articleTitle}>{property.is_coliving ? "ARTICLE XII \u2014 ANNEXES" : "ARTICLE XII \u2014 ANNEXES"}</Text>
+          <Text style={s.articleTitle}>{property.is_coliving ? "ARTICLE XIII \u2014 ANNEXES" : "ARTICLE XII \u2014 ANNEXES"}</Text>
           <Text style={s.body}>{"Sont annex\u00E9es au pr\u00E9sent contrat :"}</Text>
           {!property.is_coliving && <Bullet>{"Notice d\u2019information relative aux droits et obligations des locataires et des bailleurs"}</Bullet>}
           {!property.is_coliving && <Bullet>{"RIB du bailleur"}</Bullet>}
