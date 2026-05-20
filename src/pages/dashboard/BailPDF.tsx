@@ -512,7 +512,7 @@ export function BailPDF({ data }: { data: BailPDFData }) {
 
         {property.is_coliving ? (
           <View>
-            <Text style={s.subTitle}><Text style={{ fontFamily: "Helvetica-Bold" }}>Loyer mensuel :</Text> {fEUR(loyer_eur)}</Text>
+            <Text style={s.subTitle}><Text style={{ fontFamily: "Helvetica-Bold" }}>Loyer mensuel :</Text> {fEUR(loyer_eur)} ({fCHF(form.loyer_chf)})</Text>
             <Text style={[s.body, { marginTop: 0 }]}>- (taux BCE du {form.exchange_rate_date || "\u2014"} : {rate})</Text>
             {prorata_days > 0 && prorata_total_days > 0 && prorata_days < prorata_total_days ? (
               <View>
@@ -558,7 +558,7 @@ export function BailPDF({ data }: { data: BailPDFData }) {
         ) : (
           <View>
             <Text style={s.subTitle}>Loyer mensuel :</Text>
-            <Bullet>Loyer : {fEUR(loyer_eur)}</Bullet>
+            <Bullet>Loyer : {fEUR(loyer_eur)} ({fCHF(form.loyer_chf)})</Bullet>
 
             <Text style={s.subTitle}>{"Provisions sur charges (avec r\u00E9gularisation annuelle) :"}</Text>
             <Bullet>Montant mensuel : {fEUR(totalCharges)}</Bullet>

@@ -550,7 +550,7 @@ function generateContractHTML(data: ContractData): string {
         <h2>ARTICLE IV — CONDITIONS FINANCIÈRES</h2>
         <div class="article">
           ${property.is_coliving ? `
-          <h3><strong>Loyer mensuel :</strong> ${fEUR(loyer_eur)}</h3>
+          <h3><strong>Loyer mensuel :</strong> ${fEUR(loyer_eur)} (${fCHF(form.loyer_chf)})</h3>
           <p style="margin-top:5px;">- (taux BCE du ${form.exchange_rate_date} : ${form.exchange_rate})</p>
           ${(!data.prorata_days || !data.prorata_total_days || data.prorata_days >= data.prorata_total_days)
             ? '<p><em>Entrée le 1er du mois — pas de prorata.</em></p>'
@@ -561,7 +561,7 @@ function generateContractHTML(data: ContractData): string {
           <p style="font-size:9px;">En cas de départ à une date inférieure à 3 mois révolu à partir de la date de début du contrat, le locataire sera redevable auprès du bailleur des frais de dossier administratifs de services et d'états des lieux, offerts dans ce présent contrat.</p>` : `
           <h3>Loyer mensuel :</h3>
           <ul>
-            <li><strong>Loyer :</strong> ${fEUR(loyer_eur)}</li>
+            <li><strong>Loyer :</strong> ${fEUR(loyer_eur)} (${fCHF(form.loyer_chf)})</li>
           </ul>
           <h3>Provisions sur charges (avec régularisation annuelle) :</h3>
           <ul>
