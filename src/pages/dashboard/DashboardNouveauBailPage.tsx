@@ -744,43 +744,25 @@ function generateContractHTML(data: ContractData): string {
 
 async function fetchExchangeRate(): Promise<{ rate: number; date: string; isLive: boolean }> {
   const todayStr = new Date().toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' });
-  // Try Frankfurter API (ECB-based, supports CORS)
+  // On appelle l'Edge Function get-exchange-rate qui interroge Frankfurter + BCE XML
+  // côté serveur (pas de blocage CORS) et garde un cache 7 jours en table exchange_rates.
   try {
-    const res = await fetch('https://api.frankfurter.app/latest?from=EUR&to=CHF');
-    if (res.ok) {
-      const data = await res.json();
-      const rateDate = data.date
-        ? new Date(data.date + 'T00:00:00').toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' })
-        : todayStr;
-      const rate = data.rates?.CHF;
-      if (rate) {
-        console.log('[Bail] Taux BCE chargé via Frankfurter:', rate, 'du', rateDate);
-        return { rate, date: rateDate, isLive: true };
-      }
+    const { data, error } = await supabase.functions.invoke('get-exchange-rate');
+    if (error) {
+      console.warn('[Bail] Edge Function get-exchange-rate error:', error);
+    } else if (data?.ok && data?.rate && data?.date) {
+      const rateDate = new Date(data.date + 'T00:00:00').toLocaleDateString('fr-FR', {
+        day: 'numeric',
+        month: 'long',
+        year: 'numeric',
+      });
+      console.log('[Bail] Taux BCE chargé via Edge Function (source:', data.source, '):', data.rate, 'du', rateDate);
+      return { rate: Number(data.rate), date: rateDate, isLive: true };
     }
   } catch (e) {
-    console.warn('[Bail] Frankfurter API failed:', e);
+    console.warn('[Bail] Edge Function get-exchange-rate failed:', e);
   }
-  // Fallback: ECB XML direct
-  try {
-    const res = await fetch('https://www.ecb.europa.eu/stats/eurofxref/eurofxref-daily.xml');
-    if (res.ok) {
-      const xml = await res.text();
-      const match = xml.match(/currency="CHF"[^>]*rate="([0-9.]+)"/);
-      const dateMatch = xml.match(/time="(\d{4}-\d{2}-\d{2})"/);
-      if (match) {
-        const rate = parseFloat(match[1]);
-        const rateDate = dateMatch
-          ? new Date(dateMatch[1] + 'T00:00:00').toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' })
-          : todayStr;
-        console.log('[Bail] Taux BCE chargé via ECB XML:', rate, 'du', rateDate);
-        return { rate, date: rateDate, isLive: true };
-      }
-    }
-  } catch (e) {
-    console.warn('[Bail] ECB XML API failed:', e);
-  }
-  console.warn('[Bail] APIs BCE indisponibles — saisie manuelle requise');
+  console.warn('[Bail] Taux BCE indisponible — saisie manuelle requise');
   return { rate: 0.9145, date: todayStr, isLive: false };
 }
 
