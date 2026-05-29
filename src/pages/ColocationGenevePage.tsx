@@ -1,4 +1,5 @@
 import { Link } from "react-router-dom";
+import { Helmet } from "react-helmet";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { SEO } from "@/components/SEO";
 import {
@@ -113,55 +114,56 @@ export function ColocationGenevePage() {
     loadBlogPosts();
   }, []);
 
-  // Combined schema: FAQPage + Offer for rich snippets
-  const pageSchema = {
+  // FAQPage schema — standalone for proper Google validation
+  const faqSchema = {
     "@context": "https://schema.org",
-    "@graph": [
-      {
-        "@type": "FAQPage",
-        mainEntity: colocationFAQ.map((item) => ({
-          "@type": "Question",
-          name: item.q,
-          acceptedAnswer: {
-            "@type": "Answer",
-            text: item.a,
-          },
-        })),
+    "@type": "FAQPage",
+    mainEntity: colocationFAQ.map((item) => ({
+      "@type": "Question",
+      name: item.q,
+      acceptedAnswer: {
+        "@type": "Answer",
+        text: item.a,
       },
-      {
-        "@type": "AggregateRating",
-        itemReviewed: {
-          "@type": "LodgingBusiness",
-          name: "La Villa Coliving",
-        },
-        ratingValue: "4.9",
-        bestRating: "5",
-        ratingCount: "47",
-        reviewCount: "47",
-      },
-      {
-        "@type": "Offer",
-        name: language === "en"
-          ? "Furnished room in shared housing near Geneva"
-          : "Chambre meublée en colocation près de Genève",
-        description: language === "en"
-          ? "All-inclusive furnished room: rent, utilities, fiber internet, cleaning 2x/week, pool, gym, sauna, yoga classes, community events."
-          : "Chambre meublée tout inclus : loyer, charges, fibre internet, ménage 2x/semaine, piscine, gym, sauna, cours de yoga, événements communautaires.",
-        price: "1380",
-        priceCurrency: "CHF",
-        priceValidUntil: "2026-12-31",
-        availability: "https://schema.org/InStock",
-        url: "https://www.lavillacoliving.com/colocation-geneve",
-        seller: {
-          "@type": "Organization",
-          name: "La Villa Coliving",
-          url: "https://www.lavillacoliving.com",
-        },
-        areaServed: [
-          { "@type": "City", name: "Genève" },
-          { "@type": "City", name: "Annemasse" },
-        ],
-      },
+    })),
+  };
+
+  // AggregateRating + Offer schemas — separate JSON-LD blocks
+  const ratingSchema = {
+    "@context": "https://schema.org",
+    "@type": "AggregateRating",
+    itemReviewed: {
+      "@type": "LodgingBusiness",
+      name: "La Villa Coliving",
+    },
+    ratingValue: "4.9",
+    bestRating: "5",
+    ratingCount: "47",
+    reviewCount: "47",
+  };
+
+  const offerSchema = {
+    "@context": "https://schema.org",
+    "@type": "Offer",
+    name: language === "en"
+      ? "Furnished room in shared housing near Geneva"
+      : "Chambre meublée en colocation près de Genève",
+    description: language === "en"
+      ? "All-inclusive furnished room: rent, utilities, fiber internet, cleaning 2x/week, pool, gym, sauna, yoga classes, community events."
+      : "Chambre meublée tout inclus : loyer, charges, fibre internet, ménage 2x/semaine, piscine, gym, sauna, cours de yoga, événements communautaires.",
+    price: "1380",
+    priceCurrency: "CHF",
+    priceValidUntil: "2026-12-31",
+    availability: "https://schema.org/InStock",
+    url: "https://www.lavillacoliving.com/colocation-geneve",
+    seller: {
+      "@type": "Organization",
+      name: "La Villa Coliving",
+      url: "https://www.lavillacoliving.com",
+    },
+    areaServed: [
+      { "@type": "City", name: "Genève" },
+      { "@type": "City", name: "Annemasse" },
     ],
   };
 
@@ -180,8 +182,13 @@ export function ColocationGenevePage() {
         }
         url="https://www.lavillacoliving.com/colocation-geneve"
         image="https://www.lavillacoliving.com/images/villa_portrait.webp"
-        jsonLd={pageSchema}
+        jsonLd={faqSchema}
       />
+      {/* Separate JSON-LD blocks for AggregateRating + Offer — avoids @graph parsing issues */}
+      <Helmet>
+        <script type="application/ld+json">{JSON.stringify(ratingSchema)}</script>
+        <script type="application/ld+json">{JSON.stringify(offerSchema)}</script>
+      </Helmet>
 
       {/* ===== HERO ===== */}
       <section className="relative py-24 lg:py-32 bg-gradient-to-b from-white to-[#FAF9F6]">
