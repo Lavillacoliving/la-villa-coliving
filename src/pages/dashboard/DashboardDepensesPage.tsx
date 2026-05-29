@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { supabase } from '@/lib/supabase';
-import { useToast } from '@/components/ui/Toast';
+
 
 interface Expense {
   transaction_id: string; entity_code: string; entity_name: string;
@@ -18,7 +18,6 @@ const ENTITY_BADGES: Record<string,{bg:string,color:string}> = {
 
 export default function DashboardDepensesPage() {
   const [expenses, setExpenses] = useState<Expense[]>([]);
-  const toast = useToast();
   const [month, setMonth] = useState(() => new Date().toISOString().slice(0,7));
   const [entityFilter, setEntityFilter] = useState('all');
   const [search, setSearch] = useState('');
