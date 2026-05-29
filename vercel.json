@@ -499,6 +499,16 @@
       "permanent": true
     },
     {
+      "source": "/prices",
+      "destination": "/tarifs",
+      "permanent": true
+    },
+    {
+      "source": "/en/prices",
+      "destination": "/en/tarifs",
+      "permanent": true
+    },
+    {
       "source": "/join-us",
       "destination": "/candidature",
       "permanent": true
