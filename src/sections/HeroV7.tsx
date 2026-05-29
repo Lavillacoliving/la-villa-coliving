@@ -21,6 +21,9 @@ export function HeroV7() {
             src="/images/la villa jardin.webp"
             alt="La Villa Coliving — maison premium avec piscine à 20 min du centre de Genève"
             className="w-full h-full object-cover"
+            width={1920}
+            height={1080}
+            fetchPriority="high"
           />
           {/* Gradient overlay — warm black, stronger for text readability */}
           <div className="absolute inset-0 bg-gradient-to-t from-[#1C1917] via-[#1C1917]/60 to-black/30" />
@@ -236,6 +239,9 @@ export function HeroV7() {
                   src={item.image}
                   alt={item.title}
                   className="w-full h-full object-cover group-hover:scale-[1.03] transition-transform duration-500"
+                  loading="lazy"
+                  width={400}
+                  height={533}
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
                 <div className="absolute bottom-0 left-0 right-0 p-4 md:p-5">

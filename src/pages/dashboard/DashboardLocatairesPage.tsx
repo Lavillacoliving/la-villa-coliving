@@ -264,8 +264,8 @@ export default function DashboardLocatairesPage() {
     };
   };
 
-  const exportExcel = () => {
-    const XLSX=(window as any).XLSX; if(!XLSX)return;
+  const exportExcel = async () => {
+    const XLSX = await import('xlsx');
     const rows=filtered.map(t=>{const p=properties.find(p=>p.id===t.property_id);return{Nom:t.first_name+' '+t.last_name,Ch:t.room_number,Propriété:p?.name||'',Loyer:t.current_rent,Entrée:t.move_in_date||'',Sortie:t.move_out_date||'',Email:t.email,Tél:t.phone,Caution:t.deposit_amount||'',Statut:t.is_active?'Actif':'Sorti'};});
     const ws=XLSX.utils.json_to_sheet(rows);const wb=XLSX.utils.book_new();XLSX.utils.book_append_sheet(wb,ws,'Locataires');XLSX.writeFile(wb,'locataires.xlsx');
   };

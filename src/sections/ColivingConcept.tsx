@@ -116,6 +116,7 @@ export function ColivingConcept() {
                 src={comparisonData.coliving.image}
                 alt="Coliving"
                 className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
+                loading="lazy"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-[#10b981]/80 to-transparent" />
 
@@ -153,6 +154,7 @@ export function ColivingConcept() {
                 src={comparisonData.colocation.image}
                 alt="Colocation"
                 className="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-700"
+                loading="lazy"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-gray-900/60 to-transparent" />
 

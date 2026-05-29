@@ -26,6 +26,7 @@ export function About() {
                 src="/public/ACTIVITES & ILLUSTRATIONS/colocs.jpg"
                 alt="La Villa Coliving"
                 className="w-full h-full object-cover"
+                loading="lazy"
               />
             </div>
 

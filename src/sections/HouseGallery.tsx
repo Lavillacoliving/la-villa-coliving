@@ -128,6 +128,7 @@ export function HouseGallery({ images, houseName }: HouseGalleryProps) {
                 src={image.src}
                 alt={image.alt}
                 className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
+                loading="lazy"
               />
               
               {/* Overlay */}

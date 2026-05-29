@@ -1425,6 +1425,9 @@ export function HouseDetailPage() {
                     alt={`${house.name} coliving ${house.location} — ${language === "en" ? "premium colocation near Geneva" : "colocation premium près de Genève"} (${index + 1})`}
                     className="w-full h-full object-cover"
                     loading={index === 0 ? "eager" : "lazy"}
+                    width={1920}
+                    height={1080}
+                    {...(index === 0 ? { fetchPriority: "high" as const } : {})}
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-[#FAF9F6] via-transparent to-transparent" />
                 </div>
@@ -1910,6 +1913,8 @@ export function HouseDetailPage() {
                     alt={`${room.type} — ${language === "en" ? "furnished room in" : "chambre meublée à"} ${house.name} coliving ${house.location}`}
                     className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
                     loading="lazy"
+                    width={800}
+                    height={600}
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent" />
                 </div>

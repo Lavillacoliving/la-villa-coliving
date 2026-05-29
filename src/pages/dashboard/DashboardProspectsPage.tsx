@@ -133,9 +133,8 @@ export default function DashboardProspectsPage() {
     load();
   };
 
-  const exportExcel = () => {
-    const XLSX=(window as any).XLSX;
-    if(!XLSX){toast.error('SheetJS non chargé');return;}
+  const exportExcel = async () => {
+    const XLSX = await import('xlsx');
     const rows=filtered.map(p=>({Nom:p.first_name+" "+p.last_name,Email:p.email||"",Tél:p.phone||"",
       Source:p.source||"",Statut:STATUS_LABELS[p.status]||p.status,Intérêt:p.property_interest||"",
       Budget:p.budget||"",Cible:p.move_in_target||"",Contact:p.last_contact||"",Notes:p.notes||""}));

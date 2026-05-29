@@ -1,47 +1,56 @@
+import { lazy, Suspense } from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { useLocation } from "react-router-dom";
 import { AuthProvider } from "@/contexts/AuthContext";
 import { LanguageProvider } from "@/contexts/LanguageContext";
 import { NavbarV7 as Navbar } from "@/components/custom/NavbarV7";
 import { FooterV7 as Footer } from "@/components/custom/FooterV7";
-import { HomePage } from "@/pages/HomePage";
-import { ColivingPageV4 as ColivingPage } from "@/pages/ColivingPageV4";
-import { ServicesPageV4 as ServicesPage } from "@/pages/ServicesPageV4";
-import { HousesPageV4 as HousesPage } from "@/pages/HousesPageV4";
-import { RatesPageV4 as RatesPage } from "@/pages/RatesPageV4";
-import { FAQPageV4 as FAQPage } from "@/pages/FAQPageV4";
-import { JoinPageV4 as JoinPage } from "@/pages/JoinPageV4";
-import { HouseDetailPage } from "@/pages/HouseDetailPage";
-import { BlogPage } from "@/pages/BlogPage";
-import { BlogPostPage } from "@/pages/BlogPostPage";
-import { ColocationGenevePage } from "@/pages/ColocationGenevePage";
-import { AnnemasseColocationPage } from "@/pages/AnnemasseColocationPage";
-import { ChambreLouerAnnemassePage } from "@/pages/ChambreLouerAnnemassePage";
-import { InvestisseursPage } from "@/pages/InvestisseursPage";
-import { NotFoundPage } from "@/pages/NotFoundPage";
 import { Navigate } from "react-router-dom";
 import { PortailLayout } from "@/pages/portail/PortailLayout";
-import { MaMaisonPage } from "@/pages/portail/MaMaisonPage";
-import { MonBailPage } from "@/pages/portail/MonBailPage";
-import { MesDemandesPage } from "@/pages/portail/MesDemandesPage";
-import { CommunautePage } from "@/pages/portail/CommunautePage";
 import { ScrollToTop } from "@/components/ScrollToTop";
-import DashboardLayout from "@/pages/dashboard/DashboardLayout";
-import DashboardLoyersPage from "@/pages/dashboard/DashboardLoyersPage";
-import DashboardLocatairesPage from "@/pages/dashboard/DashboardLocatairesPage";
-import DashboardDepensesPage from "@/pages/dashboard/DashboardDepensesPage";
-import DashboardMaintenancePage from "@/pages/dashboard/DashboardMaintenancePage";
-import DashboardProspectsPage from "@/pages/dashboard/DashboardProspectsPage";
-import DashboardRoadmapPage from "@/pages/dashboard/DashboardRoadmapPage";
-import DashboardMaisonsPage from '@/pages/dashboard/DashboardMaisonsPage';
-import DashboardNouveauBailPage from '@/pages/dashboard/DashboardNouveauBailPage';
-import DashboardDocumentsPage from "@/pages/dashboard/DashboardDocumentsPage";
-import DashboardEventsPage from "@/pages/dashboard/DashboardEventsPage";
-import DashboardRapprochementPage from "@/pages/dashboard/DashboardRapprochementPage";
-import DashboardCautionsPage from "@/pages/dashboard/DashboardCautionsPage";
-import DashboardBlogPage from "@/pages/dashboard/DashboardBlogPage";
-import DashboardComptesLocatairesPage from "@/pages/dashboard/DashboardComptesLocatairesPage";
-import ResetPasswordPage from "@/pages/ResetPasswordPage";
+
+// ─── Lazy-loaded public pages (named exports) ──────────────
+const HomePage = lazy(() => import("@/pages/HomePage").then(m => ({ default: m.HomePage })));
+const ColivingPage = lazy(() => import("@/pages/ColivingPageV4").then(m => ({ default: m.ColivingPageV4 })));
+const ServicesPage = lazy(() => import("@/pages/ServicesPageV4").then(m => ({ default: m.ServicesPageV4 })));
+const HousesPage = lazy(() => import("@/pages/HousesPageV4").then(m => ({ default: m.HousesPageV4 })));
+const RatesPage = lazy(() => import("@/pages/RatesPageV4").then(m => ({ default: m.RatesPageV4 })));
+const FAQPage = lazy(() => import("@/pages/FAQPageV4").then(m => ({ default: m.FAQPageV4 })));
+const JoinPage = lazy(() => import("@/pages/JoinPageV4").then(m => ({ default: m.JoinPageV4 })));
+const HouseDetailPage = lazy(() => import("@/pages/HouseDetailPage").then(m => ({ default: m.HouseDetailPage })));
+const BlogPage = lazy(() => import("@/pages/BlogPage").then(m => ({ default: m.BlogPage })));
+const BlogPostPage = lazy(() => import("@/pages/BlogPostPage").then(m => ({ default: m.BlogPostPage })));
+const ColocationGenevePage = lazy(() => import("@/pages/ColocationGenevePage").then(m => ({ default: m.ColocationGenevePage })));
+const AnnemasseColocationPage = lazy(() => import("@/pages/AnnemasseColocationPage").then(m => ({ default: m.AnnemasseColocationPage })));
+const ChambreLouerAnnemassePage = lazy(() => import("@/pages/ChambreLouerAnnemassePage").then(m => ({ default: m.ChambreLouerAnnemassePage })));
+const InvestisseursPage = lazy(() => import("@/pages/InvestisseursPage").then(m => ({ default: m.InvestisseursPage })));
+const NotFoundPage = lazy(() => import("@/pages/NotFoundPage").then(m => ({ default: m.NotFoundPage })));
+
+// ─── Lazy-loaded portail pages (named exports) ─────────────
+const MaMaisonPage = lazy(() => import("@/pages/portail/MaMaisonPage").then(m => ({ default: m.MaMaisonPage })));
+const MonBailPage = lazy(() => import("@/pages/portail/MonBailPage").then(m => ({ default: m.MonBailPage })));
+const MesDemandesPage = lazy(() => import("@/pages/portail/MesDemandesPage").then(m => ({ default: m.MesDemandesPage })));
+const CommunautePage = lazy(() => import("@/pages/portail/CommunautePage").then(m => ({ default: m.CommunautePage })));
+
+// ─── Lazy-loaded dashboard pages (default exports) ─────────
+const DashboardLayout = lazy(() => import("@/pages/dashboard/DashboardLayout"));
+const DashboardLoyersPage = lazy(() => import("@/pages/dashboard/DashboardLoyersPage"));
+const DashboardLocatairesPage = lazy(() => import("@/pages/dashboard/DashboardLocatairesPage"));
+const DashboardDepensesPage = lazy(() => import("@/pages/dashboard/DashboardDepensesPage"));
+const DashboardMaintenancePage = lazy(() => import("@/pages/dashboard/DashboardMaintenancePage"));
+const DashboardProspectsPage = lazy(() => import("@/pages/dashboard/DashboardProspectsPage"));
+const DashboardRoadmapPage = lazy(() => import("@/pages/dashboard/DashboardRoadmapPage"));
+const DashboardMaisonsPage = lazy(() => import("@/pages/dashboard/DashboardMaisonsPage"));
+const DashboardNouveauBailPage = lazy(() => import("@/pages/dashboard/DashboardNouveauBailPage"));
+const DashboardDocumentsPage = lazy(() => import("@/pages/dashboard/DashboardDocumentsPage"));
+const DashboardEventsPage = lazy(() => import("@/pages/dashboard/DashboardEventsPage"));
+const DashboardRapprochementPage = lazy(() => import("@/pages/dashboard/DashboardRapprochementPage"));
+const DashboardCautionsPage = lazy(() => import("@/pages/dashboard/DashboardCautionsPage"));
+const DashboardBlogPage = lazy(() => import("@/pages/dashboard/DashboardBlogPage"));
+const DashboardComptesLocatairesPage = lazy(() => import("@/pages/dashboard/DashboardComptesLocatairesPage"));
+
+// ─── Lazy-loaded misc pages (default export) ───────────────
+const ResetPasswordPage = lazy(() => import("@/pages/ResetPasswordPage"));
 
 function AppContent() {
   const location = useLocation();
@@ -52,6 +61,7 @@ function AppContent() {
   return (
     <div className="min-h-screen bg-background">
       {!isDashboard && !isPortail && !isResetPw && <Navbar />}
+      <Suspense fallback={<div className="min-h-screen" />}>
       <Routes>
         <Route path="/" element={<HomePage />} />
         <Route path="/colocation-geneve" element={<ColocationGenevePage />} />
@@ -118,6 +128,7 @@ function AppContent() {
         </Route>
         <Route path="*" element={<NotFoundPage />} />
       </Routes>
+      </Suspense>
       {!isDashboard && !isPortail && !isResetPw && <Footer />}
     </div>
   );

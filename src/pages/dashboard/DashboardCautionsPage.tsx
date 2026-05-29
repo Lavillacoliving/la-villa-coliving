@@ -237,9 +237,8 @@ export default function DashboardCautionsPage() {
   };
 
   // ─── Export Excel ─────────────────────────────────────
-  const exportExcel = () => {
-    const XLSX = (window as any).XLSX;
-    if (!XLSX) { toast.error('SheetJS non chargé'); return; }
+  const exportExcel = async () => {
+    const XLSX = await import('xlsx');
 
     const exportRows = filtered.map(r => ({
       'Locataire': `${r.first_name} ${r.last_name}`,

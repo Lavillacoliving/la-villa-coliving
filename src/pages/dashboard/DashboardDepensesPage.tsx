@@ -61,8 +61,8 @@ export default function DashboardDepensesPage() {
 
   const prevMonth=()=>{const d=new Date(month+'-01');d.setMonth(d.getMonth()-1);setMonth(d.toISOString().slice(0,7));};
   const nextMonth=()=>{const d=new Date(month+'-01');d.setMonth(d.getMonth()+1);setMonth(d.toISOString().slice(0,7));};
-  const exportExcel=()=>{
-    const XLSX=(window as any).XLSX; if(!XLSX){toast.error('SheetJS non chargé');return;}
+  const exportExcel=async ()=>{
+    const XLSX = await import('xlsx');
     const rows=filtered.map(e=>({Date:e.accounting_date,Fournisseur:e.label_simple,Opération:e.label_operation,Catégorie:e.category,Montant:e.amount,Entité:e.entity_name,Réf:e.reference||''}));
     const ws=XLSX.utils.json_to_sheet(rows);const wb=XLSX.utils.book_new();XLSX.utils.book_append_sheet(wb,ws,'Dépenses');XLSX.writeFile(wb,'depenses_'+month+'.xlsx');
   };

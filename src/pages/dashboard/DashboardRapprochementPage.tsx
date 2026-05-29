@@ -251,9 +251,8 @@ export default function DashboardRapprochementPage() {
   };
 
   // ─── Export Excel YTD ─────────────────────────────────
-  const exportExcel = () => {
-    const XLSX = (window as any).XLSX;
-    if (!XLSX) { toast.error('SheetJS non chargé'); return; }
+  const exportExcel = async () => {
+    const XLSX = await import('xlsx');
 
     const year = month.slice(0, 4);
     const label = ytdMode ? `YTD_${year}_au_${month}` : month;
