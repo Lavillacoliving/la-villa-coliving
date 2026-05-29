@@ -716,8 +716,8 @@ export function RatesPageV4() {
               </h3>
               <p className="text-[#57534E] leading-relaxed">
                 {language === "en"
-                  ? "We require a security deposit equivalent to two months' rent. This is returned within 30 days of move-out, minus any deductions for damages."
-                  : "Nous exigeons une caution équivalente à deux mois de loyer. Elle est restituée dans les 30 jours suivant le départ, déduction faite des éventuels dommages."}
+                  ? "We require a security deposit equivalent to two months' rent (standard in France). It is returned in full within 30 days of move-out, minus any deductions for damages. Payment can be spread over the first 2 months."
+                  : "Nous demandons une caution de deux mois de loyer (standard en France). Elle est restituée intégralement dans les 30 jours suivant le départ, déduction faite des éventuels dommages. Le paiement peut être étalé sur les 2 premiers mois."}
               </p>
             </div>
             <div className="bg-[#FAF9F6] p-10">
@@ -734,6 +734,27 @@ export function RatesPageV4() {
         </div>
       </section>
 
+      {/* Social proof + colocation-geneve link */}
+      <section className="py-16 bg-white border-t border-[#E7E5E4]">
+        <div className="container-custom max-w-3xl text-center">
+          <p className="text-[#57534E] italic text-lg mb-2">
+            {language === "en"
+              ? "\"I was paying 2,200 CHF for a tiny studio in Geneva. Here I pay 1,380 CHF all-inclusive with pool, gym, and an amazing community.\""
+              : "\"Je payais 2 200 CHF pour un petit studio à Genève. Ici je paie 1 380 CHF tout inclus avec piscine, gym et une communauté incroyable.\""}
+          </p>
+          <p className="text-sm text-[#78716C] mb-6">
+            — Marie L., {language === "en" ? "Consultant, cross-border worker" : "Consultante, frontalière"}
+          </p>
+          <Link
+            to="/colocation-geneve"
+            className="inline-flex items-center gap-2 text-[#D4A574] font-medium hover:underline"
+          >
+            {language === "en" ? "Learn more about shared housing near Geneva" : "En savoir plus sur la colocation près de Genève"}
+            <ArrowRight className="w-4 h-4" />
+          </Link>
+        </div>
+      </section>
+
       {/* CTA */}
       <section className="py-24 bg-[#D4A574]">
         <div className="container-custom text-center">
@@ -746,9 +767,15 @@ export function RatesPageV4() {
               : "Prêt à Économiser & Nous Rejoindre ?"}
           </h2>
           <p className="text-lg text-white/80 max-w-xl mx-auto mb-8">
-            {language === "en"
-              ? `Save ${monthlySavings} CHF/month and join 100+ happy colivers. Limited spots for Spring 2026.`
-              : `Économisez ${monthlySavings} CHF/mois et rejoignez 100+ colivers heureux. Places limitées pour le Printemps 2026.`}
+            {(() => {
+              const now = new Date();
+              const next = new Date(now.getFullYear(), now.getMonth() + 1, 1);
+              const monthFr = next.toLocaleDateString("fr-FR", { month: "long", year: "numeric" });
+              const monthEn = next.toLocaleDateString("en-US", { month: "long", year: "numeric" });
+              return language === "en"
+                ? `Save ${monthlySavings} CHF/month and join 100+ happy colivers. Limited spots for ${monthEn}.`
+                : `Économisez ${monthlySavings} CHF/mois et rejoignez 100+ colivers heureux. Places limitées pour ${monthFr}.`;
+            })()}
           </p>
           <Link
             to="/candidature"
