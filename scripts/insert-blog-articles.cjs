@@ -74,7 +74,7 @@ Attention aux postes souvent oubliés quand on compare les prix :
 
 1. **Taxe d'habitation** : 50-100 €/mois (location classique)
 2. **Électricité** : 60-120 €/mois (studio mal isolé)
-3. **Dépôt de garantie** : 3 mois de loyer à Genève vs 2 mois chez La Villa
+3. **Dépôt de garantie** : 3 mois de loyer à Genève vs 2 mois hors charges chez La Villa
 4. **Frais d'agence** : 1 mois de loyer (location classique)
 5. **Meubles et équipement** : 2 000 – 5 000 € pour un studio vide
 6. **Transport** : budget identique que vous viviez à Genève ou côté France (Léman Express)
@@ -140,7 +140,7 @@ Watch out for expenses often forgotten when comparing prices:
 
 1. **Housing tax**: €50-100/month (traditional rental)
 2. **Electricity**: €60-120/month (poorly insulated studio)
-3. **Security deposit**: 3 months rent in Geneva vs 2 months at La Villa
+3. **Security deposit**: 3 months rent in Geneva vs 2 months excluding charges at La Villa
 4. **Agency fees**: 1 month's rent (traditional rental)
 5. **Furniture and equipment**: €2,000 – €5,000 for an empty studio
 6. **Transport**: same budget whether you live in Geneva or on the French side (Léman Express)

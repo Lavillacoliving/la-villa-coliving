@@ -20,7 +20,7 @@ import {
 const chambreFAQ = [
   {
     q: "Quel est le prix d'une chambre meublée à Annemasse chez La Villa Coliving ?",
-    a: "Nos chambres meublées à Annemasse Agglo sont à partir de 1 380 CHF/mois tout inclus (loyer + charges + fibre + ménage 2x/semaine + accès piscine/sauna/gym + cours fitness privés + abonnements streaming). Pas de frais d'agence, pas de frais de dossier, caution équivalente à 2 mois de loyer (restituée sous 30 jours après l'état des lieux).",
+    a: "Nos chambres meublées à Annemasse Agglo sont à partir de 1 380 CHF/mois tout inclus (loyer + charges + fibre + ménage 2x/semaine + accès piscine/sauna/gym + cours fitness privés + abonnements streaming). Pas de frais d'agence, pas de frais de dossier, caution équivalente à 2 mois de loyer hors charges (restituée sous 30 jours après l'état des lieux).",
   },
   {
     q: "Vos chambres à louer à Annemasse sont-elles vraiment meublées ?",
@@ -283,8 +283,8 @@ export function ChambreLouerAnnemassePage() {
                 num: "4",
                 title_fr: "Emménagement 2 sem.",
                 title_en: "Move in within 2 weeks",
-                desc_fr: "Bail meublé signé en ligne, caution 2 mois, emménagement avec une valise.",
-                desc_en: "Furnished lease signed online, 2-month deposit, move in with a suitcase.",
+                desc_fr: "Bail meublé signé en ligne, caution 2 mois hors charges, emménagement avec une valise.",
+                desc_en: "Furnished lease signed online, 2-month deposit excluding charges, move in with a suitcase.",
               },
             ].map((step, i) => (
               <div key={i} className="text-center">

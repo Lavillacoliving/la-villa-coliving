@@ -716,8 +716,8 @@ export function RatesPageV4() {
               </h3>
               <p className="text-[#57534E] leading-relaxed">
                 {language === "en"
-                  ? "We require a security deposit equivalent to two months' rent (standard in France). It is returned in full within 30 days of move-out, minus any deductions for damages. Payment can be spread over the first 2 months."
-                  : "Nous demandons une caution de deux mois de loyer (standard en France). Elle est restituée intégralement dans les 30 jours suivant le départ, déduction faite des éventuels dommages. Le paiement peut être étalé sur les 2 premiers mois."}
+                  ? "We require a security deposit equivalent to two months' rent excluding charges (standard in France). It is returned in full within 30 days of move-out, minus any deductions for damages. Payment can be spread over the first 2 months."
+                  : "Nous demandons une caution de deux mois de loyer hors charges (standard en France). Elle est restituée intégralement dans les 30 jours suivant le départ, déduction faite des éventuels dommages. Le paiement peut être étalé sur les 2 premiers mois."}
               </p>
             </div>
             <div className="bg-[#FAF9F6] p-10">

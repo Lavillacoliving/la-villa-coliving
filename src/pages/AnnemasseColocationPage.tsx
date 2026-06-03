@@ -36,7 +36,7 @@ const annemasseFAQ = [
   },
   {
     q: "Quelle est la durée du bail à Annemasse ?",
-    a: "Le bail est un contrat de location meublée de 12 mois renouvelable, avec un préavis d'1 mois. Cela convient aux frontaliers qui s'installent durablement comme à ceux en période d'essai à Genève. Le bail respecte le cadre français (loi Alur), avec une caution de 2 mois et aucun frais d'agence.",
+    a: "Le bail est un contrat de location meublée de 12 mois renouvelable, avec un préavis d'1 mois. Cela convient aux frontaliers qui s'installent durablement comme à ceux en période d'essai à Genève. Le bail respecte le cadre français (loi Alur), avec une caution de 2 mois hors charges et aucun frais d'agence.",
   },
   {
     q: "Quelle différence entre colocation classique et coliving à Annemasse ?",

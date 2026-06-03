@@ -363,7 +363,7 @@ export const translations = {
           "E-bike charging stations (Le Lodge)",
         ],
       },
-      deposit: "Security deposit: 2 months rent",
+      deposit: "Security deposit: 2 months' rent excluding charges",
       noFees: "No agency fees",
     },
 
@@ -802,7 +802,7 @@ export const translations = {
           "Bornes recharge vélo électrique (Le Lodge)",
         ],
       },
-      deposit: "Caution : 2 mois de loyer",
+      deposit: "Caution : 2 mois de loyer hors charges",
       noFees: "Sans frais d'agence",
     },
 

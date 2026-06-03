@@ -291,8 +291,8 @@ export const faqData: FAQItem[] = [
       fr: 'Y a-t-il une caution ?',
     },
     answer: {
-      en: 'Yes, we require a security deposit equivalent to two months\' rent. This deposit is held for the duration of your stay and returned within 30 days of move-out, minus any deductions for damages beyond normal wear and tear.',
-      fr: 'Oui, nous exigeons une caution équivalente à deux mois de loyer. Cette caution est conservée pendant la durée de votre séjour et restituée dans les 30 jours suivant le départ, moins toute déduction pour dommages au-delà de l\'usure normale.',
+      en: 'Yes, we require a security deposit equivalent to two months\' rent excluding charges. This deposit is held for the duration of your stay and returned within 30 days of move-out, minus any deductions for damages beyond normal wear and tear.',
+      fr: 'Oui, nous exigeons une caution équivalente à deux mois de loyer hors charges. Cette caution est conservée pendant la durée de votre séjour et restituée dans les 30 jours suivant le départ, moins toute déduction pour dommages au-delà de l\'usure normale.',
     },
   },
   {

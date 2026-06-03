@@ -871,7 +871,7 @@ export function ColocationGenevePage() {
                   [language === "en" ? "Cleaning" : "Ménage", "✓ " + (language === "en" ? "2x/week, included" : "2x/semaine, inclus"), language === "en" ? "You manage" : "À votre charge"],
                   [language === "en" ? "Community" : "Communauté", "✓ " + (language === "en" ? "Monthly events, yoga & sports, community dinners" : "Événements mensuels, yoga & sport, dîners communautaires"), "✗ " + (language === "en" ? "Isolated" : "Isolé")],
                   [language === "en" ? "Lease" : "Bail", language === "en" ? "12 months, renewable" : "12 mois, renouvelable", language === "en" ? "12+ months lease" : "Bail 12+ mois"],
-                  [language === "en" ? "Deposit" : "Caution", language === "en" ? "2 months" : "2 mois", language === "en" ? "3 months typical" : "3 mois généralement"],
+                  [language === "en" ? "Deposit" : "Caution", language === "en" ? "2 months excl. charges" : "2 mois hors charges", language === "en" ? "3 months typical" : "3 mois généralement"],
                 ].map(([label, villa, studio], i) => (
                   <tr key={i} className={i % 2 === 0 ? "bg-white" : "bg-[#FAF9F6]"}>
                     <td className="border border-[#E7E5E4] px-6 py-3 font-medium text-[#1C1917]">{label}</td>
