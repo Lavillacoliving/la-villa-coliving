@@ -1624,9 +1624,16 @@ export function HouseDetailPage() {
                   <p className="text-4xl font-black text-[#D4A574] mb-2">
                     {house.price} CHF
                   </p>
-                  <p className="text-[#78716C] mb-6 font-medium">
+                  <p className="text-[#78716C] mb-4 font-medium">
                     {t.houseDetail.perMonth}
                   </p>
+
+                  {/* 0 € move-in fees badge */}
+                  <div className="mb-4">
+                    <span className="inline-flex items-center gap-2 px-3 py-1.5 bg-[#1C1917] text-white text-sm font-semibold rounded-lg">
+                      {language === "en" ? "€0 move-in fees" : "0 € de frais d'entrée"}
+                    </span>
+                  </div>
 
                   {/* Availability badge */}
                   <div className="mb-4">
