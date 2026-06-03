@@ -654,28 +654,28 @@ export function RatesPageV4() {
                     <Check className="w-4 h-4 text-[#D4A574]" />{" "}
                     {language === "en" ? "Application fee" : "Frais de dossier"}
                   </span>
-                  <span className="text-[#D4A574] font-bold">0 €</span>
+                  <span className="text-[#D4A574] font-bold">{language === "en" ? "€0" : "0 €"}</span>
                 </div>
                 <div className="flex justify-between text-[#44403C]">
                   <span className="flex items-center gap-2">
                     <Check className="w-4 h-4 text-[#D4A574]" />{" "}
                     {language === "en" ? "Agency fee" : "Honoraires d'agence"}
                   </span>
-                  <span className="text-[#D4A574] font-bold">0 €</span>
+                  <span className="text-[#D4A574] font-bold">{language === "en" ? "€0" : "0 €"}</span>
                 </div>
                 <div className="flex justify-between text-[#44403C]">
                   <span className="flex items-center gap-2">
                     <Check className="w-4 h-4 text-[#D4A574]" />{" "}
                     {language === "en" ? "Booking fee" : "Frais de réservation"}
                   </span>
-                  <span className="text-[#D4A574] font-bold">0 €</span>
+                  <span className="text-[#D4A574] font-bold">{language === "en" ? "€0" : "0 €"}</span>
                 </div>
                 <div className="flex justify-between text-[#44403C]">
                   <span className="flex items-center gap-2">
                     <Check className="w-4 h-4 text-[#D4A574]" />{" "}
                     {language === "en" ? "Check-in fee" : "Frais d'état des lieux"}
                   </span>
-                  <span className="text-[#D4A574] font-bold">0 €</span>
+                  <span className="text-[#D4A574] font-bold">{language === "en" ? "€0" : "0 €"}</span>
                 </div>
               </div>
 
