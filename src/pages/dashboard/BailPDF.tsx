@@ -71,7 +71,23 @@ interface FormData {
   irl_indice: number;
   clauses_particulieres: string;
   annexe_documents: string[];
+  lease_duration_months: number;
 }
+
+// Helper: nombre en lettres pour la durée (mois)
+const DURATION_WORDS: Record<number, string> = {
+  1: "un", 2: "deux", 3: "trois", 4: "quatre", 5: "cinq", 6: "six",
+  7: "sept", 8: "huit", 9: "neuf", 10: "dix", 11: "onze", 12: "douze",
+  15: "quinze", 18: "dix-huit", 24: "vingt-quatre", 36: "trente-six",
+};
+export const durationInWords = (n: number): string => DURATION_WORDS[n] || String(n);
+
+// Helper: traduit bathroom_type (private/shared) en libellé FR
+const bathroomLabel = (type: string | undefined): string => {
+  if (!type) return "—";
+  const m: Record<string, string> = { private: "privée", shared: "partagée", semi_private: "semi-privée" };
+  return m[type] || type;
+};
 
 export interface BailPDFData {
   property: Property;
@@ -363,28 +379,32 @@ export function BailPDF({ data }: { data: BailPDFData }) {
         {/* ---------- ARTICLE II ---------- */}
         <View minPresenceAhead={60}>
           <Text style={s.articleTitle}>{"ARTICLE II \u2014 OBJET DU CONTRAT"}</Text>
-          <Text style={[s.body, { fontFamily: "Helvetica-Bold" }]}>
-            {property.is_coliving
-              ? "Le bailleur loue au locataire un logement meubl\u00E9 comprenant :"
-              : "Le bailleur loue au locataire un appartement meubl\u00E9 comprenant :"}
-          </Text>
         </View>
 
         {property.is_coliving ? (
           <View>
-            <BoldBullet>{ph(property.name, "Nom du bien")}</BoldBullet>
-            <BoldBullet>{ph(property.address, "Adresse du bien")}</BoldBullet>
-            <BoldBullet>Chambre : {ph(room.name, "Chambre")}</BoldBullet>
-            <Bullet>Surface : {room.surface_m2} m² — {"Étage : "}{room.floor}</Bullet>
+            <Text style={[s.body, { fontFamily: "Helvetica-Bold", marginTop: 4 }]}>{"Bien concern\u00E9 :"}</Text>
+            <BoldBullet>{ph(property.name, "Nom du bien")} - {ph(property.address, "Adresse du bien")}</BoldBullet>
+            <BoldBullet>{"\u00C9tage : "}{room.floor} - Chambre : {ph(room.name, "Chambre")} - Surface : {room.surface_m2} m²</BoldBullet>
+
+            <Text style={[s.body, { fontFamily: "Helvetica-Bold", marginTop: 10 }]}>
+              {"Le bailleur loue au locataire un logement meubl\u00E9 comprenant :"}
+            </Text>
             {room.location_detail && <Bullet>Emplacement : {room.location_detail}</Bullet>}
             <Bullet>Description : {ph(room.description, "Description")}</Bullet>
-            <Bullet>Salle de bain : {ph(room.bathroom_type, "Type")}{room.bathroom_detail ? ` — ${room.bathroom_detail}` : ""}</Bullet>
+            <Bullet>Salle de bain : {bathroomLabel(room.bathroom_type)}{room.bathroom_detail ? ` \u2014 ${room.bathroom_detail}` : ""}</Bullet>
             {room.has_parking && <Bullet>Parking : {room.parking_detail || "Oui"}</Bullet>}
             {room.has_balcony && <Bullet>Balcon : Oui</Bullet>}
             {room.has_terrace && <Bullet>Terrasse : Oui</Bullet>}
             {room.has_private_entrance && <Bullet>{"Entr\u00e9e priv\u00e9e : Oui"}</Bullet>}
           </View>
         ) : (
+          <>
+          <View>
+            <Text style={[s.body, { fontFamily: "Helvetica-Bold" }]}>
+              {"Le bailleur loue au locataire un appartement meubl\u00E9 comprenant :"}
+            </Text>
+          </View>
           <View>
             <Text style={s.subTitle}>{"A. Consistance du logement"}</Text>
             <Text style={s.body}>
@@ -404,6 +424,7 @@ export function BailPDF({ data }: { data: BailPDFData }) {
             <Text style={s.subTitle}>{"C. D\u00E9signation des locaux et \u00E9quipements accessoires de l\u2019immeuble \u00E0 usage privatif du locataire :"}</Text>
             <Text style={s.body}>{"Place de Parking Num\u00E9ro 8 (Identifiant fiscal: 740120062917)"}</Text>
           </View>
+          </>
         )}
 
         {/* Parties communes */}
@@ -494,7 +515,7 @@ export function BailPDF({ data }: { data: BailPDFData }) {
         <View wrap={false} minPresenceAhead={30}>
           <Text style={s.articleTitle}>{"ARTICLE III \u2014 DATE DE PRISE D\u2019EFFET ET DUR\u00C9E"}</Text>
           <Text style={[s.body, { fontFamily: "Helvetica-Bold" }]}>
-            {"La location prend effet le "}{fDate(form.entry_date)}{" pour une dur\u00E9e de douze (12) mois, soit jusqu\u2019au "}{fDate(exit_date)}.
+            {"La location prend effet le "}{fDate(form.entry_date)}{" pour une dur\u00E9e de "}{durationInWords(form.lease_duration_months || 12)}{" ("}{form.lease_duration_months || 12}{") mois, soit jusqu\u2019au "}{fDate(exit_date)}.
           </Text>
           <Text style={s.body}>
             {"\u00C0 l\u2019expiration de cette p\u00E9riode, le contrat se renouvelle par reconduction tacite pour des p\u00E9riodes successives de douze mois, sauf d\u00E9nonciation notifi\u00E9e au moins un mois avant l\u2019expiration du contrat par le locataire, ou trois mois par le bailleur."}
@@ -511,7 +532,7 @@ export function BailPDF({ data }: { data: BailPDFData }) {
 
         {property.is_coliving ? (
           <View>
-            <Text style={s.subTitle}><Text style={{ fontFamily: "Helvetica-Bold" }}>Loyer mensuel :</Text> {fEUR(loyer_eur)} ({fCHF(form.loyer_chf)} au taux BCE du {form.exchange_rate_date || "\u2014"} : {rate} \u2014 pour indication uniquement)</Text>
+            <Text style={s.subTitle}><Text style={{ fontFamily: "Helvetica-Bold" }}>Loyer mensuel :</Text> {fEUR(loyer_eur)} ({fCHF(form.loyer_chf)} au taux BCE du {form.exchange_rate_date || "\u2014"} : {rate}{" \u2014 pour indication uniquement"})</Text>
             {prorata_days > 0 && prorata_total_days > 0 && prorata_days < prorata_total_days ? (
               <View>
                 <Text style={[s.body, { marginTop: 6, fontFamily: "Helvetica-Bold" }]}>
@@ -597,7 +618,7 @@ export function BailPDF({ data }: { data: BailPDFData }) {
           <Text style={s.articleTitle}>{"ARTICLE V \u2014 GARANTIES"}</Text>
           <Text style={s.body}>
             {property.is_coliving
-              ? <>{"Le locataire versera un d\u00E9p\u00F4t de garantie \u00E9gal \u00E0 deux (2) mois de loyer hors charges, soit "}<Text style={{ fontFamily: "Helvetica-Bold", color: gold }}>{fEUR(depot_eur)} ({fCHF(depot_eur * rate)})</Text>{", restitu\u00E9 dans les deux (2) mois suivant la fin du contrat, selon l\u2019\u00E9tat des lieux."}</>
+              ? <>{"Le locataire versera un d\u00E9p\u00F4t de garantie \u00E9gal \u00E0 deux (2) mois de loyer hors charges, soit "}<Text style={{ fontFamily: "Helvetica-Bold", color: gold }}>{fEUR(depot_eur)}</Text>{", restitu\u00E9 dans les deux (2) mois suivant la fin du contrat, selon l\u2019\u00E9tat des lieux."}</>
               : <>{"Le locataire versera un d\u00E9p\u00F4t de garantie \u00E9gal \u00E0 un (1) mois de loyer hors charges, soit "}<Text style={{ fontFamily: "Helvetica-Bold", color: gold }}>{fEUR(depot_eur)}</Text>{", restitu\u00E9 dans les deux (2) mois suivant la fin du contrat, d\u00E9duction faite des sommes \u00E9ventuellement dues."}</>
             }
           </Text>

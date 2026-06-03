@@ -73,7 +73,23 @@ interface FormData {
   irl_indice: number;
   clauses_particulieres: string;
   annexe_documents: string[];
+  lease_duration_months: number;
 }
+
+// Helper: nombre en lettres pour la durée (mois)
+const DURATION_WORDS_PREVIEW: Record<number, string> = {
+  1: "un", 2: "deux", 3: "trois", 4: "quatre", 5: "cinq", 6: "six",
+  7: "sept", 8: "huit", 9: "neuf", 10: "dix", 11: "onze", 12: "douze",
+  15: "quinze", 18: "dix-huit", 24: "vingt-quatre", 36: "trente-six",
+};
+const durationInWordsPreview = (n: number): string => DURATION_WORDS_PREVIEW[n] || String(n);
+
+// Helper: traduit bathroom_type en libellé FR (preview)
+const bathroomLabelPreview = (type: string | undefined): string => {
+  if (!type) return "—";
+  const m: Record<string, string> = { private: "privée", shared: "partagée", semi_private: "semi-privée" };
+  return m[type] || type;
+};
 
 interface ContractData {
   property: Property;
@@ -434,16 +450,16 @@ function generateContractHTML(data: ContractData): string {
         <h2>ARTICLE II — OBJET DU CONTRAT</h2>
         <div class="article">
           ${property.is_coliving ? `
-          <strong>Le bailleur loue au locataire un logement meublé comprenant :</strong>
+          <strong>Bien concerné :</strong>
           <ul>
-            <li><strong>${ph(property.name, 'Nom du bien')}</strong></li>
-            <li><strong>${ph(property.address, 'Adresse du bien')}</strong></li>
-            <li><strong>Chambre : ${ph(room.name, 'Chambre')}</strong></li>
-            <li><strong>Surface :</strong> ${room.surface_m2} m²</li>
-            <li><strong>Étage :</strong> ${room.floor}</li>
+            <li><strong>${ph(property.name, 'Nom du bien')} - ${ph(property.address, 'Adresse du bien')}</strong></li>
+            <li><strong>Étage : ${room.floor} - Chambre : ${ph(room.name, 'Chambre')} - Surface : ${room.surface_m2} m²</strong></li>
+          </ul>
+          <p style="margin-top:10px;"><strong>Le bailleur loue au locataire un logement meublé comprenant :</strong></p>
+          <ul>
             ${room.location_detail ? `<li><strong>Emplacement :</strong> ${room.location_detail}</li>` : ''}
             <li><strong>Description :</strong> ${ph(room.description, 'Description')}</li>
-            <li><strong>Salle de bain :</strong> ${ph(room.bathroom_type, 'Type')}${room.bathroom_detail ? ` — ${room.bathroom_detail}` : ''}</li>
+            <li><strong>Salle de bain :</strong> ${bathroomLabelPreview(room.bathroom_type)}${room.bathroom_detail ? ` — ${room.bathroom_detail}` : ''}</li>
             ${room.has_parking ? `<li><strong>Parking :</strong> ${room.parking_detail || 'Oui'}</li>` : ''}
             ${room.has_balcony ? '<li><strong>Balcon :</strong> Oui</li>' : ''}
             ${room.has_terrace ? '<li><strong>Terrasse :</strong> Oui</li>' : ''}
@@ -539,9 +555,9 @@ function generateContractHTML(data: ContractData): string {
 
         <h2>ARTICLE III — DATE DE PRISE D'EFFET ET DURÉE</h2>
         <div class="article">
-          <strong>La location prend effet le <span style="color:#c9a96e;">${fDate(form.entry_date)}</span> pour une durée de douze (12) mois, soit jusqu'au <span style="color:#c9a96e;">${fDate(exit_date)}</span>.</strong>
+          <strong>La location prend effet le <span style="color:#c9a96e;">${fDate(form.entry_date)}</span> pour une durée de ${durationInWordsPreview(form.lease_duration_months || 12)} (${form.lease_duration_months || 12}) mois, soit jusqu'au <span style="color:#c9a96e;">${fDate(exit_date)}</span>.</strong>
           <br/><br/>
-          À l'expiration de cette période, le contrat se renouvelle par reconduction tacite pour des périodes successives de douze mois, sauf dénonciation notifiée au moins un mois avant l'expiration du contrat par le locataire, ou trois mois par le bailleur.
+          À l'expiration de cette période, le contrat se renouvelle par reconduction tacite pour des périodes successives de ${durationInWordsPreview(form.lease_duration_months || 12)} mois, sauf dénonciation notifiée au moins un mois avant l'expiration du contrat par le locataire, ou trois mois par le bailleur.
         </div>
 
         <div class="page-break"></div>
@@ -597,7 +613,7 @@ function generateContractHTML(data: ContractData): string {
         <h2>ARTICLE V — GARANTIES</h2>
         <div class="article">
           ${property.is_coliving
-            ? `Le locataire versera un dépôt de garantie égal à deux (2) mois de loyer hors charges, soit <strong style="color:#c9a96e;">${fEUR(depot_eur)} (${fCHF(depot_eur * form.exchange_rate)})</strong>, restitué dans les deux (2) mois suivant la fin du contrat, selon l'état des lieux.`
+            ? `Le locataire versera un dépôt de garantie égal à deux (2) mois de loyer hors charges, soit <strong style="color:#c9a96e;">${fEUR(depot_eur)}</strong>, restitué dans les deux (2) mois suivant la fin du contrat, selon l'état des lieux.`
             : `Le locataire versera un dépôt de garantie égal à un (1) mois de loyer hors charges, soit <strong style="color:#c9a96e;">${fEUR(depot_eur)}</strong>, restitué dans les deux (2) mois suivant la fin du contrat, déduction faite des sommes éventuellement dues.`}
         </div>
 
@@ -707,6 +723,12 @@ function generateContractHTML(data: ContractData): string {
             ${(form.annexe_documents || []).map((doc: string) => `<li>${doc}</li>`).join('')}
           </ul>
         </div>
+
+        ${form.clauses_particulieres?.trim() ? `
+        <h2>CLAUSES PARTICULIÈRES</h2>
+        <div class="article">
+          ${form.clauses_particulieres.replace(/\n/g, '<br/>')}
+        </div>` : ''}
 
         <div class="signature-section">
           <div class="signature-box">
@@ -820,6 +842,7 @@ export default function DashboardNouveauBailPage() {
     irl_indice: 145.77,
     clauses_particulieres: '',
     annexe_documents: [],
+    lease_duration_months: 12,
   });
 
   const [selectedProperty, setSelectedProperty] = useState<Property | null>(null);
@@ -941,11 +964,13 @@ export default function DashboardNouveauBailPage() {
     }
   };
 
-  // Calculate exit date
+  // Calculate exit date (durée variable, default 12 mois)
   const exitDate = form.entry_date
-    ? new Date(new Date(form.entry_date).setFullYear(new Date(form.entry_date).getFullYear() + 1))
-        .toISOString()
-        .split('T')[0]
+    ? (() => {
+        const d = new Date(form.entry_date + 'T00:00:00');
+        d.setMonth(d.getMonth() + (form.lease_duration_months || 12));
+        return d.toISOString().split('T')[0];
+      })()
     : '';
 
   // Calculate loyer EUR
@@ -983,10 +1008,10 @@ export default function DashboardNouveauBailPage() {
         await supabase.from('tenants').update({ is_active: false }).eq('id', oldTenantId);
       }
 
-      // Calculate dates
+      // Calculate dates (durée variable du bail)
       const entryDate = new Date(form.entry_date + 'T00:00:00');
       const bailEnd = new Date(entryDate);
-      bailEnd.setFullYear(bailEnd.getFullYear() + 1);
+      bailEnd.setMonth(bailEnd.getMonth() + (form.lease_duration_months || 12));
       const bailEndStr = bailEnd.toISOString().split('T')[0];
 
       // Calculate amounts
@@ -1482,6 +1507,33 @@ export default function DashboardNouveauBailPage() {
             fontSize: '14px',
           }}
         />
+
+        <label style={{ display: 'block', marginBottom: '8px', fontSize: '13px', color: '#666' }}>
+          Durée du bail (mois) — <span style={{ color: '#999', fontStyle: 'italic' }}>standard : 12 mois</span>
+        </label>
+        <select
+          value={form.lease_duration_months}
+          onChange={(e) => setForm((prev) => ({ ...prev, lease_duration_months: parseInt(e.target.value) || 12 }))}
+          style={{
+            width: '100%',
+            padding: '10px',
+            marginBottom: '15px',
+            borderRadius: '4px',
+            border: '1px solid #ddd',
+            fontSize: '14px',
+            background: 'white',
+          }}
+        >
+          <option value={1}>1 mois</option>
+          <option value={3}>3 mois</option>
+          <option value={6}>6 mois (étudiant / bail mobilité)</option>
+          <option value={9}>9 mois (étudiant)</option>
+          <option value={12}>12 mois (standard)</option>
+          <option value={15}>15 mois</option>
+          <option value={18}>18 mois</option>
+          <option value={24}>24 mois</option>
+          <option value={36}>36 mois</option>
+        </select>
 
         <label style={{ display: 'block', marginBottom: '8px', fontSize: '13px', color: '#666' }}>
           Taux de change (1 EUR = X CHF) — <span style={{ color: '#999', fontStyle: 'italic' }}>
