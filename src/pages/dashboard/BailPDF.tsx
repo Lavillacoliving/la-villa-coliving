@@ -67,7 +67,6 @@ interface FormData {
   charges_energy: number;
   charges_maintenance: number;
   charges_services: number;
-  frais_dossier: number;
   irl_trimestre: string;
   irl_indice: number;
   clauses_particulieres: string;
@@ -512,8 +511,7 @@ export function BailPDF({ data }: { data: BailPDFData }) {
 
         {property.is_coliving ? (
           <View>
-            <Text style={s.subTitle}><Text style={{ fontFamily: "Helvetica-Bold" }}>Loyer mensuel :</Text> {fEUR(loyer_eur)} ({fCHF(form.loyer_chf)})</Text>
-            <Text style={[s.body, { marginTop: 0 }]}>- (taux BCE du {form.exchange_rate_date || "\u2014"} : {rate})</Text>
+            <Text style={s.subTitle}><Text style={{ fontFamily: "Helvetica-Bold" }}>Loyer mensuel :</Text> {fEUR(loyer_eur)} ({fCHF(form.loyer_chf)} au taux BCE du {form.exchange_rate_date || "\u2014"} : {rate} \u2014 pour indication uniquement)</Text>
             {prorata_days > 0 && prorata_total_days > 0 && prorata_days < prorata_total_days ? (
               <View>
                 <Text style={[s.body, { marginTop: 6, fontFamily: "Helvetica-Bold" }]}>
@@ -550,10 +548,6 @@ export function BailPDF({ data }: { data: BailPDFData }) {
               <Text style={[s.tableCellBold, { width: "40%", textAlign: "right" }]}>{fEUR(totalCharges)}</Text>
             </View>
 
-            <Text style={s.subTitle}><Text style={{ fontFamily: "Helvetica-Bold" }}>Frais de dossier :</Text> Montant : {fEUR(form.frais_dossier)} ({fCHF(form.frais_dossier * rate)}) — OFFERTS par le bailleur</Text>
-            <Text style={[s.body, { marginTop: 6, fontSize: 9 }]}>
-              {"En cas de d\u00E9part \u00E0 une date inf\u00E9rieure \u00E0 3 mois r\u00E9volu \u00E0 partir de la date de d\u00E9but du contrat, le locataire sera redevable aupr\u00E8s du bailleur des frais de dossier administratifs de services et d\u2019\u00E9tats des lieux, offerts dans ce pr\u00E9sent contrat."}
-            </Text>
           </View>
         ) : (
           <View>

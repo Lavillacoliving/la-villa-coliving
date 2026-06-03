@@ -69,7 +69,6 @@ interface FormData {
   charges_energy: number;
   charges_maintenance: number;
   charges_services: number;
-  frais_dossier: number;
   irl_trimestre: string;
   irl_indice: number;
   clauses_particulieres: string;
@@ -550,15 +549,12 @@ function generateContractHTML(data: ContractData): string {
         <h2>ARTICLE IV — CONDITIONS FINANCIÈRES</h2>
         <div class="article">
           ${property.is_coliving ? `
-          <h3><strong>Loyer mensuel :</strong> ${fEUR(loyer_eur)} (${fCHF(form.loyer_chf)})</h3>
-          <p style="margin-top:5px;">- (taux BCE du ${form.exchange_rate_date} : ${form.exchange_rate})</p>
+          <h3><strong>Loyer mensuel :</strong> ${fEUR(loyer_eur)} (${fCHF(form.loyer_chf)} au taux BCE du ${form.exchange_rate_date} : ${form.exchange_rate} — pour indication uniquement)</h3>
           ${(!data.prorata_days || !data.prorata_total_days || data.prorata_days >= data.prorata_total_days)
             ? '<p><em>Entrée le 1er du mois — pas de prorata.</em></p>'
             : '<p><strong>Prorata du premier mois :</strong> Du ' + fDate(form.entry_date) + ' au dernier jour du mois (' + data.prorata_days + '/' + data.prorata_total_days + ' jours) :</p><ul><li><strong>En EUR :</strong> <strong style="color:#c9a96e;">' + fEUR(data.prorata_eur) + '</strong></li></ul>'}
           <h3>Charges forfaitaires mensuelles :</h3>
-          ${chargesTable}
-          <h3><strong>Frais de dossier :</strong> Montant : ${fEUR(form.frais_dossier)} (${fCHF(form.frais_dossier * form.exchange_rate)}) — OFFERTS par le bailleur</h3>
-          <p style="font-size:9px;">En cas de départ à une date inférieure à 3 mois révolu à partir de la date de début du contrat, le locataire sera redevable auprès du bailleur des frais de dossier administratifs de services et d'états des lieux, offerts dans ce présent contrat.</p>` : `
+          ${chargesTable}` : `
           <h3>Loyer mensuel :</h3>
           <ul>
             <li><strong>Loyer :</strong> ${fEUR(loyer_eur)} (${fCHF(form.loyer_chf)})</li>
@@ -820,7 +816,6 @@ export default function DashboardNouveauBailPage() {
     charges_energy: 130,
     charges_maintenance: 200,
     charges_services: 90,
-    frais_dossier: 380,
     irl_trimestre: '3ème trimestre 2025',
     irl_indice: 145.77,
     clauses_particulieres: '',
@@ -1653,26 +1648,6 @@ export default function DashboardNouveauBailPage() {
             <span>{depotEUR.toLocaleString('fr-FR')} €</span>
           </div>
         </div>
-
-        <label style={{ display: 'block', marginBottom: '8px', fontSize: '13px', color: '#666' }}>
-          Frais de dossier (EUR) — Offerts
-        </label>
-        <input
-          type="number"
-          step="1"
-          value={form.frais_dossier}
-          onChange={(e) =>
-            setForm((prev) => ({ ...prev, frais_dossier: parseInt(e.target.value) || 0 }))
-          }
-          style={{
-            width: '100%',
-            padding: '10px',
-            marginBottom: '10px',
-            borderRadius: '4px',
-            border: '1px solid #ddd',
-            fontSize: '14px',
-          }}
-        />
 
         <label style={{ display: 'block', marginBottom: '8px', fontSize: '13px', color: '#666' }}>
           IRL Trimestre de référence — <span style={{
