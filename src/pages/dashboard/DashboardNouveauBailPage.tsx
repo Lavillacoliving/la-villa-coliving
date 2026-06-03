@@ -601,7 +601,7 @@ function generateContractHTML(data: ContractData): string {
         <h2>ARTICLE V — GARANTIES</h2>
         <div class="article">
           ${property.is_coliving
-            ? `Le locataire versera un dépôt de garantie égal à deux (2) mois de loyer, soit <strong style="color:#c9a96e;">${fEUR(depot_eur)} (${fCHF(depot_eur * form.exchange_rate)})</strong>, restitué dans les deux (2) mois suivant la fin du contrat, selon l'état des lieux.`
+            ? `Le locataire versera un dépôt de garantie égal à deux (2) mois de loyer hors charges, soit <strong style="color:#c9a96e;">${fEUR(depot_eur)} (${fCHF(depot_eur * form.exchange_rate)})</strong>, restitué dans les deux (2) mois suivant la fin du contrat, selon l'état des lieux.`
             : `Le locataire versera un dépôt de garantie égal à un (1) mois de loyer hors charges, soit <strong style="color:#c9a96e;">${fEUR(depot_eur)}</strong>, restitué dans les deux (2) mois suivant la fin du contrat, déduction faite des sommes éventuellement dues.`}
         </div>
 
@@ -955,7 +955,11 @@ export default function DashboardNouveauBailPage() {
 
   // Calculate loyer EUR
   const loyerEUR = Math.round(form.loyer_chf / form.exchange_rate);
-  const depotEUR = loyerEUR * 2;
+  // Caution = 2 mois de loyer HORS charges (loi Alur — meublé)
+  // form.charges_* sont en EUR (cf. note naming charges_*_chf trompeur)
+  const totalChargesEUR = (form.charges_energy || 0) + (form.charges_maintenance || 0) + (form.charges_services || 0);
+  const loyerHorsChargesEUR = Math.max(0, loyerEUR - totalChargesEUR);
+  const depotEUR = loyerHorsChargesEUR * 2;
 
   // Calculate prorata first month
   const computeProrata = () => {
@@ -993,7 +997,11 @@ export default function DashboardNouveauBailPage() {
       // Calculate amounts
       const loyerEur = Math.round(form.loyer_chf / form.exchange_rate);
       const depositMonths = selectedProperty.deposit_months || 2;
-      const depositEur = loyerEur * depositMonths;
+      // Caution = N mois de loyer HORS charges (loi Alur — meublé)
+      // form.charges_* sont en EUR (cf. note naming charges_*_chf trompeur)
+      const totalChargesEurSave = (form.charges_energy || 0) + (form.charges_maintenance || 0) + (form.charges_services || 0);
+      const loyerHorsChargesEurSave = Math.max(0, loyerEur - totalChargesEurSave);
+      const depositEur = loyerHorsChargesEurSave * depositMonths;
 
       // Insert new tenant and get back the ID
       // ⚠️ Bail créé en mode 'draft' — pas encore envoyé Yousign, caution NON reçue.
@@ -1613,6 +1621,38 @@ export default function DashboardNouveauBailPage() {
             fontSize: '14px',
           }}
         />
+
+        {/* Récap caution dynamique — loi Alur : meublé ≤ 2 mois HORS charges */}
+        <div style={{
+          marginTop: '8px',
+          marginBottom: '15px',
+          padding: '12px 14px',
+          background: '#FFF8E7',
+          border: '1px solid #b8860b',
+          borderRadius: '6px',
+          fontSize: '13px',
+          color: '#3a2e10',
+        }}>
+          <div style={{ fontWeight: 'bold', marginBottom: '6px', color: '#b8860b' }}>
+            Calcul caution (dynamique)
+          </div>
+          <div style={{ display: 'flex', justifyContent: 'space-between', padding: '2px 0' }}>
+            <span>Loyer total mensuel (EUR)</span>
+            <span>{loyerEUR.toLocaleString('fr-FR')} €</span>
+          </div>
+          <div style={{ display: 'flex', justifyContent: 'space-between', padding: '2px 0' }}>
+            <span>− Charges forfaitaires</span>
+            <span>− {totalChargesEUR.toLocaleString('fr-FR')} €</span>
+          </div>
+          <div style={{ display: 'flex', justifyContent: 'space-between', padding: '2px 0', borderTop: '1px dashed #b8860b', marginTop: '4px', paddingTop: '6px' }}>
+            <span>= Loyer hors charges</span>
+            <span>{loyerHorsChargesEUR.toLocaleString('fr-FR')} €</span>
+          </div>
+          <div style={{ display: 'flex', justifyContent: 'space-between', padding: '4px 0 0 0', fontWeight: 'bold', fontSize: '14px' }}>
+            <span>Caution (× 2 mois HC)</span>
+            <span>{depotEUR.toLocaleString('fr-FR')} €</span>
+          </div>
+        </div>
 
         <label style={{ display: 'block', marginBottom: '8px', fontSize: '13px', color: '#666' }}>
           Frais de dossier (EUR) — Offerts

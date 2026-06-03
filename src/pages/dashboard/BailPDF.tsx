@@ -603,7 +603,7 @@ export function BailPDF({ data }: { data: BailPDFData }) {
           <Text style={s.articleTitle}>{"ARTICLE V \u2014 GARANTIES"}</Text>
           <Text style={s.body}>
             {property.is_coliving
-              ? <>{"Le locataire versera un d\u00E9p\u00F4t de garantie \u00E9gal \u00E0 deux (2) mois de loyer, soit "}<Text style={{ fontFamily: "Helvetica-Bold", color: gold }}>{fEUR(depot_eur)} ({fCHF(depot_eur * rate)})</Text>{", restitu\u00E9 dans les deux (2) mois suivant la fin du contrat, selon l\u2019\u00E9tat des lieux."}</>
+              ? <>{"Le locataire versera un d\u00E9p\u00F4t de garantie \u00E9gal \u00E0 deux (2) mois de loyer hors charges, soit "}<Text style={{ fontFamily: "Helvetica-Bold", color: gold }}>{fEUR(depot_eur)} ({fCHF(depot_eur * rate)})</Text>{", restitu\u00E9 dans les deux (2) mois suivant la fin du contrat, selon l\u2019\u00E9tat des lieux."}</>
               : <>{"Le locataire versera un d\u00E9p\u00F4t de garantie \u00E9gal \u00E0 un (1) mois de loyer hors charges, soit "}<Text style={{ fontFamily: "Helvetica-Bold", color: gold }}>{fEUR(depot_eur)}</Text>{", restitu\u00E9 dans les deux (2) mois suivant la fin du contrat, d\u00E9duction faite des sommes \u00E9ventuellement dues."}</>
             }
           </Text>
