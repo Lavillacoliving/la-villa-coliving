@@ -303,8 +303,56 @@ export const faqData: FAQItem[] = [
       fr: 'Y a-t-il des frais d\'agence ?',
     },
     answer: {
-      en: 'No, there are absolutely no agency fees at La Villa Coliving. Our pricing is transparent and all-inclusive. You only pay your monthly rent and the security deposit. No hidden costs, no surprise charges.',
-      fr: 'Non, il n\'y a absolument aucun frais d\'agence chez La Villa Coliving. Notre tarification est transparente et tout inclusive. Vous ne payez que votre loyer mensuel et la caution. Pas de coûts cachés, pas de frais surprises.',
+      en: 'No. La Villa rents its houses directly, with no middleman: so there are no agency fees, no application fee, no booking fee and no check-in fee. You pay your all-inclusive rent and a fully refundable deposit — that\'s it. And it\'s not a temporary offer: it\'s our model.',
+      fr: 'Non. La Villa loue ses maisons en direct, sans intermédiaire : il n\'y a donc aucun honoraire d\'agence, aucun frais de dossier, aucun frais de réservation et aucun frais d\'état des lieux. Vous réglez votre loyer tout inclus et une caution intégralement restituée — c\'est tout. Et ce n\'est pas une offre temporaire : c\'est notre modèle.',
+    },
+  },
+  {
+    id: 'application-fees',
+    category: 'Pricing & Payments',
+    question: {
+      en: 'Is there an application fee?',
+      fr: 'Y a-t-il des frais de dossier ?',
+    },
+    answer: {
+      en: 'No, €0. Applying to La Villa is entirely free: no application fee to apply, to be selected, or to sign your lease. On the coliving market, these move-in fees often range from €200 to €700; here, it\'s zero.',
+      fr: 'Non, 0 €. Candidater chez La Villa est entièrement gratuit : aucun frais de dossier pour postuler, être sélectionné ou signer votre bail. Sur le marché du coliving, ces frais d\'entrée vont souvent de 200 à 700 € ; chez nous, c\'est zéro.',
+    },
+  },
+  {
+    id: 'booking-fees',
+    category: 'Pricing & Payments',
+    question: {
+      en: 'Do I have to pay a booking fee to reserve a room?',
+      fr: 'Dois-je payer des frais de réservation pour bloquer une chambre ?',
+    },
+    answer: {
+      en: 'No. No booking fee is charged. Once your application is accepted, you pay your first month\'s rent and your refundable deposit — nothing else.',
+      fr: 'Non. Aucun frais de réservation n\'est demandé. Une fois votre candidature acceptée, vous réglez votre première échéance de loyer et votre caution remboursable — rien d\'autre.',
+    },
+  },
+  {
+    id: 'check-in-fees',
+    category: 'Pricing & Payments',
+    question: {
+      en: 'Is there a check-in (inventory) fee?',
+      fr: 'Y a-t-il des frais d\'état des lieux ?',
+    },
+    answer: {
+      en: 'No. The move-in and move-out inventory is carried out by our team, at no cost to you.',
+      fr: 'Non. L\'état des lieux d\'entrée comme de sortie est réalisé par notre équipe, sans aucun frais pour vous.',
+    },
+  },
+  {
+    id: 'coliving-can-charge-fees',
+    category: 'Pricing & Payments',
+    question: {
+      en: 'Can a coliving operator charge an application fee?',
+      fr: 'Un coliving peut-il facturer des frais de dossier ?',
+    },
+    answer: {
+      en: 'It depends on who manages the property. A real-estate agency may charge the tenant fees that are regulated and capped by law (organising the viewing, putting together the file, drafting the lease, and the move-in inventory). When you rent directly from the owner — as at La Villa — there\'s no agency, so none of these fees. It\'s the simplest way to move in with no entry fees.',
+      fr: 'Cela dépend de qui gère le logement. Une agence immobilière peut facturer au locataire des frais encadrés et plafonnés par la loi (organisation de la visite, constitution du dossier, rédaction du bail et état des lieux d\'entrée). Quand vous louez en direct auprès du propriétaire — comme chez La Villa — il n\'y a pas d\'agence, donc pas de ces frais. C\'est la façon la plus simple d\'emménager sans frais d\'entrée.',
     },
   },
   {
