@@ -222,6 +222,13 @@ export function RatesPageV4() {
               ? "No hidden fees. No surprises. Just exceptional value."
               : "Pas de frais cachés. Pas de surprises. Juste une valeur exceptionnelle."}
           </p>
+          <div className="mt-8 flex justify-center">
+            <span className="inline-flex items-center text-center gap-2 px-5 py-2.5 bg-[#1C1917] text-white text-sm md:text-base font-semibold rounded-full">
+              {language === "en"
+                ? "€0 application fee · €0 agency fee · €0 check-in fee"
+                : "0 € de frais de dossier · 0 € d'honoraires d'agence · 0 € de frais d'état des lieux"}
+            </span>
+          </div>
         </div>
       </section>
 
@@ -716,8 +723,8 @@ export function RatesPageV4() {
               </h3>
               <p className="text-[#57534E] leading-relaxed">
                 {language === "en"
-                  ? "We require a security deposit equivalent to two months' rent excluding charges (standard in France). It is returned in full within 30 days of move-out, minus any deductions for damages. Payment can be spread over the first 2 months."
-                  : "Nous demandons une caution de deux mois de loyer hors charges (standard en France). Elle est restituée intégralement dans les 30 jours suivant le départ, déduction faite des éventuels dommages. Le paiement peut être étalé sur les 2 premiers mois."}
+                  ? "We require a security deposit equivalent to two months' rent excluding charges (standard in France). It is returned in full within 30 days of move-out, minus any deductions for damages. Payment can be spread over the first 2 months. A refundable deposit, yes — non-refundable move-in fees, never."
+                  : "Nous demandons une caution de deux mois de loyer hors charges (standard en France). Elle est restituée intégralement dans les 30 jours suivant le départ, déduction faite des éventuels dommages. Le paiement peut être étalé sur les 2 premiers mois. Une caution remboursable, oui — des frais d'entrée non remboursables, jamais."}
               </p>
             </div>
             <div className="bg-[#FAF9F6] p-10">

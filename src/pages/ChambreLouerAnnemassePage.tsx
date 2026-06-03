@@ -194,7 +194,7 @@ export function ChambreLouerAnnemassePage() {
                   "Twice-weekly cleaning of common areas",
                   "Weekly yoga and fitness classes included",
                   "Monthly community events, community dinners",
-                  "No agency fees, no application fees",
+                  "No agency fees, no application fees — €0 to move in",
                   "Flexible 12-month lease, 1-month notice",
                   "Cross-border profile expected (CDI Geneva)",
                 ]
@@ -208,7 +208,7 @@ export function ChambreLouerAnnemassePage() {
                   "Ménage 2 fois par semaine des espaces communs",
                   "Cours hebdomadaires yoga et fitness inclus",
                   "Événements communautaires mensuels, dîners communautaires",
-                  "Aucun frais d'agence, aucun frais de dossier",
+                  "Aucun frais d'agence, aucun frais de dossier — 0 € de frais d'entrée",
                   "Bail flexible 12 mois, préavis 1 mois",
                   "Profil frontalier attendu (CDI Genève)",
                 ]

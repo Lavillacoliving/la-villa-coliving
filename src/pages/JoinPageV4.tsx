@@ -134,8 +134,8 @@ export function JoinPageV4() {
                 title: language === "en" ? "Move In" : "Emménager",
                 description:
                   language === "en"
-                    ? "Welcome to your new home and community!"
-                    : "Bienvenue dans votre nouveau chez-vous et votre communauté !",
+                    ? "Refundable deposit, and that's it — zero application fee. Welcome home!"
+                    : "Caution remboursable, et c'est tout — zéro frais de dossier. Bienvenue chez vous !",
               },
             ].map((step, index) => (
               <div key={index} className="bg-white p-10 text-center">
@@ -168,6 +168,10 @@ export function JoinPageV4() {
             <span className="flex items-center gap-2">
               <Shield className="w-4 h-4 text-[#D4A574]" />
               {language === "en" ? "Response within 48h" : "Réponse sous 48h"}
+            </span>
+            <span className="flex items-center gap-2">
+              <Check className="w-4 h-4 text-[#D4A574]" />
+              {language === "en" ? "No application fee" : "Aucun frais de dossier"}
             </span>
           </div>
 

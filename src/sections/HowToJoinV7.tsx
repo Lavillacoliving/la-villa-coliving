@@ -32,8 +32,8 @@ export function HowToJoinV7() {
       number: '03',
       title: language === 'en' ? 'Move in' : 'Emménagez',
       description: language === 'en'
-        ? 'Sign, deposit, and welcome home.'
-        : 'Signature, caution, et bienvenue chez vous.',
+        ? 'Sign, refundable deposit, and that\'s it. Zero application fee. Welcome home.'
+        : 'Signature, caution remboursable, et c\'est tout. Zéro frais de dossier. Bienvenue chez vous.',
     },
   ];
 

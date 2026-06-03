@@ -141,6 +141,10 @@ export function HeroV7() {
                 value: `${STATS.occupancyRate}%`,
                 label: language === "en" ? `Occupancy over ${STATS.occupancyYears} yrs` : `Taux d'occupation sur ${STATS.occupancyYears} ans`,
               },
+              {
+                value: language === "en" ? "€0" : "0 €",
+                label: language === "en" ? "Move-in fees" : "Frais d'entrée",
+              },
             ].map((stat, index) => (
               <div key={index}>
                 <span className="text-xl md:text-2xl font-bold text-white">{stat.value}</span>
@@ -258,8 +262,8 @@ export function HeroV7() {
           {/* Pricing reminder */}
           <p className="text-center text-white/50 text-sm mt-10 max-w-lg mx-auto">
             {language === "en"
-              ? `All of this is included in your rent. CHF ${STATS.priceChf.toLocaleString('en')}/month. No paid add-ons. No hidden fees. Ever.`
-              : `Tout ceci est inclus dans votre loyer. ${STATS.priceChf.toLocaleString('fr-FR')} CHF/mois. Pas d'options payantes. Pas de frais cachés. Jamais.`}
+              ? `All of this is included in your rent. CHF ${STATS.priceChf.toLocaleString('en')}/month. No paid add-ons. No application fee, no agency fee. No hidden fees. Ever.`
+              : `Tout ceci est inclus dans votre loyer. ${STATS.priceChf.toLocaleString('fr-FR')} CHF/mois. Pas d'options payantes. Pas de frais de dossier, pas d'honoraires d'agence. Pas de frais cachés. Jamais.`}
           </p>
         </div>
 

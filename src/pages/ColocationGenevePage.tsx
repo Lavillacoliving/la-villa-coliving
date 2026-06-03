@@ -699,6 +699,18 @@ export function ColocationGenevePage() {
             ))}
           </div>
 
+          {/* Propriétaire, pas agence — 0 € de frais d'entrée */}
+          <div className="max-w-3xl mx-auto mt-12 bg-[#FAF9F6] border border-[#D4A574]/30 rounded-2xl p-8 text-center">
+            <span className="inline-flex items-center gap-2 px-4 py-1.5 bg-[#1C1917] text-white text-sm font-semibold rounded-full mb-4">
+              {language === "en" ? "€0 move-in fees" : "0 € de frais d'entrée"}
+            </span>
+            <p className="text-[#57534E] leading-relaxed">
+              {language === "en"
+                ? "Unlike an agency, we rent our houses directly. No middleman, no agency fees, no application fee: you deal directly with the owners, who want you to feel at home, for a long time."
+                : "Contrairement à une agence, nous louons nos maisons en direct. Pas d'intermédiaire, pas d'honoraires d'agence, pas de frais de dossier : vous traitez directement avec les propriétaires, qui ont tout intérêt à ce que vous vous sentiez bien, longtemps."}
+            </p>
+          </div>
+
           <div className="text-center mt-12">
             <Link
               to="/tarifs"

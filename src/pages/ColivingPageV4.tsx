@@ -234,6 +234,18 @@ export function ColivingPageV4() {
                 ))}
               </div>
 
+              {/* Propriétaire, pas agence — 0 € de frais d'entrée */}
+              <div className="mt-8 bg-[#FAF9F6] border border-[#D4A574]/30 rounded-2xl p-6">
+                <span className="inline-flex items-center gap-2 px-4 py-1.5 bg-[#1C1917] text-white text-sm font-semibold rounded-full mb-3">
+                  {language === "en" ? "€0 move-in fees" : "0 € de frais d'entrée"}
+                </span>
+                <p className="text-[#57534E] leading-relaxed">
+                  {language === "en"
+                    ? "Unlike an agency, we rent our houses directly. No middleman, no agency fees, no application fee: you deal directly with the owners, who want you to feel at home, for a long time."
+                    : "Contrairement à une agence, nous louons nos maisons en direct. Pas d'intermédiaire, pas d'honoraires d'agence, pas de frais de dossier : vous traitez directement avec les propriétaires, qui ont tout intérêt à ce que vous vous sentiez bien, longtemps."}
+                </p>
+              </div>
+
               <Link
                 to="/nos-maisons"
                 className="inline-flex items-center gap-2 mt-10 px-8 py-4 bg-[#1C1917] text-white font-bold hover:bg-[#D4A574] transition-colors"
