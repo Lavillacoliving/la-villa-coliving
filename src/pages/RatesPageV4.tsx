@@ -537,6 +537,179 @@ export function RatesPageV4() {
         </div>
       </section>
 
+      {/* MOVE-IN FEES COMPARISON — Et les frais pour emménager ? */}
+      <section className="py-20 bg-[#1C1917] border-t border-[#333]">
+        <div className="container-custom">
+          <div className="text-center mb-16">
+            <span className="inline-flex items-center gap-2 px-4 py-2 bg-[#D4A574]/20 text-[#E0BB8A] text-sm font-medium rounded-full mb-4">
+              <Sparkles className="w-4 h-4" />{" "}
+              {language === "en" ? "Move-in fees" : "Frais d'entrée"}
+            </span>
+            <h2 className="text-3xl md:text-4xl font-light text-white mb-4">
+              {language === "en"
+                ? "What about move-in fees?"
+                : "Et les frais pour emménager ?"}
+            </h2>
+            <p className="text-[#78716C] max-w-2xl mx-auto">
+              {language === "en"
+                ? "The cost you're often only shown at the end. Here, there isn't one."
+                : "Le coût qu'on ne vous montre souvent qu'à la fin. Chez nous, il n'y en a pas."}
+            </p>
+          </div>
+
+          <div className="grid md:grid-cols-2 gap-8 max-w-5xl mx-auto">
+            {/* Market — neutral, anonymous */}
+            <div className="bg-[#1C1917] rounded-2xl p-8 border border-[#333]">
+              <div className="flex items-center gap-3 mb-6">
+                <div className="w-12 h-12 rounded-full bg-[#666]/20 flex items-center justify-center">
+                  <Home className="w-6 h-6 text-[#b3b2b2]" />
+                </div>
+                <div>
+                  <h3 className="text-xl font-medium text-white">
+                    {language === "en"
+                      ? "Most coliving operators"
+                      : "Ailleurs sur le marché du coliving"}
+                  </h3>
+                  <p className="text-sm text-[#b3b2b2]">
+                    {language === "en"
+                      ? "Fees before you get the key"
+                      : "Des frais avant même la clé"}
+                  </p>
+                </div>
+              </div>
+
+              <div className="space-y-3 mb-6 text-sm">
+                <div className="flex justify-between text-[#b3b2b2]">
+                  <span className="flex items-center gap-2">
+                    <X className="w-3 h-3" />{" "}
+                    {language === "en" ? "Application fee" : "Frais de dossier"}
+                  </span>
+                  <span>{language === "en" ? "€200 to €700" : "de 200 à 700 €"}</span>
+                </div>
+                <div className="flex justify-between text-[#b3b2b2]">
+                  <span className="flex items-center gap-2">
+                    <X className="w-3 h-3" />{" "}
+                    {language === "en" ? "Agency fee" : "Honoraires d'agence"}
+                  </span>
+                  <span>{language === "en" ? "depends on size" : "selon la surface"}</span>
+                </div>
+                <div className="flex justify-between text-[#b3b2b2]">
+                  <span className="flex items-center gap-2">
+                    <X className="w-3 h-3" />{" "}
+                    {language === "en" ? "Booking fee" : "Frais de réservation"}
+                  </span>
+                  <span>{language === "en" ? "at signing" : "à la signature"}</span>
+                </div>
+                <div className="flex justify-between text-[#b3b2b2]">
+                  <span className="flex items-center gap-2">
+                    <X className="w-3 h-3" />{" "}
+                    {language === "en" ? "Check-in fee" : "Frais d'état des lieux"}
+                  </span>
+                  <span>{language === "en" ? "extra" : "en supplément"}</span>
+                </div>
+              </div>
+
+              <div className="border-t border-[#333] pt-4">
+                <div className="flex justify-between items-center">
+                  <span className="text-[#d5d5d5]">
+                    {language === "en" ? "Total to move in" : "Total à l'entrée"}
+                  </span>
+                  <span className="text-2xl font-medium text-[#d5d5d5]">
+                    {language === "en" ? "€200 to €700" : "de 200 à 700 €"}
+                  </span>
+                </div>
+                <p className="text-xs text-[#78716C] mt-2">
+                  {language === "en"
+                    ? "(on top of the security deposit)"
+                    : "(en plus du dépôt de garantie)"}
+                </p>
+              </div>
+            </div>
+
+            {/* La Villa — highlighted */}
+            <div className="bg-white rounded-2xl p-8 relative overflow-hidden border border-[#E7E5E4] shadow-lg">
+              <div className="absolute top-4 right-4 bg-[#D4A574] text-white text-xs font-bold px-3 py-1 rounded-full">
+                {language === "en" ? "€0 TO MOVE IN" : "0 € À L'ENTRÉE"}
+              </div>
+
+              <div className="flex items-center gap-3 mb-6">
+                <div className="w-12 h-12 rounded-full bg-[#FAF9F6] flex items-center justify-center">
+                  <Sparkles className="w-6 h-6 text-[#D4A574]" />
+                </div>
+                <div>
+                  <h3 className="text-xl font-medium text-[#1C1917]">
+                    {language === "en" ? "At La Villa" : "Chez La Villa"}
+                  </h3>
+                  <p className="text-base text-[#57534E]">
+                    {language === "en"
+                      ? "Direct owner, no agency"
+                      : "Propriétaire en direct, pas d'agence"}
+                  </p>
+                </div>
+              </div>
+
+              <div className="space-y-3 mb-6 text-sm">
+                <div className="flex justify-between text-[#44403C]">
+                  <span className="flex items-center gap-2">
+                    <Check className="w-4 h-4 text-[#D4A574]" />{" "}
+                    {language === "en" ? "Application fee" : "Frais de dossier"}
+                  </span>
+                  <span className="text-[#D4A574] font-bold">0 €</span>
+                </div>
+                <div className="flex justify-between text-[#44403C]">
+                  <span className="flex items-center gap-2">
+                    <Check className="w-4 h-4 text-[#D4A574]" />{" "}
+                    {language === "en" ? "Agency fee" : "Honoraires d'agence"}
+                  </span>
+                  <span className="text-[#D4A574] font-bold">0 €</span>
+                </div>
+                <div className="flex justify-between text-[#44403C]">
+                  <span className="flex items-center gap-2">
+                    <Check className="w-4 h-4 text-[#D4A574]" />{" "}
+                    {language === "en" ? "Booking fee" : "Frais de réservation"}
+                  </span>
+                  <span className="text-[#D4A574] font-bold">0 €</span>
+                </div>
+                <div className="flex justify-between text-[#44403C]">
+                  <span className="flex items-center gap-2">
+                    <Check className="w-4 h-4 text-[#D4A574]" />{" "}
+                    {language === "en" ? "Check-in fee" : "Frais d'état des lieux"}
+                  </span>
+                  <span className="text-[#D4A574] font-bold">0 €</span>
+                </div>
+              </div>
+
+              <div className="border-t border-[#E7E5E4] pt-4">
+                <span className="text-[#57534E] text-sm block mb-1">
+                  {language === "en" ? "Total to move in" : "Total à l'entrée"}
+                </span>
+                <span className="text-lg font-bold text-[#1C1917]">
+                  {language === "en"
+                    ? "Your first month's rent + a refundable deposit. That's it."
+                    : "Votre 1er loyer + une caution remboursable. C'est tout."}
+                </span>
+              </div>
+            </div>
+          </div>
+
+          {/* Note + CTA */}
+          <div className="mt-12 max-w-3xl mx-auto text-center">
+            <p className="text-[#b3b2b2] leading-relaxed">
+              {language === "en"
+                ? "Not a promo — it's our model. We rent our houses directly, with no agency, so there are no move-in fees to charge."
+                : "Pas une promo — notre modèle. On loue nos maisons en direct, sans agence : il n'y a donc aucun frais d'entrée à facturer."}
+            </p>
+            <Link
+              to="/candidature"
+              className="mt-6 inline-flex items-center gap-2 px-8 py-4 bg-[#D4A574] text-white font-semibold rounded-lg hover:bg-[#E0BB8A] transition-colors duration-300"
+            >
+              {language === "en" ? "Apply — it's free" : "Candidater — c'est gratuit"}
+              <ArrowRight className="w-5 h-5" />
+            </Link>
+          </div>
+        </div>
+      </section>
+
       {/* Price Cards WITH IMAGES */}
       <section className="py-24 lg:py-32 bg-[#FAF9F6]">
         <div className="container-custom">
@@ -729,12 +902,12 @@ export function RatesPageV4() {
             </div>
             <div className="bg-[#FAF9F6] p-10">
               <h3 className="text-xl font-medium text-[#1C1917] mb-4">
-                {language === "en" ? "No Agency Fees" : "Sans Frais d'Agence"}
+                {language === "en" ? "Direct owner, not an agency" : "Propriétaire, pas agence"}
               </h3>
               <p className="text-[#57534E] leading-relaxed">
                 {language === "en"
-                  ? "There are absolutely no agency fees at La Villa Coliving. Our pricing is transparent and all-inclusive. What you see is what you pay."
-                  : "Il n'y a absolument aucun frais d'agence chez La Villa Coliving. Notre tarification est transparente et tout inclusive. Ce que vous voyez est ce que vous payez."}
+                  ? "We rent our houses directly, with no middleman. That's why there are no move-in fees to charge — and why what you see is what you pay, at move-in and every month."
+                  : "Nous louons nos maisons en direct, sans intermédiaire. C'est pour ça qu'il n'y a aucun frais d'entrée à facturer — et que ce que vous voyez est ce que vous payez, à l'entrée comme chaque mois."}
               </p>
             </div>
           </div>
