@@ -177,6 +177,23 @@ export function FAQPageV4() {
                   </p>
                 </Link>
 
+                {/* Frais d'entrée article — SEO maillage */}
+                <Link
+                  to={language === "en" ? "/en/blog/coliving-frais-dossier-geneve-annemasse" : "/blog/coliving-frais-dossier-geneve-annemasse"}
+                  className="mt-4 block p-6 bg-[#FAF9F6] border border-[#E7E5E4] hover:border-[#D4A574]/40 transition-colors group"
+                >
+                  <h4 className="font-medium text-[#1C1917] mb-2 group-hover:text-[#D4A574] transition-colors">
+                    {language === "en"
+                      ? "Move-in fees explained"
+                      : "Frais d'entrée : le guide"}
+                  </h4>
+                  <p className="text-sm text-[#57534E]">
+                    {language === "en"
+                      ? "Application, agency, booking fees: what the law allows and how to move in for €0. Read the guide →"
+                      : "Frais de dossier, agence, réservation : ce que dit la loi et comment emménager pour 0 €. Lire le guide →"}
+                  </p>
+                </Link>
+
                 {/* Contact CTA */}
                 <div className="mt-4 p-6 bg-white border border-[#E7E5E4]">
                   <MessageCircle className="w-6 h-6 text-[#D4A574] mb-4" />

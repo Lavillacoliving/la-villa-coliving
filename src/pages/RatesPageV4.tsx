@@ -188,8 +188,8 @@ export function RatesPageV4() {
       <SEO
         title={language === "en" ? "Rates — All-Inclusive Coliving from 1,380 CHF/month" : "Tarifs Colocation Genève — Tout Compris dès 1 380 CHF/mois"}
         description={language === "en"
-          ? "Transparent all-inclusive coliving pricing near Geneva from 1,380 CHF/month. Rent, utilities, gym, pool, sauna, yoga, internet, cleaning — everything included. Compare with Geneva studios."
-          : "Tarifs colocation tout inclus près de Genève dès 1 380 CHF/mois. Loyer, charges, gym, piscine, sauna, yoga, internet, ménage — tout compris. Comparez avec les studios à Genève."}
+          ? "All-inclusive coliving near Geneva from 1,380 CHF/month — no application or agency fees. Rent, utilities, gym, pool, WiFi, cleaning included."
+          : "Tarifs colocation tout inclus près de Genève dès 1 380 CHF/mois, sans frais de dossier ni d'agence. Loyer, charges, gym, piscine, WiFi, ménage compris."}
         url="https://www.lavillacoliving.com/tarifs"
       />
       {/* Hero */}
@@ -706,6 +706,16 @@ export function RatesPageV4() {
               {language === "en" ? "Apply — it's free" : "Candidater — c'est gratuit"}
               <ArrowRight className="w-5 h-5" />
             </Link>
+            <p className="mt-5 text-sm">
+              <Link
+                to={language === "en" ? "/en/blog/coliving-frais-dossier-geneve-annemasse" : "/blog/coliving-frais-dossier-geneve-annemasse"}
+                className="text-[#D4A574] hover:text-[#E0BB8A] underline underline-offset-4 transition-colors"
+              >
+                {language === "en"
+                  ? "Application fees in a flat-share: what the law allows →"
+                  : "Frais de dossier en colocation : ce que dit la loi →"}
+              </Link>
+            </p>
           </div>
         </div>
       </section>
