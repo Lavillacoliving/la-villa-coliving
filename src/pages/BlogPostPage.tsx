@@ -164,6 +164,11 @@ export function BlogPostPage() {
             <ReactMarkdown
               remarkPlugins={[remarkGfm]}
               components={{
+                // B6: a leading "# H1" in article content would create a 2nd <h1> (the page title is already the <h1>).
+                // Render markdown H1 as <h2> so each blog page keeps exactly one <h1>.
+                h1: ({children}) => (
+                  <h2 className="text-2xl md:text-3xl font-semibold text-[#1C1917] mt-12 mb-4" style={{fontFamily:"DM Serif Display, serif"}}>{children}</h2>
+                ),
                 h2: ({children}) => (
                   <h2 className="text-2xl md:text-3xl font-semibold text-[#1C1917] mt-12 mb-4" style={{fontFamily:"DM Serif Display, serif"}}>{children}</h2>
                 ),
