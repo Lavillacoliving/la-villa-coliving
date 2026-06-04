@@ -68,10 +68,17 @@ export function HeroV7() {
           </h1>
 
           {/* Description */}
-          <p className="text-base md:text-lg text-white/90 max-w-xl mb-8 leading-relaxed font-light">
+          <p className="text-base md:text-lg text-white/90 max-w-xl mb-4 leading-relaxed font-light">
             {language === "en"
               ? "Your private room in a house with pool, 20 min from Geneva. All-inclusive from CHF 1,380/month."
               : "Votre chambre privée dans une maison avec piscine, à 20 min de Genève. Tout inclus dès 1 380 CHF/mois."}
+          </p>
+
+          {/* Réassurance frais — visible sans scroll */}
+          <p className="text-sm text-white/75 max-w-xl mb-8 font-light">
+            {language === "en"
+              ? "Everything included — no application fee, no agency fee, no hidden costs."
+              : "Tout est compris — pas de frais de dossier, pas d'honoraires d'agence, pas de frais cachés."}
           </p>
 
           {/* Social proof */}
@@ -85,8 +92,8 @@ export function HeroV7() {
             </div>
             <span className="text-white/90 text-sm font-medium">
               {language === "en"
-                ? "4.9/5 — 150+ residents since 2023"
-                : "4.9/5 — 150+ résidents depuis 2023"}
+                ? "4.9/5 — 150+ residents since 2021"
+                : "4.9/5 — 150+ résidents depuis 2021"}
             </span>
           </div>
 

@@ -215,8 +215,8 @@ export function ColocationGenevePage() {
           </h1>
           <p className="text-lg md:text-xl text-[#57534E] max-w-3xl mx-auto mb-10 leading-relaxed">
             {language === "en"
-              ? "Live on the French side, work in Geneva. 29 fully furnished, all-inclusive rooms across 3 designer houses in Ville-la-Grand, Ambilly and Annemasse. Pool, gym, sauna, fiber internet — everything included."
-              : "Vivez côté France, travaillez à Genève. 29 chambres meublées tout inclus dans 3 maisons design à Ville-la-Grand, Ambilly et Annemasse. Piscine, gym, sauna, fibre optique — tout est compris."}
+              ? "Live on the French side, work in Geneva. 29 fully furnished, all-inclusive rooms across 3 designer houses in Ville-la-Grand, Ambilly and Annemasse. Pool, gym, sauna, fiber internet — no application fee, everything included."
+              : "Vivez côté France, travaillez à Genève. 29 chambres meublées tout inclus dans 3 maisons design à Ville-la-Grand, Ambilly et Annemasse. Piscine, gym, sauna, fibre optique — pas de frais de dossier, tout est compris."}
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Link
@@ -357,8 +357,8 @@ export function ColocationGenevePage() {
                 <li className="flex items-center gap-2">
                   <Check className="w-4 h-4 text-[#D4A574] flex-shrink-0" />
                   <span>
-                    <strong>Bus TAC / TPG :</strong>{" "}
-                    {language === "en" ? "Direct lines to Geneva" : "Lignes directes vers Genève"}
+                    <strong>Tram 17 :</strong>{" "}
+                    {language === "en" ? "Bel-Air in under 30 minutes" : "Bel-Air en moins de 30 minutes"}
                   </span>
                 </li>
                 <li className="flex items-center gap-2">

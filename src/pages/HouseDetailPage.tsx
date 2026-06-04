@@ -435,9 +435,9 @@ function getHousesData(lang: string): Record<string, HouseData> {
       "Entrepreneurs & créatifs",
       "Amoureux de la nature & passionnés de bien-être",
     ],
-    available: false,
-    badge: "Complet",
-    badgeColor: "#78716C",
+    available: true,
+    badge: isEn ? "1 room available" : "1 chambre disponible",
+    badgeColor: "#D4A574",
   },
   leloft: {
     name: "Le Loft",
@@ -1301,9 +1301,9 @@ function getHousesData(lang: string): Record<string, HouseData> {
       "Passionnés de bien-être",
       "Frontaliers & expatriés",
     ],
-    available: false,
-    badge: "Complet",
-    badgeColor: "#78716C",
+    available: true,
+    badge: isEn ? "1 room available" : "1 chambre disponible",
+    badgeColor: "#D4A574",
   },
 };
 }
