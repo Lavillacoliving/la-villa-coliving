@@ -312,8 +312,8 @@ export function AnnemasseColocationPage() {
           </h2>
           <p className="text-[#57534E] text-center max-w-3xl mx-auto mb-12">
             {language === "en"
-              ? "One payment, zero surprises. No agency fees, no application fees — €0 to move in."
-              : "Un seul paiement, zéro surprise. Aucun frais d'agence, aucun frais de dossier : 0 € de frais d'entrée."}
+              ? "One payment, zero surprises — everything is included in the rent."
+              : "Un seul paiement, zéro surprise — tout est compris dans le loyer."}
           </p>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-4">
             {(language === "en"
