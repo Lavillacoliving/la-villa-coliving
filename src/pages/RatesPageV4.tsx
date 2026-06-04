@@ -222,12 +222,18 @@ export function RatesPageV4() {
               ? "No hidden fees. No surprises. Just exceptional value."
               : "Pas de frais cachés. Pas de surprises. Juste une valeur exceptionnelle."}
           </p>
-          <div className="mt-8 flex justify-center">
-            <span className="inline-flex items-center text-center gap-2 px-5 py-2.5 bg-[#1C1917] text-white text-sm md:text-base font-semibold rounded-full">
-              {language === "en"
-                ? "€0 application fee · €0 agency fee · €0 check-in fee"
-                : "0 € de frais de dossier · 0 € d'honoraires d'agence · 0 € de frais d'état des lieux"}
-            </span>
+          <div className="mt-8 flex flex-wrap justify-center gap-2">
+            {(language === "en"
+              ? ["€0 application fee", "€0 agency fee", "€0 check-in fee"]
+              : ["0 € de frais de dossier", "0 € d'honoraires d'agence", "0 € de frais d'état des lieux"]
+            ).map((label) => (
+              <span
+                key={label}
+                className="inline-flex items-center px-4 py-2 bg-[#1C1917] text-white text-sm md:text-base font-semibold rounded-full"
+              >
+                {label}
+              </span>
+            ))}
           </div>
         </div>
       </section>
@@ -550,7 +556,7 @@ export function RatesPageV4() {
                 ? "What about move-in fees?"
                 : "Et les frais pour emménager ?"}
             </h2>
-            <p className="text-[#78716C] max-w-2xl mx-auto">
+            <p className="text-[#b3b2b2] max-w-2xl mx-auto">
               {language === "en"
                 ? "The cost you're often only shown at the end. Here, there isn't one."
                 : "Le coût qu'on ne vous montre souvent qu'à la fin. Chez nous, il n'y en a pas."}
@@ -618,7 +624,7 @@ export function RatesPageV4() {
                     {language === "en" ? "€200 to €700" : "de 200 à 700 €"}
                   </span>
                 </div>
-                <p className="text-xs text-[#78716C] mt-2">
+                <p className="text-xs text-[#a8a29e] mt-2">
                   {language === "en"
                     ? "(on top of the security deposit)"
                     : "(en plus du dépôt de garantie)"}

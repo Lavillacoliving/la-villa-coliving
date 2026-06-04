@@ -145,8 +145,8 @@ export function HeroV7() {
                 value: language === "en" ? "€0" : "0 €",
                 label: language === "en" ? "Move-in fees" : "Frais d'entrée",
               },
-            ].map((stat, index) => (
-              <div key={index}>
+            ].map((stat, index, arr) => (
+              <div key={index} className={index === arr.length - 1 ? "col-span-2 text-center md:col-span-1 md:text-left" : undefined}>
                 <span className="text-xl md:text-2xl font-bold text-white">{stat.value}</span>
                 <span className="block text-xs text-white/70 uppercase tracking-wider mt-1">{stat.label}</span>
               </div>

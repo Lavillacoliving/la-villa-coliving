@@ -13,7 +13,7 @@ export function TrustBadgesV7() {
     {
       icon: ShieldCheck,
       title: language === "en" ? "Zero stress, zero surprises" : "Zéro stress, zéro surprise",
-      description: language === "en" ? "One payment, €0 move-in fees" : "Un seul paiement, 0 € de frais d'entrée",
+      description: language === "en" ? "One payment, all-inclusive — €0 to move in" : "Un seul paiement, tout inclus — 0 € à l'entrée",
     },
     {
       icon: Users,

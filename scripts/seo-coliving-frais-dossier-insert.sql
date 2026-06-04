@@ -13,13 +13,11 @@ INSERT INTO blog_posts (
   is_published, published_at, tags
 ) VALUES (
   'coliving-frais-dossier-geneve-annemasse',
-  'Coliving sans frais de dossier près de Genève : ce que vous payez vraiment pour emménager',
+  'Colocation sans frais de dossier près de Genève : ce que vous payez vraiment pour emménager',
   'Coliving with no application fee near Geneva: what you really pay to move in',
   'Frais de dossier, honoraires d''agence, frais de réservation en colocation : ce que la loi autorise, combien ça coûte (200–700 €) et comment emménager sans frais d''entrée près de Genève.',
   'Application fees, agency fees, booking fees in a flat-share: what the law allows, how much it really costs (€200–700) and how to move in with zero entry fees near Geneva.',
-  $$# Coliving sans frais de dossier près de Genève : ce que vous payez vraiment pour emménager
-
-Vous avez trouvé la chambre parfaite. Le loyer rentre dans votre budget, l'emplacement est idéal pour rejoindre Genève. Vous êtes prêt à signer… et là, surprise : 400 € de « frais de dossier » apparaissent. Plus une caution. Plus des « frais de réservation ». L'addition d'entrée grimpe avant même que vous ayez la clé. Ce scénario est banal sur le marché de la colocation et du coliving. Pourtant, ces frais ne sont ni automatiques ni inévitables. Voici ce que la loi autorise réellement, combien ça coûte, et comment emménager sans frais d'entrée près de Genève.
+  $$Vous avez trouvé la chambre parfaite. Le loyer rentre dans votre budget, l'emplacement est idéal pour rejoindre Genève. Vous êtes prêt à signer… et là, surprise : 400 € de « frais de dossier » apparaissent. Plus une caution. Plus des « frais de réservation ». L'addition d'entrée grimpe avant même que vous ayez la clé. Ce scénario est banal sur le marché de la colocation et du coliving. Pourtant, ces frais ne sont ni automatiques ni inévitables. Voici ce que la loi autorise réellement, combien ça coûte, et comment emménager sans frais d'entrée près de Genève.
 
 ## Quels frais peut-on légalement vous facturer en colocation ?
 
@@ -62,7 +60,7 @@ Pour aller plus loin sur la différence entre une colocation classique et le col
 
 Chez La Villa Coliving, emménager ne coûte aucun frais d'entrée : pas de frais de dossier, pas d'honoraires d'agence, pas de frais de réservation, pas de frais d'état des lieux. Vous réglez votre premier loyer, tout inclus, et une caution intégralement restituée. C'est tout.
 
-Pourquoi ? Parce que nous ne sommes pas une agence : nous louons nos propres maisons, en direct. Il n'y a personne entre vous et nous à rémunérer. Et notre intérêt n'est pas d'encaisser une commission à la signature, puis de passer au suivant — il est que vous vous sentiez assez bien pour rester (nos résidents restent de 6 mois à 3 ans). C'est aussi pour ça que ce sont nos résidents qui choisissent qui rejoint la maison : on optimise les affinités, pas le remplissage. Pas de frais pour entrer, pas de porte tournante. Une maison, une communauté, et un prix qui est vraiment le prix.
+Pourquoi ? Parce que nous ne sommes pas une agence : nous louons nos propres maisons, en direct. Il n'y a personne entre vous et nous à rémunérer. Et notre intérêt n'est pas d'encaisser une commission à la signature, puis de passer au suivant — il est que vous vous sentiez assez bien pour rester (nos résidents restent de 6 mois à 3 ans). C'est aussi pour ça que nos résidents ont leur mot à dire sur qui rejoint la maison : on optimise les affinités, pas le remplissage. Pas de frais pour entrer, pas de porte tournante. Une maison, une communauté, et un prix qui est vraiment le prix.
 
 D'ailleurs, ce principe se lit directement sur notre [grille tarifaire](/tarifs) : le prix affiché est le prix que vous payez, à l'entrée comme chaque mois. Vous cherchez une chambre en [colocation à Genève](/colocation-geneve) côté France ? Vous savez désormais quoi regarder.
 
@@ -88,9 +86,7 @@ Cela dépend de qui gère le logement. Une agence immobilière peut facturer au 
 
 Des frais d'entrée de plusieurs centaines d'euros ne sont pas une fatalité. En louant en direct, vous emménagez avec vos valises, votre premier loyer et une caution remboursable — rien de plus. Envie de voir nos chambres près de Genève ? [Découvrez nos maisons](/lavilla) ou [candidatez en 2 minutes, gratuitement](/candidature).
 $$,
-  $$# Coliving with no application fee near Geneva: what you really pay to move in
-
-You've found the perfect room. The rent fits your budget, the location is ideal for getting to Geneva. You're ready to sign… and then, surprise: €400 in "application fees" appears. Plus a deposit. Plus "booking fees." The move-in bill climbs before you've even got the key. This scenario is routine on the flat-share and coliving market. Yet these fees are neither automatic nor unavoidable. Here's what the law actually allows, how much it costs, and how to move in with zero entry fees near Geneva.
+  $$You've found the perfect room. The rent fits your budget, the location is ideal for getting to Geneva. You're ready to sign… and then, surprise: €400 in "application fees" appears. Plus a deposit. Plus "booking fees." The move-in bill climbs before you've even got the key. This scenario is routine on the flat-share and coliving market. Yet these fees are neither automatic nor unavoidable. Here's what the law actually allows, how much it costs, and how to move in with zero entry fees near Geneva.
 
 ## What fees can you legally be charged for a flat-share?
 
@@ -133,7 +129,7 @@ To go deeper on the difference between a classic flat-share and coliving, our [C
 
 At La Villa Coliving, moving in costs zero entry fees: no application fee, no agency fee, no booking fee, no check-in fee. You pay your first month's rent, all inclusive, and a fully refundable deposit. That's it.
 
-Why? Because we're not an agency: we rent our own houses, directly. There's no one between you and us to pay. And our interest isn't in collecting a commission at signing and then moving on to the next person — it's in you feeling good enough to stay (our residents stay from 6 months to 3 years). That's also why it's our residents who choose who joins the house: we optimise for chemistry, not occupancy. No fee to get in, no revolving door. One house, one community, and a price that's really the price.
+Why? Because we're not an agency: we rent our own houses, directly. There's no one between you and us to pay. And our interest isn't in collecting a commission at signing and then moving on to the next person — it's in you feeling good enough to stay (our residents stay from 6 months to 3 years). That's also why our residents have a say in who joins the house: we optimise for chemistry, not occupancy. No fee to get in, no revolving door. One house, one community, and a price that's really the price.
 
 In fact, this principle reads straight off our [pricing page](/en/tarifs): the price shown is the price you pay, at move-in and every month. Looking for a room in a [flat-share in Geneva](/en/colocation-geneve) on the French side? Now you know what to look for.
 
