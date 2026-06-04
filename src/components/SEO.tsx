@@ -36,10 +36,11 @@ export function SEO({
       ? "Premium coliving near Geneva. 29 furnished rooms, all-inclusive from 1,380 CHF/month. Heated pool, gym, sauna, fiber internet. Ideal for expats, cross-border workers & young professionals."
       : "Colocation et coliving premium près de Genève. 29 chambres meublées tout inclus dès 1 380 CHF/mois. Piscine chauffée, salle de sport, sauna, fibre optique. Idéal frontaliers, expats et jeunes professionnels.";
 
-  // B2: append the brand suffix only when it keeps the title within the ~60-char SERP limit;
-  // otherwise use the bare descriptive title to avoid truncation in search results.
+  // B2: append the brand suffix only while the title stays within the SERP display limit (~65 chars);
+  // beyond that, use the bare descriptive title to avoid truncation. 65 (not 60) keeps the brand on
+  // borderline brand-critical titles like the homepage; genuinely long blog titles still drop it.
   const brandedTitle = title ? `${title} | La Villa Coliving` : defaultTitle;
-  const siteTitle = brandedTitle.length <= 60 ? brandedTitle : (title || defaultTitle);
+  const siteTitle = brandedTitle.length <= 65 ? brandedTitle : (title || defaultTitle);
   const siteDescription = description || defaultDescription;
 
   return (
