@@ -41,6 +41,8 @@ export function SEO({
 
   return (
     <Helmet>
+      {/* B5: set <html lang> per route language (fixes EN pages declaring lang="fr") */}
+      <html lang={language === "en" ? "en" : "fr"} />
       {/* Primary Meta Tags */}
       <title>{siteTitle}</title>
       <meta name="title" content={siteTitle} />

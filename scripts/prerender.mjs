@@ -381,6 +381,10 @@ async function renderRoute(browser, route) {
 
     let html = await page.content();
 
+    // B5: set <html lang> to match the route language (EN pages were defaulting to "fr")
+    const isEnRoute = route === '/en' || route.startsWith('/en/');
+    html = html.replace(/<html\s+lang="[^"]*"/, `<html lang="${isEnRoute ? 'en' : 'fr'}"`);
+
     // Inject canonical URL (SEO: tells Google this is the authoritative URL)
     const canonicalUrl = `${SITE_URL}${route === '/' ? '' : route}`;
     const canonicalTag = `<link rel="canonical" href="${canonicalUrl}" />`;
