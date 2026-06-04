@@ -2,6 +2,7 @@ import { Link } from "react-router-dom";
 import { Helmet } from "react-helmet";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { SEO } from "@/components/SEO";
+import { WaitlistForm } from "@/components/WaitlistForm";
 import {
   MapPin,
   Clock,
@@ -233,6 +234,16 @@ export function ColocationGenevePage() {
               {language === "en" ? "View Our Houses" : "Voir Nos Maisons"}
             </Link>
           </div>
+
+          {/* C2 preuve sociale + C3 réassurance — visible sans scroll */}
+          <p className="mt-6 text-sm text-[#57534E]">
+            {language === "en"
+              ? "★ 4.9/5 · 150+ residents since 2021 · 99% occupancy"
+              : "★ 4,9/5 · 150+ résidents depuis 2021 · 99 % d'occupation"}
+          </p>
+          <p className="mt-1 text-xs text-[#78716C]">
+            {language === "en" ? "Reply within 48h · No application fee" : "Réponse sous 48h · Aucun frais de dossier"}
+          </p>
 
           {/* Trust badges */}
           <div className="flex flex-wrap justify-center gap-8 mt-12 text-sm text-[#78716C]">
@@ -1155,6 +1166,24 @@ export function ColocationGenevePage() {
         </div>
       </section>
 
+      {/* ===== C4 — LISTE PRIORITAIRE (waitlist) ===== */}
+      <section className="py-20 lg:py-28 bg-white border-t border-[#E7E5E4]">
+        <div className="max-w-3xl mx-auto px-6 text-center">
+          <span className="text-xs text-[#D4A574] uppercase tracking-[0.3em] mb-4 block font-medium">
+            {language === "en" ? "Priority list" : "Liste prioritaire"}
+          </span>
+          <h2 className="text-3xl md:text-4xl font-light text-[#1C1917] mb-4" style={{ fontFamily: "DM Serif Display, serif" }}>
+            {language === "en" ? "No spot right now? Get first in line." : "Pas de place tout de suite ? Soyez prioritaire."}
+          </h2>
+          <p className="text-[#57534E] max-w-xl mx-auto mb-10">
+            {language === "en"
+              ? "Our houses fill fast. Join the priority list — we'll reach out the moment a room matching your profile opens up."
+              : "Nos maisons se remplissent vite. Rejoignez la liste prioritaire : on vous contacte dès qu'une chambre correspondant à votre profil se libère."}
+          </p>
+          <WaitlistForm />
+        </div>
+      </section>
+
       {/* ===== CTA FINAL ===== */}
       <section className="py-24 lg:py-32 bg-[#1C1917] text-white">
         <div className="max-w-3xl mx-auto px-6 text-center">
@@ -1188,6 +1217,16 @@ export function ColocationGenevePage() {
           </div>
         </div>
       </section>
+      {/* C3 — CTA collante mobile */}
+      <div className="md:hidden fixed bottom-0 inset-x-0 z-40 bg-white/95 backdrop-blur border-t border-[#E7E5E4] px-4 py-3">
+        <Link
+          to="/candidature"
+          className="flex items-center justify-center gap-2 w-full bg-[#D4A574] text-white py-3 rounded-lg text-sm font-semibold uppercase tracking-wider"
+        >
+          {language === "en" ? "Apply — reply within 48h" : "Candidater — réponse sous 48h"}
+          <ArrowRight className="w-4 h-4" />
+        </Link>
+      </div>
     </main>
   );
 }

@@ -48,19 +48,19 @@ export function HeroV7() {
           >
             {language === "en" ? (
               <>
-                3 houses. 7 to 12 residents.
+                3 houses, 7 to 12 residents.
                 <br />
                 <em className="text-[#E0BB8A] not-italic" style={{ fontFamily: "'DM Serif Display', serif", fontStyle: 'italic', textShadow: '0 2px 12px rgba(0,0,0,0.5)' }}>
-                  All inclusive
+                  All-inclusive coliving near Geneva
                 </em>
                 .
               </>
             ) : (
               <>
-                3 maisons. 7 à 12 résidents.
+                3 maisons, 7 à 12 résidents.
                 <br />
                 <em className="text-[#E0BB8A] not-italic" style={{ fontFamily: "'DM Serif Display', serif", fontStyle: 'italic', textShadow: '0 2px 12px rgba(0,0,0,0.5)' }}>
-                  Tout inclus
+                  Coliving tout inclus près de Genève
                 </em>
                 .
               </>
