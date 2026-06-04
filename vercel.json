@@ -765,6 +765,66 @@
       "source": "/_api/:path*",
       "destination": "/",
       "permanent": true
+    },
+    {
+      "source": "/blog/coliving-geneve-frontaliers-guide-2024",
+      "destination": "/blog/coliving-geneve-frontaliers-guide-complet",
+      "permanent": true
+    },
+    {
+      "source": "/en/blog/coliving-geneve-frontaliers-guide-2024",
+      "destination": "/en/blog/coliving-geneve-frontaliers-guide-complet",
+      "permanent": true
+    },
+    {
+      "source": "/blog/coliving-geneve-frontalier-guide-complet",
+      "destination": "/blog/coliving-geneve-frontaliers-guide-complet",
+      "permanent": true
+    },
+    {
+      "source": "/en/blog/coliving-geneve-frontalier-guide-complet",
+      "destination": "/en/blog/coliving-geneve-frontaliers-guide-complet",
+      "permanent": true
+    },
+    {
+      "source": "/blog/coliving-vs-colocation-choisir-mode-vie-geneve-frontalier",
+      "destination": "/blog/coliving-vs-colocation-differences",
+      "permanent": true
+    },
+    {
+      "source": "/en/blog/coliving-vs-colocation-choisir-mode-vie-geneve-frontalier",
+      "destination": "/en/blog/coliving-vs-colocation-differences",
+      "permanent": true
+    },
+    {
+      "source": "/blog/5-erreurs-eviter-recherche-logement-frontalier",
+      "destination": "/blog/5-erreurs-logement-frontalier-geneve",
+      "permanent": true
+    },
+    {
+      "source": "/en/blog/5-erreurs-eviter-recherche-logement-frontalier",
+      "destination": "/en/blog/5-erreurs-logement-frontalier-geneve",
+      "permanent": true
+    },
+    {
+      "source": "/blog/annemasse-coliving-geneve-frontaliers-guide-complet",
+      "destination": "/blog/coliving-annemasse-geneve-frontaliers-avantages",
+      "permanent": true
+    },
+    {
+      "source": "/en/blog/annemasse-coliving-geneve-frontaliers-guide-complet",
+      "destination": "/en/blog/coliving-annemasse-geneve-frontaliers-avantages",
+      "permanent": true
+    },
+    {
+      "source": "/blog/coliving-annemasse-geneve-alternative-premium",
+      "destination": "/blog/coliving-annemasse-geneve-frontaliers-avantages",
+      "permanent": true
+    },
+    {
+      "source": "/en/blog/coliving-annemasse-geneve-alternative-premium",
+      "destination": "/en/blog/coliving-annemasse-geneve-frontaliers-avantages",
+      "permanent": true
     }
   ],
   "headers": [
