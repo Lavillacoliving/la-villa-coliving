@@ -969,8 +969,8 @@ export function RatesPageV4() {
               const monthFr = next.toLocaleDateString("fr-FR", { month: "long", year: "numeric" });
               const monthEn = next.toLocaleDateString("en-US", { month: "long", year: "numeric" });
               return language === "en"
-                ? `Save ${monthlySavings} CHF/month and join 100+ happy colivers. Limited spots for ${monthEn}.`
-                : `Économisez ${monthlySavings} CHF/mois et rejoignez 100+ colivers heureux. Places limitées pour ${monthFr}.`;
+                ? `Save ${monthlySavings} CHF/month and join 150+ happy colivers. Limited spots for ${monthEn}.`
+                : `Économisez ${monthlySavings} CHF/mois et rejoignez 150+ colivers heureux. Places limitées pour ${monthFr}.`;
             })()}
           </p>
           <Link

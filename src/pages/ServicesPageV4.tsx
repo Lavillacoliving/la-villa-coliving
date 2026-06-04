@@ -131,7 +131,7 @@ export function ServicesPageV4() {
       icon: Clock,
     },
     {
-      value: "100+",
+      value: "150+",
       label: language === "en" ? "Happy residents" : "Résidents satisfaits",
       icon: Users,
     },
@@ -464,8 +464,8 @@ export function ServicesPageV4() {
           </h2>
           <p className="text-lg text-white/60 max-w-2xl mx-auto mb-8">
             {language === "en"
-              ? "Join 100+ residents who've reclaimed their time. One price. Everything included."
-              : "Rejoignez plus de 100 résidents qui ont récupéré leur temps. Un prix. Tout inclus."}
+              ? "Join 150+ residents who've reclaimed their time. One price. Everything included."
+              : "Rejoignez plus de 150 résidents qui ont récupéré leur temps. Un prix. Tout inclus."}
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Link

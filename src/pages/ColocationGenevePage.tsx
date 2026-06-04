@@ -35,7 +35,7 @@ const colocationFAQ = [
   },
   {
     q: "Quel est le temps de trajet entre La Villa et le centre de Genève ?",
-    a: "Depuis nos résidences, vous rejoignez le centre de Genève (gare Cornavin) en 15 à 25 minutes selon le mode de transport. En voiture : 15 min via la douane de Moillesulaz. En Léman Express : 20 min depuis la gare d'Annemasse. En bus : lignes TAC et TPG avec correspondances directes.",
+    a: "Depuis nos résidences, vous rejoignez le centre de Genève (gare Cornavin) en 15 à 25 minutes selon le mode de transport. En voiture : 15 min via la douane de Moillesulaz. En Léman Express : 20 min depuis la gare d'Annemasse. En tram : ligne 17 jusqu'à Bel-Air en moins de 30 min. En bus : lignes TAC et TPG avec correspondances directes.",
   },
   {
     q: "Faut-il un permis de travail suisse pour vivre chez La Villa et travailler à Genève ?",
