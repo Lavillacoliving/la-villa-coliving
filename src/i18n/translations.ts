@@ -342,7 +342,7 @@ export const translations = {
         title: "What's Included",
         items: [
           "Rent & utilities (electricity, water, heating)",
-          "Professional-grade fiber internet (8 Gbps)",
+          "Professional-grade fiber internet (up to 8 Gb/s)",
           "Housekeeping twice a week",
           "Pool, sauna & garden maintenance",
           "Fully equipped gym",
@@ -781,7 +781,7 @@ export const translations = {
         title: "Ce Qui Est Inclus",
         items: [
           "Loyer & charges (électricité, eau, chauffage)",
-          "Internet fibre pro (8 Gbps)",
+          "Internet fibre pro (jusqu'à 8 Gb/s)",
           "Ménage des communs 2 fois par semaine",
           "Entretien piscine, sauna & jardin",
           "Salle de sport équipée",

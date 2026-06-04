@@ -68,8 +68,8 @@ export function ChambreLouerAnnemassePage() {
         }
         description={
           language === "en"
-            ? "Furnished rooms for rent in Annemasse 2026, all-inclusive from CHF 1,380/mo. Pool, gym, sauna, 8 Gbps fiber. Léman Express direct to Geneva 15 min. No agency fees."
-            : "Chambre meublée à louer à Annemasse en 2026, tout inclus dès 1 380 CHF/mois. Piscine, gym, sauna, fibre 8 Gbps. Léman Express direct Genève 15 min. Sans frais d'agence."
+            ? "Furnished rooms for rent in Annemasse 2026, all-inclusive from CHF 1,380/mo. Pool, gym, sauna, fiber up to 8 Gb/s. Léman Express direct to Geneva 15 min. No agency fees."
+            : "Chambre meublée à louer à Annemasse en 2026, tout inclus dès 1 380 CHF/mois. Piscine, gym, sauna, fibre jusqu'à 8 Gb/s. Léman Express direct Genève 15 min. Sans frais d'agence."
         }
         url="https://www.lavillacoliving.com/chambre-a-louer-annemasse"
         image="https://www.lavillacoliving.com/images/le lodge/rooms/la villa coliving le lodge-78.webp"
@@ -190,7 +190,7 @@ export function ChambreLouerAnnemassePage() {
                   "Move in within 2 weeks (no paperwork friction)",
                   "Léman Express direct to Geneva Cornavin 15 min",
                   "Pool, gym, sauna in every house",
-                  "8 Gbps fiber internet",
+                  "fiber internet up to 8 Gb/s",
                   "Twice-weekly cleaning of common areas",
                   "Weekly yoga and fitness classes included",
                   "Monthly community events, community dinners",
@@ -204,7 +204,7 @@ export function ChambreLouerAnnemassePage() {
                   "Emménagement en 2 semaines (zéro friction administrative)",
                   "Léman Express direct Genève Cornavin en 15 min",
                   "Piscine, salle de sport, sauna dans chaque maison",
-                  "Internet fibre 8 Gbps",
+                  "Internet fibre jusqu'à 8 Gb/s",
                   "Ménage 2 fois par semaine des espaces communs",
                   "Cours hebdomadaires yoga et fitness inclus",
                   "Événements communautaires mensuels, dîners communautaires",

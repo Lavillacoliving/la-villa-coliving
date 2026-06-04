@@ -20,7 +20,7 @@ import {
 const annemasseFAQ = [
   {
     q: "Combien coûte une colocation à Annemasse chez La Villa Coliving ?",
-    a: "Nos chambres privatives à Annemasse Agglo (Ville-la-Grand, Ambilly, Annemasse) sont à partir de 1 380 CHF/mois tout inclus. Le prix comprend le loyer, les charges (eau, électricité, chauffage), la fibre 8 Gbps, le ménage 2 fois par semaine des communs, l'accès à la piscine chauffée, à la salle de sport et au sauna, les cours de yoga et fitness privés hebdomadaires, et les événements communautaires mensuels. Pas de frais d'agence, pas de frais de dossier.",
+    a: "Nos chambres privatives à Annemasse Agglo (Ville-la-Grand, Ambilly, Annemasse) sont à partir de 1 380 CHF/mois tout inclus. Le prix comprend le loyer, les charges (eau, électricité, chauffage), la fibre jusqu'à 8 Gb/s, le ménage 2 fois par semaine des communs, l'accès à la piscine chauffée, à la salle de sport et au sauna, les cours de yoga et fitness privés hebdomadaires, et les événements communautaires mensuels. Pas de frais d'agence, pas de frais de dossier.",
   },
   {
     q: "Combien de temps pour aller à Genève depuis Annemasse ?",
@@ -320,7 +320,7 @@ export function AnnemasseColocationPage() {
               ? [
                   "Furnished private room with quality bed and ergonomic desk",
                   "All utilities (water, electricity, heating)",
-                  "8 Gbps fiber internet",
+                  "fiber internet up to 8 Gb/s",
                   "Twice-weekly cleaning of common areas",
                   "Heated pool, sauna and gym access",
                   "Private weekly yoga and fitness classes",
@@ -332,7 +332,7 @@ export function AnnemasseColocationPage() {
               : [
                   "Chambre privée meublée avec lit qualité et bureau ergonomique",
                   "Toutes charges (eau, électricité, chauffage)",
-                  "Internet fibre 8 Gbps",
+                  "Internet fibre jusqu'à 8 Gb/s",
                   "Ménage 2 fois par semaine des espaces communs",
                   "Accès piscine chauffée, sauna et salle de sport",
                   "Cours privés de yoga et fitness hebdomadaires",

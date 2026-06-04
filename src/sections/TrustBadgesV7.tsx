@@ -27,7 +27,7 @@ export function TrustBadgesV7() {
     },
     {
       icon: Zap,
-      title: language === "en" ? "8 Gbps fiber WiFi" : "WiFi fibre 8 Gbps",
+      title: language === "en" ? "Fiber up to 8 Gb/s" : "Fibre jusqu'à 8 Gb/s",
       description: language === "en" ? "Work from home, no compromises" : "Télétravail sans compromis",
     },
   ];

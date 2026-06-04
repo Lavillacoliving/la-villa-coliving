@@ -339,7 +339,7 @@ function getHousesData(lang: string): Record<string, HouseData> {
       "Volleyball court",
       "Parking included",
       "Laundry & storage room",
-      "8 Gbps fiber internet",
+      "fiber internet up to 8 Gb/s",
       "Vegetable garden & outdoor yoga deck",
       "Double equipped kitchen",
     ] : [
@@ -351,7 +351,7 @@ function getHousesData(lang: string): Record<string, HouseData> {
       "Terrain de volley",
       "Parking inclus",
       "Buanderie & espace rangement",
-      "Internet fibre 8 Gbps",
+      "Internet fibre jusqu'à 8 Gb/s",
       "Potager & terrasse yoga extérieure",
       "Double cuisine équipée",
     ],
@@ -754,7 +754,7 @@ function getHousesData(lang: string): Record<string, HouseData> {
       "XXL outdoor kitchen with TV",
       "Parking included",
       "In-house laundry room",
-      "8 Gbps fiber internet",
+      "fiber internet up to 8 Gb/s",
       "Designer kitchen",
       "Foosball table",
     ] : [
@@ -765,7 +765,7 @@ function getHousesData(lang: string): Record<string, HouseData> {
       "Cuisine extérieure XXL avec TV",
       "Parking inclus",
       "Buanderie intégrée",
-      "Internet fibre 8 Gbps",
+      "Internet fibre jusqu'à 8 Gb/s",
       "Cuisine design",
       "Babyfoot",
     ],
@@ -1214,7 +1214,7 @@ function getHousesData(lang: string): Record<string, HouseData> {
       "Shuffleboard & foosball",
       "Beautiful gardens & expansive outdoor spaces",
       "Parking included",
-      "8 Gbps fiber internet",
+      "fiber internet up to 8 Gb/s",
       "130 m² attic storage",
       "DPE B energy rating",
     ] : [
@@ -1225,7 +1225,7 @@ function getHousesData(lang: string): Record<string, HouseData> {
       "Jeux de palets & babyfoot",
       "Grands jardins & vastes espaces extérieurs",
       "Parking inclus",
-      "Internet fibre 8 Gbps",
+      "Internet fibre jusqu'à 8 Gb/s",
       "Grenier de stockage 130 m²",
       "DPE B (performance énergétique)",
     ],
@@ -1691,7 +1691,7 @@ export function HouseDetailPage() {
                     </div>
                     <div className="flex items-center gap-3 text-[#57534E]">
                       <Wifi size={18} className="text-[#D4A574]" />
-                      <span className="text-sm">{language === "en" ? "8 Gbps Fiber" : "Fibre 8 Gbps"}</span>
+                      <span className="text-sm">{language === "en" ? "Fiber up to 8 Gb/s" : "Fibre jusqu'à 8 Gb/s"}</span>
                     </div>
                     <div className="flex items-center gap-3 text-[#57534E]">
                       <Car size={18} className="text-[#78716C]" />
@@ -1961,7 +1961,7 @@ export function HouseDetailPage() {
         const FAQ_DATA: Record<string, { fr: QA[]; en: QA[] }> = {
           lavilla: {
             fr: [
-              { q: "Quel est le loyer mensuel à La Villa et que comprend-il ?", a: "Les chambres de La Villa sont à 1 380 CHF par mois tout inclus : charges (eau, électricité, chauffage), internet fibre 8 Gbps, ménage 2 fois par semaine des espaces communs, abonnements streaming, entretien piscine et jardin, cours de yoga / fitness privés, parure de linge fournie. Aucun supplément." },
+              { q: "Quel est le loyer mensuel à La Villa et que comprend-il ?", a: "Les chambres de La Villa sont à 1 380 CHF par mois tout inclus : charges (eau, électricité, chauffage), internet fibre jusqu'à 8 Gb/s, ménage 2 fois par semaine des espaces communs, abonnements streaming, entretien piscine et jardin, cours de yoga / fitness privés, parure de linge fournie. Aucun supplément." },
               { q: "Comment se rendre à Genève depuis La Villa à Ville-la-Grand ?", a: "Plusieurs options : 15 min en voiture jusqu'au centre de Genève, 25 min en transport en commun via le bus TPN ligne 61 (arrêt à 200 m) puis correspondance Léman Express depuis la gare d'Annemasse. La frontière suisse de Moillesulaz est à 2 km — 5 min à vélo." },
               { q: "Quelle est la durée minimale du bail à La Villa ?", a: "Bail flexible 1 à 12 mois. Le bail par défaut est de 12 mois pour la stabilité de la communauté, mais nous acceptons des séjours plus courts (1, 3, 6 mois) selon disponibilité — utile pour les missions courtes ou les périodes d'essai en CDI." },
               { q: "Y a-t-il une caution et des frais d'agence ?", a: "Caution équivalente à 2 mois de loyer hors charges, restituée sous 30 jours après l'état des lieux de sortie. Aucun frais d'agence. Aucun frais de dossier." },
@@ -1969,7 +1969,7 @@ export function HouseDetailPage() {
               { q: "Qui peut postuler pour vivre à La Villa ?", a: "Profil cible : frontaliers en CDI, jeunes professionnels, expatriés et résidents fiscaux français travaillant à Genève. Sélection sur dossier (justificatif de revenus, motivation, compatibilité avec la communauté). Pas de critère d'âge strict, mais la majorité des résidents ont entre 25 et 40 ans." },
             ],
             en: [
-              { q: "What is the monthly rent at La Villa and what does it include?", a: "Rooms at La Villa are CHF 1,380 per month all-inclusive: utilities (water, electricity, heating), 8 Gbps fiber internet, twice-weekly common-area cleaning, streaming subscriptions, pool & garden upkeep, private yoga/fitness classes, bedding included. No add-on fees." },
+              { q: "What is the monthly rent at La Villa and what does it include?", a: "Rooms at La Villa are CHF 1,380 per month all-inclusive: utilities (water, electricity, heating), fiber internet up to 8 Gb/s, twice-weekly common-area cleaning, streaming subscriptions, pool & garden upkeep, private yoga/fitness classes, bedding included. No add-on fees." },
               { q: "How do I get to Geneva from La Villa in Ville-la-Grand?", a: "Several options: 15 min by car to central Geneva, 25 min by public transit via TPN bus line 61 (stop 200 m away) plus Léman Express from Annemasse station. The Moillesulaz Swiss border is 2 km away — 5 min by bike." },
               { q: "What is the minimum lease term at La Villa?", a: "Flexible leases from 1 to 12 months. The default is 12 months for community stability, but shorter stays (1, 3, 6 months) are accepted depending on availability — useful for short assignments or CDI trial periods." },
               { q: "Is there a deposit and any agency fees?", a: "Deposit equivalent to 2 months' rent excluding charges, refunded within 30 days after the move-out inspection. No agency fees. No application fees." },
@@ -1979,7 +1979,7 @@ export function HouseDetailPage() {
           },
           leloft: {
             fr: [
-              { q: "Quel est le loyer mensuel au Loft et que comprend-il ?", a: "Les chambres du Loft sont à 1 380 CHF par mois tout inclus : charges, internet fibre 8 Gbps, ménage 2 fois par semaine des communs, abonnements streaming, piscine intérieure, jardin, parure de linge. Pas de supplément caché." },
+              { q: "Quel est le loyer mensuel au Loft et que comprend-il ?", a: "Les chambres du Loft sont à 1 380 CHF par mois tout inclus : charges, internet fibre jusqu'à 8 Gb/s, ménage 2 fois par semaine des communs, abonnements streaming, piscine intérieure, jardin, parure de linge. Pas de supplément caché." },
               { q: "Comment se rendre à Genève depuis Le Loft à Ambilly ?", a: "Le Loft est à 5 min à pied de la frontière de Moillesulaz et à 5 minutes à pied du Tram 17 TPG (Lancy-Pont-Rouge ↔ Annemasse). Genève centre : 20 min via Tram 17. Pistes cyclables sécurisées vers Genève centre : 25 min en vélo." },
               { q: "Quelle est la durée minimale du bail au Loft ?", a: "Bail flexible 1 à 12 mois. Le bail par défaut est de 12 mois, mais nous acceptons des séjours plus courts selon disponibilité — pratique pour les frontaliers en mission ou en période d'essai à Genève." },
               { q: "Y a-t-il une caution et des frais d'agence ?", a: "Caution équivalente à 2 mois de loyer hors charges, restituée sous 30 jours après l'état des lieux de sortie. Aucun frais d'agence ni de dossier." },
@@ -1987,7 +1987,7 @@ export function HouseDetailPage() {
               { q: "Qui peut postuler pour vivre au Loft ?", a: "Profil cible : frontaliers en CDI, jeunes professionnels, expatriés. Sélection sur dossier (justificatif de revenus, motivation, compatibilité avec la communauté). La proximité immédiate de la frontière fait du Loft un favori des frontaliers qui vont au bureau à pied ou en vélo." },
             ],
             en: [
-              { q: "What is the monthly rent at Le Loft and what does it include?", a: "Rooms at Le Loft are CHF 1,380 per month all-inclusive: utilities, 8 Gbps fiber internet, twice-weekly common-area cleaning, streaming subscriptions, indoor pool, garden, bedding included. No hidden fees." },
+              { q: "What is the monthly rent at Le Loft and what does it include?", a: "Rooms at Le Loft are CHF 1,380 per month all-inclusive: utilities, fiber internet up to 8 Gb/s, twice-weekly common-area cleaning, streaming subscriptions, indoor pool, garden, bedding included. No hidden fees." },
               { q: "How do I get to Geneva from Le Loft in Ambilly?", a: "Le Loft is 5 min walk from the Moillesulaz border and 5 min walk from TPG Tram 17 (Lancy-Pont-Rouge ↔ Annemasse). Central Geneva: 20 min via Tram 17. Secure bike paths to central Geneva: 25 min by bike." },
               { q: "What is the minimum lease term at Le Loft?", a: "Flexible leases from 1 to 12 months. The default is 12 months, but shorter stays are accepted depending on availability — useful for cross-border workers on assignment or CDI trial periods in Geneva." },
               { q: "Is there a deposit and any agency fees?", a: "Deposit equivalent to 2 months' rent excluding charges, refunded within 30 days after the move-out inspection. No agency fees, no application fees." },
@@ -1997,7 +1997,7 @@ export function HouseDetailPage() {
           },
           lelodge: {
             fr: [
-              { q: "Quel est le loyer mensuel au Lodge et que comprend-il ?", a: "Les chambres du Lodge sont à partir de 1 380 CHF par mois tout inclus : charges (eau, électricité, chauffage), internet fibre 8 Gbps, ménage 2 fois par semaine des communs, abonnements streaming, entretien piscine et jardin, cours de yoga / fitness privés, parure de linge fournie, dîner communautaire mensuel. Pas de supplément." },
+              { q: "Quel est le loyer mensuel au Lodge et que comprend-il ?", a: "Les chambres du Lodge sont à partir de 1 380 CHF par mois tout inclus : charges (eau, électricité, chauffage), internet fibre jusqu'à 8 Gb/s, ménage 2 fois par semaine des communs, abonnements streaming, entretien piscine et jardin, cours de yoga / fitness privés, parure de linge fournie, dîner communautaire mensuel. Pas de supplément." },
               { q: "Comment se rendre à Genève depuis Le Lodge à Annemasse ?", a: "Le Lodge est à 9 min à pied de la gare d'Annemasse, terminus du Léman Express. Genève Cornavin est à 15 min en Léman Express direct, sans correspondance. La frontière suisse est à 5 min en voiture. Aéroport de Genève : 30 min." },
               { q: "Quelle est la durée minimale du bail au Lodge ?", a: "Bail flexible 1 à 12 mois. Le bail par défaut est de 12 mois pour la stabilité de la communauté, mais nous acceptons des séjours plus courts (1, 3, 6 mois) selon disponibilité." },
               { q: "Y a-t-il une caution et des frais d'agence ?", a: "Caution équivalente à 2 mois de loyer hors charges, restituée sous 30 jours après l'état des lieux. Aucun frais d'agence ni de dossier." },
@@ -2005,7 +2005,7 @@ export function HouseDetailPage() {
               { q: "Qu'est-ce qui rend Le Lodge unique parmi vos 3 maisons ?", a: "Le Lodge est notre maison la plus récente (ouverte janvier 2026) et la plus grande (500 m² sur 1 500 m²). Elle dispose de 4 bâtiments : la résidence principale, un chalet fitness dédié avec sauna finlandais, un pool house avec cuisine d'été complète et une zone de rangement de 130 m². DPE B (performance énergétique). C'est aussi la plus proche de la gare d'Annemasse pour le Léman Express." },
             ],
             en: [
-              { q: "What is the monthly rent at Le Lodge and what does it include?", a: "Rooms at Le Lodge start at CHF 1,380 per month all-inclusive: utilities (water, electricity, heating), 8 Gbps fiber internet, twice-weekly common-area cleaning, streaming subscriptions, pool & garden upkeep, private yoga/fitness classes, bedding included, monthly community dinner. No add-on fees." },
+              { q: "What is the monthly rent at Le Lodge and what does it include?", a: "Rooms at Le Lodge start at CHF 1,380 per month all-inclusive: utilities (water, electricity, heating), fiber internet up to 8 Gb/s, twice-weekly common-area cleaning, streaming subscriptions, pool & garden upkeep, private yoga/fitness classes, bedding included, monthly community dinner. No add-on fees." },
               { q: "How do I get to Geneva from Le Lodge in Annemasse?", a: "Le Lodge is a 9-minute walk from Annemasse station, the Léman Express terminus. Geneva Cornavin is 15 min via direct Léman Express, no transfer. Swiss border: 5 min by car. Geneva Airport: 30 min." },
               { q: "What is the minimum lease term at Le Lodge?", a: "Flexible leases from 1 to 12 months. The default is 12 months for community stability, but shorter stays (1, 3, 6 months) are accepted depending on availability." },
               { q: "Is there a deposit and any agency fees?", a: "Deposit equivalent to 2 months' rent excluding charges, refunded within 30 days after the move-out inspection. No agency fees, no application fees." },

@@ -18,7 +18,7 @@ export const STATS = {
   roomSizeMin: 17,
   roomSizeMax: 23,
   cleaningPerWeek: 2,
-  wifiBandwidth: "8 Gbps",
+  fiberSpeed: "8 Gb/s",
   includedItems: 20,
 } as const;
 

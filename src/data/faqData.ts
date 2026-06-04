@@ -523,8 +523,8 @@ export const faqData: FAQItem[] = [
       fr: 'Quelle est la vitesse de l\'internet ?',
     },
     answer: {
-      en: 'We provide professional-grade fiber optic internet with speeds typically ranging from 300 Mbps to 1 Gbps, depending on the house. The connection is reliable, fast, and perfect for video calls, streaming, gaming, and any work requirements. We also have mesh WiFi systems to ensure strong coverage throughout the house.',
-      fr: 'Nous fournissons un internet fibre optique de qualité professionnelle avec des vitesses généralement comprises entre 300 Mbps et 1 Gbps, selon la maison. La connexion est fiable, rapide et parfaite pour les appels vidéo, le streaming, le gaming et toutes les exigences de travail. Nous avons également des systèmes WiFi mesh pour assurer une couverture forte dans toute la maison.',
+      en: 'We provide professional-grade Orange fiber, up to 8 Gb/s symmetric on the line. Over WiFi, each device typically gets 300 Mbps to 1 Gbps depending on the house and distance to the router — plenty for video calls, streaming, gaming, and demanding remote work. We also use mesh WiFi systems to ensure strong coverage throughout the house.',
+      fr: 'Nous fournissons une fibre optique professionnelle Orange, pouvant atteindre 8 Gb/s symétrique sur la ligne. En WiFi, chaque appareil reçoit généralement entre 300 Mbps et 1 Gbps selon la maison et la distance à la box — largement de quoi gérer les appels vidéo, le streaming, le gaming et le télétravail exigeant. Nous avons également des systèmes WiFi mesh pour assurer une couverture forte dans toute la maison.',
     },
   },
   {
