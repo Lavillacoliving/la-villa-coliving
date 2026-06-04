@@ -247,6 +247,14 @@
 
   <!-- ═══ BLOG ARTICLES — FR ═══ -->
   <url>
+    <loc>https://www.lavillacoliving.com/blog/coliving-frais-dossier-geneve-annemasse</loc>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://www.lavillacoliving.com/blog/coliving-frais-dossier-geneve-annemasse" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.lavillacoliving.com/en/blog/coliving-frais-dossier-geneve-annemasse" />
+    <lastmod>2026-06-04</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
     <loc>https://www.lavillacoliving.com/blog/coliving-communaute-reels-amis-geneve-annemasse</loc>
     <xhtml:link rel="alternate" hreflang="fr" href="https://www.lavillacoliving.com/blog/coliving-communaute-reels-amis-geneve-annemasse" />
     <xhtml:link rel="alternate" hreflang="en" href="https://www.lavillacoliving.com/en/blog/coliving-communaute-reels-amis-geneve-annemasse" />
@@ -600,6 +608,14 @@
   </url>
 
   <!-- ═══ BLOG ARTICLES — EN ═══ -->
+  <url>
+    <loc>https://www.lavillacoliving.com/en/blog/coliving-frais-dossier-geneve-annemasse</loc>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://www.lavillacoliving.com/blog/coliving-frais-dossier-geneve-annemasse" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.lavillacoliving.com/en/blog/coliving-frais-dossier-geneve-annemasse" />
+    <lastmod>2026-06-04</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
+  </url>
   <url>
     <loc>https://www.lavillacoliving.com/en/blog/coliving-communaute-reels-amis-geneve-annemasse</loc>
     <xhtml:link rel="alternate" hreflang="fr" href="https://www.lavillacoliving.com/blog/coliving-communaute-reels-amis-geneve-annemasse" />

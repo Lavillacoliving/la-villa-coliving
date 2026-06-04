@@ -121,6 +121,10 @@
       "destination": "/prerendered/en-investisseurs.html"
     },
     {
+      "source": "/blog/coliving-frais-dossier-geneve-annemasse",
+      "destination": "/prerendered/blog-coliving-frais-dossier-geneve-annemasse.html"
+    },
+    {
       "source": "/blog/coliving-communaute-reels-amis-geneve-annemasse",
       "destination": "/prerendered/blog-coliving-communaute-reels-amis-geneve-annemasse.html"
     },
@@ -295,6 +299,10 @@
     {
       "source": "/blog/what-is-coliving-and-why-it-matters",
       "destination": "/prerendered/blog-what-is-coliving-and-why-it-matters.html"
+    },
+    {
+      "source": "/en/blog/coliving-frais-dossier-geneve-annemasse",
+      "destination": "/prerendered/en-blog-coliving-frais-dossier-geneve-annemasse.html"
     },
     {
       "source": "/en/blog/coliving-communaute-reels-amis-geneve-annemasse",
