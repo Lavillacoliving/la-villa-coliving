@@ -2,6 +2,8 @@ import { useLanguage } from "@/contexts/LanguageContext";
 import { Check, ArrowRight, Home, Sparkles, X, Star, Droplets } from "lucide-react";
 import { Link } from "react-router-dom";
 import { SEO } from "@/components/SEO";
+import { FaqSection } from "@/components/FaqSection";
+import { tarifsFaq } from "@/data/faq/tarifsFaq";
 
 export function RatesPageV4() {
   const { language } = useLanguage();
@@ -950,6 +952,12 @@ export function RatesPageV4() {
           </Link>
         </div>
       </section>
+
+      <FaqSection
+        title={language === "en" ? "Pricing — frequently asked questions" : "Questions fréquentes sur les tarifs"}
+        items={tarifsFaq[language === "en" ? "en" : "fr"]}
+        emitSchema
+      />
 
       {/* CTA */}
       <section className="py-24 bg-[#D4A574]">
