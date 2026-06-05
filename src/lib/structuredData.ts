@@ -107,3 +107,32 @@ export function buildHomeLodgingBusinessSchema(): Record<string, unknown> {
     })),
   };
 }
+
+/** Fil d'ariane (BreadcrumbList) — items {name, url} déjà localisés. */
+export function buildBreadcrumbSchema(items: { name: string; url: string }[]): Record<string, unknown> {
+  return {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: items.map((it, i) => ({
+      "@type": "ListItem",
+      position: i + 1,
+      name: it.name,
+      item: it.url,
+    })),
+  };
+}
+
+/** Offre « chambre tout inclus » — prix sourcé depuis STATS (single source). */
+export function buildRoomOfferSchema(opts: { name: string; description: string; url: string }): Record<string, unknown> {
+  return {
+    "@context": "https://schema.org",
+    "@type": "Offer",
+    name: opts.name,
+    description: opts.description,
+    price: String(STATS.priceChf),
+    priceCurrency: "CHF",
+    availability: "https://schema.org/InStock",
+    url: opts.url,
+    seller: { "@type": "Organization", name: "La Villa Coliving", url: SITE },
+  };
+}

@@ -1,9 +1,11 @@
 import { useLanguage } from "@/contexts/LanguageContext";
 import { Check, ArrowRight, Home, Sparkles, X, Star, Droplets } from "lucide-react";
 import { Link } from "react-router-dom";
+import { Helmet } from "react-helmet";
 import { SEO } from "@/components/SEO";
 import { FaqSection } from "@/components/FaqSection";
 import { tarifsFaq } from "@/data/faq/tarifsFaq";
+import { buildBreadcrumbSchema, buildRoomOfferSchema } from "@/lib/structuredData";
 
 export function RatesPageV4() {
   const { language } = useLanguage();
@@ -194,6 +196,19 @@ export function RatesPageV4() {
           : "Tarifs colocation tout inclus près de Genève dès 1 380 CHF/mois, sans frais de dossier ni d'agence. Loyer, charges, gym, piscine, WiFi, ménage compris."}
         url="https://www.lavillacoliving.com/tarifs"
       />
+      <Helmet>
+        <script type="application/ld+json">{JSON.stringify(buildBreadcrumbSchema([
+          { name: language === "en" ? "Home" : "Accueil", url: "https://www.lavillacoliving.com/" },
+          { name: language === "en" ? "Rates" : "Tarifs", url: "https://www.lavillacoliving.com/tarifs" },
+        ]))}</script>
+        <script type="application/ld+json">{JSON.stringify(buildRoomOfferSchema({
+          name: language === "en" ? "All-inclusive furnished room near Geneva" : "Chambre meublée tout inclus près de Genève",
+          description: language === "en"
+            ? "All-inclusive coliving room from CHF 1,380/month near Geneva — utilities, fiber, cleaning, pool, sauna, gym included."
+            : "Chambre de coliving tout inclus dès 1 380 CHF/mois près de Genève — charges, fibre, ménage, piscine, sauna, salle de sport compris.",
+          url: "https://www.lavillacoliving.com/tarifs",
+        }))}</script>
+      </Helmet>
       {/* Hero */}
       <section className="py-24 lg:py-32 bg-white">
         <div className="container-custom text-center">
