@@ -2,6 +2,8 @@ import { useLanguage } from "@/contexts/LanguageContext";
 import { Users, Zap, Heart, Check, ArrowRight, Star } from "lucide-react";
 import { Link } from "react-router-dom";
 import { SEO } from "@/components/SEO";
+import { FaqSection } from "@/components/FaqSection";
+import { colivingFaq } from "@/data/faq/colivingFaq";
 
 export function ColivingPageV4() {
   const { t, language } = useLanguage();
@@ -412,6 +414,12 @@ export function ColivingPageV4() {
           </p>
         </div>
       </section>
+
+      <FaqSection
+        title={language === "en" ? "Coliving — frequently asked questions" : "Le coliving — questions fréquentes"}
+        items={colivingFaq[language === "en" ? "en" : "fr"]}
+        emitSchema
+      />
     </main>
   );
 }
