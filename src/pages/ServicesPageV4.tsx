@@ -19,6 +19,8 @@ import {
 } from "lucide-react";
 import { Link } from "react-router-dom";
 import { SEO } from "@/components/SEO";
+import { FaqSection } from "@/components/FaqSection";
+import { servicesFaq } from "@/data/faq/servicesFaq";
 
 export function ServicesPageV4() {
   const { t, language } = useLanguage();
@@ -450,6 +452,12 @@ export function ServicesPageV4() {
           </div>
         </div>
       </section>
+
+      <FaqSection
+        title={language === "en" ? "Included services — frequently asked questions" : "Services inclus — questions fréquentes"}
+        items={servicesFaq[language === "en" ? "en" : "fr"]}
+        emitSchema
+      />
 
       {/* CTA FINAL */}
       <section className="py-24 bg-[#1C1917]">
