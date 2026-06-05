@@ -115,7 +115,7 @@ export function SEO({
           contactPoint: {
             "@type": "ContactPoint",
             email: "contact@lavillacoliving.com",
-            telephone: "+33626235336",
+            telephone: "+33664315134",
             contactType: "customer service",
             availableLanguage: ["French", "English"],
           },
