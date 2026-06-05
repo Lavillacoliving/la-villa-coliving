@@ -2,6 +2,8 @@ import { Link } from "react-router-dom";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { MapPin, Users, ArrowRight, Check, X } from "lucide-react";
 import { SEO } from "@/components/SEO";
+import { FaqSection } from "@/components/FaqSection";
+import { maisonsFaq } from "@/data/faq/maisonsFaq";
 
 export function HousesPageV4() {
   const { language } = useLanguage();
@@ -308,6 +310,12 @@ export function HousesPageV4() {
           </div>
         </div>
       </section>
+
+      <FaqSection
+        title={language === "en" ? "Our houses — frequently asked questions" : "Nos maisons — questions fréquentes"}
+        items={maisonsFaq[language === "en" ? "en" : "fr"]}
+        emitSchema
+      />
 
       {/* CTA */}
       <section className="py-24 bg-[#1C1917]">
