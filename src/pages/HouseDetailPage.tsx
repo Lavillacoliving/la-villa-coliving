@@ -1402,12 +1402,6 @@ export function HouseDetailPage() {
           { "@type": "LocationFeatureSpecification", "name": "Parking", "value": true }
         ],
         "numberOfRooms": id === "lavilla" ? 10 : id === "leloft" ? 7 : 12,
-        "aggregateRating": {
-          "@type": "AggregateRating",
-          "ratingValue": "4.9",
-          "reviewCount": "47",
-          "bestRating": "5"
-        },
         "sameAs": [
           "https://www.facebook.com/lavillacoliving",
           "https://www.instagram.com/lavillacoliving"

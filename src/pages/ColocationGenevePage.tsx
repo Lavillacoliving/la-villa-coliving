@@ -129,20 +129,8 @@ export function ColocationGenevePage() {
     })),
   };
 
-  // AggregateRating + Offer schemas — separate JSON-LD blocks
-  const ratingSchema = {
-    "@context": "https://schema.org",
-    "@type": "AggregateRating",
-    itemReviewed: {
-      "@type": "LodgingBusiness",
-      name: "La Villa Coliving",
-    },
-    ratingValue: "4.9",
-    bestRating: "5",
-    ratingCount: "47",
-    reviewCount: "47",
-  };
-
+  // Offer schema — separate JSON-LD block.
+  // (AggregateRating retiré : la note 4,9 vient d'un NPS interne, non balisable en schema.)
   const offerSchema = {
     "@context": "https://schema.org",
     "@type": "Offer",
@@ -185,9 +173,8 @@ export function ColocationGenevePage() {
         image="https://www.lavillacoliving.com/images/villa_portrait.webp"
         jsonLd={faqSchema}
       />
-      {/* Separate JSON-LD blocks for AggregateRating + Offer — avoids @graph parsing issues */}
+      {/* Separate JSON-LD block for Offer — avoids @graph parsing issues */}
       <Helmet>
-        <script type="application/ld+json">{JSON.stringify(ratingSchema)}</script>
         <script type="application/ld+json">{JSON.stringify(offerSchema)}</script>
       </Helmet>
 
