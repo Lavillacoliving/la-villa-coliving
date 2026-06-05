@@ -17,8 +17,6 @@ import {
   Check,
   Star,
   Shield,
-  ChevronDown,
-  ChevronUp,
   Tv,
   UtensilsCrossed,
   Globe,
@@ -27,66 +25,11 @@ import {
 } from "lucide-react";
 import { useState, useEffect } from "react";
 import { supabase } from "@/lib/supabase";
+import { FaqSection } from "@/components/FaqSection";
+import { buildFaqPageSchema } from "@/lib/structuredData";
+import { colocationGeneveFaq } from "@/data/faq/colocationGeneveFaq";
 
-// FAQ data specific to this page
-const colocationFAQ = [
-  {
-    q: "Combien coûte une colocation près de Genève chez La Villa ?",
-    a: "Nos chambres privatives tout inclus sont à 1 380 CHF/mois. Ce prix comprend le loyer, les charges, la fibre internet, le ménage 2x/semaine, l'accès à la piscine, la salle de sport, le sauna, les cours de yoga et de sport hebdomadaires, les événements communautaires mensuels et les dîners communautaires mensuels. C'est en moyenne 30 à 40% moins cher qu'un studio équivalent à Genève.",
-  },
-  {
-    q: "Quel est le temps de trajet entre La Villa et le centre de Genève ?",
-    a: "Depuis nos résidences, vous rejoignez le centre de Genève (gare Cornavin) en 15 à 25 minutes selon le mode de transport. En voiture : 15 min via la douane de Moillesulaz. En Léman Express : 20 min depuis la gare d'Annemasse. En tram : ligne 17 jusqu'à Bel-Air en moins de 30 min. En bus : lignes TAC et TPG avec correspondances directes.",
-  },
-  {
-    q: "Faut-il un permis de travail suisse pour vivre chez La Villa et travailler à Genève ?",
-    a: "Oui, pour travailler à Genève en vivant côté France, vous avez besoin d'un permis G (permis frontalier). C'est votre employeur suisse qui fait la demande. La Villa Coliving se situe dans la zone frontalière éligible. Beaucoup de nos résidents sont des frontaliers actifs.",
-  },
-  {
-    q: "Quels sont les avantages fiscaux de vivre côté France et travailler à Genève ?",
-    a: "Le canton de Genève a un accord fiscal spécifique : les frontaliers sont imposés à la source en Suisse (à un taux souvent inférieur au taux français). De plus, le coût de la vie (loyer, courses, loisirs) est 30 à 50% moins cher côté France qu'à Genève. En vivant chez La Villa, vous bénéficiez d'un salaire suisse avec des charges de vie françaises.",
-  },
-  {
-    q: "Quelle est la durée du bail ?",
-    a: "Le bail est un contrat meublé de 12 mois, renouvelable, avec un préavis de départ d'1 mois. C'est idéal pour les frontaliers qui s'installent durablement près de Genève.",
-  },
-  {
-    q: "Les chambres sont-elles meublées ?",
-    a: "Oui, toutes nos chambres sont entièrement meublées et équipées : lit double de qualité, bureau, rangements, linge de maison. Vous n'avez qu'à poser vos valises. Les espaces communs (cuisine, salon, terrasse) sont également équipés haut de gamme.",
-  },
-  {
-    q: "Comment candidater ?",
-    a: "Le processus est simple : remplissez le formulaire sur notre page 'Nous Rejoindre', nous vous contactons sous 48h pour un échange, puis une visite est organisée. L'emménagement peut se faire en 2 semaines.",
-  },
-  {
-    q: "Comment trouver une colocation à Genève ?",
-    a: "Le marché locatif genevois est extrêmement tendu avec un taux de vacance inférieur à 1%. Trouver une colocation à Genève demande souvent des mois de recherche. Les options classiques (annonces sur Anibis, Facebook, WG-Zimmer) impliquent de monter un dossier compétitif face à des dizaines de candidats. Le coliving comme La Villa simplifie ce processus : un seul interlocuteur, un dossier simple, et un emménagement possible en 2 semaines. En choisissant le côté français, vous élargissez vos options tout en réduisant votre budget de 30 à 50%.",
-  },
-  {
-    q: "Colocation ou studio à Genève : que choisir ?",
-    a: "Un studio à Genève coûte entre 1 800 et 2 500 CHF/mois (non meublé, charges en sus), soit environ 2 200 à 2 900 CHF tout compris. Une colocation classique à Genève revient à 1 000-1 500 CHF pour une chambre, mais sans services inclus. Chez La Villa, pour 1 380 CHF/mois tout inclus, vous bénéficiez d'une chambre meublée, de la piscine, du sauna, de la salle de sport, du ménage 2x/semaine, et d'une communauté active. Consultez notre tableau comparatif détaillé sur cette page pour voir toutes les différences.",
-  },
-  {
-    q: "Quel budget prévoir pour une colocation à Genève ?",
-    a: "Le budget dépend de la localisation et du niveau de services. Côté suisse, comptez 1 000 à 1 500 CHF/mois pour une chambre en colocation classique (charges en sus). Côté français, les prix sont plus accessibles : 600 à 900 EUR pour une colocation standard. Chez La Villa Coliving, le tarif est de 1 380 CHF/mois tout inclus (loyer, charges, fibre, ménage, piscine, gym, sauna, événements communautaires). C'est un excellent rapport qualité-prix pour la zone du Grand Genève.",
-  },
-  {
-    q: "La colocation est-elle adaptée aux couples ?",
-    a: "Oui, certaines de nos chambres peuvent accueillir des couples. Les espaces communs (cuisine, salon, piscine, salle de sport) sont partagés avec les autres résidents, ce qui crée une ambiance conviviale appréciée par tous. Contactez-nous pour connaître les disponibilités et les conditions spécifiques pour les couples.",
-  },
-  {
-    q: "Peut-on recevoir des visiteurs chez La Villa ?",
-    a: "Bien sûr, les visiteurs sont les bienvenus chez La Villa. Vous pouvez recevoir des proches dans votre chambre privée et profiter des espaces communs ensemble. Nous demandons simplement de respecter les règles de courtoisie pour le confort de tous les résidents : niveaux sonores raisonnables, prévenir en cas de séjour prolongé d'un invité, etc.",
-  },
-  {
-    q: "Y a-t-il un âge minimum ou maximum pour vivre en colocation chez La Villa ?",
-    a: "Il n'y a pas de limite d'âge stricte pour rejoindre La Villa. La majorité de nos résidents ont entre 25 et 40 ans, mais l'essentiel est la compatibilité avec la communauté et le mode de vie coliving. Nous accueillons des profils variés : jeunes professionnels, expatriés, freelances, couples — ce qui compte, c'est l'envie de vivre en communauté.",
-  },
-  {
-    q: "Quelles sont les différences entre colocation classique et coliving ?",
-    a: "La colocation classique consiste à partager un appartement avec des colocataires que vous trouvez vous-même (via des annonces, des amis, etc.). Vous gérez ensemble le bail, les charges, le ménage et l'organisation quotidienne. Le coliving, comme La Villa, est une formule gérée professionnellement : la communauté est sélectionnée, tous les services sont inclus (ménage, maintenance, fibre, abonnements), des événements sont organisés régulièrement, et un seul interlocuteur s'occupe de tout. C'est une colocation premium, sans les contraintes.",
-  },
-];
+// FAQ §3 (bilingue, tutoiement) : voir src/data/faq/colocationGeneveFaq.ts
 
 interface BlogPost {
   id: string; slug: string;
@@ -97,7 +40,6 @@ interface BlogPost {
 
 export function ColocationGenevePage() {
   const { language } = useLanguage();
-  const [openFAQ, setOpenFAQ] = useState<number | null>(null);
   const [blogPosts, setBlogPosts] = useState<BlogPost[]>([]);
 
   useEffect(() => {
@@ -115,19 +57,9 @@ export function ColocationGenevePage() {
     loadBlogPosts();
   }, []);
 
-  // FAQPage schema — standalone for proper Google validation
-  const faqSchema = {
-    "@context": "https://schema.org",
-    "@type": "FAQPage",
-    mainEntity: colocationFAQ.map((item) => ({
-      "@type": "Question",
-      name: item.q,
-      acceptedAnswer: {
-        "@type": "Answer",
-        text: item.a,
-      },
-    })),
-  };
+  // FAQ §3 résolue dans la langue courante + schema FAQPage construit depuis le texte VISIBLE.
+  const colocationFAQ = colocationGeneveFaq[language === "en" ? "en" : "fr"];
+  const faqSchema = buildFaqPageSchema(colocationFAQ);
 
   // Offer schema — separate JSON-LD block.
   // (AggregateRating retiré : la note 4,9 vient d'un NPS interne, non balisable en schema.)
@@ -971,42 +903,11 @@ export function ColocationGenevePage() {
         </div>
       </section>
 
-      {/* ===== FAQ ===== */}
-      <section className="py-24 lg:py-32 bg-[#FAF9F6]">
-        <div className="max-w-3xl mx-auto px-6">
-          <h2
-            className="text-3xl md:text-4xl font-light text-[#1C1917] mb-12 text-center"
-            style={{ fontFamily: "DM Serif Display, serif" }}
-          >
-            {language === "en"
-              ? "Frequently Asked Questions"
-              : "Questions Fréquentes sur la Colocation près de Genève"}
-          </h2>
-
-          <div className="space-y-4">
-            {colocationFAQ.map((item, i) => (
-              <div key={i} className="bg-white border border-[#E7E5E4]">
-                <button
-                  onClick={() => setOpenFAQ(openFAQ === i ? null : i)}
-                  className="w-full flex items-center justify-between px-6 py-5 text-left"
-                >
-                  <span className="font-medium text-[#1C1917] pr-4">{item.q}</span>
-                  {openFAQ === i ? (
-                    <ChevronUp className="w-5 h-5 text-[#D4A574] flex-shrink-0" />
-                  ) : (
-                    <ChevronDown className="w-5 h-5 text-[#78716C] flex-shrink-0" />
-                  )}
-                </button>
-                {openFAQ === i && (
-                  <div className="px-6 pb-5 text-[#57534E] leading-relaxed border-t border-[#E7E5E4] pt-4">
-                    {item.a}
-                  </div>
-                )}
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
+      {/* ===== FAQ (§3, accordéon Radix → réponses dans le DOM) ===== */}
+      <FaqSection
+        title={language === "en" ? "Frequently asked questions" : "Questions fréquentes sur la colocation près de Genève"}
+        items={colocationFAQ}
+      />
 
       {/* ===== ARTICLES UTILES ===== */}
       {blogPosts.length > 0 && (
