@@ -93,13 +93,13 @@ export function ColocationGenevePage() {
       <SEO
         title={
           language === "en"
-            ? "Shared Housing Geneva — Furnished Rooms from CHF 1,380"
-            : "Colocation Genève — Chambres Meublées dès 1 380 CHF"
+            ? "Shared Housing near Geneva — All-Inclusive Rooms from CHF 1,380"
+            : "Colocation Genève : chambres meublées tout inclus dès 1 380 CHF"
         }
         description={
           language === "en"
-            ? "Shared housing 15 min from Geneva, all-inclusive from CHF 1,380/mo. 29 rooms, pool, gym, sauna. Direct Léman Express to Cornavin 15 min."
-            : "Colocation Genève côté France dès 1 380 CHF/mois tout inclus. 29 chambres meublées, piscine, gym, sauna. Léman Express direct Cornavin 15 min."
+            ? "Shared housing near Geneva, French side: all-inclusive furnished room from CHF 1,380/mo (utilities, fiber, cleaning). No application fee. Pool, sauna, gym."
+            : "Colocation près de Genève côté France : chambre meublée tout inclus dès 1 380 CHF/mois (charges, fibre, ménage). Sans frais de dossier. Piscine, sauna, gym."
         }
         url="https://www.lavillacoliving.com/colocation-geneve"
         image="https://www.lavillacoliving.com/images/villa_portrait.webp"

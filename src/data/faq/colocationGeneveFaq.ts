@@ -28,6 +28,10 @@ export const colocationGeneveFaq: { fr: QAPair[]; en: QAPair[] } = {
       q: "Combien de temps peut-on rester en colocation chez La Villa ?",
       a: "Chez La Villa Coliving, nos résidents restent en moyenne de 6 mois à 3 ans : assez longtemps pour créer de vraies amitiés, assez souple pour partir quand ta vie change.",
     },
+    {
+      q: "Faut-il un permis de travail suisse pour vivre chez La Villa et travailler à Genève ?",
+      a: "Oui : pour travailler à Genève en vivant côté France, il te faut un permis G (permis frontalier), demandé par ton employeur suisse. La Villa Coliving se situe dans la zone frontalière éligible, et beaucoup de nos résidents sont des frontaliers actifs.",
+    },
   ],
   en: [
     {
@@ -53,6 +57,10 @@ export const colocationGeneveFaq: { fr: QAPair[]; en: QAPair[] } = {
     {
       q: "How long can you stay in shared housing at La Villa?",
       a: "At La Villa Coliving, residents stay on average from 6 months to 3 years: long enough to build real friendships, flexible enough to leave when your life changes.",
+    },
+    {
+      q: "Do you need a Swiss work permit to live at La Villa and work in Geneva?",
+      a: "Yes: to work in Geneva while living on the French side, you need a G permit (cross-border permit), requested by your Swiss employer. La Villa Coliving sits within the eligible cross-border zone, and many of our residents are active cross-border workers.",
     },
   ],
 };
