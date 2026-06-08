@@ -182,7 +182,7 @@ export function RatesPageV4() {
   ];
 
   // Comparison data
-  const genevaTotal = 2045;
+  const genevaTotal = 2245;
   const lavillaPrice = 1380;
   const monthlySavings = genevaTotal - lavillaPrice;
   const yearlySavings = monthlySavings * 12;
@@ -303,7 +303,7 @@ export function RatesPageV4() {
                       ? "Base rent (small studio)"
                       : "Loyer de base (petit studio)"}
                   </span>
-                  <span className="font-medium">1 400 CHF</span>
+                  <span className="font-medium">1 600 CHF</span>
                 </div>
                 <div className="flex justify-between text-[#b3b2b2]">
                   <span className="flex items-center gap-2">
@@ -370,7 +370,7 @@ export function RatesPageV4() {
                     {language === "en" ? "Total monthly" : "Total mensuel"}
                   </span>
                   <span className="text-2xl font-medium text-[#d5d5d5]">
-                    2 045 CHF
+                    2 245 CHF
                   </span>
                 </div>
               </div>
@@ -380,8 +380,8 @@ export function RatesPageV4() {
             <div className="bg-white rounded-2xl p-8 relative overflow-hidden border border-[#E7E5E4] shadow-lg">
               <div className="absolute top-4 right-4 bg-[#D4A574] text-white text-xs font-bold px-3 py-1 rounded-full">
                 {language === "en"
-                  ? "SAVE 665 CHF/MO"
-                  : "ÉCONOMISEZ 665 CHF/MOIS"}
+                  ? "SAVE 865 CHF/MO"
+                  : "ÉCONOMISEZ 865 CHF/MOIS"}
               </div>
 
               <div className="flex items-center gap-3 mb-6">
@@ -866,8 +866,8 @@ export function RatesPageV4() {
             </h3>
             <p className="text-[#78716C] max-w-2xl mx-auto mb-6">
               {language === "en"
-                ? "For 1,380 CHF/month, you get a furnished room in a premium house, all utilities, cleaning, gym, pool, sauna, yoga classes, community events, and zero hassle. Compare that to 2,045+ CHF for a basic studio in Geneva."
-                : "Pour 1 380 CHF/mois, vous obtenez une chambre meublée dans une maison premium, toutes charges, ménage, sport, piscine, sauna, cours de yoga, événements communautaires, et zéro tracas. Comparez avec 2 045+ CHF pour un studio basique à Genève."}
+                ? "For 1,380 CHF/month, you get a furnished room in a premium house, all utilities, cleaning, gym, pool, sauna, yoga classes, community events, and zero hassle. Compare that to 2,245+ CHF for a basic studio in Geneva."
+                : "Pour 1 380 CHF/mois, vous obtenez une chambre meublée dans une maison premium, toutes charges, ménage, sport, piscine, sauna, cours de yoga, événements communautaires, et zéro tracas. Comparez avec 2 245+ CHF pour un studio basique à Genève."}
             </p>
             <div className="inline-flex items-center gap-2 px-6 py-3 bg-[#D4A574] text-white rounded-full font-medium">
               <Sparkles className="w-5 h-5" />
