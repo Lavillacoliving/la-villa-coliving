@@ -88,6 +88,20 @@ export function ColocationGenevePage() {
     ],
   };
 
+  // Freshness signal for the money page. Bump PAGE_LAST_UPDATED whenever the page
+  // content is meaningfully refreshed so Google sees a recent dateModified.
+  const PAGE_LAST_UPDATED = "2026-06-09";
+  const webPageSchema = {
+    "@context": "https://schema.org",
+    "@type": "WebPage",
+    url: "https://www.lavillacoliving.com/colocation-geneve",
+    name: language === "en"
+      ? "Shared Housing near Geneva — All-Inclusive Rooms"
+      : "Colocation Genève — chambres meublées tout inclus",
+    inLanguage: language === "en" ? "en" : "fr",
+    dateModified: PAGE_LAST_UPDATED,
+  };
+
   return (
     <main className="relative pt-16">
       <SEO
@@ -105,9 +119,10 @@ export function ColocationGenevePage() {
         image="https://www.lavillacoliving.com/images/villa_portrait.webp"
         jsonLd={faqSchema}
       />
-      {/* Separate JSON-LD block for Offer — avoids @graph parsing issues */}
+      {/* Separate JSON-LD blocks for Offer + WebPage (dateModified) — avoids @graph parsing issues */}
       <Helmet>
         <script type="application/ld+json">{JSON.stringify(offerSchema)}</script>
+        <script type="application/ld+json">{JSON.stringify(webPageSchema)}</script>
       </Helmet>
 
       {/* ===== HERO ===== */}
@@ -1036,16 +1051,16 @@ export function ColocationGenevePage() {
           </h2>
           <ul className="grid grid-cols-1 md:grid-cols-2 gap-3 text-sm max-w-3xl mx-auto">
             {[
-              { fr: "Où habiter quand on est frontalier suisse — Top 7 villes côté France", en: "Where to live as a Swiss cross-border worker — Top 7 French towns", slug: "ou-habiter-frontalier-suisse-villes-france-pas-cher" },
+              { fr: "Les meilleurs quartiers frontaliers autour de Genève", en: "Best cross-border districts around Geneva", slug: "meilleurs-quartiers-frontaliers-geneve" },
+              { fr: "Fiscalité du frontalier à Genève : impôts 2026", en: "Cross-border taxation in Geneva: 2026 rules", slug: "fiscalite-frontalier-geneve-impots-2026" },
+              { fr: "Le budget complet d'un logement frontalier à Genève", en: "The full budget of cross-border housing near Geneva", slug: "budget-colocation-geneve-guide-complet" },
+              { fr: "Où habiter quand on est frontalier suisse — Top 7 villes", en: "Where to live as a Swiss cross-border worker — Top 7 towns", slug: "ou-habiter-frontalier-suisse-villes-france-pas-cher" },
               { fr: "Télétravail frontalier Genève : règles 2026", en: "Cross-border remote work Geneva: 2026 rules", slug: "teletravail-frontalier-geneve-regles-2026" },
-              { fr: "Grand Genève 2026 : nouveautés pour les frontaliers", en: "Greater Geneva 2026: what's new for cross-border workers", slug: "grand-geneve-2026-nouveautes-frontaliers" },
-              { fr: "Organisations internationales à Genève : où habiter", en: "Geneva international organisations: where to live", slug: "organisations-internationales-geneve-ou-habiter" },
-              { fr: "Économies du coliving tout-inclus près de Genève", en: "All-inclusive coliving savings near Geneva", slug: "economies-coliving-tout-inclus-geneve" },
-              { fr: "Temps de trajet Annemasse ↔ Genève par quartier", en: "Annemasse ↔ Geneva travel times by district", slug: "temps-trajet-annemasse-geneve-par-quartier" },
+              { fr: "Se loger à Genève quand on est expatrié", en: "Housing in Geneva as an expat", slug: "colocation-expats-geneve-guide" },
             ].map((item) => (
               <li key={item.slug} className="flex items-start gap-2">
                 <span className="text-[#D4A574]">→</span>
-                <Link to={`/blog/${item.slug}`} className="text-[#1C1917] hover:text-[#D4A574] hover:underline transition-colors">
+                <Link to={language === "en" ? `/en/blog/${item.slug}` : `/blog/${item.slug}`} className="text-[#1C1917] hover:text-[#D4A574] hover:underline transition-colors">
                   {language === "en" ? item.en : item.fr}
                 </Link>
               </li>

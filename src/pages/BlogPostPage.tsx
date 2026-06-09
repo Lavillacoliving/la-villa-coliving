@@ -223,28 +223,28 @@ export function BlogPostPage() {
             className="text-xl md:text-2xl font-light text-[#1C1917] mb-3"
             style={{ fontFamily: "DM Serif Display, serif" }}
           >
-            {language === "en"
-              ? "Looking for shared housing near Geneva?"
-              : "Vous cherchez une colocation près de Genève ?"}
+            {post?.category === "geneva" || post?.category === "tips"
+              ? (language === "en" ? "Planning your move near Geneva?" : "Tu prépares ton installation près de Genève ?")
+              : (language === "en" ? "Want to live in coliving near Geneva?" : "Envie de vivre en coliving près de Genève ?")}
           </h2>
           <p className="text-sm text-[#78716C] mb-6 max-w-lg mx-auto">
             {language === "en"
-              ? "29 furnished rooms in 3 premium houses, all-inclusive from CHF 1,380/month. Pool, gym, sauna — 15 min from Geneva."
-              : "29 chambres meublées dans 3 maisons premium, tout inclus dès 1 380 CHF/mois. Piscine, gym, sauna — à 15 min de Genève."}
+              ? "29 furnished all-inclusive rooms from CHF 1,380/month — utilities, fiber, cleaning, pool, gym, 15 min from Geneva. No application fee, reply within 48h."
+              : "29 chambres meublées tout inclus dès 1 380 CHF/mois — charges, fibre, ménage, piscine, gym, à 15 min de Genève. 0 frais de dossier, réponse sous 48 h."}
           </p>
           <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
             <Link
-              to={language === "en" ? "/en/colocation-geneve" : "/colocation-geneve"}
-              className="inline-flex items-center gap-2 px-6 py-3 bg-[#44403C] text-white text-sm font-medium rounded-lg hover:bg-[#57534E] transition-all duration-300"
+              to={language === "en" ? "/en/candidature" : "/candidature"}
+              className="inline-flex items-center gap-2 px-6 py-3 bg-[#D4A574] text-[#1C1917] text-sm font-semibold rounded-lg hover:bg-[#E0BB8A] transition-all duration-300"
             >
-              {language === "en" ? "Shared housing Geneva — Learn more" : "Colocation Genève — En savoir plus"}
+              {language === "en" ? "Apply — 2 min, free" : "Candidater — 2 min, gratuit"}
               <ArrowRight className="w-4 h-4" />
             </Link>
             <Link
-              to={language === "en" ? "/en/candidature" : "/candidature"}
+              to={language === "en" ? "/en/colocation-geneve" : "/colocation-geneve"}
               className="inline-flex items-center gap-2 px-6 py-3 border border-[#E7E5E4] text-[#44403C] text-sm font-medium rounded-lg hover:border-[#D4A574] transition-all duration-300"
             >
-              {language === "en" ? "Apply now" : "Candidater"}
+              {language === "en" ? "Shared housing in Geneva" : "Voir la colocation à Genève"}
             </Link>
           </div>
         </div>

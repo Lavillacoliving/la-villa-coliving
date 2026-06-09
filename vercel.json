@@ -153,10 +153,6 @@
       "destination": "/prerendered/blog-coliving-frais-dossier-geneve-annemasse.html"
     },
     {
-      "source": "/blog/coliving-communaute-reels-amis-geneve-annemasse",
-      "destination": "/prerendered/blog-coliving-communaute-reels-amis-geneve-annemasse.html"
-    },
-    {
       "source": "/blog/ou-habiter-frontalier-suisse-villes-france-pas-cher",
       "destination": "/prerendered/blog-ou-habiter-frontalier-suisse-villes-france-pas-cher.html"
     },
@@ -169,16 +165,8 @@
       "destination": "/prerendered/blog-coliving-transfrontalier-geneve-annemasse-nouvelle-vie.html"
     },
     {
-      "source": "/blog/coliving-tendance-habitat-jeunes-professionnels-2024",
-      "destination": "/prerendered/blog-coliving-tendance-habitat-jeunes-professionnels-2024.html"
-    },
-    {
       "source": "/blog/choc-culturel-franco-suisse-expatrie-geneve",
       "destination": "/prerendered/blog-choc-culturel-franco-suisse-expatrie-geneve.html"
-    },
-    {
-      "source": "/blog/coliving-pour-qui-profil-ideal",
-      "destination": "/prerendered/blog-coliving-pour-qui-profil-ideal.html"
     },
     {
       "source": "/blog/vie-quotidienne-frontalier-courses-sport-sorties",
@@ -237,16 +225,8 @@
       "destination": "/prerendered/blog-studio-geneve-vs-colocation-france-budget.html"
     },
     {
-      "source": "/blog/vie-communautaire-coliving-temoignages",
-      "destination": "/prerendered/blog-vie-communautaire-coliving-temoignages.html"
-    },
-    {
       "source": "/blog/transport-annemasse-geneve-leman-express",
       "destination": "/prerendered/blog-transport-annemasse-geneve-leman-express.html"
-    },
-    {
-      "source": "/blog/avantages-coliving-jeunes-professionnels",
-      "destination": "/prerendered/blog-avantages-coliving-jeunes-professionnels.html"
     },
     {
       "source": "/blog/colocation-annemasse-ville-la-grand-ambilly",
@@ -301,10 +281,6 @@
       "destination": "/prerendered/blog-living-in-france-working-in-geneva.html"
     },
     {
-      "source": "/blog/what-is-coliving-and-why-it-matters",
-      "destination": "/prerendered/blog-what-is-coliving-and-why-it-matters.html"
-    },
-    {
       "source": "/en/blog/optimiser-espace-coliving-productivite-bien-etre",
       "destination": "/prerendered/en-blog-optimiser-espace-coliving-productivite-bien-etre.html"
     },
@@ -337,10 +313,6 @@
       "destination": "/prerendered/en-blog-coliving-frais-dossier-geneve-annemasse.html"
     },
     {
-      "source": "/en/blog/coliving-communaute-reels-amis-geneve-annemasse",
-      "destination": "/prerendered/en-blog-coliving-communaute-reels-amis-geneve-annemasse.html"
-    },
-    {
       "source": "/en/blog/ou-habiter-frontalier-suisse-villes-france-pas-cher",
       "destination": "/prerendered/en-blog-ou-habiter-frontalier-suisse-villes-france-pas-cher.html"
     },
@@ -353,16 +325,8 @@
       "destination": "/prerendered/en-blog-coliving-transfrontalier-geneve-annemasse-nouvelle-vie.html"
     },
     {
-      "source": "/en/blog/coliving-tendance-habitat-jeunes-professionnels-2024",
-      "destination": "/prerendered/en-blog-coliving-tendance-habitat-jeunes-professionnels-2024.html"
-    },
-    {
       "source": "/en/blog/choc-culturel-franco-suisse-expatrie-geneve",
       "destination": "/prerendered/en-blog-choc-culturel-franco-suisse-expatrie-geneve.html"
-    },
-    {
-      "source": "/en/blog/coliving-pour-qui-profil-ideal",
-      "destination": "/prerendered/en-blog-coliving-pour-qui-profil-ideal.html"
     },
     {
       "source": "/en/blog/vie-quotidienne-frontalier-courses-sport-sorties",
@@ -421,16 +385,8 @@
       "destination": "/prerendered/en-blog-studio-geneve-vs-colocation-france-budget.html"
     },
     {
-      "source": "/en/blog/vie-communautaire-coliving-temoignages",
-      "destination": "/prerendered/en-blog-vie-communautaire-coliving-temoignages.html"
-    },
-    {
       "source": "/en/blog/transport-annemasse-geneve-leman-express",
       "destination": "/prerendered/en-blog-transport-annemasse-geneve-leman-express.html"
-    },
-    {
-      "source": "/en/blog/avantages-coliving-jeunes-professionnels",
-      "destination": "/prerendered/en-blog-avantages-coliving-jeunes-professionnels.html"
     },
     {
       "source": "/en/blog/colocation-annemasse-ville-la-grand-ambilly",
@@ -483,10 +439,6 @@
     {
       "source": "/en/blog/living-in-france-working-in-geneva",
       "destination": "/prerendered/en-blog-living-in-france-working-in-geneva.html"
-    },
-    {
-      "source": "/en/blog/what-is-coliving-and-why-it-matters",
-      "destination": "/prerendered/en-blog-what-is-coliving-and-why-it-matters.html"
     },
     {
       "source": "/(.*)",
@@ -562,6 +514,71 @@
     {
       "source": "/fr/services-3",
       "destination": "/services",
+      "permanent": true
+    },
+    {
+      "source": "/en/fr/services-3",
+      "destination": "/en/services",
+      "permanent": true
+    },
+    {
+      "source": "/blog/what-is-coliving-and-why-it-matters",
+      "destination": "/le-coliving",
+      "permanent": true
+    },
+    {
+      "source": "/en/blog/what-is-coliving-and-why-it-matters",
+      "destination": "/en/le-coliving",
+      "permanent": true
+    },
+    {
+      "source": "/blog/coliving-tendance-habitat-jeunes-professionnels-2024",
+      "destination": "/le-coliving",
+      "permanent": true
+    },
+    {
+      "source": "/en/blog/coliving-tendance-habitat-jeunes-professionnels-2024",
+      "destination": "/en/le-coliving",
+      "permanent": true
+    },
+    {
+      "source": "/blog/coliving-pour-qui-profil-ideal",
+      "destination": "/le-coliving",
+      "permanent": true
+    },
+    {
+      "source": "/en/blog/coliving-pour-qui-profil-ideal",
+      "destination": "/en/le-coliving",
+      "permanent": true
+    },
+    {
+      "source": "/blog/avantages-coliving-jeunes-professionnels",
+      "destination": "/le-coliving",
+      "permanent": true
+    },
+    {
+      "source": "/en/blog/avantages-coliving-jeunes-professionnels",
+      "destination": "/en/le-coliving",
+      "permanent": true
+    },
+    {
+      "source": "/blog/vie-communautaire-coliving-temoignages",
+      "destination": "/le-coliving",
+      "permanent": true
+    },
+    {
+      "source": "/en/blog/vie-communautaire-coliving-temoignages",
+      "destination": "/en/le-coliving",
+      "permanent": true
+    },
+    {
+      "source": "/blog/coliving-communaute-reels-amis-geneve-annemasse",
+      "destination": "/le-coliving",
+      "permanent": true
+    },
+    {
+      "source": "/en/blog/coliving-communaute-reels-amis-geneve-annemasse",
+      "destination": "/en/le-coliving",
       "permanent": true
     },
     {

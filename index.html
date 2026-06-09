@@ -27,7 +27,11 @@
     <!-- LodgingBusiness schema removed: was duplicating with page-specific schemas on house pages,
          causing "Duplicate field FAQPage" errors in GSC. Organization schema in SEO.tsx covers global needs.
          House-specific LodgingBusiness schemas remain in HouseDetailPage.tsx -->
-    <!-- meta description removed: managed by React Helmet per-page via SEO.tsx to avoid duplicate tags -->
+    <!-- Default meta description (fallback). scripts/inject-prerendered.mjs REPLACES this per-page with
+         each route's specific description (from SEO.tsx / React-Helmet). This tag MUST stay present:
+         without it the inject "replace" has no target, which silently dropped the description on all
+         122 pre-rendered pages. React-Helmet de-dupes by name, so no duplicate tag in the live SPA. -->
+    <meta name="description" content="Colocation et coliving premium près de Genève, côté France. Chambres meublées tout inclus dès 1 380 CHF/mois. Pour frontaliers, expats et jeunes professionnels." />
     <meta name="keywords" content="colocation genève, coliving genève, colocation annemasse, colocation ville-la-grand, colocation frontalier genève, chambre meublée genève, coliving près de genève, colocation tout inclus genève, logement frontalier genève" />
     <!-- Preload hero image for faster LCP -->
     <link rel="preload" as="image" href="/images/la villa jardin.webp" type="image/webp" fetchpriority="high" />
