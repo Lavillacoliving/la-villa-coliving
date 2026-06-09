@@ -247,6 +247,30 @@
 
   <!-- ═══ BLOG ARTICLES — FR ═══ -->
   <url>
+    <loc>https://www.lavillacoliving.com/blog/declaration-impots-frontalier-2026</loc>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://www.lavillacoliving.com/blog/declaration-impots-frontalier-2026" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.lavillacoliving.com/en/blog/declaration-impots-frontalier-2026" />
+    <lastmod>2026-06-09</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://www.lavillacoliving.com/blog/3e-pilier-frontalier-geneve</loc>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://www.lavillacoliving.com/blog/3e-pilier-frontalier-geneve" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.lavillacoliving.com/en/blog/3e-pilier-frontalier-geneve" />
+    <lastmod>2026-06-09</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://www.lavillacoliving.com/blog/permis-g-frontalier-geneve</loc>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://www.lavillacoliving.com/blog/permis-g-frontalier-geneve" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.lavillacoliving.com/en/blog/permis-g-frontalier-geneve" />
+    <lastmod>2026-06-09</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
     <loc>https://www.lavillacoliving.com/blog/avenant-fiscal-40-frontalier-geneve</loc>
     <xhtml:link rel="alternate" hreflang="fr" href="https://www.lavillacoliving.com/blog/avenant-fiscal-40-frontalier-geneve" />
     <xhtml:link rel="alternate" hreflang="en" href="https://www.lavillacoliving.com/en/blog/avenant-fiscal-40-frontalier-geneve" />
@@ -568,6 +592,30 @@
   </url>
 
   <!-- ═══ BLOG ARTICLES — EN ═══ -->
+  <url>
+    <loc>https://www.lavillacoliving.com/en/blog/declaration-impots-frontalier-2026</loc>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://www.lavillacoliving.com/blog/declaration-impots-frontalier-2026" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.lavillacoliving.com/en/blog/declaration-impots-frontalier-2026" />
+    <lastmod>2026-06-09</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
+  </url>
+  <url>
+    <loc>https://www.lavillacoliving.com/en/blog/3e-pilier-frontalier-geneve</loc>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://www.lavillacoliving.com/blog/3e-pilier-frontalier-geneve" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.lavillacoliving.com/en/blog/3e-pilier-frontalier-geneve" />
+    <lastmod>2026-06-09</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
+  </url>
+  <url>
+    <loc>https://www.lavillacoliving.com/en/blog/permis-g-frontalier-geneve</loc>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://www.lavillacoliving.com/blog/permis-g-frontalier-geneve" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.lavillacoliving.com/en/blog/permis-g-frontalier-geneve" />
+    <lastmod>2026-06-09</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
+  </url>
   <url>
     <loc>https://www.lavillacoliving.com/en/blog/avenant-fiscal-40-frontalier-geneve</loc>
     <xhtml:link rel="alternate" hreflang="fr" href="https://www.lavillacoliving.com/blog/avenant-fiscal-40-frontalier-geneve" />

@@ -121,6 +121,18 @@
       "destination": "/prerendered/en-investisseurs.html"
     },
     {
+      "source": "/blog/declaration-impots-frontalier-2026",
+      "destination": "/prerendered/blog-declaration-impots-frontalier-2026.html"
+    },
+    {
+      "source": "/blog/3e-pilier-frontalier-geneve",
+      "destination": "/prerendered/blog-3e-pilier-frontalier-geneve.html"
+    },
+    {
+      "source": "/blog/permis-g-frontalier-geneve",
+      "destination": "/prerendered/blog-permis-g-frontalier-geneve.html"
+    },
+    {
       "source": "/blog/avenant-fiscal-40-frontalier-geneve",
       "destination": "/prerendered/blog-avenant-fiscal-40-frontalier-geneve.html"
     },
@@ -279,6 +291,18 @@
     {
       "source": "/blog/what-is-coliving-and-why-it-matters",
       "destination": "/prerendered/blog-what-is-coliving-and-why-it-matters.html"
+    },
+    {
+      "source": "/en/blog/declaration-impots-frontalier-2026",
+      "destination": "/prerendered/en-blog-declaration-impots-frontalier-2026.html"
+    },
+    {
+      "source": "/en/blog/3e-pilier-frontalier-geneve",
+      "destination": "/prerendered/en-blog-3e-pilier-frontalier-geneve.html"
+    },
+    {
+      "source": "/en/blog/permis-g-frontalier-geneve",
+      "destination": "/prerendered/en-blog-permis-g-frontalier-geneve.html"
     },
     {
       "source": "/en/blog/avenant-fiscal-40-frontalier-geneve",
