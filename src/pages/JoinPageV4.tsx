@@ -1,6 +1,6 @@
 import { useState, type FormEvent } from "react";
 import { useLanguage } from "@/contexts/LanguageContext";
-import { ArrowRight, Check, Clock, Shield, Loader2 } from "lucide-react";
+import { ArrowRight, Check, Clock, Shield, Loader2, Star, Users, Calendar, ChevronDown, ChevronUp, MessageCircle, Sparkles } from "lucide-react";
 import { SEO } from "@/components/SEO";
 import { SUPABASE_URL, SUPABASE_ANON_KEY } from "@/lib/supabase";
 
@@ -12,6 +12,7 @@ export function JoinPageV4() {
   const { language } = useLanguage();
   const [status, setStatus] = useState<FormStatus>("idle");
   const [errorMessage, setErrorMessage] = useState<string>("");
+  const [openFAQ, setOpenFAQ] = useState<number | null>(null);
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -96,6 +97,41 @@ export function JoinPageV4() {
         </div>
       </section>
 
+      {/* Social proof stats — chiffres business pour rassurer (CRO win #1) */}
+      <section className="py-12 bg-[#FAF9F6] border-y border-[#E7E5E4]">
+        <div className="container-custom">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-4xl mx-auto text-center">
+            <div className="flex flex-col items-center">
+              <Users className="w-8 h-8 text-[#D4A574] mb-3" />
+              <p className="text-3xl font-light text-[#1C1917] mb-1" style={{ fontFamily: "DM Serif Display, serif" }}>
+                100+
+              </p>
+              <p className="text-sm text-[#57534E]">
+                {language === "en" ? "Residents welcomed since 2021" : "Résidents accueillis depuis 2021"}
+              </p>
+            </div>
+            <div className="flex flex-col items-center">
+              <Sparkles className="w-8 h-8 text-[#D4A574] mb-3" />
+              <p className="text-3xl font-light text-[#1C1917] mb-1" style={{ fontFamily: "DM Serif Display, serif" }}>
+                99%
+              </p>
+              <p className="text-sm text-[#57534E]">
+                {language === "en" ? "Occupancy rate over 5 years" : "Taux d'occupation sur 5 ans"}
+              </p>
+            </div>
+            <div className="flex flex-col items-center">
+              <Star className="w-8 h-8 text-[#D4A574] mb-3 fill-[#D4A574]" />
+              <p className="text-3xl font-light text-[#1C1917] mb-1" style={{ fontFamily: "DM Serif Display, serif" }}>
+                4.9/5
+              </p>
+              <p className="text-sm text-[#57534E]">
+                {language === "en" ? "Average rating from residents" : "Note moyenne des résidents"}
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* Steps — shown before the form to reduce anxiety */}
       <section className="py-24 lg:py-32 bg-white">
         <div className="container-custom">
@@ -152,9 +188,84 @@ export function JoinPageV4() {
         </div>
       </section>
 
+      {/* Testimonials — 3 résidents (CRO win #2) */}
+      <section className="py-20 lg:py-24 bg-white">
+        <div className="container-custom max-w-5xl">
+          <div className="text-center mb-12">
+            <span className="text-xs text-[#78716C] uppercase tracking-[0.3em] mb-4 block">
+              {language === "en" ? "What our residents say" : "Ce que disent nos résidents"}
+            </span>
+            <h2
+              className="text-3xl md:text-4xl font-light text-[#1C1917]"
+              style={{ fontFamily: "DM Serif Display, serif" }}
+            >
+              {language === "en" ? "Real voices, not stock photos" : "Vraies voix, pas des photos d'illustration"}
+            </h2>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            {[
+              {
+                initials: "SM",
+                name: "Sarah M.",
+                role_fr: "Responsable Marketing · 8 mois au Lodge",
+                role_en: "Marketing Manager · 8 months at Le Lodge",
+                quote_fr: "Le processus de candidature était super simple. J'ai emménagé 2 semaines après. La communauté est exactement ce que je cherchais en arrivant à Genève.",
+                quote_en: "The application process was super simple. I moved in 2 weeks later. The community is exactly what I was looking for when arriving in Geneva.",
+              },
+              {
+                initials: "TL",
+                name: "Thomas L.",
+                role_fr: "Ingénieur frontalier · 1 an à La Villa",
+                role_en: "Cross-border engineer · 1 year at La Villa",
+                quote_fr: "Je voulais éviter la galère de chercher un studio à Genève. Ici, tout est inclus et la piscine après le boulot, c'est priceless.",
+                quote_en: "I wanted to skip the hassle of finding a studio in Geneva. Everything is included here, and the pool after work is priceless.",
+              },
+              {
+                initials: "CD",
+                name: "Camille D.",
+                role_fr: "Chargée de projet OI · 6 mois au Loft",
+                role_en: "International org. project lead · 6 months at Le Loft",
+                quote_fr: "Atterrir à Genève seule était stressant. Le Loft m'a donné un réseau social en 2 semaines. Je recommande à toutes les expats qui arrivent.",
+                quote_en: "Landing in Geneva alone was stressful. Le Loft gave me a social network in 2 weeks. I recommend it to every expat arriving.",
+              },
+            ].map((t, i) => (
+              <div key={i} className="bg-[#FAF9F6] border border-[#E7E5E4] p-6">
+                <div className="flex items-center gap-3 mb-4">
+                  <div className="w-12 h-12 rounded-full bg-[#D4A574] text-white flex items-center justify-center font-medium">
+                    {t.initials}
+                  </div>
+                  <div>
+                    <p className="text-sm font-medium text-[#1C1917]">{t.name}</p>
+                    <p className="text-xs text-[#78716C]">{language === "en" ? t.role_en : t.role_fr}</p>
+                  </div>
+                </div>
+                <div className="flex gap-1 mb-3">
+                  {[1, 2, 3, 4, 5].map((s) => (
+                    <Star key={s} className="w-3.5 h-3.5 fill-[#D4A574] text-[#D4A574]" />
+                  ))}
+                </div>
+                <p className="text-sm text-[#57534E] italic leading-relaxed">
+                  "{language === "en" ? t.quote_en : t.quote_fr}"
+                </p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
       {/* Form */}
       <section className="py-24 lg:py-32 bg-[#FAF9F6]">
         <div className="container-custom max-w-3xl">
+          {/* Scarcité honnête — créer micro-urgence (CRO win #5) */}
+          <div className="mb-6 text-center">
+            <span className="inline-flex items-center gap-2 px-4 py-2 bg-white border border-[#D4A574] text-sm text-[#1C1917]">
+              <Calendar className="w-4 h-4 text-[#D4A574]" />
+              {language === "en"
+                ? "Several rooms available this month — disponibilities updated daily"
+                : "Plusieurs chambres disponibles ce mois — disponibilités mises à jour quotidiennement"}
+            </span>
+          </div>
+
           {/* Reassurance strip */}
           <div className="flex flex-wrap justify-center gap-6 mb-8 text-sm text-[#57534E]">
             <span className="flex items-center gap-2">
@@ -293,27 +404,6 @@ export function JoinPageV4() {
                     className="w-full px-4 py-3 border border-[#E7E5E4] focus:border-[#D4A574] focus:outline-none transition-colors"
                   />
                 </div>
-                <div>
-                  <label className="block text-sm text-[#57534E] mb-2">
-                    {language === "en" ? "Date of Birth (optional)" : "Date de Naissance (optionnel)"}
-                  </label>
-                  <input
-                    type="date"
-                    name="birthDate"
-                    autoComplete="bday"
-                    className="w-full px-4 py-3 border border-[#E7E5E4] focus:border-[#D4A574] focus:outline-none transition-colors"
-                  />
-                </div>
-                <div>
-                  <label className="block text-sm text-[#57534E] mb-2">
-                    {language === "en" ? "Job Position (optional)" : "Poste (optionnel)"}
-                  </label>
-                  <input
-                    type="text"
-                    name="job"
-                    className="w-full px-4 py-3 border border-[#E7E5E4] focus:border-[#D4A574] focus:outline-none transition-colors"
-                  />
-                </div>
               </div>
             </div>
 
@@ -329,12 +419,27 @@ export function JoinPageV4() {
                       ? "When would you like to join?"
                       : "Quand souhaitez-vous nous rejoindre ?"}
                   </label>
-                  <input
-                    type="date"
+                  <select
                     name="arrival"
                     required
-                    className="w-full px-4 py-3 border border-[#E7E5E4] focus:border-[#D4A574] focus:outline-none transition-colors"
-                  />
+                    className="w-full px-4 py-3 border border-[#E7E5E4] focus:border-[#D4A574] focus:outline-none transition-colors bg-white"
+                  >
+                    <option value="">
+                      {language === "en" ? "Select arrival period" : "Sélectionner la période"}
+                    </option>
+                    <option value="asap">
+                      {language === "en" ? "As soon as possible (within 1 month)" : "Le plus tôt possible (sous 1 mois)"}
+                    </option>
+                    <option value="1-3-months">
+                      {language === "en" ? "Within 1 to 3 months" : "Dans 1 à 3 mois"}
+                    </option>
+                    <option value="3-6-months">
+                      {language === "en" ? "Within 3 to 6 months" : "Dans 3 à 6 mois"}
+                    </option>
+                    <option value="later">
+                      {language === "en" ? "Later / not decided yet" : "Plus tard / pas encore décidé"}
+                    </option>
+                  </select>
                 </div>
                 <div>
                   <label className="block text-sm text-[#57534E] mb-2">
@@ -439,6 +544,110 @@ export function JoinPageV4() {
             </p>
           </form>
           )}
+        </div>
+      </section>
+
+      {/* WhatsApp alternative + FAQ contextuelle (CRO wins #4 + #8) */}
+      <section className="py-20 lg:py-24 bg-white">
+        <div className="container-custom max-w-3xl">
+          {/* WhatsApp CTA */}
+          <div className="bg-[#FAF9F6] border border-[#E7E5E4] p-6 md:p-8 text-center mb-12">
+            <MessageCircle className="w-10 h-10 text-[#25D366] mx-auto mb-4" />
+            <h2 className="text-xl md:text-2xl font-medium text-[#1C1917] mb-2">
+              {language === "en"
+                ? "Prefer to chat first? Reach us on WhatsApp"
+                : "Vous préférez discuter d'abord ? Joignez-nous sur WhatsApp"}
+            </h2>
+            <p className="text-sm text-[#57534E] mb-6 max-w-xl mx-auto">
+              {language === "en"
+                ? "Quick questions about availability, neighborhoods, or how it works? Send us a message — we usually reply within the hour during business days."
+                : "Une question rapide sur les disponibilités, les quartiers ou le fonctionnement ? Écrivez-nous — réponse généralement sous 1h en jours ouvrés."}
+            </p>
+            <a
+              href="https://wa.me/33664315134"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-2 px-6 py-3 bg-[#25D366] text-white font-medium hover:bg-[#1FAD52] transition-colors"
+            >
+              <MessageCircle className="w-5 h-5" />
+              {language === "en" ? "Message us on WhatsApp" : "Écrire sur WhatsApp"}
+            </a>
+          </div>
+
+          {/* FAQ contextuelle — réduit les abandons du form */}
+          <div className="text-center mb-8">
+            <span className="text-xs text-[#78716C] uppercase tracking-[0.3em] mb-4 block">
+              {language === "en" ? "Before you apply" : "Avant de candidater"}
+            </span>
+            <h2
+              className="text-3xl md:text-4xl font-light text-[#1C1917]"
+              style={{ fontFamily: "DM Serif Display, serif" }}
+            >
+              {language === "en" ? "Frequently asked questions" : "Questions fréquentes"}
+            </h2>
+          </div>
+          <div className="space-y-3">
+            {[
+              {
+                q_fr: "Qui peut postuler ? Y a-t-il un profil type ?",
+                q_en: "Who can apply? Is there a typical profile?",
+                a_fr: "Notre communauté est principalement composée de frontaliers en CDI à Genève, de jeunes professionnels et d'expats. Nous sélectionnons sur dossier (justificatif de revenus, motivation, compatibilité avec la communauté). Pas de critère d'âge strict, mais la majorité de nos résidents ont entre 25 et 40 ans.",
+                a_en: "Our community is mainly cross-border workers on permanent contracts (CDI) in Geneva, young professionals and expats. We select based on application (income proof, motivation, fit with community). No strict age limit, but most residents are 25-40 years old.",
+              },
+              {
+                q_fr: "Combien de temps entre la candidature et l'emménagement ?",
+                q_en: "How long from application to move-in?",
+                a_fr: "En moyenne 2 à 4 semaines. Étape 1 : réponse sous 48h. Étape 2 : appel vidéo (30 min). Étape 3 : visite physique ou virtuelle. Étape 4 : signature en ligne du bail + caution. Étape 5 : emménagement avec une valise.",
+                a_en: "Usually 2 to 4 weeks. Step 1: reply within 48h. Step 2: video call (30 min). Step 3: physical or virtual tour. Step 4: online lease signing + deposit. Step 5: move in with a suitcase.",
+              },
+              {
+                q_fr: "Quel est le loyer et que comprend-il vraiment ?",
+                q_en: "What is the rent and what does it really include?",
+                a_fr: "À partir de 1 380 CHF/mois tout inclus : chambre meublée, charges (eau, électricité, chauffage), fibre 8 Gbps, ménage 2 fois par semaine, accès piscine/sauna/gym, cours de yoga et fitness privés, abonnements streaming, événements communautaires mensuels. Caution 2 mois de loyer hors charges. Aucun frais d'agence, aucun frais de dossier.",
+                a_en: "From CHF 1,380/month all-inclusive: furnished room, utilities (water, electricity, heating), 8 Gbps fiber, twice-weekly cleaning, pool/sauna/gym access, private yoga and fitness classes, streaming subscriptions, monthly community events. Deposit: 2 months' rent excl. utilities. No agency fees, no application fees.",
+              },
+              {
+                q_fr: "Quelle est la durée minimale du bail ?",
+                q_en: "What is the minimum lease duration?",
+                a_fr: "Le bail standard est de 12 mois renouvelable, avec préavis d'1 mois. Cadre conforme à la loi française (Alur). Nous étudions au cas par cas des séjours plus courts (6 mois) selon disponibilité.",
+                a_en: "Standard lease is 12 months renewable, with 1-month notice. Compliant with French Alur law. We consider shorter stays (6 months) case-by-case depending on availability.",
+              },
+              {
+                q_fr: "Je peux visiter avant de signer ?",
+                q_en: "Can I visit before signing?",
+                a_fr: "Oui, c'est systématique. Visite physique (30-45 min) ou virtuelle si vous êtes à l'étranger. Vous rencontrez aussi un coliver actuel pour avoir un retour terrain honnête sur la vie communautaire.",
+                a_en: "Yes, always. Physical tour (30-45 min) or virtual if you're abroad. You also meet a current resident to get an honest first-hand take on community life.",
+              },
+              {
+                q_fr: "Et si je ne sais pas encore quelle date d'arrivée mettre ?",
+                q_en: "What if I don't know my arrival date yet?",
+                a_fr: "Pas de souci — choisissez \"Plus tard / pas encore décidé\". On revient vers vous avec les chambres disponibles et on cale ensemble une date qui vous convient. Candidater ne vous engage à rien.",
+                a_en: "No worries — pick \"Later / not decided yet\". We'll get back to you with available rooms and we'll set a date together. Applying doesn't commit you to anything.",
+              },
+            ].map((item, i) => (
+              <div key={i} className="bg-[#FAF9F6] border border-[#E7E5E4]">
+                <button
+                  type="button"
+                  onClick={() => setOpenFAQ(openFAQ === i ? null : i)}
+                  className="w-full flex items-center justify-between px-5 py-4 text-left"
+                >
+                  <span className="text-sm md:text-base font-medium text-[#1C1917] pr-4">
+                    {language === "en" ? item.q_en : item.q_fr}
+                  </span>
+                  {openFAQ === i ? (
+                    <ChevronUp className="w-5 h-5 text-[#D4A574] flex-shrink-0" />
+                  ) : (
+                    <ChevronDown className="w-5 h-5 text-[#78716C] flex-shrink-0" />
+                  )}
+                </button>
+                {openFAQ === i && (
+                  <div className="px-5 pb-5 text-sm text-[#57534E] leading-relaxed border-t border-[#E7E5E4] pt-4">
+                    {language === "en" ? item.a_en : item.a_fr}
+                  </div>
+                )}
+              </div>
+            ))}
+          </div>
         </div>
       </section>
 
