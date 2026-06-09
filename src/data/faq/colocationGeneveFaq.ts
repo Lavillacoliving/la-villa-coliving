@@ -32,6 +32,14 @@ export const colocationGeneveFaq: { fr: QAPair[]; en: QAPair[] } = {
       q: "Faut-il un permis de travail suisse pour vivre chez La Villa et travailler à Genève ?",
       a: "Oui : pour travailler à Genève en vivant côté France, il te faut un permis G (permis frontalier), demandé par ton employeur suisse. La Villa Coliving se situe dans la zone frontalière éligible, et beaucoup de nos résidents sont des frontaliers actifs.",
     },
+    {
+      q: "Proposez-vous des colocations meublées à Genève ?",
+      a: "Oui. Chez La Villa Coliving, chaque chambre est privée et entièrement meublée (lit, bureau, rangements), et tous les espaces communs le sont aussi. Tu emménages avec ta valise : pas de meubles à acheter, pas d'IKEA à monter. C'est une colocation meublée tout inclus, à 20 minutes du centre de Genève côté France, dès 1 380 CHF/mois.",
+    },
+    {
+      q: "La colocation près de Genève est-elle adaptée aux frontaliers ?",
+      a: "Tout à fait — c'est même le cœur de nos résidents. Nos maisons sont à 20 minutes de Genève en tram ou en train CEVA, dans la zone éligible au permis G. Côté dossier, c'est simplifié : pas de garant français exigé, pas de dix justificatifs. Une colocation pensée pour les frontaliers qui travaillent à Genève et vivent côté France.",
+    },
   ],
   en: [
     {
@@ -61,6 +69,14 @@ export const colocationGeneveFaq: { fr: QAPair[]; en: QAPair[] } = {
     {
       q: "Do you need a Swiss work permit to live at La Villa and work in Geneva?",
       a: "Yes: to work in Geneva while living on the French side, you need a G permit (cross-border permit), requested by your Swiss employer. La Villa Coliving sits within the eligible cross-border zone, and many of our residents are active cross-border workers.",
+    },
+    {
+      q: "Do you offer furnished shared housing in Geneva?",
+      a: "Yes. At La Villa Coliving, every room is private and fully furnished (bed, desk, storage), and all common areas are too. You move in with your suitcase: no furniture to buy, no IKEA to assemble. It's all-inclusive furnished shared housing, 20 minutes from Geneva city center on the French side, from CHF 1,380/month.",
+    },
+    {
+      q: "Is shared housing near Geneva suitable for cross-border workers?",
+      a: "Absolutely — they're the core of our residents. Our houses are 20 minutes from Geneva by tram or CEVA train, within the G-permit eligible zone. The application is simplified: no French guarantor required, no ten supporting documents. Shared housing designed for cross-border workers who work in Geneva and live on the French side.",
     },
   ],
 };
