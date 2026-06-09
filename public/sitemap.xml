@@ -247,6 +247,22 @@
 
   <!-- ═══ BLOG ARTICLES — FR ═══ -->
   <url>
+    <loc>https://www.lavillacoliving.com/blog/optimiser-espace-coliving-productivite-bien-etre</loc>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://www.lavillacoliving.com/blog/optimiser-espace-coliving-productivite-bien-etre" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.lavillacoliving.com/en/blog/optimiser-espace-coliving-productivite-bien-etre" />
+    <lastmod>2026-06-09</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://www.lavillacoliving.com/blog/espaces-verts-coliving-lodge-annemasse</loc>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://www.lavillacoliving.com/blog/espaces-verts-coliving-lodge-annemasse" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.lavillacoliving.com/en/blog/espaces-verts-coliving-lodge-annemasse" />
+    <lastmod>2026-06-09</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
     <loc>https://www.lavillacoliving.com/blog/trouver-colocation-geneve-frontalier</loc>
     <xhtml:link rel="alternate" hreflang="fr" href="https://www.lavillacoliving.com/blog/trouver-colocation-geneve-frontalier" />
     <xhtml:link rel="alternate" hreflang="en" href="https://www.lavillacoliving.com/en/blog/trouver-colocation-geneve-frontalier" />
@@ -600,6 +616,22 @@
   </url>
 
   <!-- ═══ BLOG ARTICLES — EN ═══ -->
+  <url>
+    <loc>https://www.lavillacoliving.com/en/blog/optimiser-espace-coliving-productivite-bien-etre</loc>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://www.lavillacoliving.com/blog/optimiser-espace-coliving-productivite-bien-etre" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.lavillacoliving.com/en/blog/optimiser-espace-coliving-productivite-bien-etre" />
+    <lastmod>2026-06-09</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
+  </url>
+  <url>
+    <loc>https://www.lavillacoliving.com/en/blog/espaces-verts-coliving-lodge-annemasse</loc>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://www.lavillacoliving.com/blog/espaces-verts-coliving-lodge-annemasse" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.lavillacoliving.com/en/blog/espaces-verts-coliving-lodge-annemasse" />
+    <lastmod>2026-06-09</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
+  </url>
   <url>
     <loc>https://www.lavillacoliving.com/en/blog/trouver-colocation-geneve-frontalier</loc>
     <xhtml:link rel="alternate" hreflang="fr" href="https://www.lavillacoliving.com/blog/trouver-colocation-geneve-frontalier" />

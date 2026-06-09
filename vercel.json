@@ -121,6 +121,14 @@
       "destination": "/prerendered/en-investisseurs.html"
     },
     {
+      "source": "/blog/optimiser-espace-coliving-productivite-bien-etre",
+      "destination": "/prerendered/blog-optimiser-espace-coliving-productivite-bien-etre.html"
+    },
+    {
+      "source": "/blog/espaces-verts-coliving-lodge-annemasse",
+      "destination": "/prerendered/blog-espaces-verts-coliving-lodge-annemasse.html"
+    },
+    {
       "source": "/blog/trouver-colocation-geneve-frontalier",
       "destination": "/prerendered/blog-trouver-colocation-geneve-frontalier.html"
     },
@@ -295,6 +303,14 @@
     {
       "source": "/blog/what-is-coliving-and-why-it-matters",
       "destination": "/prerendered/blog-what-is-coliving-and-why-it-matters.html"
+    },
+    {
+      "source": "/en/blog/optimiser-espace-coliving-productivite-bien-etre",
+      "destination": "/prerendered/en-blog-optimiser-espace-coliving-productivite-bien-etre.html"
+    },
+    {
+      "source": "/en/blog/espaces-verts-coliving-lodge-annemasse",
+      "destination": "/prerendered/en-blog-espaces-verts-coliving-lodge-annemasse.html"
     },
     {
       "source": "/en/blog/trouver-colocation-geneve-frontalier",
