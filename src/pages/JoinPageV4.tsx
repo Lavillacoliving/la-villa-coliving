@@ -199,7 +199,7 @@ export function JoinPageV4() {
               className="text-3xl md:text-4xl font-light text-[#1C1917]"
               style={{ fontFamily: "DM Serif Display, serif" }}
             >
-              {language === "en" ? "Real voices, not stock photos" : "Vraies voix, pas des photos d'illustration"}
+              {language === "en" ? "They took the leap" : "Ils ont sauté le pas"}
             </h2>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -261,8 +261,8 @@ export function JoinPageV4() {
             <span className="inline-flex items-center gap-2 px-4 py-2 bg-white border border-[#D4A574] text-sm text-[#1C1917]">
               <Calendar className="w-4 h-4 text-[#D4A574]" />
               {language === "en"
-                ? "Several rooms available this month — disponibilities updated daily"
-                : "Plusieurs chambres disponibles ce mois — disponibilités mises à jour quotidiennement"}
+                ? "Several rooms available"
+                : "Plusieurs chambres disponibles"}
             </span>
           </div>
 

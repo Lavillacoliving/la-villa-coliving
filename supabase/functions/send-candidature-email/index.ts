@@ -116,8 +116,8 @@ function buildAutoresponseEmail(firstName: string): string {
       <p style="margin:0 0 28px 0;font-size:11px;letter-spacing:3px;text-transform:uppercase;color:#D4A574;text-align:center;">Et maintenant ?</p>
       <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%">
         <tr><td style="padding:0 0 26px 0;">
-          <p style="margin:0 0 6px 0;font-size:16px;font-weight:600;color:#1C1917;">On lit votre candidature attentivement.</p>
-          <p style="margin:0;font-size:14px;line-height:1.65;color:#57534E;">Pas un tri express. On regarde qui vous êtes, ce que vous cherchez, et si La Villa correspond vraiment à ce dont vous avez besoin.</p>
+          <p style="margin:0 0 6px 0;font-size:16px;font-weight:600;color:#1C1917;">Candidature bien reçue !</p>
+          <p style="margin:0;font-size:14px;line-height:1.65;color:#57534E;">On regarde qui vous êtes, ce que vous cherchez, et si La Villa correspond à ce dont vous avez besoin.</p>
         </td></tr>
         <tr><td style="padding:0 0 26px 0;">
           <p style="margin:0 0 6px 0;font-size:16px;font-weight:600;color:#1C1917;">On vous recontacte sous 48h.</p>
