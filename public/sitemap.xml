@@ -247,6 +247,14 @@
 
   <!-- ═══ BLOG ARTICLES — FR ═══ -->
   <url>
+    <loc>https://www.lavillacoliving.com/blog/trouver-colocation-geneve-frontalier</loc>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://www.lavillacoliving.com/blog/trouver-colocation-geneve-frontalier" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.lavillacoliving.com/en/blog/trouver-colocation-geneve-frontalier" />
+    <lastmod>2026-06-09</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
     <loc>https://www.lavillacoliving.com/blog/declaration-impots-frontalier-2026</loc>
     <xhtml:link rel="alternate" hreflang="fr" href="https://www.lavillacoliving.com/blog/declaration-impots-frontalier-2026" />
     <xhtml:link rel="alternate" hreflang="en" href="https://www.lavillacoliving.com/en/blog/declaration-impots-frontalier-2026" />
@@ -592,6 +600,14 @@
   </url>
 
   <!-- ═══ BLOG ARTICLES — EN ═══ -->
+  <url>
+    <loc>https://www.lavillacoliving.com/en/blog/trouver-colocation-geneve-frontalier</loc>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://www.lavillacoliving.com/blog/trouver-colocation-geneve-frontalier" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.lavillacoliving.com/en/blog/trouver-colocation-geneve-frontalier" />
+    <lastmod>2026-06-09</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
+  </url>
   <url>
     <loc>https://www.lavillacoliving.com/en/blog/declaration-impots-frontalier-2026</loc>
     <xhtml:link rel="alternate" hreflang="fr" href="https://www.lavillacoliving.com/blog/declaration-impots-frontalier-2026" />

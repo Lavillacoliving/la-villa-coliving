@@ -121,6 +121,10 @@
       "destination": "/prerendered/en-investisseurs.html"
     },
     {
+      "source": "/blog/trouver-colocation-geneve-frontalier",
+      "destination": "/prerendered/blog-trouver-colocation-geneve-frontalier.html"
+    },
+    {
       "source": "/blog/declaration-impots-frontalier-2026",
       "destination": "/prerendered/blog-declaration-impots-frontalier-2026.html"
     },
@@ -291,6 +295,10 @@
     {
       "source": "/blog/what-is-coliving-and-why-it-matters",
       "destination": "/prerendered/blog-what-is-coliving-and-why-it-matters.html"
+    },
+    {
+      "source": "/en/blog/trouver-colocation-geneve-frontalier",
+      "destination": "/prerendered/en-blog-trouver-colocation-geneve-frontalier.html"
     },
     {
       "source": "/en/blog/declaration-impots-frontalier-2026",
