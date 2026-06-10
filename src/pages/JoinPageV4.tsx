@@ -47,6 +47,25 @@ export function JoinPageV4() {
       }
 
       setStatus("success");
+
+      // Tracking GA4 — on déclenche explicitement l'event `form_submit` au succès.
+      // La détection automatique de GA4 (mesure améliorée) ne capte PAS de façon fiable
+      // les formulaires SPA envoyés via fetch() : c'est pourquoi le suivi des candidatures
+      // est tombé à zéro après la refonte du formulaire de mai 2026. Même motif sûr que
+      // WaitlistForm.tsx. On ne le déclenche qu'après une réponse OK = vraie candidature.
+      try {
+        (window as unknown as { gtag?: (...a: unknown[]) => void }).gtag?.(
+          "event",
+          "form_submit",
+          {
+            form_id: "candidature",
+            form_destination: "supabase-edge",
+            language,
+            lead_source: payload.source || "unknown",
+          }
+        );
+      } catch { /* noop — ne jamais bloquer l'UI de succès à cause de l'analytics */ }
+
       form.reset();
     } catch (err) {
       setStatus("error");
