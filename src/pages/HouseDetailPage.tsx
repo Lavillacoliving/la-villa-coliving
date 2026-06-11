@@ -1317,6 +1317,16 @@ export function HouseDetailPage() {
   const housesData = getHousesData(language);
   const house = id ? housesData[id] : null;
 
+  // Same guarded gtag pattern as the blog CTAs / candidature form: measure which
+  // CTA position converts (GA4 cta_click), never block the UI on analytics.
+  const trackCta = (position: string) => {
+    try {
+      (window as unknown as { gtag?: (...a: unknown[]) => void }).gtag?.("event", "cta_click", {
+        cta_position: position, cta_target: "/candidature", house: id, language,
+      });
+    } catch { /* noop */ }
+  };
+
   if (!house) {
     return (
       <main className="pt-32 pb-20 bg-white">
@@ -1514,6 +1524,23 @@ export function HouseDetailPage() {
               <span className="flex items-center gap-2">
                 <Maximize size={18} className="text-[#78716C]" />
                 {house.specs.size}
+              </span>
+            </div>
+            {/* Above-fold CTA — GA4 showed candidatures are won on house pages, yet the
+                only apply CTA was at the very bottom of this 2000-line template. */}
+            <div className="mt-6 flex flex-wrap items-center gap-4">
+              <Link
+                to={language === "en" ? "/en/candidature" : "/candidature"}
+                onClick={() => trackCta("house_hero")}
+                className="inline-flex items-center gap-2 px-7 py-3.5 bg-[#D4A574] text-[#1C1917] font-bold rounded-full hover:bg-[#E0BB8A] transition-colors shadow-sharp"
+              >
+                {t.houseDetail.apply}
+                <ArrowRight className="w-5 h-5" />
+              </Link>
+              <span className="text-sm font-semibold text-[#1C1917] bg-white/85 backdrop-blur px-4 py-2 rounded-full">
+                {language === "en"
+                  ? "All-inclusive from CHF 1,380/month — no application fee"
+                  : "Tout inclus dès 1 380 CHF/mois — 0 frais de dossier"}
               </span>
             </div>
           </div>
@@ -2068,6 +2095,56 @@ export function HouseDetailPage() {
         );
       })()}
 
+      {/* Cross-house discovery — GA4 path data shows visitors loop back through
+          /nos-maisons to compare; link the siblings directly to shorten the loop. */}
+      <section className="section-padding relative bg-white">
+        <div className="container-custom">
+          <h2
+            className="text-3xl md:text-4xl mb-8 text-[#1C1917]"
+            style={{ fontFamily: "DM Serif Display, serif" }}
+          >
+            {language === "en" ? "Compare with our other houses" : "Compare avec nos autres maisons"}
+          </h2>
+          <div className="grid md:grid-cols-2 gap-6">
+            {(Object.keys(housesData) as Array<keyof typeof housesData>)
+              .filter((hid) => hid !== id)
+              .map((hid) => {
+                const other = housesData[hid];
+                return (
+                  <Link
+                    key={hid}
+                    to={language === "en" ? `/en/${hid}` : `/${hid}`}
+                    className="group card-ultra overflow-hidden hover:shadow-lg transition-all"
+                  >
+                    <div className="aspect-[16/9] overflow-hidden">
+                      <img
+                        src={other.image}
+                        alt={`${other.name} — coliving ${other.location}`}
+                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                        loading="lazy"
+                      />
+                    </div>
+                    <div className="p-6 flex items-center justify-between">
+                      <div>
+                        <h3
+                          className="text-xl text-[#1C1917] mb-1 group-hover:text-[#D4A574] transition-colors"
+                          style={{ fontFamily: "DM Serif Display, serif" }}
+                        >
+                          {other.name}
+                        </h3>
+                        <p className="text-sm text-[#57534E] font-medium">
+                          {other.location} · {other.capacity}
+                        </p>
+                      </div>
+                      <ArrowRight className="w-5 h-5 text-[#D4A574] group-hover:translate-x-1 transition-transform" />
+                    </div>
+                  </Link>
+                );
+              })}
+          </div>
+        </div>
+      </section>
+
       {/* CTA Section */}
       <section className="py-20 relative bg-[#1C1917] overflow-hidden">
         <div className="absolute top-10 left-10 w-32 h-32 bg-white/15 blob hidden lg:block" />
@@ -2080,23 +2157,24 @@ export function HouseDetailPage() {
           >
             {language === "en"
               ? `Ready to make ${house.name} your home?`
-              : `Prêt à faire de ${house.name} votre chez-vous ?`}
+              : `Prêt à faire de ${house.name} ton chez-toi ?`}
           </h2>
           <p className="text-lg text-white/90 max-w-2xl mx-auto font-bold mb-8">
             {language === "en"
               ? "Join our curated community and experience the best of coliving near Geneva."
-              : "Rejoignez notre communauté sélectionnée et vivez le meilleur du coliving près de Genève."}
+              : "Rejoins notre communauté sélectionnée et vis le meilleur du coliving près de Genève."}
           </p>
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
             <Link
-              to="/candidature"
+              to={language === "en" ? "/en/candidature" : "/candidature"}
+              onClick={() => trackCta("house_footer")}
               className="inline-flex items-center gap-2 px-8 py-4 bg-white text-[#1C1917] font-bold rounded-full hover:bg-gray-100 transition-colors"
             >
               {t.houseDetail.apply}
               <ArrowRight className="w-5 h-5" />
             </Link>
             <Link
-              to="/colocation-geneve"
+              to={language === "en" ? "/en/colocation-geneve" : "/colocation-geneve"}
               className="inline-flex items-center gap-2 px-8 py-4 border border-white/30 text-white font-medium rounded-full hover:bg-white/10 transition-colors"
             >
               {language === "en" ? "Shared housing Geneva" : "Colocation Genève"}
