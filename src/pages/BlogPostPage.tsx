@@ -6,6 +6,7 @@ import { Clock, Calendar, User, ArrowLeft, ArrowRight } from "lucide-react";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import { SEO } from "@/components/SEO";
+import { getIntentBucket, type IntentBucket } from "@/data/blogIntentBuckets";
 
 interface Post {
   id:string; slug:string;
@@ -30,6 +31,83 @@ const CL:Record<string,Record<string,string>>={
   tips:{en:"Tips",fr:"Conseils"},geneva:{en:"Geneva",fr:"Genève"},
   community:{en:"Community",fr:"Communauté"},
 };
+
+// CTA copy per intent bucket (see src/data/blogIntentBuckets.ts). Editorial rules:
+// tutoiement, loyer en CHF, « 0 frais » = conséquence du modèle, aucun concurrent.
+// Paths are language-neutral — localized (/en prefix) at render time.
+const CTA_COPY: Record<IntentBucket, {
+  headline: { fr: string; en: string };
+  primary: { fr: string; en: string; to: string };
+  secondary: { fr: string; en: string; to: string };
+  mid: { text: { fr: string; en: string }; label: { fr: string; en: string }; to: string };
+}> = {
+  high: {
+    headline: { fr: "Tu cherches une chambre près de Genève ?", en: "Looking for a room near Geneva?" },
+    primary: { fr: "Candidater — 2 min, gratuit", en: "Apply — 2 min, free", to: "/candidature" },
+    secondary: { fr: "Voir la colocation à Genève", en: "Shared housing in Geneva", to: "/colocation-geneve" },
+    mid: {
+      text: { fr: "29 chambres tout inclus dès 1 380 CHF/mois, à 15 min de Genève — 0 frais de dossier.", en: "29 all-inclusive rooms from CHF 1,380/month, 15 min from Geneva — no application fee." },
+      label: { fr: "Candidater (2 min, gratuit)", en: "Apply (2 min, free)" }, to: "/candidature",
+    },
+  },
+  medium: {
+    headline: { fr: "Envie d'un logement tout inclus près de Genève ?", en: "Want all-inclusive housing near Geneva?" },
+    primary: { fr: "Candidater — 2 min, gratuit", en: "Apply — 2 min, free", to: "/candidature" },
+    secondary: { fr: "Voir la colocation à Genève", en: "Shared housing in Geneva", to: "/colocation-geneve" },
+    mid: {
+      text: { fr: "29 chambres tout inclus dès 1 380 CHF/mois, à 15 min de Genève — 0 frais de dossier.", en: "29 all-inclusive rooms from CHF 1,380/month, 15 min from Geneva — no application fee." },
+      label: { fr: "Candidater (2 min, gratuit)", en: "Apply (2 min, free)" }, to: "/candidature",
+    },
+  },
+  admin: {
+    headline: { fr: "Tu prépares ton installation côté France ?", en: "Planning your move to the French side?" },
+    primary: { fr: "Voir les chambres", en: "See the rooms", to: "/colocation-geneve" },
+    secondary: { fr: "Candidater", en: "Apply", to: "/candidature" },
+    mid: {
+      text: { fr: "Tu prépares ton installation côté France ? Découvre nos chambres tout inclus près de la frontière.", en: "Planning your move to the French side? Discover our all-inclusive rooms near the border." },
+      label: { fr: "Voir les chambres", en: "See the rooms" }, to: "/colocation-geneve",
+    },
+  },
+  life: {
+    headline: { fr: "Envie d'habiter à 15 min de Genève, sans la galère ?", en: "Want to live 15 minutes from Geneva, hassle-free?" },
+    primary: { fr: "Découvre nos maisons", en: "Discover our houses", to: "/nos-maisons" },
+    secondary: { fr: "Candidater", en: "Apply", to: "/candidature" },
+    mid: {
+      text: { fr: "Envie d'habiter à 15 min de Genève, sans la galère ? Trois maisons tout inclus dès 1 380 CHF/mois.", en: "Want to live 15 minutes from Geneva, hassle-free? Three all-inclusive houses from CHF 1,380/month." },
+      label: { fr: "Découvre nos maisons", en: "Discover our houses" }, to: "/nos-maisons",
+    },
+  },
+  coliving: {
+    headline: { fr: "Envie de vivre en coliving près de Genève ?", en: "Want to live in coliving near Geneva?" },
+    primary: { fr: "Candidater — 2 min, gratuit", en: "Apply — 2 min, free", to: "/candidature" },
+    secondary: { fr: "Voir la colocation à Genève", en: "Shared housing in Geneva", to: "/colocation-geneve" },
+    mid: {
+      text: { fr: "29 chambres tout inclus dès 1 380 CHF/mois, à 15 min de Genève — 0 frais de dossier.", en: "29 all-inclusive rooms from CHF 1,380/month, 15 min from Geneva — no application fee." },
+      label: { fr: "Candidater (2 min, gratuit)", en: "Apply (2 min, free)" }, to: "/candidature",
+    },
+  },
+};
+
+// Mid-article CTA: only for long reads (>1500 words, per the conversion plan),
+// split at the "## " heading closest to the middle so both halves stay substantial.
+// Bails out on edge cases (fenced code, <2 headings, off-center split) — then the
+// article renders unsplit, exactly as before.
+function splitForMidCta(md: string): [string, string] | null {
+  if (md.includes("```")) return null;
+  if (md.split(/\s+/).length <= 1500) return null;
+  const headings: number[] = [];
+  const re = /^## /gm;
+  let m: RegExpExecArray | null;
+  while ((m = re.exec(md)) !== null) headings.push(m.index);
+  if (headings.length < 2) return null;
+  const mid = md.length / 2;
+  let best = -1;
+  for (const idx of headings) {
+    if (best === -1 || Math.abs(idx - mid) < Math.abs(best - mid)) best = idx;
+  }
+  if (best < md.length * 0.25 || best > md.length * 0.75) return null;
+  return [md.slice(0, best), md.slice(best)];
+}
 
 export function BlogPostPage() {
   const { slug } = useParams<{slug:string}>();
@@ -97,6 +175,66 @@ export function BlogPostPage() {
   const content = (language==="en"&&post.content_en)?post.content_en:post.content_fr;
   const fmtD = (d:string) => new Date(d).toLocaleDateString(language==="en"?"en-US":"fr-FR",{year:"numeric",month:"long",day:"numeric"});
 
+  const L = language === "en" ? "en" : "fr";
+  // Localize language-neutral internal paths for the EN site (/x → /en/x).
+  const loc = (p: string) => (language === "en" && !p.startsWith("/en") ? (p === "/" ? "/en" : `/en${p}`) : p);
+  const bucket = getIntentBucket(post.slug, post.category);
+  const cta = CTA_COPY[bucket];
+  const midSplit = splitForMidCta(content);
+  // Same guarded gtag pattern as the candidature form (JoinPageV4): measure which
+  // CTA position/variant drives applications, never block the UI on analytics.
+  const trackCta = (position: "mid" | "end", target: string) => {
+    try {
+      (window as unknown as { gtag?: (...a: unknown[]) => void }).gtag?.("event", "cta_click", {
+        cta_position: position, cta_target: target, article_slug: post.slug, intent: bucket, language,
+      });
+    } catch { /* noop */ }
+  };
+
+  // Markdown renderers — shared by both halves when the article is split for the mid CTA.
+  const mdComponents = {
+    // B6: a leading "# H1" in article content would create a 2nd <h1> (the page title is already the <h1>).
+    // Render markdown H1 as <h2> so each blog page keeps exactly one <h1>.
+    h1: ({children}: {children?: React.ReactNode}) => (
+      <h2 className="text-2xl md:text-3xl font-semibold text-[#1C1917] mt-12 mb-4" style={{fontFamily:"DM Serif Display, serif"}}>{children}</h2>
+    ),
+    h2: ({children}: {children?: React.ReactNode}) => (
+      <h2 className="text-2xl md:text-3xl font-semibold text-[#1C1917] mt-12 mb-4" style={{fontFamily:"DM Serif Display, serif"}}>{children}</h2>
+    ),
+    h3: ({children}: {children?: React.ReactNode}) => (
+      <h3 className="text-xl md:text-2xl font-semibold text-[#1C1917] mt-8 mb-3" style={{fontFamily:"DM Serif Display, serif"}}>{children}</h3>
+    ),
+    p: ({children}: {children?: React.ReactNode}) => <p className="mb-6 leading-relaxed">{children}</p>,
+    strong: ({children}: {children?: React.ReactNode}) => <strong className="font-semibold text-[#1C1917]">{children}</strong>,
+    ul: ({children}: {children?: React.ReactNode}) => <ul className="list-disc pl-6 mb-6 space-y-2">{children}</ul>,
+    ol: ({children}: {children?: React.ReactNode}) => <ol className="list-decimal pl-6 mb-6 space-y-2">{children}</ol>,
+    li: ({children}: {children?: React.ReactNode}) => <li className="leading-relaxed">{children}</li>,
+    a: ({href, children}: {href?: string; children?: React.ReactNode}) => {
+      // Internal links use React Router for SPA navigation + better SEO signal
+      if (href && (href.startsWith('/') || href.startsWith('https://www.lavillacoliving.com'))) {
+        const internalPath = href.startsWith('https://www.lavillacoliving.com')
+          ? href.replace('https://www.lavillacoliving.com', '')
+          : href;
+        // Content stores language-neutral paths; on the EN site, prefix /en so
+        // anglophone readers stay on EN pages (every FR route has an /en twin).
+        return <Link to={loc(internalPath)} className="text-[#D4A574] hover:underline">{children}</Link>;
+      }
+      // External links open in new tab
+      return <a href={href} className="text-[#D4A574] hover:underline" target="_blank" rel="noopener noreferrer">{children}</a>;
+    },
+    table: ({children}: {children?: React.ReactNode}) => (
+      <div className="overflow-x-auto my-8">
+        <table className="w-full border-collapse text-sm">{children}</table>
+      </div>
+    ),
+    thead: ({children}: {children?: React.ReactNode}) => <thead className="bg-[#F5F2ED]">{children}</thead>,
+    th: ({children}: {children?: React.ReactNode}) => <th className="border border-[#E7E5E4] px-4 py-3 text-left font-semibold text-[#1C1917]">{children}</th>,
+    td: ({children}: {children?: React.ReactNode}) => <td className="border border-[#E7E5E4] px-4 py-3">{children}</td>,
+    blockquote: ({children}: {children?: React.ReactNode}) => (
+      <blockquote className="border-l-4 border-[#D4A574] pl-6 italic text-[#57534E] my-6">{children}</blockquote>
+    ),
+  };
+
   // BlogPosting structured data
   const blogPostingSchema = {
     "@context": "https://schema.org",
@@ -161,51 +299,26 @@ export function BlogPostPage() {
           )}
 
           <div className="blog-content max-w-none text-[#44403C]" style={{fontSize:"1.1rem",lineHeight:"1.8"}}>
-            <ReactMarkdown
-              remarkPlugins={[remarkGfm]}
-              components={{
-                // B6: a leading "# H1" in article content would create a 2nd <h1> (the page title is already the <h1>).
-                // Render markdown H1 as <h2> so each blog page keeps exactly one <h1>.
-                h1: ({children}) => (
-                  <h2 className="text-2xl md:text-3xl font-semibold text-[#1C1917] mt-12 mb-4" style={{fontFamily:"DM Serif Display, serif"}}>{children}</h2>
-                ),
-                h2: ({children}) => (
-                  <h2 className="text-2xl md:text-3xl font-semibold text-[#1C1917] mt-12 mb-4" style={{fontFamily:"DM Serif Display, serif"}}>{children}</h2>
-                ),
-                h3: ({children}) => (
-                  <h3 className="text-xl md:text-2xl font-semibold text-[#1C1917] mt-8 mb-3" style={{fontFamily:"DM Serif Display, serif"}}>{children}</h3>
-                ),
-                p: ({children}) => <p className="mb-6 leading-relaxed">{children}</p>,
-                strong: ({children}) => <strong className="font-semibold text-[#1C1917]">{children}</strong>,
-                ul: ({children}) => <ul className="list-disc pl-6 mb-6 space-y-2">{children}</ul>,
-                ol: ({children}) => <ol className="list-decimal pl-6 mb-6 space-y-2">{children}</ol>,
-                li: ({children}) => <li className="leading-relaxed">{children}</li>,
-                a: ({href, children}) => {
-                  // Internal links use React Router for SPA navigation + better SEO signal
-                  if (href && (href.startsWith('/') || href.startsWith('https://www.lavillacoliving.com'))) {
-                    const internalPath = href.startsWith('https://www.lavillacoliving.com')
-                      ? href.replace('https://www.lavillacoliving.com', '')
-                      : href;
-                    return <Link to={internalPath} className="text-[#D4A574] hover:underline">{children}</Link>;
-                  }
-                  // External links open in new tab
-                  return <a href={href} className="text-[#D4A574] hover:underline" target="_blank" rel="noopener noreferrer">{children}</a>;
-                },
-                table: ({children}) => (
-                  <div className="overflow-x-auto my-8">
-                    <table className="w-full border-collapse text-sm">{children}</table>
-                  </div>
-                ),
-                thead: ({children}) => <thead className="bg-[#F5F2ED]">{children}</thead>,
-                th: ({children}) => <th className="border border-[#E7E5E4] px-4 py-3 text-left font-semibold text-[#1C1917]">{children}</th>,
-                td: ({children}) => <td className="border border-[#E7E5E4] px-4 py-3">{children}</td>,
-                blockquote: ({children}) => (
-                  <blockquote className="border-l-4 border-[#D4A574] pl-6 italic text-[#57534E] my-6">{children}</blockquote>
-                ),
-              }}
-            >
-              {content}
-            </ReactMarkdown>
+            {midSplit ? (
+              <>
+                <ReactMarkdown remarkPlugins={[remarkGfm]} components={mdComponents}>{midSplit[0]}</ReactMarkdown>
+                {/* Mid-article CTA — long reads only (>1500 words), message variant by intent bucket */}
+                <aside className="my-10 px-6 py-5 bg-[#FAF9F6] border border-[#E7E5E4] rounded-lg text-center">
+                  <p className="text-[#1C1917] font-medium mb-2">{cta.mid.text[L]}</p>
+                  <Link
+                    to={loc(cta.mid.to)}
+                    onClick={() => trackCta("mid", cta.mid.to)}
+                    className="inline-flex items-center gap-2 text-[#D4A574] font-semibold hover:underline"
+                  >
+                    {cta.mid.label[L]}
+                    <ArrowRight className="w-4 h-4" />
+                  </Link>
+                </aside>
+                <ReactMarkdown remarkPlugins={[remarkGfm]} components={mdComponents}>{midSplit[1]}</ReactMarkdown>
+              </>
+            ) : (
+              <ReactMarkdown remarkPlugins={[remarkGfm]} components={mdComponents}>{content}</ReactMarkdown>
+            )}
           </div>
 
           {post.tags&&post.tags.length>0&&(
@@ -223,9 +336,7 @@ export function BlogPostPage() {
             className="text-xl md:text-2xl font-light text-[#1C1917] mb-3"
             style={{ fontFamily: "DM Serif Display, serif" }}
           >
-            {post?.category === "geneva" || post?.category === "tips"
-              ? (language === "en" ? "Planning your move near Geneva?" : "Tu prépares ton installation près de Genève ?")
-              : (language === "en" ? "Want to live in coliving near Geneva?" : "Envie de vivre en coliving près de Genève ?")}
+            {cta.headline[L]}
           </h2>
           <p className="text-sm text-[#78716C] mb-6 max-w-lg mx-auto">
             {language === "en"
@@ -234,17 +345,19 @@ export function BlogPostPage() {
           </p>
           <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
             <Link
-              to={language === "en" ? "/en/candidature" : "/candidature"}
+              to={loc(cta.primary.to)}
+              onClick={() => trackCta("end", cta.primary.to)}
               className="inline-flex items-center gap-2 px-6 py-3 bg-[#D4A574] text-[#1C1917] text-sm font-semibold rounded-lg hover:bg-[#E0BB8A] transition-all duration-300"
             >
-              {language === "en" ? "Apply — 2 min, free" : "Candidater — 2 min, gratuit"}
+              {cta.primary[L]}
               <ArrowRight className="w-4 h-4" />
             </Link>
             <Link
-              to={language === "en" ? "/en/colocation-geneve" : "/colocation-geneve"}
+              to={loc(cta.secondary.to)}
+              onClick={() => trackCta("end", cta.secondary.to)}
               className="inline-flex items-center gap-2 px-6 py-3 border border-[#E7E5E4] text-[#44403C] text-sm font-medium rounded-lg hover:border-[#D4A574] transition-all duration-300"
             >
-              {language === "en" ? "Shared housing in Geneva" : "Voir la colocation à Genève"}
+              {cta.secondary[L]}
             </Link>
           </div>
         </div>
