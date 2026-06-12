@@ -55,8 +55,8 @@ const CTA_COPY: Record<IntentBucket, {
     primary: { fr: "Candidater — 2 min, gratuit", en: "Apply — 2 min, free", to: "/candidature" },
     secondary: { fr: "Voir la colocation à Genève", en: "Shared housing in Geneva", to: "/colocation-geneve" },
     mid: {
-      text: { fr: "29 chambres tout inclus dès 1 380 CHF/mois, à 15 min de Genève — 0 frais de dossier.", en: "29 all-inclusive rooms from CHF 1,380/month, 15 min from Geneva — no application fee." },
-      label: { fr: "Candidater (2 min, gratuit)", en: "Apply (2 min, free)" }, to: "/candidature",
+      text: { fr: "Chambres disponibles dès 1 380 CHF/mois tout inclus, à 15 min de Genève — 0 frais de dossier.", en: "Rooms available from CHF 1,380/month all-inclusive, 15 min from Geneva — no application fee." },
+      label: { fr: "Voir les chambres disponibles", en: "See available rooms" }, to: "/nos-maisons",
     },
   },
   admin: {
@@ -64,8 +64,8 @@ const CTA_COPY: Record<IntentBucket, {
     primary: { fr: "Voir les chambres", en: "See the rooms", to: "/colocation-geneve" },
     secondary: { fr: "Candidater", en: "Apply", to: "/candidature" },
     mid: {
-      text: { fr: "Tu prépares ton installation côté France ? Découvre nos chambres tout inclus près de la frontière.", en: "Planning your move to the French side? Discover our all-inclusive rooms near the border." },
-      label: { fr: "Voir les chambres", en: "See the rooms" }, to: "/colocation-geneve",
+      text: { fr: "Tu prépares ton installation côté France ? Chambres disponibles dès 1 380 CHF/mois tout inclus.", en: "Planning your move to the French side? Rooms available from CHF 1,380/month all-inclusive." },
+      label: { fr: "Voir les chambres disponibles", en: "See available rooms" }, to: "/nos-maisons",
     },
   },
   life: {
@@ -82,19 +82,20 @@ const CTA_COPY: Record<IntentBucket, {
     primary: { fr: "Candidater — 2 min, gratuit", en: "Apply — 2 min, free", to: "/candidature" },
     secondary: { fr: "Voir la colocation à Genève", en: "Shared housing in Geneva", to: "/colocation-geneve" },
     mid: {
-      text: { fr: "29 chambres tout inclus dès 1 380 CHF/mois, à 15 min de Genève — 0 frais de dossier.", en: "29 all-inclusive rooms from CHF 1,380/month, 15 min from Geneva — no application fee." },
-      label: { fr: "Candidater (2 min, gratuit)", en: "Apply (2 min, free)" }, to: "/candidature",
+      text: { fr: "Chambres disponibles dès 1 380 CHF/mois tout inclus, à 15 min de Genève — 0 frais de dossier.", en: "Rooms available from CHF 1,380/month all-inclusive, 15 min from Geneva — no application fee." },
+      label: { fr: "Voir les chambres disponibles", en: "See available rooms" }, to: "/nos-maisons",
     },
   },
 };
 
-// Mid-article CTA: only for long reads (>1500 words, per the conversion plan),
+// Mid-article CTA: for substantial reads (>800 words — GA4 path data shows the blog
+// converts ~nobody without an in-body block; decision Jérôme 2026-06-11),
 // split at the "## " heading closest to the middle so both halves stay substantial.
 // Bails out on edge cases (fenced code, <2 headings, off-center split) — then the
 // article renders unsplit, exactly as before.
 function splitForMidCta(md: string): [string, string] | null {
   if (md.includes("```")) return null;
-  if (md.split(/\s+/).length <= 1500) return null;
+  if (md.split(/\s+/).length <= 800) return null;
   const headings: number[] = [];
   const re = /^## /gm;
   let m: RegExpExecArray | null;

@@ -68,21 +68,41 @@ export function HeroV7() {
           </h1>
 
           {/* Description */}
-          <p className="text-base md:text-lg text-white/90 max-w-xl mb-4 leading-relaxed font-light">
+          <p className="text-base md:text-lg text-white/90 max-w-xl mb-6 leading-relaxed font-light">
             {language === "en"
-              ? "Your private room in a house with pool, 20 min from Geneva. All-inclusive from CHF 1,380/month."
-              : "Votre chambre privée dans une maison avec piscine, à 20 min de Genève. Tout inclus dès 1 380 CHF/mois."}
+              ? "Your private room in a house with pool, 15 min from Geneva. All-inclusive from CHF 1,380/month."
+              : "Ta chambre privée dans une maison avec piscine, à 15 min de Genève. Tout inclus dès 1 380 CHF/mois."}
           </p>
 
+          {/* CTAs — remontés au-dessus de la réassurance/preuve sociale : GA4 montre que
+              la home perd ~50 % des visiteurs avant la 2e page, et que le couloir
+              Nos 3 Maisons → maison → candidature génère 46 % des candidatures. */}
+          <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3 sm:gap-4 mb-6">
+            <Link
+              to="/nos-maisons"
+              className="inline-flex items-center gap-2 bg-[#D4A574] text-[#1C1917] px-8 py-4 rounded-lg font-bold text-base hover:bg-[#E0BB8A] hover:shadow-lg hover:translate-y-[-1px] transition-all duration-300 focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-[#1C1917] w-full sm:w-auto justify-center sm:justify-start"
+            >
+              {language === "en" ? "Explore our 3 houses" : "Découvrir nos 3 maisons"}
+              <ArrowRight className="w-5 h-5" />
+            </Link>
+            <Link
+              to="/colocation-geneve"
+              className="inline-flex items-center gap-2 border border-white/30 text-white px-7 py-3.5 rounded-lg font-semibold text-[15px] hover:border-white hover:bg-white/5 transition-all duration-300 w-full sm:w-auto justify-center sm:justify-start"
+            >
+              {language === "en" ? "Shared housing Geneva" : "Colocation Genève"}
+              <ArrowRight className="w-4 h-4" />
+            </Link>
+          </div>
+
           {/* Réassurance frais — visible sans scroll */}
-          <p className="text-sm text-white/75 max-w-xl mb-8 font-light">
+          <p className="text-sm text-white/75 max-w-xl mb-4 font-light">
             {language === "en"
               ? "Everything included — no application fee, no agency fee, no hidden costs."
               : "Tout est compris — pas de frais de dossier, pas d'honoraires d'agence, pas de frais cachés."}
           </p>
 
           {/* Social proof */}
-          <div className="flex items-center gap-3 mb-8">
+          <div className="flex items-center gap-3 mb-12 md:mb-14">
             <div className="flex items-center gap-1">
               {[1,2,3,4,5].map(i => (
                 <svg key={i} className="w-4 h-4 text-[#E0BB8A]" fill="currentColor" viewBox="0 0 20 20">
@@ -95,24 +115,6 @@ export function HeroV7() {
                 ? "4.9/5 — 150+ residents since 2021"
                 : "4.9/5 — 150+ résidents depuis 2021"}
             </span>
-          </div>
-
-          {/* CTAs */}
-          <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3 sm:gap-4 mb-12 md:mb-14">
-            <Link
-              to="/nos-maisons"
-              className="inline-flex items-center gap-2 bg-white text-[#1C1917] px-7 py-3.5 rounded-lg font-semibold text-[15px] hover:shadow-lg hover:translate-y-[-1px] transition-all duration-300 focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-[#1C1917] w-full sm:w-auto justify-center sm:justify-start"
-            >
-              {language === "en" ? "Explore our houses" : "Découvrir nos maisons"}
-              <ArrowRight className="w-4 h-4" />
-            </Link>
-            <Link
-              to="/colocation-geneve"
-              className="inline-flex items-center gap-2 border border-white/30 text-white px-7 py-3.5 rounded-lg font-semibold text-[15px] hover:border-white hover:bg-white/5 transition-all duration-300 w-full sm:w-auto justify-center sm:justify-start"
-            >
-              {language === "en" ? "Shared housing Geneva" : "Colocation Genève"}
-              <ArrowRight className="w-4 h-4" />
-            </Link>
           </div>
 
           {/* Availability signal — dynamic next month */}
