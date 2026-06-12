@@ -141,15 +141,17 @@ function AppContent() {
 }
 
 function App() {
+  // LanguageProvider DOIT être dans BrowserRouter : la langue est dérivée de
+  // l'URL (useLocation) et le toggle navigue vers l'URL miroir (useNavigate).
   return (
-    <LanguageProvider>
-      <AuthProvider>
+    <AuthProvider>
       <BrowserRouter>
-        <ScrollToTop />
-        <AppContent />
+        <LanguageProvider>
+          <ScrollToTop />
+          <AppContent />
+        </LanguageProvider>
       </BrowserRouter>
     </AuthProvider>
-    </LanguageProvider>
   );
 }
 
