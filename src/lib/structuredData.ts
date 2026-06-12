@@ -71,26 +71,29 @@ export function buildFaqPageSchema(items: QAPair[]): Record<string, unknown> {
  * PAS d'`aggregateRating` (la note 4,9 vient d'un NPS interne → non balisable).
  * Prix / fibre sourcés depuis STATS pour rester cohérents partout.
  */
-export function buildHomeLodgingBusinessSchema(): Record<string, unknown> {
+export function buildHomeLodgingBusinessSchema(language: "fr" | "en" = "fr"): Record<string, unknown> {
+  const en = language === "en";
   return {
     "@context": "https://schema.org",
     "@type": "LodgingBusiness",
     name: "La Villa Coliving",
-    description: `Coliving premium tout inclus près de Genève : ${STATS.totalHouses} maisons (${STATS.totalRooms} chambres meublées) à ${STATS.genevaCenterMinutes} minutes du centre de Genève, côté France, avec piscine, sauna et salle de sport dans chaque maison.`,
+    description: en
+      ? `All-inclusive premium coliving near Geneva: ${STATS.totalHouses} houses (${STATS.totalRooms} furnished rooms) ${STATS.genevaCenterMinutes} minutes from Geneva city center, on the French side, with pool, sauna and gym in every house.`
+      : `Coliving premium tout inclus près de Genève : ${STATS.totalHouses} maisons (${STATS.totalRooms} chambres meublées) à ${STATS.genevaCenterMinutes} minutes du centre de Genève, côté France, avec piscine, sauna et salle de sport dans chaque maison.`,
     url: `${SITE}/`,
     logo: `${SITE}/logos/logo-full.png`,
     image: `${SITE}/images/villa_portrait.webp`,
     telephone: LAVILLA_PHONE,
     email: LAVILLA_EMAIL,
-    priceRange: `dès ${STATS.priceChf} CHF/mois`,
+    priceRange: en ? `from ${STATS.priceChf} CHF/month` : `dès ${STATS.priceChf} CHF/mois`,
     areaServed: ["Genève", "Annemasse", "Ville-la-Grand", "Ambilly", "Grand Genève"],
     knowsLanguage: ["fr", "en"],
     amenityFeature: [
-      { "@type": "LocationFeatureSpecification", name: "Piscine", value: true },
+      { "@type": "LocationFeatureSpecification", name: en ? "Swimming pool" : "Piscine", value: true },
       { "@type": "LocationFeatureSpecification", name: "Sauna", value: true },
-      { "@type": "LocationFeatureSpecification", name: "Salle de sport", value: true },
-      { "@type": "LocationFeatureSpecification", name: `Internet fibre jusqu'à ${STATS.fiberSpeed}`, value: true },
-      { "@type": "LocationFeatureSpecification", name: "Ménage des parties communes inclus", value: true },
+      { "@type": "LocationFeatureSpecification", name: en ? "Gym" : "Salle de sport", value: true },
+      { "@type": "LocationFeatureSpecification", name: en ? `Fiber internet up to ${STATS.fiberSpeed}` : `Internet fibre jusqu'à ${STATS.fiberSpeed}`, value: true },
+      { "@type": "LocationFeatureSpecification", name: en ? "Common areas cleaning included" : "Ménage des parties communes inclus", value: true },
     ],
     sameAs: ["https://www.instagram.com/lavillacoliving/"],
     department: HOUSES.map((h) => ({

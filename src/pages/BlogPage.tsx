@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom";
+import { LocalizedLink } from "@/components/LocalizedLink";
 import { useState, useEffect } from "react";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { supabase } from "@/lib/supabase";
@@ -97,7 +97,7 @@ export function BlogPage() {
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
               {fp.map((post)=>(
-                <Link to={`/blog/${post.slug}`} key={post.id} className="group bg-white border border-[#E7E5E4] overflow-hidden transition-all duration-300 hover:border-[#D4A574]/30 hover:shadow-lg">
+                <LocalizedLink to={`/blog/${post.slug}`} key={post.id} className="group bg-white border border-[#E7E5E4] overflow-hidden transition-all duration-300 hover:border-[#D4A574]/30 hover:shadow-lg">
                   <div className="aspect-[16/10] overflow-hidden bg-[#F5F2ED]">
                     {post.image_url ? (
                       <img src={post.image_url} alt={gT(post)} className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" loading="lazy" />
@@ -124,7 +124,7 @@ export function BlogPage() {
                       <span className="flex items-center gap-1.5"><Clock className="w-3.5 h-3.5" />{post.read_time_min} min</span>
                     </div>
                   </div>
-                </Link>
+                </LocalizedLink>
               ))}
             </div>
           )}

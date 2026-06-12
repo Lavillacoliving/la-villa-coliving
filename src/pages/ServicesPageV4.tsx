@@ -17,7 +17,7 @@ import {
   Shield,
   Users,
 } from "lucide-react";
-import { Link } from "react-router-dom";
+import { LocalizedLink } from "@/components/LocalizedLink";
 import { SEO } from "@/components/SEO";
 import { FaqSection } from "@/components/FaqSection";
 import { servicesFaq } from "@/data/faq/servicesFaq";
@@ -476,19 +476,19 @@ export function ServicesPageV4() {
               : "Rejoignez plus de 150 résidents qui ont récupéré leur temps. Un prix. Tout inclus."}
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Link
+            <LocalizedLink
               to="/tarifs"
               className="inline-flex items-center justify-center gap-2 px-8 py-4 bg-[#D4A574] text-[#1C1917] font-semibold rounded-lg hover:bg-[#E0BB8A] transition-all duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#D4A574] focus-visible:ring-offset-2 focus-visible:ring-offset-[#1C1917]"
             >
               {language === "en" ? "View Rates" : "Voir les Tarifs"}
               <ArrowRight className="w-5 h-5" />
-            </Link>
-            <Link
+            </LocalizedLink>
+            <LocalizedLink
               to="/candidature"
               className="inline-flex items-center justify-center gap-2 px-8 py-4 border border-white/30 text-white font-semibold rounded-lg hover:border-white hover:bg-white/5 transition-all duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-[#1C1917]"
             >
               {language === "en" ? "Apply Now" : "Candidater"}
-            </Link>
+            </LocalizedLink>
           </div>
         </div>
       </section>

@@ -1,4 +1,5 @@
-import { useLocation, Link } from "react-router-dom";
+import { useLocation } from "react-router-dom";
+import { LocalizedLink } from "@/components/LocalizedLink";
 import { buildBreadcrumbSchema } from "@/lib/structuredData";
 import {
   MapPin,
@@ -1332,12 +1333,12 @@ export function HouseDetailPage() {
       <main className="pt-32 pb-20 bg-white">
         <div className="container-custom text-center">
           <h1 className="text-4xl mb-4 text-[#1C1917]">House not found</h1>
-          <Link
+          <LocalizedLink
             to="/nos-maisons"
             className="text-[#D4A574] hover:underline font-bold"
           >
             View all houses
-          </Link>
+          </LocalizedLink>
         </div>
       </main>
     );
@@ -1512,14 +1513,14 @@ export function HouseDetailPage() {
             {/* Above-fold CTA — GA4 showed candidatures are won on house pages, yet the
                 only apply CTA was at the very bottom of this 2000-line template. */}
             <div className="mt-6 flex flex-wrap items-center gap-4">
-              <Link
+              <LocalizedLink
                 to={language === "en" ? "/en/candidature" : "/candidature"}
                 onClick={() => trackCta("house_hero")}
                 className="inline-flex items-center gap-2 px-7 py-3.5 bg-[#D4A574] text-[#1C1917] font-bold rounded-full hover:bg-[#E0BB8A] transition-colors shadow-sharp"
               >
                 {t.houseDetail.apply}
                 <ArrowRight className="w-5 h-5" />
-              </Link>
+              </LocalizedLink>
               <span className="text-sm font-semibold text-[#1C1917] bg-white/85 backdrop-blur px-4 py-2 rounded-full">
                 {language === "en"
                   ? "All-inclusive from CHF 1,380/month — no application fee"
@@ -1661,7 +1662,7 @@ export function HouseDetailPage() {
                   </div>
 
                   <div className="flex flex-col gap-3">
-                    <Link
+                    <LocalizedLink
                       to="/candidature"
                       className="w-full inline-flex items-center justify-center gap-2 px-6 py-3 bg-[#1C1917] text-white font-semibold rounded-xl hover:bg-[#D4A574] transition-colors"
                     >
@@ -1669,13 +1670,13 @@ export function HouseDetailPage() {
                         ? t.houseDetail.apply
                         : language === "en" ? "Join waitlist" : "Liste d'attente"}
                       <ArrowRight size={18} />
-                    </Link>
-                    <Link
+                    </LocalizedLink>
+                    <LocalizedLink
                       to="/tarifs"
                       className="w-full text-center text-sm text-[#78716C] hover:text-[#1C1917] hover:underline transition-colors mt-1"
                     >
                       {t.houseDetail.checkRates}
-                    </Link>
+                    </LocalizedLink>
                     <a
                       href="https://wa.me/33664315134"
                       target="_blank"
@@ -2100,7 +2101,7 @@ export function HouseDetailPage() {
               .map((hid) => {
                 const other = housesData[hid];
                 return (
-                  <Link
+                  <LocalizedLink
                     key={hid}
                     to={language === "en" ? `/en/${hid}` : `/${hid}`}
                     className="group card-ultra overflow-hidden hover:shadow-lg transition-all"
@@ -2127,7 +2128,7 @@ export function HouseDetailPage() {
                       </div>
                       <ArrowRight className="w-5 h-5 text-[#D4A574] group-hover:translate-x-1 transition-transform" />
                     </div>
-                  </Link>
+                  </LocalizedLink>
                 );
               })}
           </div>
@@ -2154,21 +2155,21 @@ export function HouseDetailPage() {
               : "Rejoins notre communauté sélectionnée et vis le meilleur du coliving près de Genève."}
           </p>
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-            <Link
+            <LocalizedLink
               to={language === "en" ? "/en/candidature" : "/candidature"}
               onClick={() => trackCta("house_footer")}
               className="inline-flex items-center gap-2 px-8 py-4 bg-white text-[#1C1917] font-bold rounded-full hover:bg-gray-100 transition-colors"
             >
               {t.houseDetail.apply}
               <ArrowRight className="w-5 h-5" />
-            </Link>
-            <Link
+            </LocalizedLink>
+            <LocalizedLink
               to={language === "en" ? "/en/colocation-geneve" : "/colocation-geneve"}
               className="inline-flex items-center gap-2 px-8 py-4 border border-white/30 text-white font-medium rounded-full hover:bg-white/10 transition-colors"
             >
               {language === "en" ? "Shared housing Geneva" : "Colocation Genève"}
               <ArrowRight className="w-5 h-5" />
-            </Link>
+            </LocalizedLink>
           </div>
         </div>
       </section>

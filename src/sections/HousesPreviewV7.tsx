@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom";
+import { LocalizedLink } from "@/components/LocalizedLink";
 import { ArrowRight, MapPin, Users } from "lucide-react";
 import { useLanguage } from "@/contexts/LanguageContext";
 
@@ -68,19 +68,19 @@ export function HousesPreviewV7() {
               {language === "en" ? "3 houses, 3 personalities" : "3 maisons, 3 personnalités"}
             </h2>
           </div>
-          <Link
+          <LocalizedLink
             to="/nos-maisons"
             className="group mt-6 md:mt-0 inline-flex items-center gap-2 text-[#44403C] font-semibold text-sm hover:gap-3 transition-all duration-300 focus-visible:ring-2 focus-visible:ring-[#44403C] focus-visible:ring-offset-2 rounded-lg"
           >
             {language === "en" ? "See all houses" : "Voir toutes les maisons"}
             <ArrowRight className="w-4 h-4" />
-          </Link>
+          </LocalizedLink>
         </div>
 
         {/* Houses grid */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           {houses.map((house, index) => (
-            <Link key={index} to={`/${house.id}`} className="group block bg-white rounded-2xl border border-[#E7E5E4] overflow-hidden hover:border-[#44403C]/20 hover:shadow-[0_4px_24px_rgba(0,0,0,0.06)] hover:translate-y-[-2px] transition-all duration-300">
+            <LocalizedLink key={index} to={`/${house.id}`} className="group block bg-white rounded-2xl border border-[#E7E5E4] overflow-hidden hover:border-[#44403C]/20 hover:shadow-[0_4px_24px_rgba(0,0,0,0.06)] hover:translate-y-[-2px] transition-all duration-300">
               {/* Photo */}
               <div className="relative aspect-[16/10] overflow-hidden">
                 <img
@@ -131,7 +131,7 @@ export function HousesPreviewV7() {
                   </span>
                 </div>
               </div>
-            </Link>
+            </LocalizedLink>
           ))}
         </div>
       </div>

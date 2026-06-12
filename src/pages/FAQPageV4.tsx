@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { LocalizedLink } from "@/components/LocalizedLink";
 import { Helmet } from "react-helmet";
 import { useLanguage } from "@/contexts/LanguageContext";
 import {
@@ -161,7 +161,7 @@ export function FAQPageV4() {
                 </nav>
 
                 {/* Colocation Genève link — SEO maillage */}
-                <Link
+                <LocalizedLink
                   to="/colocation-geneve"
                   className="mt-8 block p-6 bg-[#FAF9F6] border border-[#E7E5E4] hover:border-[#D4A574]/40 transition-colors group"
                 >
@@ -175,10 +175,10 @@ export function FAQPageV4() {
                       ? "29 furnished rooms, all-inclusive from CHF 1,380/mo. See the full guide →"
                       : "29 chambres meublées, tout inclus dès 1 380 CHF/mois. Voir le guide complet →"}
                   </p>
-                </Link>
+                </LocalizedLink>
 
                 {/* Frais d'entrée article — SEO maillage */}
-                <Link
+                <LocalizedLink
                   to={language === "en" ? "/en/blog/coliving-frais-dossier-geneve-annemasse" : "/blog/coliving-frais-dossier-geneve-annemasse"}
                   className="mt-4 block p-6 bg-[#FAF9F6] border border-[#E7E5E4] hover:border-[#D4A574]/40 transition-colors group"
                 >
@@ -192,7 +192,7 @@ export function FAQPageV4() {
                       ? "Application, agency, booking fees: what the law allows and how to move in for €0. Read the guide →"
                       : "Frais de dossier, agence, réservation : ce que dit la loi et comment emménager pour 0 €. Lire le guide →"}
                   </p>
-                </Link>
+                </LocalizedLink>
 
                 {/* Contact CTA */}
                 <div className="mt-4 p-6 bg-white border border-[#E7E5E4]">

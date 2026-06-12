@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom";
+import { LocalizedLink } from "@/components/LocalizedLink";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { Home, ArrowLeft } from "lucide-react";
 import { SEO } from "@/components/SEO";
@@ -52,28 +52,28 @@ export function NotFoundPage() {
               : "La page que vous cherchez n'existe pas ou a été déplacée."}
           </p>
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-10">
-            <Link
+            <LocalizedLink
               to={language === "en" ? "/en" : "/"}
               className="inline-flex items-center gap-2 px-6 py-3 bg-[#44403C] text-white font-medium rounded-lg hover:bg-[#57534E] transition-colors"
             >
               <Home size={18} />
               {language === "en" ? "Back to Home" : "Retour à l'accueil"}
-            </Link>
-            <Link
+            </LocalizedLink>
+            <LocalizedLink
               to={language === "en" ? "/en/nos-maisons" : "/nos-maisons"}
               className="inline-flex items-center gap-2 px-6 py-3 border-2 border-[#E7E5E4] text-[#1C1917] font-medium rounded-lg hover:border-[#44403C] transition-colors"
             >
               <ArrowLeft size={18} />
               {language === "en" ? "View Our Houses" : "Voir Nos Maisons"}
-            </Link>
+            </LocalizedLink>
           </div>
           <nav aria-label={language === "en" ? "Key pages" : "Pages clés"}>
             <ul className="flex flex-wrap items-center justify-center gap-x-6 gap-y-2 text-sm text-[#57534E]">
               {keyLinks.map((l) => (
                 <li key={l.to}>
-                  <Link to={l.to} className="hover:text-[#1C1917] underline underline-offset-4">
+                  <LocalizedLink to={l.to} className="hover:text-[#1C1917] underline underline-offset-4">
                     {l.label}
-                  </Link>
+                  </LocalizedLink>
                 </li>
               ))}
             </ul>

@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom";
+import { LocalizedLink } from "@/components/LocalizedLink";
 import { Helmet } from "react-helmet";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { SEO } from "@/components/SEO";
@@ -163,19 +163,19 @@ export function ColocationGenevePage() {
               : "Vivez côté France, travaillez à Genève. 29 chambres meublées tout inclus dans 3 maisons design à Ville-la-Grand, Ambilly et Annemasse. Piscine, gym, sauna, fibre optique — pas de frais de dossier, tout est compris."}
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Link
+            <LocalizedLink
               to="/candidature"
               className="inline-flex items-center gap-2 bg-[#D4A574] text-white px-8 py-4 text-sm uppercase tracking-wider hover:bg-[#44403C] transition-colors"
             >
               {language === "en" ? "Apply Now" : "Candidater"}
               <ArrowRight className="w-4 h-4" />
-            </Link>
-            <Link
+            </LocalizedLink>
+            <LocalizedLink
               to="/nos-maisons"
               className="inline-flex items-center gap-2 border border-[#1C1917] text-[#1C1917] px-8 py-4 text-sm uppercase tracking-wider hover:bg-[#1C1917] hover:text-white transition-colors"
             >
               {language === "en" ? "View Our Houses" : "Voir Nos Maisons"}
-            </Link>
+            </LocalizedLink>
           </div>
 
           {/* C2 preuve sociale + C3 réassurance — visible sans scroll */}
@@ -425,11 +425,11 @@ export function ColocationGenevePage() {
 
           <div className="grid md:grid-cols-3 gap-8">
             {/* La Villa */}
-            <Link to="/lavilla" className="group bg-white border border-[#E7E5E4] hover:border-[#D4A574] transition-colors">
+            <LocalizedLink to="/lavilla" className="group bg-white border border-[#E7E5E4] hover:border-[#D4A574] transition-colors">
               <div className="aspect-[4/3] overflow-hidden">
                 <img
                   src="/images/la villa jardin.webp"
-                  alt="La Villa Coliving — colocation premium avec piscine chauffée à Ville-la-Grand, près de Genève"
+                  alt={language === "en" ? "La Villa Coliving — premium shared housing with heated pool in Ville-la-Grand, near Geneva" : "La Villa Coliving — colocation premium avec piscine chauffée à Ville-la-Grand, près de Genève"}
                   className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                   loading="lazy"
                   width={800}
@@ -452,14 +452,14 @@ export function ColocationGenevePage() {
                   <span className="flex items-center gap-1"><Wifi className="w-3 h-3" /> Fibre</span>
                 </div>
               </div>
-            </Link>
+            </LocalizedLink>
 
             {/* Le Loft */}
-            <Link to="/leloft" className="group bg-white border border-[#E7E5E4] hover:border-[#D4A574] transition-colors">
+            <LocalizedLink to="/leloft" className="group bg-white border border-[#E7E5E4] hover:border-[#D4A574] transition-colors">
               <div className="aspect-[4/3] overflow-hidden">
                 <img
                   src="/images/le loft glamour.webp"
-                  alt="Le Loft Coliving — colocation moderne avec piscine intérieure à Ambilly, près de Genève"
+                  alt={language === "en" ? "Le Loft Coliving — modern shared housing with indoor pool in Ambilly, near Geneva" : "Le Loft Coliving — colocation moderne avec piscine intérieure à Ambilly, près de Genève"}
                   className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                   loading="lazy"
                   width={800}
@@ -482,14 +482,14 @@ export function ColocationGenevePage() {
                   <span className="flex items-center gap-1"><Wifi className="w-3 h-3" /> Fibre</span>
                 </div>
               </div>
-            </Link>
+            </LocalizedLink>
 
             {/* Le Lodge */}
-            <Link to="/lelodge" className="group bg-white border border-[#E7E5E4] hover:border-[#D4A574] transition-colors">
+            <LocalizedLink to="/lelodge" className="group bg-white border border-[#E7E5E4] hover:border-[#D4A574] transition-colors">
               <div className="aspect-[4/3] overflow-hidden">
                 <img
                   src="/images/le lodge piscine.webp"
-                  alt="Le Lodge Coliving — colocation avec piscine et salle de sport à Annemasse, à 10 min de Genève"
+                  alt={language === "en" ? "Le Lodge Coliving — shared housing with pool and gym in Annemasse, 10 min from Geneva" : "Le Lodge Coliving — colocation avec piscine et salle de sport à Annemasse, à 10 min de Genève"}
                   className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                   loading="lazy"
                   width={800}
@@ -512,17 +512,17 @@ export function ColocationGenevePage() {
                   <span className="flex items-center gap-1"><Wifi className="w-3 h-3" /> Fibre</span>
                 </div>
               </div>
-            </Link>
+            </LocalizedLink>
           </div>
 
           <div className="text-center mt-12">
-            <Link
+            <LocalizedLink
               to="/nos-maisons"
               className="inline-flex items-center gap-2 text-[#D4A574] font-medium hover:underline"
             >
               {language === "en" ? "Explore all houses in detail" : "Explorer toutes nos maisons en détail"}
               <ArrowRight className="w-4 h-4" />
-            </Link>
+            </LocalizedLink>
           </div>
         </div>
       </section>
@@ -667,13 +667,13 @@ export function ColocationGenevePage() {
           </div>
 
           <div className="text-center mt-12">
-            <Link
+            <LocalizedLink
               to="/tarifs"
               className="inline-flex items-center gap-2 text-[#D4A574] font-medium hover:underline"
             >
               {language === "en" ? "See detailed pricing" : "Voir les tarifs détaillés"}
               <ArrowRight className="w-4 h-4" />
-            </Link>
+            </LocalizedLink>
           </div>
         </div>
       </section>
@@ -920,13 +920,13 @@ export function ColocationGenevePage() {
           </div>
 
           <div className="text-center mt-12">
-            <Link
+            <LocalizedLink
               to="/candidature"
               className="inline-flex items-center gap-2 bg-[#D4A574] text-white px-8 py-4 text-sm uppercase tracking-wider hover:bg-[#44403C] transition-colors"
             >
               {language === "en" ? "Start Your Application" : "Commencer Votre Candidature"}
               <ArrowRight className="w-4 h-4" />
-            </Link>
+            </LocalizedLink>
           </div>
         </div>
       </section>
@@ -969,7 +969,7 @@ export function ColocationGenevePage() {
                   ? (language === "en" ? override.en : override.fr)
                   : (language === "en" && post.title_en) ? post.title_en : post.title_fr;
                 return (
-                  <Link
+                  <LocalizedLink
                     to={`/blog/${post.slug}`}
                     key={post.id}
                     className="group bg-[#FAF9F6] border border-[#E7E5E4] overflow-hidden hover:border-[#D4A574]/30 hover:shadow-lg transition-all"
@@ -987,15 +987,15 @@ export function ColocationGenevePage() {
                         <Clock className="w-3 h-3" /> {post.read_time_min} min
                       </span>
                     </div>
-                  </Link>
+                  </LocalizedLink>
                 );
               })}
             </div>
             <div className="text-center mt-8">
-              <Link to="/blog" className="inline-flex items-center gap-2 text-[#D4A574] font-medium hover:underline">
+              <LocalizedLink to="/blog" className="inline-flex items-center gap-2 text-[#D4A574] font-medium hover:underline">
                 {language === "en" ? "View all articles" : "Voir tous les articles"}
                 <ArrowRight className="w-4 h-4" />
-              </Link>
+              </LocalizedLink>
             </div>
           </div>
         </section>
@@ -1018,7 +1018,7 @@ export function ColocationGenevePage() {
               : "Nos 3 maisons sont toutes situées dans Annemasse Agglo (Ville-la-Grand, Ambilly, Annemasse). Si vous zoomez sur l'angle local, voici deux pages dédiées."}
           </p>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <Link
+            <LocalizedLink
               to="/annemasse-colocation"
               className="group bg-[#FAF9F6] border border-[#E7E5E4] p-8 hover:border-[#D4A574]/30 hover:shadow-lg transition-all"
             >
@@ -1039,9 +1039,9 @@ export function ColocationGenevePage() {
                 {language === "en" ? "Read the guide" : "Lire le guide"}
                 <ArrowRight className="w-4 h-4" />
               </span>
-            </Link>
+            </LocalizedLink>
 
-            <Link
+            <LocalizedLink
               to="/chambre-a-louer-annemasse"
               className="group bg-[#FAF9F6] border border-[#E7E5E4] p-8 hover:border-[#D4A574]/30 hover:shadow-lg transition-all"
             >
@@ -1062,7 +1062,7 @@ export function ColocationGenevePage() {
                 {language === "en" ? "Check availability" : "Voir les disponibilités"}
                 <ArrowRight className="w-4 h-4" />
               </span>
-            </Link>
+            </LocalizedLink>
           </div>
         </div>
       </section>
@@ -1084,9 +1084,9 @@ export function ColocationGenevePage() {
             ].map((item) => (
               <li key={item.slug} className="flex items-start gap-2">
                 <span className="text-[#D4A574]">→</span>
-                <Link to={language === "en" ? `/en/blog/${item.slug}` : `/blog/${item.slug}`} className="text-[#1C1917] hover:text-[#D4A574] hover:underline transition-colors">
+                <LocalizedLink to={language === "en" ? `/en/blog/${item.slug}` : `/blog/${item.slug}`} className="text-[#1C1917] hover:text-[#D4A574] hover:underline transition-colors">
                   {language === "en" ? item.en : item.fr}
-                </Link>
+                </LocalizedLink>
               </li>
             ))}
           </ul>
@@ -1128,31 +1128,31 @@ export function ColocationGenevePage() {
               : "Candidatez en 2 minutes. Réponse sous 48h. Emménagement en 2 semaines."}
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Link
+            <LocalizedLink
               to="/candidature"
               className="inline-flex items-center gap-2 bg-[#D4A574] text-white px-8 py-4 text-sm uppercase tracking-wider hover:bg-[#44403C] transition-colors"
             >
               {language === "en" ? "Apply Now" : "Candidater Maintenant"}
               <ArrowRight className="w-4 h-4" />
-            </Link>
-            <Link
+            </LocalizedLink>
+            <LocalizedLink
               to="/tarifs"
               className="inline-flex items-center gap-2 border border-white/30 text-white px-8 py-4 text-sm uppercase tracking-wider hover:bg-white hover:text-[#1C1917] transition-colors"
             >
               {language === "en" ? "View Pricing" : "Voir les Tarifs"}
-            </Link>
+            </LocalizedLink>
           </div>
         </div>
       </section>
       {/* C3 — CTA collante mobile */}
       <div className="md:hidden fixed bottom-0 inset-x-0 z-40 bg-white/95 backdrop-blur border-t border-[#E7E5E4] px-4 py-3">
-        <Link
+        <LocalizedLink
           to="/candidature"
           className="flex items-center justify-center gap-2 w-full bg-[#D4A574] text-white py-3 rounded-lg text-sm font-semibold uppercase tracking-wider"
         >
           {language === "en" ? "Apply — reply within 48h" : "Candidater — réponse sous 48h"}
           <ArrowRight className="w-4 h-4" />
-        </Link>
+        </LocalizedLink>
       </div>
     </main>
   );

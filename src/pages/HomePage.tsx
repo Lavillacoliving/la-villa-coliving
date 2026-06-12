@@ -29,7 +29,7 @@ export function HomePage() {
           : "29 chambres meublées dans 3 maisons avec piscine, sauna et salle de sport. Tout inclus dès 1 380 CHF/mois. Idéal frontaliers et expats."}
         url="https://www.lavillacoliving.com/"
         image="https://www.lavillacoliving.com/images/villa_portrait.webp"
-        jsonLd={buildHomeLodgingBusinessSchema()}
+        jsonLd={buildHomeLodgingBusinessSchema(language === "en" ? "en" : "fr")}
       />
       <Hero />
       <TrustBadges />

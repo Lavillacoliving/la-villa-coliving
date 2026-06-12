@@ -1,7 +1,9 @@
 import { useState, useEffect } from "react";
-import { Link, useLocation } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 import { Menu, X } from "lucide-react";
 import { useLanguage } from "@/contexts/LanguageContext";
+import { LocalizedLink } from "@/components/LocalizedLink";
+import { localizePath } from "@/lib/localizedPath";
 
 /**
  * VERSION 9: STONE & BRASS — CONDO PREMIUM
@@ -37,7 +39,9 @@ export function NavbarV7() {
     { path: "/blog", label: "Blog" },
   ];
 
-  const isActive = (path: string) => location.pathname === path;
+  // Compare contre le chemin localisé : sur /en/tarifs, l'onglet « Rates » (path
+  // neutre /tarifs) doit être actif.
+  const isActive = (path: string) => location.pathname === localizePath(path, language);
 
   return (
     <header
@@ -50,18 +54,18 @@ export function NavbarV7() {
       <nav className="container-custom">
         <div className="flex items-center justify-between h-16">
           {/* Logo */}
-          <Link to="/" className="flex items-center group">
+          <LocalizedLink to="/" className="flex items-center group">
             <img
               src="/logos/NEW Logo La Villa-14.png"
-              alt="La Villa Coliving — colocation et coliving premium près de Genève"
+              alt={language === "en" ? "La Villa Coliving — premium coliving and shared housing near Geneva" : "La Villa Coliving — colocation et coliving premium près de Genève"}
               className="h-12 w-auto transition-transform duration-300 group-hover:scale-105"
             />
-          </Link>
+          </LocalizedLink>
 
           {/* Desktop Navigation */}
           <div className="hidden lg:flex items-center gap-5">
             {navLinks.map((link) => (
-              <Link
+              <LocalizedLink
                 key={link.path}
                 to={link.path}
                 className={`relative text-sm transition-all duration-300 ${
@@ -74,7 +78,7 @@ export function NavbarV7() {
                 {isActive(link.path) && (
                   <span className="absolute -bottom-1 left-0 right-0 h-0.5 bg-[#44403C] rounded-full" />
                 )}
-              </Link>
+              </LocalizedLink>
             ))}
           </div>
 
@@ -89,19 +93,19 @@ export function NavbarV7() {
             </button>
 
             {/* Portail */}
-            <Link
+            <LocalizedLink
               to="/portail"
               className="text-sm text-[#78716C] hover:text-[#1C1917] transition-all duration-300"
             >
               {language === "en" ? "Portal" : "Portail"}
-            </Link>
+            </LocalizedLink>
             {/* CTA Button */}
-            <Link
+            <LocalizedLink
               to="/candidature"
               className="px-6 py-2.5 bg-[#44403C] text-white text-sm font-medium rounded-lg hover:bg-[#57534E] transition-all duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#44403C] focus-visible:ring-offset-2"
             >
               {language === "en" ? "Join us" : "Nous rejoindre"}
-            </Link>
+            </LocalizedLink>
           </div>
 
           {/* Mobile Menu Button */}
@@ -122,7 +126,7 @@ export function NavbarV7() {
           <div className="lg:hidden absolute top-full left-0 right-0 bg-white border-b border-[#E7E5E4] shadow-[0_10px_40px_rgba(0,0,0,0.06)]">
             <div className="py-6 px-6 flex flex-col gap-2">
               {navLinks.map((link) => (
-                <Link
+                <LocalizedLink
                   key={link.path}
                   to={link.path}
                   className={`text-lg py-3 px-4 rounded-lg transition-all duration-300 ${
@@ -133,15 +137,15 @@ export function NavbarV7() {
                   onClick={() => setIsMobileMenuOpen(false)}
                 >
                   {link.label}
-                </Link>
+                </LocalizedLink>
               ))}
-              <Link
+              <LocalizedLink
                 to="/portail"
                 onClick={() => setIsMobileMenuOpen(false)}
                 className="text-lg py-3 px-4 rounded-lg text-[#78716C] hover:text-[#1C1917]"
               >
                 {language === "en" ? "Portal" : "Portail"}
-              </Link>
+              </LocalizedLink>
               <div className="flex items-center gap-4 pt-4 mt-4 border-t border-[#E7E5E4]">
                 <button
                   onClick={toggleLanguage}
@@ -149,13 +153,13 @@ export function NavbarV7() {
                 >
                   {language === "en" ? "FR" : "EN"}
                 </button>
-                <Link
+                <LocalizedLink
                   to="/candidature"
                   onClick={() => setIsMobileMenuOpen(false)}
                   className="flex-1 px-6 py-3 bg-[#44403C] text-white text-center font-medium rounded-lg hover:bg-[#57534E] transition-all duration-300"
                 >
                   {language === "en" ? "Join us" : "Nous rejoindre"}
-                </Link>
+                </LocalizedLink>
               </div>
             </div>
           </div>

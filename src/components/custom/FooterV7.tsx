@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom";
+import { LocalizedLink } from "@/components/LocalizedLink";
 import { Instagram, Mail, MapPin, Phone } from "lucide-react";
 import { useLanguage } from "@/contexts/LanguageContext";
 
@@ -44,13 +44,13 @@ export function FooterV7() {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12">
           {/* Brand */}
           <div className="lg:col-span-2">
-            <Link to="/" className="inline-block mb-6">
+            <LocalizedLink to="/" className="inline-block mb-6">
               <img
                 src="/logos/NEW Logo La Villa-12.png"
-                alt="La Villa Coliving — colocation et coliving premium près de Genève"
+                alt={language === "en" ? "La Villa Coliving — premium coliving and shared housing near Geneva" : "La Villa Coliving — colocation et coliving premium près de Genève"}
                 className="h-32 w-auto brightness-0 invert"
               />
-            </Link>
+            </LocalizedLink>
             <p className="text-[#78716C] max-w-md mb-6 leading-relaxed">
               {language === "en"
                 ? "Boutique coliving in Greater Geneva. 3 houses, 29 rooms, pool, sauna and gym in every house. All inclusive."
@@ -82,12 +82,12 @@ export function FooterV7() {
             <ul className="space-y-3">
               {navLinks.map((link) => (
                 <li key={link.path}>
-                  <Link
+                  <LocalizedLink
                     to={link.path}
                     className="text-[#78716C] hover:text-[#E0BB8A] transition-colors duration-300 text-sm"
                   >
                     {link.label}
-                  </Link>
+                  </LocalizedLink>
                 </li>
               ))}
             </ul>
@@ -142,12 +142,12 @@ export function FooterV7() {
             </div>
 
             {/* CTA */}
-            <Link
+            <LocalizedLink
               to="/candidature"
               className="inline-flex items-center gap-2 mt-6 px-5 py-2.5 bg-[#D4A574] text-[#1C1917] text-sm font-semibold rounded-lg hover:bg-[#E0BB8A] transition-all duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#D4A574] focus-visible:ring-offset-2 focus-visible:ring-offset-[#1C1917]"
             >
               {language === "en" ? "Apply now" : "Candidater"}
-            </Link>
+            </LocalizedLink>
           </div>
         </div>
 
@@ -162,20 +162,20 @@ export function FooterV7() {
           <nav aria-label={language === "en" ? "Legal" : "Légal"}>
             <ul className="flex items-center gap-6">
               <li>
-                <Link
+                <LocalizedLink
                   to="/mentions-legales"
                   className="text-[#78716C] hover:text-[#E0BB8A] transition-colors duration-300 text-sm"
                 >
                   {language === "en" ? "Legal notice" : "Mentions légales"}
-                </Link>
+                </LocalizedLink>
               </li>
               <li>
-                <Link
+                <LocalizedLink
                   to="/politique-de-confidentialite"
                   className="text-[#78716C] hover:text-[#E0BB8A] transition-colors duration-300 text-sm"
                 >
                   {language === "en" ? "Privacy" : "Confidentialité"}
-                </Link>
+                </LocalizedLink>
               </li>
             </ul>
           </nav>
