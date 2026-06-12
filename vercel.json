@@ -61,6 +61,14 @@
       "destination": "/prerendered/investisseurs.html"
     },
     {
+      "source": "/mentions-legales",
+      "destination": "/prerendered/mentions-legales.html"
+    },
+    {
+      "source": "/politique-de-confidentialite",
+      "destination": "/prerendered/politique-de-confidentialite.html"
+    },
+    {
       "source": "/en",
       "destination": "/prerendered/en.html"
     },
@@ -119,6 +127,14 @@
     {
       "source": "/en/investisseurs",
       "destination": "/prerendered/en-investisseurs.html"
+    },
+    {
+      "source": "/en/mentions-legales",
+      "destination": "/prerendered/en-mentions-legales.html"
+    },
+    {
+      "source": "/en/politique-de-confidentialite",
+      "destination": "/prerendered/en-politique-de-confidentialite.html"
     },
     {
       "source": "/blog/optimiser-espace-coliving-productivite-bien-etre",
@@ -441,10 +457,39 @@
       "destination": "/prerendered/en-blog-living-in-france-working-in-geneva.html"
     },
     {
-      "source": "/(.*)",
+      "source": "/portail",
+      "destination": "/_spa.html"
+    },
+    {
+      "source": "/portail/:path*",
+      "destination": "/_spa.html"
+    },
+    {
+      "source": "/dashboard",
+      "destination": "/_spa.html"
+    },
+    {
+      "source": "/dashboard/:path*",
+      "destination": "/_spa.html"
+    },
+    {
+      "source": "/reset-password",
+      "destination": "/_spa.html"
+    },
+    {
+      "source": "/mon-espace",
+      "destination": "/_spa.html"
+    },
+    {
+      "source": "/blog/:slug",
+      "destination": "/_spa.html"
+    },
+    {
+      "source": "/en/blog/:slug",
       "destination": "/_spa.html"
     }
   ],
+  "trailingSlash": false,
   "redirects": [
     {
       "source": "/fr",
@@ -878,6 +923,33 @@
           "key": "Content-Type",
           "value": "text/html; charset=utf-8"
         },
+        {
+          "key": "X-Robots-Tag",
+          "value": "noindex"
+        }
+      ]
+    },
+    {
+      "source": "/_spa.html",
+      "headers": [
+        {
+          "key": "X-Robots-Tag",
+          "value": "noindex"
+        }
+      ]
+    },
+    {
+      "source": "/(portail|dashboard|mon-espace|reset-password)",
+      "headers": [
+        {
+          "key": "X-Robots-Tag",
+          "value": "noindex"
+        }
+      ]
+    },
+    {
+      "source": "/(portail|dashboard)/:path*",
+      "headers": [
         {
           "key": "X-Robots-Tag",
           "value": "noindex"

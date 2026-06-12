@@ -159,6 +159,26 @@ export function FooterV7() {
               ? "Made in Grand Genève."
               : "Fait au Grand Genève."}
           </p>
+          <nav aria-label={language === "en" ? "Legal" : "Légal"}>
+            <ul className="flex items-center gap-6">
+              <li>
+                <Link
+                  to="/mentions-legales"
+                  className="text-[#78716C] hover:text-[#E0BB8A] transition-colors duration-300 text-sm"
+                >
+                  {language === "en" ? "Legal notice" : "Mentions légales"}
+                </Link>
+              </li>
+              <li>
+                <Link
+                  to="/politique-de-confidentialite"
+                  className="text-[#78716C] hover:text-[#E0BB8A] transition-colors duration-300 text-sm"
+                >
+                  {language === "en" ? "Privacy" : "Confidentialité"}
+                </Link>
+              </li>
+            </ul>
+          </nav>
           <p className="text-[#78716C] text-sm">
             {language === "en"
               ? "Boutique coliving near Geneva."

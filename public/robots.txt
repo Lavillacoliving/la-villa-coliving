@@ -3,6 +3,8 @@ Allow: /
 Disallow: /_api/
 Disallow: /dashboard
 Disallow: /mon-espace
+Disallow: /portail
+Disallow: /admin
 Disallow: /prerendered/
 
 Sitemap: https://www.lavillacoliving.com/sitemap.xml

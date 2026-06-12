@@ -9,6 +9,7 @@ interface SEOProps {
   url?: string;
   type?: string;
   jsonLd?: Record<string, unknown>;
+  noindex?: boolean;
 }
 
 export function SEO({
@@ -18,6 +19,7 @@ export function SEO({
   url: _url, // kept for backward compat — canonical is now computed from useLocation()
   type = "website",
   jsonLd,
+  noindex = false,
 }: SEOProps) {
   const { language } = useLanguage();
   const location = useLocation();
@@ -60,22 +62,28 @@ export function SEO({
         }
       />
       <meta name="author" content="La Villa Coliving" />
-      <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1" />
+      {noindex ? (
+        <meta name="robots" content="noindex, follow" />
+      ) : (
+        <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1" />
+      )}
       <meta name="language" content={language} />
-      <link rel="canonical" href={siteUrl} />
+      {/* Pas de canonical ni de hreflang sur une page noindex (404) */}
+      {!noindex && <link rel="canonical" href={siteUrl} />}
 
       {/* Hreflang tags pour le SEO multilingue */}
-      {(() => {
-        const base = "https://www.lavillacoliving.com";
-        const urlPath = siteUrl.replace(base, "") || "/";
-        const frUrl = urlPath.startsWith("/en") ? `${base}${urlPath.replace(/^\/en(\/|$)/, "$1") || "/"}` : siteUrl;
-        const enUrl = urlPath.startsWith("/en") ? siteUrl : `${base}/en${urlPath === "/" ? "" : urlPath}`;
-        return [
-          <link key="hreflang-fr" rel="alternate" hrefLang="fr" href={frUrl} />,
-          <link key="hreflang-en" rel="alternate" hrefLang="en" href={enUrl} />,
-          <link key="hreflang-default" rel="alternate" hrefLang="x-default" href={frUrl} />,
-        ];
-      })()}
+      {!noindex &&
+        (() => {
+          const base = "https://www.lavillacoliving.com";
+          const urlPath = siteUrl.replace(base, "") || "/";
+          const frUrl = urlPath.startsWith("/en") ? `${base}${urlPath.replace(/^\/en(\/|$)/, "$1") || "/"}` : siteUrl;
+          const enUrl = urlPath.startsWith("/en") ? siteUrl : `${base}/en${urlPath === "/" ? "" : urlPath}`;
+          return [
+            <link key="hreflang-fr" rel="alternate" hrefLang="fr" href={frUrl} />,
+            <link key="hreflang-en" rel="alternate" hrefLang="en" href={enUrl} />,
+            <link key="hreflang-default" rel="alternate" hrefLang="x-default" href={frUrl} />,
+          ];
+        })()}
 
       {/* Open Graph / Facebook */}
       <meta property="og:type" content={type} />

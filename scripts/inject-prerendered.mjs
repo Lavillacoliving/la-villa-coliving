@@ -198,6 +198,34 @@ function buildSeoHeadTags(seo, route) {
   return tags.join('\n    ');
 }
 
+/**
+ * Minimal head tags for the 404 page: it is served on ANY unknown URL, so it
+ * must carry no canonical, no hreflang, no OG/Twitter URL and no JSON-LD —
+ * only the meta name tags (robots noindex, author...) extracted from prerender.
+ */
+function buildSeoHeadTags404(seo) {
+  const tags = [];
+  for (const [name, content] of Object.entries(seo.metaName || {})) {
+    if (name === 'description') continue; // handled via replace
+    tags.push(`<meta name="${name}" content="${content}" />`);
+  }
+  if (!seo.metaName?.robots) {
+    tags.push('<meta name="robots" content="noindex, follow" />');
+  }
+  return tags.join('\n    ');
+}
+
+/**
+ * Last-resort 404: SPA shell + noindex, used when no prerendered 404 exists.
+ * Guarantees a deploy never ships without dist/404.html (real HTTP 404 on Vercel).
+ */
+async function writeFallback404(indexHtml) {
+  let html = indexHtml.replace(/<title[^>]*>.*?<\/title>/, '<title>404 — Page introuvable | La Villa Coliving</title>');
+  html = html.replace('</head>', '    <meta name="robots" content="noindex, follow" />\n  </head>');
+  await fs.writeFile(path.join(DIST_DIR, '404.html'), html, 'utf-8');
+  console.log('  📄 Wrote fallback dist/404.html (SPA shell + noindex)');
+}
+
 async function main() {
   console.log('\n🔧 Post-build: injecting pre-rendered content + SEO tags...\n');
 
@@ -216,6 +244,7 @@ async function main() {
     await fs.access(PRERENDERED_DIR);
   } catch {
     console.log('  ⚠️  No dist/prerendered/ directory — skipping injection.');
+    await writeFallback404(indexHtml);
     await fs.rename(indexPath, path.join(DIST_DIR, '_spa.html'));
     console.log('  📦 Renamed dist/index.html → dist/_spa.html');
     process.exit(0);
@@ -241,6 +270,7 @@ async function main() {
 
   if (htmlFiles.length === 0) {
     console.log('  ⚠️  No pre-rendered HTML files found — skipping injection.');
+    await writeFallback404(indexHtml);
     await fs.rename(indexPath, path.join(DIST_DIR, '_spa.html'));
     console.log('  📦 Renamed dist/index.html → dist/_spa.html');
     process.exit(0);
@@ -248,6 +278,7 @@ async function main() {
 
   let successCount = 0;
   let seoTagCount = 0;
+  const skippedFiles = [];
 
   for (const file of htmlFiles) {
     const filePath = path.join(PRERENDERED_DIR, file);
@@ -257,6 +288,7 @@ async function main() {
     const rootContent = extractRootContent(prerenderedHtml);
     if (!rootContent || rootContent.trim().length < 50) {
       console.log(`  ⚠️  ${file}: No substantial #root content found — skipping`);
+      skippedFiles.push(file);
       continue;
     }
 
@@ -267,6 +299,8 @@ async function main() {
     const destFile = `/prerendered/${file}`;
     const route = routeMap.get(destFile) || `/${file.replace('.html', '').replace(/-/g, '/')}`;
     const isEnglish = route.startsWith('/en');
+    // 404.html has no rewrite (served by Vercel on any unknown URL): no canonical/hreflang/OG
+    const is404 = file === '404.html';
 
     // Start with a fresh copy of index.html (correct asset references)
     let result = indexHtml;
@@ -295,7 +329,7 @@ async function main() {
     }
 
     // 4. Build and inject all SEO tags (canonical, OG, Twitter, hreflang, JSON-LD)
-    const seoHeadTags = buildSeoHeadTags(seo, route);
+    const seoHeadTags = is404 ? buildSeoHeadTags404(seo) : buildSeoHeadTags(seo, route);
     result = result.replace('</head>', `    ${seoHeadTags}\n  </head>`);
     const tagCount = (seoHeadTags.match(/<(meta|link|script)/g) || []).length;
     seoTagCount += tagCount;
@@ -312,6 +346,23 @@ async function main() {
     const wordCount = textContent.split(' ').filter(w => w.length > 2).length;
     console.log(`  ✅ ${file} → ${wordCount} words + ${tagCount} SEO tags`);
     successCount++;
+  }
+
+  // FAIL-FAST: a skipped file would ship a raw prerendered page referencing the
+  // asset hashes of an OLD build (broken CSS/JS). Better to fail the deploy.
+  if (skippedFiles.length > 0) {
+    console.error(`\n❌ ${skippedFiles.length}/${htmlFiles.length} prerendered files had no substantial #root content: ${skippedFiles.join(', ')}`);
+    console.error('   Failing the build — regenerate the prerendered pages (npm run prerender) before deploying.');
+    process.exit(1);
+  }
+
+  // Serve the prerendered 404 page as Vercel's custom 404 (real HTTP 404 status
+  // for any path matching neither a static file nor a rewrite)
+  try {
+    await fs.copyFile(path.join(PRERENDERED_DIR, '404.html'), path.join(DIST_DIR, '404.html'));
+    console.log('\n  📄 Copied prerendered 404.html → dist/404.html (custom 404 page)');
+  } catch {
+    await writeFallback404(indexHtml);
   }
 
   // CRITICAL: Rename dist/index.html → dist/_spa.html

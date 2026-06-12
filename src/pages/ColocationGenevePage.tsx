@@ -90,7 +90,15 @@ export function ColocationGenevePage() {
 
   // Freshness signal for the money page. Bump PAGE_LAST_UPDATED whenever the page
   // content is meaningfully refreshed so Google sees a recent dateModified.
-  const PAGE_LAST_UPDATED = "2026-06-09";
+  const PAGE_LAST_UPDATED = "2026-06-12";
+  // First commit of this page in the repo (git log --diff-filter=A) — verifiable.
+  const PAGE_FIRST_PUBLISHED = "2026-02-17";
+  // timeZone UTC : une chaîne YYYY-MM-DD est parsée à minuit UTC — sans cette
+  // option, les visiteurs en UTC− verraient la veille (incohérent avec le JSON-LD).
+  const lastUpdatedLabel = new Date(PAGE_LAST_UPDATED).toLocaleDateString(
+    language === "en" ? "en-US" : "fr-FR",
+    { year: "numeric", month: "long", day: "numeric", timeZone: "UTC" },
+  );
   const webPageSchema = {
     "@context": "https://schema.org",
     "@type": "WebPage",
@@ -99,6 +107,7 @@ export function ColocationGenevePage() {
       ? "Shared Housing near Geneva — All-Inclusive Rooms"
       : "Colocation Genève — chambres meublées tout inclus",
     inLanguage: language === "en" ? "en" : "fr",
+    datePublished: PAGE_FIRST_PUBLISHED,
     dateModified: PAGE_LAST_UPDATED,
   };
 
@@ -177,6 +186,10 @@ export function ColocationGenevePage() {
           </p>
           <p className="mt-1 text-xs text-[#78716C]">
             {language === "en" ? "Reply within 48h · No application fee" : "Réponse sous 48h · Aucun frais de dossier"}
+          </p>
+          {/* Fraîcheur visible (cohérente avec le dateModified du JSON-LD WebPage) */}
+          <p className="mt-1 text-xs text-[#A8A29E]">
+            {language === "en" ? `Updated ${lastUpdatedLabel}` : `Mis à jour le ${lastUpdatedLabel}`}
           </p>
 
           {/* Trust badges */}
@@ -943,7 +956,18 @@ export function ColocationGenevePage() {
             </p>
             <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
               {blogPosts.map((post) => {
-                const title = (language === "en" && post.title_en) ? post.title_en : post.title_fr;
+                // Ancres dé-optimisées depuis le PILIER : jamais « colocation (à) Genève »
+                // en texte cliquable vers un satellite (règle hub & spoke, Phase 2).
+                const ANCHOR_OVERRIDES: Record<string, { fr: string; en: string }> = {
+                  "trouver-colocation-geneve-frontalier": {
+                    fr: "Comment chercher et éviter les arnaques (guide 2026)",
+                    en: "How to search and avoid scams (2026 guide)",
+                  },
+                };
+                const override = ANCHOR_OVERRIDES[post.slug];
+                const title = override
+                  ? (language === "en" ? override.en : override.fr)
+                  : (language === "en" && post.title_en) ? post.title_en : post.title_fr;
                 return (
                   <Link
                     to={`/blog/${post.slug}`}

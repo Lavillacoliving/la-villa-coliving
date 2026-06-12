@@ -48,12 +48,40 @@ const STATIC_ROUTES_FR = [
   '/leloft',
   '/lelodge',
   '/investisseurs',
+  '/mentions-legales',
+  '/politique-de-confidentialite',
 ];
 
 // English versions of all static pages (same paths with /en prefix)
 const STATIC_ROUTES_EN = STATIC_ROUTES_FR.map(r => r === '/' ? '/en' : `/en${r}`);
 
 const STATIC_ROUTES = [...STATIC_ROUTES_FR, ...STATIC_ROUTES_EN];
+
+// Routes rendered to HTML but NOT added to vercel.json rewrites nor sitemap.
+// '/404' renders the React NotFoundPage; inject-prerendered.mjs copies it to
+// dist/404.html, which Vercel serves with a real HTTP 404 status for any path
+// that matches neither a static file nor a rewrite.
+const EXTRA_RENDER_ROUTES = ['/404'];
+
+// Client-only routes (no prerendered HTML) that must keep receiving the SPA shell.
+// This replaces the old '/(.*)' catch-all: anything NOT listed here, not a static
+// file and not a prerendered rewrite now falls through to 404.html (real 404).
+// ⚠️ Keep in sync with the non-prerendered routes of src/App.tsx.
+// The /blog/:slug fallbacks come AFTER the per-slug prerendered rewrites (order
+// matters): known articles keep their prerendered HTML, but an article published
+// outside the n8n flow (e.g. dashboard "Publier") renders client-side immediately
+// instead of 404ing until the next prerender run. They also cap the blast radius
+// if the blog rewrites ever got wiped (Supabase outage during a prerender run).
+const SPA_FALLBACK_REWRITES = [
+  { source: '/portail', destination: '/_spa.html' },
+  { source: '/portail/:path*', destination: '/_spa.html' },
+  { source: '/dashboard', destination: '/_spa.html' },
+  { source: '/dashboard/:path*', destination: '/_spa.html' },
+  { source: '/reset-password', destination: '/_spa.html' },
+  { source: '/mon-espace', destination: '/_spa.html' },
+  { source: '/blog/:slug', destination: '/_spa.html' },
+  { source: '/en/blog/:slug', destination: '/_spa.html' },
+];
 
 // ─────────────────────────────────────────────
 // Supabase: fetch published blog slugs
@@ -77,23 +105,41 @@ function httpsGet(url, headers) {
   });
 }
 
+// Filled by fetchBlogSlugs(): '/blog/<slug>' → 'YYYY-MM-DD' (updated_at, fallback
+// published_at). Used by generateSitemap so <lastmod> reflects the real edit date
+// instead of the build date (real freshness signal for Google).
+const BLOG_LASTMOD = new Map();
+
 async function fetchBlogSlugs() {
   console.log('  📡 Fetching published blog slugs from Supabase...');
   try {
-    const url = `${SUPABASE_URL}/rest/v1/blog_posts?select=slug&is_published=eq.true&order=published_at.desc`;
+    const url = `${SUPABASE_URL}/rest/v1/blog_posts?select=slug,updated_at,published_at&is_published=eq.true&order=published_at.desc`;
     const posts = await httpsGet(url, {
       'apikey': SUPABASE_ANON_KEY,
       'Accept': 'application/json',
     });
+    for (const p of posts) {
+      const lastmod = (p.updated_at || p.published_at || '').slice(0, 10);
+      if (lastmod) BLOG_LASTMOD.set(`/blog/${p.slug}`, lastmod);
+    }
     const slugsFr = posts.map(p => `/blog/${p.slug}`);
     const slugsEn = posts.map(p => `/en/blog/${p.slug}`);
     const slugs = [...slugsFr, ...slugsEn];
     console.log(`  📝 Found ${slugsFr.length} published articles (× 2 languages = ${slugs.length} routes)\n`);
+    // FAIL-FAST : depuis la liste blanche (plus de catch-all), continuer avec 0
+    // article détruirait les 80 rewrites blog + fichiers prerendered + sitemap,
+    // et la GH Action committerait/déploierait la destruction. Il y a toujours
+    // ≥ 1 article publié : 0 = panne (réseau, 5xx, ou policy RLS resserrée par
+    // erreur qui renvoie 200 + tableau vide).
+    if (slugsFr.length === 0) {
+      console.error('  ❌ 0 published article returned by Supabase — aborting to avoid wiping blog rewrites/prerender/sitemap.');
+      process.exit(1);
+    }
     return slugs;
   } catch (err) {
-    console.error(`  ⚠️  Failed to fetch blog slugs: ${err.message}`);
-    console.log('  ℹ️  Continuing with static routes only.\n');
-    return [];
+    console.error(`  ❌ Failed to fetch blog slugs: ${err.message}`);
+    console.error('  ❌ Aborting: continuing would wipe the 80 blog rewrites + prerendered files + sitemap entries.');
+    process.exit(1);
   }
 }
 
@@ -102,15 +148,8 @@ async function fetchBlogSlugs() {
 // ─────────────────────────────────────────────
 
 async function updateVercelJson(blogRoutes) {
-  console.log('  📦 Updating vercel.json with ALL rewrites (FR static + EN static + blog)...');
+  console.log('  📦 Updating vercel.json with ALL rewrites (FR static + EN static + blog + SPA fallbacks)...');
   const config = JSON.parse(await fs.readFile(VERCEL_JSON_PATH, 'utf-8'));
-
-  // Keep ONLY the catch-all — regenerate everything else from STATIC_ROUTES + blogRoutes
-  const catchAll = config.rewrites.find(r => r.source === '/(.*)');
-  if (!catchAll) {
-    console.error('  ❌ No catch-all rewrite found in vercel.json!');
-    return;
-  }
 
   // Generate FR static rewrites (auto from STATIC_ROUTES_FR — no more manual maintenance!)
   const frStaticRewrites = STATIC_ROUTES_FR.map(route => ({
@@ -130,11 +169,16 @@ async function updateVercelJson(blogRoutes) {
     destination: `/prerendered/${route.slice(1).replace(/\//g, '-')}.html`,
   }));
 
-  // Rebuild rewrites: FR static → EN static → blog → catch-all
-  config.rewrites = [...frStaticRewrites, ...enStaticRewrites, ...blogRewrites, catchAll];
+  // Rebuild rewrites: FR static → EN static → blog → SPA-only routes.
+  // No '/(.*)' catch-all anymore: unknown URLs fall through to dist/404.html,
+  // served by Vercel with a real HTTP 404 (fix soft-404 — Phase 1, 2026-06).
+  config.rewrites = [...frStaticRewrites, ...enStaticRewrites, ...blogRewrites, ...SPA_FALLBACK_REWRITES];
+
+  // '/tarifs/' must 308 to '/tarifs' instead of missing every rewrite and dying in 404
+  config.trailingSlash = false;
 
   await fs.writeFile(VERCEL_JSON_PATH, JSON.stringify(config, null, 2) + '\n', 'utf-8');
-  console.log(`  ✅ vercel.json updated: ${frStaticRewrites.length} FR static + ${enStaticRewrites.length} EN static + ${blogRewrites.length} blog rewrites\n`);
+  console.log(`  ✅ vercel.json updated: ${frStaticRewrites.length} FR static + ${enStaticRewrites.length} EN static + ${blogRewrites.length} blog + ${SPA_FALLBACK_REWRITES.length} SPA fallback rewrites\n`);
 }
 
 // ─────────────────────────────────────────────
@@ -385,18 +429,30 @@ async function renderRoute(browser, route) {
     const isEnRoute = route === '/en' || route.startsWith('/en/');
     html = html.replace(/<html\s+lang="[^"]*"/, `<html lang="${isEnRoute ? 'en' : 'fr'}"`);
 
+    // The 404 page must carry neither canonical nor breadcrumb (noindex, served on any unknown URL)
+    const is404Route = route === '/404';
+
     // Inject canonical URL (SEO: tells Google this is the authoritative URL)
     const canonicalUrl = `${SITE_URL}${route === '/' ? '' : route}`;
     const canonicalTag = `<link rel="canonical" href="${canonicalUrl}" />`;
-    if (!html.includes('rel="canonical"')) {
+    if (!is404Route && !html.includes('rel="canonical"')) {
       html = html.replace('</head>', `    ${canonicalTag}\n  </head>`);
     }
 
     // Inject BreadcrumbList JSON-LD (rich-snippet fil d'ariane sur 100 % des pages — audit P0-1, 2026-04-28).
-    const breadcrumbJsonLd = generateBreadcrumbJsonLd(route, html);
+    const breadcrumbJsonLd = is404Route ? null : generateBreadcrumbJsonLd(route, html);
     if (breadcrumbJsonLd && !html.includes('"@type":"BreadcrumbList"') && !html.includes('"@type": "BreadcrumbList"')) {
       const breadcrumbScript = `<script type="application/ld+json">${JSON.stringify(breadcrumbJsonLd)}</script>`;
       html = html.replace('</head>', `    ${breadcrumbScript}\n  </head>`);
+    }
+
+    // Guard: a near-empty render (missing dist/index.html, blank React mount...)
+    // must NEVER overwrite a good committed page. Smallest legit page ≈ 80 words (404).
+    const textContent = html.replace(/<[^>]*>/g, ' ').replace(/\s+/g, ' ');
+    const wordCount = textContent.split(' ').filter(w => w.length > 2).length;
+    if (wordCount < 50) {
+      console.error(`  ❌ ${route} → only ${wordCount} words (empty shell?) — NOT writing the file`);
+      return false;
     }
 
     // Save to public/prerendered/ (committed to git, served by Vercel)
@@ -406,11 +462,11 @@ async function renderRoute(browser, route) {
     await fs.mkdir(OUTPUT_DIR, { recursive: true });
     await fs.writeFile(outputPath, html, 'utf-8');
 
-    const textContent = html.replace(/<[^>]*>/g, ' ').replace(/\s+/g, ' ');
-    const wordCount = textContent.split(' ').filter(w => w.length > 2).length;
     console.log(`  ✅ ${route} → ${wordCount} words`);
+    return true;
   } catch (error) {
     console.error(`  ❌ ${route}: ${error.message}`);
+    return false;
   } finally {
     await page.close();
   }
@@ -464,6 +520,8 @@ const STATIC_PAGE_CONFIG = {
   '/candidature': { priority: '0.7', changefreq: 'monthly' },
   '/blog': { priority: '0.7', changefreq: 'weekly' },
   '/investisseurs': { priority: '0.6', changefreq: 'monthly' },
+  '/mentions-legales': { priority: '0.3', changefreq: 'yearly' },
+  '/politique-de-confidentialite': { priority: '0.3', changefreq: 'yearly' },
 };
 
 async function generateSitemap(blogSlugs) {
@@ -501,18 +559,19 @@ async function generateSitemap(blogSlugs) {
     entries.push(sitemapEntry(enRoute, frRoute, enRoute, enPriority, config.changefreq, today));
   }
 
-  // Blog articles (FR + EN) — only FR slugs, we generate both
+  // Blog articles (FR + EN) — only FR slugs, we generate both.
+  // lastmod = real updated_at from Supabase (fallback: build date).
   const frBlogSlugs = blogSlugs.filter(s => !s.startsWith('/en/'));
   if (frBlogSlugs.length > 0) {
     entries.push('\n  <!-- ═══ BLOG ARTICLES — FR ═══ -->');
     for (const slug of frBlogSlugs) {
       const enSlug = `/en${slug}`;
-      entries.push(sitemapEntry(slug, slug, enSlug, '0.6', 'monthly', today));
+      entries.push(sitemapEntry(slug, slug, enSlug, '0.6', 'monthly', BLOG_LASTMOD.get(slug) || today));
     }
     entries.push('\n  <!-- ═══ BLOG ARTICLES — EN ═══ -->');
     for (const slug of frBlogSlugs) {
       const enSlug = `/en${slug}`;
-      entries.push(sitemapEntry(enSlug, slug, enSlug, '0.5', 'monthly', today));
+      entries.push(sitemapEntry(enSlug, slug, enSlug, '0.5', 'monthly', BLOG_LASTMOD.get(slug) || today));
     }
   }
 
@@ -535,9 +594,21 @@ ${entries.join('\n')}
 async function main() {
   console.log('\n🚀 La Villa Coliving — Pre-rendering pipeline\n');
 
+  // Step 0: dist/index.html must exist (vite build first). Without it, the local
+  // server would serve empty 404 bodies and every render would be a blank shell.
+  // (After build:local, inject renames it to _spa.html — re-run vite build first.)
+  try {
+    await fs.access(path.join(DIST_DIR, 'index.html'));
+  } catch {
+    console.error('❌ dist/index.html not found — run "vite build" first (npm run build:local does it in order).');
+    process.exit(1);
+  }
+
   // Step 1: Fetch blog slugs from Supabase
   const blogRoutes = await fetchBlogSlugs();
-  const allRoutes = [...STATIC_ROUTES, ...blogRoutes];
+  // EXTRA_RENDER_ROUTES ('/404') is rendered + kept by cleanup, but excluded
+  // from updateVercelJson and generateSitemap (no rewrite, no sitemap entry).
+  const allRoutes = [...STATIC_ROUTES, ...blogRoutes, ...EXTRA_RENDER_ROUTES];
 
   // Step 2: Update vercel.json (always run — EN static routes + blog routes)
   await updateVercelJson(blogRoutes);
@@ -563,12 +634,21 @@ async function main() {
   // Step 5: Pre-render all pages
   const server = await startServer();
 
+  const failedRoutes = [];
   for (const route of allRoutes) {
-    await renderRoute(browser, route);
+    const ok = await renderRoute(browser, route);
+    if (!ok) failedRoutes.push(route);
   }
 
   await browser.close();
   server.close();
+
+  // FAIL-FAST: a partial render must not be committed/deployed by the Action.
+  if (failedRoutes.length > 0) {
+    console.error(`\n❌ ${failedRoutes.length}/${allRoutes.length} routes failed to render: ${failedRoutes.join(', ')}`);
+    console.error('   Nothing committed — fix the issue and re-run.');
+    process.exit(1);
+  }
 
   console.log(`\n🎉 Pre-rendering complete! ${allRoutes.length} pages saved to public/prerendered/`);
   console.log('  💡 Commit all changes (including vercel.json) and push to deploy.\n');
