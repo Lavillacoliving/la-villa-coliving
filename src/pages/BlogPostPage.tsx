@@ -15,9 +15,11 @@ interface Post {
   title_fr:string; title_en:string|null;
   excerpt_fr:string; excerpt_en:string|null;
   content_fr:string; content_en:string|null;
+  meta_description_fr:string|null; meta_description_en:string|null;
   author:string; category:string;
   image_url:string|null;
   read_time_min:number; published_at:string;
+  updated_at:string|null;
   tags:string[];
 }
 
@@ -176,6 +178,10 @@ export function BlogPostPage() {
   const title = (language==="en"&&post.title_en)?post.title_en:post.title_fr;
   const excerpt = (language==="en"&&post.excerpt_en)?post.excerpt_en:post.excerpt_fr;
   const content = (language==="en"&&post.content_en)?post.content_en:post.content_fr;
+  // Meta description dédiée si renseignée en base (optimisée SEO), sinon excerpt
+  const metaDescription = language==="en"
+    ? (post.meta_description_en || excerpt)
+    : (post.meta_description_fr || excerpt);
   const fmtD = (d:string) => new Date(d).toLocaleDateString(language==="en"?"en-US":"fr-FR",{year:"numeric",month:"long",day:"numeric"});
 
   const L = language === "en" ? "en" : "fr";
@@ -258,7 +264,7 @@ export function BlogPostPage() {
       },
     },
     datePublished: post.published_at,
-    dateModified: post.published_at,
+    dateModified: post.updated_at || post.published_at,
     mainEntityOfPage: {
       "@type": "WebPage",
       "@id": `https://www.lavillacoliving.com/blog/${post.slug}`,
@@ -272,7 +278,7 @@ export function BlogPostPage() {
     <main className="relative pt-16">
       <SEO
         title={title}
-        description={excerpt}
+        description={metaDescription}
         url={`https://www.lavillacoliving.com/blog/${post.slug}`}
         image={post.image_url || undefined}
         type="article"

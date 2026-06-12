@@ -98,14 +98,23 @@ function httpsGet(url, headers) {
   });
 }
 
+// Filled by fetchBlogSlugs(): '/blog/<slug>' → 'YYYY-MM-DD' (updated_at, fallback
+// published_at). Used by generateSitemap so <lastmod> reflects the real edit date
+// instead of the build date (real freshness signal for Google).
+const BLOG_LASTMOD = new Map();
+
 async function fetchBlogSlugs() {
   console.log('  📡 Fetching published blog slugs from Supabase...');
   try {
-    const url = `${SUPABASE_URL}/rest/v1/blog_posts?select=slug&is_published=eq.true&order=published_at.desc`;
+    const url = `${SUPABASE_URL}/rest/v1/blog_posts?select=slug,updated_at,published_at&is_published=eq.true&order=published_at.desc`;
     const posts = await httpsGet(url, {
       'apikey': SUPABASE_ANON_KEY,
       'Accept': 'application/json',
     });
+    for (const p of posts) {
+      const lastmod = (p.updated_at || p.published_at || '').slice(0, 10);
+      if (lastmod) BLOG_LASTMOD.set(`/blog/${p.slug}`, lastmod);
+    }
     const slugsFr = posts.map(p => `/blog/${p.slug}`);
     const slugsEn = posts.map(p => `/en/blog/${p.slug}`);
     const slugs = [...slugsFr, ...slugsEn];
@@ -525,18 +534,19 @@ async function generateSitemap(blogSlugs) {
     entries.push(sitemapEntry(enRoute, frRoute, enRoute, enPriority, config.changefreq, today));
   }
 
-  // Blog articles (FR + EN) — only FR slugs, we generate both
+  // Blog articles (FR + EN) — only FR slugs, we generate both.
+  // lastmod = real updated_at from Supabase (fallback: build date).
   const frBlogSlugs = blogSlugs.filter(s => !s.startsWith('/en/'));
   if (frBlogSlugs.length > 0) {
     entries.push('\n  <!-- ═══ BLOG ARTICLES — FR ═══ -->');
     for (const slug of frBlogSlugs) {
       const enSlug = `/en${slug}`;
-      entries.push(sitemapEntry(slug, slug, enSlug, '0.6', 'monthly', today));
+      entries.push(sitemapEntry(slug, slug, enSlug, '0.6', 'monthly', BLOG_LASTMOD.get(slug) || today));
     }
     entries.push('\n  <!-- ═══ BLOG ARTICLES — EN ═══ -->');
     for (const slug of frBlogSlugs) {
       const enSlug = `/en${slug}`;
-      entries.push(sitemapEntry(enSlug, slug, enSlug, '0.5', 'monthly', today));
+      entries.push(sitemapEntry(enSlug, slug, enSlug, '0.5', 'monthly', BLOG_LASTMOD.get(slug) || today));
     }
   }
 
