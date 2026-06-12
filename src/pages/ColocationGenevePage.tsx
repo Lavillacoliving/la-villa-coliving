@@ -93,9 +93,11 @@ export function ColocationGenevePage() {
   const PAGE_LAST_UPDATED = "2026-06-12";
   // First commit of this page in the repo (git log --diff-filter=A) — verifiable.
   const PAGE_FIRST_PUBLISHED = "2026-02-17";
+  // timeZone UTC : une chaîne YYYY-MM-DD est parsée à minuit UTC — sans cette
+  // option, les visiteurs en UTC− verraient la veille (incohérent avec le JSON-LD).
   const lastUpdatedLabel = new Date(PAGE_LAST_UPDATED).toLocaleDateString(
     language === "en" ? "en-US" : "fr-FR",
-    { year: "numeric", month: "long", day: "numeric" },
+    { year: "numeric", month: "long", day: "numeric", timeZone: "UTC" },
   );
   const webPageSchema = {
     "@context": "https://schema.org",

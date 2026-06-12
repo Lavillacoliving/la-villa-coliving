@@ -479,6 +479,14 @@
     {
       "source": "/mon-espace",
       "destination": "/_spa.html"
+    },
+    {
+      "source": "/blog/:slug",
+      "destination": "/_spa.html"
+    },
+    {
+      "source": "/en/blog/:slug",
+      "destination": "/_spa.html"
     }
   ],
   "trailingSlash": false,

@@ -67,6 +67,11 @@ const EXTRA_RENDER_ROUTES = ['/404'];
 // This replaces the old '/(.*)' catch-all: anything NOT listed here, not a static
 // file and not a prerendered rewrite now falls through to 404.html (real 404).
 // ⚠️ Keep in sync with the non-prerendered routes of src/App.tsx.
+// The /blog/:slug fallbacks come AFTER the per-slug prerendered rewrites (order
+// matters): known articles keep their prerendered HTML, but an article published
+// outside the n8n flow (e.g. dashboard "Publier") renders client-side immediately
+// instead of 404ing until the next prerender run. They also cap the blast radius
+// if the blog rewrites ever got wiped (Supabase outage during a prerender run).
 const SPA_FALLBACK_REWRITES = [
   { source: '/portail', destination: '/_spa.html' },
   { source: '/portail/:path*', destination: '/_spa.html' },
@@ -74,6 +79,8 @@ const SPA_FALLBACK_REWRITES = [
   { source: '/dashboard/:path*', destination: '/_spa.html' },
   { source: '/reset-password', destination: '/_spa.html' },
   { source: '/mon-espace', destination: '/_spa.html' },
+  { source: '/blog/:slug', destination: '/_spa.html' },
+  { source: '/en/blog/:slug', destination: '/_spa.html' },
 ];
 
 // ─────────────────────────────────────────────
@@ -119,11 +126,20 @@ async function fetchBlogSlugs() {
     const slugsEn = posts.map(p => `/en/blog/${p.slug}`);
     const slugs = [...slugsFr, ...slugsEn];
     console.log(`  📝 Found ${slugsFr.length} published articles (× 2 languages = ${slugs.length} routes)\n`);
+    // FAIL-FAST : depuis la liste blanche (plus de catch-all), continuer avec 0
+    // article détruirait les 80 rewrites blog + fichiers prerendered + sitemap,
+    // et la GH Action committerait/déploierait la destruction. Il y a toujours
+    // ≥ 1 article publié : 0 = panne (réseau, 5xx, ou policy RLS resserrée par
+    // erreur qui renvoie 200 + tableau vide).
+    if (slugsFr.length === 0) {
+      console.error('  ❌ 0 published article returned by Supabase — aborting to avoid wiping blog rewrites/prerender/sitemap.');
+      process.exit(1);
+    }
     return slugs;
   } catch (err) {
-    console.error(`  ⚠️  Failed to fetch blog slugs: ${err.message}`);
-    console.log('  ℹ️  Continuing with static routes only.\n');
-    return [];
+    console.error(`  ❌ Failed to fetch blog slugs: ${err.message}`);
+    console.error('  ❌ Aborting: continuing would wipe the 80 blog rewrites + prerendered files + sitemap entries.');
+    process.exit(1);
   }
 }
 
@@ -430,6 +446,15 @@ async function renderRoute(browser, route) {
       html = html.replace('</head>', `    ${breadcrumbScript}\n  </head>`);
     }
 
+    // Guard: a near-empty render (missing dist/index.html, blank React mount...)
+    // must NEVER overwrite a good committed page. Smallest legit page ≈ 80 words (404).
+    const textContent = html.replace(/<[^>]*>/g, ' ').replace(/\s+/g, ' ');
+    const wordCount = textContent.split(' ').filter(w => w.length > 2).length;
+    if (wordCount < 50) {
+      console.error(`  ❌ ${route} → only ${wordCount} words (empty shell?) — NOT writing the file`);
+      return false;
+    }
+
     // Save to public/prerendered/ (committed to git, served by Vercel)
     const fileName = route === '/' ? 'index.html' : `${route.slice(1).replace(/\//g, '-')}.html`;
     const outputPath = path.join(OUTPUT_DIR, fileName);
@@ -437,11 +462,11 @@ async function renderRoute(browser, route) {
     await fs.mkdir(OUTPUT_DIR, { recursive: true });
     await fs.writeFile(outputPath, html, 'utf-8');
 
-    const textContent = html.replace(/<[^>]*>/g, ' ').replace(/\s+/g, ' ');
-    const wordCount = textContent.split(' ').filter(w => w.length > 2).length;
     console.log(`  ✅ ${route} → ${wordCount} words`);
+    return true;
   } catch (error) {
     console.error(`  ❌ ${route}: ${error.message}`);
+    return false;
   } finally {
     await page.close();
   }
@@ -569,6 +594,16 @@ ${entries.join('\n')}
 async function main() {
   console.log('\n🚀 La Villa Coliving — Pre-rendering pipeline\n');
 
+  // Step 0: dist/index.html must exist (vite build first). Without it, the local
+  // server would serve empty 404 bodies and every render would be a blank shell.
+  // (After build:local, inject renames it to _spa.html — re-run vite build first.)
+  try {
+    await fs.access(path.join(DIST_DIR, 'index.html'));
+  } catch {
+    console.error('❌ dist/index.html not found — run "vite build" first (npm run build:local does it in order).');
+    process.exit(1);
+  }
+
   // Step 1: Fetch blog slugs from Supabase
   const blogRoutes = await fetchBlogSlugs();
   // EXTRA_RENDER_ROUTES ('/404') is rendered + kept by cleanup, but excluded
@@ -599,12 +634,21 @@ async function main() {
   // Step 5: Pre-render all pages
   const server = await startServer();
 
+  const failedRoutes = [];
   for (const route of allRoutes) {
-    await renderRoute(browser, route);
+    const ok = await renderRoute(browser, route);
+    if (!ok) failedRoutes.push(route);
   }
 
   await browser.close();
   server.close();
+
+  // FAIL-FAST: a partial render must not be committed/deployed by the Action.
+  if (failedRoutes.length > 0) {
+    console.error(`\n❌ ${failedRoutes.length}/${allRoutes.length} routes failed to render: ${failedRoutes.join(', ')}`);
+    console.error('   Nothing committed — fix the issue and re-run.');
+    process.exit(1);
+  }
 
   console.log(`\n🎉 Pre-rendering complete! ${allRoutes.length} pages saved to public/prerendered/`);
   console.log('  💡 Commit all changes (including vercel.json) and push to deploy.\n');

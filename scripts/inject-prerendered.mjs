@@ -278,6 +278,7 @@ async function main() {
 
   let successCount = 0;
   let seoTagCount = 0;
+  const skippedFiles = [];
 
   for (const file of htmlFiles) {
     const filePath = path.join(PRERENDERED_DIR, file);
@@ -287,6 +288,7 @@ async function main() {
     const rootContent = extractRootContent(prerenderedHtml);
     if (!rootContent || rootContent.trim().length < 50) {
       console.log(`  ⚠️  ${file}: No substantial #root content found — skipping`);
+      skippedFiles.push(file);
       continue;
     }
 
@@ -344,6 +346,14 @@ async function main() {
     const wordCount = textContent.split(' ').filter(w => w.length > 2).length;
     console.log(`  ✅ ${file} → ${wordCount} words + ${tagCount} SEO tags`);
     successCount++;
+  }
+
+  // FAIL-FAST: a skipped file would ship a raw prerendered page referencing the
+  // asset hashes of an OLD build (broken CSS/JS). Better to fail the deploy.
+  if (skippedFiles.length > 0) {
+    console.error(`\n❌ ${skippedFiles.length}/${htmlFiles.length} prerendered files had no substantial #root content: ${skippedFiles.join(', ')}`);
+    console.error('   Failing the build — regenerate the prerendered pages (npm run prerender) before deploying.');
+    process.exit(1);
   }
 
   // Serve the prerendered 404 page as Vercel's custom 404 (real HTTP 404 status

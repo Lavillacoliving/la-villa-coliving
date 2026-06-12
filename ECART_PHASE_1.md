@@ -43,6 +43,22 @@
 - **Bandeau cookies** : GA4 se charge inconditionnellement et AUCUN bandeau de consentement n'existe — point de conformité ePrivacy/CNIL à trancher (impact mesure d'audience si ajouté). Mentionné honnêtement dans la politique de confidentialité.
 - Ping sitemap Google/Bing dans l'Action : endpoints décommissionnés (inoffensif).
 
+## Revue adversariale post-implémentation (3 lentilles × vérification, 13 findings confirmés)
+
+**Corrigé sur la branche (LOT F)** :
+- 🟠 *Panne Supabase pendant un prerender = destruction des 80 rewrites/fichiers blog committée et déployée automatiquement* (le catch-all amortissait ce scénario avant) → **fail-fast** : le script s'arrête (exit 1, l'Action échoue sans rien committer) sur erreur de fetch OU sur 0 article retourné.
+- 🟠 *Article publié via le dashboard (« Publier ») = 404 dur jusqu'au prochain run de l'Action* → fallbacks `/blog/:slug` et `/en/blog/:slug` vers le shell SPA en fin de rewrites : les articles connus restent prérendus, un nouvel article s'affiche immédiatement côté client. (Effet secondaire assumé : les URLs poubelle sous `/blog/` restent en soft-200 — périmètre contenu ; les fantômes Wix, eux, sont hors `/blog/`.)
+- 🟠 *`npm run prerender` lancé seul sans `dist/index.html` écraserait les 115 pages par des coquilles vides (exit 0)* → garde `fs.access(dist/index.html)` + une page rendue < 50 mots n'est jamais écrite + tout échec de rendu fait échouer le script.
+- 🟡 *inject : skip silencieux d'une page cassée* → le build échoue désormais si un fichier prérendu n'a pas de contenu substantiel.
+- 🟡 *« Mis à jour le » décalé d'un jour pour les visiteurs UTC−* → `timeZone: "UTC"`.
+
+**Documenté, traité ailleurs ou backlog** :
+- 🔴 *Placeholders légaux committés* → c'est le gate de merge #1 ci-dessous (connu, voulu).
+- 🟡 404 servi en français sur les URLs `/en/*` inconnues (l'anglais revient à l'hydratation ; page noindex statut 404 → zéro impact SEO) — backlog optionnel.
+- 🟡 `lastmod` des pages statiques = date de build (pré-existant ; le blog est corrigé) — backlog Phase 4.
+- 🟡 Liste blanche à maintenir en phase avec App.tsx (garde-fou CI possible) — backlog ; commentaire de synchro en place.
+- 🟡 `build:local` : dist/ en retard d'une génération (zéro impact prod, preview locale non représentative des statuts — d'où la checklist sur preview Vercel).
+
 ## Décisions / inputs attendus de Jérôme avant MERGE
 1. **Pages légales** : fournir raison sociale, forme juridique, SIREN/SIRET, ville RCS, adresse du siège, directeur de la publication, durée de conservation des candidatures (proposition : 2 ans). Les pages affichent des placeholders `[À COMPLÉTER]` très visibles — elles ne doivent pas partir en prod en l'état.
 2. **Vérification GSC fraîche** (10 min) : Search Console → Indexation → Pages → exporter les URLs « Explorée/Détectée, actuellement non indexée » + Performances → Pages (28 j). Me transmettre les exports : je vérifie qu'aucune URL à impressions ne passerait en 404 (sinon j'ajoute des redirects ciblés).
