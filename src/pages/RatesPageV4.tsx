@@ -1,6 +1,6 @@
 import { useLanguage } from "@/contexts/LanguageContext";
 import { Check, ArrowRight, Home, Sparkles, X, Star, Droplets } from "lucide-react";
-import { Link } from "react-router-dom";
+import { LocalizedLink } from "@/components/LocalizedLink";
 import { Helmet } from "react-helmet";
 import { SEO } from "@/components/SEO";
 import { FaqSection } from "@/components/FaqSection";
@@ -722,22 +722,22 @@ export function RatesPageV4() {
                 ? "Not a promo — it's our model. We rent our houses directly, with no agency, so there are no move-in fees to charge."
                 : "Pas une promo — notre modèle. On loue nos maisons en direct, sans agence : il n'y a donc aucun frais d'entrée à facturer."}
             </p>
-            <Link
+            <LocalizedLink
               to="/candidature"
               className="mt-6 inline-flex items-center gap-2 px-8 py-4 bg-[#D4A574] text-white font-semibold rounded-lg hover:bg-[#E0BB8A] transition-colors duration-300"
             >
               {language === "en" ? "Apply — it's free" : "Candidater — c'est gratuit"}
               <ArrowRight className="w-5 h-5" />
-            </Link>
+            </LocalizedLink>
             <p className="mt-5 text-sm">
-              <Link
+              <LocalizedLink
                 to={language === "en" ? "/en/blog/coliving-frais-dossier-geneve-annemasse" : "/blog/coliving-frais-dossier-geneve-annemasse"}
                 className="text-[#D4A574] hover:text-[#E0BB8A] underline underline-offset-4 transition-colors"
               >
                 {language === "en"
                   ? "Application fees in a flat-share: what the law allows →"
                   : "Frais de dossier en colocation : ce que dit la loi →"}
-              </Link>
+              </LocalizedLink>
             </p>
           </div>
         </div>
@@ -797,12 +797,12 @@ export function RatesPageV4() {
                     </span>
                   </div>
 
-                  <Link
+                  <LocalizedLink
                     to={`/${house.name.toLowerCase().replace(/\s+/g, "")}`}
                     className="block w-full py-4 bg-[#1C1917] text-white text-center font-bold hover:bg-[#D4A574] transition-colors"
                   >
                     {language === "en" ? "VIEW DETAILS" : "VOIR LES DÉTAILS"}
-                  </Link>
+                  </LocalizedLink>
                 </div>
               </div>
             ))}
@@ -958,13 +958,13 @@ export function RatesPageV4() {
           <p className="text-sm text-[#78716C] mb-6">
             — Marie L., {language === "en" ? "Consultant, cross-border worker" : "Consultante, frontalière"}
           </p>
-          <Link
+          <LocalizedLink
             to="/colocation-geneve"
             className="inline-flex items-center gap-2 text-[#D4A574] font-medium hover:underline"
           >
             {language === "en" ? "Learn more about shared housing near Geneva" : "En savoir plus sur la colocation près de Genève"}
             <ArrowRight className="w-4 h-4" />
-          </Link>
+          </LocalizedLink>
         </div>
       </section>
 
@@ -996,13 +996,13 @@ export function RatesPageV4() {
                 : `Économisez ${monthlySavings} CHF/mois et rejoignez 150+ colivers heureux. Places limitées pour ${monthFr}.`;
             })()}
           </p>
-          <Link
+          <LocalizedLink
             to="/candidature"
             className="inline-flex items-center gap-2 px-8 py-4 bg-white text-[#D4A574] font-bold hover:bg-[#1C1917] hover:text-white transition-colors"
           >
             {language === "en" ? "APPLY NOW" : "CANDIDATER"}
             <ArrowRight className="w-5 h-5" />
-          </Link>
+          </LocalizedLink>
         </div>
       </section>
     </main>

@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom";
+import { LocalizedLink } from "@/components/LocalizedLink";
 import { useState } from "react";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { SEO } from "@/components/SEO";
@@ -96,19 +96,19 @@ export function ChambreLouerAnnemassePage() {
               : "29 chambres meublées dans 3 maisons design à Annemasse Agglo. Emménagez avec une valise — lit, bureau, fibre, charges, ménage 2x/semaine, piscine et salle de sport sont inclus."}
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Link
+            <LocalizedLink
               to="/candidature"
               className="inline-flex items-center gap-2 px-8 py-4 bg-[#1C1917] text-white font-semibold rounded-full hover:bg-[#44403C] transition-colors"
             >
               {language === "en" ? "Check availability" : "Voir les disponibilités"}
               <ArrowRight className="w-5 h-5" />
-            </Link>
-            <Link
+            </LocalizedLink>
+            <LocalizedLink
               to="/tarifs"
               className="inline-flex items-center gap-2 px-8 py-4 border-2 border-[#1C1917] text-[#1C1917] font-semibold rounded-full hover:bg-[#1C1917] hover:text-white transition-colors"
             >
               {language === "en" ? "See pricing" : "Voir les tarifs"}
-            </Link>
+            </LocalizedLink>
           </div>
         </div>
       </section>
@@ -237,13 +237,13 @@ export function ChambreLouerAnnemassePage() {
               ? "Annemasse station is the Léman Express terminus — direct train to Geneva Cornavin in 15 minutes, no transfer. Tram 17 TPG and direct buses also connect to central Geneva. Whether you commute daily or visit occasionally, our 3 houses are optimised for cross-border life."
               : "La gare d'Annemasse est le terminus du Léman Express — train direct Genève Cornavin en 15 minutes, sans correspondance. Le Tram 17 TPG et des bus directs desservent aussi le centre de Genève. Que vous fassiez le trajet quotidien ou occasionnellement, nos 3 maisons sont optimisées pour la vie frontalière."}
           </p>
-          <Link
+          <LocalizedLink
             to="/annemasse-colocation"
             className="inline-flex items-center gap-2 mt-8 text-[#D4A574] font-medium hover:underline"
           >
             {language === "en" ? "See full Annemasse coliving guide" : "Voir le guide complet colocation Annemasse"}
             <ArrowRight className="w-4 h-4" />
-          </Link>
+          </LocalizedLink>
         </div>
       </section>
 
@@ -354,13 +354,13 @@ export function ChambreLouerAnnemassePage() {
               ? "Disponibilités change weekly across our 29 rooms. Fill the form, we get back within 48h with the rooms that match your move-in date and profile."
               : "Les disponibilités évoluent chaque semaine sur nos 29 chambres. Remplissez le formulaire, on revient sous 48h avec les chambres qui matchent votre date d'emménagement et votre profil."}
           </p>
-          <Link
+          <LocalizedLink
             to="/candidature"
             className="inline-flex items-center gap-2 px-8 py-4 bg-white text-[#1C1917] font-semibold rounded-full hover:bg-gray-100 transition-colors"
           >
             {language === "en" ? "Apply now" : "Candidater maintenant"}
             <ArrowRight className="w-5 h-5" />
-          </Link>
+          </LocalizedLink>
         </div>
       </section>
 
@@ -371,25 +371,25 @@ export function ChambreLouerAnnemassePage() {
             {language === "en" ? "Related pages" : "Pages liées"}
           </p>
           <div className="flex flex-wrap gap-4 justify-center text-sm">
-            <Link to="/annemasse-colocation" className="text-[#1C1917] underline hover:text-[#D4A574]">
+            <LocalizedLink to="/annemasse-colocation" className="text-[#1C1917] underline hover:text-[#D4A574]">
               {language === "en" ? "Annemasse coliving guide" : "Guide colocation Annemasse"}
-            </Link>
+            </LocalizedLink>
             <span className="text-[#E7E5E4]">·</span>
-            <Link to="/colocation-geneve" className="text-[#1C1917] underline hover:text-[#D4A574]">
+            <LocalizedLink to="/colocation-geneve" className="text-[#1C1917] underline hover:text-[#D4A574]">
               {language === "en" ? "Shared housing Geneva" : "Colocation Genève"}
-            </Link>
+            </LocalizedLink>
             <span className="text-[#E7E5E4]">·</span>
-            <Link to="/nos-maisons" className="text-[#1C1917] underline hover:text-[#D4A574]">
+            <LocalizedLink to="/nos-maisons" className="text-[#1C1917] underline hover:text-[#D4A574]">
               {language === "en" ? "Our 3 houses" : "Nos 3 maisons"}
-            </Link>
+            </LocalizedLink>
             <span className="text-[#E7E5E4]">·</span>
-            <Link to="/lelodge" className="text-[#1C1917] underline hover:text-[#D4A574]">
+            <LocalizedLink to="/lelodge" className="text-[#1C1917] underline hover:text-[#D4A574]">
               {language === "en" ? "Le Lodge — 12 rooms Annemasse" : "Le Lodge — 12 chambres Annemasse"}
-            </Link>
+            </LocalizedLink>
             <span className="text-[#E7E5E4]">·</span>
-            <Link to="/tarifs" className="text-[#1C1917] underline hover:text-[#D4A574]">
+            <LocalizedLink to="/tarifs" className="text-[#1C1917] underline hover:text-[#D4A574]">
               {language === "en" ? "Pricing" : "Tarifs"}
-            </Link>
+            </LocalizedLink>
           </div>
           <Euro className="w-5 h-5 text-[#D4A574]/40 mx-auto mt-6" />
         </div>

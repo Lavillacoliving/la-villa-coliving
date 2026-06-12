@@ -1,6 +1,6 @@
 import { useLanguage } from "@/contexts/LanguageContext";
 import { Users, Zap, Heart, Check, ArrowRight, Star } from "lucide-react";
-import { Link } from "react-router-dom";
+import { LocalizedLink } from "@/components/LocalizedLink";
 import { SEO } from "@/components/SEO";
 import { FaqSection } from "@/components/FaqSection";
 import { colivingFaq } from "@/data/faq/colivingFaq";
@@ -84,7 +84,7 @@ export function ColivingPageV4() {
                 ? "Experience premium coliving in our beautifully designed houses"
                 : "Vis l'expérience coliving dans nos maisons magnifiquement designées"}
             </p>
-            <Link
+            <LocalizedLink
               to="/nos-maisons"
               className="inline-flex items-center gap-2 px-8 py-4 bg-white text-[#1C1917] font-bold hover:bg-[#D4A574] hover:text-white transition-colors"
             >
@@ -92,7 +92,7 @@ export function ColivingPageV4() {
                 ? "Explore Our Houses"
                 : "Découvrir Nos Maisons"}
               <ArrowRight className="w-5 h-5" />
-            </Link>
+            </LocalizedLink>
           </div>
         </div>
       </section>
@@ -245,7 +245,7 @@ export function ColivingPageV4() {
                 </p>
               </div>
 
-              <Link
+              <LocalizedLink
                 to="/nos-maisons"
                 className="inline-flex items-center gap-2 mt-10 px-8 py-4 bg-[#1C1917] text-white font-bold hover:bg-[#D4A574] transition-colors"
               >
@@ -253,7 +253,7 @@ export function ColivingPageV4() {
                   ? "Explore Our Houses"
                   : "Explorer Nos Maisons"}
                 <ArrowRight className="w-5 h-5" />
-              </Link>
+              </LocalizedLink>
             </div>
 
             <div className="relative">
@@ -323,7 +323,7 @@ export function ColivingPageV4() {
                 </div>
               </div>
 
-              <Link
+              <LocalizedLink
                 to="/candidature"
                 className="inline-flex items-center gap-2 text-[#D4A574] font-bold hover:text-[#1C1917] transition-colors"
               >
@@ -331,7 +331,7 @@ export function ColivingPageV4() {
                   ? "Join our community"
                   : "Rejoindre notre communauté"}
                 <ArrowRight className="w-5 h-5" />
-              </Link>
+              </LocalizedLink>
             </div>
           </div>
         </div>
@@ -377,13 +377,13 @@ export function ColivingPageV4() {
                 ))}
               </div>
 
-              <Link
+              <LocalizedLink
                 to="/candidature"
                 className="inline-flex items-center gap-2 mt-10 px-8 py-4 bg-[#D4A574] text-white font-bold hover:bg-[#1C1917] transition-colors"
               >
                 {language === "en" ? "Apply Now" : "Candidater"}
                 <ArrowRight className="w-5 h-5" />
-              </Link>
+              </LocalizedLink>
             </div>
           </div>
         </div>

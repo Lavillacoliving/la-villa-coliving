@@ -1,5 +1,7 @@
 import { useState, useEffect } from "react";
-import { useParams, useSearchParams, Link } from "react-router-dom";
+import { useParams, useSearchParams } from "react-router-dom";
+import { LocalizedLink } from "@/components/LocalizedLink";
+import { localizePath } from "@/lib/localizedPath";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { supabase } from "@/lib/supabase";
 import { Clock, Calendar, User, ArrowLeft, ArrowRight } from "lucide-react";
@@ -170,7 +172,7 @@ export function BlogPostPage() {
     <main className="relative pt-16">
       <div className="py-32 text-center">
         <p className="text-[#57534E] text-lg mb-4">{language==="en"?"Article not found":"Article introuvable"}</p>
-        <Link to="/blog" className="text-[#D4A574] hover:underline">{language==="en"?"Back to blog":"Retour au blog"}</Link>
+        <LocalizedLink to="/blog" className="text-[#D4A574] hover:underline">{language==="en"?"Back to blog":"Retour au blog"}</LocalizedLink>
       </div>
     </main>
   );
@@ -186,7 +188,7 @@ export function BlogPostPage() {
 
   const L = language === "en" ? "en" : "fr";
   // Localize language-neutral internal paths for the EN site (/x → /en/x).
-  const loc = (p: string) => (language === "en" && !p.startsWith("/en") ? (p === "/" ? "/en" : `/en${p}`) : p);
+  const loc = (p: string) => localizePath(p, language);
   const bucket = getIntentBucket(post.slug, post.category);
   const cta = CTA_COPY[bucket];
   const midSplit = splitForMidCta(content);
@@ -226,7 +228,7 @@ export function BlogPostPage() {
           : href;
         // Content stores language-neutral paths; on the EN site, prefix /en so
         // anglophone readers stay on EN pages (every FR route has an /en twin).
-        return <Link to={loc(internalPath)} className="text-[#D4A574] hover:underline">{children}</Link>;
+        return <LocalizedLink to={loc(internalPath)} className="text-[#D4A574] hover:underline">{children}</LocalizedLink>;
       }
       // External links open in new tab
       return <a href={href} className="text-[#D4A574] hover:underline" target="_blank" rel="noopener noreferrer">{children}</a>;
@@ -293,10 +295,10 @@ export function BlogPostPage() {
       </Helmet>
       <article className="py-16 lg:py-24">
         <div className="max-w-3xl mx-auto px-6">
-          <Link to="/blog" className="inline-flex items-center gap-2 text-[#57534E] hover:text-[#D4A574] mb-8 text-sm transition-colors">
+          <LocalizedLink to="/blog" className="inline-flex items-center gap-2 text-[#57534E] hover:text-[#D4A574] mb-8 text-sm transition-colors">
             <ArrowLeft className="w-4 h-4" />
             {language==="en"?"Back to blog":"Retour au blog"}
-          </Link>
+          </LocalizedLink>
           <span className="inline-block text-xs uppercase tracking-widest text-[#D4A574] font-medium mb-4">
             {CL[post.category]?.[language]||post.category}
           </span>
@@ -321,14 +323,14 @@ export function BlogPostPage() {
                 {/* Mid-article CTA — long reads only (>1500 words), message variant by intent bucket */}
                 <aside className="my-10 px-6 py-5 bg-[#FAF9F6] border border-[#E7E5E4] rounded-lg text-center">
                   <p className="text-[#1C1917] font-medium mb-2">{cta.mid.text[L]}</p>
-                  <Link
+                  <LocalizedLink
                     to={loc(cta.mid.to)}
                     onClick={() => trackCta("mid", cta.mid.to)}
                     className="inline-flex items-center gap-2 text-[#D4A574] font-semibold hover:underline"
                   >
                     {cta.mid.label[L]}
                     <ArrowRight className="w-4 h-4" />
-                  </Link>
+                  </LocalizedLink>
                 </aside>
                 <ReactMarkdown remarkPlugins={[remarkGfm]} components={mdComponents}>{midSplit[1]}</ReactMarkdown>
               </>
@@ -360,21 +362,21 @@ export function BlogPostPage() {
               : "29 chambres meublées tout inclus dès 1 380 CHF/mois — charges, fibre, ménage, piscine, gym, à 15 min de Genève. 0 frais de dossier, réponse sous 48 h."}
           </p>
           <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
-            <Link
+            <LocalizedLink
               to={loc(cta.primary.to)}
               onClick={() => trackCta("end", cta.primary.to)}
               className="inline-flex items-center gap-2 px-6 py-3 bg-[#D4A574] text-[#1C1917] text-sm font-semibold rounded-lg hover:bg-[#E0BB8A] transition-all duration-300"
             >
               {cta.primary[L]}
               <ArrowRight className="w-4 h-4" />
-            </Link>
-            <Link
+            </LocalizedLink>
+            <LocalizedLink
               to={loc(cta.secondary.to)}
               onClick={() => trackCta("end", cta.secondary.to)}
               className="inline-flex items-center gap-2 px-6 py-3 border border-[#E7E5E4] text-[#44403C] text-sm font-medium rounded-lg hover:border-[#D4A574] transition-all duration-300"
             >
               {cta.secondary[L]}
-            </Link>
+            </LocalizedLink>
           </div>
         </div>
       </section>
@@ -399,7 +401,7 @@ export function BlogPostPage() {
               { slug: "lelodge", labelFr: "Le Lodge", labelEn: "Le Lodge", img: "/images/le lodge.webp", descFr: "12 chambres · sauna · gym", descEn: "12 rooms · sauna · gym" },
               { slug: "leloft", labelFr: "Le Loft", labelEn: "Le Loft", img: "/images/le loft glamour.webp", descFr: "7 chambres · home cinéma", descEn: "7 rooms · home cinema" },
             ].map((h) => (
-              <Link
+              <LocalizedLink
                 key={h.slug}
                 to={language === "en" ? `/en/${h.slug}` : `/${h.slug}`}
                 className="group bg-white border border-[#E7E5E4] overflow-hidden hover:border-[#D4A574]/40 hover:shadow-lg transition-all"
@@ -413,7 +415,7 @@ export function BlogPostPage() {
                   </h3>
                   <p className="text-sm text-[#57534E]">{language === "en" ? h.descEn : h.descFr}</p>
                 </div>
-              </Link>
+              </LocalizedLink>
             ))}
           </div>
         </div>
@@ -434,7 +436,7 @@ export function BlogPostPage() {
                 const rTitle = (language === "en" && r.title_en) ? r.title_en : r.title_fr;
                 const rExcerpt = (language === "en" && r.excerpt_en) ? r.excerpt_en : r.excerpt_fr;
                 return (
-                  <Link
+                  <LocalizedLink
                     to={`/blog/${r.slug}`}
                     key={r.id}
                     className="group bg-white border border-[#E7E5E4] overflow-hidden hover:border-[#D4A574]/30 hover:shadow-lg transition-all"
@@ -456,7 +458,7 @@ export function BlogPostPage() {
                         <Clock className="w-3 h-3" /> {r.read_time_min} min
                       </span>
                     </div>
-                  </Link>
+                  </LocalizedLink>
                 );
               })}
             </div>

@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom";
+import { LocalizedLink } from "@/components/LocalizedLink";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { MapPin, Users, ArrowRight, Check, X } from "lucide-react";
 import { SEO } from "@/components/SEO";
@@ -171,7 +171,7 @@ export function HousesPageV4() {
                 className="bg-white rounded-2xl border border-[#E7E5E4] overflow-hidden hover:border-[#44403C]/20 hover:shadow-[0_4px_24px_rgba(0,0,0,0.06)] hover:translate-y-[-2px] transition-all duration-300 flex flex-col"
               >
                 {/* Photo */}
-                <Link to={`/${house.id}`} className="block relative aspect-[16/10] overflow-hidden group">
+                <LocalizedLink to={`/${house.id}`} className="block relative aspect-[16/10] overflow-hidden group">
                   <img
                     src={house.image}
                     alt={house.alt}
@@ -184,7 +184,7 @@ export function HousesPageV4() {
                   <span className="absolute top-4 right-4 bg-black/60 backdrop-blur-sm text-white text-xs font-medium px-3 py-1.5 rounded-lg">
                     {language === "en" ? "20 min Geneva center" : "20 min Genève centre"}
                   </span>
-                </Link>
+                </LocalizedLink>
 
                 {/* Content */}
                 <div className="p-6 flex flex-col flex-1">
@@ -232,19 +232,19 @@ export function HousesPageV4() {
                     </div>
 
                     <div className="flex gap-3">
-                      <Link
+                      <LocalizedLink
                         to={`/${house.id}`}
                         className="flex-1 inline-flex items-center justify-center gap-2 px-5 py-3 bg-[#1C1917] text-white text-sm font-semibold rounded-lg hover:bg-[#D4A574] transition-colors"
                       >
                         {language === "en" ? "Discover" : "Découvrir"}
                         <ArrowRight className="w-4 h-4" />
-                      </Link>
-                      <Link
+                      </LocalizedLink>
+                      <LocalizedLink
                         to="/candidature"
                         className="inline-flex items-center justify-center px-5 py-3 border border-[#1C1917] text-[#1C1917] text-sm font-semibold rounded-lg hover:bg-[#1C1917] hover:text-white transition-colors"
                       >
                         {language === "en" ? "Apply" : "Postuler"}
-                      </Link>
+                      </LocalizedLink>
                     </div>
                   </div>
                 </div>
@@ -333,12 +333,12 @@ export function HousesPageV4() {
               ? "Contact us and we'll help you find the perfect home for your lifestyle."
               : "Contactez-nous et nous vous aiderons à trouver la maison parfaite pour votre style de vie."}
           </p>
-          <Link
+          <LocalizedLink
             to="/faq"
             className="inline-flex items-center gap-2 px-8 py-4 border border-white text-white font-bold hover:bg-white hover:text-[#1C1917] transition-colors"
           >
             {language === "en" ? "VISIT OUR FAQ" : "CONSULTER NOTRE FAQ"}
-          </Link>
+          </LocalizedLink>
         </div>
       </section>
     </main>

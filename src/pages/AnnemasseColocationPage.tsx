@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom";
+import { LocalizedLink } from "@/components/LocalizedLink";
 import { useState } from "react";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { SEO } from "@/components/SEO";
@@ -101,19 +101,19 @@ export function AnnemasseColocationPage() {
               : "Trois maisons coliving premium dans Annemasse Agglo (Ville-la-Grand, Ambilly, Annemasse) — pour frontaliers qui veulent un salaire suisse avec le coût de la vie français. Léman Express direct Genève Cornavin en 15 min."}
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Link
+            <LocalizedLink
               to="/candidature"
               className="inline-flex items-center gap-2 px-8 py-4 bg-[#1C1917] text-white font-semibold rounded-full hover:bg-[#44403C] transition-colors"
             >
               {language === "en" ? "Apply now" : "Candidater"}
               <ArrowRight className="w-5 h-5" />
-            </Link>
-            <Link
+            </LocalizedLink>
+            <LocalizedLink
               to="/nos-maisons"
               className="inline-flex items-center gap-2 px-8 py-4 border-2 border-[#1C1917] text-[#1C1917] font-semibold rounded-full hover:bg-[#1C1917] hover:text-white transition-colors"
             >
               {language === "en" ? "See the 3 houses" : "Voir les 3 maisons"}
-            </Link>
+            </LocalizedLink>
           </div>
         </div>
       </section>
@@ -191,7 +191,7 @@ export function AnnemasseColocationPage() {
           </p>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {/* La Villa */}
-            <Link
+            <LocalizedLink
               to="/lavilla"
               className="bg-white p-8 hover:shadow-xl transition-shadow group"
             >
@@ -208,10 +208,10 @@ export function AnnemasseColocationPage() {
                 {language === "en" ? "Discover La Villa" : "Découvrir La Villa"}
                 <ArrowRight className="w-4 h-4" />
               </span>
-            </Link>
+            </LocalizedLink>
 
             {/* Le Loft */}
-            <Link
+            <LocalizedLink
               to="/leloft"
               className="bg-white p-8 hover:shadow-xl transition-shadow group"
             >
@@ -228,10 +228,10 @@ export function AnnemasseColocationPage() {
                 {language === "en" ? "Discover Le Loft" : "Découvrir Le Loft"}
                 <ArrowRight className="w-4 h-4" />
               </span>
-            </Link>
+            </LocalizedLink>
 
             {/* Le Lodge */}
-            <Link
+            <LocalizedLink
               to="/lelodge"
               className="bg-white p-8 hover:shadow-xl transition-shadow group"
             >
@@ -248,7 +248,7 @@ export function AnnemasseColocationPage() {
                 {language === "en" ? "Discover Le Lodge" : "Découvrir Le Lodge"}
                 <ArrowRight className="w-4 h-4" />
               </span>
-            </Link>
+            </LocalizedLink>
           </div>
         </div>
       </section>
@@ -449,19 +449,19 @@ export function AnnemasseColocationPage() {
               : "Dites-nous qui vous êtes et votre projet d'emménagement — on revient sous 48h, et une visite peut s'organiser sous 2 semaines."}
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Link
+            <LocalizedLink
               to="/candidature"
               className="inline-flex items-center gap-2 px-8 py-4 bg-white text-[#1C1917] font-semibold rounded-full hover:bg-gray-100 transition-colors"
             >
               {language === "en" ? "Apply now" : "Candidater"}
               <ArrowRight className="w-5 h-5" />
-            </Link>
-            <Link
+            </LocalizedLink>
+            <LocalizedLink
               to="/colocation-geneve"
               className="inline-flex items-center gap-2 px-8 py-4 border-2 border-white text-white font-semibold rounded-full hover:bg-white hover:text-[#1C1917] transition-colors"
             >
               {language === "en" ? "See Geneva-side option" : "Voir l'option côté Genève"}
-            </Link>
+            </LocalizedLink>
           </div>
         </div>
       </section>
@@ -483,9 +483,9 @@ export function AnnemasseColocationPage() {
             ].map((item) => (
               <li key={item.slug} className="flex items-start gap-2">
                 <span className="text-[#D4A574]">→</span>
-                <Link to={`/blog/${item.slug}`} className="text-[#1C1917] hover:text-[#D4A574] hover:underline transition-colors">
+                <LocalizedLink to={`/blog/${item.slug}`} className="text-[#1C1917] hover:text-[#D4A574] hover:underline transition-colors">
                   {language === "en" ? item.en : item.fr}
-                </Link>
+                </LocalizedLink>
               </li>
             ))}
           </ul>
@@ -499,25 +499,25 @@ export function AnnemasseColocationPage() {
             {language === "en" ? "Related pages" : "Pages liées"}
           </p>
           <div className="flex flex-wrap gap-4 justify-center text-sm">
-            <Link to="/colocation-geneve" className="text-[#1C1917] underline hover:text-[#D4A574]">
+            <LocalizedLink to="/colocation-geneve" className="text-[#1C1917] underline hover:text-[#D4A574]">
               {language === "en" ? "Shared housing Geneva" : "Colocation Genève"}
-            </Link>
+            </LocalizedLink>
             <span className="text-[#E7E5E4]">·</span>
-            <Link to="/le-coliving" className="text-[#1C1917] underline hover:text-[#D4A574]">
+            <LocalizedLink to="/le-coliving" className="text-[#1C1917] underline hover:text-[#D4A574]">
               {language === "en" ? "What is coliving" : "Le coliving"}
-            </Link>
+            </LocalizedLink>
             <span className="text-[#E7E5E4]">·</span>
-            <Link to="/nos-maisons" className="text-[#1C1917] underline hover:text-[#D4A574]">
+            <LocalizedLink to="/nos-maisons" className="text-[#1C1917] underline hover:text-[#D4A574]">
               {language === "en" ? "Our 3 houses" : "Nos 3 maisons"}
-            </Link>
+            </LocalizedLink>
             <span className="text-[#E7E5E4]">·</span>
-            <Link to="/tarifs" className="text-[#1C1917] underline hover:text-[#D4A574]">
+            <LocalizedLink to="/tarifs" className="text-[#1C1917] underline hover:text-[#D4A574]">
               {language === "en" ? "Pricing" : "Tarifs"}
-            </Link>
+            </LocalizedLink>
             <span className="text-[#E7E5E4]">·</span>
-            <Link to="/blog/meilleurs-quartiers-frontaliers-geneve" className="text-[#1C1917] underline hover:text-[#D4A574]">
+            <LocalizedLink to="/blog/meilleurs-quartiers-frontaliers-geneve" className="text-[#1C1917] underline hover:text-[#D4A574]">
               {language === "en" ? "Best cross-border neighborhoods" : "Meilleurs quartiers frontaliers"}
-            </Link>
+            </LocalizedLink>
           </div>
         </div>
       </section>
