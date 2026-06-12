@@ -19,7 +19,7 @@ export function HeroV7() {
         <div className="absolute inset-0">
           <img
             src="/images/la villa jardin.webp"
-            alt="La Villa Coliving — maison premium avec piscine à 20 min du centre de Genève"
+            alt={language === "en" ? "La Villa Coliving — premium house with pool, 20 min from Geneva city center" : "La Villa Coliving — maison premium avec piscine à 20 min du centre de Genève"}
             className="w-full h-full object-cover"
             width={1920}
             height={1080}

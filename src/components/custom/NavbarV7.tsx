@@ -57,7 +57,7 @@ export function NavbarV7() {
           <LocalizedLink to="/" className="flex items-center group">
             <img
               src="/logos/NEW Logo La Villa-14.png"
-              alt="La Villa Coliving — colocation et coliving premium près de Genève"
+              alt={language === "en" ? "La Villa Coliving — premium coliving and shared housing near Geneva" : "La Villa Coliving — colocation et coliving premium près de Genève"}
               className="h-12 w-auto transition-transform duration-300 group-hover:scale-105"
             />
           </LocalizedLink>

@@ -47,7 +47,7 @@ export function FooterV7() {
             <LocalizedLink to="/" className="inline-block mb-6">
               <img
                 src="/logos/NEW Logo La Villa-12.png"
-                alt="La Villa Coliving — colocation et coliving premium près de Genève"
+                alt={language === "en" ? "La Villa Coliving — premium coliving and shared housing near Geneva" : "La Villa Coliving — colocation et coliving premium près de Genève"}
                 className="h-32 w-auto brightness-0 invert"
               />
             </LocalizedLink>

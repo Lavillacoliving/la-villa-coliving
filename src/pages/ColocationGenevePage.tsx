@@ -429,7 +429,7 @@ export function ColocationGenevePage() {
               <div className="aspect-[4/3] overflow-hidden">
                 <img
                   src="/images/la villa jardin.webp"
-                  alt="La Villa Coliving — colocation premium avec piscine chauffée à Ville-la-Grand, près de Genève"
+                  alt={language === "en" ? "La Villa Coliving — premium shared housing with heated pool in Ville-la-Grand, near Geneva" : "La Villa Coliving — colocation premium avec piscine chauffée à Ville-la-Grand, près de Genève"}
                   className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                   loading="lazy"
                   width={800}
@@ -459,7 +459,7 @@ export function ColocationGenevePage() {
               <div className="aspect-[4/3] overflow-hidden">
                 <img
                   src="/images/le loft glamour.webp"
-                  alt="Le Loft Coliving — colocation moderne avec piscine intérieure à Ambilly, près de Genève"
+                  alt={language === "en" ? "Le Loft Coliving — modern shared housing with indoor pool in Ambilly, near Geneva" : "Le Loft Coliving — colocation moderne avec piscine intérieure à Ambilly, près de Genève"}
                   className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                   loading="lazy"
                   width={800}
@@ -489,7 +489,7 @@ export function ColocationGenevePage() {
               <div className="aspect-[4/3] overflow-hidden">
                 <img
                   src="/images/le lodge piscine.webp"
-                  alt="Le Lodge Coliving — colocation avec piscine et salle de sport à Annemasse, à 10 min de Genève"
+                  alt={language === "en" ? "Le Lodge Coliving — shared housing with pool and gym in Annemasse, 10 min from Geneva" : "Le Lodge Coliving — colocation avec piscine et salle de sport à Annemasse, à 10 min de Genève"}
                   className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                   loading="lazy"
                   width={800}
