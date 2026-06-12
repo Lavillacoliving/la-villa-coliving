@@ -9,7 +9,7 @@ import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import { Helmet } from "react-helmet";
 import { SEO } from "@/components/SEO";
-import { buildBreadcrumbSchema } from "@/lib/structuredData";
+import { buildBreadcrumbSchema, buildFaqPageSchema } from "@/lib/structuredData";
 import { getIntentBucket, type IntentBucket } from "@/data/blogIntentBuckets";
 
 interface Post {
@@ -116,6 +116,28 @@ function splitForMidCta(md: string): [string, string] | null {
   return [md.slice(0, best), md.slice(best)];
 }
 
+// Extrait les paires Q/R d'une section FAQ markdown (« ## FAQ … » ou « ## … questions … ») :
+// questions en gras terminées par « ? », réponse = paragraphe(s) qui suivent.
+// Sert au JSON-LD FAQPage — même texte que le visible (règle AEO), markdown aplati.
+function extractFaqPairs(md: string): { q: string; a: string }[] {
+  // (pas de flag m : avec lui, le $ du lookahead matche chaque fin de ligne et la capture est vide)
+  const section = md.match(/(?:^|\n)##\s+(?:FAQ[^\n]*|[^\n]*questions?[^\n]*)\n([\s\S]*?)(?=\n##\s|\s*$)/i);
+  if (!section) return [];
+  const pairs: { q: string; a: string }[] = [];
+  const re = /\*\*([^*\n]+\?)\*\*\s*\n+([\s\S]*?)(?=\n\s*\*\*[^*\n]+\?\*\*|$)/g;
+  let m: RegExpExecArray | null;
+  while ((m = re.exec(section[1])) !== null) {
+    const q = m[1].trim();
+    const a = m[2]
+      .replace(/\[([^\]]+)\]\([^)]*\)/g, "$1")
+      .replace(/[*_`>]/g, "")
+      .replace(/\s+/g, " ")
+      .trim();
+    if (a) pairs.push({ q, a });
+  }
+  return pairs;
+}
+
 export function BlogPostPage() {
   const { slug } = useParams<{slug:string}>();
   const { language } = useLanguage();
@@ -180,6 +202,7 @@ export function BlogPostPage() {
   const title = (language==="en"&&post.title_en)?post.title_en:post.title_fr;
   const excerpt = (language==="en"&&post.excerpt_en)?post.excerpt_en:post.excerpt_fr;
   const content = (language==="en"&&post.content_en)?post.content_en:post.content_fr;
+  const faqPairs = extractFaqPairs(content);
   // Meta description dédiée si renseignée en base (optimisée SEO), sinon excerpt
   const metaDescription = language==="en"
     ? (post.meta_description_en || excerpt)
@@ -292,6 +315,9 @@ export function BlogPostPage() {
           { name: "Blog", url: `https://www.lavillacoliving.com${language === "en" ? "/en" : ""}/blog` },
           { name: title, url: `https://www.lavillacoliving.com${language === "en" ? "/en" : ""}/blog/${post.slug}` },
         ]))}</script>
+        {faqPairs.length > 0 && (
+          <script type="application/ld+json">{JSON.stringify(buildFaqPageSchema(faqPairs))}</script>
+        )}
       </Helmet>
       <article className="py-16 lg:py-24">
         <div className="max-w-3xl mx-auto px-6">
