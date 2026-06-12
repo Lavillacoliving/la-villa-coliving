@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom";
+import { LocalizedLink } from "@/components/LocalizedLink";
 import { ArrowRight, ChevronDown, Home, Users, Heart, MapPin } from "lucide-react";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { STATS } from "@/data/stats";
@@ -78,20 +78,20 @@ export function HeroV7() {
               la home perd ~50 % des visiteurs avant la 2e page, et que le couloir
               Nos 3 Maisons → maison → candidature génère 46 % des candidatures. */}
           <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3 sm:gap-4 mb-6">
-            <Link
+            <LocalizedLink
               to="/nos-maisons"
               className="inline-flex items-center gap-2 bg-[#D4A574] text-[#1C1917] px-8 py-4 rounded-lg font-bold text-base hover:bg-[#E0BB8A] hover:shadow-lg hover:translate-y-[-1px] transition-all duration-300 focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-[#1C1917] w-full sm:w-auto justify-center sm:justify-start"
             >
               {language === "en" ? "Explore our 3 houses" : "Découvrir nos 3 maisons"}
               <ArrowRight className="w-5 h-5" />
-            </Link>
-            <Link
+            </LocalizedLink>
+            <LocalizedLink
               to="/colocation-geneve"
               className="inline-flex items-center gap-2 border border-white/30 text-white px-7 py-3.5 rounded-lg font-semibold text-[15px] hover:border-white hover:bg-white/5 transition-all duration-300 w-full sm:w-auto justify-center sm:justify-start"
             >
               {language === "en" ? "Shared housing Geneva" : "Colocation Genève"}
               <ArrowRight className="w-4 h-4" />
-            </Link>
+            </LocalizedLink>
           </div>
 
           {/* Réassurance frais — visible sans scroll */}

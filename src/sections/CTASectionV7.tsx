@@ -1,4 +1,4 @@
-import { Link } from 'react-router-dom';
+import { LocalizedLink } from "@/components/LocalizedLink";
 import { ArrowRight } from 'lucide-react';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { STATS } from '@/data/stats';
@@ -34,20 +34,20 @@ export function CTASectionV7() {
 
           {/* CTAs */}
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-            <Link
+            <LocalizedLink
               to="/candidature"
               className="group inline-flex items-center gap-3 px-10 py-4 bg-[#D4A574] text-[#1C1917] font-semibold rounded-lg hover:bg-[#E0BB8A] transition-all duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#D4A574] focus-visible:ring-offset-2 focus-visible:ring-offset-[#1C1917]"
             >
               {language === 'en' ? 'Apply now' : 'Rejoindre La Villa'}
               <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform duration-300" />
-            </Link>
+            </LocalizedLink>
 
-            <Link
+            <LocalizedLink
               to="/nos-maisons"
               className="inline-flex items-center gap-3 px-10 py-4 border border-white/30 text-white font-semibold rounded-lg hover:border-white hover:bg-white/5 transition-all duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-[#1C1917]"
             >
               {language === 'en' ? 'Explore our houses' : 'Découvrir nos maisons'}
-            </Link>
+            </LocalizedLink>
           </div>
 
           {/* Trust text */}

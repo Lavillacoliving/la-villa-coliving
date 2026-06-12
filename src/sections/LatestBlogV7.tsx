@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
+import { LocalizedLink } from "@/components/LocalizedLink";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { supabase } from "@/lib/supabase";
 import { Clock, ArrowRight } from "lucide-react";
@@ -74,7 +74,7 @@ export function LatestBlogV7() {
 
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
           {posts.map((post) => (
-            <Link
+            <LocalizedLink
               to={`/blog/${post.slug}`}
               key={post.id}
               className="group bg-[#FAF9F6] border border-[#E7E5E4] overflow-hidden transition-all duration-300 hover:border-[#D4A574]/30 hover:shadow-lg"
@@ -111,18 +111,18 @@ export function LatestBlogV7() {
                   {post.read_time_min} min
                 </span>
               </div>
-            </Link>
+            </LocalizedLink>
           ))}
         </div>
 
         <div className="text-center mt-12">
-          <Link
+          <LocalizedLink
             to="/blog"
             className="inline-flex items-center gap-2 text-[#D4A574] font-medium hover:underline"
           >
             {language === "en" ? "View all articles" : "Voir tous les articles"}
             <ArrowRight className="w-4 h-4" />
-          </Link>
+          </LocalizedLink>
         </div>
       </div>
     </section>
