@@ -3,9 +3,12 @@ import type { Language } from "@/i18n/translations";
 // Routes privées/techniques jamais préfixées par /en (pas de version EN routée).
 const EXCLUDED_PREFIXES = ["/portail", "/dashboard", "/reset-password", "/mon-espace"];
 
-function isExcluded(pathname: string): boolean {
+/** Route privée/technique sans miroir /en (portail, dashboard…). */
+export function isExcludedPath(pathname: string): boolean {
   return EXCLUDED_PREFIXES.some((p) => pathname === p || pathname.startsWith(p + "/"));
 }
+
+const isExcluded = isExcludedPath;
 
 /**
  * Préfixe un chemin interne par /en quand la langue courante est l'anglais.

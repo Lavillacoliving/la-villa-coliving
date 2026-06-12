@@ -536,7 +536,7 @@ export function RatesPageV4() {
                   {language === "en" ? "That's per year" : "Soit par an"}
                 </div>
                 <div className="text-2xl font-bold">
-                  {yearlySavings.toLocaleString()} CHF
+                  {yearlySavings.toLocaleString(language === "en" ? "en" : "fr-FR")} CHF
                 </div>
               </div>
               <Star className="w-8 h-8 text-[#D4A574]" />

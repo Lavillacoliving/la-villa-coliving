@@ -1,7 +1,7 @@
 import React, { createContext, useContext, useCallback, useEffect, useMemo } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { translations, type Language, type Translations } from '@/i18n/translations';
-import { mirrorPath } from '@/lib/localizedPath';
+import { mirrorPath, isExcludedPath } from '@/lib/localizedPath';
 
 interface LanguageContextType {
   language: Language;
@@ -20,15 +20,36 @@ function languageFromPathname(pathname: string): Language {
   return /^\/en(\/|$)/.test(pathname) ? 'en' : 'fr';
 }
 
+const LANG_PREF_KEY = 'lavilla-lang';
+
+function storedLanguage(): Language {
+  try {
+    return window.localStorage.getItem(LANG_PREF_KEY) === 'en' ? 'en' : 'fr';
+  } catch {
+    return 'fr';
+  }
+}
+
 export function LanguageProvider({ children }: { children: React.ReactNode }) {
   const location = useLocation();
   const navigate = useNavigate();
 
-  const language = languageFromPathname(location.pathname);
+  // Les routes privées (/portail, /dashboard…) n'ont pas de miroir /en : la
+  // langue y suit la dernière préférence exprimée sur le site public (un
+  // locataire anglophone garde son portail en anglais).
+  const isPrivateRoute = isExcludedPath(location.pathname);
+  const language = isPrivateRoute ? storedLanguage() : languageFromPathname(location.pathname);
 
   useEffect(() => {
     document.documentElement.lang = language;
-  }, [language]);
+    if (!isPrivateRoute) {
+      try {
+        window.localStorage.setItem(LANG_PREF_KEY, language);
+      } catch {
+        /* stockage indisponible (navigation privée) — préférence non persistée */
+      }
+    }
+  }, [language, isPrivateRoute]);
 
   // Changer de langue = naviguer vers l'URL miroir (/x ↔ /en/x), en préservant
   // query et hash. Les slugs étant identiques FR/EN, le miroir existe toujours.
