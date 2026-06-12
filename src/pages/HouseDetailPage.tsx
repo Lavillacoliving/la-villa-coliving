@@ -1,4 +1,5 @@
 import { useLocation, Link } from "react-router-dom";
+import { buildBreadcrumbSchema } from "@/lib/structuredData";
 import {
   MapPin,
   Users,
@@ -1416,6 +1417,12 @@ export function HouseDetailPage() {
           "https://www.instagram.com/lavillacoliving"
         ]
       }) }} />
+      {/* BreadcrumbList Schema.org */}
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(buildBreadcrumbSchema([
+        { name: language === "en" ? "Home" : "Accueil", url: `https://www.lavillacoliving.com${language === "en" ? "/en" : ""}/` },
+        { name: language === "en" ? "Our houses" : "Nos maisons", url: `https://www.lavillacoliving.com${language === "en" ? "/en" : ""}/nos-maisons` },
+        { name: id === "lavilla" ? "La Villa" : id === "leloft" ? "Le Loft" : "Le Lodge", url: `https://www.lavillacoliving.com${language === "en" ? "/en" : ""}/${id}` },
+      ])) }} />
       {/* Hero Gallery */}
       <section className="relative pt-16">
         <Carousel className="w-full">

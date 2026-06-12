@@ -5,7 +5,9 @@ import { supabase } from "@/lib/supabase";
 import { Clock, Calendar, User, ArrowLeft, ArrowRight } from "lucide-react";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
+import { Helmet } from "react-helmet";
 import { SEO } from "@/components/SEO";
+import { buildBreadcrumbSchema } from "@/lib/structuredData";
 import { getIntentBucket, type IntentBucket } from "@/data/blogIntentBuckets";
 
 interface Post {
@@ -276,6 +278,13 @@ export function BlogPostPage() {
         type="article"
         jsonLd={blogPostingSchema}
       />
+      <Helmet>
+        <script type="application/ld+json">{JSON.stringify(buildBreadcrumbSchema([
+          { name: language === "en" ? "Home" : "Accueil", url: `https://www.lavillacoliving.com${language === "en" ? "/en" : ""}/` },
+          { name: "Blog", url: `https://www.lavillacoliving.com${language === "en" ? "/en" : ""}/blog` },
+          { name: title, url: `https://www.lavillacoliving.com${language === "en" ? "/en" : ""}/blog/${post.slug}` },
+        ]))}</script>
+      </Helmet>
       <article className="py-16 lg:py-24">
         <div className="max-w-3xl mx-auto px-6">
           <Link to="/blog" className="inline-flex items-center gap-2 text-[#57534E] hover:text-[#D4A574] mb-8 text-sm transition-colors">
