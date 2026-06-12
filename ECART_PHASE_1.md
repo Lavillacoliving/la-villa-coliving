@@ -59,10 +59,11 @@
 - 🟡 Liste blanche à maintenir en phase avec App.tsx (garde-fou CI possible) — backlog ; commentaire de synchro en place.
 - 🟡 `build:local` : dist/ en retard d'une génération (zéro impact prod, preview locale non représentative des statuts — d'où la checklist sur preview Vercel).
 
-## Décisions / inputs attendus de Jérôme avant MERGE
-1. **Pages légales** : fournir raison sociale, forme juridique, SIREN/SIRET, ville RCS, adresse du siège, directeur de la publication, durée de conservation des candidatures (proposition : 2 ans). Les pages affichent des placeholders `[À COMPLÉTER]` très visibles — elles ne doivent pas partir en prod en l'état.
-2. **Vérification GSC fraîche** (10 min) : Search Console → Indexation → Pages → exporter les URLs « Explorée/Détectée, actuellement non indexée » + Performances → Pages (28 j). Me transmettre les exports : je vérifie qu'aucune URL à impressions ne passerait en 404 (sinon j'ajoute des redirects ciblés).
-3. **Préversion Vercel** : pousser la branche (nécessite ton nouveau PAT — étape A du guide #11) puis dérouler la checklist ci-dessous sur l'URL de preview.
+## Gates de merge — état au 12/06 soir
+1. ✅ **Pages légales** : contenu réel intégré (Pages_Legales_Contenu.md — SCI SLEEP IN, RCS 882 153 810, SIRET, siège, TVA, directeur). Zéro placeholder restant (vérifié sur les 115 pages prérendues). 2 adaptations à valider par Jérôme : champs réels du formulaire en §2a (sans date de naissance/situation pro) ; pas de référence à un « bandeau cookies » inexistant en §2d/§7 (bandeau CMP = micro-lot à trancher, la note cookies du doc source manquait). Nota : médiateur de la consommation non nommé (paragraphe générique L.612-1 — un médiateur désigné est normalement attendu, à compléter quand Jérôme en aura un).
+2. ✅ **Vérification GSC** : export du 12/06 analysé (synthèse sans listes d'URLs : 107 indexées / 60 non indexées au 05/06, impressions ~530/j). Catégories à risque toutes couvertes : soft 404 (6) = corrigés par cette branche ; redirects (8) = en place ; crawled-not-indexed (31) = fantômes déjà redirigés (vérifiés au curl un par un) ; junk /blog/* = fallback SPA. Filet : surveillance du rapport 404 GSC 2 semaines post-merge (redirect ciblé si une URL à trafic apparaît).
+3. ⏳ **Préversion Vercel** : branche poussée (déploiement preview auto). Jérôme récupère l'URL (guide fourni) → je déroule la checklist ci-dessous moi-même.
+4. ⏸ **#11 sécurité** (PAT GitHub + RLS blog_calendar) : reporté à la fin de la mission à la demande de Jérôme — je le guiderai pas à pas. D'ici là : remote git déjà nettoyé ; `blog_calendar` reste lisible publiquement (risque concurrence, pas de données perso).
 
 ## Checklist de préversion (statuts fiables UNIQUEMENT sur preview Vercel)
 ```bash
