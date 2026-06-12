@@ -55,6 +55,25 @@ const STATIC_ROUTES_EN = STATIC_ROUTES_FR.map(r => r === '/' ? '/en' : `/en${r}`
 
 const STATIC_ROUTES = [...STATIC_ROUTES_FR, ...STATIC_ROUTES_EN];
 
+// Routes rendered to HTML but NOT added to vercel.json rewrites nor sitemap.
+// '/404' renders the React NotFoundPage; inject-prerendered.mjs copies it to
+// dist/404.html, which Vercel serves with a real HTTP 404 status for any path
+// that matches neither a static file nor a rewrite.
+const EXTRA_RENDER_ROUTES = ['/404'];
+
+// Client-only routes (no prerendered HTML) that must keep receiving the SPA shell.
+// This replaces the old '/(.*)' catch-all: anything NOT listed here, not a static
+// file and not a prerendered rewrite now falls through to 404.html (real 404).
+// ⚠️ Keep in sync with the non-prerendered routes of src/App.tsx.
+const SPA_FALLBACK_REWRITES = [
+  { source: '/portail', destination: '/_spa.html' },
+  { source: '/portail/:path*', destination: '/_spa.html' },
+  { source: '/dashboard', destination: '/_spa.html' },
+  { source: '/dashboard/:path*', destination: '/_spa.html' },
+  { source: '/reset-password', destination: '/_spa.html' },
+  { source: '/mon-espace', destination: '/_spa.html' },
+];
+
 // ─────────────────────────────────────────────
 // Supabase: fetch published blog slugs
 // ─────────────────────────────────────────────
@@ -102,15 +121,8 @@ async function fetchBlogSlugs() {
 // ─────────────────────────────────────────────
 
 async function updateVercelJson(blogRoutes) {
-  console.log('  📦 Updating vercel.json with ALL rewrites (FR static + EN static + blog)...');
+  console.log('  📦 Updating vercel.json with ALL rewrites (FR static + EN static + blog + SPA fallbacks)...');
   const config = JSON.parse(await fs.readFile(VERCEL_JSON_PATH, 'utf-8'));
-
-  // Keep ONLY the catch-all — regenerate everything else from STATIC_ROUTES + blogRoutes
-  const catchAll = config.rewrites.find(r => r.source === '/(.*)');
-  if (!catchAll) {
-    console.error('  ❌ No catch-all rewrite found in vercel.json!');
-    return;
-  }
 
   // Generate FR static rewrites (auto from STATIC_ROUTES_FR — no more manual maintenance!)
   const frStaticRewrites = STATIC_ROUTES_FR.map(route => ({
@@ -130,11 +142,16 @@ async function updateVercelJson(blogRoutes) {
     destination: `/prerendered/${route.slice(1).replace(/\//g, '-')}.html`,
   }));
 
-  // Rebuild rewrites: FR static → EN static → blog → catch-all
-  config.rewrites = [...frStaticRewrites, ...enStaticRewrites, ...blogRewrites, catchAll];
+  // Rebuild rewrites: FR static → EN static → blog → SPA-only routes.
+  // No '/(.*)' catch-all anymore: unknown URLs fall through to dist/404.html,
+  // served by Vercel with a real HTTP 404 (fix soft-404 — Phase 1, 2026-06).
+  config.rewrites = [...frStaticRewrites, ...enStaticRewrites, ...blogRewrites, ...SPA_FALLBACK_REWRITES];
+
+  // '/tarifs/' must 308 to '/tarifs' instead of missing every rewrite and dying in 404
+  config.trailingSlash = false;
 
   await fs.writeFile(VERCEL_JSON_PATH, JSON.stringify(config, null, 2) + '\n', 'utf-8');
-  console.log(`  ✅ vercel.json updated: ${frStaticRewrites.length} FR static + ${enStaticRewrites.length} EN static + ${blogRewrites.length} blog rewrites\n`);
+  console.log(`  ✅ vercel.json updated: ${frStaticRewrites.length} FR static + ${enStaticRewrites.length} EN static + ${blogRewrites.length} blog + ${SPA_FALLBACK_REWRITES.length} SPA fallback rewrites\n`);
 }
 
 // ─────────────────────────────────────────────
@@ -385,15 +402,18 @@ async function renderRoute(browser, route) {
     const isEnRoute = route === '/en' || route.startsWith('/en/');
     html = html.replace(/<html\s+lang="[^"]*"/, `<html lang="${isEnRoute ? 'en' : 'fr'}"`);
 
+    // The 404 page must carry neither canonical nor breadcrumb (noindex, served on any unknown URL)
+    const is404Route = route === '/404';
+
     // Inject canonical URL (SEO: tells Google this is the authoritative URL)
     const canonicalUrl = `${SITE_URL}${route === '/' ? '' : route}`;
     const canonicalTag = `<link rel="canonical" href="${canonicalUrl}" />`;
-    if (!html.includes('rel="canonical"')) {
+    if (!is404Route && !html.includes('rel="canonical"')) {
       html = html.replace('</head>', `    ${canonicalTag}\n  </head>`);
     }
 
     // Inject BreadcrumbList JSON-LD (rich-snippet fil d'ariane sur 100 % des pages — audit P0-1, 2026-04-28).
-    const breadcrumbJsonLd = generateBreadcrumbJsonLd(route, html);
+    const breadcrumbJsonLd = is404Route ? null : generateBreadcrumbJsonLd(route, html);
     if (breadcrumbJsonLd && !html.includes('"@type":"BreadcrumbList"') && !html.includes('"@type": "BreadcrumbList"')) {
       const breadcrumbScript = `<script type="application/ld+json">${JSON.stringify(breadcrumbJsonLd)}</script>`;
       html = html.replace('</head>', `    ${breadcrumbScript}\n  </head>`);
@@ -537,7 +557,9 @@ async function main() {
 
   // Step 1: Fetch blog slugs from Supabase
   const blogRoutes = await fetchBlogSlugs();
-  const allRoutes = [...STATIC_ROUTES, ...blogRoutes];
+  // EXTRA_RENDER_ROUTES ('/404') is rendered + kept by cleanup, but excluded
+  // from updateVercelJson and generateSitemap (no rewrite, no sitemap entry).
+  const allRoutes = [...STATIC_ROUTES, ...blogRoutes, ...EXTRA_RENDER_ROUTES];
 
   // Step 2: Update vercel.json (always run — EN static routes + blog routes)
   await updateVercelJson(blogRoutes);

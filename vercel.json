@@ -441,10 +441,31 @@
       "destination": "/prerendered/en-blog-living-in-france-working-in-geneva.html"
     },
     {
-      "source": "/(.*)",
+      "source": "/portail",
+      "destination": "/_spa.html"
+    },
+    {
+      "source": "/portail/:path*",
+      "destination": "/_spa.html"
+    },
+    {
+      "source": "/dashboard",
+      "destination": "/_spa.html"
+    },
+    {
+      "source": "/dashboard/:path*",
+      "destination": "/_spa.html"
+    },
+    {
+      "source": "/reset-password",
+      "destination": "/_spa.html"
+    },
+    {
+      "source": "/mon-espace",
       "destination": "/_spa.html"
     }
   ],
+  "trailingSlash": false,
   "redirects": [
     {
       "source": "/fr",
@@ -878,6 +899,33 @@
           "key": "Content-Type",
           "value": "text/html; charset=utf-8"
         },
+        {
+          "key": "X-Robots-Tag",
+          "value": "noindex"
+        }
+      ]
+    },
+    {
+      "source": "/_spa.html",
+      "headers": [
+        {
+          "key": "X-Robots-Tag",
+          "value": "noindex"
+        }
+      ]
+    },
+    {
+      "source": "/(portail|dashboard|mon-espace|reset-password)",
+      "headers": [
+        {
+          "key": "X-Robots-Tag",
+          "value": "noindex"
+        }
+      ]
+    },
+    {
+      "source": "/(portail|dashboard)/:path*",
+      "headers": [
         {
           "key": "X-Robots-Tag",
           "value": "noindex"

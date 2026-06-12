@@ -6,12 +6,31 @@ import { SEO } from "@/components/SEO";
 export function NotFoundPage() {
   const { language } = useLanguage();
 
+  const keyLinks =
+    language === "en"
+      ? [
+          { to: "/en/colocation-geneve", label: "Shared Housing Geneva" },
+          { to: "/en/tarifs", label: "Pricing" },
+          { to: "/en/candidature", label: "Apply" },
+          { to: "/en/blog", label: "Blog" },
+        ]
+      : [
+          { to: "/colocation-geneve", label: "Colocation Genève" },
+          { to: "/tarifs", label: "Tarifs" },
+          { to: "/candidature", label: "Candidater" },
+          { to: "/blog", label: "Blog" },
+        ];
+
   return (
     <main className="relative pt-16">
       <SEO
-        title="404 - Page Not Found"
-        description="The page you are looking for does not exist."
-        url="https://www.lavillacoliving.com/404"
+        title={language === "en" ? "404 — Page Not Found" : "404 — Page introuvable"}
+        description={
+          language === "en"
+            ? "The page you are looking for does not exist."
+            : "La page que vous cherchez n'existe pas."
+        }
+        noindex
       />
       <section className="min-h-[70vh] flex items-center justify-center bg-white">
         <div className="container-custom text-center">
@@ -30,24 +49,35 @@ export function NotFoundPage() {
           <p className="text-lg text-[#57534E] max-w-md mx-auto mb-8">
             {language === "en"
               ? "The page you're looking for doesn't exist or has been moved."
-              : "La page que vous cherchez n'existe pas ou a \u00e9t\u00e9 d\u00e9plac\u00e9e."}
+              : "La page que vous cherchez n'existe pas ou a été déplacée."}
           </p>
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-10">
             <Link
-              to="/"
+              to={language === "en" ? "/en" : "/"}
               className="inline-flex items-center gap-2 px-6 py-3 bg-[#44403C] text-white font-medium rounded-lg hover:bg-[#57534E] transition-colors"
             >
               <Home size={18} />
-              {language === "en" ? "Back to Home" : "Retour \u00e0 l'accueil"}
+              {language === "en" ? "Back to Home" : "Retour à l'accueil"}
             </Link>
             <Link
-              to="/nos-maisons"
+              to={language === "en" ? "/en/nos-maisons" : "/nos-maisons"}
               className="inline-flex items-center gap-2 px-6 py-3 border-2 border-[#E7E5E4] text-[#1C1917] font-medium rounded-lg hover:border-[#44403C] transition-colors"
             >
               <ArrowLeft size={18} />
               {language === "en" ? "View Our Houses" : "Voir Nos Maisons"}
             </Link>
           </div>
+          <nav aria-label={language === "en" ? "Key pages" : "Pages clés"}>
+            <ul className="flex flex-wrap items-center justify-center gap-x-6 gap-y-2 text-sm text-[#57534E]">
+              {keyLinks.map((l) => (
+                <li key={l.to}>
+                  <Link to={l.to} className="hover:text-[#1C1917] underline underline-offset-4">
+                    {l.label}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </nav>
         </div>
       </section>
     </main>
