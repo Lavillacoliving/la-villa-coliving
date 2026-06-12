@@ -48,6 +48,8 @@ const STATIC_ROUTES_FR = [
   '/leloft',
   '/lelodge',
   '/investisseurs',
+  '/mentions-legales',
+  '/politique-de-confidentialite',
 ];
 
 // English versions of all static pages (same paths with /en prefix)
@@ -484,6 +486,8 @@ const STATIC_PAGE_CONFIG = {
   '/candidature': { priority: '0.7', changefreq: 'monthly' },
   '/blog': { priority: '0.7', changefreq: 'weekly' },
   '/investisseurs': { priority: '0.6', changefreq: 'monthly' },
+  '/mentions-legales': { priority: '0.3', changefreq: 'yearly' },
+  '/politique-de-confidentialite': { priority: '0.3', changefreq: 'yearly' },
 };
 
 async function generateSitemap(blogSlugs) {
