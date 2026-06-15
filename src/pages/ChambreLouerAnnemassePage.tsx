@@ -23,8 +23,8 @@ const chambreFAQ = [
     a: "Nos chambres meublées à Annemasse Agglo sont à partir de 1 380 CHF/mois tout inclus (loyer + charges + fibre + ménage 2x/semaine + accès piscine/sauna/gym + cours fitness privés + abonnements streaming). Pas de frais d'agence, pas de frais de dossier, caution équivalente à 2 mois de loyer hors charges (restituée sous 30 jours après l'état des lieux).",
   },
   {
-    q: "Vos chambres à louer à Annemasse sont-elles vraiment meublées ?",
-    a: "Oui, intégralement. Chaque chambre dispose d'un lit double qualité avec parure de linge, d'un bureau ergonomique, de rangements (placard sur mesure au Lodge), et selon les résidences d'une salle de bain privative. Les espaces communs (cuisine, salon, terrasse, piscine, sauna, salle de sport) sont aussi entièrement équipés. Vous n'avez qu'à arriver avec vos valises.",
+    q: "Tes chambres à louer à Annemasse sont-elles vraiment meublées ?",
+    a: "Oui, intégralement. Chaque chambre dispose d'un lit double qualité avec parure de linge, d'un bureau ergonomique, de rangements (placard sur mesure au Lodge), et selon les résidences d'une salle de bain privative. Les espaces communs (cuisine, salon, terrasse, piscine, sauna, salle de sport) sont aussi entièrement équipés. Tu n'as qu'à arriver avec tes valises.",
   },
   {
     q: "Quelle différence entre studio à Annemasse et chambre en coliving ?",
@@ -36,11 +36,11 @@ const chambreFAQ = [
   },
   {
     q: "Quelles sont les disponibilités actuelles à Annemasse ?",
-    a: "Les disponibilités évoluent en continu sur nos 29 chambres réparties dans 3 résidences (La Villa à Ville-la-Grand, Le Loft à Ambilly, Le Lodge à Annemasse Romagny). Le moyen le plus fiable de connaître les disponibilités est de candidater via notre page Candidature — nous vous indiquons sous 48h les chambres libres ou bientôt libérées qui matchent votre profil.",
+    a: "Les disponibilités évoluent en continu sur nos 29 chambres réparties dans 3 résidences (La Villa à Ville-la-Grand, Le Loft à Ambilly, Le Lodge à Annemasse Romagny). Le moyen le plus fiable de connaître les disponibilités est de candidater via notre page Candidature — nous t'indiquons sous 48h les chambres libres ou bientôt libérées qui matchent ton profil.",
   },
   {
     q: "Comment se passe la visite avant de signer ?",
-    a: "Après votre candidature, nous organisons une visite physique ou virtuelle (selon votre localisation) de la résidence qui correspond à votre profil. La visite physique dure 30-45 min : tour de la maison, de la chambre disponible, présentation des espaces communs et services. Vous rencontrez aussi un coliver actuel pour avoir un retour terrain.",
+    a: "Après ta candidature, nous organisons une visite physique ou virtuelle (selon ta localisation) de la résidence qui correspond à ton profil. La visite physique dure 30-45 min : tour de la maison, de la chambre disponible, présentation des espaces communs et services. Tu rencontres aussi un coliver actuel pour avoir un retour terrain.",
   },
 ];
 
@@ -120,7 +120,7 @@ export function ChambreLouerAnnemassePage() {
             className="text-3xl md:text-4xl font-light text-[#1C1917] mb-12 text-center"
             style={{ fontFamily: "DM Serif Display, serif" }}
           >
-            {language === "en" ? "Choose your room type" : "Choisissez votre type de chambre"}
+            {language === "en" ? "Choose your room type" : "Choisis ton type de chambre"}
           </h2>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {/* Standard */}
@@ -180,7 +180,7 @@ export function ChambreLouerAnnemassePage() {
           >
             {language === "en"
               ? "Why rent your room at La Villa Coliving in Annemasse"
-              : "Pourquoi louer votre chambre chez La Villa Coliving à Annemasse"}
+              : "Pourquoi louer ta chambre chez La Villa Coliving à Annemasse"}
           </h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-4 max-w-3xl mx-auto">
             {(language === "en"
@@ -235,7 +235,7 @@ export function ChambreLouerAnnemassePage() {
           <p className="text-lg text-[#57534E] leading-relaxed max-w-3xl mx-auto">
             {language === "en"
               ? "Annemasse station is the Léman Express terminus — direct train to Geneva Cornavin in 15 minutes, no transfer. Tram 17 TPG and direct buses also connect to central Geneva. Whether you commute daily or visit occasionally, our 3 houses are optimised for cross-border life."
-              : "La gare d'Annemasse est le terminus du Léman Express — train direct Genève Cornavin en 15 minutes, sans correspondance. Le Tram 17 TPG et des bus directs desservent aussi le centre de Genève. Que vous fassiez le trajet quotidien ou occasionnellement, nos 3 maisons sont optimisées pour la vie frontalière."}
+              : "La gare d'Annemasse est le terminus du Léman Express — train direct Genève Cornavin en 15 minutes, sans correspondance. Le Tram 17 TPG et des bus directs desservent aussi le centre de Genève. Que tu fasses le trajet quotidien ou occasionnellement, nos 3 maisons sont optimisées pour la vie frontalière."}
           </p>
           <LocalizedLink
             to="/annemasse-colocation"
@@ -254,7 +254,7 @@ export function ChambreLouerAnnemassePage() {
             className="text-3xl md:text-4xl font-light text-[#1C1917] mb-12 text-center"
             style={{ fontFamily: "DM Serif Display, serif" }}
           >
-            {language === "en" ? "How to rent your room — 4 steps" : "Comment louer votre chambre — 4 étapes"}
+            {language === "en" ? "How to rent your room — 4 steps" : "Comment louer ta chambre — 4 étapes"}
           </h2>
           <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
             {[
@@ -262,14 +262,14 @@ export function ChambreLouerAnnemassePage() {
                 num: "1",
                 title_fr: "Candidature en ligne",
                 title_en: "Online application",
-                desc_fr: "5 min pour remplir votre profil (motivation, contexte pro, dates d'emménagement).",
+                desc_fr: "5 min pour remplir ton profil (motivation, contexte pro, dates d'emménagement).",
                 desc_en: "5 min to fill your profile (motivation, pro context, move-in dates).",
               },
               {
                 num: "2",
                 title_fr: "Échange sous 48h",
                 title_en: "Reply within 48h",
-                desc_fr: "On vous appelle pour confirmer la disponibilité et vérifier le fit communauté.",
+                desc_fr: "On t'appelle pour confirmer la disponibilité et vérifier le fit communauté.",
                 desc_en: "We call to confirm availability and check community fit.",
               },
               {
@@ -352,7 +352,7 @@ export function ChambreLouerAnnemassePage() {
           <p className="text-lg text-white/80 mb-10 leading-relaxed">
             {language === "en"
               ? "Disponibilités change weekly across our 29 rooms. Fill the form, we get back within 48h with the rooms that match your move-in date and profile."
-              : "Les disponibilités évoluent chaque semaine sur nos 29 chambres. Remplissez le formulaire, on revient sous 48h avec les chambres qui matchent votre date d'emménagement et votre profil."}
+              : "Les disponibilités évoluent chaque semaine sur nos 29 chambres. Remplis le formulaire, on revient sous 48h avec les chambres qui matchent ta date d'emménagement et ton profil."}
           </p>
           <LocalizedLink
             to="/candidature"

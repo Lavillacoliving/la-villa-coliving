@@ -273,7 +273,7 @@ export function RatesPageV4() {
             <p className="text-[#78716C] max-w-2xl mx-auto">
               {language === "en"
                 ? "See how much you actually save with our all-inclusive model"
-                : "Découvrez combien vous économisez réellement avec notre modèle tout-inclus"}
+                : "Découvre combien tu économises réellement avec notre modèle tout-inclus"}
             </p>
           </div>
 
@@ -381,7 +381,7 @@ export function RatesPageV4() {
               <div className="absolute top-4 right-4 bg-[#D4A574] text-white text-xs font-bold px-3 py-1 rounded-full">
                 {language === "en"
                   ? "SAVE 865 CHF/MO"
-                  : "ÉCONOMISEZ 865 CHF/MOIS"}
+                  : "ÉCONOMISE 865 CHF/MOIS"}
               </div>
 
               <div className="flex items-center gap-3 mb-6">
@@ -403,7 +403,7 @@ export function RatesPageV4() {
                   <span>
                     {language === "en"
                       ? "Your room (furnished)"
-                      : "Votre chambre (meublée)"}
+                      : "Ta chambre (meublée)"}
                   </span>
                   <span>1 380 CHF</span>
                 </div>
@@ -526,7 +526,7 @@ export function RatesPageV4() {
                 <div className="text-sm opacity-90">
                   {language === "en"
                     ? "You save every month"
-                    : "Vous économisez chaque mois"}
+                    : "Tu économises chaque mois"}
                 </div>
                 <div className="text-3xl font-bold">{monthlySavings} CHF</div>
               </div>
@@ -576,7 +576,7 @@ export function RatesPageV4() {
             <p className="text-[#b3b2b2] max-w-2xl mx-auto">
               {language === "en"
                 ? "The cost you're often only shown at the end. Here, there isn't one."
-                : "Le coût qu'on ne vous montre souvent qu'à la fin. Chez nous, il n'y en a pas."}
+                : "Le coût qu'on ne te montre souvent qu'à la fin. Chez nous, il n'y en a pas."}
             </p>
           </div>
 
@@ -709,7 +709,7 @@ export function RatesPageV4() {
                 <span className="text-lg font-bold text-[#1C1917]">
                   {language === "en"
                     ? "Your first month's rent + a refundable deposit. That's it."
-                    : "Votre 1er loyer + une caution remboursable. C'est tout."}
+                    : "Ton 1er loyer + une caution remboursable. C'est tout."}
                 </span>
               </div>
             </div>
@@ -867,13 +867,13 @@ export function RatesPageV4() {
             <p className="text-[#78716C] max-w-2xl mx-auto mb-6">
               {language === "en"
                 ? "For 1,380 CHF/month, you get a furnished room in a premium house, all utilities, cleaning, gym, pool, sauna, yoga classes, community events, and zero hassle. Compare that to 2,245+ CHF for a basic studio in Geneva."
-                : "Pour 1 380 CHF/mois, vous obtenez une chambre meublée dans une maison premium, toutes charges, ménage, sport, piscine, sauna, cours de yoga, événements communautaires, et zéro tracas. Comparez avec 2 245+ CHF pour un studio basique à Genève."}
+                : "Pour 1 380 CHF/mois, tu obtiens une chambre meublée dans une maison premium, toutes charges, ménage, sport, piscine, sauna, cours de yoga, événements communautaires, et zéro tracas. Compare avec 2 245+ CHF pour un studio basique à Genève."}
             </p>
             <div className="inline-flex items-center gap-2 px-6 py-3 bg-[#D4A574] text-white rounded-full font-medium">
               <Sparkles className="w-5 h-5" />
               {language === "en"
                 ? `You save ${monthlySavings} CHF every month`
-                : `Vous économisez ${monthlySavings} CHF chaque mois`}
+                : `Tu économises ${monthlySavings} CHF chaque mois`}
             </div>
           </div>
         </div>
@@ -893,7 +893,7 @@ export function RatesPageV4() {
               >
                 {language === "en"
                   ? "Everything You Need"
-                  : "Tout Ce Dont Vous Avez Besoin"}
+                  : "Tout Ce Dont Tu As Besoin"}
               </h2>
               <p className="text-lg text-[#57534E] leading-relaxed">
                 {language === "en"
@@ -940,7 +940,7 @@ export function RatesPageV4() {
               <p className="text-[#57534E] leading-relaxed">
                 {language === "en"
                   ? "We rent our houses directly, with no middleman. That's why there are no move-in fees to charge — and why what you see is what you pay, at move-in and every month."
-                  : "Nous louons nos maisons en direct, sans intermédiaire. C'est pour ça qu'il n'y a aucun frais d'entrée à facturer — et que ce que vous voyez est ce que vous payez, à l'entrée comme chaque mois."}
+                  : "Nous louons nos maisons en direct, sans intermédiaire. C'est pour ça qu'il n'y a aucun frais d'entrée à facturer — et que ce que tu vois est ce que tu paies, à l'entrée comme chaque mois."}
               </p>
             </div>
           </div>
@@ -993,7 +993,7 @@ export function RatesPageV4() {
               const monthEn = next.toLocaleDateString("en-US", { month: "long", year: "numeric" });
               return language === "en"
                 ? `Save ${monthlySavings} CHF/month and join 150+ happy colivers. Limited spots for ${monthEn}.`
-                : `Économisez ${monthlySavings} CHF/mois et rejoignez 150+ colivers heureux. Places limitées pour ${monthFr}.`;
+                : `Économise ${monthlySavings} CHF/mois et rejoins 150+ colivers heureux. Places limitées pour ${monthFr}.`;
             })()}
           </p>
           <LocalizedLink

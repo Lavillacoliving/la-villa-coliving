@@ -240,8 +240,8 @@ export function TestimonialsCarousel() {
         {/* Stats */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-6 mt-16 max-w-4xl mx-auto">
           {[
-            { value: '4.9', label: language === 'en' ? 'Average Rating' : 'Note Moyenne', suffix: '/5' },
-            { value: '50+', label: language === 'en' ? 'Happy Colivers' : 'Colivers Heureux', suffix: '' },
+            { value: language === 'en' ? '4.9' : '4,9', label: language === 'en' ? 'Average Rating' : 'Note Moyenne', suffix: '/5' },
+            { value: '150+', label: language === 'en' ? 'Happy Colivers' : 'Colivers Heureux', suffix: '' },
             { value: '85%', label: language === 'en' ? 'Stay Longer' : 'Restent Plus Longtemps', suffix: '' },
             { value: '92%', label: language === 'en' ? 'Recommend Us' : 'Nous Recommandent', suffix: '' },
           ].map((stat, index) => (

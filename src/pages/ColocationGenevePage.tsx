@@ -160,7 +160,7 @@ export function ColocationGenevePage() {
           <p className="text-lg md:text-xl text-[#57534E] max-w-3xl mx-auto mb-10 leading-relaxed">
             {language === "en"
               ? "Live on the French side, work in Geneva. 29 fully furnished, all-inclusive rooms across 3 designer houses in Ville-la-Grand, Ambilly and Annemasse. Pool, gym, sauna, fiber internet — no application fee, everything included."
-              : "Vivez côté France, travaillez à Genève. 29 chambres meublées tout inclus dans 3 maisons design à Ville-la-Grand, Ambilly et Annemasse. Piscine, gym, sauna, fibre optique — pas de frais de dossier, tout est compris."}
+              : "Vis côté France, travaille à Genève. 29 chambres meublées tout inclus dans 3 maisons design à Ville-la-Grand, Ambilly et Annemasse. Piscine, gym, sauna, fibre optique — pas de frais de dossier, tout est compris."}
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <LocalizedLink
@@ -229,7 +229,7 @@ export function ColocationGenevePage() {
           <p className="text-[#57534E] text-center max-w-3xl mx-auto mb-16">
             {language === "en"
               ? "Geneva is one of the most expensive cities in the world for housing. Living across the border gives you Swiss salaries with French cost of living."
-              : "Genève est l'une des villes les plus chères au monde pour se loger. Vivre côté France vous donne un salaire suisse avec un coût de vie français."}
+              : "Genève est l'une des villes les plus chères au monde pour se loger. Vivre côté France te donne un salaire suisse avec un coût de vie français."}
           </p>
 
           <div className="grid md:grid-cols-2 gap-12">
@@ -242,7 +242,7 @@ export function ColocationGenevePage() {
               <p className="text-[#57534E] leading-relaxed mb-4">
                 {language === "en"
                   ? "A studio in Geneva starts at 1,800 CHF/month — without furniture or services. At La Villa, you get a fully furnished room with pool, gym, sauna, cleaning 2x/week, weekly yoga & sports classes, monthly community events and community dinners — from 1,380 CHF/month."
-                  : "Un studio à Genève coûte minimum 1 800 CHF/mois — sans meubles ni services. Chez La Villa, vous avez une chambre meublée avec piscine, gym, sauna, ménage 2x/semaine, cours de yoga et sport hebdomadaires, événements communautaires et dîners communautaires mensuels — dès 1 380 CHF/mois."}
+                  : "Un studio à Genève coûte minimum 1 800 CHF/mois — sans meubles ni services. Chez La Villa, tu as une chambre meublée avec piscine, gym, sauna, ménage 2x/semaine, cours de yoga et sport hebdomadaires, événements communautaires et dîners communautaires mensuels — dès 1 380 CHF/mois."}
               </p>
               <div className="bg-white p-4 border border-[#E7E5E4]">
                 <div className="flex justify-between items-center mb-2">
@@ -283,7 +283,7 @@ export function ColocationGenevePage() {
               <p className="text-[#57534E] leading-relaxed">
                 {language === "en"
                   ? "As a cross-border worker in Geneva, you're taxed at source in Switzerland — often at a lower rate than in France. You enjoy Swiss salaries while benefiting from French cost of living: groceries, leisure, transport, and healthcare costs are significantly lower on the French side."
-                  : "En tant que frontalier à Genève, vous êtes imposé à la source en Suisse — souvent à un taux inférieur au taux français. Vous bénéficiez d'un salaire suisse avec un coût de vie français : courses, loisirs, transports et santé sont nettement moins chers côté France."}
+                  : "En tant que frontalier à Genève, tu es imposé à la source en Suisse — souvent à un taux inférieur au taux français. Tu bénéficies d'un salaire suisse avec un coût de vie français : courses, loisirs, transports et santé sont nettement moins chers côté France."}
               </p>
             </div>
 
@@ -340,7 +340,7 @@ export function ColocationGenevePage() {
               <p className="text-[#57534E] leading-relaxed">
                 {language === "en"
                   ? "Forget the isolation of a tiny studio. At La Villa, you live in designer houses with pool, gym, sauna, garden, coworking spaces, and a vibrant international community. Weekly yoga & sports classes, monthly community events, monthly community dinners — cleaning 2x/week, maintenance, streaming subscriptions all included."
-                  : "Oubliez l'isolement d'un petit studio. Chez La Villa, vous vivez dans des maisons design avec piscine, salle de sport, sauna, jardin, espaces coworking et une communauté internationale dynamique. Cours de yoga et sport hebdomadaires, événements communautaires mensuels, dîners communautaires mensuels — ménage 2x/semaine, entretien, abonnements streaming inclus."}
+                  : "Oublie l'isolement d'un petit studio. Chez La Villa, tu vis dans des maisons design avec piscine, salle de sport, sauna, jardin, espaces coworking et une communauté internationale dynamique. Cours de yoga et sport hebdomadaires, événements communautaires mensuels, dîners communautaires mensuels — ménage 2x/semaine, entretien, abonnements streaming inclus."}
               </p>
             </div>
           </div>
@@ -361,7 +361,7 @@ export function ColocationGenevePage() {
           <p className="text-[#57534E] text-center max-w-3xl mx-auto mb-12">
             {language === "en"
               ? "Understanding the Geneva rental landscape helps you make the right housing choice."
-              : "Comprendre le paysage locatif genevois vous aide à faire le bon choix de logement."}
+              : "Comprendre le paysage locatif genevois t'aide à faire le bon choix de logement."}
           </p>
 
           <div className="prose prose-lg max-w-none text-[#57534E] leading-relaxed space-y-6">
@@ -389,7 +389,7 @@ export function ColocationGenevePage() {
                   Genève est l'un des marchés locatifs les plus tendus d'Europe. Avec un taux de vacance constamment inférieur à 1%, trouver un appartement — a fortiori abordable — représente un défi majeur pour quiconque s'installe dans la région. La position de la ville comme centre d'organisations internationales, de finance et de technologie génère une demande incessante de logements, alors que l'offre reste structurellement limitée par le manque de terrains constructibles et des réglementations urbanistiques strictes.
                 </p>
                 <p>
-                  En 2026, le loyer moyen pour un studio à Genève se situe entre 1 800 et 2 500 CHF par mois, non meublé et hors charges. Pour un deux-pièces, comptez 2 200 à 3 200 CHF. Ces prix font de Genève l'une des villes les plus chères au monde pour se loger, au même niveau que Zurich, Londres ou New York. Même une chambre en colocation à Genève coûte généralement entre 1 000 et 1 500 CHF par mois, sans aucun service inclus : pas de ménage, pas d'espaces communs meublés, et souvent des infrastructures vieillissantes.
+                  En 2026, le loyer moyen pour un studio à Genève se situe entre 1 800 et 2 500 CHF par mois, non meublé et hors charges. Pour un deux-pièces, compte 2 200 à 3 200 CHF. Ces prix font de Genève l'une des villes les plus chères au monde pour se loger, au même niveau que Zurich, Londres ou New York. Même une chambre en colocation à Genève coûte généralement entre 1 000 et 1 500 CHF par mois, sans aucun service inclus : pas de ménage, pas d'espaces communs meublés, et souvent des infrastructures vieillissantes.
                 </p>
                 <p>
                   Cette situation a alimenté l'essor de la vie transfrontalière. Le côté français du Grand Genève — des communes comme Annemasse, Ville-la-Grand, Ambilly ou Saint-Julien-en-Genevois — offre des loyers 30 à 50% moins chers qu'à Genève. Un frontalier touchant un salaire suisse tout en vivant en France bénéficie d'un gain de pouvoir d'achat considérable. Le Léman Express, qui relie Annemasse à la gare de Genève Cornavin en seulement 20 minutes, a rendu ce mode de vie plus pratique que jamais. Aujourd'hui, près de 116 200 frontaliers font le trajet quotidien entre la France et le canton de Genève (OCSTAT, fin 2025).
@@ -629,7 +629,7 @@ export function ColocationGenevePage() {
           >
             {language === "en"
               ? "Everything Included in Your Rent"
-              : "Tout Est Compris dans Votre Loyer"}
+              : "Tout Est Compris dans Ton Loyer"}
           </h2>
           <p className="text-[#57534E] text-center max-w-3xl mx-auto mb-16">
             {language === "en"
@@ -662,7 +662,7 @@ export function ColocationGenevePage() {
             <p className="text-[#57534E] leading-relaxed">
               {language === "en"
                 ? "Unlike an agency, we rent our houses directly. No middleman, no agency fees, no application fee: you deal directly with the owners, who want you to feel at home, for a long time."
-                : "Contrairement à une agence, nous louons nos maisons en direct. Pas d'intermédiaire, pas d'honoraires d'agence, pas de frais de dossier : vous traitez directement avec les propriétaires, qui ont tout intérêt à ce que vous vous sentiez bien, longtemps."}
+                : "Contrairement à une agence, nous louons nos maisons en direct. Pas d'intermédiaire, pas d'honoraires d'agence, pas de frais de dossier : tu traites directement avec les propriétaires, qui ont tout intérêt à ce que tu te sentes bien, longtemps."}
             </p>
           </div>
 
@@ -704,14 +704,14 @@ export function ColocationGenevePage() {
                 title: language === "en" ? "Expats & Internationals" : "Expats & Internationaux",
                 desc: language === "en"
                   ? "New to the area? Join a welcoming community. No need to furnish or deal with admin alone."
-                  : "Nouveau dans la région ? Rejoignez une communauté accueillante. Pas besoin de meubler ni de gérer l'administratif seul.",
+                  : "Nouveau dans la région ? Rejoins une communauté accueillante. Pas besoin de meubler ni de gérer l'administratif seul.",
               },
               {
                 Icon: Briefcase,
                 title: language === "en" ? "Young Professionals" : "Jeunes Professionnels",
                 desc: language === "en"
                   ? "Start your career near Geneva with flexible, affordable, premium housing."
-                  : "Démarrez votre carrière près de Genève avec un logement flexible, abordable et premium.",
+                  : "Démarre ta carrière près de Genève avec un logement flexible, abordable et premium.",
               },
               {
                 Icon: Laptop2,
@@ -812,7 +812,7 @@ export function ColocationGenevePage() {
           <p className="text-[#57534E] text-center max-w-3xl mx-auto mb-12">
             {language === "en"
               ? "See why our coliving is the smartest choice for living near Geneva."
-              : "Découvrez pourquoi notre colocation est le choix le plus malin pour vivre près de Genève."}
+              : "Découvre pourquoi notre colocation est le choix le plus malin pour vivre près de Genève."}
           </p>
 
           <div className="overflow-x-auto">
@@ -835,7 +835,7 @@ export function ColocationGenevePage() {
                   [language === "en" ? "Pool" : "Piscine", "✓ " + (language === "en" ? "Pool included" : "Piscine incluse"), "✗"],
                   ["Gym / Sauna", "✓ " + (language === "en" ? "Included" : "Inclus"), "✗ " + (language === "en" ? "Extra 80-150 CHF/month" : "En plus : 80-150 CHF/mois")],
                   ["Internet", "✓ " + (language === "en" ? "Pro fiber included" : "Fibre Pro incluse"), "~50 CHF/" + (language === "en" ? "month" : "mois")],
-                  [language === "en" ? "Cleaning" : "Ménage", "✓ " + (language === "en" ? "2x/week, included" : "2x/semaine, inclus"), language === "en" ? "You manage" : "À votre charge"],
+                  [language === "en" ? "Cleaning" : "Ménage", "✓ " + (language === "en" ? "2x/week, included" : "2x/semaine, inclus"), language === "en" ? "You manage" : "À ta charge"],
                   [language === "en" ? "Community" : "Communauté", "✓ " + (language === "en" ? "Monthly events, yoga & sports, community dinners" : "Événements mensuels, yoga & sport, dîners communautaires"), "✗ " + (language === "en" ? "Isolated" : "Isolé")],
                   [language === "en" ? "Lease" : "Bail", language === "en" ? "12 months, renewable" : "12 mois, renouvelable", language === "en" ? "12+ months lease" : "Bail 12+ mois"],
                   [language === "en" ? "Deposit" : "Caution", language === "en" ? "2 months excl. charges" : "2 mois hors charges", language === "en" ? "3 months typical" : "3 mois généralement"],
@@ -873,10 +873,10 @@ export function ColocationGenevePage() {
             {[
               {
                 step: 1,
-                title: language === "en" ? "Define your budget and criteria" : "Définissez votre budget et vos critères",
+                title: language === "en" ? "Define your budget and criteria" : "Définis ton budget et tes critères",
                 desc: language === "en"
                   ? "Start by setting a clear monthly budget. Consider not just rent but also utilities, internet, gym membership, and commuting costs. In the Geneva area, an all-inclusive colocation like La Villa at 1,380 CHF/month can be more cost-effective than a cheaper room plus separate expenses. Think about what matters most: proximity to work, amenities, community, or outdoor space."
-                  : "Commencez par fixer un budget mensuel clair. Prenez en compte non seulement le loyer mais aussi les charges, l'internet, la salle de sport et les frais de transport. Dans la région de Genève, une colocation tout inclus comme La Villa à 1 380 CHF/mois peut être plus rentable qu'une chambre moins chère avec des dépenses séparées. Réfléchissez à ce qui compte le plus : proximité du travail, équipements, communauté ou espaces verts.",
+                  : "Commence par fixer un budget mensuel clair. Prends en compte non seulement le loyer mais aussi les charges, l'internet, la salle de sport et les frais de transport. Dans la région de Genève, une colocation tout inclus comme La Villa à 1 380 CHF/mois peut être plus rentable qu'une chambre moins chère avec des dépenses séparées. Réfléchis à ce qui compte le plus : proximité du travail, équipements, communauté ou espaces verts.",
               },
               {
                 step: 2,
@@ -887,24 +887,24 @@ export function ColocationGenevePage() {
               },
               {
                 step: 3,
-                title: language === "en" ? "Visit the spaces and meet the community" : "Visitez les espaces et rencontrez la communauté",
+                title: language === "en" ? "Visit the spaces and meet the community" : "Visite les espaces et rencontre la communauté",
                 desc: language === "en"
                   ? "Nothing replaces an in-person visit. At La Villa, we organize private tours of our three houses so you can see the rooms, common areas, pool, gym, and sauna. You'll meet current residents and get a real feel for the community atmosphere. This step is essential — coliving is about the people as much as the place."
-                  : "Rien ne remplace une visite en personne. Chez La Villa, nous organisons des visites privées de nos trois maisons pour que vous puissiez voir les chambres, les espaces communs, la piscine, la salle de sport et le sauna. Vous rencontrerez les résidents actuels et ressentirez l'atmosphère de la communauté. Cette étape est essentielle — le coliving, c'est autant les personnes que le lieu.",
+                  : "Rien ne remplace une visite en personne. Chez La Villa, nous organisons des visites privées de nos trois maisons pour que tu puisses voir les chambres, les espaces communs, la piscine, la salle de sport et le sauna. Tu rencontreras les résidents actuels et ressentiras l'atmosphère de la communauté. Cette étape est essentielle — le coliving, c'est autant les personnes que le lieu.",
               },
               {
                 step: 4,
-                title: language === "en" ? "Prepare your application" : "Préparez votre dossier",
+                title: language === "en" ? "Prepare your application" : "Prépare ton dossier",
                 desc: language === "en"
                   ? "To apply, you'll need a valid ID, proof of employment (or enrollment), and a brief description of yourself. If you're a cross-border worker, your Swiss work permit (permis G) or employment contract is helpful. Unlike traditional Geneva rentals that demand extensive financial guarantees, our process is straightforward and transparent."
-                  : "Pour candidater, vous aurez besoin d'une pièce d'identité valide, d'un justificatif d'emploi (ou d'inscription) et d'une courte description de vous-même. Si vous êtes frontalier, votre permis de travail suisse (permis G) ou contrat de travail est utile. Contrairement aux locations genevoises traditionnelles qui exigent d'importantes garanties financières, notre processus est simple et transparent.",
+                  : "Pour candidater, tu auras besoin d'une pièce d'identité valide, d'un justificatif d'emploi (ou d'inscription) et d'une courte description de toi-même. Si tu es frontalier, ton permis de travail suisse (permis G) ou contrat de travail est utile. Contrairement aux locations genevoises traditionnelles qui exigent d'importantes garanties financières, notre processus est simple et transparent.",
               },
               {
                 step: 5,
                 title: language === "en" ? "Move in within 2 weeks" : "Emménagez en 2 semaines",
                 desc: language === "en"
                   ? "Once your application is accepted, move-in can happen within two weeks. Your room is ready, fully furnished, with everything included from day one. No need to set up internet, buy furniture, or sign multiple contracts. Just bring your bags and start your new life near Geneva."
-                  : "Une fois votre candidature acceptée, l'emménagement peut se faire en deux semaines. Votre chambre est prête, entièrement meublée, avec tout inclus dès le premier jour. Pas besoin d'installer internet, d'acheter des meubles ou de signer plusieurs contrats. Apportez simplement vos valises et commencez votre nouvelle vie près de Genève.",
+                  : "Une fois ta candidature acceptée, l'emménagement peut se faire en deux semaines. Ta chambre est prête, entièrement meublée, avec tout inclus dès le premier jour. Pas besoin d'installer internet, d'acheter des meubles ou de signer plusieurs contrats. Apporte simplement tes valises et commence ta nouvelle vie près de Genève.",
               },
             ].map((item) => (
               <div key={item.step} className="flex gap-6">
@@ -924,7 +924,7 @@ export function ColocationGenevePage() {
               to="/candidature"
               className="inline-flex items-center gap-2 bg-[#D4A574] text-white px-8 py-4 text-sm uppercase tracking-wider hover:bg-[#44403C] transition-colors"
             >
-              {language === "en" ? "Start Your Application" : "Commencer Votre Candidature"}
+              {language === "en" ? "Start Your Application" : "Commencer Ta Candidature"}
               <ArrowRight className="w-4 h-4" />
             </LocalizedLink>
           </div>
@@ -952,7 +952,7 @@ export function ColocationGenevePage() {
             <p className="text-[#57534E] text-center max-w-3xl mx-auto mb-12">
               {language === "en"
                 ? "Everything you need to know about living near Geneva."
-                : "Tout ce que vous devez savoir pour vivre près de Genève."}
+                : "Tout ce que tu dois savoir pour vivre près de Genève."}
             </p>
             <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
               {blogPosts.map((post) => {
@@ -1010,12 +1010,12 @@ export function ColocationGenevePage() {
           >
             {language === "en"
               ? "Looking for the Annemasse-specific view?"
-              : "Vous cherchez la vue spécifique Annemasse ?"}
+              : "Tu cherches la vue spécifique Annemasse ?"}
           </h2>
           <p className="text-[#57534E] text-center max-w-3xl mx-auto mb-12">
             {language === "en"
               ? "Our 3 houses are all located in Annemasse Agglo (Ville-la-Grand, Ambilly, Annemasse). If you're zooming in on the local angle, here are two dedicated pages."
-              : "Nos 3 maisons sont toutes situées dans Annemasse Agglo (Ville-la-Grand, Ambilly, Annemasse). Si vous zoomez sur l'angle local, voici deux pages dédiées."}
+              : "Nos 3 maisons sont toutes situées dans Annemasse Agglo (Ville-la-Grand, Ambilly, Annemasse). Si tu zoomes sur l'angle local, voici deux pages dédiées."}
           </p>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <LocalizedLink
@@ -1106,7 +1106,7 @@ export function ColocationGenevePage() {
           <p className="text-[#57534E] max-w-xl mx-auto mb-10">
             {language === "en"
               ? "Our houses fill fast. Join the priority list — we'll reach out the moment a room matching your profile opens up."
-              : "Nos maisons se remplissent vite. Rejoignez la liste prioritaire : on vous contacte dès qu'une chambre correspondant à votre profil se libère."}
+              : "Nos maisons se remplissent vite. Rejoins la liste prioritaire : on te contacte dès qu'une chambre correspondant à ton profil se libère."}
           </p>
           <WaitlistForm />
         </div>
@@ -1121,7 +1121,7 @@ export function ColocationGenevePage() {
           >
             {language === "en"
               ? "Ready to Find Your Room Near Geneva?"
-              : "Prêt à Trouver Votre Chambre près de Genève ?"}
+              : "Prêt à Trouver Ta Chambre près de Genève ?"}
           </h2>
           <p className="text-[#78716C] text-lg mb-10 max-w-xl mx-auto">
             {language === "en"

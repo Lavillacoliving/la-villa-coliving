@@ -29,7 +29,7 @@ export function ServicesPageV4() {
     {
       title: language === "en" ? "Live" : "Vivre",
       subtitle:
-        language === "en" ? "Your daily comfort" : "Votre confort quotidien",
+        language === "en" ? "Your daily comfort" : "Ton confort quotidien",
       color: "bg-[#44403C]",
       services: [
         {
@@ -145,7 +145,7 @@ export function ServicesPageV4() {
         title={language === "en" ? "All-Inclusive Services — La Villa Coliving" : "Services Tout Inclus — La Villa Coliving"}
         description={language === "en"
           ? "Cleaning, pool, sauna, gym, yoga, fitness, events — everything included in your rent. Discover our services."
-          : "Ménage, piscine, sauna, salle de sport, yoga, fitness, événements — tout est inclus dans votre loyer. Découvrez nos services."}
+          : "Ménage, piscine, sauna, salle de sport, yoga, fitness, événements — tout est inclus dans ton loyer. Découvre nos services."}
         url="https://www.lavillacoliving.com/services"
       />
       {/* HERO */}
@@ -181,7 +181,7 @@ export function ServicesPageV4() {
                   On gère{" "}
                   <em className="text-[#E0BB8A] not-italic" style={{ fontFamily: "'DM Serif Display', serif", fontStyle: 'italic' }}>tout</em>.
                   <br />
-                  Vous vivez sans soucis.
+                  Tu vis sans soucis.
                 </>
               )}
             </h1>
@@ -227,7 +227,7 @@ export function ServicesPageV4() {
             <p className="text-[#78716C] max-w-2xl mx-auto">
               {language === "en"
                 ? "We don't just check boxes. We create an environment where you can focus on what matters."
-                : "Nous ne cochons pas juste des cases. Nous créons un environnement où vous pouvez vous concentrer sur l'essentiel."}
+                : "Nous ne cochons pas juste des cases. Nous créons un environnement où tu peux te concentrer sur l'essentiel."}
             </p>
           </div>
 
@@ -262,7 +262,7 @@ export function ServicesPageV4() {
                 desc:
                   language === "en"
                     ? "Move in alone, find your people. Curated events and shared spaces create natural connections."
-                    : "Emménagez seul, trouvez votre tribu. Des événements sélectionnés et des espaces partagés créent des connexions naturelles.",
+                    : "Emménage seul, trouve ta tribu. Des événements sélectionnés et des espaces partagés créent des connexions naturelles.",
               },
             ].map((item, index) => (
               <div
@@ -292,7 +292,7 @@ export function ServicesPageV4() {
             <h2 className="text-3xl md:text-4xl font-bold text-[#1C1917] tracking-tight">
               {language === "en"
                 ? "Everything you need"
-                : "Tout ce dont vous avez besoin"}
+                : "Tout ce dont tu as besoin"}
             </h2>
           </div>
 
@@ -422,12 +422,12 @@ export function ServicesPageV4() {
                 <p className="text-[#1C1917] font-semibold mb-2">
                   {language === "en"
                     ? "Instead, you get:"
-                    : "À la place, vous avez :"}
+                    : "À la place, tu as :"}
                 </p>
                 <p className="text-[#78716C] text-sm">
                   {language === "en"
                     ? "More time to focus on your work, your passions, your people."
-                    : "Du temps pour vous concentrer sur votre travail, vos passions, vos proches."}
+                    : "Du temps pour te concentrer sur ton travail, tes passions, tes proches."}
                 </p>
               </div>
             </div>
@@ -473,7 +473,7 @@ export function ServicesPageV4() {
           <p className="text-lg text-white/60 max-w-2xl mx-auto mb-8">
             {language === "en"
               ? "Join 150+ residents who've reclaimed their time. One price. Everything included."
-              : "Rejoignez plus de 150 résidents qui ont récupéré leur temps. Un prix. Tout inclus."}
+              : "Rejoins plus de 150 résidents qui ont récupéré leur temps. Un prix. Tout inclus."}
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <LocalizedLink

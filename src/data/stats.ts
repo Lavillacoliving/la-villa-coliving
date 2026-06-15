@@ -20,21 +20,57 @@ export const STATS = {
   cleaningPerWeek: 2,
   fiberSpeed: "8 Gb/s",
   includedItems: 20,
+  rating: "4,9", // note interne ; graphie virgule en FR, point en EN (cf. ratingDisplay)
 } as const;
+
+// ⚠️ DISPONIBILITÉ — SOURCE UNIQUE (Jérôme : mets à jour ces 3 nombres quand la dispo change).
+// Tout en découle : compteur du hero, cartes de la home, badges des pages maisons,
+// option du formulaire candidature. Avant, ces 4 endroits étaient codés en dur et se
+// contredisaient (hero « 3 », cartes « Complet/1/Complet », badges « 1 » ×3, form « Plusieurs »).
+export const AVAILABILITY = {
+  lavilla: 1, // La Villa — Ville-la-Grand (10 chambres) — PROVISOIRE (Jérôme 15/06 : 1 partout)
+  leloft: 1, // Le Loft — Ambilly (7 chambres) — PROVISOIRE
+  lelodge: 1, // Le Lodge — Annemasse (12 chambres) — PROVISOIRE
+} as const;
+
+export type HouseKey = keyof typeof AVAILABILITY;
+
+export const totalAvailable = (): number =>
+  AVAILABILITY.lavilla + AVAILABILITY.leloft + AVAILABILITY.lelodge;
+
+// Libellé de dispo d'une maison (« 1 chambre disponible » / « Complet »).
+export function houseAvailabilityLabel(house: HouseKey, lang: "fr" | "en"): string {
+  const n = AVAILABILITY[house];
+  if (n <= 0) return lang === "en" ? "Fully booked" : "Complet";
+  if (n === 1) return lang === "en" ? "1 room available" : "1 chambre disponible";
+  return lang === "en" ? `${n} rooms available` : `${n} chambres disponibles`;
+}
+
+// Libellé global de dispo (hero / candidature), avec le mois pris à part par l'appelant.
+export function totalAvailabilityLabel(lang: "fr" | "en"): string {
+  const n = totalAvailable();
+  if (n <= 0) return lang === "en" ? "Join the waitlist" : "Rejoins la liste d'attente";
+  if (n === 1) return lang === "en" ? "1 room available" : "1 chambre disponible";
+  return lang === "en" ? `${n} rooms available` : `${n} chambres disponibles`;
+}
 
 export const STATS_DISPLAY = {
   en: {
-    residents: `${STATS.totalResidents}+ residents welcomed since ${STATS.foundedYear}`,
+    residents: `${STATS.totalResidents}+ residents since ${STATS.foundedYear}`,
     houses: `${STATS.totalHouses} houses`,
     distance: `${STATS.genevaCenterMinutes} min from Geneva city center`,
     roomSize: `${STATS.roomSizeMin} to ${STATS.roomSizeMax} m² rooms`,
     price: `CHF ${STATS.priceChf.toLocaleString('en')}/month — all inclusive`,
+    rating: STATS.rating.replace(",", "."), // 4.9 en EN
+    ratingSourced: `${STATS.rating.replace(",", ".")}/5 — resident surveys`,
   },
   fr: {
-    residents: `${STATS.totalResidents}+ résidents accueillis depuis ${STATS.foundedYear}`,
+    residents: `${STATS.totalResidents}+ résidents depuis ${STATS.foundedYear}`,
     houses: `${STATS.totalHouses} maisons`,
     distance: `${STATS.genevaCenterMinutes} min du centre de Genève`,
     roomSize: `Chambres de ${STATS.roomSizeMin} à ${STATS.roomSizeMax} m²`,
     price: `${STATS.priceChf.toLocaleString('fr-FR')} CHF/mois — tout inclus`,
+    rating: STATS.rating, // 4,9 en FR (virgule)
+    ratingSourced: `${STATS.rating}/5 — enquêtes résidents`,
   },
 } as const;

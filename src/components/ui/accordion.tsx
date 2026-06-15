@@ -53,7 +53,12 @@ function AccordionContent({
   return (
     <AccordionPrimitive.Content
       data-slot="accordion-content"
-      className="data-[state=closed]:animate-accordion-up data-[state=open]:animate-accordion-down overflow-hidden text-sm"
+      // forceMount keeps the answer text in the DOM even when collapsed, so it ends up
+      // in the prerendered HTML (curl) and matches the FAQPage JSON-LD. Radix still sets
+      // data-state=closed; the animation classes + overflow-hidden + the explicit
+      // data-[state=closed]:hidden below keep it visually collapsed until opened.
+      forceMount
+      className="data-[state=closed]:hidden data-[state=closed]:animate-accordion-up data-[state=open]:animate-accordion-down overflow-hidden text-sm"
       {...props}
     >
       <div className={cn("pt-0 pb-4", className)}>{children}</div>
