@@ -137,6 +137,10 @@
       "destination": "/prerendered/en-politique-de-confidentialite.html"
     },
     {
+      "source": "/blog/guide-ressources-frontalier-geneve",
+      "destination": "/prerendered/blog-guide-ressources-frontalier-geneve.html"
+    },
+    {
       "source": "/blog/optimiser-espace-coliving-productivite-bien-etre",
       "destination": "/prerendered/blog-optimiser-espace-coliving-productivite-bien-etre.html"
     },
@@ -295,6 +299,10 @@
     {
       "source": "/blog/living-in-france-working-in-geneva",
       "destination": "/prerendered/blog-living-in-france-working-in-geneva.html"
+    },
+    {
+      "source": "/en/blog/guide-ressources-frontalier-geneve",
+      "destination": "/prerendered/en-blog-guide-ressources-frontalier-geneve.html"
     },
     {
       "source": "/en/blog/optimiser-espace-coliving-productivite-bien-etre",
