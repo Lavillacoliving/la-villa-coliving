@@ -116,12 +116,14 @@ function splitForMidCta(md: string): [string, string] | null {
   return [md.slice(0, best), md.slice(best)];
 }
 
-// Extrait les paires Q/R d'une section FAQ markdown (« ## FAQ … » ou « ## … questions … ») :
-// questions en gras terminées par « ? », réponse = paragraphe(s) qui suivent.
-// Sert au JSON-LD FAQPage — même texte que le visible (règle AEO), markdown aplati.
+// Extrait les paires Q/R d'une section FAQ markdown (« # FAQ … », « ## FAQ … » ou
+// « ## … questions … ») : questions en gras terminées par « ? », réponse = paragraphe(s)
+// qui suivent. Sert au JSON-LD FAQPage — même texte que le visible (règle AEO), markdown aplati.
 function extractFaqPairs(md: string): { q: string; a: string }[] {
+  // #{1,2} : le titre FAQ peut être de niveau # (gros dossier) ou ## (article standard).
+  // Lookahead sur \n#{1,2}\s : la section s'arrête au prochain titre de même niveau ou plus haut.
   // (pas de flag m : avec lui, le $ du lookahead matche chaque fin de ligne et la capture est vide)
-  const section = md.match(/(?:^|\n)##\s+(?:FAQ[^\n]*|[^\n]*questions?[^\n]*)\n([\s\S]*?)(?=\n##\s|\s*$)/i);
+  const section = md.match(/(?:^|\n)#{1,2}\s+(?:FAQ[^\n]*|[^\n]*questions?[^\n]*)\n([\s\S]*?)(?=\n#{1,2}\s|\s*$)/i);
   if (!section) return [];
   const pairs: { q: string; a: string }[] = [];
   const re = /\*\*([^*\n]+\?)\*\*\s*\n+([\s\S]*?)(?=\n\s*\*\*[^*\n]+\?\*\*|$)/g;
