@@ -28,9 +28,9 @@ export const STATS = {
 // option du formulaire candidature. Avant, ces 4 endroits étaient codés en dur et se
 // contredisaient (hero « 3 », cartes « Complet/1/Complet », badges « 1 » ×3, form « Plusieurs »).
 export const AVAILABILITY = {
-  lavilla: 0, // La Villa — Ville-la-Grand (10 chambres)
-  leloft: 1, // Le Loft — Ambilly (7 chambres)
-  lelodge: 0, // Le Lodge — Annemasse (12 chambres)
+  lavilla: 1, // La Villa — Ville-la-Grand (10 chambres) — PROVISOIRE (Jérôme 15/06 : 1 partout)
+  leloft: 1, // Le Loft — Ambilly (7 chambres) — PROVISOIRE
+  lelodge: 1, // Le Lodge — Annemasse (12 chambres) — PROVISOIRE
 } as const;
 
 export type HouseKey = keyof typeof AVAILABILITY;
