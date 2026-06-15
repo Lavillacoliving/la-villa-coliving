@@ -12,13 +12,13 @@ export function TrustBadgesV4() {
     },
     {
       icon: Star,
-      value: '4.9/5',
+      value: language === 'en' ? '4.9/5' : '4,9/5',
       label: language === 'en' ? 'Member Rating' : 'Note des Membres',
     },
     {
       icon: Clock,
-      value: '30min',
-      label: language === 'en' ? 'To Geneva' : 'De Genève',
+      value: '20min',
+      label: language === 'en' ? 'From Geneva center' : 'Du centre de Genève',
     },
     {
       icon: Home,
