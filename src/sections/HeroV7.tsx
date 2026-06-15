@@ -1,7 +1,7 @@
 import { LocalizedLink } from "@/components/LocalizedLink";
 import { ArrowRight, ChevronDown, Home, Users, Heart, MapPin } from "lucide-react";
 import { useLanguage } from "@/contexts/LanguageContext";
-import { STATS } from "@/data/stats";
+import { STATS, STATS_DISPLAY, totalAvailable, totalAvailabilityLabel } from "@/data/stats";
 
 /**
  * VERSION 9: STONE & BRASS — Condo premium contemporain
@@ -10,6 +10,7 @@ import { STATS } from "@/data/stats";
 
 export function HeroV7() {
   const { language } = useLanguage();
+  const L = language === "en" ? "en" : "fr";
 
   return (
     <>
@@ -70,8 +71,8 @@ export function HeroV7() {
           {/* Description */}
           <p className="text-base md:text-lg text-white/90 max-w-xl mb-6 leading-relaxed font-light">
             {language === "en"
-              ? "Your private room in a house with pool, 15 min from Geneva. All-inclusive from CHF 1,380/month."
-              : "Ta chambre privée dans une maison avec piscine, à 15 min de Genève. Tout inclus dès 1 380 CHF/mois."}
+              ? "Your private room in a house with pool, 20 min from Geneva city center. All-inclusive from CHF 1,380/month."
+              : "Ta chambre privée dans une maison avec piscine, à 20 min du centre de Genève. Tout inclus dès 1 380 CHF/mois."}
           </p>
 
           {/* CTAs — remontés au-dessus de la réassurance/preuve sociale : GA4 montre que
@@ -110,10 +111,11 @@ export function HeroV7() {
                 </svg>
               ))}
             </div>
-            <span className="text-white/90 text-sm font-medium">
-              {language === "en"
-                ? "4.9/5 — 150+ residents since 2021"
-                : "4.9/5 — 150+ résidents depuis 2021"}
+            <span
+              className="text-white/90 text-sm font-medium"
+              title={language === "en" ? "Average rating — resident surveys 2021-2026" : "Note moyenne — enquêtes résidents 2021-2026"}
+            >
+              {`${STATS_DISPLAY[L].rating}/5 — ${STATS_DISPLAY[L].residents}`}
             </span>
           </div>
 
@@ -121,13 +123,13 @@ export function HeroV7() {
           <p className="text-sm text-[#E0BB8A] mt-4 flex items-center gap-2">
             <span className="w-2 h-2 bg-[#E0BB8A] rounded-full animate-pulse" />
             {(() => {
+              // Dispo = source unique (stats.ts AVAILABILITY) ; mois calculé dynamiquement.
               const now = new Date();
               const next = new Date(now.getFullYear(), now.getMonth() + 1, 1);
-              const monthFr = next.toLocaleDateString("fr-FR", { month: "long", year: "numeric" });
-              const monthEn = next.toLocaleDateString("en-US", { month: "long", year: "numeric" });
-              return language === "en"
-                ? `3 rooms available for ${monthEn}`
-                : `3 chambres disponibles pour ${monthFr}`;
+              const month = next.toLocaleDateString(L === "en" ? "en-US" : "fr-FR", { month: "long", year: "numeric" });
+              const label = totalAvailabilityLabel(L);
+              if (totalAvailable() <= 0) return label;
+              return L === "en" ? `${label} for ${month}` : `${label} pour ${month}`;
             })()}
           </p>
 

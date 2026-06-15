@@ -24,15 +24,15 @@ const annemasseFAQ = [
   },
   {
     q: "Combien de temps pour aller à Genève depuis Annemasse ?",
-    a: "Depuis Annemasse, Genève Cornavin est à 15 minutes en Léman Express direct (sans correspondance) depuis la gare d'Annemasse. En voiture, comptez 15-20 min selon la douane (Moillesulaz est la plus rapide). Le Tram 17 TPG (Lancy-Pont-Rouge ↔ Annemasse) dessert aussi le centre de Genève. L'aéroport de Genève est à 25-30 min en voiture.",
+    a: "Depuis Annemasse, Genève Cornavin est à 15 minutes en Léman Express direct (sans correspondance) depuis la gare d'Annemasse. En voiture, compte 15-20 min selon la douane (Moillesulaz est la plus rapide). Le Tram 17 TPG (Lancy-Pont-Rouge ↔ Annemasse) dessert aussi le centre de Genève. L'aéroport de Genève est à 25-30 min en voiture.",
   },
   {
     q: "Quel quartier d'Annemasse Agglo choisir : Ville-la-Grand, Ambilly ou Annemasse ?",
-    a: "Cela dépend de votre priorité. Ambilly est la commune la plus proche de la frontière suisse (Moillesulaz à 5 min à pied, Tram 17 à 5 min — idéal si vous voulez marcher ou pédaler vers Genève). Ville-la-Grand est résidentielle et calme, frontière mitoyenne, idéale pour ceux qui cherchent du vert (réserve naturelle du Foron à la porte). Annemasse centre (quartier Romagny pour Le Lodge) offre la proximité de la gare Léman Express et de toutes les commodités urbaines.",
+    a: "Cela dépend de ta priorité. Ambilly est la commune la plus proche de la frontière suisse (Moillesulaz à 5 min à pied, Tram 17 à 5 min — idéal si tu veux marcher ou pédaler vers Genève). Ville-la-Grand est résidentielle et calme, frontière mitoyenne, idéale pour ceux qui cherchent du vert (réserve naturelle du Foron à la porte). Annemasse centre (quartier Romagny pour Le Lodge) offre la proximité de la gare Léman Express et de toutes les commodités urbaines.",
   },
   {
     q: "Faut-il un permis G pour vivre à Annemasse et travailler à Genève ?",
-    a: "Oui, pour travailler à Genève en habitant côté France, vous avez besoin d'un permis G (permis frontalier). Votre employeur suisse en fait la demande. Annemasse Agglo se situe dans la zone frontalière éligible. Le permis G est délivré rapidement (souvent en quelques semaines) une fois le contrat signé.",
+    a: "Oui, pour travailler à Genève en habitant côté France, tu as besoin d'un permis G (permis frontalier). Ton employeur suisse en fait la demande. Annemasse Agglo se situe dans la zone frontalière éligible. Le permis G est délivré rapidement (souvent en quelques semaines) une fois le contrat signé.",
   },
   {
     q: "Quelle est la durée du bail à Annemasse ?",
@@ -44,7 +44,7 @@ const annemasseFAQ = [
   },
   {
     q: "Comment réserver une chambre à Annemasse ?",
-    a: "Remplissez le formulaire sur notre page Candidature. Nous vous rappelons sous 48h pour un échange (motivation, contexte pro, disponibilité). Si le fit est bon, une visite est organisée dans la résidence qui correspond à votre profil (La Villa à Ville-la-Grand, Le Loft à Ambilly, Le Lodge à Annemasse Romagny). L'emménagement peut se faire en 2 à 4 semaines selon les disponibilités.",
+    a: "Remplis le formulaire sur notre page Candidature. Nous te rappelons sous 48h pour un échange (motivation, contexte pro, disponibilité). Si le fit est bon, une visite est organisée dans la résidence qui correspond à ton profil (La Villa à Ville-la-Grand, Le Loft à Ambilly, Le Lodge à Annemasse Romagny). L'emménagement peut se faire en 2 à 4 semaines selon les disponibilités.",
   },
 ];
 
@@ -187,7 +187,7 @@ export function AnnemasseColocationPage() {
           <p className="text-[#57534E] text-center max-w-3xl mx-auto mb-12">
             {language === "en"
               ? "29 furnished rooms across 3 design houses — same all-inclusive pricing, different vibes. Pick the location that fits your commute and lifestyle."
-              : "29 chambres meublées dans 3 maisons design — même prix tout inclus, ambiances différentes. Choisissez la résidence qui colle à votre trajet et votre style de vie."}
+              : "29 chambres meublées dans 3 maisons design — même prix tout inclus, ambiances différentes. Choisis la résidence qui colle à ton trajet et ton style de vie."}
           </p>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {/* La Villa */}
@@ -446,7 +446,7 @@ export function AnnemasseColocationPage() {
           <p className="text-lg text-white/80 mb-10 leading-relaxed">
             {language === "en"
               ? "Tell us about you and your move plans — we get back to you within 48 hours, and a visit can be organised within 2 weeks."
-              : "Dites-nous qui vous êtes et votre projet d'emménagement — on revient sous 48h, et une visite peut s'organiser sous 2 semaines."}
+              : "Dis-nous qui tu es et ton projet d'emménagement — on revient sous 48h, et une visite peut s'organiser sous 2 semaines."}
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <LocalizedLink

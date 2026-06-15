@@ -52,7 +52,7 @@ const CTA_COPY: Record<IntentBucket, {
     primary: { fr: "Candidater — 2 min, gratuit", en: "Apply — 2 min, free", to: "/candidature" },
     secondary: { fr: "Voir la colocation à Genève", en: "Shared housing in Geneva", to: "/colocation-geneve" },
     mid: {
-      text: { fr: "29 chambres tout inclus dès 1 380 CHF/mois, à 15 min de Genève — 0 frais de dossier.", en: "29 all-inclusive rooms from CHF 1,380/month, 15 min from Geneva — no application fee." },
+      text: { fr: "29 chambres tout inclus dès 1 380 CHF/mois, à 20 min du centre de Genève — 0 frais de dossier.", en: "29 all-inclusive rooms from CHF 1,380/month, 20 min from Geneva city center — no application fee." },
       label: { fr: "Candidater (2 min, gratuit)", en: "Apply (2 min, free)" }, to: "/candidature",
     },
   },
@@ -61,7 +61,7 @@ const CTA_COPY: Record<IntentBucket, {
     primary: { fr: "Candidater — 2 min, gratuit", en: "Apply — 2 min, free", to: "/candidature" },
     secondary: { fr: "Voir la colocation à Genève", en: "Shared housing in Geneva", to: "/colocation-geneve" },
     mid: {
-      text: { fr: "Chambres disponibles dès 1 380 CHF/mois tout inclus, à 15 min de Genève — 0 frais de dossier.", en: "Rooms available from CHF 1,380/month all-inclusive, 15 min from Geneva — no application fee." },
+      text: { fr: "Chambres disponibles dès 1 380 CHF/mois tout inclus, à 20 min du centre de Genève — 0 frais de dossier.", en: "Rooms available from CHF 1,380/month all-inclusive, 20 min from Geneva city center — no application fee." },
       label: { fr: "Voir les chambres disponibles", en: "See available rooms" }, to: "/nos-maisons",
     },
   },
@@ -75,11 +75,11 @@ const CTA_COPY: Record<IntentBucket, {
     },
   },
   life: {
-    headline: { fr: "Envie d'habiter à 15 min de Genève, sans la galère ?", en: "Want to live 15 minutes from Geneva, hassle-free?" },
+    headline: { fr: "Envie d'habiter à 20 min du centre de Genève, sans la galère ?", en: "Want to live 20 min from Geneva city center, hassle-free?" },
     primary: { fr: "Découvre nos maisons", en: "Discover our houses", to: "/nos-maisons" },
     secondary: { fr: "Candidater", en: "Apply", to: "/candidature" },
     mid: {
-      text: { fr: "Envie d'habiter à 15 min de Genève, sans la galère ? Trois maisons tout inclus dès 1 380 CHF/mois.", en: "Want to live 15 minutes from Geneva, hassle-free? Three all-inclusive houses from CHF 1,380/month." },
+      text: { fr: "Envie d'habiter à 20 min du centre de Genève, sans la galère ? Trois maisons tout inclus dès 1 380 CHF/mois.", en: "Want to live 20 min from Geneva city center, hassle-free? Three all-inclusive houses from CHF 1,380/month." },
       label: { fr: "Découvre nos maisons", en: "Discover our houses" }, to: "/nos-maisons",
     },
   },
@@ -88,7 +88,7 @@ const CTA_COPY: Record<IntentBucket, {
     primary: { fr: "Candidater — 2 min, gratuit", en: "Apply — 2 min, free", to: "/candidature" },
     secondary: { fr: "Voir la colocation à Genève", en: "Shared housing in Geneva", to: "/colocation-geneve" },
     mid: {
-      text: { fr: "Chambres disponibles dès 1 380 CHF/mois tout inclus, à 15 min de Genève — 0 frais de dossier.", en: "Rooms available from CHF 1,380/month all-inclusive, 15 min from Geneva — no application fee." },
+      text: { fr: "Chambres disponibles dès 1 380 CHF/mois tout inclus, à 20 min du centre de Genève — 0 frais de dossier.", en: "Rooms available from CHF 1,380/month all-inclusive, 20 min from Geneva city center — no application fee." },
       label: { fr: "Voir les chambres disponibles", en: "See available rooms" }, to: "/nos-maisons",
     },
   },
@@ -452,8 +452,8 @@ export function BlogPostPage() {
           </h2>
           <p className="text-sm text-[#78716C] mb-6 max-w-lg mx-auto">
             {language === "en"
-              ? "29 furnished all-inclusive rooms from CHF 1,380/month — utilities, fiber, cleaning, pool, gym, 15 min from Geneva. No application fee, reply within 48h."
-              : "29 chambres meublées tout inclus dès 1 380 CHF/mois — charges, fibre, ménage, piscine, gym, à 15 min de Genève. 0 frais de dossier, réponse sous 48 h."}
+              ? "29 furnished all-inclusive rooms from CHF 1,380/month — utilities, fiber, cleaning, pool, gym, 20 min from Geneva city center. No application fee, reply within 48h."
+              : "29 chambres meublées tout inclus dès 1 380 CHF/mois — charges, fibre, ménage, piscine, gym, à 20 min du centre de Genève. 0 frais de dossier, réponse sous 48 h."}
           </p>
           <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
             <LocalizedLink
@@ -486,8 +486,8 @@ export function BlogPostPage() {
           </h2>
           <p className="text-sm text-[#78716C] text-center mb-10">
             {language === "en"
-              ? "Three premium coliving houses 15 min from Geneva, all-inclusive from CHF 1,380/month."
-              : "Trois maisons de coliving premium à 15 min de Genève, tout inclus dès 1 380 CHF/mois."}
+              ? "Three premium coliving houses 20 min from Geneva city center, all-inclusive from CHF 1,380/month."
+              : "Trois maisons de coliving premium à 20 min du centre de Genève, tout inclus dès 1 380 CHF/mois."}
           </p>
           <div className="grid md:grid-cols-3 gap-6">
             {[

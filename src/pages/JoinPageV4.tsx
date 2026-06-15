@@ -3,6 +3,7 @@ import { useLanguage } from "@/contexts/LanguageContext";
 import { ArrowRight, Check, Clock, Shield, Loader2, Star, Users, Calendar, ChevronDown, ChevronUp, MessageCircle, Sparkles } from "lucide-react";
 import { SEO } from "@/components/SEO";
 import { SUPABASE_URL, SUPABASE_ANON_KEY } from "@/lib/supabase";
+import { STATS, STATS_DISPLAY, totalAvailabilityLabel } from "@/data/stats";
 
 type FormStatus = "idle" | "submitting" | "success" | "error";
 
@@ -10,6 +11,7 @@ const EDGE_FUNCTION_URL = `${SUPABASE_URL}/functions/v1/send-candidature-email`;
 
 export function JoinPageV4() {
   const { language } = useLanguage();
+  const L = language === "en" ? "en" : "fr";
   const [status, setStatus] = useState<FormStatus>("idle");
   const [errorMessage, setErrorMessage] = useState<string>("");
   const [openFAQ, setOpenFAQ] = useState<number | null>(null);
@@ -111,7 +113,7 @@ export function JoinPageV4() {
           <p className="text-lg text-[#57534E] max-w-2xl mx-auto">
             {language === "en"
               ? "Your new home is waiting. Complete the form below and we'll guide you through every step."
-              : "Votre nouvelle maison vous attend. Complétez le formulaire ci-dessous et on vous accompagne à chaque étape."}
+              : "Ta nouvelle maison t'attend. Complète le formulaire ci-dessous et on t'accompagne à chaque étape."}
           </p>
         </div>
       </section>
@@ -123,10 +125,10 @@ export function JoinPageV4() {
             <div className="flex flex-col items-center">
               <Users className="w-8 h-8 text-[#D4A574] mb-3" />
               <p className="text-3xl font-light text-[#1C1917] mb-1" style={{ fontFamily: "DM Serif Display, serif" }}>
-                100+
+                {STATS.totalResidents}+
               </p>
               <p className="text-sm text-[#57534E]">
-                {language === "en" ? "Residents welcomed since 2021" : "Résidents accueillis depuis 2021"}
+                {language === "en" ? "Residents since 2021" : "Résidents depuis 2021"}
               </p>
             </div>
             <div className="flex flex-col items-center">
@@ -141,7 +143,7 @@ export function JoinPageV4() {
             <div className="flex flex-col items-center">
               <Star className="w-8 h-8 text-[#D4A574] mb-3 fill-[#D4A574]" />
               <p className="text-3xl font-light text-[#1C1917] mb-1" style={{ fontFamily: "DM Serif Display, serif" }}>
-                4.9/5
+                {STATS_DISPLAY[L].rating}/5
               </p>
               <p className="text-sm text-[#57534E]">
                 {language === "en" ? "Average rating from residents" : "Note moyenne des résidents"}
@@ -174,7 +176,7 @@ export function JoinPageV4() {
                 description:
                   language === "en"
                     ? "Fill out the application form with your details."
-                    : "Remplissez le formulaire de candidature avec vos coordonnées.",
+                    : "Remplis le formulaire de candidature avec tes coordonnées.",
               },
               {
                 number: "02",
@@ -182,7 +184,7 @@ export function JoinPageV4() {
                 description:
                   language === "en"
                     ? "We'll schedule a video call to get to know you better."
-                    : "On planifiera un appel vidéo pour mieux vous connaître.",
+                    : "On planifiera un appel vidéo pour mieux te connaître.",
               },
               {
                 number: "03",
@@ -190,7 +192,7 @@ export function JoinPageV4() {
                 description:
                   language === "en"
                     ? "Refundable deposit, and that's it — zero application fee. Welcome home!"
-                    : "Caution remboursable, et c'est tout — zéro frais de dossier. Bienvenue chez vous !",
+                    : "Caution remboursable, et c'est tout — zéro frais de dossier. Bienvenue chez toi !",
               },
             ].map((step, index) => (
               <div key={index} className="bg-white p-10 text-center">
@@ -279,9 +281,7 @@ export function JoinPageV4() {
           <div className="mb-6 text-center">
             <span className="inline-flex items-center gap-2 px-4 py-2 bg-white border border-[#D4A574] text-sm text-[#1C1917]">
               <Calendar className="w-4 h-4 text-[#D4A574]" />
-              {language === "en"
-                ? "Several rooms available"
-                : "Plusieurs chambres disponibles"}
+              {totalAvailabilityLabel(L)}
             </span>
           </div>
 
@@ -319,12 +319,12 @@ export function JoinPageV4() {
               <p className="text-lg text-[#57534E] mb-2">
                 {language === "en"
                   ? "Thank you for your application."
-                  : "Merci pour votre candidature."}
+                  : "Merci pour ta candidature."}
               </p>
               <p className="text-[#78716C] mb-8">
                 {language === "en"
                   ? "We've sent you a confirmation email and will get back to you within 48 hours."
-                  : "Vous allez recevoir un email de confirmation. Nous vous recontactons sous 48h."}
+                  : "Tu vas recevoir un email de confirmation. On te recontacte sous 48h."}
               </p>
               <button
                 type="button"
@@ -353,12 +353,12 @@ export function JoinPageV4() {
             <div className="flex items-center gap-4 mb-8 pb-6 border-b border-[#E7E5E4]">
               <div className="flex items-center gap-2">
                 <span className="w-6 h-6 bg-[#D4A574] text-white text-xs rounded-full flex items-center justify-center font-medium">1</span>
-                <span className="text-sm text-[#1C1917] font-medium">{language === "en" ? "Your info" : "Vos infos"}</span>
+                <span className="text-sm text-[#1C1917] font-medium">{language === "en" ? "Your info" : "Tes infos"}</span>
               </div>
               <div className="flex-1 h-px bg-[#E7E5E4]" />
               <div className="flex items-center gap-2">
                 <span className="w-6 h-6 bg-[#D4A574] text-white text-xs rounded-full flex items-center justify-center font-medium">2</span>
-                <span className="text-sm text-[#1C1917] font-medium">{language === "en" ? "Your stay" : "Votre séjour"}</span>
+                <span className="text-sm text-[#1C1917] font-medium">{language === "en" ? "Your stay" : "Ton séjour"}</span>
               </div>
               <div className="flex-1 h-px bg-[#E7E5E4]" />
               <div className="flex items-center gap-2">
@@ -429,14 +429,14 @@ export function JoinPageV4() {
             {/* Stay Info */}
             <div className="mb-10">
               <h2 className="text-xs uppercase tracking-widest text-[#78716C] mb-6">
-                {language === "en" ? "Your Stay" : "Votre Séjour"}
+                {language === "en" ? "Your Stay" : "Ton Séjour"}
               </h2>
               <div className="grid md:grid-cols-2 gap-6">
                 <div>
                   <label className="block text-sm text-[#57534E] mb-2">
                     {language === "en"
                       ? "When would you like to join?"
-                      : "Quand souhaitez-vous nous rejoindre ?"}
+                      : "Quand souhaites-tu nous rejoindre ?"}
                   </label>
                   <select
                     name="arrival"
@@ -464,7 +464,7 @@ export function JoinPageV4() {
                   <label className="block text-sm text-[#57534E] mb-2">
                     {language === "en"
                       ? "How long do you plan to stay?"
-                      : "Combien de temps comptez-vous rester ?"}
+                      : "Combien de temps comptes-tu rester ?"}
                   </label>
                   <select
                     name="duration"
@@ -494,7 +494,7 @@ export function JoinPageV4() {
                   <label className="block text-sm text-[#57534E] mb-2">
                     {language === "en"
                       ? "How did you hear about us?"
-                      : "Comment avez-vous entendu parler de nous ?"}
+                      : "Comment as-tu entendu parler de nous ?"}
                   </label>
                   <select
                     name="source"
@@ -559,7 +559,7 @@ export function JoinPageV4() {
             <p className="text-sm text-[#78716C] text-center mt-4">
               {language === "en"
                 ? "Response within 48h. Your data remains confidential."
-                : "Réponse sous 48h. Vos données restent confidentielles."}
+                : "Réponse sous 48h. Tes données restent confidentielles."}
             </p>
           </form>
           )}
@@ -575,7 +575,7 @@ export function JoinPageV4() {
             <h2 className="text-xl md:text-2xl font-medium text-[#1C1917] mb-2">
               {language === "en"
                 ? "Prefer to chat first? Reach us on WhatsApp"
-                : "Vous préférez discuter d'abord ? Joignez-nous sur WhatsApp"}
+                : "Tu préfères discuter d'abord ? Joins-nous sur WhatsApp"}
             </h2>
             <p className="text-sm text-[#57534E] mb-6 max-w-xl mx-auto">
               {language === "en"
@@ -634,13 +634,13 @@ export function JoinPageV4() {
               {
                 q_fr: "Je peux visiter avant de signer ?",
                 q_en: "Can I visit before signing?",
-                a_fr: "Oui, c'est systématique. Visite physique (30-45 min) ou virtuelle si vous êtes à l'étranger. Vous rencontrez aussi un coliver actuel pour avoir un retour terrain honnête sur la vie communautaire.",
+                a_fr: "Oui, c'est systématique. Visite physique (30-45 min) ou virtuelle si tu es à l'étranger. Tu rencontres aussi un coliver actuel pour avoir un retour terrain honnête sur la vie communautaire.",
                 a_en: "Yes, always. Physical tour (30-45 min) or virtual if you're abroad. You also meet a current resident to get an honest first-hand take on community life.",
               },
               {
                 q_fr: "Et si je ne sais pas encore quelle date d'arrivée mettre ?",
                 q_en: "What if I don't know my arrival date yet?",
-                a_fr: "Pas de souci — choisissez \"Plus tard / pas encore décidé\". On revient vers vous avec les chambres disponibles et on cale ensemble une date qui vous convient. Candidater ne vous engage à rien.",
+                a_fr: "Pas de souci — choisis \"Plus tard / pas encore décidé\". On revient vers toi avec les chambres disponibles et on cale ensemble une date qui te convient. Candidater ne t'engage à rien.",
                 a_en: "No worries — pick \"Later / not decided yet\". We'll get back to you with available rooms and we'll set a date together. Applying doesn't commit you to anything.",
               },
             ].map((item, i) => (

@@ -1,18 +1,20 @@
 import { useLanguage } from '@/contexts/LanguageContext';
 import { Users, Star, Clock, Home } from 'lucide-react';
+import { STATS_DISPLAY } from '@/data/stats';
 
 export function TrustBadges() {
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
+  const L = language === 'en' ? 'en' : 'fr';
 
   const badges = [
     {
       icon: Users,
-      value: '50+',
+      value: '150+',
       label: t.trustBadges.members,
     },
     {
       icon: Star,
-      value: '4.9/5',
+      value: `${STATS_DISPLAY[L].rating}/5`,
       label: t.trustBadges.rating,
     },
     {

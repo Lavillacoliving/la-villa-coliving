@@ -18,6 +18,7 @@ import {
   Sun,
 } from "lucide-react";
 import { useLanguage } from "@/contexts/LanguageContext";
+import { AVAILABILITY, houseAvailabilityLabel } from "@/data/stats";
 
 import { Badge } from "@/components/ui/badge";
 import { HouseGallery } from "@/sections/HouseGallery";
@@ -437,9 +438,10 @@ function getHousesData(lang: string): Record<string, HouseData> {
       "Entrepreneurs & créatifs",
       "Amoureux de la nature & passionnés de bien-être",
     ],
-    available: true,
-    badge: isEn ? "1 room available" : "1 chambre disponible",
-    badgeColor: "#D4A574",
+    // Dispo dérivée de la source unique (stats.ts) — plus de "1 chambre" codée en dur.
+    available: AVAILABILITY.lavilla > 0,
+    badge: houseAvailabilityLabel("lavilla", isEn ? "en" : "fr"),
+    badgeColor: AVAILABILITY.lavilla > 0 ? "#D4A574" : "#78716C",
   },
   leloft: {
     name: "Le Loft",
@@ -840,9 +842,10 @@ function getHousesData(lang: string): Record<string, HouseData> {
       "Cadres internationaux",
       "Amoureux de la ville & passionnés de culture",
     ],
-    available: true,
-    badge: isEn ? "1 room available" : "1 chambre disponible",
-    badgeColor: "#D4A574",
+    // Dispo dérivée de la source unique (stats.ts) — plus de "1 chambre" codée en dur.
+    available: AVAILABILITY.leloft > 0,
+    badge: houseAvailabilityLabel("leloft", isEn ? "en" : "fr"),
+    badgeColor: AVAILABILITY.leloft > 0 ? "#D4A574" : "#78716C",
   },
   lelodge: {
     name: "Le Lodge",
@@ -1302,9 +1305,10 @@ function getHousesData(lang: string): Record<string, HouseData> {
       "Passionnés de bien-être",
       "Frontaliers & expatriés",
     ],
-    available: true,
-    badge: isEn ? "1 room available" : "1 chambre disponible",
-    badgeColor: "#D4A574",
+    // Dispo dérivée de la source unique (stats.ts) — plus de "1 chambre" codée en dur.
+    available: AVAILABILITY.lelodge > 0,
+    badge: houseAvailabilityLabel("lelodge", isEn ? "en" : "fr"),
+    badgeColor: AVAILABILITY.lelodge > 0 ? "#D4A574" : "#78716C",
   },
 };
 }
@@ -1362,8 +1366,8 @@ export function HouseDetailPage() {
           // Metas ≤ 155c, factuelles, chiffrées. Pas de "${house.description}" qui dépasse 200c.
           const descs: Record<string, { en: string; fr: string }> = {
             lavilla: {
-              en: "La Villa: 10 premium rooms in Ville-la-Grand. Heated pool, sauna, gym, fiber. All-inclusive from CHF 1,380/month. 15 min from Geneva.",
-              fr: "La Villa : 10 chambres premium à Ville-la-Grand. Piscine chauffée, sauna, gym, fibre. Tout inclus dès 1 380 CHF/mois. À 15 min de Genève.",
+              en: "La Villa: 10 premium rooms in Ville-la-Grand. Heated pool, sauna, gym, fiber. All-inclusive from CHF 1,380/month. 20 min from Geneva city center.",
+              fr: "La Villa : 10 chambres premium à Ville-la-Grand. Piscine chauffée, sauna, gym, fibre. Tout inclus dès 1 380 CHF/mois. À 20 min du centre de Genève.",
             },
             leloft: {
               en: "Le Loft: 7 premium rooms in Ambilly. Indoor pool, urban design, Tram 17 to Geneva. All-inclusive from CHF 1,380/month.",
@@ -2173,6 +2177,20 @@ export function HouseDetailPage() {
           </div>
         </div>
       </section>
+
+      {/* Funnel P1 — CTA collante MOBILE (cachée en desktop), visible pendant tout le scroll.
+          On garde "Candidater" + réassurance 48h (pas de promesse de réservation). */}
+      <div className="md:hidden h-16" aria-hidden="true" />
+      <div className="md:hidden fixed bottom-0 inset-x-0 z-40 bg-white/95 backdrop-blur border-t border-[#E7E5E4] px-4 py-3">
+        <LocalizedLink
+          to={language === "en" ? "/en/candidature" : "/candidature"}
+          onClick={() => trackCta("sticky_mobile")}
+          className="flex items-center justify-center gap-2 w-full bg-[#D4A574] text-[#1C1917] py-3 rounded-lg text-sm font-semibold"
+        >
+          {language === "en" ? "Apply — reply within 48h" : "Candidater — réponse sous 48h"}
+          <ArrowRight className="w-4 h-4" />
+        </LocalizedLink>
+      </div>
     </main>
   );
 }

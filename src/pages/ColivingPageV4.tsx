@@ -4,9 +4,11 @@ import { LocalizedLink } from "@/components/LocalizedLink";
 import { SEO } from "@/components/SEO";
 import { FaqSection } from "@/components/FaqSection";
 import { colivingFaq } from "@/data/faq/colivingFaq";
+import { STATS, STATS_DISPLAY } from "@/data/stats";
 
 export function ColivingPageV4() {
   const { t, language } = useLanguage();
+  const L = language === "en" ? "en" : "fr";
 
   const values = [
     {
@@ -311,14 +313,14 @@ export function ColivingPageV4() {
                   <Users className="w-5 h-5 text-[#D4A574]" />
                   <span className="text-sm text-[#57534E]">
                     {language === "en"
-                      ? "50+ happy residents"
-                      : "50+ résidents heureux"}
+                      ? `${STATS.totalResidents}+ happy residents`
+                      : `${STATS.totalResidents}+ résidents heureux`}
                   </span>
                 </div>
                 <div className="flex items-center gap-2">
                   <Star className="w-5 h-5 text-[#D4A574]" />
                   <span className="text-sm text-[#57534E]">
-                    {language === "en" ? "4.9/5 rating" : "Note 4.9/5"}
+                    {language === "en" ? `${STATS_DISPLAY[L].rating}/5 rating` : `Note ${STATS_DISPLAY[L].rating}/5`}
                   </span>
                 </div>
               </div>
