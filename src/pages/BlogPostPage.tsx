@@ -147,7 +147,10 @@ function slugify(s: string): string {
     .toLowerCase()
     .normalize("NFD").replace(/[̀-ͯ]/g, "") // accents
     .replace(/[^a-z0-9]+/g, "-")
-    .replace(/^-+|-+$/g, "");
+    .replace(/^-+|-+$/g, "")
+    // Retire un numéro de chapitre en tête (« 1- ») : l'id commence ainsi toujours par une
+    // lettre → ancre fiable partout + sélecteur CSS valide (#1-… est rejeté par querySelector).
+    .replace(/^\d+-/, "");
 }
 
 // Aplati les children React d'un titre en texte brut (pour calculer l'id).
