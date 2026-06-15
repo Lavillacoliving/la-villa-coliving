@@ -1,21 +1,22 @@
 -- ════════════════════════════════════════════════════════════════════════
 -- PHASE 3 — DOSSIER DE RÉFÉRENCE « Guide des ressources du frontalier »
--- Date : 2026-06-15 (v2 — version pleine, ~10 min/chapitre) · Demande Jérôme.
+-- Date : 2026-06-15 (v3 — FR VÉRIFIÉ par Jérôme + Tram 17, EN aligné).
 -- ────────────────────────────────────────────────────────────────────────
--- ANTI-HALLUCINATION : chaque chiffre provient des articles DÉJÀ VALIDÉS par
--- Jérôme (permis G, LAMal/CMU, fiscalité, déclaration, avenant 40, télétravail,
--- coût transport, transport Léman Express, temps de trajet, budget, dossier-
--- location, arnaques, loyer, 5-erreurs). Présentés comme « ordres de grandeur /
--- environ », exactement comme les articles source. Hub & spoke : chaque chapitre
--- renvoie vers l'article dédié. Divergences arbitrées prudemment (Léman Express :
--- « une vingtaine de min » ; abonnement « ~80 CHF/mois » = consensus 3 articles).
--- Chômage : aucun article source → structurel + « vérifie l'état à jour », ZÉRO
--- montant inventé (chapitre volontairement plus court, signalé à Jérôme).
+-- content_fr = version vérifiée fournie par Jérôme (Article_Ego_Bait_..._VERIFIE.md),
+--   intégrée verbatim, + ajout Tram 17 (Croix d'Ambilly → Terrassière ~20 min).
+--   Corrections Jérôme (sourcées en ligne) : Ch.2 prime LAMal CONSTANTE ~280 CHF
+--   (indépendante du salaire) + note franchise ; évolution « quasi stable 2026,
+--   réforme compensation des risques 2028 » ; Ch.3 avenant télétravail signé
+--   25/07/2025 (permanent) + obligation employeur de transmettre le % dès 2027 ;
+--   3a rachat rétroactif depuis 2026.
+-- content_en = EN précédent + MÊMES corrections reportées (parité) + Tram 17.
+-- ANTI-HALLUCINATION maintenu ; Tram 17 ~70 CHF = pass Unireso/tpg (cohérent
+--   avec l'article temps-trajet validé). Chômage : zéro montant inventé.
 -- À exécuter dans le SQL Editor Supabase ; relire la preview au dashboard.
 -- ════════════════════════════════════════════════════════════════════════
 
 UPDATE blog_posts SET
-  read_time_min = 45,
+  read_time_min = 40,
   updated_at = NOW(),
   excerpt_fr = 'Le dossier complet du frontalier genevois : permis G, LAMal ou CMU, impôts et télétravail, transports, chômage, logement. Chaque étape détaillée, chiffrée et sourcée.',
   excerpt_en = 'The complete cross-border worker dossier for Geneva: Permit G, LAMal vs CMU, taxes and remote work, transport, unemployment, housing. Every step detailed and sourced.',
@@ -23,7 +24,7 @@ UPDATE blog_posts SET
   meta_description_en = 'The reference dossier for cross-border workers in Geneva: Permit G, health insurance (LAMal/CMU), taxes, remote work, transport, unemployment, housing.',
   content_fr = $$Travailler en Suisse quand on habite côté France, c'est une belle équation — un salaire suisse, un coût de la vie français. Mais c'est aussi une série de démarches qu'on découvre souvent dans le désordre, et toujours un peu dans l'urgence : le permis, l'assurance maladie, les impôts, les transports, le chômage et bien sûr le logement.
 
-Ce dossier les couvre **une par une, en profondeur**. Chaque chapitre se lit indépendamment, avec ses tableaux, ses chiffres (ordres de grandeur indicatifs, toujours à vérifier sur les sources officielles, car les règles évoluent) et, à la fin, un lien vers notre guide détaillé si tu veux creuser encore. Garde cette page sous le coude : c'est le point de départ de toute installation réussie sur le bassin genevois.
+Ce dossier les couvre **une par une**. Chaque chapitre se lit indépendamment, avec ses tableaux, ses chiffres (ordres de grandeur indicatifs, toujours à vérifier sur les sources officielles, car les règles évoluent) et, à la fin, un lien vers notre guide détaillé si tu veux creuser encore. Garde cette page sous le coude : c'est le point de départ de toute installation réussie sur le bassin genevois.
 
 > **Comment lire ce dossier ?** Inutile de tout enchaîner. Va directement au chapitre qui te concerne aujourd'hui — le permis si tu viens de signer, l'assurance si ton délai de 3 mois court, le logement si tu cherches encore — et reviens-y au fil de ton installation.
 
@@ -111,7 +112,7 @@ C'est l'option par défaut. Tu choisis un **assureur suisse** (Helsana, CSS, Swi
 - Après la franchise, une **quote-part de 10 %** s'applique sur les frais, plafonnée à **700 CHF/an** : ton reste à charge annuel est donc borné.
 - La LAMal couvre les soins **en Suisse et en France** (avec la carte européenne d'assurance maladie) et te donne accès aux médecins suisses **sans médecin traitant** — un confort réel si tu te soignes côté suisse.
 
-Son talon d'Achille : des primes qui augmentent de **5 à 10 % par an**, une hausse à anticiper sur la durée. Pour comparer les caisses, utilise le **comparateur officiel de la Confédération, [priminfo.admin.ch](https://www.priminfo.admin.ch)** — il évite de te fier aux arguments commerciaux d'un seul assureur.
+Côté évolution des prix : les primes LAMal ont **historiquement augmenté de 5 à 10 % par an** (avec un pic à +16,6 % en 2024). Bonne nouvelle, **2026 est une année quasi blanche pour les frontaliers**, la hausse restant très contenue. Mais garde un œil sur l'horizon : une **réforme du mécanisme de compensation des risques, qui pourrait renchérir les primes des assurés frontaliers, est attendue pour 2028** — un point à anticiper dans un choix qui t'engage sur la durée. Pour comparer les caisses, utilise le **comparateur officiel de la Confédération, [priminfo.admin.ch](https://www.priminfo.admin.ch)** — il évite de te fier aux arguments commerciaux d'un seul assureur.
 
 ## Comment marche la CMU-PUMa (couverture française)
 
@@ -125,21 +126,21 @@ Deux contreparties : la couverture est surtout **côté France**, et tu dois res
 |---|---|---|
 | Base du coût | Âge, canton, franchise — **indépendant du salaire** | **~8 % du revenu fiscal de référence** |
 | Franchise | 300 à 2 500 CHF/an + quote-part 10 % (max 700 CHF/an) | Pas de franchise à avancer |
-| Évolution | Primes +5 à 10 %/an | Augmente seulement si le salaire augmente |
+| Évolution | Historiquement +5 à 10 %/an ; **quasi stable en 2026**, réforme attendue en 2028 | Augmente seulement si le salaire augmente |
 | Accès aux soins | Médecins suisses en direct, couvre Suisse + France | Parcours coordonné, médecin traitant en France |
 | Le mieux pour… | Hauts salaires (prime fixe) | Salaires modestes (< ~65 000 CHF brut/an) |
 
-À titre indicatif, selon les ordres de grandeur relevés début 2026 pour un frontalier de 25-35 ans, voici comment les deux options se croisent selon le salaire :
+À titre indicatif, selon les ordres de grandeur relevés début 2026 pour un frontalier de 25-35 ans, voici comment les deux options se croisent selon le salaire. **Note bien la logique du tableau : la prime LAMal ne bouge pas avec ton salaire** (elle dépend de ton âge, de ton canton et de ta franchise) — c'est la cotisation CMU, elle, qui grimpe avec le revenu. C'est tout le cœur de l'arbitrage.
 
-| Salaire brut annuel | Prime LAMal (franchise 2 500) | Cotisation CMU-PUMa | Option qui ressort |
+| Salaire brut annuel | Prime LAMal (jeune adulte)* | Cotisation CMU-PUMa | Option qui ressort |
 |---|---|---|---|
-| 50 000 CHF | ~300 CHF | ~210 CHF | CMU |
-| 65 000 CHF | ~320 CHF | ~300 CHF | Équivalent |
-| 80 000 CHF | ~350 CHF | ~400 CHF | LAMal |
-| 100 000 CHF | ~380 CHF | ~530 CHF | LAMal |
-| 120 000 CHF | ~400 CHF | ~650 CHF | LAMal |
+| 50 000 CHF | ~280 CHF | ~210 CHF | CMU |
+| 65 000 CHF | ~280 CHF | ~300 CHF | Équivalent |
+| 80 000 CHF | ~280 CHF | ~400 CHF | LAMal |
+| 100 000 CHF | ~280 CHF | ~530 CHF | LAMal |
+| 120 000 CHF | ~280 CHF | ~650 CHF | LAMal |
 
-*(Ordres de grandeur indicatifs, hors situation individuelle — à confirmer par une simulation.)*
+*\*Prime forfaitaire, **indépendante du salaire** : elle varie selon l'âge, le canton et la franchise. La valeur de ~280 CHF correspond à un adulte de 25-35 ans avec une franchise basse (300 CHF) chez une caisse compétitive ; les offres les moins chères démarrent autour de 200 CHF, et choisir une franchise élevée (2 500 CHF) ramène la prime vers ~200 CHF — mais en t'exposant à davantage de frais à ta charge avant remboursement. Ordres de grandeur indicatifs, hors situation individuelle.*
 
 ## La règle simple, et le réflexe à prendre
 
@@ -201,9 +202,11 @@ Depuis 2021, si **90 % ou plus** des revenus de ton foyer sont imposés en Suiss
 
 Levier complémentaire bien connu des frontaliers quasi-résidents : le **3e pilier 3a**, un compte d'épargne retraite suisse dont les versements sont déductibles du revenu imposable. En 2026, le plafond pour un salarié affilié à la LPP est de **7 258 CHF/an**. Concrètement, verser ce plafond avec un taux marginal de l'ordre de 15 % génère environ **1 089 CHF d'économie d'impôt**, soit près de **91 CHF/mois** — tout en te constituant une épargne. C'est l'un des rares dispositifs qui te fait gagner sur les deux tableaux.
 
+Nouveauté 2026 à connaître : il est désormais possible de **combler rétroactivement** les lacunes de cotisation des années précédentes (sous conditions, et uniquement pour les lacunes apparues à partir de l'année 2025) — une option utile si tu n'as pas pu verser le maximum certaines années.
+
 ## Le télétravail : la règle des 40 %
 
-Depuis l'avenant fiscal franco-suisse applicable aux **revenus perçus à partir du 1er janvier 2026**, tu peux télétravailler depuis la France **jusqu'à 40 % de ton temps de travail annuel** — soit **environ 2 jours par semaine** — sans rien changer à ton imposition : **tout ton salaire reste imposé à la source en Suisse**, comme si tu étais 100 % sur place. Jusqu'à 10 jours de missions par an hors de Suisse (en France ou ailleurs) sont comptabilisés dans ces 40 %.
+Depuis l'avenant fiscal franco-suisse — **accord permanent signé le 25 juillet 2025** et applicable aux **revenus perçus à partir du 1er janvier 2026** —, tu peux télétravailler depuis la France **jusqu'à 40 % de ton temps de travail annuel** — soit **environ 2 jours par semaine** — sans rien changer à ton imposition : **tout ton salaire reste imposé à la source en Suisse**, comme si tu étais 100 % sur place. Jusqu'à 10 jours de missions par an hors de Suisse (en France ou ailleurs) sont comptabilisés dans ces 40 %.
 
 | Part de télétravail (annuelle, depuis la France) | Régime fiscal | Régime social |
 |---|---|---|
@@ -211,7 +214,9 @@ Depuis l'avenant fiscal franco-suisse applicable aux **revenus perçus à partir
 | Au-delà de 40 % | La part télétravaillée devient imposable **en France dès le 1er jour** | Maintien suisse tant que < 49,9 % |
 | 49,9 % et plus (≥ 3 j/sem.) | Idem ci-dessus | **Risque de bascule vers la sécurité sociale française** |
 
-Le piège, c'est de confondre **deux seuils distincts** : **40 % pour le fiscal**, **49,9 % pour le social**. Tant que tu restes sous 49,9 %, tu conserves la sécurité sociale suisse (AVS, LPP, chômage, assurance maladie), grâce à un accord-cadre européen — mais cela suppose une **attestation A1** à jour, que ton employeur demande via la plateforme ALPS. Au-delà de 49,9 % (3 jours de télétravail par semaine et plus), tu risques de basculer sur les cotisations françaises, ce qui change tout : retraite, prévoyance, couverture santé. Comme ces seuils et leurs modalités évoluent, **vérifie l'état en vigueur chaque année** auprès de ton employeur et des sources officielles.
+Le piège, c'est de confondre **deux seuils distincts** : **40 % pour le fiscal**, **49,9 % pour le social**. Tant que tu restes sous 49,9 %, tu conserves la sécurité sociale suisse (AVS, LPP, chômage, assurance maladie), grâce à un accord-cadre européen — mais cela suppose une **attestation A1** à jour, que ton employeur demande via la plateforme ALPS. Au-delà de 49,9 % (3 jours de télétravail par semaine et plus), tu risques de basculer sur les cotisations françaises, ce qui change tout : retraite, prévoyance, couverture santé.
+
+Deux points à anticiper : ton employeur doit pouvoir **attester ton pourcentage de télétravail** (via un avenant ou un accord signé), et **à partir de 2027, il devra transmettre cette donnée aux autorités fiscales cantonales suisses**. Comme ces seuils et leurs modalités peuvent évoluer, **vérifie l'état en vigueur chaque année** auprès de ton employeur et des sources officielles.
 
 > **Pour aller plus loin :** [Fiscalité du frontalier à Genève : les impôts en 2026](/blog/fiscalite-frontalier-geneve-impots-2026), [la déclaration pas à pas](/blog/declaration-impots-frontalier-2026), [l'avenant fiscal sur le télétravail](/blog/avenant-fiscal-40-frontalier-geneve) et [les règles 2026 du télétravail](/blog/teletravail-frontalier-geneve-regles-2026).
 
@@ -225,11 +230,16 @@ La grande majorité des frontaliers prennent encore leur voiture — pratique, m
 
 Depuis 2019, le **[Léman Express](https://www.lemanexpress.ch)** relie de nombreuses communes françaises au cœur de Genève en **une vingtaine de minutes**, sans embouteillage ni stress de douane. Trains **toutes les 15 minutes** en heure de pointe (toutes les 30 min en heures creuses), du premier vers **5h30** au dernier vers **minuit**, dans des rames modernes climatisées avec **WiFi et prises électriques** — autant de temps utile pour lire, travailler ou souffler. Un **abonnement toutes zones** coûte de l'ordre de **80 CHF/mois**, et beaucoup d'employeurs en remboursent une partie : un avantage souvent méconnu, à vérifier dans ta convention. Pour les titres combinés des deux côtés de la frontière, regarde du côté d'**[Unireso](https://www.unireso.com)** (le réseau genevois) et des **[CFF](https://www.sbb.ch)**.
 
-## Voiture, vélo, bus : le vrai comparatif
+## Le tram transfrontalier : Genève comme en ville
+
+Autre liaison directe et sans douane, pratique pour qui habite côté Ambilly/Moillesulaz : le **tram transfrontalier (ligne 17)**. Depuis **Croix d'Ambilly**, il rejoint le quartier de la **Terrassière**, en plein centre de Genève (rive gauche, près des Eaux-Vives), en **une vingtaine de minutes** — un tram qu'on prend comme en ville, à la fréquence élevée, couvert par un abonnement Unireso. C'est l'une des connexions les plus simples du bassin : pas de correspondance, pas de parking, pas d'attente à la frontière.
+
+## Voiture, vélo, bus, tram : le vrai comparatif
 
 | Mode | Coût mensuel (ordre de grandeur) | Temps Annemasse → Genève | Fiabilité |
 |---|---|---|---|
 | Léman Express | ~80 CHF | ~20 min | Très élevée |
+| Tram 17 (transfrontalier) | ~70 CHF (Unireso) | ~20 min (Croix d'Ambilly → Terrassière) | Élevée |
 | Vélo électrique (amorti) | 40 à 115 € (lissé ~60 €) | 25 à 40 min | Élevée (8 mois/12) |
 | Bus (tpg / SNCF / Transdev) | ~70 CHF à 180 € | 30 à 50 min | Moyenne |
 | Covoiturage | 50 à 200 € | 25 à 50 min | Moyenne |
@@ -443,7 +453,7 @@ Pour une personne seule, compte un studio entre 650 et 1 150 € ou une chambre 
 Devenir frontalier, c'est franchir six étapes — permis, assurance, impôts, transports, chômage, logement — dont aucune n'est insurmontable quand on sait où chercher. Garde ce dossier à portée de main, appuie-toi sur les associations qui connaissent ces sujets par cœur, et vérifie toujours les montants sur les sources officielles, car les règles évoluent. Et si tu cherches à t'installer vite et sans frais d'entrée près de Genève, **[découvre nos maisons](/colocation-geneve)** ou **[candidate en quelques minutes, gratuitement](/candidature)**.$$,
   content_en = $$Working in Switzerland while living in France is a great equation — a Swiss salary with a French cost of living. It is also a series of formalities you usually discover in the wrong order, and always slightly in a hurry: the permit, health insurance, taxes, transport, unemployment and, of course, housing.
 
-This dossier covers them **one by one, in depth**. Each chapter stands on its own, with its tables, its figures (indicative orders of magnitude, always to be checked against official sources, as the rules evolve) and, at the end, a link to our detailed guide if you want to dig deeper. Whether you are a French cross-border commuter or an international newcomer taking up a position in Geneva, keep this page handy: it is the starting point of any successful move to the Geneva area.
+This dossier covers them **one by one**. Each chapter stands on its own, with its tables, its figures (indicative orders of magnitude, always to be checked against official sources, as the rules evolve) and, at the end, a link to our detailed guide if you want to dig deeper. Whether you are a French cross-border commuter or an international newcomer taking up a position in Geneva, keep this page handy: it is the starting point of any successful move to the Geneva area.
 
 > **How to read this dossier?** No need to go through it all at once. Jump straight to the chapter that concerns you today — the permit if you have just signed, insurance if your 3-month window is running, housing if you are still searching — and come back as your installation unfolds.
 
@@ -529,7 +539,7 @@ It is the default option. You pick a **Swiss insurer** (Helsana, CSS, Swica, Gro
 - After the deductible, a **10% co-payment** applies, capped at **700 CHF/year**: your annual out-of-pocket is bounded.
 - LAMal covers care **in Switzerland and in France** (with the European health insurance card) and gives direct access to Swiss doctors **without a referring GP**.
 
-Its weak point: premiums rising **5 to 10% per year**, to be anticipated over time. To compare insurers, use the **official federal comparator, [priminfo.admin.ch](https://www.priminfo.admin.ch)**.
+On price evolution: LAMal premiums have **historically risen 5 to 10% per year** (with a peak of +16.6% in 2024). The good news: **2026 is a near-flat year for cross-border workers**, with a very contained increase. But keep an eye on the horizon: a **reform of the risk-compensation mechanism, which could raise premiums for cross-border policyholders, is expected for 2028** — worth anticipating in a choice that commits you for the long run. To compare insurers, use the **official federal comparator, [priminfo.admin.ch](https://www.priminfo.admin.ch)**.
 
 ## How CMU-PUMa works (French cover)
 
@@ -543,21 +553,21 @@ Two trade-offs: cover is mainly **on the French side**, and you must follow a **
 |---|---|---|
 | Cost basis | Age, canton, deductible — **independent of salary** | **~8% of reference tax income** |
 | Deductible | 300 to 2,500 CHF/year + 10% co-pay (max 700 CHF/year) | No deductible to advance |
-| Evolution | Premiums +5 to 10%/year | Rises only if salary rises |
+| Evolution | Historically +5 to 10%/year; **nearly stable in 2026**, reform expected in 2028 | Rises only if salary rises |
 | Care access | Swiss doctors directly, covers CH + FR | Coordinated pathway, GP in France |
 | Best for… | High salaries (fixed premium) | Modest salaries (< ~65,000 CHF gross/year) |
 
-By orders of magnitude observed in early 2026 for a 25-35-year-old, here is how the two cross over depending on salary:
+By orders of magnitude observed in early 2026 for a 25-35-year-old, here is how the two cross over depending on salary. **Note the table's logic: the LAMal premium does not move with your salary** (it depends on your age, canton and deductible) — it is the CMU contribution that climbs with income. That is the very heart of the trade-off.
 
-| Gross annual salary | LAMal premium (deductible 2,500) | CMU-PUMa contribution | Option that stands out |
+| Gross annual salary | LAMal premium (young adult)* | CMU-PUMa contribution | Option that stands out |
 |---|---|---|---|
-| 50,000 CHF | ~300 CHF | ~210 CHF | CMU |
-| 65,000 CHF | ~320 CHF | ~300 CHF | Tie |
-| 80,000 CHF | ~350 CHF | ~400 CHF | LAMal |
-| 100,000 CHF | ~380 CHF | ~530 CHF | LAMal |
-| 120,000 CHF | ~400 CHF | ~650 CHF | LAMal |
+| 50,000 CHF | ~280 CHF | ~210 CHF | CMU |
+| 65,000 CHF | ~280 CHF | ~300 CHF | Tie |
+| 80,000 CHF | ~280 CHF | ~400 CHF | LAMal |
+| 100,000 CHF | ~280 CHF | ~530 CHF | LAMal |
+| 120,000 CHF | ~280 CHF | ~650 CHF | LAMal |
 
-*(Indicative orders of magnitude, individual situations vary — confirm with a simulation.)*
+*\*Flat premium, **independent of salary**: it varies with age, canton and deductible. The ~280 CHF figure corresponds to a 25-35-year-old with a low deductible (300 CHF) at a competitive insurer; the cheapest offers start around 200 CHF, and choosing a high deductible (2,500 CHF) brings the premium toward ~200 CHF — but exposing you to more out-of-pocket costs before reimbursement. Indicative orders of magnitude, individual situations vary.*
 
 ## The simple rule, and the reflex to build
 
@@ -619,9 +629,11 @@ As an illustration, on a 90,000 CHF salary the gain can be on the order of **150
 
 A well-known lever for quasi-resident cross-border workers: the **third pillar 3a**, a Swiss retirement savings account whose contributions are deductible from taxable income. In 2026 the cap for an employee affiliated to the LPP is **7,258 CHF/year**. Concretely, contributing that cap at a marginal rate of around 15% generates about **1,089 CHF of tax savings**, nearly **91 CHF/month** — while building your own savings. One of the rare schemes that wins on both fronts.
 
+A 2026 novelty to know: it is now possible to **retroactively fill** contribution gaps from previous years (under conditions, and only for gaps arising from 2025 onward) — useful if you could not pay the maximum in some years.
+
 ## Remote work: the 40% rule
 
-Under the French-Swiss tax addendum applicable to **income earned from 1 January 2026**, you can work from home in France **up to 40% of your annual working time** — about **2 days a week** — without changing anything to your taxation: **your whole salary stays taxed at source in Switzerland**, as if you were 100% on site. Up to 10 days of assignments per year outside Switzerland count within that 40%.
+Under the French-Swiss tax addendum — a **permanent agreement signed on 25 July 2025** and applicable to **income earned from 1 January 2026** — you can work from home in France **up to 40% of your annual working time** — about **2 days a week** — without changing anything to your taxation: **your whole salary stays taxed at source in Switzerland**, as if you were 100% on site. Up to 10 days of assignments per year outside Switzerland count within that 40%.
 
 | Share of remote work (annual, from France) | Tax regime | Social regime |
 |---|---|---|
@@ -629,7 +641,9 @@ Under the French-Swiss tax addendum applicable to **income earned from 1 January
 | Above 40% | The remote-worked share becomes taxable **in France from day one** | Swiss maintained as long as < 49.9% |
 | 49.9% and above (≥ 3 days/week) | Same as above | **Risk of switching to French social security** |
 
-The trap is confusing **two distinct thresholds**: **40% for tax**, **49.9% for social security**. As long as you stay under 49.9%, you keep Swiss social security (pension, occupational pension, unemployment, health), thanks to a European framework agreement — but that requires an up-to-date **A1 certificate**, which your employer requests via the ALPS platform. Beyond 49.9% (3 remote days a week or more), you risk switching to French contributions, which changes everything: pension, occupational cover, health. As these thresholds and their rules evolve, **check what is in force each year** with your employer and official sources.
+The trap is confusing **two distinct thresholds**: **40% for tax**, **49.9% for social security**. As long as you stay under 49.9%, you keep Swiss social security (pension, occupational pension, unemployment, health), thanks to a European framework agreement — but that requires an up-to-date **A1 certificate**, which your employer requests via the ALPS platform. Beyond 49.9% (3 remote days a week or more), you risk switching to French contributions, which changes everything: pension, occupational cover, health.
+
+Two things to anticipate: your employer must be able to **certify your remote-work percentage** (via an addendum or signed agreement), and **from 2027 they will have to report this figure to the Swiss cantonal tax authorities**. As these thresholds and their rules may evolve, **check what is in force each year** with your employer and official sources.
 
 > **Go further:** [Cross-border taxation in Geneva: 2026 rules](/blog/fiscalite-frontalier-geneve-impots-2026), [the return step by step](/blog/declaration-impots-frontalier-2026), [the remote-work tax addendum](/blog/avenant-fiscal-40-frontalier-geneve) and [the 2026 remote-work rules](/blog/teletravail-frontalier-geneve-regles-2026).
 
@@ -643,11 +657,16 @@ Most cross-border workers still drive — convenient, but costly, and often a tr
 
 Since 2019, the **[Léman Express](https://www.lemanexpress.ch)** links many French municipalities to the heart of Geneva in **around twenty minutes**, with no traffic jams or border stress. Trains **every 15 minutes** at peak (every 30 off-peak), from the first around **5:30am** to the last around **midnight**, in modern air-conditioned units with **WiFi and power sockets** — time you can use to read, work or unwind. An **all-zones pass** costs on the order of **80 CHF/month**, and many employers reimburse part of it: an often-overlooked perk, worth checking in your agreement. For combined tickets on both sides of the border, look at **[Unireso](https://www.unireso.com)** (the Geneva network) and the **[SBB/CFF](https://www.sbb.ch)**.
 
-## Car, bike, bus: the real comparison
+## The cross-border tram: Geneva like any city
+
+Another direct, border-stop-free link, handy for those living on the Ambilly/Moillesulaz side: the **cross-border tram (line 17)**. From **Croix d'Ambilly**, it reaches the **Terrassière** district, in the heart of Geneva (left bank, near Eaux-Vives), in **around twenty minutes** — a tram you catch like in any city, at high frequency, covered by an Unireso pass. One of the simplest connections in the area: no transfer, no parking, no waiting at the border.
+
+## Car, bike, bus, tram: the real comparison
 
 | Mode | Monthly cost (order of magnitude) | Annemasse → Geneva | Reliability |
 |---|---|---|---|
 | Léman Express | ~80 CHF | ~20 min | Very high |
+| Tram 17 (cross-border) | ~70 CHF (Unireso) | ~20 min (Croix d'Ambilly → Terrassière) | High |
 | E-bike (amortised) | €40 to €115 (smoothed ~€60) | 25 to 40 min | High (8 months/12) |
 | Bus (tpg / SNCF / Transdev) | ~70 CHF to €180 | 30 to 50 min | Medium |
 | Carpooling | €50 to €200 | 25 to 50 min | Medium |
