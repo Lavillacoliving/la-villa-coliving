@@ -69,6 +69,7 @@ interface FormData {
   charges_energy: number;
   charges_maintenance: number;
   charges_services: number;
+  frais_remise_location: number;
   irl_trimestre: string;
   irl_indice: number;
   clauses_particulieres: string;
@@ -586,6 +587,17 @@ function generateContractHTML(data: ContractData): string {
             <li>Indice de référence : ${form.irl_indice}</li>
             <li>La révision s'effectue chaque année à la date anniversaire du contrat.</li>
           </ul>
+          ${form.frais_remise_location > 0 ? `
+          <h3>Frais de remise en location : ${fEUR(form.frais_remise_location)} — offerts à partir de 3 mois de présence</h3>
+          <p>Le départ anticipé d'un locataire oblige le bailleur à engager, indépendamment de l'état du logement restitué, l'ensemble des démarches nécessaires pour remettre le logement en location :</p>
+          <ul>
+            <li>Création et diffusion de nouvelles annonces sur les différents supports ;</li>
+            <li>Traitement des candidatures, organisation et tenue des visites ;</li>
+            <li>Recherche et sélection d'un nouveau locataire (vérification du dossier, rédaction du contrat) ;</li>
+            <li>Installation du nouveau locataire (accueil, remise des clés, mise à jour des accès) ;</li>
+            <li>Formalités administratives liées au changement de locataire (déclarations d'occupation, démarches techniques et administratives).</li>
+          </ul>
+          <p>Ces frais, fixés forfaitairement à ${fEUR(form.frais_remise_location)}, sont offerts au locataire dont le séjour atteint 3 mois à compter de la date d'entrée. En cas de départ avant ce délai, ils restent à sa charge.</p>` : ''}
           <h3>Modalités de paiement :</h3>
           <ul>
             <li><strong style="color:#c9a96e;">Le loyer et les charges doivent être versés avant le 5 du mois.</strong></li>
@@ -838,6 +850,7 @@ export default function DashboardNouveauBailPage() {
     charges_energy: 130,
     charges_maintenance: 200,
     charges_services: 90,
+    frais_remise_location: 350,
     irl_trimestre: '3ème trimestre 2025',
     irl_indice: 145.77,
     clauses_particulieres: '',
@@ -1658,6 +1671,26 @@ export default function DashboardNouveauBailPage() {
           value={form.charges_services}
           onChange={(e) =>
             setForm((prev) => ({ ...prev, charges_services: parseInt(e.target.value) || 0 }))
+          }
+          style={{
+            width: '100%',
+            padding: '10px',
+            marginBottom: '10px',
+            borderRadius: '4px',
+            border: '1px solid #ddd',
+            fontSize: '14px',
+          }}
+        />
+
+        <label style={{ display: 'block', marginBottom: '8px', fontSize: '13px', color: '#666' }}>
+          Frais de remise en location — moins de 3 mois (EUR)
+        </label>
+        <input
+          type="number"
+          step="1"
+          value={form.frais_remise_location}
+          onChange={(e) =>
+            setForm((prev) => ({ ...prev, frais_remise_location: parseInt(e.target.value) || 0 }))
           }
           style={{
             width: '100%',

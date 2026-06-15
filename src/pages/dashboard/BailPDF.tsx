@@ -67,6 +67,7 @@ interface FormData {
   charges_energy: number;
   charges_maintenance: number;
   charges_services: number;
+  frais_remise_location: number;
   irl_trimestre: string;
   irl_indice: number;
   clauses_particulieres: string;
@@ -591,6 +592,25 @@ export function BailPDF({ data }: { data: BailPDFData }) {
         <Text style={s.subTitle}>{"Modalit\u00E9s de paiement :"}</Text>
         <Bullet><Text style={{ fontFamily: "Helvetica-Bold", color: gold }}>{"Le loyer et les charges doivent \u00EAtre vers\u00E9s avant le 5 du mois."}</Text></Bullet>
         <Bullet>Virement bancaire sur le compte du bailleur.</Bullet>
+
+        {form.frais_remise_location > 0 && (
+          <View minPresenceAhead={60} style={{ marginTop: 8 }}>
+            <Text style={[s.subTitle, { color: gold }]}>
+              {"Frais de remise en location : "}{fEUR(form.frais_remise_location)}{" — offerts à partir de 3 mois de présence"}
+            </Text>
+            <Text style={s.body}>
+              {"Le départ anticipé d'un locataire oblige le bailleur à engager, indépendamment de l'état du logement restitué, l'ensemble des démarches nécessaires pour remettre le logement en location :"}
+            </Text>
+            <Bullet>{"Création et diffusion de nouvelles annonces sur les différents supports ;"}</Bullet>
+            <Bullet>{"Traitement des candidatures, organisation et tenue des visites ;"}</Bullet>
+            <Bullet>{"Recherche et sélection d'un nouveau locataire (vérification du dossier, rédaction du contrat) ;"}</Bullet>
+            <Bullet>{"Installation du nouveau locataire (accueil, remise des clés, mise à jour des accès) ;"}</Bullet>
+            <Bullet>{"Formalités administratives liées au changement de locataire (déclarations d'occupation, démarches techniques et administratives)."}</Bullet>
+            <Text style={[s.body, { marginTop: 4 }]}>
+              {"Ces frais, fixés forfaitairement à "}{fEUR(form.frais_remise_location)}{", sont offerts au locataire dont le séjour atteint 3 mois à compter de la date d'entrée. En cas de départ avant ce délai, ils restent à sa charge."}
+            </Text>
+          </View>
+        )}
 
         {/* Bank Details */}
         {(property.name?.includes('Villa') || property.name?.includes('lavilla')) && (
