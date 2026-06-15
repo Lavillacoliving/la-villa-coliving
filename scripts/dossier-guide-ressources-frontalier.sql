@@ -228,18 +228,18 @@ La grande majorité des frontaliers prennent encore leur voiture — pratique, m
 
 ## Le Léman Express, colonne vertébrale du bassin
 
-Depuis 2019, le **[Léman Express](https://www.lemanexpress.ch)** relie de nombreuses communes françaises au cœur de Genève en **une vingtaine de minutes**, sans embouteillage ni stress de douane. Trains **toutes les 15 minutes** en heure de pointe (toutes les 30 min en heures creuses), du premier vers **5h30** au dernier vers **minuit**, dans des rames modernes climatisées avec **WiFi et prises électriques** — autant de temps utile pour lire, travailler ou souffler. Un **abonnement toutes zones** coûte de l'ordre de **80 CHF/mois**, et beaucoup d'employeurs en remboursent une partie : un avantage souvent méconnu, à vérifier dans ta convention. Pour les titres combinés des deux côtés de la frontière, regarde du côté d'**[Unireso](https://www.unireso.com)** (le réseau genevois) et des **[CFF](https://www.sbb.ch)**.
+Depuis 2019, le **[Léman Express](https://www.lemanexpress.ch)** relie de nombreuses communes françaises au cœur de Genève en **une vingtaine de minutes**, sans embouteillage ni stress de douane. Trains **toutes les 15 minutes** en heure de pointe (toutes les 30 min en heures creuses), du premier vers **5h30** au dernier vers **minuit**, dans des rames modernes climatisées avec **WiFi et prises électriques** — autant de temps utile pour lire, travailler ou souffler. Un **abonnement toutes zones** coûte de l'ordre de **80 CHF/mois** (abonnement zones 10-21, [tpg.ch](https://www.tpg.ch)), et beaucoup d'employeurs en remboursent une partie : un avantage souvent méconnu, à vérifier dans ta convention. Pour les titres combinés des deux côtés de la frontière, regarde du côté d'**[Unireso](https://www.unireso.com)** (le réseau genevois), des **[TPG](https://www.tpg.ch)** et des **[CFF](https://www.sbb.ch)**.
 
 ## Le tram transfrontalier : Genève comme en ville
 
-Autre liaison directe et sans douane, pratique pour qui habite côté Ambilly/Moillesulaz : le **tram transfrontalier (ligne 17)**. Depuis **Croix d'Ambilly**, il rejoint le quartier de la **Terrassière**, en plein centre de Genève (rive gauche, près des Eaux-Vives), en **une vingtaine de minutes** — un tram qu'on prend comme en ville, à la fréquence élevée, couvert par un abonnement Unireso. C'est l'une des connexions les plus simples du bassin : pas de correspondance, pas de parking, pas d'attente à la frontière.
+Autre liaison directe et sans douane, pratique pour qui habite côté Annemasse/Ambilly/Moillesulaz : le **tram transfrontalier (ligne 17)**. Depuis **Annemasse – Parc Montessuit** ou **Ambilly – Croix d'Ambilly**, il rejoint la station **Terrassière**, en plein centre de Genève (rive gauche, près des Eaux-Vives), en **une vingtaine de minutes** — un tram qu'on prend comme en ville, à la fréquence élevée, couvert par un abonnement Unireso. C'est l'une des connexions les plus simples du bassin : pas de correspondance, pas de parking, pas d'attente à la frontière.
 
 ## Voiture, vélo, bus, tram : le vrai comparatif
 
 | Mode | Coût mensuel (ordre de grandeur) | Temps Annemasse → Genève | Fiabilité |
 |---|---|---|---|
 | Léman Express | ~80 CHF | ~20 min | Très élevée |
-| Tram 17 (transfrontalier) | ~70 CHF (Unireso) | ~20 min (Croix d'Ambilly → Terrassière) | Élevée |
+| Tram 17 (transfrontalier) | ~80 CHF (Unireso) | ~20 min (Croix d'Ambilly → Terrassière) | Élevée |
 | Vélo électrique (amorti) | 40 à 115 € (lissé ~60 €) | 25 à 40 min | Élevée (8 mois/12) |
 | Bus (tpg / SNCF / Transdev) | ~70 CHF à 180 € | 30 à 50 min | Moyenne |
 | Covoiturage | 50 à 200 € | 25 à 50 min | Moyenne |
@@ -338,11 +338,11 @@ Traverser la frontière, c'est diviser le loyer par **1,5 à 2**. Un studio à 2
 | Gaillard | 700 – 950 € | 500 – 700 € |
 | Cranves-Sales · Vétraz-Monthoux | 650 – 850 € | 450 – 650 € |
 
-*(Fourchettes indicatives ; un coliving premium tout inclus se situe autour de 1 380 CHF/mois.)* À retenir : les communes de **2e couronne** (Cranves-Sales, Vétraz-Monthoux, Bonne) sont 10 à 15 % moins chères qu'Annemasse centre pour 5 à 10 minutes de trajet en plus — un arbitrage souvent gagnant.
+*(Fourchettes indicatives ; La Villa Coliving — coliving premium tout inclus dans des maisons d'exception : piscine, sauna, salle de sport… — se situe autour de 1 380 CHF/mois.)* À retenir : les communes de **2e couronne** (Cranves-Sales, Vétraz-Monthoux, Bonne) sont 10 à 15 % moins chères qu'Annemasse centre pour 5 à 10 minutes de trajet en plus — un arbitrage souvent gagnant.
 
 ## Le piège du « loyer attractif »
 
-Un loyer affiché n'est jamais le coût réel. Ajoute les charges et l'addition grimpe vite :
+Un loyer affiché n'est jamais le coût réel, même en France. Ajoute les charges et l'addition grimpe vite :
 
 | Poste mensuel | Ordre de grandeur |
 |---|---|
@@ -355,7 +355,7 @@ Résultat : un studio affiché à 750 € revient souvent à **1 050 à 1 140 �
 
 ## La règle des 30 % et ton salaire
 
-La règle classique : ne pas consacrer plus de **30 % de tes revenus nets** au logement. Avec un salaire médian frontalier de l'ordre de 5 500-6 000 CHF net, cela situe ton budget logement autour de 1 650-1 800 CHF — large pour une chambre côté France, juste pour un studio à Genève. Les salaires nets varient fortement selon le secteur (administration, commerce, tech, finance, pharma, horlogerie, organisations internationales, hôtellerie-restauration), d'où l'importance de raisonner sur **ton** net réel, pas sur une moyenne.
+La règle classique et indicative : ne pas consacrer plus de **30 % de tes revenus nets** au logement. Avec un salaire médian frontalier de l'ordre de 5 500-6 000 CHF net, cela situe ton budget logement autour de 1 650-1 800 CHF — large pour une chambre côté France, juste pour un studio à Genève. Les salaires nets varient fortement selon le secteur (administration, commerce, tech, finance, pharma, horlogerie, organisations internationales, hôtellerie-restauration), d'où l'importance de raisonner sur **ton** net réel, pas sur une moyenne.
 
 ## Monter un dossier qui passe en tête de pile
 
@@ -655,18 +655,18 @@ Most cross-border workers still drive — convenient, but costly, and often a tr
 
 ## The Léman Express, backbone of the area
 
-Since 2019, the **[Léman Express](https://www.lemanexpress.ch)** links many French municipalities to the heart of Geneva in **around twenty minutes**, with no traffic jams or border stress. Trains **every 15 minutes** at peak (every 30 off-peak), from the first around **5:30am** to the last around **midnight**, in modern air-conditioned units with **WiFi and power sockets** — time you can use to read, work or unwind. An **all-zones pass** costs on the order of **80 CHF/month**, and many employers reimburse part of it: an often-overlooked perk, worth checking in your agreement. For combined tickets on both sides of the border, look at **[Unireso](https://www.unireso.com)** (the Geneva network) and the **[SBB/CFF](https://www.sbb.ch)**.
+Since 2019, the **[Léman Express](https://www.lemanexpress.ch)** links many French municipalities to the heart of Geneva in **around twenty minutes**, with no traffic jams or border stress. Trains **every 15 minutes** at peak (every 30 off-peak), from the first around **5:30am** to the last around **midnight**, in modern air-conditioned units with **WiFi and power sockets** — time you can use to read, work or unwind. An **all-zones pass** costs on the order of **80 CHF/month** (zones 10-21, [tpg.ch](https://www.tpg.ch)), and many employers reimburse part of it: an often-overlooked perk, worth checking in your agreement. For combined tickets on both sides of the border, look at **[Unireso](https://www.unireso.com)** (the Geneva network), the **[TPG](https://www.tpg.ch)** and the **[SBB/CFF](https://www.sbb.ch)**.
 
 ## The cross-border tram: Geneva like any city
 
-Another direct, border-stop-free link, handy for those living on the Ambilly/Moillesulaz side: the **cross-border tram (line 17)**. From **Croix d'Ambilly**, it reaches the **Terrassière** district, in the heart of Geneva (left bank, near Eaux-Vives), in **around twenty minutes** — a tram you catch like in any city, at high frequency, covered by an Unireso pass. One of the simplest connections in the area: no transfer, no parking, no waiting at the border.
+Another direct, border-stop-free link, handy for those living on the Annemasse/Ambilly/Moillesulaz side: the **cross-border tram (line 17)**. From **Annemasse – Parc Montessuit** or **Ambilly – Croix d'Ambilly**, it reaches the **Terrassière** stop, in the heart of Geneva (left bank, near Eaux-Vives), in **around twenty minutes** — a tram you catch like in any city, at high frequency, covered by an Unireso pass. One of the simplest connections in the area: no transfer, no parking, no waiting at the border.
 
 ## Car, bike, bus, tram: the real comparison
 
 | Mode | Monthly cost (order of magnitude) | Annemasse → Geneva | Reliability |
 |---|---|---|---|
 | Léman Express | ~80 CHF | ~20 min | Very high |
-| Tram 17 (cross-border) | ~70 CHF (Unireso) | ~20 min (Croix d'Ambilly → Terrassière) | High |
+| Tram 17 (cross-border) | ~80 CHF (Unireso) | ~20 min (Croix d'Ambilly → Terrassière) | High |
 | E-bike (amortised) | €40 to €115 (smoothed ~€60) | 25 to 40 min | High (8 months/12) |
 | Bus (tpg / SNCF / Transdev) | ~70 CHF to €180 | 30 to 50 min | Medium |
 | Carpooling | €50 to €200 | 25 to 50 min | Medium |
@@ -765,11 +765,11 @@ Crossing the border means dividing the rent by **1.5 to 2**. A studio at 2,000 C
 | Gaillard | €700 – 950 | €500 – 700 |
 | Cranves-Sales · Vétraz-Monthoux | €650 – 850 | €450 – 650 |
 
-*(Indicative ranges; an all-inclusive premium coliving sits around 1,380 CHF/month.)* Note: the **second-ring** municipalities (Cranves-Sales, Vétraz-Monthoux, Bonne) are 10 to 15% cheaper than Annemasse centre for 5 to 10 minutes more travel — an arbitrage that often pays off.
+*(Indicative ranges; La Villa Coliving — all-inclusive premium coliving in exceptional houses: pool, sauna, gym… — sits around 1,380 CHF/month.)* Note: the **second-ring** municipalities (Cranves-Sales, Vétraz-Monthoux, Bonne) are 10 to 15% cheaper than Annemasse centre for 5 to 10 minutes more travel — an arbitrage that often pays off.
 
 ## The "attractive rent" trap
 
-An advertised rent is never the real cost. Add the charges and the bill climbs fast:
+An advertised rent is never the real cost, even in France. Add the charges and the bill climbs fast:
 
 | Monthly line item | Order of magnitude |
 |---|---|
@@ -782,7 +782,7 @@ The result: a studio advertised at €750 often comes to **€1,050 to €1,140 
 
 ## The 30% rule and your salary
 
-The classic rule: do not spend more than **30% of your net income** on housing. With a median cross-border net salary around 5,500-6,000 CHF, that puts your housing budget around 1,650-1,800 CHF — comfortable for a room on the French side, tight for a studio in Geneva. Net salaries vary widely by sector (administration, retail, tech, finance, pharma, watchmaking, international organisations, hospitality), which is why you should reason on **your** real net, not an average.
+The classic, indicative rule: do not spend more than **30% of your net income** on housing. With a median cross-border net salary around 5,500-6,000 CHF, that puts your housing budget around 1,650-1,800 CHF — comfortable for a room on the French side, tight for a studio in Geneva. Net salaries vary widely by sector (administration, retail, tech, finance, pharma, watchmaking, international organisations, hospitality), which is why you should reason on **your** real net, not an average.
 
 ## Building a file that goes to the top of the pile
 
