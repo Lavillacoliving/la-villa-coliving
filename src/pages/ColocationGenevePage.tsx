@@ -1075,6 +1075,7 @@ export function ColocationGenevePage() {
           </h2>
           <ul className="grid grid-cols-1 md:grid-cols-2 gap-3 text-sm max-w-3xl mx-auto">
             {[
+              { fr: "Le guide des ressources du frontalier", en: "The cross-border worker's resources guide", slug: "guide-ressources-frontalier-geneve" },
               { fr: "Les meilleurs quartiers frontaliers autour de Genève", en: "Best cross-border districts around Geneva", slug: "meilleurs-quartiers-frontaliers-geneve" },
               { fr: "Fiscalité du frontalier à Genève : impôts 2026", en: "Cross-border taxation in Geneva: 2026 rules", slug: "fiscalite-frontalier-geneve-impots-2026" },
               { fr: "Le budget complet d'un logement frontalier à Genève", en: "The full budget of cross-border housing near Geneva", slug: "budget-colocation-geneve-guide-complet" },

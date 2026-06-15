@@ -9,7 +9,7 @@ import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import { Helmet } from "react-helmet";
 import { SEO } from "@/components/SEO";
-import { buildBreadcrumbSchema } from "@/lib/structuredData";
+import { buildBreadcrumbSchema, buildFaqPageSchema } from "@/lib/structuredData";
 import { getIntentBucket, type IntentBucket } from "@/data/blogIntentBuckets";
 
 interface Post {
@@ -116,6 +116,64 @@ function splitForMidCta(md: string): [string, string] | null {
   return [md.slice(0, best), md.slice(best)];
 }
 
+// Extrait les paires Q/R d'une section FAQ markdown (« # FAQ … », « ## FAQ … » ou
+// « ## … questions … ») : questions en gras terminées par « ? », réponse = paragraphe(s)
+// qui suivent. Sert au JSON-LD FAQPage — même texte que le visible (règle AEO), markdown aplati.
+function extractFaqPairs(md: string): { q: string; a: string }[] {
+  // #{1,2} : le titre FAQ peut être de niveau # (gros dossier) ou ## (article standard).
+  // Lookahead sur \n#{1,2}\s : la section s'arrête au prochain titre de même niveau ou plus haut.
+  // (pas de flag m : avec lui, le $ du lookahead matche chaque fin de ligne et la capture est vide)
+  const section = md.match(/(?:^|\n)#{1,2}\s+(?:FAQ[^\n]*|[^\n]*questions?[^\n]*)\n([\s\S]*?)(?=\n#{1,2}\s|\s*$)/i);
+  if (!section) return [];
+  const pairs: { q: string; a: string }[] = [];
+  const re = /\*\*([^*\n]+\?)\*\*\s*\n+([\s\S]*?)(?=\n\s*\*\*[^*\n]+\?\*\*|$)/g;
+  let m: RegExpExecArray | null;
+  while ((m = re.exec(section[1])) !== null) {
+    const q = m[1].trim();
+    const a = m[2]
+      .replace(/\[([^\]]+)\]\([^)]*\)/g, "$1")
+      .replace(/[*_`>]/g, "")
+      .replace(/\s+/g, " ")
+      .trim();
+    if (a) pairs.push({ q, a });
+  }
+  return pairs;
+}
+
+// Slug déterministe pour les ancres de chapitre (titre → #slug). Même fonction
+// pour l'id du titre rendu ET pour le lien du sommaire → ils correspondent toujours.
+function slugify(s: string): string {
+  return s
+    .toLowerCase()
+    .normalize("NFD").replace(/[̀-ͯ]/g, "") // accents
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-+|-+$/g, "");
+}
+
+// Aplati les children React d'un titre en texte brut (pour calculer l'id).
+function nodeText(node: React.ReactNode): string {
+  if (node === null || node === undefined || node === false) return "";
+  if (typeof node === "string" || typeof node === "number") return String(node);
+  if (Array.isArray(node)) return node.map(nodeText).join("");
+  if (typeof node === "object" && "props" in (node as object)) {
+    return nodeText((node as { props?: { children?: React.ReactNode } }).props?.children);
+  }
+  return "";
+}
+
+// Sommaire : un item par titre de niveau « # » (chapitre). Les « ## » (sous-sections)
+// sont ignorés. Le slug correspond à l'id posé sur le titre rendu.
+function extractToc(md: string): { title: string; slug: string }[] {
+  const out: { title: string; slug: string }[] = [];
+  const re = /^# (?!#)(.+)$/gm;
+  let m: RegExpExecArray | null;
+  while ((m = re.exec(md)) !== null) {
+    const title = m[1].trim();
+    out.push({ title, slug: slugify(title) });
+  }
+  return out;
+}
+
 export function BlogPostPage() {
   const { slug } = useParams<{slug:string}>();
   const { language } = useLanguage();
@@ -180,6 +238,8 @@ export function BlogPostPage() {
   const title = (language==="en"&&post.title_en)?post.title_en:post.title_fr;
   const excerpt = (language==="en"&&post.excerpt_en)?post.excerpt_en:post.excerpt_fr;
   const content = (language==="en"&&post.content_en)?post.content_en:post.content_fr;
+  const faqPairs = extractFaqPairs(content);
+  const toc = extractToc(content);
   // Meta description dédiée si renseignée en base (optimisée SEO), sinon excerpt
   const metaDescription = language==="en"
     ? (post.meta_description_en || excerpt)
@@ -206,8 +266,9 @@ export function BlogPostPage() {
   const mdComponents = {
     // B6: a leading "# H1" in article content would create a 2nd <h1> (the page title is already the <h1>).
     // Render markdown H1 as <h2> so each blog page keeps exactly one <h1>.
+    // id = slug de chapitre (cible du sommaire) ; scroll-mt-24 pour ne pas passer sous la navbar fixe.
     h1: ({children}: {children?: React.ReactNode}) => (
-      <h2 className="text-2xl md:text-3xl font-semibold text-[#1C1917] mt-12 mb-4" style={{fontFamily:"DM Serif Display, serif"}}>{children}</h2>
+      <h2 id={slugify(nodeText(children))} className="scroll-mt-24 text-2xl md:text-3xl font-semibold text-[#1C1917] mt-12 mb-4" style={{fontFamily:"DM Serif Display, serif"}}>{children}</h2>
     ),
     h2: ({children}: {children?: React.ReactNode}) => (
       <h2 className="text-2xl md:text-3xl font-semibold text-[#1C1917] mt-12 mb-4" style={{fontFamily:"DM Serif Display, serif"}}>{children}</h2>
@@ -221,6 +282,11 @@ export function BlogPostPage() {
     ol: ({children}: {children?: React.ReactNode}) => <ol className="list-decimal pl-6 mb-6 space-y-2">{children}</ol>,
     li: ({children}: {children?: React.ReactNode}) => <li className="leading-relaxed">{children}</li>,
     a: ({href, children}: {href?: string; children?: React.ReactNode}) => {
+      // Ancres internes (#chapitre, ex. depuis le sommaire) : <a> natif même onglet,
+      // surtout PAS un Link routeur ni un target=_blank.
+      if (href && href.startsWith('#')) {
+        return <a href={href} className="text-[#D4A574] hover:underline">{children}</a>;
+      }
       // Internal links use React Router for SPA navigation + better SEO signal
       if (href && (href.startsWith('/') || href.startsWith('https://www.lavillacoliving.com'))) {
         const internalPath = href.startsWith('https://www.lavillacoliving.com')
@@ -292,6 +358,9 @@ export function BlogPostPage() {
           { name: "Blog", url: `https://www.lavillacoliving.com${language === "en" ? "/en" : ""}/blog` },
           { name: title, url: `https://www.lavillacoliving.com${language === "en" ? "/en" : ""}/blog/${post.slug}` },
         ]))}</script>
+        {faqPairs.length > 0 && (
+          <script type="application/ld+json">{JSON.stringify(buildFaqPageSchema(faqPairs))}</script>
+        )}
       </Helmet>
       <article className="py-16 lg:py-24">
         <div className="max-w-3xl mx-auto px-6">
@@ -314,6 +383,28 @@ export function BlogPostPage() {
             <div className="mb-10 overflow-hidden">
               <img src={post.image_url} alt={title} className="w-full h-auto object-cover" loading="lazy" />
             </div>
+          )}
+
+          {/* Sommaire cliquable — articles à chapitres uniquement (≥4 titres « # »).
+              Ancres natives (#slug) : fonctionnent sans JS, présentes dans le prérendu. */}
+          {toc.length >= 4 && (
+            <nav
+              aria-label={language === "en" ? "Table of contents" : "Sommaire"}
+              className="mb-10 p-6 bg-[#FAF9F6] border border-[#E7E5E4] rounded-lg"
+            >
+              <p className="text-xs uppercase tracking-widest text-[#D4A574] font-medium mb-4">
+                {language === "en" ? "Contents" : "Sommaire"}
+              </p>
+              <ul className="list-none space-y-2 text-[#44403C]">
+                {toc.map((t) => (
+                  <li key={t.slug}>
+                    <a href={`#${t.slug}`} className="hover:text-[#D4A574] hover:underline transition-colors">
+                      {t.title}
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            </nav>
           )}
 
           <div className="blog-content max-w-none text-[#44403C]" style={{fontSize:"1.1rem",lineHeight:"1.8"}}>
