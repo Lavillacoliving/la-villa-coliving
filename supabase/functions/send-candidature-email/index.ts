@@ -339,6 +339,23 @@ Deno.serve(async (req: Request) => {
         "leboncoin": "Leboncoin",
         "other": "Autre",
       };
+      // lease_duration est contraint (prospects_lease_duration_check) : seules 3_mois / 6_mois /
+      // 12_mois / flexible passent. Le formulaire envoie des fourchettes (2-3, 3-6, 6-12, 12+) →
+      // on mappe vers la valeur autorisée la plus proche, et on garde la fourchette exacte en `notes`.
+      const LEASE_DURATION_MAP: Record<string, string> = {
+        "2-3": "3_mois",
+        "3-6": "6_mois",
+        "6-12": "12_mois",
+        "12+": "12_mois",
+      };
+      const DURATION_LABELS: Record<string, string> = {
+        "2-3": "2-3 mois",
+        "3-6": "3-6 mois",
+        "6-12": "6-12 mois",
+        "12+": "12+ mois",
+      };
+      const durationRaw = (data.duration ?? "").trim();
+      const leaseDuration = LEASE_DURATION_MAP[durationRaw] ?? null;
 
       // notes : tout ce qui n'a pas de colonne dédiée dans `prospects`.
       const notesParts: string[] = [];
@@ -347,6 +364,8 @@ Deno.serve(async (req: Request) => {
       if (arrivalRaw && !moveInDate) {
         notesParts.push(`Souhait d'arrivée : ${ARRIVAL_LABELS[arrivalRaw] ?? arrivalRaw}`);
       }
+      // Durée : on garde la fourchette exacte du formulaire (lease_duration ne stocke que le bucket mappé)
+      if (durationRaw) notesParts.push(`Durée souhaitée : ${DURATION_LABELS[durationRaw] ?? durationRaw}`);
       // ⚠️ "Comment as-tu entendu parler ?" (data.source) ≠ prospects.source.
       // prospects.source est contraint (prospects_source_check) et DOIT valoir "site_web" ;
       // le canal déclaré par le candidat part donc dans `notes`.
@@ -368,7 +387,7 @@ Deno.serve(async (req: Request) => {
         phone: data.phone,
         occupation: (data.job ?? "").trim() || null, // champ "Poste" (présent sur l'ancien form)
         move_in_date: moveInDate,
-        lease_duration: data.duration || null,
+        lease_duration: leaseDuration, // mappé vers une valeur autorisée (prospects_lease_duration_check)
         source: "site_web", // contrainte prospects_source_check — valeur fixe obligatoire
         status: "new",
         notes: notesParts.length > 0 ? notesParts.join("\n") : null,
