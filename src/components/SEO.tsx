@@ -53,14 +53,7 @@ export function SEO({
       <title>{siteTitle}</title>
       <meta name="title" content={siteTitle} />
       <meta name="description" content={siteDescription} />
-      <meta
-        name="keywords"
-        content={
-          language === "en"
-            ? "coliving geneva, shared housing geneva, coliving near geneva, furnished rooms geneva, expat housing geneva, cross-border worker housing, digital nomad geneva, coliving grand geneve, all-inclusive coliving, la villa coliving"
-            : "colocation genève, coliving genève, colocation annemasse, colocation frontalier genève, chambre meublée genève, coliving près de genève, colocation tout inclus genève, logement frontalier genève, colocation ville-la-grand, la villa coliving"
-        }
-      />
+      {/* A3 (2026-06) : meta-keywords retiré — sans valeur SEO depuis ~2009 et identique sur toutes les pages. */}
       <meta name="author" content="La Villa Coliving" />
       {noindex ? (
         <meta name="robots" content="noindex, follow" />

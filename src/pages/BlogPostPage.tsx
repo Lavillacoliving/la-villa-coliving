@@ -11,6 +11,7 @@ import { Helmet } from "react-helmet";
 import { SEO } from "@/components/SEO";
 import { buildBreadcrumbSchema, buildFaqPageSchema } from "@/lib/structuredData";
 import { getIntentBucket, type IntentBucket } from "@/data/blogIntentBuckets";
+import { YmylNotice, isYmyl } from "@/components/YmylNotice";
 
 interface Post {
   id:string; slug:string;
@@ -380,6 +381,9 @@ export function BlogPostPage() {
           <div className="flex items-center gap-6 text-sm text-[#78716C] mb-8 pb-8 border-b border-[#E7E5E4]">
             <span className="flex items-center gap-2"><User className="w-4 h-4" />{post.author}</span>
             <span className="flex items-center gap-2"><Calendar className="w-4 h-4" />{fmtD(post.published_at)}</span>
+            {post.updated_at && post.updated_at.slice(0,10) > post.published_at.slice(0,10) && (
+              <span className="text-[#A8A29E]">{language === "en" ? `· Updated ${fmtD(post.updated_at)}` : `· Mis à jour le ${fmtD(post.updated_at)}`}</span>
+            )}
             <span className="flex items-center gap-2"><Clock className="w-4 h-4" />{post.read_time_min} min</span>
           </div>
           {post.image_url && (
@@ -432,6 +436,8 @@ export function BlogPostPage() {
               <ReactMarkdown remarkPlugins={[remarkGfm]} components={mdComponents}>{content}</ReactMarkdown>
             )}
           </div>
+
+          {isYmyl(post.slug) && <YmylNotice />}
 
           {post.tags&&post.tags.length>0&&(
             <div className="flex flex-wrap gap-2 mt-12 pt-8 border-t border-[#E7E5E4]">
