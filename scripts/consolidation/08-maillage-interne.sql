@@ -4,6 +4,7 @@
 -- Ne touche QUE l'URL des liens, garde le texte d'ancrage intact.
 -- Projet Supabase : tefpynkdxxfiefpkgitz
 -- ════════════════════════════════════════════════════════════════════════
+-- NB : voir 08b-maillage-crosslang.sql pour les liens croisés-langue (FR-path en contenu EN).
 
 -- ─── SECTION 1 : liens vers les 9 sources fusionnées → leur pilier ───
 -- loyer-frontalier-geneve-combien-payer  →  /blog/budget-colocation-geneve-guide-complet   (10 article(s) concerné(s))
