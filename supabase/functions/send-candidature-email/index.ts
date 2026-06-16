@@ -275,6 +275,125 @@ Deno.serve(async (req: Request) => {
     });
   }
 
+  // 3. Journalisation best-effort de la candidature (trace serveur, SANS donnée personnelle).
+  //    Alimente le Health Check hebdo n8n ("Check Candidatures 7j") et garde une trace
+  //    indépendante de GA4 (corrige la cause racine de la perte de suivi mai→juin 2026).
+  //    On ne bloque JAMAIS la candidature si la journalisation échoue : l'email reste prioritaire.
+  try {
+    const sbUrl = Deno.env.get("SUPABASE_URL");
+    const sbKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY");
+    if (sbUrl && sbKey) {
+      const referer = req.headers.get("Referer") ?? "";
+      const language = /\/en(\/|$|\?)/.test(referer) ? "en" : "fr";
+      const logRes = await fetch(`${sbUrl}/rest/v1/form_submissions`, {
+        method: "POST",
+        headers: {
+          "apikey": sbKey,
+          "Authorization": `Bearer ${sbKey}`,
+          "Content-Type": "application/json",
+          "Prefer": "return=minimal",
+        },
+        body: JSON.stringify({
+          form_type: "candidature",
+          source: data.source || null,
+          language,
+        }),
+      });
+      if (!logRes.ok) {
+        console.error("form_submissions logging failed", logRes.status, await logRes.text().catch(() => ""));
+      }
+    } else {
+      console.error("form_submissions logging skipped: SUPABASE_URL / SUPABASE_SERVICE_ROLE_KEY missing");
+    }
+  } catch (e) {
+    console.error("form_submissions logging threw (non-blocking)", e);
+  }
+
+  // 4. Enregistrement de la candidature dans la table `prospects` (CRM / dashboard / Google Sheet).
+  //    Best-effort : on ne bloque JAMAIS la candidature si l'insert échoue — l'email de
+  //    notification reste la source de vérité prioritaire (voir le 502 plus haut). Utilise la
+  //    clé service_role (RLS : `prospects` est inaccessible en anon), déjà disponible dans
+  //    l'environnement de la fonction (même clé que la journalisation ci-dessus). Aucune clé
+  //    secrète n'est exposée côté client.
+  try {
+    const sbUrl = Deno.env.get("SUPABASE_URL");
+    const sbKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY");
+    if (sbUrl && sbKey) {
+      // Date d'arrivée : le formulaire envoie une valeur RELATIVE (asap, 1-3-months…), pas une
+      // vraie date. La colonne move_in_date (type date) ne reçoit donc une valeur que si le champ
+      // est un vrai YYYY-MM-DD ; sinon elle reste null et le souhait est consigné dans `notes`.
+      const arrivalRaw = (data.arrival ?? "").trim();
+      const isIsoDate = /^\d{4}-\d{2}-\d{2}$/.test(arrivalRaw);
+      const moveInDate = isIsoDate ? arrivalRaw : null;
+
+      const ARRIVAL_LABELS: Record<string, string> = {
+        "asap": "Le plus tôt possible (sous 1 mois)",
+        "1-3-months": "Dans 1 à 3 mois",
+        "3-6-months": "Dans 3 à 6 mois",
+        "later": "Plus tard / pas encore décidé",
+      };
+      const CHANNEL_LABELS: Record<string, string> = {
+        "google": "Google",
+        "instagram": "Instagram",
+        "word-of-mouth": "Bouche à oreille",
+        "leboncoin": "Leboncoin",
+        "other": "Autre",
+      };
+
+      // notes : tout ce qui n'a pas de colonne dédiée dans `prospects`.
+      const notesParts: string[] = [];
+      const birthDate = (data.birthDate ?? "").trim();
+      if (birthDate) notesParts.push(`Né(e) le ${birthDate}`);
+      if (arrivalRaw && !moveInDate) {
+        notesParts.push(`Souhait d'arrivée : ${ARRIVAL_LABELS[arrivalRaw] ?? arrivalRaw}`);
+      }
+      // ⚠️ "Comment as-tu entendu parler ?" (data.source) ≠ prospects.source.
+      // prospects.source est contraint (prospects_source_check) et DOIT valoir "site_web" ;
+      // le canal déclaré par le candidat part donc dans `notes`.
+      const channel = (data.source ?? "").trim();
+      if (channel) notesParts.push(`Canal déclaré : ${CHANNEL_LABELS[channel] ?? channel}`);
+      const extraMessage = (data.message ?? "").trim();
+      if (extraMessage) notesParts.push(extraMessage);
+
+      // property_interest (uuid) : NON renseigné — le formulaire de candidature n'a pas de
+      // sélection de maison. Pour mémoire, si un champ "maison" est ajouté un jour :
+      //   La Villa   → d39d074a-ad6d-471c-b7c7-0e576521730e
+      //   Le Loft    → 177ebcb2-6852-461c-8150-d416aa62ecf1
+      //   Le Lodge   → 45175bde-8b94-446a-9dd4-e6dee4b5a509
+      //   Mont-Blanc → 57ecaa58-81e3-4c8c-8681-d5ac50b0d437
+      const prospect: Record<string, unknown> = {
+        first_name: data.firstName,
+        last_name: data.lastName,
+        email: data.email,
+        phone: data.phone,
+        occupation: (data.job ?? "").trim() || null, // champ "Poste" (présent sur l'ancien form)
+        move_in_date: moveInDate,
+        lease_duration: data.duration || null,
+        source: "site_web", // contrainte prospects_source_check — valeur fixe obligatoire
+        status: "new",
+        notes: notesParts.length > 0 ? notesParts.join("\n") : null,
+      };
+
+      const insertRes = await fetch(`${sbUrl}/rest/v1/prospects`, {
+        method: "POST",
+        headers: {
+          "apikey": sbKey,
+          "Authorization": `Bearer ${sbKey}`,
+          "Content-Type": "application/json",
+          "Prefer": "return=minimal",
+        },
+        body: JSON.stringify(prospect),
+      });
+      if (!insertRes.ok) {
+        console.error("prospects insert failed", insertRes.status, await insertRes.text().catch(() => ""));
+      }
+    } else {
+      console.error("prospects insert skipped: SUPABASE_URL / SUPABASE_SERVICE_ROLE_KEY missing");
+    }
+  } catch (e) {
+    console.error("prospects insert threw (non-blocking)", e);
+  }
+
   return new Response(JSON.stringify({
     success: true,
     autoresponseSent: candidateRes.ok,
