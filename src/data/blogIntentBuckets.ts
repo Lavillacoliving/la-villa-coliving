@@ -15,26 +15,21 @@
  */
 export type IntentBucket = "high" | "medium" | "admin" | "life" | "coliving";
 
+// 2026-06 : 9 slugs retirés (consolidation blog — voir scripts/consolidation/).
+// Les sources fusionnées sont dépubliées en base + 301 dans vercel.json.
 const BUCKET_BY_SLUG: Record<string, IntentBucket> = {
   // 🟢 high — the reader is looking for housing / about to apply
   "trouver-colocation-geneve-frontalier": "high",
-  "chambre-meublee-annemasse-geneve": "high",
   "colocation-annemasse-ville-la-grand-ambilly": "high",
   "dossier-location-frontalier-suisse-france": "high",
-  "5-erreurs-logement-frontalier-geneve": "high",
   "arnaques-logement-frontalier-geneve-eviter": "high",
   "demenager-geneve-frontalier-checklist": "high",
-  "arriver-seul-geneve-guide-30-jours": "high",
   "coliving-frais-dossier-geneve-annemasse": "high",
   // 🟡 medium — planning, budget, comparison
   "budget-colocation-geneve-guide-complet": "medium",
-  "loyer-frontalier-geneve-combien-payer": "medium",
-  "studio-geneve-vs-colocation-france-budget": "medium",
-  "economies-coliving-tout-inclus-geneve": "medium",
   "coliving-vs-colocation-differences": "medium",
   "living-in-france-working-in-geneva": "medium",
   "ou-habiter-frontalier-suisse-villes-france-pas-cher": "medium",
-  "meilleurs-quartiers-frontaliers-geneve": "medium",
   "colocation-expats-geneve-guide": "medium",
   "organisations-internationales-geneve-ou-habiter": "medium",
   // 🟠 admin — tax/admin authority content, soft CTA only
@@ -49,8 +44,6 @@ const BUCKET_BY_SLUG: Record<string, IntentBucket> = {
   // 🔵 life — daily life / transport / evaluating the area
   "cout-transport-frontalier-geneve-2026": "life",
   "transport-annemasse-geneve-leman-express": "life",
-  "temps-trajet-annemasse-geneve-par-quartier": "life",
-  "geneve-sans-voiture-mobilite-douce-frontaliers": "life",
   "grand-geneve-2026-nouveautes-frontaliers": "life",
   "vie-quotidienne-frontalier-courses-sport-sorties": "life",
   "se-faire-reseau-geneve-arriver-seul": "life",

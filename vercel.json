@@ -876,12 +876,12 @@
     },
     {
       "source": "/blog/5-erreurs-eviter-recherche-logement-frontalier",
-      "destination": "/blog/5-erreurs-logement-frontalier-geneve",
+      "destination": "/blog/arnaques-logement-frontalier-geneve-eviter",
       "permanent": true
     },
     {
       "source": "/en/blog/5-erreurs-eviter-recherche-logement-frontalier",
-      "destination": "/en/blog/5-erreurs-logement-frontalier-geneve",
+      "destination": "/en/blog/arnaques-logement-frontalier-geneve-eviter",
       "permanent": true
     },
     {
@@ -902,6 +902,106 @@
     {
       "source": "/en/blog/coliving-annemasse-geneve-alternative-premium",
       "destination": "/en/blog/coliving-annemasse-geneve-frontaliers-avantages",
+      "permanent": true
+    },
+    {
+      "source": "/blog/loyer-frontalier-geneve-combien-payer",
+      "destination": "/blog/budget-colocation-geneve-guide-complet",
+      "permanent": true
+    },
+    {
+      "source": "/en/blog/loyer-frontalier-geneve-combien-payer",
+      "destination": "/en/blog/budget-colocation-geneve-guide-complet",
+      "permanent": true
+    },
+    {
+      "source": "/blog/studio-geneve-vs-colocation-france-budget",
+      "destination": "/blog/budget-colocation-geneve-guide-complet",
+      "permanent": true
+    },
+    {
+      "source": "/en/blog/studio-geneve-vs-colocation-france-budget",
+      "destination": "/en/blog/budget-colocation-geneve-guide-complet",
+      "permanent": true
+    },
+    {
+      "source": "/blog/economies-coliving-tout-inclus-geneve",
+      "destination": "/blog/budget-colocation-geneve-guide-complet",
+      "permanent": true
+    },
+    {
+      "source": "/en/blog/economies-coliving-tout-inclus-geneve",
+      "destination": "/en/blog/budget-colocation-geneve-guide-complet",
+      "permanent": true
+    },
+    {
+      "source": "/blog/meilleurs-quartiers-frontaliers-geneve",
+      "destination": "/blog/ou-habiter-frontalier-suisse-villes-france-pas-cher",
+      "permanent": true
+    },
+    {
+      "source": "/en/blog/meilleurs-quartiers-frontaliers-geneve",
+      "destination": "/en/blog/ou-habiter-frontalier-suisse-villes-france-pas-cher",
+      "permanent": true
+    },
+    {
+      "source": "/blog/chambre-meublee-annemasse-geneve",
+      "destination": "/blog/colocation-annemasse-ville-la-grand-ambilly",
+      "permanent": true
+    },
+    {
+      "source": "/en/blog/chambre-meublee-annemasse-geneve",
+      "destination": "/en/blog/colocation-annemasse-ville-la-grand-ambilly",
+      "permanent": true
+    },
+    {
+      "source": "/blog/temps-trajet-annemasse-geneve-par-quartier",
+      "destination": "/blog/transport-annemasse-geneve-leman-express",
+      "permanent": true
+    },
+    {
+      "source": "/en/blog/temps-trajet-annemasse-geneve-par-quartier",
+      "destination": "/en/blog/transport-annemasse-geneve-leman-express",
+      "permanent": true
+    },
+    {
+      "source": "/blog/geneve-sans-voiture-mobilite-douce-frontaliers",
+      "destination": "/blog/transport-annemasse-geneve-leman-express",
+      "permanent": true
+    },
+    {
+      "source": "/en/blog/geneve-sans-voiture-mobilite-douce-frontaliers",
+      "destination": "/en/blog/transport-annemasse-geneve-leman-express",
+      "permanent": true
+    },
+    {
+      "source": "/blog/arriver-seul-geneve-guide-30-jours",
+      "destination": "/blog/demenager-geneve-frontalier-checklist",
+      "permanent": true
+    },
+    {
+      "source": "/en/blog/arriver-seul-geneve-guide-30-jours",
+      "destination": "/en/blog/demenager-geneve-frontalier-checklist",
+      "permanent": true
+    },
+    {
+      "source": "/blog/5-erreurs-logement-frontalier-geneve",
+      "destination": "/blog/arnaques-logement-frontalier-geneve-eviter",
+      "permanent": true
+    },
+    {
+      "source": "/en/blog/5-erreurs-logement-frontalier-geneve",
+      "destination": "/en/blog/arnaques-logement-frontalier-geneve-eviter",
+      "permanent": true
+    },
+    {
+      "source": "/blog/transport-annemasse-geneve-leman-expres",
+      "destination": "/blog/transport-annemasse-geneve-leman-express",
+      "permanent": true
+    },
+    {
+      "source": "/en/blog/transport-annemasse-geneve-leman-expres",
+      "destination": "/en/blog/transport-annemasse-geneve-leman-express",
       "permanent": true
     }
   ],
