@@ -38,11 +38,12 @@
   - **Saint-Cergues** : gare « St-Cergues-Les Voirons » **fermée aux voyageurs**, les L1 passent sans arrêt → « — ».
 - **⚠️ Réserve presse** : minutages des branches issus de l'horaire **2023** (stables d'année en année). **Avant publication, re-vérifier les 2-3 temps affichés sur l'horaire 2026 en vigueur** (cff.ch / lemanexpress.com) — écarts attendus ±1-2 min.
 
-## 4. TEMPS DE TRAJET VOITURE — pointe (colonne `voiture_pointe_min`)
+## 4. TEMPS DE TRAJET VOITURE (colonne `voiture_min`)
 
-- **`TODO` sur les 25 communes.** Les moteurs de routage (Google Maps, ViaMichelin, Mappy) sont **dynamiques** : aucune valeur heure-de-pointe citable depuis une source statique.
-- **Méthode de remplissage recommandée** : un relevé unique daté dans Google Maps, départ calé sur une arrivée **un jour de semaine à 08h00** au centre de Genève (Plainpalais/Cornavin), en notant la **date + heure du relevé** comme « source ». ~15 min pour les 25.
-- **Décision à prendre avec Jérôme** : (a) je te guide pour ce relevé Maps, (b) tu le fais, ou (c) on publie une **V1 train-only** (l'angle « et si tu passais au train ? » fonctionne sans la colonne voiture) et on ajoute la voiture en édition suivante.
+- **Source** : relevé **Google Maps**, itinéraire commune → **Plainpalais (centre de Genève, 1205)**, mode voiture, **le 16/06/2026**. Valeur = itinéraire le plus rapide affiché. Les 25 relevés un par un (origine pinée par code postal/département, résolution de commune vérifiée à chaque fois — Cranves-Sales re-fait car le CP 74380 renvoyait d'abord Lucinges).
+- **⚠️ Conditions = trafic COURANT au moment du relevé**, pas le pic strict de 8h. Les libellés Maps indiquaient « circulation normale / moins dense que d'habitude » → ces temps représentent un **niveau normal-à-léger** (≈ hors pointe). **La pointe matin ENTRANTE vers Genève (passage de frontière) est sensiblement plus élevée** sur les axes concernés. Le réglage « Partir à 8h » de Maps n'a pas pu être automatisé (widget résistant).
+- **À écrire honnêtement sur la page** : « Temps voiture indicatif (Google Maps, conditions courantes, juin 2026) ». Ne PAS présenter comme un temps de pointe garanti. **Décision Jérôme** : (a) publier tels quels avec ce libellé, (b) re-relever quelques communes-clés à 8h pour un chiffre de pointe, ou (c) garder le train comme angle principal et la voiture en complément.
+- **Ordres de grandeur cohérents** : cœur frontalier 17-30 min (Saint-Julien/Collonges/Archamps 17-19 ; Annemasse 28 ; Gaillard 22), Pays de Gex 26-42 (Ferney 26, Gex 42), Chablais lointain 41-63 (Bons 41, Thonon 55, Évian 63), Annecy 43.
 
 ## 5. REPÈRE GENÈVE — CHF (hors CSV communes, encadré méthodo)
 
@@ -66,7 +67,7 @@
 | Loyer T2-type | ✅ Calculé (×45 m²) | Dérivé assumé |
 | Temps train (15 communes à gare) | ✅ Sourcé (horaires LEX) | Élevé (Saint-Julien = moyen) |
 | « — » train (10 communes) | ✅ Réel (pas de gare) | Élevé |
-| Temps voiture pointe | ⛔ `TODO` ×25 | À relever (décision §4) |
+| Temps voiture | ✅ Relevé Google Maps 16/06 | Conditions courantes ≈ hors pointe (pas le pic 8h strict) |
 | Repère Genève CHF | ✅ Sourcé (OCSTAT 2021) | Élevé (millésime 2021) |
 
 **Prochaine étape : validation Jérôme du CSV, puis construction de la page (LOT 3b).**
