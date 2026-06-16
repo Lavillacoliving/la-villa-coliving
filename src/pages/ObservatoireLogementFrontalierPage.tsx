@@ -51,6 +51,9 @@ const CSV_URL = "/data/observatoire-data-2026.csv";
 const hub = COMMUNES.find((c) => c.name === "Annemasse")!;
 const far = COMMUNES.find((c) => c.name === "Bons-en-Chablais")!;
 const dropPct = Math.round((1 - far.mois / hub.mois) * 100); // -19 %
+// Repère Genève-Eaux-Vives (0 trajet) : OCSTAT 2021 nouveaux locataires 27,60 CHF/m² × 37 m², HORS charges.
+// Gardé en CHF (jamais converti / mélangé aux € français charges comprises). Ligne de repère, hors filtre budget.
+const GENEVA_CHF = 1020;
 
 type ModeKey = "pt" | "velo" | "voiture";
 type SortKey = "name" | "mois" | ModeKey;
@@ -333,6 +336,17 @@ export function ObservatoireLogementFrontalierPage() {
                 </tr>
               </thead>
               <tbody>
+                {/* Repère Genève-Eaux-Vives : 0 trajet, loyer CHF hors charges (toujours en tête, hors filtre budget) */}
+                <tr className="border-b border-[#E7E5E4]" style={{ background: "#F7F1E8" }}>
+                  <td className="px-3 py-2.5 text-[#1C1917] whitespace-nowrap font-medium">
+                    Genève-Eaux-Vives
+                    <span className="ml-1.5 text-[10px] uppercase tracking-wider text-[#A0623C]">({en ? "reference" : "repère"})</span>
+                  </td>
+                  <td className="px-3 py-2.5 text-right font-medium text-[#1C1917] whitespace-nowrap">≈ {GENEVA_CHF}&nbsp;CHF*</td>
+                  <td className="px-3 py-2.5 text-right text-[#78716C]">0 min</td>
+                  <td className="px-3 py-2.5 text-right text-[#78716C]">0 min</td>
+                  <td className="px-3 py-2.5 text-right text-[#78716C]">0 min</td>
+                </tr>
                 {sorted.map((c) => {
                   const ok = c.mois <= budget;
                   return (
@@ -360,6 +374,11 @@ export function ObservatoireLogementFrontalierPage() {
             {en
               ? "Times door-to-door to Geneva-Eaux-Vives at morning peak (arrival ~9:15). “—” bike = too far to cycle daily. The Léman Express is even faster station-to-station (e.g. Annemasse 8 min)."
               : "Temps porte-à-porte vers Genève-Eaux-Vives à l'heure de pointe (arrivée ~9h15). « — » vélo = trop loin au quotidien. Le Léman Express est plus rapide encore de gare à gare (ex. Annemasse 8 min)."}
+          </p>
+          <p className="text-xs text-[#A8A29E] mt-2">
+            {en
+              ? "* Geneva reference: ≈1,020 CHF/mo (OCSTAT 2021 new-tenant rate, 27.60 CHF/m² × 37 m², excluding charges) — shown in CHF, not directly comparable with the French charges-included figures. Living in Geneva itself means zero commute but a clearly higher rent."
+              : "* Repère Genève : ≈1 020 CHF/mois (OCSTAT 2021, nouveaux locataires, 27,60 CHF/m² × 37 m², hors charges) — affiché en CHF, non directement comparable aux loyers français charges comprises. Vivre à Genève même = zéro trajet, mais un loyer nettement plus élevé."}
           </p>
         </div>
       </section>
