@@ -1,73 +1,78 @@
 # Observatoire « Loyer × Trajet » — Sources & méthodologie (Édition 2026)
 
 > Relevé effectué le **2026-06-16**. Données = `public/data/observatoire-data-2026.csv` (séparateur `;`, décimales françaises `,`).
-> **Règle absolue : chaque valeur est sourcée ou marquée `TODO`. Aucun chiffre inventé.** La Villa n'apparaît dans aucun chiffre (éditrice neutre).
+> **Règle absolue : chaque valeur est sourcée ou marquée `—`/`TODO`. Aucun chiffre inventé.** La Villa n'apparaît dans aucun chiffre (éditrice neutre).
 > ⚠️ **À valider par Jérôme ligne par ligne avant publication** (crédibilité presse).
 
 ---
 
-## 1. LOYER — €/m² (colonne `loyer_eur_m2`)
+## 1. LOYER (ANIL « Carte des loyers » 2025)
 
-- **Source** : « Carte des loyers — Indicateurs de loyers d'annonce par commune en 2025 », Ministère du Logement / DGALN-DHUP, en partenariat avec **ANIL**, INRAE, Groupe SeLoger et leboncoin.
-- **Données** : annonces du **3ᵉ trimestre 2025**, édition publiée le **11 décembre 2025** (dernière disponible).
+- **Source** : « Carte des loyers — Indicateurs de loyers d'annonce par commune en 2025 », Ministère du Logement / DGALN-DHUP + **ANIL** + Groupe SeLoger + leboncoin. Données **3ᵉ trimestre 2025**, édition publiée le **11/12/2025**.
 - **Page dataset** : https://www.data.gouv.fr/datasets/carte-des-loyers-indicateurs-de-loyers-dannonce-par-commune-en-2025
-- **Fichier utilisé** (appartements, toutes typologies) : `pred-app-mef-dhup.csv` — colonne `loypredm2`.
-  - https://static.data.gouv.fr/resources/carte-des-loyers-indicateurs-de-loyers-dannonce-par-commune-en-2025/20251211-145010/pred-app-mef-dhup.csv
-- **Unité** : **€/m² par mois, charges comprises**, appartements.
-- **⚠️ Définition exacte à respecter sur la page** : ce n'est PAS une médiane brute d'annonces, mais un **loyer d'annonce ESTIMÉ (prédit)** par modèle hédonique pour un **appartement de référence** (52 m²), charges comprises. Formulation rigoureuse à employer : « loyer d'annonce estimé (€/m², charges comprises) — Carte des loyers 2025, données T3 2025 ». Le dataset fournit aussi un intervalle de confiance par commune (`lwr.IPm2`/`upr.IPm2`) si on veut afficher l'incertitude.
-- **Mention d'attribution OBLIGATOIRE (verbatim, à afficher dans l'encadré méthodo)** :
+- Deux indicateurs retenus (colonne `loypredm2`) :
+  - **`loyer_appt_eur_m2`** = appartements (ensemble). Fichier `pred-app-mef-dhup.csv`.
+  - **`loyer_t1t2_eur_m2`** = appartements **1-2 pièces (T1-T2)** — *le plus pertinent pour studios/colocation*. Fichier `pred-app12-mef-dhup.csv` (`.../20251211-144934/`).
+- **`loyer_t1t2_mois_37m2`** = `loyer_t1t2_eur_m2 × 37` (loyer mensuel d'un T1-T2 type), **calculé** sur la surface de référence ANIL.
+
+### ⚠️ Définition exacte (à respecter sur la page — citations verbatim)
+- **CHARGES COMPRISES** (confirmé 4× dans la méthodo officielle) : *« …estimer les indicateurs de loyers charges comprises »* (Note méthodo p.5) ; *« Ils correspondent au loyer du marché de la relocation et sont charges comprises »* (p.4). → **NON comparable à un loyer hors charges** (dont le repère OCSTAT Genève, §5). Toute comparaison doit le mentionner.
+- **Loyer ESTIMÉ (prédit)**, pas une médiane brute : prédiction hédonique pour un **logement de référence non meublé**. Formulation : « loyer d'annonce estimé (€/m², charges comprises) — Carte des loyers 2025, T3 2025 ».
+- **Surfaces de référence** (verbatim, Guide p.1 + Note méthodo Tableau 11) :
+  - Appartement **ensemble** : **52 m²**, 22,2 m²/pièce.
+  - Appartement **T1-T2** : **37 m²**, **22,9 m²/pièce**.
+  - (T3+ : 72 m² ; maison : 92 m².)
+- **Pas d'indicateur T1 seul** : la maille la plus fine = « 1-2 pièces ».
+- **Mention d'attribution OBLIGATOIRE** (verbatim, Guide p.2) :
   > **Estimations ANIL, à partir des données du Groupe SeLoger et de leboncoin**
-- **Flag qualité** : **Machilly (74158)** → valeur prédite « à la maille » (cluster homogène environnant), granularité locale moindre que les autres communes (prédites au niveau commune). Toujours une valeur officielle, mais à signaler.
-- **Désambiguïsation** : Bonneville = INSEE **74042** (Haute-Savoie), pas 80113 (Somme).
+- **Flag qualité** : **Machilly (74158)** = valeur prédite « à la maille » (cluster), granularité locale moindre (et T1-T2 < ensemble, artefact de maille). Bonneville = INSEE **74042** (Haute-Savoie).
 
-## 2. LOYER T2-TYPE — € (colonne `loyer_t2_45m2_eur`)
+## 2. TEMPS TRAIN — Léman Express **DIRECT** (`train_eauxvives_min`, `train_cornavin_min`)
 
-- **Calculé** : `loyer_eur_m2 × 45 m²` (T2 de référence ~45 m²), arrondi à l'euro. **Valeur dérivée, pas une donnée brute** — à présenter comme « ordre de grandeur pour un T2 d'environ 45 m² ».
+- **Source** : fiches horaires officielles **Léman Express** (édition 2023) tracées train par train ; tronçon Annemasse–Genève re-confirmé sur l'horaire 2025 (oev-info.ch 151).
+- **⚠️ LIAISONS DIRECTES UNIQUEMENT** (colonne `gare_lex_directe`) : **9 communes** desservies en direct vers Genève sans correspondance (Annemasse, Annecy, Thonon, Évian, Bons-en-Chablais, Machilly, Reignier-Ésery, La Roche-sur-Foron, Bonneville). Les autres = « — ».
+- Deux gares d'arrivée centrales : **Eaux-Vives** (terminus CEVA, plus proche) et **Cornavin** (gare principale, ≈ Eaux-Vives +14 min). Fenêtre pointe matin.
+- **Saint-Julien-en-Genevois** : gare TER **mais pas de LEX direct** (via Bellegarde ~46 min) → `gare_lex_directe = non`, train = « — ». Mode réel = bus/voiture.
+- **Saint-Cergues** : gare fermée aux voyageurs.
+- ⚠️ Horaires branches 2023 (stables) → re-vérifier 2-3 temps sur l'horaire 2026 avant publi (±1-2 min).
 
-## 3. TEMPS DE TRAJET TRAIN (colonnes `train_cornavin_min`, `train_eauxvives_min`)
+## 3. TEMPS VOITURE (`voiture_min`)
 
-- **Source** : fiches horaires officielles **Léman Express** (édition 2023, valable 11.12.2022→09.12.2023) tracées train par train ; tronçon central **Annemasse–Genève** re-confirmé sur l'horaire officiel **2025** (151 « Annemasse–Genève–Coppet », oev-info.ch).
-  - L1 (Évian/Thonon/Bons/Machilly) : https://www.lemanexpress.com/wp-content/uploads/2022/11/2023_LEX_FH_L1_EVI_COP.pdf
-  - L2 (Annecy/La Roche/Reignier) : https://www.lemanexpress.com/wp-content/uploads/2022/11/2023_LEX_FH_L2_ANN_COP.pdf
-  - L3 (Bonneville) : https://www.lemanexpress.com/wp-content/uploads/2022/11/2023_LEX_FH_L3_SGF_COP.pdf
-  - Tronçon Annemasse–Genève 2025 : https://www.oev-info.ch/sites/default/files/fap/2025/pdf/151.pdf
-- **Fenêtre** : pointe matin (arrivée Genève ~07h–08h30). Deux gares d'arrivée centrales fournies : **Genève-Cornavin** (gare principale) et **Genève-Eaux-Vives** (terminus CEVA, plus proche/rapide sur les branches est ; ≈ Cornavin −14 min).
-- **15 communes avec gare directe** ; **10 sans gare** (« — » = réponse réelle, desserte bus uniquement) — confirmé via la liste canonique des 45 gares du réseau.
-- **Cas particuliers** :
-  - **Saint-Julien-en-Genevois** : gare TER existante MAIS pas de liaison directe Genève (ligne vers Annemasse ; pour Cornavin = changement à Bellegarde, ~46 min, **confiance moyenne** — Wikipédia/Trainline, SNCF-Connect inaccessible). Mode réel = bus/voiture. À traiter avec prudence sur la page.
-  - **Saint-Cergues** : gare « St-Cergues-Les Voirons » **fermée aux voyageurs**, les L1 passent sans arrêt → « — ».
-- **⚠️ Réserve presse** : minutages des branches issus de l'horaire **2023** (stables d'année en année). **Avant publication, re-vérifier les 2-3 temps affichés sur l'horaire 2026 en vigueur** (cff.ch / lemanexpress.com) — écarts attendus ±1-2 min.
+- **Source** : relevé **Google Maps** (commune → Plainpalais, centre Genève), mode voiture, **le 16/06/2026**, itinéraire le plus rapide. 25 relevés, résolution de commune vérifiée à chaque fois.
+- **⚠️ Conditions = trafic COURANT au relevé** (libellés Maps « circulation normale / moins dense que d'habitude » → niveau **normal-à-léger, ≈ hors pointe**), **pas le pic strict de 8h** (le réglage « Partir à 8h » de Maps n'a pas pu être automatisé). La **pointe matin entrante vers Genève (frontière) est plus élevée**. → afficher « temps voiture indicatif (Google Maps, conditions courantes, juin 2026) ».
 
-## 4. TEMPS DE TRAJET VOITURE (colonne `voiture_min`)
+## 4. TEMPS TRAM/BUS — réseau **TPG** (`tpg_min`, `tpg_ligne`)
 
-- **Source** : relevé **Google Maps**, itinéraire commune → **Plainpalais (centre de Genève, 1205)**, mode voiture, **le 16/06/2026**. Valeur = itinéraire le plus rapide affiché. Les 25 relevés un par un (origine pinée par code postal/département, résolution de commune vérifiée à chaque fois — Cranves-Sales re-fait car le CP 74380 renvoyait d'abord Lucinges).
-- **⚠️ Conditions = trafic COURANT au moment du relevé**, pas le pic strict de 8h. Les libellés Maps indiquaient « circulation normale / moins dense que d'habitude » → ces temps représentent un **niveau normal-à-léger** (≈ hors pointe). **La pointe matin ENTRANTE vers Genève (passage de frontière) est sensiblement plus élevée** sur les axes concernés. Le réglage « Partir à 8h » de Maps n'a pas pu être automatisé (widget résistant).
-- **À écrire honnêtement sur la page** : « Temps voiture indicatif (Google Maps, conditions courantes, juin 2026) ». Ne PAS présenter comme un temps de pointe garanti. **Décision Jérôme** : (a) publier tels quels avec ce libellé, (b) re-relever quelques communes-clés à 8h pour un chiffre de pointe, ou (c) garder le train comme angle principal et la voiture en complément.
-- **Ordres de grandeur cohérents** : cœur frontalier 17-30 min (Saint-Julien/Collonges/Archamps 17-19 ; Annemasse 28 ; Gaillard 22), Pays de Gex 26-42 (Ferney 26, Gex 42), Chablais lointain 41-63 (Bons 41, Thonon 55, Évian 63), Annecy 43.
+- **Source** : pages officielles TPG (tpg.ch/lignes), recoupées Wikipédia/agrégateurs. **Couverture partielle** : seules les communes du **cordon frontalier immédiat** ont une ligne TPG vers le centre.
+  - **Annemasse → Genève-Rive : 25 min (Tram 17)** — chiffre officiel TPG robuste, **le repère à mettre en avant**.
+  - **Ferney-Voltaire → Cornavin : ~27 min (Bus 60/61)** · **Gex → Cornavin : ~44 min (Bus 61 BHNS)** · **Saint-Julien → Bel-Air : ~35 min (Bus 80)** — sourcés (confiance correcte).
+  - **Ambilly / Gaillard** : sur le Tram 17, temps **estimés** (~22 / ~20 min, lecture de grille, non confirmés au stop-level → marqués « estimé »).
+  - **Toutes les autres** : « — » (réseau **TAC** Annemasse Agglo ou **Proxim'iTi** → correspondance obligatoire vers le Tram 17 ; ou hors réseau TPG pour le Chablais/Faucigny/Annecy). Honnête : pas de ligne TPG directe vers le centre.
+- **À écrire sur la page** : présenter le tram/bus comme **complément** (le Tram 17 = la star), pas comme une colonne exhaustive.
 
-## 5. REPÈRE GENÈVE — CHF (hors CSV communes, encadré méthodo)
+## 5. REPÈRE GENÈVE — CHF, **hors charges** (encadré méthodo, hors CSV communes)
 
-- **Source primaire** : **OCSTAT** (Office cantonal de la statistique, Genève), *Informations statistiques N°14, novembre 2021 — « Niveau des loyers, résultats 2021 »*.
-  - https://statistique.ge.ch/tel/publications/2021/informations_statistiques/autres_themes/is_loyers_14_2021.pdf
-- **Chiffres (mai 2021, loyer libre, hors charges)** : **21,55 CHF/m²/mois** · loyer moyen **1 439 CHF/mois** · nouveaux locataires (au plus près du marché) **27,60 CHF/m²**.
-- **Gardé en CHF** (jamais converti, jamais mélangé aux € français — règle brief). Sert de **point haut de comparaison** (« côté France, le loyer est nettement plus bas »).
-- **MAJ 2024** : chiffres par-pièce existent (presse immobilier.ch/20min) mais attribution plus faible (« canton » pas OCSTAT nommé) et **pas de CHF/m²** → si un CHF/m² 2024 est requis : `TODO` (puiser dans les tableaux Excel OCSTAT T 05.04.2.01).
+- **Source primaire OCSTAT** (IS N°14, nov. 2021, « Niveau des loyers, résultats 2021 ») : https://statistique.ge.ch/tel/publications/2021/informations_statistiques/autres_themes/is_loyers_14_2021.pdf
+- **21,55 CHF/m²/mois** · loyer moyen **1 439 CHF/mois** · nouveaux locataires **27,60 CHF/m²**. **HORS CHARGES.**
+- ⚠️ **Asymétrie charges** : OCSTAT = hors charges ; ANIL France = charges comprises. La comparaison France↔Genève doit le signaler (sinon l'écart est surévalué). Gardé en CHF, jamais converti.
 
-## 6. CODES INSEE (colonne `code_insee`)
-
-- Source : villes-de-france.eu (miroir du Code officiel géographique INSEE), recoupé Wikipédia/INSEE. Les 25 vérifiés. (Saint-Julien-en-Genevois est bien en Haute-Savoie 74 malgré le nom « Genevois ».)
+## 6. CODES INSEE — villes-de-france.eu (miroir COG INSEE), 25 vérifiés.
 
 ---
 
-## Récapitulatif qualité (à valider par Jérôme)
+## Conditions de mesure (encadré méthodo à publier intégralement)
+1. **Loyers** : ANIL Carte des loyers 2025, données T3 2025, **charges comprises**, appartements non meublés, loyer **estimé** (prédit) pour un logement de référence (ensemble 52 m² / T1-T2 37 m²). « Estimations ANIL, à partir des données du Groupe SeLoger et de leboncoin ». Ordres de grandeur indicatifs, hors situation individuelle.
+2. **Train** : Léman Express, **liaisons directes** uniquement, vers Genève-Eaux-Vives / Cornavin, pointe matin, horaire 2023/2025.
+3. **Voiture** : Google Maps, → centre Genève, **trafic courant au 16/06/2026** (≈ hors pointe).
+4. **Tram/bus** : TPG, communes du cordon frontalier, lignes desservant directement le centre (Tram 17, Bus 60/61/80).
+5. **Repère Genève** : OCSTAT 2021, CHF, **hors charges** (≠ charges comprises côté France).
 
-| Donnée | Statut | Niveau de confiance |
+## Récapitulatif qualité (à valider)
+| Donnée | Statut | Confiance |
 |---|---|---|
-| Loyer €/m² (25 communes) | ✅ Sourcé (ANIL 2025) | Élevé (sauf Machilly = maille) |
-| Loyer T2-type | ✅ Calculé (×45 m²) | Dérivé assumé |
-| Temps train (15 communes à gare) | ✅ Sourcé (horaires LEX) | Élevé (Saint-Julien = moyen) |
-| « — » train (10 communes) | ✅ Réel (pas de gare) | Élevé |
-| Temps voiture | ✅ Relevé Google Maps 16/06 | Conditions courantes ≈ hors pointe (pas le pic 8h strict) |
-| Repère Genève CHF | ✅ Sourcé (OCSTAT 2021) | Élevé (millésime 2021) |
-
-**Prochaine étape : validation Jérôme du CSV, puis construction de la page (LOT 3b).**
+| Loyer appt + T1-T2 €/m² (25) | ✅ Sourcé ANIL 2025, charges comprises | Élevé (Machilly = maille) |
+| Loyer mensuel T1-T2 (×37 m²) | ✅ Calculé (surface réf. ANIL) | Dérivé assumé |
+| Train direct (9 communes à gare) | ✅ Sourcé horaires LEX | Élevé |
+| Voiture (25) | ✅ Google Maps 16/06 | Conditions courantes ≈ hors pointe |
+| Tram/bus TPG | ⚠️ Partiel : Annemasse solide ; Ferney/Gex/St-Julien OK ; reste « — » | Moyen/sourcé |
+| Repère Genève CHF | ✅ OCSTAT 2021 (hors charges) | Élevé (millésime 2021) |
