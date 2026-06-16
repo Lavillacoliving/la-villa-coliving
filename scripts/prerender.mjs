@@ -48,6 +48,7 @@ const STATIC_ROUTES_FR = [
   '/leloft',
   '/lelodge',
   '/investisseurs',
+  '/observatoire-logement-frontalier-geneve',
   '/mentions-legales',
   '/politique-de-confidentialite',
 ];
@@ -293,6 +294,7 @@ const BREADCRUMB_LABELS = {
     candidature: 'Candidature',
     blog: 'Blog',
     investisseurs: 'Investisseurs',
+    'observatoire-logement-frontalier-geneve': 'Observatoire logement frontalier',
   },
   en: {
     home: 'Home',
@@ -310,6 +312,7 @@ const BREADCRUMB_LABELS = {
     candidature: 'Apply',
     blog: 'Blog',
     investisseurs: 'Investors',
+    'observatoire-logement-frontalier-geneve': 'Cross-border housing observatory',
   },
 };
 
@@ -520,6 +523,7 @@ const STATIC_PAGE_CONFIG = {
   '/candidature': { priority: '0.7', changefreq: 'monthly' },
   '/blog': { priority: '0.7', changefreq: 'weekly' },
   '/investisseurs': { priority: '0.6', changefreq: 'monthly' },
+  '/observatoire-logement-frontalier-geneve': { priority: '0.8', changefreq: 'monthly' },
   '/mentions-legales': { priority: '0.3', changefreq: 'yearly' },
   '/politique-de-confidentialite': { priority: '0.3', changefreq: 'yearly' },
 };

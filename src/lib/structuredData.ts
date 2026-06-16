@@ -139,3 +139,46 @@ export function buildRoomOfferSchema(opts: { name: string; description: string; 
     seller: { "@type": "Organization", name: "La Villa Coliving", url: SITE },
   };
 }
+
+/**
+ * Dataset (schema.org) — premier usage Dataset du site, pour l'observatoire.
+ * `distribution` pointe le CSV téléchargeable. La Villa = éditrice neutre (creator/publisher),
+ * jamais dans les chiffres. Licence CC-BY pour encourager la citation presse.
+ */
+export function buildDatasetSchema(opts: {
+  name: string;
+  description: string;
+  url: string;
+  csvUrl: string;
+  datePublished: string;
+  dateModified: string;
+  language: "fr" | "en";
+  spatial: string[];
+}): Record<string, unknown> {
+  return {
+    "@context": "https://schema.org",
+    "@type": "Dataset",
+    name: opts.name,
+    description: opts.description,
+    url: opts.url,
+    inLanguage: opts.language,
+    datePublished: opts.datePublished,
+    dateModified: opts.dateModified,
+    creator: { "@type": "Organization", name: "La Villa Coliving", url: SITE },
+    publisher: { "@type": "Organization", name: "La Villa Coliving", url: SITE },
+    license: "https://creativecommons.org/licenses/by/4.0/",
+    isAccessibleForFree: true,
+    keywords:
+      opts.language === "en"
+        ? ["cross-border housing", "Geneva", "rent", "commute time", "Léman Express", "Greater Geneva"]
+        : ["logement frontalier", "Genève", "loyer", "temps de trajet", "Léman Express", "Genevois français"],
+    spatialCoverage: opts.spatial.map((name) => ({ "@type": "Place", name })),
+    distribution: [
+      {
+        "@type": "DataDownload",
+        encodingFormat: "text/csv",
+        contentUrl: opts.csvUrl,
+      },
+    ],
+  };
+}

@@ -1,0 +1,29 @@
+<svg width="1200" height="630" viewBox="0 0 1200 630" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Observatoire du logement frontalier — loyer et trajet vers Genève">
+  <rect width="1200" height="630" fill="#FAF9F6"/>
+  <rect x="0" y="0" width="1200" height="10" fill="#D4A574"/>
+  <text x="64" y="96" font-family="Helvetica, Arial, sans-serif" font-size="20" letter-spacing="3" fill="#D4A574">OBSERVATOIRE DU LOGEMENT FRONTALIER · ÉDITION 2026</text>
+  <text x="64" y="190" font-family="Georgia, 'Times New Roman', serif" font-size="58" fill="#1C1917">Où se loger près de Genève</text>
+  <text x="64" y="256" font-family="Georgia, 'Times New Roman', serif" font-size="58" fill="#1C1917">sans <tspan fill="#D4A574">s'éloigner ?</tspan></text>
+  <text x="64" y="330" font-family="Helvetica, Arial, sans-serif" font-size="26" fill="#57534E">Le loyer d'un studio croisé au temps de trajet,</text>
+  <text x="64" y="366" font-family="Helvetica, Arial, sans-serif" font-size="26" fill="#57534E">commune par commune du Genevois français.</text>
+  <text x="64" y="476" font-family="Helvetica, Arial, sans-serif" font-size="84" font-weight="bold" fill="#1C1917">−19<tspan font-size="48"> %</tspan></text>
+  <text x="64" y="520" font-family="Helvetica, Arial, sans-serif" font-size="24" fill="#57534E">de loyer 20 min plus loin sur le Léman Express</text>
+
+  <g>
+    <line x1="690" y1="120" x2="690" y2="470" stroke="#E7E5E4" stroke-width="2"/>
+    <line x1="690" y1="470" x2="1150" y2="470" stroke="#E7E5E4" stroke-width="2"/>
+    <text x="920" y="510" text-anchor="middle" font-family="Helvetica, Arial, sans-serif" font-size="17" fill="#A8A29E">temps de trajet vers Genève →</text>
+    <text x="668" y="300" text-anchor="middle" font-family="Helvetica, Arial, sans-serif" font-size="17" fill="#A8A29E" transform="rotate(-90 668 300)">loyer €/mois</text>
+    <circle cx="690" cy="470" r="7" fill="#1C1917"/>
+    <text x="700" y="458" font-family="Helvetica, Arial, sans-serif" font-size="16" font-weight="bold" fill="#1C1917">Eaux-Vives</text>
+    <circle cx="807" cy="172" r="11" fill="#A0623C"/><text x="822" y="177" font-family="Helvetica, Arial, sans-serif" font-size="15" fill="#44403C">Ambilly</text>
+    <circle cx="768" cy="242" r="11" fill="#D4A574"/><text x="783" y="247" font-family="Helvetica, Arial, sans-serif" font-size="15" fill="#44403C">Annemasse</text>
+    <circle cx="978" cy="289" r="11" fill="#D4A574"/><text x="993" y="294" font-family="Helvetica, Arial, sans-serif" font-size="15" fill="#44403C">Évian</text>
+    <circle cx="1120" cy="301" r="11" fill="#D4A574"/><text x="1063" y="324" font-family="Helvetica, Arial, sans-serif" font-size="15" fill="#44403C">Annecy</text>
+    <circle cx="861" cy="395" r="11" fill="#6B8E6B"/><text x="876" y="400" font-family="Helvetica, Arial, sans-serif" font-size="15" fill="#44403C">Bons-en-Chablais</text>
+    <circle cx="822" cy="439" r="11" fill="#6B8E6B"/><text x="837" y="444" font-family="Helvetica, Arial, sans-serif" font-size="15" fill="#44403C">Ville-la-Grand</text>
+  </g>
+
+  <text x="64" y="588" font-family="Helvetica, Arial, sans-serif" font-size="20" font-weight="bold" fill="#1C1917">La Villa Coliving</text>
+  <text x="1136" y="588" text-anchor="end" font-family="Helvetica, Arial, sans-serif" font-size="20" fill="#A8A29E">lavillacoliving.com</text>
+</svg>
