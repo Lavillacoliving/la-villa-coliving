@@ -13,13 +13,14 @@ interface Prospect {
 }
 
 const STATUS_COLORS: Record<string,string> = {
-  new: '#3b82f6', contacted: '#eab308', visit_scheduled: '#8b5cf6',
-  visit_done: '#f97316', offer_sent: '#b8860b', signed: '#22c55e',
-  lost: '#94a3b8'
+  new: '#3b82f6', contacted: '#eab308', photos_sent: '#06b6d4',
+  interested: '#a855f7', visit_scheduled: '#8b5cf6', visit_done: '#f97316',
+  contract_sent: '#b8860b', signed: '#22c55e', lost: '#94a3b8'
 };
 const STATUS_LABELS: Record<string,string> = {
-  new: 'Nouveau', contacted: 'Contacté', visit_scheduled: 'Visite planifiée',
-  visit_done: 'Visite faite', offer_sent: 'Offre envoyée', signed: 'Signé', lost: 'Perdu'
+  new: 'Nouveau', contacted: 'Contacté', photos_sent: 'Photos envoyées',
+  interested: 'Intéressé', visit_scheduled: 'Visite planifiée', visit_done: 'Visite faite',
+  contract_sent: 'Contrat envoyé', signed: 'Signé', lost: 'Perdu'
 };
 const PIPELINE_STAGES = ['new','contacted','visit_scheduled','visit_done','signed'];
 const PIPELINE_LABELS: Record<string,string> = {
@@ -28,8 +29,10 @@ const PIPELINE_LABELS: Record<string,string> = {
 };
 // Valeurs autorisées par la contrainte prospects_source_check (value = stocké en base, label = affiché)
 const SOURCE_OPTIONS: Array<[string, string]> = [
-  ['messenger','Messenger'], ['instagram','Instagram'], ['whatsapp','WhatsApp'],
-  ['facebook','Facebook'], ['leboncoin','Leboncoin'], ['site_web','Site web'], ['autre','Autre'],
+  ['site_web','Site web'], ['facebook','Facebook'], ['instagram','Instagram'],
+  ['whatsapp','WhatsApp'], ['messenger','Messenger'], ['leboncoin','Leboncoin'],
+  ['appartager','Appartager'], ['roomlala','Roomlala'], ['bouche_a_oreille','Bouche-à-oreille'],
+  ['email','Email'], ['autre','Autre'],
 ];
 const SOURCE_LABELS: Record<string, string> = Object.fromEntries(SOURCE_OPTIONS);
 
@@ -45,7 +48,7 @@ const propertyName = (id: string | null) => (id ? (PROPERTY_LABELS[id] ?? '—')
 
 // Durée du séjour : mêmes valeurs que le formulaire public de candidature
 const DURATION_OPTIONS: Array<[string, string]> = [
-  ['2-3','2-3 mois'], ['3-6','3-6 mois'], ['6-12','6-12 mois'], ['12+','12+ mois'],
+  ['3_mois','3 mois'], ['6_mois','6 mois'], ['12_mois','12 mois'], ['flexible','Flexible'],
 ];
 const DURATION_LABELS: Record<string, string> = Object.fromEntries(DURATION_OPTIONS);
 
@@ -76,7 +79,7 @@ export default function DashboardProspectsPage() {
 
   useEffect(() => { load(); }, [load]);
 
-  const active = ["new","contacted","visit_scheduled","visit_done","offer_sent"];
+  const active = ["new","contacted","photos_sent","interested","visit_scheduled","visit_done","contract_sent"];
   const filtered = statusFilter==="active" ? prospects.filter(p=>active.includes(p.status))
     : statusFilter==="all" ? prospects : prospects.filter(p=>p.status===statusFilter);
 
