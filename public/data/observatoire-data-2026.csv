@@ -1,0 +1,26 @@
+commune;code_insee;departement;loyer_eur_m2;loyer_t2_45m2_eur;gare;ligne_lex;train_cornavin_min;train_eauxvives_min;voiture_pointe_min;note
+Annemasse;74012;74;20,99;945;oui;L1/L2/L3/L4;22;8;TODO;Hub principal Léman Express
+Ville-la-Grand;74305;74;16,15;727;non;—;—;—;TODO;Desserte bus TAC uniquement
+Ambilly;74008;74;21,28;958;non;—;—;—;TODO;
+Gaillard;74133;74;17,71;797;non;—;—;—;TODO;Frontalier d'Eaux-Vives mais pas de halte
+Étrembières;74118;74;21,98;989;non;—;—;—;TODO;
+Vétraz-Monthoux;74298;74;20,69;931;non;—;—;—;TODO;
+Cranves-Sales;74094;74;21,19;954;non;—;—;—;TODO;
+Bonne;74040;74;18,46;831;non;—;—;—;TODO;
+Saint-Cergues;74229;74;20,41;918;non;—;—;—;TODO;Gare fermée aux voyageurs
+Saint-Julien-en-Genevois;74243;74;21,85;983;oui;TER (pas LEX);46;—;TODO;Gare TER sans liaison directe Genève — via Bellegarde ~46 min — confiance moyenne
+Archamps;74016;74;22,08;994;non;—;—;—;TODO;
+Collonges-sous-Salève;74082;74;20,78;935;non;—;—;—;TODO;
+Ferney-Voltaire;01160;01;26,13;1176;non;—;—;—;TODO;Pays de Gex — tram prévu 2027
+Saint-Genis-Pouilly;01354;01;22,55;1015;non;—;—;—;TODO;Pays de Gex
+Prévessin-Moëns;01313;01;24,64;1109;non;—;—;—;TODO;Pays de Gex
+Gex;01173;01;21,18;953;non;—;—;—;TODO;Pays de Gex — car TER ligne 33
+Divonne-les-Bains;01143;01;27,85;1253;non;—;—;—;TODO;Pays de Gex — ligne fermée aux voyageurs depuis 1980
+Annecy;74010;74;20,45;920;oui;L2;77;63;TODO;Repère élargissement (axe L2)
+Thonon-les-Bains;74281;74;16,87;759;oui;L1;57;43;TODO;
+Évian-les-Bains;74119;74;19,23;865;oui;L1;66;52;TODO;
+Bons-en-Chablais;74043;74;16,26;732;oui;L1;42;28;TODO;
+Machilly;74158;74;20,44;920;oui;L1;36;22;TODO;Loyer prédit à la maille (granularité locale moindre)
+Reignier-Ésery;74220;74;18,38;827;oui;L2/L3;39;25;TODO;
+La Roche-sur-Foron;74224;74;16,69;751;oui;L2/L3;46;32;TODO;
+Bonneville;74042;74;15,34;690;oui;L3;62;48;TODO;INSEE 74042 (Haute-Savoie)
