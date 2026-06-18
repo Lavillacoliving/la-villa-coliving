@@ -310,7 +310,7 @@ export function ObservatoireLogementFrontalierPage() {
           <div className="bg-white border border-[#E7E5E4] rounded-xl p-5 mb-5">
             <p className="text-sm mb-3">
               <span className="text-xs font-semibold uppercase tracking-wider text-[#D4A574] mr-2">{en ? "Step 1" : "Étape 1"}</span>
-              <span className="text-[#57534E]">{en ? "Set your monthly budget with the slider — towns over budget fade out." : "Définis ton budget mensuel avec le curseur — les communes hors budget se grisent."}</span>
+              <span className="font-semibold text-[#44403C]">{en ? "Set your monthly budget with the slider — towns over budget fade out." : "Définis ton budget mensuel avec le curseur — les communes hors budget se grisent."}</span>
             </p>
             <div className="flex items-center gap-3 flex-wrap">
               <label htmlFor="budget" className="text-sm text-[#57534E] whitespace-nowrap flex items-center gap-2">
@@ -349,7 +349,7 @@ export function ObservatoireLogementFrontalierPage() {
           {/* ÉTAPE 2 — filtre mode */}
           <p className="text-sm mb-3 mt-6">
             <span className="text-xs font-semibold uppercase tracking-wider text-[#D4A574] mr-2">{en ? "Step 2" : "Étape 2"}</span>
-            <span className="text-[#57534E]">{en ? "Choose how you commute" : "Choisis ton mode de déplacement"}</span>
+            <span className="font-semibold text-[#44403C]">{en ? "Choose how you commute" : "Choisis ton mode de déplacement"}</span>
           </p>
           <div className="flex items-center gap-2 flex-wrap mb-6">
             {modeBtns.map(({ k, icon: Icon, fr, en: enL }) => {
@@ -380,7 +380,7 @@ export function ObservatoireLogementFrontalierPage() {
           {/* ÉTAPE 3 — tableau (toutes les colonnes restent dans le DOM = lisible sans JS / crawlable) */}
           <p className="text-sm mb-3">
             <span className="text-xs font-semibold uppercase tracking-wider text-[#D4A574] mr-2">{en ? "Step 3" : "Étape 3"}</span>
-            <span className="text-[#57534E]">{en ? "Find the town that fits you — click a column header to sort." : "Trouve la commune qui te correspond — clique sur un en-tête de colonne pour trier."}</span>
+            <span className="font-semibold text-[#44403C]">{en ? "Find the town that fits you — click a column header to sort." : "Trouve la commune qui te correspond — clique sur un en-tête de colonne pour trier."}</span>
           </p>
           <div className="overflow-x-auto bg-white border border-[#E7E5E4] rounded-xl">
             <table className="w-full text-sm" style={{ borderCollapse: "collapse" }}>
