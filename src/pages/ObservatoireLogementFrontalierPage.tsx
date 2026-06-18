@@ -142,11 +142,34 @@ export function ObservatoireLogementFrontalierPage() {
   const tier = (mois: number) => (mois <= 750 ? "#6B8E6B" : mois <= 950 ? "#D4A574" : "#A0623C");
 
   // ── Mini-infographie « Loyer studio × Trajet » (transport public) — l'objet partageable.
-  const VW = 800, VH = 430, PADL = 92, PADR = 24, PADT = 40, PADB = 64;
+  const VW = 800, VH = 470, PADL = 92, PADR = 24, PADT = 40, PADB = 64;
   const ptMax = 90, moisMin = 600, moisMax = 1050;
   const sx = (pt: number) => PADL + (Math.min(pt, ptMax) / ptMax) * (VW - PADL - PADR);
   const sy = (mois: number) => PADT + ((moisMax - mois) / (moisMax - moisMin)) * (VH - PADT - PADB);
-  const labelled = new Set(["Ville-la-Grand", "Annemasse", "Ambilly", "Bons-en-Chablais", "Bonneville", "Annecy"]);
+
+  // Étiquettes du nuage : TOUTES les communes, placement glouton anti-chevauchement (droite > gauche > haut > bas).
+  type LBox = { x1: number; y1: number; x2: number; y2: number };
+  const dotPts = COMMUNES.map((c) => ({ name: c.name, x: sx(c.pt), y: sy(c.mois) }));
+  const placedBoxes: LBox[] = [];
+  const labelPos: Record<string, { lx: number; ly: number; anchor: "start" | "end" | "middle" }> = {};
+  [...dotPts]
+    .sort((a, b) => a.x - b.x)
+    .forEach((d) => {
+      const w = d.name.length * 5.6 + 4;
+      const cands = [
+        { lx: d.x + 9, ly: d.y + 3.5, anchor: "start" as const, box: { x1: d.x + 8, y1: d.y - 5, x2: d.x + 10 + w, y2: d.y + 7 } },
+        { lx: d.x - 9, ly: d.y + 3.5, anchor: "end" as const, box: { x1: d.x - 10 - w, y1: d.y - 5, x2: d.x - 8, y2: d.y + 7 } },
+        { lx: d.x, ly: d.y - 10, anchor: "middle" as const, box: { x1: d.x - w / 2, y1: d.y - 20, x2: d.x + w / 2, y2: d.y - 8 } },
+        { lx: d.x, ly: d.y + 16, anchor: "middle" as const, box: { x1: d.x - w / 2, y1: d.y + 8, x2: d.x + w / 2, y2: d.y + 19 } },
+      ];
+      const bad = (b: LBox) =>
+        placedBoxes.some((p) => !(b.x2 < p.x1 || b.x1 > p.x2 || b.y2 < p.y1 || b.y1 > p.y2)) ||
+        dotPts.some((o) => o.name !== d.name && o.x > b.x1 - 1 && o.x < b.x2 + 1 && o.y > b.y1 - 1 && o.y < b.y2 + 1) ||
+        b.x1 < PADL - 2 || b.x2 > VW - 4 || b.y1 < PADT - 8 || b.y2 > VH - PADB + 4;
+      const chosen = cands.find((c) => !bad(c.box)) ?? cands[0];
+      placedBoxes.push(chosen.box);
+      labelPos[d.name] = { lx: chosen.lx, ly: chosen.ly, anchor: chosen.anchor };
+    });
 
   const modeBtns: { k: ModeKey; icon: typeof Bus; fr: string; en: string }[] = [
     { k: "pt", icon: Bus, fr: "Transport public", en: "Public transport" },
@@ -258,24 +281,14 @@ export function ObservatoireLogementFrontalierPage() {
               <text x={PADL + 9} y={PADT - 6} fontSize="11" fontWeight="600" fill="#1C1917">Genève-Eaux-Vives</text>
               <text x={PADL + 9} y={PADT + 8} fontSize="10" fill="#A0623C">≈ {GENEVA_CHF_RANGE} CHF · 0 min</text>
             </g>
-            {/* points */}
+            {/* points — toutes les communes étiquetées */}
             {COMMUNES.map((c) => {
               const x = sx(c.pt), y = sy(c.mois);
-              const nearRight = x > VW - 140; // label vers la gauche pour ne pas sortir du cadre
+              const lp = labelPos[c.name];
               return (
                 <g key={c.name}>
                   <circle cx={x} cy={y} r="6" fill={tier(c.mois)} stroke="#fff" strokeWidth="1.5" />
-                  {labelled.has(c.name) && (
-                    <text
-                      x={nearRight ? x - 9 : x + 9}
-                      y={y + 4}
-                      textAnchor={nearRight ? "end" : "start"}
-                      fontSize="11"
-                      fill="#44403C"
-                    >
-                      {c.name}
-                    </text>
-                  )}
+                  <text x={lp.lx} y={lp.ly} textAnchor={lp.anchor} fontSize="10.5" fill="#44403C">{c.name}</text>
                 </g>
               );
             })}
