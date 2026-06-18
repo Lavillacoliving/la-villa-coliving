@@ -1,0 +1,13 @@
+{
+  "slug": "banque-telephone-internet-frontalier-bons-plans",
+  "corrections": [],
+  "links": [
+    {"field": "content_fr", "anchor": "Vous aurez besoin d'un compte français", "url": "https://www.service-public.gouv.fr/particuliers/vosdroits/F2417"},
+    {"field": "content_en", "anchor": "You'll need a French account", "url": "https://www.service-public.gouv.fr/particuliers/vosdroits/F2417?lang=en"},
+    {"field": "content_fr", "anchor": "mais la Suisse n'est PAS dans l'UE", "url": "https://www.arcep.fr/mes-demarches-et-services/consommateurs/fiches-pratiques/itinerance-international-hors-union-europeenne.html"},
+    {"field": "content_en", "anchor": "but Switzerland is NOT in the EU", "url": "https://www.arcep.fr/mes-demarches-et-services/consommateurs/fiches-pratiques/itinerance-international-hors-union-europeenne.html"},
+    {"field": "content_fr", "anchor": "La Suisse fait partie de l'espace", "url": "https://www.arcep.fr/la-regulation/grands-dossiers-reseaux-mobiles/litinerance-internationale-roaming.html"},
+    {"field": "content_en", "anchor": "Switzerland falls under the", "url": "https://www.arcep.fr/la-regulation/grands-dossiers-reseaux-mobiles/litinerance-internationale-roaming.html"}
+  ],
+  "notes": "Faits verifies : ~6 ✓, 0 ✶, 0 ?. Aucun fait reglementaire faux -> corrections=[]. Le coeur reglementaire est juste : la Suisse hors UE/EEE => roaming facture en supplement (confirme ARCEP, plafond data defaut 60 EUR ; les forfaits/prix restent des estimations non corrigees, conformement a la consigne). A6 : l'article ne cite ni 29 chambres, ni trajet, ni prix d'appel 1380 -> rien a aligner. A1 : 3 liens officiels (FR+EN, tous 200) : droit au compte (service-public.gouv.fr, .lang=en pour EN) ancre sur le besoin de compte francais (sujet 'droit au compte' demande) ; itinerance hors UE (ARCEP fiche) ancre sur 'la Suisse n'est PAS dans l'UE' ; dossier roaming (ARCEP) ancre sur 'La Suisse fait partie de l'espace Monde'. banque-france.fr/droit-au-compte 200 verifie aussi mais non retenu pour eviter le doublon avec service-public (qui a une vraie version EN)."
+}

@@ -1,0 +1,18 @@
+{
+  "slug": "demenager-geneve-frontalier-checklist",
+  "corrections": [
+    {"field": "content_fr", "old": "vous rendre à l'Office cantonal de la population et des migrations (OCPM) pour activer votre permis G (prenez rendez-vous en ligne, les files sont légendaires)", "new": "déposer votre demande de permis G auprès de l'Office cantonal de la population et des migrations (OCPM) — pour un ressortissant UE/AELE c'est vous qui déposez la demande, et vous pouvez commencer à travailler dès le dépôt (récépissé)", "src": "https://www.ge.ch/demander-permis-travail-frontalier"},
+    {"field": "content_en", "old": "go to the Office cantonal de la population et des migrations (OCPM) to activate your G permit (book online, the queues are legendary)", "new": "file your G permit application with the Office cantonal de la population et des migrations (OCPM) — as an EU/EFTA national you file it yourself, and you can start working as soon as it is filed (récépissé)", "src": "https://www.ge.ch/demander-permis-travail-frontalier"}
+  ],
+  "links": [
+    {"field": "content_fr", "anchor": "droit d'option entre la LAMal suisse et la CMU française", "url": "https://www.cleiss.fr/faq/droit_d_option_des_frontaliers_france-suisse.html"},
+    {"field": "content_en", "anchor": "right of option between Swiss LAMal and French CMU", "url": "https://www.cleiss.fr/faq/droit_d_option_des_frontaliers_france-suisse.html"},
+    {"field": "content_fr", "anchor": "Office cantonal de la population et des migrations (OCPM)", "url": "https://www.ge.ch/demander-permis-travail-frontalier"},
+    {"field": "content_en", "anchor": "Office cantonal de la population et des migrations (OCPM)", "url": "https://www.ge.ch/demander-permis-travail-frontalier"},
+    {"field": "content_fr", "anchor": "Généralement 2x le loyer mensuel", "url": "https://www.service-public.gouv.fr/particuliers/vosdroits/F31269"},
+    {"field": "content_en", "anchor": "Usually 2x monthly rent", "url": "https://www.service-public.gouv.fr/particuliers/vosdroits/F31269"},
+    {"field": "content_fr", "anchor": "vous restez frontalier, donc impôts France", "url": "https://www.impots.gouv.fr/international-particulier/je-suis-frontalier-franco-suisse"},
+    {"field": "content_en", "anchor": "you stay cross-border, so taxes in France", "url": "https://www.impots.gouv.fr/international-particulier/je-suis-frontalier-franco-suisse"}
+  ],
+  "notes": "Bilan : ~7 faits verifies ✓, 1 ✶ (corrige FR+EN), 0 ? non resolu. ✓ droit d'option = 3 mois + irrevocable/quasi-irreversible (cleiss) ; ✓ caution meuble 2 mois loyer HORS charges (service-public F31269, la formule 'Generalement 2x le loyer mensuel' reste comme estimation, le calcul 2 x 1380 CHF est coherent avec l'appel) ; ✓ medecin traitant 2-3 sem plausible. ✶ unique : le permis G se DEMANDE/depose a l'OCPM (UE/AELE = le travailleur depose, travail possible des le recepisse), il ne s'ACTIVE pas en personne ; 'rendez-vous / files legendaires' supprime (ge.ch). A6 OK : 1 380 CHF present et correct, aucun '15 min'/nb de chambres/frais de dossier a corriger. Fusion '30 premiers jours' coherente (renvoi 'section suivante' valide, leger chevauchement impots Phase5/Semaine4 non contradictoire). Liens : 4 officiels (cleiss, ge.ch OCPM, service-public caution, impots frontalier) + equivalents EN ; Leman Express ecarte (curl=000 repete depuis cet env, non garanti 200)."
+}

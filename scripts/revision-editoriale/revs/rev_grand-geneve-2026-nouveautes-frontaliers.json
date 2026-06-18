@@ -1,0 +1,72 @@
+{
+  "slug": "grand-geneve-2026-nouveautes-frontaliers",
+  "corrections": [
+    {
+      "field": "content_fr",
+      "old": "Le succès du Léman Express depuis 2019 a dépassé toutes les attentes avec ses 50 000 voyageurs quotidiens.",
+      "new": "Le succès du Léman Express depuis 2019 a dépassé toutes les attentes : la barre des 50 000 voyageurs quotidiens, fixée comme objectif à quatre ans, a été franchie après seulement deux ans, et le réseau transporte désormais plus de 80 000 personnes par jour (RegioExpress CFF inclus, depuis l'automne 2024).",
+      "src": "https://www.lemanexpress.com/en/2025/06/10/leman-express-5-ans-de-succes-et-nouvelle-liaison-pour-geneve-aeroport-et-vernier/"
+    },
+    {
+      "field": "content_en",
+      "old": "The success of Léman Express since 2019 has exceeded all expectations with its 50,000 daily passengers.",
+      "new": "The success of Léman Express since 2019 has exceeded all expectations: the 50,000 daily passengers set as a four-year target was reached after just two years, and the network now carries more than 80,000 people per day (including CFF RegioExpress trains, since autumn 2024).",
+      "src": "https://www.lemanexpress.com/en/2025/06/10/leman-express-5-ans-de-succes-et-nouvelle-liaison-pour-geneve-aeroport-et-vernier/"
+    },
+    {
+      "field": "content_fr",
+      "old": "Le projet Annemasse 2030 transforme le visage de l'agglomération. Le réaménagement du quartier de la gare, l'extension du centre-ville et la création de nouveaux espaces verts redéfinissent l'urbanisme local.",
+      "new": "L'éco-quartier Étoile Annemasse-Genève, organisé autour de la nouvelle gare et de son pôle d'échanges multimodal, transforme le visage de l'agglomération. Le réaménagement du quartier de la gare, l'extension du centre-ville et la création de nouveaux espaces verts redéfinissent l'urbanisme local.",
+      "src": "https://www.annemasse-agglo.fr/actions-et-projets/se-deplacer/nouvelle-gare-annemasse"
+    },
+    {
+      "field": "content_en",
+      "old": "The Annemasse 2030 project is transforming the face of the agglomeration. The redevelopment of the train station district, city center extension, and creation of new green spaces are redefining local urban planning.",
+      "new": "The Étoile Annemasse-Genève eco-district, built around the new station and its multimodal interchange hub, is transforming the face of the agglomeration. The redevelopment of the train station district, city center extension, and creation of new green spaces are redefining local urban planning.",
+      "src": "https://www.annemasse-agglo.fr/actions-et-projets/se-deplacer/nouvelle-gare-annemasse"
+    }
+  ],
+  "links": [
+    {
+      "field": "content_fr",
+      "anchor": "116 200 frontaliers qui traversent quotidiennement la frontière franco-suisse",
+      "url": "https://statistique.ge.ch/domaines/03/03_05/tableaux.asp"
+    },
+    {
+      "field": "content_en",
+      "anchor": "116,200 cross-border workers who cross the Franco-Swiss border daily",
+      "url": "https://statistique.ge.ch/domaines/03/03_05/tableaux.asp"
+    },
+    {
+      "field": "content_fr",
+      "anchor": "Le succès du Léman Express depuis 2019",
+      "url": "https://www.lemanexpress.com/"
+    },
+    {
+      "field": "content_en",
+      "anchor": "The success of Léman Express since 2019",
+      "url": "https://www.lemanexpress.com/"
+    },
+    {
+      "field": "content_fr",
+      "anchor": "Les projets d'extension vers de nouveaux secteurs côté français",
+      "url": "https://news.sbb.ch/fr/medias/article/136418/leman-express-5-ans-de-succes-et-nouvelle-liaison-pour-geneve-aeroport"
+    },
+    {
+      "field": "content_en",
+      "anchor": "Extension projects to new sectors on the French side",
+      "url": "https://news.sbb.ch/fr/medias/article/136418/leman-express-5-ans-de-succes-et-nouvelle-liaison-pour-geneve-aeroport"
+    },
+    {
+      "field": "content_fr",
+      "anchor": "Le réaménagement du quartier de la gare",
+      "url": "https://www.annemasse-agglo.fr/actions-et-projets/se-deplacer/nouvelle-gare-annemasse"
+    },
+    {
+      "field": "content_en",
+      "anchor": "The redevelopment of the train station district",
+      "url": "https://www.annemasse-agglo.fr/actions-et-projets/se-deplacer/nouvelle-gare-annemasse"
+    }
+  ],
+  "notes": "Bilan : 1 fait ✓ (116 200 frontaliers OCSTAT fin 2025 = exact, +2100/+1,9%), 2 ✦ corrigés, reste plausible. ✦ #1 : Léman Express « 50 000 voyageurs quotidiens » périmé — c'était l'objectif à 4 ans (atteint en 2 ans) ; réel = 80 000+/j depuis automne 2024 (source lemanexpress.com/CFF). ✦ #2 : « projet Annemasse 2030 » = nom inexact ; le vrai projet urbain (gare, centre-ville, espaces verts, nouveaux quartiers) est l'éco-quartier Étoile Annemasse-Genève + nouvelle gare/pôle d'échanges ; « 2030 » officiel désigne seulement le Contrat Engagements Quartiers 2030 (politique de la ville). Extensions 2026 (ligne L7 Annemasse–Genève-Aéroport via tunnel de Châtelaine, ouverte 14/12/2025 ; passerelle Étoile fin 2026) directionnellement vraies → lien ajouté, pas de correction. 4 liens off. FR+EN (statistique.ge.ch, lemanexpress.com, news.sbb.ch, annemasse-agglo.fr), tous testés 200."
+}

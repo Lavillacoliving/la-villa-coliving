@@ -1,0 +1,32 @@
+{
+  "slug": "guide-ressources-frontalier-geneve",
+  "corrections": [
+    {
+      "field": "content_fr",
+      "old": "Ouverture le **10 avril 2026** ; dates limites **22 mai / 29 mai / 5 juin** selon le département",
+      "new": "Ouverture le **9 avril 2026** ; dates limites **21 mai / 28 mai / 4 juin** selon le département",
+      "src": "https://www.impots.gouv.fr/les-modalites-de-la-declaration-de-revenus-en-2026"
+    },
+    {
+      "field": "content_en",
+      "old": "Opens **10 April 2026**; deadlines **22 May / 29 May / 5 June** depending on the département",
+      "new": "Opens **9 April 2026**; deadlines **21 May / 28 May / 4 June** depending on the département",
+      "src": "https://www.impots.gouv.fr/les-modalites-de-la-declaration-de-revenus-en-2026"
+    }
+  ],
+  "links": [
+    {"field": "content_fr", "anchor": "autorisation frontalière", "url": "https://www.sem.admin.ch/sem/fr/home/themen/aufenthalt/eu_efta/ausweis_g_eu_efta.html"},
+    {"field": "content_en", "anchor": "cross-border permit", "url": "https://www.sem.admin.ch/sem/fr/home/themen/aufenthalt/eu_efta/ausweis_g_eu_efta.html"},
+    {"field": "content_fr", "anchor": "quote-part de 10 %", "url": "https://www.bag.admin.ch/fr/assurance-maladie-primes-et-participation-aux-couts"},
+    {"field": "content_en", "anchor": "10% co-payment", "url": "https://www.bag.admin.ch/fr/assurance-maladie-primes-et-participation-aux-couts"},
+    {"field": "content_fr", "anchor": "statut de quasi-résident", "url": "https://www.ge.ch/demande-rectification-taxation-ordinaire-ulterieure/determiner-statut-quasi-resident"},
+    {"field": "content_en", "anchor": "quasi-resident status", "url": "https://www.ge.ch/demande-rectification-taxation-ordinaire-ulterieure/determiner-statut-quasi-resident"},
+    {"field": "content_fr", "anchor": "40 % pour le fiscal", "url": "https://www.ge.ch/imposition-du-teletravail-personnes-frontalieres"},
+    {"field": "content_en", "anchor": "40% for tax", "url": "https://www.ge.ch/imposition-du-teletravail-personnes-frontalieres"},
+    {"field": "content_fr", "anchor": "Ouverture le 9 avril 2026", "url": "https://www.impots.gouv.fr/les-modalites-de-la-declaration-de-revenus-en-2026"},
+    {"field": "content_en", "anchor": "Opens 9 April 2026", "url": "https://www.impots.gouv.fr/les-modalites-de-la-declaration-de-revenus-en-2026"},
+    {"field": "content_fr", "anchor": "Léman Express", "url": "https://www.lemanexpress.com/fr/"},
+    {"field": "content_en", "anchor": "Léman Express", "url": "https://www.lemanexpress.com/en/"}
+  ],
+  "notes": "Audit ~42k HUB. Faits: 13 verifies (permis G 5 ans SEM, 3a 7 258 CHF/an salarie LPP, teletravail 40%+10j missions applicable 1.1.2026 ge.ch, seuil social 49,9%, LAMal quote-part 10% max 700 CHF/an + franchise 300-2500, CSG 17,2%, art.25A 1966, fonds frontaliers 1973, quasi-resident 90%/avant 31 mars, Leman Express 2019 ~20 min). 2 corrections ✶ FR+EN: calendrier declaration impots 2026 'Ouverture le 10 avril' -> 9 avril (off. impots.gouv.fr ; coherent avec lot fiscal deja corrige) ; dates limites 22/29 mai/5 juin -> 21/28 mai/4 juin (dates off. 2026). 1 point ? non corrige: avenant teletravail 'signe le 25 juillet 2025' (off. ge.ch ne donne pas la date de signature ; entree en vigueur 24.07.2025, applicable 1.1.2026 ; cadre/substance corrects -> on ne touche pas). LIENS: ajout 5 liens off. (SEM permis G, OFSP/bag quote-part, ge.ch quasi-resident, ge.ch teletravail 40%, impots.gouv calendrier) en FR+EN. BROKEN LINK: lemanexpress.ch HS (cert TLS invalide + 503/'Object not found', 4 occurrences) -> remplace par lemanexpress.com (FR /fr/, EN /en/), site officiel verifie 200. NB: l'article ne cite AUCUN comptage de frontaliers (pas de '116 200'/'114 900') -> rien a corriger sur ce point ; OCSTAT fin 2024 = ~114 900 si besoin un jour. Autres liens existants tous 200 (priminfo, urssaf, tpg, unireso, sbb, francetravail, visale, frontalier.org, cagi, glocals(*), genevepascher, maison-transfrontaliere, statregio). (*)glocals.com renvoie 403 au bot mais site vivant (communautaire, non-officiel) -> laisse tel quel."
+}

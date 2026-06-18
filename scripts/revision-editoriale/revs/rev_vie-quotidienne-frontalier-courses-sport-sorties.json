@@ -1,0 +1,13 @@
+{
+  "slug": "vie-quotidienne-frontalier-courses-sport-sorties",
+  "corrections": [],
+  "links": [
+    {"field": "content_fr", "anchor": "Accessible en tram 12", "url": "https://www.tpg.ch/"},
+    {"field": "content_en", "anchor": "Accessible via tram 12", "url": "https://www.tpg.ch/"},
+    {"field": "content_fr", "anchor": "CERN (visites gratuites, à réserver)", "url": "https://visit.cern/"},
+    {"field": "content_en", "anchor": "CERN (free visits, must book)", "url": "https://visit.cern/"},
+    {"field": "content_fr", "anchor": "patrimoine UNESCO", "url": "https://www.lavaux-unesco.ch/"},
+    {"field": "content_en", "anchor": "UNESCO heritage", "url": "https://www.lavaux-unesco.ch/"}
+  ],
+  "notes": "Article lifestyle, peu de faits durs. Faits réglementaires/officiels vérifiés ✓ : MAMCO gratuit 1er dimanche du mois (vrai ; musée fermé travaux jusqu'en 2028 mais l'article ne prétend pas qu'il est ouvert, pas de flag en lifestyle), CERN visites gratuites sur réservation (vrai), Yvoire labellisé Plus Beaux Villages de France (vrai), Lavaux patrimoine mondial UNESCO depuis 2007 (vrai). Aucun fait douanier / franchise à l'import n'est avancé dans l'article -> rien à vérifier ni corriger de ce côté. Tous les prix (essence/courses CH vs FR 40-60 %, salles de sport 19,99-40 €, budgets resto 12-18 €/20-35 CHF, économie 300-700 €) = estimations plausibles sans barème officiel -> NON corrigées (conservateur). Cohérence A6 : pas de prix d'appel La Villa ni '29 chambres' cités ; Salève '20 minutes en voiture' = OK. Bilan : ~4 ✓ / 0 ✶ / 0 ?. 0 correction. 3 liens officiels FR + 3 EN (TPG transport, CERN, Lavaux-UNESCO), choisis on-topic, tous testés 200."
+}

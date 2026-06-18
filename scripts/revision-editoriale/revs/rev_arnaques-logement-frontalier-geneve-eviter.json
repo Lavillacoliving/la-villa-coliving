@@ -1,0 +1,18 @@
+{
+  "slug": "arnaques-logement-frontalier-geneve-eviter",
+  "corrections": [
+    {"field": "content_fr", "old": "Signalez sur la plateforme Pharos (internet-signalement.gouv.fr) si l'arnaque est en ligne.", "new": "Si l'arnaque est en ligne (fausse annonce, escroquerie), portez plainte via le téléservice THESEE (masecurite.interieur.gouv.fr) et signalez la pratique commerciale trompeuse à la DGCCRF sur SignalConso (signal.conso.gouv.fr).", "src": "https://www.service-public.gouv.fr/particuliers/vosdroits/F34092"},
+    {"field": "content_en", "old": "report on the Pharos platform (internet-signalement.gouv.fr) if the scam is online.", "new": "if the scam is online (fake listing, fraud), file a complaint via the THESEE service (masecurite.interieur.gouv.fr) and report the misleading commercial practice to the DGCCRF on SignalConso (signal.conso.gouv.fr).", "src": "https://www.service-public.gouv.fr/particuliers/vosdroits/F34092"}
+  ],
+  "links": [
+    {"field": "content_fr", "anchor": "la loi ALUR plafonne les honoraires de location à charge du locataire", "url": "https://www.service-public.gouv.fr/particuliers/vosdroits/F375"},
+    {"field": "content_en", "anchor": "the ALUR law caps letting fees charged to tenants", "url": "https://www.service-public.gouv.fr/particuliers/vosdroits/F375"},
+    {"field": "content_fr", "anchor": "la caution est plafonnée à 2 mois de loyer hors charges", "url": "https://www.service-public.gouv.fr/particuliers/vosdroits/F31269"},
+    {"field": "content_en", "anchor": "the deposit is capped at 2 months' rent excluding charges", "url": "https://www.service-public.gouv.fr/particuliers/vosdroits/F31269"},
+    {"field": "content_fr", "anchor": "la loi ALUR et la loi du 6 juillet 1989 encadrent strictement la location en France", "url": "https://signal.conso.gouv.fr/fr/immobilier"},
+    {"field": "content_en", "anchor": "the ALUR law and the law of 6 July 1989 strictly regulate rentals in France", "url": "https://signal.conso.gouv.fr/fr/immobilier"},
+    {"field": "content_fr", "anchor": "Portez plainte au commissariat ou à la gendarmerie", "url": "https://www.masecurite.interieur.gouv.fr/fr/demarches-en-ligne/thesee-arnaques-internet-plainte-en-ligne"},
+    {"field": "content_en", "anchor": "file a complaint at the police station", "url": "https://www.masecurite.interieur.gouv.fr/fr/demarches-en-ligne/thesee-arnaques-internet-plainte-en-ligne"}
+  ],
+  "notes": "Cadre legal verifie ✓ : depot de garantie 1 mois (vide) / 2 mois (meuble) hors charges = correct (art. 22 loi 6 juil. 1989, service-public F31269) ; Annemasse EST en zone tendue = correct (decret 2013-392, agglo Geneve-Annemasse) ; honoraires loc. plafonnes ~10 €/m2 zone tendue = plausible/illustratif (valeur historique du decret 2014, revalorisee ~10,09 € au 01/2026) -> non corrige (conservateur). 1 ✶ FR + 1 ✶ EN : le signalement d'une arnaque EN LIGNE va a THESEE (plainte) + SignalConso/DGCCRF (pratique trompeuse), PAS a Pharos (internet-signalement.gouv.fr, reserve aux contenus illicites) -> service-public F34092. Section fusionnee « erreurs classiques » coherente (caution 1 mois hors charges, etat des lieux contradictoire) — aucun conflit avec le corps. Aucune valeur A6 (1380 CHF / 29 chambres / 20 min / 0 frais dossier) citee dans cet article. 4 liens officiels FR + 4 EN, tous testes 200 (service-public.gouv.fr, masecurite.interieur.gouv.fr, signal.conso.gouv.fr)."
+}

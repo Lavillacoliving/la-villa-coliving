@@ -1,0 +1,15 @@
+{
+  "slug": "organisations-internationales-geneve-ou-habiter",
+  "corrections": [],
+  "links": [
+    {"field": "content_fr", "anchor": "carte de légitimation", "url": "https://www.ge.ch/voter-geneve/je-suis-fonctionnaire-international"},
+    {"field": "content_en", "anchor": "legitimation card", "url": "https://www.ge.ch/voter-geneve/je-suis-fonctionnaire-international"},
+    {"field": "content_fr", "anchor": "Environ 30 000 fonctionnaires internationaux travaillent à Genève", "url": "https://www.geneve-int.ch/facts-figures"},
+    {"field": "content_en", "anchor": "Around 30,000 international civil servants work in Geneva", "url": "https://www.geneve-int.ch/facts-figures"},
+    {"field": "content_fr", "anchor": "ses 17 000 employés et utilisateurs", "url": "https://home.cern/about/who-we-are/our-people/"},
+    {"field": "content_en", "anchor": "its 17,000 employees and users", "url": "https://home.cern/about/who-we-are/our-people/"},
+    {"field": "content_fr", "anchor": "Le Léman Express a supprimé la barrière du transport", "url": "https://www.lemanexpress.com/"},
+    {"field": "content_en", "anchor": "The Léman Express removed the transport barrier", "url": "https://www.lemanexpress.com/"}
+  ],
+  "notes": "Audit OI : ~12 faits vérifiables, 0 ✶, 0 ?. Tous confirmés. Localisations OK : OMS Av. Appia 20 (Pregny-Chambésy), CICR Av. de la Paix 19, OMC/Centre William Rappard rue de Lausanne 154, CERN Meyrin/St-Genis frontière. Chiffres OK : ~30 000 fonctionnaires (29 011 en OI / 36 908 total Genève int. 2025), CERN « plus de 17 500 » personnes (home.cern) => « 17 000 » exact. FAIT-CLÉ confirmé : la carte de légitimation est un document du DFAE et N'EST PAS un titre de séjour/permis ordinaire (ge.ch) — distincte du permis G ; affirmation de l'article correcte. Temps Léman Express plausibles (Annemasse->Sécheron ~28 min officiel, non corrigés car estimations). Cohérence A6 OK (1 380 CHF, 29 chambres, 0 frais de dossier, dépôt). 4 liens off. FR + 4 EN (tous 200). DFAE eda/dfae.admin.ch en 403 anti-bot => remplacé par ge.ch (source primaire 200 sur le même fait)."
+}

@@ -1,0 +1,11 @@
+{
+  "slug": "se-faire-reseau-geneve-arriver-seul",
+  "corrections": [],
+  "links": [
+    {"field": "content_fr", "anchor": "La Fête de la Musique (juin)", "url": "https://evenements.geneve.ch/fetedelamusique/"},
+    {"field": "content_en", "anchor": "The Fête de la Musique (June)", "url": "https://evenements.geneve.ch/fetedelamusique/"},
+    {"field": "content_fr", "anchor": "le Festival Annecy Cinéma (juin)", "url": "https://www.annecyfestival.com/"},
+    {"field": "content_en", "anchor": "Annecy Cinema Festival (June)", "url": "https://www.annecyfestival.com/"}
+  ],
+  "notes": "Article lifestyle, quasi aucun fait dur. Vérifs : ✓2 (marchés Annemasse mardi/vendredi confirmés par annemasse.fr ; Fête de la Musique Genève bien en juin, site officiel geneve.ch), ✶0, ?1 (« Festival Annecy Cinéma » : le vrai évènement de juin est le Festival international du film d'animation d'Annecy — nom imprécis mais évènement réel en juin, donc conservé, lien officiel posé pour ancrer). Aucune correction : pas de prix/trajet/chambres/frais cités → rien à aligner sur A6 (les « 7 à 12 personnes » = par maison, ne contredit pas les 29 chambres). 2 liens officiels seulement (FR+EN), volontairement peu vu le format lifestyle ; page marchés Annemasse écartée car curl 403 (non 200). Pas de lien grand-geneve.org faute d'ancre verbatim pertinente."
+}
