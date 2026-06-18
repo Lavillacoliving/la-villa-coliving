@@ -218,10 +218,10 @@ export function ObservatoireLogementFrontalierPage() {
           </p>
 
           {/* Chiffre-choc : le même studio, de part et d'autre de la frontière (comparaison explicite) */}
+          <p className="text-xl sm:text-2xl font-medium uppercase tracking-wide text-[#1C1917] mb-5">
+            {en ? "The same studio · 8 min on the Léman Express" : "Le même studio · à 8 min en Léman Express"}
+          </p>
           <div className="inline-block bg-white border border-[#E7E5E4] rounded-xl px-7 py-5">
-            <div className="text-[10px] uppercase tracking-[0.2em] text-[#A8A29E] mb-3">
-              {en ? "The same studio · 8 min apart on the Léman Express" : "Le même studio · à 8 min en Léman Express"}
-            </div>
             <div className="flex flex-col sm:flex-row items-center justify-center gap-2 sm:gap-6">
               <div className="text-center">
                 <div className="text-xs text-[#57534E] mb-1">Genève-Eaux-Vives</div>
@@ -237,11 +237,6 @@ export function ObservatoireLogementFrontalierPage() {
               </div>
             </div>
           </div>
-          <p className="mt-4 text-base text-[#44403C] font-medium">
-            {en
-              ? "Often half the rent, just across the border."
-              : "Souvent moitié moins, juste de l'autre côté de la frontière."}
-          </p>
           <p className="mt-5 text-xs text-[#A8A29E]">
             {en ? `Updated ${updatedLabel}` : `Mis à jour le ${updatedLabel}`}
           </p>
@@ -311,8 +306,12 @@ export function ObservatoireLogementFrontalierPage() {
       {/* ===== TABLEAU INTERACTIF ===== */}
       <section className="py-12 lg:py-16 bg-[#FAF9F6]">
         <div className="max-w-4xl mx-auto px-6">
-          {/* curseur budget */}
+          {/* ÉTAPE 1 — curseur budget */}
           <div className="bg-white border border-[#E7E5E4] rounded-xl p-5 mb-5">
+            <p className="text-sm mb-3">
+              <span className="text-xs font-semibold uppercase tracking-wider text-[#D4A574] mr-2">{en ? "Step 1" : "Étape 1"}</span>
+              <span className="text-[#57534E]">{en ? "Set your monthly budget with the slider — towns over budget fade out." : "Définis ton budget mensuel avec le curseur — les communes hors budget se grisent."}</span>
+            </p>
             <div className="flex items-center gap-3 flex-wrap">
               <label htmlFor="budget" className="text-sm text-[#57534E] whitespace-nowrap flex items-center gap-2">
                 <Wallet className="w-4 h-4 text-[#D4A574]" />
@@ -347,9 +346,12 @@ export function ObservatoireLogementFrontalierPage() {
             </p>
           </div>
 
-          {/* filtre mode */}
-          <div className="flex items-center gap-2 flex-wrap mb-4">
-            <span className="text-sm text-[#57534E]">{en ? "I commute by:" : "Je me déplace en :"}</span>
+          {/* ÉTAPE 2 — filtre mode */}
+          <p className="text-sm mb-3 mt-6">
+            <span className="text-xs font-semibold uppercase tracking-wider text-[#D4A574] mr-2">{en ? "Step 2" : "Étape 2"}</span>
+            <span className="text-[#57534E]">{en ? "Choose how you commute" : "Choisis ton mode de déplacement"}</span>
+          </p>
+          <div className="flex items-center gap-2 flex-wrap mb-6">
             {modeBtns.map(({ k, icon: Icon, fr, en: enL }) => {
               const active = mode === k;
               return (
@@ -375,7 +377,11 @@ export function ObservatoireLogementFrontalierPage() {
             })}
           </div>
 
-          {/* tableau (toutes les colonnes restent dans le DOM = lisible sans JS / crawlable) */}
+          {/* ÉTAPE 3 — tableau (toutes les colonnes restent dans le DOM = lisible sans JS / crawlable) */}
+          <p className="text-sm mb-3">
+            <span className="text-xs font-semibold uppercase tracking-wider text-[#D4A574] mr-2">{en ? "Step 3" : "Étape 3"}</span>
+            <span className="text-[#57534E]">{en ? "Find the town that fits you — click a column header to sort." : "Trouve la commune qui te correspond — clique sur un en-tête de colonne pour trier."}</span>
+          </p>
           <div className="overflow-x-auto bg-white border border-[#E7E5E4] rounded-xl">
             <table className="w-full text-sm" style={{ borderCollapse: "collapse" }}>
               <thead>
