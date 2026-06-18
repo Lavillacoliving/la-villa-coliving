@@ -1073,6 +1073,20 @@ export function ColocationGenevePage() {
           <h2 className="text-2xl md:text-3xl font-light text-[#1C1917] mb-8 text-center" style={{ fontFamily: "DM Serif Display, serif" }}>
             {language === "en" ? "Essential reads for cross-border workers" : "Lectures essentielles pour les frontaliers"}
           </h2>
+          <LocalizedLink
+            to="/observatoire-logement-frontalier-geneve"
+            className="flex items-center justify-between gap-4 bg-white border border-[#D4A574]/50 rounded-xl px-5 py-4 mb-6 max-w-3xl mx-auto hover:border-[#D4A574] transition-colors group"
+          >
+            <span className="text-sm">
+              <span className="text-[10px] uppercase tracking-wider text-[#D4A574] font-medium mr-2">{language === "en" ? "New · Data" : "Nouveau · Data"}</span>
+              <span className="text-[#1C1917] font-medium">
+                {language === "en"
+                  ? "Cross-border housing observatory — studio rent × commute, 17 towns near Geneva"
+                  : "Observatoire du logement frontalier — loyer studio × trajet, 17 communes près de Genève"}
+              </span>
+            </span>
+            <ArrowRight className="w-4 h-4 text-[#D4A574] shrink-0 group-hover:translate-x-1 transition-transform" />
+          </LocalizedLink>
           <ul className="grid grid-cols-1 md:grid-cols-2 gap-3 text-sm max-w-3xl mx-auto">
             {[
               { fr: "Le guide des ressources du frontalier", en: "The cross-border worker's resources guide", slug: "guide-ressources-frontalier-geneve" },

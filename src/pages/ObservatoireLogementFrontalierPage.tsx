@@ -4,56 +4,63 @@ import { LocalizedLink } from "@/components/LocalizedLink";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { SEO } from "@/components/SEO";
 import { buildDatasetSchema } from "@/lib/structuredData";
-import { Train, Bike, Car, Wallet, Download, ArrowRight, MapPin, Info } from "lucide-react";
+import { Train, Bus, Bike, Car, Wallet, Download, ArrowRight, MapPin, Info } from "lucide-react";
 
 // ──────────────────────────────────────────────────────────────────────────
 // Observatoire « Loyer × Trajet » — Édition 1 : corridor rive gauche → Eaux-Vives.
 // La Villa = éditrice NEUTRE, jamais dans les chiffres (cf. brief Pan Malin).
 // Données = public/data/observatoire-data-2026.csv (source unique, sourcée).
-// Loyer T1-T2 charges comprises (ANIL 2025). Trajets vers Genève-Eaux-Vives,
-// heure de pointe (arrivée ~9h15), relevés Google Maps 16/06/2026.
+// Loyer = STUDIO €/m² réel (Le Figaro, page MAJ 02/06/2026) × 30 m² de référence.
+//   3 communes sans studio publié (Bons-en-Chablais, Bonne, Machilly) = loyer 2-pièces (proxy *).
+// Trajets vers Genève-Eaux-Vives, heure de pointe (arrivée ~9h15), relevés Google Maps.
+// Cadence = horaire officiel Léman Express 2026. Repère Genève = annonces marché ImmoStreet.
 // ──────────────────────────────────────────────────────────────────────────
 
 type Commune = {
   name: string;
-  mois: number; // loyer T1-T2 €/mois (charges comprises)
-  m2: number; // loyer T1-T2 €/m²
+  m2: number; // loyer studio €/m² (Le Figaro 06/2026) ; * si proxy 2-pièces
+  mois: number; // = m2 × 30 m² (studio de référence)
   pt: number; // transport public, min (porte-à-porte, pointe)
   velo: number; // vélo, min (voie verte)
   voiture: number; // voiture, min (pointe)
-  train: number | null; // Léman Express direct, gare-à-gare (min) — bonus
+  train: number | null; // Léman Express direct, gare-à-gare (min)
+  cadence: number | null; // cadence LEX en pointe (min entre 2 trains vers Genève)
+  proxy?: boolean; // studio non publié → loyer 2-pièces
+  tram?: boolean; // desservi par le tram (pas de gare LEX)
 };
 
+// Studio de référence : 30 m² (le €/mois isole l'effet du €/m², comme le 37 m² ANIL pour le T1-T2).
+const REF_M2 = 30;
+
 const COMMUNES: Commune[] = [
-  { name: "Annemasse", mois: 835, m2: 22.58, pt: 16, velo: 21, voiture: 28, train: 8 },
-  { name: "Ville-la-Grand", mois: 632, m2: 17.09, pt: 27, velo: 27, voiture: 24, train: null },
-  { name: "Ambilly", mois: 907, m2: 24.52, pt: 24, velo: 21, voiture: 24, train: null },
-  { name: "Gaillard", mois: 851, m2: 23.01, pt: 37, velo: 21, voiture: 26, train: null },
-  { name: "Étrembières", mois: 852, m2: 23.02, pt: 49, velo: 30, voiture: 22, train: null },
-  { name: "Vétraz-Monthoux", mois: 884, m2: 23.90, pt: 68, velo: 32, voiture: 35, train: null },
-  { name: "Cranves-Sales", mois: 856, m2: 23.13, pt: 66, velo: 38, voiture: 35, train: null },
-  { name: "Bonne", mois: 851, m2: 23.01, pt: 52, velo: 49, voiture: 35, train: null },
-  { name: "Saint-Cergues", mois: 851, m2: 22.99, pt: 62, velo: 50, voiture: 30, train: null },
-  { name: "Machilly", mois: 685, m2: 18.50, pt: 30, velo: 50, voiture: 28, train: 22 },
-  { name: "Bons-en-Chablais", mois: 677, m2: 18.31, pt: 35, velo: 63, voiture: 35, train: 28 },
-  { name: "Thonon-les-Bains", mois: 700, m2: 18.91, pt: 50, velo: 112, voiture: 60, train: 43 },
-  { name: "Évian-les-Bains", mois: 786, m2: 21.24, pt: 59, velo: 148, voiture: 70, train: 52 },
-  { name: "Reignier-Ésery", mois: 745, m2: 20.14, pt: 36, velo: 58, voiture: 30, train: 25 },
-  { name: "La Roche-sur-Foron", mois: 693, m2: 18.74, pt: 43, velo: 89, voiture: 35, train: 32 },
-  { name: "Bonneville", mois: 701, m2: 18.94, pt: 54, velo: 99, voiture: 35, train: 48 },
-  { name: "Annecy", mois: 774, m2: 20.92, pt: 88, velo: 171, voiture: 55, train: 63 },
+  { name: "Annemasse", m2: 33, mois: 990, pt: 16, velo: 21, voiture: 28, train: 8, cadence: 10 },
+  { name: "Ville-la-Grand", m2: 30, mois: 900, pt: 27, velo: 27, voiture: 24, train: 8, cadence: 10 },
+  { name: "Ambilly", m2: 34, mois: 1020, pt: 24, velo: 21, voiture: 24, train: 8, cadence: 10 },
+  { name: "Gaillard", m2: 33, mois: 990, pt: 37, velo: 21, voiture: 26, train: null, cadence: null, tram: true },
+  { name: "Étrembières", m2: 33, mois: 990, pt: 49, velo: 30, voiture: 22, train: null, cadence: null },
+  { name: "Vétraz-Monthoux", m2: 32, mois: 960, pt: 68, velo: 32, voiture: 35, train: null, cadence: null },
+  { name: "Cranves-Sales", m2: 31, mois: 930, pt: 66, velo: 38, voiture: 35, train: null, cadence: null },
+  { name: "Bonne", m2: 23, mois: 690, pt: 52, velo: 49, voiture: 35, train: null, cadence: null, proxy: true },
+  { name: "Saint-Cergues", m2: 24, mois: 720, pt: 62, velo: 50, voiture: 30, train: null, cadence: null },
+  { name: "Machilly", m2: 23, mois: 690, pt: 30, velo: 50, voiture: 28, train: 22, cadence: 30, proxy: true },
+  { name: "Bons-en-Chablais", m2: 21, mois: 630, pt: 35, velo: 63, voiture: 35, train: 28, cadence: 30, proxy: true },
+  { name: "Thonon-les-Bains", m2: 24, mois: 720, pt: 50, velo: 112, voiture: 60, train: 43, cadence: 30 },
+  { name: "Évian-les-Bains", m2: 30, mois: 900, pt: 59, velo: 148, voiture: 70, train: 52, cadence: 30 },
+  { name: "Reignier-Ésery", m2: 31, mois: 930, pt: 36, velo: 58, voiture: 30, train: 25, cadence: 30 },
+  { name: "La Roche-sur-Foron", m2: 27, mois: 810, pt: 43, velo: 89, voiture: 35, train: 32, cadence: 30 },
+  { name: "Bonneville", m2: 21, mois: 630, pt: 54, velo: 99, voiture: 35, train: 48, cadence: 60 },
+  { name: "Annecy", m2: 29, mois: 870, pt: 88, velo: 171, voiture: 55, train: 63, cadence: 60 },
 ];
 
 const VELO_MAX = 75; // au-delà, le vélo n'est plus un mode du quotidien → « — »
 const SITE = "https://www.lavillacoliving.com";
 const CSV_URL = "/data/observatoire-data-2026.csv";
 
-const hub = COMMUNES.find((c) => c.name === "Annemasse")!;
-const far = COMMUNES.find((c) => c.name === "Bons-en-Chablais")!;
-const dropPct = Math.round((1 - far.mois / hub.mois) * 100); // -19 %
-// Repère Genève-Eaux-Vives (0 trajet) : OCSTAT 2021 nouveaux locataires 27,60 CHF/m² × 37 m², HORS charges.
-// Gardé en CHF (jamais converti / mélangé aux € français charges comprises). Ligne de repère, hors filtre budget.
-const GENEVA_CHF = 1020;
+const hub = COMMUNES.find((c) => c.name === "Annemasse")!; // 990 € studio, 8 min LEX
+// Repère Genève-Eaux-Vives : loyer d'annonce RÉEL d'un studio (ImmoStreet, juin 2026, hors
+// logements étudiants/meublés). Fourchette volontairement conservatrice : on en trouve parfois
+// dès 1 600 CHF, jusqu'à ~2 000 (niveau studio Eaux-Vives). Gardé en CHF. € et CHF ≈ parité.
+const GENEVA_CHF_RANGE = "1 600–2 000";
 
 type ModeKey = "pt" | "velo" | "voiture";
 type SortKey = "name" | "mois" | ModeKey;
@@ -68,7 +75,7 @@ export function ObservatoireLogementFrontalierPage() {
   const [sortDir, setSortDir] = useState(1);
 
   const PAGE_FIRST_PUBLISHED = "2026-06-16";
-  const PAGE_LAST_UPDATED = "2026-06-16";
+  const PAGE_LAST_UPDATED = "2026-06-18";
   const updatedLabel = new Date(PAGE_LAST_UPDATED).toLocaleDateString(en ? "en-US" : "fr-FR", {
     year: "numeric",
     month: "long",
@@ -78,11 +85,11 @@ export function ObservatoireLogementFrontalierPage() {
 
   const datasetSchema = buildDatasetSchema({
     name: en
-      ? "Cross-border housing observatory — Rent × Commute, left-bank Geneva (2026)"
-      : "Observatoire du logement frontalier — Loyer × Trajet, rive gauche de Genève (2026)",
+      ? "Cross-border housing observatory — Studio rent × Commute, left-bank Geneva (2026)"
+      : "Observatoire du logement frontalier — Loyer studio × Trajet, rive gauche de Genève (2026)",
     description: en
-      ? "Monthly rent of a studio/1-2 room flat crossed with commute time to Geneva-Eaux-Vives, for 17 municipalities of the French Genevois along the Léman Express axis. Rent: ANIL 2025 (charges included). Commute by public transport, bike and car at peak hour."
-      : "Loyer mensuel d'un studio/T1-T2 croisé au temps de trajet vers Genève-Eaux-Vives, pour 17 communes du Genevois français le long de l'axe Léman Express. Loyer : ANIL 2025 (charges comprises). Trajet en transport public, vélo et voiture à l'heure de pointe.",
+      ? "Real advertised studio rent (Le Figaro, June 2026) crossed with commute time to Geneva-Eaux-Vives, for 17 municipalities of the French Genevois along the Léman Express axis, including peak-hour train frequency. Geneva benchmark: real market listings (ImmoStreet)."
+      : "Loyer d'annonce réel d'un studio (Le Figaro, juin 2026) croisé au temps de trajet vers Genève-Eaux-Vives, pour 17 communes du Genevois français le long de l'axe Léman Express, avec la cadence des trains en heure de pointe. Repère Genève : annonces réelles du marché (ImmoStreet).",
     url: `${SITE}/observatoire-logement-frontalier-geneve`,
     csvUrl: `${SITE}${CSV_URL}`,
     datePublished: PAGE_FIRST_PUBLISHED,
@@ -95,8 +102,8 @@ export function ObservatoireLogementFrontalierPage() {
     "@context": "https://schema.org",
     "@type": "Article",
     headline: en
-      ? "Where to live on the French side without straying far from Geneva — Rent × Commute observatory"
-      : "Où se loger côté France sans s'éloigner de Genève — l'observatoire Loyer × Trajet",
+      ? "A studio costs nearly half as much one stop across the border — Rent × Commute observatory"
+      : "Un studio coûte près de moitié moins de l'autre côté de la frontière — l'observatoire Loyer × Trajet",
     inLanguage: en ? "en" : "fr",
     datePublished: PAGE_FIRST_PUBLISHED,
     dateModified: PAGE_LAST_UPDATED,
@@ -131,18 +138,18 @@ export function ObservatoireLogementFrontalierPage() {
     }
   }
 
-  // Couleur par palier de loyer (sobre, charte La Villa).
-  const tier = (mois: number) => (mois <= 700 ? "#6B8E6B" : mois <= 850 ? "#D4A574" : "#A0623C");
+  // Couleur par palier de loyer studio (sobre, charte La Villa).
+  const tier = (mois: number) => (mois <= 750 ? "#6B8E6B" : mois <= 950 ? "#D4A574" : "#A0623C");
 
-  // ── Mini-infographie « Loyer × Trajet » (transport public) — l'objet partageable.
-  const VW = 800, VH = 430, PADL = 86, PADR = 24, PADT = 36, PADB = 64;
-  const ptMax = 90, moisMin = 600, moisMax = 950;
+  // ── Mini-infographie « Loyer studio × Trajet » (transport public) — l'objet partageable.
+  const VW = 800, VH = 430, PADL = 92, PADR = 24, PADT = 40, PADB = 64;
+  const ptMax = 90, moisMin = 600, moisMax = 1050;
   const sx = (pt: number) => PADL + (Math.min(pt, ptMax) / ptMax) * (VW - PADL - PADR);
   const sy = (mois: number) => PADT + ((moisMax - mois) / (moisMax - moisMin)) * (VH - PADT - PADB);
-  const labelled = new Set(["Ville-la-Grand", "Annemasse", "Bons-en-Chablais", "Ambilly", "Évian-les-Bains", "Annecy"]);
+  const labelled = new Set(["Ville-la-Grand", "Annemasse", "Ambilly", "Bons-en-Chablais", "Bonneville", "Annecy"]);
 
-  const modeBtns: { k: ModeKey; icon: typeof Train; fr: string; en: string }[] = [
-    { k: "pt", icon: Train, fr: "Transport public", en: "Public transport" },
+  const modeBtns: { k: ModeKey; icon: typeof Bus; fr: string; en: string }[] = [
+    { k: "pt", icon: Bus, fr: "Transport public", en: "Public transport" },
     { k: "velo", icon: Bike, fr: "Vélo", en: "Bike" },
     { k: "voiture", icon: Car, fr: "Voiture", en: "Car" },
   ];
@@ -152,13 +159,13 @@ export function ObservatoireLogementFrontalierPage() {
       <SEO
         title={
           en
-            ? "Geneva cross-border housing observatory — rent × commute (2026)"
-            : "Observatoire du logement frontalier Genève — loyer × trajet (2026)"
+            ? "Geneva cross-border housing observatory — studio rent × commute (2026)"
+            : "Observatoire du logement frontalier Genève — loyer studio × trajet (2026)"
         }
         description={
           en
-            ? "Where to live near Geneva on the French side within your budget? 17 municipalities ranked by monthly rent and commute time (public transport, bike, car). Free open data."
-            : "Où se loger près de Genève côté France dans ton budget ? 17 communes classées par loyer mensuel et temps de trajet (transport public, vélo, voiture). Données ouvertes."
+            ? "Where to live near Geneva on the French side within your budget? 17 towns ranked by real studio rent, commute time and Léman Express frequency. A studio is nearly half the price one stop across the border. Free open data."
+            : "Où se loger près de Genève côté France dans ton budget ? 17 communes classées par loyer studio réel, temps de trajet et cadence du Léman Express. Un studio coûte près de moitié moins de l'autre côté de la frontière. Données ouvertes."
         }
         image={`${SITE}/images/observatoire-loyer-trajet-2026.svg`}
         type="article"
@@ -181,19 +188,32 @@ export function ObservatoireLogementFrontalierPage() {
             {en ? "Where to live near Geneva " : "Où se loger près de Genève "}
             <span className="text-[#D4A574]">{en ? "without straying far?" : "sans s'éloigner ?"}</span>
           </h1>
-          <p className="text-lg text-[#57534E] max-w-3xl mx-auto mb-8 leading-relaxed">
+          <p className="text-lg text-[#57534E] max-w-3xl mx-auto mb-9 leading-relaxed">
             {en
-              ? "Rive gauche / Léman Express corridor → Geneva-Eaux-Vives. The monthly rent of a studio crossed with the real commute, for 17 municipalities of the French Genevois. You set the budget — we show you where you fit."
-              : "Corridor rive gauche / Léman Express → Genève-Eaux-Vives. Le loyer mensuel d'un studio croisé au temps de trajet réel, pour 17 communes du Genevois français. Tu fixes le budget — on te montre où tu rentres."}
+              ? "Rive gauche / Léman Express corridor → Geneva-Eaux-Vives. The real rent of a studio crossed with the actual commute, for 17 municipalities of the French Genevois. You set the budget — we show you where you fit."
+              : "Corridor rive gauche / Léman Express → Genève-Eaux-Vives. Le loyer réel d'un studio croisé au temps de trajet réel, pour 17 communes du Genevois français. Tu fixes le budget — on te montre où tu rentres."}
           </p>
-          <div className="inline-flex items-baseline gap-2 bg-white border border-[#E7E5E4] rounded-md px-5 py-3">
-            <span className="text-3xl font-medium text-[#1C1917]">−{Math.abs(dropPct)} %</span>
-            <span className="text-sm text-[#57534E]">
-              {en
-                ? `of rent ${far.pt - hub.pt} min further along the Léman Express (${hub.name} → ${far.name})`
-                : `de loyer ${far.pt - hub.pt} min plus loin sur le Léman Express (${hub.name} → ${far.name})`}
-            </span>
+
+          {/* Chiffre-choc : la falaise de la frontière */}
+          <div className="inline-flex flex-col sm:flex-row items-stretch sm:items-center gap-3 sm:gap-5 bg-white border border-[#E7E5E4] rounded-xl px-6 py-5">
+            <div className="text-center">
+              <div className="text-2xl font-medium text-[#1C1917] whitespace-nowrap">≈ {GENEVA_CHF_RANGE} CHF</div>
+              <div className="text-xs text-[#A8A29E] mt-0.5">{en ? "Geneva-Eaux-Vives · studio" : "Genève-Eaux-Vives · studio"}</div>
+            </div>
+            <div className="flex sm:flex-col items-center justify-center gap-1.5 text-[#D4A574] shrink-0">
+              <Train className="w-5 h-5" />
+              <span className="text-[10px] uppercase tracking-wider whitespace-nowrap">8 min</span>
+            </div>
+            <div className="text-center">
+              <div className="text-2xl font-medium text-[#1C1917] whitespace-nowrap">≈ {hub.mois} €</div>
+              <div className="text-xs text-[#A8A29E] mt-0.5">Annemasse · studio</div>
+            </div>
           </div>
+          <p className="mt-4 text-base text-[#44403C] font-medium">
+            {en
+              ? "Often half the rent, just across the border — 8 minutes on the Léman Express."
+              : "Souvent moitié moins, juste de l'autre côté de la frontière — 8 minutes en Léman Express."}
+          </p>
           <p className="mt-5 text-xs text-[#A8A29E]">
             {en ? `Updated ${updatedLabel}` : `Mis à jour le ${updatedLabel}`}
           </p>
@@ -209,15 +229,15 @@ export function ObservatoireLogementFrontalierPage() {
             role="img"
             aria-label={
               en
-                ? "Scatter chart: monthly T1-T2 rent versus public-transport time to Geneva-Eaux-Vives for 17 municipalities."
-                : "Nuage de points : loyer mensuel T1-T2 selon le temps en transport public vers Genève-Eaux-Vives pour 17 communes."
+                ? "Scatter chart: monthly studio rent versus public-transport time to Geneva-Eaux-Vives for 17 municipalities."
+                : "Nuage de points : loyer mensuel d'un studio selon le temps en transport public vers Genève-Eaux-Vives pour 17 communes."
             }
           >
             <rect x="0" y="0" width={VW} height={VH} fill="#FAF9F6" rx="8" />
             {/* axes */}
             <line x1={PADL} y1={VH - PADB} x2={VW - PADR} y2={VH - PADB} stroke="#E7E5E4" strokeWidth="1" />
             <line x1={PADL} y1={PADT} x2={PADL} y2={VH - PADB} stroke="#E7E5E4" strokeWidth="1" />
-            {[600, 700, 800, 900].map((m) => (
+            {[600, 700, 800, 900, 1000].map((m) => (
               <g key={m}>
                 <text x={PADL - 10} y={sy(m) + 4} textAnchor="end" fontSize="11" fill="#A8A29E">{m} €</text>
                 <line x1={PADL} y1={sy(m)} x2={VW - PADR} y2={sy(m)} stroke="#F0EEE9" strokeWidth="1" />
@@ -229,30 +249,43 @@ export function ObservatoireLogementFrontalierPage() {
             <text x={(VW + PADL) / 2} y={VH - 12} textAnchor="middle" fontSize="12" fill="#57534E">
               {en ? "Public-transport time to Eaux-Vives (min) →" : "Temps en transport public vers Eaux-Vives (min) →"}
             </text>
-            <text x={18} y={VH / 2} textAnchor="middle" fontSize="12" fill="#57534E" transform={`rotate(-90 18 ${VH / 2})`}>
-              {en ? "Monthly rent, studio/1-2 rooms (€)" : "Loyer mensuel, studio/T1-T2 (€)"}
+            <text x={20} y={VH / 2} textAnchor="middle" fontSize="12" fill="#57534E" transform={`rotate(-90 20 ${VH / 2})`}>
+              {en ? "Monthly studio rent (€)" : "Loyer mensuel d'un studio (€)"}
             </text>
-            {/* Eaux-Vives anchor */}
+            {/* Genève-Eaux-Vives : repère central, loyer le plus haut (hors échelle €, en CHF) */}
             <g>
-              <circle cx={PADL} cy={VH - PADB} r="5" fill="#1C1917" />
-              <text x={PADL + 8} y={VH - PADB - 8} fontSize="11" fontWeight="500" fill="#1C1917">Genève-Eaux-Vives</text>
+              <circle cx={PADL} cy={PADT} r="6" fill="#1C1917" />
+              <text x={PADL + 9} y={PADT - 6} fontSize="11" fontWeight="600" fill="#1C1917">Genève-Eaux-Vives</text>
+              <text x={PADL + 9} y={PADT + 8} fontSize="10" fill="#A0623C">≈ {GENEVA_CHF_RANGE} CHF · 0 min</text>
             </g>
             {/* points */}
-            {COMMUNES.map((c) => (
-              <g key={c.name}>
-                <circle cx={sx(c.pt)} cy={sy(c.mois)} r="6" fill={tier(c.mois)} stroke="#fff" strokeWidth="1.5" />
-                {labelled.has(c.name) && (
-                  <text x={sx(c.pt) + 9} y={sy(c.mois) + 4} fontSize="11" fill="#44403C">{c.name}</text>
-                )}
-              </g>
-            ))}
+            {COMMUNES.map((c) => {
+              const x = sx(c.pt), y = sy(c.mois);
+              const nearRight = x > VW - 140; // label vers la gauche pour ne pas sortir du cadre
+              return (
+                <g key={c.name}>
+                  <circle cx={x} cy={y} r="6" fill={tier(c.mois)} stroke="#fff" strokeWidth="1.5" />
+                  {labelled.has(c.name) && (
+                    <text
+                      x={nearRight ? x - 9 : x + 9}
+                      y={y + 4}
+                      textAnchor={nearRight ? "end" : "start"}
+                      fontSize="11"
+                      fill="#44403C"
+                    >
+                      {c.name}
+                    </text>
+                  )}
+                </g>
+              );
+            })}
             {/* logo + url (objet qui circule) */}
-            <text x={VW - PADR} y={PADT - 14} textAnchor="end" fontSize="12" fill="#A8A29E">lavillacoliving.com</text>
+            <text x={VW - PADR} y={PADT - 18} textAnchor="end" fontSize="12" fill="#A8A29E">lavillacoliving.com</text>
           </svg>
           <p className="text-center text-xs text-[#A8A29E] mt-3">
             {en
-              ? "Each dot = a municipality. Lower-left = closest & cheapest. La Villa Coliving, neutral editor."
-              : "Chaque point = une commune. En bas à gauche = au plus proche et au moins cher. La Villa Coliving, éditrice neutre."}
+              ? "Each dot = a municipality. Top-left = Geneva (central, priciest). Lower-right = further & cheaper. La Villa Coliving, neutral editor."
+              : "Chaque point = une commune. En haut à gauche = Genève (centrale, la plus chère). En bas à droite = plus loin et moins cher. La Villa Coliving, éditrice neutre."}
           </p>
         </div>
       </section>
@@ -271,8 +304,8 @@ export function ObservatoireLogementFrontalierPage() {
                 id="budget"
                 type="range"
                 min={600}
-                max={950}
-                step={25}
+                max={2000}
+                step={50}
                 value={budget}
                 onChange={(e) => setBudget(Number(e.target.value))}
                 className="flex-1 min-w-[160px] accent-[#D4A574]"
@@ -284,8 +317,15 @@ export function ObservatoireLogementFrontalierPage() {
             <p className="text-sm text-[#57534E] mt-2">
               <span className="font-medium text-[#1C1917]">{inBudget}</span>{" "}
               {en
-                ? `of 17 municipalities within budget (studio/1-2 room rent).`
-                : `communes sur 17 dans ton budget (loyer d'un studio/T1-T2).`}
+                ? `of 17 municipalities within budget (studio rent).`
+                : `communes sur 17 dans ton budget (loyer d'un studio).`}
+              {budget >= 1600 && (
+                <span className="text-[#A0623C]">
+                  {en
+                    ? " — at this budget you'd rent a studio in Geneva itself."
+                    : " — à ce budget, tu paierais un studio à Genève même."}
+                </span>
+              )}
             </p>
           </div>
 
@@ -323,9 +363,9 @@ export function ObservatoireLogementFrontalierPage() {
               <thead>
                 <tr className="border-b border-[#E7E5E4] text-left">
                   <Th onClick={() => toggleSort("name")}>{en ? "Municipality" : "Commune"}</Th>
-                  <Th onClick={() => toggleSort("mois")} right>{en ? "Rent €/mo" : "Loyer €/mois"}</Th>
+                  <Th onClick={() => toggleSort("mois")} right>{en ? "Studio €/mo" : "Studio €/mois"}</Th>
                   <Th onClick={() => toggleSort("pt")} right active={mode === "pt"}>
-                    <Train className="inline w-3.5 h-3.5 mb-0.5" />
+                    <Bus className="inline w-3.5 h-3.5 mb-0.5" /> <span className="hidden sm:inline">Transports&nbsp;publics</span>
                   </Th>
                   <Th onClick={() => toggleSort("velo")} right active={mode === "velo"}>
                     <Bike className="inline w-3.5 h-3.5 mb-0.5" />
@@ -336,13 +376,13 @@ export function ObservatoireLogementFrontalierPage() {
                 </tr>
               </thead>
               <tbody>
-                {/* Repère Genève-Eaux-Vives : 0 trajet, loyer CHF hors charges (toujours en tête, hors filtre budget) */}
+                {/* Repère Genève-Eaux-Vives : 0 trajet, loyer CHF marché (toujours en tête, hors filtre budget) */}
                 <tr className="border-b border-[#E7E5E4]" style={{ background: "#F7F1E8" }}>
                   <td className="px-3 py-2.5 text-[#1C1917] whitespace-nowrap font-medium">
                     Genève-Eaux-Vives
                     <span className="ml-1.5 text-[10px] uppercase tracking-wider text-[#A0623C]">({en ? "reference" : "repère"})</span>
                   </td>
-                  <td className="px-3 py-2.5 text-right font-medium text-[#1C1917] whitespace-nowrap">≈ {GENEVA_CHF}&nbsp;CHF*</td>
+                  <td className="px-3 py-2.5 text-right font-medium text-[#1C1917] whitespace-nowrap">≈ {GENEVA_CHF_RANGE}&nbsp;CHF*</td>
                   <td className="px-3 py-2.5 text-right text-[#78716C]">0 min</td>
                   <td className="px-3 py-2.5 text-right text-[#78716C]">0 min</td>
                   <td className="px-3 py-2.5 text-right text-[#78716C]">0 min</td>
@@ -358,9 +398,10 @@ export function ObservatoireLogementFrontalierPage() {
                       <td className="px-3 py-2.5 text-[#1C1917] whitespace-nowrap">
                         {ok && <span className="text-[#6B8E6B] mr-1.5">✓</span>}
                         {c.name}
+                        {c.proxy && <span className="text-[#A8A29E]">&nbsp;*</span>}
                       </td>
                       <td className="px-3 py-2.5 text-right font-medium text-[#1C1917] whitespace-nowrap">{c.mois} €</td>
-                      <Td active={mode === "pt"}>{c.pt} min</Td>
+                      <TransportCell c={c} en={en} active={mode === "pt"} />
                       <Td active={mode === "velo"}>{c.velo > VELO_MAX ? "—" : `${c.velo} min`}</Td>
                       <Td active={mode === "voiture"}>{c.voiture} min</Td>
                     </tr>
@@ -369,16 +410,25 @@ export function ObservatoireLogementFrontalierPage() {
               </tbody>
             </table>
           </div>
+
+          {/* légende cadence LEX */}
+          <div className="flex items-center gap-4 flex-wrap mt-3 text-xs text-[#78716C]">
+            <span className="text-[#A8A29E]">{en ? "Léman Express frequency (peak):" : "Cadence Léman Express (pointe) :"}</span>
+            <span className="inline-flex items-center gap-1"><span style={{ color: "#6B8E6B" }}>●</span> ≤ 15 min</span>
+            <span className="inline-flex items-center gap-1"><span style={{ color: "#D4A574" }}>●</span> ~30 min</span>
+            <span className="inline-flex items-center gap-1"><span style={{ color: "#A0623C" }}>●</span> {en ? "~1/h" : "~1 train/h"}</span>
+          </div>
+
           <p className="text-xs text-[#A8A29E] mt-3 flex items-start gap-1.5">
             <Info className="w-3.5 h-3.5 mt-0.5 shrink-0" />
             {en
-              ? "Times door-to-door to Geneva-Eaux-Vives at morning peak (arrival ~9:15). “—” bike = too far to cycle daily. The Léman Express is even faster station-to-station (e.g. Annemasse 8 min)."
-              : "Temps porte-à-porte vers Genève-Eaux-Vives à l'heure de pointe (arrivée ~9h15). « — » vélo = trop loin au quotidien. Le Léman Express est plus rapide encore de gare à gare (ex. Annemasse 8 min)."}
+              ? "Public transport: when a town is on the Léman Express, we show the direct station-to-station time (with peak frequency, dot) plus the real door-to-door time; otherwise tram/bus door-to-door, at morning peak (arrival ~9:15). “—” bike = too far to cycle daily."
+              : "Transports publics : si la commune est sur le Léman Express, on affiche le temps direct gare-à-gare (avec la cadence en pointe, pastille) + le porte-à-porte réel ; sinon tram/bus porte-à-porte, à l'heure de pointe (arrivée ~9h15). « — » vélo = trop loin au quotidien."}
           </p>
           <p className="text-xs text-[#A8A29E] mt-2">
             {en
-              ? "* Geneva reference: ≈1,020 CHF/mo (OCSTAT 2021 new-tenant rate, 27.60 CHF/m² × 37 m², excluding charges) — shown in CHF, not directly comparable with the French charges-included figures. Living in Geneva itself means zero commute but a clearly higher rent."
-              : "* Repère Genève : ≈1 020 CHF/mois (OCSTAT 2021, nouveaux locataires, 27,60 CHF/m² × 37 m², hors charges) — affiché en CHF, non directement comparable aux loyers français charges comprises. Vivre à Genève même = zéro trajet, mais un loyer nettement plus élevé."}
+              ? "* Geneva reference: real advertised studio rent in Eaux-Vives, ≈1,600–2,000 CHF/mo (ImmoStreet listings, June 2026, excluding student/furnished lets — studios are scarce there). Shown in CHF; € and CHF are near parity. “*” next to a French town = studio not published by Le Figaro, 2-room rent shown instead."
+              : "* Repère Genève : loyer d'annonce réel d'un studio à Eaux-Vives, ≈1 600–2 000 CHF/mois (annonces ImmoStreet, juin 2026, hors logements étudiants/meublés — le studio y est rare). Affiché en CHF ; € et CHF sont proches de la parité. « * » devant une commune française = studio non publié par Le Figaro, loyer 2-pièces affiché."}
           </p>
         </div>
       </section>
@@ -386,9 +436,14 @@ export function ObservatoireLogementFrontalierPage() {
       {/* ===== PALIERS DE TRAJET ===== */}
       <section className="py-12 lg:py-16 bg-white">
         <div className="max-w-4xl mx-auto px-6">
-          <h2 className="text-2xl md:text-3xl font-light text-[#1C1917] mb-8 text-center" style={{ fontFamily: "DM Serif Display, serif" }}>
-            {en ? "Rent by commute band (public transport)" : "Le loyer par palier de trajet (transport public)"}
+          <h2 className="text-2xl md:text-3xl font-light text-[#1C1917] mb-3 text-center" style={{ fontFamily: "DM Serif Display, serif" }}>
+            {en ? "Studio rent by commute band" : "Le loyer d'un studio par palier de trajet"}
           </h2>
+          <p className="text-sm text-[#78716C] text-center mb-8 max-w-2xl mx-auto">
+            {en
+              ? "The immediate ring around Annemasse is the priciest; step a little further out and rent eases."
+              : "Le premier cercle autour d'Annemasse est le plus cher ; en s'éloignant un peu, le loyer se détend."}
+          </p>
           <div className="grid sm:grid-cols-3 gap-4">
             {[
               { lo: 0, hi: 30, label: en ? "Under 30 min" : "Moins de 30 min" },
@@ -402,7 +457,7 @@ export function ObservatoireLogementFrontalierPage() {
                   <p className="text-xs text-[#A8A29E] uppercase tracking-wider">{band.label}</p>
                   <p className="text-3xl font-medium text-[#1C1917] my-1">{avg} €</p>
                   <p className="text-xs text-[#57534E]">
-                    {en ? "avg. rent · " : "loyer moyen · "}
+                    {en ? "avg. studio · " : "studio moyen · "}
                     {list.length} {en ? "towns" : "communes"}
                   </p>
                 </div>
@@ -421,24 +476,23 @@ export function ObservatoireLogementFrontalierPage() {
           </h2>
           <ul className="text-sm text-[#57534E] space-y-2.5 leading-relaxed list-disc pl-5">
             <li>
-              {en ? "Rent: " : "Loyer : "}
-              <a href="https://www.data.gouv.fr/datasets/carte-des-loyers-indicateurs-de-loyers-dannonce-par-commune-en-2025" target="_blank" rel="noopener" className="text-[#D4A574] hover:underline">
-                {en ? "ANIL “Carte des loyers” 2025" : "« Carte des loyers » ANIL 2025"}
+              {en ? "Studio rent (France): " : "Loyer studio (France) : "}
+              <a href="https://immobilier.lefigaro.fr/prix-immobilier/" target="_blank" rel="noopener" className="text-[#D4A574] hover:underline">
+                {en ? "Le Figaro Immobilier" : "Le Figaro Immobilier"}
               </a>
               {en
-                ? " — estimated advertised rent for a 1-2 room flat (37 m² reference), charges included, Q3 2025. Indicative orders of magnitude. "
-                : " — loyer d'annonce estimé pour un T1-T2 (réf. 37 m²), charges comprises, T3 2025. Ordres de grandeur indicatifs. "}
-              <em>{en ? "“ANIL estimates, from Groupe SeLoger and leboncoin data.”" : "« Estimations ANIL, à partir des données du Groupe SeLoger et de leboncoin »."}</em>
+                ? ` — advertised studio rent per m² per municipality (page updated 02/06/2026), × ${REF_M2} m² reference. 14 of 17 towns have a published studio rate; the other 3 (marked *) use the 2-room rent. Indicative orders of magnitude.`
+                : ` — loyer d'annonce d'un studio au m² par commune (page MAJ 02/06/2026), × ${REF_M2} m² de référence. 14 communes sur 17 ont un studio publié ; les 3 autres (marquées *) reprennent le loyer 2-pièces. Ordres de grandeur indicatifs.`}
             </li>
             <li>
               {en
-                ? "Commute: door-to-door to Geneva-Eaux-Vives at morning peak (arrival ~9:15), surveyed on Google Maps (16/06/2026) for car & public transport; bike via the greenway. Direct Léman Express times are timetable-based (lemanexpress.com)."
-                : "Trajet : porte-à-porte vers Genève-Eaux-Vives à l'heure de pointe (arrivée ~9h15), relevé sur Google Maps (16/06/2026) pour voiture & transport public ; vélo par la voie verte. Les temps Léman Express directs proviennent des horaires officiels (lemanexpress.com)."}
+                ? "Commute: door-to-door to Geneva-Eaux-Vives at morning peak (arrival ~9:15), surveyed on Google Maps for car & public transport; bike via the greenway. Direct Léman Express times and peak frequency are from the official 2026 timetable (lemanexpress.com, ge.ch)."
+                : "Trajet : porte-à-porte vers Genève-Eaux-Vives à l'heure de pointe (arrivée ~9h15), relevé sur Google Maps pour voiture & transport public ; vélo par la voie verte. Les temps Léman Express directs et la cadence en pointe proviennent de l'horaire officiel 2026 (lemanexpress.com, ge.ch)."}
             </li>
             <li>
               {en
-                ? "Geneva reference (kept in CHF): ~21.55 CHF/m²/month (OCSTAT 2021) — without charges, so not directly comparable with the French charges-included figures."
-                : "Repère Genève (gardé en CHF) : ~21,55 CHF/m²/mois (OCSTAT 2021) — hors charges, donc non directement comparable aux loyers français charges comprises."}
+                ? "Geneva benchmark (kept in CHF): real advertised studio rent in Eaux-Vives, ≈1,600–2,000 CHF/month (ImmoStreet listings, June 2026, excluding student & furnished lets) — a deliberately conservative range, as studios are genuinely scarce there. € and CHF are near parity, so the figures are directly readable side by side."
+                : "Repère Genève (gardé en CHF) : loyer d'annonce réel d'un studio à Eaux-Vives, ≈1 600–2 000 CHF/mois (annonces ImmoStreet, juin 2026, hors logements étudiants & meublés) — fourchette volontairement conservatrice, le studio y étant réellement rare. € et CHF étant proches de la parité, les chiffres se lisent directement côte à côte."}
             </li>
             <li>
               {en
@@ -505,6 +559,37 @@ function Td({ children, active }: { children: ReactNode; active?: boolean }) {
   return (
     <td className={`px-3 py-2.5 text-right whitespace-nowrap ${active ? "text-[#1C1917] font-medium" : "text-[#78716C]"}`}>
       {children}
+    </td>
+  );
+}
+
+// Colonne « Transports publics » fusionnée : Léman Express en priorité (temps direct gare-à-gare
+// + cadence en pointe), avec le porte-à-porte réel juste en dessous ; sinon tram/bus porte-à-porte.
+function TransportCell({ c, en, active }: { c: Commune; en: boolean; active?: boolean }) {
+  const primary = active ? "text-[#1C1917]" : "text-[#57534E]";
+  if (c.train != null) {
+    const cad = c.cadence ?? 99;
+    const color = cad <= 15 ? "#6B8E6B" : cad <= 30 ? "#D4A574" : "#A0623C";
+    const cadLbl = cad >= 60 ? (en ? "1/h" : "1 train/h") : `${c.cadence} min`;
+    return (
+      <td className="px-3 py-2.5 text-right whitespace-nowrap">
+        <div className="leading-tight">
+          <div className={`font-medium ${primary}`}>
+            {c.train} min <span className="text-[10px] font-normal text-[#78716C]">Léman&nbsp;Express</span>
+          </div>
+          <div className="text-[10px] text-[#A8A29E]">
+            <span style={{ color }}>●</span> {cadLbl} · {en ? `door-to-door ${c.pt} min` : `porte-à-porte ${c.pt} min`}
+          </div>
+        </div>
+      </td>
+    );
+  }
+  return (
+    <td className="px-3 py-2.5 text-right whitespace-nowrap">
+      <div className="leading-tight">
+        <div className={`font-medium ${primary}`}>{c.pt} min</div>
+        <div className="text-[10px] text-[#A8A29E]">{c.tram ? "Tram 17" : "Bus / tram"}</div>
+      </div>
     </td>
   );
 }
