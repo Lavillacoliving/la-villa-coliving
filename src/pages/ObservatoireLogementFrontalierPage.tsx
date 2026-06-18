@@ -217,25 +217,30 @@ export function ObservatoireLogementFrontalierPage() {
               : "Corridor rive gauche / Léman Express → Genève-Eaux-Vives. Le loyer réel d'un studio croisé au temps de trajet réel, pour 17 communes du Genevois français. Tu fixes le budget — on te montre où tu rentres."}
           </p>
 
-          {/* Chiffre-choc : la falaise de la frontière */}
-          <div className="inline-flex flex-col sm:flex-row items-stretch sm:items-center gap-3 sm:gap-5 bg-white border border-[#E7E5E4] rounded-xl px-6 py-5">
-            <div className="text-center">
-              <div className="text-2xl font-medium text-[#1C1917] whitespace-nowrap">≈ {GENEVA_CHF_RANGE} CHF</div>
-              <div className="text-xs text-[#A8A29E] mt-0.5">{en ? "Geneva-Eaux-Vives · studio" : "Genève-Eaux-Vives · studio"}</div>
+          {/* Chiffre-choc : le même studio, de part et d'autre de la frontière (comparaison explicite) */}
+          <div className="inline-block bg-white border border-[#E7E5E4] rounded-xl px-7 py-5">
+            <div className="text-[10px] uppercase tracking-[0.2em] text-[#A8A29E] mb-3">
+              {en ? "The same studio · 8 min apart on the Léman Express" : "Le même studio · à 8 min en Léman Express"}
             </div>
-            <div className="flex sm:flex-col items-center justify-center gap-1.5 text-[#D4A574] shrink-0">
-              <Train className="w-5 h-5" />
-              <span className="text-[10px] uppercase tracking-wider whitespace-nowrap">8 min</span>
-            </div>
-            <div className="text-center">
-              <div className="text-2xl font-medium text-[#1C1917] whitespace-nowrap">≈ {hub.mois} €</div>
-              <div className="text-xs text-[#A8A29E] mt-0.5">Annemasse · studio</div>
+            <div className="flex flex-col sm:flex-row items-center justify-center gap-2 sm:gap-6">
+              <div className="text-center">
+                <div className="text-xs text-[#57534E] mb-1">Genève-Eaux-Vives</div>
+                <div className="text-xl sm:text-2xl font-medium text-[#1C1917] whitespace-nowrap">≈ {GENEVA_CHF_RANGE} CHF</div>
+              </div>
+              <div className="flex items-center text-[#D4A574] shrink-0 my-1 sm:my-0">
+                <Train className="w-5 h-5" />
+                <ArrowRight className="w-4 h-4 rotate-90 sm:rotate-0" />
+              </div>
+              <div className="text-center">
+                <div className="text-xs text-[#57534E] mb-1">{en ? "Annemasse (France)" : "Annemasse (France)"}</div>
+                <div className="text-xl sm:text-2xl font-medium text-[#1C1917] whitespace-nowrap">≈ {hub.mois} €</div>
+              </div>
             </div>
           </div>
           <p className="mt-4 text-base text-[#44403C] font-medium">
             {en
-              ? "Often half the rent, just across the border — 8 minutes on the Léman Express."
-              : "Souvent moitié moins, juste de l'autre côté de la frontière — 8 minutes en Léman Express."}
+              ? "Often half the rent, just across the border."
+              : "Souvent moitié moins, juste de l'autre côté de la frontière."}
           </p>
           <p className="mt-5 text-xs text-[#A8A29E]">
             {en ? `Updated ${updatedLabel}` : `Mis à jour le ${updatedLabel}`}
