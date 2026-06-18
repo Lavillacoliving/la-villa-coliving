@@ -594,16 +594,18 @@ function TransportCell({ c, en, active }: { c: Commune; en: boolean; active?: bo
   if (c.train != null) {
     const cad = c.cadence ?? 99;
     const color = cad <= 15 ? "#6B8E6B" : cad <= 30 ? "#D4A574" : "#A0623C";
-    const cadLbl = cad >= 60 ? (en ? "1/h" : "1 train/h") : `${c.cadence} min`;
+    const cadFreq = cad >= 60 ? (en ? "every hour" : "toutes les heures") : (en ? `every ${cad} min` : `toutes les ${cad} min`);
     return (
       <td className="px-3 py-2.5 text-right whitespace-nowrap">
         <div className="leading-tight">
           <div className={`font-medium ${primary}`}>
             {c.train} min <span className="text-[10px] font-normal text-[#78716C]">Léman&nbsp;Express</span>
           </div>
-          <div className="text-[10px] text-[#A8A29E]">
-            <span style={{ color }}>●</span> {cadLbl} · {en ? `door-to-door ${c.pt} min` : `porte-à-porte ${c.pt} min`}
+          <div className="text-[11px] mt-0.5">
+            <span style={{ color }}>●</span>{" "}
+            <span className="font-medium text-[#57534E]">{cadFreq}</span>
           </div>
+          <div className="text-[10px] text-[#A8A29E]">{en ? `door-to-door ${c.pt} min` : `porte-à-porte ${c.pt} min`}</div>
         </div>
       </td>
     );
