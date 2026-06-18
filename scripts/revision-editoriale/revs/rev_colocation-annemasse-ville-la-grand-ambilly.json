@@ -1,0 +1,15 @@
+{
+  "slug": "colocation-annemasse-ville-la-grand-ambilly",
+  "corrections": [],
+  "links": [
+    {"field": "content_fr", "anchor": "dépôt de garantie 2 mois", "url": "https://www.service-public.gouv.fr/particuliers/vosdroits/F31269"},
+    {"field": "content_fr", "anchor": "2-month security deposit", "url": "https://www.service-public.gouv.fr/particuliers/vosdroits/F31269?lang=en"},
+    {"field": "content_fr", "anchor": "Justificatif de domicile actuel", "url": "https://www.service-public.gouv.fr/particuliers/vosdroits/F1169"},
+    {"field": "content_fr", "anchor": "Proof of current address", "url": "https://www.service-public.gouv.fr/particuliers/vosdroits/F1169?lang=en"},
+    {"field": "content_fr", "anchor": "1 mois de préavis en meublé", "url": "https://www.service-public.gouv.fr/particuliers/vosdroits/F1168"},
+    {"field": "content_fr", "anchor": "1-month notice on furnished", "url": "https://www.service-public.gouv.fr/particuliers/vosdroits/F1168?lang=en"},
+    {"field": "content_fr", "anchor": "Pas lire le bail", "url": "https://www.anil.org/votre-besoin/louer/type-de-location/location-meublee/bail/"},
+    {"field": "content_fr", "anchor": "Don't read the lease", "url": "https://www.anil.org/votre-besoin/louer/type-de-location/location-meublee/bail/"}
+  ],
+  "notes": "Audit ~16 faits : ✓ majorité, ✶ 0, ? 1. AUCUNE correction. Verifie officiellement (service-public.gouv.fr + ANIL) : depot de garantie meuble = 2 mois hors charges (F31269) => l'article a RAISON (la consigne '1 mois meuble' etait erronee, 1 mois ne vaut que pour le vide) ; decret mobilier meuble = bien le 31 juillet 2015 (n°2015-981) ; preavis meuble = 1 mois (F1168) ; pieces de location = decret 2015-1437 / F1169. Coherence A6 OK : 1 380 CHF, 29 chambres, sans frais de dossier ; pas de trajet Geneve en min dans le corps (les '30 min' = visite d'appart, non concerne). ? = la caution sur 'compte bloque (CNCCC en France)' (FR l.85 / EN l.229) : organisme/sigle introuvable, le compte bloque est un dispositif BELGE, pas francais (en France le bailleur detient le depot) — probablement invente lors de la fusion 'chambre meublee', NON corrige par prudence (pas de source officielle qui contredise nommement, et eviter d'inventer un remplacement) : a verifier par Jerome. 4 liens FR + 4 EN, toutes URL testees 200 (Legifrance 403 anti-bot => ecarte au profit de service-public/ANIL primaires)."
+}

@@ -1,0 +1,13 @@
+{
+  "slug": "trouver-colocation-geneve-frontalier",
+  "corrections": [],
+  "links": [
+    {"field": "content_fr", "anchor": "fournir des justificatifs « à la française » (revenus, parfois un garant)", "url": "https://www.service-public.fr/particuliers/vosdroits/F1169"},
+    {"field": "content_en", "anchor": "provide \"French-style\" documents (income, sometimes a guarantor)", "url": "https://www.service-public.gouv.fr/particuliers/vosdroits/F1169?lang=en"},
+    {"field": "content_fr", "anchor": "pas de garant français exigé", "url": "https://www.service-public.fr/particuliers/vosdroits/F34661"},
+    {"field": "content_en", "anchor": "no French guarantor required", "url": "https://www.service-public.gouv.fr/particuliers/vosdroits/F34661?lang=en"},
+    {"field": "content_fr", "anchor": "(sérieuses, mais frais de dossier et dossier lourd)", "url": "https://www.anil.org/"},
+    {"field": "content_en", "anchor": "(serious, but application fees and heavy files)", "url": "https://www.anil.org/"}
+  ],
+  "notes": "4 faits vérifiés ✓ (vacance Genève <1% : 0,34% en 2025 / 0,46% en 2024 OCSTAT-OFS, claim conservateur OK ; trajet Annemasse→Genève Cornavin = 20 min OK ; budget chambre côté France 600-900€ plausible, moyenne Annemasse ~737€ baromètre OQORO 2025 ; 1 380 CHF conforme A6). 0 correction (✶) : aucune source officielle ne contredit. ? laissés intacts (non corrigeables faute de barème) : « loyers 30-50 % plus bas », « majorité des colocations Genève côté France » (estimations marché plausibles). A1 : 3 liens officiels + équivalents EN — service-public F1169 (dossier/justificatifs+garant), F34661 (règles colocation/garant), ANIL (info logement neutre). Toutes URL testées 200 (Legifrance JORFTEXT 403 → écartée, couverte par service-public). Conforme A6 : 1 380 CHF, 20 min, 0 frais de dossier cohérents."
+}

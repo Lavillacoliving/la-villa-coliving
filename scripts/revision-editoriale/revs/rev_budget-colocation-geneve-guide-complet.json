@@ -1,0 +1,18 @@
+{
+  "slug": "budget-colocation-geneve-guide-complet",
+  "corrections": [
+    {"field": "content_fr", "old": "5. **Faites jouer le taux de change** : payez en euros quand le CHF est fort (un loyer de 1 380 CHF peut varier de 1 350 à 1 450 € selon le taux)", "new": "5. **Tenez compte du taux de change** : un loyer de 1 380 CHF équivaut à environ 1 480 à 1 530 € selon le taux du moment (le franc suisse étant plus fort que l'euro)", "src": "https://www.impots.gouv.fr/international-particulier/questions/quel-taux-de-change-dois-je-utiliser-pour-la-declaration"},
+    {"field": "content_en", "old": "5. **Play the exchange rate**: a 1,380 CHF rent varies between 1,350-1,450 € depending on the rate", "new": "5. **Factor in the exchange rate**: a 1,380 CHF rent is worth roughly 1,480-1,530 € depending on the current rate (the Swiss franc being stronger than the euro)", "src": "https://www.impots.gouv.fr/international-particulier/questions/quel-taux-de-change-dois-je-utiliser-pour-la-declaration"}
+  ],
+  "links": [
+    {"field": "content_fr", "anchor": "imposition à la source à Genève", "url": "https://www.impots.gouv.fr/international-particulier/questions/je-reside-en-france-et-travaille-dans-le-canton-de-geneve-ou-je"},
+    {"field": "content_en", "anchor": "favorable tax treatment", "url": "https://www.impots.gouv.fr/international-particulier/questions/je-reside-en-france-et-travaille-dans-le-canton-de-geneve-ou-je"},
+    {"field": "content_fr", "anchor": "le taux de change joue en votre faveur", "url": "https://www.impots.gouv.fr/international-particulier/questions/quel-taux-de-change-dois-je-utiliser-pour-la-declaration"},
+    {"field": "content_en", "anchor": "Swiss salary kept", "url": "https://www.impots.gouv.fr/international-particulier/questions/quel-taux-de-change-dois-je-utiliser-pour-la-declaration"},
+    {"field": "content_fr", "anchor": "Annemasse↔Genève Cornavin en 20 minutes, directement", "url": "https://www.lemanexpress.com/"},
+    {"field": "content_en", "anchor": "Léman Express connecting Annemasse to Geneva Cornavin in 20 minutes", "url": "https://www.lemanexpress.com/en/"},
+    {"field": "content_fr", "anchor": "Voici les chiffres moyens pour un studio ou un T2 en 2026", "url": "https://statistique.ge.ch/prestations/calcul_loyer.asp"},
+    {"field": "content_en", "anchor": "Here are the average figures for a studio or one-bedroom in 2026", "url": "https://statistique.ge.ch/prestations/calcul_loyer.asp"}
+  ],
+  "notes": "Audit: ~22 faits vérifiés. ✓ majoritaires : rents marché Genève cohérents avec OCSTAT 2024 (calc. loyer ge.ch ; ex. 4 p. ~1 607 CHF) ; trajet Léman Express Annemasse↔Cornavin = 20 min (confirmé, conforme règle A6) ; 1 380 CHF, dépôt 2 mois hors charges, 800 €≈750 CHF et 15 000 CHF/an d'économie (arithmétique OK à ~1 CHF=1,08 €). Tableau prix par commune (contenu fusionné) cohérent avec table par zone, pas de contradiction inventée. 1 seul ✶ corrigé (FR+EN) : « 1 380 CHF varie de 1 350 à 1 450 € » est FAUX — au taux réel 2026 (1 CHF≈1,08 €) c'est ~1 490 €, donc ~1 480-1 530 € ; le cadrage « payer en euros quand le CHF est fort » était aussi conceptuellement bancal (loyer La Villa payé en CHF). ? laissés intacts : charges, salaires types, % loyer (estimations plausibles, pas de barème). 4 liens A1 FR + 4 EN (impots.gouv.fr taux de change + imposition source Genève, Léman Express, OCSTAT calc. loyer), tous testés 200."
+}

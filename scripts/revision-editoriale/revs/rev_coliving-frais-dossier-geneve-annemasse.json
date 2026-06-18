@@ -1,0 +1,11 @@
+{
+  "slug": "coliving-frais-dossier-geneve-annemasse",
+  "corrections": [],
+  "links": [
+    {"field": "content_fr", "anchor": "la constitution de votre dossier de location", "url": "https://www.service-public.gouv.fr/particuliers/vosdroits/F375"},
+    {"field": "content_fr", "anchor": "putting together your rental application file", "url": "https://www.service-public.gouv.fr/particuliers/vosdroits/F375?lang=en"},
+    {"field": "content_fr", "anchor": "plafonnés au mètre carré", "url": "https://www.anil.org/documentation-experte/analyses-juridiques-jurisprudence/analyses-juridiques/analyses-juridiques-2014/professionnels-de-limmobilier-plafonnement-des-honoraires-de-location-et-transmission-des-informations-aux-observatoires-de-loyers/"},
+    {"field": "content_fr", "anchor": "capped per square metre", "url": "https://www.anil.org/documentation-experte/analyses-juridiques-jurisprudence/analyses-juridiques/analyses-juridiques-2014/professionnels-de-limmobilier-plafonnement-des-honoraires-de-location-et-transmission-des-informations-aux-observatoires-de-loyers/"}
+  ],
+  "notes": "Point factuel clé VÉRIFIÉ et exact : service-public.fr (F375) confirme les 4 prestations facturables au locataire (visite, constitution du dossier, rédaction du bail, état des lieux d'ENTRÉE), le plafond au m² par zone, et surtout que l'état des lieux de SORTIE amiable ne peut PAS être facturé (clause inopposable) — l'article est juste sur ce point. Bilan : ~6 faits ✓ (4 prestations, plafond m², sortie non facturable, location en direct = pas d'honoraires d'agence), 0 ✶, 2 ? non corrigés car estimations sans barème officiel (fourchette 200-700 € ; « avant encadrement, jusqu'à un mois de loyer »). Prix 1 380 CHF conforme aux règles ; 0 frais de dossier cohérent. Aucune correction. 4 liens A1 posés (FR+EN) : service-public.fr F375 + ANIL plafonnement honoraires, tous 200 (Legifrance 403 écarté)."
+}

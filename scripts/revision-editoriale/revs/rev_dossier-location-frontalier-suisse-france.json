@@ -1,0 +1,13 @@
+{
+  "slug": "dossier-location-frontalier-suisse-france",
+  "corrections": [],
+  "links": [
+    {"field": "content_fr", "anchor": "avec les mêmes pièces justificatives", "url": "https://www.service-public.gouv.fr/particuliers/vosdroits/F1169"},
+    {"field": "content_en", "anchor": "with the same supporting documents", "url": "https://www.service-public.gouv.fr/particuliers/vosdroits/F1169"},
+    {"field": "content_fr", "anchor": "la garantie gratuite d'Action Logement", "url": "https://www.visale.fr/visale-pour-les-locataires/eligibilite/"},
+    {"field": "content_en", "anchor": "Action Logement's free guarantee", "url": "https://www.visale.fr/visale-pour-les-locataires/eligibilite/"},
+    {"field": "content_fr", "anchor": "vous aurez besoin d'un garant", "url": "https://www.anil.org/parole-expert-logement-location-pas-garant/"},
+    {"field": "content_en", "anchor": "you'll need a guarantor", "url": "https://www.anil.org/parole-expert-logement-location-pas-garant/"}
+  ],
+  "notes": "Audit factuel : ~6 faits vérifiés ✓, 0 ✶ (rien de faux à corriger), 1 ? (éligibilité Visale). Plafond dépôt de garantie confirmé (1 mois vide / 2 mois meublé hors charges, service-public F31269) mais NON cité dans l'article -> pas de lien forcé. Liste des pièces = décret 2015-1437 (liste limitative) : toutes les pièces listées par l'article sont autorisées ; le relevé de compte est INTERDIT à la demande du bailleur mais l'article le présente bien comme un extra VOLONTAIRE du candidat -> conforme, pas de correction. ? Visale : l'article réduit l'éligibilité >30 ans à la seule mobilité pro, alors que les salariés <=1500EUR net/promesse d'embauche sont aussi éligibles ; l'article renvoie correctement a visale.fr -> pas de réécriture (conservateur), lien officiel eligibilite ajouté. Tarif Garantme/Cautioneo 3-4% = estimation plausible, pas de barème officiel -> non touché. Cohérence A6 La Villa OK (pas de chiffre divergent). 3 liens A1 FR + 3 EN, toutes URLs testées 200."
+}

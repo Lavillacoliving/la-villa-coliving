@@ -1,0 +1,16 @@
+{
+  "slug": "transport-annemasse-geneve-leman-express",
+  "corrections": [
+    {"field": "content_fr", "old": "**Temps** : Annemasse-Genève-Cornavin = 12 minutes.", "new": "**Temps** : Annemasse-Genève-Cornavin = 20 minutes.", "src": "https://www.tac-mobilites.fr/nos-services/train"},
+    {"field": "content_fr", "old": "| Léman Express | 200€ | 12 min | Bas | 9/10 |", "new": "| Léman Express | 200€ | 20 min | Bas | 9/10 |", "src": "https://www.tac-mobilites.fr/nos-services/train"},
+    {"field": "content_en", "old": "**Time**: Annemasse-Geneva-Cornavin = 12 minutes.", "new": "**Time**: Annemasse-Geneva-Cornavin = 20 minutes.", "src": "https://www.tac-mobilites.fr/nos-services/train"},
+    {"field": "content_en", "old": "| Léman Express | 200€ | 12 min | Low | 9/10 |", "new": "| Léman Express | 200€ | 20 min | Low | 9/10 |", "src": "https://www.tac-mobilites.fr/nos-services/train"}
+  ],
+  "links": [
+    {"field": "content_fr", "anchor": "Toutes les 15 min en heures de pointe", "url": "https://www.lemanexpress.com/fr/"},
+    {"field": "content_fr", "anchor": "~200 CHF/mois abonnement frontalier", "url": "https://www.tpg.ch/fr"},
+    {"field": "content_en", "anchor": "Every 15 min peak hours", "url": "https://www.lemanexpress.com/en/"},
+    {"field": "content_en", "anchor": "~200 CHF/month cross-border pass", "url": "https://www.tpg.ch/en"}
+  ],
+  "notes": "Audit Léman Express Annemasse↔Genève. 1 erreur majeure ✶ corrigée x4 (FR+EN prose + 2 tableaux comparatifs) : trajet Cornavin = 20 min, PAS 12 min — triple-confirmé tac-mobilites (autorité agglo Annemasse) + lemanexpress.com + recherche ; conforme règle A6 (20 min). VÉRIFIÉS ✓ : ~200 CHF/mois abo frontalier (Léman Pass/unireso, ordre de grandeur OK), fréquence 'toutes les 15 min en pointe' (défendable : par-ligne 15 min, combiné ~10 min — non contredit, conservé), matrice 22 min Cornavin (✓), 7 lignes LEX (L1–L7 depuis 14/12/2025, la vigilance disait L1–L6 mais l'article ne liste pas de numéros). INCERTAINS ? non touchés (règle 3) : aéroport '25 min'/'direct 30 min' (nouvelle L7 directe depuis 14/12/2025 ~32 min mais 1 train/jour ; via Cornavin ~54 min — formulation litigieuse mais plausible post-L7, non corrigée) ; 'piste cyclable Plan d'Eau' (nom officiel = Voie Verte du Grand Genève, mais réf locale plausible, non corrigée). Liens A1 : lemanexpress.com (FR/EN) + tpg.ch (FR/EN), tous 200. NB : lemanexpress.ch renvoie 000 au curl (TLS/geo) → domaine officiel .com utilisé à la place."
+}
