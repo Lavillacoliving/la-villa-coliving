@@ -1,0 +1,14 @@
+{
+  "slug": "coliving-geneve-frontaliers-guide-complet",
+  "corrections": [
+    {"field": "content_fr", "old": "15 minutes en transport en commun pour rejoindre le centre de Genève", "new": "20 minutes en transport en commun pour rejoindre le centre de Genève", "src": "https://www.lemanexpress.com/fr/"},
+    {"field": "content_en", "old": "15 minutes by public transport to reach Geneva center", "new": "20 minutes by public transport to reach Geneva center", "src": "https://www.lemanexpress.com/fr/"}
+  ],
+  "links": [
+    {"field": "content_fr", "anchor": "Liaisons directes avec le réseau TPG", "url": "https://www.lemanexpress.com/fr/"},
+    {"field": "content_en", "anchor": "Direct connections with the TPG", "url": "https://www.lemanexpress.com/fr/"},
+    {"field": "content_fr", "anchor": "Si vous êtes frontalier ou envisagez de le devenir", "url": "https://www.impots.gouv.fr/international-particulier/je-suis-frontalier-franco-suisse"},
+    {"field": "content_en", "anchor": "If you're a cross-border worker or considering becoming one", "url": "https://www.impots.gouv.fr/international-particulier/je-suis-frontalier-franco-suisse"}
+  ],
+  "notes": "Bilan : ~3 ✓ / 2 ✶ / 0 ?. ✶ corrige le trajet 15 min -> 20 min (Annemasse-Cornavin via Leman Express = 20 min, confirme OCSTAT/operateur), FR+EN, conforme A6. ✓ : prix d'appel 1380 CHF tout inclus (OK A6), baux 12 mois (pas de conflit). PAS de claim 29 chambres/3 maisons ni 0 frais de dossier dans cet article (rien a corriger sur ces points). Article generique (lifestyle) : il NE cite NI le nombre de frontaliers (~116 200 OCSTAT fin 2025, verifie mais absent du texte) NI une taille de marche coliving (ref JLL absente) -> rien a corriger/sourcer dessus. Le studio Geneve a 1800 CHF + 200-300 charges et caution 2 mois sont des estimations plausibles non corrigees (pas de bareme officiel). 4 liens A1 poses (2 FR + 2 EN, memes URLs) : Leman Express .com/fr (le .ch renvoie 000 cert TLS invalide -> remplace par .com/fr teste 200) sur l'ancre transport ; impots.gouv frontalier franco-suisse sur l'ancre frontalier. Toutes URLs testees 200."
+}

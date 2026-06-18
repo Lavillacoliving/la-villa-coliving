@@ -1,0 +1,11 @@
+{
+  "slug": "coliving-vs-colocation-differences",
+  "corrections": [],
+  "links": [
+    {"field": "content_fr", "anchor": "souvent un bail unique au nom d'un seul locataire", "url": "https://www.service-public.gouv.fr/particuliers/vosdroits/F34661"},
+    {"field": "content_fr", "anchor": "les autres en sous-location (pas toujours légal)", "url": "https://www.service-public.gouv.fr/particuliers/vosdroits/F2449"},
+    {"field": "content_en", "anchor": "Both involve living with other people", "url": "https://www.service-public.gouv.fr/particuliers/vosdroits/F34661?lang=en"},
+    {"field": "content_en", "anchor": "Often unclear", "url": "https://www.service-public.gouv.fr/particuliers/vosdroits/F2449?lang=en"}
+  ],
+  "notes": "Lifestyle/comparatif, peu de faits durs. Bilan: ~6 ✓, 0 ✶, 2 ? non corrigés (conservateur). VÉRIFIÉ ✓: dépôt garantie meublé plafonné à 2 mois hors charges (art. 25-6 loi 1989 → caution coliving 2 mois OK); sous-location exige accord ÉCRIT du bailleur (service-public F2449) → la mention « les autres en sous-location (pas toujours légal) » est exacte; bail unique colocation + clause solidarité confirmés (F34661/ANIL). A6 OK: 1 380 CHF cohérent partout, pas de mention trajet/29 chambres/frais de dossier à recaler. ? NON corrigés (pas de source officielle contraire, JLL≠source admise): « ~23 150 lits » et « +15-20%/an depuis 2020 » tracent à l'index JLL 2019 (potentiellement daté mais attribué à la source dans l'article); occupation 99%/5 ans et pionnier 2021 = claims business non vérifiables. 4 liens posés (2 sources off. FR+EN), toutes URLs testées 200."
+}

@@ -1,0 +1,18 @@
+{
+  "slug": "colocation-expats-geneve-guide",
+  "corrections": [
+    {"field": "content_fr", "old": "**Condition** : résider dans la zone frontalière (90 km de la frontière)", "new": "**Condition** : retourner à votre domicile en France au moins une fois par semaine (les zones frontalières ont été supprimées pour les ressortissants UE/AELE)", "src": "https://www.sem.admin.ch/sem/fr/home/themen/aufenthalt/eu_efta/ausweis_g_eu_efta.html"},
+    {"field": "content_en", "old": "**Condition**: reside in the border zone (90 km from the border)", "new": "**Condition**: return to your home in France at least once a week (border zones have been abolished for EU/EFTA nationals)", "src": "https://www.sem.admin.ch/sem/fr/home/themen/aufenthalt/eu_efta/ausweis_g_eu_efta.html"},
+    {"field": "content_fr", "old": "Votre nouvelle vie à 15 minutes de Genève commence maintenant.", "new": "Votre nouvelle vie à 20 minutes de Genève commence maintenant.", "src": "https://www.lavillacoliving.com/colocation-geneve"},
+    {"field": "content_en", "old": "Your new life 15 minutes from Geneva starts now.", "new": "Your new life 20 minutes from Geneva starts now.", "src": "https://www.lavillacoliving.com/colocation-geneve"}
+  ],
+  "links": [
+    {"field": "content_fr", "anchor": "permis G (frontalier)", "url": "https://www.sem.admin.ch/sem/fr/home/themen/aufenthalt/eu_efta/ausweis_g_eu_efta.html"},
+    {"field": "content_en", "anchor": "G permit (cross-border)", "url": "https://www.sem.admin.ch/sem/fr/home/themen/aufenthalt/eu_efta/ausweis_g_eu_efta.html"},
+    {"field": "content_fr", "anchor": "Pas besoin de permis B", "url": "https://www.sem.admin.ch/sem/fr/home/themen/aufenthalt/eu_efta/ausweis_b_eu_efta.html"},
+    {"field": "content_en", "anchor": "No B permit needed", "url": "https://www.sem.admin.ch/sem/fr/home/themen/aufenthalt/eu_efta/ausweis_b_eu_efta.html"},
+    {"field": "content_fr", "anchor": "3 mois de loyer en Suisse", "url": "https://www.cagi.ch/fr/infos-pratiques/garantie-bancaire-ou-caution/"},
+    {"field": "content_en", "anchor": "3 months' rent in Switzerland", "url": "https://www.cagi.ch/en/practical-infos/bank-guarantee-or-surety/"}
+  ],
+  "notes": "Bilan : ~7 faits ✓, 1 ✶ majeur (x2 FR+EN), 1 A6 (x2). ✶ CLÉ : la condition permis G « zone frontalière (90 km de la frontière) » est FAUSSE — la SEM indique que les zones frontalières ont été supprimées pour les ressortissants UE/AELE ; la vraie condition est le retour au domicile à l'étranger au moins 1x/semaine. A6 : « 15 minutes de Genève » corrigé en 20 min (FR+EN). Distinction expat/frontalier : PAS de confusion — l'article cadre bien les expats résidant côté France comme ayant besoin du permis G (frontalier) et non du permis B ; le « pas besoin de permis B » est exact pour ce cas. Vérifiés ✓ : durée permis G 5 ans (contrat indéterminé/>1 an), employeur demandeur, impôt à la source canton GE, caution 3 mois max en Suisse (Art. 257e CO / CAGI), prix 1 380 CHF/mois. Liens A1 : SEM permis G (corrige le ✶), SEM permis B, CAGI garantie de loyer — tous testés 200, FR+EN."
+}

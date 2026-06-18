@@ -1,0 +1,9 @@
+{
+  "slug": "choc-culturel-franco-suisse-expatrie-geneve",
+  "corrections": [],
+  "links": [
+    {"field": "content_fr", "anchor": "Pour le frontalier", "url": "https://www.impots.gouv.fr/international-particulier/je-suis-frontalier-franco-suisse"},
+    {"field": "content_fr", "anchor": "For the cross-border worker", "url": "https://www.impots.gouv.fr/international-particulier/je-suis-frontalier-franco-suisse"}
+  ],
+  "notes": "Article lifestyle (choc culturel franco-suisse), quasi aucun fait dur. Bilan : 1 fait verifie acceptable (?), 0 faux, 0 correction. Seul chiffre concret = service compris 'environ 15 % dans l'addition' : historiquement fonde (CCNT 1974 a integre ~15 % de service dans les prix ; le service EST inclus) -> aucune source officielle ne contredit clairement, on ne touche pas (regle conservatrice). Aucun chiffre A6 dans l'article (pas de 1 380 CHF, pas de trajet, pas de 29 chambres, pas de frais de dossier) -> rien a aligner. Lien : 1 paire officielle (FR+EN) impots.gouv.fr frontalier franco-suisse, testee 200, ancree sur le passage decrivant la realite fiscale du frontalier (salaire suisse / residence francaise). Volontairement parcimonieux : ajouter d'autres liens officiels serait force sur un sujet culturel/ressenti."
+}

@@ -1,0 +1,11 @@
+{
+  "slug": "coliving-transfrontalier-geneve-annemasse-nouvelle-vie",
+  "corrections": [],
+  "links": [
+    {"field": "content_fr", "anchor": "permis G", "url": "https://www.sem.admin.ch/sem/fr/home/themen/aufenthalt/eu_efta/ausweis_g_eu_efta.html"},
+    {"field": "content_en", "anchor": "G permit", "url": "https://www.sem.admin.ch/sem/fr/home/themen/aufenthalt/eu_efta/ausweis_g_eu_efta.html"},
+    {"field": "content_fr", "anchor": "en tram", "url": "https://www.tpg.ch/"},
+    {"field": "content_en", "anchor": "or tram", "url": "https://www.tpg.ch/"}
+  ],
+  "notes": "Lifestyle court, peu de faits durs. Cohérence A6 OK : 1 380 CHF (l.17/35/49 FR, 64/82/96 EN) = canonique ; trajet ~20 min partout (jamais 15) ; aucune mention de '29 chambres' ni de frais de dossier, donc rien a corriger -> corrections vide. Verifs : 3 chiffres verifiables tous ✓, 0 ✶, 0 ?. Liens : 2 officiels seulement (article lifestyle) + equivalents EN. Permis G -> SEM (200, claim factuel 'zone eligible au permis G' l.21/68). Tram -> TPG (200). Leman Express (000) et CFF/SBB (403) EXCLUS car non-200 ; pour le rail seul le tram (TPG) reste verifie."
+}
