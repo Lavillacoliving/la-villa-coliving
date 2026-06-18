@@ -24,6 +24,7 @@ const ColocationGenevePage = lazy(() => import("@/pages/ColocationGenevePage").t
 const AnnemasseColocationPage = lazy(() => import("@/pages/AnnemasseColocationPage").then(m => ({ default: m.AnnemasseColocationPage })));
 const ChambreLouerAnnemassePage = lazy(() => import("@/pages/ChambreLouerAnnemassePage").then(m => ({ default: m.ChambreLouerAnnemassePage })));
 const InvestisseursPage = lazy(() => import("@/pages/InvestisseursPage").then(m => ({ default: m.InvestisseursPage })));
+const ObservatoireLogementPage = lazy(() => import("@/pages/ObservatoireLogementFrontalierPage").then(m => ({ default: m.ObservatoireLogementFrontalierPage })));
 const NotFoundPage = lazy(() => import("@/pages/NotFoundPage").then(m => ({ default: m.NotFoundPage })));
 const MentionsLegalesPage = lazy(() => import("@/pages/MentionsLegalesPage").then(m => ({ default: m.MentionsLegalesPage })));
 const PolitiqueConfidentialitePage = lazy(() => import("@/pages/PolitiqueConfidentialitePage").then(m => ({ default: m.PolitiqueConfidentialitePage })));
@@ -85,6 +86,7 @@ function AppContent() {
         <Route path="/leloft" element={<HouseDetailPage />} />
         <Route path="/lelodge" element={<HouseDetailPage />} />
         <Route path="/investisseurs" element={<InvestisseursPage />} />
+        <Route path="/observatoire-logement-frontalier-geneve" element={<ObservatoireLogementPage />} />
         <Route path="/mentions-legales" element={<MentionsLegalesPage />} />
         <Route path="/politique-de-confidentialite" element={<PolitiqueConfidentialitePage />} />
         {/* EN routes — same components, language detected from /en prefix */}
@@ -104,6 +106,7 @@ function AppContent() {
         <Route path="/en/leloft" element={<HouseDetailPage />} />
         <Route path="/en/lelodge" element={<HouseDetailPage />} />
         <Route path="/en/investisseurs" element={<InvestisseursPage />} />
+        <Route path="/en/observatoire-logement-frontalier-geneve" element={<ObservatoireLogementPage />} />
         <Route path="/en/mentions-legales" element={<MentionsLegalesPage />} />
         <Route path="/en/politique-de-confidentialite" element={<PolitiqueConfidentialitePage />} />
         <Route path="/reset-password" element={<ResetPasswordPage />} />

@@ -1,0 +1,18 @@
+commune;code_insee;departement;loyer_studio_eur_m2;loyer_studio_eur_mois_ref30m2;studio_source;transport_public_min;velo_min;voiture_min;gare_lex;train_lex_eauxvives_min;cadence_lex_pointe_min;note
+Annemasse;74012;74;33;990;lefigaro;16;21;28;oui;8;10;Hub Leman Express L1-L4
+Ville-la-Grand;74305;74;30;900;lefigaro;27;27;24;oui;8;10;Gare d'Annemasse (limitrophe)
+Ambilly;74008;74;34;1020;lefigaro;24;21;24;oui;8;10;Gare d'Annemasse + tram 17
+Gaillard;74133;74;33;990;lefigaro;37;21;26;non;;;Tram 17
+Etrembieres;74118;74;33;990;lefigaro;49;30;22;non;;;
+Vetraz-Monthoux;74298;74;32;960;lefigaro;68;32;35;non;;;
+Cranves-Sales;74094;74;31;930;lefigaro;66;38;35;non;;;
+Bonne;74040;74;23;690;2pieces;52;49;35;non;;;Studio non publie sur Le Figaro - loyer 2-pieces
+Saint-Cergues;74229;74;24;720;lefigaro;62;50;30;non;;;
+Machilly;74158;74;23;690;2pieces;30;50;28;oui;22;30;Studio non publie sur Le Figaro - loyer 2-pieces
+Bons-en-Chablais;74043;74;21;630;2pieces;35;63;35;oui;28;30;Studio non publie sur Le Figaro - loyer 2-pieces
+Thonon-les-Bains;74281;74;24;720;lefigaro;50;112;60;oui;43;30;
+Evian-les-Bains;74119;74;30;900;lefigaro;59;148;70;oui;52;30;Terminus L1
+Reignier-Esery;74220;74;31;930;lefigaro;36;58;30;oui;25;30;
+La Roche-sur-Foron;74224;74;27;810;lefigaro;43;89;35;oui;32;30;
+Bonneville;74042;74;21;630;lefigaro;54;99;35;oui;48;60;Direction Saint-Gervais (L3)
+Annecy;74010;74;29;870;lefigaro;88;171;55;oui;63;60;Terminus L2 (repere elargissement)

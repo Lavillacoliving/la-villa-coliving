@@ -61,6 +61,10 @@
       "destination": "/prerendered/investisseurs.html"
     },
     {
+      "source": "/observatoire-logement-frontalier-geneve",
+      "destination": "/prerendered/observatoire-logement-frontalier-geneve.html"
+    },
+    {
       "source": "/mentions-legales",
       "destination": "/prerendered/mentions-legales.html"
     },
@@ -127,6 +131,10 @@
     {
       "source": "/en/investisseurs",
       "destination": "/prerendered/en-investisseurs.html"
+    },
+    {
+      "source": "/en/observatoire-logement-frontalier-geneve",
+      "destination": "/prerendered/en-observatoire-logement-frontalier-geneve.html"
     },
     {
       "source": "/en/mentions-legales",
