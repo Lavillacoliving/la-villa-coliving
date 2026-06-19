@@ -55,7 +55,7 @@ export function FooterV7() {
                 className="h-32 w-auto brightness-0 invert"
               />
             </LocalizedLink>
-            <p className="text-[#78716C] max-w-md mb-6 leading-relaxed">
+            <p className="text-[#A8A29E] max-w-md mb-6 leading-relaxed">
               {language === "en"
                 ? "Boutique coliving in Greater Geneva. 3 houses, 29 rooms, pool, sauna and gym in every house. All inclusive."
                 : "Coliving boutique au Grand Genève. 3 maisons, 29 chambres, piscine, sauna et salle de sport dans chaque maison. Tout inclus."}
@@ -65,13 +65,13 @@ export function FooterV7() {
                 href="https://www.instagram.com/lavillacoliving/"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="w-11 h-11 rounded-lg bg-white/[0.06] flex items-center justify-center text-[#78716C] hover:text-[#E0BB8A] hover:bg-white/[0.1] transition-all duration-300"
+                className="w-11 h-11 rounded-lg bg-white/[0.06] flex items-center justify-center text-[#A8A29E] hover:text-[#E0BB8A] hover:bg-white/[0.1] transition-all duration-300"
               >
                 <Instagram size={18} />
               </a>
               <a
                 href="mailto:contact@lavillacoliving.com"
-                className="w-11 h-11 rounded-lg bg-white/[0.06] flex items-center justify-center text-[#78716C] hover:text-[#E0BB8A] hover:bg-white/[0.1] transition-all duration-300"
+                className="w-11 h-11 rounded-lg bg-white/[0.06] flex items-center justify-center text-[#A8A29E] hover:text-[#E0BB8A] hover:bg-white/[0.1] transition-all duration-300"
               >
                 <Mail size={18} />
               </a>
@@ -88,7 +88,7 @@ export function FooterV7() {
                 <li key={link.path}>
                   <LocalizedLink
                     to={link.path}
-                    className="text-[#78716C] hover:text-[#E0BB8A] transition-colors duration-300 text-sm"
+                    className="text-[#A8A29E] hover:text-[#E0BB8A] transition-colors duration-300 text-sm"
                   >
                     {link.label}
                   </LocalizedLink>
@@ -108,7 +108,7 @@ export function FooterV7() {
                   size={18}
                   className="text-[#D4A574] mt-0.5 flex-shrink-0"
                 />
-                <span className="text-[#78716C] text-sm">
+                <span className="text-[#A8A29E] text-sm">
                   Grand Genève, France
                 </span>
               </div>
@@ -116,7 +116,7 @@ export function FooterV7() {
                 <Mail size={18} className="text-[#D4A574] flex-shrink-0" />
                 <a
                   href="mailto:contact@lavillacoliving.com"
-                  className="text-[#78716C] hover:text-[#E0BB8A] transition-colors duration-300 text-sm"
+                  className="text-[#A8A29E] hover:text-[#E0BB8A] transition-colors duration-300 text-sm"
                 >
                   contact@lavillacoliving.com
                 </a>
@@ -125,7 +125,7 @@ export function FooterV7() {
                 <Phone size={18} className="text-[#D4A574] flex-shrink-0" />
                 <a
                   href="tel:+33664315134"
-                  className="text-[#78716C] hover:text-[#E0BB8A] transition-colors duration-300 text-sm"
+                  className="text-[#A8A29E] hover:text-[#E0BB8A] transition-colors duration-300 text-sm"
                 >
                   +33 6 64 31 51 34
                 </a>
@@ -138,7 +138,7 @@ export function FooterV7() {
                   href="https://wa.me/33664315134"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-[#78716C] hover:text-[#E0BB8A] transition-colors duration-300 text-sm"
+                  className="text-[#A8A29E] hover:text-[#E0BB8A] transition-colors duration-300 text-sm"
                 >
                   WhatsApp
                 </a>
@@ -157,7 +157,7 @@ export function FooterV7() {
 
         {/* Bottom */}
         <div className="mt-16 pt-8 border-t border-white/[0.08] flex flex-col md:flex-row items-center justify-between gap-4">
-          <p className="text-[#78716C] text-sm">
+          <p className="text-[#A8A29E] text-sm">
             &copy; {new Date().getFullYear()} La Villa Coliving.{" "}
             {language === "en"
               ? "Made in Grand Genève."
@@ -168,7 +168,7 @@ export function FooterV7() {
               <li>
                 <LocalizedLink
                   to="/mentions-legales"
-                  className="text-[#78716C] hover:text-[#E0BB8A] transition-colors duration-300 text-sm"
+                  className="text-[#A8A29E] hover:text-[#E0BB8A] transition-colors duration-300 text-sm"
                 >
                   {language === "en" ? "Legal notice" : "Mentions légales"}
                 </LocalizedLink>
@@ -176,14 +176,14 @@ export function FooterV7() {
               <li>
                 <LocalizedLink
                   to="/politique-de-confidentialite"
-                  className="text-[#78716C] hover:text-[#E0BB8A] transition-colors duration-300 text-sm"
+                  className="text-[#A8A29E] hover:text-[#E0BB8A] transition-colors duration-300 text-sm"
                 >
                   {language === "en" ? "Privacy" : "Confidentialité"}
                 </LocalizedLink>
               </li>
             </ul>
           </nav>
-          <p className="text-[#78716C] text-sm">
+          <p className="text-[#A8A29E] text-sm">
             {language === "en"
               ? "Boutique coliving near Geneva."
               : "Coliving boutique près de Genève."}

@@ -1,4 +1,5 @@
 import { LocalizedLink } from "@/components/LocalizedLink";
+import { Scrim } from "@/components/Scrim";
 import { ArrowRight, ChevronDown, Home, Users, Heart, MapPin } from "lucide-react";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { STATS, STATS_DISPLAY, totalAvailable, totalAvailabilityLabel } from "@/data/stats";
@@ -15,7 +16,7 @@ export function HeroV7() {
   return (
     <>
       {/* ─── HERO — Full-bleed photo ─── */}
-      <section className="relative min-h-screen flex items-end pb-16 md:pb-20 overflow-hidden">
+      <section className="relative min-h-screen flex items-end pt-24 pb-16 md:pb-20 overflow-hidden">
         {/* Background image — full bleed */}
         <div className="absolute inset-0">
           <img
@@ -26,8 +27,8 @@ export function HeroV7() {
             height={1080}
             fetchPriority="high"
           />
-          {/* Gradient overlay — warm black, stronger for text readability */}
-          <div className="absolute inset-0 bg-gradient-to-t from-[#1C1917] via-[#1C1917]/60 to-black/30" />
+          {/* Voile dégradé réutilisable — lisibilité du texte sur photo (WCAG AA) */}
+          <Scrim />
         </div>
 
         {/* Content — aligned bottom-left */}
@@ -69,7 +70,7 @@ export function HeroV7() {
           </h1>
 
           {/* Description */}
-          <p className="text-base md:text-lg text-white/90 max-w-xl mb-6 leading-relaxed font-light">
+          <p className="text-base md:text-lg text-white max-w-xl mb-6 leading-relaxed font-light [text-shadow:0_2px_10px_rgba(0,0,0,0.55)]">
             {language === "en"
               ? "Your private room in a house with pool, 20 min from Geneva city center. All-inclusive from CHF 1,380/month."
               : "Ta chambre privée dans une maison avec piscine, à 20 min du centre de Genève. Tout inclus dès 1 380 CHF/mois."}
@@ -96,7 +97,7 @@ export function HeroV7() {
           </div>
 
           {/* Réassurance frais — visible sans scroll */}
-          <p className="text-sm text-white/75 max-w-xl mb-4 font-light">
+          <p className="text-sm text-white/90 max-w-xl mb-4 font-light [text-shadow:0_2px_10px_rgba(0,0,0,0.55)]">
             {language === "en"
               ? "Everything included — no application fee, no agency fee, no hidden costs."
               : "Tout est compris — pas de frais de dossier, pas d'honoraires d'agence, pas de frais cachés."}

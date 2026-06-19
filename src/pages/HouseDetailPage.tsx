@@ -1,5 +1,6 @@
 import { useLocation } from "react-router-dom";
 import { LocalizedLink } from "@/components/LocalizedLink";
+import { Scrim } from "@/components/Scrim";
 import { buildBreadcrumbSchema } from "@/lib/structuredData";
 import {
   MapPin,
@@ -1434,7 +1435,7 @@ export function HouseDetailPage() {
           <CarouselContent>
             {[house.image, ...house.gallery].map((img, index) => (
               <CarouselItem key={index}>
-                <div className="relative h-[50vh] md:h-[70vh]">
+                <div className="relative h-[60vh] md:h-[70vh]">
                   <img
                     src={img}
                     alt={`${house.name} coliving ${house.location} — ${language === "en" ? "premium colocation near Geneva" : "colocation premium près de Genève"} (${index + 1})`}
@@ -1444,7 +1445,7 @@ export function HouseDetailPage() {
                     height={1080}
                     {...(index === 0 ? { fetchPriority: "high" as const } : {})}
                   />
-                  <div className="absolute inset-0 bg-gradient-to-t from-[#FAF9F6] via-transparent to-transparent" />
+                  <Scrim />
                 </div>
               </CarouselItem>
             ))}
@@ -1477,7 +1478,7 @@ export function HouseDetailPage() {
                   obligatoire sur la page → affichée dans la section « À propos ». */}
             </div>
             <h1
-              className="text-5xl md:text-7xl mb-4 text-[#1C1917]"
+              className="text-4xl md:text-7xl mb-4 text-white [text-shadow:0_2px_12px_rgba(0,0,0,0.55)]"
               style={{ fontFamily: "DM Serif Display, serif" }}
             >
               {(() => {
@@ -1500,7 +1501,7 @@ export function HouseDetailPage() {
                 return h1[id]?.[language === "en" ? "en" : "fr"] ?? house.name;
               })()}
             </h1>
-            <div className="flex flex-wrap items-center gap-6 text-[#78716C] font-medium">
+            <div className="flex flex-wrap items-center gap-6 text-white/90 font-medium">
               <span className="flex items-center gap-2">
                 <MapPin size={18} className="text-[#D4A574]" />
                 {house.location}
@@ -1510,7 +1511,7 @@ export function HouseDetailPage() {
                 {house.capacity}
               </span>
               <span className="flex items-center gap-2">
-                <Maximize size={18} className="text-[#78716C]" />
+                <Maximize size={18} className="text-white/80" />
                 {house.specs.size}
               </span>
             </div>
