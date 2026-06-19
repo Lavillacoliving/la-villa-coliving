@@ -1,5 +1,6 @@
 // Features V9 - Stone & Brass
-import { Waves, Sofa, BedDouble, Users, CircleCheck, TreePine } from 'lucide-react';
+import { Waves, Sofa, BedDouble, Users, CircleCheck, TreePine, ArrowRight } from 'lucide-react';
+import { LocalizedLink } from '@/components/LocalizedLink';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { STATS } from '@/data/stats';
 
@@ -72,6 +73,14 @@ export function FeaturesV7() {
               ? `Bring your suitcase. We take care of everything else — ${STATS.includedItems} services covered in a single rent of CHF ${STATS.priceChf.toLocaleString('en')}/month.`
               : `Apportez votre valise. Nous nous occupons de tout le reste — ${STATS.includedItems} services couverts en un seul loyer de ${STATS.priceChf.toLocaleString('fr-FR')} CHF/mois.`}
           </p>
+          {/* Lien contextuel -> /tarifs (maillage interne) */}
+          <LocalizedLink
+            to="/tarifs"
+            className="inline-flex items-center gap-1.5 mt-6 font-semibold text-[#44403C] underline decoration-[#D4A574] decoration-2 underline-offset-4 hover:text-[#1C1917] transition-colors"
+          >
+            {language === 'en' ? 'See full pricing' : 'Voir le détail des tarifs'}
+            <ArrowRight className="w-4 h-4" />
+          </LocalizedLink>
         </div>
 
         {/* Features grid */}

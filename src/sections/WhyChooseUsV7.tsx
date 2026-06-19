@@ -1,5 +1,6 @@
 // WhyChooseUs V9 - Stone & Brass
-import { Wallet, Heart, CalendarDays, Trophy, Sparkles, Users, MapPin } from "lucide-react";
+import { Wallet, Heart, CalendarDays, Trophy, Sparkles, Users, MapPin, ArrowRight } from "lucide-react";
+import { LocalizedLink } from "@/components/LocalizedLink";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { STATS } from "@/data/stats";
 
@@ -96,6 +97,15 @@ export function WhyChooseUsV7() {
                 </div>
               ))}
             </div>
+
+            {/* Lien contextuel -> /services (maillage interne) */}
+            <LocalizedLink
+              to="/services"
+              className="inline-flex items-center gap-1.5 mt-8 font-semibold text-[#44403C] underline decoration-[#D4A574] decoration-2 underline-offset-4 hover:text-[#1C1917] transition-colors"
+            >
+              {language === "en" ? "Discover our services" : "Découvrir nos services"}
+              <ArrowRight className="w-4 h-4" />
+            </LocalizedLink>
           </div>
         </div>
       </div>

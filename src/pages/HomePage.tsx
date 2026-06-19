@@ -32,10 +32,13 @@ export function HomePage() {
         jsonLd={buildHomeLodgingBusinessSchema(language === "en" ? "en" : "fr")}
       />
       <Hero />
+      {/* Nos maisons remonté juste après le bandeau "Piscine, sauna & salle de sport"
+          (fin du Hero) : le couloir Nos 3 Maisons -> maison -> candidature génère
+          ~46 % des candidatures (GA4). */}
+      <HousesPreview />
       <TrustBadges />
       <WhyChooseUs />
       <Features />
-      <HousesPreview />
       <TestimonialsCarousel />
       <HowToJoin />
       <LatestBlogV7 />

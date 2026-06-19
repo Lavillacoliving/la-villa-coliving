@@ -347,65 +347,6 @@ export function ColocationGenevePage() {
         </div>
       </section>
 
-      {/* ===== LE MARCHÉ DE LA COLOCATION À GENÈVE EN 2026 ===== */}
-      <section className="py-24 lg:py-32 bg-white">
-        <div className="max-w-5xl mx-auto px-6">
-          <h2
-            className="text-3xl md:text-4xl font-light text-[#1C1917] mb-4 text-center"
-            style={{ fontFamily: "DM Serif Display, serif" }}
-          >
-            {language === "en"
-              ? "The Shared Housing Market in Geneva in 2026"
-              : "Le Marché de la Colocation à Genève en 2026"}
-          </h2>
-          <p className="text-[#57534E] text-center max-w-3xl mx-auto mb-12">
-            {language === "en"
-              ? "Understanding the Geneva rental landscape helps you make the right housing choice."
-              : "Comprendre le paysage locatif genevois t'aide à faire le bon choix de logement."}
-          </p>
-
-          <div className="prose prose-lg max-w-none text-[#57534E] leading-relaxed space-y-6">
-            {language === "en" ? (
-              <>
-                <p>
-                  Geneva is one of the tightest rental markets in Europe. With a vacancy rate consistently below 1%, finding an apartment — let alone an affordable one — is a significant challenge for anyone relocating to the area. The city's position as a hub for international organizations, finance, and technology drives relentless demand for housing, while supply remains structurally constrained by limited buildable land and strict urban planning regulations.
-                </p>
-                <p>
-                  In 2026, the average rent for a studio in Geneva ranges from 1,800 to 2,500 CHF per month, unfurnished and excluding utilities. For a one-bedroom apartment, expect to pay 2,200 to 3,200 CHF. These prices make Geneva one of the most expensive cities in the world for housing, on par with Zurich, London, and New York. Even finding a room in a traditional shared flat in Geneva — a colocation — typically costs between 1,000 and 1,500 CHF per month, with no services included: no cleaning, no furnished common areas, and often aging infrastructure.
-                </p>
-                <p>
-                  This situation has fueled the rise of cross-border living. The French side of the Greater Geneva area — towns like Annemasse, Ville-la-Grand, Ambilly, and Saint-Julien-en-Genevois — offers rents that are 30 to 50% lower than in Geneva itself. A cross-border worker (frontalier) earning a Swiss salary while living in France enjoys a dramatic improvement in purchasing power. The Leman Express rail link, which connects Annemasse to Geneva Cornavin station in just 20 minutes, has made this lifestyle more practical than ever. Today, around 116,200 frontaliers commute daily from France to work in the canton of Geneva (OCSTAT, end of 2025).
-                </p>
-                <p>
-                  Within this context, coliving has emerged as a compelling alternative to traditional shared housing near Geneva. Unlike a standard colocation where tenants share an apartment and manage everything themselves, coliving offers a professionally managed environment with curated communities, fully furnished rooms, and comprehensive services included in a single monthly payment. At La Villa Coliving, residents enjoy premium shared housing from 1,380 CHF per month — all inclusive: rent, utilities, fiber internet, housekeeping twice a week, pool, gym, sauna, weekly yoga and sports classes, monthly community events, and community dinners. This represents exceptional value compared to both a Geneva studio and a traditional cross-border colocation.
-                </p>
-                <p>
-                  For professionals relocating to work in Geneva — whether as frontaliers, expats joining international organizations, or remote workers seeking a vibrant community — coliving on the French border offers the ideal balance: Swiss-level salaries with French-side affordability, premium amenities, and a ready-made social network. The demand for shared housing in Geneva and its surrounding area continues to grow, and modern coliving spaces like La Villa are leading this transformation.
-                </p>
-              </>
-            ) : (
-              <>
-                <p>
-                  Genève est l'un des marchés locatifs les plus tendus d'Europe. Avec un taux de vacance constamment inférieur à 1%, trouver un appartement — a fortiori abordable — représente un défi majeur pour quiconque s'installe dans la région. La position de la ville comme centre d'organisations internationales, de finance et de technologie génère une demande incessante de logements, alors que l'offre reste structurellement limitée par le manque de terrains constructibles et des réglementations urbanistiques strictes.
-                </p>
-                <p>
-                  En 2026, le loyer moyen pour un studio à Genève se situe entre 1 800 et 2 500 CHF par mois, non meublé et hors charges. Pour un deux-pièces, compte 2 200 à 3 200 CHF. Ces prix font de Genève l'une des villes les plus chères au monde pour se loger, au même niveau que Zurich, Londres ou New York. Même une chambre en colocation à Genève coûte généralement entre 1 000 et 1 500 CHF par mois, sans aucun service inclus : pas de ménage, pas d'espaces communs meublés, et souvent des infrastructures vieillissantes.
-                </p>
-                <p>
-                  Cette situation a alimenté l'essor de la vie transfrontalière. Le côté français du Grand Genève — des communes comme Annemasse, Ville-la-Grand, Ambilly ou Saint-Julien-en-Genevois — offre des loyers 30 à 50% moins chers qu'à Genève. Un frontalier touchant un salaire suisse tout en vivant en France bénéficie d'un gain de pouvoir d'achat considérable. Le Léman Express, qui relie Annemasse à la gare de Genève Cornavin en seulement 20 minutes, a rendu ce mode de vie plus pratique que jamais. Aujourd'hui, près de 116 200 frontaliers font le trajet quotidien entre la France et le canton de Genève (OCSTAT, fin 2025).
-                </p>
-                <p>
-                  Dans ce contexte, le coliving s'impose comme une alternative séduisante à la colocation classique près de Genève. Contrairement à une colocation traditionnelle où les locataires partagent un appartement et gèrent tout eux-mêmes, le coliving propose un environnement géré professionnellement avec des communautés sélectionnées, des chambres entièrement meublées et des services complets inclus dans un paiement mensuel unique. Chez La Villa Coliving, les résidents profitent d'une colocation premium dès 1 380 CHF par mois — tout compris : loyer, charges, fibre internet, ménage deux fois par semaine, piscine, gym, sauna, cours de yoga et sport hebdomadaires, événements communautaires mensuels et dîners communautaires. Cela représente un rapport qualité-prix exceptionnel comparé à un studio à Genève ou une colocation frontalière classique.
-                </p>
-                <p>
-                  Pour les professionnels qui s'installent pour travailler à Genève — qu'ils soient frontaliers, expatriés rejoignant des organisations internationales ou télétravailleurs en quête d'une communauté dynamique — la colocation côté frontière française offre l'équilibre idéal : salaires suisses avec des coûts côté France, prestations premium et un réseau social prêt à l'emploi. La demande de colocation à Genève et dans sa périphérie continue de croître, et les espaces de coliving modernes comme La Villa sont à la pointe de cette transformation.
-                </p>
-              </>
-            )}
-          </div>
-        </div>
-      </section>
-
       {/* ===== NOS 3 RÉSIDENCES ===== */}
       <section className="py-24 lg:py-32 bg-[#FAF9F6]">
         <div className="max-w-5xl mx-auto px-6">
@@ -523,6 +464,65 @@ export function ColocationGenevePage() {
               {language === "en" ? "Explore all houses in detail" : "Explorer toutes nos maisons en détail"}
               <ArrowRight className="w-4 h-4" />
             </LocalizedLink>
+          </div>
+        </div>
+      </section>
+
+      {/* ===== LE MARCHÉ DE LA COLOCATION À GENÈVE EN 2026 ===== */}
+      <section className="py-24 lg:py-32 bg-white">
+        <div className="max-w-5xl mx-auto px-6">
+          <h2
+            className="text-3xl md:text-4xl font-light text-[#1C1917] mb-4 text-center"
+            style={{ fontFamily: "DM Serif Display, serif" }}
+          >
+            {language === "en"
+              ? "The Shared Housing Market in Geneva in 2026"
+              : "Le Marché de la Colocation à Genève en 2026"}
+          </h2>
+          <p className="text-[#57534E] text-center max-w-3xl mx-auto mb-12">
+            {language === "en"
+              ? "Understanding the Geneva rental landscape helps you make the right housing choice."
+              : "Comprendre le paysage locatif genevois t'aide à faire le bon choix de logement."}
+          </p>
+
+          <div className="prose prose-lg max-w-none text-[#57534E] leading-relaxed space-y-6">
+            {language === "en" ? (
+              <>
+                <p>
+                  Geneva is one of the tightest rental markets in Europe. With a vacancy rate consistently below 1%, finding an apartment — let alone an affordable one — is a significant challenge for anyone relocating to the area. The city's position as a hub for international organizations, finance, and technology drives relentless demand for housing, while supply remains structurally constrained by limited buildable land and strict urban planning regulations.
+                </p>
+                <p>
+                  In 2026, the average rent for a studio in Geneva ranges from 1,800 to 2,500 CHF per month, unfurnished and excluding utilities. For a one-bedroom apartment, expect to pay 2,200 to 3,200 CHF. These prices make Geneva one of the most expensive cities in the world for housing, on par with Zurich, London, and New York. Even finding a room in a traditional shared flat in Geneva — a colocation — typically costs between 1,000 and 1,500 CHF per month, with no services included: no cleaning, no furnished common areas, and often aging infrastructure.
+                </p>
+                <p>
+                  This situation has fueled the rise of cross-border living. The French side of the Greater Geneva area — towns like Annemasse, Ville-la-Grand, Ambilly, and Saint-Julien-en-Genevois — offers rents that are 30 to 50% lower than in Geneva itself. A cross-border worker (frontalier) earning a Swiss salary while living in France enjoys a dramatic improvement in purchasing power. The Leman Express rail link, which connects Annemasse to Geneva Cornavin station in just 20 minutes, has made this lifestyle more practical than ever. Today, around 116,200 frontaliers commute daily from France to work in the canton of Geneva (OCSTAT, end of 2025).
+                </p>
+                <p>
+                  Within this context, coliving has emerged as a compelling alternative to traditional shared housing near Geneva. Unlike a standard colocation where tenants share an apartment and manage everything themselves, coliving offers a professionally managed environment with curated communities, fully furnished rooms, and comprehensive services included in a single monthly payment. At La Villa Coliving, residents enjoy premium shared housing from 1,380 CHF per month — all inclusive: rent, utilities, fiber internet, housekeeping twice a week, pool, gym, sauna, weekly yoga and sports classes, monthly community events, and community dinners. This represents exceptional value compared to both a Geneva studio and a traditional cross-border colocation.
+                </p>
+                <p>
+                  For professionals relocating to work in Geneva — whether as frontaliers, expats joining international organizations, or remote workers seeking a vibrant community — coliving on the French border offers the ideal balance: Swiss-level salaries with French-side affordability, premium amenities, and a ready-made social network. The demand for shared housing in Geneva and its surrounding area continues to grow, and modern coliving spaces like La Villa are leading this transformation.
+                </p>
+              </>
+            ) : (
+              <>
+                <p>
+                  Genève est l'un des marchés locatifs les plus tendus d'Europe. Avec un taux de vacance constamment inférieur à 1%, trouver un appartement — a fortiori abordable — représente un défi majeur pour quiconque s'installe dans la région. La position de la ville comme centre d'organisations internationales, de finance et de technologie génère une demande incessante de logements, alors que l'offre reste structurellement limitée par le manque de terrains constructibles et des réglementations urbanistiques strictes.
+                </p>
+                <p>
+                  En 2026, le loyer moyen pour un studio à Genève se situe entre 1 800 et 2 500 CHF par mois, non meublé et hors charges. Pour un deux-pièces, compte 2 200 à 3 200 CHF. Ces prix font de Genève l'une des villes les plus chères au monde pour se loger, au même niveau que Zurich, Londres ou New York. Même une chambre en colocation à Genève coûte généralement entre 1 000 et 1 500 CHF par mois, sans aucun service inclus : pas de ménage, pas d'espaces communs meublés, et souvent des infrastructures vieillissantes.
+                </p>
+                <p>
+                  Cette situation a alimenté l'essor de la vie transfrontalière. Le côté français du Grand Genève — des communes comme Annemasse, Ville-la-Grand, Ambilly ou Saint-Julien-en-Genevois — offre des loyers 30 à 50% moins chers qu'à Genève. Un frontalier touchant un salaire suisse tout en vivant en France bénéficie d'un gain de pouvoir d'achat considérable. Le Léman Express, qui relie Annemasse à la gare de Genève Cornavin en seulement 20 minutes, a rendu ce mode de vie plus pratique que jamais. Aujourd'hui, près de 116 200 frontaliers font le trajet quotidien entre la France et le canton de Genève (OCSTAT, fin 2025).
+                </p>
+                <p>
+                  Dans ce contexte, le coliving s'impose comme une alternative séduisante à la colocation classique près de Genève. Contrairement à une colocation traditionnelle où les locataires partagent un appartement et gèrent tout eux-mêmes, le coliving propose un environnement géré professionnellement avec des communautés sélectionnées, des chambres entièrement meublées et des services complets inclus dans un paiement mensuel unique. Chez La Villa Coliving, les résidents profitent d'une colocation premium dès 1 380 CHF par mois — tout compris : loyer, charges, fibre internet, ménage deux fois par semaine, piscine, gym, sauna, cours de yoga et sport hebdomadaires, événements communautaires mensuels et dîners communautaires. Cela représente un rapport qualité-prix exceptionnel comparé à un studio à Genève ou une colocation frontalière classique.
+                </p>
+                <p>
+                  Pour les professionnels qui s'installent pour travailler à Genève — qu'ils soient frontaliers, expatriés rejoignant des organisations internationales ou télétravailleurs en quête d'une communauté dynamique — la colocation côté frontière française offre l'équilibre idéal : salaires suisses avec des coûts côté France, prestations premium et un réseau social prêt à l'emploi. La demande de colocation à Genève et dans sa périphérie continue de croître, et les espaces de coliving modernes comme La Villa sont à la pointe de cette transformation.
+                </p>
+              </>
+            )}
           </div>
         </div>
       </section>
