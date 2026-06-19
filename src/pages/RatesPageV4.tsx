@@ -554,7 +554,7 @@ export function RatesPageV4() {
             >
               {language === "en"
                 ? "Or ask us a question directly on WhatsApp →"
-                : "Ou posez-nous directement une question sur WhatsApp →"}
+                : "Ou pose-nous directement une question sur WhatsApp →"}
             </a>
           </div>
         </div>
@@ -590,8 +590,8 @@ export function RatesPageV4() {
                 <div>
                   <h3 className="text-xl font-medium text-white">
                     {language === "en"
-                      ? "Most coliving operators"
-                      : "Ailleurs sur le marché du coliving"}
+                      ? "Most coliving or shared-housing operators"
+                      : "Ailleurs sur le marché du coliving ou de la colocation"}
                   </h3>
                   <p className="text-sm text-[#b3b2b2]">
                     {language === "en"
@@ -992,8 +992,8 @@ export function RatesPageV4() {
               const monthFr = next.toLocaleDateString("fr-FR", { month: "long", year: "numeric" });
               const monthEn = next.toLocaleDateString("en-US", { month: "long", year: "numeric" });
               return language === "en"
-                ? `Save ${monthlySavings} CHF/month and join 150+ happy colivers. Limited spots for ${monthEn}.`
-                : `Économise ${monthlySavings} CHF/mois et rejoins 150+ colivers heureux. Places limitées pour ${monthFr}.`;
+                ? `Save ${monthlySavings} CHF/month and join 150+ happy residents. Limited spots for ${monthEn}.`
+                : `Économise ${monthlySavings} CHF/mois et rejoins 150+ résidents heureux. Places limitées pour ${monthFr}.`;
             })()}
           </p>
           <LocalizedLink

@@ -208,7 +208,7 @@ export function HeroV7() {
             <p className="text-white/60 max-w-2xl mx-auto text-base">
               {language === "en"
                 ? `This level of amenities is unheard of in coliving. Most don't even have a pool. We have one in all three houses — plus private yoga, fitness classes, pizza nights, and ${STATS.includedItems - 3} more services included.`
-                : `Ce niveau de prestations est inédit en coliving. La plupart n'ont même pas de piscine. Nous en avons une dans les 3 maisons — plus yoga privé, cours de fitness, pizza party et ${STATS.includedItems - 3} autres services inclus.`}
+                : `Ce niveau de prestations est inédit en coliving. La plupart n'ont même pas de piscine. Nous en avons une dans chacune de nos 3 maisons — plus cours de yoga, cours de fitness, pizza party et ${STATS.includedItems - 3} autres services inclus.`}
             </p>
           </div>
 
@@ -271,7 +271,7 @@ export function HeroV7() {
           <p className="text-center text-white/50 text-sm mt-10 max-w-lg mx-auto">
             {language === "en"
               ? `All of this is included in your rent. CHF ${STATS.priceChf.toLocaleString('en')}/month. No paid add-ons. No application fee, no agency fee. No hidden fees. Ever.`
-              : `Tout ceci est inclus dans votre loyer. ${STATS.priceChf.toLocaleString('fr-FR')} CHF/mois. Pas d'options payantes. Pas de frais de dossier, pas d'honoraires d'agence. Pas de frais cachés. Jamais.`}
+              : `Tout ceci est inclus dans ton loyer. ${STATS.priceChf.toLocaleString('fr-FR')} CHF/mois. Pas d'options payantes. Pas de frais de dossier, pas d'honoraires d'agence. Pas de frais cachés. Jamais.`}
           </p>
         </div>
 

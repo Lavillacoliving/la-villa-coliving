@@ -326,7 +326,7 @@ export function HousesPageV4() {
           >
             {language === "en"
               ? "Not Sure Which One?"
-              : "Pas Sûr de Laquelle Choisir ?"}
+              : "Pas certain de ton choix ?"}
           </h2>
           <p className="text-lg text-white/60 max-w-xl mx-auto mb-8">
             {language === "en"
