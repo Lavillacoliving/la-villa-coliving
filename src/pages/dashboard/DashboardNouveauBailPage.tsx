@@ -559,6 +559,8 @@ function generateContractHTML(data: ContractData): string {
           <strong>La location prend effet le <span style="color:#c9a96e;">${fDate(form.entry_date)}</span> pour une durée de ${durationInWordsPreview(form.lease_duration_months || 12)} (${form.lease_duration_months || 12}) mois, soit jusqu'au <span style="color:#c9a96e;">${fDate(exit_date)}</span>.</strong>
           <br/><br/>
           À l'expiration de cette période, le contrat se renouvelle par reconduction tacite pour des périodes successives de ${durationInWordsPreview(form.lease_duration_months || 12)} mois, sauf dénonciation notifiée au moins un mois avant l'expiration du contrat par le locataire, ou trois mois par le bailleur.
+          <br/><br/>
+          Conformément à l'article 25-8 de la loi n° 89-462 du 6 juillet 1989, le locataire peut donner congé à tout moment, avec un préavis d'un mois.
         </div>
 
         <div class="page-break"></div>
