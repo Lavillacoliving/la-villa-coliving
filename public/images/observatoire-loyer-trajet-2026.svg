@@ -1,4 +1,4 @@
-<svg width="1200" height="630" viewBox="0 0 1200 630" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Observatoire du logement frontalier — un studio coûte souvent moitié moins à 8 minutes de Genève côté France">
+<svg width="1200" height="630" viewBox="0 0 1200 630" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Observatoire du logement frontalier 2026 — loyer d'un studio à Genève-Eaux-Vives (≈1 600–2 000 CHF) versus Annemasse (≈990 €), à 8 minutes en Léman Express">
   <rect width="1200" height="630" fill="#FAF9F6"/>
   <rect x="0" y="0" width="1200" height="10" fill="#D4A574"/>
   <text x="64" y="84" font-family="Helvetica, Arial, sans-serif" font-size="19" letter-spacing="3" fill="#D4A574">OBSERVATOIRE DU LOGEMENT FRONTALIER · ÉDITION 2026</text>
@@ -8,8 +8,8 @@
   <text x="64" y="292" font-family="Helvetica, Arial, sans-serif" font-size="24" fill="#57534E">Le loyer réel d'un studio croisé au temps de trajet,</text>
   <text x="64" y="326" font-family="Helvetica, Arial, sans-serif" font-size="24" fill="#57534E">commune par commune du Genevois français.</text>
 
-  <!-- La falaise de la frontière -->
-  <g>
+  <!-- Comparaison frontière (le même studio de part et d'autre) -->
+  <g transform="translate(0,26)">
     <text x="245" y="430" text-anchor="middle" font-family="Helvetica, Arial, sans-serif" font-size="34" font-weight="bold" fill="#1C1917">≈ 1 600–2 000 CHF</text>
     <text x="245" y="462" text-anchor="middle" font-family="Helvetica, Arial, sans-serif" font-size="18" fill="#57534E">Genève-Eaux-Vives · studio</text>
 
@@ -20,8 +20,6 @@
     <text x="900" y="430" text-anchor="middle" font-family="Helvetica, Arial, sans-serif" font-size="40" font-weight="bold" fill="#1C1917">≈ 990 €</text>
     <text x="900" y="462" text-anchor="middle" font-family="Helvetica, Arial, sans-serif" font-size="18" fill="#57534E">Annemasse · studio</text>
   </g>
-
-  <text x="600" y="528" text-anchor="middle" font-family="Georgia, 'Times New Roman', serif" font-size="30" fill="#A0623C">Souvent moitié moins, de l'autre côté de la frontière.</text>
 
   <line x1="64" y1="566" x2="1136" y2="566" stroke="#E7E5E4" stroke-width="1"/>
   <text x="64" y="600" font-family="Helvetica, Arial, sans-serif" font-size="20" font-weight="bold" fill="#1C1917">La Villa Coliving</text>

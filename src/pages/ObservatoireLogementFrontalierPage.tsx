@@ -190,7 +190,7 @@ export function ObservatoireLogementFrontalierPage() {
             ? "Where to live near Geneva on the French side within your budget? 17 towns ranked by real studio rent, commute time and Léman Express frequency. A studio is nearly half the price one stop across the border. Free open data."
             : "Où se loger près de Genève côté France dans ton budget ? 17 communes classées par loyer studio réel, temps de trajet et cadence du Léman Express. Un studio coûte près de moitié moins de l'autre côté de la frontière. Données ouvertes."
         }
-        image={`${SITE}/images/observatoire-loyer-trajet-2026.svg`}
+        image={`${SITE}/images/observatoire-loyer-trajet-2026.png`}
         type="article"
         jsonLd={datasetSchema}
       />

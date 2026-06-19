@@ -33,6 +33,10 @@ export function FooterV7() {
     },
     { path: "/blog", label: "Blog" },
     {
+      path: "/observatoire-logement-frontalier-geneve",
+      label: language === "en" ? "Housing Observatory" : "Observatoire du logement",
+    },
+    {
       path: "/investisseurs",
       label: language === "en" ? "Investors" : "Investisseurs",
     },
