@@ -35,7 +35,7 @@ export function HousesPageV4() {
         language === "en"
           ? "A 300 m² townhouse with urban sophistication. Year-round heated indoor pool, Finnish sauna, gym, and spacious designer rooms."
           : "Maison de ville de 300 m² avec sophistication urbaine. Piscine intérieure chauffée toute l'année, sauna finlandais, gym et chambres design spacieuses.",
-      image: "/images/le loft jardin.webp",
+      image: "/images/la villa coliving le loft piscine.webp",
       alt: language === "en"
         ? "Le Loft — urban coliving with indoor pool and designer rooms in Ambilly near Geneva"
         : "Le Loft — colocation urbaine avec piscine intérieure et chambres design à Ambilly près de Genève",
