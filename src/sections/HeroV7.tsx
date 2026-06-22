@@ -249,7 +249,7 @@ export function HeroV7() {
               <div key={index} className="group relative aspect-[3/4] rounded-2xl overflow-hidden cursor-pointer">
                 <img
                   src={item.image}
-                  alt={item.title}
+                  alt={`${item.title}${language === "en" ? " — premium coliving near Geneva" : " — coliving premium près de Genève"}`}
                   className="w-full h-full object-cover group-hover:scale-[1.03] transition-transform duration-500"
                   loading="lazy"
                   width={400}
