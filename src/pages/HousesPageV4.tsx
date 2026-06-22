@@ -127,7 +127,7 @@ export function HousesPageV4() {
   return (
     <main className="relative pt-16">
       <SEO
-        title={language === "en" ? "Our 3 Coliving Houses Near Geneva" : "Nos 3 Maisons Coliving près de Genève"}
+        title={language === "en" ? "Our 3 Coliving Houses Near Geneva" : "Colocation en maison près de Genève"}
         description={language === "en"
           ? "La Villa, Le Loft, Le Lodge — 3 premium houses with pool, sauna & gym. 29 all-inclusive furnished rooms from CHF 1,380/month."
           : "La Villa, Le Loft, Le Lodge — 3 maisons premium avec piscine, sauna et gym. 29 chambres privées tout inclus dès 1 380 CHF/mois."}
@@ -155,8 +155,8 @@ export function HousesPageV4() {
           </h1>
           <p className="text-xl text-[#57534E] max-w-2xl mx-auto">
             {language === "en"
-              ? "Each designed for modern community living. Choose the one that fits your lifestyle."
-              : "Chacune conçue pour la vie communautaire moderne. Choisissez celle qui correspond à votre style de vie."}
+              ? "Three houses in premium coliving near Geneva — each designed for modern community living."
+              : "Trois maisons en colocation premium près de Genève — chacune pensée pour la vie communautaire moderne."}
           </p>
         </div>
       </section>

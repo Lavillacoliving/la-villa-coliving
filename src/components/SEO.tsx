@@ -97,22 +97,34 @@ export function SEO({
       <meta property="twitter:description" content={siteDescription} />
       <meta property="twitter:image" content={image} />
 
-      {/* Structured Data - Organization (default) */}
+      {/* Structured Data — LocalBusiness (défaut sur toutes les pages) — SEO local.
+          PAS d'aggregateRating (la note 4,9/5 = NPS interne, non balisable). */}
       <script type="application/ld+json">
         {JSON.stringify({
           "@context": "https://schema.org",
-          "@type": "Organization",
+          "@type": "LocalBusiness",
           name: "La Villa Coliving",
           url: "https://www.lavillacoliving.com",
           logo: "https://www.lavillacoliving.com/logos/logo-full.png",
+          image: "https://www.lavillacoliving.com/images/villa_portrait.webp",
           description: siteDescription,
+          telephone: "+33664315134",
+          email: "contact@lavillacoliving.com",
+          priceRange: language === "en" ? "From CHF 1,380/month" : "Dès 1 380 CHF/mois",
           address: {
             "@type": "PostalAddress",
+            streetAddress: "34 rue du Foron",
             addressLocality: "Ville-la-Grand",
             addressRegion: "Haute-Savoie",
             postalCode: "74100",
             addressCountry: "FR",
           },
+          geo: {
+            "@type": "GeoCoordinates",
+            latitude: 46.2031,
+            longitude: 6.2475,
+          },
+          areaServed: ["Genève", "Annemasse", "Ville-la-Grand", "Ambilly", "Grand Genève"],
           contactPoint: {
             "@type": "ContactPoint",
             email: "contact@lavillacoliving.com",
