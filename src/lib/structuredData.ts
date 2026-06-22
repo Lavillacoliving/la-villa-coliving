@@ -20,6 +20,8 @@ export interface HouseInfo {
   streetAddress: string;
   addressLocality: string;
   postalCode: string;
+  /** Coordonnées au centre de la commune (à affiner en rooftop-exact via Google Maps si besoin). */
+  geo: { lat: number; lng: number };
 }
 
 /** Les 3 maisons — source unique pour le schema (adresses confirmées). */
@@ -31,6 +33,7 @@ export const HOUSES: HouseInfo[] = [
     streetAddress: "34 rue du Foron",
     addressLocality: "Ville-la-Grand",
     postalCode: "74100",
+    geo: { lat: 46.2031, lng: 6.2475 },
   },
   {
     slug: "leloft",
@@ -39,6 +42,7 @@ export const HOUSES: HouseInfo[] = [
     streetAddress: "1 rue des Marronniers",
     addressLocality: "Ambilly",
     postalCode: "74100",
+    geo: { lat: 46.194, lng: 6.223 },
   },
   {
     slug: "lelodge",
@@ -47,6 +51,7 @@ export const HOUSES: HouseInfo[] = [
     streetAddress: "8 rue de Romagny",
     addressLocality: "Annemasse",
     postalCode: "74100",
+    geo: { lat: 46.1958, lng: 6.2364 },
   },
 ];
 
@@ -96,6 +101,7 @@ export function buildHomeLodgingBusinessSchema(language: "fr" | "en" = "fr"): Re
       { "@type": "LocationFeatureSpecification", name: en ? "Common areas cleaning included" : "Ménage des parties communes inclus", value: true },
     ],
     sameAs: ["https://www.instagram.com/lavillacoliving/"],
+    geo: { "@type": "GeoCoordinates", latitude: HOUSES[0].geo.lat, longitude: HOUSES[0].geo.lng },
     department: HOUSES.map((h) => ({
       "@type": "LodgingBusiness",
       name: h.name,
@@ -107,6 +113,7 @@ export function buildHomeLodgingBusinessSchema(language: "fr" | "en" = "fr"): Re
         postalCode: h.postalCode,
         addressCountry: "FR",
       },
+      geo: { "@type": "GeoCoordinates", latitude: h.geo.lat, longitude: h.geo.lng },
     })),
   };
 }

@@ -1355,8 +1355,8 @@ export function HouseDetailPage() {
           // Titles compacts (≤ 40c) — le suffix " | La Villa Coliving" (~21c) est ajouté par <SEO>.
           // Cibles SEO : /lelodge → "colocation annemasse" (880/mois), /lavilla et /leloft → brand + ville.
           const titles: Record<string, { en: string; fr: string }> = {
-            lavilla: { en: "La Villa — 10 rooms in Ville-la-Grand", fr: "La Villa — 10 chambres à Ville-la-Grand" },
-            leloft:  { en: "Le Loft — 7 rooms in Ambilly",          fr: "Le Loft — 7 chambres à Ambilly" },
+            lavilla: { en: "La Villa — 10 rooms in Ville-la-Grand", fr: "Colocation à Ville-la-Grand — coliving" },
+            leloft:  { en: "Le Loft — 7 rooms in Ambilly",          fr: "Colocation à Ambilly — coliving tout inclus" },
             lelodge: { en: "Le Lodge — 12 rooms in Annemasse",       fr: "Le Lodge — 12 chambres à Annemasse" },
           };
           return titles[id]?.[language === "en" ? "en" : "fr"]
@@ -1486,11 +1486,11 @@ export function HouseDetailPage() {
                 const h1: Record<string, { en: string; fr: string }> = {
                   lavilla: {
                     en: "La Villa — Coliving 10 rooms in Ville-la-Grand",
-                    fr: "La Villa — Coliving 10 chambres à Ville-la-Grand",
+                    fr: "La Villa : la colocation à Ville-la-Grand, version coliving premium",
                   },
                   leloft: {
                     en: "Le Loft — Coliving 7 rooms in Ambilly",
-                    fr: "Le Loft — Coliving 7 chambres à Ambilly",
+                    fr: "Le Loft : la colocation à Ambilly, version coliving premium",
                   },
                   lelodge: {
                     en: "Le Lodge — Coliving 12 rooms in Annemasse",

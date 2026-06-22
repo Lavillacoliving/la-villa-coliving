@@ -83,16 +83,16 @@ export function FAQPageV4() {
             {language === "en" ? "Help Center" : "Centre d'Aide"}
           </span>
           <h1
-            className="text-5xl md:text-6xl lg:text-7xl font-light text-[#1C1917] mb-6"
+            className="text-3xl md:text-4xl lg:text-5xl font-light text-[#1C1917] mb-6"
             style={{ fontFamily: "DM Serif Display, serif" }}
           >
             {language === "en" ? (
               <>
-                Questions<span className="text-[#44403C]">?</span>
+                FAQ — Coliving &amp; shared housing near Geneva
               </>
             ) : (
               <>
-                Des Questions<span className="text-[#44403C]">?</span>
+                FAQ — Coliving &amp; colocation près de Genève
               </>
             )}
           </h1>
