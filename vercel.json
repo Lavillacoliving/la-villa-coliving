@@ -145,6 +145,10 @@
       "destination": "/prerendered/en-politique-de-confidentialite.html"
     },
     {
+      "source": "/blog/salaire-suisse-net-frontalier-2026",
+      "destination": "/prerendered/blog-salaire-suisse-net-frontalier-2026.html"
+    },
+    {
       "source": "/blog/guide-ressources-frontalier-geneve",
       "destination": "/prerendered/blog-guide-ressources-frontalier-geneve.html"
     },
@@ -271,6 +275,10 @@
     {
       "source": "/blog/living-in-france-working-in-geneva",
       "destination": "/prerendered/blog-living-in-france-working-in-geneva.html"
+    },
+    {
+      "source": "/en/blog/salaire-suisse-net-frontalier-2026",
+      "destination": "/prerendered/en-blog-salaire-suisse-net-frontalier-2026.html"
     },
     {
       "source": "/en/blog/guide-ressources-frontalier-geneve",
