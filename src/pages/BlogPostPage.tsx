@@ -499,7 +499,7 @@ export function BlogPostPage() {
             {[
               { slug: "lavilla", labelFr: "La Villa", labelEn: "La Villa", img: "/images/la villa.webp", descFr: "10 chambres · piscine · jardin", descEn: "10 rooms · pool · garden" },
               { slug: "lelodge", labelFr: "Le Lodge", labelEn: "Le Lodge", img: "/images/le lodge.webp", descFr: "12 chambres · sauna · gym", descEn: "12 rooms · sauna · gym" },
-              { slug: "leloft", labelFr: "Le Loft", labelEn: "Le Loft", img: "/images/le loft glamour.webp", descFr: "7 chambres · home cinéma", descEn: "7 rooms · home cinema" },
+              { slug: "leloft", labelFr: "Le Loft", labelEn: "Le Loft", img: "/images/la villa coliving le loft piscine.webp", descFr: "7 chambres · piscine intérieure", descEn: "7 rooms · indoor pool" },
             ].map((h) => (
               <LocalizedLink
                 key={h.slug}

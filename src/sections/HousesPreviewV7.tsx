@@ -32,7 +32,7 @@ export function HousesPreviewV7() {
       name: "Le Loft",
       location: "Ambilly",
       residents: "7",
-      image: "/images/le loft jardin.webp",
+      image: "/images/la villa coliving le loft piscine.webp",
       description: language === "en"
         ? "20 min from Geneva city center by tram. Year-round heated indoor pool, Finnish sauna."
         : "20 min du centre de Genève en tram. Piscine intérieure chauffée toute l'année, sauna finlandais.",

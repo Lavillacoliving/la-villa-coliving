@@ -453,7 +453,7 @@ function getHousesData(lang: string): Record<string, HouseData> {
     longDescription: isEn
       ? "Le Loft brings urban sophistication to coliving. This stunning 300 m² townhouse in Ambilly is the most intimate of our three houses, with just 7 residents. Its year-round heated indoor pool — virtually unique in European coliving — is the centerpiece of this exceptional property. The Finnish sauna, fully equipped gym, designer interiors, outdoor kitchen with TV, and spacious terraces make Le Loft ideal for those who appreciate the finer things while valuing genuine community."
       : "Le Loft incarne la sophistication urbaine du coliving. Cette maison de ville de 300 m² à Ambilly est la plus intimiste de nos trois maisons, avec seulement 7 résidents. Sa piscine intérieure chauffée toute l'année — quasi unique en coliving européen — est la pièce maîtresse de ce bien d'exception. Le sauna finlandais, la salle de sport équipée, les intérieurs design, la cuisine extérieure avec TV et les terrasses spacieuses font du Loft un lieu idéal pour ceux qui apprécient le raffinement tout en valorisant la vraie communauté.",
-    image: "/images/le loft/exterior/la villa coliving le loft.webp",
+    image: "/images/la villa coliving le loft piscine.webp",
     gallery: [
       "/images/le loft/rooms/la villa coliving le loft-21.webp",
       "/images/le loft/rooms/la villa coliving le loft-24.webp",
