@@ -92,7 +92,7 @@ export function ServicesPageV4() {
         {
           key: "pool",
           icon: Waves,
-          image: "/images/le loft piscine_interieur_500x200.webp",
+          image: "/images/la villa jardin.webp",
           highlight:
             language === "en"
               ? "In all 3 houses"
