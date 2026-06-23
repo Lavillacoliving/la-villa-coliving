@@ -295,6 +295,14 @@
 
   <!-- ═══ BLOG ARTICLES — FR ═══ -->
   <url>
+    <loc>https://www.lavillacoliving.com/blog/ecole-internationale-geneve-frontalier-ou-habiter</loc>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://www.lavillacoliving.com/blog/ecole-internationale-geneve-frontalier-ou-habiter" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.lavillacoliving.com/en/blog/ecole-internationale-geneve-frontalier-ou-habiter" />
+    <lastmod>2026-06-23</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
     <loc>https://www.lavillacoliving.com/blog/salaire-suisse-net-frontalier-2026</loc>
     <xhtml:link rel="alternate" hreflang="fr" href="https://www.lavillacoliving.com/blog/salaire-suisse-net-frontalier-2026" />
     <xhtml:link rel="alternate" hreflang="en" href="https://www.lavillacoliving.com/en/blog/salaire-suisse-net-frontalier-2026" />
@@ -560,6 +568,14 @@
   </url>
 
   <!-- ═══ BLOG ARTICLES — EN ═══ -->
+  <url>
+    <loc>https://www.lavillacoliving.com/en/blog/ecole-internationale-geneve-frontalier-ou-habiter</loc>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://www.lavillacoliving.com/blog/ecole-internationale-geneve-frontalier-ou-habiter" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.lavillacoliving.com/en/blog/ecole-internationale-geneve-frontalier-ou-habiter" />
+    <lastmod>2026-06-23</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
+  </url>
   <url>
     <loc>https://www.lavillacoliving.com/en/blog/salaire-suisse-net-frontalier-2026</loc>
     <xhtml:link rel="alternate" hreflang="fr" href="https://www.lavillacoliving.com/blog/salaire-suisse-net-frontalier-2026" />

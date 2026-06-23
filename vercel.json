@@ -145,6 +145,10 @@
       "destination": "/prerendered/en-politique-de-confidentialite.html"
     },
     {
+      "source": "/blog/ecole-internationale-geneve-frontalier-ou-habiter",
+      "destination": "/prerendered/blog-ecole-internationale-geneve-frontalier-ou-habiter.html"
+    },
+    {
       "source": "/blog/salaire-suisse-net-frontalier-2026",
       "destination": "/prerendered/blog-salaire-suisse-net-frontalier-2026.html"
     },
@@ -275,6 +279,10 @@
     {
       "source": "/blog/living-in-france-working-in-geneva",
       "destination": "/prerendered/blog-living-in-france-working-in-geneva.html"
+    },
+    {
+      "source": "/en/blog/ecole-internationale-geneve-frontalier-ou-habiter",
+      "destination": "/prerendered/en-blog-ecole-internationale-geneve-frontalier-ou-habiter.html"
     },
     {
       "source": "/en/blog/salaire-suisse-net-frontalier-2026",
