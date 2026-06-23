@@ -380,7 +380,7 @@ export function ColocationGenevePage() {
               <div className="p-6">
                 <h3 className="text-xl font-medium text-[#1C1917] mb-1">La Villa</h3>
                 <p className="text-sm text-[#D4A574] flex items-center gap-1 mb-3">
-                  <MapPin className="w-3 h-3" /> Ville-la-Grand
+                  <MapPin className="w-3 h-3" /> {language === "en" ? "Ville-la-Grand" : "Colocation à Ville-la-Grand"}
                 </p>
                 <p className="text-sm text-[#57534E] mb-4">
                   {language === "en"
@@ -410,7 +410,7 @@ export function ColocationGenevePage() {
               <div className="p-6">
                 <h3 className="text-xl font-medium text-[#1C1917] mb-1">Le Loft</h3>
                 <p className="text-sm text-[#D4A574] flex items-center gap-1 mb-3">
-                  <MapPin className="w-3 h-3" /> Ambilly
+                  <MapPin className="w-3 h-3" /> {language === "en" ? "Ambilly" : "Colocation à Ambilly"}
                 </p>
                 <p className="text-sm text-[#57534E] mb-4">
                   {language === "en"
@@ -440,7 +440,7 @@ export function ColocationGenevePage() {
               <div className="p-6">
                 <h3 className="text-xl font-medium text-[#1C1917] mb-1">Le Lodge</h3>
                 <p className="text-sm text-[#D4A574] flex items-center gap-1 mb-3">
-                  <MapPin className="w-3 h-3" /> Annemasse
+                  <MapPin className="w-3 h-3" /> {language === "en" ? "Annemasse" : "Colocation à Annemasse"}
                 </p>
                 <p className="text-sm text-[#57534E] mb-4">
                   {language === "en"
