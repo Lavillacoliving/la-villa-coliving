@@ -152,7 +152,7 @@ export function ServicesPageV4() {
       <section className="relative min-h-[70vh] flex items-center overflow-hidden">
         <div className="absolute inset-0">
           <img
-            src="/images/le loft piscine_interieur_500x200.webp"
+            src="/images/la villa coliving le loft piscine.webp"
             alt={language === "en" ? "Le Loft indoor pool — all-inclusive coliving services near Geneva" : "Piscine intérieure du Loft — services colocation tout inclus près de Genève"}
             className="w-full h-full object-cover" loading="lazy"
           />
