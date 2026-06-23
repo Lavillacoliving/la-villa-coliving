@@ -399,7 +399,7 @@ export function ColocationGenevePage() {
             <LocalizedLink to="/leloft" className="group bg-white border border-[#E7E5E4] hover:border-[#D4A574] transition-colors">
               <div className="aspect-[4/3] overflow-hidden">
                 <img
-                  src="/images/la villa coliving le loft piscine.webp"
+                  src="/images/le loft/amenities/la villa coliving le loft-94.webp"
                   alt={language === "en" ? "Le Loft Coliving — modern shared housing with indoor pool in Ambilly, near Geneva" : "Le Loft Coliving — colocation moderne avec piscine intérieure à Ambilly, près de Genève"}
                   className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                   loading="lazy"
