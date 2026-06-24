@@ -145,6 +145,10 @@
       "destination": "/prerendered/en-politique-de-confidentialite.html"
     },
     {
+      "source": "/blog/quartiers-annemasse-ou-vivre-selon-profil",
+      "destination": "/prerendered/blog-quartiers-annemasse-ou-vivre-selon-profil.html"
+    },
+    {
       "source": "/blog/ecole-internationale-geneve-frontalier-ou-habiter",
       "destination": "/prerendered/blog-ecole-internationale-geneve-frontalier-ou-habiter.html"
     },
@@ -279,6 +283,10 @@
     {
       "source": "/blog/living-in-france-working-in-geneva",
       "destination": "/prerendered/blog-living-in-france-working-in-geneva.html"
+    },
+    {
+      "source": "/en/blog/quartiers-annemasse-ou-vivre-selon-profil",
+      "destination": "/prerendered/en-blog-quartiers-annemasse-ou-vivre-selon-profil.html"
     },
     {
       "source": "/en/blog/ecole-internationale-geneve-frontalier-ou-habiter",
