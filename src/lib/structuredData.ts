@@ -156,7 +156,7 @@ export function buildDatasetSchema(opts: {
   name: string;
   description: string;
   url: string;
-  csvUrl: string;
+  csvUrls: string[];
   datePublished: string;
   dateModified: string;
   language: "fr" | "en";
@@ -180,12 +180,10 @@ export function buildDatasetSchema(opts: {
         ? ["cross-border housing", "Geneva", "rent", "commute time", "Léman Express", "Greater Geneva"]
         : ["logement frontalier", "Genève", "loyer", "temps de trajet", "Léman Express", "Genevois français"],
     spatialCoverage: opts.spatial.map((name) => ({ "@type": "Place", name })),
-    distribution: [
-      {
-        "@type": "DataDownload",
-        encodingFormat: "text/csv",
-        contentUrl: opts.csvUrl,
-      },
-    ],
+    distribution: opts.csvUrls.map((contentUrl) => ({
+      "@type": "DataDownload",
+      encodingFormat: "text/csv",
+      contentUrl,
+    })),
   };
 }

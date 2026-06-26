@@ -1,0 +1,12 @@
+cle;valeur;unite;source;n;note
+loyer_median_parc_en_place;35.0;CHF/m2;OCSTAT 2025;2294;Studios <=37 m2 loyer libre locataires net hors chauffage - Ville de Geneve
+loyer_median_parc_en_place_mois;1050;CHF/mois;OCSTAT 2025;2294;= 35 x 30 m2 de reference
+loyer_median_annonce;50.0;CHF/m2;Releve annonces juin 2026;25;Studios <=37 m2 loues vides Ville de Geneve net - mediane stricte studios 50.4
+loyer_median_annonce_mois;1500;CHF/mois;Releve annonces juin 2026;25;= 50 x 30 m2 de reference
+ecart_annonce_vs_parc;44;pourcent;Calcul fige;;50.4 / 35.0 = +44 - un nouvel arrivant median paie au m2 autant que les 10 pourcent de baux en place les plus chers
+stock_decile_d1;20.6;CHF/m2;OCSTAT 2025;2294;1er decile du parc en place
+stock_quartile_q1;26.3;CHF/m2;OCSTAT 2025;2294;1er quartile du parc en place
+stock_mediane;35.0;CHF/m2;OCSTAT 2025;2294;Mediane du parc en place
+stock_quartile_q3;42.9;CHF/m2;OCSTAT 2025;2294;3e quartile du parc en place
+stock_decile_d9;51.3;CHF/m2;OCSTAT 2025;2294;9e decile - la mediane arrivant 50.4 frole ce niveau
+repere_eaux_vives_8min;1750;CHF/mois;Releve annonces juin 2026;;Studio quartier Eaux-Vives premium a 8 min en Leman Express - haut du marche

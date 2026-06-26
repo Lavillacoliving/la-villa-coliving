@@ -1,24 +1,24 @@
-<svg width="1200" height="630" viewBox="0 0 1200 630" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Observatoire du logement frontalier 2026 — loyer d'un studio à Genève-Eaux-Vives (≈1 600–2 000 CHF) versus Annemasse (≈990 €), à 8 minutes en Léman Express">
+<svg width="1200" height="630" viewBox="0 0 1200 630" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Observatoire du logement frontalier 2026 — à Genève, un nouvel arrivant paie +44 % au mètre carré qu'un locataire déjà en place, autant que les 10 % de baux en place les plus chers. Loyer médian d'un studio : 35 contre environ 50 CHF par mètre carré. La Villa Coliving.">
   <rect width="1200" height="630" fill="#FAF9F6"/>
   <rect x="0" y="0" width="1200" height="10" fill="#D4A574"/>
-  <text x="64" y="84" font-family="Helvetica, Arial, sans-serif" font-size="19" letter-spacing="3" fill="#D4A574">OBSERVATOIRE DU LOGEMENT FRONTALIER · ÉDITION 2026</text>
 
-  <text x="64" y="170" font-family="Georgia, 'Times New Roman', serif" font-size="56" fill="#1C1917">Où se loger près de Genève</text>
-  <text x="64" y="234" font-family="Georgia, 'Times New Roman', serif" font-size="56" fill="#1C1917">sans <tspan fill="#D4A574">s'éloigner ?</tspan></text>
-  <text x="64" y="292" font-family="Helvetica, Arial, sans-serif" font-size="24" fill="#57534E">Le loyer réel d'un studio croisé au temps de trajet,</text>
-  <text x="64" y="326" font-family="Helvetica, Arial, sans-serif" font-size="24" fill="#57534E">commune par commune du Genevois français.</text>
+  <text x="64" y="90" font-family="Helvetica, Arial, sans-serif" font-size="19" letter-spacing="3" fill="#D4A574">OBSERVATOIRE DU LOGEMENT FRONTALIER · 2026</text>
 
-  <!-- Comparaison frontière (le même studio de part et d'autre) -->
-  <g transform="translate(0,26)">
-    <text x="245" y="430" text-anchor="middle" font-family="Helvetica, Arial, sans-serif" font-size="34" font-weight="bold" fill="#1C1917">≈ 1 600–2 000 CHF</text>
-    <text x="245" y="462" text-anchor="middle" font-family="Helvetica, Arial, sans-serif" font-size="18" fill="#57534E">Genève-Eaux-Vives · studio</text>
+  <text x="64" y="196" font-family="Georgia, 'Times New Roman', serif" font-size="44" fill="#1C1917">À Genève, un nouvel arrivant paie</text>
+  <text x="64" y="330" font-family="Georgia, 'Times New Roman', serif" font-size="100" font-weight="bold" fill="#A0623C">+44 %/m²</text>
+  <text x="64" y="404" font-family="Georgia, 'Times New Roman', serif" font-size="44" fill="#1C1917">qu'un locataire déjà en place.</text>
 
-    <line x1="430" y1="418" x2="700" y2="418" stroke="#D4A574" stroke-width="2.5"/>
-    <polygon points="700,418 686,410 686,426" fill="#D4A574"/>
-    <text x="565" y="404" text-anchor="middle" font-family="Helvetica, Arial, sans-serif" font-size="18" font-weight="bold" fill="#A0623C">8 min · Léman Express</text>
+  <text x="64" y="468" font-family="Helvetica, Arial, sans-serif" font-size="24" fill="#57534E">— autant que les 10 % de baux en place les plus chers du canton —</text>
 
-    <text x="900" y="430" text-anchor="middle" font-family="Helvetica, Arial, sans-serif" font-size="40" font-weight="bold" fill="#1C1917">≈ 990 €</text>
-    <text x="900" y="462" text-anchor="middle" font-family="Helvetica, Arial, sans-serif" font-size="18" fill="#57534E">Annemasse · studio</text>
+  <!-- Mini-viz : loyer médian d'un studio, 35 (en place) vs 50 (arrivant) CHF/m² -->
+  <g>
+    <rect x="892" y="312" width="64" height="116" rx="3" fill="#6B8E6B"/>
+    <text x="924" y="300" text-anchor="middle" font-family="Helvetica, Arial, sans-serif" font-size="22" font-weight="bold" fill="#1C1917">35</text>
+    <text x="924" y="450" text-anchor="middle" font-family="Helvetica, Arial, sans-serif" font-size="15" fill="#57534E">en place</text>
+    <rect x="1008" y="262" width="64" height="166" rx="3" fill="#A0623C"/>
+    <text x="1040" y="250" text-anchor="middle" font-family="Helvetica, Arial, sans-serif" font-size="22" font-weight="bold" fill="#1C1917">≈ 50</text>
+    <text x="1040" y="450" text-anchor="middle" font-family="Helvetica, Arial, sans-serif" font-size="15" fill="#57534E">arrivant</text>
+    <text x="982" y="472" text-anchor="middle" font-family="Helvetica, Arial, sans-serif" font-size="12" fill="#A8A29E">loyer médian · CHF/m²</text>
   </g>
 
   <line x1="64" y1="566" x2="1136" y2="566" stroke="#E7E5E4" stroke-width="1"/>
