@@ -145,6 +145,10 @@
       "destination": "/prerendered/en-politique-de-confidentialite.html"
     },
     {
+      "source": "/blog/allocations-familiales-frontalier-geneve-2026",
+      "destination": "/prerendered/blog-allocations-familiales-frontalier-geneve-2026.html"
+    },
+    {
       "source": "/blog/cout-de-la-vie-suisse-france-frontalier-2026",
       "destination": "/prerendered/blog-cout-de-la-vie-suisse-france-frontalier-2026.html"
     },
@@ -287,6 +291,10 @@
     {
       "source": "/blog/living-in-france-working-in-geneva",
       "destination": "/prerendered/blog-living-in-france-working-in-geneva.html"
+    },
+    {
+      "source": "/en/blog/allocations-familiales-frontalier-geneve-2026",
+      "destination": "/prerendered/en-blog-allocations-familiales-frontalier-geneve-2026.html"
     },
     {
       "source": "/en/blog/cout-de-la-vie-suisse-france-frontalier-2026",
