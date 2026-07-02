@@ -145,6 +145,10 @@
       "destination": "/prerendered/en-politique-de-confidentialite.html"
     },
     {
+      "source": "/blog/cout-de-la-vie-suisse-france-frontalier-2026",
+      "destination": "/prerendered/blog-cout-de-la-vie-suisse-france-frontalier-2026.html"
+    },
+    {
       "source": "/blog/quartiers-annemasse-ou-vivre-selon-profil",
       "destination": "/prerendered/blog-quartiers-annemasse-ou-vivre-selon-profil.html"
     },
@@ -283,6 +287,10 @@
     {
       "source": "/blog/living-in-france-working-in-geneva",
       "destination": "/prerendered/blog-living-in-france-working-in-geneva.html"
+    },
+    {
+      "source": "/en/blog/cout-de-la-vie-suisse-france-frontalier-2026",
+      "destination": "/prerendered/en-blog-cout-de-la-vie-suisse-france-frontalier-2026.html"
     },
     {
       "source": "/en/blog/quartiers-annemasse-ou-vivre-selon-profil",
