@@ -68,8 +68,8 @@ export function ChambreLouerAnnemassePage() {
         }
         description={
           language === "en"
-            ? "Furnished rooms for rent in Annemasse 2026, all-inclusive from CHF 1,380/mo. Pool, gym, sauna, fiber up to 8 Gb/s. Léman Express direct to Geneva 15 min. No agency fees."
-            : "Chambre meublée à louer à Annemasse en 2026, tout inclus dès 1 380 CHF/mois. Piscine, gym, sauna, fibre jusqu'à 8 Gb/s. Léman Express direct Genève 15 min. Sans frais d'agence."
+            ? "Furnished rooms for rent in Annemasse, all-inclusive from CHF 1,380/mo. Pool, gym, sauna, fiber. Léman Express to Geneva in 15 min. No agency fees."
+            : "Chambre meublée à louer à Annemasse, tout inclus dès 1 380 CHF/mois. Piscine, gym, sauna, fibre. Léman Express Genève 15 min. Sans frais d'agence."
         }
         url="https://www.lavillacoliving.com/chambre-a-louer-annemasse"
         image="https://www.lavillacoliving.com/images/le lodge/rooms/la villa coliving le lodge-78.webp"

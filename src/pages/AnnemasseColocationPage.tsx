@@ -478,8 +478,8 @@ export function AnnemasseColocationPage() {
               { fr: "Télétravail frontalier Genève : règles 2026", en: "Cross-border remote work Geneva: 2026 rules", slug: "teletravail-frontalier-geneve-regles-2026" },
               { fr: "Grand Genève 2026 : nouveautés pour les frontaliers", en: "Greater Geneva 2026: what's new for cross-border workers", slug: "grand-geneve-2026-nouveautes-frontaliers" },
               { fr: "Organisations internationales à Genève : où habiter", en: "Geneva international organisations: where to live", slug: "organisations-internationales-geneve-ou-habiter" },
-              { fr: "Économies du coliving tout-inclus près de Genève", en: "All-inclusive coliving savings near Geneva", slug: "economies-coliving-tout-inclus-geneve" },
-              { fr: "Temps de trajet Annemasse ↔ Genève par quartier", en: "Annemasse ↔ Geneva travel times by district", slug: "temps-trajet-annemasse-geneve-par-quartier" },
+              { fr: "Coliving à Genève pour frontaliers : le guide complet", en: "Coliving in Geneva for cross-border workers: the guide", slug: "coliving-geneve-frontaliers-guide-complet" },
+              { fr: "Transport Annemasse ↔ Genève : le guide Léman Express", en: "Annemasse ↔ Geneva by Léman Express: the guide", slug: "transport-annemasse-geneve-leman-express" },
             ].map((item) => (
               <li key={item.slug} className="flex items-start gap-2">
                 <span className="text-[#D4A574]">→</span>
@@ -515,8 +515,8 @@ export function AnnemasseColocationPage() {
               {language === "en" ? "Pricing" : "Tarifs"}
             </LocalizedLink>
             <span className="text-[#E7E5E4]">·</span>
-            <LocalizedLink to="/blog/meilleurs-quartiers-frontaliers-geneve" className="text-[#1C1917] underline hover:text-[#D4A574]">
-              {language === "en" ? "Best cross-border neighborhoods" : "Meilleurs quartiers frontaliers"}
+            <LocalizedLink to="/blog/quartiers-annemasse-ou-vivre-selon-profil" className="text-[#1C1917] underline hover:text-[#D4A574]">
+              {language === "en" ? "Annemasse neighbourhoods: where to live" : "Quartiers d'Annemasse : où vivre"}
             </LocalizedLink>
           </div>
         </div>

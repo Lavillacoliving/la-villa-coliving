@@ -194,13 +194,13 @@ export function ObservatoireLogementFrontalierPage() {
       <SEO
         title={
           en
-            ? "Geneva cross-border housing observatory — studio rent × commute (2026)"
-            : "Observatoire du logement frontalier Genève — loyer studio × trajet (2026)"
+            ? "Geneva cross-border housing observatory — rents 2026"
+            : "Observatoire du logement frontalier Genève — loyers 2026"
         }
         description={
           en
             ? "In Geneva, a newcomer pays 44% more per m² than a sitting tenant. 17 French-Genevois towns ranked by advertised studio rent and commute time. Free open data."
-            : "À Genève, un nouvel arrivant paie +44 % au m² qu'un locataire en place. 17 communes du Genevois français classées par loyer d'annonce et temps de trajet. Données ouvertes."
+            : "À Genève, un nouvel arrivant paie +44 % au m² qu'un locataire en place. 17 communes du Genevois français classées par loyer et trajet. Données ouvertes."
         }
         image={`${SITE}/images/observatoire-loyer-trajet-2026.png`}
         type="article"
