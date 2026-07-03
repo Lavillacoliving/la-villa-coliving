@@ -480,6 +480,7 @@ export function AnnemasseColocationPage() {
               { fr: "Organisations internationales à Genève : où habiter", en: "Geneva international organisations: where to live", slug: "organisations-internationales-geneve-ou-habiter" },
               { fr: "Coliving à Genève pour frontaliers : le guide complet", en: "Coliving in Geneva for cross-border workers: the guide", slug: "coliving-geneve-frontaliers-guide-complet" },
               { fr: "Transport Annemasse ↔ Genève : le guide Léman Express", en: "Annemasse ↔ Geneva by Léman Express: the guide", slug: "transport-annemasse-geneve-leman-express" },
+              { fr: "Les espaces verts du coliving Le Lodge à Annemasse", en: "Green spaces at Le Lodge coliving in Annemasse", slug: "espaces-verts-coliving-lodge-annemasse" },
             ].map((item) => (
               <li key={item.slug} className="flex items-start gap-2">
                 <span className="text-[#D4A574]">→</span>
