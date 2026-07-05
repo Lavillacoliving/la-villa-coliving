@@ -9,6 +9,7 @@
     "prerender": "node scripts/prerender.mjs",
     "build:local": "tsc -b && vite build && node scripts/prerender.mjs && node scripts/inject-prerendered.mjs",
     "lint": "eslint .",
+    "lint:seo": "node scripts/seo-lint.mjs",
     "preview": "vite preview"
   },
   "dependencies": {
