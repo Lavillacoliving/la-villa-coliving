@@ -516,6 +516,10 @@ export function AnnemasseColocationPage() {
               {language === "en" ? "Pricing" : "Tarifs"}
             </LocalizedLink>
             <span className="text-[#E7E5E4]">·</span>
+            <LocalizedLink to="/chambre-a-louer-annemasse" className="text-[#1C1917] underline hover:text-[#D4A574]">
+              {language === "en" ? "Rooms for rent in Annemasse" : "Chambre à louer à Annemasse"}
+            </LocalizedLink>
+            <span className="text-[#E7E5E4]">·</span>
             <LocalizedLink to="/blog/quartiers-annemasse-ou-vivre-selon-profil" className="text-[#1C1917] underline hover:text-[#D4A574]">
               {language === "en" ? "Annemasse neighbourhoods: where to live" : "Quartiers d'Annemasse : où vivre"}
             </LocalizedLink>

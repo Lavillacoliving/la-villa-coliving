@@ -83,8 +83,8 @@ export function ColivingPageV4() {
             </h1>
             <p className="text-xl mb-8 text-white/90">
               {language === "en"
-                ? "Experience premium coliving in our beautifully designed houses"
-                : "Vis l'expérience coliving dans nos maisons magnifiquement designées"}
+                ? "Coliving is flatsharing with hotel-grade services included: furnished room, utilities, fiber, cleaning and shared spaces designed for community. At La Villa: 29 rooms, 3 houses near Geneva, from CHF 1,380/month."
+                : "Le coliving, c'est la colocation avec services hôteliers inclus : chambre meublée, charges, fibre, ménage et espaces communs pensés pour la communauté. À La Villa : 29 chambres, 3 maisons près de Genève, dès 1 380 CHF/mois."}
             </p>
             <LocalizedLink
               to="/nos-maisons"

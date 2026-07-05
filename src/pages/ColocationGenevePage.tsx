@@ -159,8 +159,8 @@ export function ColocationGenevePage() {
           </h1>
           <p className="text-lg md:text-xl text-[#57534E] max-w-3xl mx-auto mb-10 leading-relaxed">
             {language === "en"
-              ? "Live on the French side, work in Geneva. 29 fully furnished, all-inclusive rooms across 3 designer houses in Ville-la-Grand, Ambilly and Annemasse. Pool, gym, sauna, fiber internet — no application fee, everything included."
-              : "Vis côté France, travaille à Genève. 29 chambres meublées tout inclus dans 3 maisons design à Ville-la-Grand, Ambilly et Annemasse. Piscine, gym, sauna, fibre optique — pas de frais de dossier, tout est compris."}
+              ? "Live on the French side, work in Geneva. 29 fully furnished, all-inclusive rooms from CHF 1,380/month across 3 designer houses in Ville-la-Grand, Ambilly and Annemasse. Pool, gym, sauna, fiber internet — no application fee, everything included."
+              : "Vis côté France, travaille à Genève. 29 chambres meublées tout inclus dès 1 380 CHF/mois, dans 3 maisons design à Ville-la-Grand, Ambilly et Annemasse. Piscine, gym, sauna, fibre optique — pas de frais de dossier, tout est compris."}
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <LocalizedLink
@@ -1089,6 +1089,7 @@ export function ColocationGenevePage() {
           </LocalizedLink>
           <ul className="grid grid-cols-1 md:grid-cols-2 gap-3 text-sm max-w-3xl mx-auto">
             {[
+              { fr: "Trouver une colocation à Genève : le guide du frontalier", en: "Finding a flatshare in Geneva: the cross-border guide", slug: "trouver-colocation-geneve-frontalier" },
               { fr: "Le guide des ressources du frontalier", en: "The cross-border worker's resources guide", slug: "guide-ressources-frontalier-geneve" },
               { fr: "Coliving à Genève pour frontaliers : le guide complet", en: "Coliving in Geneva for cross-border workers: the guide", slug: "coliving-geneve-frontaliers-guide-complet" },
               { fr: "Fiscalité du frontalier à Genève : impôts 2026", en: "Cross-border taxation in Geneva: 2026 rules", slug: "fiscalite-frontalier-geneve-impots-2026" },

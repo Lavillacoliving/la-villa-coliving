@@ -92,8 +92,8 @@ export function ChambreLouerAnnemassePage() {
           </h1>
           <p className="text-lg md:text-xl text-[#57534E] max-w-3xl mx-auto leading-relaxed mb-10 font-medium">
             {language === "en"
-              ? "29 furnished rooms across 3 design houses in Annemasse Agglo. Move in with just your suitcases — bed, desk, fiber, utilities, weekly cleaning, pool & gym all included."
-              : "29 chambres meublées dans 3 maisons design à Annemasse Agglo. Emménagez avec une valise — lit, bureau, fibre, charges, ménage 2x/semaine, piscine et salle de sport sont inclus."}
+              ? "29 furnished rooms across 3 design houses in Annemasse Agglo, from CHF 1,380/month all-inclusive. Renting a room made simpler than a furnished studio: bed, desk, fiber, utilities, weekly cleaning, pool & gym included — move in with just your suitcases."
+              : "29 chambres meublées dans 3 maisons design à Annemasse Agglo, dès 1 380 CHF/mois tout inclus. Une location de chambre plus simple qu'un studio meublé : lit, bureau, fibre, charges, ménage 2x/semaine, piscine et salle de sport compris — emménagez avec une valise."}
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <LocalizedLink

@@ -9,6 +9,7 @@
 - Public : frontaliers Suisse, expats, jeunes professionnels
 - Équipements : piscine chauffée, sauna, salle de sport, fibre jusqu'à 8 Gb/s, coworking, yoga
 - Baux de 12 mois, charges forfaitaires incluses (ménage 2x/sem, streaming, fibre, cours de sport)
+- Sans frais de dossier ni d'agence ; caution de 2 mois de loyer (hors charges)
 - 150+ résidents accueillis depuis 2021, événements réguliers (pizza party, cours de yoga, afterworks)
 - 99% d'occupation sur 5 ans d'exploitation
 
@@ -23,6 +24,24 @@
 - Tout inclus = pas de frais cachés, pas de caution sur les charges
 - Communauté internationale, aide à l'installation
 
+## Données ouvertes — Observatoire du logement frontalier
+- Étude annuelle : loyer d'annonce d'un studio croisé au temps de trajet vers Genève-Eaux-Vives, pour 17 communes du Genevois français (corridor Léman Express)
+- Chiffre clé 2026 : à Genève, un nouvel arrivant paie environ +44 % au m² qu'un locataire en place (annonces ≈ 50 CHF/m² vs 35 CHF/m² OCSTAT pour les baux en cours)
+- Page : https://www.lavillacoliving.com/observatoire-logement-frontalier-geneve
+- Données CSV (communes françaises) : https://www.lavillacoliving.com/data/observatoire-data-2026.csv
+- Données CSV (Genève) : https://www.lavillacoliving.com/data/observatoire-geneve-2026.csv
+- Réutilisation libre avec attribution « La Villa Coliving »
+
+## Guides de référence (blog, sourcés et mis à jour)
+- Trouver une colocation à Genève quand on est frontalier : https://www.lavillacoliving.com/blog/trouver-colocation-geneve-frontalier
+- Budget logement frontalier — prix réels par ville : https://www.lavillacoliving.com/blog/budget-colocation-geneve-guide-complet
+- Où habiter côté France — top 7 des villes : https://www.lavillacoliving.com/blog/ou-habiter-frontalier-suisse-villes-france-pas-cher
+- Fiscalité du frontalier à Genève : https://www.lavillacoliving.com/blog/fiscalite-frontalier-geneve-impots-2026
+- Salaire suisse net d'un frontalier : https://www.lavillacoliving.com/blog/salaire-suisse-net-frontalier-2026
+- Permis G (frontalier) : https://www.lavillacoliving.com/blog/permis-g-frontalier-geneve
+- Le dossier ressources du frontalier : https://www.lavillacoliving.com/blog/guide-ressources-frontalier-geneve
+- Télétravail frontalier — règle des 40 % : https://www.lavillacoliving.com/blog/teletravail-frontalier-geneve-regles-2026
+
 ## Contact
 - Site : https://www.lavillacoliving.com
 - Email : contact@lavillacoliving.com
@@ -32,9 +51,15 @@
 
 ## Pages utiles
 - Guide colocation Genève : https://www.lavillacoliving.com/colocation-geneve
+- Colocation à Annemasse : https://www.lavillacoliving.com/annemasse-colocation
+- Chambre à louer à Annemasse : https://www.lavillacoliving.com/chambre-a-louer-annemasse
+- Qu'est-ce que le coliving : https://www.lavillacoliving.com/le-coliving
 - Tarifs détaillés : https://www.lavillacoliving.com/tarifs
 - FAQ : https://www.lavillacoliving.com/faq
 - Blog : https://www.lavillacoliving.com/blog
 - La Villa (10 ch.) : https://www.lavillacoliving.com/lavilla
 - Le Loft (7 ch.) : https://www.lavillacoliving.com/leloft
 - Le Lodge (12 ch.) : https://www.lavillacoliving.com/lelodge
+- Version anglaise : https://www.lavillacoliving.com/en
+
+Dernière mise à jour : 2026-07-04
