@@ -236,8 +236,8 @@ export function RatesPageV4() {
           </p>
           <p className="text-lg text-[#78716C]">
             {language === "en"
-              ? "At La Villa Coliving, rooms range from CHF 1,380 to 1,490/month depending on the house. Everything included: rent, utilities, fiber, cleaning twice a week, gym, pool, streaming. No application or agency fees — deposit of 2 months' rent (excluding utilities)."
-              : "À La Villa Coliving, les chambres vont de 1 380 à 1 490 CHF/mois selon la maison. Tout compris : loyer, charges, fibre, ménage 2x/semaine, salle de sport, piscine, streaming. Sans frais de dossier ni d'agence — caution de 2 mois de loyer (hors charges)."}
+              ? "At La Villa Coliving, a room costs CHF 1,380/month, everything included: rent, utilities, fiber, cleaning twice a week, gym, pool, streaming. No application or agency fees — deposit of 2 months' rent (excluding utilities)."
+              : "À La Villa Coliving, une chambre coûte 1 380 CHF/mois, tout compris : loyer, charges, fibre, ménage 2x/semaine, salle de sport, piscine, streaming. Sans frais de dossier ni d'agence — caution de 2 mois de loyer (hors charges)."}
           </p>
           <div className="mt-8 flex flex-wrap justify-center gap-2">
             {(language === "en"
