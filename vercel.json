@@ -145,6 +145,10 @@
       "destination": "/prerendered/en-politique-de-confidentialite.html"
     },
     {
+      "source": "/blog/quitter-son-logement-guide-pratique",
+      "destination": "/prerendered/blog-quitter-son-logement-guide-pratique.html"
+    },
+    {
       "source": "/blog/allocations-familiales-frontalier-geneve-2026",
       "destination": "/prerendered/blog-allocations-familiales-frontalier-geneve-2026.html"
     },
@@ -291,6 +295,10 @@
     {
       "source": "/blog/living-in-france-working-in-geneva",
       "destination": "/prerendered/blog-living-in-france-working-in-geneva.html"
+    },
+    {
+      "source": "/en/blog/quitter-son-logement-guide-pratique",
+      "destination": "/prerendered/en-blog-quitter-son-logement-guide-pratique.html"
     },
     {
       "source": "/en/blog/allocations-familiales-frontalier-geneve-2026",
