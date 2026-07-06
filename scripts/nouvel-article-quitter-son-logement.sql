@@ -11,7 +11,10 @@
 --   (comparatif), demenager-geneve-checklist (arrivée), dossier-location.
 -- Image : chambre La Villa-88 (jamais utilisée sur le blog — règle unicité).
 -- FAQ en ## FAQ + questions en gras → JSON-LD FAQPage auto (BlogPostPage).
--- Title FR 40c + suffixe " | La Villa Coliving" = 60c (< 70). Meta FR 141c.
+-- Title FR 40c + suffixe " | La Villa Coliving" = 60c (< 70). Meta FR 139c.
+-- ✅ APPLIQUÉ en base le 2026-07-06 — vérifié via REST : publié, 0 mojibake,
+--    8 liens internes FR + 8 EN. (Ce commit sert aussi à déclencher le
+--    prerender, qui a tourné avant l'INSERT lors du push précédent.)
 -- ════════════════════════════════════════════════════════════════════════
 
 INSERT INTO blog_posts (
