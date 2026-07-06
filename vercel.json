@@ -65,6 +65,10 @@
       "destination": "/prerendered/observatoire-logement-frontalier-geneve.html"
     },
     {
+      "source": "/qui-sommes-nous",
+      "destination": "/prerendered/qui-sommes-nous.html"
+    },
+    {
       "source": "/mentions-legales",
       "destination": "/prerendered/mentions-legales.html"
     },
@@ -137,12 +141,20 @@
       "destination": "/prerendered/en-observatoire-logement-frontalier-geneve.html"
     },
     {
+      "source": "/en/qui-sommes-nous",
+      "destination": "/prerendered/en-qui-sommes-nous.html"
+    },
+    {
       "source": "/en/mentions-legales",
       "destination": "/prerendered/en-mentions-legales.html"
     },
     {
       "source": "/en/politique-de-confidentialite",
       "destination": "/prerendered/en-politique-de-confidentialite.html"
+    },
+    {
+      "source": "/blog/quitter-son-logement-guide-pratique",
+      "destination": "/prerendered/blog-quitter-son-logement-guide-pratique.html"
     },
     {
       "source": "/blog/allocations-familiales-frontalier-geneve-2026",
@@ -291,6 +303,10 @@
     {
       "source": "/blog/living-in-france-working-in-geneva",
       "destination": "/prerendered/blog-living-in-france-working-in-geneva.html"
+    },
+    {
+      "source": "/en/blog/quitter-son-logement-guide-pratique",
+      "destination": "/prerendered/en-blog-quitter-son-logement-guide-pratique.html"
     },
     {
       "source": "/en/blog/allocations-familiales-frontalier-geneve-2026",

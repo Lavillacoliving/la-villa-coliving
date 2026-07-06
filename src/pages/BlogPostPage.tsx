@@ -9,9 +9,10 @@ import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import { Helmet } from "react-helmet";
 import { SEO } from "@/components/SEO";
-import { buildBreadcrumbSchema, buildFaqPageSchema } from "@/lib/structuredData";
+import { buildBreadcrumbSchema, buildFaqPageSchema, getFounderByAuthorName } from "@/lib/structuredData";
 import { getIntentBucket, type IntentBucket } from "@/data/blogIntentBuckets";
-import { YmylNotice, isYmyl } from "@/components/YmylNotice";
+import { YmylNotice, YmylPosture, AuthorBox } from "@/components/YmylNotice";
+import { isYmyl } from "@/lib/ymyl";
 
 interface Post {
   id:string; slug:string;
@@ -316,6 +317,10 @@ export function BlogPostPage() {
     ),
   };
 
+  // Auteur nommé (E-E-A-T) : si le champ author correspond à un fondateur, la byline
+  // pointe vers /qui-sommes-nous et le schema Person est corroboré par LinkedIn (sameAs).
+  const founder = getFounderByAuthorName(post.author);
+
   // BlogPosting structured data
   const blogPostingSchema = {
     "@context": "https://schema.org",
@@ -323,10 +328,18 @@ export function BlogPostPage() {
     headline: title,
     description: excerpt,
     image: post.image_url || "https://www.lavillacoliving.com/images/la villa jardin.webp",
-    author: {
-      "@type": "Person",
-      name: post.author,
-    },
+    author: founder
+      ? {
+          "@type": "Person",
+          name: founder.name,
+          jobTitle: founder.jobTitle[L],
+          url: "https://www.lavillacoliving.com/qui-sommes-nous",
+          sameAs: [founder.linkedin],
+        }
+      : {
+          "@type": "Person",
+          name: post.author,
+        },
     publisher: {
       "@type": "Organization",
       name: "La Villa Coliving",
@@ -378,14 +391,31 @@ export function BlogPostPage() {
           <h1 className="text-4xl md:text-5xl font-light text-[#1C1917] mb-6" style={{fontFamily:"DM Serif Display, serif"}}>
             {title}
           </h1>
-          <div className="flex items-center gap-6 text-sm text-[#78716C] mb-8 pb-8 border-b border-[#E7E5E4]">
-            <span className="flex items-center gap-2"><User className="w-4 h-4" />{post.author}</span>
+          <div className="flex flex-wrap items-center gap-x-6 gap-y-2 text-sm text-[#78716C] mb-8 pb-8 border-b border-[#E7E5E4]">
+            <span className="flex items-center gap-2">
+              <User className="w-4 h-4" />
+              {founder ? (
+                <>
+                  <LocalizedLink to="/qui-sommes-nous" className="text-[#44403C] hover:text-[#D4A574] transition-colors">
+                    {founder.name}
+                  </LocalizedLink>
+                  <span className="hidden sm:inline text-[#A8A29E]">
+                    · {founder.jobTitle[L].charAt(0).toLowerCase() + founder.jobTitle[L].slice(1)}
+                  </span>
+                </>
+              ) : (
+                post.author
+              )}
+            </span>
             <span className="flex items-center gap-2"><Calendar className="w-4 h-4" />{fmtD(post.published_at)}</span>
             {post.updated_at && post.updated_at.slice(0,10) > post.published_at.slice(0,10) && (
               <span className="text-[#A8A29E]">{language === "en" ? `· Updated ${fmtD(post.updated_at)}` : `· Mis à jour le ${fmtD(post.updated_at)}`}</span>
             )}
             <span className="flex items-center gap-2"><Clock className="w-4 h-4" />{post.read_time_min} min</span>
           </div>
+          {/* Encadré « Notre posture » — en tête des articles YMYL, avant l'intro (brief E-E-A-T A.3) */}
+          {isYmyl(post.slug) && <YmylPosture slug={post.slug} />}
+
           {post.image_url && (
             <div className="mb-10 overflow-hidden">
               <img src={post.image_url} alt={title} className="w-full h-auto object-cover" loading="lazy" />
@@ -437,7 +467,8 @@ export function BlogPostPage() {
             )}
           </div>
 
-          {isYmyl(post.slug) && <YmylNotice />}
+          {isYmyl(post.slug) && <YmylNotice content={content} />}
+          <AuthorBox author={post.author} />
 
           {post.tags&&post.tags.length>0&&(
             <div className="flex flex-wrap gap-2 mt-12 pt-8 border-t border-[#E7E5E4]">

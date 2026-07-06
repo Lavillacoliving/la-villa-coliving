@@ -125,6 +125,23 @@ export function SEO({
             longitude: 6.2475,
           },
           areaServed: ["Genève", "Annemasse", "Ville-la-Grand", "Ambilly", "Grand Genève"],
+          // E-E-A-T : fondation + fondateurs identifiables (sameAs LinkedIn) sur toutes
+          // les pages — Google corrobore l'existence des personnes hors du site.
+          foundingDate: "2021-10",
+          founder: [
+            {
+              "@type": "Person",
+              name: "Jérôme Austin",
+              url: "https://www.lavillacoliving.com/qui-sommes-nous",
+              sameAs: ["https://www.linkedin.com/in/jeromeaustin1/"],
+            },
+            {
+              "@type": "Person",
+              name: "Fanny Bela",
+              url: "https://www.lavillacoliving.com/qui-sommes-nous",
+              sameAs: ["https://www.linkedin.com/in/fanny-bela-24793138/"],
+            },
+          ],
           contactPoint: {
             "@type": "ContactPoint",
             email: "contact@lavillacoliving.com",
