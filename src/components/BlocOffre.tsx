@@ -73,6 +73,13 @@ export function BlocOffre({ variant, slug, bucket }: BlocOffreProps) {
   const h = HOUSES[house];
   const price = formatPriceChf(L);
   const to = CANDIDATURE_REF(slug);
+  // Lien secondaire : la page maison quand l'article cible Le Lodge (4,65 % de
+  // conversion atterrissage — meilleure page du site) ou Le Loft ; sinon le
+  // guide « colocation Genève » (complément débrief 07/07, quick win /lelodge).
+  const secondary =
+    house === "lavilla"
+      ? { to: colocGeneveHref(language), label: L === "en" ? "Shared housing in Geneva" : "Colocation Genève : le guide" }
+      : { to: `/${house}`, label: L === "en" ? `Discover ${h.label}` : `Découvrir ${h.label}` };
 
   // Même pattern gtag gardé que le formulaire : l'analytics ne bloque jamais l'UI.
   const track = (target: string) => {
@@ -93,8 +100,9 @@ export function BlocOffre({ variant, slug, bucket }: BlocOffreProps) {
       en: `${STATS.genevaCenterMinutes} min from Geneva city center`,
     },
     {
-      fr: "0 frais de dossier — réponse sous 48 h",
-      en: "No application fee — reply within 48h",
+      // « 0 frais » = conséquence du modèle (location en direct), jamais une « interdiction »
+      fr: "Location en direct — 0 frais d'agence, réponse sous 48 h",
+      en: "Direct rental — no agency fees, reply within 48h",
     },
   ];
 
@@ -178,11 +186,11 @@ export function BlocOffre({ variant, slug, bucket }: BlocOffreProps) {
                 <ArrowRight className="w-4 h-4" />
               </LocalizedLink>
               <LocalizedLink
-                to={colocGeneveHref(language)}
-                onClick={() => track(colocGeneveHref(language))}
+                to={secondary.to}
+                onClick={() => track(secondary.to)}
                 className="inline-flex items-center justify-center gap-2 px-6 py-3 border border-[#E7E5E4] text-[#44403C] text-sm font-medium rounded-lg hover:border-[#D4A574] transition-all duration-300"
               >
-                {L === "en" ? "Shared housing in Geneva" : "Colocation Genève : le guide"}
+                {secondary.label}
               </LocalizedLink>
             </div>
           </div>
