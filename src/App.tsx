@@ -27,6 +27,9 @@ const InvestisseursPage = lazy(() => import("@/pages/InvestisseursPage").then(m 
 const ObservatoireLogementPage = lazy(() => import("@/pages/ObservatoireLogementFrontalierPage").then(m => ({ default: m.ObservatoireLogementFrontalierPage })));
 const NotFoundPage = lazy(() => import("@/pages/NotFoundPage").then(m => ({ default: m.NotFoundPage })));
 const MentionsLegalesPage = lazy(() => import("@/pages/MentionsLegalesPage").then(m => ({ default: m.MentionsLegalesPage })));
+// QuiSommesNousPage : composant prêt (src/pages/QuiSommesNousPage.tsx) mais PAS routé —
+// Jérôme retravaille la page dans une autre session. Au moment de la router : lazy import ici,
+// routes FR+EN, liens navbar/footer, route prerender.mjs, et ABOUT_PAGE_LIVE=true (structuredData.ts).
 const PolitiqueConfidentialitePage = lazy(() => import("@/pages/PolitiqueConfidentialitePage").then(m => ({ default: m.PolitiqueConfidentialitePage })));
 
 // ─── Lazy-loaded portail pages (named exports) ─────────────

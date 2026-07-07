@@ -118,6 +118,114 @@ export function buildHomeLodgingBusinessSchema(language: "fr" | "en" = "fr"): Re
   };
 }
 
+/**
+ * Fondateurs — source unique pour les bylines blog, la page /qui-sommes-nous et les
+ * schemas Person. `dbAuthorName` = valeur ASCII du champ blog_posts.author (pipeline
+ * SQL ASCII-safe) ; `name` = graphie affichée. sameAs LinkedIn = corroboration
+ * d'identité hors site (E-E-A-T), URLs confirmées par Jérôme (2026-07-06).
+ */
+export interface Founder {
+  name: string;
+  dbAuthorName: string;
+  linkedin: string;
+  jobTitle: { fr: string; en: string };
+}
+
+export const FOUNDERS: Record<"jerome" | "fanny", Founder> = {
+  jerome: {
+    name: "Jérôme Austin",
+    dbAuthorName: "Jerome Austin",
+    linkedin: "https://www.linkedin.com/in/jeromeaustin1/",
+    jobTitle: {
+      fr: "Cofondateur de La Villa Coliving",
+      en: "Co-founder of La Villa Coliving",
+    },
+  },
+  fanny: {
+    name: "Fanny Bela",
+    dbAuthorName: "Fanny Bela",
+    linkedin: "https://www.linkedin.com/in/fanny-bela-24793138/",
+    jobTitle: {
+      fr: "Cofondatrice de La Villa Coliving",
+      en: "Co-founder of La Villa Coliving",
+    },
+  },
+};
+
+/** Mois de commercialisation de la première maison (confirmé Jérôme : octobre 2021). */
+export const FOUNDING_DATE = "2021-10";
+
+/**
+ * ⚠️ INTERRUPTEUR — passer à `true` quand la page /qui-sommes-nous sera routée et en prod
+ * (Jérôme la retravaille dans une autre session, 07/2026). Tant que `false` :
+ * bylines et blocs auteur affichent le nom SANS lien interne, et les schemas Person
+ * omettent `url` (le sameAs LinkedIn reste). Aucun lien mort ne part en prod.
+ */
+export const ABOUT_PAGE_LIVE = false;
+
+/** Retrouve un fondateur depuis le champ `author` d'un article (sinon null → auteur générique). */
+export function getFounderByAuthorName(author: string | null | undefined): Founder | null {
+  if (!author) return null;
+  const a = author.trim().toLowerCase();
+  if (a === "jerome austin" || a === "jérôme austin" || a === "jérôme" || a === "jerome") return FOUNDERS.jerome;
+  if (a === "fanny bela" || a === "fanny") return FOUNDERS.fanny;
+  return null;
+}
+
+/** Person schema d'un fondateur — sameAs = LinkedIn ; url = page fondateurs quand elle est en prod. */
+export function buildFounderPersonSchema(founder: Founder, language: "fr" | "en" = "fr"): Record<string, unknown> {
+  return {
+    "@type": "Person",
+    name: founder.name,
+    jobTitle: founder.jobTitle[language],
+    ...(ABOUT_PAGE_LIVE ? { url: `${SITE}/qui-sommes-nous` } : {}),
+    sameAs: [founder.linkedin],
+    worksFor: { "@type": "Organization", name: "La Villa Coliving", url: SITE },
+  };
+}
+
+/**
+ * Schema de la page « Qui sommes-nous » : Organization complète (foundingDate,
+ * founder → 2 Person, legalName) dans un @graph avec la fiche AboutPage.
+ * PAS d'aggregateRating (règle du site : note 4,9 = enquêtes internes, non balisable).
+ */
+export function buildAboutPageSchema(language: "fr" | "en" = "fr"): Record<string, unknown> {
+  const en = language === "en";
+  return {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "AboutPage",
+        url: `${SITE}${en ? "/en" : ""}/qui-sommes-nous`,
+        name: en ? "Who we are — La Villa Coliving" : "Qui sommes-nous — La Villa Coliving",
+        inLanguage: language,
+        mainEntity: { "@id": `${SITE}/#organization` },
+      },
+      {
+        "@type": "Organization",
+        "@id": `${SITE}/#organization`,
+        name: "La Villa Coliving",
+        legalName: "SCI Sleep In",
+        url: SITE,
+        logo: `${SITE}/logos/logo-full.png`,
+        image: `${SITE}/images/villa_portrait.webp`,
+        foundingDate: FOUNDING_DATE,
+        founder: [
+          buildFounderPersonSchema(FOUNDERS.jerome, language),
+          buildFounderPersonSchema(FOUNDERS.fanny, language),
+        ],
+        email: LAVILLA_EMAIL,
+        telephone: LAVILLA_PHONE,
+        areaServed: ["Genève", "Annemasse", "Ville-la-Grand", "Ambilly", "Grand Genève"],
+        sameAs: ["https://www.instagram.com/lavillacoliving/"],
+        description: en
+          ? `Boutique coliving founded in ${STATS.foundedYear} and personally run by its two founders: ${STATS.totalHouses} houses, ${STATS.totalRooms} rooms near Geneva, ${STATS.totalResidents}+ residents welcomed.`
+          : `Coliving boutique fondé en ${STATS.foundedYear} et géré en direct par ses deux fondateurs : ${STATS.totalHouses} maisons, ${STATS.totalRooms} chambres près de Genève, ${STATS.totalResidents}+ résidents accueillis.`,
+      },
+    ],
+  };
+}
+
 /** Fil d'ariane (BreadcrumbList) — items {name, url} déjà localisés. */
 export function buildBreadcrumbSchema(items: { name: string; url: string }[]): Record<string, unknown> {
   return {

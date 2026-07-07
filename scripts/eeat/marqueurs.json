@@ -1,0 +1,429 @@
+{
+ "articles": [
+  {
+   "slug": "fiscalite-frontalier-geneve-impots-2026",
+   "replacements": [
+    {
+     "field": "content_fr",
+     "find": "En pratique, si vous n'avez que des revenus suisses et aucun revenu français, votre impôt français est généralement nul ou très faible.",
+     "replace": "En pratique — et on le vérifie chaque année sur les dossiers de nos résidents —, si vous n'avez que des revenus suisses et aucun revenu français, votre impôt français est généralement nul ou très faible."
+    },
+    {
+     "field": "content_en",
+     "find": "In practice, if you only have Swiss income and no French income, your French tax is generally zero or very low.",
+     "replace": "In practice — and we see it every year on our residents' files — if you only have Swiss income and no French income, your French tax is generally zero or very low."
+    },
+    {
+     "field": "content_fr",
+     "find": "auprès de l'administration fiscale genevoise, et c'est souvent pertinent de se faire accompagner par un fiduciaire.",
+     "replace": "auprès de l'administration fiscale genevoise — une démarche que beaucoup de nos résidents découvrent à l'emménagement —, et c'est souvent pertinent de se faire accompagner par un fiduciaire."
+    },
+    {
+     "field": "content_en",
+     "find": "to the Geneva tax administration, and it's often worth getting help from a fiduciary.",
+     "replace": "to the Geneva tax administration — a step many of our residents only discover when they move in — and it's often worth getting help from a fiduciary."
+    }
+   ]
+  },
+  {
+   "slug": "declaration-impots-frontalier-2026",
+   "replacements": [
+    {
+     "field": "content_fr",
+     "find": "Oui, c'est **obligatoire**, même si l'impôt a déjà été prélevé à Genève.",
+     "replace": "Oui, c'est **obligatoire**, même si l'impôt a déjà été prélevé à Genève — c'est la question qu'on nous pose le plus à l'emménagement, et la réponse ne change pas."
+    },
+    {
+     "field": "content_en",
+     "find": "Yes, it's **mandatory**, even though tax was already withheld in Geneva.",
+     "replace": "Yes, it's **mandatory**, even though tax was already withheld in Geneva — it's the question our residents ask us most often at move-in, and the answer never changes."
+    },
+    {
+     "field": "content_fr",
+     "find": "Passé cette date, c'est perdu pour l'année.",
+     "replace": "Passé cette date, c'est perdu pour l'année — c'est l'échéance qu'on rappelle chaque année à nos résidents concernés."
+    },
+    {
+     "field": "content_en",
+     "find": "After that, it's lost for the year.",
+     "replace": "After that, it's lost for the year — it's the deadline we flag to our residents every year."
+    }
+   ]
+  },
+  {
+   "slug": "salaire-suisse-net-frontalier-2026",
+   "replacements": [
+    {
+     "field": "content_fr",
+     "find": "En Suisse comme en France, le salaire brut affiché sur ton contrat n'est pas ce que tu touches sur ton compte.",
+     "replace": "En Suisse comme en France, le salaire brut affiché sur ton contrat n'est pas ce que tu touches sur ton compte — c'est le premier point qu'on clarifie avec nos résidents qui commencent un poste à Genève."
+    },
+    {
+     "field": "content_en",
+     "find": "Just like in France, the gross figure on your Swiss contract is not what hits your account.",
+     "replace": "Just like in France, the gross figure on your Swiss contract is not what hits your account — the first thing we clarify with our residents starting a job in Geneva."
+    },
+    {
+     "field": "content_fr",
+     "find": "vivre à Annemasse plutôt qu'à Genève centre te fait économiser **800 à 1 800 CHF/mois** sur ton loyer — soit 9 600 à 21 600 CHF/an.",
+     "replace": "vivre à Annemasse plutôt qu'à Genève centre te fait économiser **800 à 1 800 CHF/mois** sur ton loyer — soit 9 600 à 21 600 CHF/an. C'est très exactement l'arbitrage que font nos résidents, on le vit avec eux au quotidien."
+    },
+    {
+     "field": "content_en",
+     "find": "living in Annemasse rather than central Geneva saves **800 to 1,800 CHF/month** in rent — 9,600 to 21,600 CHF/year.",
+     "replace": "living in Annemasse rather than central Geneva saves **800 to 1,800 CHF/month** in rent — 9,600 to 21,600 CHF/year. This is exactly the trade-off our residents make, and we live it with them daily."
+    }
+   ]
+  },
+  {
+   "slug": "avenant-fiscal-40-frontalier-geneve",
+   "replacements": [
+    {
+     "field": "content_fr",
+     "find": "Le plus simple reste de rester sous le seuil ; si votre activité l'impose, faites-vous accompagner par un fiduciaire spécialisé en fiscalité transfrontalière.",
+     "replace": "Le plus simple reste de rester sous le seuil — c'est ce qu'on conseille à nos résidents dans ce cas ; si votre activité l'impose, faites-vous accompagner par un fiduciaire spécialisé en fiscalité transfrontalière."
+    },
+    {
+     "field": "content_en",
+     "find": "The simplest approach is to stay under the threshold; if your job requires more, get help from a fiduciary specializing in cross-border taxation.",
+     "replace": "The simplest approach is to stay under the threshold — the advice we give our residents in this situation; if your job requires more, get help from a fiduciary specializing in cross-border taxation."
+    },
+    {
+     "field": "content_fr",
+     "find": "sont désormais pleinement compatibles avec votre statut fiscal **et** social suisse.",
+     "replace": "sont désormais pleinement compatibles avec votre statut fiscal **et** social suisse — on le vit chaque semaine avec nos résidents qui télétravaillent."
+    },
+    {
+     "field": "content_en",
+     "find": "are now fully compatible with both your Swiss tax **and** social-security status.",
+     "replace": "are now fully compatible with both your Swiss tax **and** social-security status — something we see every week with our residents who work from home."
+    }
+   ]
+  },
+  {
+   "slug": "teletravail-frontalier-geneve-regles-2026",
+   "replacements": [
+    {
+     "field": "content_fr",
+     "find": "Le conseil pragmatique : restez sous 40 % (fiscal) et sous 49,9 % (social) pour profiter du télétravail sans aucune complication.",
+     "replace": "Le conseil pragmatique — celui qu'on donne à nos résidents qui télétravaillent : restez sous 40 % (fiscal) et sous 49,9 % (social) pour profiter du télétravail sans aucune complication."
+    },
+    {
+     "field": "content_en",
+     "find": "Pragmatic advice: stay under 40% (tax) and under 49.9% (social) to enjoy remote work without any complications.",
+     "replace": "Pragmatic advice — the same we give our remote-working residents: stay under 40% (tax) and under 49.9% (social) to enjoy remote work without any complications."
+    },
+    {
+     "field": "content_fr",
+     "find": "Concrètement, sur une semaine de 5 jours, **2 jours de télétravail (40 %) sont compatibles** avec le maintien de votre fiscalité ET de votre couverture sociale suisses.",
+     "replace": "Concrètement, sur une semaine de 5 jours, **2 jours de télétravail (40 %) sont compatibles** avec le maintien de votre fiscalité ET de votre couverture sociale suisses — c'est d'ailleurs le rythme qu'on observe le plus souvent chez nos résidents qui télétravaillent."
+    },
+    {
+     "field": "content_en",
+     "find": "Concretely, in a 5-day week, **2 days of remote work (40%) are compatible** with keeping both your Swiss taxation AND your Swiss social coverage.",
+     "replace": "Concretely, in a 5-day week, **2 days of remote work (40%) are compatible** with keeping both your Swiss taxation AND your Swiss social coverage — it's also the rhythm we see most often among our residents who work remotely."
+    }
+   ]
+  },
+  {
+   "slug": "permis-g-frontalier-geneve",
+   "replacements": [
+    {
+     "field": "content_fr",
+     "find": "Comptez en moyenne **environ 3 mois (12 semaines)** pour la délivrance du permis — vous pouvez toutefois commencer à travailler dès l'envoi de votre dossier complet.",
+     "replace": "Comptez en moyenne **environ 3 mois (12 semaines)** pour la délivrance du permis — vous pouvez toutefois commencer à travailler dès l'envoi de votre dossier complet. C'est le point sur lequel on rassure le plus souvent nos résidents à l'emménagement : le délai impressionne, mais il ne retarde pas la prise de poste."
+    },
+    {
+     "field": "content_en",
+     "find": "Expect **about 3 months (12 weeks) on average** for the permit to be issued — though you can start working as soon as your complete file is submitted.",
+     "replace": "Expect **about 3 months (12 weeks) on average** for the permit to be issued — though you can start working as soon as your complete file is submitted. It's the point we most often reassure our residents about at move-in: the timeline looks long, but it doesn't delay your start date."
+    },
+    {
+     "field": "content_fr",
+     "find": "Anticipez : lancez la démarche dès réception du courrier pour éviter tout trou de validité.",
+     "replace": "Anticipez : lancez la démarche dès réception du courrier pour éviter tout trou de validité — c'est le rappel qu'on fait chaque année à nos résidents dont le permis arrive à échéance."
+    },
+    {
+     "field": "content_en",
+     "find": "Plan ahead: start as soon as you get the letter to avoid any gap in validity.",
+     "replace": "Plan ahead: start as soon as you get the letter to avoid any gap in validity — it's the reminder we give our residents every year when their permit comes up for renewal."
+    }
+   ]
+  },
+  {
+   "slug": "allocations-familiales-frontalier-geneve-2026",
+   "replacements": [
+    {
+     "field": "content_fr",
+     "find": "**Ouvre d'abord tes droits en France** auprès de la **CAF de Haute-Savoie** (même si la Suisse sera prioritaire — c'est la porte d'entrée du système).",
+     "replace": "**Ouvre d'abord tes droits en France** auprès de la **CAF de Haute-Savoie** (même si la Suisse sera prioritaire — c'est la porte d'entrée du système). Contre-intuitif, mais c'est le point qu'on se retrouve à réexpliquer le plus souvent aux frontaliers qu'on accompagne."
+    },
+    {
+     "field": "content_en",
+     "find": "**Open your rights in France first** with the **CAF of Haute-Savoie** (even if Switzerland will be priority — it's the entry point).",
+     "replace": "**Open your rights in France first** with the **CAF of Haute-Savoie** (even if Switzerland will be priority — it's the entry point). Counter-intuitive, but it's the step we find ourselves re-explaining most often to the frontaliers we support."
+    },
+    {
+     "field": "content_fr",
+     "find": "Garde une copie de tout : contrat de travail suisse, acte de naissance, attestation de non-versement ou de versement de l'autre caisse. C'est le nerf de la guerre pour débloquer un dossier.",
+     "replace": "Garde une copie de tout : contrat de travail suisse, acte de naissance, attestation de non-versement ou de versement de l'autre caisse. C'est le nerf de la guerre pour débloquer un dossier — on le constate régulièrement en accompagnant nos résidents dans leurs démarches : la pièce manquante est presque toujours ce qui bloque."
+    },
+    {
+     "field": "content_en",
+     "find": "Keep copies of everything: Swiss work contract, birth certificate, proof of (non-)payment from the other fund.",
+     "replace": "Keep copies of everything: Swiss work contract, birth certificate, proof of (non-)payment from the other fund. We see it regularly when helping our residents with their paperwork: a missing document is almost always what holds a file up."
+    }
+   ]
+  },
+  {
+   "slug": "3e-pilier-frontalier-geneve",
+   "replacements": [
+    {
+     "field": "content_fr",
+     "find": "Sans ce statut, si vous êtes uniquement imposé à la source, votre versement 3a **ne réduit pas votre impôt suisse** — il garde alors uniquement son intérêt « épargne retraite ».",
+     "replace": "Sans ce statut, si vous êtes uniquement imposé à la source, votre versement 3a **ne réduit pas votre impôt suisse** — il garde alors uniquement son intérêt « épargne retraite ». C'est le point qu'on vérifie en premier avec nos résidents qui envisagent un 3a : quasi-résident ou pas, tout part de là."
+    },
+    {
+     "field": "content_en",
+     "find": "Without that status, if you're taxed only at source, your 3a contribution **does not reduce your Swiss tax** — it then keeps only its \"retirement savings\" value.",
+     "replace": "Without that status, if you're taxed only at source, your 3a contribution **does not reduce your Swiss tax** — it then keeps only its \"retirement savings\" value. It's the first thing we check with our residents considering a 3a: quasi-resident or not, everything follows from that."
+    },
+    {
+     "field": "content_fr",
+     "find": "Dans tous les cas, faites le point sur votre statut avant de vous engager.",
+     "replace": "Dans tous les cas, faites le point sur votre statut avant de vous engager — c'est ce qu'on conseille systématiquement à nos résidents avant toute ouverture de 3a."
+    },
+    {
+     "field": "content_en",
+     "find": "Either way, check your status before committing.",
+     "replace": "Either way, check your status before committing — it's what we systematically advise our residents before opening any 3a."
+    }
+   ]
+  },
+  {
+   "slug": "assurance-sante-frontalier-lamal-cmu-budget",
+   "replacements": [
+    {
+     "field": "content_fr",
+     "find": "Le droit d'option est irréversible en pratique. Vous avez 3 mois après le début de votre contrat suisse pour choisir.",
+     "replace": "Le droit d'option est irréversible en pratique — c'est le point sur lequel on alerte chaque nouveau résident dès l'emménagement. Vous avez 3 mois après le début de votre contrat suisse pour choisir."
+    },
+    {
+     "field": "content_en",
+     "find": "The right of option is practically irreversible. You have 3 months after your Swiss contract starts to choose.",
+     "replace": "The right of option is practically irreversible — it's the point we flag to every new resident at move-in. You have 3 months after your Swiss contract starts to choose."
+    },
+    {
+     "field": "content_fr",
+     "find": "Faites ce calcul AVANT d'arriver. Beaucoup de frontaliers découvrent la question de l'assurance santé après avoir signé leur bail, et regrettent de ne pas avoir optimisé plus tôt.",
+     "replace": "Faites ce calcul AVANT d'arriver. On le vit chaque année avec nos résidents : beaucoup de frontaliers découvrent la question de l'assurance santé après avoir signé leur bail, et regrettent de ne pas avoir optimisé plus tôt."
+    },
+    {
+     "field": "content_en",
+     "find": "Do this calculation BEFORE arriving. Many cross-border workers discover the health insurance question after signing their lease and regret not optimizing earlier.",
+     "replace": "Do this calculation BEFORE arriving. We see it every year with our residents: many cross-border workers discover the health insurance question after signing their lease and regret not optimizing earlier."
+    }
+   ]
+  },
+  {
+   "slug": "guide-ressources-frontalier-geneve",
+   "replacements": [
+    {
+     "field": "content_fr",
+     "find": "L'irréversibilité est le point que beaucoup sous-estiment : une fois la CMU choisie, on ne revient pas facilement à la LAMal. D'où l'importance de chiffrer les deux **avant** de décider, idéalement avant même d'arriver.",
+     "replace": "L'irréversibilité est le point que beaucoup sous-estiment : une fois la CMU choisie, on ne revient pas facilement à la LAMal. C'est la question qu'on nous pose le plus à l'emménagement — d'où l'importance de chiffrer les deux **avant** de décider, idéalement avant même d'arriver."
+    },
+    {
+     "field": "content_en",
+     "find": "The irreversibility is what many underestimate: once CMU is chosen, you do not easily return to LAMal. Hence the importance of costing both **before** deciding, ideally before you even arrive.",
+     "replace": "The irreversibility is what many underestimate: once CMU is chosen, you do not easily return to LAMal. It is the question we get asked most at move-in — hence the importance of costing both **before** deciding, ideally before you even arrive."
+    },
+    {
+     "field": "content_fr",
+     "find": "et la demande doit être déposée **chaque année, avant le 31 mars** ; passé cette date, c'est perdu pour l'année.",
+     "replace": "et la demande doit être déposée **chaque année, avant le 31 mars** — une échéance qu'on rappelle chaque printemps à nos résidents ; passé cette date, c'est perdu pour l'année."
+    },
+    {
+     "field": "content_en",
+     "find": "and the request must be filed **every year, before 31 March**; after that, it is lost for the year.",
+     "replace": "and the request must be filed **every year, before 31 March** — a deadline we remind our residents of every spring; after that, it is lost for the year."
+    }
+   ]
+  },
+  {
+   "slug": "cout-de-la-vie-suisse-france-frontalier-2026",
+   "replacements": [
+    {
+     "field": "content_fr",
+     "find": "**La stratégie 50/50 qui marche :** gros des courses non périssables côté France",
+     "replace": "**La stratégie 50/50 qui marche — celle qu'on voit s'installer naturellement chez nos résidents :** gros des courses non périssables côté France"
+    },
+    {
+     "field": "content_en",
+     "find": "**The 50/50 strategy that works:** bulk non-perishables on the French side",
+     "replace": "**The 50/50 strategy that works — the one we see our residents settle into naturally:** bulk non-perishables on the French side"
+    },
+    {
+     "field": "content_fr",
+     "find": "Le choix est structurant et difficilement réversible — on le détaille dans notre [comparatif LAMal vs CMU pour frontalier](/blog/assurance-sante-frontalier-lamal-cmu-budget).",
+     "replace": "Le choix est structurant et difficilement réversible — c'est l'un des sujets sur lesquels on accompagne le plus nos résidents à l'arrivée, et on le détaille dans notre [comparatif LAMal vs CMU pour frontalier](/blog/assurance-sante-frontalier-lamal-cmu-budget)."
+    },
+    {
+     "field": "content_en",
+     "find": "The choice is structural and hard to reverse — detailed in our [LAMal vs CMU comparison](/en/blog/assurance-sante-frontalier-lamal-cmu-budget).",
+     "replace": "The choice is structural and hard to reverse — it's one of the topics we help our residents with most on arrival, detailed in our [LAMal vs CMU comparison](/en/blog/assurance-sante-frontalier-lamal-cmu-budget)."
+    }
+   ]
+  },
+  {
+   "slug": "cout-transport-frontalier-geneve-2026",
+   "replacements": [
+    {
+     "field": "content_fr",
+     "find": "Certaines entreprises suisses remboursent partiellement ou totalement l'abonnement de transport. Renseignez-vous auprès de votre RH",
+     "replace": "Certaines entreprises suisses remboursent partiellement ou totalement l'abonnement de transport — c'est l'un des premiers réflexes qu'on conseille à nos résidents à l'arrivée. Renseignez-vous auprès de votre RH"
+    },
+    {
+     "field": "content_en",
+     "find": "Some Swiss companies partially or fully reimburse transport passes. Check with your HR",
+     "replace": "Some Swiss companies partially or fully reimburse transport passes — it's one of the first reflexes we suggest to our residents on arrival. Check with your HR"
+    },
+    {
+     "field": "content_fr",
+     "find": "Le coliving facilite le covoiturage naturellement : quand 10-12 personnes vivent dans la même maison et travaillent dans la même ville, les combinaisons se créent d'elles-mêmes.",
+     "replace": "Le coliving facilite le covoiturage naturellement — on le constate au quotidien dans nos maisons : quand 10-12 personnes vivent dans la même maison et travaillent dans la même ville, les combinaisons se créent d'elles-mêmes."
+    },
+    {
+     "field": "content_en",
+     "find": "Coliving naturally facilitates carpooling: when 10-12 people live in the same house and work in the same city, combinations create themselves.",
+     "replace": "Coliving naturally facilitates carpooling — we see it every day in our houses: when 10-12 people live in the same house and work in the same city, combinations create themselves."
+    }
+   ]
+  },
+  {
+   "slug": "budget-colocation-geneve-guide-complet",
+   "replacements": [
+    {
+     "field": "content_fr",
+     "find": "**Exemple concret** : un loyer affiché à 750 €/mois devient facilement **1 050 €/mois** une fois toutes les charges ajoutées. C'est 40% de plus que le chiffre de l'annonce.",
+     "replace": "**Exemple concret** : un loyer affiché à 750 €/mois devient facilement **1 050 €/mois** une fois toutes les charges ajoutées. C'est 40% de plus que le chiffre de l'annonce — et c'est exactement ce que nos résidents nous racontent de leur ancien logement quand ils arrivent chez nous."
+    },
+    {
+     "field": "content_fr",
+     "find": "En coliving, la logique est différente : les chambres se libèrent ponctuellement toute l'année, donc la meilleure stratégie est de candidater dès maintenant pour figurer sur la liste d'attente.",
+     "replace": "En coliving, la logique est différente : les chambres se libèrent ponctuellement toute l'année — on le voit sur les candidatures qu'on reçoit chaque mois —, donc la meilleure stratégie est de candidater dès maintenant pour figurer sur la liste d'attente."
+    },
+    {
+     "field": "content_en",
+     "find": "**Real example:** a listed rent of 750 €/month easily becomes **1,050 €/month** once all charges are added. That's 40% more than the ad price.",
+     "replace": "**Real example:** a listed rent of 750 €/month easily becomes **1,050 €/month** once all charges are added. That's 40% more than the ad price — and it's exactly what our residents tell us about their previous housing when they move in."
+    },
+    {
+     "field": "content_en",
+     "find": "In coliving the logic is different: rooms free up throughout the year, so the best strategy is to apply now to get on the waiting list.",
+     "replace": "In coliving the logic is different: rooms free up throughout the year — we see it in the applications we receive every month — so the best strategy is to apply now to get on the waiting list."
+    }
+   ]
+  },
+  {
+   "slug": "dossier-location-frontalier-suisse-france",
+   "replacements": [
+    {
+     "field": "content_fr",
+     "find": "C'est le document que la plupart des frontaliers oublient, et c'est celui qui fait pencher la balance.",
+     "replace": "C'est le document que la plupart des frontaliers oublient — on le constate sur les dossiers qu'on voit passer chaque mois — et c'est celui qui fait pencher la balance."
+    },
+    {
+     "field": "content_fr",
+     "find": "**Envoyer un dossier incomplet** : un dossier avec des pièces manquantes est éliminé immédiatement. Mieux vaut envoyer un jour plus tard qu'un dossier bâclé.",
+     "replace": "**Envoyer un dossier incomplet** : un dossier avec des pièces manquantes est éliminé immédiatement — on le voit sur les candidatures qu'on reçoit, un dossier complet passe toujours devant. Mieux vaut envoyer un jour plus tard qu'un dossier bâclé."
+    },
+    {
+     "field": "content_en",
+     "find": "This is the document most cross-border workers forget, and it's the one that tips the balance.",
+     "replace": "This is the document most cross-border workers forget — we see it in the application files that come through every month — and it's the one that tips the balance."
+    },
+    {
+     "field": "content_en",
+     "find": "**Sending an incomplete file**: an application with missing documents is eliminated immediately. Better to send a day later than a rushed file.",
+     "replace": "**Sending an incomplete file**: an application with missing documents is eliminated immediately — we see it in the applications we receive: a complete file always comes out ahead. Better to send a day later than a rushed file."
+    }
+   ]
+  },
+  {
+   "slug": "banque-telephone-internet-frontalier-bons-plans",
+   "replacements": [
+    {
+     "field": "content_fr",
+     "find": "**Règle d'or** : ne faites JAMAIS de change via votre banque traditionnelle. Utilisez Wise ou Revolut. L'économie sur un an représente facilement 1 000 à 1 500 €.",
+     "replace": "**Règle d'or** : ne faites JAMAIS de change via votre banque traditionnelle. Utilisez Wise ou Revolut. L'économie sur un an représente facilement 1 000 à 1 500 € — c'est le premier conseil qu'on donne à nos résidents à l'emménagement."
+    },
+    {
+     "field": "content_fr",
+     "find": "C'est l'option la plus populaire chez les frontaliers. 35 Go en Suisse suffisent largement",
+     "replace": "C'est l'option la plus populaire chez les frontaliers — et de loin la plus courante chez nos résidents aussi. 35 Go en Suisse suffisent largement"
+    },
+    {
+     "field": "content_en",
+     "find": "**Golden rule**: NEVER do currency exchange through your traditional bank. Use Wise or Revolut. The savings over a year easily represent €1,000-1,500.",
+     "replace": "**Golden rule**: NEVER do currency exchange through your traditional bank. Use Wise or Revolut. The savings over a year easily represent €1,000-1,500 — it's the first tip we give our residents when they move in."
+    },
+    {
+     "field": "content_en",
+     "find": "This is the most popular option among cross-border workers. 35 GB in Switzerland is more than enough",
+     "replace": "This is the most popular option among cross-border workers — and by far the most common one among our residents too. 35 GB in Switzerland is more than enough"
+    }
+   ]
+  },
+  {
+   "slug": "arnaques-logement-frontalier-geneve-eviter",
+   "replacements": [
+    {
+     "field": "content_fr",
+     "find": "C'est la règle d'or : **ne versez jamais un centime avant d'avoir visité le logement ET vérifié l'identité du propriétaire**.",
+     "replace": "C'est la règle d'or — celle qu'on répète à chaque candidat qui nous raconte sa recherche : **ne versez jamais un centime avant d'avoir visité le logement ET vérifié l'identité du propriétaire**."
+    },
+    {
+     "field": "content_fr",
+     "find": "La demande est très forte près de Genève : comptez généralement entre **deux et quatre mois** pour trouver un logement qui correspond à vos critères et à votre budget.",
+     "replace": "La demande est très forte près de Genève : comptez généralement entre **deux et quatre mois** pour trouver un logement qui correspond à vos critères et à votre budget — c'est ce que nos résidents nous racontent le plus souvent de leur recherche avant d'arriver chez nous."
+    },
+    {
+     "field": "content_en",
+     "find": "This is the golden rule: **never pay a single cent before visiting the property AND verifying the owner's identity**.",
+     "replace": "This is the golden rule — the one we repeat to every applicant who tells us about their search: **never pay a single cent before visiting the property AND verifying the owner's identity**."
+    },
+    {
+     "field": "content_en",
+     "find": "Demand is very high near Geneva: it generally takes **two to four months** to find housing that matches your criteria and budget.",
+     "replace": "Demand is very high near Geneva: it generally takes **two to four months** to find housing that matches your criteria and budget — it's what our residents most often tell us about their search before joining us."
+    }
+   ]
+  },
+  {
+   "slug": "salaire-suisse-net-frontalier-2026",
+   "replacements": [
+    {
+     "field": "content_fr",
+     "find": "le plafond 2026 est de **7 056 CHF/an**",
+     "replace": "le plafond 2026 est de **7 258 CHF/an**"
+    },
+    {
+     "field": "content_en",
+     "find": "the 2026 cap is **7,056 CHF/year**",
+     "replace": "the 2026 cap is **7,258 CHF/year**"
+    },
+    {
+     "field": "content_fr",
+     "find": "La convention franco-suisse de 1966 (et son avenant de 2022)",
+     "replace": "La convention franco-suisse de 1966 (modifiée en dernier lieu en 2023)"
+    },
+    {
+     "field": "content_en",
+     "find": "The Franco-Swiss convention (1966, updated 2022)",
+     "replace": "The Franco-Swiss convention (1966, last updated 2023)"
+    }
+   ]
+  }
+ ]
+}
