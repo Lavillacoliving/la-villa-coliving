@@ -275,12 +275,12 @@ export const faqData: FAQItem[] = [
     id: 'monthly-cost',
     category: 'Pricing & Payments',
     question: {
-      en: 'How much does it cost to live at La Villa?',
-      fr: 'Combien coûte la vie à La Villa ?',
+      en: 'How much does a room at La Villa Coliving cost?',
+      fr: 'Combien coûte une chambre chez La Villa Coliving ?',
     },
     answer: {
-      en: 'Our rates start from 1,380 CHF per month and vary depending on the house, room type, and whether you choose a private or shared bathroom. This is an all-inclusive rate with no hidden fees. When compared to renting a studio in Geneva plus utilities and amenities, La Villa offers exceptional value.',
-      fr: 'Nos tarifs commencent à 1 380 CHF par mois et varient selon la maison, le type de chambre, et si vous choisissez une salle de bain privée ou partagée. C\'est un tarif tout inclus sans frais cachés. Comparé à la location d\'un studio à Genève plus les charges et équipements, La Villa offre une valeur exceptionnelle.',
+      en: 'A room at La Villa Coliving costs CHF 1,380 per month, all-inclusive, with no hidden fees and no application fee: utilities, fiber internet, cleaning of common areas twice a week, gym, sauna, pool, streaming and community events. Our three houses — La Villa (Ville-la-Grand), Le Loft (Ambilly) and Le Lodge (Annemasse) — are 15-20 minutes from Geneva by Léman Express or tram.',
+      fr: 'Une chambre chez La Villa Coliving coûte 1 380 CHF par mois, tout inclus, sans frais cachés ni frais de dossier : charges, fibre, ménage des espaces communs deux fois par semaine, salle de sport, sauna, piscine, streaming et événements communautaires. Nos trois maisons — La Villa (Ville-la-Grand), Le Loft (Ambilly) et Le Lodge (Annemasse) — sont à 15-20 minutes de Genève en Léman Express ou tram.',
     },
   },
   {
