@@ -1,11 +1,13 @@
 import { useLanguage } from "@/contexts/LanguageContext";
 import { Check, ArrowRight, Home, Sparkles, X, Star, Droplets } from "lucide-react";
 import { LocalizedLink } from "@/components/LocalizedLink";
+import { colocGeneveHref } from "@/lib/siteLinks";
 import { Helmet } from "react-helmet";
 import { SEO } from "@/components/SEO";
 import { FaqSection } from "@/components/FaqSection";
 import { tarifsFaq } from "@/data/faq/tarifsFaq";
 import { buildBreadcrumbSchema, buildRoomOfferSchema } from "@/lib/structuredData";
+import { STATS, PRICE_EN_NUM, PRICE_CHF_FR, PRICE_CHF_EN } from "@/data/stats";
 
 export function RatesPageV4() {
   const { language } = useLanguage();
@@ -148,8 +150,8 @@ export function RatesPageV4() {
       location: "Ville-la-Grand",
       image: "/images/villa_portrait.webp",
       alt: language === "en"
-        ? "La Villa coliving Ville-la-Grand — all-inclusive furnished rooms from 1,380 CHF near Geneva"
-        : "La Villa coliving Ville-la-Grand — chambres meublées tout inclus dès 1 380 CHF près de Genève",
+        ? `La Villa coliving Ville-la-Grand — all-inclusive furnished rooms from ${PRICE_EN_NUM} CHF near Geneva`
+        : `La Villa coliving Ville-la-Grand — chambres meublées tout inclus dès ${PRICE_CHF_FR} près de Genève`,
       description:
         language === "en"
           ? "Elegant villa with pool & garden"
@@ -160,8 +162,8 @@ export function RatesPageV4() {
       location: "Ambilly",
       image: "/images/le loft jardin.webp",
       alt: language === "en"
-        ? "Le Loft coliving Ambilly — all-inclusive furnished rooms from 1,380 CHF near Geneva"
-        : "Le Loft coliving Ambilly — chambres meublées tout inclus dès 1 380 CHF près de Genève",
+        ? `Le Loft coliving Ambilly — all-inclusive furnished rooms from ${PRICE_EN_NUM} CHF near Geneva`
+        : `Le Loft coliving Ambilly — chambres meublées tout inclus dès ${PRICE_CHF_FR} près de Genève`,
       description:
         language === "en"
           ? "Modern loft with big rooms"
@@ -172,8 +174,8 @@ export function RatesPageV4() {
       location: "Annemasse",
       image: "/images/le lodge piscine.webp",
       alt: language === "en"
-        ? "Le Lodge coliving Annemasse — all-inclusive furnished rooms from 1,380 CHF near Geneva"
-        : "Le Lodge coliving Annemasse — chambres meublées tout inclus dès 1 380 CHF près de Genève",
+        ? `Le Lodge coliving Annemasse — all-inclusive furnished rooms from ${PRICE_EN_NUM} CHF near Geneva`
+        : `Le Lodge coliving Annemasse — chambres meublées tout inclus dès ${PRICE_CHF_FR} près de Genève`,
       description:
         language === "en"
           ? "Pool house, full fitness chalet with sauna & arcade"
@@ -183,17 +185,17 @@ export function RatesPageV4() {
 
   // Comparison data
   const genevaTotal = 2245;
-  const lavillaPrice = 1380;
+  const lavillaPrice = STATS.priceChf;
   const monthlySavings = genevaTotal - lavillaPrice;
   const yearlySavings = monthlySavings * 12;
 
   return (
     <main className="relative pt-16">
       <SEO
-        title={language === "en" ? "Rates — All-Inclusive Coliving from 1,380 CHF/month" : "Tarifs Colocation Genève — Tout Compris dès 1 380 CHF/mois"}
+        title={language === "en" ? `Rates — All-Inclusive Coliving from ${PRICE_EN_NUM} CHF/month` : `Tarifs Colocation Genève — Tout Compris dès ${PRICE_CHF_FR}/mois`}
         description={language === "en"
-          ? "All-inclusive coliving near Geneva from 1,380 CHF/month — no application or agency fees. Rent, utilities, gym, pool, WiFi, cleaning included."
-          : "Tarifs colocation tout inclus près de Genève dès 1 380 CHF/mois, sans frais de dossier ni d'agence. Loyer, charges, gym, piscine, WiFi, ménage compris."}
+          ? `All-inclusive coliving near Geneva from ${PRICE_EN_NUM} CHF/month — no application or agency fees. Rent, utilities, gym, pool, WiFi, cleaning included.`
+          : `Tarifs colocation tout inclus près de Genève dès ${PRICE_CHF_FR}/mois, sans frais de dossier ni d'agence. Loyer, charges, gym, piscine, WiFi, ménage compris.`}
         url="https://www.lavillacoliving.com/tarifs"
       />
       <Helmet>
@@ -204,8 +206,8 @@ export function RatesPageV4() {
         <script type="application/ld+json">{JSON.stringify(buildRoomOfferSchema({
           name: language === "en" ? "All-inclusive furnished room near Geneva" : "Chambre meublée tout inclus près de Genève",
           description: language === "en"
-            ? "All-inclusive coliving room from CHF 1,380/month near Geneva — utilities, fiber, cleaning, pool, sauna, gym included."
-            : "Chambre de coliving tout inclus dès 1 380 CHF/mois près de Genève — charges, fibre, ménage, piscine, sauna, salle de sport compris.",
+            ? `All-inclusive coliving room from ${PRICE_CHF_EN}/month near Geneva — utilities, fiber, cleaning, pool, sauna, gym included.`
+            : `Chambre de coliving tout inclus dès ${PRICE_CHF_FR}/mois près de Genève — charges, fibre, ménage, piscine, sauna, salle de sport compris.`,
           url: "https://www.lavillacoliving.com/tarifs",
         }))}</script>
       </Helmet>
@@ -231,13 +233,13 @@ export function RatesPageV4() {
           </h1>
           <p className="text-xl text-[#57534E] max-w-2xl mx-auto mb-4">
             {language === "en"
-              ? "From 1,380 CHF/month — All inclusive"
-              : "À partir de 1 380 CHF/mois — Tout inclus"}
+              ? `From ${PRICE_EN_NUM} CHF/month — All inclusive`
+              : `À partir de ${PRICE_CHF_FR}/mois — Tout inclus`}
           </p>
           <p className="text-lg text-[#78716C]">
             {language === "en"
-              ? "At La Villa Coliving, a room costs CHF 1,380/month, everything included: rent, utilities, fiber, cleaning twice a week, gym, pool, streaming. No application or agency fees — deposit of 2 months' rent (excluding utilities)."
-              : "À La Villa Coliving, une chambre coûte 1 380 CHF/mois, tout compris : loyer, charges, fibre, ménage 2x/semaine, salle de sport, piscine, streaming. Sans frais de dossier ni d'agence — caution de 2 mois de loyer (hors charges)."}
+              ? `At La Villa Coliving, a room costs ${PRICE_CHF_EN}/month, everything included: rent, utilities, fiber, cleaning twice a week, gym, pool, streaming. No application or agency fees — deposit of 2 months' rent (excluding utilities).`
+              : `À La Villa Coliving, une chambre coûte ${PRICE_CHF_FR}/mois, tout compris : loyer, charges, fibre, ménage 2x/semaine, salle de sport, piscine, streaming. Sans frais de dossier ni d'agence — caution de 2 mois de loyer (hors charges).`}
           </p>
           <div className="mt-8 flex flex-wrap justify-center gap-2">
             {(language === "en"
@@ -405,7 +407,7 @@ export function RatesPageV4() {
                       ? "Your room (furnished)"
                       : "Ta chambre (meublée)"}
                   </span>
-                  <span>1 380 CHF</span>
+                  <span>{PRICE_CHF_FR}</span>
                 </div>
                 <div className="flex justify-between text-[#44403C]">
                   <span className="flex items-center gap-2">
@@ -511,7 +513,7 @@ export function RatesPageV4() {
                     {language === "en" ? "Total monthly" : "Total mensuel"}
                   </span>
                   <span className="text-3xl font-bold text-[#1C1917]">
-                    1 380 CHF
+                    {PRICE_CHF_FR}
                   </span>
                 </div>
               </div>
@@ -789,7 +791,7 @@ export function RatesPageV4() {
 
                   <div className="mb-8">
                     <span className="text-4xl font-light text-[#D4A574]">
-                      1,380
+                      {PRICE_EN_NUM}
                     </span>
                     <span className="text-[#78716C]">
                       {" "}
@@ -866,8 +868,8 @@ export function RatesPageV4() {
             </h3>
             <p className="text-[#A8A29E] max-w-2xl mx-auto mb-6">
               {language === "en"
-                ? "For 1,380 CHF/month, you get a furnished room in a premium house, all utilities, cleaning, gym, pool, sauna, yoga classes, community events, and zero hassle. Compare that to 2,245+ CHF for a basic studio in Geneva."
-                : "Pour 1 380 CHF/mois, tu obtiens une chambre meublée dans une maison premium, toutes charges, ménage, sport, piscine, sauna, cours de yoga, événements communautaires, et zéro tracas. Compare avec 2 245+ CHF pour un studio basique à Genève."}
+                ? `For ${PRICE_EN_NUM} CHF/month, you get a furnished room in a premium house, all utilities, cleaning, gym, pool, sauna, yoga classes, community events, and zero hassle. Compare that to 2,245+ CHF for a basic studio in Geneva.`
+                : `Pour ${PRICE_CHF_FR}/mois, tu obtiens une chambre meublée dans une maison premium, toutes charges, ménage, sport, piscine, sauna, cours de yoga, événements communautaires, et zéro tracas. Compare avec 2 245+ CHF pour un studio basique à Genève.`}
             </p>
             <div className="inline-flex items-center gap-2 px-6 py-3 bg-[#D4A574] text-white rounded-full font-medium">
               <Sparkles className="w-5 h-5" />
@@ -952,14 +954,14 @@ export function RatesPageV4() {
         <div className="container-custom max-w-3xl text-center">
           <p className="text-[#57534E] italic text-lg mb-2">
             {language === "en"
-              ? "\"I was paying 2,200 CHF for a tiny studio in Geneva. Here I pay 1,380 CHF all-inclusive with pool, gym, and an amazing community.\""
-              : "\"Je payais 2 200 CHF pour un petit studio à Genève. Ici je paie 1 380 CHF tout inclus avec piscine, gym et une communauté incroyable.\""}
+              ? `\"I was paying 2,200 CHF for a tiny studio in Geneva. Here I pay ${PRICE_EN_NUM} CHF all-inclusive with pool, gym, and an amazing community.\"`
+              : `\"Je payais 2 200 CHF pour un petit studio à Genève. Ici je paie ${PRICE_CHF_FR} tout inclus avec piscine, gym et une communauté incroyable.\"`}
           </p>
           <p className="text-sm text-[#78716C] mb-6">
             — Marie L., {language === "en" ? "Consultant, cross-border worker" : "Consultante, frontalière"}
           </p>
           <LocalizedLink
-            to="/colocation-geneve"
+            to={colocGeneveHref(language)}
             className="inline-flex items-center gap-2 text-[#D4A574] font-medium hover:underline"
           >
             {language === "en" ? "Learn more about shared housing near Geneva" : "En savoir plus sur la colocation près de Genève"}

@@ -32,9 +32,12 @@ const SUPABASE_URL = 'https://tefpynkdxxfiefpkgitz.supabase.co';
 const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InRlZnB5bmtkeHhmaWVmcGtnaXR6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzA4OTg5NDksImV4cCI6MjA4NjQ3NDk0OX0.X_Z85w6L4i1IkVevMK73hpFRClCpgh0Gh0WMY9pdDtw';
 
 // Static pages to pre-render (manually maintained — rarely changes)
+// ⚠️ /colocation-geneve FR : consolidé 07/07/2026 → 308 (vercel.json redirects)
+// vers /blog/trouver-colocation-geneve-frontalier. Ne PAS le remettre ici :
+// le prérendre recréerait un rewrite qui n'est plus servi (redirect prioritaire)
+// et le réinjecterait dans le sitemap.
 const STATIC_ROUTES_FR = [
   '/',
-  '/colocation-geneve',
   '/annemasse-colocation',
   '/chambre-a-louer-annemasse',
   '/le-coliving',
@@ -53,8 +56,13 @@ const STATIC_ROUTES_FR = [
   '/politique-de-confidentialite',
 ];
 
-// English versions of all static pages (same paths with /en prefix)
-const STATIC_ROUTES_EN = STATIC_ROUTES_FR.map(r => r === '/' ? '/en' : `/en${r}`);
+// English versions of all static pages (same paths with /en prefix).
+// + /en/colocation-geneve : le pilier EN reste servi (money page en progression,
+// pos 7,0 — décision 07/07/2026), contrairement au FR consolidé ci-dessus.
+const STATIC_ROUTES_EN = [
+  ...STATIC_ROUTES_FR.map(r => r === '/' ? '/en' : `/en${r}`),
+  '/en/colocation-geneve',
+];
 
 const STATIC_ROUTES = [...STATIC_ROUTES_FR, ...STATIC_ROUTES_EN];
 
@@ -509,7 +517,6 @@ const SITE_URL = 'https://www.lavillacoliving.com';
 // Priority/frequency config for static pages
 const STATIC_PAGE_CONFIG = {
   '/': { priority: '1.0', changefreq: 'weekly' },
-  '/colocation-geneve': { priority: '0.9', changefreq: 'weekly' },
   '/annemasse-colocation': { priority: '0.9', changefreq: 'weekly' },
   '/chambre-a-louer-annemasse': { priority: '0.8', changefreq: 'weekly' },
   '/le-coliving': { priority: '0.8', changefreq: 'monthly' },
@@ -562,6 +569,10 @@ async function generateSitemap(blogSlugs) {
     const enPriority = (parseFloat(config.priority) - 0.1).toFixed(1);
     entries.push(sitemapEntry(enRoute, frRoute, enRoute, enPriority, config.changefreq, today));
   }
+  // Pilier EN conservé hors boucle (le FR est consolidé → 308 vers l'article,
+  // 07/07/2026) : son alternate FR pointe vers l'article élu, pas vers l'URL
+  // redirigée.
+  entries.push(sitemapEntry('/en/colocation-geneve', '/blog/trouver-colocation-geneve-frontalier', '/en/colocation-geneve', '0.8', 'weekly', today));
 
   // Blog articles (FR + EN) — only FR slugs, we generate both.
   // lastmod = real updated_at from Supabase (fallback: build date).

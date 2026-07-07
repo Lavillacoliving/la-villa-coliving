@@ -2,6 +2,7 @@ import { Helmet } from "react-helmet";
 import { useLocation } from "react-router-dom";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { FOUNDERS, FOUNDING_DATE, ABOUT_PAGE_LIVE } from "@/lib/structuredData";
+import { PRICE_EN_NUM, PRICE_CHF_FR, PRICE_CHF_EN } from "@/data/stats";
 
 interface SEOProps {
   title?: string;
@@ -36,8 +37,8 @@ export function SEO({
 
   const defaultDescription =
     language === "en"
-      ? "Premium coliving near Geneva. 29 furnished rooms, all-inclusive from 1,380 CHF/month. Heated pool, gym, sauna, fiber internet. Ideal for expats, cross-border workers & young professionals."
-      : "Colocation et coliving premium près de Genève. 29 chambres meublées tout inclus dès 1 380 CHF/mois. Piscine chauffée, salle de sport, sauna, fibre optique. Idéal frontaliers, expats et jeunes professionnels.";
+      ? `Premium coliving near Geneva. 29 furnished rooms, all-inclusive from ${PRICE_EN_NUM} CHF/month. Heated pool, gym, sauna, fiber internet. Ideal for expats, cross-border workers & young professionals.`
+      : `Colocation et coliving premium près de Genève. 29 chambres meublées tout inclus dès ${PRICE_CHF_FR}/mois. Piscine chauffée, salle de sport, sauna, fibre optique. Idéal frontaliers, expats et jeunes professionnels.`;
 
   // B2: append the brand suffix only while the title stays within the SERP display limit (~65 chars);
   // beyond that, use the bare descriptive title to avoid truncation. 65 (not 60) keeps the brand on
@@ -111,7 +112,7 @@ export function SEO({
           description: siteDescription,
           telephone: "+33664315134",
           email: "contact@lavillacoliving.com",
-          priceRange: language === "en" ? "From CHF 1,380/month" : "Dès 1 380 CHF/mois",
+          priceRange: language === "en" ? `From ${PRICE_CHF_EN}/month` : `Dès ${PRICE_CHF_FR}/mois`,
           address: {
             "@type": "PostalAddress",
             streetAddress: "34 rue du Foron",

@@ -1,4 +1,5 @@
 import type { QAPair } from "@/lib/structuredData";
+import { PRICE_CHF_FR, PRICE_CHF_EN } from "@/data/stats";
 
 // §4 du playbook AEO — /le-coliving (définitionnel). Tutoiement, texte verbatim.
 export const colivingFaq: { fr: QAPair[]; en: QAPair[] } = {
@@ -17,7 +18,7 @@ export const colivingFaq: { fr: QAPair[]; en: QAPair[] } = {
     },
     {
       q: "Quelle est la différence entre le coliving et Airbnb ?",
-      a: "Airbnb, c'est de la location courte durée, meublée mais sans vie de communauté ni engagement de long terme. Le coliving, comme chez La Villa Coliving, c'est un vrai lieu de vie : tu y résides plusieurs mois à plusieurs années, dans une communauté stable de 7 à 12 personnes, avec tous les services inclus dans un loyer mensuel unique dès 1 380 CHF.",
+      a: `Airbnb, c'est de la location courte durée, meublée mais sans vie de communauté ni engagement de long terme. Le coliving, comme chez La Villa Coliving, c'est un vrai lieu de vie : tu y résides plusieurs mois à plusieurs années, dans une communauté stable de 7 à 12 personnes, avec tous les services inclus dans un loyer mensuel unique dès ${PRICE_CHF_FR}.`,
     },
     {
       q: "Le coliving est-il adapté si je suis plutôt introverti ?",
@@ -25,7 +26,7 @@ export const colivingFaq: { fr: QAPair[]; en: QAPair[] } = {
     },
     {
       q: "Y a-t-il du coliving près de Genève ?",
-      a: "Oui. La Villa Coliving gère trois maisons de coliving à 20 minutes du centre de Genève, côté France : à Ville-la-Grand, Ambilly et Annemasse. Chacune propose des chambres meublées de 17 à 23 m², tout inclus dès 1 380 CHF/mois, avec piscine, sauna et salle de sport.",
+      a: `Oui. La Villa Coliving gère trois maisons de coliving à 20 minutes du centre de Genève, côté France : à Ville-la-Grand, Ambilly et Annemasse. Chacune propose des chambres meublées de 17 à 23 m², tout inclus dès ${PRICE_CHF_FR}/mois, avec piscine, sauna et salle de sport.`,
     },
   ],
   en: [
@@ -43,7 +44,7 @@ export const colivingFaq: { fr: QAPair[]; en: QAPair[] } = {
     },
     {
       q: "What is the difference between coliving and Airbnb?",
-      a: "Airbnb is short-term rental, furnished but without community life or long-term commitment. Coliving, as at La Villa Coliving, is a real place to live: you stay for several months to several years, in a stable community of 7 to 12 people, with all services included in a single monthly rent from CHF 1,380.",
+      a: `Airbnb is short-term rental, furnished but without community life or long-term commitment. Coliving, as at La Villa Coliving, is a real place to live: you stay for several months to several years, in a stable community of 7 to 12 people, with all services included in a single monthly rent from ${PRICE_CHF_EN}.`,
     },
     {
       q: "Is coliving suitable if I'm rather introverted?",
@@ -51,7 +52,7 @@ export const colivingFaq: { fr: QAPair[]; en: QAPair[] } = {
     },
     {
       q: "Is there coliving near Geneva?",
-      a: "Yes. La Villa Coliving runs three coliving houses 20 minutes from Geneva city center, on the French side: in Ville-la-Grand, Ambilly and Annemasse. Each offers furnished rooms of 17 to 23 m², all inclusive from CHF 1,380/month, with a pool, sauna and gym.",
+      a: `Yes. La Villa Coliving runs three coliving houses 20 minutes from Geneva city center, on the French side: in Ville-la-Grand, Ambilly and Annemasse. Each offers furnished rooms of 17 to 23 m², all inclusive from ${PRICE_CHF_EN}/month, with a pool, sauna and gym.`,
     },
   ],
 };

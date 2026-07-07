@@ -1,4 +1,5 @@
 import type { QAPair } from "@/lib/structuredData";
+import { PRICE_CHF_FR, PRICE_CHF_EN } from "@/data/stats";
 
 // §3 du playbook AEO — /colocation-geneve (page pilier géo « colocation Genève »).
 // Tutoiement, texte verbatim. Les questions prix vivent désormais sur /tarifs (canonique).
@@ -6,7 +7,7 @@ export const colocationGeneveFaq: { fr: QAPair[]; en: QAPair[] } = {
   fr: [
     {
       q: "Où trouver une colocation près de Genève ?",
-      a: "La Villa Coliving propose des chambres en colocation tout inclus dans trois maisons situées à 20 minutes du centre de Genève, côté France : à Ville-la-Grand, Ambilly et Annemasse. Chaque maison accueille 7 à 12 résidents et dispose d'une piscine, d'un sauna et d'une salle de sport. À partir de 1 380 CHF/mois.",
+      a: `La Villa Coliving propose des chambres en colocation tout inclus dans trois maisons situées à 20 minutes du centre de Genève, côté France : à Ville-la-Grand, Ambilly et Annemasse. Chaque maison accueille 7 à 12 résidents et dispose d'une piscine, d'un sauna et d'une salle de sport. À partir de ${PRICE_CHF_FR}/mois.`,
     },
     {
       q: "Quelle est la différence entre une colocation classique et le coliving ?",
@@ -18,7 +19,7 @@ export const colocationGeneveFaq: { fr: QAPair[]; en: QAPair[] } = {
     },
     {
       q: "Pourquoi habiter côté français plutôt qu'à Genève ?",
-      a: "Habiter côté français près de Genève, comme à La Villa Coliving, permet un loyer et des frais de vie nettement plus accessibles qu'au centre de Genève, tout en restant à 20 minutes en transports. Tu profites d'une chambre meublée tout inclus dès 1 380 CHF/mois, avec piscine, sauna et salle de sport, dans une maison à taille humaine.",
+      a: `Habiter côté français près de Genève, comme à La Villa Coliving, permet un loyer et des frais de vie nettement plus accessibles qu'au centre de Genève, tout en restant à 20 minutes en transports. Tu profites d'une chambre meublée tout inclus dès ${PRICE_CHF_FR}/mois, avec piscine, sauna et salle de sport, dans une maison à taille humaine.`,
     },
     {
       q: "La colocation près de Genève convient-elle aux expatriés et nouveaux arrivants ?",
@@ -34,7 +35,7 @@ export const colocationGeneveFaq: { fr: QAPair[]; en: QAPair[] } = {
     },
     {
       q: "Proposez-vous des colocations meublées à Genève ?",
-      a: "Oui. Chez La Villa Coliving, chaque chambre est privée et entièrement meublée (lit, bureau, rangements), et tous les espaces communs le sont aussi. Tu emménages avec ta valise : pas de meubles à acheter, pas d'IKEA à monter. C'est une colocation meublée tout inclus, à 20 minutes du centre de Genève côté France, dès 1 380 CHF/mois.",
+      a: `Oui. Chez La Villa Coliving, chaque chambre est privée et entièrement meublée (lit, bureau, rangements), et tous les espaces communs le sont aussi. Tu emménages avec ta valise : pas de meubles à acheter, pas d'IKEA à monter. C'est une colocation meublée tout inclus, à 20 minutes du centre de Genève côté France, dès ${PRICE_CHF_FR}/mois.`,
     },
     {
       q: "La colocation près de Genève est-elle adaptée aux frontaliers ?",
@@ -44,7 +45,7 @@ export const colocationGeneveFaq: { fr: QAPair[]; en: QAPair[] } = {
   en: [
     {
       q: "Where to find shared housing near Geneva?",
-      a: "La Villa Coliving offers all-inclusive shared rooms in three houses located 20 minutes from Geneva city center, on the French side: in Ville-la-Grand, Ambilly and Annemasse. Each house hosts 7 to 12 residents and has a pool, a sauna and a gym. From CHF 1,380/month.",
+      a: `La Villa Coliving offers all-inclusive shared rooms in three houses located 20 minutes from Geneva city center, on the French side: in Ville-la-Grand, Ambilly and Annemasse. Each house hosts 7 to 12 residents and has a pool, a sauna and a gym. From ${PRICE_CHF_EN}/month.`,
     },
     {
       q: "What is the difference between traditional shared housing and coliving?",
@@ -56,7 +57,7 @@ export const colocationGeneveFaq: { fr: QAPair[]; en: QAPair[] } = {
     },
     {
       q: "Why live on the French side rather than in Geneva?",
-      a: "Living on the French side near Geneva, like at La Villa Coliving, means significantly more affordable rent and living costs than central Geneva, while staying 20 minutes away by public transport. You enjoy an all-inclusive furnished room from CHF 1,380/month, with a pool, sauna and gym, in a human-scale house.",
+      a: `Living on the French side near Geneva, like at La Villa Coliving, means significantly more affordable rent and living costs than central Geneva, while staying 20 minutes away by public transport. You enjoy an all-inclusive furnished room from ${PRICE_CHF_EN}/month, with a pool, sauna and gym, in a human-scale house.`,
     },
     {
       q: "Is shared housing near Geneva suitable for expats and newcomers?",
@@ -72,7 +73,7 @@ export const colocationGeneveFaq: { fr: QAPair[]; en: QAPair[] } = {
     },
     {
       q: "Do you offer furnished shared housing in Geneva?",
-      a: "Yes. At La Villa Coliving, every room is private and fully furnished (bed, desk, storage), and all common areas are too. You move in with your suitcase: no furniture to buy, no IKEA to assemble. It's all-inclusive furnished shared housing, 20 minutes from Geneva city center on the French side, from CHF 1,380/month.",
+      a: `Yes. At La Villa Coliving, every room is private and fully furnished (bed, desk, storage), and all common areas are too. You move in with your suitcase: no furniture to buy, no IKEA to assemble. It's all-inclusive furnished shared housing, 20 minutes from Geneva city center on the French side, from ${PRICE_CHF_EN}/month.`,
     },
     {
       q: "Is shared housing near Geneva suitable for cross-border workers?",

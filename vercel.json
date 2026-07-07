@@ -5,10 +5,6 @@
       "destination": "/prerendered/index.html"
     },
     {
-      "source": "/colocation-geneve",
-      "destination": "/prerendered/colocation-geneve.html"
-    },
-    {
       "source": "/annemasse-colocation",
       "destination": "/prerendered/annemasse-colocation.html"
     },
@@ -77,10 +73,6 @@
       "destination": "/prerendered/en.html"
     },
     {
-      "source": "/en/colocation-geneve",
-      "destination": "/prerendered/en-colocation-geneve.html"
-    },
-    {
       "source": "/en/annemasse-colocation",
       "destination": "/prerendered/en-annemasse-colocation.html"
     },
@@ -143,6 +135,10 @@
     {
       "source": "/en/politique-de-confidentialite",
       "destination": "/prerendered/en-politique-de-confidentialite.html"
+    },
+    {
+      "source": "/en/colocation-geneve",
+      "destination": "/prerendered/en-colocation-geneve.html"
     },
     {
       "source": "/blog/quitter-son-logement-guide-pratique",
@@ -483,6 +479,11 @@
   ],
   "trailingSlash": false,
   "redirects": [
+    {
+      "source": "/colocation-geneve",
+      "destination": "/blog/trouver-colocation-geneve-frontalier",
+      "permanent": true
+    },
     {
       "source": "/fr",
       "destination": "/",

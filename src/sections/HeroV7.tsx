@@ -1,8 +1,9 @@
 import { LocalizedLink } from "@/components/LocalizedLink";
+import { colocGeneveHref } from "@/lib/siteLinks";
 import { Scrim } from "@/components/Scrim";
 import { ArrowRight, ChevronDown, Home, Users, Heart, MapPin } from "lucide-react";
 import { useLanguage } from "@/contexts/LanguageContext";
-import { STATS, STATS_DISPLAY, totalAvailable, totalAvailabilityLabel } from "@/data/stats";
+import { STATS, STATS_DISPLAY, totalAvailable, totalAvailabilityLabel, PRICE_CHF_FR, PRICE_CHF_EN } from "@/data/stats";
 
 /**
  * VERSION 9: STONE & BRASS — Condo premium contemporain
@@ -72,8 +73,8 @@ export function HeroV7() {
           {/* Description */}
           <p className="text-base md:text-lg text-white max-w-xl mb-6 leading-relaxed font-light [text-shadow:0_2px_10px_rgba(0,0,0,0.55)]">
             {language === "en"
-              ? "Your private room in a house with pool, 20 min from Geneva city center. All-inclusive from CHF 1,380/month."
-              : "Ta chambre privée dans une maison avec piscine, à 20 min du centre de Genève. Tout inclus dès 1 380 CHF/mois."}
+              ? `Your private room in a house with pool, 20 min from Geneva city center. All-inclusive from ${PRICE_CHF_EN}/month.`
+              : `Ta chambre privée dans une maison avec piscine, à 20 min du centre de Genève. Tout inclus dès ${PRICE_CHF_FR}/mois.`}
           </p>
 
           {/* CTAs — remontés au-dessus de la réassurance/preuve sociale : GA4 montre que
@@ -88,7 +89,7 @@ export function HeroV7() {
               <ArrowRight className="w-5 h-5" />
             </LocalizedLink>
             <LocalizedLink
-              to="/colocation-geneve"
+              to={colocGeneveHref(language)}
               className="inline-flex items-center gap-2 border border-white/30 text-white px-7 py-3.5 rounded-lg font-semibold text-[15px] hover:border-white hover:bg-white/5 transition-all duration-300 w-full sm:w-auto justify-center sm:justify-start"
             >
               {language === "en" ? "Shared housing Geneva" : "Colocation Genève"}

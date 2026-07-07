@@ -1,6 +1,8 @@
+import { STATS } from "./stats";
+
 // Source of Truth: Supabase properties table (D4)
 // Fallback values used during SSR/initial load
-export const BASE_PRICE_CHF = 1380;
+export const BASE_PRICE_CHF = STATS.priceChf;
 export const DEPOSIT_MONTHS = 2;
 export const DEPOSIT_CHF = BASE_PRICE_CHF * DEPOSIT_MONTHS;
 

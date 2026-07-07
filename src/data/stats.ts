@@ -23,6 +23,23 @@ export const STATS = {
   rating: "4,9", // note interne ; graphie virgule en FR, point en EN (cf. ratingDisplay)
 } as const;
 
+// ── Prix public affiché ────────────────────────────────────────────────
+// SEULE source du tarif : changer STATS.priceChf met à jour tout le site
+// (hero, SEO, FAQ, pages maisons, blocs offre du blog…).
+// Séparateurs déterministes (pas de toLocaleString : l'ICU peut différer
+// entre le build Puppeteer du prérendu et le navigateur → hydration mismatch).
+const thousands = (n: number, sep: string) =>
+  String(n).replace(/\B(?=(\d{3})+(?!\d))/g, sep);
+
+export const PRICE_FR_NUM = thousands(STATS.priceChf, " "); // « 1 380 » — U+00A0 insécable classique (la fine U+202F était quasi invisible → lisait « 1380 »)
+export const PRICE_EN_NUM = thousands(STATS.priceChf, ",");      // « 1,380 »
+export const PRICE_CHF_FR = `${PRICE_FR_NUM} CHF`;               // « 1 380 CHF »
+export const PRICE_CHF_EN = `CHF ${PRICE_EN_NUM}`;               // « CHF 1,380 »
+
+export function formatPriceChf(lang: "fr" | "en"): string {
+  return lang === "en" ? PRICE_CHF_EN : PRICE_CHF_FR;
+}
+
 // ⚠️ DISPONIBILITÉ — SOURCE UNIQUE (Jérôme : mets à jour ces 3 nombres quand la dispo change).
 // Tout en découle : compteur du hero, cartes de la home, badges des pages maisons,
 // option du formulaire candidature. Avant, ces 4 endroits étaient codés en dur et se

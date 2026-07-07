@@ -14,6 +14,7 @@ import { LatestBlogV7 } from '@/sections/LatestBlogV7';
 import { SEO } from '@/components/SEO';
 import { buildHomeLodgingBusinessSchema } from '@/lib/structuredData';
 import { useLanguage } from '@/contexts/LanguageContext';
+import { PRICE_CHF_FR, PRICE_CHF_EN } from '@/data/stats';
 
 export function HomePage() {
   const { language } = useLanguage();
@@ -25,8 +26,8 @@ export function HomePage() {
           ? "Premium Coliving & Shared Housing Near Geneva"
           : "Colocation & Coliving Premium près de Genève"}
         description={language === "en"
-          ? "29 furnished rooms in 3 houses with pool, sauna & gym. All-inclusive from CHF 1,380/month. Ideal for cross-border workers & expats."
-          : "29 chambres meublées dans 3 maisons avec piscine, sauna et salle de sport. Tout inclus dès 1 380 CHF/mois. Idéal frontaliers et expats."}
+          ? `29 furnished rooms in 3 houses with pool, sauna & gym. All-inclusive from ${PRICE_CHF_EN}/month. Ideal for cross-border workers & expats.`
+          : `29 chambres meublées dans 3 maisons avec piscine, sauna et salle de sport. Tout inclus dès ${PRICE_CHF_FR}/mois. Idéal frontaliers et expats.`}
         url="https://www.lavillacoliving.com/"
         image="https://www.lavillacoliving.com/images/villa_portrait.webp"
         jsonLd={buildHomeLodgingBusinessSchema(language === "en" ? "en" : "fr")}

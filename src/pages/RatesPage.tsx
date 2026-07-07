@@ -2,6 +2,7 @@ import { Link } from 'react-router-dom';
 import { Check, ArrowRight, Home, Calculator } from 'lucide-react';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { Button } from '@/components/ui/button';
+import { PRICE_EN_NUM } from '@/data/stats';
 
 export function RatesPage() {
   const { t } = useLanguage();
@@ -121,7 +122,7 @@ export function RatesPage() {
                 <p className="text-[#64748b] font-medium">Your own sanctuary with en-suite facilities</p>
               </div>
               <div className="text-center mb-8">
-                <span className="text-5xl font-black text-[#10b981]">1,380</span>
+                <span className="text-5xl font-black text-[#10b981]">{PRICE_EN_NUM}</span>
                 <span className="text-[#64748b] font-bold"> CHF/month</span>
               </div>
               <Link to="/join-us">
@@ -142,7 +143,7 @@ export function RatesPage() {
                 <p className="text-[#64748b] font-medium">Comfortable private room with shared facilities</p>
               </div>
               <div className="text-center mb-8">
-                <span className="text-5xl font-black text-[#f97316]">1,380</span>
+                <span className="text-5xl font-black text-[#f97316]">{PRICE_EN_NUM}</span>
                 <span className="text-[#64748b] font-bold"> CHF/month</span>
               </div>
               <Link to="/join-us">

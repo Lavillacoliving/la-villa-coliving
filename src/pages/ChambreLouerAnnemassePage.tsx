@@ -1,4 +1,5 @@
 import { LocalizedLink } from "@/components/LocalizedLink";
+import { colocGeneveHref } from "@/lib/siteLinks";
 import { useState } from "react";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { SEO } from "@/components/SEO";
@@ -13,6 +14,7 @@ import {
   Calendar,
   Sparkles,
 } from "lucide-react";
+import { PRICE_CHF_FR, PRICE_CHF_EN } from "@/data/stats";
 
 // ───────────────────────────────────────────────────────────────────────
 // FAQ (FR) — cible "chambre à louer annemasse" 170/mois + "studio annemasse" 590/mois
@@ -20,7 +22,7 @@ import {
 const chambreFAQ = [
   {
     q: "Quel est le prix d'une chambre meublée à Annemasse chez La Villa Coliving ?",
-    a: "Nos chambres meublées à Annemasse Agglo sont à partir de 1 380 CHF/mois tout inclus (loyer + charges + fibre + ménage 2x/semaine + accès piscine/sauna/gym + cours fitness privés + abonnements streaming). Pas de frais d'agence, pas de frais de dossier, caution équivalente à 2 mois de loyer hors charges (restituée sous 30 jours après l'état des lieux).",
+    a: `Nos chambres meublées à Annemasse Agglo sont à partir de ${PRICE_CHF_FR}/mois tout inclus (loyer + charges + fibre + ménage 2x/semaine + accès piscine/sauna/gym + cours fitness privés + abonnements streaming). Pas de frais d'agence, pas de frais de dossier, caution équivalente à 2 mois de loyer hors charges (restituée sous 30 jours après l'état des lieux).`,
   },
   {
     q: "Tes chambres à louer à Annemasse sont-elles vraiment meublées ?",
@@ -28,7 +30,7 @@ const chambreFAQ = [
   },
   {
     q: "Quelle différence entre studio à Annemasse et chambre en coliving ?",
-    a: "Un studio à Annemasse coûte en moyenne 700-950 €/mois charges non comprises (eau, électricité, internet, ménage, mobilier en plus). Nos chambres en coliving coûtent 1 380 CHF tout inclus, avec accès à 200 m² d'espaces communs et 25 services. Au final, le coût mensuel d'un studio Annemasse meublé + équipé + tout charges incluses se rapproche de 1 200-1 400 CHF — pour beaucoup moins de m² communs et zéro communauté.",
+    a: `Un studio à Annemasse coûte en moyenne 700-950 €/mois charges non comprises (eau, électricité, internet, ménage, mobilier en plus). Nos chambres en coliving coûtent ${PRICE_CHF_FR} tout inclus, avec accès à 200 m² d'espaces communs et 25 services. Au final, le coût mensuel d'un studio Annemasse meublé + équipé + tout charges incluses se rapproche de 1 200-1 400 CHF — pour beaucoup moins de m² communs et zéro communauté.`,
   },
   {
     q: "Pour combien de temps puis-je louer une chambre à Annemasse ?",
@@ -63,13 +65,13 @@ export function ChambreLouerAnnemassePage() {
       <SEO
         title={
           language === "en"
-            ? "Furnished rooms Annemasse 2026 from CHF 1,380"
-            : "Chambre à louer Annemasse 2026 : dès 1 380 CHF"
+            ? `Furnished rooms Annemasse 2026 from ${PRICE_CHF_EN}`
+            : `Chambre à louer Annemasse 2026 : dès ${PRICE_CHF_FR}`
         }
         description={
           language === "en"
-            ? "Furnished rooms for rent in Annemasse, all-inclusive from CHF 1,380/mo. Pool, gym, sauna, fiber. Léman Express to Geneva in 15 min. No agency fees."
-            : "Chambre meublée à louer à Annemasse, tout inclus dès 1 380 CHF/mois. Piscine, gym, sauna, fibre. Léman Express Genève 15 min. Sans frais d'agence."
+            ? `Furnished rooms for rent in Annemasse, all-inclusive from ${PRICE_CHF_EN}/mo. Pool, gym, sauna, fiber. Léman Express to Geneva in 15 min. No agency fees.`
+            : `Chambre meublée à louer à Annemasse, tout inclus dès ${PRICE_CHF_FR}/mois. Piscine, gym, sauna, fibre. Léman Express Genève 15 min. Sans frais d'agence.`
         }
         url="https://www.lavillacoliving.com/chambre-a-louer-annemasse"
         image="https://www.lavillacoliving.com/images/le lodge/rooms/la villa coliving le lodge-78.webp"
@@ -87,13 +89,13 @@ export function ChambreLouerAnnemassePage() {
             style={{ fontFamily: "DM Serif Display, serif" }}
           >
             {language === "en"
-              ? "Furnished rooms to rent in Annemasse — from CHF 1,380/mo all-inclusive"
-              : "Chambres meublées à louer à Annemasse — dès 1 380 CHF/mois tout inclus"}
+              ? `Furnished rooms to rent in Annemasse — from ${PRICE_CHF_EN}/mo all-inclusive`
+              : `Chambres meublées à louer à Annemasse — dès ${PRICE_CHF_FR}/mois tout inclus`}
           </h1>
           <p className="text-lg md:text-xl text-[#57534E] max-w-3xl mx-auto leading-relaxed mb-10 font-medium">
             {language === "en"
-              ? "29 furnished rooms across 3 design houses in Annemasse Agglo, from CHF 1,380/month all-inclusive. Renting a room made simpler than a furnished studio: bed, desk, fiber, utilities, weekly cleaning, pool & gym included — move in with just your suitcases."
-              : "29 chambres meublées dans 3 maisons design à Annemasse Agglo, dès 1 380 CHF/mois tout inclus. Une location de chambre plus simple qu'un studio meublé : lit, bureau, fibre, charges, ménage 2x/semaine, piscine et salle de sport compris — emménage avec une valise."}
+              ? `29 furnished rooms across 3 design houses in Annemasse Agglo, from ${PRICE_CHF_EN}/month all-inclusive. Renting a room made simpler than a furnished studio: bed, desk, fiber, utilities, weekly cleaning, pool & gym included — move in with just your suitcases.`
+              : `29 chambres meublées dans 3 maisons design à Annemasse Agglo, dès ${PRICE_CHF_FR}/mois tout inclus. Une location de chambre plus simple qu'un studio meublé : lit, bureau, fibre, charges, ménage 2x/semaine, piscine et salle de sport compris — emménage avec une valise.`}
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <LocalizedLink
@@ -129,12 +131,12 @@ export function ChambreLouerAnnemassePage() {
             <div className="bg-[#1C1917] text-white p-8 md:col-span-2">
               <BedDouble className="w-10 h-10 text-[#D4A574] mb-4" />
               <p className="text-2xl font-bold text-[#D4A574] mb-4">
-                {language === "en" ? "CHF 1,380/mo — all-inclusive" : "1 380 CHF/mois — tout inclus"}
+                {language === "en" ? `${PRICE_CHF_EN}/mo — all-inclusive` : `${PRICE_CHF_FR}/mois — tout inclus`}
               </p>
               <p className="text-sm text-white/80 leading-relaxed mb-6">
                 {language === "en"
-                  ? "CHF 1,380/month, all-inclusive, for every one of our rooms. No \"standard\" or \"premium\" tiers: they're all equally good. Each room simply has its own character — some with a balcony, others with a terrace, some more spacious, others more cosy, the bathroom sometimes en-suite, sometimes across the landing. Same comfort, same services, same price: you pick the vibe that suits you, not a tier."
-                  : "1 380 CHF/mois, tout inclus, pour chacune de nos chambres. Pas de gamme « standard » ou « premium » : elles se valent toutes. Chaque chambre a simplement son caractère — certaines avec balcon, d'autres avec terrasse, certaines plus spacieuses, d'autres plus cosy, la salle d'eau tantôt privative, tantôt sur le palier. Même confort, mêmes services, même tarif : tu choisis l'ambiance qui te ressemble, pas un standing."}
+                  ? `${PRICE_CHF_EN}/month, all-inclusive, for every one of our rooms. No \"standard\" or \"premium\" tiers: they're all equally good. Each room simply has its own character — some with a balcony, others with a terrace, some more spacious, others more cosy, the bathroom sometimes en-suite, sometimes across the landing. Same comfort, same services, same price: you pick the vibe that suits you, not a tier.`
+                  : `${PRICE_CHF_FR}/mois, tout inclus, pour chacune de nos chambres. Pas de gamme « standard » ou « premium » : elles se valent toutes. Chaque chambre a simplement son caractère — certaines avec balcon, d'autres avec terrasse, certaines plus spacieuses, d'autres plus cosy, la salle d'eau tantôt privative, tantôt sur le palier. Même confort, mêmes services, même tarif : tu choisis l'ambiance qui te ressemble, pas un standing.`}
               </p>
               <ul className="space-y-2 text-sm text-white/80">
                 <li className="flex items-start gap-2"><Check className="w-4 h-4 text-[#D4A574] mt-0.5 flex-shrink-0" /> {language === "en" ? "Designer furniture" : "Mobilier design"}</li>
@@ -186,7 +188,7 @@ export function ChambreLouerAnnemassePage() {
             {(language === "en"
               ? [
                   "29 furnished rooms — 3 houses, 1 community",
-                  "All-inclusive from CHF 1,380/mo (no surprises)",
+                  `All-inclusive from ${PRICE_CHF_EN}/mo (no surprises)`,
                   "Move in within 2 weeks (no paperwork friction)",
                   "Léman Express direct to Geneva Cornavin 15 min",
                   "Pool, gym, sauna in every house",
@@ -200,7 +202,7 @@ export function ChambreLouerAnnemassePage() {
                 ]
               : [
                   "29 chambres meublées — 3 maisons, 1 communauté",
-                  "Tout inclus dès 1 380 CHF/mois (zéro surprise)",
+                  `Tout inclus dès ${PRICE_CHF_FR}/mois (zéro surprise)`,
                   "Emménagement en 2 semaines (zéro friction administrative)",
                   "Léman Express direct Genève Cornavin en 15 min",
                   "Piscine, salle de sport, sauna dans chaque maison",
@@ -375,7 +377,7 @@ export function ChambreLouerAnnemassePage() {
               {language === "en" ? "Annemasse coliving guide" : "Guide colocation Annemasse"}
             </LocalizedLink>
             <span className="text-[#E7E5E4]">·</span>
-            <LocalizedLink to="/colocation-geneve" className="text-[#1C1917] underline hover:text-[#D4A574]">
+            <LocalizedLink to={colocGeneveHref(language)} className="text-[#1C1917] underline hover:text-[#D4A574]">
               {language === "en" ? "Shared housing Geneva" : "Colocation Genève"}
             </LocalizedLink>
             <span className="text-[#E7E5E4]">·</span>

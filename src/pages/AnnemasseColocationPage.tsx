@@ -1,4 +1,5 @@
 import { LocalizedLink } from "@/components/LocalizedLink";
+import { colocGeneveHref } from "@/lib/siteLinks";
 import { useState } from "react";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { SEO } from "@/components/SEO";
@@ -13,6 +14,7 @@ import {
   ArrowRight,
   Euro,
 } from "lucide-react";
+import { PRICE_CHF_FR, PRICE_CHF_EN } from "@/data/stats";
 
 // ───────────────────────────────────────────────────────────────────────
 // FAQ (FR) — cible "colocation annemasse" 880/mois + secondaires
@@ -20,7 +22,7 @@ import {
 const annemasseFAQ = [
   {
     q: "Combien coûte une colocation à Annemasse chez La Villa Coliving ?",
-    a: "Nos chambres privatives à Annemasse Agglo (Ville-la-Grand, Ambilly, Annemasse) sont à partir de 1 380 CHF/mois tout inclus. Le prix comprend le loyer, les charges (eau, électricité, chauffage), la fibre jusqu'à 8 Gb/s, le ménage 2 fois par semaine des communs, l'accès à la piscine chauffée, à la salle de sport et au sauna, les cours de yoga et fitness privés hebdomadaires, et les événements communautaires mensuels. Pas de frais d'agence, pas de frais de dossier.",
+    a: `Nos chambres privatives à Annemasse Agglo (Ville-la-Grand, Ambilly, Annemasse) sont à partir de ${PRICE_CHF_FR}/mois tout inclus. Le prix comprend le loyer, les charges (eau, électricité, chauffage), la fibre jusqu'à 8 Gb/s, le ménage 2 fois par semaine des communs, l'accès à la piscine chauffée, à la salle de sport et au sauna, les cours de yoga et fitness privés hebdomadaires, et les événements communautaires mensuels. Pas de frais d'agence, pas de frais de dossier.`,
   },
   {
     q: "Combien de temps pour aller à Genève depuis Annemasse ?",
@@ -69,12 +71,12 @@ export function AnnemasseColocationPage() {
         title={
           language === "en"
             ? "Shared housing Annemasse 2026: 29 rooms"
-            : "Colocation Annemasse 2026 : dès 1 380 CHF"
+            : `Colocation Annemasse 2026 : dès ${PRICE_CHF_FR}`
         }
         description={
           language === "en"
-            ? "Shared housing Annemasse 2026: 29 furnished rooms all-inclusive from CHF 1,380/mo. Léman Express direct to Geneva 15 min. Cross-border living, no agency fees."
-            : "Colocation Annemasse : 29 chambres meublées tout inclus dès 1 380 CHF/mois. Léman Express direct Genève 15 min. Coliving frontaliers. Sans frais d'agence."
+            ? `Shared housing Annemasse 2026: 29 furnished rooms all-inclusive from ${PRICE_CHF_EN}/mo. Léman Express direct to Geneva 15 min. Cross-border living, no agency fees.`
+            : `Colocation Annemasse : 29 chambres meublées tout inclus dès ${PRICE_CHF_FR}/mois. Léman Express direct Genève 15 min. Coliving frontaliers. Sans frais d'agence.`
         }
         url="https://www.lavillacoliving.com/annemasse-colocation"
         image="https://www.lavillacoliving.com/images/le lodge/exterior/la villa coliving le lodge-14.webp"
@@ -92,8 +94,8 @@ export function AnnemasseColocationPage() {
             style={{ fontFamily: "DM Serif Display, serif" }}
           >
             {language === "en"
-              ? "Shared housing in Annemasse — 29 premium rooms from CHF 1,380/mo"
-              : "Colocation à Annemasse — 29 chambres premium dès 1 380 CHF/mois"}
+              ? `Shared housing in Annemasse — 29 premium rooms from ${PRICE_CHF_EN}/mo`
+              : `Colocation à Annemasse — 29 chambres premium dès ${PRICE_CHF_FR}/mois`}
           </h1>
           <p className="text-lg md:text-xl text-[#57534E] max-w-3xl mx-auto leading-relaxed mb-10 font-medium">
             {language === "en"
@@ -139,8 +141,8 @@ export function AnnemasseColocationPage() {
               </h3>
               <p className="text-[#57534E] leading-relaxed">
                 {language === "en"
-                  ? "Same Swiss salary, but rent and daily expenses 30-50 % lower than central Geneva. A 12 m² room in Geneva costs CHF 1,800-2,500 — we offer the same comfort at CHF 1,380 all-inclusive."
-                  : "Même salaire suisse, mais loyer et coût de la vie 30 à 50 % inférieurs au centre de Genève. Une chambre 12 m² à Genève coûte 1 800-2 500 CHF — on offre le même confort à 1 380 CHF tout inclus."}
+                  ? `Same Swiss salary, but rent and daily expenses 30-50 % lower than central Geneva. A 12 m² room in Geneva costs CHF 1,800-2,500 — we offer the same comfort at ${PRICE_CHF_EN} all-inclusive.`
+                  : `Même salaire suisse, mais loyer et coût de la vie 30 à 50 % inférieurs au centre de Genève. Une chambre 12 m² à Genève coûte 1 800-2 500 CHF — on offre le même confort à ${PRICE_CHF_FR} tout inclus.`}
               </p>
             </div>
             <div className="text-center">
@@ -307,8 +309,8 @@ export function AnnemasseColocationPage() {
             style={{ fontFamily: "DM Serif Display, serif" }}
           >
             {language === "en"
-              ? "What's included in CHF 1,380/month"
-              : "Ce qui est inclus dans 1 380 CHF/mois"}
+              ? `What's included in ${PRICE_CHF_EN}/month`
+              : `Ce qui est inclus dans ${PRICE_CHF_FR}/mois`}
           </h2>
           <p className="text-[#57534E] text-center max-w-3xl mx-auto mb-12">
             {language === "en"
@@ -457,7 +459,7 @@ export function AnnemasseColocationPage() {
               <ArrowRight className="w-5 h-5" />
             </LocalizedLink>
             <LocalizedLink
-              to="/colocation-geneve"
+              to={colocGeneveHref(language)}
               className="inline-flex items-center gap-2 px-8 py-4 border-2 border-white text-white font-semibold rounded-full hover:bg-white hover:text-[#1C1917] transition-colors"
             >
               {language === "en" ? "See Geneva-side option" : "Voir l'option côté Genève"}
@@ -500,7 +502,7 @@ export function AnnemasseColocationPage() {
             {language === "en" ? "Related pages" : "Pages liées"}
           </p>
           <div className="flex flex-wrap gap-4 justify-center text-sm">
-            <LocalizedLink to="/colocation-geneve" className="text-[#1C1917] underline hover:text-[#D4A574]">
+            <LocalizedLink to={colocGeneveHref(language)} className="text-[#1C1917] underline hover:text-[#D4A574]">
               {language === "en" ? "Shared housing Geneva" : "Colocation Genève"}
             </LocalizedLink>
             <span className="text-[#E7E5E4]">·</span>

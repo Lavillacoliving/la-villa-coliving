@@ -70,7 +70,11 @@ function AppContent() {
       <Suspense fallback={<div className="min-h-screen" />}>
       <Routes>
         <Route path="/" element={<HomePage />} />
-        <Route path="/colocation-geneve" element={<ColocationGenevePage />} />
+        {/* Pilier FR consolidé 07/07/2026 vers l'article élu par Google (pos 9,3 vs 44,8).
+            Navigate = clics SPA (liens des contenus en base) ; vercel.json porte le 308
+            serveur. La version EN /en/colocation-geneve reste servie (money page en
+            progression) — voir src/lib/siteLinks.ts. */}
+        <Route path="/colocation-geneve" element={<Navigate to="/blog/trouver-colocation-geneve-frontalier" replace />} />
         <Route path="/annemasse-colocation" element={<AnnemasseColocationPage />} />
         <Route path="/chambre-a-louer-annemasse" element={<ChambreLouerAnnemassePage />} />
         <Route path="/le-coliving" element={<ColivingPage />} />

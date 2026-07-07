@@ -1,6 +1,7 @@
 import { useState, type ReactNode } from "react";
 import { Helmet } from "react-helmet";
 import { LocalizedLink } from "@/components/LocalizedLink";
+import { colocGeneveHref } from "@/lib/siteLinks";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { SEO } from "@/components/SEO";
 import { buildDatasetSchema } from "@/lib/structuredData";
@@ -1215,7 +1216,7 @@ export function ObservatoireLogementFrontalierPage() {
             </a>
           </div>
 
-          {/* Éditeur + CTA discret */}
+          {/* Éditeur + CTA discret — FR → article consolidé (07/07), EN → pilier conservé */}
           <div className="text-center mt-12">
             <MapPin className="w-6 h-6 text-[#D4A574] mx-auto mb-3" />
             <p className="text-[#57534E] leading-relaxed mb-6 max-w-2xl mx-auto">
@@ -1227,7 +1228,7 @@ export function ObservatoireLogementFrontalierPage() {
                 fondateurs sera validée et routée (elle vit sur la branche feat/qui-sommes-nous-v2). */}
             <div className="flex flex-col sm:flex-row gap-3 justify-center">
               <LocalizedLink
-                to="/colocation-geneve"
+                to={colocGeneveHref(language)}
                 className="inline-flex items-center gap-2 border border-[#1C1917] text-[#1C1917] px-6 py-3 text-sm uppercase tracking-wider hover:bg-[#1C1917] hover:text-white transition-colors"
               >
                 {en ? "Shared housing in Geneva" : "La colocation à Genève"}

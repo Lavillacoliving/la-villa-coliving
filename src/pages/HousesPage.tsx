@@ -2,6 +2,7 @@ import { Link } from "react-router-dom";
 import { ArrowRight, MapPin, Users, Check } from "lucide-react";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { Badge } from "@/components/ui/badge";
+import { PRICE_EN_NUM } from "@/data/stats";
 
 export function HousesPage() {
   const { t } = useLanguage();
@@ -19,7 +20,7 @@ export function HousesPage() {
       ],
       available: true,
       badge: null as string | null,
-      price: "1,380 CHF",
+      price: `${PRICE_EN_NUM} CHF`,
       badgeColor: "#10b981",
       specs: {
         size: "400 m²",
@@ -39,7 +40,7 @@ export function HousesPage() {
       ],
       available: true,
       badge: null as string | null,
-      price: "1,380 CHF",
+      price: `${PRICE_EN_NUM} CHF`,
       badgeColor: "#f97316",
       specs: {
         size: "300 m²",
@@ -58,7 +59,7 @@ export function HousesPage() {
       ],
       available: false,
       badge: null as string | null,
-      price: "1,380 CHF",
+      price: `${PRICE_EN_NUM} CHF`,
       badgeColor: "#f43f5e",
       specs: {
         size: "500 m²",

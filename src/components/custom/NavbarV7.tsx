@@ -4,6 +4,7 @@ import { Menu, X } from "lucide-react";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { LocalizedLink } from "@/components/LocalizedLink";
 import { localizePath } from "@/lib/localizedPath";
+import { colocGeneveHref } from "@/lib/siteLinks";
 
 /**
  * VERSION 9: STONE & BRASS — CONDO PREMIUM
@@ -27,7 +28,8 @@ export function NavbarV7() {
 
   const navLinks = [
     {
-      path: "/colocation-geneve",
+      // FR → article élu par Google (consolidation 07/07) ; EN → pilier conservé.
+      path: colocGeneveHref(language),
       label: language === "en" ? "Shared Housing Geneva" : "Colocation Genève",
     },
     {

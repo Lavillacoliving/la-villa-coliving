@@ -28,8 +28,10 @@ const PIPELINE_LABELS: Record<string,string> = {
   visit_done:'Visite faite', signed:'Signé'
 };
 // Valeurs autorisées par la contrainte prospects_source_check (value = stocké en base, label = affiché)
+// article_blog + google : migration 07/07/2026 (scripts/migration-prospects-source-article-blog.sql)
 const SOURCE_OPTIONS: Array<[string, string]> = [
-  ['site_web','Site web'], ['facebook','Facebook'], ['instagram','Instagram'],
+  ['site_web','Site web'], ['article_blog','Article du blog'], ['google','Google'],
+  ['facebook','Facebook'], ['instagram','Instagram'],
   ['whatsapp','WhatsApp'], ['messenger','Messenger'], ['leboncoin','Leboncoin'],
   ['appartager','Appartager'], ['roomlala','Roomlala'], ['bouche_a_oreille','Bouche-à-oreille'],
   ['email','Email'], ['autre','Autre'],

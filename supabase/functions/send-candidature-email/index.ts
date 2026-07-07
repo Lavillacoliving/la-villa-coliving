@@ -336,8 +336,21 @@ Deno.serve(async (req: Request) => {
         "google": "Google",
         "instagram": "Instagram",
         "word-of-mouth": "Bouche à oreille",
+        "article-blog": "Un article du blog",
         "leboncoin": "Leboncoin",
         "other": "Autre",
+      };
+      // Canal déclaré (select du formulaire) → valeur autorisée par prospects_source_check.
+      // Nécessite la migration qui ajoute article_blog + google à la contrainte
+      // (scripts/migration-prospects-source-article-blog.sql) ; en attendant, le retry
+      // plus bas retombe sur site_web — aucune candidature n'est perdue.
+      const PROSPECT_SOURCE_MAP: Record<string, string> = {
+        "google": "google",
+        "instagram": "instagram",
+        "word-of-mouth": "bouche_a_oreille",
+        "article-blog": "article_blog",
+        "leboncoin": "leboncoin",
+        "other": "autre",
       };
       // lease_duration est contraint (prospects_lease_duration_check) : seules 3_mois / 6_mois /
       // 12_mois / flexible passent. Le formulaire envoie des fourchettes (2-3, 3-6, 6-12, 12+) →
@@ -366,11 +379,22 @@ Deno.serve(async (req: Request) => {
       }
       // Durée : on garde la fourchette exacte du formulaire (lease_duration ne stocke que le bucket mappé)
       if (durationRaw) notesParts.push(`Durée souhaitée : ${DURATION_LABELS[durationRaw] ?? durationRaw}`);
-      // ⚠️ "Comment as-tu entendu parler ?" (data.source) ≠ prospects.source.
-      // prospects.source est contraint (prospects_source_check) et DOIT valoir "site_web" ;
-      // le canal déclaré par le candidat part donc dans `notes`.
+      // Attribution — deux couches (plan blog-conversion 07/07/2026) :
+      // 1) DÉCLARÉE : « Comment as-tu entendu parler ? » → prospects.source (mappée
+      //    vers une valeur de prospects_source_check) + libellé gardé en notes.
+      // 2) OBSERVÉE : ?src=bloc_offre&article={slug} posé par les blocs offre du blog
+      //    (transmis par le formulaire en ref_src/ref_article) → notes, et sert de
+      //    fallback pour source si le candidat n'a rien déclaré. Le déclaré PRIME.
       const channel = (data.source ?? "").trim();
       if (channel) notesParts.push(`Canal déclaré : ${CHANNEL_LABELS[channel] ?? channel}`);
+      const refSrc = (data.ref_src ?? "").trim().slice(0, 50);
+      const refArticle = (data.ref_article ?? "").trim().slice(0, 120);
+      if (refSrc) {
+        notesParts.push(`Origine observée : ${refSrc}${refArticle ? ` — article « ${refArticle} »` : ""}`);
+      }
+      const prospectSource: string =
+        PROSPECT_SOURCE_MAP[channel] ??
+        (refSrc === "bloc_offre" ? "article_blog" : "site_web");
       const extraMessage = (data.message ?? "").trim();
       if (extraMessage) notesParts.push(extraMessage);
 
@@ -388,21 +412,31 @@ Deno.serve(async (req: Request) => {
         occupation: (data.job ?? "").trim() || null, // champ "Poste" (présent sur l'ancien form)
         move_in_date: moveInDate,
         lease_duration: leaseDuration, // mappé vers une valeur autorisée (prospects_lease_duration_check)
-        source: "site_web", // contrainte prospects_source_check — valeur fixe obligatoire
+        source: prospectSource, // déclaré > observé > site_web (prospects_source_check)
         status: "new",
         notes: notesParts.length > 0 ? notesParts.join("\n") : null,
       };
 
-      const insertRes = await fetch(`${sbUrl}/rest/v1/prospects`, {
-        method: "POST",
-        headers: {
-          "apikey": sbKey,
-          "Authorization": `Bearer ${sbKey}`,
-          "Content-Type": "application/json",
-          "Prefer": "return=minimal",
-        },
-        body: JSON.stringify(prospect),
-      });
+      const insertProspect = (body: Record<string, unknown>) =>
+        fetch(`${sbUrl}/rest/v1/prospects`, {
+          method: "POST",
+          headers: {
+            "apikey": sbKey,
+            "Authorization": `Bearer ${sbKey}`,
+            "Content-Type": "application/json",
+            "Prefer": "return=minimal",
+          },
+          body: JSON.stringify(body),
+        });
+
+      let insertRes = await insertProspect(prospect);
+      if (!insertRes.ok && prospectSource !== "site_web") {
+        // Filet : si la contrainte prospects_source_check ne connaît pas encore la
+        // valeur (migration pas passée / rollback), on ne perd JAMAIS la candidature —
+        // on retombe sur site_web, le détail reste dans notes.
+        console.error("prospects insert rejected for source=" + prospectSource + ", retrying with site_web", insertRes.status, await insertRes.text().catch(() => ""));
+        insertRes = await insertProspect({ ...prospect, source: "site_web" });
+      }
       if (!insertRes.ok) {
         console.error("prospects insert failed", insertRes.status, await insertRes.text().catch(() => ""));
       }

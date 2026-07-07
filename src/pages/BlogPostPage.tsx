@@ -4,13 +4,15 @@ import { LocalizedLink } from "@/components/LocalizedLink";
 import { localizePath } from "@/lib/localizedPath";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { supabase } from "@/lib/supabase";
-import { Clock, Calendar, User, ArrowLeft, ArrowRight } from "lucide-react";
+import { Clock, Calendar, User, ArrowLeft } from "lucide-react";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import { Helmet } from "react-helmet";
 import { SEO } from "@/components/SEO";
 import { buildBreadcrumbSchema, buildFaqPageSchema, getFounderByAuthorName, ABOUT_PAGE_LIVE } from "@/lib/structuredData";
-import { getIntentBucket, type IntentBucket } from "@/data/blogIntentBuckets";
+import { getIntentBucket } from "@/data/blogIntentBuckets";
+import { BlocOffre } from "@/components/BlocOffre";
+import { formatPriceChf } from "@/data/stats";
 import { YmylNotice, YmylPosture, AuthorBox } from "@/components/YmylNotice";
 import { isYmyl } from "@/lib/ymyl";
 
@@ -40,61 +42,9 @@ const CL:Record<string,Record<string,string>>={
   community:{en:"Community",fr:"Communauté"},
 };
 
-// CTA copy per intent bucket (see src/data/blogIntentBuckets.ts). Editorial rules:
-// tutoiement, loyer en CHF, « 0 frais » = conséquence du modèle, aucun concurrent.
-// Paths are language-neutral — localized (/en prefix) at render time.
-const CTA_COPY: Record<IntentBucket, {
-  headline: { fr: string; en: string };
-  primary: { fr: string; en: string; to: string };
-  secondary: { fr: string; en: string; to: string };
-  mid: { text: { fr: string; en: string }; label: { fr: string; en: string }; to: string };
-}> = {
-  high: {
-    headline: { fr: "Tu cherches une chambre près de Genève ?", en: "Looking for a room near Geneva?" },
-    primary: { fr: "Candidater — 2 min, gratuit", en: "Apply — 2 min, free", to: "/candidature" },
-    secondary: { fr: "Voir la colocation à Genève", en: "Shared housing in Geneva", to: "/colocation-geneve" },
-    mid: {
-      text: { fr: "29 chambres tout inclus dès 1 380 CHF/mois, à 20 min du centre de Genève — 0 frais de dossier.", en: "29 all-inclusive rooms from CHF 1,380/month, 20 min from Geneva city center — no application fee." },
-      label: { fr: "Candidater (2 min, gratuit)", en: "Apply (2 min, free)" }, to: "/candidature",
-    },
-  },
-  medium: {
-    headline: { fr: "Envie d'un logement tout inclus près de Genève ?", en: "Want all-inclusive housing near Geneva?" },
-    primary: { fr: "Candidater — 2 min, gratuit", en: "Apply — 2 min, free", to: "/candidature" },
-    secondary: { fr: "Voir la colocation à Genève", en: "Shared housing in Geneva", to: "/colocation-geneve" },
-    mid: {
-      text: { fr: "Chambres disponibles dès 1 380 CHF/mois tout inclus, à 20 min du centre de Genève — 0 frais de dossier.", en: "Rooms available from CHF 1,380/month all-inclusive, 20 min from Geneva city center — no application fee." },
-      label: { fr: "Voir les chambres disponibles", en: "See available rooms" }, to: "/nos-maisons",
-    },
-  },
-  admin: {
-    headline: { fr: "Tu prépares ton installation côté France ?", en: "Planning your move to the French side?" },
-    primary: { fr: "Voir les chambres", en: "See the rooms", to: "/colocation-geneve" },
-    secondary: { fr: "Candidater", en: "Apply", to: "/candidature" },
-    mid: {
-      text: { fr: "Tu prépares ton installation côté France ? Chambres disponibles dès 1 380 CHF/mois tout inclus.", en: "Planning your move to the French side? Rooms available from CHF 1,380/month all-inclusive." },
-      label: { fr: "Voir les chambres disponibles", en: "See available rooms" }, to: "/nos-maisons",
-    },
-  },
-  life: {
-    headline: { fr: "Envie d'habiter à 20 min du centre de Genève, sans la galère ?", en: "Want to live 20 min from Geneva city center, hassle-free?" },
-    primary: { fr: "Découvre nos maisons", en: "Discover our houses", to: "/nos-maisons" },
-    secondary: { fr: "Candidater", en: "Apply", to: "/candidature" },
-    mid: {
-      text: { fr: "Envie d'habiter à 20 min du centre de Genève, sans la galère ? Trois maisons tout inclus dès 1 380 CHF/mois.", en: "Want to live 20 min from Geneva city center, hassle-free? Three all-inclusive houses from CHF 1,380/month." },
-      label: { fr: "Découvre nos maisons", en: "Discover our houses" }, to: "/nos-maisons",
-    },
-  },
-  coliving: {
-    headline: { fr: "Envie de vivre en coliving près de Genève ?", en: "Want to live in coliving near Geneva?" },
-    primary: { fr: "Candidater — 2 min, gratuit", en: "Apply — 2 min, free", to: "/candidature" },
-    secondary: { fr: "Voir la colocation à Genève", en: "Shared housing in Geneva", to: "/colocation-geneve" },
-    mid: {
-      text: { fr: "Chambres disponibles dès 1 380 CHF/mois tout inclus, à 20 min du centre de Genève — 0 frais de dossier.", en: "Rooms available from CHF 1,380/month all-inclusive, 20 min from Geneva city center — no application fee." },
-      label: { fr: "Voir les chambres disponibles", en: "See available rooms" }, to: "/nos-maisons",
-    },
-  },
-};
+// Les CTA candidature (mi-article + fin d'article) vivent dans BlocOffre
+// (photo maison + prix + attribution ?src=bloc_offre — plan blog-conversion
+// 07/07/2026) ; l'accroche varie toujours par intent bucket, dans le composant.
 
 // Mid-article CTA: for substantial reads (>800 words — GA4 path data shows the blog
 // converts ~nobody without an in-body block; decision Jérôme 2026-06-11),
@@ -255,17 +205,7 @@ export function BlogPostPage() {
   // Localize language-neutral internal paths for the EN site (/x → /en/x).
   const loc = (p: string) => localizePath(p, language);
   const bucket = getIntentBucket(post.slug, post.category);
-  const cta = CTA_COPY[bucket];
   const midSplit = splitForMidCta(content);
-  // Same guarded gtag pattern as the candidature form (JoinPageV4): measure which
-  // CTA position/variant drives applications, never block the UI on analytics.
-  const trackCta = (position: "mid" | "end", target: string) => {
-    try {
-      (window as unknown as { gtag?: (...a: unknown[]) => void }).gtag?.("event", "cta_click", {
-        cta_position: position, cta_target: target, article_slug: post.slug, intent: bucket, language,
-      });
-    } catch { /* noop */ }
-  };
 
   // Markdown renderers — shared by both halves when the article is split for the mid CTA.
   const mdComponents = {
@@ -452,18 +392,8 @@ export function BlogPostPage() {
             {midSplit ? (
               <>
                 <ReactMarkdown remarkPlugins={[remarkGfm]} components={mdComponents}>{midSplit[0]}</ReactMarkdown>
-                {/* Mid-article CTA — long reads only (>1500 words), message variant by intent bucket */}
-                <aside className="my-10 px-6 py-5 bg-[#FAF9F6] border border-[#E7E5E4] rounded-lg text-center">
-                  <p className="text-[#1C1917] font-medium mb-2">{cta.mid.text[L]}</p>
-                  <LocalizedLink
-                    to={loc(cta.mid.to)}
-                    onClick={() => trackCta("mid", cta.mid.to)}
-                    className="inline-flex items-center gap-2 text-[#D4A574] font-semibold hover:underline"
-                  >
-                    {cta.mid.label[L]}
-                    <ArrowRight className="w-4 h-4" />
-                  </LocalizedLink>
-                </aside>
+                {/* Bloc offre mi-article — longs formats uniquement (>800 mots), maison + prix + candidature */}
+                <BlocOffre variant="mid" slug={post.slug} bucket={bucket} />
                 <ReactMarkdown remarkPlugins={[remarkGfm]} components={mdComponents}>{midSplit[1]}</ReactMarkdown>
               </>
             ) : (
@@ -482,39 +412,8 @@ export function BlogPostPage() {
         </div>
       </article>
 
-      {/* Colocation Genève CTA — SEO pillar page link from every blog article */}
-      <section className="py-12 lg:py-16 bg-[#FAF9F6] border-t border-[#E7E5E4]">
-        <div className="max-w-3xl mx-auto px-6 text-center">
-          <h2
-            className="text-xl md:text-2xl font-light text-[#1C1917] mb-3"
-            style={{ fontFamily: "DM Serif Display, serif" }}
-          >
-            {cta.headline[L]}
-          </h2>
-          <p className="text-sm text-[#78716C] mb-6 max-w-lg mx-auto">
-            {language === "en"
-              ? "29 furnished all-inclusive rooms from CHF 1,380/month — utilities, fiber, cleaning, pool, gym, 20 min from Geneva city center. No application fee, reply within 48h."
-              : "29 chambres meublées tout inclus dès 1 380 CHF/mois — charges, fibre, ménage, piscine, gym, à 20 min du centre de Genève. 0 frais de dossier, réponse sous 48 h."}
-          </p>
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
-            <LocalizedLink
-              to={loc(cta.primary.to)}
-              onClick={() => trackCta("end", cta.primary.to)}
-              className="inline-flex items-center gap-2 px-6 py-3 bg-[#D4A574] text-[#1C1917] text-sm font-semibold rounded-lg hover:bg-[#E0BB8A] transition-all duration-300"
-            >
-              {cta.primary[L]}
-              <ArrowRight className="w-4 h-4" />
-            </LocalizedLink>
-            <LocalizedLink
-              to={loc(cta.secondary.to)}
-              onClick={() => trackCta("end", cta.secondary.to)}
-              className="inline-flex items-center gap-2 px-6 py-3 border border-[#E7E5E4] text-[#44403C] text-sm font-medium rounded-lg hover:border-[#D4A574] transition-all duration-300"
-            >
-              {cta.secondary[L]}
-            </LocalizedLink>
-          </div>
-        </div>
-      </section>
+      {/* Bloc offre fin d'article — photo maison + prix + candidature (attribution ?src=bloc_offre) */}
+      <BlocOffre variant="end" slug={post.slug} bucket={bucket} />
 
       {/* Discover our houses — internal linking from blog to conversion pages */}
       <section className="py-16 lg:py-20 bg-white border-t border-[#E7E5E4]">
@@ -527,8 +426,8 @@ export function BlogPostPage() {
           </h2>
           <p className="text-sm text-[#78716C] text-center mb-10">
             {language === "en"
-              ? "Three premium coliving houses 20 min from Geneva city center, all-inclusive from CHF 1,380/month."
-              : "Trois maisons de coliving premium à 20 min du centre de Genève, tout inclus dès 1 380 CHF/mois."}
+              ? `Three premium coliving houses 20 min from Geneva city center, all-inclusive from ${formatPriceChf("en")}/month.`
+              : `Trois maisons de coliving premium à 20 min du centre de Genève, tout inclus dès ${formatPriceChf("fr")}/mois.`}
           </p>
           <div className="grid md:grid-cols-3 gap-6">
             {[

@@ -4,7 +4,7 @@ import { LocalizedLink } from "@/components/LocalizedLink";
 import { SEO } from "@/components/SEO";
 import { FaqSection } from "@/components/FaqSection";
 import { colivingFaq } from "@/data/faq/colivingFaq";
-import { STATS, STATS_DISPLAY } from "@/data/stats";
+import { STATS, STATS_DISPLAY, PRICE_CHF_FR, PRICE_CHF_EN } from "@/data/stats";
 
 export function ColivingPageV4() {
   const { t, language } = useLanguage();
@@ -83,8 +83,8 @@ export function ColivingPageV4() {
             </h1>
             <p className="text-xl mb-8 text-white/90">
               {language === "en"
-                ? "Coliving is flatsharing with hotel-grade services included: furnished room, utilities, fiber, cleaning and shared spaces designed for community. At La Villa: 29 rooms, 3 houses near Geneva, from CHF 1,380/month."
-                : "Le coliving, c'est la colocation avec services hôteliers inclus : chambre meublée, charges, fibre, ménage et espaces communs pensés pour la communauté. À La Villa : 29 chambres, 3 maisons près de Genève, dès 1 380 CHF/mois."}
+                ? `Coliving is flatsharing with hotel-grade services included: furnished room, utilities, fiber, cleaning and shared spaces designed for community. At La Villa: 29 rooms, 3 houses near Geneva, from ${PRICE_CHF_EN}/month.`
+                : `Le coliving, c'est la colocation avec services hôteliers inclus : chambre meublée, charges, fibre, ménage et espaces communs pensés pour la communauté. À La Villa : 29 chambres, 3 maisons près de Genève, dès ${PRICE_CHF_FR}/mois.`}
             </p>
             <LocalizedLink
               to="/nos-maisons"

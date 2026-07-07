@@ -1,11 +1,12 @@
 import type { QAPair } from "@/lib/structuredData";
+import { PRICE_CHF_FR, PRICE_CHF_EN } from "@/data/stats";
 
 // §10 du playbook AEO — /services (détail des prestations incluses). Tutoiement, texte verbatim.
 export const servicesFaq: { fr: QAPair[]; en: QAPair[] } = {
   fr: [
     {
       q: "Quels services sont inclus dans le loyer chez La Villa ?",
-      a: "Chez La Villa Coliving, une vingtaine de services sont inclus dans un loyer unique dès 1 380 CHF/mois : charges, internet fibre jusqu'à 8 Gb/s, ménage des communs deux fois par semaine, piscine, sauna, salle de sport, cours de yoga et fitness, streaming, événements communautaires et livraison d'essentiels mensuels.",
+      a: `Chez La Villa Coliving, une vingtaine de services sont inclus dans un loyer unique dès ${PRICE_CHF_FR}/mois : charges, internet fibre jusqu'à 8 Gb/s, ménage des communs deux fois par semaine, piscine, sauna, salle de sport, cours de yoga et fitness, streaming, événements communautaires et livraison d'essentiels mensuels.`,
     },
     {
       q: "Les cours de yoga et de fitness sont-ils vraiment inclus ?",
@@ -27,7 +28,7 @@ export const servicesFaq: { fr: QAPair[]; en: QAPair[] } = {
   en: [
     {
       q: "What services are included in the rent at La Villa?",
-      a: "At La Villa Coliving, around twenty services are included in a single rent from CHF 1,380/month: utilities, fibre internet up to 8 Gb/s, cleaning of common areas twice a week, pool, sauna, gym, yoga and fitness classes, streaming, community events and monthly delivery of essentials.",
+      a: `At La Villa Coliving, around twenty services are included in a single rent from ${PRICE_CHF_EN}/month: utilities, fibre internet up to 8 Gb/s, cleaning of common areas twice a week, pool, sauna, gym, yoga and fitness classes, streaming, community events and monthly delivery of essentials.`,
     },
     {
       q: "Are the yoga and fitness classes really included?",

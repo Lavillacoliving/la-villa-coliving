@@ -1,3 +1,5 @@
+import { PRICE_CHF_FR, PRICE_CHF_EN } from "@/data/stats";
+
 export const translations = {
   en: {
     // Navigation
@@ -333,7 +335,7 @@ export const translations = {
     ratesPage: {
       hero: {
         title: "Transparent Pricing",
-        subtitle: "CHF 1,380/month — All inclusive in a house, not a residence",
+        subtitle: `${PRICE_CHF_EN}/month — All inclusive in a house, not a residence`,
         description: "No hidden fees. No surprises. Just exceptional value.",
         description2:
           "When you add up rent, utilities, amenities, and services, La Villa offers more—for less than a Geneva studio.",
@@ -771,7 +773,7 @@ export const translations = {
     ratesPage: {
       hero: {
         title: "Tarifs Transparents",
-        subtitle: "1 380 CHF/mois — Tout inclus dans une maison, pas une résidence",
+        subtitle: `${PRICE_CHF_FR}/mois — Tout inclus dans une maison, pas une résidence`,
         description:
           "Pas de frais cachés. Pas de surprises. Juste une valeur exceptionnelle.",
         description2:

@@ -1,4 +1,5 @@
 import { LocalizedLink } from "@/components/LocalizedLink";
+import { COLOC_GENEVE_ARTICLE } from "@/lib/siteLinks";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { Home, ArrowLeft } from "lucide-react";
 import { SEO } from "@/components/SEO";
@@ -15,7 +16,7 @@ export function NotFoundPage() {
           { to: "/en/blog", label: "Blog" },
         ]
       : [
-          { to: "/colocation-geneve", label: "Colocation Genève" },
+          { to: COLOC_GENEVE_ARTICLE, label: "Colocation Genève" },
           { to: "/tarifs", label: "Tarifs" },
           { to: "/candidature", label: "Candidater" },
           { to: "/blog", label: "Blog" },

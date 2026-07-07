@@ -1,11 +1,12 @@
 import type { QAPair } from "@/lib/structuredData";
+import { PRICE_CHF_FR, PRICE_CHF_EN } from "@/data/stats";
 
 // §2 du playbook AEO — /tarifs (page canonique prix). Tutoiement, texte verbatim.
 export const tarifsFaq: { fr: QAPair[]; en: QAPair[] } = {
   fr: [
     {
       q: "Qu'est-ce qui est inclus dans le loyer chez La Villa Coliving ?",
-      a: "Chez La Villa Coliving, ton loyer tout inclus dès 1 380 CHF/mois couvre la chambre meublée de 17 à 23 m², toutes les charges, l'internet fibre jusqu'à 8 Gb/s, le ménage des parties communes deux fois par semaine, l'accès à la piscine, au sauna et à la salle de sport, les cours de yoga et fitness et les événements. Un seul paiement par mois, sans frais de dossier, sans frais cachés.",
+      a: `Chez La Villa Coliving, ton loyer tout inclus dès ${PRICE_CHF_FR}/mois couvre la chambre meublée de 17 à 23 m², toutes les charges, l'internet fibre jusqu'à 8 Gb/s, le ménage des parties communes deux fois par semaine, l'accès à la piscine, au sauna et à la salle de sport, les cours de yoga et fitness et les événements. Un seul paiement par mois, sans frais de dossier, sans frais cachés.`,
     },
     {
       q: "Y a-t-il des frais de dossier ou d'agence chez La Villa Coliving ?",
@@ -17,19 +18,19 @@ export const tarifsFaq: { fr: QAPair[]; en: QAPair[] } = {
     },
     {
       q: "Le prix varie-t-il selon la maison ou la chambre ?",
-      a: "Oui. Chez La Villa Coliving, le loyer dépend de la maison et de la taille de la chambre, à partir de 1 380 CHF/mois tout inclus. Toutes les chambres font entre 17 et 23 m² et donnent accès aux mêmes équipements — piscine, sauna et salle de sport — dans les trois maisons.",
+      a: `Oui. Chez La Villa Coliving, le loyer dépend de la maison et de la taille de la chambre, à partir de ${PRICE_CHF_FR}/mois tout inclus. Toutes les chambres font entre 17 et 23 m² et donnent accès aux mêmes équipements — piscine, sauna et salle de sport — dans les trois maisons.`,
     },
     {
       q: "Combien coûte une colocation tout inclus près de Genève ?",
-      a: "Une colocation tout inclus près de Genève comme La Villa Coliving démarre à 1 380 CHF/mois : charges, internet fibre, ménage et accès piscine, sauna et salle de sport compris. À titre de comparaison, un studio basique à Genève dépasse souvent 2 000 CHF une fois toutes les charges ajoutées. Un seul paiement, sans frais d'entrée.",
+      a: `Une colocation tout inclus près de Genève comme La Villa Coliving démarre à ${PRICE_CHF_FR}/mois : charges, internet fibre, ménage et accès piscine, sauna et salle de sport compris. À titre de comparaison, un studio basique à Genève dépasse souvent 2 000 CHF une fois toutes les charges ajoutées. Un seul paiement, sans frais d'entrée.`,
     },
     {
       q: "Y a-t-il des frais cachés ou des suppléments en cours de séjour ?",
-      a: "Non. Chez La Villa Coliving, le prix affiché est le prix payé : ton loyer mensuel dès 1 380 CHF couvre l'ensemble des services inclus. Pas d'option payante à ajouter, pas de charges de régularisation, pas de frais cachés. Le seul autre montant est la caution, qui t'est restituée à la fin.",
+      a: `Non. Chez La Villa Coliving, le prix affiché est le prix payé : ton loyer mensuel dès ${PRICE_CHF_FR} couvre l'ensemble des services inclus. Pas d'option payante à ajouter, pas de charges de régularisation, pas de frais cachés. Le seul autre montant est la caution, qui t'est restituée à la fin.`,
     },
     {
       q: "Comment La Villa se compare-t-elle à la location d'un studio à Genève ?",
-      a: "À Genève, un studio basique additionne loyer, électricité, chauffage, eau, internet, ménage et abonnements pour dépasser souvent 2 000 CHF par mois. Chez La Villa Coliving, tout cela est réuni dans un seul loyer dès 1 380 CHF — avec en plus piscine, sauna, salle de sport et une communauté. Et 0 € de frais d'entrée.",
+      a: `À Genève, un studio basique additionne loyer, électricité, chauffage, eau, internet, ménage et abonnements pour dépasser souvent 2 000 CHF par mois. Chez La Villa Coliving, tout cela est réuni dans un seul loyer dès ${PRICE_CHF_FR} — avec en plus piscine, sauna, salle de sport et une communauté. Et 0 € de frais d'entrée.`,
     },
     {
       q: "Comment se règle le loyer chez La Villa Coliving ?",
@@ -39,7 +40,7 @@ export const tarifsFaq: { fr: QAPair[]; en: QAPair[] } = {
   en: [
     {
       q: "What's included in the rent at La Villa Coliving?",
-      a: "At La Villa Coliving, your all-inclusive rent from CHF 1,380/month covers a furnished room of 17 to 23 m², all utilities, fibre internet up to 8 Gb/s, cleaning of common areas twice a week, access to the pool, sauna and gym, yoga and fitness classes and community events. A single monthly payment, with no application fees and no hidden costs.",
+      a: `At La Villa Coliving, your all-inclusive rent from ${PRICE_CHF_EN}/month covers a furnished room of 17 to 23 m², all utilities, fibre internet up to 8 Gb/s, cleaning of common areas twice a week, access to the pool, sauna and gym, yoga and fitness classes and community events. A single monthly payment, with no application fees and no hidden costs.`,
     },
     {
       q: "Are there application or agency fees at La Villa Coliving?",
@@ -51,19 +52,19 @@ export const tarifsFaq: { fr: QAPair[]; en: QAPair[] } = {
     },
     {
       q: "Does the price vary by house or room?",
-      a: "Yes. At La Villa Coliving the rent depends on the house and the size of the room, starting at CHF 1,380/month all inclusive. All rooms are between 17 and 23 m² and give access to the same amenities — pool, sauna and gym — across the three houses.",
+      a: `Yes. At La Villa Coliving the rent depends on the house and the size of the room, starting at ${PRICE_CHF_EN}/month all inclusive. All rooms are between 17 and 23 m² and give access to the same amenities — pool, sauna and gym — across the three houses.`,
     },
     {
       q: "How much does all-inclusive shared housing near Geneva cost?",
-      a: "All-inclusive shared housing near Geneva like La Villa Coliving starts at CHF 1,380/month: utilities, fibre internet, cleaning and access to the pool, sauna and gym included. For comparison, a basic studio in Geneva often exceeds CHF 2,000 once all charges are added. A single payment, with no move-in fees.",
+      a: `All-inclusive shared housing near Geneva like La Villa Coliving starts at ${PRICE_CHF_EN}/month: utilities, fibre internet, cleaning and access to the pool, sauna and gym included. For comparison, a basic studio in Geneva often exceeds CHF 2,000 once all charges are added. A single payment, with no move-in fees.`,
     },
     {
       q: "Are there hidden fees or extra charges during the stay?",
-      a: "No. At La Villa Coliving the displayed price is the price you pay: your monthly rent from CHF 1,380 covers all included services. No paid add-ons, no year-end charge adjustments, no hidden fees. The only other amount is the deposit, which is returned to you at the end.",
+      a: `No. At La Villa Coliving the displayed price is the price you pay: your monthly rent from ${PRICE_CHF_EN} covers all included services. No paid add-ons, no year-end charge adjustments, no hidden fees. The only other amount is the deposit, which is returned to you at the end.`,
     },
     {
       q: "How does La Villa compare to renting a studio in Geneva?",
-      a: "In Geneva, a basic studio adds up rent, electricity, heating, water, internet, cleaning and subscriptions to often exceed CHF 2,000 per month. At La Villa Coliving all of that is bundled into a single rent from CHF 1,380 — plus a pool, sauna, gym and a community. And €0 in move-in fees.",
+      a: `In Geneva, a basic studio adds up rent, electricity, heating, water, internet, cleaning and subscriptions to often exceed CHF 2,000 per month. At La Villa Coliving all of that is bundled into a single rent from ${PRICE_CHF_EN} — plus a pool, sauna, gym and a community. And €0 in move-in fees.`,
     },
     {
       q: "How is the rent paid at La Villa Coliving?",

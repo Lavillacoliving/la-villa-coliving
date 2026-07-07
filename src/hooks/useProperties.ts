@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { supabase } from '@/lib/supabase';
+import { STATS } from '@/data/stats';
 
 export interface Property {
   id: string;
@@ -53,9 +54,9 @@ export function useProperties() {
   const getPricing = () => {
     const p = properties[0];
     return {
-      price_chf: p?.price_chf || 1380,
+      price_chf: p?.price_chf || STATS.priceChf,
       deposit_months: p?.deposit_months || 2,
-      deposit_chf: (p?.price_chf || 1380) * (p?.deposit_months || 2),
+      deposit_chf: (p?.price_chf || STATS.priceChf) * (p?.deposit_months || 2),
     };
   };
   return { properties, loading, error, getProperty, getPricing };
@@ -66,8 +67,8 @@ export async function fetchPricing() {
     .from('properties').select('price_chf, deposit_months')
     .eq('is_coliving', true).limit(1).single();
   return {
-    price_chf: data?.price_chf || 1380,
+    price_chf: data?.price_chf || STATS.priceChf,
     deposit_months: data?.deposit_months || 2,
-    deposit_chf: (data?.price_chf || 1380) * (data?.deposit_months || 2),
+    deposit_chf: (data?.price_chf || STATS.priceChf) * (data?.deposit_months || 2),
   };
 }

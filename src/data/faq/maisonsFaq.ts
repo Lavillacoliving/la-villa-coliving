@@ -1,4 +1,5 @@
 import type { QAPair } from "@/lib/structuredData";
+import { PRICE_CHF_FR, PRICE_CHF_EN } from "@/data/stats";
 
 // §9 du playbook AEO — /nos-maisons (vue d'ensemble & choix). Tutoiement, texte verbatim.
 export const maisonsFaq: { fr: QAPair[]; en: QAPair[] } = {
@@ -9,7 +10,7 @@ export const maisonsFaq: { fr: QAPair[]; en: QAPair[] } = {
     },
     {
       q: "Quelle maison choisir entre La Villa, Le Loft et Le Lodge ?",
-      a: "Les trois maisons de La Villa Coliving offrent la même expérience tout inclus dès 1 380 CHF/mois. La Villa, à Ville-la-Grand, séduit par son grand jardin et son emplacement au calme ; Le Loft, à Ambilly, par sa piscine intérieure chauffée toute l'année ; Le Lodge, à Annemasse, par sa taille et son chalet fitness. Le choix dépend de l'ambiance recherchée et des disponibilités.",
+      a: `Les trois maisons de La Villa Coliving offrent la même expérience tout inclus dès ${PRICE_CHF_FR}/mois. La Villa, à Ville-la-Grand, séduit par son grand jardin et son emplacement au calme ; Le Loft, à Ambilly, par sa piscine intérieure chauffée toute l'année ; Le Lodge, à Annemasse, par sa taille et son chalet fitness. Le choix dépend de l'ambiance recherchée et des disponibilités.`,
     },
     {
       q: "Toutes les maisons ont-elles une piscine ?",
@@ -27,7 +28,7 @@ export const maisonsFaq: { fr: QAPair[]; en: QAPair[] } = {
     },
     {
       q: "Which house should you choose between La Villa, Le Loft and Le Lodge?",
-      a: "The three La Villa Coliving houses offer the same all-inclusive experience from CHF 1,380/month. La Villa, in Ville-la-Grand, stands out for its large garden and quiet location; Le Loft, in Ambilly, for its indoor pool heated year-round; Le Lodge, in Annemasse, for its size and its fitness chalet. The choice depends on the atmosphere you're after and availability.",
+      a: `The three La Villa Coliving houses offer the same all-inclusive experience from ${PRICE_CHF_EN}/month. La Villa, in Ville-la-Grand, stands out for its large garden and quiet location; Le Loft, in Ambilly, for its indoor pool heated year-round; Le Lodge, in Annemasse, for its size and its fitness chalet. The choice depends on the atmosphere you're after and availability.`,
     },
     {
       q: "Do all the houses have a pool?",
