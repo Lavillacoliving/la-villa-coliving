@@ -1,0 +1,13 @@
+cle;valeur;unite;source;n;note
+loyer_median_chambre_tout_inclus;1360;CHF/mois;La Villa Coliving 2026;29;Mediane actuelle 2026 des loyers en cours factures en CHF - couvre loyer, charges, meuble, equipements (piscine, sauna, salle de sport, home cinema), services (menage, jardin, evenements), 0 frais d'agence - caution 2 mois
+surface_moyenne_par_resident;38;m2;La Villa Coliving 2026;;Surface habitable totale / nb de residents - par maison: La Villa 37, Le Lodge 37.5, Le Loft 41.5 - chambres privees 17-23 m2
+loyer_tout_inclus_par_m2;36;CHF/m2;La Villa Coliving 2026;;= 1360 / 38 - a comparer avec prudence aux loyers nets (voir methodologie)
+duree_moyenne_sejour;13;mois;La Villa Coliving 2021-2026;100;Moyenne sur 100+ residents depuis octobre 2021
+taux_occupation;99;pourcent;La Villa Coliving;;98-99 selon les periodes
+candidatures_par_mois;30-45;candidatures;La Villa Coliving 2026;;Toutes maisons confondues
+delai_placement_chambre;<1;semaine;La Villa Coliving 2026;;Delai moyen entre liberation et relocation d'une chambre
+part_frontaliers;100;pourcent;La Villa Coliving;;Residents travaillant en Suisse
+age_residents;22-48;ans;La Villa Coliving;;Dominante 25-35 ans
+part_celibataires;80;pourcent;La Villa Coliving;;20 pourcent en couple
+secteurs_principaux;medical, cadres d'entreprise, organisations internationales;;La Villa Coliving;;Top 3 des secteurs d'emploi
+nationalites_principales_hors_fr_ch;espagnole, italienne;;La Villa Coliving;;Egalement: irlandaise, australienne, belge, russe, hongroise, polonaise, americaine, sud-americaine

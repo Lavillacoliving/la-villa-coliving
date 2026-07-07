@@ -4,12 +4,15 @@ import { LocalizedLink } from "@/components/LocalizedLink";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { SEO } from "@/components/SEO";
 import { buildDatasetSchema } from "@/lib/structuredData";
-import { Train, Bus, Bike, Car, Wallet, Download, ArrowRight, MapPin, Info } from "lucide-react";
+import { BAROMETRE, STUDIO_FULL_COST } from "@/data/barometre";
+import { Train, Bus, Bike, Car, Wallet, Download, ArrowRight, MapPin, Info, Home, Users, Check, ChevronDown, ImageDown } from "lucide-react";
 
 // ──────────────────────────────────────────────────────────────────────────
 // Observatoire du logement frontalier — Édition 1 : corridor rive gauche → Eaux-Vives.
-// La Villa = éditrice NEUTRE, jamais dans les chiffres (cf. brief Pan Malin).
-// Données France = public/data/observatoire-data-2026.csv ; Genève = observatoire-geneve-2026.csv.
+// DEUX COUCHES : « marché » (sources publiques, La Villa neutre, jamais dans ces chiffres)
+//   + « Vu de nos maisons » (données first-party La Villa, ÉTIQUETÉES — src/data/barometre.ts).
+// Données France = public/data/observatoire-data-2026.csv ; Genève = observatoire-geneve-2026.csv ;
+//   La Villa = observatoire-lavilla-2026.csv.
 // Loyer France = STUDIO €/m² d'annonce (Le Figaro, page MAJ 02/06/2026) × 30 m² de référence.
 //   3 communes sans studio publié (Bons-en-Chablais, Bonne, Machilly) = loyer 2-pièces (proxy *).
 // Genève = marché à DEUX VITESSES : parc en place 35 CHF/m² (OCSTAT 2025) vs annonces ≈ 50 (+44 %).
@@ -58,6 +61,7 @@ const VELO_MAX = 75; // au-delà, le vélo n'est plus un mode du quotidien → �
 const SITE = "https://www.lavillacoliving.com";
 const CSV_URL = "/data/observatoire-data-2026.csv"; // France — corridor (Le Figaro)
 const CSV_GENEVA_URL = "/data/observatoire-geneve-2026.csv"; // Genève — deux vitesses (OCSTAT + annonces)
+const CSV_LAVILLA_URL = "/data/observatoire-lavilla-2026.csv"; // La Villa — agrégats first-party (couche 2)
 
 const hub = COMMUNES.find((c) => c.name === "Annemasse")!; // 990 € studio, 8 min LEX
 // ── Genève, marché à DEUX VITESSES (chiffres FIGÉS — brief §1.1, ne rien recalculer) ──
@@ -71,8 +75,19 @@ const GENEVA_ANNONCE_CHF = "1 500"; // ≈ 50 × 30 m²
 const GENEVA_ECART_PCT = "+44 %"; // figé (50,4 / 35,0)
 // Déciles du stock OCSTAT (CHF/m²) : D1 20,6 · Q1 26,3 · médiane 35,0 · Q3 42,9 · D9 51,3 → voir observatoire-geneve-2026.csv.
 // Repère transfrontalier « 8 min » : Genève-Eaux-Vives = quartier premium (haut du marché), loyer d'annonce.
-const GENEVA_EAUXVIVES_CHF = "1 750"; // CHF/mois, studio Eaux-Vives (annonces juin 2026)
-const TRANSFRONT_DELTA_CHF = "760"; // 1 750 − 990 ; € et CHF ≈ parité (jamais convertis)
+const GENEVA_EAUXVIVES_CHF = "1 750"; // CHF/mois, studio Eaux-Vives (relevé Homegate, juin 2026)
+// ── Taux de change (brief correction #2, 07/2026) : plus JAMAIS de « parité » €/CHF. ──
+// Taux figé de l'édition : 1 € = 0,92 CHF (juillet 2026) — affiché partout où l'on convertit.
+// Dérivés (arrondis d'affichage) : 990 € ≈ 910 CHF · 1 750 CHF ≈ 1 900 € · économie 1 750 − 911 ≈ 840 CHF ≈ 910 €
+//   · 1 360 CHF ≈ 1 480 € · studio coût complet 1 344 € ≈ 1 236 CHF (≈ 45 €/m² ≈ 41 CHF/m²).
+const FX_NOTE_FR = "Conversions au taux 1 € = 0,92 CHF (juillet 2026)";
+const FX_NOTE_EN = "Conversions at €1 = CHF 0.92 (July 2026)";
+const GENEVA_EAUXVIVES_EUR = "1 900"; // ≈ 1 750 / 0,92
+const HUB_CHF = "910"; // ≈ 990 × 0,92
+const TRANSFRONT_DELTA_CHF = "840"; // 1 750 − (990 × 0,92 ≈ 911)
+const TRANSFRONT_DELTA_EUR = "910"; // ≈ 840 / 0,92
+const COLIVING_EUR = "1 480"; // ≈ 1 360 / 0,92
+const STUDIO_38M2_EUR = "1 700"; // lecture « à surface équivalente » : 38 m² × 44,8 €/m² (coût complet du studio) ≈ 1 702 €
 
 type ModeKey = "pt" | "velo" | "voiture";
 type SortKey = "name" | "mois" | ModeKey;
@@ -87,7 +102,7 @@ export function ObservatoireLogementFrontalierPage() {
   const [sortDir, setSortDir] = useState(1);
 
   const PAGE_FIRST_PUBLISHED = "2026-06-16";
-  const PAGE_LAST_UPDATED = "2026-06-26";
+  const PAGE_LAST_UPDATED = "2026-07-06"; // à caler sur la date réelle de mise en ligne au moment du merge
   const updatedLabel = new Date(PAGE_LAST_UPDATED).toLocaleDateString(en ? "en-US" : "fr-FR", {
     year: "numeric",
     month: "long",
@@ -100,10 +115,10 @@ export function ObservatoireLogementFrontalierPage() {
       ? "Cross-border housing observatory — Studio rent × Commute, left-bank Geneva (2026)"
       : "Observatoire du logement frontalier — Loyer studio × Trajet, rive gauche de Genève (2026)",
     description: en
-      ? "Advertised studio rent (Le Figaro, June 2026) crossed with commute time to Geneva-Eaux-Vives, for 17 municipalities of the French Genevois along the Léman Express axis, including peak-hour train frequency. Geneva, a two-speed market: sitting tenants 35 CHF/m² (OCSTAT 2025) vs. newcomers ≈ 50 CHF/m² in today's listings (+44%)."
-      : "Loyer d'annonce d'un studio (Le Figaro, juin 2026) croisé au temps de trajet vers Genève-Eaux-Vives, pour 17 communes du Genevois français le long de l'axe Léman Express, avec la cadence des trains en heure de pointe. Genève, marché à deux vitesses : locataire en place 35 CHF/m² (OCSTAT 2025) vs nouvel arrivant ≈ 50 CHF/m² dans les annonces (+44 %).",
+      ? "Advertised studio rent (Observatory survey on Le Figaro Immobilier, June 2026) crossed with commute time to Geneva-Eaux-Vives, for 17 municipalities of the French Genevois along the Léman Express axis, including peak-hour train frequency. Geneva, a two-speed market: sitting tenants 35 CHF/m² (OCSTAT 2025) vs. newcomers ≈ 50 CHF/m² in today's listings (Homegate survey, +44%). Includes first-party aggregates from La Villa Coliving's 3 houses (100+ residents since 2021), clearly labelled. Conversions at €1 = CHF 0.92 (July 2026)."
+      : "Loyer d'annonce d'un studio (relevé de l'Observatoire sur Le Figaro Immobilier, juin 2026) croisé au temps de trajet vers Genève-Eaux-Vives, pour 17 communes du Genevois français le long de l'axe Léman Express, avec la cadence des trains en heure de pointe. Genève, marché à deux vitesses : locataire en place 35 CHF/m² (OCSTAT 2025) vs nouvel arrivant ≈ 50 CHF/m² dans les annonces (relevé Homegate, +44 %). Inclut les agrégats first-party des 3 maisons La Villa Coliving (100+ résidents depuis 2021), clairement étiquetés. Conversions au taux 1 € = 0,92 CHF (juillet 2026).",
     url: `${SITE}/observatoire-logement-frontalier-geneve`,
-    csvUrls: [`${SITE}${CSV_URL}`, `${SITE}${CSV_GENEVA_URL}`],
+    csvUrls: [`${SITE}${CSV_URL}`, `${SITE}${CSV_GENEVA_URL}`, `${SITE}${CSV_LAVILLA_URL}`],
     datePublished: PAGE_FIRST_PUBLISHED,
     dateModified: PAGE_LAST_UPDATED,
     language: en ? "en" : "fr",
@@ -149,6 +164,36 @@ export function ObservatoireLogementFrontalierPage() {
       setSortDir(1);
     }
   }
+
+  // Télécharge le graphique signature (SVG inline sérialisé) — bloc presse.
+  function downloadScatterSvg() {
+    const node = document.getElementById("graphique-loyer-trajet");
+    if (!node) return;
+    const blob = new Blob([new XMLSerializer().serializeToString(node)], { type: "image/svg+xml" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = "observatoire-loyer-trajet-2026.svg";
+    a.click();
+    URL.revokeObjectURL(url);
+  }
+
+  // Renvoi méthodologie : déplie l'accordéon avant que l'ancre ne scrolle dessus.
+  function openMethodo() {
+    const d = document.getElementById("methodo") as HTMLDetailsElement | null;
+    if (d) d.open = true;
+  }
+
+  // Légende « source + date » sous CHAQUE tableau/graphique (demande Jérôme 07/07 :
+  // les sources sont mélangées → chaque visuel porte la sienne, avec renvoi méthodo).
+  const SourceLine = ({ children, center = true }: { children: ReactNode; center?: boolean }) => (
+    <p className={`text-[11px] text-[#A8A29E] mt-2 leading-snug ${center ? "text-center" : ""}`}>
+      {children}{" "}
+      <a href="#methodo" onClick={openMethodo} className="underline underline-offset-2 hover:text-[#A0623C] whitespace-nowrap">
+        → {en ? "methodology" : "méthodologie"}
+      </a>
+    </p>
+  );
 
   // Couleur par palier de loyer studio (sobre, charte La Villa).
   const tier = (mois: number) => (mois <= 750 ? "#6B8E6B" : mois <= 950 ? "#D4A574" : "#A0623C");
@@ -210,57 +255,104 @@ export function ObservatoireLogementFrontalierPage() {
         <script type="application/ld+json">{JSON.stringify(articleSchema)}</script>
       </Helmet>
 
-      {/* ===== HERO ===== */}
-      <section className="py-20 lg:py-28 bg-gradient-to-b from-white to-[#FAF9F6]">
-        <div className="max-w-5xl mx-auto px-6 text-center">
+      {/* ===== HERO — plein contraste, le chiffre-choc en très grand (brief staging 07/2026) ===== */}
+      <section className="bg-[#1C1917] text-white">
+        <div className="max-w-5xl mx-auto px-6 pt-16 pb-14 lg:pt-24 lg:pb-16 text-center">
           <span className="text-xs text-[#D4A574] uppercase tracking-[0.3em] mb-4 block font-medium">
             {en ? "Cross-border housing observatory · Edition 1" : "Observatoire du logement frontalier · Édition 1"}
           </span>
           <h1
-            className="text-4xl md:text-5xl font-light text-[#1C1917] mb-5 leading-tight"
+            className="text-4xl md:text-5xl font-light mb-4 leading-tight"
             style={{ fontFamily: "DM Serif Display, serif" }}
           >
             {en ? "Where to live near Geneva " : "Où se loger près de Genève "}
             <span className="text-[#D4A574]">{en ? "without straying far?" : "sans s'éloigner ?"}</span>
           </h1>
-          <p className="text-lg text-[#57534E] max-w-3xl mx-auto mb-9 leading-relaxed">
+          <p className="text-base md:text-lg text-white/70 max-w-3xl mx-auto leading-relaxed">
             {en
               ? "Rive gauche / Léman Express corridor → Geneva-Eaux-Vives. A studio's advertised rent, mapped against real commute time, across 17 towns on the French side of Geneva."
               : "Corridor rive gauche / Léman Express → Genève-Eaux-Vives. Le loyer d'annonce d'un studio, croisé au temps de trajet réel, pour 17 communes du Genevois français."}
           </p>
 
-          {/* Chiffre-choc transfrontalier : loyer d'un studio, à 8 min en Léman Express */}
-          <p className="text-xl sm:text-2xl font-medium uppercase tracking-wide text-[#1C1917] mb-5">
-            {en ? "A studio's rent, 8 minutes away on the Léman Express" : "Loyer d'un studio, à 8 minutes en Léman Express"}
-          </p>
-          <div className="inline-block bg-white border border-[#E7E5E4] rounded-xl px-7 py-5">
-            <div className="flex flex-col sm:flex-row items-center justify-center gap-2 sm:gap-6">
-              <div className="text-center">
-                <div className="text-xs text-[#57534E] mb-1">Genève-Eaux-Vives</div>
-                <div className="text-xl sm:text-2xl font-medium text-[#1C1917] whitespace-nowrap">≈ {GENEVA_EAUXVIVES_CHF} CHF</div>
-                <div className="text-[10px] text-[#A8A29E] mt-0.5">{en ? "8-min neighbourhood" : "quartier à 8 min"}</div>
+          {/* Le chiffre-choc, énorme */}
+          <div className="grid sm:grid-cols-[1fr_auto_1fr] items-center gap-4 sm:gap-8 max-w-3xl mx-auto mt-12">
+            <div className="text-center sm:text-right">
+              <div className="text-5xl md:text-6xl font-light whitespace-nowrap" style={{ fontFamily: "DM Serif Display, serif" }}>
+                ≈ {GENEVA_EAUXVIVES_CHF}<span className="text-2xl md:text-3xl ml-2 text-white/70">CHF</span>
               </div>
-              <div className="flex items-center text-[#D4A574] shrink-0 my-1 sm:my-0">
-                <Train className="w-5 h-5" />
-                <ArrowRight className="w-4 h-4 rotate-90 sm:rotate-0" />
+              <div className="text-sm text-white/60 mt-2">
+                {en ? "a studio — Geneva-Eaux-Vives" : "un studio — Genève-Eaux-Vives"}
+                <span className="block text-xs text-white/40 mt-0.5">≈ {GENEVA_EAUXVIVES_EUR} €</span>
               </div>
-              <div className="text-center">
-                <div className="text-xs text-[#57534E] mb-1">Annemasse (France)</div>
-                <div className="text-xl sm:text-2xl font-medium text-[#1C1917] whitespace-nowrap">≈ {hub.mois} €</div>
-                <div className="text-[10px] text-[#A8A29E] mt-0.5">{en ? "8 min by train" : "à 8 min en train"}</div>
+            </div>
+            <div className="flex sm:flex-col items-center justify-center gap-1 text-[#D4A574]">
+              <Train className="w-6 h-6" />
+              <ArrowRight className="w-5 h-5 rotate-90 sm:rotate-0" />
+            </div>
+            <div className="text-center sm:text-left">
+              <div className="text-5xl md:text-6xl font-light whitespace-nowrap" style={{ fontFamily: "DM Serif Display, serif" }}>
+                ≈ {hub.mois}<span className="text-2xl md:text-3xl ml-2 text-white/70">€</span>
+              </div>
+              <div className="text-sm text-white/60 mt-2">
+                {en ? "a studio — Annemasse, 8 min away" : "un studio — Annemasse, à 8 min"}
+                <span className="block text-xs text-white/40 mt-0.5">≈ {HUB_CHF} CHF</span>
               </div>
             </div>
           </div>
-          <p className="mt-4 text-sm text-[#57534E]">
-            {en ? (
-              <>≈ <span className="font-medium text-[#1C1917]">CHF {TRANSFRONT_DELTA_CHF} less per month</span>, on the French side</>
-            ) : (
-              <>≈ <span className="font-medium text-[#1C1917]">{TRANSFRONT_DELTA_CHF} CHF de moins par mois</span>, côté France</>
-            )}
+          <p className="mt-9 text-xl md:text-2xl font-semibold text-[#D4A574]">
+            {en
+              ? `= ≈ CHF ${TRANSFRONT_DELTA_CHF} saved per month (≈ €${TRANSFRONT_DELTA_EUR}), on the French side.`
+              : `= ≈ ${TRANSFRONT_DELTA_CHF} CHF d'économie par mois (≈ ${TRANSFRONT_DELTA_EUR} €), côté France.`}
           </p>
-          <p className="mt-5 text-xs text-[#A8A29E]">
-            {en ? `Updated ${updatedLabel}` : `Mis à jour le ${updatedLabel}`}
+          <p className="mt-7 text-xs text-white/40">
+            {en
+              ? `Updated ${updatedLabel} · Sources: Observatory surveys on Homegate (Geneva) & Le Figaro Immobilier (France), June 2026 · ${FX_NOTE_EN} `
+              : `Mis à jour le ${updatedLabel} · Sources : relevés de l'Observatoire sur Homegate (Genève) & Le Figaro Immobilier (France), juin 2026 · ${FX_NOTE_FR} `}
+            <a href="#methodo" onClick={openMethodo} className="underline underline-offset-2 hover:text-white/70 whitespace-nowrap">
+              → {en ? "methodology" : "méthodologie"}
+            </a>
           </p>
+        </div>
+      </section>
+
+      {/* ===== LES CHIFFRES À RETENIR — 4 stat-cards « lift-and-quote » ===== */}
+      <section className="py-10 lg:py-12 bg-white border-b border-[#F0EEE9]">
+        <div className="max-w-5xl mx-auto px-6">
+          <h2 className="text-sm font-semibold uppercase tracking-[0.2em] text-[#A0623C] text-center mb-6">
+            {en ? "The figures to remember" : "Les chiffres à retenir"}
+          </h2>
+          <div className="grid sm:grid-cols-3 gap-3">
+            {[
+              {
+                fig: GENEVA_ECART_PCT,
+                label: en
+                  ? "what a newcomer pays on top of a sitting tenant in Geneva"
+                  : "ce qu'un nouvel arrivant paie de plus qu'un locataire installé à Genève",
+              },
+              {
+                fig: `≈ ${TRANSFRONT_DELTA_CHF} CHF/${en ? "mo" : "mois"}`,
+                label: en
+                  ? `the saving on the French side (≈ €${TRANSFRONT_DELTA_EUR}), 8 min from Geneva by train`
+                  : `l'économie côté France (≈ ${TRANSFRONT_DELTA_EUR} €), à 8 min de Genève en train`,
+              },
+              {
+                fig: "970 €",
+                label: en
+                  ? "average studio under 30 min from Geneva (Léman Express)"
+                  : "studio moyen à moins de 30 min de Genève (Léman Express)",
+              },
+            ].map((s) => (
+              <div key={s.fig} className="bg-[#FAF9F6] rounded-xl p-4 sm:p-5 text-center">
+                <p className="text-2xl sm:text-3xl font-medium text-[#1C1917] whitespace-nowrap">{s.fig}</p>
+                <p className="text-xs text-[#57534E] mt-1.5 leading-snug">{s.label}</p>
+              </div>
+            ))}
+          </div>
+          <SourceLine>
+            {en
+              ? `Sources: OCSTAT 2025 (sitting stock) · Observatory surveys on Homegate & Le Figaro Immobilier, June 2026 · ${FX_NOTE_EN}.`
+              : `Sources : OCSTAT 2025 (parc en place) · relevés de l'Observatoire sur Homegate & Le Figaro Immobilier, juin 2026 · ${FX_NOTE_FR}.`}
+          </SourceLine>
         </div>
       </section>
 
@@ -287,14 +379,27 @@ export function ObservatoireLogementFrontalierPage() {
                     <>À Genève, le loyer d'un studio dépend fortement de l'ancienneté du bail. Les locataires en place paient une médiane de <strong className="text-[#1C1917]">35 CHF/m²</strong>, soit environ <strong className="text-[#1C1917]">{GENEVA_STOCK_CHF} CHF par mois</strong> — un niveau maintenu bas par la protection des baux en cours. Les loyers d'annonce du jour, eux, s'établissent à <strong className="text-[#1C1917]">environ 50 CHF/m²</strong> (<strong className="text-[#1C1917]">~{GENEVA_ANNONCE_CHF} CHF par mois</strong>), soit <strong className="text-[#A0623C]">44 % de plus</strong>.</>
                   )}
                 </p>
-                <p>
-                  {en ? (
-                    <>The cantonal statistical office notes that recent leases are “generally substantially higher than those paid by people who have occupied the same flat for a long time.”</>
-                  ) : (
-                    <>L'office cantonal de la statistique le précise : les baux récents sont « en général sensiblement supérieurs à ceux payés par des personnes qui occupent le même appartement depuis longtemps ».</>
-                  )}
-                </p>
               </div>
+
+              {/* Pull-quote OCSTAT — la citation en grand, pas noyée dans un paragraphe */}
+              <blockquote className="border-l-4 border-[#D4A574] pl-5 sm:pl-6 my-7">
+                <p className="text-lg md:text-xl text-[#44403C] leading-relaxed italic" style={{ fontFamily: "DM Serif Display, serif" }}>
+                  {en
+                    ? "“Rents on recently concluded leases are generally substantially higher than those paid by people who have occupied the same flat for a long time.”"
+                    : "« Les loyers des baux conclus récemment sont en général sensiblement supérieurs à ceux payés par des personnes qui occupent le même appartement depuis longtemps. »"}
+                </p>
+                <footer className="text-xs text-[#A8A29E] mt-2 not-italic">
+                  —{" "}
+                  <a
+                    href="https://statistique.ge.ch/prestations/calcul_loyer.asp"
+                    target="_blank"
+                    rel="noopener"
+                    className="underline underline-offset-2 hover:text-[#A0623C] transition-colors"
+                  >
+                    OCSTAT, {en ? "Cantonal Statistical Office (Geneva), rent calculator" : "Office cantonal de la statistique (Genève), calculateur de loyers"}
+                  </a>
+                </footer>
+              </blockquote>
 
               {/* Mini-graphe : 35 vs 50 CHF/m², repère D9 du parc en place = 51,3 (chiffres figés) */}
               <div className="my-7">
@@ -341,20 +446,44 @@ export function ObservatoireLogementFrontalierPage() {
                   )}
                 </p>
               </div>
-              <p className="text-xs text-[#A8A29E] mt-5">
-                {en
-                  ? "Sources: sitting-tenant rents — OCSTAT 2025 (2,294 studios); advertised rents — June 2026 survey (n = 25). Net rents (excl. heating), City of Geneva."
-                  : "Sources : loyers du parc en place — OCSTAT 2025 (2 294 studios) ; loyers d'annonce — relevé juin 2026 (n = 25). Loyers nets (hors chauffage), Ville de Genève."}
-              </p>
+              {/* Côté France : un marché ouvert — argument STRUCTUREL (pas de claim quantitatif
+                  non sourcé sur l'écart annonce/pratiqué) + désamorçage explicite du 33 vs 22,6
+                  (les deux sources françaises sont des loyers d'ANNONCE — demande Jérôme 07/07). */}
+              <div className="border-l-4 border-[#6B8E6B] bg-[#FAF9F6] rounded-r-xl p-5 sm:p-6 mt-7">
+                <h3 className="text-base font-semibold text-[#1C1917] mb-2">
+                  {en ? "And on the French side? A gap exists too — not the lock" : "Et côté France ? Un écart existe aussi — pas le verrou"}
+                </h3>
+                <p className="text-sm text-[#57534E] leading-relaxed">
+                  {en
+                    ? "A gap between sitting tenants' rents and newcomers' rents exists on the French side too — as on any market where running leases are indexed (IRL) while the market climbs. This observatory does not measure it: there is no public equivalent of OCSTAT for the sitting stock of the French Genevois. The difference with Geneva is one of magnitude and nature: the Geneva gap is measured — the median newcomer pays per m² as much as the top 10% of sitting leases — and it is sustained by a tenancy-protection mechanism with no French equivalent. For a household moving in, the relevant comparison remains, on both sides, advertised rents: ~CHF 1,500 in Geneva versus the French advertised rents on this page."
+                    : "Un écart entre les loyers des locataires en place et ceux des arrivants existe aussi côté France — comme sur tout marché où les baux en cours sont indexés (IRL) pendant que le marché monte. Cet observatoire ne le mesure pas : il n'existe pas, pour le Genevois français, d'équivalent public de l'OCSTAT sur le parc en place. La différence avec Genève est d'ampleur et de nature : l'écart genevois, lui, est mesuré — l'arrivant médian y paie au m² autant que les 10 % de baux en place les plus chers — et il est entretenu par un mécanisme de protection des baux sans équivalent côté France. Pour un ménage qui s'installe, la comparaison pertinente reste, des deux côtés, celle des loyers d'annonce : ~1 500 CHF à Genève contre les loyers d'annonce français de cette page."}
+                </p>
+              </div>
+              <div className="mt-5">
+                <SourceLine center={false}>
+                  {en
+                    ? "Sources: sitting-tenant rents — OCSTAT 2025 (2,294 studios); advertised rents — Observatory survey on Homegate, June 2026 (n = 25). Net rents (excl. heating), City of Geneva."
+                    : "Sources : loyers du parc en place — OCSTAT 2025 (2 294 studios) ; loyers d'annonce — relevé de l'Observatoire sur Homegate, juin 2026 (n = 25). Loyers nets (hors chauffage), Ville de Genève."}
+                </SourceLine>
+              </div>
             </div>
           </div>
         </div>
       </section>
 
-      {/* ===== INFOGRAPHIE (objet partageable) ===== */}
+      {/* ===== LA DESSERTE, PAS LA DISTANCE — graphique signature (insight annoté) + paliers ===== */}
       <section className="py-12 lg:py-16 bg-white">
         <div className="max-w-4xl mx-auto px-6">
+          <h2 className="text-2xl md:text-3xl font-light text-[#1C1917] mb-3 text-center" style={{ fontFamily: "DM Serif Display, serif" }}>
+            {en ? "The deciding factor is rail service, not distance" : "Le facteur déterminant : la desserte, pas la distance"}
+          </h2>
+          <p className="text-sm text-[#57534E] text-center mb-8 max-w-2xl mx-auto leading-relaxed">
+            {en
+              ? "Rent does not fall linearly with distance. Beyond the first ring around Annemasse, it eases and then levels off: moving further out no longer meaningfully lowers it. The deciding factor is rail service — on the Léman Express, some of the cheapest towns remain within 30 minutes of Geneva by direct train (Bons-en-Chablais: €630, 28 minutes)."
+              : "Le loyer ne décroît pas linéairement avec l'éloignement. Passé la première couronne autour d'Annemasse, il se détend puis se stabilise : s'éloigner davantage ne réduit plus sensiblement le niveau. Le facteur déterminant est la desserte ferroviaire — sur le Léman Express, certaines des communes les moins chères restent à moins de 30 minutes de Genève en train direct (Bons-en-Chablais : 630 €, 28 minutes)."}
+          </p>
           <svg
+            id="graphique-loyer-trajet"
             viewBox={`0 0 ${VW} ${VH}`}
             className="w-full h-auto"
             role="img"
@@ -388,7 +517,7 @@ export function ObservatoireLogementFrontalierPage() {
             <g>
               <circle cx={PADL} cy={48} r="6" fill="#1C1917" />
               <text x={PADL + 9} y={44} fontSize="11" fontWeight="600" fill="#1C1917">Genève-Eaux-Vives</text>
-              <text x={PADL + 9} y={58} fontSize="10" fill="#A0623C">≈ {GENEVA_EAUXVIVES_CHF} CHF · 0 min</text>
+              <text x={PADL + 9} y={58} fontSize="10" fill="#A0623C">≈ {GENEVA_EAUXVIVES_CHF} CHF (≈ {GENEVA_EAUXVIVES_EUR} €) · 0 min</text>
             </g>
             {/* points — toutes les communes étiquetées */}
             {COMMUNES.map((c) => {
@@ -401,6 +530,13 @@ export function ObservatoireLogementFrontalierPage() {
                 </g>
               );
             })}
+            {/* Insight écrit sur le graphique (brief staging) — bande libre à droite, entre 750 et 850 € */}
+            <text x={VW - PADR - 6} y={268} textAnchor="end" fontSize="13" fontStyle="italic" fill="#A0623C">
+              {en ? "Moving further out no longer lowers the rent —" : "S'éloigner ne fait plus baisser le loyer —"}
+            </text>
+            <text x={VW - PADR - 6} y={286} textAnchor="end" fontSize="13" fontStyle="italic" fill="#A0623C">
+              {en ? "the rail line matters more than the kilometres." : "la desserte compte plus que les kilomètres."}
+            </text>
             {/* logo + url (objet qui circule) */}
             <text x={VW - PADR} y={26} textAnchor="end" fontSize="12" fill="#A8A29E">lavillacoliving.com</text>
           </svg>
@@ -409,6 +545,44 @@ export function ObservatoireLogementFrontalierPage() {
               ? "Each dot = a French municipality (rent in €). Geneva-Eaux-Vives (in CHF) sits off the € scale, above the axis break. Lower-right = further & cheaper. La Villa Coliving, neutral editor."
               : "Chaque point = une commune française (loyer en €). Genève-Eaux-Vives (en CHF) est hors échelle €, au-dessus de la rupture d'axe. En bas à droite = plus loin et moins cher. La Villa Coliving, éditrice neutre."}
           </p>
+          <SourceLine>
+            {en
+              ? `Sources: French rents = Observatory survey on Le Figaro Immobilier, June 2026 · Geneva benchmark = Observatory survey on Homegate, June 2026 · commutes = online maps & official Léman Express 2026 timetable · ${FX_NOTE_EN}.`
+              : `Sources : loyers France = relevé de l'Observatoire sur Le Figaro Immobilier, juin 2026 · repère Genève = relevé de l'Observatoire sur Homegate, juin 2026 · trajets = cartes en ligne & horaire officiel Léman Express 2026 · ${FX_NOTE_FR}.`}
+          </SourceLine>
+
+          {/* Moyennes par palier de trajet (élargissement exclu) */}
+          <div className="grid sm:grid-cols-3 gap-4 mt-10">
+            {[
+              { lo: 0, hi: 30, label: en ? "Under 30 min" : "Moins de 30 min" },
+              { lo: 30, hi: 45, label: "30–45 min" },
+              { lo: 45, hi: 999, label: en ? "45 min and beyond" : "45 min et plus" },
+            ].map((band) => {
+              // Moyennes par palier : on EXCLUT les communes d'élargissement (hors corridor immédiat).
+              const list = COMMUNES.filter((c) => c.pt >= band.lo && c.pt < band.hi && !c.expanded);
+              const avg = list.length ? Math.round(list.reduce((s, c) => s + c.mois, 0) / list.length) : 0;
+              return (
+                <div key={band.label} className="bg-[#FAF9F6] rounded-xl p-5 text-center">
+                  <p className="text-xs text-[#A8A29E] uppercase tracking-wider">{band.label}</p>
+                  <p className="text-3xl font-medium text-[#1C1917] my-1">{avg} €</p>
+                  <p className="text-xs text-[#57534E]">
+                    {en ? "avg. studio · " : "studio moyen · "}
+                    {list.length} {en ? "towns" : "communes"}
+                  </p>
+                </div>
+              );
+            })}
+          </div>
+          <p className="text-xs text-[#A8A29E] mt-4 text-center">
+            {en
+              ? "Band averages exclude expansion towns (Annecy, Évian, Bonneville), which sit outside the immediate corridor."
+              : "Les moyennes par palier excluent les communes d'élargissement (Annecy, Évian, Bonneville), hors corridor immédiat."}
+          </p>
+          <SourceLine>
+            {en
+              ? "Source: Observatory survey on the Le Figaro Immobilier portal, June 2026."
+              : "Source : relevé de l'Observatoire sur le portail Le Figaro Immobilier, juin 2026."}
+          </SourceLine>
         </div>
       </section>
 
@@ -416,6 +590,9 @@ export function ObservatoireLogementFrontalierPage() {
       <section className="py-12 lg:py-16 bg-[#FAF9F6]">
         <div className="max-w-4xl mx-auto px-6">
           {/* Intro de l'outil interactif */}
+          <p className="text-xs font-semibold uppercase tracking-[0.2em] text-[#A0623C] text-center mb-2">
+            {en ? "The exploration tool" : "L'outil d'exploration"}
+          </p>
           <h2
             className="text-2xl md:text-3xl font-light text-[#1C1917] mb-3 text-center"
             style={{ fontFamily: "DM Serif Display, serif" }}
@@ -524,30 +701,35 @@ export function ObservatoireLogementFrontalierPage() {
               <tbody>
                 {/* Repère Genève-Eaux-Vives : 0 trajet, loyer CHF marché (toujours en tête, hors filtre budget) */}
                 <tr className="border-b border-[#E7E5E4]" style={{ background: "#F7F1E8" }}>
-                  <td className="px-3 py-2.5 text-[#1C1917] whitespace-nowrap font-medium">
+                  <td className="px-3 py-3 text-[#1C1917] whitespace-nowrap font-medium">
                     Genève-Eaux-Vives
                     <span className="ml-1.5 text-[10px] uppercase tracking-wider text-[#A0623C]">({en ? "reference" : "repère"})</span>
                   </td>
-                  <td className="px-3 py-2.5 text-right font-medium text-[#1C1917] whitespace-nowrap">≈ {GENEVA_EAUXVIVES_CHF}&nbsp;CHF*</td>
-                  <td className="px-3 py-2.5 text-right text-[#78716C]">0 min</td>
-                  <td className="px-3 py-2.5 text-right text-[#78716C]">0 min</td>
-                  <td className="px-3 py-2.5 text-right text-[#78716C]">0 min</td>
+                  <td className="px-3 py-3 text-right font-medium text-[#1C1917] whitespace-nowrap">≈ {GENEVA_EAUXVIVES_CHF}&nbsp;CHF*</td>
+                  <td className="px-3 py-3 text-right text-[#78716C]">0 min</td>
+                  <td className="px-3 py-3 text-right text-[#78716C]">0 min</td>
+                  <td className="px-3 py-3 text-right text-[#78716C]">0 min</td>
                 </tr>
                 {sorted.map((c) => {
                   const ok = c.mois <= budget;
+                  // Contraste budget : vert charte doux (~10 %) + liseré à gauche pour les communes
+                  // DANS le budget ; retrait renforcé (opacité 0.45) pour les autres. Le repère
+                  // Genève-Eaux-Vives (ligne au-dessus) reste neutre. Mise à jour immédiate au curseur.
                   return (
                     <tr
                       key={c.name}
-                      className="border-b border-[#F0EEE9] last:border-0"
-                      style={{ opacity: ok ? 1 : 0.4 }}
+                      className={`border-b border-[#F0EEE9] last:border-0 border-l-[3px] transition-colors ${
+                        ok ? "border-l-[#6B8E6B] bg-[#6B8E6B]/10" : "border-l-transparent"
+                      }`}
+                      style={{ opacity: ok ? 1 : 0.45 }}
                     >
-                      <td className="px-3 py-2.5 text-[#1C1917] whitespace-nowrap">
+                      <td className="px-3 py-3 text-[#1C1917] whitespace-nowrap">
                         {ok && <span className="text-[#6B8E6B] mr-1.5">✓</span>}
                         {c.name}
                         {c.proxy && <span className="text-[#A8A29E]">&nbsp;*</span>}
                         {c.expanded && <span className="text-[#A8A29E]">&nbsp;°</span>}
                       </td>
-                      <td className="px-3 py-2.5 text-right font-medium text-[#1C1917] whitespace-nowrap">{c.mois} €</td>
+                      <td className="px-3 py-3 text-right font-medium text-[#1C1917] whitespace-nowrap">{c.mois} €</td>
                       <TransportCell c={c} en={en} active={mode === "pt"} />
                       <Td active={mode === "velo"}>{c.velo > VELO_MAX ? "—" : `${c.velo} min`}</Td>
                       <Td active={mode === "voiture"}>{c.voiture} min</Td>
@@ -574,69 +756,324 @@ export function ObservatoireLogementFrontalierPage() {
           </p>
           <p className="text-xs text-[#A8A29E] mt-2">
             {en
-              ? "* Geneva reference: advertised studio rent in Eaux-Vives — a premium 8-minute neighbourhood — ≈ 1,750 CHF/mo (market listings, June 2026, excluding student/furnished lets). City-wide, the median asking rent is lower (≈ 1,500 CHF). Shown in CHF; € and CHF are near parity. “*” next to a French town = studio not published by Le Figaro, 2-room rent shown instead."
-              : "* Repère Genève : loyer d'annonce d'un studio à Eaux-Vives — quartier premium à 8 min — ≈ 1 750 CHF/mois (annonces du marché, juin 2026, hors logements étudiants/meublés). À l'échelle de toute la ville, la médiane des annonces est plus basse (≈ 1 500 CHF). Affiché en CHF ; € et CHF sont proches de la parité. « * » devant une commune française = studio non publié par Le Figaro, loyer 2-pièces affiché."}
+              ? `* Geneva reference: advertised studio rent in Eaux-Vives — a premium 8-minute neighbourhood — ≈ 1,750 CHF/mo, i.e. ≈ €${GENEVA_EAUXVIVES_EUR} at the July 2026 rate (Observatory survey on Homegate, June 2026, excluding student/furnished lets). City-wide, the median asking rent is lower (≈ 1,500 CHF). “*” next to a French town = studio not published by Le Figaro, 2-room rent shown instead.`
+              : `* Repère Genève : loyer d'annonce d'un studio à Eaux-Vives — quartier premium à 8 min — ≈ 1 750 CHF/mois, soit ≈ ${GENEVA_EAUXVIVES_EUR} € au taux de juillet 2026 (relevé de l'Observatoire sur Homegate, juin 2026, hors logements étudiants/meublés). À l'échelle de toute la ville, la médiane des annonces est plus basse (≈ 1 500 CHF). « * » devant une commune française = studio non publié par Le Figaro, loyer 2-pièces affiché.`}
           </p>
           <p className="text-xs text-[#A8A29E] mt-2">
             {en
-              ? "° Expansion town (Annecy, Évian, Bonneville): outside the immediate corridor — excluded from the commute-band averages below, but kept in the table."
-              : "° Commune d'élargissement (Annecy, Évian, Bonneville) : hors corridor immédiat — exclue des moyennes par palier ci-dessous, mais conservée dans le tableau."}
+              ? "° Expansion town (Annecy, Évian, Bonneville): outside the immediate corridor — excluded from the commute-band averages above, but kept in the table."
+              : "° Commune d'élargissement (Annecy, Évian, Bonneville) : hors corridor immédiat — exclue des moyennes par palier ci-dessus, mais conservée dans le tableau."}
           </p>
+          <SourceLine>
+            {en
+              ? `Sources: French rents = Observatory survey on Le Figaro Immobilier, June 2026 · Geneva-Eaux-Vives benchmark = Observatory survey on Homegate, June 2026 · commutes = online maps & official Léman Express 2026 timetable · ${FX_NOTE_EN}.`
+              : `Sources : loyers France = relevé de l'Observatoire sur Le Figaro Immobilier, juin 2026 · repère Genève-Eaux-Vives = relevé de l'Observatoire sur Homegate, juin 2026 · trajets = cartes en ligne & horaire officiel Léman Express 2026 · ${FX_NOTE_FR}.`}
+          </SourceLine>
         </div>
       </section>
 
-      {/* ===== PALIERS DE TRAJET ===== */}
+      {/* ===== VU DE NOS MAISONS — données first-party La Villa (couche 2, ENCADRÉ dédié
+           pour séparer visuellement l'observatoire des données internes — demande Jérôme 07/2026) ===== */}
       <section className="py-12 lg:py-16 bg-white">
         <div className="max-w-4xl mx-auto px-6">
-          <h2 className="text-2xl md:text-3xl font-light text-[#1C1917] mb-3 text-center" style={{ fontFamily: "DM Serif Display, serif" }}>
-            {en ? "The deciding factor is rail service, not distance" : "Le facteur déterminant : la desserte, pas la distance"}
-          </h2>
-          <p className="text-sm text-[#57534E] text-center mb-8 max-w-2xl mx-auto leading-relaxed">
-            {en
-              ? "Rent does not fall linearly with distance. Beyond the first ring around Annemasse, it eases and then levels off: moving further out no longer meaningfully lowers it. The deciding factor is rail service — on the Léman Express, some of the cheapest towns remain within 30 minutes of Geneva by direct train (Bons-en-Chablais: €630, 28 minutes)."
-              : "Le loyer ne décroît pas linéairement avec l'éloignement. Passé la première couronne autour d'Annemasse, il se détend puis se stabilise : s'éloigner davantage ne réduit plus sensiblement le niveau. Le facteur déterminant est la desserte ferroviaire — sur le Léman Express, certaines des communes les moins chères restent à moins de 30 minutes de Genève en train direct (Bons-en-Chablais : 630 €, 28 minutes)."}
-          </p>
-          <div className="grid sm:grid-cols-3 gap-4">
-            {[
-              { lo: 0, hi: 30, label: en ? "Under 30 min" : "Moins de 30 min" },
-              { lo: 30, hi: 45, label: "30–45 min" },
-              { lo: 45, hi: 999, label: en ? "45 min and beyond" : "45 min et plus" },
-            ].map((band) => {
-              // Moyennes par palier : on EXCLUT les communes d'élargissement (hors corridor immédiat).
-              const list = COMMUNES.filter((c) => c.pt >= band.lo && c.pt < band.hi && !c.expanded);
-              const avg = list.length ? Math.round(list.reduce((s, c) => s + c.mois, 0) / list.length) : 0;
-              return (
-                <div key={band.label} className="bg-[#FAF9F6] rounded-xl p-5 text-center">
-                  <p className="text-xs text-[#A8A29E] uppercase tracking-wider">{band.label}</p>
-                  <p className="text-3xl font-medium text-[#1C1917] my-1">{avg} €</p>
-                  <p className="text-xs text-[#57534E]">
-                    {en ? "avg. studio · " : "studio moyen · "}
-                    {list.length} {en ? "towns" : "communes"}
+          <div className="border border-[#E7E5E4] rounded-2xl overflow-hidden shadow-sm">
+            <div className="h-1.5 bg-[#D4A574]" />
+            <div className="bg-[#FAF9F6] p-5 sm:p-8">
+          <div className="text-center mb-8">
+            <span className="text-xs text-[#A0623C] uppercase tracking-[0.2em] font-medium">
+              {en ? "First-party data" : "Données first-party"}
+            </span>
+            <h2
+              className="text-2xl md:text-3xl font-light text-[#1C1917] mt-2 mb-3"
+              style={{ fontFamily: "DM Serif Display, serif" }}
+            >
+              {en ? "Seen from our houses" : "Vu de nos maisons"}
+            </h2>
+            <p className="inline-flex items-center gap-2 text-xs text-[#57534E] bg-white border border-[#E7E5E4] rounded-full px-4 py-1.5">
+              <Home className="w-3.5 h-3.5 text-[#D4A574]" />
+              {en
+                ? `La Villa data · ${BAROMETRE.housesCount} houses · ${BAROMETRE.roomsCount} rooms · ${BAROMETRE.residentsCovered} residents since October 2021`
+                : `Données La Villa · ${BAROMETRE.housesCount} maisons · ${BAROMETRE.roomsCount} chambres · ${BAROMETRE.residentsCovered} résidents depuis octobre 2021`}
+            </p>
+            <p className="text-sm text-[#78716C] max-w-2xl mx-auto mt-4 leading-relaxed">
+              {en
+                ? "Alongside the market data above, the aggregated and anonymised figures from our three houses document one specific segment: the all-inclusive coliving room. They are labelled “La Villa” throughout."
+                : "En complément des données de marché ci-dessus, les chiffres agrégés et anonymisés de nos trois maisons documentent un segment précis : la chambre en coliving tout inclus. Ils sont étiquetés « La Villa » partout."}
+            </p>
+          </div>
+
+          {/* En bref — les chiffres La Villa (synthèse de l'encadré) */}
+          <div className="mb-8">
+            <p className="text-xs font-semibold uppercase tracking-[0.2em] text-[#A0623C] text-center mb-4">
+              {en ? "At a glance — our 2026 figures" : "En bref — nos chiffres 2026"}
+            </p>
+            <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
+              {[
+                {
+                  fig: en ? `CHF ${BAROMETRE.rentMedianChf}` : `${BAROMETRE.rentMedianChf} CHF`,
+                  label: en ? `per month, a room all-inclusive (≈ €${COLIVING_EUR} · 2026 median)` : `par mois, chambre tout compris (≈ ${COLIVING_EUR} € · médiane 2026)`,
+                },
+                {
+                  fig: `≈ ${BAROMETRE.chfPerM2AllIn} CHF/m²`,
+                  label: en ? `all-inclusive, ≈ ${BAROMETRE.m2PerResident} m² per resident` : `tout compris, ≈ ${BAROMETRE.m2PerResident} m² par résident`,
+                },
+                {
+                  fig: `${BAROMETRE.tenureAvgMonths} ${en ? "months" : "mois"}`,
+                  label: en ? "average length of stay" : "durée moyenne de séjour",
+                },
+                {
+                  fig: "98-99 %",
+                  label: en ? "average occupancy since Oct. 2021" : "occupation moyenne depuis oct. 2021",
+                },
+              ].map((s) => (
+                <div key={s.label} className="bg-white border border-[#E7E5E4] rounded-xl p-3 sm:p-4 text-center">
+                  <p className="text-lg sm:text-2xl font-medium text-[#1C1917] whitespace-nowrap">{s.fig}</p>
+                  <p className="text-xs text-[#57534E] mt-1 leading-snug">{s.label}</p>
+                </div>
+              ))}
+            </div>
+            <p className="text-[11px] text-[#A8A29E] text-center mt-3">
+              {en
+                ? "1,360 CHF = median of current rents (leases signed at different dates); today's entry price for a room is 1,380 CHF — detail in the methodology."
+                : "1 360 CHF = médiane des loyers en cours (baux signés à des dates différentes) ; le prix d'entrée actuel d'une chambre est de 1 380 CHF — détail en méthodologie."}
+            </p>
+            <SourceLine>
+              {en
+                ? "Source: La Villa Coliving internal data — 2026 medians and aggregates (3 houses, 29 rooms)."
+                : "Source : données internes La Villa Coliving — médianes et agrégats 2026 (3 maisons, 29 chambres)."}
+            </SourceLine>
+          </div>
+
+          {/* A — Le m² tout compris (finding) + spectre 4 barres */}
+          <div className="bg-white border border-[#E7E5E4] rounded-xl p-6 sm:p-8 mb-6">
+            <h3 className="text-xl md:text-2xl font-light text-[#1C1917] mb-4" style={{ fontFamily: "DM Serif Display, serif" }}>
+              {en ? "The all-inclusive square metre" : "Le mètre carré tout compris"}
+            </h3>
+            <p className="text-sm text-[#44403C] leading-relaxed">
+              {en ? (
+                <>A coliving room rents for a median of <strong className="text-[#1C1917]">CHF {BAROMETRE.rentMedianChf} per month, all-inclusive</strong> (2026 median of current rents in our houses). Relative to the space actually available — a private room of {BAROMETRE.roomSizeMin} to {BAROMETRE.roomSizeMax} m² plus shared living space, i.e. <strong className="text-[#1C1917]">≈ {BAROMETRE.m2PerResident} m² per resident</strong> — that is <strong className="text-[#1C1917]">≈ {BAROMETRE.chfPerM2AllIn} CHF/m² (ALL-INCLUSIVE)</strong>: close to the median of Geneva's sitting-tenant stock ({GENEVA_STOCK_M2} CHF/m² net), a level the listings market no longer offers a newcomer (≈ {GENEVA_ANNONCE_M2} CHF/m² net).</>
+              ) : (
+                <>Une chambre en coliving se loue en médiane <strong className="text-[#1C1917]">{BAROMETRE.rentMedianChf} CHF par mois, tout compris</strong> (médiane 2026 des loyers en cours dans nos maisons). Rapportée à la surface réellement à disposition — chambre privée de {BAROMETRE.roomSizeMin} à {BAROMETRE.roomSizeMax} m² plus les espaces communs, soit <strong className="text-[#1C1917]">≈ {BAROMETRE.m2PerResident} m² par résident</strong> —, elle revient à <strong className="text-[#1C1917]">≈ {BAROMETRE.chfPerM2AllIn} CHF/m² (TOUT COMPRIS)</strong> : un niveau proche de la médiane du parc genevois en place ({GENEVA_STOCK_M2} CHF/m² net), que le marché des annonces ne propose plus à un arrivant (≈ {GENEVA_ANNONCE_M2} CHF/m² net).</>
+              )}
+            </p>
+            <div className="mt-6">
+              <svg
+                viewBox="0 0 560 300"
+                className="w-full h-auto"
+                role="img"
+                aria-label={
+                  en
+                    ? "Four bars comparing rent per square metre: Geneva sitting-tenant stock 35 CHF/m² net; coliving room about 36 CHF/m² all-inclusive; bare studio about 45 €/m² at full cost; Geneva listings about 50 CHF/m² net. Bases differ and are labelled."
+                    : "Quatre barres comparant le loyer au mètre carré : parc genevois en place 35 CHF/m² net ; chambre coliving environ 36 CHF/m² tout compris ; studio nu environ 45 €/m² en coût complet ; annonces Genève environ 50 CHF/m² net. Les bases diffèrent et sont étiquetées."
+                }
+              >
+                <rect x="0" y="0" width="560" height="300" fill="#FAF9F6" rx="8" />
+                {/* Hachures = barre La Villa (base « tout compris ») visuellement distincte des loyers de marché,
+                    même sur une capture isolée sans la note « bases différentes ». */}
+                <defs>
+                  <pattern id="hachure-lavilla" patternUnits="userSpaceOnUse" width="7" height="7" patternTransform="rotate(45)">
+                    <rect width="7" height="7" fill="#D4A574" />
+                    <line x1="0" y1="0" x2="0" y2="7" stroke="#A0623C" strokeWidth="2.5" opacity="0.45" />
+                  </pattern>
+                </defs>
+                <line x1="30" y1="240" x2="530" y2="240" stroke="#E7E5E4" strokeWidth="1" />
+                {[
+                  { x: 45, v: GENEVA_STOCK_M2, unit: "CHF/m²", c: "#6B8E6B", l1: en ? "Sitting stock" : "Parc en place", l2: en ? "Geneva · net" : "Genève · net" },
+                  { x: 172, v: BAROMETRE.chfPerM2AllIn, unit: "CHF/m²", c: "url(#hachure-lavilla)", approx: true, l1: "Coliving", l2: en ? "all-inclusive · La Villa" : "tout compris · La Villa" },
+                  { x: 299, v: STUDIO_FULL_COST.perM2Chf, unit: en ? `CHF/m² (≈ ${STUDIO_FULL_COST.perM2Eur} €)` : `CHF/m² (≈ ${STUDIO_FULL_COST.perM2Eur} €)`, c: "#A8A29E", approx: true, l1: en ? "Bare studio" : "Studio nu", l2: en ? "full cost · France" : "coût complet · France" },
+                  { x: 426, v: GENEVA_ANNONCE_M2, unit: "CHF/m²", c: "#A0623C", approx: true, l1: en ? "Listings" : "Annonces", l2: en ? "Geneva · net" : "Genève · net" },
+                ].map((b) => {
+                  const h = (b.v / 50) * 185;
+                  return (
+                    <g key={b.x}>
+                      <rect x={b.x} y={240 - h} width="90" height={h} rx="3" fill={b.c} />
+                      <text x={b.x + 45} y={240 - h + 22} textAnchor="middle" fontSize="17" fontWeight="700" fill="#ffffff">
+                        {b.approx ? "≈ " : ""}{b.v}
+                      </text>
+                      <text x={b.x + 45} y={240 - h + 36} textAnchor="middle" fontSize="9" fill="#ffffff" opacity="0.85">{b.unit}</text>
+                      <text x={b.x + 45} y={258} textAnchor="middle" fontSize="11" fontWeight="600" fill="#44403C">{b.l1}</text>
+                      <text x={b.x + 45} y={271} textAnchor="middle" fontSize="9.5" fill="#78716C">{b.l2}</text>
+                    </g>
+                  );
+                })}
+                <text x="280" y="292" textAnchor="middle" fontSize="9.5" fill="#A8A29E">
+                  {en ? "Bases differ (net / all-inclusive / full cost) — detail in the methodology." : "Bases différentes (net / tout compris / coût complet) — détail en méthodologie."}
+                </text>
+              </svg>
+            </div>
+            <SourceLine>
+              {en
+                ? `Sources: sitting stock = OCSTAT 2025 · Geneva listings = Observatory survey on Homegate, June 2026 · full-cost studio = Observatory survey on Le Figaro Immobilier, June 2026 + posted assumptions · coliving = La Villa data, 2026 · ${FX_NOTE_EN}.`
+                : `Sources : parc en place = OCSTAT 2025 · annonces Genève = relevé de l'Observatoire sur Homegate, juin 2026 · studio coût complet = relevé de l'Observatoire sur Le Figaro Immobilier, juin 2026 + hypothèses affichées · coliving = données La Villa, 2026 · ${FX_NOTE_FR}.`}
+            </SourceLine>
+          </div>
+
+          {/* B — Le coût complet, ligne à ligne (hypothèses affichées) */}
+          <div className="bg-white border border-[#E7E5E4] rounded-xl p-6 sm:p-8 mb-6">
+            <h3 className="text-xl md:text-2xl font-light text-[#1C1917] mb-4" style={{ fontFamily: "DM Serif Display, serif" }}>
+              {en ? "The full monthly cost, line by line" : "Le coût mensuel complet, ligne à ligne"}
+            </h3>
+            <p className="text-sm text-[#57534E] leading-relaxed mb-4">
+              {en
+                ? "An advertised rent is not a total cost. Below, the same calculation on both sides: a bare 30 m² studio in Annemasse (observatory listing rent + posted assumptions) next to an all-inclusive coliving room."
+                : "Un loyer d'annonce n'est pas un coût total. Ci-dessous, le même calcul des deux côtés : un studio nu de 30 m² à Annemasse (loyer d'annonce de l'observatoire + hypothèses affichées) face à une chambre en coliving tout inclus."}
+            </p>
+            <div className="overflow-x-auto">
+              <table className="w-full text-sm" style={{ borderCollapse: "collapse" }}>
+                <thead>
+                  <tr className="border-b border-[#E7E5E4] text-left">
+                    <th className="px-3 py-3 font-medium text-[#57534E]">{en ? "Item" : "Poste"}</th>
+                    <th className="px-3 py-3 font-medium text-[#57534E] text-right">{en ? "Bare studio 30 m² (Annemasse)" : "Studio nu 30 m² (Annemasse)"}</th>
+                    <th className="px-3 py-3 font-medium text-[#57534E] text-right">{en ? "Coliving room (La Villa)" : "Chambre coliving (La Villa)"}</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {[
+                    { p: en ? "Advertised rent" : "Loyer d'annonce", s: `${STUDIO_FULL_COST.rentEur} €`, c: en ? `CHF ${BAROMETRE.rentMedianChf} all-inclusive` : `${BAROMETRE.rentMedianChf} CHF tout compris` },
+                    { p: en ? "Charges" : "Charges", s: `~${STUDIO_FULL_COST.chargesEur} €`, c: en ? "included" : "incluses" },
+                    { p: en ? "Electricity + internet" : "Électricité + internet", s: `~${STUDIO_FULL_COST.energyInternetEur} €`, c: en ? "included" : "inclus" },
+                    { p: en ? `Furniture (${STUDIO_FULL_COST.furnitureTotalEur.toLocaleString("en")} € over ${STUDIO_FULL_COST.furnitureMonths} mo)` : `Meubles (${STUDIO_FULL_COST.furnitureTotalEur.toLocaleString("fr-FR")} € amortis sur ${STUDIO_FULL_COST.furnitureMonths} mois)`, s: `~${STUDIO_FULL_COST.furnitureMonthlyEur} €`, c: en ? "included (furnished)" : "inclus (meublé)" },
+                    { p: en ? "Agency fees (legal cap, spread)" : "Frais d'agence (plafond légal, amortis)", s: `~${STUDIO_FULL_COST.agencyMonthlyEur} €`, c: en ? "0 (direct rental)" : "0 (location en direct)" },
+                  ].map((r) => (
+                    <tr key={r.p} className="border-b border-[#F0EEE9]">
+                      <td className="px-3 py-3 text-[#44403C]">{r.p}</td>
+                      <td className="px-3 py-3 text-right text-[#44403C] whitespace-nowrap">{r.s}</td>
+                      <td className="px-3 py-3 text-right text-[#44403C] whitespace-nowrap">{r.c}</td>
+                    </tr>
+                  ))}
+                  <tr className="border-b border-[#E7E5E4] font-medium" style={{ background: "#FAF9F6" }}>
+                    <td className="px-3 py-3 text-[#1C1917]">{en ? "Real monthly total" : "Total mensuel réel"}</td>
+                    <td className="px-3 py-3 text-right text-[#1C1917] whitespace-nowrap">
+                      ≈ {STUDIO_FULL_COST.totalMonthlyEur.toLocaleString(en ? "en" : "fr-FR")} €
+                      <span className="block text-[10px] font-normal text-[#78716C]">≈ {STUDIO_FULL_COST.totalMonthlyChf.toLocaleString(en ? "en" : "fr-FR")} CHF</span>
+                    </td>
+                    <td className="px-3 py-3 text-right text-[#1C1917] whitespace-nowrap">
+                      {en ? `CHF ${BAROMETRE.rentMedianChf}` : `${BAROMETRE.rentMedianChf} CHF`}
+                      <span className="block text-[10px] font-normal text-[#78716C]">≈ {COLIVING_EUR} €</span>
+                    </td>
+                  </tr>
+                  <tr className="border-b border-[#F0EEE9]">
+                    <td className="px-3 py-3 text-[#44403C]">{en ? "Living space" : "Surface à disposition"}</td>
+                    <td className="px-3 py-3 text-right text-[#44403C]">{en ? "30 m², bare" : "30 m² nus"}</td>
+                    <td className="px-3 py-3 text-right text-[#44403C]">{en ? `≈ ${BAROMETRE.m2PerResident} m²/resident, equipped` : `≈ ${BAROMETRE.m2PerResident} m²/résident, équipés`}</td>
+                  </tr>
+                  <tr>
+                    <td className="px-3 py-3 text-[#44403C]">{en ? "Cash needed before moving in" : "À sortir avant d'emménager"}</td>
+                    <td className="px-3 py-3 text-right text-[#44403C] whitespace-nowrap">≈ {STUDIO_FULL_COST.entryCashEur.toLocaleString(en ? "en" : "fr-FR")} €</td>
+                    <td className="px-3 py-3 text-right text-[#44403C] whitespace-nowrap">{en ? "2-month deposit (refundable)" : "Caution 2 mois (restituable)"}</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            {/* Verdict + panier — l'encart-clé du tableau (mis en avant, demande Jérôme 07/2026) */}
+            <div className="mt-6 bg-[#D4A574]/10 border border-[#D4A574]/40 rounded-xl p-5 sm:p-7 text-center">
+              <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[#A0623C] mb-4">
+                {en ? "The same table, two readings" : "Le même tableau, deux lectures"}
+              </p>
+              <div className="grid sm:grid-cols-2 gap-3 max-w-2xl mx-auto text-left">
+                <div className="bg-white border border-[#E7E5E4] rounded-xl p-4">
+                  <p className="text-xs text-[#78716C] uppercase tracking-wider mb-1.5">
+                    {en ? "Like-for-like property" : "À bien équivalent"}
+                  </p>
+                  <p className="text-sm text-[#44403C] leading-relaxed">
+                    {en ? (
+                      <>A coliving room, all-inclusive, comes to <strong className="text-[#1C1917]">≈ 10% more</strong> than a bare 30 m² studio all-in (≈ €{COLIVING_EUR} vs ≈ €1,344).</>
+                    ) : (
+                      <>Une chambre en coliving tout inclus revient <strong className="text-[#1C1917]">≈ 10 % plus cher</strong> qu'un studio nu de 30 m² tout compris (≈ {COLIVING_EUR} € contre ≈ 1 344 €).</>
+                    )}
                   </p>
                 </div>
-              );
-            })}
-          </div>
-          <p className="text-xs text-[#A8A29E] mt-4 text-center">
-            {en
-              ? "Band averages exclude expansion towns (Annecy, Évian, Bonneville), which sit outside the immediate corridor."
-              : "Les moyennes par palier excluent les communes d'élargissement (Annecy, Évian, Bonneville), hors corridor immédiat."}
-          </p>
-        </div>
-      </section>
-
-      {/* ===== ENCADRÉ — Et côté France ? Un marché ouvert ===== */}
-      <section className="py-10 lg:py-12 bg-white">
-        <div className="max-w-3xl mx-auto px-6">
-          <div className="border-l-4 border-[#6B8E6B] bg-[#FAF9F6] rounded-r-xl p-5 sm:p-6">
-            <h3 className="text-base font-semibold text-[#1C1917] mb-2">
-              {en ? "On the French side: an open market" : "Côté France : un marché ouvert"}
-            </h3>
-            <p className="text-sm text-[#57534E] leading-relaxed">
+                <div className="bg-white border border-[#E7E5E4] rounded-xl p-4">
+                  <p className="text-xs text-[#78716C] uppercase tracking-wider mb-1.5">
+                    {en ? "Like-for-like surface (≈ 38 m²)" : "À surface équivalente (≈ 38 m²)"}
+                  </p>
+                  <p className="text-sm text-[#44403C] leading-relaxed">
+                    {en ? (
+                      <>For the ≈ 38 m² a resident actually enjoys, coliving comes to <strong className="text-[#1C1917]">≈ 13% less</strong> than the same surface solo at the studio's full-cost rate (≈ €{COLIVING_EUR} vs ≈ €{STUDIO_38M2_EUR}).</>
+                    ) : (
+                      <>Pour les ≈ 38 m² dont dispose réellement un résident, le coliving revient <strong className="text-[#1C1917]">≈ 13 % moins cher</strong> que la même surface en solo au coût complet du studio (≈ {COLIVING_EUR} € contre ≈ {STUDIO_38M2_EUR} €).</>
+                    )}
+                  </p>
+                </div>
+              </div>
+              <p className="text-sm text-[#44403C] leading-relaxed max-w-2xl mx-auto mt-4">
+                {en
+                  ? "In both readings: a furnished and equipped home, all services and charges included, a selected community, no agency or application fees, and the flexibility of a short lease."
+                  : "Dans les deux lectures : un logement meublé et équipé, tous les services et charges compris, une communauté sélectionnée, aucun frais d'agence ni de dossier, et la flexibilité d'un bail court."}
+              </p>
+              <p className="text-xs uppercase tracking-[0.18em] text-[#A0623C] font-semibold mt-6 mb-3">
+                {en ? `What CHF ${BAROMETRE.rentMedianChf}/month covers` : `Ce que couvrent les ${BAROMETRE.rentMedianChf} CHF par mois`}
+              </p>
+              <div className="flex flex-wrap justify-center gap-2">
+                {(en
+                  ? ["rent", "charges", "furnished", "fiber internet", "cleaning", "pool", "sauna", "gym", "home cinema", "garden", "community events"]
+                  : ["loyer", "charges", "meublé", "fibre", "ménage", "piscine", "sauna", "salle de sport", "home cinema", "jardin", "événements"]
+                ).map((item) => (
+                  <span
+                    key={item}
+                    className="inline-flex items-center gap-1.5 text-sm bg-white border border-[#D4A574]/50 text-[#44403C] rounded-full px-3 py-1.5"
+                  >
+                    <Check className="w-3.5 h-3.5 text-[#6B8E6B] shrink-0" />
+                    {item}
+                  </span>
+                ))}
+              </div>
+              <p className="text-sm font-semibold text-[#1C1917] mt-4">
+                {en
+                  ? "One rent, a single line on the bank statement — no charges, furniture or agency fees."
+                  : "Un loyer, une seule ligne sur le relevé bancaire — pas de charges, de meubles ni de frais d'agence."}
+              </p>
+            </div>
+            <p className="text-xs text-[#A8A29E] mt-4">
               {en
-                ? "On the French side, the gap between advertised and effective rents is small: the market is open, without the protection mechanism that keeps Geneva's affordable stock largely out of reach for new entrants. For a household moving in, the relevant comparison is therefore between Geneva's advertised rent (~CHF 1,500) and the French advertised rent."
-                : "Sur le versant français, l'écart entre loyer d'annonce et loyer effectivement pratiqué est faible : le marché y est ouvert, sans le mécanisme de protection qui maintient à Genève un parc abordable peu accessible aux nouveaux entrants. Pour un ménage qui s'installe, la comparaison pertinente oppose donc le loyer d'annonce genevois (~1 500 CHF) au loyer d'annonce français."}
+                ? `Posted assumptions: charges ${STUDIO_FULL_COST.chargesEur} €, electricity + internet ${STUDIO_FULL_COST.energyInternetEur} €, furniture ${STUDIO_FULL_COST.furnitureTotalEur.toLocaleString("en")} € spread over ${STUDIO_FULL_COST.furnitureMonths} months, agency fees at the legal cap (15 €/m², French Alur law) spread over ${STUDIO_FULL_COST.furnitureMonths} months. Reference studio 30 m², Annemasse listing rent from the observatory above. Entry cash: 1-month deposit + agency fees + furniture. “Like-for-like surface” reading: 38 m² × the studio's full cost per m² (≈ €44.8/m²) ≈ €1,700 — an extrapolation at constant rate per m². ${FX_NOTE_EN}.`
+                : `Hypothèses affichées : charges ${STUDIO_FULL_COST.chargesEur} €, électricité + internet ${STUDIO_FULL_COST.energyInternetEur} €, meubles ${STUDIO_FULL_COST.furnitureTotalEur.toLocaleString("fr-FR")} € amortis sur ${STUDIO_FULL_COST.furnitureMonths} mois, frais d'agence au plafond légal (15 €/m², loi Alur) amortis sur ${STUDIO_FULL_COST.furnitureMonths} mois. Studio de référence 30 m², loyer d'annonce Annemasse de l'observatoire ci-dessus. À l'entrée : caution 1 mois + agence + meubles. Lecture « à surface équivalente » : 38 m² × le coût complet au m² du studio (≈ 44,8 €/m²) ≈ 1 700 € — extrapolation à taux constant au m². ${FX_NOTE_FR}.`}
             </p>
+            <SourceLine>
+              {en
+                ? "Sources: bare studio = Observatory survey on the Le Figaro Immobilier portal, June 2026 (+ assumptions above) · coliving room = La Villa Coliving internal data, 2026 median."
+                : "Sources : studio nu = relevé de l'Observatoire sur le portail Le Figaro Immobilier, juin 2026 (+ hypothèses ci-dessus) · chambre coliving = données internes La Villa Coliving, médiane 2026."}
+            </SourceLine>
+          </div>
+
+          {/* C — Le résident-type + la tension */}
+          <div className="bg-white border border-[#E7E5E4] rounded-xl p-6 sm:p-8">
+            <h3 className="text-xl md:text-2xl font-light text-[#1C1917] mb-4 flex items-center gap-2.5" style={{ fontFamily: "DM Serif Display, serif" }}>
+              <Users className="w-6 h-6 text-[#D4A574] shrink-0" />
+              {en ? "Who lives in coliving — the typical resident" : "Qui vit en coliving — le résident-type"}
+            </h3>
+            <p className="text-sm text-[#57534E] leading-relaxed mb-5">
+              {en
+                ? `Profile of the ${BAROMETRE.residentsCovered} residents hosted in our houses since October 2021 (aggregated, anonymised):`
+                : `Le profil des ${BAROMETRE.residentsCovered} résidents passés par nos maisons depuis octobre 2021 (agrégé, anonymisé) :`}
+            </p>
+            <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
+              {[
+                { v: `${BAROMETRE.frontaliersPct} %`, l: en ? "cross-border workers" : "frontaliers" },
+                { v: `${BAROMETRE.ageDominant} ${en ? "yrs" : "ans"}`, l: en ? `dominant age group (full range ${BAROMETRE.ageRange})` : `tranche dominante (fourchette ${BAROMETRE.ageRange})` },
+                { v: `${BAROMETRE.singlesPct} / ${BAROMETRE.couplesPct}`, l: en ? "% singles / couples" : "% célibataires / couples" },
+                { v: `${BAROMETRE.tenureAvgMonths} ${en ? "months" : "mois"}`, l: en ? "average length of stay" : "durée moyenne de séjour" },
+                { v: en ? "Health, corporate, int'l org." : "Médical, cadres, org. int.", l: en ? "top employment sectors" : "premiers secteurs d'emploi" },
+                { v: en ? "Spanish & Italian" : "Espagnols & Italiens", l: en ? "top nationalities (excl. FR/CH)" : "premières nationalités (hors FR/CH)" },
+              ].map((c) => (
+                <div key={c.l} className="bg-[#FAF9F6] rounded-lg p-4 text-center">
+                  <p className="text-base font-medium text-[#1C1917] leading-snug">{c.v}</p>
+                  <p className="text-xs text-[#78716C] mt-1 leading-snug">{c.l}</p>
+                </div>
+              ))}
+            </div>
+            <p className="text-sm text-[#57534E] leading-relaxed mt-5">
+              {en
+                ? `On market tension: occupancy runs at 98-99%, applications come in at ${BAROMETRE.applicationsPerMonth} per month, and a vacated room is re-let in under a week.`
+                : `Côté tension : le taux d'occupation s'établit à 98-99 %, les candidatures arrivent au rythme de ${BAROMETRE.applicationsPerMonth} par mois, et une chambre libérée se reloue en moins d'une semaine.`}
+            </p>
+            <SourceLine center={false}>
+              {en
+                ? "Source: La Villa Coliving internal data, October 2021 → 2026 (aggregated, anonymised)."
+                : "Source : données internes La Villa Coliving, octobre 2021 → 2026 (agrégées, anonymisées)."}
+            </SourceLine>
+          </div>
+            </div>
           </div>
         </div>
       </section>
@@ -644,11 +1081,14 @@ export function ObservatoireLogementFrontalierPage() {
       {/* ===== MÉTHODO ===== */}
       <section className="py-12 lg:py-16 bg-[#FAF9F6]">
         <div className="max-w-3xl mx-auto px-6">
-          <h2 className="text-xl font-medium text-[#1C1917] mb-4 flex items-center gap-2">
-            <Info className="w-5 h-5 text-[#D4A574]" />
-            {en ? "Method & sources" : "Méthodologie & sources"}
-          </h2>
-          <div className="text-sm text-[#57534E] space-y-4 leading-relaxed">
+          <details id="methodo" className="group scroll-mt-24">
+            <summary className="flex items-center gap-2 cursor-pointer select-none list-none [&::-webkit-details-marker]:hidden text-xl font-medium text-[#1C1917]">
+              <Info className="w-5 h-5 text-[#D4A574] shrink-0" />
+              {en ? "Method & sources" : "Méthodologie & sources"}
+              <ChevronDown className="w-4 h-4 text-[#A8A29E] transition-transform group-open:rotate-180" />
+              <span className="text-xs font-normal text-[#A8A29E] ml-auto">{en ? "unfold" : "déplier"}</span>
+            </summary>
+          <div className="text-sm text-[#57534E] space-y-4 leading-relaxed mt-5">
             <p>
               <strong className="text-[#1C1917]">{en ? "What this observatory measures." : "Ce que mesure cet observatoire."}</strong>{" "}
               {en
@@ -665,83 +1105,141 @@ export function ObservatoireLogementFrontalierPage() {
               <strong className="text-[#1C1917]">{en ? "Geneva — one solid figure, two readings." : "Genève — un chiffre solide, deux regards."}</strong>
               <ul className="list-disc pl-5 mt-1.5 space-y-1">
                 <li>{en ? "Established tenants: OCSTAT 2025, studios ≤ 37 m², free-market rent, tenants — 2,294 observations, median 35 CHF/m²." : "Parc en place (installés) : OCSTAT 2025, studios ≤ 37 m², loyer libre, locataires — 2 294 observations, médiane 35 CHF/m²."}</li>
-                <li>{en ? "Listings (newcomers): survey of studios ≤ 37 m² let unfurnished in the City of Geneva, June 2026 — median ≈ 50 CHF/m² (n = 25). Net rents (excl. heating) on both sides, to compare like with like." : "Annonces (arrivants) : relevé de studios ≤ 37 m² loués vides en Ville de Genève, juin 2026 — médiane ≈ 50 CHF/m² (n = 25). Loyers nets (hors chauffage) des deux côtés, pour comparer ce qui est comparable."}</li>
+                <li>{en ? "Listings (newcomers): Observatory survey on the Homegate portal — studios ≤ 37 m² let unfurnished in the City of Geneva, June 2026 — median ≈ 50 CHF/m² (n = 25). Net rents (excl. heating) on both sides, to compare like with like." : "Annonces (arrivants) : relevé de l'Observatoire sur le portail Homegate — studios ≤ 37 m² loués vides en Ville de Genève, juin 2026 — médiane ≈ 50 CHF/m² (n = 25). Loyers nets (hors chauffage) des deux côtés, pour comparer ce qui est comparable."}</li>
                 <li>{en ? "Both cover the same area and the same type of home: the +44% gap is a genuine established-vs-newcomer comparison, not an artefact." : "Les deux portent sur le même périmètre et le même type de logement : l'écart de +44 % est donc une vraie comparaison installés / arrivants, pas un artefact."}</li>
-                <li>{en ? "“8-min” benchmark: advertised studio rent in Geneva-Eaux-Vives ≈ 1,750 CHF/month — a premium neighbourhood; city-wide the median asking rent is lower (≈ 1,500 CHF). Shown in CHF; € and CHF near parity, so the figures read side by side." : "Repère « 8 min » : loyer d'annonce d'un studio à Genève-Eaux-Vives ≈ 1 750 CHF/mois — quartier premium ; la médiane des annonces de toute la ville est plus basse (≈ 1 500 CHF). Affiché en CHF ; € et CHF étant proches de la parité, les chiffres se lisent côte à côte."}</li>
+                <li>{en ? `“8-min” benchmark: advertised studio rent in Geneva-Eaux-Vives ≈ 1,750 CHF/month (≈ €${GENEVA_EAUXVIVES_EUR} at the July 2026 rate) — a premium neighbourhood, from the same Homegate survey; city-wide the median asking rent is lower (≈ 1,500 CHF).` : `Repère « 8 min » : loyer d'annonce d'un studio à Genève-Eaux-Vives ≈ 1 750 CHF/mois (≈ ${GENEVA_EAUXVIVES_EUR} € au taux de juillet 2026) — quartier premium, issu du même relevé Homegate ; la médiane des annonces de toute la ville est plus basse (≈ 1 500 CHF).`}</li>
               </ul>
             </div>
             <div>
               <strong className="text-[#1C1917]">{en ? "France — an open market, and honesty about sources." : "France — un marché ouvert, et une honnêteté sur les sources."}</strong>
               <ul className="list-disc pl-5 mt-1.5 space-y-1">
-                <li>{en ? `Rents: advertised studio rent per m² by municipality, surveyed in June 2026, × ${REF_M2} m² reference (listings portal in the sources line below). Indicative orders of magnitude — few listings in small towns, so read with care. 14 of 17 towns have a published studio rate; the other 3 (marked *) use the 2-room rent.` : `Loyers : loyers d'annonce d'un studio au m² par commune, relevés en juin 2026, × ${REF_M2} m² de référence (portail des annonces en note de sources ci-dessous). Ordres de grandeur indicatifs — sur les petites communes, peu d'annonces, donc à lire avec prudence. 14 communes sur 17 ont un studio publié ; les 3 autres (marquées *) reprennent le loyer 2-pièces.`}</li>
-                <li>{en ? "Official cross-check: we cross-checked the ANIL rent map (1- and 2-room flats, charges included). The ranking between towns is the same, and the French market comes out far below Geneva. For transparency: our studio listing figures sit a little above the ANIL 1–2-room estimate, for two legitimate reasons — a studio (≈ 30 m²) rents higher per m² than a 37 m² reference, and ANIL is a model smoothed over several years while our survey is live. ANIL is a broader, older benchmark: it confirms the order of magnitude, it doesn't contradict it." : "Corroboration officielle : on a recoupé avec la Carte des loyers de l'ANIL (appartements T1-T2, charges comprises). La hiérarchie entre communes est la même, et le marché français ressort très en-dessous de Genève. Pour la transparence : nos chiffres d'annonce studio sont un peu au-dessus de l'estimation ANIL T1-T2, pour deux raisons légitimes — un studio (≈ 30 m²) se loue plus cher au m² qu'un T1-T2 de référence (37 m²), et l'ANIL est une estimation modélisée lissée sur plusieurs années quand notre relevé est live. L'ANIL est un repère plus large et plus ancien : il confirme l'ordre de grandeur, il ne le contredit pas."}</li>
-                <li>{en ? "No two-speed market on the French side: unlike Geneva, ANIL isn't a protected “stock” rent — it's already a listings measure. The small gap with our survey is a size and vintage effect, not a locked stock. So we don't put the French gap on the same footing as Geneva's." : "Pas de marché à deux vitesses côté France : contrairement à Genève, l'ANIL n'est pas un loyer de « stock » protégé — c'est déjà une mesure d'annonces. Le petit écart avec nos relevés est un effet de taille et de millésime, pas un parc verrouillé. On ne met donc pas l'écart français sur le même plan que l'écart genevois."}</li>
+                <li>{en ? `The rents displayed on this page (table, commute bands, Annemasse comparison) come from OUR June 2026 survey: advertised studio rents per m² by municipality, collected by us on the Le Figaro Immobilier listings portal, × ${REF_M2} m² reference. Indicative orders of magnitude — few listings in small towns, so read with care. 14 of 17 towns have a published studio rate; the other 3 (marked *) use the 2-room rent.` : `Les loyers affichés sur cette page (tableau, paliers, comparatif Annemasse) proviennent de NOTRE relevé de juin 2026 : les loyers d'annonce d'un studio au m² par commune, relevés par nos soins sur le portail Le Figaro Immobilier, × ${REF_M2} m² de référence. Ordres de grandeur indicatifs — sur les petites communes, peu d'annonces, donc à lire avec prudence. 14 communes sur 17 ont un studio publié ; les 3 autres (marquées *) reprennent le loyer 2-pièces.`}</li>
+                <li>{en ? "The ANIL rent map confirms the order of magnitude of the France/Geneva differential, on a smoothed 1–2-room basis (charges included). It is not the source of any figure displayed on this page. (“ANIL estimates, based on data from Groupe SeLoger and leboncoin.”)" : "La Carte des loyers de l'ANIL confirme l'ordre de grandeur du différentiel France/Genève, sur une base lissée T1-T2 (charges comprises). Elle n'est la source d'aucun chiffre affiché sur cette page. (« Estimations ANIL, à partir des données du Groupe SeLoger et de leboncoin. »)"}</li>
+                <li>{en ? "The French sitting/newcomer gap is not measured here: a gap exists in France too (indexed running leases), but no public stock statistic equivalent to OCSTAT covers the French Genevois. The only sitting/newcomer gap this observatory quantifies is Geneva's." : "L'écart installés/arrivants côté France n'est pas mesuré ici : un écart existe aussi en France (baux en cours indexés), mais aucune statistique publique de « stock » équivalente à l'OCSTAT ne couvre le Genevois français. Le seul écart installés/arrivants que cet observatoire quantifie est donc celui de Genève."}</li>
               </ul>
             </div>
+            <p>
+              <strong className="text-[#1C1917]">{en ? "Exchange rate." : "Taux de change."}</strong>{" "}
+              {en
+                ? `Each market is shown in its native currency (Geneva and coliving in CHF, France in €). Whenever this page compares across currencies or computes a gap, it converts at the July 2026 rate: €1 = CHF 0.92 (CHF 1 = €1.087). Converted equivalents are shown in brackets. No €/CHF “parity” is assumed anywhere.`
+                : `Chaque marché est affiché dans sa devise (Genève et coliving en CHF, France en €). Dès que la page compare des devises ou calcule un écart, elle convertit au taux de juillet 2026 : 1 € = 0,92 CHF (1 CHF = 1,087 €). Les équivalents convertis figurent entre parenthèses. Aucune « parité » €/CHF n'est supposée nulle part.`}
+            </p>
             <p>
               <strong className="text-[#1C1917]">{en ? "Commute." : "Trajet."}</strong>{" "}
               {en
                 ? "Door-to-door to Geneva-Eaux-Vives at morning peak (arrival ~9:15), surveyed on online maps for car and public transport; bike via the greenway. Direct Léman Express times and peak frequency come from the official 2026 timetable."
                 : "Porte-à-porte vers Genève-Eaux-Vives à l'heure de pointe (arrivée ~9h15), relevé sur cartes en ligne pour la voiture et les transports publics ; vélo par la voie verte. Les temps Léman Express directs et la cadence en pointe proviennent de l'horaire officiel 2026."}
             </p>
+            <div>
+              <strong className="text-[#1C1917]">{en ? "La Villa data (“Seen from our houses”)." : "Données La Villa (« Vu de nos maisons »)."}</strong>
+              <ul className="list-disc pl-5 mt-1.5 space-y-1">
+                <li>{en ? `Anonymised aggregates from our ${BAROMETRE.housesCount} houses (${BAROMETRE.roomsCount} rooms, ${BAROMETRE.residentsCovered} residents since October 2021) — an operator's sample, not a market census.` : `Agrégats anonymisés issus de nos ${BAROMETRE.housesCount} maisons (${BAROMETRE.roomsCount} chambres, ${BAROMETRE.residentsCovered} résidents depuis octobre 2021) — un échantillon d'exploitant, pas un recensement du marché.`}</li>
+                <li>{en ? "Rent: 2026 median of current rents, billed in CHF, all-inclusive. Today's entry price for a room (1,380 CHF) sits slightly above this median — the gap comes from older leases still running. Occupancy: average across all houses since October 2021 — 98-99% depending on the year and the house; a recently opened house can temporarily sit below that level during its ramp-up. Length of stay: average over all residents." : "Loyer : médiane 2026 des loyers en cours, facturés en CHF, tout compris. Le prix d'entrée actuel d'une chambre (1 380 CHF) est légèrement au-dessus de cette médiane — l'écart vient des baux plus anciens toujours en cours. Occupation : moyenne toutes maisons confondues depuis octobre 2021 — 98-99 % selon les années et les maisons ; une maison récemment ouverte peut passer temporairement en dessous pendant sa montée en charge. Durée de séjour : moyenne sur l'ensemble des résidents."}</li>
+                <li>{en ? `Space per resident: total habitable surface ÷ number of residents — La Villa ${BAROMETRE.m2PerHouse.lavilla} m², Le Lodge ${BAROMETRE.m2PerHouse.lelodge} m², Le Loft ${BAROMETRE.m2PerHouse.leloft} m² (private rooms ${BAROMETRE.roomSizeMin}-${BAROMETRE.roomSizeMax} m²). The “≈ ${BAROMETRE.chfPerM2AllIn} CHF/m² all-inclusive” is therefore not directly comparable to a net rent per m² — the difference in scope is stated and detailed here.` : `Surface par résident : surface habitable totale ÷ nombre de résidents — La Villa ${BAROMETRE.m2PerHouse.lavilla} m², Le Lodge ${BAROMETRE.m2PerHouse.lelodge} m², Le Loft ${BAROMETRE.m2PerHouse.leloft} m² (chambres privées ${BAROMETRE.roomSizeMin}-${BAROMETRE.roomSizeMax} m²). Le « ≈ ${BAROMETRE.chfPerM2AllIn} CHF/m² tout compris » n'est donc pas directement comparable à un loyer net au m² — l'écart de périmètre est assumé et détaillé ici.`}</li>
+                <li>{en ? "“Full cost” table: every assumption is posted under the table itself." : "Tableau « coût complet » : toutes les hypothèses sont affichées sous le tableau lui-même."}</li>
+              </ul>
+            </div>
             <p>
-              <strong className="text-[#1C1917]">{en ? "Independence." : "Indépendance."}</strong>{" "}
+              <strong className="text-[#1C1917]">{en ? "Independence and transparency." : "Indépendance et transparence."}</strong>{" "}
               {en
-                ? "La Villa Coliving edits this observatory: it appears in none of the figures. The data is freely reusable with attribution (CC-BY) and downloadable above."
-                : "La Villa Coliving est l'éditrice de cet observatoire : elle n'apparaît dans aucun chiffre. Les données sont librement réutilisables avec mention de la source (CC-BY) et téléchargeables ci-dessus."}
+                ? "The “market” layer of this observatory (Geneva, French corridor) relies exclusively on public sources and listings surveys: La Villa appears in none of those figures. The “Seen from our houses” layer relies on our own data, clearly labelled — the reader always knows who is speaking. All data is freely reusable with attribution (CC-BY) and downloadable above."
+                : "La couche « marché » de cet observatoire (Genève, corridor France) repose exclusivement sur des sources publiques et des relevés d'annonces : La Villa n'apparaît dans aucun de ces chiffres. La couche « Vu de nos maisons » repose sur nos propres données, clairement étiquetées — le lecteur sait toujours qui parle. L'ensemble est librement réutilisable avec mention de la source (CC-BY) et téléchargeable ci-dessus."}
             </p>
             <p className="text-xs text-[#A8A29E]">
               {en
-                ? "Sources: OCSTAT (cantonal rent statistics, Geneva); advertised rents surveyed June 2026 (Le Figaro Immobilier for France); ANIL rent map — “ANIL estimates, based on data from Groupe SeLoger and leboncoin”; Léman Express 2026 timetable. Edition 1: left-bank / Léman Express corridor → Geneva-Eaux-Vives."
-                : "Sources : OCSTAT (statistique cantonale des loyers, Genève) ; loyers d'annonce relevés en juin 2026 (Le Figaro Immobilier pour la France) ; Carte des loyers — « Estimations ANIL, à partir des données du Groupe SeLoger et de leboncoin » ; horaires Léman Express 2026. Édition 1 : corridor rive gauche / Léman Express → Genève-Eaux-Vives."}
+                ? `Sources: OCSTAT (cantonal rent statistics, Geneva); Observatory listings surveys, June 2026 — Homegate for Geneva, Le Figaro Immobilier for France; Léman Express 2026 timetable; La Villa Coliving internal data (2021-2026 aggregates). ${FX_NOTE_EN}. Edition 1: left-bank / Léman Express corridor → Geneva-Eaux-Vives.`
+                : `Sources : OCSTAT (statistique cantonale des loyers, Genève) ; relevés d'annonces de l'Observatoire, juin 2026 — Homegate pour Genève, Le Figaro Immobilier pour la France ; horaires Léman Express 2026 ; données internes La Villa Coliving (agrégats 2021-2026). ${FX_NOTE_FR}. Édition 1 : corridor rive gauche / Léman Express → Genève-Eaux-Vives.`}
             </p>
           </div>
+          </details>
+        </div>
+      </section>
 
-          <div className="flex flex-col sm:flex-row gap-3 mt-7">
+      {/* ===== PRESSE & TÉLÉCHARGEMENTS + CTA (brief staging §5) ===== */}
+      <section className="py-14 lg:py-20 bg-white border-t border-[#E7E5E4]">
+        <div className="max-w-4xl mx-auto px-6">
+          <h2 className="text-2xl md:text-3xl font-light text-[#1C1917] mb-6 text-center" style={{ fontFamily: "DM Serif Display, serif" }}>
+            {en ? "Press & downloads" : "Presse & téléchargements"}
+          </h2>
+          {/* À citer */}
+          <div className="bg-[#FAF9F6] border border-[#E7E5E4] rounded-xl p-5 text-center max-w-2xl mx-auto mb-7">
+            <p className="text-sm text-[#44403C] leading-relaxed">
+              {en ? (
+                <><strong className="text-[#1C1917]">To quote:</strong> figures and charts are freely reusable with the attribution <strong className="text-[#1C1917]">“Observatoire La Villa Coliving 2026”</strong> (CC-BY).</>
+              ) : (
+                <><strong className="text-[#1C1917]">À citer :</strong> chiffres et graphiques librement réutilisables avec la mention <strong className="text-[#1C1917]">« Observatoire La Villa Coliving 2026 »</strong> (CC-BY).</>
+              )}
+            </p>
+          </div>
+          {/* Téléchargements */}
+          <div className="flex flex-wrap gap-3 justify-center">
             <a
               href={CSV_URL}
               download="observatoire-loyer-trajet-geneve-2026.csv"
-              className="inline-flex items-center gap-2 bg-[#1C1917] text-white px-6 py-3 text-sm uppercase tracking-wider hover:bg-[#44403C] transition-colors rounded-md"
+              className="inline-flex items-center gap-2 bg-[#1C1917] text-white px-5 py-3 text-xs sm:text-sm uppercase tracking-wider hover:bg-[#44403C] transition-colors rounded-md"
             >
               <Download className="w-4 h-4" />
-              {en ? "France corridor data (CSV)" : "Données corridor France (CSV)"}
+              {en ? "France corridor (CSV)" : "Corridor France (CSV)"}
             </a>
             <a
               href={CSV_GENEVA_URL}
               download="observatoire-geneve-deux-vitesses-2026.csv"
-              className="inline-flex items-center gap-2 border border-[#1C1917] text-[#1C1917] px-6 py-3 text-sm uppercase tracking-wider hover:bg-[#1C1917] hover:text-white transition-colors rounded-md"
+              className="inline-flex items-center gap-2 border border-[#1C1917] text-[#1C1917] px-5 py-3 text-xs sm:text-sm uppercase tracking-wider hover:bg-[#1C1917] hover:text-white transition-colors rounded-md"
             >
               <Download className="w-4 h-4" />
-              {en ? "Geneva two-speed data (CSV)" : "Données Genève deux vitesses (CSV)"}
+              {en ? "Geneva two-speed (CSV)" : "Genève deux vitesses (CSV)"}
+            </a>
+            <a
+              href={CSV_LAVILLA_URL}
+              download="observatoire-lavilla-first-party-2026.csv"
+              className="inline-flex items-center gap-2 border border-[#1C1917] text-[#1C1917] px-5 py-3 text-xs sm:text-sm uppercase tracking-wider hover:bg-[#1C1917] hover:text-white transition-colors rounded-md"
+            >
+              <Download className="w-4 h-4" />
+              {en ? "La Villa first-party (CSV)" : "La Villa first-party (CSV)"}
+            </a>
+            <button
+              type="button"
+              onClick={downloadScatterSvg}
+              className="inline-flex items-center gap-2 border border-[#D4A574] text-[#A0623C] px-5 py-3 text-xs sm:text-sm uppercase tracking-wider hover:bg-[#D4A574] hover:text-white transition-colors rounded-md"
+            >
+              <ImageDown className="w-4 h-4" />
+              {en ? "Rent × commute chart (SVG)" : "Graphique loyer × trajet (SVG)"}
+            </button>
+            <a
+              href="/images/observatoire-loyer-trajet-2026.png"
+              download="observatoire-la-villa-coliving-2026.png"
+              className="inline-flex items-center gap-2 border border-[#D4A574] text-[#A0623C] px-5 py-3 text-xs sm:text-sm uppercase tracking-wider hover:bg-[#D4A574] hover:text-white transition-colors rounded-md"
+            >
+              <ImageDown className="w-4 h-4" />
+              {en ? "Press visual +44% (PNG)" : "Visuel presse +44 % (PNG)"}
             </a>
           </div>
-          <p className="text-xs text-[#A8A29E] mt-2">{en ? "Free to reuse with attribution (CC-BY)." : "Réutilisable librement avec mention de la source (CC-BY)."}</p>
-        </div>
-      </section>
 
-      {/* ===== PIED — La Villa éditrice (sobre) ===== */}
-      <section className="py-14 lg:py-20 bg-white border-t border-[#E7E5E4]">
-        <div className="max-w-3xl mx-auto px-6 text-center">
-          <MapPin className="w-6 h-6 text-[#D4A574] mx-auto mb-3" />
-          <p className="text-[#57534E] leading-relaxed mb-6">
-            {en
-              ? "This observatory is published by La Villa Coliving, which runs all-inclusive coliving houses on the French side of Geneva. Want a turnkey room without the apartment hunt?"
-              : "Cet observatoire est publié par La Villa Coliving, qui gère des maisons de coliving tout inclus côté France. Envie d'une chambre clé en main sans la chasse à l'appartement ?"}
-          </p>
-          <div className="flex flex-col sm:flex-row gap-3 justify-center">
-            <LocalizedLink
-              to="/colocation-geneve"
-              className="inline-flex items-center gap-2 border border-[#1C1917] text-[#1C1917] px-6 py-3 text-sm uppercase tracking-wider hover:bg-[#1C1917] hover:text-white transition-colors"
-            >
-              {en ? "Shared housing in Geneva" : "La colocation à Genève"}
-            </LocalizedLink>
-            <LocalizedLink
-              to="/candidature"
-              className="inline-flex items-center gap-2 bg-[#D4A574] text-white px-6 py-3 text-sm uppercase tracking-wider hover:bg-[#44403C] transition-colors"
-            >
-              {en ? "Apply" : "Candidater"}
-              <ArrowRight className="w-4 h-4" />
-            </LocalizedLink>
+          {/* Éditeur + CTA discret */}
+          <div className="text-center mt-12">
+            <MapPin className="w-6 h-6 text-[#D4A574] mx-auto mb-3" />
+            <p className="text-[#57534E] leading-relaxed mb-6 max-w-2xl mx-auto">
+              {en
+                ? "This observatory is published by La Villa Coliving, which runs all-inclusive coliving houses on the French side of Geneva. Want a turnkey room without the apartment hunt?"
+                : "Cet observatoire est publié par La Villa Coliving, qui gère des maisons de coliving tout inclus côté France. Envie d'une chambre clé en main sans la chasse à l'appartement ?"}
+            </p>
+            {/* Lien « Qui est derrière cet observatoire → /qui-sommes-nous » à RÉTABLIR quand la page
+                fondateurs sera validée et routée (elle vit sur la branche feat/qui-sommes-nous-v2). */}
+            <div className="flex flex-col sm:flex-row gap-3 justify-center">
+              <LocalizedLink
+                to="/colocation-geneve"
+                className="inline-flex items-center gap-2 border border-[#1C1917] text-[#1C1917] px-6 py-3 text-sm uppercase tracking-wider hover:bg-[#1C1917] hover:text-white transition-colors"
+              >
+                {en ? "Shared housing in Geneva" : "La colocation à Genève"}
+              </LocalizedLink>
+              <LocalizedLink
+                to="/candidature"
+                className="inline-flex items-center gap-2 bg-[#D4A574] text-white px-6 py-3 text-sm uppercase tracking-wider hover:bg-[#44403C] transition-colors"
+              >
+                {en ? "Apply" : "Candidater"}
+                <ArrowRight className="w-4 h-4" />
+              </LocalizedLink>
+            </div>
           </div>
         </div>
       </section>
@@ -753,7 +1251,7 @@ function Th({ children, onClick, right, active }: { children: ReactNode; onClick
   return (
     <th
       onClick={onClick}
-      className={`px-3 py-2.5 cursor-pointer select-none font-medium ${right ? "text-right" : "text-left"} ${active ? "text-[#D4A574]" : "text-[#57534E]"}`}
+      className={`px-3 py-3 cursor-pointer select-none font-medium ${right ? "text-right" : "text-left"} ${active ? "text-[#D4A574]" : "text-[#57534E]"}`}
     >
       {children}
     </th>
@@ -762,7 +1260,7 @@ function Th({ children, onClick, right, active }: { children: ReactNode; onClick
 
 function Td({ children, active }: { children: ReactNode; active?: boolean }) {
   return (
-    <td className={`px-3 py-2.5 text-right whitespace-nowrap ${active ? "text-[#1C1917] font-medium" : "text-[#78716C]"}`}>
+    <td className={`px-3 py-3 text-right whitespace-nowrap ${active ? "text-[#1C1917] font-medium" : "text-[#78716C]"}`}>
       {children}
     </td>
   );
@@ -777,7 +1275,7 @@ function TransportCell({ c, en, active }: { c: Commune; en: boolean; active?: bo
     const color = cad <= 15 ? "#6B8E6B" : cad <= 30 ? "#D4A574" : "#A0623C";
     const cadFreq = cad >= 60 ? (en ? "every hour" : "toutes les heures") : (en ? `every ${cad} min` : `toutes les ${cad} min`);
     return (
-      <td className="px-3 py-2.5 text-right whitespace-nowrap">
+      <td className="px-3 py-3 text-right whitespace-nowrap">
         <div className="leading-tight">
           <div className={`font-medium ${primary}`}>
             {c.train} min <span className="text-[10px] font-normal text-[#78716C]">Léman&nbsp;Express</span>
@@ -792,7 +1290,7 @@ function TransportCell({ c, en, active }: { c: Commune; en: boolean; active?: bo
     );
   }
   return (
-    <td className="px-3 py-2.5 text-right whitespace-nowrap">
+    <td className="px-3 py-3 text-right whitespace-nowrap">
       <div className="leading-tight">
         <div className={`font-medium ${primary}`}>{c.pt} min</div>
         <div className="text-[10px] text-[#A8A29E]">{c.tram ? "Tram 17" : "Bus / tram"}</div>

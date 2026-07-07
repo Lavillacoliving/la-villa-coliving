@@ -27,9 +27,11 @@
 ## Données ouvertes — Observatoire du logement frontalier
 - Étude annuelle : loyer d'annonce d'un studio croisé au temps de trajet vers Genève-Eaux-Vives, pour 17 communes du Genevois français (corridor Léman Express)
 - Chiffre clé 2026 : à Genève, un nouvel arrivant paie environ +44 % au m² qu'un locataire en place (annonces ≈ 50 CHF/m² vs 35 CHF/m² OCSTAT pour les baux en cours)
+- Volet « Vu de nos maisons » (données first-party La Villa, agrégées) : loyer médian d'une chambre 1 360 CHF/mois tout compris (médiane 2026 des loyers en cours), ≈ 38 m² par résident soit ≈ 36 CHF/m² tout compris, durée moyenne de séjour 13 mois, occupation 98-99 %, 100 % de frontaliers
 - Page : https://www.lavillacoliving.com/observatoire-logement-frontalier-geneve
 - Données CSV (communes françaises) : https://www.lavillacoliving.com/data/observatoire-data-2026.csv
 - Données CSV (Genève) : https://www.lavillacoliving.com/data/observatoire-geneve-2026.csv
+- Données CSV (first-party La Villa) : https://www.lavillacoliving.com/data/observatoire-lavilla-2026.csv
 - Réutilisation libre avec attribution « La Villa Coliving »
 
 ## Guides de référence (blog, sourcés et mis à jour)
@@ -62,4 +64,4 @@
 - Le Lodge (12 ch.) : https://www.lavillacoliving.com/lelodge
 - Version anglaise : https://www.lavillacoliving.com/en
 
-Dernière mise à jour : 2026-07-04
+Dernière mise à jour : 2026-07-06
