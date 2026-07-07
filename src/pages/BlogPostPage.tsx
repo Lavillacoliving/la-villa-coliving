@@ -321,7 +321,9 @@ export function BlogPostPage() {
       </Helmet>
       <article className="py-16 lg:py-24">
         <div className="max-w-3xl mx-auto px-6">
-          <LocalizedLink to="/blog" className="inline-flex items-center gap-2 text-[#57534E] hover:text-[#D4A574] mb-8 text-sm transition-colors">
+          {/* flex w-fit (et non inline-flex) : bloc-niveau largeur-contenu, sinon le
+              badge catégorie « inline-block » se colle sur la même ligne (collision). */}
+          <LocalizedLink to="/blog" className="flex w-fit items-center gap-2 text-[#57534E] hover:text-[#D4A574] mb-8 text-sm transition-colors">
             <ArrowLeft className="w-4 h-4" />
             {language==="en"?"Back to blog":"Retour au blog"}
           </LocalizedLink>

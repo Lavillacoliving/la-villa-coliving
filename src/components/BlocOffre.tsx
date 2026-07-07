@@ -80,6 +80,10 @@ export function BlocOffre({ variant, slug, bucket }: BlocOffreProps) {
     house === "lavilla"
       ? { to: colocGeneveHref(language), label: L === "en" ? "Shared housing in Geneva" : "Colocation Genève : le guide" }
       : { to: `/${house}`, label: L === "en" ? `Discover ${h.label}` : `Découvrir ${h.label}` };
+  // Sur l'article pilier FR lui-même, colocGeneveHref renvoie vers cette page (308
+  // pilier→article) : le lien secondaire tournerait en rond. On le masque alors —
+  // il reste utile sur tous les autres articles (et en EN, cible = pilier distinct).
+  const showSecondary = secondary.to !== `/blog/${slug}`;
 
   // Même pattern gtag gardé que le formulaire : l'analytics ne bloque jamais l'UI.
   const track = (target: string) => {
@@ -185,13 +189,15 @@ export function BlocOffre({ variant, slug, bucket }: BlocOffreProps) {
                 {L === "en" ? "Apply — 2 min, free" : "Candidater — 2 min, gratuit"}
                 <ArrowRight className="w-4 h-4" />
               </LocalizedLink>
-              <LocalizedLink
-                to={secondary.to}
-                onClick={() => track(secondary.to)}
-                className="inline-flex items-center justify-center gap-2 px-6 py-3 border border-[#E7E5E4] text-[#44403C] text-sm font-medium rounded-lg hover:border-[#D4A574] transition-all duration-300"
-              >
-                {secondary.label}
-              </LocalizedLink>
+              {showSecondary && (
+                <LocalizedLink
+                  to={secondary.to}
+                  onClick={() => track(secondary.to)}
+                  className="inline-flex items-center justify-center gap-2 px-6 py-3 border border-[#E7E5E4] text-[#44403C] text-sm font-medium rounded-lg hover:border-[#D4A574] transition-all duration-300"
+                >
+                  {secondary.label}
+                </LocalizedLink>
+              )}
             </div>
           </div>
         </div>
