@@ -1,6 +1,7 @@
 import { Helmet } from "react-helmet";
 import { useLocation } from "react-router-dom";
 import { useLanguage } from "@/contexts/LanguageContext";
+import { FOUNDERS, FOUNDING_DATE, ABOUT_PAGE_LIVE } from "@/lib/structuredData";
 
 interface SEOProps {
   title?: string;
@@ -127,21 +128,14 @@ export function SEO({
           areaServed: ["Genève", "Annemasse", "Ville-la-Grand", "Ambilly", "Grand Genève"],
           // E-E-A-T : fondation + fondateurs identifiables (sameAs LinkedIn) sur toutes
           // les pages — Google corrobore l'existence des personnes hors du site.
-          foundingDate: "2021-10",
-          founder: [
-            {
-              "@type": "Person",
-              name: "Jérôme Austin",
-              url: "https://www.lavillacoliving.com/qui-sommes-nous",
-              sameAs: ["https://www.linkedin.com/in/jeromeaustin1/"],
-            },
-            {
-              "@type": "Person",
-              name: "Fanny Bela",
-              url: "https://www.lavillacoliving.com/qui-sommes-nous",
-              sameAs: ["https://www.linkedin.com/in/fanny-bela-24793138/"],
-            },
-          ],
+          // url de la page fondateurs ajoutée automatiquement quand ABOUT_PAGE_LIVE=true.
+          foundingDate: FOUNDING_DATE,
+          founder: [FOUNDERS.jerome, FOUNDERS.fanny].map((f) => ({
+            "@type": "Person",
+            name: f.name,
+            ...(ABOUT_PAGE_LIVE ? { url: "https://www.lavillacoliving.com/qui-sommes-nous" } : {}),
+            sameAs: [f.linkedin],
+          })),
           contactPoint: {
             "@type": "ContactPoint",
             email: "contact@lavillacoliving.com",

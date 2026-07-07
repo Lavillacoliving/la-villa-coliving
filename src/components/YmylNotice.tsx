@@ -2,7 +2,7 @@ import { useLanguage } from "@/contexts/LanguageContext";
 import { LocalizedLink } from "@/components/LocalizedLink";
 import { Linkedin } from "lucide-react";
 import { STATS } from "@/data/stats";
-import { getFounderByAuthorName } from "@/lib/structuredData";
+import { getFounderByAuthorName, ABOUT_PAGE_LIVE } from "@/lib/structuredData";
 import { YMYL_ARTICLES, YMYL_NOT_US, extractOfficialSources } from "@/lib/ymyl";
 
 /**
@@ -94,6 +94,15 @@ export function AuthorBox({ author }: { author: string }) {
   const fr = language !== "en";
   const founder = getFounderByAuthorName(author);
   if (!founder) return null;
+  // Tant que /qui-sommes-nous n'est pas routée (ABOUT_PAGE_LIVE=false), le nom
+  // s'affiche sans lien interne — aucun lien mort en prod.
+  const founderName = ABOUT_PAGE_LIVE ? (
+    <LocalizedLink to="/qui-sommes-nous" className="font-medium text-[#1C1917] hover:text-[#D4A574]">
+      {founder.name}
+    </LocalizedLink>
+  ) : (
+    <span className="font-medium text-[#1C1917]">{founder.name}</span>
+  );
   return (
     <aside className="mt-6 p-5 border border-[#E7E5E4] rounded-lg flex items-start gap-4">
       <div
@@ -107,20 +116,14 @@ export function AuthorBox({ author }: { author: string }) {
         <p>
           {fr ? (
             <>
-              Écrit par{" "}
-              <LocalizedLink to="/qui-sommes-nous" className="font-medium text-[#1C1917] hover:text-[#D4A574]">
-                {founder.name}
-              </LocalizedLink>
+              Écrit par {founderName}
               , {founder.jobTitle.fr.charAt(0).toLowerCase() + founder.jobTitle.fr.slice(1)}. Depuis{" "}
               {STATS.foundedYear}, nous logeons et accompagnons des frontaliers près de Genève — on connaît ces
               démarches parce qu'on les vit chaque semaine avec nos résidents.
             </>
           ) : (
             <>
-              Written by{" "}
-              <LocalizedLink to="/qui-sommes-nous" className="font-medium text-[#1C1917] hover:text-[#D4A574]">
-                {founder.name}
-              </LocalizedLink>
+              Written by {founderName}
               , {founder.jobTitle.en.charAt(0).toLowerCase() + founder.jobTitle.en.slice(1)}. Since{" "}
               {STATS.foundedYear}, we house and support cross-border workers near Geneva — we know these
               procedures because we live them every week with our residents.
@@ -128,9 +131,11 @@ export function AuthorBox({ author }: { author: string }) {
           )}
         </p>
         <p className="mt-2 flex flex-wrap items-center gap-x-4 gap-y-1">
-          <LocalizedLink to="/qui-sommes-nous" className="text-[#D4A574] hover:underline">
-            {fr ? "Qui sommes-nous" : "Who we are"}
-          </LocalizedLink>
+          {ABOUT_PAGE_LIVE && (
+            <LocalizedLink to="/qui-sommes-nous" className="text-[#D4A574] hover:underline">
+              {fr ? "Qui sommes-nous" : "Who we are"}
+            </LocalizedLink>
+          )}
           <a
             href={founder.linkedin}
             target="_blank"

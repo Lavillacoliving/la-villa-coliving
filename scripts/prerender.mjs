@@ -49,7 +49,6 @@ const STATIC_ROUTES_FR = [
   '/lelodge',
   '/investisseurs',
   '/observatoire-logement-frontalier-geneve',
-  '/qui-sommes-nous',
   '/mentions-legales',
   '/politique-de-confidentialite',
 ];
@@ -525,7 +524,6 @@ const STATIC_PAGE_CONFIG = {
   '/blog': { priority: '0.7', changefreq: 'weekly' },
   '/investisseurs': { priority: '0.6', changefreq: 'monthly' },
   '/observatoire-logement-frontalier-geneve': { priority: '0.8', changefreq: 'monthly' },
-  '/qui-sommes-nous': { priority: '0.6', changefreq: 'monthly' },
   '/mentions-legales': { priority: '0.3', changefreq: 'yearly' },
   '/politique-de-confidentialite': { priority: '0.3', changefreq: 'yearly' },
 };

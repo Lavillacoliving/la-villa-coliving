@@ -155,6 +155,14 @@ export const FOUNDERS: Record<"jerome" | "fanny", Founder> = {
 /** Mois de commercialisation de la première maison (confirmé Jérôme : octobre 2021). */
 export const FOUNDING_DATE = "2021-10";
 
+/**
+ * ⚠️ INTERRUPTEUR — passer à `true` quand la page /qui-sommes-nous sera routée et en prod
+ * (Jérôme la retravaille dans une autre session, 07/2026). Tant que `false` :
+ * bylines et blocs auteur affichent le nom SANS lien interne, et les schemas Person
+ * omettent `url` (le sameAs LinkedIn reste). Aucun lien mort ne part en prod.
+ */
+export const ABOUT_PAGE_LIVE = false;
+
 /** Retrouve un fondateur depuis le champ `author` d'un article (sinon null → auteur générique). */
 export function getFounderByAuthorName(author: string | null | undefined): Founder | null {
   if (!author) return null;
@@ -164,13 +172,13 @@ export function getFounderByAuthorName(author: string | null | undefined): Found
   return null;
 }
 
-/** Person schema d'un fondateur — url = page fondateurs (hub auteur), sameAs = LinkedIn. */
+/** Person schema d'un fondateur — sameAs = LinkedIn ; url = page fondateurs quand elle est en prod. */
 export function buildFounderPersonSchema(founder: Founder, language: "fr" | "en" = "fr"): Record<string, unknown> {
   return {
     "@type": "Person",
     name: founder.name,
     jobTitle: founder.jobTitle[language],
-    url: `${SITE}/qui-sommes-nous`,
+    ...(ABOUT_PAGE_LIVE ? { url: `${SITE}/qui-sommes-nous` } : {}),
     sameAs: [founder.linkedin],
     worksFor: { "@type": "Organization", name: "La Villa Coliving", url: SITE },
   };

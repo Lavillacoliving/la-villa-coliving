@@ -65,10 +65,6 @@
       "destination": "/prerendered/observatoire-logement-frontalier-geneve.html"
     },
     {
-      "source": "/qui-sommes-nous",
-      "destination": "/prerendered/qui-sommes-nous.html"
-    },
-    {
       "source": "/mentions-legales",
       "destination": "/prerendered/mentions-legales.html"
     },
@@ -139,10 +135,6 @@
     {
       "source": "/en/observatoire-logement-frontalier-geneve",
       "destination": "/prerendered/en-observatoire-logement-frontalier-geneve.html"
-    },
-    {
-      "source": "/en/qui-sommes-nous",
-      "destination": "/prerendered/en-qui-sommes-nous.html"
     },
     {
       "source": "/en/mentions-legales",

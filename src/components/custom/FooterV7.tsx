@@ -37,10 +37,6 @@ export function FooterV7() {
       label: language === "en" ? "Housing Observatory" : "Observatoire du logement",
     },
     {
-      path: "/qui-sommes-nous",
-      label: language === "en" ? "Who we are" : "Qui sommes-nous",
-    },
-    {
       path: "/investisseurs",
       label: language === "en" ? "Investors" : "Investisseurs",
     },

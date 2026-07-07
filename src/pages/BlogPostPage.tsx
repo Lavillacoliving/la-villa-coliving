@@ -9,7 +9,7 @@ import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import { Helmet } from "react-helmet";
 import { SEO } from "@/components/SEO";
-import { buildBreadcrumbSchema, buildFaqPageSchema, getFounderByAuthorName } from "@/lib/structuredData";
+import { buildBreadcrumbSchema, buildFaqPageSchema, getFounderByAuthorName, ABOUT_PAGE_LIVE } from "@/lib/structuredData";
 import { getIntentBucket, type IntentBucket } from "@/data/blogIntentBuckets";
 import { YmylNotice, YmylPosture, AuthorBox } from "@/components/YmylNotice";
 import { isYmyl } from "@/lib/ymyl";
@@ -333,7 +333,7 @@ export function BlogPostPage() {
           "@type": "Person",
           name: founder.name,
           jobTitle: founder.jobTitle[L],
-          url: "https://www.lavillacoliving.com/qui-sommes-nous",
+          ...(ABOUT_PAGE_LIVE ? { url: "https://www.lavillacoliving.com/qui-sommes-nous" } : {}),
           sameAs: [founder.linkedin],
         }
       : {
@@ -396,9 +396,13 @@ export function BlogPostPage() {
               <User className="w-4 h-4" />
               {founder ? (
                 <>
-                  <LocalizedLink to="/qui-sommes-nous" className="text-[#44403C] hover:text-[#D4A574] transition-colors">
-                    {founder.name}
-                  </LocalizedLink>
+                  {ABOUT_PAGE_LIVE ? (
+                    <LocalizedLink to="/qui-sommes-nous" className="text-[#44403C] hover:text-[#D4A574] transition-colors">
+                      {founder.name}
+                    </LocalizedLink>
+                  ) : (
+                    <span className="text-[#44403C]">{founder.name}</span>
+                  )}
                   <span className="hidden sm:inline text-[#A8A29E]">
                     · {founder.jobTitle[L].charAt(0).toLowerCase() + founder.jobTitle[L].slice(1)}
                   </span>

@@ -37,10 +37,6 @@ export function NavbarV7() {
     { path: "/services", label: "Services" },
     { path: "/tarifs", label: language === "en" ? "Rates" : "Tarifs" },
     { path: "/blog", label: "Blog" },
-    {
-      path: "/qui-sommes-nous",
-      label: language === "en" ? "Who we are" : "Qui sommes-nous",
-    },
   ];
 
   // Compare contre le chemin localisé : sur /en/tarifs, l'onglet « Rates » (path
