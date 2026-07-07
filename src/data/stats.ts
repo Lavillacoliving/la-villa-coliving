@@ -2,7 +2,7 @@
 // Modifier ici = mis à jour partout automatiquement
 
 export const STATS = {
-  totalResidents: 150,
+  totalResidents: 100,
   totalRooms: 29,
   totalHouses: 3,
   occupancyRate: 99,

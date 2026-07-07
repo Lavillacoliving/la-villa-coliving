@@ -556,13 +556,13 @@ export function ColocationGenevePage() {
                 {language === "en" ? (
                   <>
                     <p>A quiet residential town just 5 minutes from the Swiss border, Ville-la-Grand offers a peaceful environment with tree-lined streets and local parks. La Villa sits on a 2,000 m² estate with a private garden, heated pool, and serene surroundings — ideal for those who value calm after a busy day in Geneva.</p>
-                    <p>Local shops and restaurants are within walking distance. The town is connected to Annemasse station by bus (10 minutes), giving easy access to the Leman Express and onward to Geneva Cornavin. Bike paths connect directly to the Swiss border, making cycle commuting a real option for those working near the Moillesulaz crossing.</p>
+                    <p>Local shops and restaurants are within walking distance. The town is connected to Annemasse station, giving easy access to the Leman Express and onward to Geneva Cornavin. Bike paths connect directly to the Swiss border, making cycle commuting a real option for those working near the Moillesulaz crossing.</p>
                     <p>Ville-la-Grand is the perfect choice for residents who prefer a calm, residential atmosphere with direct garden access while remaining minutes from the economic hub of Geneva. The colocation at La Villa combines this tranquility with premium amenities rarely found in traditional shared housing near Geneva.</p>
                   </>
                 ) : (
                   <>
                     <p>Ville résidentielle calme à seulement 5 minutes de la frontière suisse, Ville-la-Grand offre un cadre paisible avec ses rues bordées d'arbres et ses parcs. La Villa est implantée sur un domaine de 2 000 m² avec jardin privatif, piscine chauffée et un environnement serein — idéal pour ceux qui apprécient le calme après une journée active à Genève.</p>
-                    <p>Les commerces et restaurants de proximité sont accessibles à pied. La commune est reliée à la gare d'Annemasse par bus (10 minutes), offrant un accès facile au Léman Express et à Genève Cornavin. Des pistes cyclables mènent directement à la frontière suisse, faisant du vélo une option réelle pour les frontaliers travaillant près du passage de Moillesulaz.</p>
+                    <p>Les commerces et restaurants de proximité sont accessibles à pied. La commune est reliée à la gare d'Annemasse, offrant un accès facile au Léman Express et à Genève Cornavin. Des pistes cyclables mènent directement à la frontière suisse, faisant du vélo une option réelle pour les frontaliers travaillant près du passage de Moillesulaz.</p>
                     <p>Ville-la-Grand est le choix idéal pour les résidents qui préfèrent une atmosphère calme et résidentielle avec accès direct au jardin, tout en restant à quelques minutes du pôle économique de Genève. La colocation à La Villa associe cette tranquillité à des prestations premium rarement proposées en colocation près de Genève.</p>
                   </>
                 )}
@@ -580,13 +580,13 @@ export function ColocationGenevePage() {
                 {language === "en" ? (
                   <>
                     <p>Ambilly is the closest French town to Geneva, sitting right at the Swiss border. Le Loft, our charming townhouse with indoor pool, is within walking distance of the Moillesulaz border crossing — making it the fastest commute option for those working in central Geneva.</p>
-                    <p>Direct bus and tram lines connect Ambilly to Geneva's public transport network (TPG). The urban feel of the area means restaurants, cafés, and shops are steps away. Annemasse train station is a short bus ride, and the planned extension of Geneva's tram network will further improve connectivity.</p>
+                    <p>Direct access to the CEVA (Leman Express) via Annemasse station, with direct bus and tram lines connecting Ambilly to Geneva's public transport network (TPG). The urban feel of the area means restaurants, cafés, and shops are steps away. Annemasse train station is a short bus ride, and the planned extension of Geneva's tram network will further improve connectivity.</p>
                     <p>Ambilly suits residents who want the convenience of being right at the border with easy access to both Annemasse and Geneva. Le Loft offers a modern colocation experience in a prime frontalier location — ideal for those who commute daily to Geneva and want to minimize their travel time while enjoying premium coliving amenities.</p>
                   </>
                 ) : (
                   <>
                     <p>Ambilly est la commune française la plus proche de Genève, située directement à la frontière suisse. Le Loft, notre maison de ville avec piscine intérieure, se trouve à distance de marche du passage frontière de Moillesulaz — offrant le trajet le plus court pour ceux qui travaillent dans le centre de Genève.</p>
-                    <p>Des lignes de bus et de tram directes relient Ambilly au réseau de transports genevois (TPG). L'ambiance urbaine du quartier signifie que restaurants, cafés et commerces sont à deux pas. La gare d'Annemasse est accessible en quelques minutes de bus, et l'extension prévue du réseau de tram genevois améliorera encore la connectivité.</p>
+                    <p>Accès direct au CEVA via la gare d'Annemasse, avec des lignes de bus et de tram directes reliant Ambilly au réseau de transports genevois (TPG). L'ambiance urbaine du quartier signifie que restaurants, cafés et commerces sont à deux pas. La gare d'Annemasse est accessible en quelques minutes de bus, et l'extension prévue du réseau de tram genevois améliorera encore la connectivité.</p>
                     <p>Ambilly convient aux résidents qui souhaitent la commodité d'être directement à la frontière avec un accès facile à Annemasse comme à Genève. Le Loft offre une colocation moderne dans un emplacement frontalier stratégique — idéal pour les frontaliers qui font le trajet quotidien vers Genève et veulent minimiser leur temps de transport tout en profitant d'un coliving premium.</p>
                   </>
                 )}
@@ -880,17 +880,17 @@ export function ColocationGenevePage() {
               },
               {
                 step: 2,
-                title: language === "en" ? "Explore your options: Swiss side vs French side" : "Explorez les options : côté suisse vs côté France",
+                title: language === "en" ? "Explore your options: Swiss side vs French side" : "Explore les options : côté suisse vs côté France",
                 desc: language === "en"
-                  ? "A room in a shared flat in Geneva costs 1,000-1,500 CHF/month without services. On the French side, cross-border coliving offers the same access to Geneva at 30-50% lower cost of living. The Leman Express connects Annemasse to Geneva Cornavin in 20 minutes, making the French border towns a practical and financially smart choice for anyone working in Geneva."
-                  : "Une chambre en colocation à Genève coûte 1 000 à 1 500 CHF/mois sans services. Côté français, le coliving frontalier offre le même accès à Genève pour un coût de vie 30 à 50% inférieur. Le Léman Express relie Annemasse à Genève Cornavin en 20 minutes, faisant des communes frontalières françaises un choix pratique et financièrement avisé pour quiconque travaille à Genève.",
+                  ? "A room in a shared flat in Geneva costs 1,000-1,500 CHF/month without services. On the French side, cross-border flatshare or coliving offers the same access to Geneva at 30-50% lower cost of living. The Leman Express connects Annemasse to Geneva Cornavin in 20 minutes, making the French border towns a practical and financially smart choice for anyone working in Geneva."
+                  : "Une chambre en colocation à Genève coûte 1 000 à 1 500 CHF/mois sans services. Côté français, la colocation ou le coliving frontalier offre le même accès à Genève pour un coût de vie 30 à 50% inférieur. Le Léman Express relie Annemasse à Genève Cornavin en 20 minutes, faisant des communes frontalières françaises un choix pratique et financièrement avisé pour quiconque travaille à Genève.",
               },
               {
                 step: 3,
                 title: language === "en" ? "Visit the spaces and meet the community" : "Visite les espaces et rencontre la communauté",
                 desc: language === "en"
-                  ? "Nothing replaces an in-person visit. At La Villa, we organize private tours of our three houses so you can see the rooms, common areas, pool, gym, and sauna. You'll meet current residents and get a real feel for the community atmosphere. This step is essential — coliving is about the people as much as the place."
-                  : "Rien ne remplace une visite en personne. Chez La Villa, nous organisons des visites privées de nos trois maisons pour que tu puisses voir les chambres, les espaces communs, la piscine, la salle de sport et le sauna. Tu rencontreras les résidents actuels et ressentiras l'atmosphère de la communauté. Cette étape est essentielle — le coliving, c'est autant les personnes que le lieu.",
+                  ? "Nothing replaces an in-person visit. At La Villa, we organize tours of our three houses so you can see the rooms, common areas, pool, gym, and sauna. You'll meet current residents and get a real feel for the community atmosphere. This step is essential — coliving is about the people as much as the place."
+                  : "Rien ne remplace une visite en personne. Chez La Villa, nous organisons des visites de nos trois maisons pour que tu puisses voir les chambres, les espaces communs, la piscine, la salle de sport et le sauna. Tu rencontreras les résidents actuels et ressentiras l'atmosphère de la communauté. Cette étape est essentielle — le coliving, c'est autant les personnes que le lieu.",
               },
               {
                 step: 4,
@@ -901,10 +901,10 @@ export function ColocationGenevePage() {
               },
               {
                 step: 5,
-                title: language === "en" ? "Move in within 2 weeks" : "Emménagez en 2 semaines",
+                title: language === "en" ? "Move in within 2 weeks" : "Emménage en 2 semaines",
                 desc: language === "en"
-                  ? "Once your application is accepted, move-in can happen within two weeks. Your room is ready, fully furnished, with everything included from day one. No need to set up internet, buy furniture, or sign multiple contracts. Just bring your bags and start your new life near Geneva."
-                  : "Une fois ta candidature acceptée, l'emménagement peut se faire en deux semaines. Ta chambre est prête, entièrement meublée, avec tout inclus dès le premier jour. Pas besoin d'installer internet, d'acheter des meubles ou de signer plusieurs contrats. Apporte simplement tes valises et commence ta nouvelle vie près de Genève.",
+                  ? "Once your application is accepted, move-in can happen in less than two weeks! Your room is ready, fully furnished, with everything included from day one. No need to set up internet, buy furniture, or sign multiple contracts. Just bring your bags and start your new life near Geneva."
+                  : "Une fois ta candidature acceptée, l'emménagement peut se faire en moins de deux semaines ! Ta chambre est prête, entièrement meublée, avec tout inclus dès le premier jour. Pas besoin d'installer internet, d'acheter des meubles ou de signer plusieurs contrats. Apporte simplement tes valises et commence ta nouvelle vie près de Genève.",
               },
             ].map((item) => (
               <div key={item.step} className="flex gap-6">

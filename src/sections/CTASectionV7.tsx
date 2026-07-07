@@ -22,7 +22,7 @@ export function CTASectionV7() {
 
           {/* Heading */}
           <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-white tracking-tight mb-6">
-            {language === 'en' ? 'Your next home is waiting' : 'Votre prochaine maison vous attend'}
+            {language === 'en' ? 'Your next home is waiting' : 'Ta prochaine maison t\'attend'}
           </h2>
 
           {/* Subtitle */}

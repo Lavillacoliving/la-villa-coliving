@@ -79,8 +79,8 @@ function getHousesData(lang: string): Record<string, HouseData> {
       ? "370 m² of designed living on a 2,000 m² estate bordering a nature reserve. Heated pool, sauna, gym, and 10 spacious rooms."
       : "370 m² de vie design sur un domaine de 2 000 m² bordant une réserve naturelle. Piscine chauffée, sauna, salle de sport et 10 chambres spacieuses.",
     longDescription: isEn
-      ? "Our flagship house, 10 minutes on foot from Annemasse station — Léman Express to central Geneva in 9 minutes, under 20 minutes door-to-door. 370 m² for 10 housemates on a 2,000 m² estate bordering a nature reserve. Day to day: a heated 12×5 m pool, a 5-seat sauna, a fully equipped gym, quiet workspaces and 8 Gb/s fiber. All rooms are furnished with Emma or Tediber mattresses — 6 with a private en-suite bathroom, 4 with a shared designer bathroom. All-inclusive rent from CHF 1,380/month: utilities, fiber, twice-weekly cleaning of common areas, pool and garden upkeep. No application fee, reply within 48h."
-      : "Notre maison amirale, à 10 minutes à pied de la gare d'Annemasse — Léman Express vers le centre de Genève en 9 minutes, moins de 20 minutes porte-à-porte. 370 m² pour 10 colocataires, sur un domaine de 2 000 m² en bordure de réserve naturelle. Au quotidien : piscine chauffée de 12×5 m, sauna 5 places, salle de sport équipée, espaces de travail calmes et fibre 8 Gb/s. Toutes les chambres sont meublées avec matelas Emma ou Tediber — 6 avec salle de bain privative, 4 avec salle de bain partagée design. Loyer tout inclus dès 1 380 CHF/mois : charges, fibre, ménage 2×/semaine des espaces communs, entretien piscine et jardin. 0 frais de dossier, réponse sous 48 h.",
+      ? "Our flagship house, 10 minutes on foot from Annemasse station — Léman Express to central Geneva in 9 minutes, under 20 minutes door-to-door. 370 m² for 10 housemates on a 2,000 m² estate bordering a nature reserve. Day to day: a heated 12×5 m pool, a 5-seat sauna, a fully equipped gym and 8 Gb/s fiber. All rooms are furnished with Emma or Tediber mattresses — 6 with a private en-suite bathroom, 4 with 2 shared shower rooms (for these rooms, shower-room cleaning is included in the rent — no hassle!). All-inclusive rent from CHF 1,380/month: utilities, fiber, twice-weekly cleaning of common areas, pool and garden upkeep. No application fee, reply within 48h."
+      : "Notre maison amirale, à 10 minutes à pied de la gare d'Annemasse — Léman Express vers le centre de Genève en 9 minutes, moins de 20 minutes porte-à-porte. 370 m² pour 10 colocataires, sur un domaine de 2 000 m² en bordure de réserve naturelle. Au quotidien : piscine chauffée de 12×5 m, sauna 5 places, salle de sport équipée et fibre 8 Gb/s. Toutes les chambres sont meublées avec matelas Emma ou Tediber — 6 avec salle de bain privative, 4 avec 2 salles d'eau partagées (pour ces chambres, le ménage de la salle d'eau est inclus dans le loyer : pas de tracas !). Loyer tout inclus dès 1 380 CHF/mois : charges, fibre, ménage 2×/semaine des espaces communs, entretien piscine et jardin. 0 frais de dossier, réponse sous 48 h.",
     image: "/images/la villa jardin.webp",
     gallery: [
       "/images/la villa/rooms/La Villa-92.webp",
@@ -386,15 +386,15 @@ function getHousesData(lang: string): Record<string, HouseData> {
         price: "1,380 CHF",
         description: isEn
           ? "Your private sanctuary with double Emma bed, ergonomic desk, spacious closet, and private bathroom. Most rooms offer a terrace or balcony with garden views. 17 to 23 m²."
-          : "Votre espace privé avec lit double Emma, bureau ergonomique, placard spacieux et salle de bain privative. La plupart des chambres offrent une terrasse ou un balcon avec vue sur le jardin. 17 à 23 m².",
+          : "Ton espace privé avec lit double Emma, bureau ergonomique, placard spacieux et salle de bain privative. La plupart des chambres offrent une terrasse ou un balcon avec vue sur le jardin. 17 à 23 m².",
         image: "/images/la villa/rooms/La Villa-80.webp",
       },
       {
         type: isEn ? "Room with shared bathroom" : "Chambre avec salle de bain partagée",
         price: "1,380 CHF",
         description: isEn
-          ? "Comfortable private room with double Emma bed, workspace, and ample storage. Access to beautifully designed shared bathroom (rooms CH3, CH4, CH7, CH8). 17 to 20 m²."
-          : "Chambre privée confortable avec lit double Emma, espace de travail et rangement. Accès à une salle de bain partagée design (chambres CH3, CH4, CH7, CH8). 17 à 20 m².",
+          ? "Comfortable private room with double Emma bed, workspace, and ample storage. Access to a beautifully designed shared shower room. 17 to 20 m²."
+          : "Chambre privée confortable avec lit double Emma, espace de travail et rangement. Accès à une salle d'eau partagée design. 17 à 20 m².",
         image: "/images/la villa/rooms/La Villa-92.webp",
       },
     ],
@@ -799,8 +799,8 @@ function getHousesData(lang: string): Record<string, HouseData> {
         type: isEn ? "Room with private bathroom" : "Chambre avec salle de bain privative",
         price: "1,380 CHF",
         description: isEn
-          ? "Elegant designer room (21 m², CH7 = 23 m²) with private en-suite bathroom, premium Emma or Tediber mattress, workspace, and terrace access. All 7 rooms have private bathrooms."
-          : "Chambre design élégante (21 m², CH7 = 23 m²) avec salle de bain privative, matelas premium Emma ou Tediber, espace de travail et accès terrasse. Les 7 chambres ont une salle de bain privative.",
+          ? "Elegant designer room (21 or 23 m²) with private en-suite shower room, premium Emma or Tediber mattress, workspace, and terrace access. All 7 rooms have a private shower room."
+          : "Chambre design élégante (21 m² ou 23 m²) avec salle d'eau privative, matelas premium Emma ou Tediber, espace de travail et accès terrasse. Les 7 chambres ont une salle d'eau privative.",
         image: "/images/le loft/rooms/la villa coliving le loft-52.webp",
       },
     ],
@@ -1788,11 +1788,12 @@ export function HouseDetailPage() {
           },
           leloft: {
             fr: {
-              intro: "Le Loft est situé à Ambilly, la commune la plus proche de la frontière suisse dans l'agglomération d'Annemasse. Le Tram 17 est situé à 5 minutes à pied.",
+              intro: "Le Loft est situé à Ambilly, la commune la plus proche de la frontière suisse dans l'agglomération d'Annemasse. La gare d'Annemasse (CEVA) est à 10 minutes à pied. Le Tram 17 est à 5 minutes à pied.",
               address: "1 rue des Marronniers, 74100 Ambilly, Haute-Savoie, France",
               transport: [
                 "Genève Cornavin : 20 min via Léman Express depuis Annemasse Gare (5 min en bus depuis Le Loft)",
-                "Tram 17 TPG (Lancy-Pont-Rouge ↔ Annemasse) : 5 min à pied",
+                "Gare d'Annemasse (CEVA) : 10 min à pied",
+                "Tram 17 TPG : 5 min à pied",
                 "Aéroport de Genève : 25 min en voiture",
                 "Frontière suisse de Moillesulaz : 500 m, 5 min à pied",
                 "Pistes cyclables sécurisées vers Genève centre : 25 min en vélo",
@@ -1805,11 +1806,12 @@ export function HouseDetailPage() {
               ],
             },
             en: {
-              intro: "Le Loft is located in Ambilly, the closest commune to the Swiss border within the Annemasse agglomeration. Tram 17 is a 5-minute walk away.",
+              intro: "Le Loft is located in Ambilly, the closest commune to the Swiss border within the Annemasse agglomeration. Annemasse station (CEVA) is a 10-minute walk away. Tram 17 is a 5-minute walk away.",
               address: "1 rue des Marronniers, 74100 Ambilly, Haute-Savoie, France",
               transport: [
                 "Geneva Cornavin: 20 min via Léman Express from Annemasse Gare (5-min bus from Le Loft)",
-                "Tram 17 TPG (Lancy-Pont-Rouge ↔ Annemasse): 5 min on foot",
+                "Annemasse station (CEVA): 10 min on foot",
+                "Tram 17 TPG: 5 min on foot",
                 "Geneva Airport: 25 min by car",
                 "Moillesulaz border: 500 m, 5 min walk",
                 "Secure bike paths to central Geneva: 25 min by bike",
@@ -1981,7 +1983,7 @@ export function HouseDetailPage() {
               { q: "Comment se rendre à Genève depuis La Villa à Ville-la-Grand ?", a: "Moins de 20 minutes porte-à-porte : la gare d'Annemasse est à moins de 10 min à pied, puis le Léman Express te dépose au centre de Genève en 9 min. En voiture : 15 min. En alternative, le bus TPN ligne 61 passe à 200 m. La frontière suisse de Moillesulaz est à 2 km — 5 min à vélo." },
               { q: "Quelle est la durée minimale du bail à La Villa ?", a: "Bail flexible 1 à 12 mois. Le bail par défaut est de 12 mois pour la stabilité de la communauté, mais nous acceptons des séjours plus courts (1, 3, 6 mois) selon disponibilité — utile pour les missions courtes ou les périodes d'essai en CDI." },
               { q: "Y a-t-il une caution et des frais d'agence ?", a: "Caution équivalente à 2 mois de loyer hors charges, restituée sous 30 jours après l'état des lieux de sortie. Aucun frais d'agence. Aucun frais de dossier." },
-              { q: "Combien de chambres y a-t-il à La Villa et sont-elles meublées ?", a: "10 chambres privatives, toutes meublées (lit, bureau ergonomique, placard) : 6 avec salle de bain privative, 4 avec accès à une salle de bain partagée design. Chaque chambre offre une vue sur le jardin ou la réserve naturelle. Cuisine, salon, salle de sport, sauna et piscine chauffée 12×5 m sont partagés." },
+              { q: "Combien de chambres y a-t-il à La Villa et sont-elles meublées ?", a: "10 chambres privatives, toutes meublées (lit, bureau ergonomique, placard) : 6 avec salle de bain privative, 4 avec accès à 2 salles d'eau partagées (ménage inclus dans le loyer). Chaque chambre offre une vue sur le jardin ou la réserve naturelle. Cuisine, salon, salle de sport, sauna et piscine chauffée 12×5 m sont partagés." },
               { q: "Qui peut postuler pour vivre à La Villa ?", a: "Profil cible : frontaliers en CDI, jeunes professionnels, expatriés et résidents fiscaux français travaillant à Genève. Sélection sur dossier (justificatif de revenus, motivation, compatibilité avec la communauté). Pas de critère d'âge strict, mais la majorité des résidents ont entre 25 et 40 ans." },
               { q: "Où se trouve La Villa et à quelle distance de Genève ?", a: "La Villa se situe à Ville-la-Grand, côté France, à moins de 20 minutes porte-à-porte du centre de Genève (Léman Express) et 15 minutes en voiture. C'est l'une des trois maisons de coliving de La Villa Coliving, avec une piscine extérieure chauffée, 2 000 m² de jardin en bordure d'une réserve naturelle." },
               { q: "Combien de résidents vivent à La Villa ?", a: "La Villa accueille 10 résidents dans une maison de coliving à Ville-la-Grand, près de Genève. C'est une maison à taille humaine, pensée pour que les liens se créent naturellement, avec une chambre meublée privée pour chacun et de larges espaces communs." },

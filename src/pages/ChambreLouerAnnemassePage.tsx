@@ -93,7 +93,7 @@ export function ChambreLouerAnnemassePage() {
           <p className="text-lg md:text-xl text-[#57534E] max-w-3xl mx-auto leading-relaxed mb-10 font-medium">
             {language === "en"
               ? "29 furnished rooms across 3 design houses in Annemasse Agglo, from CHF 1,380/month all-inclusive. Renting a room made simpler than a furnished studio: bed, desk, fiber, utilities, weekly cleaning, pool & gym included — move in with just your suitcases."
-              : "29 chambres meublées dans 3 maisons design à Annemasse Agglo, dès 1 380 CHF/mois tout inclus. Une location de chambre plus simple qu'un studio meublé : lit, bureau, fibre, charges, ménage 2x/semaine, piscine et salle de sport compris — emménagez avec une valise."}
+              : "29 chambres meublées dans 3 maisons design à Annemasse Agglo, dès 1 380 CHF/mois tout inclus. Une location de chambre plus simple qu'un studio meublé : lit, bureau, fibre, charges, ménage 2x/semaine, piscine et salle de sport compris — emménage avec une valise."}
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <LocalizedLink
@@ -120,37 +120,28 @@ export function ChambreLouerAnnemassePage() {
             className="text-3xl md:text-4xl font-light text-[#1C1917] mb-12 text-center"
             style={{ fontFamily: "DM Serif Display, serif" }}
           >
-            {language === "en" ? "Choose your room type" : "Choisis ton type de chambre"}
+            {language === "en"
+              ? "One price, the same quality — you choose the vibe"
+              : "Un seul prix, la même qualité — à toi de choisir l'ambiance"}
           </h2>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {/* Standard */}
-            <div className="bg-[#FAF9F6] p-8">
+            {/* Prix unique — toutes les chambres */}
+            <div className="bg-[#1C1917] text-white p-8 md:col-span-2">
               <BedDouble className="w-10 h-10 text-[#D4A574] mb-4" />
-              <h3 className="text-xl font-medium text-[#1C1917] mb-2">
-                {language === "en" ? "Standard room" : "Chambre standard"}
-              </h3>
-              <p className="text-2xl font-bold text-[#D4A574] mb-4">CHF 1,380/mo</p>
-              <ul className="space-y-2 text-sm text-[#57534E]">
-                <li className="flex items-start gap-2"><Check className="w-4 h-4 text-[#D4A574] mt-0.5 flex-shrink-0" /> {language === "en" ? "12-15 m² furnished" : "12-15 m² meublée"}</li>
-                <li className="flex items-start gap-2"><Check className="w-4 h-4 text-[#D4A574] mt-0.5 flex-shrink-0" /> {language === "en" ? "Shared bathroom" : "Salle de bain partagée"}</li>
-                <li className="flex items-start gap-2"><Check className="w-4 h-4 text-[#D4A574] mt-0.5 flex-shrink-0" /> {language === "en" ? "Available at La Villa & Le Loft" : "Disponible à La Villa et Le Loft"}</li>
-              </ul>
-            </div>
-
-            {/* Premium with private bathroom */}
-            <div className="bg-[#1C1917] text-white p-8 relative">
-              <span className="absolute -top-3 left-1/2 -translate-x-1/2 bg-[#D4A574] text-[#1C1917] text-xs uppercase tracking-wider px-3 py-1 rounded-full font-bold">
-                {language === "en" ? "Most popular" : "Le plus demandé"}
-              </span>
-              <BedDouble className="w-10 h-10 text-[#D4A574] mb-4" />
-              <h3 className="text-xl font-medium mb-2">
-                {language === "en" ? "Room with private bathroom" : "Chambre salle de bain privative"}
-              </h3>
-              <p className="text-2xl font-bold text-[#D4A574] mb-4">CHF 1,380/mo</p>
+              <p className="text-2xl font-bold text-[#D4A574] mb-4">
+                {language === "en" ? "CHF 1,380/mo — all-inclusive" : "1 380 CHF/mois — tout inclus"}
+              </p>
+              <p className="text-sm text-white/80 leading-relaxed mb-6">
+                {language === "en"
+                  ? "CHF 1,380/month, all-inclusive, for every one of our rooms. No \"standard\" or \"premium\" tiers: they're all equally good. Each room simply has its own character — some with a balcony, others with a terrace, some more spacious, others more cosy, the bathroom sometimes en-suite, sometimes across the landing. Same comfort, same services, same price: you pick the vibe that suits you, not a tier."
+                  : "1 380 CHF/mois, tout inclus, pour chacune de nos chambres. Pas de gamme « standard » ou « premium » : elles se valent toutes. Chaque chambre a simplement son caractère — certaines avec balcon, d'autres avec terrasse, certaines plus spacieuses, d'autres plus cosy, la salle d'eau tantôt privative, tantôt sur le palier. Même confort, mêmes services, même tarif : tu choisis l'ambiance qui te ressemble, pas un standing."}
+              </p>
               <ul className="space-y-2 text-sm text-white/80">
-                <li className="flex items-start gap-2"><Check className="w-4 h-4 text-[#D4A574] mt-0.5 flex-shrink-0" /> {language === "en" ? "17-19 m² furnished" : "17-19 m² meublée"}</li>
-                <li className="flex items-start gap-2"><Check className="w-4 h-4 text-[#D4A574] mt-0.5 flex-shrink-0" /> {language === "en" ? "Private en-suite bathroom" : "Salle de bain privative"}</li>
-                <li className="flex items-start gap-2"><Check className="w-4 h-4 text-[#D4A574] mt-0.5 flex-shrink-0" /> {language === "en" ? "All 12 rooms at Le Lodge" : "Les 12 chambres du Lodge"}</li>
+                <li className="flex items-start gap-2"><Check className="w-4 h-4 text-[#D4A574] mt-0.5 flex-shrink-0" /> {language === "en" ? "Designer furniture" : "Mobilier design"}</li>
+                <li className="flex items-start gap-2"><Check className="w-4 h-4 text-[#D4A574] mt-0.5 flex-shrink-0" /> {language === "en" ? "8 Gb/s fiber" : "Fibre 8 Gb/s"}</li>
+                <li className="flex items-start gap-2"><Check className="w-4 h-4 text-[#D4A574] mt-0.5 flex-shrink-0" /> {language === "en" ? "Utilities included" : "Charges comprises"}</li>
+                <li className="flex items-start gap-2"><Check className="w-4 h-4 text-[#D4A574] mt-0.5 flex-shrink-0" /> {language === "en" ? "Housekeeping 2×/week" : "Ménage 2×/semaine"}</li>
+                <li className="flex items-start gap-2"><Check className="w-4 h-4 text-[#D4A574] mt-0.5 flex-shrink-0" /> {language === "en" ? "Pool, sauna and gym" : "Piscine, sauna et salle de sport"}</li>
               </ul>
             </div>
 
@@ -158,15 +149,24 @@ export function ChambreLouerAnnemassePage() {
             <div className="bg-[#FAF9F6] p-8">
               <Sparkles className="w-10 h-10 text-[#D4A574] mb-4" />
               <h3 className="text-xl font-medium text-[#1C1917] mb-2">
-                {language === "en" ? "Studio Annemasse — alternative" : "Studio Annemasse — alternative"}
+                {language === "en" ? "What about a classic studio in Annemasse?" : "Et un studio classique à Annemasse ?"}
               </h3>
-              <p className="text-2xl font-bold text-[#78716C] mb-4">700-950 €/mo +</p>
-              <ul className="space-y-2 text-sm text-[#57534E]">
-                <li className="flex items-start gap-2"><Check className="w-4 h-4 text-[#78716C] mt-0.5 flex-shrink-0" /> {language === "en" ? "Charges not included" : "Charges en plus"}</li>
-                <li className="flex items-start gap-2"><Check className="w-4 h-4 text-[#78716C] mt-0.5 flex-shrink-0" /> {language === "en" ? "Furniture not included" : "Mobilier non inclus"}</li>
-                <li className="flex items-start gap-2"><Check className="w-4 h-4 text-[#78716C] mt-0.5 flex-shrink-0" /> {language === "en" ? "No community, no shared spaces" : "Pas de communauté, pas d'espaces partagés"}</li>
-              </ul>
+              <p className="text-2xl font-bold text-[#78716C] mb-4">{language === "en" ? "700-950 €/mo +" : "700-950 €/mois +"}</p>
+              <p className="text-sm text-[#57534E] leading-relaxed">
+                {language === "en"
+                  ? "700–950 €/month on paper — but utilities on top, furniture not included, no community and no shared spaces."
+                  : "700–950 €/mois en apparence — mais charges en plus, à meubler soi-même, sans communauté ni espaces partagés."}
+              </p>
             </div>
+          </div>
+          <div className="text-center mt-12">
+            <LocalizedLink
+              to="/tarifs"
+              className="inline-flex items-center gap-2 px-8 py-4 bg-[#1C1917] text-white font-semibold rounded-full hover:bg-[#44403C] transition-colors"
+            >
+              {language === "en" ? "See what's included in the rent" : "Voir le détail des tarifs"}
+              <ArrowRight className="w-5 h-5" />
+            </LocalizedLink>
           </div>
         </div>
       </section>

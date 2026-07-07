@@ -31,8 +31,8 @@ export function FeaturesV7() {
       icon: BedDouble,
       title: language === 'en' ? `Spacious rooms from ${STATS.roomSizeMin} to ${STATS.roomSizeMax} m²` : `Chambres spacieuses de ${STATS.roomSizeMin} à ${STATS.roomSizeMax} m²`,
       description: language === 'en'
-        ? '50% larger than the coliving average. Emma or Tediber mattress, designer furniture. Most with private bathroom.'
-        : '50% plus grandes que la moyenne coliving. Matelas Emma ou Tediber, mobilier design. La plupart avec salle de bain privative.',
+        ? '50% larger than the flatshare or coliving average. Emma or Tediber mattress, designer furniture. Most with private bathroom.'
+        : '50% plus grandes que la moyenne colocation ou coliving. Matelas Emma ou Tediber, mobilier design. La plupart avec salle de bain privative.',
     },
     {
       icon: Users,
@@ -50,10 +50,10 @@ export function FeaturesV7() {
     },
     {
       icon: TreePine,
-      title: language === 'en' ? 'Stay as long as you want' : 'Restez le temps que vous voulez',
+      title: language === 'en' ? 'Stay as long as you want' : 'Reste le temps que tu veux',
       description: language === 'en'
         ? 'Our residents stay between 6 months and 3 years. Long enough to build real friendships, free enough to leave when life changes.'
-        : 'Nos résidents restent entre 6 mois et 3 ans. Assez longtemps pour créer de vraies amitiés, assez libre pour partir quand votre vie change.',
+        : 'Nos résidents restent entre 6 mois et 3 ans. Assez longtemps pour créer de vraies amitiés, assez libre pour partir quand ta vie change.',
     },
   ];
 
@@ -71,7 +71,7 @@ export function FeaturesV7() {
           <p className="text-[#78716C] text-base md:text-lg">
             {language === 'en'
               ? `Bring your suitcase. We take care of everything else — ${STATS.includedItems} services covered in a single rent of CHF ${STATS.priceChf.toLocaleString('en')}/month.`
-              : `Apportez votre valise. Nous nous occupons de tout le reste — ${STATS.includedItems} services couverts en un seul loyer de ${STATS.priceChf.toLocaleString('fr-FR')} CHF/mois.`}
+              : `Apporte ta valise. Nous nous occupons de tout le reste — ${STATS.includedItems} services couverts en un seul loyer de ${STATS.priceChf.toLocaleString('fr-FR')} CHF/mois.`}
           </p>
           {/* Lien contextuel -> /tarifs (maillage interne) */}
           <LocalizedLink

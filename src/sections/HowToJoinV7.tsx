@@ -17,7 +17,7 @@ export function HowToJoinV7() {
       title: language === 'en' ? 'Online application' : 'Candidature en ligne',
       description: language === 'en'
         ? 'Tell us about yourself in 2 minutes. No CV needed.'
-        : 'Parlez-nous de vous en 2 minutes. Sans CV.',
+        : 'Parle-nous de toi en 2 minutes. Sans CV.',
     },
     {
       icon: Video,
@@ -30,10 +30,10 @@ export function HowToJoinV7() {
     {
       icon: KeyRound,
       number: '03',
-      title: language === 'en' ? 'Move in' : 'Emménagez',
+      title: language === 'en' ? 'Move in' : 'Emménage',
       description: language === 'en'
         ? 'Sign, refundable deposit, and that\'s it. Zero application fee. Welcome home.'
-        : 'Signature, caution remboursable, et c\'est tout. Zéro frais de dossier. Bienvenue chez vous.',
+        : 'Signature, caution remboursable, et c\'est tout. Zéro frais de dossier. Bienvenue chez toi.',
     },
   ];
 

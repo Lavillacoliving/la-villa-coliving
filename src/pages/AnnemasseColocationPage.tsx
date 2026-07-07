@@ -221,8 +221,8 @@ export function AnnemasseColocationPage() {
               </p>
               <p className="text-[#57534E] leading-relaxed mb-6">
                 {language === "en"
-                  ? "Urban design, indoor heated pool year-round, terrace. Tram 17 (Lancy-Pont-Rouge ↔ Annemasse) is a 5-min walk away."
-                  : "Design urbain, piscine intérieure chauffée toute l'année, terrasse. Le Tram 17 (Lancy-Pont-Rouge ↔ Annemasse) est à 5 minutes à pied."}
+                  ? "Urban design, indoor heated pool year-round, terrace. Le Loft is extremely well connected: Annemasse station is a 10-min walk and Tram 17 (Lancy-Pont-Rouge ↔ Annemasse) a 5-min walk away."
+                  : "Design urbain, piscine intérieure chauffée toute l'année, terrasse. Le Loft est extrêmement bien desservi : la gare d'Annemasse à 10 minutes à pied et le Tram 17 (Lancy-Pont-Rouge ↔ Annemasse) à 5 minutes à pied."}
               </p>
               <span className="inline-flex items-center gap-2 text-[#D4A574] font-medium group-hover:gap-3 transition-all">
                 {language === "en" ? "Discover Le Loft" : "Découvrir Le Loft"}
