@@ -38,6 +38,11 @@ on:
 permissions:
   contents: write
 
+# Un seul run prerender a la fois - le plus recent annule l ancien (fix course-au-push)
+concurrency:
+  group: prerender
+  cancel-in-progress: true
+
 jobs:
   prerender:
     runs-on: ubuntu-latest
