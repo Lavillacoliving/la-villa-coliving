@@ -6,7 +6,7 @@
 const RESEND_API_URL = "https://api.resend.com/emails";
 
 const ADMIN_EMAIL = "jerome@lavillacoliving.com";
-const FROM_AUTORESPONSE = "La Villa Coliving <bonjour@lavillacoliving.com>";
+const FROM_AUTORESPONSE = "La Villa Coliving <hello@lavillacoliving.com>";
 const FROM_ADMIN_NOTIF = "Site La Villa <notifications@lavillacoliving.com>";
 
 const ALLOWED_ORIGINS = [
