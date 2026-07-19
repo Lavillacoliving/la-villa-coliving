@@ -8,7 +8,7 @@ interface Ticket {
   status: string; priority: string; category: string;
   property_id: string; room_number: number | null;
   reported_by: string | null; assigned_to: string | null;
-  created_at: string; resolved_at: string | null;
+  created_at: string; resolved_date: string | null;
 }
 interface Property { id: string; name: string; slug: string; }
 interface TenantLookup { id: string; first_name: string; last_name: string; }
@@ -140,8 +140,8 @@ export default function DashboardMaintenancePage() {
       reported_by: modal.reported_by || null,
       assigned_to: modal.assigned_to || null,
     };
-    if (modal.status === 'resolved' && !modal.resolved_at) {
-      data.resolved_at = new Date().toISOString();
+    if (modal.status === 'resolved' && !modal.resolved_date) {
+      data.resolved_date = new Date().toISOString();
     }
     let err;
     if (isNew) {
@@ -169,7 +169,7 @@ export default function DashboardMaintenancePage() {
     const idx = STATUS_ORDER.indexOf(currentStatus);
     const nextStatus = STATUS_ORDER[(idx + 1) % STATUS_ORDER.length];
     const update: any = { status: nextStatus };
-    if (nextStatus === 'resolved') update.resolved_at = new Date().toISOString();
+    if (nextStatus === 'resolved') update.resolved_date = new Date().toISOString();
     const { error } = await supabase.from('maintenance_tickets').update(update).eq('id', ticketId);
     if (error) { toast.error('Erreur: ' + error.message); return; }
     load();
@@ -329,9 +329,9 @@ export default function DashboardMaintenancePage() {
             </div>
 
             {/* Resolved info */}
-            {modal.resolved_at && (
+            {modal.resolved_date && (
               <div style={{background:'#f0fdf4',border:'1px solid #86efac',borderRadius:'8px',padding:'10px',marginBottom:'16px',fontSize:'13px',color:'#15803d'}}>
-                ✅ Résolu le {new Date(modal.resolved_at).toLocaleDateString('fr-FR')}
+                ✅ Résolu le {new Date(modal.resolved_date).toLocaleDateString('fr-FR')}
               </div>
             )}
 
