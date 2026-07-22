@@ -30,7 +30,8 @@ export type AuditAction =
   | 'invoice_linked' | 'invoice_unlinked'
   | 'transaction_classified' | 'transaction_flagged' | 'transaction_verified'
   | 'deposit_received' | 'deposit_unreceived'
-  | 'deposit_returned' | 'deposit_adjusted' | 'split_group_created';
+  | 'deposit_returned' | 'deposit_adjusted' | 'split_group_created'
+  | 'exit_survey_sent';
 
 export type AuditEntityType =
   | 'tenant' | 'prospect' | 'payment' | 'maintenance_ticket'

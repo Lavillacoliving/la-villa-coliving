@@ -469,6 +469,10 @@
       "destination": "/_spa.html"
     },
     {
+      "source": "/questionnaire-depart/:token",
+      "destination": "/_spa.html"
+    },
+    {
       "source": "/blog/:slug",
       "destination": "/_spa.html"
     },
@@ -1024,6 +1028,15 @@
     },
     {
       "source": "/_spa.html",
+      "headers": [
+        {
+          "key": "X-Robots-Tag",
+          "value": "noindex"
+        }
+      ]
+    },
+    {
+      "source": "/questionnaire-depart/:path*",
       "headers": [
         {
           "key": "X-Robots-Tag",

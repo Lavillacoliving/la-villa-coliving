@@ -23,6 +23,10 @@ interface Property {
   id: string; name: string; slug: string; entity_id: string; is_coliving: boolean;
   charges_energy_chf?: number|null; charges_maintenance_chf?: number|null; charges_services_chf?: number|null;
 }
+interface ExitSurvey {
+  id: string; status: string; nps: number|null;
+  sent_at: string|null; completed_at: string|null; created_at: string;
+}
 
 // Métadonnées d'affichage du statut bail
 const LEASE_STATUS_META: Record<LeaseStatus, { label: string; color: string; bg: string }> = {
@@ -61,6 +65,8 @@ export default function DashboardLocatairesPage() {
   const [activeTab, setActiveTab] = useState<'info'|'documents'>('info');
   const [tenantDocs, setTenantDocs] = useState<{name:string,id:string|null,updated_at:string|null,metadata:{size?:number}|null}[]>([]);
   const [uploadingDoc, setUploadingDoc] = useState(false);
+  const [exitSurvey, setExitSurvey] = useState<ExitSurvey|null>(null);
+  const [sendingSurvey, setSendingSurvey] = useState(false);
   // deleteConfirm removed — no deletion allowed from dashboard
 
   const load = useCallback(async () => {
@@ -83,6 +89,17 @@ export default function DashboardLocatairesPage() {
     } else { setTenantDocs([]); }
   }, []);
 
+  const loadExitSurvey = useCallback(async (tenantId: string) => {
+    const { data } = await supabase
+      .from('exit_surveys')
+      .select('id,status,nps,sent_at,completed_at,created_at')
+      .eq('tenant_id', tenantId)
+      .order('created_at', { ascending: false })
+      .limit(1)
+      .maybeSingle();
+    setExitSurvey((data as ExitSurvey) || null);
+  }, []);
+
   const filtered = filterByEntity(
     tenants
       .filter(t => statusFilter==='all' ? true : statusFilter==='active' ? t.is_active : !t.is_active)
@@ -95,8 +112,8 @@ export default function DashboardLocatairesPage() {
   const totalRent = filtered.filter(t=>t.is_active).reduce((s,t)=>s+t.current_rent,0);
 
   const openModal = (tenant?: Tenant) => {
-    if (tenant) { setModal({...tenant}); setIsNew(false); loadTenantDocs(tenant.id); }
-    else { setModal({...EMPTY_TENANT}); setIsNew(true); setTenantDocs([]); }
+    if (tenant) { setModal({...tenant}); setIsNew(false); loadTenantDocs(tenant.id); loadExitSurvey(tenant.id); }
+    else { setModal({...EMPTY_TENANT}); setIsNew(true); setTenantDocs([]); setExitSurvey(null); }
     setRefundMode(false);
     setActiveTab('info');
   };
@@ -225,6 +242,20 @@ export default function DashboardLocatairesPage() {
     await logAudit('tenant_deactivated', 'tenant', modal.id, { name: `${modal.first_name} ${modal.last_name}`, move_out_date: modal.move_out_date || today });
     toast.success(`${modal.first_name} ${modal.last_name} archivé(e)`);
     setModal(null); load();
+  };
+
+  // Envoi du questionnaire de départ (Edge Function send-exit-survey, JWT admin auto).
+  // La Function gère l'anti-doublon (réutilise un questionnaire en attente non expiré).
+  const sendExitSurvey = async () => {
+    if (!modal?.id) return;
+    if (!modal.email) { toast.error("Ce locataire n'a pas d'email — ajoute-le d'abord"); return; }
+    setSendingSurvey(true);
+    const { error } = await supabase.functions.invoke('send-exit-survey', { body: { tenant_id: modal.id } });
+    setSendingSurvey(false);
+    if (error) { toast.error('Erreur envoi questionnaire : ' + error.message); return; }
+    await logAudit('exit_survey_sent', 'tenant', modal.id, { name: `${modal.first_name} ${modal.last_name}` });
+    toast.success('Questionnaire de départ envoyé ✉️');
+    loadExitSurvey(modal.id);
   };
 
   const confirmRefund = async () => {
@@ -460,6 +491,35 @@ export default function DashboardLocatairesPage() {
                     </div>
                     <div style={{marginTop:'8px',fontSize:'11px',color:'#9ca3af',lineHeight:1.4}}>
                       Brouillon → Envoyé Yousign → Signé → Actif. La caution se confirme séparément (champ ci-dessus).
+                    </div>
+                  </div>
+                )}
+
+                {/* === QUESTIONNAIRE DE DÉPART === */}
+                {!isNew && (
+                  <div style={{background:'#fafafa',border:'1px solid #e5e7eb',borderRadius:'8px',padding:'12px',marginBottom:'16px'}}>
+                    <div style={{display:'flex',justifyContent:'space-between',alignItems:'center',marginBottom:'8px'}}>
+                      <strong style={{fontSize:'13px',color:'#374151'}}>Questionnaire de départ</strong>
+                      {exitSurvey && (
+                        exitSurvey.status === 'completed'
+                          ? <span style={{background:'#dcfce7',color:'#16a34a',padding:'3px 10px',borderRadius:'12px',fontSize:'11px',fontWeight:600}}>Répondu{exitSurvey.nps!=null?` · NPS ${exitSurvey.nps}`:''}</span>
+                          : exitSurvey.status === 'expired'
+                            ? <span style={{background:'#fee2e2',color:'#dc2626',padding:'3px 10px',borderRadius:'12px',fontSize:'11px',fontWeight:600}}>Lien expiré</span>
+                            : <span style={{background:'#cffafe',color:'#0891b2',padding:'3px 10px',borderRadius:'12px',fontSize:'11px',fontWeight:600}}>Envoyé</span>
+                      )}
+                    </div>
+                    <div style={{display:'flex',gap:'8px',alignItems:'center',flexWrap:'wrap'}}>
+                      <button onClick={sendExitSurvey} disabled={sendingSurvey} style={{padding:'6px 12px',background:'#b8860b',color:'#fff',border:'none',borderRadius:'6px',cursor:sendingSurvey?'wait':'pointer',fontSize:'12px',fontWeight:600}}>
+                        {sendingSurvey ? 'Envoi…' : (exitSurvey ? '↻ Renvoyer le questionnaire' : '✉️ Envoyer le questionnaire de départ')}
+                      </button>
+                      {exitSurvey?.completed_at
+                        ? <span style={{fontSize:'11px',color:'#6b7280'}}>Répondu le {new Date(exitSurvey.completed_at).toLocaleDateString('fr-FR')}</span>
+                        : exitSurvey?.sent_at
+                          ? <span style={{fontSize:'11px',color:'#6b7280'}}>Envoyé le {new Date(exitSurvey.sent_at).toLocaleDateString('fr-FR')}</span>
+                          : null}
+                    </div>
+                    <div style={{marginTop:'8px',fontSize:'11px',color:'#9ca3af',lineHeight:1.4}}>
+                      Idéalement ~7 jours après le départ. Le coloc reçoit un email avec un lien unique. L'avis Google est proposé à tous sur l'écran de remerciement.
                     </div>
                   </div>
                 )}

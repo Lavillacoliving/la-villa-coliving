@@ -88,6 +88,7 @@ const SPA_FALLBACK_REWRITES = [
   { source: '/dashboard/:path*', destination: '/_spa.html' },
   { source: '/reset-password', destination: '/_spa.html' },
   { source: '/mon-espace', destination: '/_spa.html' },
+  { source: '/questionnaire-depart/:token', destination: '/_spa.html' },
   { source: '/blog/:slug', destination: '/_spa.html' },
   { source: '/en/blog/:slug', destination: '/_spa.html' },
 ];

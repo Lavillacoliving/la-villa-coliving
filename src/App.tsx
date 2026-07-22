@@ -31,6 +31,7 @@ const MentionsLegalesPage = lazy(() => import("@/pages/MentionsLegalesPage").the
 // Jérôme retravaille la page dans une autre session. Au moment de la router : lazy import ici,
 // routes FR+EN, liens navbar/footer, route prerender.mjs, et ABOUT_PAGE_LIVE=true (structuredData.ts).
 const PolitiqueConfidentialitePage = lazy(() => import("@/pages/PolitiqueConfidentialitePage").then(m => ({ default: m.PolitiqueConfidentialitePage })));
+const QuestionnaireDepartPage = lazy(() => import("@/pages/QuestionnaireDepartPage").then(m => ({ default: m.QuestionnaireDepartPage })));
 
 // ─── Lazy-loaded portail pages (named exports) ─────────────
 const MaMaisonPage = lazy(() => import("@/pages/portail/MaMaisonPage").then(m => ({ default: m.MaMaisonPage })));
@@ -63,10 +64,11 @@ function AppContent() {
   const isDashboard = location.pathname.startsWith('/dashboard');
   const isPortail = location.pathname.startsWith('/portail');
   const isResetPw = location.pathname === '/reset-password';
+  const isQuestionnaire = location.pathname.startsWith('/questionnaire-depart');
 
   return (
     <div className="min-h-screen bg-background">
-      {!isDashboard && !isPortail && !isResetPw && <Navbar />}
+      {!isDashboard && !isPortail && !isResetPw && !isQuestionnaire && <Navbar />}
       <Suspense fallback={<div className="min-h-screen" />}>
       <Routes>
         <Route path="/" element={<HomePage />} />
@@ -117,6 +119,7 @@ function AppContent() {
         <Route path="/en/mentions-legales" element={<MentionsLegalesPage />} />
         <Route path="/en/politique-de-confidentialite" element={<PolitiqueConfidentialitePage />} />
         <Route path="/reset-password" element={<ResetPasswordPage />} />
+        <Route path="/questionnaire-depart/:token" element={<QuestionnaireDepartPage />} />
         <Route path="/mon-espace" element={<Navigate to="/portail" replace />} />
         <Route path="/portail" element={<PortailLayout />}>
           <Route index element={<Navigate to="/portail/ma-maison" replace />} />
@@ -145,7 +148,7 @@ function AppContent() {
         <Route path="*" element={<NotFoundPage />} />
       </Routes>
       </Suspense>
-      {!isDashboard && !isPortail && !isResetPw && <Footer />}
+      {!isDashboard && !isPortail && !isResetPw && !isQuestionnaire && <Footer />}
     </div>
   );
 }
