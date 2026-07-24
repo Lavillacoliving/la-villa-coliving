@@ -25,7 +25,7 @@ interface Property {
 }
 interface ExitSurvey {
   id: string; status: string; nps: number|null;
-  sent_at: string|null; completed_at: string|null; created_at: string;
+  sent_at: string|null; completed_at: string|null; created_at: string; tenant_id?: string;
 }
 
 // Métadonnées d'affichage du statut bail
@@ -67,16 +67,22 @@ export default function DashboardLocatairesPage() {
   const [uploadingDoc, setUploadingDoc] = useState(false);
   const [exitSurvey, setExitSurvey] = useState<ExitSurvey|null>(null);
   const [sendingSurvey, setSendingSurvey] = useState(false);
+  const [surveyByTenant, setSurveyByTenant] = useState<Record<string, ExitSurvey>>({});
   // deleteConfirm removed — no deletion allowed from dashboard
 
   const load = useCallback(async () => {
     setLoading(true);
-    const [tRes,pRes] = await Promise.all([
+    const [tRes,pRes,sRes] = await Promise.all([
       supabase.from('tenants').select('*').order('room_number'),
       supabase.from('properties').select('id,name,slug,entity_id,is_coliving,charges_energy_chf,charges_maintenance_chf,charges_services_chf'),
+      supabase.from('exit_surveys').select('id,tenant_id,status,nps,sent_at,completed_at,created_at').order('created_at',{ascending:false}),
     ]);
     setTenants(tRes.data||[]);
     setProperties(pRes.data||[]);
+    // Dernier questionnaire par locataire (liste triée desc → 1re occurrence = plus récente)
+    const map: Record<string, ExitSurvey> = {};
+    for (const s of ((sRes.data||[]) as ExitSurvey[])) { if (s.tenant_id && !map[s.tenant_id]) map[s.tenant_id] = s; }
+    setSurveyByTenant(map);
     setLoading(false);
   },[]);
 
@@ -280,6 +286,15 @@ export default function DashboardLocatairesPage() {
     return {label:'En attente',color:'#eab308'};
   };
 
+  // Pastille questionnaire de départ pour la liste (— si aucun)
+  const surveyBadge = (tenantId: string): {label:string;bg:string;color:string}|null => {
+    const s = surveyByTenant[tenantId];
+    if (!s) return null;
+    if (s.status==='completed') return { label: s.nps!=null ? `Répondu · ${s.nps}` : 'Répondu', bg:'#dcfce7', color:'#16a34a' };
+    if (s.status==='expired')   return { label:'Expiré', bg:'#fee2e2', color:'#dc2626' };
+    return { label:'Envoyé', bg:'#cffafe', color:'#0891b2' };
+  };
+
   // Charges effectives = override locataire si rempli, sinon valeur propriété
   const effectiveCharges = (m: Partial<Tenant>) => {
     const prop = properties.find(p => p.id === m.property_id);
@@ -344,7 +359,7 @@ export default function DashboardLocatairesPage() {
       <div style={{...S.card,padding:0,overflow:'auto'}}>
         <table style={{width:'100%',borderCollapse:'collapse',fontSize:'14px'}}>
           <thead><tr style={{background:'#f8f8f8',borderBottom:'2px solid #e5e7eb'}}>
-            {['Propriété','Ch.','Locataire','Loyer','Contact','Entrée','Bail','Caution','Statut'].map(h=>(
+            {['Propriété','Ch.','Locataire','Loyer','Contact','Entrée','Bail','Caution','Quest.','Statut'].map(h=>(
               <th key={h} style={{padding:'12px 16px',textAlign:'left',fontWeight:600,color:'#555',fontSize:'12px',textTransform:'uppercase'}}>{h}</th>
             ))}
           </tr></thead>
@@ -363,11 +378,12 @@ export default function DashboardLocatairesPage() {
                   <td style={{padding:'10px 16px',color:'#888',fontSize:'13px'}}>{t.move_in_date?new Date(t.move_in_date).toLocaleDateString('fr-FR'):'—'}</td>
                   <td style={{padding:'10px 16px'}}><span style={{background:ls.bg,color:ls.color,padding:'2px 8px',borderRadius:'10px',fontSize:'11px',fontWeight:600}}>{ls.label}</span></td>
                   <td style={{padding:'10px 16px'}}><span style={{color:ds.color,fontSize:'12px',fontWeight:500}}>{ds.label}</span></td>
+                  <td style={{padding:'10px 16px'}}>{(() => { const b=surveyBadge(t.id); return b ? <span style={{background:b.bg,color:b.color,padding:'2px 8px',borderRadius:'10px',fontSize:'11px',fontWeight:600}}>{b.label}</span> : <span style={{color:'#d1d5db'}}>—</span>; })()}</td>
                   <td style={{padding:'10px 16px'}}><span style={{background:t.is_active?'#22c55e':'#94a3b8',color:'#fff',padding:'2px 10px',borderRadius:'12px',fontSize:'12px'}}>{t.is_active?'Actif':'Sorti'}</span></td>
                 </tr>
               );
             })}
-            {filtered.length===0 && <tr><td colSpan={9} style={{padding:'40px',textAlign:'center',color:'#888'}}>Aucun locataire</td></tr>}
+            {filtered.length===0 && <tr><td colSpan={10} style={{padding:'40px',textAlign:'center',color:'#888'}}>Aucun locataire</td></tr>}
           </tbody>
         </table>
       </div>
