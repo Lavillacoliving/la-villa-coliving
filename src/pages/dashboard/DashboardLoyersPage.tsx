@@ -488,7 +488,7 @@ export default function DashboardLoyersPage() {
           <h2 style={{margin:0,fontSize:'20px',color:'#1a1a2e'}}>{new Date(month+'-01').toLocaleDateString('fr-FR',{month:'long',year:'numeric'}).replace(/^\w/,c=>c.toUpperCase())}</h2>
           <button onClick={nextMonth} style={{border:'1px solid #ddd',background:'#fff',borderRadius:'6px',padding:'6px 12px',cursor:'pointer',fontSize:'16px'}}>→</button>
         </div>
-        <div style={{display:'flex',gap:'8px',flexWrap:'wrap',alignItems:'center'}}>
+        <div className="dash-toolbar" style={{display:'flex',gap:'8px',flexWrap:'wrap',alignItems:'center'}}>
           {[{v:'all',l:'Toutes'},{v:'la-villa',l:'La Villa (LMP)'},{v:'sleep-in',l:'Sleep In (SCI)'},{v:'mont-blanc',l:'Mont-Blanc'}].map(e=>(
             <button key={e.v} onClick={()=>setEntityFilter(e.v)} style={{...S.btn,background:entityFilter===e.v?'#3D4A38':'#e5e7eb',color:entityFilter===e.v?'#fff':'#555',fontWeight:entityFilter===e.v?600:400}}>{e.l}</button>
           ))}
@@ -563,7 +563,7 @@ export default function DashboardLoyersPage() {
 
       {/* Suivi des loyers */}
       <h3 style={{margin:'0 0 12px',fontSize:'18px',color:'#1a1a2e'}}>Suivi des loyers</h3>
-      <div style={{display:'flex',gap:'8px',marginBottom:'16px',flexWrap:'wrap',alignItems:'center'}}>
+      <div className="dash-toolbar" style={{display:'flex',gap:'8px',marginBottom:'16px',flexWrap:'wrap',alignItems:'center'}}>
         {[{v:'all',l:'Tous'},{v:'paid',l:'Payés'},{v:'late',l:'En retard'},{v:'unpaid',l:'Non payés'}].map(f=>(
           <button key={f.v} onClick={()=>setStatusFilter(f.v)} style={{...S.btn,background:statusFilter===f.v?'#5A6B52':'#fff',color:statusFilter===f.v?'#fff':'#555',border:statusFilter===f.v?'none':'1px solid #ddd'}}>{f.l}</button>
         ))}
@@ -572,7 +572,7 @@ export default function DashboardLoyersPage() {
 
       {/* Payments table grouped by property */}
       <div style={{...S.card,padding:0,overflow:'auto'}}>
-        <table style={{width:'100%',borderCollapse:'collapse',fontSize:'14px'}}>
+        <table className="dash-table" style={{width:'100%',borderCollapse:'collapse',fontSize:'14px'}}>
           <thead>
             <tr style={{background:'#f8f8f8',borderBottom:'2px solid #e5e7eb'}}>
               {['Chambre','Locataire','Loyer attendu','Statut','Date paiement','Montant reçu','Ajusté','Notes',''].map(h=>(
@@ -583,7 +583,7 @@ export default function DashboardLoyersPage() {
           <tbody>
             {sortedGroups.map(g => (
               <>
-                <tr key={'h-'+g.prop.id}><td colSpan={9} style={{padding:'12px 16px',fontWeight:700,fontSize:'14px',background:'#fafaf8',borderBottom:'1px solid #e5e7eb'}}>🏠 {g.prop.name}{ENTITY_MAP[g.prop.slug]?' — '+ENTITY_MAP[g.prop.slug].split('—')[1]?.trim():''}</td></tr>
+                <tr key={'h-'+g.prop.id} className="dash-group-row"><td colSpan={9} style={{padding:'12px 16px',fontWeight:700,fontSize:'14px',background:'#fafaf8',borderBottom:'1px solid #e5e7eb'}}>🏠 {g.prop.name}{ENTITY_MAP[g.prop.slug]?' — '+ENTITY_MAP[g.prop.slug].split('—')[1]?.trim():''}</td></tr>
                 {g.payments.sort((a,b)=>{const ta=tenants.find(x=>x.id===a.tenant_id);const tb=tenants.find(x=>x.id===b.tenant_id);return (ta?.room_number||0)-(tb?.room_number||0);}).map(p => {
                   const t = tenants.find(x=>x.id===p.tenant_id);
                   const isEditing = editingPayment === p.id;
@@ -591,27 +591,27 @@ export default function DashboardLoyersPage() {
                   if (isEditing) {
                     return (
                       <tr key={p.id} style={{borderBottom:'1px solid #f0f0f0',background:'#fffbeb'}}>
-                        <td style={{padding:'10px 16px',fontWeight:600}}>Ch. {t?.room_number}</td>
-                        <td style={{padding:'10px 16px'}}>{t?t.first_name+' '+t.last_name:'?'}</td>
-                        <td style={{padding:'10px 16px'}}>{fmt(p.expected_amount)}</td>
-                        <td style={{padding:'10px 16px'}}>
+                        <td data-label="Chambre" style={{padding:'10px 16px',fontWeight:600}}>Ch. {t?.room_number}</td>
+                        <td data-label="Locataire" style={{padding:'10px 16px'}}>{t?t.first_name+' '+t.last_name:'?'}</td>
+                        <td data-label="Loyer attendu" style={{padding:'10px 16px'}}>{fmt(p.expected_amount)}</td>
+                        <td data-label="Statut" style={{padding:'10px 16px'}}>
                           <select value={editData.status} onChange={e=>setEditData({...editData,status:e.target.value})} style={{...S.inlineInput,width:'120px'}}>
                             {STATUS_ORDER.map(s=><option key={s} value={s}>{STATUS_LABELS[s]}</option>)}
                           </select>
                         </td>
-                        <td style={{padding:'10px 16px'}}>
+                        <td data-label="Date paiement" style={{padding:'10px 16px'}}>
                           <input type="date" value={editData.payment_date||''} onChange={e=>setEditData({...editData,payment_date:e.target.value||null})} style={S.inlineInput}/>
                         </td>
-                        <td style={{padding:'10px 16px'}}>
+                        <td data-label="Montant reçu" style={{padding:'10px 16px'}}>
                           <input type="number" step="0.01" value={editData.received_amount} onChange={e=>setEditData({...editData,received_amount:parseFloat(e.target.value)||0})} style={S.inlineInput}/>
                         </td>
-                        <td style={{padding:'10px 16px'}}>
+                        <td data-label="Ajusté" style={{padding:'10px 16px'}}>
                           <input type="number" step="0.01" value={editData.adjusted_amount??''} onChange={e=>setEditData({...editData,adjusted_amount:e.target.value?parseFloat(e.target.value):null})} style={S.inlineInput} placeholder="—"/>
                         </td>
-                        <td style={{padding:'10px 16px'}}>
+                        <td data-label="Notes" style={{padding:'10px 16px'}}>
                           <button onClick={()=>setNotesModal({id:p.id,notes:p.notes||''})} style={{background:'none',border:'none',cursor:'pointer',fontSize:'16px'}} title="Notes">📝</button>
                         </td>
-                        <td style={{padding:'10px 16px',whiteSpace:'nowrap'}}>
+                        <td data-label="Actions" style={{padding:'10px 16px',whiteSpace:'nowrap'}}>
                           <button onClick={saveEdit} disabled={editSaving} style={{padding:'4px 10px',background:'#22c55e',color:'#fff',border:'none',borderRadius:'4px',cursor:'pointer',fontSize:'12px',marginRight:'4px'}}>{editSaving?'...':'✓'}</button>
                           <button onClick={cancelEdit} style={{padding:'4px 10px',background:'#ef4444',color:'#fff',border:'none',borderRadius:'4px',cursor:'pointer',fontSize:'12px'}}>✕</button>
                         </td>
@@ -621,10 +621,10 @@ export default function DashboardLoyersPage() {
 
                   return (
                     <tr key={p.id} style={{borderBottom:'1px solid #f0f0f0'}}>
-                      <td style={{padding:'10px 16px',fontWeight:600}}>Ch. {t?.room_number}</td>
-                      <td style={{padding:'10px 16px'}}>{t?t.first_name+' '+t.last_name:'?'} {t?.phone && <a href={'tel:'+t.phone} style={{color:'#b8860b',textDecoration:'none'}} title="Appeler">📞</a>}</td>
-                      <td style={{padding:'10px 16px'}}>{fmt(p.expected_amount)}</td>
-                      <td style={{padding:'10px 16px'}}>
+                      <td data-label="Chambre" style={{padding:'10px 16px',fontWeight:600}}>Ch. {t?.room_number}</td>
+                      <td data-label="Locataire" style={{padding:'10px 16px'}}>{t?t.first_name+' '+t.last_name:'?'} {t?.phone && <a href={'tel:'+t.phone} style={{color:'#b8860b',textDecoration:'none'}} title="Appeler">📞</a>}</td>
+                      <td data-label="Loyer attendu" style={{padding:'10px 16px'}}>{fmt(p.expected_amount)}</td>
+                      <td data-label="Statut" style={{padding:'10px 16px'}}>
                         <span
                           onClick={()=>cycleStatus(p.id, p.status)}
                           style={{background:(STATUS_COLORS[p.status]||'#94a3b8')+'20',color:STATUS_COLORS[p.status]||'#94a3b8',padding:'4px 12px',borderRadius:'12px',fontSize:'12px',fontWeight:600,border:`1px solid ${STATUS_COLORS[p.status]||'#94a3b8'}40`,cursor:'pointer',userSelect:'none'}}
@@ -633,13 +633,13 @@ export default function DashboardLoyersPage() {
                           {p.status==='paid'?'✓ ':p.status==='partial'?'⚡ ':p.status==='late'?'⚠ ':''}{STATUS_LABELS[p.status]||p.status}
                         </span>
                       </td>
-                      <td style={{padding:'10px 16px',color:'#888'}}>{p.payment_date?new Date(p.payment_date).toLocaleDateString('fr-FR'):'—'}</td>
-                      <td style={{padding:'10px 16px'}}>{p.received_amount>0?fmt(p.received_amount):'—'}</td>
-                      <td style={{padding:'10px 16px',color:'#888'}}>{p.adjusted_amount!==null?fmt(p.adjusted_amount):'—'}</td>
-                      <td style={{padding:'10px 16px'}}>
+                      <td data-label="Date paiement" style={{padding:'10px 16px',color:'#888'}}>{p.payment_date?new Date(p.payment_date).toLocaleDateString('fr-FR'):'—'}</td>
+                      <td data-label="Montant reçu" style={{padding:'10px 16px'}}>{p.received_amount>0?fmt(p.received_amount):'—'}</td>
+                      <td data-label="Ajusté" style={{padding:'10px 16px',color:'#888'}}>{p.adjusted_amount!==null?fmt(p.adjusted_amount):'—'}</td>
+                      <td data-label="Notes" style={{padding:'10px 16px'}}>
                         <button onClick={()=>setNotesModal({id:p.id,notes:p.notes||''})} style={{background:'none',border:'none',cursor:'pointer',fontSize:'16px'}} title="Notes">📝</button>
                       </td>
-                      <td style={{padding:'10px 16px',whiteSpace:'nowrap'}}>
+                      <td data-label="Actions" style={{padding:'10px 16px',whiteSpace:'nowrap'}}>
                         <button onClick={()=>startEdit(p)} style={{background:'none',border:'none',cursor:'pointer',fontSize:'14px',color:'#b8860b'}} title="Modifier">✎</button>
                         {(p.status === 'partial' || p.status === 'late' || p.status === 'unpaid') && t?.email && (() => {
                           const prop = properties.find(pr => pr.id === t.property_id);
@@ -668,8 +668,8 @@ export default function DashboardLoyersPage() {
 
       {/* IRL confirmation modal */}
       {irlConfirm && (
-        <div style={{position:'fixed',top:0,left:0,right:0,bottom:0,background:'rgba(0,0,0,0.6)',display:'flex',alignItems:'center',justifyContent:'center',zIndex:2000}} onClick={()=>setIrlConfirm(null)}>
-          <div style={{background:'white',borderRadius:'12px',padding:'24px',width:'400px',maxWidth:'90vw'}} onClick={e=>e.stopPropagation()}>
+        <div className="dash-modal-overlay" style={{position:'fixed',top:0,left:0,right:0,bottom:0,background:'rgba(0,0,0,0.6)',display:'flex',alignItems:'center',justifyContent:'center',zIndex:2000}} onClick={()=>setIrlConfirm(null)}>
+          <div className="dash-modal dash-modal-compact" style={{background:'white',borderRadius:'12px',padding:'24px',width:'400px',maxWidth:'90vw'}} onClick={e=>e.stopPropagation()}>
             <h3 style={{margin:'0 0 12px',fontSize:'16px'}}>📈 Confirmer l'augmentation IRL</h3>
             <p style={{fontSize:'14px',color:'#555',margin:'0 0 20px'}}>Appliquer le nouveau loyer de <strong>{fmt(irlConfirm.newRent)}</strong> ?</p>
             <div style={{display:'flex',gap:'8px',justifyContent:'flex-end'}}>
@@ -682,8 +682,8 @@ export default function DashboardLoyersPage() {
 
       {/* Notes modal */}
       {notesModal && (
-        <div style={{position:'fixed',top:0,left:0,right:0,bottom:0,background:'rgba(0,0,0,0.5)',display:'flex',alignItems:'center',justifyContent:'center',zIndex:1000}} onClick={()=>setNotesModal(null)}>
-          <div style={{background:'white',borderRadius:'12px',padding:'24px',width:'400px',maxWidth:'90vw'}} onClick={e=>e.stopPropagation()}>
+        <div className="dash-modal-overlay" style={{position:'fixed',top:0,left:0,right:0,bottom:0,background:'rgba(0,0,0,0.5)',display:'flex',alignItems:'center',justifyContent:'center',zIndex:1000}} onClick={()=>setNotesModal(null)}>
+          <div className="dash-modal dash-modal-compact" style={{background:'white',borderRadius:'12px',padding:'24px',width:'400px',maxWidth:'90vw'}} onClick={e=>e.stopPropagation()}>
             <h3 style={{margin:'0 0 12px'}}>Notes</h3>
             <textarea value={notesModal.notes} onChange={e=>setNotesModal({...notesModal,notes:e.target.value})} style={{width:'100%',height:'120px',border:'1px solid #ddd',borderRadius:'8px',padding:'10px',fontSize:'14px',resize:'vertical'}}/>
             <div style={{display:'flex',gap:'8px',marginTop:'12px',justifyContent:'flex-end'}}>

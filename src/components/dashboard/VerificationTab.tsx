@@ -229,7 +229,7 @@ export default function VerificationTab({
         )}
 
         {/* ★ PDF VIEWER — the key addition */}
-        <div style={{ marginBottom: '16px' }}>
+        <div className="dash-scroll-x" style={{ marginBottom: '16px' }}>
           <div style={{ fontSize: '12px', fontWeight: 700, color: '#555', marginBottom: '6px', textTransform: 'uppercase' }}>
             Vérification visuelle
           </div>
@@ -291,7 +291,7 @@ export default function VerificationTab({
       </div>
 
       {/* Mode tabs : Search / Upload */}
-      <div style={{ display: 'flex', gap: '0', marginBottom: '16px', borderBottom: '2px solid #e5e7eb' }}>
+      <div className="dash-toolbar" style={{ display: 'flex', gap: '0', marginBottom: '16px', borderBottom: '2px solid #e5e7eb' }}>
         {([
           { key: 'search' as const, label: '🔍 Chercher une facture' },
           { key: 'upload' as const, label: '📎 Uploader un PDF' },
@@ -310,7 +310,7 @@ export default function VerificationTab({
       {/* ─── Search mode ─── */}
       {activeMode === 'search' && (
         <>
-          <div style={{ display: 'flex', gap: '8px', marginBottom: '12px' }}>
+          <div className="dash-toolbar" style={{ display: 'flex', gap: '8px', marginBottom: '12px' }}>
             <input
               value={searchQuery}
               onChange={e => setSearchQuery(e.target.value)}

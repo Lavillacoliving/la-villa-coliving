@@ -294,7 +294,7 @@ export default function DashboardCautionsPage() {
       {/* ─── Header ─── */}
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px', flexWrap: 'wrap', gap: '12px' }}>
         <h2 style={{ margin: 0, fontSize: '20px', color: '#1a1a2e' }}>Cautions</h2>
-        <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap', alignItems: 'center' }}>
+        <div className="dash-toolbar" style={{ display: 'flex', gap: '8px', flexWrap: 'wrap', alignItems: 'center' }}>
           {PROPERTY_FILTER_OPTIONS.map(p => (
             <button key={p.value} onClick={() => setPropertyFilter(p.value)} style={{ ...S.btn, background: propertyFilter === p.value ? '#3D4A38' : '#e5e7eb', color: propertyFilter === p.value ? '#fff' : '#555', fontWeight: propertyFilter === p.value ? 600 : 400 }}>{p.label}</button>
           ))}
@@ -346,7 +346,7 @@ export default function DashboardCautionsPage() {
       </div>
 
       {/* ─── Status filter + Search ─── */}
-      <div style={{ display: 'flex', gap: '8px', marginBottom: '16px', flexWrap: 'wrap', alignItems: 'center' }}>
+      <div className="dash-toolbar" style={{ display: 'flex', gap: '8px', marginBottom: '16px', flexWrap: 'wrap', alignItems: 'center' }}>
         {[
           { v: 'all', l: `Toutes (${rows.length})` },
           { v: 'en_attente', l: `En attente (${rows.filter(r => r.deposit_status === 'en_attente').length})` },
@@ -367,7 +367,7 @@ export default function DashboardCautionsPage() {
 
       {/* ─── Data table ─── */}
       <div style={{ ...S.card, padding: 0, overflow: 'auto' }}>
-        <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '14px' }}>
+        <table className="dash-table" style={{ width: '100%', borderCollapse: 'collapse', fontSize: '14px' }}>
           <thead>
             <tr style={{ background: '#f8f8f8', borderBottom: '2px solid #e5e7eb' }}>
               {['Locataire', 'Propriété', 'Chambre', 'Montant', 'Reçue le', 'Statut', 'Restitution', ''].map(h => (
@@ -381,26 +381,26 @@ export default function DashboardCautionsPage() {
               const isOverdue = row.deposit_status === 'a_restituer' && row.move_out_date && (Date.now() - new Date(row.move_out_date).getTime()) / (1000 * 60 * 60 * 24) > 30;
               return (
                 <tr key={row.id} style={{ borderBottom: '1px solid #f0f0f0', background: isOverdue ? '#fef2f2' : undefined }}>
-                  <td style={{ padding: '8px 12px', fontWeight: 500 }}>
+                  <td data-label="Locataire" style={{ padding: '8px 12px', fontWeight: 500 }}>
                     {row.first_name} {row.last_name}
                     {!row.is_active && <span style={{ fontSize: '10px', color: '#dc2626', marginLeft: '6px' }}>parti</span>}
                   </td>
-                  <td style={{ padding: '8px 12px', fontSize: '13px' }}>{row.property_name}</td>
-                  <td style={{ padding: '8px 12px', fontSize: '13px', color: '#888' }}>{row.room_number || '—'}</td>
-                  <td style={{ padding: '8px 12px', textAlign: 'right', fontWeight: 600 }}>{fmt(row.deposit_amount || 0)}</td>
-                  <td style={{ padding: '8px 12px', fontSize: '13px', color: '#888' }}>{fmtDate(row.deposit_received_date)}</td>
-                  <td style={{ padding: '8px 12px' }}>
+                  <td data-label="Propriété" style={{ padding: '8px 12px', fontSize: '13px' }}>{row.property_name}</td>
+                  <td data-label="Chambre" style={{ padding: '8px 12px', fontSize: '13px', color: '#888' }}>{row.room_number || '—'}</td>
+                  <td data-label="Montant" style={{ padding: '8px 12px', textAlign: 'right', fontWeight: 600 }}>{fmt(row.deposit_amount || 0)}</td>
+                  <td data-label="Reçue le" style={{ padding: '8px 12px', fontSize: '13px', color: '#888' }}>{fmtDate(row.deposit_received_date)}</td>
+                  <td data-label="Statut" style={{ padding: '8px 12px' }}>
                     <span style={{ background: cfg.bg, color: cfg.color, padding: '2px 8px', borderRadius: '4px', fontSize: '11px', fontWeight: 600 }}>
                       {cfg.emoji} {cfg.label}
                     </span>
                     {isOverdue && <span style={{ fontSize: '10px', color: '#dc2626', display: 'block', marginTop: '2px' }}>⚠️ En retard (&gt;30j)</span>}
                   </td>
-                  <td style={{ padding: '8px 12px', fontSize: '13px' }}>
+                  <td data-label="Restitution" style={{ padding: '8px 12px', fontSize: '13px' }}>
                     {row.deposit_refunded_date ? (
                       <span>{fmt(row.deposit_refunded_amount || 0)} le {fmtDate(row.deposit_refunded_date)}</span>
                     ) : '—'}
                   </td>
-                  <td style={{ padding: '8px 12px', whiteSpace: 'nowrap' }}>
+                  <td data-label="Actions" style={{ padding: '8px 12px', whiteSpace: 'nowrap' }}>
                     <div style={{ display: 'flex', gap: '4px' }}>
                       {(row.deposit_status === 'en_attente' || row.deposit_status === 'detenue') && (
                         <button onClick={() => openAdjust(row)} style={{ background: '#f5f5f5', border: '1px solid #e5e7eb', borderRadius: '6px', padding: '4px 10px', cursor: 'pointer', fontSize: '12px' }}>
@@ -426,8 +426,8 @@ export default function DashboardCautionsPage() {
 
       {/* ─── Return Modal ─── */}
       {editRow && (
-        <div style={S.modal} onClick={() => setEditRow(null)}>
-          <div style={S.modalContent} onClick={e => e.stopPropagation()}>
+        <div className="dash-modal-overlay" style={S.modal} onClick={() => setEditRow(null)}>
+          <div className="dash-modal" style={S.modalContent} onClick={e => e.stopPropagation()}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
               <h3 style={{ margin: 0, fontSize: '18px', color: '#1a1a2e' }}>Restitution de caution</h3>
               <button onClick={() => setEditRow(null)} style={{ background: 'none', border: 'none', fontSize: '24px', cursor: 'pointer', color: '#888' }}>×</button>
@@ -462,8 +462,8 @@ export default function DashboardCautionsPage() {
 
       {/* ─── Adjust Modal ─── */}
       {adjustRow && (
-        <div style={S.modal} onClick={() => setAdjustRow(null)}>
-          <div style={S.modalContent} onClick={e => e.stopPropagation()}>
+        <div className="dash-modal-overlay" style={S.modal} onClick={() => setAdjustRow(null)}>
+          <div className="dash-modal" style={S.modalContent} onClick={e => e.stopPropagation()}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
               <h3 style={{ margin: 0, fontSize: '18px', color: '#1a1a2e' }}>Ajuster la caution</h3>
               <button onClick={() => setAdjustRow(null)} style={{ background: 'none', border: 'none', fontSize: '24px', cursor: 'pointer', color: '#888' }}>×</button>

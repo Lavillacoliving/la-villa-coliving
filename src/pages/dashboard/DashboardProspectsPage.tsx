@@ -197,7 +197,7 @@ export default function DashboardProspectsPage() {
               ...S.btn,background:statusFilter===e.v?"#b8860b":"#e5e7eb",color:statusFilter===e.v?"#fff":"#555"
             }}>{e.l}</button>))}
         </div>
-        <div style={{display:"flex",gap:"8px",alignItems:"center"}}>
+        <div className="dash-toolbar" style={{display:"flex",gap:"8px",alignItems:"center"}}>
           <button onClick={()=>setViewMode(viewMode==='pipeline'?'table':'pipeline')} style={{...S.btn,background:"#1a1a2e",color:"#fff"}}>{viewMode==='pipeline'?'Vue tableau':'Vue pipeline'}</button>
           <button onClick={exportExcel} style={{...S.btn,background:"#1a1a2e",color:"#fff"}}>Export Excel</button>
           <button onClick={()=>openModal()} style={{padding:"8px 20px",background:"#3D4A38",color:"#fff",border:"none",borderRadius:"8px",cursor:"pointer",fontSize:"14px",fontWeight:600}}>+ Nouveau prospect</button>
@@ -264,7 +264,7 @@ export default function DashboardProspectsPage() {
       {/* Table View */}
       {viewMode === 'table' && (
         <div style={{...S.card,padding:0,overflow:"auto"}}>
-          <table style={{width:"100%",borderCollapse:"collapse",fontSize:"14px"}}>
+          <table className="dash-table" style={{width:"100%",borderCollapse:"collapse",fontSize:"14px"}}>
             <thead><tr style={{background:"#f8f8f8",borderBottom:"2px solid #e5e7eb"}}>
               {["Nom","Métier","Source","Statut","Maison","Durée","Reçu le","Contact"].map(h=>(
                 <th key={h} style={{padding:"12px 16px",textAlign:"left",fontWeight:600,color:"#555",fontSize:"12px",textTransform:"uppercase"}}>{h}</th>))}
@@ -272,14 +272,14 @@ export default function DashboardProspectsPage() {
             <tbody>
               {filtered.map(p=>(
                 <tr key={p.id} style={{borderBottom:"1px solid #f0f0f0",cursor:"pointer"}} onClick={()=>openModal(p)}>
-                  <td style={{padding:"10px 16px",fontWeight:500}}>{p.first_name} {p.last_name}</td>
-                  <td style={{padding:"10px 16px",fontSize:"12px"}}>{p.occupation||"-"}</td>
-                  <td style={{padding:"10px 16px",fontSize:"12px"}}>{SOURCE_LABELS[p.source||""]||p.source||"-"}</td>
-                  <td style={{padding:"10px 16px"}}><span style={{background:STATUS_COLORS[p.status]||"#94a3b8",color:"#fff",padding:"2px 10px",borderRadius:"12px",fontSize:"12px"}}>{STATUS_LABELS[p.status]||p.status}</span></td>
-                  <td style={{padding:"10px 16px"}}>{propertyName(p.property_interest)}</td>
-                  <td style={{padding:"10px 16px",color:"#888",fontSize:"12px"}}>{p.lease_duration?(DURATION_LABELS[p.lease_duration]||p.lease_duration):"-"}</td>
-                  <td style={{padding:"10px 16px",color:"#888",fontSize:"12px"}}>{p.created_at?new Date(p.created_at).toLocaleDateString("fr-FR"):"-"}</td>
-                  <td style={{padding:"10px 16px",fontSize:"12px"}}>{p.email && <span title={p.email}>✉️</span>} {p.phone && <a href={'tel:'+p.phone} title={p.phone} style={{textDecoration:'none'}}>📞</a>}</td>
+                  <td data-label="Nom" style={{padding:"10px 16px",fontWeight:500}}>{p.first_name} {p.last_name}</td>
+                  <td data-label="Métier" style={{padding:"10px 16px",fontSize:"12px"}}>{p.occupation||"-"}</td>
+                  <td data-label="Source" style={{padding:"10px 16px",fontSize:"12px"}}>{SOURCE_LABELS[p.source||""]||p.source||"-"}</td>
+                  <td data-label="Statut" style={{padding:"10px 16px"}}><span style={{background:STATUS_COLORS[p.status]||"#94a3b8",color:"#fff",padding:"2px 10px",borderRadius:"12px",fontSize:"12px"}}>{STATUS_LABELS[p.status]||p.status}</span></td>
+                  <td data-label="Maison" style={{padding:"10px 16px"}}>{propertyName(p.property_interest)}</td>
+                  <td data-label="Durée" style={{padding:"10px 16px",color:"#888",fontSize:"12px"}}>{p.lease_duration?(DURATION_LABELS[p.lease_duration]||p.lease_duration):"-"}</td>
+                  <td data-label="Reçu le" style={{padding:"10px 16px",color:"#888",fontSize:"12px"}}>{p.created_at?new Date(p.created_at).toLocaleDateString("fr-FR"):"-"}</td>
+                  <td data-label="Contact" style={{padding:"10px 16px",fontSize:"12px"}}>{p.email && <span title={p.email}>✉️</span>} {p.phone && <a href={'tel:'+p.phone} title={p.phone} style={{textDecoration:'none'}}>📞</a>}</td>
                 </tr>))}
               {filtered.length===0&&<tr><td colSpan={8} style={{padding:"40px",textAlign:"center",color:"#888"}}>Aucun prospect</td></tr>}
             </tbody>
@@ -289,8 +289,8 @@ export default function DashboardProspectsPage() {
 
       {/* Prospect Modal */}
       {modal && (
-        <div style={{position:'fixed',top:0,left:0,right:0,bottom:0,background:'rgba(0,0,0,0.5)',display:'flex',alignItems:'center',justifyContent:'center',zIndex:1000,overflow:'auto',padding:'20px'}} onClick={()=>setModal(null)}>
-          <div style={{background:'white',borderRadius:'16px',padding:'28px',width:'600px',maxWidth:'95vw',maxHeight:'90vh',overflow:'auto'}} onClick={e=>e.stopPropagation()}>
+        <div className="dash-modal-overlay" style={{position:'fixed',top:0,left:0,right:0,bottom:0,background:'rgba(0,0,0,0.5)',display:'flex',alignItems:'center',justifyContent:'center',zIndex:1000,overflow:'auto',padding:'20px'}} onClick={()=>setModal(null)}>
+          <div className="dash-modal" style={{background:'white',borderRadius:'16px',padding:'28px',width:'600px',maxWidth:'95vw',maxHeight:'90vh',overflow:'auto'}} onClick={e=>e.stopPropagation()}>
             <div style={{display:'flex',justifyContent:'space-between',alignItems:'center',marginBottom:'20px'}}>
               <h2 style={{margin:0,fontSize:'20px'}}>{isNew?'Nouveau Prospect':'Fiche Prospect'}</h2>
               <button onClick={()=>setModal(null)} style={{background:'none',border:'none',fontSize:'24px',cursor:'pointer',color:'#888'}}>×</button>
@@ -350,8 +350,8 @@ export default function DashboardProspectsPage() {
 
       {/* Delete confirmation modal */}
       {deleteConfirm && (
-        <div style={{position:'fixed',top:0,left:0,right:0,bottom:0,background:'rgba(0,0,0,0.6)',display:'flex',alignItems:'center',justifyContent:'center',zIndex:2000}} onClick={()=>setDeleteConfirm(null)}>
-          <div style={{background:'white',borderRadius:'12px',padding:'24px',width:'400px',maxWidth:'90vw'}} onClick={e=>e.stopPropagation()}>
+        <div className="dash-modal-overlay" style={{position:'fixed',top:0,left:0,right:0,bottom:0,background:'rgba(0,0,0,0.6)',display:'flex',alignItems:'center',justifyContent:'center',zIndex:2000}} onClick={()=>setDeleteConfirm(null)}>
+          <div className="dash-modal dash-modal-compact" style={{background:'white',borderRadius:'12px',padding:'24px',width:'400px',maxWidth:'90vw'}} onClick={e=>e.stopPropagation()}>
             <h3 style={{margin:'0 0 12px',fontSize:'16px'}}>⚠️ Confirmer la suppression</h3>
             <p style={{fontSize:'14px',color:'#555',margin:'0 0 20px'}}>Supprimer <strong>{deleteConfirm.label}</strong> ? Cette action est irréversible.</p>
             <div style={{display:'flex',gap:'8px',justifyContent:'flex-end'}}>

@@ -339,7 +339,7 @@ export default function DashboardRapprochementPage() {
           </h2>
           <button onClick={nextMonth} style={{ border: '1px solid #ddd', background: '#fff', borderRadius: '6px', padding: '6px 12px', cursor: 'pointer', fontSize: '16px' }}>→</button>
         </div>
-        <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap', alignItems: 'center' }}>
+        <div className="dash-toolbar" style={{ display: 'flex', gap: '8px', flexWrap: 'wrap', alignItems: 'center' }}>
           <button onClick={() => setYtdMode(!ytdMode)} style={{ ...S.btn, background: ytdMode ? '#1a1a2e' : '#e5e7eb', color: ytdMode ? '#fff' : '#555', fontWeight: ytdMode ? 600 : 400 }}>
             {ytdMode ? 'YTD ✓' : 'YTD'}
           </button>
@@ -440,7 +440,7 @@ export default function DashboardRapprochementPage() {
       )}
 
       {/* ─── Sub-tabs + Type filter ─── */}
-      <div style={{ display: 'flex', gap: '8px', marginBottom: '16px', flexWrap: 'wrap', alignItems: 'center' }}>
+      <div className="dash-toolbar" style={{ display: 'flex', gap: '8px', marginBottom: '16px', flexWrap: 'wrap', alignItems: 'center' }}>
         {[
           { v: 'all', l: `Toutes (${transactions.length})` },
           { v: 'non_rapproche', l: `Non rapprochées (${countByStatus('non_rapproche')})` },
@@ -466,7 +466,7 @@ export default function DashboardRapprochementPage() {
 
       {/* ─── Data table ─── */}
       <div style={{ ...S.card, padding: 0, overflow: 'auto' }}>
-        <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '14px' }}>
+        <table className="dash-table" style={{ width: '100%', borderCollapse: 'collapse', fontSize: '14px' }}>
           <thead>
             <tr style={{ background: '#f8f8f8', borderBottom: '2px solid #e5e7eb' }}>
               {['Date', 'Libellé', 'Débit', 'Crédit', 'Type', 'Catégorie', 'Statut', 'Facture', ''].map(h => (
@@ -481,25 +481,25 @@ export default function DashboardRapprochementPage() {
               const ent = entities.find(e => e.id === tx.entity_id);
               return (
                 <tr key={tx.id} style={{ borderBottom: '1px solid #f0f0f0' }}>
-                  <td style={{ padding: '8px 12px', color: '#888', whiteSpace: 'nowrap', fontSize: '13px' }}>{fmtDate(tx.accounting_date)}</td>
-                  <td style={{ padding: '8px 12px', fontWeight: 500, maxWidth: '300px' }} title={tx.details || tx.label_operation}>
+                  <td data-label="Date" style={{ padding: '8px 12px', color: '#888', whiteSpace: 'nowrap', fontSize: '13px' }}>{fmtDate(tx.accounting_date)}</td>
+                  <td data-label="Libellé" style={{ padding: '8px 12px', fontWeight: 500, maxWidth: '300px' }} title={tx.details || tx.label_operation}>
                     <div>{tx.label_simple}</div>
                     {tx.manual_comment && <div style={{ fontSize: '11px', color: '#888', fontStyle: 'italic' }}>💬 {tx.manual_comment}</div>}
                     {ent && <span style={{ fontSize: '10px', color: '#aaa' }}>{ent.code}</span>}
                   </td>
-                  <td style={{ padding: '8px 12px', textAlign: 'right', fontWeight: 600, color: '#ef4444' }}>{tx.debit > 0 ? fmt(tx.debit) : ''}</td>
-                  <td style={{ padding: '8px 12px', textAlign: 'right', fontWeight: 600, color: '#22c55e' }}>{tx.credit > 0 ? fmt(tx.credit) : ''}</td>
-                  <td style={{ padding: '8px 12px' }}>
+                  <td data-label="Débit" style={{ padding: '8px 12px', textAlign: 'right', fontWeight: 600, color: '#ef4444' }}>{tx.debit > 0 ? fmt(tx.debit) : ''}</td>
+                  <td data-label="Crédit" style={{ padding: '8px 12px', textAlign: 'right', fontWeight: 600, color: '#22c55e' }}>{tx.credit > 0 ? fmt(tx.credit) : ''}</td>
+                  <td data-label="Type" style={{ padding: '8px 12px' }}>
                     <span style={{ color: typeColor, fontSize: '12px', fontWeight: 500 }}>{getTransactionTypeLabel(tx.transaction_type)}</span>
                   </td>
-                  <td style={{ padding: '8px 12px', fontSize: '13px' }}>{tx.manual_category || tx.category || '—'}</td>
-                  <td style={{ padding: '8px 12px' }}>
+                  <td data-label="Catégorie" style={{ padding: '8px 12px', fontSize: '13px' }}>{tx.manual_category || tx.category || '—'}</td>
+                  <td data-label="Statut" style={{ padding: '8px 12px' }}>
                     <span style={{ background: badge.bg, color: badge.color, padding: '2px 8px', borderRadius: '4px', fontSize: '11px', fontWeight: 600, whiteSpace: 'nowrap' }}>
                       {badge.label}
                     </span>
                     {tx.flagged_reason && <div style={{ fontSize: '10px', color: '#d97706', marginTop: '2px' }}>{tx.flagged_reason}</div>}
                   </td>
-                  <td style={{ padding: '8px 12px', fontSize: '12px' }}>
+                  <td data-label="Facture" style={{ padding: '8px 12px', fontSize: '12px' }}>
                     {tx.matched_invoice_id ? (
                       <span style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
                         <span style={{ color: '#16a34a' }}>📎</span>
@@ -507,7 +507,7 @@ export default function DashboardRapprochementPage() {
                       </span>
                     ) : <span style={{ color: '#ccc' }}>—</span>}
                   </td>
-                  <td style={{ padding: '8px 12px' }}>
+                  <td data-label="Actions" style={{ padding: '8px 12px' }}>
                     <button onClick={() => openEdit(tx)} style={{ background: '#f5f5f5', border: '1px solid #e5e7eb', borderRadius: '6px', padding: '4px 10px', cursor: 'pointer', fontSize: '12px' }}>✏️</button>
                   </td>
                 </tr>

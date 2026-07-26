@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { supabase } from '@/lib/supabase';
+import { useIsMobile } from '@/hooks/use-mobile';
 
 interface Task { id:string; name:string; state:'red'|'yellow'|'green'; priority:string; phase:string; status:string; doc:string; }
 interface Domain { id:string; name:string; icon:string; tasks:Task[]; }
@@ -20,6 +21,7 @@ export default function DashboardRoadmapPage() {
   const [domains, setDomains] = useState<Domain[]>([]);
   const [loading, setLoading] = useState(true);
   const [lastUpdated, setLastUpdated] = useState<string>('');
+  const isMobile = useIsMobile();
 
   useEffect(() => {
     async function fetchTasks() {
@@ -164,12 +166,15 @@ export default function DashboardRoadmapPage() {
       </div>
 
       {/* Gantt */}
-      <div style={{ ...S.card, marginBottom: '24px', overflowX: 'auto' }}>
+      <div className="dash-scroll-x" style={{ ...S.card, marginBottom: '24px', overflowX: 'auto' }}>
         <h3 style={{ margin: '0 0 16px', fontSize: '16px', color: '#1a1a2e' }}>Timeline</h3>
+        {/* NB : les 2 grilles du Gantt portent dash-grid-keep — ce sont des mises en
+            page, pas des formulaires : elles ne doivent PAS être aplaties à 1 colonne
+            sur mobile (le scroll est confiné par dash-scroll-x ci-dessus). */}
         <div style={{ minWidth: '650px' }}>
           <div style={{ display: 'grid', gridTemplateColumns: '180px 1fr', fontSize: '12px', color: '#888', paddingBottom: '8px', borderBottom: '1px solid #e5e7eb' }}>
             <div />
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(6,1fr)', textAlign: 'center' }}>
+            <div className="dash-grid-keep" style={{ display: 'grid', gridTemplateColumns: 'repeat(6,1fr)', textAlign: 'center' }}>
               {months.map(m => <div key={m}>{m}</div>)}
             </div>
           </div>
@@ -179,7 +184,7 @@ export default function DashboardRoadmapPage() {
                 <div style={{ fontSize: '13px', fontWeight: 600 }}>{ph.name}</div>
                 <div style={{ fontSize: '11px', color: '#888' }}>Sem {ph.weeks[0]}-{ph.weeks[1]}</div>
               </div>
-              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(24,1fr)', gap: '1px', height: '26px' }}>
+              <div className="dash-grid-keep" style={{ display: 'grid', gridTemplateColumns: 'repeat(24,1fr)', gap: '1px', height: '26px' }}>
                 <div style={{ gridColumn: `${ph.weeks[0]} / span ${ph.weeks[1] - ph.weeks[0] + 1}`, borderRadius: '6px', background: ph.color, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '11px', fontWeight: 500, color: 'white' }}>
                   {ph.name.split(' ').slice(1).join(' ')}
                 </div>
@@ -190,7 +195,7 @@ export default function DashboardRoadmapPage() {
       </div>
 
       {/* Filters */}
-      <div style={{ display: 'flex', gap: '8px', marginBottom: '20px', flexWrap: 'wrap' }}>
+      <div className="dash-toolbar" style={{ display: 'flex', gap: '8px', marginBottom: '20px', flexWrap: 'wrap' }}>
         {FILTERS.map(f => (
           <button key={f.id} onClick={() => setFilter(f.id)} style={{ padding: '8px 16px', borderRadius: '6px', border: '1px solid rgba(0,0,0,0.08)', background: filter === f.id ? '#1a1a2e' : '#fff', color: filter === f.id ? '#fff' : '#555', cursor: 'pointer', fontSize: '13px', fontWeight: 500 }}>{f.l}</button>
         ))}
@@ -206,7 +211,7 @@ export default function DashboardRoadmapPage() {
 
         return (
           <div key={domain.id} style={{ ...S.card, marginBottom: '12px', padding: 0, overflow: 'hidden' }}>
-            <div onClick={() => toggleDomain(domain.id)} style={{ padding: '16px 20px', cursor: 'pointer', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+            <div className="dash-toolbar" onClick={() => toggleDomain(domain.id)} style={{ padding: '16px 20px', cursor: 'pointer', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
               <span style={{ fontWeight: 600, fontSize: '15px' }}>{domain.icon} {domain.name}</span>
               <div style={{ display: 'flex', gap: '6px', alignItems: 'center' }}>
                 {stats.completed > 0 && <span style={{ fontSize: '12px', padding: '2px 8px', borderRadius: '10px', background: '#dcfce7', color: '#22c55e', fontWeight: 600 }}>{stats.completed} ✅</span>}
@@ -218,7 +223,7 @@ export default function DashboardRoadmapPage() {
             {isOpen && (
               <div style={{ padding: '0 20px 16px' }}>
                 {ft.map(t => (
-                  <div key={t.id} style={{ display: 'grid', gridTemplateColumns: '28px 1fr 60px 90px 70px', alignItems: 'start', padding: '10px 0', borderBottom: '1px solid #f0f0f0', fontSize: '13px', gap: '6px' }}>
+                  <div key={t.id} style={{ display: 'grid', gridTemplateColumns: isMobile ? 'auto 1fr' : '28px 1fr 60px 90px 70px', alignItems: 'start', padding: '10px 0', borderBottom: '1px solid #f0f0f0', fontSize: '13px', gap: '6px' }}>
                     <div style={{ width: '8px', height: '8px', borderRadius: '50%', background: stColors[t.state], marginTop: '6px', marginLeft: '8px' }} />
                     <div>
                       <div style={{ fontWeight: 500 }}>{t.id} {t.name}</div>

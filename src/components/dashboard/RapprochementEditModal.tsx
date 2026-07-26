@@ -328,11 +328,11 @@ export default function RapprochementEditModal({
   };
 
   return (
-    <div style={S.overlay} onClick={onClose}>
-      <div style={S.modal} onClick={e => e.stopPropagation()}>
+    <div className="dash-modal-overlay" style={S.overlay} onClick={onClose}>
+      <div className="dash-modal dash-modal-flush" style={S.modal} onClick={e => e.stopPropagation()}>
         {/* ─── Header with batch navigation ─── */}
         <div style={S.header}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+          <div className="dash-toolbar" style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
             {hasBatch && (
               <button onClick={() => canPrev && onNavigate!(currentIndex! - 1)} disabled={!canPrev}
                 style={{ ...S.navBtn, opacity: canPrev ? 1 : 0.3, cursor: canPrev ? 'pointer' : 'default' }}>←</button>
@@ -379,7 +379,7 @@ export default function RapprochementEditModal({
           </div>
 
           {/* ─── Tabs ─── */}
-          <div style={{ display: 'flex', gap: '4px', marginBottom: '20px', borderBottom: '2px solid #e5e7eb', paddingBottom: '4px' }}>
+          <div className="dash-scroll-x" style={{ display: 'flex', gap: '4px', marginBottom: '20px', borderBottom: '2px solid #e5e7eb', paddingBottom: '4px' }}>
             {([
               { v: 'verification' as const, l: 'Vérification', dot: transaction.rapprochement_status !== 'verified' },
               { v: 'classify' as const, l: 'Classifier', dot: false },

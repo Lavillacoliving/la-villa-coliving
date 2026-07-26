@@ -116,7 +116,7 @@ export default function DashboardEventsPage() {
     <div>
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px', flexWrap: 'wrap', gap: '12px' }}>
         <h2 style={{ margin: 0, fontSize: '20px', color: '#1a1a2e' }}>Événements</h2>
-        <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
+        <div className="dash-toolbar" style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
           {(['upcoming', 'past', 'all'] as const).map(f => (
             <button key={f} onClick={() => setFilter(f)} style={{ ...S.btn, background: filter === f ? '#3D4A38' : '#e5e7eb', color: filter === f ? '#fff' : '#555' }}>
               {f === 'upcoming' ? 'À venir' : f === 'past' ? 'Passés' : 'Tous'}
@@ -167,8 +167,8 @@ export default function DashboardEventsPage() {
 
       {/* Event create/edit modal */}
       {modal && (
-        <div style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.4)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 2000 }} onClick={() => setModal(null)}>
-          <div style={{ background: '#fff', borderRadius: '16px', padding: '28px', width: '540px', maxWidth: '95vw', maxHeight: '90vh', overflowY: 'auto' }} onClick={e => e.stopPropagation()}>
+        <div className="dash-modal-overlay" style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.4)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 2000 }} onClick={() => setModal(null)}>
+          <div className="dash-modal" style={{ background: '#fff', borderRadius: '16px', padding: '28px', width: '540px', maxWidth: '95vw', maxHeight: '90vh', overflowY: 'auto' }} onClick={e => e.stopPropagation()}>
             <h3 style={{ margin: '0 0 20px', fontSize: '18px' }}>{modal.id ? 'Modifier l\'événement' : 'Nouvel événement'}</h3>
             <div style={{ display: 'grid', gap: '14px' }}>
               <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
@@ -229,8 +229,8 @@ export default function DashboardEventsPage() {
 
       {/* Delete confirmation modal */}
       {deleteConfirm && (
-        <div style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.4)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 2000 }} onClick={() => setDeleteConfirm(null)}>
-          <div style={{ background: '#fff', borderRadius: '12px', padding: '24px', width: '380px', maxWidth: '90vw' }} onClick={e => e.stopPropagation()}>
+        <div className="dash-modal-overlay" style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.4)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 2000 }} onClick={() => setDeleteConfirm(null)}>
+          <div className="dash-modal dash-modal-compact" style={{ background: '#fff', borderRadius: '12px', padding: '24px', width: '380px', maxWidth: '90vw' }} onClick={e => e.stopPropagation()}>
             <h3 style={{ margin: '0 0 8px', fontSize: '16px' }}>Confirmer la suppression</h3>
             <p style={{ color: '#555', fontSize: '14px', margin: '0 0 20px' }}>Supprimer l'événement <strong>{deleteConfirm.label}</strong> ?</p>
             <div style={{ display: 'flex', gap: '8px', justifyContent: 'flex-end' }}>

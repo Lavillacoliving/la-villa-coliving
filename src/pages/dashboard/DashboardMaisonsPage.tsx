@@ -2,6 +2,7 @@ import { useState, useEffect, useCallback } from 'react';
 import { supabase } from '@/lib/supabase';
 import { useToast } from '@/components/ui/Toast';
 import PropertyContentEditor from '@/components/PropertyContentEditor';
+import { useIsMobile } from '@/hooks/use-mobile';
 
 interface Property {
   id: string;
@@ -97,6 +98,7 @@ const EMPTY_ROOM: Partial<Room> = {
 export default function DashboardMaisonsPage() {
   const [properties, setProperties] = useState<Property[]>([]);
   const toast = useToast();
+  const isMobile = useIsMobile();
   const [rooms, setRooms] = useState<Room[]>([]);
   const [tenants, setTenants] = useState<Tenant[]>([]);
   const [selectedPropertyId, setSelectedPropertyId] = useState<string | null>(null);
@@ -260,9 +262,9 @@ export default function DashboardMaisonsPage() {
   if (loading) return <p style={{ textAlign: 'center', padding: '40px', color: '#b8860b' }}>Chargement...</p>;
 
   return (
-    <div style={{ display: 'flex', gap: '20px', height: 'calc(100vh - 120px)', overflow: 'hidden' }}>
+    <div style={{ display: 'flex', flexDirection: isMobile ? 'column' : 'row', gap: '20px', height: isMobile ? 'auto' : 'calc(100vh - 120px)', overflow: isMobile ? 'visible' : 'hidden' }}>
       {/* LEFT PANEL: Properties */}
-      <div style={{ width: '280px', display: 'flex', flexDirection: 'column', overflow: 'auto', borderRight: '1px solid #e5e7eb', paddingRight: '12px' }}>
+      <div style={{ width: isMobile ? '100%' : '280px', display: 'flex', flexDirection: 'column', overflow: isMobile ? 'visible' : 'auto', borderRight: isMobile ? 'none' : '1px solid #e5e7eb', paddingRight: isMobile ? 0 : '12px' }}>
         <h3 style={{ margin: '0 0 12px', fontSize: '14px', fontWeight: 600, color: '#1a1a2e' }}>Propriétés</h3>
         {properties.map(p => (
           <div
@@ -289,14 +291,14 @@ export default function DashboardMaisonsPage() {
       </div>
 
       {/* RIGHT PANEL: Property details + rooms */}
-      <div style={{ flex: 1, display: 'flex', flexDirection: 'column', overflow: 'auto' }}>
+      <div style={{ flex: 1, display: 'flex', flexDirection: 'column', overflow: isMobile ? 'visible' : 'auto' }}>
         {selectedProperty ? (
           <>
             {/* Property details card */}
             <div style={{ ...S.card, marginBottom: '20px' }}>
               {!editingProperty ? (
                 <>
-                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '16px' }}>
+                  <div className="dash-toolbar" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '16px' }}>
                     <h2 style={{ margin: 0, fontSize: '24px', color: '#1a1a2e' }}>{selectedProperty.name}</h2>
                     <button
                       onClick={() => {
@@ -360,7 +362,7 @@ export default function DashboardMaisonsPage() {
                   {selectedProperty.is_coliving && (
                     <div style={{ marginTop: '16px', padding: '12px', background: '#f9f7f4', borderRadius: '8px', borderLeft: '3px solid #c9a96e' }}>
                       <p style={{ ...S.label, color: '#c9a96e' }}>Charges forfaitaires mensuelles (EUR)</p>
-                      <div style={{ display: 'flex', gap: '20px', fontSize: '14px' }}>
+                      <div style={{ display: 'flex', flexWrap: isMobile ? 'wrap' : 'nowrap', gap: '20px', fontSize: '14px' }}>
                         <span>Énergie : <strong>{selectedProperty.charges_energy_chf || 0} €</strong></span>
                         <span>Maintenance : <strong>{selectedProperty.charges_maintenance_chf || 0} €</strong></span>
                         <span>Services : <strong>{selectedProperty.charges_services_chf || 0} €</strong></span>
@@ -503,7 +505,7 @@ export default function DashboardMaisonsPage() {
               {propertyRooms.length === 0 ? (
                 <p style={{ color: '#888', fontSize: '14px', textAlign: 'center', padding: '40px 20px' }}>Aucune chambre pour le moment</p>
               ) : (
-                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: '12px' }}>
+                <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : 'repeat(auto-fill, minmax(280px, 1fr))', gap: '12px' }}>
                   {propertyRooms.map(room => {
                     const tenant = getTenantForRoom(room.room_number);
                     const isOccupied = !!tenant;
@@ -573,6 +575,7 @@ export default function DashboardMaisonsPage() {
       {/* ROOM MODAL */}
       {modalRoom && (
         <div
+          className="dash-modal-overlay"
           style={{
             position: 'fixed',
             top: 0,
@@ -590,6 +593,7 @@ export default function DashboardMaisonsPage() {
           onClick={() => setModalRoom(null)}
         >
           <div
+            className="dash-modal"
             style={{
               background: 'white',
               borderRadius: '16px',
@@ -885,8 +889,8 @@ export default function DashboardMaisonsPage() {
 
       {/* Delete confirmation modal */}
       {deleteConfirm && (
-        <div style={{position:'fixed',top:0,left:0,right:0,bottom:0,background:'rgba(0,0,0,0.6)',display:'flex',alignItems:'center',justifyContent:'center',zIndex:2000}} onClick={()=>setDeleteConfirm(null)}>
-          <div style={{background:'white',borderRadius:'12px',padding:'24px',width:'400px',maxWidth:'90vw'}} onClick={e=>e.stopPropagation()}>
+        <div className="dash-modal-overlay" style={{position:'fixed',top:0,left:0,right:0,bottom:0,background:'rgba(0,0,0,0.6)',display:'flex',alignItems:'center',justifyContent:'center',zIndex:2000}} onClick={()=>setDeleteConfirm(null)}>
+          <div className="dash-modal dash-modal-compact" style={{background:'white',borderRadius:'12px',padding:'24px',width:'400px',maxWidth:'90vw'}} onClick={e=>e.stopPropagation()}>
             <h3 style={{margin:'0 0 12px',fontSize:'16px'}}>⚠️ Confirmer la suppression</h3>
             <p style={{fontSize:'14px',color:'#555',margin:'0 0 20px'}}>Supprimer <strong>{deleteConfirm.label}</strong> ? Cette action est irréversible.</p>
             <div style={{display:'flex',gap:'8px',justifyContent:'flex-end'}}>

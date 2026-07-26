@@ -111,7 +111,7 @@ export default function DashboardBlogPage() {
       <div>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px', flexWrap: 'wrap', gap: '8px' }}>
           <h2 style={{ margin: 0, fontSize: '22px', color: '#1a1a2e' }}>Blog</h2>
-          <div style={{ display: 'flex', gap: '4px' }}>
+          <div className="dash-toolbar" style={{ display: 'flex', gap: '4px' }}>
             <TabBtn active={tab === 'drafts'} onClick={() => setTab('drafts')} label={`Brouillons (${draftCount})`} />
             <TabBtn active={tab === 'published'} onClick={() => setTab('published')} label={`Publiés (${publishedCount})`} />
           </div>
@@ -175,7 +175,7 @@ export default function DashboardBlogPage() {
         >
           ← Retour
         </button>
-        <div style={{ display: 'flex', gap: '6px', flexWrap: 'wrap' }}>
+        <div className="dash-toolbar" style={{ display: 'flex', gap: '6px', flexWrap: 'wrap' }}>
           <a href={previewUrl} target="_blank" rel="noopener noreferrer"
             style={{ padding: '8px 12px', background: '#f0f0f0', borderRadius: '8px', color: '#333', textDecoration: 'none', fontSize: '13px', fontWeight: 500 }}>
             👁 Preview
@@ -199,6 +199,7 @@ export default function DashboardBlogPage() {
 
       {/* Title editable */}
       <input
+        className="dash-fs-keep"
         value={editPost.title_fr}
         onChange={e => setEditPost({ ...editPost, title_fr: e.target.value })}
         onBlur={() => save({ title_fr: editPost.title_fr })}
@@ -209,7 +210,7 @@ export default function DashboardBlogPage() {
       {saved && <p style={{ color: '#28a745', fontSize: '12px', margin: '-8px 0 8px' }}>✓ Enregistré</p>}
 
       {/* Tabs: FR / EN / Meta */}
-      <div style={{ display: 'flex', gap: '4px', marginBottom: '12px' }}>
+      <div className="dash-toolbar" style={{ display: 'flex', gap: '4px', marginBottom: '12px' }}>
         <TabBtn active={editTab === 'fr'} onClick={() => setEditTab('fr')} label="Contenu FR" />
         <TabBtn active={editTab === 'en'} onClick={() => setEditTab('en')} label="Contenu EN" />
         <TabBtn active={editTab === 'meta'} onClick={() => setEditTab('meta')} label="Meta / SEO" />

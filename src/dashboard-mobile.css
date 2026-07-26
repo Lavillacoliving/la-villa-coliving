@@ -1,0 +1,270 @@
+/* ============================================================================
+   dashboard-mobile.css — rendu mobile du tableau de bord (D5 : opérable depuis
+   Chrome smartphone). Importé par src/pages/dashboard/DashboardLayout.tsx.
+
+   RÈGLE ABSOLUE : tout ce fichier vit sous @media (max-width: 767px).
+   Aucune règle ne doit s'appliquer à partir de 768px → desktop pixel-identique.
+
+   La borne 767 n'est pas arbitraire : useIsMobile() (src/hooks/use-mobile.ts)
+   renvoie `innerWidth < 768`, donc FAUX à 768px pile. Une media query à
+   `max-width: 768px` s'appliquerait, elle, À 768px inclus → à cette largeur
+   exacte (iPad portrait) le CSS serait en mode mobile pendant que tout le JS
+   resterait en mode desktop. Les deux bornes doivent rester alignées.
+
+   Le dashboard style en inline (style={{…}}), donc surcharger une valeur inline
+   exige !important. On l'utilise volontairement et uniquement ici.
+
+   Classes du contrat (à poser dans les pages) :
+     .dash                  → wrapper (main + écrans auth) : inputs 16px, cibles 44px
+     .dash-table            → <table> transformée en cartes empilées
+     .dash-table td[data-label] → une ligne « Label : valeur » par cellule
+     .dash-group-row        → <tr> qui n'est pas une donnée mais un titre de groupe
+     .dash-modal-overlay    → le fond fixe d'un modal
+     .dash-modal            → le panneau blanc d'un modal (→ plein écran)
+     .dash-scroll-x         → conteneur d'un contenu large volontairement scrollable
+     .dash-fs-keep          → input dont la taille de police inline est déjà ≥ 16px
+     .dash-hide-mobile      → élément masqué sur mobile (colonne secondaire, etc.)
+     .dash-grid-keep        → grille de mise en page à NE PAS aplatir sur mobile
+     .dash-modal-flush      → panneau de modal conçu à padding:0 (bandeaux pleine largeur)
+     .dash-modal-compact    → micro-dialogue (confirmation) : petite carte centrée
+     .dash-tap-keep         → bouton dont la petite taille est voulue (icône positionnée)
+   ========================================================================== */
+
+@media (max-width: 767px) {
+
+  /* ---- 1. Anti-zoom iOS : tout champ de saisie ≥ 16px ---------------------
+     iOS Safari/Chrome zoome automatiquement au focus si la police < 16px.
+     .dash-fs-keep exclut les champs déjà plus grands (ex. code 2FA à 24px). */
+  .dash input:not(.dash-fs-keep),
+  .dash select:not(.dash-fs-keep),
+  .dash textarea:not(.dash-fs-keep) {
+    font-size: 16px !important;
+  }
+
+  /* ---- 2. Cibles tactiles ------------------------------------------------- */
+  .dash button:not(.dash-tap-keep),
+  .dash select,
+  .dash input:not([type="checkbox"]):not([type="radio"]):not([type="file"]) {
+    min-height: 44px;
+  }
+  /* .dash-tap-keep = petite icône dont la taille est structurelle (pastille
+     positionnée en absolu sur une vignette) : l'agrandir la déformerait. */
+  .dash button.dash-tap-keep {
+    min-height: 0 !important;
+  }
+  /* !important : ces cases portent parfois width/height:16px en inline */
+  .dash input[type="checkbox"],
+  .dash input[type="radio"] {
+    width: 20px !important;
+    height: 20px !important;
+  }
+  /* Les <label> servant de bouton d'upload (pattern « + Ajouter »).
+     display en !important : certains labels sont en inline-block inline,
+     ce qui rendrait align-items/justify-content inertes. */
+  .dash label.dash-btn {
+    min-height: 44px;
+    display: inline-flex !important;
+    align-items: center;
+    justify-content: center;
+  }
+
+  /* ---- 3. Jamais de scroll horizontal de page ---------------------------- */
+  .dash {
+    max-width: 100%;
+  }
+  .dash img,
+  .dash canvas,
+  .dash iframe,
+  .dash embed,
+  .dash object {
+    max-width: 100%;
+  }
+  /* Contenu volontairement large (Gantt, aperçu PDF) : le scroll reste
+     confiné au conteneur, jamais sur le body. */
+  .dash-scroll-x {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    max-width: 100%;
+  }
+
+  /* ---- 4. Formulaires : une seule colonne -------------------------------
+     Les grilles sont écrites en inline (gridTemplateColumns:'1fr 1fr').
+     On cible la sérialisation de l'attribut style : seules les grilles à
+     colonnes égales sont aplaties — « auto 1fr », « 2fr 1fr » etc. sont
+     préservées (ce sont des mises en page, pas des formulaires). */
+  .dash [style*="1fr 1fr"]:not(.dash-grid-keep),
+  .dash [style*="repeat(2"]:not(.dash-grid-keep),
+  .dash [style*="repeat(3"]:not(.dash-grid-keep),
+  .dash [style*="repeat(4"]:not(.dash-grid-keep),
+  .dash [style*="repeat(5"]:not(.dash-grid-keep),
+  .dash [style*="repeat(6"]:not(.dash-grid-keep) {
+    grid-template-columns: 1fr !important;
+  }
+  /* .dash-grid-keep = « cette grille est une mise en page, pas un formulaire :
+     garde ses colonnes sur mobile » (ex. l'en-tête de mois d'un Gantt).
+     À utiliser avec un parent .dash-scroll-x, sinon elle débordera. */
+
+  /* ---- 5. Tableaux → cartes empilées -------------------------------------
+     Chaque <tr> devient une carte, chaque <td data-label="…"> une ligne
+     « LABEL      valeur ». L'en-tête <thead> disparaît (les labels le
+     remplacent). Badges, liens et boutons restent des enfants normaux du
+     <td> donc pleinement cliquables. */
+  .dash-table {
+    display: block !important;
+    width: 100% !important;
+    padding: 8px !important;
+    box-sizing: border-box;
+    font-size: 14px !important;
+  }
+  .dash-table thead {
+    display: none !important;
+  }
+  .dash-table tbody,
+  .dash-table tr {
+    display: block !important;
+    width: 100% !important;
+  }
+  .dash-table tr {
+    /* background laissé libre : les lignes colorées (retard, alerte) gardent
+       leur couleur inline ; seules les lignes sans couleur prennent le blanc. */
+    background: #fff;
+    border: 1px solid #e5e7eb !important;
+    border-radius: 10px;
+    padding: 10px 14px !important;
+    margin: 0 0 10px !important;
+    box-sizing: border-box;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
+  }
+  .dash-table tr:last-child {
+    margin-bottom: 0 !important;
+  }
+  .dash-table td {
+    display: flex !important;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 4px 10px;
+    width: auto !important;
+    max-width: none !important;
+    padding: 7px 0 !important;
+    border: none !important;
+    border-bottom: 1px solid #f4f4f5 !important;
+    text-align: right;
+    min-width: 0;
+    white-space: normal !important;
+    word-break: break-word;
+  }
+  /* Champs d'édition en ligne : en mode carte ils disposent de toute la largeur
+     (ils gardent sinon leur width inline de ~100px, qui rogne les dates à 16px). */
+  .dash-table td input:not([type="checkbox"]):not([type="radio"]),
+  .dash-table td select,
+  .dash-table td textarea {
+    width: 100% !important;
+    max-width: 100% !important;
+  }
+  .dash-table td:last-child {
+    border-bottom: none !important;
+    padding-bottom: 0 !important;
+  }
+  .dash-table td:first-child {
+    padding-top: 0 !important;
+  }
+  /* Le label vient de data-label ; margin-right:auto pousse la (ou les)
+     valeur(s) à droite en les gardant groupées. */
+  .dash-table td[data-label]::before {
+    content: attr(data-label);
+    flex: 0 0 auto;
+    margin-right: auto;
+    text-align: left;
+    font-size: 11px;
+    font-weight: 600;
+    color: #6b7280;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+  }
+  /* Cellule sans data-label = pleine largeur (état vide en colSpan, etc.) */
+  .dash-table td:not([data-label]) {
+    display: block !important;
+    text-align: center;
+    border-bottom: none !important;
+  }
+  /* Ligne « titre de groupe » (ex. nom de propriété dans Suivi Loyers) :
+     ce n'est pas une carte de données, on la rend comme un intertitre. */
+  .dash-table tr.dash-group-row {
+    background: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
+    padding: 0 !important;
+    margin: 16px 0 8px !important;
+  }
+  .dash-table tr.dash-group-row td {
+    display: block !important;
+    text-align: left !important;
+    border: none !important;
+    padding: 4px 2px !important;
+    font-weight: 700;
+  }
+  .dash-table tr.dash-group-row td::before {
+    content: none !important;
+  }
+  /* Colonne jugée secondaire sur mobile */
+  .dash-table .dash-hide-mobile,
+  .dash .dash-hide-mobile {
+    display: none !important;
+  }
+
+  /* ---- 6. Modals plein écran -------------------------------------------- */
+  .dash-modal-overlay {
+    padding: 0 !important;
+    align-items: stretch !important;
+    justify-content: stretch !important;
+  }
+  .dash-modal {
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
+    height: 100dvh !important;
+    max-height: 100dvh !important;
+    border-radius: 0 !important;
+    box-sizing: border-box !important;
+    overflow-y: auto !important;
+    -webkit-overflow-scrolling: touch;
+  }
+  /* Le padding du panneau est resserré (28px → 16px) SAUF si le panneau est
+     conçu à padding:0 avec des bandeaux pleine largeur : il porte alors
+     .dash-modal-flush et garde sa mise en page. */
+  .dash-modal:not(.dash-modal-flush):not(.dash-modal-compact) {
+    padding: 16px !important;
+  }
+
+  /* ---- 6 bis. Micro-dialogues : petite carte centrée, PAS plein écran -----
+     Règle : plein écran pour les modals de travail (fiche locataire,
+     rapprochement, formulaires) ; carte centrée pour les confirmations.
+     Étirer 3 lignes de texte sur 100 dvh éloigne le bouton « Confirmer » du
+     texte et fait perdre le contexte de la page derrière. */
+  .dash-modal.dash-modal-compact {
+    width: auto !important;
+    max-width: calc(100vw - 32px) !important;
+    height: auto !important;
+    max-height: calc(100dvh - 32px) !important;
+    border-radius: 12px !important;
+    padding: 20px !important;
+    overflow-y: auto !important;
+  }
+  /* L'overlay d'un micro-dialogue reste centré, avec sa marge. */
+  .dash-modal-overlay:has(.dash-modal-compact) {
+    padding: 16px !important;
+    align-items: center !important;
+    justify-content: center !important;
+  }
+
+  /* ---- 7. Barres de filtres / d'actions : ça passe à la ligne ------------ */
+  /* On force seulement le retour à la ligne : les `gap` inline existants sont
+     conservés (pas de !important sur gap, pour ne rien resserrer au passage). */
+  .dash-toolbar {
+    flex-wrap: wrap !important;
+  }
+  /* « marginLeft:auto » sur un bouton d'export casse le retour à la ligne */
+  .dash-toolbar > .dash-toolbar-end {
+    margin-left: 0 !important;
+  }
+}

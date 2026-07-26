@@ -203,7 +203,7 @@ export default function DashboardComptesLocatairesPage() {
       </div>
 
       {/* Filters */}
-      <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap', marginBottom: 16 }}>
+      <div className="dash-toolbar" style={{ display: 'flex', gap: 12, flexWrap: 'wrap', marginBottom: 16 }}>
         <select
           value={filterEntity}
           onChange={e => setFilterEntity(e.target.value)}
@@ -239,7 +239,7 @@ export default function DashboardComptesLocatairesPage() {
             {propName} <span style={{ color: '#94a3b8', fontWeight: 400, fontSize: 14 }}>— {grouped[propName].length} locataires</span>
           </h2>
           <div style={{ overflowX: 'auto', border: '1px solid #e2e8f0', borderRadius: 12, background: '#fff' }}>
-            <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: 14 }}>
+            <table className="dash-table" style={{ width: '100%', borderCollapse: 'collapse', fontSize: 14 }}>
               <thead>
                 <tr style={{ background: '#f8fafc', borderBottom: '1px solid #e2e8f0' }}>
                   <th style={thStyle}>Locataire</th>
@@ -262,16 +262,17 @@ export default function DashboardComptesLocatairesPage() {
                     onMouseEnter={e => (e.currentTarget.style.background = '#f8fafc')}
                     onMouseLeave={e => (e.currentTarget.style.background = '#fff')}
                   >
-                    <td style={tdStyle}>
+                    <td data-label="Locataire" style={tdStyle}>
                       <strong>{b.tenant.first_name} {b.tenant.last_name}</strong>
                     </td>
-                    <td style={tdStyle}>{b.tenant.room_number || '—'}</td>
-                    <td style={tdStyle}>{fmtDate(b.tenant.move_in_date)}</td>
-                    <td style={tdStyle}>{b.tenant.current_rent ? fmt(b.tenant.current_rent) : '—'}</td>
-                    <td style={{ ...tdStyle, textAlign: 'right' }}>{fmt(b.loyer)}</td>
-                    <td style={{ ...tdStyle, textAlign: 'right', color: '#22c55e' }}>{fmt(b.paiement)}</td>
-                    <td style={{ ...tdStyle, textAlign: 'right', color: '#8b5cf6' }}>{fmt(b.caution)}</td>
+                    <td data-label="Chambre" style={tdStyle}>{b.tenant.room_number || '—'}</td>
+                    <td data-label="Entrée" style={tdStyle}>{fmtDate(b.tenant.move_in_date)}</td>
+                    <td data-label="Loyer" style={tdStyle}>{b.tenant.current_rent ? fmt(b.tenant.current_rent) : '—'}</td>
+                    <td data-label="Dus" style={{ ...tdStyle, textAlign: 'right' }}>{fmt(b.loyer)}</td>
+                    <td data-label="Paiements" style={{ ...tdStyle, textAlign: 'right', color: '#22c55e' }}>{fmt(b.paiement)}</td>
+                    <td data-label="Caution" style={{ ...tdStyle, textAlign: 'right', color: '#8b5cf6' }}>{fmt(b.caution)}</td>
                     <td
+                      data-label="Solde"
                       style={{
                         ...tdStyle,
                         textAlign: 'right',
@@ -281,7 +282,7 @@ export default function DashboardComptesLocatairesPage() {
                     >
                       {fmt(b.solde)}
                     </td>
-                    <td style={tdStyle}>
+                    <td data-label="Statut" style={tdStyle}>
                       <span
                         style={{
                           display: 'inline-block',
@@ -410,6 +411,7 @@ function LedgerDetailModal({
   return (
     <div
       onClick={onClose}
+      className="dash-modal-overlay"
       style={{
         position: 'fixed',
         inset: 0,
@@ -423,6 +425,7 @@ function LedgerDetailModal({
     >
       <div
         onClick={e => e.stopPropagation()}
+        className="dash-modal"
         style={{
           background: '#fff',
           borderRadius: 16,
@@ -470,7 +473,7 @@ function LedgerDetailModal({
         </div>
 
         {/* Ledger entries header with add button */}
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 8 }}>
+        <div className="dash-toolbar" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 8 }}>
           <h3 style={{ fontSize: 16, fontWeight: 600, margin: 0 }}>Détail du ledger ({sorted.length} écritures)</h3>
           <button
             onClick={() => setShowForm(v => !v)}
@@ -533,7 +536,7 @@ function LedgerDetailModal({
         )}
 
         <div style={{ border: '1px solid #e2e8f0', borderRadius: 8, overflow: 'hidden' }}>
-          <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: 13 }}>
+          <table className="dash-table" style={{ width: '100%', borderCollapse: 'collapse', fontSize: 13 }}>
             <thead>
               <tr style={{ background: '#f8fafc' }}>
                 <th style={thStyle}>Date</th>
@@ -547,8 +550,8 @@ function LedgerDetailModal({
             <tbody>
               {sorted.map(e => (
                 <tr key={e.id} style={{ borderTop: '1px solid #f1f5f9' }}>
-                  <td style={tdStyle}>{fmtDate(e.entry_date)}</td>
-                  <td style={tdStyle}>
+                  <td data-label="Date" style={tdStyle}>{fmtDate(e.entry_date)}</td>
+                  <td data-label="Type" style={tdStyle}>
                     <span
                       style={{
                         display: 'inline-block',
@@ -563,9 +566,10 @@ function LedgerDetailModal({
                       {TYPE_LABELS[e.type]}
                     </span>
                   </td>
-                  <td style={tdStyle}>{e.month || '—'}</td>
-                  <td style={{ ...tdStyle, color: '#475569' }}>{e.label || '—'}</td>
+                  <td data-label="Mois" style={tdStyle}>{e.month || '—'}</td>
+                  <td data-label="Libellé" style={{ ...tdStyle, color: '#475569' }}>{e.label || '—'}</td>
                   <td
+                    data-label="Montant"
                     style={{
                       ...tdStyle,
                       textAlign: 'right',
@@ -575,7 +579,7 @@ function LedgerDetailModal({
                   >
                     {fmt(Number(e.amount))}
                   </td>
-                  <td style={{ ...tdStyle, textAlign: 'center' }}>
+                  <td data-label="Actions" className={e.type === 'regularisation' ? undefined : 'dash-hide-mobile'} style={{ ...tdStyle, textAlign: 'center' }}>
                     {e.type === 'regularisation' && (
                       <button
                         onClick={() => handleDelete(e)}

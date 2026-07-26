@@ -5,6 +5,7 @@ import { pdf } from '@react-pdf/renderer';
 import { BailPDF } from './BailPDF';
 import { logAudit } from '@/lib/auditLog';
 import { getBailleurLines } from '@/lib/entities';
+import { useIsMobile } from '@/hooks/use-mobile';
 
 interface Property {
   id: string;
@@ -821,6 +822,7 @@ async function fetchExchangeRate(): Promise<{ rate: number; date: string; isLive
 
 
 export default function DashboardNouveauBailPage() {
+  const isMobile = useIsMobile();
   const [properties, setProperties] = useState<Property[]>([]);
   const toast = useToast();
   const [rooms, setRooms] = useState<Room[]>([]);
@@ -1226,14 +1228,15 @@ export default function DashboardNouveauBailPage() {
   const contractHTML = contractData ? generateContractHTML(contractData) : '';
 
   return (
-    <div style={{ display: 'flex', height: '100vh', background: '#fafafa' }}>
+    <div style={{ display: 'flex', flexDirection: isMobile ? 'column' : 'row', height: isMobile ? 'auto' : '100vh', background: '#fafafa' }}>
       {/* LEFT PANEL — FORM */}
       <div
+        className="dash-scroll-x bail-form-panel"
         style={{
-          flex: '0 0 520px',
+          flex: isMobile ? '0 0 auto' : '0 0 520px',
           overflowY: 'auto',
           background: 'white',
-          padding: '30px',
+          padding: isMobile ? '16px' : '30px',
           boxShadow: '0 0 10px rgba(0,0,0,0.1)',
         }}
       >
@@ -1994,7 +1997,7 @@ export default function DashboardNouveauBailPage() {
           }}
         />
 
-        <div style={{ display: 'flex', gap: '10px' }}>
+        <div className="dash-toolbar" style={{ display: 'flex', gap: '10px' }}>
           <button
             onClick={async () => { if (!contractData) return; try { const blob = await pdf(BailPDF({ data: contractData })).toBlob(); const url = URL.createObjectURL(blob); const a = document.createElement('a'); a.href = url; a.download = `Bail_${form.locataire_nom || 'Locataire'}_${form.entry_date || 'date'}.pdf`; a.click(); URL.revokeObjectURL(url); } catch (e) { console.error('PDF error:', e); toast.error('Erreur PDF: ' + e); } }}
             disabled={!contractData || rateStatus === 'fallback'}
@@ -2049,13 +2052,14 @@ export default function DashboardNouveauBailPage() {
 
       {/* RIGHT PANEL — PREVIEW */}
       <div
+        className="dash-scroll-x bail-preview-panel"
         style={{
-          flex: 1,
+          flex: isMobile ? '0 0 auto' : 1,
           overflowY: 'auto',
           background: '#f5f5f5',
-          padding: '30px',
+          padding: isMobile ? '12px' : '30px',
           display: 'flex',
-          justifyContent: 'center',
+          justifyContent: isMobile ? 'flex-start' : 'center',
         }}
       >
         {contractHTML ? (
@@ -2064,6 +2068,7 @@ export default function DashboardNouveauBailPage() {
             style={{
               background: 'white',
               width: '210mm',
+              flexShrink: isMobile ? 0 : undefined,
               boxShadow: '0 0 20px rgba(0,0,0,0.15)',
               borderRadius: '4px',
             }}
@@ -2089,10 +2094,13 @@ export default function DashboardNouveauBailPage() {
             margin: 0;
             padding: 0;
           }
-          div[style*="flex: 0 0 520px"] {
+          /* Ciblage par classe et non par style inline : les valeurs de flex
+             changent sur mobile (isMobile), ce qui cassait silencieusement
+             l'impression depuis un téléphone (tout le formulaire imprimé). */
+          .bail-form-panel {
             display: none;
           }
-          div[style*="flex: 1"] {
+          .bail-preview-panel {
             flex: 1 !important;
             padding: 0 !important;
             background: white !important;
@@ -2107,8 +2115,8 @@ export default function DashboardNouveauBailPage() {
 
       {/* Replace tenant confirmation modal */}
       {replaceConfirm && (
-        <div style={{position:'fixed',top:0,left:0,right:0,bottom:0,background:'rgba(0,0,0,0.6)',display:'flex',alignItems:'center',justifyContent:'center',zIndex:2000}} onClick={()=>setReplaceConfirm(null)}>
-          <div style={{background:'white',borderRadius:'12px',padding:'24px',width:'440px',maxWidth:'90vw'}} onClick={e=>e.stopPropagation()}>
+        <div className="dash-modal-overlay" style={{position:'fixed',top:0,left:0,right:0,bottom:0,background:'rgba(0,0,0,0.6)',display:'flex',alignItems:'center',justifyContent:'center',zIndex:2000}} onClick={()=>setReplaceConfirm(null)}>
+          <div className="dash-modal dash-modal-compact" style={{background:'white',borderRadius:'12px',padding:'24px',width:'440px',maxWidth:'90vw'}} onClick={e=>e.stopPropagation()}>
             <h3 style={{margin:'0 0 12px',fontSize:'16px'}}>⚠️ Chambre occupée</h3>
             <p style={{fontSize:'14px',color:'#555',margin:'0 0 20px'}}><strong>{replaceConfirm.oldTenant.first_name} {replaceConfirm.oldTenant.last_name}</strong> occupe actuellement cette chambre. Voulez-vous le désactiver et enregistrer le nouveau bail ?</p>
             <div style={{display:'flex',gap:'8px',justifyContent:'flex-end'}}>

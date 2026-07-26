@@ -85,7 +85,7 @@ export default function DashboardDepensesPage() {
           <h2 style={{margin:0,fontSize:'20px',color:'#1a1a2e'}}>{new Date(month+'-01').toLocaleDateString('fr-FR',{month:'long',year:'numeric'}).replace(/^\w/,c=>c.toUpperCase())}</h2>
           <button onClick={nextMonth} style={{border:'1px solid #ddd',background:'#fff',borderRadius:'6px',padding:'6px 12px',cursor:'pointer',fontSize:'16px'}}>→</button>
         </div>
-        <div style={{display:'flex',gap:'8px',flexWrap:'wrap',alignItems:'center'}}>
+        <div className="dash-toolbar" style={{display:'flex',gap:'8px',flexWrap:'wrap',alignItems:'center'}}>
           {[{v:'all',l:'Toutes les entités'},{v:'LMP',l:'La Villa (LMP)'},{v:'SCI',l:'Sleep In (SCI)'},{v:'MB',l:'Mont-Blanc (NP)'}].map(e=>(
             <button key={e.v} onClick={()=>setEntityFilter(e.v)} style={{...S.btn,background:entityFilter===e.v?'#3D4A38':'#e5e7eb',color:entityFilter===e.v?'#fff':'#555',fontWeight:entityFilter===e.v?600:400}}>{e.l}</button>
           ))}
@@ -135,7 +135,7 @@ export default function DashboardDepensesPage() {
       </div>
 
       <div style={{...S.card,padding:0,overflow:'auto'}}>
-        <table style={{width:'100%',borderCollapse:'collapse',fontSize:'14px'}}>
+        <table className="dash-table" style={{width:'100%',borderCollapse:'collapse',fontSize:'14px'}}>
           <thead><tr style={{background:'#f8f8f8',borderBottom:'2px solid #e5e7eb'}}>
             {['Date','Libellé','Catégorie','Entité','Montant'].map(h=>(
               <th key={h} style={{padding:'12px 16px',textAlign:h==='Montant'?'right':'left',fontWeight:600,color:'#555',fontSize:'12px',textTransform:'uppercase'}}>{h}</th>
@@ -146,11 +146,11 @@ export default function DashboardDepensesPage() {
               const badge = ENTITY_BADGES[e.entity_code]||{bg:'#e5e7eb',color:'#555'};
               return (
                 <tr key={e.transaction_id} style={{borderBottom:'1px solid #f0f0f0'}}>
-                  <td style={{padding:'10px 16px',color:'#888'}}>{e.accounting_date?new Date(e.accounting_date).toLocaleDateString('fr-FR'):'—'}</td>
-                  <td style={{padding:'10px 16px',fontWeight:500}} title={e.details||e.label_operation}>{e.label_simple}</td>
-                  <td style={{padding:'10px 16px'}}><span style={{fontSize:'13px'}}>{e.category}</span></td>
-                  <td style={{padding:'10px 16px'}}><span style={{background:badge.bg,color:badge.color,padding:'2px 8px',borderRadius:'4px',fontSize:'12px',fontWeight:500}}>{e.entity_code}</span></td>
-                  <td style={{padding:'10px 16px',textAlign:'right',fontWeight:600,color:'#ef4444'}}>{fmt(e.amount)}</td>
+                  <td data-label="Date" style={{padding:'10px 16px',color:'#888'}}>{e.accounting_date?new Date(e.accounting_date).toLocaleDateString('fr-FR'):'—'}</td>
+                  <td data-label="Libellé" style={{padding:'10px 16px',fontWeight:500}} title={e.details||e.label_operation}>{e.label_simple}</td>
+                  <td data-label="Catégorie" style={{padding:'10px 16px'}}><span style={{fontSize:'13px'}}>{e.category}</span></td>
+                  <td data-label="Entité" style={{padding:'10px 16px'}}><span style={{background:badge.bg,color:badge.color,padding:'2px 8px',borderRadius:'4px',fontSize:'12px',fontWeight:500}}>{e.entity_code}</span></td>
+                  <td data-label="Montant" style={{padding:'10px 16px',textAlign:'right',fontWeight:600,color:'#ef4444'}}>{fmt(e.amount)}</td>
                 </tr>
               );
             })}

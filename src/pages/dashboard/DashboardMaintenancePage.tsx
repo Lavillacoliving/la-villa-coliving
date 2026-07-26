@@ -189,13 +189,13 @@ export default function DashboardMaintenancePage() {
   return (
     <div>
       <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:"20px",flexWrap:"wrap",gap:"12px"}}>
-        <div style={{display:"flex",gap:"8px",flexWrap:"wrap"}}>
+        <div className="dash-toolbar" style={{display:"flex",gap:"8px",flexWrap:"wrap"}}>
           {[{v:"active",l:"Actifs"},{v:"all",l:"Tous"},{v:"resolved",l:"Résolus"},{v:"closed",l:"Fermés"}].map(e=>(
             <button key={e.v} onClick={()=>setStatusFilter(e.v)} style={{
               ...S.btn, background:statusFilter===e.v?"#b8860b":"#e5e7eb",color:statusFilter===e.v?"#fff":"#555"
             }}>{e.l}</button>))}
         </div>
-        <div style={{display:"flex",gap:"8px",flexWrap:"wrap",alignItems:"center"}}>
+        <div className="dash-toolbar" style={{display:"flex",gap:"8px",flexWrap:"wrap",alignItems:"center"}}>
           {PROPERTY_FILTER_OPTIONS.map(e=>(
             <button key={e.value} onClick={()=>setPropFilter(e.value)} style={{
               ...S.btn, background:propFilter===e.value?"#1a1a2e":"#e5e7eb",color:propFilter===e.value?"#fff":"#555"
@@ -212,7 +212,7 @@ export default function DashboardMaintenancePage() {
       </div>
 
       <div style={{...S.card,padding:0,overflow:"auto"}}>
-        <table style={{width:"100%",borderCollapse:"collapse",fontSize:"14px"}}>
+        <table className="dash-table" style={{width:"100%",borderCollapse:"collapse",fontSize:"14px"}}>
           <thead><tr style={{background:"#f8f8f8",borderBottom:"2px solid #e5e7eb"}}>
             {["Titre","Propriété","Ch.","Priorité","Statut","Catégorie","Créé le","Assigné"].map(h=>(
               <th key={h} style={{padding:"12px 16px",textAlign:"left",fontWeight:600,color:"#555",fontSize:"12px",textTransform:"uppercase"}}>{h}</th>))}
@@ -221,20 +221,20 @@ export default function DashboardMaintenancePage() {
             {filtered.map(t=>{
               const prop=properties.find(p=>p.id===t.property_id);
               return(<tr key={t.id} style={{borderBottom:"1px solid #f0f0f0",cursor:"pointer"}} onClick={()=>openModal(t)}>
-                <td style={{padding:"10px 16px",fontWeight:500,maxWidth:"250px"}}>{t.title}</td>
-                <td style={{padding:"10px 16px"}}>{prop?.name||""}</td>
-                <td style={{padding:"10px 16px"}}>{t.room_number||"-"}</td>
-                <td style={{padding:"10px 16px"}}><span style={{background:PRIO_COLORS[t.priority]||"#94a3b8",color:"#fff",padding:"2px 10px",borderRadius:"12px",fontSize:"12px"}}>{PRIO_LABELS[t.priority]||t.priority}</span></td>
-                <td style={{padding:"10px 16px"}}>
+                <td data-label="Titre" style={{padding:"10px 16px",fontWeight:500,maxWidth:"250px"}}>{t.title}</td>
+                <td data-label="Propriété" style={{padding:"10px 16px"}}>{prop?.name||""}</td>
+                <td data-label="Ch." style={{padding:"10px 16px"}}>{t.room_number||"-"}</td>
+                <td data-label="Priorité" style={{padding:"10px 16px"}}><span style={{background:PRIO_COLORS[t.priority]||"#94a3b8",color:"#fff",padding:"2px 10px",borderRadius:"12px",fontSize:"12px"}}>{PRIO_LABELS[t.priority]||t.priority}</span></td>
+                <td data-label="Statut" style={{padding:"10px 16px"}}>
                   <span
                     onClick={(e)=>{e.stopPropagation();cycleStatus(t.id,t.status);}}
                     style={{background:STATUS_COLORS[t.status]||"#94a3b8",color:"#fff",padding:"2px 10px",borderRadius:"12px",fontSize:"12px",cursor:"pointer",userSelect:"none"}}
                     title="Cliquer pour changer le statut"
                   >{STATUS_LABELS[t.status]||t.status}</span>
                 </td>
-                <td style={{padding:"10px 16px",fontSize:"12px"}}>{CAT_LABELS[t.category] || t.category}</td>
-                <td style={{padding:"10px 16px",color:"#888",fontSize:"12px"}}>{new Date(t.created_at).toLocaleDateString("fr-FR")}</td>
-                <td style={{padding:"10px 16px",color:"#888"}}>{t.assigned_to||"-"}</td>
+                <td data-label="Catégorie" style={{padding:"10px 16px",fontSize:"12px"}}>{CAT_LABELS[t.category] || t.category}</td>
+                <td data-label="Créé le" style={{padding:"10px 16px",color:"#888",fontSize:"12px"}}>{new Date(t.created_at).toLocaleDateString("fr-FR")}</td>
+                <td data-label="Assigné" style={{padding:"10px 16px",color:"#888"}}>{t.assigned_to||"-"}</td>
               </tr>);})}
             {filtered.length===0&&<tr><td colSpan={8} style={{padding:"40px",textAlign:"center",color:"#888"}}>Aucun ticket</td></tr>}
           </tbody>
@@ -243,8 +243,8 @@ export default function DashboardMaintenancePage() {
 
       {/* Ticket Modal */}
       {modal && (
-        <div style={{position:'fixed',top:0,left:0,right:0,bottom:0,background:'rgba(0,0,0,0.5)',display:'flex',alignItems:'center',justifyContent:'center',zIndex:1000,overflow:'auto',padding:'20px'}} onClick={()=>setModal(null)}>
-          <div style={{background:'white',borderRadius:'16px',padding:'28px',width:'600px',maxWidth:'95vw',maxHeight:'90vh',overflow:'auto'}} onClick={e=>e.stopPropagation()}>
+        <div className="dash-modal-overlay" style={{position:'fixed',top:0,left:0,right:0,bottom:0,background:'rgba(0,0,0,0.5)',display:'flex',alignItems:'center',justifyContent:'center',zIndex:1000,overflow:'auto',padding:'20px'}} onClick={()=>setModal(null)}>
+          <div className="dash-modal" style={{background:'white',borderRadius:'16px',padding:'28px',width:'600px',maxWidth:'95vw',maxHeight:'90vh',overflow:'auto'}} onClick={e=>e.stopPropagation()}>
             <div style={{display:'flex',justifyContent:'space-between',alignItems:'center',marginBottom:'20px'}}>
               <h2 style={{margin:0,fontSize:'20px'}}>{isNew?'Nouveau Ticket':'Modifier Ticket'}</h2>
               <button onClick={()=>setModal(null)} style={{background:'none',border:'none',fontSize:'24px',cursor:'pointer',color:'#888'}}>×</button>
@@ -313,13 +313,13 @@ export default function DashboardMaintenancePage() {
                   {photos.map(p => (
                     <div key={p.name} style={{position:'relative',width:'80px',height:'80px',borderRadius:'8px',overflow:'hidden',border:'1px solid #e5e7eb'}}>
                       <img src={p.url} alt={p.name} style={{width:'100%',height:'100%',objectFit:'cover'}} />
-                      <button onClick={()=>deletePhoto(p.name)} style={{position:'absolute',top:'2px',right:'2px',background:'rgba(239,68,68,0.9)',color:'#fff',border:'none',borderRadius:'50%',width:'18px',height:'18px',fontSize:'11px',cursor:'pointer',lineHeight:'18px',padding:0}}>×</button>
+                      <button onClick={()=>deletePhoto(p.name)} className="dash-tap-keep" style={{position:'absolute',top:'2px',right:'2px',background:'rgba(239,68,68,0.9)',color:'#fff',border:'none',borderRadius:'50%',width:'18px',height:'18px',fontSize:'11px',cursor:'pointer',lineHeight:'18px',padding:0}}>×</button>
                     </div>
                   ))}
                 </div>
               )}
               {!isNew && modal?.id ? (
-                <label style={{display:'inline-block',padding:'6px 14px',background:'#e5e7eb',borderRadius:'6px',cursor:uploading?'wait':'pointer',fontSize:'13px'}}>
+                <label className="dash-btn" style={{display:'inline-block',padding:'6px 14px',background:'#e5e7eb',borderRadius:'6px',cursor:uploading?'wait':'pointer',fontSize:'13px'}}>
                   {uploading ? 'Upload...' : '📷 Ajouter des photos'}
                   <input type="file" multiple accept="image/*" style={{display:'none'}} onChange={e=>uploadPhotos(e.target.files)} disabled={uploading} />
                 </label>
@@ -348,8 +348,8 @@ export default function DashboardMaintenancePage() {
 
       {/* Delete confirmation modal */}
       {deleteConfirm && (
-        <div style={{position:'fixed',top:0,left:0,right:0,bottom:0,background:'rgba(0,0,0,0.6)',display:'flex',alignItems:'center',justifyContent:'center',zIndex:2000}} onClick={()=>setDeleteConfirm(null)}>
-          <div style={{background:'white',borderRadius:'12px',padding:'24px',width:'400px',maxWidth:'90vw'}} onClick={e=>e.stopPropagation()}>
+        <div className="dash-modal-overlay" style={{position:'fixed',top:0,left:0,right:0,bottom:0,background:'rgba(0,0,0,0.6)',display:'flex',alignItems:'center',justifyContent:'center',zIndex:2000}} onClick={()=>setDeleteConfirm(null)}>
+          <div className="dash-modal dash-modal-compact" style={{background:'white',borderRadius:'12px',padding:'24px',width:'400px',maxWidth:'90vw'}} onClick={e=>e.stopPropagation()}>
             <h3 style={{margin:'0 0 12px',fontSize:'16px'}}>⚠️ Confirmer la suppression</h3>
             <p style={{fontSize:'14px',color:'#555',margin:'0 0 20px'}}>Supprimer <strong>{deleteConfirm.label}</strong> ? Cette action est irréversible.</p>
             <div style={{display:'flex',gap:'8px',justifyContent:'flex-end'}}>

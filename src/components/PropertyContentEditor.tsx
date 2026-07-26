@@ -139,6 +139,7 @@ export default function PropertyContentEditor({ propertyId, propertyName }: Prop
       {/* Edit modal */}
       {editingRow && (
         <div
+          className="dash-modal-overlay"
           style={{
             position: 'fixed', top: 0, left: 0, right: 0, bottom: 0,
             background: 'rgba(0,0,0,0.6)', display: 'flex',
@@ -147,6 +148,7 @@ export default function PropertyContentEditor({ propertyId, propertyName }: Prop
           onClick={() => setEditingRow(null)}
         >
           <div
+            className="dash-modal"
             style={{
               background: 'white', borderRadius: '12px', padding: '24px',
               width: '700px', maxWidth: '90vw', maxHeight: '90vh', overflowY: 'auto',

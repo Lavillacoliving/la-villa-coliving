@@ -122,7 +122,7 @@ export default function DashboardDocumentsPage() {
     <div>
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px', flexWrap: 'wrap', gap: '12px' }}>
         <h2 style={{ margin: 0, fontSize: '20px', color: '#1a1a2e' }}>Documents</h2>
-        <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
+        <div className="dash-toolbar" style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
           {['compta', 'operations', 'tenant-files'].map(b => (
             <button key={b} onClick={() => switchBucket(b)} style={{ ...S.btn, background: bucket === b ? '#3D4A38' : '#e5e7eb', color: bucket === b ? '#fff' : '#555', fontWeight: bucket === b ? 600 : 400, textTransform: 'capitalize' }}>{b}</button>
           ))}
@@ -145,10 +145,10 @@ export default function DashboardDocumentsPage() {
       </div>
 
       {/* Search + Upload */}
-      <div style={{ display: 'flex', gap: '12px', marginBottom: '20px', flexWrap: 'wrap', alignItems: 'center' }}>
+      <div className="dash-toolbar" style={{ display: 'flex', gap: '12px', marginBottom: '20px', flexWrap: 'wrap', alignItems: 'center' }}>
         <input value={search} onChange={e => setSearch(e.target.value)} placeholder="Rechercher un fichier..." style={{ padding: '8px 14px', border: '1px solid #ddd', borderRadius: '8px', fontSize: '14px', minWidth: '250px' }} />
         <button onClick={() => { setFolderName(''); setFolderModal(true); }} style={{ padding: '8px 16px', background: '#3D4A38', color: '#fff', borderRadius: '8px', cursor: 'pointer', fontSize: '13px', fontWeight: 600, border: 'none' }}>+ Dossier</button>
-        <label style={{ padding: '8px 16px', background: '#b8860b', color: '#fff', borderRadius: '8px', cursor: uploading ? 'wait' : 'pointer', fontSize: '13px', fontWeight: 600 }}>
+        <label className="dash-btn" style={{ padding: '8px 16px', background: '#b8860b', color: '#fff', borderRadius: '8px', cursor: uploading ? 'wait' : 'pointer', fontSize: '13px', fontWeight: 600 }}>
           {uploading ? 'Upload...' : '📤 Ajouter des fichiers'}
           <input type="file" multiple style={{ display: 'none' }} onChange={e => uploadFiles(e.target.files)} disabled={uploading} />
         </label>
@@ -193,8 +193,8 @@ export default function DashboardDocumentsPage() {
       )}
       {/* Folder creation modal */}
 {folderModal && (
-<div style={{position:"fixed",inset:0,background:"rgba(0,0,0,0.4)",display:"flex",alignItems:"center",justifyContent:"center",zIndex:999}} onClick={()=>setFolderModal(false)}>
-<div style={{background:"#fff",borderRadius:"12px",padding:"24px",width:"380px",maxWidth:"90vw"}} onClick={e=>e.stopPropagation()}>
+<div className="dash-modal-overlay" style={{position:"fixed",inset:0,background:"rgba(0,0,0,0.4)",display:"flex",alignItems:"center",justifyContent:"center",zIndex:999}} onClick={()=>setFolderModal(false)}>
+<div className="dash-modal dash-modal-compact" style={{background:"#fff",borderRadius:"12px",padding:"24px",width:"380px",maxWidth:"90vw"}} onClick={e=>e.stopPropagation()}>
 <h3 style={{margin:"0 0 16px",fontSize:"16px"}}>Nouveau dossier</h3>
 <input autoFocus value={folderName} onChange={e=>setFolderName(e.target.value)} onKeyDown={e=>{if(e.key==="Enter")createFolder()}} placeholder="Nom du dossier" style={{width:"100%",padding:"10px 12px",border:"1px solid #ddd",borderRadius:"8px",fontSize:"14px",boxSizing:"border-box"}} />
 <div style={{display:"flex",gap:"8px",justifyContent:"flex-end",marginTop:"16px"}}>
@@ -203,8 +203,8 @@ export default function DashboardDocumentsPage() {
 </div></div></div>)}
 {/* Delete confirmation modal */}
 {deleteTarget && (
-<div style={{position:"fixed",inset:0,background:"rgba(0,0,0,0.4)",display:"flex",alignItems:"center",justifyContent:"center",zIndex:999}} onClick={()=>setDeleteTarget(null)}>
-<div style={{background:"#fff",borderRadius:"12px",padding:"24px",width:"380px",maxWidth:"90vw"}} onClick={e=>e.stopPropagation()}>
+<div className="dash-modal-overlay" style={{position:"fixed",inset:0,background:"rgba(0,0,0,0.4)",display:"flex",alignItems:"center",justifyContent:"center",zIndex:999}} onClick={()=>setDeleteTarget(null)}>
+<div className="dash-modal dash-modal-compact" style={{background:"#fff",borderRadius:"12px",padding:"24px",width:"380px",maxWidth:"90vw"}} onClick={e=>e.stopPropagation()}>
 <h3 style={{margin:"0 0 8px",fontSize:"16px"}}>Confirmer la suppression</h3>
 <p style={{color:"#555",fontSize:"14px",margin:"0 0 20px"}}>Supprimer <strong>{deleteTarget.split("/").pop()}</strong> ?</p>
 <div style={{display:"flex",gap:"8px",justifyContent:"flex-end"}}>

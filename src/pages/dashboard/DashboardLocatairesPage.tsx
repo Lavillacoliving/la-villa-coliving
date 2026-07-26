@@ -335,17 +335,17 @@ export default function DashboardLocatairesPage() {
       </div>
 
       {/* Filters */}
-      <div style={{display:'flex',gap:'8px',marginBottom:'16px',flexWrap:'wrap',alignItems:'center'}}>
+      <div className="dash-toolbar" style={{display:'flex',gap:'8px',marginBottom:'16px',flexWrap:'wrap',alignItems:'center'}}>
         {[{value:'all',label:'Toutes'},{value:'lavilla',label:'La Villa'},{value:'leloft',label:'Le Loft'},{value:'lelodge',label:'Le Lodge'},{value:'montblanc',label:'Mont-Blanc'}].map(e=>(
           <button key={e.value} onClick={()=>setFilter(e.value)} style={{...S.btn,background:filter===e.value?'#3D4A38':'#e5e7eb',color:filter===e.value?'#fff':'#555',fontWeight:filter===e.value?600:400}}>{e.label}</button>
         ))}
       </div>
-      <div style={{display:'flex',gap:'8px',marginBottom:'16px',flexWrap:'wrap',alignItems:'center'}}>
+      <div className="dash-toolbar" style={{display:'flex',gap:'8px',marginBottom:'16px',flexWrap:'wrap',alignItems:'center'}}>
         <input value={search} onChange={e=>setSearch(e.target.value)} placeholder="Chercher un locataire..." style={{padding:'8px 14px',border:'1px solid #ddd',borderRadius:'8px',fontSize:'14px',minWidth:'200px'}}/>
         {[{v:'all' as const,l:'Tous'},{v:'active' as const,l:'Actifs'},{v:'inactive' as const,l:'Anciens'}].map(f=>(
           <button key={f.v} onClick={()=>setStatusFilter(f.v)} style={{...S.btn,background:statusFilter===f.v?'#5A6B52':'#fff',color:statusFilter===f.v?'#fff':'#555',border:statusFilter===f.v?'none':'1px solid #ddd'}}>{f.l}</button>
         ))}
-        <button onClick={exportExcel} style={{padding:'6px 14px',background:'#1a1a2e',color:'#fff',border:'none',borderRadius:'6px',cursor:'pointer',fontSize:'13px',marginLeft:'auto'}}>Export Excel</button>
+        <button onClick={exportExcel} className="dash-toolbar-end" style={{padding:'6px 14px',background:'#1a1a2e',color:'#fff',border:'none',borderRadius:'6px',cursor:'pointer',fontSize:'13px',marginLeft:'auto'}}>Export Excel</button>
       </div>
 
       {/* KPIs */}
@@ -357,7 +357,7 @@ export default function DashboardLocatairesPage() {
 
       {/* Table */}
       <div style={{...S.card,padding:0,overflow:'auto'}}>
-        <table style={{width:'100%',borderCollapse:'collapse',fontSize:'14px'}}>
+        <table className="dash-table" style={{width:'100%',borderCollapse:'collapse',fontSize:'14px'}}>
           <thead><tr style={{background:'#f8f8f8',borderBottom:'2px solid #e5e7eb'}}>
             {['Propriété','Ch.','Locataire','Loyer','Contact','Entrée','Bail','Caution','Quest.','Statut'].map(h=>(
               <th key={h} style={{padding:'12px 16px',textAlign:'left',fontWeight:600,color:'#555',fontSize:'12px',textTransform:'uppercase'}}>{h}</th>
@@ -370,16 +370,16 @@ export default function DashboardLocatairesPage() {
               const ls = LEASE_STATUS_META[(t.lease_status as LeaseStatus) || 'active'];
               return (
                 <tr key={t.id} style={{borderBottom:'1px solid #f0f0f0',opacity:t.is_active?1:0.5,cursor:'pointer'}} onClick={()=>openModal(t)}>
-                  <td style={{padding:'10px 16px',fontSize:'12px'}}>{prop?.name||''}</td>
-                  <td style={{padding:'10px 16px',fontWeight:600}}>{properties.find(p=>p.id===t.property_id)?.is_coliving===false ? 'Appt.' : `Ch. ${t.room_number}`}</td>
-                  <td style={{padding:'10px 16px',fontWeight:500}}>{t.first_name} {t.last_name}</td>
-                  <td style={{padding:'10px 16px'}}>{fmt(t.current_rent)}</td>
-                  <td style={{padding:'10px 16px',fontSize:'12px'}}>{t.email && <span title={t.email}>✉️</span>} {t.phone && <a href={'tel:'+t.phone} title={t.phone} style={{textDecoration:'none'}}>📞</a>}</td>
-                  <td style={{padding:'10px 16px',color:'#888',fontSize:'13px'}}>{t.move_in_date?new Date(t.move_in_date).toLocaleDateString('fr-FR'):'—'}</td>
-                  <td style={{padding:'10px 16px'}}><span style={{background:ls.bg,color:ls.color,padding:'2px 8px',borderRadius:'10px',fontSize:'11px',fontWeight:600}}>{ls.label}</span></td>
-                  <td style={{padding:'10px 16px'}}><span style={{color:ds.color,fontSize:'12px',fontWeight:500}}>{ds.label}</span></td>
-                  <td style={{padding:'10px 16px'}}>{(() => { const b=surveyBadge(t.id); return b ? <span style={{background:b.bg,color:b.color,padding:'2px 8px',borderRadius:'10px',fontSize:'11px',fontWeight:600}}>{b.label}</span> : <span style={{color:'#d1d5db'}}>—</span>; })()}</td>
-                  <td style={{padding:'10px 16px'}}><span style={{background:t.is_active?'#22c55e':'#94a3b8',color:'#fff',padding:'2px 10px',borderRadius:'12px',fontSize:'12px'}}>{t.is_active?'Actif':'Sorti'}</span></td>
+                  <td data-label="Propriété" style={{padding:'10px 16px',fontSize:'12px'}}>{prop?.name||''}</td>
+                  <td data-label="Ch." style={{padding:'10px 16px',fontWeight:600}}>{properties.find(p=>p.id===t.property_id)?.is_coliving===false ? 'Appt.' : `Ch. ${t.room_number}`}</td>
+                  <td data-label="Locataire" style={{padding:'10px 16px',fontWeight:500}}>{t.first_name} {t.last_name}</td>
+                  <td data-label="Loyer" style={{padding:'10px 16px'}}>{fmt(t.current_rent)}</td>
+                  <td data-label="Contact" style={{padding:'10px 16px',fontSize:'12px'}}>{t.email && <span title={t.email}>✉️</span>} {t.phone && <a href={'tel:'+t.phone} title={t.phone} style={{textDecoration:'none'}}>📞</a>}</td>
+                  <td data-label="Entrée" style={{padding:'10px 16px',color:'#888',fontSize:'13px'}}>{t.move_in_date?new Date(t.move_in_date).toLocaleDateString('fr-FR'):'—'}</td>
+                  <td data-label="Bail" style={{padding:'10px 16px'}}><span style={{background:ls.bg,color:ls.color,padding:'2px 8px',borderRadius:'10px',fontSize:'11px',fontWeight:600}}>{ls.label}</span></td>
+                  <td data-label="Caution" style={{padding:'10px 16px'}}><span style={{color:ds.color,fontSize:'12px',fontWeight:500}}>{ds.label}</span></td>
+                  <td data-label="Quest." style={{padding:'10px 16px'}}>{(() => { const b=surveyBadge(t.id); return b ? <span style={{background:b.bg,color:b.color,padding:'2px 8px',borderRadius:'10px',fontSize:'11px',fontWeight:600}}>{b.label}</span> : <span style={{color:'#d1d5db'}}>—</span>; })()}</td>
+                  <td data-label="Statut" style={{padding:'10px 16px'}}><span style={{background:t.is_active?'#22c55e':'#94a3b8',color:'#fff',padding:'2px 10px',borderRadius:'12px',fontSize:'12px'}}>{t.is_active?'Actif':'Sorti'}</span></td>
                 </tr>
               );
             })}
@@ -390,8 +390,8 @@ export default function DashboardLocatairesPage() {
 
       {/* Tenant Modal */}
       {modal && (
-        <div style={{position:'fixed',top:0,left:0,right:0,bottom:0,background:'rgba(0,0,0,0.5)',display:'flex',alignItems:'center',justifyContent:'center',zIndex:1000,overflow:'auto',padding:'20px'}} onClick={closeModal}>
-          <div style={{background:'white',borderRadius:'16px',padding:'28px',width:'600px',maxWidth:'95vw',maxHeight:'90vh',overflow:'auto'}} onClick={e=>e.stopPropagation()}>
+        <div className="dash-modal-overlay" style={{position:'fixed',top:0,left:0,right:0,bottom:0,background:'rgba(0,0,0,0.5)',display:'flex',alignItems:'center',justifyContent:'center',zIndex:1000,overflow:'auto',padding:'20px'}} onClick={closeModal}>
+          <div className="dash-modal" style={{background:'white',borderRadius:'16px',padding:'28px',width:'600px',maxWidth:'95vw',maxHeight:'90vh',overflow:'auto'}} onClick={e=>e.stopPropagation()}>
             <div style={{display:'flex',justifyContent:'space-between',alignItems:'center',marginBottom:'20px'}}>
               <h2 style={{margin:0,fontSize:'20px'}}>{isNew?'Nouveau Locataire':'Fiche Locataire'}</h2>
               <button onClick={closeModal} style={{background:'none',border:'none',fontSize:'24px',cursor:'pointer',color:'#888'}}>×</button>
@@ -409,7 +409,7 @@ export default function DashboardLocatairesPage() {
               <div>
                 <div style={{display:'flex',justifyContent:'space-between',alignItems:'center',marginBottom:'16px'}}>
                   <h3 style={{margin:0,fontSize:'16px'}}>Documents du locataire</h3>
-                  <label style={{padding:'6px 14px',background:'#b8860b',color:'#fff',borderRadius:'6px',cursor:uploadingDoc?'wait':'pointer',fontSize:'13px',fontWeight:600}}>
+                  <label className="dash-btn" style={{padding:'6px 14px',background:'#b8860b',color:'#fff',borderRadius:'6px',cursor:uploadingDoc?'wait':'pointer',fontSize:'13px',fontWeight:600}}>
                     {uploadingDoc ? 'Upload...' : '+ Ajouter'}
                     <input type="file" multiple style={{display:'none'}} onChange={e=>uploadTenantDoc(e.target.files)} disabled={uploadingDoc}/>
                   </label>
@@ -590,7 +590,7 @@ export default function DashboardLocatairesPage() {
                   </div>
                 )}
 
-                <div style={{display:'flex',gap:'8px',justifyContent:'space-between'}}>
+                <div className="dash-toolbar" style={{display:'flex',gap:'8px',justifyContent:'space-between'}}>
                   <div>{!isNew && modal.is_active !== false && <button onClick={archiveTenant} style={{padding:'8px 16px',background:'#6b7280',color:'#fff',border:'none',borderRadius:'6px',cursor:'pointer',fontSize:'13px'}}>Passer en ancien</button>}</div>
                   <div style={{display:'flex',gap:'8px'}}>
                     <button onClick={closeModal} style={{padding:'8px 16px',border:'1px solid #ddd',background:'#fff',borderRadius:'6px',cursor:'pointer'}}>Fermer</button>

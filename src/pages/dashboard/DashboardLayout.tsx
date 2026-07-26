@@ -2,6 +2,8 @@ import { useState, useEffect } from 'react';
 import { ToastProvider } from '@/components/ui/Toast';
 import { Outlet, useNavigate, useLocation } from 'react-router-dom';
 import { supabase } from '@/lib/supabase';
+import { useIsMobile } from '@/hooks/use-mobile';
+import '@/dashboard-mobile.css';
 
 const ADMIN_EMAILS = ['jerome@lavillacoliving.com', 'fanny@lavillacoliving.com'];
 
@@ -38,6 +40,8 @@ export default function DashboardLayout() {
 
   const nav = useNavigate();
   const loc = useLocation();
+  const isMobile = useIsMobile();
+  const activeTab = TABS.find(t => loc.pathname.startsWith(t.path))?.id || 'loyers';
 
   const checkAuth = async () => {
     const { data: { user } } = await supabase.auth.getUser();
@@ -110,8 +114,9 @@ export default function DashboardLayout() {
   };
 
   const S = {
-    wrapper: { display: 'flex' as const, justifyContent: 'center' as const, alignItems: 'center' as const, minHeight: '100vh', background: '#FAF8F5' },
-    card: { background: '#fff', padding: '40px', borderRadius: '16px', boxShadow: '0 4px 24px rgba(0,0,0,0.08)', width: '400px', textAlign: 'center' as const },
+    wrapper: { display: 'flex' as const, justifyContent: 'center' as const, alignItems: 'center' as const, minHeight: '100vh', background: '#FAF8F5', padding: isMobile ? '16px' : '0', boxSizing: 'border-box' as const },
+    // maxWidth + boxSizing : sans eux la carte (400/440px) débordait sous 400px de large.
+    card: { background: '#fff', padding: isMobile ? '24px 20px' : '40px', borderRadius: '16px', boxShadow: '0 4px 24px rgba(0,0,0,0.08)', width: '400px', maxWidth: '100%', boxSizing: 'border-box' as const, textAlign: 'center' as const },
     input: { width: '100%', padding: '12px', marginBottom: '12px', border: '1px solid #ddd', borderRadius: '8px', fontSize: '15px', boxSizing: 'border-box' as const },
     btn: { width: '100%', padding: '12px', background: '#b8860b', color: '#fff', border: 'none', borderRadius: '8px', fontSize: '15px', fontWeight: 600, cursor: 'pointer' },
     err: { color: '#e74c3c', fontSize: '13px', marginBottom: '12px' },
@@ -119,12 +124,12 @@ export default function DashboardLayout() {
 
   // Loading
   if (step === 'loading') return (
-    <div style={S.wrapper}><p style={{ color: '#b8860b', fontSize: '18px' }}>Chargement...</p></div>
+    <div className="dash" style={S.wrapper}><p style={{ color: '#b8860b', fontSize: '18px' }}>Chargement...</p></div>
   );
 
   // Login form
   if (step === 'login') return (
-    <div style={S.wrapper}>
+    <div className="dash" style={S.wrapper}>
       <form onSubmit={login} style={S.card}>
         <h2 style={{ color: '#1a1a2e', marginBottom: '8px' }}>Tableau de Bord</h2>
         <p style={{ color: '#888', marginBottom: '24px', fontSize: '14px' }}>Connexion administrateur</p>
@@ -138,7 +143,7 @@ export default function DashboardLayout() {
 
   // MFA Enrollment (first time — QR code)
   if (step === 'mfa-enroll') return (
-    <div style={S.wrapper}>
+    <div className="dash" style={S.wrapper}>
       <form onSubmit={verifyMFA} style={{ ...S.card, width: '440px' }}>
         <h2 style={{ color: '#1a1a2e', marginBottom: '8px' }}>🔒 Activer la double authentification</h2>
         <p style={{ color: '#888', marginBottom: '16px', fontSize: '14px' }}>
@@ -153,7 +158,7 @@ export default function DashboardLayout() {
         <input
           type="text" inputMode="numeric" pattern="[0-9]*" maxLength={6}
           value={totpCode} onChange={e => setTotpCode(e.target.value.replace(/\D/g, ''))}
-          placeholder="Code à 6 chiffres" required autoFocus
+          placeholder="Code à 6 chiffres" required autoFocus className="dash-fs-keep"
           style={{ ...S.input, textAlign: 'center', fontSize: '24px', letterSpacing: '8px', fontWeight: 700 }}
         />
         {err && <p style={S.err}>{err}</p>}
@@ -167,7 +172,7 @@ export default function DashboardLayout() {
 
   // MFA Verify (returning user)
   if (step === 'mfa-verify') return (
-    <div style={S.wrapper}>
+    <div className="dash" style={S.wrapper}>
       <form onSubmit={verifyMFA} style={S.card}>
         <h2 style={{ color: '#1a1a2e', marginBottom: '8px' }}>🔒 Vérification 2FA</h2>
         <p style={{ color: '#888', marginBottom: '24px', fontSize: '14px' }}>
@@ -176,7 +181,7 @@ export default function DashboardLayout() {
         <input
           type="text" inputMode="numeric" pattern="[0-9]*" maxLength={6}
           value={totpCode} onChange={e => setTotpCode(e.target.value.replace(/\D/g, ''))}
-          placeholder="000000" required autoFocus
+          placeholder="000000" required autoFocus className="dash-fs-keep"
           style={{ ...S.input, textAlign: 'center', fontSize: '24px', letterSpacing: '8px', fontWeight: 700 }}
         />
         {err && <p style={S.err}>{err}</p>}
@@ -189,29 +194,49 @@ export default function DashboardLayout() {
   );
 
   // Dashboard (ready)
-  const activeTab = TABS.find(t => loc.pathname.startsWith(t.path))?.id || 'loyers';
-
   return (
     <ToastProvider>
-    <div style={{ background: '#FAF8F5', minHeight: '100vh' }}>
-      <header style={{ background: '#1a1a2e', color: '#fff', padding: '16px 24px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-        <div>
-          <h1 style={{ margin: 0, fontSize: '20px', color: '#b8860b' }}>La Villa — Tableau de Bord</h1>
+    <div className="dash" style={{ background: '#FAF8F5', minHeight: '100vh' }}>
+      <header style={{ background: '#1a1a2e', color: '#fff', padding: isMobile ? '12px 14px' : '16px 24px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: isMobile ? '10px' : undefined }}>
+        <div style={isMobile ? { minWidth: 0 } : undefined}>
+          <h1 style={{ margin: 0, fontSize: isMobile ? '15px' : '20px', color: '#b8860b' }}>La Villa — Tableau de Bord</h1>
           <p style={{ margin: 0, fontSize: '12px', opacity: 0.7 }}>Gestion locative</p>
         </div>
-        <div style={{ display: 'flex', gap: '8px' }}>
+        <div style={{ display: 'flex', gap: '8px', ...(isMobile ? { flexShrink: 0 } : {}) }}>
           <button onClick={() => nav('/')} style={{ background: 'none', border: '1px solid #555', color: '#aaa', padding: '6px 12px', borderRadius: '6px', cursor: 'pointer' }}>Site</button>
           <button onClick={logout} style={{ background: '#c0392b', border: 'none', color: '#fff', padding: '6px 12px', borderRadius: '6px', cursor: 'pointer' }}>Logout</button>
         </div>
       </header>
 
-      <nav style={{ display: 'flex', gap: '4px', padding: '8px 24px', background: '#1a1a2e', borderBottom: '2px solid #b8860b', overflowX: 'auto' }}>
-        {TABS.map(tab => (
-          <button key={tab.id} onClick={() => nav(tab.path)} style={{ padding: '10px 16px', border: 'none', borderRadius: '8px 8px 0 0', cursor: 'pointer', fontSize: '14px', whiteSpace: 'nowrap', background: activeTab === tab.id ? '#b8860b' : 'transparent', color: activeTab === tab.id ? '#fff' : '#aaa', fontWeight: activeTab === tab.id ? 600 : 400 }}>{tab.label}</button>
-        ))}
-      </nav>
+      {isMobile ? (
+        // Mobile : 14 onglets = un <select> natif pleine largeur, atteignable au pouce
+        // en un tap. La bande à défilement horizontal reste le rendu desktop.
+        <nav style={{ background: '#1a1a2e', borderBottom: '2px solid #b8860b', padding: '10px 12px' }}>
+          <select
+            aria-label="Section du tableau de bord"
+            value={activeTab}
+            onChange={e => { const t = TABS.find(x => x.id === e.target.value); if (t) nav(t.path); }}
+            style={{
+              width: '100%', padding: '12px 36px 12px 14px', borderRadius: '8px', border: '1px solid #d4a017',
+              background: `#b8860b url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 8'><path d='M1 1l5 5 5-5' fill='none' stroke='white' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/></svg>") no-repeat right 12px center`,
+              backgroundSize: '12px 8px', color: '#fff', fontWeight: 600, fontSize: '16px',
+              boxSizing: 'border-box', appearance: 'none', WebkitAppearance: 'none', MozAppearance: 'none',
+            }}
+          >
+            {TABS.map(tab => (
+              <option key={tab.id} value={tab.id} style={{ background: '#fff', color: '#1a1a2e' }}>{tab.label}</option>
+            ))}
+          </select>
+        </nav>
+      ) : (
+        <nav style={{ display: 'flex', gap: '4px', padding: '8px 24px', background: '#1a1a2e', borderBottom: '2px solid #b8860b', overflowX: 'auto' }}>
+          {TABS.map(tab => (
+            <button key={tab.id} onClick={() => nav(tab.path)} style={{ padding: '10px 16px', border: 'none', borderRadius: '8px 8px 0 0', cursor: 'pointer', fontSize: '14px', whiteSpace: 'nowrap', background: activeTab === tab.id ? '#b8860b' : 'transparent', color: activeTab === tab.id ? '#fff' : '#aaa', fontWeight: activeTab === tab.id ? 600 : 400 }}>{tab.label}</button>
+          ))}
+        </nav>
+      )}
 
-      <main style={{ padding: '24px', maxWidth: '1400px', margin: '0 auto' }}>
+      <main style={{ padding: isMobile ? '12px' : '24px', maxWidth: '1400px', margin: '0 auto' }}>
         <Outlet />
       </main>
     </div>

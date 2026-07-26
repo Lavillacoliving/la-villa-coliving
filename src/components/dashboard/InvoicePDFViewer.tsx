@@ -138,7 +138,7 @@ export default function InvoicePDFViewer({ storagePath, filePath, fileName }: Pr
   }
 
   return (
-    <div>
+    <div className="dash-scroll-x">
       <iframe
         src={signedUrl}
         title={fileName || 'Facture PDF'}
