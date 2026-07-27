@@ -185,10 +185,6 @@
       "destination": "/prerendered/blog-declaration-impots-frontalier-2026.html"
     },
     {
-      "source": "/blog/3e-pilier-frontalier-geneve",
-      "destination": "/prerendered/blog-3e-pilier-frontalier-geneve.html"
-    },
-    {
       "source": "/blog/permis-g-frontalier-geneve",
       "destination": "/prerendered/blog-permis-g-frontalier-geneve.html"
     },
@@ -335,10 +331,6 @@
     {
       "source": "/en/blog/declaration-impots-frontalier-2026",
       "destination": "/prerendered/en-blog-declaration-impots-frontalier-2026.html"
-    },
-    {
-      "source": "/en/blog/3e-pilier-frontalier-geneve",
-      "destination": "/prerendered/en-blog-3e-pilier-frontalier-geneve.html"
     },
     {
       "source": "/en/blog/permis-g-frontalier-geneve",
@@ -991,6 +983,16 @@
     {
       "source": "/en/blog/transport-annemasse-geneve-leman-expres",
       "destination": "/en/blog/transport-annemasse-geneve-leman-express",
+      "permanent": true
+    },
+    {
+      "source": "/blog/3e-pilier-frontalier-geneve",
+      "destination": "/blog/fiscalite-frontalier-geneve-impots-2026",
+      "permanent": true
+    },
+    {
+      "source": "/en/blog/3e-pilier-frontalier-geneve",
+      "destination": "/en/blog/fiscalite-frontalier-geneve-impots-2026",
       "permanent": true
     }
   ],
