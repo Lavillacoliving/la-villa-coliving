@@ -655,27 +655,27 @@
     },
     {
       "source": "/colocation-geneva",
-      "destination": "/colocation-geneve",
+      "destination": "/blog/trouver-colocation-geneve-frontalier",
       "permanent": true
     },
     {
       "source": "/colocation",
-      "destination": "/colocation-geneve",
+      "destination": "/blog/trouver-colocation-geneve-frontalier",
       "permanent": true
     },
     {
       "source": "/coliving-geneve",
-      "destination": "/colocation-geneve",
+      "destination": "/blog/trouver-colocation-geneve-frontalier",
       "permanent": true
     },
     {
       "source": "/coliving-geneva",
-      "destination": "/colocation-geneve",
+      "destination": "/blog/trouver-colocation-geneve-frontalier",
       "permanent": true
     },
     {
       "source": "/fr/colocation-geneve",
-      "destination": "/colocation-geneve",
+      "destination": "/blog/trouver-colocation-geneve-frontalier",
       "permanent": true
     },
     {

@@ -29,6 +29,13 @@ import { FaqSection } from "@/components/FaqSection";
 import { buildFaqPageSchema } from "@/lib/structuredData";
 import { colocationGeneveFaq } from "@/data/faq/colocationGeneveFaq";
 import { STATS, PRICE_EN_NUM, PRICE_CHF_FR, PRICE_CHF_EN } from "@/data/stats";
+import { COLOC_GENEVE_PILLAR_EN } from "@/lib/siteLinks";
+
+// URL réelle de cette page. Elle n'est plus routée qu'en EN (App.tsx : seule
+// `/en/colocation-geneve` la rend) depuis la consolidation du 07/07/2026 —
+// l'ancienne URL FR renvoie un 308. Le JSON-LD codait encore cette URL FR en
+// dur : `Offer.url` et `WebPage.url` désignaient donc une redirection.
+const PILLAR_URL = `https://www.lavillacoliving.com${COLOC_GENEVE_PILLAR_EN}`;
 
 // FAQ §3 (bilingue, tutoiement) : voir src/data/faq/colocationGeneveFaq.ts
 
@@ -77,7 +84,7 @@ export function ColocationGenevePage() {
     priceCurrency: "CHF",
     priceValidUntil: "2026-12-31",
     availability: "https://schema.org/InStock",
-    url: "https://www.lavillacoliving.com/colocation-geneve",
+    url: PILLAR_URL,
     seller: {
       "@type": "Organization",
       name: "La Villa Coliving",
@@ -103,7 +110,7 @@ export function ColocationGenevePage() {
   const webPageSchema = {
     "@context": "https://schema.org",
     "@type": "WebPage",
-    url: "https://www.lavillacoliving.com/colocation-geneve",
+    url: PILLAR_URL,
     name: language === "en"
       ? "Shared Housing near Geneva — All-Inclusive Rooms"
       : "Colocation Genève — chambres meublées tout inclus",

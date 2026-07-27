@@ -540,11 +540,17 @@ async function generateSitemap(blogSlugs) {
   console.log('  🗺️  Generating sitemap.xml...');
   const today = new Date().toISOString().slice(0, 10);
 
+  // frPath / enPath à `null` => aucune balise alternate pour cette langue.
+  // Une page sans équivalent réel ne doit PAS en déclarer un (cf. le pilier EN
+  // plus bas) : déclarer un faux jumeau crée un cluster à deux pages pour la
+  // même langue, sans return-tag — exactement ce que Google rejette.
   function sitemapEntry(locPath, frPath, enPath, priority, changefreq, lastmod) {
+    const alts = [];
+    if (frPath) alts.push(`    <xhtml:link rel="alternate" hreflang="fr" href="${SITE_URL}${frPath}" />`);
+    if (enPath) alts.push(`    <xhtml:link rel="alternate" hreflang="en" href="${SITE_URL}${enPath}" />`);
     return `  <url>
     <loc>${SITE_URL}${locPath}</loc>
-    <xhtml:link rel="alternate" hreflang="fr" href="${SITE_URL}${frPath}" />
-    <xhtml:link rel="alternate" hreflang="en" href="${SITE_URL}${enPath}" />
+${alts.join('\n')}
     <lastmod>${lastmod}</lastmod>
     <changefreq>${changefreq}</changefreq>
     <priority>${priority}</priority>
@@ -571,9 +577,16 @@ async function generateSitemap(blogSlugs) {
     entries.push(sitemapEntry(enRoute, frRoute, enRoute, enPriority, config.changefreq, today));
   }
   // Pilier EN conservé hors boucle (le FR est consolidé → 308 vers l'article,
-  // 07/07/2026) : son alternate FR pointe vers l'article élu, pas vers l'URL
-  // redirigée.
-  entries.push(sitemapEntry('/en/colocation-geneve', '/blog/trouver-colocation-geneve-frontalier', '/en/colocation-geneve', '0.8', 'weekly', today));
+  // 07/07/2026). Il n'a donc PLUS de pendant français : aucun alternate `fr`.
+  //
+  // Correction du 27/07/2026 — l'entrée déclarait auparavant
+  // `fr → /blog/trouver-colocation-geneve-frontalier`. Cette cible répond bien
+  // 200, mais l'article a déjà son propre jumeau `/en/blog/trouver-...` : deux
+  // pages EN revendiquaient la même page FR, qui n'en référençait qu'une seule.
+  // C'est le motif « more than one page for same language » + « no return tag ».
+  // Une page orpheline n'a pas de cluster — on ne déclare rien.
+  // Miroir côté HTML : scripts/hreflang-overrides.mjs + src/lib/siteLinks.ts.
+  entries.push(sitemapEntry('/en/colocation-geneve', null, '/en/colocation-geneve', '0.8', 'weekly', today));
 
   // Blog articles (FR + EN) — only FR slugs, we generate both.
   // lastmod = real updated_at from Supabase (fallback: build date).

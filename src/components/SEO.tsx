@@ -2,6 +2,7 @@ import { Helmet } from "react-helmet";
 import { useLocation } from "react-router-dom";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { FOUNDERS, FOUNDING_DATE, ABOUT_PAGE_LIVE } from "@/lib/structuredData";
+import { HREFLANG_NO_ALTERNATES } from "@/lib/siteLinks";
 import { PRICE_EN_NUM, PRICE_CHF_FR, PRICE_CHF_EN } from "@/data/stats";
 
 interface SEOProps {
@@ -66,11 +67,15 @@ export function SEO({
       {/* Pas de canonical ni de hreflang sur une page noindex (404) */}
       {!noindex && <link rel="canonical" href={siteUrl} />}
 
-      {/* Hreflang tags pour le SEO multilingue */}
+      {/* Hreflang tags pour le SEO multilingue.
+          Le miroir mécanique /en/X → /X ne vaut que si la page FR existe VRAIMENT :
+          les routes listées dans HREFLANG_NO_ALTERNATES n'ont plus de pendant et
+          n'émettent donc aucune balise (cf. siteLinks.ts pour le détail). */}
       {!noindex &&
         (() => {
           const base = "https://www.lavillacoliving.com";
           const urlPath = siteUrl.replace(base, "") || "/";
+          if (HREFLANG_NO_ALTERNATES.has(urlPath)) return null;
           const frUrl = urlPath.startsWith("/en") ? `${base}${urlPath.replace(/^\/en(\/|$)/, "$1") || "/"}` : siteUrl;
           const enUrl = urlPath.startsWith("/en") ? siteUrl : `${base}/en${urlPath === "/" ? "" : urlPath}`;
           return [

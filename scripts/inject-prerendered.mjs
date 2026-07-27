@@ -18,6 +18,7 @@
 
 import fs from 'fs/promises';
 import path from 'path';
+import { HREFLANG_NO_ALTERNATES } from './hreflang-overrides.mjs';
 import { fileURLToPath } from 'url';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
@@ -110,7 +111,16 @@ function extractSeoTags(html) {
 
   // Hreflang links
   // [^>]* before > handles extra attributes like data-react-helmet="true"
-  const hreflangPattern = /<link\s+rel="alternate"\s+hrefLang="([^"]+)"\s+href="([^"]*)"[^>]*>/g;
+  //
+  // ⚠️ Le flag `i` est INDISPENSABLE : react-helmet écrit `hrefLang` en JSX mais
+  // Puppeteer sérialise l'attribut en minuscules (`hreflang`). Sans lui, cette
+  // regex ne matchait JAMAIS, `seo.hreflang` restait vide, et la branche de
+  // repli plus bas décidait seule des hreflang servis en prod — c'est ce qui a
+  // laissé `/en/colocation-geneve` pointer vers une URL en 308 pendant 20 jours.
+  // Vérifié le 27/07/2026 avant correction : sur les 111 pages qui portent des
+  // hreflang, la sortie helmet et le calcul de repli étaient identiques à
+  // l'octet près — réparer la regex est donc sans effet de bord.
+  const hreflangPattern = /<link\s+rel="alternate"\s+hreflang="([^"]+)"\s+href="([^"]*)"[^>]*>/gi;
   seo.hreflang = [];
   while ((m = hreflangPattern.exec(head)) !== null) {
     seo.hreflang.push({ lang: m[1], href: m[2] });
@@ -173,8 +183,12 @@ function buildSeoHeadTags(seo, route) {
     if (content) tags.push(`<meta property="${prop}" content="${content}" />`);
   }
 
-  // Hreflang tags (from pre-rendered or computed from route)
-  if (seo.hreflang && seo.hreflang.length > 0) {
+  // Hreflang tags (from pre-rendered or computed from route).
+  // Une route sans équivalent dans l'autre langue n'a pas de cluster : on
+  // n'émet rien, quelle que soit la source. Voir scripts/hreflang-overrides.mjs.
+  if (HREFLANG_NO_ALTERNATES.has(route)) {
+    // rien
+  } else if (seo.hreflang && seo.hreflang.length > 0) {
     for (const { lang, href } of seo.hreflang) {
       tags.push(`<link rel="alternate" hreflang="${lang}" href="${href}" />`);
     }

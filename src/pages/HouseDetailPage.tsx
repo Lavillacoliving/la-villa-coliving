@@ -2,7 +2,7 @@ import { useLocation } from "react-router-dom";
 import { LocalizedLink } from "@/components/LocalizedLink";
 import { colocGeneveHref } from "@/lib/siteLinks";
 import { Scrim } from "@/components/Scrim";
-import { buildBreadcrumbSchema } from "@/lib/structuredData";
+import { buildBreadcrumbSchema, HOUSES } from "@/lib/structuredData";
 import {
   MapPin,
   Users,
@@ -1396,11 +1396,15 @@ export function HouseDetailPage() {
         "url": `https://www.lavillacoliving.com/${id}`,
         "telephone": "+33664315134",
         "email": "contact@lavillacoliving.com",
+        // `streetAddress` contenait le nom de la commune, dupliqué depuis
+        // `addressLocality` — les 3 fiches maison annonçaient donc une adresse
+        // sans rue. Les vraies rues vivent dans HOUSES (structuredData.ts),
+        // source unique déjà utilisée par le schema de l'accueil.
         "address": {
           "@type": "PostalAddress",
-          "streetAddress": id === "lavilla" ? "Ville-la-Grand" : id === "leloft" ? "Ambilly" : "Annemasse",
-          "addressLocality": id === "lavilla" ? "Ville-la-Grand" : id === "leloft" ? "Ambilly" : "Annemasse",
-          "postalCode": id === "lavilla" ? "74100" : id === "leloft" ? "74100" : "74100",
+          "streetAddress": HOUSES.find(h => h.slug === id)?.streetAddress ?? "",
+          "addressLocality": HOUSES.find(h => h.slug === id)?.addressLocality ?? "",
+          "postalCode": HOUSES.find(h => h.slug === id)?.postalCode ?? "74100",
           "addressRegion": "Haute-Savoie",
           "addressCountry": "FR"
         },

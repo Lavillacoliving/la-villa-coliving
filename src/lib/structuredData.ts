@@ -13,6 +13,20 @@ export const LAVILLA_EMAIL = "contact@lavillacoliving.com";
 /** Une question / réponse, déjà résolue dans la langue de la page. */
 export type QAPair = { q: string; a: string };
 
+/**
+ * Adresse postale du siège — source unique.
+ * `addressRegion` inclus : le bloc LocalBusiness de SEO.tsx le portait déjà,
+ * pas HOUSES[0] ; les deux divergaient.
+ */
+export const LAVILLA_POSTAL_ADDRESS = {
+  "@type": "PostalAddress",
+  streetAddress: "34 rue du Foron",
+  addressLocality: "Ville-la-Grand",
+  addressRegion: "Haute-Savoie",
+  postalCode: "74100",
+  addressCountry: "FR",
+} as const;
+
 export interface HouseInfo {
   slug: string;
   name: string;
@@ -101,6 +115,11 @@ export function buildHomeLodgingBusinessSchema(language: "fr" | "en" = "fr"): Re
       { "@type": "LocationFeatureSpecification", name: en ? "Common areas cleaning included" : "Ménage des parties communes inclus", value: true },
     ],
     sameAs: ["https://www.instagram.com/lavillacoliving/"],
+    // `address` racine — Google la réclame sur LodgingBusiness (« Rich results
+    // validation error » relevé au crawl du 23/07/2026 sur / et /en). Les
+    // adresses par maison vivaient déjà dans `department[].address`, mais
+    // l'entité mère n'en avait aucune.
+    address: LAVILLA_POSTAL_ADDRESS,
     geo: { "@type": "GeoCoordinates", latitude: HOUSES[0].geo.lat, longitude: HOUSES[0].geo.lng },
     department: HOUSES.map((h) => ({
       "@type": "LodgingBusiness",
