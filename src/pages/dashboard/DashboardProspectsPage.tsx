@@ -12,15 +12,21 @@ interface Prospect {
   created_at: string;
 }
 
+// Statuts autorisés par la contrainte prospects_status_check (10 valeurs).
+// do_not_contact : migration 26/07/2026 (scripts/migration-prospects-status-do-not-contact.sql).
+// Toute valeur ajoutée ici DOIT l'être aussi dans la contrainte, sinon save
+// refusé en 23514 (cf. Schema_Supabase_LaVilla.md §12 point 2bis).
 const STATUS_COLORS: Record<string,string> = {
   new: '#3b82f6', contacted: '#eab308', photos_sent: '#06b6d4',
   interested: '#a855f7', visit_scheduled: '#8b5cf6', visit_done: '#f97316',
-  contract_sent: '#b8860b', signed: '#22c55e', lost: '#94a3b8'
+  contract_sent: '#b8860b', signed: '#22c55e', lost: '#94a3b8',
+  do_not_contact: '#475569'
 };
 const STATUS_LABELS: Record<string,string> = {
   new: 'Nouveau', contacted: 'Contacté', photos_sent: 'Photos envoyées',
   interested: 'Intéressé', visit_scheduled: 'Visite planifiée', visit_done: 'Visite faite',
-  contract_sent: 'Contrat envoyé', signed: 'Signé', lost: 'Perdu'
+  contract_sent: 'Contrat envoyé', signed: 'Signé', lost: 'Perdu',
+  do_not_contact: 'Ne pas recontacter'
 };
 const PIPELINE_STAGES = ['new','contacted','visit_scheduled','visit_done','signed'];
 const PIPELINE_LABELS: Record<string,string> = {
@@ -81,6 +87,9 @@ export default function DashboardProspectsPage() {
 
   useEffect(() => { load(); }, [load]);
 
+  // Statuts terminaux volontairement absents : signed, lost, do_not_contact.
+  // Un prospect « Ne pas recontacter » sort donc de la vue « Actifs » — c'est
+  // tout l'intérêt du statut. Il reste visible via le filtre « Tous ».
   const active = ["new","contacted","photos_sent","interested","visit_scheduled","visit_done","contract_sent"];
   const filtered = statusFilter==="active" ? prospects.filter(p=>active.includes(p.status))
     : statusFilter==="all" ? prospects : prospects.filter(p=>p.status===statusFilter);
