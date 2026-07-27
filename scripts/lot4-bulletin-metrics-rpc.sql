@@ -43,7 +43,7 @@
 --   from vault.secrets where name = 'bulletin_token';
 
 -- ÉTAPE 2 : la fonction.
-CREATE OR REPLACE FUNCTION public.bulletin_seo_metrics(p_token text)
+CREATE OR REPLACE FUNCTION public.bulletin_seo_metrics(p_token text default null)
 RETURNS jsonb
 LANGUAGE plpgsql
 SECURITY DEFINER
@@ -52,8 +52,22 @@ STABLE
 AS $fn$
 DECLARE
   v_expected text;
+  v_given    text;
   v_result   jsonb;
 BEGIN
+  -- Le jeton arrive par l'un des deux chemins :
+  --   • argument `p_token`            → tests manuels dans le SQL Editor ;
+  --   • en-tête HTTP x-bulletin-token → appel n8n.
+  -- Le second existe parce que les Variables n8n (`$env`) sont réservées aux
+  -- offres supérieures — « access to env vars denied », constaté le 27/07/2026.
+  -- Avec l'en-tête, le jeton vit dans un credential Header Auth chiffré par n8n :
+  -- il n'apparaît ni dans le JSON du workflow, ni dans ce dépôt.
+  -- PostgREST expose les en-têtes via le GUC `request.headers` (vérifié en prod).
+  v_given := coalesce(
+    p_token,
+    (current_setting('request.headers', true))::jsonb ->> 'x-bulletin-token'
+  );
+
   SELECT decrypted_secret INTO v_expected
   FROM vault.decrypted_secrets WHERE name = 'bulletin_token' LIMIT 1;
 
@@ -61,8 +75,8 @@ BEGIN
   IF v_expected IS NULL OR length(v_expected) < 16 THEN
     RAISE EXCEPTION 'bulletin_seo_metrics: secret « bulletin_token » absent du Vault (ou trop court)';
   END IF;
-  IF p_token IS DISTINCT FROM v_expected THEN
-    RAISE EXCEPTION 'bulletin_seo_metrics: jeton invalide';
+  IF v_given IS NULL OR v_given IS DISTINCT FROM v_expected THEN
+    RAISE EXCEPTION 'bulletin_seo_metrics: jeton invalide ou absent';
   END IF;
 
   SELECT jsonb_build_object(
