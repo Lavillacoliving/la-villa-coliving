@@ -46,14 +46,20 @@ const CL:Record<string,Record<string,string>>={
 // (photo maison + prix + attribution ?src=bloc_offre — plan blog-conversion
 // 07/07/2026) ; l'accroche varie toujours par intent bucket, dans le composant.
 
-// Mid-article CTA: for substantial reads (>800 words — GA4 path data shows the blog
+// Mid-article CTA: for substantial reads (>650 words — GA4 path data shows the blog
 // converts ~nobody without an in-body block; decision Jérôme 2026-06-11),
 // split at the "## " heading closest to the middle so both halves stay substantial.
 // Bails out on edge cases (fenced code, <2 headings, off-center split) — then the
 // article renders unsplit, exactly as before.
+//
+// Seuil abaissé 800 -> 650 le 2026-07-27 (Lot 3.1). Motif : `trouver-colocation-
+// geneve-frontalier` fait 779 mots et n'avait donc AUCUN CTA en milieu d'article,
+// alors que c'est la cible de la 308 de « colocation geneve » et le bucket `high`.
+// Le placement reste protégé par la fenêtre 25-75 % plus bas : un article trop
+// court n'obtient pas un CTA mal placé, il n'en obtient pas du tout.
 function splitForMidCta(md: string): [string, string] | null {
   if (md.includes("```")) return null;
-  if (md.split(/\s+/).length <= 800) return null;
+  if (md.split(/\s+/).length <= 650) return null;
   const headings: number[] = [];
   const re = /^## /gm;
   let m: RegExpExecArray | null;
