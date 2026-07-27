@@ -26,25 +26,40 @@
 -- ============================================================================
 
 -- ÉTAPE 1 (à faire UNE FOIS, par Jérôme, avec un jeton de son choix) :
---   ALTER DATABASE postgres SET app.settings.bulletin_token = 'REMPLACER_PAR_UN_JETON_LONG';
---   puis reconnecter la session (le paramètre est lu à l'ouverture de connexion).
--- Ne mets PAS ce jeton dans le dépôt : il vivra uniquement dans le credential n8n.
+--
+--   select vault.create_secret('COLLE_TON_JETON_ICI', 'bulletin_token',
+--                              'Jeton du bulletin SEO hebdo (lu par n8n)');
+--
+-- Le jeton ne doit exister qu'à deux endroits : ce secret, et le credential n8n.
+-- Jamais dans le dépôt.
+--
+-- ⚠️ NE PAS utiliser `ALTER DATABASE postgres SET app.settings.…` : le rôle du
+-- SQL Editor Supabase n'en a pas le droit (« permission denied to set parameter »).
+-- Vault est le mécanisme prévu pour ça, et il est déjà installé sur le projet
+-- (supabase_vault 0.3.1, vérifié le 27/07/2026).
+--
+-- Pour faire tourner le jeton plus tard :
+--   select vault.update_secret(id, 'NOUVEAU_JETON', 'bulletin_token', description)
+--   from vault.secrets where name = 'bulletin_token';
 
 -- ÉTAPE 2 : la fonction.
 CREATE OR REPLACE FUNCTION public.bulletin_seo_metrics(p_token text)
 RETURNS jsonb
 LANGUAGE plpgsql
 SECURITY DEFINER
-SET search_path = public
+SET search_path = public, vault
 STABLE
 AS $fn$
 DECLARE
-  v_expected text := current_setting('app.settings.bulletin_token', true);
+  v_expected text;
   v_result   jsonb;
 BEGIN
-  -- Échec fermé : si le jeton n'est pas configuré, personne ne passe.
+  SELECT decrypted_secret INTO v_expected
+  FROM vault.decrypted_secrets WHERE name = 'bulletin_token' LIMIT 1;
+
+  -- Échec fermé : sans secret dans le Vault, personne ne passe.
   IF v_expected IS NULL OR length(v_expected) < 16 THEN
-    RAISE EXCEPTION 'bulletin_seo_metrics: jeton non configure cote base';
+    RAISE EXCEPTION 'bulletin_seo_metrics: secret « bulletin_token » absent du Vault (ou trop court)';
   END IF;
   IF p_token IS DISTINCT FROM v_expected THEN
     RAISE EXCEPTION 'bulletin_seo_metrics: jeton invalide';
@@ -120,11 +135,13 @@ GRANT EXECUTE ON FUNCTION public.bulletin_seo_metrics(text) TO anon, authenticat
 -- ============================================================================
 -- VÉRIFICATION
 -- ============================================================================
--- 1) Sans jeton configuré  -> doit lever « jeton non configure cote base » :
---      SELECT public.bulletin_seo_metrics('peu-importe');
--- 2) Après l'ALTER DATABASE + reconnexion, avec un mauvais jeton -> « jeton invalide ».
+-- 1) Sans secret dans le Vault -> lève « secret bulletin_token absent du Vault ».
+-- 2) Avec un mauvais jeton -> « jeton invalide ».
 -- 3) Avec le bon jeton -> JSON complet :
 --      SELECT jsonb_pretty(public.bulletin_seo_metrics('LE_JETON'));
+--
+-- Cycle complet testé en production le 27/07/2026 : création du secret, lecture
+-- par la fonction, suppression, retour à l'échec fermé.
 -- 4) Appel HTTP (celui que fera n8n) :
 --      POST https://tefpynkdxxfiefpkgitz.supabase.co/rest/v1/rpc/bulletin_seo_metrics
 --      headers: apikey: <ANON_KEY>, Content-Type: application/json
