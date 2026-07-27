@@ -11,14 +11,26 @@
  *  5. Liens internes avec trailing slash (trailingSlash:false → 308)
  *  6. Liens internes vers une URL inconnue (ni page, ni redirection → 404)
  *  7. Pages avec ≤ 1 lien interne entrant (quasi-orphelines)
+ *  8. hreflang : cible redirigée/inconnue, réciprocité rompue, x-default absent ou multiple
+ *  9. JSON-LD : LocalBusiness/LodgingBusiness sans `address`, ou `url` vers une redirection
+ * 10. llms.txt (FR + EN) : liens vers une redirection ou une URL inconnue
+ * 11. Cohérence de serving : même code HTTP en UA Googlebot et en UA navigateur  (--net)
+ * 12. Sitemap : aucune URL (loc ET alternates) ne doit être une source de redirection
+ * 13. Sitemap vs HTML : les alternates hreflang doivent être identiques des deux côtés
  *
- * Usage :  node scripts/seo-lint.mjs          (rapport lisible)
+ * Les checks 8, 12 et 13 existent parce que le linter ne regardait que le <body> :
+ * c'est par là que `/en/colocation-geneve` a pu déclarer 20 jours durant un
+ * hreflang vers une URL en 308, sans que rien ne le signale (27/07/2026).
+ *
+ * Usage :  node scripts/seo-lint.mjs          (rapport lisible, hors ligne)
  *          node scripts/seo-lint.mjs --json   (sortie JSON pour scripts)
+ *          node scripts/seo-lint.mjs --net    (ajoute le check 11 — requêtes réseau)
  */
 
 import fs from 'fs/promises';
 import path from 'path';
 import { fileURLToPath } from 'url';
+import { HREFLANG_NO_ALTERNATES } from './hreflang-overrides.mjs';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const ROOT = path.join(__dirname, '..');
@@ -32,6 +44,11 @@ const TITLE_MAX = 70;   // seuil Ahrefs « Title too long » (empirique, audit 2
 const META_MAX = 160;   // seuil Ahrefs « Meta description too long » (~920 px)
 
 const asJson = process.argv.includes('--json');
+const withNet = process.argv.includes('--net');
+
+const UA_BOT = 'Mozilla/5.0 (compatible; Googlebot/2.1; +http://www.google.com/bot.html)';
+const UA_HUMAN = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 '
+  + '(KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36';
 
 // ─── helpers ────────────────────────────────────────────────
 
@@ -107,6 +124,76 @@ function extractLinks(html) {
   return links;
 }
 
+// ─── extraction <head> : hreflang & JSON-LD ─────────────────
+
+// ⚠️ insensible à la casse : react-helmet écrit `hrefLang`, Puppeteer sérialise
+// `hreflang`. Une regex sensible à la casse ne voit rien (bug historique de
+// inject-prerendered.mjs). L'ordre des attributs n'est pas garanti non plus.
+function extractHreflang(html) {
+  const head = html.split('</head>')[0];
+  const out = [];
+  for (const m of head.matchAll(/<link\s[^>]*rel="alternate"[^>]*>/gi)) {
+    const tag = m[0];
+    const lang = (tag.match(/hreflang="([^"]*)"/i) || [])[1];
+    const href = (tag.match(/href="([^"]*)"/i) || [])[1];
+    if (lang && href) out.push({ lang: lang.toLowerCase(), href: decodeEntities(href) });
+  }
+  return out;
+}
+
+function extractJsonLd(html) {
+  const blocks = [];
+  for (const m of html.matchAll(/<script[^>]*type="application\/ld\+json"[^>]*>([\s\S]*?)<\/script>/gi)) {
+    try { blocks.push(JSON.parse(m[1].trim())); } catch { blocks.push({ __parseError: true }); }
+  }
+  return blocks;
+}
+
+// Parcourt un JSON-LD et renvoie toutes les valeurs de clés `url`/`@id`.
+function collectJsonLdUrls(node, acc = []) {
+  if (Array.isArray(node)) { for (const x of node) collectJsonLdUrls(x, acc); return acc; }
+  if (node && typeof node === 'object') {
+    for (const [k, v] of Object.entries(node)) {
+      if ((k === 'url' || k === '@id') && typeof v === 'string') acc.push(v);
+      else collectJsonLdUrls(v, acc);
+    }
+  }
+  return acc;
+}
+
+// Types qui doivent porter une `address` à la racine du bloc (exigence Google).
+const NEEDS_ADDRESS = new Set(['LocalBusiness', 'LodgingBusiness']);
+
+function jsonLdTypesMissingAddress(block) {
+  const missing = [];
+  const walk = (n, depth) => {
+    if (Array.isArray(n)) { for (const x of n) walk(x, depth); return; }
+    if (!n || typeof n !== 'object') return;
+    const t = n['@type'];
+    // uniquement la racine du bloc : `department[].address` ne compte pas pour l'entité mère
+    if (depth === 0 && typeof t === 'string' && NEEDS_ADDRESS.has(t) && !n.address) missing.push(t);
+    if (depth === 0) for (const v of Object.values(n)) walk(v, depth + 1);
+  };
+  walk(block, 0);
+  return missing;
+}
+
+// ─── sitemap : loc + alternates par URL ─────────────────────
+
+async function loadSitemapEntries() {
+  const xml = await fs.readFile(path.join(ROOT, 'public', 'sitemap.xml'), 'utf-8');
+  const entries = new Map(); // route → [{lang, href}]
+  for (const m of xml.matchAll(/<url>([\s\S]*?)<\/url>/g)) {
+    const block = m[1];
+    const loc = (block.match(/<loc>([^<]+)<\/loc>/) || [])[1];
+    if (!loc) continue;
+    const alts = [...block.matchAll(/hreflang="([^"]+)"\s+href="([^"]+)"/g)]
+      .map(a => ({ lang: a[1].toLowerCase(), href: a[2] }));
+    entries.set(loc.replace(SITE, '') || '/', alts);
+  }
+  return entries;
+}
+
 // normalise un href interne → { path, issues } ; null si externe/mailto/ancre pure
 function normalizeHref(href) {
   const issues = [];
@@ -134,11 +221,17 @@ async function main() {
   const { exact, patterns, map } = await loadRedirects();
   const knownSet = new Set(knownRoutes);
 
+  const sitemapEntries = await loadSitemapEntries();
+
   const report = {
     titleTooLong: [], metaTooLong: [],
     linksToRedirect: [], badScheme: [], trailingSlash: [], deadLinks: [],
     weakIncoming: [],
+    hreflang: [], jsonLd: [], llmsTxt: [], serving: [], sitemapRedirect: [], sitemapVsHtml: [],
   };
+
+  const isRedirectPath = (p) => exact.has(p) || patterns.some(pt => pt.rx.test(p));
+  const hreflangByRoute = new Map(); // route → [{lang, href}] (pour la réciprocité)
 
   // agrégats de liens : href problématique → Set(pages sources)
   const redirectHits = new Map(), schemeHits = new Map(), slashHits = new Map(), deadHits = new Map();
@@ -153,6 +246,42 @@ async function main() {
     const { title, meta } = extractHead(html);
     if (title.length > TITLE_MAX) report.titleTooLong.push({ route, len: title.length, title });
     if (meta.length > META_MAX) report.metaTooLong.push({ route, len: meta.length, meta });
+
+    // ── 8. hreflang
+    const alts = extractHreflang(html);
+    hreflangByRoute.set(route, alts);
+    if (HREFLANG_NO_ALTERNATES.has(route)) {
+      if (alts.length) {
+        report.hreflang.push({ route, kind: 'orpheline-avec-alternates',
+          detail: `${alts.length} balise(s) alors que la route est déclarée sans équivalent` });
+      }
+    } else if (alts.length) {
+      const xdef = alts.filter(a => a.lang === 'x-default').length;
+      if (xdef !== 1) report.hreflang.push({ route, kind: 'x-default', detail: `${xdef} x-default (attendu : 1)` });
+      for (const { lang, href } of alts) {
+        const n = normalizeHref(href);
+        if (!n) { report.hreflang.push({ route, kind: 'href-externe', detail: `${lang} → ${href}` }); continue; }
+        if (isRedirectPath(n.path)) {
+          report.hreflang.push({ route, kind: 'cible-redirigee', detail: `${lang} → ${n.path} (→ ${map.get(n.path) || 'pattern'})` });
+        } else if (!knownSet.has(n.path)) {
+          report.hreflang.push({ route, kind: 'cible-inconnue', detail: `${lang} → ${n.path}` });
+        }
+      }
+    }
+
+    // ── 9. JSON-LD
+    for (const block of extractJsonLd(html)) {
+      if (block.__parseError) { report.jsonLd.push({ route, kind: 'json-invalide', detail: '' }); continue; }
+      for (const t of jsonLdTypesMissingAddress(block)) {
+        report.jsonLd.push({ route, kind: 'address-manquante', detail: t });
+      }
+      for (const u of collectJsonLdUrls(block)) {
+        const n = normalizeHref(u);
+        if (n && isRedirectPath(n.path)) {
+          report.jsonLd.push({ route, kind: 'url-vers-redirection', detail: n.path });
+        }
+      }
+    }
 
     for (const { href, nofollow } of extractLinks(html)) {
       const n = normalizeHref(href);
@@ -189,6 +318,117 @@ async function main() {
         if (!incoming.has(target)) incoming.set(target, new Set());
         incoming.get(target).add(route);
       }
+    }
+  }
+
+  // ── 8 (suite). Réciprocité : si A déclare B en langue L, B doit renvoyer vers A.
+  for (const [route, alts] of hreflangByRoute) {
+    if (HREFLANG_NO_ALTERNATES.has(route) || !alts.length) continue;
+    for (const { lang, href } of alts) {
+      if (lang === 'x-default') continue;
+      const n = normalizeHref(href);
+      if (!n || n.path === route) continue;
+      const back = hreflangByRoute.get(n.path);
+      if (back === undefined) continue; // page hors périmètre prerendered
+      const reciproque = back.some(b => {
+        const bn = normalizeHref(b.href);
+        return bn && bn.path === route;
+      });
+      if (!reciproque) {
+        report.hreflang.push({ route, kind: 'reciprocite-rompue',
+          detail: `déclare ${lang} → ${n.path}, qui ne renvoie pas vers ${route}` });
+      }
+    }
+  }
+  // Deux CLUSTERS distincts revendiquant la même cible pour la même langue.
+  //
+  // ⚠️ Ne pas confondre avec le cas normal : dans un cluster sain FR↔EN, les deux
+  // pages déclarent le MÊME jeu d'alternates (chacune liste les deux membres).
+  // Que « fr → A » soit déclaré par A et par B n'est donc pas une anomalie.
+  // L'anomalie, c'est deux pages aux jeux d'alternates DIFFÉRENTS qui visent la
+  // même cible : elles appartiennent alors à deux clusters concurrents, et
+  // Google n'en retient qu'un (motif « more than one page for same language »).
+  const signature = (alts) => alts
+    .filter(a => a.lang !== 'x-default')
+    .map(a => `${a.lang}=${(normalizeHref(a.href) || { path: a.href }).path}`)
+    .sort().join(',');
+  const claims = new Map(); // `${lang}|${cible}` → Map(signature → [routes])
+  for (const [route, alts] of hreflangByRoute) {
+    if (HREFLANG_NO_ALTERNATES.has(route) || !alts.length) continue;
+    const sig = signature(alts);
+    for (const { lang, href } of alts) {
+      if (lang === 'x-default') continue;
+      const n = normalizeHref(href);
+      if (!n) continue;
+      const k = `${lang}|${n.path}`;
+      if (!claims.has(k)) claims.set(k, new Map());
+      const bySig = claims.get(k);
+      if (!bySig.has(sig)) bySig.set(sig, []);
+      bySig.get(sig).push(route);
+    }
+  }
+  for (const [k, bySig] of claims) {
+    if (bySig.size > 1) {
+      const [lang, cible] = k.split('|');
+      const groupes = [...bySig.values()].map(rs => rs.join('+')).join(' | ');
+      report.hreflang.push({ route: cible, kind: 'clusters-concurrents',
+        detail: `${bySig.size} clusters distincts déclarent ${lang} → ${cible} : ${groupes}` });
+    }
+  }
+
+  // ── 10. llms.txt (FR + EN)
+  for (const rel of ['public/llms.txt', 'public/en/llms.txt']) {
+    let txt;
+    try { txt = await fs.readFile(path.join(ROOT, rel), 'utf-8'); } catch { continue; }
+    for (const m of txt.matchAll(/https?:\/\/[^\s)]+/g)) {
+      const n = normalizeHref(m[0]);
+      if (!n) continue;
+      if (isRedirectPath(n.path)) report.llmsTxt.push({ file: rel, href: n.path, kind: 'redirection' });
+      else if (!knownSet.has(n.path)) {
+        let asset = false;
+        try { await fs.access(path.join(ROOT, 'public', n.path.slice(1))); asset = true; } catch { /* */ }
+        if (!asset) report.llmsTxt.push({ file: rel, href: n.path, kind: 'inconnue' });
+      }
+    }
+  }
+
+  // ── 12. Sitemap : aucune URL (loc OU alternate) ne doit être une source de redirection
+  for (const [route, alts] of sitemapEntries) {
+    if (isRedirectPath(route)) report.sitemapRedirect.push({ where: '<loc>', href: route });
+    for (const { lang, href } of alts) {
+      const n = normalizeHref(href);
+      if (n && isRedirectPath(n.path)) report.sitemapRedirect.push({ where: `alternate ${lang} de ${route}`, href: n.path });
+    }
+  }
+
+  // ── 13. Sitemap vs HTML : mêmes alternates des deux côtés
+  const key = (list) => list
+    .filter(a => a.lang !== 'x-default')  // le sitemap ne porte pas de x-default
+    .map(a => `${a.lang}=${(normalizeHref(a.href) || { path: a.href }).path}`)
+    .sort().join(',');
+  for (const [route, alts] of sitemapEntries) {
+    const html = hreflangByRoute.get(route);
+    if (html === undefined) continue;
+    const a = key(alts), b = key(html);
+    if (a !== b) report.sitemapVsHtml.push({ route, sitemap: a || '(aucun)', html: b || '(aucun)' });
+  }
+
+  // ── 11. Cohérence de serving bot / navigateur (réseau, opt-in)
+  if (withNet) {
+    const sources = [...exact];
+    const status = async (url, ua) => {
+      try {
+        const r = await fetch(url, { method: 'HEAD', redirect: 'manual', headers: { 'user-agent': ua } });
+        return r.status;
+      } catch { return 0; }
+    };
+    for (let i = 0; i < sources.length; i += 8) {
+      const chunk = sources.slice(i, i + 8);
+      await Promise.all(chunk.map(async (src) => {
+        const url = SITE + src;
+        const [b, h] = await Promise.all([status(url, UA_BOT), status(url, UA_HUMAN)]);
+        if (b !== h) report.serving.push({ source: src, bot: b, humain: h });
+      }));
     }
   }
 
@@ -237,8 +477,28 @@ async function main() {
   sec(`7. Pages avec ≤ 1 lien interne entrant : ${report.weakIncoming.length}`);
   for (const x of report.weakIncoming) console.log(`  [${x.incoming} entrant(s)] ${x.route}`);
 
+  sec(`8. hreflang : ${report.hreflang.length}`);
+  for (const x of report.hreflang) console.log(`  [${x.kind}] ${x.route}\n        ${x.detail}`);
+
+  sec(`9. JSON-LD : ${report.jsonLd.length}`);
+  for (const x of report.jsonLd) console.log(`  [${x.kind}] ${x.route}${x.detail ? `\n        ${x.detail}` : ''}`);
+
+  sec(`10. llms.txt : ${report.llmsTxt.length}`);
+  for (const x of report.llmsTxt) console.log(`  [${x.kind}] ${x.file} → ${x.href}`);
+
+  sec(`11. Cohérence de serving bot/navigateur : ${withNet ? report.serving.length : 'non exécuté (--net)'}`);
+  for (const x of report.serving) console.log(`  ${x.source} : Googlebot=${x.bot} navigateur=${x.humain}`);
+
+  sec(`12. Sitemap → redirection : ${report.sitemapRedirect.length}`);
+  for (const x of report.sitemapRedirect) console.log(`  ${x.where} : ${x.href}`);
+
+  sec(`13. Sitemap vs HTML (alternates) : ${report.sitemapVsHtml.length}`);
+  for (const x of report.sitemapVsHtml) console.log(`  ${x.route}\n        sitemap : ${x.sitemap}\n        html    : ${x.html}`);
+
   const total = report.titleTooLong.length + report.metaTooLong.length + report.linksToRedirect.length
-    + report.badScheme.length + report.trailingSlash.length + report.deadLinks.length + report.weakIncoming.length;
+    + report.badScheme.length + report.trailingSlash.length + report.deadLinks.length + report.weakIncoming.length
+    + report.hreflang.length + report.jsonLd.length + report.llmsTxt.length + report.serving.length
+    + report.sitemapRedirect.length + report.sitemapVsHtml.length;
   console.log(`\n${total === 0 ? '✅ Aucun problème détecté' : `⚠️  ${total} problème(s) au total`}`);
 }
 

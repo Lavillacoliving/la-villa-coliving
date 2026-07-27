@@ -8,7 +8,15 @@
 //    toujours étiquetée ainsi, JAMAIS juxtaposée au prix d'appel « dès 1 380 ».
 //  - Ne JAMAIS écrire « moins cher que Genève » (l'angle honnête = tout-inclus / m²).
 //  - Caution = 2 mois (ne jamais écrire « 0 caution » ; le « 0 frais » = frais d'agence).
-//  - Durée de séjour publiée = « moyenne : 13 mois » (aucune autre variante en public).
+//  - Durée de séjour publiée = « 13 mois en moyenne (9 mois hors longs séjours) »,
+//    formulation IDENTIQUE partout : llms.txt, observatoire-lavilla-2026.csv,
+//    /qui-sommes-nous, et ici. La règle précédente (« aucune autre variante en
+//    public ») était contredite par QuiSommesNousPage, qui affichait déjà le 9.
+//    ⚠️ Le 13 est une MOYENNE extrêmes inclus, fournie par Jérôme — elle n'est pas
+//    reproductible depuis `tenants` (56 résidents en base, dont 39 arrivés en 2026,
+//    et 16 séjours terminés seulement : échantillon biaisé vers les séjours courts).
+//    Publier une médiane calculée là-dessus serait moins honnête que le 13/9.
+//    À revoir dès que le registre historique complet est disponible.
 
 import { STATS } from "@/data/stats";
 

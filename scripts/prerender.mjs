@@ -545,16 +545,14 @@ async function generateSitemap(blogSlugs) {
   // plus bas) : déclarer un faux jumeau crée un cluster à deux pages pour la
   // même langue, sans return-tag — exactement ce que Google rejette.
   function sitemapEntry(locPath, frPath, enPath, priority, changefreq, lastmod) {
-    const alts = [];
-    if (frPath) alts.push(`    <xhtml:link rel="alternate" hreflang="fr" href="${SITE_URL}${frPath}" />`);
-    if (enPath) alts.push(`    <xhtml:link rel="alternate" hreflang="en" href="${SITE_URL}${enPath}" />`);
-    return `  <url>
-    <loc>${SITE_URL}${locPath}</loc>
-${alts.join('\n')}
-    <lastmod>${lastmod}</lastmod>
-    <changefreq>${changefreq}</changefreq>
-    <priority>${priority}</priority>
-  </url>`;
+    const lines = [`  <url>`, `    <loc>${SITE_URL}${locPath}</loc>`];
+    if (frPath) lines.push(`    <xhtml:link rel="alternate" hreflang="fr" href="${SITE_URL}${frPath}" />`);
+    if (enPath) lines.push(`    <xhtml:link rel="alternate" hreflang="en" href="${SITE_URL}${enPath}" />`);
+    lines.push(`    <lastmod>${lastmod}</lastmod>`,
+               `    <changefreq>${changefreq}</changefreq>`,
+               `    <priority>${priority}</priority>`,
+               `  </url>`);
+    return lines.join('\n');
   }
 
   const entries = [];
@@ -584,9 +582,12 @@ ${alts.join('\n')}
   // 200, mais l'article a déjà son propre jumeau `/en/blog/trouver-...` : deux
   // pages EN revendiquaient la même page FR, qui n'en référençait qu'une seule.
   // C'est le motif « more than one page for same language » + « no return tag ».
-  // Une page orpheline n'a pas de cluster — on ne déclare rien.
+  // Une page orpheline n'a pas de cluster — on ne déclare rien, ni `fr` ni un
+  // `en` auto-référencé : un hreflang qui ne pointe que vers soi-même n'a aucun
+  // sens, et le check #13 de seo-lint exige que sitemap et HTML disent la même
+  // chose (le HTML n'émet plus rien pour cette route).
   // Miroir côté HTML : scripts/hreflang-overrides.mjs + src/lib/siteLinks.ts.
-  entries.push(sitemapEntry('/en/colocation-geneve', null, '/en/colocation-geneve', '0.8', 'weekly', today));
+  entries.push(sitemapEntry('/en/colocation-geneve', null, null, '0.8', 'weekly', today));
 
   // Blog articles (FR + EN) — only FR slugs, we generate both.
   // lastmod = real updated_at from Supabase (fallback: build date).
