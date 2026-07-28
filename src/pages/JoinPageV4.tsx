@@ -16,6 +16,9 @@ export function JoinPageV4() {
   const [status, setStatus] = useState<FormStatus>("idle");
   const [errorMessage, setErrorMessage] = useState<string>("");
   const [openFAQ, setOpenFAQ] = useState<number | null>(null);
+  // Canal déclaré — contrôlé pour pouvoir afficher le champ conditionnel
+  // « parrain » quand le candidat dit venir d'un résident (programme parrainage).
+  const [sourceChoice, setSourceChoice] = useState("");
   // Attribution observée : les blocs offre du blog arrivent avec
   // ?src=bloc_offre&article={slug} (params custom, pas utm_* — les utm sur liens
   // internes redémarrent l'attribution de session GA4). Transmis à l'Edge Function
@@ -82,6 +85,7 @@ export function JoinPageV4() {
       } catch { /* noop — ne jamais bloquer l'UI de succès à cause de l'analytics */ }
 
       form.reset();
+      setSourceChoice(""); // le select est contrôlé — form.reset() ne le vide pas
     } catch (err) {
       setStatus("error");
       setErrorMessage(
@@ -511,10 +515,17 @@ export function JoinPageV4() {
                   </label>
                   <select
                     name="source"
+                    value={sourceChoice}
+                    onChange={(e) => setSourceChoice(e.target.value)}
                     className="w-full px-4 py-3 border border-[#E7E5E4] focus:border-[#D4A574] focus:outline-none transition-colors bg-white"
                   >
                     <option value="">
                       {language === "en" ? "Select" : "Sélectionner"}
+                    </option>
+                    {/* Parrainage en tête de liste : la visibilité de l'option
+                        conditionne le succès du programme (brief 28/07/2026). */}
+                    <option value="resident-referral">
+                      {language === "en" ? "A resident referred me" : "Un résident m'a recommandé"}
                     </option>
                     <option value="google">Google</option>
                     <option value="instagram">Instagram</option>
@@ -529,6 +540,23 @@ export function JoinPageV4() {
                       {language === "en" ? "Other" : "Autre"}
                     </option>
                   </select>
+                  {sourceChoice === "resident-referral" && (
+                    <div className="mt-4">
+                      <label className="block text-sm text-[#57534E] mb-2">
+                        {language === "en"
+                          ? "First name (and last name if known) of the resident who referred you"
+                          : "Prénom (et nom si tu le connais) du résident qui t'a recommandé"}
+                      </label>
+                      {/* Optionnel volontairement : ne jamais bloquer une candidature
+                          parce que le candidat ne se souvient plus du nom exact. */}
+                      <input
+                        type="text"
+                        name="referrerName"
+                        maxLength={80}
+                        className="w-full px-4 py-3 border border-[#E7E5E4] focus:border-[#D4A574] focus:outline-none transition-colors"
+                      />
+                    </div>
+                  )}
                 </div>
               </div>
             </div>

@@ -18,7 +18,7 @@ interface LedgerEntry {
   id: string;
   tenant_id: string;
   entry_date: string;
-  type: 'loyer' | 'paiement' | 'caution' | 'regularisation';
+  type: 'loyer' | 'paiement' | 'caution' | 'regularisation' | 'avoir';
   amount: number;
   month: string | null;
   label: string | null;
@@ -54,6 +54,7 @@ const TYPE_LABELS: Record<string, string> = {
   paiement: 'Paiement',
   caution: 'Caution',
   regularisation: 'Régularisation',
+  avoir: 'Avoir',
 };
 
 const TYPE_COLORS: Record<string, string> = {
@@ -61,6 +62,7 @@ const TYPE_COLORS: Record<string, string> = {
   paiement: '#22c55e',
   caution: '#8b5cf6',
   regularisation: '#f59e0b',
+  avoir: '#0ea5e9',
 };
 
 function fmt(n: number) {
@@ -117,7 +119,9 @@ export default function DashboardComptesLocatairesPage() {
       let loyer = 0, paiement = 0, caution = 0;
       for (const e of entries) {
         const a = Number(e.amount);
-        if (e.type === 'loyer' || e.type === 'regularisation') loyer += a;
+        // avoir compté dans les « dus » (négatif → réduit le solde), comme dans
+        // v_tenant_balance où tout sauf caution/retenue/remboursement entre au solde loyer
+        if (e.type === 'loyer' || e.type === 'regularisation' || e.type === 'avoir') loyer += a;
         else if (e.type === 'paiement') paiement += a;
         else if (e.type === 'caution') caution += a;
       }
@@ -404,7 +408,7 @@ function LedgerDetailModal({
   // sort entries: by date, then by type priority (caution first, then loyer, then paiement, then regul)
   const sorted = [...entries].sort((a, b) => {
     if (a.entry_date !== b.entry_date) return a.entry_date.localeCompare(b.entry_date);
-    const order = { caution: 0, loyer: 1, regularisation: 2, paiement: 3 };
+    const order = { caution: 0, loyer: 1, regularisation: 2, avoir: 2, paiement: 3 };
     return (order[a.type] ?? 4) - (order[b.type] ?? 4);
   });
 

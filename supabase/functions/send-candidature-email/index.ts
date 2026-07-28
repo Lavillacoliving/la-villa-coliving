@@ -52,6 +52,9 @@ function buildAdminEmail(data: Record<string, string>): string {
     ["Date d'arrivée souhaitée", data.arrival],
     ["Durée du séjour", data.duration],
     ["Comment a entendu parler", data.source || "—"],
+    // Programme parrainage : le nom du parrain déclaré doit être visible dès la
+    // notification, pour le rattachement par Fanny à la qualification.
+    ["Parrainé par", (data.referrerName ?? "").trim().slice(0, 80) || "—"],
   ];
 
   const tableRows = rows.map(([label, value]) => `
@@ -338,6 +341,7 @@ Deno.serve(async (req: Request) => {
         "word-of-mouth": "Bouche à oreille",
         "article-blog": "Un article du blog",
         "leboncoin": "Leboncoin",
+        "resident-referral": "Un résident m'a recommandé",
         "other": "Autre",
       };
       // Canal déclaré (select du formulaire) → valeur autorisée par prospects_source_check.
@@ -350,6 +354,7 @@ Deno.serve(async (req: Request) => {
         "word-of-mouth": "bouche_a_oreille",
         "article-blog": "article_blog",
         "leboncoin": "leboncoin",
+        "resident-referral": "parrainage",
         "other": "autre",
       };
       // lease_duration est contraint (prospects_lease_duration_check) : seules 3_mois / 6_mois /
@@ -387,6 +392,11 @@ Deno.serve(async (req: Request) => {
       //    fallback pour source si le candidat n'a rien déclaré. Le déclaré PRIME.
       const channel = (data.source ?? "").trim();
       if (channel) notesParts.push(`Canal déclaré : ${CHANNEL_LABELS[channel] ?? channel}`);
+      // Parrainage : nom du parrain tel que déclaré par le candidat, en clair dans
+      // les notes. La résolution vers un tenant_id est faite PAR FANNY au dashboard
+      // (humain dans la boucle) — jamais automatiquement ici (homonymes, fautes).
+      const referrerName = (data.referrerName ?? "").trim().slice(0, 80);
+      if (referrerName) notesParts.push(`Parrain déclaré : ${referrerName}`);
       const refSrc = (data.ref_src ?? "").trim().slice(0, 50);
       const refArticle = (data.ref_article ?? "").trim().slice(0, 120);
       if (refSrc) {

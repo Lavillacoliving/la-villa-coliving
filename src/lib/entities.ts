@@ -54,6 +54,25 @@ export const PROPERTY_ADDRESSES: Record<string, string> = {
 };
 
 // ==========================================
+// Prospects — sources
+// ==========================================
+
+// Valeurs autorisées par la contrainte prospects_source_check (14 valeurs).
+// Toute valeur ajoutée ici DOIT l'être aussi dans la contrainte, sinon save
+// refusé en 23514 (cf. Schema_Supabase_LaVilla.md).
+// parrainage : migration prospects_source_referral_program (28/07/2026).
+export const PROSPECT_SOURCE_OPTIONS: Array<[string, string]> = [
+  ['site_web', 'Site web'], ['article_blog', 'Article du blog'], ['google', 'Google'],
+  ['parrainage', 'Parrainage résident'],
+  ['facebook', 'Facebook'], ['instagram', 'Instagram'],
+  ['whatsapp', 'WhatsApp'], ['messenger', 'Messenger'], ['leboncoin', 'Leboncoin'],
+  ['appartager', 'Appartager'], ['roomlala', 'Roomlala'], ['bouche_a_oreille', 'Bouche-à-oreille'],
+  ['email', 'Email'], ['autre', 'Autre'],
+];
+
+export const PROSPECT_SOURCE_LABELS: Record<string, string> = Object.fromEntries(PROSPECT_SOURCE_OPTIONS);
+
+// ==========================================
 // Transaction types & rapprochement statuses
 // ==========================================
 

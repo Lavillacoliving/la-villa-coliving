@@ -14,6 +14,8 @@ interface Tenant {
   deposit_received_date: string|null; deposit_refunded_amount: number|null; deposit_refunded_date: string|null;
   due_day: number|null; date_of_birth: string|null; place_of_birth: string|null;
   bank_aliases: string[]|null; notes: string|null; entity_id: string|null;
+  // Parrainage : locataire qui a recommandé ce filleul (FK tenants, reporté du prospect)
+  referred_by_tenant_id: string|null;
   // Charges individualisées (override propriété — NULL = hérite)
   charges_energy_chf: number|null; charges_maintenance_chf: number|null; charges_services_chf: number|null;
   // Cycle de vie du bail (workflow Yousign)
@@ -44,10 +46,13 @@ const EMPTY_TENANT: Partial<Tenant> = {
   property_id:'',is_active:true,move_in_date:null,move_out_date:null,
   deposit_amount:null,deposit_received:false,deposit_received_date:null,deposit_refunded_amount:null,
   deposit_refunded_date:null,due_day:5,date_of_birth:null,place_of_birth:null,
-  bank_aliases:null,notes:null,entity_id:null,
+  bank_aliases:null,notes:null,entity_id:null,referred_by_tenant_id:null,
   charges_energy_chf:null,charges_maintenance_chf:null,charges_services_chf:null,
   lease_status:'draft'
 };
+
+// Montant du crédit parrainage — règle métier arbitrée (brief 28/07/2026)
+const REFERRAL_CREDIT_EUR = 150;
 
 export default function DashboardLocatairesPage() {
   const [tenants, setTenants] = useState<Tenant[]>([]);
@@ -68,6 +73,12 @@ export default function DashboardLocatairesPage() {
   const [exitSurvey, setExitSurvey] = useState<ExitSurvey|null>(null);
   const [sendingSurvey, setSendingSurvey] = useState(false);
   const [surveyByTenant, setSurveyByTenant] = useState<Record<string, ExitSurvey>>({});
+  // Parrainage : état du crédit du parrain pour le filleul ouvert dans le modal.
+  // creditedDate non null = avoir déjà versé (l'UUID du filleul dans le label du
+  // ledger EST le mécanisme d'idempotence — jamais le nom, à cause des homonymes).
+  const [referralCheck, setReferralCheck] = useState<{loading:boolean; creditedDate:string|null; error:boolean}>({loading:false, creditedDate:null, error:false});
+  const [referralConfirm, setReferralConfirm] = useState(false);
+  const [crediting, setCrediting] = useState(false);
   // deleteConfirm removed — no deletion allowed from dashboard
 
   const load = useCallback(async () => {
@@ -117,10 +128,32 @@ export default function DashboardLocatairesPage() {
   const activeCount = tenants.filter(t=>t.is_active).length;
   const totalRent = filtered.filter(t=>t.is_active).reduce((s,t)=>s+t.current_rent,0);
 
+  // Anti-double-crédit : cherche un avoir du PARRAIN dont le label contient
+  // l'UUID du filleul. En cas d'erreur réseau on bloque le bouton (conservateur).
+  const checkReferralCredit = useCallback(async (filleulId: string, parrainId: string) => {
+    setReferralCheck({loading:true, creditedDate:null, error:false});
+    const { data, error } = await supabase
+      .from('tenant_ledger')
+      .select('id,entry_date')
+      .eq('tenant_id', parrainId)
+      .eq('type', 'avoir')
+      .ilike('label', `%${filleulId}%`)
+      .order('entry_date', {ascending:false})
+      .limit(1)
+      .maybeSingle();
+    if (error) { setReferralCheck({loading:false, creditedDate:null, error:true}); return; }
+    setReferralCheck({loading:false, creditedDate: data?.entry_date ?? null, error:false});
+  }, []);
+
   const openModal = (tenant?: Tenant) => {
-    if (tenant) { setModal({...tenant}); setIsNew(false); loadTenantDocs(tenant.id); loadExitSurvey(tenant.id); }
+    if (tenant) {
+      setModal({...tenant}); setIsNew(false); loadTenantDocs(tenant.id); loadExitSurvey(tenant.id);
+      if (tenant.referred_by_tenant_id) checkReferralCredit(tenant.id, tenant.referred_by_tenant_id);
+      else setReferralCheck({loading:false, creditedDate:null, error:false});
+    }
     else { setModal({...EMPTY_TENANT}); setIsNew(true); setTenantDocs([]); setExitSurvey(null); }
     setRefundMode(false);
+    setReferralConfirm(false);
     setActiveTab('info');
   };
 
@@ -262,6 +295,52 @@ export default function DashboardLocatairesPage() {
     await logAudit('exit_survey_sent', 'tenant', modal.id, { name: `${modal.first_name} ${modal.last_name}` });
     toast.success('Questionnaire de départ envoyé ✉️');
     loadExitSurvey(modal.id);
+  };
+
+  // Versement du crédit parrainage : avoir de −150 € sur le ledger du PARRAIN
+  // (convention v_tenant_balance : positif = débiteur, un crédit est donc négatif).
+  // Déclenchement volontairement MANUEL (contrôle Jérôme/Fanny), jamais automatisé.
+  const creditReferral = async () => {
+    if (!modal?.id || !modal.referred_by_tenant_id) return;
+    const parrain = tenants.find(t => t.id === modal.referred_by_tenant_id);
+    if (!parrain) { toast.error('Parrain introuvable'); return; }
+    setCrediting(true);
+    // Re-vérification juste avant l'INSERT (cas de deux onglets/sessions ouverts)
+    const { data: existing, error: checkErr } = await supabase
+      .from('tenant_ledger')
+      .select('id,entry_date')
+      .eq('tenant_id', parrain.id)
+      .eq('type', 'avoir')
+      .ilike('label', `%${modal.id}%`)
+      .limit(1)
+      .maybeSingle();
+    if (checkErr) { setCrediting(false); toast.error('Vérification impossible : ' + checkErr.message); return; }
+    if (existing) {
+      setCrediting(false); setReferralConfirm(false);
+      setReferralCheck({loading:false, creditedDate: existing.entry_date, error:false});
+      toast.warning('Déjà crédité le ' + new Date(existing.entry_date).toLocaleDateString('fr-FR'));
+      return;
+    }
+    const today = new Date().toISOString().split('T')[0];
+    const { error } = await supabase.from('tenant_ledger').insert({
+      tenant_id: parrain.id,
+      entry_date: today,
+      type: 'avoir',
+      amount: -REFERRAL_CREDIT_EUR,
+      label: `Parrainage — filleul ${modal.id} (${modal.first_name} ${modal.last_name})`,
+      created_by: 'dashboard_manual',
+    });
+    setCrediting(false);
+    if (error) { toast.error('Erreur: ' + error.message); return; }
+    await logAudit('referral_credited', 'tenant', parrain.id, {
+      parrain_name: `${parrain.first_name} ${parrain.last_name}`,
+      filleul_id: modal.id,
+      filleul_name: `${modal.first_name} ${modal.last_name}`,
+      amount: -REFERRAL_CREDIT_EUR,
+    });
+    setReferralConfirm(false);
+    setReferralCheck({loading:false, creditedDate: today, error:false});
+    toast.success(`${REFERRAL_CREDIT_EUR} € crédités à ${parrain.first_name} ${parrain.last_name} 🎉`);
   };
 
   const confirmRefund = async () => {
@@ -540,6 +619,43 @@ export default function DashboardLocatairesPage() {
                   </div>
                 )}
 
+                {/* === PARRAINAGE (fiche du FILLEUL — le crédit va au ledger du PARRAIN) === */}
+                {!isNew && modal.referred_by_tenant_id && (() => {
+                  const parrain = tenants.find(t => t.id === modal.referred_by_tenant_id);
+                  const parrainName = parrain ? `${parrain.first_name} ${parrain.last_name}` : 'locataire introuvable';
+                  return (
+                    <div style={{background:'#fafafa',border:'1px solid #e5e7eb',borderRadius:'8px',padding:'12px',marginBottom:'16px'}}>
+                      <div style={{display:'flex',justifyContent:'space-between',alignItems:'center',marginBottom:'8px'}}>
+                        <strong style={{fontSize:'13px',color:'#374151'}}>Parrainage</strong>
+                        {referralCheck.creditedDate && (
+                          <span style={{background:'#dcfce7',color:'#16a34a',padding:'3px 10px',borderRadius:'12px',fontSize:'11px',fontWeight:600}}>Crédité ✓</span>
+                        )}
+                      </div>
+                      <div style={{fontSize:'13px',color:'#374151',marginBottom:'10px'}}>
+                        Parrainé par <strong>{parrainName}</strong> — le crédit de {REFERRAL_CREDIT_EUR} € s'applique sur le ledger du parrain.
+                      </div>
+                      {referralCheck.loading ? (
+                        <span style={{fontSize:'12px',color:'#6b7280'}}>Vérification du crédit…</span>
+                      ) : referralCheck.creditedDate ? (
+                        <span style={{fontSize:'12px',color:'#16a34a'}}>✅ Déjà crédité le {new Date(referralCheck.creditedDate).toLocaleDateString('fr-FR')}</span>
+                      ) : referralCheck.error ? (
+                        <span style={{fontSize:'12px',color:'#dc2626'}}>Vérification impossible — recharge la page avant de créditer.</span>
+                      ) : (
+                        <button
+                          onClick={()=>setReferralConfirm(true)}
+                          disabled={!parrain}
+                          style={{padding:'6px 12px',background:parrain?'#16a34a':'#e5e7eb',color:parrain?'#fff':'#9ca3af',border:'none',borderRadius:'6px',cursor:parrain?'pointer':'not-allowed',fontSize:'12px',fontWeight:600}}
+                        >
+                          💶 Créditer parrainage ({REFERRAL_CREDIT_EUR} €)
+                        </button>
+                      )}
+                      <div style={{marginTop:'8px',fontSize:'11px',color:'#9ca3af',lineHeight:1.4}}>
+                        À verser une fois le bail du filleul signé. 1 crédit max par filleul — le bouton se verrouille après versement.
+                      </div>
+                    </div>
+                  );
+                })()}
+
                 {/* === CHARGES INDIVIDUALISÉES (override propriété) === */}
                 <div style={{background:'#fafafa',border:'1px solid #e5e7eb',borderRadius:'8px',padding:'12px',marginBottom:'16px'}}>
                   <div style={{marginBottom:'8px'}}>
@@ -617,6 +733,31 @@ export default function DashboardLocatairesPage() {
           </div>
         </div>
       )}
+
+      {/* Confirmation crédit parrainage */}
+      {referralConfirm && modal && (() => {
+        const parrain = tenants.find(t => t.id === modal.referred_by_tenant_id);
+        if (!parrain) return null;
+        return (
+          <div className="dash-modal-overlay" style={{position:'fixed',top:0,left:0,right:0,bottom:0,background:'rgba(0,0,0,0.6)',display:'flex',alignItems:'center',justifyContent:'center',zIndex:2000}} onClick={()=>setReferralConfirm(false)}>
+            <div className="dash-modal dash-modal-compact" style={{background:'white',borderRadius:'12px',padding:'24px',width:'420px',maxWidth:'90vw'}} onClick={e=>e.stopPropagation()}>
+              <h3 style={{margin:'0 0 12px',fontSize:'16px'}}>💶 Confirmer le crédit parrainage</h3>
+              <p style={{fontSize:'14px',color:'#555',margin:'0 0 8px'}}>
+                Créditer <strong>{REFERRAL_CREDIT_EUR} €</strong> à <strong>{parrain.first_name} {parrain.last_name}</strong> pour le parrainage de <strong>{modal.first_name} {modal.last_name}</strong> ?
+              </p>
+              <p style={{fontSize:'12px',color:'#888',margin:'0 0 20px'}}>
+                Écriture « Avoir » de −{REFERRAL_CREDIT_EUR} € sur le ledger de {parrain.first_name}, visible dans Comptes Locataires.
+              </p>
+              <div style={{display:'flex',gap:'8px',justifyContent:'flex-end'}}>
+                <button onClick={()=>setReferralConfirm(false)} style={{padding:'8px 16px',border:'1px solid #ddd',background:'#fff',borderRadius:'6px',cursor:'pointer'}}>Annuler</button>
+                <button onClick={creditReferral} disabled={crediting} style={{padding:'8px 16px',background:'#16a34a',color:'#fff',border:'none',borderRadius:'6px',cursor:crediting?'wait':'pointer',fontWeight:600,opacity:crediting?0.6:1}}>
+                  {crediting ? 'Crédit…' : 'Confirmer le crédit'}
+                </button>
+              </div>
+            </div>
+          </div>
+        );
+      })()}
 
     </div>
   );

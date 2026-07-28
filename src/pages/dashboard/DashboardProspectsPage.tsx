@@ -1,6 +1,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import { supabase } from '@/lib/supabase';
 import { useToast } from '@/components/ui/Toast';
+import { PROSPECT_SOURCE_OPTIONS, PROSPECT_SOURCE_LABELS } from '@/lib/entities';
 
 interface Prospect {
   id: string; first_name: string; last_name: string;
@@ -9,7 +10,13 @@ interface Prospect {
   property_interest: string | null; occupation: string | null;
   move_in_date: string | null; lease_duration: string | null;
   notes: string | null; assigned_to: string | null;
+  referred_by_tenant_id: string | null;
   created_at: string;
+}
+
+// Locataires actifs proposés dans le dropdown « Parrainé par » (programme parrainage)
+interface ReferrerTenant {
+  id: string; first_name: string; last_name: string; property_id: string | null;
 }
 
 // Statuts autorisés par la contrainte prospects_status_check (10 valeurs).
@@ -33,16 +40,9 @@ const PIPELINE_LABELS: Record<string,string> = {
   new:'Nouveau', contacted:'Contacté/Photos', visit_scheduled:'Visite planifiée',
   visit_done:'Visite faite', signed:'Signé'
 };
-// Valeurs autorisées par la contrainte prospects_source_check (value = stocké en base, label = affiché)
-// article_blog + google : migration 07/07/2026 (scripts/migration-prospects-source-article-blog.sql)
-const SOURCE_OPTIONS: Array<[string, string]> = [
-  ['site_web','Site web'], ['article_blog','Article du blog'], ['google','Google'],
-  ['facebook','Facebook'], ['instagram','Instagram'],
-  ['whatsapp','WhatsApp'], ['messenger','Messenger'], ['leboncoin','Leboncoin'],
-  ['appartager','Appartager'], ['roomlala','Roomlala'], ['bouche_a_oreille','Bouche-à-oreille'],
-  ['email','Email'], ['autre','Autre'],
-];
-const SOURCE_LABELS: Record<string, string> = Object.fromEntries(SOURCE_OPTIONS);
+// Sources prospects : liste centralisée dans entities.ts (alignée sur prospects_source_check)
+const SOURCE_OPTIONS = PROSPECT_SOURCE_OPTIONS;
+const SOURCE_LABELS = PROSPECT_SOURCE_LABELS;
 
 // property_interest est un UUID (FK properties) : affichage = nom de maison, stockage = UUID.
 const PROPERTY_OPTIONS: Array<[string, string]> = [
@@ -64,11 +64,12 @@ const EMPTY_PROSPECT: Partial<Prospect> = {
   first_name:'', last_name:'', email:null, phone:null,
   source:null, status:'new', property_interest:null,
   occupation:null, move_in_date:null, lease_duration:null,
-  notes:null, assigned_to:null,
+  notes:null, assigned_to:null, referred_by_tenant_id:null,
 };
 
 export default function DashboardProspectsPage() {
   const [prospects, setProspects] = useState<Prospect[]>([]);
+  const [activeTenants, setActiveTenants] = useState<ReferrerTenant[]>([]);
   const toast = useToast();
   const [statusFilter, setStatusFilter] = useState("active");
   const [viewMode, setViewMode] = useState<'pipeline'|'table'>('pipeline');
@@ -80,8 +81,14 @@ export default function DashboardProspectsPage() {
 
   const load = useCallback(async () => {
     setLoading(true);
-    const {data} = await supabase.from("prospects").select("*").order("created_at",{ascending:false});
-    setProspects(data||[]);
+    // Parrainage : peut parrainer tout locataire ACTIF, y compris en préavis
+    // (is_active reste true jusqu'à la sortie — le préavis n'est pas un statut à part).
+    const [pRes, tRes] = await Promise.all([
+      supabase.from("prospects").select("*").order("created_at",{ascending:false}),
+      supabase.from("tenants").select("id,first_name,last_name,property_id").eq("is_active", true).order("first_name"),
+    ]);
+    setProspects(pRes.data||[]);
+    setActiveTenants(tRes.data||[]);
     setLoading(false);
   },[]);
 
@@ -122,6 +129,7 @@ export default function DashboardProspectsPage() {
       move_in_date: modal.move_in_date || null,
       lease_duration: modal.lease_duration || null,
       notes: modal.notes || null,
+      referred_by_tenant_id: modal.referred_by_tenant_id || null,
     };
     // assigned_to : on n'envoie la valeur que si renseignée, pour laisser le défaut DB ('gestionnaire') à l'insert
     if (modal.assigned_to) data.assigned_to = modal.assigned_to;
@@ -156,6 +164,9 @@ export default function DashboardProspectsPage() {
       property_id: modal.property_interest, is_active: true, due_day: 5,
       move_in_date: modal.move_in_date || null,
       notes: 'Converti depuis prospect. ' + (modal.notes || ''),
+      // Parrainage : c'est la colonne côté tenants qui fait foi pour le versement
+      // du crédit de 150 € (bouton « Créditer parrainage » sur la fiche locataire).
+      referred_by_tenant_id: modal.referred_by_tenant_id || null,
     };
     const { error } = await supabase.from('tenants').insert(data);
     if (error) { toast.error('Erreur: ' + error.message); return; }
@@ -336,6 +347,33 @@ export default function DashboardProspectsPage() {
               </div>
               <div><label style={S.fieldLabel}>Date d'emménagement souhaitée</label><input type="date" style={S.input} value={modal.move_in_date||''} onChange={e=>setModal({...modal,move_in_date:e.target.value||null})}/></div>
               <div><label style={S.fieldLabel}>Assigné à</label><input style={S.input} value={modal.assigned_to||''} onChange={e=>setModal({...modal,assigned_to:e.target.value||null})} placeholder="gestionnaire"/></div>
+              {/* Parrainage : rattachement parrain ↔ filleul fait à la main à la
+                  qualification (note « Parrain déclaré : … » visible ci-dessous).
+                  Éditable quelle que soit la source — un parrainage peut se déclarer
+                  après coup. Surligné si source=parrainage sans parrain rattaché. */}
+              {(() => {
+                const needsReferrer = modal.source === 'parrainage' && !modal.referred_by_tenant_id;
+                return (
+                  <div>
+                    <label style={S.fieldLabel}>Parrainé par</label>
+                    <select
+                      style={{...S.input, ...(needsReferrer ? {border:'1px solid #f59e0b', background:'#fffbeb'} : {})}}
+                      value={modal.referred_by_tenant_id||''}
+                      onChange={e=>setModal({...modal,referred_by_tenant_id:e.target.value||null})}
+                    >
+                      <option value="">— (aucun parrain)</option>
+                      {activeTenants.map(t=>(
+                        <option key={t.id} value={t.id}>
+                          {t.first_name} {t.last_name} — {t.property_id ? (PROPERTY_LABELS[t.property_id] ?? '?') : '?'}
+                        </option>
+                      ))}
+                    </select>
+                    {needsReferrer && (
+                      <div style={{fontSize:'10px',color:'#b45309',marginTop:'2px'}}>↳ source « Parrainage » : rattachement à faire</div>
+                    )}
+                  </div>
+                );
+              })()}
             </div>
 
             <div style={{marginBottom:'16px'}}>
