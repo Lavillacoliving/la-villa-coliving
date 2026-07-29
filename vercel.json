@@ -606,16 +606,6 @@
       "permanent": true
     },
     {
-      "source": "/blog/coliving-communaute-reels-amis-geneve-annemasse",
-      "destination": "/le-coliving",
-      "permanent": true
-    },
-    {
-      "source": "/en/blog/coliving-communaute-reels-amis-geneve-annemasse",
-      "destination": "/en/le-coliving",
-      "permanent": true
-    },
-    {
       "source": "/fr/blog",
       "destination": "/blog",
       "permanent": true
@@ -933,16 +923,6 @@
     {
       "source": "/en/blog/chambre-meublee-annemasse-geneve",
       "destination": "/en/blog/colocation-annemasse-ville-la-grand-ambilly",
-      "permanent": true
-    },
-    {
-      "source": "/blog/temps-trajet-annemasse-geneve-par-quartier",
-      "destination": "/blog/transport-annemasse-geneve-leman-express",
-      "permanent": true
-    },
-    {
-      "source": "/en/blog/temps-trajet-annemasse-geneve-par-quartier",
-      "destination": "/en/blog/transport-annemasse-geneve-leman-express",
       "permanent": true
     },
     {
