@@ -29,6 +29,7 @@ on:
       - 'index.html'
       - 'package.json'
       - 'vite.config.ts'
+      - 'vercel.json'
   repository_dispatch:
     types: [prerender]
   schedule:
