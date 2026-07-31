@@ -20,14 +20,39 @@ const CL:Record<string,Record<string,string>>={
   geneva:{en:"Geneva",fr:"Gen\u00e8ve"},community:{en:"Community",fr:"Communaut\u00e9"},
 };
 
+// État embarqué dans le HTML prerendu (fix CLS 07/2026, même mécanique que
+// BlogPostPage) : premier rendu React = grille complète → l'hydratation réussit,
+// pas d'effondrement en « Chargement… » ni de fetch Supabase au chargement.
+let embeddedRead = false;
+let embeddedPosts: BlogPost[] | null = null;
+function readEmbedded(): BlogPost[] | null {
+  if (!embeddedRead) {
+    embeddedRead = true;
+    try {
+      // Source primaire : la capture de main.tsx (avant hydratation) — voir BlogPostPage.
+      const stash = (window as unknown as { __PRERENDER_STATE__?: Record<string, string> }).__PRERENDER_STATE__;
+      const raw = stash?.["__blog_list_data__"] ?? document.getElementById("__blog_list_data__")?.textContent;
+      if (raw) {
+        const parsed = JSON.parse(raw);
+        // Tableau vide = capture prématurée du prerender → on refait le fetch normal.
+        embeddedPosts = Array.isArray(parsed) && parsed.length > 0 ? parsed : null;
+      }
+    } catch { embeddedPosts = null; }
+  }
+  return embeddedPosts;
+}
+
 export function BlogPage() {
   const { language } = useLanguage();
   const [sq, setSq] = useState("");
   const [ac, setAc] = useState("all");
-  const [posts, setPosts] = useState<BlogPost[]>([]);
-  const [loading, setLoading] = useState(true);
+  const [posts, setPosts] = useState<BlogPost[]>(() => readEmbedded() ?? []);
+  const [loading, setLoading] = useState(() => readEmbedded() === null);
 
-  useEffect(() => { loadPosts(); }, []);
+  useEffect(() => {
+    if (readEmbedded() !== null) return; // état initial déjà hydraté depuis le prerendu
+    loadPosts();
+  }, []);
   async function loadPosts() {
     try {
       const { data, error } = await supabase
@@ -130,6 +155,13 @@ export function BlogPage() {
           )}
         </div>
       </section>
+      {/* État embarqué pour l'hydratation sans fetch — capturé par le prerender,
+          lu par readEmbedded() au montage. « < » échappé en < par sécurité. */}
+      <script
+        type="application/json"
+        id="__blog_list_data__"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(posts).replace(/</g, "\\u003c") }}
+      />
     </main>
   );
 }

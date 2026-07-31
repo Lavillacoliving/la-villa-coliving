@@ -135,17 +135,61 @@ function extractToc(md: string): { title: string; slug: string }[] {
   return out;
 }
 
+// État embarqué dans le HTML prerendu (fix CLS 07/2026). Le composant rend un
+// <script type="application/json" id="__blog_post_data__"> avec {post, related} ;
+// Puppeteer le capture dans public/prerendered/. Au chargement réel, l'état initial
+// se lit ici de façon SYNCHRONE : le premier rendu React reproduit l'article complet,
+// l'hydratation de main.tsx réussit, et Supabase n'est plus appelé. Sans ça, le
+// premier rendu est « Chargement… » : sur mobile lent, l'article prerendu s'effondre
+// puis se re-déploie après le fetch = CLS > 0,25 mesuré par la CrUX sur ~41 URLs.
+// Contrepartie assumée : une édition SQL seule n'apparaît qu'au prochain run
+// prerender (déjà vrai pour le SEO — le HTML prerendu fait foi).
+type EmbeddedBlogData = { post: Post; related: RelatedPost[] };
+let embeddedRead = false;
+let embeddedCache: EmbeddedBlogData | null = null;
+function readEmbedded(): EmbeddedBlogData | null {
+  if (!embeddedRead) {
+    embeddedRead = true;
+    try {
+      // Source primaire : la capture faite par main.tsx avant l'hydratation (le DOM
+      // prerendu peut avoir été remplacé quand ce chunk lazy s'exécute). Le DOM reste
+      // en secours au cas où l'ordre d'exécution changerait.
+      const stash = (window as unknown as { __PRERENDER_STATE__?: Record<string, string> }).__PRERENDER_STATE__;
+      const raw = stash?.["__blog_post_data__"] ?? document.getElementById("__blog_post_data__")?.textContent;
+      if (raw) embeddedCache = JSON.parse(raw);
+    } catch { embeddedCache = null; }
+  }
+  return embeddedCache;
+}
+
 export function BlogPostPage() {
   const { slug } = useParams<{slug:string}>();
   const { language } = useLanguage();
-  const [post, setPost] = useState<Post|null>(null);
-  const [related, setRelated] = useState<RelatedPost[]>([]);
-  const [loading, setLoading] = useState(true);
+  const [post, setPost] = useState<Post|null>(() => {
+    const emb = readEmbedded();
+    return emb && emb.post?.slug === slug ? emb.post : null;
+  });
+  const [related, setRelated] = useState<RelatedPost[]>(() => {
+    const emb = readEmbedded();
+    return emb && emb.post?.slug === slug ? (emb.related ?? []) : [];
+  });
+  const [loading, setLoading] = useState(() => {
+    const emb = readEmbedded();
+    return !(emb && emb.post?.slug === slug);
+  });
   const [searchParams] = useSearchParams();
   const isPreview = searchParams.get("preview") === "lavilla2026";
 
   useEffect(() => {
-    if(slug) loadPost(slug);
+    if (!slug) return;
+    const emb = readEmbedded();
+    if (emb && emb.post?.slug === slug && !isPreview) {
+      // Premier montage sur page prerendue : état initial déjà en place, pas de fetch.
+      // Filet : si le prerender a capturé avant l'arrivée des articles liés, les charger.
+      if (!emb.related || emb.related.length === 0) loadRelated(emb.post.id, emb.post.category);
+      return;
+    }
+    loadPost(slug);
   }, [slug]);
   async function loadPost(s:string) {
     try {
@@ -180,8 +224,10 @@ export function BlogPostPage() {
     } catch(e) { console.error("Related posts load:", e); }
   }
 
+  // min-h-screen : en navigation SPA (pas de données embarquées), l'attente ne doit
+  // pas faire remonter le footer dans le viewport (layout shift).
   if(loading) return (
-    <main className="relative pt-16">
+    <main className="relative pt-16 min-h-screen">
       <div className="py-32 text-center text-[#57534E]">
         {language==="en"?"Loading...":"Chargement..."}
       </div>
@@ -368,9 +414,12 @@ export function BlogPostPage() {
           {/* Encadré « Notre posture » — en tête des articles YMYL, avant l'intro (brief E-E-A-T A.3) */}
           {isYmyl(post.slug) && <YmylPosture slug={post.slug} />}
 
+          {/* aspect-[16/10] : réserve la hauteur AVANT l'arrivée de l'image (sinon h-auto
+              part de 0 et pousse tout l'article vers le bas = layout shift) ; image héro
+              au-dessus de la ligne de flottaison → chargement eager, pas lazy (LCP). */}
           {post.image_url && (
-            <div className="mb-10 overflow-hidden">
-              <img src={post.image_url} alt={title} className="w-full h-auto object-cover" loading="lazy" />
+            <div className="mb-10 overflow-hidden aspect-[16/10]">
+              <img src={post.image_url} alt={title} className="w-full h-full object-cover" />
             </div>
           )}
 
@@ -507,6 +556,14 @@ export function BlogPostPage() {
           </div>
         </section>
       )}
+      {/* État embarqué pour l'hydratation sans fetch — capturé par le prerender, lu par
+          readEmbedded() au montage. L'échappement de « < » (<) empêche toute sortie
+          prématurée du <script> si un contenu contenait « </script> ». */}
+      <script
+        type="application/json"
+        id="__blog_post_data__"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify({ post, related }).replace(/</g, "\\u003c") }}
+      />
     </main>
   );
 }
