@@ -25,6 +25,7 @@ import { AVAILABILITY, houseAvailabilityLabel, STATS, PRICE_EN_NUM, PRICE_CHF_FR
 import { Badge } from "@/components/ui/badge";
 import { HouseGallery } from "@/sections/HouseGallery";
 import { SEO } from "@/components/SEO";
+import { WhatsAppButton } from "@/components/WhatsAppButton";
 import {
   Carousel,
   CarouselContent,
@@ -1879,7 +1880,13 @@ export function HouseDetailPage() {
                   ? `Location: ${house.name} in ${house.location.split(',')[0]}`
                   : `Localisation : ${house.name} à ${house.location.split(',')[0]}`}
               </h2>
-              <p className="text-lg text-[#57534E] leading-relaxed mb-8 font-medium">{data.intro}</p>
+              <p className="text-lg text-[#57534E] leading-relaxed mb-4 font-medium">{data.intro}</p>
+              {/* Phrase citable produit (extraction IA / AI Overviews) — 1 par page, motif commun aux money pages */}
+              <p className="text-sm text-[#78716C] leading-relaxed mb-8">
+                {language === "en"
+                  ? `${house.name} is one of the 3 La Villa Coliving houses: all-inclusive furnished rooms from ${PRICE_CHF_EN}/month — pool, sauna, gym and cleaning included, 20 minutes from Geneva, no application fee.`
+                  : `${house.name} est l'une des 3 maisons La Villa Coliving : chambres meublées tout inclus dès ${PRICE_CHF_FR}/mois — piscine, sauna, salle de sport et ménage compris, à 20 minutes de Genève, sans frais de dossier.`}
+              </p>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
                 <div>
@@ -2199,6 +2206,9 @@ export function HouseDetailPage() {
           <ArrowRight className="w-4 h-4" />
         </LocalizedLink>
       </div>
+      {/* WhatsApp flottant contextuel (plan A1, 08/2026) — remonté au-dessus de la
+          CTA collante mobile (z-40, bottom-0) via bottomClass. */}
+      <WhatsAppButton context={house.name} bottomClass="bottom-20 md:bottom-6" />
     </main>
   );
 }

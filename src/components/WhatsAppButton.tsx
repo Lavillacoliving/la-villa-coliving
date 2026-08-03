@@ -1,30 +1,72 @@
 import { useState } from "react";
+import { useLocation } from "react-router-dom";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 /**
- * Floating WhatsApp button — bottom-right, pulse animation, tooltip
- * Stone & Brass design — WhatsApp green icon on clean white circle
+ * Bouton WhatsApp flottant — bas-droite, pulse, tooltip.
+ * WhatsApp est le canal préféré de la cible (40+ messages/jour reçus) : monté
+ * sur les pages de lecture longue (articles de blog, pages maisons) comme CTA
+ * co-principal mobile-first.
+ *
+ * - `context` alimente le message pré-rempli (« Je viens de lire “…” ») et le
+ *   param GA4 `context` de l'event whatsapp_click.
+ * - `bottomClass` permet de cohabiter avec les CTA sticky mobiles existantes
+ *   (z-40, bottom-0) : passer p.ex. "bottom-20 md:bottom-6" sur ces pages.
  */
-export function WhatsAppButton() {
+interface WhatsAppButtonProps {
+  context?: string;
+  bottomClass?: string;
+}
+
+const WHATSAPP_NUMBER = "33664315134";
+
+export function WhatsAppButton({ context, bottomClass = "bottom-6" }: WhatsAppButtonProps) {
   const [showTooltip, setShowTooltip] = useState(false);
+  const { language } = useLanguage();
+  const { pathname } = useLocation();
+  const en = language === "en";
+
+  const message = context
+    ? en
+      ? `Hi! I've just read "${context}" and I'm looking for a room at La Villa Coliving.`
+      : `Bonjour ! Je viens de lire « ${context} » et je cherche une chambre chez La Villa Coliving.`
+    : en
+      ? "Hi! I'm looking for a room at La Villa Coliving."
+      : "Bonjour ! Je cherche une chambre chez La Villa Coliving.";
+
+  const href = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(message)}`;
+
+  const trackClick = () => {
+    try {
+      (window as unknown as { gtag?: (...a: unknown[]) => void }).gtag?.("event", "whatsapp_click", {
+        page_path: pathname,
+        context: context || "none",
+        language,
+      });
+    } catch {
+      /* noop — l'analytics ne bloque jamais l'UI */
+    }
+  };
 
   return (
-    <div className="fixed bottom-6 right-6 z-50 flex items-center gap-3">
+    <div className={`fixed ${bottomClass} right-6 z-50 flex items-center gap-3`}>
       {/* Tooltip */}
       {showTooltip && (
         <span className="bg-[#1C1917] text-white text-sm font-medium px-4 py-2 rounded-lg shadow-lg whitespace-nowrap animate-fade-in">
-          Nous écrire
+          {en ? "Chat with us" : "Nous écrire"}
         </span>
       )}
 
       {/* Button */}
       <a
-        href="https://wa.me/33664315134"
+        href={href}
         target="_blank"
         rel="noopener noreferrer"
-        aria-label="Contacter La Villa Coliving sur WhatsApp"
+        aria-label={en ? "Contact La Villa Coliving on WhatsApp" : "Contacter La Villa Coliving sur WhatsApp"}
         className="relative w-14 h-14 bg-[#25D366] rounded-full flex items-center justify-center shadow-[0_4px_20px_rgba(37,211,102,0.4)] hover:shadow-[0_6px_28px_rgba(37,211,102,0.5)] hover:scale-105 transition-all duration-300"
         onMouseEnter={() => setShowTooltip(true)}
         onMouseLeave={() => setShowTooltip(false)}
+        onClick={trackClick}
       >
         {/* Pulse ring */}
         <span className="absolute inset-0 rounded-full bg-[#25D366] animate-ping opacity-20" />

@@ -105,6 +105,22 @@ export function buildHomeLodgingBusinessSchema(language: "fr" | "en" = "fr"): Re
     telephone: LAVILLA_PHONE,
     email: LAVILLA_EMAIL,
     priceRange: en ? `from ${STATS.priceChf} CHF/month` : `dès ${STATS.priceChf} CHF/mois`,
+    // Offre citable par les moteurs et les IA (AI Overviews cite déjà nos prix —
+    // autant qu'ils viennent d'une donnée structurée exacte). Prix via STATS.
+    makesOffer: {
+      "@type": "Offer",
+      name: en
+        ? "All-inclusive furnished room in coliving near Geneva"
+        : "Chambre meublée tout inclus en coliving près de Genève",
+      description: en
+        ? `Furnished room of ${STATS.roomSizeMin} to ${STATS.roomSizeMax} m², all utilities, fibre internet, cleaning, pool, sauna and gym included. No application fee.`
+        : `Chambre meublée de ${STATS.roomSizeMin} à ${STATS.roomSizeMax} m², charges, internet fibre, ménage, piscine, sauna et salle de sport inclus. Sans frais de dossier.`,
+      price: String(STATS.priceChf),
+      priceCurrency: "CHF",
+      availability: "https://schema.org/InStock",
+      url: `${SITE}${en ? "/en" : ""}/tarifs`,
+      seller: { "@type": "Organization", name: "La Villa Coliving", url: SITE },
+    },
     areaServed: ["Genève", "Annemasse", "Ville-la-Grand", "Ambilly", "Grand Genève"],
     knowsLanguage: ["fr", "en"],
     amenityFeature: [

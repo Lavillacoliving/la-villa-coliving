@@ -2,6 +2,7 @@ import { useState, useEffect, useCallback } from 'react';
 import { supabase } from '@/lib/supabase';
 import { useToast } from '@/components/ui/Toast';
 import { PROSPECT_SOURCE_OPTIONS, PROSPECT_SOURCE_LABELS } from '@/lib/entities';
+import { logAudit } from '@/lib/auditLog';
 
 interface Prospect {
   id: string; first_name: string; last_name: string;
@@ -11,6 +12,7 @@ interface Prospect {
   move_in_date: string | null; lease_duration: string | null;
   notes: string | null; assigned_to: string | null;
   referred_by_tenant_id: string | null;
+  lost_reason: string | null;
   created_at: string;
 }
 
@@ -35,6 +37,22 @@ const STATUS_LABELS: Record<string,string> = {
   contract_sent: 'Contrat envoyé', signed: 'Signé', lost: 'Perdu',
   do_not_contact: 'Ne pas recontacter'
 };
+// Raisons de perte — alignées sur prospects_lost_reason_check
+// (scripts/migration-prospects-lost-reason.sql, 04/08/2026). Obligatoire côté UI
+// au passage en « Perdu » : sans raison consignée, impossible de savoir pourquoi
+// on perd (constat du 03/08 : 10 perdus, 0 raison).
+const LOST_REASON_OPTIONS: Array<[string, string]> = [
+  ['trop_cher', 'Trop cher / budget'],
+  ['trop_loin', 'Trop loin / trajet'],
+  ['timing_decale', 'Timing décalé'],
+  ['autre_logement', 'A trouvé un autre logement'],
+  ['sans_reponse', 'Sans réponse (relancé)'],
+  ['profil_incompatible', 'Profil incompatible'],
+  ['chambre_indisponible', 'Aucune chambre à proposer'],
+  ['autre', 'Autre'],
+];
+const LOST_REASON_LABELS: Record<string, string> = Object.fromEntries(LOST_REASON_OPTIONS);
+
 const PIPELINE_STAGES = ['new','contacted','visit_scheduled','visit_done','signed'];
 const PIPELINE_LABELS: Record<string,string> = {
   new:'Nouveau', contacted:'Contacté/Photos', visit_scheduled:'Visite planifiée',
@@ -65,6 +83,7 @@ const EMPTY_PROSPECT: Partial<Prospect> = {
   source:null, status:'new', property_interest:null,
   occupation:null, move_in_date:null, lease_duration:null,
   notes:null, assigned_to:null, referred_by_tenant_id:null,
+  lost_reason:null,
 };
 
 export default function DashboardProspectsPage() {
@@ -116,6 +135,11 @@ export default function DashboardProspectsPage() {
   const saveModal = async () => {
     if (!modal) return;
     if (!modal.first_name || !modal.last_name) { toast.warning('Prénom et nom obligatoires'); return; }
+    // Raison de perte obligatoire au passage en « Perdu » (plan A1, 04/08/2026)
+    if (modal.status === 'lost' && !modal.lost_reason) {
+      toast.warning('Indique la raison de la perte (menu « Raison de perte »)');
+      return;
+    }
     setSaving(true);
     const data: any = {
       first_name: modal.first_name,
@@ -130,9 +154,12 @@ export default function DashboardProspectsPage() {
       lease_duration: modal.lease_duration || null,
       notes: modal.notes || null,
       referred_by_tenant_id: modal.referred_by_tenant_id || null,
+      // La raison n'a de sens que pour « Perdu » — nettoyée sinon (retour en pipeline)
+      lost_reason: modal.status === 'lost' ? (modal.lost_reason || null) : null,
     };
     // assigned_to : on n'envoie la valeur que si renseignée, pour laisser le défaut DB ('gestionnaire') à l'insert
     if (modal.assigned_to) data.assigned_to = modal.assigned_to;
+    const prevStatus = isNew ? null : (prospects.find(p => p.id === modal.id)?.status ?? null);
     let err;
     if (isNew) {
       ({ error: err } = await supabase.from('prospects').insert(data));
@@ -141,6 +168,15 @@ export default function DashboardProspectsPage() {
     }
     setSaving(false);
     if (err) { toast.error('Erreur: ' + err.message); return; }
+    if (isNew) {
+      await logAudit('create', 'prospect', undefined, { name: `${modal.first_name} ${modal.last_name}`, status: data.status });
+    } else if (prevStatus && prevStatus !== data.status) {
+      await logAudit('status_change', 'prospect', modal.id, {
+        from: prevStatus, to: data.status,
+        name: `${modal.first_name} ${modal.last_name}`,
+        ...(data.status === 'lost' ? { lost_reason: data.lost_reason } : {}),
+      });
+    }
     setModal(null);
     load();
   };
@@ -150,6 +186,7 @@ export default function DashboardProspectsPage() {
     setDeleteConfirm({label:`${modal.first_name} ${modal.last_name}`,fn:async()=>{
       const { error } = await supabase.from('prospects').delete().eq('id', modal.id);
       if (error) { toast.error('Erreur: ' + error.message); return; }
+      await logAudit('delete', 'prospect', modal.id, { name: `${modal.first_name} ${modal.last_name}` });
       setModal(null); load();
     }});
   };
@@ -172,14 +209,23 @@ export default function DashboardProspectsPage() {
     if (error) { toast.error('Erreur: ' + error.message); return; }
     // Mark prospect as signed
     await supabase.from('prospects').update({ status: 'signed' }).eq('id', modal.id);
+    await logAudit('prospect_converted', 'prospect', modal.id, {
+      name: `${modal.first_name} ${modal.last_name}`,
+      property_id: modal.property_interest,
+    });
     toast.success(modal.first_name + ' converti en locataire');
     setModal(null); load();
   };
 
   // Quick status change via pipeline drag-like click
   const moveToStage = async (prospectId: string, newStatus: string) => {
+    const prev = prospects.find(p => p.id === prospectId);
     const { error } = await supabase.from('prospects').update({ status: newStatus }).eq('id', prospectId);
     if (error) { toast.error('Erreur: ' + error.message); return; }
+    await logAudit('status_change', 'prospect', prospectId, {
+      from: prev?.status ?? null, to: newStatus,
+      name: prev ? `${prev.first_name} ${prev.last_name}` : undefined,
+    });
     load();
   };
 
@@ -187,7 +233,9 @@ export default function DashboardProspectsPage() {
     const XLSX = await import('xlsx');
     const rows=filtered.map(p=>({Nom:p.first_name+" "+p.last_name,Email:p.email||"",Tél:p.phone||"",
       Métier:p.occupation||"",Source:SOURCE_LABELS[p.source||""]||p.source||"",
-      Statut:STATUS_LABELS[p.status]||p.status,Maison:propertyName(p.property_interest),
+      Statut:STATUS_LABELS[p.status]||p.status,
+      "Raison perte":p.lost_reason?(LOST_REASON_LABELS[p.lost_reason]||p.lost_reason):"",
+      Maison:propertyName(p.property_interest),
       "Durée séjour":DURATION_LABELS[p.lease_duration||""]||p.lease_duration||"",
       "Emménagement souhaité":p.move_in_date||"",
       "Reçu le":p.created_at?new Date(p.created_at).toLocaleDateString("fr-FR"):"",
@@ -333,6 +381,14 @@ export default function DashboardProspectsPage() {
                   {Object.entries(STATUS_LABELS).map(([k,v])=><option key={k} value={k}>{v}</option>)}
                 </select>
               </div>
+              {modal.status === 'lost' && (
+                <div><label style={S.fieldLabel}>Raison de perte *</label>
+                  <select style={S.input} value={modal.lost_reason||''} onChange={e=>setModal({...modal,lost_reason:e.target.value||null})}>
+                    <option value="">— à renseigner —</option>
+                    {LOST_REASON_OPTIONS.map(([v,l])=><option key={v} value={v}>{l}</option>)}
+                  </select>
+                </div>
+              )}
               <div><label style={S.fieldLabel}>Maison d'intérêt</label>
                 <select style={S.input} value={modal.property_interest||''} onChange={e=>setModal({...modal,property_interest:e.target.value||null})}>
                   <option value="">— (indifférent)</option>

@@ -1,10 +1,11 @@
-import { useState, type FormEvent } from "react";
+import { useEffect, useRef, useState, type FormEvent, type KeyboardEvent } from "react";
 import { useSearchParams } from "react-router-dom";
 import { useLanguage } from "@/contexts/LanguageContext";
-import { ArrowRight, Check, Clock, Shield, Loader2, Star, Users, Calendar, ChevronDown, ChevronUp, MessageCircle, Sparkles } from "lucide-react";
+import { ArrowLeft, ArrowRight, Check, Clock, Shield, Loader2, Star, Users, Calendar, ChevronDown, ChevronUp, MessageCircle, Sparkles } from "lucide-react";
 import { SEO } from "@/components/SEO";
 import { SUPABASE_URL, SUPABASE_ANON_KEY } from "@/lib/supabase";
 import { STATS, STATS_DISPLAY, totalAvailabilityLabel, PRICE_CHF_FR, PRICE_CHF_EN } from "@/data/stats";
+import { useFormTelemetry } from "@/hooks/useFormTelemetry";
 
 type FormStatus = "idle" | "submitting" | "success" | "error";
 
@@ -27,8 +28,68 @@ export function JoinPageV4() {
   const refSrc = (searchParams.get("src") ?? "").slice(0, 50);
   const refArticle = (searchParams.get("article") ?? "").slice(0, 120);
 
+  // Formulaire en 2 étapes réelles (étape 1 : contact · étape 2 : séjour).
+  // Les deux blocs restent MONTÉS en permanence (l'inactif est en [hidden]) :
+  // FormData lit les inputs en display:none (preuve : le honeypot), seuls les
+  // inputs démontés disparaissent du payload. État initial déterministe step=1
+  // → le HTML prerendu et le premier render d'hydratation sont identiques.
+  const [step, setStep] = useState<1 | 2>(1);
+  const step1Ref = useRef<HTMLDivElement>(null);
+  const step2Ref = useRef<HTMLDivElement>(null);
+  const firstRenderRef = useRef(true);
+  const telemetry = useFormTelemetry({
+    formId: "candidature",
+    formDestination: "supabase-edge",
+    baseParams: {
+      language: L,
+      ref_src: refSrc || "none",
+      ref_article: refArticle || "none",
+    },
+  });
+
+  useEffect(() => {
+    if (firstRenderRef.current) {
+      firstRenderRef.current = false;
+      return;
+    }
+    const target = step === 2 ? step2Ref.current : step1Ref.current;
+    target?.focus({ preventScroll: true });
+    target?.scrollIntoView({ behavior: "smooth", block: "start" });
+  }, [step]);
+
+  function handleContinue() {
+    // reportValidity() champ par champ : un reportValidity() du <form> entier
+    // buterait sur les champs requis de l'étape 2, cachés donc non focusables.
+    const fields = step1Ref.current?.querySelectorAll<HTMLInputElement>("input") ?? [];
+    for (const field of Array.from(fields)) {
+      if (!field.reportValidity()) return;
+    }
+    telemetry.trackStepComplete(1);
+    setStep(2);
+  }
+
+  function handleBack() {
+    setStep(1);
+  }
+
+  function handleFormKeyDown(e: KeyboardEvent<HTMLFormElement>) {
+    // À l'étape 1, Entrée (dont la touche « OK » des claviers mobiles) doit
+    // faire « Continuer », pas soumettre — sans casser l'activation clavier
+    // des boutons eux-mêmes.
+    if (e.key !== "Enter" || step !== 1) return;
+    if ((e.target as HTMLElement).tagName === "BUTTON") return;
+    e.preventDefault();
+    handleContinue();
+  }
+
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
+    if (status === "submitting") return;
+    if (step === 1) {
+      // Filet : si un navigateur soumet malgré l'interception d'Entrée.
+      handleContinue();
+      return;
+    }
     setStatus("submitting");
     setErrorMessage("");
 
@@ -41,6 +102,10 @@ export function JoinPageV4() {
     // Couche « observée » de l'attribution (l'URL d'arrivée), à côté du canal déclaré.
     if (refSrc) payload.ref_src = refSrc;
     if (refArticle) payload.ref_article = refArticle;
+    // Langue explicite : l'Edge Function ne peut plus se fier au Referer
+    // (la Referrer-Policy par défaut ampute le path en cross-origin, ce qui
+    // loggait toutes les soumissions en « fr »).
+    payload.language = L;
 
     try {
       const response = await fetch(EDGE_FUNCTION_URL, {
@@ -64,28 +129,13 @@ export function JoinPageV4() {
 
       setStatus("success");
 
-      // Tracking GA4 — on déclenche explicitement l'event `form_submit` au succès.
-      // La détection automatique de GA4 (mesure améliorée) ne capte PAS de façon fiable
-      // les formulaires SPA envoyés via fetch() : c'est pourquoi le suivi des candidatures
-      // est tombé à zéro après la refonte du formulaire de mai 2026. Même motif sûr que
-      // WaitlistForm.tsx. On ne le déclenche qu'après une réponse OK = vraie candidature.
-      try {
-        (window as unknown as { gtag?: (...a: unknown[]) => void }).gtag?.(
-          "event",
-          "form_submit",
-          {
-            form_id: "candidature",
-            form_destination: "supabase-edge",
-            language,
-            lead_source: payload.source || "unknown",
-            ref_src: refSrc || "none",
-            ref_article: refArticle || "none",
-          }
-        );
-      } catch { /* noop — ne jamais bloquer l'UI de succès à cause de l'analytics */ }
+      // Tracking GA4 — form_submit émis UNIQUEMENT après réponse OK (vraie
+      // candidature) via useFormTelemetry, qui désarme aussi form_abandon.
+      telemetry.trackSubmit({ lead_source: payload.source || "unknown" });
 
       form.reset();
       setSourceChoice(""); // le select est contrôlé — form.reset() ne le vide pas
+      setStep(1); // sinon « envoyer une autre candidature » rouvrirait un formulaire vide à l'étape 2
     } catch (err) {
       setStatus("error");
       setErrorMessage(
@@ -354,6 +404,8 @@ export function JoinPageV4() {
           ) : (
           <form
             onSubmit={handleSubmit}
+            onKeyDown={handleFormKeyDown}
+            {...telemetry.formProps}
             className="bg-white border border-[#E7E5E4] p-8 md:p-12"
           >
             {/* Honeypot anti-spam (caché aux humains) */}
@@ -366,16 +418,18 @@ export function JoinPageV4() {
               autoComplete="off"
             />
 
-            {/* Progress indicator */}
+            {/* Progress indicator — réel, dérivé de `step` */}
             <div className="flex items-center gap-4 mb-8 pb-6 border-b border-[#E7E5E4]">
-              <div className="flex items-center gap-2">
-                <span className="w-6 h-6 bg-[#D4A574] text-white text-xs rounded-full flex items-center justify-center font-medium">1</span>
-                <span className="text-sm text-[#1C1917] font-medium">{language === "en" ? "Your info" : "Tes infos"}</span>
+              <div className="flex items-center gap-2" aria-current={step === 1 ? "step" : undefined}>
+                <span className="w-6 h-6 bg-[#D4A574] text-white text-xs rounded-full flex items-center justify-center font-medium">
+                  {step === 2 ? <Check className="w-3.5 h-3.5" /> : "1"}
+                </span>
+                <span className={`text-sm font-medium ${step === 1 ? "text-[#1C1917]" : "text-[#78716C]"}`}>{language === "en" ? "Your info" : "Tes infos"}</span>
               </div>
               <div className="flex-1 h-px bg-[#E7E5E4]" />
-              <div className="flex items-center gap-2">
-                <span className="w-6 h-6 bg-[#D4A574] text-white text-xs rounded-full flex items-center justify-center font-medium">2</span>
-                <span className="text-sm text-[#1C1917] font-medium">{language === "en" ? "Your stay" : "Ton séjour"}</span>
+              <div className="flex items-center gap-2" aria-current={step === 2 ? "step" : undefined}>
+                <span className={`w-6 h-6 text-xs rounded-full flex items-center justify-center font-medium ${step === 2 ? "bg-[#D4A574] text-white" : "bg-[#E7E5E4] text-[#78716C]"}`}>2</span>
+                <span className={`text-sm font-medium ${step === 2 ? "text-[#1C1917]" : "text-[#78716C]"}`}>{language === "en" ? "Your stay" : "Ton séjour"}</span>
               </div>
               <div className="flex-1 h-px bg-[#E7E5E4]" />
               <div className="flex items-center gap-2">
@@ -384,6 +438,16 @@ export function JoinPageV4() {
               </div>
             </div>
 
+            {/* ÉTAPE 1 — contact. Toujours montée ([hidden] quand step=2) pour
+                que FormData lise ses valeurs à la soumission finale. */}
+            <div
+              ref={step1Ref}
+              hidden={step !== 1}
+              tabIndex={-1}
+              className="scroll-mt-24 outline-none"
+              aria-label={language === "en" ? "Step 1 of 2 — Your info" : "Étape 1 sur 2 — Tes infos"}
+              onInvalid={() => setStep(1)}
+            >
             {/* Personal Info */}
             <div className="mb-10">
               <h2 className="text-xs uppercase tracking-widest text-[#78716C] mb-6">
@@ -443,6 +507,27 @@ export function JoinPageV4() {
               </div>
             </div>
 
+            <button
+              type="button"
+              onClick={handleContinue}
+              className="w-full py-4 bg-[#1C1917] text-white font-bold hover:bg-[#D4A574] transition-colors flex items-center justify-center gap-2"
+            >
+              {language === "en" ? "CONTINUE" : "CONTINUER"}
+              <ArrowRight className="w-5 h-5" />
+            </button>
+            <p className="text-sm text-[#78716C] text-center mt-4">
+              {language === "en" ? "1 step left — about a minute" : "Plus qu'une étape — environ 1 minute"}
+            </p>
+            </div>
+
+            {/* ÉTAPE 2 — séjour. Toujours montée ([hidden] quand step=1). */}
+            <div
+              ref={step2Ref}
+              hidden={step !== 2}
+              tabIndex={-1}
+              className="scroll-mt-24 outline-none"
+              aria-label={language === "en" ? "Step 2 of 2 — Your stay" : "Étape 2 sur 2 — Ton séjour"}
+            >
             {/* Stay Info */}
             <div className="mb-10">
               <h2 className="text-xs uppercase tracking-widest text-[#78716C] mb-6">
@@ -600,11 +685,20 @@ export function JoinPageV4() {
                 </>
               )}
             </button>
+            <button
+              type="button"
+              onClick={handleBack}
+              className="w-full mt-3 py-3 border border-[#E7E5E4] text-[#57534E] hover:border-[#D4A574] hover:text-[#1C1917] transition-colors flex items-center justify-center gap-2"
+            >
+              <ArrowLeft className="w-4 h-4" />
+              {language === "en" ? "Back to my info" : "Revenir à mes infos"}
+            </button>
             <p className="text-sm text-[#78716C] text-center mt-4">
               {language === "en"
                 ? "Response within 48h. Your data remains confidential."
                 : "Réponse sous 48h. Tes données restent confidentielles."}
             </p>
+            </div>
           </form>
           )}
         </div>

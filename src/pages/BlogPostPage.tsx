@@ -12,6 +12,7 @@ import { SEO } from "@/components/SEO";
 import { buildBreadcrumbSchema, buildFaqPageSchema, getFounderByAuthorName, ABOUT_PAGE_LIVE } from "@/lib/structuredData";
 import { getIntentBucket } from "@/data/blogIntentBuckets";
 import { BlocOffre } from "@/components/BlocOffre";
+import { WhatsAppButton } from "@/components/WhatsAppButton";
 import { formatPriceChf } from "@/data/stats";
 import { YmylNotice, YmylPosture, AuthorBox } from "@/components/YmylNotice";
 import { isYmyl } from "@/lib/ymyl";
@@ -556,6 +557,9 @@ export function BlogPostPage() {
           </div>
         </section>
       )}
+      {/* WhatsApp flottant contextuel — canal préféré de la cible (plan A1, 08/2026).
+          Le message pré-rempli cite le titre de l'article lu. */}
+      <WhatsAppButton context={title} />
       {/* État embarqué pour l'hydratation sans fetch — capturé par le prerender, lu par
           readEmbedded() au montage. L'échappement de « < » (<) empêche toute sortie
           prématurée du <script> si un contenu contenait « </script> ». */}

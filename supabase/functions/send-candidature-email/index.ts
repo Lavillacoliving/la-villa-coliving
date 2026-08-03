@@ -87,14 +87,60 @@ function buildAdminEmail(data: Record<string, string>): string {
 </body></html>`;
 }
 
-function buildAutoresponseEmail(firstName: string): string {
+// Textes de l'auto-réponse candidat, FR (registre vouvoyé historique) + EN.
+// Le HTML est unique : seule la langue des chaînes change.
+const AUTORESPONSE_TEXTS = {
+  fr: {
+    htmlLang: "fr",
+    title: "Votre candidature à La Villa",
+    heading: (name: string) => `${name}, ravis d'avoir reçu votre candidature.`,
+    intro: "Vous venez peut-être de faire le premier pas vers un autre quotidien — et chez nous, on prend le temps de bien faire les choses. Toute l'équipe a hâte de découvrir votre profil.",
+    nextLabel: "Et maintenant ?",
+    step1Title: "Candidature bien reçue !",
+    step1Body: "On regarde qui vous êtes, ce que vous cherchez, et si La Villa correspond à ce dont vous avez besoin.",
+    step2Title: "On vous recontacte sous 48h.",
+    step2Body: "Par email ou téléphone, pour faire connaissance autour d'un échange — sans pression, sans engagement.",
+    step3Title: "Si tout est aligné, on vous fait visiter.",
+    step3Body: "Et vous rencontrerez peut-être déjà certains de vos futurs colocataires.",
+    meanwhileLabel: "En attendant",
+    meanwhileBody: "La Villa, ce n'est pas une colocation comme les autres. C'est une maison, une vraie, avec ses pièces de vie, ses moments partagés, et des gens qui ont choisi de ne pas vivre seuls.",
+    ctaDiscover: "Découvrir La Villa",
+    questionBlock: "Une question avant qu'on se parle ?<br>Répondez simplement à cet email, on est là.",
+    signoff: "À très vite,",
+    team: "Jérôme &amp; l'équipe de La Villa",
+    footerNote: "Cet email vous a été envoyé suite à votre candidature.<br>Vos données restent strictement confidentielles.",
+  },
+  en: {
+    htmlLang: "en",
+    title: "Your application to La Villa",
+    heading: (name: string) => `${name}, we're delighted to have received your application.`,
+    intro: "You may have just taken the first step towards a different everyday life — and here, we take the time to do things right. The whole team is looking forward to discovering your profile.",
+    nextLabel: "What happens next?",
+    step1Title: "Application received!",
+    step1Body: "We look at who you are, what you're looking for, and whether La Villa matches what you need.",
+    step2Title: "We'll get back to you within 48h.",
+    step2Body: "By email or phone, to get to know each other — no pressure, no commitment.",
+    step3Title: "If everything lines up, we'll show you around.",
+    step3Body: "And you might already meet some of your future housemates.",
+    meanwhileLabel: "In the meantime",
+    meanwhileBody: "La Villa isn't your average flatshare. It's a house — a real one — with shared living spaces, shared moments, and people who chose not to live alone.",
+    ctaDiscover: "Discover La Villa",
+    questionBlock: "A question before we talk?<br>Just reply to this email, we're here.",
+    signoff: "See you very soon,",
+    team: "Jérôme &amp; the La Villa team",
+    footerNote: "This email was sent to you following your application.<br>Your data remains strictly confidential.",
+  },
+} as const;
+
+function buildAutoresponseEmail(firstName: string, language: "fr" | "en"): string {
   const safeFirstName = escapeHtml(firstName);
+  const T = AUTORESPONSE_TEXTS[language];
   return `<!DOCTYPE html>
-<html lang="fr">
+<html lang="${T.htmlLang}">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Votre candidature à La Villa</title>
+<title>${T.title}</title>
 </head>
 <body style="margin:0;padding:0;background-color:#FAF9F6;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif;color:#1C1917;">
 <table role="presentation" cellspacing="0" cellpadding="0" border="0" align="center" width="100%" style="max-width:600px;margin:0 auto;background-color:#FAF9F6;">
@@ -105,8 +151,8 @@ function buildAutoresponseEmail(firstName: string): string {
   </tr>
   <tr>
     <td style="padding:56px 40px 24px 40px;background-color:#FFFFFF;text-align:center;">
-      <h2 style="margin:0 0 24px 0;font-family:'Georgia','Times New Roman',serif;font-weight:300;font-size:30px;color:#1C1917;line-height:1.3;">${safeFirstName}, ravis d'avoir reçu votre candidature.</h2>
-      <p style="margin:0;font-size:16px;line-height:1.75;color:#57534E;">Vous venez peut-être de faire le premier pas vers un autre quotidien — et chez nous, on prend le temps de bien faire les choses. Toute l'équipe a hâte de découvrir votre profil.</p>
+      <h2 style="margin:0 0 24px 0;font-family:'Georgia','Times New Roman',serif;font-weight:300;font-size:30px;color:#1C1917;line-height:1.3;">${T.heading(safeFirstName)}</h2>
+      <p style="margin:0;font-size:16px;line-height:1.75;color:#57534E;">${T.intro}</p>
     </td>
   </tr>
   <tr>
@@ -116,30 +162,30 @@ function buildAutoresponseEmail(firstName: string): string {
   </tr>
   <tr>
     <td style="padding:0 40px 40px 40px;background-color:#FFFFFF;">
-      <p style="margin:0 0 28px 0;font-size:11px;letter-spacing:3px;text-transform:uppercase;color:#D4A574;text-align:center;">Et maintenant ?</p>
+      <p style="margin:0 0 28px 0;font-size:11px;letter-spacing:3px;text-transform:uppercase;color:#D4A574;text-align:center;">${T.nextLabel}</p>
       <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%">
         <tr><td style="padding:0 0 26px 0;">
-          <p style="margin:0 0 6px 0;font-size:16px;font-weight:600;color:#1C1917;">Candidature bien reçue !</p>
-          <p style="margin:0;font-size:14px;line-height:1.65;color:#57534E;">On regarde qui vous êtes, ce que vous cherchez, et si La Villa correspond à ce dont vous avez besoin.</p>
+          <p style="margin:0 0 6px 0;font-size:16px;font-weight:600;color:#1C1917;">${T.step1Title}</p>
+          <p style="margin:0;font-size:14px;line-height:1.65;color:#57534E;">${T.step1Body}</p>
         </td></tr>
         <tr><td style="padding:0 0 26px 0;">
-          <p style="margin:0 0 6px 0;font-size:16px;font-weight:600;color:#1C1917;">On vous recontacte sous 48h.</p>
-          <p style="margin:0;font-size:14px;line-height:1.65;color:#57534E;">Par email ou téléphone, pour faire connaissance autour d'un échange — sans pression, sans engagement.</p>
+          <p style="margin:0 0 6px 0;font-size:16px;font-weight:600;color:#1C1917;">${T.step2Title}</p>
+          <p style="margin:0;font-size:14px;line-height:1.65;color:#57534E;">${T.step2Body}</p>
         </td></tr>
         <tr><td style="padding:0;">
-          <p style="margin:0 0 6px 0;font-size:16px;font-weight:600;color:#1C1917;">Si tout est aligné, on vous fait visiter.</p>
-          <p style="margin:0;font-size:14px;line-height:1.65;color:#57534E;">Et vous rencontrerez peut-être déjà certains de vos futurs colocataires.</p>
+          <p style="margin:0 0 6px 0;font-size:16px;font-weight:600;color:#1C1917;">${T.step3Title}</p>
+          <p style="margin:0;font-size:14px;line-height:1.65;color:#57534E;">${T.step3Body}</p>
         </td></tr>
       </table>
     </td>
   </tr>
   <tr>
     <td style="padding:40px;background-color:#FAF9F6;border-top:1px solid #E7E5E4;border-bottom:1px solid #E7E5E4;text-align:center;">
-      <p style="margin:0 0 16px 0;font-size:11px;letter-spacing:3px;text-transform:uppercase;color:#78716C;">En attendant</p>
-      <p style="margin:0 0 28px 0;font-size:15px;line-height:1.75;color:#57534E;">La Villa, ce n'est pas une colocation comme les autres. C'est une maison, une vraie, avec ses pièces de vie, ses moments partagés, et des gens qui ont choisi de ne pas vivre seuls.</p>
+      <p style="margin:0 0 16px 0;font-size:11px;letter-spacing:3px;text-transform:uppercase;color:#78716C;">${T.meanwhileLabel}</p>
+      <p style="margin:0 0 28px 0;font-size:15px;line-height:1.75;color:#57534E;">${T.meanwhileBody}</p>
       <table role="presentation" cellspacing="0" cellpadding="0" border="0" align="center"><tr>
         <td style="padding:0 8px;">
-          <a href="https://lavillacoliving.com" style="display:inline-block;padding:14px 28px;background-color:#1C1917;color:#FFFFFF;text-decoration:none;font-size:12px;letter-spacing:2px;text-transform:uppercase;font-weight:600;">Découvrir La Villa</a>
+          <a href="https://lavillacoliving.com" style="display:inline-block;padding:14px 28px;background-color:#1C1917;color:#FFFFFF;text-decoration:none;font-size:12px;letter-spacing:2px;text-transform:uppercase;font-weight:600;">${T.ctaDiscover}</a>
         </td>
         <td style="padding:0 8px;">
           <a href="https://www.instagram.com/la_villa_coliving_geneva" style="display:inline-block;padding:14px 28px;background-color:#FFFFFF;color:#1C1917;text-decoration:none;font-size:12px;letter-spacing:2px;text-transform:uppercase;font-weight:600;border:1px solid #1C1917;">Instagram</a>
@@ -149,15 +195,15 @@ function buildAutoresponseEmail(firstName: string): string {
   </tr>
   <tr>
     <td style="padding:48px 40px;background-color:#FFFFFF;text-align:center;">
-      <p style="margin:0 0 12px 0;font-size:15px;line-height:1.7;color:#57534E;">Une question avant qu'on se parle ?<br>Répondez simplement à cet email, on est là.</p>
-      <p style="margin:32px 0 0 0;font-size:15px;line-height:1.6;color:#1C1917;">À très vite,<br><strong style="font-weight:600;">Jérôme &amp; l'équipe de La Villa</strong></p>
+      <p style="margin:0 0 12px 0;font-size:15px;line-height:1.7;color:#57534E;">${T.questionBlock}</p>
+      <p style="margin:32px 0 0 0;font-size:15px;line-height:1.6;color:#1C1917;">${T.signoff}<br><strong style="font-weight:600;">${T.team}</strong></p>
     </td>
   </tr>
   <tr>
     <td style="padding:28px 40px;background-color:#1C1917;text-align:center;">
       <p style="margin:0 0 8px 0;font-size:12px;color:#D4A574;letter-spacing:2px;text-transform:uppercase;font-weight:600;">La Villa Coliving</p>
       <p style="margin:0 0 14px 0;font-size:12px;color:#A8A29E;line-height:1.6;"><a href="https://lavillacoliving.com" style="color:#D4A574;text-decoration:none;">lavillacoliving.com</a></p>
-      <p style="margin:0;font-size:11px;color:#78716C;line-height:1.5;">Cet email vous a été envoyé suite à votre candidature.<br>Vos données restent strictement confidentielles.</p>
+      <p style="margin:0;font-size:11px;color:#78716C;line-height:1.5;">${T.footerNote}</p>
     </td>
   </tr>
 </table>
@@ -236,6 +282,17 @@ Deno.serve(async (req: Request) => {
     });
   }
 
+  // Langue du candidat : champ explicite du payload (fiable depuis 08/2026),
+  // sinon heuristique Referer historique — la Referrer-Policy par défaut ampute
+  // le path en cross-origin, ce qui classait toutes les soumissions en « fr ».
+  const referer = req.headers.get("Referer") ?? "";
+  const language: "fr" | "en" =
+    data.language === "en" || data.language === "fr"
+      ? (data.language as "fr" | "en")
+      : /\/en(\/|$|\?)/.test(referer)
+        ? "en"
+        : "fr";
+
   // 1. Email de notification admin
   const adminEmail = {
     from: FROM_ADMIN_NOTIF,
@@ -245,13 +302,15 @@ Deno.serve(async (req: Request) => {
     html: buildAdminEmail(data),
   };
 
-  // 2. Auto-réponse au candidat
+  // 2. Auto-réponse au candidat (dans sa langue)
   const autoresponseEmail = {
     from: FROM_AUTORESPONSE,
     to: [data.email],
     reply_to: ADMIN_EMAIL,
-    subject: "Votre candidature à La Villa — bien reçue",
-    html: buildAutoresponseEmail(data.firstName),
+    subject: language === "en"
+      ? "Your application to La Villa — received"
+      : "Votre candidature à La Villa — bien reçue",
+    html: buildAutoresponseEmail(data.firstName, language),
   };
 
   // Envoi en parallèle
@@ -286,8 +345,7 @@ Deno.serve(async (req: Request) => {
     const sbUrl = Deno.env.get("SUPABASE_URL");
     const sbKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY");
     if (sbUrl && sbKey) {
-      const referer = req.headers.get("Referer") ?? "";
-      const language = /\/en(\/|$|\?)/.test(referer) ? "en" : "fr";
+      // `language` : calculé plus haut (payload explicite > heuristique Referer).
       const logRes = await fetch(`${sbUrl}/rest/v1/form_submissions`, {
         method: "POST",
         headers: {

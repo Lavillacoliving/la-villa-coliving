@@ -159,6 +159,12 @@ export function HousesPageV4() {
               ? "Three houses in premium coliving near Geneva — each designed for modern community living."
               : "Trois maisons en colocation premium près de Genève — chacune pensée pour la vie communautaire moderne."}
           </p>
+          {/* Phrase citable produit (extraction IA / AI Overviews) */}
+          <p className="text-sm text-[#78716C] max-w-2xl mx-auto mt-4">
+            {language === "en"
+              ? `La Villa Coliving: 29 all-inclusive furnished rooms from ${PRICE_CHF_EN}/month across 3 houses — La Villa (Ville-la-Grand), Le Loft (Ambilly) and Le Lodge (Annemasse), 20 minutes from Geneva.`
+              : `La Villa Coliving : 29 chambres meublées tout inclus dès ${PRICE_CHF_FR}/mois dans 3 maisons — La Villa (Ville-la-Grand), Le Loft (Ambilly) et Le Lodge (Annemasse), à 20 minutes de Genève.`}
+          </p>
         </div>
       </section>
 
