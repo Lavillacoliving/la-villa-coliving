@@ -88,10 +88,10 @@ jobs:
             echo "🚀 Pushed — Vercel will auto-deploy"
           fi
 
-      - name: Ping Google & Bing with updated sitemap
+      # Les anciens pings sitemap (google.com/ping, bing.com/ping) sont dépréciés
+      # et répondent 404 depuis 2023-2024. Google découvre via le sitemap déclaré
+      # dans GSC ; Bing (et les assistants IA qui sourcent sur son index :
+      # ChatGPT, Copilot) passent par IndexNow (A4-bis, 04/08/2026).
+      - name: Notify Bing/IndexNow with updated URLs
         if: success()
-        run: |
-          echo "📡 Notifying search engines of sitemap update..."
-          curl -s "https://www.google.com/ping?sitemap=https://www.lavillacoliving.com/sitemap.xml" -o /dev/null -w "Google: HTTP %{http_code}\n"
-          curl -s "https://www.bing.com/ping?sitemap=https://www.lavillacoliving.com/sitemap.xml" -o /dev/null -w "Bing: HTTP %{http_code}\n"
-          echo "✅ Search engines notified"
+        run: node scripts/indexnow-ping.mjs
