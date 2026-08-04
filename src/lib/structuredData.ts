@@ -191,12 +191,11 @@ export const FOUNDERS: Record<"jerome" | "fanny", Founder> = {
 export const FOUNDING_DATE = "2021-10";
 
 /**
- * ⚠️ INTERRUPTEUR — passer à `true` quand la page /qui-sommes-nous sera routée et en prod
- * (Jérôme la retravaille dans une autre session, 07/2026). Tant que `false` :
- * bylines et blocs auteur affichent le nom SANS lien interne, et les schemas Person
- * omettent `url` (le sameAs LinkedIn reste). Aucun lien mort ne part en prod.
+ * ⚠️ INTERRUPTEUR — `true` depuis le 04/08/2026 : la page /qui-sommes-nous est routée
+ * (branche feat/qui-sommes-nous-preview). Bylines et blocs auteur pointent vers la page,
+ * et les schemas Person portent son `url`.
  */
-export const ABOUT_PAGE_LIVE = false;
+export const ABOUT_PAGE_LIVE = true;
 
 /** Retrouve un fondateur depuis le champ `author` d'un article (sinon null → auteur générique). */
 export function getFounderByAuthorName(author: string | null | undefined): Founder | null {

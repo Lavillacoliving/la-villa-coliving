@@ -1224,8 +1224,11 @@ export function ObservatoireLogementFrontalierPage() {
                 ? "This observatory is published by La Villa Coliving, which runs all-inclusive coliving houses on the French side of Geneva. Want a turnkey room without the apartment hunt?"
                 : "Cet observatoire est publié par La Villa Coliving, qui gère des maisons de coliving tout inclus côté France. Envie d'une chambre clé en main sans la chasse à l'appartement ?"}
             </p>
-            {/* Lien « Qui est derrière cet observatoire → /qui-sommes-nous » à RÉTABLIR quand la page
-                fondateurs sera validée et routée (elle vit sur la branche feat/qui-sommes-nous-v2). */}
+            <p className="mb-6 -mt-2 text-sm">
+              <LocalizedLink to="/qui-sommes-nous" className="text-[#A0623C] underline underline-offset-4 hover:text-[#1C1917] transition-colors">
+                {en ? "Who is behind this observatory?" : "Qui est derrière cet observatoire ?"}
+              </LocalizedLink>
+            </p>
             <div className="flex flex-col sm:flex-row gap-3 justify-center">
               <LocalizedLink
                 to={colocGeneveHref(language)}

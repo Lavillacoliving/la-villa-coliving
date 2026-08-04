@@ -25,6 +25,7 @@ const AnnemasseColocationPage = lazy(() => import("@/pages/AnnemasseColocationPa
 const ChambreLouerAnnemassePage = lazy(() => import("@/pages/ChambreLouerAnnemassePage").then(m => ({ default: m.ChambreLouerAnnemassePage })));
 const InvestisseursPage = lazy(() => import("@/pages/InvestisseursPage").then(m => ({ default: m.InvestisseursPage })));
 const ObservatoireLogementPage = lazy(() => import("@/pages/ObservatoireLogementFrontalierPage").then(m => ({ default: m.ObservatoireLogementFrontalierPage })));
+const QuiSommesNousPage = lazy(() => import("@/pages/QuiSommesNousPage").then(m => ({ default: m.QuiSommesNousPage })));
 const NotFoundPage = lazy(() => import("@/pages/NotFoundPage").then(m => ({ default: m.NotFoundPage })));
 const MentionsLegalesPage = lazy(() => import("@/pages/MentionsLegalesPage").then(m => ({ default: m.MentionsLegalesPage })));
 // QuiSommesNousPage : composant prêt (src/pages/QuiSommesNousPage.tsx) mais PAS routé —
@@ -96,6 +97,7 @@ function AppContent() {
         <Route path="/lelodge" element={<HouseDetailPage />} />
         <Route path="/investisseurs" element={<InvestisseursPage />} />
         <Route path="/observatoire-logement-frontalier-geneve" element={<ObservatoireLogementPage />} />
+        <Route path="/qui-sommes-nous" element={<QuiSommesNousPage />} />
         <Route path="/mentions-legales" element={<MentionsLegalesPage />} />
         <Route path="/politique-de-confidentialite" element={<PolitiqueConfidentialitePage />} />
         {/* EN routes — same components, language detected from /en prefix */}
@@ -116,6 +118,7 @@ function AppContent() {
         <Route path="/en/lelodge" element={<HouseDetailPage />} />
         <Route path="/en/investisseurs" element={<InvestisseursPage />} />
         <Route path="/en/observatoire-logement-frontalier-geneve" element={<ObservatoireLogementPage />} />
+        <Route path="/en/qui-sommes-nous" element={<QuiSommesNousPage />} />
         <Route path="/en/mentions-legales" element={<MentionsLegalesPage />} />
         <Route path="/en/politique-de-confidentialite" element={<PolitiqueConfidentialitePage />} />
         <Route path="/reset-password" element={<ResetPasswordPage />} />

@@ -1,574 +1,423 @@
+import { Helmet } from "react-helmet";
+import { LocalizedLink } from "@/components/LocalizedLink";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { SEO } from "@/components/SEO";
-import { LocalizedLink } from "@/components/LocalizedLink";
-import { Helmet } from "react-helmet";
+import { buildBreadcrumbSchema, HOUSES, LAVILLA_EMAIL, LAVILLA_PHONE, LAVILLA_POSTAL_ADDRESS } from "@/lib/structuredData";
+import { STATS, PRICE_CHF_FR, PRICE_CHF_EN } from "@/data/stats";
 import {
-  ArrowRight,
-  Check,
-  Users,
-  Gem,
-  Eye,
-  HeartHandshake,
   Linkedin,
-  MapPin,
   Mail,
   Phone,
-  BarChart3,
+  ArrowRight,
+  Database,
+  Users,
+  Gem,
+  BadgeCheck,
+  HeartHandshake,
+  CheckCircle2,
 } from "lucide-react";
-import { STATS, STATS_DISPLAY } from "@/data/stats";
-import {
-  FOUNDERS,
-  HOUSES,
-  LAVILLA_EMAIL,
-  LAVILLA_PHONE,
-  buildAboutPageSchema,
-  buildBreadcrumbSchema,
-} from "@/lib/structuredData";
 
-/**
- * Page « Qui sommes-nous » — hub de confiance E-E-A-T (brief v2, 2026-07-06).
- * Rôle : réassurance anti-arnaque + page-auteur de référence (toutes les bylines
- * du blog pointent ici) + transparence (entités, contact, avis).
- * Parti pris : « maison de famille tenue par deux personnes », à l'opposé d'une
- * plateforme — on mène avec l'histoire, pas un organigramme.
- */
+// ──────────────────────────────────────────────────────────────────────────
+// Qui sommes-nous — v2 (brief correction 07/2026) : page image-led pour le public
+// principal = FRONTALIERS qui cherchent une chambre (pas les journalistes).
+// Ordre : hero photo couple → histoire (+photo maison) → co-fondateurs (portraits 4:5)
+//   → valeurs → confiance (anti-arnaque) → données allégée + presse en 1 ligne → CTA.
+// Prénoms AFFICHÉS (« Jérôme & Fanny ») + noms complets dans le JSON-LD Person
+//   (sameAs LinkedIn — déjà publics via kit presse). foundingDate = octobre 2021.
+// Photos : public/images/fondateur*-*.webp (portraits 4:5 fournis, ne pas déformer)
+//   + visuels maisons de la bibliothèque (⚠️ règle : Le Loft = piscine INTÉRIEURE).
+// Chiffres : STATS = source unique.
+// ──────────────────────────────────────────────────────────────────────────
 
-// [JÉRÔME] Portraits réels à fournir (facteur n°1 de crédibilité — brief §10.1) :
-// déposer /public/images/fondateurs/jerome.webp et fanny.webp puis remplacer
-// FOUNDER_PHOTOS ci-dessous. En attendant : monogramme (volontaire, pas d'image cassée).
-const FOUNDER_PHOTOS: Record<"jerome" | "fanny", string | null> = {
-  jerome: null,
-  fanny: null,
+const SITE = "https://www.lavillacoliving.com";
+const LINKEDIN_JEROME = "https://www.linkedin.com/in/jeromeaustin1/";
+const LINKEDIN_FANNY = "https://www.linkedin.com/in/fanny-bela-24793138/";
+const PRESS_PHONE_DISPLAY = "+33 6 64 31 51 34";
+
+const IMG_JEROME = "/images/fondateur-jerome.webp";
+const IMG_FANNY = "/images/fondatrice-fanny.webp";
+const IMG_HISTOIRE = "/images/la villa jardin.webp";
+const HOUSE_IMAGES: Record<string, string> = {
+  lavilla: "/images/la villa.webp",
+  leloft: "/images/la villa coliving le loft piscine.webp", // piscine intérieure (règle visuelle Loft)
+  lelodge: "/images/le lodge.webp",
 };
 
 export function QuiSommesNousPage() {
   const { language } = useLanguage();
   const en = language === "en";
-  const S = STATS_DISPLAY[en ? "en" : "fr"];
 
-  const founderCards = [
+  const pageUrl = `${SITE}${en ? "/en" : ""}/qui-sommes-nous`;
+
+  const aboutSchema = {
+    "@context": "https://schema.org",
+    "@type": "AboutPage",
+    name: en ? "Who we are — Jérôme & Fanny, founders" : "Qui sommes-nous — Jérôme & Fanny, fondateurs",
+    url: pageUrl,
+    inLanguage: en ? "en" : "fr",
+    primaryImageOfPage: `${SITE}${IMG_HISTOIRE}`,
+    mainEntity: {
+      "@type": "Organization",
+      name: "La Villa Coliving",
+      url: SITE,
+      logo: `${SITE}/logos/logo-full.png`,
+      email: LAVILLA_EMAIL,
+      telephone: LAVILLA_PHONE,
+      foundingDate: "2021-10",
+      address: LAVILLA_POSTAL_ADDRESS,
+      areaServed: ["Genève", "Annemasse", "Grand Genève"],
+      description: en
+        ? `Premium coliving under direct management: ${STATS.totalHouses} houses, ${STATS.totalRooms} furnished rooms all-inclusive from ${PRICE_CHF_EN}/month, 20 minutes from Geneva on the French side.`
+        : `Coliving premium en gestion directe : ${STATS.totalHouses} maisons, ${STATS.totalRooms} chambres meublées tout inclus dès ${PRICE_CHF_FR}/mois, à 20 minutes de Genève côté France.`,
+      founder: [
+        {
+          "@type": "Person",
+          name: "Jérôme Austin",
+          givenName: "Jérôme",
+          jobTitle: en ? "Co-founder" : "Co-fondateur",
+          image: `${SITE}${IMG_JEROME}`,
+          sameAs: [LINKEDIN_JEROME],
+          worksFor: { "@type": "Organization", name: "La Villa Coliving", url: SITE },
+        },
+        {
+          "@type": "Person",
+          name: "Fanny Bela",
+          givenName: "Fanny",
+          jobTitle: en ? "Co-founder" : "Co-fondatrice",
+          image: `${SITE}${IMG_FANNY}`,
+          sameAs: [LINKEDIN_FANNY],
+          worksFor: { "@type": "Organization", name: "La Villa Coliving", url: SITE },
+        },
+      ],
+      sameAs: [
+        "https://www.instagram.com/lavillacoliving/",
+        "https://share.google/OR9wy40wVx80aeQei",
+      ],
+    },
+  };
+
+  const breadcrumbSchema = buildBreadcrumbSchema([
+    { name: en ? "Home" : "Accueil", url: `${SITE}${en ? "/en" : "/"}` },
+    { name: en ? "Who we are" : "Qui sommes-nous", url: pageUrl },
+  ]);
+
+  const founders = [
     {
-      key: "jerome" as const,
-      founder: FOUNDERS.jerome,
-      displayName: "Jérôme",
-      role: en ? "Co-founder · Strategy & development" : "Cofondateur · Stratégie & développement",
+      img: IMG_JEROME,
+      alt: en ? "Portrait of Jérôme, co-founder of La Villa Coliving" : "Portrait de Jérôme, cofondateur de La Villa Coliving",
+      firstName: "Jérôme",
+      role: en ? "Co-founder" : "Co-fondateur",
       bio: en
-        ? "I imagined La Villa as the house I would have loved to find when I arrived in the region: beautiful, well thought-out, scam-free, and full of life. My job is everything behind the scenes — designing the houses, keeping quality where it belongs, and making sure every detail delivers on the promise."
-        : "J'ai imaginé La Villa comme la maison que j'aurais aimé trouver en arrivant dans la région : belle, bien pensée, sans arnaque, et pleine de vie. Mon travail, c'est tout ce qui se passe en coulisses — concevoir les maisons, garder la qualité au niveau, et faire en sorte que chaque détail tienne la promesse.",
+        ? "The direction and the concept: Jérôme opened the first house in 2021 and has been steering La Villa's development ever since. He also edits the cross-border housing observatory — the open-data study on rents and commute times around Geneva. Understanding the market better than anyone, to house people better than anyone."
+        : "Le cap et le concept : Jérôme a ouvert la première maison en 2021 et pilote depuis le développement de La Villa. Il édite aussi l'Observatoire du logement frontalier — l'étude en données ouvertes sur les loyers et les trajets autour de Genève. Comprendre le marché mieux que personne, pour loger mieux que personne.",
+      linkedin: LINKEDIN_JEROME,
     },
     {
-      key: "fanny" as const,
-      founder: FOUNDERS.fanny,
-      displayName: "Fanny",
-      role: en ? "Co-founder · House life & community" : "Cofondatrice · Vie des maisons & communauté",
+      img: IMG_FANNY,
+      alt: en ? "Portrait of Fanny, co-founder of La Villa Coliving" : "Portrait de Fanny, cofondatrice de La Villa Coliving",
+      firstName: "Fanny",
+      role: en ? "Co-founder" : "Co-fondatrice",
       bio: en
-        ? "My side is the day-to-day and the human part: welcoming residents, the atmosphere in the houses, the bond with each resident from move-in to move-out. So that the moment you walk through the door, you feel at home."
-        : "Moi, c'est le quotidien et l'humain : l'accueil, l'ambiance des maisons, le lien avec chaque résident, de l'emménagement au départ. Qu'on ressente, en franchissant la porte, qu'on est chez soi.",
+        ? "The soul and the face of the three houses: Fanny orchestrates arrivals, keeps every space up to the finest detail and brings the community to life every day. She's the one who answers residents — and often the reason they stay."
+        : "L'âme et le visage des trois maisons : Fanny orchestre les arrivées, veille à l'exigence du détail dans chaque espace et fait vivre la communauté au quotidien. C'est elle qui répond aux résidents — et c'est souvent pour elle qu'ils restent.",
+      linkedin: LINKEDIN_FANNY,
     },
   ];
 
   const values = [
     {
       icon: Users,
-      title: en ? "A hand-picked community" : "Une communauté choisie",
+      title: en ? "Community, our reason for being" : "La communauté, notre raison d'être",
       text: en
-        ? "We don't fill rooms, we compose houses. Every application is reviewed, every move-in is a deliberate choice."
-        : "On ne remplit pas des chambres, on compose des maisons. Chaque candidature est étudiée, chaque emménagement validé.",
+        ? "We don't rent out rooms, we bring houses to life: a community dinner every month, yoga and sport every week, events all year round. Selecting housemates is only the first chapter — what happens next is what makes La Villa."
+        : "On ne loue pas des chambres, on fait vivre des maisons : dîner communautaire chaque mois, yoga et sport chaque semaine, événements toute l'année. La sélection des colocataires n'est que le premier chapitre — c'est ce qui se passe après qui fait La Villa.",
+    },
+    {
+      icon: HeartHandshake,
+      title: en ? "Not a factory" : "Pas une usine",
+      text: en
+        ? "7 to 12 residents per house — not 300 per residence. Real houses with gardens, a pool and terraces, where everyone knows each other's first name. Three beautiful addresses rather than fifty average ones."
+        : "7 à 12 résidents par maison — pas 300 par résidence. De vraies maisons avec jardin, piscine et terrasses, où chacun connaît le prénom des autres. Trois belles adresses plutôt que cinquante moyennes.",
     },
     {
       icon: Gem,
       title: en ? "Quality, no compromise" : "La qualité, sans compromis",
       text: en
-        ? "Real designer furniture, real amenities, real spaces. Three beautiful houses rather than fifty average ones."
-        : "Vrai mobilier design, vraies prestations, vrais espaces. Trois belles maisons plutôt que cinquante moyennes.",
+        ? "Designer furniture, pool, sauna, gym — real amenities, maintained as if we lived there. Because we're there, every week."
+        : "Mobilier design, piscine, sauna, salle de sport — de vraies prestations, entretenues comme si on y vivait. Parce qu'on y passe, chaque semaine.",
     },
     {
-      icon: Eye,
-      title: en ? "Total transparency" : "La transparence, totale",
+      icon: BadgeCheck,
+      title: en ? "Direct and fully transparent" : "En direct, en toute transparence",
       text: en
-        ? "One price, all inclusive. No application fee, no agency fee, no hidden costs. Ever."
-        : "Un seul prix, tout inclus. Pas de frais de dossier, pas d'honoraires d'agence, pas de frais cachés. Jamais.",
+        ? "One price, all inclusive: no application fees, no agency fees, no surprises. And no hotline — us, directly reachable, with an answer within 48 hours."
+        : "Un seul prix, tout inclus : pas de frais de dossier, pas d'honoraires d'agence, pas de surprises. Et pas de hotline — nous, joignables en direct, réponse sous 48 h.",
     },
-    {
-      icon: HeartHandshake,
-      title: en ? "Human scale" : "À taille humaine",
-      text: en
-        ? "No platform, no hotline. Us, directly, reachable — with a reply within 48 hours."
-        : "Pas de plateforme, pas de hotline. Nous, en direct, joignables — et une réponse sous 48 h.",
-    },
-  ];
-
-  const proofs = [
-    en
-      ? `Since ${STATS.foundedYear}, ${STATS.totalResidents}+ residents welcomed — a real track record, not a promise.`
-      : `Depuis ${STATS.foundedYear}, plus de ${STATS.totalResidents} résidents accueillis — un vrai historique, pas une promesse.`,
-    en
-      ? "Real houses, real addresses. Come visit before you sign — on site or by video call."
-      : "De vraies maisons, de vraies adresses. Viens les visiter avant de signer — sur place ou en visio.",
-    en
-      ? "One price, all inclusive. No application fee, no agency fee."
-      : "Un seul prix, tout inclus. Aucun frais de dossier, aucun honoraire d'agence.",
-    en
-      ? "Compliant leases, a deposit regulated by French law."
-      : "Des baux en règle, une caution encadrée par la loi française.",
-    en
-      ? "A selected community — a house where everyone was chosen."
-      : "Une communauté sélectionnée — une maison où chacun a été choisi.",
-    en
-      ? "A human contact who replies within 48 hours — it's us answering."
-      : "Un interlocuteur humain, sous 48 h — c'est nous qui te répondons.",
-  ];
-
-  const dataPoints = [
-    {
-      value: "99 %",
-      label: en ? "occupancy over 5 years" : "d'occupation sur 5 ans",
-    },
-    {
-      value: en ? "13 mo." : "13 mois",
-      label: en
-        ? "average stay (9 months excluding long stays)"
-        : "de séjour moyen (9 mois hors longs séjours)",
-    },
-    {
-      value: "100 %",
-      label: en ? "of residents are cross-border workers" : "de résidents frontaliers",
-    },
-    {
-      value: en ? "< 1 week" : "< 1 semaine",
-      label: en
-        ? "to fill a room (30-45 applications/month)"
-        : "pour replacer une chambre (30-45 candidatures/mois)",
-    },
-  ];
-
-  // Fiches Google Business par maison — [JÉRÔME] remplacer par les liens de partage
-  // exacts des 3 fiches GBP si tu les as sous la main (Maps → Partager).
-  const googleReviews = [
-    { name: "La Villa", url: "https://www.google.com/search?q=La+Villa+Coliving+Ville-la-Grand+avis" },
-    { name: "Le Loft", url: "https://www.google.com/search?q=La+Villa+Coliving+Le+Loft+Ambilly+avis" },
-    { name: "Le Lodge", url: "https://www.google.com/search?q=La+Villa+Coliving+Le+Lodge+Annemasse+avis" },
   ];
 
   return (
     <main className="relative pt-16">
       <SEO
-        title={en ? "Who we are — Jérôme & Fanny, founders" : "Qui sommes-nous ? Jérôme & Fanny, fondateurs"}
+        title={en ? "Who we are — Jérôme & Fanny, founders" : "Qui sommes-nous — Jérôme & Fanny, fondateurs"}
         description={
           en
-            ? "Jérôme and Fanny, founders of La Villa Coliving: our story, our values, and why we personally run every house near Geneva."
-            : "Jérôme et Fanny, fondateurs de La Villa Coliving : notre parcours, nos valeurs et pourquoi nous gérons nous-mêmes chaque maison près de Genève."
+            ? `Two co-founders, ${STATS.totalHouses} houses, ${STATS.totalResidents}+ residents since October ${STATS.foundedYear}. La Villa Coliving runs its colivings near Geneva directly — no agency, no hidden fees.`
+            : `Deux co-fondateurs, ${STATS.totalHouses} maisons, ${STATS.totalResidents}+ résidents depuis octobre ${STATS.foundedYear}. La Villa Coliving gère en direct ses colivings près de Genève — sans agence, sans frais cachés.`
         }
-        jsonLd={buildAboutPageSchema(en ? "en" : "fr")}
+        image={`${SITE}${IMG_HISTOIRE}`}
+        jsonLd={aboutSchema}
       />
       <Helmet>
-        <script type="application/ld+json">
-          {JSON.stringify(
-            buildBreadcrumbSchema([
-              { name: en ? "Home" : "Accueil", url: `https://www.lavillacoliving.com${en ? "/en" : ""}/` },
-              {
-                name: en ? "Who we are" : "Qui sommes-nous",
-                url: `https://www.lavillacoliving.com${en ? "/en" : ""}/qui-sommes-nous`,
-              },
-            ])
-          )}
-        </script>
+        <script type="application/ld+json">{JSON.stringify(breadcrumbSchema)}</script>
       </Helmet>
 
-      {/* ============================================ */}
-      {/* 1 — HERO (dark) : deux personnes, pas une plateforme */}
-      {/* ============================================ */}
-      <section className="bg-[#1C1917] py-24 lg:py-32">
-        <div className="container-custom text-center">
-          <span className="text-xs uppercase tracking-[0.3em] text-[#D4A574] mb-4 block">
-            {en ? "WHO WE ARE" : "QUI SOMMES-NOUS"}
-          </span>
-          <h1
-            className="text-4xl md:text-5xl lg:text-6xl font-light text-white mb-6 max-w-4xl mx-auto"
-            style={{ fontFamily: "DM Serif Display, serif" }}
-          >
-            {en
-              ? "Behind La Villa, two people. Not a platform."
-              : "Derrière La Villa, deux personnes. Pas une plateforme."}
-          </h1>
-          <p className="text-lg text-stone-300 max-w-2xl mx-auto">
-            {en
-              ? `We are Jérôme and Fanny. Since ${STATS.foundedYear}, we design and run every house, every community, every detail ourselves. No algorithm, no call center: just two people who answer the phone and welcome you in person.`
-              : `Nous sommes Jérôme et Fanny. Depuis ${STATS.foundedYear}, nous concevons et gérons nous-mêmes chaque maison, chaque communauté, chaque détail. Pas d'algorithme, pas de call-center : juste deux personnes qui répondent au téléphone et t'accueillent en vrai.`}
-          </p>
+      {/* ===== HERO — panneau texte pleine largeur ===== */}
+      <section className="bg-[#1C1917]">
+        <div className="flex items-center">
+          <div className="max-w-5xl mx-auto w-full px-6 sm:px-10 lg:px-14">
+            <div className="max-w-xl py-12 lg:py-24 text-white">
+              <span className="text-xs text-[#D4A574] uppercase tracking-[0.3em] mb-3 block font-medium">
+                La Villa Coliving
+              </span>
+              <h1
+                className="text-4xl md:text-5xl font-light mb-4 leading-tight"
+                style={{ fontFamily: "DM Serif Display, serif" }}
+              >
+                {en ? "Who we are" : "Qui sommes-nous"}
+              </h1>
+              <p className="text-base md:text-lg text-white/85 leading-relaxed">
+                {en
+                  ? `Two founders, three houses, one conviction: coliving is first and foremost about community. Since October ${STATS.foundedYear}, Jérôme and Fanny have run their Greater Geneva houses, on the French side, directly — no agency between you and us.`
+                  : `Deux fondateurs, trois maisons, une conviction : le coliving est d'abord une histoire de communauté. Depuis octobre ${STATS.foundedYear}, Jérôme et Fanny gèrent leurs maisons du Grand Genève, côté France, en direct — sans agence entre toi et nous.`}
+              </p>
+            </div>
+          </div>
         </div>
       </section>
 
-      {/* ============================================ */}
-      {/* 2 — NOTRE HISTOIRE (white)                   */}
-      {/* ============================================ */}
-      <section className="bg-white py-24 lg:py-32">
-        <div className="container-custom">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-center">
-            <div>
-              <span className="text-xs uppercase tracking-[0.3em] text-[#D4A574] mb-4 block">
-                {en ? "OUR STORY" : "NOTRE HISTOIRE"}
-              </span>
-              <h2
-                className="text-3xl md:text-4xl font-light text-[#1C1917] mb-8"
-                style={{ fontFamily: "DM Serif Display, serif" }}
-              >
-                {en ? "How it all began" : "Comment tout a commencé"}
+      {/* ===== L'HISTOIRE — texte + photo de maison (rythme éditorial) ===== */}
+      <section className="py-14 lg:py-20 bg-white">
+        <div className="max-w-5xl mx-auto px-6">
+          <div className="grid lg:grid-cols-5 gap-10 items-center">
+            <div className="lg:col-span-3">
+              <h2 className="text-2xl md:text-3xl font-light text-[#1C1917] mb-5" style={{ fontFamily: "DM Serif Display, serif" }}>
+                {en ? "The story, in brief" : "L'histoire, en bref"}
               </h2>
-              <div className="space-y-5 text-[#44403C] leading-relaxed">
+              <div className="space-y-4 text-[#44403C] leading-relaxed">
                 <p>
                   {en
-                    ? "It all started from a simple observation. Around Geneva, finding housing on the French side is an obstacle course: soaring rents, dubious listings, deposit scams — and once you've moved in, isolation. Arriving alone in a new region, with no network, wears you down."
-                    : "Tout est parti d'un constat simple. Autour de Genève, se loger côté France relève du parcours du combattant : loyers qui s'envolent, annonces douteuses, arnaques à la caution — et une fois installé, l'isolement. Arriver seul dans une nouvelle région, sans réseau, ça use."}
-                </p>
-                {/* [JÉRÔME] Le déclic (brief §10.2) : insérer ici, en une ou deux phrases, le vrai
-                    moment / la vraie raison qui vous a décidés à lancer La Villa. C'est ce qui
-                    donnera son âme à la page. */}
-                <p>
-                  {en
-                    ? "So we decided to create exactly what we couldn't find: a house where you feel at home from day one, with real amenities — pool, sauna, gym —, a carefully chosen community, and zero bad surprises on price."
-                    : "Nous avons décidé de créer exactement ce qui nous manquait : une maison où l'on se sent chez soi dès le premier jour, avec de vraies prestations — piscine, sauna, salle de sport —, une communauté choisie avec soin, et zéro mauvaise surprise sur le prix."}
-                </p>
-                <p>
-                  {en ? (
-                    <>
-                      In October {STATS.foundedYear}, we opened our first house. Today, it's{" "}
-                      <strong className="font-semibold text-[#1C1917]">{STATS.totalHouses} houses</strong> in
-                      Ville-la-Grand, Ambilly and Annemasse,{" "}
-                      <strong className="font-semibold text-[#1C1917]">{STATS.totalRooms} rooms</strong>, and{" "}
-                      <strong className="font-semibold text-[#1C1917]">{STATS.totalResidents}+ residents</strong>{" "}
-                      who have lived with us. Many stay far longer than planned — 13 months on average.
-                    </>
-                  ) : (
-                    <>
-                      En octobre {STATS.foundedYear}, nous avons ouvert notre première maison. Aujourd'hui, ce sont{" "}
-                      <strong className="font-semibold text-[#1C1917]">{STATS.totalHouses} maisons</strong> à
-                      Ville-la-Grand, Ambilly et Annemasse,{" "}
-                      <strong className="font-semibold text-[#1C1917]">{STATS.totalRooms} chambres</strong>, et{" "}
-                      <strong className="font-semibold text-[#1C1917]">
-                        plus de {STATS.totalResidents} résidents
-                      </strong>{" "}
-                      passés chez nous. Beaucoup restent bien plus longtemps que prévu — 13 mois en moyenne.
-                    </>
-                  )}
+                    ? `October ${STATS.foundedYear}: the first house opened in Ville-la-Grand, with a simple conviction — a coliving should be a living space designed around its community, not just an upgraded flatshare. Today, La Villa Coliving brings together ${STATS.totalHouses} houses — La Villa in Ville-la-Grand, Le Loft in Ambilly, Le Lodge in Annemasse — ${STATS.totalRooms} furnished rooms, all-inclusive from ${PRICE_CHF_EN}/month, ${STATS.genevaCenterMinutes} minutes from central Geneva.`
+                    : `Octobre ${STATS.foundedYear} : la première maison ouvre à Ville-la-Grand, avec une conviction simple — un coliving doit être un lieu de vie pensé pour sa communauté, pas une colocation améliorée. Aujourd'hui, La Villa Coliving réunit ${STATS.totalHouses} maisons — La Villa à Ville-la-Grand, Le Loft à Ambilly, Le Lodge à Annemasse — soit ${STATS.totalRooms} chambres meublées tout inclus dès ${PRICE_CHF_FR}/mois, à ${STATS.genevaCenterMinutes} minutes du centre de Genève.`}
                 </p>
                 <p>
                   {en
-                    ? "We have no investors to satisfy, no growth-at-all-costs to show. Just the will to do things well, at human scale."
-                    : "Nous n'avons ni investisseurs à satisfaire, ni croissance à tout prix à afficher. Juste l'envie de faire les choses bien, à taille humaine."}
+                    ? `More than ${STATS.totalResidents} residents have lived there since: cross-border workers and expats arriving in the Geneva basin, most between 25 and 40. And renting is direct — the people who own and look after the houses are the ones you talk to, from the first message to the key handover. No agency, no middleman: us.`
+                    : `Plus de ${STATS.totalResidents} résidents y ont vécu depuis : des frontaliers et des expats qui arrivent dans le bassin genevois, entre 25 et 40 ans pour la plupart. Et la location se fait en direct — ceux qui possèdent et entretiennent les maisons sont ceux à qui tu parles, du premier message à la remise des clés. Pas d'agence, pas d'intermédiaire : nous.`}
                 </p>
               </div>
             </div>
-            <div className="overflow-hidden rounded-lg">
+            <div className="lg:col-span-2">
               <img
-                src="/images/la villa event.webp"
-                alt={
-                  en
-                    ? "Residents gathered for an event at La Villa Coliving near Geneva"
-                    : "Résidents réunis lors d'un événement à La Villa Coliving près de Genève"
-                }
-                className="w-full h-full object-cover"
+                src={IMG_HISTOIRE}
+                alt={en ? "One of La Villa's coliving houses near Geneva" : "Une des maisons de coliving La Villa près de Genève"}
+                className="w-full aspect-[4/3] object-cover rounded-2xl shadow-sm"
                 loading="lazy"
               />
             </div>
           </div>
-        </div>
-      </section>
 
-      {/* ============================================ */}
-      {/* 3 — LES FONDATEURS (cream) + LinkedIn        */}
-      {/* ============================================ */}
-      <section className="bg-[#FAF9F6] py-24 lg:py-32">
-        <div className="container-custom">
-          <div className="text-center mb-14">
-            <span className="text-xs uppercase tracking-[0.3em] text-[#D4A574] mb-4 block">
-              {en ? "THE FOUNDERS" : "LES FONDATEURS"}
-            </span>
-            <h2
-              className="text-3xl md:text-4xl font-light text-[#1C1917]"
-              style={{ fontFamily: "DM Serif Display, serif" }}
-            >
-              {en ? "Who we are" : "Qui nous sommes"}
-            </h2>
-          </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto">
-            {founderCards.map((card) => (
-              <article
-                key={card.key}
-                className="bg-white border border-[#E7E5E4] rounded-lg p-8 flex flex-col items-center text-center"
+          {/* Les 3 maisons — vignettes photo + maillage interne */}
+          <div className="grid sm:grid-cols-3 gap-4 mt-10">
+            {HOUSES.map((h) => (
+              <LocalizedLink
+                key={h.slug}
+                to={`/${h.slug}`}
+                className="group bg-white border border-[#E7E5E4] rounded-2xl overflow-hidden hover:border-[#D4A574] transition-colors"
               >
-                {FOUNDER_PHOTOS[card.key] ? (
-                  <img
-                    src={FOUNDER_PHOTOS[card.key] as string}
-                    alt={
-                      en
-                        ? `${card.founder.name}, ${card.role.toLowerCase()} of La Villa Coliving`
-                        : `${card.founder.name}, ${card.role.toLowerCase()} de La Villa Coliving`
-                    }
-                    className="w-28 h-28 rounded-full object-cover mb-6"
-                    loading="lazy"
-                  />
-                ) : (
-                  <div
-                    aria-hidden="true"
-                    className="w-28 h-28 rounded-full bg-[#1C1917] text-[#D4A574] flex items-center justify-center text-3xl mb-6"
-                    style={{ fontFamily: "DM Serif Display, serif" }}
-                  >
-                    {card.displayName.charAt(0)}
-                  </div>
-                )}
-                <h3
-                  className="text-2xl text-[#1C1917] mb-1"
-                  style={{ fontFamily: "DM Serif Display, serif" }}
-                >
-                  {card.founder.name}
-                </h3>
-                <p className="text-sm text-[#D4A574] font-medium mb-5">{card.role}</p>
-                <p className="text-[#57534E] leading-relaxed mb-6">{card.bio}</p>
-                <a
-                  href={card.founder.linkedin}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="mt-auto inline-flex items-center gap-2 text-sm text-[#44403C] hover:text-[#D4A574] transition-colors duration-300"
-                >
-                  <Linkedin size={16} />
-                  {en ? "LinkedIn profile" : "Profil LinkedIn"}
-                </a>
-              </article>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* ============================================ */}
-      {/* 4 — NOS VALEURS (white)                      */}
-      {/* ============================================ */}
-      <section className="bg-white py-24 lg:py-32">
-        <div className="container-custom">
-          <div className="text-center mb-14">
-            <span className="text-xs uppercase tracking-[0.3em] text-[#D4A574] mb-4 block">
-              {en ? "OUR VALUES" : "NOS VALEURS"}
-            </span>
-            <h2
-              className="text-3xl md:text-4xl font-light text-[#1C1917]"
-              style={{ fontFamily: "DM Serif Display, serif" }}
-            >
-              {en ? "What we care about" : "Ce à quoi nous tenons"}
-            </h2>
-          </div>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-            {values.map((v) => {
-              const Icon = v.icon;
-              return (
-                <div key={v.title} className="p-6 border border-[#E7E5E4] rounded-lg">
-                  <div className="w-11 h-11 rounded-lg bg-[#F5F2ED] flex items-center justify-center mb-4">
-                    <Icon size={20} className="text-[#D4A574]" />
-                  </div>
-                  <h3 className="text-lg font-medium text-[#1C1917] mb-2">{v.title}</h3>
-                  <p className="text-sm text-[#57534E] leading-relaxed">{v.text}</p>
+                <img
+                  src={HOUSE_IMAGES[h.slug]}
+                  alt={`${h.name.split(" — ")[0]} ${en ? "in" : "à"} ${h.addressLocality}`}
+                  className="w-full aspect-[4/3] object-cover group-hover:scale-[1.02] transition-transform duration-300"
+                  loading="lazy"
+                />
+                <div className="p-4">
+                  <p className="text-sm font-medium text-[#1C1917] group-hover:text-[#A0623C] transition-colors">{h.name.split(" — ")[0]}</p>
+                  <p className="text-xs text-[#78716C] mt-0.5">{h.addressLocality}</p>
                 </div>
-              );
-            })}
+              </LocalizedLink>
+            ))}
           </div>
         </div>
       </section>
 
-      {/* ============================================ */}
-      {/* 5 — POURQUOI NOUS FAIRE CONFIANCE (cream)    */}
-      {/* ============================================ */}
-      <section className="bg-[#FAF9F6] py-24 lg:py-32">
-        <div className="container-custom max-w-3xl">
-          <span className="text-xs uppercase tracking-[0.3em] text-[#D4A574] mb-4 block">
-            {en ? "TRUST" : "CONFIANCE"}
-          </span>
-          <h2
-            className="text-3xl md:text-4xl font-light text-[#1C1917] mb-10"
-            style={{ fontFamily: "DM Serif Display, serif" }}
-          >
-            {en ? "Why you can trust us" : "Pourquoi tu peux nous faire confiance"}
+      {/* ===== LES CO-FONDATEURS — portraits réels 4:5 ===== */}
+      <section className="py-14 lg:py-20 bg-[#FAF9F6]">
+        <div className="max-w-4xl mx-auto px-6">
+          <h2 className="text-2xl md:text-3xl font-light text-[#1C1917] mb-10 text-center" style={{ fontFamily: "DM Serif Display, serif" }}>
+            {en ? "The co-founders" : "Les co-fondateurs"}
           </h2>
-          <ul className="space-y-4">
-            {proofs.map((p) => (
-              <li key={p} className="flex items-start gap-3">
-                <span className="w-6 h-6 rounded-full bg-[#D4A574]/15 flex items-center justify-center flex-shrink-0 mt-0.5">
-                  <Check size={14} className="text-[#D4A574]" />
-                </span>
-                <span className="text-[#44403C] leading-relaxed">{p}</span>
-              </li>
+          <div className="grid sm:grid-cols-2 gap-6 max-w-3xl mx-auto">
+            {founders.map((f) => (
+              <div key={f.firstName} className="bg-white border border-[#E7E5E4] rounded-2xl overflow-hidden">
+                <img src={f.img} alt={f.alt} className="w-full aspect-[4/5] object-cover" loading="lazy" />
+                <div className="p-6 text-center">
+                  <h3 className="text-xl font-medium text-[#1C1917]" style={{ fontFamily: "DM Serif Display, serif" }}>{f.firstName}</h3>
+                  <p className="text-xs text-[#A0623C] uppercase tracking-wider mt-1 mb-3">{f.role}</p>
+                  <p className="text-sm text-[#57534E] leading-relaxed">{f.bio}</p>
+                  <a
+                    href={f.linkedin}
+                    target="_blank"
+                    rel="noopener"
+                    aria-label={`LinkedIn — ${f.firstName}`}
+                    className="inline-flex items-center justify-center w-10 h-10 rounded-full border border-[#E7E5E4] text-[#57534E] hover:border-[#D4A574] hover:text-[#A0623C] transition-colors mt-4"
+                  >
+                    <Linkedin className="w-4 h-4" />
+                  </a>
+                </div>
+              </div>
             ))}
-          </ul>
-          <p className="mt-8 text-sm text-[#78716C]">
-            {en ? (
-              <>
-                Scams are real on the cross-border housing market — we wrote{" "}
-                <LocalizedLink
-                  to="/blog/arnaques-logement-frontalier-geneve-eviter"
-                  className="text-[#D4A574] hover:underline"
-                >
-                  the guide to spotting them
-                </LocalizedLink>
-                .
-              </>
-            ) : (
-              <>
-                Les arnaques existent vraiment sur le marché du logement frontalier — on a écrit{" "}
-                <LocalizedLink
-                  to="/blog/arnaques-logement-frontalier-geneve-eviter"
-                  className="text-[#D4A574] hover:underline"
-                >
-                  le guide pour les repérer
-                </LocalizedLink>
-                .
-              </>
-            )}
+          </div>
+        </div>
+      </section>
+
+      {/* ===== NOS VALEURS ===== */}
+      <section className="py-14 lg:py-20 bg-white">
+        <div className="max-w-4xl mx-auto px-6">
+          <h2 className="text-2xl md:text-3xl font-light text-[#1C1917] mb-10 text-center" style={{ fontFamily: "DM Serif Display, serif" }}>
+            {en ? "Our values" : "Nos valeurs"}
+          </h2>
+          <div className="grid sm:grid-cols-2 gap-5">
+            {values.map((v) => (
+              <div key={v.title} className="bg-[#FAF9F6] border border-[#E7E5E4] rounded-2xl p-6">
+                <div className="w-10 h-10 rounded-full bg-[#D4A574]/15 text-[#A0623C] flex items-center justify-center mb-4">
+                  <v.icon className="w-5 h-5" />
+                </div>
+                <h3 className="text-base font-semibold text-[#1C1917] mb-2">{v.title}</h3>
+                <p className="text-sm text-[#57534E] leading-relaxed">{v.text}</p>
+              </div>
+            ))}
+          </div>
+          {/* Ambiance — deux photos qui respirent */}
+          <div className="grid grid-cols-2 gap-4 mt-8">
+            <img
+              src="/images/la villa coliving le lodge-sauna.webp"
+              alt={en ? "Sauna at Le Lodge — La Villa Coliving" : "Le sauna du Lodge — La Villa Coliving"}
+              className="w-full aspect-[16/10] object-cover rounded-2xl"
+              loading="lazy"
+            />
+            <img
+              src="/images/le lodge living room.webp"
+              alt={en ? "Living room at Le Lodge — La Villa Coliving" : "Le salon du Lodge — La Villa Coliving"}
+              className="w-full aspect-[16/10] object-cover rounded-2xl"
+              loading="lazy"
+            />
+          </div>
+        </div>
+      </section>
+
+      {/* ===== POURQUOI NOUS FAIRE CONFIANCE — bloc anti-arnaque ===== */}
+      <section className="py-14 lg:py-20 bg-[#FAF9F6]">
+        <div className="max-w-4xl mx-auto px-6">
+          <div className="bg-white border border-[#E7E5E4] rounded-2xl overflow-hidden shadow-sm">
+            <div className="h-1.5 bg-[#D4A574]" />
+            <div className="p-6 sm:p-9">
+              <h2 className="text-2xl md:text-3xl font-light text-[#1C1917] mb-7 text-center" style={{ fontFamily: "DM Serif Display, serif" }}>
+                {en ? "Why you can trust us" : "Pourquoi tu peux nous faire confiance"}
+              </h2>
+              <ul className="grid md:grid-cols-2 gap-x-8 gap-y-4">
+                {[
+                  {
+                    fr: <><strong className="text-[#1C1917]">Depuis octobre 2021, plus de {STATS.totalResidents} résidents accueillis</strong> — un vrai historique, pas une promesse.</>,
+                    en: <><strong className="text-[#1C1917]">Since October 2021, {STATS.totalResidents}+ residents hosted</strong> — a real track record, not a promise.</>,
+                  },
+                  {
+                    fr: <><strong className="text-[#1C1917]">De vraies maisons, de vraies adresses.</strong> Viens les visiter avant de signer — sur place ou en visio.</>,
+                    en: <><strong className="text-[#1C1917]">Real houses, real addresses.</strong> Come visit before you sign — in person or by video call.</>,
+                  },
+                  {
+                    fr: <><strong className="text-[#1C1917]">Un seul prix, tout inclus.</strong> Aucun frais de dossier, aucun honoraire d'agence.</>,
+                    en: <><strong className="text-[#1C1917]">One price, all inclusive.</strong> No application fees, no agency fees.</>,
+                  },
+                  {
+                    fr: <><strong className="text-[#1C1917]">Des baux en règle, une caution encadrée par la loi française.</strong> On a même écrit <LocalizedLink to="/blog/arnaques-logement-frontalier-geneve-eviter" className="text-[#A0623C] underline underline-offset-2 hover:text-[#1C1917]">le guide anti-arnaque</LocalizedLink>.</>,
+                    en: <><strong className="text-[#1C1917]">Proper leases, a deposit regulated by French law.</strong> We even wrote <LocalizedLink to="/blog/arnaques-logement-frontalier-geneve-eviter" className="text-[#A0623C] underline underline-offset-2 hover:text-[#1C1917]">the anti-scam guide</LocalizedLink>.</>,
+                  },
+                  {
+                    fr: <><strong className="text-[#1C1917]">Une communauté sélectionnée</strong> — une maison où chacun a été choisi.</>,
+                    en: <><strong className="text-[#1C1917]">A selected community</strong> — a house where everyone was chosen.</>,
+                  },
+                  {
+                    fr: <><strong className="text-[#1C1917]">Un interlocuteur humain, sous 48 h</strong> — c'est nous qui te répondons.</>,
+                    en: <><strong className="text-[#1C1917]">A human answer, within 48 hours</strong> — it's us who reply.</>,
+                  },
+                ].map((item, i) => (
+                  <li key={i} className="flex items-start gap-2.5 text-sm text-[#57534E] leading-relaxed">
+                    <CheckCircle2 className="w-5 h-5 text-[#6B8E6B] shrink-0 mt-0.5" />
+                    <span>{en ? item.en : item.fr}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ===== NOS DONNÉES (allégée) + presse en une ligne ===== */}
+      <section className="py-12 lg:py-16 bg-white">
+        <div className="max-w-4xl mx-auto px-6">
+          <div className="border-l-4 border-[#D4A574] bg-[#FAF9F6] rounded-r-xl p-5 sm:p-6">
+            <h2 className="text-base font-semibold text-[#1C1917] mb-2 flex items-center gap-2">
+              <Database className="w-4 h-4 text-[#D4A574]" />
+              {en ? "Our data" : "Nos données"}
+            </h2>
+            <p className="text-sm text-[#57534E] leading-relaxed">
+              {en
+                ? "Our houses produce field data nobody else publishes — real all-inclusive rents, length of stay, occupancy. We publish these aggregates in open access (CC-BY) in the cross-border housing observatory."
+                : "Nos maisons produisent des données de terrain que personne d'autre ne publie — loyers réels tout compris, durées de séjour, occupation. Nous les publions en accès ouvert (CC-BY) dans l'observatoire du logement frontalier."}{" "}
+              <LocalizedLink
+                to="/observatoire-logement-frontalier-geneve"
+                className="text-[#A0623C] underline underline-offset-2 hover:text-[#1C1917] transition-colors whitespace-nowrap"
+              >
+                {en ? "See the observatory →" : "Voir l'observatoire →"}
+              </LocalizedLink>
+            </p>
+          </div>
+          <p className="text-xs text-[#A8A29E] mt-4 flex items-center gap-3 flex-wrap">
+            <span>{en ? "Press:" : "Presse :"}</span>
+            <a href={`mailto:${LAVILLA_EMAIL}`} className="inline-flex items-center gap-1 hover:text-[#A0623C] transition-colors">
+              <Mail className="w-3 h-3" />
+              {LAVILLA_EMAIL}
+            </a>
+            <a href={`tel:${LAVILLA_PHONE}`} className="inline-flex items-center gap-1 hover:text-[#A0623C] transition-colors">
+              <Phone className="w-3 h-3" />
+              {PRESS_PHONE_DISPLAY}
+            </a>
+            <span>{en ? "— figures freely quotable with attribution." : "— chiffres librement citables avec mention de la source."}</span>
           </p>
         </div>
       </section>
 
-      {/* ============================================ */}
-      {/* 6 — NOS DONNÉES (dark) : signal Experience   */}
-      {/* ============================================ */}
-      <section className="bg-[#1C1917] py-24 lg:py-32">
-        <div className="container-custom">
-          <div className="text-center mb-12">
-            <span className="text-xs uppercase tracking-[0.3em] text-[#D4A574] mb-4 block">
-              {en ? "OUR DATA" : "NOS DONNÉES"}
-            </span>
-            <h2
-              className="text-3xl md:text-4xl font-light text-white mb-4"
-              style={{ fontFamily: "DM Serif Display, serif" }}
-            >
-              {en ? "What our houses teach us" : "Ce que nos maisons nous apprennent"}
-            </h2>
-            <p className="text-stone-300 max-w-2xl mx-auto">
-              {en
-                ? `Since ${STATS.foundedYear}, we don't just rent rooms: we observe the cross-border housing reality every day, from inside our own houses.`
-                : `Depuis ${STATS.foundedYear}, on ne se contente pas de louer des chambres : on observe la réalité du logement frontalier au quotidien, depuis nos propres maisons.`}
-            </p>
-          </div>
-          <div className="grid grid-cols-2 lg:grid-cols-4 gap-8 text-center mb-12">
-            {dataPoints.map((d) => (
-              <div key={d.label}>
-                <p className="text-4xl md:text-5xl font-bold text-white mb-2">{d.value}</p>
-                <p className="text-stone-400 text-sm">{d.label}</p>
-              </div>
-            ))}
-          </div>
-          <div className="text-center">
-            <LocalizedLink
-              to="/observatoire-logement-frontalier-geneve"
-              className="inline-flex items-center gap-2 text-[#D4A574] font-semibold hover:text-[#E0BB8A] transition-colors duration-300"
-            >
-              <BarChart3 size={18} />
-              {en
-                ? "This is the raw material behind our Cross-border Housing Observatory"
-                : "C'est cette matière qui nourrit notre Observatoire du logement frontalier"}
-              <ArrowRight size={16} />
-            </LocalizedLink>
-          </div>
-        </div>
-      </section>
-
-      {/* ============================================ */}
-      {/* 7 — TRANSPARENCE (white, sobre) : signal Trust */}
-      {/* ============================================ */}
-      <section className="bg-white py-16 lg:py-20 border-b border-[#E7E5E4]">
-        <div className="container-custom max-w-3xl">
-          <h2
-            className="text-2xl md:text-3xl font-light text-[#1C1917] mb-6"
-            style={{ fontFamily: "DM Serif Display, serif" }}
-          >
-            {en ? "In full transparency" : "En toute transparence"}
-          </h2>
-          <div className="text-sm text-[#57534E] leading-relaxed space-y-4">
-            <p>
-              {en
-                ? "La Villa Coliving is operated by two family-owned structures: SCI Sleep In (RCS Thonon-les-Bains 882 153 810) and La Villa LMP."
-                : "La Villa Coliving est exploitée par deux structures familiales : la SCI Sleep In (RCS Thonon-les-Bains 882 153 810) et La Villa LMP."}
-            </p>
-            <ul className="space-y-2">
-              {HOUSES.map((h) => (
-                <li key={h.slug} className="flex items-start gap-2">
-                  <MapPin size={16} className="text-[#D4A574] mt-0.5 flex-shrink-0" />
-                  <span>
-                    {h.name} — {h.streetAddress}, {h.postalCode} {h.addressLocality}
-                  </span>
-                </li>
-              ))}
-            </ul>
-            <p className="flex flex-wrap items-center gap-x-6 gap-y-2">
-              <a
-                href={`mailto:${LAVILLA_EMAIL}`}
-                className="inline-flex items-center gap-2 text-[#44403C] hover:text-[#D4A574] transition-colors"
-              >
-                <Mail size={16} className="text-[#D4A574]" />
-                {LAVILLA_EMAIL}
-              </a>
-              <a
-                href={`tel:${LAVILLA_PHONE}`}
-                className="inline-flex items-center gap-2 text-[#44403C] hover:text-[#D4A574] transition-colors"
-              >
-                <Phone size={16} className="text-[#D4A574]" />
-                +33 6 64 31 51 34
-              </a>
-            </p>
-            <p>
-              {en ? "Our Google listings (reviews): " : "Nos fiches Google (avis) : "}
-              {googleReviews.map((g, i) => (
-                <span key={g.name}>
-                  {i > 0 && " · "}
-                  <a
-                    href={g.url}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="text-[#D4A574] hover:underline"
-                  >
-                    {g.name}
-                  </a>
-                </span>
-              ))}
-              {" — "}
-              {S.ratingSourced}.
-            </p>
-            <p>
-              <LocalizedLink to="/mentions-legales" className="text-[#D4A574] hover:underline">
-                {en ? "Legal notice" : "Mentions légales"}
-              </LocalizedLink>
-              {" · "}
-              <LocalizedLink to="/politique-de-confidentialite" className="text-[#D4A574] hover:underline">
-                {en ? "Privacy policy" : "Politique de confidentialité"}
-              </LocalizedLink>
-            </p>
-          </div>
-        </div>
-      </section>
-
-      {/* ============================================ */}
-      {/* 8 — CTA final                                */}
-      {/* ============================================ */}
-      <section className="bg-[#FAF9F6] py-16 lg:py-24">
-        <div className="container-custom text-center">
-          <h2
-            className="text-2xl md:text-3xl font-light text-[#1C1917] mb-8"
-            style={{ fontFamily: "DM Serif Display, serif" }}
-          >
+      {/* ===== CTA (sobre) ===== */}
+      <section className="py-14 lg:py-20 bg-white border-t border-[#E7E5E4]">
+        <div className="max-w-3xl mx-auto px-6 text-center">
+          <p className="text-[#57534E] leading-relaxed mb-6">
             {en
-              ? "Want to see if La Villa is right for you?"
-              : "Envie de voir si La Villa est faite pour toi ?"}
-          </h2>
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
+              ? "Looking for a turnkey room near Geneva?"
+              : "Tu cherches une chambre clé en main près de Genève ?"}
+          </p>
+          <div className="flex flex-col sm:flex-row gap-3 justify-center">
             <LocalizedLink
               to="/nos-maisons"
-              className="inline-flex items-center gap-2 px-6 py-3 bg-[#D4A574] text-[#1C1917] text-sm font-semibold rounded-lg hover:bg-[#E0BB8A] transition-all duration-300"
+              className="inline-flex items-center gap-2 border border-[#1C1917] text-[#1C1917] px-6 py-3 text-sm uppercase tracking-wider hover:bg-[#1C1917] hover:text-white transition-colors"
             >
-              {en ? "Discover our houses" : "Découvrir nos maisons"}
-              <ArrowRight className="w-4 h-4" />
+              {en ? "Our houses" : "Nos maisons"}
             </LocalizedLink>
             <LocalizedLink
               to="/candidature"
-              className="inline-flex items-center gap-2 px-6 py-3 border border-[#E7E5E4] text-[#44403C] text-sm font-medium rounded-lg hover:border-[#D4A574] transition-all duration-300"
+              className="inline-flex items-center gap-2 bg-[#D4A574] text-white px-6 py-3 text-sm uppercase tracking-wider hover:bg-[#44403C] transition-colors"
             >
-              {en ? "Apply" : "Déposer ma candidature"}
+              {en ? "Apply" : "Candidater"}
+              <ArrowRight className="w-4 h-4" />
             </LocalizedLink>
           </div>
         </div>
