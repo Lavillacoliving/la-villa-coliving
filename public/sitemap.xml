@@ -123,6 +123,14 @@
     <priority>0.8</priority>
   </url>
   <url>
+    <loc>https://www.lavillacoliving.com/qui-sommes-nous</loc>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://www.lavillacoliving.com/qui-sommes-nous" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.lavillacoliving.com/en/qui-sommes-nous" />
+    <lastmod>2026-08-04</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
+  </url>
+  <url>
     <loc>https://www.lavillacoliving.com/mentions-legales</loc>
     <xhtml:link rel="alternate" hreflang="fr" href="https://www.lavillacoliving.com/mentions-legales" />
     <xhtml:link rel="alternate" hreflang="en" href="https://www.lavillacoliving.com/en/mentions-legales" />
@@ -259,6 +267,14 @@
     <lastmod>2026-08-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://www.lavillacoliving.com/en/qui-sommes-nous</loc>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://www.lavillacoliving.com/qui-sommes-nous" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.lavillacoliving.com/en/qui-sommes-nous" />
+    <lastmod>2026-08-04</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.4</priority>
   </url>
   <url>
     <loc>https://www.lavillacoliving.com/en/mentions-legales</loc>
