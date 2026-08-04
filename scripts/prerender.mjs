@@ -52,6 +52,7 @@ const STATIC_ROUTES_FR = [
   '/lelodge',
   '/investisseurs',
   '/observatoire-logement-frontalier-geneve',
+  '/qui-sommes-nous',
   '/mentions-legales',
   '/politique-de-confidentialite',
 ];
