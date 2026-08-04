@@ -218,9 +218,27 @@ export function RatesPageV4() {
       studio: { fr: "20-30 m² (logement entier)", en: "20-30 m² (entire studio)" },
     },
     {
-      label: { fr: "Prix au m² habitable", en: "Price per liveable m²" },
-      classic: { fr: "~75-100 €/m²", en: "~€75-100/m²" },
-      villa: { fr: "~65-85 €/m²", en: "~€65-85/m²" },
+      label: {
+        fr: "Espace de vie par colocataire",
+        en: "Living space per flatmate",
+      },
+      classic: {
+        fr: "22-28 m² (relevé août 2026)",
+        en: "22-28 m² (surveyed August 2026)",
+      },
+      villa: {
+        fr: "37-42 m² + extérieurs jusqu'à 2 000 m²",
+        en: "37-42 m² + outdoor areas up to 2,000 m²",
+      },
+      studio: {
+        fr: "tout le logement, mais seul",
+        en: "the entire flat, but alone",
+      },
+    },
+    {
+      label: { fr: "Prix du m²", en: "Price per m²" },
+      classic: { fr: "~25-45 €/m²", en: "~€25-45/m²" },
+      villa: { fr: "~35-40 €/m²", en: "~€35-40/m²" },
       studio: { fr: "~85-110 CHF/m² + charges", en: "~CHF 85-110/m² + utilities" },
       highlight: true,
     },
@@ -825,8 +843,8 @@ export function RatesPageV4() {
             </p>
             <p className="mt-3 text-center text-xs text-[#78716C]">
               {language === "en"
-                ? `"Standard flatshare" and "Geneva studio" columns: market observations (indicative ranges). La Villa column: contractual facts. La Villa price per m²: ${PRICE_CHF_EN} ≈ €1,470 ÷ ${STATS.roomSizeMin}-${STATS.roomSizeMax} m².`
-                : `Colonnes « Colocation classique » et « Studio Genève » : observations de marché (fourchettes indicatives). Colonne La Villa : faits contractuels. Prix au m² La Villa : ${PRICE_CHF_FR} ≈ 1 470 € ÷ ${STATS.roomSizeMin}-${STATS.roomSizeMax} m².`}
+                ? `"Standard flatshare" and "Geneva studio" columns: market observations (indicative ranges). La Villa column: contractual facts. La Villa price per m²: ${PRICE_CHF_EN} ≈ €1,470 ÷ 37-42 m² of living space per flatmate.`
+                : `Colonnes « Colocation classique » et « Studio Genève » : observations de marché (fourchettes indicatives). Colonne La Villa : faits contractuels. Prix du m² La Villa : ${PRICE_CHF_FR} ≈ 1 470 € ÷ 37-42 m² d'espace de vie par colocataire.`}
             </p>
           </div>
         </div>
