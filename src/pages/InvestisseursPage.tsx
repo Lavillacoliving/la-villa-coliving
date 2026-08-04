@@ -1,5 +1,6 @@
 import { useLanguage } from "@/contexts/LanguageContext";
 import { SEO } from "@/components/SEO";
+import { STATS } from "@/data/stats";
 import {
   ArrowRight,
   Users,
@@ -92,7 +93,7 @@ export function InvestisseursPage() {
             </div>
             <div>
               <p className="text-4xl md:text-5xl font-bold text-white mb-2">
-                150+
+                {STATS.totalResidents}+
               </p>
               <p className="text-stone-400 text-sm">
                 {language === "en"
@@ -372,8 +373,8 @@ export function InvestisseursPage() {
               </p>
               <p className="text-[#57534E] text-sm leading-relaxed">
                 {language === "en"
-                  ? "3 houses, 29 rooms, 150+ residents. Proven processes, an established brand in Greater Geneva."
-                  : "3 maisons, 29 chambres, 150+ résidents. Des process rodés, une marque établie dans le Grand Genève."}
+                  ? `${STATS.totalHouses} houses, ${STATS.totalRooms} rooms, ${STATS.totalResidents}+ residents. Proven processes, an established brand in Greater Geneva.`
+                  : `${STATS.totalHouses} maisons, ${STATS.totalRooms} chambres, ${STATS.totalResidents}+ résidents. Des process rodés, une marque établie dans le Grand Genève.`}
               </p>
             </div>
           </div>

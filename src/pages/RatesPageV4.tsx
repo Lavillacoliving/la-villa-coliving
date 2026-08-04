@@ -189,6 +189,115 @@ export function RatesPageV4() {
   const monthlySavings = genevaTotal - lavillaPrice;
   const yearlySavings = monthlySavings * 12;
 
+  // Tableau « objection prix » — 3 colonnes, La Villa au centre.
+  // Colonnes marché = observations (fourchettes, « le plus souvent ») ; colonne La Villa = faits contractuels.
+  const pick = (t: { fr: string; en: string }) => (language === "en" ? t.en : t.fr);
+  const objectionRows: Array<{
+    label: { fr: string; en: string };
+    classic: { fr: string; en: string };
+    villa: { fr: string; en: string };
+    studio: { fr: string; en: string };
+    highlight?: boolean;
+  }> = [
+    {
+      label: { fr: "Loyer mensuel", en: "Monthly rent" },
+      classic: { fr: "700-1 000 €", en: "€700-1,000" },
+      villa: {
+        fr: `dès ${PRICE_CHF_FR} tout inclus`,
+        en: `from ${PRICE_CHF_EN} all inclusive`,
+      },
+      studio: { fr: "1 800-2 500 CHF + charges", en: "CHF 1,800-2,500 + utilities" },
+    },
+    {
+      label: { fr: "Surface chambre", en: "Room size" },
+      classic: { fr: "9-12 m² (le plus souvent)", en: "9-12 m² (most often)" },
+      villa: {
+        fr: `${STATS.roomSizeMin}-${STATS.roomSizeMax} m²`,
+        en: `${STATS.roomSizeMin}-${STATS.roomSizeMax} m²`,
+      },
+      studio: { fr: "20-30 m² (logement entier)", en: "20-30 m² (entire studio)" },
+    },
+    {
+      label: {
+        fr: "Espace de vie par colocataire",
+        en: "Living space per flatmate",
+      },
+      classic: {
+        fr: "22-28 m² (relevé août 2026)",
+        en: "22-28 m² (surveyed August 2026)",
+      },
+      villa: {
+        fr: "37-42 m² + extérieurs jusqu'à 2 000 m²",
+        en: "37-42 m² + outdoor areas up to 2,000 m²",
+      },
+      studio: {
+        fr: "tout le logement, mais seul",
+        en: "the entire flat, but alone",
+      },
+    },
+    {
+      label: { fr: "Prix du m²", en: "Price per m²" },
+      classic: { fr: "~25-45 €/m²", en: "~€25-45/m²" },
+      villa: { fr: "~35-40 €/m²", en: "~€35-40/m²" },
+      studio: { fr: "~85-110 CHF/m² + charges", en: "~CHF 85-110/m² + utilities" },
+      highlight: true,
+    },
+    {
+      label: { fr: "Charges, fibre, streaming", en: "Utilities, fibre, streaming" },
+      classic: { fr: "rarement incluses", en: "rarely included" },
+      villa: { fr: "incluses", en: "included" },
+      studio: { fr: "200-400 CHF en plus", en: "CHF 200-400 on top" },
+    },
+    {
+      label: { fr: "Piscine, sauna, salle de sport", en: "Pool, sauna, gym" },
+      classic: { fr: "✗", en: "✗" },
+      villa: { fr: "✓ dans chaque maison", en: "✓ in every house" },
+      studio: { fr: "✗ (gym : 80-150 CHF/mois)", en: "✗ (gym: CHF 80-150/month)" },
+    },
+    {
+      label: { fr: "Ménage professionnel", en: "Professional cleaning" },
+      classic: { fr: "✗ (à ta charge)", en: "✗ (up to you)" },
+      villa: {
+        fr: "✓ 2×/sem (3× en déploiement)",
+        en: "✓ 2×/week (3× rolling out)",
+      },
+      studio: { fr: "✗", en: "✗" },
+    },
+    {
+      label: {
+        fr: "Entretien (jardinier, pisciniste, réparations)",
+        en: "Upkeep (gardener, pool technician, repairs)",
+      },
+      classic: { fr: "propriétaire à relancer", en: "landlord to chase" },
+      villa: {
+        fr: "✓ équipe dédiée, réponse < 48 h",
+        en: "✓ dedicated team, answer < 48 h",
+      },
+      studio: { fr: "à ta charge", en: "up to you" },
+    },
+    {
+      label: { fr: "Événements & communauté", en: "Events & community" },
+      classic: { fr: "selon la chance", en: "luck of the draw" },
+      villa: { fr: "✓ organisés chaque mois", en: "✓ organised every month" },
+      studio: { fr: "✗", en: "✗" },
+    },
+    {
+      label: { fr: "Frais d'entrée (dossier, agence)", en: "Move-in fees (application, agency)" },
+      classic: { fr: "200-700 € fréquents", en: "€200-700 common" },
+      villa: { fr: "0 €", en: "€0" },
+      studio: { fr: "souvent élevés", en: "often high" },
+    },
+    {
+      label: { fr: "Caution", en: "Deposit" },
+      classic: { fr: "variable", en: "varies" },
+      villa: {
+        fr: `${STATS.depositMonths} mois hors charges, étalable`,
+        en: `${STATS.depositMonths} months excluding utilities, can be split`,
+      },
+      studio: { fr: "3 mois usuels", en: "3 months customary" },
+    },
+  ];
+
   return (
     <main className="relative pt-16">
       <SEO
@@ -558,6 +667,232 @@ export function RatesPageV4() {
                 ? "Or ask us a question directly on WhatsApp →"
                 : "Ou pose-nous directement une question sur WhatsApp →"}
             </a>
+          </div>
+        </div>
+      </section>
+
+      {/* OBJECTION PRIX — « Oui, nos prix sont plus élevés » + tableau comparatif 3 colonnes */}
+      <section className="py-20 bg-[#FAF9F6]" id="objection-prix">
+        <div className="container-custom">
+          <div className="max-w-3xl mx-auto">
+            <h2
+              className="text-3xl md:text-4xl font-light text-[#1C1917] mb-8"
+              style={{ fontFamily: "DM Serif Display, serif" }}
+            >
+              {language === "en"
+                ? "Yes, our prices are higher. Here's why — and what you get for it."
+                : "Oui, nos prix sont plus élevés. Voici pourquoi — et ce que tu obtiens en échange."}
+            </h2>
+            <div className="space-y-5 text-[#44403C] leading-relaxed">
+              <p>
+                {language === "en"
+                  ? "A room in a standard flatshare in Annemasse costs less. It's also usually 9-12 m², with no pool, no sauna, no gym, cleaning left to you, and a landlord you have to chase."
+                  : "Une chambre en colocation classique à Annemasse coûte moins cher. Elle fait aussi, le plus souvent, 9 à 12 m², sans piscine, sans sauna, sans salle de sport, avec le ménage à ta charge et un propriétaire qu'il faut relancer."}
+              </p>
+              <p>
+                {language === "en" ? (
+                  <>
+                    Here: a{" "}
+                    <strong>
+                      {STATS.roomSizeMin}-{STATS.roomSizeMax} m² room
+                    </strong>{" "}
+                    — up to twice the usual market size —, generous common areas, a
+                    garden, and amenities no local flatshare offers: pool, sauna,
+                    gym. A real team maintains the house — professional cleaning
+                    twice a week (
+                    <strong>moving to 3×/week, already live at Le Lodge</strong>),
+                    gardener, pool technician — and your issues get answered within
+                    48 hours. Community life is organised, not hoped for: monthly
+                    parties, summer events, Halloween, Christmas, girls' nights.
+                  </>
+                ) : (
+                  <>
+                    Chez nous : une chambre de{" "}
+                    <strong>
+                      {STATS.roomSizeMin} à {STATS.roomSizeMax} m²
+                    </strong>{" "}
+                    — jusqu'à deux fois la surface habituelle du marché —, des
+                    espaces communs généreux, un jardin, et des équipements
+                    qu'aucune colocation locale ne propose : piscine, sauna, salle
+                    de sport. Une équipe entretient réellement la maison — ménage
+                    professionnel 2×/semaine (
+                    <strong>3×/semaine en cours de déploiement, déjà actif au Lodge</strong>
+                    ), jardinier, pisciniste — et tes problèmes trouvent une réponse
+                    en moins de 48 h. La vie commune est organisée, pas espérée :
+                    soirée mensuelle, événements d'été, Halloween, Noël, soirées
+                    entre filles.
+                  </>
+                )}
+              </p>
+              <p>
+                {language === "en" ? (
+                  <>
+                    <strong>
+                      Do the math per square metre: we're at market price — for
+                      twice the home.
+                    </strong>{" "}
+                    Add what's included (utilities, fibre, gym, sauna, cleaning:
+                    count CHF 250-400/month if paid separately) and the comparison
+                    flips.
+                  </>
+                ) : (
+                  <>
+                    <strong>
+                      Fais le calcul au m² : nous sommes dans les prix du marché —
+                      pour deux fois mieux.
+                    </strong>{" "}
+                    Ajoute ce qui est inclus (charges, fibre, sport, sauna,
+                    ménage : compte 250 à 400 CHF/mois si tu devais les payer à
+                    part) et la comparaison s'inverse.
+                  </>
+                )}
+              </p>
+              <p>
+                {language === "en"
+                  ? "If you're after the lowest rent in the area, that's not us — and we'd rather tell you straight. If you compare what every franc buys you, come visit a house."
+                  : "Si tu cherches le loyer le plus bas de l'agglomération, ce n'est pas nous — et on préfère te le dire franchement. Si tu compares ce que chaque franc t'apporte, viens visiter une maison."}
+              </p>
+            </div>
+          </div>
+
+          <div className="max-w-5xl mx-auto mt-16">
+            <h3
+              className="text-2xl md:text-3xl font-light text-[#1C1917] mb-8 text-center"
+              style={{ fontFamily: "DM Serif Display, serif" }}
+            >
+              {language === "en"
+                ? "And compared to a standard flatshare?"
+                : "Et face à une colocation classique ?"}
+            </h3>
+            <p
+              className="md:hidden text-xs text-[#78716C] mb-2 text-right pr-1"
+              aria-hidden="true"
+            >
+              {language === "en"
+                ? "Swipe to compare →"
+                : "Fais défiler pour comparer →"}
+            </p>
+            <div className="overflow-x-auto rounded-2xl border border-[#E7E5E4] bg-white shadow-sm">
+              <table className="w-full min-w-[680px] border-separate border-spacing-0 text-sm">
+                <caption className="sr-only">
+                  {language === "en"
+                    ? "Price and services comparison: standard flatshare, La Villa Coliving, Geneva studio"
+                    : "Comparaison prix et services : colocation classique, La Villa Coliving, studio à Genève"}
+                </caption>
+                <thead>
+                  <tr className="bg-[#1C1917] text-white">
+                    <th
+                      scope="col"
+                      className="sticky left-0 z-[1] bg-[#1C1917] px-4 py-4 text-left font-medium w-[150px] min-w-[150px] md:w-auto md:min-w-[200px]"
+                    >
+                      <span className="sr-only">
+                        {language === "en" ? "Criterion" : "Critère"}
+                      </span>
+                    </th>
+                    <th scope="col" className="px-4 py-4 text-left font-medium">
+                      {language === "en"
+                        ? "Standard flatshare (local area)"
+                        : "Colocation classique (agglo)"}
+                    </th>
+                    <th
+                      scope="col"
+                      className="px-4 py-4 text-left font-bold bg-[#D4A574]"
+                    >
+                      La Villa Coliving
+                    </th>
+                    <th scope="col" className="px-4 py-4 text-left font-medium">
+                      {language === "en" ? "Geneva studio" : "Studio Genève"}
+                    </th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {objectionRows.map((row) => (
+                    <tr key={row.label.fr} className="group">
+                      <th
+                        scope="row"
+                        className={`sticky left-0 z-[1] bg-white border-r border-b border-[#E7E5E4] group-last:border-b-0 px-4 py-3 text-left align-top text-[#1C1917] w-[150px] min-w-[150px] md:w-auto md:min-w-[200px] ${
+                          row.highlight ? "font-bold" : "font-medium"
+                        }`}
+                      >
+                        {pick(row.label)}
+                      </th>
+                      <td className="border-b border-[#E7E5E4] group-last:border-b-0 px-4 py-3 align-top text-[#57534E]">
+                        {pick(row.classic)}
+                      </td>
+                      <td
+                        className={`border-b border-[#E7E5E4] group-last:border-b-0 px-4 py-3 align-top bg-[#F8EFE4] text-[#1C1917] ${
+                          row.highlight ? "font-bold" : "font-semibold"
+                        }`}
+                      >
+                        {pick(row.villa)}
+                      </td>
+                      <td className="border-b border-[#E7E5E4] group-last:border-b-0 px-4 py-3 align-top text-[#57534E]">
+                        {pick(row.studio)}
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+            <p className="mt-6 text-center text-[#1C1917]">
+              <strong>
+                {language === "en"
+                  ? "Per square metre and like-for-like on services, La Villa is at market price — often below. The difference isn't the price: it's what it buys."
+                  : "Au m² et à services égaux, La Villa est dans les prix du marché — souvent en dessous. La différence n'est pas le prix : c'est ce qu'il achète."}
+              </strong>
+            </p>
+            <p className="mt-3 text-center text-xs text-[#78716C]">
+              {language === "en"
+                ? `"Standard flatshare" and "Geneva studio" columns: market observations (indicative ranges). La Villa column: contractual facts. La Villa price per m²: ${PRICE_CHF_EN} ≈ €1,470 ÷ 37-42 m² of living space per flatmate.`
+                : `Colonnes « Colocation classique » et « Studio Genève » : observations de marché (fourchettes indicatives). Colonne La Villa : faits contractuels. Prix du m² La Villa : ${PRICE_CHF_FR} ≈ 1 470 € ÷ 37-42 m² d'espace de vie par colocataire.`}
+            </p>
+
+            {/* Encadré méga-résidences — chiffres publics, concurrent non nommé */}
+            <aside className="mt-10 max-w-3xl mx-auto bg-white border border-[#E7E5E4] border-l-4 border-l-[#D4A574] rounded-xl p-6 md:p-8">
+              <p className="text-xs font-medium tracking-wider uppercase text-[#D4A574] mb-2">
+                {language === "en" ? "Mega-residences" : "Méga-résidences"}
+              </p>
+              <h3
+                className="text-xl md:text-2xl font-medium text-[#1C1917] mb-3"
+                style={{ fontFamily: "DM Serif Display, serif" }}
+              >
+                {language === "en"
+                  ? "And compared to the new coliving mega-residences?"
+                  : "Et face aux nouvelles méga-résidences de coliving ?"}
+              </h3>
+              <p className="text-[#44403C] leading-relaxed">
+                {language === "en" ? (
+                  <>
+                    Near Geneva, recent mega-colivings house up to 776 rooms in a
+                    single building, with around 3,000 m² of shared spaces —{" "}
+                    <strong>
+                      less than 4 m² of common areas per resident
+                    </strong>
+                    . Here: {STATS.minResidentsPerHouse} to{" "}
+                    {STATS.maxResidentsPerHouse} flatmates per house,{" "}
+                    <strong>15 to 20 m² of indoor common areas each</strong>,
+                    plus the gardens, terraces and pools. At a comparable price,
+                    it's not the same product: there, you rent a studio in a
+                    service tower; here, you share a house.
+                  </>
+                ) : (
+                  <>
+                    Près de Genève, les méga-colivings récents logent jusqu'à 776
+                    chambres dans un même bâtiment, avec environ 3 000 m²
+                    d'espaces partagés —{" "}
+                    <strong>
+                      soit moins de 4 m² d'espaces communs par résident
+                    </strong>
+                    . Chez nous : {STATS.minResidentsPerHouse} à{" "}
+                    {STATS.maxResidentsPerHouse} colocataires par maison,{" "}
+                    <strong>15 à 20 m² d'espaces communs intérieurs chacun</strong>,
+                    plus les jardins, terrasses et piscines. À prix comparable, ce
+                    n'est pas le même produit : là-bas tu loues un studio dans une
+                    tour de services ; ici tu partages une maison.
+                  </>
+                )}
+              </p>
+            </aside>
           </div>
         </div>
       </section>
@@ -994,8 +1329,8 @@ export function RatesPageV4() {
               const monthFr = next.toLocaleDateString("fr-FR", { month: "long", year: "numeric" });
               const monthEn = next.toLocaleDateString("en-US", { month: "long", year: "numeric" });
               return language === "en"
-                ? `Save ${monthlySavings} CHF/month and join 150+ happy residents. Limited spots for ${monthEn}.`
-                : `Économise ${monthlySavings} CHF/mois et rejoins 150+ résidents heureux. Places limitées pour ${monthFr}.`;
+                ? `Save ${monthlySavings} CHF/month and join ${STATS.totalResidents}+ happy residents. Limited spots for ${monthEn}.`
+                : `Économise ${monthlySavings} CHF/mois et rejoins ${STATS.totalResidents}+ résidents heureux. Places limitées pour ${monthFr}.`;
             })()}
           </p>
           <LocalizedLink

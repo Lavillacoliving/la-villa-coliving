@@ -29,7 +29,7 @@ export function ImpactStats() {
     },
     {
       icon: Home,
-      value: '150+',
+      value: '100+',
       label: language === 'en' ? 'Happy Colivers' : 'Colivers Heureux',
       comparison: language === 'en' ? 'and growing' : 'et ça grandit',
       description: language === 'en'
