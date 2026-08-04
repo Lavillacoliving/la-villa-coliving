@@ -161,8 +161,8 @@ export function QuiSommesNousPage() {
         title={en ? "Who we are — Jérôme & Fanny, founders" : "Qui sommes-nous — Jérôme & Fanny, fondateurs"}
         description={
           en
-            ? `Two co-founders, ${STATS.totalHouses} houses, ${STATS.totalResidents}+ residents since October ${STATS.foundedYear}. La Villa Coliving runs its colivings near Geneva directly — no agency, no hidden fees.`
-            : `Deux co-fondateurs, ${STATS.totalHouses} maisons, ${STATS.totalResidents}+ résidents depuis octobre ${STATS.foundedYear}. La Villa Coliving gère en direct ses colivings près de Genève — sans agence, sans frais cachés.`
+            ? `Two co-founders, ${STATS.totalHouses} houses, ${STATS.totalResidents}+ residents since ${STATS.foundedYear}. La Villa Coliving runs its colivings near Geneva directly — no agency, no hidden fees.`
+            : `Deux co-fondateurs, ${STATS.totalHouses} maisons, ${STATS.totalResidents}+ résidents depuis ${STATS.foundedYear}. La Villa Coliving gère en direct ses colivings près de Genève — sans agence, sans frais cachés.`
         }
         image={`${SITE}${IMG_HISTOIRE}`}
         jsonLd={aboutSchema}
