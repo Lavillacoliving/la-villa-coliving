@@ -846,6 +846,53 @@ export function RatesPageV4() {
                 ? `"Standard flatshare" and "Geneva studio" columns: market observations (indicative ranges). La Villa column: contractual facts. La Villa price per m²: ${PRICE_CHF_EN} ≈ €1,470 ÷ 37-42 m² of living space per flatmate.`
                 : `Colonnes « Colocation classique » et « Studio Genève » : observations de marché (fourchettes indicatives). Colonne La Villa : faits contractuels. Prix du m² La Villa : ${PRICE_CHF_FR} ≈ 1 470 € ÷ 37-42 m² d'espace de vie par colocataire.`}
             </p>
+
+            {/* Encadré méga-résidences — chiffres publics, concurrent non nommé */}
+            <aside className="mt-10 max-w-3xl mx-auto bg-white border border-[#E7E5E4] border-l-4 border-l-[#D4A574] rounded-xl p-6 md:p-8">
+              <p className="text-xs font-medium tracking-wider uppercase text-[#D4A574] mb-2">
+                {language === "en" ? "Mega-residences" : "Méga-résidences"}
+              </p>
+              <h3
+                className="text-xl md:text-2xl font-medium text-[#1C1917] mb-3"
+                style={{ fontFamily: "DM Serif Display, serif" }}
+              >
+                {language === "en"
+                  ? "And compared to the new coliving mega-residences?"
+                  : "Et face aux nouvelles méga-résidences de coliving ?"}
+              </h3>
+              <p className="text-[#44403C] leading-relaxed">
+                {language === "en" ? (
+                  <>
+                    Near Geneva, recent mega-colivings house up to 776 rooms in a
+                    single building, with around 3,000 m² of shared spaces —{" "}
+                    <strong>
+                      less than 4 m² of common areas per resident
+                    </strong>
+                    . Here: {STATS.minResidentsPerHouse} to{" "}
+                    {STATS.maxResidentsPerHouse} flatmates per house,{" "}
+                    <strong>15 to 20 m² of indoor common areas each</strong>,
+                    plus the gardens, terraces and pools. At a comparable price,
+                    it's not the same product: there, you rent a studio in a
+                    service tower; here, you share a house.
+                  </>
+                ) : (
+                  <>
+                    Près de Genève, les méga-colivings récents logent jusqu'à 776
+                    chambres dans un même bâtiment, avec environ 3 000 m²
+                    d'espaces partagés —{" "}
+                    <strong>
+                      soit moins de 4 m² d'espaces communs par résident
+                    </strong>
+                    . Chez nous : {STATS.minResidentsPerHouse} à{" "}
+                    {STATS.maxResidentsPerHouse} colocataires par maison,{" "}
+                    <strong>15 à 20 m² d'espaces communs intérieurs chacun</strong>,
+                    plus les jardins, terrasses et piscines. À prix comparable, ce
+                    n'est pas le même produit : là-bas tu loues un studio dans une
+                    tour de services ; ici tu partages une maison.
+                  </>
+                )}
+              </p>
+            </aside>
           </div>
         </div>
       </section>
