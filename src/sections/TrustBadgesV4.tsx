@@ -7,7 +7,7 @@ export function TrustBadgesV4() {
   const badges = [
     {
       icon: Users,
-      value: '150+',
+      value: '100+',
       label: language === 'en' ? 'Happy Members' : 'Membres Heureux',
     },
     {

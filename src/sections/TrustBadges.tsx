@@ -9,7 +9,7 @@ export function TrustBadges() {
   const badges = [
     {
       icon: Users,
-      value: '150+',
+      value: '100+',
       label: t.trustBadges.members,
     },
     {

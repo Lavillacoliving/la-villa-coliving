@@ -268,8 +268,8 @@ export const faqData: FAQItem[] = [
       fr: 'Qu\'est-ce qui est inclus dans le loyer mensuel ?',
     },
     answer: {
-      en: 'Your monthly rent includes: private furnished bedroom, all utilities (electricity, water, heating), high-speed fiber internet, weekly housekeeping of common areas, pool and garden maintenance, gym and sauna access, weekly yoga and fitness classes, streaming subscriptions, community events, monthly essentials delivery (cleaning supplies, paper goods), and WhatsApp support. It\'s truly all-inclusive.',
-      fr: 'Votre loyer mensuel inclut : chambre privée meublée, tous les services (électricité, eau, chauffage), internet fibre haut débit, ménage hebdomadaire des espaces communs, entretien de la piscine et du jardin, accès à la salle de sport et au sauna, cours de yoga et fitness hebdomadaires, abonnements streaming, événements communautaires, livraison mensuelle d\'essentiels (produits d\'entretien, articles en papier), et support WhatsApp. C\'est vraiment tout inclus.',
+      en: 'Your monthly rent includes: private furnished bedroom, all utilities (electricity, water, heating), high-speed fiber internet, twice-weekly housekeeping of common areas, pool and garden maintenance, gym and sauna access, weekly yoga and fitness classes, streaming subscriptions, community events, monthly essentials delivery (cleaning supplies, paper goods), and WhatsApp support. It\'s truly all-inclusive.',
+      fr: 'Votre loyer mensuel inclut : chambre privée meublée, tous les services (électricité, eau, chauffage), internet fibre haut débit, ménage des espaces communs deux fois par semaine, entretien de la piscine et du jardin, accès à la salle de sport et au sauna, cours de yoga et fitness hebdomadaires, abonnements streaming, événements communautaires, livraison mensuelle d\'essentiels (produits d\'entretien, articles en papier), et support WhatsApp. C\'est vraiment tout inclus.',
     },
   },
   {
@@ -282,6 +282,18 @@ export const faqData: FAQItem[] = [
     answer: {
       en: `A room at La Villa Coliving costs ${PRICE_CHF_EN} per month, all-inclusive, with no hidden fees and no application fee: utilities, fiber internet, cleaning of common areas twice a week, gym, sauna, pool, streaming and community events. Our three houses — La Villa (Ville-la-Grand), Le Loft (Ambilly) and Le Lodge (Annemasse) — are 15-20 minutes from Geneva by Léman Express or tram.`,
       fr: `Une chambre chez La Villa Coliving coûte ${PRICE_CHF_FR} par mois, tout inclus, sans frais cachés ni frais de dossier : charges, fibre, ménage des espaces communs deux fois par semaine, salle de sport, sauna, piscine, streaming et événements communautaires. Nos trois maisons — La Villa (Ville-la-Grand), Le Loft (Ambilly) et Le Lodge (Annemasse) — sont à 15-20 minutes de Genève en Léman Express ou tram.`,
+    },
+  },
+  {
+    id: 'why-higher-prices',
+    category: 'Pricing & Payments',
+    question: {
+      en: 'Why are your prices higher than a standard flatshare?',
+      fr: 'Pourquoi vos prix sont-ils plus élevés qu\'une colocation classique ?',
+    },
+    answer: {
+      en: `Because you're not getting the same thing. Our rooms are 17-23 m² (vs 9-12 m² for most local flatshares), every house has a pool, sauna and gym, professional cleaning is included, a dedicated team maintains the house (gardener, pool technician), and community life is organised monthly. Per square metre and like-for-like on services, La Villa is at market price — all inclusive from ${PRICE_CHF_EN}/month, with no application or agency fees.`,
+      fr: `Parce que tu n'obtiens pas la même chose. Nos chambres font 17 à 23 m² (contre 9-12 m² pour la plupart des colocations locales), chaque maison a piscine, sauna et salle de sport, le ménage professionnel est inclus, une équipe entretient la maison (jardinier, pisciniste) et la vie communautaire est organisée chaque mois. Au m² et à services équivalents, La Villa est dans les prix du marché — tout inclus dès ${PRICE_CHF_FR}/mois, sans frais de dossier ni d'agence.`,
     },
   },
   {
