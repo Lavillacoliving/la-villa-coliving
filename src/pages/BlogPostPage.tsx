@@ -13,7 +13,7 @@ import { buildBreadcrumbSchema, buildFaqPageSchema, getFounderByAuthorName, ABOU
 import { getIntentBucket } from "@/data/blogIntentBuckets";
 import { BlocOffre } from "@/components/BlocOffre";
 import { WhatsAppButton } from "@/components/WhatsAppButton";
-import { formatPriceChf } from "@/data/stats";
+import { PRICE_SHARED_CHF_FR, PRICE_SHARED_CHF_EN } from "@/data/stats";
 import { YmylNotice, YmylPosture, AuthorBox } from "@/components/YmylNotice";
 import { isYmyl } from "@/lib/ymyl";
 
@@ -484,8 +484,8 @@ export function BlogPostPage() {
           </h2>
           <p className="text-sm text-[#78716C] text-center mb-10">
             {language === "en"
-              ? `Three premium coliving houses 20 min from Geneva city center, all-inclusive from ${formatPriceChf("en")}/month.`
-              : `Trois maisons de coliving premium à 20 min du centre de Genève, tout inclus dès ${formatPriceChf("fr")}/mois.`}
+              ? `Three premium coliving houses 20 min from Geneva city center, all-inclusive from ${PRICE_SHARED_CHF_EN}/month.`
+              : `Trois maisons de coliving premium à 20 min du centre de Genève, tout inclus dès ${PRICE_SHARED_CHF_FR}/mois.`}
           </p>
           <div className="grid md:grid-cols-3 gap-6">
             {[

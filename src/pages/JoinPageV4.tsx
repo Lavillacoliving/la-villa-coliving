@@ -4,7 +4,7 @@ import { useLanguage } from "@/contexts/LanguageContext";
 import { ArrowLeft, ArrowRight, Check, Clock, Shield, Loader2, Star, Users, Calendar, ChevronDown, ChevronUp, MessageCircle, Sparkles } from "lucide-react";
 import { SEO } from "@/components/SEO";
 import { SUPABASE_URL, SUPABASE_ANON_KEY } from "@/lib/supabase";
-import { STATS, STATS_DISPLAY, totalAvailabilityLabel, PRICE_CHF_FR, PRICE_CHF_EN } from "@/data/stats";
+import { STATS, STATS_DISPLAY, totalAvailabilityLabel, PRICE_SHARED_CHF_FR, PRICE_SHARED_CHF_EN } from "@/data/stats";
 import { useFormTelemetry } from "@/hooks/useFormTelemetry";
 
 type FormStatus = "idle" | "submitting" | "success" | "error";
@@ -760,8 +760,8 @@ export function JoinPageV4() {
               {
                 q_fr: "Quel est le loyer et que comprend-il vraiment ?",
                 q_en: "What is the rent and what does it really include?",
-                a_fr: `À partir de ${PRICE_CHF_FR}/mois tout inclus : chambre meublée, charges (eau, électricité, chauffage), fibre 8 Gbps, ménage 2 fois par semaine, accès piscine/sauna/gym, cours de yoga et fitness privés, abonnements streaming, événements communautaires mensuels. Caution 2 mois de loyer hors charges. Aucun frais d'agence, aucun frais de dossier.`,
-                a_en: `From ${PRICE_CHF_EN}/month all-inclusive: furnished room, utilities (water, electricity, heating), 8 Gbps fiber, twice-weekly cleaning, pool/sauna/gym access, private yoga and fitness classes, streaming subscriptions, monthly community events. Deposit: 2 months' rent excl. utilities. No agency fees, no application fees.`,
+                a_fr: `À partir de ${PRICE_SHARED_CHF_FR}/mois tout inclus : chambre meublée, charges (eau, électricité, chauffage), fibre 8 Gbps, ménage 2 fois par semaine, accès piscine/sauna/gym, cours de yoga et fitness privés, abonnements streaming, événements communautaires mensuels. Caution 2 mois de loyer hors charges. Aucun frais d'agence, aucun frais de dossier.`,
+                a_en: `From ${PRICE_SHARED_CHF_EN}/month all-inclusive: furnished room, utilities (water, electricity, heating), 8 Gbps fiber, twice-weekly cleaning, pool/sauna/gym access, private yoga and fitness classes, streaming subscriptions, monthly community events. Deposit: 2 months' rent excl. utilities. No agency fees, no application fees.`,
               },
               {
                 q_fr: "Quelle est la durée minimale du bail ?",

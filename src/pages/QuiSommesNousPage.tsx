@@ -3,7 +3,7 @@ import { LocalizedLink } from "@/components/LocalizedLink";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { SEO } from "@/components/SEO";
 import { buildBreadcrumbSchema, HOUSES, LAVILLA_EMAIL, LAVILLA_PHONE, LAVILLA_POSTAL_ADDRESS } from "@/lib/structuredData";
-import { STATS, PRICE_CHF_FR, PRICE_CHF_EN } from "@/data/stats";
+import { STATS, PRICE_SHARED_CHF_FR, PRICE_SHARED_CHF_EN } from "@/data/stats";
 import {
   Linkedin,
   Mail,
@@ -67,8 +67,8 @@ export function QuiSommesNousPage() {
       address: LAVILLA_POSTAL_ADDRESS,
       areaServed: ["Genève", "Annemasse", "Grand Genève"],
       description: en
-        ? `Premium coliving under direct management: ${STATS.totalHouses} houses, ${STATS.totalRooms} furnished rooms all-inclusive from ${PRICE_CHF_EN}/month, 20 minutes from Geneva on the French side.`
-        : `Coliving premium en gestion directe : ${STATS.totalHouses} maisons, ${STATS.totalRooms} chambres meublées tout inclus dès ${PRICE_CHF_FR}/mois, à 20 minutes de Genève côté France.`,
+        ? `Premium coliving under direct management: ${STATS.totalHouses} houses, ${STATS.totalRooms} furnished rooms all-inclusive from ${PRICE_SHARED_CHF_EN}/month, 20 minutes from Geneva on the French side.`
+        : `Coliving premium en gestion directe : ${STATS.totalHouses} maisons, ${STATS.totalRooms} chambres meublées tout inclus dès ${PRICE_SHARED_CHF_FR}/mois, à 20 minutes de Genève côté France.`,
       founder: [
         {
           "@type": "Person",
@@ -206,8 +206,8 @@ export function QuiSommesNousPage() {
               <div className="space-y-4 text-[#44403C] leading-relaxed">
                 <p>
                   {en
-                    ? `October ${STATS.foundedYear}: the first house opened in Ville-la-Grand, with a simple conviction — a coliving should be a living space designed around its community, not just an upgraded flatshare. Today, La Villa Coliving brings together ${STATS.totalHouses} houses — La Villa in Ville-la-Grand, Le Loft in Ambilly, Le Lodge in Annemasse — ${STATS.totalRooms} furnished rooms, all-inclusive from ${PRICE_CHF_EN}/month, ${STATS.genevaCenterMinutes} minutes from central Geneva.`
-                    : `Octobre ${STATS.foundedYear} : la première maison ouvre à Ville-la-Grand, avec une conviction simple — un coliving doit être un lieu de vie pensé pour sa communauté, pas une colocation améliorée. Aujourd'hui, La Villa Coliving réunit ${STATS.totalHouses} maisons — La Villa à Ville-la-Grand, Le Loft à Ambilly, Le Lodge à Annemasse — soit ${STATS.totalRooms} chambres meublées tout inclus dès ${PRICE_CHF_FR}/mois, à ${STATS.genevaCenterMinutes} minutes du centre de Genève.`}
+                    ? `October ${STATS.foundedYear}: the first house opened in Ville-la-Grand, with a simple conviction — a coliving should be a living space designed around its community, not just an upgraded flatshare. Today, La Villa Coliving brings together ${STATS.totalHouses} houses — La Villa in Ville-la-Grand, Le Loft in Ambilly, Le Lodge in Annemasse — ${STATS.totalRooms} furnished rooms, all-inclusive from ${PRICE_SHARED_CHF_EN}/month, ${STATS.genevaCenterMinutes} minutes from central Geneva.`
+                    : `Octobre ${STATS.foundedYear} : la première maison ouvre à Ville-la-Grand, avec une conviction simple — un coliving doit être un lieu de vie pensé pour sa communauté, pas une colocation améliorée. Aujourd'hui, La Villa Coliving réunit ${STATS.totalHouses} maisons — La Villa à Ville-la-Grand, Le Loft à Ambilly, Le Lodge à Annemasse — soit ${STATS.totalRooms} chambres meublées tout inclus dès ${PRICE_SHARED_CHF_FR}/mois, à ${STATS.genevaCenterMinutes} minutes du centre de Genève.`}
                 </p>
                 <p>
                   {en

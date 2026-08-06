@@ -14,7 +14,7 @@ import {
   ArrowRight,
   Euro,
 } from "lucide-react";
-import { PRICE_CHF_FR, PRICE_CHF_EN } from "@/data/stats";
+import { PRICE_CHF_FR, PRICE_CHF_EN, PRICE_SHARED_CHF_FR, PRICE_SHARED_CHF_EN } from "@/data/stats";
 
 // ───────────────────────────────────────────────────────────────────────
 // FAQ (FR) — cible "colocation annemasse" 880/mois + secondaires
@@ -22,7 +22,7 @@ import { PRICE_CHF_FR, PRICE_CHF_EN } from "@/data/stats";
 const annemasseFAQ = [
   {
     q: "Combien coûte une colocation à Annemasse chez La Villa Coliving ?",
-    a: `Nos chambres privatives à Annemasse Agglo (Ville-la-Grand, Ambilly, Annemasse) sont à partir de ${PRICE_CHF_FR}/mois tout inclus. Le prix comprend le loyer, les charges (eau, électricité, chauffage), la fibre jusqu'à 8 Gb/s, le ménage 2 fois par semaine des communs, l'accès à la piscine chauffée, à la salle de sport et au sauna, les cours de yoga et fitness privés hebdomadaires, et les événements communautaires mensuels. Pas de frais d'agence, pas de frais de dossier.`,
+    a: `Nos chambres privatives à Annemasse Agglo (Ville-la-Grand, Ambilly, Annemasse) sont à partir de ${PRICE_SHARED_CHF_FR}/mois tout inclus. Le prix comprend le loyer, les charges (eau, électricité, chauffage), la fibre jusqu'à 8 Gb/s, le ménage 2 fois par semaine des communs, l'accès à la piscine chauffée, à la salle de sport et au sauna, les cours de yoga et fitness privés hebdomadaires, et les événements communautaires mensuels. Pas de frais d'agence, pas de frais de dossier.`,
   },
   {
     q: "Combien de temps pour aller à Genève depuis Annemasse ?",
@@ -71,12 +71,12 @@ export function AnnemasseColocationPage() {
         title={
           language === "en"
             ? "Shared housing Annemasse 2026: 29 rooms"
-            : `Colocation Annemasse 2026 : dès ${PRICE_CHF_FR}`
+            : `Colocation Annemasse 2026 : dès ${PRICE_SHARED_CHF_FR}`
         }
         description={
           language === "en"
-            ? `Shared housing Annemasse 2026: 29 furnished rooms all-inclusive from ${PRICE_CHF_EN}/mo. Léman Express direct to Geneva 15 min. Cross-border living, no agency fees.`
-            : `Colocation Annemasse : 29 chambres meublées tout inclus dès ${PRICE_CHF_FR}/mois. Léman Express direct Genève 15 min. Coliving frontaliers. Sans frais d'agence.`
+            ? `Shared housing Annemasse 2026: 29 furnished rooms all-inclusive from ${PRICE_SHARED_CHF_EN}/mo. Léman Express direct to Geneva 15 min. Cross-border living, no agency fees.`
+            : `Colocation Annemasse : 29 chambres meublées tout inclus dès ${PRICE_SHARED_CHF_FR}/mois. Léman Express direct Genève 15 min. Coliving frontaliers. Sans frais d'agence.`
         }
         url="https://www.lavillacoliving.com/annemasse-colocation"
         image="https://www.lavillacoliving.com/images/le lodge/exterior/la villa coliving le lodge-14.webp"
@@ -94,8 +94,8 @@ export function AnnemasseColocationPage() {
             style={{ fontFamily: "DM Serif Display, serif" }}
           >
             {language === "en"
-              ? `Shared housing in Annemasse — 29 premium rooms from ${PRICE_CHF_EN}/mo`
-              : `Colocation à Annemasse — 29 chambres premium dès ${PRICE_CHF_FR}/mois`}
+              ? `Shared housing in Annemasse — 29 premium rooms from ${PRICE_SHARED_CHF_EN}/mo`
+              : `Colocation à Annemasse — 29 chambres premium dès ${PRICE_SHARED_CHF_FR}/mois`}
           </h1>
           <p className="text-lg md:text-xl text-[#57534E] max-w-3xl mx-auto leading-relaxed mb-10 font-medium">
             {language === "en"
@@ -188,8 +188,8 @@ export function AnnemasseColocationPage() {
           </h2>
           <p className="text-[#57534E] text-center max-w-3xl mx-auto mb-12">
             {language === "en"
-              ? "29 furnished rooms across 3 design houses — same all-inclusive pricing, different vibes. Pick the location that fits your commute and lifestyle."
-              : "29 chambres meublées dans 3 maisons design — même prix tout inclus, ambiances différentes. Choisis la résidence qui colle à ton trajet et ton style de vie."}
+              ? "29 furnished rooms across 3 design houses — simple all-inclusive pricing, different vibes. Pick the location that fits your commute and lifestyle."
+              : "29 chambres meublées dans 3 maisons design — tarification simple tout inclus, ambiances différentes. Choisis la résidence qui colle à ton trajet et ton style de vie."}
           </p>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {/* La Villa */}

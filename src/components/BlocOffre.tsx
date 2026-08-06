@@ -129,8 +129,8 @@ export function BlocOffre({ variant, slug, bucket }: BlocOffreProps) {
             </p>
             <p className="text-sm text-[#57534E] mb-3">
               {L === "en"
-                ? <>All-inclusive from <strong className="text-[#1C1917]">{price}/month</strong> — {h.descEn}.</>
-                : <>Tout inclus dès <strong className="text-[#1C1917]">{price}/mois</strong> — {h.descFr}.</>}
+                ? <>All-inclusive at <strong className="text-[#1C1917]">{price}/month</strong> — {h.descEn}.</>
+                : <>Tout inclus à <strong className="text-[#1C1917]">{price}/mois</strong> — {h.descFr}.</>}
             </p>
             <LocalizedLink
               to={to}
@@ -170,7 +170,7 @@ export function BlocOffre({ variant, slug, bucket }: BlocOffreProps) {
               {HEADLINES[bucket][L]}
             </h2>
             <p className="text-lg text-[#1C1917] font-medium mb-4">
-              {L === "en" ? <>All-inclusive from <span className="text-[#D4A574]">{price}</span>/month</> : <>Tout inclus dès <span className="text-[#D4A574]">{price}</span>/mois</>}
+              {L === "en" ? <>All-inclusive at <span className="text-[#D4A574]">{price}</span>/month</> : <>Tout inclus à <span className="text-[#D4A574]">{price}</span>/mois</>}
             </p>
             <ul className="space-y-1.5 mb-6">
               {proofs.map((p) => (

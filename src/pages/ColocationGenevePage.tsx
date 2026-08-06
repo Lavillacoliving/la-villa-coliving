@@ -28,7 +28,7 @@ import { supabase } from "@/lib/supabase";
 import { FaqSection } from "@/components/FaqSection";
 import { buildFaqPageSchema } from "@/lib/structuredData";
 import { colocationGeneveFaq } from "@/data/faq/colocationGeneveFaq";
-import { STATS, PRICE_EN_NUM, PRICE_CHF_FR, PRICE_CHF_EN } from "@/data/stats";
+import { STATS, STATS_SHARED_BATH, PRICE_EN_NUM, PRICE_CHF_FR, PRICE_CHF_EN, PRICE_SHARED_EN_NUM, PRICE_SHARED_CHF_FR, PRICE_SHARED_CHF_EN } from "@/data/stats";
 import { COLOC_GENEVE_PILLAR_EN } from "@/lib/siteLinks";
 
 // URL réelle de cette page. Elle n'est plus routée qu'en EN (App.tsx : seule
@@ -73,15 +73,17 @@ export function ColocationGenevePage() {
   // (AggregateRating retiré : la note 4,9 vient d'un NPS interne, non balisable en schema.)
   const offerSchema = {
     "@context": "https://schema.org",
-    "@type": "Offer",
+    "@type": "AggregateOffer",
     name: language === "en"
       ? "Furnished room in shared housing near Geneva"
       : "Chambre meublée en colocation près de Genève",
     description: language === "en"
       ? "All-inclusive furnished room: rent, utilities, fiber internet, cleaning 2x/week, pool, gym, sauna, yoga classes, community events."
       : "Chambre meublée tout inclus : loyer, charges, fibre internet, ménage 2x/semaine, piscine, gym, sauna, cours de yoga, événements communautaires.",
-    price: String(STATS.priceChf),
+    lowPrice: String(STATS_SHARED_BATH.priceChf),
+    highPrice: String(STATS.priceChf),
     priceCurrency: "CHF",
+    offerCount: STATS.totalRooms,
     priceValidUntil: "2026-12-31",
     availability: "https://schema.org/InStock",
     url: PILLAR_URL,
@@ -124,13 +126,13 @@ export function ColocationGenevePage() {
       <SEO
         title={
           language === "en"
-            ? `Shared Housing near Geneva — All-Inclusive Rooms from ${PRICE_CHF_EN}`
-            : `Colocation Genève : chambres meublées tout inclus dès ${PRICE_CHF_FR}`
+            ? `Shared Housing near Geneva — All-Inclusive Rooms from ${PRICE_SHARED_CHF_EN}`
+            : `Colocation Genève : chambres meublées tout inclus dès ${PRICE_SHARED_CHF_FR}`
         }
         description={
           language === "en"
-            ? `Shared housing near Geneva, French side: all-inclusive furnished room from ${PRICE_CHF_EN}/mo (utilities, fiber, cleaning). No application fee. Pool, sauna, gym.`
-            : `Colocation près de Genève côté France : chambre meublée tout inclus dès ${PRICE_CHF_FR}/mois (charges, fibre, ménage). Sans frais de dossier. Piscine, sauna, gym.`
+            ? `Shared housing near Geneva, French side: all-inclusive furnished room from ${PRICE_SHARED_CHF_EN}/mo (utilities, fiber, cleaning). No application fee. Pool, sauna, gym.`
+            : `Colocation près de Genève côté France : chambre meublée tout inclus dès ${PRICE_SHARED_CHF_FR}/mois (charges, fibre, ménage). Sans frais de dossier. Piscine, sauna, gym.`
         }
         url="https://www.lavillacoliving.com/colocation-geneve"
         image="https://www.lavillacoliving.com/images/villa_portrait.webp"
@@ -167,8 +169,8 @@ export function ColocationGenevePage() {
           </h1>
           <p className="text-lg md:text-xl text-[#57534E] max-w-3xl mx-auto mb-10 leading-relaxed">
             {language === "en"
-              ? `Live on the French side, work in Geneva. 29 fully furnished, all-inclusive rooms from ${PRICE_CHF_EN}/month across 3 designer houses in Ville-la-Grand, Ambilly and Annemasse. Pool, gym, sauna, fiber internet — no application fee, everything included.`
-              : `Vis côté France, travaille à Genève. 29 chambres meublées tout inclus dès ${PRICE_CHF_FR}/mois, dans 3 maisons design à Ville-la-Grand, Ambilly et Annemasse. Piscine, gym, sauna, fibre optique — pas de frais de dossier, tout est compris.`}
+              ? `Live on the French side, work in Geneva. 29 fully furnished, all-inclusive rooms from ${PRICE_SHARED_CHF_EN}/month across 3 designer houses in Ville-la-Grand, Ambilly and Annemasse. Pool, gym, sauna, fiber internet — no application fee, everything included.`
+              : `Vis côté France, travaille à Genève. 29 chambres meublées tout inclus dès ${PRICE_SHARED_CHF_FR}/mois, dans 3 maisons design à Ville-la-Grand, Ambilly et Annemasse. Piscine, gym, sauna, fibre optique — pas de frais de dossier, tout est compris.`}
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <LocalizedLink
@@ -216,7 +218,7 @@ export function ColocationGenevePage() {
             </span>
             <span className="flex items-center gap-2">
               <Euro className="w-4 h-4" />{" "}
-              {language === "en" ? "From" : "Dès"} {PRICE_CHF_FR}/
+              {language === "en" ? PRICE_CHF_EN : PRICE_CHF_FR}/
               {language === "en" ? "month" : "mois"}
             </span>
           </div>
@@ -249,8 +251,8 @@ export function ColocationGenevePage() {
               </h3>
               <p className="text-[#57534E] leading-relaxed mb-4">
                 {language === "en"
-                  ? `A studio in Geneva starts at 1,800 CHF/month — without furniture or services. At La Villa, you get a fully furnished room with pool, gym, sauna, cleaning 2x/week, weekly yoga & sports classes, monthly community events and community dinners — from ${PRICE_EN_NUM} CHF/month.`
-                  : `Un studio à Genève coûte minimum 1 800 CHF/mois — sans meubles ni services. Chez La Villa, tu as une chambre meublée avec piscine, gym, sauna, ménage 2x/semaine, cours de yoga et sport hebdomadaires, événements communautaires et dîners communautaires mensuels — dès ${PRICE_CHF_FR}/mois.`}
+                  ? `A studio in Geneva starts at 1,800 CHF/month — without furniture or services. At La Villa, you get a fully furnished room with pool, gym, sauna, cleaning 2x/week, weekly yoga & sports classes, monthly community events and community dinners — from ${PRICE_SHARED_EN_NUM} CHF/month.`
+                  : `Un studio à Genève coûte minimum 1 800 CHF/mois — sans meubles ni services. Chez La Villa, tu as une chambre meublée avec piscine, gym, sauna, ménage 2x/semaine, cours de yoga et sport hebdomadaires, événements communautaires et dîners communautaires mensuels — dès ${PRICE_SHARED_CHF_FR}/mois.`}
               </p>
               <div className="bg-white p-4 border border-[#E7E5E4]">
                 <div className="flex justify-between items-center mb-2">
@@ -506,7 +508,7 @@ export function ColocationGenevePage() {
                   This situation has fueled the rise of cross-border living. The French side of the Greater Geneva area — towns like Annemasse, Ville-la-Grand, Ambilly, and Saint-Julien-en-Genevois — offers rents that are 30 to 50% lower than in Geneva itself. A cross-border worker (frontalier) earning a Swiss salary while living in France enjoys a dramatic improvement in purchasing power. The Leman Express rail link, which connects Annemasse to Geneva Cornavin station in just 20 minutes, has made this lifestyle more practical than ever. Today, around 116,200 frontaliers commute daily from France to work in the canton of Geneva (OCSTAT, end of 2025).
                 </p>
                 <p>
-                  Within this context, coliving has emerged as a compelling alternative to traditional shared housing near Geneva. Unlike a standard colocation where tenants share an apartment and manage everything themselves, coliving offers a professionally managed environment with curated communities, fully furnished rooms, and comprehensive services included in a single monthly payment. At La Villa Coliving, residents enjoy premium shared housing from {PRICE_EN_NUM} CHF per month — all inclusive: rent, utilities, fiber internet, housekeeping twice a week, pool, gym, sauna, weekly yoga and sports classes, monthly community events, and community dinners. This represents exceptional value compared to both a Geneva studio and a traditional cross-border colocation.
+                  Within this context, coliving has emerged as a compelling alternative to traditional shared housing near Geneva. Unlike a standard colocation where tenants share an apartment and manage everything themselves, coliving offers a professionally managed environment with curated communities, fully furnished rooms, and comprehensive services included in a single monthly payment. At La Villa Coliving, residents enjoy premium shared housing from {PRICE_SHARED_EN_NUM} CHF per month — all inclusive: rent, utilities, fiber internet, housekeeping twice a week, pool, gym, sauna, weekly yoga and sports classes, monthly community events, and community dinners. This represents exceptional value compared to both a Geneva studio and a traditional cross-border colocation.
                 </p>
                 <p>
                   For professionals relocating to work in Geneva — whether as frontaliers, expats joining international organizations, or remote workers seeking a vibrant community — coliving on the French border offers the ideal balance: Swiss-level salaries with French-side affordability, premium amenities, and a ready-made social network. The demand for shared housing in Geneva and its surrounding area continues to grow, and modern coliving spaces like La Villa are leading this transformation.
@@ -524,7 +526,7 @@ export function ColocationGenevePage() {
                   Cette situation a alimenté l'essor de la vie transfrontalière. Le côté français du Grand Genève — des communes comme Annemasse, Ville-la-Grand, Ambilly ou Saint-Julien-en-Genevois — offre des loyers 30 à 50% moins chers qu'à Genève. Un frontalier touchant un salaire suisse tout en vivant en France bénéficie d'un gain de pouvoir d'achat considérable. Le Léman Express, qui relie Annemasse à la gare de Genève Cornavin en seulement 20 minutes, a rendu ce mode de vie plus pratique que jamais. Aujourd'hui, près de 116 200 frontaliers font le trajet quotidien entre la France et le canton de Genève (OCSTAT, fin 2025).
                 </p>
                 <p>
-                  Dans ce contexte, le coliving s'impose comme une alternative séduisante à la colocation classique près de Genève. Contrairement à une colocation traditionnelle où les locataires partagent un appartement et gèrent tout eux-mêmes, le coliving propose un environnement géré professionnellement avec des communautés sélectionnées, des chambres entièrement meublées et des services complets inclus dans un paiement mensuel unique. Chez La Villa Coliving, les résidents profitent d'une colocation premium dès {PRICE_CHF_FR} par mois — tout compris : loyer, charges, fibre internet, ménage deux fois par semaine, piscine, gym, sauna, cours de yoga et sport hebdomadaires, événements communautaires mensuels et dîners communautaires. Cela représente un rapport qualité-prix exceptionnel comparé à un studio à Genève ou une colocation frontalière classique.
+                  Dans ce contexte, le coliving s'impose comme une alternative séduisante à la colocation classique près de Genève. Contrairement à une colocation traditionnelle où les locataires partagent un appartement et gèrent tout eux-mêmes, le coliving propose un environnement géré professionnellement avec des communautés sélectionnées, des chambres entièrement meublées et des services complets inclus dans un paiement mensuel unique. Chez La Villa Coliving, les résidents profitent d'une colocation premium dès {PRICE_SHARED_CHF_FR} par mois — tout compris : loyer, charges, fibre internet, ménage deux fois par semaine, piscine, gym, sauna, cours de yoga et sport hebdomadaires, événements communautaires mensuels et dîners communautaires. Cela représente un rapport qualité-prix exceptionnel comparé à un studio à Genève ou une colocation frontalière classique.
                 </p>
                 <p>
                   Pour les professionnels qui s'installent pour travailler à Genève — qu'ils soient frontaliers, expatriés rejoignant des organisations internationales ou télétravailleurs en quête d'une communauté dynamique — la colocation côté frontière française offre l'équilibre idéal : salaires suisses avec des coûts côté France, prestations premium et un réseau social prêt à l'emploi. La demande de colocation à Genève et dans sa périphérie continue de croître, et les espaces de coliving modernes comme La Villa sont à la pointe de cette transformation.
@@ -838,7 +840,7 @@ export function ColocationGenevePage() {
               </thead>
               <tbody>
                 {[
-                  [language === "en" ? "Monthly cost" : "Coût mensuel", language === "en" ? `From ${PRICE_EN_NUM} CHF (all-incl.)` : `Dès ${PRICE_CHF_FR} (tout compris)`, "1 800 - 2 500 CHF + charges"],
+                  [language === "en" ? "Monthly cost" : "Coût mensuel", language === "en" ? `From ${PRICE_SHARED_EN_NUM} CHF (all-incl.)` : `Dès ${PRICE_SHARED_CHF_FR} (tout compris)`, "1 800 - 2 500 CHF + charges"],
                   [language === "en" ? "Furnished" : "Meublé", "✓ " + (language === "en" ? "Fully furnished" : "Entièrement meublé"), language === "en" ? "Usually unfurnished" : "Généralement non meublé"],
                   [language === "en" ? "Pool" : "Piscine", "✓ " + (language === "en" ? "Pool included" : "Piscine incluse"), "✗"],
                   ["Gym / Sauna", "✓ " + (language === "en" ? "Included" : "Inclus"), "✗ " + (language === "en" ? "Extra 80-150 CHF/month" : "En plus : 80-150 CHF/mois")],
@@ -1058,8 +1060,8 @@ export function ColocationGenevePage() {
               </span>
               <h3 className="text-xl font-medium text-[#1C1917] mb-3 group-hover:text-[#D4A574] transition-colors">
                 {language === "en"
-                  ? `Furnished rooms to rent in Annemasse from ${PRICE_CHF_EN}/mo`
-                  : `Chambres meublées à louer à Annemasse dès ${PRICE_CHF_FR}/mois`}
+                  ? `Furnished rooms to rent in Annemasse from ${PRICE_SHARED_CHF_EN}/mo`
+                  : `Chambres meublées à louer à Annemasse dès ${PRICE_SHARED_CHF_FR}/mois`}
               </h3>
               <p className="text-sm text-[#57534E] leading-relaxed mb-4">
                 {language === "en"

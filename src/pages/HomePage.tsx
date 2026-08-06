@@ -15,7 +15,7 @@ import { SEO } from '@/components/SEO';
 import { FaqSection } from '@/components/FaqSection';
 import { buildHomeLodgingBusinessSchema } from '@/lib/structuredData';
 import { useLanguage } from '@/contexts/LanguageContext';
-import { PRICE_CHF_FR, PRICE_CHF_EN } from '@/data/stats';
+import { PRICE_SHARED_CHF_FR, PRICE_SHARED_CHF_EN } from '@/data/stats';
 import { homeFaq } from '@/data/faq/homeFaq';
 
 export function HomePage() {
@@ -29,8 +29,8 @@ export function HomePage() {
           Contrainte : title + « | La Villa Coliving » ≤ 65 c. (règle B2). */}
       <SEO
         title={language === "en"
-          ? `Coliving & Flatshare Geneva from ${PRICE_CHF_EN}`
-          : `Coliving & Colocation Genève dès ${PRICE_CHF_FR}`}
+          ? `Coliving & Flatshare Geneva from ${PRICE_SHARED_CHF_EN}`
+          : `Coliving & Colocation Genève dès ${PRICE_SHARED_CHF_FR}`}
         description={language === "en"
           ? "3 houses on the Geneva border — not a 300-room residence. Pool. Sauna. Gym. Private 17-23 m² room, all inclusive, no application fee. Reply within 48h."
           : "3 maisons à la frontière de Genève — pas une résidence de 300 chambres. Piscine. Sauna. Salle de sport. Chambre privée 17-23 m² tout inclus, 0 frais de dossier."}
@@ -59,8 +59,8 @@ export function HomePage() {
         intro={
           <p>
             {language === "en"
-              ? `La Villa Coliving: 29 all-inclusive furnished rooms from ${PRICE_CHF_EN}/month in 3 houses with pool, sauna and gym, 20 minutes from Geneva — no application fee.`
-              : `La Villa Coliving : 29 chambres meublées tout inclus dès ${PRICE_CHF_FR}/mois dans 3 maisons avec piscine, sauna et salle de sport, à 20 minutes de Genève — sans frais de dossier.`}
+              ? `La Villa Coliving: 29 all-inclusive furnished rooms from ${PRICE_SHARED_CHF_EN}/month in 3 houses with pool, sauna and gym, 20 minutes from Geneva — no application fee.`
+              : `La Villa Coliving : 29 chambres meublées tout inclus dès ${PRICE_SHARED_CHF_FR}/mois dans 3 maisons avec piscine, sauna et salle de sport, à 20 minutes de Genève — sans frais de dossier.`}
           </p>
         }
       />

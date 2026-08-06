@@ -11,7 +11,7 @@ export const STATS = {
   genevaCenterMinutes: 20, // arrondi de 15-25 min, porte à porte en CEVA/tram
   maxResidentsPerHouse: 12,
   minResidentsPerHouse: 7,
-  priceChf: 1380,
+  priceChf: 1440,
   depositMonths: 2,
   leaseDurationMonths: 12,
   noticePeriodMonths: 1,
@@ -24,17 +24,27 @@ export const STATS = {
 } as const;
 
 // ── Prix public affiché ────────────────────────────────────────────────
-// SEULE source du tarif : changer STATS.priceChf met à jour tout le site
-// (hero, SEO, FAQ, pages maisons, blocs offre du blog…).
+// SEULE source du tarif : changer STATS.priceChf / STATS_SHARED_BATH.priceChf
+// met à jour tout le site (hero, SEO, FAQ, pages maisons, blocs offre du blog…).
+// Deux niveaux depuis le 01/09/2026 : 1 440 CHF (salle d'eau privative, 25 ch.)
+// et 1 390 CHF (les 4 chambres de La Villa à salle d'eau partagée entre 2 chambres,
+// entretien par l'équipe de ménage inclus). Le Loft / Le Lodge : 100 % privatif.
 // Séparateurs déterministes (pas de toLocaleString : l'ICU peut différer
 // entre le build Puppeteer du prérendu et le navigateur → hydration mismatch).
 const thousands = (n: number, sep: string) =>
   String(n).replace(/\B(?=(\d{3})+(?!\d))/g, sep);
 
-export const PRICE_FR_NUM = thousands(STATS.priceChf, " "); // « 1 380 » — U+00A0 insécable classique (la fine U+202F était quasi invisible → lisait « 1380 »)
-export const PRICE_EN_NUM = thousands(STATS.priceChf, ",");      // « 1,380 »
-export const PRICE_CHF_FR = `${PRICE_FR_NUM} CHF`;               // « 1 380 CHF »
-export const PRICE_CHF_EN = `CHF ${PRICE_EN_NUM}`;               // « CHF 1,380 »
+export const PRICE_FR_NUM = thousands(STATS.priceChf, " "); // « 1 440 » — U+00A0 insécable classique (la fine U+202F était quasi invisible → le nombre se lisait collé)
+export const PRICE_EN_NUM = thousands(STATS.priceChf, ",");      // « 1,440 »
+export const PRICE_CHF_FR = `${PRICE_FR_NUM} CHF`;               // « 1 440 CHF »
+export const PRICE_CHF_EN = `CHF ${PRICE_EN_NUM}`;               // « CHF 1,440 »
+
+// Second niveau — les 4 chambres de La Villa à salle d'eau partagée (entre 2 chambres).
+export const STATS_SHARED_BATH = { priceChf: 1390, rooms: 4, house: "La Villa" } as const;
+export const PRICE_SHARED_FR_NUM = thousands(STATS_SHARED_BATH.priceChf, " "); // « 1 390 »
+export const PRICE_SHARED_EN_NUM = thousands(STATS_SHARED_BATH.priceChf, ","); // « 1,390 »
+export const PRICE_SHARED_CHF_FR = `${PRICE_SHARED_FR_NUM} CHF`;               // « 1 390 CHF »
+export const PRICE_SHARED_CHF_EN = `CHF ${PRICE_SHARED_EN_NUM}`;               // « CHF 1,390 »
 
 export function formatPriceChf(lang: "fr" | "en"): string {
   return lang === "en" ? PRICE_CHF_EN : PRICE_CHF_FR;

@@ -1,5 +1,5 @@
 import type { QAPair } from "@/lib/structuredData";
-import { PRICE_CHF_FR, PRICE_CHF_EN } from "@/data/stats";
+import { PRICE_SHARED_CHF_FR, PRICE_SHARED_CHF_EN } from "@/data/stats";
 
 // FAQ de l'accueil — front A6 « coliving genève » (PAA + AEO). Tutoiement,
 // texte verbatim : ces réponses sont AUSSI balisées FAQPage (règle d'or :
@@ -15,11 +15,11 @@ export const homeFaq: { fr: QAPair[]; en: QAPair[] } = {
     },
     {
       q: "Y a-t-il du coliving près de Genève ?",
-      a: `Oui. La Villa Coliving gère trois maisons de coliving à 20 minutes du centre de Genève, côté France : La Villa à Ville-la-Grand, Le Loft à Ambilly et Le Lodge à Annemasse. Chacune propose des chambres meublées de 17 à 23 m², tout inclus dès ${PRICE_CHF_FR}/mois, avec piscine, sauna et salle de sport.`,
+      a: `Oui. La Villa Coliving gère trois maisons de coliving à 20 minutes du centre de Genève, côté France : La Villa à Ville-la-Grand, Le Loft à Ambilly et Le Lodge à Annemasse. Chacune propose des chambres meublées de 17 à 23 m², tout inclus dès ${PRICE_SHARED_CHF_FR}/mois, avec piscine, sauna et salle de sport.`,
     },
     {
       q: "Combien coûte une chambre en coliving à Genève ?",
-      a: `Chez La Villa Coliving, le loyer tout inclus démarre à ${PRICE_CHF_FR}/mois : chambre meublée de 17 à 23 m², toutes les charges, internet fibre jusqu'à 8 Gb/s, ménage des parties communes deux fois par semaine, piscine, sauna, salle de sport, cours de yoga et événements. Un seul paiement par mois, sans frais cachés.`,
+      a: `Chez La Villa Coliving, le loyer tout inclus démarre à ${PRICE_SHARED_CHF_FR}/mois : chambre meublée de 17 à 23 m², toutes les charges, internet fibre jusqu'à 8 Gb/s, ménage des parties communes deux fois par semaine, piscine, sauna, salle de sport, cours de yoga et événements. Un seul paiement par mois, sans frais cachés.`,
     },
     {
       q: "Y a-t-il des frais de dossier ou d'agence ?",
@@ -41,11 +41,11 @@ export const homeFaq: { fr: QAPair[]; en: QAPair[] } = {
     },
     {
       q: "Is there coliving near Geneva?",
-      a: `Yes. La Villa Coliving runs three coliving houses 20 minutes from central Geneva, on the French side: La Villa in Ville-la-Grand, Le Loft in Ambilly and Le Lodge in Annemasse. Each offers furnished rooms of 17 to 23 m², all inclusive from ${PRICE_CHF_EN}/month, with a pool, sauna and gym.`,
+      a: `Yes. La Villa Coliving runs three coliving houses 20 minutes from central Geneva, on the French side: La Villa in Ville-la-Grand, Le Loft in Ambilly and Le Lodge in Annemasse. Each offers furnished rooms of 17 to 23 m², all inclusive from ${PRICE_SHARED_CHF_EN}/month, with a pool, sauna and gym.`,
     },
     {
       q: "How much does a coliving room near Geneva cost?",
-      a: `At La Villa Coliving, all-inclusive rent starts at ${PRICE_CHF_EN}/month: a furnished room of 17 to 23 m², all utilities, fibre internet up to 8 Gb/s, cleaning of common areas twice a week, pool, sauna, gym, yoga classes and events. One single monthly payment, no hidden costs.`,
+      a: `At La Villa Coliving, all-inclusive rent starts at ${PRICE_SHARED_CHF_EN}/month: a furnished room of 17 to 23 m², all utilities, fibre internet up to 8 Gb/s, cleaning of common areas twice a week, pool, sauna, gym, yoga classes and events. One single monthly payment, no hidden costs.`,
     },
     {
       q: "Are there application or agency fees?",
