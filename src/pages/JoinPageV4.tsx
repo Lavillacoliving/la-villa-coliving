@@ -4,7 +4,7 @@ import { useLanguage } from "@/contexts/LanguageContext";
 import { ArrowLeft, ArrowRight, Check, Clock, Shield, Loader2, Star, Users, Calendar, ChevronDown, ChevronUp, MessageCircle, Sparkles } from "lucide-react";
 import { SEO } from "@/components/SEO";
 import { SUPABASE_URL, SUPABASE_ANON_KEY } from "@/lib/supabase";
-import { STATS, STATS_DISPLAY, totalAvailabilityLabel, PRICE_SHARED_CHF_FR, PRICE_SHARED_CHF_EN } from "@/data/stats";
+import { STATS, STATS_DISPLAY, totalAvailabilityLabel, PRICE_SHARED_CHF_FR, PRICE_SHARED_CHF_EN, CONTRACT_EUR, EUR_STANDARD_FR_NUM, EUR_SHARED_FR_NUM, EUR_STANDARD_EN_NUM, EUR_SHARED_EN_NUM } from "@/data/stats";
 import { useFormTelemetry } from "@/hooks/useFormTelemetry";
 
 type FormStatus = "idle" | "submitting" | "success" | "error";
@@ -371,6 +371,13 @@ export function JoinPageV4() {
               {language === "en" ? "No application fee" : "Aucun frais de dossier"}
             </span>
           </div>
+
+          {/* Mention contractuelle euro (prix maître depuis le 01/09/2026) — montants via CONTRACT_EUR */}
+          <p className="text-center text-xs text-[#78716C] mb-8">
+            {language === "en"
+              ? `Contractual rent in euros: €${EUR_SHARED_EN_NUM}–€${EUR_STANDARD_EN_NUM}/month depending on the room. CHF shown for guidance — ${CONTRACT_EUR.rateLabelEn} rate.`
+              : `Loyer contractuel en euros : de ${EUR_SHARED_FR_NUM} à ${EUR_STANDARD_FR_NUM} €/mois selon la chambre. Affichage en CHF indicatif — taux d'${CONTRACT_EUR.rateLabelFr}.`}
+          </p>
 
           {status === "success" ? (
             <div className="bg-white border border-[#E7E5E4] p-12 md:p-16 text-center">

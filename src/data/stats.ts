@@ -46,6 +46,15 @@ export const PRICE_SHARED_EN_NUM = thousands(STATS_SHARED_BATH.priceChf, ","); /
 export const PRICE_SHARED_CHF_FR = `${PRICE_SHARED_FR_NUM} CHF`;               // « 1 390 CHF »
 export const PRICE_SHARED_CHF_EN = `CHF ${PRICE_SHARED_EN_NUM}`;               // « CHF 1,390 »
 
+/** Loyer contractuel en euros (prix maître depuis le 01/09/2026).
+ *  Le CHF affiché sur le site est un indicatif dérivé (taux figé au lancement).
+ *  Phase B (post-01/09) : ces valeurs seront servies par la table pricing_current. */
+export const CONTRACT_EUR = { standard: 1540, sharedBath: 1490, rateLabelFr: "août 2026", rateLabelEn: "August 2026" } as const;
+export const EUR_STANDARD_FR_NUM = thousands(CONTRACT_EUR.standard, " "); // « 1 540 »
+export const EUR_SHARED_FR_NUM = thousands(CONTRACT_EUR.sharedBath, " ");   // « 1 490 »
+export const EUR_STANDARD_EN_NUM = thousands(CONTRACT_EUR.standard, ",");      // « 1,540 »
+export const EUR_SHARED_EN_NUM = thousands(CONTRACT_EUR.sharedBath, ",");      // « 1,490 »
+
 export function formatPriceChf(lang: "fr" | "en"): string {
   return lang === "en" ? PRICE_CHF_EN : PRICE_CHF_FR;
 }

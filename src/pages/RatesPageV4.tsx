@@ -7,7 +7,7 @@ import { SEO } from "@/components/SEO";
 import { FaqSection } from "@/components/FaqSection";
 import { tarifsFaq } from "@/data/faq/tarifsFaq";
 import { buildBreadcrumbSchema, buildRoomsAggregateOfferSchema } from "@/lib/structuredData";
-import { STATS, STATS_SHARED_BATH, PRICE_FR_NUM, PRICE_EN_NUM, PRICE_CHF_FR, PRICE_CHF_EN, PRICE_SHARED_EN_NUM, PRICE_SHARED_CHF_FR, PRICE_SHARED_CHF_EN } from "@/data/stats";
+import { STATS, STATS_SHARED_BATH, PRICE_FR_NUM, PRICE_EN_NUM, PRICE_CHF_FR, PRICE_CHF_EN, PRICE_SHARED_EN_NUM, PRICE_SHARED_CHF_FR, PRICE_SHARED_CHF_EN, CONTRACT_EUR, EUR_STANDARD_FR_NUM, EUR_SHARED_FR_NUM, EUR_STANDARD_EN_NUM, EUR_SHARED_EN_NUM } from "@/data/stats";
 
 export function RatesPageV4() {
   const { language } = useLanguage();
@@ -368,6 +368,12 @@ export function RatesPageV4() {
             {language === "en"
               ? `${PRICE_SHARED_CHF_EN}/month for the ${STATS_SHARED_BATH.rooms} rooms at ${STATS_SHARED_BATH.house} with a shower room shared between 2 rooms — cleaned by our housekeeping team, like the rest of the house.`
               : `${PRICE_SHARED_CHF_FR}/mois pour les ${STATS_SHARED_BATH.rooms} chambres de ${STATS_SHARED_BATH.house} avec salle d'eau partagée entre 2 chambres — entretien assuré par notre équipe de ménage, comme le reste de la maison.`}
+          </p>
+          {/* Mention contractuelle euro (prix maître depuis le 01/09/2026) — montants via CONTRACT_EUR */}
+          <p className="mt-2 max-w-2xl mx-auto text-xs text-[#78716C]">
+            {language === "en"
+              ? `Contractual rent in euros: €${EUR_SHARED_EN_NUM}–€${EUR_STANDARD_EN_NUM}/month depending on the room. CHF shown for guidance — ${CONTRACT_EUR.rateLabelEn} rate.`
+              : `Loyer contractuel en euros : de ${EUR_SHARED_FR_NUM} à ${EUR_STANDARD_FR_NUM} €/mois selon la chambre. Affichage en CHF indicatif — taux d'${CONTRACT_EUR.rateLabelFr}.`}
           </p>
         </div>
       </section>
@@ -849,8 +855,8 @@ export function RatesPageV4() {
             </p>
             <p className="mt-3 text-center text-xs text-[#78716C]">
               {language === "en"
-                ? `"Standard flatshare" and "Geneva studio" columns: market observations (indicative ranges). La Villa column: contractual facts. La Villa price per m²: ${PRICE_CHF_EN} ≈ €1,535 ÷ 37-42 m² of living space per flatmate.`
-                : `Colonnes « Colocation classique » et « Studio Genève » : observations de marché (fourchettes indicatives). Colonne La Villa : faits contractuels. Prix du m² La Villa : ${PRICE_CHF_FR} ≈ 1 535 € ÷ 37-42 m² d'espace de vie par colocataire.`}
+                ? `"Standard flatshare" and "Geneva studio" columns: market observations (indicative ranges). La Villa column: contractual facts. La Villa price per m²: contractual rent of €${EUR_STANDARD_EN_NUM} (${PRICE_CHF_EN}) ÷ 37-42 m² of living space per flatmate.`
+                : `Colonnes « Colocation classique » et « Studio Genève » : observations de marché (fourchettes indicatives). Colonne La Villa : faits contractuels. Prix du m² La Villa : loyer contractuel de ${EUR_STANDARD_FR_NUM} € (${PRICE_CHF_FR}) ÷ 37-42 m² d'espace de vie par colocataire.`}
             </p>
 
             {/* Encadré méga-résidences — chiffres publics, concurrent non nommé */}
