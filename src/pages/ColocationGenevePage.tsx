@@ -25,6 +25,7 @@ import {
 } from "lucide-react";
 import { useState, useEffect } from "react";
 import { supabase } from "@/lib/supabase";
+import { readEmbeddedArray, embedJson } from "@/lib/prerenderEmbeddedState";
 import { FaqSection } from "@/components/FaqSection";
 import { buildFaqPageSchema } from "@/lib/structuredData";
 import { colocationGeneveFaq } from "@/data/faq/colocationGeneveFaq";
@@ -46,11 +47,20 @@ interface BlogPost {
   read_time_min: number; category: string;
 }
 
+// État embarqué par le prerender (fix hydratation #418) — id aussi listé dans main.tsx.
+const BLOG_EMBED_ID = "__colocation_blog_data__";
+
 export function ColocationGenevePage() {
   const { language } = useLanguage();
-  const [blogPosts, setBlogPosts] = useState<BlogPost[]>([]);
+  // Init synchrone depuis l'état embarqué (fix hydratation #418) : sans lui,
+  // blogPosts=[] au premier rendu client → la section « articles » manque →
+  // mismatch avec le snapshot prérendu et re-render de toute la page.
+  const [blogPosts, setBlogPosts] = useState<BlogPost[]>(
+    () => readEmbeddedArray<BlogPost>(BLOG_EMBED_ID) ?? [],
+  );
 
   useEffect(() => {
+    if (readEmbeddedArray<BlogPost>(BLOG_EMBED_ID) !== null) return; // déjà hydraté depuis le prerendu
     async function loadBlogPosts() {
       try {
         const { data } = await supabase
@@ -1178,6 +1188,13 @@ export function ColocationGenevePage() {
           <ArrowRight className="w-4 h-4" />
         </LocalizedLink>
       </div>
+      {/* État embarqué pour l'hydratation sans fetch — capturé par le prerender,
+          relu par readEmbeddedArray() à l'init du state. */}
+      <script
+        type="application/json"
+        id={BLOG_EMBED_ID}
+        dangerouslySetInnerHTML={{ __html: embedJson(blogPosts) }}
+      />
     </main>
   );
 }

@@ -2,7 +2,11 @@ import { useState, useEffect } from "react";
 import { LocalizedLink } from "@/components/LocalizedLink";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { supabase } from "@/lib/supabase";
+import { readEmbeddedArray, embedJson } from "@/lib/prerenderEmbeddedState";
 import { Clock, ArrowRight } from "lucide-react";
+
+// État embarqué par le prerender (fix hydratation #418) — id aussi listé dans main.tsx.
+const EMBED_ID = "__latest_blog_data__";
 
 interface BlogPost {
   id: string;
@@ -26,9 +30,12 @@ const CL: Record<string, Record<string, string>> = {
 
 export function LatestBlogV7() {
   const { language } = useLanguage();
-  const [posts, setPosts] = useState<BlogPost[]>([]);
+  // Init synchrone depuis l'état embarqué : le premier rendu client est alors
+  // identique au snapshot prérendu (sinon posts=[] → section absente → mismatch).
+  const [posts, setPosts] = useState<BlogPost[]>(() => readEmbeddedArray<BlogPost>(EMBED_ID) ?? []);
 
   useEffect(() => {
+    if (readEmbeddedArray<BlogPost>(EMBED_ID) !== null) return; // déjà hydraté depuis le prerendu
     loadPosts();
   }, []);
 
@@ -125,6 +132,13 @@ export function LatestBlogV7() {
           </LocalizedLink>
         </div>
       </div>
+      {/* État embarqué pour l'hydratation sans fetch — capturé par le prerender,
+          relu par readEmbeddedArray() à l'init du state. */}
+      <script
+        type="application/json"
+        id={EMBED_ID}
+        dangerouslySetInnerHTML={{ __html: embedJson(posts) }}
+      />
     </section>
   );
 }
