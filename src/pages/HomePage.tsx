@@ -23,14 +23,16 @@ export function HomePage() {
 
   return (
     <main>
-      {/* Title/meta réécrits le 04/08/2026 (front A6 « coliving genève ») :
-          l'ancien snippet SERP servait le message anti-mega-coliving sans
-          offre ni prix — illisible à froid (capture Jérôme du 03/08).
+      {/* Titles rollbackés le 10/08/2026 : test A6 « prix dans le title »
+          ARRÊTÉ sur données CTR (0 clic / 15 impressions post-03/08 sur la
+          requête money « coliving geneve », CTR historique ~45 %). Le prix ne
+          doit PLUS apparaître dans un <title> — il reste en meta description
+          et dans le priceRange du schema.
           Contrainte : title + « | La Villa Coliving » ≤ 65 c. (règle B2). */}
       <SEO
         title={language === "en"
-          ? `Coliving & Flatshare Geneva from ${PRICE_CHF_EN}`
-          : `Coliving & Colocation Genève dès ${PRICE_CHF_FR}`}
+          ? "Premium Coliving & Shared Housing Near Geneva"
+          : "Colocation & Coliving Premium près de Genève"}
         description={language === "en"
           ? "3 houses on the Geneva border — not a 300-room residence. Pool. Sauna. Gym. Private 17-23 m² room, all inclusive, no application fee. Reply within 48h."
           : "3 maisons à la frontière de Genève — pas une résidence de 300 chambres. Piscine. Sauna. Salle de sport. Chambre privée 17-23 m² tout inclus, 0 frais de dossier."}
