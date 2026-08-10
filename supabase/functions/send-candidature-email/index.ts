@@ -1,4 +1,13 @@
 // Supabase Edge Function — send-candidature-email
+// v11 — 10/08/2026 — Formulaire 1 étape (sprint conversion S33)
+//   CHANGEMENTS vs v10 :
+//   1. `arrival` et `duration` ne sont PLUS requis (retirés du formulaire ;
+//      questions posées par Fanny à l'appel de qualification). La fonction reste
+//      RÉTROCOMPATIBLE : si l'ancien front les envoie, ils sont traités comme avant.
+//   2. Email admin : affiche « — » quand arrival/duration sont absents.
+//   ⚠️ Déployer cette v11 dans le dashboard Supabase AVANT de merger le front
+//      1 étape (la v10 renvoie 400 si arrival/duration manquent).
+//
 // Reçoit une soumission du formulaire de candidature et envoie :
 //   1. Une notification admin à jerome@lavillacoliving.com
 //   2. Un email d'auto-réponse personnalisé au candidat
@@ -49,8 +58,10 @@ function buildAdminEmail(data: Record<string, string>): string {
     ["Téléphone", data.phone],
     ["Date de naissance", data.birthDate || "—"],
     ["Poste", data.job || "—"],
-    ["Date d'arrivée souhaitée", data.arrival],
-    ["Durée du séjour", data.duration],
+    // v11 : arrival/duration retirés du formulaire 1 étape — affichés seulement
+    // si un (ancien) front les envoie encore. Fanny qualifie ces points à l'appel.
+    ["Date d'arrivée souhaitée", data.arrival || "—"],
+    ["Durée du séjour", data.duration || "—"],
     ["Comment a entendu parler", data.source || "—"],
     // Programme parrainage : le nom du parrain déclaré doit être visible dès la
     // notification, pour le rattachement par Fanny à la qualification.
@@ -266,7 +277,10 @@ Deno.serve(async (req: Request) => {
   }
 
   // Validation des champs obligatoires
-  const required = ["firstName", "lastName", "email", "phone", "arrival", "duration"];
+  // v11 : `arrival` et `duration` retirés des requis (formulaire 1 étape).
+  // Ces infos sont qualifiées par Fanny à l'appel. Rétrocompatible : si un
+  // ancien front les envoie, ils sont traités plus bas comme avant.
+  const required = ["firstName", "lastName", "email", "phone"];
   const missing = required.filter((k) => !data[k] || String(data[k]).trim().length === 0);
   if (missing.length > 0) {
     return new Response(JSON.stringify({ error: `Champs manquants : ${missing.join(", ")}` }), {
@@ -380,9 +394,10 @@ Deno.serve(async (req: Request) => {
     const sbUrl = Deno.env.get("SUPABASE_URL");
     const sbKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY");
     if (sbUrl && sbKey) {
-      // Date d'arrivée : le formulaire envoie une valeur RELATIVE (asap, 1-3-months…), pas une
-      // vraie date. La colonne move_in_date (type date) ne reçoit donc une valeur que si le champ
-      // est un vrai YYYY-MM-DD ; sinon elle reste null et le souhait est consigné dans `notes`.
+      // v11 : le formulaire 1 étape n'envoie plus arrival/duration. Les blocs
+      // ci-dessous restent pour la rétrocompatibilité (ancien front, tests) :
+      // avec des valeurs absentes, moveInDate = null, leaseDuration = null et
+      // aucune ligne correspondante dans `notes`.
       const arrivalRaw = (data.arrival ?? "").trim();
       const isIsoDate = /^\d{4}-\d{2}-\d{2}$/.test(arrivalRaw);
       const moveInDate = isIsoDate ? arrivalRaw : null;
@@ -403,9 +418,6 @@ Deno.serve(async (req: Request) => {
         "other": "Autre",
       };
       // Canal déclaré (select du formulaire) → valeur autorisée par prospects_source_check.
-      // Nécessite la migration qui ajoute article_blog + google à la contrainte
-      // (scripts/migration-prospects-source-article-blog.sql) ; en attendant, le retry
-      // plus bas retombe sur site_web — aucune candidature n'est perdue.
       const PROSPECT_SOURCE_MAP: Record<string, string> = {
         "google": "google",
         "instagram": "instagram",
@@ -416,8 +428,7 @@ Deno.serve(async (req: Request) => {
         "other": "autre",
       };
       // lease_duration est contraint (prospects_lease_duration_check) : seules 3_mois / 6_mois /
-      // 12_mois / flexible passent. Le formulaire envoie des fourchettes (2-3, 3-6, 6-12, 12+) →
-      // on mappe vers la valeur autorisée la plus proche, et on garde la fourchette exacte en `notes`.
+      // 12_mois / flexible passent. Mapping conservé pour rétrocompatibilité (v11).
       const LEASE_DURATION_MAP: Record<string, string> = {
         "2-3": "3_mois",
         "3-6": "6_mois",
@@ -440,18 +451,17 @@ Deno.serve(async (req: Request) => {
       if (arrivalRaw && !moveInDate) {
         notesParts.push(`Souhait d'arrivée : ${ARRIVAL_LABELS[arrivalRaw] ?? arrivalRaw}`);
       }
-      // Durée : on garde la fourchette exacte du formulaire (lease_duration ne stocke que le bucket mappé)
       if (durationRaw) notesParts.push(`Durée souhaitée : ${DURATION_LABELS[durationRaw] ?? durationRaw}`);
       // Attribution — deux couches (plan blog-conversion 07/07/2026) :
-      // 1) DÉCLARÉE : « Comment as-tu entendu parler ? » → prospects.source (mappée
-      //    vers une valeur de prospects_source_check) + libellé gardé en notes.
+      // 1) DÉCLARÉE : « Comment as-tu entendu parler ? » (optionnel depuis v11) →
+      //    prospects.source + libellé gardé en notes.
       // 2) OBSERVÉE : ?src=bloc_offre&article={slug} posé par les blocs offre du blog
-      //    (transmis par le formulaire en ref_src/ref_article) → notes, et sert de
-      //    fallback pour source si le candidat n'a rien déclaré. Le déclaré PRIME.
+      //    (transmis en ref_src/ref_article) → notes, et fallback pour source.
+      //    Le déclaré PRIME.
       const channel = (data.source ?? "").trim();
       if (channel) notesParts.push(`Canal déclaré : ${CHANNEL_LABELS[channel] ?? channel}`);
-      // Parrainage : nom du parrain tel que déclaré par le candidat, en clair dans
-      // les notes. La résolution vers un tenant_id est faite PAR FANNY au dashboard
+      // Parrainage : nom du parrain tel que déclaré, en clair dans les notes.
+      // La résolution vers un tenant_id est faite PAR FANNY au dashboard
       // (humain dans la boucle) — jamais automatiquement ici (homonymes, fautes).
       const referrerName = (data.referrerName ?? "").trim().slice(0, 80);
       if (referrerName) notesParts.push(`Parrain déclaré : ${referrerName}`);
@@ -477,10 +487,10 @@ Deno.serve(async (req: Request) => {
         last_name: data.lastName,
         email: data.email,
         phone: data.phone,
-        occupation: (data.job ?? "").trim() || null, // champ "Poste" (présent sur l'ancien form)
+        occupation: (data.job ?? "").trim() || null,
         move_in_date: moveInDate,
-        lease_duration: leaseDuration, // mappé vers une valeur autorisée (prospects_lease_duration_check)
-        source: prospectSource, // déclaré > observé > site_web (prospects_source_check)
+        lease_duration: leaseDuration,
+        source: prospectSource,
         status: "new",
         notes: notesParts.length > 0 ? notesParts.join("\n") : null,
       };
@@ -499,9 +509,8 @@ Deno.serve(async (req: Request) => {
 
       let insertRes = await insertProspect(prospect);
       if (!insertRes.ok && prospectSource !== "site_web") {
-        // Filet : si la contrainte prospects_source_check ne connaît pas encore la
-        // valeur (migration pas passée / rollback), on ne perd JAMAIS la candidature —
-        // on retombe sur site_web, le détail reste dans notes.
+        // Filet : si la contrainte prospects_source_check ne connaît pas la valeur,
+        // on ne perd JAMAIS la candidature — on retombe sur site_web, détail en notes.
         console.error("prospects insert rejected for source=" + prospectSource + ", retrying with site_web", insertRes.status, await insertRes.text().catch(() => ""));
         insertRes = await insertProspect({ ...prospect, source: "site_web" });
       }
