@@ -436,6 +436,54 @@ async function renderRoute(browser, route) {
     // Give React + react-helmet + Supabase fetches a moment to finish
     await new Promise(r => setTimeout(r, 3000));
 
+    // ── Fix hydratation React #418 (2026-08-10) — deux transformations DOM ──
+    // Le HTML servi est un snapshot Puppeteer du DOM client : il lui manque les
+    // annotations qu'un vrai SSR (renderToString/Fizz) émet et que hydrateRoot
+    // de React 19 EXIGE. Sans elles, chaque page prérendue jette l'erreur #418
+    // et re-rend tout le root côté client (CPU gaspillé, régressions masquées).
+    //
+    // 1. Marqueurs de frontière Suspense : React n'hydrate un <Suspense> que
+    //    s'il trouve <!--$-->…<!--/$--> autour de son contenu (« dehydrated
+    //    boundary »). Le shell d'App.tsx est stable :
+    //    <div>[header (NavbarV7), …page…, footer (FooterV7)]</div> — on encadre
+    //    tout ce qui sépare le header du footer. React hydrate alors le shell
+    //    immédiatement et le contenu quand le chunk lazy de la page arrive,
+    //    sans jamais détruire le DOM.
+    // 2. Séparateurs de nœuds texte : le JSX `© {année} La Villa` rend
+    //    plusieurs nœuds texte adjacents ; la sérialisation HTML les fusionne
+    //    en un seul, et l'hydratation compare alors « © » au texte fusionné →
+    //    mismatch. Le vrai SSR émet <!-- --> entre eux ; on fait pareil sur
+    //    chaque paire de nœuds texte adjacents sous #root (les commentaires
+    //    ordinaires sont ignorés par l'hydratation, zéro effet visuel).
+    const domAnnotations = await page.evaluate(() => {
+      const shell = document.querySelector('#root > div');
+      if (!shell) return { ok: false };
+      const header = shell.firstElementChild;
+      const footer = shell.lastElementChild;
+      if (!header || header.tagName !== 'HEADER' || !footer || footer.tagName !== 'FOOTER' || header === footer) return { ok: false };
+      shell.insertBefore(document.createComment('$'), header.nextSibling);
+      shell.insertBefore(document.createComment('/$'), footer);
+
+      const root = document.getElementById('root');
+      const walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT);
+      const needSeparator = [];
+      let node;
+      while ((node = walker.nextNode())) {
+        if (node.nextSibling && node.nextSibling.nodeType === Node.TEXT_NODE) needSeparator.push(node);
+      }
+      for (const textNode of needSeparator) {
+        textNode.parentNode.insertBefore(document.createComment(' '), textNode.nextSibling);
+      }
+      return { ok: true, separators: needSeparator.length };
+    });
+    // FAIL-FAST : sans marqueurs, la page repart en #418 silencieux. Si ce
+    // garde-fou casse, c'est que la forme du shell a changé dans App.tsx —
+    // adapter le bloc ci-dessus en connaissance de cause.
+    if (!domAnnotations.ok) {
+      console.error(`  ❌ ${route} → shell [header…footer] non reconnu, marqueurs Suspense non posés`);
+      return false;
+    }
+
     let html = await page.content();
 
     // B5: set <html lang> to match the route language (EN pages were defaulting to "fr")
@@ -662,11 +710,20 @@ async function main() {
   // Step 4: Clean up obsolete pre-rendered files
   await cleanupOldFiles(allRoutes);
 
-  // Step 5: Pre-render all pages
+  // Step 5: Pre-render all pages.
+  // Debug : PRERENDER_ONLY="/,/tarifs" limite le rendu à ces routes (itération
+  // rapide sur un fix). vercel.json/sitemap restent générés en entier, et
+  // cleanupOldFiles garde la liste complète — aucun fichier n'est supprimé.
+  const onlyFilter = process.env.PRERENDER_ONLY
+    ? new Set(process.env.PRERENDER_ONLY.split(',').map(s => s.trim()))
+    : null;
+  const routesToRender = onlyFilter ? allRoutes.filter(r => onlyFilter.has(r)) : allRoutes;
+  if (onlyFilter) console.log(`  ⚠️  PRERENDER_ONLY actif : ${routesToRender.length}/${allRoutes.length} routes rendues (dev only, ne pas committer un run partiel)\n`);
+
   const server = await startServer();
 
   const failedRoutes = [];
-  for (const route of allRoutes) {
+  for (const route of routesToRender) {
     const ok = await renderRoute(browser, route);
     if (!ok) failedRoutes.push(route);
   }
@@ -676,7 +733,7 @@ async function main() {
 
   // FAIL-FAST: a partial render must not be committed/deployed by the Action.
   if (failedRoutes.length > 0) {
-    console.error(`\n❌ ${failedRoutes.length}/${allRoutes.length} routes failed to render: ${failedRoutes.join(', ')}`);
+    console.error(`\n❌ ${failedRoutes.length}/${routesToRender.length} routes failed to render: ${failedRoutes.join(', ')}`);
     console.error('   Nothing committed — fix the issue and re-run.');
     process.exit(1);
   }

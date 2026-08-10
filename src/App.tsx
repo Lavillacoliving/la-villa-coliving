@@ -10,6 +10,8 @@ import { PortailLayout } from "@/pages/portail/PortailLayout";
 import { ScrollToTop } from "@/components/ScrollToTop";
 
 // ─── Lazy-loaded public pages (named exports) ──────────────
+// ⚠️ Nouvelle page PRÉRENDUE = l'ajouter aussi à src/lib/routePreload.ts
+// (préchargement avant hydratation — fix #418) et à scripts/prerender.mjs.
 const HomePage = lazy(() => import("@/pages/HomePage").then(m => ({ default: m.HomePage })));
 const ColivingPage = lazy(() => import("@/pages/ColivingPageV4").then(m => ({ default: m.ColivingPageV4 })));
 const ServicesPage = lazy(() => import("@/pages/ServicesPageV4").then(m => ({ default: m.ServicesPageV4 })));
