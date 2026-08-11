@@ -232,8 +232,17 @@ export function HousesPageV4() {
                   {/* Price + CTA */}
                   <div className="mt-auto pt-5 border-t border-[#E7E5E4]">
                     <div className="flex items-baseline gap-2 mb-4">
+                      {/* La Villa : 4 chambres sur 10 à salle d'eau partagée → plancher 1 390 */}
+                      {house.name === "La Villa" && (
+                        <span className="text-sm text-[#78716C]">
+                          {language === "en" ? "from" : "dès"}
+                        </span>
+                      )}
                       <span className="text-2xl font-light text-[#D4A574]">
-                        {house.price} CHF
+                        {house.name === "La Villa"
+                          ? (language === "en" ? PRICE_SHARED_EN_NUM : PRICE_SHARED_FR_NUM)
+                          : house.price}{" "}
+                        CHF
                       </span>
                       <span className="text-sm text-[#78716C]">
                         / {language === "en" ? "month" : "mois"}

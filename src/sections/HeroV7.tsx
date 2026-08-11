@@ -244,7 +244,7 @@ export function HeroV7() {
                 image: "/images/le loft glamour.webp",
                 title: language === "en" ? `${STATS.roomSizeMin}-${STATS.roomSizeMax} m² rooms` : `Chambres ${STATS.roomSizeMin}-${STATS.roomSizeMax} m²`,
                 desc: language === "en" ? "50% larger than coliving average" : "50% plus grandes que la moyenne",
-                highlight: language === "en" ? "Private bathroom" : "SDB privative",
+                highlight: language === "en" ? "Private bathroom (most)" : "SDB privative (la plupart)",
               },
             ].map((item, index) => (
               <div key={index} className="group relative aspect-[3/4] rounded-2xl overflow-hidden cursor-pointer">

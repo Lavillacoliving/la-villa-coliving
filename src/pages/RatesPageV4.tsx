@@ -7,7 +7,7 @@ import { SEO } from "@/components/SEO";
 import { FaqSection } from "@/components/FaqSection";
 import { tarifsFaq } from "@/data/faq/tarifsFaq";
 import { buildBreadcrumbSchema, buildRoomsAggregateOfferSchema } from "@/lib/structuredData";
-import { STATS, STATS_SHARED_BATH, PRICE_FR_NUM, PRICE_EN_NUM, PRICE_CHF_FR, PRICE_CHF_EN, PRICE_SHARED_EN_NUM, PRICE_SHARED_CHF_FR, PRICE_SHARED_CHF_EN, CONTRACT_EUR, EUR_STANDARD_FR_NUM, EUR_SHARED_FR_NUM, EUR_STANDARD_EN_NUM, EUR_SHARED_EN_NUM } from "@/data/stats";
+import { STATS, STATS_SHARED_BATH, PRICE_FR_NUM, PRICE_EN_NUM, PRICE_CHF_FR, PRICE_CHF_EN, PRICE_SHARED_FR_NUM, PRICE_SHARED_EN_NUM, PRICE_SHARED_CHF_FR, PRICE_SHARED_CHF_EN, CONTRACT_EUR, EUR_STANDARD_FR_NUM, EUR_SHARED_FR_NUM, EUR_STANDARD_EN_NUM, EUR_SHARED_EN_NUM } from "@/data/stats";
 
 export function RatesPageV4() {
   const { language } = useLanguage();
@@ -236,7 +236,7 @@ export function RatesPageV4() {
     {
       label: { fr: "Prix du m²", en: "Price per m²" },
       classic: { fr: "~25-45 €/m²", en: "~€25-45/m²" },
-      villa: { fr: "~35-40 €/m²", en: "~€35-40/m²" },
+      villa: { fr: "~37-42 €/m²", en: "~€37-42/m²" },
       studio: { fr: "~85-110 CHF/m² + charges", en: "~CHF 85-110/m² + utilities" },
       highlight: true,
     },
@@ -345,8 +345,8 @@ export function RatesPageV4() {
           </p>
           <p className="text-lg text-[#78716C]">
             {language === "en"
-              ? `At La Villa Coliving, a room costs ${PRICE_CHF_EN}/month, everything included: rent, utilities, fiber, cleaning three times a week, gym, pool, streaming. No application or agency fees — deposit of 2 months' rent (excluding utilities).`
-              : `À La Villa Coliving, une chambre coûte ${PRICE_CHF_FR}/mois, tout compris : loyer, charges, fibre, ménage 3x/semaine, salle de sport, piscine, streaming. Sans frais de dossier ni d'agence — caution de 2 mois de loyer (hors charges).`}
+              ? `At La Villa Coliving, a room costs ${PRICE_CHF_EN}/month all-inclusive (${PRICE_SHARED_CHF_EN} for rooms with a shared shower room): rent, utilities, fiber, cleaning three times a week, gym, pool, streaming. No application or agency fees — deposit of 2 months' rent (excluding utilities).`
+              : `À La Villa Coliving, une chambre coûte ${PRICE_CHF_FR}/mois tout compris (${PRICE_SHARED_CHF_FR} pour les chambres à salle d'eau partagée) : loyer, charges, fibre, ménage 3x/semaine, salle de sport, piscine, streaming. Sans frais de dossier ni d'agence — caution de 2 mois de loyer (hors charges).`}
           </p>
           <div className="mt-8 flex flex-wrap justify-center gap-2">
             {(language === "en"
@@ -364,8 +364,8 @@ export function RatesPageV4() {
           {/* Second niveau de tarif — 4 chambres à salle d'eau partagée (La Villa). Prix via stats.ts */}
           <p className="mt-6 max-w-2xl mx-auto text-sm md:text-base text-[#57534E] border border-[#D4A574]/40 bg-[#D4A574]/10 rounded-xl px-5 py-3">
             {language === "en"
-              ? `${PRICE_SHARED_CHF_EN}/month for the ${STATS_SHARED_BATH.rooms} rooms at ${STATS_SHARED_BATH.house} with a shower room shared between 2 rooms — cleaned by our housekeeping team, like the rest of the house.`
-              : `${PRICE_SHARED_CHF_FR}/mois pour les ${STATS_SHARED_BATH.rooms} chambres de ${STATS_SHARED_BATH.house} avec salle d'eau partagée entre 2 chambres — entretien assuré par notre équipe de ménage, comme le reste de la maison.`}
+              ? `${PRICE_SHARED_CHF_EN}/month at ${STATS_SHARED_BATH.house} — one bathroom for every 2 rooms. And a real perk: our team does the cleaning!`
+              : `${PRICE_SHARED_CHF_FR}/mois à ${STATS_SHARED_BATH.house} — une salle d'eau pour 2 chambres. Avec un avantage : son ménage est assuré par notre équipe !`}
           </p>
           {/* Mention contractuelle euro (prix maître depuis le 01/09/2026) — montants via CONTRACT_EUR */}
           <p className="mt-2 max-w-2xl mx-auto text-xs text-[#78716C]">
@@ -430,7 +430,7 @@ export function RatesPageV4() {
                       ? "Base rent (small studio)"
                       : "Loyer de base (petit studio)"}
                   </span>
-                  <span className="font-medium">1 600 CHF</span>
+                  <span className="font-medium">{language === "en" ? "CHF 1,600" : "1 600 CHF"}</span>
                 </div>
                 <div className="flex justify-between text-[#b3b2b2]">
                   <span className="flex items-center gap-2">
@@ -497,7 +497,7 @@ export function RatesPageV4() {
                     {language === "en" ? "Total monthly" : "Total mensuel"}
                   </span>
                   <span className="text-2xl font-medium text-[#d5d5d5]">
-                    2 245 CHF
+                    {language === "en" ? "CHF 2,245" : "2 245 CHF"}
                   </span>
                 </div>
               </div>
@@ -532,7 +532,7 @@ export function RatesPageV4() {
                       ? "Your room (furnished)"
                       : "Ta chambre (meublée)"}
                   </span>
-                  <span>{PRICE_CHF_FR}</span>
+                  <span>{language === "en" ? PRICE_CHF_EN : PRICE_CHF_FR}</span>
                 </div>
                 <div className="flex justify-between text-[#44403C]">
                   <span className="flex items-center gap-2">
@@ -638,7 +638,7 @@ export function RatesPageV4() {
                     {language === "en" ? "Total monthly" : "Total mensuel"}
                   </span>
                   <span className="text-3xl font-bold text-[#1C1917]">
-                    {PRICE_CHF_FR}
+                    {language === "en" ? PRICE_CHF_EN : PRICE_CHF_FR}
                   </span>
                 </div>
               </div>
@@ -1139,8 +1139,16 @@ export function RatesPageV4() {
                   </p>
 
                   <div className="mb-8">
+                    {/* La Villa : 4 chambres sur 10 à salle d'eau partagée → plancher 1 390 */}
+                    {house.name === "La Villa" && (
+                      <span className="text-[#78716C] mr-1">
+                        {language === "en" ? "from" : "dès"}
+                      </span>
+                    )}
                     <span className="text-4xl font-light text-[#D4A574]">
-                      {language === "en" ? PRICE_EN_NUM : PRICE_FR_NUM}
+                      {house.name === "La Villa"
+                        ? (language === "en" ? PRICE_SHARED_EN_NUM : PRICE_SHARED_FR_NUM)
+                        : (language === "en" ? PRICE_EN_NUM : PRICE_FR_NUM)}
                     </span>
                     <span className="text-[#78716C]">
                       {" "}
@@ -1303,8 +1311,8 @@ export function RatesPageV4() {
         <div className="container-custom max-w-3xl text-center">
           <p className="text-[#57534E] italic text-lg mb-2">
             {language === "en"
-              ? `\"I was paying 2,200 CHF for a tiny studio in Geneva. Here I pay ${PRICE_EN_NUM} CHF all-inclusive with pool, gym, and an amazing community.\"`
-              : `\"Je payais 2 200 CHF pour un petit studio à Genève. Ici je paie ${PRICE_CHF_FR} tout inclus avec piscine, gym et une communauté incroyable.\"`}
+              ? `\"I was paying CHF 2,200 for a tiny studio in Geneva. Here everything's included — pool, gym, and an amazing community.\"`
+              : `\"Je payais 2 200 CHF pour un petit studio à Genève. Ici, tout est inclus — piscine, gym et une communauté incroyable.\"`}
           </p>
           <p className="text-sm text-[#78716C] mb-6">
             — Marie L., {language === "en" ? "Consultant, cross-border worker" : "Consultante, frontalière"}

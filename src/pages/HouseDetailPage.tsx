@@ -1533,9 +1533,14 @@ export function HouseDetailPage() {
                 <ArrowRight className="w-5 h-5" />
               </LocalizedLink>
               <span className="text-sm font-semibold text-[#1C1917] bg-white/85 backdrop-blur px-4 py-2 rounded-full">
-                {language === "en"
-                  ? `All-inclusive: ${PRICE_CHF_EN}/month — no application fee`
-                  : `Tout inclus : ${PRICE_CHF_FR}/mois — 0 frais de dossier`}
+                {/* La Villa : 4 chambres sur 10 à salle d'eau partagée → plancher 1 390 */}
+                {id === "lavilla"
+                  ? (language === "en"
+                      ? `All-inclusive: from ${PRICE_SHARED_CHF_EN}/month — no application fee`
+                      : `Tout inclus : dès ${PRICE_SHARED_CHF_FR}/mois — 0 frais de dossier`)
+                  : (language === "en"
+                      ? `All-inclusive: ${PRICE_CHF_EN}/month — no application fee`
+                      : `Tout inclus : ${PRICE_CHF_FR}/mois — 0 frais de dossier`)}
               </span>
             </div>
           </div>
@@ -1640,11 +1645,17 @@ export function HouseDetailPage() {
               <div className="sticky top-24 space-y-6">
                 {/* Pricing Card */}
                 <div className="card-ultra p-8">
+                  {/* La Villa : plancher 1 390 (4 ch. sur 10 à salle d'eau partagée). Loft/Lodge : prix unique. */}
                   <p className="text-sm text-[#78716C] mb-2 font-bold">
-                    {language === "en" ? "Monthly rent" : "Loyer mensuel"}
+                    {id === "lavilla"
+                      ? (language === "en" ? "From" : "À partir de")
+                      : (language === "en" ? "Monthly rent" : "Loyer mensuel")}
                   </p>
                   <p className="text-4xl font-black text-[#D4A574] mb-2">
-                    {house.price} CHF
+                    {id === "lavilla"
+                      ? (language === "en" ? PRICE_SHARED_EN_NUM : PRICE_SHARED_FR_NUM)
+                      : house.price}{" "}
+                    CHF
                   </p>
                   <p className="text-[#78716C] mb-4 font-medium">
                     {t.houseDetail.perMonth}
@@ -1999,7 +2010,7 @@ export function HouseDetailPage() {
               { q: "Qui peut postuler pour vivre à La Villa ?", a: "Profil cible : frontaliers en CDI, jeunes professionnels, expatriés et résidents fiscaux français travaillant à Genève. Sélection sur dossier (justificatif de revenus, motivation, compatibilité avec la communauté). Pas de critère d'âge strict, mais la majorité des résidents ont entre 25 et 40 ans." },
               { q: "Où se trouve La Villa et à quelle distance de Genève ?", a: "La Villa se situe à Ville-la-Grand, côté France, à moins de 20 minutes porte-à-porte du centre de Genève (Léman Express) et 15 minutes en voiture. C'est l'une des trois maisons de coliving de La Villa Coliving, avec une piscine extérieure chauffée, 2 000 m² de jardin en bordure d'une réserve naturelle." },
               { q: "Combien de résidents vivent à La Villa ?", a: "La Villa accueille 10 résidents dans une maison de coliving à Ville-la-Grand, près de Genève. C'est une maison à taille humaine, pensée pour que les liens se créent naturellement, avec une chambre meublée privée pour chacun et de larges espaces communs." },
-              { q: "Quels équipements y a-t-il à La Villa ?", a: `La Villa, à Ville-la-Grand, dispose d'une piscine extérieure chauffée, d'un sauna infrarouge, d'une salle de sport, d'une salle de jeu, d'un espace home cinéma, de 2 000 m² de jardin et d'espaces communs design. Tout est inclus dans le loyer tout compris dès ${PRICE_SHARED_CHF_FR}/mois, comme dans les trois maisons de La Villa Coliving.` },
+              { q: "Quels équipements y a-t-il à La Villa ?", a: `La Villa, à Ville-la-Grand, dispose d'une piscine extérieure chauffée, d'un sauna infrarouge, d'une salle de sport, d'une salle de jeu, d'un espace home cinéma, de 2 000 m² de jardin et d'espaces communs design. Tout est inclus dans le loyer tout compris, dès ${PRICE_SHARED_CHF_FR}/mois à La Villa.` },
               { q: "La Villa est-elle bien reliée à Genève ?", a: "Oui. Depuis La Villa, la gare d'Annemasse est à moins de 10 min à pied et le Léman Express rejoint le centre de Genève en 9 min — moins de 20 minutes porte-à-porte. En voiture : 15 min. La maison combine ce bon accès avec un cadre verdoyant — 2 000 m² de jardin et une réserve naturelle — à 2 km de la frontière." },
             ],
             en: [
@@ -2011,7 +2022,7 @@ export function HouseDetailPage() {
               { q: "Who can apply to live at La Villa?", a: "Target profile: cross-border workers on CDI, young professionals, expatriates and French tax residents working in Geneva. Selection by application (income proof, motivation, fit with the community). No strict age limit, but most residents are 25-40 years old." },
               { q: "Where is La Villa and how far from Geneva?", a: "La Villa is in Ville-la-Grand, on the French side, under 20 minutes door-to-door from Geneva city center (Léman Express) and 15 minutes by car. It's one of the three La Villa Coliving houses, with a heated outdoor pool and 2,000 m² of garden bordering a nature reserve." },
               { q: "How many residents live at La Villa?", a: "La Villa hosts 10 residents in a coliving house in Ville-la-Grand, near Geneva. It's a human-scale house, designed so connections form naturally, with a private furnished room for each resident and large common areas." },
-              { q: "What amenities are there at La Villa?", a: `La Villa, in Ville-la-Grand, has a heated outdoor pool, an infrared sauna, a gym, a games room, a home cinema space, 2,000 m² of garden and designer common areas. Everything is included in the all-inclusive rent from ${PRICE_SHARED_CHF_EN}/month, as in all three La Villa Coliving houses.` },
+              { q: "What amenities are there at La Villa?", a: `La Villa, in Ville-la-Grand, has a heated outdoor pool, an infrared sauna, a gym, a games room, a home cinema space, 2,000 m² of garden and designer common areas. Everything is included in the all-inclusive rent, from ${PRICE_SHARED_CHF_EN}/month at La Villa.` },
               { q: "Is La Villa well connected to Geneva?", a: "Yes. From La Villa, Annemasse station is less than a 10-minute walk and the Léman Express reaches central Geneva in 9 minutes — under 20 minutes door-to-door. By car: 15 min. The house combines this good access with green surroundings — 2,000 m² of garden and a nature reserve — 2 km from the border." },
             ],
           },
