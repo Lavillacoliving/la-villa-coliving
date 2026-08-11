@@ -8,6 +8,7 @@ interface Expense {
   label_operation: string; category: string; subcategory: string|null;
   amount: number; reference: string|null; details: string|null;
   rapprochement_status?: string; matched_invoice_id?: string|null;
+  transaction_type: string; groupe: string;
 }
 
 function fmt(n:number) { return n.toLocaleString('fr-FR',{minimumFractionDigits:2,maximumFractionDigits:2})+' €'; }
@@ -39,21 +40,24 @@ export default function DashboardDepensesPage() {
     filtered = filtered.filter(e => e.label_simple.toLowerCase().includes(q) || e.category.toLowerCase().includes(q) || (e.details||'').toLowerCase().includes(q) || e.label_operation.toLowerCase().includes(q));
   }
 
-  const total = filtered.reduce((s,e)=>s+e.amount,0);
-  const lmpTotal = filtered.filter(e=>e.entity_code==='LMP').reduce((s,e)=>s+e.amount,0);
-  const sciTotal = filtered.filter(e=>e.entity_code==='SCI').reduce((s,e)=>s+e.amount,0);
-  const mbTotal = filtered.filter(e=>e.entity_code==='MB').reduce((s,e)=>s+e.amount,0);
-  const categories = [...new Set(filtered.map(e=>e.category))];
+  const depenses = filtered.filter(e=>e.transaction_type==='depense');
+  const horsDep = filtered.filter(e=>e.transaction_type!=='depense' && e.transaction_type!=='loyer');
+  const total = depenses.reduce((s,e)=>s+e.amount,0);
+  const lmpTotal = depenses.filter(e=>e.entity_code==='LMP').reduce((s,e)=>s+e.amount,0);
+  const sciTotal = depenses.filter(e=>e.entity_code==='SCI').reduce((s,e)=>s+e.amount,0);
+  const mbTotal = depenses.filter(e=>e.entity_code==='MB').reduce((s,e)=>s+e.amount,0);
+  const horsDepTotal = horsDep.reduce((s,e)=>s+e.amount,0);
+  const categories = [...new Set(depenses.map(e=>e.category))];
 
   // Category breakdown per entity
   const entitiesForBreakdown = entityFilter==='all' ? ['LMP','SCI','MB'] : [entityFilter];
   const breakdowns: {entity:string,label:string,cats:{name:string,total:number,count:number}[]}[] = [];
   entitiesForBreakdown.forEach(ec => {
-    const entData = filtered.filter(e=>e.entity_code===ec);
+    const entData = depenses.filter(e=>e.entity_code===ec);
     if (entData.length===0) return;
     const catMap: Record<string,{total:number,count:number}> = {};
-    entData.forEach(e => { if(!catMap[e.category]) catMap[e.category]={total:0,count:0}; catMap[e.category].total+=e.amount; catMap[e.category].count++; });
-    const sorted = Object.entries(catMap).sort((a,b)=>b[1].total-a[1].total).map(([n,d])=>({name:n,...d}));
+    entData.forEach(e => { const g=e.groupe||'8. Divers'; if(!catMap[g]) catMap[g]={total:0,count:0}; catMap[g].total+=e.amount; catMap[g].count++; });
+    const sorted = Object.entries(catMap).sort((a,b)=>a[0].localeCompare(b[0])).map(([n,d])=>({name:n.replace(/^\d+\.\s*/,''),...d}));
     const label = ec==='LMP'?'La Villa (LMP)':ec==='SCI'?'Sleep In (SCI)':'Mont-Blanc (NP)';
     breakdowns.push({entity:ec,label,cats:sorted});
   });
@@ -95,10 +99,11 @@ export default function DashboardDepensesPage() {
 
       {/* KPI Cards */}
       <div style={{display:'grid',gridTemplateColumns:'repeat(auto-fit,minmax(180px,1fr))',gap:'16px',marginBottom:'24px'}}>
-        <div style={S.card}><p style={S.label}>Total dépenses</p><p style={S.val}>{fmt(total)}</p><p style={S.sub}>{filtered.length} transaction{filtered.length>1?'s':''}</p></div>
-        <div style={S.card}><p style={S.label}>La Villa (LMP)</p><p style={S.val}>{fmt(lmpTotal)}</p><p style={S.sub}>{filtered.filter(e=>e.entity_code==='LMP').length} transaction{filtered.filter(e=>e.entity_code==='LMP').length>1?'s':''}</p></div>
-        <div style={S.card}><p style={S.label}>Sleep In (SCI)</p><p style={S.val}>{fmt(sciTotal)}</p><p style={S.sub}>{filtered.filter(e=>e.entity_code==='SCI').length} transaction{filtered.filter(e=>e.entity_code==='SCI').length>1?'s':''}</p></div>
-        <div style={S.card}><p style={S.label}>Mont-Blanc (NP)</p><p style={S.val}>{fmt(mbTotal)}</p><p style={S.sub}>{filtered.filter(e=>e.entity_code==='MB').length} transaction{filtered.filter(e=>e.entity_code==='MB').length>1?'s':''}</p></div>
+        <div style={S.card}><p style={S.label}>Total dépenses</p><p style={S.val}>{fmt(total)}</p><p style={S.sub}>{depenses.length} transaction{depenses.length>1?'s':''}</p></div>
+        <div style={S.card}><p style={S.label}>La Villa (LMP)</p><p style={S.val}>{fmt(lmpTotal)}</p><p style={S.sub}>{depenses.filter(e=>e.entity_code==='LMP').length} transaction{depenses.filter(e=>e.entity_code==='LMP').length>1?'s':''}</p></div>
+        <div style={S.card}><p style={S.label}>Sleep In (SCI)</p><p style={S.val}>{fmt(sciTotal)}</p><p style={S.sub}>{depenses.filter(e=>e.entity_code==='SCI').length} transaction{depenses.filter(e=>e.entity_code==='SCI').length>1?'s':''}</p></div>
+        <div style={S.card}><p style={S.label}>Mont-Blanc (NP)</p><p style={S.val}>{fmt(mbTotal)}</p><p style={S.sub}>{depenses.filter(e=>e.entity_code==='MB').length} transaction{depenses.filter(e=>e.entity_code==='MB').length>1?'s':''}</p></div>
+        <div style={S.card}><p style={S.label}>Hors dépenses</p><p style={{...S.val,fontSize:'22px',color:'#888'}}>{fmt(horsDepTotal)}</p><p style={S.sub}>cautions, transferts, prélèvements</p></div>
         <div style={S.card}><p style={S.label}>Catégories</p><p style={S.val}>{categories.length}</p><p style={S.sub}>catégories distinctes</p></div>
       </div>
 
@@ -109,7 +114,7 @@ export default function DashboardDepensesPage() {
             <div key={bd.entity} style={S.card}>
               <h3 style={{margin:'0 0 12px',fontSize:'16px',color:'#1a1a2e'}}>{bd.label}</h3>
               {bd.cats.map(cat => {
-                const maxCat = bd.cats[0]?.total || 1;
+                const maxCat = Math.max(...bd.cats.map(c=>c.total)) || 1;
                 const pct = Math.round((cat.total/maxCat)*100);
                 return (
                   <div key={cat.name}>
@@ -124,6 +129,16 @@ export default function DashboardDepensesPage() {
                 );
               })}
             </div>
+          ))}
+        </div>
+      )}
+
+      {/* Hors dépenses */}
+      {horsDep.length > 0 && (
+        <div style={{...S.card,marginBottom:'24px'}}>
+          <h3 style={{margin:'0 0 12px',fontSize:'16px',color:'#1a1a2e'}}>Hors dépenses (neutre pour la marge)</h3>
+          {Object.entries(horsDep.reduce((m:Record<string,number>,e)=>{const g=e.groupe||e.transaction_type;m[g]=(m[g]||0)+e.amount;return m;},{})).map(([g,t])=>(
+            <div key={g} style={{display:'flex',justifyContent:'space-between',padding:'4px 0',fontSize:'14px',color:'#666'}}><span>{g}</span><strong>{fmt(t)}</strong></div>
           ))}
         </div>
       )}
