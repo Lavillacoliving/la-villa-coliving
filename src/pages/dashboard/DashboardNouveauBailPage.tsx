@@ -518,7 +518,12 @@ function generateContractHTML(data: ContractData): string {
             <li>Gestion des départs : à vous de rencontrer notre sélection de nouveaux candidats et de les sélectionner</li>
           </ul>
 
-          <h3>ENTRETIEN</h3>
+          <h3>PRESTATION OPTIONNELLE — FACTURÉE À PART</h3>
+        <ul>
+          <li>Ménage de la chambre privée : sur demande uniquement. Facturé séparément du loyer et du forfait de charges, à un tarif communiqué à l’avance, sans engagement et interruptible à tout moment. Cette prestation ne conditionne pas la location.</li>
+        </ul>
+
+        <h3>ENTRETIEN</h3>
           <p>Entretien des parties communes intérieures et extérieures : réparation et entretien et remplacement des éléments défectueux des parties communes de la maison. Entretien des extérieurs et de la piscine. Ménage effectué trois fois par semaine pour que les espaces communs brillent !</p>
           <p style="font-weight:600;font-size:10px;">PARTIES COMMUNES INTÉRIEURES</p>
           <p style="margin-left:20px;">Fourniture de produits d'entretien (balais et sacs nécessaires à l'élimination des déchets) et de produits de désinsectisation et désinfection<br/>

@@ -466,6 +466,8 @@ export function BailPDF({ data }: { data: BailPDFData }) {
             <Bullet>{"Fournitures de base : 1 panier de base livr\u00E9 chaque mois pour la communaut\u00E9 (papier toilette, Essuie-tout, lessive, produits d\u2019entretiens, ..) en fonction de votre demande"}</Bullet>
             <Bullet>{"Gestion des d\u00E9parts : \u00E0 vous de rencontrer notre s\u00E9lection de nouveaux candidats et de les s\u00E9lectionner"}</Bullet>
 
+            <Text style={[s.subTitle, { fontSize: 9, marginTop: 8 }]}>{"PRESTATION OPTIONNELLE \u2014 FACTUR\u00C9E \u00C0 PART"}</Text>
+            <Bullet>{"M\u00E9nage de la chambre priv\u00E9e : sur demande uniquement. Factur\u00E9 s\u00E9par\u00E9ment du loyer et du forfait de charges, \u00E0 un tarif communiqu\u00E9 \u00E0 l\u2019avance, sans engagement et interruptible \u00E0 tout moment. Cette prestation ne conditionne pas la location."}</Bullet>
             <Text style={[s.subTitle, { fontSize: 9, marginTop: 8 }]}>{"ENTRETIEN"}</Text>
             <Text style={[s.body, { fontSize: 9 }]}>
               {"Entretien des parties communes int\u00E9rieures et ext\u00E9rieures : r\u00E9paration et entretien et remplacement des \u00E9l\u00E9ments d\u00E9fectueux des parties communes de la maison. Entretien des ext\u00E9rieurs et de la piscine. M\u00E9nage effectu\u00E9 trois fois par semaine pour que les espaces communs brillent !"}
