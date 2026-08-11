@@ -23,7 +23,8 @@ export default function DashboardDepensesPage() {
   const [entityFilter, setEntityFilter] = useState('all');
   const [search, setSearch] = useState('');
   const [groupFilter, setGroupFilter] = useState<string|null>(null);
-  const [revenus, setRevenus] = useState<{entity_code:string,total_loyers:number}[]>([]);
+  const [revFilter, setRevFilter] = useState<string|null>(null);
+  const [revenus, setRevenus] = useState<{transaction_id:string,entity_code:string,accounting_date:string,label_simple:string,locataire:string|null,amount:number}[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -37,6 +38,7 @@ export default function DashboardDepensesPage() {
     };
     load();
     setGroupFilter(null);
+    setRevFilter(null);
   },[month]);
 
   let filtered = entityFilter==='all' ? expenses : expenses.filter(e=>e.entity_code===entityFilter);
@@ -56,10 +58,11 @@ export default function DashboardDepensesPage() {
 
   // Revenus (loyers encaissés)
   const revByEntity: Record<string,number> = {};
-  revenus.forEach(r=>{revByEntity[r.entity_code]=(revByEntity[r.entity_code]||0)+Number(r.total_loyers||0);});
+  revenus.forEach(r=>{revByEntity[r.entity_code]=(revByEntity[r.entity_code]||0)+Number(r.amount||0);});
   const revTotal = entityFilter==='all' ? Object.values(revByEntity).reduce((s,v)=>s+v,0) : (revByEntity[entityFilter]||0);
   const marge = revTotal - total;
-  const tableRows = groupFilter ? filtered.filter(e=>(e.groupe||'8. Divers')===groupFilter) : filtered;
+  const revRows = revFilter ? revenus.filter(r=>revFilter==='all'||r.entity_code===revFilter).sort((a,b)=>(b.accounting_date||'').localeCompare(a.accounting_date||'')) : [];
+  const tableRows = groupFilter ? filtered.filter(e=>(e.groupe||'10. Divers')===groupFilter) : filtered;
 
   // Category breakdown per entity
   const entitiesForBreakdown = entityFilter==='all' ? ['LMP','SCI','MB'] : [entityFilter];
@@ -68,7 +71,7 @@ export default function DashboardDepensesPage() {
     const entData = depenses.filter(e=>e.entity_code===ec);
     if (entData.length===0) return;
     const catMap: Record<string,{total:number,count:number}> = {};
-    entData.forEach(e => { const g=e.groupe||'8. Divers'; if(!catMap[g]) catMap[g]={total:0,count:0}; catMap[g].total+=e.amount; catMap[g].count++; });
+    entData.forEach(e => { const g=e.groupe||'10. Divers'; if(!catMap[g]) catMap[g]={total:0,count:0}; catMap[g].total+=e.amount; catMap[g].count++; });
     const sorted = Object.entries(catMap).sort((a,b)=>a[0].localeCompare(b[0])).map(([n,d])=>({key:n,name:n.replace(/^\d+\.\s*/,''),...d}));
     const label = ec==='LMP'?'La Villa (LMP)':ec==='SCI'?'Sleep In (SCI)':'Mont-Blanc (NP)';
     breakdowns.push({entity:ec,label,cats:sorted});
@@ -121,12 +124,49 @@ export default function DashboardDepensesPage() {
 
       {/* Revenus & marge */}
       <div style={{display:'grid',gridTemplateColumns:'repeat(auto-fit,minmax(180px,1fr))',gap:'16px',marginBottom:'24px'}}>
-        <div style={{...S.card,borderLeft:'4px solid #16a34a'}}><p style={S.label}>Revenus loyers</p><p style={{...S.val,color:'#16a34a'}}>{fmt(revTotal)}</p><p style={S.sub}>encaissés ce mois</p></div>
-        {entityFilter==='all' && <div style={S.card}><p style={S.label}>La Villa (LMP)</p><p style={{...S.val,fontSize:'22px',color:'#16a34a'}}>{fmt(revByEntity['LMP']||0)}</p><p style={S.sub}>loyers</p></div>}
-        {entityFilter==='all' && <div style={S.card}><p style={S.label}>Sleep In (SCI)</p><p style={{...S.val,fontSize:'22px',color:'#16a34a'}}>{fmt(revByEntity['SCI']||0)}</p><p style={S.sub}>loyers</p></div>}
-        {entityFilter==='all' && <div style={S.card}><p style={S.label}>Mont-Blanc (NP)</p><p style={{...S.val,fontSize:'22px',color:'#16a34a'}}>{fmt(revByEntity['MB']||0)}</p><p style={S.sub}>loyers</p></div>}
+        <div onClick={()=>setRevFilter(revFilter==='all'?null:'all')} title="Cliquer pour voir les loyers reçus"
+          style={{...S.card,borderLeft:'4px solid #16a34a',cursor:'pointer',outline:revFilter==='all'?'2px solid #16a34a':'none'}}>
+          <p style={S.label}>Revenus loyers</p><p style={{...S.val,color:'#16a34a'}}>{fmt(revTotal)}</p><p style={S.sub}>encaissés ce mois</p></div>
+        {entityFilter==='all' && ['LMP','SCI','MB'].map(ec=>(
+          <div key={ec} onClick={()=>setRevFilter(revFilter===ec?null:ec)} title="Cliquer pour voir les loyers reçus"
+            style={{...S.card,cursor:'pointer',outline:revFilter===ec?'2px solid #16a34a':'none'}}>
+            <p style={S.label}>{ec==='LMP'?'La Villa (LMP)':ec==='SCI'?'Sleep In (SCI)':'Mont-Blanc (NP)'}</p>
+            <p style={{...S.val,fontSize:'22px',color:'#16a34a'}}>{fmt(revByEntity[ec]||0)}</p><p style={S.sub}>loyers</p></div>
+        ))}
         <div style={{...S.card,borderLeft:`4px solid ${marge>=0?'#16a34a':'#ef4444'}`}}><p style={S.label}>Marge du mois</p><p style={{...S.val,color:marge>=0?'#16a34a':'#ef4444'}}>{fmt(marge)}</p><p style={S.sub}>revenus − dépenses</p></div>
       </div>
+
+      {/* Loyers reçus (au clic sur une carte revenus) */}
+      {revFilter && (
+        <div style={{...S.card,padding:0,overflow:'auto',marginBottom:'24px',border:'1px solid #bbf7d0'}}>
+          <div style={{display:'flex',justifyContent:'space-between',alignItems:'center',padding:'14px 16px'}}>
+            <h3 style={{margin:0,fontSize:'16px',color:'#166534'}}>Loyers reçus — {revFilter==='all'?'toutes entités':revFilter==='LMP'?'La Villa (LMP)':revFilter==='SCI'?'Sleep In (SCI)':'Mont-Blanc (NP)'} ({revRows.length})</h3>
+            <button onClick={()=>setRevFilter(null)} style={{background:'none',border:'none',cursor:'pointer',fontSize:'16px',color:'#166534'}}>✕</button>
+          </div>
+          <table style={{width:'100%',borderCollapse:'collapse',fontSize:'14px'}}>
+            <thead><tr style={{background:'#f0fdf4',borderBottom:'2px solid #bbf7d0'}}>
+              {['Date','Libellé','Locataire','Entité','Montant'].map(h=>(
+                <th key={h} style={{padding:'10px 16px',textAlign:h==='Montant'?'right':'left',fontWeight:600,color:'#166534',fontSize:'12px',textTransform:'uppercase'}}>{h}</th>
+              ))}
+            </tr></thead>
+            <tbody>
+              {revRows.map(r=>{
+                const badge = ENTITY_BADGES[r.entity_code]||{bg:'#e5e7eb',color:'#555'};
+                return (
+                  <tr key={r.transaction_id} style={{borderBottom:'1px solid #f0f0f0'}}>
+                    <td style={{padding:'8px 16px',color:'#888'}}>{r.accounting_date?new Date(r.accounting_date).toLocaleDateString('fr-FR'):'—'}</td>
+                    <td style={{padding:'8px 16px'}}>{(r.label_simple||'').split('\n')[0].slice(0,60)}</td>
+                    <td style={{padding:'8px 16px',fontWeight:600}}>{r.locataire||'—'}</td>
+                    <td style={{padding:'8px 16px'}}><span style={{background:badge.bg,color:badge.color,padding:'2px 8px',borderRadius:'4px',fontSize:'12px',fontWeight:500}}>{r.entity_code}</span></td>
+                    <td style={{padding:'8px 16px',textAlign:'right',fontWeight:700,color:'#16a34a'}}>{fmt(r.amount)}</td>
+                  </tr>
+                );
+              })}
+              {revRows.length===0 && <tr><td colSpan={5} style={{padding:'30px',textAlign:'center',color:'#888'}}>Aucun loyer reçu</td></tr>}
+            </tbody>
+          </table>
+        </div>
+      )}
 
       {/* Category breakdown panels */}
       {breakdowns.length > 0 && (
