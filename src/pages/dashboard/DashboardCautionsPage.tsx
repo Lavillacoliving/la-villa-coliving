@@ -53,6 +53,8 @@ function computeStatus(t: Tenant): DepositStatus {
   if (!t.deposit_amount || t.deposit_amount <= 0) return 'en_attente';
   // Caution restituée en totalité
   if (t.deposit_refunded_date && t.deposit_refunded_amount && t.deposit_refunded_amount >= t.deposit_amount) return 'restituee';
+  // Retenue intégrale : date de restitution renseignée avec 0 € restitué → dossier clos
+  if (t.deposit_refunded_date && !(Number(t.deposit_refunded_amount) > 0)) return 'restituee';
   // Caution partiellement restituée
   if (t.deposit_refunded_amount && t.deposit_refunded_amount > 0 && t.deposit_refunded_amount < t.deposit_amount) return 'partielle';
   // Locataire parti → caution à restituer
