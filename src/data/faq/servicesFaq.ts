@@ -6,7 +6,7 @@ export const servicesFaq: { fr: QAPair[]; en: QAPair[] } = {
   fr: [
     {
       q: "Quels services sont inclus dans le loyer chez La Villa ?",
-      a: `Chez La Villa Coliving, une vingtaine de services sont inclus dans un loyer unique dès ${PRICE_SHARED_CHF_FR}/mois : charges, internet fibre jusqu'à 8 Gb/s, ménage des communs deux fois par semaine, piscine, sauna, salle de sport, cours de yoga et fitness, streaming, événements communautaires et livraison d'essentiels mensuels.`,
+      a: `Chez La Villa Coliving, une vingtaine de services sont inclus dans un loyer unique dès ${PRICE_SHARED_CHF_FR}/mois : charges, internet fibre jusqu'à 8 Gb/s, ménage des communs trois fois par semaine, piscine, sauna, salle de sport, cours de yoga et fitness, streaming, événements communautaires et livraison d'essentiels mensuels.`,
     },
     {
       q: "Les cours de yoga et de fitness sont-ils vraiment inclus ?",
@@ -18,7 +18,7 @@ export const servicesFaq: { fr: QAPair[]; en: QAPair[] } = {
     },
     {
       q: "À quelle fréquence le ménage est-il assuré ?",
-      a: "Chez La Villa Coliving, les parties communes sont nettoyées deux fois par semaine, ménage inclus dans ton loyer. L'entretien de la piscine, du jardin et les réparations sont également pris en charge.",
+      a: "Chez La Villa Coliving, les parties communes sont nettoyées trois fois par semaine, ménage inclus dans ton loyer. L'entretien de la piscine, du jardin et les réparations sont également pris en charge.",
     },
     {
       q: "La nourriture est-elle incluse dans le loyer ?",
@@ -28,7 +28,7 @@ export const servicesFaq: { fr: QAPair[]; en: QAPair[] } = {
   en: [
     {
       q: "What services are included in the rent at La Villa?",
-      a: `At La Villa Coliving, around twenty services are included in a single rent from ${PRICE_SHARED_CHF_EN}/month: utilities, fibre internet up to 8 Gb/s, cleaning of common areas twice a week, pool, sauna, gym, yoga and fitness classes, streaming, community events and monthly delivery of essentials.`,
+      a: `At La Villa Coliving, around twenty services are included in a single rent from ${PRICE_SHARED_CHF_EN}/month: utilities, fibre internet up to 8 Gb/s, cleaning of common areas three times a week, pool, sauna, gym, yoga and fitness classes, streaming, community events and monthly delivery of essentials.`,
     },
     {
       q: "Are the yoga and fitness classes really included?",
@@ -40,7 +40,7 @@ export const servicesFaq: { fr: QAPair[]; en: QAPair[] } = {
     },
     {
       q: "How often is cleaning done?",
-      a: "At La Villa Coliving, common areas are cleaned twice a week, cleaning included in your rent. Pool and garden upkeep and repairs are also taken care of.",
+      a: "At La Villa Coliving, common areas are cleaned three times a week, cleaning included in your rent. Pool and garden upkeep and repairs are also taken care of.",
     },
     {
       q: "Is food included in the rent?",

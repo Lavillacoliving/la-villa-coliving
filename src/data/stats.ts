@@ -17,9 +17,14 @@ export const STATS = {
   noticePeriodMonths: 1,
   roomSizeMin: 17,
   roomSizeMax: 23,
-  cleaningPerWeek: 2,
+  cleaningPerWeek: 3, // 3×/semaine dans les 3 maisons depuis le 01/09/2026 (vote des résidents).
+  // ⚠️ Constante NON consommée : toutes les mentions de fréquence sont des littéraux en dur
+  // dans les pages. La brancher partout est un chantier de septembre (cf. table `services`).
   fiberSpeed: "8 Gb/s",
-  includedItems: 20,
+  // Nombre de services affichés dans la grille « Ce Qui Est Vraiment Inclus » de /tarifs.
+  // ⚠️ Maintenu à la main jusqu'à la mise en base (septembre) : doit TOUJOURS égaler le nombre
+  // d'items réellement listés sur /tarifs (24 depuis le retrait du panier repas au 01/09/2026).
+  includedItems: 24,
   rating: "4,9", // note interne ; graphie virgule en FR, point en EN (cf. ratingDisplay)
 } as const;
 

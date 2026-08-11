@@ -53,6 +53,7 @@ const STATIC_ROUTES_FR = [
   '/investisseurs',
   '/observatoire-logement-frontalier-geneve',
   '/qui-sommes-nous',
+  '/charte-transparence',
   '/mentions-legales',
   '/politique-de-confidentialite',
 ];

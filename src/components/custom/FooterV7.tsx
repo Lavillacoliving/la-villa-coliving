@@ -46,6 +46,10 @@ export function FooterV7() {
       path: "/investisseurs",
       label: language === "en" ? "Investors" : "Investisseurs",
     },
+    {
+      path: "/charte-transparence",
+      label: language === "en" ? "Transparency charter" : "Charte de transparence",
+    },
   ];
 
   return (

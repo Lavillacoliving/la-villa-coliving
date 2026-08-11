@@ -22,7 +22,7 @@ import { PRICE_CHF_FR, PRICE_CHF_EN, PRICE_SHARED_CHF_FR, PRICE_SHARED_CHF_EN } 
 const annemasseFAQ = [
   {
     q: "Combien coûte une colocation à Annemasse chez La Villa Coliving ?",
-    a: `Nos chambres privatives à Annemasse Agglo (Ville-la-Grand, Ambilly, Annemasse) sont à partir de ${PRICE_SHARED_CHF_FR}/mois tout inclus. Le prix comprend le loyer, les charges (eau, électricité, chauffage), la fibre jusqu'à 8 Gb/s, le ménage 2 fois par semaine des communs, l'accès à la piscine chauffée, à la salle de sport et au sauna, les cours de yoga et fitness privés hebdomadaires, et les événements communautaires mensuels. Pas de frais d'agence, pas de frais de dossier.`,
+    a: `Nos chambres privatives à Annemasse Agglo (Ville-la-Grand, Ambilly, Annemasse) sont à partir de ${PRICE_SHARED_CHF_FR}/mois tout inclus. Le prix comprend le loyer, les charges (eau, électricité, chauffage), la fibre jusqu'à 8 Gb/s, le ménage 3 fois par semaine des communs, l'accès à la piscine chauffée, à la salle de sport et au sauna, les cours de yoga et fitness privés hebdomadaires, et les événements communautaires mensuels. Pas de frais d'agence, pas de frais de dossier.`,
   },
   {
     q: "Combien de temps pour aller à Genève depuis Annemasse ?",
@@ -42,7 +42,7 @@ const annemasseFAQ = [
   },
   {
     q: "Quelle différence entre colocation classique et coliving à Annemasse ?",
-    a: "Une colocation classique implique généralement de gérer soi-même les charges (électricité, eau, internet), le ménage, l'entretien, et de meubler sa chambre. Notre coliving à Annemasse inclut tout dans un seul loyer : charges, fibre, ménage 2x/semaine, mobilier design, accès aux espaces premium (piscine, gym, sauna), événements communautaires. Le prix au mètre carré reste cohérent avec une colocation classique haut de gamme à Annemasse, mais sans aucune mauvaise surprise.",
+    a: "Une colocation classique implique généralement de gérer soi-même les charges (électricité, eau, internet), le ménage, l'entretien, et de meubler sa chambre. Notre coliving à Annemasse inclut tout dans un seul loyer : charges, fibre, ménage 3x/semaine, mobilier design, accès aux espaces premium (piscine, gym, sauna), événements communautaires. Le prix au mètre carré reste cohérent avec une colocation classique haut de gamme à Annemasse, mais sans aucune mauvaise surprise.",
   },
   {
     q: "Comment réserver une chambre à Annemasse ?",
@@ -323,7 +323,7 @@ export function AnnemasseColocationPage() {
                   "Furnished private room with quality bed and ergonomic desk",
                   "All utilities (water, electricity, heating)",
                   "fiber internet up to 8 Gb/s",
-                  "Twice-weekly cleaning of common areas",
+                  "Cleaning of common areas three times a week",
                   "Heated pool, sauna and gym access",
                   "Private weekly yoga and fitness classes",
                   "Streaming subscriptions (Netflix, Canal+, etc.)",
@@ -335,11 +335,11 @@ export function AnnemasseColocationPage() {
                   "Chambre privée meublée avec lit qualité et bureau ergonomique",
                   "Toutes charges (eau, électricité, chauffage)",
                   "Internet fibre jusqu'à 8 Gb/s",
-                  "Ménage 2 fois par semaine des espaces communs",
+                  "Ménage 3 fois par semaine des espaces communs",
                   "Accès piscine chauffée, sauna et salle de sport",
                   "Cours privés de yoga et fitness hebdomadaires",
                   "Abonnements streaming (Netflix, Canal+, etc.)",
-                  "Panier repas mensuel et pizza party",
+                  "Dîner communautaire mensuel et pizza party",
                   "Entretien piscine, jardin et propriété",
                   "Parure de linge et serviettes fournies",
                 ]

@@ -169,8 +169,9 @@ Ménage (Bouameur)
         content: `Planning d'entretien
 
 Ménage régulier (Société Bouameur)
-• Jeudi : nettoyage léger (aspirateur communs, sanitaires)
-• Lundi : nettoyage approfondi (sols, cuisines, salles de bain)
+• Nettoyage léger (aspirateur communs, sanitaires)
+• Nettoyage approfondi (sols, cuisines, salles de bain)
+• 3 passages par semaine — planning affiché en cuisine
 
 Deep clean bimestriel
 • Un nettoyage complet tous les 2 mois (inclus vitres, sous meubles, etc.)
@@ -327,8 +328,9 @@ Cleaning (Bouameur)
         content: `Cleaning Schedule
 
 Regular cleaning (Bouameur Company)
-• Thursday: light cleaning (vacuuming common areas, bathrooms)
-• Monday: deep cleaning (floors, kitchens, bathrooms)
+• Light cleaning (vacuuming common areas, bathrooms)
+• Deep cleaning (floors, kitchens, bathrooms)
+• 3 visits per week — schedule posted in the kitchen
 
 Bi-monthly deep clean
 • A thorough cleaning every 2 months (includes windows, under furniture, etc.)
@@ -395,7 +397,7 @@ Pompiers : 18 | SAMU : 15 | Police : 17 | 112` },
 Urgence maintenance : WhatsApp Fanny
 Jérôme (Propriétaire) : jerome@lavillacoliving.com (admin uniquement)
 Ménage : planning en cuisine, passer par Fanny` },
-      { section: 'cleaning', content: `Jeudi : nettoyage léger | Lundi : nettoyage approfondi
+      { section: 'cleaning', content: `Ménage 3×/semaine : nettoyage léger + nettoyage approfondi
 Deep clean bimestriel (voir planning cuisine)
 Piscine : entretien hebdomadaire | Jardin : tonte bimensuelle` },
     ],
@@ -439,7 +441,7 @@ Firefighters: 18 | Ambulance: 15 | Police: 17 | 112` },
 Emergency maintenance: WhatsApp Fanny
 Jérôme (Owner): jerome@lavillacoliving.com (admin only)
 Cleaning: schedule in kitchen, contact via Fanny` },
-      { section: 'cleaning', content: `Thursday: light cleaning | Monday: deep cleaning
+      { section: 'cleaning', content: `Cleaning 3×/week: light + deep cleaning
 Bi-monthly deep clean (see kitchen schedule)
 Pool: weekly | Garden: bi-monthly` },
     ],
@@ -505,7 +507,7 @@ Pompiers : 18 | SAMU : 15 | Police : 17 | 112` },
 Urgence maintenance : WhatsApp Fanny
 Jérôme : jerome@lavillacoliving.com (admin uniquement)
 Ménage : planning affiché, passer par Fanny` },
-      { section: 'cleaning', content: `Jeudi : nettoyage léger | Lundi : nettoyage approfondi
+      { section: 'cleaning', content: `Ménage 3×/semaine : nettoyage léger + nettoyage approfondi
 Deep clean bimestriel
 Piscine : entretien quotidien (automatique) + hebdomadaire (prestataire)
 Parties communes : nettoyage quotidien` },
@@ -552,7 +554,7 @@ Firefighters: 18 | Ambulance: 15 | Police: 17 | 112` },
 Emergency: WhatsApp Fanny
 Jérôme (Owner): jerome@lavillacoliving.com (admin only)
 Cleaning: schedule posted, contact via Fanny` },
-      { section: 'cleaning', content: `Thursday: light cleaning | Monday: deep cleaning
+      { section: 'cleaning', content: `Cleaning 3×/week: light + deep cleaning
 Bi-monthly deep clean
 Pool: daily automated + weekly professional
 Common areas: daily cleaning` },

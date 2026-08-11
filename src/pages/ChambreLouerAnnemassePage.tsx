@@ -22,7 +22,7 @@ import { PRICE_FR_NUM, PRICE_CHF_FR, PRICE_CHF_EN, PRICE_SHARED_FR_NUM, PRICE_SH
 const chambreFAQ = [
   {
     q: "Quel est le prix d'une chambre meublée à Annemasse chez La Villa Coliving ?",
-    a: `Nos chambres meublées à Annemasse Agglo sont à partir de ${PRICE_SHARED_CHF_FR}/mois tout inclus (loyer + charges + fibre + ménage 2x/semaine + accès piscine/sauna/gym + cours fitness privés + abonnements streaming). Pas de frais d'agence, pas de frais de dossier, caution équivalente à 2 mois de loyer hors charges (restituée sous 30 jours après l'état des lieux).`,
+    a: `Nos chambres meublées à Annemasse Agglo sont à partir de ${PRICE_SHARED_CHF_FR}/mois tout inclus (loyer + charges + fibre + ménage 3x/semaine + accès piscine/sauna/gym + cours fitness privés + abonnements streaming). Pas de frais d'agence, pas de frais de dossier, caution équivalente à 2 mois de loyer hors charges (restituée sous 30 jours après l'état des lieux).`,
   },
   {
     q: "Tes chambres à louer à Annemasse sont-elles vraiment meublées ?",
@@ -94,8 +94,8 @@ export function ChambreLouerAnnemassePage() {
           </h1>
           <p className="text-lg md:text-xl text-[#57534E] max-w-3xl mx-auto leading-relaxed mb-10 font-medium">
             {language === "en"
-              ? `29 furnished rooms across 3 design houses in Annemasse Agglo, from ${PRICE_SHARED_CHF_EN}/month all-inclusive. Renting a room made simpler than a furnished studio: bed, desk, fiber, utilities, weekly cleaning, pool & gym included — move in with just your suitcases.`
-              : `29 chambres meublées dans 3 maisons design à Annemasse Agglo, dès ${PRICE_SHARED_CHF_FR}/mois tout inclus. Une location de chambre plus simple qu'un studio meublé : lit, bureau, fibre, charges, ménage 2x/semaine, piscine et salle de sport compris — emménage avec une valise.`}
+              ? `29 furnished rooms across 3 design houses in Annemasse Agglo, from ${PRICE_SHARED_CHF_EN}/month all-inclusive. Renting a room made simpler than a furnished studio: bed, desk, fiber, utilities, cleaning 3×/week, pool & gym included — move in with just your suitcases.`
+              : `29 chambres meublées dans 3 maisons design à Annemasse Agglo, dès ${PRICE_SHARED_CHF_FR}/mois tout inclus. Une location de chambre plus simple qu'un studio meublé : lit, bureau, fibre, charges, ménage 3x/semaine, piscine et salle de sport compris — emménage avec une valise.`}
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <LocalizedLink
@@ -142,7 +142,7 @@ export function ChambreLouerAnnemassePage() {
                 <li className="flex items-start gap-2"><Check className="w-4 h-4 text-[#D4A574] mt-0.5 flex-shrink-0" /> {language === "en" ? "Designer furniture" : "Mobilier design"}</li>
                 <li className="flex items-start gap-2"><Check className="w-4 h-4 text-[#D4A574] mt-0.5 flex-shrink-0" /> {language === "en" ? "8 Gb/s fiber" : "Fibre 8 Gb/s"}</li>
                 <li className="flex items-start gap-2"><Check className="w-4 h-4 text-[#D4A574] mt-0.5 flex-shrink-0" /> {language === "en" ? "Utilities included" : "Charges comprises"}</li>
-                <li className="flex items-start gap-2"><Check className="w-4 h-4 text-[#D4A574] mt-0.5 flex-shrink-0" /> {language === "en" ? "Housekeeping 2×/week" : "Ménage 2×/semaine"}</li>
+                <li className="flex items-start gap-2"><Check className="w-4 h-4 text-[#D4A574] mt-0.5 flex-shrink-0" /> {language === "en" ? "Housekeeping 3×/week" : "Ménage 3×/semaine"}</li>
                 <li className="flex items-start gap-2"><Check className="w-4 h-4 text-[#D4A574] mt-0.5 flex-shrink-0" /> {language === "en" ? "Pool, sauna and gym" : "Piscine, sauna et salle de sport"}</li>
               </ul>
             </div>
@@ -193,7 +193,7 @@ export function ChambreLouerAnnemassePage() {
                   "Léman Express direct to Geneva Cornavin 15 min",
                   "Pool, gym, sauna in every house",
                   "fiber internet up to 8 Gb/s",
-                  "Twice-weekly cleaning of common areas",
+                  "Cleaning of common areas three times a week",
                   "Weekly yoga and fitness classes included",
                   "Monthly community events, community dinners",
                   "No agency fees, no application fees",
@@ -207,7 +207,7 @@ export function ChambreLouerAnnemassePage() {
                   "Léman Express direct Genève Cornavin en 15 min",
                   "Piscine, salle de sport, sauna dans chaque maison",
                   "Internet fibre jusqu'à 8 Gb/s",
-                  "Ménage 2 fois par semaine des espaces communs",
+                  "Ménage 3 fois par semaine des espaces communs",
                   "Cours hebdomadaires yoga et fitness inclus",
                   "Événements communautaires mensuels, dîners communautaires",
                   "Aucun frais d'agence, aucun frais de dossier",

@@ -288,7 +288,7 @@ export const translations = {
         housekeeping: {
           title: "Effortless Upkeep",
           description:
-            "Twice-weekly professional housekeeping for all common areas — a light clean on Thursdays and a deep clean on Mondays. Your home stays pristine, effortlessly.",
+            "Professional housekeeping for all common areas three times a week — light passes plus a weekly deep clean. Your home stays pristine, effortlessly.",
         },
         internet: {
           title: "High-Speed Fiber",
@@ -321,7 +321,7 @@ export const translations = {
         community: {
           title: "Community Events",
           description:
-            "Monthly pizza parties, seasonal community events, and a meal basket delivered to your house every month. Real connections, zero obligations.",
+            "Monthly pizza parties, community dinners and seasonal events. Real connections, zero obligations.",
         },
         support: {
           title: "Always Here for You",
@@ -345,13 +345,12 @@ export const translations = {
         items: [
           "Rent & utilities (electricity, water, heating)",
           "Professional-grade fiber internet (up to 8 Gb/s)",
-          "Housekeeping twice a week",
+          "Housekeeping three times a week",
           "Pool, sauna & garden maintenance",
           "Fully equipped gym",
           "Weekly private yoga class",
           "Weekly private fitness class",
           "Monthly pizza party",
-          "Monthly meal basket delivered to your house",
           "Streaming subscriptions (Netflix, Canal+, etc.)",
           "Seasonal community events",
           "Parking included",
@@ -724,7 +723,7 @@ export const translations = {
         housekeeping: {
           title: "Entretien Sans Effort",
           description:
-            "Ménage professionnel des communs 2 fois par semaine — nettoyage léger le jeudi, approfondi le lundi. Ta maison reste impeccable, sans effort.",
+            "Ménage professionnel des communs 3 fois par semaine — passages légers et nettoyage approfondi hebdomadaire. Ta maison reste impeccable, sans effort.",
         },
         internet: {
           title: "Fibre Haut Débit",
@@ -759,7 +758,7 @@ export const translations = {
         community: {
           title: "Événements Communautaires",
           description:
-            "Pizza Party mensuelle, événements saisonniers, et un panier repas livré chaque mois dans ta maison. De vraies connexions, zéro obligation.",
+            "Pizza Party mensuelle, dîners communautaires et événements saisonniers. De vraies connexions, zéro obligation.",
         },
         support: {
           title: "Toujours Là pour Toi",
@@ -784,13 +783,12 @@ export const translations = {
         items: [
           "Loyer & charges (électricité, eau, chauffage)",
           "Internet fibre pro (jusqu'à 8 Gb/s)",
-          "Ménage des communs 2 fois par semaine",
+          "Ménage des communs 3 fois par semaine",
           "Entretien piscine, sauna & jardin",
           "Salle de sport équipée",
           "Cours de yoga privé hebdomadaire",
           "Cours de fitness privé hebdomadaire",
           "Pizza Party mensuelle",
-          "Panier repas mensuel livré par maison",
           "Abonnements streaming (Netflix, Canal+, etc.)",
           "Événements communautaires saisonniers",
           "Parking inclus",

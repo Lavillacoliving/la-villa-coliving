@@ -94,7 +94,7 @@ export const faqData: FAQItem[] = [
       fr: 'Le coliving est-il cher ?',
     },
     answer: {
-      en: `When you factor in all costs—rent, utilities, internet, furniture, gym membership, cleaning services, and entertainment—coliving is often more economical than traditional renting. At La Villa, our all-inclusive rates start from ${PRICE_SHARED_EN_NUM} CHF/month, which is competitive with Geneva studio prices while including: heated pool, gym, sauna, weekly yoga classes, parking, monthly Pizza Party, meal baskets, streaming subscriptions, and more.`,
+      en: `When you factor in all costs—rent, utilities, internet, furniture, gym membership, cleaning services, and entertainment—coliving is often more economical than traditional renting. At La Villa, our all-inclusive rates start from ${PRICE_SHARED_EN_NUM} CHF/month, which is competitive with Geneva studio prices while including: heated pool, gym, sauna, weekly yoga classes, parking, monthly Pizza Party, community dinners, streaming subscriptions, and more.`,
       fr: `Quand vous prenez en compte tous les coûts—loyer, charges, internet, meubles, abonnement de salle de sport, services de ménage et divertissement—le coliving est souvent plus économique que la location traditionnelle. Chez La Villa, nos tarifs tout inclus commencent à ${PRICE_SHARED_CHF_FR}/mois, ce qui est compétitif avec les prix des studios à Genève tout en offrant beaucoup plus de valeur et d\'équipements.`,
     },
   },
@@ -268,8 +268,8 @@ export const faqData: FAQItem[] = [
       fr: 'Qu\'est-ce qui est inclus dans le loyer mensuel ?',
     },
     answer: {
-      en: 'Your monthly rent includes: private furnished bedroom, all utilities (electricity, water, heating), high-speed fiber internet, twice-weekly housekeeping of common areas, pool and garden maintenance, gym and sauna access, weekly yoga and fitness classes, streaming subscriptions, community events, monthly essentials delivery (cleaning supplies, paper goods), and WhatsApp support. It\'s truly all-inclusive.',
-      fr: 'Votre loyer mensuel inclut : chambre privée meublée, tous les services (électricité, eau, chauffage), internet fibre haut débit, ménage des espaces communs deux fois par semaine, entretien de la piscine et du jardin, accès à la salle de sport et au sauna, cours de yoga et fitness hebdomadaires, abonnements streaming, événements communautaires, livraison mensuelle d\'essentiels (produits d\'entretien, articles en papier), et support WhatsApp. C\'est vraiment tout inclus.',
+      en: 'Your monthly rent includes: private furnished bedroom, all utilities (electricity, water, heating), high-speed fiber internet, housekeeping of common areas three times a week, pool and garden maintenance, gym and sauna access, weekly yoga and fitness classes, streaming subscriptions, community events, monthly essentials delivery (cleaning supplies, paper goods), and WhatsApp support. It\'s truly all-inclusive.',
+      fr: 'Votre loyer mensuel inclut : chambre privée meublée, tous les services (électricité, eau, chauffage), internet fibre haut débit, ménage des espaces communs trois fois par semaine, entretien de la piscine et du jardin, accès à la salle de sport et au sauna, cours de yoga et fitness hebdomadaires, abonnements streaming, événements communautaires, livraison mensuelle d\'essentiels (produits d\'entretien, articles en papier), et support WhatsApp. C\'est vraiment tout inclus.',
     },
   },
   {
@@ -280,8 +280,8 @@ export const faqData: FAQItem[] = [
       fr: 'Combien coûte une chambre chez La Villa Coliving ?',
     },
     answer: {
-      en: `A room at La Villa Coliving costs ${PRICE_CHF_EN} per month all-inclusive with a private bathroom, or ${PRICE_SHARED_CHF_EN} for the 4 rooms at our La Villa house with a shower room shared between 2 rooms (cleaned by our housekeeping team). No hidden fees and no application fee: utilities, fiber internet, cleaning of common areas twice a week, gym, sauna, pool, streaming and community events. Our three houses — La Villa (Ville-la-Grand), Le Loft (Ambilly) and Le Lodge (Annemasse) — are 15-20 minutes from Geneva by Léman Express or tram.`,
-      fr: `Une chambre chez La Villa Coliving coûte ${PRICE_CHF_FR} par mois tout inclus avec salle d'eau privative, ou ${PRICE_SHARED_CHF_FR} pour les 4 chambres de la maison La Villa dont la salle d'eau est partagée entre 2 chambres (entretien par notre équipe de ménage inclus). Sans frais cachés ni frais de dossier : charges, fibre, ménage des espaces communs deux fois par semaine, salle de sport, sauna, piscine, streaming et événements communautaires. Nos trois maisons — La Villa (Ville-la-Grand), Le Loft (Ambilly) et Le Lodge (Annemasse) — sont à 15-20 minutes de Genève en Léman Express ou tram.`,
+      en: `A room at La Villa Coliving costs ${PRICE_CHF_EN} per month all-inclusive with a private bathroom, or ${PRICE_SHARED_CHF_EN} for the 4 rooms at our La Villa house with a shower room shared between 2 rooms (cleaned by our housekeeping team). No hidden fees and no application fee: utilities, fiber internet, cleaning of common areas three times a week, gym, sauna, pool, streaming and community events. Our three houses — La Villa (Ville-la-Grand), Le Loft (Ambilly) and Le Lodge (Annemasse) — are 15-20 minutes from Geneva by Léman Express or tram.`,
+      fr: `Une chambre chez La Villa Coliving coûte ${PRICE_CHF_FR} par mois tout inclus avec salle d'eau privative, ou ${PRICE_SHARED_CHF_FR} pour les 4 chambres de la maison La Villa dont la salle d'eau est partagée entre 2 chambres (entretien par notre équipe de ménage inclus). Sans frais cachés ni frais de dossier : charges, fibre, ménage des espaces communs trois fois par semaine, salle de sport, sauna, piscine, streaming et événements communautaires. Nos trois maisons — La Villa (Ville-la-Grand), Le Loft (Ambilly) et Le Lodge (Annemasse) — sont à 15-20 minutes de Genève en Léman Express ou tram.`,
     },
   },
   {
@@ -782,8 +782,8 @@ export const faqData: FAQItem[] = [
       fr: 'À quelle fréquence les espaces communs sont-ils nettoyés ?',
     },
     answer: {
-      en: 'Common areas are professionally cleaned weekly. This includes the kitchen, living rooms, bathrooms, and hallways. Residents are expected to clean up after themselves daily (dishes, counters, etc.), but the deep cleaning is handled for you.',
-      fr: 'Les espaces communs sont nettoyés professionnellement chaque semaine. Cela inclut la cuisine, les salons, les salles de bain et les couloirs. Les résidents sont censés nettoyer après eux quotidiennement (vaisselle, comptoirs, etc.), mais le nettoyage en profondeur est géré pour vous.',
+      en: 'Common areas are professionally cleaned three times a week. This includes the kitchen, living rooms, bathrooms, and hallways. Residents are expected to clean up after themselves daily (dishes, counters, etc.), but the deep cleaning is handled for you.',
+      fr: 'Les espaces communs sont nettoyés professionnellement trois fois par semaine. Cela inclut la cuisine, les salons, les salles de bain et les couloirs. Les résidents sont censés nettoyer après eux quotidiennement (vaisselle, comptoirs, etc.), mais le nettoyage en profondeur est géré pour vous.',
     },
   },
   {

@@ -6,7 +6,7 @@ export const tarifsFaq: { fr: QAPair[]; en: QAPair[] } = {
   fr: [
     {
       q: "Qu'est-ce qui est inclus dans le loyer chez La Villa Coliving ?",
-      a: `Chez La Villa Coliving, ton loyer tout inclus dès ${PRICE_SHARED_CHF_FR}/mois couvre la chambre meublée de 17 à 23 m², toutes les charges, l'internet fibre jusqu'à 8 Gb/s, le ménage des parties communes deux fois par semaine, l'accès à la piscine, au sauna et à la salle de sport, les cours de yoga et fitness et les événements. Un seul paiement par mois, sans frais de dossier, sans frais cachés.`,
+      a: `Chez La Villa Coliving, ton loyer tout inclus dès ${PRICE_SHARED_CHF_FR}/mois couvre la chambre meublée de 17 à 23 m², toutes les charges, l'internet fibre jusqu'à 8 Gb/s, le ménage des parties communes trois fois par semaine, l'accès à la piscine, au sauna et à la salle de sport, les cours de yoga et fitness et les événements. Un seul paiement par mois, sans frais de dossier, sans frais cachés.`,
     },
     {
       q: "Pourquoi vos prix sont-ils plus élevés qu'une colocation classique ?",
@@ -44,7 +44,7 @@ export const tarifsFaq: { fr: QAPair[]; en: QAPair[] } = {
   en: [
     {
       q: "What's included in the rent at La Villa Coliving?",
-      a: `At La Villa Coliving, your all-inclusive rent from ${PRICE_SHARED_CHF_EN}/month covers a furnished room of 17 to 23 m², all utilities, fibre internet up to 8 Gb/s, cleaning of common areas twice a week, access to the pool, sauna and gym, yoga and fitness classes and community events. A single monthly payment, with no application fees and no hidden costs.`,
+      a: `At La Villa Coliving, your all-inclusive rent from ${PRICE_SHARED_CHF_EN}/month covers a furnished room of 17 to 23 m², all utilities, fibre internet up to 8 Gb/s, cleaning of common areas three times a week, access to the pool, sauna and gym, yoga and fitness classes and community events. A single monthly payment, with no application fees and no hidden costs.`,
     },
     {
       q: "Why are your prices higher than a standard flatshare?",

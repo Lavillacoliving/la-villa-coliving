@@ -767,8 +767,8 @@ export function JoinPageV4() {
               {
                 q_fr: "Quel est le loyer et que comprend-il vraiment ?",
                 q_en: "What is the rent and what does it really include?",
-                a_fr: `À partir de ${PRICE_SHARED_CHF_FR}/mois tout inclus : chambre meublée, charges (eau, électricité, chauffage), fibre 8 Gbps, ménage 2 fois par semaine, accès piscine/sauna/gym, cours de yoga et fitness privés, abonnements streaming, événements communautaires mensuels. Caution 2 mois de loyer hors charges. Aucun frais d'agence, aucun frais de dossier.`,
-                a_en: `From ${PRICE_SHARED_CHF_EN}/month all-inclusive: furnished room, utilities (water, electricity, heating), 8 Gbps fiber, twice-weekly cleaning, pool/sauna/gym access, private yoga and fitness classes, streaming subscriptions, monthly community events. Deposit: 2 months' rent excl. utilities. No agency fees, no application fees.`,
+                a_fr: `À partir de ${PRICE_SHARED_CHF_FR}/mois tout inclus : chambre meublée, charges (eau, électricité, chauffage), fibre 8 Gbps, ménage 3 fois par semaine, accès piscine/sauna/gym, cours de yoga et fitness privés, abonnements streaming, événements communautaires mensuels. Caution 2 mois de loyer hors charges. Aucun frais d'agence, aucun frais de dossier.`,
+                a_en: `From ${PRICE_SHARED_CHF_EN}/month all-inclusive: furnished room, utilities (water, electricity, heating), 8 Gbps fiber, cleaning three times a week, pool/sauna/gym access, private yoga and fitness classes, streaming subscriptions, monthly community events. Deposit: 2 months' rent excl. utilities. No agency fees, no application fees.`,
               },
               {
                 q_fr: "Quelle est la durée minimale du bail ?",
