@@ -157,7 +157,7 @@ function generateContractHTML(data: ContractData): string {
   const totalChargesEUR = form.charges_energy + form.charges_maintenance + form.charges_services;
 
   const chargesTable = property.is_coliving ? `
-    <p style="font-size:9px;color:#666;">Le montant mensuel des charges forfaitaires et des services est inclus dans le loyer principal.</p>
+    <p style="font-size:9px;color:#666;">Le forfait de charges ci-dessus couvre exclusivement des charges récupérables au sens du décret n° 87-713 (énergie, eau, ménage et entretien des parties communes, fournitures). Les services communautaires énumérés à l’article II sont gratuits : ils ne sont inclus ni dans le loyer ni dans ce forfait, et ne conditionnent pas la location.</p>
     <table style="width:100%;border-collapse:collapse;margin:10px 0;">
       <tr style="border-bottom:1px solid #e0e0e0;">
         <td style="padding:8px;font-weight:600;width:60%;">Catégorie</td>
@@ -489,7 +489,7 @@ function generateContractHTML(data: ContractData): string {
           <p><strong>Accès aux parties communes :</strong></p>
           <ul>${commonAreasList}</ul>` : ''}
           ${property.is_coliving ? `
-          <p><strong style="color:#c9a96e;">Charges & Services inclus dans le forfait location TOUT INCLUS à « La Villa »</strong></p>
+          <p><strong style="color:#c9a96e;">Charges récupérables et services de la maison</strong></p>
 
           <h3>EAU & ÉNERGIE :</h3>
           <ul>
@@ -504,13 +504,13 @@ function generateContractHTML(data: ContractData): string {
             <li>Tout entretien</li>
           </ul>
 
-          <h3>SERVICES</h3>
+          <h3>SERVICES COMMUNAUTAIRES — GRATUITS</h3>
+        <p style="font-size:10px;color:#666;">Offerts par le bailleur. Ils ne sont facturés ni en supplément ni au titre du forfait de charges, leur usage est libre et ils ne conditionnent en rien la location.</p>
           <ul>
             <li>Mise à disposition d'une parure de linge de lit et serviette.</li>
-            <li>Ménage 2 fois par semaine dans les parties communes intérieur. Ménage de la chambre en option.</li>
+            <li>Ménage 3 fois par semaine des parties communes intérieures</li>
             <li>Entretien régulier des parties communes extérieur : pisciniste, jardinier, élagage, nettoyage</li>
-            <li>Box pour diner communautaire livrée 1 fois/mois</li>
-            <li>Évènements communautaires récurrents</li>
+              <li>Évènements communautaires récurrents</li>
             <li>Résolution des problèmes Contact via WhatsApp, réponse en moins de 48h.</li>
             <li>Cours de yoga</li>
             <li>Cours de remise en forme (coaching Sportif)</li>
@@ -519,7 +519,7 @@ function generateContractHTML(data: ContractData): string {
           </ul>
 
           <h3>ENTRETIEN</h3>
-          <p>Entretien des parties communes intérieures et extérieures : réparation et entretien et remplacement des éléments défectueux des parties communes de la maison. Entretien des extérieurs et de la piscine. Ménage effectué deux fois par semaine pour que les espaces communs brillent !</p>
+          <p>Entretien des parties communes intérieures et extérieures : réparation et entretien et remplacement des éléments défectueux des parties communes de la maison. Entretien des extérieurs et de la piscine. Ménage effectué trois fois par semaine pour que les espaces communs brillent !</p>
           <p style="font-weight:600;font-size:10px;">PARTIES COMMUNES INTÉRIEURES</p>
           <p style="margin-left:20px;">Fourniture de produits d'entretien (balais et sacs nécessaires à l'élimination des déchets) et de produits de désinsectisation et désinfection<br/>
           Entretien de la minuterie, des tapis, des vide-ordures<br/>

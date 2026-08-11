@@ -441,7 +441,7 @@ export function BailPDF({ data }: { data: BailPDFData }) {
         {/* Charges & Services coliving */}
         {property.is_coliving ? (
           <View>
-            <Text style={[s.subTitle, { color: gold }]}>{"Charges & Services inclus dans le forfait location TOUT INCLUS à «La Villa»"}</Text>
+            <Text style={[s.subTitle, { color: gold }]}>{"Charges r\u00E9cup\u00E9rables et services de la maison"}</Text>
 
             <Text style={[s.subTitle, { fontSize: 9, marginTop: 8 }]}>{"EAU & ÉNERGIE :"}</Text>
             <Bullet>{"\u00C9lectricit\u00E9"}</Bullet>
@@ -454,11 +454,11 @@ export function BailPDF({ data }: { data: BailPDFData }) {
             <Bullet>{"Distribution d\u2019eau dans les parties privatives (contr\u00F4le des raccordements, r\u00E9glage de d\u00E9bit et temp\u00E9ratures, d\u00E9pannage, remplacement des joints cloches des chasses d\u2019eau)"}</Bullet>
             <Bullet>{"Tout entretien"}</Bullet>
 
-            <Text style={[s.subTitle, { fontSize: 9, marginTop: 8 }]}>SERVICES</Text>
+            <Text style={[s.subTitle, { fontSize: 9, marginTop: 8 }]}>{"SERVICES COMMUNAUTAIRES \u2014 GRATUITS"}</Text>
+            <Text style={[s.body, { fontSize: 8, color: "#666", marginBottom: 4 }]}>{"Offerts par le bailleur. Ils ne sont factur\u00E9s ni en suppl\u00E9ment ni au titre du forfait de charges, leur usage est libre et ils ne conditionnent en rien la location."}</Text>
             <Bullet>{"Mise \u00E0 disposition d\u2019une parure de linge de lit et serviette."}</Bullet>
-            <Bullet>{"M\u00E9nage 2 fois par semaine dans les parties communes int\u00E9rieur. M\u00E9nage de la chambre en option."}</Bullet>
+            <Bullet>{"M\u00E9nage 3 fois par semaine des parties communes int\u00E9rieures"}</Bullet>
             <Bullet>{"Entretien r\u00E9gulier des parties communes ext\u00E9rieur : pisciniste, jardinier, \u00E9lagage, nettoyage"}</Bullet>
-            <Bullet>{"Box pour diner communautaire livr\u00E9e 1 fois/mois"}</Bullet>
             <Bullet>{"\u00C9v\u00E8nements communautaires r\u00E9currents"}</Bullet>
             <Bullet>{"R\u00E9solution des probl\u00E8mes Contact via WhatsApp, r\u00E9ponse en moins de 48h."}</Bullet>
             <Bullet>{"Cours de yoga"}</Bullet>
@@ -468,7 +468,7 @@ export function BailPDF({ data }: { data: BailPDFData }) {
 
             <Text style={[s.subTitle, { fontSize: 9, marginTop: 8 }]}>{"ENTRETIEN"}</Text>
             <Text style={[s.body, { fontSize: 9 }]}>
-              {"Entretien des parties communes int\u00E9rieures et ext\u00E9rieures : r\u00E9paration et entretien et remplacement des \u00E9l\u00E9ments d\u00E9fectueux des parties communes de la maison. Entretien des ext\u00E9rieurs et de la piscine. M\u00E9nage effectu\u00E9 deux fois par semaine pour que les espaces communs brillent !"}
+              {"Entretien des parties communes int\u00E9rieures et ext\u00E9rieures : r\u00E9paration et entretien et remplacement des \u00E9l\u00E9ments d\u00E9fectueux des parties communes de la maison. Entretien des ext\u00E9rieurs et de la piscine. M\u00E9nage effectu\u00E9 trois fois par semaine pour que les espaces communs brillent !"}
             </Text>
             <Text style={[s.subTitle, { fontSize: 8, marginTop: 4 }]}>{"PARTIES COMMUNES INT\u00C9RIEURES"}</Text>
             <Text style={[s.body, { paddingLeft: 10, marginBottom: 2 }]}>{"Fourniture de produits d\u2019entretien (balais et sacs n\u00E9cessaires \u00E0 l\u2019\u00E9limination des d\u00E9chets) et de produits de d\u00E9sinsectisation et d\u00E9sinfection"}</Text>
@@ -550,7 +550,7 @@ export function BailPDF({ data }: { data: BailPDFData }) {
 
             <Text style={s.subTitle}>{"Charges forfaitaires mensuelles :"}</Text>
             <Text style={[s.body, { fontSize: 9, color: "#666" }]}>
-              {"Le montant mensuel des charges forfaitaires et des services est inclus dans le loyer principal."}
+              {"Le forfait de charges ci-dessus couvre exclusivement des charges r\u00E9cup\u00E9rables au sens du d\u00E9cret n\u00B0 87-713 (\u00E9nergie, eau, m\u00E9nage et entretien des parties communes, fournitures). Les services communautaires \u00E9num\u00E9r\u00E9s \u00E0 l\u2019article II sont gratuits : ils ne sont inclus ni dans le loyer ni dans ce forfait, et ne conditionnent pas la location."}
             </Text>
             <View style={s.tableHeader}>
               <Text style={[s.tableCellBold, { width: "60%" }]}>{"Cat\u00E9gorie"}</Text>
