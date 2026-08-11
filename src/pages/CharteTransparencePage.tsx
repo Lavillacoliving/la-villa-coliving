@@ -60,8 +60,10 @@ export function CharteTransparencePage() {
                 <p>
                   Your monthly payment covers your room, the shared spaces and amenities of the
                   house (depending on the house: pool, sauna, gym, garden), water, energy, internet
-                  and the upkeep of common areas. There is nothing else to pay. Not before, not
-                  during, not after.
+                  and the upkeep of common areas. There is nothing else to pay — not before, not
+                  during, not after. One single exception, and we'd rather name it: having your own
+                  room cleaned, if you want it. The price is given to you upfront, you take it if
+                  you like, you stop it whenever you like.
                 </p>
               </Section>
 
@@ -94,8 +96,10 @@ export function CharteTransparencePage() {
               <Section title="No imposed services">
                 <p>
                   No compulsory "package", no hidden options, no service billed on top that would be
-                  a condition of your tenancy. The amenities of the house are part of the place:
-                  they're included, for everyone, full stop.
+                  a condition of your tenancy. The one paid option we do offer — having your own
+                  room cleaned — is visible, priced upfront and commitment-free: nobody needs it to
+                  live here. The amenities of the house are part of the place: they're included, for
+                  everyone, full stop.
                 </p>
               </Section>
 
@@ -150,8 +154,10 @@ export function CharteTransparencePage() {
                 <p>
                   Ta mensualité couvre ta chambre, les espaces et équipements de la maison (selon la
                   maison : piscine, sauna, salle de sport, jardin), l'eau, l'énergie, internet et
-                  l'entretien des communs. Il n'y a rien d'autre à payer. Ni avant, ni pendant, ni
-                  après.
+                  l'entretien des communs. Il n'y a rien d'autre à payer — ni avant, ni pendant, ni
+                  après. Une seule exception, et nous préférons te la nommer : le ménage de ta
+                  chambre, si tu le souhaites. Son tarif t'est donné à l'avance, tu le prends si tu
+                  veux, tu l'arrêtes quand tu veux.
                 </p>
               </Section>
 
@@ -184,8 +190,10 @@ export function CharteTransparencePage() {
               <Section title="Aucun service imposé">
                 <p>
                   Aucun « pack » obligatoire, aucune option cachée, aucun service facturé en
-                  supplément qui conditionnerait ta location. Les équipements de la maison font
-                  partie du lieu : ils sont inclus, pour tout le monde, point.
+                  supplément qui conditionnerait ta location. La seule option payante qui existe
+                  chez nous — le ménage de ta chambre — est visible, tarifée d'avance et sans
+                  engagement : personne n'en a besoin pour vivre ici. Les équipements de la maison,
+                  eux, font partie du lieu : ils sont inclus, pour tout le monde, point.
                 </p>
               </Section>
 
