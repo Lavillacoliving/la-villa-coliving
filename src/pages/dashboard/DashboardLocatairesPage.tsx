@@ -3,6 +3,7 @@ import { supabase } from '@/lib/supabase';
 import { useToast } from '@/components/ui/Toast';
 import { filterByEntity } from '@/lib/entities';
 import { logAudit } from '@/lib/auditLog';
+import IRLRevisionCard from '@/components/dashboard/IRLRevisionCard';
 
 type LeaseStatus = 'draft' | 'sent_yousign' | 'signed' | 'active' | 'cancelled';
 
@@ -67,7 +68,7 @@ export default function DashboardLocatairesPage() {
   const [saving, setSaving] = useState(false);
   const [refundMode, setRefundMode] = useState(false);
   const [refundData, setRefundData] = useState({type:'full',amount:0,deductions:'',virementDone:false});
-  const [activeTab, setActiveTab] = useState<'info'|'documents'>('info');
+  const [activeTab, setActiveTab] = useState<'info'|'documents'|'irl'>('info');
   const [tenantDocs, setTenantDocs] = useState<{name:string,id:string|null,updated_at:string|null,metadata:{size?:number}|null}[]>([]);
   const [uploadingDoc, setUploadingDoc] = useState(false);
   const [exitSurvey, setExitSurvey] = useState<ExitSurvey|null>(null);
@@ -481,9 +482,16 @@ export default function DashboardLocatairesPage() {
             <div style={{display:'flex',gap:'0',marginBottom:'20px',borderBottom:'2px solid #e5e7eb'}}>
               <button onClick={()=>setActiveTab('info')} style={{padding:'8px 20px',border:'none',background:'none',cursor:'pointer',fontSize:'14px',fontWeight:activeTab==='info'?600:400,color:activeTab==='info'?'#b8860b':'#888',borderBottom:activeTab==='info'?'2px solid #b8860b':'2px solid transparent',marginBottom:'-2px'}}>Fiche</button>
               {!isNew && <button onClick={()=>setActiveTab('documents')} style={{padding:'8px 20px',border:'none',background:'none',cursor:'pointer',fontSize:'14px',fontWeight:activeTab==='documents'?600:400,color:activeTab==='documents'?'#b8860b':'#888',borderBottom:activeTab==='documents'?'2px solid #b8860b':'2px solid transparent',marginBottom:'-2px'}}>Documents</button>}
+              {!isNew && <button onClick={()=>setActiveTab('irl')} style={{padding:'8px 20px',border:'none',background:'none',cursor:'pointer',fontSize:'14px',fontWeight:activeTab==='irl'?600:400,color:activeTab==='irl'?'#b8860b':'#888',borderBottom:activeTab==='irl'?'2px solid #b8860b':'2px solid transparent',marginBottom:'-2px'}}>Révision IRL</button>}
             </div>
 
-            {activeTab === 'documents' && !isNew ? (
+            {activeTab === 'irl' && !isNew ? (
+              <IRLRevisionCard
+                tenant={modal}
+                propertyName={properties.find(p=>p.id===modal.property_id)?.name || ''}
+                onApplied={()=>{ closeModal(); load(); }}
+              />
+            ) : activeTab === 'documents' && !isNew ? (
               /* Documents tab */
               <div>
                 <div style={{display:'flex',justifyContent:'space-between',alignItems:'center',marginBottom:'16px'}}>
