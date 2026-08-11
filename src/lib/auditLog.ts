@@ -25,7 +25,7 @@ export type AuditAction =
   | 'status_change' | 'payment_recorded'
   | 'lease_generated' | 'tenant_deactivated'
   | 'lease_status_changed'
-  | 'irl_applied' | 'irl_dismissed' | 'prospect_converted'
+  | 'irl_applied' | 'irl_dismissed' | 'irl_revision_applied' | 'prospect_converted'
   | 'file_uploaded' | 'file_deleted'
   | 'invoice_linked' | 'invoice_unlinked'
   | 'transaction_classified' | 'transaction_flagged' | 'transaction_verified'
