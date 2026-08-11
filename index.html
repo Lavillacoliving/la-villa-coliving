@@ -33,7 +33,9 @@
          122 pre-rendered pages. React-Helmet de-dupes by name, so no duplicate tag in the live SPA. -->
     <meta name="description" content="3 maisons à la frontière de Genève — pas une résidence de 300 chambres. Piscine. Sauna. Salle de sport. Chambre privée 17-23 m² tout inclus, 0 frais de dossier." />
     <!-- meta-keywords retiré (A3, 2026-06) : sans valeur SEO. -->
-    <!-- Preload hero image for faster LCP -->
+    <!-- Preload hero image for faster LCP. scripts/inject-prerendered.mjs REMOVES this
+         preload (and this comment) on every pre-rendered page that does not render the
+         image eagerly, and on _spa.html — otherwise all 118 pages preload it for nothing. -->
     <link rel="preload" as="image" href="/images/la villa jardin.webp" type="image/webp" fetchpriority="high" />
   </head>
   <body>

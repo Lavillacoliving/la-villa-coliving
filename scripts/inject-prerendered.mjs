@@ -12,8 +12,11 @@
  *      canonical, hreflang, OG, Twitter, JSON-LD, keywords)
  *    - Injects them into a fresh copy of dist/index.html
  *    - Overwrites the file with the corrected version
- * 3. Renames dist/index.html → dist/_spa.html so Vercel's static file
- *    matching doesn't bypass the "/" rewrite
+ * 3. Removes the home-hero <link rel="preload"> (inherited from index.html)
+ *    from every page that does not render that image eagerly — otherwise all
+ *    118 pages preload ~100 KB for nothing ("preloaded but not used" warning)
+ * 4. Renames dist/index.html → dist/_spa.html (hero preload stripped too) so
+ *    Vercel's static file matching doesn't bypass the "/" rewrite
  */
 
 import fs from 'fs/promises';
@@ -25,6 +28,35 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const DIST_DIR = path.join(__dirname, '..', 'dist');
 const PRERENDERED_DIR = path.join(DIST_DIR, 'prerendered');
 const SITE_URL = 'https://www.lavillacoliving.com';
+
+// Hero image preloaded in index.html's <head> (must match the href there).
+// Puppeteer serializes src with the literal space, so this matches as-is.
+const HERO_PRELOAD_IMG = '/images/la villa jardin.webp';
+
+/**
+ * True if the page renders the hero image eagerly (an <img> with that exact
+ * src and no loading="lazy") — only then is the preload actually consumed.
+ * Lazy usages don't count: preloading them re-creates the "not used" warning.
+ */
+function usesHeroImageEagerly(rootContent) {
+  const imgPattern = /<img\b[^>]*>/g;
+  let m;
+  while ((m = imgPattern.exec(rootContent)) !== null) {
+    if (m[0].includes(`src="${HERO_PRELOAD_IMG}"`) && !m[0].includes('loading="lazy"')) {
+      return true;
+    }
+  }
+  return false;
+}
+
+/**
+ * Remove the hero preload <link> (and its comment) from a copy of index.html
+ */
+function stripHeroPreload(html) {
+  return html
+    .replace(/\s*<!--\s*Preload hero image[\s\S]*?-->/, '')
+    .replace(/\s*<link\s+rel="preload"\s+as="image"\s+href="\/images\/la villa jardin\.webp"[^>]*>/, '');
+}
 
 /**
  * Extract innerHTML of <div id="root"> using depth tracking
@@ -293,6 +325,7 @@ async function main() {
   let successCount = 0;
   let seoTagCount = 0;
   const skippedFiles = [];
+  const heroPreloadKept = [];
 
   for (const file of htmlFiles) {
     const filePath = path.join(PRERENDERED_DIR, file);
@@ -322,6 +355,14 @@ async function main() {
     // 0. Remove ALL existing JSON-LD scripts from the base template
     //    (they will be replaced by the page-specific ones extracted from pre-rendered HTML)
     result = result.replace(/<script\s+type="application\/ld\+json"[^>]*>[\s\S]*?<\/script>\s*/g, '');
+
+    // 0bis. Drop the home-hero preload unless this page renders the image
+    //       eagerly (home, /lavilla, pages using it as above-the-fold cover)
+    if (usesHeroImageEagerly(rootContent)) {
+      heroPreloadKept.push(file);
+    } else {
+      result = stripHeroPreload(result);
+    }
 
     // 1. Inject pre-rendered content into <div id="root">
     result = result.replace(
@@ -379,10 +420,14 @@ async function main() {
     await writeFallback404(indexHtml);
   }
 
-  // CRITICAL: Rename dist/index.html → dist/_spa.html
-  await fs.rename(indexPath, path.join(DIST_DIR, '_spa.html'));
-  console.log(`\n  📦 Renamed dist/index.html → dist/_spa.html`);
+  // CRITICAL: Rename dist/index.html → dist/_spa.html. The SPA shell serves
+  // app routes (dashboard, portail) that never render the hero: strip the
+  // preload from it too.
+  await fs.writeFile(path.join(DIST_DIR, '_spa.html'), stripHeroPreload(indexHtml), 'utf-8');
+  await fs.unlink(indexPath);
+  console.log(`\n  📦 Renamed dist/index.html → dist/_spa.html (hero preload stripped)`);
 
+  console.log(`  🖼  Hero preload kept on ${heroPreloadKept.length}/${htmlFiles.length} pages: ${heroPreloadKept.join(', ')}`);
   console.log(`\n🎉 Injection complete! ${successCount}/${htmlFiles.length} pages updated, ${seoTagCount} total SEO tags injected.\n`);
 }
 
