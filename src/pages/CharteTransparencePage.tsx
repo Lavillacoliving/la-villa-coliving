@@ -67,11 +67,19 @@ export function CharteTransparencePage() {
                 </p>
               </Section>
 
-              <Section title="Zero fees — that's our model">
+              <Section title="Zero fees to move in — and a three-month commitment">
                 <p>
-                  No agency fees, no application fees, no viewing or check-in fees. We don't make
-                  money when you sign: we make money when you stay, because you're happy here.
-                  That's what keeps our interests aligned with yours.
+                  No agency fees, no application fees, no viewing or check-in fees: you pay nothing
+                  to move in. We don't make money when you sign — we make money when you stay,
+                  because you're happy here.
+                </p>
+                <p>
+                  In return, we ask you to stay at least three months. A house is not a hotel: every
+                  abrupt departure unsettles the people who remain, and it's their daily life we're
+                  protecting. If you leave before three months, an early-departure fee of €350
+                  applies — except in the case of a job relocation, job loss, health reasons or
+                  force majeure. After that, you're free to leave whenever you want, with one
+                  month's notice.
                 </p>
               </Section>
 
@@ -152,20 +160,27 @@ export function CharteTransparencePage() {
             <>
               <Section title="Un seul prix, tout compris">
                 <p>
-                  Ta mensualité couvre ta chambre, les espaces et équipements de la maison (selon la
-                  maison : piscine, sauna, salle de sport, jardin), l'eau, l'énergie, internet et
-                  l'entretien des communs. Il n'y a rien d'autre à payer — ni avant, ni pendant, ni
+                  Ta mensualité couvre ta chambre, les espaces et équipements de la maison, l'eau,
+                  l'énergie, internet et l'entretien des communs. Il n'y a rien d'autre à payer — ni avant, ni pendant, ni
                   après. Une seule exception, et nous préférons te la nommer : le ménage de ta
                   chambre, si tu le souhaites. Son tarif t'est donné à l'avance, tu le prends si tu
                   veux, tu l'arrêtes quand tu veux.
                 </p>
               </Section>
 
-              <Section title="0 frais — c'est notre modèle">
+              <Section title="Zéro frais pour entrer — et un engagement de trois mois">
                 <p>
                   Pas de frais d'agence, pas de frais de dossier, pas de frais de visite ni d'état
-                  des lieux. Nous ne gagnons pas d'argent quand tu signes : nous en gagnons quand tu
-                  restes, parce que tu es bien. C'est ce qui aligne nos intérêts avec les tiens.
+                  des lieux : tu ne paies rien pour entrer. Nous ne gagnons pas d'argent quand tu
+                  signes — nous en gagnons quand tu restes, parce que tu es bien.
+                </p>
+                <p>
+                  En échange, nous te demandons de rester au moins trois mois. Une maison n'est pas
+                  un hôtel : chaque départ précipité déstabilise ceux qui restent, et c'est leur
+                  quotidien que nous protégeons. Si tu pars avant trois mois, une indemnité de
+                  départ anticipé de 350 € est due — sauf en cas de mutation professionnelle, de
+                  perte d'emploi, de raison de santé ou de force majeure. Passé ce délai, tu es
+                  libre de partir quand tu veux, avec un mois de préavis.
                 </p>
               </Section>
 
