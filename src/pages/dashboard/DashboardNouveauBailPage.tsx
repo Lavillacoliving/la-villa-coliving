@@ -265,7 +265,7 @@ function generateContractHTML(data: ContractData): string {
         <td style="padding:8px;">Services (ménage, yoga, support)</td>
         <td style="padding:8px;text-align:right;">${fEUR(form.charges_services)}</td>
       </tr>
-      <tr style="background:#f9f7f4;font-weight:600;border-bottom:2px solid #c9a96e;">
+      <tr style="background:#f9f7f4;font-weight:600;border-bottom:2px solid #B8860B;">
         <td style="padding:8px;">TOTAL CHARGES MENSUELLES</td>
         <td style="padding:8px;text-align:right;">${fEUR(totalChargesEUR)}</td>
       </tr>
@@ -285,7 +285,7 @@ function generateContractHTML(data: ContractData): string {
         <td style="padding:8px;">Forfait de charges récupérables</td>
         <td style="padding:8px;text-align:right;">${fEUR(totalChargesEUR)}</td>
       </tr>
-      <tr style="background:#f9f7f4;font-weight:600;border-bottom:2px solid #c9a96e;">
+      <tr style="background:#f9f7f4;font-weight:600;border-bottom:2px solid #B8860B;">
         <td style="padding:8px;">TOTAL MENSUEL</td>
         <td style="padding:8px;text-align:right;">${fEUR(loyerNuEurTable + totalChargesEUR)}</td>
       </tr>
@@ -310,7 +310,7 @@ function generateContractHTML(data: ContractData): string {
         <td style="padding:8px;">Charges diverses</td>
         <td style="padding:8px;text-align:right;">${fEUR(form.charges_services)}</td>
       </tr>
-      <tr style="background:#f9f7f4;font-weight:600;border-bottom:2px solid #c9a96e;">
+      <tr style="background:#f9f7f4;font-weight:600;border-bottom:2px solid #B8860B;">
         <td style="padding:8px;">TOTAL CHARGES MENSUELLES</td>
         <td style="padding:8px;text-align:right;">${fEUR(totalChargesEUR)}</td>
       </tr>
@@ -344,7 +344,7 @@ function generateContractHTML(data: ContractData): string {
         .contract-header {
           text-align: center;
           margin-bottom: 25px;
-          border-bottom: 2px solid #c9a96e;
+          border-bottom: 2px solid #B8860B;
           padding-bottom: 15px;
         }
         .contract-header img {
@@ -372,14 +372,14 @@ function generateContractHTML(data: ContractData): string {
         }
         .party-box {
           background: #faf8f5;
-          border-left: 4px solid #c9a96e;
+          border-left: 4px solid #B8860B;
           padding: 12px 10px;
           margin: 15px 0;
           font-size: 10pt;
           line-height: 1.5;
         }
         .party-box strong {
-          color: #c9a96e;
+          color: #B8860B;
           font-weight: bold;
         }
         h2 {
@@ -388,7 +388,7 @@ function generateContractHTML(data: ContractData): string {
           font-weight: bold;
           margin: 18px 0 10px 0;
           color: #1a1a2e;
-          border-bottom: 2px solid #c9a96e;
+          border-bottom: 2px solid #B8860B;
           padding-bottom: 6px;
           text-transform: uppercase;
         }
@@ -400,11 +400,11 @@ function generateContractHTML(data: ContractData): string {
           color: #333;
         }
         .gold {
-          color: #c9a96e;
+          color: #B8860B;
           font-weight: bold;
         }
         .bold-gold {
-          color: #c9a96e;
+          color: #B8860B;
           font-weight: bold;
         }
         .article {
@@ -445,26 +445,26 @@ function generateContractHTML(data: ContractData): string {
         th {
           background: #f9f7f4;
           font-weight: bold;
-          border-top: 2px solid #c9a96e;
-          border-bottom: 2px solid #c9a96e;
+          border-top: 2px solid #B8860B;
+          border-bottom: 2px solid #B8860B;
         }
         tr:last-child td {
-          border-bottom: 2px solid #c9a96e;
+          border-bottom: 2px solid #B8860B;
         }
         .section-header {
           background: #f9f7f4;
           padding: 10px 8px;
           margin: 15px 0 10px 0;
           font-weight: bold;
-          color: #c9a96e;
+          color: #B8860B;
           text-transform: uppercase;
           font-size: 12pt;
-          border-top: 2px solid #c9a96e;
-          border-bottom: 1px solid #c9a96e;
+          border-top: 2px solid #B8860B;
+          border-bottom: 1px solid #B8860B;
         }
         .bank-details {
           background: #faf8f5;
-          border-left: 4px solid #c9a96e;
+          border-left: 4px solid #B8860B;
           padding: 12px 10px;
           margin: 15px 0;
           font-size: 10pt;
@@ -472,7 +472,7 @@ function generateContractHTML(data: ContractData): string {
         }
         .bank-details h3 {
           margin-top: 0;
-          color: #c9a96e;
+          color: #B8860B;
         }
         .bank-details p {
           margin: 4px 0;
@@ -528,17 +528,16 @@ function generateContractHTML(data: ContractData): string {
       <div class="contract-container">
         <div class="contract-header">
           <img src="https://www.lavillacoliving.com/logos/logo-full.png" alt="La Villa Coliving" />
-          <p>La Villa Coliving</p>
           <h1>CONTRAT DE LOCATION<br/>DE LOGEMENT MEUBLÉ</h1>
           <p class="subtitle">Loi n° 89-462 du 6 juillet 1989</p>
+          <p style="color:#B8860B;font-size:7pt;margin-top:6px;">&#9670;</p>
         </div>
 
         <div class="party-box">
           <strong>BAILLEUR :</strong><br/>
           ${getBailleurLines(property.entity_id).join('<br/>')}<br/>
           ${property.is_coliving ? `
-          SIRET : ${ph(property.siret, 'SIRET')}<br/>
-          TVA : ${ph(property.tva, 'TVA')}<br/>
+          SIRET : ${ph(property.siret, 'SIRET')}${property.tva?.trim() && property.tva.trim() !== 'N/A' ? ' — TVA : ' + property.tva.trim() : ''}<br/>
           Siège social : ${ph(property.siege_social, 'Siège social')}<br/>
           Représenté par : Jérôme AUSTIN, Gérant` : `
           Domicilié(s) à : ${ph(property.siege_social, 'Adresse')}`}
@@ -600,70 +599,7 @@ function generateContractHTML(data: ContractData): string {
           ${property.is_coliving && commonAreasList ? `
           <p><strong>Accès aux parties communes :</strong></p>
           <ul>${commonAreasList}</ul>` : ''}
-          ${property.is_coliving ? `
-          <p><strong style="color:#c9a96e;">Charges récupérables et services de la maison</strong></p>
-
-          <h3>EAU & ÉNERGIE :</h3>
-          <ul>
-            <li>Électricité</li>
-            <li>Eau froide et chaude</li>
-            <li>Eau nécessaire à l'entretien courant des parties communes</li>
-            <li>Eau nécessaire à l'entretien courant des espaces extérieurs</li>
-            <li>Produits nécessaires à l'exploitation, à l'entretien et au traitement de l'eau</li>
-            <li>Fourniture d'énergie quelle que soit sa nature</li>
-            <li>Chauffage et production d'eau chaude</li>
-            <li>Distribution d'eau dans les parties privatives (contrôle des raccordements, réglage de débit et températures, dépannage, remplacement des joints cloches des chasses d'eau)</li>
-            <li>Tout entretien</li>
-          </ul>
-
-          <h3>SERVICES COMMUNAUTAIRES — GRATUITS</h3>
-        <p style="font-size:10px;color:#666;">Offerts par le bailleur. Ils ne sont facturés ni en supplément ni au titre du forfait de charges, leur usage est libre et ils ne conditionnent en rien la location.</p>
-          <ul>
-            <li>Mise à disposition d'une parure de linge de lit et serviette.</li>
-            <li>Ménage 3 fois par semaine des parties communes intérieures</li>
-            <li>Entretien régulier des parties communes extérieur : pisciniste, jardinier, élagage, nettoyage</li>
-              <li>Évènements communautaires récurrents</li>
-            <li>Résolution des problèmes Contact via WhatsApp, réponse en moins de 48h.</li>
-            <li>Cours de yoga</li>
-            <li>Cours de remise en forme (coaching sportif)</li>
-            <li>Soirée communautaire mensuelle</li>
-            <li>Accès internet fibre — box mise à disposition dans les parties communes</li>
-            <li>Abonnements numériques de divertissement (services de streaming)</li>
-            <li>Accueil, remise des clés et mise à jour des accès à l'arrivée</li>
-            <li>Fournitures de base : 1 panier de base livré chaque mois pour la communauté (papier toilette, Essuie-tout, lessive, produits d'entretiens, ..) en fonction de votre demande</li>
-            <li>Gestion des départs : à vous de rencontrer notre sélection de nouveaux candidats et de les sélectionner</li>
-          </ul>
-
-          <h3>PRESTATION OPTIONNELLE — FACTURÉE À PART</h3>
-        <ul>
-          <li>Ménage de la chambre privée : sur demande uniquement. Facturé séparément du loyer et du forfait de charges, à un tarif communiqué à l’avance, sans engagement et interruptible à tout moment. Cette prestation ne conditionne pas la location.</li>
-        </ul>
-
-        <h3>ENTRETIEN</h3>
-          <p>Entretien des parties communes intérieures et extérieures : réparation et entretien et remplacement des éléments défectueux des parties communes de la maison. Entretien des extérieurs et de la piscine. Ménage effectué trois fois par semaine pour que les espaces communs brillent !</p>
-          <p style="font-weight:600;font-size:10px;">PARTIES COMMUNES INTÉRIEURES</p>
-          <p style="margin-left:20px;">Fourniture de produits d'entretien (balais et sacs nécessaires à l'élimination des déchets) et de produits de désinsectisation et désinfection<br/>
-          Entretien de la minuterie, des tapis, des vide-ordures<br/>
-          Réparation des appareils d'entretien de propreté tels que l'aspirateur<br/>
-          Frais de personnel d'entretien.</p>
-          <p style="font-weight:600;font-size:10px;margin-top:10px;">PARTIES COMMUNES EXTÉRIEURES</p>
-          <p style="margin-left:20px;">Voies de circulation<br/>
-          Aires de stationnement<br/>
-          Abords des espaces verts<br/>
-          Équipements : piscine, terrasse, barbecue, jeux</p>
-
-          <h3>ABONNEMENTS</h3>
-          <ul>
-            <li>Eau, Électricité, Gaz,</li>
-            <li>Entretien Chaudière</li>
-          </ul>
-
-          <h3>TAXES</h3>
-          <ul>
-            <li>Taxe ou redevance d'enlèvement des ordures ménagères</li>
-            <li>Taxe de balayage</li>
-            <li>Redevance assainissement.</li>
-          </ul>` : `
+          ${property.is_coliving ? '' : `
           <p><strong>Charges récupérables (provisions avec régularisation annuelle) :</strong></p>
           <ul>
             <li>Chauffage et eau chaude collective</li>
@@ -674,9 +610,22 @@ function generateContractHTML(data: ContractData): string {
           </ul>`}
         </div>
 
-        <h2>ARTICLE III — DATE DE PRISE D'EFFET ET DURÉE</h2>
+        ${property.is_coliving ? `
+        <h2>ARTICLE III — CHARGES FORFAITAIRES ET SERVICES</h2>
         <div class="article">
-          <strong>La location prend effet le <span style="color:#c9a96e;">${fDate(form.entry_date)}</span> pour une durée de ${durationInWordsPreview(form.lease_duration_months || 12)} (${form.lease_duration_months || 12}) mois, soit jusqu'au <span style="color:#c9a96e;">${fDate(exit_date)}</span>.</strong>
+          <p><strong>CHARGES FORFAITAIRES — COMPRIS DANS VOTRE FORFAIT DE CHARGES</strong></p>
+          <p style="color:#6B6B6B;">Retrouvez tout le détail des charges incluses à l'article V du présent contrat.</p>
+          <ul><li>Eau &amp; énergie</li><li>Entretien des parties communes intérieures &amp; extérieures</li><li>Abonnements</li><li>Taxes</li></ul>
+          <p><strong>FOURNITURES — COMPRIS DANS VOTRE FORFAIT DE CHARGES</strong></p>
+          <ul><li>Produits d'entretien ménager ;</li><li>Produits de lave-vaisselle (lavage, liquide de rinçage, sels) ;</li><li>Liquide vaisselle ;</li><li>Lessive pour le linge ;</li><li>Savon lave-main ;</li><li>Essuie-tout, papier toilette ;</li><li>Éponges (classiques et acier) ;</li><li>Sacs poubelle ;</li><li>Chlore de piscine ;</li><li>Gaz pour le BBQ (remboursement sur présentation du justificatif d'achat).</li></ul>
+          <p><strong>SERVICES COMMUNAUTAIRES — GRATUITS</strong></p>
+          <p style="color:#6B6B6B;">Offerts par le bailleur. Ils ne sont facturés ni en supplément ni au titre du forfait de charges, leur usage est libre et ils ne conditionnent en rien la location.</p>
+          <ul><li>Mise à disposition d'une parure de linge de lit et serviette.</li><li>Évènements communautaires récurrents</li><li>Cours de yoga</li><li>Cours de remise en forme (coaching sportif)</li><li>Soirée communautaire mensuelle</li><li>Accès internet fibre — box mise à disposition dans les parties communes</li><li>Abonnements numériques de divertissement (services de streaming)</li><li>Résolution des problèmes : contact via WhatsApp, réponse en moins de 48 h.</li><li>Gestion des départs : à vous de rencontrer notre sélection de nouveaux candidats et de les sélectionner</li></ul>
+        </div>` : ''}
+
+        <h2>${property.is_coliving ? 'ARTICLE IV' : 'ARTICLE III'} — DATE DE PRISE D'EFFET ET DURÉE</h2>
+        <div class="article">
+          <strong>La location prend effet le <span style="color:#B8860B;">${fDate(form.entry_date)}</span> pour une durée de ${durationInWordsPreview(form.lease_duration_months || 12)} (${form.lease_duration_months || 12}) mois, soit jusqu'au <span style="color:#B8860B;">${fDate(exit_date)}</span>.</strong>
           <br/><br/>
           À l'expiration de cette période, le contrat se renouvelle par reconduction tacite pour des périodes successives de ${durationInWordsPreview(form.lease_duration_months || 12)} mois, sauf dénonciation notifiée au moins un mois avant l'expiration du contrat par le locataire, ou trois mois par le bailleur.
           <br/><br/>
@@ -685,7 +634,7 @@ function generateContractHTML(data: ContractData): string {
 
         <div class="page-break"></div>
 
-        <h2>ARTICLE IV — CONDITIONS FINANCIÈRES</h2>
+        <h2>${property.is_coliving ? 'ARTICLE V' : 'ARTICLE IV'} — CONDITIONS FINANCIÈRES</h2>
         <div class="article">
           ${property.is_coliving ? `
           ${isLegacyCharges
@@ -693,7 +642,7 @@ function generateContractHTML(data: ContractData): string {
             : `<h3><strong>Loyer mensuel charges comprises :</strong> ${fEUR(loyer_eur)}</h3>`}
           ${(!data.prorata_days || !data.prorata_total_days || data.prorata_days >= data.prorata_total_days)
             ? '<p><em>Entrée le 1er du mois — pas de prorata.</em></p>'
-            : '<p><strong>Prorata du premier mois :</strong> Du ' + fDate(form.entry_date) + ' au dernier jour du mois (' + data.prorata_days + '/' + data.prorata_total_days + ' jours) :</p><ul><li><strong>En EUR :</strong> <strong style="color:#c9a96e;">' + fEUR(data.prorata_eur) + '</strong></li></ul>'}
+            : '<p><strong>Prorata du premier mois :</strong> Du ' + fDate(form.entry_date) + ' au dernier jour du mois (' + data.prorata_days + '/' + data.prorata_total_days + ' jours) :</p><ul><li><strong>En EUR :</strong> <strong style="color:#B8860B;">' + fEUR(data.prorata_eur) + '</strong></li></ul>'}
           <h3>Charges forfaitaires mensuelles :</h3>
           ${chargesTable}` : `
           <h3>Loyer mensuel :</h3>
@@ -719,7 +668,7 @@ function generateContractHTML(data: ContractData): string {
           <p>Passé ce délai de trois mois, aucune indemnité n'est due : le locataire reste libre de donner congé à tout moment, avec un préavis d'un mois, conformément à l'article 25-8 de la loi du 6 juillet 1989.</p>` : ''}
           <h3>Modalités de paiement :</h3>
           <ul>
-            <li><strong style="color:#c9a96e;">Le loyer et les charges doivent être versés avant le 5 du mois.</strong></li>
+            <li><strong style="color:#B8860B;">Le loyer et les charges doivent être versés avant le 5 du mois.</strong></li>
             <li>Virement bancaire sur le compte du bailleur.</li>
           </ul>
           ${property.name?.includes('Villa') || property.name?.includes('lavilla')
@@ -741,21 +690,21 @@ function generateContractHTML(data: ContractData): string {
             : ''}
         </div>
 
-        <h2>ARTICLE V — GARANTIES</h2>
+        <h2>${property.is_coliving ? 'ARTICLE VI' : 'ARTICLE V'} — GARANTIES</h2>
         <div class="article">
           ${property.is_coliving
-            ? `Le locataire versera un dépôt de garantie égal à deux (2) mois de loyer hors charges, soit <strong style="color:#c9a96e;">${fEUR(depot_eur)}</strong>, restitué dans les deux (2) mois suivant la fin du contrat, selon l'état des lieux.`
-            : `Le locataire versera un dépôt de garantie égal à un (1) mois de loyer hors charges, soit <strong style="color:#c9a96e;">${fEUR(depot_eur)}</strong>, restitué dans les deux (2) mois suivant la fin du contrat, déduction faite des sommes éventuellement dues.`}
+            ? `Le locataire versera un dépôt de garantie égal à deux (2) mois de loyer hors charges, soit <strong style="color:#B8860B;">${fEUR(depot_eur)}</strong>, restitué dans les deux (2) mois suivant la fin du contrat, selon l'état des lieux.`
+            : `Le locataire versera un dépôt de garantie égal à un (1) mois de loyer hors charges, soit <strong style="color:#B8860B;">${fEUR(depot_eur)}</strong>, restitué dans les deux (2) mois suivant la fin du contrat, déduction faite des sommes éventuellement dues.`}
         </div>
 
-        <h2>ARTICLE VI — CLAUSE RÉSOLUTOIRE</h2>
+        <h2>${property.is_coliving ? 'ARTICLE VII' : 'ARTICLE VI'} — CLAUSE RÉSOLUTOIRE</h2>
         <div class="article">
           Le bailleur se réserve le droit de résilier le contrat en cas de non-paiement du loyer ou des charges, sans préjudice du droit de poursuivre le recouvrement des sommes dues.
         </div>
 
         <div class="page-break"></div>
 
-        <h2>ARTICLE VII — OBLIGATIONS DU LOCATAIRE</h2>
+        <h2>${property.is_coliving ? 'ARTICLE VIII' : 'ARTICLE VII'} — OBLIGATIONS DU LOCATAIRE</h2>
         <div class="article">
           Le locataire s'engage à :
           <ol>
@@ -771,7 +720,7 @@ function generateContractHTML(data: ContractData): string {
           </ol>
         </div>
 
-        <h2>ARTICLE VIII — OBLIGATIONS DU BAILLEUR</h2>
+        <h2>${property.is_coliving ? 'ARTICLE IX' : 'ARTICLE VIII'} — OBLIGATIONS DU BAILLEUR</h2>
         <div class="article">
           Le bailleur s'engage à :
           <ol>
@@ -784,7 +733,7 @@ function generateContractHTML(data: ContractData): string {
         </div>
 
         ${property.is_coliving ? `
-        <h2>ARTICLE IX — USAGE DES ÉQUIPEMENTS ET ESPACES COMMUNS — RESPONSABILITÉ DU LOCATAIRE</h2>
+        <h2>ARTICLE X — USAGE DES ÉQUIPEMENTS ET ESPACES COMMUNS — RESPONSABILITÉ DU LOCATAIRE</h2>
         <div class="article">
           <p><strong>§ 1 — Périmètre</strong><br/>
           La maison met à disposition du Locataire, dans les espaces communs, des équipements premium dont notamment, sans que cette liste soit limitative : piscine, sauna, jacuzzi le cas échéant, salle de sport et matériel associé, cuisine équipée et électroménager, mobilier et équipements de détente, jardin et terrasses, ainsi que tout équipement ajouté en cours de bail.</p>
@@ -811,7 +760,7 @@ function generateContractHTML(data: ContractData): string {
           Les présentes stipulations ne sauraient priver le Locataire de l'exercice des droits qu'il tient des dispositions légales d'ordre public, ni exonérer le Bailleur de son obligation légale de sécurité et de délivrance d'un logement décent.</p>
         </div>` : ''}
 
-        <h2>${property.is_coliving ? 'ARTICLE X' : 'ARTICLE IX'} — ÉTAT DES LIEUX</h2>
+        <h2>${property.is_coliving ? 'ARTICLE XI' : 'ARTICLE IX'} — ÉTAT DES LIEUX</h2>
         <div class="article">
           ${property.is_coliving
             ? "L'état des lieux d'entrée et de sortie sera établi via <strong>Etadly</strong>. Le locataire recevra un exemplaire après sa réalisation."
@@ -824,7 +773,7 @@ function generateContractHTML(data: ContractData): string {
           L'inventaire détaillé du mobilier et des équipements fournis est joint en annexe au présent contrat. Le locataire s'engage à en prendre soin et à le restituer en bon état.
         </div>` : ''}
 
-        <h2>ARTICLE XI — DIAGNOSTICS TECHNIQUES</h2>
+        <h2>${property.is_coliving ? 'ARTICLE XII' : 'ARTICLE XI'} — DIAGNOSTICS TECHNIQUES</h2>
         <div class="article">
           Conformément à la réglementation française, le bailleur fournit au locataire :
           <ul>
@@ -837,17 +786,18 @@ function generateContractHTML(data: ContractData): string {
         </div>
 
         ${property.is_coliving ? `
-        <h2>ARTICLE XII — RÈGLEMENT INTÉRIEUR</h2>
+        <h2>ARTICLE XIII — RÈGLEMENT INTÉRIEUR</h2>
         <div class="article">
           Le locataire accepte le Règlement Intérieur La Villa Coliving (la "Bible du Coliver"), joint en annexe, qui précise les règles de vie commune, l'usage des parties communes et les procédures de gestion interne.
         </div>
 
-        <h2>ARTICLE XIII — ANNEXES</h2>` : `
+        <h2>ARTICLE XIV — ANNEXES</h2>` : `
         <h2>ARTICLE XII — ANNEXES</h2>`}
         <div class="article">
           Sont annexées au présent contrat :
           <ul>
             ${property.is_coliving ? '<li>Règlement Intérieur La Villa Coliving</li>' : ''}
+            ${property.is_coliving && !isLegacyCharges ? '<li>Annexe « Comment votre loyer est construit »</li>' : ''}
             <li>Diagnostics techniques</li>
             ${!property.is_coliving ? '<li>Notice d\'information relative aux droits et obligations des locataires et des bailleurs</li>' : ''}
             ${!property.is_coliving ? '<li>RIB du bailleur</li>' : ''}
@@ -868,13 +818,12 @@ function generateContractHTML(data: ContractData): string {
             <div style="font-size:9px;margin-top:30px;font-style:italic;">${property.manager_name || 'Jérôme AUSTIN'}</div>
           </div>
           <div class="signature-box">
-            <div>Le ${fDate(form.entry_date)}</div>
             <div style="font-size:9px;margin-top:15px;">Signature du locataire</div>
             <div style="font-size:9px;margin-top:30px;font-style:italic;">${ph(form.locataire_prenom, 'Prénom')} ${ph(form.locataire_nom, 'Nom')}</div>
           </div>
         </div>
 
-        <div style="margin-top:40px;padding-top:20px;border-top:1px solid #c9a96e;text-align:center;font-size:9px;color:#999;">
+        <div style="margin-top:40px;padding-top:20px;border-top:1px solid #B8860B;text-align:center;font-size:9px;color:#999;">
           Lu et approuvé
         </div>
 
@@ -1933,7 +1882,7 @@ export default function DashboardNouveauBailPage() {
                       : (prev.annexe_documents || []).filter((d) => d !== doc),
                   }));
                 }}
-                style={{ width: '16px', height: '16px', accentColor: '#c9a96e' }}
+                style={{ width: '16px', height: '16px', accentColor: '#B8860B' }}
               />
               {doc}
             </label>
@@ -1967,7 +1916,7 @@ export default function DashboardNouveauBailPage() {
                   input.value = '';
                 }
               }}
-              style={{ padding: '8px 14px', background: '#c9a96e', color: 'white', border: 'none', borderRadius: '4px', cursor: 'pointer', fontSize: '13px' }}
+              style={{ padding: '8px 14px', background: '#B8860B', color: 'white', border: 'none', borderRadius: '4px', cursor: 'pointer', fontSize: '13px' }}
             >
               + Ajouter
             </button>
@@ -1998,7 +1947,7 @@ export default function DashboardNouveauBailPage() {
           transition: 'background 0.2s',
         }}
           onClick={() => fileInputRef.current?.click()}
-          onDragOver={(e) => { e.preventDefault(); e.currentTarget.style.borderColor = '#c9a96e'; }}
+          onDragOver={(e) => { e.preventDefault(); e.currentTarget.style.borderColor = '#B8860B'; }}
           onDragLeave={(e) => { e.currentTarget.style.borderColor = '#ddd'; }}
           onDrop={(e) => {
             e.preventDefault();
@@ -2059,7 +2008,7 @@ export default function DashboardNouveauBailPage() {
                 display: 'flex', alignItems: 'center', gap: '8px', padding: '8px 10px',
                 background: '#faf8f5', borderRadius: '4px', marginBottom: '4px', fontSize: '13px',
               }}>
-                <span style={{ color: '#c9a96e', fontWeight: 600 }}>
+                <span style={{ color: '#B8860B', fontWeight: 600 }}>
                   {af.file.type.includes('pdf') ? '(pdf)' : af.file.type.includes('image') ? '(img)' : '(doc)'}
                 </span>
                 <input
@@ -2120,7 +2069,7 @@ export default function DashboardNouveauBailPage() {
             style={{
               flex: 1,
               padding: '12px',
-              background: (contractData && !generationBloquee) ? '#c9a96e' : '#cccccc',
+              background: (contractData && !generationBloquee) ? '#B8860B' : '#cccccc',
               color: 'white',
               border: 'none',
               borderRadius: '4px',

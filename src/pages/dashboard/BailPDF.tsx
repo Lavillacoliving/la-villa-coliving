@@ -143,7 +143,7 @@ function fCHF(n: number): string {
   }).format(n).replace(/[\s\u00A0\u202F\u2009]/g, " ");
 }
 
-const gold = "#c9a96e";
+const gold = "#B8860B";
 const s = StyleSheet.create({
   page: {
     fontFamily: "Helvetica",
@@ -286,7 +286,8 @@ const s = StyleSheet.create({
     bottom: 20,
     left: 45,
     right: 45,
-    textAlign: "center",
+    flexDirection: "row",
+    justifyContent: "space-between",
     fontSize: 8,
     color: "#999",
     lineHeight: 1.6,
@@ -345,15 +346,15 @@ export function BailPDF({ data }: { data: BailPDFData }) {
         {/* ---------- HEADER ---------- */}
         <View style={s.headerBlock} fixed={false}>
           <Image style={s.logo} src="https://www.lavillacoliving.com/logos/logo-full.png" />
-          <Text style={{ fontSize: 10, fontFamily: "Helvetica-Bold" }}>
-            {"La Villa Coliving"}
-          </Text>
           <Text style={s.headerTitle}>{"CONTRAT DE LOCATION\nDE LOGEMENT MEUBL\u00C9"}</Text>
           <Text style={s.headerSub}>{"Loi n\u00B0 89-462 du 6 juillet 1989"}</Text>
+          <View style={{ width: 4, height: 4, backgroundColor: gold, marginTop: 8,
+            alignSelf: "center", transform: "rotate(45deg)" }} />
         </View>
 
-        {/* ---------- BAILLEUR ---------- */}
-        <View style={s.partyBox}>
+        {/* ---------- BAILLEUR / LOCATAIRE (2 colonnes, cf. modele) ---------- */}
+        <View style={{ flexDirection: "row", gap: 10 }}>
+        <View style={[s.partyBox, { flex: 1 }]}>
           <Text style={s.partyLabel}>BAILLEUR :</Text>
           {(property.legal_entity_name?.trim()
             ? [property.legal_entity_name.trim()]
@@ -372,8 +373,7 @@ export function BailPDF({ data }: { data: BailPDFData }) {
           )}
         </View>
 
-        {/* ---------- LOCATAIRE ---------- */}
-        <View style={s.partyBox}>
+        <View style={[s.partyBox, { flex: 1 }]}>
           <Text style={s.partyLabel}>LOCATAIRE :</Text>
           <Text>{ph(form.locataire_nom, "Nom")} {ph(form.locataire_prenom, "Pr\u00E9nom")}</Text>
           <Text>{"N\u00E9(e) le "}{fDate(form.locataire_dob)}{" \u00E0 "}{ph(form.locataire_birthplace, "Lieu de naissance")}</Text>
@@ -383,6 +383,7 @@ export function BailPDF({ data }: { data: BailPDFData }) {
           <Text>{"T\u00E9l : "}{ph(form.locataire_phone, "T\u00E9l\u00E9phone")}</Text>
           <Text>Profession : {ph(form.locataire_profession, "Profession")}</Text>
           <Text>Employeur : {ph(form.locataire_employer, "Employeur")}</Text>
+        </View>
         </View>
 
         {/* ---------- ARTICLE I ---------- */}
@@ -448,9 +449,19 @@ export function BailPDF({ data }: { data: BailPDFData }) {
         {property.is_coliving && (property.common_areas || []).length > 0 && (
           <View>
             <Text style={s.subTitle}>{"Acc\u00E8s aux parties communes :"}</Text>
-            {(property.common_areas || []).map((area: string, i: number) => (
-              <Text key={i} style={[s.body, { paddingLeft: 10, marginBottom: 2 }]}>{area}</Text>
-            ))}
+            <View style={{ flexDirection: "row" }}>
+              {[0, 1].map((col) => {
+                const areas = property.common_areas || [];
+                const moitie = Math.ceil(areas.length / 2);
+                return (
+                  <View key={col} style={{ flex: 1 }}>
+                    {areas.slice(col * moitie, (col + 1) * moitie).map((area: string, i: number) => (
+                      <Text key={i} style={[s.body, { paddingLeft: 10, marginBottom: 2 }]}>{area}</Text>
+                    ))}
+                  </View>
+                );
+              })}
+            </View>
           </View>
         )}
 
@@ -873,7 +884,6 @@ export function BailPDF({ data }: { data: BailPDFData }) {
           {!property.is_coliving && <Bullet>{"Notice d\u2019information relative aux droits et obligations des locataires et des bailleurs"}</Bullet>}
           {!property.is_coliving && <Bullet>{"RIB du bailleur"}</Bullet>}
           {property.is_coliving && <Bullet>{"R\u00E8glement Int\u00E9rieur La Villa Coliving"}</Bullet>}
-          {property.is_coliving && <Bullet>{"Inventaire du mobilier"}</Bullet>}
           {property.is_coliving && !isLegacyCharges && (
             <Bullet>{"Annexe \u00AB Comment votre loyer est construit \u00BB"}</Bullet>
           )}
@@ -900,7 +910,6 @@ export function BailPDF({ data }: { data: BailPDFData }) {
               <Text style={s.signatureName}>{property.manager_name || "J\u00E9r\u00F4me AUSTIN"}</Text>
             </View>
             <View style={s.signatureBox}>
-              <Text style={{ fontSize: 9 }}>Le {fDate(form.entry_date)}</Text>
               <Text style={s.signatureLabel}>Signature du locataire</Text>
               <Text style={s.signatureName}>{ph(form.locataire_prenom, "Pr\u00E9nom")} {ph(form.locataire_nom, "Nom")}</Text>
             </View>
@@ -913,10 +922,8 @@ export function BailPDF({ data }: { data: BailPDFData }) {
 
         {/* Fixed footer — direct child of Page for fixed positioning */}
         <View style={s.pageFooter} fixed>
-          <Text render={({ pageNumber, totalPages }) => pageNumber < totalPages ? "La Villa Coliving - lavillacoliving.com" : ""} />
-          <Text render={({ pageNumber, totalPages }) => pageNumber < totalPages ? "8 rue du Mont-Blanc" : ""} />
-          <Text render={({ pageNumber, totalPages }) => pageNumber < totalPages ? "74100 Annemasse" : ""} />
-          <Text render={({ pageNumber, totalPages }) => pageNumber < totalPages ? `Page ${pageNumber} / ${totalPages}` : ""} />
+          <Text>{"La Villa Coliving \u2014 Contrat de location de logement meubl\u00E9"}</Text>
+          <Text render={({ pageNumber }) => `Page ${pageNumber}`} />
         </View>
 
       </Page>
