@@ -23,6 +23,8 @@ interface Property {
   charges_energy_chf: number;
   charges_maintenance_chf: number;
   charges_services_chf: number;
+  // Bail 01/09/2026 : forfait unique EUR (migration 2026-09-01-bail-forfait-eur.sql)
+  charges_forfait_eur: number | null;
   deposit_months: number;
   entity_id: string | null;
   manager_name: string;
@@ -903,6 +905,7 @@ export default function DashboardNouveauBailPage() {
     loyer_chf: 0,
     exchange_rate: exchangeRate,
     exchange_rate_date: new Date().toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' }),
+    charges_forfait_eur: null,
     charges_energy: 130,
     charges_maintenance: 200,
     charges_services: 90,
@@ -975,9 +978,12 @@ export default function DashboardNouveauBailPage() {
       if (prop) {
         setForm((prev) => ({
           ...prev,
-          charges_energy: prop.charges_energy_chf || 130,
-          charges_maintenance: prop.charges_maintenance_chf || 200,
-          charges_services: prop.charges_services_chf || 90,
+          // Legacy conserve pour les baux anterieurs ; plus de valeur de secours
+          // en dur (elles ne correspondraient plus a rien depuis le 01/09/2026).
+          charges_energy: prop.charges_energy_chf ?? 0,
+          charges_maintenance: prop.charges_maintenance_chf ?? 0,
+          charges_services: prop.charges_services_chf ?? 0,
+          charges_forfait_eur: prop.charges_forfait_eur ?? null,
         }));
       }
     }
@@ -995,9 +1001,10 @@ export default function DashboardNouveauBailPage() {
         ...prev,
         property_id: pid,
         room_id: "",
-        charges_energy: prop.charges_energy_chf || 130,
-        charges_maintenance: prop.charges_maintenance_chf || 200,
-        charges_services: prop.charges_services_chf || 90,
+        charges_energy: prop.charges_energy_chf ?? 0,
+        charges_maintenance: prop.charges_maintenance_chf ?? 0,
+        charges_services: prop.charges_services_chf ?? 0,
+        charges_forfait_eur: prop.charges_forfait_eur ?? null,
       }));
     }
 
@@ -1680,64 +1687,34 @@ export default function DashboardNouveauBailPage() {
         />
 
         <label style={{ display: 'block', marginBottom: '8px', fontSize: '13px', color: '#666' }}>
-          Charges mensuelles — Énergie (EUR)
+          Forfait de charges récupérables (EUR/mois)
         </label>
         <input
           type="number"
           step="1"
-          value={form.charges_energy}
+          value={form.charges_forfait_eur ?? ''}
+          placeholder="Renseigné automatiquement depuis la maison"
           onChange={(e) =>
-            setForm((prev) => ({ ...prev, charges_energy: parseInt(e.target.value) || 0 }))
+            setForm((prev) => ({
+              ...prev,
+              charges_forfait_eur: e.target.value === '' ? null : parseInt(e.target.value) || 0,
+            }))
           }
           style={{
             width: '100%',
             padding: '10px',
-            marginBottom: '10px',
+            marginBottom: '4px',
             borderRadius: '4px',
-            border: '1px solid #ddd',
+            border: form.charges_forfait_eur == null ? '2px solid #FCA5A5' : '1px solid #ddd',
             fontSize: '14px',
+            background: form.charges_forfait_eur == null ? '#FFFBEB' : 'white',
           }}
         />
-
-        <label style={{ display: 'block', marginBottom: '8px', fontSize: '13px', color: '#666' }}>
-          Charges mensuelles — Maintenance (EUR)
-        </label>
-        <input
-          type="number"
-          step="1"
-          value={form.charges_maintenance}
-          onChange={(e) =>
-            setForm((prev) => ({ ...prev, charges_maintenance: parseInt(e.target.value) || 0 }))
-          }
-          style={{
-            width: '100%',
-            padding: '10px',
-            marginBottom: '10px',
-            borderRadius: '4px',
-            border: '1px solid #ddd',
-            fontSize: '14px',
-          }}
-        />
-
-        <label style={{ display: 'block', marginBottom: '8px', fontSize: '13px', color: '#666' }}>
-          Charges mensuelles — Services (EUR)
-        </label>
-        <input
-          type="number"
-          step="1"
-          value={form.charges_services}
-          onChange={(e) =>
-            setForm((prev) => ({ ...prev, charges_services: parseInt(e.target.value) || 0 }))
-          }
-          style={{
-            width: '100%',
-            padding: '10px',
-            marginBottom: '10px',
-            borderRadius: '4px',
-            border: '1px solid #ddd',
-            fontSize: '14px',
-          }}
-        />
+        <p style={{ fontSize: '12px', color: form.charges_forfait_eur == null ? '#B45309' : '#666', marginBottom: '15px' }}>
+          {form.charges_forfait_eur == null
+            ? "⚠️ Aucun forfait en base pour cette maison — le bail sortira en ANCIEN format (3 postes). Renseigner properties.charges_forfait_eur avant de générer un bail au nouveau format."
+            : "Charges récupérables (décret n° 87-713). Modifiable au cas par cas."}
+        </p>
 
         <label style={{ display: 'block', marginBottom: '8px', fontSize: '13px', color: '#666' }}>
           Indemnité de départ anticipé — départ avant 3 mois (EUR)
