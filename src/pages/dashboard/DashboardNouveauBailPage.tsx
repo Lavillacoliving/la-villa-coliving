@@ -370,9 +370,14 @@ function generateContractHTML(data: ContractData): string {
           color: #666;
           margin: 8px 0 0 0;
         }
+        .highlight-box {
+          background: #F3ECD8;
+          border-top: 1px solid #B8860B;
+          padding: 10px;
+          margin: 8px 0;
+        }
         .party-box {
-          background: #faf8f5;
-          border-left: 4px solid #B8860B;
+          background: #F3ECD8;
           padding: 12px 10px;
           margin: 15px 0;
           font-size: 10pt;

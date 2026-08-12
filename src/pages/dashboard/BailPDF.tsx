@@ -173,9 +173,7 @@ const s = StyleSheet.create({
     marginTop: 2,
   },
   partyBox: {
-    backgroundColor: "#faf8f5",
-    borderLeftWidth: 3,
-    borderLeftColor: gold,
+    backgroundColor: "#F3ECD8",
     padding: 10,
     marginVertical: 8,
     fontSize: 9,
@@ -235,6 +233,13 @@ const s = StyleSheet.create({
     flexDirection: "row",
     borderBottomWidth: 1,
     borderBottomColor: "#e0e0e0",
+  },
+  highlightBox: {
+    backgroundColor: "#F3ECD8",
+    borderTopWidth: 0.75,
+    borderTopColor: gold,
+    padding: 8,
+    marginVertical: 6,
   },
   tableHeader: {
     flexDirection: "row",
@@ -545,6 +550,7 @@ export function BailPDF({ data }: { data: BailPDFData }) {
 
         {property.is_coliving ? (
           <View>
+            <View style={s.highlightBox}>
             {isLegacyCharges ? (
               <Text style={s.subTitle}><Text style={{ fontFamily: "Helvetica-Bold" }}>Loyer mensuel :</Text> {fEUR(loyer_eur)} ({fCHF(form.loyer_chf)} au taux BCE du {form.exchange_rate_date || "\u2014"} : {rate}{" \u2014 pour indication uniquement"})</Text>
             ) : (
@@ -560,6 +566,7 @@ export function BailPDF({ data }: { data: BailPDFData }) {
             ) : (
               <Text style={[s.body, { fontStyle: "italic" }]}>{"Entr\u00E9e le 1er du mois \u2014 pas de prorata."}</Text>
             )}
+            </View>
 
             {isLegacyCharges ? (
               <View>
@@ -700,6 +707,7 @@ export function BailPDF({ data }: { data: BailPDFData }) {
 
         {form.frais_remise_location > 0 && (
           <View minPresenceAhead={60} style={{ marginTop: 8 }}>
+            <View style={s.highlightBox}>
             <Text style={[s.subTitle, { color: gold }]}>
               {"Indemnité de départ anticipé : "}{fEUR(form.frais_remise_location)}
             </Text>
@@ -716,6 +724,7 @@ export function BailPDF({ data }: { data: BailPDFData }) {
             <Text style={[s.body, { marginTop: 4 }]}>
               {"Passé ce délai de trois mois, aucune indemnité n'est due : le locataire reste libre de donner congé à tout moment, avec un préavis d'un mois, conformément à l'article 25-8 de la loi du 6 juillet 1989."}
             </Text>
+            </View>
           </View>
         )}
 
