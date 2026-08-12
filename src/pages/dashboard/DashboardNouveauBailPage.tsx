@@ -48,6 +48,8 @@ interface Room {
   has_terrace: boolean;
   has_private_entrance: boolean;
   rent_chf: number;
+  /** Prix contractuel maître (addendum 1). NULL = chambre non tarifée en euros. */
+  rent_eur: number | null;
   specifics: Record<string, any> | null;
   furniture_inventory: Array<{item: string; qty: number}> | null;
 }
@@ -83,6 +85,66 @@ interface FormData {
   clauses_particulieres: string;
   annexe_documents: string[];
   lease_duration_months: number;
+}
+
+// ───────────────────────────────────────────────────────────────────────────
+// SOURCE UNIQUE DES MONTANTS DU BAIL — ne jamais dupliquer ce calcul ailleurs.
+//
+// Depuis l'addendum 1 (bascule du 01/09/2026), l'EURO est le prix contractuel
+// maître : il vient de rooms.rent_eur (1 540 € en salle de bain privative,
+// 1 490 € en salle d'eau partagée). Il ne doit JAMAIS être dérivé d'une
+// conversion du franc suisse : une telle conversion fait bouger le loyer
+// contractuel à chaque variation du taux BCE et efface la distinction
+// salle d'eau partagée.
+//
+// Le franc ne subsiste qu'à titre indicatif, et uniquement sur les baux au
+// format legacy (signés avant le 01/09/2026, sans forfait unique en base),
+// qui doivent ressortir à l'identique avec leurs 3 postes de charges.
+//
+// Cette fonction alimente les trois consommateurs qui divergeaient :
+// l'aperçu HTML, le PDF contractuel signé, et ce qui est écrit en base.
+// ───────────────────────────────────────────────────────────────────────────
+export interface BailAmounts {
+  isLegacy: boolean;
+  /** Loyer mensuel charges comprises — montant contractuel. */
+  loyerCC: number;
+  /** Forfait unique, ou somme des 3 postes en legacy. */
+  charges: number;
+  /** Loyer hors charges = assiette de la caution (loi Alur, meublé). */
+  loyerNu: number;
+  depot: number;
+  /** true = prix maître absent en base : la génération doit être bloquée. */
+  rentEurManquant: boolean;
+}
+
+type BailAmountsInput = Pick<
+  FormData,
+  | 'charges_forfait_eur' | 'rent_eur' | 'loyer_chf' | 'exchange_rate'
+  | 'charges_energy' | 'charges_maintenance' | 'charges_services'
+>;
+
+export function computeBailAmounts(form: BailAmountsInput, depositMonths: number): BailAmounts {
+  const isLegacy = form.charges_forfait_eur === null || form.charges_forfait_eur === undefined;
+  const rentEurManquant = !isLegacy && (form.rent_eur === null || form.rent_eur === undefined);
+
+  const loyerCC = isLegacy
+    ? Math.round(form.loyer_chf / (form.exchange_rate || 0.9145))
+    : Number(form.rent_eur ?? 0);
+
+  const charges = isLegacy
+    ? (form.charges_energy || 0) + (form.charges_maintenance || 0) + (form.charges_services || 0)
+    : Number(form.charges_forfait_eur);
+
+  const loyerNu = Math.max(0, loyerCC - charges);
+
+  return {
+    isLegacy,
+    loyerCC,
+    charges,
+    loyerNu,
+    depot: loyerNu * (depositMonths || 2),
+    rentEurManquant,
+  };
 }
 
 // Helper: nombre en lettres pour la durée (mois)
@@ -163,12 +225,10 @@ function generateContractHTML(data: ContractData): string {
   // Charges en EUR (cf. dette de schema : les colonnes _chf portent des EUR).
   // Bascule legacy : un bail signe avant le 01/09/2026 n'a pas de forfait unique
   // et doit ressortir A L'IDENTIQUE avec ses 3 postes.
-  const isLegacyCharges = form.charges_forfait_eur === null || form.charges_forfait_eur === undefined;
-  const totalChargesEUR = isLegacyCharges
-    ? form.charges_energy + form.charges_maintenance + form.charges_services
-    : Number(form.charges_forfait_eur);
-
-  const loyerNuEurTable = Math.max(0, Math.round(form.loyer_chf / (form.exchange_rate || 0.9145)) - totalChargesEUR);
+  const amounts = computeBailAmounts(form, property.deposit_months);
+  const isLegacyCharges = amounts.isLegacy;
+  const totalChargesEUR = amounts.charges;
+  const loyerNuEurTable = amounts.loyerNu;
   const detailForfait = `
     <p style="font-weight:600;font-size:11px;margin-top:12px;">Détail du forfait de charges — nomenclature du décret n° 87-713 du 26 août 1987</p>
     <p style="font-weight:600;font-size:10px;margin-top:8px;">I. EAU</p>
@@ -628,7 +688,9 @@ function generateContractHTML(data: ContractData): string {
         <h2>ARTICLE IV — CONDITIONS FINANCIÈRES</h2>
         <div class="article">
           ${property.is_coliving ? `
-          <h3><strong>Loyer mensuel :</strong> ${fEUR(loyer_eur)} (${fCHF(form.loyer_chf)} au taux BCE du ${form.exchange_rate_date} : ${form.exchange_rate} — pour indication uniquement)</h3>
+          ${isLegacyCharges
+            ? `<h3><strong>Loyer mensuel :</strong> ${fEUR(loyer_eur)} (${fCHF(form.loyer_chf)} au taux BCE du ${form.exchange_rate_date} : ${form.exchange_rate} — pour indication uniquement)</h3>`
+            : `<h3><strong>Loyer mensuel charges comprises :</strong> ${fEUR(loyer_eur)}</h3>`}
           ${(!data.prorata_days || !data.prorata_total_days || data.prorata_days >= data.prorata_total_days)
             ? '<p><em>Entrée le 1er du mois — pas de prorata.</em></p>'
             : '<p><strong>Prorata du premier mois :</strong> Du ' + fDate(form.entry_date) + ' au dernier jour du mois (' + data.prorata_days + '/' + data.prorata_total_days + ' jours) :</p><ul><li><strong>En EUR :</strong> <strong style="color:#c9a96e;">' + fEUR(data.prorata_eur) + '</strong></li></ul>'}
@@ -903,6 +965,7 @@ export default function DashboardNouveauBailPage() {
     locataire_employer: '',
     entry_date: '',
     loyer_chf: 0,
+    rent_eur: null,
     exchange_rate: exchangeRate,
     exchange_rate_date: new Date().toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' }),
     charges_forfait_eur: null,
@@ -1019,6 +1082,7 @@ export default function DashboardNouveauBailPage() {
         ...prev,
         room_id: autoRoom.id,
         loyer_chf: autoRoom.rent_chf,
+        rent_eur: autoRoom.rent_eur ?? null,
       }));
     } else {
       setSelectedRoom(null);
@@ -1036,6 +1100,7 @@ export default function DashboardNouveauBailPage() {
       setForm((prev) => ({
         ...prev,
         loyer_chf: room.rent_chf,
+        rent_eur: room.rent_eur ?? null,
       }));
     }
   };
@@ -1049,13 +1114,27 @@ export default function DashboardNouveauBailPage() {
       })()
     : '';
 
-  // Calculate loyer EUR
-  const loyerEUR = Math.round(form.loyer_chf / form.exchange_rate);
-  // Caution = 2 mois de loyer HORS charges (loi Alur — meublé)
-  // form.charges_* sont en EUR (cf. note naming charges_*_chf trompeur)
-  const totalChargesEUR = (form.charges_energy || 0) + (form.charges_maintenance || 0) + (form.charges_services || 0);
-  const loyerHorsChargesEUR = Math.max(0, loyerEUR - totalChargesEUR);
-  const depotEUR = loyerHorsChargesEUR * 2;
+  // Montants du bail — source unique (cf. computeBailAmounts en tête de fichier).
+  // L'euro vient de rooms.rent_eur ; la caution est assise sur le loyer HORS
+  // charges (loi Alur — meublé) et sur properties.deposit_months, pas sur un 2 en dur.
+  const bailAmounts = computeBailAmounts(form, selectedProperty?.deposit_months ?? 2);
+  const loyerEUR = bailAmounts.loyerCC;
+  const totalChargesEUR = bailAmounts.charges;
+  const loyerHorsChargesEUR = bailAmounts.loyerNu;
+  const depotEUR = bailAmounts.depot;
+
+  // Conditions de blocage de la génération.
+  // 1. Prix maître absent : générer produirait un bail à 0 €. Blocage dur.
+  // 2. Taux BCE indisponible : ne bloque plus QUE les baux au format legacy,
+  //    seuls baux où le taux détermine encore un montant contractuel. Sur le
+  //    nouveau format l'euro vient de la base : bloquer sur une API externe
+  //    empêcherait d'établir un bail parfaitement valide.
+  const blocageMotif = bailAmounts.rentEurManquant
+    ? "Prix contractuel en euros absent en base pour cette chambre (rooms.rent_eur) — renseigne-le avant de générer le bail."
+    : bailAmounts.isLegacy && rateStatus === 'fallback'
+      ? "Saisis manuellement le taux EUR/CHF du jour : ce bail est au format legacy, le taux détermine encore les montants."
+      : '';
+  const generationBloquee = blocageMotif !== '';
 
   // Calculate prorata first month
   const computeProrata = () => {
@@ -1091,13 +1170,13 @@ export default function DashboardNouveauBailPage() {
       const bailEndStr = bailEnd.toISOString().split('T')[0];
 
       // Calculate amounts
-      const loyerEur = Math.round(form.loyer_chf / form.exchange_rate);
+      // Mêmes montants que l'aperçu et le PDF : une seule source de vérité.
+      // Auparavant ce bloc recalculait le loyer à partir du CHF, si bien que
+      // la base pouvait diverger du contrat effectivement signé.
       const depositMonths = selectedProperty.deposit_months || 2;
-      // Caution = N mois de loyer HORS charges (loi Alur — meublé)
-      // form.charges_* sont en EUR (cf. note naming charges_*_chf trompeur)
-      const totalChargesEurSave = (form.charges_energy || 0) + (form.charges_maintenance || 0) + (form.charges_services || 0);
-      const loyerHorsChargesEurSave = Math.max(0, loyerEur - totalChargesEurSave);
-      const depositEur = loyerHorsChargesEurSave * depositMonths;
+      const saveAmounts = computeBailAmounts(form, depositMonths);
+      const loyerEur = saveAmounts.loyerCC;
+      const depositEur = saveAmounts.depot;
 
       // Insert new tenant and get back the ID
       // ⚠️ Bail créé en mode 'draft' — pas encore envoyé Yousign, caution NON reçue.
@@ -1124,6 +1203,13 @@ export default function DashboardNouveauBailPage() {
         charges_energy_chf: form.charges_energy,
         charges_maintenance_chf: form.charges_maintenance,
         charges_services_chf: form.charges_services,
+        // Snapshot du nouveau format (migration 2026-09-01) : sans ces colonnes,
+        // le bail signé n'était retrouvable nulle part en base et toute relecture
+        // ultérieure serait retombée sur les 3 postes dépréciés.
+        rent_eur: saveAmounts.isLegacy ? null : saveAmounts.loyerCC,
+        charges_forfait_eur: saveAmounts.isLegacy ? null : saveAmounts.charges,
+        previous_tenant_rent_eur: form.previous_tenant_rent_eur ?? null,
+        previous_tenant_departure_date: form.previous_tenant_departure_date || null,
         notes: 'Bail généré automatiquement le ' + new Date().toLocaleDateString('fr-FR'),
       }).select('id').single();
 
@@ -2029,21 +2115,21 @@ export default function DashboardNouveauBailPage() {
         <div className="dash-toolbar" style={{ display: 'flex', gap: '10px' }}>
           <button
             onClick={async () => { if (!contractData) return; try { const blob = await pdf(BailPDF({ data: contractData })).toBlob(); const url = URL.createObjectURL(blob); const a = document.createElement('a'); a.href = url; a.download = `Bail_${form.locataire_nom || 'Locataire'}_${form.entry_date || 'date'}.pdf`; a.click(); URL.revokeObjectURL(url); } catch (e) { console.error('PDF error:', e); toast.error('Erreur PDF: ' + e); } }}
-            disabled={!contractData || rateStatus === 'fallback'}
-            title={rateStatus === 'fallback' ? 'Saisis manuellement le taux EUR/CHF du jour avant de générer le bail' : ''}
+            disabled={!contractData || generationBloquee}
+            title={blocageMotif}
             style={{
               flex: 1,
               padding: '12px',
-              background: (contractData && rateStatus !== 'fallback') ? '#c9a96e' : '#cccccc',
+              background: (contractData && !generationBloquee) ? '#c9a96e' : '#cccccc',
               color: 'white',
               border: 'none',
               borderRadius: '4px',
               fontWeight: '600',
-              cursor: (contractData && rateStatus !== 'fallback') ? 'pointer' : 'not-allowed',
+              cursor: (contractData && !generationBloquee) ? 'pointer' : 'not-allowed',
               fontSize: '14px',
             }}
           >
-            {rateStatus === 'fallback' ? '🔒 Taux BCE requis' : 'Générer le PDF'}
+            {bailAmounts.rentEurManquant ? '🔒 Prix EUR manquant' : bailAmounts.isLegacy && rateStatus === 'fallback' ? '🔒 Taux BCE requis' : 'Générer le PDF'}
           </button>
           <button
             onClick={() => window.print()}
@@ -2064,13 +2150,14 @@ export default function DashboardNouveauBailPage() {
           </button>
           <button
             onClick={handleSaveBail}
-            disabled={!contractData || saving}
+            disabled={!contractData || saving || generationBloquee}
+            title={blocageMotif}
             style={{
               flex:1, padding:'12px',
-              background: saving ? '#999' : '#27AB9F',
+              background: (saving || generationBloquee) ? '#999' : '#27AB9F',
               color:'white', border:'none',
               borderRadius:'4px', fontWeight:'600',
-              cursor: (!contractData||saving) ? 'not-allowed' : 'pointer',
+              cursor: (!contractData||saving||generationBloquee) ? 'not-allowed' : 'pointer',
               fontSize:'14px',
             }}
           >
