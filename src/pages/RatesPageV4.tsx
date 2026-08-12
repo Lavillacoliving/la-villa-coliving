@@ -7,7 +7,7 @@ import { SEO } from "@/components/SEO";
 import { FaqSection } from "@/components/FaqSection";
 import { tarifsFaq } from "@/data/faq/tarifsFaq";
 import { buildBreadcrumbSchema, buildRoomsAggregateOfferSchema } from "@/lib/structuredData";
-import { STATS, STATS_SHARED_BATH, PRICE_FR_NUM, PRICE_EN_NUM, PRICE_CHF_FR, PRICE_CHF_EN, PRICE_SHARED_FR_NUM, PRICE_SHARED_EN_NUM, PRICE_SHARED_CHF_FR, PRICE_SHARED_CHF_EN, CONTRACT_EUR, EUR_STANDARD_FR_NUM, EUR_SHARED_FR_NUM, EUR_STANDARD_EN_NUM, EUR_SHARED_EN_NUM } from "@/data/stats";
+import { STATS, PRICE_FR_NUM, PRICE_EN_NUM, PRICE_CHF_FR, PRICE_CHF_EN, PRICE_SHARED_FR_NUM, PRICE_SHARED_EN_NUM, PRICE_SHARED_CHF_FR, PRICE_SHARED_CHF_EN, CONTRACT_EUR, EUR_STANDARD_FR_NUM, EUR_SHARED_FR_NUM, EUR_STANDARD_EN_NUM, EUR_SHARED_EN_NUM } from "@/data/stats";
 
 export function RatesPageV4() {
   const { language } = useLanguage();
@@ -345,8 +345,8 @@ export function RatesPageV4() {
           </p>
           <p className="text-lg text-[#78716C]">
             {language === "en"
-              ? `At La Villa Coliving, a room costs ${PRICE_CHF_EN}/month all-inclusive (${PRICE_SHARED_CHF_EN} for rooms with a shared shower room): rent, utilities, fiber, cleaning three times a week, gym, pool, streaming. No application or agency fees — deposit of 2 months' rent (excluding utilities).`
-              : `À La Villa Coliving, une chambre coûte ${PRICE_CHF_FR}/mois tout compris (${PRICE_SHARED_CHF_FR} pour les chambres à salle d'eau partagée) : loyer, charges, fibre, ménage 3x/semaine, salle de sport, piscine, streaming. Sans frais de dossier ni d'agence — caution de 2 mois de loyer (hors charges).`}
+              ? `At La Villa Coliving, most rooms cost ${PRICE_CHF_EN}/month all-inclusive (the others cost ${PRICE_SHARED_CHF_EN}/month): rent, utilities, fiber, cleaning three times a week, gym, pool, streaming. No application or agency fees — deposit of 2 months' rent (excluding utilities).`
+              : `À La Villa Coliving, la plupart des chambres coûtent ${PRICE_CHF_FR}/mois tout compris (les autres coûtent ${PRICE_SHARED_CHF_FR}/mois) : loyer, charges, fibre, ménage 3x/semaine, salle de sport, piscine, streaming. Sans frais de dossier ni d'agence — caution de 2 mois de loyer (hors charges).`}
           </p>
           <div className="mt-8 flex flex-wrap justify-center gap-2">
             {(language === "en"
@@ -361,14 +361,8 @@ export function RatesPageV4() {
               </span>
             ))}
           </div>
-          {/* Second niveau de tarif — 4 chambres à salle d'eau partagée (La Villa). Prix via stats.ts */}
-          <p className="mt-6 max-w-2xl mx-auto text-sm md:text-base text-[#57534E] border border-[#D4A574]/40 bg-[#D4A574]/10 rounded-xl px-5 py-3">
-            {language === "en"
-              ? `${PRICE_SHARED_CHF_EN}/month at ${STATS_SHARED_BATH.house} — one bathroom for every 2 rooms. And a real perk: our team does the cleaning!`
-              : `${PRICE_SHARED_CHF_FR}/mois à ${STATS_SHARED_BATH.house} — une salle d'eau pour 2 chambres. Avec un avantage : son ménage est assuré par notre équipe !`}
-          </p>
           {/* Mention contractuelle euro (prix maître depuis le 01/09/2026) — montants via CONTRACT_EUR */}
-          <p className="mt-2 max-w-2xl mx-auto text-xs text-[#78716C]">
+          <p className="mt-6 max-w-2xl mx-auto text-xs text-[#78716C]">
             {language === "en"
               ? `Contractual rent in euros: €${EUR_SHARED_EN_NUM}–€${EUR_STANDARD_EN_NUM}/month depending on the room. CHF shown for guidance — ${CONTRACT_EUR.rateLabelEn} rate.`
               : `Loyer contractuel en euros : de ${EUR_SHARED_FR_NUM} à ${EUR_STANDARD_FR_NUM} €/mois selon la chambre. Affichage en CHF indicatif — taux d'${CONTRACT_EUR.rateLabelFr}.`}{" "}
@@ -703,7 +697,16 @@ export function RatesPageV4() {
               <p>
                 {language === "en"
                   ? "A room in a standard flatshare in Annemasse costs less. It's also usually 9-12 m², with no pool, no sauna, no gym, cleaning left to you, and a landlord you have to chase."
-                  : "Une chambre en colocation classique à Annemasse coûte moins cher. Elle fait aussi, le plus souvent, 9 à 12 m², sans piscine, sans sauna, sans salle de sport, avec le ménage à ta charge et un propriétaire qu'il faut relancer."}
+                  : (
+                    <>
+                      Une chambre en colocation classique à Annemasse coûte moins cher. Elle fait
+                      aussi, le plus souvent, 9 à 12 m²,{" "}
+                      <strong>
+                        sans piscine, sans sauna, sans salle de sport, avec le ménage à ta charge et
+                        un propriétaire qu'il faut relancer.
+                      </strong>
+                    </>
+                  )}
               </p>
               <p>
                 {language === "en" ? (
@@ -712,7 +715,7 @@ export function RatesPageV4() {
                     <strong>
                       {STATS.roomSizeMin}-{STATS.roomSizeMax} m² room
                     </strong>{" "}
-                    — up to twice the usual market size —, generous common areas, a
+                    — <strong>up to twice the usual market size</strong> —, generous common areas, a
                     garden, and amenities no local flatshare offers: pool, sauna,
                     gym. A real team maintains the house — professional cleaning{" "}
                     <strong>three times a week</strong>,
@@ -726,7 +729,7 @@ export function RatesPageV4() {
                     <strong>
                       {STATS.roomSizeMin} à {STATS.roomSizeMax} m²
                     </strong>{" "}
-                    — jusqu'à deux fois la surface habituelle du marché —, des
+                    — <strong>jusqu'à deux fois la surface habituelle du marché</strong> —, des
                     espaces communs généreux, un jardin, et des équipements
                     qu'aucune colocation locale ne propose : piscine, sauna, salle
                     de sport. Une équipe entretient réellement la maison — ménage
@@ -745,9 +748,10 @@ export function RatesPageV4() {
                       Do the math per square metre: we're at market price — for
                       twice the home.
                     </strong>{" "}
-                    Add what's included (utilities, fibre, gym, sauna, cleaning:
-                    count CHF 250-400/month if paid separately) and the comparison
-                    flips.
+                    Add everything that's included (pool, gym, sauna, generous
+                    common areas, home cinema, yoga classes, fitness classes,
+                    monthly community event, cleaning, fibre, etc.: count
+                    CHF 250-400/month if paid separately) and the comparison flips.
                   </>
                 ) : (
                   <>
@@ -755,9 +759,10 @@ export function RatesPageV4() {
                       Fais le calcul au m² : nous sommes dans les prix du marché —
                       pour deux fois mieux.
                     </strong>{" "}
-                    Ajoute ce qui est inclus (charges, fibre, sport, sauna,
-                    ménage : compte 250 à 400 CHF/mois si tu devais les payer à
-                    part) et la comparaison s'inverse.
+                    Ajoute tout ce qui est inclus (piscine, salle de sport, sauna,
+                    grands espaces, home cinéma, cours de yoga, cours de sport,
+                    événement mensuel, ménage, fibre, etc. : compte 250 à 400 CHF/mois
+                    si tu devais les payer à part) et la comparaison s'inverse.
                   </>
                 )}
               </p>

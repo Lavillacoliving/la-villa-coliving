@@ -58,20 +58,24 @@ export function CharteTransparencePage() {
             <>
               <Section title="One price, everything included">
                 <p>
-                  Your monthly payment covers your room, the shared spaces and amenities of the
-                  house (depending on the house: pool, sauna, gym, garden), water, energy, internet
-                  and the upkeep of common areas. There is nothing else to pay — not before, not
-                  during, not after. One single exception, and we'd rather name it: having your own
-                  room cleaned, if you want it. The price is given to you upfront, you take it if
-                  you like, you stop it whenever you like.
+                  <strong>Your monthly payment covers absolutely everything</strong>: your room,
+                  the shared spaces and amenities of the house (depending on the house: pool, sauna,
+                  gym, garden), water, energy, internet and the upkeep of common areas — and many
+                  services come at no charge. There is nothing else to pay — not before, not during,
+                  not after. One single exception, and we'd rather name it: having your own room
+                  cleaned, if you want it. The price is given to you upfront, you take it if you
+                  like, you stop it whenever you like.
                 </p>
               </Section>
 
               <Section title="Zero fees to move in — and a three-month commitment">
                 <p>
-                  No agency fees, no application fees, no viewing or check-in fees: you pay nothing
-                  to move in. We don't make money when you sign — we make money when you stay,
-                  because you're happy here.
+                  <strong>
+                    No agency fees, no application fees, no viewing or check-in fees: you pay
+                    nothing to move in.
+                  </strong>{" "}
+                  We don't make money when you sign — we make money when you stay, because you're
+                  happy here.
                 </p>
                 <p>
                   In return, we ask you to stay at least three months. A house is not a hotel: every
@@ -160,19 +164,23 @@ export function CharteTransparencePage() {
             <>
               <Section title="Un seul prix, tout compris">
                 <p>
-                  Ta mensualité couvre ta chambre, les espaces et équipements de la maison, l'eau,
-                  l'énergie, internet et l'entretien des communs. Il n'y a rien d'autre à payer — ni avant, ni pendant, ni
-                  après. Une seule exception, et nous préférons te la nommer : le ménage de ta
-                  chambre, si tu le souhaites. Son tarif t'est donné à l'avance, tu le prends si tu
-                  veux, tu l'arrêtes quand tu veux.
+                  <strong>Ta mensualité couvre absolument tout</strong> : ta chambre, les espaces
+                  et équipements de la maison, l'eau, l'énergie, internet et l'entretien des
+                  communs, et de nombreux services te sont offerts. Il n'y a rien d'autre à payer —
+                  ni avant, ni pendant, ni après. Une seule exception, et nous préférons te la
+                  nommer : le ménage de ta chambre, si tu le souhaites. Son tarif t'est donné à
+                  l'avance, tu le prends si tu veux, tu l'arrêtes quand tu veux.
                 </p>
               </Section>
 
               <Section title="Zéro frais pour entrer — et un engagement de trois mois">
                 <p>
-                  Pas de frais d'agence, pas de frais de dossier, pas de frais de visite ni d'état
-                  des lieux : tu ne paies rien pour entrer. Nous ne gagnons pas d'argent quand tu
-                  signes — nous en gagnons quand tu restes, parce que tu es bien.
+                  <strong>
+                    Pas de frais d'agence, pas de frais de dossier, pas de frais de visite ni
+                    d'état des lieux : tu ne paies rien pour entrer.
+                  </strong>{" "}
+                  Nous ne gagnons pas d'argent quand tu signes — nous en gagnons quand tu restes,
+                  parce que tu es bien.
                 </p>
                 <p>
                   En échange, nous te demandons de rester au moins trois mois. Une maison n'est pas
