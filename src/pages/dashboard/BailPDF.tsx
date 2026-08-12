@@ -355,12 +355,15 @@ export function BailPDF({ data }: { data: BailPDFData }) {
         {/* ---------- BAILLEUR ---------- */}
         <View style={s.partyBox}>
           <Text style={s.partyLabel}>BAILLEUR :</Text>
-          {getBailleurLines(property.entity_id).map((line, i) => (
+          {(property.legal_entity_name?.trim()
+            ? [property.legal_entity_name.trim()]
+            : getBailleurLines(property.entity_id)
+          ).map((line, i) => (
             <Text key={i}>{line}</Text>
           ))}
           {property.is_coliving ? (
             <View>
-              <Text>SIRET : {ph(property.siret, "SIRET")} — TVA : {ph(property.tva, "TVA")}</Text>
+              <Text>SIRET : {ph(property.siret, "SIRET")}{property.tva?.trim() && property.tva.trim() !== "N/A" ? ` — TVA : ${property.tva.trim()}` : ""}</Text>
               <Text>{"Si\u00E8ge social : "}{ph(property.siege_social, "Si\u00E8ge social")}</Text>
               <Text>{"Repr\u00E9sent\u00E9 par : J\u00E9r\u00F4me AUSTIN, G\u00E9rant"}</Text>
             </View>
@@ -451,63 +454,41 @@ export function BailPDF({ data }: { data: BailPDFData }) {
           </View>
         )}
 
-        {/* Charges & Services coliving */}
+        {/* ---------- ARTICLE III (coliving) — Charges forfaitaires et services ---------- */}
         {property.is_coliving ? (
           <View>
-            <Text style={[s.subTitle, { color: gold }]}>{"Charges r\u00E9cup\u00E9rables et services de la maison"}</Text>
+            <Text style={s.articleTitle}>{"ARTICLE III \u2014 CHARGES FORFAITAIRES ET SERVICES"}</Text>
 
-            <Text style={[s.subTitle, { fontSize: 9, marginTop: 8 }]}>{"EAU & ÉNERGIE :"}</Text>
-            <Bullet>{"\u00C9lectricit\u00E9"}</Bullet>
-            <Bullet>{"Eau froide et chaude"}</Bullet>
-            <Bullet>{"Eau n\u00E9cessaire \u00E0 l\u2019entretien courant des parties communes"}</Bullet>
-            <Bullet>{"Eau n\u00E9cessaire \u00E0 l\u2019entretien courant des espaces ext\u00E9rieurs"}</Bullet>
-            <Bullet>{"Produits n\u00E9cessaires \u00E0 l\u2019exploitation, \u00E0 l\u2019entretien et au traitement de l\u2019eau"}</Bullet>
-            <Bullet>{"Fourniture d\u2019\u00E9nergie quelle que soit sa nature"}</Bullet>
-            <Bullet>{"Chauffage et production d\u2019eau chaude"}</Bullet>
-            <Bullet>{"Distribution d\u2019eau dans les parties privatives (contr\u00F4le des raccordements, r\u00E9glage de d\u00E9bit et temp\u00E9ratures, d\u00E9pannage, remplacement des joints cloches des chasses d\u2019eau)"}</Bullet>
-            <Bullet>{"Tout entretien"}</Bullet>
+            <Text style={[s.subTitle, { fontSize: 8.5 }]}>{"CHARGES FORFAITAIRES \u2014 COMPRIS DANS VOTRE FORFAIT DE CHARGES"}</Text>
+            <Text style={[s.body, { fontSize: 9.5, color: "#6B6B6B", marginBottom: 4 }]}>{"Retrouvez tout le d\u00E9tail des charges incluses \u00E0 l'article V du pr\u00E9sent contrat."}</Text>
+            <Bullet>{"Eau & \u00E9nergie"}</Bullet>
+            <Bullet>{"Entretien des parties communes int\u00E9rieures & ext\u00E9rieures"}</Bullet>
+            <Bullet>{"Abonnements"}</Bullet>
+            <Bullet>{"Taxes"}</Bullet>
 
-            <Text style={[s.subTitle, { fontSize: 9, marginTop: 8 }]}>{"SERVICES COMMUNAUTAIRES \u2014 GRATUITS"}</Text>
-            <Text style={[s.body, { fontSize: 8, color: "#666", marginBottom: 4 }]}>{"Offerts par le bailleur. Ils ne sont factur\u00E9s ni en suppl\u00E9ment ni au titre du forfait de charges, leur usage est libre et ils ne conditionnent en rien la location."}</Text>
-            <Bullet>{"Mise \u00E0 disposition d\u2019une parure de linge de lit et serviette."}</Bullet>
-            <Bullet>{"M\u00E9nage 3 fois par semaine des parties communes int\u00E9rieures"}</Bullet>
-            <Bullet>{"Entretien r\u00E9gulier des parties communes ext\u00E9rieur : pisciniste, jardinier, \u00E9lagage, nettoyage"}</Bullet>
+            <Text style={[s.subTitle, { fontSize: 8.5, marginTop: 8 }]}>{"FOURNITURES \u2014 COMPRIS DANS VOTRE FORFAIT DE CHARGES"}</Text>
+            <Bullet>{"Produits d'entretien m\u00E9nager ;"}</Bullet>
+            <Bullet>{"Produits de lave-vaisselle (lavage, liquide de rin\u00E7age, sels) ;"}</Bullet>
+            <Bullet>{"Liquide vaisselle ;"}</Bullet>
+            <Bullet>{"Lessive pour le linge ;"}</Bullet>
+            <Bullet>{"Savon lave-main ;"}</Bullet>
+            <Bullet>{"Essuie-tout, papier toilette ;"}</Bullet>
+            <Bullet>{"\u00C9ponges (classiques et acier) ;"}</Bullet>
+            <Bullet>{"Sacs poubelle ;"}</Bullet>
+            <Bullet>{"Chlore de piscine ;"}</Bullet>
+            <Bullet>{"Gaz pour le BBQ (remboursement sur pr\u00E9sentation du justificatif d'achat)."}</Bullet>
+
+            <Text style={[s.subTitle, { fontSize: 8.5, marginTop: 8 }]}>{"SERVICES COMMUNAUTAIRES \u2014 GRATUITS"}</Text>
+            <Text style={[s.body, { fontSize: 9.5, color: "#6B6B6B", marginBottom: 4 }]}>{"Offerts par le bailleur. Ils ne sont factur\u00E9s ni en suppl\u00E9ment ni au titre du forfait de charges, leur usage est libre et ils ne conditionnent en rien la location."}</Text>
+            <Bullet>{"Mise \u00E0 disposition d'une parure de linge de lit et serviette."}</Bullet>
             <Bullet>{"\u00C9v\u00E8nements communautaires r\u00E9currents"}</Bullet>
-            <Bullet>{"R\u00E9solution des probl\u00E8mes Contact via WhatsApp, r\u00E9ponse en moins de 48h."}</Bullet>
             <Bullet>{"Cours de yoga"}</Bullet>
             <Bullet>{"Cours de remise en forme (coaching sportif)"}</Bullet>
             <Bullet>{"Soir\u00E9e communautaire mensuelle"}</Bullet>
             <Bullet>{"Acc\u00E8s internet fibre \u2014 box mise \u00E0 disposition dans les parties communes"}</Bullet>
             <Bullet>{"Abonnements num\u00E9riques de divertissement (services de streaming)"}</Bullet>
-            <Bullet>{"Accueil, remise des cl\u00E9s et mise \u00E0 jour des acc\u00E8s \u00E0 l\u2019arriv\u00E9e"}</Bullet>
-            <Bullet>{"Fournitures de base : 1 panier de base livr\u00E9 chaque mois pour la communaut\u00E9 (papier toilette, Essuie-tout, lessive, produits d\u2019entretiens, ..) en fonction de votre demande"}</Bullet>
+            <Bullet>{"R\u00E9solution des probl\u00E8mes : contact via WhatsApp, r\u00E9ponse en moins de 48 h."}</Bullet>
             <Bullet>{"Gestion des d\u00E9parts : \u00E0 vous de rencontrer notre s\u00E9lection de nouveaux candidats et de les s\u00E9lectionner"}</Bullet>
-
-            <Text style={[s.subTitle, { fontSize: 9, marginTop: 8 }]}>{"PRESTATION OPTIONNELLE \u2014 FACTUR\u00C9E \u00C0 PART"}</Text>
-            <Bullet>{"M\u00E9nage de la chambre priv\u00E9e : sur demande uniquement. Factur\u00E9 s\u00E9par\u00E9ment du loyer et du forfait de charges, \u00E0 un tarif communiqu\u00E9 \u00E0 l\u2019avance, sans engagement et interruptible \u00E0 tout moment. Cette prestation ne conditionne pas la location."}</Bullet>
-            <Text style={[s.subTitle, { fontSize: 9, marginTop: 8 }]}>{"ENTRETIEN"}</Text>
-            <Text style={[s.body, { fontSize: 9 }]}>
-              {"Entretien des parties communes int\u00E9rieures et ext\u00E9rieures : r\u00E9paration et entretien et remplacement des \u00E9l\u00E9ments d\u00E9fectueux des parties communes de la maison. Entretien des ext\u00E9rieurs et de la piscine. M\u00E9nage effectu\u00E9 trois fois par semaine pour que les espaces communs brillent !"}
-            </Text>
-            <Text style={[s.subTitle, { fontSize: 8, marginTop: 4 }]}>{"PARTIES COMMUNES INT\u00C9RIEURES"}</Text>
-            <Text style={[s.body, { paddingLeft: 10, marginBottom: 2 }]}>{"Fourniture de produits d\u2019entretien (balais et sacs n\u00E9cessaires \u00E0 l\u2019\u00E9limination des d\u00E9chets) et de produits de d\u00E9sinsectisation et d\u00E9sinfection"}</Text>
-            <Text style={[s.body, { paddingLeft: 10, marginBottom: 2 }]}>{"Entretien de la minuterie, des tapis, des vide-ordures"}</Text>
-            <Text style={[s.body, { paddingLeft: 10, marginBottom: 2 }]}>{"R\u00E9paration des appareils d\u2019entretien de propret\u00E9 tels que l\u2019aspirateur"}</Text>
-            <Text style={[s.body, { paddingLeft: 10, marginBottom: 2 }]}>{"Frais de personnel d\u2019entretien."}</Text>
-            <Text style={[s.subTitle, { fontSize: 8, marginTop: 4 }]}>{"PARTIES COMMUNES EXT\u00C9RIEURES"}</Text>
-            <Text style={[s.body, { paddingLeft: 10, marginBottom: 2 }]}>{"Voies de circulation"}</Text>
-            <Text style={[s.body, { paddingLeft: 10, marginBottom: 2 }]}>{"Aires de stationnement"}</Text>
-            <Text style={[s.body, { paddingLeft: 10, marginBottom: 2 }]}>{"Abords des espaces verts"}</Text>
-            <Text style={[s.body, { paddingLeft: 10, marginBottom: 2 }]}>{"\u00C9quipements : piscine, terrasse, barbecue, jeux"}</Text>
-
-            <Text style={[s.subTitle, { fontSize: 9, marginTop: 8 }]}>ABONNEMENTS</Text>
-            <Bullet>{"Eau, \u00C9lectricit\u00E9, Gaz,"}</Bullet>
-            <Bullet>{"Entretien Chaudi\u00E8re"}</Bullet>
-
-            <Text style={[s.subTitle, { fontSize: 9, marginTop: 8 }]}>TAXES</Text>
-            <Bullet>{"Taxe ou redevance d\u2019enl\u00E8vement des ordures m\u00E9nag\u00E8res"}</Bullet>
-            <Bullet>{"Taxe de balayage"}</Bullet>
-            <Bullet>{"Redevance assainissement."}</Bullet>
           </View>
         ) : (
           <View>
@@ -531,7 +512,7 @@ export function BailPDF({ data }: { data: BailPDFData }) {
 
         {/* ---------- ARTICLE III ---------- */}
         <View wrap={false} minPresenceAhead={30}>
-          <Text style={s.articleTitle}>{"ARTICLE III \u2014 DATE DE PRISE D\u2019EFFET ET DUR\u00C9E"}</Text>
+          <Text style={s.articleTitle}>{property.is_coliving ? "ARTICLE IV \u2014 DATE DE PRISE D\u2019EFFET ET DUR\u00C9E" : "ARTICLE III \u2014 DATE DE PRISE D\u2019EFFET ET DUR\u00C9E"}</Text>
           <Text style={[s.body, { fontFamily: "Helvetica-Bold" }]}>
             {"La location prend effet le "}{fDate(form.entry_date)}{" pour une dur\u00E9e de "}{durationInWords(form.lease_duration_months || 12)}{" ("}{form.lease_duration_months || 12}{") mois, soit jusqu\u2019au "}{fDate(exit_date)}.
           </Text>
@@ -548,7 +529,7 @@ export function BailPDF({ data }: { data: BailPDFData }) {
 
         {/* ---------- ARTICLE IV ---------- */}
         <View minPresenceAhead={60}>
-          <Text style={s.articleTitle}>{"ARTICLE IV \u2014 CONDITIONS FINANCI\u00C8RES"}</Text>
+          <Text style={s.articleTitle}>{property.is_coliving ? "ARTICLE V \u2014 CONDITIONS FINANCI\u00C8RES" : "ARTICLE IV \u2014 CONDITIONS FINANCI\u00C8RES"}</Text>
         </View>
 
         {property.is_coliving ? (
@@ -647,7 +628,7 @@ export function BailPDF({ data }: { data: BailPDFData }) {
                 <Bullet>{"Frais de personnel d\u2019entretien \u2014 m\u00E9nage 3 fois par semaine"}</Bullet>
                 <Bullet>{"Produits d\u2019entretien, balais, sacs n\u00E9cessaires \u00E0 l\u2019\u00E9limination des d\u00E9chets"}</Bullet>
                 <Bullet>{"Produits de d\u00E9sinsectisation et de d\u00E9sinfection"}</Bullet>
-                <Bullet>{"Entretien de la minuterie, des tapis, des vide-ordures"}</Bullet>
+                <Bullet>{"Entretien de la minuterie et des tapis"}</Bullet>
                 <Bullet>{"R\u00E9paration et remplacement des appareils d\u2019entretien (aspirateur et mat\u00E9riel associ\u00E9)"}</Bullet>
                 <Bullet>{"Entretien de la buanderie et de ses \u00E9quipements"}</Bullet>
                 <Bullet>{"Enl\u00E8vement des d\u00E9chets et sortie des conteneurs"}</Bullet>
@@ -699,7 +680,7 @@ export function BailPDF({ data }: { data: BailPDFData }) {
 
         <Text style={s.subTitle}>{"R\u00E9vision annuelle (IRL) :"}</Text>
         <Bullet>{"Trimestre de r\u00E9f\u00E9rence : "}{ph(form.irl_trimestre, "3\u00E8me trimestre 2025")}</Bullet>
-        <Bullet>{"Indice de r\u00E9f\u00E9rence : "}{form.irl_indice}</Bullet>
+        <Bullet>{"Indice de r\u00E9f\u00E9rence : "}{form.irl_indice.toLocaleString("fr-FR", { minimumFractionDigits: 2 })}</Bullet>
         <Bullet>{"La r\u00E9vision s\u2019effectue chaque ann\u00E9e \u00E0 la date anniversaire du contrat."}</Bullet>
 
         <Text style={s.subTitle}>{"Modalit\u00E9s de paiement :"}</Text>
@@ -750,7 +731,7 @@ export function BailPDF({ data }: { data: BailPDFData }) {
 
         {/* ---------- ARTICLE V ---------- */}
         <View wrap={false} minPresenceAhead={30}>
-          <Text style={s.articleTitle}>{"ARTICLE V \u2014 GARANTIES"}</Text>
+          <Text style={s.articleTitle}>{property.is_coliving ? "ARTICLE VI \u2014 GARANTIES" : "ARTICLE V \u2014 GARANTIES"}</Text>
           <Text style={s.body}>
             {property.is_coliving
               ? <>{"Le locataire versera un d\u00E9p\u00F4t de garantie \u00E9gal \u00E0 deux (2) mois de loyer hors charges, soit "}<Text style={{ fontFamily: "Helvetica-Bold", color: gold }}>{fEUR(depot_eur)}</Text>{", restitu\u00E9 dans les deux (2) mois suivant la fin du contrat, selon l\u2019\u00E9tat des lieux."}</>
@@ -761,7 +742,7 @@ export function BailPDF({ data }: { data: BailPDFData }) {
 
         {/* ---------- ARTICLE VI ---------- */}
         <View wrap={false} minPresenceAhead={30}>
-          <Text style={s.articleTitle}>{"ARTICLE VI \u2014 CLAUSE R\u00C9SOLUTOIRE"}</Text>
+          <Text style={s.articleTitle}>{property.is_coliving ? "ARTICLE VII \u2014 CLAUSE R\u00C9SOLUTOIRE" : "ARTICLE VI \u2014 CLAUSE R\u00C9SOLUTOIRE"}</Text>
           <Text style={s.body}>
             {"Le bailleur se r\u00E9serve le droit de r\u00E9silier le contrat en cas de non-paiement du loyer ou des charges, sans pr\u00E9judice du droit de poursuivre le recouvrement des sommes dues."}
           </Text>
@@ -769,7 +750,7 @@ export function BailPDF({ data }: { data: BailPDFData }) {
 
         {/* ---------- ARTICLE VII ---------- */}
         <View minPresenceAhead={60}>
-          <Text style={s.articleTitle}>{"ARTICLE VII \u2014 OBLIGATIONS DU LOCATAIRE"}</Text>
+          <Text style={s.articleTitle}>{property.is_coliving ? "ARTICLE VIII \u2014 OBLIGATIONS DU LOCATAIRE" : "ARTICLE VII \u2014 OBLIGATIONS DU LOCATAIRE"}</Text>
           <Text style={s.body}>{"Le locataire s\u2019engage \u00E0 :"}</Text>
         </View>
         <Numbered n={1}>{"Payer le loyer et les charges aux dates et lieux convenus ;"}</Numbered>
@@ -784,11 +765,11 @@ export function BailPDF({ data }: { data: BailPDFData }) {
 
         {/* ---------- ARTICLE VIII ---------- */}
         <View wrap={false} minPresenceAhead={40}>
-          <Text style={s.articleTitle}>{"ARTICLE VIII \u2014 OBLIGATIONS DU BAILLEUR"}</Text>
+          <Text style={s.articleTitle}>{property.is_coliving ? "ARTICLE IX \u2014 OBLIGATIONS DU BAILLEUR" : "ARTICLE VIII \u2014 OBLIGATIONS DU BAILLEUR"}</Text>
           <Text style={s.body}>{"Le bailleur s\u2019engage \u00E0 :"}</Text>
           <Numbered n={1}>Assurer la jouissance paisible du logement ;</Numbered>
           <Numbered n={2}>{"Maintenir les lieux en bon \u00E9tat de r\u00E9paration et de viabilit\u00E9 ;"}</Numbered>
-          <Numbered n={3}>{"Fournir les services d\u00E9crits \u00E0 l\u2019article II ;"}</Numbered>
+          <Numbered n={3}>{property.is_coliving ? "Fournir les services d\u00E9crits \u00E0 l\u2019article III ;" : "Fournir les services d\u00E9crits \u00E0 l\u2019article II ;"}</Numbered>
           <Numbered n={4}>{"R\u00E9pondre aux demandes d\u2019entretien dans un d\u00E9lai raisonnable (max 48h) ;"}</Numbered>
           <Numbered n={5}>{"Respecter la vie priv\u00E9e du locataire et donner un pr\u00E9avis de 48h avant visite."}</Numbered>
         </View>
@@ -796,7 +777,7 @@ export function BailPDF({ data }: { data: BailPDFData }) {
         {/* ---------- ARTICLE IX (coliving only) \u2014 Usage des \u00E9quipements & responsabilit\u00E9 ---------- */}
         {property.is_coliving && (
           <View minPresenceAhead={60}>
-            <Text style={s.articleTitle}>{"ARTICLE IX \u2014 USAGE DES \u00C9QUIPEMENTS ET ESPACES COMMUNS \u2014 RESPONSABILIT\u00C9 DU LOCATAIRE"}</Text>
+            <Text style={s.articleTitle}>{"ARTICLE X \u2014 USAGE DES \u00C9QUIPEMENTS ET ESPACES COMMUNS \u2014 RESPONSABILIT\u00C9 DU LOCATAIRE"}</Text>
 
             <Text style={s.subTitle}>{"\u00A7 1 \u2014 P\u00E9rim\u00E8tre"}</Text>
             <Text style={s.body}>
@@ -844,7 +825,7 @@ export function BailPDF({ data }: { data: BailPDFData }) {
 
         {/* ---------- ARTICLE IX (Mont-Blanc) / X (coliving) \u2014 \u00C9tat des lieux ---------- */}
         <View wrap={false} minPresenceAhead={30}>
-          <Text style={s.articleTitle}>{property.is_coliving ? "ARTICLE X \u2014 \u00C9TAT DES LIEUX" : "ARTICLE IX \u2014 \u00C9TAT DES LIEUX"}</Text>
+          <Text style={s.articleTitle}>{property.is_coliving ? "ARTICLE XI \u2014 \u00C9TAT DES LIEUX" : "ARTICLE IX \u2014 \u00C9TAT DES LIEUX"}</Text>
           <Text style={s.body}>
             {property.is_coliving
               ? "L\u2019\u00E9tat des lieux d\u2019entr\u00E9e et de sortie sera \u00E9tabli via Etadly. Le locataire recevra un exemplaire apr\u00E8s sa r\u00E9alisation."
@@ -864,7 +845,7 @@ export function BailPDF({ data }: { data: BailPDFData }) {
 
         {/* ---------- Diagnostics ---------- */}
         <View wrap={false} minPresenceAhead={40}>
-          <Text style={s.articleTitle}>{property.is_coliving ? "ARTICLE XI \u2014 DIAGNOSTICS TECHNIQUES" : "ARTICLE XI \u2014 DIAGNOSTICS TECHNIQUES"}</Text>
+          <Text style={s.articleTitle}>{property.is_coliving ? "ARTICLE XII \u2014 DIAGNOSTICS TECHNIQUES" : "ARTICLE XI \u2014 DIAGNOSTICS TECHNIQUES"}</Text>
           <Text style={s.body}>
             {"Conform\u00E9ment \u00E0 la r\u00E9glementation fran\u00E7aise, le bailleur fournit au locataire :"}
           </Text>
@@ -878,7 +859,7 @@ export function BailPDF({ data }: { data: BailPDFData }) {
         {/* ---------- Règlement intérieur (coliving only) ---------- */}
         {property.is_coliving && (
           <View wrap={false} minPresenceAhead={30}>
-            <Text style={s.articleTitle}>{"ARTICLE XII \u2014 R\u00C8GLEMENT INT\u00C9RIEUR"}</Text>
+            <Text style={s.articleTitle}>{"ARTICLE XIII \u2014 R\u00C8GLEMENT INT\u00C9RIEUR"}</Text>
             <Text style={s.body}>
               {"Le locataire accepte le R\u00E8glement Int\u00E9rieur La Villa Coliving (la \u201CBible du Coliver\u201D), joint en annexe, qui pr\u00E9cise les r\u00E8gles de vie commune, l\u2019usage des parties communes et les proc\u00E9dures de gestion interne."}
             </Text>
@@ -887,7 +868,7 @@ export function BailPDF({ data }: { data: BailPDFData }) {
 
         {/* ---------- ANNEXES ---------- */}
         <View wrap={false} minPresenceAhead={20}>
-          <Text style={s.articleTitle}>{property.is_coliving ? "ARTICLE XIII \u2014 ANNEXES" : "ARTICLE XII \u2014 ANNEXES"}</Text>
+          <Text style={s.articleTitle}>{property.is_coliving ? "ARTICLE XIV \u2014 ANNEXES" : "ARTICLE XII \u2014 ANNEXES"}</Text>
           <Text style={s.body}>{"Sont annex\u00E9es au pr\u00E9sent contrat :"}</Text>
           {!property.is_coliving && <Bullet>{"Notice d\u2019information relative aux droits et obligations des locataires et des bailleurs"}</Bullet>}
           {!property.is_coliving && <Bullet>{"RIB du bailleur"}</Bullet>}
