@@ -1,0 +1,175 @@
+// Génération du bail Word à partir du gabarit public/templates/bail-coliving-2026-09.docx.
+//
+// Le gabarit EST le fichier Word de Jérôme : la mise en forme n'est jamais recréée
+// ni convertie, seules les 50 balises {…} sont remplies. Le document contractuel
+// des baux 2026-09 sort d'ici ; le rendu @react-pdf reste pour les baux legacy,
+// Mont-Blanc et l'aperçu écran.
+//
+// Réservé aux baux coliving au NOUVEAU format (forfait unique) : le gabarit ne
+// connaît ni les 3 postes legacy ni la structure Mont-Blanc.
+import PizZip from "pizzip";
+import Docxtemplater from "docxtemplater";
+
+const TEMPLATE_URL = "/templates/bail-coliving-2026-09.docx";
+const DOCX_MIME =
+  "application/vnd.openxmlformats-officedocument.wordprocessingml.document";
+
+// Coordonnées bancaires par entité — mêmes valeurs que l'aperçu HTML historique.
+const BANQUES: Record<string, { titulaire: string; iban: string }> = {
+  "La Villa": { titulaire: "Jérôme Austin / Fanny Piot", iban: "FR76 4097 8000 4321 3287 5019 897" },
+  "Le Lodge": { titulaire: "SCI Sleep In", iban: "FR76 4097 8000 4321 3287 5921 415" },
+  "Le Loft": { titulaire: "SCI Sleep In", iban: "FR76 4097 8000 4321 3287 5921 415" },
+};
+
+// Montants au format du gabarit : espaces simples (c'est ce que contient le Word).
+const nb = (n: number): string =>
+  new Intl.NumberFormat("fr-FR", { maximumFractionDigits: 0 })
+    .format(n)
+    .replace(/[   ]/g, " ");
+
+const surfaceFr = (m2: number | null | undefined): string =>
+  m2 == null ? "—" : Number(m2).toLocaleString("fr-FR", { maximumFractionDigits: 1 });
+
+// "34 rue du Foron - 74100 Ville-la-Grand - France" -> "Ville-la-Grand"
+export function villeDepuisAdresse(adresse: string | null | undefined): string {
+  const m = (adresse || "").match(/\b\d{5}\s+([^-–]+)/);
+  return m ? m[1].trim() : "—";
+}
+
+export interface BailDocxInput {
+  property: {
+    name: string;
+    address: string;
+    legal_entity_name: string;
+    siret: string;
+    tva: string;
+    siege_social: string;
+    manager_name: string | null;
+    common_areas: string[];
+  };
+  room: {
+    name: string;
+    floor: string;
+    surface_m2: number | null;
+    location_detail: string | null;
+    description: string;
+    bathroom_type: string;
+    bathroom_detail: string | null;
+    has_parking: boolean;
+    parking_detail: string | null;
+    has_balcony: boolean;
+    has_terrace: boolean;
+    has_private_entrance: boolean;
+  };
+  form: {
+    locataire_nom: string;
+    locataire_prenom: string;
+    locataire_dob: string;
+    locataire_birthplace: string;
+    locataire_nationality: string;
+    locataire_previous_address: string;
+    locataire_email: string;
+    locataire_phone: string;
+    locataire_profession: string;
+    locataire_employer: string;
+    entry_date: string;
+    lease_duration_months: number;
+    frais_remise_location: number;
+    irl_trimestre: string;
+    irl_indice: number;
+    previous_tenant_rent_eur?: number | null;
+    previous_tenant_departure_date?: string | null;
+  };
+  amounts: { loyerCC: number; charges: number; loyerNu: number; depot: number };
+  exitDate: string;
+  prorata: { days: number; totalDays: number; eur: number };
+  fDate: (d: string | null | undefined) => string;
+  durationInWords: (n: number) => string;
+}
+
+export function bailDocxData(i: BailDocxInput) {
+  const { property, room, form, amounts, prorata } = i;
+  const bathroomFr: Record<string, string> = {
+    private: "privée",
+    shared: "partagée",
+    semi_private: "semi-privée",
+  };
+
+  const extras: string[] = [];
+  if (room.has_parking) extras.push(`Parking : ${room.parking_detail || "Oui"}`);
+  if (room.has_balcony) extras.push("Balcon : Oui");
+  if (room.has_terrace) extras.push("Terrasse : Oui");
+  if (room.has_private_entrance) extras.push("Entrée privée : Oui");
+
+  const communes = property.common_areas || [];
+  const g = communes.slice(0, Math.ceil(communes.length / 2));
+  const d = communes.slice(Math.ceil(communes.length / 2));
+
+  const banque = BANQUES[property.name] ?? BANQUES["La Villa"];
+  const duree = form.lease_duration_months || 12;
+  const prorataActif = prorata.days > 0 && prorata.totalDays > 0 && prorata.days < prorata.totalDays;
+
+  // Art. 3 loi 1989 : dernier loyer du précédent occupant, ou mention des 18 mois.
+  const dernierLoyer =
+    form.previous_tenant_rent_eur && form.previous_tenant_departure_date
+      ? `Le dernier loyer acquitté par le précédent occupant de la chambre, qui l'a quittée le ${i.fDate(form.previous_tenant_departure_date)}, s'élevait à ${nb(Number(form.previous_tenant_rent_eur))} € par mois (loyer hors charges).`
+      : "La chambre n'a pas été occupée au cours des dix-huit derniers mois.";
+
+  return {
+    bailleur_nom: property.legal_entity_name?.trim() || property.name,
+    siret: property.siret,
+    tva: property.tva,
+    siege_social: property.siege_social,
+    loc_nom_complet: `${form.locataire_nom} ${form.locataire_prenom}`.trim(),
+    loc_prenom_nom: `${form.locataire_prenom} ${form.locataire_nom}`.trim(),
+    loc_naissance: i.fDate(form.locataire_dob),
+    loc_lieu_naissance: form.locataire_birthplace,
+    loc_nationalite: form.locataire_nationality,
+    loc_adresse_precedente: form.locataire_previous_address,
+    loc_email: form.locataire_email,
+    loc_tel: form.locataire_phone,
+    loc_profession: form.locataire_profession,
+    loc_employeur: form.locataire_employer,
+    bien_ligne: `${property.name} - ${property.address}`,
+    etage: room.floor,
+    chambre: room.name,
+    surface: surfaceFr(room.surface_m2),
+    emplacement: room.location_detail || "—",
+    description: room.description,
+    sdb: `${bathroomFr[room.bathroom_type] || room.bathroom_type}${room.bathroom_detail ? ` — ${room.bathroom_detail}` : ""}`,
+    extras,
+    communes_g: g,
+    communes_d: d,
+    date_effet: i.fDate(form.entry_date),
+    duree_lettres: i.durationInWords(duree),
+    duree,
+    date_fin: i.fDate(i.exitDate),
+    loyer_cc: nb(amounts.loyerCC),
+    loyer_nu: nb(amounts.loyerNu),
+    forfait: nb(amounts.charges),
+    depot: nb(amounts.depot),
+    indemnite: nb(form.frais_remise_location),
+    prorata: prorataActif,
+    prorata_texte: prorataActif
+      ? `Prorata du premier mois : du ${i.fDate(form.entry_date)} au dernier jour du mois (${prorata.days}/${prorata.totalDays} jours), soit ${nb(prorata.eur)} €.`
+      : "",
+    dernier_loyer_texte: dernierLoyer,
+    irl_trimestre: form.irl_trimestre,
+    irl_indice: Number(form.irl_indice).toLocaleString("fr-FR", { minimumFractionDigits: 2 }),
+    banque: "Banque Palatine",
+    titulaire_compte: banque.titulaire,
+    iban: banque.iban,
+    bic: "BSPFFRPPXXX",
+    bailleur_signataires: property.manager_name || "Jérôme Austin / Fanny Piot",
+    ville: villeDepuisAdresse(property.address),
+  };
+}
+
+export async function genererBailDocx(input: BailDocxInput): Promise<Blob> {
+  const res = await fetch(TEMPLATE_URL);
+  if (!res.ok) throw new Error(`Gabarit introuvable (${res.status}) : ${TEMPLATE_URL}`);
+  const buf = await res.arrayBuffer();
+  const doc = new Docxtemplater(new PizZip(buf), { paragraphLoop: true, linebreaks: true });
+  doc.render(bailDocxData(input));
+  return doc.getZip().generate({ type: "blob", mimeType: DOCX_MIME }) as Blob;
+}

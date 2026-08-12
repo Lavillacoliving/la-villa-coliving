@@ -6,6 +6,7 @@ import { BailPDF } from './BailPDF';
 import { logAudit } from '@/lib/auditLog';
 import { getBailleurLines } from '@/lib/entities';
 import { useIsMobile } from '@/hooks/use-mobile';
+import { genererBailDocx } from '@/lib/bailDocx';
 
 interface Property {
   id: string;
@@ -725,7 +726,7 @@ function generateContractHTML(data: ContractData): string {
           <ol>
             <li>Assurer la jouissance paisible du logement;</li>
             <li>Maintenir les lieux en bon état de réparation et de viabilité;</li>
-            <li>Fournir les services décrits à l'article II;</li>
+            <li>Fournir les services décrits à l'${property.is_coliving ? 'article III' : 'article II'};</li>
             <li>Répondre aux demandes d'entretien dans un délai raisonnable (max 48h);</li>
             <li>Respecter la vie privée du locataire et donner un préavis de 48h avant visite.</li>
           </ol>
@@ -1803,6 +1804,29 @@ export default function DashboardNouveauBailPage() {
           </div>
         </div>
 
+        {/* Art. 3 loi 1989 : dernier loyer du precedent occupant. Vide = la clause
+            "chambre non occupee depuis 18 mois" sort dans le bail : ne laisser vide
+            que si c'est VRAI. Alimente tenants.previous_tenant_* a l'enregistrement. */}
+        <label style={{ display: 'block', marginBottom: '8px', fontSize: '13px', color: '#666' }}>
+          Dernier loyer du précédent occupant (EUR hors charges) — vide si chambre inoccupée depuis 18 mois
+        </label>
+        <div style={{ display: 'flex', gap: '8px', marginBottom: '10px' }}>
+          <input
+            type="number"
+            placeholder="ex. 1 104"
+            value={form.previous_tenant_rent_eur ?? ''}
+            onChange={(e) => setForm((prev) => ({ ...prev, previous_tenant_rent_eur: e.target.value === '' ? null : Number(e.target.value) }))}
+            style={{ flex: 1, padding: '10px', borderRadius: '4px', border: '1px solid #ddd', fontSize: '14px' }}
+          />
+          <input
+            type="date"
+            title="Date de départ du précédent occupant"
+            value={form.previous_tenant_departure_date ?? ''}
+            onChange={(e) => setForm((prev) => ({ ...prev, previous_tenant_departure_date: e.target.value || null }))}
+            style={{ flex: 1, padding: '10px', borderRadius: '4px', border: '1px solid #ddd', fontSize: '14px' }}
+          />
+        </div>
+
         <label style={{ display: 'block', marginBottom: '8px', fontSize: '13px', color: '#666' }}>
           IRL Trimestre de référence — <span style={{
             color: irlStatus === 'live' ? '#0F766E' : irlStatus === 'cache' ? '#B45309' : '#999',
@@ -2062,6 +2086,51 @@ export default function DashboardNouveauBailPage() {
         />
 
         <div className="dash-toolbar" style={{ display: 'flex', gap: '10px' }}>
+          {/* Document CONTRACTUEL des baux 2026-09 : le gabarit Word de Jérôme, rempli.
+              Flux : télécharger → relire dans Word → exporter en PDF → Yousign. */}
+          {selectedProperty?.is_coliving && !bailAmounts.isLegacy && (
+            <button
+              onClick={async () => {
+                if (!selectedProperty || !selectedRoom) return;
+                try {
+                  const blob = await genererBailDocx({
+                    property: selectedProperty,
+                    room: selectedRoom,
+                    form,
+                    amounts: bailAmounts,
+                    exitDate,
+                    prorata,
+                    fDate,
+                    durationInWords: durationInWordsPreview,
+                  });
+                  const url = URL.createObjectURL(blob);
+                  const a = document.createElement('a');
+                  a.href = url;
+                  a.download = `Bail_${form.locataire_nom || 'Locataire'}_${form.entry_date || 'date'}.docx`;
+                  a.click();
+                  URL.revokeObjectURL(url);
+                } catch (e) {
+                  console.error('DOCX error:', e);
+                  toast.error('Erreur Word : ' + e);
+                }
+              }}
+              disabled={!contractData || generationBloquee}
+              title={blocageMotif || 'Gabarit Word officiel — à relire puis exporter en PDF pour Yousign'}
+              style={{
+                flex: 1,
+                padding: '12px',
+                background: (contractData && !generationBloquee) ? '#1C1917' : '#cccccc',
+                color: 'white',
+                border: 'none',
+                borderRadius: '4px',
+                fontWeight: '600',
+                cursor: (contractData && !generationBloquee) ? 'pointer' : 'not-allowed',
+                fontSize: '14px',
+              }}
+            >
+              {bailAmounts.rentEurManquant ? '🔒 Prix EUR manquant' : '⬇ Bail Word (officiel)'}
+            </button>
+          )}
           <button
             onClick={async () => { if (!contractData) return; try { const blob = await pdf(BailPDF({ data: contractData })).toBlob(); const url = URL.createObjectURL(blob); const a = document.createElement('a'); a.href = url; a.download = `Bail_${form.locataire_nom || 'Locataire'}_${form.entry_date || 'date'}.pdf`; a.click(); URL.revokeObjectURL(url); } catch (e) { console.error('PDF error:', e); toast.error('Erreur PDF: ' + e); } }}
             disabled={!contractData || generationBloquee}
@@ -2078,7 +2147,7 @@ export default function DashboardNouveauBailPage() {
               fontSize: '14px',
             }}
           >
-            {bailAmounts.rentEurManquant ? '🔒 Prix EUR manquant' : bailAmounts.isLegacy && rateStatus === 'fallback' ? '🔒 Taux BCE requis' : 'Générer le PDF'}
+            {bailAmounts.rentEurManquant ? '🔒 Prix EUR manquant' : bailAmounts.isLegacy && rateStatus === 'fallback' ? '🔒 Taux BCE requis' : (selectedProperty?.is_coliving && !bailAmounts.isLegacy) ? 'PDF (copie interne)' : 'Générer le PDF'}
           </button>
           <button
             onClick={() => window.print()}
