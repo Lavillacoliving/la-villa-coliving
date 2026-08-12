@@ -6,6 +6,7 @@ import {
   View,
   StyleSheet,
   Image,
+  Font,
 } from "@react-pdf/renderer";
 import { getBailleurLines } from "@/lib/entities";
 
@@ -117,11 +118,14 @@ function ph(val: string | undefined | null, placeholder: string): string {
 function fDate(d: string | undefined | null): string {
   if (!d) return "[date]";
   try {
-    return new Date(d + "T00:00:00").toLocaleDateString("fr-FR", {
+    const dt = new Date(d + "T00:00:00");
+    const base = dt.toLocaleDateString("fr-FR", {
       day: "numeric",
       month: "long",
       year: "numeric",
     });
+    // Usage francais : le premier du mois s'ecrit "1er septembre", pas "1 septembre".
+    return dt.getDate() === 1 ? base.replace(/^1 /, "1er ") : base;
   } catch {
     return "[date invalide]";
   }
@@ -143,96 +147,114 @@ function fCHF(n: number): string {
   }).format(n).replace(/[\s\u00A0\u202F\u2009]/g, " ");
 }
 
+// Police du modele Word (docDefaults = Inter 10,5 pt). Fichiers commites dans
+// public/fonts : servis par l'origine en navigateur, lus sur disque en Node
+// (harnais de rendu). Jamais de CDN au moment de generer un contrat.
+const FONT_DIR =
+  typeof window === "undefined"
+    ? `${(globalThis as { process?: { cwd(): string } }).process?.cwd() ?? "."}/public/fonts`
+    : "/fonts";
+Font.register({
+  family: "Inter",
+  fonts: [
+    { src: `${FONT_DIR}/inter-400.ttf`, fontWeight: 400 },
+    { src: `${FONT_DIR}/inter-400-italic.ttf`, fontWeight: 400, fontStyle: "italic" },
+    { src: `${FONT_DIR}/inter-600.ttf`, fontWeight: 600 },
+    { src: `${FONT_DIR}/inter-700.ttf`, fontWeight: 700 },
+  ],
+});
+// Pas de cesure automatique (regles anglaises) dans un contrat francais.
+Font.registerHyphenationCallback((w) => [w]);
+
 const gold = "#B8860B";
 const s = StyleSheet.create({
+  // Tokens releves dans le XML du modele Word (sectPr, styles.xml, runs) :
+  // marges 78/85/85/85, Inter 10,5 pt, interligne 1,375, titre 23 pt non gras,
+  // Heading 1 13,5 pt filet or 0,5 pt, libelles dores 8,5 pt gras.
   page: {
-    fontFamily: "Helvetica",
-    fontSize: 10,
-    lineHeight: 1.6,
-    color: "#333",
-    paddingTop: 50,
-    paddingBottom: 50,
-    paddingHorizontal: 45,
+    fontFamily: "Inter",
+    fontSize: 10.5,
+    lineHeight: 1.375,
+    color: "#111111",
+    paddingTop: 78,
+    paddingBottom: 85,
+    paddingHorizontal: 85,
   },
   headerBlock: {
     textAlign: "center",
-    marginBottom: 20,
-    borderBottomWidth: 2,
-    borderBottomColor: gold,
-    paddingBottom: 12,
+    marginBottom: 4,
   },
   headerTitle: {
-    fontSize: 18,
-    fontFamily: "Helvetica-Bold",
+    fontSize: 23,
+    lineHeight: 1.15,
     marginTop: 6,
     marginBottom: 4,
   },
   headerSub: {
     fontSize: 9,
-    color: "#666",
+    color: "#8A8A8A",
     marginTop: 2,
+    marginBottom: 6,
   },
   partyBox: {
     backgroundColor: "#F3ECD8",
     padding: 10,
     marginVertical: 8,
-    fontSize: 9,
+    fontSize: 9.5,
   },
   partyLabel: {
-    fontFamily: "Helvetica-Bold",
+    fontWeight: 700,
     color: gold,
-    fontSize: 10,
+    fontSize: 8.5,
     marginBottom: 4,
   },
+  // Heading 1 du modele : 13,5 pt NON gras, "ARTICLE N" dore + suite noire
+  // (deux tons geres par <ArticleTitle/>), filet or 0,5 pt a 10 pt du texte.
   articleTitle: {
-    fontFamily: "Helvetica-Bold",
-    fontSize: 12,
-    marginTop: 18,
-    marginBottom: 6,
-    borderBottomWidth: 1,
+    fontSize: 13.5,
+    lineHeight: 1.25,
+    marginTop: 27,
+    marginBottom: 11,
+    borderBottomWidth: 0.5,
     borderBottomColor: gold,
-    paddingBottom: 4,
+    paddingBottom: 10,
   },
   /* Keep article headings with their content — avoid orphaned titles at page bottom */
   articleWrap: {
     marginTop: 0,
   },
   body: {
-    textAlign: "justify",
-    marginBottom: 4,
+    marginBottom: 7,
   },
   subTitle: {
-    fontFamily: "Helvetica-Bold",
-    fontSize: 10,
-    marginTop: 10,
-    marginBottom: 4,
+    fontWeight: 700,
+    fontSize: 8.5,
+    color: gold,
+    marginTop: 8,
+    marginBottom: 5.5,
   },
   bullet: {
     flexDirection: "row",
-    marginBottom: 2,
+    marginBottom: 3,
     paddingLeft: 10,
   },
   bulletDot: {
     width: 12,
-    fontSize: 10,
   },
   bulletText: {
     flex: 1,
-    fontSize: 10,
   },
   numberedItem: {
     flexDirection: "row",
-    marginBottom: 2,
+    marginBottom: 3,
     paddingLeft: 10,
   },
   numberedNum: {
     width: 18,
-    fontSize: 10,
   },
+  // Le tableau de repartition du modele est SANS bordures ni fond.
   tableRow: {
     flexDirection: "row",
-    borderBottomWidth: 1,
-    borderBottomColor: "#e0e0e0",
   },
   highlightBox: {
     backgroundColor: "#F3ECD8",
@@ -243,18 +265,17 @@ const s = StyleSheet.create({
   },
   tableHeader: {
     flexDirection: "row",
-    borderBottomWidth: 2,
-    borderBottomColor: gold,
-    backgroundColor: "#f9f7f4",
   },
   tableCell: {
-    padding: 6,
-    fontSize: 9,
+    paddingVertical: 3,
+    paddingHorizontal: 6,
+    fontSize: 9.5,
   },
   tableCellBold: {
-    padding: 6,
-    fontSize: 9,
-    fontFamily: "Helvetica-Bold",
+    paddingVertical: 3,
+    paddingHorizontal: 6,
+    fontSize: 9.5,
+    fontWeight: 700,
   },
   signatureSection: {
     flexDirection: "row",
@@ -262,11 +283,8 @@ const s = StyleSheet.create({
     marginTop: 50,
   },
   signatureBox: {
-    width: "40%",
-    borderTopWidth: 1,
-    borderTopColor: "#333",
+    width: "45%",
     paddingTop: 15,
-    alignItems: "center",
   },
   signatureLabel: {
     fontSize: 9,
@@ -288,9 +306,9 @@ const s = StyleSheet.create({
   },
   pageFooter: {
     position: "absolute",
-    bottom: 20,
-    left: 45,
-    right: 45,
+    bottom: 35,
+    left: 85,
+    right: 85,
     flexDirection: "row",
     justifyContent: "space-between",
     fontSize: 8,
@@ -298,26 +316,29 @@ const s = StyleSheet.create({
     lineHeight: 1.6,
   },
   logo: {
-    width: 120,
+    height: 91,
     marginBottom: 6,
     alignSelf: "center",
   },
 });
+
+// Titre d'article du modele : "ARTICLE N" en dore, le reste en noir.
+function ArticleTitle({ children }: { children: string }) {
+  const i = children.indexOf(" \u2014 ");
+  if (i === -1) return <ArticleTitle>{children}</ArticleTitle>;
+  return (
+    <Text style={s.articleTitle}>
+      <Text style={{ color: gold }}>{children.slice(0, i)}</Text>
+      <Text>{children.slice(i)}</Text>
+    </Text>
+  );
+}
 
 function Bullet({ children }: { children: React.ReactNode }) {
   return (
     <View style={s.bullet}>
       <Text style={s.bulletDot}>{"\u2022"}</Text>
       <Text style={s.bulletText}>{children}</Text>
-    </View>
-  );
-}
-
-function BoldBullet({ children }: { children: React.ReactNode }) {
-  return (
-    <View style={s.bullet}>
-      <Text style={s.bulletDot}>{"\u2022"}</Text>
-      <Text style={[s.bulletText, { fontFamily: "Helvetica-Bold" }]}>{children}</Text>
     </View>
   );
 }
@@ -393,7 +414,7 @@ export function BailPDF({ data }: { data: BailPDFData }) {
 
         {/* ---------- ARTICLE I ---------- */}
         <View wrap={false} minPresenceAhead={40}>
-          <Text style={s.articleTitle}>{"ARTICLE I \u2014 D\u00C9SIGNATION DES PARTIES"}</Text>
+          <ArticleTitle>{"ARTICLE I \u2014 D\u00C9SIGNATION DES PARTIES"}</ArticleTitle>
           <Text style={s.body}>
             {"Entre les parties ci-dessus d\u00E9sign\u00E9es, il est convenu ce qui suit."}
           </Text>
@@ -401,16 +422,16 @@ export function BailPDF({ data }: { data: BailPDFData }) {
 
         {/* ---------- ARTICLE II ---------- */}
         <View minPresenceAhead={60}>
-          <Text style={s.articleTitle}>{"ARTICLE II \u2014 OBJET DU CONTRAT"}</Text>
+          <ArticleTitle>{"ARTICLE II \u2014 OBJET DU CONTRAT"}</ArticleTitle>
         </View>
 
         {property.is_coliving ? (
           <View>
-            <Text style={[s.body, { fontFamily: "Helvetica-Bold", marginTop: 4 }]}>{"Bien concern\u00E9 :"}</Text>
-            <BoldBullet>{ph(property.name, "Nom du bien")} - {ph(property.address, "Adresse du bien")}</BoldBullet>
-            <BoldBullet>{"\u00C9tage : "}{room.floor} - Chambre : {ph(room.name, "Chambre")} - Surface : {room.surface_m2} m²</BoldBullet>
+            <Text style={[s.subTitle, { marginTop: 4 }]}>{"Bien concern\u00E9 :"}</Text>
+            <Bullet>{ph(property.name, "Nom du bien")} - {ph(property.address, "Adresse du bien")}</Bullet>
+            <Bullet>{"\u00C9tage : "}{room.floor} - Chambre : {ph(room.name, "Chambre")} - Surface : {room.surface_m2} m²</Bullet>
 
-            <Text style={[s.body, { fontFamily: "Helvetica-Bold", marginTop: 10 }]}>
+            <Text style={[s.body, { marginTop: 10 }]}>
               {"Le bailleur loue au locataire un logement meubl\u00E9 comprenant :"}
             </Text>
             {room.location_detail && <Bullet>Emplacement : {room.location_detail}</Bullet>}
@@ -424,7 +445,7 @@ export function BailPDF({ data }: { data: BailPDFData }) {
         ) : (
           <>
           <View>
-            <Text style={[s.body, { fontFamily: "Helvetica-Bold" }]}>
+            <Text style={[s.body, { fontWeight: 700 }]}>
               {"Le bailleur loue au locataire un appartement meubl\u00E9 comprenant :"}
             </Text>
           </View>
@@ -473,7 +494,7 @@ export function BailPDF({ data }: { data: BailPDFData }) {
         {/* ---------- ARTICLE III (coliving) — Charges forfaitaires et services ---------- */}
         {property.is_coliving ? (
           <View>
-            <Text style={s.articleTitle}>{"ARTICLE III \u2014 CHARGES FORFAITAIRES ET SERVICES"}</Text>
+            <ArticleTitle>{"ARTICLE III \u2014 CHARGES FORFAITAIRES ET SERVICES"}</ArticleTitle>
 
             <Text style={[s.subTitle, { fontSize: 8.5 }]}>{"CHARGES FORFAITAIRES \u2014 COMPRIS DANS VOTRE FORFAIT DE CHARGES"}</Text>
             <Text style={[s.body, { fontSize: 9.5, color: "#6B6B6B", marginBottom: 4 }]}>{"Retrouvez tout le d\u00E9tail des charges incluses \u00E0 l'article V du pr\u00E9sent contrat."}</Text>
@@ -528,8 +549,8 @@ export function BailPDF({ data }: { data: BailPDFData }) {
 
         {/* ---------- ARTICLE III ---------- */}
         <View wrap={false} minPresenceAhead={30}>
-          <Text style={s.articleTitle}>{property.is_coliving ? "ARTICLE IV \u2014 DATE DE PRISE D\u2019EFFET ET DUR\u00C9E" : "ARTICLE III \u2014 DATE DE PRISE D\u2019EFFET ET DUR\u00C9E"}</Text>
-          <Text style={[s.body, { fontFamily: "Helvetica-Bold" }]}>
+          <ArticleTitle>{property.is_coliving ? "ARTICLE IV \u2014 DATE DE PRISE D\u2019EFFET ET DUR\u00C9E" : "ARTICLE III \u2014 DATE DE PRISE D\u2019EFFET ET DUR\u00C9E"}</ArticleTitle>
+          <Text style={[s.body, { fontWeight: 700 }]}>
             {"La location prend effet le "}{fDate(form.entry_date)}{" pour une dur\u00E9e de "}{durationInWords(form.lease_duration_months || 12)}{" ("}{form.lease_duration_months || 12}{") mois, soit jusqu\u2019au "}{fDate(exit_date)}.
           </Text>
           <Text style={s.body}>
@@ -538,30 +559,30 @@ export function BailPDF({ data }: { data: BailPDFData }) {
           <Text style={s.body}>
             {"Conform\u00E9ment \u00E0 l\u2019article 25-8 de la loi n\u00B0 89-462 du 6 juillet 1989, le locataire peut donner cong\u00E9 \u00E0 tout moment, avec un pr\u00E9avis d\u2019un mois."}
           </Text>
-          <Text style={[s.body, { fontSize: 9, fontStyle: "italic", color: "#555", marginTop: 4 }]}>
+          <Text style={[s.body, { marginTop: 4 }]}>
             {"Le pr\u00E9sent contrat est conclu en vue d\u2019affecter le logement \u00E0 la r\u00E9sidence principale du locataire au sens de l\u2019article 2 de la loi n\u00B0 89-462 du 6 juillet 1989."}
           </Text>
         </View>
 
         {/* ---------- ARTICLE IV ---------- */}
         <View minPresenceAhead={60}>
-          <Text style={s.articleTitle}>{property.is_coliving ? "ARTICLE V \u2014 CONDITIONS FINANCI\u00C8RES" : "ARTICLE IV \u2014 CONDITIONS FINANCI\u00C8RES"}</Text>
+          <ArticleTitle>{property.is_coliving ? "ARTICLE V \u2014 CONDITIONS FINANCI\u00C8RES" : "ARTICLE IV \u2014 CONDITIONS FINANCI\u00C8RES"}</ArticleTitle>
         </View>
 
         {property.is_coliving ? (
           <View>
             <View style={s.highlightBox}>
             {isLegacyCharges ? (
-              <Text style={s.subTitle}><Text style={{ fontFamily: "Helvetica-Bold" }}>Loyer mensuel :</Text> {fEUR(loyer_eur)} ({fCHF(form.loyer_chf)} au taux BCE du {form.exchange_rate_date || "\u2014"} : {rate}{" \u2014 pour indication uniquement"})</Text>
+              <Text style={s.subTitle}><Text style={{ fontWeight: 700 }}>Loyer mensuel :</Text> {fEUR(loyer_eur)} ({fCHF(form.loyer_chf)} au taux BCE du {form.exchange_rate_date || "\u2014"} : {rate}{" \u2014 pour indication uniquement"})</Text>
             ) : (
-              <Text style={s.subTitle}><Text style={{ fontFamily: "Helvetica-Bold" }}>{"Loyer mensuel charges comprises :"}</Text> {fEUR(loyer_eur)}</Text>
+              <Text style={s.subTitle}><Text style={{ fontWeight: 700 }}>{"Loyer mensuel charges comprises :"}</Text> {fEUR(loyer_eur)}</Text>
             )}
             {prorata_days > 0 && prorata_total_days > 0 && prorata_days < prorata_total_days ? (
               <View>
-                <Text style={[s.body, { marginTop: 6, fontFamily: "Helvetica-Bold" }]}>
+                <Text style={[s.body, { marginTop: 6, fontWeight: 700 }]}>
                   {"Prorata du premier mois : du "}{fDate(form.entry_date)}{" au dernier jour du mois ("}{prorata_days}{"/"}{prorata_total_days}{" jours) :"}
                 </Text>
-                <Bullet>En EUR : <Text style={{ fontFamily: "Helvetica-Bold", color: gold }}>{fEUR(prorata_eur)}</Text></Bullet>
+                <Bullet>En EUR : <Text style={{ fontWeight: 700, color: gold }}>{fEUR(prorata_eur)}</Text></Bullet>
               </View>
             ) : (
               <Text style={[s.body, { fontStyle: "italic" }]}>{"Entr\u00E9e le 1er du mois \u2014 pas de prorata."}</Text>
@@ -621,7 +642,7 @@ export function BailPDF({ data }: { data: BailPDFData }) {
                   {"Conform\u00E9ment \u00E0 la loi du 6 juillet 1989, ce forfait ne donne lieu \u00E0 aucune r\u00E9gularisation annuelle."}
                 </Text>
 
-                <Text style={[s.subTitle, { fontSize: 9 }]}>{"D\u00E9tail du forfait de charges \u2014 nomenclature du d\u00E9cret n\u00B0 87-713 du 26 ao\u00FBt 1987"}</Text>
+                <Text style={[s.subTitle, { fontSize: 10, color: "#111111" }]}>{"D\u00E9tail du forfait de charges \u2014 nomenclature du d\u00E9cret n\u00B0 87-713 du 26 ao\u00FBt 1987"}</Text>
 
                 <Text style={[s.subTitle, { fontSize: 8, marginTop: 4 }]}>{"I. EAU"}</Text>
                 <Bullet>{"Eau froide et eau chaude de l\u2019ensemble des occupants"}</Bullet>
@@ -702,7 +723,7 @@ export function BailPDF({ data }: { data: BailPDFData }) {
         <Bullet>{"La r\u00E9vision s\u2019effectue chaque ann\u00E9e \u00E0 la date anniversaire du contrat."}</Bullet>
 
         <Text style={s.subTitle}>{"Modalit\u00E9s de paiement :"}</Text>
-        <Bullet><Text style={{ fontFamily: "Helvetica-Bold", color: gold }}>{"Le loyer et les charges doivent \u00EAtre vers\u00E9s avant le 5 du mois."}</Text></Bullet>
+        <Bullet><Text style={{ fontWeight: 700, color: gold }}>{"Le loyer et les charges doivent \u00EAtre vers\u00E9s avant le 5 du mois."}</Text></Bullet>
         <Bullet>Virement bancaire sur le compte du bailleur.</Bullet>
 
         {form.frais_remise_location > 0 && (
@@ -732,37 +753,37 @@ export function BailPDF({ data }: { data: BailPDFData }) {
         {(property.name?.includes('Villa') || property.name?.includes('lavilla')) && (
           <View style={[s.partyBox, { marginTop: 12 }]}>
             <Text style={s.partyLabel}>{"Coordonnées bancaires du bailleur :"}</Text>
-            <Text style={{ marginBottom: 2, fontSize: 9 }}><Text style={{ fontFamily: "Helvetica-Bold" }}>{"Banque : "}</Text>{"Banque Palatine"}</Text>
-            <Text style={{ marginBottom: 2, fontSize: 9 }}><Text style={{ fontFamily: "Helvetica-Bold" }}>{"Titulaire : "}</Text>{"Jérôme Austin / Fanny Piot"}</Text>
-            <Text style={{ marginBottom: 2, fontSize: 9 }}><Text style={{ fontFamily: "Helvetica-Bold" }}>{"IBAN : "}</Text>{"FR76 4097 8000 4321 3287 5019 897"}</Text>
-            <Text style={{ fontSize: 9 }}><Text style={{ fontFamily: "Helvetica-Bold" }}>{"BIC : "}</Text>{"BSPFFRPPXXX"}</Text>
+            <Text style={{ marginBottom: 2, fontSize: 9 }}><Text style={{ fontWeight: 700 }}>{"Banque : "}</Text>{"Banque Palatine"}</Text>
+            <Text style={{ marginBottom: 2, fontSize: 9 }}><Text style={{ fontWeight: 700 }}>{"Titulaire : "}</Text>{"Jérôme Austin / Fanny Piot"}</Text>
+            <Text style={{ marginBottom: 2, fontSize: 9 }}><Text style={{ fontWeight: 700 }}>{"IBAN : "}</Text>{"FR76 4097 8000 4321 3287 5019 897"}</Text>
+            <Text style={{ fontSize: 9 }}><Text style={{ fontWeight: 700 }}>{"BIC : "}</Text>{"BSPFFRPPXXX"}</Text>
           </View>
         )}
 
         {(property.name?.includes('Loft') || property.name?.includes('Lodge') || property.name?.includes('leloft') || property.name?.includes('lelodge')) && (
           <View style={[s.partyBox, { marginTop: 12 }]}>
             <Text style={s.partyLabel}>{"Coordonnées bancaires du bailleur :"}</Text>
-            <Text style={{ marginBottom: 2, fontSize: 9 }}><Text style={{ fontFamily: "Helvetica-Bold" }}>{"Banque : "}</Text>{"Banque Palatine"}</Text>
-            <Text style={{ marginBottom: 2, fontSize: 9 }}><Text style={{ fontFamily: "Helvetica-Bold" }}>{"Titulaire : "}</Text>{"SCI Sleep In"}</Text>
-            <Text style={{ marginBottom: 2, fontSize: 9 }}><Text style={{ fontFamily: "Helvetica-Bold" }}>{"IBAN : "}</Text>{"FR76 4097 8000 4321 3287 5921 415"}</Text>
-            <Text style={{ fontSize: 9 }}><Text style={{ fontFamily: "Helvetica-Bold" }}>{"BIC : "}</Text>{"BSPFFRPPXXX"}</Text>
+            <Text style={{ marginBottom: 2, fontSize: 9 }}><Text style={{ fontWeight: 700 }}>{"Banque : "}</Text>{"Banque Palatine"}</Text>
+            <Text style={{ marginBottom: 2, fontSize: 9 }}><Text style={{ fontWeight: 700 }}>{"Titulaire : "}</Text>{"SCI Sleep In"}</Text>
+            <Text style={{ marginBottom: 2, fontSize: 9 }}><Text style={{ fontWeight: 700 }}>{"IBAN : "}</Text>{"FR76 4097 8000 4321 3287 5921 415"}</Text>
+            <Text style={{ fontSize: 9 }}><Text style={{ fontWeight: 700 }}>{"BIC : "}</Text>{"BSPFFRPPXXX"}</Text>
           </View>
         )}
 
         {/* ---------- ARTICLE V ---------- */}
         <View wrap={false} minPresenceAhead={30}>
-          <Text style={s.articleTitle}>{property.is_coliving ? "ARTICLE VI \u2014 GARANTIES" : "ARTICLE V \u2014 GARANTIES"}</Text>
+          <ArticleTitle>{property.is_coliving ? "ARTICLE VI \u2014 GARANTIES" : "ARTICLE V \u2014 GARANTIES"}</ArticleTitle>
           <Text style={s.body}>
             {property.is_coliving
-              ? <>{"Le locataire versera un d\u00E9p\u00F4t de garantie \u00E9gal \u00E0 deux (2) mois de loyer hors charges, soit "}<Text style={{ fontFamily: "Helvetica-Bold", color: gold }}>{fEUR(depot_eur)}</Text>{", restitu\u00E9 dans les deux (2) mois suivant la fin du contrat, selon l\u2019\u00E9tat des lieux."}</>
-              : <>{"Le locataire versera un d\u00E9p\u00F4t de garantie \u00E9gal \u00E0 un (1) mois de loyer hors charges, soit "}<Text style={{ fontFamily: "Helvetica-Bold", color: gold }}>{fEUR(depot_eur)}</Text>{", restitu\u00E9 dans les deux (2) mois suivant la fin du contrat, d\u00E9duction faite des sommes \u00E9ventuellement dues."}</>
+              ? <>{"Le locataire versera un d\u00E9p\u00F4t de garantie \u00E9gal \u00E0 deux (2) mois de loyer hors charges, soit "}<Text style={{ fontWeight: 700, color: gold }}>{fEUR(depot_eur)}</Text>{", restitu\u00E9 dans les deux (2) mois suivant la fin du contrat, selon l\u2019\u00E9tat des lieux."}</>
+              : <>{"Le locataire versera un d\u00E9p\u00F4t de garantie \u00E9gal \u00E0 un (1) mois de loyer hors charges, soit "}<Text style={{ fontWeight: 700, color: gold }}>{fEUR(depot_eur)}</Text>{", restitu\u00E9 dans les deux (2) mois suivant la fin du contrat, d\u00E9duction faite des sommes \u00E9ventuellement dues."}</>
             }
           </Text>
         </View>
 
         {/* ---------- ARTICLE VI ---------- */}
         <View wrap={false} minPresenceAhead={30}>
-          <Text style={s.articleTitle}>{property.is_coliving ? "ARTICLE VII \u2014 CLAUSE R\u00C9SOLUTOIRE" : "ARTICLE VI \u2014 CLAUSE R\u00C9SOLUTOIRE"}</Text>
+          <ArticleTitle>{property.is_coliving ? "ARTICLE VII \u2014 CLAUSE R\u00C9SOLUTOIRE" : "ARTICLE VI \u2014 CLAUSE R\u00C9SOLUTOIRE"}</ArticleTitle>
           <Text style={s.body}>
             {"Le bailleur se r\u00E9serve le droit de r\u00E9silier le contrat en cas de non-paiement du loyer ou des charges, sans pr\u00E9judice du droit de poursuivre le recouvrement des sommes dues."}
           </Text>
@@ -770,7 +791,7 @@ export function BailPDF({ data }: { data: BailPDFData }) {
 
         {/* ---------- ARTICLE VII ---------- */}
         <View minPresenceAhead={60}>
-          <Text style={s.articleTitle}>{property.is_coliving ? "ARTICLE VIII \u2014 OBLIGATIONS DU LOCATAIRE" : "ARTICLE VII \u2014 OBLIGATIONS DU LOCATAIRE"}</Text>
+          <ArticleTitle>{property.is_coliving ? "ARTICLE VIII \u2014 OBLIGATIONS DU LOCATAIRE" : "ARTICLE VII \u2014 OBLIGATIONS DU LOCATAIRE"}</ArticleTitle>
           <Text style={s.body}>{"Le locataire s\u2019engage \u00E0 :"}</Text>
         </View>
         <Numbered n={1}>{"Payer le loyer et les charges aux dates et lieux convenus ;"}</Numbered>
@@ -785,7 +806,7 @@ export function BailPDF({ data }: { data: BailPDFData }) {
 
         {/* ---------- ARTICLE VIII ---------- */}
         <View wrap={false} minPresenceAhead={40}>
-          <Text style={s.articleTitle}>{property.is_coliving ? "ARTICLE IX \u2014 OBLIGATIONS DU BAILLEUR" : "ARTICLE VIII \u2014 OBLIGATIONS DU BAILLEUR"}</Text>
+          <ArticleTitle>{property.is_coliving ? "ARTICLE IX \u2014 OBLIGATIONS DU BAILLEUR" : "ARTICLE VIII \u2014 OBLIGATIONS DU BAILLEUR"}</ArticleTitle>
           <Text style={s.body}>{"Le bailleur s\u2019engage \u00E0 :"}</Text>
           <Numbered n={1}>Assurer la jouissance paisible du logement ;</Numbered>
           <Numbered n={2}>{"Maintenir les lieux en bon \u00E9tat de r\u00E9paration et de viabilit\u00E9 ;"}</Numbered>
@@ -797,7 +818,7 @@ export function BailPDF({ data }: { data: BailPDFData }) {
         {/* ---------- ARTICLE IX (coliving only) \u2014 Usage des \u00E9quipements & responsabilit\u00E9 ---------- */}
         {property.is_coliving && (
           <View minPresenceAhead={60}>
-            <Text style={s.articleTitle}>{"ARTICLE X \u2014 USAGE DES \u00C9QUIPEMENTS ET ESPACES COMMUNS \u2014 RESPONSABILIT\u00C9 DU LOCATAIRE"}</Text>
+            <ArticleTitle>{"ARTICLE X \u2014 USAGE DES \u00C9QUIPEMENTS ET ESPACES COMMUNS \u2014 RESPONSABILIT\u00C9 DU LOCATAIRE"}</ArticleTitle>
 
             <Text style={s.subTitle}>{"\u00A7 1 \u2014 P\u00E9rim\u00E8tre"}</Text>
             <Text style={s.body}>
@@ -812,7 +833,7 @@ export function BailPDF({ data }: { data: BailPDFData }) {
             <Text style={s.subTitle}>{"\u00A7 3 \u2014 Piscine, sauna et installations de bien-\u00EAtre"}</Text>
             <Text style={s.body}>
               {"Le Locataire est express\u00E9ment inform\u00E9 que la piscine, le sauna et les \u00E9ventuelles installations de bien-\u00EAtre sont des \u00E9quipements \u00E0 usage priv\u00E9 et "}
-              <Text style={{ fontFamily: "Helvetica-Bold" }}>{"NON SURVEILL\u00C9S"}</Text>
+              <Text style={{ fontWeight: 700 }}>{"NON SURVEILL\u00C9S"}</Text>
               {". Leur utilisation suppose l\u2019aptitude physique et la vigilance personnelle de l\u2019utilisateur. L\u2019acc\u00E8s des mineurs s\u2019effectue sous la responsabilit\u00E9 exclusive de l\u2019adulte qui les accompagne. Il est rappel\u00E9 qu\u2019il est d\u00E9conseill\u00E9 d\u2019utiliser ces \u00E9quipements seul, sous l\u2019effet de l\u2019alcool, de substances ou en cas de contre-indication m\u00E9dicale."}
             </Text>
 
@@ -845,7 +866,7 @@ export function BailPDF({ data }: { data: BailPDFData }) {
 
         {/* ---------- ARTICLE IX (Mont-Blanc) / X (coliving) \u2014 \u00C9tat des lieux ---------- */}
         <View wrap={false} minPresenceAhead={30}>
-          <Text style={s.articleTitle}>{property.is_coliving ? "ARTICLE XI \u2014 \u00C9TAT DES LIEUX" : "ARTICLE IX \u2014 \u00C9TAT DES LIEUX"}</Text>
+          <ArticleTitle>{property.is_coliving ? "ARTICLE XI \u2014 \u00C9TAT DES LIEUX" : "ARTICLE IX \u2014 \u00C9TAT DES LIEUX"}</ArticleTitle>
           <Text style={s.body}>
             {property.is_coliving
               ? "L\u2019\u00E9tat des lieux d\u2019entr\u00E9e et de sortie sera \u00E9tabli via Etadly. Le locataire recevra un exemplaire apr\u00E8s sa r\u00E9alisation."
@@ -856,7 +877,7 @@ export function BailPDF({ data }: { data: BailPDFData }) {
         {/* ---------- ARTICLE X (Mont-Blanc only: Inventaire) ---------- */}
         {!property.is_coliving && (
           <View wrap={false} minPresenceAhead={30}>
-            <Text style={s.articleTitle}>{"ARTICLE X \u2014 INVENTAIRE DU MOBILIER"}</Text>
+            <ArticleTitle>{"ARTICLE X \u2014 INVENTAIRE DU MOBILIER"}</ArticleTitle>
             <Text style={s.body}>
               {"L\u2019inventaire d\u00E9taill\u00E9 du mobilier et des \u00E9quipements fournis est joint en annexe au pr\u00E9sent contrat. Le locataire s\u2019engage \u00E0 en prendre soin et \u00E0 le restituer en bon \u00E9tat."}
             </Text>
@@ -865,7 +886,7 @@ export function BailPDF({ data }: { data: BailPDFData }) {
 
         {/* ---------- Diagnostics ---------- */}
         <View wrap={false} minPresenceAhead={40}>
-          <Text style={s.articleTitle}>{property.is_coliving ? "ARTICLE XII \u2014 DIAGNOSTICS TECHNIQUES" : "ARTICLE XI \u2014 DIAGNOSTICS TECHNIQUES"}</Text>
+          <ArticleTitle>{property.is_coliving ? "ARTICLE XII \u2014 DIAGNOSTICS TECHNIQUES" : "ARTICLE XI \u2014 DIAGNOSTICS TECHNIQUES"}</ArticleTitle>
           <Text style={s.body}>
             {"Conform\u00E9ment \u00E0 la r\u00E9glementation fran\u00E7aise, le bailleur fournit au locataire :"}
           </Text>
@@ -879,7 +900,7 @@ export function BailPDF({ data }: { data: BailPDFData }) {
         {/* ---------- Règlement intérieur (coliving only) ---------- */}
         {property.is_coliving && (
           <View wrap={false} minPresenceAhead={30}>
-            <Text style={s.articleTitle}>{"ARTICLE XIII \u2014 R\u00C8GLEMENT INT\u00C9RIEUR"}</Text>
+            <ArticleTitle>{"ARTICLE XIII \u2014 R\u00C8GLEMENT INT\u00C9RIEUR"}</ArticleTitle>
             <Text style={s.body}>
               {"Le locataire accepte le R\u00E8glement Int\u00E9rieur La Villa Coliving (la \u201CBible du Coliver\u201D), joint en annexe, qui pr\u00E9cise les r\u00E8gles de vie commune, l\u2019usage des parties communes et les proc\u00E9dures de gestion interne."}
             </Text>
@@ -888,7 +909,7 @@ export function BailPDF({ data }: { data: BailPDFData }) {
 
         {/* ---------- ANNEXES ---------- */}
         <View wrap={false} minPresenceAhead={20}>
-          <Text style={s.articleTitle}>{property.is_coliving ? "ARTICLE XIV \u2014 ANNEXES" : "ARTICLE XII \u2014 ANNEXES"}</Text>
+          <ArticleTitle>{property.is_coliving ? "ARTICLE XIV \u2014 ANNEXES" : "ARTICLE XII \u2014 ANNEXES"}</ArticleTitle>
           <Text style={s.body}>{"Sont annex\u00E9es au pr\u00E9sent contrat :"}</Text>
           {!property.is_coliving && <Bullet>{"Notice d\u2019information relative aux droits et obligations des locataires et des bailleurs"}</Bullet>}
           {!property.is_coliving && <Bullet>{"RIB du bailleur"}</Bullet>}
@@ -905,7 +926,7 @@ export function BailPDF({ data }: { data: BailPDFData }) {
         {/* ---------- Clauses particulières ---------- */}
         {form.clauses_particulieres?.trim() ? (
           <View wrap={false} minPresenceAhead={30}>
-            <Text style={s.articleTitle}>{"CLAUSES PARTICULI\u00C8RES"}</Text>
+            <ArticleTitle>{"CLAUSES PARTICULI\u00C8RES"}</ArticleTitle>
             <Text style={s.body}>{form.clauses_particulieres}</Text>
           </View>
         ) : null}

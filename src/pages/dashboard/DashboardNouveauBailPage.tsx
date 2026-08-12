@@ -182,11 +182,14 @@ function ph(val: string | undefined | null, placeholder: string): string {
 function fDate(d: string | undefined | null): string {
   if (!d) return `<span style="color:#c0392b;font-style:italic">[date]</span>`;
   try {
-    return new Date(d + 'T00:00:00').toLocaleDateString('fr-FR', {
+    const dt = new Date(d + 'T00:00:00');
+    const base = dt.toLocaleDateString('fr-FR', {
       day: 'numeric',
       month: 'long',
       year: 'numeric',
     });
+    // Usage francais : le premier du mois s'ecrit '1er septembre', pas '1 septembre'.
+    return dt.getDate() === 1 ? base.replace(/^1 /, '1er ') : base;
   } catch {
     return `<span style="color:#c0392b;font-style:italic">[date invalide]</span>`;
   }
@@ -323,52 +326,45 @@ function generateContractHTML(data: ContractData): string {
     <head>
       <meta charset="UTF-8" />
       <style>
+        /* Tokens du modele Word : Inter 10,5 pt, interligne 1,375, or #B8860B.
+           Inter est deja chargee par l'app (index.css). */
         * {
-          font-family: Arial, Helvetica, sans-serif;
+          font-family: 'Inter', system-ui, sans-serif;
         }
         body {
-          font-family: Arial, Helvetica, sans-serif;
-          font-size: 13px;
-          line-height: 1.6;
-          color: #333;
+          font-family: 'Inter', system-ui, sans-serif;
+          font-size: 10.5pt;
+          line-height: 1.375;
+          color: #111;
           margin: 0;
           padding: 0;
         }
         .contract-container {
           max-width: 210mm;
           margin: 0 auto;
-          padding: 20mm 14mm;
+          padding: 27.5mm 30mm 30mm; /* marges du modele : 78/85/85 pt */
           background: white;
           page-break-after: always;
         }
         .contract-header {
           text-align: center;
-          margin-bottom: 25px;
-          border-bottom: 2px solid #B8860B;
-          padding-bottom: 15px;
+          margin-bottom: 16px;
         }
         .contract-header img {
-          max-height: 130px;
-          margin-bottom: 12px;
-        }
-        .contract-header p {
-          margin: 5px 0;
-          font-size: 12pt;
-          font-weight: bold;
-          color: #333;
+          max-height: 91pt;
+          margin-bottom: 8px;
         }
         .contract-header h1 {
-          font-family: Arial, Helvetica, sans-serif;
-          font-size: 20pt;
-          font-weight: bold;
-          margin: 12px 0;
-          color: #333;
-          line-height: 1.4;
+          font-size: 23pt;
+          font-weight: 400;
+          margin: 6px 0 4px;
+          color: #111;
+          line-height: 1.15;
         }
         .contract-header .subtitle {
           font-size: 9pt;
-          color: #666;
-          margin: 8px 0 0 0;
+          color: #8A8A8A;
+          margin: 2px 0 0 0;
         }
         .highlight-box {
           background: #F3ECD8;
@@ -388,21 +384,20 @@ function generateContractHTML(data: ContractData): string {
           font-weight: bold;
         }
         h2 {
-          font-family: Arial, Helvetica, sans-serif;
-          font-size: 14pt;
-          font-weight: bold;
-          margin: 18px 0 10px 0;
-          color: #1a1a2e;
-          border-bottom: 2px solid #B8860B;
-          padding-bottom: 6px;
-          text-transform: uppercase;
+          font-size: 13.5pt;
+          font-weight: 400;
+          margin: 27px 0 11px 0;
+          color: #111;
+          border-bottom: 0.5px solid #B8860B;
+          padding-bottom: 10px;
+          line-height: 1.25;
         }
+        h2 .art-num { color: #B8860B; }
         h3 {
-          font-family: Arial, Helvetica, sans-serif;
-          font-size: 11pt;
-          font-weight: bold;
-          margin: 12px 0 8px 0;
-          color: #333;
+          font-size: 8.5pt;
+          font-weight: 700;
+          margin: 8px 0 5.5px 0;
+          color: #B8860B;
         }
         .gold {
           color: #B8860B;
@@ -414,8 +409,7 @@ function generateContractHTML(data: ContractData): string {
         }
         .article {
           margin: 12px 0;
-          text-align: justify;
-          font-size: 10pt;
+          font-size: 10.5pt;
         }
         .article-title {
           font-weight: bold;
@@ -427,8 +421,8 @@ function generateContractHTML(data: ContractData): string {
           padding-left: 24px;
         }
         li {
-          margin: 6px 0;
-          font-size: 10pt;
+          margin: 3px 0;
+          font-size: 10.5pt;
         }
         ul li {
           list-style: disc;
@@ -842,7 +836,8 @@ function generateContractHTML(data: ContractData): string {
     </html>
   `;
 
-  return html;
+  // Titres deux tons du modele : "ARTICLE N" dore, le reste noir (idem BailPDF).
+  return html.replace(/<h2>(ARTICLE [IVX]+)( — )/g, '<h2><span class="art-num">$1</span>$2');
 }
 
 /**
