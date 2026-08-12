@@ -70,6 +70,11 @@ interface FormData {
   charges_energy: number;
   charges_maintenance: number;
   charges_services: number;
+  // Bail 01/09/2026 : forfait unique EUR. NULL = bail anterieur -> rendu LEGACY.
+  charges_forfait_eur?: number | null;
+  rent_eur?: number | null;
+  previous_tenant_rent_eur?: number | null;
+  previous_tenant_departure_date?: string | null;
   frais_remise_location: number;
   irl_trimestre: string;
   irl_indice: number;
@@ -153,11 +158,34 @@ function generateContractHTML(data: ContractData): string {
     .map(area => `<li>${area}</li>`)
     .join('');
 
-  // Charges are stored in EUR — convert to CHF for display
-  const totalChargesEUR = form.charges_energy + form.charges_maintenance + form.charges_services;
+  // Charges en EUR (cf. dette de schema : les colonnes _chf portent des EUR).
+  // Bascule legacy : un bail signe avant le 01/09/2026 n'a pas de forfait unique
+  // et doit ressortir A L'IDENTIQUE avec ses 3 postes.
+  const isLegacyCharges = form.charges_forfait_eur === null || form.charges_forfait_eur === undefined;
+  const totalChargesEUR = isLegacyCharges
+    ? form.charges_energy + form.charges_maintenance + form.charges_services
+    : Number(form.charges_forfait_eur);
 
-  const chargesTable = property.is_coliving ? `
-    <p style="font-size:9px;color:#666;">Le forfait de charges ci-dessus couvre exclusivement des charges récupérables au sens du décret n° 87-713 (énergie, eau, ménage et entretien des parties communes, fournitures). Les services communautaires énumérés à l’article II sont gratuits : ils ne sont inclus ni dans le loyer ni dans ce forfait, et ne conditionnent pas la location.</p>
+  const loyerNuEurTable = Math.max(0, Math.round(form.loyer_chf / (form.exchange_rate || 0.9145)) - totalChargesEUR);
+  const detailForfait = `
+    <p style="font-weight:600;font-size:11px;margin-top:12px;">Détail du forfait de charges — nomenclature du décret n° 87-713 du 26 août 1987</p>
+    <p style="font-weight:600;font-size:10px;margin-top:8px;">I. EAU</p>
+    <ul><li>Eau froide et eau chaude de l'ensemble des occupants</li><li>Eau nécessaire à l'entretien courant des parties communes intérieures</li><li>Eau nécessaire à l'entretien courant des espaces extérieurs et du potager</li><li>Produits nécessaires à l'exploitation, à l'entretien et au traitement de l'eau</li><li>Fourniture d'eau chaude collective</li></ul>
+    <p style="font-weight:600;font-size:10px;margin-top:8px;">II. ÉNERGIE</p>
+    <ul><li>Électricité des parties communes et privatives</li><li>Chauffage et production d'eau chaude</li><li>Fourniture d'énergie, quelle que soit sa nature</li><li>Exploitation, entretien et réglage des installations de chauffage et de production d'eau chaude</li><li>Entretien annuel et ramonage de la chaudière</li></ul>
+    <p style="font-weight:600;font-size:10px;margin-top:8px;">III. INSTALLATIONS INDIVIDUELLES</p>
+    <ul><li>Contrôle des raccordements, réglage du débit et de la température</li><li>Dépannage, remplacement des joints et clapets, joints cloches des chasses d'eau</li><li>Entretien courant de la robinetterie</li></ul>
+    <p style="font-weight:600;font-size:10px;margin-top:8px;">IV. PARTIES COMMUNES INTÉRIEURES</p>
+    <ul><li>Frais de personnel d'entretien — ménage 3 fois par semaine</li><li>Produits d'entretien, balais, sacs nécessaires à l'élimination des déchets</li><li>Produits de désinsectisation et de désinfection</li><li>Entretien de la minuterie, des tapis, des vide-ordures</li><li>Réparation et remplacement des appareils d'entretien (aspirateur et matériel associé)</li><li>Entretien de la buanderie et de ses équipements</li><li>Enlèvement des déchets et sortie des conteneurs</li></ul>
+    <p style="font-weight:600;font-size:10px;margin-top:8px;">V. ESPACES EXTÉRIEURS</p>
+    <ul><li>Entretien des voies de circulation et des aires de stationnement</li><li>Entretien des espaces verts : tonte, taille, élagage, arrosage, remplacement du végétal</li><li>Entretien du potager</li><li>Entretien de la piscine : intervention du pisciniste, produits de traitement, filtration, hivernage</li><li>Entretien des terrasses, du barbecue, des équipements de jeux et du terrain de volleyball</li><li>Enlèvement des feuilles et de la neige</li></ul>
+    <p style="font-weight:600;font-size:10px;margin-top:8px;">VI. ÉQUIPEMENTS COMMUNS</p>
+    <ul><li>Entretien et menues réparations des équipements communs : électroménager, mobilier commun, matériel de sport, sauna</li><li>Vérification périodique des installations de sécurité (détecteurs de fumée, extincteurs)</li><li>Remplacement des éléments défectueux des parties communes</li></ul>
+    <p style="font-weight:600;font-size:10px;margin-top:8px;">VII. TAXES ET REDEVANCES</p>
+    <ul><li>Taxe ou redevance d'enlèvement des ordures ménagères</li><li>Taxe de balayage</li><li>Redevance d'assainissement</li></ul>`;
+
+  const chargesTable = property.is_coliving ? (isLegacyCharges ? `
+    <p style="font-size:9px;color:#666;">Le montant mensuel des charges forfaitaires et des services est inclus dans le loyer principal.</p>
     <table style="width:100%;border-collapse:collapse;margin:10px 0;">
       <tr style="border-bottom:1px solid #e0e0e0;">
         <td style="padding:8px;font-weight:600;width:60%;">Catégorie</td>
@@ -181,6 +209,28 @@ function generateContractHTML(data: ContractData): string {
       </tr>
     </table>
   ` : `
+    <p style="font-size:9px;color:#666;">Le loyer et le forfait de charges sont réglés ensemble ; leur répartition figure ci-dessous.</p>
+    <table style="width:100%;border-collapse:collapse;margin:10px 0;">
+      <tr style="border-bottom:1px solid #e0e0e0;">
+        <td style="padding:8px;font-weight:600;width:60%;">Poste</td>
+        <td style="padding:8px;font-weight:600;text-align:right;width:40%;">Montant EUR</td>
+      </tr>
+      <tr style="border-bottom:1px solid #f0f0f0;">
+        <td style="padding:8px;">Loyer nu</td>
+        <td style="padding:8px;text-align:right;">${fEUR(loyerNuEurTable)}</td>
+      </tr>
+      <tr style="border-bottom:1px solid #f0f0f0;">
+        <td style="padding:8px;">Forfait de charges récupérables</td>
+        <td style="padding:8px;text-align:right;">${fEUR(totalChargesEUR)}</td>
+      </tr>
+      <tr style="background:#f9f7f4;font-weight:600;border-bottom:2px solid #c9a96e;">
+        <td style="padding:8px;">TOTAL MENSUEL</td>
+        <td style="padding:8px;text-align:right;">${fEUR(loyerNuEurTable + totalChargesEUR)}</td>
+      </tr>
+    </table>
+    <p style="font-size:9px;color:#666;">Conformément à la loi du 6 juillet 1989, ce forfait ne donne lieu à aucune régularisation annuelle.</p>
+    ${detailForfait}
+  `) : `
     <table style="width:100%;border-collapse:collapse;margin:10px 0;">
       <tr style="border-bottom:1px solid #e0e0e0;">
         <td style="padding:8px;font-weight:600;width:60%;">Catégorie</td>
@@ -513,7 +563,11 @@ function generateContractHTML(data: ContractData): string {
               <li>Évènements communautaires récurrents</li>
             <li>Résolution des problèmes Contact via WhatsApp, réponse en moins de 48h.</li>
             <li>Cours de yoga</li>
-            <li>Cours de remise en forme (coaching Sportif)</li>
+            <li>Cours de remise en forme (coaching sportif)</li>
+            <li>Soirée communautaire mensuelle</li>
+            <li>Accès internet fibre — box mise à disposition dans les parties communes</li>
+            <li>Abonnements numériques de divertissement (services de streaming)</li>
+            <li>Accueil, remise des clés et mise à jour des accès à l'arrivée</li>
             <li>Fournitures de base : 1 panier de base livré chaque mois pour la communauté (papier toilette, Essuie-tout, lessive, produits d'entretiens, ..) en fonction de votre demande</li>
             <li>Gestion des départs : à vous de rencontrer notre sélection de nouveaux candidats et de les sélectionner</li>
           </ul>
@@ -540,8 +594,6 @@ function generateContractHTML(data: ContractData): string {
           <ul>
             <li>Eau, Électricité, Gaz,</li>
             <li>Entretien Chaudière</li>
-            <li>Internet</li>
-            <li>Abonnements numériques de divertissement</li>
           </ul>
 
           <h3>TAXES</h3>
@@ -596,16 +648,11 @@ function generateContractHTML(data: ContractData): string {
             <li>La révision s'effectue chaque année à la date anniversaire du contrat.</li>
           </ul>
           ${form.frais_remise_location > 0 ? `
-          <h3>Frais de remise en location : ${fEUR(form.frais_remise_location)} — offerts à partir de 3 mois de présence</h3>
-          <p>Le départ anticipé d'un locataire oblige le bailleur à engager, indépendamment de l'état du logement restitué, l'ensemble des démarches nécessaires pour remettre le logement en location :</p>
-          <ul>
-            <li>Création et diffusion de nouvelles annonces sur les différents supports ;</li>
-            <li>Traitement des candidatures, organisation et tenue des visites ;</li>
-            <li>Recherche et sélection d'un nouveau locataire (vérification du dossier, rédaction du contrat) ;</li>
-            <li>Installation du nouveau locataire (accueil, remise des clés, mise à jour des accès) ;</li>
-            <li>Formalités administratives liées au changement de locataire (déclarations d'occupation, démarches techniques et administratives).</li>
-          </ul>
-          <p>Ces frais, fixés forfaitairement à ${fEUR(form.frais_remise_location)}, sont offerts au locataire dont le séjour atteint 3 mois à compter de la date d'entrée. En cas de départ avant ce délai, ils restent à sa charge.</p>` : ''}
+          <h3>Indemnité de départ anticipé : ${fEUR(form.frais_remise_location)}</h3>
+          <p>Le locataire s'engage à occuper le logement pendant une durée minimale de trois mois à compter de la date d'entrée. En cas de départ avant ce terme, une indemnité de départ anticipé de ${fEUR(form.frais_remise_location)} est due au bailleur.</p>
+          <p>Cette indemnité n'est pas due dans les situations suivantes :</p>
+          <ul><li>mutation professionnelle ;</li><li>perte d'emploi ;</li><li>raison de santé ;</li><li>force majeure.</li></ul>
+          <p>Passé ce délai de trois mois, aucune indemnité n'est due : le locataire reste libre de donner congé à tout moment, avec un préavis d'un mois, conformément à l'article 25-8 de la loi du 6 juillet 1989.</p>` : ''}
           <h3>Modalités de paiement :</h3>
           <ul>
             <li><strong style="color:#c9a96e;">Le loyer et les charges doivent être versés avant le 5 du mois.</strong></li>
@@ -1693,7 +1740,7 @@ export default function DashboardNouveauBailPage() {
         />
 
         <label style={{ display: 'block', marginBottom: '8px', fontSize: '13px', color: '#666' }}>
-          Frais de remise en location — moins de 3 mois (EUR)
+          Indemnité de départ anticipé — départ avant 3 mois (EUR)
         </label>
         <input
           type="number"

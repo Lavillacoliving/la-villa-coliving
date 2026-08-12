@@ -67,6 +67,13 @@ interface FormData {
   charges_energy: number;
   charges_maintenance: number;
   charges_services: number;
+  // Bail 01/09/2026 : forfait unique en EUR. NULL/undefined = bail anterieur
+  // -> rendu LEGACY (3 postes). Ne jamais retro-remplir. Cf. migration
+  // scripts/2026-09-01-bail-forfait-eur.sql
+  charges_forfait_eur?: number | null;
+  rent_eur?: number | null;
+  previous_tenant_rent_eur?: number | null;
+  previous_tenant_departure_date?: string | null;
   frais_remise_location: number;
   irl_trimestre: string;
   irl_indice: number;
@@ -320,7 +327,13 @@ function Numbered({ n, children }: { n: number; children: React.ReactNode }) {
 
 export function BailPDF({ data }: { data: BailPDFData }) {
   const { property, room, form, exit_date, loyer_eur, depot_eur, prorata_eur, prorata_days, prorata_total_days } = data;
-  const totalCharges = form.charges_energy + form.charges_maintenance + form.charges_services;
+  // Bascule legacy / nouveau format. Un bail signe avant le 01/09/2026 n'a pas
+  // de forfait unique : il doit ressortir A L'IDENTIQUE, avec ses 3 postes.
+  const isLegacyCharges = form.charges_forfait_eur === null || form.charges_forfait_eur === undefined;
+  const totalCharges = isLegacyCharges
+    ? form.charges_energy + form.charges_maintenance + form.charges_services
+    : Number(form.charges_forfait_eur);
+  const loyerNuEur = Math.max(0, loyer_eur - totalCharges);
   const rate = form.exchange_rate || 0.9145;
   const ville = property.siege_social?.split(",")[0]?.trim() || "[Ville]";
 
@@ -462,7 +475,11 @@ export function BailPDF({ data }: { data: BailPDFData }) {
             <Bullet>{"\u00C9v\u00E8nements communautaires r\u00E9currents"}</Bullet>
             <Bullet>{"R\u00E9solution des probl\u00E8mes Contact via WhatsApp, r\u00E9ponse en moins de 48h."}</Bullet>
             <Bullet>{"Cours de yoga"}</Bullet>
-            <Bullet>{"Cours de remise en forme (coaching Sportif)"}</Bullet>
+            <Bullet>{"Cours de remise en forme (coaching sportif)"}</Bullet>
+            <Bullet>{"Soir\u00E9e communautaire mensuelle"}</Bullet>
+            <Bullet>{"Acc\u00E8s internet fibre \u2014 box mise \u00E0 disposition dans les parties communes"}</Bullet>
+            <Bullet>{"Abonnements num\u00E9riques de divertissement (services de streaming)"}</Bullet>
+            <Bullet>{"Accueil, remise des cl\u00E9s et mise \u00E0 jour des acc\u00E8s \u00E0 l\u2019arriv\u00E9e"}</Bullet>
             <Bullet>{"Fournitures de base : 1 panier de base livr\u00E9 chaque mois pour la communaut\u00E9 (papier toilette, Essuie-tout, lessive, produits d\u2019entretiens, ..) en fonction de votre demande"}</Bullet>
             <Bullet>{"Gestion des d\u00E9parts : \u00E0 vous de rencontrer notre s\u00E9lection de nouveaux candidats et de les s\u00E9lectionner"}</Bullet>
 
@@ -486,8 +503,6 @@ export function BailPDF({ data }: { data: BailPDFData }) {
             <Text style={[s.subTitle, { fontSize: 9, marginTop: 8 }]}>ABONNEMENTS</Text>
             <Bullet>{"Eau, \u00C9lectricit\u00E9, Gaz,"}</Bullet>
             <Bullet>{"Entretien Chaudi\u00E8re"}</Bullet>
-            <Bullet>{"Internet"}</Bullet>
-            <Bullet>{"Abonnements num\u00E9riques de divertissement"}</Bullet>
 
             <Text style={[s.subTitle, { fontSize: 9, marginTop: 8 }]}>TAXES</Text>
             <Bullet>{"Taxe ou redevance d\u2019enl\u00E8vement des ordures m\u00E9nag\u00E8res"}</Bullet>
@@ -538,7 +553,11 @@ export function BailPDF({ data }: { data: BailPDFData }) {
 
         {property.is_coliving ? (
           <View>
-            <Text style={s.subTitle}><Text style={{ fontFamily: "Helvetica-Bold" }}>Loyer mensuel :</Text> {fEUR(loyer_eur)} ({fCHF(form.loyer_chf)} au taux BCE du {form.exchange_rate_date || "\u2014"} : {rate}{" \u2014 pour indication uniquement"})</Text>
+            {isLegacyCharges ? (
+              <Text style={s.subTitle}><Text style={{ fontFamily: "Helvetica-Bold" }}>Loyer mensuel :</Text> {fEUR(loyer_eur)} ({fCHF(form.loyer_chf)} au taux BCE du {form.exchange_rate_date || "\u2014"} : {rate}{" \u2014 pour indication uniquement"})</Text>
+            ) : (
+              <Text style={s.subTitle}><Text style={{ fontFamily: "Helvetica-Bold" }}>{"Loyer mensuel charges comprises :"}</Text> {fEUR(loyer_eur)}</Text>
+            )}
             {prorata_days > 0 && prorata_total_days > 0 && prorata_days < prorata_total_days ? (
               <View>
                 <Text style={[s.body, { marginTop: 6, fontFamily: "Helvetica-Bold" }]}>
@@ -550,30 +569,108 @@ export function BailPDF({ data }: { data: BailPDFData }) {
               <Text style={[s.body, { fontStyle: "italic" }]}>{"Entr\u00E9e le 1er du mois \u2014 pas de prorata."}</Text>
             )}
 
-            <Text style={s.subTitle}>{"Charges forfaitaires mensuelles :"}</Text>
-            <Text style={[s.body, { fontSize: 9, color: "#666" }]}>
-              {"Le forfait de charges ci-dessus couvre exclusivement des charges r\u00E9cup\u00E9rables au sens du d\u00E9cret n\u00B0 87-713 (\u00E9nergie, eau, m\u00E9nage et entretien des parties communes, fournitures). Les services communautaires \u00E9num\u00E9r\u00E9s \u00E0 l\u2019article II sont gratuits : ils ne sont inclus ni dans le loyer ni dans ce forfait, et ne conditionnent pas la location."}
-            </Text>
-            <View style={s.tableHeader}>
-              <Text style={[s.tableCellBold, { width: "60%" }]}>{"Cat\u00E9gorie"}</Text>
-              <Text style={[s.tableCellBold, { width: "40%", textAlign: "right" }]}>EUR</Text>
-            </View>
-            <View style={s.tableRow}>
-              <Text style={[s.tableCell, { width: "60%" }]}>{"Énergie (eau, chauffage, \u00E9lec.)"}</Text>
-              <Text style={[s.tableCell, { width: "40%", textAlign: "right" }]}>{fEUR(form.charges_energy)}</Text>
-            </View>
-            <View style={s.tableRow}>
-              <Text style={[s.tableCell, { width: "60%" }]}>Maintenance et Entretien</Text>
-              <Text style={[s.tableCell, { width: "40%", textAlign: "right" }]}>{fEUR(form.charges_maintenance)}</Text>
-            </View>
-            <View style={s.tableRow}>
-              <Text style={[s.tableCell, { width: "60%" }]}>{"Services (m\u00E9nage, yoga, support)"}</Text>
-              <Text style={[s.tableCell, { width: "40%", textAlign: "right" }]}>{fEUR(form.charges_services)}</Text>
-            </View>
-            <View style={[s.tableHeader, { marginBottom: 8 }]}>
-              <Text style={[s.tableCellBold, { width: "60%" }]}>TOTAL CHARGES</Text>
-              <Text style={[s.tableCellBold, { width: "40%", textAlign: "right" }]}>{fEUR(totalCharges)}</Text>
-            </View>
+            {isLegacyCharges ? (
+              <View>
+                <Text style={s.subTitle}>{"Charges forfaitaires mensuelles :"}</Text>
+                <Text style={[s.body, { fontSize: 9, color: "#666" }]}>
+                  {"Le montant mensuel des charges forfaitaires et des services est inclus dans le loyer principal."}
+                </Text>
+                <View style={s.tableHeader}>
+                  <Text style={[s.tableCellBold, { width: "60%" }]}>{"Cat\u00E9gorie"}</Text>
+                  <Text style={[s.tableCellBold, { width: "40%", textAlign: "right" }]}>EUR</Text>
+                </View>
+                <View style={s.tableRow}>
+                  <Text style={[s.tableCell, { width: "60%" }]}>{"\u00C9nergie (eau, chauffage, \u00E9lec.)"}</Text>
+                  <Text style={[s.tableCell, { width: "40%", textAlign: "right" }]}>{fEUR(form.charges_energy)}</Text>
+                </View>
+                <View style={s.tableRow}>
+                  <Text style={[s.tableCell, { width: "60%" }]}>Maintenance et Entretien</Text>
+                  <Text style={[s.tableCell, { width: "40%", textAlign: "right" }]}>{fEUR(form.charges_maintenance)}</Text>
+                </View>
+                <View style={s.tableRow}>
+                  <Text style={[s.tableCell, { width: "60%" }]}>{"Services (m\u00E9nage, yoga, support)"}</Text>
+                  <Text style={[s.tableCell, { width: "40%", textAlign: "right" }]}>{fEUR(form.charges_services)}</Text>
+                </View>
+                <View style={[s.tableHeader, { marginBottom: 8 }]}>
+                  <Text style={[s.tableCellBold, { width: "60%" }]}>TOTAL CHARGES</Text>
+                  <Text style={[s.tableCellBold, { width: "40%", textAlign: "right" }]}>{fEUR(totalCharges)}</Text>
+                </View>
+              </View>
+            ) : (
+              <View>
+                <Text style={s.subTitle}>{"R\u00E9partition du montant mensuel :"}</Text>
+                <Text style={[s.body, { fontSize: 9, color: "#666" }]}>
+                  {"Le loyer et le forfait de charges sont r\u00E9gl\u00E9s ensemble ; leur r\u00E9partition figure ci-dessous."}
+                </Text>
+                <View style={s.tableHeader}>
+                  <Text style={[s.tableCellBold, { width: "60%" }]}>{"Poste"}</Text>
+                  <Text style={[s.tableCellBold, { width: "40%", textAlign: "right" }]}>EUR</Text>
+                </View>
+                <View style={s.tableRow}>
+                  <Text style={[s.tableCell, { width: "60%" }]}>{"Loyer nu"}</Text>
+                  <Text style={[s.tableCell, { width: "40%", textAlign: "right" }]}>{fEUR(loyerNuEur)}</Text>
+                </View>
+                <View style={s.tableRow}>
+                  <Text style={[s.tableCell, { width: "60%" }]}>{"Forfait de charges r\u00E9cup\u00E9rables"}</Text>
+                  <Text style={[s.tableCell, { width: "40%", textAlign: "right" }]}>{fEUR(totalCharges)}</Text>
+                </View>
+                <View style={[s.tableHeader, { marginBottom: 8 }]}>
+                  <Text style={[s.tableCellBold, { width: "60%" }]}>{"TOTAL MENSUEL"}</Text>
+                  <Text style={[s.tableCellBold, { width: "40%", textAlign: "right" }]}>{fEUR(loyer_eur)}</Text>
+                </View>
+                <Text style={[s.body, { fontSize: 9, color: "#666", marginBottom: 6 }]}>
+                  {"Conform\u00E9ment \u00E0 la loi du 6 juillet 1989, ce forfait ne donne lieu \u00E0 aucune r\u00E9gularisation annuelle."}
+                </Text>
+
+                <Text style={[s.subTitle, { fontSize: 9 }]}>{"D\u00E9tail du forfait de charges \u2014 nomenclature du d\u00E9cret n\u00B0 87-713 du 26 ao\u00FBt 1987"}</Text>
+
+                <Text style={[s.subTitle, { fontSize: 8, marginTop: 4 }]}>{"I. EAU"}</Text>
+                <Bullet>{"Eau froide et eau chaude de l\u2019ensemble des occupants"}</Bullet>
+                <Bullet>{"Eau n\u00E9cessaire \u00E0 l\u2019entretien courant des parties communes int\u00E9rieures"}</Bullet>
+                <Bullet>{"Eau n\u00E9cessaire \u00E0 l\u2019entretien courant des espaces ext\u00E9rieurs et du potager"}</Bullet>
+                <Bullet>{"Produits n\u00E9cessaires \u00E0 l\u2019exploitation, \u00E0 l\u2019entretien et au traitement de l\u2019eau"}</Bullet>
+                <Bullet>{"Fourniture d\u2019eau chaude collective"}</Bullet>
+
+                <Text style={[s.subTitle, { fontSize: 8, marginTop: 4 }]}>{"II. \u00C9NERGIE"}</Text>
+                <Bullet>{"\u00C9lectricit\u00E9 des parties communes et privatives"}</Bullet>
+                <Bullet>{"Chauffage et production d\u2019eau chaude"}</Bullet>
+                <Bullet>{"Fourniture d\u2019\u00E9nergie, quelle que soit sa nature"}</Bullet>
+                <Bullet>{"Exploitation, entretien et r\u00E9glage des installations de chauffage et de production d\u2019eau chaude"}</Bullet>
+                <Bullet>{"Entretien annuel et ramonage de la chaudi\u00E8re"}</Bullet>
+
+                <Text style={[s.subTitle, { fontSize: 8, marginTop: 4 }]}>{"III. INSTALLATIONS INDIVIDUELLES"}</Text>
+                <Bullet>{"Contr\u00F4le des raccordements, r\u00E9glage du d\u00E9bit et de la temp\u00E9rature"}</Bullet>
+                <Bullet>{"D\u00E9pannage, remplacement des joints et clapets, joints cloches des chasses d\u2019eau"}</Bullet>
+                <Bullet>{"Entretien courant de la robinetterie"}</Bullet>
+
+                <Text style={[s.subTitle, { fontSize: 8, marginTop: 4 }]}>{"IV. PARTIES COMMUNES INT\u00C9RIEURES"}</Text>
+                <Bullet>{"Frais de personnel d\u2019entretien \u2014 m\u00E9nage 3 fois par semaine"}</Bullet>
+                <Bullet>{"Produits d\u2019entretien, balais, sacs n\u00E9cessaires \u00E0 l\u2019\u00E9limination des d\u00E9chets"}</Bullet>
+                <Bullet>{"Produits de d\u00E9sinsectisation et de d\u00E9sinfection"}</Bullet>
+                <Bullet>{"Entretien de la minuterie, des tapis, des vide-ordures"}</Bullet>
+                <Bullet>{"R\u00E9paration et remplacement des appareils d\u2019entretien (aspirateur et mat\u00E9riel associ\u00E9)"}</Bullet>
+                <Bullet>{"Entretien de la buanderie et de ses \u00E9quipements"}</Bullet>
+                <Bullet>{"Enl\u00E8vement des d\u00E9chets et sortie des conteneurs"}</Bullet>
+
+                <Text style={[s.subTitle, { fontSize: 8, marginTop: 4 }]}>{"V. ESPACES EXT\u00C9RIEURS"}</Text>
+                <Bullet>{"Entretien des voies de circulation et des aires de stationnement"}</Bullet>
+                <Bullet>{"Entretien des espaces verts : tonte, taille, \u00E9lagage, arrosage, remplacement du v\u00E9g\u00E9tal"}</Bullet>
+                <Bullet>{"Entretien du potager"}</Bullet>
+                <Bullet>{"Entretien de la piscine : intervention du pisciniste, produits de traitement, filtration, hivernage"}</Bullet>
+                <Bullet>{"Entretien des terrasses, du barbecue, des \u00E9quipements de jeux et du terrain de volleyball"}</Bullet>
+                <Bullet>{"Enl\u00E8vement des feuilles et de la neige"}</Bullet>
+
+                <Text style={[s.subTitle, { fontSize: 8, marginTop: 4 }]}>{"VI. \u00C9QUIPEMENTS COMMUNS"}</Text>
+                <Bullet>{"Entretien et menues r\u00E9parations des \u00E9quipements communs : \u00E9lectrom\u00E9nager, mobilier commun, mat\u00E9riel de sport, sauna"}</Bullet>
+                <Bullet>{"V\u00E9rification p\u00E9riodique des installations de s\u00E9curit\u00E9 (d\u00E9tecteurs de fum\u00E9e, extincteurs)"}</Bullet>
+                <Bullet>{"Remplacement des \u00E9l\u00E9ments d\u00E9fectueux des parties communes"}</Bullet>
+
+                <Text style={[s.subTitle, { fontSize: 8, marginTop: 4 }]}>{"VII. TAXES ET REDEVANCES"}</Text>
+                <Bullet>{"Taxe ou redevance d\u2019enl\u00E8vement des ordures m\u00E9nag\u00E8res"}</Bullet>
+                <Bullet>{"Taxe de balayage"}</Bullet>
+                <Bullet>{"Redevance d\u2019assainissement"}</Bullet>
+              </View>
+            )}
 
           </View>
         ) : (
@@ -585,6 +682,17 @@ export function BailPDF({ data }: { data: BailPDFData }) {
             <Bullet>Montant mensuel : {fEUR(totalCharges)}</Bullet>
             <Text style={[s.body, { fontSize: 9, color: "#666" }]}>
               {"La r\u00E9gularisation des charges est effectu\u00E9e annuellement, au vu des d\u00E9penses r\u00E9elles. Le trop-per\u00E7u est restitu\u00E9 au locataire ou le compl\u00E9ment est demand\u00E9."}
+            </Text>
+          </View>
+        )}
+
+        {!isLegacyCharges && (
+          <View style={{ marginTop: 6 }}>
+            <Text style={s.subTitle}>{"Dernier loyer de l\u2019occupant pr\u00E9c\u00E9dent :"}</Text>
+            <Text style={s.body}>
+              {form.previous_tenant_rent_eur && form.previous_tenant_departure_date
+                ? `Le dernier loyer acquitt\u00E9 par le pr\u00E9c\u00E9dent occupant de la chambre, qui l\u2019a quitt\u00E9e le ${fDate(form.previous_tenant_departure_date)}, s\u2019\u00E9levait \u00E0 ${fEUR(form.previous_tenant_rent_eur)} par mois (loyer hors charges).`
+                : "La chambre n\u2019a pas \u00E9t\u00E9 occup\u00E9e au cours des dix-huit derniers mois."}
             </Text>
           </View>
         )}
@@ -601,18 +709,20 @@ export function BailPDF({ data }: { data: BailPDFData }) {
         {form.frais_remise_location > 0 && (
           <View minPresenceAhead={60} style={{ marginTop: 8 }}>
             <Text style={[s.subTitle, { color: gold }]}>
-              {"Frais de remise en location : "}{fEUR(form.frais_remise_location)}{" — offerts à partir de 3 mois de présence"}
+              {"Indemnité de départ anticipé : "}{fEUR(form.frais_remise_location)}
             </Text>
             <Text style={s.body}>
-              {"Le départ anticipé d'un locataire oblige le bailleur à engager, indépendamment de l'état du logement restitué, l'ensemble des démarches nécessaires pour remettre le logement en location :"}
+              {"Le locataire s'engage à occuper le logement pendant une durée minimale de trois mois à compter de la date d'entrée. En cas de départ avant ce terme, une indemnité de départ anticipé de "}{fEUR(form.frais_remise_location)}{" est due au bailleur."}
             </Text>
-            <Bullet>{"Création et diffusion de nouvelles annonces sur les différents supports ;"}</Bullet>
-            <Bullet>{"Traitement des candidatures, organisation et tenue des visites ;"}</Bullet>
-            <Bullet>{"Recherche et sélection d'un nouveau locataire (vérification du dossier, rédaction du contrat) ;"}</Bullet>
-            <Bullet>{"Installation du nouveau locataire (accueil, remise des clés, mise à jour des accès) ;"}</Bullet>
-            <Bullet>{"Formalités administratives liées au changement de locataire (déclarations d'occupation, démarches techniques et administratives)."}</Bullet>
             <Text style={[s.body, { marginTop: 4 }]}>
-              {"Ces frais, fixés forfaitairement à "}{fEUR(form.frais_remise_location)}{", sont offerts au locataire dont le séjour atteint 3 mois à compter de la date d'entrée. En cas de départ avant ce délai, ils restent à sa charge."}
+              {"Cette indemnité n'est pas due dans les situations suivantes :"}
+            </Text>
+            <Bullet>{"mutation professionnelle ;"}</Bullet>
+            <Bullet>{"perte d'emploi ;"}</Bullet>
+            <Bullet>{"raison de santé ;"}</Bullet>
+            <Bullet>{"force majeure."}</Bullet>
+            <Text style={[s.body, { marginTop: 4 }]}>
+              {"Passé ce délai de trois mois, aucune indemnité n'est due : le locataire reste libre de donner congé à tout moment, avec un préavis d'un mois, conformément à l'article 25-8 de la loi du 6 juillet 1989."}
             </Text>
           </View>
         )}
@@ -782,6 +892,10 @@ export function BailPDF({ data }: { data: BailPDFData }) {
           {!property.is_coliving && <Bullet>{"Notice d\u2019information relative aux droits et obligations des locataires et des bailleurs"}</Bullet>}
           {!property.is_coliving && <Bullet>{"RIB du bailleur"}</Bullet>}
           {property.is_coliving && <Bullet>{"R\u00E8glement Int\u00E9rieur La Villa Coliving"}</Bullet>}
+          {property.is_coliving && <Bullet>{"Inventaire du mobilier"}</Bullet>}
+          {property.is_coliving && !isLegacyCharges && (
+            <Bullet>{"Annexe \u00AB Comment votre loyer est construit \u00BB"}</Bullet>
+          )}
           <Bullet>Diagnostics techniques</Bullet>
           {(form.annexe_documents || []).map((doc: string, i: number) => (
             <Bullet key={i}>{doc}</Bullet>
