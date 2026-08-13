@@ -97,11 +97,6 @@ function getHousesData(lang: string): Record<string, HouseData> {
     photoGallery: [
       // Exterior
       {
-        src: "/images/la villa/exterior/la villa yoga.webp",
-        alt: "La Villa outdoor space",
-        category: "exterior",
-      },
-      {
         src: "/images/la villa/exterior/villa_portrait.webp",
         alt: "La Villa outdoor space",
         category: "exterior",
@@ -292,11 +287,6 @@ function getHousesData(lang: string): Record<string, HouseData> {
       // Amenities
       {
         src: "/images/la villa/amenities/La Villa-109.webp",
-        alt: "La Villa swimming pool",
-        category: "amenity",
-      },
-      {
-        src: "/images/la villa/amenities/la villa yoga.webp",
         alt: "La Villa swimming pool",
         category: "amenity",
       },

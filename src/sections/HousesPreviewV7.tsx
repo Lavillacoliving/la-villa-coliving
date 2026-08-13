@@ -102,7 +102,7 @@ export function HousesPreviewV7() {
                 <span className={`absolute bottom-4 left-4 backdrop-blur-sm text-white text-xs font-semibold px-3 py-1.5 rounded-lg ${
                   AVAILABILITY[house.id as HouseKey] <= 0
                     ? "bg-[#78716C]/90"
-                    : "bg-[#D4A574]/90"
+                    : "bg-[#16A34A]/95"
                 }`}>
                   {house.availability}
                 </span>
