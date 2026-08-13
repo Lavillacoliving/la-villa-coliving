@@ -1,6 +1,28 @@
 // Source de vérité pour tous les chiffres affichés sur le site
 // Modifier ici = mis à jour partout automatiquement
 
+// ── Prix maître : l'EURO. Le CHF affiché en est DÉRIVÉ. ────────────────
+// Décision Jérôme 13/08/2026 : les prix CHF du site ne sont plus une constante
+// indépendante mais la conversion des prix contractuels en euros, au taux BCE
+// d'une date choisie et figée, arrondie à la dizaine INFÉRIEURE (le CHF affiché
+// n'excède jamais la conversion réelle). Avec le taux ci-dessous :
+//   1 540 € × 0,9366 = 1 442,36 → 1 440 CHF ; 1 490 € × 0,9366 = 1 395,53 → 1 390 CHF
+// (identiques aux prix validés par le brief — aucun changement visible).
+// ⚠️ Actualiser le taux change les prix publics ET doit entraîner la mise à jour
+// des littéraux du blog/knowledge_base (cf. SQL de bascule du 31/08).
+export const TAUX_BCE = {
+  eurChf: 0.9366,
+  dateFr: "12 août 2026",
+  dateEn: "12 August 2026",
+} as const;
+
+/** Loyer contractuel en euros (prix maître depuis le 01/09/2026).
+ *  Phase B (post-01/09) : ces valeurs seront servies par la table pricing_current. */
+export const CONTRACT_EUR = { standard: 1540, sharedBath: 1490, rateLabelFr: "août 2026", rateLabelEn: "August 2026" } as const;
+
+// Conversion affichée : euro × taux BCE figé, arrondi à la dizaine inférieure.
+const chfAffiche = (eur: number): number => Math.floor((eur * TAUX_BCE.eurChf) / 10) * 10;
+
 export const STATS = {
   totalResidents: 100,
   totalRooms: 29,
@@ -11,7 +33,7 @@ export const STATS = {
   genevaCenterMinutes: 20, // arrondi de 15-25 min, porte à porte en CEVA/tram
   maxResidentsPerHouse: 12,
   minResidentsPerHouse: 7,
-  priceChf: 1440,
+  priceChf: chfAffiche(CONTRACT_EUR.standard), // 1 440 — dérivé, ne plus saisir en dur
   depositMonths: 2,
   leaseDurationMonths: 12,
   noticePeriodMonths: 1,
@@ -29,8 +51,9 @@ export const STATS = {
 } as const;
 
 // ── Prix public affiché ────────────────────────────────────────────────
-// SEULE source du tarif : changer STATS.priceChf / STATS_SHARED_BATH.priceChf
-// met à jour tout le site (hero, SEO, FAQ, pages maisons, blocs offre du blog…).
+// Le tarif se change en modifiant CONTRACT_EUR (et/ou TAUX_BCE) en tête de
+// fichier : le CHF suit par dérivation et tout le site se met à jour
+// (hero, SEO, FAQ, pages maisons, blocs offre du blog…).
 // Deux niveaux depuis le 01/09/2026 : 1 440 CHF (salle d'eau privative, 25 ch.)
 // et 1 390 CHF (les 4 chambres de La Villa à salle d'eau partagée entre 2 chambres,
 // entretien par l'équipe de ménage inclus). Le Loft / Le Lodge : 100 % privatif.
@@ -45,16 +68,12 @@ export const PRICE_CHF_FR = `${PRICE_FR_NUM} CHF`;               // « 1 440 CHF
 export const PRICE_CHF_EN = `CHF ${PRICE_EN_NUM}`;               // « CHF 1,440 »
 
 // Second niveau — les 4 chambres de La Villa à salle d'eau partagée (entre 2 chambres).
-export const STATS_SHARED_BATH = { priceChf: 1390, rooms: 4, house: "La Villa" } as const;
+export const STATS_SHARED_BATH = { priceChf: chfAffiche(CONTRACT_EUR.sharedBath), rooms: 4, house: "La Villa" } as const; // 1 390 — dérivé
 export const PRICE_SHARED_FR_NUM = thousands(STATS_SHARED_BATH.priceChf, " "); // « 1 390 »
 export const PRICE_SHARED_EN_NUM = thousands(STATS_SHARED_BATH.priceChf, ","); // « 1,390 »
 export const PRICE_SHARED_CHF_FR = `${PRICE_SHARED_FR_NUM} CHF`;               // « 1 390 CHF »
 export const PRICE_SHARED_CHF_EN = `CHF ${PRICE_SHARED_EN_NUM}`;               // « CHF 1,390 »
 
-/** Loyer contractuel en euros (prix maître depuis le 01/09/2026).
- *  Le CHF affiché sur le site est un indicatif dérivé (taux figé au lancement).
- *  Phase B (post-01/09) : ces valeurs seront servies par la table pricing_current. */
-export const CONTRACT_EUR = { standard: 1540, sharedBath: 1490, rateLabelFr: "août 2026", rateLabelEn: "August 2026" } as const;
 export const EUR_STANDARD_FR_NUM = thousands(CONTRACT_EUR.standard, " "); // « 1 540 »
 export const EUR_SHARED_FR_NUM = thousands(CONTRACT_EUR.sharedBath, " ");   // « 1 490 »
 export const EUR_STANDARD_EN_NUM = thousands(CONTRACT_EUR.standard, ",");      // « 1,540 »
