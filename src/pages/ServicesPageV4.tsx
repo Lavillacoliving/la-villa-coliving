@@ -197,7 +197,7 @@ export function ServicesPageV4() {
             </p>
 
             <div className="flex flex-wrap gap-6">
-              {stats.slice(0, 2).map((stat, index) => (
+              {stats.map((stat, index) => (
                 <div key={index} className="flex items-center gap-3">
                   <div className="w-12 h-12 rounded-lg bg-white/[0.08] flex items-center justify-center">
                     <stat.icon className="w-5 h-5 text-[#E0BB8A]" />
@@ -371,23 +371,6 @@ export function ServicesPageV4() {
       </section>
 
       {/* STATS BAR */}
-      <section className="py-16 bg-[#1C1917]">
-        <div className="container-custom">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
-            {stats.map((stat, index) => (
-              <div key={index} className="text-center">
-                <div className="inline-flex items-center justify-center w-14 h-14 rounded-xl bg-white/[0.06] mb-4">
-                  <stat.icon className="w-7 h-7 text-[#D4A574]" />
-                </div>
-                <div className="text-4xl font-bold text-white mb-2">
-                  {stat.value}
-                </div>
-                <div className="text-sm text-white/50">{stat.label}</div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
 
       {/* COMPARISON */}
       <section className="py-24 bg-[#F5F2ED]">
