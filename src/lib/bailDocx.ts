@@ -11,6 +11,7 @@ import PizZip from "pizzip";
 import Docxtemplater from "docxtemplater";
 
 const TEMPLATE_URL = "/templates/bail-coliving-2026-09.docx";
+const ANNEXE_URL = "/templates/annexe-loyer-2026-09.docx";
 const DOCX_MIME =
   "application/vnd.openxmlformats-officedocument.wordprocessingml.document";
 
@@ -25,7 +26,7 @@ const BANQUES: Record<string, { titulaire: string; iban: string }> = {
 const nb = (n: number): string =>
   new Intl.NumberFormat("fr-FR", { maximumFractionDigits: 0 })
     .format(n)
-    .replace(/[   ]/g, " ");
+    .replace(/[\u202f\u00a0]/g, " ");
 
 const surfaceFr = (m2: number | null | undefined): string =>
   m2 == null ? "—" : Number(m2).toLocaleString("fr-FR", { maximumFractionDigits: 1 });
@@ -165,11 +166,29 @@ export function bailDocxData(i: BailDocxInput) {
   };
 }
 
-export async function genererBailDocx(input: BailDocxInput): Promise<Blob> {
-  const res = await fetch(TEMPLATE_URL);
-  if (!res.ok) throw new Error(`Gabarit introuvable (${res.status}) : ${TEMPLATE_URL}`);
+async function remplirGabarit(url: string, data: Record<string, unknown>): Promise<Blob> {
+  const res = await fetch(url);
+  if (!res.ok) throw new Error(`Gabarit introuvable (${res.status}) : ${url}`);
   const buf = await res.arrayBuffer();
   const doc = new Docxtemplater(new PizZip(buf), { paragraphLoop: true, linebreaks: true });
-  doc.render(bailDocxData(input));
+  doc.render(data);
   return doc.getZip().generate({ type: "blob", mimeType: DOCX_MIME }) as Blob;
+}
+
+export function genererBailDocx(input: BailDocxInput): Promise<Blob> {
+  return remplirGabarit(TEMPLATE_URL, bailDocxData(input));
+}
+
+// Annexe « Comment votre loyer est construit » — listée à l'article XIV du bail.
+// Mêmes données que le bail + la maison et la date d'établissement (jour de génération).
+export function genererAnnexeDocx(input: BailDocxInput): Promise<Blob> {
+  return remplirGabarit(ANNEXE_URL, {
+    ...bailDocxData(input),
+    maison: input.property.name,
+    date_etablie: new Date().toLocaleDateString("fr-FR", {
+      day: "numeric",
+      month: "long",
+      year: "numeric",
+    }),
+  });
 }

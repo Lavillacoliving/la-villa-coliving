@@ -6,7 +6,7 @@ import { BailPDF } from './BailPDF';
 import { logAudit } from '@/lib/auditLog';
 import { getBailleurLines } from '@/lib/entities';
 import { useIsMobile } from '@/hooks/use-mobile';
-import { genererBailDocx } from '@/lib/bailDocx';
+import { genererBailDocx, genererAnnexeDocx } from '@/lib/bailDocx';
 
 interface Property {
   id: string;
@@ -2129,6 +2129,50 @@ export default function DashboardNouveauBailPage() {
               }}
             >
               {bailAmounts.rentEurManquant ? '🔒 Prix EUR manquant' : '⬇ Bail Word (officiel)'}
+            </button>
+          )}
+          {/* Annexe « Comment votre loyer est construit » — même gabarit Word, mêmes montants. */}
+          {selectedProperty?.is_coliving && !bailAmounts.isLegacy && (
+            <button
+              onClick={async () => {
+                if (!selectedProperty || !selectedRoom) return;
+                try {
+                  const blob = await genererAnnexeDocx({
+                    property: selectedProperty,
+                    room: selectedRoom,
+                    form,
+                    amounts: bailAmounts,
+                    exitDate,
+                    prorata,
+                    fDate,
+                    durationInWords: durationInWordsPreview,
+                  });
+                  const url = URL.createObjectURL(blob);
+                  const a = document.createElement('a');
+                  a.href = url;
+                  a.download = `Annexe_loyer_${form.locataire_nom || 'Locataire'}_${form.entry_date || 'date'}.docx`;
+                  a.click();
+                  URL.revokeObjectURL(url);
+                } catch (e) {
+                  console.error('DOCX annexe error:', e);
+                  toast.error('Erreur annexe : ' + e);
+                }
+              }}
+              disabled={!contractData || generationBloquee}
+              title={blocageMotif || 'Annexe « Comment votre loyer est construit » — à joindre au bail (article XIV)'}
+              style={{
+                flex: 1,
+                padding: '12px',
+                background: (contractData && !generationBloquee) ? '#57534E' : '#cccccc',
+                color: 'white',
+                border: 'none',
+                borderRadius: '4px',
+                fontWeight: '600',
+                cursor: (contractData && !generationBloquee) ? 'pointer' : 'not-allowed',
+                fontSize: '14px',
+              }}
+            >
+              {'⬇ Annexe loyer (Word)'}
             </button>
           )}
           <button
