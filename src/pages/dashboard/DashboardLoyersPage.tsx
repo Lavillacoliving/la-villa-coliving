@@ -3,6 +3,7 @@ import { supabase } from '@/lib/supabase';
 import { useToast } from '@/components/ui/Toast';
 import { ENTITY_SLUGS, PROPERTY_ADDRESSES } from '@/lib/entities';
 import { logAudit } from '@/lib/auditLog';
+import { resolveCharges } from '@/lib/charges';
 import { pdf } from '@react-pdf/renderer';
 import CourrierIRLPDF from './CourrierIRLPDF';
 
@@ -293,7 +294,12 @@ export default function DashboardLoyersPage() {
         if (next < today) next.setFullYear(next.getFullYear()+1);
         const days = Math.ceil((next.getTime()-today.getTime())/(1000*60*60*24));
         if (days <= 61 && days >= 0) {
-          const newRent = Math.round(t.current_rent * factor * 100)/100;
+          // Bail au forfait : seule l'assiette loyer NU est indexable IRL,
+          // le forfait reste fige (cf. IRLRevisionCard, meme regle).
+          const { total: chFixes, isLegacy: chLegacy } = resolveCharges(t as unknown as import('@/lib/charges').ChargesSource);
+          const newRent = chLegacy
+            ? Math.round(t.current_rent * factor * 100)/100
+            : Math.round((Math.max(0, t.current_rent - chFixes) * factor + chFixes) * 100)/100;
           if (newRent > t.current_rent) {
             const prop = properties.find(p=>p.id===t.property_id);
             const propName = prop?.name||'';

@@ -31,6 +31,23 @@ const nb = (n: number): string =>
 const surfaceFr = (m2: number | null | undefined): string =>
   m2 == null ? "—" : Number(m2).toLocaleString("fr-FR", { maximumFractionDigits: 1 });
 
+// Date en toutes lettres, "1er" pour le premier du mois. JAMAIS de HTML ici :
+// ce texte part dans le contrat Word.
+function fDateTexte(d: string | null | undefined): string {
+  if (!d) return "[date]";
+  const dt = new Date(d + "T00:00:00");
+  if (isNaN(dt.getTime())) return "[date invalide]";
+  const base = dt.toLocaleDateString("fr-FR", { day: "numeric", month: "long", year: "numeric" });
+  return dt.getDate() === 1 ? base.replace(/^1 /, "1er ") : base;
+}
+
+const DUREE_LETTRES: Record<number, string> = {
+  1: "un", 2: "deux", 3: "trois", 4: "quatre", 5: "cinq", 6: "six",
+  7: "sept", 8: "huit", 9: "neuf", 10: "dix", 11: "onze", 12: "douze",
+  15: "quinze", 18: "dix-huit", 24: "vingt-quatre", 36: "trente-six",
+};
+const dureeLettres = (n: number): string => DUREE_LETTRES[n] || String(n);
+
 // "34 rue du Foron - 74100 Ville-la-Grand - France" -> "Ville-la-Grand"
 export function villeDepuisAdresse(adresse: string | null | undefined): string {
   const m = (adresse || "").match(/\b\d{5}\s+([^-–]+)/);
@@ -80,12 +97,12 @@ export interface BailDocxInput {
     irl_indice: number;
     previous_tenant_rent_eur?: number | null;
     previous_tenant_departure_date?: string | null;
+    clauses_particulieres?: string;
+    annexe_documents?: string[];
   };
   amounts: { loyerCC: number; charges: number; loyerNu: number; depot: number };
   exitDate: string;
   prorata: { days: number; totalDays: number; eur: number };
-  fDate: (d: string | null | undefined) => string;
-  durationInWords: (n: number) => string;
 }
 
 export function bailDocxData(i: BailDocxInput) {
@@ -113,7 +130,7 @@ export function bailDocxData(i: BailDocxInput) {
   // Art. 3 loi 1989 : dernier loyer du précédent occupant, ou mention des 18 mois.
   const dernierLoyer =
     form.previous_tenant_rent_eur && form.previous_tenant_departure_date
-      ? `Le dernier loyer acquitté par le précédent occupant de la chambre, qui l'a quittée le ${i.fDate(form.previous_tenant_departure_date)}, s'élevait à ${nb(Number(form.previous_tenant_rent_eur))} € par mois (loyer hors charges).`
+      ? `Le dernier loyer acquitté par le précédent occupant de la chambre, qui l'a quittée le ${fDateTexte(form.previous_tenant_departure_date)}, s'élevait à ${nb(Number(form.previous_tenant_rent_eur))} € par mois (loyer hors charges).`
       : "La chambre n'a pas été occupée au cours des dix-huit derniers mois.";
 
   return {
@@ -123,7 +140,7 @@ export function bailDocxData(i: BailDocxInput) {
     siege_social: property.siege_social,
     loc_nom_complet: `${form.locataire_nom} ${form.locataire_prenom}`.trim(),
     loc_prenom_nom: `${form.locataire_prenom} ${form.locataire_nom}`.trim(),
-    loc_naissance: i.fDate(form.locataire_dob),
+    loc_naissance: fDateTexte(form.locataire_dob),
     loc_lieu_naissance: form.locataire_birthplace,
     loc_nationalite: form.locataire_nationality,
     loc_adresse_precedente: form.locataire_previous_address,
@@ -141,10 +158,10 @@ export function bailDocxData(i: BailDocxInput) {
     extras,
     communes_g: g,
     communes_d: d,
-    date_effet: i.fDate(form.entry_date),
-    duree_lettres: i.durationInWords(duree),
+    date_effet: fDateTexte(form.entry_date),
+    duree_lettres: dureeLettres(duree),
     duree,
-    date_fin: i.fDate(i.exitDate),
+    date_fin: fDateTexte(i.exitDate),
     loyer_cc: nb(amounts.loyerCC),
     loyer_nu: nb(amounts.loyerNu),
     forfait: nb(amounts.charges),
@@ -152,7 +169,7 @@ export function bailDocxData(i: BailDocxInput) {
     indemnite: nb(form.frais_remise_location),
     prorata: prorataActif,
     prorata_texte: prorataActif
-      ? `Prorata du premier mois : du ${i.fDate(form.entry_date)} au dernier jour du mois (${prorata.days}/${prorata.totalDays} jours), soit ${nb(prorata.eur)} €.`
+      ? `Prorata du premier mois : du ${fDateTexte(form.entry_date)} au dernier jour du mois (${prorata.days}/${prorata.totalDays} jours), soit ${nb(prorata.eur)} €.`
       : "",
     dernier_loyer_texte: dernierLoyer,
     irl_trimestre: form.irl_trimestre,
@@ -163,6 +180,12 @@ export function bailDocxData(i: BailDocxInput) {
     bic: "BSPFFRPPXXX",
     bailleur_signataires: property.manager_name || "Jérôme Austin / Fanny Piot",
     ville: villeDepuisAdresse(property.address),
+    // Clauses particulieres : sans elles le Word perdait silencieusement une
+    // clause negociee que l'apercu affichait pourtant (constat bloquant n.1).
+    has_clauses: !!form.clauses_particulieres?.trim(),
+    clauses: form.clauses_particulieres?.trim() || "",
+    // Annexes cochees dans le formulaire, ajoutees a la liste de l'article XIV.
+    annexes_sup: form.annexe_documents || [],
   };
 }
 
@@ -170,7 +193,12 @@ async function remplirGabarit(url: string, data: Record<string, unknown>): Promi
   const res = await fetch(url);
   if (!res.ok) throw new Error(`Gabarit introuvable (${res.status}) : ${url}`);
   const buf = await res.arrayBuffer();
-  const doc = new Docxtemplater(new PizZip(buf), { paragraphLoop: true, linebreaks: true });
+  const doc = new Docxtemplater(new PizZip(buf), {
+    paragraphLoop: true,
+    linebreaks: true,
+    // Balise sans valeur -> chaine vide, jamais le litteral "undefined".
+    nullGetter: () => "",
+  });
   doc.render(data);
   return doc.getZip().generate({ type: "blob", mimeType: DOCX_MIME }) as Blob;
 }
@@ -185,10 +213,6 @@ export function genererAnnexeDocx(input: BailDocxInput): Promise<Blob> {
   return remplirGabarit(ANNEXE_URL, {
     ...bailDocxData(input),
     maison: input.property.name,
-    date_etablie: new Date().toLocaleDateString("fr-FR", {
-      day: "numeric",
-      month: "long",
-      year: "numeric",
-    }),
+    date_etablie: fDateTexte(new Date().toISOString().slice(0, 10)),
   });
 }

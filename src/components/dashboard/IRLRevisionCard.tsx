@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { supabase } from '@/lib/supabase';
 import { useToast } from '@/components/ui/Toast';
 import { logAudit } from '@/lib/auditLog';
+import { resolveCharges } from '@/lib/charges';
 import { pdf, Document, Page, Text, StyleSheet } from '@react-pdf/renderer';
 
 interface Props { tenant: any; propertyName: string; onApplied?: () => void; }
@@ -81,7 +82,14 @@ export default function IRLRevisionCard({ tenant, propertyName, onApplied }: Pro
   if (!old) return <p style={{color:'#888',padding:'20px'}}>Indice IRL de référence manquant en base (T{latest.quarter} {latest.year-1}).</p>;
 
   const oldRent = Number(tenant.current_rent);
-  const newRent = Math.round(oldRent * latest.value / old.value * 100) / 100;
+  // Bail au forfait (2026-09) : seule l'assiette LOYER NU est indexable IRL —
+  // le forfait de charges est fige au contrat. Les baux legacy gardent le
+  // calcul historique (charges comprises).
+  const { total: chargesFixes, isLegacy: chargesLegacy } = resolveCharges(tenant);
+  const facteurIRL = latest.value / old.value;
+  const newRent = chargesLegacy
+    ? Math.round(oldRent * facteurIRL * 100) / 100
+    : Math.round((Math.max(0, oldRent - chargesFixes) * facteurIRL + chargesFixes) * 100) / 100;
   const pct = (latest.value / old.value - 1) * 100;
   const effectiveMonth = new Date(anniv.getFullYear(), anniv.getMonth() + (anniv.getDate() > 1 ? 1 : 0), 1)
     .toLocaleDateString('fr-FR', { month: 'long', year: 'numeric' });

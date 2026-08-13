@@ -52,6 +52,7 @@ const EMPTY_TENANT: Partial<Tenant> = {
   deposit_refunded_date:null,due_day:5,date_of_birth:null,place_of_birth:null,
   bank_aliases:null,notes:null,entity_id:null,referred_by_tenant_id:null,
   charges_energy_chf:null,charges_maintenance_chf:null,charges_services_chf:null,
+  charges_forfait_eur:null,
   lease_status:'draft'
 };
 
@@ -210,6 +211,8 @@ export default function DashboardLocatairesPage() {
     charges_energy_chf:      m.charges_energy_chf===null || m.charges_energy_chf===undefined || isNaN(Number(m.charges_energy_chf)) ? null : Number(m.charges_energy_chf),
     charges_maintenance_chf: m.charges_maintenance_chf===null || m.charges_maintenance_chf===undefined || isNaN(Number(m.charges_maintenance_chf)) ? null : Number(m.charges_maintenance_chf),
     charges_services_chf:    m.charges_services_chf===null || m.charges_services_chf===undefined || isNaN(Number(m.charges_services_chf)) ? null : Number(m.charges_services_chf),
+    // Forfait unique 2026-09 (snapshot du bail) — editable ici pour correction.
+    charges_forfait_eur:     m.charges_forfait_eur===null || m.charges_forfait_eur===undefined || isNaN(Number(m.charges_forfait_eur)) ? null : Number(m.charges_forfait_eur),
     lease_status: m.lease_status || 'active',
     updated_at:new Date().toISOString(),
   });
@@ -675,8 +678,13 @@ export default function DashboardLocatairesPage() {
                   </div>
                   {modal.charges_forfait_eur !== null && modal.charges_forfait_eur !== undefined ? (
                     <div style={{background:'#FBF7F0',border:'1px solid #E7D9C2',borderRadius:'6px',padding:'10px',fontSize:'13px',color:'#374151'}}>
-                      Bail 2026-09 — <strong>forfait unique de charges : {Number(modal.charges_forfait_eur).toLocaleString('fr-FR')} €/mois</strong>.
-                      Les trois postes historiques ne s'appliquent pas à ce bail.
+                      <label style={{...S.fieldLabel,fontSize:'11px'}}>Bail 2026-09 — forfait unique de charges (EUR/mois)</label>
+                      <input type="number" step="1" style={S.input}
+                        value={modal.charges_forfait_eur}
+                        onChange={e=>setModal({...modal,charges_forfait_eur: e.target.value === '' ? null : parseFloat(e.target.value) || 0})}/>
+                      <div style={{fontSize:'11px',color:'#9ca3af',marginTop:'4px'}}>
+                        Snapshot du bail signé — ne corriger qu'en cohérence avec le contrat. Vider le champ rebascule le locataire en régime legacy (3 postes).
+                      </div>
                     </div>
                   ) : (() => {
                     const ec = effectiveCharges(modal);

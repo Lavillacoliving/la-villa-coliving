@@ -535,7 +535,7 @@ function generateContractHTML(data: ContractData): string {
 
         <div class="party-box">
           <strong>BAILLEUR :</strong><br/>
-          ${getBailleurLines(property.entity_id).join('<br/>')}<br/>
+          ${(property.legal_entity_name?.trim() ? [property.legal_entity_name.trim()] : getBailleurLines(property.entity_id)).join('<br/>')}<br/>
           ${property.is_coliving ? `
           SIRET : ${ph(property.siret, 'SIRET')}${property.tva?.trim() && property.tva.trim() !== 'N/A' ? ' — TVA : ' + property.tva.trim() : ''}<br/>
           Siège social : ${ph(property.siege_social, 'Siège social')}<br/>
@@ -933,6 +933,8 @@ export default function DashboardNouveauBailPage() {
   const [selectedProperty, setSelectedProperty] = useState<Property | null>(null);
   const [selectedRoom, setSelectedRoom] = useState<Room | null>(null);
   const [saving, setSaving] = useState(false);
+  // true des que Jerome edite le champ forfait a la main (voir effet [properties])
+  const forfaitTouche = React.useRef(false);
   const [replaceConfirm, setReplaceConfirm] = useState<{oldTenant:{id:string,first_name:string,last_name:string}}|null>(null);
 
   // Annexe file uploads — stored in memory until save
@@ -996,7 +998,11 @@ export default function DashboardNouveauBailPage() {
           charges_energy: prop.charges_energy_chf ?? 0,
           charges_maintenance: prop.charges_maintenance_chf ?? 0,
           charges_services: prop.charges_services_chf ?? 0,
-          charges_forfait_eur: prop.charges_forfait_eur ?? null,
+          // loadData rejoue au focus de la fenetre : ne pas ecraser une saisie
+          // manuelle du forfait — c'est le commutateur de REGIME du bail.
+          charges_forfait_eur: forfaitTouche.current
+            ? prev.charges_forfait_eur
+            : (prop.charges_forfait_eur ?? null),
         }));
       }
     }
@@ -1019,6 +1025,7 @@ export default function DashboardNouveauBailPage() {
         charges_services: prop.charges_services_chf ?? 0,
         charges_forfait_eur: prop.charges_forfait_eur ?? null,
       }));
+      forfaitTouche.current = false;
     }
 
     const propRooms = rooms.filter((r) => r.property_id === pid);
@@ -1033,6 +1040,8 @@ export default function DashboardNouveauBailPage() {
         room_id: autoRoom.id,
         loyer_chf: autoRoom.rent_chf,
         rent_eur: autoRoom.rent_eur ?? null,
+        previous_tenant_rent_eur: null,
+        previous_tenant_departure_date: null,
       }));
     } else {
       setSelectedRoom(null);
@@ -1051,6 +1060,8 @@ export default function DashboardNouveauBailPage() {
         ...prev,
         loyer_chf: room.rent_chf,
         rent_eur: room.rent_eur ?? null,
+        previous_tenant_rent_eur: null,
+        previous_tenant_departure_date: null,
       }));
     }
   };
@@ -1059,7 +1070,10 @@ export default function DashboardNouveauBailPage() {
   const exitDate = form.entry_date
     ? (() => {
         const d = new Date(form.entry_date + 'T00:00:00');
+        const jour = d.getDate();
         d.setMonth(d.getMonth() + (form.lease_duration_months || 12));
+        // Entree un 31 + mois plus court : setMonth deborde sur le mois suivant.
+        if (d.getDate() !== jour) d.setDate(0);
         return d.toISOString().split('T')[0];
       })()
     : '';
@@ -1085,6 +1099,17 @@ export default function DashboardNouveauBailPage() {
       ? "Saisis manuellement le taux EUR/CHF du jour : ce bail est au format legacy, le taux détermine encore les montants."
       : '';
   const generationBloquee = blocageMotif !== '';
+
+  const prevRentSaisi = form.previous_tenant_rent_eur !== null && form.previous_tenant_rent_eur !== undefined;
+  const prevDateSaisie = !!form.previous_tenant_departure_date;
+  const docxBloqueMotif = blocageMotif
+    || (!form.locataire_nom.trim() || !form.locataire_prenom.trim() ? 'Nom et prénom du locataire requis pour le document officiel.' : '')
+    || (!form.entry_date ? "Date d'entrée requise pour le document officiel." : '')
+    || (!form.locataire_dob ? 'Date de naissance requise pour le document officiel.' : '')
+    || (prevRentSaisi !== prevDateSaisie
+      ? 'Dernier occupant : renseigne le loyer ET la date de départ (ou aucun des deux) — sinon le bail déclarerait à tort la chambre inoccupée depuis 18 mois.'
+      : '');
+  const docxBloque = docxBloqueMotif !== '';
 
   // Calculate prorata first month
   const computeProrata = () => {
@@ -1116,7 +1141,9 @@ export default function DashboardNouveauBailPage() {
       // Calculate dates (durée variable du bail)
       const entryDate = new Date(form.entry_date + 'T00:00:00');
       const bailEnd = new Date(entryDate);
+      const jourEntree = bailEnd.getDate();
       bailEnd.setMonth(bailEnd.getMonth() + (form.lease_duration_months || 12));
+      if (bailEnd.getDate() !== jourEntree) bailEnd.setDate(0);
       const bailEndStr = bailEnd.toISOString().split('T')[0];
 
       // Calculate amounts
@@ -1149,10 +1176,11 @@ export default function DashboardNouveauBailPage() {
         due_day: 5,
         date_of_birth: form.locataire_dob || null,
         place_of_birth: form.locataire_birthplace || null,
-        // Charges individualisées (override propriété — saisies dans le form)
-        charges_energy_chf: form.charges_energy,
-        charges_maintenance_chf: form.charges_maintenance,
-        charges_services_chf: form.charges_services,
+        // Charges individualisees : trio pour un bail legacy uniquement — un bail
+        // au forfait n'a PAS d'override trio (il contredirait son propre contrat).
+        charges_energy_chf: saveAmounts.isLegacy ? form.charges_energy : null,
+        charges_maintenance_chf: saveAmounts.isLegacy ? form.charges_maintenance : null,
+        charges_services_chf: saveAmounts.isLegacy ? form.charges_services : null,
         // Snapshot du nouveau format (migration 2026-09-01) : sans ces colonnes,
         // le bail signé n'était retrouvable nulle part en base et toute relecture
         // ultérieure serait retombée sur les 3 postes dépréciés.
@@ -1204,11 +1232,12 @@ export default function DashboardNouveauBailPage() {
           start_date: form.entry_date,
           end_date: bailEndStr,
           exchange_rate: form.exchange_rate,
-          // Charges du bail (snapshot — utilise les valeurs du form, qui peuvent
-          // être l'override locataire OU le fallback propriété si jamais override)
-          charges_energy_chf: form.charges_energy,
-          charges_maintenance_chf: form.charges_maintenance,
-          charges_services_chf: form.charges_services,
+          // Snapshot des charges DU BAIL SIGNE : forfait unique pour un bail
+          // 2026-09 (le trio n'y correspond a rien), trio pour un bail legacy.
+          charges_forfait_eur: saveAmounts.isLegacy ? null : saveAmounts.charges,
+          charges_energy_chf: saveAmounts.isLegacy ? form.charges_energy : null,
+          charges_maintenance_chf: saveAmounts.isLegacy ? form.charges_maintenance : null,
+          charges_services_chf: saveAmounts.isLegacy ? form.charges_services : null,
           status: 'draft',
           is_active: false,
           document_url: documentUrl,
@@ -1722,6 +1751,7 @@ export default function DashboardNouveauBailPage() {
           }}
         />
 
+        {selectedProperty?.is_coliving && (<>
         <label style={{ display: 'block', marginBottom: '8px', fontSize: '13px', color: '#666' }}>
           Forfait de charges récupérables (EUR/mois)
         </label>
@@ -1733,7 +1763,7 @@ export default function DashboardNouveauBailPage() {
           onChange={(e) =>
             setForm((prev) => ({
               ...prev,
-              charges_forfait_eur: e.target.value === '' ? null : parseInt(e.target.value) || 0,
+              charges_forfait_eur: (forfaitTouche.current = true, e.target.value === '' ? null : parseInt(e.target.value) || 0),
             }))
           }
           style={{
@@ -1751,6 +1781,7 @@ export default function DashboardNouveauBailPage() {
             ? "⚠️ Aucun forfait en base pour cette maison — le bail sortira en ANCIEN format (3 postes). Renseigner properties.charges_forfait_eur avant de générer un bail au nouveau format."
             : "Charges récupérables (décret n° 87-713). Modifiable au cas par cas."}
         </p>
+        </>)}
 
         <label style={{ display: 'block', marginBottom: '8px', fontSize: '13px', color: '#666' }}>
           Indemnité de départ anticipé — départ avant 3 mois (EUR)
@@ -2100,8 +2131,6 @@ export default function DashboardNouveauBailPage() {
                     amounts: bailAmounts,
                     exitDate,
                     prorata,
-                    fDate,
-                    durationInWords: durationInWordsPreview,
                   });
                   const url = URL.createObjectURL(blob);
                   const a = document.createElement('a');
@@ -2114,21 +2143,21 @@ export default function DashboardNouveauBailPage() {
                   toast.error('Erreur Word : ' + e);
                 }
               }}
-              disabled={!contractData || generationBloquee}
-              title={blocageMotif || 'Gabarit Word officiel — à relire puis exporter en PDF pour Yousign'}
+              disabled={!contractData || docxBloque}
+              title={docxBloqueMotif || 'Gabarit Word officiel — à relire puis exporter en PDF pour Yousign'}
               style={{
                 flex: 1,
                 padding: '12px',
-                background: (contractData && !generationBloquee) ? '#1C1917' : '#cccccc',
+                background: (contractData && !docxBloque) ? '#1C1917' : '#cccccc',
                 color: 'white',
                 border: 'none',
                 borderRadius: '4px',
                 fontWeight: '600',
-                cursor: (contractData && !generationBloquee) ? 'pointer' : 'not-allowed',
+                cursor: (contractData && !docxBloque) ? 'pointer' : 'not-allowed',
                 fontSize: '14px',
               }}
             >
-              {bailAmounts.rentEurManquant ? '🔒 Prix EUR manquant' : '⬇ Bail Word (officiel)'}
+              {bailAmounts.rentEurManquant ? '🔒 Prix EUR manquant' : docxBloque ? '🔒 Champs manquants' : '⬇ Bail Word (officiel)'}
             </button>
           )}
           {/* Annexe « Comment votre loyer est construit » — même gabarit Word, mêmes montants. */}
@@ -2144,8 +2173,6 @@ export default function DashboardNouveauBailPage() {
                     amounts: bailAmounts,
                     exitDate,
                     prorata,
-                    fDate,
-                    durationInWords: durationInWordsPreview,
                   });
                   const url = URL.createObjectURL(blob);
                   const a = document.createElement('a');
@@ -2158,12 +2185,12 @@ export default function DashboardNouveauBailPage() {
                   toast.error('Erreur annexe : ' + e);
                 }
               }}
-              disabled={!contractData || generationBloquee}
-              title={blocageMotif || 'Annexe « Comment votre loyer est construit » — à joindre au bail (article XIV)'}
+              disabled={!contractData || docxBloque}
+              title={docxBloqueMotif || 'Annexe « Comment votre loyer est construit » — à joindre au bail (article XIV)'}
               style={{
                 flex: 1,
                 padding: '12px',
-                background: (contractData && !generationBloquee) ? '#57534E' : '#cccccc',
+                background: (contractData && !docxBloque) ? '#57534E' : '#cccccc',
                 color: 'white',
                 border: 'none',
                 borderRadius: '4px',
