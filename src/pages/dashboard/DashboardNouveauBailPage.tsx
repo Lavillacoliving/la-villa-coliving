@@ -639,7 +639,7 @@ function generateContractHTML(data: ContractData): string {
           ${property.is_coliving ? `
           ${isLegacyCharges
             ? `<h3><strong>Loyer mensuel :</strong> ${fEUR(loyer_eur)} (${fCHF(form.loyer_chf)} au taux BCE du ${form.exchange_rate_date} : ${form.exchange_rate} — pour indication uniquement)</h3>`
-            : `<h3><strong>Loyer mensuel charges comprises :</strong> ${fEUR(loyer_eur)} (soit ${fCHF(Math.round(loyer_eur * (form.exchange_rate || 0)))} au taux BCE du ${form.exchange_rate_date} : ${form.exchange_rate} — pour indication uniquement)</h3>`}
+            : `<h3><strong>Loyer mensuel charges comprises :</strong> ${fEUR(loyer_eur)}&nbsp;&nbsp;&nbsp;<span style="font-size:9pt;font-weight:400;">soit ${fCHF(Math.round(loyer_eur * (form.exchange_rate || 0)))} au taux BCE du ${form.exchange_rate_date} : ${form.exchange_rate} — pour indication uniquement</span></h3>`}
           ${(!data.prorata_days || !data.prorata_total_days || data.prorata_days >= data.prorata_total_days)
             ? '<p><em>Entrée le 1er du mois — pas de prorata.</em></p>'
             : '<p><strong>Prorata du premier mois :</strong> Du ' + fDate(form.entry_date) + ' au dernier jour du mois (' + data.prorata_days + '/' + data.prorata_total_days + ' jours) :</p><ul><li><strong>En EUR :</strong> <strong style="color:#B8860B;">' + fEUR(data.prorata_eur) + '</strong></li></ul>'}

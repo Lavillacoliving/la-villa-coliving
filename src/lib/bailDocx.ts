@@ -187,7 +187,7 @@ export function bailDocxData(i: BailDocxInput) {
     // Conversion exacte du jour, arrondie a l'entier — PAS l'arrondi commercial
     // du site (dizaine inferieure au taux fige) : quelques francs d'ecart
     // possibles selon le jour, c'est attendu.
-    chf_indicatif: `(soit ${nb(Math.round(amounts.loyerCC * form.exchange_rate))} CHF au taux BCE du ${form.exchange_rate_date} : ${form.exchange_rate} — pour indication uniquement)`,
+    chf_indicatif: `soit ${nb(Math.round(amounts.loyerCC * form.exchange_rate))} CHF au taux BCE du ${form.exchange_rate_date} : ${form.exchange_rate} — pour indication uniquement`,
     // Clauses particulieres : sans elles le Word perdait silencieusement une
     // clause negociee que l'apercu affichait pourtant (constat bloquant n.1).
     has_clauses: !!form.clauses_particulieres?.trim(),

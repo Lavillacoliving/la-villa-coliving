@@ -575,7 +575,7 @@ export function BailPDF({ data }: { data: BailPDFData }) {
             {isLegacyCharges ? (
               <Text style={s.subTitle}><Text style={{ fontWeight: 700 }}>Loyer mensuel :</Text> {fEUR(loyer_eur)} ({fCHF(form.loyer_chf)} au taux BCE du {form.exchange_rate_date || "\u2014"} : {rate}{" \u2014 pour indication uniquement"})</Text>
             ) : (
-              <Text style={s.subTitle}><Text style={{ fontWeight: 700 }}>{"Loyer mensuel charges comprises :"}</Text> {fEUR(loyer_eur)}{" (soit "}{fCHF(Math.round(loyer_eur * rate))}{" au taux BCE du "}{form.exchange_rate_date || "\u2014"}{" : "}{rate}{" \u2014 pour indication uniquement)"}</Text>
+              <Text style={s.subTitle}><Text style={{ fontWeight: 700 }}>{"Loyer mensuel charges comprises :"}</Text> {fEUR(loyer_eur)}{"   "}<Text style={{ fontSize: 7.5, fontWeight: 400, color: "#444444" }}>{"soit "}{fCHF(Math.round(loyer_eur * rate))}{" au taux BCE du "}{form.exchange_rate_date || "\u2014"}{" : "}{rate}{" \u2014 pour indication uniquement"}</Text></Text>
             )}
             {prorata_days > 0 && prorata_total_days > 0 && prorata_days < prorata_total_days ? (
               <View>
