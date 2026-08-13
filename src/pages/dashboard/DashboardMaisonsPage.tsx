@@ -32,6 +32,8 @@ interface Property {
   charges_energy_chf: number;
   charges_maintenance_chf: number;
   charges_services_chf: number;
+  /** Forfait unique de charges recuperables (baux 2026-09). Le trio ci-dessus = legacy. */
+  charges_forfait_eur: number | null;
 }
 
 interface Room {
@@ -52,6 +54,8 @@ interface Room {
   has_private_entrance: boolean;
   specifics: Record<string, any> | null;
   rent_chf: number | null;
+  /** Prix contractuel maitre (EUR). NULL = chambre non tarifee : generation de bail bloquee. */
+  rent_eur: number | null;
   furniture_inventory: Array<{ item: string; qty: number }> | null;
   dpe_document_url: string | null;
   status: 'active' | 'maintenance' | 'unavailable';
@@ -88,6 +92,7 @@ const EMPTY_ROOM: Partial<Room> = {
   has_private_entrance: false,
   specifics: null,
   rent_chf: null,
+  rent_eur: null,
   furniture_inventory: [],
   dpe_document_url: '',
   status: 'active',
@@ -173,6 +178,7 @@ export default function DashboardMaisonsPage() {
       has_private_entrance: modalRoom.has_private_entrance || false,
       specifics: modalRoom.specifics || null,
       rent_chf: modalRoom.rent_chf || null,
+      rent_eur: modalRoom.rent_eur || null,
       furniture_inventory: modalRoom.furniture_inventory || [],
       dpe_document_url: modalRoom.dpe_document_url || null,
       status: modalRoom.status || 'active',
@@ -225,6 +231,8 @@ export default function DashboardMaisonsPage() {
       charges_energy_chf: editPropertyData.charges_energy_chf || 0,
       charges_maintenance_chf: editPropertyData.charges_maintenance_chf || 0,
       charges_services_chf: editPropertyData.charges_services_chf || 0,
+      // Vide = NULL assume (maison sans forfait), jamais 0 silencieux.
+      charges_forfait_eur: editPropertyData.charges_forfait_eur ?? null,
     };
     const { error } = await supabase.from('properties').update(data).eq('id', selectedPropertyId);
     setSavingProperty(false);
@@ -362,11 +370,16 @@ export default function DashboardMaisonsPage() {
                   {selectedProperty.is_coliving && (
                     <div style={{ marginTop: '16px', padding: '12px', background: '#f9f7f4', borderRadius: '8px', borderLeft: '3px solid #c9a96e' }}>
                       <p style={{ ...S.label, color: '#c9a96e' }}>Charges forfaitaires mensuelles (EUR)</p>
+                      {selectedProperty.charges_forfait_eur !== null && selectedProperty.charges_forfait_eur !== undefined && (
+                        <p style={{ fontSize: '14px', margin: '0 0 8px' }}>
+                          Forfait unique (baux 2026-09) : <strong style={{ color: '#b8860b' }}>{Number(selectedProperty.charges_forfait_eur).toLocaleString('fr-FR')} €/mois</strong>
+                        </p>
+                      )}
                       <div style={{ display: 'flex', flexWrap: isMobile ? 'wrap' : 'nowrap', gap: '20px', fontSize: '14px' }}>
                         <span>Énergie : <strong>{selectedProperty.charges_energy_chf || 0} €</strong></span>
                         <span>Maintenance : <strong>{selectedProperty.charges_maintenance_chf || 0} €</strong></span>
                         <span>Services : <strong>{selectedProperty.charges_services_chf || 0} €</strong></span>
-                        <span style={{ color: '#b8860b', fontWeight: 700 }}>Total : {(selectedProperty.charges_energy_chf || 0) + (selectedProperty.charges_maintenance_chf || 0) + (selectedProperty.charges_services_chf || 0)} €</span>
+                        <span style={{ color: '#b8860b', fontWeight: 700 }}>Total legacy : {(selectedProperty.charges_energy_chf || 0) + (selectedProperty.charges_maintenance_chf || 0) + (selectedProperty.charges_services_chf || 0)} € (baux d'avant 09/2026)</span>
                       </div>
                     </div>
                   )}
@@ -448,6 +461,13 @@ export default function DashboardMaisonsPage() {
                   </div>
                   <div style={{ marginTop: '16px', padding: '12px', background: '#f9f7f4', borderRadius: '8px', borderLeft: '3px solid #c9a96e' }}>
                     <label style={{ fontSize: '13px', fontWeight: 600, color: '#c9a96e', marginBottom: '8px', display: 'block' }}>Charges forfaitaires mensuelles (EUR)</label>
+                    <div style={{ marginBottom: '10px' }}>
+                      <label style={S.fieldLabel}>Forfait unique — baux 2026-09 (c'est LUI qui entre dans les nouveaux baux)</label>
+                      <input type="number" style={S.input} value={editPropertyData?.charges_forfait_eur ?? ''}
+                        placeholder="vide = pas de forfait"
+                        onChange={e => setEditPropertyData({ ...editPropertyData, charges_forfait_eur: e.target.value === '' ? null : parseInt(e.target.value) || 0 })} />
+                    </div>
+                    <label style={{ ...S.fieldLabel, display: 'block', marginBottom: '4px' }}>Trio historique — baux d'avant 09/2026 uniquement</label>
                     <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '8px' }}>
                       <div>
                         <label style={S.fieldLabel}>Énergie</label>
@@ -656,7 +676,17 @@ export default function DashboardMaisonsPage() {
                 />
               </div>
               <div>
-                <label style={S.fieldLabel}>Loyer CHF/mois</label>
+                <label style={S.fieldLabel}>Prix contractuel EUR/mois (baux 2026-09)</label>
+                <input
+                  type="number"
+                  style={{ ...S.input, borderColor: modalRoom.rent_eur ? undefined : '#FCA5A5' }}
+                  placeholder="requis pour générer un bail"
+                  value={modalRoom.rent_eur || ''}
+                  onChange={e => setModalRoom({ ...modalRoom, rent_eur: parseInt(e.target.value) || null })}
+                />
+              </div>
+              <div>
+                <label style={S.fieldLabel}>Loyer CHF/mois (indicatif)</label>
                 <input
                   type="number"
                   style={S.input}

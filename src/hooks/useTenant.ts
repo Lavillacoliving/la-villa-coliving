@@ -29,6 +29,8 @@ export interface TenantInfo {
   charges_energy_chf: number;
   charges_maintenance_chf: number;
   charges_services_chf: number;
+  /** Forfait unique 2026-09, snapshot du bail. NULL = bail legacy (trio). */
+  charges_forfait_eur: number | null;
   is_coliving: boolean;
   date_of_birth: string | null;
   place_of_birth: string | null;
@@ -58,7 +60,8 @@ export function useTenant() {
             current_rent, move_in_date, move_out_date, deposit_amount, due_day,
             bail_end, preavis_status, preavis_date, bio, is_visible_annuaire,
             property_id, date_of_birth, place_of_birth,
-            properties!inner(name, address, city, legal_entity_name, siege_social, siret, charges_energy_chf, charges_maintenance_chf, charges_services_chf, is_coliving)
+            charges_energy_chf, charges_maintenance_chf, charges_services_chf, charges_forfait_eur,
+            properties!inner(name, address, city, legal_entity_name, siege_social, siret, charges_energy_chf, charges_maintenance_chf, charges_services_chf, charges_forfait_eur, is_coliving)
           `)
           .eq('user_id', user.id)
           .eq('is_active', true)
@@ -75,7 +78,8 @@ export function useTenant() {
             current_rent, move_in_date, move_out_date, deposit_amount, due_day,
             bail_end, preavis_status, preavis_date, bio, is_visible_annuaire,
             property_id, date_of_birth, place_of_birth,
-            properties!inner(name, address, city, legal_entity_name, siege_social, siret, charges_energy_chf, charges_maintenance_chf, charges_services_chf, is_coliving)
+            charges_energy_chf, charges_maintenance_chf, charges_services_chf, charges_forfait_eur,
+            properties!inner(name, address, city, legal_entity_name, siege_social, siret, charges_energy_chf, charges_maintenance_chf, charges_services_chf, charges_forfait_eur, is_coliving)
           `)
           .eq('email', user.email)
           .eq('is_active', true)
@@ -102,9 +106,10 @@ export function useTenant() {
           legal_entity_name: prop?.legal_entity_name || '',
           siege_social: prop?.siege_social || '',
           siret: prop?.siret || '',
-          charges_energy_chf: prop?.charges_energy_chf || 0,
-          charges_maintenance_chf: prop?.charges_maintenance_chf || 0,
-          charges_services_chf: prop?.charges_services_chf || 0,
+          charges_energy_chf: (data as any).charges_energy_chf ?? prop?.charges_energy_chf ?? 0,
+          charges_maintenance_chf: (data as any).charges_maintenance_chf ?? prop?.charges_maintenance_chf ?? 0,
+          charges_services_chf: (data as any).charges_services_chf ?? prop?.charges_services_chf ?? 0,
+          charges_forfait_eur: (data as any).charges_forfait_eur ?? null,
           is_coliving: prop?.is_coliving ?? true,
         } as TenantInfo);
       }

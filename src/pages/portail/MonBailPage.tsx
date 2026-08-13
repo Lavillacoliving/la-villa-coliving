@@ -4,6 +4,7 @@ import type { TenantInfo } from '@/hooks/useTenant';
 import { usePayments } from '@/hooks/usePayments';
 import { useTenantDocuments, DOCUMENT_TYPES } from '@/hooks/useTenantDocuments';
 import { supabase } from '@/lib/supabase';
+import { resolveCharges } from '@/lib/charges';
 import { pdf } from '@react-pdf/renderer';
 import { QuittancePDF } from './QuittancePDF';
 import { AttestationResidencePDF } from './AttestationResidencePDF';
@@ -90,8 +91,8 @@ export function MonBailPage() {
       const lastDay = new Date(year, monthIdx + 1, 0).getDate();
       const pad = (n: number) => n.toString().padStart(2, '0');
 
-      // Charges are stored in EUR in Supabase (despite column names ending in _chf)
-      const chargesEUR = (tenant.charges_energy_chf || 0) + (tenant.charges_maintenance_chf || 0) + (tenant.charges_services_chf || 0);
+      // Ventilation loyer nu / charges : regle unique forfait/legacy (src/lib/charges).
+      const { total: chargesEUR } = resolveCharges(tenant);
       const loyerNu = Math.max(0, payment.received_amount - chargesEUR);
 
       // Bailleur : "La Villa Coliving" pour coliving, nom propre pour non-coliving (Mont-Blanc)

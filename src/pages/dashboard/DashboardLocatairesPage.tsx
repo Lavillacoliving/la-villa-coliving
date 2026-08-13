@@ -19,12 +19,15 @@ interface Tenant {
   referred_by_tenant_id: string|null;
   // Charges individualisées (override propriété — NULL = hérite)
   charges_energy_chf: number|null; charges_maintenance_chf: number|null; charges_services_chf: number|null;
+  // Forfait unique 2026-09, snapshot du bail. NULL = bail legacy (trio ci-dessus).
+  charges_forfait_eur: number|null;
   // Cycle de vie du bail (workflow Yousign)
   lease_status: LeaseStatus|null;
 }
 interface Property {
   id: string; name: string; slug: string; entity_id: string; is_coliving: boolean;
   charges_energy_chf?: number|null; charges_maintenance_chf?: number|null; charges_services_chf?: number|null;
+  charges_forfait_eur?: number|null;
 }
 interface ExitSurvey {
   id: string; status: string; nps: number|null;
@@ -86,7 +89,7 @@ export default function DashboardLocatairesPage() {
     setLoading(true);
     const [tRes,pRes,sRes] = await Promise.all([
       supabase.from('tenants').select('*').order('room_number'),
-      supabase.from('properties').select('id,name,slug,entity_id,is_coliving,charges_energy_chf,charges_maintenance_chf,charges_services_chf'),
+      supabase.from('properties').select('id,name,slug,entity_id,is_coliving,charges_energy_chf,charges_maintenance_chf,charges_services_chf,charges_forfait_eur'),
       supabase.from('exit_surveys').select('id,tenant_id,status,nps,sent_at,completed_at,created_at').order('created_at',{ascending:false}),
     ]);
     setTenants(tRes.data||[]);
@@ -670,7 +673,12 @@ export default function DashboardLocatairesPage() {
                     <strong style={{fontSize:'13px',color:'#374151'}}>Charges individualisées</strong>
                     <span style={{fontSize:'11px',color:'#9ca3af',marginLeft:'8px'}}>vide = hérite de la propriété</span>
                   </div>
-                  {(() => {
+                  {modal.charges_forfait_eur !== null && modal.charges_forfait_eur !== undefined ? (
+                    <div style={{background:'#FBF7F0',border:'1px solid #E7D9C2',borderRadius:'6px',padding:'10px',fontSize:'13px',color:'#374151'}}>
+                      Bail 2026-09 — <strong>forfait unique de charges : {Number(modal.charges_forfait_eur).toLocaleString('fr-FR')} €/mois</strong>.
+                      Les trois postes historiques ne s'appliquent pas à ce bail.
+                    </div>
+                  ) : (() => {
                     const ec = effectiveCharges(modal);
                     return (
                       <div style={{display:'grid',gridTemplateColumns:'1fr 1fr 1fr',gap:'10px'}}>
