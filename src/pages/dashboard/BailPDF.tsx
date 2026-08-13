@@ -361,7 +361,7 @@ export function BailPDF({ data }: { data: BailPDFData }) {
     ? form.charges_energy + form.charges_maintenance + form.charges_services
     : Number(form.charges_forfait_eur);
   const loyerNuEur = Math.max(0, loyer_eur - totalCharges);
-  const rate = form.exchange_rate || 0.9145;
+  const rate = form.exchange_rate || 0.9366; // secours : BCE 12/08/2026 (maj Jerome)
   const ville = property.siege_social?.split(",")[0]?.trim() || "[Ville]";
 
   return (
@@ -575,7 +575,7 @@ export function BailPDF({ data }: { data: BailPDFData }) {
             {isLegacyCharges ? (
               <Text style={s.subTitle}><Text style={{ fontWeight: 700 }}>Loyer mensuel :</Text> {fEUR(loyer_eur)} ({fCHF(form.loyer_chf)} au taux BCE du {form.exchange_rate_date || "\u2014"} : {rate}{" \u2014 pour indication uniquement"})</Text>
             ) : (
-              <Text style={s.subTitle}><Text style={{ fontWeight: 700 }}>{"Loyer mensuel charges comprises :"}</Text> {fEUR(loyer_eur)}</Text>
+              <Text style={s.subTitle}><Text style={{ fontWeight: 700 }}>{"Loyer mensuel charges comprises :"}</Text> {fEUR(loyer_eur)}{" (soit "}{fCHF(Math.round(loyer_eur * rate))}{" au taux BCE du "}{form.exchange_rate_date || "\u2014"}{" : "}{rate}{" \u2014 pour indication uniquement)"}</Text>
             )}
             {prorata_days > 0 && prorata_total_days > 0 && prorata_days < prorata_total_days ? (
               <View>

@@ -129,7 +129,7 @@ export function computeBailAmounts(form: BailAmountsInput, depositMonths: number
   const rentEurManquant = !isLegacy && (form.rent_eur === null || form.rent_eur === undefined);
 
   const loyerCC = isLegacy
-    ? Math.round(form.loyer_chf / (form.exchange_rate || 0.9145))
+    ? Math.round(form.loyer_chf / (form.exchange_rate || 0.9366))
     : Number(form.rent_eur ?? 0);
 
   const charges = isLegacy
@@ -639,7 +639,7 @@ function generateContractHTML(data: ContractData): string {
           ${property.is_coliving ? `
           ${isLegacyCharges
             ? `<h3><strong>Loyer mensuel :</strong> ${fEUR(loyer_eur)} (${fCHF(form.loyer_chf)} au taux BCE du ${form.exchange_rate_date} : ${form.exchange_rate} — pour indication uniquement)</h3>`
-            : `<h3><strong>Loyer mensuel charges comprises :</strong> ${fEUR(loyer_eur)}</h3>`}
+            : `<h3><strong>Loyer mensuel charges comprises :</strong> ${fEUR(loyer_eur)} (soit ${fCHF(Math.round(loyer_eur * (form.exchange_rate || 0)))} au taux BCE du ${form.exchange_rate_date} : ${form.exchange_rate} — pour indication uniquement)</h3>`}
           ${(!data.prorata_days || !data.prorata_total_days || data.prorata_days >= data.prorata_total_days)
             ? '<p><em>Entrée le 1er du mois — pas de prorata.</em></p>'
             : '<p><strong>Prorata du premier mois :</strong> Du ' + fDate(form.entry_date) + ' au dernier jour du mois (' + data.prorata_days + '/' + data.prorata_total_days + ' jours) :</p><ul><li><strong>En EUR :</strong> <strong style="color:#B8860B;">' + fEUR(data.prorata_eur) + '</strong></li></ul>'}
@@ -883,7 +883,7 @@ async function fetchExchangeRate(): Promise<{ rate: number; date: string; isLive
     console.warn('[Bail] Edge Function get-exchange-rate failed:', e);
   }
   console.warn('[Bail] Taux BCE indisponible — saisie manuelle requise');
-  return { rate: 0.9145, date: todayStr, isLive: false };
+  return { rate: 0.9366, date: todayStr, isLive: false }; // BCE 12/08/2026 (maj Jerome)
 }
 
 
@@ -893,7 +893,7 @@ export default function DashboardNouveauBailPage() {
   const toast = useToast();
   const [rooms, setRooms] = useState<Room[]>([]);
   const [filteredRooms, setFilteredRooms] = useState<Room[]>([]);
-  const [exchangeRate, setExchangeRate] = useState(0.9145);
+  const [exchangeRate, setExchangeRate] = useState(0.9366);
   // 'live' : taux récupéré depuis l'API BCE | 'fallback' : APIs indisponibles, saisie manuelle requise | 'manual' : taux validé/saisi par le gestionnaire
   const [rateStatus, setRateStatus] = useState<'live' | 'fallback' | 'manual'>('live');
   const [rateLoading, setRateLoading] = useState(false);
@@ -1095,8 +1095,8 @@ export default function DashboardNouveauBailPage() {
   //    empêcherait d'établir un bail parfaitement valide.
   const blocageMotif = bailAmounts.rentEurManquant
     ? "Prix contractuel en euros absent en base pour cette chambre (rooms.rent_eur) — renseigne-le avant de générer le bail."
-    : bailAmounts.isLegacy && rateStatus === 'fallback'
-      ? "Saisis manuellement le taux EUR/CHF du jour : ce bail est au format legacy, le taux détermine encore les montants."
+    : rateStatus === 'fallback'
+      ? "Saisis manuellement le taux EUR/CHF du jour — legacy : il détermine les montants ; nouveau format : il figure au bail (mention CHF indicative)."
       : '';
   const generationBloquee = blocageMotif !== '';
 
@@ -1696,7 +1696,7 @@ export default function DashboardNouveauBailPage() {
             color: '#991B1B',
             lineHeight: 1.5,
           }}>
-            <strong>⚠ Taux BCE indisponible.</strong> Les APIs Frankfurter et BCE n'ont pas répondu. La valeur affichée (0.9145) est obsolète et ne doit PAS être utilisée telle quelle.
+            <strong>⚠ Taux BCE indisponible.</strong> Les APIs Frankfurter et BCE n'ont pas répondu. La valeur affichée (0.9366, BCE du 12/08/2026) est obsolète et ne doit PAS être utilisée telle quelle.
             <br />
             <strong>Action requise :</strong> consulte <a href="https://www.ecb.europa.eu/stats/policy_and_exchange_rates/euro_reference_exchange_rates/html/eurofxref-graph-chf.en.html" target="_blank" rel="noopener" style={{ color: '#991B1B', textDecoration: 'underline' }}>ecb.europa.eu</a> et saisis le taux du jour ci-dessous. Le bouton "Générer le PDF" sera débloqué automatiquement.
             <br />
@@ -1724,6 +1724,29 @@ export default function DashboardNouveauBailPage() {
             >
               {rateLoading ? '⏳ Tentative en cours…' : '↻ Réessayer la connexion BCE'}
             </button>
+            <button
+              type="button"
+              onClick={() => {
+                // La valeur pre-remplie EST parfois le bon taux du jour : confirmer
+                // explicitement vaut saisie manuelle (React n'emet pas d'onChange
+                // quand on retape une valeur identique).
+                setRateStatus('manual');
+                setForm((prev) => ({ ...prev, exchange_rate_date: new Date().toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' }) }));
+              }}
+              style={{
+                marginTop: '8px',
+                marginLeft: '8px',
+                padding: '6px 12px',
+                background: '#0F766E',
+                color: 'white',
+                border: 'none',
+                borderRadius: '4px',
+                fontSize: '12px',
+                cursor: 'pointer',
+              }}
+            >
+              {'✓ J\u2019ai v\u00E9rifi\u00E9 sur ecb.europa.eu \u2014 confirmer ' + form.exchange_rate}
+            </button>
           </div>
         )}
 
@@ -1732,10 +1755,10 @@ export default function DashboardNouveauBailPage() {
           step="0.0001"
           value={form.exchange_rate}
           onChange={(e) => {
-            const newRate = parseFloat(e.target.value) || 0.9145;
+            const newRate = parseFloat(e.target.value) || 0.9366;
             setForm((prev) => ({ ...prev, exchange_rate: newRate }));
-            // Toute saisie manuelle (différente du fallback initial 0.9145) débloque le bouton
-            if (rateStatus === 'fallback' && newRate !== 0.9145) {
+            // Toute saisie manuelle débloque : l'acte de taper vaut vérification du taux.
+            if (rateStatus === 'fallback') {
               setRateStatus('manual');
               setForm((prev) => ({ ...prev, exchange_rate_date: new Date().toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' }) }));
             }
@@ -2218,7 +2241,7 @@ export default function DashboardNouveauBailPage() {
               fontSize: '14px',
             }}
           >
-            {bailAmounts.rentEurManquant ? '🔒 Prix EUR manquant' : bailAmounts.isLegacy && rateStatus === 'fallback' ? '🔒 Taux BCE requis' : (selectedProperty?.is_coliving && !bailAmounts.isLegacy) ? 'PDF (copie interne)' : 'Générer le PDF'}
+            {bailAmounts.rentEurManquant ? '🔒 Prix EUR manquant' : rateStatus === 'fallback' ? '🔒 Taux BCE requis' : (selectedProperty?.is_coliving && !bailAmounts.isLegacy) ? 'PDF (copie interne)' : 'Générer le PDF'}
           </button>
           <button
             onClick={() => window.print()}

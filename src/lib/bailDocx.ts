@@ -92,6 +92,8 @@ export interface BailDocxInput {
     locataire_employer: string;
     entry_date: string;
     lease_duration_months: number;
+    exchange_rate: number;
+    exchange_rate_date: string;
     frais_remise_location: number;
     irl_trimestre: string;
     irl_indice: number;
@@ -180,6 +182,12 @@ export function bailDocxData(i: BailDocxInput) {
     bic: "BSPFFRPPXXX",
     bailleur_signataires: property.manager_name || "Jérôme Austin / Fanny Piot",
     ville: villeDepuisAdresse(property.address),
+    // CHF indicatif (decision Jerome 13/08) : l'euro reste LE prix contractuel,
+    // le CHF fait le lien avec le site et parle aux frontaliers payes en francs.
+    // Conversion exacte du jour, arrondie a l'entier — PAS l'arrondi commercial
+    // du site (dizaine inferieure au taux fige) : quelques francs d'ecart
+    // possibles selon le jour, c'est attendu.
+    chf_indicatif: `(soit ${nb(Math.round(amounts.loyerCC * form.exchange_rate))} CHF au taux BCE du ${form.exchange_rate_date} : ${form.exchange_rate} — pour indication uniquement)`,
     // Clauses particulieres : sans elles le Word perdait silencieusement une
     // clause negociee que l'apercu affichait pourtant (constat bloquant n.1).
     has_clauses: !!form.clauses_particulieres?.trim(),
