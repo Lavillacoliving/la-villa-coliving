@@ -6,8 +6,7 @@
 // indépendante mais la conversion des prix contractuels en euros, au taux BCE
 // d'une date choisie et figée, arrondie à la dizaine INFÉRIEURE (le CHF affiché
 // n'excède jamais la conversion réelle). Avec le taux ci-dessous :
-//   1 540 € × 0,9366 = 1 442,36 → 1 440 CHF ; 1 490 € × 0,9366 = 1 395,53 → 1 390 CHF
-// (identiques aux prix validés par le brief — aucun changement visible).
+//   1 530 € × 0,9366 = 1 433,00 → 1 430 CHF ; 1 470 € × 0,9366 = 1 376,80 → 1 370 CHF
 // ⚠️ Actualiser le taux change les prix publics ET doit entraîner la mise à jour
 // des littéraux du blog/knowledge_base (cf. SQL de bascule du 31/08).
 export const TAUX_BCE = {
@@ -18,7 +17,7 @@ export const TAUX_BCE = {
 
 /** Loyer contractuel en euros (prix maître depuis le 01/09/2026).
  *  Phase B (post-01/09) : ces valeurs seront servies par la table pricing_current. */
-export const CONTRACT_EUR = { standard: 1540, sharedBath: 1490, rateLabelFr: "août 2026", rateLabelEn: "August 2026" } as const;
+export const CONTRACT_EUR = { standard: 1530, sharedBath: 1470, rateLabelFr: "août 2026", rateLabelEn: "August 2026" } as const; // 1 530/1 470 € (Jérôme 13/08)
 
 // Conversion affichée : euro × taux BCE figé, arrondi à la dizaine inférieure.
 const chfAffiche = (eur: number): number => Math.floor((eur * TAUX_BCE.eurChf) / 10) * 10;
@@ -33,7 +32,7 @@ export const STATS = {
   genevaCenterMinutes: 20, // arrondi de 15-25 min, porte à porte en CEVA/tram
   maxResidentsPerHouse: 12,
   minResidentsPerHouse: 7,
-  priceChf: chfAffiche(CONTRACT_EUR.standard), // 1 440 — dérivé, ne plus saisir en dur
+  priceChf: chfAffiche(CONTRACT_EUR.standard), // 1 430 — dérivé, ne plus saisir en dur
   depositMonths: 2,
   leaseDurationMonths: 12,
   noticePeriodMonths: 1,
@@ -54,8 +53,8 @@ export const STATS = {
 // Le tarif se change en modifiant CONTRACT_EUR (et/ou TAUX_BCE) en tête de
 // fichier : le CHF suit par dérivation et tout le site se met à jour
 // (hero, SEO, FAQ, pages maisons, blocs offre du blog…).
-// Deux niveaux depuis le 01/09/2026 : 1 440 CHF (salle d'eau privative, 25 ch.)
-// et 1 390 CHF (les 4 chambres de La Villa à salle d'eau partagée entre 2 chambres,
+// Deux niveaux depuis le 01/09/2026 : 1 430 CHF (salle d'eau privative, 25 ch.)
+// et 1 370 CHF (les 4 chambres de La Villa à salle d'eau partagée entre 2 chambres,
 // entretien par l'équipe de ménage inclus). Le Loft / Le Lodge : 100 % privatif.
 // Séparateurs déterministes (pas de toLocaleString : l'ICU peut différer
 // entre le build Puppeteer du prérendu et le navigateur → hydration mismatch).
@@ -68,7 +67,7 @@ export const PRICE_CHF_FR = `${PRICE_FR_NUM} CHF`;               // « 1 440 CHF
 export const PRICE_CHF_EN = `CHF ${PRICE_EN_NUM}`;               // « CHF 1,440 »
 
 // Second niveau — les 4 chambres de La Villa à salle d'eau partagée (entre 2 chambres).
-export const STATS_SHARED_BATH = { priceChf: chfAffiche(CONTRACT_EUR.sharedBath), rooms: 4, house: "La Villa" } as const; // 1 390 — dérivé
+export const STATS_SHARED_BATH = { priceChf: chfAffiche(CONTRACT_EUR.sharedBath), rooms: 4, house: "La Villa" } as const; // 1 370 — dérivé
 export const PRICE_SHARED_FR_NUM = thousands(STATS_SHARED_BATH.priceChf, " "); // « 1 390 »
 export const PRICE_SHARED_EN_NUM = thousands(STATS_SHARED_BATH.priceChf, ","); // « 1,390 »
 export const PRICE_SHARED_CHF_FR = `${PRICE_SHARED_FR_NUM} CHF`;               // « 1 390 CHF »

@@ -196,7 +196,7 @@ export function ServicesPageV4() {
                 : "Du ménage à la fibre haut débit, des cours de yoga aux événements communautaires — chaque détail est pensé."}
             </p>
 
-            <div className="flex flex-wrap gap-6">
+            <div className="grid grid-cols-2 gap-x-8 gap-y-6 max-w-xl">
               {stats.map((stat, index) => (
                 <div key={index} className="flex items-center gap-3">
                   <div className="w-12 h-12 rounded-lg bg-white/[0.08] flex items-center justify-center">
