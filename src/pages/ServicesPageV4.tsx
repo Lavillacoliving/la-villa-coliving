@@ -192,8 +192,8 @@ export function ServicesPageV4() {
 
             <p className="text-xl text-white/80 mb-8 max-w-lg">
               {language === "en"
-                ? "From cleaning to high-speed internet, from yoga classes to community dinners — every detail is taken care of."
-                : "Du ménage à la fibre haut débit, des cours de yoga aux dîners communautaires — chaque détail est pensé."}
+                ? "From cleaning to high-speed internet, from yoga classes to community events — every detail is taken care of."
+                : "Du ménage à la fibre haut débit, des cours de yoga aux événements communautaires — chaque détail est pensé."}
             </p>
 
             <div className="flex flex-wrap gap-6">

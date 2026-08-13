@@ -4,7 +4,7 @@ import { MapPin, Users, ArrowRight, Check, X } from "lucide-react";
 import { SEO } from "@/components/SEO";
 import { FaqSection } from "@/components/FaqSection";
 import { maisonsFaq } from "@/data/faq/maisonsFaq";
-import { PRICE_FR_NUM, PRICE_EN_NUM, PRICE_SHARED_FR_NUM, PRICE_SHARED_EN_NUM, PRICE_SHARED_CHF_FR, PRICE_SHARED_CHF_EN } from "@/data/stats";
+import { PRICE_FR_NUM, PRICE_EN_NUM, PRICE_SHARED_FR_NUM, PRICE_SHARED_EN_NUM, PRICE_SHARED_CHF_FR, PRICE_SHARED_CHF_EN, EUR_STANDARD_FR_NUM, EUR_STANDARD_EN_NUM, EUR_SHARED_FR_NUM, EUR_SHARED_EN_NUM } from "@/data/stats";
 
 export function HousesPageV4() {
   const { language } = useLanguage();
@@ -122,8 +122,8 @@ export function HousesPageV4() {
     {
       label: language === "en" ? "Price" : "Tarif",
       values: language === "en"
-        ? [`${PRICE_SHARED_EN_NUM}–${PRICE_EN_NUM} CHF`, `${PRICE_EN_NUM} CHF`, `${PRICE_EN_NUM} CHF`]
-        : [`${PRICE_SHARED_FR_NUM}–${PRICE_FR_NUM} CHF`, `${PRICE_FR_NUM} CHF`, `${PRICE_FR_NUM} CHF`],
+        ? [`${PRICE_SHARED_EN_NUM}–${PRICE_EN_NUM} CHF (€${EUR_SHARED_EN_NUM}–${EUR_STANDARD_EN_NUM})`, `${PRICE_EN_NUM} CHF (€${EUR_STANDARD_EN_NUM})`, `${PRICE_EN_NUM} CHF (€${EUR_STANDARD_EN_NUM})`]
+        : [`${PRICE_SHARED_FR_NUM}–${PRICE_FR_NUM} CHF (${EUR_SHARED_FR_NUM}–${EUR_STANDARD_FR_NUM} €)`, `${PRICE_FR_NUM} CHF (${EUR_STANDARD_FR_NUM} €)`, `${PRICE_FR_NUM} CHF (${EUR_STANDARD_FR_NUM} €)`],
     },
   ];
 
@@ -243,6 +243,11 @@ export function HousesPageV4() {
                           ? (language === "en" ? PRICE_SHARED_EN_NUM : PRICE_SHARED_FR_NUM)
                           : house.price}{" "}
                         CHF
+                      </span>
+                      <span className="text-sm font-light text-[#78716C]">
+                        {house.name === "La Villa"
+                          ? (language === "en" ? `(€${EUR_SHARED_EN_NUM})` : `(${EUR_SHARED_FR_NUM} €)`)
+                          : (language === "en" ? `(€${EUR_STANDARD_EN_NUM})` : `(${EUR_STANDARD_FR_NUM} €)`)}
                       </span>
                       <span className="text-sm text-[#78716C]">
                         / {language === "en" ? "month" : "mois"}

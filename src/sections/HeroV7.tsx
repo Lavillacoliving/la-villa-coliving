@@ -3,7 +3,7 @@ import { colocGeneveHref } from "@/lib/siteLinks";
 import { Scrim } from "@/components/Scrim";
 import { ArrowRight, ChevronDown, Home, Users, Heart, MapPin } from "lucide-react";
 import { useLanguage } from "@/contexts/LanguageContext";
-import { STATS, STATS_DISPLAY, totalAvailable, totalAvailabilityLabel, PRICE_CHF_FR, PRICE_CHF_EN } from "@/data/stats";
+import { STATS, STATS_DISPLAY, totalAvailable, totalAvailabilityLabel, PRICE_SHARED_CHF_FR, PRICE_SHARED_CHF_EN } from "@/data/stats";
 
 /**
  * VERSION 9: STONE & BRASS — Condo premium contemporain
@@ -73,8 +73,8 @@ export function HeroV7() {
           {/* Description */}
           <p className="text-base md:text-lg text-white max-w-xl mb-6 leading-relaxed font-light [text-shadow:0_2px_10px_rgba(0,0,0,0.55)]">
             {language === "en"
-              ? `Your private room in a house with pool, 20 min from Geneva city center. ${PRICE_CHF_EN}/month, all inclusive.`
-              : `Ta chambre privée dans une maison avec piscine, à 20 min du centre de Genève. ${PRICE_CHF_FR}/mois tout inclus.`}
+              ? `Your private room in a house with pool, 20 min from Geneva city center. From ${PRICE_SHARED_CHF_EN}/month, all inclusive.`
+              : `Ta chambre privée dans une maison avec piscine, à 20 min du centre de Genève. Dès ${PRICE_SHARED_CHF_FR}/mois tout inclus.`}
           </p>
 
           {/* CTAs — remontés au-dessus de la réassurance/preuve sociale : GA4 montre que
@@ -147,7 +147,7 @@ export function HeroV7() {
                 label: language === "en" ? "Private rooms" : "Chambres privées",
               },
               {
-                value: PRICE_CHF_FR,
+                value: language === "en" ? `from ${PRICE_SHARED_CHF_EN}` : `dès ${PRICE_SHARED_CHF_FR}`,
                 label: language === "en" ? "All inclusive / month" : "Tout inclus / mois",
               },
               {
@@ -271,8 +271,8 @@ export function HeroV7() {
           {/* Pricing reminder */}
           <p className="text-center text-white/50 text-sm mt-10 max-w-lg mx-auto">
             {language === "en"
-              ? `All of this is included in your rent. ${PRICE_CHF_EN}/month. No paid add-ons. No application fee, no agency fee. No hidden fees. Ever.`
-              : `Tout ceci est inclus dans ton loyer. ${PRICE_CHF_FR}/mois. Pas d'options payantes. Pas de frais de dossier, pas d'honoraires d'agence. Pas de frais cachés. Jamais.`}
+              ? `All of this is included in your rent. No paid add-ons. No application fee, no agency fee. No hidden fees. Ever.`
+              : `Tout ceci est inclus dans ton loyer. Pas d'options payantes. Pas de frais de dossier, pas d'honoraires d'agence. Pas de frais cachés. Jamais.`}
           </p>
         </div>
 

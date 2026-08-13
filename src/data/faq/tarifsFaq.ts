@@ -6,11 +6,11 @@ export const tarifsFaq: { fr: QAPair[]; en: QAPair[] } = {
   fr: [
     {
       q: "Qu'est-ce qui est inclus dans le loyer chez La Villa Coliving ?",
-      a: `Chez La Villa Coliving, ton loyer tout inclus dès ${PRICE_SHARED_CHF_FR}/mois couvre la chambre meublée de 17 à 23 m², toutes les charges, l'internet fibre jusqu'à 8 Gb/s, le ménage des parties communes trois fois par semaine, l'accès à la piscine, au sauna et à la salle de sport, les cours de yoga et fitness et les événements. Un seul paiement par mois, sans frais de dossier, sans frais cachés.`,
+      a: `Chez La Villa Coliving, ton loyer tout inclus dès ${PRICE_SHARED_CHF_FR}/mois couvre la chambre meublée de 17 à 25 m², toutes les charges, l'internet fibre jusqu'à 8 Gb/s, le ménage des parties communes trois fois par semaine, l'accès à la piscine, au sauna et à la salle de sport, les cours de yoga et fitness et les événements. Un seul paiement par mois, sans frais de dossier, sans frais cachés.`,
     },
     {
       q: "Pourquoi vos prix sont-ils plus élevés qu'une colocation classique ?",
-      a: `Parce que tu n'obtiens pas la même chose. Nos chambres font 17 à 23 m² (contre 9-12 m² pour la plupart des colocations locales), chaque maison a piscine, sauna et salle de sport, le ménage professionnel est inclus, une équipe entretient la maison (jardinier, pisciniste) et la vie communautaire est organisée chaque mois. Au m² et à services équivalents, La Villa est dans les prix du marché — tout inclus dès ${PRICE_SHARED_CHF_FR}/mois, sans frais de dossier ni d'agence.`,
+      a: `Parce que tu n'obtiens pas la même chose. Nos chambres font 17 à 25 m² (contre 9-12 m² pour la plupart des colocations locales), chaque maison a piscine, sauna et salle de sport, le ménage professionnel est inclus, une équipe entretient la maison (jardinier, pisciniste) et la vie communautaire est organisée chaque mois. Au m² et à services équivalents, La Villa est dans les prix du marché — tout inclus dès ${PRICE_SHARED_CHF_FR}/mois, sans frais de dossier ni d'agence.`,
     },
     {
       q: "Y a-t-il des frais de dossier ou d'agence chez La Villa Coliving ?",
@@ -22,7 +22,7 @@ export const tarifsFaq: { fr: QAPair[]; en: QAPair[] } = {
     },
     {
       q: "Le prix varie-t-il selon la maison ou la chambre ?",
-      a: `Oui, il existe deux niveaux. La plupart des chambres (25 sur 29) disposent d'une salle d'eau privative : ${PRICE_CHF_FR}/mois tout inclus. Les 4 chambres de la maison La Villa qui partagent une salle d'eau entre 2 chambres sont à ${PRICE_SHARED_CHF_FR}/mois — son entretien est assuré par notre équipe de ménage. Toutes les chambres font entre 17 et 23 m² et donnent accès aux mêmes équipements — piscine, sauna et salle de sport — dans les trois maisons.`,
+      a: `Oui, il existe deux niveaux. La plupart des chambres (25 sur 29) disposent d'une salle d'eau privative : ${PRICE_CHF_FR}/mois tout inclus. Les 4 chambres de la maison La Villa qui partagent une salle d'eau entre 2 chambres sont à ${PRICE_SHARED_CHF_FR}/mois — son entretien est assuré par notre équipe de ménage. Toutes les chambres font entre 17 et 25 m² et donnent accès aux mêmes équipements — piscine, sauna et salle de sport — dans les trois maisons.`,
     },
     {
       q: "Combien coûte une colocation tout inclus près de Genève ?",
@@ -44,11 +44,11 @@ export const tarifsFaq: { fr: QAPair[]; en: QAPair[] } = {
   en: [
     {
       q: "What's included in the rent at La Villa Coliving?",
-      a: `At La Villa Coliving, your all-inclusive rent from ${PRICE_SHARED_CHF_EN}/month covers a furnished room of 17 to 23 m², all utilities, fibre internet up to 8 Gb/s, cleaning of common areas three times a week, access to the pool, sauna and gym, yoga and fitness classes and community events. A single monthly payment, with no application fees and no hidden costs.`,
+      a: `At La Villa Coliving, your all-inclusive rent from ${PRICE_SHARED_CHF_EN}/month covers a furnished room of 17 to 25 m², all utilities, fibre internet up to 8 Gb/s, cleaning of common areas three times a week, access to the pool, sauna and gym, yoga and fitness classes and community events. A single monthly payment, with no application fees and no hidden costs.`,
     },
     {
       q: "Why are your prices higher than a standard flatshare?",
-      a: `Because you're not getting the same thing. Our rooms are 17-23 m² (vs 9-12 m² for most local flatshares), every house has a pool, sauna and gym, professional cleaning is included, a dedicated team maintains the house (gardener, pool technician), and community life is organised monthly. Per square metre and like-for-like on services, La Villa is at market price — all inclusive from ${PRICE_SHARED_CHF_EN}/month, with no application or agency fees.`,
+      a: `Because you're not getting the same thing. Our rooms are 17-25 m² (vs 9-12 m² for most local flatshares), every house has a pool, sauna and gym, professional cleaning is included, a dedicated team maintains the house (gardener, pool technician), and community life is organised monthly. Per square metre and like-for-like on services, La Villa is at market price — all inclusive from ${PRICE_SHARED_CHF_EN}/month, with no application or agency fees.`,
     },
     {
       q: "Are there application or agency fees at La Villa Coliving?",

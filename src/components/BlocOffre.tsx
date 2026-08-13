@@ -1,7 +1,7 @@
 import { LocalizedLink } from "@/components/LocalizedLink";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { ArrowRight, Check } from "lucide-react";
-import { STATS, formatPriceChf, houseAvailabilityLabel, type HouseKey } from "@/data/stats";
+import { STATS, PRICE_SHARED_CHF_FR, PRICE_SHARED_CHF_EN, houseAvailabilityLabel, type HouseKey } from "@/data/stats";
 import { colocGeneveHref } from "@/lib/siteLinks";
 import type { IntentBucket } from "@/data/blogIntentBuckets";
 
@@ -71,7 +71,8 @@ export function BlocOffre({ variant, slug, bucket }: BlocOffreProps) {
   const L = language === "en" ? "en" : "fr";
   const house = houseForArticle(slug);
   const h = HOUSES[house];
-  const price = formatPriceChf(L);
+  // Prix d'appel du blog = palier d'entree (Jerome 13/08 : « des 1 390 », jamais 1 440)
+  const price = L === "en" ? PRICE_SHARED_CHF_EN : PRICE_SHARED_CHF_FR;
   const to = CANDIDATURE_REF(slug);
   // Lien secondaire : la page maison quand l'article cible Le Lodge (4,65 % de
   // conversion atterrissage — meilleure page du site) ou Le Loft ; sinon le
@@ -130,7 +131,7 @@ export function BlocOffre({ variant, slug, bucket }: BlocOffreProps) {
             <p className="text-sm text-[#57534E] mb-3">
               {L === "en"
                 ? <>All-inclusive at <strong className="text-[#1C1917]">{price}/month</strong> — {h.descEn}.</>
-                : <>Tout inclus à <strong className="text-[#1C1917]">{price}/mois</strong> — {h.descFr}.</>}
+                : <>Tout inclus dès <strong className="text-[#1C1917]">{price}/mois</strong> — {h.descFr}.</>}
             </p>
             <LocalizedLink
               to={to}
@@ -170,7 +171,7 @@ export function BlocOffre({ variant, slug, bucket }: BlocOffreProps) {
               {HEADLINES[bucket][L]}
             </h2>
             <p className="text-lg text-[#1C1917] font-medium mb-4">
-              {L === "en" ? <>All-inclusive at <span className="text-[#D4A574]">{price}</span>/month</> : <>Tout inclus à <span className="text-[#D4A574]">{price}</span>/mois</>}
+              {L === "en" ? <>All-inclusive from <span className="text-[#D4A574]">{price}</span>/month</> : <>Tout inclus dès <span className="text-[#D4A574]">{price}</span>/mois</>}
             </p>
             <ul className="space-y-1.5 mb-6">
               {proofs.map((p) => (

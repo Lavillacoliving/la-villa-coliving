@@ -94,7 +94,7 @@ export const faqData: FAQItem[] = [
       fr: 'Le coliving est-il cher ?',
     },
     answer: {
-      en: `When you factor in all costs—rent, utilities, internet, furniture, gym membership, cleaning services, and entertainment—coliving is often more economical than traditional renting. At La Villa, our all-inclusive rates start from ${PRICE_SHARED_EN_NUM} CHF/month, which is competitive with Geneva studio prices while including: heated pool, gym, sauna, weekly yoga classes, parking, monthly Pizza Party, community dinners, streaming subscriptions, and more.`,
+      en: `When you factor in all costs—rent, utilities, internet, furniture, gym membership, cleaning services, and entertainment—coliving is often more economical than traditional renting. At La Villa, our all-inclusive rates start from ${PRICE_SHARED_EN_NUM} CHF/month, which is competitive with Geneva studio prices while including: heated pool, gym, sauna, weekly yoga classes, parking, monthly Pizza Party, streaming subscriptions, and more.`,
       fr: `Quand vous prenez en compte tous les coûts—loyer, charges, internet, meubles, abonnement de salle de sport, services de ménage et divertissement—le coliving est souvent plus économique que la location traditionnelle. Chez La Villa, nos tarifs tout inclus commencent à ${PRICE_SHARED_CHF_FR}/mois, ce qui est compétitif avec les prix des studios à Genève tout en offrant beaucoup plus de valeur et d\'équipements.`,
     },
   },
@@ -292,8 +292,8 @@ export const faqData: FAQItem[] = [
       fr: 'Pourquoi vos prix sont-ils plus élevés qu\'une colocation classique ?',
     },
     answer: {
-      en: `Because you're not getting the same thing. Our rooms are 17-23 m² (vs 9-12 m² for most local flatshares), every house has a pool, sauna and gym, professional cleaning is included, a dedicated team maintains the house (gardener, pool technician), and community life is organised monthly. Per square metre and like-for-like on services, La Villa is at market price — all inclusive from ${PRICE_SHARED_CHF_EN}/month, with no application or agency fees.`,
-      fr: `Parce que tu n'obtiens pas la même chose. Nos chambres font 17 à 23 m² (contre 9-12 m² pour la plupart des colocations locales), chaque maison a piscine, sauna et salle de sport, le ménage professionnel est inclus, une équipe entretient la maison (jardinier, pisciniste) et la vie communautaire est organisée chaque mois. Au m² et à services équivalents, La Villa est dans les prix du marché — tout inclus dès ${PRICE_SHARED_CHF_FR}/mois, sans frais de dossier ni d'agence.`,
+      en: `Because you're not getting the same thing. Our rooms are 17-25 m² (vs 9-12 m² for most local flatshares), every house has a pool, sauna and gym, professional cleaning is included, a dedicated team maintains the house (gardener, pool technician), and community life is organised monthly. Per square metre and like-for-like on services, La Villa is at market price — all inclusive from ${PRICE_SHARED_CHF_EN}/month, with no application or agency fees.`,
+      fr: `Parce que tu n'obtiens pas la même chose. Nos chambres font 17 à 25 m² (contre 9-12 m² pour la plupart des colocations locales), chaque maison a piscine, sauna et salle de sport, le ménage professionnel est inclus, une équipe entretient la maison (jardinier, pisciniste) et la vie communautaire est organisée chaque mois. Au m² et à services équivalents, La Villa est dans les prix du marché — tout inclus dès ${PRICE_SHARED_CHF_FR}/mois, sans frais de dossier ni d'agence.`,
     },
   },
   {
@@ -426,8 +426,8 @@ export const faqData: FAQItem[] = [
       fr: 'Quel type d\'événements communautaires sont organisés ?',
     },
     answer: {
-      en: 'We organize regular community events including monthly dinners, yoga and fitness classes, Pizza parties and seasonal celebrations and networking events. Participation is always optional—we respect your need for both social time and personal space.',
-      fr: 'Nous organisons régulièrement des événements communautaires incluant des dîners mensuels, des cours de yoga et fitness, des soirées pizza, des célébrations saisonnières et des événements de networking. La participation est toujours optionnelle—nous respectons votre besoin de temps social et d\'espace personnel.',
+      en: 'We organize regular community events including yoga and fitness classes, Pizza parties and seasonal celebrations and networking events. Participation is always optional—we respect your need for both social time and personal space.',
+      fr: 'Nous organisons régulièrement des événements communautaires incluant des cours de yoga et fitness, des soirées pizza, des célébrations saisonnières et des événements de networking. La participation est toujours optionnelle—nous respectons votre besoin de temps social et d\'espace personnel.',
     },
   },
   {
@@ -1074,8 +1074,8 @@ export const faqData: FAQItem[] = [
       fr: 'La nourriture est-elle incluse dans le loyer ?',
     },
     answer: {
-      en: 'Food is not included in the rent, but our kitchens are fully equipped for cooking, and we organize monthly community dinners. Many residents enjoy cooking together and sharing meals. There are also supermarkets and restaurants nearby for all your dining needs.',
-      fr: 'La nourriture n\'est pas incluse dans le loyer, mais nos cuisines sont entièrement équipées pour cuisiner, et nous organisons des dîners communautaires mensuels. Beaucoup de résidents aiment cuisiner ensemble et partager des repas. Il y a également des supermarchés et restaurants à proximité pour tous vos besoins alimentaires.',
+      en: 'Food is not included in the rent, but our kitchens are fully equipped for cooking. Many residents enjoy cooking together and sharing meals. There are also supermarkets and restaurants nearby for all your dining needs.',
+      fr: 'La nourriture n\'est pas incluse dans le loyer, mais nos cuisines sont entièrement équipées pour cuisiner. Beaucoup de résidents aiment cuisiner ensemble et partager des repas. Il y a également des supermarchés et restaurants à proximité pour tous vos besoins alimentaires.',
     },
   },
   {

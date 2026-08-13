@@ -32,8 +32,8 @@ export function HomePage() {
           ? `Coliving & Flatshare Geneva from ${PRICE_SHARED_CHF_EN}`
           : `Coliving & Colocation Genève dès ${PRICE_SHARED_CHF_FR}`}
         description={language === "en"
-          ? "3 houses on the Geneva border — not a 300-room residence. Pool. Sauna. Gym. Private 17-23 m² room, all inclusive, no application fee. Reply within 48h."
-          : "3 maisons à la frontière de Genève — pas une résidence de 300 chambres. Piscine. Sauna. Salle de sport. Chambre privée 17-23 m² tout inclus, 0 frais de dossier."}
+          ? "3 houses on the Geneva border — not a 300-room residence. Pool. Sauna. Gym. Private 17-25 m² room, all inclusive, no application fee. Reply within 48h."
+          : "3 maisons à la frontière de Genève — pas une résidence de 300 chambres. Piscine. Sauna. Salle de sport. Chambre privée 17-25 m² tout inclus, 0 frais de dossier."}
         url="https://www.lavillacoliving.com/"
         image="https://www.lavillacoliving.com/images/villa_portrait.webp"
         jsonLd={buildHomeLodgingBusinessSchema(language === "en" ? "en" : "fr")}

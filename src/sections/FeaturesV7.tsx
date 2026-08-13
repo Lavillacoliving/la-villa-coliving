@@ -2,7 +2,7 @@
 import { Waves, Sofa, BedDouble, Users, CircleCheck, TreePine, ArrowRight } from 'lucide-react';
 import { LocalizedLink } from '@/components/LocalizedLink';
 import { useLanguage } from '@/contexts/LanguageContext';
-import { STATS, PRICE_CHF_FR, PRICE_CHF_EN } from '@/data/stats';
+import { STATS } from '@/data/stats';
 
 /**
  * VERSION 9: STONE & BRASS
@@ -38,8 +38,8 @@ export function FeaturesV7() {
       icon: Users,
       title: language === 'en' ? 'Active community life' : 'Vie communautaire active',
       description: language === 'en'
-        ? 'Monthly pizza party, community dinner, private yoga and fitness classes, board games, foosball. All included, all optional.'
-        : 'Pizza Party mensuelle, dîner communautaire, cours de yoga et fitness privés, jeux de société, babyfoot. Tout inclus, tout optionnel.',
+        ? 'Monthly pizza party, private yoga and fitness classes, board games, foosball. All included, all optional.'
+        : 'Pizza Party mensuelle, cours de yoga et fitness privés, jeux de société, babyfoot. Tout inclus, tout optionnel.',
     },
     {
       icon: CircleCheck,
@@ -70,8 +70,8 @@ export function FeaturesV7() {
           </h2>
           <p className="text-[#78716C] text-base md:text-lg">
             {language === 'en'
-              ? `Bring your suitcase. We take care of everything else — ${STATS.includedItems} services covered in a single rent of ${PRICE_CHF_EN}/month.`
-              : `Apporte ta valise. Nous nous occupons de tout le reste — ${STATS.includedItems} services couverts en un seul loyer de ${PRICE_CHF_FR}/mois.`}
+              ? `Bring your suitcase. We take care of everything else.`
+              : `Apporte ta valise. Nous nous occupons de tout le reste.`}
           </p>
           {/* Lien contextuel -> /tarifs (maillage interne) */}
           <LocalizedLink

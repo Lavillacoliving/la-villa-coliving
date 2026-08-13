@@ -340,13 +340,13 @@ export function RatesPageV4() {
           </h1>
           <p className="text-xl text-[#57534E] max-w-2xl mx-auto mb-4">
             {language === "en"
-              ? `${PRICE_EN_NUM} CHF/month — All inclusive`
-              : `${PRICE_CHF_FR}/mois — Tout inclus`}
+              ? `from ${PRICE_SHARED_EN_NUM} CHF/month (€${EUR_SHARED_EN_NUM}/month) — All inclusive`
+              : `dès ${PRICE_SHARED_CHF_FR}/mois (${EUR_SHARED_FR_NUM} €/mois) — Tout inclus`}
           </p>
           <p className="text-lg text-[#78716C]">
             {language === "en"
-              ? `At La Villa Coliving, most rooms cost ${PRICE_CHF_EN}/month all-inclusive (the others cost ${PRICE_SHARED_CHF_EN}/month): rent, utilities, fiber, cleaning three times a week, gym, pool, streaming. No application or agency fees — deposit of 2 months' rent (excluding utilities).`
-              : `À La Villa Coliving, la plupart des chambres coûtent ${PRICE_CHF_FR}/mois tout compris (les autres coûtent ${PRICE_SHARED_CHF_FR}/mois) : loyer, charges, fibre, ménage 3x/semaine, salle de sport, piscine, streaming. Sans frais de dossier ni d'agence — caution de 2 mois de loyer (hors charges).`}
+              ? `At La Villa Coliving, rooms with a private shower room cost ${PRICE_CHF_EN}/month (€${EUR_STANDARD_EN_NUM}) all-inclusive. Those with a shared bathroom cost ${PRICE_SHARED_CHF_EN}/month (€${EUR_SHARED_EN_NUM}): rent, utilities, fiber, cleaning three times a week, gym, pool, streaming. No application or agency fees — deposit of 2 months' rent (excluding utilities).`
+              : `À La Villa Coliving, les chambres avec salle d'eau privée coûtent ${PRICE_CHF_FR}/mois (${EUR_STANDARD_FR_NUM} €) tout compris. Celles avec salle de bain partagée coûtent ${PRICE_SHARED_CHF_FR}/mois (${EUR_SHARED_FR_NUM} €) : loyer, charges, fibre, ménage 3x/semaine, salle de sport, piscine, streaming. Sans frais de dossier ni d'agence — caution de 2 mois de loyer (hors charges).`}
           </p>
           <div className="mt-8 flex flex-wrap justify-center gap-2">
             {(language === "en"
@@ -532,8 +532,8 @@ export function RatesPageV4() {
                   <span className="flex items-center gap-2">
                     <Check className="w-4 h-4 text-[#D4A574]" />{" "}
                     {language === "en"
-                      ? "Room from 17 to 23 m²"
-                      : "Chambre de 17 à 23 m²"}
+                      ? "Room from 17 to 25 m²"
+                      : "Chambre de 17 à 25 m²"}
                   </span>
                   <span className="text-[#D4A574] font-bold">
                     {language === "en" ? "INCLUDED" : "INCLUS"}

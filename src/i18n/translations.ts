@@ -321,7 +321,7 @@ export const translations = {
         community: {
           title: "Community Events",
           description:
-            "Monthly pizza parties, community dinners and seasonal events. Real connections, zero obligations.",
+            "Monthly pizza parties and seasonal events. Real connections, zero obligations.",
         },
         support: {
           title: "Always Here for You",
@@ -758,7 +758,7 @@ export const translations = {
         community: {
           title: "Événements Communautaires",
           description:
-            "Pizza Party mensuelle, dîners communautaires et événements saisonniers. De vraies connexions, zéro obligation.",
+            "Pizza Party mensuelle et événements saisonniers. De vraies connexions, zéro obligation.",
         },
         support: {
           title: "Toujours Là pour Toi",

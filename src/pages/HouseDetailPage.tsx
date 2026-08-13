@@ -20,7 +20,7 @@ import {
   Sun,
 } from "lucide-react";
 import { useLanguage } from "@/contexts/LanguageContext";
-import { AVAILABILITY, houseAvailabilityLabel, PRICE_FR_NUM, PRICE_EN_NUM, PRICE_CHF_FR, PRICE_CHF_EN, PRICE_SHARED_FR_NUM, PRICE_SHARED_EN_NUM, PRICE_SHARED_CHF_FR, PRICE_SHARED_CHF_EN } from "@/data/stats";
+import { AVAILABILITY, houseAvailabilityLabel, PRICE_FR_NUM, PRICE_EN_NUM, PRICE_CHF_FR, PRICE_CHF_EN, PRICE_SHARED_FR_NUM, PRICE_SHARED_EN_NUM, PRICE_SHARED_CHF_FR, PRICE_SHARED_CHF_EN, EUR_STANDARD_FR_NUM, EUR_STANDARD_EN_NUM, EUR_SHARED_FR_NUM, EUR_SHARED_EN_NUM } from "@/data/stats";
 
 import { Badge } from "@/components/ui/badge";
 import { HouseGallery } from "@/sections/HouseGallery";
@@ -60,6 +60,8 @@ interface HouseData {
   rooms: {
     type: string;
     price: string;
+    /** Prix contractuel euro, affiche en leger entre parentheses. */
+    priceEur?: string;
     description: string;
     image: string;
   }[];
@@ -362,22 +364,20 @@ function getHousesData(lang: string): Record<string, HouseData> {
       "Double cuisine équipée",
     ],
     services: isEn ? [
+      "Housekeeping three times a week",
       "Weekly private yoga & fitness classes",
       "Monthly pizza party",
-      "Monthly community dinner",
       "Seasonal community events",
       "WhatsApp direct support",
-      "Housekeeping three times a week",
       "Pool, sauna & garden maintenance",
       "Streaming subscriptions (Netflix, Canal+, etc.)",
       "Bed linen set & towels provided",
     ] : [
+      "Ménage des communs 3 fois par semaine",
       "Cours de yoga & fitness privés hebdomadaires",
       "Pizza Party mensuelle",
-      "Dîner communautaire mensuel",
       "Événements communautaires saisonniers",
       "Support WhatsApp direct",
-      "Ménage des communs 3 fois par semaine",
       "Entretien piscine, sauna & jardin",
       "Abonnements streaming (Netflix, Canal+, etc.)",
       "Parure de linge de lit et serviettes fournie",
@@ -386,14 +386,16 @@ function getHousesData(lang: string): Record<string, HouseData> {
       {
         type: isEn ? "Room with private bathroom" : "Chambre avec salle de bain privative",
         price: isEn ? `${PRICE_EN_NUM} CHF` : `${PRICE_FR_NUM} CHF`,
+        priceEur: isEn ? `€${EUR_STANDARD_EN_NUM}` : `${EUR_STANDARD_FR_NUM} €`,
         description: isEn
-          ? "Your private sanctuary with double Emma bed, ergonomic desk, spacious closet, and private bathroom. Most rooms offer a terrace or balcony with garden views. 17 to 23 m²."
-          : "Ton espace privé avec lit double Emma, bureau ergonomique, placard spacieux et salle de bain privative. La plupart des chambres offrent une terrasse ou un balcon avec vue sur le jardin. 17 à 23 m².",
+          ? "Your private sanctuary with double Emma bed, ergonomic desk, spacious closet, and private bathroom. Most rooms offer a terrace or balcony with garden views. 17 to 25 m²."
+          : "Ton espace privé avec lit double Emma, bureau ergonomique, placard spacieux et salle de bain privative. La plupart des chambres offrent une terrasse ou un balcon avec vue sur le jardin. 17 à 25 m².",
         image: "/images/la villa/rooms/La Villa-80.webp",
       },
       {
         type: isEn ? "Room with shared bathroom" : "Chambre avec salle de bain partagée",
         price: isEn ? `${PRICE_SHARED_EN_NUM} CHF` : `${PRICE_SHARED_FR_NUM} CHF`,
+        priceEur: isEn ? `€${EUR_SHARED_EN_NUM}` : `${EUR_SHARED_FR_NUM} €`,
         description: isEn
           ? "Comfortable private room with double Emma bed, workspace, and ample storage. Designer shower room shared with just one other room, cleaned by our housekeeping team. 17 to 20 m²."
           : "Chambre privée confortable avec lit double Emma, espace de travail et rangement. Salle d'eau design partagée avec une seule autre chambre, entretenue par notre équipe de ménage. 17 à 20 m².",
@@ -776,22 +778,20 @@ function getHousesData(lang: string): Record<string, HouseData> {
       "Babyfoot",
     ],
     services: isEn ? [
+      "Housekeeping three times a week",
       "Weekly private yoga & fitness classes",
       "Monthly pizza party",
-      "Monthly community dinner",
       "Seasonal community events",
       "WhatsApp direct support",
-      "Housekeeping three times a week",
       "Pool & sauna maintenance",
       "Streaming subscriptions (Netflix, Canal+, etc.)",
       "Bed linen set & towels provided",
     ] : [
+      "Ménage des communs 3 fois par semaine",
       "Cours de yoga & fitness privés hebdomadaires",
       "Pizza Party mensuelle",
-      "Dîner communautaire mensuel",
       "Événements communautaires saisonniers",
       "Support WhatsApp direct",
-      "Ménage des communs 3 fois par semaine",
       "Entretien piscine & sauna",
       "Abonnements streaming (Netflix, Canal+, etc.)",
       "Parure de linge de lit et serviettes fournie",
@@ -1237,22 +1237,20 @@ function getHousesData(lang: string): Record<string, HouseData> {
       "DPE B (performance énergétique)",
     ],
     services: isEn ? [
+      "Housekeeping three times a week",
       "Weekly private yoga & fitness classes",
       "Monthly pizza party",
-      "Monthly community dinner",
       "Seasonal community events",
       "WhatsApp direct support",
-      "Housekeeping three times a week",
       "Full property, garden & pool maintenance",
       "Streaming subscriptions (Netflix, Canal+, etc.)",
       "Bed linen set & towels provided",
     ] : [
+      "Ménage des communs 3 fois par semaine",
       "Cours de yoga & fitness privés hebdomadaires",
       "Pizza Party mensuelle",
-      "Dîner communautaire mensuel",
       "Événements communautaires saisonniers",
       "Support WhatsApp direct",
-      "Ménage des communs 3 fois par semaine",
       "Entretien complet propriété, jardin & piscine",
       "Abonnements streaming (Netflix, Canal+, etc.)",
       "Parure de linge de lit et serviettes fournie",
@@ -1655,7 +1653,12 @@ export function HouseDetailPage() {
                     {id === "lavilla"
                       ? (language === "en" ? PRICE_SHARED_EN_NUM : PRICE_SHARED_FR_NUM)
                       : house.price}{" "}
-                    CHF
+                    CHF{" "}
+                    <span className="text-xl font-light text-[#78716C]">
+                      {id === "lavilla"
+                        ? (language === "en" ? `(€${EUR_SHARED_EN_NUM})` : `(${EUR_SHARED_FR_NUM} €)`)
+                        : (language === "en" ? `(€${EUR_STANDARD_EN_NUM})` : `(${EUR_STANDARD_FR_NUM} €)`)}
+                    </span>
                   </p>
                   <p className="text-[#78716C] mb-4 font-medium">
                     {t.houseDetail.perMonth}
@@ -1981,6 +1984,9 @@ export function HouseDetailPage() {
                   <div className="flex items-center justify-between">
                     <p className="text-2xl font-black text-[#D4A574]">
                       {room.price}
+                      {"priceEur" in room && (
+                        <span className="text-base font-light text-[#78716C]"> ({(room as { priceEur: string }).priceEur})</span>
+                      )}
                     </p>
                     <span className="text-[#78716C] font-medium">
                       {t.houseDetail.perMonth}
@@ -2036,7 +2042,7 @@ export function HouseDetailPage() {
               { q: "Qui peut postuler pour vivre au Loft ?", a: "Profil cible : frontaliers en CDI, jeunes professionnels, expatriés. Sélection sur dossier (justificatif de revenus, motivation, compatibilité avec la communauté). La proximité immédiate de la frontière fait du Loft un favori des frontaliers qui vont au bureau à pied ou en vélo." },
               { q: "Où se trouve Le Loft et à quelle distance de Genève ?", a: "Le Loft se situe à Ambilly, côté France, à 20 minutes du centre de Genève en tram. C'est l'une des trois maisons de coliving de La Villa Coliving, avec une piscine intérieure chauffée toute l'année et un sauna finlandais." },
               { q: "Combien de résidents vivent au Loft ?", a: "Le Loft accueille 7 résidents, ce qui en fait la plus intime des maisons de La Villa Coliving. Située à Ambilly, près de Genève, elle offre une chambre meublée privée à chacun et une ambiance très conviviale à taille réduite." },
-              { q: "Quels équipements y a-t-il au Loft ?", a: `Le Loft, à Ambilly, dispose d'une piscine intérieure chauffée utilisable toute l'année, d'un sauna finlandais, d'une salle de sport, d'un espace home cinéma et de chambres spacieuses de 17 à 23 m². Tout est inclus dans le loyer tout compris de ${PRICE_CHF_FR}/mois.` },
+              { q: "Quels équipements y a-t-il au Loft ?", a: `Le Loft, à Ambilly, dispose d'une piscine intérieure chauffée utilisable toute l'année, d'un sauna finlandais, d'une salle de sport, d'un espace home cinéma et de chambres spacieuses de 17 à 25 m². Tout est inclus dans le loyer tout compris de ${PRICE_CHF_FR}/mois.` },
               { q: "Peut-on nager toute l'année au Loft ?", a: "Oui. Le Loft, à Ambilly, est la maison de La Villa Coliving dotée d'une piscine intérieure chauffée, accessible toute l'année quelle que soit la saison, ainsi que d'un sauna finlandais. C'est inclus dans ton loyer, comme l'ensemble des services." },
             ],
             en: [
@@ -2048,7 +2054,7 @@ export function HouseDetailPage() {
               { q: "Who can apply to live at Le Loft?", a: "Target profile: cross-border workers on CDI, young professionals, expats. Selection by application (income proof, motivation, fit with community). The immediate proximity to the border makes Le Loft a favorite among cross-border workers who walk or bike to the office." },
               { q: "Where is Le Loft and how far from Geneva?", a: "Le Loft is in Ambilly, on the French side, 20 minutes from Geneva city center by tram. It's one of the three La Villa Coliving houses, with an indoor pool heated year-round and a Finnish sauna." },
               { q: "How many residents live at Le Loft?", a: "Le Loft hosts 7 residents, making it the most intimate of the La Villa Coliving houses. Located in Ambilly, near Geneva, it offers a private furnished room for each resident and a very convivial small-scale atmosphere." },
-              { q: "What amenities are there at Le Loft?", a: `Le Loft, in Ambilly, has an indoor pool heated and usable year-round, a Finnish sauna, a gym, a home cinema space and spacious rooms of 17 to 23 m². Everything is included in the all-inclusive rent of ${PRICE_CHF_EN}/month.` },
+              { q: "What amenities are there at Le Loft?", a: `Le Loft, in Ambilly, has an indoor pool heated and usable year-round, a Finnish sauna, a gym, a home cinema space and spacious rooms of 17 to 25 m². Everything is included in the all-inclusive rent of ${PRICE_CHF_EN}/month.` },
               { q: "Can you swim year-round at Le Loft?", a: "Yes. Le Loft, in Ambilly, is the La Villa Coliving house with an indoor heated pool, accessible year-round whatever the season, plus a Finnish sauna. It's included in your rent, like all services." },
             ],
           },
@@ -2063,7 +2069,7 @@ export function HouseDetailPage() {
               { q: "Où se trouve Le Lodge et à quelle distance de Genève ?", a: "Le Lodge se situe à Annemasse, côté France, à 20 minutes du centre de Genève en train CEVA. C'est la plus grande des trois maisons de coliving de La Villa Coliving, avec une piscine extérieure et un pool house, un chalet fitness complet et un sauna." },
               { q: "Combien de résidents vivent au Lodge ?", a: "Le Lodge accueille 12 résidents, ce qui en fait la plus grande maison de La Villa Coliving. Située à Annemasse, près de Genève, elle conserve une taille humaine tout en offrant les espaces les plus généreux : espace home cinéma, piscine, pool house / salle de jeu, chalet fitness et grands espaces communs." },
               { q: "Quels équipements y a-t-il au Lodge ?", a: `Le Lodge, à Annemasse, dispose d'une piscine avec pool house/salle de jeu, d'un chalet fitness complet avec grand sauna finlandais, d'une salle de sport, d'un jeu d'arcade et de larges espaces communs. Tout est inclus dans le loyer tout compris de ${PRICE_CHF_FR}/mois, comme dans les trois maisons de La Villa Coliving.` },
-              { q: "Y a-t-il du coliving à Annemasse ?", a: `Oui. Le Lodge est la maison de coliving de La Villa Coliving à Annemasse : 12 résidents, chambres meublées de 17 à 23 m², pool house, chalet fitness et sauna, le tout à 20 minutes du centre de Genève en CEVA. Tout inclus à ${PRICE_CHF_FR}/mois.` },
+              { q: "Y a-t-il du coliving à Annemasse ?", a: `Oui. Le Lodge est la maison de coliving de La Villa Coliving à Annemasse : 12 résidents, chambres meublées de 17 à 25 m², pool house, chalet fitness et sauna, le tout à 20 minutes du centre de Genève en CEVA. Tout inclus à ${PRICE_CHF_FR}/mois.` },
             ],
             en: [
               { q: "What is the monthly rent at Le Lodge and what does it include?", a: `Rooms at Le Lodge are ${PRICE_CHF_EN} per month all-inclusive: utilities (water, electricity, heating), fiber internet up to 8 Gb/s, common-area cleaning three times a week, streaming subscriptions, pool & garden upkeep, private yoga/fitness classes, bedding included, monthly community dinner. No add-on fees.` },
@@ -2075,7 +2081,7 @@ export function HouseDetailPage() {
               { q: "Where is Le Lodge and how far from Geneva?", a: "Le Lodge is in Annemasse, on the French side, 20 minutes from Geneva city center by CEVA train. It's the largest of the three La Villa Coliving houses, with an outdoor pool and a pool house, a full fitness chalet and a sauna." },
               { q: "How many residents live at Le Lodge?", a: "Le Lodge hosts 12 residents, making it the largest La Villa Coliving house. Located in Annemasse, near Geneva, it keeps a human scale while offering the most generous spaces: home cinema, pool, pool house / games room, fitness chalet and large common areas." },
               { q: "What amenities are there at Le Lodge?", a: `Le Lodge, in Annemasse, has a pool with a pool house/games room, a full fitness chalet with a large Finnish sauna, a gym, an arcade game and large common areas. Everything is included in the all-inclusive rent of ${PRICE_CHF_EN}/month, as in all three La Villa Coliving houses.` },
-              { q: "Is there coliving in Annemasse?", a: `Yes. Le Lodge is the La Villa Coliving coliving house in Annemasse: 12 residents, furnished rooms of 17 to 23 m², pool house, fitness chalet and sauna, all 20 minutes from Geneva city center by CEVA. All inclusive at ${PRICE_CHF_EN}/month.` },
+              { q: "Is there coliving in Annemasse?", a: `Yes. Le Lodge is the La Villa Coliving coliving house in Annemasse: 12 residents, furnished rooms of 17 to 25 m², pool house, fitness chalet and sauna, all 20 minutes from Geneva city center by CEVA. All inclusive at ${PRICE_CHF_EN}/month.` },
             ],
           },
         };
