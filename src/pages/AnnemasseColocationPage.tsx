@@ -69,9 +69,11 @@ export function AnnemasseColocationPage() {
     <main className="relative pt-16">
       <SEO
         title={
+          // Prix retiré du title le 15/08/2026 (doctrine A6/S33 : le prix filtre le clic
+          // avant que la page puisse vendre la valeur — il reste en meta description).
           language === "en"
             ? "Shared housing Annemasse 2026: 29 rooms"
-            : `Colocation Annemasse 2026 : dès ${PRICE_CHF_FR}`
+            : "Colocation Annemasse 2026 : 29 chambres"
         }
         description={
           language === "en"

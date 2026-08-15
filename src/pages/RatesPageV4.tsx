@@ -301,7 +301,8 @@ export function RatesPageV4() {
   return (
     <main className="relative pt-16">
       <SEO
-        title={language === "en" ? `Rates — All-Inclusive Coliving from ${PRICE_EN_NUM} CHF/month` : `Tarifs Colocation Genève — Tout Compris dès ${PRICE_CHF_FR}/mois`}
+        // Prix retiré du title le 15/08/2026 (doctrine A6/S33) — il reste en meta description.
+        title={language === "en" ? "Rates — All-Inclusive Coliving Near Geneva" : "Tarifs Colocation Genève — Tout Compris"}
         description={language === "en"
           ? `All-inclusive coliving near Geneva from ${PRICE_EN_NUM} CHF/month — no application or agency fees. Rent, utilities, gym, pool, WiFi, cleaning included.`
           : `Tarifs colocation tout inclus près de Genève dès ${PRICE_CHF_FR}/mois, sans frais de dossier ni d'agence. Loyer, charges, gym, piscine, WiFi, ménage compris.`}

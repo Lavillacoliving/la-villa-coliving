@@ -64,9 +64,11 @@ export function ChambreLouerAnnemassePage() {
     <main className="relative pt-16">
       <SEO
         title={
+          // Prix retiré du title le 15/08/2026 (doctrine A6/S33 : le prix filtre le clic
+          // avant que la page puisse vendre la valeur — il reste en meta description).
           language === "en"
-            ? `Furnished rooms Annemasse 2026 from ${PRICE_CHF_EN}`
-            : `Chambre à louer Annemasse 2026 : dès ${PRICE_CHF_FR}`
+            ? "Furnished rooms Annemasse 2026: all inclusive"
+            : "Chambre à louer Annemasse 2026 : tout inclus"
         }
         description={
           language === "en"
