@@ -39,6 +39,9 @@ export function HomePage() {
         url="https://www.lavillacoliving.com/"
         image="https://www.lavillacoliving.com/images/villa_portrait.webp"
         jsonLd={buildHomeLodgingBusinessSchema(language === "en" ? "en" : "fr")}
+        // Le LodgingBusiness ci-dessus porte le même @id que le LocalBusiness générique :
+        // on coupe ce dernier pour n'avoir qu'une fiche business sur l'accueil.
+        omitLocalBusiness
       />
       <Hero />
       {/* Nos maisons remonté juste après le bandeau "Piscine, sauna & salle de sport"

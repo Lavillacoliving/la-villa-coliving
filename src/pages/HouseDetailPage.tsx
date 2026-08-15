@@ -2,7 +2,7 @@ import { useLocation } from "react-router-dom";
 import { LocalizedLink } from "@/components/LocalizedLink";
 import { colocGeneveHref } from "@/lib/siteLinks";
 import { Scrim } from "@/components/Scrim";
-import { buildBreadcrumbSchema, HOUSES } from "@/lib/structuredData";
+import { buildBreadcrumbSchema, HOUSES, LAVILLA_SAME_AS } from "@/lib/structuredData";
 import {
   MapPin,
   Users,
@@ -1409,10 +1409,12 @@ export function HouseDetailPage() {
           "addressRegion": "Haute-Savoie",
           "addressCountry": "FR"
         },
+        // Geo rooftop-exacte depuis HOUSES (source unique, BAN 15/08/2026) — les
+        // valeurs codées en dur ici divergeaient de structuredData.ts.
         "geo": {
           "@type": "GeoCoordinates",
-          "latitude": id === "lavilla" ? 46.2050 : id === "leloft" ? 46.1960 : 46.1940,
-          "longitude": id === "lavilla" ? 6.2280 : id === "leloft" ? 6.2250 : 6.2360
+          "latitude": HOUSES.find(h => h.slug === id)?.geo.lat,
+          "longitude": HOUSES.find(h => h.slug === id)?.geo.lng
         },
         "priceRange": `${STATS.priceChf} CHF/mois`,
         "currenciesAccepted": "EUR",
@@ -1424,10 +1426,7 @@ export function HouseDetailPage() {
           { "@type": "LocationFeatureSpecification", "name": "Parking", "value": true }
         ],
         "numberOfRooms": id === "lavilla" ? 10 : id === "leloft" ? 7 : 12,
-        "sameAs": [
-          "https://www.facebook.com/lavillacoliving",
-          "https://www.instagram.com/lavillacoliving"
-        ]
+        "sameAs": LAVILLA_SAME_AS
       }) }} />
       {/* BreadcrumbList Schema.org */}
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(buildBreadcrumbSchema([

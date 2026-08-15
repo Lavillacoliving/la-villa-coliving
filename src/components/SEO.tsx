@@ -1,7 +1,7 @@
 import { Helmet } from "react-helmet";
 import { useLocation } from "react-router-dom";
 import { useLanguage } from "@/contexts/LanguageContext";
-import { FOUNDERS, FOUNDING_DATE, ABOUT_PAGE_LIVE } from "@/lib/structuredData";
+import { FOUNDERS, FOUNDING_DATE, ABOUT_PAGE_LIVE, ORG_ID, LAVILLA_SAME_AS, HOUSES } from "@/lib/structuredData";
 import { HREFLANG_NO_ALTERNATES } from "@/lib/siteLinks";
 import { PRICE_EN_NUM, PRICE_CHF_FR, PRICE_CHF_EN } from "@/data/stats";
 
@@ -13,6 +13,12 @@ interface SEOProps {
   type?: string;
   jsonLd?: Record<string, unknown>;
   noindex?: boolean;
+  /**
+   * Coupe le LocalBusiness générique quand la page émet déjà une fiche business
+   * plus riche portant le même @id (cas de l'accueil : LodgingBusiness) —
+   * sinon Google voit deux fiches concurrentes sur la même URL.
+   */
+  omitLocalBusiness?: boolean;
 }
 
 export function SEO({
@@ -23,6 +29,7 @@ export function SEO({
   type = "website",
   jsonLd,
   noindex = false,
+  omitLocalBusiness = false,
 }: SEOProps) {
   const { language } = useLanguage();
   const location = useLocation();
@@ -106,10 +113,11 @@ export function SEO({
 
       {/* Structured Data — LocalBusiness (défaut sur toutes les pages) — SEO local.
           PAS d'aggregateRating (la note 4,9/5 = NPS interne, non balisable). */}
-      <script type="application/ld+json">
+      {!omitLocalBusiness && <script type="application/ld+json">
         {JSON.stringify({
           "@context": "https://schema.org",
           "@type": "LocalBusiness",
+          "@id": ORG_ID,
           name: "La Villa Coliving",
           url: "https://www.lavillacoliving.com",
           logo: "https://www.lavillacoliving.com/logos/logo-full.png",
@@ -128,8 +136,8 @@ export function SEO({
           },
           geo: {
             "@type": "GeoCoordinates",
-            latitude: 46.2031,
-            longitude: 6.2475,
+            latitude: HOUSES[0].geo.lat,
+            longitude: HOUSES[0].geo.lng,
           },
           areaServed: ["Genève", "Annemasse", "Ville-la-Grand", "Ambilly", "Grand Genève"],
           // E-E-A-T : fondation + fondateurs identifiables (sameAs LinkedIn) sur toutes
@@ -149,9 +157,9 @@ export function SEO({
             contactType: "customer service",
             availableLanguage: ["French", "English"],
           },
-          sameAs: ["https://www.instagram.com/lavillacoliving/"],
+          sameAs: LAVILLA_SAME_AS,
         })}
-      </script>
+      </script>}
 
       {/* Additional Structured Data (page-specific) */}
       {jsonLd && (
