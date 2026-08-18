@@ -6,6 +6,7 @@ import { SEO } from "@/components/SEO";
 import { SUPABASE_URL, SUPABASE_ANON_KEY } from "@/lib/supabase";
 import { STATS, STATS_DISPLAY, PRICE_CHF_FR, PRICE_CHF_EN } from "@/data/stats";
 import { useFormTelemetry } from "@/hooks/useFormTelemetry";
+import { useRoomAvailability, shortAvailabilityLabel } from "@/lib/availability";
 
 type FormStatus = "idle" | "submitting" | "success" | "error";
 
@@ -14,6 +15,7 @@ const EDGE_FUNCTION_URL = `${SUPABASE_URL}/functions/v1/send-candidature-email`;
 export function JoinPageV4() {
   const { language } = useLanguage();
   const L = language === "en" ? "en" : "fr";
+  const availability = useRoomAvailability();
   const [status, setStatus] = useState<FormStatus>("idle");
   const [errorMessage, setErrorMessage] = useState<string>("");
   const [openFAQ, setOpenFAQ] = useState<number | null>(null);
@@ -142,16 +144,13 @@ export function JoinPageV4() {
       {/* Form — remonté juste sous le hero (S33) : premier champ ≤ 1,2 écran desktop */}
       <section className="py-12 lg:py-16 bg-[#FAF9F6]">
         <div className="container-custom max-w-3xl">
-          {/* Dispo sans chiffre (S33) : la constante AVAILABILITY est maintenue à la
-              main (valeurs provisoires du 15/06) — un chiffre statique faux coûte la
-              confiance. Libellé qualitatif en attendant le branchement live-count
-              (vue v_public_room_availability, revue du 18/08). */}
+          {/* Dispo réelle (revue 18/08) : lue sur v_public_rooms via useRoomAvailability,
+              embarquée dans le prérendu. La constante manuelle AVAILABILITY a été
+              supprimée — sans données, le libellé redevient qualitatif, jamais chiffré. */}
           <div className="mb-6 text-center">
             <span className="inline-flex items-center gap-2 px-4 py-2 bg-white border border-[#D4A574] text-sm text-[#1C1917]">
               <Calendar className="w-4 h-4 text-[#D4A574]" />
-              {language === "en"
-                ? "Rooms are opening up — apply now"
-                : "Des chambres se libèrent — candidate maintenant"}
+              {shortAvailabilityLabel(availability, L)}
             </span>
           </div>
 

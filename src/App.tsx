@@ -8,6 +8,7 @@ import { FooterV7 as Footer } from "@/components/custom/FooterV7";
 import { Navigate } from "react-router-dom";
 import { PortailLayout } from "@/pages/portail/PortailLayout";
 import { ScrollToTop } from "@/components/ScrollToTop";
+import { AvailabilityEmbed } from "@/components/AvailabilityEmbed";
 
 // ─── Lazy-loaded public pages (named exports) ──────────────
 // ⚠️ Nouvelle page PRÉRENDUE = l'ajouter aussi à src/lib/routePreload.ts
@@ -153,6 +154,8 @@ function AppContent() {
         <Route path="*" element={<NotFoundPage />} />
       </Routes>
       </Suspense>
+      {/* État de dispo embarqué pour l'hydratation sans fetch — instance unique. */}
+      <AvailabilityEmbed />
       {!isDashboard && !isPortail && !isResetPw && !isQuestionnaire && <Footer />}
     </div>
   );

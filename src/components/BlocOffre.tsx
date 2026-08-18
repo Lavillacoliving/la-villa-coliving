@@ -1,7 +1,8 @@
 import { LocalizedLink } from "@/components/LocalizedLink";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { ArrowRight, Check } from "lucide-react";
-import { STATS, formatPriceChf, houseAvailabilityLabel, type HouseKey } from "@/data/stats";
+import { STATS, formatPriceChf } from "@/data/stats";
+import { useRoomAvailability, houseBadgeLabel, type HouseKey } from "@/lib/availability";
 import { colocGeneveHref } from "@/lib/siteLinks";
 import type { IntentBucket } from "@/data/blogIntentBuckets";
 
@@ -71,6 +72,8 @@ export function BlocOffre({ variant, slug, bucket }: BlocOffreProps) {
   const L = language === "en" ? "en" : "fr";
   const house = houseForArticle(slug);
   const h = HOUSES[house];
+  const availability = useRoomAvailability();
+  const availabilityBadge = houseBadgeLabel(availability.byHouse[house], availability.known, L);
   const price = formatPriceChf(L);
   const to = CANDIDATURE_REF(slug);
   // Lien secondaire : la page maison quand l'article cible Le Lodge (4,65 % de
@@ -158,9 +161,11 @@ export function BlocOffre({ variant, slug, bucket }: BlocOffreProps) {
               className="w-full h-52 md:h-full object-cover"
               loading="lazy"
             />
-            <span className="absolute top-3 left-3 text-xs font-semibold px-3 py-1 rounded-full bg-white/90 text-[#1C1917]">
-              {houseAvailabilityLabel(house, L)}
-            </span>
+            {availabilityBadge && (
+              <span className="absolute top-3 left-3 text-xs font-semibold px-3 py-1 rounded-full bg-white/90 text-[#1C1917]">
+                {availabilityBadge}
+              </span>
+            )}
           </div>
           <div className="p-6 md:p-8">
             <p className="text-xs uppercase tracking-[0.2em] text-[#D4A574] font-semibold mb-2">
