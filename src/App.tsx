@@ -52,6 +52,7 @@ const DashboardMaintenancePage = lazy(() => import("@/pages/dashboard/DashboardM
 const DashboardProspectsPage = lazy(() => import("@/pages/dashboard/DashboardProspectsPage"));
 const DashboardRoadmapPage = lazy(() => import("@/pages/dashboard/DashboardRoadmapPage"));
 const DashboardMaisonsPage = lazy(() => import("@/pages/dashboard/DashboardMaisonsPage"));
+const DashboardDispoPage = lazy(() => import("@/pages/dashboard/DashboardDispoPage"));
 const DashboardNouveauBailPage = lazy(() => import("@/pages/dashboard/DashboardNouveauBailPage"));
 const DashboardDocumentsPage = lazy(() => import("@/pages/dashboard/DashboardDocumentsPage"));
 const DashboardEventsPage = lazy(() => import("@/pages/dashboard/DashboardEventsPage"));
@@ -148,6 +149,7 @@ function AppContent() {
           <Route path="documents" element={<DashboardDocumentsPage />} />
           <Route path="events" element={<DashboardEventsPage />} />
           <Route path="maisons" element={<DashboardMaisonsPage />} />
+          <Route path="dispo" element={<DashboardDispoPage />} />
           <Route path="nouveau-bail" element={<DashboardNouveauBailPage />} />
           <Route path="blog" element={<DashboardBlogPage />} />
         </Route>
