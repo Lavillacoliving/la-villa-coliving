@@ -32,7 +32,8 @@ export type AuditAction =
   | 'deposit_received' | 'deposit_unreceived'
   | 'deposit_returned' | 'deposit_adjusted' | 'split_group_created'
   | 'exit_survey_sent'
-  | 'referral_credited';
+  | 'referral_credited'
+  | 'move_out_date_changed' | 'room_status_changed';
 
 export type AuditEntityType =
   | 'tenant' | 'prospect' | 'payment' | 'maintenance_ticket'
