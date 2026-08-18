@@ -40,36 +40,11 @@ export function formatPriceChf(lang: "fr" | "en"): string {
   return lang === "en" ? PRICE_CHF_EN : PRICE_CHF_FR;
 }
 
-// ⚠️ DISPONIBILITÉ — SOURCE UNIQUE (Jérôme : mets à jour ces 3 nombres quand la dispo change).
-// Tout en découle : compteur du hero, cartes de la home, badges des pages maisons,
-// option du formulaire candidature. Avant, ces 4 endroits étaient codés en dur et se
-// contredisaient (hero « 3 », cartes « Complet/1/Complet », badges « 1 » ×3, form « Plusieurs »).
-export const AVAILABILITY = {
-  lavilla: 1, // La Villa — Ville-la-Grand (10 chambres) — PROVISOIRE (Jérôme 15/06 : 1 partout)
-  leloft: 1, // Le Loft — Ambilly (7 chambres) — PROVISOIRE
-  lelodge: 1, // Le Lodge — Annemasse (12 chambres) — PROVISOIRE
-} as const;
-
-export type HouseKey = keyof typeof AVAILABILITY;
-
-export const totalAvailable = (): number =>
-  AVAILABILITY.lavilla + AVAILABILITY.leloft + AVAILABILITY.lelodge;
-
-// Libellé de dispo d'une maison (« 1 chambre disponible » / « Complet »).
-export function houseAvailabilityLabel(house: HouseKey, lang: "fr" | "en"): string {
-  const n = AVAILABILITY[house];
-  if (n <= 0) return lang === "en" ? "Fully booked" : "Complet";
-  if (n === 1) return lang === "en" ? "1 room available" : "1 chambre disponible";
-  return lang === "en" ? `${n} rooms available` : `${n} chambres disponibles`;
-}
-
-// Libellé global de dispo (hero / candidature), avec le mois pris à part par l'appelant.
-export function totalAvailabilityLabel(lang: "fr" | "en"): string {
-  const n = totalAvailable();
-  if (n <= 0) return lang === "en" ? "Join the waitlist" : "Rejoins la liste d'attente";
-  if (n === 1) return lang === "en" ? "1 room available" : "1 chambre disponible";
-  return lang === "en" ? `${n} rooms available` : `${n} chambres disponibles`;
-}
+// ⚠️ DISPONIBILITÉ — PLUS ICI (18/08/2026). L'ancienne constante `AVAILABILITY`,
+// tenue à la main, était restée aux valeurs provisoires du 15/06 (1/1/1) et rendait
+// 2 badges maisons sur 3 faux en prod. Source unique désormais : la vue Supabase
+// `v_public_rooms`, via `src/lib/availability.ts` (useRoomAvailability).
+// RÈGLE PERMANENTE : ne jamais réintroduire un chiffre de dispo en dur.
 
 export const STATS_DISPLAY = {
   en: {

@@ -3,7 +3,8 @@ import { colocGeneveHref } from "@/lib/siteLinks";
 import { Scrim } from "@/components/Scrim";
 import { ArrowRight, ChevronDown, Home, Users, Heart, MapPin } from "lucide-react";
 import { useLanguage } from "@/contexts/LanguageContext";
-import { STATS, STATS_DISPLAY, totalAvailable, totalAvailabilityLabel, PRICE_CHF_FR, PRICE_CHF_EN } from "@/data/stats";
+import { STATS, STATS_DISPLAY, PRICE_CHF_FR, PRICE_CHF_EN } from "@/data/stats";
+import { useRoomAvailability, globalAvailabilityLabel } from "@/lib/availability";
 
 /**
  * VERSION 9: STONE & BRASS — Condo premium contemporain
@@ -13,6 +14,7 @@ import { STATS, STATS_DISPLAY, totalAvailable, totalAvailabilityLabel, PRICE_CHF
 export function HeroV7() {
   const { language } = useLanguage();
   const L = language === "en" ? "en" : "fr";
+  const availability = useRoomAvailability();
 
   return (
     <>
@@ -121,18 +123,12 @@ export function HeroV7() {
             </span>
           </div>
 
-          {/* Availability signal — dynamic next month */}
+          {/* Availability signal — dispo réelle (v_public_rooms), dates comprises.
+              Avant : constante manuelle + mois suivant calculé, qui annonçait
+              « 3 chambres disponibles pour septembre » pour 1 seule libre. */}
           <p className="text-sm text-[#E0BB8A] mt-4 flex items-center gap-2">
             <span className="w-2 h-2 bg-[#E0BB8A] rounded-full animate-pulse" />
-            {(() => {
-              // Dispo = source unique (stats.ts AVAILABILITY) ; mois calculé dynamiquement.
-              const now = new Date();
-              const next = new Date(now.getFullYear(), now.getMonth() + 1, 1);
-              const month = next.toLocaleDateString(L === "en" ? "en-US" : "fr-FR", { month: "long", year: "numeric" });
-              const label = totalAvailabilityLabel(L);
-              if (totalAvailable() <= 0) return label;
-              return L === "en" ? `${label} for ${month}` : `${label} pour ${month}`;
-            })()}
+            {globalAvailabilityLabel(availability, L)}
           </p>
 
           {/* Stats bar */}

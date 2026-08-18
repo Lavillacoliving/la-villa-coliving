@@ -1,7 +1,7 @@
 import { LocalizedLink } from "@/components/LocalizedLink";
 import { ArrowRight, MapPin, Users } from "lucide-react";
 import { useLanguage } from "@/contexts/LanguageContext";
-import { AVAILABILITY, houseAvailabilityLabel, type HouseKey } from "@/data/stats";
+import { useRoomAvailability, houseBadgeLabel, type HouseKey } from "@/lib/availability";
 
 /**
  * VERSION 9: STONE & BRASS
@@ -11,6 +11,9 @@ import { AVAILABILITY, houseAvailabilityLabel, type HouseKey } from "@/data/stat
 export function HousesPreviewV7() {
   const { language } = useLanguage();
   const L = language === "en" ? "en" : "fr";
+  const availability = useRoomAvailability();
+  const badge = (house: HouseKey) =>
+    houseBadgeLabel(availability.byHouse[house], availability.known, L);
 
   const houses = [
     {
@@ -25,7 +28,7 @@ export function HousesPreviewV7() {
       alt: language === "en"
         ? "La Villa — premium coliving house with garden and pool in Ville-la-Grand, near Geneva"
         : "La Villa — maison de colocation premium avec jardin et piscine à Ville-la-Grand, près de Genève",
-      availability: houseAvailabilityLabel("lavilla", L),
+      availability: badge("lavilla"),
     },
     {
       id: "leloft",
@@ -39,7 +42,7 @@ export function HousesPreviewV7() {
       alt: language === "en"
         ? "Le Loft — urban coliving house with indoor pool in Ambilly, near Geneva"
         : "Le Loft — colocation urbaine avec piscine intérieure à Ambilly, près de Genève",
-      availability: houseAvailabilityLabel("leloft", L),
+      availability: badge("leloft"),
     },
     {
       id: "lelodge",
@@ -53,7 +56,7 @@ export function HousesPreviewV7() {
       alt: language === "en"
         ? "Le Lodge — coliving house with pool and gym in Annemasse, near Geneva"
         : "Le Lodge — maison de colocation avec piscine et salle de sport à Annemasse, près de Genève",
-      availability: houseAvailabilityLabel("lelodge", L),
+      availability: badge("lelodge"),
     },
   ];
 
@@ -98,14 +101,17 @@ export function HousesPreviewV7() {
                 <span className="absolute top-4 right-4 bg-black/60 backdrop-blur-sm text-white text-xs font-medium px-3 py-1.5 rounded-lg">
                   {language === "en" ? "20 min Geneva center" : "20 min centre Genève"}
                 </span>
-                {/* Availability badge — couleur dérivée de la dispo réelle (source unique), pas du libellé */}
-                <span className={`absolute bottom-4 left-4 backdrop-blur-sm text-white text-xs font-semibold px-3 py-1.5 rounded-lg ${
-                  AVAILABILITY[house.id as HouseKey] <= 0
-                    ? "bg-[#78716C]/90"
-                    : "bg-[#D4A574]/90"
-                }`}>
-                  {house.availability}
-                </span>
+                {/* Availability badge — couleur dérivée de la dispo réelle, pas du libellé.
+                    Libellé null (dispo inconnue) = pas de badge, jamais de chiffre inventé. */}
+                {house.availability && (
+                  <span className={`absolute bottom-4 left-4 backdrop-blur-sm text-white text-xs font-semibold px-3 py-1.5 rounded-lg ${
+                    availability.byHouse[house.id as HouseKey].available > 0
+                      ? "bg-[#D4A574]/90"
+                      : "bg-[#78716C]/90"
+                  }`}>
+                    {house.availability}
+                  </span>
+                )}
               </div>
 
               {/* Content */}
