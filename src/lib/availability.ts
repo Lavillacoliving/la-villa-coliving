@@ -41,6 +41,9 @@ export type HouseSummary = {
   house_slug: HouseKey;
   /** Chambres libres tout de suite. */
   available: number;
+  /** Nombre de CHAMBRES ayant une libération datée (pas de maisons : deux
+   *  départs dans la même maison doivent compter pour deux). */
+  upcoming: number;
   /** Prochaine libération datée, « YYYY-MM-DD », ou null. */
   next_free_date: string | null;
 };
@@ -90,6 +93,7 @@ function summarise(rooms: RoomRow[]): HouseSummary[] {
     return {
       house_slug: key,
       available: mine.filter((r) => r.availability === "available").length,
+      upcoming: dates.length,
       next_free_date: dates[0] ?? null,
     };
   });
@@ -116,6 +120,8 @@ async function refresh(): Promise<void> {
 export type HouseAvailability = {
   /** Chambres libres tout de suite. */
   available: number;
+  /** Chambres ayant une libération datée. */
+  upcoming: number;
   /** Prochaine libération datée, ou null. */
   nextFreeDate: string | null;
 };
@@ -125,14 +131,14 @@ export type SiteAvailability = {
   known: boolean;
   /** Chambres libres tout de suite, toutes maisons. */
   totalAvailable: number;
-  /** Nombre de maisons ayant une libération datée à venir. */
+  /** Chambres ayant une libération datée, toutes maisons. */
   upcoming: number;
   /** Plus proche libération datée, toutes maisons. */
   nextFreeDate: string | null;
   byHouse: Record<HouseKey, HouseAvailability>;
 };
 
-const UNKNOWN_HOUSE: HouseAvailability = { available: 0, nextFreeDate: null };
+const UNKNOWN_HOUSE: HouseAvailability = { available: 0, upcoming: 0, nextFreeDate: null };
 
 function derive(rows: HouseSummary[] | null): SiteAvailability {
   const byHouse = {
@@ -149,6 +155,9 @@ function derive(rows: HouseSummary[] | null): SiteAvailability {
     if (!HOUSE_KEYS.includes(row.house_slug)) continue;
     byHouse[row.house_slug] = {
       available: row.available,
+      // Repli sur l'ancienne forme embarquée (sans `upcoming`) : un HTML
+      // prérendu par la version précédente reste lisible sans afficher 0.
+      upcoming: typeof row.upcoming === "number" ? row.upcoming : (row.next_free_date ? 1 : 0),
       nextFreeDate: row.next_free_date,
     };
   }
@@ -160,7 +169,7 @@ function derive(rows: HouseSummary[] | null): SiteAvailability {
   return {
     known: true,
     totalAvailable: HOUSE_KEYS.reduce((n, k) => n + byHouse[k].available, 0),
-    upcoming: dates.length,
+    upcoming: HOUSE_KEYS.reduce((n, k) => n + byHouse[k].upcoming, 0),
     nextFreeDate: dates[0] ?? null,
     byHouse,
   };
