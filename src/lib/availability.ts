@@ -46,6 +46,9 @@ export type HouseSummary = {
   upcoming: number;
   /** Prochaine libération datée, « YYYY-MM-DD », ou null. */
   next_free_date: string | null;
+  /** Chambres libérées À `next_free_date` — PAS `upcoming` : deux départs à
+   *  deux dates différentes ne libèrent pas deux chambres le même jour. */
+  next_free_count: number;
 };
 
 // ── Store minimal partagé (hero, cartes, pages maisons, /candidature) ───────
@@ -95,6 +98,7 @@ function summarise(rooms: RoomRow[]): HouseSummary[] {
       available: mine.filter((r) => r.availability === "available").length,
       upcoming: dates.length,
       next_free_date: dates[0] ?? null,
+      next_free_count: dates.filter((d) => d === dates[0]).length,
     };
   });
 }
@@ -124,6 +128,8 @@ export type HouseAvailability = {
   upcoming: number;
   /** Prochaine libération datée, ou null. */
   nextFreeDate: string | null;
+  /** Chambres libérées à cette date précise (≠ `upcoming`). */
+  nextFreeCount: number;
 };
 
 export type SiteAvailability = {
@@ -138,7 +144,7 @@ export type SiteAvailability = {
   byHouse: Record<HouseKey, HouseAvailability>;
 };
 
-const UNKNOWN_HOUSE: HouseAvailability = { available: 0, upcoming: 0, nextFreeDate: null };
+const UNKNOWN_HOUSE: HouseAvailability = { available: 0, upcoming: 0, nextFreeDate: null, nextFreeCount: 0 };
 
 function derive(rows: HouseSummary[] | null): SiteAvailability {
   const byHouse = {
@@ -159,6 +165,8 @@ function derive(rows: HouseSummary[] | null): SiteAvailability {
       // prérendu par la version précédente reste lisible sans afficher 0.
       upcoming: typeof row.upcoming === "number" ? row.upcoming : (row.next_free_date ? 1 : 0),
       nextFreeDate: row.next_free_date,
+      nextFreeCount:
+        typeof row.next_free_count === "number" ? row.next_free_count : (row.next_free_date ? 1 : 0),
     };
   }
 
@@ -232,10 +240,56 @@ export function houseBadgeLabel(house: HouseAvailability, known: boolean, lang: 
   }
   if (house.nextFreeDate) {
     const date = formatFreeDate(house.nextFreeDate, lang);
-    return lang === "en" ? `Available from ${date}` : `Libre dès le ${date}`;
+    // « Libre dès le X » seul se lisait « la MAISON est libre » — faux pour une
+    // maison de 10 résidents. On nomme l'unité, et on compte les chambres
+    // libérées à cette date (repli à 1 : un HTML prérendu d'avant ce champ).
+    const n = house.nextFreeCount > 0 ? house.nextFreeCount : 1;
+    return lang === "en"
+      ? `${n} room${n > 1 ? "s" : ""} available from ${date}`
+      : `${n} chambre${n > 1 ? "s" : ""} libre${n > 1 ? "s" : ""} dès le ${date}`;
   }
   return lang === "en" ? "Fully booked" : "Complet";
 }
+
+// ── Code couleur du badge ──────────────────────────────────────────────────
+// Vert = libre maintenant, bronze = libération datée, pierre = complet. Dérivé
+// de la dispo réelle, jamais du libellé.
+//
+// Pastilles claires à texte foncé, et non plus aplats à texte blanc : le bronze
+// #D4A574 sur blanc plafonnait à 2,23:1, sous le minimum AA de 4,5:1 — illisible
+// en plein soleil, or l'audience est mobile. Ici : 8,1:1 / 5,7:1 / 8,2:1. La
+// forme reprend la puce blanche « N résidents » déjà posée sur ces photos.
+
+export type BadgeTone = "available" | "upcoming" | "full";
+
+/** `null` = dispo inconnue → l'appelant masque le badge (comme le libellé). */
+export function houseBadgeTone(house: HouseAvailability, known: boolean): BadgeTone | null {
+  if (!known) return null;
+  if (house.available > 0) return "available";
+  if (house.nextFreeDate) return "upcoming";
+  return "full";
+}
+
+/** Classes de la pastille posée sur une photo (cartes home, hero maison, blog). */
+export const BADGE_CHIP_CLASS: Record<BadgeTone, string> = {
+  available: "bg-[#2F7D5B]/95 text-white",
+  upcoming: "bg-[#F5E7D3]/95 text-[#7A5215]",
+  full: "bg-[#E7E5E4]/95 text-[#44403C]",
+};
+
+/** Classes de la même pastille sur fond blanc (colonne latérale page maison). */
+export const BADGE_PANEL_CLASS: Record<BadgeTone, string> = {
+  available: "bg-[#DFF3E6] text-[#0F5132]",
+  upcoming: "bg-[#F5E7D3] text-[#7A5215]",
+  full: "bg-[#E7E5E4] text-[#44403C]",
+};
+
+/** Pastille de statut (le point) qui accompagne le libellé dans la colonne. */
+export const BADGE_DOT_CLASS: Record<BadgeTone, string> = {
+  available: "bg-[#0F5132]",
+  upcoming: "bg-[#7A5215]",
+  full: "bg-[#44403C]",
+};
 
 /**
  * Libellé global (hero home, badge /candidature).
