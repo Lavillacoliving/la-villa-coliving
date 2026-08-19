@@ -1,7 +1,13 @@
 import { LocalizedLink } from "@/components/LocalizedLink";
 import { ArrowRight, MapPin, Users } from "lucide-react";
 import { useLanguage } from "@/contexts/LanguageContext";
-import { useRoomAvailability, houseBadgeLabel, type HouseKey } from "@/lib/availability";
+import {
+  useRoomAvailability,
+  houseBadgeLabel,
+  houseBadgeTone,
+  BADGE_CHIP_CLASS,
+  type HouseKey,
+} from "@/lib/availability";
 
 /**
  * VERSION 9: STONE & BRASS
@@ -14,6 +20,8 @@ export function HousesPreviewV7() {
   const availability = useRoomAvailability();
   const badge = (house: HouseKey) =>
     houseBadgeLabel(availability.byHouse[house], availability.known, L);
+  const tone = (house: HouseKey) =>
+    houseBadgeTone(availability.byHouse[house], availability.known);
 
   const houses = [
     {
@@ -29,6 +37,7 @@ export function HousesPreviewV7() {
         ? "La Villa — premium coliving house with garden and pool in Ville-la-Grand, near Geneva"
         : "La Villa — maison de colocation premium avec jardin et piscine à Ville-la-Grand, près de Genève",
       availability: badge("lavilla"),
+      tone: tone("lavilla"),
     },
     {
       id: "leloft",
@@ -43,6 +52,7 @@ export function HousesPreviewV7() {
         ? "Le Loft — urban coliving house with indoor pool in Ambilly, near Geneva"
         : "Le Loft — colocation urbaine avec piscine intérieure à Ambilly, près de Genève",
       availability: badge("leloft"),
+      tone: tone("leloft"),
     },
     {
       id: "lelodge",
@@ -57,6 +67,7 @@ export function HousesPreviewV7() {
         ? "Le Lodge — coliving house with pool and gym in Annemasse, near Geneva"
         : "Le Lodge — maison de colocation avec piscine et salle de sport à Annemasse, près de Genève",
       availability: badge("lelodge"),
+      tone: tone("lelodge"),
     },
   ];
 
@@ -103,12 +114,8 @@ export function HousesPreviewV7() {
                 </span>
                 {/* Availability badge — couleur dérivée de la dispo réelle, pas du libellé.
                     Libellé null (dispo inconnue) = pas de badge, jamais de chiffre inventé. */}
-                {house.availability && (
-                  <span className={`absolute bottom-4 left-4 backdrop-blur-sm text-white text-xs font-semibold px-3 py-1.5 rounded-lg ${
-                    availability.byHouse[house.id as HouseKey].available > 0
-                      ? "bg-[#D4A574]/90"
-                      : "bg-[#78716C]/90"
-                  }`}>
+                {house.availability && house.tone && (
+                  <span className={`absolute bottom-4 left-4 backdrop-blur-sm text-xs font-semibold px-3 py-1.5 rounded-lg ${BADGE_CHIP_CLASS[house.tone]}`}>
                     {house.availability}
                   </span>
                 )}

@@ -21,7 +21,15 @@ import {
 } from "lucide-react";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { STATS, PRICE_EN_NUM, PRICE_CHF_FR, PRICE_CHF_EN } from "@/data/stats";
-import { useRoomAvailability, houseBadgeLabel, type HouseKey } from "@/lib/availability";
+import {
+  useRoomAvailability,
+  houseBadgeLabel,
+  houseBadgeTone,
+  BADGE_CHIP_CLASS,
+  BADGE_PANEL_CLASS,
+  BADGE_DOT_CLASS,
+  type HouseKey,
+} from "@/lib/availability";
 
 import { Badge } from "@/components/ui/badge";
 import { HouseGallery } from "@/sections/HouseGallery";
@@ -1314,10 +1322,11 @@ export function HouseDetailPage() {
   // Dispo réelle (v_public_rooms) — remplace les champs available/badge/badgeColor
   // qui étaient figés dans getHousesData depuis la constante manuelle.
   const availability = useRoomAvailability();
-  const houseAvail = availability.byHouse[id as HouseKey] ?? { available: 0, nextFreeDate: null };
+  const houseAvail =
+    availability.byHouse[id as HouseKey] ?? { available: 0, upcoming: 0, nextFreeDate: null, nextFreeCount: 0 };
   const isAvailable = availability.known && houseAvail.available > 0;
   const availabilityBadge = houseBadgeLabel(houseAvail, availability.known, language === "en" ? "en" : "fr");
-  const badgeColor = isAvailable ? "#D4A574" : "#78716C";
+  const badgeTone = houseBadgeTone(houseAvail, availability.known);
   // « Candidater » dès qu'il y a une chambre libre OU une libération datée
   // (une maison qui se libère dans 3 semaines n'est pas une liste d'attente) ;
   // dispo inconnue → CTA de candidature aussi, jamais d'impasse.
@@ -1461,11 +1470,8 @@ export function HouseDetailPage() {
         <div className="absolute bottom-0 left-0 right-0 pb-8 pt-20">
           <div className="container-custom">
             <div className="flex flex-wrap items-center gap-3 mb-4">
-              {availabilityBadge && (
-                <Badge
-                  className="font-extrabold"
-                  style={{ background: badgeColor, color: "white" }}
-                >
+              {availabilityBadge && badgeTone && (
+                <Badge className={`font-extrabold backdrop-blur-sm ${BADGE_CHIP_CLASS[badgeTone]}`}>
                   {availabilityBadge}
                 </Badge>
               )}
@@ -1647,19 +1653,12 @@ export function HouseDetailPage() {
                   </div>
 
                   {/* Availability badge */}
-                  {availabilityBadge && (
+                  {availabilityBadge && badgeTone && (
                     <div className="mb-4">
-                      {isAvailable ? (
-                        <span className="inline-flex items-center gap-2 px-3 py-1.5 bg-[#D4A574]/10 text-[#D4A574] text-sm font-semibold rounded-lg">
-                          <span className="w-2 h-2 bg-[#D4A574] rounded-full animate-pulse" />
-                          {availabilityBadge}
-                        </span>
-                      ) : (
-                        <span className="inline-flex items-center gap-2 px-3 py-1.5 bg-[#78716C]/10 text-[#78716C] text-sm font-semibold rounded-lg">
-                          <span className="w-2 h-2 bg-[#78716C] rounded-full" />
-                          {availabilityBadge}
-                        </span>
-                      )}
+                      <span className={`inline-flex items-center gap-2 px-3 py-1.5 text-sm font-semibold rounded-lg ${BADGE_PANEL_CLASS[badgeTone]}`}>
+                        <span className={`w-2 h-2 rounded-full ${BADGE_DOT_CLASS[badgeTone]} ${isAvailable ? "animate-pulse" : ""}`} />
+                        {availabilityBadge}
+                      </span>
                     </div>
                   )}
 
