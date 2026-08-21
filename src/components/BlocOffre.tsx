@@ -1,4 +1,5 @@
 import { LocalizedLink } from "@/components/LocalizedLink";
+import { responsiveImage } from "@/lib/responsiveImage";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { ArrowRight, Check } from "lucide-react";
 import { STATS, formatPriceChf } from "@/data/stats";
@@ -131,6 +132,7 @@ export function BlocOffre({ variant, slug, bucket }: BlocOffreProps) {
               alt={`${h.label} — coliving près de Genève`}
               className="w-full h-36 sm:h-full object-cover"
               loading="lazy"
+              {...responsiveImage(h.img, "(min-width: 640px) 176px, 100vw")}
             />
           </div>
           <div className="p-5 flex-1">
@@ -167,6 +169,7 @@ export function BlocOffre({ variant, slug, bucket }: BlocOffreProps) {
               alt={`${h.label} — coliving près de Genève`}
               className="w-full h-52 md:h-full object-cover"
               loading="lazy"
+              {...responsiveImage(h.img, "(min-width: 768px) 40vw, 100vw")}
             />
             {availabilityBadge && availabilityTone && (
               <span className={`absolute top-3 left-3 text-xs font-semibold px-3 py-1 rounded-full ${BADGE_CHIP_CLASS[availabilityTone]}`}>

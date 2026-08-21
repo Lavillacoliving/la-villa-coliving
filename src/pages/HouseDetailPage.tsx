@@ -1,4 +1,5 @@
 import { useLocation } from "react-router-dom";
+import { responsiveImage } from "@/lib/responsiveImage";
 import { LocalizedLink } from "@/components/LocalizedLink";
 import { colocGeneveHref } from "@/lib/siteLinks";
 import { Scrim } from "@/components/Scrim";
@@ -1456,6 +1457,7 @@ export function HouseDetailPage() {
                     width={1920}
                     height={1080}
                     {...(index === 0 ? { fetchPriority: "high" as const } : {})}
+                    {...responsiveImage(img, "100vw")}
                   />
                   <Scrim />
                 </div>

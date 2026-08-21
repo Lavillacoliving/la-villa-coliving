@@ -1,4 +1,5 @@
 import { LocalizedLink } from "@/components/LocalizedLink";
+import { responsiveImage } from "@/lib/responsiveImage";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { MapPin, Users, ArrowRight, Check, X } from "lucide-react";
 import { SEO } from "@/components/SEO";
@@ -184,6 +185,7 @@ export function HousesPageV4() {
                     alt={house.alt}
                     className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                     loading="lazy"
+                    {...responsiveImage(house.image, "(min-width: 768px) 33vw, 100vw")}
                   />
                   <span className="absolute top-4 left-4 bg-white/90 backdrop-blur-sm text-[#1C1917] text-xs font-semibold px-3 py-1.5 rounded-lg">
                     {house.capacity} {language === "en" ? "residents" : "résidents"}

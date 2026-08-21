@@ -1,4 +1,5 @@
-@import url('https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Inter:wght@300;400;500;600;700&display=swap');
+/* Fonts Google : chargées en non-bloquant depuis index.html (R2, checkpoint 21/08/2026).
+   L'@import ici rendait la feuille Google render-blocking (~0,8 s/page en mobile simulé). */
 
 @tailwind base;
 @tailwind components;
