@@ -13,6 +13,7 @@ interface Prospect {
   notes: string | null; assigned_to: string | null;
   referred_by_tenant_id: string | null;
   lost_reason: string | null;
+  is_test: boolean;
   created_at: string;
 }
 
@@ -84,6 +85,7 @@ const EMPTY_PROSPECT: Partial<Prospect> = {
   occupation:null, move_in_date:null, lease_duration:null,
   notes:null, assigned_to:null, referred_by_tenant_id:null,
   lost_reason:null,
+  is_test:false,
 };
 
 export default function DashboardProspectsPage() {
@@ -156,6 +158,8 @@ export default function DashboardProspectsPage() {
       referred_by_tenant_id: modal.referred_by_tenant_id || null,
       // La raison n'a de sens que pour « Perdu » — nettoyée sinon (retour en pipeline)
       lost_reason: modal.status === 'lost' ? (modal.lost_reason || null) : null,
+      // Soumission de test (équipe) : exclue du bulletin SEO et des comptages (21/08/2026)
+      is_test: !!modal.is_test,
     };
     // assigned_to : on n'envoie la valeur que si renseignée, pour laisser le défaut DB ('gestionnaire') à l'insert
     if (modal.assigned_to) data.assigned_to = modal.assigned_to;
@@ -296,7 +300,7 @@ export default function DashboardProspectsPage() {
                   <div key={p.id} onClick={()=>openModal(p)} style={{background:'#fff',borderRadius:'8px',padding:'10px 12px',marginBottom:'8px',cursor:'pointer',boxShadow:'0 1px 3px rgba(0,0,0,0.06)',borderLeft:`3px solid ${STATUS_COLORS[stage]}`,transition:'transform 0.15s'}}
                     onMouseOver={e=>e.currentTarget.style.transform='translateY(-1px)'}
                     onMouseOut={e=>e.currentTarget.style.transform='none'}>
-                    <div style={{fontWeight:600,fontSize:'13px',color:'#1a1a2e',marginBottom:'4px'}}>{p.first_name} {p.last_name}</div>
+                    <div style={{fontWeight:600,fontSize:'13px',color:'#1a1a2e',marginBottom:'4px'}}>{p.first_name} {p.last_name}{p.is_test && <span style={{marginLeft:6,fontSize:10,fontWeight:700,padding:'1px 6px',borderRadius:4,background:'#FEF3C7',color:'#92400E'}}>TEST</span>}</div>
                     {p.property_interest && <div style={{fontSize:'11px',color:'#888',marginBottom:'2px'}}>🏠 {propertyName(p.property_interest)}</div>}
                     {p.occupation && <div style={{fontSize:'11px',color:'#888',marginBottom:'2px'}}>💼 {p.occupation}</div>}
                     {p.lease_duration && <div style={{fontSize:'11px',color:'#888',marginBottom:'2px'}}>⏳ {DURATION_LABELS[p.lease_duration]||p.lease_duration}</div>}
@@ -389,6 +393,12 @@ export default function DashboardProspectsPage() {
                   </select>
                 </div>
               )}
+              <div><label style={S.fieldLabel}>Test</label>
+                <label style={{display:'flex',alignItems:'center',gap:8,fontSize:13,cursor:'pointer'}}>
+                  <input type="checkbox" checked={!!modal.is_test} onChange={e=>setModal({...modal,is_test:e.target.checked})} />
+                  Soumission de test — exclue du bulletin et des statistiques
+                </label>
+              </div>
               <div><label style={S.fieldLabel}>Maison d'intérêt</label>
                 <select style={S.input} value={modal.property_interest||''} onChange={e=>setModal({...modal,property_interest:e.target.value||null})}>
                   <option value="">— (indifférent)</option>

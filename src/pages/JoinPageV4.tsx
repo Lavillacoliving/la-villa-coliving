@@ -29,6 +29,9 @@ export function JoinPageV4() {
   const [searchParams] = useSearchParams();
   const refSrc = (searchParams.get("src") ?? "").slice(0, 50);
   const refArticle = (searchParams.get("article") ?? "").slice(0, 120);
+  // Soumission de TEST (équipe) : /candidature?test=1 → prospects.is_test = true côté
+  // Edge (v12), exclue du bulletin et des comptages. Jamais exposée dans l'UI.
+  const isTest = searchParams.get("test") === "1";
 
   // Formulaire 1 ÉTAPE depuis S33 (10/08/2026) : arrival/duration retirés du
   // formulaire — ces questions sont posées par Fanny à l'appel de qualification.
@@ -59,6 +62,7 @@ export function JoinPageV4() {
     // Couche « observée » de l'attribution (l'URL d'arrivée), à côté du canal déclaré.
     if (refSrc) payload.ref_src = refSrc;
     if (refArticle) payload.ref_article = refArticle;
+    if (isTest) payload.isTest = "1";
     // Langue explicite : l'Edge Function ne peut plus se fier au Referer
     // (la Referrer-Policy par défaut ampute le path en cross-origin, ce qui
     // loggait toutes les soumissions en « fr »).
