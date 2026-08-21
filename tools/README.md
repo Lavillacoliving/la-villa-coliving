@@ -32,6 +32,13 @@ Paramètres à ajuster dans `tools/lib/config.mjs` : liste des pages money (`MON
 
 Voir `tools/README-mining-gsc.md` (même dossier) : formats d'entrée (export CSV de Search Console ou JSON de la sonde n8n), options, lecture du rapport `tools/out/mining_gsc_AAAA-MM.md`.
 
+Mode **sonde** (données fraîches, page × requête × pays) : la sonde n8n « Cowork — Sonde Google » doit être active (à désactiver après usage : webhook sans authentification). Son URL Production se met dans le terminal, jamais dans un fichier du repo :
+```bash
+export GSC_SONDE_URL="https://…/webhook/…"
+node tools/gsc-sonde-pull.mjs                       # 3 mois glissants → ../GSC_exports/sonde/*.json (hors repo)
+node tools/mining-gsc.mjs --json ../GSC_exports/sonde/gsc_page-query-country_<début>_<fin>_p1.json
+```
+
 ## 3. Tests — `npm run test:tools`
 
 Vérifie les extracteurs sur des données synthétiques (`tools/test/`). À lancer après toute modification de `tools/lib/*`.
