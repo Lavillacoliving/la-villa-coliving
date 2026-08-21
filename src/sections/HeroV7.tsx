@@ -119,7 +119,7 @@ export function HeroV7() {
               className="text-white/90 text-sm font-medium"
               title={language === "en" ? "Average rating — resident surveys 2021-2026" : "Note moyenne — enquêtes résidents 2021-2026"}
             >
-              {`${STATS_DISPLAY[L].rating}/5 — ${STATS_DISPLAY[L].residents}`}
+              {`${STATS_DISPLAY[L].rating}/5 ${language === "en" ? "(resident surveys)" : "(enquêtes résidents)"} — ${STATS_DISPLAY[L].residents}`}
             </span>
           </div>
 

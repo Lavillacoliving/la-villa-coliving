@@ -139,12 +139,12 @@ export function AnnemasseColocationPage() {
                 <Euro className="w-7 h-7 text-[#D4A574]" />
               </div>
               <h3 className="text-xl font-medium text-[#1C1917] mb-3">
-                {language === "en" ? "30-50% cheaper than Geneva" : "30 à 50 % moins cher que Genève"}
+                {language === "en" ? "Same Swiss salary, real living space" : "Le même salaire suisse, un vrai espace de vie"}
               </h3>
               <p className="text-[#57534E] leading-relaxed">
                 {language === "en"
-                  ? `Same Swiss salary, but rent and daily expenses 30-50 % lower than central Geneva. A 12 m² room in Geneva costs CHF 1,800-2,500 — we offer the same comfort at ${PRICE_CHF_EN} all-inclusive.`
-                  : `Même salaire suisse, mais loyer et coût de la vie 30 à 50 % inférieurs au centre de Genève. Une chambre 12 m² à Genève coûte 1 800-2 500 CHF — on offre le même confort à ${PRICE_CHF_FR} tout inclus.`}
+                  ? `You keep your Swiss salary and live on the French side, in a real house: 37-42 m² of living space per housemate, pool, sauna and gym included, from ${PRICE_CHF_EN}/month all-inclusive — no application or agency fees.`
+                  : `Tu gardes ton salaire suisse et tu vis côté France, dans une vraie maison : 37-42 m² d'espace de vie par colocataire, piscine, sauna et salle de sport inclus, dès ${PRICE_CHF_FR}/mois tout inclus — sans frais de dossier ni d'agence.`}
               </p>
             </div>
             <div className="text-center">

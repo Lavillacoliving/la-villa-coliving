@@ -320,7 +320,7 @@ export function ColivingPageV4() {
                 <div className="flex items-center gap-2">
                   <Star className="w-5 h-5 text-[#D4A574]" />
                   <span className="text-sm text-[#57534E]">
-                    {language === "en" ? `${STATS_DISPLAY[L].rating}/5 rating` : `Note ${STATS_DISPLAY[L].rating}/5`}
+                    {language === "en" ? `${STATS_DISPLAY[L].rating}/5 · resident surveys` : `Note ${STATS_DISPLAY[L].rating}/5 · enquêtes résidents`}
                   </span>
                 </div>
               </div>

@@ -110,7 +110,7 @@ export function JoinPageV4() {
         title={language === "en" ? "Apply — Join La Villa Coliving" : "Candidater — Rejoindre La Villa Coliving"}
         description={language === "en"
           ? "Apply to join La Villa Coliving near Geneva. Simple process, move in within 2 weeks. Furnished all-inclusive rooms for cross-border workers & expats."
-          : "Postulez en 2 minutes. Communauté sélectionnée, emménagement en 2 semaines. Chambres meublées tout inclus près de Genève."}
+          : "Candidate en 30 secondes, sans engagement. Réponse sous 48 h, emménagement possible en 2 semaines. Chambres meublées tout inclus près de Genève."}
         url="https://www.lavillacoliving.com/candidature"
       />
       {/* Hero compacté (S33) : ≤ 0,8 écran, le formulaire doit arriver vite. */}
