@@ -3,6 +3,15 @@ import { createRoot, hydrateRoot } from "react-dom/client";
 import "./index.css";
 import App from "./App.tsx";
 import { preloadRouteModule } from "@/lib/routePreload";
+import { captureAttribution, captureTestFlag } from "@/lib/attribution";
+
+// Attribution Ads (utm_* + gclid) et marqueur de test (?test=1) : capturés ICI, dès
+// l'exécution du bundle et AVANT l'hydratation — l'URL d'atterrissage est encore intacte,
+// quelle que soit la page d'entrée (/, /en, blog, pages Annemasse…). First-touch de
+// session, write-once, sessionStorage (voir src/lib/attribution.ts). Aucun accès au DOM :
+// zéro impact sur l'hydratation. Brief UTM/GCLID du 22/08/2026 (prérequis Ads 25/08).
+captureAttribution();
+captureTestFlag();
 
 const rootElement = document.getElementById("root")!;
 

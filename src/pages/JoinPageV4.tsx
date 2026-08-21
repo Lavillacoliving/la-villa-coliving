@@ -7,6 +7,7 @@ import { SUPABASE_URL, SUPABASE_ANON_KEY } from "@/lib/supabase";
 import { STATS, STATS_DISPLAY, PRICE_CHF_FR, PRICE_CHF_EN } from "@/data/stats";
 import { useFormTelemetry } from "@/hooks/useFormTelemetry";
 import { useRoomAvailability, shortAvailabilityLabel } from "@/lib/availability";
+import { attributionPayload, isTestSession } from "@/lib/attribution";
 
 type FormStatus = "idle" | "submitting" | "success" | "error";
 
@@ -31,7 +32,9 @@ export function JoinPageV4() {
   const refArticle = (searchParams.get("article") ?? "").slice(0, 120);
   // Soumission de TEST (équipe) : /candidature?test=1 → prospects.is_test = true côté
   // Edge (v12), exclue du bulletin et des comptages. Jamais exposée dans l'UI.
-  const isTest = searchParams.get("test") === "1";
+  // Depuis le 22/08/2026, `?test=1` posé sur N'IMPORTE QUELLE page d'atterrissage marque
+  // aussi toute la session (sessionStorage, cf. src/lib/attribution.ts — protocole LOT F).
+  const isTest = searchParams.get("test") === "1" || isTestSession();
 
   // Formulaire 1 ÉTAPE depuis S33 (10/08/2026) : arrival/duration retirés du
   // formulaire — ces questions sont posées par Fanny à l'appel de qualification.
@@ -63,6 +66,11 @@ export function JoinPageV4() {
     if (refSrc) payload.ref_src = refSrc;
     if (refArticle) payload.ref_article = refArticle;
     if (isTest) payload.isTest = "1";
+    // Attribution technique Ads (utm_* + gclid) capturée à l'atterrissage de la session
+    // (first-touch, sessionStorage — src/lib/attribution.ts) → colonnes dédiées côté base
+    // (Edge v13). Le canal DÉCLARÉ (`source`) n'est jamais surchargé. Absente → rien
+    // d'envoyé : un client ancien/en cache reste strictement rétrocompatible.
+    Object.assign(payload, attributionPayload());
     // Langue explicite : l'Edge Function ne peut plus se fier au Referer
     // (la Referrer-Policy par défaut ampute le path en cross-origin, ce qui
     // loggait toutes les soumissions en « fr »).

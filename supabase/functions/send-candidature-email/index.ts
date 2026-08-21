@@ -1,4 +1,21 @@
 // Supabase Edge Function — send-candidature-email
+// v13 — 22/08/2026 — Attribution Ads (UTM + gclid) — brief UTM/GCLID, prérequis Ads 25/08
+//   CHANGEMENTS vs v12 :
+//   1. Payload optionnel `utm_source` / `utm_medium` / `utm_campaign` / `utm_content` /
+//      `utm_term` / `gclid` (capturés à l'atterrissage par le front — first-touch de
+//      session, sessionStorage, cf. src/lib/attribution.ts) → écrits TELS QUELS (trim,
+//      256 caractères max, aucune autre normalisation) dans les colonnes homonymes de
+//      form_submissions ET prospects (migration `utm_attribution_2026_08_22`, text NULL).
+//   2. `prospects.source` n'est PAS touché : le déclaratif du candidat prime, l'attribution
+//      technique vit dans ses colonnes dédiées (`is_paid` = gclid présent OU utm_medium=cpc,
+//      calculé dans v_form_submissions_clean et bulletin_seo_metrics).
+//   3. Rétrocompatible dans les deux sens : sans ces champs dans le payload, les corps
+//      envoyés à PostgREST sont identiques à la v12 ; si les colonnes sont refusées
+//      (migration absente), filet : l'insert est rejoué SANS les champs d'attribution —
+//      une candidature n'est jamais perdue pour un champ de mesure.
+//      Ordre de déploiement recommandé : migration → v13 → front.
+//   ⚠️ Déployer au Dashboard Supabase (collage manuel) ou via MCP deploy_edge_function
+//      (verify_jwt = true, inchangé).
 // v12 — 21/08/2026 — Marqueur de test (checkpoint R1)
 //   CHANGEMENTS vs v11 :
 //   1. Payload optionnel `isTest` ("1"/"true", posé par /candidature?test=1) →
@@ -320,6 +337,21 @@ Deno.serve(async (req: Request) => {
   // Soumission de test (v12) : /candidature?test=1 → exclue des comptages.
   const isTest = ["1", "true"].includes(String(data.isTest ?? "").trim().toLowerCase());
 
+  // Attribution technique Ads (v13) : utm_* + gclid posés par le front (first-touch de
+  // session). Trim + 256 caractères max, aucune autre normalisation ; vide → null.
+  // Les clés ne sont jointes aux inserts QUE si au moins une valeur est présente :
+  // sans attribution, les corps envoyés à PostgREST sont identiques à la v12.
+  const ATTRIBUTION_KEYS = ["utm_source", "utm_medium", "utm_campaign", "utm_content", "utm_term", "gclid"] as const;
+  const attribution: Record<string, string | null> = {};
+  for (const key of ATTRIBUTION_KEYS) {
+    const value = String(data[key] ?? "").trim().slice(0, 256);
+    attribution[key] = value || null;
+  }
+  const hasAttribution = Object.values(attribution).some((v) => v !== null);
+  const attributionFields: Record<string, string | null> = hasAttribution ? attribution : {};
+  const withoutAttribution = (body: Record<string, unknown>): Record<string, unknown> =>
+    Object.fromEntries(Object.entries(body).filter(([k]) => !(ATTRIBUTION_KEYS as readonly string[]).includes(k)));
+
   // 1. Email de notification admin
   const adminEmail = {
     from: FROM_ADMIN_NOTIF,
@@ -373,21 +405,32 @@ Deno.serve(async (req: Request) => {
     const sbKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY");
     if (sbUrl && sbKey) {
       // `language` : calculé plus haut (payload explicite > heuristique Referer).
-      const logRes = await fetch(`${sbUrl}/rest/v1/form_submissions`, {
-        method: "POST",
-        headers: {
-          "apikey": sbKey,
-          "Authorization": `Bearer ${sbKey}`,
-          "Content-Type": "application/json",
-          "Prefer": "return=minimal",
-        },
-        body: JSON.stringify({
-          form_type: "candidature",
-          source: data.source || null,
-          language,
-          is_test: isTest,
-        }),
-      });
+      const logSubmission = (body: Record<string, unknown>) =>
+        fetch(`${sbUrl}/rest/v1/form_submissions`, {
+          method: "POST",
+          headers: {
+            "apikey": sbKey,
+            "Authorization": `Bearer ${sbKey}`,
+            "Content-Type": "application/json",
+            "Prefer": "return=minimal",
+          },
+          body: JSON.stringify(body),
+        });
+      const submissionRow: Record<string, unknown> = {
+        form_type: "candidature",
+        source: data.source || null,
+        language,
+        is_test: isTest,
+        // v13 : attribution Ads — clés présentes uniquement si au moins une valeur.
+        ...attributionFields,
+      };
+      let logRes = await logSubmission(submissionRow);
+      if (!logRes.ok && hasAttribution) {
+        // Filet v13 : colonnes d'attribution refusées (migration absente…) → on rejoue
+        // sans elles plutôt que de perdre la trace.
+        console.error("form_submissions logging rejected with attribution fields, retrying without", logRes.status, await logRes.text().catch(() => ""));
+        logRes = await logSubmission(withoutAttribution(submissionRow));
+      }
       if (!logRes.ok) {
         console.error("form_submissions logging failed", logRes.status, await logRes.text().catch(() => ""));
       }
@@ -508,6 +551,8 @@ Deno.serve(async (req: Request) => {
         status: "new",
         notes: notesParts.length > 0 ? notesParts.join("\n") : null,
         is_test: isTest,
+        // v13 : attribution Ads dans ses colonnes dédiées (`source` = déclaratif, intact).
+        ...attributionFields,
       };
 
       const insertProspect = (body: Record<string, unknown>) =>
@@ -522,12 +567,21 @@ Deno.serve(async (req: Request) => {
           body: JSON.stringify(body),
         });
 
-      let insertRes = await insertProspect(prospect);
+      let prospectBody: Record<string, unknown> = prospect;
+      let insertRes = await insertProspect(prospectBody);
       if (!insertRes.ok && prospectSource !== "site_web") {
         // Filet : si la contrainte prospects_source_check ne connaît pas la valeur,
         // on ne perd JAMAIS la candidature — on retombe sur site_web, détail en notes.
         console.error("prospects insert rejected for source=" + prospectSource + ", retrying with site_web", insertRes.status, await insertRes.text().catch(() => ""));
-        insertRes = await insertProspect({ ...prospect, source: "site_web" });
+        prospectBody = { ...prospectBody, source: "site_web" };
+        insertRes = await insertProspect(prospectBody);
+      }
+      if (!insertRes.ok && hasAttribution) {
+        // Filet v13 : colonnes d'attribution refusées (migration absente…) → on rejoue
+        // sans elles. Une candidature n'est JAMAIS perdue pour un champ de mesure.
+        console.error("prospects insert rejected with attribution fields, retrying without", insertRes.status, await insertRes.text().catch(() => ""));
+        prospectBody = withoutAttribution(prospectBody);
+        insertRes = await insertProspect(prospectBody);
       }
       if (!insertRes.ok) {
         console.error("prospects insert failed", insertRes.status, await insertRes.text().catch(() => ""));
