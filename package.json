@@ -12,7 +12,7 @@
     "lint:seo": "node scripts/seo-lint.mjs",
     "link:graph": "node tools/link-graph.mjs",
     "mining:gsc": "node tools/mining-gsc.mjs",
-    "test:tools": "node --test tools/test/",
+    "test:tools": "node --test tools/test/*.test.mjs",
     "preview": "vite preview"
   },
   "dependencies": {
