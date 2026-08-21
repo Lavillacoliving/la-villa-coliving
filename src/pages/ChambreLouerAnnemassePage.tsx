@@ -1,4 +1,5 @@
 import { LocalizedLink } from "@/components/LocalizedLink";
+import { WhatsAppButton } from "@/components/WhatsAppButton";
 import { colocGeneveHref } from "@/lib/siteLinks";
 import { useState } from "react";
 import { useLanguage } from "@/contexts/LanguageContext";
@@ -398,6 +399,7 @@ export function ChambreLouerAnnemassePage() {
           <Euro className="w-5 h-5 text-[#D4A574]/40 mx-auto mt-6" />
         </div>
       </section>
+      <WhatsAppButton context={language === "en" ? "Rooms for rent Annemasse" : "Chambre à louer Annemasse"} />
     </main>
   );
 }

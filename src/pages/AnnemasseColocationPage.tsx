@@ -1,4 +1,5 @@
 import { LocalizedLink } from "@/components/LocalizedLink";
+import { WhatsAppButton } from "@/components/WhatsAppButton";
 import { colocGeneveHref } from "@/lib/siteLinks";
 import { useState } from "react";
 import { useLanguage } from "@/contexts/LanguageContext";
@@ -530,6 +531,7 @@ export function AnnemasseColocationPage() {
           </div>
         </div>
       </section>
+      <WhatsAppButton context={language === "en" ? "Shared housing Annemasse" : "Colocation Annemasse"} />
     </main>
   );
 }

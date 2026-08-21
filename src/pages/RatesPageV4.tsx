@@ -1,4 +1,5 @@
 import { useLanguage } from "@/contexts/LanguageContext";
+import { WhatsAppButton } from "@/components/WhatsAppButton";
 import { Check, ArrowRight, Home, Sparkles, X, Star, Droplets } from "lucide-react";
 import { LocalizedLink } from "@/components/LocalizedLink";
 import { colocGeneveHref } from "@/lib/siteLinks";
@@ -1343,6 +1344,8 @@ export function RatesPageV4() {
           </LocalizedLink>
         </div>
       </section>
+      {/* R3 (checkpoint 21/08) : canal court sur une page d'entrée — pas sur /candidature (71 % de complétion, on ne détourne pas). */}
+      <WhatsAppButton context={language === "en" ? "Rates" : "Tarifs"} />
     </main>
   );
 }
