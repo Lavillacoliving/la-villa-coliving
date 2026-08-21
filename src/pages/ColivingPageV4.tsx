@@ -256,6 +256,13 @@ export function ColivingPageV4() {
                   : "Explorer Nos Maisons"}
                 <ArrowRight className="w-5 h-5" />
               </LocalizedLink>
+              <p className="mt-4 text-sm text-[#57534E]">
+                {language === "en" ? "Or start with " : "Ou commence par "}
+                <LocalizedLink to="/annemasse-colocation" className="underline underline-offset-4 hover:text-[#1C1917]">
+                  {language === "en" ? "shared housing in Annemasse" : "la colocation à Annemasse"}
+                </LocalizedLink>
+                {language === "en" ? " — our three houses are in Annemasse Agglo." : " — nos trois maisons sont dans Annemasse Agglo."}
+              </p>
             </div>
 
             <div className="relative">

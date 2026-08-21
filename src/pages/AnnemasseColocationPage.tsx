@@ -16,6 +16,13 @@ import {
   Euro,
 } from "lucide-react";
 import { PRICE_CHF_FR, PRICE_CHF_EN } from "@/data/stats";
+import {
+  useRoomAvailability,
+  houseBadgeLabel,
+  houseBadgeTone,
+  BADGE_CHIP_CLASS,
+  type HouseKey,
+} from "@/lib/availability";
 
 // ───────────────────────────────────────────────────────────────────────
 // FAQ (FR) — cible "colocation annemasse" 880/mois + secondaires
@@ -54,6 +61,26 @@ const annemasseFAQ = [
 export function AnnemasseColocationPage() {
   const { language } = useLanguage();
   const [openFAQ, setOpenFAQ] = useState<number | null>(null);
+
+  // R5 (checkpoint 21/08) — la page devient une destination : dispo réelle des
+  // 3 maisons d'Annemasse Agglo (v_public_rooms via useRoomAvailability, jamais
+  // de chiffre statique ; libellé qualitatif si la vue est injoignable).
+  const availability = useRoomAvailability();
+  const L: "fr" | "en" = language === "en" ? "en" : "fr";
+  const houseChips = (
+    [
+      ["lavilla", "La Villa · Ville-la-Grand"],
+      ["leloft", "Le Loft · Ambilly"],
+      ["lelodge", "Le Lodge · Annemasse"],
+    ] as Array<[HouseKey, string]>
+  )
+    .map(([key, name]) => ({
+      key,
+      name,
+      label: houseBadgeLabel(availability.byHouse[key], availability.known, L),
+      tone: houseBadgeTone(availability.byHouse[key], availability.known),
+    }))
+    .filter((c) => c.label && c.tone);
 
   // JSON-LD FAQPage — rich snippet
   const faqSchema = {
@@ -120,6 +147,20 @@ export function AnnemasseColocationPage() {
               {language === "en" ? "See the 3 houses" : "Voir les 3 maisons"}
             </LocalizedLink>
           </div>
+          {houseChips.length > 0 && (
+            <div className="mt-8 flex flex-wrap justify-center gap-2" aria-label={language === "en" ? "Live availability" : "Disponibilités en temps réel"}>
+              {houseChips.map((c) => (
+                <span
+                  key={c.key}
+                  className={`inline-flex items-center gap-1.5 text-xs font-semibold px-3 py-1.5 rounded-lg ${BADGE_CHIP_CLASS[c.tone as keyof typeof BADGE_CHIP_CLASS]}`}
+                >
+                  <span className="font-bold">{c.name}</span>
+                  <span aria-hidden="true">—</span>
+                  {c.label}
+                </span>
+              ))}
+            </div>
+          )}
         </div>
       </section>
 

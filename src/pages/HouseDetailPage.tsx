@@ -1898,6 +1898,18 @@ export function HouseDetailPage() {
                       </li>
                     ))}
                   </ul>
+                  {id === "lelodge" && (
+                    <p className="mt-5 text-sm text-[#57534E]">
+                      {language === "en" ? "See also: " : "Voir aussi : "}
+                      <LocalizedLink to="/annemasse-colocation" className="underline underline-offset-4 hover:text-[#1C1917]">
+                        {language === "en" ? "shared housing in Annemasse" : "colocation à Annemasse"}
+                      </LocalizedLink>
+                      {" · "}
+                      <LocalizedLink to="/chambre-a-louer-annemasse" className="underline underline-offset-4 hover:text-[#1C1917]">
+                        {language === "en" ? "rooms for rent in Annemasse" : "chambre à louer à Annemasse"}
+                      </LocalizedLink>
+                    </p>
+                  )}
                 </div>
 
                 <div>

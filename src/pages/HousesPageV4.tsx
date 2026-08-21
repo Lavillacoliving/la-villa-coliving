@@ -253,12 +253,24 @@ export function HousesPageV4() {
                         {language === "en" ? "Apply" : "Postuler"}
                       </LocalizedLink>
                     </div>
-                    <LocalizedLink
-                      to={`/${house.id}`}
-                      className="mt-3 inline-block text-sm text-[#78716C] underline hover:text-[#D4A574] transition-colors"
-                    >
-                      {language === "en" ? `Flatshare in ${house.location}` : `Colocation à ${house.location}`}
-                    </LocalizedLink>
+                    {house.id === "lelodge" ? (
+                      <p className="mt-3 text-sm text-[#78716C]">
+                        <LocalizedLink to="/annemasse-colocation" className="underline hover:text-[#D4A574] transition-colors">
+                          {language === "en" ? "Shared housing in Annemasse" : "Colocation à Annemasse"}
+                        </LocalizedLink>
+                        {" · "}
+                        <LocalizedLink to="/chambre-a-louer-annemasse" className="underline hover:text-[#D4A574] transition-colors">
+                          {language === "en" ? "Rooms for rent in Annemasse" : "Chambre à louer à Annemasse"}
+                        </LocalizedLink>
+                      </p>
+                    ) : (
+                      <LocalizedLink
+                        to={`/${house.id}`}
+                        className="mt-3 inline-block text-sm text-[#78716C] underline hover:text-[#D4A574] transition-colors"
+                      >
+                        {language === "en" ? `Flatshare in ${house.location}` : `Colocation à ${house.location}`}
+                      </LocalizedLink>
+                    )}
                   </div>
                 </div>
               </div>
