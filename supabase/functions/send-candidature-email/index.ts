@@ -1,4 +1,14 @@
 // Supabase Edge Function — send-candidature-email
+// v12 — 21/08/2026 — Marqueur de test (checkpoint R1)
+//   CHANGEMENTS vs v11 :
+//   1. Payload optionnel `isTest` ("1"/"true", posé par /candidature?test=1) →
+//      `is_test = true` sur form_submissions ET prospects (colonnes ajoutées le
+//      21/08/2026, défaut false). Le bulletin et la vue v_form_submissions_clean
+//      excluent ces lignes. Sans le champ : comportement v11 strictement identique.
+//   2. Email admin préfixé « [TEST] » dans ce cas (les emails partent toujours,
+//      pour vérifier la chaîne de bout en bout).
+//   ⚠️ Déployer au Dashboard Supabase (collage manuel) — rétrocompatible, aucun
+//      ordre imposé vis-à-vis du front.
 // v11 — 10/08/2026 — Formulaire 1 étape (sprint conversion S33)
 //   CHANGEMENTS vs v10 :
 //   1. `arrival` et `duration` ne sont PLUS requis (retirés du formulaire ;
@@ -307,12 +317,15 @@ Deno.serve(async (req: Request) => {
         ? "en"
         : "fr";
 
+  // Soumission de test (v12) : /candidature?test=1 → exclue des comptages.
+  const isTest = ["1", "true"].includes(String(data.isTest ?? "").trim().toLowerCase());
+
   // 1. Email de notification admin
   const adminEmail = {
     from: FROM_ADMIN_NOTIF,
     to: [ADMIN_EMAIL],
     reply_to: data.email,
-    subject: `[Candidature] ${data.firstName} ${data.lastName}`,
+    subject: `${isTest ? "[TEST] " : ""}[Candidature] ${data.firstName} ${data.lastName}`,
     html: buildAdminEmail(data),
   };
 
@@ -372,6 +385,7 @@ Deno.serve(async (req: Request) => {
           form_type: "candidature",
           source: data.source || null,
           language,
+          is_test: isTest,
         }),
       });
       if (!logRes.ok) {
@@ -493,6 +507,7 @@ Deno.serve(async (req: Request) => {
         source: prospectSource,
         status: "new",
         notes: notesParts.length > 0 ? notesParts.join("\n") : null,
+        is_test: isTest,
       };
 
       const insertProspect = (body: Record<string, unknown>) =>

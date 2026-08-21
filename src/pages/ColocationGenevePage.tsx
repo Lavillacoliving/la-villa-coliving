@@ -134,8 +134,8 @@ export function ColocationGenevePage() {
       <SEO
         title={
           language === "en"
-            ? `Shared Housing near Geneva — All-Inclusive Rooms from ${PRICE_CHF_EN}`
-            : `Colocation Genève : chambres meublées tout inclus dès ${PRICE_CHF_FR}`
+            ? "All-Inclusive Shared Housing near Geneva"
+            : "Colocation Genève : chambres tout inclus"
         }
         description={
           language === "en"
@@ -199,8 +199,8 @@ export function ColocationGenevePage() {
           {/* C2 preuve sociale + C3 réassurance — visible sans scroll */}
           <p className="mt-6 text-sm text-[#57534E]">
             {language === "en"
-              ? `★ 4.9/5 · ${STATS.totalResidents}+ residents since 2021 · 99% occupancy`
-              : `★ 4,9/5 · ${STATS.totalResidents}+ résidents depuis 2021 · 99 % d'occupation`}
+              ? `★ ${STATS.rating.replace(",", ".")}/5 (resident surveys) · ${STATS.totalResidents}+ residents since 2021 · 99% occupancy`
+              : `★ ${STATS.rating}/5 (enquêtes résidents) · ${STATS.totalResidents}+ résidents depuis 2021 · 99 % d'occupation`}
           </p>
           <p className="mt-1 text-xs text-[#78716C]">
             {language === "en" ? "Reply within 48h · No application fee" : "Réponse sous 48h · Aucun frais de dossier"}

@@ -1,4 +1,5 @@
 import { LocalizedLink } from "@/components/LocalizedLink";
+import { WhatsAppButton } from "@/components/WhatsAppButton";
 import { colocGeneveHref } from "@/lib/siteLinks";
 import { useState } from "react";
 import { useLanguage } from "@/contexts/LanguageContext";
@@ -15,6 +16,13 @@ import {
   Euro,
 } from "lucide-react";
 import { PRICE_CHF_FR, PRICE_CHF_EN } from "@/data/stats";
+import {
+  useRoomAvailability,
+  houseBadgeLabel,
+  houseBadgeTone,
+  BADGE_CHIP_CLASS,
+  type HouseKey,
+} from "@/lib/availability";
 
 // ───────────────────────────────────────────────────────────────────────
 // FAQ (FR) — cible "colocation annemasse" 880/mois + secondaires
@@ -53,6 +61,26 @@ const annemasseFAQ = [
 export function AnnemasseColocationPage() {
   const { language } = useLanguage();
   const [openFAQ, setOpenFAQ] = useState<number | null>(null);
+
+  // R5 (checkpoint 21/08) — la page devient une destination : dispo réelle des
+  // 3 maisons d'Annemasse Agglo (v_public_rooms via useRoomAvailability, jamais
+  // de chiffre statique ; libellé qualitatif si la vue est injoignable).
+  const availability = useRoomAvailability();
+  const L: "fr" | "en" = language === "en" ? "en" : "fr";
+  const houseChips = (
+    [
+      ["lavilla", "La Villa · Ville-la-Grand"],
+      ["leloft", "Le Loft · Ambilly"],
+      ["lelodge", "Le Lodge · Annemasse"],
+    ] as Array<[HouseKey, string]>
+  )
+    .map(([key, name]) => ({
+      key,
+      name,
+      label: houseBadgeLabel(availability.byHouse[key], availability.known, L),
+      tone: houseBadgeTone(availability.byHouse[key], availability.known),
+    }))
+    .filter((c) => c.label && c.tone);
 
   // JSON-LD FAQPage — rich snippet
   const faqSchema = {
@@ -119,6 +147,20 @@ export function AnnemasseColocationPage() {
               {language === "en" ? "See the 3 houses" : "Voir les 3 maisons"}
             </LocalizedLink>
           </div>
+          {houseChips.length > 0 && (
+            <div className="mt-8 flex flex-wrap justify-center gap-2" aria-label={language === "en" ? "Live availability" : "Disponibilités en temps réel"}>
+              {houseChips.map((c) => (
+                <span
+                  key={c.key}
+                  className={`inline-flex items-center gap-1.5 text-xs font-semibold px-3 py-1.5 rounded-lg ${BADGE_CHIP_CLASS[c.tone as keyof typeof BADGE_CHIP_CLASS]}`}
+                >
+                  <span className="font-bold">{c.name}</span>
+                  <span aria-hidden="true">—</span>
+                  {c.label}
+                </span>
+              ))}
+            </div>
+          )}
         </div>
       </section>
 
@@ -139,12 +181,12 @@ export function AnnemasseColocationPage() {
                 <Euro className="w-7 h-7 text-[#D4A574]" />
               </div>
               <h3 className="text-xl font-medium text-[#1C1917] mb-3">
-                {language === "en" ? "30-50% cheaper than Geneva" : "30 à 50 % moins cher que Genève"}
+                {language === "en" ? "Same Swiss salary, real living space" : "Le même salaire suisse, un vrai espace de vie"}
               </h3>
               <p className="text-[#57534E] leading-relaxed">
                 {language === "en"
-                  ? `Same Swiss salary, but rent and daily expenses 30-50 % lower than central Geneva. A 12 m² room in Geneva costs CHF 1,800-2,500 — we offer the same comfort at ${PRICE_CHF_EN} all-inclusive.`
-                  : `Même salaire suisse, mais loyer et coût de la vie 30 à 50 % inférieurs au centre de Genève. Une chambre 12 m² à Genève coûte 1 800-2 500 CHF — on offre le même confort à ${PRICE_CHF_FR} tout inclus.`}
+                  ? `You keep your Swiss salary and live on the French side, in a real house: 37-42 m² of living space per housemate, pool, sauna and gym included, from ${PRICE_CHF_EN}/month all-inclusive — no application or agency fees.`
+                  : `Tu gardes ton salaire suisse et tu vis côté France, dans une vraie maison : 37-42 m² d'espace de vie par colocataire, piscine, sauna et salle de sport inclus, dès ${PRICE_CHF_FR}/mois tout inclus — sans frais de dossier ni d'agence.`}
               </p>
             </div>
             <div className="text-center">
@@ -530,6 +572,7 @@ export function AnnemasseColocationPage() {
           </div>
         </div>
       </section>
+      <WhatsAppButton context={language === "en" ? "Shared housing Annemasse" : "Colocation Annemasse"} />
     </main>
   );
 }

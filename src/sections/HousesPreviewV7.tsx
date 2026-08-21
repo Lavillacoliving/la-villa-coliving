@@ -1,4 +1,5 @@
 import { LocalizedLink } from "@/components/LocalizedLink";
+import { responsiveImage } from "@/lib/responsiveImage";
 import { ArrowRight, MapPin, Users } from "lucide-react";
 import { useLanguage } from "@/contexts/LanguageContext";
 import {
@@ -103,6 +104,7 @@ export function HousesPreviewV7() {
                   src={house.image}
                   alt={house.alt}
                   className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" loading="lazy"
+                  {...responsiveImage(house.image, "(min-width: 768px) 33vw, 100vw")}
                 />
                 {/* Tag résidents */}
                 <span className="absolute top-4 left-4 bg-white/90 backdrop-blur-sm text-[#1C1917] text-xs font-semibold px-3 py-1.5 rounded-lg">
@@ -149,6 +151,20 @@ export function HousesPreviewV7() {
             </LocalizedLink>
           ))}
         </div>
+
+        {/* R5 (checkpoint 21/08) — front Annemasse : /annemasse-colocation et
+            /chambre-a-louer-annemasse n'avaient aucun lien entrant depuis les
+            pages fortes (home, maisons, tarifs, FAQ). */}
+        <p className="mt-8 text-sm text-[#57534E]">
+          {language === "en" ? "Focused on Annemasse Agglo? " : "Tu vises Annemasse Agglo ? "}
+          <LocalizedLink to="/annemasse-colocation" className="underline underline-offset-4 hover:text-[#1C1917]">
+            {language === "en" ? "Shared housing in Annemasse" : "Colocation à Annemasse"}
+          </LocalizedLink>
+          {" · "}
+          <LocalizedLink to="/chambre-a-louer-annemasse" className="underline underline-offset-4 hover:text-[#1C1917]">
+            {language === "en" ? "Rooms for rent in Annemasse" : "Chambre à louer à Annemasse"}
+          </LocalizedLink>
+        </p>
       </div>
     </section>
   );

@@ -1,4 +1,5 @@
 import { useLocation } from "react-router-dom";
+import { responsiveImage } from "@/lib/responsiveImage";
 import { LocalizedLink } from "@/components/LocalizedLink";
 import { colocGeneveHref } from "@/lib/siteLinks";
 import { Scrim } from "@/components/Scrim";
@@ -1456,6 +1457,7 @@ export function HouseDetailPage() {
                     width={1920}
                     height={1080}
                     {...(index === 0 ? { fetchPriority: "high" as const } : {})}
+                    {...responsiveImage(img, "100vw")}
                   />
                   <Scrim />
                 </div>
@@ -1898,6 +1900,18 @@ export function HouseDetailPage() {
                       </li>
                     ))}
                   </ul>
+                  {id === "lelodge" && (
+                    <p className="mt-5 text-sm text-[#57534E]">
+                      {language === "en" ? "See also: " : "Voir aussi : "}
+                      <LocalizedLink to="/annemasse-colocation" className="underline underline-offset-4 hover:text-[#1C1917]">
+                        {language === "en" ? "shared housing in Annemasse" : "colocation à Annemasse"}
+                      </LocalizedLink>
+                      {" · "}
+                      <LocalizedLink to="/chambre-a-louer-annemasse" className="underline underline-offset-4 hover:text-[#1C1917]">
+                        {language === "en" ? "rooms for rent in Annemasse" : "chambre à louer à Annemasse"}
+                      </LocalizedLink>
+                    </p>
+                  )}
                 </div>
 
                 <div>

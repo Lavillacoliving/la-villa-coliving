@@ -11,6 +11,7 @@ import {
   CTASection
 } from '@/sections/HomeSectionsV7';
 import { LatestBlogV7 } from '@/sections/LatestBlogV7';
+import { WhatsAppButton } from "@/components/WhatsAppButton";
 import { SEO } from '@/components/SEO';
 import { FaqSection } from '@/components/FaqSection';
 import { buildHomeLodgingBusinessSchema } from '@/lib/structuredData';
@@ -70,6 +71,7 @@ export function HomePage() {
         }
       />
       <CTASection />
+      <WhatsAppButton />
     </main>
   );
 }

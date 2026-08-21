@@ -1,4 +1,5 @@
 import { LocalizedLink } from "@/components/LocalizedLink";
+import { responsiveImage } from "@/lib/responsiveImage";
 import { colocGeneveHref } from "@/lib/siteLinks";
 import { Scrim } from "@/components/Scrim";
 import { ArrowRight, ChevronDown, Home, Users, Heart, MapPin } from "lucide-react";
@@ -29,6 +30,7 @@ export function HeroV7() {
             width={1920}
             height={1080}
             fetchPriority="high"
+            {...responsiveImage("/images/la villa jardin.webp", "100vw")}
           />
           {/* Voile dégradé réutilisable — lisibilité du texte sur photo (WCAG AA) */}
           <Scrim />
@@ -119,7 +121,7 @@ export function HeroV7() {
               className="text-white/90 text-sm font-medium"
               title={language === "en" ? "Average rating — resident surveys 2021-2026" : "Note moyenne — enquêtes résidents 2021-2026"}
             >
-              {`${STATS_DISPLAY[L].rating}/5 — ${STATS_DISPLAY[L].residents}`}
+              {`${STATS_DISPLAY[L].rating}/5 ${language === "en" ? "(resident surveys)" : "(enquêtes résidents)"} — ${STATS_DISPLAY[L].residents}`}
             </span>
           </div>
 
@@ -251,6 +253,7 @@ export function HeroV7() {
                   loading="lazy"
                   width={400}
                   height={533}
+                  {...responsiveImage(item.image, "(min-width: 768px) 20vw, 50vw")}
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
                 <div className="absolute bottom-0 left-0 right-0 p-4 md:p-5">
