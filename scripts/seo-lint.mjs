@@ -29,7 +29,7 @@
 
 import fs from 'fs/promises';
 import path from 'path';
-import { fileURLToPath } from 'url';
+import { fileURLToPath, pathToFileURL } from 'url';
 import { HREFLANG_NO_ALTERNATES } from './hreflang-overrides.mjs';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
@@ -52,7 +52,7 @@ const UA_HUMAN = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/53
 
 // ─── helpers ────────────────────────────────────────────────
 
-function decodeEntities(s) {
+export function decodeEntities(s) {
   return s
     .replace(/&quot;/g, '"').replace(/&#39;/g, "'").replace(/&apos;/g, "'")
     .replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(/&nbsp;/g, ' ')
@@ -61,20 +61,20 @@ function decodeEntities(s) {
 
 // nom de fichier prerendered → route ('index.html' → '/', 'en-blog-x.html' ambigu :
 // on reconstruit depuis les routes connues, pas l'inverse)
-function routeToFile(route) {
+export function routeToFile(route) {
   return route === '/' ? 'index.html' : `${route.slice(1).replace(/\//g, '-')}.html`;
 }
 
 // ─── load : routes connues (sitemap) + redirects (vercel.json) ─
 
-async function loadKnownRoutes() {
+export async function loadKnownRoutes() {
   const xml = await fs.readFile(path.join(ROOT, 'public', 'sitemap.xml'), 'utf-8');
   const routes = [...xml.matchAll(/<loc>([^<]+)<\/loc>/g)]
     .map(m => m[1].replace(SITE, '') || '/');
   return [...new Set(routes)];
 }
 
-async function loadRedirects() {
+export async function loadRedirects() {
   const config = JSON.parse(await fs.readFile(VERCEL_JSON, 'utf-8'));
   const exact = new Set();
   const patterns = [];
@@ -109,7 +109,7 @@ function extractHead(html) {
   return { title, meta };
 }
 
-function extractLinks(html) {
+export function extractLinks(html) {
   // uniquement le <body> : canonical/hreflang/og sont légitimes en <head>
   const bodyStart = html.search(/<body[^>]*>/i);
   const body = bodyStart >= 0 ? html.slice(bodyStart) : html;
@@ -195,7 +195,7 @@ async function loadSitemapEntries() {
 }
 
 // normalise un href interne → { path, issues } ; null si externe/mailto/ancre pure
-function normalizeHref(href) {
+export function normalizeHref(href) {
   const issues = [];
   if (/^(mailto:|tel:|javascript:|#)/i.test(href)) return null;
   let url = href;
@@ -502,4 +502,10 @@ async function main() {
   console.log(`\n${total === 0 ? '✅ Aucun problème détecté' : `⚠️  ${total} problème(s) au total`}`);
 }
 
-main().catch(err => { console.error('Fatal:', err); process.exit(1); });
+// Exécution directe seulement (`node scripts/seo-lint.mjs`) : les helpers exportés
+// ci-dessus (decodeEntities, routeToFile, loadKnownRoutes, loadRedirects,
+// normalizeHref, extractLinks) sont réutilisés par tools/link-graph.mjs sans
+// déclencher le lint. Refactor 21/08/2026 (Brief n°2, Chantier 7) — comportement inchangé.
+if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) {
+  main().catch(err => { console.error('Fatal:', err); process.exit(1); });
+}

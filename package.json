@@ -10,6 +10,9 @@
     "build:local": "tsc -b && vite build && node scripts/prerender.mjs && node scripts/inject-prerendered.mjs",
     "lint": "eslint .",
     "lint:seo": "node scripts/seo-lint.mjs",
+    "link:graph": "node tools/link-graph.mjs",
+    "mining:gsc": "node tools/mining-gsc.mjs",
+    "test:tools": "node --test tools/test/",
     "preview": "vite preview"
   },
   "dependencies": {
