@@ -30,13 +30,10 @@ import { FaqSection } from "@/components/FaqSection";
 import { buildFaqPageSchema } from "@/lib/structuredData";
 import { colocationGeneveFaq } from "@/data/faq/colocationGeneveFaq";
 import { STATS, PRICE_EN_NUM, PRICE_CHF_FR, PRICE_CHF_EN } from "@/data/stats";
-import { COLOC_GENEVE_PILLAR_EN } from "@/lib/siteLinks";
+import { COLOC_GENEVE_PILLAR_EN, COLOC_GENEVE_PILLAR_FR } from "@/lib/siteLinks";
 
-// URL réelle de cette page. Elle n'est plus routée qu'en EN (App.tsx : seule
-// `/en/colocation-geneve` la rend) depuis la consolidation du 07/07/2026 —
-// l'ancienne URL FR renvoie un 308. Le JSON-LD codait encore cette URL FR en
-// dur : `Offer.url` et `WebPage.url` désignaient donc une redirection.
-const PILLAR_URL = `https://www.lavillacoliving.com${COLOC_GENEVE_PILLAR_EN}`;
+// URL de la page dans la langue servie : pilier FR restauré le 25/08/2026 (revert au
+// critère écrit), pilier EN inchangé — Offer.url / WebPage.url suivent `language`.
 
 // FAQ §3 (bilingue, tutoiement) : voir src/data/faq/colocationGeneveFaq.ts
 
@@ -94,7 +91,7 @@ export function ColocationGenevePage() {
     priceCurrency: "CHF",
     priceValidUntil: "2026-12-31",
     availability: "https://schema.org/InStock",
-    url: PILLAR_URL,
+    url: `https://www.lavillacoliving.com${language === "en" ? COLOC_GENEVE_PILLAR_EN : COLOC_GENEVE_PILLAR_FR}`, // URL de la langue servie (pilier FR restauré le 25/08/2026)
     seller: {
       "@type": "Organization",
       name: "La Villa Coliving",
@@ -120,7 +117,7 @@ export function ColocationGenevePage() {
   const webPageSchema = {
     "@context": "https://schema.org",
     "@type": "WebPage",
-    url: PILLAR_URL,
+    url: `https://www.lavillacoliving.com${language === "en" ? COLOC_GENEVE_PILLAR_EN : COLOC_GENEVE_PILLAR_FR}`, // URL de la langue servie (pilier FR restauré le 25/08/2026)
     name: language === "en"
       ? "Shared Housing near Geneva — All-Inclusive Rooms"
       : "Colocation Genève — chambres meublées tout inclus",
@@ -134,8 +131,8 @@ export function ColocationGenevePage() {
       <SEO
         title={
           language === "en"
-            ? `Shared Housing near Geneva — All-Inclusive Rooms from ${PRICE_CHF_EN}`
-            : `Colocation Genève : chambres meublées tout inclus dès ${PRICE_CHF_FR}`
+            ? "All-Inclusive Shared Housing near Geneva"
+            : "Colocation Genève : chambres tout inclus"
         }
         description={
           language === "en"

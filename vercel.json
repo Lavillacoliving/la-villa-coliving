@@ -508,11 +508,6 @@
   "trailingSlash": false,
   "redirects": [
     {
-      "source": "/colocation-geneve",
-      "destination": "/blog/trouver-colocation-geneve-frontalier",
-      "permanent": true
-    },
-    {
       "source": "/fr",
       "destination": "/",
       "permanent": true

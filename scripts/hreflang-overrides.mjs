@@ -10,6 +10,5 @@
 // Voir `src/lib/siteLinks.ts` pour le raisonnement complet (pilier EN orphelin
 // après la consolidation du 07/07/2026).
 
-export const HREFLANG_NO_ALTERNATES = new Set([
-  '/en/colocation-geneve',
-]);
+// Vide depuis le revert du pilier FR (25/08/2026) — voir src/lib/siteLinks.ts.
+export const HREFLANG_NO_ALTERNATES = new Set([]);

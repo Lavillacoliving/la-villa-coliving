@@ -6,10 +6,18 @@
 // Une seule fonction à changer si la stratégie évolue.
 
 export const COLOC_GENEVE_ARTICLE = "/blog/trouver-colocation-geneve-frontalier";
+export const COLOC_GENEVE_PILLAR_FR = "/colocation-geneve";
 export const COLOC_GENEVE_PILLAR_EN = "/en/colocation-geneve";
 
+// ── REVERT 25/08/2026 (arbitrage au critère écrit du 03/08) ──────────────────
+// Règle : « coliving-frais-dossier ≤ pos 11 deux semaines de suite AVEC clics →
+// cible officielle ; sinon revert ». Données : sem. 6-12/08 pos 15,3 / 0 clic ;
+// sem. 12-18/08 ~9,7 / 1 clic ; cible de la 308 (trouver-colocation) 1 clic /
+// 103 impr / pos 20 sur 28 j. → le pilier /colocation-geneve est restauré en 200
+// (FR et EN), toutes les ancres internes y reviennent, gel jusqu'au 05/10.
+// L'article reste en ligne comme how-to (titles différenciés : pilier = offre).
 export function colocGeneveHref(language: string): string {
-  return language === "en" ? COLOC_GENEVE_PILLAR_EN : COLOC_GENEVE_ARTICLE;
+  return language === "en" ? COLOC_GENEVE_PILLAR_EN : COLOC_GENEVE_PILLAR_FR;
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -34,6 +42,6 @@ export function colocGeneveHref(language: string): string {
 // ⚠️ MIROIR À TENIR À JOUR : `scripts/hreflang-overrides.mjs` (les scripts Node
 // ne peuvent pas importer ce fichier TS). Le check #13 de `scripts/seo-lint.mjs`
 // détecte toute divergence entre le HTML, le sitemap et cette liste.
-export const HREFLANG_NO_ALTERNATES: ReadonlySet<string> = new Set([
-  "/en/colocation-geneve",
-]);
+// Vide depuis le revert du 25/08/2026 : /colocation-geneve (FR) existe à nouveau,
+// le pilier EN a donc retrouvé son pendant — le miroir mécanique /en/X ↔ /X vaut.
+export const HREFLANG_NO_ALTERNATES: ReadonlySet<string> = new Set<string>([]);

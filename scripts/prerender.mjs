@@ -32,12 +32,11 @@ const SUPABASE_URL = 'https://tefpynkdxxfiefpkgitz.supabase.co';
 const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InRlZnB5bmtkeHhmaWVmcGtnaXR6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzA4OTg5NDksImV4cCI6MjA4NjQ3NDk0OX0.X_Z85w6L4i1IkVevMK73hpFRClCpgh0Gh0WMY9pdDtw';
 
 // Static pages to pre-render (manually maintained — rarely changes)
-// ⚠️ /colocation-geneve FR : consolidé 07/07/2026 → 308 (vercel.json redirects)
-// vers /blog/trouver-colocation-geneve-frontalier. Ne PAS le remettre ici :
-// le prérendre recréerait un rewrite qui n'est plus servi (redirect prioritaire)
-// et le réinjecterait dans le sitemap.
+// /colocation-geneve FR : consolidé en 308 du 07/07 au 25/08/2026, puis restauré
+// (revert au critère écrit — voir src/lib/siteLinks.ts).
 const STATIC_ROUTES_FR = [
   '/',
+  '/colocation-geneve',
   '/annemasse-colocation',
   '/chambre-a-louer-annemasse',
   '/le-coliving',
@@ -58,12 +57,7 @@ const STATIC_ROUTES_FR = [
 ];
 
 // English versions of all static pages (same paths with /en prefix).
-// + /en/colocation-geneve : le pilier EN reste servi (money page en progression,
-// pos 7,0 — décision 07/07/2026), contrairement au FR consolidé ci-dessus.
-const STATIC_ROUTES_EN = [
-  ...STATIC_ROUTES_FR.map(r => r === '/' ? '/en' : `/en${r}`),
-  '/en/colocation-geneve',
-];
+const STATIC_ROUTES_EN = STATIC_ROUTES_FR.map(r => r === '/' ? '/en' : `/en${r}`);
 
 const STATIC_ROUTES = [...STATIC_ROUTES_FR, ...STATIC_ROUTES_EN];
 
@@ -567,6 +561,7 @@ const SITE_URL = 'https://www.lavillacoliving.com';
 // Priority/frequency config for static pages
 const STATIC_PAGE_CONFIG = {
   '/': { priority: '1.0', changefreq: 'weekly' },
+  '/colocation-geneve': { priority: '0.9', changefreq: 'weekly' },
   '/annemasse-colocation': { priority: '0.9', changefreq: 'weekly' },
   '/chambre-a-louer-annemasse': { priority: '0.8', changefreq: 'weekly' },
   '/le-coliving': { priority: '0.8', changefreq: 'monthly' },
@@ -623,20 +618,7 @@ async function generateSitemap(blogSlugs) {
     const enPriority = (parseFloat(config.priority) - 0.1).toFixed(1);
     entries.push(sitemapEntry(enRoute, frRoute, enRoute, enPriority, config.changefreq, today));
   }
-  // Pilier EN conservé hors boucle (le FR est consolidé → 308 vers l'article,
-  // 07/07/2026). Il n'a donc PLUS de pendant français : aucun alternate `fr`.
-  //
-  // Correction du 27/07/2026 — l'entrée déclarait auparavant
-  // `fr → /blog/trouver-colocation-geneve-frontalier`. Cette cible répond bien
-  // 200, mais l'article a déjà son propre jumeau `/en/blog/trouver-...` : deux
-  // pages EN revendiquaient la même page FR, qui n'en référençait qu'une seule.
-  // C'est le motif « more than one page for same language » + « no return tag ».
-  // Une page orpheline n'a pas de cluster — on ne déclare rien, ni `fr` ni un
-  // `en` auto-référencé : un hreflang qui ne pointe que vers soi-même n'a aucun
-  // sens, et le check #13 de seo-lint exige que sitemap et HTML disent la même
-  // chose (le HTML n'émet plus rien pour cette route).
-  // Miroir côté HTML : scripts/hreflang-overrides.mjs + src/lib/siteLinks.ts.
-  entries.push(sitemapEntry('/en/colocation-geneve', null, null, '0.8', 'weekly', today));
+  // (le pilier /en/colocation-geneve est couvert par la boucle standard depuis le revert du 25/08/2026)
 
   // Blog articles (FR + EN) — only FR slugs, we generate both.
   // lastmod = real updated_at from Supabase (fallback: build date).
