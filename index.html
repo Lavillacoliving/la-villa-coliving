@@ -15,6 +15,43 @@
 
       gtag("config", "G-HW98R11W6M");
     </script>
+
+    <!-- Microsoft Clarity — INTÉGRATION TEMPORAIRE (24/08/2026).
+         Objet : enquête « ~66 clics payants sans conversion depuis le 22/08 » — identifier la
+         cause côté atterrissage (rebond immédiat / lecture sans formulaire / formulaire
+         abandonné). Clarity n'enregistre que vers l'avant : l'autopsie du passé passe par GA4.
+
+         DÉSINSTALLATION PRÉVUE MI-SEPTEMBRE 2026, à la clôture de l'enquête. Retirer alors :
+           1. ce bloc ;
+           2. les mentions Clarity de src/pages/PolitiqueConfidentialitePage.tsx
+              (sections 2d, 3, 4 et 7, en FR ET en EN) ;
+           3. la ligne correspondante de ../lavilla-docs/Infrastructure_LaVilla.md section 9 bis.
+
+         Deux gardes volontaires (GO Jérôme du 24/08/2026) :
+
+         1. hostname — scripts/prerender.mjs charge 118 pages sur localhost:3456 à chaque
+            `npm run build:local`. Sans ce test, chaque build fabriquerait 118 fausses sessions
+            headless qui noieraient les vraies sessions payantes qu'on doit lire. Exclut aussi
+            les preview deployments Vercel.
+
+         2. espace résident — /portail, /dashboard, /mon-espace, /reset-password et
+            /questionnaire-depart affichent nom, loyer, charges et bail EN CLAIR. Clarity masque
+            nativement les SAISIES de formulaire (masquage par défaut CONSERVÉ : ne jamais le
+            désactiver, on veut les parcours, jamais les données des candidats), mais PAS le
+            texte rendu. Limite assumée de cette version « simple » : le test n'a lieu qu'au
+            chargement, donc une navigation SPA depuis / vers /portail reste enregistrée.
+            L'étanchéité complète demanderait clarity("stop") sur changement de route. -->
+    <script type="text/javascript">
+      (function () {
+        if (window.location.hostname !== "www.lavillacoliving.com") return;
+        if (/^\/(portail|dashboard|mon-espace|reset-password|questionnaire-depart)(\/|$)/.test(window.location.pathname)) return;
+        (function(c,l,a,r,i,t,y){
+            c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
+            t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
+            y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
+        })(window, document, "clarity", "script", "y7eiydr6dv");
+      })();
+    </script>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="theme-color" content="#000000" />

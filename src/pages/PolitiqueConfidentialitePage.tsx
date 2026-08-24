@@ -10,8 +10,8 @@ import { SEO } from "@/components/SEO";
 //      ni de situation professionnelle — retirés du formulaire lors du CRO 06/2026).
 //   2. §2d/§7 : pas de référence à un « bandeau cookies » tant qu'aucun bandeau
 //      n'existe sur le site (note cookies du doc source manquante — à trancher).
-const LAST_UPDATED_FR = "12 juin 2026";
-const LAST_UPDATED_EN = "June 12, 2026";
+const LAST_UPDATED_FR = "24 août 2026";
+const LAST_UPDATED_EN = "August 24, 2026";
 
 function Section({ title, children }: { title: string; children: React.ReactNode }) {
   return (
@@ -104,7 +104,10 @@ export function PolitiqueConfidentialitePage() {
                 <p>
                   <strong>d) Browsing data and audience measurement.</strong> We use Google
                   Analytics 4 to understand how the Site is used (page views, journeys, traffic
-                  sources).
+                  sources), together with <strong>Microsoft Clarity</strong> for audience
+                  measurement and anonymised session recording (heatmaps, anonymised replays of
+                  browsing journeys). Form entries are masked by default and are never recorded,
+                  and the residents' area (portal, dashboard) is excluded from recording.
                   <br />
                   <em>Legal basis:</em> your consent (art. 6(1)(a)). You can refuse or block these
                   cookies at any time (see section 7).
@@ -131,6 +134,10 @@ export function PolitiqueConfidentialitePage() {
                   <li>
                     <strong>Google LLC</strong> (United States) — audience measurement (Google
                     Analytics 4)
+                  </li>
+                  <li>
+                    <strong>Microsoft Corporation</strong> (United States) — audience measurement
+                    and anonymised session recording (Microsoft Clarity)
                   </li>
                   <li>
                     <strong>Meta Platforms</strong> (WhatsApp) — when you choose to contact us via
@@ -171,6 +178,10 @@ export function PolitiqueConfidentialitePage() {
                     <strong>Audience measurement data</strong>: 14 months maximum (Google
                     Analytics setting).
                   </li>
+                  <li>
+                    <strong>Session recordings</strong> (Microsoft Clarity): 30 days, and up to
+                    9 months for a sample of sessions and for heatmaps.
+                  </li>
                 </ul>
               </Section>
               <Section title="5. Your rights">
@@ -208,8 +219,8 @@ export function PolitiqueConfidentialitePage() {
                     (exempt from consent);
                   </li>
                   <li>
-                    <strong>Audience measurement cookies</strong> (Google Analytics 4) — you can
-                    block them at any time in your browser settings.
+                    <strong>Audience measurement cookies</strong> (Google Analytics 4, Microsoft
+                    Clarity) — you can block them at any time in your browser settings.
                   </li>
                 </ul>
               </Section>
@@ -258,7 +269,11 @@ export function PolitiqueConfidentialitePage() {
                 <p>
                   <strong>d) Données de navigation et mesure d'audience.</strong> Nous utilisons
                   Google Analytics 4 pour comprendre l'utilisation du Site (pages vues, parcours,
-                  origine du trafic).
+                  origine du trafic), ainsi que <strong>Microsoft Clarity</strong> pour la mesure
+                  d'audience et l'enregistrement de session anonymisé (cartes de chaleur,
+                  relecture anonymisée des parcours de navigation). Les saisies des formulaires
+                  sont masquées par défaut et ne sont jamais enregistrées, et l'espace résident
+                  (portail, tableau de bord) est exclu de l'enregistrement.
                   <br />
                   <em>Base légale :</em> votre consentement (art. 6.1.a). Vous pouvez refuser ou
                   bloquer ces cookies à tout moment (voir section 7).
@@ -285,6 +300,10 @@ export function PolitiqueConfidentialitePage() {
                   <li>
                     <strong>Google LLC</strong> (États-Unis) — mesure d'audience (Google
                     Analytics 4)
+                  </li>
+                  <li>
+                    <strong>Microsoft Corporation</strong> (États-Unis) — mesure d'audience et
+                    enregistrement de session anonymisé (Microsoft Clarity)
                   </li>
                   <li>
                     <strong>Meta Platforms</strong> (WhatsApp) — lorsque vous choisissez de nous
@@ -326,6 +345,10 @@ export function PolitiqueConfidentialitePage() {
                     <strong>Données de mesure d'audience</strong> : 14 mois maximum (paramétrage
                     Google Analytics).
                   </li>
+                  <li>
+                    <strong>Enregistrements de session</strong> (Microsoft Clarity) : 30 jours, et
+                    jusqu'à 9 mois pour un échantillon de sessions et les cartes de chaleur.
+                  </li>
                 </ul>
               </Section>
               <Section title="5. Vos droits">
@@ -365,9 +388,9 @@ export function PolitiqueConfidentialitePage() {
                     (exemptés de consentement) ;
                   </li>
                   <li>
-                    <strong>Cookies de mesure d'audience</strong> (Google Analytics 4) — vous
-                    pouvez les refuser ou les bloquer à tout moment dans les réglages de votre
-                    navigateur.
+                    <strong>Cookies de mesure d'audience</strong> (Google Analytics 4, Microsoft
+                    Clarity) — vous pouvez les refuser ou les bloquer à tout moment dans les
+                    réglages de votre navigateur.
                   </li>
                 </ul>
               </Section>
