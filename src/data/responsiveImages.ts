@@ -114,16 +114,6 @@ export const RESPONSIVE_IMAGES: Record<string, { original: number; widths: numbe
     ],
     "reencoded": true
   },
-  "/images/le lodge/exterior/lodge-piscine-hero.webp": {
-    "original": 1086,
-    "widths": [
-      480,
-      768,
-      1024,
-      1086
-    ],
-    "reencoded": true
-  },
   "/images/le lodge/rooms/Chambre 4/chambre-4-vue-large.webp": {
     "original": 1600,
     "widths": [
@@ -145,28 +135,25 @@ export const RESPONSIVE_IMAGES: Record<string, { original: number; widths: numbe
     "reencoded": false
   },
   "/images/la villa/rooms/Chambre 8/chambre-8-balcon-piscine.webp": {
-    "original": 1168,
+    "original": 941,
     "widths": [
       480,
       768,
-      1024,
-      1168
+      941
     ],
     "reencoded": true
   },
   "/images/la villa/rooms/Chambre 8/chambre-8-chambre.webp": {
-    "original": 1600,
+    "original": 1086,
     "widths": [
       480,
       768,
-      1024,
-      1440,
-      1600
+      1024
     ],
-    "reencoded": true
+    "reencoded": false
   },
   "/images/la villa/rooms/Chambre 8/chambre-8-bureau.webp": {
-    "original": 1170,
+    "original": 1335,
     "widths": [
       480,
       768,

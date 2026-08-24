@@ -37,7 +37,15 @@ export interface RoomSeptembre {
    * Chemins sous /images/lp-septembre/ — passés par scripts/optimize-images.mjs
    * pour obtenir les variantes responsive.
    */
-  photos: { src: string; alt: { fr: string; en: string } }[];
+  photos: {
+    src: string;
+    /** Dimensions RÉELLES du fichier. Sans elles, un cadre fixe recadre les
+     *  portraits de 40 %+ (« ça zoome beaucoup trop », Jérôme 24/08). La page
+     *  calcule le cadre de chaque photo à partir de ce ratio, borné [0,75 ; 1,5]. */
+    w: number;
+    h: number;
+    alt: { fr: string; en: string };
+  }[];
 }
 
 export const ROOMS_SEPTEMBRE: RoomSeptembre[] = [
@@ -60,6 +68,8 @@ export const ROOMS_SEPTEMBRE: RoomSeptembre[] = [
     photos: [
       {
         src: "/images/le lodge/common areas/la villa coliving le lodge-40.webp",
+        w: 1920,
+        h: 1280,
         alt: {
           fr: "Le grand salon commun du Lodge, canapés et coin musique",
           en: "The Lodge's large shared lounge, sofas and record corner",
@@ -67,6 +77,8 @@ export const ROOMS_SEPTEMBRE: RoomSeptembre[] = [
       },
       {
         src: "/images/le lodge/rooms/Chambre 4/chambre-4-vue-large.webp",
+        w: 1600,
+        h: 1067,
         alt: {
           fr: "Chambre 4 du Lodge : lit double, bureau et grande fenêtre côté jardin",
           en: "Room 4 at the Lodge: double bed, desk and a large garden-side window",
@@ -74,6 +86,8 @@ export const ROOMS_SEPTEMBRE: RoomSeptembre[] = [
       },
       {
         src: "/images/le lodge/rooms/Chambre 4/chambre-4-salle-eau.webp",
+        w: 1600,
+        h: 1067,
         alt: {
           fr: "Salle d'eau privative de la chambre 4 : douche à l'italienne, meuble vasque et miroir rétroéclairé",
           en: "Room 4's private shower room: walk-in shower, vanity unit and backlit mirror",
@@ -100,6 +114,8 @@ export const ROOMS_SEPTEMBRE: RoomSeptembre[] = [
     photos: [
       {
         src: "/images/la villa/rooms/Chambre 8/chambre-8-balcon-piscine.webp",
+        w: 941,
+        h: 1672,
         alt: {
           fr: "La piscine de La Villa vue depuis le balcon privatif de la chambre 8",
           en: "La Villa's pool seen from room 8's private balcony",
@@ -107,6 +123,8 @@ export const ROOMS_SEPTEMBRE: RoomSeptembre[] = [
       },
       {
         src: "/images/la villa/rooms/Chambre 8/chambre-8-chambre.webp",
+        w: 1086,
+        h: 1448,
         alt: {
           fr: "Chambre 8 de La Villa : lit double, tête de lit capitonnée et mur bleu",
           en: "Room 8 at La Villa: double bed, upholstered headboard and blue accent wall",
@@ -114,9 +132,11 @@ export const ROOMS_SEPTEMBRE: RoomSeptembre[] = [
       },
       {
         src: "/images/la villa/rooms/Chambre 8/chambre-8-bureau.webp",
+        w: 1335,
+        h: 1178,
         alt: {
-          fr: "Le coin bureau attenant à la chambre 8, baigné de lumière",
-          en: "Room 8's adjoining desk nook, bathed in light",
+          fr: "Le coin bureau de la chambre 8, en plein soleil devant la baie",
+          en: "Room 8's desk nook, in full sun by the window",
         },
       },
     ],
@@ -124,16 +144,17 @@ export const ROOMS_SEPTEMBRE: RoomSeptembre[] = [
 ];
 
 /**
- * Hero — piscine extérieure du Lodge (fournie le 24/08/2026). Choisi plutôt que
- * `le lodge/exterior/la villa coliving le lodge-14.webp`, seule autre photo
- * « extérieur Lodge » disponible : celle-ci est une prise de vue HIVERNALE
- * (arbres nus, pelouse brune) — contre-productive sur une page qui vend
- * septembre. Portrait 1086x1448, calibré plein écran mobile.
+ * Hero — « la villa jardin.webp » (choix de Jérôme, 24/08). Piscine extérieure,
+ * maison et saule pleureur : la photo qui « vend le rêve » du brief. Déjà servie
+ * en hero de la home et de /lavilla, jeu responsive complet jusqu'à 1920 — donc
+ * nette aussi en desktop, ce que la piscine du Lodge (1086 px de large) n'était pas.
  */
-export const HERO_IMAGE = "/images/le lodge/exterior/lodge-piscine-hero.webp";
+export const HERO_IMAGE = "/images/la villa jardin.webp";
+export const HERO_W = 1024;
+export const HERO_H = 1536;
 export const HERO_ALT = {
-  fr: "La piscine extérieure du Lodge, transats au soleil",
-  en: "The Lodge's outdoor pool, loungers in the sun",
+  fr: "La piscine extérieure de La Villa, sous le saule pleureur",
+  en: "La Villa's outdoor pool, under the weeping willow",
 };
 
 /** Loyer d'entrée réel — alimente le « dès X CHF » du hero (jamais une valeur en dur). */

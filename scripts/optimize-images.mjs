@@ -37,11 +37,8 @@ const SOURCES = [
   '/images/la villa.webp',                                            // bloc offre
   '/images/le lodge.webp',                                            // bloc offre
   // LP payante /chambres-septembre (brief LOT 2, 24/08/2026).
-  // Hero : piscine extérieure du Lodge, fournie par Jérôme le 24/08. Portrait
-  // 1086x1448 — calibré pour le plein écran MOBILE (60 % du trafic payant) ;
-  // au-delà de ~1086 px de large il n'y a plus de pixels, l'affichage desktop
-  // plein écran sera légèrement doux. Assumé pour cette LP.
-  '/images/le lodge/exterior/lodge-piscine-hero.webp',
+  // Hero : « la villa jardin.webp » (déjà listé plus haut — piscine extérieure,
+  // maison et saule ; jeu responsive complet jusqu'à 1920).
   // 3 photos par carte chambre,
   // toutes au-dessus ou juste sous la ligne de flottaison mobile. La LP vise
   // LCP < 2,5 s : ces images DOIVENT avoir leurs variantes responsive.

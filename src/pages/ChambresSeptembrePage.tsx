@@ -6,7 +6,9 @@ import { WhatsAppButton } from "@/components/WhatsAppButton";
 import { responsiveImage } from "@/lib/responsiveImage";
 import {
   HERO_ALT,
+  HERO_H,
   HERO_IMAGE,
+  HERO_W,
   PRICE_FROM_CHF,
   ROOMS_SEPTEMBRE,
   formatAvailability,
@@ -31,6 +33,18 @@ import {
  * Tout le contenu chiffré vient de src/data/roomsSeptembre.ts — le titre dérive du
  * NOMBRE RÉEL de chambres, il ne peut pas annoncer autre chose que ce qui est affiché.
  */
+/**
+ * Cadre d'une photo : son ratio RÉEL, borné à [0,75 ; 1,5].
+ * Les photos des deux chambres ont des orientations opposées (Lodge en paysage
+ * 3:2, La Villa en portrait). Un cadre fixe unique amputait les portraits de plus
+ * de 40 % de leur hauteur — « ça les zoome beaucoup trop » (Jérôme, 24/08).
+ * Avec ces bornes : aucune photo du Lodge n'est recadrée, et seul le balcon de la
+ * 8 (0,56, très allongé) perd de la hauteur, ce qui reste inévitable en carte.
+ */
+function frameRatio(w: number, h: number): number {
+  return Math.min(1.5, Math.max(0.75, w / h));
+}
+
 export function ChambresSeptembrePage() {
   const { language } = useLanguage();
   const en = language === "en";
@@ -59,8 +73,24 @@ export function ChambresSeptembrePage() {
     : `Ta chambre dans une maison avec piscine, sauna et salle de sport — dès ${formatChf(PRICE_FROM_CHF)} CHF/mois tout inclus, à 15 min de Genève.`;
 
   const amenities = en
-    ? ["Pool", "Sauna", "Gym", "Large park (the Lodge)", "Fibre up to 8 Gb/s", "Shared-area cleaning included"]
-    : ["Piscine", "Sauna", "Salle de sport", "Grand parc (le Lodge)", "Fibre jusqu'à 8 Gb/s", "Ménage des communs inclus"];
+    ? [
+        "Pool",
+        "Sauna",
+        "Gym",
+        "Large gardens and terraces",
+        "Community events",
+        "Shared areas cleaned three times a week",
+        "100% all-inclusive, down to the supplies",
+      ]
+    : [
+        "Piscine",
+        "Sauna",
+        "Salle de sport",
+        "Grands jardins et terrasses",
+        "Événements communautaires",
+        "Ménage des communs 3 fois par semaine",
+        "100 % tout inclus, même les fournitures",
+      ];
 
   const reassurance = en
     ? [
@@ -68,14 +98,12 @@ export function ChambresSeptembrePage() {
         "Answer within 48 hours",
         "Video tour available",
         "100+ residents since 2021",
-        "Deposit: 2 months excluding charges",
       ]
     : [
         "0 frais d'agence ni de dossier",
         "Réponse sous 48 h",
         "Visite en visio possible",
         "100+ résidents depuis 2021",
-        "Caution 2 mois hors charges",
       ];
 
   return (
@@ -99,8 +127,8 @@ export function ChambresSeptembrePage() {
           src={HERO_IMAGE}
           alt={en ? HERO_ALT.en : HERO_ALT.fr}
           {...responsiveImage(HERO_IMAGE, "100vw")}
-          width={1086}
-          height={1448}
+          width={HERO_W}
+          height={HERO_H}
           fetchPriority="high"
           decoding="async"
           className="absolute inset-0 h-full w-full object-cover"
@@ -186,24 +214,37 @@ export function ChambresSeptembrePage() {
                     src={room.photos[0].src}
                     alt={en ? room.photos[0].alt.en : room.photos[0].alt.fr}
                     {...responsiveImage(room.photos[0].src, "(min-width: 768px) 46vw, 100vw")}
+                    width={room.photos[0].w}
+                    height={room.photos[0].h}
                     loading={roomIndex === 0 ? "eager" : "lazy"}
                     decoding="async"
-                    className="aspect-[4/3] w-full object-cover"
+                    className="w-full object-cover"
+                    style={{ aspectRatio: String(frameRatio(room.photos[0].w, room.photos[0].h)) }}
                   />
                   <span className="absolute left-4 top-4 rounded-lg bg-white/95 px-3 py-1.5 text-xs font-semibold text-[#1C1917] backdrop-blur-sm">
                     {room.houseName}
                   </span>
                 </div>
-                <div className="grid grid-cols-2 gap-1 bg-white p-1">
+                {/* Largeur PROPORTIONNELLE au ratio (flex-grow = ratio) + aspect-ratio
+                    identique : les hauteurs s'égalisent d'elles-mêmes, la ligne se
+                    remplit entièrement, et AUCUNE photo n'est recadrée — y compris
+                    un paysage 3:2 à côté d'un portrait 3:4. Une hauteur fixe, elle,
+                    laissait la chambre 8 (portraits) chétive et le Lodge en débord. */}
+                <div className="flex gap-2 bg-white p-2">
                   {room.photos.slice(1).map((photo) => (
                     <img
                       key={photo.src}
                       src={photo.src}
                       alt={en ? photo.alt.en : photo.alt.fr}
-                      {...responsiveImage(photo.src, "(min-width: 768px) 23vw, 50vw")}
+                      {...responsiveImage(photo.src, "(min-width: 768px) 23vw, 45vw")}
+                      width={photo.w}
+                      height={photo.h}
                       loading="lazy"
                       decoding="async"
-                      className="aspect-[4/3] w-full rounded-md object-cover"
+                      // `min-w-0` et PAS de `w-full` : une largeur 100 % entrerait en
+                      // conflit avec la base flex et ferait déborder la ligne.
+                      className="min-w-0 rounded-md object-cover"
+                      style={{ flex: `${photo.w / photo.h} 1 0%`, aspectRatio: String(photo.w / photo.h) }}
                     />
                   ))}
                 </div>
@@ -267,6 +308,20 @@ export function ChambresSeptembrePage() {
               </article>
             ))}
           </div>
+
+          {/* Lien maisons — demandé par Jérôme le 24/08. Placé APRÈS les cartes et
+              en secondaire assumé : dans le hero ou le header, il offrirait une
+              sortie de tunnel à quelqu'un qui n'a pas encore vu les chambres. Ici,
+              il ne capte que le visiteur déjà convaincu qui veut en voir plus. */}
+          <p className="mt-12 text-center text-sm text-[#57534E]">
+            {en ? "Want to see the houses themselves? " : "Envie de voir les maisons en entier ? "}
+            <Link
+              to={`${prefix}/nos-maisons`}
+              className="font-medium text-[#b8860b] underline underline-offset-4 hover:text-[#1C1917] transition-colors"
+            >
+              {en ? "Discover our 3 homes" : "Découvrir nos 3 maisons"}
+            </Link>
+          </p>
         </div>
       </section>
 
