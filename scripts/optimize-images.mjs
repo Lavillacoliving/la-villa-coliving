@@ -36,6 +36,17 @@ const SOURCES = [
   '/images/le loft/amenities/la villa coliving le loft-94.webp',      // nos-maisons
   '/images/la villa.webp',                                            // bloc offre
   '/images/le lodge.webp',                                            // bloc offre
+  // LP payante /chambres-septembre (brief LOT 2, 24/08/2026).
+  // Hero : « la villa jardin.webp » (déjà listé plus haut — piscine extérieure,
+  // maison et saule ; jeu responsive complet jusqu'à 1920).
+  // 3 photos par carte chambre,
+  // toutes au-dessus ou juste sous la ligne de flottaison mobile. La LP vise
+  // LCP < 2,5 s : ces images DOIVENT avoir leurs variantes responsive.
+  '/images/le lodge/rooms/Chambre 4/chambre-4-vue-large.webp',
+  '/images/le lodge/rooms/Chambre 4/chambre-4-salle-eau.webp',
+  '/images/la villa/rooms/Chambre 8/chambre-8-balcon-piscine.webp',
+  '/images/la villa/rooms/Chambre 8/chambre-8-chambre.webp',
+  '/images/la villa/rooms/Chambre 8/chambre-8-bureau.webp',
 ];
 // Galeries (carrousel héros des 3 maisons) : les slides voisins du 1er sont chargés
 // par le navigateur (lazy horizontal) — en pleine taille sans variantes.

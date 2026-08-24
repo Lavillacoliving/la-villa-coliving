@@ -47,8 +47,8 @@ export function FeaturesV7() {
       icon: CircleCheck,
       title: language === 'en' ? 'Truly all inclusive' : 'Vraiment tout inclus',
       description: language === 'en'
-        ? `Utilities, fiber up to ${STATS.fiberSpeed}, housekeeping 2×/week, parking, streaming, fitness classes, bed linen — ${STATS.includedItems} services in one rent. No add-ons, no hidden fees.`
-        : `Charges, fibre jusqu'à ${STATS.fiberSpeed}, ménage 2×/semaine, parking, streaming, cours de sport, linge de lit — ${STATS.includedItems} services dans un seul loyer. Pas d'options à ajouter, pas de frais cachés.`,
+        ? `Utilities, fiber up to ${STATS.fiberSpeed}, housekeeping 3×/week, parking, streaming, fitness classes, bed linen — ${STATS.includedItems} services in one rent. No add-ons, no hidden fees.`
+        : `Charges, fibre jusqu'à ${STATS.fiberSpeed}, ménage 3×/semaine, parking, streaming, cours de sport, linge de lit — ${STATS.includedItems} services dans un seul loyer. Pas d'options à ajouter, pas de frais cachés.`,
     },
     {
       icon: TreePine,

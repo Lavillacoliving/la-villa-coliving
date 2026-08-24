@@ -34,7 +34,7 @@ export function WhyChooseUsV7() {
     },
     {
       icon: Sparkles,
-      text: language === "en" ? "Housekeeping twice a week" : "Ménage 2 fois par semaine",
+      text: language === "en" ? "Housekeeping three times a week" : "Ménage 3 fois par semaine",
     },
     {
       icon: Users,

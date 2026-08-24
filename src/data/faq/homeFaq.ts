@@ -19,7 +19,7 @@ export const homeFaq: { fr: QAPair[]; en: QAPair[] } = {
     },
     {
       q: "Combien coûte une chambre en coliving à Genève ?",
-      a: `Chez La Villa Coliving, le loyer tout inclus démarre à ${PRICE_CHF_FR}/mois : chambre meublée de 17 à 23 m², toutes les charges, internet fibre jusqu'à 8 Gb/s, ménage des parties communes deux fois par semaine, piscine, sauna, salle de sport, cours de yoga et événements. Un seul paiement par mois, sans frais cachés.`,
+      a: `Chez La Villa Coliving, le loyer tout inclus démarre à ${PRICE_CHF_FR}/mois : chambre meublée de 17 à 23 m², toutes les charges, internet fibre jusqu'à 8 Gb/s, ménage des parties communes trois fois par semaine, piscine, sauna, salle de sport, cours de yoga et événements. Un seul paiement par mois, sans frais cachés.`,
     },
     {
       q: "Y a-t-il des frais de dossier ou d'agence ?",
@@ -45,7 +45,7 @@ export const homeFaq: { fr: QAPair[]; en: QAPair[] } = {
     },
     {
       q: "How much does a coliving room near Geneva cost?",
-      a: `At La Villa Coliving, all-inclusive rent starts at ${PRICE_CHF_EN}/month: a furnished room of 17 to 23 m², all utilities, fibre internet up to 8 Gb/s, cleaning of common areas twice a week, pool, sauna, gym, yoga classes and events. One single monthly payment, no hidden costs.`,
+      a: `At La Villa Coliving, all-inclusive rent starts at ${PRICE_CHF_EN}/month: a furnished room of 17 to 23 m², all utilities, fibre internet up to 8 Gb/s, cleaning of common areas three times a week, pool, sauna, gym, yoga classes and events. One single monthly payment, no hidden costs.`,
     },
     {
       q: "Are there application or agency fees?",

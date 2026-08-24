@@ -1,4 +1,23 @@
 // Supabase Edge Function — send-candidature-email
+// v14 — 24/08/2026 — Intérêt maison/chambre (LP /chambres-septembre) — brief LOT 2
+//   CHANGEMENTS vs v13 :
+//   1. Payload optionnel `property_interest` / `room_interest` (posés par les CTA des
+//      cartes chambre de la LP, via query params sur /candidature) → colonnes dédiées
+//      sur form_submissions ET prospects (migration `property_interest_2026_08_24`).
+//      ⚠️ `prospects.property_interest` PRÉEXISTAIT en base : c'est un **uuid** avec
+//      une clé étrangère vers properties(id), pas du texte (introspection prod du
+//      24/08 : 6 lignes déjà renseignées). Le front envoie un SLUG lisible
+//      (`lavilla`…) et c'est CETTE fonction qui le traduit en uuid. Écrire le slug
+//      tel quel serait rejeté par le type, et le filet ci-dessous jetterait le champ
+//      en silence — le pré-remplissage échouerait sans aucune alerte.
+//   2. `source` (canal DÉCLARÉ par le candidat) reste intact : l'intérêt déclaré au clic
+//      vit dans ses propres colonnes, exactement comme l'attribution Ads de la v13.
+//   3. Filet en CASCADE ordonnée par valeur : si l'insert est refusé, on retire d'abord
+//      les champs d'intérêt (les plus récents), et seulement ensuite l'attribution Ads
+//      (donnée établie depuis le 22/08) — une candidature n'est jamais perdue, et un
+//      champ neuf ne fait jamais tomber une mesure qui marche.
+//      Ordre de déploiement recommandé : migration → v14 → front.
+//
 // v13 — 22/08/2026 — Attribution Ads (UTM + gclid) — brief UTM/GCLID, prérequis Ads 25/08
 //   CHANGEMENTS vs v12 :
 //   1. Payload optionnel `utm_source` / `utm_medium` / `utm_campaign` / `utm_content` /
@@ -352,6 +371,31 @@ Deno.serve(async (req: Request) => {
   const withoutAttribution = (body: Record<string, unknown>): Record<string, unknown> =>
     Object.fromEntries(Object.entries(body).filter(([k]) => !(ATTRIBUTION_KEYS as readonly string[]).includes(k)));
 
+  // Intérêt maison/chambre (v14) : déclaré par le CTA de la carte chambre cliquée sur la
+  // LP /chambres-septembre, transporté en query params jusqu'au formulaire. Même
+  // traitement que l'attribution (trim, 256 car., vide → null) et même règle : les clés
+  // ne sont jointes aux inserts QUE si au moins une valeur est présente, donc sans LP les
+  // corps envoyés à PostgREST sont identiques à la v13.
+  // properties.id — figés, relevés en production le 24/08/2026. Une table de
+  // correspondance côté serveur garantit que la valeur écrite satisfait TOUJOURS la
+  // clé étrangère : un slug inconnu donne null, jamais un uuid inventé.
+  const PROPERTY_IDS: Record<string, string> = {
+    lavilla: "d39d074a-ad6d-471c-b7c7-0e576521730e",
+    leloft: "177ebcb2-6852-461c-8150-d416aa62ecf1",
+    lelodge: "45175bde-8b94-446a-9dd4-e6dee4b5a509",
+    montblanc: "57ecaa58-81e3-4c8c-8681-d5ac50b0d437",
+  };
+  const INTEREST_KEYS = ["property_interest", "room_interest"] as const;
+  const propertySlug = String(data.property_interest ?? "").trim().toLowerCase();
+  const interest: Record<string, string | null> = {
+    property_interest: PROPERTY_IDS[propertySlug] ?? null,
+    room_interest: String(data.room_interest ?? "").trim().slice(0, 256) || null,
+  };
+  const hasInterest = Object.values(interest).some((v) => v !== null);
+  const interestFields: Record<string, string | null> = hasInterest ? interest : {};
+  const withoutInterest = (body: Record<string, unknown>): Record<string, unknown> =>
+    Object.fromEntries(Object.entries(body).filter(([k]) => !(INTEREST_KEYS as readonly string[]).includes(k)));
+
   // 1. Email de notification admin
   const adminEmail = {
     from: FROM_ADMIN_NOTIF,
@@ -423,13 +467,21 @@ Deno.serve(async (req: Request) => {
         is_test: isTest,
         // v13 : attribution Ads — clés présentes uniquement si au moins une valeur.
         ...attributionFields,
+        // v14 : intérêt maison/chambre — même règle.
+        ...interestFields,
       };
       let logRes = await logSubmission(submissionRow);
+      if (!logRes.ok && hasInterest) {
+        // Filet v14 : colonnes d'intérêt refusées (migration non appliquée…) → on les
+        // retire EN PREMIER, pour ne pas sacrifier l'attribution Ads qui, elle, marche.
+        console.error("form_submissions logging rejected with interest fields, retrying without", logRes.status, await logRes.text().catch(() => ""));
+        logRes = await logSubmission(withoutInterest(submissionRow));
+      }
       if (!logRes.ok && hasAttribution) {
         // Filet v13 : colonnes d'attribution refusées (migration absente…) → on rejoue
         // sans elles plutôt que de perdre la trace.
         console.error("form_submissions logging rejected with attribution fields, retrying without", logRes.status, await logRes.text().catch(() => ""));
-        logRes = await logSubmission(withoutAttribution(submissionRow));
+        logRes = await logSubmission(withoutAttribution(withoutInterest(submissionRow)));
       }
       if (!logRes.ok) {
         console.error("form_submissions logging failed", logRes.status, await logRes.text().catch(() => ""));
@@ -533,12 +585,10 @@ Deno.serve(async (req: Request) => {
       const extraMessage = (data.message ?? "").trim();
       if (extraMessage) notesParts.push(extraMessage);
 
-      // property_interest (uuid) : NON renseigné — le formulaire de candidature n'a pas de
-      // sélection de maison. Pour mémoire, si un champ "maison" est ajouté un jour :
-      //   La Villa   → d39d074a-ad6d-471c-b7c7-0e576521730e
-      //   Le Loft    → 177ebcb2-6852-461c-8150-d416aa62ecf1
-      //   Le Lodge   → 45175bde-8b94-446a-9dd4-e6dee4b5a509
-      //   Mont-Blanc → 57ecaa58-81e3-4c8c-8681-d5ac50b0d437
+      // property_interest (uuid) : renseigné depuis la v14 quand la candidature vient
+      // d'une carte de la LP (slug traduit en uuid plus haut, cf. PROPERTY_IDS).
+      // Reste null pour toute candidature arrivée par le formulaire nu — celui-ci n'a
+      // toujours pas de sélection de maison, et on n'en invente pas une.
       const prospect: Record<string, unknown> = {
         first_name: data.firstName,
         last_name: data.lastName,
@@ -553,6 +603,8 @@ Deno.serve(async (req: Request) => {
         is_test: isTest,
         // v13 : attribution Ads dans ses colonnes dédiées (`source` = déclaratif, intact).
         ...attributionFields,
+        // v14 : intérêt maison/chambre déclaré au clic sur une carte de la LP.
+        ...interestFields,
       };
 
       const insertProspect = (body: Record<string, unknown>) =>
@@ -576,11 +628,18 @@ Deno.serve(async (req: Request) => {
         prospectBody = { ...prospectBody, source: "site_web" };
         insertRes = await insertProspect(prospectBody);
       }
+      if (!insertRes.ok && hasInterest) {
+        // Filet v14 : on retire d'abord les champs d'intérêt (les plus récents) — jamais
+        // l'attribution Ads en premier.
+        console.error("prospects insert rejected with interest fields, retrying without", insertRes.status, await insertRes.text().catch(() => ""));
+        prospectBody = withoutInterest(prospectBody);
+        insertRes = await insertProspect(prospectBody);
+      }
       if (!insertRes.ok && hasAttribution) {
         // Filet v13 : colonnes d'attribution refusées (migration absente…) → on rejoue
         // sans elles. Une candidature n'est JAMAIS perdue pour un champ de mesure.
         console.error("prospects insert rejected with attribution fields, retrying without", insertRes.status, await insertRes.text().catch(() => ""));
-        prospectBody = withoutAttribution(prospectBody);
+        prospectBody = withoutAttribution(withoutInterest(prospectBody));
         insertRes = await insertProspect(prospectBody);
       }
       if (!insertRes.ok) {

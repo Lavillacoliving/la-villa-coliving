@@ -36,4 +36,7 @@ export function colocGeneveHref(language: string): string {
 // détecte toute divergence entre le HTML, le sitemap et cette liste.
 export const HREFLANG_NO_ALTERNATES: ReadonlySet<string> = new Set([
   "/en/colocation-geneve",
+  // LP payantes : noindex + hors sitemap -> aucun alternate a declarer.
+  "/chambres-septembre",
+  "/en/rooms-september",
 ]);
