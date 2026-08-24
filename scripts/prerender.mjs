@@ -73,6 +73,15 @@ const STATIC_ROUTES = [...STATIC_ROUTES_FR, ...STATIC_ROUTES_EN];
 // that matches neither a static file nor a rewrite.
 const EXTRA_RENDER_ROUTES = ['/404'];
 
+// Routes PRÉRENDUES + REWRITÉES mais JAMAIS listées au sitemap : pages
+// d'atterrissage payantes (Ads). Ni STATIC_ROUTES (qui entre au sitemap) ni
+// EXTRA_RENDER_ROUTES (qui n'a pas de rewrite) ne convenaient.
+//   • prérendues : la LP vise LCP < 2,5 s, elle ne peut pas se contenter du shell SPA ;
+//   • hors sitemap + noindex (composant SEO) + X-Robots-Tag dans vercel.json ;
+//   • aucun lien interne entrant : ce n'est pas un actif SEO, c'est une destination d'annonce.
+// ⚠️ Garder synchronisé avec `isLp` dans src/App.tsx et avec les en-têtes de vercel.json.
+const NOINDEX_PRERENDERED_ROUTES = ['/chambres-septembre', '/en/rooms-september'];
+
 // Client-only routes (no prerendered HTML) that must keep receiving the SPA shell.
 // This replaces the old '/(.*)' catch-all: anything NOT listed here, not a static
 // file and not a prerendered rewrite now falls through to 404.html (real 404).
@@ -183,13 +192,20 @@ async function updateVercelJson(blogRoutes) {
   // Rebuild rewrites: FR static → EN static → blog → SPA-only routes.
   // No '/(.*)' catch-all anymore: unknown URLs fall through to dist/404.html,
   // served by Vercel with a real HTTP 404 (fix soft-404 — Phase 1, 2026-06).
-  config.rewrites = [...frStaticRewrites, ...enStaticRewrites, ...blogRewrites, ...SPA_FALLBACK_REWRITES];
+  // LP payantes : rewrite vers leur HTML prérendu, mais aucune entrée sitemap
+  // (generateSitemap ne connaît que STATIC_ROUTES_FR/EN + blog).
+  const noindexRewrites = NOINDEX_PRERENDERED_ROUTES.map(route => ({
+    source: route,
+    destination: `/prerendered/${route.slice(1).replace(/\//g, '-')}.html`,
+  }));
+
+  config.rewrites = [...frStaticRewrites, ...enStaticRewrites, ...blogRewrites, ...noindexRewrites, ...SPA_FALLBACK_REWRITES];
 
   // '/tarifs/' must 308 to '/tarifs' instead of missing every rewrite and dying in 404
   config.trailingSlash = false;
 
   await fs.writeFile(VERCEL_JSON_PATH, JSON.stringify(config, null, 2) + '\n', 'utf-8');
-  console.log(`  ✅ vercel.json updated: ${frStaticRewrites.length} FR static + ${enStaticRewrites.length} EN static + ${blogRewrites.length} blog + ${SPA_FALLBACK_REWRITES.length} SPA fallback rewrites\n`);
+  console.log(`  ✅ vercel.json updated: ${frStaticRewrites.length} FR static + ${enStaticRewrites.length} EN static + ${blogRewrites.length} blog + ${noindexRewrites.length} LP noindex + ${SPA_FALLBACK_REWRITES.length} SPA fallback rewrites\n`);
 }
 
 // ─────────────────────────────────────────────
@@ -687,7 +703,7 @@ async function main() {
   const blogRoutes = await fetchBlogSlugs();
   // EXTRA_RENDER_ROUTES ('/404') is rendered + kept by cleanup, but excluded
   // from updateVercelJson and generateSitemap (no rewrite, no sitemap entry).
-  const allRoutes = [...STATIC_ROUTES, ...blogRoutes, ...EXTRA_RENDER_ROUTES];
+  const allRoutes = [...STATIC_ROUTES, ...blogRoutes, ...EXTRA_RENDER_ROUTES, ...NOINDEX_PRERENDERED_ROUTES];
 
   // Step 2: Update vercel.json (always run — EN static routes + blog routes)
   await updateVercelJson(blogRoutes);

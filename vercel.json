@@ -469,6 +469,14 @@
       "destination": "/prerendered/en-blog-living-in-france-working-in-geneva.html"
     },
     {
+      "source": "/chambres-septembre",
+      "destination": "/prerendered/chambres-septembre.html"
+    },
+    {
+      "source": "/en/rooms-september",
+      "destination": "/prerendered/en-rooms-september.html"
+    },
+    {
       "source": "/portail",
       "destination": "/_spa.html"
     },
@@ -1069,6 +1077,15 @@
     },
     {
       "source": "/(portail|dashboard)/:path*",
+      "headers": [
+        {
+          "key": "X-Robots-Tag",
+          "value": "noindex"
+        }
+      ]
+    },
+    {
+      "source": "/(chambres-septembre|en/rooms-september)",
       "headers": [
         {
           "key": "X-Robots-Tag",

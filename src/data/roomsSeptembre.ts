@@ -59,24 +59,24 @@ export const ROOMS_SEPTEMBRE: RoomSeptembre[] = [
     },
     photos: [
       {
-        src: "/images/lp-septembre/lelodge-parc.webp",
+        src: "/images/le lodge/common areas/la villa coliving le lodge-40.webp",
         alt: {
-          fr: "Le grand parc du Lodge, à Annemasse",
-          en: "The Lodge's large park, in Annemasse",
+          fr: "Le grand salon commun du Lodge, canapés et coin musique",
+          en: "The Lodge's large shared lounge, sofas and record corner",
         },
       },
       {
-        src: "/images/lp-septembre/chambre-4-lelodge-1.webp",
+        src: "/images/le lodge/rooms/Chambre 4/chambre-4-vue-large.webp",
         alt: {
-          fr: "Chambre 4 du Lodge, 20 m² côté jardin",
-          en: "Room 4 at the Lodge, 20 sqm on the garden side",
+          fr: "Chambre 4 du Lodge : lit double, bureau et grande fenêtre côté jardin",
+          en: "Room 4 at the Lodge: double bed, desk and a large garden-side window",
         },
       },
       {
-        src: "/images/lp-septembre/chambre-4-lelodge-2.webp",
+        src: "/images/le lodge/rooms/Chambre 4/chambre-4-salle-eau.webp",
         alt: {
-          fr: "Salle d'eau privative de la chambre 4",
-          en: "Room 4's private shower room",
+          fr: "Salle d'eau privative de la chambre 4 : douche à l'italienne, meuble vasque et miroir rétroéclairé",
+          en: "Room 4's private shower room: walk-in shower, vanity unit and backlit mirror",
         },
       },
     ],
@@ -99,29 +99,42 @@ export const ROOMS_SEPTEMBRE: RoomSeptembre[] = [
     },
     photos: [
       {
-        src: "/images/lp-septembre/chambre-8-lavilla-balcon.webp",
+        src: "/images/la villa/rooms/Chambre 8/chambre-8-balcon-piscine.webp",
         alt: {
-          fr: "Vue sur la piscine depuis le balcon privatif de la chambre 8",
-          en: "Pool view from room 8's private balcony",
+          fr: "La piscine de La Villa vue depuis le balcon privatif de la chambre 8",
+          en: "La Villa's pool seen from room 8's private balcony",
         },
       },
       {
-        src: "/images/lp-septembre/chambre-8-lavilla-1.webp",
+        src: "/images/la villa/rooms/Chambre 8/chambre-8-chambre.webp",
         alt: {
-          fr: "Chambre 8 de La Villa, 18 m² plein sud",
-          en: "Room 8 at La Villa, 18 sqm facing south",
+          fr: "Chambre 8 de La Villa : lit double, tête de lit capitonnée et mur bleu",
+          en: "Room 8 at La Villa: double bed, upholstered headboard and blue accent wall",
         },
       },
       {
-        src: "/images/lp-septembre/chambre-8-lavilla-2.webp",
+        src: "/images/la villa/rooms/Chambre 8/chambre-8-bureau.webp",
         alt: {
-          fr: "Coin bureau de la chambre 8, avec sa grande baie",
-          en: "Room 8's desk nook and its large window",
+          fr: "Le coin bureau attenant à la chambre 8, baigné de lumière",
+          en: "Room 8's adjoining desk nook, bathed in light",
         },
       },
     ],
   },
 ];
+
+/**
+ * Hero — piscine extérieure du Lodge (fournie le 24/08/2026). Choisi plutôt que
+ * `le lodge/exterior/la villa coliving le lodge-14.webp`, seule autre photo
+ * « extérieur Lodge » disponible : celle-ci est une prise de vue HIVERNALE
+ * (arbres nus, pelouse brune) — contre-productive sur une page qui vend
+ * septembre. Portrait 1086x1448, calibré plein écran mobile.
+ */
+export const HERO_IMAGE = "/images/le lodge/exterior/lodge-piscine-hero.webp";
+export const HERO_ALT = {
+  fr: "La piscine extérieure du Lodge, transats au soleil",
+  en: "The Lodge's outdoor pool, loungers in the sun",
+};
 
 /** Loyer d'entrée réel — alimente le « dès X CHF » du hero (jamais une valeur en dur). */
 export const PRICE_FROM_CHF = Math.min(...ROOMS_SEPTEMBRE.map((r) => r.priceChf));
