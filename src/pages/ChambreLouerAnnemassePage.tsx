@@ -145,7 +145,7 @@ export function ChambreLouerAnnemassePage() {
                 <li className="flex items-start gap-2"><Check className="w-4 h-4 text-[#D4A574] mt-0.5 flex-shrink-0" /> {language === "en" ? "Designer furniture" : "Mobilier design"}</li>
                 <li className="flex items-start gap-2"><Check className="w-4 h-4 text-[#D4A574] mt-0.5 flex-shrink-0" /> {language === "en" ? "8 Gb/s fiber" : "Fibre 8 Gb/s"}</li>
                 <li className="flex items-start gap-2"><Check className="w-4 h-4 text-[#D4A574] mt-0.5 flex-shrink-0" /> {language === "en" ? "Utilities included" : "Charges comprises"}</li>
-                <li className="flex items-start gap-2"><Check className="w-4 h-4 text-[#D4A574] mt-0.5 flex-shrink-0" /> {language === "en" ? "Housekeeping 2×/week" : "Ménage 2×/semaine"}</li>
+                <li className="flex items-start gap-2"><Check className="w-4 h-4 text-[#D4A574] mt-0.5 flex-shrink-0" /> {language === "en" ? "Housekeeping 3×/week" : "Ménage 3×/semaine"}</li>
                 <li className="flex items-start gap-2"><Check className="w-4 h-4 text-[#D4A574] mt-0.5 flex-shrink-0" /> {language === "en" ? "Pool, sauna and gym" : "Piscine, sauna et salle de sport"}</li>
               </ul>
             </div>
@@ -196,7 +196,7 @@ export function ChambreLouerAnnemassePage() {
                   "Léman Express direct to Geneva Cornavin 15 min",
                   "Pool, gym, sauna in every house",
                   "fiber internet up to 8 Gb/s",
-                  "Twice-weekly cleaning of common areas",
+                  "Cleaning three times a week of common areas",
                   "Weekly yoga and fitness classes included",
                   "Monthly community events, community dinners",
                   "No agency fees, no application fees",
@@ -210,7 +210,7 @@ export function ChambreLouerAnnemassePage() {
                   "Léman Express direct Genève Cornavin en 15 min",
                   "Piscine, salle de sport, sauna dans chaque maison",
                   "Internet fibre jusqu'à 8 Gb/s",
-                  "Ménage 2 fois par semaine des espaces communs",
+                  "Ménage 3 fois par semaine des espaces communs",
                   "Cours hebdomadaires yoga et fitness inclus",
                   "Événements communautaires mensuels, dîners communautaires",
                   "Aucun frais d'agence, aucun frais de dossier",

@@ -89,7 +89,7 @@ function getHousesData(lang: string): Record<string, HouseData> {
       : "370 m² de vie design sur un domaine de 2 000 m² bordant une réserve naturelle. Piscine chauffée, sauna, salle de sport et 10 chambres spacieuses.",
     longDescription: isEn
       ? `Our flagship house, 10 minutes on foot from Annemasse station — Léman Express to central Geneva in 9 minutes, under 20 minutes door-to-door. 370 m² for 10 housemates on a 2,000 m² estate bordering a nature reserve. Day to day: a heated 12×5 m pool, a 5-seat sauna, a fully equipped gym and 8 Gb/s fiber. All rooms are furnished with Emma or Tediber mattresses — 6 with a private en-suite bathroom, 4 with 2 shared shower rooms (for these rooms, shower-room cleaning is included in the rent — no hassle!). All-inclusive rent from ${PRICE_CHF_EN}/month: utilities, fiber, twice-weekly cleaning of common areas, pool and garden upkeep. No application fee, reply within 48h.`
-      : `Notre maison amirale, à 10 minutes à pied de la gare d'Annemasse — Léman Express vers le centre de Genève en 9 minutes, moins de 20 minutes porte-à-porte. 370 m² pour 10 colocataires, sur un domaine de 2 000 m² en bordure de réserve naturelle. Au quotidien : piscine chauffée de 12×5 m, sauna 5 places, salle de sport équipée et fibre 8 Gb/s. Toutes les chambres sont meublées avec matelas Emma ou Tediber — 6 avec salle de bain privative, 4 avec 2 salles d'eau partagées (pour ces chambres, le ménage de la salle d'eau est inclus dans le loyer : pas de tracas !). Loyer tout inclus dès ${PRICE_CHF_FR}/mois : charges, fibre, ménage 2×/semaine des espaces communs, entretien piscine et jardin. 0 frais de dossier, réponse sous 48 h.`,
+      : `Notre maison amirale, à 10 minutes à pied de la gare d'Annemasse — Léman Express vers le centre de Genève en 9 minutes, moins de 20 minutes porte-à-porte. 370 m² pour 10 colocataires, sur un domaine de 2 000 m² en bordure de réserve naturelle. Au quotidien : piscine chauffée de 12×5 m, sauna 5 places, salle de sport équipée et fibre 8 Gb/s. Toutes les chambres sont meublées avec matelas Emma ou Tediber — 6 avec salle de bain privative, 4 avec 2 salles d'eau partagées (pour ces chambres, le ménage de la salle d'eau est inclus dans le loyer : pas de tracas !). Loyer tout inclus dès ${PRICE_CHF_FR}/mois : charges, fibre, ménage 3×/semaine des espaces communs, entretien piscine et jardin. 0 frais de dossier, réponse sous 48 h.`,
     image: "/images/la villa jardin.webp",
     gallery: [
       "/images/la villa/rooms/La Villa-92.webp",
@@ -374,7 +374,7 @@ function getHousesData(lang: string): Record<string, HouseData> {
       "Monthly community dinner",
       "Seasonal community events",
       "WhatsApp direct support",
-      "Housekeeping twice a week",
+      "Housekeeping three times a week",
       "Pool, sauna & garden maintenance",
       "Streaming subscriptions (Netflix, Canal+, etc.)",
       "Bed linen set & towels provided",
@@ -384,7 +384,7 @@ function getHousesData(lang: string): Record<string, HouseData> {
       "Panier repas mensuel livré",
       "Événements communautaires saisonniers",
       "Support WhatsApp direct",
-      "Ménage des communs 2 fois par semaine",
+      "Ménage des communs 3 fois par semaine",
       "Entretien piscine, sauna & jardin",
       "Abonnements streaming (Netflix, Canal+, etc.)",
       "Parure de linge de lit et serviettes fournie",
@@ -784,7 +784,7 @@ function getHousesData(lang: string): Record<string, HouseData> {
       "Monthly community dinner",
       "Seasonal community events",
       "WhatsApp direct support",
-      "Housekeeping twice a week",
+      "Housekeeping three times a week",
       "Pool & sauna maintenance",
       "Streaming subscriptions (Netflix, Canal+, etc.)",
       "Bed linen set & towels provided",
@@ -794,7 +794,7 @@ function getHousesData(lang: string): Record<string, HouseData> {
       "Panier repas mensuel livré",
       "Événements communautaires saisonniers",
       "Support WhatsApp direct",
-      "Ménage des communs 2 fois par semaine",
+      "Ménage des communs 3 fois par semaine",
       "Entretien piscine & sauna",
       "Abonnements streaming (Netflix, Canal+, etc.)",
       "Parure de linge de lit et serviettes fournie",
@@ -857,7 +857,7 @@ function getHousesData(lang: string): Record<string, HouseData> {
       : "Notre maison la plus récente et la plus grande, ouverte depuis janvier 2026. 500 m² sur 1 500 m², pool house, chalet fitness complet avec sauna et jeu d'arcade.",
     longDescription: isEn
       ? `Le Lodge is our newest coliving in Annemasse, opened January 2026 in the quiet residential Romagny district. Within 500 m² spread across 4 buildings at the heart of 1,500 m² of gardens, 12 housemates share a dedicated fitness chalet with Finnish sauna, a pool house with full outdoor kitchen, and a main residence designed to combine privacy and community living. Each furnished room has its own en-suite bathroom, ergonomic desk and fiber internet. Annemasse station is a 9-minute walk away — direct Léman Express to Geneva Cornavin in 15 minutes, no transfer. Ideal for cross-border workers commuting daily, and young professionals who value a real community over a faceless apartment block. All-inclusive rent (utilities, fiber, twice-weekly common cleaning, private fitness classes) from ${PRICE_CHF_EN}/month. No agency fees.`
-      : `Le Lodge est notre coliving le plus récent à Annemasse, ouvert en janvier 2026 dans le quartier résidentiel calme de Romagny. Dans 500 m² répartis sur 4 bâtiments au cœur de 1 500 m² de jardins, 12 colocataires partagent un chalet fitness dédié avec sauna finlandais, un pool house avec cuisine d'été complète et une résidence principale conçue pour combiner intimité et vie communautaire. Chaque chambre meublée dispose de sa salle de bain privative, d'un bureau ergonomique et de la fibre. La gare d'Annemasse est à 9 minutes à pied — Léman Express direct jusqu'à Genève Cornavin en 15 minutes, sans correspondance. Idéal pour les frontaliers qui font le trajet quotidien, et les jeunes pros qui valorisent une vraie communauté plutôt qu'un immeuble anonyme. Loyer tout inclus (charges, fibre, ménage commun 2 fois par semaine, cours de fitness privés) à partir de ${PRICE_CHF_FR}/mois. Sans frais d'agence.`,
+      : `Le Lodge est notre coliving le plus récent à Annemasse, ouvert en janvier 2026 dans le quartier résidentiel calme de Romagny. Dans 500 m² répartis sur 4 bâtiments au cœur de 1 500 m² de jardins, 12 colocataires partagent un chalet fitness dédié avec sauna finlandais, un pool house avec cuisine d'été complète et une résidence principale conçue pour combiner intimité et vie communautaire. Chaque chambre meublée dispose de sa salle de bain privative, d'un bureau ergonomique et de la fibre. La gare d'Annemasse est à 9 minutes à pied — Léman Express direct jusqu'à Genève Cornavin en 15 minutes, sans correspondance. Idéal pour les frontaliers qui font le trajet quotidien, et les jeunes pros qui valorisent une vraie communauté plutôt qu'un immeuble anonyme. Loyer tout inclus (charges, fibre, ménage commun 3 fois par semaine, cours de fitness privés) à partir de ${PRICE_CHF_FR}/mois. Sans frais d'agence.`,
     image: "/images/le lodge/exterior/la villa coliving le lodge-14.webp",
     gallery: [
       "/images/le lodge/rooms/la villa coliving le lodge-104.webp",
@@ -1241,7 +1241,7 @@ function getHousesData(lang: string): Record<string, HouseData> {
       "Monthly community dinner",
       "Seasonal community events",
       "WhatsApp direct support",
-      "Housekeeping twice a week",
+      "Housekeeping three times a week",
       "Full property, garden & pool maintenance",
       "Streaming subscriptions (Netflix, Canal+, etc.)",
       "Bed linen set & towels provided",
@@ -1251,7 +1251,7 @@ function getHousesData(lang: string): Record<string, HouseData> {
       "Panier repas mensuel livré",
       "Événements communautaires saisonniers",
       "Support WhatsApp direct",
-      "Ménage des communs 2 fois par semaine",
+      "Ménage des communs 3 fois par semaine",
       "Entretien complet propriété, jardin & piscine",
       "Abonnements streaming (Netflix, Canal+, etc.)",
       "Parure de linge de lit et serviettes fournie",
@@ -1995,7 +1995,7 @@ export function HouseDetailPage() {
         const FAQ_DATA: Record<string, { fr: QA[]; en: QA[] }> = {
           lavilla: {
             fr: [
-              { q: "Quel est le loyer mensuel à La Villa et que comprend-il ?", a: `Les chambres de La Villa sont à ${PRICE_CHF_FR} par mois tout inclus : charges (eau, électricité, chauffage), internet fibre jusqu'à 8 Gb/s, ménage 2 fois par semaine des espaces communs, abonnements streaming, entretien piscine et jardin, cours de yoga / fitness privés, parure de linge fournie. Aucun supplément.` },
+              { q: "Quel est le loyer mensuel à La Villa et que comprend-il ?", a: `Les chambres de La Villa sont à ${PRICE_CHF_FR} par mois tout inclus : charges (eau, électricité, chauffage), internet fibre jusqu'à 8 Gb/s, ménage 3 fois par semaine des espaces communs, abonnements streaming, entretien piscine et jardin, cours de yoga / fitness privés, parure de linge fournie. Aucun supplément.` },
               { q: "Comment se rendre à Genève depuis La Villa à Ville-la-Grand ?", a: "Moins de 20 minutes porte-à-porte : la gare d'Annemasse est à moins de 10 min à pied, puis le Léman Express te dépose au centre de Genève en 9 min. En voiture : 15 min. En alternative, le bus TPN ligne 61 passe à 200 m. La frontière suisse de Moillesulaz est à 2 km — 5 min à vélo." },
               { q: "Quelle est la durée minimale du bail à La Villa ?", a: "Bail flexible 1 à 12 mois. Le bail par défaut est de 12 mois pour la stabilité de la communauté, mais nous acceptons des séjours plus courts (1, 3, 6 mois) selon disponibilité — utile pour les missions courtes ou les périodes d'essai en CDI." },
               { q: "Y a-t-il une caution et des frais d'agence ?", a: "Caution équivalente à 2 mois de loyer hors charges, restituée sous 30 jours après l'état des lieux de sortie. Aucun frais d'agence. Aucun frais de dossier." },
@@ -2021,7 +2021,7 @@ export function HouseDetailPage() {
           },
           leloft: {
             fr: [
-              { q: "Quel est le loyer mensuel au Loft et que comprend-il ?", a: `Les chambres du Loft sont à ${PRICE_CHF_FR} par mois tout inclus : charges, internet fibre jusqu'à 8 Gb/s, ménage 2 fois par semaine des communs, abonnements streaming, piscine intérieure, jardin, parure de linge. Pas de supplément caché.` },
+              { q: "Quel est le loyer mensuel au Loft et que comprend-il ?", a: `Les chambres du Loft sont à ${PRICE_CHF_FR} par mois tout inclus : charges, internet fibre jusqu'à 8 Gb/s, ménage 3 fois par semaine des communs, abonnements streaming, piscine intérieure, jardin, parure de linge. Pas de supplément caché.` },
               { q: "Comment se rendre à Genève depuis Le Loft à Ambilly ?", a: "Le Loft est à 5 min à pied de la frontière de Moillesulaz et à 5 minutes à pied du Tram 17 TPG (Lancy-Pont-Rouge ↔ Annemasse). Genève centre : 20 min via Tram 17. Pistes cyclables sécurisées vers Genève centre : 25 min en vélo." },
               { q: "Quelle est la durée minimale du bail au Loft ?", a: "Bail flexible 1 à 12 mois. Le bail par défaut est de 12 mois, mais nous acceptons des séjours plus courts selon disponibilité — pratique pour les frontaliers en mission ou en période d'essai à Genève." },
               { q: "Y a-t-il une caution et des frais d'agence ?", a: "Caution équivalente à 2 mois de loyer hors charges, restituée sous 30 jours après l'état des lieux de sortie. Aucun frais d'agence ni de dossier." },
@@ -2047,7 +2047,7 @@ export function HouseDetailPage() {
           },
           lelodge: {
             fr: [
-              { q: "Quel est le loyer mensuel au Lodge et que comprend-il ?", a: `Les chambres du Lodge sont à partir de ${PRICE_CHF_FR} par mois tout inclus : charges (eau, électricité, chauffage), internet fibre jusqu'à 8 Gb/s, ménage 2 fois par semaine des communs, abonnements streaming, entretien piscine et jardin, cours de yoga / fitness privés, parure de linge fournie, dîner communautaire mensuel. Pas de supplément.` },
+              { q: "Quel est le loyer mensuel au Lodge et que comprend-il ?", a: `Les chambres du Lodge sont à partir de ${PRICE_CHF_FR} par mois tout inclus : charges (eau, électricité, chauffage), internet fibre jusqu'à 8 Gb/s, ménage 3 fois par semaine des communs, abonnements streaming, entretien piscine et jardin, cours de yoga / fitness privés, parure de linge fournie, dîner communautaire mensuel. Pas de supplément.` },
               { q: "Comment se rendre à Genève depuis Le Lodge à Annemasse ?", a: "Le Lodge est à 9 min à pied de la gare d'Annemasse, terminus du Léman Express. Genève Cornavin est à 15 min en Léman Express direct, sans correspondance. La frontière suisse est à 5 min en voiture. Aéroport de Genève : 30 min." },
               { q: "Quelle est la durée minimale du bail au Lodge ?", a: "Bail flexible 1 à 12 mois. Le bail par défaut est de 12 mois pour la stabilité de la communauté, mais nous acceptons des séjours plus courts (1, 3, 6 mois) selon disponibilité." },
               { q: "Y a-t-il une caution et des frais d'agence ?", a: "Caution équivalente à 2 mois de loyer hors charges, restituée sous 30 jours après l'état des lieux. Aucun frais d'agence ni de dossier." },

@@ -20,7 +20,7 @@ export function RatesPageV4() {
     language === "en"
       ? "High-speed Pro fiber internet"
       : "Internet fibre Pro haut débit",
-    language === "en" ? "Twice-weekly housekeeping" : "Ménage 2 fois par semaine",
+    language === "en" ? "Housekeeping three times a week" : "Ménage 3 fois par semaine",
     language === "en"
       ? "Pool & garden maintenance"
       : "Entretien piscine & jardin",
@@ -259,8 +259,8 @@ export function RatesPageV4() {
       label: { fr: "Ménage professionnel", en: "Professional cleaning" },
       classic: { fr: "✗ (à ta charge)", en: "✗ (up to you)" },
       villa: {
-        fr: "✓ 2×/sem (3× en déploiement)",
-        en: "✓ 2×/week (3× rolling out)",
+        fr: "✓ 3×/sem",
+        en: "✓ 3×/week",
       },
       studio: { fr: "✗", en: "✗" },
     },
@@ -349,7 +349,7 @@ export function RatesPageV4() {
           </p>
           <p className="text-lg text-[#78716C]">
             {language === "en"
-              ? `At La Villa Coliving, a room costs ${PRICE_CHF_EN}/month, everything included: rent, utilities, fiber, cleaning twice a week, gym, pool, streaming. No application or agency fees — deposit of 2 months' rent (excluding utilities).`
+              ? `At La Villa Coliving, a room costs ${PRICE_CHF_EN}/month, everything included: rent, utilities, fiber, cleaning three times a week, gym, pool, streaming. No application or agency fees — deposit of 2 months' rent (excluding utilities).`
               : `À La Villa Coliving, une chambre coûte ${PRICE_CHF_FR}/mois, tout compris : loyer, charges, fibre, ménage 2x/semaine, salle de sport, piscine, streaming. Sans frais de dossier ni d'agence — caution de 2 mois de loyer (hors charges).`}
           </p>
           <div className="mt-8 flex flex-wrap justify-center gap-2">
@@ -701,8 +701,7 @@ export function RatesPageV4() {
                     — up to twice the usual market size —, generous common areas, a
                     garden, and amenities no local flatshare offers: pool, sauna,
                     gym. A real team maintains the house — professional cleaning
-                    twice a week (
-                    <strong>moving to 3×/week, already live at Le Lodge</strong>),
+                    three times a week,
                     gardener, pool technician — and your issues get answered within
                     48 hours. Community life is organised, not hoped for: monthly
                     parties, summer events, Halloween, Christmas, girls' nights.
@@ -717,9 +716,7 @@ export function RatesPageV4() {
                     espaces communs généreux, un jardin, et des équipements
                     qu'aucune colocation locale ne propose : piscine, sauna, salle
                     de sport. Une équipe entretient réellement la maison — ménage
-                    professionnel 2×/semaine (
-                    <strong>3×/semaine en cours de déploiement, déjà actif au Lodge</strong>
-                    ), jardinier, pisciniste — et tes problèmes trouvent une réponse
+                    professionnel 3×/semaine, jardinier, pisciniste — et tes problèmes trouvent une réponse
                     en moins de 48 h. La vie commune est organisée, pas espérée :
                     soirée mensuelle, événements d'été, Halloween, Noël, soirées
                     entre filles.

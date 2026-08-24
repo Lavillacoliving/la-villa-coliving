@@ -269,7 +269,7 @@ export const faqData: FAQItem[] = [
     },
     answer: {
       en: 'Your monthly rent includes: private furnished bedroom, all utilities (electricity, water, heating), high-speed fiber internet, twice-weekly housekeeping of common areas, pool and garden maintenance, gym and sauna access, weekly yoga and fitness classes, streaming subscriptions, community events, monthly essentials delivery (cleaning supplies, paper goods), and WhatsApp support. It\'s truly all-inclusive.',
-      fr: 'Votre loyer mensuel inclut : chambre privée meublée, tous les services (électricité, eau, chauffage), internet fibre haut débit, ménage des espaces communs deux fois par semaine, entretien de la piscine et du jardin, accès à la salle de sport et au sauna, cours de yoga et fitness hebdomadaires, abonnements streaming, événements communautaires, livraison mensuelle d\'essentiels (produits d\'entretien, articles en papier), et support WhatsApp. C\'est vraiment tout inclus.',
+      fr: 'Votre loyer mensuel inclut : chambre privée meublée, tous les services (électricité, eau, chauffage), internet fibre haut débit, ménage des espaces communs trois fois par semaine, entretien de la piscine et du jardin, accès à la salle de sport et au sauna, cours de yoga et fitness hebdomadaires, abonnements streaming, événements communautaires, livraison mensuelle d\'essentiels (produits d\'entretien, articles en papier), et support WhatsApp. C\'est vraiment tout inclus.',
     },
   },
   {
@@ -280,8 +280,8 @@ export const faqData: FAQItem[] = [
       fr: 'Combien coûte une chambre chez La Villa Coliving ?',
     },
     answer: {
-      en: `A room at La Villa Coliving costs ${PRICE_CHF_EN} per month, all-inclusive, with no hidden fees and no application fee: utilities, fiber internet, cleaning of common areas twice a week, gym, sauna, pool, streaming and community events. Our three houses — La Villa (Ville-la-Grand), Le Loft (Ambilly) and Le Lodge (Annemasse) — are 15-20 minutes from Geneva by Léman Express or tram.`,
-      fr: `Une chambre chez La Villa Coliving coûte ${PRICE_CHF_FR} par mois, tout inclus, sans frais cachés ni frais de dossier : charges, fibre, ménage des espaces communs deux fois par semaine, salle de sport, sauna, piscine, streaming et événements communautaires. Nos trois maisons — La Villa (Ville-la-Grand), Le Loft (Ambilly) et Le Lodge (Annemasse) — sont à 15-20 minutes de Genève en Léman Express ou tram.`,
+      en: `A room at La Villa Coliving costs ${PRICE_CHF_EN} per month, all-inclusive, with no hidden fees and no application fee: utilities, fiber internet, cleaning of common areas three times a week, gym, sauna, pool, streaming and community events. Our three houses — La Villa (Ville-la-Grand), Le Loft (Ambilly) and Le Lodge (Annemasse) — are 15-20 minutes from Geneva by Léman Express or tram.`,
+      fr: `Une chambre chez La Villa Coliving coûte ${PRICE_CHF_FR} par mois, tout inclus, sans frais cachés ni frais de dossier : charges, fibre, ménage des espaces communs trois fois par semaine, salle de sport, sauna, piscine, streaming et événements communautaires. Nos trois maisons — La Villa (Ville-la-Grand), Le Loft (Ambilly) et Le Lodge (Annemasse) — sont à 15-20 minutes de Genève en Léman Express ou tram.`,
     },
   },
   {

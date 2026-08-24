@@ -288,7 +288,7 @@ export const translations = {
         housekeeping: {
           title: "Effortless Upkeep",
           description:
-            "Twice-weekly professional housekeeping for all common areas — a light clean on Thursdays and a deep clean on Mondays. Your home stays pristine, effortlessly.",
+            "Professional housekeeping of all common areas three times a week, including one deep clean. Your home stays pristine, effortlessly.",
         },
         internet: {
           title: "High-Speed Fiber",
@@ -345,7 +345,7 @@ export const translations = {
         items: [
           "Rent & utilities (electricity, water, heating)",
           "Professional-grade fiber internet (up to 8 Gb/s)",
-          "Housekeeping twice a week",
+          "Housekeeping three times a week",
           "Pool, sauna & garden maintenance",
           "Fully equipped gym",
           "Weekly private yoga class",
@@ -724,7 +724,7 @@ export const translations = {
         housekeeping: {
           title: "Entretien Sans Effort",
           description:
-            "Ménage professionnel des communs 2 fois par semaine — nettoyage léger le jeudi, approfondi le lundi. Ta maison reste impeccable, sans effort.",
+            "Ménage professionnel des communs 3 fois par semaine, dont un nettoyage approfondi hebdomadaire. Ta maison reste impeccable, sans effort.",
         },
         internet: {
           title: "Fibre Haut Débit",
@@ -784,7 +784,7 @@ export const translations = {
         items: [
           "Loyer & charges (électricité, eau, chauffage)",
           "Internet fibre pro (jusqu'à 8 Gb/s)",
-          "Ménage des communs 2 fois par semaine",
+          "Ménage des communs 3 fois par semaine",
           "Entretien piscine, sauna & jardin",
           "Salle de sport équipée",
           "Cours de yoga privé hebdomadaire",
