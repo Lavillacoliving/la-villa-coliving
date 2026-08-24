@@ -1,60 +1,57 @@
 -- ============================================================================
 -- Intérêt chambre/maison déclaré à l'atterrissage (LP /chambres-septembre)
--- Brief LOT 2 du 24/08/2026 — critère d'acceptation §7.2 : la ligne Supabase doit
--- porter `property_interest` pré-rempli depuis la carte chambre cliquée.
--- Trace de la migration Supabase à appliquer via MCP `apply_migration`
--- (nom : `property_interest_2026_08_24`) APRÈS GO écrit de Jérôme.
+-- Brief LOT 2 du 24/08/2026 — critère §7.2 : la ligne Supabase doit porter
+-- `property_interest` pré-rempli depuis la carte chambre cliquée.
+-- Migration Supabase `property_interest_2026_08_24`, appliquée via MCP après GO.
+--
+-- ⚠️ CORRECTION DE CONCEPTION (24/08, avant application) : une introspection de la
+-- PRODUCTION a montré que `prospects.property_interest` EXISTAIT DÉJÀ — en **uuid**,
+-- avec une **clé étrangère vers properties(id)** et 6 lignes renseignées ; et
+-- `prospects.room_interest` existait déjà en text (0 ligne). Ces colonnes ne sont
+-- pas documentées dans Schema_Supabase_LaVilla.md.
+-- Conséquences, toutes intégrées ici :
+--   • on NE TOUCHE PAS à `prospects` : ses colonnes sont déjà bonnes ;
+--   • seule `form_submissions` reçoit les 2 colonnes, en MIROIR EXACT du typage de
+--     `prospects` (uuid + FK, et text) — sinon les deux tables divergeraient ;
+--   • la valeur écrite est un **uuid de properties**, PAS un slug. L'Edge v14 traduit
+--     le slug reçu du front (`lavilla`, `leloft`, `lelodge`, `montblanc`) en uuid via
+--     une table de correspondance figée. Écrire le slug tel quel aurait été rejeté par
+--     le type uuid, et le filet de l'Edge aurait silencieusement jeté le champ.
 --
 -- CHECKLIST §12 (lavilla-docs/Schema_Supabase_LaVilla.md) :
 --   1. Vues : `v_form_submissions_clean` recréée (DROP + CREATE — seule vue dépendante
---      de form_submissions, cf. migration du 22/08) : expose en plus property_interest
---      et room_interest ; security_invoker = true conservé ; grants identiques.
---      La RPC `bulletin_seo_metrics` lit la vue par colonnes nommées : ajouter des
---      colonnes ne la casse pas — elle n'est PAS modifiée par cette migration.
---   2. RLS : inchangée — 2 colonnes text NULL ; policies existantes intactes
---      (prospects : admin_full_prospects + service_role_prospects ; form_submissions :
---      Admins full access — anon sans policy → aucune exposition client).
---   2bis. AUCUNE contrainte CHECK modifiée. `prospects.source` (déclaratif) n'est pas
---      touché, et `property_interest` est volontairement du TEXTE LIBRE, sans CHECK :
---      un CHECK ici rejouerait le piège 23514 (Edge + dropdowns dashboard à aligner)
---      pour un champ de mesure qui n'a pas besoin d'être contraint.
---   3. entities.ts : valeurs écrites = slugs canoniques SANS tiret (`lavilla`, `leloft`,
---      `lelodge`, `montblanc`), conformes à `properties.slug`. logAudit : non concerné.
+--      de form_submissions) : expose property_interest et room_interest ;
+--      security_invoker = true conservé ; grants identiques. La RPC
+--      `bulletin_seo_metrics` lit la vue par colonnes nommées : non modifiée.
+--   2. RLS : inchangée — colonnes nullables ajoutées ; policies existantes intactes
+--      (form_submissions : Admins full access — anon sans policy).
+--   2bis. AUCUNE contrainte CHECK modifiée. `prospects.source` n'est pas touché.
+--   3. entities.ts : la correspondance slug → uuid vit dans l'Edge, alignée sur
+--      properties.slug (sans tiret). logAudit : non concerné.
 --   4. Trace : ce fichier.
---   5. Backup VPS : aucune table nouvelle — colonnes exportées avec les tables existantes.
---   6. Doc : Schema_Supabase_LaVilla.md (§6.1, §6.4, vue) + Infrastructure (Edge v14).
+--   5. Backup VPS : aucune table nouvelle.
+--   6. Doc : Schema_Supabase_LaVilla.md (§6.4 + vue) — et signaler les colonnes
+--      `prospects.property_interest` / `room_interest` absentes du document.
 --
--- Écriture : Edge Function `send-candidature-email` v14, depuis le payload du front
--- (query params `?property_interest=…&room_interest=…` posés par les CTA de la LP).
--- Trim + 256 caractères, vide → null. Le canal DÉCLARÉ (`source`) reste intact.
--- Ordre de déploiement : cette migration → Edge v14 → front (chaque étape rétrocompatible).
--- Additif et réversible (rollback en partie 3).
+-- Additive et réversible (rollback en partie 3).
 -- ============================================================================
 
 -- ---------------------------------------------------------------------------
--- PARTIE 1 — Colonnes : 2 colonnes text NULL sur prospects ET form_submissions
+-- PARTIE 1 — form_submissions : miroir exact du typage de prospects
 -- ---------------------------------------------------------------------------
-alter table public.prospects
-  add column if not exists property_interest text,
-  add column if not exists room_interest     text;
-
 alter table public.form_submissions
-  add column if not exists property_interest text,
+  add column if not exists property_interest uuid references public.properties(id),
   add column if not exists room_interest     text;
 
-comment on column public.prospects.property_interest is
-  'Maison visée, déclarée par le clic sur une carte chambre (LP /chambres-septembre). Slug canonique properties.slug SANS tiret : lavilla | leloft | lelodge | montblanc. Texte libre, aucun CHECK. Écrit par l''Edge send-candidature-email v14. N''écrase jamais `source` (déclaratif).';
-comment on column public.prospects.room_interest is
-  'Chambre visée si connue (ex. « chambre-4 »). Texte libre, aucun CHECK. Edge v14.';
 comment on column public.form_submissions.property_interest is
-  'Maison visée déclarée au clic sur une carte chambre (LP /chambres-septembre) — slug properties.slug. Edge v14.';
+  'Maison visée, déclarée par le clic sur une carte chambre (LP /chambres-septembre). uuid properties(id) — même typage que prospects.property_interest. L''Edge send-candidature-email v14 traduit le slug reçu du front en uuid.';
 comment on column public.form_submissions.room_interest is
-  'Chambre visée si connue. Edge v14.';
+  'Chambre visée si connue (ex. « chambre-4 »). Texte libre, aucun CHECK. Edge v14.';
 
 -- ---------------------------------------------------------------------------
 -- PARTIE 2 — Vue `v_form_submissions_clean` : DROP + CREATE (jamais d'ALTER).
 --   Identique à la version du 22/08, + property_interest et room_interest.
---   Dédoublonnage 10 min et filtre non-test inchangés ; is_paid inchangé.
+--   Dédoublonnage 10 min, filtre non-test et is_paid inchangés.
 -- ---------------------------------------------------------------------------
 drop view if exists public.v_form_submissions_clean;
 
@@ -92,14 +89,16 @@ from (
 where prev_at is null or (created_at - prev_at) > interval '10 minutes';
 
 comment on view public.v_form_submissions_clean is
-  'Soumissions réelles (hors is_test) dédoublonnées à 10 min par form_type. is_paid = gclid présent ou utm_medium = cpc (Google Ads). Le KPI SEO (candidatures nettes) = is_paid = false. property_interest/room_interest : maison/chambre visée déclarée au clic sur une carte de la LP (24/08/2026).';
+  'Soumissions réelles (hors is_test) dédoublonnées à 10 min par form_type. is_paid = gclid présent ou utm_medium = cpc (Google Ads). Le KPI SEO (candidatures nettes) = is_paid = false. property_interest (uuid properties) / room_interest : maison et chambre visées, déclarées au clic sur une carte de la LP (24/08/2026).';
 
 grant select on public.v_form_submissions_clean to anon, authenticated, service_role;
 
 -- ---------------------------------------------------------------------------
--- PARTIE 3 — Rollback (si nécessaire) : recréer la vue SANS les 2 colonnes
---   (copie exacte de la version du 22/08), puis supprimer les colonnes.
+-- PARTIE 3 — Rollback : recréer la vue SANS les 2 colonnes (version du 22/08),
+--   puis supprimer les colonnes de form_submissions.
 --   ⚠️ Ne jamais exécuter en même temps que les parties 1-2.
+--   ⚠️ Ne JAMAIS supprimer prospects.property_interest / room_interest : elles
+--      préexistaient à cette migration et portent des données métier.
 -- ---------------------------------------------------------------------------
 -- drop view if exists public.v_form_submissions_clean;
 -- create view public.v_form_submissions_clean with (security_invoker = true) as
@@ -112,5 +111,4 @@ grant select on public.v_form_submissions_clean to anon, authenticated, service_
 --   from public.form_submissions fs where not fs.is_test
 -- ) t where prev_at is null or (created_at - prev_at) > interval '10 minutes';
 -- grant select on public.v_form_submissions_clean to anon, authenticated, service_role;
--- alter table public.prospects        drop column if exists property_interest, drop column if exists room_interest;
 -- alter table public.form_submissions drop column if exists property_interest, drop column if exists room_interest;

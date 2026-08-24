@@ -4,6 +4,12 @@
 //   1. Payload optionnel `property_interest` / `room_interest` (posés par les CTA des
 //      cartes chambre de la LP, via query params sur /candidature) → colonnes dédiées
 //      sur form_submissions ET prospects (migration `property_interest_2026_08_24`).
+//      ⚠️ `prospects.property_interest` PRÉEXISTAIT en base : c'est un **uuid** avec
+//      une clé étrangère vers properties(id), pas du texte (introspection prod du
+//      24/08 : 6 lignes déjà renseignées). Le front envoie un SLUG lisible
+//      (`lavilla`…) et c'est CETTE fonction qui le traduit en uuid. Écrire le slug
+//      tel quel serait rejeté par le type, et le filet ci-dessous jetterait le champ
+//      en silence — le pré-remplissage échouerait sans aucune alerte.
 //   2. `source` (canal DÉCLARÉ par le candidat) reste intact : l'intérêt déclaré au clic
 //      vit dans ses propres colonnes, exactement comme l'attribution Ads de la v13.
 //   3. Filet en CASCADE ordonnée par valeur : si l'insert est refusé, on retire d'abord
@@ -370,12 +376,21 @@ Deno.serve(async (req: Request) => {
   // traitement que l'attribution (trim, 256 car., vide → null) et même règle : les clés
   // ne sont jointes aux inserts QUE si au moins une valeur est présente, donc sans LP les
   // corps envoyés à PostgREST sont identiques à la v13.
+  // properties.id — figés, relevés en production le 24/08/2026. Une table de
+  // correspondance côté serveur garantit que la valeur écrite satisfait TOUJOURS la
+  // clé étrangère : un slug inconnu donne null, jamais un uuid inventé.
+  const PROPERTY_IDS: Record<string, string> = {
+    lavilla: "d39d074a-ad6d-471c-b7c7-0e576521730e",
+    leloft: "177ebcb2-6852-461c-8150-d416aa62ecf1",
+    lelodge: "45175bde-8b94-446a-9dd4-e6dee4b5a509",
+    montblanc: "57ecaa58-81e3-4c8c-8681-d5ac50b0d437",
+  };
   const INTEREST_KEYS = ["property_interest", "room_interest"] as const;
-  const interest: Record<string, string | null> = {};
-  for (const key of INTEREST_KEYS) {
-    const value = String(data[key] ?? "").trim().slice(0, 256);
-    interest[key] = value || null;
-  }
+  const propertySlug = String(data.property_interest ?? "").trim().toLowerCase();
+  const interest: Record<string, string | null> = {
+    property_interest: PROPERTY_IDS[propertySlug] ?? null,
+    room_interest: String(data.room_interest ?? "").trim().slice(0, 256) || null,
+  };
   const hasInterest = Object.values(interest).some((v) => v !== null);
   const interestFields: Record<string, string | null> = hasInterest ? interest : {};
   const withoutInterest = (body: Record<string, unknown>): Record<string, unknown> =>
@@ -570,12 +585,10 @@ Deno.serve(async (req: Request) => {
       const extraMessage = (data.message ?? "").trim();
       if (extraMessage) notesParts.push(extraMessage);
 
-      // property_interest (uuid) : NON renseigné — le formulaire de candidature n'a pas de
-      // sélection de maison. Pour mémoire, si un champ "maison" est ajouté un jour :
-      //   La Villa   → d39d074a-ad6d-471c-b7c7-0e576521730e
-      //   Le Loft    → 177ebcb2-6852-461c-8150-d416aa62ecf1
-      //   Le Lodge   → 45175bde-8b94-446a-9dd4-e6dee4b5a509
-      //   Mont-Blanc → 57ecaa58-81e3-4c8c-8681-d5ac50b0d437
+      // property_interest (uuid) : renseigné depuis la v14 quand la candidature vient
+      // d'une carte de la LP (slug traduit en uuid plus haut, cf. PROPERTY_IDS).
+      // Reste null pour toute candidature arrivée par le formulaire nu — celui-ci n'a
+      // toujours pas de sélection de maison, et on n'en invente pas une.
       const prospect: Record<string, unknown> = {
         first_name: data.firstName,
         last_name: data.lastName,
