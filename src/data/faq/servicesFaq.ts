@@ -17,6 +17,10 @@ export const servicesFaq: { fr: QAPair[]; en: QAPair[] } = {
       a: "Oui. Chaque maison de La Villa Coliving dispose d'un sauna inclus dans le loyer : finlandais au Loft (Ambilly) et au Lodge (Annemasse), infrarouge à La Villa (Ville-la-Grand). Tu y accèdes librement, comme à la piscine et à la salle de sport.",
     },
     {
+      q: "La salle de sport est-elle accessible 24h/24 ?",
+      a: "Oui. Dans les trois maisons de La Villa Coliving, la salle de sport est en libre accès 24h/24 et 7j/7, sans réservation ni supplément : salle équipée à La Villa (Ville-la-Grand) et au Loft (Ambilly), chalet fitness dédié au Lodge (Annemasse). Tu t'entraînes quand tu veux, tôt le matin comme tard le soir.",
+    },
+    {
       q: "À quelle fréquence le ménage est-il assuré ?",
       a: "Chez La Villa Coliving, les parties communes sont nettoyées trois fois par semaine, ménage inclus dans ton loyer. L'entretien de la piscine, du jardin et les réparations sont également pris en charge.",
     },
@@ -37,6 +41,10 @@ export const servicesFaq: { fr: QAPair[]; en: QAPair[] } = {
     {
       q: "Is the sauna included?",
       a: "Yes. Every La Villa Coliving house has a sauna included in the rent: Finnish at Le Loft (Ambilly) and Le Lodge (Annemasse), infrared at La Villa (Ville-la-Grand). You access it freely, like the pool and the gym.",
+    },
+    {
+      q: "Is the gym open 24/7?",
+      a: "Yes. In all three La Villa Coliving houses, the gym is freely accessible 24/7, with no booking and no extra cost: an equipped gym at La Villa (Ville-la-Grand) and Le Loft (Ambilly), a dedicated fitness chalet at Le Lodge (Annemasse). You train whenever you want, early morning or late at night.",
     },
     {
       q: "How often is cleaning done?",

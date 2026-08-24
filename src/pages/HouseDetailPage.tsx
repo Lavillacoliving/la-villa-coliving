@@ -346,7 +346,7 @@ function getHousesData(lang: string): Record<string, HouseData> {
     features: isEn ? [
       "Heated 12×5m swimming pool (mid-April to end of September)",
       "5-seat sauna",
-      "Fully equipped gym",
+      "Fully equipped gym, open 24/7",
       "TV & gaming room (PS5, PS4 & Switch)",
       "XXL barbecue & multiple terraces",
       "Volleyball court",
@@ -358,7 +358,7 @@ function getHousesData(lang: string): Record<string, HouseData> {
     ] : [
       "Piscine chauffée 12×5 m (mi-avril à fin septembre)",
       "Sauna 5 places",
-      "Salle de sport équipée",
+      "Salle de sport équipée, accessible 24h/24",
       "Salle TV & gaming (PS5, PS4 & Switch)",
       "BBQ XXL & terrasses multiples",
       "Terrain de volley",
@@ -758,7 +758,7 @@ function getHousesData(lang: string): Record<string, HouseData> {
     features: isEn ? [
       "Year-round heated indoor pool",
       "Finnish sauna (2 seats) in the pool area",
-      "Fully equipped modern gym",
+      "Fully equipped modern gym, open 24/7",
       "Large south-facing terraces",
       "XXL outdoor kitchen with TV",
       "Parking included",
@@ -769,7 +769,7 @@ function getHousesData(lang: string): Record<string, HouseData> {
     ] : [
       "Piscine intérieure chauffée toute l'année",
       "Sauna finlandais (2 places) dans l'espace piscine",
-      "Salle de sport moderne équipée",
+      "Salle de sport moderne équipée, accessible 24h/24",
       "Grandes terrasses plein sud",
       "Cuisine extérieure XXL avec TV",
       "Parking inclus",
@@ -1214,7 +1214,7 @@ function getHousesData(lang: string): Record<string, HouseData> {
     },
     features: isEn ? [
       "12×5m outdoor swimming pool (mid-April to end of September)",
-      "Dedicated fitness chalet with sauna (5 seats)",
+      "Dedicated fitness chalet with sauna (5 seats), open 24/7",
       "Pool house with full outdoor kitchen, BBQ XXL",
       "Ping pong, arcade machine, pétanque",
       "Shuffleboard & foosball",
@@ -1225,7 +1225,7 @@ function getHousesData(lang: string): Record<string, HouseData> {
       "DPE B energy rating",
     ] : [
       "Piscine extérieure 12×5 m (mi-avril à fin septembre)",
-      "Chalet fitness dédié avec sauna (5 places)",
+      "Chalet fitness dédié avec sauna (5 places), accessible 24h/24",
       "Pool house avec cuisine d'été complète, BBQ XXL",
       "Ping pong, jeu d'arcade, pétanque",
       "Jeux de palets & babyfoot",

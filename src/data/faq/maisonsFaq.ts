@@ -14,7 +14,7 @@ export const maisonsFaq: { fr: QAPair[]; en: QAPair[] } = {
     },
     {
       q: "Toutes les maisons ont-elles une piscine ?",
-      a: "Oui. Les trois maisons de La Villa Coliving disposent d'une piscine : extérieure chauffée à La Villa (Ville-la-Grand), extérieure au Lodge (Annemasse) et intérieure chauffée toute l'année au Loft (Ambilly). Chacune a aussi un sauna, une salle de sport, un home cinéma et des jeux (babyfoot et/ou arcade) inclus dans le loyer.",
+      a: "Oui. Les trois maisons de La Villa Coliving disposent d'une piscine : extérieure chauffée à La Villa (Ville-la-Grand), extérieure au Lodge (Annemasse) et intérieure chauffée toute l'année au Loft (Ambilly). Chacune a aussi un sauna, une salle de sport en libre accès 24h/24, un home cinéma et des jeux (babyfoot et/ou arcade) inclus dans le loyer.",
     },
     {
       q: "Les maisons sont-elles toutes proches de Genève ?",
@@ -32,7 +32,7 @@ export const maisonsFaq: { fr: QAPair[]; en: QAPair[] } = {
     },
     {
       q: "Do all the houses have a pool?",
-      a: "Yes. All three La Villa Coliving houses have a pool: heated outdoor at La Villa (Ville-la-Grand), outdoor at Le Lodge (Annemasse) and indoor heated year-round at Le Loft (Ambilly). Each also has a sauna, a gym, a home cinema and games (table football and/or arcade) included in the rent.",
+      a: "Yes. All three La Villa Coliving houses have a pool: heated outdoor at La Villa (Ville-la-Grand), outdoor at Le Lodge (Annemasse) and indoor heated year-round at Le Loft (Ambilly). Each also has a sauna, a gym with 24/7 access, a home cinema and games (table football and/or arcade) included in the rent.",
     },
     {
       q: "Are all the houses close to Geneva?",

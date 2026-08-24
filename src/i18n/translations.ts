@@ -302,7 +302,7 @@ export const translations = {
         },
         wellness: {
           title: "Wellness Included",
-          description: "Fully equipped gym and sauna, because balance matters.",
+          description: "Fully equipped gym (24/7 access) and sauna, because balance matters.",
         },
         entertainment: {
           title: "Entertainment Hub",
@@ -739,7 +739,7 @@ export const translations = {
         wellness: {
           title: "Bien-être Inclus",
           description:
-            "Salle de sport équipée et sauna, parce que l'équilibre compte.",
+            "Salle de sport équipée (accès 24h/24) et sauna, parce que l'équilibre compte.",
         },
         entertainment: {
           title: "Espace Divertissement",

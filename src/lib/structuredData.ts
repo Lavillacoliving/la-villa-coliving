@@ -144,7 +144,7 @@ export function buildHomeLodgingBusinessSchema(language: "fr" | "en" = "fr"): Re
     amenityFeature: [
       { "@type": "LocationFeatureSpecification", name: en ? "Swimming pool" : "Piscine", value: true },
       { "@type": "LocationFeatureSpecification", name: "Sauna", value: true },
-      { "@type": "LocationFeatureSpecification", name: en ? "Gym" : "Salle de sport", value: true },
+      { "@type": "LocationFeatureSpecification", name: en ? "Gym (24/7 access)" : "Salle de sport (accès 24h/24)", value: true },
       { "@type": "LocationFeatureSpecification", name: en ? `Fiber internet up to ${STATS.fiberSpeed}` : `Internet fibre jusqu'à ${STATS.fiberSpeed}`, value: true },
       { "@type": "LocationFeatureSpecification", name: en ? "Common areas cleaning included" : "Ménage des parties communes inclus", value: true },
     ],
