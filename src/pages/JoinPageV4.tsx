@@ -30,6 +30,15 @@ export function JoinPageV4() {
   const [searchParams] = useSearchParams();
   const refSrc = (searchParams.get("src") ?? "").slice(0, 50);
   const refArticle = (searchParams.get("article") ?? "").slice(0, 120);
+  // Intérêt déclaré au clic sur une carte chambre de la LP /chambres-septembre
+  // (brief LOT 2, 24/08/2026) : ?property_interest=<slug properties.slug SANS tiret>
+  // &room_interest=<repère chambre>. Transmis à l'Edge v14 → colonnes dédiées sur
+  // prospects + form_submissions. Le canal DÉCLARÉ (select ci-dessous) reste prioritaire,
+  // ces champs ne le touchent pas. ⚠️ Les liens INTERNES vers /candidature ne portent
+  // volontairement aucun utm_* : ils redémarreraient l'attribution de session GA4 —
+  // l'attribution Ads est déjà capturée à l'atterrissage (sessionStorage, first-touch).
+  const refProperty = (searchParams.get("property_interest") ?? "").slice(0, 64);
+  const refRoom = (searchParams.get("room_interest") ?? "").slice(0, 64);
   // Soumission de TEST (équipe) : /candidature?test=1 → prospects.is_test = true côté
   // Edge (v12), exclue du bulletin et des comptages. Jamais exposée dans l'UI.
   // Depuis le 22/08/2026, `?test=1` posé sur N'IMPORTE QUELLE page d'atterrissage marque
@@ -47,6 +56,8 @@ export function JoinPageV4() {
       language: L,
       ref_src: refSrc || "none",
       ref_article: refArticle || "none",
+      property_interest: refProperty || "none",
+      room_interest: refRoom || "none",
     },
   });
 
@@ -65,6 +76,8 @@ export function JoinPageV4() {
     // Couche « observée » de l'attribution (l'URL d'arrivée), à côté du canal déclaré.
     if (refSrc) payload.ref_src = refSrc;
     if (refArticle) payload.ref_article = refArticle;
+    if (refProperty) payload.property_interest = refProperty;
+    if (refRoom) payload.room_interest = refRoom;
     if (isTest) payload.isTest = "1";
     // Attribution technique Ads (utm_* + gclid) capturée à l'atterrissage de la session
     // (first-touch, sessionStorage — src/lib/attribution.ts) → colonnes dédiées côté base
