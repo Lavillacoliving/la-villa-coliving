@@ -71,6 +71,33 @@ const GALLERY_SOURCES = [
   "/images/le lodge/common areas/la villa coliving le lodge-23.webp"
 ];
 for (const g of GALLERY_SOURCES) if (!SOURCES.includes(g)) SOURCES.push(g);
+
+// Galeries de la LP payante (brief LOT 3, 26/08/2026) : les photos visibles
+// UNIQUEMENT en lightbox. Elles ne sont jamais dans le flux de chargement de la
+// page — mais une fois la visionneuse ouverte, on ne veut pas servir un 1920 à un
+// écran de 412 px. Les 3 photos de carte de chaque chambre sont déjà listées plus haut.
+const LP_LIGHTBOX_SOURCES = [
+  // Chambre 4 · Le Lodge
+  "/images/le lodge/rooms/Chambre 4/chambre-4-bureau.webp",
+  "/images/le lodge/exterior/lodge-piscine-maison.webp",
+  "/images/le lodge/exterior/lodge-hamac-jardin.webp",
+  "/images/le lodge/common areas/lodge-salle-a-manger.webp",
+  "/images/le lodge/amenities/la villa coliving le lodge-57.webp",   // sauna finlandais
+  "/images/le lodge/amenities/la villa coliving le lodge-121.webp",  // salle de sport
+  "/images/le lodge/amenities/la villa coliving le lodge-96.webp",   // home cinéma
+  "/images/le lodge/interior/la villa coliving le lodge-85.webp",    // baby-foot
+  // Chambre 8 · La Villa
+  "/images/la villa/rooms/Chambre 8/chambre-8-vue-bureau.webp",
+  "/images/la villa/rooms/Chambre 8/chambre-8-salle-eau.webp",
+  "/images/la villa/rooms/La Villa-80.webp",                         // chambre, plan large
+  "/images/la villa/exterior/la villa.webp",                         // piscine + maison
+  "/images/la villa/amenities/La Villa-11.webp",                     // salle de sport
+  "/images/la villa/amenities/La Villa-37.webp",                     // sauna infrarouge
+  "/images/la villa/amenities/La Villa-42.webp",                     // baby-foot
+  "/images/la villa/interior/La Villa-89.webp",                      // salon
+];
+for (const g of LP_LIGHTBOX_SOURCES) if (!SOURCES.includes(g)) SOURCES.push(g);
+
 // Héros plein écran sous voile dégradé (Scrim) : qualité plus basse invisible à l'œil.
 const QUALITY_OVERRIDES = {
   '/images/la villa jardin.webp': 58,

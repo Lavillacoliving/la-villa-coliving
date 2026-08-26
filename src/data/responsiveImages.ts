@@ -339,5 +339,153 @@ export const RESPONSIVE_IMAGES: Record<string, { original: number; widths: numbe
       1440
     ],
     "reencoded": false
+  },
+  "/images/le lodge/rooms/Chambre 4/chambre-4-bureau.webp": {
+    "original": 1800,
+    "widths": [
+      480,
+      768,
+      1024,
+      1440
+    ],
+    "reencoded": false
+  },
+  "/images/le lodge/exterior/lodge-piscine-maison.webp": {
+    "original": 1086,
+    "widths": [
+      480,
+      768,
+      1024,
+      1086
+    ],
+    "reencoded": true
+  },
+  "/images/le lodge/exterior/lodge-hamac-jardin.webp": {
+    "original": 1022,
+    "widths": [
+      480,
+      768,
+      1022
+    ],
+    "reencoded": true
+  },
+  "/images/le lodge/common areas/lodge-salle-a-manger.webp": {
+    "original": 1086,
+    "widths": [
+      480,
+      768,
+      1024
+    ],
+    "reencoded": false
+  },
+  "/images/le lodge/amenities/la villa coliving le lodge-57.webp": {
+    "original": 1920,
+    "widths": [
+      480,
+      768,
+      1024,
+      1440
+    ],
+    "reencoded": false
+  },
+  "/images/le lodge/amenities/la villa coliving le lodge-121.webp": {
+    "original": 1536,
+    "widths": [
+      480,
+      768,
+      1024,
+      1440
+    ],
+    "reencoded": false
+  },
+  "/images/le lodge/amenities/la villa coliving le lodge-96.webp": {
+    "original": 1920,
+    "widths": [
+      480,
+      768,
+      1024,
+      1440,
+      1920
+    ],
+    "reencoded": true
+  },
+  "/images/la villa/rooms/Chambre 8/chambre-8-vue-bureau.webp": {
+    "original": 1086,
+    "widths": [
+      480,
+      768,
+      1024
+    ],
+    "reencoded": false
+  },
+  "/images/la villa/rooms/Chambre 8/chambre-8-salle-eau.webp": {
+    "original": 1086,
+    "widths": [
+      480,
+      768,
+      1024
+    ],
+    "reencoded": false
+  },
+  "/images/la villa/rooms/La Villa-80.webp": {
+    "original": 1440,
+    "widths": [
+      480,
+      768,
+      1024,
+      1440
+    ],
+    "reencoded": true
+  },
+  "/images/la villa/exterior/la villa.webp": {
+    "original": 1280,
+    "widths": [
+      480,
+      768,
+      1024,
+      1280
+    ],
+    "reencoded": true
+  },
+  "/images/la villa/amenities/La Villa-11.webp": {
+    "original": 1651,
+    "widths": [
+      480,
+      768,
+      1024,
+      1440,
+      1651
+    ],
+    "reencoded": true
+  },
+  "/images/la villa/amenities/La Villa-37.webp": {
+    "original": 1920,
+    "widths": [
+      480,
+      768,
+      1024,
+      1440,
+      1920
+    ],
+    "reencoded": true
+  },
+  "/images/la villa/amenities/La Villa-42.webp": {
+    "original": 1127,
+    "widths": [
+      480,
+      768,
+      1024,
+      1127
+    ],
+    "reencoded": true
+  },
+  "/images/la villa/interior/La Villa-89.webp": {
+    "original": 1170,
+    "widths": [
+      480,
+      768,
+      1024
+    ],
+    "reencoded": false
   }
 };
