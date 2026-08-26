@@ -78,6 +78,21 @@ interface FormData {
   lease_duration_months: number;
 }
 
+// ── Tarif transitoire — bascule des loyers du 01/09/2026 ────────────────
+// Les nouveaux loyers vivent dans Supabase (rooms.rent_chf) et sont donc déjà
+// appliqués par défaut. Jérôme doit pouvoir continuer à émettre des baux à
+// l'ANCIEN tarif jusqu'au 05/09/2026 INCLUS (engagements pris avant la bascule).
+// Le raccourci ci-dessous disparaît tout seul le 06/09/2026 ; le champ loyer,
+// lui, reste éditable en permanence (loyers négociés, cas particuliers).
+const LEGACY_RENT_CHF = 1380;
+const LEGACY_RENT_UNTIL = '2026-09-05'; // dernier jour où le raccourci est proposé
+
+// Date du jour au format ISO local (pas toISOString : décalage UTC en soirée)
+function todayISO(): string {
+  const d = new Date();
+  return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+}
+
 // Helper: nombre en lettres pour la durée (mois)
 const DURATION_WORDS_PREVIEW: Record<number, string> = {
   1: "un", 2: "deux", 3: "trois", 4: "quatre", 5: "cinq", 6: "six",
@@ -990,6 +1005,9 @@ export default function DashboardNouveauBailPage() {
       })()
     : '';
 
+  // Raccourci « ancien tarif » — visible jusqu'au 05/09/2026 inclus, puis disparaît
+  const [legacyRentAvailable] = useState<boolean>(() => todayISO() <= LEGACY_RENT_UNTIL);
+
   // Calculate loyer EUR
   const loyerEUR = Math.round(form.loyer_chf / form.exchange_rate);
   // Caution = 2 mois de loyer HORS charges (loi Alur — meublé)
@@ -1171,6 +1189,9 @@ export default function DashboardNouveauBailPage() {
         property: selectedProperty.name,
         room: selectedRoom.room_number,
         rent_chf: form.loyer_chf,
+        // Trace des baux émis hors tarif fiche chambre (bascule du 01/09/2026)
+        room_reference_rent_chf: selectedRoom.rent_chf,
+        rent_overridden: form.loyer_chf !== selectedRoom.rent_chf,
         entry_date: form.entry_date,
         document_url: documentUrl,
         annexe_files_uploaded: uploadedCount,
@@ -1552,6 +1573,86 @@ export default function DashboardNouveauBailPage() {
           <option value={24}>24 mois</option>
           <option value={36}>36 mois</option>
         </select>
+
+        <label style={{ display: 'block', marginBottom: '8px', fontSize: '13px', color: '#666' }}>
+          Loyer mensuel (CHF, charges comprises) — <span style={{ color: '#999', fontStyle: 'italic' }}>
+            {selectedRoom
+              ? (form.loyer_chf === selectedRoom.rent_chf
+                  ? 'tarif de la fiche chambre'
+                  : `modifié — fiche chambre : ${selectedRoom.rent_chf} CHF`)
+              : 'sélectionne une chambre'}
+          </span>
+        </label>
+        <input
+          type="number"
+          step="10"
+          min="0"
+          value={form.loyer_chf}
+          onChange={(e) => setForm((prev) => ({ ...prev, loyer_chf: parseInt(e.target.value) || 0 }))}
+          style={{
+            width: '100%',
+            padding: '10px',
+            marginBottom: '10px',
+            borderRadius: '4px',
+            border: selectedRoom && form.loyer_chf !== selectedRoom.rent_chf ? '2px solid #b8860b' : '1px solid #ddd',
+            fontSize: '14px',
+            background: selectedRoom && form.loyer_chf !== selectedRoom.rent_chf ? '#FFF8E7' : 'white',
+          }}
+        />
+
+        {/* Fenêtre transitoire : ancien tarif encore émettable jusqu'au 05/09/2026 inclus */}
+        {legacyRentAvailable && selectedRoom && (
+          <div style={{
+            marginBottom: '15px',
+            padding: '12px 14px',
+            background: '#FFF8E7',
+            border: '1px solid #b8860b',
+            borderRadius: '6px',
+            fontSize: '13px',
+            color: '#3a2e10',
+            lineHeight: 1.5,
+          }}>
+            <div style={{ fontWeight: 'bold', marginBottom: '8px', color: '#b8860b' }}>
+              Bascule tarifaire du 1er septembre
+            </div>
+            L'ancien tarif reste émettable jusqu'au <strong>5 septembre 2026 inclus</strong>. Passé cette date, ce raccourci disparaît.
+            <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap', marginTop: '10px' }}>
+              <button
+                type="button"
+                onClick={() => setForm((prev) => ({ ...prev, loyer_chf: LEGACY_RENT_CHF }))}
+                style={{
+                  padding: '7px 12px',
+                  borderRadius: '4px',
+                  fontSize: '12px',
+                  cursor: 'pointer',
+                  border: form.loyer_chf === LEGACY_RENT_CHF ? 'none' : '1px solid #b8860b',
+                  background: form.loyer_chf === LEGACY_RENT_CHF ? '#b8860b' : 'white',
+                  color: form.loyer_chf === LEGACY_RENT_CHF ? 'white' : '#b8860b',
+                  fontWeight: form.loyer_chf === LEGACY_RENT_CHF ? 600 : 400,
+                }}
+              >
+                {form.loyer_chf === LEGACY_RENT_CHF ? '✓ ' : ''}Ancien tarif — {LEGACY_RENT_CHF} CHF
+              </button>
+              <button
+                type="button"
+                onClick={() => setForm((prev) => ({ ...prev, loyer_chf: selectedRoom.rent_chf }))}
+                style={{
+                  padding: '7px 12px',
+                  borderRadius: '4px',
+                  fontSize: '12px',
+                  cursor: 'pointer',
+                  border: form.loyer_chf === selectedRoom.rent_chf ? 'none' : '1px solid #b8860b',
+                  background: form.loyer_chf === selectedRoom.rent_chf ? '#b8860b' : 'white',
+                  color: form.loyer_chf === selectedRoom.rent_chf ? 'white' : '#b8860b',
+                  fontWeight: form.loyer_chf === selectedRoom.rent_chf ? 600 : 400,
+                }}
+              >
+                {form.loyer_chf === selectedRoom.rent_chf ? '✓ ' : ''}Nouveau tarif — {selectedRoom.rent_chf} CHF
+              </button>
+            </div>
+          </div>
+        )}
+
 
         <label style={{ display: 'block', marginBottom: '8px', fontSize: '13px', color: '#666' }}>
           Taux de change (1 EUR = X CHF) — <span style={{ color: '#999', fontStyle: 'italic' }}>
