@@ -1,9 +1,11 @@
+import { Suspense, lazy, useCallback, useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
-import { ArrowRight, Bath, Calendar, Check, Maximize2 } from "lucide-react";
+import { ArrowRight, Bath, Calendar, Check, Maximize2, ZoomIn } from "lucide-react";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { SEO } from "@/components/SEO";
 import { WhatsAppButton } from "@/components/WhatsAppButton";
 import { responsiveImage } from "@/lib/responsiveImage";
+import type { RoomSeptembre } from "@/data/roomsSeptembre";
 import {
   HERO_ALT,
   HERO_H,
@@ -34,6 +36,33 @@ import {
  * NOMBRE RÉEL de chambres, il ne peut pas annoncer autre chose que ce qui est affiché.
  */
 /**
+ * La visionneuse n'est chargée qu'au premier geste (et préchargée à l'idle, voir
+ * plus bas) : elle ne pèse rien sur le chunk initial de la LP, et la haute
+ * résolution n'entre jamais dans le flux de chargement de la page (brief C4).
+ */
+const PhotoLightbox = lazy(() => import("@/components/PhotoLightbox"));
+
+/** Nombre de vignettes visibles en carte ; le reste vit dans la lightbox. */
+const CARD_PHOTOS = 3;
+
+/**
+ * Mesure directe de l'efficacité du lot : Clarity montrait des clics morts sur les
+ * photos, cet événement compte les ouvertures réelles. Même motif gardé que les
+ * autres CTA du site — l'analytics ne doit jamais casser l'UI (adblock, gtag absent).
+ */
+function trackLightboxOpen(room: RoomSeptembre, photoIndex: number) {
+  try {
+    (window as unknown as { gtag?: (...a: unknown[]) => void }).gtag?.("event", "photo_lightbox_open", {
+      room_id: room.id,
+      property_interest: room.property,
+      photo_index: photoIndex,
+    });
+  } catch {
+    /* noop */
+  }
+}
+
+/**
  * Cadre d'une photo : son ratio RÉEL, borné à [0,75 ; 1,5].
  * Les photos des deux chambres ont des orientations opposées (Lodge en paysage
  * 3:2, La Villa en portrait). Un cadre fixe unique amputait les portraits de plus
@@ -50,6 +79,57 @@ export function ChambresSeptembrePage() {
   const en = language === "en";
   const prefix = en ? "/en" : "";
   const count = ROOMS_SEPTEMBRE.length;
+
+  // Une seule lightbox à la fois : quelle chambre, quelle photo.
+  const [viewer, setViewer] = useState<{ room: number; photo: number } | null>(null);
+  /** Le bouton qui a ouvert la visionneuse — on lui rend le focus à la fermeture. */
+  const triggerRef = useRef<HTMLElement | null>(null);
+
+  const openViewer = useCallback(
+    (roomIndex: number, photoIndex: number, trigger?: HTMLElement | null) => {
+      // Radix rend le focus à l'élément focalisé À L'OUVERTURE. Or Safari — 1er
+      // navigateur de la LP (29,5 % des sessions) — ne focalise pas un <button> au
+      // clic : sans ce `focus()`, le focus retombait sur <body> à la fermeture et
+      // l'utilisateur au clavier repartait du haut de la page.
+      trigger?.focus();
+      triggerRef.current = trigger ?? null;
+      setViewer({ room: roomIndex, photo: photoIndex });
+      trackLightboxOpen(ROOMS_SEPTEMBRE[roomIndex], photoIndex);
+    },
+    [],
+  );
+
+  /**
+   * Fermeture + restitution EXPLICITE du focus. Radix a bien un mécanisme de
+   * restitution, mais au moment où il s'exécute le déclencheur est encore dans le
+   * sous-arbre masqué par la modale : le `focus()` y est sans effet et le focus
+   * retombe sur <body>. On le refait au tour de boucle suivant, overlay démonté.
+   *
+   * `setTimeout` et non `requestAnimationFrame` : rAF est SUSPENDU dans un onglet
+   * en arrière-plan — la restitution n'aurait jamais lieu pour qui change d'onglet
+   * pendant la visite.
+   */
+  const closeViewer = useCallback(() => {
+    setViewer(null);
+    const trigger = triggerRef.current;
+    if (trigger) window.setTimeout(() => trigger.focus(), 0);
+  }, []);
+
+  // Précharge le chunk de la visionneuse quand le navigateur n'a plus rien à faire :
+  // l'ouverture est alors instantanée, sans avoir rien coûté au premier rendu.
+  useEffect(() => {
+    const w = window as unknown as {
+      requestIdleCallback?: (cb: () => void) => number;
+      cancelIdleCallback?: (id: number) => void;
+    };
+    const load = () => { void import("@/components/PhotoLightbox"); };
+    if (w.requestIdleCallback) {
+      const id = w.requestIdleCallback(load);
+      return () => w.cancelIdleCallback?.(id);
+    }
+    const id = window.setTimeout(load, 2500);
+    return () => window.clearTimeout(id);
+  }, []);
 
   const heroTitle = en
     ? count === 1
@@ -208,20 +288,42 @@ export function ChambresSeptembrePage() {
                 className="overflow-hidden rounded-2xl border border-[#E7E5E4] bg-white shadow-sm"
               >
                 {/* Photo 1 = l'atout de SA maison (décision produit du brief).
-                    Bande de vignettes en dessous : les 2 photos de la chambre. */}
+                    Bande de vignettes en dessous : les 2 photos de la chambre.
+                    Les deux ouvrent la visionneuse : Clarity classait ces images n°2, 3, 4,
+                    6, 8 et 9 des éléments cliqués — des clics morts jusqu'au 26/08. */}
                 <div className="relative">
-                  <img
-                    src={room.photos[0].src}
-                    alt={en ? room.photos[0].alt.en : room.photos[0].alt.fr}
-                    {...responsiveImage(room.photos[0].src, "(min-width: 768px) 46vw, 100vw")}
-                    width={room.photos[0].w}
-                    height={room.photos[0].h}
-                    loading={roomIndex === 0 ? "eager" : "lazy"}
-                    decoding="async"
-                    className="w-full object-cover"
-                    style={{ aspectRatio: String(frameRatio(room.photos[0].w, room.photos[0].h)) }}
-                  />
-                  <span className="absolute left-4 top-4 rounded-lg bg-white/95 px-3 py-1.5 text-xs font-semibold text-[#1C1917] backdrop-blur-sm">
+                  <button
+                    type="button"
+                    onClick={(e) => openViewer(roomIndex, 0, e.currentTarget)}
+                    aria-label={
+                      en
+                        ? `Open the photos of ${room.landmark.en} (${room.photos.length} photos)`
+                        : `Ouvrir les photos de ${room.landmark.fr} (${room.photos.length} photos)`
+                    }
+                    className="group block w-full cursor-pointer transition-[filter] active:brightness-90"
+                  >
+                    <img
+                      src={room.photos[0].src}
+                      alt={en ? room.photos[0].alt.en : room.photos[0].alt.fr}
+                      {...responsiveImage(room.photos[0].src, "(min-width: 768px) 46vw, 100vw")}
+                      width={room.photos[0].w}
+                      height={room.photos[0].h}
+                      // Sous la ligne de flottaison (le hero occupe 100svh) : rien à
+                      // charger d'avance, ces octets concurrençaient le premier rendu.
+                      loading="lazy"
+                      decoding="async"
+                      className="w-full object-cover"
+                      style={{ aspectRatio: String(frameRatio(room.photos[0].w, room.photos[0].h)) }}
+                    />
+                    {/* Affordance : au survol en desktop, PERMANENTE en mobile — là où
+                        il n'y a pas de survol pour révéler quoi que ce soit. */}
+                    <span className="absolute right-3 top-3 flex h-9 w-9 items-center justify-center rounded-full bg-black/45 text-white backdrop-blur-sm transition-opacity md:opacity-0 md:group-hover:opacity-100 md:group-focus-visible:opacity-100">
+                      <ZoomIn className="h-5 w-5" />
+                    </span>
+                  </button>
+                  {/* `pointer-events-none` : la pastille ne doit pas percer un trou
+                      dans la zone cliquable de la photo. */}
+                  <span className="pointer-events-none absolute left-4 top-4 rounded-lg bg-white/95 px-3 py-1.5 text-xs font-semibold text-[#1C1917] backdrop-blur-sm">
                     {room.houseName}
                   </span>
                 </div>
@@ -231,30 +333,71 @@ export function ChambresSeptembrePage() {
                     un paysage 3:2 à côté d'un portrait 3:4. Une hauteur fixe, elle,
                     laissait la chambre 8 (portraits) chétive et le Lodge en débord. */}
                 <div className="flex gap-2 bg-white p-2">
-                  {room.photos.slice(1).map((photo) => (
-                    <img
-                      key={photo.src}
-                      src={photo.src}
-                      alt={en ? photo.alt.en : photo.alt.fr}
-                      {...responsiveImage(photo.src, "(min-width: 768px) 23vw, 45vw")}
-                      width={photo.w}
-                      height={photo.h}
-                      loading="lazy"
-                      decoding="async"
-                      // `min-w-0` et PAS de `w-full` : une largeur 100 % entrerait en
-                      // conflit avec la base flex et ferait déborder la ligne.
-                      className="min-w-0 rounded-md object-cover"
-                      style={{ flex: `${photo.w / photo.h} 1 0%`, aspectRatio: String(photo.w / photo.h) }}
-                    />
-                  ))}
+                  {room.photos.slice(1, CARD_PHOTOS).map((photo, i) => {
+                    const photoIndex = i + 1;
+                    const isLastThumb = photoIndex === CARD_PHOTOS - 1;
+                    const remaining = room.photos.length - CARD_PHOTOS;
+                    return (
+                      <button
+                        key={photo.src}
+                        type="button"
+                        onClick={(e) => openViewer(roomIndex, photoIndex, e.currentTarget)}
+                        aria-label={
+                          isLastThumb && remaining > 0
+                            ? en
+                              ? `See all ${room.photos.length} photos`
+                              : `Voir les ${room.photos.length} photos`
+                            : en
+                              ? photo.alt.en
+                              : photo.alt.fr
+                        }
+                        // `min-w-0` et PAS de `w-full` : une largeur 100 % entrerait en
+                        // conflit avec la base flex et ferait déborder la ligne.
+                        className="relative min-w-0 cursor-pointer overflow-hidden rounded-md transition-transform active:scale-[0.97]"
+                        style={{ flex: `${photo.w / photo.h} 1 0%`, aspectRatio: String(photo.w / photo.h) }}
+                      >
+                        <img
+                          src={photo.src}
+                          alt={en ? photo.alt.en : photo.alt.fr}
+                          {...responsiveImage(photo.src, "(min-width: 768px) 23vw, 45vw")}
+                          width={photo.w}
+                          height={photo.h}
+                          loading="lazy"
+                          decoding="async"
+                          className="h-full w-full object-cover"
+                        />
+                        {/* Le reste de la galerie, annoncé SANS interaction préalable :
+                            le visiteur doit savoir qu'il y a plus à voir avant de cliquer. */}
+                        {isLastThumb && remaining > 0 && (
+                          <span
+                            aria-hidden
+                            className="absolute inset-0 flex flex-col items-center justify-center bg-black/45 text-white backdrop-blur-[1px]"
+                          >
+                            <span className="text-lg font-semibold leading-none">+{remaining}</span>
+                            <span className="mt-1 text-[10px] font-medium uppercase tracking-[0.15em]">
+                              photos
+                            </span>
+                          </span>
+                        )}
+                      </button>
+                    );
+                  })}
                 </div>
 
                 <div className="p-6">
+                  {/* Le titre recevait des clics (n°10 de la heatmap) : il était perçu
+                      comme un lien. Il en devient un — vers la visionneuse. */}
                   <h3
                     className="text-xl text-[#1C1917]"
                     style={{ fontFamily: "DM Serif Display, serif" }}
                   >
-                    {en ? room.landmark.en : room.landmark.fr}
+                    <button
+                      type="button"
+                      onClick={(e) => openViewer(roomIndex, 0, e.currentTarget)}
+                      className="cursor-pointer text-left underline-offset-4 transition-colors hover:text-[#b8860b] hover:underline focus-visible:underline active:text-[#b8860b]"
+                    >
+                      {en ? room.landmark.en : room.landmark.fr}
+                    </button>
                   </h3>
 
                   <div className="mt-4 flex flex-wrap items-center gap-x-5 gap-y-2 text-sm text-[#57534E]">
@@ -350,6 +493,27 @@ export function ChambresSeptembrePage() {
       {/* WhatsApp flottant sur toute la page : 1 clic WhatsApp payant enregistré
           le 23/08 — le canal compte pour cette cible. */}
       <WhatsAppButton context={en ? "September rooms" : "Chambres septembre"} />
+
+      {/* Montée uniquement après un geste : tant que `viewer` est nul, ni le chunk
+          ni la moindre photo haute résolution n'est demandé. Pas de `fallback` :
+          le chunk est déjà préchargé à l'idle, et un voile d'attente sur un overlay
+          plein écran serait plus perturbant que son absence. */}
+      {viewer !== null && (
+        <Suspense fallback={null}>
+          <PhotoLightbox
+            photos={ROOMS_SEPTEMBRE[viewer.room].photos}
+            index={viewer.photo}
+            onIndexChange={(photo) => setViewer((v) => (v ? { ...v, photo } : v))}
+            onClose={closeViewer}
+            en={en}
+            title={
+              en
+                ? ROOMS_SEPTEMBRE[viewer.room].landmark.en
+                : ROOMS_SEPTEMBRE[viewer.room].landmark.fr
+            }
+          />
+        </Suspense>
+      )}
     </main>
   );
 }

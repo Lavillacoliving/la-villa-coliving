@@ -27,6 +27,13 @@ const STATIC_LOADERS: Record<string, Loader> = {
   "/tarifs": () => import("@/pages/RatesPageV4"),
   "/faq": () => import("@/pages/FAQPageV4"),
   "/candidature": () => import("@/pages/JoinPageV4"),
+  // LP payante (LOT 2) : prérendue mais ABSENTE de cette table jusqu'au 26/08 —
+  // `preloadRouteModule` retombait donc sur NotFoundPage, React ne pouvait pas
+  // réconcilier le DOM prérendu et détruisait le hero pour le reconstruire
+  // (LCP mesuré 4,04 s, dont ~2,9 s de pure attente d'hydratation).
+  // Les deux langues pointent le MÊME spécificateur qu'App.tsx → même chunk Vite.
+  "/chambres-septembre": () => import("@/pages/ChambresSeptembrePage"),
+  "/rooms-september": () => import("@/pages/ChambresSeptembrePage"),
   "/blog": () => import("@/pages/BlogPage"),
   "/lavilla": () => import("@/pages/HouseDetailPage"),
   "/leloft": () => import("@/pages/HouseDetailPage"),

@@ -32,10 +32,19 @@ export interface RoomSeptembre {
   /** L'atout vendeur, une phrase. EN = miroir, pas du mot à mot. */
   pitch: { fr: string; en: string };
   /**
-   * 3 photos. photos[0] = l'atout de SA maison (décision produit du brief :
-   * « la maison vend le rêve, la chambre signe le bail »), photos[1] = la chambre.
-   * Chemins sous /images/lp-septembre/ — passés par scripts/optimize-images.mjs
-   * pour obtenir les variantes responsive.
+   * Galerie de la chambre — 12 photos (LOT 3, 26/08/2026).
+   *
+   * ORDRE SIGNIFIANT, ne pas mélanger :
+   *   [0]      l'atout de SA maison — décision produit du brief LOT 2, « la maison
+   *            vend le rêve, la chambre signe le bail ». C'est la grande photo de la carte.
+   *   [1], [2] la chambre — les 2 vignettes de la carte.
+   *   [3…]     le reste : chambre puis équipements de la maison (piscine, sauna,
+   *            salle de sport, salon, jeux). Visible en LIGHTBOX UNIQUEMENT.
+   *
+   * Les 3 premières seules entrent dans le flux initial de la page ; les suivantes
+   * ne sont jamais requêtées tant que la lightbox n'est pas ouverte (LCP, brief C4).
+   * L'`alt` sert aussi de légende dans la lightbox — d'où des phrases descriptives
+   * et non des mots-clés.
    */
   photos: {
     src: string;
@@ -93,6 +102,87 @@ export const ROOMS_SEPTEMBRE: RoomSeptembre[] = [
           en: "Room 4's private shower room: walk-in shower, vanity unit and backlit mirror",
         },
       },
+      {
+        src: "/images/le lodge/rooms/Chambre 4/chambre-4-bureau.webp",
+        w: 1800,
+        h: 1200,
+        alt: {
+          fr: "Le coin bureau de la chambre 4, sous une suspension noire, à côté du lit",
+          en: "Room 4's desk nook, under a black pendant lamp, beside the bed",
+        },
+      },
+      {
+        src: "/images/le lodge/exterior/le lodge piscine.webp",
+        w: 1024,
+        h: 1024,
+        alt: {
+          fr: "La piscine extérieure du Lodge, bordée de cyprès",
+          en: "The Lodge's outdoor pool, lined with cypress trees",
+        },
+      },
+      {
+        src: "/images/le lodge/exterior/lodge-piscine-maison.webp",
+        w: 1086,
+        h: 1448,
+        alt: {
+          fr: "La piscine du Lodge et la maison en arrière-plan, un jour de plein soleil",
+          en: "The Lodge's pool with the house behind it, on a bright sunny day",
+        },
+      },
+      {
+        src: "/images/le lodge/amenities/la villa coliving le lodge-57.webp",
+        w: 1920,
+        h: 1280,
+        alt: {
+          fr: "Le sauna finlandais du Lodge, banquettes en bois clair",
+          en: "The Lodge's Finnish sauna, pale wooden benches",
+        },
+      },
+      {
+        src: "/images/le lodge/amenities/la villa coliving le lodge-121.webp",
+        w: 1536,
+        h: 1024,
+        alt: {
+          fr: "La salle de sport du Lodge : cage à squat, bancs et poids libres",
+          en: "The Lodge's gym: squat rack, benches and free weights",
+        },
+      },
+      {
+        src: "/images/le lodge/amenities/la villa coliving le lodge-96.webp",
+        w: 1920,
+        h: 1280,
+        alt: {
+          fr: "L'espace home cinéma du Lodge, grand écran et canapés bas",
+          en: "The Lodge's home cinema area, big screen and low sofas",
+        },
+      },
+      {
+        src: "/images/le lodge/interior/la villa coliving le lodge-85.webp",
+        w: 1920,
+        h: 1280,
+        alt: {
+          fr: "Le baby-foot du Lodge, à l'entrée du salon",
+          en: "The Lodge's foosball table, at the entrance to the lounge",
+        },
+      },
+      {
+        src: "/images/le lodge/common areas/lodge-salle-a-manger.webp",
+        w: 1086,
+        h: 1448,
+        alt: {
+          fr: "La salle à manger du Lodge : grande table en bois, chaises colorées et suspensions en rotin",
+          en: "The Lodge's dining room: long wooden table, colourful chairs and rattan pendant lights",
+        },
+      },
+      {
+        src: "/images/le lodge/exterior/lodge-hamac-jardin.webp",
+        w: 1022,
+        h: 1363,
+        alt: {
+          fr: "Un hamac tendu dans le jardin du Lodge",
+          en: "A hammock strung up in the Lodge's garden",
+        },
+      },
     ],
   },
   {
@@ -137,6 +227,78 @@ export const ROOMS_SEPTEMBRE: RoomSeptembre[] = [
         alt: {
           fr: "Le coin bureau de la chambre 8, en plein soleil devant la baie",
           en: "Room 8's desk nook, in full sun by the window",
+        },
+      },
+      {
+        src: "/images/la villa/rooms/La Villa-80.webp",
+        w: 1440,
+        h: 1920,
+        alt: {
+          fr: "La chambre 8 en plan large : le lit, le parquet et l'accès au balcon",
+          en: "Room 8 from a wider angle: the bed, the wood floor and the way out to the balcony",
+        },
+      },
+      {
+        src: "/images/la villa/rooms/Chambre 8/chambre-8-vue-bureau.webp",
+        w: 1086,
+        h: 1448,
+        alt: {
+          fr: "Depuis le lit de la chambre 8 : le fauteuil tressé et l'alcôve bureau baignée de lumière",
+          en: "From room 8's bed: the woven lounge chair and the sunlit desk alcove",
+        },
+      },
+      {
+        src: "/images/la villa/rooms/Chambre 8/chambre-8-salle-eau.webp",
+        w: 1086,
+        h: 1448,
+        alt: {
+          fr: "La salle d'eau partagée de l'étage : douche à l'italienne et double vasque",
+          en: "The floor's shared shower room: walk-in shower and double washbasin",
+        },
+      },
+      {
+        src: "/images/la villa jardin.webp",
+        w: 1024,
+        h: 1536,
+        alt: {
+          fr: "Le jardin de La Villa : la piscine et le banc de pierre, sous le saule pleureur",
+          en: "La Villa's garden: the pool and the stone bench, under the weeping willow",
+        },
+      },
+      {
+        src: "/images/la villa/amenities/La Villa-11.webp",
+        w: 1651,
+        h: 1920,
+        alt: {
+          fr: "La salle de sport de La Villa : tapis de course, haltères et cheval d'arçons",
+          en: "La Villa's gym: treadmill, dumbbells and a pommel horse",
+        },
+      },
+      {
+        src: "/images/la villa/amenities/La Villa-37.webp",
+        w: 1920,
+        h: 1307,
+        alt: {
+          fr: "Le sauna infrarouge de La Villa",
+          en: "La Villa's infrared sauna",
+        },
+      },
+      {
+        src: "/images/la villa/interior/La Villa-89.webp",
+        w: 1170,
+        h: 878,
+        alt: {
+          fr: "Le salon de La Villa : canapé moutarde, grande méridienne et plantes",
+          en: "La Villa's lounge: mustard sofa, a large daybed and plants",
+        },
+      },
+      {
+        src: "/images/la villa/amenities/La Villa-42.webp",
+        w: 1127,
+        h: 1464,
+        alt: {
+          fr: "Le baby-foot de La Villa, devant la baie vitrée",
+          en: "La Villa's foosball table, in front of the bay window",
         },
       },
     ],
