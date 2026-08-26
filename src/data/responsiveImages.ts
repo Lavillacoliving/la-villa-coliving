@@ -437,16 +437,6 @@ export const RESPONSIVE_IMAGES: Record<string, { original: number; widths: numbe
     ],
     "reencoded": true
   },
-  "/images/la villa/exterior/la villa.webp": {
-    "original": 1280,
-    "widths": [
-      480,
-      768,
-      1024,
-      1280
-    ],
-    "reencoded": true
-  },
   "/images/la villa/amenities/La Villa-11.webp": {
     "original": 1651,
     "widths": [

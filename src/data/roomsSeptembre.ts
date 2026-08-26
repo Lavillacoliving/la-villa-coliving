@@ -257,12 +257,12 @@ export const ROOMS_SEPTEMBRE: RoomSeptembre[] = [
         },
       },
       {
-        src: "/images/la villa/exterior/la villa.webp",
-        w: 1280,
-        h: 722,
+        src: "/images/la villa jardin.webp",
+        w: 1024,
+        h: 1536,
         alt: {
-          fr: "La piscine de La Villa et sa terrasse en bois, devant la maison",
-          en: "La Villa's pool and its wooden deck, in front of the house",
+          fr: "Le jardin de La Villa : la piscine et le banc de pierre, sous le saule pleureur",
+          en: "La Villa's garden: the pool and the stone bench, under the weeping willow",
         },
       },
       {
@@ -299,15 +299,6 @@ export const ROOMS_SEPTEMBRE: RoomSeptembre[] = [
         alt: {
           fr: "Le baby-foot de La Villa, devant la baie vitrée",
           en: "La Villa's foosball table, in front of the bay window",
-        },
-      },
-      {
-        src: "/images/la villa yoga.webp",
-        w: 1024,
-        h: 1536,
-        alt: {
-          fr: "Un cours de yoga dans le jardin de La Villa, au coucher du soleil sous le saule",
-          en: "A yoga class in La Villa's garden, at sunset under the willow",
         },
       },
     ],

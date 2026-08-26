@@ -90,7 +90,6 @@ const LP_LIGHTBOX_SOURCES = [
   "/images/la villa/rooms/Chambre 8/chambre-8-vue-bureau.webp",
   "/images/la villa/rooms/Chambre 8/chambre-8-salle-eau.webp",
   "/images/la villa/rooms/La Villa-80.webp",                         // chambre, plan large
-  "/images/la villa/exterior/la villa.webp",                         // piscine + maison
   "/images/la villa/amenities/La Villa-11.webp",                     // salle de sport
   "/images/la villa/amenities/La Villa-37.webp",                     // sauna infrarouge
   "/images/la villa/amenities/La Villa-42.webp",                     // baby-foot
