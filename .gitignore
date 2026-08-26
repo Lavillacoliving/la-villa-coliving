@@ -23,3 +23,6 @@ Thumbs.db
 # Logs
 *.log
 npm-debug.log*
+
+# Sorties des outils SEO (données GSC, graphes) — jamais versionnées
+tools/out/
