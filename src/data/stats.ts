@@ -28,7 +28,9 @@ export const STATS = {
 // (hero, SEO, FAQ, pages maisons, blocs offre du blog…).
 // Séparateurs déterministes (pas de toLocaleString : l'ICU peut différer
 // entre le build Puppeteer du prérendu et le navigateur → hydration mismatch).
-const thousands = (n: number, sep: string) =>
+// Exporté : la LP payante formate des loyers PAR CHAMBRE (src/data/roomsSeptembre.ts),
+// qui peuvent différer de STATS.priceChf — elle doit le faire avec le même séparateur.
+export const thousands = (n: number, sep: string) =>
   String(n).replace(/\B(?=(\d{3})+(?!\d))/g, sep);
 
 export const PRICE_FR_NUM = thousands(STATS.priceChf, " "); // « 1 380 » — U+00A0 insécable classique (la fine U+202F était quasi invisible → lisait « 1380 »)

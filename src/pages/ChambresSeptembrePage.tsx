@@ -5,14 +5,18 @@ import { useLanguage } from "@/contexts/LanguageContext";
 import { SEO } from "@/components/SEO";
 import { WhatsAppButton } from "@/components/WhatsAppButton";
 import { responsiveImage } from "@/lib/responsiveImage";
+import { STATS } from "@/data/stats";
 import type { RoomSeptembre } from "@/data/roomsSeptembre";
 import {
+  AVAILABLE_COUNT,
+  AVAILABLE_ROOMS,
   HERO_ALT,
   HERO_H,
   HERO_IMAGE,
   HERO_W,
+  LP_HOUSES,
+  LP_MONTH,
   PRICE_FROM_CHF,
-  ROOMS_SEPTEMBRE,
   formatAvailability,
   formatChf,
 } from "@/data/roomsSeptembre";
@@ -34,6 +38,22 @@ import {
  *
  * Tout le contenu chiffré vient de src/data/roomsSeptembre.ts — le titre dérive du
  * NOMBRE RÉEL de chambres, il ne peut pas annoncer autre chose que ce qui est affiché.
+ *
+ * ── TROIS ÉTATS, UN SEUL COMPTEUR (LOT 4, 28/08/2026) ────────────────────────
+ * Le composant ne décide de rien : `AVAILABLE_COUNT` (chambres au statut
+ * "disponible") le met dans l'un des trois états, et le mois vient de `LP_MONTH`.
+ *
+ *   n ≥ 2 → « Il ne reste que N chambres pour {mois} »   · CTA vers les cartes
+ *   n = 1 → « Dernière chambre disponible pour {mois} »  · CTA vers la carte
+ *   n = 0 → « Complet pour {mois} »                      · CTA vers /candidature,
+ *           qui sert de liste d'attente ; les cartes cèdent la place au bloc des
+ *           3 maisons. Rien n'est supprimé : rouvrir une chambre dans le fichier
+ *           de données ramène la page entière, lightbox du LOT 3 comprise.
+ *
+ * Pourquoi cette mécanique : les campagnes s'allument par « blast » de quelques
+ * jours à chaque libération. Entre deux blasts la page reste en ligne (lien
+ * partagé, onglet rouvert, accès direct) — elle doit donc pouvoir dire « complet »
+ * toute seule. Une page qui ment abîme la crédibilité que la rareté a construite.
  */
 /**
  * La visionneuse n'est chargée qu'au premier geste (et préchargée à l'idle, voir
@@ -44,6 +64,10 @@ const PhotoLightbox = lazy(() => import("@/components/PhotoLightbox"));
 
 /** Nombre de vignettes visibles en carte ; le reste vit dans la lightbox. */
 const CARD_PHOTOS = 3;
+
+/** Le CTA du hero change de destination selon l'état, jamais d'allure. */
+const HERO_CTA_CLASS =
+  "mt-7 inline-flex items-center gap-2 rounded-xl bg-white px-7 py-4 text-base font-semibold text-[#1C1917] shadow-lg transition-transform hover:scale-[1.02]";
 
 /**
  * Mesure directe de l'efficacité du lot : Clarity montrait des clics morts sur les
@@ -78,7 +102,16 @@ export function ChambresSeptembrePage() {
   const { language } = useLanguage();
   const en = language === "en";
   const prefix = en ? "/en" : "";
-  const count = ROOMS_SEPTEMBRE.length;
+  /**
+   * Le compteur — dérivé des chambres OUVERTES (src/data/roomsSeptembre.ts), jamais
+   * saisi. Il gouverne à lui seul les trois états de la page ; `isFull` n'est pas un
+   * mode à part, c'est son cas n = 0.
+   */
+  const count = AVAILABLE_COUNT;
+  const isFull = count === 0;
+  /** « septembre » / « September » — variable, pour que la bascule de mois soit une
+   *  seule valeur à changer et non une chasse aux chaînes dans le composant. */
+  const month = en ? LP_MONTH.en : LP_MONTH.fr;
 
   // Une seule lightbox à la fois : quelle chambre, quelle photo.
   const [viewer, setViewer] = useState<{ room: number; photo: number } | null>(null);
@@ -94,7 +127,7 @@ export function ChambresSeptembrePage() {
       trigger?.focus();
       triggerRef.current = trigger ?? null;
       setViewer({ room: roomIndex, photo: photoIndex });
-      trackLightboxOpen(ROOMS_SEPTEMBRE[roomIndex], photoIndex);
+      trackLightboxOpen(AVAILABLE_ROOMS[roomIndex], photoIndex);
     },
     [],
   );
@@ -131,26 +164,53 @@ export function ChambresSeptembrePage() {
     return () => window.clearTimeout(id);
   }, []);
 
-  const heroTitle = en
-    ? count === 1
-      ? "Only one room left for September"
-      : `Only ${count} rooms left for September`
-    : count === 1
-      ? "Il ne reste qu'une chambre pour septembre"
-      : `Il ne reste que ${count} chambres pour septembre`;
+  const heroBadge = isFull
+    ? en
+      ? "Next availabilities"
+      : "Prochaines disponibilités"
+    : en
+      ? `${month} availability`
+      : `Disponible en ${month}`;
 
-  const ctaLabel = en
-    ? count === 1
-      ? "See the room"
-      : `See the ${count} rooms`
+  const heroTitle = isFull
+    ? en
+      ? `Fully booked for ${month}`
+      : `Complet pour ${month}`
     : count === 1
-      ? "Voir la chambre"
-      : `Voir les ${count} chambres`;
+      ? en
+        ? `Last room available for ${month}`
+        : `Dernière chambre disponible pour ${month}`
+      : en
+        ? `Only ${count} rooms left for ${month}`
+        : `Il ne reste que ${count} chambres pour ${month}`;
+
+  const ctaLabel = isFull
+    ? en
+      ? "Be the first to know"
+      : "Être prévenu·e en premier"
+    : count === 1
+      ? en
+        ? "See the room"
+        : "Voir la chambre"
+      : en
+        ? `See the ${count} rooms`
+        : `Voir les ${count} chambres`;
+
+  /**
+   * Complet → le CTA quitte le tunnel photo : il n'y a plus de carte à faire
+   * défiler, et /candidature EST la liste d'attente (le formulaire existant, avec
+   * son Edge d'envoi — rien de nouveau à brancher).
+   */
+  const ctaHref = isFull ? `${prefix}/candidature` : "#chambres";
 
   // « dès » obligatoire (CLAUDE.md) : le prix affiché est un point d'entrée, pas un prix unique.
-  const heroSubtitle = en
-    ? `Your room in a house with a pool, sauna and gym — from CHF ${formatChf(PRICE_FROM_CHF)}/month all-inclusive, 15 minutes from Geneva.`
-    : `Ta chambre dans une maison avec piscine, sauna et salle de sport — dès ${formatChf(PRICE_FROM_CHF)} CHF/mois tout inclus, à 15 min de Genève.`;
+  const heroSubtitle = isFull
+    ? en
+      ? `All our ${month} rooms are taken. New rooms open up regularly — leave us your details and we'll let you know first.`
+      : `Toutes nos chambres de ${month} sont réservées. Les prochaines libérations arrivent — laisse-nous tes coordonnées, on te prévient en premier.`
+    : en
+      ? `Your room in a house with a pool, sauna and gym — from CHF ${formatChf(PRICE_FROM_CHF, true)}/month all-inclusive, 15 minutes from Geneva.`
+      : `Ta chambre dans une maison avec piscine, sauna et salle de sport — dès ${formatChf(PRICE_FROM_CHF, false)} CHF/mois tout inclus, à 15 min de Genève.`;
 
   const amenities = en
     ? [
@@ -190,11 +250,17 @@ export function ChambresSeptembrePage() {
     <main className="bg-white">
       <SEO
         noindex
-        title={en ? `Only ${count} rooms left for September` : `Il ne reste que ${count} chambres pour septembre`}
+        /* Le title suit le H1 : la page partagée en lien ne doit jamais promettre
+           des chambres qu'elle n'affiche plus. Jamais de prix ici (décision S33). */
+        title={heroTitle}
         description={
-          en
-            ? `${count} rooms available this September near Geneva. Pool, sauna, gym. From CHF ${formatChf(PRICE_FROM_CHF)}/month all-inclusive, no agency or application fee.`
-            : `${count} chambres se libèrent en septembre près de Genève. Piscine, sauna, salle de sport. Dès ${formatChf(PRICE_FROM_CHF)} CHF/mois tout inclus, 0 frais de dossier.`
+          isFull
+            ? en
+              ? `All our ${month} rooms are taken. ${STATS.totalHouses} homes, ${STATS.totalRooms} rooms near Geneva — leave us your details and we'll let you know as soon as one opens up.`
+              : `Toutes nos chambres de ${month} sont réservées. ${STATS.totalHouses} maisons, ${STATS.totalRooms} chambres près de Genève : laisse-nous tes coordonnées, on te prévient dès la prochaine libération.`
+            : en
+              ? `${count} rooms available this ${month} near Geneva. Pool, sauna, gym. From CHF ${formatChf(PRICE_FROM_CHF, true)}/month all-inclusive, no agency or application fee.`
+              : `${count} chambres se libèrent en ${month} près de Genève. Piscine, sauna, salle de sport. Dès ${formatChf(PRICE_FROM_CHF, false)} CHF/mois tout inclus, 0 frais de dossier.`
         }
       />
 
@@ -219,7 +285,7 @@ export function ChambresSeptembrePage() {
 
         <div className="container-custom relative z-10 pb-12 pt-28 md:pb-20">
           <span className="mb-4 inline-flex items-center gap-2 rounded-full bg-[#b8860b] px-4 py-1.5 text-xs font-semibold uppercase tracking-[0.2em] text-white">
-            {en ? "September availability" : "Disponible en septembre"}
+            {heroBadge}
           </span>
           <h1
             className="max-w-3xl text-4xl leading-tight text-white sm:text-5xl md:text-6xl"
@@ -228,13 +294,19 @@ export function ChambresSeptembrePage() {
             {heroTitle}
           </h1>
           <p className="mt-4 max-w-2xl text-base text-white/90 sm:text-lg">{heroSubtitle}</p>
-          <a
-            href="#chambres"
-            className="mt-7 inline-flex items-center gap-2 rounded-xl bg-white px-7 py-4 text-base font-semibold text-[#1C1917] shadow-lg transition-transform hover:scale-[1.02]"
-          >
-            {ctaLabel}
-            <ArrowRight className="h-5 w-5" />
-          </a>
+          {/* Complet → <Link> (navigation SPA vers /candidature) ; sinon <a> vers
+              l'ancre des cartes, qu'un Link transformerait en changement de route. */}
+          {isFull ? (
+            <Link to={ctaHref} className={HERO_CTA_CLASS}>
+              {ctaLabel}
+              <ArrowRight className="h-5 w-5" />
+            </Link>
+          ) : (
+            <a href={ctaHref} className={HERO_CTA_CLASS}>
+              {ctaLabel}
+              <ArrowRight className="h-5 w-5" />
+            </a>
+          )}
         </div>
       </section>
 
@@ -260,7 +332,11 @@ export function ChambresSeptembrePage() {
         </div>
       </section>
 
-      {/* ── Écran 3 — LES CARTES CHAMBRES : la preuve datée ─────────────────── */}
+      {/* ── Écran 3 — LES CARTES CHAMBRES : la preuve datée ───────────────────
+          MASQUÉES, JAMAIS SUPPRIMÉES quand il n'y a plus rien à louer : la
+          lightbox, les galeries et les affordances du LOT 3 restent en place et
+          reviennent d'elles-mêmes dès qu'une chambre repasse à "disponible". */}
+      {!isFull && (
       <section id="chambres" className="py-16 md:py-24">
         <div className="container-custom">
           <h2
@@ -282,7 +358,7 @@ export function ChambresSeptembrePage() {
           </p>
 
           <div className="mx-auto grid max-w-5xl gap-10 md:grid-cols-2">
-            {ROOMS_SEPTEMBRE.map((room, roomIndex) => (
+            {AVAILABLE_ROOMS.map((room, roomIndex) => (
               <article
                 key={room.id}
                 className="overflow-hidden rounded-2xl border border-[#E7E5E4] bg-white shadow-sm"
@@ -422,8 +498,8 @@ export function ChambresSeptembrePage() {
                   <div className="mt-5 border-t border-[#E7E5E4] pt-5">
                     <p className="text-2xl font-semibold text-[#1C1917]">
                       {en
-                        ? `CHF ${formatChf(room.priceChf)}/month`
-                        : `${formatChf(room.priceChf)} CHF/mois`}
+                        ? `CHF ${formatChf(room.priceChf, true)}/month`
+                        : `${formatChf(room.priceChf, false)} CHF/mois`}
                       <span className="ml-2 text-sm font-normal text-[#57534E]">
                         {en ? "all-inclusive" : "tout inclus"}
                       </span>
@@ -467,6 +543,75 @@ export function ChambresSeptembrePage() {
           </p>
         </div>
       </section>
+      )}
+
+      {/* ── Écran 3 bis — MODE COMPLET : plus de chambre à montrer, alors on
+          montre OÙ elles se libèrent. Remplace les cartes, ne les efface pas. ── */}
+      {isFull && (
+        <section className="py-16 md:py-24">
+          <div className="container-custom">
+            <h2
+              className="mb-3 text-center text-3xl text-[#1C1917] md:text-4xl"
+              style={{ fontFamily: "DM Serif Display, serif" }}
+            >
+              {en ? `Our ${STATS.totalHouses} homes` : `Nos ${STATS.totalHouses} maisons`}
+            </h2>
+            <p className="mb-12 text-center text-[#57534E]">
+              {en
+                ? `${STATS.totalRooms} rooms, with rooms opening up all year round.`
+                : `${STATS.totalRooms} chambres, des libérations toute l'année.`}
+            </p>
+
+            <div className="mx-auto grid max-w-5xl gap-6 sm:grid-cols-3">
+              {LP_HOUSES.map((house) => (
+                <Link
+                  key={house.slug}
+                  to={`${prefix}/${house.slug}`}
+                  className="group overflow-hidden rounded-2xl border border-[#E7E5E4] bg-white shadow-sm transition-transform hover:scale-[1.02]"
+                >
+                  {/* Cadre 4/3 commun : les 3 photos n'ont pas le même format, seul
+                      un cadre imposé aligne les cartes. `width`/`height` réels pour
+                      que la place soit réservée avant le chargement (pas de CLS). */}
+                  <img
+                    src={house.src}
+                    alt={en ? house.alt.en : house.alt.fr}
+                    {...responsiveImage(house.src, "(min-width: 640px) 30vw, 100vw")}
+                    width={house.w}
+                    height={house.h}
+                    loading="lazy"
+                    decoding="async"
+                    className="aspect-[4/3] w-full object-cover"
+                  />
+                  <div className="flex items-center justify-between gap-3 px-5 py-4">
+                    <span>
+                      <span
+                        className="block text-lg text-[#1C1917]"
+                        style={{ fontFamily: "DM Serif Display, serif" }}
+                      >
+                        {house.name}
+                      </span>
+                      <span className="mt-0.5 block text-sm text-[#57534E]">{house.city}</span>
+                    </span>
+                    <ArrowRight className="h-5 w-5 shrink-0 text-[#b8860b] transition-transform group-hover:translate-x-1" />
+                  </div>
+                </Link>
+              ))}
+            </div>
+
+            {/* Lien maisons — demandé par Jérôme le 24/08, conservé ici : il mène à
+                la page d'ensemble, pas à une maison en particulier. */}
+            <p className="mt-12 text-center text-sm text-[#57534E]">
+              {en ? "Want to see the houses themselves? " : "Envie de voir les maisons en entier ? "}
+              <Link
+                to={`${prefix}/nos-maisons`}
+                className="font-medium text-[#b8860b] underline underline-offset-4 hover:text-[#1C1917] transition-colors"
+              >
+                {en ? `Discover our ${STATS.totalHouses} homes` : `Découvrir nos ${STATS.totalHouses} maisons`}
+              </Link>
+            </p>
+          </div>
+        </section>
+      )}
 
       {/* ── Écran 4 — RÉASSURANCE ───────────────────────────────────────────── */}
       <section className="bg-[#FAFAF9] py-14 md:py-20">
@@ -501,15 +646,15 @@ export function ChambresSeptembrePage() {
       {viewer !== null && (
         <Suspense fallback={null}>
           <PhotoLightbox
-            photos={ROOMS_SEPTEMBRE[viewer.room].photos}
+            photos={AVAILABLE_ROOMS[viewer.room].photos}
             index={viewer.photo}
             onIndexChange={(photo) => setViewer((v) => (v ? { ...v, photo } : v))}
             onClose={closeViewer}
             en={en}
             title={
               en
-                ? ROOMS_SEPTEMBRE[viewer.room].landmark.en
-                : ROOMS_SEPTEMBRE[viewer.room].landmark.fr
+                ? AVAILABLE_ROOMS[viewer.room].landmark.en
+                : AVAILABLE_ROOMS[viewer.room].landmark.fr
             }
           />
         </Suspense>
