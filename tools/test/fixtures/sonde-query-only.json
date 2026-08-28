@@ -1,0 +1,31 @@
+{
+ "rows": [
+  {
+   "keys": [
+    "coliving geneve"
+   ],
+   "clicks": 35,
+   "impressions": 130,
+   "ctr": 0.269,
+   "position": 2.3
+  },
+  {
+   "keys": [
+    "colocation geneve"
+   ],
+   "clicks": 4,
+   "impressions": 230,
+   "ctr": 0.0174,
+   "position": 15.2
+  },
+  {
+   "keys": [
+    "colocation annemasse"
+   ],
+   "clicks": 2,
+   "impressions": 110,
+   "ctr": 0.0182,
+   "position": 6.2
+  }
+ ]
+}

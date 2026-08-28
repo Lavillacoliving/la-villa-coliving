@@ -1,4 +1,5 @@
 import { useLanguage } from "@/contexts/LanguageContext";
+import { WhatsAppButton } from "@/components/WhatsAppButton";
 import { Check, ArrowRight, Home, Sparkles, X, Star, Droplets } from "lucide-react";
 import { LocalizedLink } from "@/components/LocalizedLink";
 import { colocGeneveHref } from "@/lib/siteLinks";
@@ -256,7 +257,7 @@ export function RatesPageV4() {
       label: { fr: "Ménage professionnel", en: "Professional cleaning" },
       classic: { fr: "✗ (à ta charge)", en: "✗ (up to you)" },
       villa: {
-        fr: "✓ 3×/semaine",
+        fr: "✓ 3×/sem",
         en: "✓ 3×/week",
       },
       studio: { fr: "✗", en: "✗" },
@@ -299,7 +300,8 @@ export function RatesPageV4() {
   return (
     <main className="relative pt-16">
       <SEO
-        title={language === "en" ? `Rates — All-Inclusive Coliving from ${PRICE_SHARED_EN_NUM} CHF/month` : `Tarifs Colocation Genève — Tout Compris dès ${PRICE_SHARED_CHF_FR}/mois`}
+        // Prix retiré du title le 15/08/2026 (doctrine A6/S33) — il reste en meta description.
+        title={language === "en" ? "Rates — All-Inclusive Coliving Near Geneva" : "Tarifs Colocation Genève — Tout Compris"}
         description={language === "en"
           ? `All-inclusive coliving near Geneva from ${PRICE_SHARED_EN_NUM} CHF/month — no application or agency fees. Rent, utilities, gym, pool, WiFi, cleaning included.`
           : `Tarifs colocation tout inclus près de Genève dès ${PRICE_SHARED_CHF_FR}/mois, sans frais de dossier ni d'agence. Loyer, charges, gym, piscine, WiFi, ménage compris.`}
@@ -717,8 +719,8 @@ export function RatesPageV4() {
                     </strong>{" "}
                     — <strong>up to twice the usual market size</strong> —, generous common areas, a
                     garden, and amenities no local flatshare offers: pool, sauna,
-                    gym. A real team maintains the house — professional cleaning{" "}
-                    <strong>three times a week</strong>,
+                    gym. A real team maintains the house — professional cleaning
+                    three times a week,
                     gardener, pool technician — and your issues get answered within
                     48 hours. Community life is organised, not hoped for: monthly
                     parties, summer events, Halloween, Christmas, girls' nights.
@@ -733,8 +735,7 @@ export function RatesPageV4() {
                     espaces communs généreux, un jardin, et des équipements
                     qu'aucune colocation locale ne propose : piscine, sauna, salle
                     de sport. Une équipe entretient réellement la maison — ménage
-                    professionnel{" "}
-                    <strong>3×/semaine</strong>, jardinier, pisciniste — et tes problèmes trouvent une réponse
+                    professionnel 3×/semaine, jardinier, pisciniste — et tes problèmes trouvent une réponse
                     en moins de 48 h. La vie commune est organisée, pas espérée :
                     soirée mensuelle, événements d'été, Halloween, Noël, soirées
                     entre filles.
@@ -1095,6 +1096,16 @@ export function RatesPageV4() {
                   : "Frais de dossier en colocation : ce que dit la loi →"}
               </LocalizedLink>
             </p>
+            <p className="mt-2 text-sm">
+              <LocalizedLink
+                to="/annemasse-colocation"
+                className="text-[#D4A574] hover:text-[#E0BB8A] underline underline-offset-4 transition-colors"
+              >
+                {language === "en"
+                  ? "Looking on the Annemasse side? Shared housing in Annemasse →"
+                  : "Tu cherches côté Annemasse ? Colocation à Annemasse →"}
+              </LocalizedLink>
+            </p>
           </div>
         </div>
       </section>
@@ -1369,6 +1380,8 @@ export function RatesPageV4() {
           </LocalizedLink>
         </div>
       </section>
+      {/* R3 (checkpoint 21/08) : canal court sur une page d'entrée — pas sur /candidature (71 % de complétion, on ne détourne pas). */}
+      <WhatsAppButton context={language === "en" ? "Rates" : "Tarifs"} />
     </main>
   );
 }

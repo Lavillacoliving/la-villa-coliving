@@ -136,8 +136,8 @@ export function QuiSommesNousPage() {
       icon: HeartHandshake,
       title: en ? "Not a factory" : "Pas une usine",
       text: en
-        ? "7 to 12 residents per house — not 300 per residence. Real houses with gardens, a pool and terraces, where everyone knows each other's first name. Three beautiful addresses rather than fifty average ones."
-        : "7 à 12 résidents par maison — pas 300 par résidence. De vraies maisons avec jardin, piscine et terrasses, où chacun connaît le prénom des autres. Trois belles adresses plutôt que cinquante moyennes.",
+        ? "A stone's throw from Geneva, the new mega-residences pack up to 776 rooms — with less than 4 m² of communal space per resident. With us: 7 to 12 housemates per house, 37 to 42 m² of living space each, and whole gardens to share. You don't build a community in a building lobby."
+        : "À deux pas de Genève, les nouvelles méga-résidences logent jusqu'à 776 chambres — avec moins de 4 m² d'espaces communs par résident. Chez nous : 7 à 12 colocataires par maison, 37 à 42 m² d'espace de vie chacun, et des jardins entiers à partager. On ne compose pas une communauté dans un hall d'immeuble.",
     },
     {
       icon: Gem,
@@ -161,8 +161,8 @@ export function QuiSommesNousPage() {
         title={en ? "Who we are — Jérôme & Fanny, founders" : "Qui sommes-nous — Jérôme & Fanny, fondateurs"}
         description={
           en
-            ? `Two co-founders, ${STATS.totalHouses} houses, ${STATS.totalResidents}+ residents since October ${STATS.foundedYear}. La Villa Coliving runs its colivings near Geneva directly — no agency, no hidden fees.`
-            : `Deux co-fondateurs, ${STATS.totalHouses} maisons, ${STATS.totalResidents}+ résidents depuis octobre ${STATS.foundedYear}. La Villa Coliving gère en direct ses colivings près de Genève — sans agence, sans frais cachés.`
+            ? `Two co-founders, ${STATS.totalHouses} houses, ${STATS.totalResidents}+ residents since October ${STATS.foundedYear}. La Villa Coliving runs its colivings near Geneva with no agency and no hidden fees.`
+            : `Deux co-fondateurs, ${STATS.totalHouses} maisons, ${STATS.totalResidents}+ résidents depuis octobre ${STATS.foundedYear}. La Villa Coliving gère ses colivings près de Genève sans agence ni frais cachés.`
         }
         image={`${SITE}${IMG_HISTOIRE}`}
         jsonLd={aboutSchema}

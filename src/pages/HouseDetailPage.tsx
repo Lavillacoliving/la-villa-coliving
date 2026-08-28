@@ -1,8 +1,9 @@
 import { useLocation } from "react-router-dom";
+import { responsiveImage } from "@/lib/responsiveImage";
 import { LocalizedLink } from "@/components/LocalizedLink";
 import { colocGeneveHref } from "@/lib/siteLinks";
 import { Scrim } from "@/components/Scrim";
-import { buildBreadcrumbSchema, HOUSES } from "@/lib/structuredData";
+import { buildBreadcrumbSchema, HOUSES, LAVILLA_SAME_AS } from "@/lib/structuredData";
 import {
   MapPin,
   Users,
@@ -20,7 +21,16 @@ import {
   Sun,
 } from "lucide-react";
 import { useLanguage } from "@/contexts/LanguageContext";
-import { AVAILABILITY, houseAvailabilityLabel, PRICE_FR_NUM, PRICE_EN_NUM, PRICE_CHF_FR, PRICE_CHF_EN, PRICE_SHARED_FR_NUM, PRICE_SHARED_EN_NUM, PRICE_SHARED_CHF_FR, PRICE_SHARED_CHF_EN, EUR_STANDARD_FR_NUM, EUR_STANDARD_EN_NUM, EUR_SHARED_FR_NUM, EUR_SHARED_EN_NUM } from "@/data/stats";
+import { STATS, PRICE_FR_NUM, PRICE_EN_NUM, PRICE_CHF_FR, PRICE_CHF_EN, PRICE_SHARED_FR_NUM, PRICE_SHARED_EN_NUM, PRICE_SHARED_CHF_FR, PRICE_SHARED_CHF_EN, EUR_STANDARD_FR_NUM, EUR_STANDARD_EN_NUM, EUR_SHARED_FR_NUM, EUR_SHARED_EN_NUM } from "@/data/stats";
+import {
+  useRoomAvailability,
+  houseBadgeLabel,
+  houseBadgeTone,
+  BADGE_CHIP_CLASS,
+  BADGE_PANEL_CLASS,
+  BADGE_DOT_CLASS,
+  type HouseKey,
+} from "@/lib/availability";
 
 import { Badge } from "@/components/ui/badge";
 import { HouseGallery } from "@/sections/HouseGallery";
@@ -68,9 +78,6 @@ interface HouseData {
   nearby: string[];
   lifestyle: string[];
   community: string[];
-  available: boolean;
-  badge?: string;
-  badgeColor: string;
 }
 
 function getHousesData(lang: string): Record<string, HouseData> {
@@ -433,10 +440,6 @@ function getHousesData(lang: string): Record<string, HouseData> {
       "Entrepreneurs & créatifs",
       "Amoureux de la nature & passionnés de bien-être",
     ],
-    // Dispo dérivée de la source unique (stats.ts) — plus de "1 chambre" codée en dur.
-    available: AVAILABILITY.lavilla > 0,
-    badge: houseAvailabilityLabel("lavilla", isEn ? "en" : "fr"),
-    badgeColor: AVAILABILITY.lavilla > 0 ? "#D4A574" : "#78716C",
   },
   leloft: {
     name: "Le Loft",
@@ -835,10 +838,6 @@ function getHousesData(lang: string): Record<string, HouseData> {
       "Cadres internationaux",
       "Amoureux de la ville & passionnés de culture",
     ],
-    // Dispo dérivée de la source unique (stats.ts) — plus de "1 chambre" codée en dur.
-    available: AVAILABILITY.leloft > 0,
-    badge: houseAvailabilityLabel("leloft", isEn ? "en" : "fr"),
-    badgeColor: AVAILABILITY.leloft > 0 ? "#D4A574" : "#78716C",
   },
   lelodge: {
     name: "Le Lodge",
@@ -1296,10 +1295,6 @@ function getHousesData(lang: string): Record<string, HouseData> {
       "Passionnés de bien-être",
       "Frontaliers & expatriés",
     ],
-    // Dispo dérivée de la source unique (stats.ts) — plus de "1 chambre" codée en dur.
-    available: AVAILABILITY.lelodge > 0,
-    badge: houseAvailabilityLabel("lelodge", isEn ? "en" : "fr"),
-    badgeColor: AVAILABILITY.lelodge > 0 ? "#D4A574" : "#78716C",
   },
 };
 }
@@ -1312,6 +1307,19 @@ export function HouseDetailPage() {
 
   const housesData = getHousesData(language);
   const house = id ? housesData[id] : null;
+
+  // Dispo réelle (v_public_rooms) — remplace les champs available/badge/badgeColor
+  // qui étaient figés dans getHousesData depuis la constante manuelle.
+  const availability = useRoomAvailability();
+  const houseAvail =
+    availability.byHouse[id as HouseKey] ?? { available: 0, upcoming: 0, nextFreeDate: null, nextFreeCount: 0 };
+  const isAvailable = availability.known && houseAvail.available > 0;
+  const availabilityBadge = houseBadgeLabel(houseAvail, availability.known, language === "en" ? "en" : "fr");
+  const badgeTone = houseBadgeTone(houseAvail, availability.known);
+  // « Candidater » dès qu'il y a une chambre libre OU une libération datée
+  // (une maison qui se libère dans 3 semaines n'est pas une liste d'attente) ;
+  // dispo inconnue → CTA de candidature aussi, jamais d'impasse.
+  const canApplyNow = !availability.known || isAvailable || !!houseAvail.nextFreeDate;
 
   // Same guarded gtag pattern as the blog CTAs / candidature form: measure which
   // CTA position converts (GA4 cta_click), never block the UI on analytics.
@@ -1397,10 +1405,12 @@ export function HouseDetailPage() {
           "addressRegion": "Haute-Savoie",
           "addressCountry": "FR"
         },
+        // Geo rooftop-exacte depuis HOUSES (source unique, BAN 15/08/2026) — les
+        // valeurs codées en dur ici divergeaient de structuredData.ts.
         "geo": {
           "@type": "GeoCoordinates",
-          "latitude": id === "lavilla" ? 46.2050 : id === "leloft" ? 46.1960 : 46.1940,
-          "longitude": id === "lavilla" ? 6.2280 : id === "leloft" ? 6.2250 : 6.2360
+          "latitude": HOUSES.find(h => h.slug === id)?.geo.lat,
+          "longitude": HOUSES.find(h => h.slug === id)?.geo.lng
         },
         "priceRange": id === "lavilla" ? `${PRICE_SHARED_FR_NUM}–${PRICE_FR_NUM} CHF/mois` : `${PRICE_FR_NUM} CHF/mois`,
         "currenciesAccepted": "EUR",
@@ -1412,10 +1422,7 @@ export function HouseDetailPage() {
           { "@type": "LocationFeatureSpecification", "name": "Parking", "value": true }
         ],
         "numberOfRooms": id === "lavilla" ? 10 : id === "leloft" ? 7 : 12,
-        "sameAs": [
-          "https://www.facebook.com/lavillacoliving",
-          "https://www.instagram.com/lavillacoliving"
-        ]
+        "sameAs": LAVILLA_SAME_AS
       }) }} />
       {/* BreadcrumbList Schema.org */}
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(buildBreadcrumbSchema([
@@ -1438,6 +1445,7 @@ export function HouseDetailPage() {
                     width={1920}
                     height={1080}
                     {...(index === 0 ? { fetchPriority: "high" as const } : {})}
+                    {...responsiveImage(img, "100vw")}
                   />
                   <Scrim />
                 </div>
@@ -1452,20 +1460,9 @@ export function HouseDetailPage() {
         <div className="absolute bottom-0 left-0 right-0 pb-8 pt-20">
           <div className="container-custom">
             <div className="flex flex-wrap items-center gap-3 mb-4">
-              {house.badge && (
-                <Badge
-                  className="font-extrabold"
-                  style={{ background: house.badgeColor, color: "white" }}
-                >
-                  {house.badge}
-                </Badge>
-              )}
-              {house.available && !house.badge && (
-                <Badge
-                  className="font-extrabold"
-                  style={{ background: house.badgeColor, color: "white" }}
-                >
-                  {language === "en" ? "Available" : "Disponible"}
+              {availabilityBadge && badgeTone && (
+                <Badge className={`font-extrabold backdrop-blur-sm ${BADGE_CHIP_CLASS[badgeTone]}`}>
+                  {availabilityBadge}
                 </Badge>
               )}
               {/* DPE déplacé hors du hero (décision 2026-06-11) : la mention reste
@@ -1662,26 +1659,21 @@ export function HouseDetailPage() {
                   </div>
 
                   {/* Availability badge */}
-                  <div className="mb-4">
-                    {house.available ? (
-                      <span className="inline-flex items-center gap-2 px-3 py-1.5 bg-[#D4A574]/10 text-[#D4A574] text-sm font-semibold rounded-lg">
-                        <span className="w-2 h-2 bg-[#D4A574] rounded-full animate-pulse" />
-                        {house.badge || (language === "en" ? "Available" : "Disponible")}
+                  {availabilityBadge && badgeTone && (
+                    <div className="mb-4">
+                      <span className={`inline-flex items-center gap-2 px-3 py-1.5 text-sm font-semibold rounded-lg ${BADGE_PANEL_CLASS[badgeTone]}`}>
+                        <span className={`w-2 h-2 rounded-full ${BADGE_DOT_CLASS[badgeTone]} ${isAvailable ? "animate-pulse" : ""}`} />
+                        {availabilityBadge}
                       </span>
-                    ) : (
-                      <span className="inline-flex items-center gap-2 px-3 py-1.5 bg-[#78716C]/10 text-[#78716C] text-sm font-semibold rounded-lg">
-                        <span className="w-2 h-2 bg-[#78716C] rounded-full" />
-                        {house.badge || "Complet"}
-                      </span>
-                    )}
-                  </div>
+                    </div>
+                  )}
 
                   <div className="flex flex-col gap-3">
                     <LocalizedLink
                       to="/candidature"
                       className="w-full inline-flex items-center justify-center gap-2 px-6 py-3 bg-[#1C1917] text-white font-semibold rounded-xl hover:bg-[#D4A574] transition-colors"
                     >
-                      {house.available
+                      {canApplyNow
                         ? t.houseDetail.apply
                         : language === "en" ? "Join waitlist" : "Liste d'attente"}
                       <ArrowRight size={18} />
@@ -1912,6 +1904,18 @@ export function HouseDetailPage() {
                       </li>
                     ))}
                   </ul>
+                  {id === "lelodge" && (
+                    <p className="mt-5 text-sm text-[#57534E]">
+                      {language === "en" ? "See also: " : "Voir aussi : "}
+                      <LocalizedLink to="/annemasse-colocation" className="underline underline-offset-4 hover:text-[#1C1917]">
+                        {language === "en" ? "shared housing in Annemasse" : "colocation à Annemasse"}
+                      </LocalizedLink>
+                      {" · "}
+                      <LocalizedLink to="/chambre-a-louer-annemasse" className="underline underline-offset-4 hover:text-[#1C1917]">
+                        {language === "en" ? "rooms for rent in Annemasse" : "chambre à louer à Annemasse"}
+                      </LocalizedLink>
+                    </p>
+                  )}
                 </div>
 
                 <div>

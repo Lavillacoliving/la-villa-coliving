@@ -3,7 +3,7 @@
 # Triggers:
 # 1. Push to main (src/ or public/ changes only — NOT prerendered files)
 # 2. repository_dispatch from n8n (after blog approval) — immediate
-# 3. Weekly schedule Sunday 5h UTC (6h Paris) — safety net + blog sync
+# 3. Daily schedule 5h UTC — safety net + blog sync + fraîcheur de la dispo prérendue
 # 4. Manual from GitHub UI — troubleshooting
 #
 # What it does:
@@ -33,7 +33,7 @@ on:
   repository_dispatch:
     types: [prerender]
   schedule:
-    - cron: '0 5 * * 0'
+    - cron: '0 5 * * *'
   workflow_dispatch:
 
 permissions:

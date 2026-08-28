@@ -196,6 +196,21 @@ export function FAQPageV4() {
                   </p>
                 </LocalizedLink>
 
+                {/* Front Annemasse — R5 checkpoint 21/08 */}
+                <LocalizedLink
+                  to="/annemasse-colocation"
+                  className="mt-4 block p-6 bg-[#FAF9F6] border border-[#E7E5E4] hover:border-[#D4A574]/40 transition-colors group"
+                >
+                  <h4 className="font-medium text-[#1C1917] mb-2 group-hover:text-[#D4A574] transition-colors">
+                    {language === "en" ? "Shared housing in Annemasse" : "Colocation à Annemasse"}
+                  </h4>
+                  <p className="text-sm text-[#57534E]">
+                    {language === "en"
+                      ? "3 houses in Annemasse Agglo (Ville-la-Grand, Ambilly, Annemasse), direct Léman Express to Geneva. See the page →"
+                      : "3 maisons dans Annemasse Agglo (Ville-la-Grand, Ambilly, Annemasse), Léman Express direct vers Genève. Voir la page →"}
+                  </p>
+                </LocalizedLink>
+
                 {/* Contact CTA */}
                 <div className="mt-4 p-6 bg-white border border-[#E7E5E4]">
                   <MessageCircle className="w-6 h-6 text-[#D4A574] mb-4" />

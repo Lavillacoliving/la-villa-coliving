@@ -256,6 +256,13 @@ export function ColivingPageV4() {
                   : "Explorer Nos Maisons"}
                 <ArrowRight className="w-5 h-5" />
               </LocalizedLink>
+              <p className="mt-4 text-sm text-[#57534E]">
+                {language === "en" ? "Or start with " : "Ou commence par "}
+                <LocalizedLink to="/annemasse-colocation" className="underline underline-offset-4 hover:text-[#1C1917]">
+                  {language === "en" ? "shared housing in Annemasse" : "la colocation à Annemasse"}
+                </LocalizedLink>
+                {language === "en" ? " — our three houses are in Annemasse Agglo." : " — nos trois maisons sont dans Annemasse Agglo."}
+              </p>
             </div>
 
             <div className="relative">
@@ -320,7 +327,7 @@ export function ColivingPageV4() {
                 <div className="flex items-center gap-2">
                   <Star className="w-5 h-5 text-[#D4A574]" />
                   <span className="text-sm text-[#57534E]">
-                    {language === "en" ? `${STATS_DISPLAY[L].rating}/5 rating` : `Note ${STATS_DISPLAY[L].rating}/5`}
+                    {language === "en" ? `${STATS_DISPLAY[L].rating}/5 · resident surveys` : `Note ${STATS_DISPLAY[L].rating}/5 · enquêtes résidents`}
                   </span>
                 </div>
               </div>
@@ -421,6 +428,16 @@ export function ColivingPageV4() {
         title={language === "en" ? "Coliving — frequently asked questions" : "Le coliving — questions fréquentes"}
         items={colivingFaq[language === "en" ? "en" : "fr"]}
         emitSchema
+        // Lien éditorial vers la home (URL championne sur « coliving geneve ») — hors schema FAQPage
+        intro={
+          <p>
+            {language === "en" ? (
+              <>Looking for <LocalizedLink to="/" className="underline decoration-[#D4A574] decoration-2 underline-offset-4 hover:text-[#1C1917] transition-colors">coliving in Geneva</LocalizedLink>? Our three houses are {STATS.genevaCenterMinutes} minutes from the city center, on the French side.</>
+            ) : (
+              <>Tu cherches un <LocalizedLink to="/" className="underline decoration-[#D4A574] decoration-2 underline-offset-4 hover:text-[#1C1917] transition-colors">coliving à Genève</LocalizedLink> ? Nos trois maisons sont à {STATS.genevaCenterMinutes} minutes du centre, côté France.</>
+            )}
+          </p>
+        }
       />
     </main>
   );

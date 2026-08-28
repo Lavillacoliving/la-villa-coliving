@@ -1,4 +1,5 @@
 import { LocalizedLink } from "@/components/LocalizedLink";
+import { WhatsAppButton } from "@/components/WhatsAppButton";
 import { colocGeneveHref } from "@/lib/siteLinks";
 import { useState } from "react";
 import { useLanguage } from "@/contexts/LanguageContext";
@@ -64,9 +65,11 @@ export function ChambreLouerAnnemassePage() {
     <main className="relative pt-16">
       <SEO
         title={
+          // Prix retiré du title le 15/08/2026 (doctrine A6/S33 : le prix filtre le clic
+          // avant que la page puisse vendre la valeur — il reste en meta description).
           language === "en"
-            ? `Furnished rooms Annemasse 2026 from ${PRICE_SHARED_CHF_EN}`
-            : `Chambre à louer Annemasse 2026 : dès ${PRICE_SHARED_CHF_FR}`
+            ? "Furnished rooms Annemasse 2026: all inclusive"
+            : "Chambre à louer Annemasse 2026 : tout inclus"
         }
         description={
           language === "en"
@@ -193,7 +196,7 @@ export function ChambreLouerAnnemassePage() {
                   "Léman Express direct to Geneva Cornavin 15 min",
                   "Pool, gym, sauna in every house",
                   "fiber internet up to 8 Gb/s",
-                  "Cleaning of common areas three times a week",
+                  "Cleaning three times a week of common areas",
                   "Weekly yoga and fitness classes included",
                   "Monthly community events, community dinners",
                   "No agency fees, no application fees",
@@ -396,6 +399,7 @@ export function ChambreLouerAnnemassePage() {
           <Euro className="w-5 h-5 text-[#D4A574]/40 mx-auto mt-6" />
         </div>
       </section>
+      <WhatsAppButton context={language === "en" ? "Rooms for rent Annemasse" : "Chambre à louer Annemasse"} />
     </main>
   );
 }

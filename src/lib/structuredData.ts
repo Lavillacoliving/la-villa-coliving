@@ -6,6 +6,23 @@ import { STATS, STATS_SHARED_BATH, PRICE_FR_NUM, PRICE_EN_NUM, PRICE_SHARED_FR_N
 
 const SITE = "https://www.lavillacoliving.com";
 
+/**
+ * @id unique de l'entité La Villa Coliving dans le knowledge graph.
+ * Porté par : l'Organization de /qui-sommes-nous, le LodgingBusiness de l'accueil
+ * et le LocalBusiness générique de SEO.tsx → Google fusionne les trois en une seule fiche.
+ */
+export const ORG_ID = `${SITE}/#organization`;
+
+/**
+ * Profils publics officiels — source unique pour tous les `sameAs`.
+ * Le lien share.google est la fiche Google Business (une seule fiche, confirmé 04/08).
+ */
+export const LAVILLA_SAME_AS = [
+  "https://www.instagram.com/lavillacoliving/",
+  "https://www.facebook.com/lavillacoliving",
+  "https://share.google/OR9wy40wVx80aeQei",
+];
+
 // Coordonnées publiques — confirmées par Jérôme (2026-06-05).
 export const LAVILLA_PHONE = "+33664315134";
 export const LAVILLA_EMAIL = "contact@lavillacoliving.com";
@@ -34,11 +51,11 @@ export interface HouseInfo {
   streetAddress: string;
   addressLocality: string;
   postalCode: string;
-  /** Coordonnées au centre de la commune (à affiner en rooftop-exact via Google Maps si besoin). */
+  /** Coordonnées rooftop-exactes (Base Adresse Nationale, géocodées le 15/08/2026, score > 0,95). */
   geo: { lat: number; lng: number };
 }
 
-/** Les 3 maisons — source unique pour le schema (adresses confirmées). */
+/** Les 3 maisons — source unique pour le schema (adresses confirmées, geo BAN rooftop). */
 export const HOUSES: HouseInfo[] = [
   {
     slug: "lavilla",
@@ -47,7 +64,7 @@ export const HOUSES: HouseInfo[] = [
     streetAddress: "34 rue du Foron",
     addressLocality: "Ville-la-Grand",
     postalCode: "74100",
-    geo: { lat: 46.2031, lng: 6.2475 },
+    geo: { lat: 46.205146, lng: 6.232634 },
   },
   {
     slug: "leloft",
@@ -56,7 +73,7 @@ export const HOUSES: HouseInfo[] = [
     streetAddress: "1 rue des Marronniers",
     addressLocality: "Ambilly",
     postalCode: "74100",
-    geo: { lat: 46.194, lng: 6.223 },
+    geo: { lat: 46.196367, lng: 6.226278 },
   },
   {
     slug: "lelodge",
@@ -65,7 +82,7 @@ export const HOUSES: HouseInfo[] = [
     streetAddress: "8 rue de Romagny",
     addressLocality: "Annemasse",
     postalCode: "74100",
-    geo: { lat: 46.1958, lng: 6.2364 },
+    geo: { lat: 46.194519, lng: 6.241576 },
   },
 ];
 
@@ -95,6 +112,7 @@ export function buildHomeLodgingBusinessSchema(language: "fr" | "en" = "fr"): Re
   return {
     "@context": "https://schema.org",
     "@type": "LodgingBusiness",
+    "@id": ORG_ID,
     name: "La Villa Coliving",
     description: en
       ? `All-inclusive premium coliving near Geneva: ${STATS.totalHouses} houses (${STATS.totalRooms} furnished rooms) ${STATS.genevaCenterMinutes} minutes from Geneva city center, on the French side, with pool, sauna and gym in every house.`
@@ -133,7 +151,22 @@ export function buildHomeLodgingBusinessSchema(language: "fr" | "en" = "fr"): Re
       { "@type": "LocationFeatureSpecification", name: en ? `Fiber internet up to ${STATS.fiberSpeed}` : `Internet fibre jusqu'à ${STATS.fiberSpeed}`, value: true },
       { "@type": "LocationFeatureSpecification", name: en ? "Common areas cleaning included" : "Ménage des parties communes inclus", value: true },
     ],
-    sameAs: ["https://www.instagram.com/lavillacoliving/"],
+    sameAs: LAVILLA_SAME_AS,
+    numberOfRooms: STATS.totalRooms,
+    // E-E-A-T : mêmes champs identité que le LocalBusiness générique (qu'il remplace
+    // sur l'accueil depuis le 15/08 — prop omitLocalBusiness de SEO.tsx).
+    foundingDate: FOUNDING_DATE,
+    founder: [
+      buildFounderPersonSchema(FOUNDERS.jerome, language),
+      buildFounderPersonSchema(FOUNDERS.fanny, language),
+    ],
+    contactPoint: {
+      "@type": "ContactPoint",
+      email: LAVILLA_EMAIL,
+      telephone: LAVILLA_PHONE,
+      contactType: "customer service",
+      availableLanguage: ["French", "English"],
+    },
     // `address` racine — Google la réclame sur LodgingBusiness (« Rich results
     // validation error » relevé au crawl du 23/07/2026 sur / et /en). Les
     // adresses par maison vivaient déjà dans `department[].address`, mais
@@ -236,11 +269,11 @@ export function buildAboutPageSchema(language: "fr" | "en" = "fr"): Record<strin
         url: `${SITE}${en ? "/en" : ""}/qui-sommes-nous`,
         name: en ? "Who we are — La Villa Coliving" : "Qui sommes-nous — La Villa Coliving",
         inLanguage: language,
-        mainEntity: { "@id": `${SITE}/#organization` },
+        mainEntity: { "@id": ORG_ID },
       },
       {
         "@type": "Organization",
-        "@id": `${SITE}/#organization`,
+        "@id": ORG_ID,
         name: "La Villa Coliving",
         legalName: "SCI Sleep In",
         url: SITE,

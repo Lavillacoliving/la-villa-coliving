@@ -12,4 +12,7 @@
 
 export const HREFLANG_NO_ALTERNATES = new Set([
   '/en/colocation-geneve',
+  // LP payantes : noindex + hors sitemap -> aucun alternate a declarer.
+  '/chambres-septembre',
+  '/en/rooms-september',
 ]);

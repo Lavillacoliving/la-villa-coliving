@@ -20,6 +20,7 @@ const TABS = [
   { id: 'documents', label: 'Documents', path: '/dashboard/documents' },
   { id: 'events', label: 'Événements', path: '/dashboard/events' },
   { id: 'maisons', label: 'Maisons', path: '/dashboard/maisons' },
+  { id: 'dispo', label: 'Dispo site', path: '/dashboard/dispo' },
   { id: 'nouveau-bail', label: 'Nouveau Bail', path: '/dashboard/nouveau-bail' },
   { id: 'blog', label: 'Blog', path: '/dashboard/blog' },
 ];

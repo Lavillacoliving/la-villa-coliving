@@ -1,11 +1,13 @@
-import { useEffect, useRef, useState, type FormEvent, type KeyboardEvent } from "react";
+import { useState, type FormEvent } from "react";
 import { useSearchParams } from "react-router-dom";
 import { useLanguage } from "@/contexts/LanguageContext";
-import { ArrowLeft, ArrowRight, Check, Clock, Shield, Loader2, Star, Users, Calendar, ChevronDown, ChevronUp, MessageCircle, Sparkles } from "lucide-react";
+import { ArrowRight, Check, Shield, Loader2, Star, Users, Calendar, ChevronDown, ChevronUp, MessageCircle, Sparkles } from "lucide-react";
 import { SEO } from "@/components/SEO";
 import { SUPABASE_URL, SUPABASE_ANON_KEY } from "@/lib/supabase";
-import { STATS, STATS_DISPLAY, totalAvailabilityLabel, PRICE_SHARED_CHF_FR, PRICE_SHARED_CHF_EN, CONTRACT_EUR, EUR_STANDARD_FR_NUM, EUR_SHARED_FR_NUM, EUR_STANDARD_EN_NUM, EUR_SHARED_EN_NUM } from "@/data/stats";
+import { STATS, STATS_DISPLAY, PRICE_SHARED_CHF_FR, PRICE_SHARED_CHF_EN, CONTRACT_EUR, EUR_STANDARD_FR_NUM, EUR_SHARED_FR_NUM, EUR_STANDARD_EN_NUM, EUR_SHARED_EN_NUM } from "@/data/stats";
 import { useFormTelemetry } from "@/hooks/useFormTelemetry";
+import { useRoomAvailability, shortAvailabilityLabel } from "@/lib/availability";
+import { attributionPayload, isTestSession } from "@/lib/attribution";
 
 type FormStatus = "idle" | "submitting" | "success" | "error";
 
@@ -14,6 +16,7 @@ const EDGE_FUNCTION_URL = `${SUPABASE_URL}/functions/v1/send-candidature-email`;
 export function JoinPageV4() {
   const { language } = useLanguage();
   const L = language === "en" ? "en" : "fr";
+  const availability = useRoomAvailability();
   const [status, setStatus] = useState<FormStatus>("idle");
   const [errorMessage, setErrorMessage] = useState<string>("");
   const [openFAQ, setOpenFAQ] = useState<number | null>(null);
@@ -27,16 +30,25 @@ export function JoinPageV4() {
   const [searchParams] = useSearchParams();
   const refSrc = (searchParams.get("src") ?? "").slice(0, 50);
   const refArticle = (searchParams.get("article") ?? "").slice(0, 120);
+  // Intérêt déclaré au clic sur une carte chambre de la LP /chambres-septembre
+  // (brief LOT 2, 24/08/2026) : ?property_interest=<slug properties.slug SANS tiret>
+  // &room_interest=<repère chambre>. Transmis à l'Edge v14 → colonnes dédiées sur
+  // prospects + form_submissions. Le canal DÉCLARÉ (select ci-dessous) reste prioritaire,
+  // ces champs ne le touchent pas. ⚠️ Les liens INTERNES vers /candidature ne portent
+  // volontairement aucun utm_* : ils redémarreraient l'attribution de session GA4 —
+  // l'attribution Ads est déjà capturée à l'atterrissage (sessionStorage, first-touch).
+  const refProperty = (searchParams.get("property_interest") ?? "").slice(0, 64);
+  const refRoom = (searchParams.get("room_interest") ?? "").slice(0, 64);
+  // Soumission de TEST (équipe) : /candidature?test=1 → prospects.is_test = true côté
+  // Edge (v12), exclue du bulletin et des comptages. Jamais exposée dans l'UI.
+  // Depuis le 22/08/2026, `?test=1` posé sur N'IMPORTE QUELLE page d'atterrissage marque
+  // aussi toute la session (sessionStorage, cf. src/lib/attribution.ts — protocole LOT F).
+  const isTest = searchParams.get("test") === "1" || isTestSession();
 
-  // Formulaire en 2 étapes réelles (étape 1 : contact · étape 2 : séjour).
-  // Les deux blocs restent MONTÉS en permanence (l'inactif est en [hidden]) :
-  // FormData lit les inputs en display:none (preuve : le honeypot), seuls les
-  // inputs démontés disparaissent du payload. État initial déterministe step=1
-  // → le HTML prerendu et le premier render d'hydratation sont identiques.
-  const [step, setStep] = useState<1 | 2>(1);
-  const step1Ref = useRef<HTMLDivElement>(null);
-  const step2Ref = useRef<HTMLDivElement>(null);
-  const firstRenderRef = useRef(true);
+  // Formulaire 1 ÉTAPE depuis S33 (10/08/2026) : arrival/duration retirés du
+  // formulaire — ces questions sont posées par Fanny à l'appel de qualification.
+  // L'Edge Function v11 accepte leur absence (et reste rétrocompatible si un
+  // ancien front les envoie encore).
   const telemetry = useFormTelemetry({
     formId: "candidature",
     formDestination: "supabase-edge",
@@ -44,52 +56,14 @@ export function JoinPageV4() {
       language: L,
       ref_src: refSrc || "none",
       ref_article: refArticle || "none",
+      property_interest: refProperty || "none",
+      room_interest: refRoom || "none",
     },
   });
-
-  useEffect(() => {
-    if (firstRenderRef.current) {
-      firstRenderRef.current = false;
-      return;
-    }
-    const target = step === 2 ? step2Ref.current : step1Ref.current;
-    target?.focus({ preventScroll: true });
-    target?.scrollIntoView({ behavior: "smooth", block: "start" });
-  }, [step]);
-
-  function handleContinue() {
-    // reportValidity() champ par champ : un reportValidity() du <form> entier
-    // buterait sur les champs requis de l'étape 2, cachés donc non focusables.
-    const fields = step1Ref.current?.querySelectorAll<HTMLInputElement>("input") ?? [];
-    for (const field of Array.from(fields)) {
-      if (!field.reportValidity()) return;
-    }
-    telemetry.trackStepComplete(1);
-    setStep(2);
-  }
-
-  function handleBack() {
-    setStep(1);
-  }
-
-  function handleFormKeyDown(e: KeyboardEvent<HTMLFormElement>) {
-    // À l'étape 1, Entrée (dont la touche « OK » des claviers mobiles) doit
-    // faire « Continuer », pas soumettre — sans casser l'activation clavier
-    // des boutons eux-mêmes.
-    if (e.key !== "Enter" || step !== 1) return;
-    if ((e.target as HTMLElement).tagName === "BUTTON") return;
-    e.preventDefault();
-    handleContinue();
-  }
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     if (status === "submitting") return;
-    if (step === 1) {
-      // Filet : si un navigateur soumet malgré l'interception d'Entrée.
-      handleContinue();
-      return;
-    }
     setStatus("submitting");
     setErrorMessage("");
 
@@ -102,6 +76,14 @@ export function JoinPageV4() {
     // Couche « observée » de l'attribution (l'URL d'arrivée), à côté du canal déclaré.
     if (refSrc) payload.ref_src = refSrc;
     if (refArticle) payload.ref_article = refArticle;
+    if (refProperty) payload.property_interest = refProperty;
+    if (refRoom) payload.room_interest = refRoom;
+    if (isTest) payload.isTest = "1";
+    // Attribution technique Ads (utm_* + gclid) capturée à l'atterrissage de la session
+    // (first-touch, sessionStorage — src/lib/attribution.ts) → colonnes dédiées côté base
+    // (Edge v13). Le canal DÉCLARÉ (`source`) n'est jamais surchargé. Absente → rien
+    // d'envoyé : un client ancien/en cache reste strictement rétrocompatible.
+    Object.assign(payload, attributionPayload());
     // Langue explicite : l'Edge Function ne peut plus se fier au Referer
     // (la Referrer-Policy par défaut ampute le path en cross-origin, ce qui
     // loggait toutes les soumissions en « fr »).
@@ -135,7 +117,6 @@ export function JoinPageV4() {
 
       form.reset();
       setSourceChoice(""); // le select est contrôlé — form.reset() ne le vide pas
-      setStep(1); // sinon « envoyer une autre candidature » rouvrirait un formulaire vide à l'étape 2
     } catch (err) {
       setStatus("error");
       setErrorMessage(
@@ -154,17 +135,17 @@ export function JoinPageV4() {
         title={language === "en" ? "Apply — Join La Villa Coliving" : "Candidater — Rejoindre La Villa Coliving"}
         description={language === "en"
           ? "Apply to join La Villa Coliving near Geneva. Simple process, move in within 2 weeks. Furnished all-inclusive rooms for cross-border workers & expats."
-          : "Postulez en 2 minutes. Communauté sélectionnée, emménagement en 2 semaines. Chambres meublées tout inclus près de Genève."}
+          : "Candidate en 30 secondes, sans engagement. Réponse sous 48 h, emménagement possible en 2 semaines. Chambres meublées tout inclus près de Genève."}
         url="https://www.lavillacoliving.com/candidature"
       />
-      {/* Hero */}
-      <section className="py-24 lg:py-32 bg-white">
+      {/* Hero compacté (S33) : ≤ 0,8 écran, le formulaire doit arriver vite. */}
+      <section className="py-10 md:py-14 bg-white">
         <div className="container-custom text-center">
           <span className="text-xs text-[#78716C] uppercase tracking-[0.3em] mb-4 block">
             {language === "en" ? "Get Started" : "Commencer"}
           </span>
           <h1
-            className="text-5xl md:text-6xl lg:text-7xl font-light text-[#1C1917] mb-6"
+            className="text-4xl md:text-5xl lg:text-6xl font-light text-[#1C1917] mb-4"
             style={{ fontFamily: "DM Serif Display, serif" }}
           >
             {language === "en" ? (
@@ -185,98 +166,229 @@ export function JoinPageV4() {
         </div>
       </section>
 
-      {/* Social proof stats — chiffres business pour rassurer (CRO win #1) */}
-      <section className="py-12 bg-[#FAF9F6] border-y border-[#E7E5E4]">
-        <div className="container-custom">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-4xl mx-auto text-center">
-            <div className="flex flex-col items-center">
-              <Users className="w-8 h-8 text-[#D4A574] mb-3" />
-              <p className="text-3xl font-light text-[#1C1917] mb-1" style={{ fontFamily: "DM Serif Display, serif" }}>
-                {STATS.totalResidents}+
-              </p>
-              <p className="text-sm text-[#57534E]">
-                {language === "en" ? "Residents since 2021" : "Résidents depuis 2021"}
-              </p>
-            </div>
-            <div className="flex flex-col items-center">
-              <Sparkles className="w-8 h-8 text-[#D4A574] mb-3" />
-              <p className="text-3xl font-light text-[#1C1917] mb-1" style={{ fontFamily: "DM Serif Display, serif" }}>
-                99%
-              </p>
-              <p className="text-sm text-[#57534E]">
-                {language === "en" ? "Occupancy rate over 5 years" : "Taux d'occupation sur 5 ans"}
-              </p>
-            </div>
-            <div className="flex flex-col items-center">
-              <Star className="w-8 h-8 text-[#D4A574] mb-3 fill-[#D4A574]" />
-              <p className="text-3xl font-light text-[#1C1917] mb-1" style={{ fontFamily: "DM Serif Display, serif" }}>
-                {STATS_DISPLAY[L].rating}/5
-              </p>
-              <p className="text-sm text-[#57534E]">
-                {language === "en" ? "Average rating from residents" : "Note moyenne des résidents"}
-              </p>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Steps — shown before the form to reduce anxiety */}
-      <section className="py-24 lg:py-32 bg-white">
-        <div className="container-custom">
-          <div className="text-center mb-16">
-            <span className="text-xs text-[#78716C] uppercase tracking-[0.3em] mb-4 block">
-              {language === "en" ? "The Process" : "Le Processus"}
+      {/* Form — remonté juste sous le hero (S33) : premier champ ≤ 1,2 écran desktop */}
+      <section className="py-12 lg:py-16 bg-[#FAF9F6]">
+        <div className="container-custom max-w-3xl">
+          {/* Dispo réelle (revue 18/08) : lue sur v_public_rooms via useRoomAvailability,
+              embarquée dans le prérendu. La constante manuelle AVAILABILITY a été
+              supprimée — sans données, le libellé redevient qualitatif, jamais chiffré. */}
+          <div className="mb-6 text-center">
+            <span className="inline-flex items-center gap-2 px-4 py-2 bg-white border border-[#D4A574] text-sm text-[#1C1917]">
+              <Calendar className="w-4 h-4 text-[#D4A574]" />
+              {shortAvailabilityLabel(availability, L)}
             </span>
-            <h2
-              className="text-4xl md:text-5xl font-light text-[#1C1917]"
-              style={{ fontFamily: "DM Serif Display, serif" }}
-            >
-              {language === "en" ? "How It Works" : "Comment Ça Marche"}
-            </h2>
           </div>
 
-          <div className="grid md:grid-cols-3 gap-px bg-[#E7E5E4]">
-            {[
-              {
-                number: "01",
-                title: language === "en" ? "Apply" : "Candidater",
-                description:
-                  language === "en"
-                    ? "Fill out the application form with your details."
-                    : "Remplis le formulaire de candidature avec tes coordonnées.",
-              },
-              {
-                number: "02",
-                title: language === "en" ? "Meet" : "Rencontrer",
-                description:
-                  language === "en"
-                    ? "We'll schedule a video call to get to know you better."
-                    : "On planifiera un appel vidéo pour mieux te connaître.",
-              },
-              {
-                number: "03",
-                title: language === "en" ? "Move In" : "Emménager",
-                description:
-                  language === "en"
-                    ? "Refundable deposit, and that's it — zero application fee. Welcome home!"
-                    : "Caution remboursable, et c'est tout — zéro frais de dossier. Bienvenue chez toi !",
-              },
-            ].map((step, index) => (
-              <div key={index} className="bg-white p-10 text-center">
-                <span className="text-6xl font-light text-[#E7E5E4] block mb-6">
-                  {step.number}
-                </span>
-                <h3 className="text-xl font-medium text-[#1C1917] mb-4">
-                  {step.title}
-                </h3>
-                <p className="text-[#57534E]">{step.description}</p>
-              </div>
-            ))}
+          {/* Reassurance strip */}
+          <div className="flex flex-wrap justify-center gap-6 mb-8 text-sm text-[#57534E]">
+            <span className="flex items-center gap-2">
+              <Check className="w-4 h-4 text-[#D4A574]" />
+              {language === "en" ? "No commitment" : "Sans engagement"}
+            </span>
+            <span className="flex items-center gap-2">
+              <Shield className="w-4 h-4 text-[#D4A574]" />
+              {language === "en" ? "Response within 48h" : "Réponse sous 48h"}
+            </span>
+            <span className="flex items-center gap-2">
+              <Check className="w-4 h-4 text-[#D4A574]" />
+              {language === "en" ? "No application fee" : "Aucun frais de dossier"}
+            </span>
           </div>
+
+          {status === "success" ? (
+            <div className="bg-white border border-[#E7E5E4] p-12 md:p-16 text-center">
+              <div className="w-16 h-16 bg-[#D4A574] rounded-full flex items-center justify-center mx-auto mb-6">
+                <Check className="w-8 h-8 text-white" strokeWidth={3} />
+              </div>
+              <h2
+                className="text-3xl md:text-4xl font-light text-[#1C1917] mb-4"
+                style={{ fontFamily: "DM Serif Display, serif" }}
+              >
+                {language === "en" ? "Application received!" : "Candidature reçue !"}
+              </h2>
+              <p className="text-lg text-[#57534E] mb-2">
+                {language === "en"
+                  ? "Thank you for your application."
+                  : "Merci pour ta candidature."}
+              </p>
+              <p className="text-[#78716C] mb-8">
+                {language === "en"
+                  ? "We've sent you a confirmation email and will get back to you within 48 hours."
+                  : "Tu vas recevoir un email de confirmation. On te recontacte sous 48h."}
+              </p>
+              <button
+                type="button"
+                onClick={() => setStatus("idle")}
+                className="text-sm text-[#78716C] underline hover:text-[#1C1917] transition-colors"
+              >
+                {language === "en" ? "Submit another application" : "Envoyer une autre candidature"}
+              </button>
+            </div>
+          ) : (
+          <form
+            onSubmit={handleSubmit}
+            {...telemetry.formProps}
+            className="bg-white border border-[#E7E5E4] p-8 md:p-12"
+          >
+            {/* Honeypot anti-spam (caché aux humains) */}
+            <input
+              type="text"
+              name="botcheck"
+              className="hidden"
+              style={{ display: "none" }}
+              tabIndex={-1}
+              autoComplete="off"
+            />
+
+            {/* Personal Info */}
+            <div className="mb-10">
+              <h2 className="text-xs uppercase tracking-widest text-[#78716C] mb-6">
+                {language === "en"
+                  ? "Personal Information"
+                  : "Informations Personnelles"}
+              </h2>
+              <div className="grid md:grid-cols-2 gap-6">
+                <div>
+                  <label className="block text-sm text-[#57534E] mb-2">
+                    {language === "en" ? "First Name" : "Prénom"}
+                  </label>
+                  <input
+                    type="text"
+                    name="firstName"
+                    required
+                    autoComplete="given-name"
+                    className="w-full px-4 py-3 border border-[#E7E5E4] focus:border-[#D4A574] focus:outline-none transition-colors"
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm text-[#57534E] mb-2">
+                    {language === "en" ? "Last Name" : "Nom"}
+                  </label>
+                  <input
+                    type="text"
+                    name="lastName"
+                    required
+                    autoComplete="family-name"
+                    className="w-full px-4 py-3 border border-[#E7E5E4] focus:border-[#D4A574] focus:outline-none transition-colors"
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm text-[#57534E] mb-2">
+                    {language === "en" ? "Email" : "Email"}
+                  </label>
+                  <input
+                    type="email"
+                    name="email"
+                    required
+                    autoComplete="email"
+                    className="w-full px-4 py-3 border border-[#E7E5E4] focus:border-[#D4A574] focus:outline-none transition-colors"
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm text-[#57534E] mb-2">
+                    {language === "en" ? "Phone" : "Téléphone"}
+                  </label>
+                  <input
+                    type="tel"
+                    name="phone"
+                    required
+                    autoComplete="tel"
+                    className="w-full px-4 py-3 border border-[#E7E5E4] focus:border-[#D4A574] focus:outline-none transition-colors"
+                  />
+                </div>
+                <div className="md:col-span-2">
+                  <label className="block text-sm text-[#57534E] mb-2">
+                    {language === "en"
+                      ? "How did you hear about us? (optional)"
+                      : "Comment as-tu entendu parler de nous ? (optionnel)"}
+                  </label>
+                  <select
+                    name="source"
+                    value={sourceChoice}
+                    onChange={(e) => setSourceChoice(e.target.value)}
+                    className="w-full px-4 py-3 border border-[#E7E5E4] focus:border-[#D4A574] focus:outline-none transition-colors bg-white"
+                  >
+                    <option value="">
+                      {language === "en" ? "Select" : "Sélectionner"}
+                    </option>
+                    {/* Parrainage en tête de liste : la visibilité de l'option
+                        conditionne le succès du programme (brief 28/07/2026). */}
+                    <option value="resident-referral">
+                      {language === "en" ? "A resident referred me" : "Un résident m'a recommandé"}
+                    </option>
+                    <option value="google">Google</option>
+                    <option value="instagram">Instagram</option>
+                    <option value="word-of-mouth">
+                      {language === "en" ? "Word of mouth" : "Bouche à oreille"}
+                    </option>
+                    <option value="article-blog">
+                      {language === "en" ? "A blog article" : "Un article du blog"}
+                    </option>
+                    <option value="leboncoin">Leboncoin</option>
+                    <option value="other">
+                      {language === "en" ? "Other" : "Autre"}
+                    </option>
+                  </select>
+                  {sourceChoice === "resident-referral" && (
+                    <div className="mt-4">
+                      <label className="block text-sm text-[#57534E] mb-2">
+                        {language === "en"
+                          ? "First name (and last name if known) of the resident who referred you"
+                          : "Prénom (et nom si tu le connais) du résident qui t'a recommandé"}
+                      </label>
+                      {/* Optionnel volontairement : ne jamais bloquer une candidature
+                          parce que le candidat ne se souvient plus du nom exact. */}
+                      <input
+                        type="text"
+                        name="referrerName"
+                        maxLength={80}
+                        className="w-full px-4 py-3 border border-[#E7E5E4] focus:border-[#D4A574] focus:outline-none transition-colors"
+                      />
+                    </div>
+                  )}
+                </div>
+              </div>
+            </div>
+
+            {/* Error message */}
+            {status === "error" && (
+              <div role="alert" className="mb-6 p-4 bg-red-50 border border-red-200 text-red-800 text-sm">
+                {errorMessage}
+              </div>
+            )}
+
+            {/* Submit */}
+            <button
+              type="submit"
+              disabled={status === "submitting"}
+              className="w-full py-4 bg-[#1C1917] text-white font-bold hover:bg-[#D4A574] transition-colors flex items-center justify-center gap-2 disabled:opacity-60 disabled:cursor-not-allowed"
+            >
+              {status === "submitting" ? (
+                <>
+                  <Loader2 className="w-5 h-5 animate-spin" />
+                  {language === "en" ? "Sending..." : "Envoi en cours..."}
+                </>
+              ) : (
+                <>
+                  {language === "en"
+                    ? "SEND MY APPLICATION"
+                    : "ENVOYER MA CANDIDATURE"}
+                  <ArrowRight className="w-5 h-5" />
+                </>
+              )}
+            </button>
+            <p className="text-sm text-[#78716C] text-center mt-4">
+              {language === "en" ? "30 seconds, no commitment" : "30 secondes, sans engagement"}
+            </p>
+            <p className="text-xs text-[#78716C] text-center mt-1">
+              {language === "en" ? "Your data remains confidential." : "Tes données restent confidentielles."}
+            </p>
+          </form>
+          )}
         </div>
       </section>
 
-      {/* Testimonials — 3 résidents (CRO win #2) */}
+      {/* Testimonials — réassurance post-form (S33) */}
       <section className="py-20 lg:py-24 bg-white">
         <div className="container-custom max-w-5xl">
           <div className="text-center mb-12">
@@ -341,366 +453,94 @@ export function JoinPageV4() {
         </div>
       </section>
 
-      {/* Form */}
-      <section className="py-24 lg:py-32 bg-[#FAF9F6]">
-        <div className="container-custom max-w-3xl">
-          {/* Scarcité honnête — créer micro-urgence (CRO win #5) */}
-          <div className="mb-6 text-center">
-            <span className="inline-flex items-center gap-2 px-4 py-2 bg-white border border-[#D4A574] text-sm text-[#1C1917]">
-              <Calendar className="w-4 h-4 text-[#D4A574]" />
-              {totalAvailabilityLabel(L)}
-            </span>
-          </div>
-
-          {/* Reassurance strip */}
-          <div className="flex flex-wrap justify-center gap-6 mb-8 text-sm text-[#57534E]">
-            <span className="flex items-center gap-2">
-              <Check className="w-4 h-4 text-[#D4A574]" />
-              {language === "en" ? "No commitment" : "Sans engagement"}
-            </span>
-            <span className="flex items-center gap-2">
-              <Clock className="w-4 h-4 text-[#D4A574]" />
-              {language === "en" ? "2 min to complete" : "2 min pour compléter"}
-            </span>
-            <span className="flex items-center gap-2">
-              <Shield className="w-4 h-4 text-[#D4A574]" />
-              {language === "en" ? "Response within 48h" : "Réponse sous 48h"}
-            </span>
-            <span className="flex items-center gap-2">
-              <Check className="w-4 h-4 text-[#D4A574]" />
-              {language === "en" ? "No application fee" : "Aucun frais de dossier"}
-            </span>
-          </div>
-
-          {status === "success" ? (
-            <div className="bg-white border border-[#E7E5E4] p-12 md:p-16 text-center">
-              <div className="w-16 h-16 bg-[#D4A574] rounded-full flex items-center justify-center mx-auto mb-6">
-                <Check className="w-8 h-8 text-white" strokeWidth={3} />
-              </div>
-              <h2
-                className="text-3xl md:text-4xl font-light text-[#1C1917] mb-4"
-                style={{ fontFamily: "DM Serif Display, serif" }}
-              >
-                {language === "en" ? "Application received!" : "Candidature reçue !"}
-              </h2>
-              <p className="text-lg text-[#57534E] mb-2">
-                {language === "en"
-                  ? "Thank you for your application."
-                  : "Merci pour ta candidature."}
+      {/* Social proof stats — chiffres business pour rassurer (CRO win #1) */}
+      <section className="py-12 bg-[#FAF9F6] border-y border-[#E7E5E4]">
+        <div className="container-custom">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-4xl mx-auto text-center">
+            <div className="flex flex-col items-center">
+              <Users className="w-8 h-8 text-[#D4A574] mb-3" />
+              <p className="text-3xl font-light text-[#1C1917] mb-1" style={{ fontFamily: "DM Serif Display, serif" }}>
+                {STATS.totalResidents}+
               </p>
-              <p className="text-[#78716C] mb-8">
-                {language === "en"
-                  ? "We've sent you a confirmation email and will get back to you within 48 hours."
-                  : "Tu vas recevoir un email de confirmation. On te recontacte sous 48h."}
+              <p className="text-sm text-[#57534E]">
+                {language === "en" ? "Residents since 2021" : "Résidents depuis 2021"}
               </p>
-              <button
-                type="button"
-                onClick={() => setStatus("idle")}
-                className="text-sm text-[#78716C] underline hover:text-[#1C1917] transition-colors"
-              >
-                {language === "en" ? "Submit another application" : "Envoyer une autre candidature"}
-              </button>
             </div>
-          ) : (
-          <form
-            onSubmit={handleSubmit}
-            onKeyDown={handleFormKeyDown}
-            {...telemetry.formProps}
-            className="bg-white border border-[#E7E5E4] p-8 md:p-12"
-          >
-            {/* Honeypot anti-spam (caché aux humains) */}
-            <input
-              type="text"
-              name="botcheck"
-              className="hidden"
-              style={{ display: "none" }}
-              tabIndex={-1}
-              autoComplete="off"
-            />
+            <div className="flex flex-col items-center">
+              <Sparkles className="w-8 h-8 text-[#D4A574] mb-3" />
+              <p className="text-3xl font-light text-[#1C1917] mb-1" style={{ fontFamily: "DM Serif Display, serif" }}>
+                99%
+              </p>
+              <p className="text-sm text-[#57534E]">
+                {language === "en" ? "Occupancy rate over 5 years" : "Taux d'occupation sur 5 ans"}
+              </p>
+            </div>
+            <div className="flex flex-col items-center">
+              <Star className="w-8 h-8 text-[#D4A574] mb-3 fill-[#D4A574]" />
+              <p className="text-3xl font-light text-[#1C1917] mb-1" style={{ fontFamily: "DM Serif Display, serif" }}>
+                {STATS_DISPLAY[L].rating}/5
+              </p>
+              <p className="text-sm text-[#57534E]">
+                {language === "en" ? "Average rating from residents" : "Note moyenne des résidents"}
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
 
-            {/* Progress indicator — réel, dérivé de `step` */}
-            <div className="flex items-center gap-4 mb-8 pb-6 border-b border-[#E7E5E4]">
-              <div className="flex items-center gap-2" aria-current={step === 1 ? "step" : undefined}>
-                <span className="w-6 h-6 bg-[#D4A574] text-white text-xs rounded-full flex items-center justify-center font-medium">
-                  {step === 2 ? <Check className="w-3.5 h-3.5" /> : "1"}
+      {/* Steps — après le form (S33) : explique la suite, Candidater ✓ → Rencontrer → Emménager */}
+      <section className="py-24 lg:py-32 bg-white">
+        <div className="container-custom">
+          <div className="text-center mb-16">
+            <span className="text-xs text-[#78716C] uppercase tracking-[0.3em] mb-4 block">
+              {language === "en" ? "The Process" : "Le Processus"}
+            </span>
+            <h2
+              className="text-4xl md:text-5xl font-light text-[#1C1917]"
+              style={{ fontFamily: "DM Serif Display, serif" }}
+            >
+              {language === "en" ? "How It Works" : "Comment Ça Marche"}
+            </h2>
+          </div>
+
+          <div className="grid md:grid-cols-3 gap-px bg-[#E7E5E4]">
+            {[
+              {
+                number: "01",
+                title: language === "en" ? "Apply" : "Candidater",
+                description:
+                  language === "en"
+                    ? "Fill out the application form with your details."
+                    : "Remplis le formulaire de candidature avec tes coordonnées.",
+              },
+              {
+                number: "02",
+                title: language === "en" ? "Meet" : "Rencontrer",
+                description:
+                  language === "en"
+                    ? "We'll schedule a video call to get to know you better."
+                    : "On planifiera un appel vidéo pour mieux te connaître.",
+              },
+              {
+                number: "03",
+                title: language === "en" ? "Move In" : "Emménager",
+                description:
+                  language === "en"
+                    ? "Refundable deposit, and that's it — zero application fee. Welcome home!"
+                    : "Caution remboursable, et c'est tout — zéro frais de dossier. Bienvenue chez toi !",
+              },
+            ].map((step, index) => (
+              <div key={index} className="bg-white p-10 text-center">
+                <span className="text-6xl font-light text-[#E7E5E4] block mb-6">
+                  {step.number}
                 </span>
-                <span className={`text-sm font-medium ${step === 1 ? "text-[#1C1917]" : "text-[#78716C]"}`}>{language === "en" ? "Your info" : "Tes infos"}</span>
+                <h3 className="text-xl font-medium text-[#1C1917] mb-4">
+                  {step.title}
+                </h3>
+                <p className="text-[#57534E]">{step.description}</p>
               </div>
-              <div className="flex-1 h-px bg-[#E7E5E4]" />
-              <div className="flex items-center gap-2" aria-current={step === 2 ? "step" : undefined}>
-                <span className={`w-6 h-6 text-xs rounded-full flex items-center justify-center font-medium ${step === 2 ? "bg-[#D4A574] text-white" : "bg-[#E7E5E4] text-[#78716C]"}`}>2</span>
-                <span className={`text-sm font-medium ${step === 2 ? "text-[#1C1917]" : "text-[#78716C]"}`}>{language === "en" ? "Your stay" : "Ton séjour"}</span>
-              </div>
-              <div className="flex-1 h-px bg-[#E7E5E4]" />
-              <div className="flex items-center gap-2">
-                <span className="w-6 h-6 bg-[#E7E5E4] text-[#78716C] text-xs rounded-full flex items-center justify-center font-medium">&#10003;</span>
-                <span className="text-sm text-[#78716C]">{language === "en" ? "Done!" : "Envoyé !"}</span>
-              </div>
-            </div>
-
-            {/* ÉTAPE 1 — contact. Toujours montée ([hidden] quand step=2) pour
-                que FormData lise ses valeurs à la soumission finale. */}
-            <div
-              ref={step1Ref}
-              hidden={step !== 1}
-              tabIndex={-1}
-              className="scroll-mt-24 outline-none"
-              aria-label={language === "en" ? "Step 1 of 2 — Your info" : "Étape 1 sur 2 — Tes infos"}
-              onInvalid={() => setStep(1)}
-            >
-            {/* Personal Info */}
-            <div className="mb-10">
-              <h2 className="text-xs uppercase tracking-widest text-[#78716C] mb-6">
-                {language === "en"
-                  ? "Personal Information"
-                  : "Informations Personnelles"}
-              </h2>
-              <div className="grid md:grid-cols-2 gap-6">
-                <div>
-                  <label className="block text-sm text-[#57534E] mb-2">
-                    {language === "en" ? "First Name" : "Prénom"}
-                  </label>
-                  <input
-                    type="text"
-                    name="firstName"
-                    required
-                    autoComplete="given-name"
-                    className="w-full px-4 py-3 border border-[#E7E5E4] focus:border-[#D4A574] focus:outline-none transition-colors"
-                  />
-                </div>
-                <div>
-                  <label className="block text-sm text-[#57534E] mb-2">
-                    {language === "en" ? "Last Name" : "Nom"}
-                  </label>
-                  <input
-                    type="text"
-                    name="lastName"
-                    required
-                    autoComplete="family-name"
-                    className="w-full px-4 py-3 border border-[#E7E5E4] focus:border-[#D4A574] focus:outline-none transition-colors"
-                  />
-                </div>
-                <div>
-                  <label className="block text-sm text-[#57534E] mb-2">
-                    {language === "en" ? "Email" : "Email"}
-                  </label>
-                  <input
-                    type="email"
-                    name="email"
-                    required
-                    autoComplete="email"
-                    className="w-full px-4 py-3 border border-[#E7E5E4] focus:border-[#D4A574] focus:outline-none transition-colors"
-                  />
-                </div>
-                <div>
-                  <label className="block text-sm text-[#57534E] mb-2">
-                    {language === "en" ? "Phone" : "Téléphone"}
-                  </label>
-                  <input
-                    type="tel"
-                    name="phone"
-                    required
-                    autoComplete="tel"
-                    className="w-full px-4 py-3 border border-[#E7E5E4] focus:border-[#D4A574] focus:outline-none transition-colors"
-                  />
-                </div>
-              </div>
-            </div>
-
-            <button
-              type="button"
-              onClick={handleContinue}
-              className="w-full py-4 bg-[#1C1917] text-white font-bold hover:bg-[#D4A574] transition-colors flex items-center justify-center gap-2"
-            >
-              {language === "en" ? "CONTINUE" : "CONTINUER"}
-              <ArrowRight className="w-5 h-5" />
-            </button>
-            <p className="text-sm text-[#78716C] text-center mt-4">
-              {language === "en" ? "1 step left — about a minute" : "Plus qu'une étape — environ 1 minute"}
-            </p>
-            </div>
-
-            {/* ÉTAPE 2 — séjour. Toujours montée ([hidden] quand step=1). */}
-            <div
-              ref={step2Ref}
-              hidden={step !== 2}
-              tabIndex={-1}
-              className="scroll-mt-24 outline-none"
-              aria-label={language === "en" ? "Step 2 of 2 — Your stay" : "Étape 2 sur 2 — Ton séjour"}
-            >
-            {/* Stay Info */}
-            <div className="mb-10">
-              <h2 className="text-xs uppercase tracking-widest text-[#78716C] mb-6">
-                {language === "en" ? "Your Stay" : "Ton Séjour"}
-              </h2>
-              <div className="grid md:grid-cols-2 gap-6">
-                <div>
-                  <label className="block text-sm text-[#57534E] mb-2">
-                    {language === "en"
-                      ? "When would you like to join?"
-                      : "Quand souhaites-tu nous rejoindre ?"}
-                  </label>
-                  <select
-                    name="arrival"
-                    required
-                    className="w-full px-4 py-3 border border-[#E7E5E4] focus:border-[#D4A574] focus:outline-none transition-colors bg-white"
-                  >
-                    <option value="">
-                      {language === "en" ? "Select arrival period" : "Sélectionner la période"}
-                    </option>
-                    <option value="asap">
-                      {language === "en" ? "As soon as possible (within 1 month)" : "Le plus tôt possible (sous 1 mois)"}
-                    </option>
-                    <option value="1-3-months">
-                      {language === "en" ? "Within 1 to 3 months" : "Dans 1 à 3 mois"}
-                    </option>
-                    <option value="3-6-months">
-                      {language === "en" ? "Within 3 to 6 months" : "Dans 3 à 6 mois"}
-                    </option>
-                    <option value="later">
-                      {language === "en" ? "Later / not decided yet" : "Plus tard / pas encore décidé"}
-                    </option>
-                  </select>
-                </div>
-                <div>
-                  <label className="block text-sm text-[#57534E] mb-2">
-                    {language === "en"
-                      ? "How long do you plan to stay?"
-                      : "Combien de temps comptes-tu rester ?"}
-                  </label>
-                  <select
-                    name="duration"
-                    required
-                    className="w-full px-4 py-3 border border-[#E7E5E4] focus:border-[#D4A574] focus:outline-none transition-colors bg-white"
-                  >
-                    <option value="">
-                      {language === "en"
-                        ? "Select duration"
-                        : "Sélectionner la durée"}
-                    </option>
-                    <option value="2-3">
-                      {language === "en" ? "2-3 months" : "2-3 mois"}
-                    </option>
-                    <option value="3-6">
-                      {language === "en" ? "3-6 months" : "3-6 mois"}
-                    </option>
-                    <option value="6-12">
-                      {language === "en" ? "6-12 months" : "6-12 mois"}
-                    </option>
-                    <option value="12+">
-                      {language === "en" ? "12+ months" : "12+ mois"}
-                    </option>
-                  </select>
-                </div>
-                <div className="md:col-span-2">
-                  <label className="block text-sm text-[#57534E] mb-2">
-                    {language === "en"
-                      ? "How did you hear about us?"
-                      : "Comment as-tu entendu parler de nous ?"}
-                  </label>
-                  <select
-                    name="source"
-                    value={sourceChoice}
-                    onChange={(e) => setSourceChoice(e.target.value)}
-                    className="w-full px-4 py-3 border border-[#E7E5E4] focus:border-[#D4A574] focus:outline-none transition-colors bg-white"
-                  >
-                    <option value="">
-                      {language === "en" ? "Select" : "Sélectionner"}
-                    </option>
-                    {/* Parrainage en tête de liste : la visibilité de l'option
-                        conditionne le succès du programme (brief 28/07/2026). */}
-                    <option value="resident-referral">
-                      {language === "en" ? "A resident referred me" : "Un résident m'a recommandé"}
-                    </option>
-                    <option value="google">Google</option>
-                    <option value="instagram">Instagram</option>
-                    <option value="word-of-mouth">
-                      {language === "en" ? "Word of mouth" : "Bouche à oreille"}
-                    </option>
-                    <option value="article-blog">
-                      {language === "en" ? "A blog article" : "Un article du blog"}
-                    </option>
-                    <option value="leboncoin">Leboncoin</option>
-                    <option value="other">
-                      {language === "en" ? "Other" : "Autre"}
-                    </option>
-                  </select>
-                  {sourceChoice === "resident-referral" && (
-                    <div className="mt-4">
-                      <label className="block text-sm text-[#57534E] mb-2">
-                        {language === "en"
-                          ? "First name (and last name if known) of the resident who referred you"
-                          : "Prénom (et nom si tu le connais) du résident qui t'a recommandé"}
-                      </label>
-                      {/* Optionnel volontairement : ne jamais bloquer une candidature
-                          parce que le candidat ne se souvient plus du nom exact. */}
-                      <input
-                        type="text"
-                        name="referrerName"
-                        maxLength={80}
-                        className="w-full px-4 py-3 border border-[#E7E5E4] focus:border-[#D4A574] focus:outline-none transition-colors"
-                      />
-                    </div>
-                  )}
-                </div>
-              </div>
-            </div>
-
-            {/* Social proof */}
-            <div className="mb-6 p-4 bg-[#FAF9F6] border border-[#E7E5E4] text-center">
-              <p className="text-sm text-[#57534E] italic mb-1">
-                {language === "en"
-                  ? "\"The application process was super simple. I moved in 2 weeks later!\""
-                  : "\"Le processus de candidature était super simple. J'ai emménagé 2 semaines après !\""}
-              </p>
-              <p className="text-xs text-[#78716C]">
-                {language === "en" ? "— Sarah M., Marketing Manager" : "— Sarah M., Responsable Marketing"}
-              </p>
-            </div>
-
-            {/* Error message */}
-            {status === "error" && (
-              <div className="mb-6 p-4 bg-red-50 border border-red-200 text-red-800 text-sm">
-                {errorMessage}
-              </div>
-            )}
-
-            {/* Submit */}
-            <button
-              type="submit"
-              disabled={status === "submitting"}
-              className="w-full py-4 bg-[#1C1917] text-white font-bold hover:bg-[#D4A574] transition-colors flex items-center justify-center gap-2 disabled:opacity-60 disabled:cursor-not-allowed"
-            >
-              {status === "submitting" ? (
-                <>
-                  <Loader2 className="w-5 h-5 animate-spin" />
-                  {language === "en" ? "Sending..." : "Envoi en cours..."}
-                </>
-              ) : (
-                <>
-                  {language === "en"
-                    ? "SEND MY APPLICATION — IT'S FREE"
-                    : "ENVOYER MA CANDIDATURE — C'EST GRATUIT"}
-                  <ArrowRight className="w-5 h-5" />
-                </>
-              )}
-            </button>
-            <button
-              type="button"
-              onClick={handleBack}
-              className="w-full mt-3 py-3 border border-[#E7E5E4] text-[#57534E] hover:border-[#D4A574] hover:text-[#1C1917] transition-colors flex items-center justify-center gap-2"
-            >
-              <ArrowLeft className="w-4 h-4" />
-              {language === "en" ? "Back to my info" : "Revenir à mes infos"}
-            </button>
-            <p className="text-sm text-[#78716C] text-center mt-4">
-              {language === "en"
-                ? "Response within 48h. Your data remains confidential."
-                : "Réponse sous 48h. Tes données restent confidentielles."}
-            </p>
-            </div>
-          </form>
-          )}
+            ))}
+          </div>
         </div>
       </section>
 
@@ -778,8 +618,8 @@ export function JoinPageV4() {
               {
                 q_fr: "Et si je ne sais pas encore quelle date d'arrivée mettre ?",
                 q_en: "What if I don't know my arrival date yet?",
-                a_fr: "Pas de souci — choisis \"Plus tard / pas encore décidé\". On revient vers toi avec les chambres disponibles et on cale ensemble une date qui te convient. Candidater ne t'engage à rien.",
-                a_en: "No worries — pick \"Later / not decided yet\". We'll get back to you with available rooms and we'll set a date together. Applying doesn't commit you to anything.",
+                a_fr: "Pas de souci — le formulaire ne demande aucune date. On en parle ensemble à l'appel qui suit ta candidature et on cale une date qui te convient. Candidater ne t'engage à rien.",
+                a_en: "No worries — the form doesn't ask for any date. We'll discuss it on the call that follows your application and set a date that works for you. Applying doesn't commit you to anything.",
               },
             ].map((item, i) => (
               <div key={i} className="bg-[#FAF9F6] border border-[#E7E5E4]">

@@ -25,6 +25,7 @@ import {
 } from "lucide-react";
 import { useState, useEffect } from "react";
 import { supabase } from "@/lib/supabase";
+import { readEmbeddedArray, embedJson } from "@/lib/prerenderEmbeddedState";
 import { FaqSection } from "@/components/FaqSection";
 import { buildFaqPageSchema } from "@/lib/structuredData";
 import { colocationGeneveFaq } from "@/data/faq/colocationGeneveFaq";
@@ -46,11 +47,20 @@ interface BlogPost {
   read_time_min: number; category: string;
 }
 
+// État embarqué par le prerender (fix hydratation #418) — id aussi listé dans main.tsx.
+const BLOG_EMBED_ID = "__colocation_blog_data__";
+
 export function ColocationGenevePage() {
   const { language } = useLanguage();
-  const [blogPosts, setBlogPosts] = useState<BlogPost[]>([]);
+  // Init synchrone depuis l'état embarqué (fix hydratation #418) : sans lui,
+  // blogPosts=[] au premier rendu client → la section « articles » manque →
+  // mismatch avec le snapshot prérendu et re-render de toute la page.
+  const [blogPosts, setBlogPosts] = useState<BlogPost[]>(
+    () => readEmbeddedArray<BlogPost>(BLOG_EMBED_ID) ?? [],
+  );
 
   useEffect(() => {
+    if (readEmbeddedArray<BlogPost>(BLOG_EMBED_ID) !== null) return; // déjà hydraté depuis le prerendu
     async function loadBlogPosts() {
       try {
         const { data } = await supabase
@@ -73,17 +83,15 @@ export function ColocationGenevePage() {
   // (AggregateRating retiré : la note 4,9 vient d'un NPS interne, non balisable en schema.)
   const offerSchema = {
     "@context": "https://schema.org",
-    "@type": "AggregateOffer",
+    "@type": "Offer",
     name: language === "en"
       ? "Furnished room in shared housing near Geneva"
       : "Chambre meublée en colocation près de Genève",
     description: language === "en"
       ? "All-inclusive furnished room: rent, utilities, fiber internet, cleaning 3x/week, pool, gym, sauna, yoga classes, community events."
       : "Chambre meublée tout inclus : loyer, charges, fibre internet, ménage 3x/semaine, piscine, gym, sauna, cours de yoga, événements communautaires.",
-    lowPrice: String(STATS_SHARED_BATH.priceChf),
-    highPrice: String(STATS.priceChf),
+    price: String(STATS_SHARED_BATH.priceChf),
     priceCurrency: "CHF",
-    offerCount: STATS.totalRooms,
     priceValidUntil: "2026-12-31",
     availability: "https://schema.org/InStock",
     url: PILLAR_URL,
@@ -126,8 +134,8 @@ export function ColocationGenevePage() {
       <SEO
         title={
           language === "en"
-            ? `Shared Housing near Geneva — All-Inclusive Rooms from ${PRICE_SHARED_CHF_EN}`
-            : `Colocation Genève : chambres meublées tout inclus dès ${PRICE_SHARED_CHF_FR}`
+            ? "All-Inclusive Shared Housing near Geneva"
+            : "Colocation Genève : chambres tout inclus"
         }
         description={
           language === "en"
@@ -191,8 +199,8 @@ export function ColocationGenevePage() {
           {/* C2 preuve sociale + C3 réassurance — visible sans scroll */}
           <p className="mt-6 text-sm text-[#57534E]">
             {language === "en"
-              ? `★ 4.9/5 · ${STATS.totalResidents}+ residents since 2021 · 99% occupancy`
-              : `★ 4,9/5 · ${STATS.totalResidents}+ résidents depuis 2021 · 99 % d'occupation`}
+              ? `★ ${STATS.rating.replace(",", ".")}/5 (resident surveys) · ${STATS.totalResidents}+ residents since 2021 · 99% occupancy`
+              : `★ ${STATS.rating}/5 (enquêtes résidents) · ${STATS.totalResidents}+ résidents depuis 2021 · 99 % d'occupation`}
           </p>
           <p className="mt-1 text-xs text-[#78716C]">
             {language === "en" ? "Reply within 48h · No application fee" : "Réponse sous 48h · Aucun frais de dossier"}
@@ -218,7 +226,8 @@ export function ColocationGenevePage() {
             </span>
             <span className="flex items-center gap-2">
               <Euro className="w-4 h-4" />{" "}
-              {language === "en" ? PRICE_CHF_EN : PRICE_CHF_FR}/
+              {language === "en" ? "From " : "Dès "}
+              {language === "en" ? PRICE_SHARED_CHF_EN : PRICE_SHARED_CHF_FR}/
               {language === "en" ? "month" : "mois"}
             </span>
           </div>
@@ -1180,6 +1189,13 @@ export function ColocationGenevePage() {
           <ArrowRight className="w-4 h-4" />
         </LocalizedLink>
       </div>
+      {/* État embarqué pour l'hydratation sans fetch — capturé par le prerender,
+          relu par readEmbeddedArray() à l'init du state. */}
+      <script
+        type="application/json"
+        id={BLOG_EMBED_ID}
+        dangerouslySetInnerHTML={{ __html: embedJson(blogPosts) }}
+      />
     </main>
   );
 }

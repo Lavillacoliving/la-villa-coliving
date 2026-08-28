@@ -3,6 +3,7 @@ import { Waves, Sofa, BedDouble, Users, CircleCheck, TreePine, ArrowRight } from
 import { LocalizedLink } from '@/components/LocalizedLink';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { STATS } from '@/data/stats';
+import { colocGeneveHref } from '@/lib/siteLinks';
 
 /**
  * VERSION 9: STONE & BRASS
@@ -30,9 +31,10 @@ export function FeaturesV7() {
     {
       icon: BedDouble,
       title: language === 'en' ? `Spacious rooms from ${STATS.roomSizeMin} to ${STATS.roomSizeMax} m²` : `Chambres spacieuses de ${STATS.roomSizeMin} à ${STATS.roomSizeMax} m²`,
+      // Lien contextuel « colocation » -> article élu FR / pilier EN (cluster page 2)
       description: language === 'en'
-        ? '50% larger than the flatshare or coliving average. Emma or Tediber mattress, designer furniture. Most with private bathroom.'
-        : '50% plus grandes que la moyenne colocation ou coliving. Matelas Emma ou Tediber, mobilier design. La plupart avec salle de bain privative.',
+        ? (<>50% larger than the average <LocalizedLink to={colocGeneveHref(language)} className="underline decoration-[#D4A574] decoration-2 underline-offset-2 hover:text-[#1C1917] transition-colors">flatshare in Geneva</LocalizedLink> or coliving. Emma or Tediber mattress, designer furniture. Most with private bathroom.</>)
+        : (<>50% plus grandes que la moyenne d'une <LocalizedLink to={colocGeneveHref(language)} className="underline decoration-[#D4A574] decoration-2 underline-offset-2 hover:text-[#1C1917] transition-colors">colocation à Genève</LocalizedLink> ou d'un coliving. Matelas Emma ou Tediber, mobilier design. La plupart avec salle de bain privative.</>),
     },
     {
       icon: Users,

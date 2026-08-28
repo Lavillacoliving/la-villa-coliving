@@ -15,6 +15,43 @@
 
       gtag("config", "G-HW98R11W6M");
     </script>
+
+    <!-- Microsoft Clarity — INTÉGRATION TEMPORAIRE (24/08/2026).
+         Objet : enquête « ~66 clics payants sans conversion depuis le 22/08 » — identifier la
+         cause côté atterrissage (rebond immédiat / lecture sans formulaire / formulaire
+         abandonné). Clarity n'enregistre que vers l'avant : l'autopsie du passé passe par GA4.
+
+         DÉSINSTALLATION PRÉVUE MI-SEPTEMBRE 2026, à la clôture de l'enquête. Retirer alors :
+           1. ce bloc ;
+           2. les mentions Clarity de src/pages/PolitiqueConfidentialitePage.tsx
+              (sections 2d, 3, 4 et 7, en FR ET en EN) ;
+           3. la ligne correspondante de ../lavilla-docs/Infrastructure_LaVilla.md section 9 bis.
+
+         Deux gardes volontaires (GO Jérôme du 24/08/2026) :
+
+         1. hostname — scripts/prerender.mjs charge 118 pages sur localhost:3456 à chaque
+            `npm run build:local`. Sans ce test, chaque build fabriquerait 118 fausses sessions
+            headless qui noieraient les vraies sessions payantes qu'on doit lire. Exclut aussi
+            les preview deployments Vercel.
+
+         2. espace résident — /portail, /dashboard, /mon-espace, /reset-password et
+            /questionnaire-depart affichent nom, loyer, charges et bail EN CLAIR. Clarity masque
+            nativement les SAISIES de formulaire (masquage par défaut CONSERVÉ : ne jamais le
+            désactiver, on veut les parcours, jamais les données des candidats), mais PAS le
+            texte rendu. Limite assumée de cette version « simple » : le test n'a lieu qu'au
+            chargement, donc une navigation SPA depuis / vers /portail reste enregistrée.
+            L'étanchéité complète demanderait clarity("stop") sur changement de route. -->
+    <script type="text/javascript">
+      (function () {
+        if (window.location.hostname !== "www.lavillacoliving.com") return;
+        if (/^\/(portail|dashboard|mon-espace|reset-password|questionnaire-depart)(\/|$)/.test(window.location.pathname)) return;
+        (function(c,l,a,r,i,t,y){
+            c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
+            t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
+            y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
+        })(window, document, "clarity", "script", "y7eiydr6dv");
+      })();
+    </script>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="theme-color" content="#000000" />
@@ -23,7 +60,23 @@
     <link rel="icon" type="image/png" href="/favicon.png" />
     <link rel="apple-touch-icon" href="/favicon.png" />
 
-    <title>Coliving &amp; Colocation Genève dès 1 370 CHF | La Villa Coliving</title>
+    <!-- Fonts Google en NON-bloquant (R2, checkpoint 21/08/2026). Avant : @import dans
+         src/index.css → la feuille Google bloquait le premier rendu (~0,8 s/page en mobile
+         simulé, FCP home 4,8 s). Le pattern preload→stylesheet rend les polices dès leur
+         arrivée (display=swap), sans bloquer le texte. Même URL qu'avant, même familles. -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="preload"
+      as="style"
+      href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Inter:wght@300;400;500;600;700&display=swap"
+      onload="this.onload=null;this.rel='stylesheet'"
+    />
+    <noscript>
+      <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Inter:wght@300;400;500;600;700&display=swap" />
+    </noscript>
+
+    <title>Colocation &amp; Coliving Premium près de Genève | La Villa Coliving</title>
     <!-- LodgingBusiness schema removed: was duplicating with page-specific schemas on house pages,
          causing "Duplicate field FAQPage" errors in GSC. Organization schema in SEO.tsx covers global needs.
          House-specific LodgingBusiness schemas remain in HouseDetailPage.tsx -->
@@ -33,8 +86,12 @@
          122 pre-rendered pages. React-Helmet de-dupes by name, so no duplicate tag in the live SPA. -->
     <meta name="description" content="3 maisons à la frontière de Genève — pas une résidence de 300 chambres. Piscine. Sauna. Salle de sport. Chambre privée 17-23 m² tout inclus, 0 frais de dossier." />
     <!-- meta-keywords retiré (A3, 2026-06) : sans valeur SEO. -->
-    <!-- Preload hero image for faster LCP -->
-    <link rel="preload" as="image" href="/images/la villa jardin.webp" type="image/webp" fetchpriority="high" />
+    <!-- Plus de balise preload d'image pour le hero (R2, 21/08/2026) : le <img> du hero
+         porte désormais un srcset responsive + fetchpriority="high" dans le HTML prérendu ; un
+         preload mono-URL téléchargerait la grande image EN PLUS de la variante choisie (double
+         téléchargement), et Vite ré-encode « imagesrcset » (%20 → %2520). Le scanner de
+         préchargement du navigateur découvre l'<img> aussi tôt. scripts/inject-prerendered.mjs
+         garde sa logique de retrait (no-op sans balise). -->
   </head>
   <body>
     <div id="root"></div>

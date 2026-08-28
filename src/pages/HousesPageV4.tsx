@@ -1,4 +1,5 @@
 import { LocalizedLink } from "@/components/LocalizedLink";
+import { responsiveImage } from "@/lib/responsiveImage";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { MapPin, Users, ArrowRight, Check, X } from "lucide-react";
 import { SEO } from "@/components/SEO";
@@ -186,6 +187,7 @@ export function HousesPageV4() {
                     alt={house.alt}
                     className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                     loading="lazy"
+                    {...responsiveImage(house.image, "(min-width: 768px) 33vw, 100vw")}
                   />
                   <span className="absolute top-4 left-4 bg-white/90 backdrop-blur-sm text-[#1C1917] text-xs font-semibold px-3 py-1.5 rounded-lg">
                     {house.capacity} {language === "en" ? "residents" : "résidents"}
@@ -275,12 +277,24 @@ export function HousesPageV4() {
                         {language === "en" ? "Apply" : "Postuler"}
                       </LocalizedLink>
                     </div>
-                    <LocalizedLink
-                      to={`/${house.id}`}
-                      className="mt-3 inline-block text-sm text-[#78716C] underline hover:text-[#D4A574] transition-colors"
-                    >
-                      {language === "en" ? `Flatshare in ${house.location}` : `Colocation à ${house.location}`}
-                    </LocalizedLink>
+                    {house.id === "lelodge" ? (
+                      <p className="mt-3 text-sm text-[#78716C]">
+                        <LocalizedLink to="/annemasse-colocation" className="underline hover:text-[#D4A574] transition-colors">
+                          {language === "en" ? "Shared housing in Annemasse" : "Colocation à Annemasse"}
+                        </LocalizedLink>
+                        {" · "}
+                        <LocalizedLink to="/chambre-a-louer-annemasse" className="underline hover:text-[#D4A574] transition-colors">
+                          {language === "en" ? "Rooms for rent in Annemasse" : "Chambre à louer à Annemasse"}
+                        </LocalizedLink>
+                      </p>
+                    ) : (
+                      <LocalizedLink
+                        to={`/${house.id}`}
+                        className="mt-3 inline-block text-sm text-[#78716C] underline hover:text-[#D4A574] transition-colors"
+                      >
+                        {language === "en" ? `Flatshare in ${house.location}` : `Colocation à ${house.location}`}
+                      </LocalizedLink>
+                    )}
                   </div>
                 </div>
               </div>

@@ -1,7 +1,15 @@
 import { LocalizedLink } from "@/components/LocalizedLink";
+import { responsiveImage } from "@/lib/responsiveImage";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { ArrowRight, Check } from "lucide-react";
-import { STATS, PRICE_SHARED_CHF_FR, PRICE_SHARED_CHF_EN, houseAvailabilityLabel, type HouseKey } from "@/data/stats";
+import { STATS, PRICE_SHARED_CHF_FR, PRICE_SHARED_CHF_EN } from "@/data/stats";
+import {
+  useRoomAvailability,
+  houseBadgeLabel,
+  houseBadgeTone,
+  BADGE_CHIP_CLASS,
+  type HouseKey,
+} from "@/lib/availability";
 import { colocGeneveHref } from "@/lib/siteLinks";
 import type { IntentBucket } from "@/data/blogIntentBuckets";
 
@@ -71,7 +79,10 @@ export function BlocOffre({ variant, slug, bucket }: BlocOffreProps) {
   const L = language === "en" ? "en" : "fr";
   const house = houseForArticle(slug);
   const h = HOUSES[house];
-  // Prix d'appel du blog = palier d'entree (Jerome 13/08 : « des 1 390 », jamais 1 440)
+  const availability = useRoomAvailability();
+  const availabilityBadge = houseBadgeLabel(availability.byHouse[house], availability.known, L);
+  const availabilityTone = houseBadgeTone(availability.byHouse[house], availability.known);
+  // Prix d'appel du blog = palier d'entrée (Jérôme : « dès », jamais le prix standard)
   const price = L === "en" ? PRICE_SHARED_CHF_EN : PRICE_SHARED_CHF_FR;
   const to = CANDIDATURE_REF(slug);
   // Lien secondaire : la page maison quand l'article cible Le Lodge (4,65 % de
@@ -122,6 +133,7 @@ export function BlocOffre({ variant, slug, bucket }: BlocOffreProps) {
               alt={`${h.label} — coliving près de Genève`}
               className="w-full h-36 sm:h-full object-cover"
               loading="lazy"
+              {...responsiveImage(h.img, "(min-width: 640px) 176px, 100vw")}
             />
           </div>
           <div className="p-5 flex-1">
@@ -158,10 +170,13 @@ export function BlocOffre({ variant, slug, bucket }: BlocOffreProps) {
               alt={`${h.label} — coliving près de Genève`}
               className="w-full h-52 md:h-full object-cover"
               loading="lazy"
+              {...responsiveImage(h.img, "(min-width: 768px) 40vw, 100vw")}
             />
-            <span className="absolute top-3 left-3 text-xs font-semibold px-3 py-1 rounded-full bg-white/90 text-[#1C1917]">
-              {houseAvailabilityLabel(house, L)}
-            </span>
+            {availabilityBadge && availabilityTone && (
+              <span className={`absolute top-3 left-3 text-xs font-semibold px-3 py-1 rounded-full ${BADGE_CHIP_CLASS[availabilityTone]}`}>
+                {availabilityBadge}
+              </span>
+            )}
           </div>
           <div className="p-6 md:p-8">
             <p className="text-xs uppercase tracking-[0.2em] text-[#D4A574] font-semibold mb-2">

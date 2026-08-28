@@ -1,9 +1,11 @@
 import { LocalizedLink } from "@/components/LocalizedLink";
+import { responsiveImage } from "@/lib/responsiveImage";
 import { colocGeneveHref } from "@/lib/siteLinks";
 import { Scrim } from "@/components/Scrim";
 import { ArrowRight, ChevronDown, Home, Users, Heart, MapPin } from "lucide-react";
 import { useLanguage } from "@/contexts/LanguageContext";
-import { STATS, STATS_DISPLAY, totalAvailable, totalAvailabilityLabel, PRICE_SHARED_CHF_FR, PRICE_SHARED_CHF_EN } from "@/data/stats";
+import { STATS, STATS_DISPLAY, PRICE_SHARED_CHF_FR, PRICE_SHARED_CHF_EN } from "@/data/stats";
+import { useRoomAvailability, globalAvailabilityLabel } from "@/lib/availability";
 
 /**
  * VERSION 9: STONE & BRASS — Condo premium contemporain
@@ -13,6 +15,7 @@ import { STATS, STATS_DISPLAY, totalAvailable, totalAvailabilityLabel, PRICE_SHA
 export function HeroV7() {
   const { language } = useLanguage();
   const L = language === "en" ? "en" : "fr";
+  const availability = useRoomAvailability();
 
   return (
     <>
@@ -27,6 +30,7 @@ export function HeroV7() {
             width={1920}
             height={1080}
             fetchPriority="high"
+            {...responsiveImage("/images/la villa jardin.webp", "100vw")}
           />
           {/* Voile dégradé réutilisable — lisibilité du texte sur photo (WCAG AA) */}
           <Scrim />
@@ -117,22 +121,16 @@ export function HeroV7() {
               className="text-white/90 text-sm font-medium"
               title={language === "en" ? "Average rating — resident surveys 2021-2026" : "Note moyenne — enquêtes résidents 2021-2026"}
             >
-              {`${STATS_DISPLAY[L].rating}/5 — ${STATS_DISPLAY[L].residents}`}
+              {`${STATS_DISPLAY[L].rating}/5 ${language === "en" ? "(resident surveys)" : "(enquêtes résidents)"} — ${STATS_DISPLAY[L].residents}`}
             </span>
           </div>
 
-          {/* Availability signal — dynamic next month */}
+          {/* Availability signal — dispo réelle (v_public_rooms), dates comprises.
+              Avant : constante manuelle + mois suivant calculé, qui annonçait
+              « 3 chambres disponibles pour septembre » pour 1 seule libre. */}
           <p className="text-sm text-[#E0BB8A] mt-4 flex items-center gap-2">
             <span className="w-2 h-2 bg-[#E0BB8A] rounded-full animate-pulse" />
-            {(() => {
-              // Dispo = source unique (stats.ts AVAILABILITY) ; mois calculé dynamiquement.
-              const now = new Date();
-              const next = new Date(now.getFullYear(), now.getMonth() + 1, 1);
-              const month = next.toLocaleDateString(L === "en" ? "en-US" : "fr-FR", { month: "long", year: "numeric" });
-              const label = totalAvailabilityLabel(L);
-              if (totalAvailable() <= 0) return label;
-              return L === "en" ? `${label} for ${month}` : `${label} pour ${month}`;
-            })()}
+            {globalAvailabilityLabel(availability, L)}
           </p>
 
           {/* Stats bar */}
@@ -255,6 +253,7 @@ export function HeroV7() {
                   loading="lazy"
                   width={400}
                   height={533}
+                  {...responsiveImage(item.image, "(min-width: 768px) 20vw, 50vw")}
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
                 <div className="absolute bottom-0 left-0 right-0 p-4 md:p-5">

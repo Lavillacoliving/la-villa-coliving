@@ -288,7 +288,7 @@ export const translations = {
         housekeeping: {
           title: "Effortless Upkeep",
           description:
-            "Professional housekeeping for all common areas three times a week — light passes plus a weekly deep clean. Your home stays pristine, effortlessly.",
+            "Professional housekeeping of all common areas three times a week, including one deep clean. Your home stays pristine, effortlessly.",
         },
         internet: {
           title: "High-Speed Fiber",
@@ -723,7 +723,7 @@ export const translations = {
         housekeeping: {
           title: "Entretien Sans Effort",
           description:
-            "Ménage professionnel des communs 3 fois par semaine — passages légers et nettoyage approfondi hebdomadaire. Ta maison reste impeccable, sans effort.",
+            "Ménage professionnel des communs 3 fois par semaine, dont un nettoyage approfondi hebdomadaire. Ta maison reste impeccable, sans effort.",
         },
         internet: {
           title: "Fibre Haut Débit",

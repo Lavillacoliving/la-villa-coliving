@@ -1,5 +1,5 @@
 import type { QAPair } from "@/lib/structuredData";
-import { PRICE_SHARED_CHF_FR, PRICE_SHARED_CHF_EN } from "@/data/stats";
+import { PRICE_SHARED_CHF_FR, PRICE_SHARED_CHF_EN, STATS } from "@/data/stats";
 
 // §4 du playbook AEO — /le-coliving (définitionnel). Tutoiement, texte verbatim.
 export const colivingFaq: { fr: QAPair[]; en: QAPair[] } = {
@@ -23,6 +23,14 @@ export const colivingFaq: { fr: QAPair[]; en: QAPair[] } = {
     {
       q: "Le coliving est-il adapté si je suis plutôt introverti ?",
       a: "Oui. Chez La Villa Coliving, tu gardes ta chambre privée pour ton intimité, et la vie commune reste une invitation, jamais une obligation. Les événements — dîners, pizza party, cours de sport — sont optionnels. Les maisons à taille humaine de 7 à 12 résidents rendent les liens plus naturels et moins intimidants qu'un grand immeuble.",
+    },
+    {
+      q: "Quels sont les inconvénients du coliving ?",
+      a: `Le coliving a de vrais inconvénients : tu partages la cuisine et les espaces communs, tu as moins d'intimité qu'en studio, et l'entrée se fait sur candidature — donc avec un délai et une sélection, sans garantie d'être retenu. La vie en communauté ne convient pas à tout le monde. En contrepartie, ta chambre privée de ${STATS.roomSizeMin} à ${STATS.roomSizeMax} m² préserve ton espace, et chez La Villa Coliving les événements restent optionnels : tu participes quand tu veux, jamais par obligation.`,
+    },
+    {
+      q: "Quel est le prix d'une colocation à Genève ?",
+      a: `Compte 1 200 à 1 600 CHF par mois pour une chambre en colocation dans le centre de Genève, et 900 à 1 200 CHF en périphérie. Côté France voisine, une chambre se loue plutôt entre 600 et 900 € par mois, hors charges. À ces montants s'ajoutent souvent la caution, un garant et d'éventuels frais d'agence. En coliving, tout est réuni dans un loyer unique : chez La Villa Coliving, la chambre meublée tout inclus démarre dès ${PRICE_SHARED_CHF_FR}/mois, sans frais de dossier.`,
     },
     {
       q: "Y a-t-il du coliving près de Genève ?",
@@ -49,6 +57,14 @@ export const colivingFaq: { fr: QAPair[]; en: QAPair[] } = {
     {
       q: "Is coliving suitable if I'm rather introverted?",
       a: "Yes. At La Villa Coliving you keep your private room for your privacy, and shared life remains an invitation, never an obligation. Events — dinners, pizza parties, sport classes — are optional. The human-scale houses of 7 to 12 residents make connections more natural and less intimidating than a large building.",
+    },
+    {
+      q: "What are the downsides of coliving?",
+      a: `Coliving has real downsides: you share the kitchen and common areas, you get less privacy than in a studio, and entry goes through an application — so there is a delay and a selection process, with no guarantee of getting a room. Community living simply isn't for everyone. On the flip side, your private room of ${STATS.roomSizeMin} to ${STATS.roomSizeMax} m² protects your own space, and at La Villa Coliving events stay optional: you join when you feel like it, never out of obligation.`,
+    },
+    {
+      q: "How much does a room in a Geneva flatshare cost?",
+      a: `Expect CHF 1,200 to 1,600 per month for a room in a shared flat in central Geneva, and CHF 900 to 1,200 on the outskirts. On the French side of the border, a room usually rents for 600 to 900 € per month, excluding utilities. On top of that, expect a deposit, often a guarantor, and sometimes agency fees. Coliving bundles everything into a single rent: at La Villa Coliving, an all-inclusive furnished room starts from ${PRICE_SHARED_CHF_EN}/month, with no application fee.`,
     },
     {
       q: "Is there coliving near Geneva?",

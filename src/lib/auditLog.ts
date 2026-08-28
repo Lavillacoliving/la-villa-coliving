@@ -25,14 +25,15 @@ export type AuditAction =
   | 'status_change' | 'payment_recorded'
   | 'lease_generated' | 'tenant_deactivated'
   | 'lease_status_changed'
-  | 'irl_applied' | 'irl_dismissed' | 'prospect_converted'
+  | 'irl_applied' | 'irl_dismissed' | 'irl_revision_applied' | 'prospect_converted'
   | 'file_uploaded' | 'file_deleted'
   | 'invoice_linked' | 'invoice_unlinked'
   | 'transaction_classified' | 'transaction_flagged' | 'transaction_verified'
   | 'deposit_received' | 'deposit_unreceived'
   | 'deposit_returned' | 'deposit_adjusted' | 'split_group_created'
   | 'exit_survey_sent'
-  | 'referral_credited';
+  | 'referral_credited'
+  | 'move_out_date_changed' | 'room_status_changed';
 
 export type AuditEntityType =
   | 'tenant' | 'prospect' | 'payment' | 'maintenance_ticket'
