@@ -5,10 +5,18 @@ import { MapPin, Users, ArrowRight, Check, X } from "lucide-react";
 import { SEO } from "@/components/SEO";
 import { FaqSection } from "@/components/FaqSection";
 import { maisonsFaq } from "@/data/faq/maisonsFaq";
-import { PRICE_FR_NUM, PRICE_EN_NUM, PRICE_SHARED_FR_NUM, PRICE_SHARED_EN_NUM, PRICE_SHARED_CHF_FR, PRICE_SHARED_CHF_EN, EUR_STANDARD_FR_NUM, EUR_STANDARD_EN_NUM, EUR_SHARED_FR_NUM, EUR_SHARED_EN_NUM, AVAILABILITY, houseAvailabilityLabel, type HouseKey } from "@/data/stats";
+import { PRICE_FR_NUM, PRICE_EN_NUM, PRICE_SHARED_FR_NUM, PRICE_SHARED_EN_NUM, PRICE_SHARED_CHF_FR, PRICE_SHARED_CHF_EN, EUR_STANDARD_FR_NUM, EUR_STANDARD_EN_NUM, EUR_SHARED_FR_NUM, EUR_SHARED_EN_NUM } from "@/data/stats";
+import {
+  useRoomAvailability,
+  houseBadgeLabel,
+  houseBadgeTone,
+  BADGE_CHIP_CLASS,
+  type HouseKey,
+} from "@/lib/availability";
 
 export function HousesPageV4() {
   const { language } = useLanguage();
+  const availability = useRoomAvailability();
 
   const houses = [
     {
@@ -195,12 +203,17 @@ export function HousesPageV4() {
                   <span className="absolute top-4 right-4 bg-black/60 backdrop-blur-sm text-white text-xs font-medium px-3 py-1.5 rounded-lg">
                     {language === "en" ? "20 min Geneva center" : "20 min Genève centre"}
                   </span>
-                  {/* Pastille dispo — verte si des chambres sont libres (source unique AVAILABILITY) */}
-                  <span className={`absolute bottom-4 left-4 backdrop-blur-sm text-white text-xs font-semibold px-3 py-1.5 rounded-lg ${
-                    AVAILABILITY[house.id as HouseKey] <= 0 ? "bg-[#78716C]/90" : "bg-[#16A34A]/95"
-                  }`}>
-                    {houseAvailabilityLabel(house.id as HouseKey, language)}
-                  </span>
+                  {/* Pastille dispo — couleur dérivée de la dispo réelle (v_public_rooms), pas du libellé.
+                      Libellé null (dispo inconnue) = pas de pastille, jamais de chiffre inventé. */}
+                  {(() => {
+                    const label = houseBadgeLabel(availability.byHouse[house.id as HouseKey], availability.known, language);
+                    const tone = houseBadgeTone(availability.byHouse[house.id as HouseKey], availability.known);
+                    return label && tone ? (
+                      <span className={`absolute bottom-4 left-4 backdrop-blur-sm text-xs font-semibold px-3 py-1.5 rounded-lg ${BADGE_CHIP_CLASS[tone]}`}>
+                        {label}
+                      </span>
+                    ) : null;
+                  })()}
                 </LocalizedLink>
 
                 {/* Content */}
