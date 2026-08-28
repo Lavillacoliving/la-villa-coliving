@@ -1,11 +1,25 @@
 /**
- * Chambres disponibles — LP payante /chambres-septembre (brief LOT 2, 24/08/2026).
+ * Inventaire de la LP payante /chambres-septembre · /en/rooms-september.
+ * Brief LOT 2 (24/08/2026), rendu PILOTABLE PAR LA DONNÉE au LOT 4 (28/08/2026).
  *
- * SOURCE UNIQUE de la page : le H1, le compteur et les cartes dérivent tous de
- * ROOMS_SEPTEMBRE. Ajouter/retirer une chambre = éditer ce tableau, rien d'autre.
- * Le titre ne peut donc jamais annoncer un nombre différent de ce qui est affiché —
- * garde-fou volontaire : sur une page d'atterrissage payante, un écart entre
- * « X chambres » et le nombre de cartes est une allégation trompeuse.
+ * ── SOURCE UNIQUE ────────────────────────────────────────────────────────────
+ * Le badge, le H1, le compteur, le CTA, les cartes et les metas dérivent TOUS de
+ * ce fichier. Un blast se prépare ici et nulle part ailleurs :
+ *
+ *   • rouvrir une chambre  → son `status` passe à "disponible"
+ *   • fermer une chambre   → son `status` passe à "réservée" (on NE supprime rien :
+ *                            photos et textes restent prêts pour la prochaine fois)
+ *   • changer de mois      → `LP_MONTH`
+ *
+ * La page se met alors seule dans le bon des trois états (voir `AVAILABLE_COUNT`)
+ * sans qu'une ligne de composant bouge. Procédure complète : README.md.
+ *
+ * Pourquoi un fichier et pas une table : le gros du volume est ÉDITORIAL (12 photos
+ * par chambre avec alt FR/EN rédigés et dimensions réelles, pitch, repère) — en base
+ * ce serait une colonne JSON, sans typage ni relecture en diff. Et la LP est
+ * prérendue : son H1 est l'élément LCP, il doit être dans le HTML servi, pas derrière
+ * un fetch. `tsc -b` sert de garde-fou : une faute de frappe sur un statut casse le
+ * build au lieu de partir en prod.
  *
  * ⚠️ `property` DOIT rester un slug canonique `properties.slug` SANS tiret
  * (src/lib/entities.ts) : il part tel quel dans `property_interest` (Edge v14 →
@@ -15,9 +29,38 @@
  * ajoutée doit venir de lui (maison, repère, surface, salle d'eau, prix, date, atout).
  */
 
+import { STATS, thousands } from "@/data/stats";
+
+/**
+ * Le mois de la campagne — VARIABLE, jamais écrit dans un composant.
+ * FR en minuscule et EN en capitale : ils s'insèrent tels quels dans
+ * « pour septembre » / « for September ».
+ *
+ * L'URL, elle, reste /chambres-septembre en toute saison : les campagnes Ads en
+ * pause pointent dessus et seront réactivées. La page est noindex et l'URL n'est
+ * lue par personne — la changer coûterait des campagnes, la garder ne coûte rien.
+ */
+export const LP_MONTH = {
+  fr: "septembre",
+  en: "September",
+};
+
+/**
+ * Le seul champ à toucher pour ouvrir ou fermer une chambre.
+ * Accent inclus, c'est voulu : « reservee » ne compile pas, donc une coquille
+ * s'arrête au build et n'atteint jamais une page payante.
+ */
+export type RoomStatus = "disponible" | "réservée";
+
 export interface RoomSeptembre {
   /** Identifiant stable — part dans `room_interest`. */
   id: string;
+  /**
+   * Ouvre ou ferme la chambre sur la page. C'EST LE SEUL CHAMP DU BLAST.
+   * "réservée" la retire des cartes et du compteur sans rien effacer :
+   * elle revient telle quelle au prochain départ.
+   */
+  status: RoomStatus;
   /** Slug canonique properties.slug, SANS tiret — part dans `property_interest`. */
   property: "lavilla" | "leloft" | "lelodge" | "montblanc";
   houseName: string;
@@ -60,6 +103,8 @@ export interface RoomSeptembre {
 export const ROOMS_SEPTEMBRE: RoomSeptembre[] = [
   {
     id: "chambre-4",
+    // Réservée le 27/08/2026 — les 3 chambres de septembre sont parties.
+    status: "réservée",
     property: "lelodge",
     houseName: "Le Lodge",
     landmark: {
@@ -187,6 +232,8 @@ export const ROOMS_SEPTEMBRE: RoomSeptembre[] = [
   },
   {
     id: "chambre-8",
+    // Réservée le 27/08/2026.
+    status: "réservée",
     property: "lavilla",
     houseName: "La Villa",
     landmark: {
@@ -319,17 +366,100 @@ export const HERO_ALT = {
   en: "La Villa's outdoor pool, under the weeping willow",
 };
 
-/** Loyer d'entrée réel — alimente le « dès X CHF » du hero (jamais une valeur en dur). */
-export const PRICE_FROM_CHF = Math.min(...ROOMS_SEPTEMBRE.map((r) => r.priceChf));
+// ── Dérivations : la page ne compte jamais elle-même ────────────────────────
 
 /**
- * « 1 380 » — `fr-CH` produit déjà une ESPACE FINE INSÉCABLE (U+202F) entre les
- * milliers. On la garde telle quelle : la remplacer par une espace ordinaire
- * autoriserait une coupure de ligne entre « 1 » et « 380 » en colonne étroite
- * (mobile ≈ 60 % du trafic payant). Ne pas « normaliser » ce caractère.
+ * Les chambres réellement proposées. TOUT ce que la page affiche part d'ici :
+ * cartes, compteur, H1, CTA, metas. Une chambre "réservée" reste dans le fichier
+ * mais sort de la page — impossible d'annoncer un nombre qu'on n'affiche pas.
  */
-export function formatChf(value: number): string {
-  return value.toLocaleString("fr-CH");
+export const AVAILABLE_ROOMS = ROOMS_SEPTEMBRE.filter((r) => r.status === "disponible");
+
+/**
+ * Le compteur du hero. Il gouverne les TROIS états de la page :
+ *   ≥ 2 → « Il ne reste que N chambres pour {mois} »
+ *   = 1 → « Dernière chambre disponible pour {mois} »
+ *   = 0 → mode « Complet » : liste d'attente vers /candidature, bloc des 3 maisons
+ * Aucun de ces trois cas n'est écrit en dur dans un composant.
+ */
+export const AVAILABLE_COUNT = AVAILABLE_ROOMS.length;
+
+/**
+ * Loyer d'entrée du « dès X CHF » du hero.
+ *
+ * Le plus bas des chambres OUVERTES ; à zéro chambre ouverte (mode complet), le
+ * tarif public de src/data/stats.ts — seule source du prix (CLAUDE.md), et pas
+ * `Math.min()` d'un tableau vide, qui vaut Infinity.
+ */
+export const PRICE_FROM_CHF = AVAILABLE_ROOMS.length
+  ? Math.min(...AVAILABLE_ROOMS.map((r) => r.priceChf))
+  : STATS.priceChf;
+
+/**
+ * Les 3 maisons — bloc de repli du mode « complet » : quand il n'y a plus de
+ * chambre à montrer, on montre où elles se libèrent.
+ *
+ * `slug` est aussi le chemin (/lavilla, /leloft, /lelodge), préfixé par /en côté
+ * anglais. Photos déjà présentes dans RESPONSIVE_IMAGES avec un jeu complet, et
+ * dimensions RÉELLES des fichiers : le cadre 4/3 de la carte s'en sert pour ne
+ * pas faire sauter la mise en page pendant le chargement.
+ */
+export const LP_HOUSES = [
+  {
+    slug: "lavilla",
+    name: "La Villa",
+    city: "Ville-la-Grand",
+    src: "/images/la villa.webp",
+    w: 1280,
+    h: 722,
+    alt: {
+      fr: "La Villa, à Ville-la-Grand : la maison et son jardin",
+      en: "La Villa, in Ville-la-Grand: the house and its garden",
+    },
+  },
+  {
+    slug: "leloft",
+    name: "Le Loft",
+    city: "Ambilly",
+    src: "/images/la villa coliving le loft piscine.webp",
+    w: 1920,
+    h: 1440,
+    alt: {
+      fr: "La piscine du Loft, à Ambilly",
+      en: "The Loft's pool, in Ambilly",
+    },
+  },
+  {
+    slug: "lelodge",
+    name: "Le Lodge",
+    city: "Annemasse",
+    src: "/images/le lodge piscine.webp",
+    w: 1024,
+    h: 1024,
+    alt: {
+      fr: "La piscine du Lodge, à Annemasse",
+      en: "The Lodge's pool, in Annemasse",
+    },
+  },
+];
+
+/**
+ * « 1 380 » en FR, « 1,380 » en EN — exactement la graphie de src/data/stats.ts
+ * (PRICE_FR_NUM / PRICE_EN_NUM), y compris dans le JSON-LD de cette page.
+ *
+ * Deux corrections par rapport au LOT 2, qui appelait `toLocaleString("fr-CH")` :
+ *  • la LANGUE était ignorée — la LP anglaise affichait « CHF 1 380/month » là où
+ *    tout le reste du site anglais écrit « CHF 1,380 » ;
+ *  • `toLocaleString` est proscrit ici : l'ICU du build Puppeteer du prérendu et
+ *    celui du navigateur peuvent diverger, ce qui produit un mismatch
+ *    d'hydratation sur une page dont le prix est au premier écran.
+ *
+ * L'insécable FR (U+00A0, pas la fine U+202F quasi invisible) interdit par
+ * ailleurs la coupure de ligne entre « 1 » et « 380 » en colonne étroite
+ * (mobile ≈ 60 % du trafic payant).
+ */
+export function formatChf(value: number, en: boolean): string {
+  return thousands(value, en ? "," : " ");
 }
 
 /** « 05/09 » en FR, « 5 September » en EN. */
