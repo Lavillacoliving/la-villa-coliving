@@ -456,7 +456,7 @@ export function BailPDF({ data }: { data: BailPDFData }) {
 
             <Text style={[s.subTitle, { fontSize: 9, marginTop: 8 }]}>SERVICES</Text>
             <Bullet>{"Mise \u00E0 disposition d\u2019une parure de linge de lit et serviette."}</Bullet>
-            <Bullet>{"M\u00E9nage 2 fois par semaine dans les parties communes int\u00E9rieur. M\u00E9nage de la chambre en option."}</Bullet>
+            <Bullet>{"M\u00E9nage 3 fois par semaine dans les parties communes int\u00E9rieur. M\u00E9nage de la chambre en option."}</Bullet>
             <Bullet>{"Entretien r\u00E9gulier des parties communes ext\u00E9rieur : pisciniste, jardinier, \u00E9lagage, nettoyage"}</Bullet>
             <Bullet>{"Box pour diner communautaire livr\u00E9e 1 fois/mois"}</Bullet>
             <Bullet>{"\u00C9v\u00E8nements communautaires r\u00E9currents"}</Bullet>
@@ -468,7 +468,7 @@ export function BailPDF({ data }: { data: BailPDFData }) {
 
             <Text style={[s.subTitle, { fontSize: 9, marginTop: 8 }]}>{"ENTRETIEN"}</Text>
             <Text style={[s.body, { fontSize: 9 }]}>
-              {"Entretien des parties communes int\u00E9rieures et ext\u00E9rieures : r\u00E9paration et entretien et remplacement des \u00E9l\u00E9ments d\u00E9fectueux des parties communes de la maison. Entretien des ext\u00E9rieurs et de la piscine. M\u00E9nage effectu\u00E9 deux fois par semaine pour que les espaces communs brillent !"}
+              {"Entretien des parties communes int\u00E9rieures et ext\u00E9rieures : r\u00E9paration et entretien et remplacement des \u00E9l\u00E9ments d\u00E9fectueux des parties communes de la maison. Entretien des ext\u00E9rieurs et de la piscine. M\u00E9nage effectu\u00E9 trois fois par semaine pour que les espaces communs brillent !"}
             </Text>
             <Text style={[s.subTitle, { fontSize: 8, marginTop: 4 }]}>{"PARTIES COMMUNES INT\u00C9RIEURES"}</Text>
             <Text style={[s.body, { paddingLeft: 10, marginBottom: 2 }]}>{"Fourniture de produits d\u2019entretien (balais et sacs n\u00E9cessaires \u00E0 l\u2019\u00E9limination des d\u00E9chets) et de produits de d\u00E9sinsectisation et d\u00E9sinfection"}</Text>

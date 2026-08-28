@@ -522,7 +522,7 @@ function generateContractHTML(data: ContractData): string {
           <h3>SERVICES</h3>
           <ul>
             <li>Mise à disposition d'une parure de linge de lit et serviette.</li>
-            <li>Ménage 2 fois par semaine dans les parties communes intérieur. Ménage de la chambre en option.</li>
+            <li>Ménage 3 fois par semaine dans les parties communes intérieur. Ménage de la chambre en option.</li>
             <li>Entretien régulier des parties communes extérieur : pisciniste, jardinier, élagage, nettoyage</li>
             <li>Box pour diner communautaire livrée 1 fois/mois</li>
             <li>Évènements communautaires récurrents</li>
@@ -534,7 +534,7 @@ function generateContractHTML(data: ContractData): string {
           </ul>
 
           <h3>ENTRETIEN</h3>
-          <p>Entretien des parties communes intérieures et extérieures : réparation et entretien et remplacement des éléments défectueux des parties communes de la maison. Entretien des extérieurs et de la piscine. Ménage effectué deux fois par semaine pour que les espaces communs brillent !</p>
+          <p>Entretien des parties communes intérieures et extérieures : réparation et entretien et remplacement des éléments défectueux des parties communes de la maison. Entretien des extérieurs et de la piscine. Ménage effectué trois fois par semaine pour que les espaces communs brillent !</p>
           <p style="font-weight:600;font-size:10px;">PARTIES COMMUNES INTÉRIEURES</p>
           <p style="margin-left:20px;">Fourniture de produits d'entretien (balais et sacs nécessaires à l'élimination des déchets) et de produits de désinsectisation et désinfection<br/>
           Entretien de la minuterie, des tapis, des vide-ordures<br/>
