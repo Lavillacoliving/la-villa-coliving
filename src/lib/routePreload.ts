@@ -41,6 +41,7 @@ const STATIC_LOADERS: Record<string, Loader> = {
   "/investisseurs": () => import("@/pages/InvestisseursPage"),
   "/observatoire-logement-frontalier-geneve": () => import("@/pages/ObservatoireLogementFrontalierPage"),
   "/qui-sommes-nous": () => import("@/pages/QuiSommesNousPage"),
+  "/charte-transparence": () => import("@/pages/CharteTransparencePage"),
   "/mentions-legales": () => import("@/pages/MentionsLegalesPage"),
   "/politique-de-confidentialite": () => import("@/pages/PolitiqueConfidentialitePage"),
   // Servi uniquement en /en/colocation-geneve (pilier EN) — le préfixe /en est
