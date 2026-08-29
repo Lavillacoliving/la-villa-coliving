@@ -45,10 +45,11 @@ export function JoinPageV4() {
   // aussi toute la session (sessionStorage, cf. src/lib/attribution.ts — protocole LOT F).
   const isTest = searchParams.get("test") === "1" || isTestSession();
 
-  // Formulaire 1 ÉTAPE depuis S33 (10/08/2026) : arrival/duration retirés du
-  // formulaire — ces questions sont posées par Fanny à l'appel de qualification.
-  // L'Edge Function v11 accepte leur absence (et reste rétrocompatible si un
-  // ancien front les envoie encore).
+  // Formulaire 1 ÉTAPE depuis S33 (10/08/2026). Les champs arrival/duration,
+  // retirés à cette date, sont RÉTABLIS le 29/08/2026 (demande Jérôme) — dans
+  // l'étape unique, pas de retour au stepper. L'Edge Function les a toujours
+  // acceptés (rétrocompatible depuis v11) : arrival → move_in_date/notes,
+  // duration → lease_duration/notes, mêmes valeurs d'options qu'avant le retrait.
   const telemetry = useFormTelemetry({
     formId: "candidature",
     formDestination: "supabase-edge",
@@ -295,6 +296,65 @@ export function JoinPageV4() {
                     autoComplete="tel"
                     className="w-full px-4 py-3 border border-[#E7E5E4] focus:border-[#D4A574] focus:outline-none transition-colors"
                   />
+                </div>
+                {/* Séjour — rétablis le 29/08/2026 (cf. note en tête de composant).
+                    Valeurs d'options = clés des maps ARRIVAL_LABELS / LEASE_DURATION_MAP
+                    de l'Edge send-candidature-email : ne pas les renommer sans elle. */}
+                <div>
+                  <label className="block text-sm text-[#57534E] mb-2">
+                    {language === "en"
+                      ? "When would you like to join?"
+                      : "Quand souhaites-tu nous rejoindre ?"}
+                  </label>
+                  <select
+                    name="arrival"
+                    required
+                    className="w-full px-4 py-3 border border-[#E7E5E4] focus:border-[#D4A574] focus:outline-none transition-colors bg-white"
+                  >
+                    <option value="">
+                      {language === "en" ? "Select arrival period" : "Sélectionner la période"}
+                    </option>
+                    <option value="asap">
+                      {language === "en" ? "As soon as possible (within 1 month)" : "Le plus tôt possible (sous 1 mois)"}
+                    </option>
+                    <option value="1-3-months">
+                      {language === "en" ? "Within 1 to 3 months" : "Dans 1 à 3 mois"}
+                    </option>
+                    <option value="3-6-months">
+                      {language === "en" ? "Within 3 to 6 months" : "Dans 3 à 6 mois"}
+                    </option>
+                    <option value="later">
+                      {language === "en" ? "Later / not decided yet" : "Plus tard / pas encore décidé"}
+                    </option>
+                  </select>
+                </div>
+                <div>
+                  <label className="block text-sm text-[#57534E] mb-2">
+                    {language === "en"
+                      ? "How long do you plan to stay?"
+                      : "Combien de temps comptes-tu rester ?"}
+                  </label>
+                  <select
+                    name="duration"
+                    required
+                    className="w-full px-4 py-3 border border-[#E7E5E4] focus:border-[#D4A574] focus:outline-none transition-colors bg-white"
+                  >
+                    <option value="">
+                      {language === "en" ? "Select duration" : "Sélectionner la durée"}
+                    </option>
+                    <option value="2-3">
+                      {language === "en" ? "2-3 months" : "2-3 mois"}
+                    </option>
+                    <option value="3-6">
+                      {language === "en" ? "3-6 months" : "3-6 mois"}
+                    </option>
+                    <option value="6-12">
+                      {language === "en" ? "6-12 months" : "6-12 mois"}
+                    </option>
+                    <option value="12+">
+                      {language === "en" ? "12+ months" : "12+ mois"}
+                    </option>
+                  </select>
                 </div>
                 <div className="md:col-span-2">
                   <label className="block text-sm text-[#57534E] mb-2">
@@ -618,8 +678,8 @@ export function JoinPageV4() {
               {
                 q_fr: "Et si je ne sais pas encore quelle date d'arrivée mettre ?",
                 q_en: "What if I don't know my arrival date yet?",
-                a_fr: "Pas de souci — le formulaire ne demande aucune date. On en parle ensemble à l'appel qui suit ta candidature et on cale une date qui te convient. Candidater ne t'engage à rien.",
-                a_en: "No worries — the form doesn't ask for any date. We'll discuss it on the call that follows your application and set a date that works for you. Applying doesn't commit you to anything.",
+                a_fr: "Pas de souci — choisis \"Plus tard / pas encore décidé\". On revient vers toi avec les chambres disponibles et on cale ensemble une date qui te convient. Candidater ne t'engage à rien.",
+                a_en: "No worries — pick \"Later / not decided yet\". We'll get back to you with available rooms and we'll set a date together. Applying doesn't commit you to anything.",
               },
             ].map((item, i) => (
               <div key={i} className="bg-[#FAF9F6] border border-[#E7E5E4]">
