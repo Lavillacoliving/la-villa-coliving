@@ -10,6 +10,7 @@ import { Navigate } from "react-router-dom";
 import { PortailLayout } from "@/pages/portail/PortailLayout";
 import { ScrollToTop } from "@/components/ScrollToTop";
 import { AvailabilityEmbed } from "@/components/AvailabilityEmbed";
+import { RouteChangeTracker } from "@/lib/routeTracking";
 
 // ─── Lazy-loaded public pages (named exports) ──────────────
 // ⚠️ Nouvelle page PRÉRENDUE = l'ajouter aussi à src/lib/routePreload.ts
@@ -187,6 +188,8 @@ function App() {
       <BrowserRouter>
         <LanguageProvider>
           <ScrollToTop />
+          {/* route_change (Lot 1b) — trace les navigations SPA (cécité GA4/Clarity). */}
+          <RouteChangeTracker />
           <AppContent />
         </LanguageProvider>
       </BrowserRouter>
