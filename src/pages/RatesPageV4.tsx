@@ -9,6 +9,20 @@ import { FaqSection } from "@/components/FaqSection";
 import { tarifsFaq } from "@/data/faq/tarifsFaq";
 import { buildBreadcrumbSchema, buildRoomsAggregateOfferSchema } from "@/lib/structuredData";
 import { STATS, PRICE_FR_NUM, PRICE_EN_NUM, PRICE_CHF_FR, PRICE_CHF_EN, PRICE_SHARED_FR_NUM, PRICE_SHARED_EN_NUM, PRICE_SHARED_CHF_FR, PRICE_SHARED_CHF_EN, CONTRACT_EUR, EUR_STANDARD_FR_NUM, EUR_SHARED_FR_NUM, EUR_STANDARD_EN_NUM, EUR_SHARED_EN_NUM } from "@/data/stats";
+import {
+  GENEVA_STUDIO_COSTS,
+  GENEVA_STUDIO_BASE_RENT_FR,
+  GENEVA_STUDIO_BASE_RENT_EN,
+  GENEVA_STUDIO_TOTAL_FR,
+  GENEVA_STUDIO_TOTAL_EN,
+  GENEVA_STUDIO_TOTAL_FR_NUM,
+  GENEVA_STUDIO_TOTAL_EN_NUM,
+  MONTHLY_SAVINGS_CHF,
+  YEARLY_SAVINGS_FR_NUM,
+  YEARLY_SAVINGS_EN_NUM,
+  VILLA_EUR_PER_M2_FR,
+  VILLA_EUR_PER_M2_EN,
+} from "@/data/pricingComparison";
 
 export function RatesPageV4() {
   const { language } = useLanguage();
@@ -182,11 +196,24 @@ export function RatesPageV4() {
     },
   ];
 
-  // Comparison data
-  const genevaTotal = 2245;
-  const lavillaPrice = STATS.priceChf;
-  const monthlySavings = genevaTotal - lavillaPrice;
-  const yearlySavings = monthlySavings * 12;
+  // Comparatif marché : montants et économies centralisés dans src/data/pricingComparison.ts.
+
+  // Même pattern gtag gardé que HouseDetailPage / WhatsAppButton : mesurer la
+  // position du CTA qui convertit, sans jamais bloquer l'UI sur l'analytics.
+  const trackCta = (position: string) => {
+    try {
+      (window as unknown as { gtag?: (...a: unknown[]) => void }).gtag?.("event", "cta_click", {
+        cta_position: position, cta_target: "/candidature", language,
+      });
+    } catch { /* noop */ }
+  };
+  const trackWhatsApp = (position: string) => {
+    try {
+      (window as unknown as { gtag?: (...a: unknown[]) => void }).gtag?.("event", "whatsapp_click", {
+        position, language,
+      });
+    } catch { /* noop */ }
+  };
 
   // Tableau « objection prix » — 3 colonnes, La Villa au centre.
   // Colonnes marché = observations (fourchettes, « le plus souvent ») ; colonne La Villa = faits contractuels.
@@ -237,7 +264,7 @@ export function RatesPageV4() {
     {
       label: { fr: "Prix du m²", en: "Price per m²" },
       classic: { fr: "~25-45 €/m²", en: "~€25-45/m²" },
-      villa: { fr: "~37-42 €/m²", en: "~€37-42/m²" },
+      villa: { fr: VILLA_EUR_PER_M2_FR, en: VILLA_EUR_PER_M2_EN },
       studio: { fr: "~85-110 CHF/m² + charges", en: "~CHF 85-110/m² + utilities" },
       highlight: true,
     },
@@ -308,16 +335,17 @@ export function RatesPageV4() {
         url="https://www.lavillacoliving.com/tarifs"
       />
       <Helmet>
+        {/* URLs localisées (…/en/tarifs en anglais) — même pattern que HouseDetailPage/BlogPostPage */}
         <script type="application/ld+json">{JSON.stringify(buildBreadcrumbSchema([
-          { name: language === "en" ? "Home" : "Accueil", url: "https://www.lavillacoliving.com/" },
-          { name: language === "en" ? "Rates" : "Tarifs", url: "https://www.lavillacoliving.com/tarifs" },
+          { name: language === "en" ? "Home" : "Accueil", url: `https://www.lavillacoliving.com${language === "en" ? "/en" : ""}/` },
+          { name: language === "en" ? "Rates" : "Tarifs", url: `https://www.lavillacoliving.com${language === "en" ? "/en" : ""}/tarifs` },
         ]))}</script>
         <script type="application/ld+json">{JSON.stringify(buildRoomsAggregateOfferSchema({
           name: language === "en" ? "All-inclusive furnished room near Geneva" : "Chambre meublée tout inclus près de Genève",
           description: language === "en"
             ? `All-inclusive coliving room from ${PRICE_SHARED_CHF_EN} to ${PRICE_CHF_EN}/month near Geneva — utilities, fiber, cleaning, pool, sauna, gym included.`
             : `Chambre de coliving tout inclus de ${PRICE_SHARED_CHF_FR} à ${PRICE_CHF_FR}/mois près de Genève — charges, fibre, ménage, piscine, sauna, salle de sport compris.`,
-          url: "https://www.lavillacoliving.com/tarifs",
+          url: `https://www.lavillacoliving.com${language === "en" ? "/en" : ""}/tarifs`,
         }))}</script>
       </Helmet>
       {/* Hero */}
@@ -426,48 +454,48 @@ export function RatesPageV4() {
                       ? "Base rent (small studio)"
                       : "Loyer de base (petit studio)"}
                   </span>
-                  <span className="font-medium">{language === "en" ? "CHF 1,600" : "1 600 CHF"}</span>
+                  <span className="font-medium">{language === "en" ? GENEVA_STUDIO_BASE_RENT_EN : GENEVA_STUDIO_BASE_RENT_FR}</span>
                 </div>
                 <div className="flex justify-between text-[#b3b2b2]">
                   <span className="flex items-center gap-2">
                     <X className="w-3 h-3" />{" "}
                     {language === "en" ? "Electricity" : "Électricité"}
                   </span>
-                  <span>+ 80 CHF</span>
+                  <span>+ {GENEVA_STUDIO_COSTS.electricity} CHF</span>
                 </div>
                 <div className="flex justify-between text-[#b3b2b2]">
                   <span className="flex items-center gap-2">
                     <X className="w-3 h-3" />{" "}
                     {language === "en" ? "Heating" : "Chauffage"}
                   </span>
-                  <span>+ 100 CHF</span>
+                  <span>+ {GENEVA_STUDIO_COSTS.heating} CHF</span>
                 </div>
                 <div className="flex justify-between text-[#b3b2b2]">
                   <span className="flex items-center gap-2">
                     <X className="w-3 h-3" />{" "}
                     {language === "en" ? "Water" : "Eau"}
                   </span>
-                  <span>+ 40 CHF</span>
+                  <span>+ {GENEVA_STUDIO_COSTS.water} CHF</span>
                 </div>
                 <div className="flex justify-between text-[#b3b2b2]">
                   <span className="flex items-center gap-2">
                     <X className="w-3 h-3" /> Internet
                   </span>
-                  <span>+ 60 CHF</span>
+                  <span>+ {GENEVA_STUDIO_COSTS.internet} CHF</span>
                 </div>
                 <div className="flex justify-between text-[#b3b2b2]">
                   <span className="flex items-center gap-2">
                     <X className="w-3 h-3" />{" "}
                     {language === "en" ? "Cleaning service" : "Service ménage"}
                   </span>
-                  <span>+ 200 CHF</span>
+                  <span>+ {GENEVA_STUDIO_COSTS.cleaning} CHF</span>
                 </div>
                 <div className="flex justify-between text-[#b3b2b2]">
                   <span className="flex items-center gap-2">
                     <X className="w-3 h-3" />{" "}
                     {language === "en" ? "Gym membership" : "Abonnement gym"}
                   </span>
-                  <span>+ 100 CHF</span>
+                  <span>+ {GENEVA_STUDIO_COSTS.gym} CHF</span>
                 </div>
                 <div className="flex justify-between text-[#b3b2b2]">
                   <span className="flex items-center gap-2">
@@ -476,14 +504,14 @@ export function RatesPageV4() {
                       ? "Streaming services"
                       : "Services streaming"}
                   </span>
-                  <span>+ 25 CHF</span>
+                  <span>+ {GENEVA_STUDIO_COSTS.streaming} CHF</span>
                 </div>
                 <div className="flex justify-between text-[#b3b2b2]">
                   <span className="flex items-center gap-2">
                     <X className="w-3 h-3" />{" "}
                     {language === "en" ? "Taxes & fees" : "Taxes & frais"}
                   </span>
-                  <span>+ 40 CHF</span>
+                  <span>+ {GENEVA_STUDIO_COSTS.taxes} CHF</span>
                 </div>
               </div>
 
@@ -493,7 +521,7 @@ export function RatesPageV4() {
                     {language === "en" ? "Total monthly" : "Total mensuel"}
                   </span>
                   <span className="text-2xl font-medium text-[#d5d5d5]">
-                    {language === "en" ? "CHF 2,245" : "2 245 CHF"}
+                    {language === "en" ? GENEVA_STUDIO_TOTAL_EN : GENEVA_STUDIO_TOTAL_FR}
                   </span>
                 </div>
               </div>
@@ -503,8 +531,8 @@ export function RatesPageV4() {
             <div className="bg-white rounded-2xl p-8 relative overflow-hidden border border-[#E7E5E4] shadow-lg">
               <div className="absolute top-4 right-4 bg-[#D4A574] text-white text-xs font-bold px-3 py-1 rounded-full">
                 {language === "en"
-                  ? `SAVE ${monthlySavings} CHF/MO`
-                  : `ÉCONOMISE ${monthlySavings} CHF/MOIS`}
+                  ? `SAVE ${MONTHLY_SAVINGS_CHF} CHF/MO`
+                  : `ÉCONOMISE ${MONTHLY_SAVINGS_CHF} CHF/MOIS`}
               </div>
 
               <div className="flex items-center gap-3 mb-6">
@@ -651,7 +679,7 @@ export function RatesPageV4() {
                     ? "You save every month"
                     : "Tu économises chaque mois"}
                 </div>
-                <div className="text-3xl font-bold">{monthlySavings} CHF</div>
+                <div className="text-3xl font-bold">{MONTHLY_SAVINGS_CHF} CHF</div>
               </div>
               <div className="hidden sm:block w-px h-12 bg-white/20"></div>
               <div className="text-center sm:text-left">
@@ -659,7 +687,8 @@ export function RatesPageV4() {
                   {language === "en" ? "That's per year" : "Soit par an"}
                 </div>
                 <div className="text-2xl font-bold">
-                  {yearlySavings.toLocaleString(language === "en" ? "en" : "fr-FR")} CHF
+                  {/* thousands() et non toLocaleString : séparateurs déterministes (règle anti-ICU, cf. stats.ts) */}
+                  {language === "en" ? YEARLY_SAVINGS_EN_NUM : YEARLY_SAVINGS_FR_NUM} CHF
                 </div>
               </div>
               <Star className="w-8 h-8 text-[#D4A574]" />
@@ -673,12 +702,24 @@ export function RatesPageV4() {
               href="https://wa.me/33664315134"
               target="_blank"
               rel="noopener noreferrer"
+              onClick={() => trackWhatsApp("tarifs_economies")}
               className="mt-3 inline-block text-sm text-white/80 hover:text-[#E0BB8A] transition-colors duration-300"
             >
               {language === "en"
                 ? "Or ask us a question directly on WhatsApp →"
                 : "Ou pose-nous directement une question sur WhatsApp →"}
             </a>
+            {/* CTA climax — juste après la démonstration d'économies, au pic de conviction */}
+            <div className="mt-6">
+              <LocalizedLink
+                to="/candidature"
+                onClick={() => trackCta("tarifs_climax")}
+                className="inline-flex items-center gap-2 px-8 py-4 bg-[#D4A574] text-white font-semibold rounded-lg hover:bg-[#E0BB8A] transition-colors duration-300"
+              >
+                {language === "en" ? "Apply — 2 min, free" : "Candidater — 2 min, gratuit"}
+                <ArrowRight className="w-5 h-5" />
+              </LocalizedLink>
+            </div>
           </div>
         </div>
       </section>
@@ -1081,6 +1122,7 @@ export function RatesPageV4() {
             </p>
             <LocalizedLink
               to="/candidature"
+              onClick={() => trackCta("tarifs_mid")}
               className="mt-6 inline-flex items-center gap-2 px-8 py-4 bg-[#D4A574] text-white font-semibold rounded-lg hover:bg-[#E0BB8A] transition-colors duration-300"
             >
               {language === "en" ? "Apply — it's free" : "Candidater — c'est gratuit"}
@@ -1155,7 +1197,7 @@ export function RatesPageV4() {
                   </p>
 
                   <div className="mb-8">
-                    {/* La Villa : 4 chambres sur 10 à salle d'eau partagée → plancher 1 390 */}
+                    {/* La Villa : 4 chambres sur 10 à salle d'eau partagée → plancher 1 370 */}
                     {house.name === "La Villa" && (
                       <span className="text-[#78716C] mr-1">
                         {language === "en" ? "from" : "dès"}
@@ -1241,14 +1283,14 @@ export function RatesPageV4() {
             </h3>
             <p className="text-[#A8A29E] max-w-2xl mx-auto mb-6">
               {language === "en"
-                ? `For ${PRICE_EN_NUM} CHF/month, you get a furnished room in a premium house, all utilities, cleaning, gym, pool, sauna, yoga classes, community events, and zero hassle. Compare that to 2,245+ CHF for a basic studio in Geneva.`
-                : `Pour ${PRICE_CHF_FR}/mois, tu obtiens une chambre meublée dans une maison premium, toutes charges, ménage, sport, piscine, sauna, cours de yoga, événements communautaires, et zéro tracas. Compare avec 2 245+ CHF pour un studio basique à Genève.`}
+                ? `For ${PRICE_EN_NUM} CHF/month, you get a furnished room in a premium house, all utilities, cleaning, gym, pool, sauna, yoga classes, community events, and zero hassle. Compare that to ${GENEVA_STUDIO_TOTAL_EN_NUM}+ CHF for a basic studio in Geneva.`
+                : `Pour ${PRICE_CHF_FR}/mois, tu obtiens une chambre meublée dans une maison premium, toutes charges, ménage, sport, piscine, sauna, cours de yoga, événements communautaires, et zéro tracas. Compare avec ${GENEVA_STUDIO_TOTAL_FR_NUM}+ CHF pour un studio basique à Genève.`}
             </p>
             <div className="inline-flex items-center gap-2 px-6 py-3 bg-[#D4A574] text-white rounded-full font-medium">
               <Sparkles className="w-5 h-5" />
               {language === "en"
-                ? `You save ${monthlySavings} CHF every month`
-                : `Tu économises ${monthlySavings} CHF chaque mois`}
+                ? `You save ${MONTHLY_SAVINGS_CHF} CHF every month`
+                : `Tu économises ${MONTHLY_SAVINGS_CHF} CHF chaque mois`}
             </div>
           </div>
         </div>
@@ -1327,8 +1369,8 @@ export function RatesPageV4() {
         <div className="container-custom max-w-3xl text-center">
           <p className="text-[#57534E] italic text-lg mb-2">
             {language === "en"
-              ? `\"I was paying CHF 2,200 for a tiny studio in Geneva. Here everything's included — pool, gym, and an amazing community.\"`
-              : `\"Je payais 2 200 CHF pour un petit studio à Genève. Ici, tout est inclus — piscine, gym et une communauté incroyable.\"`}
+              ? `"I was paying CHF 2,200 for a tiny studio in Geneva. Here everything's included — pool, gym, and an amazing community."`
+              : `"Je payais 2 200 CHF pour un petit studio à Genève. Ici, tout est inclus — piscine, gym et une communauté incroyable."`}
           </p>
           <p className="text-sm text-[#78716C] mb-6">
             — Marie L., {language === "en" ? "Consultant, cross-border worker" : "Consultante, frontalière"}
@@ -1367,12 +1409,13 @@ export function RatesPageV4() {
               const monthFr = next.toLocaleDateString("fr-FR", { month: "long", year: "numeric" });
               const monthEn = next.toLocaleDateString("en-US", { month: "long", year: "numeric" });
               return language === "en"
-                ? `Save ${monthlySavings} CHF/month and join ${STATS.totalResidents}+ happy residents. Limited spots for ${monthEn}.`
-                : `Économise ${monthlySavings} CHF/mois et rejoins ${STATS.totalResidents}+ résidents heureux. Places limitées pour ${monthFr}.`;
+                ? `Save ${MONTHLY_SAVINGS_CHF} CHF/month and join ${STATS.totalResidents}+ happy residents. Limited spots for ${monthEn}.`
+                : `Économise ${MONTHLY_SAVINGS_CHF} CHF/mois et rejoins ${STATS.totalResidents}+ résidents heureux. Places limitées pour ${monthFr}.`;
             })()}
           </p>
           <LocalizedLink
             to="/candidature"
+            onClick={() => trackCta("tarifs_footer")}
             className="inline-flex items-center gap-2 px-8 py-4 bg-white text-[#D4A574] font-bold hover:bg-[#1C1917] hover:text-white transition-colors"
           >
             {language === "en" ? "APPLY NOW" : "CANDIDATER"}
