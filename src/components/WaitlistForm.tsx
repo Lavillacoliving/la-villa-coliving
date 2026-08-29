@@ -2,6 +2,7 @@ import { useState, type FormEvent } from "react";
 import { ArrowRight, Check } from "lucide-react";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { SUPABASE_URL, SUPABASE_ANON_KEY } from "@/lib/supabase";
+import { useFormTelemetry } from "@/hooks/useFormTelemetry";
 
 type Status = "idle" | "submitting" | "success" | "error";
 
@@ -16,6 +17,16 @@ export function WaitlistForm() {
   const [status, setStatus] = useState<Status>("idle");
   const [error, setError] = useState("");
 
+  // Télémétrie alignée sur /candidature (Lot 1b) : jusqu'ici ce formulaire
+  // n'émettait qu'un gtag brut au succès — ni form_start, ni abandon, ni erreur.
+  // submitEventName préserve l'event historique `waitlist_submit`.
+  const telemetry = useFormTelemetry({
+    formId: "waitlist",
+    formDestination: "supabase-rest",
+    baseParams: { language: en ? "en" : "fr" },
+    submitEventName: "waitlist_submit",
+  });
+
   async function handleSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
     setStatus("submitting");
@@ -24,6 +35,8 @@ export function WaitlistForm() {
     const fd = new FormData(form);
     const payload: Record<string, string> = {};
     fd.forEach((v, k) => { payload[k] = typeof v === "string" ? v : ""; });
+    const submitStartedAt = performance.now();
+    let httpStatus: number | "network" = "network";
     try {
       const res = await fetch(`${SUPABASE_URL}/rest/v1/waitlist`, {
         method: "POST",
@@ -35,6 +48,7 @@ export function WaitlistForm() {
         },
         body: JSON.stringify(payload),
       });
+      httpStatus = res.status;
       if (!res.ok) {
         const d = await res.json().catch(() => ({} as Record<string, unknown>));
         const msg = d && typeof d === "object" && typeof d.message === "string" ? d.message : `Erreur ${res.status}`;
@@ -42,10 +56,17 @@ export function WaitlistForm() {
       }
       setStatus("success");
       form.reset();
-      try { (window as unknown as { gtag?: (...a: unknown[]) => void }).gtag?.("event", "waitlist_submit"); } catch { /* noop */ }
+      telemetry.trackSubmit({
+        submit_latency_ms: Math.round(performance.now() - submitStartedAt),
+      });
     } catch (err) {
       setStatus("error");
       setError(err instanceof Error ? err.message : en ? "Submission failed. Please try again." : "L'envoi a échoué. Merci de réessayer.");
+      telemetry.trackError({
+        status: httpStatus,
+        message: err instanceof Error ? err.message : String(err),
+        submitLatencyMs: performance.now() - submitStartedAt,
+      });
     }
   }
 
@@ -67,7 +88,7 @@ export function WaitlistForm() {
 
   const field = "w-full px-4 py-3 bg-white border border-[#E7E5E4] rounded-lg text-[#1C1917] focus:outline-none focus:border-[#D4A574] transition-colors";
   return (
-    <form onSubmit={handleSubmit} className="max-w-xl mx-auto bg-white border border-[#E7E5E4] rounded-2xl p-6 md:p-8 space-y-4 text-left">
+    <form onSubmit={handleSubmit} {...telemetry.formProps} className="max-w-xl mx-auto bg-white border border-[#E7E5E4] rounded-2xl p-6 md:p-8 space-y-4 text-left">
       <div className="grid sm:grid-cols-2 gap-4">
         <input name="nom" required placeholder={en ? "Full name" : "Nom complet"} className={field} />
         <input name="email" type="email" required placeholder="Email" className={field} />

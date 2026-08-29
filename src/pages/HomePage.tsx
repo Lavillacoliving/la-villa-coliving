@@ -18,9 +18,13 @@ import { buildHomeLodgingBusinessSchema } from '@/lib/structuredData';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { PRICE_CHF_FR, PRICE_CHF_EN } from '@/data/stats';
 import { homeFaq } from '@/data/faq/homeFaq';
+import { useSectionViewTracking } from '@/lib/sectionViewTracking';
 
 export function HomePage() {
   const { language } = useLanguage();
+  // section_view (Lot 1b) : ids posés ICI dans des wrappers neutres, PAS dans les
+  // composants V7 — le Lot 2 réordonnera les sections sans casser la mesure.
+  useSectionViewTracking();
 
   return (
     <main>
@@ -44,33 +48,37 @@ export function HomePage() {
         // on coupe ce dernier pour n'avoir qu'une fiche business sur l'accueil.
         omitLocalBusiness
       />
-      <Hero />
+      <div data-home-section="hero"><Hero /></div>
       {/* Nos maisons remonté juste après le bandeau "Piscine, sauna & salle de sport"
           (fin du Hero) : le couloir Nos 3 Maisons -> maison -> candidature génère
           ~46 % des candidatures (GA4). */}
-      <HousesPreview />
-      <TrustBadges />
-      <WhyChooseUs />
-      <Features />
-      <TestimonialsCarousel />
-      <HowToJoin />
-      <LatestBlogV7 />
+      <div data-home-section="houses_preview"><HousesPreview /></div>
+      <div data-home-section="trust_badges"><TrustBadges /></div>
+      <div data-home-section="why_choose_us"><WhyChooseUs /></div>
+      {/* features_paiement = la section « Un seul paiement. Zéro surprise. »
+          (FeaturesV7) — métrique d'atteinte du Lot 2 (réf. ~16 % [EST]). */}
+      <div data-home-section="features_paiement"><Features /></div>
+      <div data-home-section="testimonials"><TestimonialsCarousel /></div>
+      <div data-home-section="how_to_join"><HowToJoin /></div>
+      <div data-home-section="latest_blog"><LatestBlogV7 /></div>
       {/* FAQ visible + FAQPage schema (front A6 : PAA « coliving genève »).
           L'intro sert de phrase citable produit (extraction IA / AI Overviews). */}
-      <FaqSection
-        title={language === "en" ? "Coliving near Geneva — your questions" : "Le coliving près de Genève — tes questions"}
-        items={language === "en" ? homeFaq.en : homeFaq.fr}
-        emitSchema
-        id="faq-coliving-geneve"
-        intro={
-          <p>
-            {language === "en"
-              ? `La Villa Coliving: 29 all-inclusive furnished rooms from ${PRICE_CHF_EN}/month in 3 houses with pool, sauna and gym, 20 minutes from Geneva — no application fee.`
-              : `La Villa Coliving : 29 chambres meublées tout inclus dès ${PRICE_CHF_FR}/mois dans 3 maisons avec piscine, sauna et salle de sport, à 20 minutes de Genève — sans frais de dossier.`}
-          </p>
-        }
-      />
-      <CTASection />
+      <div data-home-section="faq">
+        <FaqSection
+          title={language === "en" ? "Coliving near Geneva — your questions" : "Le coliving près de Genève — tes questions"}
+          items={language === "en" ? homeFaq.en : homeFaq.fr}
+          emitSchema
+          id="faq-coliving-geneve"
+          intro={
+            <p>
+              {language === "en"
+                ? `La Villa Coliving: 29 all-inclusive furnished rooms from ${PRICE_CHF_EN}/month in 3 houses with pool, sauna and gym, 20 minutes from Geneva — no application fee.`
+                : `La Villa Coliving : 29 chambres meublées tout inclus dès ${PRICE_CHF_FR}/mois dans 3 maisons avec piscine, sauna et salle de sport, à 20 minutes de Genève — sans frais de dossier.`}
+            </p>
+          }
+        />
+      </div>
+      <div data-home-section="cta_final"><CTASection /></div>
       <WhatsAppButton />
     </main>
   );
