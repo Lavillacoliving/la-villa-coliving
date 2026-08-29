@@ -11,6 +11,7 @@ import {
   type HouseKey,
 } from "@/lib/availability";
 import { colocGeneveHref } from "@/lib/siteLinks";
+import { HOUSES } from "@/data/houses";
 import type { IntentBucket } from "@/data/blogIntentBuckets";
 
 // Bloc offre — le pont blog → formulaire (plan blog-conversion 07/07/2026).
@@ -29,26 +30,8 @@ const CANDIDATURE_REF = (slug: string) =>
 
 // Maison mise en avant selon l'article : la commune nommée dans le slug gagne.
 // Le Loft = TOUJOURS sa piscine intérieure (règle visuelle permanente).
-const HOUSES: Record<HouseKey, { label: string; img: string; descFr: string; descEn: string }> = {
-  lavilla: {
-    label: "La Villa",
-    img: "/images/la villa.webp",
-    descFr: "10 chambres · piscine · jardin — Ville-la-Grand",
-    descEn: "10 rooms · pool · garden — Ville-la-Grand",
-  },
-  leloft: {
-    label: "Le Loft",
-    img: "/images/la villa coliving le loft piscine.webp",
-    descFr: "7 chambres · piscine intérieure — Ambilly",
-    descEn: "7 rooms · indoor pool — Ambilly",
-  },
-  lelodge: {
-    label: "Le Lodge",
-    img: "/images/le lodge.webp",
-    descFr: "12 chambres · sauna · gym — Annemasse",
-    descEn: "12 rooms · sauna · gym — Annemasse",
-  },
-};
+// (Fiches maison extraites vers src/data/houses.ts au Lot 1d — partagées avec
+// l'en-tête contextuel de /candidature.)
 
 export function houseForArticle(slug: string): HouseKey {
   if (/annemasse|lodge|quartiers-annemasse/.test(slug)) return "lelodge";

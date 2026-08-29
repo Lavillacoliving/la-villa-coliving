@@ -284,7 +284,7 @@ export function HousesPageV4() {
                         <ArrowRight className="w-4 h-4" />
                       </LocalizedLink>
                       <LocalizedLink
-                        to="/candidature"
+                        to={`/candidature?property_interest=${house.id}`}
                         className="inline-flex items-center justify-center px-5 py-3 border border-[#1C1917] text-[#1C1917] text-sm font-semibold rounded-lg hover:bg-[#1C1917] hover:text-white transition-colors"
                       >
                         {language === "en" ? "Apply" : "Postuler"}
@@ -393,7 +393,7 @@ export function HousesPageV4() {
           <p className="text-lg text-white/60 max-w-xl mx-auto mb-8">
             {language === "en"
               ? "Contact us and we'll help you find the perfect home for your lifestyle."
-              : "Contactez-nous et nous vous aiderons à trouver la maison parfaite pour votre style de vie."}
+              : "Contacte-nous et on t'aidera à trouver la maison parfaite pour ton style de vie."}
           </p>
           <LocalizedLink
             to="/faq"

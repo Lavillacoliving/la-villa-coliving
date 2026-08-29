@@ -76,11 +76,11 @@ export function WaitlistForm() {
         <div className="w-12 h-12 rounded-full bg-[#D4A574]/15 flex items-center justify-center mx-auto mb-4">
           <Check className="w-6 h-6 text-[#D4A574]" />
         </div>
-        <h3 className="text-xl font-medium text-[#1C1917] mb-2">{en ? "You're on the list!" : "Vous êtes sur la liste !"}</h3>
+        <h3 className="text-xl font-medium text-[#1C1917] mb-2">{en ? "You're on the list!" : "Tu es sur la liste !"}</h3>
         <p className="text-[#57534E] text-sm">
           {en
             ? "We'll reach out the moment a room matching your profile opens up."
-            : "On vous contacte dès qu'une chambre correspondant à votre profil se libère."}
+            : "On te contacte dès qu'une chambre correspondant à ton profil se libère."}
         </p>
       </div>
     );
@@ -95,7 +95,7 @@ export function WaitlistForm() {
       </div>
       <div className="grid sm:grid-cols-2 gap-4">
         <select name="profil" required defaultValue="" className={field}>
-          <option value="" disabled>{en ? "Your profile" : "Votre profil"}</option>
+          <option value="" disabled>{en ? "Your profile" : "Ton profil"}</option>
           <option value="frontalier">{en ? "Cross-border worker" : "Frontalier"}</option>
           <option value="expat">{en ? "Expat / international" : "Expat / international"}</option>
           <option value="jeune_pro">{en ? "Young professional" : "Jeune professionnel"}</option>
@@ -120,7 +120,7 @@ export function WaitlistForm() {
       </button>
       {status === "error" && <p className="text-sm text-red-600 text-center">{error}</p>}
       <p className="text-xs text-[#78716C] text-center">
-        {en ? "Free · no commitment · your data stays confidential." : "Gratuit · sans engagement · vos données restent confidentielles."}
+        {en ? "Free · no commitment · your data stays confidential." : "Gratuit · sans engagement · tes données restent confidentielles."}
       </p>
     </form>
   );

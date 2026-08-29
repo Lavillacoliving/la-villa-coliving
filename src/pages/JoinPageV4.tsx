@@ -8,6 +8,7 @@ import { STATS, STATS_DISPLAY, PRICE_SHARED_CHF_FR, PRICE_SHARED_CHF_EN, CONTRAC
 import { useFormTelemetry } from "@/hooks/useFormTelemetry";
 import { useRoomAvailability, shortAvailabilityLabel } from "@/lib/availability";
 import { attributionPayload, isTestSession } from "@/lib/attribution";
+import { HOUSES } from "@/data/houses";
 
 type FormStatus = "idle" | "submitting" | "success" | "error";
 
@@ -47,6 +48,12 @@ export function JoinPageV4() {
   // l'attribution Ads est déjà capturée à l'atterrissage (sessionStorage, first-touch).
   const refProperty = (searchParams.get("property_interest") ?? "").slice(0, 64);
   const refRoom = (searchParams.get("room_interest") ?? "").slice(0, 64);
+  // En-tête contextuel (Lot 1d) : quand le candidat arrive d'un CTA maison ou
+  // chambre, le formulaire accuse réception de son choix (continuité du
+  // parcours). Slug inconnu → pas d'en-tête, jamais d'erreur. Aucune donnée
+  // dynamique dedans : rendu serveur/client identique, zéro risque #418.
+  const contextHouse = (HOUSES as Record<string, (typeof HOUSES)[keyof typeof HOUSES]>)[refProperty] ?? null;
+  const contextRoomNum = refRoom.match(/^chambre-?(\d+)$/)?.[1] ?? null;
   // Soumission de TEST (équipe) : /candidature?test=1 → prospects.is_test = true côté
   // Edge (v12), exclue du bulletin et des comptages. Jamais exposée dans l'UI.
   // Depuis le 22/08/2026, `?test=1` posé sur N'IMPORTE QUELLE page d'atterrissage marque
@@ -220,6 +227,36 @@ export function JoinPageV4() {
             </span>
           </div>
 
+          {/* En-tête contextuel (Lot 1d) — accuse réception du choix maison/chambre
+              porté par ?property_interest (± room_interest). */}
+          {contextHouse && (
+            <div className="mb-6 bg-white border border-[#E7E5E4] p-4 flex items-center gap-4">
+              <img
+                src={contextHouse.img}
+                alt={contextHouse.label}
+                className="w-20 h-16 object-cover flex-none"
+                width={80}
+                height={64}
+              />
+              <div className="text-left">
+                <p className="text-sm text-[#1C1917]">
+                  {L === "en" ? "Your application is for: " : "Ta candidature concerne : "}
+                  <strong>
+                    {contextHouse.label}
+                    {refRoom
+                      ? ` — ${contextRoomNum ? (L === "en" ? `room ${contextRoomNum}` : `chambre ${contextRoomNum}`) : refRoom}`
+                      : ""}
+                  </strong>
+                </p>
+                <p className="text-xs text-[#57534E] mt-1">
+                  {L === "en"
+                    ? <>All inclusive from {PRICE_SHARED_CHF_EN}/month · Reply within 48h</>
+                    : <>Tout inclus dès {PRICE_SHARED_CHF_FR}/mois · Réponse sous 48 h</>}
+                </p>
+              </div>
+            </div>
+          )}
+
           {/* Reassurance strip */}
           <div className="flex flex-wrap justify-center gap-6 mb-8 text-sm text-[#57534E]">
             <span className="flex items-center gap-2">
@@ -280,6 +317,16 @@ export function JoinPageV4() {
               tabIndex={-1}
               autoComplete="off"
             />
+
+            {/* Micro-réassurance (Lot 1d) — une ligne, uniquement quand le candidat
+                arrive sans contexte maison (l'en-tête contextuel la remplace sinon). */}
+            {!contextHouse && (
+              <p className="text-xs text-[#78716C] text-center mb-6">
+                {language === "en"
+                  ? "2 minutes is all it takes — reply within 48h."
+                  : "2 minutes suffisent — réponse sous 48 h."}
+              </p>
+            )}
 
             {/* Personal Info */}
             <div className="mb-10">
@@ -483,6 +530,26 @@ export function JoinPageV4() {
             <p className="text-xs text-[#78716C] text-center mt-1">
               {language === "en" ? "Your data remains confidential." : "Tes données restent confidentielles."}
             </p>
+            {/* Porte humaine au plus près de la décision (Lot 1d) — discrète,
+                cohérence premium ; la porte existante en bas de page reste. */}
+            <p className="text-sm text-center mt-6">
+              <a
+                href="https://wa.me/33664315134"
+                target="_blank"
+                rel="noopener noreferrer"
+                onClick={() => {
+                  try {
+                    (window as unknown as { gtag?: (...a: unknown[]) => void }).gtag?.("event", "whatsapp_click", {
+                      position: "under_submit",
+                      language: L,
+                    });
+                  } catch { /* noop */ }
+                }}
+                className="text-[#57534E] underline decoration-[#D4A574] underline-offset-4 hover:text-[#1C1917] transition-colors"
+              >
+                {language === "en" ? "Prefer to talk first? → WhatsApp" : "Tu préfères discuter d'abord ? → WhatsApp"}
+              </a>
+            </p>
           </form>
           )}
         </div>
@@ -658,7 +725,7 @@ export function JoinPageV4() {
             <p className="text-sm text-[#57534E] mb-6 max-w-xl mx-auto">
               {language === "en"
                 ? "Quick questions about availability, neighborhoods, or how it works? Send us a message — we usually reply within the hour during business days."
-                : "Une question rapide sur les disponibilités, les quartiers ou le fonctionnement ? Écrivez-nous — réponse généralement sous 1h en jours ouvrés."}
+                : "Une question rapide sur les disponibilités, les quartiers ou le fonctionnement ? Écris-nous — réponse généralement sous 1h en jours ouvrés."}
             </p>
             <a
               href="https://wa.me/33664315134"

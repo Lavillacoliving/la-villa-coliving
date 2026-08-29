@@ -1510,7 +1510,7 @@ export function HouseDetailPage() {
                 only apply CTA was at the very bottom of this 2000-line template. */}
             <div className="mt-6 flex flex-wrap items-center gap-4">
               <LocalizedLink
-                to={language === "en" ? "/en/candidature" : "/candidature"}
+                to={`/candidature?property_interest=${id}`}
                 onClick={() => trackCta("house_hero")}
                 className="inline-flex items-center gap-2 px-7 py-3.5 bg-[#D4A574] text-[#1C1917] font-bold rounded-full hover:bg-[#E0BB8A] transition-colors shadow-sharp"
               >
@@ -1670,7 +1670,8 @@ export function HouseDetailPage() {
 
                   <div className="flex flex-col gap-3">
                     <LocalizedLink
-                      to="/candidature"
+                      to={`/candidature?property_interest=${id}`}
+                      onClick={() => trackCta("house_sidebar")}
                       className="w-full inline-flex items-center justify-center gap-2 px-6 py-3 bg-[#1C1917] text-white font-semibold rounded-xl hover:bg-[#D4A574] transition-colors"
                     >
                       {canApplyNow
@@ -1692,7 +1693,7 @@ export function HouseDetailPage() {
                     >
                       {language === "en"
                         ? "Or ask us on WhatsApp →"
-                        : "Ou posez-nous une question sur WhatsApp →"}
+                        : "Ou pose-nous une question sur WhatsApp →"}
                     </a>
                   </div>
                 </div>
@@ -2186,7 +2187,7 @@ export function HouseDetailPage() {
           </p>
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
             <LocalizedLink
-              to={language === "en" ? "/en/candidature" : "/candidature"}
+              to={`/candidature?property_interest=${id}`}
               onClick={() => trackCta("house_footer")}
               className="inline-flex items-center gap-2 px-8 py-4 bg-white text-[#1C1917] font-bold rounded-full hover:bg-gray-100 transition-colors"
             >
@@ -2209,7 +2210,7 @@ export function HouseDetailPage() {
       <div className="md:hidden h-16" aria-hidden="true" />
       <div className="md:hidden fixed bottom-0 inset-x-0 z-40 bg-white/95 backdrop-blur border-t border-[#E7E5E4] px-4 py-3">
         <LocalizedLink
-          to={language === "en" ? "/en/candidature" : "/candidature"}
+          to={`/candidature?property_interest=${id}`}
           onClick={() => trackCta("sticky_mobile")}
           className="flex items-center justify-center gap-2 w-full bg-[#D4A574] text-[#1C1917] py-3 rounded-lg text-sm font-semibold"
         >
