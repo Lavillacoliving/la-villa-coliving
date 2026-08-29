@@ -56,9 +56,14 @@ const CL:Record<string,Record<string,string>>={
 // Seuil abaissé 800 -> 650 le 2026-07-27 (Lot 3.1). Motif : `trouver-colocation-
 // geneve-frontalier` fait 779 mots et n'avait donc AUCUN CTA en milieu d'article,
 // alors que c'est la cible de la 308 de « colocation geneve » et le bucket `high`.
-// Le placement reste protégé par la fenêtre 25-75 % plus bas : un article trop
+// Le placement reste protégé par la fenêtre autour de la cible : un article trop
 // court n'obtient pas un CTA mal placé, il n'en obtient pas du tout.
-function splitForMidCta(md: string): [string, string] | null {
+//
+// (Lot 1e, 29/08) targetRatio : les articles du bucket « ville » (pré-achat,
+// ou-habiter…) coupent plus tôt (~30 % — le lecteur compare des villes, l'offre
+// doit apparaître avant qu'il reparte), fenêtre décalée en conséquence ; tous
+// les autres gardent le milieu (50 %, fenêtre 25-75 %) — comportement inchangé.
+function splitForMidCta(md: string, targetRatio: 0.3 | 0.5 = 0.5): [string, string] | null {
   if (md.includes("```")) return null;
   if (md.split(/\s+/).length <= 650) return null;
   const headings: number[] = [];
@@ -66,12 +71,13 @@ function splitForMidCta(md: string): [string, string] | null {
   let m: RegExpExecArray | null;
   while ((m = re.exec(md)) !== null) headings.push(m.index);
   if (headings.length < 2) return null;
-  const mid = md.length / 2;
+  const target = md.length * targetRatio;
   let best = -1;
   for (const idx of headings) {
-    if (best === -1 || Math.abs(idx - mid) < Math.abs(best - mid)) best = idx;
+    if (best === -1 || Math.abs(idx - target) < Math.abs(best - target)) best = idx;
   }
-  if (best < md.length * 0.25 || best > md.length * 0.75) return null;
+  const [lo, hi] = targetRatio === 0.5 ? [0.25, 0.75] : [0.18, 0.55];
+  if (best < md.length * lo || best > md.length * hi) return null;
   return [md.slice(0, best), md.slice(best)];
 }
 
@@ -258,7 +264,7 @@ export function BlogPostPage() {
   // Localize language-neutral internal paths for the EN site (/x → /en/x).
   const loc = (p: string) => localizePath(p, language);
   const bucket = getIntentBucket(post.slug, post.category);
-  const midSplit = splitForMidCta(content);
+  const midSplit = splitForMidCta(content, bucket === "ville" ? 0.3 : 0.5);
 
   // Markdown renderers — shared by both halves when the article is split for the mid CTA.
   const mdComponents = {
