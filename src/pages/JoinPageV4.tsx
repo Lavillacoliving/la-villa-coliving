@@ -13,6 +13,14 @@ type FormStatus = "idle" | "submitting" | "success" | "error";
 
 const EDGE_FUNCTION_URL = `${SUPABASE_URL}/functions/v1/send-candidature-email`;
 
+// Idempotence (edge v15, Lot 1a/1b) : une clé uuid par TENTATIVE de candidature,
+// posée au premier clic submit et réutilisée tant que le succès n'est pas reçu —
+// un re-clic après erreur, un rechargement ou un rejeu réseau ne crée jamais de
+// doublon (colonne unique form_submissions.submission_key ; l'edge re-renvoie le
+// succès sans ré-envoyer d'emails). Effacée au succès : une nouvelle candidature
+// dans la même session reçoit une nouvelle clé.
+const SUBMISSION_KEY_STORAGE = "candidature_submission_key";
+
 export function JoinPageV4() {
   const { language } = useLanguage();
   const L = language === "en" ? "en" : "fr";
@@ -90,6 +98,23 @@ export function JoinPageV4() {
     // loggait toutes les soumissions en « fr »).
     payload.language = L;
 
+    // Clé d'idempotence (cf. SUBMISSION_KEY_STORAGE). sessionStorage peut jeter
+    // (navigation privée stricte) : dans ce cas, pas d'idempotence — comme avant.
+    let submissionKey = "";
+    try {
+      submissionKey = sessionStorage.getItem(SUBMISSION_KEY_STORAGE) ?? "";
+      if (!submissionKey) {
+        submissionKey = crypto.randomUUID();
+        sessionStorage.setItem(SUBMISSION_KEY_STORAGE, submissionKey);
+      }
+    } catch { /* stockage indisponible — l'envoi reste possible */ }
+    if (submissionKey) payload.submission_key = submissionKey;
+
+    // Latence réelle du POST (Lot 1b) : jointe à form_submit ET form_error —
+    // tranche l'invérifiable « latence mobile 4G » du diagnostic (§4.1).
+    const submitStartedAt = performance.now();
+    let httpStatus: number | "network" = "network";
+
     try {
       const response = await fetch(EDGE_FUNCTION_URL, {
         method: "POST",
@@ -99,6 +124,7 @@ export function JoinPageV4() {
         },
         body: JSON.stringify(payload),
       });
+      httpStatus = response.status;
 
       const data = await response.json().catch(() => ({}));
 
@@ -112,9 +138,16 @@ export function JoinPageV4() {
 
       setStatus("success");
 
+      // Succès reçu : la clé a fait son travail — une éventuelle candidature
+      // suivante dans la même session repart avec une clé neuve.
+      try { sessionStorage.removeItem(SUBMISSION_KEY_STORAGE); } catch { /* noop */ }
+
       // Tracking GA4 — form_submit émis UNIQUEMENT après réponse OK (vraie
       // candidature) via useFormTelemetry, qui désarme aussi form_abandon.
-      telemetry.trackSubmit({ lead_source: payload.source || "unknown" });
+      telemetry.trackSubmit({
+        lead_source: payload.source || "unknown",
+        submit_latency_ms: Math.round(performance.now() - submitStartedAt),
+      });
 
       form.reset();
       setSourceChoice(""); // le select est contrôlé — form.reset() ne le vide pas
@@ -127,6 +160,13 @@ export function JoinPageV4() {
           ? "Submission failed. Please try again."
           : "L'envoi a échoué. Merci de réessayer."
       );
+      // form_error (Lot 1b) — le catch n'est plus muet : échecs HTTP (status du
+      // POST) et réseau ("network") remontent avec la latence réelle.
+      telemetry.trackError({
+        status: httpStatus,
+        message: err instanceof Error ? err.message : String(err),
+        submitLatencyMs: performance.now() - submitStartedAt,
+      });
     }
   }
 
