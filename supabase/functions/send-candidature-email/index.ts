@@ -1,4 +1,25 @@
 // Supabase Edge Function — send-candidature-email
+// v15 — 29/08/2026 — Durabilité du pipeline (Brief Conversion V2, Lot 1a — plan validé 29/08)
+//   CHANGEMENTS vs v14 :
+//   1. ORDRE INVERSÉ : écritures AVANT les emails. `form_submissions` devient la
+//      source de vérité (2 candidatures perdues + 4 clusters de doubles en 2 mois,
+//      audit 28/08). Échec TOTAL d'écriture = SEUL cas 502 (rien n'est sauvé, le
+//      retry est sûr grâce à la clé). Échec de l'email admin APRÈS écriture →
+//      200 candidat + alerte n8n immédiate (env `N8N_ALERT_WEBHOOK_URL`, payload
+//      sans PII) — une candidature n'est plus jamais perdue pour un email.
+//   2. IDEMPOTENCE : payload optionnel `submission_key` (uuid v4 posé par le front
+//      en sessionStorage, livré avec le lot 1b) → colonne UNIQUE (migration
+//      20260829120000_submission_key). Re-POST même clé = 409/23505 → no-op :
+//      200 `duplicate: true`, AUCUN email renvoyé, aucun prospect recréé.
+//      Côté `prospects` : garde applicative « même email < 10 min » → skip insert.
+//   3. i18n : langue résolue AVANT la validation ; erreurs 400/502 localisées FR/EN
+//      avec libellés humains (« prénom », pas `firstName`) ; le 502 n'expose plus
+//      la réponse brute de Resend.
+//   4. Auto-réponse FR au TUTOIEMENT (sujet compris) — décision Jérôme 28/08,
+//      alignée sur le registre du site. EN et HTML inchangés.
+//   Rétrocompatible front v14 (sans clé → comportement v14 côté idempotence).
+//   Ordre de déploiement : migration → merge sur main → déploiement v15 DEPUIS main
+//   (jamais depuis la branche) → front (lot 1b, qui envoie la clé).
 // v14 — 24/08/2026 — Intérêt maison/chambre (LP /chambres-septembre) — brief LOT 2
 //   CHANGEMENTS vs v13 :
 //   1. Payload optionnel `property_interest` / `room_interest` (posés par les CTA des
@@ -96,6 +117,15 @@ function isValidEmail(email: string): boolean {
   return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
 }
 
+// (v15) Libellés humains des champs pour les messages d'erreur — le front
+// affiche `data.error` tel quel (JoinPageV4) : jamais de clé technique.
+const FIELD_LABELS: Record<string, { fr: string; en: string }> = {
+  firstName: { fr: "prénom", en: "first name" },
+  lastName: { fr: "nom de famille", en: "last name" },
+  email: { fr: "email", en: "email" },
+  phone: { fr: "téléphone", en: "phone number" },
+};
+
 function buildAdminEmail(data: Record<string, string>): string {
   const rows: Array<[string, string]> = [
     ["Prénom", data.firstName],
@@ -144,28 +174,28 @@ function buildAdminEmail(data: Record<string, string>): string {
 </body></html>`;
 }
 
-// Textes de l'auto-réponse candidat, FR (registre vouvoyé historique) + EN.
-// Le HTML est unique : seule la langue des chaînes change.
+// Textes de l'auto-réponse candidat, FR (tutoiement — aligné sur le site,
+// décision Jérôme 28/08/2026) + EN. Le HTML est unique : seule la langue des chaînes change.
 const AUTORESPONSE_TEXTS = {
   fr: {
     htmlLang: "fr",
-    title: "Votre candidature à La Villa",
-    heading: (name: string) => `${name}, ravis d'avoir reçu votre candidature.`,
-    intro: "Vous venez peut-être de faire le premier pas vers un autre quotidien — et chez nous, on prend le temps de bien faire les choses. Toute l'équipe a hâte de découvrir votre profil.",
+    title: "Ta candidature à La Villa",
+    heading: (name: string) => `${name}, ravis d'avoir reçu ta candidature.`,
+    intro: "Tu viens peut-être de faire le premier pas vers un autre quotidien — et chez nous, on prend le temps de bien faire les choses. Toute l'équipe a hâte de découvrir ton profil.",
     nextLabel: "Et maintenant ?",
     step1Title: "Candidature bien reçue !",
-    step1Body: "On regarde qui vous êtes, ce que vous cherchez, et si La Villa correspond à ce dont vous avez besoin.",
-    step2Title: "On vous recontacte sous 48h.",
+    step1Body: "On regarde qui tu es, ce que tu cherches, et si La Villa correspond à ce dont tu as besoin.",
+    step2Title: "On te recontacte sous 48h.",
     step2Body: "Par email ou téléphone, pour faire connaissance autour d'un échange — sans pression, sans engagement.",
-    step3Title: "Si tout est aligné, on vous fait visiter.",
-    step3Body: "Et vous rencontrerez peut-être déjà certains de vos futurs colocataires.",
+    step3Title: "Si tout est aligné, on te fait visiter.",
+    step3Body: "Et tu rencontreras peut-être déjà certains de tes futurs colocataires.",
     meanwhileLabel: "En attendant",
     meanwhileBody: "La Villa, ce n'est pas une colocation comme les autres. C'est une maison, une vraie, avec ses pièces de vie, ses moments partagés, et des gens qui ont choisi de ne pas vivre seuls.",
     ctaDiscover: "Découvrir La Villa",
-    questionBlock: "Une question avant qu'on se parle ?<br>Répondez simplement à cet email, on est là.",
+    questionBlock: "Une question avant qu'on se parle ?<br>Réponds simplement à cet email, on est là.",
     signoff: "À très vite,",
     team: "Jérôme &amp; l'équipe de La Villa",
-    footerNote: "Cet email vous a été envoyé suite à votre candidature.<br>Vos données restent strictement confidentielles.",
+    footerNote: "Cet email t'a été envoyé suite à ta candidature.<br>Tes données restent strictement confidentielles.",
   },
   en: {
     htmlLang: "en",
@@ -281,6 +311,26 @@ async function sendEmail(payload: Record<string, unknown>, apiKey: string): Prom
   return { ok: res.ok, status: res.status, body };
 }
 
+// (v15) Alerte opérationnelle vers n8n — webhook dédié en secret d'env, jamais en
+// dur. Fire-and-forget : ne bloque ni ne fait échouer la réponse candidat. Payload
+// minimal SANS PII. Le Health Check hebdo n8n reste le filet de fond.
+async function alertN8n(payload: Record<string, unknown>): Promise<void> {
+  const url = Deno.env.get("N8N_ALERT_WEBHOOK_URL");
+  if (!url) {
+    console.error("N8N_ALERT_WEBHOOK_URL manquante — alerte non envoyée:", JSON.stringify(payload));
+    return;
+  }
+  try {
+    await fetch(url, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload),
+    });
+  } catch (e) {
+    console.error("n8n alert failed (non bloquant)", e);
+  }
+}
+
 Deno.serve(async (req: Request) => {
   const origin = req.headers.get("Origin");
   const cors = corsHeaders(origin);
@@ -305,15 +355,32 @@ Deno.serve(async (req: Request) => {
     });
   }
 
+  // Langue du candidat — résolue AVANT la validation (v15) pour localiser les
+  // erreurs : champ explicite du payload (fiable depuis 08/2026), sinon
+  // heuristique Referer historique — la Referrer-Policy par défaut ampute le
+  // path en cross-origin, ce qui classait toutes les soumissions en « fr ».
+  const referer = req.headers.get("Referer") ?? "";
+  const refererLang: "fr" | "en" = /\/en(\/|$|\?)/.test(referer) ? "en" : "fr";
+
   let data: Record<string, string>;
   try {
     data = await req.json();
   } catch {
-    return new Response(JSON.stringify({ error: "Invalid JSON body" }), {
+    // Corps illisible : pas de payload → seule l'heuristique Referer est disponible.
+    return new Response(JSON.stringify({
+      error: refererLang === "en"
+        ? "Unreadable request. Please reload the page and try again."
+        : "Requête illisible. Recharge la page et réessaie.",
+    }), {
       status: 400,
       headers: { ...cors, "Content-Type": "application/json" },
     });
   }
+
+  const language: "fr" | "en" =
+    data.language === "en" || data.language === "fr"
+      ? (data.language as "fr" | "en")
+      : refererLang;
 
   // Honeypot anti-spam : si rempli, on simule un succès (sans envoyer d'email)
   if (data.botcheck && data.botcheck.trim().length > 0) {
@@ -323,38 +390,42 @@ Deno.serve(async (req: Request) => {
   }
 
   // Validation des champs obligatoires
-  // v11 : `arrival` et `duration` retirés des requis (formulaire 1 étape).
-  // Ces infos sont qualifiées par Fanny à l'appel. Rétrocompatible : si un
-  // ancien front les envoie, ils sont traités plus bas comme avant.
+  // v11 : `arrival` et `duration` retirés des requis (le front 1 étape les a
+  // rétablis le 29/08, mais le serveur reste moins strict — rétrocompatible).
+  // (v15) : messages localisés FR/EN, libellés humains via FIELD_LABELS.
   const required = ["firstName", "lastName", "email", "phone"];
   const missing = required.filter((k) => !data[k] || String(data[k]).trim().length === 0);
   if (missing.length > 0) {
-    return new Response(JSON.stringify({ error: `Champs manquants : ${missing.join(", ")}` }), {
+    const labels = missing.map((k) => FIELD_LABELS[k]?.[language] ?? k).join(", ");
+    return new Response(JSON.stringify({
+      error: language === "en" ? `Missing fields: ${labels}` : `Champs manquants : ${labels}`,
+    }), {
       status: 400,
       headers: { ...cors, "Content-Type": "application/json" },
     });
   }
 
   if (!isValidEmail(data.email)) {
-    return new Response(JSON.stringify({ error: "Email invalide" }), {
+    return new Response(JSON.stringify({
+      error: language === "en" ? "Invalid email address" : "Email invalide",
+    }), {
       status: 400,
       headers: { ...cors, "Content-Type": "application/json" },
     });
   }
 
-  // Langue du candidat : champ explicite du payload (fiable depuis 08/2026),
-  // sinon heuristique Referer historique — la Referrer-Policy par défaut ampute
-  // le path en cross-origin, ce qui classait toutes les soumissions en « fr ».
-  const referer = req.headers.get("Referer") ?? "";
-  const language: "fr" | "en" =
-    data.language === "en" || data.language === "fr"
-      ? (data.language as "fr" | "en")
-      : /\/en(\/|$|\?)/.test(referer)
-        ? "en"
-        : "fr";
-
   // Soumission de test (v12) : /candidature?test=1 → exclue des comptages.
   const isTest = ["1", "true"].includes(String(data.isTest ?? "").trim().toLowerCase());
+
+  // Idempotence (v15) : uuid v4 posé par le front (sessionStorage, au premier clic
+  // submit, réutilisé tant que le succès n'est pas reçu — livré avec le lot 1b).
+  // Format validé ici ; absent ou invalide → null (ancien front) : pas
+  // d'idempotence, comportement v14 inchangé.
+  const submissionKeyRaw = String(data.submission_key ?? "").trim().toLowerCase();
+  const submissionKey =
+    /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/.test(submissionKeyRaw)
+      ? submissionKeyRaw
+      : null;
 
   // Attribution technique Ads (v13) : utm_* + gclid posés par le front (first-touch de
   // session). Trim + 256 caractères max, aucune autre normalisation ; vide → null.
@@ -412,42 +483,31 @@ Deno.serve(async (req: Request) => {
     reply_to: ADMIN_EMAIL,
     subject: language === "en"
       ? "Your application to La Villa — received"
-      : "Votre candidature à La Villa — bien reçue",
+      // Tutoiement (v15) — aligné sur AUTORESPONSE_TEXTS.fr, décision Jérôme 28/08.
+      : "Ta candidature à La Villa — bien reçue",
     html: buildAutoresponseEmail(data.firstName, language),
   };
 
-  // Envoi en parallèle
-  const [adminRes, candidateRes] = await Promise.all([
-    sendEmail(adminEmail, apiKey),
-    sendEmail(autoresponseEmail, apiKey),
-  ]);
+  // (v15) Les emails partent EN DERNIER, après les écritures — voir plus bas.
 
-  if (!adminRes.ok) {
-    console.error("Admin email failed", adminRes);
-  }
-  if (!candidateRes.ok) {
-    console.error("Candidate autoresponse failed", candidateRes);
-  }
-
-  // Si l'admin notification a échoué, on signale une erreur (priorité au business)
-  if (!adminRes.ok) {
-    return new Response(JSON.stringify({
-      error: "L'envoi de la notification a échoué. Merci de réessayer ou de nous contacter directement.",
-      details: adminRes.body,
-    }), {
-      status: 502,
-      headers: { ...cors, "Content-Type": "application/json" },
-    });
-  }
-
-  // 3. Journalisation best-effort de la candidature (trace serveur, SANS donnée personnelle).
+  // 3. Journalisation de la candidature (trace serveur, SANS donnée personnelle).
   //    Alimente le Health Check hebdo n8n ("Check Candidatures 7j") et garde une trace
   //    indépendante de GA4 (corrige la cause racine de la perte de suivi mai→juin 2026).
-  //    On ne bloque JAMAIS la candidature si la journalisation échoue : l'email reste prioritaire.
+  //    (v15) ÉCRITURE D'ABORD : form_submissions est la source de vérité. Un échec
+  //    TOTAL ici (cascade épuisée ou exception) est le SEUL cas 502 — rien n'est
+  //    sauvé, le candidat doit réessayer, la clé d'idempotence rend le retry sûr.
+  //    Une clé déjà en base (409/23505) = resoumission → no-op succès, sans
+  //    ré-emails ni prospect. Env Supabase manquante = accident de config : on
+  //    continue en mode dégradé v14 (emails seuls, erreur loggée) plutôt que de
+  //    bloquer toutes les candidatures pour un secret absent.
+  let submissionSaved = false;
+  let submissionDuplicate = false;
+  let loggingAvailable = false;
   try {
     const sbUrl = Deno.env.get("SUPABASE_URL");
     const sbKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY");
     if (sbUrl && sbKey) {
+      loggingAvailable = true;
       // `language` : calculé plus haut (payload explicite > heuristique Referer).
       const logSubmission = (body: Record<string, unknown>) =>
         fetch(`${sbUrl}/rest/v1/form_submissions`, {
@@ -465,37 +525,76 @@ Deno.serve(async (req: Request) => {
         source: data.source || null,
         language,
         is_test: isTest,
+        // v15 : clé d'idempotence — jointe seulement si le front l'a fournie.
+        ...(submissionKey ? { submission_key: submissionKey } : {}),
         // v13 : attribution Ads — clés présentes uniquement si au moins une valeur.
         ...attributionFields,
         // v14 : intérêt maison/chambre — même règle.
         ...interestFields,
       };
-      let logRes = await logSubmission(submissionRow);
-      if (!logRes.ok && hasInterest) {
-        // Filet v14 : colonnes d'intérêt refusées (migration non appliquée…) → on les
-        // retire EN PREMIER, pour ne pas sacrifier l'attribution Ads qui, elle, marche.
-        console.error("form_submissions logging rejected with interest fields, retrying without", logRes.status, await logRes.text().catch(() => ""));
-        logRes = await logSubmission(withoutInterest(submissionRow));
+      // Cascade v13/v14 conservée, exprimée en tentatives ordonnées « du plus
+      // récent au plus établi » : complet → sans intérêt → sans intérêt ni
+      // attribution. Un 409/23505 (submission_key) court-circuite : c'est un
+      // doublon, pas un refus de schéma.
+      const attempts: Array<Record<string, unknown>> = [submissionRow];
+      if (hasInterest) attempts.push(withoutInterest(submissionRow));
+      if (hasAttribution) attempts.push(withoutAttribution(withoutInterest(submissionRow)));
+      if (submissionKey) {
+        // Filet v15 : migration submission_key pas encore appliquée (colonne
+        // inconnue) → dernier recours SANS la clé. La trace prime sur
+        // l'idempotence — une candidature n'est jamais perdue pour un champ neuf.
+        const { submission_key: _unused, ...withoutKey } =
+          withoutAttribution(withoutInterest(submissionRow)) as Record<string, unknown> & { submission_key?: string };
+        attempts.push(withoutKey);
       }
-      if (!logRes.ok && hasAttribution) {
-        // Filet v13 : colonnes d'attribution refusées (migration absente…) → on rejoue
-        // sans elles plutôt que de perdre la trace.
-        console.error("form_submissions logging rejected with attribution fields, retrying without", logRes.status, await logRes.text().catch(() => ""));
-        logRes = await logSubmission(withoutAttribution(withoutInterest(submissionRow)));
+      for (const body of attempts) {
+        const res = await logSubmission(body);
+        if (res.ok) {
+          submissionSaved = true;
+          break;
+        }
+        const text = await res.text().catch(() => "");
+        if (res.status === 409 && (text.includes("23505") || text.includes("submission_key"))) {
+          submissionDuplicate = true;
+          break;
+        }
+        console.error("form_submissions insert rejected, cascade continue", res.status, text);
       }
-      if (!logRes.ok) {
-        console.error("form_submissions logging failed", logRes.status, await logRes.text().catch(() => ""));
+      if (!submissionSaved && !submissionDuplicate) {
+        console.error("form_submissions logging failed après cascade complète");
       }
     } else {
       console.error("form_submissions logging skipped: SUPABASE_URL / SUPABASE_SERVICE_ROLE_KEY missing");
     }
   } catch (e) {
-    console.error("form_submissions logging threw (non-blocking)", e);
+    console.error("form_submissions logging threw", e);
+  }
+
+  // Resoumission (même submission_key) : le premier POST a déjà écrit la ligne et
+  // envoyé les emails — on re-renvoie simplement le succès.
+  if (submissionDuplicate) {
+    return new Response(JSON.stringify({ success: true, autoresponseSent: true, duplicate: true }), {
+      headers: { ...cors, "Content-Type": "application/json" },
+    });
+  }
+
+  // Échec total d'écriture alors que la base était joignable : rien n'est sauvé,
+  // le candidat doit réessayer (retry sûr grâce à la clé). Message localisé,
+  // sans détail technique.
+  if (loggingAvailable && !submissionSaved) {
+    return new Response(JSON.stringify({
+      error: language === "en"
+        ? "Your application couldn't be saved. Please try again in a moment, or contact us directly."
+        : "Ta candidature n'a pas pu être enregistrée. Réessaie dans un instant, ou écris-nous directement.",
+    }), {
+      status: 502,
+      headers: { ...cors, "Content-Type": "application/json" },
+    });
   }
 
   // 4. Enregistrement de la candidature dans la table `prospects` (CRM / dashboard / Google Sheet).
-  //    Best-effort : on ne bloque JAMAIS la candidature si l'insert échoue — l'email de
-  //    notification reste la source de vérité prioritaire (voir le 502 plus haut). Utilise la
+  //    Best-effort : on ne bloque JAMAIS la candidature si l'insert échoue — la trace
+  //    `form_submissions` ci-dessus est la source de vérité (v15). Utilise la
   //    clé service_role (RLS : `prospects` est inaccessible en anon), déjà disponible dans
   //    l'environnement de la fonction (même clé que la journalisation ci-dessus). Aucune clé
   //    secrète n'est exposée côté client.
@@ -607,43 +706,64 @@ Deno.serve(async (req: Request) => {
         ...interestFields,
       };
 
-      const insertProspect = (body: Record<string, unknown>) =>
-        fetch(`${sbUrl}/rest/v1/prospects`, {
-          method: "POST",
-          headers: {
-            "apikey": sbKey,
-            "Authorization": `Bearer ${sbKey}`,
-            "Content-Type": "application/json",
-            "Prefer": "return=minimal",
-          },
-          body: JSON.stringify(body),
-        });
+      // Garde anti-doublon (v15) : un prospect au même email créé il y a moins de
+      // 10 minutes = resoumission (4 clusters en 2 mois, doublons fusionnés à la
+      // main par Fanny) → on n'insère pas ; la soumission reste tracée dans
+      // form_submissions. Contrôle best-effort : s'il échoue, on insère normalement.
+      let recentProspectExists = false;
+      try {
+        const since = new Date(Date.now() - 10 * 60 * 1000).toISOString();
+        const dupRes = await fetch(
+          `${sbUrl}/rest/v1/prospects?select=id&email=eq.${encodeURIComponent(data.email)}&created_at=gte.${encodeURIComponent(since)}&limit=1`,
+          { headers: { "apikey": sbKey, "Authorization": `Bearer ${sbKey}` } },
+        );
+        if (dupRes.ok) {
+          const rows = await dupRes.json().catch(() => []);
+          recentProspectExists = Array.isArray(rows) && rows.length > 0;
+        }
+      } catch { /* contrôle best-effort — jamais bloquant */ }
 
-      let prospectBody: Record<string, unknown> = prospect;
-      let insertRes = await insertProspect(prospectBody);
-      if (!insertRes.ok && prospectSource !== "site_web") {
-        // Filet : si la contrainte prospects_source_check ne connaît pas la valeur,
-        // on ne perd JAMAIS la candidature — on retombe sur site_web, détail en notes.
-        console.error("prospects insert rejected for source=" + prospectSource + ", retrying with site_web", insertRes.status, await insertRes.text().catch(() => ""));
-        prospectBody = { ...prospectBody, source: "site_web" };
-        insertRes = await insertProspect(prospectBody);
-      }
-      if (!insertRes.ok && hasInterest) {
-        // Filet v14 : on retire d'abord les champs d'intérêt (les plus récents) — jamais
-        // l'attribution Ads en premier.
-        console.error("prospects insert rejected with interest fields, retrying without", insertRes.status, await insertRes.text().catch(() => ""));
-        prospectBody = withoutInterest(prospectBody);
-        insertRes = await insertProspect(prospectBody);
-      }
-      if (!insertRes.ok && hasAttribution) {
-        // Filet v13 : colonnes d'attribution refusées (migration absente…) → on rejoue
-        // sans elles. Une candidature n'est JAMAIS perdue pour un champ de mesure.
-        console.error("prospects insert rejected with attribution fields, retrying without", insertRes.status, await insertRes.text().catch(() => ""));
-        prospectBody = withoutAttribution(withoutInterest(prospectBody));
-        insertRes = await insertProspect(prospectBody);
-      }
-      if (!insertRes.ok) {
-        console.error("prospects insert failed", insertRes.status, await insertRes.text().catch(() => ""));
+      if (recentProspectExists) {
+        console.log("prospects insert skipped: même email < 10 min (resoumission)");
+      } else {
+        const insertProspect = (body: Record<string, unknown>) =>
+          fetch(`${sbUrl}/rest/v1/prospects`, {
+            method: "POST",
+            headers: {
+              "apikey": sbKey,
+              "Authorization": `Bearer ${sbKey}`,
+              "Content-Type": "application/json",
+              "Prefer": "return=minimal",
+            },
+            body: JSON.stringify(body),
+          });
+
+        let prospectBody: Record<string, unknown> = prospect;
+        let insertRes = await insertProspect(prospectBody);
+        if (!insertRes.ok && prospectSource !== "site_web") {
+          // Filet : si la contrainte prospects_source_check ne connaît pas la valeur,
+          // on ne perd JAMAIS la candidature — on retombe sur site_web, détail en notes.
+          console.error("prospects insert rejected for source=" + prospectSource + ", retrying with site_web", insertRes.status, await insertRes.text().catch(() => ""));
+          prospectBody = { ...prospectBody, source: "site_web" };
+          insertRes = await insertProspect(prospectBody);
+        }
+        if (!insertRes.ok && hasInterest) {
+          // Filet v14 : on retire d'abord les champs d'intérêt (les plus récents) — jamais
+          // l'attribution Ads en premier.
+          console.error("prospects insert rejected with interest fields, retrying without", insertRes.status, await insertRes.text().catch(() => ""));
+          prospectBody = withoutInterest(prospectBody);
+          insertRes = await insertProspect(prospectBody);
+        }
+        if (!insertRes.ok && hasAttribution) {
+          // Filet v13 : colonnes d'attribution refusées (migration absente…) → on rejoue
+          // sans elles. Une candidature n'est JAMAIS perdue pour un champ de mesure.
+          console.error("prospects insert rejected with attribution fields, retrying without", insertRes.status, await insertRes.text().catch(() => ""));
+          prospectBody = withoutAttribution(withoutInterest(prospectBody));
+          insertRes = await insertProspect(prospectBody);
+        }
+        if (!insertRes.ok) {
+          console.error("prospects insert failed", insertRes.status, await insertRes.text().catch(() => ""));
+        }
       }
     } else {
       console.error("prospects insert skipped: SUPABASE_URL / SUPABASE_SERVICE_ROLE_KEY missing");
@@ -652,9 +772,36 @@ Deno.serve(async (req: Request) => {
     console.error("prospects insert threw (non-blocking)", e);
   }
 
+  // 5. (v15) Emails EN DERNIER : la candidature est déjà en base. Un échec d'email
+  //    n'est plus un échec candidat — c'est un incident interne, alerté immédiatement
+  //    (la promesse « réponse sous 48 h » ne survivrait pas à 6 jours de silence
+  //    jusqu'au Health Check hebdo).
+  const [adminRes, candidateRes] = await Promise.all([
+    sendEmail(adminEmail, apiKey),
+    sendEmail(autoresponseEmail, apiKey),
+  ]);
+
+  if (!adminRes.ok) {
+    console.error("Admin email failed", adminRes);
+    await alertN8n({
+      event: "candidature_admin_email_failed",
+      submission_key: submissionKey,
+      language,
+      is_test: isTest,
+      resend_status: adminRes.status,
+      autoresponse_sent: candidateRes.ok,
+      submission_saved: submissionSaved,
+      at: new Date().toISOString(),
+    });
+  }
+  if (!candidateRes.ok) {
+    console.error("Candidate autoresponse failed", candidateRes);
+  }
+
   return new Response(JSON.stringify({
     success: true,
     autoresponseSent: candidateRes.ok,
+    adminNotified: adminRes.ok,
   }), {
     headers: { ...cors, "Content-Type": "application/json" },
   });
