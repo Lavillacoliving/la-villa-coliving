@@ -13,7 +13,8 @@
     "link:graph": "node tools/link-graph.mjs",
     "mining:gsc": "node tools/mining-gsc.mjs",
     "test:tools": "node --test tools/test/*.test.mjs",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "postinstall": "patch-package"
   },
   "dependencies": {
     "@hookform/resolvers": "^5.2.2",
@@ -81,6 +82,7 @@
     "eslint-plugin-react-refresh": "^0.4.24",
     "globals": "^16.5.0",
     "kimi-plugin-inspect-react": "^1.0.3",
+    "patch-package": "^8.0.1",
     "postcss": "^8.5.6",
     "puppeteer": "^23.11.1",
     "sharp": "^0.34.5",

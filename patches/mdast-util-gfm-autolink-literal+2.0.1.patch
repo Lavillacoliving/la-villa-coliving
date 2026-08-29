@@ -1,0 +1,42 @@
+diff --git a/node_modules/mdast-util-gfm-autolink-literal/lib/index.js b/node_modules/mdast-util-gfm-autolink-literal/lib/index.js
+index c5ca771..82502a5 100644
+--- a/node_modules/mdast-util-gfm-autolink-literal/lib/index.js
++++ b/node_modules/mdast-util-gfm-autolink-literal/lib/index.js
+@@ -132,12 +132,36 @@ function transformGfmAutolinkLiterals(tree) {
+     tree,
+     [
+       [/(https?:\/\/|www(?=\.))([-.\w]+)([^ \t\r\n]*)/gi, findUrl],
+-      [/(?<=^|\s|\p{P}|\p{S})([-.\w+]+)@([-\w]+(?:\.[-\w]+)+)/gu, findEmail]
++      [emailRegex(), findEmail]
+     ],
+     {ignore: ['link', 'linkReference']}
+   )
+ }
+ 
++/**
++ * Patch La Villa (patch-package) — Safari < 16.4 ne supporte pas le lookbehind :
++ * esbuild (target safari16, défaut Vite) abaisse le littéral en `new RegExp(...)`,
++ * qui jette une SyntaxError au RENDU de chaque article de blog sur Safari 16.0-16.3.
++ * La frontière gauche est de toute façon re-validée en JS par `previous(match, true)`
++ * dans `findEmail` : le repli sans lookbehind conserve les mêmes groupes
++ * (atext, label) et le même comportement observable — seuls des essais de match
++ * supplémentaires, tous rejetés par `previous()`, diffèrent.
++ * Ne pas monter le target de build à la place : le littéral non transformé ferait
++ * échouer le parse du chunk entier sur ces mêmes Safari.
++ *
++ * @returns {RegExp}
++ */
++function emailRegex() {
++  try {
++    return new RegExp(
++      '(?<=^|\\s|\\p{P}|\\p{S})([-.\\w+]+)@([-\\w]+(?:\\.[-\\w]+)+)',
++      'gu'
++    )
++  } catch {
++    return /([-.\w+]+)@([-\w]+(?:\.[-\w]+)+)/g
++  }
++}
++
+ /**
+  * @type {ReplaceFunction}
+  * @param {string} _
