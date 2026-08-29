@@ -1,3 +1,4 @@
+import { lazy, Suspense, useState } from "react";
 import { useLocation } from "react-router-dom";
 import { responsiveImage } from "@/lib/responsiveImage";
 import { LocalizedLink } from "@/components/LocalizedLink";
@@ -21,16 +22,31 @@ import {
   Sun,
 } from "lucide-react";
 import { useLanguage } from "@/contexts/LanguageContext";
-import { PRICE_FR_NUM, PRICE_EN_NUM, PRICE_CHF_FR, PRICE_CHF_EN, PRICE_SHARED_FR_NUM, PRICE_SHARED_EN_NUM, PRICE_SHARED_CHF_FR, PRICE_SHARED_CHF_EN, EUR_STANDARD_FR_NUM, EUR_STANDARD_EN_NUM, EUR_SHARED_FR_NUM, EUR_SHARED_EN_NUM } from "@/data/stats";
+import { PRICE_FR_NUM, PRICE_EN_NUM, PRICE_CHF_FR, PRICE_CHF_EN, PRICE_SHARED_FR_NUM, PRICE_SHARED_EN_NUM, PRICE_SHARED_CHF_FR, PRICE_SHARED_CHF_EN, EUR_STANDARD_FR_NUM, EUR_STANDARD_EN_NUM, EUR_SHARED_FR_NUM, EUR_SHARED_EN_NUM, thousands } from "@/data/stats";
 import {
   useRoomAvailability,
+  useHouseRooms,
+  roomBadge,
   houseBadgeLabel,
   houseBadgeTone,
   BADGE_CHIP_CLASS,
   BADGE_PANEL_CLASS,
   BADGE_DOT_CLASS,
   type HouseKey,
+  type PublicRoom,
 } from "@/lib/availability";
+import { RoomsEmbed } from "@/components/RoomsEmbed";
+import { ROOM_PHOTOS } from "@/data/roomPhotos";
+
+// (Lot 3) Visionneuse photos des chambres — même composant/lazy que la LP.
+const PhotoLightbox = lazy(() => import("@/components/PhotoLightbox"));
+
+// (Lot 3) `floor` arrive en français de v_public_rooms — mapping EN minimal.
+const FLOOR_EN: Record<string, string> = {
+  "RDC": "Ground floor",
+  "Étage 1": "1st floor",
+  "Étage 2": "2nd floor",
+};
 
 import { Badge } from "@/components/ui/badge";
 import { HouseGallery } from "@/sections/HouseGallery";
@@ -1331,6 +1347,26 @@ export function HouseDetailPage() {
     } catch { /* noop */ }
   };
 
+  // (Lot 3) Chambres réelles de la maison + visionneuse photos (patterns LP).
+  const houseRooms = useHouseRooms(id as HouseKey);
+  const [roomViewer, setRoomViewer] = useState<{ key: string; roomNumber: number; index: number } | null>(null);
+  const openRoomViewer = (room: PublicRoom, photoIndex: number) => {
+    setRoomViewer({ key: `${id}:${room.room_number}`, roomNumber: room.room_number, index: photoIndex });
+    try {
+      (window as unknown as { gtag?: (...a: unknown[]) => void }).gtag?.("event", "photo_lightbox_open", {
+        room_id: `chambre-${room.room_number}`, property_interest: id, photo_index: photoIndex,
+      });
+    } catch { /* noop */ }
+  };
+  const trackRoomCta = (room: PublicRoom) => {
+    try {
+      (window as unknown as { gtag?: (...a: unknown[]) => void }).gtag?.("event", "cta_click", {
+        cta_position: "room_card", cta_target: "/candidature", house: id,
+        room_id: `chambre-${room.room_number}`, language,
+      });
+    } catch { /* noop */ }
+  };
+
   if (!house) {
     return (
       <main className="pt-32 pb-20 bg-white">
@@ -1939,60 +1975,193 @@ export function HouseDetailPage() {
         );
       })()}
 
-      {/* Rooms */}
+      {/* Rooms — (Lot 3) cartes RÉELLES depuis v_public_rooms (source unique de
+          dispo et de prix, design arbitré rapport §3.B). Les descriptions de
+          types historiques passent en intro ; chaque chambre porte photo, m²,
+          étage, SDB, prix CHF, badge dispo daté et un CTA à deux params.
+          Sans données (vue vide, vieux HTML prérendu) : repli sur les cartes de
+          types — jamais de section vide. Interdit : cloner le modèle
+          fichier-statique de la LP (roomsSeptembre.ts). */}
       <section className="section-padding relative bg-[#FAF9F6]">
         <div className="container-custom">
           <h2
-            className="text-3xl md:text-4xl mb-8 text-[#1C1917]"
+            className="text-3xl md:text-4xl mb-6 text-[#1C1917]"
             style={{ fontFamily: "DM Serif Display, serif" }}
           >
             {t.houseDetail.rooms}
           </h2>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-            {house.rooms.map((room, index) => (
-              <div key={index} className="card-ultra overflow-hidden group">
-                {/* Room Image */}
-                <div className="relative h-48 overflow-hidden">
-                  <img
-                    src={room.image}
-                    alt={`${room.type} — ${language === "en" ? "furnished room in" : "chambre meublée à"} ${house.name} coliving ${house.location}`}
-                    className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
-                    loading="lazy"
-                    width={800}
-                    height={600}
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent" />
-                </div>
-
-                {/* Room Content */}
-                <div className="p-8">
-                  <div className="flex items-center gap-3 mb-4">
-                    <BedDouble className="text-[#D4A574]" size={28} />
-                    <h3 className="text-xl font-black text-[#1C1917]">
-                      {room.type}
-                    </h3>
-                  </div>
-                  <p className="text-[#78716C] mb-6 font-medium">
-                    {room.description}
-                  </p>
-                  <div className="flex items-center justify-between">
-                    <p className="text-2xl font-black text-[#D4A574]">
-                      {room.price}
-                      {"priceEur" in room && (
-                        <span className="text-base font-light text-[#78716C]"> ({(room as { priceEur: string }).priceEur})</span>
-                      )}
-                    </p>
-                    <span className="text-[#78716C] font-medium">
-                      {t.houseDetail.perMonth}
-                    </span>
-                  </div>
-                </div>
-              </div>
+          {/* Intro : les types de chambres (ex-cartes), en texte. */}
+          <div className="mb-10 space-y-1.5 max-w-3xl">
+            {house.rooms.map((roomType, index) => (
+              <p key={index} className="text-[#78716C]">
+                <span className="font-semibold text-[#1C1917]">{roomType.type}</span>
+                {" — "}
+                {roomType.description}
+              </p>
             ))}
           </div>
+
+          {houseRooms.known ? (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {houseRooms.rooms.map((room) => {
+                const photoKey = `${id}:${room.room_number}`;
+                const gallery = ROOM_PHOTOS[photoKey];
+                const cover = gallery?.[0];
+                // Repli déterministe sur les photos de TYPE (pureté d'hydratation :
+                // room_number est stable, jamais d'aléatoire au rendu).
+                const fallbackImg = house.rooms[(room.room_number - 1) % house.rooms.length].image;
+                const lang2 = language === "en" ? "en" as const : "fr" as const;
+                const badge = roomBadge(room, lang2);
+                const surface = room.surface_m2 !== null ? Number(room.surface_m2) : null;
+                const bath =
+                  room.bathroom_type === "private"
+                    ? (language === "en" ? "private bathroom" : "salle de bain privative")
+                    : room.bathroom_type === "shared"
+                      ? (language === "en" ? "shared shower room" : "salle d'eau partagée")
+                      : null;
+                const floor = room.floor
+                  ? (language === "en" ? (FLOOR_EN[room.floor] ?? room.floor) : room.floor)
+                  : null;
+                const specs = [
+                  surface !== null && !Number.isNaN(surface) ? `${surface} m²` : null,
+                  floor,
+                  bath,
+                ].filter(Boolean).join(" · ");
+                const canApplyRoom = room.availability === "available" || !!room.available_from;
+                const roomImg = (
+                  <>
+                    <img
+                      src={cover?.src ?? fallbackImg}
+                      alt={cover
+                        ? cover.alt[lang2]
+                        : `${language === "en" ? "Room" : "Chambre"} ${room.room_number} — ${house.name}`}
+                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
+                      loading="lazy"
+                      width={cover?.w ?? 800}
+                      height={cover?.h ?? 600}
+                    />
+                    <span className={`absolute top-3 left-3 text-xs font-semibold px-3 py-1 rounded-full ${BADGE_CHIP_CLASS[badge.tone]}`}>
+                      {badge.label}
+                    </span>
+                    {gallery && gallery.length > 1 && (
+                      <span className="absolute bottom-3 right-3 text-xs font-medium px-2.5 py-1 rounded-full bg-black/55 text-white">
+                        {gallery.length} photos
+                      </span>
+                    )}
+                  </>
+                );
+                return (
+                  <div key={room.room_number} className="card-ultra overflow-hidden group flex flex-col">
+                    {gallery ? (
+                      <button
+                        type="button"
+                        onClick={() => openRoomViewer(room, 0)}
+                        className="relative h-48 w-full overflow-hidden text-left cursor-zoom-in"
+                        aria-label={language === "en"
+                          ? `See photos of room ${room.room_number}`
+                          : `Voir les photos de la chambre ${room.room_number}`}
+                      >
+                        {roomImg}
+                      </button>
+                    ) : (
+                      <div className="relative h-48 w-full overflow-hidden">{roomImg}</div>
+                    )}
+                    <div className="p-6 flex flex-col flex-1">
+                      <h3 className="text-lg font-black text-[#1C1917] mb-1">
+                        {language === "en" ? `Room ${room.room_number}` : `Chambre ${room.room_number}`}
+                      </h3>
+                      {specs && <p className="text-sm text-[#78716C] mb-1">{specs}</p>}
+                      {language !== "en" && room.location_detail && (
+                        <p className="text-xs text-[#78716C] mb-3">{room.location_detail.trim()}</p>
+                      )}
+                      <div className="mt-auto pt-3">
+                        {room.rent_chf !== null && (
+                          <p className="text-xl font-black text-[#D4A574] mb-4">
+                            {language === "en"
+                              ? `CHF ${thousands(room.rent_chf, ",")}`
+                              : `${thousands(room.rent_chf, " ")} CHF`}
+                            <span className="text-sm font-light text-[#78716C]"> {t.houseDetail.perMonth}</span>
+                          </p>
+                        )}
+                        <LocalizedLink
+                          to={`/candidature?property_interest=${id}&room_interest=chambre-${room.room_number}`}
+                          onClick={() => trackRoomCta(room)}
+                          className={canApplyRoom
+                            ? "w-full inline-flex items-center justify-center gap-2 px-5 py-2.5 bg-[#D4A574] text-[#1C1917] text-sm font-semibold rounded-lg hover:bg-[#E0BB8A] transition-colors"
+                            : "w-full inline-flex items-center justify-center gap-2 px-5 py-2.5 border border-[#1C1917] text-[#1C1917] text-sm font-semibold rounded-lg hover:bg-[#1C1917] hover:text-white transition-colors"}
+                        >
+                          {canApplyRoom
+                            ? (language === "en" ? "Apply" : "Candidater")
+                            : (language === "en" ? "Join waitlist" : "Liste d'attente")}
+                          <ArrowRight className="w-4 h-4" />
+                        </LocalizedLink>
+                      </div>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          ) : (
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+              {house.rooms.map((room, index) => (
+                <div key={index} className="card-ultra overflow-hidden group">
+                  <div className="relative h-48 overflow-hidden">
+                    <img
+                      src={room.image}
+                      alt={`${room.type} — ${language === "en" ? "furnished room in" : "chambre meublée à"} ${house.name} coliving ${house.location}`}
+                      className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
+                      loading="lazy"
+                      width={800}
+                      height={600}
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent" />
+                  </div>
+                  <div className="p-8">
+                    <div className="flex items-center gap-3 mb-4">
+                      <BedDouble className="text-[#D4A574]" size={28} />
+                      <h3 className="text-xl font-black text-[#1C1917]">
+                        {room.type}
+                      </h3>
+                    </div>
+                    <p className="text-[#78716C] mb-6 font-medium">
+                      {room.description}
+                    </p>
+                    <div className="flex items-center justify-between">
+                      <p className="text-2xl font-black text-[#D4A574]">
+                        {room.price}
+                        {"priceEur" in room && (
+                          <span className="text-base font-light text-[#78716C]"> ({(room as { priceEur: string }).priceEur})</span>
+                        )}
+                      </p>
+                      <span className="text-[#78716C] font-medium">
+                        {t.houseDetail.perMonth}
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
         </div>
       </section>
+
+      {/* (Lot 3) État chambres embarqué au prérendu — instance unique par page. */}
+      <RoomsEmbed house={id as HouseKey} />
+
+      {/* (Lot 3) Visionneuse photos chambre — lazy, montée seulement à l'ouverture. */}
+      {roomViewer && ROOM_PHOTOS[roomViewer.key] && (
+        <Suspense fallback={null}>
+          <PhotoLightbox
+            photos={ROOM_PHOTOS[roomViewer.key]}
+            index={roomViewer.index}
+            onIndexChange={(i) => setRoomViewer((v) => (v ? { ...v, index: i } : v))}
+            onClose={() => setRoomViewer(null)}
+            en={language === "en"}
+            title={language === "en" ? `Room ${roomViewer.roomNumber}` : `Chambre ${roomViewer.roomNumber}`}
+          />
+        </Suspense>
+      )}
 
       {/* Photo Gallery */}
       <HouseGallery images={house.photoGallery} houseName={house.name} />

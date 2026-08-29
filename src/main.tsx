@@ -19,7 +19,7 @@ const rootElement = document.getElementById("root")!;
 // les routes sont en React.lazy, donc le DOM prerendu (et ses <script type="application/json">)
 // peut être remplacé avant l'exécution du chunk de la page. Ici, le DOM est garanti intact.
 const prerenderState: Record<string, string> = {};
-for (const id of ["__blog_post_data__", "__blog_list_data__", "__latest_blog_data__", "__colocation_blog_data__", "__room_availability_data__"]) {
+for (const id of ["__blog_post_data__", "__blog_list_data__", "__latest_blog_data__", "__colocation_blog_data__", "__room_availability_data__", "__rooms_level_data__"]) {
   const el = document.getElementById(id);
   if (el?.textContent) prerenderState[id] = el.textContent;
 }
