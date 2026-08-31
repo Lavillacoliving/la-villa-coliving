@@ -213,10 +213,9 @@ export function HeroV7() {
 
           {/* 5 USP photo cards — cliquables depuis le 29/08 (demande Jérôme :
               l'audience cliquait sans effet, cursor-pointer sans lien). Cible =
-              la page qui convertit l'intention du pavé : la maison signature de
-              l'équipement (couloir home → maison → candidature ≈ 46 % des
-              candidatures), /tarifs pour « inclus dans le loyer », /nos-maisons
-              pour comparer les chambres. Tracké cta_click hero_amenity. */}
+              la page qui convertit l'intention du pavé : /nos-maisons (arbitrage
+              Jérôme 29/08 : le comparateur des 3 maisons reçoit les intentions
+              équipements), /services pour les cours privés. Tracké cta_click hero_amenity. */}
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
             {[
               {
@@ -224,7 +223,7 @@ export function HeroV7() {
                 title: language === "en" ? "Pool" : "Piscine",
                 desc: language === "en" ? "Indoor at Le Loft, outdoor at La Villa and Le Lodge" : "Intérieure au Loft, extérieure à La Villa et au Lodge",
                 highlight: language === "en" ? "In all 3 houses" : "Dans les 3 maisons",
-                to: "/leloft",
+                to: "/nos-maisons",
                 amenity: "pool",
               },
               {
@@ -232,7 +231,7 @@ export function HeroV7() {
                 title: "Sauna",
                 desc: language === "en" ? "Finnish sauna at Le Loft and Le Lodge, and infrared at La Villa." : "Sauna finlandais au Loft et au Lodge et infrarouge à La Villa.",
                 highlight: language === "en" ? "In all 3 houses" : "Dans les 3 maisons",
-                to: "/lelodge",
+                to: "/nos-maisons",
                 amenity: "sauna",
               },
               {
@@ -240,7 +239,7 @@ export function HeroV7() {
                 title: language === "en" ? "Gym" : "Salle de sport",
                 desc: language === "en" ? "Fully equipped in each house" : "Entièrement équipée dans chaque maison",
                 highlight: language === "en" ? "In all 3 houses" : "Dans les 3 maisons",
-                to: "/lelodge",
+                to: "/nos-maisons",
                 amenity: "gym",
               },
               {
@@ -248,7 +247,7 @@ export function HeroV7() {
                 title: language === "en" ? "Private classes" : "Cours privés",
                 desc: language === "en" ? "Weekly yoga & fitness included" : "Yoga & fitness hebdo inclus",
                 highlight: language === "en" ? "Included in rent" : "Inclus dans le loyer",
-                to: "/tarifs",
+                to: "/services",
                 amenity: "classes",
               },
               {
