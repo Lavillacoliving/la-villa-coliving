@@ -865,8 +865,8 @@ export function RatesPageV4() {
 
               <p>
                 {language === "en"
-                  ? "If you are after the lowest rent in the area, that is not us — and we would rather tell you straight. If you compare what every franc buys you, come visit a house."
-                  : "Si tu cherches le loyer le plus bas de l'agglomération, ce n'est pas nous — et on préfère te le dire franchement. Si tu compares ce que chaque franc t'apporte, viens visiter une maison."}
+                  ? "If you are after the lowest rent in the area, that unfortunately will not be us. If you compare what every franc buys you, then come and visit a house!"
+                  : "Si tu cherches le loyer le plus bas de l'agglomération, ce ne sera malheureusement pas nous. Si tu compares ce que chaque franc t'apporte, alors viens visiter une maison !"}
               </p>
             </div>
           </div>
