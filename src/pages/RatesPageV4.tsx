@@ -15,8 +15,6 @@ import {
   GENEVA_STUDIO_BASE_RENT_EN,
   GENEVA_STUDIO_TOTAL_FR,
   GENEVA_STUDIO_TOTAL_EN,
-  GENEVA_STUDIO_TOTAL_FR_NUM,
-  GENEVA_STUDIO_TOTAL_EN_NUM,
   MONTHLY_SAVINGS_CHF,
   YEARLY_SAVINGS_FR_NUM,
   YEARLY_SAVINGS_EN_NUM,
@@ -877,8 +875,8 @@ export function RatesPageV4() {
               style={{ fontFamily: "DM Serif Display, serif" }}
             >
               {language === "en"
-                ? "And compared to a standard flatshare?"
-                : "Et face à une colocation classique ?"}
+                ? "La Villa Coliving compared with a standard flatshare"
+                : "La Villa Coliving comparé à la colocation classique"}
             </h3>
             <p
               className="md:hidden text-xs text-[#78716C] mb-2 text-right pr-1"
@@ -950,13 +948,6 @@ export function RatesPageV4() {
                 </tbody>
               </table>
             </div>
-            <p className="mt-6 text-center text-[#1C1917]">
-              <strong>
-                {language === "en"
-                  ? "Per square metre and like-for-like on services, La Villa is at market price — often below. The difference isn't the price: it's what it buys."
-                  : "Au m² et à services égaux, La Villa est dans les prix du marché — souvent en dessous. La différence n'est pas le prix : c'est ce qu'il achète."}
-              </strong>
-            </p>
             <p className="mt-3 text-center text-xs text-[#78716C]">
               {language === "en"
                 ? `"Standard flatshare" and "Geneva studio" columns: market observations (indicative ranges). La Villa column: contractual facts. La Villa price per m²: contractual rent of €${EUR_STANDARD_EN_NUM} (${PRICE_CHF_EN}) ÷ 37-42 m² of living space per flatmate.`
@@ -1023,8 +1014,8 @@ export function RatesPageV4() {
             </span>
             <h2 className="text-3xl md:text-4xl font-light text-white mb-4">
               {language === "en"
-                ? "What about move-in fees?"
-                : "Et les frais pour emménager ?"}
+                ? "At La Villa Coliving, zero move-in fees"
+                : "À La Villa Coliving, 0 € de frais d'emménagement"}
             </h2>
             <p className="text-[#b3b2b2] max-w-2xl mx-auto">
               {language === "en"
@@ -1295,7 +1286,7 @@ export function RatesPageV4() {
             >
               {language === "en"
                 ? "What's Really Included"
-                : "Ce Qui Est Vraiment Inclus"}
+                : "Ce Qui Est Inclus"}
             </h2>
             <p className="text-lg text-[#57534E] max-w-2xl mx-auto">
               {language === "en"
@@ -1329,24 +1320,6 @@ export function RatesPageV4() {
                 </ul>
               </div>
             ))}
-          </div>
-
-          {/* Summary Box */}
-          <div className="mt-12 bg-[#1C1917] rounded-2xl p-8 md:p-12 text-center">
-            <h3 className="text-2xl font-light text-white mb-4">
-              {language === "en" ? "The Bottom Line" : "En Résumé"}
-            </h3>
-            <p className="text-[#A8A29E] max-w-2xl mx-auto mb-6">
-              {language === "en"
-                ? `For ${PRICE_EN_NUM} CHF/month, you get a furnished room in a premium house, all utilities, cleaning, gym, pool, sauna, yoga classes, community events, and zero hassle. Compare that to ${GENEVA_STUDIO_TOTAL_EN_NUM}+ CHF for a basic studio in Geneva.`
-                : `Pour ${PRICE_CHF_FR}/mois, tu obtiens une chambre meublée dans une maison premium, toutes charges, ménage, sport, piscine, sauna, cours de yoga, événements communautaires, et zéro tracas. Compare avec ${GENEVA_STUDIO_TOTAL_FR_NUM}+ CHF pour un studio basique à Genève.`}
-            </p>
-            <div className="inline-flex items-center gap-2 px-6 py-3 bg-[#D4A574] text-white rounded-full font-medium">
-              <Sparkles className="w-5 h-5" />
-              {language === "en"
-                ? `You save ${MONTHLY_SAVINGS_CHF} CHF every month`
-                : `Tu économises ${MONTHLY_SAVINGS_CHF} CHF chaque mois`}
-            </div>
           </div>
         </div>
       </section>
