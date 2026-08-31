@@ -303,7 +303,9 @@ export function HeroV7() {
         {/* Partie 2 — Strip positionnement */}
         <div className="border-t border-white/[0.08] mt-16">
           <div className="max-w-7xl mx-auto px-6 py-6 md:py-8">
-            <div className="flex flex-wrap justify-center gap-6 md:gap-12">
+            {/* Mobile : colonne alignée à gauche (les lignes centrées une à une
+                faisaient « voler » les icônes — Jérôme 29/08) ; desktop inchangé. */}
+            <div className="flex flex-col items-start gap-4 w-fit mx-auto md:w-auto md:flex-row md:flex-wrap md:justify-center md:gap-12">
               {[
                 { icon: Home, text: language === "en" ? "Real houses, not residences" : "De vraies maisons, pas des résidences", bold: language === "en" ? "Real houses" : "vraies maisons" },
                 { icon: Users, text: language === "en" ? `${STATS.minResidentsPerHouse} to ${STATS.maxResidentsPerHouse} residents per house` : `${STATS.minResidentsPerHouse} à ${STATS.maxResidentsPerHouse} résidents par maison`, bold: language === "en" ? `${STATS.minResidentsPerHouse} to ${STATS.maxResidentsPerHouse}` : `${STATS.minResidentsPerHouse} à ${STATS.maxResidentsPerHouse}` },
