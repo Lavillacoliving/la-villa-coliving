@@ -80,11 +80,13 @@ export function LatestBlogV7() {
         </div>
 
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {posts.map((post) => (
+          {posts.map((post, index) => (
             <LocalizedLink
               to={`/blog/${post.slug}`}
               key={post.id}
-              className="group bg-[#FAF9F6] border border-[#E7E5E4] overflow-hidden transition-all duration-300 hover:border-[#D4A574]/30 hover:shadow-lg"
+              // Lot 2 : 3 cartes en mobile (la liste de 6 poussait la FAQ et le
+              // CTA final hors de portée), les 6 restent visibles dès md.
+              className={`group bg-[#FAF9F6] border border-[#E7E5E4] overflow-hidden transition-all duration-300 hover:border-[#D4A574]/30 hover:shadow-lg${index >= 3 ? " hidden md:block" : ""}`}
             >
               <div className="aspect-[16/10] overflow-hidden bg-[#F5F2ED]">
                 {post.image_url ? (

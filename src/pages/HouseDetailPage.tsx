@@ -1,3 +1,4 @@
+import { lazy, Suspense, useState } from "react";
 import { useLocation } from "react-router-dom";
 import { responsiveImage } from "@/lib/responsiveImage";
 import { LocalizedLink } from "@/components/LocalizedLink";
@@ -21,16 +22,31 @@ import {
   Sun,
 } from "lucide-react";
 import { useLanguage } from "@/contexts/LanguageContext";
-import { STATS, PRICE_EN_NUM, PRICE_CHF_FR, PRICE_CHF_EN } from "@/data/stats";
+import { PRICE_FR_NUM, PRICE_EN_NUM, PRICE_CHF_FR, PRICE_CHF_EN, PRICE_SHARED_FR_NUM, PRICE_SHARED_EN_NUM, PRICE_SHARED_CHF_FR, PRICE_SHARED_CHF_EN, EUR_STANDARD_FR_NUM, EUR_STANDARD_EN_NUM, EUR_SHARED_FR_NUM, EUR_SHARED_EN_NUM, thousands } from "@/data/stats";
 import {
   useRoomAvailability,
+  useHouseRooms,
+  roomBadge,
   houseBadgeLabel,
   houseBadgeTone,
   BADGE_CHIP_CLASS,
   BADGE_PANEL_CLASS,
   BADGE_DOT_CLASS,
   type HouseKey,
+  type PublicRoom,
 } from "@/lib/availability";
+import { RoomsEmbed } from "@/components/RoomsEmbed";
+import { ROOM_PHOTOS } from "@/data/roomPhotos";
+
+// (Lot 3) Visionneuse photos des chambres — même composant/lazy que la LP.
+const PhotoLightbox = lazy(() => import("@/components/PhotoLightbox"));
+
+// (Lot 3) `floor` arrive en français de v_public_rooms — mapping EN minimal.
+const FLOOR_EN: Record<string, string> = {
+  "RDC": "Ground floor",
+  "Étage 1": "1st floor",
+  "Étage 2": "2nd floor",
+};
 
 import { Badge } from "@/components/ui/badge";
 import { HouseGallery } from "@/sections/HouseGallery";
@@ -70,6 +86,8 @@ interface HouseData {
   rooms: {
     type: string;
     price: string;
+    /** Prix contractuel euro, affiche en leger entre parentheses. */
+    priceEur?: string;
     description: string;
     image: string;
   }[];
@@ -88,8 +106,8 @@ function getHousesData(lang: string): Record<string, HouseData> {
       ? "370 m² of designed living on a 2,000 m² estate bordering a nature reserve. Heated pool, sauna, gym, and 10 spacious rooms."
       : "370 m² de vie design sur un domaine de 2 000 m² bordant une réserve naturelle. Piscine chauffée, sauna, salle de sport et 10 chambres spacieuses.",
     longDescription: isEn
-      ? `Our flagship house, 10 minutes on foot from Annemasse station — Léman Express to central Geneva in 9 minutes, under 20 minutes door-to-door. 370 m² for 10 housemates on a 2,000 m² estate bordering a nature reserve. Day to day: a heated 12×5 m pool, a 5-seat sauna, a fully equipped gym and 8 Gb/s fiber. All rooms are furnished with Emma or Tediber mattresses — 6 with a private en-suite bathroom, 4 with 2 shared shower rooms (for these rooms, shower-room cleaning is included in the rent — no hassle!). All-inclusive rent from ${PRICE_CHF_EN}/month: utilities, fiber, twice-weekly cleaning of common areas, pool and garden upkeep. No application fee, reply within 48h.`
-      : `Notre maison amirale, à 10 minutes à pied de la gare d'Annemasse — Léman Express vers le centre de Genève en 9 minutes, moins de 20 minutes porte-à-porte. 370 m² pour 10 colocataires, sur un domaine de 2 000 m² en bordure de réserve naturelle. Au quotidien : piscine chauffée de 12×5 m, sauna 5 places, salle de sport équipée et fibre 8 Gb/s. Toutes les chambres sont meublées avec matelas Emma ou Tediber — 6 avec salle de bain privative, 4 avec 2 salles d'eau partagées (pour ces chambres, le ménage de la salle d'eau est inclus dans le loyer : pas de tracas !). Loyer tout inclus dès ${PRICE_CHF_FR}/mois : charges, fibre, ménage 3×/semaine des espaces communs, entretien piscine et jardin. 0 frais de dossier, réponse sous 48 h.`,
+      ? `Our flagship house, 10 minutes on foot from Annemasse station — Léman Express to central Geneva in 9 minutes, under 20 minutes door-to-door. 370 m² for 10 housemates on a 2,000 m² estate bordering a nature reserve. Day to day: a heated 12×5 m pool, a 5-seat sauna, a fully equipped gym and 8 Gb/s fiber. All rooms are furnished with Emma or Tediber mattresses — 6 with a private en-suite bathroom at ${PRICE_CHF_EN}/month, 4 with 2 shower rooms each shared between just 2 rooms, at ${PRICE_SHARED_CHF_EN}/month (shower-room cleaning is included in the rent — no hassle!). All-inclusive rent covers utilities, fiber, cleaning of common areas three times a week, pool and garden upkeep. No application fee, reply within 48h.`
+      : `Notre maison amirale, à 10 minutes à pied de la gare d'Annemasse — Léman Express vers le centre de Genève en 9 minutes, moins de 20 minutes porte-à-porte. 370 m² pour 10 colocataires, sur un domaine de 2 000 m² en bordure de réserve naturelle. Au quotidien : piscine chauffée de 12×5 m, sauna 5 places, salle de sport équipée et fibre 8 Gb/s. Toutes les chambres sont meublées avec matelas Emma ou Tediber — 6 avec salle de bain privative à ${PRICE_CHF_FR}/mois, 4 avec 2 salles d'eau partagées, chacune entre 2 chambres seulement, à ${PRICE_SHARED_CHF_FR}/mois (leur ménage est inclus dans le loyer : pas de tracas !). Loyer tout inclus : charges, fibre, ménage 3×/semaine des espaces communs, entretien piscine et jardin. 0 frais de dossier, réponse sous 48 h.`,
     image: "/images/la villa jardin.webp",
     gallery: [
       "/images/la villa/rooms/La Villa-92.webp",
@@ -101,11 +119,6 @@ function getHousesData(lang: string): Record<string, HouseData> {
     ],
     photoGallery: [
       // Exterior
-      {
-        src: "/images/la villa/exterior/la villa yoga.webp",
-        alt: "La Villa outdoor space",
-        category: "exterior",
-      },
       {
         src: "/images/la villa/exterior/villa_portrait.webp",
         alt: "La Villa outdoor space",
@@ -301,11 +314,6 @@ function getHousesData(lang: string): Record<string, HouseData> {
         category: "amenity",
       },
       {
-        src: "/images/la villa/amenities/la villa yoga.webp",
-        alt: "La Villa swimming pool",
-        category: "amenity",
-      },
-      {
         src: "/images/la villa/amenities/La Villa-40.webp",
         alt: "La Villa gym",
         category: "amenity",
@@ -337,7 +345,7 @@ function getHousesData(lang: string): Record<string, HouseData> {
       },
     ],
     capacity: isEn ? "10 residents" : "10 résidents",
-    price: PRICE_EN_NUM,
+    price: isEn ? PRICE_EN_NUM : PRICE_FR_NUM,
     specs: {
       size: "370 m²",
       plot: "2,000 m²",
@@ -353,7 +361,7 @@ function getHousesData(lang: string): Record<string, HouseData> {
       "Parking included",
       "Laundry & storage room",
       "fiber internet up to 8 Gb/s",
-      "Vegetable garden & outdoor yoga deck",
+      "Vegetable garden & outdoor terraces",
       "Double equipped kitchen",
     ] : [
       "Piscine chauffée 12×5 m (mi-avril à fin septembre)",
@@ -365,26 +373,24 @@ function getHousesData(lang: string): Record<string, HouseData> {
       "Parking inclus",
       "Buanderie & espace rangement",
       "Internet fibre jusqu'à 8 Gb/s",
-      "Potager & terrasse yoga extérieure",
+      "Potager & terrasses extérieures",
       "Double cuisine équipée",
     ],
     services: isEn ? [
+      "Housekeeping three times a week",
       "Weekly private yoga & fitness classes",
       "Monthly pizza party",
-      "Monthly community dinner",
       "Seasonal community events",
       "WhatsApp direct support",
-      "Housekeeping three times a week",
       "Pool, sauna & garden maintenance",
       "Streaming subscriptions (Netflix, Canal+, etc.)",
       "Bed linen set & towels provided",
     ] : [
+      "Ménage des communs 3 fois par semaine",
       "Cours de yoga & fitness privés hebdomadaires",
       "Pizza Party mensuelle",
-      "Panier repas mensuel livré",
       "Événements communautaires saisonniers",
       "Support WhatsApp direct",
-      "Ménage des communs 3 fois par semaine",
       "Entretien piscine, sauna & jardin",
       "Abonnements streaming (Netflix, Canal+, etc.)",
       "Parure de linge de lit et serviettes fournie",
@@ -392,18 +398,20 @@ function getHousesData(lang: string): Record<string, HouseData> {
     rooms: [
       {
         type: isEn ? "Room with private bathroom" : "Chambre avec salle de bain privative",
-        price: `${PRICE_EN_NUM} CHF`,
+        price: isEn ? `${PRICE_EN_NUM} CHF` : `${PRICE_FR_NUM} CHF`,
+        priceEur: isEn ? `€${EUR_STANDARD_EN_NUM}` : `${EUR_STANDARD_FR_NUM} €`,
         description: isEn
-          ? "Your private sanctuary with double Emma bed, ergonomic desk, spacious closet, and private bathroom. Most rooms offer a terrace or balcony with garden views. 17 to 23 m²."
-          : "Ton espace privé avec lit double Emma, bureau ergonomique, placard spacieux et salle de bain privative. La plupart des chambres offrent une terrasse ou un balcon avec vue sur le jardin. 17 à 23 m².",
+          ? "Your private sanctuary with double Emma bed, ergonomic desk, spacious closet, and private bathroom. Most rooms offer a terrace or balcony with garden views. 17 to 25 m²."
+          : "Ton espace privé avec lit double Emma, bureau ergonomique, placard spacieux et salle de bain privative. La plupart des chambres offrent une terrasse ou un balcon avec vue sur le jardin. 17 à 25 m².",
         image: "/images/la villa/rooms/La Villa-80.webp",
       },
       {
         type: isEn ? "Room with shared bathroom" : "Chambre avec salle de bain partagée",
-        price: `${PRICE_EN_NUM} CHF`,
+        price: isEn ? `${PRICE_SHARED_EN_NUM} CHF` : `${PRICE_SHARED_FR_NUM} CHF`,
+        priceEur: isEn ? `€${EUR_SHARED_EN_NUM}` : `${EUR_SHARED_FR_NUM} €`,
         description: isEn
-          ? "Comfortable private room with double Emma bed, workspace, and ample storage. Access to a beautifully designed shared shower room. 17 to 20 m²."
-          : "Chambre privée confortable avec lit double Emma, espace de travail et rangement. Accès à une salle d'eau partagée design. 17 à 20 m².",
+          ? "Comfortable private room with double Emma bed, workspace, and ample storage. Designer shower room shared with just one other room, cleaned by our housekeeping team. 17 to 20 m²."
+          : "Chambre privée confortable avec lit double Emma, espace de travail et rangement. Salle d'eau design partagée avec une seule autre chambre, entretenue par notre équipe de ménage. 17 à 20 m².",
         image: "/images/la villa/rooms/La Villa-92.webp",
       },
     ],
@@ -750,7 +758,7 @@ function getHousesData(lang: string): Record<string, HouseData> {
       },
     ],
     capacity: isEn ? "7 residents" : "7 résidents",
-    price: PRICE_EN_NUM,
+    price: isEn ? PRICE_EN_NUM : PRICE_FR_NUM,
     specs: {
       size: "300 m²",
       dpe: "C",
@@ -779,22 +787,20 @@ function getHousesData(lang: string): Record<string, HouseData> {
       "Babyfoot",
     ],
     services: isEn ? [
+      "Housekeeping three times a week",
       "Weekly private yoga & fitness classes",
       "Monthly pizza party",
-      "Monthly community dinner",
       "Seasonal community events",
       "WhatsApp direct support",
-      "Housekeeping three times a week",
       "Pool & sauna maintenance",
       "Streaming subscriptions (Netflix, Canal+, etc.)",
       "Bed linen set & towels provided",
     ] : [
+      "Ménage des communs 3 fois par semaine",
       "Cours de yoga & fitness privés hebdomadaires",
       "Pizza Party mensuelle",
-      "Panier repas mensuel livré",
       "Événements communautaires saisonniers",
       "Support WhatsApp direct",
-      "Ménage des communs 3 fois par semaine",
       "Entretien piscine & sauna",
       "Abonnements streaming (Netflix, Canal+, etc.)",
       "Parure de linge de lit et serviettes fournie",
@@ -856,8 +862,8 @@ function getHousesData(lang: string): Record<string, HouseData> {
       ? "Our newest and largest home, open since January 2026. 500 m² on 1,500 m², pool house, full fitness chalet with sauna & arcade."
       : "Notre maison la plus récente et la plus grande, ouverte depuis janvier 2026. 500 m² sur 1 500 m², pool house, chalet fitness complet avec sauna et jeu d'arcade.",
     longDescription: isEn
-      ? `Le Lodge is our newest coliving in Annemasse, opened January 2026 in the quiet residential Romagny district. Within 500 m² spread across 4 buildings at the heart of 1,500 m² of gardens, 12 housemates share a dedicated fitness chalet with Finnish sauna, a pool house with full outdoor kitchen, and a main residence designed to combine privacy and community living. Each furnished room has its own en-suite bathroom, ergonomic desk and fiber internet. Annemasse station is a 9-minute walk away — direct Léman Express to Geneva Cornavin in 15 minutes, no transfer. Ideal for cross-border workers commuting daily, and young professionals who value a real community over a faceless apartment block. All-inclusive rent (utilities, fiber, twice-weekly common cleaning, private fitness classes) from ${PRICE_CHF_EN}/month. No agency fees.`
-      : `Le Lodge est notre coliving le plus récent à Annemasse, ouvert en janvier 2026 dans le quartier résidentiel calme de Romagny. Dans 500 m² répartis sur 4 bâtiments au cœur de 1 500 m² de jardins, 12 colocataires partagent un chalet fitness dédié avec sauna finlandais, un pool house avec cuisine d'été complète et une résidence principale conçue pour combiner intimité et vie communautaire. Chaque chambre meublée dispose de sa salle de bain privative, d'un bureau ergonomique et de la fibre. La gare d'Annemasse est à 9 minutes à pied — Léman Express direct jusqu'à Genève Cornavin en 15 minutes, sans correspondance. Idéal pour les frontaliers qui font le trajet quotidien, et les jeunes pros qui valorisent une vraie communauté plutôt qu'un immeuble anonyme. Loyer tout inclus (charges, fibre, ménage commun 3 fois par semaine, cours de fitness privés) à partir de ${PRICE_CHF_FR}/mois. Sans frais d'agence.`,
+      ? `Le Lodge is our newest coliving in Annemasse, opened January 2026 in the quiet residential Romagny district. Within 500 m² spread across 4 buildings at the heart of 1,500 m² of gardens, 12 housemates share a dedicated fitness chalet with Finnish sauna, a pool house with full outdoor kitchen, and a main residence designed to combine privacy and community living. Each furnished room has its own en-suite bathroom, ergonomic desk and fiber internet. Annemasse station is a 9-minute walk away — direct Léman Express to Geneva Cornavin in 15 minutes, no transfer. Ideal for cross-border workers commuting daily, and young professionals who value a real community over a faceless apartment block. All-inclusive rent (utilities, fiber, common cleaning three times a week, private fitness classes) at ${PRICE_CHF_EN}/month. No agency fees.`
+      : `Le Lodge est notre coliving le plus récent à Annemasse, ouvert en janvier 2026 dans le quartier résidentiel calme de Romagny. Dans 500 m² répartis sur 4 bâtiments au cœur de 1 500 m² de jardins, 12 colocataires partagent un chalet fitness dédié avec sauna finlandais, un pool house avec cuisine d'été complète et une résidence principale conçue pour combiner intimité et vie communautaire. Chaque chambre meublée dispose de sa salle de bain privative, d'un bureau ergonomique et de la fibre. La gare d'Annemasse est à 9 minutes à pied — Léman Express direct jusqu'à Genève Cornavin en 15 minutes, sans correspondance. Idéal pour les frontaliers qui font le trajet quotidien, et les jeunes pros qui valorisent une vraie communauté plutôt qu'un immeuble anonyme. Loyer tout inclus (charges, fibre, ménage commun 3 fois par semaine, cours de fitness privés) : ${PRICE_CHF_FR}/mois. Sans frais d'agence.`,
     image: "/images/le lodge/exterior/la villa coliving le lodge-14.webp",
     gallery: [
       "/images/le lodge/rooms/la villa coliving le lodge-104.webp",
@@ -1206,7 +1212,7 @@ function getHousesData(lang: string): Record<string, HouseData> {
       },
     ],
     capacity: isEn ? "12 residents" : "12 résidents",
-    price: PRICE_EN_NUM,
+    price: isEn ? PRICE_EN_NUM : PRICE_FR_NUM,
     specs: {
       size: "500 m²",
       plot: "1,500 m²",
@@ -1236,22 +1242,20 @@ function getHousesData(lang: string): Record<string, HouseData> {
       "DPE B (performance énergétique)",
     ],
     services: isEn ? [
+      "Housekeeping three times a week",
       "Weekly private yoga & fitness classes",
       "Monthly pizza party",
-      "Monthly community dinner",
       "Seasonal community events",
       "WhatsApp direct support",
-      "Housekeeping three times a week",
       "Full property, garden & pool maintenance",
       "Streaming subscriptions (Netflix, Canal+, etc.)",
       "Bed linen set & towels provided",
     ] : [
+      "Ménage des communs 3 fois par semaine",
       "Cours de yoga & fitness privés hebdomadaires",
       "Pizza Party mensuelle",
-      "Panier repas mensuel livré",
       "Événements communautaires saisonniers",
       "Support WhatsApp direct",
-      "Ménage des communs 3 fois par semaine",
       "Entretien complet propriété, jardin & piscine",
       "Abonnements streaming (Netflix, Canal+, etc.)",
       "Parure de linge de lit et serviettes fournie",
@@ -1343,6 +1347,26 @@ export function HouseDetailPage() {
     } catch { /* noop */ }
   };
 
+  // (Lot 3) Chambres réelles de la maison + visionneuse photos (patterns LP).
+  const houseRooms = useHouseRooms(id as HouseKey);
+  const [roomViewer, setRoomViewer] = useState<{ key: string; roomNumber: number; index: number } | null>(null);
+  const openRoomViewer = (room: PublicRoom, photoIndex: number) => {
+    setRoomViewer({ key: `${id}:${room.room_number}`, roomNumber: room.room_number, index: photoIndex });
+    try {
+      (window as unknown as { gtag?: (...a: unknown[]) => void }).gtag?.("event", "photo_lightbox_open", {
+        room_id: `chambre-${room.room_number}`, property_interest: id, photo_index: photoIndex,
+      });
+    } catch { /* noop */ }
+  };
+  const trackRoomCta = (room: PublicRoom) => {
+    try {
+      (window as unknown as { gtag?: (...a: unknown[]) => void }).gtag?.("event", "cta_click", {
+        cta_position: "room_card", cta_target: "/candidature", house: id,
+        room_id: `chambre-${room.room_number}`, language,
+      });
+    } catch { /* noop */ }
+  };
+
   if (!house) {
     return (
       <main className="pt-32 pb-20 bg-white">
@@ -1377,20 +1401,20 @@ export function HouseDetailPage() {
           // Metas ≤ 155c, factuelles, chiffrées. Pas de "${house.description}" qui dépasse 200c.
           const descs: Record<string, { en: string; fr: string }> = {
             lavilla: {
-              en: `La Villa: 10 premium rooms in Ville-la-Grand. Heated pool, sauna, gym, fiber. All-inclusive from ${PRICE_CHF_EN}/month. 20 min from Geneva city center.`,
-              fr: `La Villa : 10 chambres premium à Ville-la-Grand. Piscine chauffée, sauna, gym, fibre. Tout inclus dès ${PRICE_CHF_FR}/mois. À 20 min du centre de Genève.`,
+              en: `La Villa: 10 premium rooms in Ville-la-Grand. Heated pool, sauna, gym, fiber. All-inclusive from ${PRICE_SHARED_CHF_EN}/month. 20 min from Geneva city center.`,
+              fr: `La Villa : 10 chambres premium à Ville-la-Grand. Piscine chauffée, sauna, gym, fibre. Tout inclus dès ${PRICE_SHARED_CHF_FR}/mois. À 20 min du centre de Genève.`,
             },
             leloft: {
-              en: `Le Loft: 7 premium rooms in Ambilly. Indoor pool, urban design, Tram 17 to Geneva. All-inclusive from ${PRICE_CHF_EN}/month.`,
-              fr: `Le Loft : 7 chambres premium à Ambilly. Piscine intérieure, design urbain, Tram 17 vers Genève. Tout inclus dès ${PRICE_CHF_FR}/mois.`,
+              en: `Le Loft: 7 premium rooms in Ambilly. Indoor pool, urban design, Tram 17 to Geneva. All-inclusive: ${PRICE_CHF_EN}/month.`,
+              fr: `Le Loft : 7 chambres premium à Ambilly. Piscine intérieure, design urbain, Tram 17 vers Genève. Tout inclus : ${PRICE_CHF_FR}/mois.`,
             },
             lelodge: {
-              en: `Le Lodge: 12 rooms in Annemasse, opened 2026. Pool, gym, sauna, 9-min walk to Léman Express. All-inclusive from ${PRICE_CHF_EN}/month.`,
-              fr: `Le Lodge : 12 chambres premium à Annemasse, ouvertes en 2026. Piscine, gym, sauna, gare Léman Express à 9 min. Tout inclus dès ${PRICE_CHF_FR}/mois.`,
+              en: `Le Lodge: 12 rooms in Annemasse, opened 2026. Pool, gym, sauna, 9-min walk to Léman Express. All-inclusive: ${PRICE_CHF_EN}/month.`,
+              fr: `Le Lodge : 12 chambres premium à Annemasse, ouvertes en 2026. Piscine, gym, sauna, gare Léman Express à 9 min. Tout inclus : ${PRICE_CHF_FR}/mois.`,
             },
           };
           return descs[id]?.[language === "en" ? "en" : "fr"]
-            ?? `${house.description} Tout inclus dès ${house.price} CHF/mois.`;
+            ?? `${house.description} Tout inclus : ${house.price} CHF/mois.`;
         })()}
         url={`https://www.lavillacoliving.com/${id}`}
         image={`https://www.lavillacoliving.com${house.image}`}
@@ -1424,7 +1448,7 @@ export function HouseDetailPage() {
           "latitude": HOUSES.find(h => h.slug === id)?.geo.lat,
           "longitude": HOUSES.find(h => h.slug === id)?.geo.lng
         },
-        "priceRange": `${STATS.priceChf} CHF/mois`,
+        "priceRange": id === "lavilla" ? `${PRICE_SHARED_FR_NUM}–${PRICE_FR_NUM} CHF/mois` : `${PRICE_FR_NUM} CHF/mois`,
         "currenciesAccepted": "EUR",
         "amenityFeature": [
           { "@type": "LocationFeatureSpecification", "name": "Swimming Pool", "value": true },
@@ -1522,7 +1546,7 @@ export function HouseDetailPage() {
                 only apply CTA was at the very bottom of this 2000-line template. */}
             <div className="mt-6 flex flex-wrap items-center gap-4">
               <LocalizedLink
-                to={language === "en" ? "/en/candidature" : "/candidature"}
+                to={`/candidature?property_interest=${id}`}
                 onClick={() => trackCta("house_hero")}
                 className="inline-flex items-center gap-2 px-7 py-3.5 bg-[#D4A574] text-[#1C1917] font-bold rounded-full hover:bg-[#E0BB8A] transition-colors shadow-sharp"
               >
@@ -1530,9 +1554,14 @@ export function HouseDetailPage() {
                 <ArrowRight className="w-5 h-5" />
               </LocalizedLink>
               <span className="text-sm font-semibold text-[#1C1917] bg-white/85 backdrop-blur px-4 py-2 rounded-full">
-                {language === "en"
-                  ? `All-inclusive from ${PRICE_CHF_EN}/month — no application fee`
-                  : `Tout inclus dès ${PRICE_CHF_FR}/mois — 0 frais de dossier`}
+                {/* La Villa : 4 chambres sur 10 à salle d'eau partagée → plancher 1 390 */}
+                {id === "lavilla"
+                  ? (language === "en"
+                      ? `All-inclusive: from ${PRICE_SHARED_CHF_EN}/month — no application fee`
+                      : `Tout inclus : dès ${PRICE_SHARED_CHF_FR}/mois — 0 frais de dossier`)
+                  : (language === "en"
+                      ? `All-inclusive: ${PRICE_CHF_EN}/month — no application fee`
+                      : `Tout inclus : ${PRICE_CHF_FR}/mois — 0 frais de dossier`)}
               </span>
             </div>
           </div>
@@ -1637,11 +1666,22 @@ export function HouseDetailPage() {
               <div className="sticky top-24 space-y-6">
                 {/* Pricing Card */}
                 <div className="card-ultra p-8">
+                  {/* La Villa : plancher 1 390 (4 ch. sur 10 à salle d'eau partagée). Loft/Lodge : prix unique. */}
                   <p className="text-sm text-[#78716C] mb-2 font-bold">
-                    {t.houseDetail.from}
+                    {id === "lavilla"
+                      ? (language === "en" ? "From" : "À partir de")
+                      : (language === "en" ? "Monthly rent" : "Loyer mensuel")}
                   </p>
                   <p className="text-4xl font-black text-[#D4A574] mb-2">
-                    {house.price} CHF
+                    {id === "lavilla"
+                      ? (language === "en" ? PRICE_SHARED_EN_NUM : PRICE_SHARED_FR_NUM)
+                      : house.price}{" "}
+                    CHF{" "}
+                    <span className="text-xl font-light text-[#78716C]">
+                      {id === "lavilla"
+                        ? (language === "en" ? `(€${EUR_SHARED_EN_NUM})` : `(${EUR_SHARED_FR_NUM} €)`)
+                        : (language === "en" ? `(€${EUR_STANDARD_EN_NUM})` : `(${EUR_STANDARD_FR_NUM} €)`)}
+                    </span>
                   </p>
                   <p className="text-[#78716C] mb-4 font-medium">
                     {t.houseDetail.perMonth}
@@ -1666,7 +1706,8 @@ export function HouseDetailPage() {
 
                   <div className="flex flex-col gap-3">
                     <LocalizedLink
-                      to="/candidature"
+                      to={`/candidature?property_interest=${id}`}
+                      onClick={() => trackCta("house_sidebar")}
                       className="w-full inline-flex items-center justify-center gap-2 px-6 py-3 bg-[#1C1917] text-white font-semibold rounded-xl hover:bg-[#D4A574] transition-colors"
                     >
                       {canApplyNow
@@ -1688,7 +1729,7 @@ export function HouseDetailPage() {
                     >
                       {language === "en"
                         ? "Or ask us on WhatsApp →"
-                        : "Ou posez-nous une question sur WhatsApp →"}
+                        : "Ou pose-nous une question sur WhatsApp →"}
                     </a>
                   </div>
                 </div>
@@ -1876,8 +1917,8 @@ export function HouseDetailPage() {
               {/* Phrase citable produit (extraction IA / AI Overviews) — 1 par page, motif commun aux money pages */}
               <p className="text-sm text-[#78716C] leading-relaxed mb-8">
                 {language === "en"
-                  ? `${house.name} is one of the 3 La Villa Coliving houses: all-inclusive furnished rooms from ${PRICE_CHF_EN}/month — pool, sauna, gym and cleaning included, 20 minutes from Geneva, no application fee.`
-                  : `${house.name} est l'une des 3 maisons La Villa Coliving : chambres meublées tout inclus dès ${PRICE_CHF_FR}/mois — piscine, sauna, salle de sport et ménage compris, à 20 minutes de Genève, sans frais de dossier.`}
+                  ? `${house.name} is one of the 3 La Villa Coliving houses: all-inclusive furnished rooms from ${PRICE_SHARED_CHF_EN}/month — pool, sauna, gym and cleaning included, 20 minutes from Geneva, no application fee.`
+                  : `${house.name} est l'une des 3 maisons La Villa Coliving : chambres meublées tout inclus dès ${PRICE_SHARED_CHF_FR}/mois — piscine, sauna, salle de sport et ménage compris, à 20 minutes de Genève, sans frais de dossier.`}
               </p>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
@@ -1934,57 +1975,193 @@ export function HouseDetailPage() {
         );
       })()}
 
-      {/* Rooms */}
+      {/* Rooms — (Lot 3) cartes RÉELLES depuis v_public_rooms (source unique de
+          dispo et de prix, design arbitré rapport §3.B). Les descriptions de
+          types historiques passent en intro ; chaque chambre porte photo, m²,
+          étage, SDB, prix CHF, badge dispo daté et un CTA à deux params.
+          Sans données (vue vide, vieux HTML prérendu) : repli sur les cartes de
+          types — jamais de section vide. Interdit : cloner le modèle
+          fichier-statique de la LP (roomsSeptembre.ts). */}
       <section className="section-padding relative bg-[#FAF9F6]">
         <div className="container-custom">
           <h2
-            className="text-3xl md:text-4xl mb-8 text-[#1C1917]"
+            className="text-3xl md:text-4xl mb-6 text-[#1C1917]"
             style={{ fontFamily: "DM Serif Display, serif" }}
           >
             {t.houseDetail.rooms}
           </h2>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-            {house.rooms.map((room, index) => (
-              <div key={index} className="card-ultra overflow-hidden group">
-                {/* Room Image */}
-                <div className="relative h-48 overflow-hidden">
-                  <img
-                    src={room.image}
-                    alt={`${room.type} — ${language === "en" ? "furnished room in" : "chambre meublée à"} ${house.name} coliving ${house.location}`}
-                    className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
-                    loading="lazy"
-                    width={800}
-                    height={600}
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent" />
-                </div>
-
-                {/* Room Content */}
-                <div className="p-8">
-                  <div className="flex items-center gap-3 mb-4">
-                    <BedDouble className="text-[#D4A574]" size={28} />
-                    <h3 className="text-xl font-black text-[#1C1917]">
-                      {room.type}
-                    </h3>
-                  </div>
-                  <p className="text-[#78716C] mb-6 font-medium">
-                    {room.description}
-                  </p>
-                  <div className="flex items-center justify-between">
-                    <p className="text-2xl font-black text-[#D4A574]">
-                      {room.price}
-                    </p>
-                    <span className="text-[#78716C] font-medium">
-                      {t.houseDetail.perMonth}
-                    </span>
-                  </div>
-                </div>
-              </div>
+          {/* Intro : les types de chambres (ex-cartes), en texte. */}
+          <div className="mb-10 space-y-1.5 max-w-3xl">
+            {house.rooms.map((roomType, index) => (
+              <p key={index} className="text-[#78716C]">
+                <span className="font-semibold text-[#1C1917]">{roomType.type}</span>
+                {" — "}
+                {roomType.description}
+              </p>
             ))}
           </div>
+
+          {houseRooms.known ? (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {houseRooms.rooms.map((room) => {
+                const photoKey = `${id}:${room.room_number}`;
+                const gallery = ROOM_PHOTOS[photoKey];
+                const cover = gallery?.[0];
+                // Repli déterministe sur les photos de TYPE (pureté d'hydratation :
+                // room_number est stable, jamais d'aléatoire au rendu).
+                const fallbackImg = house.rooms[(room.room_number - 1) % house.rooms.length].image;
+                const lang2 = language === "en" ? "en" as const : "fr" as const;
+                const badge = roomBadge(room, lang2);
+                const surface = room.surface_m2 !== null ? Number(room.surface_m2) : null;
+                const bath =
+                  room.bathroom_type === "private"
+                    ? (language === "en" ? "private bathroom" : "salle de bain privative")
+                    : room.bathroom_type === "shared"
+                      ? (language === "en" ? "shared shower room" : "salle d'eau partagée")
+                      : null;
+                const floor = room.floor
+                  ? (language === "en" ? (FLOOR_EN[room.floor] ?? room.floor) : room.floor)
+                  : null;
+                const specs = [
+                  surface !== null && !Number.isNaN(surface) ? `${surface} m²` : null,
+                  floor,
+                  bath,
+                ].filter(Boolean).join(" · ");
+                const canApplyRoom = room.availability === "available" || !!room.available_from;
+                const roomImg = (
+                  <>
+                    <img
+                      src={cover?.src ?? fallbackImg}
+                      alt={cover
+                        ? cover.alt[lang2]
+                        : `${language === "en" ? "Room" : "Chambre"} ${room.room_number} — ${house.name}`}
+                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
+                      loading="lazy"
+                      width={cover?.w ?? 800}
+                      height={cover?.h ?? 600}
+                    />
+                    <span className={`absolute top-3 left-3 text-xs font-semibold px-3 py-1 rounded-full ${BADGE_CHIP_CLASS[badge.tone]}`}>
+                      {badge.label}
+                    </span>
+                    {gallery && gallery.length > 1 && (
+                      <span className="absolute bottom-3 right-3 text-xs font-medium px-2.5 py-1 rounded-full bg-black/55 text-white">
+                        {gallery.length} photos
+                      </span>
+                    )}
+                  </>
+                );
+                return (
+                  <div key={room.room_number} className="card-ultra overflow-hidden group flex flex-col">
+                    {gallery ? (
+                      <button
+                        type="button"
+                        onClick={() => openRoomViewer(room, 0)}
+                        className="relative h-48 w-full overflow-hidden text-left cursor-zoom-in"
+                        aria-label={language === "en"
+                          ? `See photos of room ${room.room_number}`
+                          : `Voir les photos de la chambre ${room.room_number}`}
+                      >
+                        {roomImg}
+                      </button>
+                    ) : (
+                      <div className="relative h-48 w-full overflow-hidden">{roomImg}</div>
+                    )}
+                    <div className="p-6 flex flex-col flex-1">
+                      <h3 className="text-lg font-black text-[#1C1917] mb-1">
+                        {language === "en" ? `Room ${room.room_number}` : `Chambre ${room.room_number}`}
+                      </h3>
+                      {specs && <p className="text-sm text-[#78716C] mb-1">{specs}</p>}
+                      {language !== "en" && room.location_detail && (
+                        <p className="text-xs text-[#78716C] mb-3">{room.location_detail.trim()}</p>
+                      )}
+                      <div className="mt-auto pt-3">
+                        {room.rent_chf !== null && (
+                          <p className="text-xl font-black text-[#D4A574] mb-4">
+                            {language === "en"
+                              ? `CHF ${thousands(room.rent_chf, ",")}`
+                              : `${thousands(room.rent_chf, " ")} CHF`}
+                            <span className="text-sm font-light text-[#78716C]"> {t.houseDetail.perMonth}</span>
+                          </p>
+                        )}
+                        <LocalizedLink
+                          to={`/candidature?property_interest=${id}&room_interest=chambre-${room.room_number}`}
+                          onClick={() => trackRoomCta(room)}
+                          className={canApplyRoom
+                            ? "w-full inline-flex items-center justify-center gap-2 px-5 py-2.5 bg-[#D4A574] text-[#1C1917] text-sm font-semibold rounded-lg hover:bg-[#E0BB8A] transition-colors"
+                            : "w-full inline-flex items-center justify-center gap-2 px-5 py-2.5 border border-[#1C1917] text-[#1C1917] text-sm font-semibold rounded-lg hover:bg-[#1C1917] hover:text-white transition-colors"}
+                        >
+                          {canApplyRoom
+                            ? (language === "en" ? "Apply" : "Candidater")
+                            : (language === "en" ? "Join waitlist" : "Liste d'attente")}
+                          <ArrowRight className="w-4 h-4" />
+                        </LocalizedLink>
+                      </div>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          ) : (
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+              {house.rooms.map((room, index) => (
+                <div key={index} className="card-ultra overflow-hidden group">
+                  <div className="relative h-48 overflow-hidden">
+                    <img
+                      src={room.image}
+                      alt={`${room.type} — ${language === "en" ? "furnished room in" : "chambre meublée à"} ${house.name} coliving ${house.location}`}
+                      className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
+                      loading="lazy"
+                      width={800}
+                      height={600}
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent" />
+                  </div>
+                  <div className="p-8">
+                    <div className="flex items-center gap-3 mb-4">
+                      <BedDouble className="text-[#D4A574]" size={28} />
+                      <h3 className="text-xl font-black text-[#1C1917]">
+                        {room.type}
+                      </h3>
+                    </div>
+                    <p className="text-[#78716C] mb-6 font-medium">
+                      {room.description}
+                    </p>
+                    <div className="flex items-center justify-between">
+                      <p className="text-2xl font-black text-[#D4A574]">
+                        {room.price}
+                        {"priceEur" in room && (
+                          <span className="text-base font-light text-[#78716C]"> ({(room as { priceEur: string }).priceEur})</span>
+                        )}
+                      </p>
+                      <span className="text-[#78716C] font-medium">
+                        {t.houseDetail.perMonth}
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
         </div>
       </section>
+
+      {/* (Lot 3) État chambres embarqué au prérendu — instance unique par page. */}
+      <RoomsEmbed house={id as HouseKey} />
+
+      {/* (Lot 3) Visionneuse photos chambre — lazy, montée seulement à l'ouverture. */}
+      {roomViewer && ROOM_PHOTOS[roomViewer.key] && (
+        <Suspense fallback={null}>
+          <PhotoLightbox
+            photos={ROOM_PHOTOS[roomViewer.key]}
+            index={roomViewer.index}
+            onIndexChange={(i) => setRoomViewer((v) => (v ? { ...v, index: i } : v))}
+            onClose={() => setRoomViewer(null)}
+            en={language === "en"}
+            title={language === "en" ? `Room ${roomViewer.roomNumber}` : `Chambre ${roomViewer.roomNumber}`}
+          />
+        </Suspense>
+      )}
 
       {/* Photo Gallery */}
       <HouseGallery images={house.photoGallery} houseName={house.name} />
@@ -1995,7 +2172,7 @@ export function HouseDetailPage() {
         const FAQ_DATA: Record<string, { fr: QA[]; en: QA[] }> = {
           lavilla: {
             fr: [
-              { q: "Quel est le loyer mensuel à La Villa et que comprend-il ?", a: `Les chambres de La Villa sont à ${PRICE_CHF_FR} par mois tout inclus : charges (eau, électricité, chauffage), internet fibre jusqu'à 8 Gb/s, ménage 3 fois par semaine des espaces communs, abonnements streaming, entretien piscine et jardin, cours de yoga / fitness privés, parure de linge fournie. Aucun supplément.` },
+              { q: "Quel est le loyer mensuel à La Villa et que comprend-il ?", a: `Les chambres de La Villa sont à ${PRICE_CHF_FR} par mois avec salle de bain privative, et à ${PRICE_SHARED_CHF_FR} pour les 4 chambres qui partagent une salle d'eau entre 2 chambres (son entretien par notre équipe de ménage est inclus). Tout inclus dans les deux cas : charges (eau, électricité, chauffage), internet fibre jusqu'à 8 Gb/s, ménage 3 fois par semaine des espaces communs, abonnements streaming, entretien piscine et jardin, cours de yoga / fitness privés, parure de linge fournie. Aucun supplément.` },
               { q: "Comment se rendre à Genève depuis La Villa à Ville-la-Grand ?", a: "Moins de 20 minutes porte-à-porte : la gare d'Annemasse est à moins de 10 min à pied, puis le Léman Express te dépose au centre de Genève en 9 min. En voiture : 15 min. En alternative, le bus TPN ligne 61 passe à 200 m. La frontière suisse de Moillesulaz est à 2 km — 5 min à vélo." },
               { q: "Quelle est la durée minimale du bail à La Villa ?", a: "Bail flexible 1 à 12 mois. Le bail par défaut est de 12 mois pour la stabilité de la communauté, mais nous acceptons des séjours plus courts (1, 3, 6 mois) selon disponibilité — utile pour les missions courtes ou les périodes d'essai en CDI." },
               { q: "Y a-t-il une caution et des frais d'agence ?", a: "Caution équivalente à 2 mois de loyer hors charges, restituée sous 30 jours après l'état des lieux de sortie. Aucun frais d'agence. Aucun frais de dossier." },
@@ -2003,19 +2180,19 @@ export function HouseDetailPage() {
               { q: "Qui peut postuler pour vivre à La Villa ?", a: "Profil cible : frontaliers en CDI, jeunes professionnels, expatriés et résidents fiscaux français travaillant à Genève. Sélection sur dossier (justificatif de revenus, motivation, compatibilité avec la communauté). Pas de critère d'âge strict, mais la majorité des résidents ont entre 25 et 40 ans." },
               { q: "Où se trouve La Villa et à quelle distance de Genève ?", a: "La Villa se situe à Ville-la-Grand, côté France, à moins de 20 minutes porte-à-porte du centre de Genève (Léman Express) et 15 minutes en voiture. C'est l'une des trois maisons de coliving de La Villa Coliving, avec une piscine extérieure chauffée, 2 000 m² de jardin en bordure d'une réserve naturelle." },
               { q: "Combien de résidents vivent à La Villa ?", a: "La Villa accueille 10 résidents dans une maison de coliving à Ville-la-Grand, près de Genève. C'est une maison à taille humaine, pensée pour que les liens se créent naturellement, avec une chambre meublée privée pour chacun et de larges espaces communs." },
-              { q: "Quels équipements y a-t-il à La Villa ?", a: `La Villa, à Ville-la-Grand, dispose d'une piscine extérieure chauffée, d'un sauna infrarouge, d'une salle de sport, d'une salle de jeu, d'un espace home cinéma, de 2 000 m² de jardin et d'espaces communs design. Tout est inclus dans le loyer tout compris dès ${PRICE_CHF_FR}/mois, comme dans les trois maisons de La Villa Coliving.` },
+              { q: "Quels équipements y a-t-il à La Villa ?", a: `La Villa, à Ville-la-Grand, dispose d'une piscine extérieure chauffée, d'un sauna infrarouge, d'une salle de sport, d'une salle de jeu, d'un espace home cinéma, de 2 000 m² de jardin et d'espaces communs design. Tout est inclus dans le loyer tout compris, dès ${PRICE_SHARED_CHF_FR}/mois à La Villa.` },
               { q: "La Villa est-elle bien reliée à Genève ?", a: "Oui. Depuis La Villa, la gare d'Annemasse est à moins de 10 min à pied et le Léman Express rejoint le centre de Genève en 9 min — moins de 20 minutes porte-à-porte. En voiture : 15 min. La maison combine ce bon accès avec un cadre verdoyant — 2 000 m² de jardin et une réserve naturelle — à 2 km de la frontière." },
             ],
             en: [
-              { q: "What is the monthly rent at La Villa and what does it include?", a: `Rooms at La Villa are ${PRICE_CHF_EN} per month all-inclusive: utilities (water, electricity, heating), fiber internet up to 8 Gb/s, twice-weekly common-area cleaning, streaming subscriptions, pool & garden upkeep, private yoga/fitness classes, bedding included. No add-on fees.` },
+              { q: "What is the monthly rent at La Villa and what does it include?", a: `Rooms at La Villa are ${PRICE_CHF_EN} per month with a private en-suite bathroom, and ${PRICE_SHARED_CHF_EN} for the 4 rooms that share a shower room between 2 rooms (cleaned by our housekeeping team, included in the rent). Both are all-inclusive: utilities (water, electricity, heating), fiber internet up to 8 Gb/s, common-area cleaning three times a week, streaming subscriptions, pool & garden upkeep, private yoga/fitness classes, bedding included. No add-on fees.` },
               { q: "How do I get to Geneva from La Villa in Ville-la-Grand?", a: "Under 20 minutes door-to-door: Annemasse station is less than a 10-minute walk away, then the Léman Express takes you to central Geneva in 9 minutes. By car: 15 min. Alternatively, TPN bus line 61 stops 200 m away. The Moillesulaz Swiss border is 2 km away — 5 min by bike." },
               { q: "What is the minimum lease term at La Villa?", a: "Flexible leases from 1 to 12 months. The default is 12 months for community stability, but shorter stays (1, 3, 6 months) are accepted depending on availability — useful for short assignments or CDI trial periods." },
               { q: "Is there a deposit and any agency fees?", a: "Deposit equivalent to 2 months' rent excluding charges, refunded within 30 days after the move-out inspection. No agency fees. No application fees." },
-              { q: "How many rooms are there at La Villa and are they furnished?", a: "10 private rooms, all furnished (bed, ergonomic desk, wardrobe): 6 with a private en-suite bathroom, 4 with access to a shared designer bathroom. Each room has a view of the garden or the nature reserve. Kitchen, living room, gym, sauna and 12×5 m heated pool are shared." },
+              { q: "How many rooms are there at La Villa and are they furnished?", a: "10 private rooms, all furnished (bed, ergonomic desk, wardrobe): 6 with a private en-suite bathroom, 4 with access to 2 shared designer shower rooms (cleaning included in the rent). Each room has a view of the garden or the nature reserve. Kitchen, living room, gym, sauna and 12×5 m heated pool are shared." },
               { q: "Who can apply to live at La Villa?", a: "Target profile: cross-border workers on CDI, young professionals, expatriates and French tax residents working in Geneva. Selection by application (income proof, motivation, fit with the community). No strict age limit, but most residents are 25-40 years old." },
               { q: "Where is La Villa and how far from Geneva?", a: "La Villa is in Ville-la-Grand, on the French side, under 20 minutes door-to-door from Geneva city center (Léman Express) and 15 minutes by car. It's one of the three La Villa Coliving houses, with a heated outdoor pool and 2,000 m² of garden bordering a nature reserve." },
               { q: "How many residents live at La Villa?", a: "La Villa hosts 10 residents in a coliving house in Ville-la-Grand, near Geneva. It's a human-scale house, designed so connections form naturally, with a private furnished room for each resident and large common areas." },
-              { q: "What amenities are there at La Villa?", a: `La Villa, in Ville-la-Grand, has a heated outdoor pool, an infrared sauna, a gym, a games room, a home cinema space, 2,000 m² of garden and designer common areas. Everything is included in the all-inclusive rent from ${PRICE_CHF_EN}/month, as in all three La Villa Coliving houses.` },
+              { q: "What amenities are there at La Villa?", a: `La Villa, in Ville-la-Grand, has a heated outdoor pool, an infrared sauna, a gym, a games room, a home cinema space, 2,000 m² of garden and designer common areas. Everything is included in the all-inclusive rent, from ${PRICE_SHARED_CHF_EN}/month at La Villa.` },
               { q: "Is La Villa well connected to Geneva?", a: "Yes. From La Villa, Annemasse station is less than a 10-minute walk and the Léman Express reaches central Geneva in 9 minutes — under 20 minutes door-to-door. By car: 15 min. The house combines this good access with green surroundings — 2,000 m² of garden and a nature reserve — 2 km from the border." },
             ],
           },
@@ -2029,11 +2206,11 @@ export function HouseDetailPage() {
               { q: "Qui peut postuler pour vivre au Loft ?", a: "Profil cible : frontaliers en CDI, jeunes professionnels, expatriés. Sélection sur dossier (justificatif de revenus, motivation, compatibilité avec la communauté). La proximité immédiate de la frontière fait du Loft un favori des frontaliers qui vont au bureau à pied ou en vélo." },
               { q: "Où se trouve Le Loft et à quelle distance de Genève ?", a: "Le Loft se situe à Ambilly, côté France, à 20 minutes du centre de Genève en tram. C'est l'une des trois maisons de coliving de La Villa Coliving, avec une piscine intérieure chauffée toute l'année et un sauna finlandais." },
               { q: "Combien de résidents vivent au Loft ?", a: "Le Loft accueille 7 résidents, ce qui en fait la plus intime des maisons de La Villa Coliving. Située à Ambilly, près de Genève, elle offre une chambre meublée privée à chacun et une ambiance très conviviale à taille réduite." },
-              { q: "Quels équipements y a-t-il au Loft ?", a: `Le Loft, à Ambilly, dispose d'une piscine intérieure chauffée utilisable toute l'année, d'un sauna finlandais, d'une salle de sport, d'un espace home cinéma et de chambres spacieuses de 17 à 23 m². Tout est inclus dans le loyer tout compris dès ${PRICE_CHF_FR}/mois.` },
+              { q: "Quels équipements y a-t-il au Loft ?", a: `Le Loft, à Ambilly, dispose d'une piscine intérieure chauffée utilisable toute l'année, d'un sauna finlandais, d'une salle de sport, d'un espace home cinéma et de chambres spacieuses de 17 à 25 m². Tout est inclus dans le loyer tout compris de ${PRICE_CHF_FR}/mois.` },
               { q: "Peut-on nager toute l'année au Loft ?", a: "Oui. Le Loft, à Ambilly, est la maison de La Villa Coliving dotée d'une piscine intérieure chauffée, accessible toute l'année quelle que soit la saison, ainsi que d'un sauna finlandais. C'est inclus dans ton loyer, comme l'ensemble des services." },
             ],
             en: [
-              { q: "What is the monthly rent at Le Loft and what does it include?", a: `Rooms at Le Loft are ${PRICE_CHF_EN} per month all-inclusive: utilities, fiber internet up to 8 Gb/s, twice-weekly common-area cleaning, streaming subscriptions, indoor pool, garden, bedding included. No hidden fees.` },
+              { q: "What is the monthly rent at Le Loft and what does it include?", a: `Rooms at Le Loft are ${PRICE_CHF_EN} per month all-inclusive: utilities, fiber internet up to 8 Gb/s, common-area cleaning three times a week, streaming subscriptions, indoor pool, garden, bedding included. No hidden fees.` },
               { q: "How do I get to Geneva from Le Loft in Ambilly?", a: "Le Loft is 5 min walk from the Moillesulaz border and 5 min walk from TPG Tram 17 (Lancy-Pont-Rouge ↔ Annemasse). Central Geneva: 20 min via Tram 17. Secure bike paths to central Geneva: 25 min by bike." },
               { q: "What is the minimum lease term at Le Loft?", a: "Flexible leases from 1 to 12 months. The default is 12 months, but shorter stays are accepted depending on availability — useful for cross-border workers on assignment or CDI trial periods in Geneva." },
               { q: "Is there a deposit and any agency fees?", a: "Deposit equivalent to 2 months' rent excluding charges, refunded within 30 days after the move-out inspection. No agency fees, no application fees." },
@@ -2041,13 +2218,13 @@ export function HouseDetailPage() {
               { q: "Who can apply to live at Le Loft?", a: "Target profile: cross-border workers on CDI, young professionals, expats. Selection by application (income proof, motivation, fit with community). The immediate proximity to the border makes Le Loft a favorite among cross-border workers who walk or bike to the office." },
               { q: "Where is Le Loft and how far from Geneva?", a: "Le Loft is in Ambilly, on the French side, 20 minutes from Geneva city center by tram. It's one of the three La Villa Coliving houses, with an indoor pool heated year-round and a Finnish sauna." },
               { q: "How many residents live at Le Loft?", a: "Le Loft hosts 7 residents, making it the most intimate of the La Villa Coliving houses. Located in Ambilly, near Geneva, it offers a private furnished room for each resident and a very convivial small-scale atmosphere." },
-              { q: "What amenities are there at Le Loft?", a: `Le Loft, in Ambilly, has an indoor pool heated and usable year-round, a Finnish sauna, a gym, a home cinema space and spacious rooms of 17 to 23 m². Everything is included in the all-inclusive rent from ${PRICE_CHF_EN}/month.` },
+              { q: "What amenities are there at Le Loft?", a: `Le Loft, in Ambilly, has an indoor pool heated and usable year-round, a Finnish sauna, a gym, a home cinema space and spacious rooms of 17 to 25 m². Everything is included in the all-inclusive rent of ${PRICE_CHF_EN}/month.` },
               { q: "Can you swim year-round at Le Loft?", a: "Yes. Le Loft, in Ambilly, is the La Villa Coliving house with an indoor heated pool, accessible year-round whatever the season, plus a Finnish sauna. It's included in your rent, like all services." },
             ],
           },
           lelodge: {
             fr: [
-              { q: "Quel est le loyer mensuel au Lodge et que comprend-il ?", a: `Les chambres du Lodge sont à partir de ${PRICE_CHF_FR} par mois tout inclus : charges (eau, électricité, chauffage), internet fibre jusqu'à 8 Gb/s, ménage 3 fois par semaine des communs, abonnements streaming, entretien piscine et jardin, cours de yoga / fitness privés, parure de linge fournie, dîner communautaire mensuel. Pas de supplément.` },
+              { q: "Quel est le loyer mensuel au Lodge et que comprend-il ?", a: `Les chambres du Lodge sont à ${PRICE_CHF_FR} par mois tout inclus : charges (eau, électricité, chauffage), internet fibre jusqu'à 8 Gb/s, ménage 3 fois par semaine des communs, abonnements streaming, entretien piscine et jardin, cours de yoga / fitness privés, parure de linge fournie, dîner communautaire mensuel. Pas de supplément.` },
               { q: "Comment se rendre à Genève depuis Le Lodge à Annemasse ?", a: "Le Lodge est à 9 min à pied de la gare d'Annemasse, terminus du Léman Express. Genève Cornavin est à 15 min en Léman Express direct, sans correspondance. La frontière suisse est à 5 min en voiture. Aéroport de Genève : 30 min." },
               { q: "Quelle est la durée minimale du bail au Lodge ?", a: "Bail flexible 1 à 12 mois. Le bail par défaut est de 12 mois pour la stabilité de la communauté, mais nous acceptons des séjours plus courts (1, 3, 6 mois) selon disponibilité." },
               { q: "Y a-t-il une caution et des frais d'agence ?", a: "Caution équivalente à 2 mois de loyer hors charges, restituée sous 30 jours après l'état des lieux. Aucun frais d'agence ni de dossier." },
@@ -2055,11 +2232,11 @@ export function HouseDetailPage() {
               { q: "Qu'est-ce qui rend Le Lodge unique parmi vos 3 maisons ?", a: "Le Lodge est notre maison la plus récente (ouverte janvier 2026) et la plus grande (500 m² sur 1 500 m²). Elle dispose de 4 bâtiments : la résidence principale, un chalet fitness dédié avec sauna finlandais, un pool house avec cuisine d'été complète et une zone de rangement de 130 m². DPE B (performance énergétique). C'est aussi la plus proche de la gare d'Annemasse pour le Léman Express." },
               { q: "Où se trouve Le Lodge et à quelle distance de Genève ?", a: "Le Lodge se situe à Annemasse, côté France, à 20 minutes du centre de Genève en train CEVA. C'est la plus grande des trois maisons de coliving de La Villa Coliving, avec une piscine extérieure et un pool house, un chalet fitness complet et un sauna." },
               { q: "Combien de résidents vivent au Lodge ?", a: "Le Lodge accueille 12 résidents, ce qui en fait la plus grande maison de La Villa Coliving. Située à Annemasse, près de Genève, elle conserve une taille humaine tout en offrant les espaces les plus généreux : espace home cinéma, piscine, pool house / salle de jeu, chalet fitness et grands espaces communs." },
-              { q: "Quels équipements y a-t-il au Lodge ?", a: `Le Lodge, à Annemasse, dispose d'une piscine avec pool house/salle de jeu, d'un chalet fitness complet avec grand sauna finlandais, d'une salle de sport, d'un jeu d'arcade et de larges espaces communs. Tout est inclus dans le loyer tout compris dès ${PRICE_CHF_FR}/mois, comme dans les trois maisons de La Villa Coliving.` },
-              { q: "Y a-t-il du coliving à Annemasse ?", a: `Oui. Le Lodge est la maison de coliving de La Villa Coliving à Annemasse : 12 résidents, chambres meublées de 17 à 23 m², pool house, chalet fitness et sauna, le tout à 20 minutes du centre de Genève en CEVA. Tout inclus dès ${PRICE_CHF_FR}/mois.` },
+              { q: "Quels équipements y a-t-il au Lodge ?", a: `Le Lodge, à Annemasse, dispose d'une piscine avec pool house/salle de jeu, d'un chalet fitness complet avec grand sauna finlandais, d'une salle de sport, d'un jeu d'arcade et de larges espaces communs. Tout est inclus dans le loyer tout compris de ${PRICE_CHF_FR}/mois, comme dans les trois maisons de La Villa Coliving.` },
+              { q: "Y a-t-il du coliving à Annemasse ?", a: `Oui. Le Lodge est la maison de coliving de La Villa Coliving à Annemasse : 12 résidents, chambres meublées de 17 à 25 m², pool house, chalet fitness et sauna, le tout à 20 minutes du centre de Genève en CEVA. Tout inclus à ${PRICE_CHF_FR}/mois.` },
             ],
             en: [
-              { q: "What is the monthly rent at Le Lodge and what does it include?", a: `Rooms at Le Lodge start at ${PRICE_CHF_EN} per month all-inclusive: utilities (water, electricity, heating), fiber internet up to 8 Gb/s, twice-weekly common-area cleaning, streaming subscriptions, pool & garden upkeep, private yoga/fitness classes, bedding included, monthly community dinner. No add-on fees.` },
+              { q: "What is the monthly rent at Le Lodge and what does it include?", a: `Rooms at Le Lodge are ${PRICE_CHF_EN} per month all-inclusive: utilities (water, electricity, heating), fiber internet up to 8 Gb/s, common-area cleaning three times a week, streaming subscriptions, pool & garden upkeep, private yoga/fitness classes, bedding included, monthly community dinner. No add-on fees.` },
               { q: "How do I get to Geneva from Le Lodge in Annemasse?", a: "Le Lodge is a 9-minute walk from Annemasse station, the Léman Express terminus. Geneva Cornavin is 15 min via direct Léman Express, no transfer. Swiss border: 5 min by car. Geneva Airport: 30 min." },
               { q: "What is the minimum lease term at Le Lodge?", a: "Flexible leases from 1 to 12 months. The default is 12 months for community stability, but shorter stays (1, 3, 6 months) are accepted depending on availability." },
               { q: "Is there a deposit and any agency fees?", a: "Deposit equivalent to 2 months' rent excluding charges, refunded within 30 days after the move-out inspection. No agency fees, no application fees." },
@@ -2067,8 +2244,8 @@ export function HouseDetailPage() {
               { q: "What makes Le Lodge unique among your 3 houses?", a: "Le Lodge is our newest (opened January 2026) and largest house (500 m² on 1,500 m²). It has 4 buildings: the main residence, a dedicated fitness chalet with Finnish sauna, a pool house with full outdoor kitchen, and a 130 m² storage area. DPE B energy rating. It's also the closest to Annemasse station for the Léman Express." },
               { q: "Where is Le Lodge and how far from Geneva?", a: "Le Lodge is in Annemasse, on the French side, 20 minutes from Geneva city center by CEVA train. It's the largest of the three La Villa Coliving houses, with an outdoor pool and a pool house, a full fitness chalet and a sauna." },
               { q: "How many residents live at Le Lodge?", a: "Le Lodge hosts 12 residents, making it the largest La Villa Coliving house. Located in Annemasse, near Geneva, it keeps a human scale while offering the most generous spaces: home cinema, pool, pool house / games room, fitness chalet and large common areas." },
-              { q: "What amenities are there at Le Lodge?", a: `Le Lodge, in Annemasse, has a pool with a pool house/games room, a full fitness chalet with a large Finnish sauna, a gym, an arcade game and large common areas. Everything is included in the all-inclusive rent from ${PRICE_CHF_EN}/month, as in all three La Villa Coliving houses.` },
-              { q: "Is there coliving in Annemasse?", a: `Yes. Le Lodge is the La Villa Coliving coliving house in Annemasse: 12 residents, furnished rooms of 17 to 23 m², pool house, fitness chalet and sauna, all 20 minutes from Geneva city center by CEVA. All inclusive from ${PRICE_CHF_EN}/month.` },
+              { q: "What amenities are there at Le Lodge?", a: `Le Lodge, in Annemasse, has a pool with a pool house/games room, a full fitness chalet with a large Finnish sauna, a gym, an arcade game and large common areas. Everything is included in the all-inclusive rent of ${PRICE_CHF_EN}/month, as in all three La Villa Coliving houses.` },
+              { q: "Is there coliving in Annemasse?", a: `Yes. Le Lodge is the La Villa Coliving coliving house in Annemasse: 12 residents, furnished rooms of 17 to 25 m², pool house, fitness chalet and sauna, all 20 minutes from Geneva city center by CEVA. All inclusive at ${PRICE_CHF_EN}/month.` },
             ],
           },
         };
@@ -2179,7 +2356,7 @@ export function HouseDetailPage() {
           </p>
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
             <LocalizedLink
-              to={language === "en" ? "/en/candidature" : "/candidature"}
+              to={`/candidature?property_interest=${id}`}
               onClick={() => trackCta("house_footer")}
               className="inline-flex items-center gap-2 px-8 py-4 bg-white text-[#1C1917] font-bold rounded-full hover:bg-gray-100 transition-colors"
             >
@@ -2202,7 +2379,7 @@ export function HouseDetailPage() {
       <div className="md:hidden h-16" aria-hidden="true" />
       <div className="md:hidden fixed bottom-0 inset-x-0 z-40 bg-white/95 backdrop-blur border-t border-[#E7E5E4] px-4 py-3">
         <LocalizedLink
-          to={language === "en" ? "/en/candidature" : "/candidature"}
+          to={`/candidature?property_interest=${id}`}
           onClick={() => trackCta("sticky_mobile")}
           className="flex items-center justify-center gap-2 w-full bg-[#D4A574] text-[#1C1917] py-3 rounded-lg text-sm font-semibold"
         >

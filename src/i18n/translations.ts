@@ -321,7 +321,7 @@ export const translations = {
         community: {
           title: "Community Events",
           description:
-            "Monthly pizza parties, seasonal community events, and a meal basket delivered to your house every month. Real connections, zero obligations.",
+            "Monthly pizza parties and seasonal events. Real connections, zero obligations.",
         },
         support: {
           title: "Always Here for You",
@@ -351,7 +351,6 @@ export const translations = {
           "Weekly private yoga class",
           "Weekly private fitness class",
           "Monthly pizza party",
-          "Monthly meal basket delivered to your house",
           "Streaming subscriptions (Netflix, Canal+, etc.)",
           "Seasonal community events",
           "Parking included",
@@ -759,7 +758,7 @@ export const translations = {
         community: {
           title: "Événements Communautaires",
           description:
-            "Pizza Party mensuelle, événements saisonniers, et un panier repas livré chaque mois dans ta maison. De vraies connexions, zéro obligation.",
+            "Pizza Party mensuelle et événements saisonniers. De vraies connexions, zéro obligation.",
         },
         support: {
           title: "Toujours Là pour Toi",
@@ -790,7 +789,6 @@ export const translations = {
           "Cours de yoga privé hebdomadaire",
           "Cours de fitness privé hebdomadaire",
           "Pizza Party mensuelle",
-          "Panier repas mensuel livré par maison",
           "Abonnements streaming (Netflix, Canal+, etc.)",
           "Événements communautaires saisonniers",
           "Parking inclus",

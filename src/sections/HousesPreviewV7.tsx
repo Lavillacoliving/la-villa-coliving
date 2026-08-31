@@ -47,8 +47,8 @@ export function HousesPreviewV7() {
       residents: "7",
       image: "/images/la villa coliving le loft piscine.webp",
       description: language === "en"
-        ? "20 min from Geneva city center by tram. Year-round heated indoor pool, Finnish sauna."
-        : "20 min du centre de Genève en tram. Piscine intérieure chauffée toute l'année, sauna finlandais.",
+        ? "20 min from Geneva city center by tram or CEVA. Year-round heated indoor pool, Finnish sauna."
+        : "20 min du centre de Genève en tram ou CEVA. Piscine intérieure chauffée toute l'année, sauna finlandais.",
       alt: language === "en"
         ? "Le Loft — urban coliving house with indoor pool in Ambilly, near Geneva"
         : "Le Loft — colocation urbaine avec piscine intérieure à Ambilly, près de Genève",

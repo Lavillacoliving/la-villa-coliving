@@ -15,7 +15,7 @@ import {
   ArrowRight,
   Euro,
 } from "lucide-react";
-import { PRICE_CHF_FR, PRICE_CHF_EN } from "@/data/stats";
+import { PRICE_SHARED_CHF_FR, PRICE_SHARED_CHF_EN } from "@/data/stats";
 import {
   useRoomAvailability,
   houseBadgeLabel,
@@ -30,7 +30,7 @@ import {
 const annemasseFAQ = [
   {
     q: "Combien coûte une colocation à Annemasse chez La Villa Coliving ?",
-    a: `Nos chambres privatives à Annemasse Agglo (Ville-la-Grand, Ambilly, Annemasse) sont à partir de ${PRICE_CHF_FR}/mois tout inclus. Le prix comprend le loyer, les charges (eau, électricité, chauffage), la fibre jusqu'à 8 Gb/s, le ménage 3 fois par semaine des communs, l'accès à la piscine chauffée, à la salle de sport et au sauna, les cours de yoga et fitness privés hebdomadaires, et les événements communautaires mensuels. Pas de frais d'agence, pas de frais de dossier.`,
+    a: `Nos chambres privatives à Annemasse Agglo (Ville-la-Grand, Ambilly, Annemasse) sont à partir de ${PRICE_SHARED_CHF_FR}/mois tout inclus. Le prix comprend le loyer, les charges (eau, électricité, chauffage), la fibre jusqu'à 8 Gb/s, le ménage 3 fois par semaine des communs, l'accès à la piscine chauffée, à la salle de sport et au sauna, les cours de yoga et fitness privés hebdomadaires, et les événements communautaires mensuels. Pas de frais d'agence, pas de frais de dossier.`,
   },
   {
     q: "Combien de temps pour aller à Genève depuis Annemasse ?",
@@ -50,7 +50,7 @@ const annemasseFAQ = [
   },
   {
     q: "Quelle différence entre colocation classique et coliving à Annemasse ?",
-    a: "Une colocation classique implique généralement de gérer soi-même les charges (électricité, eau, internet), le ménage, l'entretien, et de meubler sa chambre. Notre coliving à Annemasse inclut tout dans un seul loyer : charges, fibre, ménage 2x/semaine, mobilier design, accès aux espaces premium (piscine, gym, sauna), événements communautaires. Le prix au mètre carré reste cohérent avec une colocation classique haut de gamme à Annemasse, mais sans aucune mauvaise surprise.",
+    a: "Une colocation classique implique généralement de gérer soi-même les charges (électricité, eau, internet), le ménage, l'entretien, et de meubler sa chambre. Notre coliving à Annemasse inclut tout dans un seul loyer : charges, fibre, ménage 3x/semaine, mobilier design, accès aux espaces premium (piscine, gym, sauna), événements communautaires. Le prix au mètre carré reste cohérent avec une colocation classique haut de gamme à Annemasse, mais sans aucune mauvaise surprise.",
   },
   {
     q: "Comment réserver une chambre à Annemasse ?",
@@ -105,8 +105,8 @@ export function AnnemasseColocationPage() {
         }
         description={
           language === "en"
-            ? `Shared housing Annemasse 2026: 29 furnished rooms all-inclusive from ${PRICE_CHF_EN}/mo. Léman Express direct to Geneva 15 min. Cross-border living, no agency fees.`
-            : `Colocation Annemasse : 29 chambres meublées tout inclus dès ${PRICE_CHF_FR}/mois. Léman Express direct Genève 15 min. Coliving frontaliers. Sans frais d'agence.`
+            ? `Shared housing Annemasse 2026: 29 furnished rooms all-inclusive from ${PRICE_SHARED_CHF_EN}/mo. Léman Express direct to Geneva 15 min. Cross-border living, no agency fees.`
+            : `Colocation Annemasse : 29 chambres meublées tout inclus dès ${PRICE_SHARED_CHF_FR}/mois. Léman Express direct Genève 15 min. Coliving frontaliers. Sans frais d'agence.`
         }
         url="https://www.lavillacoliving.com/annemasse-colocation"
         image="https://www.lavillacoliving.com/images/le lodge/exterior/la villa coliving le lodge-14.webp"
@@ -124,8 +124,8 @@ export function AnnemasseColocationPage() {
             style={{ fontFamily: "DM Serif Display, serif" }}
           >
             {language === "en"
-              ? `Shared housing in Annemasse — 29 premium rooms from ${PRICE_CHF_EN}/mo`
-              : `Colocation à Annemasse — 29 chambres premium dès ${PRICE_CHF_FR}/mois`}
+              ? `Shared housing in Annemasse — 29 premium rooms from ${PRICE_SHARED_CHF_EN}/mo`
+              : `Colocation à Annemasse — 29 chambres premium dès ${PRICE_SHARED_CHF_FR}/mois`}
           </h1>
           <p className="text-lg md:text-xl text-[#57534E] max-w-3xl mx-auto leading-relaxed mb-10 font-medium">
             {language === "en"
@@ -149,13 +149,16 @@ export function AnnemasseColocationPage() {
           </div>
           {houseChips.length > 0 && (
             <div className="mt-8 flex flex-wrap justify-center gap-2" aria-label={language === "en" ? "Live availability" : "Disponibilités en temps réel"}>
+              {/* Texte en flux (pas de colonnes flex) : sur mobile, la pastille
+                  replie comme une phrase au lieu de faire « flotter » le tiret
+                  entre deux blocs repliés — fix Jérôme 29/08. */}
               {houseChips.map((c) => (
                 <span
                   key={c.key}
-                  className={`inline-flex items-center gap-1.5 text-xs font-semibold px-3 py-1.5 rounded-lg ${BADGE_CHIP_CLASS[c.tone as keyof typeof BADGE_CHIP_CLASS]}`}
+                  className={`inline-block text-center text-xs font-semibold px-3 py-1.5 rounded-lg ${BADGE_CHIP_CLASS[c.tone as keyof typeof BADGE_CHIP_CLASS]}`}
                 >
                   <span className="font-bold">{c.name}</span>
-                  <span aria-hidden="true">—</span>
+                  {" — "}
                   {c.label}
                 </span>
               ))}
@@ -185,8 +188,8 @@ export function AnnemasseColocationPage() {
               </h3>
               <p className="text-[#57534E] leading-relaxed">
                 {language === "en"
-                  ? `You keep your Swiss salary and live on the French side, in a real house: 37-42 m² of living space per housemate, pool, sauna and gym included, from ${PRICE_CHF_EN}/month all-inclusive — no application or agency fees.`
-                  : `Tu gardes ton salaire suisse et tu vis côté France, dans une vraie maison : 37-42 m² d'espace de vie par colocataire, piscine, sauna et salle de sport inclus, dès ${PRICE_CHF_FR}/mois tout inclus — sans frais de dossier ni d'agence.`}
+                  ? `You keep your Swiss salary and live on the French side, in a real house: 37-42 m² of living space per housemate, pool, sauna and gym included, from ${PRICE_SHARED_CHF_EN}/month all-inclusive — no application or agency fees.`
+                  : `Tu gardes ton salaire suisse et tu vis côté France, dans une vraie maison : 37-42 m² d'espace de vie par colocataire, piscine, sauna et salle de sport inclus, dès ${PRICE_SHARED_CHF_FR}/mois tout inclus — sans frais de dossier ni d'agence.`}
               </p>
             </div>
             <div className="text-center">
@@ -232,8 +235,8 @@ export function AnnemasseColocationPage() {
           </h2>
           <p className="text-[#57534E] text-center max-w-3xl mx-auto mb-12">
             {language === "en"
-              ? "29 furnished rooms across 3 design houses — same all-inclusive pricing, different vibes. Pick the location that fits your commute and lifestyle."
-              : "29 chambres meublées dans 3 maisons design — même prix tout inclus, ambiances différentes. Choisis la résidence qui colle à ton trajet et ton style de vie."}
+              ? "29 furnished rooms across 3 design houses — simple all-inclusive pricing, different vibes. Pick the location that fits your commute and lifestyle."
+              : "29 chambres meublées dans 3 maisons design — tarification simple tout inclus, ambiances différentes. Choisis la résidence qui colle à ton trajet et ton style de vie."}
           </p>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {/* La Villa */}
@@ -352,9 +355,9 @@ export function AnnemasseColocationPage() {
             className="text-3xl md:text-4xl font-light text-[#1C1917] mb-4 text-center"
             style={{ fontFamily: "DM Serif Display, serif" }}
           >
-            {language === "en"
-              ? `What's included in ${PRICE_CHF_EN}/month`
-              : `Ce qui est inclus dans ${PRICE_CHF_FR}/mois`}
+            {/* Montant retiré du titre le 29/08 (demande Jérôme) : le prix standard
+                ici dissonait avec le « dès 1 370 » du même écran. */}
+            {language === "en" ? "What's included" : "Ce qui est inclus"}
           </h2>
           <p className="text-[#57534E] text-center max-w-3xl mx-auto mb-12">
             {language === "en"
@@ -366,24 +369,26 @@ export function AnnemasseColocationPage() {
               ? [
                   "Furnished private room with quality bed and ergonomic desk",
                   "All utilities (water, electricity, heating)",
+                  // Ménage remonté juste après les charges (demande Jérôme 29/08) :
+                  // c'est un argument fort, il ne doit pas se perdre en milieu de liste.
+                  "Cleaning three times a week",
                   "fiber internet up to 8 Gb/s",
-                  "Cleaning three times a week of common areas",
                   "Heated pool, sauna and gym access",
                   "Private weekly yoga and fitness classes",
                   "Streaming subscriptions (Netflix, Canal+, etc.)",
-                  "Monthly community dinner and pizza party",
+                  "Monthly pizza party",
                   "Pool, garden and property maintenance",
                   "Bedding and towels provided",
                 ]
               : [
                   "Chambre privée meublée avec lit qualité et bureau ergonomique",
                   "Toutes charges (eau, électricité, chauffage)",
+                  "Ménage 3 fois par semaine",
                   "Internet fibre jusqu'à 8 Gb/s",
-                  "Ménage 3 fois par semaine des espaces communs",
                   "Accès piscine chauffée, sauna et salle de sport",
                   "Cours privés de yoga et fitness hebdomadaires",
                   "Abonnements streaming (Netflix, Canal+, etc.)",
-                  "Panier repas mensuel et pizza party",
+                  "Pizza party mensuelle",
                   "Entretien piscine, jardin et propriété",
                   "Parure de linge et serviettes fournies",
                 ]

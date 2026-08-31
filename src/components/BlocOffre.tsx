@@ -2,7 +2,7 @@ import { LocalizedLink } from "@/components/LocalizedLink";
 import { responsiveImage } from "@/lib/responsiveImage";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { ArrowRight, Check } from "lucide-react";
-import { STATS, formatPriceChf } from "@/data/stats";
+import { STATS, PRICE_SHARED_CHF_FR, PRICE_SHARED_CHF_EN } from "@/data/stats";
 import {
   useRoomAvailability,
   houseBadgeLabel,
@@ -11,6 +11,7 @@ import {
   type HouseKey,
 } from "@/lib/availability";
 import { colocGeneveHref } from "@/lib/siteLinks";
+import { HOUSES } from "@/data/houses";
 import type { IntentBucket } from "@/data/blogIntentBuckets";
 
 // Bloc offre — le pont blog → formulaire (plan blog-conversion 07/07/2026).
@@ -29,26 +30,8 @@ const CANDIDATURE_REF = (slug: string) =>
 
 // Maison mise en avant selon l'article : la commune nommée dans le slug gagne.
 // Le Loft = TOUJOURS sa piscine intérieure (règle visuelle permanente).
-const HOUSES: Record<HouseKey, { label: string; img: string; descFr: string; descEn: string }> = {
-  lavilla: {
-    label: "La Villa",
-    img: "/images/la villa.webp",
-    descFr: "10 chambres · piscine · jardin — Ville-la-Grand",
-    descEn: "10 rooms · pool · garden — Ville-la-Grand",
-  },
-  leloft: {
-    label: "Le Loft",
-    img: "/images/la villa coliving le loft piscine.webp",
-    descFr: "7 chambres · piscine intérieure — Ambilly",
-    descEn: "7 rooms · indoor pool — Ambilly",
-  },
-  lelodge: {
-    label: "Le Lodge",
-    img: "/images/le lodge.webp",
-    descFr: "12 chambres · sauna · gym — Annemasse",
-    descEn: "12 rooms · sauna · gym — Annemasse",
-  },
-};
+// (Fiches maison extraites vers src/data/houses.ts au Lot 1d — partagées avec
+// l'en-tête contextuel de /candidature.)
 
 export function houseForArticle(slug: string): HouseKey {
   if (/annemasse|lodge|quartiers-annemasse/.test(slug)) return "lelodge";
@@ -57,12 +40,16 @@ export function houseForArticle(slug: string): HouseKey {
 }
 
 // Accroche par intent bucket (proximité de la décision logement — cf.
-// blogIntentBuckets.ts). Le bouton primaire est TOUJOURS « Candidater »
-// (décision débrief 07/07 : objectif = garnir la BDD de prospects) ; seule
-// l'accroche s'adapte au contexte de lecture.
+// blogIntentBuckets.ts). Bouton primaire = « Candidater » (décision débrief
+// 07/07 : garnir la BDD de prospects), AMENDÉE le 28/08/2026 pour le SEUL
+// bucket « ville » (intention pré-achat « je choisis ma ville ») : 0/9
+// conversions via ou-habiter contre 9/9 via l'intention chambre → là, la page
+// maison prend le primaire (« la maison vend le rêve ») et Candidater passe
+// en secondaire (Lot 1e).
 const HEADLINES: Record<IntentBucket, { fr: string; en: string }> = {
   high: { fr: "Tu cherches une chambre près de Genève ?", en: "Looking for a room near Geneva?" },
   medium: { fr: "Envie d'un logement tout inclus près de Genève ?", en: "Want all-inclusive housing near Geneva?" },
+  ville: { fr: "Tu compares les villes ? Viens voir à quoi ressemble la vie sur place.", en: "Comparing towns? Come see what living here actually looks like." },
   admin: { fr: "Tu prépares ton installation côté France ?", en: "Planning your move to the French side?" },
   life: { fr: "Envie d'habiter à 20 min du centre de Genève, sans la galère ?", en: "Want to live 20 min from Geneva city center, hassle-free?" },
   coliving: { fr: "Envie de vivre en coliving près de Genève ?", en: "Want to live in coliving near Geneva?" },
@@ -82,8 +69,17 @@ export function BlocOffre({ variant, slug, bucket }: BlocOffreProps) {
   const availability = useRoomAvailability();
   const availabilityBadge = houseBadgeLabel(availability.byHouse[house], availability.known, L);
   const availabilityTone = houseBadgeTone(availability.byHouse[house], availability.known);
-  const price = formatPriceChf(L);
+  // Prix d'appel du blog = palier d'entrée (Jérôme : « dès », jamais le prix standard)
+  const price = L === "en" ? PRICE_SHARED_CHF_EN : PRICE_SHARED_CHF_FR;
   const to = CANDIDATURE_REF(slug);
+  // (Lot 1e) Bucket « ville » : inversion primaire/secondaire — cf. commentaire
+  // au-dessus de HEADLINES. Libellé = équipements réels de la fiche maison.
+  const isVille = bucket === "ville";
+  const houseCta = {
+    to: `/${house}`,
+    labelFr: `Découvrir ${h.label} — ${h.descFr.split(" — ")[0]}`,
+    labelEn: `Discover ${h.label} — ${h.descEn.split(" — ")[0]}`,
+  };
   // Lien secondaire : la page maison quand l'article cible Le Lodge (4,65 % de
   // conversion atterrissage — meilleure page du site) ou Le Loft ; sinon le
   // guide « colocation Genève » (complément débrief 07/07, quick win /lelodge).
@@ -97,10 +93,12 @@ export function BlocOffre({ variant, slug, bucket }: BlocOffreProps) {
   const showSecondary = secondary.to !== `/blog/${slug}`;
 
   // Même pattern gtag gardé que le formulaire : l'analytics ne bloque jamais l'UI.
-  const track = (target: string) => {
+  // cta_rank (Lot 1e) : distingue primaire/secondaire — indispensable pour juger
+  // l'inversion du bucket ville sans deviner via cta_target.
+  const track = (target: string, rank: "primary" | "secondary") => {
     try {
       (window as unknown as { gtag?: (...a: unknown[]) => void }).gtag?.("event", "blog_cta_click", {
-        cta_position: variant, cta_target: target, article_slug: slug, intent: bucket, house, language,
+        cta_position: variant, cta_target: target, cta_rank: rank, article_slug: slug, intent: bucket, house, language,
       });
     } catch { /* noop */ }
   };
@@ -141,17 +139,28 @@ export function BlocOffre({ variant, slug, bucket }: BlocOffreProps) {
             </p>
             <p className="text-sm text-[#57534E] mb-3">
               {L === "en"
-                ? <>All-inclusive from <strong className="text-[#1C1917]">{price}/month</strong> — {h.descEn}.</>
+                ? <>All-inclusive at <strong className="text-[#1C1917]">{price}/month</strong> — {h.descEn}.</>
                 : <>Tout inclus dès <strong className="text-[#1C1917]">{price}/mois</strong> — {h.descFr}.</>}
             </p>
             <LocalizedLink
-              to={to}
-              onClick={() => track(to)}
+              to={isVille ? houseCta.to : to}
+              onClick={() => track(isVille ? houseCta.to : to, "primary")}
               className="inline-flex items-center gap-2 px-5 py-2.5 bg-[#D4A574] text-[#1C1917] text-sm font-semibold rounded-lg hover:bg-[#E0BB8A] transition-all duration-300"
             >
-              {L === "en" ? "Apply — 2 min, free" : "Candidater — 2 min, gratuit"}
+              {isVille
+                ? (L === "en" ? `Discover ${h.label}` : `Découvrir ${h.label}`)
+                : (L === "en" ? "Apply — 2 min, free" : "Candidater — 2 min, gratuit")}
               <ArrowRight className="w-4 h-4" />
             </LocalizedLink>
+            {isVille && (
+              <LocalizedLink
+                to={to}
+                onClick={() => track(to, "secondary")}
+                className="block mt-2.5 text-sm text-[#57534E] underline decoration-[#D4A574] underline-offset-4 hover:text-[#1C1917] transition-colors"
+              >
+                {L === "en" ? "Apply — 2 min, free" : "Candidater — 2 min, gratuit"}
+              </LocalizedLink>
+            )}
           </div>
         </div>
       </aside>
@@ -197,21 +206,33 @@ export function BlocOffre({ variant, slug, bucket }: BlocOffreProps) {
             </ul>
             <div className="flex flex-col sm:flex-row sm:items-center gap-3">
               <LocalizedLink
-                to={to}
-                onClick={() => track(to)}
+                to={isVille ? houseCta.to : to}
+                onClick={() => track(isVille ? houseCta.to : to, "primary")}
                 className="inline-flex items-center justify-center gap-2 px-6 py-3 bg-[#D4A574] text-[#1C1917] text-sm font-semibold rounded-lg hover:bg-[#E0BB8A] transition-all duration-300"
               >
-                {L === "en" ? "Apply — 2 min, free" : "Candidater — 2 min, gratuit"}
+                {isVille
+                  ? (L === "en" ? houseCta.labelEn : houseCta.labelFr)
+                  : (L === "en" ? "Apply — 2 min, free" : "Candidater — 2 min, gratuit")}
                 <ArrowRight className="w-4 h-4" />
               </LocalizedLink>
-              {showSecondary && (
+              {isVille ? (
                 <LocalizedLink
-                  to={secondary.to}
-                  onClick={() => track(secondary.to)}
+                  to={to}
+                  onClick={() => track(to, "secondary")}
                   className="inline-flex items-center justify-center gap-2 px-6 py-3 border border-[#E7E5E4] text-[#44403C] text-sm font-medium rounded-lg hover:border-[#D4A574] transition-all duration-300"
                 >
-                  {secondary.label}
+                  {L === "en" ? "Apply — 2 min, free" : "Candidater — 2 min, gratuit"}
                 </LocalizedLink>
+              ) : (
+                showSecondary && (
+                  <LocalizedLink
+                    to={secondary.to}
+                    onClick={() => track(secondary.to, "secondary")}
+                    className="inline-flex items-center justify-center gap-2 px-6 py-3 border border-[#E7E5E4] text-[#44403C] text-sm font-medium rounded-lg hover:border-[#D4A574] transition-all duration-300"
+                  >
+                    {secondary.label}
+                  </LocalizedLink>
+                )
               )}
             </div>
           </div>

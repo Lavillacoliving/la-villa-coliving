@@ -45,7 +45,7 @@ export function ServicesPageV4() {
           icon: Sparkles,
           image:
             "https://images.unsplash.com/photo-1581578731548-c64695cc6952?w=600&q=80",
-          highlight: language === "en" ? "2x per week" : "2x par semaine",
+          highlight: language === "en" ? "3x per week" : "3x par semaine",
         },
         {
           key: "supplies",
@@ -86,8 +86,11 @@ export function ServicesPageV4() {
     },
     {
       title: language === "en" ? "Thrive" : "S'épanouir",
+      // Services communautaires : gratuits, jamais facturés en supplément (cf. charte de transparence).
       subtitle:
-        language === "en" ? "Wellness & community" : "Bien-être & communauté",
+        language === "en"
+          ? "Wellness & community — included, at no extra cost"
+          : "Bien-être & communauté — inclus, sans supplément",
       color: "bg-[#78716C]",
       services: [
         {
@@ -119,7 +122,7 @@ export function ServicesPageV4() {
 
   const stats = [
     {
-      value: "20+",
+      value: `${STATS.includedItems}`,
       label: language === "en" ? "Services included" : "Services inclus",
       icon: Star,
     },
@@ -129,7 +132,7 @@ export function ServicesPageV4() {
       icon: Shield,
     },
     {
-      value: "2x",
+      value: "3x",
       label: language === "en" ? "Cleaning per week" : "Ménage par semaine",
       icon: Clock,
     },
@@ -189,12 +192,12 @@ export function ServicesPageV4() {
 
             <p className="text-xl text-white/80 mb-8 max-w-lg">
               {language === "en"
-                ? "From cleaning to high-speed internet, from yoga classes to community dinners — every detail is taken care of."
-                : "Du ménage à la fibre haut débit, des cours de yoga aux dîners communautaires — chaque détail est pensé."}
+                ? "From cleaning to high-speed internet, from yoga classes to community events — every detail is taken care of."
+                : "Du ménage à la fibre haut débit, des cours de yoga aux événements communautaires — chaque détail est pensé."}
             </p>
 
-            <div className="flex flex-wrap gap-6">
-              {stats.slice(0, 2).map((stat, index) => (
+            <div className="grid grid-cols-2 gap-x-8 gap-y-6 max-w-xl">
+              {stats.map((stat, index) => (
                 <div key={index} className="flex items-center gap-3">
                   <div className="w-12 h-12 rounded-lg bg-white/[0.08] flex items-center justify-center">
                     <stat.icon className="w-5 h-5 text-[#E0BB8A]" />
@@ -215,6 +218,20 @@ export function ServicesPageV4() {
       {/* VALUE PROPOSITION */}
       <section className="py-20 bg-[#FAF9F6]">
         <div className="container-custom">
+          {/* Cadrage — texte verbatim (ADDENDUM_3_Services_et_Charte.md, A4). Gabarit YmylNotice. */}
+          <aside className="max-w-3xl mx-auto mb-16 p-5 bg-[#FBF7F0] border border-[#E7D9C2] rounded-lg text-sm text-[#57534E]">
+            <p>
+              {language === "en"
+                ? "None of these services is billed on top, and none is a condition of your tenancy. Community services are free; running costs are covered by a fixed fee set at actual cost."
+                : "Aucun de ces services n'est facturé en supplément et aucun ne conditionne ta location. Les services communautaires sont gratuits ; les charges courantes sont couvertes par un forfait établi au coût réel."}{" "}
+              <LocalizedLink
+                to="/charte-transparence"
+                className="underline underline-offset-4 hover:text-[#1C1917] transition-colors"
+              >
+                {language === "en" ? "Read our transparency charter" : "Lire notre charte de transparence"}
+              </LocalizedLink>
+            </p>
+          </aside>
           <div className="text-center mb-16">
             <h2 className="text-3xl md:text-4xl font-bold text-[#1C1917] mb-4 tracking-tight">
               {language === "en"
@@ -354,23 +371,6 @@ export function ServicesPageV4() {
       </section>
 
       {/* STATS BAR */}
-      <section className="py-16 bg-[#1C1917]">
-        <div className="container-custom">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
-            {stats.map((stat, index) => (
-              <div key={index} className="text-center">
-                <div className="inline-flex items-center justify-center w-14 h-14 rounded-xl bg-white/[0.06] mb-4">
-                  <stat.icon className="w-7 h-7 text-[#D4A574]" />
-                </div>
-                <div className="text-4xl font-bold text-white mb-2">
-                  {stat.value}
-                </div>
-                <div className="text-sm text-white/50">{stat.label}</div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
 
       {/* COMPARISON */}
       <section className="py-24 bg-[#F5F2ED]">

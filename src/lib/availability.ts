@@ -31,6 +31,9 @@ import { supabase } from "@/lib/supabase";
 import { readEmbeddedArray } from "@/lib/prerenderEmbeddedState";
 
 export const AVAILABILITY_EMBED_ID = "__room_availability_data__";
+// (Lot 3) Lignes chambres de LA maison rendue, embarquées par sa page prérendue
+// (RoomsEmbed) — l'id est enregistré dans la liste de capture de src/main.tsx.
+export const ROOMS_EMBED_ID = "__rooms_level_data__";
 
 export type HouseKey = "lavilla" | "leloft" | "lelodge";
 
@@ -85,6 +88,48 @@ type RoomRow = {
   available_from: string | null;
 };
 
+/**
+ * (Lot 3) Ligne chambre complète de `v_public_rooms` — cartes chambres des
+ * pages maisons. `surface_m2` arrive en string (numeric PostgREST) : passer
+ * par Number() à l'affichage.
+ */
+export type PublicRoom = {
+  house_slug: HouseKey;
+  room_number: number;
+  name: string | null;
+  surface_m2: number | string | null;
+  floor: string | null;
+  location_detail: string | null;
+  description: string | null;
+  bathroom_type: string | null;
+  bathroom_detail: string | null;
+  has_parking: boolean | null;
+  has_balcony: boolean | null;
+  has_terrace: boolean | null;
+  has_private_entrance: boolean | null;
+  rent_chf: number | null;
+  availability: string;
+  available_from: string | null;
+};
+
+// Second canal du même store : les lignes chambres (Lot 3). Mêmes listeners,
+// même cycle de vie (embed → init synchrone → refresh partagé post-montage).
+let roomsSnapshot: PublicRoom[] | null = null;
+let roomsInitialised = false;
+
+function getRoomsSnapshot(): PublicRoom[] | null {
+  if (!roomsInitialised) {
+    roomsInitialised = true;
+    roomsSnapshot = readEmbeddedArray<PublicRoom>(ROOMS_EMBED_ID);
+  }
+  return roomsSnapshot;
+}
+
+function publishRooms(rows: PublicRoom[]): void {
+  roomsSnapshot = rows;
+  for (const listener of listeners) listener();
+}
+
 /** Agrège les 29 lignes chambres en 3 résumés maison. */
 function summarise(rooms: RoomRow[]): HouseSummary[] {
   return HOUSE_KEYS.map((key) => {
@@ -103,16 +148,28 @@ function summarise(rooms: RoomRow[]): HouseSummary[] {
   });
 }
 
+// (Lot 3) Le fetch unique remonte désormais les colonnes chambres complètes :
+// il nourrit à la fois les résumés maisons (badges) et les cartes chambres.
+// ~10 Ko de JSON post-montage, non bloquant — inchangé côté premier rendu.
+const ROOM_COLUMNS =
+  "house_slug,room_number,name,surface_m2,floor,location_detail,description," +
+  "bathroom_type,bathroom_detail,has_parking,has_balcony,has_terrace," +
+  "has_private_entrance,rent_chf,availability,available_from";
+
 async function refresh(): Promise<void> {
   if (fetchStarted) return;
   fetchStarted = true;
   try {
     const { data, error } = await supabase
       .from("v_public_rooms")
-      .select("house_slug,availability,available_from");
+      .select(ROOM_COLUMNS);
     if (error) throw error;
     // Vue vide = anomalie (elle rend 29 lignes) → on garde l'état embarqué.
-    if (data && data.length > 0) publish(summarise(data as RoomRow[]));
+    if (data && data.length > 0) {
+      const rooms = data as unknown as PublicRoom[];
+      publish(summarise(rooms));
+      publishRooms(rooms);
+    }
   } catch (e) {
     // Jamais bloquant : les libellés retombent sur la variante qualitative.
     console.error("Room availability load:", e);
@@ -198,6 +255,50 @@ export function useRoomAvailability(): SiteAvailability {
 /** Snapshot brut, pour le composant qui sérialise l'état dans le HTML. */
 export function useAvailabilitySnapshot(): HouseSummary[] | null {
   return useSyncExternalStore(subscribe, getSnapshot, getSnapshot);
+}
+
+/**
+ * (Lot 3) Chambres réelles d'une maison, triées par numéro. Init synchrone
+ * depuis le HTML prérendu de la page maison (ROOMS_EMBED_ID), puis même
+ * rafraîchissement partagé que les résumés. `known: false` = aucune donnée →
+ * l'appelant retombe sur ses cartes de types historiques (jamais de vide).
+ */
+export function useHouseRooms(house: HouseKey): { known: boolean; rooms: PublicRoom[] } {
+  const rows = useSyncExternalStore(subscribe, getRoomsSnapshot, getRoomsSnapshot);
+  useEffect(() => {
+    void refresh();
+  }, []);
+  if (!rows) return { known: false, rooms: [] };
+  const rooms = rows
+    .filter((r) => r.house_slug === house)
+    .sort((a, b) => a.room_number - b.room_number);
+  return { known: rooms.length > 0, rooms };
+}
+
+/** (Lot 3) Snapshot chambres de la maison rendue — pour RoomsEmbed uniquement. */
+export function useRoomsSnapshotFor(house: HouseKey): PublicRoom[] | null {
+  const rows = useSyncExternalStore(subscribe, getRoomsSnapshot, getRoomsSnapshot);
+  if (!rows) return null;
+  const mine = rows.filter((r) => r.house_slug === house);
+  return mine.length > 0 ? mine : null;
+}
+
+/**
+ * (Lot 3) Badge d'une CHAMBRE — mêmes règles de pureté que le badge maison
+ * (formatFreeDate maison, jamais de new Date() au premier rendu).
+ */
+export function roomBadge(room: PublicRoom, lang: "fr" | "en"): { label: string; tone: BadgeTone } {
+  if (room.availability === "available") {
+    return { label: lang === "en" ? "Available now" : "Libre maintenant", tone: "available" };
+  }
+  if (room.available_from) {
+    const date = formatFreeDate(room.available_from, lang);
+    return {
+      label: lang === "en" ? `Available from ${date}` : `Libre dès le ${date}`,
+      tone: "upcoming",
+    };
+  }
+  return { label: lang === "en" ? "Fully booked" : "Complet", tone: "full" };
 }
 
 // ── Libellés (FR/EN) ───────────────────────────────────────────────────────

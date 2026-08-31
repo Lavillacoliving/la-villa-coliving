@@ -4,16 +4,21 @@
  *
  * Source: "Plan de contenu orienté conversion" (2026-06) — articles are
  * classified by proximity to the rental decision, NOT by search volume:
- *  - high   : actively looking for housing → push hard to /candidature
- *  - medium : planning/budget/comparison   → candidature CTA + pillar link
- *  - admin  : tax/admin cross-border guides → soft CTA ("voir les chambres")
- *  - life   : daily life/transport          → geo CTA ("découvre nos maisons")
- *  - coliving: generic coliving content     → default coliving message
+ *  - high   : actively looking for housing
+ *  - medium : planning/budget/comparison
+ *  - ville  : « je choisis ma ville » (pré-achat — Lot 1e, 29/08) : CTA primaire
+ *             = page MAISON (« la maison vend le rêve »), Candidater en secondaire
+ *  - admin  : tax/admin cross-border guides
+ *  - life   : daily life/transport
+ *  - coliving: generic coliving content
+ * NB (audit 28/08) : dans BlocOffre, seuls l'accroche (tous buckets) et
+ * l'inversion des CTA (bucket ville) varient — le bouton primaire reste
+ * « Candidater » partout ailleurs.
  *
  * New articles fall back to their category mapping below; add a slug here
  * only when the category default is wrong.
  */
-export type IntentBucket = "high" | "medium" | "admin" | "life" | "coliving";
+export type IntentBucket = "high" | "medium" | "ville" | "admin" | "life" | "coliving";
 
 // 2026-06 : 9 slugs retirés (consolidation blog — voir scripts/consolidation/).
 // Les sources fusionnées sont dépubliées en base + 301 dans vercel.json.
@@ -29,9 +34,14 @@ const BUCKET_BY_SLUG: Record<string, IntentBucket> = {
   "budget-colocation-geneve-guide-complet": "medium",
   "coliving-vs-colocation-differences": "medium",
   "living-in-france-working-in-geneva": "medium",
-  "ou-habiter-frontalier-suisse-villes-france-pas-cher": "medium",
   "colocation-expats-geneve-guide": "medium",
-  "organisations-internationales-geneve-ou-habiter": "medium",
+  // 🏙 ville — « je choisis ma ville » (Lot 1e, arbitrage 28/08) : ou-habiter
+  // FR+EN = 32 % des clics SEO du site et 0 candidature avec Candidater en
+  // primaire (0/9 vs 9/9 pour l'intention chambre) → la page maison prend le
+  // CTA primaire sur ces slugs, Candidater reste en secondaire.
+  "ou-habiter-frontalier-suisse-villes-france-pas-cher": "ville",
+  "organisations-internationales-geneve-ou-habiter": "ville",
+  "ecole-internationale-geneve-frontalier-ou-habiter": "ville",
   // 🟠 admin — tax/admin authority content, soft CTA only
   "fiscalite-frontalier-geneve-impots-2026": "admin",
   "declaration-impots-frontalier-2026": "admin",

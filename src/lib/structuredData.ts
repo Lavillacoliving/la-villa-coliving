@@ -2,7 +2,7 @@
 // Règle d'or AEO : le texte d'une réponse balisée doit être IDENTIQUE au texte visible.
 // buildFaqPageSchema() construit donc le FAQPage à partir des mêmes paires {q,a} affichées.
 
-import { STATS, PRICE_FR_NUM, PRICE_EN_NUM } from "@/data/stats";
+import { STATS, STATS_SHARED_BATH, PRICE_FR_NUM, PRICE_EN_NUM, PRICE_SHARED_FR_NUM, PRICE_SHARED_EN_NUM } from "@/data/stats";
 
 const SITE = "https://www.lavillacoliving.com";
 
@@ -122,19 +122,22 @@ export function buildHomeLodgingBusinessSchema(language: "fr" | "en" = "fr"): Re
     image: `${SITE}/images/villa_portrait.webp`,
     telephone: LAVILLA_PHONE,
     email: LAVILLA_EMAIL,
-    priceRange: en ? `from CHF ${PRICE_EN_NUM}/month` : `dès ${PRICE_FR_NUM} CHF/mois`,
+    priceRange: en ? `CHF ${PRICE_SHARED_EN_NUM}–${PRICE_EN_NUM}/month` : `${PRICE_SHARED_FR_NUM}–${PRICE_FR_NUM} CHF/mois`,
     // Offre citable par les moteurs et les IA (AI Overviews cite déjà nos prix —
-    // autant qu'ils viennent d'une donnée structurée exacte). Prix via STATS.
+    // autant qu'ils viennent d'une donnée structurée exacte). Prix via STATS :
+    // deux niveaux depuis le 01/09/2026 → AggregateOffer 1 390–1 440.
     makesOffer: {
-      "@type": "Offer",
+      "@type": "AggregateOffer",
       name: en
         ? "All-inclusive furnished room in coliving near Geneva"
         : "Chambre meublée tout inclus en coliving près de Genève",
       description: en
         ? `Furnished room of ${STATS.roomSizeMin} to ${STATS.roomSizeMax} m², all utilities, fibre internet, cleaning, pool, sauna and gym included. No application fee.`
         : `Chambre meublée de ${STATS.roomSizeMin} à ${STATS.roomSizeMax} m², charges, internet fibre, ménage, piscine, sauna et salle de sport inclus. Sans frais de dossier.`,
-      price: String(STATS.priceChf),
+      lowPrice: String(STATS_SHARED_BATH.priceChf),
+      highPrice: String(STATS.priceChf),
       priceCurrency: "CHF",
+      offerCount: STATS.totalRooms,
       availability: "https://schema.org/InStock",
       url: `${SITE}${en ? "/en" : ""}/tarifs`,
       seller: { "@type": "Organization", name: "La Villa Coliving", url: SITE },
@@ -307,15 +310,17 @@ export function buildBreadcrumbSchema(items: { name: string; url: string }[]): R
   };
 }
 
-/** Offre « chambre tout inclus » — prix sourcé depuis STATS (single source). */
-export function buildRoomOfferSchema(opts: { name: string; description: string; url: string }): Record<string, unknown> {
+/** Offre agrégée « chambres tout inclus » — deux niveaux depuis le 01/09/2026, prix sourcés depuis STATS (single source). */
+export function buildRoomsAggregateOfferSchema(opts: { name: string; description: string; url: string }): Record<string, unknown> {
   return {
     "@context": "https://schema.org",
-    "@type": "Offer",
+    "@type": "AggregateOffer",
     name: opts.name,
     description: opts.description,
-    price: String(STATS.priceChf),
+    lowPrice: String(STATS_SHARED_BATH.priceChf),
+    highPrice: String(STATS.priceChf),
     priceCurrency: "CHF",
+    offerCount: STATS.totalRooms,
     availability: "https://schema.org/InStock",
     url: opts.url,
     seller: { "@type": "Organization", name: "La Villa Coliving", url: SITE },

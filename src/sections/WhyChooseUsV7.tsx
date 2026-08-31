@@ -23,7 +23,7 @@ export function WhyChooseUsV7() {
     },
     {
       icon: CalendarDays,
-      text: language === "en" ? "Pizza night, community dinner, events" : "Pizza Party, dîner communautaire, événements",
+      text: language === "en" ? "Pizza night, events" : "Pizza Party, événements",
     },
     {
       icon: Trophy,
@@ -40,8 +40,8 @@ export function WhyChooseUsV7() {
       icon: Users,
       text: language === "en" ? "A real community" : "Une vraie communauté",
       description: language === "en"
-        ? "Pizza party, yoga classes, community dinners, game nights — bonds that form naturally between residents."
-        : "Pizza party, cours de yoga, dîners communautaires, soirées jeux — des liens qui se créent naturellement entre résidents.",
+        ? "Pizza party, yoga classes, game nights — bonds that form naturally between residents."
+        : "Pizza party, cours de yoga, soirées jeux — des liens qui se créent naturellement entre résidents.",
     },
   ];
 

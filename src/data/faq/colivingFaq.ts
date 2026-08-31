@@ -1,5 +1,5 @@
 import type { QAPair } from "@/lib/structuredData";
-import { PRICE_CHF_FR, PRICE_CHF_EN, STATS } from "@/data/stats";
+import { PRICE_SHARED_CHF_FR, PRICE_SHARED_CHF_EN, STATS } from "@/data/stats";
 
 // §4 du playbook AEO — /le-coliving (définitionnel). Tutoiement, texte verbatim.
 export const colivingFaq: { fr: QAPair[]; en: QAPair[] } = {
@@ -18,7 +18,7 @@ export const colivingFaq: { fr: QAPair[]; en: QAPair[] } = {
     },
     {
       q: "Quelle est la différence entre le coliving et Airbnb ?",
-      a: `Airbnb, c'est de la location courte durée, meublée mais sans vie de communauté ni engagement de long terme. Le coliving, comme chez La Villa Coliving, c'est un vrai lieu de vie : tu y résides plusieurs mois à plusieurs années, dans une communauté stable de 7 à 12 personnes, avec tous les services inclus dans un loyer mensuel unique dès ${PRICE_CHF_FR}.`,
+      a: `Airbnb, c'est de la location courte durée, meublée mais sans vie de communauté ni engagement de long terme. Le coliving, comme chez La Villa Coliving, c'est un vrai lieu de vie : tu y résides plusieurs mois à plusieurs années, dans une communauté stable de 7 à 12 personnes, avec tous les services inclus dans un loyer mensuel unique dès ${PRICE_SHARED_CHF_FR}.`,
     },
     {
       q: "Le coliving est-il adapté si je suis plutôt introverti ?",
@@ -30,11 +30,11 @@ export const colivingFaq: { fr: QAPair[]; en: QAPair[] } = {
     },
     {
       q: "Quel est le prix d'une colocation à Genève ?",
-      a: `Compte 1 200 à 1 600 CHF par mois pour une chambre en colocation dans le centre de Genève, et 900 à 1 200 CHF en périphérie. Côté France voisine, une chambre se loue plutôt entre 600 et 900 € par mois, hors charges. À ces montants s'ajoutent souvent la caution, un garant et d'éventuels frais d'agence. En coliving, tout est réuni dans un loyer unique : chez La Villa Coliving, la chambre meublée tout inclus démarre dès ${PRICE_CHF_FR}/mois, sans frais de dossier.`,
+      a: `Compte 1 200 à 1 600 CHF par mois pour une chambre en colocation dans le centre de Genève, et 900 à 1 200 CHF en périphérie. Côté France voisine, une chambre se loue plutôt entre 600 et 900 € par mois, hors charges. À ces montants s'ajoutent souvent la caution, un garant et d'éventuels frais d'agence. En coliving, tout est réuni dans un loyer unique : chez La Villa Coliving, la chambre meublée tout inclus démarre dès ${PRICE_SHARED_CHF_FR}/mois, sans frais de dossier.`,
     },
     {
       q: "Y a-t-il du coliving près de Genève ?",
-      a: `Oui. La Villa Coliving gère trois maisons de coliving à 20 minutes du centre de Genève, côté France : à Ville-la-Grand, Ambilly et Annemasse. Chacune propose des chambres meublées de 17 à 23 m², tout inclus dès ${PRICE_CHF_FR}/mois, avec piscine, sauna et salle de sport.`,
+      a: `Oui. La Villa Coliving gère trois maisons de coliving à 20 minutes du centre de Genève, côté France : à Ville-la-Grand, Ambilly et Annemasse. Chacune propose des chambres meublées de 17 à 25 m², tout inclus dès ${PRICE_SHARED_CHF_FR}/mois, avec piscine, sauna et salle de sport.`,
     },
   ],
   en: [
@@ -52,7 +52,7 @@ export const colivingFaq: { fr: QAPair[]; en: QAPair[] } = {
     },
     {
       q: "What is the difference between coliving and Airbnb?",
-      a: `Airbnb is short-term rental, furnished but without community life or long-term commitment. Coliving, as at La Villa Coliving, is a real place to live: you stay for several months to several years, in a stable community of 7 to 12 people, with all services included in a single monthly rent from ${PRICE_CHF_EN}.`,
+      a: `Airbnb is short-term rental, furnished but without community life or long-term commitment. Coliving, as at La Villa Coliving, is a real place to live: you stay for several months to several years, in a stable community of 7 to 12 people, with all services included in a single monthly rent from ${PRICE_SHARED_CHF_EN}.`,
     },
     {
       q: "Is coliving suitable if I'm rather introverted?",
@@ -64,11 +64,11 @@ export const colivingFaq: { fr: QAPair[]; en: QAPair[] } = {
     },
     {
       q: "How much does a room in a Geneva flatshare cost?",
-      a: `Expect CHF 1,200 to 1,600 per month for a room in a shared flat in central Geneva, and CHF 900 to 1,200 on the outskirts. On the French side of the border, a room usually rents for 600 to 900 € per month, excluding utilities. On top of that, expect a deposit, often a guarantor, and sometimes agency fees. Coliving bundles everything into a single rent: at La Villa Coliving, an all-inclusive furnished room starts from ${PRICE_CHF_EN}/month, with no application fee.`,
+      a: `Expect CHF 1,200 to 1,600 per month for a room in a shared flat in central Geneva, and CHF 900 to 1,200 on the outskirts. On the French side of the border, a room usually rents for 600 to 900 € per month, excluding utilities. On top of that, expect a deposit, often a guarantor, and sometimes agency fees. Coliving bundles everything into a single rent: at La Villa Coliving, an all-inclusive furnished room starts from ${PRICE_SHARED_CHF_EN}/month, with no application fee.`,
     },
     {
       q: "Is there coliving near Geneva?",
-      a: `Yes. La Villa Coliving runs three coliving houses 20 minutes from Geneva city center, on the French side: in Ville-la-Grand, Ambilly and Annemasse. Each offers furnished rooms of 17 to 23 m², all inclusive from ${PRICE_CHF_EN}/month, with a pool, sauna and gym.`,
+      a: `Yes. La Villa Coliving runs three coliving houses 20 minutes from Geneva city center, on the French side: in Ville-la-Grand, Ambilly and Annemasse. Each offers furnished rooms of 17 to 25 m², all inclusive from ${PRICE_SHARED_CHF_EN}/month, with a pool, sauna and gym.`,
     },
   ],
 };

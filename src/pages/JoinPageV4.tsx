@@ -4,10 +4,11 @@ import { useLanguage } from "@/contexts/LanguageContext";
 import { ArrowRight, Check, Shield, Loader2, Star, Users, Calendar, ChevronDown, ChevronUp, MessageCircle, Sparkles } from "lucide-react";
 import { SEO } from "@/components/SEO";
 import { SUPABASE_URL, SUPABASE_ANON_KEY } from "@/lib/supabase";
-import { STATS, STATS_DISPLAY, PRICE_CHF_FR, PRICE_CHF_EN } from "@/data/stats";
+import { STATS, STATS_DISPLAY, PRICE_SHARED_CHF_FR, PRICE_SHARED_CHF_EN, CONTRACT_EUR, EUR_STANDARD_FR_NUM, EUR_SHARED_FR_NUM, EUR_STANDARD_EN_NUM, EUR_SHARED_EN_NUM } from "@/data/stats";
 import { useFormTelemetry } from "@/hooks/useFormTelemetry";
 import { useRoomAvailability, shortAvailabilityLabel } from "@/lib/availability";
 import { attributionPayload, isTestSession } from "@/lib/attribution";
+import { HOUSES } from "@/data/houses";
 
 type FormStatus = "idle" | "submitting" | "success" | "error";
 
@@ -47,6 +48,12 @@ export function JoinPageV4() {
   // l'attribution Ads est déjà capturée à l'atterrissage (sessionStorage, first-touch).
   const refProperty = (searchParams.get("property_interest") ?? "").slice(0, 64);
   const refRoom = (searchParams.get("room_interest") ?? "").slice(0, 64);
+  // En-tête contextuel (Lot 1d) : quand le candidat arrive d'un CTA maison ou
+  // chambre, le formulaire accuse réception de son choix (continuité du
+  // parcours). Slug inconnu → pas d'en-tête, jamais d'erreur. Aucune donnée
+  // dynamique dedans : rendu serveur/client identique, zéro risque #418.
+  const contextHouse = (HOUSES as Record<string, (typeof HOUSES)[keyof typeof HOUSES]>)[refProperty] ?? null;
+  const contextRoomNum = refRoom.match(/^chambre-?(\d+)$/)?.[1] ?? null;
   // Soumission de TEST (équipe) : /candidature?test=1 → prospects.is_test = true côté
   // Edge (v12), exclue du bulletin et des comptages. Jamais exposée dans l'UI.
   // Depuis le 22/08/2026, `?test=1` posé sur N'IMPORTE QUELLE page d'atterrissage marque
@@ -175,7 +182,7 @@ export function JoinPageV4() {
       <SEO
         title={language === "en" ? "Apply — Join La Villa Coliving" : "Candidater — Rejoindre La Villa Coliving"}
         description={language === "en"
-          ? "Apply to join La Villa Coliving near Geneva. Simple process, move in within 2 weeks. Furnished all-inclusive rooms for cross-border workers & expats."
+          ? "Apply to join La Villa Coliving near Geneva. Simple process, move in within a week. Furnished all-inclusive rooms for cross-border workers & expats."
           : "Candidate en 30 secondes, sans engagement. Réponse sous 48 h, emménagement possible en 2 semaines. Chambres meublées tout inclus près de Genève."}
         url="https://www.lavillacoliving.com/candidature"
       />
@@ -219,6 +226,36 @@ export function JoinPageV4() {
               {shortAvailabilityLabel(availability, L)}
             </span>
           </div>
+
+          {/* En-tête contextuel (Lot 1d) — accuse réception du choix maison/chambre
+              porté par ?property_interest (± room_interest). */}
+          {contextHouse && (
+            <div className="mb-6 bg-white border border-[#E7E5E4] p-4 flex items-center gap-4">
+              <img
+                src={contextHouse.img}
+                alt={contextHouse.label}
+                className="w-20 h-16 object-cover flex-none"
+                width={80}
+                height={64}
+              />
+              <div className="text-left">
+                <p className="text-sm text-[#1C1917]">
+                  {L === "en" ? "Your application is for: " : "Ta candidature concerne : "}
+                  <strong>
+                    {contextHouse.label}
+                    {refRoom
+                      ? ` — ${contextRoomNum ? (L === "en" ? `room ${contextRoomNum}` : `chambre ${contextRoomNum}`) : refRoom}`
+                      : ""}
+                  </strong>
+                </p>
+                <p className="text-xs text-[#57534E] mt-1">
+                  {L === "en"
+                    ? <>All inclusive from {PRICE_SHARED_CHF_EN}/month · Reply within 48h</>
+                    : <>Tout inclus dès {PRICE_SHARED_CHF_FR}/mois · Réponse sous 48 h</>}
+                </p>
+              </div>
+            </div>
+          )}
 
           {/* Reassurance strip */}
           <div className="flex flex-wrap justify-center gap-6 mb-8 text-sm text-[#57534E]">
@@ -280,6 +317,16 @@ export function JoinPageV4() {
               tabIndex={-1}
               autoComplete="off"
             />
+
+            {/* Micro-réassurance (Lot 1d) — une ligne, uniquement quand le candidat
+                arrive sans contexte maison (l'en-tête contextuel la remplace sinon). */}
+            {!contextHouse && (
+              <p className="text-xs text-[#78716C] text-center mb-6">
+                {language === "en"
+                  ? "2 minutes is all it takes — reply within 48h."
+                  : "2 minutes suffisent — réponse sous 48 h."}
+              </p>
+            )}
 
             {/* Personal Info */}
             <div className="mb-10">
@@ -483,6 +530,26 @@ export function JoinPageV4() {
             <p className="text-xs text-[#78716C] text-center mt-1">
               {language === "en" ? "Your data remains confidential." : "Tes données restent confidentielles."}
             </p>
+            {/* Porte humaine au plus près de la décision (Lot 1d) — discrète,
+                cohérence premium ; la porte existante en bas de page reste. */}
+            <p className="text-sm text-center mt-6">
+              <a
+                href="https://wa.me/33664315134"
+                target="_blank"
+                rel="noopener noreferrer"
+                onClick={() => {
+                  try {
+                    (window as unknown as { gtag?: (...a: unknown[]) => void }).gtag?.("event", "whatsapp_click", {
+                      position: "under_submit",
+                      language: L,
+                    });
+                  } catch { /* noop */ }
+                }}
+                className="text-[#57534E] underline decoration-[#D4A574] underline-offset-4 hover:text-[#1C1917] transition-colors"
+              >
+                {language === "en" ? "Prefer to talk first? → WhatsApp" : "Tu préfères discuter d'abord ? → WhatsApp"}
+              </a>
+            </p>
           </form>
           )}
         </div>
@@ -553,41 +620,6 @@ export function JoinPageV4() {
         </div>
       </section>
 
-      {/* Social proof stats — chiffres business pour rassurer (CRO win #1) */}
-      <section className="py-12 bg-[#FAF9F6] border-y border-[#E7E5E4]">
-        <div className="container-custom">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-4xl mx-auto text-center">
-            <div className="flex flex-col items-center">
-              <Users className="w-8 h-8 text-[#D4A574] mb-3" />
-              <p className="text-3xl font-light text-[#1C1917] mb-1" style={{ fontFamily: "DM Serif Display, serif" }}>
-                {STATS.totalResidents}+
-              </p>
-              <p className="text-sm text-[#57534E]">
-                {language === "en" ? "Residents since 2021" : "Résidents depuis 2021"}
-              </p>
-            </div>
-            <div className="flex flex-col items-center">
-              <Sparkles className="w-8 h-8 text-[#D4A574] mb-3" />
-              <p className="text-3xl font-light text-[#1C1917] mb-1" style={{ fontFamily: "DM Serif Display, serif" }}>
-                99%
-              </p>
-              <p className="text-sm text-[#57534E]">
-                {language === "en" ? "Occupancy rate over 5 years" : "Taux d'occupation sur 5 ans"}
-              </p>
-            </div>
-            <div className="flex flex-col items-center">
-              <Star className="w-8 h-8 text-[#D4A574] mb-3 fill-[#D4A574]" />
-              <p className="text-3xl font-light text-[#1C1917] mb-1" style={{ fontFamily: "DM Serif Display, serif" }}>
-                {STATS_DISPLAY[L].rating}/5
-              </p>
-              <p className="text-sm text-[#57534E]">
-                {language === "en" ? "Average rating from residents" : "Note moyenne des résidents"}
-              </p>
-            </div>
-          </div>
-        </div>
-      </section>
-
       {/* Steps — après le form (S33) : explique la suite, Candidater ✓ → Rencontrer → Emménager */}
       <section className="py-24 lg:py-32 bg-white">
         <div className="container-custom">
@@ -644,6 +676,41 @@ export function JoinPageV4() {
         </div>
       </section>
 
+      {/* Social proof stats — chiffres business pour rassurer (CRO win #1) */}
+      <section className="py-12 bg-[#FAF9F6] border-y border-[#E7E5E4]">
+        <div className="container-custom">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-4xl mx-auto text-center">
+            <div className="flex flex-col items-center">
+              <Users className="w-8 h-8 text-[#D4A574] mb-3" />
+              <p className="text-3xl font-light text-[#1C1917] mb-1" style={{ fontFamily: "DM Serif Display, serif" }}>
+                {STATS.totalResidents}+
+              </p>
+              <p className="text-sm text-[#57534E]">
+                {language === "en" ? "Residents since 2021" : "Résidents depuis 2021"}
+              </p>
+            </div>
+            <div className="flex flex-col items-center">
+              <Sparkles className="w-8 h-8 text-[#D4A574] mb-3" />
+              <p className="text-3xl font-light text-[#1C1917] mb-1" style={{ fontFamily: "DM Serif Display, serif" }}>
+                99%
+              </p>
+              <p className="text-sm text-[#57534E]">
+                {language === "en" ? "Occupancy rate over 5 years" : "Taux d'occupation sur 5 ans"}
+              </p>
+            </div>
+            <div className="flex flex-col items-center">
+              <Star className="w-8 h-8 text-[#D4A574] mb-3 fill-[#D4A574]" />
+              <p className="text-3xl font-light text-[#1C1917] mb-1" style={{ fontFamily: "DM Serif Display, serif" }}>
+                {STATS_DISPLAY[L].rating}/5
+              </p>
+              <p className="text-sm text-[#57534E]">
+                {language === "en" ? "Average rating from residents" : "Note moyenne des résidents"}
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* WhatsApp alternative + FAQ contextuelle (CRO wins #4 + #8) */}
       <section className="py-20 lg:py-24 bg-white">
         <div className="container-custom max-w-3xl">
@@ -658,7 +725,7 @@ export function JoinPageV4() {
             <p className="text-sm text-[#57534E] mb-6 max-w-xl mx-auto">
               {language === "en"
                 ? "Quick questions about availability, neighborhoods, or how it works? Send us a message — we usually reply within the hour during business days."
-                : "Une question rapide sur les disponibilités, les quartiers ou le fonctionnement ? Écrivez-nous — réponse généralement sous 1h en jours ouvrés."}
+                : "Une question rapide sur les disponibilités, les quartiers ou le fonctionnement ? Écris-nous — réponse généralement sous 1h en jours ouvrés."}
             </p>
             <a
               href="https://wa.me/33664315134"
@@ -700,8 +767,8 @@ export function JoinPageV4() {
               {
                 q_fr: "Quel est le loyer et que comprend-il vraiment ?",
                 q_en: "What is the rent and what does it really include?",
-                a_fr: `À partir de ${PRICE_CHF_FR}/mois tout inclus : chambre meublée, charges (eau, électricité, chauffage), fibre 8 Gbps, ménage 3 fois par semaine, accès piscine/sauna/gym, cours de yoga et fitness privés, abonnements streaming, événements communautaires mensuels. Caution 2 mois de loyer hors charges. Aucun frais d'agence, aucun frais de dossier.`,
-                a_en: `From ${PRICE_CHF_EN}/month all-inclusive: furnished room, utilities (water, electricity, heating), 8 Gbps fiber, twice-weekly cleaning, pool/sauna/gym access, private yoga and fitness classes, streaming subscriptions, monthly community events. Deposit: 2 months' rent excl. utilities. No agency fees, no application fees.`,
+                a_fr: `À partir de ${PRICE_SHARED_CHF_FR}/mois tout inclus : chambre meublée, charges (eau, électricité, chauffage), fibre 8 Gbps, ménage 3 fois par semaine, accès piscine/sauna/gym, cours de yoga et fitness privés, abonnements streaming, événements communautaires mensuels. Caution 2 mois de loyer hors charges. Aucun frais d'agence, aucun frais de dossier. Le loyer contractuel est libellé en euros : de ${EUR_SHARED_FR_NUM} à ${EUR_STANDARD_FR_NUM} €/mois selon la chambre. Les montants en CHF affichés sur le site sont indicatifs (taux d'${CONTRACT_EUR.rateLabelFr}).`,
+                a_en: `From ${PRICE_SHARED_CHF_EN}/month all-inclusive: furnished room, utilities (water, electricity, heating), 8 Gbps fiber, cleaning three times a week, pool/sauna/gym access, private yoga and fitness classes, streaming subscriptions, monthly community events. Deposit: 2 months' rent excl. utilities. No agency fees, no application fees. The contractual rent is set in euros: €${EUR_SHARED_EN_NUM}–€${EUR_STANDARD_EN_NUM}/month depending on the room. CHF amounts shown on the site are indicative (${CONTRACT_EUR.rateLabelEn} rate).`,
               },
               {
                 q_fr: "Quelle est la durée minimale du bail ?",

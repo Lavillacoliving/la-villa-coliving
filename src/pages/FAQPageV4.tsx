@@ -12,7 +12,7 @@ import {
 import { faqData, faqCategories } from "@/data/faqData";
 import { Search, MessageCircle } from "lucide-react";
 import { SEO } from "@/components/SEO";
-import { PRICE_CHF_FR, PRICE_CHF_EN } from "@/data/stats";
+import { PRICE_SHARED_CHF_FR, PRICE_SHARED_CHF_EN } from "@/data/stats";
 
 export function FAQPageV4() {
   const { language } = useLanguage();
@@ -174,8 +174,8 @@ export function FAQPageV4() {
                   </h4>
                   <p className="text-sm text-[#57534E]">
                     {language === "en"
-                      ? `29 furnished rooms, all-inclusive from ${PRICE_CHF_EN}/mo. See the full guide →`
-                      : `29 chambres meublées, tout inclus dès ${PRICE_CHF_FR}/mois. Voir le guide complet →`}
+                      ? `29 furnished rooms, all-inclusive from ${PRICE_SHARED_CHF_EN}/mo. See the full guide →`
+                      : `29 chambres meublées, tout inclus dès ${PRICE_SHARED_CHF_FR}/mois. Voir le guide complet →`}
                   </p>
                 </LocalizedLink>
 

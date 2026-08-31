@@ -5,10 +5,18 @@ import { MapPin, Users, ArrowRight, Check, X } from "lucide-react";
 import { SEO } from "@/components/SEO";
 import { FaqSection } from "@/components/FaqSection";
 import { maisonsFaq } from "@/data/faq/maisonsFaq";
-import { PRICE_EN_NUM, PRICE_CHF_FR, PRICE_CHF_EN } from "@/data/stats";
+import { PRICE_FR_NUM, PRICE_EN_NUM, PRICE_SHARED_FR_NUM, PRICE_SHARED_EN_NUM, PRICE_SHARED_CHF_FR, PRICE_SHARED_CHF_EN, EUR_STANDARD_FR_NUM, EUR_STANDARD_EN_NUM, EUR_SHARED_FR_NUM, EUR_SHARED_EN_NUM } from "@/data/stats";
+import {
+  useRoomAvailability,
+  houseBadgeLabel,
+  houseBadgeTone,
+  BADGE_CHIP_CLASS,
+  type HouseKey,
+} from "@/lib/availability";
 
 export function HousesPageV4() {
   const { language } = useLanguage();
+  const availability = useRoomAvailability();
 
   const houses = [
     {
@@ -24,7 +32,7 @@ export function HousesPageV4() {
         ? "La Villa — premium coliving with heated pool, gym and sauna in Ville-la-Grand near Geneva"
         : "La Villa — colocation premium avec piscine chauffée, gym et sauna à Ville-la-Grand près de Genève",
       capacity: "10",
-      price: PRICE_EN_NUM,
+      price: language === "en" ? PRICE_EN_NUM : PRICE_FR_NUM,
       features: language === "en"
         ? ["Heated outdoor pool", "Sauna (5 seats)", "Gym", "2,000 m² garden"]
         : ["Piscine chauffée extérieure", "Sauna (5 places)", "Salle de sport", "Jardin 2 000 m²"],
@@ -37,12 +45,12 @@ export function HousesPageV4() {
         language === "en"
           ? "A 300 m² townhouse with urban sophistication. Year-round heated indoor pool, Finnish sauna, gym, and spacious designer rooms."
           : "Maison de ville de 300 m² avec sophistication urbaine. Piscine intérieure chauffée toute l'année, sauna finlandais, gym et chambres design spacieuses.",
-      image: "/images/le loft/amenities/la villa coliving le loft-94.webp",
+      image: "/images/la villa coliving le loft piscine.webp",
       alt: language === "en"
         ? "Le Loft — urban coliving with indoor pool and designer rooms in Ambilly near Geneva"
         : "Le Loft — colocation urbaine avec piscine intérieure et chambres design à Ambilly près de Genève",
       capacity: "7",
-      price: PRICE_EN_NUM,
+      price: language === "en" ? PRICE_EN_NUM : PRICE_FR_NUM,
       features: language === "en"
         ? ["Year-round indoor pool", "Finnish sauna", "Gym", "Outdoor kitchen"]
         : ["Piscine intérieure toute l'année", "Sauna finlandais", "Salle de sport", "Cuisine extérieure"],
@@ -60,7 +68,7 @@ export function HousesPageV4() {
         ? "Le Lodge — coliving with pool, gym and gardens in Annemasse, 10 min from Geneva"
         : "Le Lodge — colocation avec piscine, gym et jardins à Annemasse, 10 min de Genève",
       capacity: "12",
-      price: PRICE_EN_NUM,
+      price: language === "en" ? PRICE_EN_NUM : PRICE_FR_NUM,
       features: language === "en"
         ? ["Outdoor pool + pool house", "Sauna", "Full fitness chalet", "Arcade & games"]
         : ["Piscine + pool house", "Sauna", "Chalet fitness complet", "Arcade & jeux"],
@@ -122,7 +130,9 @@ export function HousesPageV4() {
     },
     {
       label: language === "en" ? "Price" : "Tarif",
-      values: [`${PRICE_EN_NUM} CHF`, `${PRICE_EN_NUM} CHF`, `${PRICE_EN_NUM} CHF`],
+      values: language === "en"
+        ? [`${PRICE_SHARED_EN_NUM}–${PRICE_EN_NUM} CHF (€${EUR_SHARED_EN_NUM}–${EUR_STANDARD_EN_NUM})`, `${PRICE_EN_NUM} CHF (€${EUR_STANDARD_EN_NUM})`, `${PRICE_EN_NUM} CHF (€${EUR_STANDARD_EN_NUM})`]
+        : [`${PRICE_SHARED_FR_NUM}–${PRICE_FR_NUM} CHF (${EUR_SHARED_FR_NUM}–${EUR_STANDARD_FR_NUM} €)`, `${PRICE_FR_NUM} CHF (${EUR_STANDARD_FR_NUM} €)`, `${PRICE_FR_NUM} CHF (${EUR_STANDARD_FR_NUM} €)`],
     },
   ];
 
@@ -131,8 +141,8 @@ export function HousesPageV4() {
       <SEO
         title={language === "en" ? "Our 3 Coliving Houses Near Geneva" : "Colocation en maison près de Genève"}
         description={language === "en"
-          ? `La Villa, Le Loft, Le Lodge — 3 premium houses with pool, sauna & gym. 29 all-inclusive furnished rooms from ${PRICE_CHF_EN}/month.`
-          : `La Villa, Le Loft, Le Lodge — 3 maisons premium avec piscine, sauna et gym. 29 chambres privées tout inclus dès ${PRICE_CHF_FR}/mois.`}
+          ? `La Villa, Le Loft, Le Lodge — 3 premium houses with pool, sauna & gym. 29 all-inclusive furnished rooms from ${PRICE_SHARED_CHF_EN}/month.`
+          : `La Villa, Le Loft, Le Lodge — 3 maisons premium avec piscine, sauna et gym. 29 chambres privées tout inclus dès ${PRICE_SHARED_CHF_FR}/mois.`}
         url="https://www.lavillacoliving.com/nos-maisons"
       />
       {/* Hero */}
@@ -163,8 +173,8 @@ export function HousesPageV4() {
           {/* Phrase citable produit (extraction IA / AI Overviews) */}
           <p className="text-sm text-[#78716C] max-w-2xl mx-auto mt-4">
             {language === "en"
-              ? `La Villa Coliving: 29 all-inclusive furnished rooms from ${PRICE_CHF_EN}/month across 3 houses — La Villa (Ville-la-Grand), Le Loft (Ambilly) and Le Lodge (Annemasse), 20 minutes from Geneva.`
-              : `La Villa Coliving : 29 chambres meublées tout inclus dès ${PRICE_CHF_FR}/mois dans 3 maisons — La Villa (Ville-la-Grand), Le Loft (Ambilly) et Le Lodge (Annemasse), à 20 minutes de Genève.`}
+              ? `La Villa Coliving: 29 all-inclusive furnished rooms from ${PRICE_SHARED_CHF_EN}/month across 3 houses — La Villa (Ville-la-Grand), Le Loft (Ambilly) and Le Lodge (Annemasse), 20 minutes from Geneva.`
+              : `La Villa Coliving : 29 chambres meublées tout inclus dès ${PRICE_SHARED_CHF_FR}/mois dans 3 maisons — La Villa (Ville-la-Grand), Le Loft (Ambilly) et Le Lodge (Annemasse), à 20 minutes de Genève.`}
           </p>
         </div>
       </section>
@@ -193,6 +203,17 @@ export function HousesPageV4() {
                   <span className="absolute top-4 right-4 bg-black/60 backdrop-blur-sm text-white text-xs font-medium px-3 py-1.5 rounded-lg">
                     {language === "en" ? "20 min Geneva center" : "20 min Genève centre"}
                   </span>
+                  {/* Pastille dispo — couleur dérivée de la dispo réelle (v_public_rooms), pas du libellé.
+                      Libellé null (dispo inconnue) = pas de pastille, jamais de chiffre inventé. */}
+                  {(() => {
+                    const label = houseBadgeLabel(availability.byHouse[house.id as HouseKey], availability.known, language);
+                    const tone = houseBadgeTone(availability.byHouse[house.id as HouseKey], availability.known);
+                    return label && tone ? (
+                      <span className={`absolute bottom-4 left-4 backdrop-blur-sm text-xs font-semibold px-3 py-1.5 rounded-lg ${BADGE_CHIP_CLASS[tone]}`}>
+                        {label}
+                      </span>
+                    ) : null;
+                  })()}
                 </LocalizedLink>
 
                 {/* Content */}
@@ -232,8 +253,22 @@ export function HousesPageV4() {
                   {/* Price + CTA */}
                   <div className="mt-auto pt-5 border-t border-[#E7E5E4]">
                     <div className="flex items-baseline gap-2 mb-4">
+                      {/* La Villa : 4 chambres sur 10 à salle d'eau partagée → plancher 1 390 */}
+                      {house.name === "La Villa" && (
+                        <span className="text-sm text-[#78716C]">
+                          {language === "en" ? "from" : "dès"}
+                        </span>
+                      )}
                       <span className="text-2xl font-light text-[#D4A574]">
-                        {house.price} CHF
+                        {house.name === "La Villa"
+                          ? (language === "en" ? PRICE_SHARED_EN_NUM : PRICE_SHARED_FR_NUM)
+                          : house.price}{" "}
+                        CHF
+                      </span>
+                      <span className="text-sm font-light text-[#78716C]">
+                        {house.name === "La Villa"
+                          ? (language === "en" ? `(€${EUR_SHARED_EN_NUM})` : `(${EUR_SHARED_FR_NUM} €)`)
+                          : (language === "en" ? `(€${EUR_STANDARD_EN_NUM})` : `(${EUR_STANDARD_FR_NUM} €)`)}
                       </span>
                       <span className="text-sm text-[#78716C]">
                         / {language === "en" ? "month" : "mois"}
@@ -249,7 +284,7 @@ export function HousesPageV4() {
                         <ArrowRight className="w-4 h-4" />
                       </LocalizedLink>
                       <LocalizedLink
-                        to="/candidature"
+                        to={`/candidature?property_interest=${house.id}`}
                         className="inline-flex items-center justify-center px-5 py-3 border border-[#1C1917] text-[#1C1917] text-sm font-semibold rounded-lg hover:bg-[#1C1917] hover:text-white transition-colors"
                       >
                         {language === "en" ? "Apply" : "Postuler"}
@@ -358,7 +393,7 @@ export function HousesPageV4() {
           <p className="text-lg text-white/60 max-w-xl mx-auto mb-8">
             {language === "en"
               ? "Contact us and we'll help you find the perfect home for your lifestyle."
-              : "Contactez-nous et nous vous aiderons à trouver la maison parfaite pour votre style de vie."}
+              : "Contacte-nous et on t'aidera à trouver la maison parfaite pour ton style de vie."}
           </p>
           <LocalizedLink
             to="/faq"

@@ -4,7 +4,7 @@ import { colocGeneveHref } from "@/lib/siteLinks";
 import { Scrim } from "@/components/Scrim";
 import { ArrowRight, ChevronDown, Home, Users, Heart, MapPin } from "lucide-react";
 import { useLanguage } from "@/contexts/LanguageContext";
-import { STATS, STATS_DISPLAY, PRICE_CHF_FR, PRICE_CHF_EN } from "@/data/stats";
+import { STATS, STATS_DISPLAY, PRICE_SHARED_CHF_FR, PRICE_SHARED_CHF_EN } from "@/data/stats";
 import { useRoomAvailability, globalAvailabilityLabel } from "@/lib/availability";
 
 /**
@@ -77,8 +77,8 @@ export function HeroV7() {
           {/* Description */}
           <p className="text-base md:text-lg text-white max-w-xl mb-6 leading-relaxed font-light [text-shadow:0_2px_10px_rgba(0,0,0,0.55)]">
             {language === "en"
-              ? `Your private room in a house with pool, 20 min from Geneva city center. All-inclusive from ${PRICE_CHF_EN}/month.`
-              : `Ta chambre privée dans une maison avec piscine, à 20 min du centre de Genève. Tout inclus dès ${PRICE_CHF_FR}/mois.`}
+              ? `Your private room in a house with pool, 20 min from Geneva city center. From ${PRICE_SHARED_CHF_EN}/month, all inclusive.`
+              : `Ta chambre privée dans une maison avec piscine, à 20 min du centre de Genève. Dès ${PRICE_SHARED_CHF_FR}/mois tout inclus.`}
           </p>
 
           {/* CTAs — remontés au-dessus de la réassurance/preuve sociale : GA4 montre que
@@ -145,7 +145,7 @@ export function HeroV7() {
                 label: language === "en" ? "Private rooms" : "Chambres privées",
               },
               {
-                value: `${STATS.priceChf.toLocaleString('fr-FR')} CHF`,
+                value: language === "en" ? `from ${PRICE_SHARED_CHF_EN}` : `dès ${PRICE_SHARED_CHF_FR}`,
                 label: language === "en" ? "All inclusive / month" : "Tout inclus / mois",
               },
               {
@@ -211,7 +211,11 @@ export function HeroV7() {
             </p>
           </div>
 
-          {/* 5 USP photo cards */}
+          {/* 5 USP photo cards — cliquables depuis le 29/08 (demande Jérôme :
+              l'audience cliquait sans effet, cursor-pointer sans lien). Cible =
+              la page qui convertit l'intention du pavé : /nos-maisons (arbitrage
+              Jérôme 29/08 : le comparateur des 3 maisons reçoit les intentions
+              équipements), /services pour les cours privés. Tracké cta_click hero_amenity. */}
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
             {[
               {
@@ -219,33 +223,54 @@ export function HeroV7() {
                 title: language === "en" ? "Pool" : "Piscine",
                 desc: language === "en" ? "Indoor at Le Loft, outdoor at La Villa and Le Lodge" : "Intérieure au Loft, extérieure à La Villa et au Lodge",
                 highlight: language === "en" ? "In all 3 houses" : "Dans les 3 maisons",
+                to: "/nos-maisons",
+                amenity: "pool",
               },
               {
                 image: "/images/la villa coliving le lodge-sauna2.webp",
                 title: "Sauna",
                 desc: language === "en" ? "Finnish sauna at Le Loft and Le Lodge, and infrared at La Villa." : "Sauna finlandais au Loft et au Lodge et infrarouge à La Villa.",
                 highlight: language === "en" ? "In all 3 houses" : "Dans les 3 maisons",
+                to: "/nos-maisons",
+                amenity: "sauna",
               },
               {
                 image: "/images/la villa coliving le lodge-gym.webp",
                 title: language === "en" ? "Gym" : "Salle de sport",
                 desc: language === "en" ? "Fully equipped in each house" : "Entièrement équipée dans chaque maison",
                 highlight: language === "en" ? "In all 3 houses" : "Dans les 3 maisons",
+                to: "/nos-maisons",
+                amenity: "gym",
               },
               {
                 image: "/images/la villa yoga.webp",
                 title: language === "en" ? "Private classes" : "Cours privés",
                 desc: language === "en" ? "Weekly yoga & fitness included" : "Yoga & fitness hebdo inclus",
                 highlight: language === "en" ? "Included in rent" : "Inclus dans le loyer",
+                to: "/services",
+                amenity: "classes",
               },
               {
                 image: "/images/le loft glamour.webp",
                 title: language === "en" ? `${STATS.roomSizeMin}-${STATS.roomSizeMax} m² rooms` : `Chambres ${STATS.roomSizeMin}-${STATS.roomSizeMax} m²`,
                 desc: language === "en" ? "50% larger than coliving average" : "50% plus grandes que la moyenne",
-                highlight: language === "en" ? "Private bathroom" : "SDB privative",
+                highlight: language === "en" ? "Private bathroom (most)" : "SDB privative (la plupart)",
+                to: "/nos-maisons",
+                amenity: "rooms",
               },
             ].map((item, index) => (
-              <div key={index} className="group relative aspect-[3/4] rounded-2xl overflow-hidden cursor-pointer">
+              <LocalizedLink
+                key={index}
+                to={item.to}
+                onClick={() => {
+                  try {
+                    (window as unknown as { gtag?: (...a: unknown[]) => void }).gtag?.("event", "cta_click", {
+                      cta_position: "hero_amenity", cta_target: item.to, amenity: item.amenity, language,
+                    });
+                  } catch { /* noop */ }
+                }}
+                className="group relative aspect-[3/4] rounded-2xl overflow-hidden cursor-pointer block"
+              >
                 <img
                   src={item.image}
                   alt={`${item.title}${language === "en" ? " — premium coliving near Geneva" : " — coliving premium près de Genève"}`}
@@ -263,22 +288,24 @@ export function HeroV7() {
                     {item.highlight}
                   </span>
                 </div>
-              </div>
+              </LocalizedLink>
             ))}
           </div>
 
-          {/* Pricing reminder */}
-          <p className="text-center text-white/50 text-sm mt-10 max-w-lg mx-auto">
+          {/* Pricing reminder — text-base (au lieu de sm) : demande Jérôme 29/08 */}
+          <p className="text-center text-white/50 text-base mt-10 max-w-lg mx-auto">
             {language === "en"
-              ? `All of this is included in your rent. CHF ${STATS.priceChf.toLocaleString('en')}/month. No paid add-ons. No application fee, no agency fee. No hidden fees. Ever.`
-              : `Tout ceci est inclus dans ton loyer. ${STATS.priceChf.toLocaleString('fr-FR')} CHF/mois. Pas d'options payantes. Pas de frais de dossier, pas d'honoraires d'agence. Pas de frais cachés. Jamais.`}
+              ? `All of this is included in your rent. No paid add-ons. No application fee, no agency fee. No hidden fees. Ever.`
+              : `Tout ceci est inclus dans ton loyer. Pas d'options payantes. Pas de frais de dossier, pas d'honoraires d'agence. Pas de frais cachés. Jamais.`}
           </p>
         </div>
 
         {/* Partie 2 — Strip positionnement */}
         <div className="border-t border-white/[0.08] mt-16">
           <div className="max-w-7xl mx-auto px-6 py-6 md:py-8">
-            <div className="flex flex-wrap justify-center gap-6 md:gap-12">
+            {/* Mobile : colonne alignée à gauche (les lignes centrées une à une
+                faisaient « voler » les icônes — Jérôme 29/08) ; desktop inchangé. */}
+            <div className="flex flex-col items-start gap-4 w-fit mx-auto md:w-auto md:flex-row md:flex-wrap md:justify-center md:gap-12">
               {[
                 { icon: Home, text: language === "en" ? "Real houses, not residences" : "De vraies maisons, pas des résidences", bold: language === "en" ? "Real houses" : "vraies maisons" },
                 { icon: Users, text: language === "en" ? `${STATS.minResidentsPerHouse} to ${STATS.maxResidentsPerHouse} residents per house` : `${STATS.minResidentsPerHouse} à ${STATS.maxResidentsPerHouse} résidents par maison`, bold: language === "en" ? `${STATS.minResidentsPerHouse} to ${STATS.maxResidentsPerHouse}` : `${STATS.minResidentsPerHouse} à ${STATS.maxResidentsPerHouse}` },

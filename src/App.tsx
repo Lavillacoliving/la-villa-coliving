@@ -32,6 +32,7 @@ const InvestisseursPage = lazy(() => import("@/pages/InvestisseursPage").then(m 
 const ObservatoireLogementPage = lazy(() => import("@/pages/ObservatoireLogementFrontalierPage").then(m => ({ default: m.ObservatoireLogementFrontalierPage })));
 const QuiSommesNousPage = lazy(() => import("@/pages/QuiSommesNousPage").then(m => ({ default: m.QuiSommesNousPage })));
 const NotFoundPage = lazy(() => import("@/pages/NotFoundPage").then(m => ({ default: m.NotFoundPage })));
+const CharteTransparencePage = lazy(() => import("@/pages/CharteTransparencePage").then(m => ({ default: m.CharteTransparencePage })));
 const MentionsLegalesPage = lazy(() => import("@/pages/MentionsLegalesPage").then(m => ({ default: m.MentionsLegalesPage })));
 // QuiSommesNousPage : composant prêt (src/pages/QuiSommesNousPage.tsx) mais PAS routé —
 // Jérôme retravaille la page dans une autre session. Au moment de la router : lazy import ici,
@@ -115,6 +116,7 @@ function AppContent() {
         <Route path="/investisseurs" element={<InvestisseursPage />} />
         <Route path="/observatoire-logement-frontalier-geneve" element={<ObservatoireLogementPage />} />
         <Route path="/qui-sommes-nous" element={<QuiSommesNousPage />} />
+        <Route path="/charte-transparence" element={<CharteTransparencePage />} />
         <Route path="/mentions-legales" element={<MentionsLegalesPage />} />
         <Route path="/politique-de-confidentialite" element={<PolitiqueConfidentialitePage />} />
         {/* EN routes — same components, language detected from /en prefix */}
@@ -137,6 +139,7 @@ function AppContent() {
         <Route path="/en/investisseurs" element={<InvestisseursPage />} />
         <Route path="/en/observatoire-logement-frontalier-geneve" element={<ObservatoireLogementPage />} />
         <Route path="/en/qui-sommes-nous" element={<QuiSommesNousPage />} />
+        <Route path="/en/charte-transparence" element={<CharteTransparencePage />} />
         <Route path="/en/mentions-legales" element={<MentionsLegalesPage />} />
         <Route path="/en/politique-de-confidentialite" element={<PolitiqueConfidentialitePage />} />
         <Route path="/reset-password" element={<ResetPasswordPage />} />
