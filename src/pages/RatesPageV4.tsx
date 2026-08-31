@@ -404,6 +404,288 @@ export function RatesPageV4() {
         </div>
       </section>
 
+      {/* OBJECTION PRIX — « Oui, nos prix sont plus élevés » + tableau comparatif 3 colonnes */}
+      <section className="py-20 bg-[#FAF9F6]" id="objection-prix">
+        <div className="container-custom">
+          <div className="max-w-3xl mx-auto">
+            <h2
+              className="text-3xl md:text-4xl font-light text-[#1C1917] mb-8"
+              style={{ fontFamily: "DM Serif Display, serif" }}
+            >
+              {language === "en"
+                ? "Yes, our prices are higher. Here's why — and what you get for it."
+                : "Oui, nos prix sont plus élevés. Voici pourquoi — et ce que tu obtiens en échange."}
+            </h2>
+            {/* Argumentaire réécrit en 4 points (demande Jérôme 29/08) : surface,
+                ménage, tout-inclus jusqu'aux fournitures, équipements premium.
+                Jamais de concurrent nommé — on parle du « marché » et de la
+                « colocation classique ». Chiffres via STATS (source unique). */}
+            <div className="space-y-8 text-[#44403C] leading-relaxed">
+              <p>
+                {language === "en"
+                  ? "A room in a standard flatshare costs less. Here is precisely what the difference buys you."
+                  : "Une chambre en colocation classique coûte moins cher. Voici précisément ce que la différence t'achète."}
+              </p>
+
+              <div>
+                <h3 className="text-lg font-semibold text-[#1C1917] mb-2">
+                  {language === "en"
+                    ? "1. Rooms up to twice as big — and twice the space to live in"
+                    : "1. Des chambres jusqu'à deux fois plus grandes — et deux fois plus d'espace à vivre"}
+                </h3>
+                <p>
+                  {language === "en" ? (
+                    <>
+                      A standard flatshare room is usually 9-12 m². Ours are{" "}
+                      <strong>{STATS.roomSizeMin}-{STATS.roomSizeMax} m²</strong> — up to twice that.
+                      And it does not stop at your door: counting the common areas, each housemate
+                      has <strong>37-42 m² of living space</strong>, again about twice what a classic
+                      flatshare leaves you.
+                    </>
+                  ) : (
+                    <>
+                      Une chambre en colocation classique fait le plus souvent 9 à 12 m². Les nôtres
+                      font <strong>{STATS.roomSizeMin} à {STATS.roomSizeMax} m²</strong> — jusqu'à
+                      deux fois plus. Et ça ne s'arrête pas à ta porte : espaces communs compris,
+                      chaque colocataire dispose de{" "}
+                      <strong>37 à 42 m² de surface de vie</strong>, là encore près du double de ce
+                      que laisse une coloc classique.
+                    </>
+                  )}
+                </p>
+              </div>
+
+              <div>
+                <h3 className="text-lg font-semibold text-[#1C1917] mb-2">
+                  {language === "en"
+                    ? `2. Housekeeping ${STATS.cleaningPerWeek}× a week`
+                    : `2. Le ménage ${STATS.cleaningPerWeek} fois par semaine`}
+                </h3>
+                <p>
+                  {language === "en" ? (
+                    <>
+                      Not once. Not twice, which is the best the market offers.{" "}
+                      <strong>{STATS.cleaningPerWeek} visits a week</strong> from a professional team
+                      across every shared space — kitchen, lounges, shared shower rooms. No cleaning
+                      rota to negotiate, no chore to split: you come home, it is clean.
+                    </>
+                  ) : (
+                    <>
+                      Pas une fois. Pas deux, ce que propose au mieux le marché.{" "}
+                      <strong>{STATS.cleaningPerWeek} passages par semaine</strong> d'une équipe
+                      professionnelle dans tous les espaces partagés — cuisine, salons, salles d'eau
+                      communes. Aucun planning de ménage à négocier, aucune corvée à répartir : tu
+                      rentres, c'est propre.
+                    </>
+                  )}
+                </p>
+              </div>
+
+              <div>
+                <h3 className="text-lg font-semibold text-[#1C1917] mb-2">
+                  {language === "en"
+                    ? "3. 100% of costs included, zero surprises"
+                    : "3. 100 % des frais inclus, zéro surprise"}
+                </h3>
+                <p>
+                  {language === "en" ? (
+                    <>
+                      One payment a month. It covers the rent, all utilities (water, electricity,
+                      heating), fibre up to {STATS.fiberSpeed} and the streaming subscriptions — plus
+                      everything nobody thinks to count:{" "}
+                      <strong>
+                        bedding and towels provided, cleaning products, cloths, and the basics —
+                        toilet paper, laundry detergent, salt, pepper, oil
+                      </strong>
+                      . No application fee, no agency fee, no paid extras. You know your monthly cost
+                      in advance, to the franc.
+                    </>
+                  ) : (
+                    <>
+                      Un seul paiement par mois. Il comprend le loyer, toutes les charges (eau,
+                      électricité, chauffage), la fibre jusqu'à {STATS.fiberSpeed} et les abonnements
+                      streaming — plus tout ce qu'on ne pense jamais à compter :{" "}
+                      <strong>
+                        parure de lit et serviettes fournies, produits d'entretien, chiffons, et les
+                        fournitures de base — papier toilette, lessive, sel, poivre, huile
+                      </strong>
+                      . Aucun frais de dossier, aucun honoraire d'agence, aucune option payante. Tu
+                      connais ta dépense du mois à l'avance, au franc près.
+                    </>
+                  )}
+                </p>
+              </div>
+
+              <div>
+                <h3 className="text-lg font-semibold text-[#1C1917] mb-2">
+                  {language === "en"
+                    ? "4. Premium amenities and services"
+                    : "4. Des équipements et des services premium"}
+                </h3>
+                <p>
+                  {language === "en" ? (
+                    <>
+                      <strong>Pool, sauna, gym and landscaped outdoor areas</strong> in every house.
+                      Private <strong>yoga and fitness classes every week</strong>, a{" "}
+                      <strong>pizza night every month</strong>, and events all year round. These are
+                      services no classic flatshare offers — and here, they are part of the rent.
+                    </>
+                  ) : (
+                    <>
+                      <strong>Piscine, sauna, salle de sport et extérieurs aménagés</strong> dans
+                      chaque maison. Des{" "}
+                      <strong>cours privés de yoga et de fitness chaque semaine</strong>, une{" "}
+                      <strong>soirée pizza tous les mois</strong>, et des événements toute l'année.
+                      Ce sont des services qu'aucune colocation classique ne propose — et ici, ils
+                      sont compris dans le loyer.
+                    </>
+                  )}
+                </p>
+              </div>
+
+              <p>
+                {language === "en"
+                  ? "If you are after the lowest rent in the area, that unfortunately will not be us. If you compare what every franc buys you, then come and visit a house!"
+                  : "Si tu cherches le loyer le plus bas de l'agglomération, ce ne sera malheureusement pas nous. Si tu compares ce que chaque franc t'apporte, alors viens visiter une maison !"}
+              </p>
+            </div>
+          </div>
+
+          <div className="max-w-5xl mx-auto mt-16">
+            <h3
+              className="text-2xl md:text-3xl font-light text-[#1C1917] mb-8 text-center"
+              style={{ fontFamily: "DM Serif Display, serif" }}
+            >
+              {language === "en"
+                ? "La Villa Coliving compared with a standard flatshare"
+                : "La Villa Coliving comparé à la colocation classique"}
+            </h3>
+            <p
+              className="md:hidden text-xs text-[#78716C] mb-2 text-right pr-1"
+              aria-hidden="true"
+            >
+              {language === "en"
+                ? "Swipe to compare →"
+                : "Fais défiler pour comparer →"}
+            </p>
+            <div className="overflow-x-auto rounded-2xl border border-[#E7E5E4] bg-white shadow-sm">
+              <table className="w-full min-w-[680px] border-separate border-spacing-0 text-sm">
+                <caption className="sr-only">
+                  {language === "en"
+                    ? "Price and services comparison: standard flatshare, La Villa Coliving, Geneva studio"
+                    : "Comparaison prix et services : colocation classique, La Villa Coliving, studio à Genève"}
+                </caption>
+                <thead>
+                  <tr className="bg-[#1C1917] text-white">
+                    <th
+                      scope="col"
+                      className="sticky left-0 z-[1] bg-[#1C1917] px-4 py-4 text-left font-medium w-[150px] min-w-[150px] md:w-auto md:min-w-[200px]"
+                    >
+                      <span className="sr-only">
+                        {language === "en" ? "Criterion" : "Critère"}
+                      </span>
+                    </th>
+                    <th scope="col" className="px-4 py-4 text-left font-medium">
+                      {language === "en"
+                        ? "Standard flatshare (local area)"
+                        : "Colocation classique (agglo)"}
+                    </th>
+                    <th
+                      scope="col"
+                      className="px-4 py-4 text-left font-bold bg-[#D4A574]"
+                    >
+                      La Villa Coliving
+                    </th>
+                    <th scope="col" className="px-4 py-4 text-left font-medium">
+                      {language === "en" ? "Geneva studio" : "Studio Genève"}
+                    </th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {objectionRows.map((row) => (
+                    <tr key={row.label.fr} className="group">
+                      <th
+                        scope="row"
+                        className={`sticky left-0 z-[1] bg-white border-r border-b border-[#E7E5E4] group-last:border-b-0 px-4 py-3 text-left align-top text-[#1C1917] w-[150px] min-w-[150px] md:w-auto md:min-w-[200px] ${
+                          row.highlight ? "font-bold" : "font-medium"
+                        }`}
+                      >
+                        {pick(row.label)}
+                      </th>
+                      <td className="border-b border-[#E7E5E4] group-last:border-b-0 px-4 py-3 align-top text-[#57534E]">
+                        {pick(row.classic)}
+                      </td>
+                      <td
+                        className={`border-b border-[#E7E5E4] group-last:border-b-0 px-4 py-3 align-top bg-[#F8EFE4] text-[#1C1917] ${
+                          row.highlight ? "font-bold" : "font-semibold"
+                        }`}
+                      >
+                        {pick(row.villa)}
+                      </td>
+                      <td className="border-b border-[#E7E5E4] group-last:border-b-0 px-4 py-3 align-top text-[#57534E]">
+                        {pick(row.studio)}
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+            <p className="mt-3 text-center text-xs text-[#78716C]">
+              {language === "en"
+                ? `"Standard flatshare" and "Geneva studio" columns: market observations (indicative ranges). La Villa column: contractual facts. La Villa price per m²: contractual rent of €${EUR_STANDARD_EN_NUM} (${PRICE_CHF_EN}) ÷ 37-42 m² of living space per flatmate.`
+                : `Colonnes « Colocation classique » et « Studio Genève » : observations de marché (fourchettes indicatives). Colonne La Villa : faits contractuels. Prix du m² La Villa : loyer contractuel de ${EUR_STANDARD_FR_NUM} € (${PRICE_CHF_FR}) ÷ 37-42 m² d'espace de vie par colocataire.`}
+            </p>
+
+            {/* Encadré méga-résidences — chiffres publics, concurrent non nommé */}
+            <aside className="mt-10 max-w-3xl mx-auto bg-white border border-[#E7E5E4] border-l-4 border-l-[#D4A574] rounded-xl p-6 md:p-8">
+              <p className="text-xs font-medium tracking-wider uppercase text-[#D4A574] mb-2">
+                {language === "en" ? "Mega-residences" : "Méga-résidences"}
+              </p>
+              <h3
+                className="text-xl md:text-2xl font-medium text-[#1C1917] mb-3"
+                style={{ fontFamily: "DM Serif Display, serif" }}
+              >
+                {language === "en"
+                  ? "And compared to the new coliving mega-residences?"
+                  : "Et face aux nouvelles méga-résidences de coliving ?"}
+              </h3>
+              <p className="text-[#44403C] leading-relaxed">
+                {language === "en" ? (
+                  <>
+                    Near Geneva, recent mega-colivings house up to 776 rooms in a
+                    single building, with around 3,000 m² of shared spaces —{" "}
+                    <strong>
+                      less than 4 m² of common areas per resident
+                    </strong>
+                    . Here: {STATS.minResidentsPerHouse} to{" "}
+                    {STATS.maxResidentsPerHouse} flatmates per house,{" "}
+                    <strong>15 to 20 m² of indoor common areas each</strong>,
+                    plus the gardens, terraces and pools. At a comparable price,
+                    it's not the same product: there, you rent a studio in a
+                    service tower; here, you share a house.
+                  </>
+                ) : (
+                  <>
+                    Près de Genève, les méga-colivings récents logent jusqu'à 776
+                    chambres dans un même bâtiment, avec environ 3 000 m²
+                    d'espaces partagés —{" "}
+                    <strong>
+                      soit moins de 4 m² d'espaces communs par résident
+                    </strong>
+                    . Chez nous : {STATS.minResidentsPerHouse} à{" "}
+                    {STATS.maxResidentsPerHouse} colocataires par maison,{" "}
+                    <strong>15 à 20 m² d'espaces communs intérieurs chacun</strong>,
+                    plus les jardins, terrasses et piscines. À prix comparable, ce
+                    n'est pas le même produit : là-bas tu loues un studio dans une
+                    tour de services ; ici tu partages une maison.
+                  </>
+                )}
+              </p>
+            </aside>
+          </div>
+        </div>
+      </section>
+
       {/* COMPARISON SECTION - Geneva vs La Villa */}
       <section className="py-20 bg-[#1C1917]">
         <div className="container-custom">
@@ -718,288 +1000,6 @@ export function RatesPageV4() {
                 <ArrowRight className="w-5 h-5" />
               </LocalizedLink>
             </div>
-          </div>
-        </div>
-      </section>
-
-      {/* OBJECTION PRIX — « Oui, nos prix sont plus élevés » + tableau comparatif 3 colonnes */}
-      <section className="py-20 bg-[#FAF9F6]" id="objection-prix">
-        <div className="container-custom">
-          <div className="max-w-3xl mx-auto">
-            <h2
-              className="text-3xl md:text-4xl font-light text-[#1C1917] mb-8"
-              style={{ fontFamily: "DM Serif Display, serif" }}
-            >
-              {language === "en"
-                ? "Yes, our prices are higher. Here's why — and what you get for it."
-                : "Oui, nos prix sont plus élevés. Voici pourquoi — et ce que tu obtiens en échange."}
-            </h2>
-            {/* Argumentaire réécrit en 4 points (demande Jérôme 29/08) : surface,
-                ménage, tout-inclus jusqu'aux fournitures, équipements premium.
-                Jamais de concurrent nommé — on parle du « marché » et de la
-                « colocation classique ». Chiffres via STATS (source unique). */}
-            <div className="space-y-8 text-[#44403C] leading-relaxed">
-              <p>
-                {language === "en"
-                  ? "A room in a standard flatshare costs less. Here is precisely what the difference buys you."
-                  : "Une chambre en colocation classique coûte moins cher. Voici précisément ce que la différence t'achète."}
-              </p>
-
-              <div>
-                <h3 className="text-lg font-semibold text-[#1C1917] mb-2">
-                  {language === "en"
-                    ? "1. Rooms up to twice as big — and twice the space to live in"
-                    : "1. Des chambres jusqu'à deux fois plus grandes — et deux fois plus d'espace à vivre"}
-                </h3>
-                <p>
-                  {language === "en" ? (
-                    <>
-                      A standard flatshare room is usually 9-12 m². Ours are{" "}
-                      <strong>{STATS.roomSizeMin}-{STATS.roomSizeMax} m²</strong> — up to twice that.
-                      And it does not stop at your door: counting the common areas, each housemate
-                      has <strong>37-42 m² of living space</strong>, again about twice what a classic
-                      flatshare leaves you.
-                    </>
-                  ) : (
-                    <>
-                      Une chambre en colocation classique fait le plus souvent 9 à 12 m². Les nôtres
-                      font <strong>{STATS.roomSizeMin} à {STATS.roomSizeMax} m²</strong> — jusqu'à
-                      deux fois plus. Et ça ne s'arrête pas à ta porte : espaces communs compris,
-                      chaque colocataire dispose de{" "}
-                      <strong>37 à 42 m² de surface de vie</strong>, là encore près du double de ce
-                      que laisse une coloc classique.
-                    </>
-                  )}
-                </p>
-              </div>
-
-              <div>
-                <h3 className="text-lg font-semibold text-[#1C1917] mb-2">
-                  {language === "en"
-                    ? `2. Housekeeping ${STATS.cleaningPerWeek}× a week`
-                    : `2. Le ménage ${STATS.cleaningPerWeek} fois par semaine`}
-                </h3>
-                <p>
-                  {language === "en" ? (
-                    <>
-                      Not once. Not twice, which is the best the market offers.{" "}
-                      <strong>{STATS.cleaningPerWeek} visits a week</strong> from a professional team
-                      across every shared space — kitchen, lounges, shared shower rooms. No cleaning
-                      rota to negotiate, no chore to split: you come home, it is clean.
-                    </>
-                  ) : (
-                    <>
-                      Pas une fois. Pas deux, ce que propose au mieux le marché.{" "}
-                      <strong>{STATS.cleaningPerWeek} passages par semaine</strong> d'une équipe
-                      professionnelle dans tous les espaces partagés — cuisine, salons, salles d'eau
-                      communes. Aucun planning de ménage à négocier, aucune corvée à répartir : tu
-                      rentres, c'est propre.
-                    </>
-                  )}
-                </p>
-              </div>
-
-              <div>
-                <h3 className="text-lg font-semibold text-[#1C1917] mb-2">
-                  {language === "en"
-                    ? "3. 100% of costs included, zero surprises"
-                    : "3. 100 % des frais inclus, zéro surprise"}
-                </h3>
-                <p>
-                  {language === "en" ? (
-                    <>
-                      One payment a month. It covers the rent, all utilities (water, electricity,
-                      heating), fibre up to {STATS.fiberSpeed} and the streaming subscriptions — plus
-                      everything nobody thinks to count:{" "}
-                      <strong>
-                        bedding and towels provided, cleaning products, cloths, and the basics —
-                        toilet paper, laundry detergent, salt, pepper, oil
-                      </strong>
-                      . No application fee, no agency fee, no paid extras. You know your monthly cost
-                      in advance, to the franc.
-                    </>
-                  ) : (
-                    <>
-                      Un seul paiement par mois. Il comprend le loyer, toutes les charges (eau,
-                      électricité, chauffage), la fibre jusqu'à {STATS.fiberSpeed} et les abonnements
-                      streaming — plus tout ce qu'on ne pense jamais à compter :{" "}
-                      <strong>
-                        parure de lit et serviettes fournies, produits d'entretien, chiffons, et les
-                        fournitures de base — papier toilette, lessive, sel, poivre, huile
-                      </strong>
-                      . Aucun frais de dossier, aucun honoraire d'agence, aucune option payante. Tu
-                      connais ta dépense du mois à l'avance, au franc près.
-                    </>
-                  )}
-                </p>
-              </div>
-
-              <div>
-                <h3 className="text-lg font-semibold text-[#1C1917] mb-2">
-                  {language === "en"
-                    ? "4. Premium amenities and services"
-                    : "4. Des équipements et des services premium"}
-                </h3>
-                <p>
-                  {language === "en" ? (
-                    <>
-                      <strong>Pool, sauna, gym and landscaped outdoor areas</strong> in every house.
-                      Private <strong>yoga and fitness classes every week</strong>, a{" "}
-                      <strong>pizza night every month</strong>, and events all year round. These are
-                      services no classic flatshare offers — and here, they are part of the rent.
-                    </>
-                  ) : (
-                    <>
-                      <strong>Piscine, sauna, salle de sport et extérieurs aménagés</strong> dans
-                      chaque maison. Des{" "}
-                      <strong>cours privés de yoga et de fitness chaque semaine</strong>, une{" "}
-                      <strong>soirée pizza tous les mois</strong>, et des événements toute l'année.
-                      Ce sont des services qu'aucune colocation classique ne propose — et ici, ils
-                      sont compris dans le loyer.
-                    </>
-                  )}
-                </p>
-              </div>
-
-              <p>
-                {language === "en"
-                  ? "If you are after the lowest rent in the area, that unfortunately will not be us. If you compare what every franc buys you, then come and visit a house!"
-                  : "Si tu cherches le loyer le plus bas de l'agglomération, ce ne sera malheureusement pas nous. Si tu compares ce que chaque franc t'apporte, alors viens visiter une maison !"}
-              </p>
-            </div>
-          </div>
-
-          <div className="max-w-5xl mx-auto mt-16">
-            <h3
-              className="text-2xl md:text-3xl font-light text-[#1C1917] mb-8 text-center"
-              style={{ fontFamily: "DM Serif Display, serif" }}
-            >
-              {language === "en"
-                ? "La Villa Coliving compared with a standard flatshare"
-                : "La Villa Coliving comparé à la colocation classique"}
-            </h3>
-            <p
-              className="md:hidden text-xs text-[#78716C] mb-2 text-right pr-1"
-              aria-hidden="true"
-            >
-              {language === "en"
-                ? "Swipe to compare →"
-                : "Fais défiler pour comparer →"}
-            </p>
-            <div className="overflow-x-auto rounded-2xl border border-[#E7E5E4] bg-white shadow-sm">
-              <table className="w-full min-w-[680px] border-separate border-spacing-0 text-sm">
-                <caption className="sr-only">
-                  {language === "en"
-                    ? "Price and services comparison: standard flatshare, La Villa Coliving, Geneva studio"
-                    : "Comparaison prix et services : colocation classique, La Villa Coliving, studio à Genève"}
-                </caption>
-                <thead>
-                  <tr className="bg-[#1C1917] text-white">
-                    <th
-                      scope="col"
-                      className="sticky left-0 z-[1] bg-[#1C1917] px-4 py-4 text-left font-medium w-[150px] min-w-[150px] md:w-auto md:min-w-[200px]"
-                    >
-                      <span className="sr-only">
-                        {language === "en" ? "Criterion" : "Critère"}
-                      </span>
-                    </th>
-                    <th scope="col" className="px-4 py-4 text-left font-medium">
-                      {language === "en"
-                        ? "Standard flatshare (local area)"
-                        : "Colocation classique (agglo)"}
-                    </th>
-                    <th
-                      scope="col"
-                      className="px-4 py-4 text-left font-bold bg-[#D4A574]"
-                    >
-                      La Villa Coliving
-                    </th>
-                    <th scope="col" className="px-4 py-4 text-left font-medium">
-                      {language === "en" ? "Geneva studio" : "Studio Genève"}
-                    </th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {objectionRows.map((row) => (
-                    <tr key={row.label.fr} className="group">
-                      <th
-                        scope="row"
-                        className={`sticky left-0 z-[1] bg-white border-r border-b border-[#E7E5E4] group-last:border-b-0 px-4 py-3 text-left align-top text-[#1C1917] w-[150px] min-w-[150px] md:w-auto md:min-w-[200px] ${
-                          row.highlight ? "font-bold" : "font-medium"
-                        }`}
-                      >
-                        {pick(row.label)}
-                      </th>
-                      <td className="border-b border-[#E7E5E4] group-last:border-b-0 px-4 py-3 align-top text-[#57534E]">
-                        {pick(row.classic)}
-                      </td>
-                      <td
-                        className={`border-b border-[#E7E5E4] group-last:border-b-0 px-4 py-3 align-top bg-[#F8EFE4] text-[#1C1917] ${
-                          row.highlight ? "font-bold" : "font-semibold"
-                        }`}
-                      >
-                        {pick(row.villa)}
-                      </td>
-                      <td className="border-b border-[#E7E5E4] group-last:border-b-0 px-4 py-3 align-top text-[#57534E]">
-                        {pick(row.studio)}
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-            <p className="mt-3 text-center text-xs text-[#78716C]">
-              {language === "en"
-                ? `"Standard flatshare" and "Geneva studio" columns: market observations (indicative ranges). La Villa column: contractual facts. La Villa price per m²: contractual rent of €${EUR_STANDARD_EN_NUM} (${PRICE_CHF_EN}) ÷ 37-42 m² of living space per flatmate.`
-                : `Colonnes « Colocation classique » et « Studio Genève » : observations de marché (fourchettes indicatives). Colonne La Villa : faits contractuels. Prix du m² La Villa : loyer contractuel de ${EUR_STANDARD_FR_NUM} € (${PRICE_CHF_FR}) ÷ 37-42 m² d'espace de vie par colocataire.`}
-            </p>
-
-            {/* Encadré méga-résidences — chiffres publics, concurrent non nommé */}
-            <aside className="mt-10 max-w-3xl mx-auto bg-white border border-[#E7E5E4] border-l-4 border-l-[#D4A574] rounded-xl p-6 md:p-8">
-              <p className="text-xs font-medium tracking-wider uppercase text-[#D4A574] mb-2">
-                {language === "en" ? "Mega-residences" : "Méga-résidences"}
-              </p>
-              <h3
-                className="text-xl md:text-2xl font-medium text-[#1C1917] mb-3"
-                style={{ fontFamily: "DM Serif Display, serif" }}
-              >
-                {language === "en"
-                  ? "And compared to the new coliving mega-residences?"
-                  : "Et face aux nouvelles méga-résidences de coliving ?"}
-              </h3>
-              <p className="text-[#44403C] leading-relaxed">
-                {language === "en" ? (
-                  <>
-                    Near Geneva, recent mega-colivings house up to 776 rooms in a
-                    single building, with around 3,000 m² of shared spaces —{" "}
-                    <strong>
-                      less than 4 m² of common areas per resident
-                    </strong>
-                    . Here: {STATS.minResidentsPerHouse} to{" "}
-                    {STATS.maxResidentsPerHouse} flatmates per house,{" "}
-                    <strong>15 to 20 m² of indoor common areas each</strong>,
-                    plus the gardens, terraces and pools. At a comparable price,
-                    it's not the same product: there, you rent a studio in a
-                    service tower; here, you share a house.
-                  </>
-                ) : (
-                  <>
-                    Près de Genève, les méga-colivings récents logent jusqu'à 776
-                    chambres dans un même bâtiment, avec environ 3 000 m²
-                    d'espaces partagés —{" "}
-                    <strong>
-                      soit moins de 4 m² d'espaces communs par résident
-                    </strong>
-                    . Chez nous : {STATS.minResidentsPerHouse} à{" "}
-                    {STATS.maxResidentsPerHouse} colocataires par maison,{" "}
-                    <strong>15 à 20 m² d'espaces communs intérieurs chacun</strong>,
-                    plus les jardins, terrasses et piscines. À prix comparable, ce
-                    n'est pas le même produit : là-bas tu loues un studio dans une
-                    tour de services ; ici tu partages une maison.
-                  </>
-                )}
-              </p>
-            </aside>
           </div>
         </div>
       </section>
