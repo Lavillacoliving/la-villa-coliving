@@ -149,13 +149,16 @@ export function AnnemasseColocationPage() {
           </div>
           {houseChips.length > 0 && (
             <div className="mt-8 flex flex-wrap justify-center gap-2" aria-label={language === "en" ? "Live availability" : "Disponibilités en temps réel"}>
+              {/* Texte en flux (pas de colonnes flex) : sur mobile, la pastille
+                  replie comme une phrase au lieu de faire « flotter » le tiret
+                  entre deux blocs repliés — fix Jérôme 29/08. */}
               {houseChips.map((c) => (
                 <span
                   key={c.key}
-                  className={`inline-flex items-center gap-1.5 text-xs font-semibold px-3 py-1.5 rounded-lg ${BADGE_CHIP_CLASS[c.tone as keyof typeof BADGE_CHIP_CLASS]}`}
+                  className={`inline-block text-center text-xs font-semibold px-3 py-1.5 rounded-lg ${BADGE_CHIP_CLASS[c.tone as keyof typeof BADGE_CHIP_CLASS]}`}
                 >
                   <span className="font-bold">{c.name}</span>
-                  <span aria-hidden="true">—</span>
+                  {" — "}
                   {c.label}
                 </span>
               ))}
