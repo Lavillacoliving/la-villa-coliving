@@ -292,8 +292,8 @@ export function HeroV7() {
             ))}
           </div>
 
-          {/* Pricing reminder */}
-          <p className="text-center text-white/50 text-sm mt-10 max-w-lg mx-auto">
+          {/* Pricing reminder — text-base (au lieu de sm) : demande Jérôme 29/08 */}
+          <p className="text-center text-white/50 text-base mt-10 max-w-lg mx-auto">
             {language === "en"
               ? `All of this is included in your rent. No paid add-ons. No application fee, no agency fee. No hidden fees. Ever.`
               : `Tout ceci est inclus dans ton loyer. Pas d'options payantes. Pas de frais de dossier, pas d'honoraires d'agence. Pas de frais cachés. Jamais.`}
