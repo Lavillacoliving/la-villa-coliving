@@ -537,6 +537,65 @@ export function RatesPageV4() {
             </div>
           </div>
 
+          {/* CTA climax (Lot 2b) — conservé après la suppression du comparatif
+              Genève : c'est le point de conversion au pic de conviction. */}
+          <div className="mt-12 text-center">
+            <LocalizedLink
+              to="/candidature"
+              onClick={() => trackCta("tarifs_climax")}
+              className="inline-flex items-center gap-2 px-8 py-4 bg-[#D4A574] text-white font-semibold rounded-lg hover:bg-[#E0BB8A] transition-colors duration-300"
+            >
+              {language === "en" ? "Apply — 2 min, free" : "Candidater — 2 min, gratuit"}
+              <ArrowRight className="w-5 h-5" />
+            </LocalizedLink>
+          </div>
+        </div>
+      </section>
+
+      {/* What's Included - Quick List */}
+      <section className="py-24 lg:py-32 bg-[#FAF9F6]">
+        <div className="container-custom">
+          <div className="grid lg:grid-cols-2 gap-16">
+            <div>
+              <span className="text-xs text-[#78716C] uppercase tracking-[0.3em] mb-4 block">
+                {language === "en" ? "Quick Overview" : "Aperçu Rapide"}
+              </span>
+              <h2
+                className="text-4xl md:text-5xl font-light text-[#1C1917] mb-8"
+                style={{ fontFamily: "DM Serif Display, serif" }}
+              >
+                {language === "en"
+                  ? "Everything You Need"
+                  : "Tout Ce Dont Tu As Besoin"}
+              </h2>
+              <p className="text-lg text-[#57534E] leading-relaxed">
+                {language === "en"
+                  ? "One monthly payment covers absolutely everything. No hidden costs, no surprise bills."
+                  : "Un paiement mensuel couvre absolument tout. Pas de coûts cachés, pas de factures surprises."}
+              </p>
+            </div>
+
+            <div className="space-y-4">
+              {includedItems.map((item, index) => (
+                <div
+                  key={index}
+                  className="flex items-start gap-4 bg-white p-4 rounded-xl border border-[#E7E5E4]"
+                >
+                  <div className="w-6 h-6 bg-[#D4A574]/10 border border-[#D4A574] flex items-center justify-center flex-shrink-0 mt-0.5 rounded">
+                    <Check className="w-4 h-4 text-[#D4A574]" />
+                  </div>
+                  <span className="text-[#1C1917] font-medium">{item}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Tableau comparatif « vs colocation classique » — section propre depuis
+          le 29/08 : l'aperçu « Tout ce dont tu as besoin » passe avant lui. */}
+      <section className="py-20 bg-[#FAF9F6]">
+        <div className="container-custom">
           <div className="max-w-5xl mx-auto mt-16">
             <h3
               className="text-2xl md:text-3xl font-light text-[#1C1917] mb-8 text-center"
@@ -669,21 +728,9 @@ export function RatesPageV4() {
               </p>
             </aside>
           </div>
-
-          {/* CTA climax (Lot 2b) — conservé après la suppression du comparatif
-              Genève : c'est le point de conversion au pic de conviction. */}
-          <div className="mt-12 text-center">
-            <LocalizedLink
-              to="/candidature"
-              onClick={() => trackCta("tarifs_climax")}
-              className="inline-flex items-center gap-2 px-8 py-4 bg-[#D4A574] text-white font-semibold rounded-lg hover:bg-[#E0BB8A] transition-colors duration-300"
-            >
-              {language === "en" ? "Apply — 2 min, free" : "Candidater — 2 min, gratuit"}
-              <ArrowRight className="w-5 h-5" />
-            </LocalizedLink>
-          </div>
         </div>
       </section>
+
 
       {/* MOVE-IN FEES COMPARISON — Et les frais pour emménager ? */}
       <section className="py-20 bg-[#1C1917] border-t border-[#333]">
@@ -1005,45 +1052,6 @@ export function RatesPageV4() {
         </div>
       </section>
 
-      {/* What's Included - Quick List */}
-      <section className="py-24 lg:py-32 bg-[#FAF9F6]">
-        <div className="container-custom">
-          <div className="grid lg:grid-cols-2 gap-16">
-            <div>
-              <span className="text-xs text-[#78716C] uppercase tracking-[0.3em] mb-4 block">
-                {language === "en" ? "Quick Overview" : "Aperçu Rapide"}
-              </span>
-              <h2
-                className="text-4xl md:text-5xl font-light text-[#1C1917] mb-8"
-                style={{ fontFamily: "DM Serif Display, serif" }}
-              >
-                {language === "en"
-                  ? "Everything You Need"
-                  : "Tout Ce Dont Tu As Besoin"}
-              </h2>
-              <p className="text-lg text-[#57534E] leading-relaxed">
-                {language === "en"
-                  ? "One monthly payment covers absolutely everything. No hidden costs, no surprise bills."
-                  : "Un paiement mensuel couvre absolument tout. Pas de coûts cachés, pas de factures surprises."}
-              </p>
-            </div>
-
-            <div className="space-y-4">
-              {includedItems.map((item, index) => (
-                <div
-                  key={index}
-                  className="flex items-start gap-4 bg-white p-4 rounded-xl border border-[#E7E5E4]"
-                >
-                  <div className="w-6 h-6 bg-[#D4A574]/10 border border-[#D4A574] flex items-center justify-center flex-shrink-0 mt-0.5 rounded">
-                    <Check className="w-4 h-4 text-[#D4A574]" />
-                  </div>
-                  <span className="text-[#1C1917] font-medium">{item}</span>
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
-      </section>
 
       {/* Additional Info */}
       <section className="py-24 lg:py-32 bg-white">
