@@ -920,7 +920,7 @@ export function ColocationGenevePage() {
               },
               {
                 step: 5,
-                title: language === "en" ? "Move in within 2 weeks" : "Emménage en 2 semaines",
+                title: language === "en" ? "Move in within a week" : "Emménage en une semaine",
                 desc: language === "en"
                   ? "Once your application is accepted, move-in can happen in less than two weeks! Your room is ready, fully furnished, with everything included from day one. No need to set up internet, buy furniture, or sign multiple contracts. Just bring your bags and start your new life near Geneva."
                   : "Une fois ta candidature acceptée, l'emménagement peut se faire en moins de deux semaines ! Ta chambre est prête, entièrement meublée, avec tout inclus dès le premier jour. Pas besoin d'installer internet, d'acheter des meubles ou de signer plusieurs contrats. Apporte simplement tes valises et commence ta nouvelle vie près de Genève.",
@@ -1159,8 +1159,8 @@ export function ColocationGenevePage() {
           </h2>
           <p className="text-[#78716C] text-lg mb-10 max-w-xl mx-auto">
             {language === "en"
-              ? "Apply in 2 minutes. We'll get back to you within 48 hours. Move in within 2 weeks."
-              : "Candidatez en 2 minutes. Réponse sous 48h. Emménagement en 2 semaines."}
+              ? "Apply in 2 minutes. We'll get back to you within 48 hours. Move in within a week."
+              : "Candidatez en 2 minutes. Réponse sous 48h. Emménagement en une semaine."}
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <LocalizedLink
