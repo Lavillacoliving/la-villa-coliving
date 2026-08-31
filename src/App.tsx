@@ -172,9 +172,15 @@ function AppContent() {
         </Route>
         <Route path="*" element={<NotFoundPage />} />
       </Routes>
-      </Suspense>
-      {/* État de dispo embarqué pour l'hydratation sans fetch — instance unique. */}
+      {/* État de dispo embarqué pour l'hydratation sans fetch — instance unique.
+          DOIT rester DANS le <Suspense> : scripts/prerender.mjs encadre d'un
+          marqueur de frontière Suspense TOUT ce qui sépare le header du footer.
+          Placé en dehors, ce <script> se retrouvait à l'intérieur de la frontière
+          côté HTML mais en dehors côté React → mismatch d'hydratation #418 sur
+          chaque page affichant la dispo (constaté en prod le 29/08 : /lavilla,
+          /lelodge, /nos-maisons, /candidature ; /tarifs et /services indemnes). */}
       <AvailabilityEmbed />
+      </Suspense>
       {!isDashboard && !isPortail && !isResetPw && !isQuestionnaire && (isLp ? <LpFooter /> : <Footer />)}
     </div>
   );
