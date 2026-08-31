@@ -211,7 +211,12 @@ export function HeroV7() {
             </p>
           </div>
 
-          {/* 5 USP photo cards */}
+          {/* 5 USP photo cards — cliquables depuis le 29/08 (demande Jérôme :
+              l'audience cliquait sans effet, cursor-pointer sans lien). Cible =
+              la page qui convertit l'intention du pavé : la maison signature de
+              l'équipement (couloir home → maison → candidature ≈ 46 % des
+              candidatures), /tarifs pour « inclus dans le loyer », /nos-maisons
+              pour comparer les chambres. Tracké cta_click hero_amenity. */}
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
             {[
               {
@@ -219,33 +224,54 @@ export function HeroV7() {
                 title: language === "en" ? "Pool" : "Piscine",
                 desc: language === "en" ? "Indoor at Le Loft, outdoor at La Villa and Le Lodge" : "Intérieure au Loft, extérieure à La Villa et au Lodge",
                 highlight: language === "en" ? "In all 3 houses" : "Dans les 3 maisons",
+                to: "/leloft",
+                amenity: "pool",
               },
               {
                 image: "/images/la villa coliving le lodge-sauna2.webp",
                 title: "Sauna",
                 desc: language === "en" ? "Finnish sauna at Le Loft and Le Lodge, and infrared at La Villa." : "Sauna finlandais au Loft et au Lodge et infrarouge à La Villa.",
                 highlight: language === "en" ? "In all 3 houses" : "Dans les 3 maisons",
+                to: "/lelodge",
+                amenity: "sauna",
               },
               {
                 image: "/images/la villa coliving le lodge-gym.webp",
                 title: language === "en" ? "Gym" : "Salle de sport",
                 desc: language === "en" ? "Fully equipped in each house" : "Entièrement équipée dans chaque maison",
                 highlight: language === "en" ? "In all 3 houses" : "Dans les 3 maisons",
+                to: "/lelodge",
+                amenity: "gym",
               },
               {
                 image: "/images/la villa yoga.webp",
                 title: language === "en" ? "Private classes" : "Cours privés",
                 desc: language === "en" ? "Weekly yoga & fitness included" : "Yoga & fitness hebdo inclus",
                 highlight: language === "en" ? "Included in rent" : "Inclus dans le loyer",
+                to: "/tarifs",
+                amenity: "classes",
               },
               {
                 image: "/images/le loft glamour.webp",
                 title: language === "en" ? `${STATS.roomSizeMin}-${STATS.roomSizeMax} m² rooms` : `Chambres ${STATS.roomSizeMin}-${STATS.roomSizeMax} m²`,
                 desc: language === "en" ? "50% larger than coliving average" : "50% plus grandes que la moyenne",
                 highlight: language === "en" ? "Private bathroom (most)" : "SDB privative (la plupart)",
+                to: "/nos-maisons",
+                amenity: "rooms",
               },
             ].map((item, index) => (
-              <div key={index} className="group relative aspect-[3/4] rounded-2xl overflow-hidden cursor-pointer">
+              <LocalizedLink
+                key={index}
+                to={item.to}
+                onClick={() => {
+                  try {
+                    (window as unknown as { gtag?: (...a: unknown[]) => void }).gtag?.("event", "cta_click", {
+                      cta_position: "hero_amenity", cta_target: item.to, amenity: item.amenity, language,
+                    });
+                  } catch { /* noop */ }
+                }}
+                className="group relative aspect-[3/4] rounded-2xl overflow-hidden cursor-pointer block"
+              >
                 <img
                   src={item.image}
                   alt={`${item.title}${language === "en" ? " — premium coliving near Geneva" : " — coliving premium près de Genève"}`}
@@ -263,7 +289,7 @@ export function HeroV7() {
                     {item.highlight}
                   </span>
                 </div>
-              </div>
+              </LocalizedLink>
             ))}
           </div>
 
