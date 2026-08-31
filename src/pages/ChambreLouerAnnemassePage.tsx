@@ -134,12 +134,12 @@ export function ChambreLouerAnnemassePage() {
             <div className="bg-[#1C1917] text-white p-8 md:col-span-2">
               <BedDouble className="w-10 h-10 text-[#D4A574] mb-4" />
               <p className="text-2xl font-bold text-[#D4A574] mb-4">
-                {language === "en" ? `${PRICE_CHF_EN}/mo — all-inclusive` : `${PRICE_CHF_FR}/mois — tout inclus`}
+                {language === "en" ? `From ${PRICE_SHARED_CHF_EN}/mo — all-inclusive` : `Dès ${PRICE_SHARED_CHF_FR}/mois — tout inclus`}
               </p>
               <p className="text-sm text-white/80 leading-relaxed mb-6">
                 {language === "en"
-                  ? `${PRICE_CHF_EN}/month all-inclusive for a room with a private bathroom — 25 of our 29 rooms. The 4 rooms at our La Villa house whose shower room is shared with just one other room are ${PRICE_SHARED_CHF_EN}/month — and it's cleaned by our housekeeping team. No \"standard\" or \"premium\" tiers: same comfort, same services, same common areas. Each room simply has its own character — balcony, terrace, more spacious or more cosy: you pick the vibe that suits you, not a tier.`
-                  : `${PRICE_CHF_FR}/mois tout inclus pour une chambre avec salle d'eau privative — 25 de nos 29 chambres. Les 4 chambres de la maison La Villa dont la salle d'eau est partagée avec une seule autre chambre sont à ${PRICE_SHARED_CHF_FR}/mois — et son entretien est assuré par notre équipe de ménage. Pas de gamme « standard » ou « premium » : même confort, mêmes services, mêmes espaces communs. Chaque chambre a simplement son caractère — balcon, terrasse, plus spacieuse ou plus cosy : tu choisis l'ambiance qui te ressemble, pas un standing.`}
+                  ? `${PRICE_SHARED_CHF_EN}/month all-inclusive for rooms whose shower room is shared with just one other room — and it's cleaned by our housekeeping team. ${PRICE_CHF_EN}/month all-inclusive for a room with a private bathroom. No \"standard\" or \"premium\" tiers: same comfort, same services, same common areas. Each room simply has its own character — balcony, terrace, more spacious or more cosy: you pick the vibe that suits you, not a tier.`
+                  : `${PRICE_SHARED_CHF_FR}/mois tout inclus pour les chambres dont la salle d'eau est partagée avec une seule autre chambre — et son entretien est assuré par notre équipe de ménage. ${PRICE_CHF_FR}/mois tout inclus pour une chambre avec salle d'eau privative. Pas de gamme « standard » ou « premium » : même confort, mêmes services, mêmes espaces communs. Chaque chambre a simplement son caractère — balcon, terrasse, plus spacieuse ou plus cosy : tu choisis l'ambiance qui te ressemble, pas un standing.`}
               </p>
               <ul className="space-y-2 text-sm text-white/80">
                 <li className="flex items-start gap-2"><Check className="w-4 h-4 text-[#D4A574] mt-0.5 flex-shrink-0" /> {language === "en" ? "Designer furniture" : "Mobilier design"}</li>
@@ -191,31 +191,29 @@ export function ChambreLouerAnnemassePage() {
             {(language === "en"
               ? [
                   "29 furnished rooms — 3 houses, 1 community",
-                  `All-inclusive at ${PRICE_CHF_EN}/mo (no surprises)`,
-                  "Move in within 2 weeks (no paperwork friction)",
+                  `All-inclusive from ${PRICE_SHARED_CHF_EN}/mo (no surprises)`,
+                  "Move in within a week (no paperwork friction)",
                   "Léman Express direct to Geneva Cornavin 15 min",
                   "Pool, gym, sauna in every house",
                   "fiber internet up to 8 Gb/s",
                   "Cleaning three times a week of common areas",
                   "Weekly yoga and fitness classes included",
-                  "Monthly community events, community dinners",
+                  "Monthly community events",
                   "No agency fees, no application fees",
                   "Flexible 12-month lease, 1-month notice",
-                  "Cross-border profile expected (CDI Geneva)",
                 ]
               : [
                   "29 chambres meublées — 3 maisons, 1 communauté",
-                  `Tout inclus à ${PRICE_CHF_FR}/mois (zéro surprise)`,
-                  "Emménagement en 2 semaines (zéro friction administrative)",
+                  `Tout inclus dès ${PRICE_SHARED_CHF_FR}/mois (zéro surprise)`,
+                  "Emménagement en moins d'une semaine (zéro friction administrative)",
                   "Léman Express direct Genève Cornavin en 15 min",
                   "Piscine, salle de sport, sauna dans chaque maison",
                   "Internet fibre jusqu'à 8 Gb/s",
                   "Ménage 3 fois par semaine des espaces communs",
                   "Cours hebdomadaires yoga et fitness inclus",
-                  "Événements communautaires mensuels, dîners communautaires",
+                  "Événements communautaires mensuels",
                   "Aucun frais d'agence, aucun frais de dossier",
                   "Bail flexible 12 mois, préavis 1 mois",
-                  "Profil frontalier attendu (CDI Genève)",
                 ]
             ).map((item, i) => (
               <div key={i} className="flex items-start gap-3">
