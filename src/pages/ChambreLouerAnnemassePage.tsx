@@ -284,8 +284,8 @@ export function ChambreLouerAnnemassePage() {
               },
               {
                 num: "4",
-                title_fr: "Emménagement 2 sem.",
-                title_en: "Move in within 2 weeks",
+                title_fr: "Emménagement 1 sem.",
+                title_en: "Move in within a week",
                 desc_fr: "Bail meublé signé en ligne, caution 2 mois hors charges, emménagement avec une valise.",
                 desc_en: "Furnished lease signed online, 2-month deposit excluding charges, move in with a suitcase.",
               },
