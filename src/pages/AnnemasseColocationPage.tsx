@@ -15,7 +15,7 @@ import {
   ArrowRight,
   Euro,
 } from "lucide-react";
-import { PRICE_CHF_FR, PRICE_CHF_EN, PRICE_SHARED_CHF_FR, PRICE_SHARED_CHF_EN } from "@/data/stats";
+import { PRICE_SHARED_CHF_FR, PRICE_SHARED_CHF_EN } from "@/data/stats";
 import {
   useRoomAvailability,
   houseBadgeLabel,
@@ -355,9 +355,9 @@ export function AnnemasseColocationPage() {
             className="text-3xl md:text-4xl font-light text-[#1C1917] mb-4 text-center"
             style={{ fontFamily: "DM Serif Display, serif" }}
           >
-            {language === "en"
-              ? `What's included in ${PRICE_CHF_EN}/month`
-              : `Ce qui est inclus dans ${PRICE_CHF_FR}/mois`}
+            {/* Montant retiré du titre le 29/08 (demande Jérôme) : le prix standard
+                ici dissonait avec le « dès 1 370 » du même écran. */}
+            {language === "en" ? "What's included" : "Ce qui est inclus"}
           </h2>
           <p className="text-[#57534E] text-center max-w-3xl mx-auto mb-12">
             {language === "en"
