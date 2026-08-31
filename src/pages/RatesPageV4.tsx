@@ -736,81 +736,136 @@ export function RatesPageV4() {
                 ? "Yes, our prices are higher. Here's why — and what you get for it."
                 : "Oui, nos prix sont plus élevés. Voici pourquoi — et ce que tu obtiens en échange."}
             </h2>
-            <div className="space-y-5 text-[#44403C] leading-relaxed">
+            {/* Argumentaire réécrit en 4 points (demande Jérôme 29/08) : surface,
+                ménage, tout-inclus jusqu'aux fournitures, équipements premium.
+                Jamais de concurrent nommé — on parle du « marché » et de la
+                « colocation classique ». Chiffres via STATS (source unique). */}
+            <div className="space-y-8 text-[#44403C] leading-relaxed">
               <p>
                 {language === "en"
-                  ? "A room in a standard flatshare in Annemasse costs less. It's also usually 9-12 m², with no pool, no sauna, no gym, cleaning left to you, and a landlord you have to chase."
-                  : (
+                  ? "A room in a standard flatshare costs less. Here is precisely what the difference buys you."
+                  : "Une chambre en colocation classique coûte moins cher. Voici précisément ce que la différence t'achète."}
+              </p>
+
+              <div>
+                <h3 className="text-lg font-semibold text-[#1C1917] mb-2">
+                  {language === "en"
+                    ? "1. Rooms up to twice as big — and twice the space to live in"
+                    : "1. Des chambres jusqu'à deux fois plus grandes — et deux fois plus d'espace à vivre"}
+                </h3>
+                <p>
+                  {language === "en" ? (
                     <>
-                      Une chambre en colocation classique à Annemasse coûte moins cher. Elle fait
-                      aussi, le plus souvent, 9 à 12 m²,{" "}
-                      <strong>
-                        sans piscine, sans sauna, sans salle de sport, avec le ménage à ta charge et
-                        un propriétaire qu'il faut relancer.
-                      </strong>
+                      A standard flatshare room is usually 9-12 m². Ours are{" "}
+                      <strong>{STATS.roomSizeMin}-{STATS.roomSizeMax} m²</strong> — up to twice that.
+                      And it does not stop at your door: counting the common areas, each housemate
+                      has <strong>37-42 m² of living space</strong>, again about twice what a classic
+                      flatshare leaves you.
+                    </>
+                  ) : (
+                    <>
+                      Une chambre en colocation classique fait le plus souvent 9 à 12 m². Les nôtres
+                      font <strong>{STATS.roomSizeMin} à {STATS.roomSizeMax} m²</strong> — jusqu'à
+                      deux fois plus. Et ça ne s'arrête pas à ta porte : espaces communs compris,
+                      chaque colocataire dispose de{" "}
+                      <strong>37 à 42 m² de surface de vie</strong>, là encore près du double de ce
+                      que laisse une coloc classique.
                     </>
                   )}
-              </p>
-              <p>
-                {language === "en" ? (
-                  <>
-                    Here: a{" "}
-                    <strong>
-                      {STATS.roomSizeMin}-{STATS.roomSizeMax} m² room
-                    </strong>{" "}
-                    — <strong>up to twice the usual market size</strong> —, generous common areas, a
-                    garden, and amenities no local flatshare offers: pool, sauna,
-                    gym. A real team maintains the house — professional cleaning
-                    three times a week,
-                    gardener, pool technician — and your issues get answered within
-                    48 hours. Community life is organised, not hoped for: monthly
-                    parties, summer events, Halloween, Christmas, girls' nights.
-                  </>
-                ) : (
-                  <>
-                    Chez nous : une chambre de{" "}
-                    <strong>
-                      {STATS.roomSizeMin} à {STATS.roomSizeMax} m²
-                    </strong>{" "}
-                    — <strong>jusqu'à deux fois la surface habituelle du marché</strong> —, des
-                    espaces communs généreux, un jardin, et des équipements
-                    qu'aucune colocation locale ne propose : piscine, sauna, salle
-                    de sport. Une équipe entretient réellement la maison — ménage
-                    professionnel 3×/semaine, jardinier, pisciniste — et tes problèmes trouvent une réponse
-                    en moins de 48 h. La vie commune est organisée, pas espérée :
-                    soirée mensuelle, événements d'été, Halloween, Noël, soirées
-                    entre filles.
-                  </>
-                )}
-              </p>
-              <p>
-                {language === "en" ? (
-                  <>
-                    <strong>
-                      Do the math per square metre: we're at market price — for
-                      twice the home.
-                    </strong>{" "}
-                    Add everything that's included (pool, gym, sauna, generous
-                    common areas, home cinema, yoga classes, fitness classes,
-                    monthly community event, cleaning, fibre, etc.: count
-                    CHF 250-400/month if paid separately) and the comparison flips.
-                  </>
-                ) : (
-                  <>
-                    <strong>
-                      Fais le calcul au m² : nous sommes dans les prix du marché —
-                      pour deux fois mieux.
-                    </strong>{" "}
-                    Ajoute tout ce qui est inclus (piscine, salle de sport, sauna,
-                    grands espaces, home cinéma, cours de yoga, cours de sport,
-                    événement mensuel, ménage, fibre, etc. : compte 250 à 400 CHF/mois
-                    si tu devais les payer à part) et la comparaison s'inverse.
-                  </>
-                )}
-              </p>
+                </p>
+              </div>
+
+              <div>
+                <h3 className="text-lg font-semibold text-[#1C1917] mb-2">
+                  {language === "en"
+                    ? `2. Housekeeping ${STATS.cleaningPerWeek}× a week`
+                    : `2. Le ménage ${STATS.cleaningPerWeek} fois par semaine`}
+                </h3>
+                <p>
+                  {language === "en" ? (
+                    <>
+                      Not once. Not twice, which is the best the market offers.{" "}
+                      <strong>{STATS.cleaningPerWeek} visits a week</strong> from a professional team
+                      across every shared space — kitchen, lounges, shared shower rooms. No cleaning
+                      rota to negotiate, no chore to split: you come home, it is clean.
+                    </>
+                  ) : (
+                    <>
+                      Pas une fois. Pas deux, ce que propose au mieux le marché.{" "}
+                      <strong>{STATS.cleaningPerWeek} passages par semaine</strong> d'une équipe
+                      professionnelle dans tous les espaces partagés — cuisine, salons, salles d'eau
+                      communes. Aucun planning de ménage à négocier, aucune corvée à répartir : tu
+                      rentres, c'est propre.
+                    </>
+                  )}
+                </p>
+              </div>
+
+              <div>
+                <h3 className="text-lg font-semibold text-[#1C1917] mb-2">
+                  {language === "en"
+                    ? "3. 100% of costs included, zero surprises"
+                    : "3. 100 % des frais inclus, zéro surprise"}
+                </h3>
+                <p>
+                  {language === "en" ? (
+                    <>
+                      One payment a month. It covers the rent, all utilities (water, electricity,
+                      heating), fibre up to {STATS.fiberSpeed} and the streaming subscriptions — plus
+                      everything nobody thinks to count:{" "}
+                      <strong>
+                        bedding and towels provided, cleaning products, cloths, and the basics —
+                        toilet paper, laundry detergent, salt, pepper, oil
+                      </strong>
+                      . No application fee, no agency fee, no paid extras. You know your monthly cost
+                      in advance, to the franc.
+                    </>
+                  ) : (
+                    <>
+                      Un seul paiement par mois. Il comprend le loyer, toutes les charges (eau,
+                      électricité, chauffage), la fibre jusqu'à {STATS.fiberSpeed} et les abonnements
+                      streaming — plus tout ce qu'on ne pense jamais à compter :{" "}
+                      <strong>
+                        parure de lit et serviettes fournies, produits d'entretien, chiffons, et les
+                        fournitures de base — papier toilette, lessive, sel, poivre, huile
+                      </strong>
+                      . Aucun frais de dossier, aucun honoraire d'agence, aucune option payante. Tu
+                      connais ta dépense du mois à l'avance, au franc près.
+                    </>
+                  )}
+                </p>
+              </div>
+
+              <div>
+                <h3 className="text-lg font-semibold text-[#1C1917] mb-2">
+                  {language === "en"
+                    ? "4. Premium amenities and services"
+                    : "4. Des équipements et des services premium"}
+                </h3>
+                <p>
+                  {language === "en" ? (
+                    <>
+                      <strong>Pool, sauna, gym and landscaped outdoor areas</strong> in every house.
+                      Private <strong>yoga and fitness classes every week</strong>, a{" "}
+                      <strong>pizza night every month</strong>, and events all year round. These are
+                      services no classic flatshare offers — and here, they are part of the rent.
+                    </>
+                  ) : (
+                    <>
+                      <strong>Piscine, sauna, salle de sport et extérieurs aménagés</strong> dans
+                      chaque maison. Des{" "}
+                      <strong>cours privés de yoga et de fitness chaque semaine</strong>, une{" "}
+                      <strong>soirée pizza tous les mois</strong>, et des événements toute l'année.
+                      Ce sont des services qu'aucune colocation classique ne propose — et ici, ils
+                      sont compris dans le loyer.
+                    </>
+                  )}
+                </p>
+              </div>
+
               <p>
                 {language === "en"
-                  ? "If you're after the lowest rent in the area, that's not us — and we'd rather tell you straight. If you compare what every franc buys you, come visit a house."
+                  ? "If you are after the lowest rent in the area, that is not us — and we would rather tell you straight. If you compare what every franc buys you, come visit a house."
                   : "Si tu cherches le loyer le plus bas de l'agglomération, ce n'est pas nous — et on préfère te le dire franchement. Si tu compares ce que chaque franc t'apporte, viens visiter une maison."}
               </p>
             </div>
