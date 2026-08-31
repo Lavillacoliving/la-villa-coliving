@@ -1,6 +1,6 @@
 import { useLanguage } from "@/contexts/LanguageContext";
 import { WhatsAppButton } from "@/components/WhatsAppButton";
-import { Check, ArrowRight, Home, Sparkles, X, Star, Droplets } from "lucide-react";
+import { Check, ArrowRight, Home, Sparkles, X, Droplets } from "lucide-react";
 import { LocalizedLink } from "@/components/LocalizedLink";
 import { colocGeneveHref } from "@/lib/siteLinks";
 import { Helmet } from "react-helmet";
@@ -10,14 +10,7 @@ import { tarifsFaq } from "@/data/faq/tarifsFaq";
 import { buildBreadcrumbSchema, buildRoomsAggregateOfferSchema } from "@/lib/structuredData";
 import { STATS, PRICE_FR_NUM, PRICE_EN_NUM, PRICE_CHF_FR, PRICE_CHF_EN, PRICE_SHARED_FR_NUM, PRICE_SHARED_EN_NUM, PRICE_SHARED_CHF_FR, PRICE_SHARED_CHF_EN, CONTRACT_EUR, EUR_STANDARD_FR_NUM, EUR_SHARED_FR_NUM, EUR_STANDARD_EN_NUM, EUR_SHARED_EN_NUM } from "@/data/stats";
 import {
-  GENEVA_STUDIO_COSTS,
-  GENEVA_STUDIO_BASE_RENT_FR,
-  GENEVA_STUDIO_BASE_RENT_EN,
-  GENEVA_STUDIO_TOTAL_FR,
-  GENEVA_STUDIO_TOTAL_EN,
   MONTHLY_SAVINGS_CHF,
-  YEARLY_SAVINGS_FR_NUM,
-  YEARLY_SAVINGS_EN_NUM,
   VILLA_EUR_PER_M2_FR,
   VILLA_EUR_PER_M2_EN,
 } from "@/data/pricingComparison";
@@ -202,13 +195,6 @@ export function RatesPageV4() {
     try {
       (window as unknown as { gtag?: (...a: unknown[]) => void }).gtag?.("event", "cta_click", {
         cta_position: position, cta_target: "/candidature", language,
-      });
-    } catch { /* noop */ }
-  };
-  const trackWhatsApp = (position: string) => {
-    try {
-      (window as unknown as { gtag?: (...a: unknown[]) => void }).gtag?.("event", "whatsapp_click", {
-        position, language,
       });
     } catch { /* noop */ }
   };
@@ -683,323 +669,18 @@ export function RatesPageV4() {
               </p>
             </aside>
           </div>
-        </div>
-      </section>
 
-      {/* COMPARISON SECTION - Geneva vs La Villa */}
-      <section className="py-20 bg-[#1C1917]">
-        <div className="container-custom">
-          <div className="text-center mb-16">
-            <span className="inline-flex items-center gap-2 px-4 py-2 bg-[#D4A574]/20 text-[#E0BB8A] text-sm font-medium rounded-full mb-4">
-              <Star className="w-4 h-4" />{" "}
-              {language === "en"
-                ? "Real Cost Comparison"
-                : "Comparaison Réelle des Coûts"}
-            </span>
-            <h2 className="text-3xl md:text-4xl font-light text-white mb-4">
-              {language === "en"
-                ? "Geneva Studio vs La Villa"
-                : "Studio Genève vs La Villa"}
-            </h2>
-            <p className="text-[#A8A29E] max-w-2xl mx-auto">
-              {language === "en"
-                ? "See how much you actually save with our all-inclusive model"
-                : "Découvre combien tu économises réellement avec notre modèle tout-inclus"}
-            </p>
-          </div>
-
-          <div className="grid md:grid-cols-2 gap-8 max-w-5xl mx-auto">
-            {/* Geneva Studio */}
-            <div className="bg-[#1C1917] rounded-2xl p-8 border border-[#333]">
-              <div className="flex items-center gap-3 mb-6">
-                <div className="w-12 h-12 rounded-full bg-[#666]/20 flex items-center justify-center">
-                  <Home className="w-6 h-6 text-[#b3b2b2]" />
-                </div>
-                <div>
-                  <h3 className="text-xl font-medium text-white">
-                    {language === "en" ? "Geneva Studio" : "Studio Genève"}
-                  </h3>
-                  <p className="text-sm text-[#b3b2b2]">
-                    {language === "en"
-                      ? "Traditional rental"
-                      : "Location traditionnelle"}
-                  </p>
-                </div>
-              </div>
-
-              <div className="space-y-3 mb-6 text-sm">
-                <div className="flex justify-between text-white">
-                  <span>
-                    {language === "en"
-                      ? "Base rent (small studio)"
-                      : "Loyer de base (petit studio)"}
-                  </span>
-                  <span className="font-medium">{language === "en" ? GENEVA_STUDIO_BASE_RENT_EN : GENEVA_STUDIO_BASE_RENT_FR}</span>
-                </div>
-                <div className="flex justify-between text-[#b3b2b2]">
-                  <span className="flex items-center gap-2">
-                    <X className="w-3 h-3" />{" "}
-                    {language === "en" ? "Electricity" : "Électricité"}
-                  </span>
-                  <span>+ {GENEVA_STUDIO_COSTS.electricity} CHF</span>
-                </div>
-                <div className="flex justify-between text-[#b3b2b2]">
-                  <span className="flex items-center gap-2">
-                    <X className="w-3 h-3" />{" "}
-                    {language === "en" ? "Heating" : "Chauffage"}
-                  </span>
-                  <span>+ {GENEVA_STUDIO_COSTS.heating} CHF</span>
-                </div>
-                <div className="flex justify-between text-[#b3b2b2]">
-                  <span className="flex items-center gap-2">
-                    <X className="w-3 h-3" />{" "}
-                    {language === "en" ? "Water" : "Eau"}
-                  </span>
-                  <span>+ {GENEVA_STUDIO_COSTS.water} CHF</span>
-                </div>
-                <div className="flex justify-between text-[#b3b2b2]">
-                  <span className="flex items-center gap-2">
-                    <X className="w-3 h-3" /> Internet
-                  </span>
-                  <span>+ {GENEVA_STUDIO_COSTS.internet} CHF</span>
-                </div>
-                <div className="flex justify-between text-[#b3b2b2]">
-                  <span className="flex items-center gap-2">
-                    <X className="w-3 h-3" />{" "}
-                    {language === "en" ? "Cleaning service" : "Service ménage"}
-                  </span>
-                  <span>+ {GENEVA_STUDIO_COSTS.cleaning} CHF</span>
-                </div>
-                <div className="flex justify-between text-[#b3b2b2]">
-                  <span className="flex items-center gap-2">
-                    <X className="w-3 h-3" />{" "}
-                    {language === "en" ? "Gym membership" : "Abonnement gym"}
-                  </span>
-                  <span>+ {GENEVA_STUDIO_COSTS.gym} CHF</span>
-                </div>
-                <div className="flex justify-between text-[#b3b2b2]">
-                  <span className="flex items-center gap-2">
-                    <X className="w-3 h-3" />{" "}
-                    {language === "en"
-                      ? "Streaming services"
-                      : "Services streaming"}
-                  </span>
-                  <span>+ {GENEVA_STUDIO_COSTS.streaming} CHF</span>
-                </div>
-                <div className="flex justify-between text-[#b3b2b2]">
-                  <span className="flex items-center gap-2">
-                    <X className="w-3 h-3" />{" "}
-                    {language === "en" ? "Taxes & fees" : "Taxes & frais"}
-                  </span>
-                  <span>+ {GENEVA_STUDIO_COSTS.taxes} CHF</span>
-                </div>
-              </div>
-
-              <div className="border-t border-[#333] pt-4">
-                <div className="flex justify-between items-center">
-                  <span className="text-[#d5d5d5]">
-                    {language === "en" ? "Total monthly" : "Total mensuel"}
-                  </span>
-                  <span className="text-2xl font-medium text-[#d5d5d5]">
-                    {language === "en" ? GENEVA_STUDIO_TOTAL_EN : GENEVA_STUDIO_TOTAL_FR}
-                  </span>
-                </div>
-              </div>
-            </div>
-
-            {/* La Villa */}
-            <div className="bg-white rounded-2xl p-8 relative overflow-hidden border border-[#E7E5E4] shadow-lg">
-              <div className="absolute top-4 right-4 bg-[#D4A574] text-white text-xs font-bold px-3 py-1 rounded-full">
-                {language === "en"
-                  ? `SAVE ${MONTHLY_SAVINGS_CHF} CHF/MO`
-                  : `ÉCONOMISE ${MONTHLY_SAVINGS_CHF} CHF/MOIS`}
-              </div>
-
-              <div className="flex items-center gap-3 mb-6">
-                <div className="w-12 h-12 rounded-full bg-[#FAF9F6] flex items-center justify-center">
-                  <Sparkles className="w-6 h-6 text-[#D4A574]" />
-                </div>
-                <div>
-                  <h3 className="text-xl font-medium text-[#1C1917]">
-                    La Villa Coliving
-                  </h3>
-                  <p className="text-base text-[#57534E]">
-                    {language === "en" ? "All-inclusive" : "Tout-inclus"}
-                  </p>
-                </div>
-              </div>
-
-              <div className="space-y-3 mb-6 text-sm">
-                <div className="flex justify-between text-[#1C1917] font-medium text-base">
-                  <span>
-                    {language === "en"
-                      ? "Your room (furnished)"
-                      : "Ta chambre (meublée)"}
-                  </span>
-                  <span>{language === "en" ? PRICE_CHF_EN : PRICE_CHF_FR}</span>
-                </div>
-                <div className="flex justify-between text-[#44403C]">
-                  <span className="flex items-center gap-2">
-                    <Check className="w-4 h-4 text-[#D4A574]" />{" "}
-                    {language === "en"
-                      ? "Room from 17 to 25 m²"
-                      : "Chambre de 17 à 25 m²"}
-                  </span>
-                  <span className="text-[#D4A574] font-bold">
-                    {language === "en" ? "INCLUDED" : "INCLUS"}
-                  </span>
-                </div>
-                <div className="flex justify-between text-[#44403C]">
-                  <span className="flex items-center gap-2">
-                    <Check className="w-4 h-4 text-[#D4A574]" />{" "}
-                    {language === "en"
-                      ? "Premium home & furniture"
-                      : "Logement d'exception et mobilier premium"}
-                  </span>
-                  <span className="text-[#D4A574] font-bold">
-                    {language === "en" ? "INCLUDED" : "INCLUS"}
-                  </span>
-                </div>
-                <div className="flex justify-between text-[#44403C]">
-                  <span className="flex items-center gap-2">
-                    <Check className="w-4 h-4 text-[#D4A574]" />{" "}
-                    {language === "en"
-                      ? "All maintenance & repairs"
-                      : "Tout entretien et réparations"}
-                  </span>
-                  <span className="text-[#D4A574] font-bold">
-                    {language === "en" ? "INCLUDED" : "INCLUS"}
-                  </span>
-                </div>
-                <div className="flex justify-between text-[#44403C]">
-                  <span className="flex items-center gap-2">
-                    <Check className="w-4 h-4 text-[#D4A574]" />{" "}
-                    {language === "en"
-                      ? "All utilities included"
-                      : "Toutes charges incluses"}
-                  </span>
-                  <span className="text-[#D4A574] font-bold">
-                    {language === "en" ? "INCLUDED" : "INCLUS"}
-                  </span>
-                </div>
-                <div className="flex justify-between text-[#44403C]">
-                  <span className="flex items-center gap-2">
-                    <Check className="w-4 h-4 text-[#D4A574]" />{" "}
-                    {language === "en"
-                      ? "Yoga & fitness classes"
-                      : "Cours yoga & fitness"}
-                  </span>
-                  <span className="text-[#D4A574] font-bold">
-                    {language === "en" ? "INCLUDED" : "INCLUS"}
-                  </span>
-                </div>
-                <div className="flex justify-between text-[#44403C]">
-                  <span className="flex items-center gap-2">
-                    <Check className="w-4 h-4 text-[#D4A574]" />{" "}
-                    {language === "en"
-                      ? "Pool, sauna & gym"
-                      : "Piscine, sauna & sport"}
-                  </span>
-                  <span className="text-[#D4A574] font-bold">
-                    {language === "en" ? "INCLUDED" : "INCLUS"}
-                  </span>
-                </div>
-                <div className="flex justify-between text-[#44403C]">
-                  <span className="flex items-center gap-2">
-                    <Check className="w-4 h-4 text-[#D4A574]" />{" "}
-                    {language === "en"
-                      ? "Community events"
-                      : "Événements communautaires"}
-                  </span>
-                  <span className="text-[#D4A574] font-bold">
-                    {language === "en" ? "INCLUDED" : "INCLUS"}
-                  </span>
-                </div>
-                <div className="flex justify-between text-[#44403C]">
-                  <span className="flex items-center gap-2">
-                    <Check className="w-4 h-4 text-[#D4A574]" />{" "}
-                    {language === "en"
-                      ? "Cleaning 3x/week"
-                      : "Ménage 3x/semaine"}
-                  </span>
-                  <span className="text-[#D4A574] font-bold">
-                    {language === "en" ? "INCLUDED" : "INCLUS"}
-                  </span>
-                </div>
-                <div className="flex justify-between text-[#44403C]">
-                  <span className="flex items-center gap-2">
-                    <Check className="w-4 h-4 text-[#D4A574]" /> Internet & streaming
-                  </span>
-                  <span className="text-[#D4A574] font-bold">
-                    {language === "en" ? "INCLUDED" : "INCLUS"}
-                  </span>
-                </div>
-              </div>
-
-              <div className="border-t border-[#E7E5E4] pt-4">
-                <div className="flex justify-between items-center">
-                  <span className="text-[#57534E]">
-                    {language === "en" ? "Total monthly" : "Total mensuel"}
-                  </span>
-                  <span className="text-3xl font-bold text-[#1C1917]">
-                    {language === "en" ? PRICE_CHF_EN : PRICE_CHF_FR}
-                  </span>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          {/* Savings Banner */}
+          {/* CTA climax (Lot 2b) — conservé après la suppression du comparatif
+              Genève : c'est le point de conversion au pic de conviction. */}
           <div className="mt-12 text-center">
-            <div className="inline-flex flex-col sm:flex-row items-center gap-4 bg-[#D4A574] text-white px-8 py-6 rounded-2xl shadow-[0_10px_40px_rgba(212,165,116,0.3)]">
-              <Star className="w-8 h-8 text-white" />
-              <div className="text-center sm:text-left">
-                <div className="text-sm opacity-90">
-                  {language === "en"
-                    ? "You save every month"
-                    : "Tu économises chaque mois"}
-                </div>
-                <div className="text-3xl font-bold">{MONTHLY_SAVINGS_CHF} CHF</div>
-              </div>
-              <div className="hidden sm:block w-px h-12 bg-white/20"></div>
-              <div className="text-center sm:text-left">
-                <div className="text-sm opacity-90">
-                  {language === "en" ? "That's per year" : "Soit par an"}
-                </div>
-                <div className="text-2xl font-bold">
-                  {/* thousands() et non toLocaleString : séparateurs déterministes (règle anti-ICU, cf. stats.ts) */}
-                  {language === "en" ? YEARLY_SAVINGS_EN_NUM : YEARLY_SAVINGS_FR_NUM} CHF
-                </div>
-              </div>
-              <Star className="w-8 h-8 text-[#D4A574]" />
-            </div>
-            <p className="text-[#A8A29E] mt-4 text-sm">
-              {language === "en"
-                ? "+ An instant community, premium amenities & zero hassle!"
-                : "+ Une communauté instantanée, équipements premium & zéro tracas !"}
-            </p>
-            <a
-              href="https://wa.me/33664315134"
-              target="_blank"
-              rel="noopener noreferrer"
-              onClick={() => trackWhatsApp("tarifs_economies")}
-              className="mt-3 inline-block text-sm text-white/80 hover:text-[#E0BB8A] transition-colors duration-300"
+            <LocalizedLink
+              to="/candidature"
+              onClick={() => trackCta("tarifs_climax")}
+              className="inline-flex items-center gap-2 px-8 py-4 bg-[#D4A574] text-white font-semibold rounded-lg hover:bg-[#E0BB8A] transition-colors duration-300"
             >
-              {language === "en"
-                ? "Or ask us a question directly on WhatsApp →"
-                : "Ou pose-nous directement une question sur WhatsApp →"}
-            </a>
-            {/* CTA climax — juste après la démonstration d'économies, au pic de conviction */}
-            <div className="mt-6">
-              <LocalizedLink
-                to="/candidature"
-                onClick={() => trackCta("tarifs_climax")}
-                className="inline-flex items-center gap-2 px-8 py-4 bg-[#D4A574] text-white font-semibold rounded-lg hover:bg-[#E0BB8A] transition-colors duration-300"
-              >
-                {language === "en" ? "Apply — 2 min, free" : "Candidater — 2 min, gratuit"}
-                <ArrowRight className="w-5 h-5" />
-              </LocalizedLink>
-            </div>
+              {language === "en" ? "Apply — 2 min, free" : "Candidater — 2 min, gratuit"}
+              <ArrowRight className="w-5 h-5" />
+            </LocalizedLink>
           </div>
         </div>
       </section>
