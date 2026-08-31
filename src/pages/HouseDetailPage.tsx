@@ -361,7 +361,7 @@ function getHousesData(lang: string): Record<string, HouseData> {
       "Parking included",
       "Laundry & storage room",
       "fiber internet up to 8 Gb/s",
-      "Vegetable garden & outdoor yoga deck",
+      "Vegetable garden & outdoor terraces",
       "Double equipped kitchen",
     ] : [
       "Piscine chauffée 12×5 m (mi-avril à fin septembre)",
@@ -373,7 +373,7 @@ function getHousesData(lang: string): Record<string, HouseData> {
       "Parking inclus",
       "Buanderie & espace rangement",
       "Internet fibre jusqu'à 8 Gb/s",
-      "Potager & terrasse yoga extérieure",
+      "Potager & terrasses extérieures",
       "Double cuisine équipée",
     ],
     services: isEn ? [
