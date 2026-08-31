@@ -620,41 +620,6 @@ export function JoinPageV4() {
         </div>
       </section>
 
-      {/* Social proof stats — chiffres business pour rassurer (CRO win #1) */}
-      <section className="py-12 bg-[#FAF9F6] border-y border-[#E7E5E4]">
-        <div className="container-custom">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-4xl mx-auto text-center">
-            <div className="flex flex-col items-center">
-              <Users className="w-8 h-8 text-[#D4A574] mb-3" />
-              <p className="text-3xl font-light text-[#1C1917] mb-1" style={{ fontFamily: "DM Serif Display, serif" }}>
-                {STATS.totalResidents}+
-              </p>
-              <p className="text-sm text-[#57534E]">
-                {language === "en" ? "Residents since 2021" : "Résidents depuis 2021"}
-              </p>
-            </div>
-            <div className="flex flex-col items-center">
-              <Sparkles className="w-8 h-8 text-[#D4A574] mb-3" />
-              <p className="text-3xl font-light text-[#1C1917] mb-1" style={{ fontFamily: "DM Serif Display, serif" }}>
-                99%
-              </p>
-              <p className="text-sm text-[#57534E]">
-                {language === "en" ? "Occupancy rate over 5 years" : "Taux d'occupation sur 5 ans"}
-              </p>
-            </div>
-            <div className="flex flex-col items-center">
-              <Star className="w-8 h-8 text-[#D4A574] mb-3 fill-[#D4A574]" />
-              <p className="text-3xl font-light text-[#1C1917] mb-1" style={{ fontFamily: "DM Serif Display, serif" }}>
-                {STATS_DISPLAY[L].rating}/5
-              </p>
-              <p className="text-sm text-[#57534E]">
-                {language === "en" ? "Average rating from residents" : "Note moyenne des résidents"}
-              </p>
-            </div>
-          </div>
-        </div>
-      </section>
-
       {/* Steps — après le form (S33) : explique la suite, Candidater ✓ → Rencontrer → Emménager */}
       <section className="py-24 lg:py-32 bg-white">
         <div className="container-custom">
@@ -707,6 +672,41 @@ export function JoinPageV4() {
                 <p className="text-[#57534E]">{step.description}</p>
               </div>
             ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Social proof stats — chiffres business pour rassurer (CRO win #1) */}
+      <section className="py-12 bg-[#FAF9F6] border-y border-[#E7E5E4]">
+        <div className="container-custom">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-4xl mx-auto text-center">
+            <div className="flex flex-col items-center">
+              <Users className="w-8 h-8 text-[#D4A574] mb-3" />
+              <p className="text-3xl font-light text-[#1C1917] mb-1" style={{ fontFamily: "DM Serif Display, serif" }}>
+                {STATS.totalResidents}+
+              </p>
+              <p className="text-sm text-[#57534E]">
+                {language === "en" ? "Residents since 2021" : "Résidents depuis 2021"}
+              </p>
+            </div>
+            <div className="flex flex-col items-center">
+              <Sparkles className="w-8 h-8 text-[#D4A574] mb-3" />
+              <p className="text-3xl font-light text-[#1C1917] mb-1" style={{ fontFamily: "DM Serif Display, serif" }}>
+                99%
+              </p>
+              <p className="text-sm text-[#57534E]">
+                {language === "en" ? "Occupancy rate over 5 years" : "Taux d'occupation sur 5 ans"}
+              </p>
+            </div>
+            <div className="flex flex-col items-center">
+              <Star className="w-8 h-8 text-[#D4A574] mb-3 fill-[#D4A574]" />
+              <p className="text-3xl font-light text-[#1C1917] mb-1" style={{ fontFamily: "DM Serif Display, serif" }}>
+                {STATS_DISPLAY[L].rating}/5
+              </p>
+              <p className="text-sm text-[#57534E]">
+                {language === "en" ? "Average rating from residents" : "Note moyenne des résidents"}
+              </p>
+            </div>
           </div>
         </div>
       </section>
