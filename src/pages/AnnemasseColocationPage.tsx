@@ -369,8 +369,10 @@ export function AnnemasseColocationPage() {
               ? [
                   "Furnished private room with quality bed and ergonomic desk",
                   "All utilities (water, electricity, heating)",
+                  // Ménage remonté juste après les charges (demande Jérôme 29/08) :
+                  // c'est un argument fort, il ne doit pas se perdre en milieu de liste.
+                  "Cleaning three times a week",
                   "fiber internet up to 8 Gb/s",
-                  "Cleaning three times a week of common areas",
                   "Heated pool, sauna and gym access",
                   "Private weekly yoga and fitness classes",
                   "Streaming subscriptions (Netflix, Canal+, etc.)",
@@ -381,8 +383,8 @@ export function AnnemasseColocationPage() {
               : [
                   "Chambre privée meublée avec lit qualité et bureau ergonomique",
                   "Toutes charges (eau, électricité, chauffage)",
+                  "Ménage 3 fois par semaine",
                   "Internet fibre jusqu'à 8 Gb/s",
-                  "Ménage 3 fois par semaine des espaces communs",
                   "Accès piscine chauffée, sauna et salle de sport",
                   "Cours privés de yoga et fitness hebdomadaires",
                   "Abonnements streaming (Netflix, Canal+, etc.)",
