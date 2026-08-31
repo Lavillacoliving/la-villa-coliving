@@ -188,8 +188,8 @@ export function AnnemasseColocationPage() {
               </h3>
               <p className="text-[#57534E] leading-relaxed">
                 {language === "en"
-                  ? `You keep your Swiss salary and live on the French side, in a real house: 37-42 m² of living space per housemate, pool, sauna and gym included, from ${PRICE_CHF_EN}/month all-inclusive — no application or agency fees.`
-                  : `Tu gardes ton salaire suisse et tu vis côté France, dans une vraie maison : 37-42 m² d'espace de vie par colocataire, piscine, sauna et salle de sport inclus, dès ${PRICE_CHF_FR}/mois tout inclus — sans frais de dossier ni d'agence.`}
+                  ? `You keep your Swiss salary and live on the French side, in a real house: 37-42 m² of living space per housemate, pool, sauna and gym included, from ${PRICE_SHARED_CHF_EN}/month all-inclusive — no application or agency fees.`
+                  : `Tu gardes ton salaire suisse et tu vis côté France, dans une vraie maison : 37-42 m² d'espace de vie par colocataire, piscine, sauna et salle de sport inclus, dès ${PRICE_SHARED_CHF_FR}/mois tout inclus — sans frais de dossier ni d'agence.`}
               </p>
             </div>
             <div className="text-center">
