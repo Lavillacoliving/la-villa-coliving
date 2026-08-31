@@ -592,6 +592,27 @@ export function RatesPageV4() {
         </div>
       </section>
 
+      {/* Social proof + colocation-geneve link */}
+      <section className="py-16 bg-white border-t border-[#E7E5E4]">
+        <div className="container-custom max-w-3xl text-center">
+          <p className="text-[#57534E] italic text-lg mb-2">
+            {language === "en"
+              ? `"I was paying CHF 2,200 for a tiny studio in Geneva. Here everything's included — pool, gym, and an amazing community."`
+              : `"Je payais 2 200 CHF pour un petit studio à Genève. Ici, tout est inclus — piscine, gym et une communauté incroyable."`}
+          </p>
+          <p className="text-sm text-[#78716C] mb-6">
+            — Marie L., {language === "en" ? "Consultant, cross-border worker" : "Consultante, frontalière"}
+          </p>
+          <LocalizedLink
+            to={colocGeneveHref(language)}
+            className="inline-flex items-center gap-2 text-[#D4A574] font-medium hover:underline"
+          >
+            {language === "en" ? "Learn more about shared housing near Geneva" : "En savoir plus sur la colocation près de Genève"}
+            <ArrowRight className="w-4 h-4" />
+          </LocalizedLink>
+        </div>
+      </section>
+
       {/* Tableau comparatif « vs colocation classique » — section propre depuis
           le 29/08 : l'aperçu « Tout ce dont tu as besoin » passe avant lui. */}
       <section className="py-20 bg-[#FAF9F6]">
@@ -926,80 +947,6 @@ export function RatesPageV4() {
         </div>
       </section>
 
-      {/* Price Cards WITH IMAGES */}
-      <section className="py-24 lg:py-32 bg-[#FAF9F6]">
-        <div className="container-custom">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl font-light text-[#1C1917] mb-4">
-              {language === "en" ? "Our Houses" : "Nos Maisons"}
-            </h2>
-            <p className="text-[#57534E]">
-              {language === "en"
-                ? "Same premium experience, three unique locations"
-                : "Même expérience premium, trois lieux uniques"}
-            </p>
-          </div>
-
-          <div className="grid md:grid-cols-3 gap-8">
-            {houses.map((house, index) => (
-              <div
-                key={index}
-                className="bg-white border border-[#E7E5E4] overflow-hidden hover:shadow-xl transition-all duration-300 group"
-              >
-                {/* Image Container */}
-                <div className="relative h-64 overflow-hidden">
-                  <img
-                    src={house.image}
-                    alt={house.alt}
-                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" loading="lazy"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
-                  <div className="absolute bottom-4 left-4">
-                    <h3 className="text-2xl font-medium mb-1 text-white drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)]">
-                      {house.name}
-                    </h3>
-                    <p className="text-sm text-white drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)]">
-                      {house.location}
-                    </p>
-                  </div>
-                </div>
-
-                {/* Content */}
-                <div className="p-8">
-                  <p className="text-[#57534E] text-sm mb-6">
-                    {house.description}
-                  </p>
-
-                  <div className="mb-8">
-                    {/* La Villa : 4 chambres sur 10 à salle d'eau partagée → plancher 1 370 */}
-                    {house.name === "La Villa" && (
-                      <span className="text-[#78716C] mr-1">
-                        {language === "en" ? "from" : "dès"}
-                      </span>
-                    )}
-                    <span className="text-4xl font-light text-[#D4A574]">
-                      {house.name === "La Villa"
-                        ? (language === "en" ? PRICE_SHARED_EN_NUM : PRICE_SHARED_FR_NUM)
-                        : (language === "en" ? PRICE_EN_NUM : PRICE_FR_NUM)}
-                    </span>
-                    <span className="text-[#78716C]">
-                      {" "}
-                      CHF/{language === "en" ? "mo" : "mois"}
-                    </span>
-                  </div>
-
-                  <LocalizedLink
-                    to={`/${house.name.toLowerCase().replace(/\s+/g, "")}`}
-                    className="block w-full py-4 bg-[#1C1917] text-white text-center font-bold hover:bg-[#D4A574] transition-colors"
-                  >
-                    {language === "en" ? "VIEW DETAILS" : "VOIR LES DÉTAILS"}
-                  </LocalizedLink>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
 
       {/* DETAILED SERVICES SECTION */}
       <section className="py-24 lg:py-32 bg-white">
@@ -1081,24 +1028,78 @@ export function RatesPageV4() {
         </div>
       </section>
 
-      {/* Social proof + colocation-geneve link */}
-      <section className="py-16 bg-white border-t border-[#E7E5E4]">
-        <div className="container-custom max-w-3xl text-center">
-          <p className="text-[#57534E] italic text-lg mb-2">
-            {language === "en"
-              ? `"I was paying CHF 2,200 for a tiny studio in Geneva. Here everything's included — pool, gym, and an amazing community."`
-              : `"Je payais 2 200 CHF pour un petit studio à Genève. Ici, tout est inclus — piscine, gym et une communauté incroyable."`}
-          </p>
-          <p className="text-sm text-[#78716C] mb-6">
-            — Marie L., {language === "en" ? "Consultant, cross-border worker" : "Consultante, frontalière"}
-          </p>
-          <LocalizedLink
-            to={colocGeneveHref(language)}
-            className="inline-flex items-center gap-2 text-[#D4A574] font-medium hover:underline"
-          >
-            {language === "en" ? "Learn more about shared housing near Geneva" : "En savoir plus sur la colocation près de Genève"}
-            <ArrowRight className="w-4 h-4" />
-          </LocalizedLink>
+      {/* Price Cards WITH IMAGES */}
+      <section className="py-24 lg:py-32 bg-[#FAF9F6]">
+        <div className="container-custom">
+          <div className="text-center mb-12">
+            <h2 className="text-3xl font-light text-[#1C1917] mb-4">
+              {language === "en" ? "Our Houses" : "Nos Maisons"}
+            </h2>
+            <p className="text-[#57534E]">
+              {language === "en"
+                ? "Same premium experience, three unique locations"
+                : "Même expérience premium, trois lieux uniques"}
+            </p>
+          </div>
+
+          <div className="grid md:grid-cols-3 gap-8">
+            {houses.map((house, index) => (
+              <div
+                key={index}
+                className="bg-white border border-[#E7E5E4] overflow-hidden hover:shadow-xl transition-all duration-300 group"
+              >
+                {/* Image Container */}
+                <div className="relative h-64 overflow-hidden">
+                  <img
+                    src={house.image}
+                    alt={house.alt}
+                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" loading="lazy"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
+                  <div className="absolute bottom-4 left-4">
+                    <h3 className="text-2xl font-medium mb-1 text-white drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)]">
+                      {house.name}
+                    </h3>
+                    <p className="text-sm text-white drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)]">
+                      {house.location}
+                    </p>
+                  </div>
+                </div>
+
+                {/* Content */}
+                <div className="p-8">
+                  <p className="text-[#57534E] text-sm mb-6">
+                    {house.description}
+                  </p>
+
+                  <div className="mb-8">
+                    {/* La Villa : 4 chambres sur 10 à salle d'eau partagée → plancher 1 370 */}
+                    {house.name === "La Villa" && (
+                      <span className="text-[#78716C] mr-1">
+                        {language === "en" ? "from" : "dès"}
+                      </span>
+                    )}
+                    <span className="text-4xl font-light text-[#D4A574]">
+                      {house.name === "La Villa"
+                        ? (language === "en" ? PRICE_SHARED_EN_NUM : PRICE_SHARED_FR_NUM)
+                        : (language === "en" ? PRICE_EN_NUM : PRICE_FR_NUM)}
+                    </span>
+                    <span className="text-[#78716C]">
+                      {" "}
+                      CHF/{language === "en" ? "mo" : "mois"}
+                    </span>
+                  </div>
+
+                  <LocalizedLink
+                    to={`/${house.name.toLowerCase().replace(/\s+/g, "")}`}
+                    className="block w-full py-4 bg-[#1C1917] text-white text-center font-bold hover:bg-[#D4A574] transition-colors"
+                  >
+                    {language === "en" ? "VIEW DETAILS" : "VOIR LES DÉTAILS"}
+                  </LocalizedLink>
+                </div>
+              </div>
+            ))}
+          </div>
         </div>
       </section>
 
@@ -1116,8 +1117,8 @@ export function RatesPageV4() {
             style={{ fontFamily: "DM Serif Display, serif" }}
           >
             {language === "en"
-              ? "Ready to Save & Join?"
-              : "Prêt à Économiser & Nous Rejoindre ?"}
+              ? "Ready to Join?"
+              : "Prêt à Nous Rejoindre ?"}
           </h2>
           <p className="text-lg text-white/80 max-w-xl mx-auto mb-8">
             {(() => {
