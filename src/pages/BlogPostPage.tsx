@@ -272,13 +272,13 @@ export function BlogPostPage() {
     // Render markdown H1 as <h2> so each blog page keeps exactly one <h1>.
     // id = slug de chapitre (cible du sommaire) ; scroll-mt-24 pour ne pas passer sous la navbar fixe.
     h1: ({children}: {children?: React.ReactNode}) => (
-      <h2 id={slugify(nodeText(children))} className="scroll-mt-24 text-2xl md:text-3xl font-semibold text-[#1C1917] mt-12 mb-4" style={{fontFamily:"DM Serif Display, serif"}}>{children}</h2>
+      <h2 id={slugify(nodeText(children))} className="scroll-mt-24 text-2xl md:text-3xl font-semibold text-[#1C1917] mt-12 mb-4" style={{fontFamily: '"DM Serif Display", serif'}}>{children}</h2>
     ),
     h2: ({children}: {children?: React.ReactNode}) => (
-      <h2 className="text-2xl md:text-3xl font-semibold text-[#1C1917] mt-12 mb-4" style={{fontFamily:"DM Serif Display, serif"}}>{children}</h2>
+      <h2 className="text-2xl md:text-3xl font-semibold text-[#1C1917] mt-12 mb-4" style={{fontFamily: '"DM Serif Display", serif'}}>{children}</h2>
     ),
     h3: ({children}: {children?: React.ReactNode}) => (
-      <h3 className="text-xl md:text-2xl font-semibold text-[#1C1917] mt-8 mb-3" style={{fontFamily:"DM Serif Display, serif"}}>{children}</h3>
+      <h3 className="text-xl md:text-2xl font-semibold text-[#1C1917] mt-8 mb-3" style={{fontFamily: '"DM Serif Display", serif'}}>{children}</h3>
     ),
     p: ({children}: {children?: React.ReactNode}) => <p className="mb-6 leading-relaxed">{children}</p>,
     strong: ({children}: {children?: React.ReactNode}) => <strong className="font-semibold text-[#1C1917]">{children}</strong>,
@@ -389,7 +389,7 @@ export function BlogPostPage() {
           <span className="inline-block text-xs uppercase tracking-widest text-[#D4A574] font-medium mb-4">
             {CL[post.category]?.[language]||post.category}
           </span>
-          <h1 className="text-4xl md:text-5xl font-light text-[#1C1917] mb-6" style={{fontFamily:"DM Serif Display, serif"}}>
+          <h1 className="text-4xl md:text-5xl font-light text-[#1C1917] mb-6" style={{fontFamily: '"DM Serif Display", serif'}}>
             {title}
           </h1>
           <div className="flex flex-wrap items-center gap-x-6 gap-y-2 text-sm text-[#78716C] mb-8 pb-8 border-b border-[#E7E5E4]">
@@ -484,7 +484,7 @@ export function BlogPostPage() {
         <div className="max-w-5xl mx-auto px-6">
           <h2
             className="text-2xl md:text-3xl font-light text-[#1C1917] mb-3 text-center"
-            style={{ fontFamily: "DM Serif Display, serif" }}
+            style={{ fontFamily: '"DM Serif Display", serif' }}
           >
             {language === "en" ? "Discover our houses" : "Découvrez nos maisons"}
           </h2>
@@ -508,7 +508,7 @@ export function BlogPostPage() {
                   <img src={h.img} alt={`${h.labelFr} — coliving près de Genève`} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" loading="lazy" />
                 </div>
                 <div className="p-5">
-                  <h3 className="text-lg font-medium text-[#1C1917] mb-1 group-hover:text-[#D4A574] transition-colors" style={{ fontFamily: "DM Serif Display, serif" }}>
+                  <h3 className="text-lg font-medium text-[#1C1917] mb-1 group-hover:text-[#D4A574] transition-colors" style={{ fontFamily: '"DM Serif Display", serif' }}>
                     {language === "en" ? h.labelEn : h.labelFr}
                   </h3>
                   <p className="text-sm text-[#57534E]">{language === "en" ? h.descEn : h.descFr}</p>
@@ -525,7 +525,7 @@ export function BlogPostPage() {
           <div className="max-w-5xl mx-auto px-6">
             <h2
               className="text-2xl md:text-3xl font-light text-[#1C1917] mb-8 text-center"
-              style={{ fontFamily: "DM Serif Display, serif" }}
+              style={{ fontFamily: '"DM Serif Display", serif' }}
             >
               {language === "en" ? "Related Articles" : "Articles Connexes"}
             </h2>
@@ -548,7 +548,7 @@ export function BlogPostPage() {
                       <span className="text-xs uppercase tracking-widest text-[#D4A574] font-medium mb-2 block">
                         {CL[r.category]?.[language] || r.category}
                       </span>
-                      <h3 className="text-base font-medium text-[#1C1917] mb-2 line-clamp-2 group-hover:text-[#D4A574] transition-colors" style={{ fontFamily: "DM Serif Display, serif" }}>
+                      <h3 className="text-base font-medium text-[#1C1917] mb-2 line-clamp-2 group-hover:text-[#D4A574] transition-colors" style={{ fontFamily: '"DM Serif Display", serif' }}>
                         {rTitle}
                       </h3>
                       <p className="text-sm text-[#57534E] line-clamp-2">{rExcerpt}</p>

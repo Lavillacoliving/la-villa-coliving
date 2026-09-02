@@ -73,7 +73,7 @@ export function ColivingPage() {
             </span>
             <h1 
               className="text-5xl md:text-7xl lg:text-8xl mb-8 text-[#0f172a]"
-              style={{ fontFamily: 'Plus Jakarta Sans, sans-serif' }}
+              style={{ fontFamily: '"Plus Jakarta Sans", sans-serif' }}
             >
               {t.colivingPage.hero.title}
             </h1>
@@ -111,7 +111,7 @@ export function ColivingPage() {
               </span>
               <h2 
                 className="text-4xl md:text-5xl lg:text-6xl mb-6 text-[#0f172a]"
-                style={{ fontFamily: 'Plus Jakarta Sans, sans-serif' }}
+                style={{ fontFamily: '"Plus Jakarta Sans", sans-serif' }}
               >
                 {t.colivingPage.whatIs.title}
               </h2>
@@ -162,7 +162,7 @@ export function ColivingPage() {
               </span>
               <h2 
                 className="text-4xl md:text-5xl lg:text-6xl mb-6 text-[#0f172a]"
-                style={{ fontFamily: 'Plus Jakarta Sans, sans-serif' }}
+                style={{ fontFamily: '"Plus Jakarta Sans", sans-serif' }}
               >
                 {t.colivingPage.notColocation.title}
               </h2>
@@ -191,7 +191,7 @@ export function ColivingPage() {
             </span>
             <h2 
               className="text-4xl md:text-5xl lg:text-6xl mb-6 text-[#0f172a]"
-              style={{ fontFamily: 'Plus Jakarta Sans, sans-serif' }}
+              style={{ fontFamily: '"Plus Jakarta Sans", sans-serif' }}
             >
               {t.colivingPage.difference.title}
             </h2>
@@ -240,7 +240,7 @@ export function ColivingPage() {
               </span>
               <h2 
                 className="text-4xl md:text-5xl lg:text-6xl mb-8 text-[#0f172a]"
-                style={{ fontFamily: 'Plus Jakarta Sans, sans-serif' }}
+                style={{ fontFamily: '"Plus Jakarta Sans", sans-serif' }}
               >
                 {t.colivingPage.benefits.title}
               </h2>
@@ -303,7 +303,7 @@ export function ColivingPage() {
               </span>
               <h2 
                 className="text-4xl md:text-5xl lg:text-6xl mb-6 text-[#0f172a]"
-                style={{ fontFamily: 'Plus Jakarta Sans, sans-serif' }}
+                style={{ fontFamily: '"Plus Jakarta Sans", sans-serif' }}
               >
                 {t.colivingPage.whoIsItFor.title}
               </h2>
@@ -347,7 +347,7 @@ export function ColivingPage() {
         <div className="absolute bottom-10 right-10 w-24 h-24 bg-[#f97316]/40 blob-reverse hidden lg:block" />
         
         <div className="container-custom relative text-center">
-          <p className="text-2xl md:text-3xl font-bold max-w-3xl mx-auto leading-relaxed text-white" style={{ fontFamily: 'Plus Jakarta Sans, sans-serif' }}>
+          <p className="text-2xl md:text-3xl font-bold max-w-3xl mx-auto leading-relaxed text-white" style={{ fontFamily: '"Plus Jakarta Sans", sans-serif' }}>
             "La Villa isn't just a place to live—it's a <span className="text-[#f97316] font-black">community</span> that becomes <span className="text-[#f97316] font-black">family</span>."
           </p>
         </div>

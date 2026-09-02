@@ -265,7 +265,7 @@ export function ObservatoireLogementFrontalierPage() {
           </span>
           <h1
             className="text-4xl md:text-5xl font-light mb-4 leading-tight"
-            style={{ fontFamily: "DM Serif Display, serif" }}
+            style={{ fontFamily: '"DM Serif Display", serif' }}
           >
             {en ? "Where to live near Geneva " : "Où se loger près de Genève "}
             <span className="text-[#D4A574]">{en ? "without straying far?" : "sans s'éloigner ?"}</span>
@@ -279,7 +279,7 @@ export function ObservatoireLogementFrontalierPage() {
           {/* Le chiffre-choc, énorme */}
           <div className="grid sm:grid-cols-[1fr_auto_1fr] items-center gap-4 sm:gap-8 max-w-3xl mx-auto mt-12">
             <div className="text-center sm:text-right">
-              <div className="text-5xl md:text-6xl font-light whitespace-nowrap" style={{ fontFamily: "DM Serif Display, serif" }}>
+              <div className="text-5xl md:text-6xl font-light whitespace-nowrap" style={{ fontFamily: '"DM Serif Display", serif' }}>
                 ≈ {GENEVA_EAUXVIVES_CHF}<span className="text-2xl md:text-3xl ml-2 text-white/70">CHF</span>
               </div>
               <div className="text-sm text-white/60 mt-2">
@@ -292,7 +292,7 @@ export function ObservatoireLogementFrontalierPage() {
               <ArrowRight className="w-5 h-5 rotate-90 sm:rotate-0" />
             </div>
             <div className="text-center sm:text-left">
-              <div className="text-5xl md:text-6xl font-light whitespace-nowrap" style={{ fontFamily: "DM Serif Display, serif" }}>
+              <div className="text-5xl md:text-6xl font-light whitespace-nowrap" style={{ fontFamily: '"DM Serif Display", serif' }}>
                 ≈ {hub.mois}<span className="text-2xl md:text-3xl ml-2 text-white/70">€</span>
               </div>
               <div className="text-sm text-white/60 mt-2">
@@ -369,7 +369,7 @@ export function ObservatoireLogementFrontalierPage() {
               </span>
               <h2
                 className="text-2xl md:text-3xl font-light text-[#1C1917] mt-2 mb-5 leading-snug"
-                style={{ fontFamily: "DM Serif Display, serif" }}
+                style={{ fontFamily: '"DM Serif Display", serif' }}
               >
                 {en ? "A two-speed market" : "Un marché à deux vitesses"}
               </h2>
@@ -385,7 +385,7 @@ export function ObservatoireLogementFrontalierPage() {
 
               {/* Pull-quote OCSTAT — la citation en grand, pas noyée dans un paragraphe */}
               <blockquote className="border-l-4 border-[#D4A574] pl-5 sm:pl-6 my-7">
-                <p className="text-lg md:text-xl text-[#44403C] leading-relaxed italic" style={{ fontFamily: "DM Serif Display, serif" }}>
+                <p className="text-lg md:text-xl text-[#44403C] leading-relaxed italic" style={{ fontFamily: '"DM Serif Display", serif' }}>
                   {en
                     ? "“Rents on recently concluded leases are generally substantially higher than those paid by people who have occupied the same flat for a long time.”"
                     : "« Les loyers des baux conclus récemment sont en général sensiblement supérieurs à ceux payés par des personnes qui occupent le même appartement depuis longtemps. »"}
@@ -476,7 +476,7 @@ export function ObservatoireLogementFrontalierPage() {
       {/* ===== LA DESSERTE, PAS LA DISTANCE — graphique signature (insight annoté) + paliers ===== */}
       <section className="py-12 lg:py-16 bg-white">
         <div className="max-w-4xl mx-auto px-6">
-          <h2 className="text-2xl md:text-3xl font-light text-[#1C1917] mb-3 text-center" style={{ fontFamily: "DM Serif Display, serif" }}>
+          <h2 className="text-2xl md:text-3xl font-light text-[#1C1917] mb-3 text-center" style={{ fontFamily: '"DM Serif Display", serif' }}>
             {en ? "The deciding factor is rail service, not distance" : "Le facteur déterminant : la desserte, pas la distance"}
           </h2>
           <p className="text-sm text-[#57534E] text-center mb-8 max-w-2xl mx-auto leading-relaxed">
@@ -597,7 +597,7 @@ export function ObservatoireLogementFrontalierPage() {
           </p>
           <h2
             className="text-2xl md:text-3xl font-light text-[#1C1917] mb-3 text-center"
-            style={{ fontFamily: "DM Serif Display, serif" }}
+            style={{ fontFamily: '"DM Serif Display", serif' }}
           >
             {en ? "Find your town in three steps" : "Trouve ta commune en trois gestes"}
           </h2>
@@ -787,7 +787,7 @@ export function ObservatoireLogementFrontalierPage() {
             </span>
             <h2
               className="text-2xl md:text-3xl font-light text-[#1C1917] mt-2 mb-3"
-              style={{ fontFamily: "DM Serif Display, serif" }}
+              style={{ fontFamily: '"DM Serif Display", serif' }}
             >
               {en ? "Seen from our houses" : "Vu de nos maisons"}
             </h2>
@@ -848,7 +848,7 @@ export function ObservatoireLogementFrontalierPage() {
 
           {/* A — Le m² tout compris (finding) + spectre 4 barres */}
           <div className="bg-white border border-[#E7E5E4] rounded-xl p-6 sm:p-8 mb-6">
-            <h3 className="text-xl md:text-2xl font-light text-[#1C1917] mb-4" style={{ fontFamily: "DM Serif Display, serif" }}>
+            <h3 className="text-xl md:text-2xl font-light text-[#1C1917] mb-4" style={{ fontFamily: '"DM Serif Display", serif' }}>
               {en ? "The all-inclusive square metre" : "Le mètre carré tout compris"}
             </h3>
             <p className="text-sm text-[#44403C] leading-relaxed">
@@ -912,7 +912,7 @@ export function ObservatoireLogementFrontalierPage() {
 
           {/* B — Le coût complet, ligne à ligne (hypothèses affichées) */}
           <div className="bg-white border border-[#E7E5E4] rounded-xl p-6 sm:p-8 mb-6">
-            <h3 className="text-xl md:text-2xl font-light text-[#1C1917] mb-4" style={{ fontFamily: "DM Serif Display, serif" }}>
+            <h3 className="text-xl md:text-2xl font-light text-[#1C1917] mb-4" style={{ fontFamily: '"DM Serif Display", serif' }}>
               {en ? "The full monthly cost, line by line" : "Le coût mensuel complet, ligne à ligne"}
             </h3>
             <p className="text-sm text-[#57534E] leading-relaxed mb-4">
@@ -1040,7 +1040,7 @@ export function ObservatoireLogementFrontalierPage() {
 
           {/* C — Le résident-type + la tension */}
           <div className="bg-white border border-[#E7E5E4] rounded-xl p-6 sm:p-8">
-            <h3 className="text-xl md:text-2xl font-light text-[#1C1917] mb-4 flex items-center gap-2.5" style={{ fontFamily: "DM Serif Display, serif" }}>
+            <h3 className="text-xl md:text-2xl font-light text-[#1C1917] mb-4 flex items-center gap-2.5" style={{ fontFamily: '"DM Serif Display", serif' }}>
               <Users className="w-6 h-6 text-[#D4A574] shrink-0" />
               {en ? "Who lives in coliving — the typical resident" : "Qui vit en coliving — le résident-type"}
             </h3>
@@ -1160,7 +1160,7 @@ export function ObservatoireLogementFrontalierPage() {
       {/* ===== PRESSE & TÉLÉCHARGEMENTS + CTA (brief staging §5) ===== */}
       <section className="py-14 lg:py-20 bg-white border-t border-[#E7E5E4]">
         <div className="max-w-4xl mx-auto px-6">
-          <h2 className="text-2xl md:text-3xl font-light text-[#1C1917] mb-6 text-center" style={{ fontFamily: "DM Serif Display, serif" }}>
+          <h2 className="text-2xl md:text-3xl font-light text-[#1C1917] mb-6 text-center" style={{ fontFamily: '"DM Serif Display", serif' }}>
             {en ? "Press & downloads" : "Presse & téléchargements"}
           </h2>
           {/* À citer */}

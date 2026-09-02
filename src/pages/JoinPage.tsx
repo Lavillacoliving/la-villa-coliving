@@ -37,7 +37,7 @@ export function JoinPage() {
           </div>
           <h1 
             className="text-4xl mb-4 text-[#0f172a]"
-            style={{ fontFamily: 'Plus Jakarta Sans, sans-serif' }}
+            style={{ fontFamily: '"Plus Jakarta Sans", sans-serif' }}
           >
             {t.joinPage.form.success}
           </h1>
@@ -60,7 +60,7 @@ export function JoinPage() {
         <div className="container-custom relative text-center">
           <h1 
             className="text-5xl md:text-6xl lg:text-7xl mb-6 text-[#0f172a]"
-            style={{ fontFamily: 'Plus Jakarta Sans, sans-serif' }}
+            style={{ fontFamily: '"Plus Jakarta Sans", sans-serif' }}
           >
             {t.joinPage.hero.title}
           </h1>

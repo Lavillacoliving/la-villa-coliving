@@ -50,7 +50,7 @@ export function HousesPreviewV4() {
             </span>
             <h2 
               className="text-4xl md:text-5xl font-light text-[#1a1a1a]"
-              style={{ fontFamily: 'Plus Jakarta Sans, sans-serif' }}
+              style={{ fontFamily: '"Plus Jakarta Sans", sans-serif' }}
             >
               {language === 'en' ? 'Three Homes.' : 'Trois Maisons.'}
               <br />

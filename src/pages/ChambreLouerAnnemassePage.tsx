@@ -89,7 +89,7 @@ export function ChambreLouerAnnemassePage() {
           </span>
           <h1
             className="text-4xl md:text-6xl font-light text-[#1C1917] mb-6 leading-tight"
-            style={{ fontFamily: "DM Serif Display, serif" }}
+            style={{ fontFamily: '"DM Serif Display", serif' }}
           >
             {language === "en"
               ? `Furnished rooms to rent in Annemasse — from ${PRICE_SHARED_CHF_EN}/mo all-inclusive`
@@ -123,7 +123,7 @@ export function ChambreLouerAnnemassePage() {
         <div className="max-w-6xl mx-auto px-6">
           <h2
             className="text-3xl md:text-4xl font-light text-[#1C1917] mb-12 text-center"
-            style={{ fontFamily: "DM Serif Display, serif" }}
+            style={{ fontFamily: '"DM Serif Display", serif' }}
           >
             {language === "en"
               ? "Simple pricing, the same quality — you choose the vibe"
@@ -181,7 +181,7 @@ export function ChambreLouerAnnemassePage() {
         <div className="max-w-5xl mx-auto px-6">
           <h2
             className="text-3xl md:text-4xl font-light text-[#1C1917] mb-12 text-center"
-            style={{ fontFamily: "DM Serif Display, serif" }}
+            style={{ fontFamily: '"DM Serif Display", serif' }}
           >
             {language === "en"
               ? "Why rent your room at La Villa Coliving in Annemasse"
@@ -231,7 +231,7 @@ export function ChambreLouerAnnemassePage() {
           <Train className="w-12 h-12 text-[#D4A574] mx-auto mb-6" />
           <h2
             className="text-3xl md:text-4xl font-light text-[#1C1917] mb-6"
-            style={{ fontFamily: "DM Serif Display, serif" }}
+            style={{ fontFamily: '"DM Serif Display", serif' }}
           >
             {language === "en" ? "15 min from Geneva Cornavin" : "À 15 min de Genève Cornavin"}
           </h2>
@@ -255,7 +255,7 @@ export function ChambreLouerAnnemassePage() {
         <div className="max-w-5xl mx-auto px-6">
           <h2
             className="text-3xl md:text-4xl font-light text-[#1C1917] mb-12 text-center"
-            style={{ fontFamily: "DM Serif Display, serif" }}
+            style={{ fontFamily: '"DM Serif Display", serif' }}
           >
             {language === "en" ? "How to rent your room — 4 steps" : "Comment louer ta chambre — 4 étapes"}
           </h2>
@@ -311,7 +311,7 @@ export function ChambreLouerAnnemassePage() {
         <div className="max-w-3xl mx-auto px-6">
           <h2
             className="text-3xl md:text-4xl font-light text-[#1C1917] mb-12 text-center"
-            style={{ fontFamily: "DM Serif Display, serif" }}
+            style={{ fontFamily: '"DM Serif Display", serif' }}
           >
             {language === "en" ? "Frequently asked questions" : "Questions fréquentes"}
           </h2>
@@ -346,7 +346,7 @@ export function ChambreLouerAnnemassePage() {
           <Calendar className="w-12 h-12 text-[#D4A574] mx-auto mb-6" />
           <h2
             className="text-3xl md:text-4xl font-light mb-6"
-            style={{ fontFamily: "DM Serif Display, serif" }}
+            style={{ fontFamily: '"DM Serif Display", serif' }}
           >
             {language === "en"
               ? "Check current room availability"

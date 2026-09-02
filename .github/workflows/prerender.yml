@@ -16,6 +16,12 @@
 # Loop prevention: pushes from github-actions[bot] don't trigger new workflows.
 # Extra safety: paths-ignore excludes prerendered files and sitemap.
 #
+# Déploiement production (B4, 02/09/2026) : vercel.json "ignoreCommand" ignore le build du
+# push source (le bot déploie 10-15 min plus tard, bundle + HTML cohérents). Si le prérendu
+# n'a pas changé après un push, le bot pousse un commit vide pour déclencher ce déploiement.
+# Les deux gardes (pages maisons, hydratation) bloquent la publication ET le déploiement en
+# cas d'échec.
+#
 # Cost: $0 (GitHub Actions free for public repos, 2000 min/month for private)
 
 name: Pre-render & Deploy
@@ -75,6 +81,11 @@ jobs:
       - name: Vérifier les pages maisons
         run: node scripts/house-pages-check.mjs
 
+      # Garde Lot B (02/09/2026) : hydrate chaque page prérendue contre le bundle de CE build ;
+      # toute erreur d'hydratation (#418/#423/#425) bloque le commit — et donc la production.
+      - name: Vérifier l'hydratation des pages prérendues
+        run: node scripts/hydration-check.mjs
+
       - name: Commit and push if changes
         run: |
           git config user.name "github-actions[bot]"
@@ -82,6 +93,19 @@ jobs:
           git add public/prerendered/ vercel.json public/sitemap.xml
           if git diff --staged --quiet; then
             echo "✅ No changes — pre-rendered pages are up to date"
+            # B4 (Lot B, 02/09/2026) : la production ne se déploie plus sur le push source
+            # (vercel.json ignoreCommand → scripts/vercel-ignore-build.sh) mais sur le commit du
+            # bot. Si le prérendu n'a pas changé après un push src/, le bot pousse un commit
+            # VIDE : Vercel construit alors le même arbre que le push, bundle et HTML cohérents.
+            # Aucun secret ni Deploy Hook à configurer. Cron et dispatch sans changement : rien.
+            if [ "${{ github.event_name }}" = "push" ]; then
+              git commit --allow-empty -m "auto-prerender: aucun changement — déploiement production
+
+              Triggered by: ${{ github.event_name }} (commit vide : le push source est ignoré par Vercel, voir scripts/vercel-ignore-build.sh)
+              Co-Authored-By: github-actions[bot] <github-actions[bot]@users.noreply.github.com>"
+              git push
+              echo "🚀 Commit vide poussé — Vercel déploie le bundle du push"
+            fi
           else
             BLOG_COUNT=$(ls public/prerendered/blog-*.html 2>/dev/null | wc -l)
             STATIC_COUNT=$(ls public/prerendered/*.html 2>/dev/null | wc -l)

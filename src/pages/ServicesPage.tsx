@@ -104,7 +104,7 @@ export function ServicesPage() {
         <div className="container-custom relative text-center">
           <h1 
             className="text-5xl md:text-7xl lg:text-8xl mb-6 text-[#0f172a]"
-            style={{ fontFamily: 'Plus Jakarta Sans, sans-serif' }}
+            style={{ fontFamily: '"Plus Jakarta Sans", sans-serif' }}
           >
             {t.servicesPage.hero.title}
           </h1>
@@ -174,7 +174,7 @@ export function ServicesPage() {
               </span>
               <h2 
                 className="text-4xl md:text-5xl lg:text-6xl mb-6 text-[#0f172a]"
-                style={{ fontFamily: 'Plus Jakarta Sans, sans-serif' }}
+                style={{ fontFamily: '"Plus Jakarta Sans", sans-serif' }}
               >
                 {language === 'en' 
                   ? 'Everything You Need to Live Well' 
@@ -219,7 +219,7 @@ export function ServicesPage() {
         <div className="container-custom text-center relative">
           <h2 
             className="text-3xl md:text-4xl mb-4 text-white font-black"
-            style={{ fontFamily: 'Plus Jakarta Sans, sans-serif' }}
+            style={{ fontFamily: '"Plus Jakarta Sans", sans-serif' }}
           >
             {language === 'en' 
               ? 'One Price. Everything Included.' 

@@ -97,7 +97,7 @@ export function TestimonialsCarouselV4() {
           </span>
           <h2 
             className="text-4xl md:text-5xl font-light text-white"
-            style={{ fontFamily: 'Plus Jakarta Sans, sans-serif' }}
+            style={{ fontFamily: '"Plus Jakarta Sans", sans-serif' }}
           >
             {language === 'en' ? 'What Our' : 'Ce Que Nos'}
             <br />

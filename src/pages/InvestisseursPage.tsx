@@ -50,7 +50,7 @@ export function InvestisseursPage() {
           </span>
           <h1
             className="text-4xl md:text-5xl lg:text-6xl font-light text-white mb-6 max-w-4xl mx-auto"
-            style={{ fontFamily: "DM Serif Display, serif" }}
+            style={{ fontFamily: '"DM Serif Display", serif' }}
           >
             {language === "en"
               ? "Grow your assets with premium coliving"
@@ -125,7 +125,7 @@ export function InvestisseursPage() {
           </span>
           <h2
             className="text-3xl md:text-4xl lg:text-5xl font-light text-[#1C1917] mb-12"
-            style={{ fontFamily: "DM Serif Display, serif" }}
+            style={{ fontFamily: '"DM Serif Display", serif' }}
           >
             {language === "en"
               ? "Premium coliving, a booming market"
@@ -179,7 +179,7 @@ export function InvestisseursPage() {
             </span>
             <h2
               className="text-3xl md:text-4xl lg:text-5xl font-light text-white mb-6"
-              style={{ fontFamily: "DM Serif Display, serif" }}
+              style={{ fontFamily: '"DM Serif Display", serif' }}
             >
               {language === "en"
                 ? "You are the owner. We are the operators."
@@ -304,7 +304,7 @@ export function InvestisseursPage() {
             </span>
             <h2
               className="text-3xl md:text-4xl lg:text-5xl font-light text-[#1C1917]"
-              style={{ fontFamily: "DM Serif Display, serif" }}
+              style={{ fontFamily: '"DM Serif Display", serif' }}
             >
               {language === "en"
                 ? "What makes us unique"
@@ -320,7 +320,7 @@ export function InvestisseursPage() {
               </div>
               <p
                 className="text-4xl font-bold text-[#1C1917] mb-1"
-                style={{ fontFamily: "DM Serif Display, serif" }}
+                style={{ fontFamily: '"DM Serif Display", serif' }}
               >
                 99%
               </p>
@@ -341,7 +341,7 @@ export function InvestisseursPage() {
               </div>
               <p
                 className="text-4xl font-bold text-[#1C1917] mb-1"
-                style={{ fontFamily: "DM Serif Display, serif" }}
+                style={{ fontFamily: '"DM Serif Display", serif' }}
               >
                 {language === "en" ? "Community" : "Communauté"}
               </p>
@@ -364,7 +364,7 @@ export function InvestisseursPage() {
               </div>
               <p
                 className="text-4xl font-bold text-[#1C1917] mb-1"
-                style={{ fontFamily: "DM Serif Display, serif" }}
+                style={{ fontFamily: '"DM Serif Display", serif' }}
               >
                 {language === "en" ? "5 years" : "5 ans"}
               </p>
@@ -391,7 +391,7 @@ export function InvestisseursPage() {
           </span>
           <h2
             className="text-3xl md:text-4xl lg:text-5xl font-light text-[#1C1917] mb-12"
-            style={{ fontFamily: "DM Serif Display, serif" }}
+            style={{ fontFamily: '"DM Serif Display", serif' }}
           >
             {language === "en"
               ? "The ideal property for La Villa coliving"
@@ -466,7 +466,7 @@ export function InvestisseursPage() {
             </span>
             <h2
               className="text-3xl md:text-4xl lg:text-5xl font-light text-white mb-4"
-              style={{ fontFamily: "DM Serif Display, serif" }}
+              style={{ fontFamily: '"DM Serif Display", serif' }}
             >
               {language === "en" ? "Book a meeting" : "Prendre rendez-vous"}
             </h2>

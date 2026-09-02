@@ -27,7 +27,7 @@ export function HowToJoin() {
           </span>
           <h2 
             className="text-4xl md:text-5xl lg:text-6xl text-[#0f172a]"
-            style={{ fontFamily: 'Plus Jakarta Sans, sans-serif' }}
+            style={{ fontFamily: '"Plus Jakarta Sans", sans-serif' }}
           >
             {t.howToJoin.title}
           </h2>
@@ -52,7 +52,7 @@ export function HowToJoin() {
                   <span 
                     className="text-8xl font-black mb-4 block opacity-10"
                     style={{ 
-                      fontFamily: 'Plus Jakarta Sans, sans-serif',
+                      fontFamily: '"Plus Jakarta Sans", sans-serif',
                       color: step.color 
                     }}
                   >

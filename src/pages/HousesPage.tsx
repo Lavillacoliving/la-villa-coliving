@@ -85,7 +85,7 @@ export function HousesPage() {
             </span>
             <h1
               className="text-5xl md:text-6xl lg:text-7xl mb-6 text-[#0f172a]"
-              style={{ fontFamily: "Plus Jakarta Sans, sans-serif" }}
+              style={{ fontFamily: '"Plus Jakarta Sans", sans-serif' }}
             >
               {t.houses.title}
             </h1>
@@ -166,7 +166,7 @@ export function HousesPage() {
 
                   <h2
                     className="text-4xl md:text-5xl mb-6 text-[#0f172a]"
-                    style={{ fontFamily: "Plus Jakarta Sans, sans-serif" }}
+                    style={{ fontFamily: '"Plus Jakarta Sans", sans-serif' }}
                   >
                     {house.name}
                   </h2>

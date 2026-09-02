@@ -153,7 +153,7 @@ export function HousesPageV4() {
           </span>
           <h1
             className="text-5xl md:text-6xl lg:text-7xl font-light text-[#1C1917] mb-6"
-            style={{ fontFamily: "DM Serif Display, serif" }}
+            style={{ fontFamily: '"DM Serif Display", serif' }}
           >
             {language === "en" ? (
               <>
@@ -231,7 +231,7 @@ export function HousesPageV4() {
 
                   <h2
                     className="text-2xl font-light text-[#1C1917] mb-3"
-                    style={{ fontFamily: "DM Serif Display, serif" }}
+                    style={{ fontFamily: '"DM Serif Display", serif' }}
                   >
                     {house.name}
                   </h2>
@@ -325,7 +325,7 @@ export function HousesPageV4() {
             </span>
             <h2
               className="text-3xl md:text-4xl font-light text-[#1C1917]"
-              style={{ fontFamily: "DM Serif Display, serif" }}
+              style={{ fontFamily: '"DM Serif Display", serif' }}
             >
               {language === "en" ? "Side by Side" : "Côte à Côte"}
             </h2>
@@ -340,7 +340,7 @@ export function HousesPageV4() {
                   </th>
                   {houses.map((house) => (
                     <th key={house.id} className="py-4 px-4 text-center w-1/4">
-                      <span className="text-lg font-medium text-[#1C1917]" style={{ fontFamily: "DM Serif Display, serif" }}>
+                      <span className="text-lg font-medium text-[#1C1917]" style={{ fontFamily: '"DM Serif Display", serif' }}>
                         {house.name}
                       </span>
                       <span className="block text-xs text-[#78716C] mt-1">{house.location}</span>
@@ -384,7 +384,7 @@ export function HousesPageV4() {
         <div className="container-custom text-center">
           <h2
             className="text-3xl md:text-4xl font-light text-white mb-4"
-            style={{ fontFamily: "DM Serif Display, serif" }}
+            style={{ fontFamily: '"DM Serif Display", serif' }}
           >
             {language === "en"
               ? "Not Sure Which One?"
