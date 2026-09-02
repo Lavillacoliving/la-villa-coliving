@@ -22,20 +22,22 @@ interface ReferrerTenant {
   id: string; first_name: string; last_name: string; property_id: string | null;
 }
 
-// Statuts autorisés par la contrainte prospects_status_check (10 valeurs).
+// Statuts autorisés par la contrainte prospects_status_check (11 valeurs).
 // do_not_contact : migration 26/07/2026 (scripts/migration-prospects-status-do-not-contact.sql).
+// cold (« Froid ») : migration 02/09/2026 (scripts/migration-prospects-status-cold.sql)
+//   = prospect en attente (timing lointain, sans réponse…) — ni actif, ni perdu.
 // Toute valeur ajoutée ici DOIT l'être aussi dans la contrainte, sinon save
 // refusé en 23514 (cf. Schema_Supabase_LaVilla.md §12 point 2bis).
 const STATUS_COLORS: Record<string,string> = {
   new: '#3b82f6', contacted: '#eab308', photos_sent: '#06b6d4',
   interested: '#a855f7', visit_scheduled: '#8b5cf6', visit_done: '#f97316',
-  contract_sent: '#b8860b', signed: '#22c55e', lost: '#94a3b8',
+  contract_sent: '#b8860b', signed: '#22c55e', cold: '#64748b', lost: '#94a3b8',
   do_not_contact: '#475569'
 };
 const STATUS_LABELS: Record<string,string> = {
   new: 'Nouveau', contacted: 'Contacté', photos_sent: 'Photos envoyées',
   interested: 'Intéressé', visit_scheduled: 'Visite planifiée', visit_done: 'Visite faite',
-  contract_sent: 'Contrat envoyé', signed: 'Signé', lost: 'Perdu',
+  contract_sent: 'Contrat envoyé', signed: 'Signé', cold: 'Froid', lost: 'Perdu',
   do_not_contact: 'Ne pas recontacter'
 };
 // Raisons de perte — alignées sur prospects_lost_reason_check
@@ -54,11 +56,26 @@ const LOST_REASON_OPTIONS: Array<[string, string]> = [
 ];
 const LOST_REASON_LABELS: Record<string, string> = Object.fromEntries(LOST_REASON_OPTIONS);
 
-const PIPELINE_STAGES = ['new','contacted','visit_scheduled','visit_done','signed'];
-const PIPELINE_LABELS: Record<string,string> = {
-  new:'Nouveau', contacted:'Contacté/Photos', visit_scheduled:'Visite planifiée',
-  visit_done:'Visite faite', signed:'Signé'
-};
+// Colonnes du kanban. Une colonne regroupe plusieurs statuts (ex. « Contacté /
+// Photos » = contacted + photos_sent + interested) : plus aucun prospect ne
+// disparaît du tableau (avant le 02/09, photos_sent / interested / contract_sent
+// n'étaient visibles qu'en vue tableau). Le statut exact est rappelé par une
+// pastille sur la carte quand il diffère du statut principal de la colonne.
+// `collapsed` = statuts morts repliés par défaut sous la colonne « Froids / Morts ».
+interface PipelineColumn {
+  key: string; label: string; primary: string; statuses: string[];
+  collapsed?: string[];
+  next?: string;      // cible du bouton « → étape suivante »
+  terminal?: boolean; // signé / froid : pas de rappel « date à renseigner » ni d'alerte date passée
+}
+const PIPELINE_COLUMNS: PipelineColumn[] = [
+  { key:'new',             label:'Nouveau',                primary:'new',             statuses:['new'],                                  next:'contacted' },
+  { key:'contacted',       label:'Contacté / Photos',      primary:'contacted',       statuses:['contacted','photos_sent','interested'], next:'visit_scheduled' },
+  { key:'visit_scheduled', label:'Visite planifiée',       primary:'visit_scheduled', statuses:['visit_scheduled'],                      next:'visit_done' },
+  { key:'visit_done',      label:'Visite faite / Contrat', primary:'visit_done',      statuses:['visit_done','contract_sent'],           next:'signed' },
+  { key:'signed',          label:'Signé',                  primary:'signed',          statuses:['signed'],                               terminal:true },
+  { key:'cold',            label:'Froids / Morts',         primary:'cold',            statuses:['cold'], collapsed:['lost','do_not_contact'], terminal:true },
+];
 // Sources prospects : liste centralisée dans entities.ts (alignée sur prospects_source_check)
 const SOURCE_OPTIONS = PROSPECT_SOURCE_OPTIONS;
 const SOURCE_LABELS = PROSPECT_SOURCE_LABELS;
@@ -79,6 +96,49 @@ const DURATION_OPTIONS: Array<[string, string]> = [
 ];
 const DURATION_LABELS: Record<string, string> = Object.fromEntries(DURATION_OPTIONS);
 
+// move_in_date est un `date` Postgres (YYYY-MM-DD) : formatage à la main pour
+// éviter le décalage de fuseau de new Date('YYYY-MM-DD') (parsé en UTC).
+const fmtDate = (iso: string | null) => iso ? iso.slice(0, 10).split('-').reverse().join('/') : '';
+const MONTHS_FR = ['janvier','février','mars','avril','mai','juin','juillet','août','septembre','octobre','novembre','décembre'];
+const monthLabel = (key: string) => {
+  const [y, m] = key.split('-');
+  const name = MONTHS_FR[Number(m) - 1] ?? m;
+  return name.charAt(0).toUpperCase() + name.slice(1) + ' ' + y;
+};
+const currentMonthKey = () => {
+  const d = new Date();
+  return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}`;
+};
+
+interface MonthGroup { key: string; label: string; past: boolean; items: Prospect[] }
+// Classement d'une colonne par mois d'emménagement souhaité (croissant) — le
+// pivot de la gestion à moyen terme : on voit d'un coup d'œil qui veut arriver
+// quand, et qui relancer. Fiches sans date en dernier (les plus récentes d'abord).
+const groupByMoveInMonth = (list: Prospect[]): MonthGroup[] => {
+  const sorted = [...list].sort((a, b) => {
+    if (a.move_in_date && b.move_in_date) {
+      return a.move_in_date.localeCompare(b.move_in_date) || b.created_at.localeCompare(a.created_at);
+    }
+    if (a.move_in_date) return -1;
+    if (b.move_in_date) return 1;
+    return b.created_at.localeCompare(a.created_at);
+  });
+  const nowKey = currentMonthKey();
+  const groups: MonthGroup[] = [];
+  for (const p of sorted) {
+    const key = p.move_in_date ? p.move_in_date.slice(0, 7) : 'unknown';
+    const last = groups[groups.length - 1];
+    if (last && last.key === key) { last.items.push(p); continue; }
+    groups.push({
+      key,
+      label: key === 'unknown' ? 'Date inconnue' : monthLabel(key),
+      past: key !== 'unknown' && key < nowKey,
+      items: [p],
+    });
+  }
+  return groups;
+};
+
 const EMPTY_PROSPECT: Partial<Prospect> = {
   first_name:'', last_name:'', email:null, phone:null,
   source:null, status:'new', property_interest:null,
@@ -94,6 +154,10 @@ export default function DashboardProspectsPage() {
   const toast = useToast();
   const [statusFilter, setStatusFilter] = useState("active");
   const [viewMode, setViewMode] = useState<'pipeline'|'table'>('pipeline');
+  // Vue pipeline : filtre par maison (les fiches « indifférent » restent visibles
+  // quelle que soit la maison choisie — ce sont des candidats pour toutes).
+  const [propertyFilter, setPropertyFilter] = useState<string>('all');
+  const [showDead, setShowDead] = useState(false);
   const [loading, setLoading] = useState(true);
   const [modal, setModal] = useState<Partial<Prospect>|null>(null);
   const [isNew, setIsNew] = useState(false);
@@ -115,10 +179,14 @@ export default function DashboardProspectsPage() {
 
   useEffect(() => { load(); }, [load]);
 
-  // Statuts terminaux volontairement absents : signed, lost, do_not_contact.
-  // Un prospect « Ne pas recontacter » sort donc de la vue « Actifs » — c'est
-  // tout l'intérêt du statut. Il reste visible via le filtre « Tous ».
+  // Statuts terminaux ou en attente volontairement absents : signed, cold, lost,
+  // do_not_contact. Un prospect « Froid » ou « Ne pas recontacter » sort donc de
+  // la vue « Actifs » — c'est tout l'intérêt de ces statuts. Ils restent visibles
+  // via les filtres « Froids » / « Tous » et dans la colonne « Froids / Morts ».
   const active = ["new","contacted","photos_sent","interested","visit_scheduled","visit_done","contract_sent"];
+  const pipelineProspects = propertyFilter === 'all'
+    ? prospects
+    : prospects.filter(p => !p.property_interest || p.property_interest === propertyFilter);
   const filtered = statusFilter==="active" ? prospects.filter(p=>active.includes(p.status))
     : statusFilter==="all" ? prospects : prospects.filter(p=>p.status===statusFilter);
 
@@ -126,7 +194,6 @@ export default function DashboardProspectsPage() {
   const newCount = prospects.filter(p=>p.status==="new").length;
   const visitCount = prospects.filter(p=>["visit_scheduled","visit_done"].includes(p.status)).length;
   const signedCount = prospects.filter(p=>p.status==="signed").length;
-  const lostCount = prospects.filter(p=>p.status==="lost").length;
   const conversionRate = totalCount > 0 ? Math.round((signedCount / totalCount) * 100) : 0;
 
   const openModal = (prospect?: Prospect) => {
@@ -264,10 +331,18 @@ export default function DashboardProspectsPage() {
       {/* Header */}
       <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:"20px",flexWrap:"wrap",gap:"12px"}}>
         <div style={{display:"flex",gap:"8px",flexWrap:"wrap"}}>
-          {[{v:"active",l:"Actifs"},{v:"all",l:"Tous"},{v:"signed",l:"Signés"},{v:"lost",l:"Perdus"}].map(e=>(
-            <button key={e.v} onClick={()=>setStatusFilter(e.v)} style={{
-              ...S.btn,background:statusFilter===e.v?"#b8860b":"#e5e7eb",color:statusFilter===e.v?"#fff":"#555"
-            }}>{e.l}</button>))}
+          {/* En vue pipeline les colonnes SONT les statuts : le filtre de statut
+              n'y avait aucun effet (source de confusion). On y propose à la place
+              un filtre par maison. */}
+          {viewMode === 'pipeline'
+            ? ([['all','Toutes maisons'] as [string,string], ...PROPERTY_OPTIONS]).map(([v,l])=>(
+              <button key={v} onClick={()=>setPropertyFilter(v)} title={v==='all'?undefined:'Inclut les prospects sans préférence de maison'} style={{
+                ...S.btn,background:propertyFilter===v?"#b8860b":"#e5e7eb",color:propertyFilter===v?"#fff":"#555"
+              }}>{l}</button>))
+            : [{v:"active",l:"Actifs"},{v:"all",l:"Tous"},{v:"signed",l:"Signés"},{v:"cold",l:"Froids"},{v:"lost",l:"Perdus"}].map(e=>(
+              <button key={e.v} onClick={()=>setStatusFilter(e.v)} style={{
+                ...S.btn,background:statusFilter===e.v?"#b8860b":"#e5e7eb",color:statusFilter===e.v?"#fff":"#555"
+              }}>{e.l}</button>))}
         </div>
         <div className="dash-toolbar" style={{display:"flex",gap:"8px",alignItems:"center"}}>
           <button onClick={()=>setViewMode(viewMode==='pipeline'?'table':'pipeline')} style={{...S.btn,background:"#1a1a2e",color:"#fff"}}>{viewMode==='pipeline'?'Vue tableau':'Vue pipeline'}</button>
@@ -286,59 +361,103 @@ export default function DashboardProspectsPage() {
       </div>
 
       {/* Pipeline View */}
-      {viewMode === 'pipeline' && (
-        <div style={{display:'grid',gridTemplateColumns:`repeat(${PIPELINE_STAGES.length}, minmax(200px, 1fr))`,gap:'12px',marginBottom:'24px',overflowX:'auto'}}>
-          {PIPELINE_STAGES.map(stage => {
-            const stageProspects = prospects.filter(p => p.status === stage);
-            return (
-              <div key={stage} style={{background:'#f8f8f8',borderRadius:'12px',padding:'12px',minHeight:'200px'}}>
-                <div style={{display:'flex',justifyContent:'space-between',alignItems:'center',marginBottom:'12px',paddingBottom:'8px',borderBottom:`3px solid ${STATUS_COLORS[stage]}`}}>
-                  <span style={{fontSize:'13px',fontWeight:600,color:'#1a1a2e'}}>{PIPELINE_LABELS[stage]}</span>
-                  <span style={{background:STATUS_COLORS[stage],color:'#fff',padding:'2px 8px',borderRadius:'10px',fontSize:'11px',fontWeight:700}}>{stageProspects.length}</span>
+      {viewMode === 'pipeline' && (() => {
+        const quickBtn = (p: Prospect, target: string, label: string, title: string) => (
+          <button key={target} onClick={(e)=>{e.stopPropagation();moveToStage(p.id,target);}} title={title}
+            style={{padding:'2px 6px',background:STATUS_COLORS[target]+'20',color:STATUS_COLORS[target],border:`1px solid ${STATUS_COLORS[target]}40`,borderRadius:'4px',fontSize:'10px',cursor:'pointer',whiteSpace:'nowrap'}}>
+            {label}
+          </button>
+        );
+        const renderCard = (p: Prospect, col: PipelineColumn) => {
+          const color = STATUS_COLORS[p.status] || STATUS_COLORS[col.primary];
+          const showStatusBadge = p.status !== col.primary;
+          const dateMissing = !p.move_in_date && !col.terminal;
+          return (
+            <div key={p.id} onClick={()=>openModal(p)} style={{background:'#fff',borderRadius:'8px',padding:'10px 12px',marginBottom:'8px',cursor:'pointer',boxShadow:'0 1px 3px rgba(0,0,0,0.06)',borderLeft:`3px solid ${color}`,transition:'transform 0.15s'}}
+              onMouseOver={e=>e.currentTarget.style.transform='translateY(-1px)'}
+              onMouseOut={e=>e.currentTarget.style.transform='none'}>
+              <div style={{fontWeight:600,fontSize:'13px',color:'#1a1a2e',marginBottom:'4px'}}>{p.first_name} {p.last_name}{p.is_test && <span style={{marginLeft:6,fontSize:10,fontWeight:700,padding:'1px 6px',borderRadius:4,background:'#FEF3C7',color:'#92400E'}}>TEST</span>}</div>
+              {showStatusBadge && (
+                <div style={{marginBottom:'4px'}}>
+                  <span style={{display:'inline-block',fontSize:'10px',fontWeight:600,padding:'1px 7px',borderRadius:'10px',background:color+'20',color}}>
+                    {STATUS_LABELS[p.status]||p.status}{p.status==='lost' && p.lost_reason ? ` · ${LOST_REASON_LABELS[p.lost_reason]||p.lost_reason}` : ''}
+                  </span>
                 </div>
-                {stageProspects.map(p => (
-                  <div key={p.id} onClick={()=>openModal(p)} style={{background:'#fff',borderRadius:'8px',padding:'10px 12px',marginBottom:'8px',cursor:'pointer',boxShadow:'0 1px 3px rgba(0,0,0,0.06)',borderLeft:`3px solid ${STATUS_COLORS[stage]}`,transition:'transform 0.15s'}}
-                    onMouseOver={e=>e.currentTarget.style.transform='translateY(-1px)'}
-                    onMouseOut={e=>e.currentTarget.style.transform='none'}>
-                    <div style={{fontWeight:600,fontSize:'13px',color:'#1a1a2e',marginBottom:'4px'}}>{p.first_name} {p.last_name}{p.is_test && <span style={{marginLeft:6,fontSize:10,fontWeight:700,padding:'1px 6px',borderRadius:4,background:'#FEF3C7',color:'#92400E'}}>TEST</span>}</div>
-                    {p.property_interest && <div style={{fontSize:'11px',color:'#888',marginBottom:'2px'}}>🏠 {propertyName(p.property_interest)}</div>}
-                    {p.occupation && <div style={{fontSize:'11px',color:'#888',marginBottom:'2px'}}>💼 {p.occupation}</div>}
-                    {p.lease_duration && <div style={{fontSize:'11px',color:'#888',marginBottom:'2px'}}>⏳ {DURATION_LABELS[p.lease_duration]||p.lease_duration}</div>}
-                    {p.source && <div style={{fontSize:'11px',color:'#b8860b'}}>{SOURCE_LABELS[p.source]||p.source}</div>}
-                    {p.created_at && <div style={{fontSize:'10px',color:'#aaa',marginTop:'4px'}}>Reçu: {new Date(p.created_at).toLocaleDateString('fr-FR')}</div>}
-                    {/* Quick move buttons */}
-                    <div style={{display:'flex',gap:'4px',marginTop:'6px',flexWrap:'wrap'}}>
-                      {PIPELINE_STAGES.filter(s=>s!==stage).slice(0,3).map(s=>(
-                        <button key={s} onClick={(e)=>{e.stopPropagation();moveToStage(p.id,s);}} style={{padding:'2px 6px',background:STATUS_COLORS[s]+'20',color:STATUS_COLORS[s],border:`1px solid ${STATUS_COLORS[s]}40`,borderRadius:'4px',fontSize:'10px',cursor:'pointer',whiteSpace:'nowrap'}} title={`Déplacer vers ${PIPELINE_LABELS[s]}`}>
-                          → {PIPELINE_LABELS[s].split(' ')[0]}
-                        </button>
-                      ))}
-                    </div>
-                  </div>
-                ))}
-                {stageProspects.length===0 && <p style={{textAlign:'center',color:'#ccc',fontSize:'12px',padding:'20px 0'}}>Aucun prospect</p>}
+              )}
+              {/* Date d'emménagement souhaitée : visible sur chaque fiche, et
+                  signalée quand elle manque (c'est elle qui classe la colonne). */}
+              {p.move_in_date
+                ? <div style={{fontSize:'12px',fontWeight:600,color:'#1a1a2e',marginBottom:'2px'}} title="Date d'emménagement souhaitée">📅 {fmtDate(p.move_in_date)}</div>
+                : dateMissing && <div style={{fontSize:'11px',fontWeight:600,color:'#b45309',marginBottom:'2px'}}>📅 Date d'emménagement à renseigner</div>}
+              {p.property_interest && <div style={{fontSize:'11px',color:'#888',marginBottom:'2px'}}>🏠 {propertyName(p.property_interest)}</div>}
+              {p.occupation && <div style={{fontSize:'11px',color:'#888',marginBottom:'2px'}}>💼 {p.occupation}</div>}
+              {p.lease_duration && <div style={{fontSize:'11px',color:'#888',marginBottom:'2px'}}>⏳ {DURATION_LABELS[p.lease_duration]||p.lease_duration}</div>}
+              {p.source && <div style={{fontSize:'11px',color:'#b8860b'}}>{SOURCE_LABELS[p.source]||p.source}</div>}
+              {p.created_at && <div style={{fontSize:'10px',color:'#aaa',marginTop:'4px'}}>Reçu: {new Date(p.created_at).toLocaleDateString('fr-FR')}</div>}
+              {/* Actions rapides : seulement les mouvements qui ont un sens depuis
+                  cette colonne (avant : 3 boutons arbitraires, dont deux « Visite »). */}
+              <div style={{display:'flex',gap:'4px',marginTop:'6px',flexWrap:'wrap'}}>
+                {col.next && quickBtn(p, col.next, `→ ${STATUS_LABELS[col.next]}`, `Passer en « ${STATUS_LABELS[col.next]} »`)}
+                {col.key !== 'cold' && p.status !== 'signed' && quickBtn(p, 'cold', '❄ Froid', 'Mettre en attente (prospect froid) : sort du pipeline actif, reste classé par mois d\'emménagement pour la relance')}
+                {col.key === 'cold' && p.status !== 'do_not_contact' && quickBtn(p, 'contacted', '↩ Réactiver', 'Remettre dans le pipeline (Contacté)')}
+                {!col.terminal && (
+                  <button onClick={(e)=>{e.stopPropagation();openModal({...p, status:'lost'});}} title="Marquer perdu (la raison de perte est demandée)"
+                    style={{padding:'2px 6px',background:STATUS_COLORS.lost+'20',color:'#475569',border:`1px solid ${STATUS_COLORS.lost}40`,borderRadius:'4px',fontSize:'10px',cursor:'pointer',whiteSpace:'nowrap'}}>
+                    ✕ Perdu
+                  </button>
+                )}
               </div>
-            );
-          })}
-        </div>
-      )}
-
-      {/* Lost prospects summary */}
-      {lostCount > 0 && viewMode === 'pipeline' && (
-        <div style={{...S.card,marginBottom:'24px',background:'#f9fafb',borderLeft:'4px solid #94a3b8'}}>
-          <div style={{display:'flex',justifyContent:'space-between',alignItems:'center'}}>
-            <span style={{fontWeight:600,color:'#64748b'}}>Prospects perdus : {lostCount}</span>
-            <button onClick={()=>setStatusFilter('lost')} style={{...S.btn,background:'#e5e7eb',color:'#555'}}>Voir</button>
+            </div>
+          );
+        };
+        const renderGroups = (list: Prospect[], col: PipelineColumn) => groupByMoveInMonth(list).map(g => {
+          const warn = g.past && !col.terminal;
+          return (
+            <div key={g.key}>
+              <div title={warn ? 'Date d\'emménagement dépassée : à mettre à jour, ou à passer en Froid / Perdu' : undefined}
+                style={{display:'flex',justifyContent:'space-between',fontSize:'11px',fontWeight:700,textTransform:'uppercase',letterSpacing:'0.03em',color:warn?'#c2410c':'#6b7280',margin:'10px 2px 6px'}}>
+                <span>{warn ? '⚠ ' : ''}{g.label}</span><span>{g.items.length}</span>
+              </div>
+              {g.items.map(p => renderCard(p, col))}
+            </div>
+          );
+        });
+        return (
+          <div style={{display:'grid',gridTemplateColumns:`repeat(${PIPELINE_COLUMNS.length}, minmax(190px, 1fr))`,gap:'12px',marginBottom:'24px',overflowX:'auto'}}>
+            {PIPELINE_COLUMNS.map(col => {
+              const color = STATUS_COLORS[col.primary];
+              const main = pipelineProspects.filter(p => col.statuses.includes(p.status));
+              const collapsedStatuses = col.collapsed ?? [];
+              const dead = pipelineProspects.filter(p => collapsedStatuses.includes(p.status));
+              return (
+                <div key={col.key} style={{background:'#f8f8f8',borderRadius:'12px',padding:'12px',minHeight:'200px'}}>
+                  <div style={{display:'flex',justifyContent:'space-between',alignItems:'center',marginBottom:'4px',paddingBottom:'8px',borderBottom:`3px solid ${color}`}}>
+                    <span style={{fontSize:'13px',fontWeight:600,color:'#1a1a2e'}}>{col.label}</span>
+                    <span style={{background:color,color:'#fff',padding:'2px 8px',borderRadius:'10px',fontSize:'11px',fontWeight:700}}>{main.length}</span>
+                  </div>
+                  {main.length===0 && <p style={{textAlign:'center',color:'#ccc',fontSize:'12px',padding:'20px 0'}}>Aucun prospect</p>}
+                  {renderGroups(main, col)}
+                  {dead.length > 0 && (
+                    <div style={{marginTop:'12px',borderTop:'1px dashed #d1d5db',paddingTop:'8px'}}>
+                      <button onClick={()=>setShowDead(v=>!v)} style={{...S.btn,width:'100%',background:'#e5e7eb',color:'#555',textAlign:'left'}}>
+                        {showDead ? '▾' : '▸'} Perdus / Ne pas recontacter ({dead.length})
+                      </button>
+                      {showDead && renderGroups(dead, col)}
+                    </div>
+                  )}
+                </div>
+              );
+            })}
           </div>
-        </div>
-      )}
+        );
+      })()}
 
       {/* Table View */}
       {viewMode === 'table' && (
         <div style={{...S.card,padding:0,overflow:"auto"}}>
           <table className="dash-table" style={{width:"100%",borderCollapse:"collapse",fontSize:"14px"}}>
             <thead><tr style={{background:"#f8f8f8",borderBottom:"2px solid #e5e7eb"}}>
-              {["Nom","Métier","Source","Statut","Maison","Durée","Reçu le","Contact"].map(h=>(
+              {["Nom","Métier","Source","Statut","Maison","Durée","Emménagement","Reçu le","Contact"].map(h=>(
                 <th key={h} style={{padding:"12px 16px",textAlign:"left",fontWeight:600,color:"#555",fontSize:"12px",textTransform:"uppercase"}}>{h}</th>))}
             </tr></thead>
             <tbody>
@@ -350,10 +469,11 @@ export default function DashboardProspectsPage() {
                   <td data-label="Statut" style={{padding:"10px 16px"}}><span style={{background:STATUS_COLORS[p.status]||"#94a3b8",color:"#fff",padding:"2px 10px",borderRadius:"12px",fontSize:"12px"}}>{STATUS_LABELS[p.status]||p.status}</span></td>
                   <td data-label="Maison" style={{padding:"10px 16px"}}>{propertyName(p.property_interest)}</td>
                   <td data-label="Durée" style={{padding:"10px 16px",color:"#888",fontSize:"12px"}}>{p.lease_duration?(DURATION_LABELS[p.lease_duration]||p.lease_duration):"-"}</td>
+                  <td data-label="Emménagement" style={{padding:"10px 16px",fontSize:"12px",fontWeight:500}}>{p.move_in_date?fmtDate(p.move_in_date):<span style={{color:"#b45309"}}>à renseigner</span>}</td>
                   <td data-label="Reçu le" style={{padding:"10px 16px",color:"#888",fontSize:"12px"}}>{p.created_at?new Date(p.created_at).toLocaleDateString("fr-FR"):"-"}</td>
                   <td data-label="Contact" style={{padding:"10px 16px",fontSize:"12px"}}>{p.email && <span title={p.email}>✉️</span>} {p.phone && <a href={'tel:'+p.phone} title={p.phone} style={{textDecoration:'none'}}>📞</a>}</td>
                 </tr>))}
-              {filtered.length===0&&<tr><td colSpan={8} style={{padding:"40px",textAlign:"center",color:"#888"}}>Aucun prospect</td></tr>}
+              {filtered.length===0&&<tr><td colSpan={9} style={{padding:"40px",textAlign:"center",color:"#888"}}>Aucun prospect</td></tr>}
             </tbody>
           </table>
         </div>
