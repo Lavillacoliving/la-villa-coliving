@@ -121,7 +121,7 @@ export function AnnemasseColocationPage() {
           </span>
           <h1
             className="text-4xl md:text-6xl font-light text-[#1C1917] mb-6 leading-tight"
-            style={{ fontFamily: "DM Serif Display, serif" }}
+            style={{ fontFamily: '"DM Serif Display", serif' }}
           >
             {language === "en"
               ? `Shared housing in Annemasse — 29 premium rooms from ${PRICE_SHARED_CHF_EN}/mo`
@@ -172,7 +172,7 @@ export function AnnemasseColocationPage() {
         <div className="max-w-6xl mx-auto px-6">
           <h2
             className="text-3xl md:text-4xl font-light text-[#1C1917] mb-12 text-center"
-            style={{ fontFamily: "DM Serif Display, serif" }}
+            style={{ fontFamily: '"DM Serif Display", serif' }}
           >
             {language === "en"
               ? "Why Annemasse Agglo when you work in Geneva"
@@ -227,7 +227,7 @@ export function AnnemasseColocationPage() {
         <div className="max-w-6xl mx-auto px-6">
           <h2
             className="text-3xl md:text-4xl font-light text-[#1C1917] mb-4 text-center"
-            style={{ fontFamily: "DM Serif Display, serif" }}
+            style={{ fontFamily: '"DM Serif Display", serif' }}
           >
             {language === "en"
               ? "Our 3 coliving houses in Annemasse Agglo"
@@ -307,7 +307,7 @@ export function AnnemasseColocationPage() {
         <div className="max-w-5xl mx-auto px-6">
           <h2
             className="text-3xl md:text-4xl font-light text-[#1C1917] mb-12 text-center"
-            style={{ fontFamily: "DM Serif Display, serif" }}
+            style={{ fontFamily: '"DM Serif Display", serif' }}
           >
             {language === "en"
               ? "Annemasse ↔ Geneva — real travel times"
@@ -353,7 +353,7 @@ export function AnnemasseColocationPage() {
         <div className="max-w-5xl mx-auto px-6">
           <h2
             className="text-3xl md:text-4xl font-light text-[#1C1917] mb-4 text-center"
-            style={{ fontFamily: "DM Serif Display, serif" }}
+            style={{ fontFamily: '"DM Serif Display", serif' }}
           >
             {/* Montant retiré du titre le 29/08 (demande Jérôme) : le prix standard
                 ici dissonait avec le « dès 1 370 » du même écran. */}
@@ -407,7 +407,7 @@ export function AnnemasseColocationPage() {
         <div className="max-w-5xl mx-auto px-6">
           <h2
             className="text-3xl md:text-4xl font-light text-[#1C1917] mb-12 text-center"
-            style={{ fontFamily: "DM Serif Display, serif" }}
+            style={{ fontFamily: '"DM Serif Display", serif' }}
           >
             {language === "en" ? "Who lives at our Annemasse coliving" : "Qui habite notre coliving à Annemasse"}
           </h2>
@@ -454,7 +454,7 @@ export function AnnemasseColocationPage() {
         <div className="max-w-3xl mx-auto px-6">
           <h2
             className="text-3xl md:text-4xl font-light text-[#1C1917] mb-12 text-center"
-            style={{ fontFamily: "DM Serif Display, serif" }}
+            style={{ fontFamily: '"DM Serif Display", serif' }}
           >
             {language === "en" ? "Frequently asked questions about Annemasse coliving" : "Questions fréquentes sur la colocation à Annemasse"}
           </h2>
@@ -488,7 +488,7 @@ export function AnnemasseColocationPage() {
         <div className="max-w-3xl mx-auto px-6 text-center">
           <h2
             className="text-3xl md:text-4xl font-light mb-6"
-            style={{ fontFamily: "DM Serif Display, serif" }}
+            style={{ fontFamily: '"DM Serif Display", serif' }}
           >
             {language === "en"
               ? "Ready for a coliving room in Annemasse?"
@@ -520,7 +520,7 @@ export function AnnemasseColocationPage() {
       {/* ===== INTERNAL LINKING — Essentials guides for un-crawled articles ===== */}
       <section className="py-12 lg:py-16 bg-[#FAF9F6]">
         <div className="max-w-5xl mx-auto px-6">
-          <h2 className="text-2xl md:text-3xl font-light text-[#1C1917] mb-8 text-center" style={{ fontFamily: "DM Serif Display, serif" }}>
+          <h2 className="text-2xl md:text-3xl font-light text-[#1C1917] mb-8 text-center" style={{ fontFamily: '"DM Serif Display", serif' }}>
             {language === "en" ? "Essential reads for cross-border workers" : "Lectures essentielles pour les frontaliers"}
           </h2>
           <ul className="grid grid-cols-1 md:grid-cols-2 gap-3 text-sm max-w-3xl mx-auto">

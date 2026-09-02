@@ -134,7 +134,7 @@ export function BlocOffre({ variant, slug, bucket }: BlocOffreProps) {
             />
           </div>
           <div className="p-5 flex-1">
-            <p className="text-[#1C1917] font-medium mb-1" style={{ fontFamily: "DM Serif Display, serif" }}>
+            <p className="text-[#1C1917] font-medium mb-1" style={{ fontFamily: '"DM Serif Display", serif' }}>
               {HEADLINES[bucket][L]}
             </p>
             <p className="text-sm text-[#57534E] mb-3">
@@ -190,7 +190,7 @@ export function BlocOffre({ variant, slug, bucket }: BlocOffreProps) {
             <p className="text-xs uppercase tracking-[0.2em] text-[#D4A574] font-semibold mb-2">
               La Villa Coliving · {h.label}
             </p>
-            <h2 className="text-xl md:text-2xl font-light text-[#1C1917] mb-2" style={{ fontFamily: "DM Serif Display, serif" }}>
+            <h2 className="text-xl md:text-2xl font-light text-[#1C1917] mb-2" style={{ fontFamily: '"DM Serif Display", serif' }}>
               {HEADLINES[bucket][L]}
             </h2>
             <p className="text-lg text-[#1C1917] font-medium mb-4">

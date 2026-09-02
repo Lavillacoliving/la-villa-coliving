@@ -21,7 +21,7 @@ export function RatesPage() {
         <div className="container-custom relative text-center">
           <h1 
             className="text-5xl md:text-7xl lg:text-8xl mb-6 text-[#0f172a]"
-            style={{ fontFamily: 'Plus Jakarta Sans, sans-serif' }}
+            style={{ fontFamily: '"Plus Jakarta Sans", sans-serif' }}
           >
             {t.ratesPage.hero.title}
           </h1>
@@ -49,7 +49,7 @@ export function RatesPage() {
               </span>
               <h2 
                 className="text-4xl md:text-5xl lg:text-6xl mb-6 text-[#0f172a]"
-                style={{ fontFamily: 'Plus Jakarta Sans, sans-serif' }}
+                style={{ fontFamily: '"Plus Jakarta Sans", sans-serif' }}
               >
                 {t.ratesPage.included.title}
               </h2>
@@ -99,7 +99,7 @@ export function RatesPage() {
           <div className="text-center mb-16">
             <h2 
               className="text-4xl md:text-5xl lg:text-6xl mb-4 text-[#0f172a]"
-              style={{ fontFamily: 'Plus Jakarta Sans, sans-serif' }}
+              style={{ fontFamily: '"Plus Jakarta Sans", sans-serif' }}
             >
               Room <span className="text-[#10b981]">Rates</span>
             </h2>

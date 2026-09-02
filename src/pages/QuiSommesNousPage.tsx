@@ -181,7 +181,7 @@ export function QuiSommesNousPage() {
               </span>
               <h1
                 className="text-4xl md:text-5xl font-light mb-4 leading-tight"
-                style={{ fontFamily: "DM Serif Display, serif" }}
+                style={{ fontFamily: '"DM Serif Display", serif' }}
               >
                 {en ? "Who we are" : "Qui sommes-nous"}
               </h1>
@@ -200,7 +200,7 @@ export function QuiSommesNousPage() {
         <div className="max-w-5xl mx-auto px-6">
           <div className="grid lg:grid-cols-5 gap-10 items-center">
             <div className="lg:col-span-3">
-              <h2 className="text-2xl md:text-3xl font-light text-[#1C1917] mb-5" style={{ fontFamily: "DM Serif Display, serif" }}>
+              <h2 className="text-2xl md:text-3xl font-light text-[#1C1917] mb-5" style={{ fontFamily: '"DM Serif Display", serif' }}>
                 {en ? "The story, in brief" : "L'histoire, en bref"}
               </h2>
               <div className="space-y-4 text-[#44403C] leading-relaxed">
@@ -253,7 +253,7 @@ export function QuiSommesNousPage() {
       {/* ===== LES CO-FONDATEURS — portraits réels 4:5 ===== */}
       <section className="py-14 lg:py-20 bg-[#FAF9F6]">
         <div className="max-w-4xl mx-auto px-6">
-          <h2 className="text-2xl md:text-3xl font-light text-[#1C1917] mb-10 text-center" style={{ fontFamily: "DM Serif Display, serif" }}>
+          <h2 className="text-2xl md:text-3xl font-light text-[#1C1917] mb-10 text-center" style={{ fontFamily: '"DM Serif Display", serif' }}>
             {en ? "The co-founders" : "Les co-fondateurs"}
           </h2>
           <div className="grid sm:grid-cols-2 gap-6 max-w-3xl mx-auto">
@@ -261,7 +261,7 @@ export function QuiSommesNousPage() {
               <div key={f.firstName} className="bg-white border border-[#E7E5E4] rounded-2xl overflow-hidden">
                 <img src={f.img} alt={f.alt} className="w-full aspect-[4/5] object-cover" loading="lazy" />
                 <div className="p-6 text-center">
-                  <h3 className="text-xl font-medium text-[#1C1917]" style={{ fontFamily: "DM Serif Display, serif" }}>{f.firstName}</h3>
+                  <h3 className="text-xl font-medium text-[#1C1917]" style={{ fontFamily: '"DM Serif Display", serif' }}>{f.firstName}</h3>
                   <p className="text-xs text-[#A0623C] uppercase tracking-wider mt-1 mb-3">{f.role}</p>
                   <p className="text-sm text-[#57534E] leading-relaxed">{f.bio}</p>
                   <a
@@ -283,7 +283,7 @@ export function QuiSommesNousPage() {
       {/* ===== NOS VALEURS ===== */}
       <section className="py-14 lg:py-20 bg-white">
         <div className="max-w-4xl mx-auto px-6">
-          <h2 className="text-2xl md:text-3xl font-light text-[#1C1917] mb-10 text-center" style={{ fontFamily: "DM Serif Display, serif" }}>
+          <h2 className="text-2xl md:text-3xl font-light text-[#1C1917] mb-10 text-center" style={{ fontFamily: '"DM Serif Display", serif' }}>
             {en ? "Our values" : "Nos valeurs"}
           </h2>
           <div className="grid sm:grid-cols-2 gap-5">
@@ -321,7 +321,7 @@ export function QuiSommesNousPage() {
           <div className="bg-white border border-[#E7E5E4] rounded-2xl overflow-hidden shadow-sm">
             <div className="h-1.5 bg-[#D4A574]" />
             <div className="p-6 sm:p-9">
-              <h2 className="text-2xl md:text-3xl font-light text-[#1C1917] mb-7 text-center" style={{ fontFamily: "DM Serif Display, serif" }}>
+              <h2 className="text-2xl md:text-3xl font-light text-[#1C1917] mb-7 text-center" style={{ fontFamily: '"DM Serif Display", serif' }}>
                 {en ? "Why you can trust us" : "Pourquoi tu peux nous faire confiance"}
               </h2>
               <ul className="grid md:grid-cols-2 gap-x-8 gap-y-4">

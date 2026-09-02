@@ -49,7 +49,7 @@ export function WhyChooseUsV4() {
           </span>
           <h2 
             className="text-4xl md:text-5xl font-light text-[#1a1a1a] mb-4"
-            style={{ fontFamily: 'Plus Jakarta Sans, sans-serif' }}
+            style={{ fontFamily: '"Plus Jakarta Sans", sans-serif' }}
           >
             {language === 'en' ? 'Why Choose Us?' : 'Pourquoi Nous Choisir?'}
           </h2>

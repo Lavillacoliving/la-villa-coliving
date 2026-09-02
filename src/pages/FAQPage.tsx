@@ -48,7 +48,7 @@ export function FAQPage() {
         <div className="container-custom relative text-center">
           <h1 
             className="text-5xl md:text-7xl lg:text-8xl mb-6 text-[#0f172a]"
-            style={{ fontFamily: 'Plus Jakarta Sans, sans-serif' }}
+            style={{ fontFamily: '"Plus Jakarta Sans", sans-serif' }}
           >
             {t.faqPage.hero.title}
           </h1>
@@ -140,7 +140,7 @@ export function FAQPage() {
                   <div key={category} id={category.toLowerCase().replace(/\s+/g, '-')}>
                     <h2 
                       className="text-2xl font-black mb-6 text-[#0f172a]"
-                      style={{ fontFamily: 'Plus Jakarta Sans, sans-serif' }}
+                      style={{ fontFamily: '"Plus Jakarta Sans", sans-serif' }}
                     >
                       {category}
                     </h2>

@@ -108,7 +108,7 @@ export function HouseGallery({ images, houseName }: HouseGalleryProps) {
           </span>
           <h2 
             className="text-3xl md:text-4xl lg:text-5xl font-bold text-[#0f172a] mb-4"
-            style={{ fontFamily: 'Plus Jakarta Sans, sans-serif' }}
+            style={{ fontFamily: '"Plus Jakarta Sans", sans-serif' }}
           >
             {language === 'en' ? `Explore ${houseName}` : `Découvrez ${houseName}`}
           </h2>

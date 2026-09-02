@@ -68,7 +68,7 @@ export function About() {
 
             <h2
               className="text-4xl md:text-5xl lg:text-6xl mb-6 text-[#0f172a]"
-              style={{ fontFamily: "Plus Jakarta Sans, sans-serif" }}
+              style={{ fontFamily: '"Plus Jakarta Sans", sans-serif' }}
             >
               {t.about.title}
             </h2>

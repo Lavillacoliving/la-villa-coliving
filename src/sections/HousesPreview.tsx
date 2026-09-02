@@ -52,7 +52,7 @@ export function HousesPreview() {
             </span>
             <h2
               className="text-4xl md:text-5xl lg:text-6xl text-[#0f172a]"
-              style={{ fontFamily: "Plus Jakarta Sans, sans-serif" }}
+              style={{ fontFamily: '"Plus Jakarta Sans", sans-serif' }}
             >
               {t.houses.title}
             </h2>
@@ -106,7 +106,7 @@ export function HousesPreview() {
                 <div className="absolute bottom-4 left-4 right-4 text-white">
                   <h3
                     className="text-2xl font-black mb-1"
-                    style={{ fontFamily: "Plus Jakarta Sans, sans-serif" }}
+                    style={{ fontFamily: '"Plus Jakarta Sans", sans-serif' }}
                   >
                     {house.name}
                   </h3>

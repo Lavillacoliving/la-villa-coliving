@@ -25,6 +25,36 @@ window.addEventListener("vite:preloadError", (event) => {
 
 const rootElement = document.getElementById("root")!;
 
+// Lot B (02/09/2026) — mesure des erreurs d'hydratation. Clarity ne voit qu'un « Minified React
+// error #418 » indistinct ; GA4 reçoit ici la page, le TYPE de mismatch (html / text / attr) et
+// si le navigateur est une WebView in-app (Instagram, Facebook, Samsung Internet…) qui modifie
+// le DOM avant React — seul moyen de séparer nos régressions des causes hors de notre portée.
+// L'erreur est ensuite remontée comme avant (reportError = comportement par défaut de React) :
+// rien n'est caché à Clarity ni à la console.
+function classifyHydrationError(message: string): "html" | "text" | "attr" | "other" {
+  const m = /args\[\]=(html|text)/i.exec(message) ?? /server rendered (HTML|text)/i.exec(message);
+  if (m) return m[1].toLowerCase() as "html" | "text";
+  if (/attributes/i.test(message)) return "attr";
+  return "other";
+}
+function reportHydrationError(error: unknown, errorInfo: { componentStack?: string }): void {
+  const message = error instanceof Error ? error.message : String(error);
+  try {
+    (window as unknown as { gtag?: (...a: unknown[]) => void }).gtag?.("event", "hydration_error", {
+      page_path: window.location.pathname,
+      kind: classifyHydrationError(message),
+      in_app: /Instagram|FBAN|FBAV|SamsungBrowser|Line\/|Snapchat|TikTok/i.test(navigator.userAgent),
+      message: message.slice(0, 150),
+      component_stack: (errorInfo?.componentStack ?? "").trim().slice(0, 200),
+      transport_type: "beacon",
+    });
+  } catch {
+    /* noop — l'analytics ne bloque jamais l'UI */
+  }
+  if (typeof reportError === "function") reportError(error);
+  else console.error(error);
+}
+
 // Capture de l'état embarqué par le prerender (fix CLS 07/2026) AVANT l'hydratation :
 // les routes sont en React.lazy, donc le DOM prerendu (et ses <script type="application/json">)
 // peut être remplacé avant l'exécution du chunk de la page. Ici, le DOM est garanti intact.
@@ -46,7 +76,7 @@ if (rootElement.children.length > 0) {
   // (déshydratée grâce aux marqueurs posés par scripts/prerender.mjs) est ainsi
   // hydratée immédiatement, sans fenêtre de course avec les premiers setState.
   preloadRouteModule(window.location.pathname).then(() => {
-    hydrateRoot(rootElement, app);
+    hydrateRoot(rootElement, app, { onRecoverableError: reportHydrationError });
   });
 } else {
   // SPA fallback (dashboard, portail, etc.): render from scratch

@@ -290,7 +290,7 @@ export function ChambresSeptembrePage() {
           </span>
           <h1
             className="max-w-3xl text-4xl leading-tight text-white sm:text-5xl md:text-6xl"
-            style={{ fontFamily: "DM Serif Display, serif" }}
+            style={{ fontFamily: '"DM Serif Display", serif' }}
           >
             {heroTitle}
           </h1>
@@ -316,7 +316,7 @@ export function ChambresSeptembrePage() {
         <div className="container-custom">
           <p
             className="mb-8 text-center text-2xl text-[#1C1917] md:text-3xl"
-            style={{ fontFamily: "DM Serif Display, serif" }}
+            style={{ fontFamily: '"DM Serif Display", serif' }}
           >
             {en
               ? "Three homes designed for living well, not just sleeping."
@@ -342,7 +342,7 @@ export function ChambresSeptembrePage() {
         <div className="container-custom">
           <h2
             className="mb-3 text-center text-3xl text-[#1C1917] md:text-4xl"
-            style={{ fontFamily: "DM Serif Display, serif" }}
+            style={{ fontFamily: '"DM Serif Display", serif' }}
           >
             {en
               ? count === 1
@@ -466,7 +466,7 @@ export function ChambresSeptembrePage() {
                       comme un lien. Il en devient un — vers la visionneuse. */}
                   <h3
                     className="text-xl text-[#1C1917]"
-                    style={{ fontFamily: "DM Serif Display, serif" }}
+                    style={{ fontFamily: '"DM Serif Display", serif' }}
                   >
                     <button
                       type="button"
@@ -553,7 +553,7 @@ export function ChambresSeptembrePage() {
           <div className="container-custom">
             <h2
               className="mb-3 text-center text-3xl text-[#1C1917] md:text-4xl"
-              style={{ fontFamily: "DM Serif Display, serif" }}
+              style={{ fontFamily: '"DM Serif Display", serif' }}
             >
               {en ? `Our ${STATS.totalHouses} homes` : `Nos ${STATS.totalHouses} maisons`}
             </h2>
@@ -587,7 +587,7 @@ export function ChambresSeptembrePage() {
                     <span>
                       <span
                         className="block text-lg text-[#1C1917]"
-                        style={{ fontFamily: "DM Serif Display, serif" }}
+                        style={{ fontFamily: '"DM Serif Display", serif' }}
                       >
                         {house.name}
                       </span>

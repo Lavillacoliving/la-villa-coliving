@@ -77,7 +77,7 @@ export function ColivingPageV4() {
             </span>
             <h1
               className="text-5xl md:text-6xl lg:text-7xl font-light mb-8 text-white"
-              style={{ fontFamily: "DM Serif Display, serif" }}
+              style={{ fontFamily: '"DM Serif Display", serif' }}
             >
               {t.hero.title}
             </h1>
@@ -109,7 +109,7 @@ export function ColivingPageV4() {
               </span>
               <h2
                 className="text-4xl md:text-5xl font-light text-[#1C1917] mb-6"
-                style={{ fontFamily: "DM Serif Display, serif" }}
+                style={{ fontFamily: '"DM Serif Display", serif' }}
               >
                 {t.colivingPage.whatIs.title}
               </h2>
@@ -157,7 +157,7 @@ export function ColivingPageV4() {
               </span>
               <h2
                 className="text-4xl md:text-5xl font-light text-[#1C1917] mb-6"
-                style={{ fontFamily: "DM Serif Display, serif" }}
+                style={{ fontFamily: '"DM Serif Display", serif' }}
               >
                 {t.colivingPage.notColocation.title}
               </h2>
@@ -183,7 +183,7 @@ export function ColivingPageV4() {
             </span>
             <h2
               className="text-4xl md:text-5xl font-light text-[#1C1917] mb-6"
-              style={{ fontFamily: "DM Serif Display, serif" }}
+              style={{ fontFamily: '"DM Serif Display", serif' }}
             >
               {t.colivingPage.difference.title}
             </h2>
@@ -222,7 +222,7 @@ export function ColivingPageV4() {
               </span>
               <h2
                 className="text-4xl md:text-5xl font-light text-[#1C1917] mb-8"
-                style={{ fontFamily: "DM Serif Display, serif" }}
+                style={{ fontFamily: '"DM Serif Display", serif' }}
               >
                 {t.colivingPage.benefits.title}
               </h2>
@@ -302,7 +302,7 @@ export function ColivingPageV4() {
               </span>
               <h2
                 className="text-4xl md:text-5xl font-light text-[#1C1917] mb-6"
-                style={{ fontFamily: "DM Serif Display, serif" }}
+                style={{ fontFamily: '"DM Serif Display", serif' }}
               >
                 {language === "en"
                   ? "More Than Roommates"
@@ -367,7 +367,7 @@ export function ColivingPageV4() {
               </span>
               <h2
                 className="text-4xl md:text-5xl font-light text-[#1C1917] mb-6"
-                style={{ fontFamily: "DM Serif Display, serif" }}
+                style={{ fontFamily: '"DM Serif Display", serif' }}
               >
                 {t.colivingPage.whoIsItFor.title}
               </h2>
@@ -403,7 +403,7 @@ export function ColivingPageV4() {
         <div className="container-custom text-center">
           <p
             className="text-2xl md:text-3xl font-light text-white max-w-3xl mx-auto leading-relaxed"
-            style={{ fontFamily: "DM Serif Display, serif" }}
+            style={{ fontFamily: '"DM Serif Display", serif' }}
           >
             {language === "en" ? (
               <>

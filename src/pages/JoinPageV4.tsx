@@ -194,7 +194,7 @@ export function JoinPageV4() {
           </span>
           <h1
             className="text-4xl md:text-5xl lg:text-6xl font-light text-[#1C1917] mb-4"
-            style={{ fontFamily: "DM Serif Display, serif" }}
+            style={{ fontFamily: '"DM Serif Display", serif' }}
           >
             {language === "en" ? (
               <>
@@ -280,7 +280,7 @@ export function JoinPageV4() {
               </div>
               <h2
                 className="text-3xl md:text-4xl font-light text-[#1C1917] mb-4"
-                style={{ fontFamily: "DM Serif Display, serif" }}
+                style={{ fontFamily: '"DM Serif Display", serif' }}
               >
                 {language === "en" ? "Application received!" : "Candidature reçue !"}
               </h2>
@@ -570,7 +570,7 @@ export function JoinPageV4() {
             </span>
             <h2
               className="text-3xl md:text-4xl font-light text-[#1C1917]"
-              style={{ fontFamily: "DM Serif Display, serif" }}
+              style={{ fontFamily: '"DM Serif Display", serif' }}
             >
               {language === "en" ? "They took the leap" : "Ils ont sauté le pas"}
             </h2>
@@ -635,7 +635,7 @@ export function JoinPageV4() {
             </span>
             <h2
               className="text-4xl md:text-5xl font-light text-[#1C1917]"
-              style={{ fontFamily: "DM Serif Display, serif" }}
+              style={{ fontFamily: '"DM Serif Display", serif' }}
             >
               {language === "en" ? "How It Works" : "Comment Ça Marche"}
             </h2>
@@ -688,7 +688,7 @@ export function JoinPageV4() {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-4xl mx-auto text-center">
             <div className="flex flex-col items-center">
               <Users className="w-8 h-8 text-[#D4A574] mb-3" />
-              <p className="text-3xl font-light text-[#1C1917] mb-1" style={{ fontFamily: "DM Serif Display, serif" }}>
+              <p className="text-3xl font-light text-[#1C1917] mb-1" style={{ fontFamily: '"DM Serif Display", serif' }}>
                 {STATS.totalResidents}+
               </p>
               <p className="text-sm text-[#57534E]">
@@ -697,7 +697,7 @@ export function JoinPageV4() {
             </div>
             <div className="flex flex-col items-center">
               <Sparkles className="w-8 h-8 text-[#D4A574] mb-3" />
-              <p className="text-3xl font-light text-[#1C1917] mb-1" style={{ fontFamily: "DM Serif Display, serif" }}>
+              <p className="text-3xl font-light text-[#1C1917] mb-1" style={{ fontFamily: '"DM Serif Display", serif' }}>
                 99%
               </p>
               <p className="text-sm text-[#57534E]">
@@ -706,7 +706,7 @@ export function JoinPageV4() {
             </div>
             <div className="flex flex-col items-center">
               <Star className="w-8 h-8 text-[#D4A574] mb-3 fill-[#D4A574]" />
-              <p className="text-3xl font-light text-[#1C1917] mb-1" style={{ fontFamily: "DM Serif Display, serif" }}>
+              <p className="text-3xl font-light text-[#1C1917] mb-1" style={{ fontFamily: '"DM Serif Display", serif' }}>
                 {STATS_DISPLAY[L].rating}/5
               </p>
               <p className="text-sm text-[#57534E]">
@@ -751,7 +751,7 @@ export function JoinPageV4() {
             </span>
             <h2
               className="text-3xl md:text-4xl font-light text-[#1C1917]"
-              style={{ fontFamily: "DM Serif Display, serif" }}
+              style={{ fontFamily: '"DM Serif Display", serif' }}
             >
               {language === "en" ? "Frequently asked questions" : "Questions fréquentes"}
             </h2>

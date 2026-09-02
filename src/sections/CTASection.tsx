@@ -34,7 +34,7 @@ export function CTASection() {
 
           <h2 
             className="text-4xl md:text-5xl lg:text-6xl mb-6 font-black"
-            style={{ fontFamily: 'Plus Jakarta Sans, sans-serif' }}
+            style={{ fontFamily: '"Plus Jakarta Sans", sans-serif' }}
           >
             {t.cta.title}
           </h2>

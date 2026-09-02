@@ -68,7 +68,7 @@ export function LatestBlogV7() {
           </span>
           <h2
             className="text-3xl md:text-4xl font-light text-[#1C1917] mb-4"
-            style={{ fontFamily: "DM Serif Display, serif" }}
+            style={{ fontFamily: '"DM Serif Display", serif' }}
           >
             {language === "en" ? "Latest Articles" : "Derniers Articles"}
           </h2>
@@ -108,7 +108,7 @@ export function LatestBlogV7() {
                 </span>
                 <h3
                   className="text-lg font-medium text-[#1C1917] mb-2 line-clamp-2 group-hover:text-[#D4A574] transition-colors"
-                  style={{ fontFamily: "DM Serif Display, serif" }}
+                  style={{ fontFamily: '"DM Serif Display", serif' }}
                 >
                   {gT(post)}
                 </h3>

@@ -108,7 +108,7 @@ export function AuthorBox({ author }: { author: string }) {
       <div
         aria-hidden="true"
         className="w-12 h-12 rounded-full bg-[#1C1917] text-[#D4A574] flex items-center justify-center text-lg flex-shrink-0"
-        style={{ fontFamily: "DM Serif Display, serif" }}
+        style={{ fontFamily: '"DM Serif Display", serif' }}
       >
         {founder.name.charAt(0)}
       </div>

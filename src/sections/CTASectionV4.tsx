@@ -10,7 +10,7 @@ export function CTASectionV4() {
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
         <h2 
           className="text-4xl md:text-5xl lg:text-6xl font-light text-white mb-6"
-          style={{ fontFamily: 'Plus Jakarta Sans, sans-serif' }}
+          style={{ fontFamily: '"Plus Jakarta Sans", sans-serif' }}
         >
           {language === 'en' ? (
             <>
