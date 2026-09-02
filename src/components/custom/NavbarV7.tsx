@@ -5,6 +5,7 @@ import { useLanguage } from "@/contexts/LanguageContext";
 import { LocalizedLink } from "@/components/LocalizedLink";
 import { localizePath } from "@/lib/localizedPath";
 import { colocGeneveHref } from "@/lib/siteLinks";
+import { applyHref, trackApplyClick } from "@/lib/houseContext";
 
 /**
  * VERSION 9: STONE & BRASS — CONDO PREMIUM
@@ -16,6 +17,8 @@ export function NavbarV7() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const { language, toggleLanguage } = useLanguage();
   const location = useLocation();
+  // Lot A (Q9) : sur une page maison, le CTA porte ?property_interest=<slug>.
+  const applyTo = applyHref(location.pathname);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -103,7 +106,8 @@ export function NavbarV7() {
             </LocalizedLink>
             {/* CTA Button */}
             <LocalizedLink
-              to="/candidature"
+              to={applyTo}
+              onClick={() => trackApplyClick("nav", location.pathname, language)}
               className="px-6 py-2.5 bg-[#44403C] text-white text-sm font-medium rounded-lg hover:bg-[#57534E] transition-all duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#44403C] focus-visible:ring-offset-2"
             >
               {language === "en" ? "Join us" : "Nous rejoindre"}
@@ -156,8 +160,8 @@ export function NavbarV7() {
                   {language === "en" ? "FR" : "EN"}
                 </button>
                 <LocalizedLink
-                  to="/candidature"
-                  onClick={() => setIsMobileMenuOpen(false)}
+                  to={applyTo}
+                  onClick={() => { setIsMobileMenuOpen(false); trackApplyClick("nav_mobile", location.pathname, language); }}
                   className="flex-1 px-6 py-3 bg-[#44403C] text-white text-center font-medium rounded-lg hover:bg-[#57534E] transition-all duration-300"
                 >
                   {language === "en" ? "Join us" : "Nous rejoindre"}

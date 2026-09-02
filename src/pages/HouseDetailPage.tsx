@@ -1,3 +1,4 @@
+import { lazy, Suspense, useState } from "react";
 import { useLocation } from "react-router-dom";
 import { responsiveImage } from "@/lib/responsiveImage";
 import { LocalizedLink } from "@/components/LocalizedLink";
@@ -21,21 +22,42 @@ import {
   Sun,
 } from "lucide-react";
 import { useLanguage } from "@/contexts/LanguageContext";
-import { PRICE_FR_NUM, PRICE_EN_NUM, PRICE_CHF_FR, PRICE_CHF_EN, PRICE_SHARED_FR_NUM, PRICE_SHARED_EN_NUM, PRICE_SHARED_CHF_FR, PRICE_SHARED_CHF_EN, EUR_STANDARD_FR_NUM, EUR_STANDARD_EN_NUM, EUR_SHARED_FR_NUM, EUR_SHARED_EN_NUM } from "@/data/stats";
+import { PRICE_FR_NUM, PRICE_EN_NUM, PRICE_CHF_FR, PRICE_CHF_EN, PRICE_SHARED_FR_NUM, PRICE_SHARED_EN_NUM, PRICE_SHARED_CHF_FR, PRICE_SHARED_CHF_EN, EUR_STANDARD_FR_NUM, EUR_STANDARD_EN_NUM, EUR_SHARED_FR_NUM, EUR_SHARED_EN_NUM, thousands } from "@/data/stats";
 import {
   useRoomAvailability,
+  useHouseRooms,
+  roomBadge,
+  roomHeroBadge,
+  splitRooms,
+  bathroomLabel,
+  roomSurface,
   houseBadgeLabel,
   houseBadgeTone,
   BADGE_CHIP_CLASS,
   BADGE_PANEL_CLASS,
   BADGE_DOT_CLASS,
   type HouseKey,
+  type PublicRoom,
 } from "@/lib/availability";
+import { RoomsEmbed } from "@/components/RoomsEmbed";
+import { ROOM_PHOTOS } from "@/data/roomPhotos";
+
+// (Lot 3) Visionneuse photos des chambres — même composant/lazy que la LP.
+const PhotoLightbox = lazy(() => import("@/components/PhotoLightbox"));
+
+// (Lot 3) `floor` arrive en français de v_public_rooms — mapping EN minimal.
+const FLOOR_EN: Record<string, string> = {
+  "RDC": "Ground floor",
+  "Étage 1": "1st floor",
+  "Étage 2": "2nd floor",
+  "Étage 3": "3rd floor",
+};
 
 import { Badge } from "@/components/ui/badge";
 import { HouseGallery } from "@/sections/HouseGallery";
 import { SEO } from "@/components/SEO";
 import { WhatsAppButton } from "@/components/WhatsAppButton";
+import { HouseMap } from "@/components/HouseMap";
 import {
   Carousel,
   CarouselContent,
@@ -448,8 +470,10 @@ function getHousesData(lang: string): Record<string, HouseData> {
       ? "A 300 m² townhouse with year-round heated indoor pool, Finnish sauna, outdoor kitchen, and 7 spacious designer rooms."
       : "Maison de ville de 300 m² avec piscine intérieure chauffée toute l'année, sauna finlandais, cuisine extérieure et 7 chambres design spacieuses.",
     longDescription: isEn
-      ? "Le Loft brings urban sophistication to coliving. This stunning 300 m² townhouse in Ambilly is the most intimate of our three houses, with just 7 residents. Its year-round heated indoor pool — virtually unique in European coliving — is the centerpiece of this exceptional property. The Finnish sauna, fully equipped gym, designer interiors, outdoor kitchen with TV, and spacious terraces make Le Loft ideal for those who appreciate the finer things while valuing genuine community."
-      : "Le Loft incarne la sophistication urbaine du coliving. Cette maison de ville de 300 m² à Ambilly est la plus intimiste de nos trois maisons, avec seulement 7 résidents. Sa piscine intérieure chauffée toute l'année — quasi unique en coliving européen — est la pièce maîtresse de ce bien d'exception. Le sauna finlandais, la salle de sport équipée, les intérieurs design, la cuisine extérieure avec TV et les terrasses spacieuses font du Loft un lieu idéal pour ceux qui apprécient le raffinement tout en valorisant la vraie communauté.",
+      // Lot A (02/09/2026, texte Jérôme) : ouverture « maison la plus intime » + frontière à 500 m,
+      // clôture salle d'eau privative au prix constant (jamais un montant en dur).
+      ? `Le Loft is our most intimate house: 7 residents in a 300 m² townhouse in Ambilly, 500 m from the Swiss border. Its year-round heated indoor pool — virtually unique in European coliving — is the centerpiece of this exceptional property. The Finnish sauna, fully equipped gym, designer interiors, outdoor kitchen with TV, and spacious terraces make Le Loft ideal for those who appreciate the finer things while valuing genuine community. It's also a house where every room has its own private shower room, at ${PRICE_CHF_EN} all-inclusive.`
+      : `Le Loft, c'est notre maison la plus intime : 7 résidents, une maison de ville de 300 m² à Ambilly, à 500 m de la frontière suisse. Sa piscine intérieure chauffée toute l'année — quasi unique en coliving européen — est la pièce maîtresse de ce bien d'exception. Le sauna finlandais, la salle de sport équipée, les intérieurs design, la cuisine extérieure avec TV et les terrasses spacieuses font du Loft un lieu idéal pour ceux qui apprécient le raffinement tout en valorisant la vraie communauté. C'est aussi une maison où chaque chambre a sa salle d'eau privative, à ${PRICE_CHF_FR} tout compris.`,
     image: "/images/la villa coliving le loft piscine.webp",
     gallery: [
       "/images/le loft/rooms/la villa coliving le loft-21.webp",
@@ -579,8 +603,10 @@ function getHousesData(lang: string): Record<string, HouseData> {
       },
       // Common Areas
       {
+        // Photo de groupe des résidents (seule preuve sociale visuelle des 3 pages) — l'alt
+        // disait « indoor pool » (Lot A, 02/09/2026). Reste aussi en position 5 du hero.
         src: "/images/le loft/exterior/le loft glamour.webp",
-        alt: "Le Loft indoor pool",
+        alt: isEn ? "Le Loft residents at a terrace aperitif" : "Résidents du Loft à l'apéro en terrasse",
         category: "common",
       },
       {
@@ -792,51 +818,56 @@ function getHousesData(lang: string): Record<string, HouseData> {
     rooms: [
       {
         type: isEn ? "Room with private bathroom" : "Chambre avec salle de bain privative",
-        price: `${PRICE_EN_NUM} CHF`,
+        price: isEn ? `${PRICE_EN_NUM} CHF` : `${PRICE_FR_NUM} CHF`,
+        priceEur: isEn ? `€${EUR_STANDARD_EN_NUM}` : `${EUR_STANDARD_FR_NUM} €`,
         description: isEn
-          ? "Elegant designer room (21 or 23 m²) with private en-suite shower room, premium Emma or Tediber mattress, workspace, and terrace access. All 7 rooms have a private shower room."
-          : "Chambre design élégante (21 m² ou 23 m²) avec salle d'eau privative, matelas premium Emma ou Tediber, espace de travail et accès terrasse. Les 7 chambres ont une salle d'eau privative.",
+          ? "Elegant designer room (20 to 23 m²) with private en-suite shower room, premium Emma or Tediber mattress, workspace, and terrace access. All 7 rooms have a private shower room."
+          : "Chambre design élégante (20 à 23 m²) avec salle d'eau privative, matelas premium Emma ou Tediber, espace de travail et accès terrasse. Les 7 chambres ont une salle d'eau privative.",
         image: "/images/le loft/rooms/la villa coliving le loft-52.webp",
       },
     ],
+    // Trajets : une seule vérité (Lot A, 02/09/2026) — gare 10 min à pied, tram 5 min,
+    // Genève centre 20 min, frontière de Moillesulaz 500 m. Même chose en Localisation et FAQ.
     nearby: isEn ? [
       "5 min walk to Croix d'Ambilly tram (direct to Geneva)",
-      "14 min walk to Annemasse train station",
-      "15-20 min to Geneva center",
+      "10 min walk to Annemasse train station",
+      "Central Geneva: 20 min (tram or Léman Express)",
+      "Moillesulaz border: 500 m, 5 min walk",
       "Restaurants within walking distance",
       "Easy access to the Voie Verte bike path",
     ] : [
       "Tram Croix d'Ambilly à 5 min à pied (direct Genève)",
-      "Gare d'Annemasse à 14 min à pied",
-      "15-20 min du centre de Genève",
+      "Gare d'Annemasse à 10 min à pied",
+      "Genève centre : 20 min (tram ou Léman Express)",
+      "Frontière de Moillesulaz : 500 m, 5 min à pied",
       "Restaurants accessibles à pied",
       "Accès facile à la Voie Verte (piste cyclable)",
     ],
     lifestyle: isEn ? [
       "Morning swims in the indoor pool",
       "Terrace aperitifs at sunset",
-      "Urban exploration weekends",
-      "Cooking sessions in the designer kitchen",
+      "The office on foot or by bike: the border is 500 m away",
+      "Shared dinners in the open kitchen",
       "Sauna & relaxation evenings",
       "Outdoor dining under the stars",
     ] : [
       "Baignades matinales dans la piscine intérieure",
       "Apéros en terrasse au coucher du soleil",
-      "Explorations urbaines le week-end",
-      "Sessions cuisine dans la kitchen design",
+      "Le bureau à pied ou à vélo : la frontière est à 500 m",
+      "Dîners partagés dans la cuisine ouverte",
       "Soirées sauna & relaxation",
       "Dîners en extérieur sous les étoiles",
     ],
     community: isEn ? [
-      "Urban professionals",
-      "Finance & consulting experts",
-      "International executives",
-      "City lovers & culture enthusiasts",
+      "Cross-border workers & expats",
+      "Young professionals on permanent contracts in Geneva",
+      "Remote workers & consultants",
+      "Pool lovers, 12 months a year",
     ] : [
-      "Professionnels urbains",
-      "Experts finance & consulting",
-      "Cadres internationaux",
-      "Amoureux de la ville & passionnés de culture",
+      "Frontaliers & expatriés",
+      "Jeunes pros en CDI à Genève",
+      "Télétravailleurs & consultants",
+      "Amateurs de piscine 12 mois sur 12",
     ],
   },
   lelodge: {
@@ -1247,7 +1278,8 @@ function getHousesData(lang: string): Record<string, HouseData> {
     rooms: [
       {
         type: isEn ? "Room with private bathroom" : "Chambre avec salle de bain privative",
-        price: `${PRICE_EN_NUM} CHF`,
+        price: isEn ? `${PRICE_EN_NUM} CHF` : `${PRICE_FR_NUM} CHF`,
+        priceEur: isEn ? `€${EUR_STANDARD_EN_NUM}` : `${EUR_STANDARD_FR_NUM} €`,
         description: isEn
           ? "Premium private room (17 to 19 m²) in our newest house. Modern design, private bathroom, quality mattress, and garden access. All 12 rooms have private bathrooms."
           : "Chambre privée premium (17 à 19 m²) dans notre maison la plus récente. Design moderne, salle de bain privative, matelas de qualité et accès jardin. Les 12 chambres ont une salle de bain privative.",
@@ -1327,6 +1359,43 @@ export function HouseDetailPage() {
     try {
       (window as unknown as { gtag?: (...a: unknown[]) => void }).gtag?.("event", "cta_click", {
         cta_position: position, cta_target: "/candidature", house: id, language,
+      });
+    } catch { /* noop */ }
+  };
+
+  // (Lot 3) Chambres réelles de la maison + visionneuse photos (patterns LP).
+  const houseRooms = useHouseRooms(id as HouseKey);
+  const uiLang = language === "en" ? "en" as const : "fr" as const;
+  // (Lot A — A4/Q10) Pastille hero IDENTIFIÉE quand une seule chambre est candidate :
+  // « Chambre 6 · 23 m² · SDB privative · libre maintenant ». Sinon libellé maison.
+  // Données de l'embed chambres (prérendu = premier rendu client) : pas de mismatch.
+  const heroBadge = houseRooms.known ? roomHeroBadge(houseRooms.rooms, uiLang) : null;
+  const heroBadgeLabel = heroBadge?.label ?? availabilityBadge;
+  const heroBadgeTone = heroBadge?.tone ?? badgeTone;
+  // (Lot A — Q8) Spécifications d'une chambre, communes aux cartes complètes et compactes.
+  const roomSpecs = (room: PublicRoom) => {
+    const surface = roomSurface(room);
+    const floor = room.floor
+      ? (language === "en" ? (FLOOR_EN[room.floor] ?? room.floor) : room.floor)
+      : null;
+    return [surface !== null ? `${surface} m²` : null, floor, bathroomLabel(room, uiLang)]
+      .filter(Boolean)
+      .join(" · ");
+  };
+  const [roomViewer, setRoomViewer] = useState<{ key: string; roomNumber: number; index: number } | null>(null);
+  const openRoomViewer = (room: PublicRoom, photoIndex: number) => {
+    setRoomViewer({ key: `${id}:${room.room_number}`, roomNumber: room.room_number, index: photoIndex });
+    try {
+      (window as unknown as { gtag?: (...a: unknown[]) => void }).gtag?.("event", "photo_lightbox_open", {
+        room_id: `chambre-${room.room_number}`, property_interest: id, photo_index: photoIndex,
+      });
+    } catch { /* noop */ }
+  };
+  const trackRoomCta = (room: PublicRoom) => {
+    try {
+      (window as unknown as { gtag?: (...a: unknown[]) => void }).gtag?.("event", "cta_click", {
+        cta_position: "room_card", cta_target: "/candidature", house: id,
+        room_id: `chambre-${room.room_number}`, language,
       });
     } catch { /* noop */ }
   };
@@ -1460,9 +1529,9 @@ export function HouseDetailPage() {
         <div className="absolute bottom-0 left-0 right-0 pb-8 pt-20">
           <div className="container-custom">
             <div className="flex flex-wrap items-center gap-3 mb-4">
-              {availabilityBadge && badgeTone && (
-                <Badge className={`font-extrabold backdrop-blur-sm ${BADGE_CHIP_CLASS[badgeTone]}`}>
-                  {availabilityBadge}
+              {heroBadgeLabel && heroBadgeTone && (
+                <Badge className={`font-extrabold backdrop-blur-sm ${BADGE_CHIP_CLASS[heroBadgeTone]}`}>
+                  {heroBadgeLabel}
                 </Badge>
               )}
               {/* DPE déplacé hors du hero (décision 2026-06-11) : la mention reste
@@ -1706,7 +1775,11 @@ export function HouseDetailPage() {
                   <div className="space-y-3">
                     <div className="flex items-center gap-3 text-[#57534E]">
                       <Clock size={18} className="text-[#D4A574]" />
-                      <span className="text-sm">{language === "en" ? "15-25 min to Geneva" : "15-25 min de Genève"}</span>
+                      <span className="text-sm">
+                        {id === "leloft"
+                          ? (language === "en" ? "20 min to Geneva (tram or Léman Express)" : "20 min de Genève (tram ou Léman Express)")
+                          : (language === "en" ? "15-25 min to Geneva" : "15-25 min de Genève")}
+                      </span>
                     </div>
                     <div className="flex items-center gap-3 text-[#57534E]">
                       <Wifi size={18} className="text-[#D4A574]" />
@@ -1748,6 +1821,244 @@ export function HouseDetailPage() {
           </div>
         </div>
       </section>
+
+      {/* Rooms — (Lot 3) cartes RÉELLES depuis v_public_rooms (source unique de
+          dispo et de prix, design arbitré rapport §3.B). Les descriptions de
+          types historiques passent en intro ; chaque chambre candidate porte
+          photo, m², étage, SDB, prix CHF (€), badge dispo daté et un CTA à deux
+          params ; les occupées sont listées en compact (Lot A — Q8, 02/09/2026).
+          (Lot A — A5, Q1) Section placée AVANT Localisation sur les 3 maisons :
+          90 % des visiteurs atteignent 25 % de la page, la section transactionnelle
+          doit y être. Sans données (vue vide, vieux HTML prérendu) : repli sur les
+          cartes de types — jamais de section vide. Interdit : cloner le modèle
+          fichier-statique de la LP (roomsSeptembre.ts). */}
+      <section className="section-padding relative bg-[#FAF9F6]">
+        <div className="container-custom">
+          <h2
+            className="text-3xl md:text-4xl mb-6 text-[#1C1917]"
+            style={{ fontFamily: "DM Serif Display, serif" }}
+          >
+            {t.houseDetail.rooms}
+          </h2>
+
+          {/* Intro : les types de chambres (ex-cartes), en texte. */}
+          <div className="mb-10 space-y-1.5 max-w-3xl">
+            {house.rooms.map((roomType, index) => (
+              <p key={index} className="text-[#78716C]">
+                <span className="font-semibold text-[#1C1917]">{roomType.type}</span>
+                {" — "}
+                {roomType.description}
+              </p>
+            ))}
+          </div>
+
+          {houseRooms.known ? (() => {
+            // (Lot A — Q8, décision Jérôme 02/09) Option 2 : les chambres CANDIDATES (libres
+            // maintenant, puis libérations datées) en carte complète avec photo, prix et CTA ;
+            // les occupées sans date en cartes compactes SANS photo ni CTA, et un seul CTA
+            // « Rejoindre la liste d'attente » sous la liste. Pourquoi : sans photos attribuées
+            // par chambre (mapping reporté aux plans des maisons), 7 cartes portaient la même
+            // photo de type et 6 « Complet » — le motif du rollback du 02/09 14:06.
+            const { candidates, occupied } = splitRooms(houseRooms.rooms);
+            return (
+              <>
+                {candidates.length > 0 ? (
+                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
+                    {candidates.map((room) => {
+                      const photoKey = `${id}:${room.room_number}`;
+                      const gallery = ROOM_PHOTOS[photoKey];
+                      const cover = gallery?.[0];
+                      // Repli déterministe sur la photo de TYPE (pureté d'hydratation :
+                      // room_number est stable, jamais d'aléatoire au rendu).
+                      const fallbackImg = house.rooms[(room.room_number - 1) % house.rooms.length].image;
+                      const badge = roomBadge(room, uiLang);
+                      const specs = roomSpecs(room);
+                      const rentEur =
+                        room.rent_eur !== null && room.rent_eur !== undefined && Number.isFinite(Number(room.rent_eur))
+                          ? Math.round(Number(room.rent_eur))
+                          : null;
+                      const roomImg = (
+                        <>
+                          <img
+                            src={cover?.src ?? fallbackImg}
+                            alt={cover
+                              ? cover.alt[uiLang]
+                              : `${language === "en" ? "Room" : "Chambre"} ${room.room_number} — ${house.name}`}
+                            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
+                            loading="lazy"
+                            width={cover?.w ?? 800}
+                            height={cover?.h ?? 600}
+                          />
+                          <span className={`absolute top-3 left-3 text-xs font-semibold px-3 py-1 rounded-full ${BADGE_CHIP_CLASS[badge.tone]}`}>
+                            {badge.label}
+                          </span>
+                          {gallery && gallery.length > 1 && (
+                            <span className="absolute bottom-3 right-3 text-xs font-medium px-2.5 py-1 rounded-full bg-black/55 text-white">
+                              {gallery.length} photos
+                            </span>
+                          )}
+                        </>
+                      );
+                      return (
+                        <div key={room.room_number} className="card-ultra overflow-hidden group flex flex-col">
+                          {gallery ? (
+                            <button
+                              type="button"
+                              onClick={() => openRoomViewer(room, 0)}
+                              className="relative h-48 w-full overflow-hidden text-left cursor-zoom-in"
+                              aria-label={language === "en"
+                                ? `See photos of room ${room.room_number}`
+                                : `Voir les photos de la chambre ${room.room_number}`}
+                            >
+                              {roomImg}
+                            </button>
+                          ) : (
+                            <div className="relative h-48 w-full overflow-hidden">{roomImg}</div>
+                          )}
+                          <div className="p-6 flex flex-col flex-1">
+                            <h3 className="text-lg font-black text-[#1C1917] mb-1">
+                              {language === "en" ? `Room ${room.room_number}` : `Chambre ${room.room_number}`}
+                            </h3>
+                            {specs && <p className="text-sm text-[#78716C] mb-1">{specs}</p>}
+                            {language !== "en" && room.location_detail && (
+                              <p className="text-xs text-[#78716C] mb-3">{room.location_detail.trim()}</p>
+                            )}
+                            <div className="mt-auto pt-3">
+                              {room.rent_chf !== null && (
+                                <p className="text-xl font-black text-[#D4A574] mb-4">
+                                  {language === "en"
+                                    ? `CHF ${thousands(room.rent_chf, ",")}`
+                                    : `${thousands(room.rent_chf, " ")} CHF`}
+                                  {rentEur !== null && (
+                                    <span className="text-sm font-light text-[#78716C]">
+                                      {language === "en" ? ` (€${thousands(rentEur, ",")})` : ` (${thousands(rentEur, " ")} €)`}
+                                    </span>
+                                  )}
+                                  <span className="text-sm font-light text-[#78716C]"> {t.houseDetail.perMonth}</span>
+                                </p>
+                              )}
+                              <LocalizedLink
+                                to={`/candidature?property_interest=${id}&room_interest=chambre-${room.room_number}`}
+                                onClick={() => trackRoomCta(room)}
+                                className="w-full inline-flex items-center justify-center gap-2 px-5 py-2.5 bg-[#D4A574] text-[#1C1917] text-sm font-semibold rounded-lg hover:bg-[#E0BB8A] transition-colors"
+                              >
+                                {language === "en" ? "Apply" : "Candidater"}
+                                <ArrowRight className="w-4 h-4" />
+                              </LocalizedLink>
+                            </div>
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
+                ) : (
+                  <p className="mb-8 text-[#57534E] font-medium max-w-3xl">
+                    {language === "en"
+                      ? "All rooms are taken right now — join the waitlist and you'll be the first to know when one opens up."
+                      : "Toutes les chambres sont occupées en ce moment — rejoins la liste d'attente, on te prévient en premier dès qu'une chambre se libère."}
+                  </p>
+                )}
+
+                {occupied.length > 0 && (
+                  <>
+                    <h3 className="text-lg font-black text-[#1C1917] mb-4">
+                      {language === "en"
+                        ? (candidates.length > 0 ? "The other rooms" : "The rooms")
+                        : (candidates.length > 0 ? "Les autres chambres" : "Les chambres")}
+                    </h3>
+                    <ul className="grid grid-cols-1 md:grid-cols-2 gap-3 mb-8">
+                      {occupied.map((room) => {
+                        const specs = roomSpecs(room);
+                        return (
+                          <li key={room.room_number} className="card-ultra px-5 py-4 flex items-center justify-between gap-4">
+                            <div>
+                              <p className="font-black text-[#1C1917]">
+                                {language === "en" ? `Room ${room.room_number}` : `Chambre ${room.room_number}`}
+                              </p>
+                              {specs && <p className="text-sm text-[#78716C]">{specs}</p>}
+                              {language !== "en" && room.location_detail && (
+                                <p className="text-xs text-[#78716C]">{room.location_detail.trim()}</p>
+                              )}
+                            </div>
+                            <span className={`shrink-0 text-xs font-semibold px-3 py-1 rounded-full ${BADGE_PANEL_CLASS.full}`}>
+                              {language === "en" ? "Occupied" : "Occupée"}
+                            </span>
+                          </li>
+                        );
+                      })}
+                    </ul>
+                    <LocalizedLink
+                      to={`/candidature?property_interest=${id}`}
+                      onClick={() => trackCta("room_waitlist")}
+                      className="inline-flex items-center gap-2 px-6 py-3 border border-[#1C1917] text-[#1C1917] font-semibold rounded-full hover:bg-[#1C1917] hover:text-white transition-colors"
+                    >
+                      {language === "en" ? "Join the waitlist" : "Rejoindre la liste d'attente"}
+                      <ArrowRight className="w-4 h-4" />
+                    </LocalizedLink>
+                  </>
+                )}
+              </>
+            );
+          })() : (
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+              {house.rooms.map((room, index) => (
+                <div key={index} className="card-ultra overflow-hidden group">
+                  <div className="relative h-48 overflow-hidden">
+                    <img
+                      src={room.image}
+                      alt={`${room.type} — ${language === "en" ? "furnished room in" : "chambre meublée à"} ${house.name} coliving ${house.location}`}
+                      className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
+                      loading="lazy"
+                      width={800}
+                      height={600}
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent" />
+                  </div>
+                  <div className="p-8">
+                    <div className="flex items-center gap-3 mb-4">
+                      <BedDouble className="text-[#D4A574]" size={28} />
+                      <h3 className="text-xl font-black text-[#1C1917]">
+                        {room.type}
+                      </h3>
+                    </div>
+                    <p className="text-[#78716C] mb-6 font-medium">
+                      {room.description}
+                    </p>
+                    <div className="flex items-center justify-between">
+                      <p className="text-2xl font-black text-[#D4A574]">
+                        {room.price}
+                        {"priceEur" in room && (
+                          <span className="text-base font-light text-[#78716C]"> ({(room as { priceEur: string }).priceEur})</span>
+                        )}
+                      </p>
+                      <span className="text-[#78716C] font-medium">
+                        {t.houseDetail.perMonth}
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+      </section>
+
+      {/* (Lot 3) État chambres embarqué au prérendu — instance unique par page. */}
+      <RoomsEmbed house={id as HouseKey} />
+
+      {/* (Lot 3) Visionneuse photos chambre — lazy, montée seulement à l'ouverture. */}
+      {roomViewer && ROOM_PHOTOS[roomViewer.key] && (
+        <Suspense fallback={null}>
+          <PhotoLightbox
+            photos={ROOM_PHOTOS[roomViewer.key]}
+            index={roomViewer.index}
+            onIndexChange={(i) => setRoomViewer((v) => (v ? { ...v, index: i } : v))}
+            onClose={() => setRoomViewer(null)}
+            en={language === "en"}
+            title={language === "en" ? `Room ${roomViewer.roomNumber}` : `Chambre ${roomViewer.roomNumber}`}
+          />
+        </Suspense>
+      )}
 
       {/* Location — custom section per house (audit P0-1: capture local SEO intent + Léman Express signal) */}
       {(() => {
@@ -1794,7 +2105,7 @@ export function HouseDetailPage() {
               intro: "Le Loft est situé à Ambilly, la commune la plus proche de la frontière suisse dans l'agglomération d'Annemasse. La gare d'Annemasse (CEVA) est à 10 minutes à pied. Le Tram 17 est à 5 minutes à pied.",
               address: "1 rue des Marronniers, 74100 Ambilly, Haute-Savoie, France",
               transport: [
-                "Genève Cornavin : 20 min via Léman Express depuis Annemasse Gare (5 min en bus depuis Le Loft)",
+                "Genève Cornavin : 20 min via Léman Express depuis la gare d'Annemasse (10 min à pied)",
                 "Gare d'Annemasse (CEVA) : 10 min à pied",
                 "Tram 17 TPG : 5 min à pied",
                 "Aéroport de Genève : 25 min en voiture",
@@ -1812,7 +2123,7 @@ export function HouseDetailPage() {
               intro: "Le Loft is located in Ambilly, the closest commune to the Swiss border within the Annemasse agglomeration. Annemasse station (CEVA) is a 10-minute walk away. Tram 17 is a 5-minute walk away.",
               address: "1 rue des Marronniers, 74100 Ambilly, Haute-Savoie, France",
               transport: [
-                "Geneva Cornavin: 20 min via Léman Express from Annemasse Gare (5-min bus from Le Loft)",
+                "Geneva Cornavin: 20 min via Léman Express from Annemasse station (10 min on foot)",
                 "Annemasse station (CEVA): 10 min on foot",
                 "Tram 17 TPG: 5 min on foot",
                 "Geneva Airport: 25 min by car",
@@ -1881,8 +2192,8 @@ export function HouseDetailPage() {
               {/* Phrase citable produit (extraction IA / AI Overviews) — 1 par page, motif commun aux money pages */}
               <p className="text-sm text-[#78716C] leading-relaxed mb-8">
                 {language === "en"
-                  ? `${house.name} is one of the 3 La Villa Coliving houses: all-inclusive furnished rooms from ${PRICE_SHARED_CHF_EN}/month — pool, sauna, gym and cleaning included, 20 minutes from Geneva, no application fee.`
-                  : `${house.name} est l'une des 3 maisons La Villa Coliving : chambres meublées tout inclus dès ${PRICE_SHARED_CHF_FR}/mois — piscine, sauna, salle de sport et ménage compris, à 20 minutes de Genève, sans frais de dossier.`}
+                  ? `${house.name} is one of the 3 La Villa Coliving houses: all-inclusive furnished rooms ${id === "lavilla" ? `from ${PRICE_SHARED_CHF_EN}` : `at ${PRICE_CHF_EN}`}/month — pool, sauna, gym and cleaning included, 20 minutes from Geneva, no application fee.`
+                  : `${house.name} est l'une des 3 maisons La Villa Coliving : chambres meublées tout inclus ${id === "lavilla" ? `dès ${PRICE_SHARED_CHF_FR}` : `à ${PRICE_CHF_FR}`}/mois — piscine, sauna, salle de sport et ménage compris, à 20 minutes de Genève, sans frais de dossier.`}
               </p>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
@@ -1905,7 +2216,7 @@ export function HouseDetailPage() {
                       </li>
                     ))}
                   </ul>
-                  {id === "lelodge" && (
+                  {(id === "lelodge" || id === "leloft") && (
                     <p className="mt-5 text-sm text-[#57534E]">
                       {language === "en" ? "See also: " : "Voir aussi : "}
                       <LocalizedLink to="/annemasse-colocation" className="underline underline-offset-4 hover:text-[#1C1917]">
@@ -1915,6 +2226,15 @@ export function HouseDetailPage() {
                       <LocalizedLink to="/chambre-a-louer-annemasse" className="underline underline-offset-4 hover:text-[#1C1917]">
                         {language === "en" ? "rooms for rent in Annemasse" : "chambre à louer à Annemasse"}
                       </LocalizedLink>
+                      {/* Loft (Lot A) : la frontière à 500 m justifie l'ancre Genève ; FR → article élu, EN → pilier. */}
+                      {id === "leloft" && (
+                        <>
+                          {" · "}
+                          <LocalizedLink to={colocGeneveHref(language)} className="underline underline-offset-4 hover:text-[#1C1917]">
+                            {language === "en" ? "shared housing in Geneva" : "colocation à Genève"}
+                          </LocalizedLink>
+                        </>
+                      )}
                     </p>
                   )}
                 </div>
@@ -1934,69 +2254,25 @@ export function HouseDetailPage() {
                   </ul>
                 </div>
               </div>
+
+              {/* Plan Google Maps chargé au clic (demande Jérôme 02/09, Lot A) — coordonnées
+                  rooftop de HOUSES, même source que le JSON-LD LodgingBusiness ci-dessus. */}
+              {(() => {
+                const geo = HOUSES.find((h) => h.slug === id);
+                return geo ? (
+                  <HouseMap
+                    name={house.name}
+                    address={data.address}
+                    lat={geo.geo.lat}
+                    lng={geo.geo.lng}
+                    en={language === "en"}
+                  />
+                ) : null;
+              })()}
             </div>
           </section>
         );
       })()}
-
-      {/* Rooms — présentation par TYPES de chambre (1 carte au Loft et au
-          Lodge, 2 à La Villa : SDB privative / salle d'eau partagée), photo,
-          description et prix depuis src/data/stats.ts. Retour à cet affichage
-          le 02/09/2026 à la demande de Jérôme (urgence) : la grille de toutes
-          les chambres réelles du Lot 3 (v_public_rooms) est retirée d'ici. */}
-      <section className="section-padding relative bg-[#FAF9F6]">
-        <div className="container-custom">
-          <h2
-            className="text-3xl md:text-4xl mb-8 text-[#1C1917]"
-            style={{ fontFamily: "DM Serif Display, serif" }}
-          >
-            {t.houseDetail.rooms}
-          </h2>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-            {house.rooms.map((room, index) => (
-              <div key={index} className="card-ultra overflow-hidden group">
-                {/* Room Image */}
-                <div className="relative h-48 overflow-hidden">
-                  <img
-                    src={room.image}
-                    alt={`${room.type} — ${language === "en" ? "furnished room in" : "chambre meublée à"} ${house.name} coliving ${house.location}`}
-                    className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
-                    loading="lazy"
-                    width={800}
-                    height={600}
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent" />
-                </div>
-
-                {/* Room Content */}
-                <div className="p-8">
-                  <div className="flex items-center gap-3 mb-4">
-                    <BedDouble className="text-[#D4A574]" size={28} />
-                    <h3 className="text-xl font-black text-[#1C1917]">
-                      {room.type}
-                    </h3>
-                  </div>
-                  <p className="text-[#78716C] mb-6 font-medium">
-                    {room.description}
-                  </p>
-                  <div className="flex items-center justify-between">
-                    <p className="text-2xl font-black text-[#D4A574]">
-                      {room.price}
-                      {"priceEur" in room && (
-                        <span className="text-base font-light text-[#78716C]"> ({(room as { priceEur: string }).priceEur})</span>
-                      )}
-                    </p>
-                    <span className="text-[#78716C] font-medium">
-                      {t.houseDetail.perMonth}
-                    </span>
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
 
       {/* Photo Gallery */}
       <HouseGallery images={house.photoGallery} houseName={house.name} />
@@ -2041,7 +2317,7 @@ export function HouseDetailPage() {
               { q: "Qui peut postuler pour vivre au Loft ?", a: "Profil cible : frontaliers en CDI, jeunes professionnels, expatriés. Sélection sur dossier (justificatif de revenus, motivation, compatibilité avec la communauté). La proximité immédiate de la frontière fait du Loft un favori des frontaliers qui vont au bureau à pied ou en vélo." },
               { q: "Où se trouve Le Loft et à quelle distance de Genève ?", a: "Le Loft se situe à Ambilly, côté France, à 20 minutes du centre de Genève en tram. C'est l'une des trois maisons de coliving de La Villa Coliving, avec une piscine intérieure chauffée toute l'année et un sauna finlandais." },
               { q: "Combien de résidents vivent au Loft ?", a: "Le Loft accueille 7 résidents, ce qui en fait la plus intime des maisons de La Villa Coliving. Située à Ambilly, près de Genève, elle offre une chambre meublée privée à chacun et une ambiance très conviviale à taille réduite." },
-              { q: "Quels équipements y a-t-il au Loft ?", a: `Le Loft, à Ambilly, dispose d'une piscine intérieure chauffée utilisable toute l'année, d'un sauna finlandais, d'une salle de sport, d'un espace home cinéma et de chambres spacieuses de 17 à 25 m². Tout est inclus dans le loyer tout compris de ${PRICE_CHF_FR}/mois.` },
+              { q: "Quels équipements y a-t-il au Loft ?", a: `Le Loft, à Ambilly, dispose d'une piscine intérieure chauffée utilisable toute l'année, d'un sauna finlandais, d'une salle de sport, d'un espace home cinéma et de chambres spacieuses de 20 à 23 m². Tout est inclus dans le loyer tout compris de ${PRICE_CHF_FR}/mois.` },
               { q: "Peut-on nager toute l'année au Loft ?", a: "Oui. Le Loft, à Ambilly, est la maison de La Villa Coliving dotée d'une piscine intérieure chauffée, accessible toute l'année quelle que soit la saison, ainsi que d'un sauna finlandais. C'est inclus dans ton loyer, comme l'ensemble des services." },
             ],
             en: [
@@ -2053,7 +2329,7 @@ export function HouseDetailPage() {
               { q: "Who can apply to live at Le Loft?", a: "Target profile: cross-border workers on CDI, young professionals, expats. Selection by application (income proof, motivation, fit with community). The immediate proximity to the border makes Le Loft a favorite among cross-border workers who walk or bike to the office." },
               { q: "Where is Le Loft and how far from Geneva?", a: "Le Loft is in Ambilly, on the French side, 20 minutes from Geneva city center by tram. It's one of the three La Villa Coliving houses, with an indoor pool heated year-round and a Finnish sauna." },
               { q: "How many residents live at Le Loft?", a: "Le Loft hosts 7 residents, making it the most intimate of the La Villa Coliving houses. Located in Ambilly, near Geneva, it offers a private furnished room for each resident and a very convivial small-scale atmosphere." },
-              { q: "What amenities are there at Le Loft?", a: `Le Loft, in Ambilly, has an indoor pool heated and usable year-round, a Finnish sauna, a gym, a home cinema space and spacious rooms of 17 to 25 m². Everything is included in the all-inclusive rent of ${PRICE_CHF_EN}/month.` },
+              { q: "What amenities are there at Le Loft?", a: `Le Loft, in Ambilly, has an indoor pool heated and usable year-round, a Finnish sauna, a gym, a home cinema space and spacious rooms of 20 to 23 m². Everything is included in the all-inclusive rent of ${PRICE_CHF_EN}/month.` },
               { q: "Can you swim year-round at Le Loft?", a: "Yes. Le Loft, in Ambilly, is the La Villa Coliving house with an indoor heated pool, accessible year-round whatever the season, plus a Finnish sauna. It's included in your rent, like all services." },
             ],
           },

@@ -1,7 +1,9 @@
+import { useLocation } from "react-router-dom";
 import { LocalizedLink } from "@/components/LocalizedLink";
 import { Instagram, Mail, MapPin, Phone } from "lucide-react";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { colocGeneveHref } from "@/lib/siteLinks";
+import { applyHref, trackApplyClick } from "@/lib/houseContext";
 
 /**
  * VERSION 9: STONE & BRASS — CONDO PREMIUM
@@ -10,6 +12,9 @@ import { colocGeneveHref } from "@/lib/siteLinks";
 
 export function FooterV7() {
   const { language } = useLanguage();
+  const location = useLocation();
+  // Lot A (Q9) : sur une page maison, les CTA portent ?property_interest=<slug>.
+  const applyTo = applyHref(location.pathname);
 
   const navLinks = [
     { path: "/", label: language === "en" ? "Home" : "Accueil" },
@@ -30,7 +35,7 @@ export function FooterV7() {
     { path: "/tarifs", label: language === "en" ? "Rates" : "Tarifs" },
     { path: "/faq", label: "FAQ" },
     {
-      path: "/candidature",
+      path: applyTo,
       label: language === "en" ? "Apply" : "Candidater",
     },
     { path: "/blog", label: "Blog" },
@@ -157,7 +162,8 @@ export function FooterV7() {
 
             {/* CTA */}
             <LocalizedLink
-              to="/candidature"
+              to={applyTo}
+              onClick={() => trackApplyClick("footer", location.pathname, language)}
               className="inline-flex items-center gap-2 mt-6 px-5 py-2.5 bg-[#D4A574] text-[#1C1917] text-sm font-semibold rounded-lg hover:bg-[#E0BB8A] transition-all duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#D4A574] focus-visible:ring-offset-2 focus-visible:ring-offset-[#1C1917]"
             >
               {language === "en" ? "Apply now" : "Candidater"}

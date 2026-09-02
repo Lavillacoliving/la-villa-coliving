@@ -107,7 +107,9 @@ export function PolitiqueConfidentialitePage() {
                   sources), together with <strong>Microsoft Clarity</strong> for audience
                   measurement and anonymised session recording (heatmaps, anonymised replays of
                   browsing journeys). Form entries are masked by default and are never recorded,
-                  and the residents' area (portal, dashboard) is excluded from recording.
+                  and the residents' area (portal, dashboard) is excluded from recording. Our house
+                  pages offer a <strong>Google Maps</strong> map: it is only loaded when you click
+                  “Show the map”, at which point Google may set its own cookies.
                   <br />
                   <em>Legal basis:</em> your consent (art. 6(1)(a)). You can refuse or block these
                   cookies at any time (see section 7).
@@ -133,7 +135,8 @@ export function PolitiqueConfidentialitePage() {
                   </li>
                   <li>
                     <strong>Google LLC</strong> (United States) — audience measurement (Google
-                    Analytics 4)
+                    Analytics 4) and the interactive Google Maps map on our house pages, loaded
+                    only when you click “Show the map”
                   </li>
                   <li>
                     <strong>Microsoft Corporation</strong> (United States) — audience measurement
@@ -273,7 +276,10 @@ export function PolitiqueConfidentialitePage() {
                   d'audience et l'enregistrement de session anonymisé (cartes de chaleur,
                   relecture anonymisée des parcours de navigation). Les saisies des formulaires
                   sont masquées par défaut et ne sont jamais enregistrées, et l'espace résident
-                  (portail, tableau de bord) est exclu de l'enregistrement.
+                  (portail, tableau de bord) est exclu de l'enregistrement. Les pages de nos
+                  maisons proposent une carte <strong>Google Maps</strong> : elle n'est chargée
+                  que lorsque vous cliquez sur « Afficher la carte », et Google peut alors déposer
+                  ses propres cookies.
                   <br />
                   <em>Base légale :</em> votre consentement (art. 6.1.a). Vous pouvez refuser ou
                   bloquer ces cookies à tout moment (voir section 7).
@@ -299,7 +305,8 @@ export function PolitiqueConfidentialitePage() {
                   </li>
                   <li>
                     <strong>Google LLC</strong> (États-Unis) — mesure d'audience (Google
-                    Analytics 4)
+                    Analytics 4) et carte interactive Google Maps des maisons, chargée uniquement
+                    lorsque vous cliquez sur « Afficher la carte »
                   </li>
                   <li>
                     <strong>Microsoft Corporation</strong> (États-Unis) — mesure d'audience et

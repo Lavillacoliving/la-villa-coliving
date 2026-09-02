@@ -108,6 +108,8 @@ export type PublicRoom = {
   has_terrace: boolean | null;
   has_private_entrance: boolean | null;
   rent_chf: number | null;
+  /** (Lot A) Loyer contractuel en euros, affiché entre parenthèses comme sur la carte pricing. */
+  rent_eur: number | string | null;
   availability: string;
   available_from: string | null;
 };
@@ -154,7 +156,7 @@ function summarise(rooms: RoomRow[]): HouseSummary[] {
 const ROOM_COLUMNS =
   "house_slug,room_number,name,surface_m2,floor,location_detail,description," +
   "bathroom_type,bathroom_detail,has_parking,has_balcony,has_terrace," +
-  "has_private_entrance,rent_chf,availability,available_from";
+  "has_private_entrance,rent_chf,rent_eur,availability,available_from";
 
 async function refresh(): Promise<void> {
   if (fetchStarted) return;
@@ -273,6 +275,64 @@ export function useHouseRooms(house: HouseKey): { known: boolean; rooms: PublicR
     .filter((r) => r.house_slug === house)
     .sort((a, b) => a.room_number - b.room_number);
   return { known: rooms.length > 0, rooms };
+}
+
+/**
+ * (Lot A — Q8, 02/09/2026) Partition des chambres d'une maison : les « candidates » (libres
+ * maintenant, puis libérations datées par date) reçoivent une carte complète et un CTA ;
+ * les autres (occupées sans date connue) une carte compacte sans CTA. Pure, déterministe.
+ */
+export function splitRooms(rooms: PublicRoom[]): { candidates: PublicRoom[]; occupied: PublicRoom[] } {
+  const available = rooms
+    .filter((r) => r.availability === "available")
+    .sort((a, b) => a.room_number - b.room_number);
+  const dated = rooms
+    .filter((r) => r.availability !== "available" && !!r.available_from)
+    .sort((a, b) => (a.available_from! < b.available_from! ? -1 : a.available_from! > b.available_from! ? 1 : a.room_number - b.room_number));
+  const occupied = rooms
+    .filter((r) => r.availability !== "available" && !r.available_from)
+    .sort((a, b) => a.room_number - b.room_number);
+  return { candidates: [...available, ...dated], occupied };
+}
+
+/** (Lot A) Libellé salle de bain d'une chambre, FR/EN — ou null si inconnu. */
+export function bathroomLabel(room: PublicRoom, lang: "fr" | "en"): string | null {
+  if (room.bathroom_type === "private") return lang === "en" ? "private bathroom" : "SDB privative";
+  if (room.bathroom_type === "shared") return lang === "en" ? "shared shower room" : "salle d'eau partagée";
+  return null;
+}
+
+/** (Lot A) Surface en m² entier, ou null si absente/invalide (numeric PostgREST → string). */
+export function roomSurface(room: PublicRoom): number | null {
+  if (room.surface_m2 === null || room.surface_m2 === undefined) return null;
+  const n = Number(room.surface_m2);
+  return Number.isFinite(n) ? Math.round(n) : null;
+}
+
+/**
+ * (Lot A — A4/Q10) Pastille hero IDENTIFIÉE : « Chambre 6 · 23 m² · SDB privative · libre
+ * maintenant » / « … · libre dès le 10 septembre », quand la maison a exactement UNE chambre
+ * candidate. Sinon null → l'appelant garde le libellé maison (houseBadgeLabel). Mêmes règles
+ * de pureté que les autres libellés (données de l'embed, formatFreeDate maison).
+ */
+export function roomHeroBadge(rooms: PublicRoom[], lang: "fr" | "en"): { label: string; tone: BadgeTone } | null {
+  const { candidates } = splitRooms(rooms);
+  if (candidates.length !== 1) return null;
+  const room = candidates[0];
+  const surface = roomSurface(room);
+  const parts = [
+    lang === "en" ? `Room ${room.room_number}` : `Chambre ${room.room_number}`,
+    surface !== null ? `${surface} m²` : null,
+    bathroomLabel(room, lang),
+  ].filter((p): p is string => !!p);
+  if (room.availability === "available") {
+    return { label: [...parts, lang === "en" ? "available now" : "libre maintenant"].join(" · "), tone: "available" };
+  }
+  const date = formatFreeDate(room.available_from as string, lang);
+  return {
+    label: [...parts, lang === "en" ? `available from ${date}` : `libre dès le ${date}`].join(" · "),
+    tone: "upcoming",
+  };
 }
 
 /** (Lot 3) Snapshot chambres de la maison rendue — pour RoomsEmbed uniquement. */
