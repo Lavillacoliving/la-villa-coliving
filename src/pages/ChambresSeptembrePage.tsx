@@ -1,10 +1,11 @@
-import { Suspense, lazy, useCallback, useEffect, useRef, useState } from "react";
+import { Suspense, useCallback, useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import { ArrowRight, Bath, Calendar, Check, Maximize2, ZoomIn } from "lucide-react";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { SEO } from "@/components/SEO";
 import { WhatsAppButton } from "@/components/WhatsAppButton";
 import { responsiveImage } from "@/lib/responsiveImage";
+import { lazyWithRetry } from "@/lib/lazyWithRetry";
 import { STATS } from "@/data/stats";
 import type { RoomSeptembre } from "@/data/roomsSeptembre";
 import {
@@ -60,7 +61,7 @@ import {
  * plus bas) : elle ne pèse rien sur le chunk initial de la LP, et la haute
  * résolution n'entre jamais dans le flux de chargement de la page (brief C4).
  */
-const PhotoLightbox = lazy(() => import("@/components/PhotoLightbox"));
+const PhotoLightbox = lazyWithRetry(() => import("@/components/PhotoLightbox"), "PhotoLightbox");
 
 /** Nombre de vignettes visibles en carte ; le reste vit dans la lightbox. */
 const CARD_PHOTOS = 3;

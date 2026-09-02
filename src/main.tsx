@@ -4,6 +4,7 @@ import "./index.css";
 import App from "./App.tsx";
 import { preloadRouteModule } from "@/lib/routePreload";
 import { captureAttribution, captureTestFlag } from "@/lib/attribution";
+import { recoverFromChunkError } from "@/lib/lazyWithRetry";
 
 // Attribution Ads (utm_* + gclid) et marqueur de test (?test=1) : capturés ICI, dès
 // l'exécution du bundle et AVANT l'hydratation — l'URL d'atterrissage est encore intacte,
@@ -12,6 +13,15 @@ import { captureAttribution, captureTestFlag } from "@/lib/attribution";
 // zéro impact sur l'hydratation. Brief UTM/GCLID du 22/08/2026 (prérequis Ads 25/08).
 captureAttribution();
 captureTestFlag();
+
+// Lot C (02/09/2026) — dépendance préchargée introuvable (Vite émet `vite:preloadError` quand un
+// <link rel="modulepreload"> d'un import dynamique échoue, typiquement un chunk renommé par un
+// déploiement). Même rechargement contrôlé, une seule fois, que lazyWithRetry ; si on recharge,
+// preventDefault() évite que Vite relance l'erreur dans l'arbre React.
+window.addEventListener("vite:preloadError", (event) => {
+  const payload = (event as Event & { payload?: unknown }).payload;
+  if (recoverFromChunkError("vite:preloadError", payload, true)) event.preventDefault();
+});
 
 const rootElement = document.getElementById("root")!;
 

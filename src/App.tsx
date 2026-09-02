@@ -1,4 +1,4 @@
-import { lazy, Suspense } from "react";
+import { Suspense } from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { useLocation } from "react-router-dom";
 import { AuthProvider } from "@/contexts/AuthContext";
@@ -11,65 +11,68 @@ import { PortailLayout } from "@/pages/portail/PortailLayout";
 import { ScrollToTop } from "@/components/ScrollToTop";
 import { AvailabilityEmbed } from "@/components/AvailabilityEmbed";
 import { RouteChangeTracker } from "@/lib/routeTracking";
+import { lazyWithRetry } from "@/lib/lazyWithRetry";
+import { ErrorBoundary } from "@/components/ErrorBoundary";
 
 // ─── Lazy-loaded public pages (named exports) ──────────────
+// Tous les imports dynamiques passent par lazyWithRetry (Lot C, 02/09/2026) : un chunk
+// renommé par un déploiement déclenche un rechargement contrôlé au lieu d'une page blanche.
 // ⚠️ Nouvelle page PRÉRENDUE = l'ajouter aussi à src/lib/routePreload.ts
 // (préchargement avant hydratation — fix #418) et à scripts/prerender.mjs.
-const HomePage = lazy(() => import("@/pages/HomePage").then(m => ({ default: m.HomePage })));
-const ColivingPage = lazy(() => import("@/pages/ColivingPageV4").then(m => ({ default: m.ColivingPageV4 })));
-const ServicesPage = lazy(() => import("@/pages/ServicesPageV4").then(m => ({ default: m.ServicesPageV4 })));
-const HousesPage = lazy(() => import("@/pages/HousesPageV4").then(m => ({ default: m.HousesPageV4 })));
-const RatesPage = lazy(() => import("@/pages/RatesPageV4").then(m => ({ default: m.RatesPageV4 })));
-const FAQPage = lazy(() => import("@/pages/FAQPageV4").then(m => ({ default: m.FAQPageV4 })));
-const JoinPage = lazy(() => import("@/pages/JoinPageV4").then(m => ({ default: m.JoinPageV4 })));
-const HouseDetailPage = lazy(() => import("@/pages/HouseDetailPage").then(m => ({ default: m.HouseDetailPage })));
-const BlogPage = lazy(() => import("@/pages/BlogPage").then(m => ({ default: m.BlogPage })));
-const BlogPostPage = lazy(() => import("@/pages/BlogPostPage").then(m => ({ default: m.BlogPostPage })));
-const ColocationGenevePage = lazy(() => import("@/pages/ColocationGenevePage").then(m => ({ default: m.ColocationGenevePage })));
-const AnnemasseColocationPage = lazy(() => import("@/pages/AnnemasseColocationPage").then(m => ({ default: m.AnnemasseColocationPage })));
-const ChambreLouerAnnemassePage = lazy(() => import("@/pages/ChambreLouerAnnemassePage").then(m => ({ default: m.ChambreLouerAnnemassePage })));
-const InvestisseursPage = lazy(() => import("@/pages/InvestisseursPage").then(m => ({ default: m.InvestisseursPage })));
-const ObservatoireLogementPage = lazy(() => import("@/pages/ObservatoireLogementFrontalierPage").then(m => ({ default: m.ObservatoireLogementFrontalierPage })));
-const QuiSommesNousPage = lazy(() => import("@/pages/QuiSommesNousPage").then(m => ({ default: m.QuiSommesNousPage })));
-const NotFoundPage = lazy(() => import("@/pages/NotFoundPage").then(m => ({ default: m.NotFoundPage })));
-const CharteTransparencePage = lazy(() => import("@/pages/CharteTransparencePage").then(m => ({ default: m.CharteTransparencePage })));
-const MentionsLegalesPage = lazy(() => import("@/pages/MentionsLegalesPage").then(m => ({ default: m.MentionsLegalesPage })));
+const HomePage = lazyWithRetry(() => import("@/pages/HomePage").then(m => ({ default: m.HomePage })), "HomePage");
+const ColivingPage = lazyWithRetry(() => import("@/pages/ColivingPageV4").then(m => ({ default: m.ColivingPageV4 })), "ColivingPage");
+const ServicesPage = lazyWithRetry(() => import("@/pages/ServicesPageV4").then(m => ({ default: m.ServicesPageV4 })), "ServicesPage");
+const HousesPage = lazyWithRetry(() => import("@/pages/HousesPageV4").then(m => ({ default: m.HousesPageV4 })), "HousesPage");
+const RatesPage = lazyWithRetry(() => import("@/pages/RatesPageV4").then(m => ({ default: m.RatesPageV4 })), "RatesPage");
+const FAQPage = lazyWithRetry(() => import("@/pages/FAQPageV4").then(m => ({ default: m.FAQPageV4 })), "FAQPage");
+const JoinPage = lazyWithRetry(() => import("@/pages/JoinPageV4").then(m => ({ default: m.JoinPageV4 })), "JoinPage");
+const HouseDetailPage = lazyWithRetry(() => import("@/pages/HouseDetailPage").then(m => ({ default: m.HouseDetailPage })), "HouseDetailPage");
+const BlogPage = lazyWithRetry(() => import("@/pages/BlogPage").then(m => ({ default: m.BlogPage })), "BlogPage");
+const BlogPostPage = lazyWithRetry(() => import("@/pages/BlogPostPage").then(m => ({ default: m.BlogPostPage })), "BlogPostPage");
+const ColocationGenevePage = lazyWithRetry(() => import("@/pages/ColocationGenevePage").then(m => ({ default: m.ColocationGenevePage })), "ColocationGenevePage");
+const AnnemasseColocationPage = lazyWithRetry(() => import("@/pages/AnnemasseColocationPage").then(m => ({ default: m.AnnemasseColocationPage })), "AnnemasseColocationPage");
+const ChambreLouerAnnemassePage = lazyWithRetry(() => import("@/pages/ChambreLouerAnnemassePage").then(m => ({ default: m.ChambreLouerAnnemassePage })), "ChambreLouerAnnemassePage");
+const InvestisseursPage = lazyWithRetry(() => import("@/pages/InvestisseursPage").then(m => ({ default: m.InvestisseursPage })), "InvestisseursPage");
+const ObservatoireLogementPage = lazyWithRetry(() => import("@/pages/ObservatoireLogementFrontalierPage").then(m => ({ default: m.ObservatoireLogementFrontalierPage })), "ObservatoireLogementPage");
+const QuiSommesNousPage = lazyWithRetry(() => import("@/pages/QuiSommesNousPage").then(m => ({ default: m.QuiSommesNousPage })), "QuiSommesNousPage");
+const NotFoundPage = lazyWithRetry(() => import("@/pages/NotFoundPage").then(m => ({ default: m.NotFoundPage })), "NotFoundPage");
+const CharteTransparencePage = lazyWithRetry(() => import("@/pages/CharteTransparencePage").then(m => ({ default: m.CharteTransparencePage })), "CharteTransparencePage");
+const MentionsLegalesPage = lazyWithRetry(() => import("@/pages/MentionsLegalesPage").then(m => ({ default: m.MentionsLegalesPage })), "MentionsLegalesPage");
 // QuiSommesNousPage : composant prêt (src/pages/QuiSommesNousPage.tsx) mais PAS routé —
 // Jérôme retravaille la page dans une autre session. Au moment de la router : lazy import ici,
 // routes FR+EN, liens navbar/footer, route prerender.mjs, et ABOUT_PAGE_LIVE=true (structuredData.ts).
-const PolitiqueConfidentialitePage = lazy(() => import("@/pages/PolitiqueConfidentialitePage").then(m => ({ default: m.PolitiqueConfidentialitePage })));
-const QuestionnaireDepartPage = lazy(() => import("@/pages/QuestionnaireDepartPage").then(m => ({ default: m.QuestionnaireDepartPage })));
+const PolitiqueConfidentialitePage = lazyWithRetry(() => import("@/pages/PolitiqueConfidentialitePage").then(m => ({ default: m.PolitiqueConfidentialitePage })), "PolitiqueConfidentialitePage");
+const QuestionnaireDepartPage = lazyWithRetry(() => import("@/pages/QuestionnaireDepartPage").then(m => ({ default: m.QuestionnaireDepartPage })), "QuestionnaireDepartPage");
 
 // ─── Lazy-loaded portail pages (named exports) ─────────────
-const MaMaisonPage = lazy(() => import("@/pages/portail/MaMaisonPage").then(m => ({ default: m.MaMaisonPage })));
-const MonBailPage = lazy(() => import("@/pages/portail/MonBailPage").then(m => ({ default: m.MonBailPage })));
-const MesDemandesPage = lazy(() => import("@/pages/portail/MesDemandesPage").then(m => ({ default: m.MesDemandesPage })));
-const CommunautePage = lazy(() => import("@/pages/portail/CommunautePage").then(m => ({ default: m.CommunautePage })));
+const MaMaisonPage = lazyWithRetry(() => import("@/pages/portail/MaMaisonPage").then(m => ({ default: m.MaMaisonPage })), "MaMaisonPage");
+const MonBailPage = lazyWithRetry(() => import("@/pages/portail/MonBailPage").then(m => ({ default: m.MonBailPage })), "MonBailPage");
+const MesDemandesPage = lazyWithRetry(() => import("@/pages/portail/MesDemandesPage").then(m => ({ default: m.MesDemandesPage })), "MesDemandesPage");
+const CommunautePage = lazyWithRetry(() => import("@/pages/portail/CommunautePage").then(m => ({ default: m.CommunautePage })), "CommunautePage");
 
 // ─── Lazy-loaded dashboard pages (default exports) ─────────
-const DashboardLayout = lazy(() => import("@/pages/dashboard/DashboardLayout"));
-const DashboardLoyersPage = lazy(() => import("@/pages/dashboard/DashboardLoyersPage"));
-const DashboardLocatairesPage = lazy(() => import("@/pages/dashboard/DashboardLocatairesPage"));
-const DashboardDepensesPage = lazy(() => import("@/pages/dashboard/DashboardDepensesPage"));
-const DashboardMaintenancePage = lazy(() => import("@/pages/dashboard/DashboardMaintenancePage"));
-const DashboardProspectsPage = lazy(() => import("@/pages/dashboard/DashboardProspectsPage"));
-const DashboardRoadmapPage = lazy(() => import("@/pages/dashboard/DashboardRoadmapPage"));
-const DashboardMaisonsPage = lazy(() => import("@/pages/dashboard/DashboardMaisonsPage"));
-const DashboardDispoPage = lazy(() => import("@/pages/dashboard/DashboardDispoPage"));
-const DashboardNouveauBailPage = lazy(() => import("@/pages/dashboard/DashboardNouveauBailPage"));
-const DashboardDocumentsPage = lazy(() => import("@/pages/dashboard/DashboardDocumentsPage"));
-const DashboardEventsPage = lazy(() => import("@/pages/dashboard/DashboardEventsPage"));
-const DashboardRapprochementPage = lazy(() => import("@/pages/dashboard/DashboardRapprochementPage"));
-const DashboardCautionsPage = lazy(() => import("@/pages/dashboard/DashboardCautionsPage"));
-const DashboardBlogPage = lazy(() => import("@/pages/dashboard/DashboardBlogPage"));
-const DashboardComptesLocatairesPage = lazy(() => import("@/pages/dashboard/DashboardComptesLocatairesPage"));
+const DashboardLayout = lazyWithRetry(() => import("@/pages/dashboard/DashboardLayout"), "DashboardLayout");
+const DashboardLoyersPage = lazyWithRetry(() => import("@/pages/dashboard/DashboardLoyersPage"), "DashboardLoyersPage");
+const DashboardLocatairesPage = lazyWithRetry(() => import("@/pages/dashboard/DashboardLocatairesPage"), "DashboardLocatairesPage");
+const DashboardDepensesPage = lazyWithRetry(() => import("@/pages/dashboard/DashboardDepensesPage"), "DashboardDepensesPage");
+const DashboardMaintenancePage = lazyWithRetry(() => import("@/pages/dashboard/DashboardMaintenancePage"), "DashboardMaintenancePage");
+const DashboardProspectsPage = lazyWithRetry(() => import("@/pages/dashboard/DashboardProspectsPage"), "DashboardProspectsPage");
+const DashboardRoadmapPage = lazyWithRetry(() => import("@/pages/dashboard/DashboardRoadmapPage"), "DashboardRoadmapPage");
+const DashboardMaisonsPage = lazyWithRetry(() => import("@/pages/dashboard/DashboardMaisonsPage"), "DashboardMaisonsPage");
+const DashboardDispoPage = lazyWithRetry(() => import("@/pages/dashboard/DashboardDispoPage"), "DashboardDispoPage");
+const DashboardNouveauBailPage = lazyWithRetry(() => import("@/pages/dashboard/DashboardNouveauBailPage"), "DashboardNouveauBailPage");
+const DashboardDocumentsPage = lazyWithRetry(() => import("@/pages/dashboard/DashboardDocumentsPage"), "DashboardDocumentsPage");
+const DashboardEventsPage = lazyWithRetry(() => import("@/pages/dashboard/DashboardEventsPage"), "DashboardEventsPage");
+const DashboardRapprochementPage = lazyWithRetry(() => import("@/pages/dashboard/DashboardRapprochementPage"), "DashboardRapprochementPage");
+const DashboardCautionsPage = lazyWithRetry(() => import("@/pages/dashboard/DashboardCautionsPage"), "DashboardCautionsPage");
+const DashboardBlogPage = lazyWithRetry(() => import("@/pages/dashboard/DashboardBlogPage"), "DashboardBlogPage");
+const DashboardComptesLocatairesPage = lazyWithRetry(() => import("@/pages/dashboard/DashboardComptesLocatairesPage"), "DashboardComptesLocatairesPage");
 
 // ─── Lazy-loaded misc pages (default export) ───────────────
-const ResetPasswordPage = lazy(() => import("@/pages/ResetPasswordPage"));
+const ResetPasswordPage = lazyWithRetry(() => import("@/pages/ResetPasswordPage"), "ResetPasswordPage");
 // LP payante (brief LOT 2) — noindex, hors sitemap, aucun lien interne entrant.
-const ChambresSeptembrePage = lazy(() =>
-  import("@/pages/ChambresSeptembrePage").then(m => ({ default: m.ChambresSeptembrePage })),
-);
+const ChambresSeptembrePage = lazyWithRetry(() =>
+  import("@/pages/ChambresSeptembrePage").then(m => ({ default: m.ChambresSeptembrePage })), "ChambresSeptembrePage");
 
 function AppContent() {
   const location = useLocation();
@@ -81,10 +84,16 @@ function AppContent() {
   // [<header> … <footer>] pour prérendre la route (cf. LpChrome.tsx).
   // ⚠️ Garder synchronisé avec NOINDEX_PRERENDERED_ROUTES (scripts/prerender.mjs).
   const isLp = location.pathname === '/chambres-septembre' || location.pathname === '/en/rooms-september';
+  // Langue de l'écran d'erreur (ErrorBoundary est une classe : pas de hook, on dérive de l'URL).
+  const isEn = location.pathname === '/en' || location.pathname.startsWith('/en/');
 
   return (
     <div className="min-h-screen bg-background">
       {!isDashboard && !isPortail && !isResetPw && !isQuestionnaire && (isLp ? <LpHeader /> : <Navbar />)}
+      {/* Filet Lot C : keyé par le chemin pour se réinitialiser à chaque navigation ; ne rend
+          aucun élément DOM en fonctionnement normal (shell [header…footer] inchangé pour
+          scripts/prerender.mjs et l'hydratation). */}
+      <ErrorBoundary key={location.pathname} en={isEn}>
       <Suspense fallback={<div className="min-h-screen" />}>
       <Routes>
         <Route path="/" element={<HomePage />} />
@@ -181,6 +190,7 @@ function AppContent() {
           /lelodge, /nos-maisons, /candidature ; /tarifs et /services indemnes). */}
       <AvailabilityEmbed />
       </Suspense>
+      </ErrorBoundary>
       {!isDashboard && !isPortail && !isResetPw && !isQuestionnaire && (isLp ? <LpFooter /> : <Footer />)}
     </div>
   );

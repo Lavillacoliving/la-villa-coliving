@@ -15,6 +15,8 @@
  * (createRoot, pas d'hydratation).
  */
 
+import { isChunkLoadError, recoverFromChunkError } from "@/lib/lazyWithRetry";
+
 type Loader = () => Promise<unknown>;
 
 const STATIC_LOADERS: Record<string, Loader> = {
@@ -61,7 +63,17 @@ export function preloadRouteModule(pathname: string): Promise<unknown> {
         // URL inconnue avec contenu prérendu = 404.html (NotFoundPage)
         (() => import("@/pages/NotFoundPage")));
 
-  // Ne JAMAIS bloquer l'hydratation sur un échec de préchargement (offline,
-  // chunk introuvable…) : React.lazy retentera et gérera l'erreur lui-même.
-  return loader().catch(() => undefined);
+  // Chunk de page introuvable AVANT hydrateRoot (déploiement entre deux chargements,
+  // Lot C 02/09/2026) : rechargement contrôlé, une seule fois, et on n'hydrate pas —
+  // le HTML prérendu reste affiché jusqu'au rechargement. Si le chunk manque encore
+  // après ce rechargement (déploiement incohérent), on n'hydrate pas non plus : la page
+  // prérendue reste visible et ses liens (CTA, nav) fonctionnent en navigation classique —
+  // préférable à un écran d'erreur sur une page marketing ; `chunk_error` est tracké.
+  // Tout autre échec (offline…) ne bloque jamais l'hydratation : lazyWithRetry
+  // retentera et gérera l'erreur.
+  return loader().catch((error: unknown) => {
+    if (!isChunkLoadError(error)) return undefined;
+    recoverFromChunkError(`route:${p}`, error);
+    return new Promise<never>(() => {});
+  });
 }
