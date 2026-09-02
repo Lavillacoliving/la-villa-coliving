@@ -1,4 +1,16 @@
 // Supabase Edge Function — send-candidature-email
+// v16 — 02/09/2026 — Canaux de découverte Facebook / WhatsApp / Google Maps (demande Jérôme 02/09)
+//   CHANGEMENTS vs v15 :
+//   1. Trois nouvelles valeurs du select `source` du formulaire : `facebook`, `whatsapp`,
+//      `google-maps` (CHANNEL_LABELS + PROSPECT_SOURCE_MAP). `facebook` et `whatsapp`
+//      existent déjà dans prospects_source_check (14 valeurs, pg_get_constraintdef du
+//      02/09) → écrits tels quels. Google Maps n'a PAS de valeur dédiée en base →
+//      `google` (sinon le filet aurait écrasé en site_web, cf. bug du 26/07) ; le canal
+//      exact reste lisible en notes (« Canal déclaré : Google Maps »), ce qui permet une
+//      rebascule ultérieure si `google_maps` est ajouté à la contrainte (script préparé,
+//      NON appliqué : scripts/migration-prospects-source-google-maps.sql).
+//   2. AUCUN changement de logique d'envoi, d'idempotence, de filets ni d'emails.
+//   Rétrocompatible : sans ces valeurs, comportement v15 strictement identique.
 // v15 — 29/08/2026 — Durabilité du pipeline (Brief Conversion V2, Lot 1a — plan validé 29/08)
 //   CHANGEMENTS vs v14 :
 //   1. ORDRE INVERSÉ : écritures AVANT les emails. `form_submissions` devient la
@@ -618,7 +630,10 @@ Deno.serve(async (req: Request) => {
       };
       const CHANNEL_LABELS: Record<string, string> = {
         "google": "Google",
+        "google-maps": "Google Maps",
         "instagram": "Instagram",
+        "facebook": "Facebook",
+        "whatsapp": "WhatsApp",
         "word-of-mouth": "Bouche à oreille",
         "article-blog": "Un article du blog",
         "leboncoin": "Leboncoin",
@@ -628,7 +643,12 @@ Deno.serve(async (req: Request) => {
       // Canal déclaré (select du formulaire) → valeur autorisée par prospects_source_check.
       const PROSPECT_SOURCE_MAP: Record<string, string> = {
         "google": "google",
+        // v16 : pas de valeur google_maps dans prospects_source_check → google
+        // (le canal exact est conservé en notes : « Canal déclaré : Google Maps »).
+        "google-maps": "google",
         "instagram": "instagram",
+        "facebook": "facebook",
+        "whatsapp": "whatsapp",
         "word-of-mouth": "bouche_a_oreille",
         "article-blog": "article_blog",
         "leboncoin": "leboncoin",
