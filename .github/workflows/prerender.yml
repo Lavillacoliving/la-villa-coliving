@@ -70,6 +70,11 @@ jobs:
       - name: Pre-render all pages (Supabase sync + Puppeteer)
         run: node scripts/prerender.mjs
 
+      # Garde Lot A (02/09/2026) : chaque maison de v_public_rooms a sa page FR+EN complète
+      # (embed chambres, CTA contextuels, prix FR, marqueurs d'hydratation). Échec = pas de commit.
+      - name: Vérifier les pages maisons
+        run: node scripts/house-pages-check.mjs
+
       - name: Commit and push if changes
         run: |
           git config user.name "github-actions[bot]"

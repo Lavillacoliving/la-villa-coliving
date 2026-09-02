@@ -28,14 +28,45 @@ const categoryLabels: Record<'en' | 'fr', Record<string, string>> = {
   },
 };
 
+// (Lot A — A6, 02/09/2026) Vignettes affichées au chargement. Scrollmap Clarity : 90 % des
+// visiteurs atteignent la section Chambres puis décrochent en entrant dans la galerie (44 à 66
+// photos = 27 points de hauteur de page). On coupe à 20, le reste se déroule à la demande ;
+// aucune photo n'est retirée du repo ni de la visionneuse. État initial identique au prérendu
+// (pas de mismatch d'hydratation). Décision Jérôme : 20, les 3 maisons, tracké gallery_expand.
+const INITIAL_VISIBLE = 20;
+
 export function HouseGallery({ images, houseName }: HouseGalleryProps) {
   const { language } = useLanguage();
   const [selectedImage, setSelectedImage] = useState<number | null>(null);
   const [activeFilter, setActiveFilter] = useState<string | null>(null);
+  const [expanded, setExpanded] = useState(false);
 
   const filteredImages = activeFilter
     ? images.filter((img) => img.category === activeFilter)
     : images;
+  // Préfixe de filteredImages : l'index d'une vignette reste valable pour la visionneuse.
+  const visibleImages = expanded ? filteredImages : filteredImages.slice(0, INITIAL_VISIBLE);
+  const hiddenCount = filteredImages.length - visibleImages.length;
+
+  const changeFilter = (category: string | null) => {
+    setActiveFilter(category);
+    setExpanded(false);
+  };
+
+  const expand = () => {
+    setExpanded(true);
+    try {
+      (window as unknown as { gtag?: (...a: unknown[]) => void }).gtag?.("event", "gallery_expand", {
+        house: houseName,
+        filter: activeFilter ?? "all",
+        shown: visibleImages.length,
+        total: filteredImages.length,
+        language,
+      });
+    } catch {
+      /* noop — l'analytics ne bloque jamais l'UI */
+    }
+  };
 
   const categories = [...new Set(images.map((img) => img.category))];
 
@@ -91,7 +122,7 @@ export function HouseGallery({ images, houseName }: HouseGalleryProps) {
         {/* Filter Buttons */}
         <div className="flex flex-wrap justify-center gap-3 mb-10">
           <button
-            onClick={() => setActiveFilter(null)}
+            onClick={() => changeFilter(null)}
             className={`flex items-center gap-2 px-5 py-2.5 rounded-full font-bold transition-all ${
               activeFilter === null
                 ? 'bg-[#10b981] text-white shadow-lg shadow-[#10b981]/25'
@@ -104,7 +135,7 @@ export function HouseGallery({ images, houseName }: HouseGalleryProps) {
           {categories.map((category) => (
             <button
               key={category}
-              onClick={() => setActiveFilter(category)}
+              onClick={() => changeFilter(category)}
               className={`px-5 py-2.5 rounded-full font-bold transition-all ${
                 activeFilter === category
                   ? 'bg-[#10b981] text-white shadow-lg shadow-[#10b981]/25'
@@ -118,7 +149,7 @@ export function HouseGallery({ images, houseName }: HouseGalleryProps) {
 
         {/* Image Grid */}
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-          {filteredImages.map((image, index) => (
+          {visibleImages.map((image, index) => (
             <div
               key={index}
               onClick={() => openLightbox(index)}
@@ -147,9 +178,28 @@ export function HouseGallery({ images, houseName }: HouseGalleryProps) {
           ))}
         </div>
 
+        {/* Voir plus (A6) */}
+        {hiddenCount > 0 && (
+          <div className="text-center mt-10">
+            <button
+              type="button"
+              onClick={expand}
+              className="inline-flex items-center gap-2 px-7 py-3.5 bg-[#1C1917] text-white font-semibold rounded-full hover:bg-[#D4A574] hover:text-[#1C1917] transition-colors"
+            >
+              {language === 'en'
+                ? `See more photos (${hiddenCount} more)`
+                : `Voir plus de photos (${hiddenCount} restantes)`}
+            </button>
+          </div>
+        )}
+
         {/* Image Count */}
         <p className="text-center text-gray-500 mt-8">
-          {filteredImages.length} {language === 'en' ? 'photos' : 'photos'}
+          {hiddenCount > 0
+            ? (language === 'en'
+                ? `${visibleImages.length} of ${filteredImages.length} photos`
+                : `${visibleImages.length} sur ${filteredImages.length} photos`)
+            : `${filteredImages.length} photos`}
           {activeFilter && ` · ${categoryLabels[language][activeFilter]}`}
         </p>
       </div>
