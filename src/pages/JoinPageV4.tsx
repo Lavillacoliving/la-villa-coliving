@@ -464,7 +464,13 @@ export function JoinPageV4() {
                       {language === "en" ? "A resident referred me" : "Un résident m'a recommandé"}
                     </option>
                     <option value="google">Google</option>
+                    {/* google-maps / facebook / whatsapp (02/09/2026) : mappés côté
+                        Edge v16 — facebook et whatsapp existent en base, google-maps
+                        est enregistré en `google` (canal exact conservé en notes). */}
+                    <option value="google-maps">Google Maps</option>
                     <option value="instagram">Instagram</option>
+                    <option value="facebook">Facebook</option>
+                    <option value="whatsapp">WhatsApp</option>
                     <option value="word-of-mouth">
                       {language === "en" ? "Word of mouth" : "Bouche à oreille"}
                     </option>
