@@ -1,9 +1,10 @@
 -- ============================================================================
--- Migration OPTIONNELLE : valeur dediee `google_maps` dans prospects_source_check
--- Date       : 2026-09-02 (preparee, NON APPLIQUEE)
--- GO Jerome  : NON — a decider. Sans cette migration, tout fonctionne : le canal
---              « Google Maps » du formulaire est enregistre en `google`, le detail
---              exact restant en notes (« Canal declare : Google Maps »).
+-- Migration : valeur dediee `google_maps` dans prospects_source_check
+-- Date       : 2026-09-02
+-- GO Jerome  : oui — APPLIQUEE par Jerome le 02/09/2026 (SQL Editor). Contrainte a
+--              15 valeurs verifiee par pg_get_constraintdef le meme jour.
+--              Alignement fait dans la foulee : Edge v16 (google-maps -> google_maps),
+--              entities.ts (dropdown dashboard), Schema_Supabase_LaVilla.md.
 --
 -- CONTEXTE
 -- Le 02/09/2026, le select « Comment as-tu entendu parler de nous ? » du

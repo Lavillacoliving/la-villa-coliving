@@ -465,8 +465,8 @@ export function JoinPageV4() {
                     </option>
                     <option value="google">Google</option>
                     {/* google-maps / facebook / whatsapp (02/09/2026) : mappés côté
-                        Edge v16 — facebook et whatsapp existent en base, google-maps
-                        est enregistré en `google` (canal exact conservé en notes). */}
+                        Edge v16 vers facebook / whatsapp / google_maps
+                        (prospects_source_check, 15 valeurs depuis le 02/09). */}
                     <option value="google-maps">Google Maps</option>
                     <option value="instagram">Instagram</option>
                     <option value="facebook">Facebook</option>
