@@ -57,6 +57,7 @@ import { Badge } from "@/components/ui/badge";
 import { HouseGallery } from "@/sections/HouseGallery";
 import { SEO } from "@/components/SEO";
 import { WhatsAppButton } from "@/components/WhatsAppButton";
+import { HouseMap } from "@/components/HouseMap";
 import {
   Carousel,
   CarouselContent,
@@ -2253,6 +2254,21 @@ export function HouseDetailPage() {
                   </ul>
                 </div>
               </div>
+
+              {/* Plan Google Maps chargé au clic (demande Jérôme 02/09, Lot A) — coordonnées
+                  rooftop de HOUSES, même source que le JSON-LD LodgingBusiness ci-dessus. */}
+              {(() => {
+                const geo = HOUSES.find((h) => h.slug === id);
+                return geo ? (
+                  <HouseMap
+                    name={house.name}
+                    address={data.address}
+                    lat={geo.geo.lat}
+                    lng={geo.geo.lng}
+                    en={language === "en"}
+                  />
+                ) : null;
+              })()}
             </div>
           </section>
         );
