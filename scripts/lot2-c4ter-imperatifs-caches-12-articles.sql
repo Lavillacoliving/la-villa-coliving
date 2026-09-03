@@ -69,3 +69,5 @@ select slug, m[1] as mot from blog_posts, regexp_matches(regexp_replace(content_
 --   BILAN après C1 → C4 ter : 40 articles FR publiés, 0 « vous » hors URL, 0 impératif en -ez
 --   (standard et élargi). Restent 8 articles NON publiés au « vous » (à traiter à leur publication).
 -- ---------------------------------------------------------------------------
+-- Prérendu : le run GitHub 33779369517 (push 23d30a2, 16:33 UTC) s'est arrêté sur une erreur interne GitHub
+--   (« GitHub Actions has encountered an internal error »), build réussi ; relancé par ce commit le 03/09 à 18:45.
