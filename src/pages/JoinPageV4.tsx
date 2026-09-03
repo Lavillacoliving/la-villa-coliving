@@ -7,7 +7,7 @@ import { SUPABASE_URL, SUPABASE_ANON_KEY } from "@/lib/supabase";
 import { STATS, STATS_DISPLAY, PRICE_SHARED_CHF_FR, PRICE_SHARED_CHF_EN, CONTRACT_EUR, EUR_STANDARD_FR_NUM, EUR_SHARED_FR_NUM, EUR_STANDARD_EN_NUM, EUR_SHARED_EN_NUM } from "@/data/stats";
 import { useFormTelemetry } from "@/hooks/useFormTelemetry";
 import { useRoomAvailability, shortAvailabilityLabel } from "@/lib/availability";
-import { attributionPayload, isTestSession } from "@/lib/attribution";
+import { attributionPayload, internalRefPayload, isTestSession, landingPayload } from "@/lib/attribution";
 import { HOUSES } from "@/data/houses";
 
 type FormStatus = "idle" | "submitting" | "success" | "error";
@@ -37,8 +37,12 @@ export function JoinPageV4() {
   // internes redémarrent l'attribution de session GA4). Transmis à l'Edge Function
   // → notes + prospects.source. Le canal DÉCLARÉ (select ci-dessous) prime.
   const [searchParams] = useSearchParams();
-  const refSrc = (searchParams.get("src") ?? "").slice(0, 50);
-  const refArticle = (searchParams.get("article") ?? "").slice(0, 120);
+  // (Lot 1, 03/09/2026) Repli sur les UTM virtuels de la session quand la porte interne
+  // n'est plus sur l'URL (lecteur passé par une page maison avant de candidater) : la
+  // note « Origine observée » du prospect reste renseignée. Rien de rendu → zéro #418.
+  const storedRef = internalRefPayload();
+  const refSrc = (searchParams.get("src") ?? storedRef.ref_src ?? "").slice(0, 50);
+  const refArticle = (searchParams.get("article") ?? storedRef.ref_article ?? "").slice(0, 120);
   // Intérêt déclaré au clic sur une carte chambre de la LP /chambres-septembre
   // (brief LOT 2, 24/08/2026) : ?property_interest=<slug properties.slug SANS tiret>
   // &room_interest=<repère chambre>. Transmis à l'Edge v14 → colonnes dédiées sur
@@ -110,6 +114,12 @@ export function JoinPageV4() {
     // (Edge v13). Le canal DÉCLARÉ (`source`) n'est jamais surchargé. Absente → rien
     // d'envoyé : un client ancien/en cache reste strictement rétrocompatible.
     Object.assign(payload, attributionPayload());
+    // (Lot 1, 03/09/2026) Page d'atterrissage + referrer de la session (write-once,
+    // src/lib/attribution.ts) et page de soumission → colonnes landing_page / referrer /
+    // entry_page de form_submissions (Edge v17). Absents (ancien bundle, stockage
+    // indisponible) → rien d'envoyé, l'Edge reste rétrocompatible.
+    Object.assign(payload, landingPayload());
+    try { payload.entry_page = window.location.pathname.slice(0, 512); } catch { /* noop */ }
     // Langue explicite : l'Edge Function ne peut plus se fier au Referer
     // (la Referrer-Policy par défaut ampute le path en cross-origin, ce qui
     // loggait toutes les soumissions en « fr »).

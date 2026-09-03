@@ -1,4 +1,23 @@
 // Supabase Edge Function — send-candidature-email
+// v17 — 03/09/2026 — Page d'atterrissage + portes internes (Lot 1 du brief SEO funnel, plan validé 03/09)
+//   CHANGEMENTS vs v16 :
+//   1. Payload optionnel `landing_page` / `referrer` / `entry_page` (posés par le front :
+//      première page de la session et son referrer — origine + chemin, sans query —,
+//      page de soumission) → 3 colonnes text NULL de form_submissions SEULEMENT
+//      (migration `attribution_landing_2026_09_03`). Trim, caractères de contrôle retirés,
+//      512 caractères max, vide → null. Jointes à l'insert QUE si au moins une valeur.
+//   2. Les colonnes utm_* reçoivent désormais aussi les « UTM virtuels » des portes
+//      internes (utm_source = site, utm_medium = bloc_offre | article_cta | …), écrits par
+//      le front dans le même sessionStorage que l'attribution Ads — AUCUN changement ici :
+//      mêmes clés, mêmes colonnes, `is_paid` inchangé (site ≠ cpc → organique).
+//   3. Notes du prospect : ligne « Atterrissage : /blog/<slug> — via <referrer> » (décision
+//      Q11b), lisible par Fanny au dashboard. `prospects` n'a pas de colonne pour ça.
+//   4. Cascade de filets étendue, toujours « du plus récent au plus établi » : complet →
+//      sans atterrissage → sans intérêt → sans attribution → sans clé. AUCUN changement de
+//      logique d'envoi, d'idempotence ni d'emails.
+//   Rétrocompatible : sans ces champs, corps identiques à la v16.
+//   Ordre de déploiement : migration → merge sur main → déploiement v17 DEPUIS main
+//   (jamais depuis la branche) → le front les envoie (déjà mergé avec cette version).
 // v16 — 02/09/2026 — Canaux de découverte Facebook / WhatsApp / Google Maps (demande + GO Jérôme 02/09)
 //   CHANGEMENTS vs v15 :
 //   1. Trois nouvelles valeurs du select `source` du formulaire : `facebook`, `whatsapp`,
@@ -480,6 +499,24 @@ Deno.serve(async (req: Request) => {
   const withoutInterest = (body: Record<string, unknown>): Record<string, unknown> =>
     Object.fromEntries(Object.entries(body).filter(([k]) => !(INTEREST_KEYS as readonly string[]).includes(k)));
 
+  // Page d'atterrissage (v17) : première page de la session, son referrer (origine + chemin,
+  // déjà réduit par le front — on ne fait pas confiance, on re-nettoie) et la page de
+  // soumission. Chemins/URL uniquement : caractères de contrôle retirés, 512 caractères
+  // max, vide → null. Même règle que l'attribution : clés jointes à l'insert QUE si au
+  // moins une valeur est présente — sans elles, corps identiques à la v16.
+  const LANDING_KEYS = ["landing_page", "referrer", "entry_page"] as const;
+  const cleanPath = (value: unknown): string | null => {
+    // deno-lint-ignore no-control-regex
+    const s = String(value ?? "").replace(/[\u0000-\u001f\u007f]/g, "").trim().slice(0, 512);
+    return s || null;
+  };
+  const landing: Record<string, string | null> = {};
+  for (const key of LANDING_KEYS) landing[key] = cleanPath(data[key]);
+  const hasLanding = Object.values(landing).some((v) => v !== null);
+  const landingFields: Record<string, string | null> = hasLanding ? landing : {};
+  const withoutLanding = (body: Record<string, unknown>): Record<string, unknown> =>
+    Object.fromEntries(Object.entries(body).filter(([k]) => !(LANDING_KEYS as readonly string[]).includes(k)));
+
   // 1. Email de notification admin
   const adminEmail = {
     from: FROM_ADMIN_NOTIF,
@@ -544,20 +581,23 @@ Deno.serve(async (req: Request) => {
         ...attributionFields,
         // v14 : intérêt maison/chambre — même règle.
         ...interestFields,
+        // v17 : page d'atterrissage / referrer / page de soumission — même règle.
+        ...landingFields,
       };
-      // Cascade v13/v14 conservée, exprimée en tentatives ordonnées « du plus
-      // récent au plus établi » : complet → sans intérêt → sans intérêt ni
-      // attribution. Un 409/23505 (submission_key) court-circuite : c'est un
+      // Cascade v13/v14/v17 conservée, exprimée en tentatives ordonnées « du plus
+      // récent au plus établi » : complet → sans atterrissage → sans intérêt →
+      // sans attribution. Un 409/23505 (submission_key) court-circuite : c'est un
       // doublon, pas un refus de schéma.
       const attempts: Array<Record<string, unknown>> = [submissionRow];
-      if (hasInterest) attempts.push(withoutInterest(submissionRow));
-      if (hasAttribution) attempts.push(withoutAttribution(withoutInterest(submissionRow)));
+      if (hasLanding) attempts.push(withoutLanding(submissionRow));
+      if (hasInterest) attempts.push(withoutInterest(withoutLanding(submissionRow)));
+      if (hasAttribution) attempts.push(withoutAttribution(withoutInterest(withoutLanding(submissionRow))));
       if (submissionKey) {
         // Filet v15 : migration submission_key pas encore appliquée (colonne
         // inconnue) → dernier recours SANS la clé. La trace prime sur
         // l'idempotence — une candidature n'est jamais perdue pour un champ neuf.
         const { submission_key: _unused, ...withoutKey } =
-          withoutAttribution(withoutInterest(submissionRow)) as Record<string, unknown> & { submission_key?: string };
+          withoutAttribution(withoutInterest(withoutLanding(submissionRow))) as Record<string, unknown> & { submission_key?: string };
         attempts.push(withoutKey);
       }
       for (const body of attempts) {
@@ -696,6 +736,12 @@ Deno.serve(async (req: Request) => {
       const refArticle = (data.ref_article ?? "").trim().slice(0, 120);
       if (refSrc) {
         notesParts.push(`Origine observée : ${refSrc}${refArticle ? ` — article « ${refArticle} »` : ""}`);
+      }
+      // (v17) Page d'atterrissage de la session, lisible par Fanny (décision Q11b du
+      // 03/09) — en notes, pas en colonne : `prospects` garde son schéma.
+      if (landing.landing_page) {
+        const via = landing.referrer ? ` — via ${landing.referrer.replace(/^https?:\/\//, "")}` : "";
+        notesParts.push(`Atterrissage : ${landing.landing_page}${via}`);
       }
       const prospectSource: string =
         PROSPECT_SOURCE_MAP[channel] ??

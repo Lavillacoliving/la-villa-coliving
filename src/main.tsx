@@ -3,7 +3,7 @@ import { createRoot, hydrateRoot } from "react-dom/client";
 import "./index.css";
 import App from "./App.tsx";
 import { preloadRouteModule } from "@/lib/routePreload";
-import { captureAttribution, captureTestFlag } from "@/lib/attribution";
+import { captureAttribution, captureInternalRef, captureLanding, captureTestFlag } from "@/lib/attribution";
 import { recoverFromChunkError } from "@/lib/lazyWithRetry";
 
 // Attribution Ads (utm_* + gclid) et marqueur de test (?test=1) : capturés ICI, dès
@@ -13,6 +13,12 @@ import { recoverFromChunkError } from "@/lib/lazyWithRetry";
 // zéro impact sur l'hydratation. Brief UTM/GCLID du 22/08/2026 (prérequis Ads 25/08).
 captureAttribution();
 captureTestFlag();
+// Lot 1 attribution (03/09/2026) : page d'atterrissage + referrer de la session (write-once,
+// toujours), puis porte interne éventuelle (?src=bloc_offre&article=…) traduite en « UTM
+// virtuels » si aucune première touche n'est déjà stockée. L'ordre compte : l'externe
+// (captureAttribution, ci-dessus) prime toujours sur l'interne.
+captureLanding();
+captureInternalRef();
 
 // Lot C (02/09/2026) — dépendance préchargée introuvable (Vite émet `vite:preloadError` quand un
 // <link rel="modulepreload"> d'un import dynamique échoue, typiquement un chunk renommé par un
