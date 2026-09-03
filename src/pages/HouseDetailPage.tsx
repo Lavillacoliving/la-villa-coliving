@@ -1602,7 +1602,7 @@ export function HouseDetailPage() {
       </section>
 
       {/* Description */}
-      <section className="section-padding relative bg-white">
+      <section className="section-padding py-14 md:py-20 relative bg-white">
         <div className="container-custom">
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-12">
             {/* Main Content */}
@@ -1698,7 +1698,7 @@ export function HouseDetailPage() {
             <div className="lg:col-span-1">
               <div className="sticky top-24 space-y-6">
                 {/* Pricing Card */}
-                <div className="card-ultra p-8">
+                <div className="card-ultra bg-white rounded-2xl border border-[#E7E5E4] shadow-sm p-8">
                   {/* La Villa : plancher 1 390 (4 ch. sur 10 à salle d'eau partagée). Loft/Lodge : prix unique. */}
                   <p className="text-sm text-[#78716C] mb-2 font-bold">
                     {id === "lavilla"
@@ -1768,7 +1768,7 @@ export function HouseDetailPage() {
                 </div>
 
                 {/* Quick Info Card */}
-                <div className="card-ultra p-6">
+                <div className="card-ultra bg-white rounded-2xl border border-[#E7E5E4] shadow-sm p-6">
                   <h4 className="font-bold text-[#1C1917] mb-4">
                     {language === "en" ? "Quick Info" : "Infos Rapides"}
                   </h4>
@@ -1797,7 +1797,7 @@ export function HouseDetailPage() {
                 </div>
 
                 {/* Nearby Card */}
-                <div className="card-ultra p-6">
+                <div className="card-ultra bg-white rounded-2xl border border-[#E7E5E4] shadow-sm p-6">
                   <h4 className="font-bold text-[#1C1917] mb-4">
                     {t.houseDetail.nearby}
                   </h4>
@@ -1832,7 +1832,7 @@ export function HouseDetailPage() {
           doit y être. Sans données (vue vide, vieux HTML prérendu) : repli sur les
           cartes de types — jamais de section vide. Interdit : cloner le modèle
           fichier-statique de la LP (roomsSeptembre.ts). */}
-      <section className="section-padding relative bg-[#FAF9F6]">
+      <section className="section-padding py-14 md:py-20 relative bg-[#FAF9F6]">
         <div className="container-custom">
           <h2
             className="text-3xl md:text-4xl mb-6 text-[#1C1917]"
@@ -1900,7 +1900,7 @@ export function HouseDetailPage() {
                         </>
                       );
                       return (
-                        <div key={room.room_number} className="card-ultra overflow-hidden group flex flex-col">
+                        <div key={room.room_number} className="card-ultra bg-white rounded-2xl border border-[#E7E5E4] shadow-sm overflow-hidden group flex flex-col">
                           {gallery ? (
                             <button
                               type="button"
@@ -1966,35 +1966,64 @@ export function HouseDetailPage() {
                         ? (candidates.length > 0 ? "The other rooms" : "The rooms")
                         : (candidates.length > 0 ? "Les autres chambres" : "Les chambres")}
                     </h3>
-                    <ul className="grid grid-cols-1 md:grid-cols-2 gap-3 mb-8">
-                      {occupied.map((room) => {
-                        const specs = roomSpecs(room);
-                        return (
-                          <li key={room.room_number} className="card-ultra px-5 py-4 flex items-center justify-between gap-4">
-                            <div>
-                              <p className="font-black text-[#1C1917]">
-                                {language === "en" ? `Room ${room.room_number}` : `Chambre ${room.room_number}`}
-                              </p>
-                              {specs && <p className="text-sm text-[#78716C]">{specs}</p>}
-                              {language !== "en" && room.location_detail && (
-                                <p className="text-xs text-[#78716C]">{room.location_detail.trim()}</p>
-                              )}
-                            </div>
-                            <span className={`shrink-0 text-xs font-semibold px-3 py-1 rounded-full ${BADGE_PANEL_CLASS.full}`}>
-                              {language === "en" ? "Occupied" : "Occupée"}
-                            </span>
-                          </li>
-                        );
-                      })}
-                    </ul>
-                    <LocalizedLink
-                      to={`/candidature?property_interest=${id}`}
-                      onClick={() => trackCta("room_waitlist")}
-                      className="inline-flex items-center gap-2 px-6 py-3 border border-[#1C1917] text-[#1C1917] font-semibold rounded-full hover:bg-[#1C1917] hover:text-white transition-colors"
-                    >
-                      {language === "en" ? "Join the waitlist" : "Rejoindre la liste d'attente"}
-                      <ArrowRight className="w-4 h-4" />
-                    </LocalizedLink>
+                    {/* Panneau structuré (retour Jérôme 03/09 : les lignes « flottaient ») : cadre,
+                        lignes séparées, en-tête de colonnes à partir de md, CTA rattaché au pied. */}
+                    <div className="bg-white border border-[#E7E5E4] rounded-2xl overflow-hidden shadow-sm">
+                      <div className="hidden md:grid md:grid-cols-[1.4fr_0.7fr_0.9fr_1.3fr_auto] gap-4 px-5 py-3 bg-[#FAF9F6] border-b border-[#E7E5E4] text-xs font-semibold uppercase tracking-wider text-[#78716C]">
+                        <span>{language === "en" ? "Room" : "Chambre"}</span>
+                        <span>{language === "en" ? "Size" : "Surface"}</span>
+                        <span>{language === "en" ? "Floor" : "Étage"}</span>
+                        <span>{language === "en" ? "Bathroom" : "Salle de bain"}</span>
+                        <span className="text-right">{language === "en" ? "Status" : "Statut"}</span>
+                      </div>
+                      <ul className="divide-y divide-[#E7E5E4]">
+                        {occupied.map((room) => {
+                          const surface = roomSurface(room);
+                          const floor = room.floor
+                            ? (language === "en" ? (FLOOR_EN[room.floor] ?? room.floor) : room.floor)
+                            : null;
+                          const bath = bathroomLabel(room, uiLang);
+                          const specs = roomSpecs(room);
+                          return (
+                            <li
+                              key={room.room_number}
+                              className="px-5 py-3.5 flex items-center justify-between gap-4 md:grid md:grid-cols-[1.4fr_0.7fr_0.9fr_1.3fr_auto]"
+                            >
+                              <div className="min-w-0">
+                                <p className="font-black text-[#1C1917]">
+                                  {language === "en" ? `Room ${room.room_number}` : `Chambre ${room.room_number}`}
+                                </p>
+                                {specs && <p className="text-sm text-[#78716C] md:hidden">{specs}</p>}
+                                {language !== "en" && room.location_detail && (
+                                  <p className="text-xs text-[#78716C]">{room.location_detail.trim()}</p>
+                                )}
+                              </div>
+                              <span className="hidden md:block text-sm text-[#57534E]">{surface !== null ? `${surface} m²` : "—"}</span>
+                              <span className="hidden md:block text-sm text-[#57534E]">{floor ?? "—"}</span>
+                              <span className="hidden md:block text-sm text-[#57534E]">{bath ?? "—"}</span>
+                              <span className={`justify-self-end shrink-0 text-xs font-semibold px-3 py-1 rounded-full ${BADGE_PANEL_CLASS.full}`}>
+                                {language === "en" ? "Occupied" : "Occupée"}
+                              </span>
+                            </li>
+                          );
+                        })}
+                      </ul>
+                      <div className="flex flex-wrap items-center justify-between gap-3 px-5 py-4 bg-[#FAF9F6] border-t border-[#E7E5E4]">
+                        <p className="text-sm text-[#57534E]">
+                          {language === "en"
+                            ? "A room frees up? You're told first."
+                            : "Une chambre se libère ? Tu es prévenu en premier."}
+                        </p>
+                        <LocalizedLink
+                          to={`/candidature?property_interest=${id}`}
+                          onClick={() => trackCta("room_waitlist")}
+                          className="inline-flex items-center gap-2 px-6 py-3 bg-[#1C1917] text-white font-semibold rounded-full hover:bg-[#D4A574] hover:text-[#1C1917] transition-colors"
+                        >
+                          {language === "en" ? "Join the waitlist" : "Rejoindre la liste d'attente"}
+                          <ArrowRight className="w-4 h-4" />
+                        </LocalizedLink>
+                      </div>
+                    </div>
                   </>
                 )}
               </>
@@ -2002,7 +2031,7 @@ export function HouseDetailPage() {
           })() : (
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
               {house.rooms.map((room, index) => (
-                <div key={index} className="card-ultra overflow-hidden group">
+                <div key={index} className="card-ultra bg-white rounded-2xl border border-[#E7E5E4] shadow-sm overflow-hidden group">
                   <div className="relative h-48 overflow-hidden">
                     <img
                       src={room.image}
@@ -2178,7 +2207,7 @@ export function HouseDetailPage() {
         const data = LOCATION_DATA[id]?.[language === "en" ? "en" : "fr"];
         if (!data) return null;
         return (
-          <section className="section-padding relative bg-white">
+          <section className="section-padding py-14 md:py-20 relative bg-white">
             <div className="container-custom max-w-5xl">
               <h2
                 className="text-3xl md:text-4xl mb-6 text-[#1C1917]"
@@ -2374,7 +2403,7 @@ export function HouseDetailPage() {
         return (
           <>
             <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }} />
-            <section className="section-padding relative bg-[#FAF9F6]">
+            <section className="section-padding py-14 md:py-20 relative bg-[#FAF9F6]">
               <div className="container-custom max-w-3xl">
                 <h2
                   className="text-3xl md:text-4xl mb-8 text-[#1C1917]"
@@ -2384,7 +2413,7 @@ export function HouseDetailPage() {
                 </h2>
                 <dl className="space-y-6">
                   {faqs.map(({ q, a }, i) => (
-                    <div key={i} className="card-ultra p-6">
+                    <div key={i} className="card-ultra bg-white rounded-2xl border border-[#E7E5E4] shadow-sm p-6">
                       <dt className="text-lg font-black text-[#1C1917] mb-3">{q}</dt>
                       <dd className="text-[#57534E] font-medium leading-relaxed">{a}</dd>
                     </div>
@@ -2398,7 +2427,7 @@ export function HouseDetailPage() {
 
       {/* Cross-house discovery — GA4 path data shows visitors loop back through
           /nos-maisons to compare; link the siblings directly to shorten the loop. */}
-      <section className="section-padding relative bg-white">
+      <section className="section-padding py-14 md:py-20 relative bg-white">
         <div className="container-custom">
           <h2
             className="text-3xl md:text-4xl mb-8 text-[#1C1917]"
