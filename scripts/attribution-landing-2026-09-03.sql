@@ -167,3 +167,12 @@ grant select on public.v_form_submissions_clean to anon, authenticated, service_
 -- Définition exacte : historique des migrations Supabase (MCP list_migrations →
 -- reporting_candidatures_utm_virtuels_2026_09_03). Règle à retenir pour toute vue future sur
 -- form_submissions : « payant » = gclid IS NOT NULL OR utm_medium = 'cpc', JAMAIS utm_source IS NOT NULL.
+
+-- ---------------------------------------------------------------------------
+-- PARTIE 6 — DÉPLOIEMENT (03/09/2026, GO Jérôme) : merge `fe221d0` sur main (front),
+--   Edge `send-candidature-email` v17 déployée depuis main via MCP deploy_edge_function
+--   (version Supabase 22, verify_jwt = true). Test live [TEST] concluant :
+--   form_submissions = site | bloc_offre | ou-habiter-… | end | /blog/ou-habiter-… |
+--   https://www.google.com/ | /candidature | is_test = true ; note prospect
+--   « Atterrissage : … — via www.google.com/ ». Doc : lavilla-docs (Schema MàJ 03/09, Infra).
+-- ---------------------------------------------------------------------------
