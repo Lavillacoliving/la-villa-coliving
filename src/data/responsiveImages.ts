@@ -477,5 +477,194 @@ export const RESPONSIVE_IMAGES: Record<string, { original: number; widths: numbe
       1024
     ],
     "reencoded": false
+  },
+  "/images/le lodge/rooms/standard/chambre-vue-large.webp": {
+    "original": 1920,
+    "widths": [
+      480,
+      768,
+      1024,
+      1440
+    ],
+    "reencoded": false
+  },
+  "/images/le lodge/rooms/standard/chambre-lit.webp": {
+    "original": 1277,
+    "widths": [
+      480,
+      768,
+      1024
+    ],
+    "reencoded": false
+  },
+  "/images/le lodge/rooms/standard/chambre-chevet.webp": {
+    "original": 1277,
+    "widths": [
+      480,
+      768,
+      1024
+    ],
+    "reencoded": false
+  },
+  "/images/le lodge/rooms/standard/chambre-bureau.webp": {
+    "original": 1277,
+    "widths": [
+      480,
+      768,
+      1024
+    ],
+    "reencoded": false
+  },
+  "/images/le lodge/rooms/standard/sdb-douche.webp": {
+    "original": 1280,
+    "widths": [
+      480,
+      768,
+      1024
+    ],
+    "reencoded": false
+  },
+  "/images/le lodge/rooms/standard/sdb-vasque.webp": {
+    "original": 1920,
+    "widths": [
+      480,
+      768,
+      1024,
+      1440
+    ],
+    "reencoded": false
+  },
+  "/images/le lodge/rooms/standard/sdb-robinet.webp": {
+    "original": 1277,
+    "widths": [
+      480,
+      768,
+      1024
+    ],
+    "reencoded": false
+  },
+  "/images/le lodge/rooms/standard/salle-a-manger.webp": {
+    "original": 1920,
+    "widths": [
+      480,
+      768,
+      1024,
+      1440
+    ],
+    "reencoded": false
+  },
+  "/images/le lodge/rooms/standard/cuisine.webp": {
+    "original": 1920,
+    "widths": [
+      480,
+      768,
+      1024,
+      1440
+    ],
+    "reencoded": false
+  },
+  "/images/le lodge/rooms/standard/cuisine-petit-dejeuner.webp": {
+    "original": 1920,
+    "widths": [
+      480,
+      768,
+      1024,
+      1440
+    ],
+    "reencoded": false
+  },
+  "/images/le lodge/rooms/standard/tireuse.webp": {
+    "original": 1277,
+    "widths": [
+      480,
+      768,
+      1024
+    ],
+    "reencoded": false
+  },
+  "/images/le lodge/rooms/standard/salon.webp": {
+    "original": 1920,
+    "widths": [
+      480,
+      768,
+      1024,
+      1440,
+      1920
+    ],
+    "reencoded": true
+  },
+  "/images/le lodge/rooms/standard/salon-tv.webp": {
+    "original": 1920,
+    "widths": [
+      480,
+      768,
+      1024,
+      1440,
+      1920
+    ],
+    "reencoded": true
+  },
+  "/images/le lodge/rooms/standard/sauna-entree.webp": {
+    "original": 1920,
+    "widths": [
+      480,
+      768,
+      1024,
+      1440,
+      1920
+    ],
+    "reencoded": true
+  },
+  "/images/le lodge/rooms/standard/sauna.webp": {
+    "original": 1920,
+    "widths": [
+      480,
+      768,
+      1024,
+      1440,
+      1920
+    ],
+    "reencoded": true
+  },
+  "/images/le lodge/rooms/standard/salle-de-sport-air-hockey.webp": {
+    "original": 1920,
+    "widths": [
+      480,
+      768,
+      1024,
+      1440,
+      1920
+    ],
+    "reencoded": true
+  },
+  "/images/le lodge/rooms/standard/salle-de-sport.webp": {
+    "original": 1536,
+    "widths": [
+      480,
+      768,
+      1024,
+      1440
+    ],
+    "reencoded": false
+  },
+  "/images/le lodge/rooms/standard/babyfoot.webp": {
+    "original": 1277,
+    "widths": [
+      480,
+      768,
+      1024,
+      1277
+    ],
+    "reencoded": true
+  },
+  "/images/le lodge/rooms/standard/piscine-jardin.webp": {
+    "original": 1086,
+    "widths": [
+      480,
+      768,
+      1024,
+      1086
+    ],
+    "reencoded": true
   }
 };

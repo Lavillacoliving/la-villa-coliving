@@ -96,6 +96,33 @@ const LP_LIGHTBOX_SOURCES = [
   "/images/la villa/interior/La Villa-89.webp",                      // salon
 ];
 for (const g of LP_LIGHTBOX_SOURCES) if (!SOURCES.includes(g)) SOURCES.push(g);
+// Galerie standardisée du Lodge (visionneuse des chambres libres, 03/09/2026) —
+// src/data/roomPhotos.ts (LODGE_STANDARD_ROOM / LODGE_COMMON_INTERIOR / LODGE_EXTERIOR).
+const LODGE_STANDARD_SOURCES = [
+  '/images/le lodge/rooms/standard/chambre-vue-large.webp',
+  '/images/le lodge/rooms/standard/chambre-lit.webp',
+  '/images/le lodge/rooms/standard/chambre-chevet.webp',
+  '/images/le lodge/rooms/standard/chambre-bureau.webp',
+  '/images/le lodge/rooms/standard/sdb-douche.webp',
+  '/images/le lodge/rooms/standard/sdb-vasque.webp',
+  '/images/le lodge/rooms/standard/sdb-robinet.webp',
+  '/images/le lodge/rooms/standard/salle-a-manger.webp',
+  '/images/le lodge/rooms/standard/cuisine.webp',
+  '/images/le lodge/rooms/standard/cuisine-petit-dejeuner.webp',
+  '/images/le lodge/rooms/standard/tireuse.webp',
+  '/images/le lodge/rooms/standard/salon.webp',
+  '/images/le lodge/rooms/standard/salon-tv.webp',
+  '/images/le lodge/rooms/standard/sauna-entree.webp',
+  '/images/le lodge/rooms/standard/sauna.webp',
+  '/images/le lodge/rooms/standard/salle-de-sport-air-hockey.webp',
+  '/images/le lodge/rooms/standard/salle-de-sport.webp',
+  '/images/le lodge/rooms/standard/babyfoot.webp',
+  '/images/le lodge/rooms/standard/piscine-jardin.webp',
+  '/images/le lodge/exterior/lodge-piscine-maison.webp',
+  '/images/le lodge/exterior/lodge-hamac-jardin.webp',
+];
+for (const g of LODGE_STANDARD_SOURCES) if (!SOURCES.includes(g)) SOURCES.push(g);
+
 
 // Héros plein écran sous voile dégradé (Scrim) : qualité plus basse invisible à l'œil.
 const QUALITY_OVERRIDES = {
