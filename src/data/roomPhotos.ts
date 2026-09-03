@@ -69,6 +69,33 @@ export const ROOM_PHOTOS: Record<string, RoomPhoto[]> = {
       },
     },
   ],
+  // (03/09/2026, demande Jérôme) Le Loft, chambre 5 : pack complet dans l'ordre chambre →
+  // équipements → le reste (23 photos, source PHOTOS/LOFT CH5, webp ≤ 1920 px q80, dimensions réelles).
+  "leloft:5": [
+    { src: "/images/le loft/rooms/Chambre 5/chambre-5-vue-large.webp", w: 1280, h: 960, alt: { fr: "Chambre 5 du Loft : lit double, grande fenêtre et accès à la salle d'eau privative", en: "Room 5 at Le Loft: double bed, large window and access to the private shower room" } },
+    { src: "/images/le loft/rooms/Chambre 5/chambre-5-fauteuil.webp", w: 1920, h: 1440, alt: { fr: "Le coin lecture de la chambre 5 : fauteuil jaune, miroir verrière et plante", en: "Room 5's reading nook: yellow armchair, loft-style mirror and plant" } },
+    { src: "/images/le loft/rooms/Chambre 5/chambre-5-coin-salon.webp", w: 1280, h: 960, alt: { fr: "Chambre 5 vue depuis le lit : le coin fauteuil et le mur ocre", en: "Room 5 seen from the bed: the armchair corner and the ochre wall" } },
+    { src: "/images/le loft/rooms/Chambre 5/chambre-5-salle-eau.webp", w: 1280, h: 1920, alt: { fr: "Salle d'eau privative de la chambre 5 : meuble vasque en bois et miroir rétroéclairé", en: "Room 5's private shower room: wooden vanity unit and backlit mirror" } },
+    { src: "/images/le loft/rooms/Chambre 5/chambre-5-douche.webp", w: 1280, h: 1920, alt: { fr: "La douche à l'italienne de la chambre 5", en: "Room 5's walk-in shower" } },
+    { src: "/images/le loft/rooms/Chambre 5/loft-piscine-interieure.webp", w: 1920, h: 1440, alt: { fr: "Équipements — la piscine intérieure chauffée du Loft", en: "Amenities — Le Loft's heated indoor pool" } },
+    { src: "/images/le loft/rooms/Chambre 5/loft-piscine-interieure-transat.webp", w: 1440, h: 1920, alt: { fr: "Équipements — la piscine intérieure et son transat", en: "Amenities — the indoor pool and its lounger" } },
+    { src: "/images/le loft/rooms/Chambre 5/loft-sauna.webp", w: 1358, h: 1920, alt: { fr: "Équipements — le sauna du Loft", en: "Amenities — Le Loft's sauna" } },
+    { src: "/images/le loft/rooms/Chambre 5/loft-salle-de-sport-rameur.webp", w: 1440, h: 1920, alt: { fr: "Équipements — la salle de sport : rameur et grand miroir", en: "Amenities — the gym: rowing machine and large mirror" } },
+    { src: "/images/le loft/rooms/Chambre 5/loft-salle-de-sport-tapis.webp", w: 1440, h: 1920, alt: { fr: "Équipements — la salle de sport : tapis de course, banc et haltères", en: "Amenities — the gym: treadmill, bench and dumbbells" } },
+    { src: "/images/le loft/rooms/Chambre 5/loft-home-cinema.webp", w: 1920, h: 1440, alt: { fr: "Équipements — le home cinéma : grand écran, enceintes et canapé", en: "Amenities — the home cinema: big screen, speakers and sofa" } },
+    { src: "/images/le loft/rooms/Chambre 5/loft-home-cinema-canape.webp", w: 1920, h: 1440, alt: { fr: "Équipements — le home cinéma vu du canapé", en: "Amenities — the home cinema seen from the sofa" } },
+    { src: "/images/le loft/rooms/Chambre 5/loft-babyfoot.webp", w: 1277, h: 1920, alt: { fr: "Équipements — le babyfoot", en: "Amenities — the table football" } },
+    { src: "/images/le loft/rooms/Chambre 5/loft-jeux-de-societe.webp", w: 1920, h: 1440, alt: { fr: "Équipements — l'étagère de jeux de société du salon", en: "Amenities — the living room's board-game shelf" } },
+    { src: "/images/le loft/rooms/Chambre 5/loft-salon.webp", w: 1280, h: 960, alt: { fr: "Espaces communs — le salon : canapés blancs et grand miroir", en: "Common areas — the living room: white sofas and large mirror" } },
+    { src: "/images/le loft/rooms/Chambre 5/loft-cuisine.webp", w: 1920, h: 1440, alt: { fr: "Espaces communs — la cuisine équipée et sa table haute", en: "Common areas — the fitted kitchen and its high table" } },
+    { src: "/images/le loft/rooms/Chambre 5/loft-cuisine-table.webp", w: 1920, h: 1440, alt: { fr: "Espaces communs — la table haute de la cuisine", en: "Common areas — the kitchen's high table" } },
+    { src: "/images/le loft/rooms/Chambre 5/loft-terrasse-jardin.webp", w: 1920, h: 1440, alt: { fr: "Extérieur — la terrasse et le jardin du Loft, palmier et transats", en: "Outdoors — Le Loft's terrace and garden, palm tree and loungers" } },
+    { src: "/images/le loft/rooms/Chambre 5/loft-jardin-oliviers.webp", w: 1440, h: 1920, alt: { fr: "Extérieur — le jardin : oliviers et palmiers en pots", en: "Outdoors — the garden: potted olive trees and palms" } },
+    { src: "/images/le loft/rooms/Chambre 5/loft-cabane-tv.webp", w: 1920, h: 1440, alt: { fr: "Extérieur — la cabane du jardin avec écran, fléchettes et pouf", en: "Outdoors — the garden cabin with screen, darts and beanbag" } },
+    { src: "/images/le loft/rooms/Chambre 5/loft-palmiers.webp", w: 1440, h: 1920, alt: { fr: "Extérieur — les palmiers du jardin sous le soleil", en: "Outdoors — the garden's palm trees in the sun" } },
+    { src: "/images/le loft/rooms/Chambre 5/loft-escalier.webp", w: 1440, h: 1920, alt: { fr: "Intérieur — l'escalier et ses suspensions", en: "Indoors — the staircase and its pendant lights" } },
+    { src: "/images/le loft/rooms/Chambre 5/loft-tableau-bienvenue.webp", w: 1440, h: 1920, alt: { fr: "Intérieur — le tableau d'accueil de la maison", en: "Indoors — the house's welcome board" } },
+  ],
   "lelodge:4": [
     {
       src: "/images/le lodge/rooms/Chambre 4/chambre-4-vue-large.webp",
