@@ -40,7 +40,7 @@ import {
   type PublicRoom,
 } from "@/lib/availability";
 import { RoomsEmbed } from "@/components/RoomsEmbed";
-import { ROOM_PHOTOS } from "@/data/roomPhotos";
+import { roomGallery } from "@/data/roomPhotos";
 
 // (Lot 3) Visionneuse photos des chambres — même composant/lazy que la LP.
 const PhotoLightbox = lazy(() => import("@/components/PhotoLightbox"));
@@ -1866,8 +1866,8 @@ export function HouseDetailPage() {
                 {candidates.length > 0 ? (
                   <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
                     {candidates.map((room) => {
-                      const photoKey = `${id}:${room.room_number}`;
-                      const gallery = ROOM_PHOTOS[photoKey];
+                      // Pack dédié, ou galerie standard du Lodge (chambre → communs → extérieurs).
+                      const gallery = roomGallery(id, room.room_number);
                       const cover = gallery?.[0];
                       // Repli déterministe sur la photo de TYPE (pureté d'hydratation :
                       // room_number est stable, jamais d'aléatoire au rendu).
@@ -2068,10 +2068,10 @@ export function HouseDetailPage() {
       <RoomsEmbed house={id as HouseKey} />
 
       {/* (Lot 3) Visionneuse photos chambre — lazy, montée seulement à l'ouverture. */}
-      {roomViewer && ROOM_PHOTOS[roomViewer.key] && (
+      {roomViewer && roomGallery(id, roomViewer.roomNumber) && (
         <Suspense fallback={null}>
           <PhotoLightbox
-            photos={ROOM_PHOTOS[roomViewer.key]}
+            photos={roomGallery(id, roomViewer.roomNumber)!}
             index={roomViewer.index}
             onIndexChange={(i) => setRoomViewer((v) => (v ? { ...v, index: i } : v))}
             onClose={() => setRoomViewer(null)}
