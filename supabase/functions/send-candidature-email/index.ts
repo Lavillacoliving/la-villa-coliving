@@ -507,7 +507,7 @@ Deno.serve(async (req: Request) => {
   const LANDING_KEYS = ["landing_page", "referrer", "entry_page"] as const;
   const cleanPath = (value: unknown): string | null => {
     // deno-lint-ignore no-control-regex
-    const s = String(value ?? "").replace(/[\u0000-\u001f\u007f]/g, "").trim().slice(0, 512);
+    const s = String(value ?? "").replace(/[\x00-\x1f\x7f]/g, "").trim().slice(0, 512);
     return s || null;
   };
   const landing: Record<string, string | null> = {};
