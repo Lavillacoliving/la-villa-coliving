@@ -295,6 +295,29 @@ export function splitRooms(rooms: PublicRoom[]): { candidates: PublicRoom[]; occ
   return { candidates: [...available, ...dated], occupied };
 }
 
+// (Lot 3 SEO funnel — extraction RoomCard) `floor` arrive en français de v_public_rooms :
+// mapping EN minimal, partagé par la carte chambre et le panneau compact des pages maisons.
+const FLOOR_EN: Record<string, string> = {
+  "RDC": "Ground floor",
+  "Étage 1": "1st floor",
+  "Étage 2": "2nd floor",
+  "Étage 3": "3rd floor",
+};
+
+/** Étage d'une chambre, FR tel quel / EN traduit — ou null si inconnu. */
+export function floorLabel(room: PublicRoom, lang: "fr" | "en"): string | null {
+  if (!room.floor) return null;
+  return lang === "en" ? (FLOOR_EN[room.floor] ?? room.floor) : room.floor;
+}
+
+/** « 23 m² · Étage 1 · SDB privative » — spécifications communes aux cartes complètes et compactes. */
+export function roomSpecs(room: PublicRoom, lang: "fr" | "en"): string {
+  const surface = roomSurface(room);
+  return [surface !== null ? `${surface} m²` : null, floorLabel(room, lang), bathroomLabel(room, lang)]
+    .filter(Boolean)
+    .join(" · ");
+}
+
 /** (Lot A) Libellé salle de bain d'une chambre, FR/EN — ou null si inconnu. */
 export function bathroomLabel(room: PublicRoom, lang: "fr" | "en"): string | null {
   if (room.bathroom_type === "private") return lang === "en" ? "private bathroom" : "SDB privative";
