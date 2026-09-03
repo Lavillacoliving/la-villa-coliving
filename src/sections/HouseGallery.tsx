@@ -110,12 +110,12 @@ export function HouseGallery({ images, houseName }: HouseGalleryProps) {
             className="text-3xl md:text-4xl lg:text-5xl font-bold text-[#0f172a] mb-4"
             style={{ fontFamily: '"Plus Jakarta Sans", sans-serif' }}
           >
-            {language === 'en' ? `Explore ${houseName}` : `Découvrez ${houseName}`}
+            {language === 'en' ? `Explore ${houseName}` : `Découvre ${houseName}`}
           </h2>
           <p className="text-lg text-gray-600">
             {language === 'en' 
               ? 'Take a virtual tour through our spaces' 
-              : 'Faites une visite virtuelle de nos espaces'}
+              : 'Fais une visite virtuelle de nos espaces'}
           </p>
         </div>
 

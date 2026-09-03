@@ -538,7 +538,7 @@ export function BlogPostPage() {
             className="text-2xl md:text-3xl font-light text-[#1C1917] mb-3 text-center"
             style={{ fontFamily: '"DM Serif Display", serif' }}
           >
-            {language === "en" ? "Discover our houses" : "Découvrez nos maisons"}
+            {language === "en" ? "Discover our houses" : "Découvre nos maisons"}
           </h2>
           <p className="text-sm text-[#78716C] text-center mb-10">
             {language === "en"

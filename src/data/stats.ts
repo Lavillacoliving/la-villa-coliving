@@ -96,7 +96,7 @@ export const STATS_DISPLAY = {
     houses: `${STATS.totalHouses} houses`,
     distance: `${STATS.genevaCenterMinutes} min from Geneva city center`,
     roomSize: `${STATS.roomSizeMin} to ${STATS.roomSizeMax} m² rooms`,
-    price: `CHF ${STATS.priceChf.toLocaleString('en')}/month — all inclusive`,
+    price: `${PRICE_CHF_EN}/month — all inclusive`, // (03/09) plus de toLocaleString : même graphie que le reste du site
     rating: STATS.rating.replace(",", "."), // 4.9 en EN
     ratingSourced: `${STATS.rating.replace(",", ".")}/5 — resident surveys`,
   },
@@ -105,7 +105,7 @@ export const STATS_DISPLAY = {
     houses: `${STATS.totalHouses} maisons`,
     distance: `${STATS.genevaCenterMinutes} min du centre de Genève`,
     roomSize: `Chambres de ${STATS.roomSizeMin} à ${STATS.roomSizeMax} m²`,
-    price: `${STATS.priceChf.toLocaleString('fr-FR')} CHF/mois — tout inclus`,
+    price: `${PRICE_CHF_FR}/mois — tout inclus`,
     rating: STATS.rating, // 4,9 en FR (virgule)
     ratingSourced: `${STATS.rating}/5 — enquêtes résidents`,
   },

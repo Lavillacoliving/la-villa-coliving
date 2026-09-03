@@ -29,7 +29,7 @@ export const blogPosts: BlogPost[] = [
     },
     excerpt: {
       en: "Coliving is more than a housing trend — it's a response to how modern professionals want to live, work, and connect. Discover why coliving is reshaping the way we think about home.",
-      fr: "Le coliving est bien plus qu'une tendance immobilière — c'est une réponse à la façon dont les professionnels modernes veulent vivre, travailler et se connecter. Découvrez pourquoi le coliving redéfinit notre conception du chez-soi.",
+      fr: "Le coliving est bien plus qu'une tendance immobilière — c'est une réponse à la façon dont les professionnels modernes veulent vivre, travailler et se connecter. Découvre pourquoi le coliving redéfinit notre conception du chez-soi.",
     },
     content: {
       en: "Full article content here...",

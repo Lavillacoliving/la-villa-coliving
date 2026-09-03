@@ -355,7 +355,7 @@ function getHousesData(lang: string): Record<string, HouseData> {
     price: isEn ? PRICE_EN_NUM : PRICE_FR_NUM,
     specs: {
       size: "370 m²",
-      plot: "2,000 m²",
+      plot: isEn ? "2,000 m²" : "2 000 m²",
       dpe: "D",
     },
     features: isEn ? [
@@ -1231,7 +1231,7 @@ function getHousesData(lang: string): Record<string, HouseData> {
     price: isEn ? PRICE_EN_NUM : PRICE_FR_NUM,
     specs: {
       size: "500 m²",
-      plot: "1,500 m²",
+      plot: isEn ? "1,500 m²" : "1 500 m²",
       dpe: "B",
     },
     features: isEn ? [
@@ -1588,7 +1588,7 @@ export function HouseDetailPage() {
                 <ArrowRight className="w-5 h-5" />
               </LocalizedLink>
               <span className="text-sm font-semibold text-[#1C1917] bg-white/85 backdrop-blur px-4 py-2 rounded-full">
-                {/* La Villa : 4 chambres sur 10 à salle d'eau partagée → plancher 1 390 */}
+                {/* La Villa : 4 chambres sur 10 à salle d'eau partagée → plancher 1 370 (dérivé, stats.ts) */}
                 {id === "lavilla"
                   ? (language === "en"
                       ? `All-inclusive: from ${PRICE_SHARED_CHF_EN}/month — no application fee`
@@ -1700,7 +1700,7 @@ export function HouseDetailPage() {
               <div className="sticky top-24 space-y-6">
                 {/* Pricing Card */}
                 <div className="card-ultra bg-white rounded-2xl border border-[#E7E5E4] shadow-sm p-8">
-                  {/* La Villa : plancher 1 390 (4 ch. sur 10 à salle d'eau partagée). Loft/Lodge : prix unique. */}
+                  {/* La Villa : plancher 1 370 (4 ch. sur 10 à salle d'eau partagée). Loft/Lodge : prix unique 1 430. */}
                   <p className="text-sm text-[#78716C] mb-2 font-bold">
                     {id === "lavilla"
                       ? (language === "en" ? "From" : "À partir de")
@@ -2361,7 +2361,7 @@ export function HouseDetailPage() {
               { q: "Quelle est la durée minimale du bail au Lodge ?", a: "Bail flexible 1 à 12 mois. Le bail par défaut est de 12 mois pour la stabilité de la communauté, mais nous acceptons des séjours plus courts (1, 3, 6 mois) selon disponibilité." },
               { q: "Y a-t-il une caution et des frais d'agence ?", a: "Caution équivalente à 2 mois de loyer hors charges, restituée sous 30 jours après l'état des lieux. Aucun frais d'agence ni de dossier." },
               { q: "Combien de chambres y a-t-il au Lodge et sont-elles meublées ?", a: "12 chambres privatives, toutes meublées (lit, bureau ergonomique, placard sur mesure, salle de bain privative). Surface 17 à 19 m² par chambre. Le Lodge a ouvert en janvier 2026, tout est neuf." },
-              { q: "Qu'est-ce qui rend Le Lodge unique parmi vos 3 maisons ?", a: "Le Lodge est notre maison la plus récente (ouverte janvier 2026) et la plus grande (500 m² sur 1 500 m²). Elle dispose de 4 bâtiments : la résidence principale, un chalet fitness dédié avec sauna finlandais, un pool house avec cuisine d'été complète et une zone de rangement de 130 m². DPE B (performance énergétique). C'est aussi la plus proche de la gare d'Annemasse pour le Léman Express." },
+              { q: "Qu'est-ce qui rend Le Lodge unique parmi les 3 maisons ?", a: "Le Lodge est notre maison la plus récente (ouverte janvier 2026) et la plus grande (500 m² sur 1 500 m²). Elle dispose de 4 bâtiments : la résidence principale, un chalet fitness dédié avec sauna finlandais, un pool house avec cuisine d'été complète et une zone de rangement de 130 m². DPE B (performance énergétique). C'est aussi la plus proche de la gare d'Annemasse pour le Léman Express." },
               { q: "Où se trouve Le Lodge et à quelle distance de Genève ?", a: "Le Lodge se situe à Annemasse, côté France, à 20 minutes du centre de Genève en train CEVA. C'est la plus grande des trois maisons de coliving de La Villa Coliving, avec une piscine extérieure et un pool house, un chalet fitness complet et un sauna." },
               { q: "Combien de résidents vivent au Lodge ?", a: "Le Lodge accueille 12 résidents, ce qui en fait la plus grande maison de La Villa Coliving. Située à Annemasse, près de Genève, elle conserve une taille humaine tout en offrant les espaces les plus généreux : espace home cinéma, piscine, pool house / salle de jeu, chalet fitness et grands espaces communs." },
               { q: "Quels équipements y a-t-il au Lodge ?", a: `Le Lodge, à Annemasse, dispose d'une piscine avec pool house/salle de jeu, d'un chalet fitness complet avec grand sauna finlandais, d'une salle de sport, d'un jeu d'arcade et de larges espaces communs. Tout est inclus dans le loyer tout compris de ${PRICE_CHF_FR}/mois, comme dans les trois maisons de La Villa Coliving.` },

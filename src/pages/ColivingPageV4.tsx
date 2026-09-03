@@ -53,7 +53,7 @@ export function ColivingPageV4() {
         title={language === "en" ? "Coliving Geneva: The Practical Guide" : "Coliving Genève : le guide pratique"}
         description={language === "en"
           ? "Discover premium coliving at La Villa: designer houses, curated community, all-inclusive. Different from traditional shared housing."
-          : "Découvrez le coliving premium La Villa : maisons design, communauté sélectionnée, tout inclus. Différent d'une colocation classique."}
+          : "Découvre le coliving premium La Villa : maisons design, communauté sélectionnée, tout inclus. Différent d'une colocation classique."}
         url="https://www.lavillacoliving.com/le-coliving"
       />
       {/* Hero avec image de fond */}
@@ -243,7 +243,7 @@ export function ColivingPageV4() {
                 <p className="text-[#57534E] leading-relaxed">
                   {language === "en"
                     ? "Unlike an agency, we rent our houses directly. No middleman, no agency fees, no application fee: you deal directly with the owners, who want you to feel at home, for a long time."
-                    : "Contrairement à une agence, nous louons nos maisons en direct. Pas d'intermédiaire, pas d'honoraires d'agence, pas de frais de dossier : vous traitez directement avec les propriétaires, qui ont tout intérêt à ce que vous vous sentiez bien, longtemps."}
+                    : "Contrairement à une agence, nous louons nos maisons en direct. Pas d'intermédiaire, pas d'honoraires d'agence, pas de frais de dossier : tu traites directement avec les propriétaires, qui ont tout intérêt à ce que tu te sentes bien, longtemps."}
                 </p>
               </div>
 
@@ -311,7 +311,7 @@ export function ColivingPageV4() {
               <p className="text-lg text-[#57534E] leading-relaxed mb-6">
                 {language === "en"
                   ? "At La Villa, our residents become family. Shared dinners, yoga mornings, ski weekends—our community creates bonds that last far beyond your stay."
-                  : "Chez La Villa, nos résidents deviennent famille. Dîners partagés, yoga matinal, weekends au ski—notre communauté crée des liens qui durent bien au-delà de votre séjour."}
+                  : "Chez La Villa, nos résidents deviennent famille. Dîners partagés, yoga matinal, weekends au ski—notre communauté crée des liens qui durent bien au-delà de ton séjour."}
               </p>
 
               {/* Stats au lieu de portraits */}
@@ -363,7 +363,7 @@ export function ColivingPageV4() {
 
             <div className="order-1 lg:order-2">
               <span className="text-xs text-[#78716C] uppercase tracking-[0.3em] mb-4 block">
-                {language === "en" ? "For You?" : "Pour Vous ?"}
+                {language === "en" ? "For You?" : "Pour toi ?"}
               </span>
               <h2
                 className="text-4xl md:text-5xl font-light text-[#1C1917] mb-6"
