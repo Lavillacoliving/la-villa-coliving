@@ -165,12 +165,12 @@
       "destination": "/prerendered/en-colocation-geneve.html"
     },
     {
-      "source": "/blog/coliving-communaute-reels-amis-geneve-annemasse",
-      "destination": "/prerendered/blog-coliving-communaute-reels-amis-geneve-annemasse.html"
-    },
-    {
       "source": "/blog/lodge-annemasse-coliving-premium-portes-geneve",
       "destination": "/prerendered/blog-lodge-annemasse-coliving-premium-portes-geneve.html"
+    },
+    {
+      "source": "/blog/coliving-communaute-reels-amis-geneve-annemasse",
+      "destination": "/prerendered/blog-coliving-communaute-reels-amis-geneve-annemasse.html"
     },
     {
       "source": "/blog/temps-trajet-annemasse-geneve-par-quartier",
@@ -325,12 +325,12 @@
       "destination": "/prerendered/blog-living-in-france-working-in-geneva.html"
     },
     {
-      "source": "/en/blog/coliving-communaute-reels-amis-geneve-annemasse",
-      "destination": "/prerendered/en-blog-coliving-communaute-reels-amis-geneve-annemasse.html"
-    },
-    {
       "source": "/en/blog/lodge-annemasse-coliving-premium-portes-geneve",
       "destination": "/prerendered/en-blog-lodge-annemasse-coliving-premium-portes-geneve.html"
+    },
+    {
+      "source": "/en/blog/coliving-communaute-reels-amis-geneve-annemasse",
+      "destination": "/prerendered/en-blog-coliving-communaute-reels-amis-geneve-annemasse.html"
     },
     {
       "source": "/en/blog/temps-trajet-annemasse-geneve-par-quartier",
