@@ -58,7 +58,7 @@ export const STATS = {
 // entretien par l'équipe de ménage inclus). Le Loft / Le Lodge : 100 % privatif.
 // Séparateurs déterministes (pas de toLocaleString : l'ICU peut différer
 // entre le build Puppeteer du prérendu et le navigateur → hydration mismatch).
-// Exporté : la LP payante formate des loyers PAR CHAMBRE (src/data/roomsSeptembre.ts),
+// Exporté : les cartes chambres formatent des loyers PAR CHAMBRE (RoomCard, v_public_rooms),
 // qui peuvent différer de STATS.priceChf — elle doit le faire avec le même séparateur.
 export const thousands = (n: number, sep: string) =>
   String(n).replace(/\B(?=(\d{3})+(?!\d))/g, sep);

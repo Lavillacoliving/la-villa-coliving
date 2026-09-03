@@ -1,4 +1,5 @@
 import { LocalizedLink } from "@/components/LocalizedLink";
+import { HouseAvailabilityLine } from "@/components/HouseAvailabilityLine";
 import { responsiveImage } from "@/lib/responsiveImage";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { MapPin, Users, ArrowRight, Check, X } from "lucide-react";
@@ -309,6 +310,8 @@ export function HousesPageV4() {
                         {language === "en" ? `Flatshare in ${house.location}` : `Colocation à ${house.location}`}
                       </LocalizedLink>
                     )}
+                    {/* (Lot 3 SEO funnel — 3.3) Porte vers /chambres-disponibles?maison=… */}
+                    <HouseAvailabilityLine house={house.id as HouseKey} className="mt-4" />
                   </div>
                 </div>
               </div>

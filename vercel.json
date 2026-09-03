@@ -21,6 +21,10 @@
       "destination": "/prerendered/nos-maisons.html"
     },
     {
+      "source": "/chambres-disponibles",
+      "destination": "/prerendered/chambres-disponibles.html"
+    },
+    {
       "source": "/services",
       "destination": "/prerendered/services.html"
     },
@@ -95,6 +99,10 @@
     {
       "source": "/en/nos-maisons",
       "destination": "/prerendered/en-nos-maisons.html"
+    },
+    {
+      "source": "/en/chambres-disponibles",
+      "destination": "/prerendered/en-chambres-disponibles.html"
     },
     {
       "source": "/en/services",
@@ -475,14 +483,6 @@
     {
       "source": "/en/blog/living-in-france-working-in-geneva",
       "destination": "/prerendered/en-blog-living-in-france-working-in-geneva.html"
-    },
-    {
-      "source": "/chambres-septembre",
-      "destination": "/prerendered/chambres-septembre.html"
-    },
-    {
-      "source": "/en/rooms-september",
-      "destination": "/prerendered/en-rooms-september.html"
     },
     {
       "source": "/portail",
@@ -1022,6 +1022,16 @@
       "source": "/en/blog/3e-pilier-frontalier-geneve",
       "destination": "/en/blog/fiscalite-frontalier-geneve-impots-2026",
       "permanent": true
+    },
+    {
+      "source": "/chambres-septembre",
+      "destination": "/chambres-disponibles",
+      "statusCode": 301
+    },
+    {
+      "source": "/en/rooms-september",
+      "destination": "/en/chambres-disponibles",
+      "statusCode": 301
     }
   ],
   "headers": [
@@ -1094,15 +1104,6 @@
     },
     {
       "source": "/(portail|dashboard)/:path*",
-      "headers": [
-        {
-          "key": "X-Robots-Tag",
-          "value": "noindex"
-        }
-      ]
-    },
-    {
-      "source": "/(chambres-septembre|en/rooms-september)",
       "headers": [
         {
           "key": "X-Robots-Tag",

@@ -6,7 +6,7 @@ import { SEO } from "@/components/SEO";
 import { SUPABASE_URL, SUPABASE_ANON_KEY } from "@/lib/supabase";
 import { STATS, STATS_DISPLAY, PRICE_SHARED_CHF_FR, PRICE_SHARED_CHF_EN, CONTRACT_EUR, EUR_STANDARD_FR_NUM, EUR_SHARED_FR_NUM, EUR_STANDARD_EN_NUM, EUR_SHARED_EN_NUM } from "@/data/stats";
 import { useFormTelemetry } from "@/hooks/useFormTelemetry";
-import { useRoomAvailability, shortAvailabilityLabel, type HouseKey } from "@/lib/availability";
+import { useRoomAvailability, useHouseRooms, shortAvailabilityLabel, type HouseKey } from "@/lib/availability";
 import { housePriceLabel } from "@/lib/housePrice";
 import { attributionPayload, internalRefPayload, isTestSession, landingPayload } from "@/lib/attribution";
 import { HOUSES } from "@/data/houses";
@@ -44,8 +44,8 @@ export function JoinPageV4() {
   const storedRef = internalRefPayload();
   const refSrc = (searchParams.get("src") ?? storedRef.ref_src ?? "").slice(0, 50);
   const refArticle = (searchParams.get("article") ?? storedRef.ref_article ?? "").slice(0, 120);
-  // Intérêt déclaré au clic sur une carte chambre de la LP /chambres-septembre
-  // (brief LOT 2, 24/08/2026) : ?property_interest=<slug properties.slug SANS tiret>
+  // Intérêt déclaré au clic sur une carte chambre (pages maisons, /chambres-disponibles ;
+  // origine : LP /chambres-septembre, brief LOT 2, 24/08/2026) : ?property_interest=<slug properties.slug SANS tiret>
   // &room_interest=<repère chambre>. Transmis à l'Edge v14 → colonnes dédiées sur
   // prospects + form_submissions. Le canal DÉCLARÉ (select ci-dessous) reste prioritaire,
   // ces champs ne le touchent pas. ⚠️ Les liens INTERNES vers /candidature ne portent
@@ -69,6 +69,14 @@ export function JoinPageV4() {
   // dynamique dedans : rendu serveur/client identique, zéro risque #418.
   const contextHouse = (HOUSES as Record<string, (typeof HOUSES)[keyof typeof HOUSES]>)[refProperty] ?? null;
   const contextRoomNum = refRoom.match(/^chambre-?(\d+)$/)?.[1] ?? null;
+  // (Lot 3 SEO funnel — Q3) Liste d'attente d'une maison, et chambre partie entre le clic et
+  // le formulaire : `useHouseRooms` n'a aucune donnée au premier rendu sur cette page (pas
+  // d'embed chambres) → note affichée seulement après le refresh client, zéro mismatch.
+  const contextIsWaitlist = refRoom === "liste-attente";
+  const contextRooms = useHouseRooms((contextHouse ? refProperty : "lavilla") as HouseKey);
+  const contextRoomGone =
+    !!contextHouse && !!contextRoomNum && contextRooms.known &&
+    !contextRooms.rooms.some((r) => String(r.room_number) === contextRoomNum && (r.availability === "available" || !!r.available_from));
   // Soumission de TEST (équipe) : /candidature?test=1 → prospects.is_test = true côté
   // Edge (v12), exclue du bulletin et des comptages. Jamais exposée dans l'UI.
   // Depuis le 22/08/2026, `?test=1` posé sur N'IMPORTE QUELLE page d'atterrissage marque
@@ -265,10 +273,19 @@ export function JoinPageV4() {
                   <strong>
                     {contextHouse.label}
                     {refRoom
-                      ? ` — ${contextRoomNum ? (L === "en" ? `room ${contextRoomNum}` : `chambre ${contextRoomNum}`) : refRoom}`
+                      ? ` — ${contextRoomNum
+                        ? (L === "en" ? `room ${contextRoomNum}` : `chambre ${contextRoomNum}`)
+                        : contextIsWaitlist ? (L === "en" ? "waiting list" : "liste d'attente") : refRoom}`
                       : ""}
                   </strong>
                 </p>
+                {contextRoomGone && (
+                  <p className="text-xs text-[#9A5B08] mt-1">
+                    {L === "en"
+                      ? "This room has just been taken — send your application anyway, we'll offer you the next one in this house."
+                      : "Cette chambre vient de partir — envoie quand même ta candidature, on te propose la prochaine libération dans cette maison."}
+                  </p>
+                )}
                 <p className="text-xs text-[#57534E] mt-1">
                   {L === "en"
                     ? <>All inclusive {housePriceLabel(refProperty as HouseKey, "en")} · Reply within 48h</>

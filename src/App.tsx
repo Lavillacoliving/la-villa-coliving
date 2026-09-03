@@ -5,7 +5,6 @@ import { AuthProvider } from "@/contexts/AuthContext";
 import { LanguageProvider } from "@/contexts/LanguageContext";
 import { NavbarV7 as Navbar } from "@/components/custom/NavbarV7";
 import { FooterV7 as Footer } from "@/components/custom/FooterV7";
-import { LpHeader, LpFooter } from "@/components/custom/LpChrome";
 import { Navigate } from "react-router-dom";
 import { PortailLayout } from "@/pages/portail/PortailLayout";
 import { ScrollToTop } from "@/components/ScrollToTop";
@@ -72,8 +71,8 @@ const DashboardComptesLocatairesPage = lazyWithRetry(() => import("@/pages/dashb
 // ─── Lazy-loaded misc pages (default export) ───────────────
 const ResetPasswordPage = lazyWithRetry(() => import("@/pages/ResetPasswordPage"), "ResetPasswordPage");
 // LP payante (brief LOT 2) — noindex, hors sitemap, aucun lien interne entrant.
-const ChambresSeptembrePage = lazyWithRetry(() =>
-  import("@/pages/ChambresSeptembrePage").then(m => ({ default: m.ChambresSeptembrePage })), "ChambresSeptembrePage");
+const ChambresDisponiblesPage = lazyWithRetry(() =>
+  import("@/pages/ChambresDisponiblesPage").then(m => ({ default: m.ChambresDisponiblesPage })), "ChambresDisponiblesPage");
 
 function AppContent() {
   const location = useLocation();
@@ -81,16 +80,12 @@ function AppContent() {
   const isPortail = location.pathname.startsWith('/portail');
   const isResetPw = location.pathname === '/reset-password';
   const isQuestionnaire = location.pathname.startsWith('/questionnaire-depart');
-  // LP payante : header/footer ALLÉGÉS, pas supprimés — prerender.mjs exige un shell
-  // [<header> … <footer>] pour prérendre la route (cf. LpChrome.tsx).
-  // ⚠️ Garder synchronisé avec NOINDEX_PRERENDERED_ROUTES (scripts/prerender.mjs).
-  const isLp = location.pathname === '/chambres-septembre' || location.pathname === '/en/rooms-september';
   // Langue de l'écran d'erreur (ErrorBoundary est une classe : pas de hook, on dérive de l'URL).
   const isEn = location.pathname === '/en' || location.pathname.startsWith('/en/');
 
   return (
     <div className="min-h-screen bg-background">
-      {!isDashboard && !isPortail && !isResetPw && !isQuestionnaire && (isLp ? <LpHeader /> : <Navbar />)}
+      {!isDashboard && !isPortail && !isResetPw && !isQuestionnaire && <Navbar />}
       {/* Filet Lot C : keyé par le chemin pour se réinitialiser à chaque navigation ; ne rend
           aucun élément DOM en fonctionnement normal (shell [header…footer] inchangé pour
           scripts/prerender.mjs et l'hydratation). */}
@@ -114,9 +109,10 @@ function AppContent() {
         <Route path="/rates" element={<Navigate to="/tarifs" replace />} />
         <Route path="/faq" element={<FAQPage />} />
         <Route path="/candidature" element={<JoinPage />} />
-        {/* LP payante — destination des annonces Ads. Volontairement SANS lien interne
-            entrant depuis le site (page d'acquisition, pas un actif SEO). */}
-        <Route path="/chambres-septembre" element={<ChambresSeptembrePage />} />
+        {/* (Lot 3 SEO funnel, 03/09/2026) Page money des disponibilités — indexable, prérendue.
+            L'ancienne LP Ads /chambres-septembre redirige (301 dans vercel.json, Navigate en SPA). */}
+        <Route path="/chambres-disponibles" element={<ChambresDisponiblesPage />} />
+        <Route path="/chambres-septembre" element={<Navigate to="/chambres-disponibles" replace />} />
         <Route path="/join-us" element={<Navigate to="/candidature" replace />} />
         <Route path="/blog" element={<BlogPage />} />
         <Route path="/blog/:slug" element={<BlogPostPage />} />
@@ -140,7 +136,8 @@ function AppContent() {
         <Route path="/en/tarifs" element={<RatesPage />} />
         <Route path="/en/faq" element={<FAQPage />} />
         <Route path="/en/candidature" element={<JoinPage />} />
-        <Route path="/en/rooms-september" element={<ChambresSeptembrePage />} />
+        <Route path="/en/chambres-disponibles" element={<ChambresDisponiblesPage />} />
+        <Route path="/en/rooms-september" element={<Navigate to="/en/chambres-disponibles" replace />} />
         <Route path="/en/blog" element={<BlogPage />} />
         <Route path="/en/blog/:slug" element={<BlogPostPage />} />
         <Route path="/en/lavilla" element={<HouseDetailPage />} />
@@ -192,7 +189,7 @@ function AppContent() {
       <AvailabilityEmbed />
       </Suspense>
       </ErrorBoundary>
-      {!isDashboard && !isPortail && !isResetPw && !isQuestionnaire && (isLp ? <LpFooter /> : <Footer />)}
+      {!isDashboard && !isPortail && !isResetPw && !isQuestionnaire && <Footer />}
     </div>
   );
 }

@@ -295,6 +295,29 @@ export function splitRooms(rooms: PublicRoom[]): { candidates: PublicRoom[]; occ
   return { candidates: [...available, ...dated], occupied };
 }
 
+// (Lot 3 SEO funnel — extraction RoomCard) `floor` arrive en français de v_public_rooms :
+// mapping EN minimal, partagé par la carte chambre et le panneau compact des pages maisons.
+const FLOOR_EN: Record<string, string> = {
+  "RDC": "Ground floor",
+  "Étage 1": "1st floor",
+  "Étage 2": "2nd floor",
+  "Étage 3": "3rd floor",
+};
+
+/** Étage d'une chambre, FR tel quel / EN traduit — ou null si inconnu. */
+export function floorLabel(room: PublicRoom, lang: "fr" | "en"): string | null {
+  if (!room.floor) return null;
+  return lang === "en" ? (FLOOR_EN[room.floor] ?? room.floor) : room.floor;
+}
+
+/** « 23 m² · Étage 1 · SDB privative » — spécifications communes aux cartes complètes et compactes. */
+export function roomSpecs(room: PublicRoom, lang: "fr" | "en"): string {
+  const surface = roomSurface(room);
+  return [surface !== null ? `${surface} m²` : null, floorLabel(room, lang), bathroomLabel(room, lang)]
+    .filter(Boolean)
+    .join(" · ");
+}
+
 /** (Lot A) Libellé salle de bain d'une chambre, FR/EN — ou null si inconnu. */
 export function bathroomLabel(room: PublicRoom, lang: "fr" | "en"): string | null {
   if (room.bathroom_type === "private") return lang === "en" ? "private bathroom" : "SDB privative";
@@ -336,10 +359,28 @@ export function roomHeroBadge(rooms: PublicRoom[], lang: "fr" | "en"): { label: 
 }
 
 /** (Lot 3) Snapshot chambres de la maison rendue — pour RoomsEmbed uniquement. */
-export function useRoomsSnapshotFor(house: HouseKey): PublicRoom[] | null {
+/**
+ * (Lot 3 SEO funnel — /chambres-disponibles) Toutes les chambres publiques, triées maison
+ * (Villa → Loft → Lodge) puis n°. Même cycle de vie que useHouseRooms : init synchrone depuis
+ * l'embed de la page (29 lignes), refresh partagé après montage. `known: false` = aucune donnée.
+ */
+export function useAllRooms(): { known: boolean; rooms: PublicRoom[] } {
+  const rows = useSyncExternalStore(subscribe, getRoomsSnapshot, getRoomsSnapshot);
+  useEffect(() => {
+    void refresh();
+  }, []);
+  if (!rows) return { known: false, rooms: [] };
+  const rooms = [...rows].sort(
+    (a, b) => HOUSE_KEYS.indexOf(a.house_slug) - HOUSE_KEYS.indexOf(b.house_slug) || a.room_number - b.room_number,
+  );
+  return { known: rooms.length > 0, rooms };
+}
+
+/** Snapshot brut pour RoomsEmbed : les lignes de `house`, ou TOUTES sans argument (null tant que rien n'est chargé). */
+export function useRoomsSnapshotFor(house?: HouseKey): PublicRoom[] | null {
   const rows = useSyncExternalStore(subscribe, getRoomsSnapshot, getRoomsSnapshot);
   if (!rows) return null;
-  const mine = rows.filter((r) => r.house_slug === house);
+  const mine = house ? rows.filter((r) => r.house_slug === house) : rows;
   return mine.length > 0 ? mine : null;
 }
 

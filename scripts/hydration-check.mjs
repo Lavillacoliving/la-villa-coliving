@@ -29,13 +29,13 @@ const DIST = path.join(ROOT, 'dist');
 const PRERENDERED = path.join(ROOT, 'public', 'prerendered');
 const PORT = 3458;
 
-// Pages hydratées : les 7 pages du brief (FR + EN), la LP payante et le premier article de blog.
+// Pages hydratées : les 7 pages du brief (FR + EN), /chambres-disponibles (Lot 3 SEO funnel) et le premier article de blog.
 const STATIC = ['/', '/nos-maisons', '/lavilla', '/leloft', '/lelodge', '/candidature', '/tarifs'];
 const ROUTES = [
   ...STATIC,
   ...STATIC.map((r) => (r === '/' ? '/en' : `/en${r}`)),
-  '/chambres-septembre',
-  '/en/rooms-september',
+  '/chambres-disponibles',
+  '/en/chambres-disponibles',
 ];
 
 const MIME = {

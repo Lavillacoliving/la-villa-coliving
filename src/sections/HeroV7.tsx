@@ -128,10 +128,23 @@ export function HeroV7() {
           {/* Availability signal — dispo réelle (v_public_rooms), dates comprises.
               Avant : constante manuelle + mois suivant calculé, qui annonçait
               « 3 chambres disponibles pour septembre » pour 1 seule libre. */}
-          <p className="text-sm text-[#E0BB8A] mt-4 flex items-center gap-2">
+          {/* (Lot 3 SEO funnel — Q14a, 03/09/2026) La pastille devient la porte la plus visible
+              vers /chambres-disponibles. Même libellé, même style : aucun mismatch d'hydratation. */}
+          <LocalizedLink
+            to="/chambres-disponibles"
+            onClick={() => {
+              try {
+                (window as unknown as { gtag?: (...a: unknown[]) => void }).gtag?.("event", "cta_click", {
+                  cta_position: "hero_availability", cta_target: "/chambres-disponibles", language,
+                });
+              } catch { /* noop */ }
+            }}
+            className="text-sm text-[#E0BB8A] mt-4 inline-flex items-center gap-2 hover:text-white transition-colors underline-offset-4 hover:underline"
+          >
             <span className="w-2 h-2 bg-[#E0BB8A] rounded-full animate-pulse" />
             {globalAvailabilityLabel(availability, L)}
-          </p>
+            <ArrowRight className="w-4 h-4" aria-hidden="true" />
+          </LocalizedLink>
 
           {/* Stats bar */}
           <div className="grid grid-cols-2 md:flex md:gap-12 gap-y-4 gap-x-8 pt-6 border-t border-white/20">

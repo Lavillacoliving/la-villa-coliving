@@ -29,13 +29,11 @@ const STATIC_LOADERS: Record<string, Loader> = {
   "/tarifs": () => import("@/pages/RatesPageV4"),
   "/faq": () => import("@/pages/FAQPageV4"),
   "/candidature": () => import("@/pages/JoinPageV4"),
-  // LP payante (LOT 2) : prérendue mais ABSENTE de cette table jusqu'au 26/08 —
-  // `preloadRouteModule` retombait donc sur NotFoundPage, React ne pouvait pas
-  // réconcilier le DOM prérendu et détruisait le hero pour le reconstruire
-  // (LCP mesuré 4,04 s, dont ~2,9 s de pure attente d'hydratation).
-  // Les deux langues pointent le MÊME spécificateur qu'App.tsx → même chunk Vite.
-  "/chambres-septembre": () => import("@/pages/ChambresSeptembrePage"),
-  "/rooms-september": () => import("@/pages/ChambresSeptembrePage"),
+  // Toute page prérendue DOIT figurer ici : absente, `preloadRouteModule` retombe sur
+  // NotFoundPage, React ne peut pas réconcilier le DOM prérendu et le reconstruit
+  // (LCP mesuré 4,04 s sur l'ancienne LP le 26/08, dont ~2,9 s d'attente d'hydratation).
+  // (Lot 3 SEO funnel) /chambres-disponibles remplace la LP /chambres-septembre (301).
+  "/chambres-disponibles": () => import("@/pages/ChambresDisponiblesPage"),
   "/blog": () => import("@/pages/BlogPage"),
   "/lavilla": () => import("@/pages/HouseDetailPage"),
   "/leloft": () => import("@/pages/HouseDetailPage"),

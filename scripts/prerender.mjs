@@ -42,6 +42,7 @@ const STATIC_ROUTES_FR = [
   '/chambre-a-louer-annemasse',
   '/le-coliving',
   '/nos-maisons',
+  '/chambres-disponibles',
   '/services',
   '/tarifs',
   '/faq',
@@ -80,8 +81,10 @@ const EXTRA_RENDER_ROUTES = ['/404'];
 //   • prérendues : la LP vise LCP < 2,5 s, elle ne peut pas se contenter du shell SPA ;
 //   • hors sitemap + noindex (composant SEO) + X-Robots-Tag dans vercel.json ;
 //   • aucun lien interne entrant : ce n'est pas un actif SEO, c'est une destination d'annonce.
-// ⚠️ Garder synchronisé avec `isLp` dans src/App.tsx et avec les en-têtes de vercel.json.
-const NOINDEX_PRERENDERED_ROUTES = ['/chambres-septembre', '/en/rooms-september'];
+// ⚠️ Garder synchronisé avec les en-têtes X-Robots-Tag de vercel.json.
+// (Lot 3 SEO funnel, 03/09/2026) Vide : la LP /chambres-septembre est remplacée par
+// /chambres-disponibles, page indexable (STATIC_ROUTES_FR) — 301 dans vercel.json.
+const NOINDEX_PRERENDERED_ROUTES = [];
 
 // Client-only routes (no prerendered HTML) that must keep receiving the SPA shell.
 // This replaces the old '/(.*)' catch-all: anything NOT listed here, not a static
@@ -588,6 +591,7 @@ const STATIC_PAGE_CONFIG = {
   '/chambre-a-louer-annemasse': { priority: '0.8', changefreq: 'weekly' },
   '/le-coliving': { priority: '0.8', changefreq: 'monthly' },
   '/nos-maisons': { priority: '0.8', changefreq: 'weekly' },
+  '/chambres-disponibles': { priority: '0.9', changefreq: 'daily' },
   '/lavilla': { priority: '0.8', changefreq: 'weekly' },
   '/leloft': { priority: '0.8', changefreq: 'weekly' },
   '/lelodge': { priority: '0.8', changefreq: 'weekly' },

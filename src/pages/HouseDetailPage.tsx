@@ -22,14 +22,15 @@ import {
   Sun,
 } from "lucide-react";
 import { useLanguage } from "@/contexts/LanguageContext";
-import { PRICE_FR_NUM, PRICE_EN_NUM, PRICE_CHF_FR, PRICE_CHF_EN, PRICE_SHARED_FR_NUM, PRICE_SHARED_EN_NUM, PRICE_SHARED_CHF_FR, PRICE_SHARED_CHF_EN, EUR_STANDARD_FR_NUM, EUR_STANDARD_EN_NUM, EUR_SHARED_FR_NUM, EUR_SHARED_EN_NUM, thousands } from "@/data/stats";
+import { PRICE_FR_NUM, PRICE_EN_NUM, PRICE_CHF_FR, PRICE_CHF_EN, PRICE_SHARED_FR_NUM, PRICE_SHARED_EN_NUM, PRICE_SHARED_CHF_FR, PRICE_SHARED_CHF_EN, EUR_STANDARD_FR_NUM, EUR_STANDARD_EN_NUM, EUR_SHARED_FR_NUM, EUR_SHARED_EN_NUM } from "@/data/stats";
 import {
   useRoomAvailability,
   useHouseRooms,
-  roomBadge,
   roomHeroBadge,
   splitRooms,
   bathroomLabel,
+  floorLabel,
+  roomSpecs,
   roomSurface,
   houseBadgeLabel,
   houseBadgeTone,
@@ -40,18 +41,11 @@ import {
   type PublicRoom,
 } from "@/lib/availability";
 import { RoomsEmbed } from "@/components/RoomsEmbed";
+import { RoomCard } from "@/components/RoomCard";
 import { roomGallery } from "@/data/roomPhotos";
 
 // (Lot 3) Visionneuse photos des chambres — même composant/lazy que la LP.
 const PhotoLightbox = lazy(() => import("@/components/PhotoLightbox"));
-
-// (Lot 3) `floor` arrive en français de v_public_rooms — mapping EN minimal.
-const FLOOR_EN: Record<string, string> = {
-  "RDC": "Ground floor",
-  "Étage 1": "1st floor",
-  "Étage 2": "2nd floor",
-  "Étage 3": "3rd floor",
-};
 
 import { Badge } from "@/components/ui/badge";
 import { HouseGallery } from "@/sections/HouseGallery";
@@ -1373,16 +1367,6 @@ export function HouseDetailPage() {
   const heroBadge = houseRooms.known ? roomHeroBadge(houseRooms.rooms, uiLang) : null;
   const heroBadgeLabel = heroBadge?.label ?? availabilityBadge;
   const heroBadgeTone = heroBadge?.tone ?? badgeTone;
-  // (Lot A — Q8) Spécifications d'une chambre, communes aux cartes complètes et compactes.
-  const roomSpecs = (room: PublicRoom) => {
-    const surface = roomSurface(room);
-    const floor = room.floor
-      ? (language === "en" ? (FLOOR_EN[room.floor] ?? room.floor) : room.floor)
-      : null;
-    return [surface !== null ? `${surface} m²` : null, floor, bathroomLabel(room, uiLang)]
-      .filter(Boolean)
-      .join(" · ");
-  };
   const [roomViewer, setRoomViewer] = useState<{ key: string; roomNumber: number; index: number } | null>(null);
   const openRoomViewer = (room: PublicRoom, photoIndex: number) => {
     setRoomViewer({ key: `${id}:${room.room_number}`, roomNumber: room.room_number, index: photoIndex });
@@ -1832,7 +1816,7 @@ export function HouseDetailPage() {
           90 % des visiteurs atteignent 25 % de la page, la section transactionnelle
           doit y être. Sans données (vue vide, vieux HTML prérendu) : repli sur les
           cartes de types — jamais de section vide. Interdit : cloner le modèle
-          fichier-statique de la LP (roomsSeptembre.ts). */}
+          fichier-statique de l'ancienne LP (supprimée le 03/09, Lot 3 SEO funnel). */}
       <section className="section-padding py-14 md:py-20 relative bg-[#FAF9F6]">
         <div className="container-custom">
           <h2
@@ -1865,92 +1849,20 @@ export function HouseDetailPage() {
               <>
                 {candidates.length > 0 ? (
                   <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
-                    {candidates.map((room) => {
-                      // Pack dédié, ou galerie standard du Lodge (chambre → communs → extérieurs).
-                      const gallery = roomGallery(id, room.room_number);
-                      const cover = gallery?.[0];
-                      // Repli déterministe sur la photo de TYPE (pureté d'hydratation :
+                    {candidates.map((room) => (
+                      // (Lot 3 SEO funnel) Carte partagée avec /chambres-disponibles — JSX extrait
+                      // à l'identique. Repli déterministe sur la photo de TYPE (pureté d'hydratation :
                       // room_number est stable, jamais d'aléatoire au rendu).
-                      const fallbackImg = house.rooms[(room.room_number - 1) % house.rooms.length].image;
-                      const badge = roomBadge(room, uiLang);
-                      const specs = roomSpecs(room);
-                      const rentEur =
-                        room.rent_eur !== null && room.rent_eur !== undefined && Number.isFinite(Number(room.rent_eur))
-                          ? Math.round(Number(room.rent_eur))
-                          : null;
-                      const roomImg = (
-                        <>
-                          <img
-                            src={cover?.src ?? fallbackImg}
-                            alt={cover
-                              ? cover.alt[uiLang]
-                              : `${language === "en" ? "Room" : "Chambre"} ${room.room_number} — ${house.name}`}
-                            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
-                            loading="lazy"
-                            width={cover?.w ?? 800}
-                            height={cover?.h ?? 600}
-                          />
-                          <span className={`absolute top-3 left-3 text-xs font-semibold px-3 py-1 rounded-full ${BADGE_CHIP_CLASS[badge.tone]}`}>
-                            {badge.label}
-                          </span>
-                          {gallery && gallery.length > 1 && (
-                            <span className="absolute bottom-3 right-3 text-xs font-medium px-2.5 py-1 rounded-full bg-black/55 text-white">
-                              {gallery.length} photos
-                            </span>
-                          )}
-                        </>
-                      );
-                      return (
-                        <div key={room.room_number} className="card-ultra bg-white rounded-2xl border border-[#E7E5E4] shadow-sm overflow-hidden group flex flex-col">
-                          {gallery ? (
-                            <button
-                              type="button"
-                              onClick={() => openRoomViewer(room, 0)}
-                              className="relative h-48 w-full overflow-hidden text-left cursor-zoom-in"
-                              aria-label={language === "en"
-                                ? `See photos of room ${room.room_number}`
-                                : `Voir les photos de la chambre ${room.room_number}`}
-                            >
-                              {roomImg}
-                            </button>
-                          ) : (
-                            <div className="relative h-48 w-full overflow-hidden">{roomImg}</div>
-                          )}
-                          <div className="p-6 flex flex-col flex-1">
-                            <h3 className="text-lg font-black text-[#1C1917] mb-1">
-                              {language === "en" ? `Room ${room.room_number}` : `Chambre ${room.room_number}`}
-                            </h3>
-                            {specs && <p className="text-sm text-[#78716C] mb-1">{specs}</p>}
-                            {language !== "en" && room.location_detail && (
-                              <p className="text-xs text-[#78716C] mb-3">{room.location_detail.trim()}</p>
-                            )}
-                            <div className="mt-auto pt-3">
-                              {room.rent_chf !== null && (
-                                <p className="text-xl font-black text-[#D4A574] mb-4">
-                                  {language === "en"
-                                    ? `CHF ${thousands(room.rent_chf, ",")}`
-                                    : `${thousands(room.rent_chf, " ")} CHF`}
-                                  {rentEur !== null && (
-                                    <span className="text-sm font-light text-[#78716C]">
-                                      {language === "en" ? ` (€${thousands(rentEur, ",")})` : ` (${thousands(rentEur, " ")} €)`}
-                                    </span>
-                                  )}
-                                  <span className="text-sm font-light text-[#78716C]"> {t.houseDetail.perMonth}</span>
-                                </p>
-                              )}
-                              <LocalizedLink
-                                to={`/candidature?property_interest=${id}&room_interest=chambre-${room.room_number}`}
-                                onClick={() => trackRoomCta(room)}
-                                className="w-full inline-flex items-center justify-center gap-2 px-5 py-2.5 bg-[#D4A574] text-[#1C1917] text-sm font-semibold rounded-lg hover:bg-[#E0BB8A] transition-colors"
-                              >
-                                {language === "en" ? "Apply" : "Candidater"}
-                                <ArrowRight className="w-4 h-4" />
-                              </LocalizedLink>
-                            </div>
-                          </div>
-                        </div>
-                      );
-                    })}
+                      <RoomCard
+                        key={room.room_number}
+                        house={id as HouseKey}
+                        houseName={house.name}
+                        room={room}
+                        fallbackImage={house.rooms[(room.room_number - 1) % house.rooms.length].image}
+                        onOpenPhotos={openRoomViewer}
+                        onCtaClick={trackRoomCta}
+                      />
+                    ))}
                   </div>
                 ) : null}
 
@@ -1989,11 +1901,9 @@ export function HouseDetailPage() {
                       <ul className="divide-y divide-[#E7E5E4]">
                         {occupied.map((room) => {
                           const surface = roomSurface(room);
-                          const floor = room.floor
-                            ? (language === "en" ? (FLOOR_EN[room.floor] ?? room.floor) : room.floor)
-                            : null;
+                          const floor = floorLabel(room, uiLang);
                           const bath = bathroomLabel(room, uiLang);
-                          const specs = roomSpecs(room);
+                          const specs = roomSpecs(room, uiLang);
                           return (
                             <li
                               key={room.room_number}

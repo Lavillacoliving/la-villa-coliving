@@ -101,6 +101,45 @@ async function checkHouse(slug, rooms) {
   return failures;
 }
 
+/**
+ * (Lot 3 SEO funnel, 03/09/2026) /chambres-disponibles FR + EN : l'embed porte les 29 lignes,
+ * chaque chambre candidate a son CTA à deux paramètres, chaque maison sa liste d'attente.
+ * Pas de contrôle « 0 lien /candidature nu » ici : le chrome (nav, footer) n'est contextuel
+ * que sur les pages maisons.
+ */
+async function checkAvailablePage(byHouse) {
+  const failures = [];
+  const all = [...byHouse.values()].flat();
+  const candidates = all.filter((r) => r.availability === 'available' || !!r.available_from);
+  for (const lang of ['fr', 'en']) {
+    const file = lang === 'fr' ? 'chambres-disponibles.html' : 'en-chambres-disponibles.html';
+    const prefix = lang === 'fr' ? '' : '/en';
+    let html;
+    try {
+      html = await fs.readFile(path.join(PRERENDERED, file), 'utf-8');
+    } catch {
+      failures.push(`${file} : page prérendue ABSENTE (STATIC_ROUTES_FR de scripts/prerender.mjs, App.tsx, routePreload.ts)`);
+      continue;
+    }
+    const embed = extractEmbed(html, '__rooms_level_data__');
+    const n = Array.isArray(embed) ? embed.length : 0;
+    if (n !== all.length) failures.push(`${file} : embed __rooms_level_data__ = ${n} chambre(s), base = ${all.length}`);
+    for (const r of candidates) {
+      const cta = `href="${prefix}/candidature?property_interest=${r.house_slug}&amp;room_interest=chambre-${r.room_number}"`;
+      if (!html.includes(cta) && !html.includes(cta.replace('&amp;', '&'))) failures.push(`${file} : CTA ${r.house_slug} chambre ${r.room_number} (candidate) absent`);
+    }
+    for (const slug of byHouse.keys()) {
+      const w = `property_interest=${slug}&amp;room_interest=liste-attente`;
+      if (!html.includes(w) && !html.includes(w.replace('&amp;', '&'))) failures.push(`${file} : CTA liste d'attente ${slug} absent`);
+    }
+    if (lang === 'fr' && /\b1,[0-9]{3} CHF/.test(html)) failures.push(`${file} : prix au format anglais (1,430 CHF) sur une page FR`);
+    if (/1[  ]380 CHF|1,380 CHF/.test(html)) failures.push(`${file} : montant périmé 1 380 CHF`);
+    if (!html.includes('<!--$-->') || !html.includes('<!--/$-->')) failures.push(`${file} : marqueurs Suspense <!--$--> absents (hydratation #418 garantie)`);
+    if (!extractEmbed(html, '__room_availability_data__')) failures.push(`${file} : embed __room_availability_data__ absent`);
+  }
+  return failures;
+}
+
 async function main() {
   console.log('\n🏠 Garde pages maisons — v_public_rooms × public/prerendered/\n');
   const byHouse = await fetchRooms();
@@ -112,6 +151,10 @@ async function main() {
     console.log(`${failures.length === 0 ? '✅' : '❌'} ${slug} — ${rooms.length} chambres, ${candidates} candidate(s)`);
     for (const f of failures) console.log(`   • ${f}`);
   }
+  const pageFailures = await checkAvailablePage(byHouse);
+  total += pageFailures.length;
+  console.log(`${pageFailures.length === 0 ? '✅' : '❌'} /chambres-disponibles — FR + EN`);
+  for (const f of pageFailures) console.log(`   • ${f}`);
   if (total > 0) {
     console.error(`\n❌ ${total} problème(s) — pages maisons NON publiables.`);
     process.exit(1);
