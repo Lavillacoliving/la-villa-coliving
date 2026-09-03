@@ -12,6 +12,7 @@ import { SEO } from "@/components/SEO";
 import { buildBreadcrumbSchema, buildFaqPageSchema, getFounderByAuthorName, ABOUT_PAGE_LIVE } from "@/lib/structuredData";
 import { getIntentBucket } from "@/data/blogIntentBuckets";
 import { BlocOffre } from "@/components/BlocOffre";
+import { markInternalRef } from "@/lib/attribution";
 import { WhatsAppButton } from "@/components/WhatsAppButton";
 import { PRICE_SHARED_CHF_FR, PRICE_SHARED_CHF_EN } from "@/data/stats";
 import { YmylNotice, YmylPosture, AuthorBox } from "@/components/YmylNotice";
@@ -266,6 +267,17 @@ export function BlogPostPage() {
   const bucket = getIntentBucket(post.slug, post.category);
   const midSplit = splitForMidCta(content, bucket === "ville" ? 0.3 : 0.5);
 
+  // (Lot 1) CTA du corps d'article : UTM virtuels de la session (write-once) + le même
+  // event GA4 que le bloc offre, position « body », pour comparer les deux portes.
+  const trackBodyCta = (target: string, src: "article_cta" | "bail_classique") => {
+    markInternalRef(src, post.slug, "body");
+    try {
+      (window as unknown as { gtag?: (...a: unknown[]) => void }).gtag?.("event", "blog_cta_click", {
+        cta_position: "body", cta_target: target, cta_rank: "body", article_slug: post.slug, intent: bucket, language,
+      });
+    } catch { /* noop */ }
+  };
+
   // Markdown renderers — shared by both halves when the article is split for the mid CTA.
   const mdComponents = {
     // B6: a leading "# H1" in article content would create a 2nd <h1> (the page title is already the <h1>).
@@ -296,6 +308,46 @@ export function BlogPostPage() {
         const internalPath = href.startsWith('https://www.lavillacoliving.com')
           ? href.replace('https://www.lavillacoliving.com', '')
           : href;
+        // (Lot 1 attribution, 03/09/2026) Les CTA écrits DANS le corps des articles
+        // (36 articles sur 40 lient /candidature, 2 portent la section « bail classique »)
+        // étaient aveugles : aucun paramètre, donc aucune trace en base. Ici, point
+        // d'interception unique : un lien vers /candidature reçoit
+        // ?src=article_cta&article=<slug>&pos=body (sauf s'il porte déjà un src, ex.
+        // bloc_offre écrit en base), et tout lien vers /candidature ou une page maison
+        // pose les UTM virtuels de la session au clic. Zéro SQL sur les 40 articles.
+        const [pathOnly, existingQuery = ""] = internalPath.split("?");
+        const isCandidature = /^\/(en\/)?candidature$/.test(pathOnly);
+        const isHouse = /^\/(en\/)?(lavilla|leloft|lelodge)$/.test(pathOnly);
+        if (isCandidature) {
+          const params = new URLSearchParams(existingQuery);
+          if (!params.has("src")) {
+            params.set("src", "article_cta");
+            params.set("article", post.slug);
+          }
+          if (!params.has("pos")) params.set("pos", "body");
+          const to = `${pathOnly}?${params.toString()}`;
+          const src = params.get("src") === "bail_classique" ? "bail_classique" : "article_cta";
+          return (
+            <LocalizedLink
+              to={loc(to)}
+              onClick={() => trackBodyCta(to, src)}
+              className="text-[#D4A574] hover:underline"
+            >
+              {children}
+            </LocalizedLink>
+          );
+        }
+        if (isHouse) {
+          return (
+            <LocalizedLink
+              to={loc(internalPath)}
+              onClick={() => trackBodyCta(internalPath, "article_cta")}
+              className="text-[#D4A574] hover:underline"
+            >
+              {children}
+            </LocalizedLink>
+          );
+        }
         // Content stores language-neutral paths; on the EN site, prefix /en so
         // anglophone readers stay on EN pages (every FR route has an /en twin).
         return <LocalizedLink to={loc(internalPath)} className="text-[#D4A574] hover:underline">{children}</LocalizedLink>;
@@ -502,6 +554,7 @@ export function BlogPostPage() {
               <LocalizedLink
                 key={h.slug}
                 to={language === "en" ? `/en/${h.slug}` : `/${h.slug}`}
+                onClick={() => markInternalRef("article_cta", post.slug, "end")}
                 className="group bg-white border border-[#E7E5E4] overflow-hidden hover:border-[#D4A574]/40 hover:shadow-lg transition-all"
               >
                 <div className="aspect-[16/10] overflow-hidden">

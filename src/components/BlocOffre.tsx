@@ -11,6 +11,7 @@ import {
   type HouseKey,
 } from "@/lib/availability";
 import { colocGeneveHref } from "@/lib/siteLinks";
+import { markInternalRef } from "@/lib/attribution";
 import { HOUSES } from "@/data/houses";
 import type { IntentBucket } from "@/data/blogIntentBuckets";
 
@@ -22,11 +23,16 @@ import type { IntentBucket } from "@/data/blogIntentBuckets";
 // CTA conversationnel (WhatsApp/DM) — le tunnel est self-service jusqu'au
 // formulaire, l'humain (Fanny/Jérôme) prend le relais après.
 
-// L'attribution est portée par l'URL (?src=bloc_offre&article={slug}), lue par
-// le formulaire puis persistée en BDD (prospects). Params custom, PAS utm_* :
+// L'attribution est portée par l'URL (?src=bloc_offre&article={slug}&pos={mid|end}),
+// lue par le formulaire puis persistée en BDD (prospects). Params custom, PAS utm_* :
 // des utm sur liens internes redémarrent l'attribution de session GA4.
-const CANDIDATURE_REF = (slug: string) =>
-  `/candidature?src=bloc_offre&article=${encodeURIComponent(slug)}`;
+// (Lot 1, 03/09/2026) Chaque clic — candidature OU page maison — pose aussi les « UTM
+// virtuels » de la session (markInternalRef : utm_source=site, utm_medium=bloc_offre,
+// utm_campaign=slug, utm_content=pos), sans jamais écraser une première touche externe ;
+// l'Edge les écrit dans form_submissions. Le lecteur qui passe par la page maison avant
+// de candidater reste ainsi attribué à l'article.
+const CANDIDATURE_REF = (slug: string, pos: "mid" | "end") =>
+  `/candidature?src=bloc_offre&article=${encodeURIComponent(slug)}&pos=${pos}`;
 
 // Maison mise en avant selon l'article : la commune nommée dans le slug gagne.
 // Le Loft = TOUJOURS sa piscine intérieure (règle visuelle permanente).
@@ -71,7 +77,7 @@ export function BlocOffre({ variant, slug, bucket }: BlocOffreProps) {
   const availabilityTone = houseBadgeTone(availability.byHouse[house], availability.known);
   // Prix d'appel du blog = palier d'entrée (Jérôme : « dès », jamais le prix standard)
   const price = L === "en" ? PRICE_SHARED_CHF_EN : PRICE_SHARED_CHF_FR;
-  const to = CANDIDATURE_REF(slug);
+  const to = CANDIDATURE_REF(slug, variant);
   // (Lot 1e) Bucket « ville » : inversion primaire/secondaire — cf. commentaire
   // au-dessus de HEADLINES. Libellé = équipements réels de la fiche maison.
   const isVille = bucket === "ville";
@@ -96,6 +102,8 @@ export function BlocOffre({ variant, slug, bucket }: BlocOffreProps) {
   // cta_rank (Lot 1e) : distingue primaire/secondaire — indispensable pour juger
   // l'inversion du bucket ville sans deviner via cta_target.
   const track = (target: string, rank: "primary" | "secondary") => {
+    // UTM virtuels de la session (Lot 1) — write-once, avant la navigation SPA.
+    markInternalRef("bloc_offre", slug, variant);
     try {
       (window as unknown as { gtag?: (...a: unknown[]) => void }).gtag?.("event", "blog_cta_click", {
         cta_position: variant, cta_target: target, cta_rank: rank, article_slug: slug, intent: bucket, house, language,

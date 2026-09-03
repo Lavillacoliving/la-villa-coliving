@@ -11,6 +11,7 @@ import { PortailLayout } from "@/pages/portail/PortailLayout";
 import { ScrollToTop } from "@/components/ScrollToTop";
 import { AvailabilityEmbed } from "@/components/AvailabilityEmbed";
 import { RouteChangeTracker } from "@/lib/routeTracking";
+import { InternalRefCapture } from "@/components/InternalRefCapture";
 import { lazyWithRetry } from "@/lib/lazyWithRetry";
 import { ErrorBoundary } from "@/components/ErrorBoundary";
 
@@ -206,6 +207,7 @@ function App() {
           <ScrollToTop />
           {/* route_change (Lot 1b) — trace les navigations SPA (cécité GA4/Clarity). */}
           <RouteChangeTracker />
+          <InternalRefCapture />
           <AppContent />
         </LanguageProvider>
       </BrowserRouter>
