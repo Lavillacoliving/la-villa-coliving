@@ -66,7 +66,7 @@ export function CTASectionV7() {
           >
             {language === 'en'
               ? 'Or ask us a question directly on WhatsApp →'
-              : 'Ou posez-nous directement une question sur WhatsApp →'}
+              : 'Ou pose-nous directement une question sur WhatsApp →'}
           </a>
         </div>
       </div>

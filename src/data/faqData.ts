@@ -47,7 +47,7 @@ export const faqData: FAQItem[] = [
     },
     answer: {
       en: 'Coliving is a modern housing concept where individuals share a fully furnished home with private bedrooms and shared common spaces. It combines the privacy of your own room with the benefits of community living, all in a hassle-free, all-inclusive package. Unlike traditional renting, coliving provides instant community, premium amenities, and flexible terms.',
-      fr: 'Le coliving est un concept de logement moderne où les individus partagent une maison entièrement meublée avec des chambres privées et des espaces communs partagés. Il combine l\'intimité de votre propre chambre avec les avantages de la vie communautaire, le tout dans un package tout inclus sans tracas. Contrairement à la location traditionnelle, le coliving offre une communauté instantanée, des équipements premium et des conditions flexibles.',
+      fr: 'Le coliving est un concept de logement moderne où les individus partagent une maison entièrement meublée avec des chambres privées et des espaces communs partagés. Il combine l\'intimité de ta propre chambre avec les avantages de la vie communautaire, le tout dans un package tout inclus sans tracas. Contrairement à la location traditionnelle, le coliving offre une communauté instantanée, des équipements premium et des conditions flexibles.',
     },
   },
   {
@@ -59,7 +59,7 @@ export const faqData: FAQItem[] = [
     },
     answer: {
       en: 'While both involve shared living, coliving is fundamentally different from colocation. Colocation typically means renting an apartment together and handling everything yourselves—furniture, utilities, cleaning, and finding compatible roommates. Coliving provides a turnkey solution: fully furnished spaces, all utilities included, professional cleaning, curated communities, premium amenities, and a supportive environment designed for modern living. At La Villa, we handle all the logistics so you can focus on living.',
-      fr: 'Bien que les deux impliquent le partage de logement, le coliving est fondamentalement différent de la colocation. La colocation signifie généralement louer un appartement ensemble et gérer tout vous-mêmes—meubles, services, ménage et recherche de colocataires compatibles. Le coliving offre une solution clé en main : espaces entièrement meublés, tous les services inclus, ménage professionnel, communautés sélectionnées, équipements premium et un environnement favorable conçu pour la vie moderne. Chez La Villa, nous gérons toute la logistique pour que vous puissiez vous concentrer sur le vivre.',
+      fr: 'Bien que les deux impliquent le partage de logement, le coliving est fondamentalement différent de la colocation. La colocation signifie généralement louer un appartement ensemble et tout gérer toi-même — meubles, services, ménage et recherche de colocataires compatibles. Le coliving offre une solution clé en main : espaces entièrement meublés, tous les services inclus, ménage professionnel, communautés sélectionnées, équipements premium et un environnement favorable conçu pour la vie moderne. Chez La Villa, nous gérons toute la logistique pour que tu puisses te concentrer sur l\'essentiel : vivre.',
     },
   },
   {
@@ -83,7 +83,7 @@ export const faqData: FAQItem[] = [
     },
     answer: {
       en: 'Coliving offers numerous advantages: no furniture shopping, no utility setup, no cleaning schedules to coordinate, instant community, access to amenities you couldn\'t afford alone (pools, gyms, saunas), flexible lease terms, and often significant cost savings compared to renting a studio in the same area. Plus, you gain a built-in social network and support system from day one.',
-      fr: 'Le coliving offre de nombreux avantages : pas d\'achat de meubles, pas de configuration des services, pas de plannings de ménage à coordonner, communauté instantanée, accès à des équipements que vous ne pourriez pas vous offrir seul (piscines, salles de sport, saunas), conditions de bail flexibles, et souvent des économies significatives comparées à la location d\'un studio dans la même zone. De plus, vous gagnez un réseau social intégré et un système de soutien dès le premier jour.',
+      fr: 'Le coliving offre de nombreux avantages : pas d\'achat de meubles, pas de configuration des services, pas de plannings de ménage à coordonner, communauté instantanée, accès à des équipements que tu ne pourrais pas t\'offrir seul (piscines, salles de sport, saunas), conditions de bail flexibles, et souvent des économies significatives comparées à la location d\'un studio dans la même zone. En plus, tu gagnes un réseau social intégré et un système de soutien dès le premier jour.',
     },
   },
   {
@@ -95,7 +95,7 @@ export const faqData: FAQItem[] = [
     },
     answer: {
       en: `When you factor in all costs—rent, utilities, internet, furniture, gym membership, cleaning services, and entertainment—coliving is often more economical than traditional renting. At La Villa, our all-inclusive rates start from ${PRICE_SHARED_EN_NUM} CHF/month, which is competitive with Geneva studio prices while including: heated pool, gym, sauna, weekly yoga classes, parking, monthly Pizza Party, streaming subscriptions, and more.`,
-      fr: `Quand vous prenez en compte tous les coûts—loyer, charges, internet, meubles, abonnement de salle de sport, services de ménage et divertissement—le coliving est souvent plus économique que la location traditionnelle. Chez La Villa, nos tarifs tout inclus commencent à ${PRICE_SHARED_CHF_FR}/mois, ce qui est compétitif avec les prix des studios à Genève tout en offrant beaucoup plus de valeur et d\'équipements.`,
+      fr: `Quand tu prends en compte tous les coûts—loyer, charges, internet, meubles, abonnement de salle de sport, services de ménage et divertissement—le coliving est souvent plus économique que la location traditionnelle. Chez La Villa, nos tarifs tout inclus commencent à ${PRICE_SHARED_CHF_FR}/mois, ce qui est compétitif avec les prix des studios à Genève tout en offrant beaucoup plus de valeur et d\'équipements.`,
     },
   },
 
@@ -133,7 +133,7 @@ export const faqData: FAQItem[] = [
     },
     answer: {
       en: 'Our philosophy is simple: life is better when shared. We believe that modern living should combine privacy with community, productivity with relaxation, and independence with connection. We\'ve created spaces where you can focus on your career while building meaningful relationships, where wellness is integrated into daily life, and where coming home is something to look forward to.',
-      fr: 'Notre philosophie est simple : la vie est meilleure quand elle est partagée. Nous croyons que la vie moderne devrait combiner intimité et communauté, productivité et détente, indépendance et connexion. Nous avons créé des espaces où vous pouvez vous concentrer sur votre carrière tout en construisant des relations significatives, où le bien-être est intégré dans la vie quotidienne, et où rentrer chez soi est quelque chose qu\'on attend avec impatience.',
+      fr: 'Notre philosophie est simple : la vie est meilleure quand elle est partagée. Nous croyons que la vie moderne devrait combiner intimité et communauté, productivité et détente, indépendance et connexion. Nous avons créé des espaces où tu peux te concentrer sur ta carrière tout en construisant des relations significatives, où le bien-être est intégré dans la vie quotidienne, et où rentrer chez soi est quelque chose qu\'on attend avec impatience.',
     },
   },
   {
@@ -145,7 +145,7 @@ export const faqData: FAQItem[] = [
     },
     answer: {
       en: 'Coworking provides shared workspace, while coliving provides shared living space. At La Villa, we combine both—you get a private bedroom and shared living areas, plus dedicated workspaces with high-speed internet. It\'s the perfect solution for remote workers who want to eliminate their commute and live where they work.',
-      fr: 'Le coworking fournit un espace de travail partagé, tandis que le coliving fournit un espace de vie partagé. Chez La Villa, nous combinons les deux—vous avez une chambre privée et des espaces de vie partagés, plus des espaces de travail dédiés avec internet haut débit. C\'est la solution parfaite pour les travailleurs à distance qui veulent éliminer les trajets et vivre là où ils travaillent.',
+      fr: 'Le coworking fournit un espace de travail partagé, tandis que le coliving fournit un espace de vie partagé. Chez La Villa, nous combinons les deux — tu as une chambre privée et des espaces de vie partagés, plus des espaces de travail dédiés avec internet haut débit. C\'est la solution parfaite pour les travailleurs à distance qui veulent éliminer les trajets et vivre là où ils travaillent.',
     },
   },
   {
@@ -171,7 +171,7 @@ export const faqData: FAQItem[] = [
     },
     answer: {
       en: 'Yes, absolutely. Every resident at La Villa has their own private, fully furnished bedroom with a comfortable bed, quality bedding, desk, storage, and often an en-suite bathroom. Your bedroom is your personal sanctuary—you can decorate it, work in it, and retreat to it whenever you need privacy.',
-      fr: 'Oui, absolument. Chaque résident chez La Villa a sa propre chambre privée entièrement meublée avec un lit confortable, une literie de qualité, un bureau, des rangements, et souvent une salle de bain privative. Votre chambre est votre sanctuaire personnel—vous pouvez la décorer, y travailler et vous y retirer quand vous avez besoin d\'intimité.',
+      fr: 'Oui, absolument. Chaque résident chez La Villa a sa propre chambre privée entièrement meublée avec un lit confortable, une literie de qualité, un bureau, des rangements, et souvent une salle de bain privative. Ta chambre est ton sanctuaire personnel : tu peux la décorer, y travailler et t\'y retirer quand tu as besoin d\'intimité.',
     },
   },
   {
@@ -183,7 +183,7 @@ export const faqData: FAQItem[] = [
     },
     answer: {
       en: 'All bedrooms come fully furnished with a premium bed and mattress, high-quality bedding, bedside tables, a desk with chair, wardrobe/closet, lamps, and decorative elements. Rooms are designed to be both functional and aesthetically pleasing, providing everything you need from day one.',
-      fr: 'Toutes les chambres sont entièrement meublées avec un lit et matelas premium, une literie de haute qualité, des tables de chevet, un bureau avec chaise, une armoire/penderie, des lampes et des éléments décoratifs. Les chambres sont conçues pour être à la fois fonctionnelles et esthétiquement agréables, fournissant tout ce dont vous avez besoin dès le premier jour.',
+      fr: 'Toutes les chambres sont entièrement meublées avec un lit et matelas premium, une literie de haute qualité, des tables de chevet, un bureau avec chaise, une armoire/penderie, des lampes et des éléments décoratifs. Les chambres sont conçues pour être à la fois fonctionnelles et esthétiquement agréables, avec tout ce dont tu as besoin dès le premier jour.',
     },
   },
   {
@@ -219,7 +219,7 @@ export const faqData: FAQItem[] = [
     },
     answer: {
       en: 'Yes, all residents have full access to our professional-grade kitchens. They\'re fully equipped with appliances, cookware, dishes, and utensils. You can cook your own meals, store food in designated areas, and many residents enjoy cooking together for community dinners.',
-      fr: 'Oui, tous les résidents ont un accès complet à nos cuisines de qualité professionnelle. Elles sont entièrement équipées avec des appareils électroménagers, des ustensiles de cuisine, de la vaisselle et des couverts. Vous pouvez cuisiner vos propres repas, stocker de la nourriture dans des zones désignées, et de nombreux résidents aiment cuisiner ensemble pour les dîners communautaires.',
+      fr: 'Oui, tous les résidents ont un accès complet à nos cuisines de qualité professionnelle. Elles sont entièrement équipées avec des appareils électroménagers, des ustensiles de cuisine, de la vaisselle et des couverts. Tu peux cuisiner tes propres repas, stocker de la nourriture dans des zones désignées, et de nombreux résidents aiment cuisiner ensemble pour les dîners communautaires.',
     },
   },
   {
@@ -231,7 +231,7 @@ export const faqData: FAQItem[] = [
     },
     answer: {
       en: 'Yes, each bedroom includes wardrobe/closet space, and we provide additional storage options depending on the house. Some locations offer basement storage, garage space, or dedicated storage rooms. Please inquire about specific storage needs when applying.',
-      fr: 'Oui, chaque chambre inclut un espace armoire/penderie, et nous proposons des options de rangement supplémentaires selon la maison. Certains emplacements offrent un rangement au sous-sol, un espace garage ou des salles de rangement dédiées. Veuillez vous renseigner sur vos besoins spécifiques de rangement lors de votre candidature.',
+      fr: 'Oui, chaque chambre inclut un espace armoire/penderie, et nous proposons des options de rangement supplémentaires selon la maison. Certains emplacements offrent un rangement au sous-sol, un espace garage ou des salles de rangement dédiées. Parle-nous de tes besoins de rangement lors de ta candidature.',
     },
   },
   {
@@ -243,7 +243,7 @@ export const faqData: FAQItem[] = [
     },
     answer: {
       en: 'Yes, all our houses have parking available for residents. La Villa, Le Lodge and Le Loft offer on-site parking. Please let us know your parking needs when applying so we can ensure availability.',
-      fr: 'Oui, toutes nos maisons disposent d\'un parking pour les résidents. La Villa, Le Lodge et Le Loft offrent un parking sur place. Veuillez nous informer de vos besoins de parking lors de votre candidature pour que nous puissions assurer la disponibilité.',
+      fr: 'Oui, toutes nos maisons disposent d\'un parking pour les résidents. La Villa, Le Lodge et Le Loft offrent un parking sur place. Signale-nous tes besoins de parking lors de ta candidature pour qu\'on t\'assure une place.',
     },
   },
   {
@@ -269,7 +269,7 @@ export const faqData: FAQItem[] = [
     },
     answer: {
       en: 'Your monthly rent includes: private furnished bedroom, all utilities (electricity, water, heating), high-speed fiber internet, housekeeping of common areas three times a week, pool and garden maintenance, gym and sauna access, weekly yoga and fitness classes, streaming subscriptions, community events, monthly essentials delivery (cleaning supplies, paper goods), and WhatsApp support. It\'s truly all-inclusive.',
-      fr: 'Votre loyer mensuel inclut : chambre privée meublée, tous les services (électricité, eau, chauffage), internet fibre haut débit, ménage des espaces communs trois fois par semaine, entretien de la piscine et du jardin, accès à la salle de sport et au sauna, cours de yoga et fitness hebdomadaires, abonnements streaming, événements communautaires, livraison mensuelle d\'essentiels (produits d\'entretien, articles en papier), et support WhatsApp. C\'est vraiment tout inclus.',
+      fr: 'Ton loyer mensuel inclut : chambre privée meublée, tous les services (électricité, eau, chauffage), internet fibre haut débit, ménage des espaces communs trois fois par semaine, entretien de la piscine et du jardin, accès à la salle de sport et au sauna, cours de yoga et fitness hebdomadaires, abonnements streaming, événements communautaires, livraison mensuelle d\'essentiels (produits d\'entretien, articles en papier), et support WhatsApp. C\'est vraiment tout inclus.',
     },
   },
   {
@@ -289,7 +289,7 @@ export const faqData: FAQItem[] = [
     category: 'Pricing & Payments',
     question: {
       en: 'Why are your prices higher than a standard flatshare?',
-      fr: 'Pourquoi vos prix sont-ils plus élevés qu\'une colocation classique ?',
+      fr: 'Pourquoi les prix sont-ils plus élevés qu\'une colocation classique ?',
     },
     answer: {
       en: `Because you're not getting the same thing. Our rooms are 17-25 m² (vs 9-12 m² for most local flatshares), every house has a pool, sauna and gym, professional cleaning is included, a dedicated team maintains the house (gardener, pool technician), and community life is organised monthly. Per square metre and like-for-like on services, La Villa is at market price — all inclusive from ${PRICE_SHARED_CHF_EN}/month, with no application or agency fees.`,
@@ -305,7 +305,7 @@ export const faqData: FAQItem[] = [
     },
     answer: {
       en: 'Yes, we require a security deposit equivalent to two months\' rent excluding charges. This deposit is held for the duration of your stay and returned within 30 days of move-out, minus any deductions for damages beyond normal wear and tear.',
-      fr: 'Oui, nous exigeons une caution équivalente à deux mois de loyer hors charges. Cette caution est conservée pendant la durée de votre séjour et restituée dans les 30 jours suivant le départ, moins toute déduction pour dommages au-delà de l\'usure normale.',
+      fr: 'Oui, nous exigeons une caution équivalente à deux mois de loyer hors charges. Cette caution est conservée pendant la durée de ton séjour et restituée dans les 30 jours suivant le départ, moins toute déduction pour dommages au-delà de l\'usure normale.',
     },
   },
   {
@@ -317,7 +317,7 @@ export const faqData: FAQItem[] = [
     },
     answer: {
       en: 'No. La Villa rents its houses directly, with no middleman: so there are no agency fees, no application fee, no booking fee and no check-in fee. You pay your all-inclusive rent and a fully refundable deposit — that\'s it. And it\'s not a temporary offer: it\'s our model.',
-      fr: 'Non. La Villa loue ses maisons en direct, sans intermédiaire : il n\'y a donc aucun honoraire d\'agence, aucun frais de dossier, aucun frais de réservation et aucun frais d\'état des lieux. Vous réglez votre loyer tout inclus et une caution intégralement restituée — c\'est tout. Et ce n\'est pas une offre temporaire : c\'est notre modèle.',
+      fr: 'Non. La Villa loue ses maisons en direct, sans intermédiaire : il n\'y a donc aucun honoraire d\'agence, aucun frais de dossier, aucun frais de réservation et aucun frais d\'état des lieux. Tu règles ton loyer tout inclus et une caution intégralement restituée — c\'est tout. Et ce n\'est pas une offre temporaire : c\'est notre modèle.',
     },
   },
   {
@@ -329,7 +329,7 @@ export const faqData: FAQItem[] = [
     },
     answer: {
       en: 'No, €0. Applying to La Villa is entirely free: no application fee to apply, to be selected, or to sign your lease. On the coliving market, these move-in fees often range from €200 to €700; here, it\'s zero.',
-      fr: 'Non, 0 €. Candidater chez La Villa est entièrement gratuit : aucun frais de dossier pour postuler, être sélectionné ou signer votre bail. Sur le marché du coliving, ces frais d\'entrée vont souvent de 200 à 700 € ; chez nous, c\'est zéro.',
+      fr: 'Non, 0 €. Candidater chez La Villa est entièrement gratuit : aucun frais de dossier pour postuler, être sélectionné ou signer ton bail. Sur le marché du coliving, ces frais d\'entrée vont souvent de 200 à 700 € ; chez nous, c\'est zéro.',
     },
   },
   {
@@ -341,7 +341,7 @@ export const faqData: FAQItem[] = [
     },
     answer: {
       en: 'No. No booking fee is charged. Once your application is accepted, you pay your first month\'s rent and your refundable deposit — nothing else.',
-      fr: 'Non. Aucun frais de réservation n\'est demandé. Une fois votre candidature acceptée, vous réglez votre première échéance de loyer et votre caution remboursable — rien d\'autre.',
+      fr: 'Non. Aucun frais de réservation n\'est demandé. Une fois ta candidature acceptée, tu règles ta première échéance de loyer et ta caution remboursable — rien d\'autre.',
     },
   },
   {
@@ -353,7 +353,7 @@ export const faqData: FAQItem[] = [
     },
     answer: {
       en: 'No. The move-in and move-out inventory is carried out by our team, at no cost to you.',
-      fr: 'Non. L\'état des lieux d\'entrée comme de sortie est réalisé par notre équipe, sans aucun frais pour vous.',
+      fr: 'Non. L\'état des lieux d\'entrée comme de sortie est réalisé par notre équipe, sans aucun frais pour toi.',
     },
   },
   {
@@ -365,7 +365,7 @@ export const faqData: FAQItem[] = [
     },
     answer: {
       en: 'It depends on who manages the property. A real-estate agency may charge the tenant fees that are regulated and capped by law (organising the viewing, putting together the file, drafting the lease, and the move-in inventory). When you rent directly from the owner — as at La Villa — there\'s no agency, so none of these fees. It\'s the simplest way to move in with no entry fees.',
-      fr: 'Cela dépend de qui gère le logement. Une agence immobilière peut facturer au locataire des frais encadrés et plafonnés par la loi (organisation de la visite, constitution du dossier, rédaction du bail et état des lieux d\'entrée). Quand vous louez en direct auprès du propriétaire — comme chez La Villa — il n\'y a pas d\'agence, donc pas de ces frais. C\'est la façon la plus simple d\'emménager sans frais d\'entrée.',
+      fr: 'Cela dépend de qui gère le logement. Une agence immobilière peut facturer au locataire des frais encadrés et plafonnés par la loi (organisation de la visite, constitution du dossier, rédaction du bail et état des lieux d\'entrée). Quand tu loues en direct auprès du propriétaire — comme chez La Villa — il n\'y a pas d\'agence, donc pas de ces frais. C\'est la façon la plus simple d\'emménager sans frais d\'entrée.',
     },
   },
   {
@@ -373,7 +373,7 @@ export const faqData: FAQItem[] = [
     category: 'Pricing & Payments',
     question: {
       en: 'What payment methods do you accept?',
-      fr: 'Quels modes de paiement acceptez-vous ?',
+      fr: 'Quels modes de paiement sont acceptés ?',
     },
     answer: {
       en: 'We accept bank transfers and SEPA. Rent is due monthly in advance. We can also accommodate employer-sponsored housing programs and provide invoices for expense reimbursement.',
@@ -389,7 +389,7 @@ export const faqData: FAQItem[] = [
     },
     answer: {
       en: 'Yes, we require a minimum stay of two months. This helps ensure community stability and allows members to form meaningful connections. If you need to leave earlier, we require one month\'s notice.',
-      fr: 'Oui, nous exigeons un séjour minimum de deux mois. Cela permet d\'assurer la stabilité de la communauté et permet aux membres de former des liens significatifs. Si vous devez partir plus tôt, nous avons besoin d\'un préavis d\'un mois.',
+      fr: 'Oui, nous exigeons un séjour minimum de deux mois. Cela permet d\'assurer la stabilité de la communauté et permet aux membres de former des liens significatifs. Si tu dois partir plus tôt, nous avons besoin d\'un préavis d\'un mois.',
     },
   },
   {
@@ -401,7 +401,7 @@ export const faqData: FAQItem[] = [
     },
     answer: {
       en: 'We require one month\'s notice if you decide to leave. This allows us time to find a suitable replacement and ensure a smooth transition for the community. The notice should be provided in writing.',
-      fr: 'Nous exigeons un préavis d\'un mois si vous décidez de partir. Cela nous permet de trouver un remplaçant approprié et d\'assurer une transition en douceur pour la communauté. Le préavis doit être donné par écrit.',
+      fr: 'Nous exigeons un préavis d\'un mois si tu décides de partir. Cela nous permet de trouver un remplaçant approprié et d\'assurer une transition en douceur pour la communauté. Le préavis doit être donné par écrit.',
     },
   },
   {
@@ -413,7 +413,7 @@ export const faqData: FAQItem[] = [
     },
     answer: {
       en: `A studio apartment in Geneva typically costs 1,500-2,500 CHF/month, plus utilities (150-250 CHF), internet (50-80 CHF), gym membership (100-150 CHF), and you\'d need to buy furniture. At La Villa, starting from ${PRICE_SHARED_EN_NUM} CHF, you get a furnished private room, all utilities, internet, gym, pool, sauna, cleaning, and a built-in community. The value is exceptional.`,
-      fr: `Un studio à Genève coûte généralement 1 500-2 500 CHF/mois, plus les charges (150-250 CHF), internet (50-80 CHF), abonnement de salle de sport (100-150 CHF), et vous devriez acheter des meubles. Chez La Villa, à partir de ${PRICE_SHARED_CHF_FR}, vous obtenez une chambre privée meublée, tous les services, internet, salle de sport, piscine, sauna, ménage et une communauté intégrée. La valeur est exceptionnelle.`,
+      fr: `Un studio à Genève coûte généralement 1 500-2 500 CHF/mois, plus les charges (150-250 CHF), internet (50-80 CHF), abonnement de salle de sport (100-150 CHF), et il faudrait acheter des meubles. Chez La Villa, à partir de ${PRICE_SHARED_CHF_FR}, tu obtiens une chambre privée meublée, tous les services, internet, salle de sport, piscine, sauna, ménage et une communauté intégrée. La valeur est exceptionnelle.`,
     },
   },
 
@@ -427,7 +427,7 @@ export const faqData: FAQItem[] = [
     },
     answer: {
       en: 'We organize regular community events including yoga and fitness classes, Pizza parties and seasonal celebrations and networking events. Participation is always optional—we respect your need for both social time and personal space.',
-      fr: 'Nous organisons régulièrement des événements communautaires incluant des cours de yoga et fitness, des soirées pizza, des célébrations saisonnières et des événements de networking. La participation est toujours optionnelle—nous respectons votre besoin de temps social et d\'espace personnel.',
+      fr: 'Nous organisons régulièrement des événements communautaires incluant des cours de yoga et fitness, des soirées pizza, des célébrations saisonnières et des événements de networking. La participation est toujours optionnelle—nous respectons ton besoin de temps social et d\'espace personnel.',
     },
   },
   {
@@ -451,7 +451,7 @@ export const faqData: FAQItem[] = [
     },
     answer: {
       en: 'Absolutely not. We believe in balance. While we foster community, we deeply respect personal boundaries and privacy. Your bedroom is your private sanctuary, and participation in community activities is always optional. Many residents enjoy the best of both worlds—socializing when they want and retreating when they need quiet time.',
-      fr: 'Absolument pas. Nous croyons en l\'équilibre. Bien que nous favorisions la communauté, nous respectons profondément les limites personnelles et la vie privée. Votre chambre est votre sanctuaire privé, et la participation aux activités communautaires est toujours optionnelle. De nombreux résidents apprécient le meilleur des deux mondes—socialiser quand ils veulent et se retirer quand ils ont besoin de calme.',
+      fr: 'Absolument pas. Nous croyons en l\'équilibre. Bien que nous favorisions la communauté, nous respectons profondément les limites personnelles et la vie privée. Ta chambre est ton sanctuaire privé, et la participation aux activités communautaires est toujours optionnelle. De nombreux résidents apprécient le meilleur des deux mondes—socialiser quand ils veulent et se retirer quand ils ont besoin de calme.',
     },
   },
   {
@@ -475,7 +475,7 @@ export const faqData: FAQItem[] = [
     },
     answer: {
       en: 'Yes, you can have guests visit during the day. For overnight guests, we have a policy to ensure comfort for all residents—typically limiting stays to a few nights per month with advance notice to housemates. Details vary by house, so please check with us for specific guidelines.',
-      fr: 'Oui, vous pouvez recevoir des invités pendant la journée. Pour les invités dormant sur place, nous avons une politique pour assurer le confort de tous les résidents—généralement en limitant les séjours à quelques nuits par mois avec préavis aux colocataires. Les détails varient selon la maison, alors veuillez vérifier avec nous pour les directives spécifiques.',
+      fr: 'Oui, tu peux recevoir des invités pendant la journée. Pour les invités dormant sur place, nous avons une politique pour assurer le confort de tous les résidents—généralement en limitant les séjours à quelques nuits par mois avec préavis aux colocataires. Les détails varient selon la maison, alors vérifie avec nous les règles précises.',
     },
   },
   {
@@ -561,7 +561,7 @@ export const faqData: FAQItem[] = [
     },
     answer: {
       en: 'Yes, we understand the need for privacy during work calls. Our houses have designated quiet areas and some have private call booths or small meeting rooms. You can also use your private bedroom for calls, as all rooms are well-insulated for sound.',
-      fr: 'Oui, nous comprenons le besoin d\'intimité pendant les appels professionnels. Nos maisons disposent de zones calmes désignées et certaines ont des cabines d\'appel privées ou de petites salles de réunion. Vous pouvez également utiliser votre chambre privée pour les appels, car toutes les chambres sont bien insonorisées.',
+      fr: 'Oui, nous comprenons le besoin d\'intimité pendant les appels professionnels. Nos maisons disposent de zones calmes désignées et certaines ont des cabines d\'appel privées ou de petites salles de réunion. Tu peux aussi utiliser ta chambre privée pour les appels, car toutes les chambres sont bien insonorisées.',
     },
   },
   {
@@ -585,7 +585,7 @@ export const faqData: FAQItem[] = [
     },
     answer: {
       en: 'This depends on local regulations and the specific house. Please contact us to discuss your needs, and we can advise on the best solution for your situation.',
-      fr: 'Cela dépend des réglementations locales et de la maison spécifique. Veuillez nous contacter pour discuter de vos besoins, et nous pourrons vous conseiller sur la meilleure solution pour votre situation.',
+      fr: 'Cela dépend des réglementations locales et de la maison spécifique. Contacte-nous pour en parler : on te conseillera la meilleure solution pour ta situation.',
     },
   },
 
@@ -635,7 +635,7 @@ export const faqData: FAQItem[] = [
     },
     answer: {
       en: 'Yes, all our houses have parking available. La Villa, Le Lodge and Le Loft offer on-site parking. If you plan to bring a car, please let us know when applying so we can ensure a parking spot is available.',
-      fr: 'Oui, toutes nos maisons disposent d\'un parking. La Villa, Le Lodge et Le Loft offrent un parking sur place. Si vous prévoyez d\'amener une voiture, veuillez nous en informer lors de votre candidature pour que nous puissions assurer la disponibilité d\'une place.',
+      fr: 'Oui, toutes nos maisons disposent d\'un parking. La Villa, Le Lodge et Le Loft offrent un parking sur place. Si tu prévois de venir avec une voiture, dis-le-nous lors de ta candidature pour que nous puissions assurer la disponibilité d\'une place.',
     },
   },
   {
@@ -671,7 +671,7 @@ export const faqData: FAQItem[] = [
     },
     answer: {
       en: 'Our houses are located near supermarkets, pharmacies, restaurants, cafes, gyms, and other essential services. Ville-la-Grand, Ambilly, and Annemasse all have vibrant town centers with everything you need for daily life.',
-      fr: 'Nos maisons sont situées près de supermarchés, pharmacies, restaurants, cafés, salles de sport et autres services essentiels. Ville-la-Grand, Ambilly et Annemasse ont tous des centres-villes dynamiques avec tout ce dont vous avez besoin pour la vie quotidienne.',
+      fr: 'Nos maisons sont situées près de supermarchés, pharmacies, restaurants, cafés, salles de sport et autres services essentiels. Ville-la-Grand, Ambilly et Annemasse ont tous des centres-villes dynamiques avec tout ce dont tu as besoin au quotidien.',
     },
   },
 
@@ -685,7 +685,7 @@ export const faqData: FAQItem[] = [
     },
     answer: {
       en: 'The application process is simple: 1) Fill out the online application form with your details, 2) Schedule a video call with us, 3) Have a 20-minute conversation to get to know each other, 4) Visit the house and meet your potential housemates, 5) If approved, sign your lease and move in!',
-      fr: 'Le processus de candidature est simple : 1) Remplissez le formulaire de candidature en ligne avec vos coordonnées, 2) Planifiez un appel vidéo avec nous, 3) Ayez une conversation de 20 minutes pour faire connaissance, 4) Visitez la maison et rencontrez vos futurs colocataires, 5) Si approuvé, signez votre bail et emménagez !',
+      fr: 'Le processus de candidature est simple : 1) Remplis le formulaire de candidature en ligne avec tes coordonnées, 2) Planifie un appel vidéo avec nous, 3) On fait connaissance en 20 minutes, 4) Visite la maison et rencontre tes futurs colocataires, 5) Si c\'est validé, signe ton bail et emménage !',
     },
   },
   {
@@ -697,7 +697,7 @@ export const faqData: FAQItem[] = [
     },
     answer: {
       en: 'We look for open-minded, respectful individuals who share our community values. You should be employed or have a stable income source, be able to commit to our minimum stay requirement, and be excited about community living. We welcome applicants from all backgrounds and nationalities.',
-      fr: 'Nous recherchons des personnes ouvertes d\'esprit et respectueuses qui partagent nos valeurs communautaires. Vous devriez être employé ou avoir une source de revenus stable, pouvoir vous engager sur notre durée de séjour minimum, et être enthousiaste à l\'idée de la vie communautaire. Nous accueillons des candidats de tous horizons et nationalités.',
+      fr: 'Nous recherchons des personnes ouvertes d\'esprit et respectueuses qui partagent nos valeurs communautaires. Tu dois avoir un emploi ou une source de revenus stable, pouvoir t\'engager sur notre durée de séjour minimum, et être enthousiaste à l\'idée de la vie communautaire. Nous accueillons des candidats de tous horizons et nationalités.',
     },
   },
   {
@@ -709,7 +709,7 @@ export const faqData: FAQItem[] = [
     },
     answer: {
       en: 'The typical timeline is 1-2 weeks from initial application to move-in. This includes the video call, house visit, application review, and lease signing. If you have urgent timing needs, please let us know and we\'ll do our best to accommodate.',
-      fr: 'Le délai typique est de 1 à 2 semaines entre la candidature initiale et l\'emménagement. Cela inclut l\'appel vidéo, la visite de la maison, l\'examen de la candidature et la signature du bail. Si vous avez des besoins urgents de calendrier, veuillez nous en informer et nous ferons de notre mieux pour accommoder.',
+      fr: 'Le délai typique est de 1 à 2 semaines entre la candidature initiale et l\'emménagement. Cela inclut l\'appel vidéo, la visite de la maison, l\'examen de la candidature et la signature du bail. Si ton calendrier est serré, dis-le-nous : on fera de notre mieux pour s\'adapter.',
     },
   },
   {
@@ -721,7 +721,7 @@ export const faqData: FAQItem[] = [
     },
     answer: {
       en: 'We typically schedule house visits after the initial video call as part of the application process. This allows us to get to know you first and ensures the visit is productive for both parties. Virtual tours are also available on our website.',
-      fr: 'Nous planifions généralement les visites de maison après l\'appel vidéo initial dans le cadre du processus de candidature. Cela nous permet de faire votre connaissance d\'abord et d\'assurer que la visite est productive pour les deux parties. Des visites virtuelles sont également disponibles sur notre site web.',
+      fr: 'Nous planifions généralement les visites de maison après l\'appel vidéo initial dans le cadre du processus de candidature. Cela nous permet de faire ta connaissance d\'abord et d\'assurer que la visite est productive pour les deux parties. Des visites virtuelles sont également disponibles sur notre site web.',
     },
   },
   {
@@ -745,7 +745,7 @@ export const faqData: FAQItem[] = [
     },
     answer: {
       en: 'Yes, we maintain a waitlist for interested applicants when we don\'t have immediate availability. Joining the waitlist is free and puts you first in line when a room becomes available. We\'ll contact you as soon as something opens up.',
-      fr: 'Oui, nous maintenons une liste d\'attente pour les candidats intéressés quand nous n\'avons pas de disponibilité immédiate. Rejoindre la liste d\'attente est gratuit et vous met en première ligne quand une chambre devient disponible. Nous vous contacterons dès qu\'une place se libère.',
+      fr: 'Oui, nous maintenons une liste d\'attente pour les candidats intéressés quand nous n\'avons pas de disponibilité immédiate. Rejoindre la liste d\'attente est gratuit et te met en première ligne quand une chambre se libère. On te contacte dès qu\'une place est disponible.',
     },
   },
 
@@ -759,7 +759,7 @@ export const faqData: FAQItem[] = [
     },
     answer: {
       en: 'Just your personal belongings! All furniture, bedding, kitchenware, and household essentials are provided. We recommend bringing your clothes, personal items, electronics, and any decorative items to make your room feel like home. Everything else is taken care of.',
-      fr: 'Juste vos affaires personnelles ! Tous les meubles, la literie, la vaisselle et les essentiels domestiques sont fournis. Nous recommandons d\'apporter vos vêtements, articles personnels, électronique et tout article décoratif pour que votre chambre soit comme chez vous. Tout le reste est pris en charge.',
+      fr: 'Juste tes affaires personnelles ! Tous les meubles, la literie, la vaisselle et les essentiels domestiques sont fournis. On te recommande d\'apporter tes vêtements, tes affaires personnelles, ton électronique et quelques objets déco pour que ta chambre soit vraiment chez toi. Tout le reste est pris en charge.',
     },
   },
   {
@@ -771,7 +771,7 @@ export const faqData: FAQItem[] = [
     },
     answer: {
       en: 'Yes, we have basic house rules to ensure everyone has a positive experience. These include respecting quiet hours (typically 10 PM - 7 AM), cleaning up after yourself in common areas, respecting others\' privacy, and following our guest and smoking policies. Full rules are provided upon move-in.',
-      fr: 'Oui, nous avons des règles de maison de base pour assurer que tout le monde a une expérience positive. Celles-ci incluent le respect des heures de calme (généralement 22h - 7h), le nettoyage après vous dans les espaces communs, le respect de la vie privée des autres, et le respect de nos politiques d\'invités et de tabac. Les règles complètes sont fournies à l\'emménagement.',
+      fr: 'Oui, nous avons des règles de maison de base pour assurer que tout le monde a une expérience positive. Celles-ci incluent le respect des heures de calme (généralement 22h - 7h), le nettoyage derrière soi dans les espaces communs, le respect de la vie privée des autres, et le respect de nos politiques d\'invités et de tabac. Les règles complètes sont fournies à l\'emménagement.',
     },
   },
   {
@@ -783,7 +783,7 @@ export const faqData: FAQItem[] = [
     },
     answer: {
       en: 'Common areas are professionally cleaned three times a week. This includes the kitchen, living rooms, bathrooms, and hallways. Residents are expected to clean up after themselves daily (dishes, counters, etc.), but the deep cleaning is handled for you.',
-      fr: 'Les espaces communs sont nettoyés professionnellement trois fois par semaine. Cela inclut la cuisine, les salons, les salles de bain et les couloirs. Les résidents sont censés nettoyer après eux quotidiennement (vaisselle, comptoirs, etc.), mais le nettoyage en profondeur est géré pour vous.',
+      fr: 'Les espaces communs sont nettoyés professionnellement trois fois par semaine. Cela inclut la cuisine, les salons, les salles de bain et les couloirs. Les résidents sont censés nettoyer après eux quotidiennement (vaisselle, comptoirs, etc.), mais le nettoyage en profondeur est géré pour toi.',
     },
   },
   {
@@ -795,7 +795,7 @@ export const faqData: FAQItem[] = [
     },
     answer: {
       en: 'Bedroom cleaning is typically the resident\'s responsibility, though we can arrange additional cleaning services for an extra fee if desired. Your private space remains private, and you maintain it as you prefer.',
-      fr: 'Le nettoyage de la chambre est généralement la responsabilité du résident, bien que nous puissions organiser des services de nettoyage supplémentaires pour un supplément si désiré. Votre espace privé reste privé, et vous l\'entretenez comme vous préférez.',
+      fr: 'Le nettoyage de la chambre est généralement la responsabilité du résident, bien que nous puissions organiser des services de nettoyage supplémentaires pour un supplément si désiré. Ton espace privé reste privé, et tu l\'entretiens comme tu préfères.',
     },
   },
   {
@@ -807,7 +807,7 @@ export const faqData: FAQItem[] = [
     },
     answer: {
       en: 'Simply send us a message via WhatsApp or email, and we\'ll handle it promptly. Our team is responsive and takes care of all maintenance issues, from minor repairs to larger concerns. You don\'t have to deal with landlords or contractors—we handle everything.',
-      fr: 'Envoyez-nous simplement un message via WhatsApp ou email, et nous nous en occupons rapidement. Notre équipe est réactive et prend en charge tous les problèmes de maintenance, des petites réparations aux préoccupations plus importantes. Vous n\'avez pas à vous occuper des propriétaires ou des entrepreneurs—nous gérons tout.',
+      fr: 'Envoie-nous simplement un message via WhatsApp ou email, et nous nous en occupons rapidement. Notre équipe est réactive et prend en charge tous les problèmes de maintenance, des petites réparations aux préoccupations plus importantes. Tu n\'as pas à gérer les propriétaires ni les artisans — on s\'occupe de tout.',
     },
   },
   {
@@ -831,7 +831,7 @@ export const faqData: FAQItem[] = [
     },
     answer: {
       en: 'Each house has a designated mail area where letters and packages are delivered. You can receive mail and packages at the house address. For valuable items, we recommend being present for delivery or arranging pickup at a nearby delivery point.',
-      fr: 'Chaque maison dispose d\'une zone de courrier désignée où les lettres et colis sont livrés. Vous pouvez recevoir du courrier et des colis à l\'adresse de la maison. Pour les articles de valeur, nous recommandons d\'être présent pour la livraison ou d\'organiser un retrait dans un point de livraison proche.',
+      fr: 'Chaque maison dispose d\'une zone de courrier désignée où les lettres et colis sont livrés. Tu peux recevoir du courrier et des colis à l\'adresse de la maison. Pour les articles de valeur, nous recommandons d\'être présent pour la livraison ou d\'organiser un retrait dans un point de livraison proche.',
     },
   },
   {
@@ -869,7 +869,7 @@ export const faqData: FAQItem[] = [
     },
     answer: {
       en: 'Our gyms are fully equipped with cardio machines (treadmills, bikes), weight training equipment, free weights, yoga mats, and exercise accessories. Each house has a different setup, but all provide everything you need for a complete workout.',
-      fr: 'Nos salles de sport sont entièrement équipées avec des machines cardio (tapis de course, vélos), équipement de musculation, haltères, tapis de yoga et accessoires d\'exercice. Chaque maison a une configuration différente, mais toutes fournissent tout ce dont vous avez besoin pour un entraînement complet.',
+      fr: 'Nos salles de sport sont entièrement équipées avec des machines cardio (tapis de course, vélos), équipement de musculation, haltères, tapis de yoga et accessoires d\'exercice. Chaque maison a une configuration différente, mais toutes fournissent tout ce dont tu as besoin pour un entraînement complet.',
     },
   },
   {
@@ -881,7 +881,7 @@ export const faqData: FAQItem[] = [
     },
     answer: {
       en: 'Yes, sauna access is included in your rent at all houses that have this feature. It\'s a perfect way to relax after work or a workout. Usage guidelines are provided to ensure everyone can enjoy this amenity.',
-      fr: 'Oui, l\'accès au sauna est inclus dans votre loyer dans toutes les maisons qui disposent de cette fonctionnalité. C\'est un moyen parfait de se détendre après le travail ou un entraînement. Les directives d\'utilisation sont fournies pour assurer que tout le monde puisse profiter de cet équipement.',
+      fr: 'Oui, l\'accès au sauna est inclus dans ton loyer dans toutes les maisons qui disposent de cette fonctionnalité. C\'est un moyen parfait de se détendre après le travail ou un entraînement. Les directives d\'utilisation sont fournies pour assurer que tout le monde puisse profiter de cet équipement.',
     },
   },
   {
@@ -893,7 +893,7 @@ export const faqData: FAQItem[] = [
     },
     answer: {
       en: 'Yes! We offer weekly yoga and fitness classes led by professional instructors. These are included in your rent and are a great way to stay fit and meet fellow residents. Class schedules vary by house and season.',
-      fr: 'Oui ! Nous proposons des cours de yoga et fitness hebdomadaires animés par des instructeurs professionnels. Ceux-ci sont inclus dans votre loyer et sont un excellent moyen de rester en forme et de rencontrer d\'autres résidents. Les horaires des cours varient selon la maison et la saison.',
+      fr: 'Oui ! Nous proposons des cours de yoga et fitness hebdomadaires animés par des instructeurs professionnels. Ils sont inclus dans ton loyer et sont un excellent moyen de rester en forme et de rencontrer d\'autres résidents. Les horaires des cours varient selon la maison et la saison.',
     },
   },
   {
@@ -929,7 +929,7 @@ export const faqData: FAQItem[] = [
     },
     answer: {
       en: 'Our houses feature beautiful outdoor spaces including gardens, terraces, BBQ areas, and of course, pools. These spaces are designed for relaxation, socializing, and enjoying the fresh air. Outdoor furniture is provided for your comfort.',
-      fr: 'Nos maisons disposent de magnifiques espaces extérieurs incluant des jardins, terrasses, espaces BBQ et bien sûr des piscines. Ces espaces sont conçus pour la détente, les échanges sociaux et profiter de l\'air frais. Du mobilier extérieur est fourni pour votre confort.',
+      fr: 'Nos maisons disposent de magnifiques espaces extérieurs incluant des jardins, terrasses, espaces BBQ et bien sûr des piscines. Ces espaces sont conçus pour la détente, les échanges sociaux et profiter de l\'air frais. Du mobilier extérieur est fourni pour ton confort.',
     },
   },
   {
@@ -961,11 +961,11 @@ export const faqData: FAQItem[] = [
     category: 'Services & Amenities',
     question: {
       en: 'How quickly do you respond to questions or issues?',
-      fr: 'À quelle vitesse répondez-vous aux questions ou problèmes ?',
+      fr: 'En combien de temps une question ou un problème est-il traité ?',
     },
     answer: {
       en: 'We pride ourselves on responsive support. For urgent matters, we typically respond within hours via WhatsApp. Non-urgent questions are usually answered within 24 hours. Our team is dedicated to ensuring your living experience is smooth and enjoyable.',
-      fr: 'Nous sommes fiers de notre support réactif. Pour les questions urgentes, nous répondons généralement dans les heures via WhatsApp. Les questions non urgentes sont généralement répondues dans les 24 heures. Notre équipe est dédiée à assurer que votre expérience de vie soit fluide et agréable.',
+      fr: 'Nous sommes fiers de notre support réactif. Pour les questions urgentes, nous répondons généralement dans les heures via WhatsApp. Les questions non urgentes sont généralement répondues dans les 24 heures. Notre équipe veille à ce que ton quotidien reste fluide et agréable.',
     },
   },
 
@@ -991,7 +991,7 @@ export const faqData: FAQItem[] = [
     },
     answer: {
       en: 'Absolutely! Many of our residents live in our French locations and work in Geneva. The commute is typically 25-35 minutes door-to-door, making it very manageable. Plus, you benefit from lower living costs in France while earning Swiss salaries.',
-      fr: 'Absolument ! Beaucoup de nos résidents vivent dans nos emplacements français et travaillent à Genève. Le trajet est généralement de 25 à 35 minutes porte à porte, ce qui est très gérable. De plus, vous bénéficiez de coûts de vie plus bas en France tout en gagnant des salaires suisses.',
+      fr: 'Absolument ! Beaucoup de nos résidents vivent dans nos emplacements français et travaillent à Genève. Le trajet est d\'environ 20 minutes porte-à-porte, ce qui est très gérable. En plus, tu profites d\'un coût de la vie plus bas en France tout en gagnant un salaire suisse.',
     },
   },
   {
@@ -1003,7 +1003,7 @@ export const faqData: FAQItem[] = [
     },
     answer: {
       en: 'La Villa is perfect for expats! We provide a ready-made community, fully furnished accommodation, and support navigating life in a new country. Many of our residents are international professionals, so you\'ll find people who understand the expat experience. We can also help with practical matters like setting up bank accounts and understanding local systems.',
-      fr: 'La Villa est parfaite pour les expatriés ! Nous fournissons une communauté toute prête, un logement entièrement meublé et un soutien pour naviguer dans la vie dans un nouveau pays. Beaucoup de nos résidents sont des professionnels internationaux, donc vous trouverez des personnes qui comprennent l\'expérience expatriée. Nous pouvons également aider avec des questions pratiques comme l\'ouverture de comptes bancaires et la compréhension des systèmes locaux.',
+      fr: 'La Villa est parfaite pour les expatriés ! Nous fournissons une communauté toute prête, un logement entièrement meublé et un soutien pour naviguer dans la vie dans un nouveau pays. Beaucoup de nos résidents sont des professionnels internationaux, donc tu trouveras des personnes qui comprennent l\'expérience expatriée. Nous pouvons également aider avec des questions pratiques comme l\'ouverture de comptes bancaires et la compréhension des systèmes locaux.',
     },
   },
   {
@@ -1011,11 +1011,11 @@ export const faqData: FAQItem[] = [
     category: 'Getting Started',
     question: {
       en: 'Do you welcome digital nomads?',
-      fr: 'Accueillez-vous les nomades digitaux ?',
+      fr: 'Les nomades digitaux sont-ils les bienvenus ?',
     },
     answer: {
       en: 'Yes, digital nomads are very welcome at La Villa! Our high-speed internet, dedicated workspaces, and flexible terms make us an ideal base for remote workers. You\'ll find a community of like-minded professionals and all the amenities you need to be productive while enjoying life in the Geneva area.',
-      fr: 'Oui, les nomades digitaux sont les bienvenus chez La Villa ! Notre internet haut débit, nos espaces de travail dédiés et nos conditions flexibles font de nous une base idéale pour les travailleurs à distance. Vous trouverez une communauté de professionnels partageant les mêmes idées et tous les équipements dont vous avez besoin pour être productif tout en profitant de la vie dans la région de Genève.',
+      fr: 'Oui, les nomades digitaux sont les bienvenus chez La Villa ! Notre internet haut débit, nos espaces de travail dédiés et nos conditions flexibles font de nous une base idéale pour les travailleurs à distance. Tu trouveras une communauté de professionnels qui te ressemblent et tous les équipements dont tu as besoin pour être productif tout en profitant de la vie dans la région de Genève.',
     },
   },
   {
@@ -1027,7 +1027,7 @@ export const faqData: FAQItem[] = [
     },
     answer: {
       en: 'Our minimum stay is two months, which works well for many short-term needs. After that, you can stay as long as you like with just one month\'s notice when you decide to leave. This flexibility makes us a great option for project-based work, internships, or trying out life in the Geneva area.',
-      fr: 'Notre séjour minimum est de deux mois, ce qui fonctionne bien pour de nombreux besoins à court terme. Après cela, vous pouvez rester aussi longtemps que vous le souhaitez avec seulement un mois de préavis quand vous décidez de partir. Cette flexibilité fait de nous une excellente option pour le travail basé sur des projets, des stages ou pour essayer la vie dans la région de Genève.',
+      fr: 'Notre séjour minimum est de deux mois, ce qui fonctionne bien pour de nombreux besoins à court terme. Après cela, tu peux rester aussi longtemps que tu le souhaites, avec seulement un mois de préavis quand tu décides de partir. Cette flexibilité fait de nous une excellente option pour le travail basé sur des projets, des stages ou pour essayer la vie dans la région de Genève.',
     },
   },
   {
@@ -1039,7 +1039,7 @@ export const faqData: FAQItem[] = [
     },
     answer: {
       en: 'Unlike Airbnb, coliving at La Villa provides a stable, long-term community rather than temporary accommodation. You have your own private room in a home with consistent housemates, all-inclusive services, professional management, and amenities designed for daily living. It\'s a home, not a hotel.',
-      fr: 'Contrairement à Airbnb, le coliving chez La Villa fournit une communauté stable et à long terme plutôt qu\'un hébergement temporaire. Vous avez votre propre chambre privée dans une maison avec des colocataires constants, des services tout inclus, une gestion professionnelle et des équipements conçus pour la vie quotidienne. C\'est un chez-soi, pas un hôtel.',
+      fr: 'Contrairement à Airbnb, le coliving chez La Villa fournit une communauté stable et à long terme plutôt qu\'un hébergement temporaire. Tu as ta propre chambre privée dans une maison avec des colocataires stables, des services tout inclus, une gestion professionnelle et des équipements conçus pour la vie quotidienne. C\'est un chez-soi, pas un hôtel.',
     },
   },
   {
@@ -1051,7 +1051,7 @@ export const faqData: FAQItem[] = [
     },
     answer: {
       en: 'Absolutely! Many of our residents are introverts who appreciate having their own private space while knowing community is available when they want it. Your bedroom is your private sanctuary, and participation in social activities is always optional. You can have as much or as little social interaction as you prefer.',
-      fr: 'Absolument ! Beaucoup de nos résidents sont des introvertis qui apprécient d\'avoir leur propre espace privé tout en sachant que la communauté est disponible quand ils le souhaitent. Votre chambre est votre sanctuaire privé, et la participation aux activités sociales est toujours optionnelle. Vous pouvez avoir autant ou aussi peu d\'interactions sociales que vous préférez.',
+      fr: 'Absolument ! Beaucoup de nos résidents sont des introvertis qui apprécient d\'avoir leur propre espace privé tout en sachant que la communauté est disponible quand ils le souhaitent. Ta chambre est ton sanctuaire privé, et la participation aux activités sociales est toujours optionnelle. Tu peux avoir autant ou aussi peu d\'interactions sociales que tu le souhaites.',
     },
   },
   {
@@ -1063,7 +1063,7 @@ export const faqData: FAQItem[] = [
     },
     answer: {
       en: 'Our rooms are designed for individual residents, and our community dynamic works best with single occupants. However, we occasionally have larger rooms that can accommodate couples. Please contact us to discuss your specific situation.',
-      fr: 'Nos chambres sont conçues pour des résidents individuels, et notre dynamique communautaire fonctionne mieux avec des occupants seuls. Cependant, nous avons occasionnellement des chambres plus grandes qui peuvent accommoder des couples. Veuillez nous contacter pour discuter de votre situation spécifique.',
+      fr: 'Nos chambres sont conçues pour des résidents individuels, et notre dynamique communautaire fonctionne mieux avec des occupants seuls. Cependant, nous avons occasionnellement des chambres plus grandes qui peuvent accommoder des couples. Contacte-nous pour parler de ta situation.',
     },
   },
   {
@@ -1075,7 +1075,7 @@ export const faqData: FAQItem[] = [
     },
     answer: {
       en: 'Food is not included in the rent, but our kitchens are fully equipped for cooking. Many residents enjoy cooking together and sharing meals. There are also supermarkets and restaurants nearby for all your dining needs.',
-      fr: 'La nourriture n\'est pas incluse dans le loyer, mais nos cuisines sont entièrement équipées pour cuisiner. Beaucoup de résidents aiment cuisiner ensemble et partager des repas. Il y a également des supermarchés et restaurants à proximité pour tous vos besoins alimentaires.',
+      fr: 'La nourriture n\'est pas incluse dans le loyer, mais nos cuisines sont entièrement équipées pour cuisiner. Beaucoup de résidents aiment cuisiner ensemble et partager des repas. Il y a également des supermarchés et restaurants à proximité pour tous tes besoins.',
     },
   },
   {
@@ -1087,7 +1087,7 @@ export const faqData: FAQItem[] = [
     },
     answer: {
       en: 'Yes, we have high-speed WiFi coverage throughout all our houses, including bedrooms, common areas, gardens, and terraces. Our mesh network ensures strong, reliable connectivity wherever you are in the house.',
-      fr: 'Oui, nous avons une couverture WiFi haut débit dans toutes nos maisons, incluant les chambres, espaces communs, jardins et terrasses. Notre réseau mesh assure une connectivité forte et fiable où que vous soyez dans la maison.',
+      fr: 'Oui, nous avons une couverture WiFi haut débit dans toutes nos maisons, incluant les chambres, espaces communs, jardins et terrasses. Notre réseau mesh assure une connectivité forte et fiable où que tu sois dans la maison.',
     },
   },
 ];

@@ -56,10 +56,10 @@ export function FAQPageV4() {
   return (
     <main className="relative pt-16">
       <SEO
-        title={language === "en" ? "FAQ — Your Questions About Coliving" : "FAQ — Vos Questions sur le Coliving"}
+        title={language === "en" ? "FAQ — Your Questions About Coliving" : "FAQ — tes questions sur le coliving"}
         description={language === "en"
           ? "Answers to all your questions about La Villa Coliving: pricing, duration, community, amenities, application process."
-          : "Réponses à toutes vos questions sur La Villa Coliving : prix, durée, communauté, équipements, processus de candidature."}
+          : "Réponses à toutes tes questions sur La Villa Coliving : prix, durée, communauté, équipements, processus de candidature."}
         url="https://www.lavillacoliving.com/faq"
       />
       <Helmet>
@@ -222,7 +222,7 @@ export function FAQPageV4() {
                   <p className="text-sm text-[#57534E] mb-4">
                     {language === "en"
                       ? "Can't find what you're looking for? Reach out—we're happy to help."
-                      : "Vous ne trouvez pas ce que vous cherchez ? Contactez-nous."}
+                      : "Tu ne trouves pas ce que tu cherches ? Écris-nous."}
                   </p>
                   <a
                     href="mailto:hello@lavillacoliving.com"

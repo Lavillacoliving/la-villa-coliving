@@ -9,7 +9,7 @@ export const tarifsFaq: { fr: QAPair[]; en: QAPair[] } = {
       a: `Chez La Villa Coliving, ton loyer tout inclus dès ${PRICE_SHARED_CHF_FR}/mois couvre la chambre meublée de 17 à 25 m², toutes les charges, l'internet fibre jusqu'à 8 Gb/s, le ménage des parties communes trois fois par semaine, l'accès à la piscine, au sauna et à la salle de sport, les cours de yoga et fitness et les événements. Un seul paiement par mois, sans frais de dossier, sans frais cachés.`,
     },
     {
-      q: "Pourquoi vos prix sont-ils plus élevés qu'une colocation classique ?",
+      q: "Pourquoi les prix sont-ils plus élevés qu'une colocation classique ?",
       a: `Parce que tu n'obtiens pas la même chose. Nos chambres font 17 à 25 m² (contre 9-12 m² pour la plupart des colocations locales), chaque maison a piscine, sauna et salle de sport, le ménage professionnel est inclus, une équipe entretient la maison (jardinier, pisciniste) et la vie communautaire est organisée chaque mois. Au m² et à services équivalents, La Villa est dans les prix du marché — tout inclus dès ${PRICE_SHARED_CHF_FR}/mois, sans frais de dossier ni d'agence.`,
     },
     {

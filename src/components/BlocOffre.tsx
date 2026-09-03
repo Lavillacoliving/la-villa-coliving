@@ -2,7 +2,8 @@ import { LocalizedLink } from "@/components/LocalizedLink";
 import { responsiveImage } from "@/lib/responsiveImage";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { ArrowRight, Check } from "lucide-react";
-import { STATS, PRICE_SHARED_CHF_FR, PRICE_SHARED_CHF_EN } from "@/data/stats";
+import { STATS } from "@/data/stats";
+import { housePriceFrom } from "@/lib/housePrice";
 import {
   useRoomAvailability,
   houseBadgeLabel,
@@ -75,8 +76,10 @@ export function BlocOffre({ variant, slug, bucket }: BlocOffreProps) {
   const availability = useRoomAvailability();
   const availabilityBadge = houseBadgeLabel(availability.byHouse[house], availability.known, L);
   const availabilityTone = houseBadgeTone(availability.byHouse[house], availability.known);
-  // Prix d'appel du blog = palier d'entrée (Jérôme : « dès », jamais le prix standard)
-  const price = L === "en" ? PRICE_SHARED_CHF_EN : PRICE_SHARED_CHF_FR;
+  // Prix d'appel DE LA MAISON mise en avant (Lot 2, décision Q1 du 03/09) : « dès 1 370 »
+  // à la Villa (palier salle d'eau partagée), « à 1 430 » au Loft et au Lodge (prix unique —
+  // un « dès » y serait faux). Constantes pures : identique au prérendu, zéro #418.
+  const { amount: price, from: priceFrom } = housePriceFrom(house, L);
   const to = CANDIDATURE_REF(slug, variant);
   // (Lot 1e) Bucket « ville » : inversion primaire/secondaire — cf. commentaire
   // au-dessus de HEADLINES. Libellé = équipements réels de la fiche maison.
@@ -147,8 +150,8 @@ export function BlocOffre({ variant, slug, bucket }: BlocOffreProps) {
             </p>
             <p className="text-sm text-[#57534E] mb-3">
               {L === "en"
-                ? <>All-inclusive at <strong className="text-[#1C1917]">{price}/month</strong> — {h.descEn}.</>
-                : <>Tout inclus dès <strong className="text-[#1C1917]">{price}/mois</strong> — {h.descFr}.</>}
+                ? <>All-inclusive {priceFrom ? "from" : "at"} <strong className="text-[#1C1917]">{price}/month</strong> — {h.descEn}.</>
+                : <>Tout inclus {priceFrom ? "dès" : "à"} <strong className="text-[#1C1917]">{price}/mois</strong> — {h.descFr}.</>}
             </p>
             <LocalizedLink
               to={isVille ? houseCta.to : to}
@@ -202,7 +205,9 @@ export function BlocOffre({ variant, slug, bucket }: BlocOffreProps) {
               {HEADLINES[bucket][L]}
             </h2>
             <p className="text-lg text-[#1C1917] font-medium mb-4">
-              {L === "en" ? <>All-inclusive from <span className="text-[#D4A574]">{price}</span>/month</> : <>Tout inclus dès <span className="text-[#D4A574]">{price}</span>/mois</>}
+              {L === "en"
+                ? <>All-inclusive {priceFrom ? "from" : "at"} <span className="text-[#D4A574]">{price}</span>/month</>
+                : <>Tout inclus {priceFrom ? "dès" : "à"} <span className="text-[#D4A574]">{price}</span>/mois</>}
             </p>
             <ul className="space-y-1.5 mb-6">
               {proofs.map((p) => (

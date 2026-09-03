@@ -6,7 +6,8 @@ import { SEO } from "@/components/SEO";
 import { SUPABASE_URL, SUPABASE_ANON_KEY } from "@/lib/supabase";
 import { STATS, STATS_DISPLAY, PRICE_SHARED_CHF_FR, PRICE_SHARED_CHF_EN, CONTRACT_EUR, EUR_STANDARD_FR_NUM, EUR_SHARED_FR_NUM, EUR_STANDARD_EN_NUM, EUR_SHARED_EN_NUM } from "@/data/stats";
 import { useFormTelemetry } from "@/hooks/useFormTelemetry";
-import { useRoomAvailability, shortAvailabilityLabel } from "@/lib/availability";
+import { useRoomAvailability, shortAvailabilityLabel, type HouseKey } from "@/lib/availability";
+import { housePriceLabel } from "@/lib/housePrice";
 import { attributionPayload, internalRefPayload, isTestSession, landingPayload } from "@/lib/attribution";
 import { HOUSES } from "@/data/houses";
 
@@ -270,8 +271,8 @@ export function JoinPageV4() {
                 </p>
                 <p className="text-xs text-[#57534E] mt-1">
                   {L === "en"
-                    ? <>All inclusive from {PRICE_SHARED_CHF_EN}/month · Reply within 48h</>
-                    : <>Tout inclus dès {PRICE_SHARED_CHF_FR}/mois · Réponse sous 48 h</>}
+                    ? <>All inclusive {housePriceLabel(refProperty as HouseKey, "en")} · Reply within 48h</>
+                    : <>Tout inclus {housePriceLabel(refProperty as HouseKey, "fr")} · Réponse sous 48 h</>}
                 </p>
               </div>
             </div>

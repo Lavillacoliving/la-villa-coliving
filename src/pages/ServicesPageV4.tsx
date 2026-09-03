@@ -59,7 +59,7 @@ export function ServicesPageV4() {
     },
     {
       title: language === "en" ? "Connect" : "Connecter",
-      subtitle: language === "en" ? "Stay connected" : "Restez connecté",
+      subtitle: language === "en" ? "Stay connected" : "Reste connecté",
       color: "bg-[#D4A574]",
       services: [
         {
@@ -269,7 +269,7 @@ export function ServicesPageV4() {
                 desc:
                   language === "en"
                     ? "No chores, no bills to manage, no maintenance headaches. Reclaim 10+ hours per week."
-                    : "Pas de corvées, pas de factures à gérer, pas de tracas de maintenance. Récupérez 10+ heures par semaine.",
+                    : "Pas de corvées, pas de factures à gérer, pas de tracas de maintenance. Récupère 10+ heures par semaine.",
               },
               {
                 icon: Users,
@@ -383,7 +383,7 @@ export function ServicesPageV4() {
                   : "La Différence La Villa"}
               </span>
               <h2 className="text-3xl md:text-4xl font-bold text-[#1C1917] mb-6 tracking-tight">
-                {language === "en" ? "Say goodbye to" : "Dites adieu aux"}{" "}
+                {language === "en" ? "Say goodbye to" : "Dis adieu aux"}{" "}
                 <span className="text-[#78716C] line-through">
                   {language === "en" ? "chores" : "corvées"}
                 </span>

@@ -5,7 +5,7 @@
 //
 // ⚠️ Règles d'affichage (verrouillées) :
 //  - 1 360 = médiane ACTUELLE 2026 des loyers en cours (PAS une médiane historique),
-//    toujours étiquetée ainsi, JAMAIS juxtaposée aux prix d'entrée (1 390 / 1 440 depuis le 01/09/2026) sans étiquette.
+//    toujours étiquetée ainsi, JAMAIS juxtaposée aux prix d'entrée (1 370 / 1 430 depuis le 01/09/2026) sans étiquette.
 //  - Ne JAMAIS écrire « moins cher que Genève » (l'angle honnête = tout-inclus / m²).
 //  - Caution = 2 mois (ne jamais écrire « 0 caution » ; le « 0 frais » = frais d'agence).
 //  - Durée de séjour publiée = « 13 mois en moyenne (9 mois hors longs séjours) »,

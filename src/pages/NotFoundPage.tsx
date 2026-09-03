@@ -29,7 +29,7 @@ export function NotFoundPage() {
         description={
           language === "en"
             ? "The page you are looking for does not exist."
-            : "La page que vous cherchez n'existe pas."
+            : "La page que tu cherches n'existe pas."
         }
         noindex
       />
@@ -50,7 +50,7 @@ export function NotFoundPage() {
           <p className="text-lg text-[#57534E] max-w-md mx-auto mb-8">
             {language === "en"
               ? "The page you're looking for doesn't exist or has been moved."
-              : "La page que vous cherchez n'existe pas ou a été déplacée."}
+              : "La page que tu cherches n'existe pas ou a été déplacée."}
           </p>
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-10">
             <LocalizedLink

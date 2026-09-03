@@ -82,7 +82,8 @@ export function HousesPageV4() {
     },
     {
       label: language === "en" ? "Plot" : "Terrain",
-      values: ["2,000 m²", "330 m²", "1,500 m²"],
+      // (Lot 2, 03/09) séparateur de milliers FR = espace insécable, EN = virgule
+      values: language === "en" ? ["2,000 m²", "330 m²", "1,500 m²"] : ["2 000 m²", "330 m²", "1 500 m²"],
     },
     {
       label: language === "en" ? "Residents" : "Résidents",
