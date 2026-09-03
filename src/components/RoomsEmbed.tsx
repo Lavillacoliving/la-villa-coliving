@@ -9,7 +9,8 @@ import { embedJson } from "@/lib/prerenderEmbeddedState";
 // « absent » et déclencherait un fetch au premier rendu).
 // ⚠️ ROOMS_EMBED_ID est enregistré dans la liste de capture de src/main.tsx —
 // ne pas renommer l'un sans l'autre.
-export function RoomsEmbed({ house }: { house: HouseKey }) {
+// Sans prop `house` (Lot 3 SEO funnel — /chambres-disponibles) : les 29 lignes, ≈ 10 Ko.
+export function RoomsEmbed({ house }: { house?: HouseKey }) {
   const rows = useRoomsSnapshotFor(house);
   if (!rows) return null;
   return (

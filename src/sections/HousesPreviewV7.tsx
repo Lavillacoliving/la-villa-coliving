@@ -1,4 +1,5 @@
 import { LocalizedLink } from "@/components/LocalizedLink";
+import { HouseAvailabilityLine } from "@/components/HouseAvailabilityLine";
 import { responsiveImage } from "@/lib/responsiveImage";
 import { ArrowRight, MapPin, Users } from "lucide-react";
 import { useLanguage } from "@/contexts/LanguageContext";
@@ -97,7 +98,8 @@ export function HousesPreviewV7() {
         {/* Houses grid */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           {houses.map((house, index) => (
-            <LocalizedLink key={index} to={`/${house.id}`} className="group block bg-white rounded-2xl border border-[#E7E5E4] overflow-hidden hover:border-[#44403C]/20 hover:shadow-[0_4px_24px_rgba(0,0,0,0.06)] hover:translate-y-[-2px] transition-all duration-300">
+            <div key={index} className="flex flex-col gap-3">
+            <LocalizedLink to={`/${house.id}`} className="group block bg-white rounded-2xl border border-[#E7E5E4] overflow-hidden hover:border-[#44403C]/20 hover:shadow-[0_4px_24px_rgba(0,0,0,0.06)] hover:translate-y-[-2px] transition-all duration-300">
               {/* Photo */}
               <div className="relative aspect-[16/10] overflow-hidden">
                 <img
@@ -149,6 +151,9 @@ export function HousesPreviewV7() {
                 </div>
               </div>
             </LocalizedLink>
+              {/* (Lot 3 SEO funnel — 3.3) Porte vers /chambres-disponibles?maison=… */}
+              <HouseAvailabilityLine house={house.id as HouseKey} className="px-1" />
+            </div>
           ))}
         </div>
 

@@ -40,6 +40,8 @@ on:
     types: [prerender]
   schedule:
     - cron: '0 5 * * *'
+    # (Lot 3 SEO funnel — Q2, 03/09/2026) 2ᵉ passage : écart HTML/réalité de la dispo ramené à 12 h.
+    - cron: '0 13 * * *'
   workflow_dispatch:
 
 permissions:

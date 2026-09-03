@@ -359,10 +359,28 @@ export function roomHeroBadge(rooms: PublicRoom[], lang: "fr" | "en"): { label: 
 }
 
 /** (Lot 3) Snapshot chambres de la maison rendue — pour RoomsEmbed uniquement. */
-export function useRoomsSnapshotFor(house: HouseKey): PublicRoom[] | null {
+/**
+ * (Lot 3 SEO funnel — /chambres-disponibles) Toutes les chambres publiques, triées maison
+ * (Villa → Loft → Lodge) puis n°. Même cycle de vie que useHouseRooms : init synchrone depuis
+ * l'embed de la page (29 lignes), refresh partagé après montage. `known: false` = aucune donnée.
+ */
+export function useAllRooms(): { known: boolean; rooms: PublicRoom[] } {
+  const rows = useSyncExternalStore(subscribe, getRoomsSnapshot, getRoomsSnapshot);
+  useEffect(() => {
+    void refresh();
+  }, []);
+  if (!rows) return { known: false, rooms: [] };
+  const rooms = [...rows].sort(
+    (a, b) => HOUSE_KEYS.indexOf(a.house_slug) - HOUSE_KEYS.indexOf(b.house_slug) || a.room_number - b.room_number,
+  );
+  return { known: rooms.length > 0, rooms };
+}
+
+/** Snapshot brut pour RoomsEmbed : les lignes de `house`, ou TOUTES sans argument (null tant que rien n'est chargé). */
+export function useRoomsSnapshotFor(house?: HouseKey): PublicRoom[] | null {
   const rows = useSyncExternalStore(subscribe, getRoomsSnapshot, getRoomsSnapshot);
   if (!rows) return null;
-  const mine = rows.filter((r) => r.house_slug === house);
+  const mine = house ? rows.filter((r) => r.house_slug === house) : rows;
   return mine.length > 0 ? mine : null;
 }
 

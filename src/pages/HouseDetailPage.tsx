@@ -1816,7 +1816,7 @@ export function HouseDetailPage() {
           90 % des visiteurs atteignent 25 % de la page, la section transactionnelle
           doit y être. Sans données (vue vide, vieux HTML prérendu) : repli sur les
           cartes de types — jamais de section vide. Interdit : cloner le modèle
-          fichier-statique de la LP (roomsSeptembre.ts). */}
+          fichier-statique de l'ancienne LP (supprimée le 03/09, Lot 3 SEO funnel). */}
       <section className="section-padding py-14 md:py-20 relative bg-[#FAF9F6]">
         <div className="container-custom">
           <h2
