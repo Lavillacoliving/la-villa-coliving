@@ -1,4 +1,4 @@
-import { useState, type FormEvent } from "react";
+import { useEffect, useRef, useState, type FormEvent } from "react";
 import { useSearchParams } from "react-router-dom";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { ArrowRight, Check, Shield, Loader2, Star, Users, Calendar, ChevronDown, ChevronUp, MessageCircle, Sparkles } from "lucide-react";
@@ -48,6 +48,16 @@ export function JoinPageV4() {
   // l'attribution Ads est déjà capturée à l'atterrissage (sessionStorage, first-touch).
   const refProperty = (searchParams.get("property_interest") ?? "").slice(0, 64);
   const refRoom = (searchParams.get("room_interest") ?? "").slice(0, 64);
+  // Période d'arrivée pré-choisie depuis le bloc « pipeline » des pages maisons
+  // (03/09/2026) : mêmes valeurs que le select ci-dessous. Appliquée APRÈS le montage
+  // (ref + effet) : le HTML prérendu n'a aucune option sélectionnée, zéro mismatch.
+  const refArrival = (["asap", "1-3-months", "3-6-months", "later"] as const).find(
+    (v) => v === searchParams.get("arrival"),
+  ) ?? "";
+  const arrivalRef = useRef<HTMLSelectElement>(null);
+  useEffect(() => {
+    if (refArrival && arrivalRef.current && !arrivalRef.current.value) arrivalRef.current.value = refArrival;
+  }, [refArrival]);
   // En-tête contextuel (Lot 1d) : quand le candidat arrive d'un CTA maison ou
   // chambre, le formulaire accuse réception de son choix (continuité du
   // parcours). Slug inconnu → pas d'en-tête, jamais d'erreur. Aucune donnée
@@ -395,6 +405,7 @@ export function JoinPageV4() {
                   </label>
                   <select
                     name="arrival"
+                    ref={arrivalRef}
                     required
                     className="w-full px-4 py-3 border border-[#E7E5E4] focus:border-[#D4A574] focus:outline-none transition-colors bg-white"
                   >

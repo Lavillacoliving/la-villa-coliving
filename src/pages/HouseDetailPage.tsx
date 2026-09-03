@@ -58,6 +58,7 @@ import { HouseGallery } from "@/sections/HouseGallery";
 import { SEO } from "@/components/SEO";
 import { WhatsAppButton } from "@/components/WhatsAppButton";
 import { HouseMap } from "@/components/HouseMap";
+import { RoomPipeline } from "@/components/RoomPipeline";
 import {
   Carousel,
   CarouselContent,
@@ -1951,30 +1952,39 @@ export function HouseDetailPage() {
                       );
                     })}
                   </div>
-                ) : (
-                  <p className="mb-8 text-[#57534E] font-medium max-w-3xl">
-                    {language === "en"
-                      ? "All rooms are taken right now — join the waitlist and you'll be the first to know when one opens up."
-                      : "Toutes les chambres sont occupées en ce moment — rejoins la liste d'attente, on te prévient en premier dès qu'une chambre se libère."}
-                  </p>
-                )}
+                ) : null}
+
+                {/* Bloc pipeline (Option 2, GO Jérôme 03/09) : la page vend la PROCHAINE
+                    libération, pas l'occupation du jour. */}
+                <RoomPipeline
+                  house={id as HouseKey}
+                  houseName={house.name}
+                  en={language === "en"}
+                  hasCandidates={candidates.length > 0}
+                  onApplyClick={(month) => {
+                    try {
+                      (window as unknown as { gtag?: (...a: unknown[]) => void }).gtag?.("event", "cta_click", {
+                        cta_position: "pipeline_month", cta_target: "/candidature", house: id, month, language,
+                      });
+                    } catch { /* noop */ }
+                  }}
+                />
 
                 {occupied.length > 0 && (
                   <>
                     <h3 className="text-lg font-black text-[#1C1917] mb-4">
                       {language === "en"
-                        ? (candidates.length > 0 ? "The other rooms" : "The rooms")
-                        : (candidates.length > 0 ? "Les autres chambres" : "Les chambres")}
+                        ? (candidates.length > 0 ? `The other ${occupied.length} rooms at ${house.name}` : `The ${occupied.length} rooms at ${house.name}`)
+                        : (candidates.length > 0 ? `Les ${occupied.length} autres chambres du ${house.name.replace(/^Le /, "")}` : `Les ${occupied.length} chambres du ${house.name.replace(/^Le /, "")}`)}
                     </h3>
                     {/* Panneau structuré (retour Jérôme 03/09 : les lignes « flottaient ») : cadre,
                         lignes séparées, en-tête de colonnes à partir de md, CTA rattaché au pied. */}
                     <div className="bg-white border border-[#E7E5E4] rounded-2xl overflow-hidden shadow-sm">
-                      <div className="hidden md:grid md:grid-cols-[1.4fr_0.7fr_0.9fr_1.3fr_auto] gap-4 px-5 py-3 bg-[#FAF9F6] border-b border-[#E7E5E4] text-xs font-semibold uppercase tracking-wider text-[#78716C]">
+                      <div className="hidden md:grid md:grid-cols-[1.4fr_0.7fr_0.9fr_1.3fr] gap-4 px-5 py-3 bg-[#FAF9F6] border-b border-[#E7E5E4] text-xs font-semibold uppercase tracking-wider text-[#78716C]">
                         <span>{language === "en" ? "Room" : "Chambre"}</span>
                         <span>{language === "en" ? "Size" : "Surface"}</span>
                         <span>{language === "en" ? "Floor" : "Étage"}</span>
                         <span>{language === "en" ? "Bathroom" : "Salle de bain"}</span>
-                        <span className="text-right">{language === "en" ? "Status" : "Statut"}</span>
                       </div>
                       <ul className="divide-y divide-[#E7E5E4]">
                         {occupied.map((room) => {
@@ -1987,7 +1997,7 @@ export function HouseDetailPage() {
                           return (
                             <li
                               key={room.room_number}
-                              className="px-5 py-3.5 flex items-center justify-between gap-4 md:grid md:grid-cols-[1.4fr_0.7fr_0.9fr_1.3fr_auto]"
+                              className="px-5 py-3.5 flex items-center justify-between gap-4 md:grid md:grid-cols-[1.4fr_0.7fr_0.9fr_1.3fr]"
                             >
                               <div className="min-w-0">
                                 <p className="font-black text-[#1C1917]">
@@ -2001,28 +2011,10 @@ export function HouseDetailPage() {
                               <span className="hidden md:block text-sm text-[#57534E]">{surface !== null ? `${surface} m²` : "—"}</span>
                               <span className="hidden md:block text-sm text-[#57534E]">{floor ?? "—"}</span>
                               <span className="hidden md:block text-sm text-[#57534E]">{bath ?? "—"}</span>
-                              <span className={`justify-self-end shrink-0 text-xs font-semibold px-3 py-1 rounded-full ${BADGE_PANEL_CLASS.full}`}>
-                                {language === "en" ? "Occupied" : "Occupée"}
-                              </span>
                             </li>
                           );
                         })}
                       </ul>
-                      <div className="flex flex-wrap items-center justify-between gap-3 px-5 py-4 bg-[#FAF9F6] border-t border-[#E7E5E4]">
-                        <p className="text-sm text-[#57534E]">
-                          {language === "en"
-                            ? "A room frees up? You're told first."
-                            : "Une chambre se libère ? Tu es prévenu en premier."}
-                        </p>
-                        <LocalizedLink
-                          to={`/candidature?property_interest=${id}`}
-                          onClick={() => trackCta("room_waitlist")}
-                          className="inline-flex items-center gap-2 px-6 py-3 bg-[#1C1917] text-white font-semibold rounded-full hover:bg-[#D4A574] hover:text-[#1C1917] transition-colors"
-                        >
-                          {language === "en" ? "Join the waitlist" : "Rejoindre la liste d'attente"}
-                          <ArrowRight className="w-4 h-4" />
-                        </LocalizedLink>
-                      </div>
                     </div>
                   </>
                 )}
