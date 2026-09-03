@@ -144,3 +144,26 @@ grant select on public.v_form_submissions_clean to anon, authenticated, service_
 -- 4.2 Colonnes (après retour Edge v16, ou en laissant la v17 dont le filet rejoue sans ces champs) :
 --   alter table public.form_submissions
 --     drop column if exists landing_page, drop column if exists referrer, drop column if exists entry_page;
+
+-- ---------------------------------------------------------------------------
+-- PARTIE 5 — APPLIQUÉ le 03/09/2026 (GO Jérôme) : deux migrations MCP
+--   • `attribution_landing_2026_09_03`  = parties 1-2 ci-dessus (vérifs 3.1-3.4 ✅ :
+--     3 colonnes text, vue security_invoker=true avec les 4 colonnes en plus, RPC présente,
+--     is_paid jamais NULL, 64 lignes nettes).
+--   • `reporting_candidatures_utm_virtuels_2026_09_03` = correction des 3 vues du schéma
+--     `reporting` (ci-dessous). DÉCOUVERTE À L'APPLICATION : `form_submissions` a QUATRE vues
+--     dépendantes, pas une — v_form_submissions_clean (public) + reporting.v_candidatures_jour /
+--     _semaine / _mois (migration `reporting_tableau_de_bord_v1` du 02/09, non documentées).
+--     Elles définissaient ads = utm_source non nul OU gclid non nul : avec les UTM virtuels
+--     (utm_source = site), une candidature organique venue d'un article aurait compté Ads.
+--     Correction : ads = gclid non nul OU utm_medium = cpc (= is_paid), org_direct = le reste.
+--     CREATE OR REPLACE, mêmes colonnes/ordre/types, grants conservés (postgres seul),
+--     historique inchangé (aucune ligne utm_source = site avant le déploiement du front).
+-- ---------------------------------------------------------------------------
+-- create or replace view reporting.v_candidatures_jour as … (org_direct / ads réécrits)
+-- create or replace view reporting.v_candidatures_semaine as … (org_direct / ads / org_direct_par_jour)
+-- create or replace view reporting.v_candidatures_mois as … (org_direct / ads / organique_hors_portails /
+--   ads_avec_utm_term / ads_utm_term_pct)
+-- Définition exacte : historique des migrations Supabase (MCP list_migrations →
+-- reporting_candidatures_utm_virtuels_2026_09_03). Règle à retenir pour toute vue future sur
+-- form_submissions : « payant » = gclid IS NOT NULL OR utm_medium = 'cpc', JAMAIS utm_source IS NOT NULL.
