@@ -46,7 +46,7 @@ export function CTASectionV7() {
               to="/nos-maisons"
               className="inline-flex items-center gap-3 px-10 py-4 border border-white/30 text-white font-semibold rounded-lg hover:border-white hover:bg-white/5 transition-all duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-[#1C1917]"
             >
-              {language === 'en' ? 'Explore our houses' : 'Découvrir nos maisons'}
+              {language === 'en' ? 'Explore La Villa, Le Loft, Le Lodge' : 'Découvrir La Villa, Le Loft, Le Lodge'}
             </LocalizedLink>
           </div>
 

@@ -41,8 +41,8 @@ export const BAROMETRE = {
   residentsCovered: `${STATS.totalResidents}+`,
   roomsCount: STATS.totalRooms,
   housesCount: STATS.totalHouses,
-  roomSizeMin: STATS.roomSizeMin, // 17 m² — sert à expliquer la méthode du m²/résident
-  roomSizeMax: STATS.roomSizeMax, // 23 m²
+  roomSizeMin: STATS.roomSizeMin, // 16 m² — sert à expliquer la méthode du m²/résident
+  roomSizeMax: STATS.roomSizeMax, // 24 m²
 } as const;
 
 // Tableau « coût complet » — studio nu 30 m² à Annemasse (hypothèses AFFICHÉES sur la page).

@@ -202,7 +202,7 @@ export function FAQPageV4() {
                   className="mt-4 block p-6 bg-[#FAF9F6] border border-[#E7E5E4] hover:border-[#D4A574]/40 transition-colors group"
                 >
                   <h4 className="font-medium text-[#1C1917] mb-2 group-hover:text-[#D4A574] transition-colors">
-                    {language === "en" ? "Shared housing in Annemasse" : "Colocation à Annemasse"}
+                    {language === "en" ? "Annemasse Agglo, La Villa Coliving side" : "Annemasse Agglo, côté La Villa Coliving"}
                   </h4>
                   <p className="text-sm text-[#57534E]">
                     {language === "en"

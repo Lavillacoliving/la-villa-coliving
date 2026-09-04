@@ -1,7 +1,7 @@
 // FAQ Data for SEO - Extensive question/answer database
 // Organized by categories for better SEO structure
 
-import { PRICE_CHF_FR, PRICE_CHF_EN, PRICE_SHARED_EN_NUM, PRICE_SHARED_CHF_FR, PRICE_SHARED_CHF_EN } from "@/data/stats";
+import { STATS, PRICE_CHF_FR, PRICE_CHF_EN, PRICE_SHARED_EN_NUM, PRICE_SHARED_CHF_FR, PRICE_SHARED_CHF_EN } from "@/data/stats";
 export interface FAQItem {
   id: string;
   question: { en: string; fr: string };
@@ -292,8 +292,8 @@ export const faqData: FAQItem[] = [
       fr: 'Pourquoi les prix sont-ils plus élevés qu\'une colocation classique ?',
     },
     answer: {
-      en: `Because you're not getting the same thing. Our rooms are 17-25 m² (vs 9-12 m² for most local flatshares), every house has a pool, sauna and gym, professional cleaning is included, a dedicated team maintains the house (gardener, pool technician), and community life is organised monthly. Per square metre and like-for-like on services, La Villa is at market price — all inclusive from ${PRICE_SHARED_CHF_EN}/month, with no application or agency fees.`,
-      fr: `Parce que tu n'obtiens pas la même chose. Nos chambres font 17 à 25 m² (contre 9-12 m² pour la plupart des colocations locales), chaque maison a piscine, sauna et salle de sport, le ménage professionnel est inclus, une équipe entretient la maison (jardinier, pisciniste) et la vie communautaire est organisée chaque mois. Au m² et à services équivalents, La Villa est dans les prix du marché — tout inclus dès ${PRICE_SHARED_CHF_FR}/mois, sans frais de dossier ni d'agence.`,
+      en: `Because you're not getting the same thing. Our rooms are ${STATS.roomSizeMin}-${STATS.roomSizeMax} m² (vs 9-12 m² for most local flatshares), every house has a pool, sauna and gym, professional cleaning is included, a dedicated team maintains the house (gardener, pool technician), and community life is organised monthly. Per square metre and like-for-like on services, La Villa is at market price — all inclusive from ${PRICE_SHARED_CHF_EN}/month, with no application or agency fees.`,
+      fr: `Parce que tu n'obtiens pas la même chose. Nos chambres font ${STATS.roomSizeMin} à ${STATS.roomSizeMax} m² (contre 9-12 m² pour la plupart des colocations locales), chaque maison a piscine, sauna et salle de sport, le ménage professionnel est inclus, une équipe entretient la maison (jardinier, pisciniste) et la vie communautaire est organisée chaque mois. Au m² et à services équivalents, La Villa est dans les prix du marché — tout inclus dès ${PRICE_SHARED_CHF_FR}/mois, sans frais de dossier ni d'agence.`,
     },
   },
   {

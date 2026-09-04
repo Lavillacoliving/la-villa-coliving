@@ -377,10 +377,14 @@ async function main() {
 
     // 3. Replace meta description if page has a specific one
     if (seo.metaName?.description) {
-      result = result.replace(
-        /<meta\s+name="description"\s+content="[^"]*"[^>]*>/,
-        `<meta name="description" content="${seo.metaName.description}" />`
-      );
+      const metaTag = `<meta name="description" content="${seo.metaName.description}" />`;
+      if (/<meta\s+name="description"\s+content="[^"]*"[^>]*>/.test(result)) {
+        result = result.replace(/<meta\s+name="description"\s+content="[^"]*"[^>]*>/, metaTag);
+      } else {
+        // (Lot 7, 04/09/2026) Plus de meta statique dans index.html (doublon lu par Google) :
+        // la description de la page est insérée en tête de <head>.
+        result = result.replace('</head>', `    ${metaTag}\n  </head>`);
+      }
     }
 
     // 4. Build and inject all SEO tags (canonical, OG, Twitter, hreflang, JSON-LD)
