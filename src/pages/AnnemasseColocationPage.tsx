@@ -544,6 +544,21 @@ export function AnnemasseColocationPage() {
         </div>
       </section>
 
+      {/* ===== (Lot 4 SEO funnel — Q6, 04/09/2026) Et côté Genève ? Honnêteté géographique : une seule maison
+          est à Annemasse même (Le Lodge), les deux autres sont dans l'agglo ; ancre exacte vers la home. ===== */}
+      <section className="py-12 lg:py-16 bg-white">
+        <div className="max-w-3xl mx-auto px-6">
+          <h2 className="text-2xl md:text-3xl font-light text-[#1C1917] mb-4" style={{ fontFamily: '"DM Serif Display", serif' }}>
+            {language === "en" ? "And on the Geneva side?" : "Et côté Genève ?"}
+          </h2>
+          <p className="text-[#57534E] leading-relaxed">
+            {language === "en"
+              ? <>Only one of our houses is in Annemasse itself, Le Lodge; La Villa and Le Loft are in Ville-la-Grand and Ambilly, in Annemasse Agglo, a few minutes from the border. All three belong to the same <LocalizedLink to="/" className="text-[#1C1917] underline hover:text-[#D4A574]">coliving Geneva</LocalizedLink>: same services, same community, Geneva city centre 20 minutes away.</>
+              : <>Une seule de nos maisons est à Annemasse même, Le Lodge ; La Villa et Le Loft sont à Ville-la-Grand et à Ambilly, dans Annemasse Agglo, à quelques minutes de la frontière. Les trois font partie du même <LocalizedLink to="/" className="text-[#1C1917] underline hover:text-[#D4A574]">coliving Genève</LocalizedLink> : mêmes services, même communauté, Genève centre à 20 minutes.</>}
+          </p>
+        </div>
+      </section>
+
       {/* ===== Internal linking (existing nav strip) ===== */}
       <section className="py-12 bg-white border-t border-[#E7E5E4]">
         <div className="max-w-5xl mx-auto px-6 text-center">

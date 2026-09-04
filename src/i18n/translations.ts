@@ -207,6 +207,8 @@ export const translations = {
     // The Coliving Page - Enhanced
     colivingPage: {
       hero: {
+        // (Lot 4 SEO funnel, 04/09/2026) H1 de /le-coliving — une seule page vise « coliving Genève » : la home.
+        h1: "What is coliving?",
         title: "Premium Coliving Houses & Community",
         subtitle: "What is Coliving?",
       },
@@ -639,6 +641,8 @@ export const translations = {
     // The Coliving Page - Enhanced
     colivingPage: {
       hero: {
+        // (Lot 4 SEO funnel, 04/09/2026) H1 de /le-coliving — une seule page vise « coliving Genève » : la home.
+        h1: "Le coliving, c'est quoi ?",
         title: "Maisons Coliving Premium & Communauté",
         subtitle: "Qu'est-ce que le Coliving ?",
       },

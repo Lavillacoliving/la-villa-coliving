@@ -168,9 +168,10 @@ export function HousesPageV4() {
             )}
           </h1>
           <p className="text-xl text-[#57534E] max-w-2xl mx-auto">
+            {/* (Lot 4 SEO funnel) Ancre exacte vers la home, URL championne sur « coliving genève ». */}
             {language === "en"
-              ? "Three houses in premium coliving near Geneva — each designed for modern community living."
-              : "Trois maisons en colocation premium près de Genève — chacune pensée pour la vie communautaire moderne."}
+              ? <>Three houses in premium coliving near Geneva — each designed for modern community living. Together they form our <LocalizedLink to="/" className="underline underline-offset-4 hover:text-[#1C1917]">coliving Geneva</LocalizedLink>, on the French side.</>
+              : <>Trois maisons en colocation premium près de Genève — chacune pensée pour la vie communautaire moderne. Ensemble, elles forment notre <LocalizedLink to="/" className="underline underline-offset-4 hover:text-[#1C1917]">coliving Genève</LocalizedLink>, côté France.</>}
           </p>
           {/* Phrase citable produit (extraction IA / AI Overviews) */}
           <p className="text-sm text-[#78716C] max-w-2xl mx-auto mt-4">
