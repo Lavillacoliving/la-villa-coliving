@@ -2147,9 +2147,16 @@ export function HouseDetailPage() {
                       </li>
                     ))}
                   </ul>
-                  {(id === "lelodge" || id === "leloft") && (
-                    <p className="mt-5 text-sm text-[#57534E]">
-                      {language === "en" ? "See also: " : "Voir aussi : "}
+                  {/* (Lot 4 SEO funnel, 04/09/2026) « Voir aussi » sur les 3 maisons : ancre exacte vers la home
+                      (URL championne sur « coliving genève ») en tête, puis les pages Annemasse pour Lodge et Loft. */}
+                  <p className="mt-5 text-sm text-[#57534E]">
+                    {language === "en" ? "See also: " : "Voir aussi : "}
+                    <LocalizedLink to="/" className="underline underline-offset-4 hover:text-[#1C1917]">
+                      {language === "en" ? "coliving Geneva" : "coliving Genève"}
+                    </LocalizedLink>
+                    {(id === "lelodge" || id === "leloft") && (
+                    <>
+                      {" · "}
                       <LocalizedLink to="/annemasse-colocation" className="underline underline-offset-4 hover:text-[#1C1917]">
                         {language === "en" ? "shared housing in Annemasse" : "colocation à Annemasse"}
                       </LocalizedLink>
@@ -2166,8 +2173,9 @@ export function HouseDetailPage() {
                           </LocalizedLink>
                         </>
                       )}
-                    </p>
-                  )}
+                    </>
+                    )}
+                  </p>
                 </div>
 
                 <div>

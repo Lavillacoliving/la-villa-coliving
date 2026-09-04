@@ -27,8 +27,8 @@ export function InvestisseursPage() {
       <SEO
         title={
           language === "en"
-            ? "Coliving Investors Geneva — Premium Delegated Management"
-            : "Investisseurs Coliving Genève — Gestion Déléguée Premium"
+            ? "Investing in coliving near Geneva — delegated management"
+            : "Investir dans le coliving près de Genève — gestion déléguée"
         }
         description={
           language === "en"

@@ -378,6 +378,11 @@ export function ChambreLouerAnnemassePage() {
               {language === "en" ? "Annemasse coliving guide" : "Guide colocation Annemasse"}
             </LocalizedLink>
             <span className="text-[#E7E5E4]">·</span>
+            {/* (Lot 4 SEO funnel) Ancre exacte vers la home, URL championne sur « coliving genève ». */}
+            <LocalizedLink to="/" className="text-[#1C1917] underline hover:text-[#D4A574]">
+              {language === "en" ? "Coliving Geneva" : "Coliving Genève"}
+            </LocalizedLink>
+            <span className="text-[#E7E5E4]">·</span>
             <LocalizedLink to={colocGeneveHref(language)} className="text-[#1C1917] underline hover:text-[#D4A574]">
               {language === "en" ? "Shared housing Geneva" : "Colocation Genève"}
             </LocalizedLink>

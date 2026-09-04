@@ -50,10 +50,12 @@ export function ColivingPageV4() {
   return (
     <main className="relative pt-16">
       <SEO
-        title={language === "en" ? "Coliving Geneva: The Practical Guide" : "Coliving Genève : le guide pratique"}
+        // (Lot 4 SEO funnel, 04/09/2026) Une seule cible « coliving Genève » : la home. Cette page répond
+        // à l'intention « c'est quoi » — title variante B (53 c., sans marque : le suffixe dépasserait 65 c.), pas de prix dans le title (S33).
+        title={language === "en" ? "What is coliving? Differences, prices, who it's for" : "Le coliving, c'est quoi ? Différences, prix, pour qui"}
         description={language === "en"
-          ? "Discover premium coliving at La Villa: designer houses, curated community, all-inclusive. Different from traditional shared housing."
-          : "Découvre le coliving premium La Villa : maisons design, communauté sélectionnée, tout inclus. Différent d'une colocation classique."}
+          ? `Coliving explained simply: how it differs from a flatshare, what it costs (from ${PRICE_SHARED_CHF_EN} all inclusive) and who it suits.`
+          : `Le coliving expliqué simplement : ce qui le distingue d'une colocation, ce que ça coûte (dès ${PRICE_SHARED_CHF_FR} tout inclus) et à qui ça convient.`}
         url="https://www.lavillacoliving.com/le-coliving"
       />
       {/* Hero avec image de fond */}
@@ -73,18 +75,23 @@ export function ColivingPageV4() {
           <div className="max-w-4xl">
             {/* Tout le contenu en blanc explicitement */}
             <span className="text-xs uppercase tracking-[0.3em] mb-6 block text-white">
-              {t.hero.subtitle}
+              {language === "en" ? "Coliving, explained" : "Le coliving, expliqué"}
             </span>
             <h1
               className="text-5xl md:text-6xl lg:text-7xl font-light mb-8 text-white"
               style={{ fontFamily: '"DM Serif Display", serif' }}
             >
-              {t.hero.title}
+              {t.colivingPage.hero.h1}
             </h1>
             <p className="text-xl mb-8 text-white/90">
               {language === "en"
                 ? `Coliving is flatsharing with hotel-grade services included: furnished room, utilities, fiber, cleaning and shared spaces designed for community. At La Villa: 29 rooms, 3 houses near Geneva, from ${PRICE_SHARED_CHF_EN}/month.`
                 : `Le coliving, c'est la colocation avec services hôteliers inclus : chambre meublée, charges, fibre, ménage et espaces communs pensés pour la communauté. À La Villa : 29 chambres, 3 maisons près de Genève, dès ${PRICE_SHARED_CHF_FR}/mois.`}
+              {" "}
+              {/* (Lot 4) Ancre exacte vers la home, URL championne sur « coliving genève ». */}
+              {language === "en"
+                ? <>Our <LocalizedLink to="/" className="underline decoration-[#D4A574] decoration-2 underline-offset-4 hover:text-white transition-colors">coliving Geneva</LocalizedLink> is on the French side, 20 minutes from the centre.</>
+                : <>Notre <LocalizedLink to="/" className="underline decoration-[#D4A574] decoration-2 underline-offset-4 hover:text-white transition-colors">coliving Genève</LocalizedLink> se vit côté France, à 20 minutes du centre.</>}
             </p>
             <LocalizedLink
               to="/nos-maisons"
@@ -386,6 +393,12 @@ export function ColivingPageV4() {
                 ))}
               </div>
 
+              {/* (Lot 4) Conclusion : ancre exacte vers la home + porte vers les chambres disponibles (Lot 3). */}
+              <p className="mt-8 text-[#57534E] leading-relaxed">
+                {language === "en"
+                  ? <>Ready to see it for yourself? Browse our <LocalizedLink to="/" className="underline decoration-[#D4A574] decoration-2 underline-offset-4 hover:text-[#1C1917] transition-colors">coliving Geneva</LocalizedLink> and the <LocalizedLink to="/chambres-disponibles" className="underline decoration-[#D4A574] decoration-2 underline-offset-4 hover:text-[#1C1917] transition-colors">available rooms</LocalizedLink> right now.</>
+                  : <>Envie de voir par toi-même ? Découvre notre <LocalizedLink to="/" className="underline decoration-[#D4A574] decoration-2 underline-offset-4 hover:text-[#1C1917] transition-colors">coliving Genève</LocalizedLink> et les <LocalizedLink to="/chambres-disponibles" className="underline decoration-[#D4A574] decoration-2 underline-offset-4 hover:text-[#1C1917] transition-colors">chambres disponibles</LocalizedLink> en ce moment.</>}
+              </p>
               <LocalizedLink
                 to="/candidature"
                 className="inline-flex items-center gap-2 mt-10 px-8 py-4 bg-[#D4A574] text-white font-bold hover:bg-[#1C1917] transition-colors"
