@@ -359,6 +359,14 @@
 
   <!-- ═══ BLOG ARTICLES — FR ═══ -->
   <url>
+    <loc>https://www.lavillacoliving.com/blog/temps-trajet-annemasse-geneve-par-quartier</loc>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://www.lavillacoliving.com/blog/temps-trajet-annemasse-geneve-par-quartier" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.lavillacoliving.com/en/blog/temps-trajet-annemasse-geneve-par-quartier" />
+    <lastmod>2026-09-04</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
     <loc>https://www.lavillacoliving.com/blog/coliving-communaute-reels-amis-geneve-annemasse</loc>
     <xhtml:link rel="alternate" hreflang="fr" href="https://www.lavillacoliving.com/blog/coliving-communaute-reels-amis-geneve-annemasse" />
     <xhtml:link rel="alternate" hreflang="en" href="https://www.lavillacoliving.com/en/blog/coliving-communaute-reels-amis-geneve-annemasse" />
@@ -370,14 +378,6 @@
     <loc>https://www.lavillacoliving.com/blog/lodge-annemasse-coliving-premium-portes-geneve</loc>
     <xhtml:link rel="alternate" hreflang="fr" href="https://www.lavillacoliving.com/blog/lodge-annemasse-coliving-premium-portes-geneve" />
     <xhtml:link rel="alternate" hreflang="en" href="https://www.lavillacoliving.com/en/blog/lodge-annemasse-coliving-premium-portes-geneve" />
-    <lastmod>2026-09-04</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://www.lavillacoliving.com/blog/temps-trajet-annemasse-geneve-par-quartier</loc>
-    <xhtml:link rel="alternate" hreflang="fr" href="https://www.lavillacoliving.com/blog/temps-trajet-annemasse-geneve-par-quartier" />
-    <xhtml:link rel="alternate" hreflang="en" href="https://www.lavillacoliving.com/en/blog/temps-trajet-annemasse-geneve-par-quartier" />
     <lastmod>2026-09-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
@@ -681,6 +681,14 @@
 
   <!-- ═══ BLOG ARTICLES — EN ═══ -->
   <url>
+    <loc>https://www.lavillacoliving.com/en/blog/temps-trajet-annemasse-geneve-par-quartier</loc>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://www.lavillacoliving.com/blog/temps-trajet-annemasse-geneve-par-quartier" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.lavillacoliving.com/en/blog/temps-trajet-annemasse-geneve-par-quartier" />
+    <lastmod>2026-09-04</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
+  </url>
+  <url>
     <loc>https://www.lavillacoliving.com/en/blog/coliving-communaute-reels-amis-geneve-annemasse</loc>
     <xhtml:link rel="alternate" hreflang="fr" href="https://www.lavillacoliving.com/blog/coliving-communaute-reels-amis-geneve-annemasse" />
     <xhtml:link rel="alternate" hreflang="en" href="https://www.lavillacoliving.com/en/blog/coliving-communaute-reels-amis-geneve-annemasse" />
@@ -692,14 +700,6 @@
     <loc>https://www.lavillacoliving.com/en/blog/lodge-annemasse-coliving-premium-portes-geneve</loc>
     <xhtml:link rel="alternate" hreflang="fr" href="https://www.lavillacoliving.com/blog/lodge-annemasse-coliving-premium-portes-geneve" />
     <xhtml:link rel="alternate" hreflang="en" href="https://www.lavillacoliving.com/en/blog/lodge-annemasse-coliving-premium-portes-geneve" />
-    <lastmod>2026-09-04</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.5</priority>
-  </url>
-  <url>
-    <loc>https://www.lavillacoliving.com/en/blog/temps-trajet-annemasse-geneve-par-quartier</loc>
-    <xhtml:link rel="alternate" hreflang="fr" href="https://www.lavillacoliving.com/blog/temps-trajet-annemasse-geneve-par-quartier" />
-    <xhtml:link rel="alternate" hreflang="en" href="https://www.lavillacoliving.com/en/blog/temps-trajet-annemasse-geneve-par-quartier" />
     <lastmod>2026-09-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
