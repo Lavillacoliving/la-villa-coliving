@@ -327,6 +327,13 @@ export function ChambresDisponiblesPage() {
             </LocalizedLink>
             {en ? " or message us on WhatsApp — we answer fast." : " ou écris-nous sur WhatsApp, on répond vite."}
           </p>
+          {/* (Lot 6 SEO funnel) Porte vers la page money « chambre à louer près de Genève ». */}
+          <p className="mt-3 text-center text-[#57534E]">
+            {en ? "Looking for a single room rather than a flatshare? " : "Tu cherches une chambre seule plutôt qu'une colocation ? "}
+            <LocalizedLink to="/chambre-a-louer-geneve" className="underline underline-offset-4 hover:text-[#1C1917]">
+              {en ? "Furnished rooms to rent near Geneva" : "Chambres meublées à louer près de Genève"}
+            </LocalizedLink>
+          </p>
         </div>
       </section>
 
