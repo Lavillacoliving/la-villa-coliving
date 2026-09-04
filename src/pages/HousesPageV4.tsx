@@ -1,4 +1,5 @@
 import { LocalizedLink } from "@/components/LocalizedLink";
+import { colocGeneveHref } from "@/lib/siteLinks";
 import { HouseAvailabilityLine } from "@/components/HouseAvailabilityLine";
 import { responsiveImage } from "@/lib/responsiveImage";
 import { useLanguage } from "@/contexts/LanguageContext";
@@ -170,8 +171,8 @@ export function HousesPageV4() {
           <p className="text-xl text-[#57534E] max-w-2xl mx-auto">
             {/* (Lot 4 SEO funnel) Ancre exacte vers la home, URL championne sur « coliving genève ». */}
             {language === "en"
-              ? <>Three houses in premium coliving near Geneva — each designed for modern community living. Together they form our <LocalizedLink to="/" className="underline underline-offset-4 hover:text-[#1C1917]">coliving Geneva</LocalizedLink>, on the French side.</>
-              : <>Trois maisons en colocation premium près de Genève — chacune pensée pour la vie communautaire moderne. Ensemble, elles forment notre <LocalizedLink to="/" className="underline underline-offset-4 hover:text-[#1C1917]">coliving Genève</LocalizedLink>, côté France.</>}
+              ? <>Three houses in premium coliving near Geneva — each designed for modern community living. Together they form our <LocalizedLink to="/" className="underline underline-offset-4 hover:text-[#1C1917]">coliving Geneva</LocalizedLink>, on the French side. Rooms and dates in real time on our <LocalizedLink to={colocGeneveHref(language)} className="underline underline-offset-4 hover:text-[#1C1917]">shared housing in Geneva, French side</LocalizedLink> page.</>
+              : <>Trois maisons en colocation premium près de Genève — chacune pensée pour la vie communautaire moderne. Ensemble, elles forment notre <LocalizedLink to="/" className="underline underline-offset-4 hover:text-[#1C1917]">coliving Genève</LocalizedLink>, côté France. Chambres et dates en temps réel sur notre page <LocalizedLink to={colocGeneveHref(language)} className="underline underline-offset-4 hover:text-[#1C1917]">colocation à Genève côté France</LocalizedLink>.</>}
           </p>
           {/* Phrase citable produit (extraction IA / AI Overviews) */}
           <p className="text-sm text-[#78716C] max-w-2xl mx-auto mt-4">

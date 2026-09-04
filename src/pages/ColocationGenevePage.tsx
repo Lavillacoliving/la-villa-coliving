@@ -1,64 +1,44 @@
-import { LocalizedLink } from "@/components/LocalizedLink";
 import { Helmet } from "react-helmet";
-import { useLanguage } from "@/contexts/LanguageContext";
+import { ArrowRight, Check, Train, Users, Home, Clock, Euro } from "lucide-react";
+import { LocalizedLink } from "@/components/LocalizedLink";
 import { SEO } from "@/components/SEO";
-import { WaitlistForm } from "@/components/WaitlistForm";
-import {
-  MapPin,
-  Clock,
-  Train,
-  Euro,
-  Home,
-  Users,
-  Waves,
-  Dumbbell,
-  Wifi,
-  ArrowRight,
-  Check,
-  Star,
-  Shield,
-  Tv,
-  UtensilsCrossed,
-  Globe,
-  Briefcase,
-  Laptop2,
-} from "lucide-react";
-import { useState, useEffect } from "react";
-import { supabase } from "@/lib/supabase";
-import { readEmbeddedArray, embedJson } from "@/lib/prerenderEmbeddedState";
 import { FaqSection } from "@/components/FaqSection";
-import { buildFaqPageSchema } from "@/lib/structuredData";
-import { colocationGeneveFaq } from "@/data/faq/colocationGeneveFaq";
-import { STATS, STATS_SHARED_BATH, PRICE_EN_NUM, PRICE_CHF_FR, PRICE_CHF_EN, PRICE_SHARED_EN_NUM, PRICE_SHARED_CHF_FR, PRICE_SHARED_CHF_EN } from "@/data/stats";
-import { COLOC_GENEVE_PILLAR_EN, COLOC_GENEVE_PILLAR_FR } from "@/lib/siteLinks";
 import { RoomCard } from "@/components/RoomCard";
 import { RoomsEmbed } from "@/components/RoomsEmbed";
 import { HouseAvailabilityLine } from "@/components/HouseAvailabilityLine";
+import { WaitlistForm } from "@/components/WaitlistForm";
+import { useLanguage } from "@/contexts/LanguageContext";
 import { HOUSES } from "@/data/houses";
+import { colocationGeneveFaq } from "@/data/faq/colocationGeneveFaq";
+import { STATS, STATS_SHARED_BATH, PRICE_CHF_FR, PRICE_CHF_EN, PRICE_SHARED_CHF_FR, PRICE_SHARED_CHF_EN } from "@/data/stats";
+import { COLOC_GENEVE_ARTICLE, COLOC_GENEVE_PILLAR_EN, COLOC_GENEVE_PILLAR_FR } from "@/lib/siteLinks";
 import { useAllRooms, splitRooms, type HouseKey, type PublicRoom } from "@/lib/availability";
 
-// (Lot 5 SEO funnel, 04/09/2026 — gel levé par Jérôme) La page FR revit à /colocation-geneve, l'EN à
-// /en/colocation-geneve : Offer.url et WebPage.url désignent l'URL de la langue rendue.
-
-// FAQ §3 (bilingue, tutoiement) : voir src/data/faq/colocationGeneveFaq.ts
-
-interface BlogPost {
-  id: string; slug: string;
-  title_fr: string; title_en: string | null;
-  image_url: string | null;
-  read_time_min: number; category: string;
-}
-
-// État embarqué par le prerender (fix hydratation #418) — id aussi listé dans main.tsx.
-const BLOG_EMBED_ID = "__colocation_blog_data__";
+/**
+ * /colocation-geneve · /en/colocation-geneve — Lot 5 du plan SEO funnel, spécification révisée du
+ * 04/09/2026 (gel levé par Jérôme). Page money « je cherche une chambre » : la SERP « colocation genève »
+ * récompense la FORME D'UN INVENTAIRE (chambres, prix, dates) qui répond aux quatre questions
+ * « Autres questions posées ». Structure en 8 blocs : cartes chambres au-dessus de la ligne de
+ * flottaison → combien ça coûte → comment faire (frontalier ou résident suisse) → nos 3 maisons →
+ * à N min de Genève → où chercher → FAQ (FAQPage) → CTA. L'article « Trouver une colocation à Genève »
+ * garde l'intention « comment chercher » ; pas de canonical entre les deux.
+ * Règles : CHF des deux côtés de toute comparaison, jamais un loyer français en euros ici, aucun
+ * concurrent nommé, jamais « complet », tutoiement, prix depuis src/data/stats.ts.
+ * Données : store partagé v_public_rooms (Lot 3) — les cartes sont dans le HTML prérendu (RoomsEmbed).
+ */
+const PAGE_LAST_UPDATED = "2026-09-04";
+const PAGE_FIRST_PUBLISHED = "2026-02-17";
+const HOUSE_ORDER: HouseKey[] = ["lavilla", "leloft", "lelodge"];
 
 export function ColocationGenevePage() {
   const { language } = useLanguage();
-  const PILLAR_URL = `https://www.lavillacoliving.com${language === "en" ? COLOC_GENEVE_PILLAR_EN : COLOC_GENEVE_PILLAR_FR}`;
-  // (Lot 5) Intention « je cherche une chambre » : les chambres candidates (libres ou datées)
-  // des 3 maisons, même store et même embed que /chambres-disponibles (premier rendu = prérendu).
+  const en = language === "en";
+  const L = en ? "en" as const : "fr" as const;
+  const MIN = STATS.genevaCenterMinutes;
+  const PILLAR_URL = `https://www.lavillacoliving.com${en ? COLOC_GENEVE_PILLAR_EN : COLOC_GENEVE_PILLAR_FR}`;
   const allRooms = useAllRooms();
   const { candidates } = splitRooms(allRooms.rooms);
+  const n = candidates.length;
   const trackRoomCta = (room: PublicRoom) => {
     try {
       (window as unknown as { gtag?: (...a: unknown[]) => void }).gtag?.("event", "cta_click", {
@@ -67,813 +47,214 @@ export function ColocationGenevePage() {
       });
     } catch { /* noop */ }
   };
-  // Init synchrone depuis l'état embarqué (fix hydratation #418) : sans lui,
-  // blogPosts=[] au premier rendu client → la section « articles » manque →
-  // mismatch avec le snapshot prérendu et re-render de toute la page.
-  const [blogPosts, setBlogPosts] = useState<BlogPost[]>(
-    () => readEmbeddedArray<BlogPost>(BLOG_EMBED_ID) ?? [],
-  );
 
-  useEffect(() => {
-    if (readEmbeddedArray<BlogPost>(BLOG_EMBED_ID) !== null) return; // déjà hydraté depuis le prerendu
-    async function loadBlogPosts() {
-      try {
-        const { data } = await supabase
-          .from("blog_posts")
-          .select("id,slug,title_fr,title_en,image_url,read_time_min,category")
-          .eq("is_published", true)
-          .order("published_at", { ascending: false })
-          .limit(4);
-        setBlogPosts(data || []);
-      } catch (e) { console.error(e); }
-    }
-    loadBlogPosts();
-  }, []);
-
-  // FAQ §3 résolue dans la langue courante + schema FAQPage construit depuis le texte VISIBLE.
-  const colocationFAQ = colocationGeneveFaq[language === "en" ? "en" : "fr"];
-  const faqSchema = buildFaqPageSchema(colocationFAQ);
-
-  // Offer schema — separate JSON-LD block.
-  // (AggregateRating retiré : la note 4,9 vient d'un NPS interne, non balisable en schema.)
   const offerSchema = {
     "@context": "https://schema.org",
     "@type": "Offer",
-    name: language === "en"
-      ? "Furnished room in shared housing near Geneva"
-      : "Chambre meublée en colocation près de Genève",
-    description: language === "en"
-      ? "All-inclusive furnished room: rent, utilities, fiber internet, cleaning 3x/week, pool, gym, sauna, yoga classes, community events."
-      : "Chambre meublée tout inclus : loyer, charges, fibre internet, ménage 3x/semaine, piscine, gym, sauna, cours de yoga, événements communautaires.",
+    name: en ? "Furnished room in shared housing near Geneva, French side" : "Chambre meublée en colocation près de Genève, côté France",
+    description: en
+      ? "All-inclusive furnished room: rent, utilities, fibre internet, cleaning of common areas 3x/week, shared spaces and community events."
+      : "Chambre meublée tout inclus : loyer, charges, fibre, ménage des communs 3x/semaine, espaces communs et événements.",
     price: String(STATS_SHARED_BATH.priceChf),
     priceCurrency: "CHF",
     priceValidUntil: "2026-12-31",
-    availability: "https://schema.org/InStock",
+    availability: n > 0 ? "https://schema.org/InStock" : "https://schema.org/PreOrder",
     url: PILLAR_URL,
-    seller: {
-      "@type": "Organization",
-      name: "La Villa Coliving",
-      url: "https://www.lavillacoliving.com",
-    },
-    areaServed: [
-      { "@type": "City", name: "Genève" },
-      { "@type": "City", name: "Annemasse" },
-    ],
+    seller: { "@type": "Organization", name: "La Villa Coliving", url: "https://www.lavillacoliving.com" },
+    areaServed: [{ "@type": "City", name: "Genève" }, { "@type": "City", name: "Annemasse" }],
   };
-
-  // Freshness signal for the money page. Bump PAGE_LAST_UPDATED whenever the page
-  // content is meaningfully refreshed so Google sees a recent dateModified.
-  const PAGE_LAST_UPDATED = "2026-09-04";
-  // First commit of this page in the repo (git log --diff-filter=A) — verifiable.
-  const PAGE_FIRST_PUBLISHED = "2026-02-17";
-  // timeZone UTC : une chaîne YYYY-MM-DD est parsée à minuit UTC — sans cette
-  // option, les visiteurs en UTC− verraient la veille (incohérent avec le JSON-LD).
-  const lastUpdatedLabel = new Date(PAGE_LAST_UPDATED).toLocaleDateString(
-    language === "en" ? "en-US" : "fr-FR",
-    { year: "numeric", month: "long", day: "numeric", timeZone: "UTC" },
-  );
   const webPageSchema = {
     "@context": "https://schema.org",
     "@type": "WebPage",
     url: PILLAR_URL,
-    name: language === "en"
-      ? "Shared housing in Geneva, French side — all-inclusive rooms"
-      : "Colocation à Genève, côté France — chambres meublées tout inclus",
-    inLanguage: language === "en" ? "en" : "fr",
+    name: en ? "Shared housing in Geneva, the French-side version" : "Colocation à Genève, version côté France",
+    inLanguage: en ? "en" : "fr",
     datePublished: PAGE_FIRST_PUBLISHED,
     dateModified: PAGE_LAST_UPDATED,
   };
+  const lastUpdatedLabel = new Date(PAGE_LAST_UPDATED).toLocaleDateString(en ? "en-US" : "fr-FR", { year: "numeric", month: "long", day: "numeric", timeZone: "UTC" });
+  const h2 = "text-3xl md:text-4xl font-light text-[#1C1917] mb-6";
+  const serif = { fontFamily: "DM Serif Display, serif" } as const;
+  const link = "text-[#1C1917] underline underline-offset-4 hover:text-[#D4A574]";
 
   return (
     <main className="relative pt-16">
       <SEO
-        // (Lot 5, §6 variante B) Pas de prix dans le title (S33), « côté France » = la promesse honnête.
-        title={
-          language === "en"
-            ? "Shared housing in Geneva, French side"
-            : "Colocation à Genève, côté France"
-        }
-        description={
-          language === "en"
-            ? `Shared housing in Geneva, French-side version: furnished room, all inclusive from ${PRICE_SHARED_CHF_EN}/month, 20 min from the centre by Léman Express. Reply within 48 h.`
-            : `Colocation à Genève, version côté France : chambre meublée tout inclus dès ${PRICE_SHARED_CHF_FR}/mois, 20 min du centre en Léman Express. Réponse sous 48 h.`
-        }
+        // §6 variante B (décision Q8 : pas de prix dans le title). Meta de la spécification révisée du 04/09.
+        title={en ? "Shared housing in Geneva, French side" : "Colocation à Genève, côté France"}
+        description={en
+          ? `Shared housing in Geneva without Geneva rents: 3 houses on the French side ${MIN} min from the centre, furnished room with utilities, fibre and cleaning included. Available rooms, prices in CHF, reply within 48 h.`
+          : `Colocation à Genève sans les loyers genevois : 3 maisons côté France à ${MIN} min du centre, chambre meublée, charges, fibre et ménage compris. Chambres disponibles, prix en CHF, réponse sous 48 h.`}
         url={PILLAR_URL}
         image="https://www.lavillacoliving.com/images/villa_portrait.webp"
-        jsonLd={faqSchema}
+        jsonLd={offerSchema}
       />
-      {/* Separate JSON-LD blocks for Offer + WebPage (dateModified) — avoids @graph parsing issues */}
       <Helmet>
-        <script type="application/ld+json">{JSON.stringify(offerSchema)}</script>
         <script type="application/ld+json">{JSON.stringify(webPageSchema)}</script>
       </Helmet>
 
       {/* ===== HERO ===== */}
-      <section className="relative py-24 lg:py-32 bg-gradient-to-b from-white to-[#FAF9F6]">
+      <section className="relative py-20 lg:py-28 bg-gradient-to-b from-white to-[#FAF9F6]">
         <div className="max-w-5xl mx-auto px-6 text-center">
           <span className="text-xs text-[#D4A574] uppercase tracking-[0.3em] mb-4 block font-medium">
-            {language === "en" ? "Shared housing near Geneva" : "Colocation Grand Genève"}
+            {en ? "Shared housing · Greater Geneva" : "Colocation · Grand Genève"}
           </span>
-          <h1
-            className="text-4xl md:text-5xl lg:text-6xl font-light text-[#1C1917] mb-6 leading-tight"
-            style={{ fontFamily: "DM Serif Display, serif" }}
-          >
-            {language === "en" ? (
-              <>
-                <span className="text-[#D4A574]">Shared housing in Geneva, French side</span>
-                <br />
-                All-inclusive furnished rooms
-              </>
-            ) : (
-              <>
-                <span className="text-[#D4A574]">Colocation à Genève, côté France</span>
-                <br />Chambres meublées tout inclus
-              </>
-            )}
+          <h1 className="text-4xl md:text-5xl lg:text-6xl font-light text-[#1C1917] mb-6 leading-tight" style={serif}>
+            {en ? "Shared housing in Geneva, the French-side version" : "Colocation à Genève, version côté France"}
           </h1>
-          <p className="text-lg md:text-xl text-[#57534E] max-w-3xl mx-auto mb-10 leading-relaxed">
-            {language === "en"
-              ? `Live on the French side, work in Geneva. 29 fully furnished, all-inclusive rooms from ${PRICE_SHARED_CHF_EN}/month across 3 designer houses in Ville-la-Grand, Ambilly and Annemasse. Pool, gym, sauna, fiber internet — no application fee, everything included.`
-              : `Vis côté France, travaille à Genève. 29 chambres meublées tout inclus dès ${PRICE_SHARED_CHF_FR}/mois, dans 3 maisons design à Ville-la-Grand, Ambilly et Annemasse. Piscine, gym, sauna, fibre optique — pas de frais de dossier, tout est compris.`}
+          <p className="text-lg md:text-xl text-[#57534E] max-w-3xl mx-auto mb-8 leading-relaxed">
+            {en
+              ? `Live on the French side, work in Geneva. ${STATS.totalRooms} furnished rooms in ${STATS.totalHouses} houses in Ville-la-Grand, Ambilly and Annemasse, all inclusive from ${PRICE_SHARED_CHF_EN}/month, ${MIN} minutes from the centre. Real availability below, prices in CHF, reply within 48 h.`
+              : `Vis côté France, travaille à Genève. ${STATS.totalRooms} chambres meublées dans ${STATS.totalHouses} maisons à Ville-la-Grand, Ambilly et Annemasse, tout inclus dès ${PRICE_SHARED_CHF_FR}/mois, à ${MIN} minutes du centre. Les disponibilités réelles ci-dessous, les prix en CHF, une réponse sous 48 h.`}
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <LocalizedLink
-              to="/candidature"
-              className="inline-flex items-center gap-2 bg-[#D4A574] text-white px-8 py-4 text-sm uppercase tracking-wider hover:bg-[#44403C] transition-colors"
-            >
-              {language === "en" ? "Apply Now" : "Candidater"}
+            <a href="#chambres" className="inline-flex items-center gap-2 bg-[#D4A574] text-white px-8 py-4 text-sm uppercase tracking-wider hover:bg-[#44403C] transition-colors">
+              {en ? "See available rooms" : "Voir les chambres disponibles"}
               <ArrowRight className="w-4 h-4" />
-            </LocalizedLink>
-            <LocalizedLink
-              to="/nos-maisons"
-              className="inline-flex items-center gap-2 border border-[#1C1917] text-[#1C1917] px-8 py-4 text-sm uppercase tracking-wider hover:bg-[#1C1917] hover:text-white transition-colors"
-            >
-              {language === "en" ? "View our houses" : "Voir nos maisons"}
+            </a>
+            <LocalizedLink to="/candidature" className="inline-flex items-center gap-2 border border-[#1C1917] text-[#1C1917] px-8 py-4 text-sm uppercase tracking-wider hover:bg-[#1C1917] hover:text-white transition-colors">
+              {en ? "Apply" : "Candidater"}
             </LocalizedLink>
           </div>
-
-          {/* C2 preuve sociale + C3 réassurance — visible sans scroll */}
           <p className="mt-6 text-sm text-[#57534E]">
-            {language === "en"
-              ? `★ ${STATS.rating.replace(",", ".")}/5 (resident surveys) · ${STATS.totalResidents}+ residents since 2021 · 99% occupancy`
-              : `★ ${STATS.rating}/5 (enquêtes résidents) · ${STATS.totalResidents}+ résidents depuis 2021 · 99 % d'occupation`}
+            {en
+              ? `★ ${STATS.rating.replace(",", ".")}/5 (resident surveys) · ${STATS.totalResidents}+ residents since ${STATS.foundedYear} · no agency fee, no application fee`
+              : `★ ${STATS.rating}/5 (enquêtes résidents) · ${STATS.totalResidents}+ résidents depuis ${STATS.foundedYear} · 0 frais d'agence, 0 frais de dossier`}
           </p>
-          <p className="mt-1 text-xs text-[#78716C]">
-            {language === "en" ? "Reply within 48h · No application fee" : "Réponse sous 48h · Aucun frais de dossier"}
-          </p>
-          {/* Fraîcheur visible (cohérente avec le dateModified du JSON-LD WebPage) */}
-          <p className="mt-1 text-xs text-[#A8A29E]">
-            {language === "en" ? `Updated ${lastUpdatedLabel}` : `Mis à jour le ${lastUpdatedLabel}`}
-          </p>
-
-          {/* Trust badges */}
-          <div className="flex flex-wrap justify-center gap-8 mt-12 text-sm text-[#78716C]">
-            <span className="flex items-center gap-2">
-              <Home className="w-4 h-4" /> 29{" "}
-              {language === "en" ? "rooms" : "chambres"}
-            </span>
-            <span className="flex items-center gap-2">
-              <Users className="w-4 h-4" /> 3{" "}
-              {language === "en" ? "houses" : "maisons"}
-            </span>
-            <span className="flex items-center gap-2">
-              <Clock className="w-4 h-4" /> 20 min{" "}
-              {language === "en" ? "from Geneva" : "de Genève"}
-            </span>
-            <span className="flex items-center gap-2">
-              <Euro className="w-4 h-4" />{" "}
-              {language === "en" ? "From " : "Dès "}
-              {language === "en" ? PRICE_SHARED_CHF_EN : PRICE_SHARED_CHF_FR}/
-              {language === "en" ? "month" : "mois"}
-            </span>
+          <p className="mt-1 text-xs text-[#A8A29E]">{en ? `Updated ${lastUpdatedLabel}` : `Mis à jour le ${lastUpdatedLabel}`}</p>
+          <div className="flex flex-wrap justify-center gap-8 mt-10 text-sm text-[#78716C]">
+            <span className="flex items-center gap-2"><Home className="w-4 h-4" /> {STATS.totalRooms} {en ? "rooms" : "chambres"}</span>
+            <span className="flex items-center gap-2"><Users className="w-4 h-4" /> {STATS.totalHouses} {en ? "houses" : "maisons"}</span>
+            <span className="flex items-center gap-2"><Clock className="w-4 h-4" /> {MIN} min {en ? "from Geneva" : "de Genève"}</span>
+            <span className="flex items-center gap-2"><Euro className="w-4 h-4" /> {en ? `From ${PRICE_SHARED_CHF_EN}/month` : `Dès ${PRICE_SHARED_CHF_FR}/mois`}</span>
           </div>
         </div>
       </section>
 
-      {/* ===== (Lot 5) CHAMBRES LIBRES OU À LIBÉRER — intention « je cherche une chambre » ===== */}
-      <section className="py-16 lg:py-20 bg-white border-t border-[#E7E5E4]">
+      {/* ===== BLOC 1 — LES CHAMBRES DISPONIBLES (au-dessus de la ligne de flottaison) ===== */}
+      <section id="chambres" className="py-16 lg:py-20 bg-white border-t border-[#E7E5E4]">
         <div className="max-w-6xl mx-auto px-6">
-          <span className="text-xs text-[#D4A574] uppercase tracking-[0.3em] mb-4 block font-medium">
-            {language === "en" ? "Rooms right now" : "Les chambres en ce moment"}
-          </span>
-          <h2 className="text-3xl md:text-4xl font-light text-[#1C1917] mb-3" style={{ fontFamily: "DM Serif Display, serif" }}>
-            {candidates.length > 0
-              ? (language === "en"
-                ? `${candidates.length} room${candidates.length > 1 ? "s" : ""} free now or opening soon`
-                : `${candidates.length} chambre${candidates.length > 1 ? "s" : ""} libre${candidates.length > 1 ? "s" : ""} maintenant ou bientôt`)
-              : (language === "en" ? "Next openings, house by house" : "Prochaines disponibilités, maison par maison")}
+          <h2 className={h2} style={serif}>
+            {n > 0
+              ? (en ? `${n} shared-housing room${n > 1 ? "s" : ""} available near Geneva` : `${n} chambre${n > 1 ? "s" : ""} en colocation disponible${n > 1 ? "s" : ""} près de Genève`)
+              : (en ? "Next openings near Geneva, house by house" : "Prochaines disponibilités près de Genève, maison par maison")}
           </h2>
           <p className="text-[#57534E] mb-8 max-w-2xl">
-            {language === "en"
-              ? "Real availability of our 3 houses on the French side, read from the same data as our bookings. Each room links to its own application."
-              : "La dispo réelle de nos 3 maisons côté France, lue sur la même source que nos réservations. Chaque chambre a sa propre candidature."}
+            {en
+              ? "Real availability of our 3 houses, read from the same data as our bookings: room, size, bathroom, price in CHF, opening date. Each room has its own application."
+              : "La dispo réelle de nos 3 maisons, lue sur la même source que nos réservations : chambre, surface, salle d'eau, prix en CHF, date de libération. Chaque chambre a sa propre candidature."}
           </p>
-          {candidates.length > 0 && (
+          {n > 0 && (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
               {candidates.map((room) => (
-                <RoomCard
-                  key={`${room.house_slug}:${room.room_number}`}
-                  house={room.house_slug}
-                  houseName={HOUSES[room.house_slug].label}
-                  room={room}
-                  fallbackImage={HOUSES[room.house_slug].img}
-                  showHouse
-                  onCtaClick={trackRoomCta}
-                />
+                <RoomCard key={`${room.house_slug}:${room.room_number}`} house={room.house_slug} houseName={HOUSES[room.house_slug].label} room={room} fallbackImage={HOUSES[room.house_slug].img} showHouse onCtaClick={trackRoomCta} />
               ))}
             </div>
           )}
           <div className="flex flex-col gap-2 mb-6">
-            {(["lavilla", "leloft", "lelodge"] as HouseKey[]).map((k) => (
-              <HouseAvailabilityLine key={k} house={k} />
-            ))}
+            {HOUSE_ORDER.map((k) => <HouseAvailabilityLine key={k} house={k} />)}
           </div>
-          <LocalizedLink
-            to="/chambres-disponibles"
-            className="inline-flex items-center gap-2 text-sm font-semibold text-[#1C1917] underline underline-offset-4 hover:text-[#D4A574]"
-          >
-            {language === "en" ? "See all available rooms, with dates and prices" : "Voir toutes les chambres disponibles, dates et prix"}
-            <ArrowRight className="w-4 h-4" />
-          </LocalizedLink>
+          <p className="text-sm text-[#57534E]">
+            {en ? "Nothing at your date? " : "Rien à ta date ? "}
+            <a href="#liste" className={link}>{en ? "Join the waiting list" : "Rejoins la liste d'attente"}</a>
+            {en ? " — we reply within 48 h. " : " — on te répond sous 48 h. "}
+            <LocalizedLink to="/chambres-disponibles" className={link}>{en ? "All available rooms, with dates and prices" : "Toutes les chambres disponibles, dates et prix"}</LocalizedLink>
+          </p>
         </div>
       </section>
 
-      {/* ===== POURQUOI LA COLOCATION CÔTÉ FRANCE ===== */}
-      <section className="py-24 lg:py-32 bg-white">
-        <div className="max-w-5xl mx-auto px-6">
-          <h2
-            className="text-3xl md:text-4xl font-light text-[#1C1917] mb-4 text-center"
-            style={{ fontFamily: "DM Serif Display, serif" }}
-          >
-            {language === "en"
-              ? "Why Choose Shared Housing on the French Side?"
-              : "Pourquoi Choisir la Colocation Côté France ?"}
-          </h2>
-          <p className="text-[#57534E] text-center max-w-3xl mx-auto mb-16">
-            {language === "en"
-              ? "Geneva is one of the most expensive cities in the world for housing. Living across the border gives you Swiss salaries with French cost of living."
-              : "Genève est l'une des villes les plus chères au monde pour se loger. Vivre côté France te donne un salaire suisse avec un coût de vie français."}
+      {/* ===== H2 — COMBIEN COÛTE UNE COLOCATION À GENÈVE ? ===== */}
+      <section className="py-20 lg:py-24 bg-[#FAF9F6]">
+        <div className="max-w-4xl mx-auto px-6">
+          <h2 className={h2} style={serif}>{en ? "How much does a flatshare cost in Geneva?" : "Combien coûte une colocation à Genève ?"}</h2>
+          <p className="text-[#57534E] leading-relaxed mb-6">
+            {en
+              ? "In Geneva itself, a room in a shared flat usually goes for 1,000 to 1,500 CHF a month, utilities and internet often on top; a studio, 1,800 to 2,500 CHF excluding charges. Supply is scarce (vacancy rate below 1%) and every file competes with dozens of others."
+              : "À Genève même, une chambre en colocation part le plus souvent entre 1 000 et 1 500 CHF par mois, charges et internet souvent en plus ; un studio, 1 800 à 2 500 CHF hors charges. L'offre est rare (taux de vacance sous 1 %) et chaque dossier se bat contre des dizaines d'autres."}
           </p>
-
-          <div className="grid md:grid-cols-2 gap-12">
-            {/* Card 1: Savings */}
-            <div className="bg-[#FAF9F6] p-8">
-              <Euro className="w-8 h-8 text-[#D4A574] mb-4" />
-              <h3 className="text-xl font-medium text-[#1C1917] mb-3">
-                {language === "en" ? "More space for your rent" : "Plus d'espace pour ton loyer"}
-              </h3>
-              <p className="text-[#57534E] leading-relaxed mb-4">
-                {language === "en"
-                  ? `For the budget of a bare studio in Geneva, at La Villa you get a furnished room in a real house: pool, gym, sauna, garden, utilities and fibre included. The choice is space and comfort, not the lowest possible rent.`
-                  : `Pour le budget d'un studio nu à Genève, tu as chez La Villa une chambre meublée dans une vraie maison : piscine, gym, sauna, jardin, charges et fibre comprises. Le choix, c'est l'espace et le confort, pas la course au loyer le plus bas.`}
-              </p>
-              <div className="bg-white p-4 border border-[#E7E5E4]">
-                <div className="flex justify-between items-center mb-2">
-                  <span className="text-sm text-[#78716C]">
-                    Studio Genève
-                  </span>
-                  <span className="font-medium text-[#1C1917]">
-                    1 800 - 2 500 CHF
-                  </span>
-                </div>
-                <div className="flex justify-between items-center mb-2">
-                  <span className="text-sm text-[#78716C]">
-                    + {language === "en" ? "Utilities & internet" : "Charges & internet"}
-                  </span>
-                  <span className="font-medium text-[#1C1917]">
-                    + 200 - 400 CHF
-                  </span>
-                </div>
-                <div className="border-t border-[#E7E5E4] my-2 pt-2">
-                  <div className="flex justify-between items-center">
-                    <span className="text-sm font-medium text-[#D4A574]">
-                      La Villa ({language === "en" ? "all included" : "tout compris"})
-                    </span>
-                    <span className="font-medium text-[#D4A574]">
-                      {PRICE_CHF_FR}
-                    </span>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            {/* Card 2: Tax Benefits */}
-            <div className="bg-[#FAF9F6] p-8">
-              <Shield className="w-8 h-8 text-[#D4A574] mb-4" />
-              <h3 className="text-xl font-medium text-[#1C1917] mb-3">
-                {language === "en" ? "Cross-Border Tax Benefits" : "Avantages Fiscaux Frontaliers"}
-              </h3>
-              <p className="text-[#57534E] leading-relaxed">
-                {language === "en"
-                  ? "As a cross-border worker in Geneva, you're taxed at source in Switzerland — often at a lower rate than in France. You enjoy Swiss salaries while benefiting from French cost of living: groceries, leisure, transport, and healthcare costs are significantly lower on the French side."
-                  : "En tant que frontalier à Genève, tu es imposé à la source en Suisse — souvent à un taux inférieur au taux français. Tu bénéficies d'un salaire suisse avec un coût de vie français : courses, loisirs, transports et santé sont nettement moins chers côté France."}
-              </p>
-            </div>
-
-            {/* Card 3: Transport */}
-            <div className="bg-[#FAF9F6] p-8">
-              <Train className="w-8 h-8 text-[#D4A574] mb-4" />
-              <h3 className="text-xl font-medium text-[#1C1917] mb-3">
-                {language === "en" ? "20 min from Geneva Centre" : "20 min du Centre de Genève"}
-              </h3>
-              <p className="text-[#57534E] leading-relaxed mb-4">
-                {language === "en"
-                  ? "Our houses are located in the heart of the cross-border area, with excellent connections to Geneva."
-                  : "Nos maisons sont situées au cœur de la zone frontalière, avec d'excellentes connexions vers Genève."}
-              </p>
-              <ul className="space-y-2 text-[#57534E]">
-                <li className="flex items-center gap-2">
-                  <Check className="w-4 h-4 text-[#D4A574] flex-shrink-0" />
-                  <span>
-                    <strong>Léman Express :</strong> Annemasse → Cornavin en 20 min
-                  </span>
-                </li>
-                <li className="flex items-center gap-2">
-                  <Check className="w-4 h-4 text-[#D4A574] flex-shrink-0" />
-                  <span>
-                    <strong>{language === "en" ? "By car" : "En voiture"} :</strong>{" "}
-                    15 min {language === "en" ? "via Moillesulaz border" : "via la douane de Moillesulaz"}
-                  </span>
-                </li>
-                <li className="flex items-center gap-2">
-                  <Check className="w-4 h-4 text-[#D4A574] flex-shrink-0" />
-                  <span>
-                    <strong>Tram 17 :</strong>{" "}
-                    {language === "en" ? "Bel-Air in under 30 minutes" : "Bel-Air en moins de 30 minutes"}
-                  </span>
-                </li>
-                <li className="flex items-center gap-2">
-                  <Check className="w-4 h-4 text-[#D4A574] flex-shrink-0" />
-                  <span>
-                    <strong>{language === "en" ? "By bike" : "À vélo"} :</strong>{" "}
-                    {language === "en"
-                      ? "Cycle paths to the Swiss border"
-                      : "Pistes cyclables jusqu'à la frontière suisse"}
-                  </span>
-                </li>
-              </ul>
-            </div>
-
-            {/* Card 4: Quality of Life */}
-            <div className="bg-[#FAF9F6] p-8">
-              <Star className="w-8 h-8 text-[#D4A574] mb-4" />
-              <h3 className="text-xl font-medium text-[#1C1917] mb-3">
-                {language === "en" ? "Premium Quality of Life" : "Qualité de Vie Premium"}
-              </h3>
-              <p className="text-[#57534E] leading-relaxed">
-                {language === "en"
-                  ? "Forget the isolation of a tiny studio. At La Villa, you live in designer houses with pool, gym, sauna, garden, coworking spaces, and a vibrant international community. Weekly yoga & sports classes, monthly community events, monthly community dinners — cleaning 3x/week, maintenance, streaming subscriptions all included."
-                  : "Oublie l'isolement d'un petit studio. Chez La Villa, tu vis dans des maisons design avec piscine, salle de sport, sauna, jardin, espaces coworking et une communauté internationale dynamique. Cours de yoga et sport hebdomadaires, événements communautaires mensuels, dîners communautaires mensuels — ménage 3x/semaine, entretien, abonnements streaming inclus."}
-              </p>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* ===== NOS 3 RÉSIDENCES ===== */}
-      <section className="py-24 lg:py-32 bg-[#FAF9F6]">
-        <div className="max-w-5xl mx-auto px-6">
-          <h2
-            className="text-3xl md:text-4xl font-light text-[#1C1917] mb-4 text-center"
-            style={{ fontFamily: "DM Serif Display, serif" }}
-          >
-            {language === "en"
-              ? "3 Houses, 3 Locations, 1 Community"
-              : "3 Maisons, 3 Adresses, 1 Communauté"}
-          </h2>
-          <p className="text-[#57534E] text-center max-w-3xl mx-auto mb-16">
-            {language === "en"
-              ? "All within the Grand Geneva cross-border area, 15 minutes from the Swiss border."
-              : "Toutes dans la zone frontalière du Grand Genève, à 15 minutes de la frontière suisse."}
-          </p>
-
-          <div className="grid md:grid-cols-3 gap-8">
-            {/* La Villa */}
-            <LocalizedLink to="/lavilla" className="group bg-white border border-[#E7E5E4] hover:border-[#D4A574] transition-colors">
-              <div className="aspect-[4/3] overflow-hidden">
-                <img
-                  src="/images/la villa jardin.webp"
-                  alt={language === "en" ? "La Villa Coliving — premium shared housing with heated pool in Ville-la-Grand, near Geneva" : "La Villa Coliving — colocation premium avec piscine chauffée à Ville-la-Grand, près de Genève"}
-                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                  loading="lazy"
-                  width={800}
-                  height={600}
-                />
-              </div>
-              <div className="p-6">
-                <h3 className="text-xl font-medium text-[#1C1917] mb-1">La Villa</h3>
-                <p className="text-sm text-[#D4A574] flex items-center gap-1 mb-3">
-                  <MapPin className="w-3 h-3" /> {language === "en" ? "Ville-la-Grand" : "Colocation à Ville-la-Grand"}
-                </p>
-                <p className="text-sm text-[#57534E] mb-4">
-                  {language === "en"
-                    ? "370m² designer house on 2,000m² estate. Heated pool, sauna, gym. 10 rooms."
-                    : "Maison design de 370m² sur domaine de 2 000m². Piscine chauffée, sauna, gym. 10 chambres."}
-                </p>
-                <div className="flex items-center gap-4 text-xs text-[#78716C]">
-                  <span className="flex items-center gap-1"><Waves className="w-3 h-3" /> {language === "en" ? "Pool" : "Piscine"}</span>
-                  <span className="flex items-center gap-1"><Dumbbell className="w-3 h-3" /> Gym</span>
-                  <span className="flex items-center gap-1"><Wifi className="w-3 h-3" /> Fibre</span>
-                </div>
-              </div>
-            </LocalizedLink>
-
-            {/* Le Loft */}
-            <LocalizedLink to="/leloft" className="group bg-white border border-[#E7E5E4] hover:border-[#D4A574] transition-colors">
-              <div className="aspect-[4/3] overflow-hidden">
-                <img
-                  src="/images/le loft/amenities/la villa coliving le loft-94.webp"
-                  alt={language === "en" ? "Le Loft Coliving — modern shared housing with indoor pool in Ambilly, near Geneva" : "Le Loft Coliving — colocation moderne avec piscine intérieure à Ambilly, près de Genève"}
-                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                  loading="lazy"
-                  width={800}
-                  height={600}
-                />
-              </div>
-              <div className="p-6">
-                <h3 className="text-xl font-medium text-[#1C1917] mb-1">Le Loft</h3>
-                <p className="text-sm text-[#D4A574] flex items-center gap-1 mb-3">
-                  <MapPin className="w-3 h-3" /> {language === "en" ? "Ambilly" : "Colocation à Ambilly"}
-                </p>
-                <p className="text-sm text-[#57534E] mb-4">
-                  {language === "en"
-                    ? "Charming townhouse with indoor pool, sauna, gym. Spacious designer rooms. 7 rooms."
-                    : "Maison de ville charmante avec piscine intérieure, sauna, gym. Chambres design spacieuses. 7 chambres."}
-                </p>
-                <div className="flex items-center gap-4 text-xs text-[#78716C]">
-                  <span className="flex items-center gap-1"><Waves className="w-3 h-3" /> {language === "en" ? "Pool" : "Piscine"}</span>
-                  <span className="flex items-center gap-1"><Dumbbell className="w-3 h-3" /> Gym</span>
-                  <span className="flex items-center gap-1"><Wifi className="w-3 h-3" /> Fibre</span>
-                </div>
-              </div>
-            </LocalizedLink>
-
-            {/* Le Lodge */}
-            <LocalizedLink to="/lelodge" className="group bg-white border border-[#E7E5E4] hover:border-[#D4A574] transition-colors">
-              <div className="aspect-[4/3] overflow-hidden">
-                <img
-                  src="/images/le lodge piscine.webp"
-                  alt={language === "en" ? "Le Lodge Coliving — shared housing with pool and gym in Annemasse, 10 min from Geneva" : "Le Lodge Coliving — colocation avec piscine et salle de sport à Annemasse, à 10 min de Genève"}
-                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                  loading="lazy"
-                  width={800}
-                  height={600}
-                />
-              </div>
-              <div className="p-6">
-                <h3 className="text-xl font-medium text-[#1C1917] mb-1">Le Lodge</h3>
-                <p className="text-sm text-[#D4A574] flex items-center gap-1 mb-3">
-                  <MapPin className="w-3 h-3" /> {language === "en" ? "Annemasse" : "Colocation à Annemasse"}
-                </p>
-                <p className="text-sm text-[#57534E] mb-4">
-                  {language === "en"
-                    ? "Spacious estate near Annemasse centre. Pool house, fitness chalet, large garden. 12 rooms."
-                    : "Domaine spacieux proche du centre d'Annemasse. Pool house, chalet fitness, grand jardin. 12 chambres."}
-                </p>
-                <div className="flex items-center gap-4 text-xs text-[#78716C]">
-                  <span className="flex items-center gap-1"><Waves className="w-3 h-3" /> {language === "en" ? "Pool" : "Piscine"}</span>
-                  <span className="flex items-center gap-1"><Dumbbell className="w-3 h-3" /> Gym</span>
-                  <span className="flex items-center gap-1"><Wifi className="w-3 h-3" /> Fibre</span>
-                </div>
-              </div>
-            </LocalizedLink>
-          </div>
-
-          <div className="text-center mt-12">
-            <LocalizedLink
-              to="/nos-maisons"
-              className="inline-flex items-center gap-2 text-[#D4A574] font-medium hover:underline"
-            >
-              {language === "en" ? "Explore all houses in detail" : "Explorer toutes nos maisons en détail"}
-              <ArrowRight className="w-4 h-4" />
-            </LocalizedLink>
-          </div>
-        </div>
-      </section>
-
-      {/* ===== LE MARCHÉ DE LA COLOCATION À GENÈVE EN 2026 ===== */}
-      <section className="py-24 lg:py-32 bg-white">
-        <div className="max-w-5xl mx-auto px-6">
-          <h2
-            className="text-3xl md:text-4xl font-light text-[#1C1917] mb-4 text-center"
-            style={{ fontFamily: "DM Serif Display, serif" }}
-          >
-            {language === "en"
-              ? "The Shared Housing Market in Geneva in 2026"
-              : "Le Marché de la Colocation à Genève en 2026"}
-          </h2>
-          <p className="text-[#57534E] text-center max-w-3xl mx-auto mb-12">
-            {language === "en"
-              ? "Understanding the Geneva rental landscape helps you make the right housing choice."
-              : "Comprendre le paysage locatif genevois t'aide à faire le bon choix de logement."}
-          </p>
-
-          <div className="prose prose-lg max-w-none text-[#57534E] leading-relaxed space-y-6">
-            {language === "en" ? (
-              <>
-                <p>
-                  Geneva is one of the tightest rental markets in Europe. With a vacancy rate consistently below 1%, finding an apartment — let alone an affordable one — is a significant challenge for anyone relocating to the area. The city's position as a hub for international organizations, finance, and technology drives relentless demand for housing, while supply remains structurally constrained by limited buildable land and strict urban planning regulations.
-                </p>
-                <p>
-                  In 2026, the average rent for a studio in Geneva ranges from 1,800 to 2,500 CHF per month, unfurnished and excluding utilities. For a one-bedroom apartment, expect to pay 2,200 to 3,200 CHF. These prices make Geneva one of the most expensive cities in the world for housing, on par with Zurich, London, and New York. Even finding a room in a traditional shared flat in Geneva — a colocation — typically costs between 1,000 and 1,500 CHF per month, with no services included: no cleaning, no furnished common areas, and often aging infrastructure.
-                </p>
-                <p>
-                  This situation has fueled the rise of cross-border living. The French side of the Greater Geneva area — towns like Annemasse, Ville-la-Grand, Ambilly, and Saint-Julien-en-Genevois — offers rents that are 30 to 50% lower than in Geneva itself. A cross-border worker (frontalier) earning a Swiss salary while living in France enjoys a dramatic improvement in purchasing power. The Leman Express rail link, which connects Annemasse to Geneva Cornavin station in just 20 minutes, has made this lifestyle more practical than ever. Today, around 116,200 frontaliers commute daily from France to work in the canton of Geneva (OCSTAT, end of 2025).
-                </p>
-                <p>
-                  Within this context, coliving has emerged as a compelling alternative to traditional shared housing near Geneva. Unlike a standard colocation where tenants share an apartment and manage everything themselves, coliving offers a professionally managed environment with curated communities, fully furnished rooms, and comprehensive services included in a single monthly payment. At La Villa Coliving, residents enjoy premium shared housing from {PRICE_SHARED_EN_NUM} CHF per month — all inclusive: rent, utilities, fiber internet, housekeeping three times a week, pool, gym, sauna, weekly yoga and sports classes, monthly community events, and community dinners. This represents exceptional value compared to both a Geneva studio and a traditional cross-border colocation.
-                </p>
-                <p>
-                  For professionals relocating to work in Geneva — whether as frontaliers, expats joining international organizations, or remote workers seeking a vibrant community — coliving on the French border offers the ideal balance: Swiss-level salaries with French-side affordability, premium amenities, and a ready-made social network. The demand for shared housing in Geneva and its surrounding area continues to grow, and modern coliving spaces like La Villa are leading this transformation.
-                </p>
-              </>
-            ) : (
-              <>
-                <p>
-                  Genève est l'un des marchés locatifs les plus tendus d'Europe. Avec un taux de vacance constamment inférieur à 1%, trouver un appartement — a fortiori abordable — représente un défi majeur pour quiconque s'installe dans la région. La position de la ville comme centre d'organisations internationales, de finance et de technologie génère une demande incessante de logements, alors que l'offre reste structurellement limitée par le manque de terrains constructibles et des réglementations urbanistiques strictes.
-                </p>
-                <p>
-                  En 2026, le loyer moyen pour un studio à Genève se situe entre 1 800 et 2 500 CHF par mois, non meublé et hors charges. Pour un deux-pièces, compte 2 200 à 3 200 CHF. Ces prix font de Genève l'une des villes les plus chères au monde pour se loger, au même niveau que Zurich, Londres ou New York. Même une chambre en colocation à Genève coûte généralement entre 1 000 et 1 500 CHF par mois, sans aucun service inclus : pas de ménage, pas d'espaces communs meublés, et souvent des infrastructures vieillissantes.
-                </p>
-                <p>
-                  Cette situation a alimenté l'essor de la vie transfrontalière. Le côté français du Grand Genève — des communes comme Annemasse, Ville-la-Grand, Ambilly ou Saint-Julien-en-Genevois — offre des loyers 30 à 50% moins chers qu'à Genève. Un frontalier touchant un salaire suisse tout en vivant en France bénéficie d'un gain de pouvoir d'achat considérable. Le Léman Express, qui relie Annemasse à la gare de Genève Cornavin en seulement 20 minutes, a rendu ce mode de vie plus pratique que jamais. Aujourd'hui, près de 116 200 frontaliers font le trajet quotidien entre la France et le canton de Genève (OCSTAT, fin 2025).
-                </p>
-                <p>
-                  Dans ce contexte, le coliving s'impose comme une alternative séduisante à la colocation classique près de Genève. Contrairement à une colocation traditionnelle où les locataires partagent un appartement et gèrent tout eux-mêmes, le coliving propose un environnement géré professionnellement avec des communautés sélectionnées, des chambres entièrement meublées et des services complets inclus dans un paiement mensuel unique. Chez La Villa Coliving, les résidents profitent d'une colocation premium dès {PRICE_SHARED_CHF_FR} par mois — tout compris : loyer, charges, fibre internet, ménage trois fois par semaine, piscine, gym, sauna, cours de yoga et sport hebdomadaires, événements communautaires mensuels et dîners communautaires. Cela représente un rapport qualité-prix exceptionnel comparé à un studio à Genève ou une colocation frontalière classique.
-                </p>
-                <p>
-                  Pour les professionnels qui s'installent pour travailler à Genève — qu'ils soient frontaliers, expatriés rejoignant des organisations internationales ou télétravailleurs en quête d'une communauté dynamique — la colocation côté frontière française offre l'équilibre idéal : salaires suisses avec des coûts côté France, prestations premium et un réseau social prêt à l'emploi. La demande de colocation à Genève et dans sa périphérie continue de croître, et les espaces de coliving modernes comme La Villa sont à la pointe de cette transformation.
-                </p>
-              </>
-            )}
-          </div>
-        </div>
-      </section>
-
-      {/* ===== NOS QUARTIERS FRONTALIERS ===== */}
-      <section className="py-24 lg:py-32 bg-[#FAF9F6]">
-        <div className="max-w-5xl mx-auto px-6">
-          <h2
-            className="text-3xl md:text-4xl font-light text-[#1C1917] mb-4 text-center"
-            style={{ fontFamily: "DM Serif Display, serif" }}
-          >
-            {language === "en"
-              ? "Our Cross-Border Neighborhoods"
-              : "Nos Quartiers Frontaliers"}
-          </h2>
-          <p className="text-[#57534E] text-center max-w-3xl mx-auto mb-16">
-            {language === "en"
-              ? "Three distinct towns, each with its own character — all within 15 minutes of the Swiss border."
-              : "Trois communes distinctes, chacune avec son caractère — toutes à 15 minutes de la frontière suisse."}
-          </p>
-
-          <div className="grid md:grid-cols-3 gap-8">
-            {/* Ville-la-Grand */}
-            <div className="bg-white p-8 border border-[#E7E5E4]">
-              <div className="w-12 h-12 bg-[#F5F2ED] rounded-xl flex items-center justify-center mb-4">
-                <MapPin className="w-6 h-6 text-[#D4A574]" />
-              </div>
-              <h3 className="text-xl font-medium text-[#1C1917] mb-1">Ville-la-Grand</h3>
-              <p className="text-sm text-[#D4A574] mb-4">La Villa</p>
-              <div className="text-sm text-[#57534E] leading-relaxed space-y-3">
-                {language === "en" ? (
-                  <>
-                    <p>A quiet residential town just 5 minutes from the Swiss border, Ville-la-Grand offers a peaceful environment with tree-lined streets and local parks. La Villa sits on a 2,000 m² estate with a private garden, heated pool, and serene surroundings — ideal for those who value calm after a busy day in Geneva.</p>
-                    <p>Local shops and restaurants are within walking distance. The town is connected to Annemasse station, giving easy access to the Leman Express and onward to Geneva Cornavin. Bike paths connect directly to the Swiss border, making cycle commuting a real option for those working near the Moillesulaz crossing.</p>
-                    <p>Ville-la-Grand is the perfect choice for residents who prefer a calm, residential atmosphere with direct garden access while remaining minutes from the economic hub of Geneva. The colocation at La Villa combines this tranquility with premium amenities rarely found in traditional shared housing near Geneva.</p>
-                  </>
-                ) : (
-                  <>
-                    <p>Ville résidentielle calme à seulement 5 minutes de la frontière suisse, Ville-la-Grand offre un cadre paisible avec ses rues bordées d'arbres et ses parcs. La Villa est implantée sur un domaine de 2 000 m² avec jardin privatif, piscine chauffée et un environnement serein — idéal pour ceux qui apprécient le calme après une journée active à Genève.</p>
-                    <p>Les commerces et restaurants de proximité sont accessibles à pied. La commune est reliée à la gare d'Annemasse, offrant un accès facile au Léman Express et à Genève Cornavin. Des pistes cyclables mènent directement à la frontière suisse, faisant du vélo une option réelle pour les frontaliers travaillant près du passage de Moillesulaz.</p>
-                    <p>Ville-la-Grand est le choix idéal pour les résidents qui préfèrent une atmosphère calme et résidentielle avec accès direct au jardin, tout en restant à quelques minutes du pôle économique de Genève. La colocation à La Villa associe cette tranquillité à des prestations premium rarement proposées en colocation près de Genève.</p>
-                  </>
-                )}
-              </div>
-            </div>
-
-            {/* Ambilly */}
-            <div className="bg-white p-8 border border-[#E7E5E4]">
-              <div className="w-12 h-12 bg-[#F5F2ED] rounded-xl flex items-center justify-center mb-4">
-                <MapPin className="w-6 h-6 text-[#D4A574]" />
-              </div>
-              <h3 className="text-xl font-medium text-[#1C1917] mb-1">Ambilly</h3>
-              <p className="text-sm text-[#D4A574] mb-4">Le Loft</p>
-              <div className="text-sm text-[#57534E] leading-relaxed space-y-3">
-                {language === "en" ? (
-                  <>
-                    <p>Ambilly is the closest French town to Geneva, sitting right at the Swiss border. Le Loft, our charming townhouse with indoor pool, is within walking distance of the Moillesulaz border crossing — making it the fastest commute option for those working in central Geneva.</p>
-                    <p>Direct access to the CEVA (Leman Express) via Annemasse station, with direct bus and tram lines connecting Ambilly to Geneva's public transport network (TPG). The urban feel of the area means restaurants, cafés, and shops are steps away. Annemasse train station is a short bus ride, and the planned extension of Geneva's tram network will further improve connectivity.</p>
-                    <p>Ambilly suits residents who want the convenience of being right at the border with easy access to both Annemasse and Geneva. Le Loft offers a modern colocation experience in a prime frontalier location — ideal for those who commute daily to Geneva and want to minimize their travel time while enjoying premium coliving amenities.</p>
-                  </>
-                ) : (
-                  <>
-                    <p>Ambilly est la commune française la plus proche de Genève, située directement à la frontière suisse. Le Loft, notre maison de ville avec piscine intérieure, se trouve à distance de marche du passage frontière de Moillesulaz — offrant le trajet le plus court pour ceux qui travaillent dans le centre de Genève.</p>
-                    <p>Accès direct au CEVA via la gare d'Annemasse, avec des lignes de bus et de tram directes reliant Ambilly au réseau de transports genevois (TPG). L'ambiance urbaine du quartier signifie que restaurants, cafés et commerces sont à deux pas. La gare d'Annemasse est accessible en quelques minutes de bus, et l'extension prévue du réseau de tram genevois améliorera encore la connectivité.</p>
-                    <p>Ambilly convient aux résidents qui souhaitent la commodité d'être directement à la frontière avec un accès facile à Annemasse comme à Genève. Le Loft offre une colocation moderne dans un emplacement frontalier stratégique — idéal pour les frontaliers qui font le trajet quotidien vers Genève et veulent minimiser leur temps de transport tout en profitant d'un coliving premium.</p>
-                  </>
-                )}
-              </div>
-            </div>
-
-            {/* Annemasse */}
-            <div className="bg-white p-8 border border-[#E7E5E4]">
-              <div className="w-12 h-12 bg-[#F5F2ED] rounded-xl flex items-center justify-center mb-4">
-                <MapPin className="w-6 h-6 text-[#D4A574]" />
-              </div>
-              <h3 className="text-xl font-medium text-[#1C1917] mb-1">Annemasse</h3>
-              <p className="text-sm text-[#D4A574] mb-4">Le Lodge</p>
-              <div className="text-sm text-[#57534E] leading-relaxed space-y-3">
-                {language === "en" ? (
-                  <>
-                    <p>Annemasse is the dynamic heart of the French side of Greater Geneva. With over 40,000 inhabitants, it offers a full urban experience: shopping centers, restaurants, cultural venues, a cinema, and regular markets. Le Lodge, our largest residence with 12 rooms, sits on a spacious estate near the town center.</p>
-                    <p>The Leman Express station in Annemasse is a game-changer: direct trains reach Geneva Cornavin in just 20 minutes, with frequent departures throughout the day. This makes Annemasse the best-connected French town for commuting to Geneva by public transport. The town also has excellent road access to the Geneva motorway network.</p>
-                    <p>Annemasse is perfect for residents who want an urban lifestyle with all amenities at their doorstep while being just a train ride from Geneva. Le Lodge combines the liveliness of city living with the calm of a private estate — a colocation experience that bridges the best of cross-border frontalier living near Geneva.</p>
-                  </>
-                ) : (
-                  <>
-                    <p>Annemasse est le cœur dynamique du côté français du Grand Genève. Avec plus de 40 000 habitants, elle offre une vie urbaine complète : centres commerciaux, restaurants, lieux culturels, cinéma et marchés réguliers. Le Lodge, notre plus grande résidence avec 12 chambres, est situé sur un domaine spacieux proche du centre-ville.</p>
-                    <p>La gare Léman Express d'Annemasse change la donne : des trains directs rejoignent Genève Cornavin en seulement 20 minutes, avec des départs fréquents tout au long de la journée. Cela fait d'Annemasse la commune française la mieux connectée pour les trajets vers Genève en transports en commun. La ville bénéficie également d'un excellent accès routier au réseau autoroutier genevois.</p>
-                    <p>Annemasse est parfaite pour les résidents qui veulent un mode de vie urbain avec toutes les commodités à portée de main, tout en étant à un trajet en train de Genève. Le Lodge allie l'animation de la vie citadine au calme d'un domaine privatif — une expérience de colocation frontalière qui réunit le meilleur de la vie transfrontalière près de Genève.</p>
-                  </>
-                )}
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* ===== TOUT INCLUS ===== */}
-      <section className="py-24 lg:py-32 bg-white">
-        <div className="max-w-5xl mx-auto px-6">
-          <h2
-            className="text-3xl md:text-4xl font-light text-[#1C1917] mb-4 text-center"
-            style={{ fontFamily: "DM Serif Display, serif" }}
-          >
-            {language === "en"
-              ? "Everything Included in Your Rent"
-              : "Tout Est Compris dans Ton Loyer"}
-          </h2>
-          <p className="text-[#57534E] text-center max-w-3xl mx-auto mb-16">
-            {language === "en"
-              ? "No hidden fees, no surprise bills. One simple monthly payment covers everything."
-              : "Pas de frais cachés, pas de mauvaises surprises. Un seul paiement mensuel couvre tout."}
-          </p>
-
-          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
-            {[
-              { icon: Home, label: language === "en" ? "Furnished private room" : "Chambre privée meublée" },
-              { icon: Euro, label: language === "en" ? "Rent & all utilities" : "Loyer & toutes les charges" },
-              { icon: Wifi, label: language === "en" ? "Pro fiber internet" : "Internet fibre Pro" },
-              { icon: Waves, label: language === "en" ? "Pool access" : "Accès piscine" },
-              { icon: Dumbbell, label: language === "en" ? "Gym & sauna" : "Salle de sport & sauna" },
-              { icon: Star, label: language === "en" ? "Weekly yoga & sports classes" : "Cours de yoga & sport hebdomadaires" },
-              { icon: Users, label: language === "en" ? "Monthly community events" : "Événements communautaires mensuels" },
-              { icon: Check, label: language === "en" ? "Housekeeping 3x/week" : "Ménage 3x/semaine" },
-              { icon: UtensilsCrossed, label: language === "en" ? "Monthly community dinners" : "Dîners communautaires mensuels" },
-              { icon: Tv, label: language === "en" ? "Streaming subscriptions" : "Abonnements streaming" },
-            ].map((item, i) => (
-              <div key={i} className="flex items-center gap-4 p-4 bg-[#FAF9F6]">
-                <item.icon className="w-5 h-5 text-[#D4A574] flex-shrink-0" />
-                <span className="text-[#1C1917]">{item.label}</span>
-              </div>
-            ))}
-          </div>
-
-          {/* Propriétaire, pas agence — narratif premium */}
-          <div className="max-w-3xl mx-auto mt-12 bg-[#FAF9F6] border border-[#D4A574]/30 rounded-2xl p-8 text-center">
-            <p className="text-[#57534E] leading-relaxed">
-              {language === "en"
-                ? "Unlike an agency, we rent our houses directly. No middleman, no agency fees, no application fee: you deal directly with the owners, who want you to feel at home, for a long time."
-                : "Contrairement à une agence, nous louons nos maisons en direct. Pas d'intermédiaire, pas d'honoraires d'agence, pas de frais de dossier : tu traites directement avec les propriétaires, qui ont tout intérêt à ce que tu te sentes bien, longtemps."}
+          <div className="bg-white border border-[#E7E5E4] p-6 md:p-8 mb-6">
+            <p className="text-2xl font-bold text-[#D4A574] mb-3">
+              {en ? `From ${PRICE_SHARED_CHF_EN}/month all inclusive at La Villa` : `Dès ${PRICE_SHARED_CHF_FR}/mois tout inclus chez La Villa`}
             </p>
+            <p className="text-[#57534E] leading-relaxed mb-4">
+              {en
+                ? `${PRICE_SHARED_CHF_EN} for a room whose shower room is shared with one other room, ${PRICE_CHF_EN} with a private shower room. Same currency on both sides of the comparison, and here the figure is the total monthly cost, not a bare rent:`
+                : `${PRICE_SHARED_CHF_FR} pour une chambre dont la salle d'eau est partagée avec une seule autre chambre, ${PRICE_CHF_FR} avec salle d'eau privative. Même devise des deux côtés de la comparaison, et ici le chiffre est le coût mensuel total, pas un loyer nu :`}
+            </p>
+            <ul className="grid sm:grid-cols-2 gap-2 text-sm text-[#44403C]">
+              {(en
+                ? ["Furnished room, 17-23 m²", "Utilities, water, heating, fibre up to 8 Gb/s", "Cleaning of common areas 3×/week", "Pool, sauna, gym depending on the house", "Yoga, events, community", "No agency fee, no application fee"]
+                : ["Chambre meublée, 17 à 23 m²", "Charges, eau, chauffage, fibre jusqu'à 8 Gb/s", "Ménage des communs 3×/semaine", "Piscine, sauna, salle de sport selon la maison", "Yoga, événements, communauté", "0 frais d'agence, 0 frais de dossier"]
+              ).map((item) => <li key={item} className="flex items-start gap-2"><Check className="w-4 h-4 text-[#D4A574] mt-0.5 flex-shrink-0" />{item}</li>)}
+            </ul>
           </div>
-
-          <div className="text-center mt-12">
-            <LocalizedLink
-              to="/tarifs"
-              className="inline-flex items-center gap-2 text-[#D4A574] font-medium hover:underline"
-            >
-              {language === "en" ? "See detailed pricing" : "Voir les tarifs détaillés"}
-              <ArrowRight className="w-4 h-4" />
-            </LocalizedLink>
-          </div>
+          <p className="text-[#57534E] leading-relaxed">
+            {en ? "The point is not the lowest rent: it is space and comfort for a single, predictable monthly amount. " : "Le sujet n'est pas le loyer le plus bas : c'est de l'espace et du confort pour un montant mensuel unique et prévisible. "}
+            <LocalizedLink to="/tarifs" className={link}>{en ? "See what the rent includes" : "Voir le détail des tarifs"}</LocalizedLink>
+          </p>
         </div>
       </section>
 
-      {/* ===== POUR QUI ? ===== */}
-      <section className="py-24 lg:py-32 bg-[#FAF9F6]">
-        <div className="max-w-5xl mx-auto px-6">
-          <h2
-            className="text-3xl md:text-4xl font-light text-[#1C1917] mb-16 text-center"
-            style={{ fontFamily: "DM Serif Display, serif" }}
-          >
-            {language === "en"
-              ? "Who Lives at La Villa?"
-              : "Qui Vit à La Villa ?"}
+      {/* ===== H2 — COMMENT FAIRE UNE COLOCATION À GENÈVE (FRONTALIER OU RÉSIDENT SUISSE) ===== */}
+      <section className="py-20 lg:py-24 bg-white">
+        <div className="max-w-4xl mx-auto px-6">
+          <h2 className={h2} style={serif}>
+            {en ? "How to share a flat in Geneva as a cross-border worker or a Swiss resident" : "Comment faire une colocation à Genève quand on est frontalier ou résident suisse"}
           </h2>
-
-          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
-            {[
-              {
-                Icon: MapPin,
-                title: language === "en" ? "Cross-Border Workers" : "Frontaliers",
-                desc: language === "en"
-                  ? "Work in Geneva, live in France: the comfort of a house and a single all-inclusive rent, on a Swiss salary."
-                  : "Travailler à Genève, vivre en France : le confort d'une maison et un seul loyer tout compris, avec un salaire suisse.",
-              },
-              {
-                Icon: Globe,
-                title: language === "en" ? "Expats & Internationals" : "Expats & Internationaux",
-                desc: language === "en"
-                  ? "New to the area? Join a welcoming community. No need to furnish or deal with admin alone."
-                  : "Nouveau dans la région ? Rejoins une communauté accueillante. Pas besoin de meubler ni de gérer l'administratif seul.",
-              },
-              {
-                Icon: Briefcase,
-                title: language === "en" ? "Young Professionals" : "Jeunes Professionnels",
-                desc: language === "en"
-                  ? "Start your career near Geneva with flexible, affordable, premium housing."
-                  : "Démarre ta carrière près de Genève avec un logement flexible, abordable et premium.",
-              },
-              {
-                Icon: Laptop2,
-                title: language === "en" ? "Remote Workers" : "Télétravailleurs",
-                desc: language === "en"
-                  ? "Coworking spaces, fast fiber internet, and a community of like-minded professionals."
-                  : "Espaces coworking, fibre internet rapide et une communauté de professionnels motivés.",
-              },
-            ].map((item, i) => (
-              <div key={i} className="text-center">
-                <div className="w-12 h-12 bg-[#F5F2ED] rounded-xl flex items-center justify-center mb-4 mx-auto"><item.Icon className="w-6 h-6 text-[#D4A574]" /></div>
-                <h3 className="text-lg font-medium text-[#1C1917] mb-2">{item.title}</h3>
-                <p className="text-sm text-[#57534E] leading-relaxed">{item.desc}</p>
+          <p className="text-[#57534E] leading-relaxed mb-8">
+            {en
+              ? "Two profiles come to the same place. The cross-border worker already lives in France and commutes to Geneva; the Swiss resident who moves to the French side becomes a cross-border worker (G permit, taxed at source in Geneva). In both cases, what changes is the housing paperwork, and it gets simpler:"
+              : "Deux profils arrivent au même endroit. Le frontalier vit déjà en France et va travailler à Genève ; le résident suisse qui passe côté France devient frontalier à son tour (permis G, impôt à la source à Genève). Dans les deux cas, ce qui change, c'est le dossier logement, et il devient plus simple :"}
+          </p>
+          <div className="grid md:grid-cols-3 gap-6">
+            {(en
+              ? [
+                  ["The lease", `A French furnished lease in your name: ${STATS.leaseDurationMonths} months renewable, ${STATS.noticePeriodMonths}-month notice. No Swiss rental history required, no sublet.`],
+                  ["The deposit", `${STATS.depositMonths} months' rent excluding charges, returned at the end of your stay. On the Swiss side, deposits often reach 3 months and the file is heavier.`],
+                  ["The guarantor and the file", "An employment contract or job offer and an ID are enough. No agency fee, no application fee: you pay your first rent and the deposit, nothing else."],
+                ]
+              : [
+                  ["Le bail", `Un bail meublé français à ton nom : ${STATS.leaseDurationMonths} mois renouvelable, préavis d'${STATS.noticePeriodMonths} mois. Aucun historique locatif suisse demandé, pas de sous-location.`],
+                  ["La caution", `${STATS.depositMonths} mois de loyer hors charges, restitués en fin de séjour. Côté suisse, les dépôts atteignent souvent 3 mois et le dossier est plus lourd.`],
+                  ["Le garant et le dossier", "Un contrat de travail ou une promesse d'embauche et une pièce d'identité suffisent. 0 frais d'agence, 0 frais de dossier : tu règles ton premier loyer et la caution, rien d'autre."],
+                ]
+            ).map(([t, d]) => (
+              <div key={t} className="bg-[#FAF9F6] p-6">
+                <h3 className="text-lg font-medium text-[#1C1917] mb-2">{t}</h3>
+                <p className="text-sm text-[#57534E] leading-relaxed">{d}</p>
               </div>
             ))}
           </div>
+          <p className="text-[#57534E] leading-relaxed mt-8">
+            {en ? "Shared housing in Geneva as a Swiss resident, or as a cross-border worker: the address is in France, the job in Geneva, the community in the house. " : "Colocation à Genève en résident suisse, ou colocation à Genève en frontalier : l'adresse est en France, le travail à Genève, la communauté dans la maison. "}
+            <LocalizedLink to="/candidature" className={link}>{en ? "Apply in 2 minutes" : "Candidate en 2 minutes"}</LocalizedLink>
+          </p>
         </div>
       </section>
 
-      {/* ===== CE QUE DISENT NOS RÉSIDENTS ===== */}
-      <section className="py-24 lg:py-32 bg-[#FAF9F6]">
-        <div className="max-w-5xl mx-auto px-6">
-          <h2
-            className="text-3xl md:text-4xl font-light text-[#1C1917] mb-4 text-center"
-            style={{ fontFamily: "DM Serif Display, serif" }}
-          >
-            {language === "en"
-              ? "What Our Residents Say"
-              : "Ce Que Disent Nos Résidents"}
-          </h2>
-          <p className="text-[#57534E] text-center max-w-3xl mx-auto mb-16">
-            {language === "en"
-              ? "Real stories from people who chose coliving near Geneva."
-              : "Témoignages de ceux qui ont choisi la colocation près de Genève."}
+      {/* ===== H2 — NOS 3 MAISONS ===== */}
+      <section className="py-20 lg:py-24 bg-[#FAF9F6]">
+        <div className="max-w-6xl mx-auto px-6">
+          <h2 className={h2} style={serif}>{en ? "Our 3 houses" : "Nos 3 maisons"}</h2>
+          <p className="text-[#57534E] mb-10 max-w-2xl">
+            {en
+              ? `${STATS.totalRooms} rooms in ${STATS.totalHouses} houses, ${STATS.livingSpacePerResidentMin} to ${STATS.livingSpacePerResidentMax} m² of living space per flatmate. Each house has its own character; all three share the same all-inclusive rent and the same community.`
+              : `${STATS.totalRooms} chambres dans ${STATS.totalHouses} maisons, ${STATS.livingSpacePerResidentMin} à ${STATS.livingSpacePerResidentMax} m² d'espace de vie par colocataire. Chaque maison a son caractère ; les trois partagent le même loyer tout inclus et la même communauté.`}
           </p>
-
-          <div className="grid md:grid-cols-2 gap-8">
-            {[
-              {
-                name: "Marie L.",
-                profile: language === "en" ? "Cross-border worker, consultant in Geneva" : "Frontalière, consultante à Genève",
-                quote: language === "en"
-                  ? "Moving to La Villa was the best decision when I relocated for work. Instead of spending months searching for a flat in Geneva, I moved in within two weeks. The community is amazing — I've made real friends here, and the 20-minute commute to Cornavin is a breeze."
-                  : "Emménager à La Villa a été la meilleure décision quand je me suis installée pour le travail. Au lieu de passer des mois à chercher un appartement à Genève, j'ai emménagé en deux semaines. La communauté est incroyable — je me suis fait de vrais amis ici, et le trajet de 20 minutes jusqu'à Cornavin est un jeu d'enfant.",
-              },
-              {
-                name: "Thomas K.",
-                profile: language === "en" ? "Expat, developer at the UN" : "Expat, développeur à l'ONU",
-                quote: language === "en"
-                  ? "As an expat arriving in Geneva, I had no network and no idea where to live. La Villa gave me a furnished room, a ready-made social circle, and incredible amenities. The pool and gym alone would cost 200 CHF/month in Geneva. It's unbeatable value."
-                  : "En tant qu'expat arrivant à Genève, je n'avais pas de réseau et aucune idée d'où vivre. La Villa m'a offert une chambre meublée, un cercle social prêt à l'emploi et des équipements incroyables. La piscine et la salle de sport seules coûteraient 200 CHF/mois à Genève. C'est imbattable.",
-              },
-              {
-                name: "Sarah M.",
-                profile: language === "en" ? "Young professional, marketing in Geneva" : "Jeune pro, marketing à Genève",
-                quote: language === "en"
-                  ? `I was paying 2,100 CHF for a tiny studio in Carouge. Now I pay ${PRICE_EN_NUM} CHF for a much better quality of life: a beautiful room, cleaning three times a week, yoga classes, and a vibrant community. I save money AND live better. I wish I'd found this place sooner.`
-                  : `Je payais 2 100 CHF pour un minuscule studio à Carouge. Maintenant je paie ${PRICE_CHF_FR} pour une bien meilleure qualité de vie : une belle chambre, le ménage trois fois par semaine, des cours de yoga et une communauté vibrante. J'économise ET je vis mieux. J'aurais aimé trouver cet endroit plus tôt.`,
-              },
-              {
-                name: "Lucas D.",
-                profile: language === "en" ? "Remote worker, freelance IT" : "Télétravailleur, freelance IT",
-                quote: language === "en"
-                  ? "Working from home can be isolating, but at La Villa it's the opposite. The coworking spaces are great, the fiber internet never drops, and there's always someone to grab lunch or go for a run with. It's the perfect balance between productivity and social life."
-                  : "Le télétravail peut être isolant, mais à La Villa c'est tout le contraire. Les espaces coworking sont super, la fibre ne coupe jamais, et il y a toujours quelqu'un pour déjeuner ou aller courir. C'est l'équilibre parfait entre productivité et vie sociale.",
-              },
-            ].map((testimonial, i) => (
-              <div key={i} className="bg-white p-8 border border-[#E7E5E4]">
-                <div className="flex items-center gap-1 mb-4">
-                  {[...Array(5)].map((_, j) => (
-                    <Star key={j} className="w-4 h-4 text-[#D4A574] fill-[#D4A574]" />
-                  ))}
-                </div>
-                <p className="text-[#57534E] leading-relaxed mb-6 italic">
-                  "{testimonial.quote}"
-                </p>
-                <div>
-                  <p className="font-medium text-[#1C1917]">{testimonial.name}</p>
-                  <p className="text-sm text-[#78716C]">{testimonial.profile}</p>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            {HOUSE_ORDER.map((k) => (
+              <div key={k} className="bg-white border border-[#E7E5E4] rounded-2xl overflow-hidden flex flex-col">
+                <LocalizedLink to={`/${k}`} className="block relative aspect-[16/10] overflow-hidden">
+                  <img src={HOUSES[k].img} alt={HOUSES[k].label} className="w-full h-full object-cover" loading="lazy" width={800} height={500} />
+                </LocalizedLink>
+                <div className="p-6 flex flex-col flex-1 gap-3">
+                  <h3 className="text-xl font-medium text-[#1C1917]">{HOUSES[k].label}</h3>
+                  <p className="text-sm text-[#78716C]">{en ? HOUSES[k].descEn : HOUSES[k].descFr}</p>
+                  <HouseAvailabilityLine house={k} />
+                  <LocalizedLink to={`/${k}`} className="mt-auto inline-flex items-center gap-2 text-sm font-semibold text-[#1C1917] hover:text-[#D4A574]">
+                    {en ? `Discover ${HOUSES[k].label}` : `Découvrir ${HOUSES[k].label}`}
+                    <ArrowRight className="w-4 h-4" />
+                  </LocalizedLink>
                 </div>
               </div>
             ))}
@@ -881,330 +262,58 @@ export function ColocationGenevePage() {
         </div>
       </section>
 
-      {/* ===== COLOCATION VS STUDIO COMPARATIF ===== */}
-      <section className="py-24 lg:py-32 bg-white">
-        <div className="max-w-5xl mx-auto px-6">
-          <h2
-            className="text-3xl md:text-4xl font-light text-[#1C1917] mb-4 text-center"
-            style={{ fontFamily: "DM Serif Display, serif" }}
-          >
-            {language === "en"
-              ? "Coliving vs Studio in Geneva: The Comparison"
-              : "Colocation vs Studio à Genève : Le Comparatif"}
-          </h2>
-          <p className="text-[#57534E] text-center max-w-3xl mx-auto mb-12">
-            {language === "en"
-              ? "See why our coliving is the smartest choice for living near Geneva."
-              : "Découvre pourquoi notre colocation est le choix le plus malin pour vivre près de Genève."}
+      {/* ===== H2 — À N MIN DE GENÈVE ===== */}
+      <section className="py-20 lg:py-24 bg-white">
+        <div className="max-w-4xl mx-auto px-6 text-center">
+          <Train className="w-12 h-12 text-[#D4A574] mx-auto mb-6" />
+          <h2 className={h2} style={serif}>{en ? `${MIN} minutes from Geneva` : `À ${MIN} min de Genève`}</h2>
+          <p className="text-[#57534E] leading-relaxed max-w-3xl mx-auto mb-8">
+            {en
+              ? `Door to door, count ${MIN} minutes to the centre of Geneva. Léman Express from Annemasse (Eaux-Vives in 8 minutes, Cornavin direct), tram 17 from the Moillesulaz border, TPG buses, and the border itself is a few minutes away from every house.`
+              : `Porte à porte, compte ${MIN} minutes jusqu'au centre de Genève. Léman Express depuis Annemasse (Eaux-Vives en 8 minutes, Cornavin direct), tram 17 depuis la douane de Moillesulaz, bus TPG, et la frontière elle-même à quelques minutes de chaque maison.`}
           </p>
-
-          <div className="overflow-x-auto">
-            <table className="w-full border-collapse text-sm">
-              <thead>
-                <tr className="bg-[#FAF9F6]">
-                  <th className="border border-[#E7E5E4] px-6 py-4 text-left font-medium text-[#1C1917]"></th>
-                  <th className="border border-[#E7E5E4] px-6 py-4 text-left font-medium text-[#D4A574]">
-                    La Villa Coliving
-                  </th>
-                  <th className="border border-[#E7E5E4] px-6 py-4 text-left font-medium text-[#78716C]">
-                    Studio Genève
-                  </th>
-                </tr>
-              </thead>
-              <tbody>
-                {[
-                  [language === "en" ? "Monthly cost" : "Coût mensuel", language === "en" ? `From ${PRICE_SHARED_EN_NUM} CHF (all-incl.)` : `Dès ${PRICE_SHARED_CHF_FR} (tout compris)`, "1 800 - 2 500 CHF + charges"],
-                  [language === "en" ? "Furnished" : "Meublé", "✓ " + (language === "en" ? "Fully furnished" : "Entièrement meublé"), language === "en" ? "Usually unfurnished" : "Généralement non meublé"],
-                  [language === "en" ? "Pool" : "Piscine", "✓ " + (language === "en" ? "Pool included" : "Piscine incluse"), "✗"],
-                  ["Gym / Sauna", "✓ " + (language === "en" ? "Included" : "Inclus"), "✗ " + (language === "en" ? "Extra 80-150 CHF/month" : "En plus : 80-150 CHF/mois")],
-                  ["Internet", "✓ " + (language === "en" ? "Pro fiber included" : "Fibre Pro incluse"), "~50 CHF/" + (language === "en" ? "month" : "mois")],
-                  [language === "en" ? "Cleaning" : "Ménage", "✓ " + (language === "en" ? "3x/week, included" : "3x/semaine, inclus"), language === "en" ? "You manage" : "À ta charge"],
-                  [language === "en" ? "Community" : "Communauté", "✓ " + (language === "en" ? "Monthly events, yoga & sports, community dinners" : "Événements mensuels, yoga & sport, dîners communautaires"), "✗ " + (language === "en" ? "Isolated" : "Isolé")],
-                  [language === "en" ? "Lease" : "Bail", language === "en" ? "12 months, renewable" : "12 mois, renouvelable", language === "en" ? "12+ months lease" : "Bail 12+ mois"],
-                  [language === "en" ? "Deposit" : "Caution", language === "en" ? "2 months excl. charges" : "2 mois hors charges", language === "en" ? "3 months typical" : "3 mois généralement"],
-                ].map(([label, villa, studio], i) => (
-                  <tr key={i} className={i % 2 === 0 ? "bg-white" : "bg-[#FAF9F6]"}>
-                    <td className="border border-[#E7E5E4] px-6 py-3 font-medium text-[#1C1917]">{label}</td>
-                    <td className="border border-[#E7E5E4] px-6 py-3 text-[#1C1917]">{villa}</td>
-                    <td className="border border-[#E7E5E4] px-6 py-3 text-[#57534E]">{studio}</td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        </div>
-      </section>
-
-      {/* ===== GUIDE ÉTAPE PAR ÉTAPE ===== */}
-      <section className="py-24 lg:py-32 bg-white">
-        <div className="max-w-5xl mx-auto px-6">
-          <h2
-            className="text-3xl md:text-4xl font-light text-[#1C1917] mb-4 text-center"
-            style={{ fontFamily: "DM Serif Display, serif" }}
-          >
-            {language === "en"
-              ? "How to Find Shared Housing in Geneva: Step-by-Step Guide"
-              : "Comment Trouver une Colocation à Genève : Guide Étape par Étape"}
-          </h2>
-          <p className="text-[#57534E] text-center max-w-3xl mx-auto mb-16">
-            {language === "en"
-              ? "Finding the right shared housing in the Geneva area doesn't have to be stressful. Follow these five steps."
-              : "Trouver la bonne colocation dans la région de Genève ne doit pas être stressant. Suis ces cinq étapes."}
-          </p>
-
-          <div className="space-y-8 max-w-3xl mx-auto">
-            {[
-              {
-                step: 1,
-                title: language === "en" ? "Define your budget and criteria" : "Définis ton budget et tes critères",
-                desc: language === "en"
-                  ? `Start by setting a clear monthly budget. Consider not just rent but also utilities, internet, gym membership, and commuting costs. In the Geneva area, an all-inclusive colocation like La Villa at ${PRICE_EN_NUM} CHF/month can be more cost-effective than a cheaper room plus separate expenses. Think about what matters most: proximity to work, amenities, community, or outdoor space.`
-                  : `Commence par fixer un budget mensuel clair. Prends en compte non seulement le loyer mais aussi les charges, l'internet, la salle de sport et les frais de transport. Dans la région de Genève, une colocation tout inclus comme La Villa à ${PRICE_CHF_FR}/mois peut être plus rentable qu'une chambre moins chère avec des dépenses séparées. Réfléchis à ce qui compte le plus : proximité du travail, équipements, communauté ou espaces verts.`,
-              },
-              {
-                step: 2,
-                title: language === "en" ? "Explore your options: Swiss side vs French side" : "Explore les options : côté suisse vs côté France",
-                desc: language === "en"
-                  ? "A room in a shared flat in Geneva costs 1,000-1,500 CHF/month without services. On the French side, cross-border flatshare or coliving offers the same access to Geneva at 30-50% lower cost of living. The Leman Express connects Annemasse to Geneva Cornavin in 20 minutes, making the French border towns a practical and financially smart choice for anyone working in Geneva."
-                  : "Une chambre en colocation à Genève coûte 1 000 à 1 500 CHF/mois sans services. Côté français, la colocation ou le coliving frontalier offre le même accès à Genève pour un coût de vie 30 à 50% inférieur. Le Léman Express relie Annemasse à Genève Cornavin en 20 minutes, faisant des communes frontalières françaises un choix pratique et financièrement avisé pour quiconque travaille à Genève.",
-              },
-              {
-                step: 3,
-                title: language === "en" ? "Visit the spaces and meet the community" : "Visite les espaces et rencontre la communauté",
-                desc: language === "en"
-                  ? "Nothing replaces an in-person visit. At La Villa, we organize tours of our three houses so you can see the rooms, common areas, pool, gym, and sauna. You'll meet current residents and get a real feel for the community atmosphere. This step is essential — coliving is about the people as much as the place."
-                  : "Rien ne remplace une visite en personne. Chez La Villa, nous organisons des visites de nos trois maisons pour que tu puisses voir les chambres, les espaces communs, la piscine, la salle de sport et le sauna. Tu rencontreras les résidents actuels et ressentiras l'atmosphère de la communauté. Cette étape est essentielle — le coliving, c'est autant les personnes que le lieu.",
-              },
-              {
-                step: 4,
-                title: language === "en" ? "Prepare your application" : "Prépare ton dossier",
-                desc: language === "en"
-                  ? "To apply, you'll need a valid ID, proof of employment (or enrollment), and a brief description of yourself. If you're a cross-border worker, your Swiss work permit (permis G) or employment contract is helpful. Unlike traditional Geneva rentals that demand extensive financial guarantees, our process is straightforward and transparent."
-                  : "Pour candidater, tu auras besoin d'une pièce d'identité valide, d'un justificatif d'emploi (ou d'inscription) et d'une courte description de toi-même. Si tu es frontalier, ton permis de travail suisse (permis G) ou contrat de travail est utile. Contrairement aux locations genevoises traditionnelles qui exigent d'importantes garanties financières, notre processus est simple et transparent.",
-              },
-              {
-                step: 5,
-                title: language === "en" ? "Move in within a week" : "Emménage en une semaine",
-                desc: language === "en"
-                  ? "Once your application is accepted, move-in can happen in less than two weeks! Your room is ready, fully furnished, with everything included from day one. No need to set up internet, buy furniture, or sign multiple contracts. Just bring your bags and start your new life near Geneva."
-                  : "Une fois ta candidature acceptée, l'emménagement peut se faire en moins de deux semaines ! Ta chambre est prête, entièrement meublée, avec tout inclus dès le premier jour. Pas besoin d'installer internet, d'acheter des meubles ou de signer plusieurs contrats. Apporte simplement tes valises et commence ta nouvelle vie près de Genève.",
-              },
-            ].map((item) => (
-              <div key={item.step} className="flex gap-6">
-                <div className="flex-shrink-0 w-10 h-10 bg-[#D4A574] text-white rounded-full flex items-center justify-center font-medium text-sm">
-                  {item.step}
-                </div>
-                <div>
-                  <h3 className="text-lg font-medium text-[#1C1917] mb-2">{item.title}</h3>
-                  <p className="text-sm text-[#57534E] leading-relaxed">{item.desc}</p>
-                </div>
-              </div>
+          <div className="grid sm:grid-cols-3 gap-4 text-sm text-[#44403C]">
+            {(en
+              ? [["Le Lodge · Annemasse", "Léman Express direct, Cornavin in 15 min"], ["Le Loft · Ambilly", "500 m from the Moillesulaz border, tram 17"], ["La Villa · Ville-la-Grand", "Léman Express and tram 17 within walking distance"]]
+              : [["Le Lodge · Annemasse", "Léman Express direct, Cornavin en 15 min"], ["Le Loft · Ambilly", "À 500 m de la douane de Moillesulaz, tram 17"], ["La Villa · Ville-la-Grand", "Léman Express et tram 17 à pied"]]
+            ).map(([t, d]) => (
+              <div key={t} className="bg-[#FAF9F6] p-5"><p className="font-medium text-[#1C1917] mb-1">{t}</p><p>{d}</p></div>
             ))}
           </div>
-
-          <div className="text-center mt-12">
-            <LocalizedLink
-              to="/candidature"
-              className="inline-flex items-center gap-2 bg-[#D4A574] text-white px-8 py-4 text-sm uppercase tracking-wider hover:bg-[#44403C] transition-colors"
-            >
-              {language === "en" ? "Start Your Application" : "Commencer Ta Candidature"}
-              <ArrowRight className="w-4 h-4" />
-            </LocalizedLink>
-          </div>
         </div>
       </section>
 
-      {/* ===== FAQ (§3, accordéon Radix → réponses dans le DOM) ===== */}
+      {/* ===== H2 — OÙ CHERCHER UNE COLOCATION À GENÈVE ===== */}
+      <section className="py-20 lg:py-24 bg-[#FAF9F6]">
+        <div className="max-w-4xl mx-auto px-6">
+          <h2 className={h2} style={serif}>{en ? "Where to look for a flatshare in Geneva" : "Où chercher une colocation à Genève"}</h2>
+          <p className="text-[#57534E] leading-relaxed mb-4">
+            {en
+              ? "Listing portals, flatmate groups and specialised directories all exist, on both sides of the border. They work, with their share of stale ads, visits that lead nowhere and files to assemble for each landlord. Our guide explains how to search step by step, from the budget to the visit: "
+              : "Les portails d'annonces, les groupes de colocataires et les annuaires spécialisés existent, des deux côtés de la frontière. Ils fonctionnent, avec leur lot d'annonces périmées, de visites pour rien et de dossiers à monter pour chaque propriétaire. Notre guide explique comment chercher, étape par étape, du budget à la visite : "}
+            <LocalizedLink to={COLOC_GENEVE_ARTICLE} className={link}>{en ? "finding a flatshare in Geneva" : "trouver une colocation à Genève"}</LocalizedLink>.
+          </p>
+          <p className="text-[#57534E] leading-relaxed">
+            {en
+              ? "What we add to that search: a room that is ready (furnished, connected, cleaned), a community already living in the house, a single all-inclusive rent, and a human reply within 48 hours."
+              : "Ce que nous ajoutons à cette recherche : une chambre déjà prête (meublée, connectée, entretenue), une communauté qui vit déjà dans la maison, un seul loyer tout compris, et une réponse humaine sous 48 h."}
+          </p>
+        </div>
+      </section>
+
       <FaqSection
-        title={language === "en" ? "Frequently asked questions" : "Questions fréquentes sur la colocation près de Genève"}
-        items={colocationFAQ}
+        title={en ? "Shared housing in Geneva — frequently asked questions" : "Colocation à Genève — questions fréquentes"}
+        items={colocationGeneveFaq[L]}
+        emitSchema
       />
 
-      {/* ===== ARTICLES UTILES ===== */}
-      {blogPosts.length > 0 && (
-        <section className="py-24 lg:py-32 bg-white">
-          <div className="max-w-5xl mx-auto px-6">
-            <h2
-              className="text-3xl md:text-4xl font-light text-[#1C1917] mb-4 text-center"
-              style={{ fontFamily: "DM Serif Display, serif" }}
-            >
-              {language === "en"
-                ? "Useful Guides for Cross-Border Workers"
-                : "Guides Utiles pour les Frontaliers"}
-            </h2>
-            <p className="text-[#57534E] text-center max-w-3xl mx-auto mb-12">
-              {language === "en"
-                ? "Everything you need to know about living near Geneva."
-                : "Tout ce que tu dois savoir pour vivre près de Genève."}
-            </p>
-            <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
-              {blogPosts.map((post) => {
-                // Ancres dé-optimisées depuis le PILIER : jamais « colocation (à) Genève »
-                // en texte cliquable vers un satellite (règle hub & spoke, Phase 2).
-                const ANCHOR_OVERRIDES: Record<string, { fr: string; en: string }> = {
-                  "trouver-colocation-geneve-frontalier": {
-                    fr: "Comment chercher et éviter les arnaques (guide 2026)",
-                    en: "How to search and avoid scams (2026 guide)",
-                  },
-                };
-                const override = ANCHOR_OVERRIDES[post.slug];
-                const title = override
-                  ? (language === "en" ? override.en : override.fr)
-                  : (language === "en" && post.title_en) ? post.title_en : post.title_fr;
-                return (
-                  <LocalizedLink
-                    to={`/blog/${post.slug}`}
-                    key={post.id}
-                    className="group bg-[#FAF9F6] border border-[#E7E5E4] overflow-hidden hover:border-[#D4A574]/30 hover:shadow-lg transition-all"
-                  >
-                    {post.image_url && (
-                      <div className="aspect-[16/10] overflow-hidden">
-                        <img src={post.image_url} alt={title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" loading="lazy" />
-                      </div>
-                    )}
-                    <div className="p-4">
-                      <h3 className="text-sm font-medium text-[#1C1917] line-clamp-2 group-hover:text-[#D4A574] transition-colors">
-                        {title}
-                      </h3>
-                      <span className="flex items-center gap-1 text-xs text-[#78716C] mt-2">
-                        <Clock className="w-3 h-3" /> {post.read_time_min} min
-                      </span>
-                    </div>
-                  </LocalizedLink>
-                );
-              })}
-            </div>
-            <div className="text-center mt-8">
-              <LocalizedLink to="/blog" className="inline-flex items-center gap-2 text-[#D4A574] font-medium hover:underline">
-                {language === "en" ? "View all articles" : "Voir tous les articles"}
-                <ArrowRight className="w-4 h-4" />
-              </LocalizedLink>
-            </div>
-          </div>
-        </section>
-      )}
-
-      {/* ===== RELATED PAGES (maillage entrant vers /annemasse-colocation + /chambre-a-louer-annemasse) ===== */}
-      <section className="py-24 lg:py-32 bg-white">
-        <div className="max-w-5xl mx-auto px-6">
-          <h2
-            className="text-3xl md:text-4xl font-light text-[#1C1917] mb-4 text-center"
-            style={{ fontFamily: "DM Serif Display, serif" }}
-          >
-            {language === "en"
-              ? "Looking for the Annemasse-specific view?"
-              : "Tu cherches la vue spécifique Annemasse ?"}
-          </h2>
-          <p className="text-[#57534E] text-center max-w-3xl mx-auto mb-12">
-            {language === "en"
-              ? "Our 3 houses are all located in Annemasse Agglo (Ville-la-Grand, Ambilly, Annemasse). If you're zooming in on the local angle, here are two dedicated pages."
-              : "Nos 3 maisons sont toutes situées dans Annemasse Agglo (Ville-la-Grand, Ambilly, Annemasse). Si tu zoomes sur l'angle local, voici deux pages dédiées."}
-          </p>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <LocalizedLink
-              to="/annemasse-colocation"
-              className="group bg-[#FAF9F6] border border-[#E7E5E4] p-8 hover:border-[#D4A574]/30 hover:shadow-lg transition-all"
-            >
-              <span className="text-xs text-[#D4A574] uppercase tracking-[0.3em] mb-3 block font-medium">
-                {language === "en" ? "Annemasse coliving guide" : "Guide colocation Annemasse"}
-              </span>
-              <h3 className="text-xl font-medium text-[#1C1917] mb-3 group-hover:text-[#D4A574] transition-colors">
-                {language === "en"
-                  ? "Coliving in Annemasse — 29 rooms, 3 houses"
-                  : "Colocation Annemasse — 29 chambres, 3 maisons"}
-              </h3>
-              <p className="text-sm text-[#57534E] leading-relaxed mb-4">
-                {language === "en"
-                  ? `Why Annemasse Agglo, real travel times to Geneva, 3-house comparison, what's included in ${PRICE_CHF_EN}/mo.`
-                  : `Pourquoi Annemasse Agglo, temps de trajet réels vers Genève, comparatif des 3 maisons, ce qui est inclus dans ${PRICE_CHF_FR}/mois.`}
-              </p>
-              <span className="inline-flex items-center gap-2 text-[#D4A574] text-sm font-medium group-hover:gap-3 transition-all">
-                {language === "en" ? "Read the guide" : "Lire le guide"}
-                <ArrowRight className="w-4 h-4" />
-              </span>
-            </LocalizedLink>
-
-            <LocalizedLink
-              to="/chambre-a-louer-annemasse"
-              className="group bg-[#FAF9F6] border border-[#E7E5E4] p-8 hover:border-[#D4A574]/30 hover:shadow-lg transition-all"
-            >
-              <span className="text-xs text-[#D4A574] uppercase tracking-[0.3em] mb-3 block font-medium">
-                {language === "en" ? "Furnished rooms Annemasse" : "Chambres meublées Annemasse"}
-              </span>
-              <h3 className="text-xl font-medium text-[#1C1917] mb-3 group-hover:text-[#D4A574] transition-colors">
-                {language === "en"
-                  ? `Furnished rooms to rent in Annemasse from ${PRICE_SHARED_CHF_EN}/mo`
-                  : `Chambres meublées à louer à Annemasse dès ${PRICE_SHARED_CHF_FR}/mois`}
-              </h3>
-              <p className="text-sm text-[#57534E] leading-relaxed mb-4">
-                {language === "en"
-                  ? "Direct transactional view: room types, vs studio Annemasse, 4-step move-in process, current availability."
-                  : "Vue transactionnelle directe : types de chambres, vs studio Annemasse, process emménagement en 4 étapes, disponibilités actuelles."}
-              </p>
-              <span className="inline-flex items-center gap-2 text-[#D4A574] text-sm font-medium group-hover:gap-3 transition-all">
-                {language === "en" ? "Check availability" : "Voir les disponibilités"}
-                <ArrowRight className="w-4 h-4" />
-              </span>
-            </LocalizedLink>
-          </div>
-        </div>
-      </section>
-
-      {/* ===== INTERNAL LINKING — Essentials guides for un-crawled articles ===== */}
-      <section className="py-12 lg:py-16 bg-[#FAF9F6] border-t border-[#E7E5E4]">
-        <div className="max-w-5xl mx-auto px-6">
-          <h2 className="text-2xl md:text-3xl font-light text-[#1C1917] mb-8 text-center" style={{ fontFamily: "DM Serif Display, serif" }}>
-            {language === "en" ? "Essential reads for cross-border workers" : "Lectures essentielles pour les frontaliers"}
-          </h2>
-          <LocalizedLink
-            to="/observatoire-logement-frontalier-geneve"
-            className="flex items-center justify-between gap-4 bg-white border border-[#D4A574]/50 rounded-xl px-5 py-4 mb-6 max-w-3xl mx-auto hover:border-[#D4A574] transition-colors group"
-          >
-            <span className="text-sm">
-              <span className="text-[10px] uppercase tracking-wider text-[#D4A574] font-medium mr-2">{language === "en" ? "New · Data" : "Nouveau · Data"}</span>
-              <span className="text-[#1C1917] font-medium">
-                {language === "en"
-                  ? "Cross-border housing observatory — studio rent × commute, 17 towns near Geneva"
-                  : "Observatoire du logement frontalier — loyer studio × trajet, 17 communes près de Genève"}
-              </span>
-            </span>
-            <ArrowRight className="w-4 h-4 text-[#D4A574] shrink-0 group-hover:translate-x-1 transition-transform" />
-          </LocalizedLink>
-          <ul className="grid grid-cols-1 md:grid-cols-2 gap-3 text-sm max-w-3xl mx-auto">
-            {[
-              { fr: "Trouver une colocation à Genève : le guide du frontalier", en: "Finding a flatshare in Geneva: the cross-border guide", slug: "trouver-colocation-geneve-frontalier" },
-              { fr: "Le guide des ressources du frontalier", en: "The cross-border worker's resources guide", slug: "guide-ressources-frontalier-geneve" },
-              { fr: "Coliving à Genève pour frontaliers : le guide complet", en: "Coliving in Geneva for cross-border workers: the guide", slug: "coliving-geneve-frontaliers-guide-complet" },
-              { fr: "Fiscalité du frontalier à Genève : impôts 2026", en: "Cross-border taxation in Geneva: 2026 rules", slug: "fiscalite-frontalier-geneve-impots-2026" },
-              { fr: "Le budget complet d'un logement frontalier à Genève", en: "The full budget of cross-border housing near Geneva", slug: "budget-colocation-geneve-guide-complet" },
-              { fr: "Où habiter quand on est frontalier suisse — Top 7 villes", en: "Where to live as a Swiss cross-border worker — Top 7 towns", slug: "ou-habiter-frontalier-suisse-villes-france-pas-cher" },
-              { fr: "Télétravail frontalier Genève : règles 2026", en: "Cross-border remote work Geneva: 2026 rules", slug: "teletravail-frontalier-geneve-regles-2026" },
-              { fr: "Se loger à Genève quand on est expatrié", en: "Housing in Geneva as an expat", slug: "colocation-expats-geneve-guide" },
-            ].map((item) => (
-              <li key={item.slug} className="flex items-start gap-2">
-                <span className="text-[#D4A574]">→</span>
-                <LocalizedLink to={language === "en" ? `/en/blog/${item.slug}` : `/blog/${item.slug}`} className="text-[#1C1917] hover:text-[#D4A574] hover:underline transition-colors">
-                  {language === "en" ? item.en : item.fr}
-                </LocalizedLink>
-              </li>
-            ))}
-          </ul>
-        </div>
-      </section>
-
-      {/* ===== C4 — LISTE PRIORITAIRE (waitlist) ===== */}
-      <section className="py-20 lg:py-28 bg-white border-t border-[#E7E5E4]">
+      {/* ===== LISTE D'ATTENTE ===== */}
+      <section id="liste" className="py-20 lg:py-24 bg-white border-t border-[#E7E5E4]">
         <div className="max-w-3xl mx-auto px-6 text-center">
-          <span className="text-xs text-[#D4A574] uppercase tracking-[0.3em] mb-4 block font-medium">
-            {language === "en" ? "Priority list" : "Liste prioritaire"}
-          </span>
-          <h2 className="text-3xl md:text-4xl font-light text-[#1C1917] mb-4" style={{ fontFamily: "DM Serif Display, serif" }}>
-            {language === "en" ? "No spot right now? Get first in line." : "Pas de place tout de suite ? Sois prioritaire."}
-          </h2>
+          <span className="text-xs text-[#D4A574] uppercase tracking-[0.3em] mb-4 block font-medium">{en ? "Waiting list" : "Liste d'attente"}</span>
+          <h2 className={h2} style={serif}>{en ? "No room at your date? Be first in line." : "Pas de chambre à ta date ? Sois prioritaire."}</h2>
           <p className="text-[#57534E] max-w-xl mx-auto mb-10">
-            {language === "en"
-              ? "Our houses fill fast. Join the priority list — we'll reach out the moment a room matching your profile opens up."
-              : "Nos maisons se remplissent vite. Rejoins la liste prioritaire : on te contacte dès qu'une chambre correspondant à ton profil se libère."}
+            {en ? "Rooms open up all year round. Leave your details: we contact you as soon as a room matching your profile frees up." : "Des chambres se libèrent toute l'année. Laisse tes coordonnées : on te contacte dès qu'une chambre correspondant à ton profil se libère."}
           </p>
           <WaitlistForm />
         </div>
@@ -1213,54 +322,51 @@ export function ColocationGenevePage() {
       {/* ===== CTA FINAL ===== */}
       <section className="py-24 lg:py-32 bg-[#1C1917] text-white">
         <div className="max-w-3xl mx-auto px-6 text-center">
-          <h2
-            className="text-3xl md:text-4xl font-light mb-6"
-            style={{ fontFamily: "DM Serif Display, serif" }}
-          >
-            {language === "en"
-              ? "Ready to Find Your Room Near Geneva?"
-              : "Prêt à trouver ta chambre près de Genève ?"}
-          </h2>
+          <h2 className="text-3xl md:text-4xl font-light mb-6" style={serif}>{en ? "Ready to find your room near Geneva?" : "Prêt à trouver ta chambre près de Genève ?"}</h2>
           <p className="text-[#78716C] text-lg mb-10 max-w-xl mx-auto">
-            {language === "en"
-              ? "Apply in 2 minutes. We'll get back to you within 48 hours. Move in within a week."
-              : "Candidate en 2 minutes. Réponse sous 48 h. Emménagement en une semaine."}
+            {en ? "Apply in 2 minutes. Reply within 48 h. Move in within a week." : "Candidate en 2 minutes. Réponse sous 48 h. Emménagement en une semaine."}
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <LocalizedLink
-              to="/candidature"
-              className="inline-flex items-center gap-2 bg-[#D4A574] text-white px-8 py-4 text-sm uppercase tracking-wider hover:bg-[#44403C] transition-colors"
-            >
-              {language === "en" ? "Apply now" : "Candidater maintenant"}
+            <LocalizedLink to="/chambres-disponibles" className="inline-flex items-center gap-2 bg-[#D4A574] text-white px-8 py-4 text-sm uppercase tracking-wider hover:bg-[#44403C] transition-colors">
+              {en ? "See available rooms" : "Voir les chambres disponibles"}
               <ArrowRight className="w-4 h-4" />
             </LocalizedLink>
-            <LocalizedLink
-              to="/tarifs"
-              className="inline-flex items-center gap-2 border border-white/30 text-white px-8 py-4 text-sm uppercase tracking-wider hover:bg-white hover:text-[#1C1917] transition-colors"
-            >
-              {language === "en" ? "View pricing" : "Voir les tarifs"}
+            <LocalizedLink to="/candidature" className="inline-flex items-center gap-2 border border-white/30 text-white px-8 py-4 text-sm uppercase tracking-wider hover:bg-white hover:text-[#1C1917] transition-colors">
+              {en ? "Apply" : "Candidater"}
             </LocalizedLink>
           </div>
         </div>
       </section>
-      {/* C3 — CTA collante mobile */}
+
+      {/* ===== Pages liées ===== */}
+      <section className="py-12 bg-white border-t border-[#E7E5E4]">
+        <div className="max-w-5xl mx-auto px-6 text-center">
+          <p className="text-sm text-[#78716C] mb-4">{en ? "Related pages" : "Pages liées"}</p>
+          <div className="flex flex-wrap gap-4 justify-center text-sm">
+            <LocalizedLink to="/chambres-disponibles" className={link}>{en ? "Available rooms" : "Chambres disponibles"}</LocalizedLink>
+            <span className="text-[#E7E5E4]">·</span>
+            <LocalizedLink to="/annemasse-colocation" className={link}>{en ? "Shared housing in Annemasse" : "Colocation à Annemasse"}</LocalizedLink>
+            <span className="text-[#E7E5E4]">·</span>
+            <LocalizedLink to="/chambre-a-louer-annemasse" className={link}>{en ? "Rooms for rent in Annemasse" : "Chambre à louer à Annemasse"}</LocalizedLink>
+            <span className="text-[#E7E5E4]">·</span>
+            <LocalizedLink to="/le-coliving" className={link}>{en ? "What is coliving" : "Le coliving, c'est quoi ?"}</LocalizedLink>
+            <span className="text-[#E7E5E4]">·</span>
+            <LocalizedLink to="/nos-maisons" className={link}>{en ? "Our 3 houses" : "Nos 3 maisons"}</LocalizedLink>
+            <span className="text-[#E7E5E4]">·</span>
+            <LocalizedLink to="/tarifs" className={link}>{en ? "Pricing" : "Tarifs"}</LocalizedLink>
+          </div>
+        </div>
+      </section>
+
+      {/* CTA collante mobile */}
       <div className="md:hidden fixed bottom-0 inset-x-0 z-40 bg-white/95 backdrop-blur border-t border-[#E7E5E4] px-4 py-3">
-        <LocalizedLink
-          to="/candidature"
-          className="flex items-center justify-center gap-2 w-full bg-[#D4A574] text-white py-3 rounded-lg text-sm font-semibold uppercase tracking-wider"
-        >
-          {language === "en" ? "Apply — reply within 48h" : "Candidater — réponse sous 48h"}
+        <LocalizedLink to="/chambres-disponibles" className="flex items-center justify-center gap-2 w-full bg-[#D4A574] text-white py-3 rounded-lg text-sm font-semibold uppercase tracking-wider">
+          {en ? "Available rooms — reply within 48 h" : "Chambres disponibles — réponse sous 48 h"}
           <ArrowRight className="w-4 h-4" />
         </LocalizedLink>
       </div>
-      {/* État embarqué pour l'hydratation sans fetch — capturé par le prerender,
-          relu par readEmbeddedArray() à l'init du state. */}
-      <script
-        type="application/json"
-        id={BLOG_EMBED_ID}
-        dangerouslySetInnerHTML={{ __html: embedJson(blogPosts) }}
-      />
-      {/* (Lot 5) État chambres embarqué au prérendu — toutes maisons, instance unique par page. */}
+
+      {/* État chambres embarqué au prérendu — toutes maisons, instance unique par page. */}
       <RoomsEmbed />
     </main>
   );

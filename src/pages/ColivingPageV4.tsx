@@ -1,6 +1,7 @@
 import { useLanguage } from "@/contexts/LanguageContext";
 import { Users, Zap, Heart, Check, ArrowRight, Star } from "lucide-react";
 import { LocalizedLink } from "@/components/LocalizedLink";
+import { colocGeneveHref } from "@/lib/siteLinks";
 import { SEO } from "@/components/SEO";
 import { FaqSection } from "@/components/FaqSection";
 import { colivingFaq } from "@/data/faq/colivingFaq";
@@ -396,8 +397,8 @@ export function ColivingPageV4() {
               {/* (Lot 4) Conclusion : ancre variante marque vers la home (l'exacte est en intro) + porte vers les chambres disponibles (Lot 3). */}
               <p className="mt-8 text-[#57534E] leading-relaxed">
                 {language === "en"
-                  ? <>Ready to see it for yourself? Browse <LocalizedLink to="/" className="underline decoration-[#D4A574] decoration-2 underline-offset-4 hover:text-[#1C1917] transition-colors">La Villa Coliving near Geneva</LocalizedLink> and the <LocalizedLink to="/chambres-disponibles" className="underline decoration-[#D4A574] decoration-2 underline-offset-4 hover:text-[#1C1917] transition-colors">available rooms</LocalizedLink> right now.</>
-                  : <>Envie de voir par toi-même ? Découvre <LocalizedLink to="/" className="underline decoration-[#D4A574] decoration-2 underline-offset-4 hover:text-[#1C1917] transition-colors">La Villa Coliving près de Genève</LocalizedLink> et les <LocalizedLink to="/chambres-disponibles" className="underline decoration-[#D4A574] decoration-2 underline-offset-4 hover:text-[#1C1917] transition-colors">chambres disponibles</LocalizedLink> en ce moment.</>}
+                  ? <>Ready to see it for yourself? Browse <LocalizedLink to="/" className="underline decoration-[#D4A574] decoration-2 underline-offset-4 hover:text-[#1C1917] transition-colors">La Villa Coliving near Geneva</LocalizedLink> and the <LocalizedLink to="/chambres-disponibles" className="underline decoration-[#D4A574] decoration-2 underline-offset-4 hover:text-[#1C1917] transition-colors">available rooms</LocalizedLink> right now, or our <LocalizedLink to={colocGeneveHref(language)} className="underline decoration-[#D4A574] decoration-2 underline-offset-4 hover:text-[#1C1917] transition-colors">shared housing in Geneva, French side</LocalizedLink> page.</>
+                  : <>Envie de voir par toi-même ? Découvre <LocalizedLink to="/" className="underline decoration-[#D4A574] decoration-2 underline-offset-4 hover:text-[#1C1917] transition-colors">La Villa Coliving près de Genève</LocalizedLink> et les <LocalizedLink to="/chambres-disponibles" className="underline decoration-[#D4A574] decoration-2 underline-offset-4 hover:text-[#1C1917] transition-colors">chambres disponibles</LocalizedLink> en ce moment, ou notre page <LocalizedLink to={colocGeneveHref(language)} className="underline decoration-[#D4A574] decoration-2 underline-offset-4 hover:text-[#1C1917] transition-colors">colocation à Genève côté France</LocalizedLink>.</>}
               </p>
               <LocalizedLink
                 to="/candidature"
