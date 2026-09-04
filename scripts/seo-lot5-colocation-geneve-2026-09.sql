@@ -72,3 +72,6 @@ where slug in (select slug from blog_posts where is_published and position($l8$[
 update blog_posts set content_en = replace(content_en, $l8$[shared housing near Geneva](/colocation-geneve)$l8$, $l8$[see our rooms on the French side](/colocation-geneve)$l8$), updated_at = now()
 where slug in (select slug from blog_posts where is_published and position($l8$[shared housing near Geneva](/colocation-geneve)$l8$ in content_en) > 0 order by slug limit 8);
 -- ---------------------------------------------------------------------------
+-- Marge (04/09 17:55, appliqué) : /en/colocation-geneve mesuré à 49 % après le prérendu → les pieds de page EN des 2 articles
+-- qui le portaient en double (guide-ressources, salaire-suisse-net) passent en générique « see our rooms on the French side »
+-- (3 ancres de plus) : 11 exactes / 11 génériques / 8 marque sur les pieds de page. Attendu ≈ 45 % au prérendu suivant.
