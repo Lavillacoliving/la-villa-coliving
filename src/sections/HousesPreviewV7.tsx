@@ -164,7 +164,7 @@ export function HousesPreviewV7() {
         <p className="mt-8 text-sm text-[#57534E]">
           {language === "en" ? "Focused on Annemasse Agglo? " : "Tu vises Annemasse Agglo ? "}
           <LocalizedLink to="/annemasse-colocation" className="underline underline-offset-4 hover:text-[#1C1917]">
-            {language === "en" ? "Annemasse, La Villa Coliving side" : "Annemasse, côté La Villa Coliving"}
+            {language === "en" ? "Annemasse, with Le Lodge" : "Annemasse, avec Le Lodge"}
           </LocalizedLink>
           {" · "}
           <LocalizedLink to="/chambre-a-louer-annemasse" className="underline underline-offset-4 hover:text-[#1C1917]">

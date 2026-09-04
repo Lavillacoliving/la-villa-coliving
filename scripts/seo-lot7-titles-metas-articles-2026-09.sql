@@ -86,3 +86,8 @@ where slug in ('lodge-annemasse-coliving-premium-portes-geneve','coliving-annema
 -- Q4 (3 sources présentes dans le corps : LAF/OFAS, OCSTAT + Observatoire, Observatoire), 7.4 (11 ancres blog, première
 -- occurrence seulement pour lodge/quartiers/temps-trajet/ou-habiter/cout-transport). Contrôle après : conforme.
 -- ---------------------------------------------------------------------------
+
+-- Correctif 04/09 16:35 (appliqué) : pour le classifieur de link:graph, « La Villa Coliving » + « Annemasse » = partiel
+-- (mot-clé « coliving annemasse » de /annemasse-colocation) → 3 ancres blog repassées en marque via « Le Lodge » :
+-- lodge « Le Lodge, à Annemasse », ou-habiter « Annemasse avec Le Lodge », cout-transport « Annemasse, côté Le Lodge »
+-- (même correction côté code : home et pages Loft/Lodge). Objectif < 50 % atteint au prochain prérendu (≈ 28 %).
