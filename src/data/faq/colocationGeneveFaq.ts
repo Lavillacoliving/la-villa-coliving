@@ -34,7 +34,7 @@ export const colocationGeneveFaq: { fr: QAPair[]; en: QAPair[] } = {
       a: "Oui : pour travailler à Genève en vivant côté France, il te faut un permis G (permis frontalier), demandé par ton employeur suisse. La Villa Coliving se situe dans la zone frontalière éligible, et beaucoup de nos résidents sont des frontaliers actifs.",
     },
     {
-      q: "Proposez-vous des colocations meublées à Genève ?",
+      q: "La Villa propose-t-elle des colocations meublées à Genève ?",
       a: `Oui. Chez La Villa Coliving, chaque chambre est privée et entièrement meublée (lit, bureau, rangements), et tous les espaces communs le sont aussi. Tu emménages avec ta valise : pas de meubles à acheter, pas d'IKEA à monter. C'est une colocation meublée tout inclus, à 20 minutes du centre de Genève côté France, dès ${PRICE_SHARED_CHF_FR}/mois.`,
     },
     {

@@ -11,6 +11,5 @@
 // après la consolidation du 07/07/2026).
 
 export const HREFLANG_NO_ALTERNATES = new Set([
-  '/en/colocation-geneve',
   // LP payantes : noindex + hors sitemap -> aucun alternate a declarer.
 ]);

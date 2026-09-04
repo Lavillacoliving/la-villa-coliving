@@ -43,6 +43,7 @@ const STATIC_ROUTES_FR = [
   '/le-coliving',
   '/nos-maisons',
   '/chambres-disponibles',
+  '/colocation-geneve',
   '/services',
   '/tarifs',
   '/faq',
@@ -64,7 +65,6 @@ const STATIC_ROUTES_FR = [
 // pos 7,0 — décision 07/07/2026), contrairement au FR consolidé ci-dessus.
 const STATIC_ROUTES_EN = [
   ...STATIC_ROUTES_FR.map(r => r === '/' ? '/en' : `/en${r}`),
-  '/en/colocation-geneve',
 ];
 
 const STATIC_ROUTES = [...STATIC_ROUTES_FR, ...STATIC_ROUTES_EN];
@@ -592,6 +592,7 @@ const STATIC_PAGE_CONFIG = {
   '/le-coliving': { priority: '0.8', changefreq: 'monthly' },
   '/nos-maisons': { priority: '0.8', changefreq: 'weekly' },
   '/chambres-disponibles': { priority: '0.9', changefreq: 'daily' },
+  '/colocation-geneve': { priority: '0.9', changefreq: 'weekly' },
   '/lavilla': { priority: '0.8', changefreq: 'weekly' },
   '/leloft': { priority: '0.8', changefreq: 'weekly' },
   '/lelodge': { priority: '0.8', changefreq: 'weekly' },
@@ -657,7 +658,7 @@ async function generateSitemap(blogSlugs) {
   // sens, et le check #13 de seo-lint exige que sitemap et HTML disent la même
   // chose (le HTML n'émet plus rien pour cette route).
   // Miroir côté HTML : scripts/hreflang-overrides.mjs + src/lib/siteLinks.ts.
-  entries.push(sitemapEntry('/en/colocation-geneve', null, null, '0.8', 'weekly', today));
+  // (Lot 5, 04/09/2026) /colocation-geneve FR revit : le couple FR/EN passe par la boucle standard ci-dessus.
 
   // Blog articles (FR + EN) — only FR slugs, we generate both.
   // lastmod = real updated_at from Supabase (fallback: build date).

@@ -36,6 +36,8 @@ const ROUTES = [
   ...STATIC.map((r) => (r === '/' ? '/en' : `/en${r}`)),
   '/chambres-disponibles',
   '/en/chambres-disponibles',
+  '/colocation-geneve',
+  '/en/colocation-geneve',
 ];
 
 const MIME = {

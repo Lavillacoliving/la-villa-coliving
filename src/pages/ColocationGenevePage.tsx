@@ -30,13 +30,15 @@ import { FaqSection } from "@/components/FaqSection";
 import { buildFaqPageSchema } from "@/lib/structuredData";
 import { colocationGeneveFaq } from "@/data/faq/colocationGeneveFaq";
 import { STATS, STATS_SHARED_BATH, PRICE_EN_NUM, PRICE_CHF_FR, PRICE_CHF_EN, PRICE_SHARED_EN_NUM, PRICE_SHARED_CHF_FR, PRICE_SHARED_CHF_EN } from "@/data/stats";
-import { COLOC_GENEVE_PILLAR_EN } from "@/lib/siteLinks";
+import { COLOC_GENEVE_PILLAR_EN, COLOC_GENEVE_PILLAR_FR } from "@/lib/siteLinks";
+import { RoomCard } from "@/components/RoomCard";
+import { RoomsEmbed } from "@/components/RoomsEmbed";
+import { HouseAvailabilityLine } from "@/components/HouseAvailabilityLine";
+import { HOUSES } from "@/data/houses";
+import { useAllRooms, splitRooms, type HouseKey, type PublicRoom } from "@/lib/availability";
 
-// URL réelle de cette page. Elle n'est plus routée qu'en EN (App.tsx : seule
-// `/en/colocation-geneve` la rend) depuis la consolidation du 07/07/2026 —
-// l'ancienne URL FR renvoie un 308. Le JSON-LD codait encore cette URL FR en
-// dur : `Offer.url` et `WebPage.url` désignaient donc une redirection.
-const PILLAR_URL = `https://www.lavillacoliving.com${COLOC_GENEVE_PILLAR_EN}`;
+// (Lot 5 SEO funnel, 04/09/2026 — gel levé par Jérôme) La page FR revit à /colocation-geneve, l'EN à
+// /en/colocation-geneve : Offer.url et WebPage.url désignent l'URL de la langue rendue.
 
 // FAQ §3 (bilingue, tutoiement) : voir src/data/faq/colocationGeneveFaq.ts
 
@@ -52,6 +54,19 @@ const BLOG_EMBED_ID = "__colocation_blog_data__";
 
 export function ColocationGenevePage() {
   const { language } = useLanguage();
+  const PILLAR_URL = `https://www.lavillacoliving.com${language === "en" ? COLOC_GENEVE_PILLAR_EN : COLOC_GENEVE_PILLAR_FR}`;
+  // (Lot 5) Intention « je cherche une chambre » : les chambres candidates (libres ou datées)
+  // des 3 maisons, même store et même embed que /chambres-disponibles (premier rendu = prérendu).
+  const allRooms = useAllRooms();
+  const { candidates } = splitRooms(allRooms.rooms);
+  const trackRoomCta = (room: PublicRoom) => {
+    try {
+      (window as unknown as { gtag?: (...a: unknown[]) => void }).gtag?.("event", "cta_click", {
+        cta_position: "coloc_geneve_room_card", cta_target: "/candidature", house: room.house_slug,
+        room_id: `chambre-${room.room_number}`, language,
+      });
+    } catch { /* noop */ }
+  };
   // Init synchrone depuis l'état embarqué (fix hydratation #418) : sans lui,
   // blogPosts=[] au premier rendu client → la section « articles » manque →
   // mismatch avec le snapshot prérendu et re-render de toute la page.
@@ -108,7 +123,7 @@ export function ColocationGenevePage() {
 
   // Freshness signal for the money page. Bump PAGE_LAST_UPDATED whenever the page
   // content is meaningfully refreshed so Google sees a recent dateModified.
-  const PAGE_LAST_UPDATED = "2026-06-12";
+  const PAGE_LAST_UPDATED = "2026-09-04";
   // First commit of this page in the repo (git log --diff-filter=A) — verifiable.
   const PAGE_FIRST_PUBLISHED = "2026-02-17";
   // timeZone UTC : une chaîne YYYY-MM-DD est parsée à minuit UTC — sans cette
@@ -122,8 +137,8 @@ export function ColocationGenevePage() {
     "@type": "WebPage",
     url: PILLAR_URL,
     name: language === "en"
-      ? "Shared Housing near Geneva — All-Inclusive Rooms"
-      : "Colocation Genève — chambres meublées tout inclus",
+      ? "Shared housing in Geneva, French side — all-inclusive rooms"
+      : "Colocation à Genève, côté France — chambres meublées tout inclus",
     inLanguage: language === "en" ? "en" : "fr",
     datePublished: PAGE_FIRST_PUBLISHED,
     dateModified: PAGE_LAST_UPDATED,
@@ -132,17 +147,18 @@ export function ColocationGenevePage() {
   return (
     <main className="relative pt-16">
       <SEO
+        // (Lot 5, §6 variante B) Pas de prix dans le title (S33), « côté France » = la promesse honnête.
         title={
           language === "en"
-            ? "All-Inclusive Shared Housing near Geneva"
-            : "Colocation Genève : chambres tout inclus"
+            ? "Shared housing in Geneva, French side"
+            : "Colocation à Genève, côté France"
         }
         description={
           language === "en"
-            ? `Shared housing near Geneva, French side: all-inclusive furnished room from ${PRICE_SHARED_CHF_EN}/mo (utilities, fiber, cleaning). No application fee. Pool, sauna, gym.`
-            : `Colocation près de Genève côté France : chambre meublée tout inclus dès ${PRICE_SHARED_CHF_FR}/mois (charges, fibre, ménage). Sans frais de dossier. Piscine, sauna, gym.`
+            ? `Shared housing in Geneva, French-side version: furnished room, all inclusive from ${PRICE_SHARED_CHF_EN}/month, 20 min from the centre by Léman Express. Reply within 48 h.`
+            : `Colocation à Genève, version côté France : chambre meublée tout inclus dès ${PRICE_SHARED_CHF_FR}/mois, 20 min du centre en Léman Express. Réponse sous 48 h.`
         }
-        url="https://www.lavillacoliving.com/colocation-geneve"
+        url={PILLAR_URL}
         image="https://www.lavillacoliving.com/images/villa_portrait.webp"
         jsonLd={faqSchema}
       />
@@ -164,14 +180,14 @@ export function ColocationGenevePage() {
           >
             {language === "en" ? (
               <>
-                <span className="text-[#D4A574]">Shared Housing Geneva</span>
+                <span className="text-[#D4A574]">Shared housing in Geneva, French side</span>
                 <br />
-                All-Inclusive Furnished Rooms
+                All-inclusive furnished rooms
               </>
             ) : (
               <>
-                <span className="text-[#D4A574]">Colocation Genève</span>
-                <br />Chambres Meublées Tout Inclus
+                <span className="text-[#D4A574]">Colocation à Genève, côté France</span>
+                <br />Chambres meublées tout inclus
               </>
             )}
           </h1>
@@ -192,7 +208,7 @@ export function ColocationGenevePage() {
               to="/nos-maisons"
               className="inline-flex items-center gap-2 border border-[#1C1917] text-[#1C1917] px-8 py-4 text-sm uppercase tracking-wider hover:bg-[#1C1917] hover:text-white transition-colors"
             >
-              {language === "en" ? "View Our Houses" : "Voir Nos Maisons"}
+              {language === "en" ? "View our houses" : "Voir nos maisons"}
             </LocalizedLink>
           </div>
 
@@ -234,6 +250,54 @@ export function ColocationGenevePage() {
         </div>
       </section>
 
+      {/* ===== (Lot 5) CHAMBRES LIBRES OU À LIBÉRER — intention « je cherche une chambre » ===== */}
+      <section className="py-16 lg:py-20 bg-white border-t border-[#E7E5E4]">
+        <div className="max-w-6xl mx-auto px-6">
+          <span className="text-xs text-[#D4A574] uppercase tracking-[0.3em] mb-4 block font-medium">
+            {language === "en" ? "Rooms right now" : "Les chambres en ce moment"}
+          </span>
+          <h2 className="text-3xl md:text-4xl font-light text-[#1C1917] mb-3" style={{ fontFamily: "DM Serif Display, serif" }}>
+            {candidates.length > 0
+              ? (language === "en"
+                ? `${candidates.length} room${candidates.length > 1 ? "s" : ""} free now or opening soon`
+                : `${candidates.length} chambre${candidates.length > 1 ? "s" : ""} libre${candidates.length > 1 ? "s" : ""} maintenant ou bientôt`)
+              : (language === "en" ? "Next openings, house by house" : "Prochaines disponibilités, maison par maison")}
+          </h2>
+          <p className="text-[#57534E] mb-8 max-w-2xl">
+            {language === "en"
+              ? "Real availability of our 3 houses on the French side, read from the same data as our bookings. Each room links to its own application."
+              : "La dispo réelle de nos 3 maisons côté France, lue sur la même source que nos réservations. Chaque chambre a sa propre candidature."}
+          </p>
+          {candidates.length > 0 && (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
+              {candidates.map((room) => (
+                <RoomCard
+                  key={`${room.house_slug}:${room.room_number}`}
+                  house={room.house_slug}
+                  houseName={HOUSES[room.house_slug].label}
+                  room={room}
+                  fallbackImage={HOUSES[room.house_slug].img}
+                  showHouse
+                  onCtaClick={trackRoomCta}
+                />
+              ))}
+            </div>
+          )}
+          <div className="flex flex-col gap-2 mb-6">
+            {(["lavilla", "leloft", "lelodge"] as HouseKey[]).map((k) => (
+              <HouseAvailabilityLine key={k} house={k} />
+            ))}
+          </div>
+          <LocalizedLink
+            to="/chambres-disponibles"
+            className="inline-flex items-center gap-2 text-sm font-semibold text-[#1C1917] underline underline-offset-4 hover:text-[#D4A574]"
+          >
+            {language === "en" ? "See all available rooms, with dates and prices" : "Voir toutes les chambres disponibles, dates et prix"}
+            <ArrowRight className="w-4 h-4" />
+          </LocalizedLink>
+        </div>
+      </section>
+
       {/* ===== POURQUOI LA COLOCATION CÔTÉ FRANCE ===== */}
       <section className="py-24 lg:py-32 bg-white">
         <div className="max-w-5xl mx-auto px-6">
@@ -256,12 +320,12 @@ export function ColocationGenevePage() {
             <div className="bg-[#FAF9F6] p-8">
               <Euro className="w-8 h-8 text-[#D4A574] mb-4" />
               <h3 className="text-xl font-medium text-[#1C1917] mb-3">
-                {language === "en" ? "Save 30-50% on Housing" : "Économisez 30 à 50% sur le Logement"}
+                {language === "en" ? "More space for your rent" : "Plus d'espace pour ton loyer"}
               </h3>
               <p className="text-[#57534E] leading-relaxed mb-4">
                 {language === "en"
-                  ? `A studio in Geneva starts at 1,800 CHF/month — without furniture or services. At La Villa, you get a fully furnished room with pool, gym, sauna, cleaning 3x/week, weekly yoga & sports classes, monthly community events and community dinners — from ${PRICE_SHARED_EN_NUM} CHF/month.`
-                  : `Un studio à Genève coûte minimum 1 800 CHF/mois — sans meubles ni services. Chez La Villa, tu as une chambre meublée avec piscine, gym, sauna, ménage 3x/semaine, cours de yoga et sport hebdomadaires, événements communautaires et dîners communautaires mensuels — dès ${PRICE_SHARED_CHF_FR}/mois.`}
+                  ? `For the budget of a bare studio in Geneva, at La Villa you get a furnished room in a real house: pool, gym, sauna, garden, utilities and fibre included. The choice is space and comfort, not the lowest possible rent.`
+                  : `Pour le budget d'un studio nu à Genève, tu as chez La Villa une chambre meublée dans une vraie maison : piscine, gym, sauna, jardin, charges et fibre comprises. Le choix, c'est l'espace et le confort, pas la course au loyer le plus bas.`}
               </p>
               <div className="bg-white p-4 border border-[#E7E5E4]">
                 <div className="flex justify-between items-center mb-2">
@@ -715,8 +779,8 @@ export function ColocationGenevePage() {
                 Icon: MapPin,
                 title: language === "en" ? "Cross-Border Workers" : "Frontaliers",
                 desc: language === "en"
-                  ? "Working in Geneva, living in France. Save on rent while enjoying Swiss salaries."
-                  : "Travailler à Genève, vivre en France. Économisez sur le loyer tout en profitant d'un salaire suisse.",
+                  ? "Work in Geneva, live in France: the comfort of a house and a single all-inclusive rent, on a Swiss salary."
+                  : "Travailler à Genève, vivre en France : le confort d'une maison et un seul loyer tout compris, avec un salaire suisse.",
               },
               {
                 Icon: Globe,
@@ -885,7 +949,7 @@ export function ColocationGenevePage() {
           <p className="text-[#57534E] text-center max-w-3xl mx-auto mb-16">
             {language === "en"
               ? "Finding the right shared housing in the Geneva area doesn't have to be stressful. Follow these five steps."
-              : "Trouver la bonne colocation dans la région de Genève ne doit pas être stressant. Suivez ces cinq étapes."}
+              : "Trouver la bonne colocation dans la région de Genève ne doit pas être stressant. Suis ces cinq étapes."}
           </p>
 
           <div className="space-y-8 max-w-3xl mx-auto">
@@ -1135,7 +1199,7 @@ export function ColocationGenevePage() {
             {language === "en" ? "Priority list" : "Liste prioritaire"}
           </span>
           <h2 className="text-3xl md:text-4xl font-light text-[#1C1917] mb-4" style={{ fontFamily: "DM Serif Display, serif" }}>
-            {language === "en" ? "No spot right now? Get first in line." : "Pas de place tout de suite ? Soyez prioritaire."}
+            {language === "en" ? "No spot right now? Get first in line." : "Pas de place tout de suite ? Sois prioritaire."}
           </h2>
           <p className="text-[#57534E] max-w-xl mx-auto mb-10">
             {language === "en"
@@ -1155,26 +1219,26 @@ export function ColocationGenevePage() {
           >
             {language === "en"
               ? "Ready to Find Your Room Near Geneva?"
-              : "Prêt à Trouver Ta Chambre près de Genève ?"}
+              : "Prêt à trouver ta chambre près de Genève ?"}
           </h2>
           <p className="text-[#78716C] text-lg mb-10 max-w-xl mx-auto">
             {language === "en"
               ? "Apply in 2 minutes. We'll get back to you within 48 hours. Move in within a week."
-              : "Candidatez en 2 minutes. Réponse sous 48h. Emménagement en une semaine."}
+              : "Candidate en 2 minutes. Réponse sous 48 h. Emménagement en une semaine."}
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <LocalizedLink
               to="/candidature"
               className="inline-flex items-center gap-2 bg-[#D4A574] text-white px-8 py-4 text-sm uppercase tracking-wider hover:bg-[#44403C] transition-colors"
             >
-              {language === "en" ? "Apply Now" : "Candidater Maintenant"}
+              {language === "en" ? "Apply now" : "Candidater maintenant"}
               <ArrowRight className="w-4 h-4" />
             </LocalizedLink>
             <LocalizedLink
               to="/tarifs"
               className="inline-flex items-center gap-2 border border-white/30 text-white px-8 py-4 text-sm uppercase tracking-wider hover:bg-white hover:text-[#1C1917] transition-colors"
             >
-              {language === "en" ? "View Pricing" : "Voir les Tarifs"}
+              {language === "en" ? "View pricing" : "Voir les tarifs"}
             </LocalizedLink>
           </div>
         </div>
@@ -1196,6 +1260,8 @@ export function ColocationGenevePage() {
         id={BLOG_EMBED_ID}
         dangerouslySetInnerHTML={{ __html: embedJson(blogPosts) }}
       />
+      {/* (Lot 5) État chambres embarqué au prérendu — toutes maisons, instance unique par page. */}
+      <RoomsEmbed />
     </main>
   );
 }

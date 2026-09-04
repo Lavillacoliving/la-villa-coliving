@@ -7,9 +7,13 @@
 
 export const COLOC_GENEVE_ARTICLE = "/blog/trouver-colocation-geneve-frontalier";
 export const COLOC_GENEVE_PILLAR_EN = "/en/colocation-geneve";
+// (Lot 5 SEO funnel, 04/09/2026 — gel levé par Jérôme) La page money FR revit : l'article garde
+// l'intention « comment chercher » et lie la page en intro ; toutes les ancres internes FR
+// « colocation à Genève » pointent à nouveau sur la page. Pas de canonical entre les deux.
+export const COLOC_GENEVE_PILLAR_FR = "/colocation-geneve";
 
 export function colocGeneveHref(language: string): string {
-  return language === "en" ? COLOC_GENEVE_PILLAR_EN : COLOC_GENEVE_ARTICLE;
+  return language === "en" ? COLOC_GENEVE_PILLAR_EN : COLOC_GENEVE_PILLAR_FR;
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -35,6 +39,6 @@ export function colocGeneveHref(language: string): string {
 // ne peuvent pas importer ce fichier TS). Le check #13 de `scripts/seo-lint.mjs`
 // détecte toute divergence entre le HTML, le sitemap et cette liste.
 export const HREFLANG_NO_ALTERNATES: ReadonlySet<string> = new Set([
-  "/en/colocation-geneve",
+  // (Lot 5, 04/09/2026) /en/colocation-geneve a retrouvé son pendant FR : miroir mécanique normal.
   // LP payantes : noindex + hors sitemap -> aucun alternate a declarer.
 ]);
