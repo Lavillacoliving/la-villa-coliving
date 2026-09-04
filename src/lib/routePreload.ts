@@ -23,6 +23,7 @@ const STATIC_LOADERS: Record<string, Loader> = {
   "/": () => import("@/pages/HomePage"),
   "/annemasse-colocation": () => import("@/pages/AnnemasseColocationPage"),
   "/chambre-a-louer-annemasse": () => import("@/pages/ChambreLouerAnnemassePage"),
+  "/chambre-a-louer-geneve": () => import("@/pages/ChambreLouerGenevePage"),
   "/le-coliving": () => import("@/pages/ColivingPageV4"),
   "/nos-maisons": () => import("@/pages/HousesPageV4"),
   "/services": () => import("@/pages/ServicesPageV4"),

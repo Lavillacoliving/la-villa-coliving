@@ -271,7 +271,7 @@ export function ColocationGenevePage() {
       <section className="py-20 lg:py-24 bg-white">
         <div className="max-w-4xl mx-auto px-6 text-center">
           <Train className="w-12 h-12 text-[#D4A574] mx-auto mb-6" />
-          <h2 className={h2} style={serif}>{en ? `${MIN} minutes from Geneva` : `À ${MIN} min de Genève`}</h2>
+          <h2 className={h2} style={serif}>{en ? `${MIN} minutes door to door from Geneva` : `À ${MIN} min porte-à-porte de Genève`}</h2>
           <p className="text-[#57534E] leading-relaxed max-w-3xl mx-auto mb-8">
             {en
               ? `Door to door, count ${MIN} minutes to the centre of Geneva. Léman Express from Annemasse (Eaux-Vives in 8 minutes, Cornavin direct), tram 17 from the Moillesulaz border, TPG buses, and the border itself is a few minutes away from every house.`
@@ -353,6 +353,8 @@ export function ColocationGenevePage() {
             <LocalizedLink to="/annemasse-colocation" className={link}>{en ? "Shared housing in Annemasse" : "Colocation à Annemasse"}</LocalizedLink>
             <span className="text-[#E7E5E4]">·</span>
             <LocalizedLink to="/chambre-a-louer-annemasse" className={link}>{en ? "Rooms for rent in Annemasse" : "Chambre à louer à Annemasse"}</LocalizedLink>
+            <span className="text-[#E7E5E4]">·</span>
+            <LocalizedLink to="/chambre-a-louer-geneve" className={link}>{en ? "Rooms for rent near Geneva" : "Chambre à louer près de Genève"}</LocalizedLink>
             <span className="text-[#E7E5E4]">·</span>
             <LocalizedLink to="/le-coliving" className={link}>{en ? "What is coliving" : "Le coliving, c'est quoi ?"}</LocalizedLink>
             <span className="text-[#E7E5E4]">·</span>

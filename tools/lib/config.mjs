@@ -9,9 +9,9 @@ export const SITE = 'https://www.lavillacoliving.com';
 // `/colocation-geneve` (FR) n'est dans le sitemap qu'après le revert du 25/08 :
 // le graphe ne l'analyse que s'il est présent — rien à changer ici ce jour-là.
 export const MONEY_ROUTES = [
-  '/', '/annemasse-colocation', '/chambre-a-louer-annemasse', '/colocation-geneve',
+  '/', '/annemasse-colocation', '/chambre-a-louer-annemasse', '/chambre-a-louer-geneve', '/colocation-geneve',
   '/tarifs', '/candidature', '/nos-maisons', '/lavilla', '/leloft', '/lelodge', '/le-coliving',
-  '/en', '/en/colocation-geneve', '/en/annemasse-colocation', '/en/chambre-a-louer-annemasse',
+  '/en', '/en/colocation-geneve', '/en/annemasse-colocation', '/en/chambre-a-louer-annemasse', '/en/chambre-a-louer-geneve',
   '/en/tarifs', '/en/candidature', '/en/nos-maisons', '/en/lavilla', '/en/leloft', '/en/lelodge', '/en/le-coliving',
 ];
 
@@ -22,6 +22,7 @@ export const MONEY_KEYWORDS = {
   '/annemasse-colocation': ['colocation annemasse', 'colocation a annemasse', 'coliving annemasse', 'coliving a annemasse'],
   '/chambre-a-louer-annemasse': ['chambre a louer annemasse', 'chambre a louer a annemasse', 'chambre meublee annemasse', 'chambres a louer annemasse'],
   '/colocation-geneve': ['colocation geneve', 'colocation a geneve', 'colocation pres de geneve'],
+  '/chambre-a-louer-geneve': ['chambre a louer geneve', 'chambre a louer a geneve', 'chambre a louer pres de geneve', 'chambre meublee geneve', 'chambre meublee pres de geneve'],
   '/tarifs': ['tarifs', 'nos tarifs', 'prix', 'les tarifs'],
   '/candidature': ['candidature', 'candidater', 'postuler', 'je candidate'],
   '/nos-maisons': ['nos maisons', 'nos 3 maisons', 'les 3 maisons', 'voir les 3 maisons', 'voir toutes les maisons'],
@@ -33,6 +34,7 @@ export const MONEY_KEYWORDS = {
   '/en/colocation-geneve': ['shared housing geneva', 'shared housing near geneva', 'flatshare geneva', 'room for rent geneva', 'rooms for rent geneva'],
   '/en/annemasse-colocation': ['shared housing annemasse', 'flatshare annemasse', 'shared housing in annemasse'],
   '/en/chambre-a-louer-annemasse': ['rooms for rent annemasse', 'rooms for rent in annemasse', 'furnished rooms annemasse'],
+  '/en/chambre-a-louer-geneve': ['room to rent geneva', 'room to rent near geneva', 'rooms for rent near geneva', 'furnished room geneva', 'furnished room near geneva'],
   '/en/tarifs': ['rates', 'prices', 'our rates'],
   '/en/candidature': ['apply', 'apply now', 'application'],
   '/en/nos-maisons': ['our houses', 'see the 3 houses', 'see all houses'],
@@ -64,6 +66,7 @@ export const MENTION_PATTERNS = {
     '/annemasse-colocation': /colocation (?:a |à )?annemasse|coloc(?:ation)?s? (?:sur |dans |à |a )?annemasse|annemasse agglo/gi,
     '/chambre-a-louer-annemasse': /chambres? (?:meubl[ée]es? )?(?:à louer |a louer )?(?:à |a |sur )?annemasse/gi,
     '/colocation-geneve': /colocation (?:à |a )?gen[eè]ve/gi,
+    '/chambre-a-louer-geneve': /chambres? (?:meubl[ée]es? )?(?:à louer |a louer )?(?:à |a |près de |pres de |sur )?gen[eè]ve/gi,
     '/tarifs': /\b(?:nos tarifs|tarifs?|grille tarifaire|loyer tout inclus)\b/gi,
     '/candidature': /candidat(?:ure|er|e)\b/gi,
     '/lelodge': /\ble lodge\b/gi,

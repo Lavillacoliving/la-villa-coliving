@@ -15,7 +15,12 @@ import {
   Calendar,
   Sparkles,
 } from "lucide-react";
-import { PRICE_FR_NUM, PRICE_CHF_FR, PRICE_CHF_EN, PRICE_SHARED_FR_NUM, PRICE_SHARED_CHF_FR, PRICE_SHARED_CHF_EN } from "@/data/stats";
+import { PRICE_CHF_FR, PRICE_CHF_EN } from "@/data/stats";
+import { HOUSES } from "@/data/houses";
+import { RoomCard } from "@/components/RoomCard";
+import { RoomsEmbed } from "@/components/RoomsEmbed";
+import { HouseAvailabilityLine } from "@/components/HouseAvailabilityLine";
+import { useHouseRooms, splitRooms, type PublicRoom } from "@/lib/availability";
 
 // ───────────────────────────────────────────────────────────────────────
 // FAQ (FR) — cible "chambre à louer annemasse" 170/mois + "studio annemasse" 590/mois
@@ -23,33 +28,45 @@ import { PRICE_FR_NUM, PRICE_CHF_FR, PRICE_CHF_EN, PRICE_SHARED_FR_NUM, PRICE_SH
 const chambreFAQ = [
   {
     q: "Quel est le prix d'une chambre meublée à Annemasse chez La Villa Coliving ?",
-    a: `Nos chambres meublées à Annemasse Agglo sont à partir de ${PRICE_SHARED_CHF_FR}/mois tout inclus (loyer + charges + fibre + ménage 3x/semaine + accès piscine/sauna/gym + cours fitness privés + abonnements streaming). Pas de frais d'agence, pas de frais de dossier, caution équivalente à 2 mois de loyer hors charges (restituée sous 30 jours après l'état des lieux).`,
+    a: `Les 12 chambres du Lodge, à Annemasse Romagny, sont à ${PRICE_CHF_FR}/mois tout inclus : loyer, charges, fibre, ménage des communs 3 fois par semaine, sauna, salle de sport, piscine et jardin, événements. Chaque chambre a sa salle d'eau privative. Pas de frais d'agence, pas de frais de dossier, caution de 2 mois de loyer hors charges, restituée après l'état des lieux.`,
   },
   {
-    q: "Tes chambres à louer à Annemasse sont-elles vraiment meublées ?",
-    a: "Oui, intégralement. Chaque chambre dispose d'un lit double qualité avec parure de linge, d'un bureau ergonomique, de rangements (placard sur mesure au Lodge), et selon les résidences d'une salle de bain privative. Les espaces communs (cuisine, salon, terrasse, piscine, sauna, salle de sport) sont aussi entièrement équipés. Tu n'as qu'à arriver avec tes valises.",
+    q: "Les chambres à louer à Annemasse sont-elles vraiment meublées ?",
+    a: "Oui, intégralement : lit double avec sa parure, bureau, placard sur mesure, salle d'eau privative. Les espaces communs du Lodge (cuisine, salon, terrasse, jardin, sauna, salle de sport) sont aussi entièrement équipés. Tu n'as qu'à arriver avec tes valises.",
   },
   {
-    q: "Quelle différence entre studio à Annemasse et chambre en coliving ?",
-    a: `Un studio à Annemasse coûte en moyenne 700-950 €/mois charges non comprises (eau, électricité, internet, ménage, mobilier en plus). Nos chambres en coliving coûtent ${PRICE_SHARED_FR_NUM} à ${PRICE_FR_NUM} CHF tout inclus, avec accès à 200 m² d'espaces communs et 25 services. Au final, le coût mensuel d'un studio Annemasse meublé + équipé + tout charges incluses se rapproche de 1 200-1 400 CHF — pour beaucoup moins de m² communs et zéro communauté.`,
+    q: "Quelle différence entre un studio à Annemasse et une chambre au Lodge ?",
+    a: `Un studio à Annemasse se loue en moyenne 700 à 950 € par mois charges non comprises : eau, électricité, internet, ménage et mobilier s'ajoutent. Au Lodge, ${PRICE_CHF_FR} tout inclus, avec des espaces communs pensés pour vivre et 11 colocataires qui travaillent à Genève ou dans la région. Compare le coût total, pas le loyer affiché.`,
   },
   {
-    q: "Pour combien de temps puis-je louer une chambre à Annemasse ?",
-    a: "Le bail standard est de 12 mois renouvelable, avec préavis d'1 mois. Idéal pour les frontaliers qui s'installent durablement ou en période d'essai à Genève. Le cadre est conforme à la loi française (Alur). Nous étudions au cas par cas des baux plus courts (6 mois) selon disponibilité.",
+    q: "Pour combien de temps peut-on louer une chambre à Annemasse ?",
+    a: "Le bail meublé est de 12 mois renouvelable, avec un préavis d'un mois. Idéal pour s'installer durablement comme frontalier ou pour une période d'essai à Genève. Des baux plus courts sont étudiés au cas par cas selon les disponibilités.",
   },
   {
-    q: "Quelles sont les disponibilités actuelles à Annemasse ?",
-    a: "Les disponibilités évoluent en continu sur nos 29 chambres réparties dans 3 résidences (La Villa à Ville-la-Grand, Le Loft à Ambilly, Le Lodge à Annemasse Romagny). Le moyen le plus fiable de connaître les disponibilités est de candidater via notre page Candidature — nous t'indiquons sous 48h les chambres libres ou bientôt libérées qui matchent ton profil.",
+    q: "Quelles sont les disponibilités actuelles au Lodge ?",
+    a: "La liste ci-dessus est lue en temps réel sur la même source que nos réservations : chaque chambre libre ou datée y figure avec sa date. S'il n'y a rien à ta date, rejoins la liste d'attente du Lodge, ou regarde les chambres de nos deux autres maisons à Ville-la-Grand et Ambilly sur la page des chambres à louer près de Genève.",
   },
   {
     q: "Comment se passe la visite avant de signer ?",
-    a: "Après ta candidature, nous organisons une visite physique ou virtuelle (selon ta localisation) de la résidence qui correspond à ton profil. La visite physique dure 30-45 min : tour de la maison, de la chambre disponible, présentation des espaces communs et services. Tu rencontres aussi un coliver actuel pour avoir un retour terrain.",
+    a: "Après ta candidature, on organise une visite sur place ou en visio du Lodge et de la chambre disponible : tour de la maison, présentation des espaces communs et des services, et un échange avec un résident actuel. Réponse sous 48 h, bail signé en ligne.",
   },
 ];
 
 export function ChambreLouerAnnemassePage() {
   const { language } = useLanguage();
   const [openFAQ, setOpenFAQ] = useState<number | null>(null);
+  // (Lot 6 SEO funnel, addendum 04/09) Page re-scopée : l'inventaire du Lodge uniquement (Annemasse),
+  // les deux autres maisons vivent sur /chambre-a-louer-geneve. Même store que les pages maisons.
+  const lodgeRooms = useHouseRooms("lelodge");
+  const { candidates, occupied } = splitRooms(lodgeRooms.rooms);
+  const trackRoomCta = (room: PublicRoom) => {
+    try {
+      (window as unknown as { gtag?: (...a: unknown[]) => void }).gtag?.("event", "cta_click", {
+        cta_position: "chambre_annemasse_room_card", cta_target: "/candidature", house: "lelodge",
+        room_id: `chambre-${room.room_number}`, language,
+      });
+    } catch { /* noop */ }
+  };
 
   const faqSchema = {
     "@context": "https://schema.org",
@@ -64,17 +81,12 @@ export function ChambreLouerAnnemassePage() {
   return (
     <main className="relative pt-16">
       <SEO
-        title={
-          // Prix retiré du title le 15/08/2026 (doctrine A6/S33 : le prix filtre le clic
-          // avant que la page puisse vendre la valeur — il reste en meta description).
-          language === "en"
-            ? "Furnished rooms Annemasse 2026: all inclusive"
-            : "Chambre à louer Annemasse 2026 : tout inclus"
-        }
+        // (Lot 6, §6 variante B) Page locale re-scopée sur le Lodge ; pas de prix dans le title (Q8).
+        title={language === "en" ? "Rooms for rent in Annemasse, all inclusive" : "Chambre à louer à Annemasse, tout inclus"}
         description={
           language === "en"
-            ? `Furnished rooms for rent in Annemasse, all-inclusive from ${PRICE_SHARED_CHF_EN}/mo. Pool, gym, sauna, fiber. Léman Express to Geneva in 15 min. No agency fees.`
-            : `Chambre meublée à louer à Annemasse, tout inclus dès ${PRICE_SHARED_CHF_FR}/mois. Piscine, gym, sauna, fibre. Léman Express Genève 15 min. Sans frais d'agence.`
+            ? `Furnished rooms to rent in Annemasse: the Lodge's 12 rooms, private shower room, ${PRICE_CHF_EN}/month all inclusive, 15 min by train from Geneva. Reply in 48 h.`
+            : `Chambre meublée à louer à Annemasse : les 12 chambres du Lodge, salle d'eau privative, ${PRICE_CHF_FR}/mois tout inclus, 15 min de train direct de Genève.`
         }
         url="https://www.lavillacoliving.com/chambre-a-louer-annemasse"
         image="https://www.lavillacoliving.com/images/le lodge/rooms/la villa coliving le lodge-78.webp"
@@ -85,20 +97,20 @@ export function ChambreLouerAnnemassePage() {
       <section className="relative py-24 lg:py-32 bg-gradient-to-b from-white to-[#FAF9F6]">
         <div className="max-w-5xl mx-auto px-6 text-center">
           <span className="text-xs text-[#D4A574] uppercase tracking-[0.3em] mb-4 block font-medium">
-            {language === "en" ? "Furnished rooms · Annemasse 74100" : "Chambres meublées · Annemasse 74100"}
+            {language === "en" ? "Furnished rooms · Le Lodge, Annemasse 74100" : "Chambres meublées · Le Lodge, Annemasse 74100"}
           </span>
           <h1
             className="text-4xl md:text-6xl font-light text-[#1C1917] mb-6 leading-tight"
             style={{ fontFamily: '"DM Serif Display", serif' }}
           >
             {language === "en"
-              ? `Furnished rooms to rent in Annemasse — from ${PRICE_SHARED_CHF_EN}/mo all-inclusive`
-              : `Chambres meublées à louer à Annemasse — dès ${PRICE_SHARED_CHF_FR}/mois tout inclus`}
+              ? "Rooms to rent in Annemasse: the Lodge's 12 furnished rooms, all inclusive"
+              : "Chambres à louer à Annemasse : les 12 chambres du Lodge, meublées et tout inclus"}
           </h1>
           <p className="text-lg md:text-xl text-[#57534E] max-w-3xl mx-auto leading-relaxed mb-10 font-medium">
             {language === "en"
-              ? `29 furnished rooms across 3 design houses in Annemasse Agglo, from ${PRICE_SHARED_CHF_EN}/month all-inclusive. Renting a room made simpler than a furnished studio: bed, desk, fiber, utilities, cleaning 3×/week, pool & gym included — move in with just your suitcases.`
-              : `29 chambres meublées dans 3 maisons design à Annemasse Agglo, dès ${PRICE_SHARED_CHF_FR}/mois tout inclus. Une location de chambre plus simple qu'un studio meublé : lit, bureau, fibre, charges, ménage 3x/semaine, piscine et salle de sport compris — emménage avec une valise.`}
+              ? `12 furnished rooms with private shower room at the Lodge, in Annemasse Romagny, ${PRICE_CHF_EN}/month all inclusive. Léman Express direct to Geneva Cornavin in 15 minutes by train, 20 minutes door to door from the centre. Renting a room made simpler than a furnished studio: bed, desk, fibre, bills and cleaning included, and a whole house to live in.`
+              : `12 chambres meublées avec salle d'eau privative au Lodge, à Annemasse Romagny, ${PRICE_CHF_FR}/mois tout inclus. Léman Express direct Genève Cornavin en 15 minutes de train, 20 minutes porte-à-porte depuis le centre. Une location de chambre plus simple qu'un studio meublé : lit, bureau, fibre, charges et ménage compris, et une maison entière pour vivre.`}
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <LocalizedLink
@@ -118,39 +130,63 @@ export function ChambreLouerAnnemassePage() {
         </div>
       </section>
 
-      {/* ===== TYPES OF ROOMS ===== */}
-      <section className="py-24 lg:py-32 bg-white">
+      {/* ===== (Lot 6, addendum 04/09) L'INVENTAIRE DU LODGE — forme d'annuaire, jamais « complet » ===== */}
+      <section className="py-20 lg:py-24 bg-white">
         <div className="max-w-6xl mx-auto px-6">
           <h2
-            className="text-3xl md:text-4xl font-light text-[#1C1917] mb-12 text-center"
+            className="text-3xl md:text-4xl font-light text-[#1C1917] mb-3"
             style={{ fontFamily: '"DM Serif Display", serif' }}
           >
-            {language === "en"
-              ? "Simple pricing, the same quality — you choose the vibe"
-              : "Une tarification simple, la même qualité — à toi de choisir l'ambiance"}
+            {candidates.length > 0
+              ? (language === "en"
+                ? `${candidates.length} room${candidates.length > 1 ? "s" : ""} to rent at the Lodge now or soon`
+                : `${candidates.length} chambre${candidates.length > 1 ? "s" : ""} à louer au Lodge maintenant ou bientôt`)
+              : (language === "en" ? "Next rooms opening at the Lodge" : "Prochaines chambres au Lodge")}
           </h2>
+          <p className="text-[#57534E] mb-8 max-w-2xl">
+            {language === "en"
+              ? `Real availability of the Lodge's 12 rooms, read from the same data as our bookings: size, floor, price in CHF, opening date. ${occupied.length > 0 ? `The other ${occupied.length} rooms are occupied without a known date.` : ""}`
+              : `La dispo réelle des 12 chambres du Lodge, lue sur la même source que nos réservations : surface, étage, prix en CHF, date de libération. ${occupied.length > 0 ? `Les ${occupied.length} autres chambres sont occupées sans date connue.` : ""}`}
+          </p>
+          {candidates.length > 0 && (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
+              {candidates.map((room) => (
+                <RoomCard key={room.room_number} house="lelodge" houseName={HOUSES.lelodge.label} room={room} fallbackImage={HOUSES.lelodge.img} onCtaClick={trackRoomCta} />
+              ))}
+            </div>
+          )}
+          <div className="flex flex-col gap-3 mb-6">
+            <HouseAvailabilityLine house="lelodge" />
+            <p className="text-sm text-[#57534E]">
+              {language === "en" ? "Nothing at your date? " : "Rien à ta date ? "}
+              <LocalizedLink to="/candidature?property_interest=lelodge&room_interest=liste-attente" className="underline underline-offset-4 hover:text-[#1C1917]">
+                {language === "en" ? "Join the Lodge's waiting list" : "Rejoins la liste d'attente du Lodge"}
+              </LocalizedLink>
+              {language === "en" ? " · Rooms in our two other houses, Ville-la-Grand and Ambilly: " : " · Les chambres de nos deux autres maisons, à Ville-la-Grand et Ambilly : "}
+              <LocalizedLink to="/chambre-a-louer-geneve" className="underline underline-offset-4 hover:text-[#1C1917]">
+                {language === "en" ? "rooms to rent near Geneva" : "chambre à louer près de Genève"}
+              </LocalizedLink>
+            </p>
+          </div>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {/* Tarification à deux niveaux — prix via stats.ts */}
             <div className="bg-[#1C1917] text-white p-8 md:col-span-2">
               <BedDouble className="w-10 h-10 text-[#D4A574] mb-4" />
               <p className="text-2xl font-bold text-[#D4A574] mb-4">
-                {language === "en" ? `From ${PRICE_SHARED_CHF_EN}/mo — all-inclusive` : `Dès ${PRICE_SHARED_CHF_FR}/mois — tout inclus`}
+                {language === "en" ? `${PRICE_CHF_EN}/month — all inclusive, private shower room` : `${PRICE_CHF_FR}/mois — tout inclus, salle d'eau privative`}
               </p>
               <p className="text-sm text-white/80 leading-relaxed mb-6">
                 {language === "en"
-                  ? `${PRICE_SHARED_CHF_EN}/month all-inclusive for rooms whose shower room is shared with just one other room — and it's cleaned by our housekeeping team. ${PRICE_CHF_EN}/month all-inclusive for a room with a private bathroom. No \"standard\" or \"premium\" tiers: same comfort, same services, same common areas. Each room simply has its own character — balcony, terrace, more spacious or more cosy: you pick the vibe that suits you, not a tier.`
-                  : `${PRICE_SHARED_CHF_FR}/mois tout inclus pour les chambres dont la salle d'eau est partagée avec une seule autre chambre — et son entretien est assuré par notre équipe de ménage. ${PRICE_CHF_FR}/mois tout inclus pour une chambre avec salle d'eau privative. Pas de gamme « standard » ou « premium » : même confort, mêmes services, mêmes espaces communs. Chaque chambre a simplement son caractère — balcon, terrasse, plus spacieuse ou plus cosy : tu choisis l'ambiance qui te ressemble, pas un standing.`}
+                  ? "One price for the Lodge's 12 rooms, each with its own shower room. The figure is the total monthly cost: rent, bills, fibre, cleaning of the common areas, shared spaces and events. Nothing is added at the end of the month."
+                  : "Un seul prix pour les 12 chambres du Lodge, chacune avec sa salle d'eau. Le montant est le coût mensuel total : loyer, charges, fibre, ménage des communs, espaces communs et événements. Rien ne s'ajoute en fin de mois."}
               </p>
               <ul className="space-y-2 text-sm text-white/80">
-                <li className="flex items-start gap-2"><Check className="w-4 h-4 text-[#D4A574] mt-0.5 flex-shrink-0" /> {language === "en" ? "Designer furniture" : "Mobilier design"}</li>
-                <li className="flex items-start gap-2"><Check className="w-4 h-4 text-[#D4A574] mt-0.5 flex-shrink-0" /> {language === "en" ? "8 Gb/s fiber" : "Fibre 8 Gb/s"}</li>
-                <li className="flex items-start gap-2"><Check className="w-4 h-4 text-[#D4A574] mt-0.5 flex-shrink-0" /> {language === "en" ? "Utilities included" : "Charges comprises"}</li>
+                <li className="flex items-start gap-2"><Check className="w-4 h-4 text-[#D4A574] mt-0.5 flex-shrink-0" /> {language === "en" ? "Designer furniture, private shower room" : "Mobilier design, salle d'eau privative"}</li>
+                <li className="flex items-start gap-2"><Check className="w-4 h-4 text-[#D4A574] mt-0.5 flex-shrink-0" /> {language === "en" ? "8 Gb/s fibre" : "Fibre 8 Gb/s"}</li>
+                <li className="flex items-start gap-2"><Check className="w-4 h-4 text-[#D4A574] mt-0.5 flex-shrink-0" /> {language === "en" ? "Bills included" : "Charges comprises"}</li>
                 <li className="flex items-start gap-2"><Check className="w-4 h-4 text-[#D4A574] mt-0.5 flex-shrink-0" /> {language === "en" ? "Housekeeping 3×/week" : "Ménage 3×/semaine"}</li>
-                <li className="flex items-start gap-2"><Check className="w-4 h-4 text-[#D4A574] mt-0.5 flex-shrink-0" /> {language === "en" ? "Pool, sauna and gym" : "Piscine, sauna et salle de sport"}</li>
+                <li className="flex items-start gap-2"><Check className="w-4 h-4 text-[#D4A574] mt-0.5 flex-shrink-0" /> {language === "en" ? "Sauna, gym, pool and garden" : "Sauna, salle de sport, piscine et jardin"}</li>
               </ul>
             </div>
-
-            {/* Studio alternative */}
             <div className="bg-[#FAF9F6] p-8">
               <Sparkles className="w-10 h-10 text-[#D4A574] mb-4" />
               <h3 className="text-xl font-medium text-[#1C1917] mb-2">
@@ -159,7 +195,7 @@ export function ChambreLouerAnnemassePage() {
               <p className="text-2xl font-bold text-[#78716C] mb-4">{language === "en" ? "700-950 €/mo +" : "700-950 €/mois +"}</p>
               <p className="text-sm text-[#57534E] leading-relaxed">
                 {language === "en"
-                  ? "700–950 €/month on paper — but utilities on top, furniture not included, no community and no shared spaces."
+                  ? "700–950 €/month on paper — but bills on top, furniture not included, no community and no shared spaces."
                   : "700–950 €/mois en apparence — mais charges en plus, à meubler soi-même, sans communauté ni espaces partagés."}
               </p>
             </div>
@@ -184,17 +220,17 @@ export function ChambreLouerAnnemassePage() {
             style={{ fontFamily: '"DM Serif Display", serif' }}
           >
             {language === "en"
-              ? "Why rent your room at La Villa Coliving in Annemasse"
-              : "Pourquoi louer ta chambre chez La Villa Coliving à Annemasse"}
+              ? "Why rent your room at the Lodge, Annemasse"
+              : "Pourquoi louer ta chambre au Lodge, à Annemasse"}
           </h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-4 max-w-3xl mx-auto">
             {(language === "en"
               ? [
-                  "29 furnished rooms — 3 houses, 1 community",
-                  `All-inclusive from ${PRICE_SHARED_CHF_EN}/mo (no surprises)`,
+                  "12 furnished rooms — one house, one community",
+                  `All inclusive ${PRICE_CHF_EN}/month (no surprises)`,
                   "Move in within a week (no paperwork friction)",
-                  "Léman Express direct to Geneva Cornavin 15 min",
-                  "Pool, gym, sauna in every house",
+                  "15 min direct train to Geneva Cornavin (20 min door to door)",
+                  "Sauna, gym, pool and garden at the Lodge",
                   "fiber internet up to 8 Gb/s",
                   "Cleaning three times a week of common areas",
                   "Weekly yoga and fitness classes included",
@@ -203,11 +239,11 @@ export function ChambreLouerAnnemassePage() {
                   "Flexible 12-month lease, 1-month notice",
                 ]
               : [
-                  "29 chambres meublées — 3 maisons, 1 communauté",
-                  `Tout inclus dès ${PRICE_SHARED_CHF_FR}/mois (zéro surprise)`,
+                  "12 chambres meublées — une maison, une communauté",
+                  `Tout inclus ${PRICE_CHF_FR}/mois (zéro surprise)`,
                   "Emménagement en moins d'une semaine (zéro friction administrative)",
-                  "Léman Express direct Genève Cornavin en 15 min",
-                  "Piscine, salle de sport, sauna dans chaque maison",
+                  "15 min de train direct Genève Cornavin (20 min porte-à-porte)",
+                  "Sauna, salle de sport, piscine et jardin au Lodge",
                   "Internet fibre jusqu'à 8 Gb/s",
                   "Ménage 3 fois par semaine des espaces communs",
                   "Cours hebdomadaires yoga et fitness inclus",
@@ -233,12 +269,12 @@ export function ChambreLouerAnnemassePage() {
             className="text-3xl md:text-4xl font-light text-[#1C1917] mb-6"
             style={{ fontFamily: '"DM Serif Display", serif' }}
           >
-            {language === "en" ? "15 min from Geneva Cornavin" : "À 15 min de Genève Cornavin"}
+            {language === "en" ? "15 min by direct train from Geneva Cornavin" : "À 15 min de train direct de Genève Cornavin"}
           </h2>
           <p className="text-lg text-[#57534E] leading-relaxed max-w-3xl mx-auto">
             {language === "en"
-              ? "Annemasse station is the Léman Express terminus — direct train to Geneva Cornavin in 15 minutes, no transfer. Tram 17 TPG and direct buses also connect to central Geneva. Whether you commute daily or visit occasionally, our 3 houses are optimised for cross-border life."
-              : "La gare d'Annemasse est le terminus du Léman Express — train direct Genève Cornavin en 15 minutes, sans correspondance. Le Tram 17 TPG et des bus directs desservent aussi le centre de Genève. Que tu fasses le trajet quotidien ou occasionnellement, nos 3 maisons sont optimisées pour la vie frontalière."}
+              ? "Annemasse station is the Léman Express terminus — direct train to Geneva Cornavin in 15 minutes, no transfer, 20 minutes door to door from the centre. Tram 17 TPG and direct buses also connect to central Geneva. Whether you commute daily or visit occasionally, our 3 houses are optimised for cross-border life."
+              : "La gare d'Annemasse est le terminus du Léman Express — train direct Genève Cornavin en 15 minutes, sans correspondance, soit 20 minutes porte-à-porte depuis le centre. Le Tram 17 TPG et des bus directs desservent aussi le centre de Genève. Que tu fasses le trajet quotidien ou occasionnellement, nos 3 maisons sont optimisées pour la vie frontalière."}
           </p>
           <LocalizedLink
             to="/annemasse-colocation"
@@ -387,6 +423,11 @@ export function ChambreLouerAnnemassePage() {
               {language === "en" ? "Shared housing Geneva" : "Colocation Genève"}
             </LocalizedLink>
             <span className="text-[#E7E5E4]">·</span>
+            {/* (Lot 6 SEO funnel) Page sœur côté Genève. */}
+            <LocalizedLink to="/chambre-a-louer-geneve" className="text-[#1C1917] underline hover:text-[#D4A574]">
+              {language === "en" ? "Room to rent near Geneva" : "Chambre à louer près de Genève"}
+            </LocalizedLink>
+            <span className="text-[#E7E5E4]">·</span>
             <LocalizedLink to="/nos-maisons" className="text-[#1C1917] underline hover:text-[#D4A574]">
               {language === "en" ? "Our 3 houses" : "Nos 3 maisons"}
             </LocalizedLink>
@@ -403,6 +444,8 @@ export function ChambreLouerAnnemassePage() {
         </div>
       </section>
       <WhatsAppButton context={language === "en" ? "Rooms for rent Annemasse" : "Chambre à louer Annemasse"} />
+      {/* (Lot 6) État chambres du Lodge embarqué au prérendu — instance unique par page. */}
+      <RoomsEmbed house="lelodge" />
     </main>
   );
 }

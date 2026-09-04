@@ -32,6 +32,7 @@ const BlogPostPage = lazyWithRetry(() => import("@/pages/BlogPostPage").then(m =
 const ColocationGenevePage = lazyWithRetry(() => import("@/pages/ColocationGenevePage").then(m => ({ default: m.ColocationGenevePage })), "ColocationGenevePage");
 const AnnemasseColocationPage = lazyWithRetry(() => import("@/pages/AnnemasseColocationPage").then(m => ({ default: m.AnnemasseColocationPage })), "AnnemasseColocationPage");
 const ChambreLouerAnnemassePage = lazyWithRetry(() => import("@/pages/ChambreLouerAnnemassePage").then(m => ({ default: m.ChambreLouerAnnemassePage })), "ChambreLouerAnnemassePage");
+const ChambreLouerGenevePage = lazyWithRetry(() => import("@/pages/ChambreLouerGenevePage").then(m => ({ default: m.ChambreLouerGenevePage })), "ChambreLouerGenevePage");
 const InvestisseursPage = lazyWithRetry(() => import("@/pages/InvestisseursPage").then(m => ({ default: m.InvestisseursPage })), "InvestisseursPage");
 const ObservatoireLogementPage = lazyWithRetry(() => import("@/pages/ObservatoireLogementFrontalierPage").then(m => ({ default: m.ObservatoireLogementFrontalierPage })), "ObservatoireLogementPage");
 const QuiSommesNousPage = lazyWithRetry(() => import("@/pages/QuiSommesNousPage").then(m => ({ default: m.QuiSommesNousPage })), "QuiSommesNousPage");
@@ -101,6 +102,8 @@ function AppContent() {
         <Route path="/colocation-geneve" element={<ColocationGenevePage />} />
         <Route path="/annemasse-colocation" element={<AnnemasseColocationPage />} />
         <Route path="/chambre-a-louer-annemasse" element={<ChambreLouerAnnemassePage />} />
+        {/* (Lot 6 SEO funnel, 04/09/2026) Conquête « chambre à louer genève » — slug EN identique (Q7). */}
+        <Route path="/chambre-a-louer-geneve" element={<ChambreLouerGenevePage />} />
         <Route path="/le-coliving" element={<ColivingPage />} />
         <Route path="/the-coliving" element={<Navigate to="/le-coliving" replace />} />
         <Route path="/services" element={<ServicesPage />} />
@@ -131,6 +134,7 @@ function AppContent() {
         <Route path="/en/colocation-geneve" element={<ColocationGenevePage />} />
         <Route path="/en/annemasse-colocation" element={<AnnemasseColocationPage />} />
         <Route path="/en/chambre-a-louer-annemasse" element={<ChambreLouerAnnemassePage />} />
+        <Route path="/en/chambre-a-louer-geneve" element={<ChambreLouerGenevePage />} />
         <Route path="/en/le-coliving" element={<ColivingPage />} />
         <Route path="/en/nos-maisons" element={<HousesPage />} />
         <Route path="/en/services" element={<ServicesPage />} />

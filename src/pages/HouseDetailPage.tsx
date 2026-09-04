@@ -2155,6 +2155,11 @@ export function HouseDetailPage() {
                     <LocalizedLink to="/" className="underline underline-offset-4 hover:text-[#1C1917]">
                       {language === "en" ? "our coliving near Geneva" : "notre coliving près de Genève"}
                     </LocalizedLink>
+                    {" · "}
+                    {/* (Lot 6 SEO funnel) Page money « chambre à louer près de Genève ». */}
+                    <LocalizedLink to="/chambre-a-louer-geneve" className="underline underline-offset-4 hover:text-[#1C1917]">
+                      {language === "en" ? "rooms to rent near Geneva" : "chambre à louer près de Genève"}
+                    </LocalizedLink>
                     {(id === "lelodge" || id === "leloft") && (
                     <>
                       {" · "}
