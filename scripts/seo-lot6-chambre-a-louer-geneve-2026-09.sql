@@ -16,3 +16,9 @@ update blog_posts set content_fr = replace(content_fr, $l6$et combien il te rest
 
 -- Contrôle APRÈS (attendu : lie_page = true, ancres attendues, reste_15_min = false)
 select slug, (content_fr ~ '\]\(/chambre-a-louer-geneve\)') as lie_page, substring(content_fr from '\[([^\]]+)\]\(/chambre-a-louer-geneve\)') as ancre, (content_fr ~ '15 minutes de Genève') as reste_15_min from blog_posts where slug in ('budget-colocation-geneve-guide-complet','cout-de-la-vie-suisse-france-frontalier-2026') order by slug;
+-- ---------------------------------------------------------------------------
+-- APPLIQUÉ le 04/09/2026 via MCP execute_sql, après « SQL du Lot 6 : validé » + « GO Lot 6 » (Jérôme).
+-- Contrôle après : budget → ancre « chambre à louer près de Genève », « 15 minutes de Genève » remplacé par 20 ;
+-- cout-de-la-vie → ancre « chambres meublées à louer » ; aucun gras autour des liens. Appliqué dans la fenêtre du merge
+-- (même run du bot) pour que la page existe avant que les articles la lient.
+-- ---------------------------------------------------------------------------
