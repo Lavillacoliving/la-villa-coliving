@@ -80,3 +80,9 @@ where slug in ('lodge-annemasse-coliving-premium-portes-geneve','coliving-annema
 -- update blog_posts set title_fr = 'Coût de la vie Suisse vs France 2026 : prix, loyers, salaires', meta_description_fr = 'Coût de la vie Suisse vs France en 2026 : loyer ×2-3, courses, restaurants, LAMal vs CMU, transport. Le vrai bilan chiffré du frontalier de Genève.' where slug = 'cout-de-la-vie-suisse-france-frontalier-2026';
 -- update blog_posts set title_fr = 'Budget colocation Genève 2026 : combien ça coûte vraiment ?', meta_description_fr = 'Combien coûte vraiment un logement frontalier à Genève en 2026 ? Prix réels par ville, studio vs colocation vs coliving, charges cachées et économies.' where slug = 'budget-colocation-geneve-guide-complet';
 -- update blog_posts set meta_description_fr = 'Où habiter quand on travaille à Genève ? Les 7 villes frontalières suisses les moins chères côté France : loyers réels 600-1 100 €, temps de trajet, impôts (2026).' where slug = 'ou-habiter-frontalier-suisse-villes-france-pas-cher';
+
+-- ---------------------------------------------------------------------------
+-- APPLIQUÉ le 04/09/2026 via MCP execute_sql après « GO » Jérôme : 7.3 (4 title/meta, longueurs 61/63/58 c. et 154/152/153/146 c.),
+-- Q4 (3 sources présentes dans le corps : LAF/OFAS, OCSTAT + Observatoire, Observatoire), 7.4 (11 ancres blog, première
+-- occurrence seulement pour lodge/quartiers/temps-trajet/ou-habiter/cout-transport). Contrôle après : conforme.
+-- ---------------------------------------------------------------------------
