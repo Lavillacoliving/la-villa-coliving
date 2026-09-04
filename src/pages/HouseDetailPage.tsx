@@ -2147,12 +2147,13 @@ export function HouseDetailPage() {
                       </li>
                     ))}
                   </ul>
-                  {/* (Lot 4 SEO funnel, 04/09/2026) « Voir aussi » sur les 3 maisons : ancre exacte vers la home
-                      (URL championne sur « coliving genève ») en tête, puis les pages Annemasse pour Lodge et Loft. */}
+                  {/* (Lot 4 SEO funnel, 04/09/2026) « Voir aussi » sur les 3 maisons : lien vers la home (URL championne
+                      sur « coliving genève ») en tête, ancre variante marque (Q10c : 8 exactes au total, pas plus),
+                      puis les pages Annemasse pour Lodge et Loft. */}
                   <p className="mt-5 text-sm text-[#57534E]">
                     {language === "en" ? "See also: " : "Voir aussi : "}
                     <LocalizedLink to="/" className="underline underline-offset-4 hover:text-[#1C1917]">
-                      {language === "en" ? "coliving Geneva" : "coliving Genève"}
+                      {language === "en" ? "our coliving near Geneva" : "notre coliving près de Genève"}
                     </LocalizedLink>
                     {(id === "lelodge" || id === "leloft") && (
                     <>

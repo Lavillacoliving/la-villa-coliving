@@ -18,7 +18,7 @@ export const MONEY_ROUTES = [
 // Mots-clés « exact » par cible (texte d'ancre normalisé : minuscules, sans accents).
 // Sert à classer les ancres contextuelles (marque / URL nue / générique / exact|partiel).
 export const MONEY_KEYWORDS = {
-  '/': ['accueil'],            // la marque est gérée par BRAND_RE
+  '/': ['accueil', 'coliving geneve', 'coliving geneva'], // (Lot 4, 04/09/2026) cible DÉFENSE ; la marque est gérée par BRAND_RE
   '/annemasse-colocation': ['colocation annemasse', 'colocation a annemasse', 'coliving annemasse', 'coliving a annemasse'],
   '/chambre-a-louer-annemasse': ['chambre a louer annemasse', 'chambre a louer a annemasse', 'chambre meublee annemasse', 'chambres a louer annemasse'],
   '/colocation-geneve': ['colocation geneve', 'colocation a geneve', 'colocation pres de geneve'],

@@ -393,11 +393,11 @@ export function ColivingPageV4() {
                 ))}
               </div>
 
-              {/* (Lot 4) Conclusion : ancre exacte vers la home + porte vers les chambres disponibles (Lot 3). */}
+              {/* (Lot 4) Conclusion : ancre variante marque vers la home (l'exacte est en intro) + porte vers les chambres disponibles (Lot 3). */}
               <p className="mt-8 text-[#57534E] leading-relaxed">
                 {language === "en"
-                  ? <>Ready to see it for yourself? Browse our <LocalizedLink to="/" className="underline decoration-[#D4A574] decoration-2 underline-offset-4 hover:text-[#1C1917] transition-colors">coliving Geneva</LocalizedLink> and the <LocalizedLink to="/chambres-disponibles" className="underline decoration-[#D4A574] decoration-2 underline-offset-4 hover:text-[#1C1917] transition-colors">available rooms</LocalizedLink> right now.</>
-                  : <>Envie de voir par toi-même ? Découvre notre <LocalizedLink to="/" className="underline decoration-[#D4A574] decoration-2 underline-offset-4 hover:text-[#1C1917] transition-colors">coliving Genève</LocalizedLink> et les <LocalizedLink to="/chambres-disponibles" className="underline decoration-[#D4A574] decoration-2 underline-offset-4 hover:text-[#1C1917] transition-colors">chambres disponibles</LocalizedLink> en ce moment.</>}
+                  ? <>Ready to see it for yourself? Browse <LocalizedLink to="/" className="underline decoration-[#D4A574] decoration-2 underline-offset-4 hover:text-[#1C1917] transition-colors">La Villa Coliving near Geneva</LocalizedLink> and the <LocalizedLink to="/chambres-disponibles" className="underline decoration-[#D4A574] decoration-2 underline-offset-4 hover:text-[#1C1917] transition-colors">available rooms</LocalizedLink> right now.</>
+                  : <>Envie de voir par toi-même ? Découvre <LocalizedLink to="/" className="underline decoration-[#D4A574] decoration-2 underline-offset-4 hover:text-[#1C1917] transition-colors">La Villa Coliving près de Genève</LocalizedLink> et les <LocalizedLink to="/chambres-disponibles" className="underline decoration-[#D4A574] decoration-2 underline-offset-4 hover:text-[#1C1917] transition-colors">chambres disponibles</LocalizedLink> en ce moment.</>}
               </p>
               <LocalizedLink
                 to="/candidature"
