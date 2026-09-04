@@ -2165,7 +2165,7 @@ export function HouseDetailPage() {
                     <>
                       {" · "}
                       <LocalizedLink to="/annemasse-colocation" className="underline underline-offset-4 hover:text-[#1C1917]">
-                        {language === "en" ? "living in Annemasse with La Villa Coliving" : "vivre à Annemasse avec La Villa Coliving"}
+                        {language === "en" ? "living in Annemasse with Le Lodge" : "vivre à Annemasse avec Le Lodge"}
                       </LocalizedLink>
                       {" · "}
                       <LocalizedLink to="/chambre-a-louer-annemasse" className="underline underline-offset-4 hover:text-[#1C1917]">
