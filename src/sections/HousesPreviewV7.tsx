@@ -164,11 +164,11 @@ export function HousesPreviewV7() {
         <p className="mt-8 text-sm text-[#57534E]">
           {language === "en" ? "Focused on Annemasse Agglo? " : "Tu vises Annemasse Agglo ? "}
           <LocalizedLink to="/annemasse-colocation" className="underline underline-offset-4 hover:text-[#1C1917]">
-            {language === "en" ? "Shared housing in Annemasse" : "Colocation à Annemasse"}
+            {language === "en" ? "Annemasse, La Villa Coliving side" : "Annemasse, côté La Villa Coliving"}
           </LocalizedLink>
           {" · "}
           <LocalizedLink to="/chambre-a-louer-annemasse" className="underline underline-offset-4 hover:text-[#1C1917]">
-            {language === "en" ? "Rooms for rent in Annemasse" : "Chambre à louer à Annemasse"}
+            {language === "en" ? "Le Lodge, our house in Annemasse" : "Le Lodge, notre maison d'Annemasse"}
           </LocalizedLink>
           {" · "}
           {/* (Lot 5 SEO funnel) Page money « colocation Genève », chambres et dates en temps réel. */}

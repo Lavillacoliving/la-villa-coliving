@@ -280,7 +280,7 @@ export function ChambreLouerAnnemassePage() {
             to="/annemasse-colocation"
             className="inline-flex items-center gap-2 mt-8 text-[#D4A574] font-medium hover:underline"
           >
-            {language === "en" ? "See full Annemasse coliving guide" : "Voir le guide complet colocation Annemasse"}
+            {language === "en" ? "See the full Annemasse guide" : "Voir le guide complet d'Annemasse"}
             <ArrowRight className="w-4 h-4" />
           </LocalizedLink>
         </div>
@@ -411,7 +411,7 @@ export function ChambreLouerAnnemassePage() {
           </p>
           <div className="flex flex-wrap gap-4 justify-center text-sm">
             <LocalizedLink to="/annemasse-colocation" className="text-[#1C1917] underline hover:text-[#D4A574]">
-              {language === "en" ? "Annemasse coliving guide" : "Guide colocation Annemasse"}
+              {language === "en" ? "The guide to life in Annemasse" : "Le guide de la vie à Annemasse"}
             </LocalizedLink>
             <span className="text-[#E7E5E4]">·</span>
             {/* (Lot 4 SEO funnel) Ancre exacte vers la home, URL championne sur « coliving genève ». */}
@@ -425,7 +425,7 @@ export function ChambreLouerAnnemassePage() {
             <span className="text-[#E7E5E4]">·</span>
             {/* (Lot 6 SEO funnel) Page sœur côté Genève. */}
             <LocalizedLink to="/chambre-a-louer-geneve" className="text-[#1C1917] underline hover:text-[#D4A574]">
-              {language === "en" ? "Room to rent near Geneva" : "Chambre à louer près de Genève"}
+              {language === "en" ? "See all the rooms" : "Voir toutes les chambres"}
             </LocalizedLink>
             <span className="text-[#E7E5E4]">·</span>
             <LocalizedLink to="/nos-maisons" className="text-[#1C1917] underline hover:text-[#D4A574]">

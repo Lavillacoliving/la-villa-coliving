@@ -142,10 +142,10 @@ export function HousesPageV4() {
   return (
     <main className="relative pt-16">
       <SEO
-        title={language === "en" ? "Our 3 Coliving Houses Near Geneva" : "Colocation en maison près de Genève"}
+        title={language === "en" ? "3 coliving houses near Geneva" : "3 maisons de coliving près de Genève"}
         description={language === "en"
-          ? `La Villa, Le Loft, Le Lodge — 3 premium houses with pool, sauna & gym. 29 all-inclusive furnished rooms from ${PRICE_SHARED_CHF_EN}/month.`
-          : `La Villa, Le Loft, Le Lodge — 3 maisons premium avec piscine, sauna et gym. 29 chambres privées tout inclus dès ${PRICE_SHARED_CHF_FR}/mois.`}
+          ? `La Villa, Le Loft, Le Lodge: 3 houses with pool, sauna and gym, 20 min door to door from Geneva. 29 rooms all inclusive from ${PRICE_SHARED_CHF_EN}/month.`
+          : `La Villa, Le Loft, Le Lodge : 3 maisons avec piscine, sauna et gym à 20 min porte-à-porte de Genève. 29 chambres tout inclus dès ${PRICE_SHARED_CHF_FR}/mois.`}
         url="https://www.lavillacoliving.com/nos-maisons"
       />
       {/* Hero */}
@@ -297,11 +297,11 @@ export function HousesPageV4() {
                     {house.id === "lelodge" ? (
                       <p className="mt-3 text-sm text-[#78716C]">
                         <LocalizedLink to="/annemasse-colocation" className="underline hover:text-[#D4A574] transition-colors">
-                          {language === "en" ? "Shared housing in Annemasse" : "Colocation à Annemasse"}
+                          {language === "en" ? "lavillacoliving.com/en/annemasse-colocation" : "lavillacoliving.com/annemasse-colocation"}
                         </LocalizedLink>
                         {" · "}
                         <LocalizedLink to="/chambre-a-louer-annemasse" className="underline hover:text-[#D4A574] transition-colors">
-                          {language === "en" ? "Rooms for rent in Annemasse" : "Chambre à louer à Annemasse"}
+                          {language === "en" ? "lavillacoliving.com/en/chambre-a-louer-annemasse" : "lavillacoliving.com/chambre-a-louer-annemasse"}
                         </LocalizedLink>
                       </p>
                     ) : (

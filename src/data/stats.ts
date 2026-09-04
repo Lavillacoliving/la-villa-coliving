@@ -36,12 +36,14 @@ export const STATS = {
   depositMonths: 2,
   leaseDurationMonths: 12,
   noticePeriodMonths: 1,
-  roomSizeMin: 17,
+  // (Lot 7, 04/09/2026) Décision Jérôme Q1 : surfaces lues dans `rooms` (v_public_rooms : min 15,5 → 16, max 24,0 m²).
+  // Garde CI : house-pages-check.mjs compare ces bornes au min/max de v_public_rooms.surface_m2.
+  roomSizeMin: 16,
   // (Lot 6 SEO funnel, 04/09/2026) Fact block CLAUDE.md §1 : séjour moyen et espace de vie par colocataire.
   averageStayMonths: 13,
   livingSpacePerResidentMin: 37,
   livingSpacePerResidentMax: 42,
-  roomSizeMax: 25, // 25 m² max (Jérôme 13/08)
+  roomSizeMax: 24,
   cleaningPerWeek: 3, // 3×/semaine dans les 3 maisons depuis le 01/09/2026 (vote des résidents).
   // ⚠️ Constante NON consommée : toutes les mentions de fréquence sont des littéraux en dur
   // dans les pages. La brancher partout est un chantier de septembre (cf. table `services`).

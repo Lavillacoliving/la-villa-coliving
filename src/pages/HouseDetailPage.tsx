@@ -22,7 +22,7 @@ import {
   Sun,
 } from "lucide-react";
 import { useLanguage } from "@/contexts/LanguageContext";
-import { PRICE_FR_NUM, PRICE_EN_NUM, PRICE_CHF_FR, PRICE_CHF_EN, PRICE_SHARED_FR_NUM, PRICE_SHARED_EN_NUM, PRICE_SHARED_CHF_FR, PRICE_SHARED_CHF_EN, EUR_STANDARD_FR_NUM, EUR_STANDARD_EN_NUM, EUR_SHARED_FR_NUM, EUR_SHARED_EN_NUM } from "@/data/stats";
+import { STATS, PRICE_FR_NUM, PRICE_EN_NUM, PRICE_CHF_FR, PRICE_CHF_EN, PRICE_SHARED_FR_NUM, PRICE_SHARED_EN_NUM, PRICE_SHARED_CHF_FR, PRICE_SHARED_CHF_EN, EUR_STANDARD_FR_NUM, EUR_STANDARD_EN_NUM, EUR_SHARED_FR_NUM, EUR_SHARED_EN_NUM } from "@/data/stats";
 import {
   useRoomAvailability,
   useHouseRooms,
@@ -403,7 +403,7 @@ function getHousesData(lang: string): Record<string, HouseData> {
         priceEur: isEn ? `€${EUR_STANDARD_EN_NUM}` : `${EUR_STANDARD_FR_NUM} €`,
         description: isEn
           ? "Your private sanctuary with double Emma bed, ergonomic desk, spacious closet, and private bathroom. Most rooms offer a terrace or balcony with garden views. 17 to 25 m²."
-          : "Ton espace privé avec lit double Emma, bureau ergonomique, placard spacieux et salle de bain privative. La plupart des chambres offrent une terrasse ou un balcon avec vue sur le jardin. 17 à 25 m².",
+          : `Ton espace privé avec lit double Emma, bureau ergonomique, placard spacieux et salle de bain privative. La plupart des chambres offrent une terrasse ou un balcon avec vue sur le jardin. ${STATS.roomSizeMin} à ${STATS.roomSizeMax} m².`,
         image: "/images/la villa/rooms/La Villa-80.webp",
       },
       {
@@ -1408,9 +1408,10 @@ export function HouseDetailPage() {
           // Titles compacts (≤ 40c) — le suffix " | La Villa Coliving" (~21c) est ajouté par <SEO>.
           // Cibles SEO : /lelodge → "colocation annemasse" (880/mois), /lavilla et /leloft → brand + ville.
           const titles: Record<string, { en: string; fr: string }> = {
-            lavilla: { en: "La Villa — 10 rooms in Ville-la-Grand", fr: "Colocation à Ville-la-Grand — coliving" },
-            leloft:  { en: "Le Loft — 7 rooms in Ambilly",          fr: "Colocation à Ambilly — coliving tout inclus" },
-            lelodge: { en: "Le Lodge — 12 rooms in Annemasse",       fr: "Le Lodge — 12 chambres à Annemasse" },
+            // (Lot 7, 04/09/2026) Variante B : nom de maison en tête, sans prix, ≤ 45 c. pour garder la marque.
+            lavilla: { en: "La Villa: coliving in Ville-la-Grand", fr: "La Villa : coliving à Ville-la-Grand" },
+            leloft:  { en: "Le Loft: 7 rooms in Ambilly, tram 17",  fr: "Le Loft : 7 chambres à Ambilly, tram 17" },
+            lelodge: { en: "Le Lodge: 12 rooms in Annemasse",      fr: "Le Lodge : 12 chambres à Annemasse" },
           };
           return titles[id]?.[language === "en" ? "en" : "fr"]
             ?? `${house.name} — ${house.location}`;
@@ -2158,17 +2159,17 @@ export function HouseDetailPage() {
                     {" · "}
                     {/* (Lot 6 SEO funnel) Page money « chambre à louer près de Genève ». */}
                     <LocalizedLink to="/chambre-a-louer-geneve" className="underline underline-offset-4 hover:text-[#1C1917]">
-                      {language === "en" ? "rooms to rent near Geneva" : "chambre à louer près de Genève"}
+                      {language === "en" ? "our furnished rooms, French side" : "nos chambres meublées, côté France"}
                     </LocalizedLink>
                     {(id === "lelodge" || id === "leloft") && (
                     <>
                       {" · "}
                       <LocalizedLink to="/annemasse-colocation" className="underline underline-offset-4 hover:text-[#1C1917]">
-                        {language === "en" ? "shared housing in Annemasse" : "colocation à Annemasse"}
+                        {language === "en" ? "living in Annemasse with La Villa Coliving" : "vivre à Annemasse avec La Villa Coliving"}
                       </LocalizedLink>
                       {" · "}
                       <LocalizedLink to="/chambre-a-louer-annemasse" className="underline underline-offset-4 hover:text-[#1C1917]">
-                        {language === "en" ? "rooms for rent in Annemasse" : "chambre à louer à Annemasse"}
+                        {language === "en" ? "the Lodge's rooms" : "les chambres du Lodge"}
                       </LocalizedLink>
                     </>
                     )}
@@ -2285,7 +2286,7 @@ export function HouseDetailPage() {
               { q: "Où se trouve Le Lodge et à quelle distance de Genève ?", a: "Le Lodge se situe à Annemasse, côté France, à 20 minutes du centre de Genève en train CEVA. C'est la plus grande des trois maisons de coliving de La Villa Coliving, avec une piscine extérieure et un pool house, un chalet fitness complet et un sauna." },
               { q: "Combien de résidents vivent au Lodge ?", a: "Le Lodge accueille 12 résidents, ce qui en fait la plus grande maison de La Villa Coliving. Située à Annemasse, près de Genève, elle conserve une taille humaine tout en offrant les espaces les plus généreux : espace home cinéma, piscine, pool house / salle de jeu, chalet fitness et grands espaces communs." },
               { q: "Quels équipements y a-t-il au Lodge ?", a: `Le Lodge, à Annemasse, dispose d'une piscine avec pool house/salle de jeu, d'un chalet fitness complet avec grand sauna finlandais, d'une salle de sport, d'un jeu d'arcade et de larges espaces communs. Tout est inclus dans le loyer tout compris de ${PRICE_CHF_FR}/mois, comme dans les trois maisons de La Villa Coliving.` },
-              { q: "Y a-t-il du coliving à Annemasse ?", a: `Oui. Le Lodge est la maison de coliving de La Villa Coliving à Annemasse : 12 résidents, chambres meublées de 17 à 25 m², pool house, chalet fitness et sauna, le tout à 20 minutes du centre de Genève en CEVA. Tout inclus à ${PRICE_CHF_FR}/mois.` },
+              { q: "Y a-t-il du coliving à Annemasse ?", a: `Oui. Le Lodge est la maison de coliving de La Villa Coliving à Annemasse : 12 résidents, chambres meublées de ${STATS.roomSizeMin} à ${STATS.roomSizeMax} m², pool house, chalet fitness et sauna, le tout à 20 minutes du centre de Genève en CEVA. Tout inclus à ${PRICE_CHF_FR}/mois.` },
             ],
             en: [
               { q: "What is the monthly rent at Le Lodge and what does it include?", a: `Rooms at Le Lodge are ${PRICE_CHF_EN} per month all-inclusive: utilities (water, electricity, heating), fiber internet up to 8 Gb/s, common-area cleaning three times a week, streaming subscriptions, pool & garden upkeep, private yoga/fitness classes, bedding included, monthly community dinner. No add-on fees.` },

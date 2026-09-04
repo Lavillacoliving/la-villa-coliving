@@ -37,7 +37,7 @@ function httpsGet(url, headers) {
 }
 
 async function fetchRooms() {
-  const url = `${SUPABASE_URL}/rest/v1/v_public_rooms?select=house_slug,room_number,availability,available_from,rent_chf&order=house_slug,room_number`;
+  const url = `${SUPABASE_URL}/rest/v1/v_public_rooms?select=house_slug,room_number,availability,available_from,rent_chf,surface_m2&order=house_slug,room_number`;
   const rows = await httpsGet(url, { apikey: SUPABASE_ANON_KEY, Accept: 'application/json' });
   if (!Array.isArray(rows) || rows.length === 0) throw new Error('v_public_rooms vide — anomalie (la vue rend 29 lignes)');
   const byHouse = new Map();
@@ -140,6 +140,24 @@ async function checkAvailablePage(byHouse) {
   return failures;
 }
 
+// (Lot 7, 04/09/2026) Décision Jérôme Q1 : la fourchette de surface affichée (STATS.roomSizeMin/Max,
+// rendue sur /tarifs FR + EN) doit refléter min/max de v_public_rooms.surface_m2 (15,5 → 16, 24 → 24).
+async function checkRoomSizeRange(rooms) {
+  const failures = [];
+  const sizes = rooms.map((r) => Number(r.surface_m2)).filter((n) => Number.isFinite(n) && n > 0);
+  if (sizes.length === 0) { console.log('⚠️  surface_m2 absent de v_public_rooms — garde surface ignorée'); return failures; }
+  const min = Math.round(Math.min(...sizes)), max = Math.round(Math.max(...sizes));
+  const dir = path.join(path.dirname(fileURLToPath(import.meta.url)), '..', 'public', 'prerendered');
+  for (const file of ['tarifs.html', 'en-tarifs.html']) {
+    const needle = `${min}-${max} m²`;
+    let html;
+    try { html = await fs.readFile(path.join(dir, file), 'utf8'); } catch { continue; }
+    if (!html.includes(needle)) failures.push(`${file} : « ${needle} » absent — STATS.roomSizeMin/Max ≠ v_public_rooms (min ${min}, max ${max})`);
+  }
+  console.log(`${failures.length === 0 ? '✅' : '❌'} surface des chambres — ${min}-${max} m² (v_public_rooms) sur /tarifs FR + EN`);
+  return failures;
+}
+
 async function main() {
   console.log('\n🏠 Garde pages maisons — v_public_rooms × public/prerendered/\n');
   const byHouse = await fetchRooms();
@@ -155,6 +173,9 @@ async function main() {
   total += pageFailures.length;
   console.log(`${pageFailures.length === 0 ? '✅' : '❌'} /chambres-disponibles — FR + EN`);
   for (const f of pageFailures) console.log(`   • ${f}`);
+  const sizeFailures = await checkRoomSizeRange([...byHouse.values()].flat());
+  total += sizeFailures.length;
+  for (const f of sizeFailures) console.log(`   • ${f}`);
   if (total > 0) {
     console.error(`\n❌ ${total} problème(s) — pages maisons NON publiables.`);
     process.exit(1);

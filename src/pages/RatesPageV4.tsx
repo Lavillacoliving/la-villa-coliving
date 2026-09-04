@@ -312,7 +312,7 @@ export function RatesPageV4() {
     <main className="relative pt-16">
       <SEO
         // Prix retiré du title le 15/08/2026 (doctrine A6/S33) — il reste en meta description.
-        title={language === "en" ? "Rates — All-Inclusive Coliving Near Geneva" : "Tarifs Colocation Genève — Tout Compris"}
+        title={language === "en" ? "Rates: one all-inclusive rent near Geneva" : "Tarifs : un loyer tout compris près de Genève"}
         description={language === "en"
           ? `All-inclusive coliving near Geneva from ${PRICE_SHARED_EN_NUM} CHF/month — no application or agency fees. Rent, utilities, gym, pool, WiFi, cleaning included.`
           : `Tarifs colocation tout inclus près de Genève dès ${PRICE_SHARED_CHF_FR}/mois, sans frais de dossier ni d'agence. Loyer, charges, gym, piscine, WiFi, ménage compris.`}
@@ -939,8 +939,8 @@ export function RatesPageV4() {
                 className="text-[#D4A574] hover:text-[#E0BB8A] underline underline-offset-4 transition-colors"
               >
                 {language === "en"
-                  ? "Looking on the Annemasse side? Shared housing in Annemasse →"
-                  : "Tu cherches côté Annemasse ? Colocation à Annemasse →"}
+                  ? "Looking on the Annemasse side? Le Lodge, our house there →"
+                  : "Tu cherches côté Annemasse ? Le Lodge, notre maison là-bas →"}
               </LocalizedLink>
             </p>
           </div>

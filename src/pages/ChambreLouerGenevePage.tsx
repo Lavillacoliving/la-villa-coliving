@@ -20,7 +20,7 @@ import { useAllRooms, splitRooms, type HouseKey, type PublicRoom } from "@/lib/a
  * Blocs : liste des chambres → prix d'une chambre à Genève (PAA loyer moyen, coût total) → chambre meublée
  * prête à vivre → chez l'habitant, sous-location ou coliving ? → conditions pour louer → nos 3 maisons →
  * à N min de Genève → FAQ (FAQPage, 5 questions) → CTA. Pas de cible « étudiant » (décision 03/09).
- * Fact block : « dès 1 370 CHF », 17-23 m², 20 min porte à porte (décision Jérôme 04/09), caution 2 mois
+ * Fact block : « dès 1 370 CHF », 16-24 m² (STATS.roomSizeMin/Max), 20 min porte à porte (décision Jérôme 04/09), caution 2 mois
  * hors charges, 0 frais ; jamais « moins cher que Genève » : coût total et confort, CHF des deux côtés.
  * /chambre-a-louer-annemasse reste la page locale (inventaire du Lodge), liée en croisé.
  */
@@ -186,8 +186,8 @@ export function ChambreLouerGenevePage() {
             </p>
             <ul className="grid sm:grid-cols-2 gap-2 text-sm text-[#44403C]">
               {(en
-                ? ["Furnished room, 17-23 m²", "Bills, water, heating, fibre up to 8 Gb/s", "Cleaning of common areas 3×/week", "Pool, sauna, gym depending on the house", "No agency fee, no application fee", `Deposit: ${STATS.depositMonths} months' rent excluding charges`]
-                : ["Chambre meublée, 17 à 23 m²", "Charges, eau, chauffage, fibre jusqu'à 8 Gb/s", "Ménage des communs 3×/semaine", "Piscine, sauna, salle de sport selon la maison", "0 frais d'agence, 0 frais de dossier", `Caution : ${STATS.depositMonths} mois de loyer hors charges`]
+                ? [`Furnished room, ${STATS.roomSizeMin}-${STATS.roomSizeMax} m²`, "Bills, water, heating, fibre up to 8 Gb/s", "Cleaning of common areas 3×/week", "Pool, sauna, gym depending on the house", "No agency fee, no application fee", `Deposit: ${STATS.depositMonths} months' rent excluding charges`]
+                : [`Chambre meublée, ${STATS.roomSizeMin} à ${STATS.roomSizeMax} m²`, "Charges, eau, chauffage, fibre jusqu'à 8 Gb/s", "Ménage des communs 3×/semaine", "Piscine, sauna, salle de sport selon la maison", "0 frais d'agence, 0 frais de dossier", `Caution : ${STATS.depositMonths} mois de loyer hors charges`]
               ).map((item) => <li key={item} className="flex items-start gap-2"><Check className="w-4 h-4 text-[#D4A574] mt-0.5 flex-shrink-0" />{item}</li>)}
             </ul>
           </div>
@@ -205,7 +205,7 @@ export function ChambreLouerGenevePage() {
               <p className="text-sm text-[#57534E] leading-relaxed">
                 {en
                   ? `17 to 23 m², a double bed with linen, a desk, storage, fibre up to 8 Gb/s, and a shower room that is private or shared with a single other room. You arrive with a suitcase.`
-                  : `17 à 23 m², un lit double avec sa parure, un bureau, des rangements, la fibre jusqu'à 8 Gb/s, et une salle d'eau privative ou partagée avec une seule autre chambre. Tu arrives avec une valise.`}
+                  : `${STATS.roomSizeMin} à ${STATS.roomSizeMax} m², un lit double avec sa parure, un bureau, des rangements, la fibre jusqu'à 8 Gb/s, et une salle d'eau privative ou partagée avec une seule autre chambre. Tu arrives avec une valise.`}
               </p>
             </div>
             <div>
@@ -288,7 +288,7 @@ export function ChambreLouerGenevePage() {
           </div>
           <p className="text-center mt-8 text-[#57534E]">
             {en ? "Rooms in Annemasse only? " : "Uniquement à Annemasse ? "}
-            <LocalizedLink to="/chambre-a-louer-annemasse" className={link}>{en ? "The Lodge's rooms for rent in Annemasse" : "Les chambres à louer du Lodge à Annemasse"}</LocalizedLink>
+            <LocalizedLink to="/chambre-a-louer-annemasse" className={link}>{en ? "Le Lodge in Annemasse: 12 rooms" : "Le Lodge, à Annemasse : 12 chambres"}</LocalizedLink>
             {en ? " · Looking for a flatshare rather than a single room? " : " · Plutôt une colocation qu'une chambre seule ? "}
             <LocalizedLink to={colocGeneveHref(language)} className={link}>{en ? "Shared housing in Geneva, French side" : "Colocation à Genève côté France"}</LocalizedLink>
           </p>
@@ -340,9 +340,9 @@ export function ChambreLouerGenevePage() {
             <span className="text-[#E7E5E4]">·</span>
             <LocalizedLink to={colocGeneveHref(language)} className={link}>{en ? "Shared housing Geneva" : "Colocation Genève"}</LocalizedLink>
             <span className="text-[#E7E5E4]">·</span>
-            <LocalizedLink to="/chambre-a-louer-annemasse" className={link}>{en ? "Rooms for rent in Annemasse" : "Chambre à louer à Annemasse"}</LocalizedLink>
+            <LocalizedLink to="/chambre-a-louer-annemasse" className={link}>{en ? "lavillacoliving.com/en/chambre-a-louer-annemasse" : "lavillacoliving.com/chambre-a-louer-annemasse"}</LocalizedLink>
             <span className="text-[#E7E5E4]">·</span>
-            <LocalizedLink to="/annemasse-colocation" className={link}>{en ? "Shared housing in Annemasse" : "Colocation à Annemasse"}</LocalizedLink>
+            <LocalizedLink to="/annemasse-colocation" className={link}>{en ? "Our Annemasse guide" : "Notre guide d'Annemasse"}</LocalizedLink>
             <span className="text-[#E7E5E4]">·</span>
             <LocalizedLink to="/nos-maisons" className={link}>{en ? "Our 3 houses" : "Nos 3 maisons"}</LocalizedLink>
             <span className="text-[#E7E5E4]">·</span>

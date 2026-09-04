@@ -100,12 +100,12 @@ export function AnnemasseColocationPage() {
           // Prix retiré du title le 15/08/2026 (doctrine A6/S33 : le prix filtre le clic
           // avant que la page puisse vendre la valeur — il reste en meta description).
           language === "en"
-            ? "Shared housing Annemasse 2026: 29 rooms"
-            : "Colocation Annemasse 2026 : 29 chambres"
+            ? "Shared housing in Annemasse, all inclusive"
+            : "Colocation à Annemasse, tout inclus"
         }
         description={
           language === "en"
-            ? `Shared housing Annemasse 2026: 29 furnished rooms all-inclusive from ${PRICE_SHARED_CHF_EN}/mo. Léman Express direct to Geneva 15 min. Cross-border living, no agency fees.`
+            ? `Shared housing in Annemasse: 29 furnished rooms all inclusive from ${PRICE_SHARED_CHF_EN}/month, direct Léman Express to Geneva in 15 min. No agency fee, reply in 48 h.`
             : `Colocation Annemasse : 29 chambres meublées tout inclus dès ${PRICE_SHARED_CHF_FR}/mois. Léman Express direct Genève 15 min. Coliving frontaliers. Sans frais d'agence.`
         }
         url="https://www.lavillacoliving.com/annemasse-colocation"
@@ -576,7 +576,7 @@ export function AnnemasseColocationPage() {
             <span className="text-[#E7E5E4]">·</span>
             {/* (Lot 6 SEO funnel) Chambre à louer, côté Genève. */}
             <LocalizedLink to="/chambre-a-louer-geneve" className="text-[#1C1917] underline hover:text-[#D4A574]">
-              {language === "en" ? "Room to rent near Geneva" : "Chambre à louer près de Genève"}
+              {language === "en" ? "lavillacoliving.com/en/chambre-a-louer-geneve" : "lavillacoliving.com/chambre-a-louer-geneve"}
             </LocalizedLink>
             <span className="text-[#E7E5E4]">·</span>
             <LocalizedLink to="/nos-maisons" className="text-[#1C1917] underline hover:text-[#D4A574]">
@@ -588,7 +588,7 @@ export function AnnemasseColocationPage() {
             </LocalizedLink>
             <span className="text-[#E7E5E4]">·</span>
             <LocalizedLink to="/chambre-a-louer-annemasse" className="text-[#1C1917] underline hover:text-[#D4A574]">
-              {language === "en" ? "Rooms for rent in Annemasse" : "Chambre à louer à Annemasse"}
+              {language === "en" ? "See the Lodge's availability" : "Voir les disponibilités du Lodge"}
             </LocalizedLink>
             <span className="text-[#E7E5E4]">·</span>
             <LocalizedLink to="/blog/quartiers-annemasse-ou-vivre-selon-profil" className="text-[#1C1917] underline hover:text-[#D4A574]">

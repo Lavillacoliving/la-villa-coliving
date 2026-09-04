@@ -188,8 +188,8 @@ export function ColocationGenevePage() {
             </p>
             <ul className="grid sm:grid-cols-2 gap-2 text-sm text-[#44403C]">
               {(en
-                ? ["Furnished room, 17-23 m²", "Utilities, water, heating, fibre up to 8 Gb/s", "Cleaning of common areas 3×/week", "Pool, sauna, gym depending on the house", "Yoga, events, community", "No agency fee, no application fee"]
-                : ["Chambre meublée, 17 à 23 m²", "Charges, eau, chauffage, fibre jusqu'à 8 Gb/s", "Ménage des communs 3×/semaine", "Piscine, sauna, salle de sport selon la maison", "Yoga, événements, communauté", "0 frais d'agence, 0 frais de dossier"]
+                ? [`Furnished room, ${STATS.roomSizeMin}-${STATS.roomSizeMax} m²`, "Utilities, water, heating, fibre up to 8 Gb/s", "Cleaning of common areas 3×/week", "Pool, sauna, gym depending on the house", "Yoga, events, community", "No agency fee, no application fee"]
+                : [`Chambre meublée, ${STATS.roomSizeMin} à ${STATS.roomSizeMax} m²`, "Charges, eau, chauffage, fibre jusqu'à 8 Gb/s", "Ménage des communs 3×/semaine", "Piscine, sauna, salle de sport selon la maison", "Yoga, événements, communauté", "0 frais d'agence, 0 frais de dossier"]
               ).map((item) => <li key={item} className="flex items-start gap-2"><Check className="w-4 h-4 text-[#D4A574] mt-0.5 flex-shrink-0" />{item}</li>)}
             </ul>
           </div>
@@ -350,9 +350,9 @@ export function ColocationGenevePage() {
           <div className="flex flex-wrap gap-4 justify-center text-sm">
             <LocalizedLink to="/chambres-disponibles" className={link}>{en ? "Available rooms" : "Chambres disponibles"}</LocalizedLink>
             <span className="text-[#E7E5E4]">·</span>
-            <LocalizedLink to="/annemasse-colocation" className={link}>{en ? "Shared housing in Annemasse" : "Colocation à Annemasse"}</LocalizedLink>
+            <LocalizedLink to="/annemasse-colocation" className={link}>{en ? "The Annemasse guide" : "Le guide d'Annemasse"}</LocalizedLink>
             <span className="text-[#E7E5E4]">·</span>
-            <LocalizedLink to="/chambre-a-louer-annemasse" className={link}>{en ? "Rooms for rent in Annemasse" : "Chambre à louer à Annemasse"}</LocalizedLink>
+            <LocalizedLink to="/chambre-a-louer-annemasse" className={link}>{en ? "The Lodge's rooms in Annemasse" : "Les chambres du Lodge à Annemasse"}</LocalizedLink>
             <span className="text-[#E7E5E4]">·</span>
             <LocalizedLink to="/chambre-a-louer-geneve" className={link}>{en ? "Rooms for rent near Geneva" : "Chambre à louer près de Genève"}</LocalizedLink>
             <span className="text-[#E7E5E4]">·</span>

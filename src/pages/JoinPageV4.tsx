@@ -209,7 +209,7 @@ export function JoinPageV4() {
   return (
     <main className="relative pt-16">
       <SEO
-        title={language === "en" ? "Apply — Join La Villa Coliving" : "Candidater — Rejoindre La Villa Coliving"}
+        title={language === "en" ? "Apply in 2 minutes, reply within 48 h" : "Candidater en 2 minutes, réponse sous 48 h"}
         description={language === "en"
           ? "Apply to join La Villa Coliving near Geneva. Simple process, move in within a week. Furnished all-inclusive rooms for cross-border workers & expats."
           : "Candidate en 30 secondes, sans engagement. Réponse sous 48 h, emménagement possible en 2 semaines. Chambres meublées tout inclus près de Genève."}

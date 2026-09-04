@@ -34,7 +34,7 @@ export const colivingFaq: { fr: QAPair[]; en: QAPair[] } = {
     },
     {
       q: "Y a-t-il du coliving près de Genève ?",
-      a: `Oui. La Villa Coliving gère trois maisons de coliving à 20 minutes du centre de Genève, côté France : à Ville-la-Grand, Ambilly et Annemasse. Chacune propose des chambres meublées de 17 à 25 m², tout inclus dès ${PRICE_SHARED_CHF_FR}/mois, avec piscine, sauna et salle de sport.`,
+      a: `Oui. La Villa Coliving gère trois maisons de coliving à 20 minutes du centre de Genève, côté France : à Ville-la-Grand, Ambilly et Annemasse. Chacune propose des chambres meublées de ${STATS.roomSizeMin} à ${STATS.roomSizeMax} m², tout inclus dès ${PRICE_SHARED_CHF_FR}/mois, avec piscine, sauna et salle de sport.`,
     },
   ],
   en: [

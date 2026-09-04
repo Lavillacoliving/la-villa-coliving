@@ -1,5 +1,5 @@
 import type { QAPair } from "@/lib/structuredData";
-import { PRICE_SHARED_CHF_FR, PRICE_SHARED_CHF_EN } from "@/data/stats";
+import { STATS, PRICE_SHARED_CHF_FR, PRICE_SHARED_CHF_EN } from "@/data/stats";
 
 // FAQ de l'accueil — front A6 « coliving genève » (PAA + AEO). Tutoiement,
 // texte verbatim : ces réponses sont AUSSI balisées FAQPage (règle d'or :
@@ -15,11 +15,11 @@ export const homeFaq: { fr: QAPair[]; en: QAPair[] } = {
     },
     {
       q: "Y a-t-il du coliving près de Genève ?",
-      a: `Oui. La Villa Coliving gère trois maisons de coliving à 20 minutes du centre de Genève, côté France : La Villa à Ville-la-Grand, Le Loft à Ambilly et Le Lodge à Annemasse. Chacune propose des chambres meublées de 17 à 25 m², tout inclus dès ${PRICE_SHARED_CHF_FR}/mois, avec piscine, sauna et salle de sport.`,
+      a: `Oui. La Villa Coliving gère trois maisons de coliving à 20 minutes du centre de Genève, côté France : La Villa à Ville-la-Grand, Le Loft à Ambilly et Le Lodge à Annemasse. Chacune propose des chambres meublées de ${STATS.roomSizeMin} à ${STATS.roomSizeMax} m², tout inclus dès ${PRICE_SHARED_CHF_FR}/mois, avec piscine, sauna et salle de sport.`,
     },
     {
       q: "Combien coûte une chambre en coliving à Genève ?",
-      a: `Chez La Villa Coliving, le loyer tout inclus démarre à ${PRICE_SHARED_CHF_FR}/mois : chambre meublée de 17 à 25 m², toutes les charges, internet fibre jusqu'à 8 Gb/s, ménage des parties communes trois fois par semaine, piscine, sauna, salle de sport, cours de yoga et événements. Un seul paiement par mois, sans frais cachés.`,
+      a: `Chez La Villa Coliving, le loyer tout inclus démarre à ${PRICE_SHARED_CHF_FR}/mois : chambre meublée de ${STATS.roomSizeMin} à ${STATS.roomSizeMax} m², toutes les charges, internet fibre jusqu'à 8 Gb/s, ménage des parties communes trois fois par semaine, piscine, sauna, salle de sport, cours de yoga et événements. Un seul paiement par mois, sans frais cachés.`,
     },
     {
       q: "Y a-t-il des frais de dossier ou d'agence ?",

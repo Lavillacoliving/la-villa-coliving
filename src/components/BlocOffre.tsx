@@ -89,13 +89,37 @@ export function BlocOffre({ variant, slug, bucket }: BlocOffreProps) {
     labelFr: `Découvrir ${h.label} — ${h.descFr.split(" — ")[0]}`,
     labelEn: `Discover ${h.label} — ${h.descEn.split(" — ")[0]}`,
   };
-  // Lien secondaire : la page maison quand l'article cible Le Lodge (4,65 % de
-  // conversion atterrissage — meilleure page du site) ou Le Loft ; sinon le
-  // guide « colocation Genève » (complément débrief 07/07, quick win /lelodge).
-  const secondary =
-    house === "lavilla"
-      ? { to: colocGeneveHref(language), label: L === "en" ? "Shared housing in Geneva" : "Colocation Genève : le guide" }
-      : { to: `/${house}`, label: L === "en" ? `Discover ${h.label}` : `Découvrir ${h.label}` };
+  // (Lot 7, 04/09/2026) Carte du maillage money — plan SEO funnel §6 / §7.2, validée par Jérôme (Q3) :
+  // par bucket, cible principale au bloc du milieu, cible secondaire au bloc de fin ; deux ancres
+  // distinctes pour /chambres-disponibles. Ancres marque ou génériques, jamais exactes (garde-fous
+  // « même ancre ≥ 60 % » / « exact+partiel ≥ 50 % » de link:graph). Le bucket « ville » garde sa
+  // logique propre (page maison en primaire, Candidater en secondaire).
+  const MONEY_LINKS: Record<Exclude<IntentBucket, "ville">, Record<"mid" | "end", { to: string; fr: string; en: string }>> = {
+    high: {
+      mid: { to: "/chambres-disponibles", fr: "Voir les chambres disponibles", en: "See available rooms" },
+      end: { to: "/chambres-disponibles", fr: "Les chambres libres en ce moment", en: "Rooms free right now" },
+    },
+    medium: {
+      mid: { to: colocGeneveHref(language), fr: "La Villa Coliving, colocation côté France", en: "La Villa Coliving, shared housing on the French side" },
+      end: { to: "/tarifs", fr: "Voir le détail des tarifs", en: "See what the rent includes" },
+    },
+    admin: {
+      mid: { to: "/", fr: "La Villa Coliving, côté France", en: "La Villa Coliving, French side" },
+      end: { to: "/le-coliving", fr: "Comment ça marche ?", en: "How it works" },
+    },
+    life: {
+      mid: { to: "/nos-maisons", fr: "La Villa, Le Loft, Le Lodge", en: "La Villa, Le Loft, Le Lodge" },
+      end: { to: "/chambre-a-louer-geneve", fr: "Les chambres de La Villa Coliving", en: "La Villa Coliving's rooms" },
+    },
+    coliving: {
+      mid: { to: "/le-coliving", fr: "Ce que ça comprend", en: "What's included" },
+      end: { to: "/", fr: "La Villa Coliving, côté France", en: "La Villa Coliving, French side" },
+    },
+  };
+  const moneyLink = bucket === "ville" ? null : MONEY_LINKS[bucket][variant];
+  const secondary = moneyLink
+    ? { to: moneyLink.to, label: moneyLink[L] }
+    : { to: `/${house}`, label: L === "en" ? `Discover ${h.label}` : `Découvrir ${h.label}` };
   // Sur l'article pilier FR lui-même, colocGeneveHref renvoie vers cette page (308
   // pilier→article) : le lien secondaire tournerait en rond. On le masque alors —
   // il reste utile sur tous les autres articles (et en EN, cible = pilier distinct).
@@ -163,7 +187,7 @@ export function BlocOffre({ variant, slug, bucket }: BlocOffreProps) {
                 : (L === "en" ? "Apply — 2 min, free" : "Candidater — 2 min, gratuit")}
               <ArrowRight className="w-4 h-4" />
             </LocalizedLink>
-            {isVille && (
+            {isVille ? (
               <LocalizedLink
                 to={to}
                 onClick={() => track(to, "secondary")}
@@ -171,6 +195,16 @@ export function BlocOffre({ variant, slug, bucket }: BlocOffreProps) {
               >
                 {L === "en" ? "Apply — 2 min, free" : "Candidater — 2 min, gratuit"}
               </LocalizedLink>
+            ) : (
+              showSecondary && (
+                <LocalizedLink
+                  to={secondary.to}
+                  onClick={() => track(secondary.to, "secondary")}
+                  className="block mt-2.5 text-sm text-[#57534E] underline decoration-[#D4A574] underline-offset-4 hover:text-[#1C1917] transition-colors"
+                >
+                  {secondary.label}
+                </LocalizedLink>
+              )
             )}
           </div>
         </div>
