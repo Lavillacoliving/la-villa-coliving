@@ -9,11 +9,11 @@ export const colocationGeneveFaq: { fr: QAPair[]; en: QAPair[] } = {
   fr: [
     {
       q: "Combien coûte une colocation à Genève ?",
-      a: `À Genève même, une chambre en colocation se loue le plus souvent entre 1 000 et 1 500 CHF par mois, charges et internet souvent en plus, et il faut trouver la colocation. Côté France, chez La Villa Coliving, une chambre meublée en maison coûte dès ${PRICE_SHARED_CHF_FR}/mois tout inclus (${PRICE_CHF_FR} avec salle d'eau privative) : charges, fibre, ménage des communs, piscine, sauna, salle de sport et événements compris, à ${MIN} minutes du centre.`,
+      a: `À Genève même, d'après les annonces relevées en 2026, une chambre en colocation se loue le plus souvent entre 1 000 et 1 500 CHF par mois, charges et internet souvent en plus, et il faut trouver la colocation. Côté France, chez La Villa Coliving, une chambre meublée en maison coûte dès ${PRICE_SHARED_CHF_FR}/mois tout inclus (${PRICE_CHF_FR} avec salle d'eau privative) : charges, fibre, ménage des communs, piscine, sauna, salle de sport et événements compris, à ${MIN} minutes du centre.`,
     },
     {
       q: "Quel est le loyer moyen à Genève ?",
-      a: "Pour un studio à Genève, compte 1 800 à 2 500 CHF par mois hors charges, et un taux de vacance inférieur à 1 % : l'offre est rare et les dossiers exigeants. C'est pour ça que beaucoup de frontaliers et de nouveaux arrivants cherchent leur colocation côté France, où le même budget donne une chambre dans une maison entière avec ses espaces communs.",
+      a: "Pour un studio à Genève, compte 1 800 à 2 500 CHF par mois hors charges d'après les annonces relevées en 2026 (autour de 50 CHF/m² en annonce, relevé de notre Observatoire du logement frontalier, juin 2026), et un taux de vacance inférieur à 1 % (OCSTAT) : l'offre est rare et les dossiers exigeants. C'est pour ça que beaucoup de frontaliers et de nouveaux arrivants cherchent leur colocation côté France, où le même budget donne une chambre dans une maison entière avec ses espaces communs.",
     },
     {
       q: "Comment faire une colocation en Suisse quand on travaille à Genève ?",
@@ -35,11 +35,11 @@ export const colocationGeneveFaq: { fr: QAPair[]; en: QAPair[] } = {
   en: [
     {
       q: "How much does a flatshare cost in Geneva?",
-      a: `In Geneva itself, a room in a shared flat usually rents for 1,000 to 1,500 CHF per month, often with utilities and internet on top, and you still have to find the flatshare. On the French side, at La Villa Coliving, a furnished room in a house costs from ${PRICE_SHARED_CHF_EN}/month all inclusive (${PRICE_CHF_EN} with a private shower room): utilities, fibre, cleaning of the common areas, pool, sauna, gym and events included, ${MIN} minutes from the centre.`,
+      a: `In Geneva itself, based on listings observed in 2026, a room in a shared flat usually rents for 1,000 to 1,500 CHF per month, often with utilities and internet on top, and you still have to find the flatshare. On the French side, at La Villa Coliving, a furnished room in a house costs from ${PRICE_SHARED_CHF_EN}/month all inclusive (${PRICE_CHF_EN} with a private shower room): utilities, fibre, cleaning of the common areas, pool, sauna, gym and events included, ${MIN} minutes from the centre.`,
     },
     {
       q: "What is the average rent in Geneva?",
-      a: "For a studio in Geneva, count 1,800 to 2,500 CHF per month excluding charges, with a vacancy rate below 1%: supply is scarce and files demanding. That is why many cross-border workers and newcomers look for their flatshare on the French side, where the same budget gets you a room in a whole house with its shared spaces.",
+      a: "For a studio in Geneva, count 1,800 to 2,500 CHF per month excluding charges based on listings observed in 2026 (around 50 CHF/m² advertised, our cross-border housing Observatory survey, June 2026), with a vacancy rate below 1% (OCSTAT): supply is scarce and files demanding. That is why many cross-border workers and newcomers look for their flatshare on the French side, where the same budget gets you a room in a whole house with its shared spaces.",
     },
     {
       q: "How do you share a flat in Switzerland when you work in Geneva?",
