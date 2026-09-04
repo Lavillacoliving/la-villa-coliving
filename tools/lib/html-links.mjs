@@ -97,13 +97,17 @@ export function classifyAnchor(text, targetRoute, keywords = MONEY_KEYWORDS, opt
   const t = normalizeText(text);
   if (!t) return 'generique';
   if (/^(https?:\/\/|www\.)/.test(t) || t.startsWith('lavillacoliving.com') || t.startsWith('/')) return 'url_nue';
+  // (04/09/2026, décision Jérôme) Une ancre qui nomme la marque ou une maison (« La Villa Coliving près de
+  // Genève », « le Lodge, à Annemasse ») est une ancre de marque, quel que soit le reste du texte : le test
+  // marque passe AVANT exact/partiel. Un accueil ou une page maison nourris d'ancres de marque est le profil
+  // attendu, pas une sur-optimisation.
+  if (BRAND_RE.test(t)) return 'marque';
   const kws = (keywords[targetRoute] || []).map(normalizeText);
   if (kws.includes(t)) return 'exact';
   for (const k of kws) {
     const tokens = k.split(' ').filter(w => w.length > 1);
     if (tokens.length >= 2 && tokens.every(w => t.includes(w))) return 'partiel';
   }
-  if (BRAND_RE.test(t)) return 'marque';
   return 'generique';
 }
 

@@ -43,13 +43,14 @@ test('extraction : zones, sous-types, cibles, entités, externes', () => {
   assert.equal(slash.target, '/colocation-geneve'); assert.ok(slash.issues.includes('trailing-slash'));
 });
 
+// (04/09/2026) Le test marque prime sur exact/partiel : une ancre qui nomme la marque ou une maison est « marque ».
 test('classification des ancres', () => {
   assert.equal(classifyAnchor('La Villa Coliving', '/'), 'marque');
   assert.equal(classifyAnchor('https://www.lavillacoliving.com/tarifs', '/tarifs'), 'url_nue');
   assert.equal(classifyAnchor('Colocation Annemasse', '/annemasse-colocation'), 'exact');
   assert.equal(classifyAnchor('voir la colocation à Annemasse', '/annemasse-colocation'), 'partiel');
   assert.equal(classifyAnchor('en savoir plus', '/annemasse-colocation'), 'generique');
-  assert.equal(classifyAnchor('Le Lodge', '/lelodge'), 'exact');
+  assert.equal(classifyAnchor('Le Lodge', '/lelodge'), 'marque');
   assert.equal(classifyAnchor('Le Lodge à Annemasse', '/annemasse-colocation'), 'marque');
   assert.equal(classifyAnchor('', '/x', undefined, { isImage: true }), 'image');
 });

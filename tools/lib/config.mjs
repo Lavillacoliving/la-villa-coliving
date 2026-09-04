@@ -44,7 +44,8 @@ export const MONEY_KEYWORDS = {
   '/en/le-coliving': ['coliving geneva', 'the coliving'],
 };
 
-// Ancre « marque » (maisons incluses : leur nom est la marque).
+// Ancre « marque » (maisons incluses : leur nom est la marque). Depuis le 04/09/2026 le test marque prime
+// sur exact/partiel dans classifyAnchor : « La Villa Coliving près de Genève » = marque, pas partiel.
 export const BRAND_RE = /la ?villa( coliving)?|lavillacoliving|villa coliving|le loft|le lodge/i;
 
 // Signature des liens éditoriaux (markdown du blog → <LocalizedLink className=…>,

@@ -52,3 +52,11 @@ select (select count(*) from blog_posts where is_published and position($l5$[col
 -- (l'article guide-ressources avait le pied de page en double → 2 ancres « chambres en colocation côté France »),
 -- 34 liens vers /colocation-geneve au total, ancre la plus fréquente « colocation à Genève côté France » 9/34 = 26 %,
 -- 12 articles gardent en corps un autre lien vers l'article « Trouver » (voulu : il garde l'intention « comment chercher »).
+-- ---------------------------------------------------------------------------
+-- PARTIE B ter — APPLIQUÉ le 04/09/2026 (soir) sur décision Jérôme : /colocation-geneve à 67 % d'ancres exactes/partielles
+-- (page neuve + 30 pieds de page de la même famille) → 16 des 30 pieds de page repassés hors exact :
+--   variante 1 (8) « colocation à Genève côté France » → marque « La Villa Coliving, côté France »
+--   variante 2 (8) « chambre en colocation près de Genève » → générique « voir nos chambres côté France »
+--   (variantes 3 « colocation à Genève » ×7 et 4 « chambres en colocation côté France » ×8 inchangées).
+-- Contrôle après : 8 / 8 / 8 / 7 + 4 ancres de corps ; attendu ≈ 42 % exact+partiel au prochain prérendu.
+-- ---------------------------------------------------------------------------
