@@ -60,3 +60,15 @@ select (select count(*) from blog_posts where is_published and position($l5$[col
 --   (variantes 3 « colocation à Genève » ×7 et 4 « chambres en colocation côté France » ×8 inchangées).
 -- Contrôle après : 8 / 8 / 8 / 7 + 4 ancres de corps ; attendu ≈ 42 % exact+partiel au prochain prérendu.
 -- ---------------------------------------------------------------------------
+-- ---------------------------------------------------------------------------
+-- PARTIE B ter EN — APPLIQUÉ le 04/09/2026 (soir) sur décision Jérôme : même profil côté EN — 29 pieds de page « shared housing near Geneva »
+-- vers /en/colocation-geneve (71 % exact+partiel). Même remède que le FR : 16 des 29 en marque / générique, par ordre
+-- alphabétique des slugs (8 marque, 8 générique), les autres inchangés (l'ancre exacte de la page EN reste majoritaire
+-- sur les 13 restants, parité avec le FR). Contrôle après : « La Villa Coliving, French side » ×8 (allocations → coliving-annemasse-
+-- avantages), « see our rooms on the French side » ×8 (colocation-annemasse → grand-geneve), « shared housing near Geneva » ×14
+-- (12 articles, 2 doublons guide-ressources et salaire). Attendu ≈ 35 % exact+partiel au prochain prérendu.
+update blog_posts set content_en = replace(content_en, $l8$[shared housing near Geneva](/colocation-geneve)$l8$, $l8$[La Villa Coliving, French side](/colocation-geneve)$l8$), updated_at = now()
+where slug in (select slug from blog_posts where is_published and position($l8$[shared housing near Geneva](/colocation-geneve)$l8$ in content_en) > 0 order by slug limit 8);
+update blog_posts set content_en = replace(content_en, $l8$[shared housing near Geneva](/colocation-geneve)$l8$, $l8$[see our rooms on the French side](/colocation-geneve)$l8$), updated_at = now()
+where slug in (select slug from blog_posts where is_published and position($l8$[shared housing near Geneva](/colocation-geneve)$l8$ in content_en) > 0 order by slug limit 8);
+-- ---------------------------------------------------------------------------
