@@ -38,6 +38,8 @@ const ROUTES = [
   '/en/chambres-disponibles',
   '/colocation-geneve',
   '/en/colocation-geneve',
+  '/chambre-a-louer-geneve',
+  '/en/chambre-a-louer-geneve',
 ];
 
 const MIME = {

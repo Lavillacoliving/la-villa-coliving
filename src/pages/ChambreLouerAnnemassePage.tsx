@@ -387,6 +387,11 @@ export function ChambreLouerAnnemassePage() {
               {language === "en" ? "Shared housing Geneva" : "Colocation Genève"}
             </LocalizedLink>
             <span className="text-[#E7E5E4]">·</span>
+            {/* (Lot 6 SEO funnel) Page sœur côté Genève. */}
+            <LocalizedLink to="/chambre-a-louer-geneve" className="text-[#1C1917] underline hover:text-[#D4A574]">
+              {language === "en" ? "Room to rent near Geneva" : "Chambre à louer près de Genève"}
+            </LocalizedLink>
+            <span className="text-[#E7E5E4]">·</span>
             <LocalizedLink to="/nos-maisons" className="text-[#1C1917] underline hover:text-[#D4A574]">
               {language === "en" ? "Our 3 houses" : "Nos 3 maisons"}
             </LocalizedLink>

@@ -13,6 +13,10 @@
       "destination": "/prerendered/chambre-a-louer-annemasse.html"
     },
     {
+      "source": "/chambre-a-louer-geneve",
+      "destination": "/prerendered/chambre-a-louer-geneve.html"
+    },
+    {
       "source": "/le-coliving",
       "destination": "/prerendered/le-coliving.html"
     },
@@ -95,6 +99,10 @@
     {
       "source": "/en/chambre-a-louer-annemasse",
       "destination": "/prerendered/en-chambre-a-louer-annemasse.html"
+    },
+    {
+      "source": "/en/chambre-a-louer-geneve",
+      "destination": "/prerendered/en-chambre-a-louer-geneve.html"
     },
     {
       "source": "/en/le-coliving",
