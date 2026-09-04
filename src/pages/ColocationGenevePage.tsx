@@ -83,8 +83,8 @@ export function ColocationGenevePage() {
         // §6 variante B (décision Q8 : pas de prix dans le title). Meta de la spécification révisée du 04/09.
         title={en ? "Shared housing in Geneva, French side" : "Colocation à Genève, côté France"}
         description={en
-          ? `Shared housing in Geneva without Geneva rents: 3 houses on the French side ${MIN} min from the centre, furnished room with utilities, fibre and cleaning included. Available rooms, prices in CHF, reply within 48 h.`
-          : `Colocation à Genève sans les loyers genevois : 3 maisons côté France à ${MIN} min du centre, chambre meublée, charges, fibre et ménage compris. Chambres disponibles, prix en CHF, réponse sous 48 h.`}
+          ? `Shared housing in Geneva, French side: 3 houses ${MIN} min from the centre, furnished room, bills, fibre, cleaning included. Rooms, CHF prices, reply in 48 h.`
+          : `Colocation à Genève côté France : 3 maisons à ${MIN} min du centre, chambre meublée tout inclus. Chambres disponibles, prix en CHF, réponse sous 48 h.`}
         url={PILLAR_URL}
         image="https://www.lavillacoliving.com/images/villa_portrait.webp"
         jsonLd={offerSchema}
