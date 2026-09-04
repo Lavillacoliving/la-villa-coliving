@@ -22,3 +22,4 @@ select slug, (content_fr ~ '\]\(/chambre-a-louer-geneve\)') as lie_page, substri
 -- cout-de-la-vie → ancre « chambres meublées à louer » ; aucun gras autour des liens. Appliqué dans la fenêtre du merge
 -- (même run du bot) pour que la page existe avant que les articles la lient.
 -- ---------------------------------------------------------------------------
+-- 04/09 08:10 UTC : relance du bot après le run 33849730998 annulé par le timeout de 15 min (job passé à 30 min).

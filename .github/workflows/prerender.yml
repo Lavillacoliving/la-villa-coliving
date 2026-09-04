@@ -55,7 +55,7 @@ concurrency:
 jobs:
   prerender:
     runs-on: ubuntu-latest
-    timeout-minutes: 15
+    timeout-minutes: 30  # 04/09/2026 : run de 15 min annulé par le timeout (npm install 7 min + prérendu) — marge doublée
     # Skip if the push was made by github-actions[bot] (loop prevention)
     if: github.actor != 'github-actions[bot]'
 
