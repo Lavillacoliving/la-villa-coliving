@@ -29,7 +29,7 @@ const FAQ: { fr: QAPair[]; en: QAPair[] } = {
   fr: [
     {
       q: "Quel est le loyer moyen d'une chambre à louer à Genève ?",
-      a: "À Genève même, une chambre en colocation ou chez l'habitant se loue le plus souvent entre 1 000 et 1 500 CHF par mois, charges, internet et ménage souvent en plus, et l'offre est rare (taux de vacance sous 1 %). C'est pour ça que beaucoup cherchent leur chambre côté France, à 20 minutes du centre : le même budget donne une chambre meublée dans une maison entière.",
+      a: "À Genève même, d'après les annonces relevées en 2026, une chambre en colocation ou chez l'habitant se loue le plus souvent entre 1 000 et 1 500 CHF par mois, charges, internet et ménage souvent en plus (relevé de notre Observatoire du logement frontalier, juin 2026), et l'offre est rare (taux de vacance sous 1 %, OCSTAT). C'est pour ça que beaucoup cherchent leur chambre côté France, à 20 minutes du centre : le même budget donne une chambre meublée dans une maison entière.",
     },
     {
       q: `Combien coûte une chambre meublée près de Genève chez La Villa Coliving ?`,
@@ -51,7 +51,7 @@ const FAQ: { fr: QAPair[]; en: QAPair[] } = {
   en: [
     {
       q: "What is the average rent for a room in Geneva?",
-      a: "In Geneva itself, a room in a shared flat or in someone's home usually rents for 1,000 to 1,500 CHF a month, often with bills, internet and cleaning on top, and supply is scarce (vacancy rate below 1%). That is why many people look for their room on the French side, 20 minutes from the centre: the same budget gets a furnished room in a whole house.",
+      a: "In Geneva itself, based on listings observed in 2026, a room in a shared flat or in someone's home usually rents for 1,000 to 1,500 CHF a month, often with bills, internet and cleaning on top (our cross-border housing Observatory survey, June 2026), and supply is scarce (vacancy rate below 1%, OCSTAT). That is why many people look for their room on the French side, 20 minutes from the centre: the same budget gets a furnished room in a whole house.",
     },
     {
       q: "How much is a furnished room near Geneva at La Villa Coliving?",
@@ -95,10 +95,11 @@ export function ChambreLouerGenevePage() {
     <main className="relative pt-16">
       <SEO
         // §6 variante B : pas de prix dans le title (Q8, confirmé le 04/09) ; meta sans « 3 mois minimum » (Q13, confirmé le 04/09).
-        title={en ? "Rooms to rent near Geneva, furnished" : "Chambre à louer près de Genève, meublée"}
+        // (ajustement Jérôme 04/09) pluriel aligné sur le H1 + « tout inclus », sans prix (Q8) ; > 65 c. avec la marque → pas de suffixe (S33).
+        title={en ? "Rooms to rent near Geneva: furnished, all inclusive" : "Chambres à louer près de Genève : meublées, tout inclus"}
         description={en
-          ? `Furnished rooms to rent on the French side, ${MIN} min from Geneva: bills, fibre, cleaning included, from ${PRICE_SHARED_CHF_EN} all inclusive. Live availability.`
-          : `Chambres meublées à louer côté France, à ${MIN} min de Genève : charges, fibre et ménage compris, tout inclus dès ${PRICE_SHARED_CHF_FR}. Disponibilités et prix en CHF.`}
+          ? `Furnished rooms to rent on the French side, ${MIN} min door to door from Geneva: bills, fibre, cleaning included, from ${PRICE_SHARED_CHF_EN}. Live availability.`
+          : `Chambres meublées à louer côté France, à ${MIN} min porte-à-porte de Genève : charges, fibre et ménage compris, dès ${PRICE_SHARED_CHF_FR} tout inclus. Dispo en temps réel.`}
         image="https://www.lavillacoliving.com/images/le loft/rooms/Chambre 5/chambre-5-vue-large.webp"
       />
 
@@ -113,8 +114,8 @@ export function ChambreLouerGenevePage() {
           </h1>
           <p className="text-lg md:text-xl text-[#57534E] max-w-3xl mx-auto leading-relaxed mb-8 font-medium">
             {en
-              ? `Looking for a room to rent in Geneva? Most affordable ones are on the French side, ${MIN} minutes from the centre. Below: every room available in our ${STATS.totalHouses} houses, with date and price in CHF, all inclusive from ${PRICE_SHARED_CHF_EN}/month. Neither a room in someone's home nor a sublet: a lease in your name in a whole house.`
-              : `Tu cherches une chambre à louer à Genève ? La plupart des chambres abordables sont côté France, à ${MIN} minutes du centre. Ci-dessous, toutes les chambres disponibles dans nos ${STATS.totalHouses} maisons, avec la date et le prix en CHF, tout inclus dès ${PRICE_SHARED_CHF_FR}/mois. Ni chambre chez l'habitant ni sous-location : un bail à ton nom dans une maison entière.`}
+              ? `Looking for a room to rent in Geneva? Most affordable ones are on the French side, ${MIN} minutes door to door from the centre. Below: every room available in our ${STATS.totalHouses} houses, with date and price in CHF, all inclusive from ${PRICE_SHARED_CHF_EN}/month. Neither a room in someone's home nor a sublet: a lease in your name in a whole house.`
+              : `Tu cherches une chambre à louer à Genève ? La plupart des chambres abordables sont côté France, à ${MIN} minutes porte-à-porte du centre. Ci-dessous, toutes les chambres disponibles dans nos ${STATS.totalHouses} maisons, avec la date et le prix en CHF, tout inclus dès ${PRICE_SHARED_CHF_FR}/mois. Ni chambre chez l'habitant ni sous-location : un bail à ton nom dans une maison entière.`}
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <a href="#chambres" className="inline-flex items-center gap-2 px-8 py-4 bg-[#1C1917] text-white font-semibold rounded-full hover:bg-[#44403C] transition-colors">
@@ -168,8 +169,12 @@ export function ChambreLouerGenevePage() {
           <h2 className={h2} style={serif}>{en ? "Price of a room to rent in Geneva" : "Prix d'une chambre à louer à Genève"}</h2>
           <p className="text-[#57534E] leading-relaxed mb-6">
             {en
-              ? "In Geneva itself, a room usually rents for 1,000 to 1,500 CHF a month, and a studio 1,800 to 2,500 CHF excluding charges: the city has one of the tightest housing markets in Switzerland, with a vacancy rate below 1%. « Cheap » rarely means what it says: the advertised rent leaves out bills, internet, furniture and cleaning."
-              : "À Genève même, une chambre se loue le plus souvent entre 1 000 et 1 500 CHF par mois, et un studio 1 800 à 2 500 CHF hors charges : la ville a l'un des marchés les plus tendus de Suisse, avec un taux de vacance sous 1 %. « Pas cher » veut rarement dire ce qu'il dit : le loyer affiché oublie les charges, internet, les meubles et le ménage."}
+              ? `In Geneva itself, based on listings observed in 2026, a room usually rents for 1,000 to 1,500 CHF a month and a studio 1,800 to 2,500 CHF excluding charges, around 50 CHF/m² advertised according to our cross-border housing Observatory survey (June 2026); the vacancy rate is below 1% (OCSTAT). « Cheap room in Geneva »: compare the total cost, not the advertised rent. In Geneva you add bills, an internet subscription, cleaning and the furniture to buy to the bare rent; on the French side, at La Villa Coliving, the package from ${PRICE_SHARED_CHF_EN}/month includes everything: furnished room, bills, fibre, cleaning of the common areas, pool, sauna, gym. Comfort and space make the difference, not the lowest rent.`
+              : `À Genève même, d'après les annonces relevées en 2026, une chambre se loue le plus souvent entre 1 000 et 1 500 CHF par mois, et un studio 1 800 à 2 500 CHF hors charges, soit autour de 50 CHF/m² en annonce selon le relevé de notre Observatoire du logement frontalier (juin 2026) ; le taux de vacance est sous 1 % (OCSTAT). « Chambre pas chère à Genève » : compare le coût total, pas le loyer affiché. À Genève, au loyer nu s'ajoutent les charges, l'abonnement internet, le ménage et le mobilier à acheter ; côté France, chez La Villa Coliving, le forfait dès ${PRICE_SHARED_CHF_FR}/mois comprend tout : chambre meublée, charges, fibre, ménage des communs, piscine, sauna, salle de sport. Le confort et l'espace font la différence, pas le loyer le plus bas.`}
+          </p>
+          <p className="text-sm text-[#78716C] mb-6">
+            {en ? "Source and method: " : "Source et méthode : "}
+            <LocalizedLink to="/observatoire-logement-frontalier-geneve" className="underline underline-offset-4 hover:text-[#1C1917]">{en ? "our cross-border housing Observatory, Geneva and the Léman Express axis (June 2026)" : "notre Observatoire du logement frontalier, Genève et l'axe Léman Express (juin 2026)"}</LocalizedLink>
           </p>
           <div className="bg-white border border-[#E7E5E4] p-6 md:p-8 mb-6">
             <BedDouble className="w-8 h-8 text-[#D4A574] mb-3" />
@@ -294,11 +299,11 @@ export function ChambreLouerGenevePage() {
       <section className="py-20 lg:py-24 bg-white">
         <div className="max-w-4xl mx-auto px-6 text-center">
           <Train className="w-12 h-12 text-[#D4A574] mx-auto mb-6" />
-          <h2 className={h2} style={serif}>{en ? `${MIN} minutes from Geneva` : `À ${MIN} min de Genève`}</h2>
+          <h2 className={h2} style={serif}>{en ? `${MIN} minutes door to door from Geneva` : `À ${MIN} min porte-à-porte de Genève`}</h2>
           <p className="text-[#57534E] leading-relaxed max-w-3xl mx-auto mb-8">
             {en
-              ? `Door to door, count ${MIN} minutes to the centre of Geneva: Léman Express from Annemasse (Eaux-Vives in 8 minutes, Cornavin direct), tram 17 from the Moillesulaz border, TPG buses. The border is a few minutes from every house.`
-              : `Porte à porte, compte ${MIN} minutes jusqu'au centre de Genève : Léman Express depuis Annemasse (Eaux-Vives en 8 minutes, Cornavin direct), tram 17 depuis la douane de Moillesulaz, bus TPG. La frontière est à quelques minutes de chaque maison.`}
+              ? `Door to door, count ${MIN} minutes to the centre of Geneva: Léman Express from Annemasse (Eaux-Vives in 8 minutes, Cornavin in 15 minutes by direct train), tram 17 from the Moillesulaz border, TPG buses. The border is a few minutes from every house.`
+              : `Porte à porte, compte ${MIN} minutes jusqu'au centre de Genève : Léman Express depuis Annemasse (Eaux-Vives en 8 minutes, Cornavin en 15 minutes de train direct), tram 17 depuis la douane de Moillesulaz, bus TPG. La frontière est à quelques minutes de chaque maison.`}
           </p>
           <div className="grid sm:grid-cols-3 gap-4 text-sm text-[#44403C]">
             {(en

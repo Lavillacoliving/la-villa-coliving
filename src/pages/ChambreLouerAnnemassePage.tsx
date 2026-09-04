@@ -85,8 +85,8 @@ export function ChambreLouerAnnemassePage() {
         title={language === "en" ? "Rooms for rent in Annemasse, all inclusive" : "Chambre à louer à Annemasse, tout inclus"}
         description={
           language === "en"
-            ? `Furnished rooms to rent in Annemasse: the Lodge's 12 rooms, private shower room, all inclusive ${PRICE_CHF_EN}/month, Geneva in 15 min. Reply within 48 h.`
-            : `Chambre meublée à louer à Annemasse : les 12 chambres du Lodge, salle d'eau privative, tout inclus ${PRICE_CHF_FR}/mois, Genève en 15 min. Réponse sous 48 h.`
+            ? `Furnished rooms to rent in Annemasse: the Lodge's 12 rooms, private shower room, ${PRICE_CHF_EN}/month all inclusive, 15 min by train from Geneva. Reply in 48 h.`
+            : `Chambre meublée à louer à Annemasse : les 12 chambres du Lodge, salle d'eau privative, ${PRICE_CHF_FR}/mois tout inclus, 15 min de train direct de Genève.`
         }
         url="https://www.lavillacoliving.com/chambre-a-louer-annemasse"
         image="https://www.lavillacoliving.com/images/le lodge/rooms/la villa coliving le lodge-78.webp"
@@ -109,8 +109,8 @@ export function ChambreLouerAnnemassePage() {
           </h1>
           <p className="text-lg md:text-xl text-[#57534E] max-w-3xl mx-auto leading-relaxed mb-10 font-medium">
             {language === "en"
-              ? `12 furnished rooms with private shower room at the Lodge, in Annemasse Romagny, ${PRICE_CHF_EN}/month all inclusive. Léman Express direct to Geneva Cornavin in 15 minutes. Renting a room made simpler than a furnished studio: bed, desk, fibre, bills and cleaning included, and a whole house to live in.`
-              : `12 chambres meublées avec salle d'eau privative au Lodge, à Annemasse Romagny, ${PRICE_CHF_FR}/mois tout inclus. Léman Express direct Genève Cornavin en 15 minutes. Une location de chambre plus simple qu'un studio meublé : lit, bureau, fibre, charges et ménage compris, et une maison entière pour vivre.`}
+              ? `12 furnished rooms with private shower room at the Lodge, in Annemasse Romagny, ${PRICE_CHF_EN}/month all inclusive. Léman Express direct to Geneva Cornavin in 15 minutes by train, 20 minutes door to door from the centre. Renting a room made simpler than a furnished studio: bed, desk, fibre, bills and cleaning included, and a whole house to live in.`
+              : `12 chambres meublées avec salle d'eau privative au Lodge, à Annemasse Romagny, ${PRICE_CHF_FR}/mois tout inclus. Léman Express direct Genève Cornavin en 15 minutes de train, 20 minutes porte-à-porte depuis le centre. Une location de chambre plus simple qu'un studio meublé : lit, bureau, fibre, charges et ménage compris, et une maison entière pour vivre.`}
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <LocalizedLink
@@ -229,7 +229,7 @@ export function ChambreLouerAnnemassePage() {
                   "12 furnished rooms — one house, one community",
                   `All inclusive ${PRICE_CHF_EN}/month (no surprises)`,
                   "Move in within a week (no paperwork friction)",
-                  "Léman Express direct to Geneva Cornavin 15 min",
+                  "15 min direct train to Geneva Cornavin (20 min door to door)",
                   "Sauna, gym, pool and garden at the Lodge",
                   "fiber internet up to 8 Gb/s",
                   "Cleaning three times a week of common areas",
@@ -242,7 +242,7 @@ export function ChambreLouerAnnemassePage() {
                   "12 chambres meublées — une maison, une communauté",
                   `Tout inclus ${PRICE_CHF_FR}/mois (zéro surprise)`,
                   "Emménagement en moins d'une semaine (zéro friction administrative)",
-                  "Léman Express direct Genève Cornavin en 15 min",
+                  "15 min de train direct Genève Cornavin (20 min porte-à-porte)",
                   "Sauna, salle de sport, piscine et jardin au Lodge",
                   "Internet fibre jusqu'à 8 Gb/s",
                   "Ménage 3 fois par semaine des espaces communs",
@@ -269,12 +269,12 @@ export function ChambreLouerAnnemassePage() {
             className="text-3xl md:text-4xl font-light text-[#1C1917] mb-6"
             style={{ fontFamily: '"DM Serif Display", serif' }}
           >
-            {language === "en" ? "15 min from Geneva Cornavin" : "À 15 min de Genève Cornavin"}
+            {language === "en" ? "15 min by direct train from Geneva Cornavin" : "À 15 min de train direct de Genève Cornavin"}
           </h2>
           <p className="text-lg text-[#57534E] leading-relaxed max-w-3xl mx-auto">
             {language === "en"
-              ? "Annemasse station is the Léman Express terminus — direct train to Geneva Cornavin in 15 minutes, no transfer. Tram 17 TPG and direct buses also connect to central Geneva. Whether you commute daily or visit occasionally, our 3 houses are optimised for cross-border life."
-              : "La gare d'Annemasse est le terminus du Léman Express — train direct Genève Cornavin en 15 minutes, sans correspondance. Le Tram 17 TPG et des bus directs desservent aussi le centre de Genève. Que tu fasses le trajet quotidien ou occasionnellement, nos 3 maisons sont optimisées pour la vie frontalière."}
+              ? "Annemasse station is the Léman Express terminus — direct train to Geneva Cornavin in 15 minutes, no transfer, 20 minutes door to door from the centre. Tram 17 TPG and direct buses also connect to central Geneva. Whether you commute daily or visit occasionally, our 3 houses are optimised for cross-border life."
+              : "La gare d'Annemasse est le terminus du Léman Express — train direct Genève Cornavin en 15 minutes, sans correspondance, soit 20 minutes porte-à-porte depuis le centre. Le Tram 17 TPG et des bus directs desservent aussi le centre de Genève. Que tu fasses le trajet quotidien ou occasionnellement, nos 3 maisons sont optimisées pour la vie frontalière."}
           </p>
           <LocalizedLink
             to="/annemasse-colocation"
