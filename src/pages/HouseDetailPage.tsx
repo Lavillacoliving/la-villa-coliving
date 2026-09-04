@@ -2165,17 +2165,13 @@ export function HouseDetailPage() {
                       <LocalizedLink to="/chambre-a-louer-annemasse" className="underline underline-offset-4 hover:text-[#1C1917]">
                         {language === "en" ? "rooms for rent in Annemasse" : "chambre à louer à Annemasse"}
                       </LocalizedLink>
-                      {/* Loft (Lot A) : la frontière à 500 m justifie l'ancre Genève ; FR → article élu, EN → pilier. */}
-                      {id === "leloft" && (
-                        <>
-                          {" · "}
-                          <LocalizedLink to={colocGeneveHref(language)} className="underline underline-offset-4 hover:text-[#1C1917]">
-                            {language === "en" ? "shared housing in Geneva" : "colocation à Genève"}
-                          </LocalizedLink>
-                        </>
-                      )}
                     </>
                     )}
+                    {/* (Lot 5 SEO funnel, 04/09/2026) Les 3 maisons lient la page money colocation Genève. */}
+                    {" · "}
+                    <LocalizedLink to={colocGeneveHref(language)} className="underline underline-offset-4 hover:text-[#1C1917]">
+                      {language === "en" ? "shared housing in Geneva" : "colocation à Genève"}
+                    </LocalizedLink>
                   </p>
                 </div>
 

@@ -1,4 +1,5 @@
 import { LocalizedLink } from "@/components/LocalizedLink";
+import { colocGeneveHref } from "@/lib/siteLinks";
 import { HouseAvailabilityLine } from "@/components/HouseAvailabilityLine";
 import { responsiveImage } from "@/lib/responsiveImage";
 import { ArrowRight, MapPin, Users } from "lucide-react";
@@ -168,6 +169,11 @@ export function HousesPreviewV7() {
           {" · "}
           <LocalizedLink to="/chambre-a-louer-annemasse" className="underline underline-offset-4 hover:text-[#1C1917]">
             {language === "en" ? "Rooms for rent in Annemasse" : "Chambre à louer à Annemasse"}
+          </LocalizedLink>
+          {" · "}
+          {/* (Lot 5 SEO funnel) Page money « colocation Genève », chambres et dates en temps réel. */}
+          <LocalizedLink to={colocGeneveHref(language)} className="underline underline-offset-4 hover:text-[#1C1917]">
+            {language === "en" ? "Shared housing in Geneva, French side" : "Colocation à Genève côté France"}
           </LocalizedLink>
         </p>
       </div>

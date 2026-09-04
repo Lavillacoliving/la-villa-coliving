@@ -97,7 +97,8 @@ function AppContent() {
             Navigate = clics SPA (liens des contenus en base) ; vercel.json porte le 308
             serveur. La version EN /en/colocation-geneve reste servie (money page en
             progression) — voir src/lib/siteLinks.ts. */}
-        <Route path="/colocation-geneve" element={<Navigate to="/blog/trouver-colocation-geneve-frontalier" replace />} />
+        {/* (Lot 5 SEO funnel, 04/09/2026 — gel levé) La page money FR revit ; l'article garde « comment chercher ». */}
+        <Route path="/colocation-geneve" element={<ColocationGenevePage />} />
         <Route path="/annemasse-colocation" element={<AnnemasseColocationPage />} />
         <Route path="/chambre-a-louer-annemasse" element={<ChambreLouerAnnemassePage />} />
         <Route path="/le-coliving" element={<ColivingPage />} />

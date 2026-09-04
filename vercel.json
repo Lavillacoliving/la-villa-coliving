@@ -25,6 +25,10 @@
       "destination": "/prerendered/chambres-disponibles.html"
     },
     {
+      "source": "/colocation-geneve",
+      "destination": "/prerendered/colocation-geneve.html"
+    },
+    {
       "source": "/services",
       "destination": "/prerendered/services.html"
     },
@@ -105,6 +109,10 @@
       "destination": "/prerendered/en-chambres-disponibles.html"
     },
     {
+      "source": "/en/colocation-geneve",
+      "destination": "/prerendered/en-colocation-geneve.html"
+    },
+    {
       "source": "/en/services",
       "destination": "/prerendered/en-services.html"
     },
@@ -159,10 +167,6 @@
     {
       "source": "/en/politique-de-confidentialite",
       "destination": "/prerendered/en-politique-de-confidentialite.html"
-    },
-    {
-      "source": "/en/colocation-geneve",
-      "destination": "/prerendered/en-colocation-geneve.html"
     },
     {
       "source": "/blog/coliving-communaute-reels-amis-geneve-annemasse",
@@ -524,11 +528,6 @@
   "trailingSlash": false,
   "redirects": [
     {
-      "source": "/colocation-geneve",
-      "destination": "/blog/trouver-colocation-geneve-frontalier",
-      "permanent": true
-    },
-    {
       "source": "/fr",
       "destination": "/",
       "permanent": true
@@ -685,27 +684,27 @@
     },
     {
       "source": "/colocation-geneva",
-      "destination": "/blog/trouver-colocation-geneve-frontalier",
+      "destination": "/colocation-geneve",
       "permanent": true
     },
     {
       "source": "/colocation",
-      "destination": "/blog/trouver-colocation-geneve-frontalier",
+      "destination": "/colocation-geneve",
       "permanent": true
     },
     {
       "source": "/coliving-geneve",
-      "destination": "/blog/trouver-colocation-geneve-frontalier",
+      "destination": "/",
       "permanent": true
     },
     {
       "source": "/coliving-geneva",
-      "destination": "/blog/trouver-colocation-geneve-frontalier",
+      "destination": "/",
       "permanent": true
     },
     {
       "source": "/fr/colocation-geneve",
-      "destination": "/blog/trouver-colocation-geneve-frontalier",
+      "destination": "/colocation-geneve",
       "permanent": true
     },
     {

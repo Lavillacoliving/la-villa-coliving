@@ -37,6 +37,10 @@ export const STATS = {
   leaseDurationMonths: 12,
   noticePeriodMonths: 1,
   roomSizeMin: 17,
+  // (Lot 6 SEO funnel, 04/09/2026) Fact block CLAUDE.md §1 : séjour moyen et espace de vie par colocataire.
+  averageStayMonths: 13,
+  livingSpacePerResidentMin: 37,
+  livingSpacePerResidentMax: 42,
   roomSizeMax: 25, // 25 m² max (Jérôme 13/08)
   cleaningPerWeek: 3, // 3×/semaine dans les 3 maisons depuis le 01/09/2026 (vote des résidents).
   // ⚠️ Constante NON consommée : toutes les mentions de fréquence sont des littéraux en dur
