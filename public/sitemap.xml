@@ -27,6 +27,14 @@
     <priority>0.8</priority>
   </url>
   <url>
+    <loc>https://www.lavillacoliving.com/chambre-a-louer-geneve</loc>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://www.lavillacoliving.com/chambre-a-louer-geneve" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.lavillacoliving.com/en/chambre-a-louer-geneve" />
+    <lastmod>2026-09-04</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
     <loc>https://www.lavillacoliving.com/le-coliving</loc>
     <xhtml:link rel="alternate" hreflang="fr" href="https://www.lavillacoliving.com/le-coliving" />
     <xhtml:link rel="alternate" hreflang="en" href="https://www.lavillacoliving.com/en/le-coliving" />
@@ -192,6 +200,14 @@
     <loc>https://www.lavillacoliving.com/en/chambre-a-louer-annemasse</loc>
     <xhtml:link rel="alternate" hreflang="fr" href="https://www.lavillacoliving.com/chambre-a-louer-annemasse" />
     <xhtml:link rel="alternate" hreflang="en" href="https://www.lavillacoliving.com/en/chambre-a-louer-annemasse" />
+    <lastmod>2026-09-04</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://www.lavillacoliving.com/en/chambre-a-louer-geneve</loc>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://www.lavillacoliving.com/chambre-a-louer-geneve" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.lavillacoliving.com/en/chambre-a-louer-geneve" />
     <lastmod>2026-09-04</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
