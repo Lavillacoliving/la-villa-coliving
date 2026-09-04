@@ -354,6 +354,8 @@ export function ColocationGenevePage() {
             <span className="text-[#E7E5E4]">·</span>
             <LocalizedLink to="/chambre-a-louer-annemasse" className={link}>{en ? "Rooms for rent in Annemasse" : "Chambre à louer à Annemasse"}</LocalizedLink>
             <span className="text-[#E7E5E4]">·</span>
+            <LocalizedLink to="/chambre-a-louer-geneve" className={link}>{en ? "Rooms for rent near Geneva" : "Chambre à louer près de Genève"}</LocalizedLink>
+            <span className="text-[#E7E5E4]">·</span>
             <LocalizedLink to="/le-coliving" className={link}>{en ? "What is coliving" : "Le coliving, c'est quoi ?"}</LocalizedLink>
             <span className="text-[#E7E5E4]">·</span>
             <LocalizedLink to="/nos-maisons" className={link}>{en ? "Our 3 houses" : "Nos 3 maisons"}</LocalizedLink>

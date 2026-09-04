@@ -97,7 +97,7 @@ export function ChambreLouerGenevePage() {
         // §6 variante B : pas de prix dans le title (Q8, confirmé le 04/09) ; meta sans « 3 mois minimum » (Q13, confirmé le 04/09).
         title={en ? "Rooms to rent near Geneva, furnished" : "Chambre à louer près de Genève, meublée"}
         description={en
-          ? `Furnished rooms to rent on the French side, ${MIN} min from Geneva: bills, fibre and cleaning included, all inclusive from ${PRICE_SHARED_CHF_EN}. Availability and prices in CHF.`
+          ? `Furnished rooms to rent on the French side, ${MIN} min from Geneva: bills, fibre, cleaning included, from ${PRICE_SHARED_CHF_EN} all inclusive. Live availability.`
           : `Chambres meublées à louer côté France, à ${MIN} min de Genève : charges, fibre et ménage compris, tout inclus dès ${PRICE_SHARED_CHF_FR}. Disponibilités et prix en CHF.`}
         image="https://www.lavillacoliving.com/images/le loft/rooms/Chambre 5/chambre-5-vue-large.webp"
       />
