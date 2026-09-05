@@ -57,14 +57,16 @@ export const PROPERTY_ADDRESSES: Record<string, string> = {
 // Prospects — sources
 // ==========================================
 
-// Valeurs autorisées par la contrainte prospects_source_check (15 valeurs).
+// Valeurs autorisées par la contrainte prospects_source_check (16 valeurs).
 // Toute valeur ajoutée ici DOIT l'être aussi dans la contrainte, sinon save
 // refusé en 23514 (cf. Schema_Supabase_LaVilla.md).
 // parrainage : migration prospects_source_referral_program (28/07/2026).
 // google_maps : scripts/migration-prospects-source-google-maps.sql (02/09/2026).
+// assistant_ia : scripts/migration-prospects-source-assistant-ia.sql (09/2026, Lot S3).
 export const PROSPECT_SOURCE_OPTIONS: Array<[string, string]> = [
   ['site_web', 'Site web'], ['article_blog', 'Article du blog'], ['google', 'Google'],
   ['google_maps', 'Google Maps'],
+  ['assistant_ia', 'Assistant IA'],
   ['parrainage', 'Parrainage résident'],
   ['facebook', 'Facebook'], ['instagram', 'Instagram'],
   ['whatsapp', 'WhatsApp'], ['messenger', 'Messenger'], ['leboncoin', 'Leboncoin'],
