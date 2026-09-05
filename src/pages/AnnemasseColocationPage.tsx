@@ -1,3 +1,4 @@
+import { EntityFacts } from "@/components/EntityFacts";
 import { LocalizedLink } from "@/components/LocalizedLink";
 import { WhatsAppButton } from "@/components/WhatsAppButton";
 import { colocGeneveHref } from "@/lib/siteLinks";
@@ -165,6 +166,11 @@ export function AnnemasseColocationPage() {
             </div>
           )}
         </div>
+      </section>
+
+      {/* (Lot S1) Fiche de faits canonique */}
+      <section className="py-10 bg-white">
+        <div className="max-w-3xl mx-auto px-6"><EntityFacts page="annemasse-colocation" /></div>
       </section>
 
       {/* ===== WHY ANNEMASSE ===== */}

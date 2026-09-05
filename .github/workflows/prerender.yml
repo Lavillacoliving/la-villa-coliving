@@ -96,6 +96,12 @@ jobs:
       - name: Vérifier les pages maisons
         run: node scripts/house-pages-check.mjs
 
+      # Garde Lot S1 (brief Socle entité, 05/09/2026) : fiche de faits canonique = base = HTML prérendu
+      # = llms.txt (bloc présent une fois sur 14 pages money + 8 articles FR/EN, aucune chaîne périmée,
+      # JSON-LD sans doublon ni aggregateRating). Échec = pas de commit.
+      - name: Vérifier la fiche entité
+        run: node scripts/check-entity-facts.mjs
+
       # Garde Lot B (02/09/2026) : hydrate chaque page prérendue contre le bundle de CE build ;
       # toute erreur d'hydratation (#418/#423/#425) bloque le commit — et donc la production.
       - name: Vérifier l'hydratation des pages prérendues

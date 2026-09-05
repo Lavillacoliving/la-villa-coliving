@@ -1,3 +1,4 @@
+import { EntityFacts } from "@/components/EntityFacts";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { WhatsAppButton } from "@/components/WhatsAppButton";
 import { Check, ArrowRight, Home, Sparkles, X, Droplets } from "lucide-react";
@@ -390,6 +391,11 @@ export function RatesPageV4() {
         </div>
       </section>
 
+      {/* (Lot S1) Fiche de faits canonique — le détail des deux paliers reste dans le hero ci-dessus (page tarifs). */}
+      <section className="py-10 bg-white">
+        <div className="max-w-3xl mx-auto px-6"><EntityFacts page="tarifs" /></div>
+      </section>
+
       {/* OBJECTION PRIX — « Oui, nos prix sont plus élevés » + tableau comparatif 3 colonnes */}
       <section className="py-20 bg-[#FAF9F6]" id="objection-prix">
         <div className="container-custom">
@@ -450,14 +456,12 @@ export function RatesPageV4() {
                 <p>
                   {language === "en" ? (
                     <>
-                      Not once. Not twice, which is the best the market offers.{" "}
                       <strong>{STATS.cleaningPerWeek} visits a week</strong> from a professional team
                       across every shared space — kitchen, lounges, shared shower rooms. No cleaning
                       rota to negotiate, no chore to split: you come home, it is clean.
                     </>
                   ) : (
                     <>
-                      Pas une fois. Pas deux, ce que propose au mieux le marché.{" "}
                       <strong>{STATS.cleaningPerWeek} passages par semaine</strong> d'une équipe
                       professionnelle dans tous les espaces partagés — cuisine, salons, salles d'eau
                       communes. Aucun planning de ménage à négocier, aucune corvée à répartir : tu

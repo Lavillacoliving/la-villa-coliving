@@ -12,6 +12,8 @@
     "lint:seo": "node scripts/seo-lint.mjs",
     "check:redirects": "node scripts/check-redirects.mjs --expect scripts/redirects.expected.json",
     "check:competitors": "node scripts/check-no-competitor.mjs",
+    "check:facts": "node scripts/check-entity-facts.mjs",
+    "build:llms": "node scripts/build-llms-txt.mjs",
     "article:sql": "node scripts/build-article-sql.mjs",
     "link:graph": "node tools/link-graph.mjs",
     "mining:gsc": "node tools/mining-gsc.mjs",

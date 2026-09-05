@@ -22,9 +22,14 @@ export const CONTRACT_EUR = { standard: 1530, sharedBath: 1470, rateLabelFr: "ao
 // Conversion affichée : euro × taux BCE figé, arrondi à la dizaine inférieure.
 const chfAffiche = (eur: number): number => Math.floor((eur * TAUX_BCE.eurChf) / 10) * 10;
 
+// (Lot S1, 05/09/2026) Chambres par maison — source unique (= v_public_rooms, gardée par
+// scripts/check-entity-facts.mjs) ; STATS.totalRooms en est la SOMME, plus une saisie.
+export const ROOMS_BY_HOUSE = { lavilla: 10, leloft: 7, lelodge: 12 } as const;
+const TOTAL_ROOMS: number = ROOMS_BY_HOUSE.lavilla + ROOMS_BY_HOUSE.leloft + ROOMS_BY_HOUSE.lelodge; // 29
+
 export const STATS = {
   totalResidents: 100,
-  totalRooms: 29,
+  totalRooms: TOTAL_ROOMS,
   totalHouses: 3,
   occupancyRate: 99,
   occupancyYears: 5,
@@ -35,7 +40,11 @@ export const STATS = {
   priceChf: chfAffiche(CONTRACT_EUR.standard), // 1 430 — dérivé, ne plus saisir en dur
   depositMonths: 2,
   leaseDurationMonths: 12,
+  // (Lot S1, D5 Jérôme 04/09/2026) « Bail de 12 mois. Engagement minimum de 3 mois, puis tu es
+  // libre avec 1 mois de préavis. » — phrase canonique dans src/data/entityFacts.ts.
+  leaseMinimumMonths: 3,
   noticePeriodMonths: 1,
+  responseHours: 48, // « réponse sous 48 h » — promesse du formulaire et de l'auto-réponse
   // (Lot 7, 04/09/2026) Décision Jérôme Q1 : surfaces lues dans `rooms` (v_public_rooms : min 15,5 → 16, max 24,0 m²).
   // Garde CI : house-pages-check.mjs compare ces bornes au min/max de v_public_rooms.surface_m2.
   roomSizeMin: 16,
@@ -45,8 +54,8 @@ export const STATS = {
   livingSpacePerResidentMax: 42,
   roomSizeMax: 24,
   cleaningPerWeek: 3, // 3×/semaine dans les 3 maisons depuis le 01/09/2026 (vote des résidents).
-  // ⚠️ Constante NON consommée : toutes les mentions de fréquence sont des littéraux en dur
-  // dans les pages. La brancher partout est un chantier de septembre (cf. table `services`).
+  // Consommée par /tarifs et par la fiche entité (src/data/entityFacts.ts) ; les autres mentions
+  // de fréquence restent des littéraux — remplacement progressif (Lot S2).
   fiberSpeed: "8 Gb/s",
   // Nombre de services affichés dans la grille « Ce Qui Est Vraiment Inclus » de /tarifs.
   // ⚠️ Maintenu à la main jusqu'à la mise en base (septembre) : doit TOUJOURS égaler le nombre

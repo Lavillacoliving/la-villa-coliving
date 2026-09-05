@@ -1,3 +1,4 @@
+import { EntityFacts } from "@/components/EntityFacts";
 import { lazy, Suspense, useState, useSyncExternalStore } from "react";
 import { useSearchParams } from "react-router-dom";
 import { ArrowRight, Check } from "lucide-react";
@@ -337,6 +338,8 @@ export function ChambresDisponiblesPage() {
         </div>
       </section>
 
+      {/* (Lot S1) Fiche de faits canonique */}
+      <section className="py-10 bg-white"><div className="max-w-3xl mx-auto px-6"><EntityFacts page="chambres-disponibles" /></div></section>
       <FaqSection
         title={en ? "Rooms and prices — frequently asked questions" : "Questions fréquentes sur les chambres et les prix"}
         items={faqItems}

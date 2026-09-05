@@ -1,3 +1,5 @@
+import { INSTAGRAM_URL } from "@/lib/structuredData";
+import { STATS } from "@/data/stats";
 import { useLocation } from "react-router-dom";
 import { LocalizedLink } from "@/components/LocalizedLink";
 import { Instagram, Mail, MapPin, Phone } from "lucide-react";
@@ -72,12 +74,12 @@ export function FooterV7() {
             </LocalizedLink>
             <p className="text-[#A8A29E] max-w-md mb-6 leading-relaxed">
               {language === "en"
-                ? "Boutique coliving in Greater Geneva. 3 houses, 29 rooms, pool, sauna and gym in every house. All inclusive."
-                : "Coliving boutique au Grand Genève. 3 maisons, 29 chambres, piscine, sauna et salle de sport dans chaque maison. Tout inclus."}
+                ? `Boutique coliving in Greater Geneva. ${STATS.totalHouses} houses, ${STATS.totalRooms} rooms, pool, sauna and gym in every house. All inclusive.`
+                : `Coliving boutique au Grand Genève. ${STATS.totalHouses} maisons, ${STATS.totalRooms} chambres, piscine, sauna et salle de sport dans chaque maison. Tout inclus.`}
             </p>
             <div className="flex items-center gap-3">
               <a
-                href="https://www.instagram.com/lavillacoliving/"
+                href={INSTAGRAM_URL}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="w-11 h-11 rounded-lg bg-white/[0.06] flex items-center justify-center text-[#A8A29E] hover:text-[#E0BB8A] hover:bg-white/[0.1] transition-all duration-300"

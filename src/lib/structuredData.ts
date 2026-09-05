@@ -2,7 +2,7 @@
 // Règle d'or AEO : le texte d'une réponse balisée doit être IDENTIQUE au texte visible.
 // buildFaqPageSchema() construit donc le FAQPage à partir des mêmes paires {q,a} affichées.
 
-import { STATS, STATS_SHARED_BATH, PRICE_FR_NUM, PRICE_EN_NUM, PRICE_SHARED_FR_NUM, PRICE_SHARED_EN_NUM } from "@/data/stats";
+import { STATS, STATS_SHARED_BATH, ROOMS_BY_HOUSE, PRICE_FR_NUM, PRICE_EN_NUM, PRICE_SHARED_FR_NUM, PRICE_SHARED_EN_NUM } from "@/data/stats";
 
 const SITE = "https://www.lavillacoliving.com";
 
@@ -14,12 +14,15 @@ const SITE = "https://www.lavillacoliving.com";
 export const ORG_ID = `${SITE}/#organization`;
 
 /**
- * Profils publics officiels — source unique pour tous les `sameAs`.
+ * Profils publics officiels — source unique pour tous les `sameAs` (site, llms.txt, fiche entité).
  * Le lien share.google est la fiche Google Business (une seule fiche, confirmé 04/08).
+ * (Lot S1, D10 Jérôme 05/09/2026) Le compte Instagram officiel est `la_villa_coliving_geneva`
+ * (l'ancien handle `lavillacoliving` était faux) ; PAS de page Facebook. Annuaires (bookmycoliving,
+ * coliving.com, La Carte des Colocs, LinkedIn) : à ajouter ici après validation des URL par Jérôme.
  */
+export const INSTAGRAM_URL = "https://www.instagram.com/la_villa_coliving_geneva/";
 export const LAVILLA_SAME_AS = [
-  "https://www.instagram.com/lavillacoliving/",
-  "https://www.facebook.com/lavillacoliving",
+  INSTAGRAM_URL,
   "https://share.google/OR9wy40wVx80aeQei",
 ];
 
@@ -125,7 +128,7 @@ export function buildHomeLodgingBusinessSchema(language: "fr" | "en" = "fr"): Re
     priceRange: en ? `CHF ${PRICE_SHARED_EN_NUM}–${PRICE_EN_NUM}/month` : `${PRICE_SHARED_FR_NUM}–${PRICE_FR_NUM} CHF/mois`,
     // Offre citable par les moteurs et les IA (AI Overviews cite déjà nos prix —
     // autant qu'ils viennent d'une donnée structurée exacte). Prix via STATS :
-    // deux niveaux depuis le 01/09/2026 → AggregateOffer 1 390–1 440.
+    // deux niveaux depuis le 01/09/2026 → AggregateOffer 1 370–1 430 (STATS_SHARED_BATH → STATS).
     makesOffer: {
       "@type": "AggregateOffer",
       name: en
@@ -186,6 +189,68 @@ export function buildHomeLodgingBusinessSchema(language: "fr" | "en" = "fr"): Re
       },
       geo: { "@type": "GeoCoordinates", latitude: h.geo.lat, longitude: h.geo.lng },
     })),
+  };
+}
+
+/**
+ * LocalBusiness générique de TOUTES les pages (émis par SEO.tsx, sauf l'accueil qui porte le
+ * LodgingBusiness ci-dessus avec le même @id). (Lot S1, 05/09/2026) Généralisé : les 3 maisons en
+ * `department`, l'offre agrégée en `makesOffer`, `numberOfRooms`, `sameAs` — tous lus depuis les
+ * sources uniques (STATS, ROOMS_BY_HOUSE, HOUSES, LAVILLA_SAME_AS). PAS d'aggregateRating.
+ */
+export function buildLocalBusinessSchema(language: "fr" | "en", description: string): Record<string, unknown> {
+  const en = language === "en";
+  return {
+    "@context": "https://schema.org",
+    "@type": "LocalBusiness",
+    "@id": ORG_ID,
+    name: "La Villa Coliving",
+    url: SITE,
+    logo: `${SITE}/logos/logo-full.png`,
+    image: `${SITE}/images/villa_portrait.webp`,
+    description,
+    telephone: LAVILLA_PHONE,
+    email: LAVILLA_EMAIL,
+    priceRange: en ? `CHF ${PRICE_SHARED_EN_NUM}–${PRICE_EN_NUM}/month` : `${PRICE_SHARED_FR_NUM}–${PRICE_FR_NUM} CHF/mois`,
+    address: LAVILLA_POSTAL_ADDRESS,
+    geo: { "@type": "GeoCoordinates", latitude: HOUSES[0].geo.lat, longitude: HOUSES[0].geo.lng },
+    areaServed: ["Genève", "Annemasse", "Ville-la-Grand", "Ambilly", "Grand Genève"],
+    numberOfRooms: STATS.totalRooms,
+    makesOffer: {
+      "@type": "AggregateOffer",
+      name: en ? "All-inclusive furnished room in coliving near Geneva" : "Chambre meublée tout inclus en coliving près de Genève",
+      lowPrice: String(STATS_SHARED_BATH.priceChf),
+      highPrice: String(STATS.priceChf),
+      priceCurrency: "CHF",
+      offerCount: STATS.totalRooms,
+      availability: "https://schema.org/InStock",
+      url: `${SITE}${en ? "/en" : ""}/tarifs`,
+    },
+    department: HOUSES.map((h) => ({
+      "@type": "LodgingBusiness",
+      name: h.name,
+      url: h.url,
+      numberOfRooms: ROOMS_BY_HOUSE[h.slug as keyof typeof ROOMS_BY_HOUSE],
+      address: {
+        "@type": "PostalAddress",
+        streetAddress: h.streetAddress,
+        addressLocality: h.addressLocality,
+        postalCode: h.postalCode,
+        addressCountry: "FR",
+      },
+      geo: { "@type": "GeoCoordinates", latitude: h.geo.lat, longitude: h.geo.lng },
+    })),
+    // E-E-A-T : fondation + fondateurs identifiables (sameAs LinkedIn) sur toutes les pages.
+    foundingDate: FOUNDING_DATE,
+    founder: [buildFounderPersonSchema(FOUNDERS.jerome, language), buildFounderPersonSchema(FOUNDERS.fanny, language)],
+    contactPoint: {
+      "@type": "ContactPoint",
+      email: LAVILLA_EMAIL,
+      telephone: LAVILLA_PHONE,
+      contactType: "customer service",
+      availableLanguage: ["French", "English"],
+    },
+    sameAs: LAVILLA_SAME_AS,
   };
 }
 
@@ -287,7 +352,7 @@ export function buildAboutPageSchema(language: "fr" | "en" = "fr"): Record<strin
         email: LAVILLA_EMAIL,
         telephone: LAVILLA_PHONE,
         areaServed: ["Genève", "Annemasse", "Ville-la-Grand", "Ambilly", "Grand Genève"],
-        sameAs: ["https://www.instagram.com/lavillacoliving/"],
+        sameAs: LAVILLA_SAME_AS,
         description: en
           ? `Boutique coliving founded in ${STATS.foundedYear} and personally run by its two founders: ${STATS.totalHouses} houses, ${STATS.totalRooms} rooms near Geneva, ${STATS.totalResidents}+ residents welcomed.`
           : `Coliving boutique fondé en ${STATS.foundedYear} et géré en direct par ses deux fondateurs : ${STATS.totalHouses} maisons, ${STATS.totalRooms} chambres près de Genève, ${STATS.totalResidents}+ résidents accueillis.`,

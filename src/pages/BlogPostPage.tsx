@@ -19,6 +19,7 @@ import { YmylNotice, YmylPosture, AuthorBox } from "@/components/YmylNotice";
 import { isYmyl } from "@/lib/ymyl";
 import { resolveContentTokens } from "@/lib/contentTokens";
 import { EntityFacts } from "@/components/EntityFacts";
+import { ENTITY_FACTS_ARTICLES, fallbackEntityFactsCut } from "@/data/entityFactsArticles";
 
 interface Post {
   id:string; slug:string;
@@ -280,6 +281,9 @@ export function BlogPostPage() {
   const rawContent = (language==="en"&&post.content_en)?post.content_en:post.content_fr;
   const content = resolveContentTokens(rawContent, L);
   const entityMarker = findEntityFactsMarker(content);
+  // (Lot S1) Les 8 articles les plus cités portent le bloc sans marqueur : coupe de repli avant la
+  // conclusion (src/data/entityFactsArticles.ts). Longueur 0 : rien à retirer du texte des metas.
+  const entityCut = entityMarker ?? (ENTITY_FACTS_ARTICLES.has(post.slug) ? fallbackEntityFactsCut(content) : null);
   const contentForMeta = entityMarker ? stripEntityFactsMarker(content) : content;
   const faqPairs = extractFaqPairs(contentForMeta);
   const toc = extractToc(contentForMeta);
@@ -292,7 +296,7 @@ export function BlogPostPage() {
   // Localize language-neutral internal paths for the EN site (/x → /en/x).
   const loc = (p: string) => localizePath(p, language);
   const bucket = getIntentBucket(post.slug, post.category);
-  const midSplit = splitForMidCta(content, bucket === "ville" ? 0.3 : 0.5, entityMarker ? entityMarker.index : -1);
+  const midSplit = splitForMidCta(content, bucket === "ville" ? 0.3 : 0.5, entityCut ? entityCut.index : -1);
 
   // (Lot 1) CTA du corps d'article : UTM virtuels de la session (write-once) + le même
   // event GA4 que le bloc offre, position « body », pour comparer les deux portes.
@@ -540,7 +544,7 @@ export function BlogPostPage() {
             {(() => {
               const cuts: { at: number; len: number; node: React.ReactNode }[] = [];
               if (midSplit) cuts.push({ at: midSplit[0].length, len: 0, node: <BlocOffre variant="mid" slug={post.slug} bucket={bucket} /> });
-              if (entityMarker) cuts.push({ at: entityMarker.index, len: entityMarker.length, node: <EntityFacts page={post.slug} /> });
+              if (entityCut) cuts.push({ at: entityCut.index, len: entityCut.length, node: <EntityFacts page={post.slug} /> });
               cuts.sort((a, b) => a.at - b.at);
               const out: React.ReactNode[] = [];
               let prev = 0;
@@ -552,6 +556,8 @@ export function BlogPostPage() {
               });
               const tail = content.slice(prev);
               if (tail.trim()) out.push(<ReactMarkdown key="md-tail" remarkPlugins={[remarkGfm]} components={mdComponents}>{tail}</ReactMarkdown>);
+              // Article de l'allowlist sans titre dans les 40 % finaux : le bloc ferme l'article.
+              if (!entityCut && ENTITY_FACTS_ARTICLES.has(post.slug)) out.push(<EntityFacts key="entity-facts-tail" page={post.slug} />);
               return out;
             })()}
           </div>

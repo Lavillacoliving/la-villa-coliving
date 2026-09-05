@@ -1,3 +1,4 @@
+import { EntityFacts } from "@/components/EntityFacts";
 import { ArrowRight, BedDouble, Calendar, Check, Sparkles, Train } from "lucide-react";
 import { LocalizedLink } from "@/components/LocalizedLink";
 import { SEO } from "@/components/SEO";
@@ -314,6 +315,8 @@ export function ChambreLouerGenevePage() {
         </div>
       </section>
 
+      {/* (Lot S1) Fiche de faits canonique */}
+      <section className="py-10 bg-white"><div className="max-w-3xl mx-auto px-6"><EntityFacts page="chambre-a-louer-geneve" /></div></section>
       <FaqSection title={en ? "Renting a room near Geneva — frequently asked questions" : "Louer une chambre près de Genève — questions fréquentes"} items={FAQ[L]} emitSchema />
 
       {/* ===== CTA ===== */}

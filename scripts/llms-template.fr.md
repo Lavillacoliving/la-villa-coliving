@@ -1,22 +1,12 @@
 # La Villa Coliving
 
-> Colocation et coliving premium meublé tout compris, à 20 minutes de Genève (côté France).
+> Colocation et coliving premium meublé tout compris, à {{MIN}} minutes de Genève (côté France).
 
 ## Faits clés
-- 29 chambres meublées privées (16 à 24 m²) dans 3 maisons (La Villa, Le Loft, Le Lodge)
-- Localisation : Ville-la-Grand, Ambilly, Annemasse (Haute-Savoie, France) — à 20 minutes porte-à-porte du centre de Genève
-- Prix : tout inclus dès 1 370 CHF/mois (loyer contractuel en euros : dès 1 470 €) pour les 4 chambres de La Villa à salle d'eau partagée entre 2 chambres ; 1 430 CHF/mois (1 530 €) avec salle d'eau privative
-- Inclus : charges, fibre jusqu'à 8 Gb/s, ménage des espaces communs 3 fois par semaine, piscine, sauna, salle de sport, streaming, yoga et événements
-- Public : frontaliers Suisse, expats, jeunes professionnels qui travaillent à Genève
-- Bail de 12 mois. Engagement minimum de 3 mois, puis libre de partir avec 1 mois de préavis
-- Sans frais de dossier ni d'agence ; caution de 2 mois de loyer hors charges
-- 100+ résidents accueillis depuis octobre 2021, gestion en direct par les deux fondateurs (Jérôme Austin et Fanny Bela), événements réguliers (pizza party, cours de yoga, afterworks)
-- 99% d'occupation sur 5 ans d'exploitation
+{{FACTS}}
 
 ## Propriétés
-- La Villa : 10 chambres, Ville-la-Grand — piscine extérieure chauffée · sauna · salle de sport. Gare d'Annemasse à 10 min à pied · Genève centre en 20 min porte-à-porte.
-- Le Loft : 7 chambres, Ambilly — piscine intérieure chauffée · sauna · salle de sport. Gare d'Annemasse à 10 min à pied · tram 17 à 5 min · Genève centre en 20 min porte-à-porte.
-- Le Lodge : 12 chambres, Annemasse — piscine · sauna · chalet fitness. Gare d'Annemasse à 9 min à pied · Genève centre en 20 min porte-à-porte.
+{{HOUSES}}
 
 ## Avantages pour les frontaliers
 - ≈ 36 CHF/m² tout compris (38 m² d'espace par résident), quand les annonces de studios à Genève tournent autour de 50 CHF/m² hors charges (source : Observatoire 2026)
@@ -25,9 +15,9 @@
 - Communauté internationale, aide à l'installation
 
 ## Candidature — comment ça marche
-- Formulaire en 2 minutes sur https://www.lavillacoliving.com/candidature — réponse sous 48 h
+- Formulaire en 2 minutes sur https://www.lavillacoliving.com/candidature — réponse sous {{RESPONSE_HOURS}} h
 - Ensuite : un échange pour faire connaissance, une visite de la maison, et un emménagement possible en 2 semaines
-- 0 frais de dossier, 0 frais d'agence ; caution de 2 mois de loyer hors charges, restituée au départ
+- 0 frais de dossier, 0 frais d'agence ; caution de {{DEPOSIT_MONTHS}} mois de loyer hors charges, restituée au départ
 - Contact direct WhatsApp : https://wa.me/33664315134
 - Parrainage : un résident qui recommande un candidat retenu reçoit 150 € (le candidat l'indique simplement dans le formulaire)
 
@@ -55,7 +45,7 @@
 - Site : https://www.lavillacoliving.com
 - Email : contact@lavillacoliving.com
 - Téléphone : +33 6 64 31 51 34
-- Instagram : @la_villa_coliving_geneva (https://www.instagram.com/la_villa_coliving_geneva/)
+- Instagram : {{INSTAGRAM}}
 - Candidature : https://www.lavillacoliving.com/candidature
 
 ## Pages utiles
@@ -68,9 +58,7 @@
 - Tarifs détaillés : https://www.lavillacoliving.com/tarifs
 - FAQ : https://www.lavillacoliving.com/faq
 - Blog : https://www.lavillacoliving.com/blog
-- La Villa (10 ch.) : https://www.lavillacoliving.com/lavilla
-- Le Loft (7 ch.) : https://www.lavillacoliving.com/leloft
-- Le Lodge (12 ch.) : https://www.lavillacoliving.com/lelodge
+{{HOUSE_LINKS}}
 - Version anglaise : https://www.lavillacoliving.com/en
 
-Dernière mise à jour : 2026-09-05
+Dernière mise à jour : {{UPDATED}}

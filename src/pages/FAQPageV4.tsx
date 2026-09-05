@@ -1,3 +1,4 @@
+import { EntityFacts } from "@/components/EntityFacts";
 import { useState } from "react";
 import { LocalizedLink } from "@/components/LocalizedLink";
 import { colocGeneveHref } from "@/lib/siteLinks";
@@ -120,6 +121,11 @@ export function FAQPageV4() {
             />
           </div>
         </div>
+      </section>
+
+      {/* (Lot S1) Fiche de faits canonique */}
+      <section className="py-10 bg-white">
+        <div className="max-w-3xl mx-auto px-6"><EntityFacts page="faq" /></div>
       </section>
 
       {/* FAQ Content */}

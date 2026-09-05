@@ -1,8 +1,9 @@
+import { EntityFacts } from "@/components/EntityFacts";
 import { Helmet } from "react-helmet";
 import { LocalizedLink } from "@/components/LocalizedLink";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { SEO } from "@/components/SEO";
-import { buildBreadcrumbSchema, HOUSES, LAVILLA_EMAIL, LAVILLA_PHONE, LAVILLA_POSTAL_ADDRESS } from "@/lib/structuredData";
+import { buildBreadcrumbSchema, HOUSES, LAVILLA_EMAIL, LAVILLA_PHONE, LAVILLA_POSTAL_ADDRESS, LAVILLA_SAME_AS } from "@/lib/structuredData";
 import { STATS, PRICE_SHARED_CHF_FR, PRICE_SHARED_CHF_EN } from "@/data/stats";
 import {
   Linkedin,
@@ -89,10 +90,7 @@ export function QuiSommesNousPage() {
           worksFor: { "@type": "Organization", name: "La Villa Coliving", url: SITE },
         },
       ],
-      sameAs: [
-        "https://www.instagram.com/lavillacoliving/",
-        "https://share.google/OR9wy40wVx80aeQei",
-      ],
+      sameAs: LAVILLA_SAME_AS,
     },
   };
 
@@ -193,6 +191,11 @@ export function QuiSommesNousPage() {
             </div>
           </div>
         </div>
+      </section>
+
+      {/* (Lot S1) Fiche de faits canonique */}
+      <section className="py-10 bg-white">
+        <div className="max-w-3xl mx-auto px-6"><EntityFacts page="qui-sommes-nous" /></div>
       </section>
 
       {/* ===== L'HISTOIRE — texte + photo de maison (rythme éditorial) ===== */}

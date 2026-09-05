@@ -1,3 +1,4 @@
+import { EntityFacts } from "@/components/EntityFacts";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { Users, Zap, Heart, Check, ArrowRight, Star } from "lucide-react";
 import { LocalizedLink } from "@/components/LocalizedLink";
@@ -105,6 +106,11 @@ export function ColivingPageV4() {
             </LocalizedLink>
           </div>
         </div>
+      </section>
+
+      {/* (Lot S1) Fiche de faits canonique */}
+      <section className="py-10 bg-white">
+        <div className="max-w-3xl mx-auto px-6"><EntityFacts page="le-coliving" /></div>
       </section>
 
       {/* PHOTO 1 : What is Coliving - ESPACE COMMUN */}

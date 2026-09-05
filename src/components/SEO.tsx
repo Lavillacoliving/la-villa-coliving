@@ -1,9 +1,9 @@
 import { Helmet } from "react-helmet";
 import { useLocation } from "react-router-dom";
 import { useLanguage } from "@/contexts/LanguageContext";
-import { FOUNDERS, FOUNDING_DATE, ABOUT_PAGE_LIVE, ORG_ID, LAVILLA_SAME_AS, HOUSES } from "@/lib/structuredData";
+import { buildLocalBusinessSchema } from "@/lib/structuredData";
 import { HREFLANG_NO_ALTERNATES } from "@/lib/siteLinks";
-import { PRICE_FR_NUM, PRICE_EN_NUM, PRICE_SHARED_FR_NUM, PRICE_SHARED_EN_NUM, PRICE_SHARED_CHF_FR } from "@/data/stats";
+import { STATS, PRICE_SHARED_EN_NUM, PRICE_SHARED_CHF_FR } from "@/data/stats";
 
 interface SEOProps {
   title?: string;
@@ -45,8 +45,8 @@ export function SEO({
 
   const defaultDescription =
     language === "en"
-      ? `Premium coliving near Geneva. 29 furnished rooms, all-inclusive from ${PRICE_SHARED_EN_NUM} CHF/month. Heated pool, gym, sauna, fiber internet. Ideal for expats, cross-border workers & young professionals.`
-      : `Colocation et coliving premium près de Genève. 29 chambres meublées tout inclus dès ${PRICE_SHARED_CHF_FR}/mois. Piscine chauffée, salle de sport, sauna, fibre optique. Idéal frontaliers, expats et jeunes professionnels.`;
+      ? `Premium coliving near Geneva. ${STATS.totalRooms} furnished rooms, all-inclusive from ${PRICE_SHARED_EN_NUM} CHF/month. Heated pool, gym, sauna, fiber internet. Ideal for expats, cross-border workers & young professionals.`
+      : `Colocation et coliving premium près de Genève. ${STATS.totalRooms} chambres meublées tout inclus dès ${PRICE_SHARED_CHF_FR}/mois. Piscine chauffée, salle de sport, sauna, fibre optique. Idéal frontaliers, expats et jeunes professionnels.`;
 
   // B2: append the brand suffix only while the title stays within the SERP display limit (~65 chars);
   // beyond that, use the bare descriptive title to avoid truncation. 65 (not 60) keeps the brand on
@@ -111,54 +111,11 @@ export function SEO({
       <meta property="twitter:description" content={siteDescription} />
       <meta property="twitter:image" content={image} />
 
-      {/* Structured Data — LocalBusiness (défaut sur toutes les pages) — SEO local.
-          PAS d'aggregateRating (la note 4,9/5 = NPS interne, non balisable). */}
+      {/* Structured Data — LocalBusiness (défaut sur toutes les pages) — SEO local. (Lot S1, 05/09/2026)
+          Construit par buildLocalBusinessSchema : 3 maisons en department, offre agrégée, sameAs, tout
+          lu depuis les sources uniques. PAS d'aggregateRating (la note 4,9/5 = NPS interne, non balisable). */}
       {!omitLocalBusiness && <script type="application/ld+json">
-        {JSON.stringify({
-          "@context": "https://schema.org",
-          "@type": "LocalBusiness",
-          "@id": ORG_ID,
-          name: "La Villa Coliving",
-          url: "https://www.lavillacoliving.com",
-          logo: "https://www.lavillacoliving.com/logos/logo-full.png",
-          image: "https://www.lavillacoliving.com/images/villa_portrait.webp",
-          description: siteDescription,
-          telephone: "+33664315134",
-          email: "contact@lavillacoliving.com",
-          priceRange: language === "en" ? `CHF ${PRICE_SHARED_EN_NUM}–${PRICE_EN_NUM}/month` : `${PRICE_SHARED_FR_NUM}–${PRICE_FR_NUM} CHF/mois`,
-          address: {
-            "@type": "PostalAddress",
-            streetAddress: "34 rue du Foron",
-            addressLocality: "Ville-la-Grand",
-            addressRegion: "Haute-Savoie",
-            postalCode: "74100",
-            addressCountry: "FR",
-          },
-          geo: {
-            "@type": "GeoCoordinates",
-            latitude: HOUSES[0].geo.lat,
-            longitude: HOUSES[0].geo.lng,
-          },
-          areaServed: ["Genève", "Annemasse", "Ville-la-Grand", "Ambilly", "Grand Genève"],
-          // E-E-A-T : fondation + fondateurs identifiables (sameAs LinkedIn) sur toutes
-          // les pages — Google corrobore l'existence des personnes hors du site.
-          // url de la page fondateurs ajoutée automatiquement quand ABOUT_PAGE_LIVE=true.
-          foundingDate: FOUNDING_DATE,
-          founder: [FOUNDERS.jerome, FOUNDERS.fanny].map((f) => ({
-            "@type": "Person",
-            name: f.name,
-            ...(ABOUT_PAGE_LIVE ? { url: "https://www.lavillacoliving.com/qui-sommes-nous" } : {}),
-            sameAs: [f.linkedin],
-          })),
-          contactPoint: {
-            "@type": "ContactPoint",
-            email: "contact@lavillacoliving.com",
-            telephone: "+33664315134",
-            contactType: "customer service",
-            availableLanguage: ["French", "English"],
-          },
-          sameAs: LAVILLA_SAME_AS,
-        })}
+        {JSON.stringify(buildLocalBusinessSchema(language === "en" ? "en" : "fr", siteDescription))}
       </script>}
 
       {/* Additional Structured Data (page-specific) */}

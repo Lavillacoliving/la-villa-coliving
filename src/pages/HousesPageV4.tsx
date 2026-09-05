@@ -1,3 +1,4 @@
+import { EntityFacts } from "@/components/EntityFacts";
 import { LocalizedLink } from "@/components/LocalizedLink";
 import { colocGeneveHref } from "@/lib/siteLinks";
 import { HouseAvailabilityLine } from "@/components/HouseAvailabilityLine";
@@ -174,13 +175,12 @@ export function HousesPageV4() {
               ? <>Three houses in premium coliving near Geneva — each designed for modern community living. Together they form our <LocalizedLink to="/" className="underline underline-offset-4 hover:text-[#1C1917]">coliving Geneva</LocalizedLink>, on the French side. Rooms and dates in real time on our <LocalizedLink to={colocGeneveHref(language)} className="underline underline-offset-4 hover:text-[#1C1917]">shared housing in Geneva, French side</LocalizedLink> page, or straight to a <LocalizedLink to="/chambre-a-louer-geneve" className="underline underline-offset-4 hover:text-[#1C1917]">room to rent near Geneva</LocalizedLink>, furnished and all inclusive.</>
               : <>Trois maisons en colocation premium près de Genève — chacune pensée pour la vie communautaire moderne. Ensemble, elles forment notre <LocalizedLink to="/" className="underline underline-offset-4 hover:text-[#1C1917]">coliving Genève</LocalizedLink>, côté France. Chambres et dates en temps réel sur notre page <LocalizedLink to={colocGeneveHref(language)} className="underline underline-offset-4 hover:text-[#1C1917]">colocation à Genève côté France</LocalizedLink>, ou directement une <LocalizedLink to="/chambre-a-louer-geneve" className="underline underline-offset-4 hover:text-[#1C1917]">chambre à louer près de Genève</LocalizedLink>, meublée et tout inclus.</>}
           </p>
-          {/* Phrase citable produit (extraction IA / AI Overviews) */}
-          <p className="text-sm text-[#78716C] max-w-2xl mx-auto mt-4">
-            {language === "en"
-              ? `La Villa Coliving: 29 all-inclusive furnished rooms from ${PRICE_SHARED_CHF_EN}/month across 3 houses — La Villa (Ville-la-Grand), Le Loft (Ambilly) and Le Lodge (Annemasse), 20 minutes from Geneva.`
-              : `La Villa Coliving : 29 chambres meublées tout inclus dès ${PRICE_SHARED_CHF_FR}/mois dans 3 maisons — La Villa (Ville-la-Grand), Le Loft (Ambilly) et Le Lodge (Annemasse), à 20 minutes de Genève.`}
-          </p>
         </div>
+      </section>
+
+      {/* (Lot S1) Fiche de faits canonique — remplace l'ancienne « phrase citable » (même contenu, même source). */}
+      <section className="py-10 bg-[#F5F2ED]">
+        <div className="max-w-3xl mx-auto px-6"><EntityFacts page="nos-maisons" /></div>
       </section>
 
       {/* Houses Cards */}

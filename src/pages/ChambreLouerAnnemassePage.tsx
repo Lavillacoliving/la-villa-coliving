@@ -1,3 +1,4 @@
+import { EntityFacts } from "@/components/EntityFacts";
 import { LocalizedLink } from "@/components/LocalizedLink";
 import { WhatsAppButton } from "@/components/WhatsAppButton";
 import { colocGeneveHref } from "@/lib/siteLinks";
@@ -128,6 +129,11 @@ export function ChambreLouerAnnemassePage() {
             </LocalizedLink>
           </div>
         </div>
+      </section>
+
+      {/* (Lot S1) Fiche de faits canonique */}
+      <section className="py-10 bg-white">
+        <div className="max-w-3xl mx-auto px-6"><EntityFacts page="chambre-a-louer-annemasse" /></div>
       </section>
 
       {/* ===== (Lot 6, addendum 04/09) L'INVENTAIRE DU LODGE — forme d'annuaire, jamais « complet » ===== */}

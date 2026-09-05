@@ -1,3 +1,4 @@
+import { EntityFacts } from "@/components/EntityFacts";
 // VERSION 7: JEUNE + NOMADE + ZEN + FRAIS
 // Palette: Sauge + Terracotta doux + Crème frais
 import {
@@ -103,6 +104,10 @@ export function HomePage() {
       <div data-home-section="testimonials"><TestimonialsCarousel /></div>
       <div data-home-section="how_to_join"><HowToJoin /></div>
       <div data-home-section="latest_blog"><LatestBlogV7 /></div>
+      {/* (Lot S1, brief Socle entité) Fiche de faits canonique — même texte sur 14 pages money et 8 articles. */}
+      <div data-home-section="entity_facts" className="bg-white">
+        <div className="max-w-3xl mx-auto px-6 py-6"><EntityFacts page="home" /></div>
+      </div>
       {/* FAQ visible + FAQPage schema (front A6 : PAA « coliving genève »).
           L'intro sert de phrase citable produit (extraction IA / AI Overviews). */}
       <div data-home-section="faq">
