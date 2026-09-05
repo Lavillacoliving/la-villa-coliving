@@ -19,6 +19,7 @@
  *    Vercel's static file matching doesn't bypass the "/" rewrite
  */
 
+import { stripAuthoringComments } from './lib/html-comments.mjs';
 import fs from 'fs/promises';
 import path from 'path';
 import { HREFLANG_NO_ALTERNATES } from './hreflang-overrides.mjs';
@@ -268,7 +269,7 @@ function buildSeoHeadTags404(seo) {
 async function writeFallback404(indexHtml) {
   let html = indexHtml.replace(/<title[^>]*>.*?<\/title>/, '<title>404 — Page introuvable | La Villa Coliving</title>');
   html = html.replace('</head>', '    <meta name="robots" content="noindex, follow" />\n  </head>');
-  await fs.writeFile(path.join(DIST_DIR, '404.html'), html, 'utf-8');
+  await fs.writeFile(path.join(DIST_DIR, '404.html'), stripAuthoringComments(html), 'utf-8');
   console.log('  📄 Wrote fallback dist/404.html (SPA shell + noindex)');
 }
 
@@ -399,7 +400,8 @@ async function main() {
     }
 
     // Overwrite the file with the corrected version
-    await fs.writeFile(filePath, result, 'utf-8');
+    // (Lot S1.7) Le head d'index.html réinjecte ses commentaires d'auteur : on les retire ici aussi.
+    await fs.writeFile(filePath, stripAuthoringComments(result), 'utf-8');
 
     const textContent = rootContent.replace(/<[^>]*>/g, ' ').replace(/\s+/g, ' ');
     const wordCount = textContent.split(' ').filter(w => w.length > 2).length;
@@ -427,7 +429,7 @@ async function main() {
   // CRITICAL: Rename dist/index.html → dist/_spa.html. The SPA shell serves
   // app routes (dashboard, portail) that never render the hero: strip the
   // preload from it too.
-  await fs.writeFile(path.join(DIST_DIR, '_spa.html'), stripHeroPreload(indexHtml), 'utf-8');
+  await fs.writeFile(path.join(DIST_DIR, '_spa.html'), stripAuthoringComments(stripHeroPreload(indexHtml)), 'utf-8');
   await fs.unlink(indexPath);
   console.log(`\n  📦 Renamed dist/index.html → dist/_spa.html (hero preload stripped)`);
 

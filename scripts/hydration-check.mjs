@@ -30,7 +30,8 @@ const PRERENDERED = path.join(ROOT, 'public', 'prerendered');
 const PORT = 3458;
 
 // Pages hydratées : les 7 pages du brief (FR + EN), /chambres-disponibles (Lot 3 SEO funnel) et le premier article de blog.
-const STATIC = ['/', '/nos-maisons', '/lavilla', '/leloft', '/lelodge', '/candidature', '/tarifs'];
+// (Lot S1, 05/09/2026) + les pages qui portent la fiche entité : /faq, /le-coliving, /qui-sommes-nous, pages Annemasse.
+const STATIC = ['/', '/nos-maisons', '/lavilla', '/leloft', '/lelodge', '/candidature', '/tarifs', '/faq', '/le-coliving', '/qui-sommes-nous', '/annemasse-colocation', '/chambre-a-louer-annemasse'];
 const ROUTES = [
   ...STATIC,
   ...STATIC.map((r) => (r === '/' ? '/en' : `/en${r}`)),

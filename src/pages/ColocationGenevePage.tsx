@@ -1,3 +1,4 @@
+import { EntityFacts } from "@/components/EntityFacts";
 import { Helmet } from "react-helmet";
 import { ArrowRight, Check, Train, Users, Home, Clock, Euro } from "lucide-react";
 import { LocalizedLink } from "@/components/LocalizedLink";
@@ -306,6 +307,8 @@ export function ColocationGenevePage() {
         </div>
       </section>
 
+      {/* (Lot S1) Fiche de faits canonique */}
+      <section className="py-10 bg-white"><div className="max-w-3xl mx-auto px-6"><EntityFacts page="colocation-geneve" /></div></section>
       <FaqSection
         title={en ? "Shared housing in Geneva — frequently asked questions" : "Colocation à Genève — questions fréquentes"}
         items={colocationGeneveFaq[L]}

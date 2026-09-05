@@ -14,6 +14,7 @@
  * On Vercel, inject-prerendered.mjs re-wraps content in the current index.html.
  */
 
+import { stripAuthoringComments } from './lib/html-comments.mjs';
 import fs from 'fs/promises';
 import path from 'path';
 import { fileURLToPath } from 'url';
@@ -544,7 +545,8 @@ async function renderRoute(browser, route) {
     const outputPath = path.join(OUTPUT_DIR, fileName);
 
     await fs.mkdir(OUTPUT_DIR, { recursive: true });
-    await fs.writeFile(outputPath, html, 'utf-8');
+    // (Lot S1.7) Commentaires d'auteur retirés, marqueurs React conservés (scripts/lib/html-comments.mjs).
+    await fs.writeFile(outputPath, stripAuthoringComments(html), 'utf-8');
 
     console.log(`  ✅ ${route} → ${wordCount} words`);
     return true;

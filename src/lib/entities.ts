@@ -1,3 +1,4 @@
+import { HOUSES as HOUSE_INFO } from './structuredData';
 /**
  * Shared entity/property constants for consistent filtering across dashboard tabs.
  * Sleep In SCI owns Le Loft + Le Lodge.
@@ -47,11 +48,12 @@ export const PROPERTY_FILTER_OPTIONS = [
 ];
 
 // Property slug → full address (for PDF generation, letters, etc.)
-export const PROPERTY_ADDRESSES: Record<string, string> = {
-  'lavilla': '34 rue du Foron, 74100 Ville-la-Grand',
-  'leloft': '2 rue des Marronniers, 74100 Ambilly',
-  'lelodge': '8 rue de Romagny, 74100 Annemasse',
-};
+// (Lot S1, 05/09/2026) Dérivées de HOUSES (src/lib/structuredData.ts, adresses géocodées BAN) :
+// une seule source pour le JSON-LD public et les baux PDF. Décision Jérôme D11 : Le Loft est au
+// 1 rue des Marronniers (l'ancienne valeur « 2 » était fausse).
+export const PROPERTY_ADDRESSES: Record<string, string> = Object.fromEntries(
+  HOUSE_INFO.map((h) => [h.slug, `${h.streetAddress}, ${h.postalCode} ${h.addressLocality}`]),
+);
 
 // ==========================================
 // Prospects — sources

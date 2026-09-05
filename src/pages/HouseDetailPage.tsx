@@ -1,10 +1,11 @@
+import { EntityFacts } from "@/components/EntityFacts";
 import { lazy, Suspense, useState } from "react";
 import { useLocation } from "react-router-dom";
 import { responsiveImage } from "@/lib/responsiveImage";
 import { LocalizedLink } from "@/components/LocalizedLink";
 import { colocGeneveHref } from "@/lib/siteLinks";
 import { Scrim } from "@/components/Scrim";
-import { buildBreadcrumbSchema, HOUSES, LAVILLA_SAME_AS } from "@/lib/structuredData";
+import { buildBreadcrumbSchema, HOUSES, LAVILLA_SAME_AS, ORG_ID } from "@/lib/structuredData";
 import {
   MapPin,
   Users,
@@ -22,7 +23,7 @@ import {
   Sun,
 } from "lucide-react";
 import { useLanguage } from "@/contexts/LanguageContext";
-import { STATS, PRICE_FR_NUM, PRICE_EN_NUM, PRICE_CHF_FR, PRICE_CHF_EN, PRICE_SHARED_FR_NUM, PRICE_SHARED_EN_NUM, PRICE_SHARED_CHF_FR, PRICE_SHARED_CHF_EN, EUR_STANDARD_FR_NUM, EUR_STANDARD_EN_NUM, EUR_SHARED_FR_NUM, EUR_SHARED_EN_NUM } from "@/data/stats";
+import { STATS, ROOMS_BY_HOUSE, PRICE_FR_NUM, PRICE_EN_NUM, PRICE_CHF_FR, PRICE_CHF_EN, PRICE_SHARED_FR_NUM, PRICE_SHARED_EN_NUM, PRICE_SHARED_CHF_FR, PRICE_SHARED_CHF_EN, EUR_STANDARD_FR_NUM, EUR_STANDARD_EN_NUM, EUR_SHARED_FR_NUM, EUR_SHARED_EN_NUM } from "@/data/stats";
 import {
   useRoomAvailability,
   useHouseRooms,
@@ -1442,6 +1443,9 @@ export function HouseDetailPage() {
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify({
         "@context": "https://schema.org",
         "@type": "LodgingBusiness",
+        // (Lot S1) @id propre + rattachement à l'entité mère : les 3 fiches maison ne flottent plus.
+        "@id": `https://www.lavillacoliving.com/${id}#lodging`,
+        "parentOrganization": { "@id": ORG_ID },
         "name": `La Villa Coliving — ${house.name}`,
         "description": house.description,
         "image": `https://www.lavillacoliving.com${house.image}`,
@@ -1467,7 +1471,10 @@ export function HouseDetailPage() {
           "latitude": HOUSES.find(h => h.slug === id)?.geo.lat,
           "longitude": HOUSES.find(h => h.slug === id)?.geo.lng
         },
-        "priceRange": id === "lavilla" ? `${PRICE_SHARED_FR_NUM}–${PRICE_FR_NUM} CHF/mois` : `${PRICE_FR_NUM} CHF/mois`,
+        // (Lot S1) priceRange localisé (était en français sur les pages EN).
+        "priceRange": language === "en"
+          ? (id === "lavilla" ? `CHF ${PRICE_SHARED_EN_NUM}–${PRICE_EN_NUM}/month` : `CHF ${PRICE_EN_NUM}/month`)
+          : (id === "lavilla" ? `${PRICE_SHARED_FR_NUM}–${PRICE_FR_NUM} CHF/mois` : `${PRICE_FR_NUM} CHF/mois`),
         "currenciesAccepted": "EUR",
         "amenityFeature": [
           { "@type": "LocationFeatureSpecification", "name": "Swimming Pool", "value": true },
@@ -1476,7 +1483,7 @@ export function HouseDetailPage() {
           { "@type": "LocationFeatureSpecification", "name": "WiFi", "value": true },
           { "@type": "LocationFeatureSpecification", "name": "Parking", "value": true }
         ],
-        "numberOfRooms": id === "lavilla" ? 10 : id === "leloft" ? 7 : 12,
+        "numberOfRooms": ROOMS_BY_HOUSE[id as keyof typeof ROOMS_BY_HOUSE] ?? STATS.totalRooms,
         "sameAs": LAVILLA_SAME_AS
       }) }} />
       {/* BreadcrumbList Schema.org */}
@@ -1610,6 +1617,13 @@ export function HouseDetailPage() {
                   ? `Energy performance (DPE): ${house.specs.dpe} · ${house.specs.size}`
                   : `Diagnostic de performance énergétique (DPE) : ${house.specs.dpe} · ${house.specs.size}`}
               </p>
+
+              {/* (Lot S1) Fiche de faits canonique — CTA avec property_interest (garde house-pages-check) */}
+              <EntityFacts page={id} houseSlug={id as HouseKey}>
+                {language === "en"
+                  ? `This page is about ${house.name}; the three houses share the same all-inclusive package.`
+                  : `Cette page décrit ${house.name} ; les trois maisons partagent le même tout-inclus.`}
+              </EntityFacts>
 
               {/* Features */}
               <h3 className="text-2xl font-black mb-6 text-[#1C1917]">
@@ -2227,7 +2241,7 @@ export function HouseDetailPage() {
             fr: [
               { q: "Quel est le loyer mensuel à La Villa et que comprend-il ?", a: `Les chambres de La Villa sont à ${PRICE_CHF_FR} par mois avec salle de bain privative, et à ${PRICE_SHARED_CHF_FR} pour les 4 chambres qui partagent une salle d'eau entre 2 chambres (son entretien par notre équipe de ménage est inclus). Tout inclus dans les deux cas : charges (eau, électricité, chauffage), internet fibre jusqu'à 8 Gb/s, ménage 3 fois par semaine des espaces communs, abonnements streaming, entretien piscine et jardin, cours de yoga / fitness privés, parure de linge fournie. Aucun supplément.` },
               { q: "Comment se rendre à Genève depuis La Villa à Ville-la-Grand ?", a: "Moins de 20 minutes porte-à-porte : la gare d'Annemasse est à moins de 10 min à pied, puis le Léman Express te dépose au centre de Genève en 9 min. En voiture : 15 min. En alternative, le bus TPN ligne 61 passe à 200 m. La frontière suisse de Moillesulaz est à 2 km — 5 min à vélo." },
-              { q: "Quelle est la durée minimale du bail à La Villa ?", a: "Bail flexible 1 à 12 mois. Le bail par défaut est de 12 mois pour la stabilité de la communauté, mais nous acceptons des séjours plus courts (1, 3, 6 mois) selon disponibilité — utile pour les missions courtes ou les périodes d'essai en CDI." },
+              { q: "Quelle est la durée minimale du bail à La Villa ?", a: "Bail de 12 mois avec un engagement minimum de 3 mois : passé ces 3 mois, tu es libre de partir avec 1 mois de préavis. Pratique pour une mission de quelques mois ou une période d'essai en CDI à Genève." },
               { q: "Y a-t-il une caution et des frais d'agence ?", a: "Caution équivalente à 2 mois de loyer hors charges, restituée sous 30 jours après l'état des lieux de sortie. Aucun frais d'agence. Aucun frais de dossier." },
               { q: "Combien de chambres y a-t-il à La Villa et sont-elles meublées ?", a: "10 chambres privatives, toutes meublées (lit, bureau ergonomique, placard) : 6 avec salle de bain privative, 4 avec accès à 2 salles d'eau partagées (ménage inclus dans le loyer). Chaque chambre offre une vue sur le jardin ou la réserve naturelle. Cuisine, salon, salle de sport, sauna et piscine chauffée 12×5 m sont partagés." },
               { q: "Qui peut postuler pour vivre à La Villa ?", a: "Profil cible : frontaliers en CDI, jeunes professionnels, expatriés et résidents fiscaux français travaillant à Genève. Sélection sur dossier (justificatif de revenus, motivation, compatibilité avec la communauté). Pas de critère d'âge strict, mais la majorité des résidents ont entre 25 et 40 ans." },
@@ -2239,7 +2253,7 @@ export function HouseDetailPage() {
             en: [
               { q: "What is the monthly rent at La Villa and what does it include?", a: `Rooms at La Villa are ${PRICE_CHF_EN} per month with a private en-suite bathroom, and ${PRICE_SHARED_CHF_EN} for the 4 rooms that share a shower room between 2 rooms (cleaned by our housekeeping team, included in the rent). Both are all-inclusive: utilities (water, electricity, heating), fiber internet up to 8 Gb/s, common-area cleaning three times a week, streaming subscriptions, pool & garden upkeep, private yoga/fitness classes, bedding included. No add-on fees.` },
               { q: "How do I get to Geneva from La Villa in Ville-la-Grand?", a: "Under 20 minutes door-to-door: Annemasse station is less than a 10-minute walk away, then the Léman Express takes you to central Geneva in 9 minutes. By car: 15 min. Alternatively, TPN bus line 61 stops 200 m away. The Moillesulaz Swiss border is 2 km away — 5 min by bike." },
-              { q: "What is the minimum lease term at La Villa?", a: "Flexible leases from 1 to 12 months. The default is 12 months for community stability, but shorter stays (1, 3, 6 months) are accepted depending on availability — useful for short assignments or CDI trial periods." },
+              { q: "What is the minimum lease term at La Villa?", a: "A 12-month lease with a 3-month minimum commitment: after those 3 months you're free to leave with 1 month's notice. Handy for a short assignment or a trial period in Geneva." },
               { q: "Is there a deposit and any agency fees?", a: "Deposit equivalent to 2 months' rent excluding charges, refunded within 30 days after the move-out inspection. No agency fees. No application fees." },
               { q: "How many rooms are there at La Villa and are they furnished?", a: "10 private rooms, all furnished (bed, ergonomic desk, wardrobe): 6 with a private en-suite bathroom, 4 with access to 2 shared designer shower rooms (cleaning included in the rent). Each room has a view of the garden or the nature reserve. Kitchen, living room, gym, sauna and 12×5 m heated pool are shared." },
               { q: "Who can apply to live at La Villa?", a: "Target profile: cross-border workers on CDI, young professionals, expatriates and French tax residents working in Geneva. Selection by application (income proof, motivation, fit with the community). No strict age limit, but most residents are 25-40 years old." },
@@ -2253,7 +2267,7 @@ export function HouseDetailPage() {
             fr: [
               { q: "Quel est le loyer mensuel au Loft et que comprend-il ?", a: `Les chambres du Loft sont à ${PRICE_CHF_FR} par mois tout inclus : charges, internet fibre jusqu'à 8 Gb/s, ménage 3 fois par semaine des communs, abonnements streaming, piscine intérieure, jardin, parure de linge. Pas de supplément caché.` },
               { q: "Comment se rendre à Genève depuis Le Loft à Ambilly ?", a: "Le Loft est à 5 min à pied de la frontière de Moillesulaz et à 5 minutes à pied du Tram 17 TPG (Lancy-Pont-Rouge ↔ Annemasse). Genève centre : 20 min via Tram 17. Pistes cyclables sécurisées vers Genève centre : 25 min en vélo." },
-              { q: "Quelle est la durée minimale du bail au Loft ?", a: "Bail flexible 1 à 12 mois. Le bail par défaut est de 12 mois, mais nous acceptons des séjours plus courts selon disponibilité — pratique pour les frontaliers en mission ou en période d'essai à Genève." },
+              { q: "Quelle est la durée minimale du bail au Loft ?", a: "Bail de 12 mois, engagement minimum de 3 mois, puis 1 mois de préavis pour partir quand tu veux — pratique pour les frontaliers en mission ou en période d'essai à Genève." },
               { q: "Y a-t-il une caution et des frais d'agence ?", a: "Caution équivalente à 2 mois de loyer hors charges, restituée sous 30 jours après l'état des lieux de sortie. Aucun frais d'agence ni de dossier." },
               { q: "Combien de chambres y a-t-il au Loft et sont-elles meublées ?", a: "7 chambres privatives meublées (lit, bureau, placard), toutes avec salle de bain privative. Espaces communs design : cuisine ouverte, salon, terrasse, piscine intérieure chauffée toute l'année." },
               { q: "Qui peut postuler pour vivre au Loft ?", a: "Profil cible : frontaliers en CDI, jeunes professionnels, expatriés. Sélection sur dossier (justificatif de revenus, motivation, compatibilité avec la communauté). La proximité immédiate de la frontière fait du Loft un favori des frontaliers qui vont au bureau à pied ou en vélo." },
@@ -2265,7 +2279,7 @@ export function HouseDetailPage() {
             en: [
               { q: "What is the monthly rent at Le Loft and what does it include?", a: `Rooms at Le Loft are ${PRICE_CHF_EN} per month all-inclusive: utilities, fiber internet up to 8 Gb/s, common-area cleaning three times a week, streaming subscriptions, indoor pool, garden, bedding included. No hidden fees.` },
               { q: "How do I get to Geneva from Le Loft in Ambilly?", a: "Le Loft is 5 min walk from the Moillesulaz border and 5 min walk from TPG Tram 17 (Lancy-Pont-Rouge ↔ Annemasse). Central Geneva: 20 min via Tram 17. Secure bike paths to central Geneva: 25 min by bike." },
-              { q: "What is the minimum lease term at Le Loft?", a: "Flexible leases from 1 to 12 months. The default is 12 months, but shorter stays are accepted depending on availability — useful for cross-border workers on assignment or CDI trial periods in Geneva." },
+              { q: "What is the minimum lease term at Le Loft?", a: "A 12-month lease with a 3-month minimum commitment, then 1 month's notice whenever you decide to leave — useful for cross-border workers on assignment or on a trial period in Geneva." },
               { q: "Is there a deposit and any agency fees?", a: "Deposit equivalent to 2 months' rent excluding charges, refunded within 30 days after the move-out inspection. No agency fees, no application fees." },
               { q: "How many rooms are there at Le Loft and are they furnished?", a: "7 private furnished rooms (bed, desk, wardrobe), all with a private en-suite bathroom. Designer common spaces: open kitchen, living room, terrace, year-round heated indoor pool." },
               { q: "Who can apply to live at Le Loft?", a: "Target profile: cross-border workers on CDI, young professionals, expats. Selection by application (income proof, motivation, fit with community). The immediate proximity to the border makes Le Loft a favorite among cross-border workers who walk or bike to the office." },
@@ -2279,7 +2293,7 @@ export function HouseDetailPage() {
             fr: [
               { q: "Quel est le loyer mensuel au Lodge et que comprend-il ?", a: `Les chambres du Lodge sont à ${PRICE_CHF_FR} par mois tout inclus : charges (eau, électricité, chauffage), internet fibre jusqu'à 8 Gb/s, ménage 3 fois par semaine des communs, abonnements streaming, entretien piscine et jardin, cours de yoga / fitness privés, parure de linge fournie, dîner communautaire mensuel. Pas de supplément.` },
               { q: "Comment se rendre à Genève depuis Le Lodge à Annemasse ?", a: "Le Lodge est à 9 min à pied de la gare d'Annemasse, terminus du Léman Express. Genève Cornavin est à 15 min en Léman Express direct, sans correspondance. La frontière suisse est à 5 min en voiture. Aéroport de Genève : 30 min." },
-              { q: "Quelle est la durée minimale du bail au Lodge ?", a: "Bail flexible 1 à 12 mois. Le bail par défaut est de 12 mois pour la stabilité de la communauté, mais nous acceptons des séjours plus courts (1, 3, 6 mois) selon disponibilité." },
+              { q: "Quelle est la durée minimale du bail au Lodge ?", a: "Bail de 12 mois avec un engagement minimum de 3 mois ; ensuite, 1 mois de préavis suffit pour partir. Ni séjour d'une semaine ni bail d'un mois : la stabilité de la communauté passe avant." },
               { q: "Y a-t-il une caution et des frais d'agence ?", a: "Caution équivalente à 2 mois de loyer hors charges, restituée sous 30 jours après l'état des lieux. Aucun frais d'agence ni de dossier." },
               { q: "Combien de chambres y a-t-il au Lodge et sont-elles meublées ?", a: "12 chambres privatives, toutes meublées (lit, bureau ergonomique, placard sur mesure, salle de bain privative). Surface 17 à 19 m² par chambre. Le Lodge a ouvert en janvier 2026, tout est neuf." },
               { q: "Qu'est-ce qui rend Le Lodge unique parmi les 3 maisons ?", a: "Le Lodge est notre maison la plus récente (ouverte janvier 2026) et la plus grande (500 m² sur 1 500 m²). Elle dispose de 4 bâtiments : la résidence principale, un chalet fitness dédié avec sauna finlandais, un pool house avec cuisine d'été complète et une zone de rangement de 130 m². DPE B (performance énergétique). C'est aussi la plus proche de la gare d'Annemasse pour le Léman Express." },
@@ -2291,7 +2305,7 @@ export function HouseDetailPage() {
             en: [
               { q: "What is the monthly rent at Le Lodge and what does it include?", a: `Rooms at Le Lodge are ${PRICE_CHF_EN} per month all-inclusive: utilities (water, electricity, heating), fiber internet up to 8 Gb/s, common-area cleaning three times a week, streaming subscriptions, pool & garden upkeep, private yoga/fitness classes, bedding included, monthly community dinner. No add-on fees.` },
               { q: "How do I get to Geneva from Le Lodge in Annemasse?", a: "Le Lodge is a 9-minute walk from Annemasse station, the Léman Express terminus. Geneva Cornavin is 15 min via direct Léman Express, no transfer. Swiss border: 5 min by car. Geneva Airport: 30 min." },
-              { q: "What is the minimum lease term at Le Lodge?", a: "Flexible leases from 1 to 12 months. The default is 12 months for community stability, but shorter stays (1, 3, 6 months) are accepted depending on availability." },
+              { q: "What is the minimum lease term at Le Lodge?", a: "A 12-month lease with a 3-month minimum commitment; after that, 1 month's notice is all it takes to leave. No weekly stays or one-month leases: community stability comes first." },
               { q: "Is there a deposit and any agency fees?", a: "Deposit equivalent to 2 months' rent excluding charges, refunded within 30 days after the move-out inspection. No agency fees, no application fees." },
               { q: "How many rooms are there at Le Lodge and are they furnished?", a: "12 private rooms, all furnished (bed, ergonomic desk, custom wardrobe, en-suite bathroom). 17 to 19 m² per room. Le Lodge opened in January 2026 — everything is new." },
               { q: "What makes Le Lodge unique among your 3 houses?", a: "Le Lodge is our newest (opened January 2026) and largest house (500 m² on 1,500 m²). It has 4 buildings: the main residence, a dedicated fitness chalet with Finnish sauna, a pool house with full outdoor kitchen, and a 130 m² storage area. DPE B energy rating. It's also the closest to Annemasse station for the Léman Express." },

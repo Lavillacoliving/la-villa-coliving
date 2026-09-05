@@ -39,9 +39,6 @@ const QuiSommesNousPage = lazyWithRetry(() => import("@/pages/QuiSommesNousPage"
 const NotFoundPage = lazyWithRetry(() => import("@/pages/NotFoundPage").then(m => ({ default: m.NotFoundPage })), "NotFoundPage");
 const CharteTransparencePage = lazyWithRetry(() => import("@/pages/CharteTransparencePage").then(m => ({ default: m.CharteTransparencePage })), "CharteTransparencePage");
 const MentionsLegalesPage = lazyWithRetry(() => import("@/pages/MentionsLegalesPage").then(m => ({ default: m.MentionsLegalesPage })), "MentionsLegalesPage");
-// QuiSommesNousPage : composant prêt (src/pages/QuiSommesNousPage.tsx) mais PAS routé —
-// Jérôme retravaille la page dans une autre session. Au moment de la router : lazy import ici,
-// routes FR+EN, liens navbar/footer, route prerender.mjs, et ABOUT_PAGE_LIVE=true (structuredData.ts).
 const PolitiqueConfidentialitePage = lazyWithRetry(() => import("@/pages/PolitiqueConfidentialitePage").then(m => ({ default: m.PolitiqueConfidentialitePage })), "PolitiqueConfidentialitePage");
 const QuestionnaireDepartPage = lazyWithRetry(() => import("@/pages/QuestionnaireDepartPage").then(m => ({ default: m.QuestionnaireDepartPage })), "QuestionnaireDepartPage");
 

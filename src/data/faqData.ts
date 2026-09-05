@@ -388,8 +388,8 @@ export const faqData: FAQItem[] = [
       fr: 'Y a-t-il une durée de séjour minimum ?',
     },
     answer: {
-      en: 'Yes, we require a minimum stay of two months. This helps ensure community stability and allows members to form meaningful connections. If you need to leave earlier, we require one month\'s notice.',
-      fr: 'Oui, nous exigeons un séjour minimum de deux mois. Cela permet d\'assurer la stabilité de la communauté et permet aux membres de former des liens significatifs. Si tu dois partir plus tôt, nous avons besoin d\'un préavis d\'un mois.',
+      en: 'Yes: leases run 12 months with a 3-month minimum commitment; after that you can leave whenever you like with 1 month\'s notice. This keeps the community stable while leaving you flexible.',
+      fr: 'Oui : le bail est de 12 mois, avec un engagement minimum de 3 mois ; ensuite tu peux partir quand tu veux avec 1 mois de préavis. Cela garde la communauté stable tout en te laissant de la souplesse.',
     },
   },
   {
@@ -610,8 +610,8 @@ export const faqData: FAQItem[] = [
       fr: 'Combien de temps dure le trajet jusqu\'à Genève ?',
     },
     answer: {
-      en: 'The total commute time from our houses to downtown Geneva is typically 25-35 minutes door-to-door. This includes an 8-minute walk to the bus/tram stop and a 15-20 minute ride to the city center. Many residents find this comparable to or faster than commuting within Geneva itself.',
-      fr: 'Le temps de trajet total de nos maisons au centre de Genève est généralement de 25 à 35 minutes porte à porte. Cela inclut une marche de 8 minutes jusqu\'à l\'arrêt de bus/tramway et un trajet de 15 à 20 minutes jusqu\'au centre-ville. De nombreux résidents trouvent cela comparable ou plus rapide que de se déplacer dans Genève même.',
+      en: 'Door-to-door, count on about 20 minutes from our houses to Geneva city centre. Each house is a 9-10 minute walk from Annemasse station, then the Léman Express takes you to Eaux-Vives in 8 minutes and to Cornavin in about 12; from Ambilly, tram 17 is an alternative. Many residents find this comparable to or faster than commuting within Geneva itself.',
+      fr: 'Porte-à-porte, compte environ 20 minutes entre nos maisons et le centre de Genève. Chaque maison est à 9-10 minutes à pied de la gare d\'Annemasse, puis le Léman Express te dépose aux Eaux-Vives en 8 minutes et à Cornavin en 12 environ ; depuis Ambilly, le tram 17 est une alternative. Beaucoup de résidents trouvent cela comparable, voire plus rapide, qu\'un trajet dans Genève même.',
     },
   },
   {
@@ -990,7 +990,7 @@ export const faqData: FAQItem[] = [
       fr: 'Puis-je vivre en France et travailler à Genève ?',
     },
     answer: {
-      en: 'Absolutely! Many of our residents live in our French locations and work in Geneva. The commute is typically 25-35 minutes door-to-door, making it very manageable. Plus, you benefit from lower living costs in France while earning Swiss salaries.',
+      en: 'Absolutely! Many of our residents live in our French houses and work in Geneva. The commute is about 20 minutes door-to-door, which makes it very manageable. Plus, you benefit from lower living costs in France while earning a Swiss salary.',
       fr: 'Absolument ! Beaucoup de nos résidents vivent dans nos emplacements français et travaillent à Genève. Le trajet est d\'environ 20 minutes porte-à-porte, ce qui est très gérable. En plus, tu profites d\'un coût de la vie plus bas en France tout en gagnant un salaire suisse.',
     },
   },
@@ -1026,8 +1026,8 @@ export const faqData: FAQItem[] = [
       fr: 'Puis-je rester seulement quelques mois ?',
     },
     answer: {
-      en: 'Our minimum stay is two months, which works well for many short-term needs. After that, you can stay as long as you like with just one month\'s notice when you decide to leave. This flexibility makes us a great option for project-based work, internships, or trying out life in the Geneva area.',
-      fr: 'Notre séjour minimum est de deux mois, ce qui fonctionne bien pour de nombreux besoins à court terme. Après cela, tu peux rester aussi longtemps que tu le souhaites, avec seulement un mois de préavis quand tu décides de partir. Cette flexibilité fait de nous une excellente option pour le travail basé sur des projets, des stages ou pour essayer la vie dans la région de Genève.',
+      en: 'Yes, from 3 months: the lease is a 12-month lease with a 3-month minimum commitment, and after that you can leave with just 1 month\'s notice. That works well for project-based work, internships, or trying out life in the Geneva area.',
+      fr: 'Oui, à partir de 3 mois : le bail est de 12 mois avec un engagement minimum de 3 mois, puis tu peux partir avec seulement 1 mois de préavis. Pratique pour une mission, un stage ou pour tester la vie dans la région de Genève.',
     },
   },
   {

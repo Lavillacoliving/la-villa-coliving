@@ -247,6 +247,7 @@ export const INTERNAL_REF_SOURCES = [
   "room_card",
   "dispo_line",
   "house_cta",
+  "entity_facts", // (Lot S1, 09/2026) CTA du bloc « La Villa Coliving — l'essentiel »
 ] as const;
 export type InternalRefSource = (typeof INTERNAL_REF_SOURCES)[number];
 
