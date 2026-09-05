@@ -1,7 +1,9 @@
 -- ============================================================================
 -- blog_editorial_strategy v3 — checklist factuelle alignée sur la fiche entité (Lot S1.8)
 -- Date       : 2026-09-05 · plan valide par Jerome le 04/09/2026, decisions D1-D13 du 05/09
--- GO Jerome  : A APPLIQUER PAR JEROME (SQL Editor / MCP). Le generateur n8n (CRON dimanche 8h)
+-- APPLIQUE   : le 05/09/2026 via MCP execute_sql sur GO de Jerome (forme CTE atomique INSERT ... RETURNING + UPDATE,
+--              updated_by = 'Claude Code — Lot S1 brief Socle entité, GO Jérôme 05/09/2026'). Conserve pour trace :
+--              NE PAS REJOUER (la v3 existe, la v2 est inactive). Le generateur n8n (CRON dimanche 8h)
 --              lit la ligne is_active = true a chaque execution : la v2 (04/08/2026) contient encore
 --              « 1 380 CHF unique prix citable », « Menage 2x/semaine », « 150+ residents »,
 --              « pas de garant francais exige » et demande de recopier un FACT BLOCK dans chaque article.
@@ -12,7 +14,7 @@
 
 BEGIN;
 
-INSERT INTO public.blog_editorial_strategy (version, is_active, content_md)
+INSERT INTO public.blog_editorial_strategy (version, is_active, content_md, updated_by)
 SELECT 3, true,
   replace(replace(replace(replace(replace(replace(replace(content_md,
     '(v1, 27/07/2026)',
@@ -28,7 +30,8 @@ SELECT 3, true,
     '- 116 200 frontaliers (OCSTAT fin 2025) · 150+ résidents depuis 2021 · 99 % d''occupation · 4,9/5',
     '- 116 200 frontaliers (OCSTAT fin 2025) · 100+ résidents depuis octobre 2021 (jamais « 150+ ») · 99 % d''occupation · 4,9/5 = enquêtes résidents (NPS interne), toujours étiqueté ainsi'),
     '- Reprendre le FACT BLOCK canonique (1 380 CHF tout inclus, 29 chambres, 3 maisons, ~20 min de Genève) une fois par article, mot pour mot',
-    '- Ne PAS recopier de bloc de faits : le bloc « La Villa Coliving — l''essentiel » est injecté par le site (composant EntityFacts) sur les 8 articles piliers ; une page de décision pose la ligne <!-- entity-facts --> à l''endroit voulu (après le tableau d''options). Les faits cités dans la prose sont ceux de src/data/entityFacts.ts (dès 1 370 CHF, 29 chambres, 3 maisons, 16-24 m², 20 min porte-à-porte)')
+    '- Ne PAS recopier de bloc de faits : le bloc « La Villa Coliving — l''essentiel » est injecté par le site (composant EntityFacts) sur les 8 articles piliers ; une page de décision pose la ligne <!-- entity-facts --> à l''endroit voulu (après le tableau d''options). Les faits cités dans la prose sont ceux de src/data/entityFacts.ts (dès 1 370 CHF, 29 chambres, 3 maisons, 16-24 m², 20 min porte-à-porte)'),
+  'Claude Code — Lot S1 brief Socle entité, GO Jérôme 05/09/2026'
 FROM public.blog_editorial_strategy
 WHERE version = 2;
 
