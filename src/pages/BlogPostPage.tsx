@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { Fragment, useState, useEffect } from "react";
 import { useParams, useSearchParams } from "react-router-dom";
 import { LocalizedLink } from "@/components/LocalizedLink";
 import { localizePath } from "@/lib/localizedPath";
@@ -17,6 +17,8 @@ import { WhatsAppButton } from "@/components/WhatsAppButton";
 import { PRICE_SHARED_CHF_FR, PRICE_SHARED_CHF_EN } from "@/data/stats";
 import { YmylNotice, YmylPosture, AuthorBox } from "@/components/YmylNotice";
 import { isYmyl } from "@/lib/ymyl";
+import { resolveContentTokens } from "@/lib/contentTokens";
+import { EntityFacts } from "@/components/EntityFacts";
 
 interface Post {
   id:string; slug:string;
@@ -64,7 +66,10 @@ const CL:Record<string,Record<string,string>>={
 // ou-habiter…) coupent plus tôt (~30 % — le lecteur compare des villes, l'offre
 // doit apparaître avant qu'il reparte), fenêtre décalée en conséquence ; tous
 // les autres gardent le milieu (50 %, fenêtre 25-75 %) — comportement inchangé.
-function splitForMidCta(md: string, targetRatio: 0.3 | 0.5 = 0.5): [string, string] | null {
+// (Lot C0, 09/2026) avoidIndex : position du marqueur du bloc entité — les titres à moins de
+// ~900 caractères (≈ 150 mots) de ce point sont écartés pour que les deux blocs (bloc offre
+// mi-article et bloc entité) ne se touchent jamais. Sans marqueur (-1) : comportement inchangé.
+function splitForMidCta(md: string, targetRatio: 0.3 | 0.5 = 0.5, avoidIndex = -1): [string, string] | null {
   if (md.includes("```")) return null;
   if (md.split(/\s+/).length <= 650) return null;
   const headings: number[] = [];
@@ -75,11 +80,28 @@ function splitForMidCta(md: string, targetRatio: 0.3 | 0.5 = 0.5): [string, stri
   const target = md.length * targetRatio;
   let best = -1;
   for (const idx of headings) {
+    if (avoidIndex >= 0 && Math.abs(idx - avoidIndex) < 900) continue;
     if (best === -1 || Math.abs(idx - target) < Math.abs(best - target)) best = idx;
   }
+  if (best === -1) return null;
   const [lo, hi] = targetRatio === 0.5 ? [0.25, 0.75] : [0.18, 0.55];
   if (best < md.length * lo || best > md.length * hi) return null;
   return [md.slice(0, best), md.slice(best)];
+}
+
+// (Lot C0, brief « Conquête IA », 09/2026) Marqueur du bloc entité dans le markdown des pages de
+// décision : une ligne `<!-- entity-facts -->` seule. react-markdown 10 rend le HTML brut en TEXTE
+// VISIBLE (pas de rehype-raw) : le marqueur est donc découpé ICI, avant le parseur, et remplacé par
+// <EntityFacts/>. Le paragraphe qui le suit = la phrase de contexte propre à la page. Le marqueur
+// est retiré du texte servant à la FAQ, au sommaire et au wordCount. Fonctions pures : le prérendu
+// (Puppeteer) et le client rendent la même chose.
+const ENTITY_FACTS_MARKER_RE = /^[ \t]*<!--\s*entity-facts\s*-->[ \t]*$/m;
+function findEntityFactsMarker(md: string): { index: number; length: number } | null {
+  const m = ENTITY_FACTS_MARKER_RE.exec(md);
+  return m ? { index: m.index, length: m[0].length } : null;
+}
+function stripEntityFactsMarker(md: string): string {
+  return md.replace(ENTITY_FACTS_MARKER_RE, "");
 }
 
 // Extrait les paires Q/R d'une section FAQ markdown (« # FAQ … », « ## FAQ … » ou
@@ -252,20 +274,25 @@ export function BlogPostPage() {
 
   const title = (language==="en"&&post.title_en)?post.title_en:post.title_fr;
   const excerpt = (language==="en"&&post.excerpt_en)?post.excerpt_en:post.excerpt_fr;
-  const content = (language==="en"&&post.content_en)?post.content_en:post.content_fr;
-  const faqPairs = extractFaqPairs(content);
-  const toc = extractToc(content);
+  const L = language === "en" ? "en" : "fr";
+  // (Lot C0) Tokens de faits ({{PRIX_DES}}…) résolus depuis la source unique, puis marqueur du
+  // bloc entité repéré ; FAQ, sommaire et wordCount travaillent sur le texte sans marqueur.
+  const rawContent = (language==="en"&&post.content_en)?post.content_en:post.content_fr;
+  const content = resolveContentTokens(rawContent, L);
+  const entityMarker = findEntityFactsMarker(content);
+  const contentForMeta = entityMarker ? stripEntityFactsMarker(content) : content;
+  const faqPairs = extractFaqPairs(contentForMeta);
+  const toc = extractToc(contentForMeta);
   // Meta description dédiée si renseignée en base (optimisée SEO), sinon excerpt
   const metaDescription = language==="en"
     ? (post.meta_description_en || excerpt)
     : (post.meta_description_fr || excerpt);
   const fmtD = (d:string) => new Date(d).toLocaleDateString(language==="en"?"en-US":"fr-FR",{year:"numeric",month:"long",day:"numeric"});
 
-  const L = language === "en" ? "en" : "fr";
   // Localize language-neutral internal paths for the EN site (/x → /en/x).
   const loc = (p: string) => localizePath(p, language);
   const bucket = getIntentBucket(post.slug, post.category);
-  const midSplit = splitForMidCta(content, bucket === "ville" ? 0.3 : 0.5);
+  const midSplit = splitForMidCta(content, bucket === "ville" ? 0.3 : 0.5, entityMarker ? entityMarker.index : -1);
 
   // (Lot 1) CTA du corps d'article : UTM virtuels de la session (write-once) + le même
   // event GA4 que le bloc offre, position « body », pour comparer les deux portes.
@@ -361,7 +388,7 @@ export function BlogPostPage() {
       </div>
     ),
     thead: ({children}: {children?: React.ReactNode}) => <thead className="bg-[#F5F2ED]">{children}</thead>,
-    th: ({children}: {children?: React.ReactNode}) => <th className="border border-[#E7E5E4] px-4 py-3 text-left font-semibold text-[#1C1917]">{children}</th>,
+    th: ({children}: {children?: React.ReactNode}) => <th scope="col" className="border border-[#E7E5E4] px-4 py-3 text-left font-semibold text-[#1C1917]">{children}</th>,
     td: ({children}: {children?: React.ReactNode}) => <td className="border border-[#E7E5E4] px-4 py-3">{children}</td>,
     blockquote: ({children}: {children?: React.ReactNode}) => (
       <blockquote className="border-l-4 border-[#D4A574] pl-6 italic text-[#57534E] my-6">{children}</blockquote>
@@ -403,10 +430,11 @@ export function BlogPostPage() {
     dateModified: post.updated_at || post.published_at,
     mainEntityOfPage: {
       "@type": "WebPage",
-      "@id": `https://www.lavillacoliving.com/blog/${post.slug}`,
+      // (Lot C0) URL de la page réellement servie : /en/blog/… sur la version anglaise (aligné sur le fil d'Ariane).
+      "@id": `https://www.lavillacoliving.com${language === "en" ? "/en" : ""}/blog/${post.slug}`,
     },
     keywords: post.tags?.join(", ") || "coliving, genève, colocation",
-    wordCount: content.split(/\s+/).length,
+    wordCount: contentForMeta.split(/\s+/).length,
     inLanguage: language === "en" ? "en" : "fr",
   };
 
@@ -505,16 +533,27 @@ export function BlogPostPage() {
           )}
 
           <div className="blog-content max-w-none text-[#44403C]" style={{fontSize:"1.1rem",lineHeight:"1.8"}}>
-            {midSplit ? (
-              <>
-                <ReactMarkdown remarkPlugins={[remarkGfm]} components={mdComponents}>{midSplit[0]}</ReactMarkdown>
-                {/* Bloc offre mi-article — longs formats uniquement (>800 mots), maison + prix + candidature */}
-                <BlocOffre variant="mid" slug={post.slug} bucket={bucket} />
-                <ReactMarkdown remarkPlugins={[remarkGfm]} components={mdComponents}>{midSplit[1]}</ReactMarkdown>
-              </>
-            ) : (
-              <ReactMarkdown remarkPlugins={[remarkGfm]} components={mdComponents}>{content}</ReactMarkdown>
-            )}
+            {/* Le markdown est rendu en tranches, avec des blocs React insérés entre elles :
+                bloc offre mi-article (longs formats > 650 mots, maison + prix + candidature) et,
+                pour les pages de décision, le bloc entité à la place du marqueur (Lot C0). Sans
+                coupe : une seule tranche — rendu identique à l'ancien. Clés stables → hydratation sûre. */}
+            {(() => {
+              const cuts: { at: number; len: number; node: React.ReactNode }[] = [];
+              if (midSplit) cuts.push({ at: midSplit[0].length, len: 0, node: <BlocOffre variant="mid" slug={post.slug} bucket={bucket} /> });
+              if (entityMarker) cuts.push({ at: entityMarker.index, len: entityMarker.length, node: <EntityFacts page={post.slug} /> });
+              cuts.sort((a, b) => a.at - b.at);
+              const out: React.ReactNode[] = [];
+              let prev = 0;
+              cuts.forEach((c, i) => {
+                const slice = content.slice(prev, c.at);
+                if (slice.trim()) out.push(<ReactMarkdown key={`md-${i}`} remarkPlugins={[remarkGfm]} components={mdComponents}>{slice}</ReactMarkdown>);
+                out.push(<Fragment key={`cut-${i}`}>{c.node}</Fragment>);
+                prev = c.at + c.len;
+              });
+              const tail = content.slice(prev);
+              if (tail.trim()) out.push(<ReactMarkdown key="md-tail" remarkPlugins={[remarkGfm]} components={mdComponents}>{tail}</ReactMarkdown>);
+              return out;
+            })()}
           </div>
 
           {isYmyl(post.slug) && <YmylNotice content={content} />}
