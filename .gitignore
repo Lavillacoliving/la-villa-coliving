@@ -26,3 +26,6 @@ npm-debug.log*
 
 # Sorties des outils SEO (données GSC, graphes) — jamais versionnées
 tools/out/
+
+# Liste des noms de concurrents (garde check-no-competitor) — jamais versionnée
+scripts/competitors.local.json

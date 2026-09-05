@@ -78,6 +78,19 @@ jobs:
       - name: Pre-render all pages (Supabase sync + Puppeteer)
         run: node scripts/prerender.mjs
 
+      # Garde Lot C0 (brief « Conquête IA », 09/2026) : redirections sans chaîne, aucune URL du
+      # sitemap redirigée, paires de consolidation attendues (scripts/redirects.expected.json).
+      - name: Vérifier les redirections
+        run: node scripts/check-redirects.mjs --expect scripts/redirects.expected.json
+
+      # Garde Lot C0 : aucun concurrent nommé dans le HTML prérendu ni dans llms.txt (CLAUDE.md §1).
+      # La liste des noms vit dans le secret COMPETITOR_NAMES (jamais dans le repo) ; sans secret,
+      # la garde avertit sans bloquer (voir scripts/check-no-competitor.mjs).
+      - name: Vérifier l'absence de concurrents nommés
+        run: node scripts/check-no-competitor.mjs
+        env:
+          COMPETITOR_NAMES: ${{ secrets.COMPETITOR_NAMES }}
+
       # Garde Lot A (02/09/2026) : chaque maison de v_public_rooms a sa page FR+EN complète
       # (embed chambres, CTA contextuels, prix FR, marqueurs d'hydratation). Échec = pas de commit.
       - name: Vérifier les pages maisons

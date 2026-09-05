@@ -47,3 +47,17 @@ Vérifie les extracteurs sur des données synthétiques (`tools/test/`). À lanc
 - Jamais de données GSC/GA4 brutes, d'URL de webhook ni de clé dans le repo (`tools/out/` est gitignoré).
 - Les sorties sont des **diagnostics** : toute modification de page ou de contenu blog reste un lot à part, validé, mesuré au bulletin.
 - Pilier `/colocation-geneve` gelé du 25/08 au 05/10 (page seule) : les liens **vers** lui sont autorisés.
+
+## Gardes de contenu (Lot C0, 09/2026)
+
+Trois contrôles supplémentaires, exécutés en CI après le prérendu (`.github/workflows/prerender.yml`) et à la main :
+
+- `npm run check:redirects` — `vercel.json` × `public/sitemap.xml` : aucune chaîne de redirection, aucune URL du
+  sitemap redirigée, paires de consolidation attendues (`scripts/redirects.expected.json`). Après un déploiement :
+  `node scripts/check-redirects.mjs --expect scripts/redirects.expected.json --net` (308 puis 200 en un saut).
+  Pour ajouter une redirection sans créer de chaîne : `node scripts/redirects.mjs --add /blog/ancien /blog/nouveau`.
+- `npm run check:competitors` — aucun nom de concurrent dans le HTML prérendu ni `llms.txt`. La liste n'est jamais
+  dans le repo : copier `scripts/competitors.example.json` en `scripts/competitors.local.json` (gitignoré) ; en CI,
+  secret GitHub `COMPETITOR_NAMES` (noms séparés par des virgules). Sans liste : avertissement, pas de blocage.
+- `npm run article:sql -- <slug> --mode insert|update` — valide un brouillon `content/decision-pages/<slug>.*` et
+  écrit le SQL de publication (voir `content/decision-pages/README.md`).

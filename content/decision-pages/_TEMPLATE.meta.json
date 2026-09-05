@@ -1,0 +1,26 @@
+{
+  "slug": "mon-slug-fr-court",
+  "title_fr": "Titre FR ≤ 50 caractères, sans prix",
+  "title_en": "EN title ≤ 50 characters, no price",
+  "excerpt_fr": "Deux phrases : la question, la réponse. (carte du blog)",
+  "excerpt_en": "Two sentences: the question, the answer. (blog card)",
+  "meta_description_fr": "110 à 155 caractères, orientée clic, tutoiement, sans prix. Réponse d'abord, puis pour qui c'est fait et pourquoi lire.",
+  "meta_description_en": "110 to 155 characters, click-oriented: the answer first, then who this page is for and why it is worth reading. Never a price.",
+  "author": "Jerome Austin",
+  "category": "geneva",
+  "image_url": "/images/la villa jardin.webp",
+  "tags": [
+    "genève",
+    "frontalier",
+    "logement"
+  ],
+  "intent_bucket": "medium",
+  "consolidates": [],
+  "inbound": [
+    {
+      "slug": "trouver-colocation-geneve-frontalier",
+      "anchor_fr": "texte exact present dans l'article source",
+      "anchor_en": "exact text present in the source article"
+    }
+  ]
+}
