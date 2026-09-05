@@ -503,6 +503,15 @@ export function JoinPageV4() {
                       {language === "en" ? "A resident referred me" : "Un résident m'a recommandé"}
                     </option>
                     <option value="google">Google</option>
+                    {/* ai-assistant (Lot S3 brief Socle entité, 09/2026) : mesure de la part de voix
+                        des assistants IA (ChatGPT, Perplexity, Gemini…). Mappé côté Edge v18 vers
+                        `assistant_ia` (prospects_source_check, 16 valeurs). GA4 : `lead_source`
+                        porte déjà la valeur brute du select (useFormTelemetry). */}
+                    <option value="ai-assistant">
+                      {language === "en"
+                        ? "AI assistant (ChatGPT, Perplexity, Gemini…)"
+                        : "Assistant IA (ChatGPT, Perplexity, Gemini…)"}
+                    </option>
                     {/* google-maps / facebook / whatsapp (02/09/2026) : mappés côté
                         Edge v16 vers facebook / whatsapp / google_maps
                         (prospects_source_check, 15 valeurs depuis le 02/09). */}

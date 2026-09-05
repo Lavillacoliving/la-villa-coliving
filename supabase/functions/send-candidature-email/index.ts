@@ -1,4 +1,17 @@
 // Supabase Edge Function — send-candidature-email
+// v18 — 09/2026 — Canal déclaré « Assistant IA » (Lot S3 du brief Socle entité, plan validé 04/09)
+//   CHANGEMENTS vs v17 :
+//   1. Nouvelle valeur du select `source` du formulaire : `ai-assistant` (libellé « Assistant IA
+//      (ChatGPT, Perplexity, Gemini…) », en 3ᵉ position après Google). CHANNEL_LABELS["ai-assistant"]
+//      = « Assistant IA » (notes du prospect) ; PROSPECT_SOURCE_MAP["ai-assistant"] = `assistant_ia`,
+//      valeur ajoutée à prospects_source_check (16 valeurs) par
+//      scripts/migration-prospects-source-assistant-ia.sql, à appliquer AVANT ce déploiement.
+//      Si la contrainte refusait la valeur, le filet existant retomberait sur site_web avec
+//      « Canal déclaré : Assistant IA » en notes — aucune candidature perdue, rebascule possible.
+//   2. AUCUN changement de logique d'envoi, d'idempotence, de filets ni d'emails.
+//   Rétrocompatible : sans cette valeur, comportement v17 strictement identique.
+//   Ordre de déploiement : migration (Jérôme, MCP) → merge sur main → déploiement v18 DEPUIS main
+//   (jamais depuis la branche) → le front la propose (déjà mergé avec cette version).
 // v17 — 03/09/2026 — Page d'atterrissage + portes internes (Lot 1 du brief SEO funnel, plan validé 03/09)
 //   CHANGEMENTS vs v16 :
 //   1. Payload optionnel `landing_page` / `referrer` / `entry_page` (posés par le front :
@@ -671,6 +684,7 @@ Deno.serve(async (req: Request) => {
       };
       const CHANNEL_LABELS: Record<string, string> = {
         "google": "Google",
+        "ai-assistant": "Assistant IA", // v18 — canal déclaré « Assistant IA (ChatGPT, Perplexity, Gemini…) »
         "google-maps": "Google Maps",
         "instagram": "Instagram",
         "facebook": "Facebook",
@@ -684,6 +698,7 @@ Deno.serve(async (req: Request) => {
       // Canal déclaré (select du formulaire) → valeur autorisée par prospects_source_check.
       const PROSPECT_SOURCE_MAP: Record<string, string> = {
         "google": "google",
+        "ai-assistant": "assistant_ia", // v18 — valeur ajoutée à la contrainte par migration-prospects-source-assistant-ia.sql
         "google-maps": "google_maps", // v16 — valeur ajoutée à la contrainte le 02/09/2026
         "instagram": "instagram",
         "facebook": "facebook",
