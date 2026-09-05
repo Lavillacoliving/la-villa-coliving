@@ -80,10 +80,8 @@ export function CharteTransparencePage() {
                 <p>
                   In return, we ask you to stay at least three months. A house is not a hotel: every
                   abrupt departure unsettles the people who remain, and it's their daily life we're
-                  protecting. If you leave before three months, an early-departure fee of €350
-                  applies — except in the case of a job relocation, job loss, health reasons or
-                  force majeure. After that, you're free to leave whenever you want, with one
-                  month's notice.
+                  protecting. After those three months, you're free to leave whenever you want, with
+                  one month's notice.
                 </p>
               </Section>
 
@@ -185,10 +183,8 @@ export function CharteTransparencePage() {
                 <p>
                   En échange, nous te demandons de rester au moins trois mois. Une maison n'est pas
                   un hôtel : chaque départ précipité déstabilise ceux qui restent, et c'est leur
-                  quotidien que nous protégeons. Si tu pars avant trois mois, une indemnité de
-                  départ anticipé de 350 € est due — sauf en cas de mutation professionnelle, de
-                  perte d'emploi, de raison de santé ou de force majeure. Passé ce délai, tu es
-                  libre de partir quand tu veux, avec un mois de préavis.
+                  quotidien que nous protégeons. Passé ces trois mois, tu es libre de partir quand
+                  tu veux, avec un mois de préavis.
                 </p>
               </Section>
 
