@@ -8,6 +8,7 @@ import {
   Image,
 } from "@react-pdf/renderer";
 import { getBailleurLines } from "@/lib/entities";
+import { numberInWordsFr } from "@/lib/frenchNumbers";
 
 interface Property {
   id: string;
@@ -75,13 +76,8 @@ interface FormData {
   lease_duration_months: number;
 }
 
-// Helper: nombre en lettres pour la durée (mois)
-const DURATION_WORDS: Record<number, string> = {
-  1: "un", 2: "deux", 3: "trois", 4: "quatre", 5: "cinq", 6: "six",
-  7: "sept", 8: "huit", 9: "neuf", 10: "dix", 11: "onze", 12: "douze",
-  15: "quinze", 18: "dix-huit", 24: "vingt-quatre", 36: "trente-six",
-};
-export const durationInWords = (n: number): string => DURATION_WORDS[n] || String(n);
+// Helper: nombre en lettres pour la durée (mois) — toute durée saisie (1-999)
+export const durationInWords = numberInWordsFr;
 
 // Helper: traduit bathroom_type (private/shared) en libellé FR
 const bathroomLabel = (type: string | undefined): string => {
