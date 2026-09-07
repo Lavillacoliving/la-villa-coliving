@@ -4,7 +4,8 @@
 -- d'embauche, garant seulement au cas par cas), relecture C2 du 07/09 (train Annemasse -> Cornavin ~ 20 min,
 -- Eaux-Vives 8 min, centre a 20 min porte-a-porte), regle des minutes de la garde CI (une duree non canonique
 -- dans une phrase « Geneve » doit etre qualifiee : en voiture, a pied, tram...).
--- A APPLIQUER AVANT le merge de fix/facts-consistency : la garde passe en --strict et bloquerait sur ces 3 pages.
+-- APPLIQUE le 07/09/2026 via MCP execute_sql sur GO de Jerome (6 UPDATE sans BEGIN/COMMIT, verification : 0 reste,
+-- 6 articles mis a jour). Conserve pour trace : NE PAS REJOUER (les ancres n'existent plus, les UPDATE seraient sans effet).
 -- Methode : replace() sur des ancres exactes (relevees le 07/09 par requete), UPDATE gardes par LIKE,
 -- updated_at = now() sur chaque ligne modifiee. Verification en fin de script. Pas de DELETE.
 -- Conserves volontairement (pas La Villa) : « 3 mois de loyer en Suisse » (colocation-expats, regies suisses,
