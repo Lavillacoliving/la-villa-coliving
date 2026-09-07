@@ -61,8 +61,8 @@ export function AnnemasseColocationPage() {
         }
         description={
           language === "en"
-            ? `Shared housing in Annemasse: 29 furnished rooms all inclusive from ${PRICE_SHARED_CHF_EN}/month, direct Léman Express to Geneva in 15 min. No agency fee, reply in 48 h.`
-            : `Colocation Annemasse : 29 chambres meublées tout inclus dès ${PRICE_SHARED_CHF_FR}/mois. Léman Express direct Genève 15 min. Coliving frontaliers. Sans frais d'agence.`
+            ? `Shared housing in Annemasse: 29 furnished rooms all inclusive from ${PRICE_SHARED_CHF_EN}/month, Geneva city centre 20 min door-to-door by Léman Express. No agency fee, reply in 48 h.`
+            : `Colocation Annemasse : 29 chambres meublées tout inclus dès ${PRICE_SHARED_CHF_FR}/mois. Centre de Genève à 20 min porte-à-porte en Léman Express. Coliving frontaliers. Sans frais d'agence.`
         }
         url="https://www.lavillacoliving.com/annemasse-colocation"
         image="https://www.lavillacoliving.com/images/le lodge/exterior/la villa coliving le lodge-14.webp"
@@ -84,8 +84,8 @@ export function AnnemasseColocationPage() {
           </h1>
           <p className="text-lg md:text-xl text-[#57534E] max-w-3xl mx-auto leading-relaxed mb-10 font-medium">
             {language === "en"
-              ? "Three premium coliving houses in Annemasse Agglo (Ville-la-Grand, Ambilly, Annemasse) — for cross-border workers who want a Swiss salary with French cost of living. Direct Léman Express to Geneva Cornavin in 15 min."
-              : "Trois maisons coliving premium dans Annemasse Agglo (Ville-la-Grand, Ambilly, Annemasse) — pour frontaliers qui veulent un salaire suisse avec le coût de la vie français. Léman Express direct Genève Cornavin en 15 min."}
+              ? "Three premium coliving houses in Annemasse Agglo (Ville-la-Grand, Ambilly, Annemasse) — for cross-border workers who want a Swiss salary with French cost of living. Geneva city centre 20 min door-to-door by Léman Express."
+              : "Trois maisons coliving premium dans Annemasse Agglo (Ville-la-Grand, Ambilly, Annemasse) — pour frontaliers qui veulent un salaire suisse avec le coût de la vie français. Centre de Genève à 20 min porte-à-porte en Léman Express."}
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <LocalizedLink
@@ -157,12 +157,12 @@ export function AnnemasseColocationPage() {
                 <Train className="w-7 h-7 text-[#D4A574]" />
               </div>
               <h3 className="text-xl font-medium text-[#1C1917] mb-3">
-                {language === "en" ? "15 min direct to Geneva" : "15 min direct vers Genève"}
+                {language === "en" ? "Geneva in 20 min door-to-door" : "Genève à 20 min porte-à-porte"}
               </h3>
               <p className="text-[#57534E] leading-relaxed">
                 {language === "en"
-                  ? "Léman Express direct from Annemasse station to Geneva Cornavin in 15 minutes, no transfer. Tram 17 TPG and direct buses also connect to central Geneva."
-                  : "Léman Express direct depuis la gare d'Annemasse jusqu'à Genève Cornavin en 15 minutes, sans correspondance. Le Tram 17 TPG et des bus directs desservent aussi le centre de Genève."}
+                  ? "Léman Express direct from Annemasse station: Geneva Eaux-Vives in 8 minutes, Cornavin in about 20, no transfer. Tram 17 TPG and direct buses also connect to central Geneva."
+                  : "Léman Express direct depuis la gare d'Annemasse : Genève Eaux-Vives en 8 minutes, Cornavin en 20 minutes environ, sans correspondance. Le Tram 17 TPG et des bus directs desservent aussi le centre de Genève."}
               </p>
             </div>
             <div className="text-center">
@@ -250,8 +250,8 @@ export function AnnemasseColocationPage() {
               </p>
               <p className="text-[#57534E] leading-relaxed mb-6">
                 {language === "en"
-                  ? "Opened January 2026. 500 m² over 4 buildings on 1,500 m² of gardens. Annemasse station 9-min walk — Léman Express direct to Cornavin in 15 min."
-                  : "Ouvert en janvier 2026. 500 m² sur 4 bâtiments au cœur de 1 500 m² de jardins. Gare d'Annemasse à 9 min à pied — Léman Express direct Cornavin en 15 min."}
+                  ? "Opened January 2026. 500 m² over 4 buildings on 1,500 m² of gardens. Annemasse station 9-min walk — Léman Express direct to Eaux-Vives in 8 min, Cornavin in about 20."
+                  : "Ouvert en janvier 2026. 500 m² sur 4 bâtiments au cœur de 1 500 m² de jardins. Gare d'Annemasse à 9 min à pied — Léman Express direct : Eaux-Vives en 8 min, Cornavin en 20 min environ."}
               </p>
               <span className="inline-flex items-center gap-2 text-[#D4A574] font-medium group-hover:gap-3 transition-all">
                 {language === "en" ? "Discover Le Lodge" : "Découvrir Le Lodge"}
@@ -290,8 +290,8 @@ export function AnnemasseColocationPage() {
               </thead>
               <tbody>
                 {[
-                  [language === "en" ? "Geneva Cornavin (city center)" : "Genève Cornavin (centre)", "15 min", language === "en" ? "Léman Express direct" : "Léman Express direct"],
-                  [language === "en" ? "Geneva Eaux-Vives" : "Genève Eaux-Vives", "20 min", language === "en" ? "Tram 17 TPG" : "Tram 17 TPG"],
+                  [language === "en" ? "Geneva Eaux-Vives (city centre)" : "Genève Eaux-Vives (centre)", "8 min", language === "en" ? "Léman Express direct" : "Léman Express direct"],
+                  [language === "en" ? "Geneva Cornavin" : "Genève Cornavin", language === "en" ? "about 20 min" : "20 min env.", language === "en" ? "Léman Express direct" : "Léman Express direct"],
                   [language === "en" ? "Geneva Airport" : "Aéroport de Genève", "25-30 min", language === "en" ? "Car (A40 highway)" : "Voiture (autoroute A40)"],
                   [language === "en" ? "Moillesulaz Swiss border" : "Frontière de Moillesulaz", "2-5 min", language === "en" ? "Walk / bike (Ambilly), 5 min car (Lodge/Villa)" : "À pied / vélo (Ambilly), 5 min voiture (Lodge/Villa)"],
                   [language === "en" ? "Geneva CHUV / WHO area" : "Genève CHUV / OMS", "20-25 min", language === "en" ? "Tram 17 + correspondence" : "Tram 17 + correspondance"],

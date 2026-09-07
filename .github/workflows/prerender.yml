@@ -99,8 +99,10 @@ jobs:
       # Garde Lot S1 (brief Socle entité, 05/09/2026) : fiche de faits canonique = base = HTML prérendu
       # = llms.txt (bloc présent une fois sur 14 pages money + 8 articles FR/EN, aucune chaîne périmée,
       # JSON-LD sans doublon ni aggregateRating). Échec = pas de commit.
+      # (S2, 07/09/2026) --strict : toute minute non canonique et non qualifiée dans une phrase « Genève » bloque
+      # (hors Observatoire et articles transport). Le vouvoiement reste un avertissement.
       - name: Vérifier la fiche entité
-        run: node scripts/check-entity-facts.mjs
+        run: node scripts/check-entity-facts.mjs --strict
 
       # Garde Lot B (02/09/2026) : hydrate chaque page prérendue contre le bundle de CE build ;
       # toute erreur d'hydratation (#418/#423/#425) bloque le commit — et donc la production.

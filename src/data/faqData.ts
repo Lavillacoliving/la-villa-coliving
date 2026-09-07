@@ -113,8 +113,8 @@ export const faqData: FAQItem[] = [
       fr: 'Qu\'est-ce qui différencie La Villa Coliving des autres espaces de coliving ?',
     },
     answer: {
-      en: 'La Villa stands out through our curated community approach, exceptional locations just 30 minutes from Geneva, premium amenities including heated pools and wellness areas, and our commitment to creating genuine connections. We\'re not just a place to sleep—we\'re a lifestyle designed for modern professionals who value both productivity and wellbeing. Our homes are designed spaces, not converted apartments, with every detail thoughtfully considered.',
-      fr: 'La Villa se démarque par notre approche de communauté sélectionnée, nos emplacements exceptionnels à seulement 30 minutes de Genève, nos équipements premium incluant des piscines chauffées et des espaces bien-être, et notre engagement à créer de véritables connexions. Nous ne sommes pas juste un endroit pour dormir—nous sommes un mode de vie conçu pour les professionnels modernes qui valorisent à la fois la productivité et le bien-être. Nos maisons sont des espaces design, pas des appartements convertis, avec chaque détail soigneusement pensé.',
+      en: 'La Villa stands out through our curated community approach, exceptional locations just 20 minutes from Geneva, premium amenities including heated pools and wellness areas, and our commitment to creating genuine connections. We\'re not just a place to sleep—we\'re a lifestyle designed for modern professionals who value both productivity and wellbeing. Our homes are designed spaces, not converted apartments, with every detail thoughtfully considered.',
+      fr: 'La Villa se démarque par notre approche de communauté sélectionnée, nos emplacements exceptionnels à seulement 20 minutes de Genève, nos équipements premium incluant des piscines chauffées et des espaces bien-être, et notre engagement à créer de véritables connexions. Nous ne sommes pas juste un endroit pour dormir—nous sommes un mode de vie conçu pour les professionnels modernes qui valorisent à la fois la productivité et le bien-être. Nos maisons sont des espaces design, pas des appartements convertis, avec chaque détail soigneusement pensé.',
     },
   },
   {
@@ -603,8 +603,8 @@ export const faqData: FAQItem[] = [
       fr: 'Où sont exactement situées les maisons ?',
     },
     answer: {
-      en: 'Our houses are located in the Grand Genève region in France: La Villa in Ville-la-Grand, Le Loft in Ambilly, and Le Lodge in Annemasse. All are within 30 minutes of Geneva city center, with excellent public transport connections.',
-      fr: 'Nos maisons sont situées dans la région du Grand Genève en France : La Villa à Ville-la-Grand, Le Loft à Ambilly et Le Lodge à Annemasse. Toutes sont à moins de 30 minutes du centre de Genève, avec d\'excellentes connexions de transport en commun.',
+      en: 'Our houses are located in the Grand Genève region in France: La Villa in Ville-la-Grand, Le Loft in Ambilly, and Le Lodge in Annemasse. All are about 20 minutes door-to-door from Geneva city centre, with excellent public transport connections.',
+      fr: 'Nos maisons sont situées dans la région du Grand Genève en France : La Villa à Ville-la-Grand, Le Loft à Ambilly et Le Lodge à Annemasse. Toutes sont à environ 20 minutes porte-à-porte du centre de Genève, avec d\'excellentes connexions de transport en commun.',
     },
   },
   {
@@ -983,8 +983,8 @@ export const faqData: FAQItem[] = [
       fr: 'Y a-t-il du coliving près de Genève ?',
     },
     answer: {
-      en: 'Yes! La Villa Coliving offers premium coliving experiences just 30 minutes from Geneva city center. Our houses in Ville-la-Grand, Ambilly, and Annemasse provide easy access to Geneva while offering more space, better amenities, and better value than city-center options.',
-      fr: 'Oui ! La Villa Coliving offre des expériences de coliving premium à seulement 30 minutes du centre de Genève. Nos maisons à Ville-la-Grand, Ambilly et Annemasse offrent un accès facile à Genève tout en proposant plus d\'espace, de meilleurs équipements et un meilleur rapport qualité-prix que les options en centre-ville.',
+      en: 'Yes! La Villa Coliving offers premium coliving experiences just 20 minutes door-to-door from Geneva city centre. Our houses in Ville-la-Grand, Ambilly, and Annemasse provide easy access to Geneva while offering more space, better amenities, and better value than city-center options.',
+      fr: 'Oui ! La Villa Coliving offre des expériences de coliving premium à 20 minutes porte-à-porte du centre de Genève. Nos maisons à Ville-la-Grand, Ambilly et Annemasse offrent un accès facile à Genève tout en proposant plus d\'espace, de meilleurs équipements et un meilleur rapport qualité-prix que les options en centre-ville.',
     },
   },
   {

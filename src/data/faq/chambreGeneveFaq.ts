@@ -17,7 +17,7 @@ export const chambreGeneveFaq: { fr: QAPair[]; en: QAPair[] } = {
     },
     {
       q: "Quelles sont les conditions pour louer une chambre près de Genève ?",
-      a: `Une candidature en ligne de deux minutes, puis un contrat de travail ou une promesse d'embauche et une pièce d'identité. Aucun historique locatif suisse ni garant suisse n'est demandé. Réponse sous 48 h, visite sur place ou en visio, bail meublé français à ton nom (${STATS.leaseDurationMonths} mois renouvelable, préavis d'${STATS.noticePeriodMonths} mois) signé en ligne, emménagement possible en une semaine.`,
+      a: `Une candidature en ligne de deux minutes, puis un contrat de travail ou une promesse d'embauche et une pièce d'identité. Aucun historique locatif suisse n'est demandé. Réponse sous 48 h, visite sur place ou en visio, bail meublé français à ton nom (${STATS.leaseDurationMonths} mois renouvelable, préavis d'${STATS.noticePeriodMonths} mois) signé en ligne, emménagement possible en une semaine.`,
     },
     {
       q: "Où trouver une chambre chez l'habitant près de Genève ?",
@@ -41,7 +41,7 @@ export const chambreGeneveFaq: { fr: QAPair[]; en: QAPair[] } = {
     },
     {
       q: "What are the conditions to rent a room near Geneva?",
-      a: `A two-minute online application, then an employment contract or job offer and an ID. No Swiss rental history or Swiss guarantor is required. Reply within 48 h, visit on site or by video, French furnished lease in your name (${STATS.leaseDurationMonths} months renewable, ${STATS.noticePeriodMonths}-month notice) signed online, move-in possible within a week.`,
+      a: `A two-minute online application, then an employment contract or job offer and an ID. No Swiss rental history is required. Reply within 48 h, visit on site or by video, French furnished lease in your name (${STATS.leaseDurationMonths} months renewable, ${STATS.noticePeriodMonths}-month notice) signed online, move-in possible within a week.`,
     },
     {
       q: "Where can you find a room in someone's home near Geneva?",

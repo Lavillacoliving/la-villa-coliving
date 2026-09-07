@@ -206,7 +206,7 @@ export function ChambreLouerGenevePage() {
           <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
             {[
               { num: "1", fr: ["Candidature en ligne", "2 minutes : ton profil, ta date d'arrivée, la maison qui te plaît."], en: ["Online application", "2 minutes: your profile, move-in date and favourite house."] },
-              { num: "2", fr: ["Dossier", "Contrat de travail ou promesse d'embauche, pièce d'identité. Ni historique locatif suisse ni garant suisse."], en: ["File", "Employment contract or job offer, ID. No Swiss rental history, no Swiss guarantor."] },
+              { num: "2", fr: ["Dossier", "Contrat de travail ou promesse d'embauche, pièce d'identité. Aucun historique locatif suisse demandé."], en: ["File", "Employment contract or job offer, ID. No Swiss rental history required."] },
               { num: "3", fr: ["Réponse sous 48 h et visite", "Sur place ou en visio, de la maison et de la chambre."], en: ["Reply within 48 h and visit", "On site or by video, of the house and the room."] },
               { num: "4", fr: ["Bail et emménagement", `Bail meublé à ton nom signé en ligne, caution de ${STATS.depositMonths} mois hors charges, tu arrives avec ta valise.`], en: ["Lease and move-in", `Furnished lease in your name signed online, ${STATS.depositMonths}-month deposit excluding charges, you arrive with your suitcase.`] },
             ].map((step) => (
