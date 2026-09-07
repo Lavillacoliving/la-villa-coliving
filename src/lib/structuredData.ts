@@ -17,13 +17,24 @@ export const ORG_ID = `${SITE}/#organization`;
  * Profils publics officiels — source unique pour tous les `sameAs` (site, llms.txt, fiche entité).
  * Le lien share.google est la fiche Google Business (une seule fiche, confirmé 04/08).
  * (Lot S1, D10 Jérôme 05/09/2026) Le compte Instagram officiel est `la_villa_coliving_geneva`
- * (l'ancien handle `lavillacoliving` était faux) ; PAS de page Facebook. Annuaires (bookmycoliving,
- * coliving.com, La Carte des Colocs, LinkedIn) : à ajouter ici après validation des URL par Jérôme.
+ * (l'ancien handle `lavillacoliving` était faux) ; PAS de page Facebook.
+ * (07/09/2026, URL validées avec Jérôme) Annuaires au niveau de l'organisation : profil PRO La Carte des Colocs
+ * (SIREN 882153810). Les fiches par maison (coliving.com) vivent dans HOUSES[].sameAs. Écartés : welc.ch
+ * (Welcome Center UNIGE/HES-SO/HUG — La Villa y est citée dans une liste, c'est une citation, pas une fiche
+ * d'identité) et housing.cagi.ch (tableau de bord privé, aucune page publique). bookmycoliving, LinkedIn :
+ * aucune page publique trouvée.
+ * INSTAGRAM_URL doit rester en tête : scripts/build-llms-txt.mjs lit sameAs[0].
  */
 export const INSTAGRAM_URL = "https://www.instagram.com/la_villa_coliving_geneva/";
+export const LACARTEDESCOLOCS_PRO_URL = "https://www.lacartedescolocs.com/pro/la_villa_coliving";
+/** Profil Roomlala du compte La Villa (public, membre depuis mai 2021, 3 annonces = les 3 maisons). ⚠️ Roomlala ne
+ *  doit donc PAS figurer dans la liste COMPETITOR_NAMES : la garde scanne aussi le JSON-LD. */
+export const ROOMLALA_PROFILE_URL = "https://www.roomlala.fr/profile/3199661";
 export const LAVILLA_SAME_AS = [
   INSTAGRAM_URL,
   "https://share.google/OR9wy40wVx80aeQei",
+  LACARTEDESCOLOCS_PRO_URL,
+  ROOMLALA_PROFILE_URL,
 ];
 
 // Coordonnées publiques — confirmées par Jérôme (2026-06-05).
@@ -56,6 +67,8 @@ export interface HouseInfo {
   postalCode: string;
   /** Coordonnées rooftop-exactes (Base Adresse Nationale, géocodées le 15/08/2026, score > 0,95). */
   geo: { lat: number; lng: number };
+  /** Fiches publiques de CETTE maison sur les annuaires (s'ajoutent à LAVILLA_SAME_AS dans son LodgingBusiness). */
+  sameAs?: string[];
 }
 
 /** Les 3 maisons — source unique pour le schema (adresses confirmées, geo BAN rooftop). */
@@ -68,6 +81,11 @@ export const HOUSES: HouseInfo[] = [
     addressLocality: "Ville-la-Grand",
     postalCode: "74100",
     geo: { lat: 46.205146, lng: 6.232634 },
+    // Fiches de la maison : coliving.com (publiée, hôte Fanny) + annonce Roomlala — URL de Jérôme, 07/09/2026.
+    sameAs: [
+      "https://coliving.com/spaces/ybsq769h",
+      "https://www.roomlala.fr/listing/une-chambre-se-libere-a-la-villa-coliving-tout-inclus-248638",
+    ],
   },
   {
     slug: "leloft",
@@ -77,6 +95,7 @@ export const HOUSES: HouseInfo[] = [
     addressLocality: "Ambilly",
     postalCode: "74100",
     geo: { lat: 46.196367, lng: 6.226278 },
+    sameAs: ["https://www.roomlala.fr/listing/chambre-avec-salle-de-bain-privee-coliving-tout-inclus-a-15-min-de-geneve-363910"],
   },
   {
     slug: "lelodge",
@@ -86,6 +105,7 @@ export const HOUSES: HouseInfo[] = [
     addressLocality: "Annemasse",
     postalCode: "74100",
     geo: { lat: 46.194519, lng: 6.241576 },
+    sameAs: ["https://www.roomlala.fr/listing/une-chambre-disponible-au-lodge-colocation-coliving-624138"],
   },
 ];
 
@@ -188,6 +208,7 @@ export function buildHomeLodgingBusinessSchema(language: "fr" | "en" = "fr"): Re
         addressCountry: "FR",
       },
       geo: { "@type": "GeoCoordinates", latitude: h.geo.lat, longitude: h.geo.lng },
+          ...(h.sameAs ? { sameAs: h.sameAs } : {}),
     })),
   };
 }
@@ -239,6 +260,7 @@ export function buildLocalBusinessSchema(language: "fr" | "en", description: str
         addressCountry: "FR",
       },
       geo: { "@type": "GeoCoordinates", latitude: h.geo.lat, longitude: h.geo.lng },
+          ...(h.sameAs ? { sameAs: h.sameAs } : {}),
     })),
     // E-E-A-T : fondation + fondateurs identifiables (sameAs LinkedIn) sur toutes les pages.
     foundingDate: FOUNDING_DATE,
