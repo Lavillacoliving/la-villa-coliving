@@ -6,6 +6,7 @@ import { BailPDF } from './BailPDF';
 import { logAudit } from '@/lib/auditLog';
 import { getBailleurLines } from '@/lib/entities';
 import { useIsMobile } from '@/hooks/use-mobile';
+import { numberInWordsFr } from '@/lib/frenchNumbers';
 
 interface Property {
   id: string;
@@ -93,13 +94,35 @@ function todayISO(): string {
   return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
 }
 
-// Helper: nombre en lettres pour la durée (mois)
-const DURATION_WORDS_PREVIEW: Record<number, string> = {
-  1: "un", 2: "deux", 3: "trois", 4: "quatre", 5: "cinq", 6: "six",
-  7: "sept", 8: "huit", 9: "neuf", 10: "dix", 11: "onze", 12: "douze",
-  15: "quinze", 18: "dix-huit", 24: "vingt-quatre", 36: "trente-six",
+// Helper: nombre en lettres pour la durée (mois) — toute durée saisie (1-999)
+const durationInWordsPreview = numberInWordsFr;
+
+// Durées de bail proposées dans la liste ; toute autre valeur se saisit en mois exacts
+const LEASE_DURATION_PRESETS: { months: number; label: string }[] = [
+  { months: 1, label: '1 mois' },
+  { months: 3, label: '3 mois' },
+  { months: 6, label: '6 mois (étudiant / bail mobilité)' },
+  { months: 9, label: '9 mois (étudiant)' },
+  { months: 12, label: '12 mois (standard)' },
+  { months: 15, label: '15 mois' },
+  { months: 18, label: '18 mois' },
+  { months: 24, label: '24 mois' },
+  { months: 36, label: '36 mois' },
+];
+const LEASE_DURATION_DEFAULT = 12;
+const LEASE_DURATION_MIN = 1;
+const LEASE_DURATION_MAX = 60;
+const LEASE_DURATION_CUSTOM = 'custom';
+const isPresetLeaseDuration = (months: number): boolean =>
+  LEASE_DURATION_PRESETS.some((p) => p.months === months);
+// Saisie libre : vide ou invalide → standard 12 mois, sinon borné entre MIN et MAX
+const clampLeaseDuration = (months: number): number => {
+  if (!Number.isInteger(months) || months <= 0) return LEASE_DURATION_DEFAULT;
+  return Math.min(LEASE_DURATION_MAX, Math.max(LEASE_DURATION_MIN, months));
 };
-const durationInWordsPreview = (n: number): string => DURATION_WORDS_PREVIEW[n] || String(n);
+// Date ISO → texte FR (« 14 septembre 2027 ») pour l'aide sous le champ durée
+const fDateText = (iso: string): string =>
+  new Date(iso + 'T00:00:00').toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' });
 
 // Helper: traduit bathroom_type en libellé FR (preview)
 const bathroomLabelPreview = (type: string | undefined): string => {
@@ -879,6 +902,8 @@ export default function DashboardNouveauBailPage() {
 
   const [selectedProperty, setSelectedProperty] = useState<Property | null>(null);
   const [selectedRoom, setSelectedRoom] = useState<Room | null>(null);
+  // Durée du bail : « Autre durée » choisie dans la liste → champ de saisie exacte en mois
+  const [customDuration, setCustomDuration] = useState<boolean>(false);
   const [saving, setSaving] = useState(false);
   const [replaceConfirm, setReplaceConfirm] = useState<{oldTenant:{id:string,first_name:string,last_name:string}}|null>(null);
 
@@ -1004,6 +1029,8 @@ export default function DashboardNouveauBailPage() {
         return d.toISOString().split('T')[0];
       })()
     : '';
+  // Champ « durée exacte » affiché si choisi explicitement, ou si la durée courante n'est pas dans la liste
+  const showCustomDuration = customDuration || !isPresetLeaseDuration(form.lease_duration_months);
 
   // Raccourci « ancien tarif » — visible jusqu'au 05/09/2026 inclus, puis disparaît
   const [legacyRentAvailable] = useState<boolean>(() => todayISO() <= LEGACY_RENT_UNTIL);
@@ -1548,31 +1575,87 @@ export default function DashboardNouveauBailPage() {
         />
 
         <label style={{ display: 'block', marginBottom: '8px', fontSize: '13px', color: '#666' }}>
-          Durée du bail (mois) — <span style={{ color: '#999', fontStyle: 'italic' }}>standard : 12 mois</span>
+          Durée du bail (mois) — <span style={{ color: '#999', fontStyle: 'italic' }}>
+            standard : 12 mois · « Autre durée » pour saisir un nombre de mois exact
+          </span>
         </label>
         <select
-          value={form.lease_duration_months}
-          onChange={(e) => setForm((prev) => ({ ...prev, lease_duration_months: parseInt(e.target.value) || 12 }))}
+          value={showCustomDuration ? LEASE_DURATION_CUSTOM : String(form.lease_duration_months)}
+          onChange={(e) => {
+            if (e.target.value === LEASE_DURATION_CUSTOM) {
+              // On garde la durée courante comme point de départ de la saisie exacte
+              setCustomDuration(true);
+              return;
+            }
+            setCustomDuration(false);
+            setForm((prev) => ({
+              ...prev,
+              lease_duration_months: parseInt(e.target.value, 10) || LEASE_DURATION_DEFAULT,
+            }));
+          }}
           style={{
             width: '100%',
             padding: '10px',
-            marginBottom: '15px',
+            marginBottom: '10px',
             borderRadius: '4px',
             border: '1px solid #ddd',
             fontSize: '14px',
             background: 'white',
           }}
         >
-          <option value={1}>1 mois</option>
-          <option value={3}>3 mois</option>
-          <option value={6}>6 mois (étudiant / bail mobilité)</option>
-          <option value={9}>9 mois (étudiant)</option>
-          <option value={12}>12 mois (standard)</option>
-          <option value={15}>15 mois</option>
-          <option value={18}>18 mois</option>
-          <option value={24}>24 mois</option>
-          <option value={36}>36 mois</option>
+          {LEASE_DURATION_PRESETS.map((p) => (
+            <option key={p.months} value={String(p.months)}>
+              {p.label}
+            </option>
+          ))}
+          <option value={LEASE_DURATION_CUSTOM}>Autre durée — saisie exacte en mois…</option>
         </select>
+        {showCustomDuration && (
+          <>
+            <label style={{ display: 'block', marginBottom: '8px', fontSize: '13px', color: '#666' }}>
+              Durée exacte (mois) — <span style={{ color: '#999', fontStyle: 'italic' }}>
+                de {LEASE_DURATION_MIN} à {LEASE_DURATION_MAX} mois, entier
+              </span>
+            </label>
+            <input
+              type="number"
+              inputMode="numeric"
+              min={LEASE_DURATION_MIN}
+              max={LEASE_DURATION_MAX}
+              step={1}
+              value={form.lease_duration_months || ''}
+              onChange={(e) => {
+                // Pendant la saisie : valeur brute (vide = 0) ; le contrat retombe sur 12 mois tant qu'elle est invalide
+                const raw = parseInt(e.target.value, 10);
+                setForm((prev) => ({ ...prev, lease_duration_months: Number.isNaN(raw) ? 0 : raw }));
+              }}
+              onBlur={() =>
+                setForm((prev) => ({ ...prev, lease_duration_months: clampLeaseDuration(prev.lease_duration_months) }))
+              }
+              placeholder="ex. 7"
+              style={{
+                width: '100%',
+                padding: '10px',
+                marginBottom: '10px',
+                borderRadius: '4px',
+                border: '2px solid #b8860b',
+                fontSize: '14px',
+                background: '#FFF8E7',
+              }}
+            />
+          </>
+        )}
+        <p style={{ margin: '0 0 15px', fontSize: '13px', color: '#666' }}>
+          Bail de <strong>{form.lease_duration_months || LEASE_DURATION_DEFAULT} mois</strong>{' '}
+          ({durationInWordsPreview(form.lease_duration_months || LEASE_DURATION_DEFAULT)})
+          {exitDate ? (
+            <>
+              {' '}→ fin le <strong>{fDateText(exitDate)}</strong>
+            </>
+          ) : (
+            <span style={{ color: '#999', fontStyle: 'italic' }}> — renseigne la date d'entrée pour voir la date de fin</span>
+          )}
+        </p>
 
         <label style={{ display: 'block', marginBottom: '8px', fontSize: '13px', color: '#666' }}>
           Loyer mensuel (CHF, charges comprises) — <span style={{ color: '#999', fontStyle: 'italic' }}>
