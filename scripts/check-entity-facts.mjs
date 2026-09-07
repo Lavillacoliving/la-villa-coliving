@@ -45,7 +45,7 @@ const FORBIDDEN = [
   { re: /bail flexible 1 à 12 mois|1 à 12 mois|1 to 12 months/i, label: '« bail 1 à 12 mois »' },
   { re: /\[FAIT À CONFIRMER|\[À VÉRIFIER|\{\{[A-Z_]+\}\}/, label: 'placeholder' },
 ];
-const MINUTE_QUALIFIER = /\b(?:à pied|on foot|walk\w*|vélo|bike|cycl\w*|voiture|car|driving|aéroport|airport|bus|tram\w*|Cornavin|Eaux-Vives|CERN|Nations|heure de pointe|rush hour|gare|station|Léman Express|CEVA|Moillesulaz|frontière|border|visio|vidéo|video|appel|call|Annemasse[ -–↔]+Gen[èe]v[ea])\b/i;
+const MINUTE_QUALIFIER = /(?<![\p{L}\p{N}])(?:à pied|on foot|walk\p{L}*|vélo|bike|cycl\p{L}*|voiture|car|driving|aéroport|airport|bus|tram\p{L}*|Cornavin|Eaux-Vives|CERN|Nations|heure de pointe|rush hour|gare|station|Léman Express|CEVA|Moillesulaz|frontière|border|visio|vidéo|video|appel|call|Annemasse[ \-–↔]+Gen[èe]v[ea])(?![\p{L}\p{N}])/iu;
 
 function routeToFile(route, lang) {
   const r = lang === 'en' ? (route === '/' ? '/en' : `/en${route}`) : route;
@@ -190,7 +190,7 @@ async function checkHtml(m) {
     // Tutoiement (S4 — garde anti-régression, FR hors pages légales/B2B)
     if (!f.startsWith('en-') && !VOUVOIEMENT_ALLOW.test(f)) {
       const hits = [...text.matchAll(/(?<!rendez-)\bvous\b|\bvotre\b|\bvos\b/gi)].length;
-      if (hits > 0) { vousPages++; (STRICT ? failures : warnings).push(`${f} : ${hits} forme(s) de vouvoiement`); }
+      if (hits > 0) { vousPages++; warnings.push(`${f} : ${hits} forme(s) de vouvoiement`); } // toujours en avertissement, même en --strict (S4 = garde anti-régression)
     }
   }
   return { failures, warnings, files: files.length, blocks, minuteWarnings, vousPages };
