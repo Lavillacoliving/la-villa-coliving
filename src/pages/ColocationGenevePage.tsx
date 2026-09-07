@@ -280,8 +280,8 @@ export function ColocationGenevePage() {
           </p>
           <div className="grid sm:grid-cols-3 gap-4 text-sm text-[#44403C]">
             {(en
-              ? [["Le Lodge · Annemasse", "Léman Express direct, Cornavin in 15 min"], ["Le Loft · Ambilly", "500 m from the Moillesulaz border, tram 17"], ["La Villa · Ville-la-Grand", "Léman Express and tram 17 within walking distance"]]
-              : [["Le Lodge · Annemasse", "Léman Express direct, Cornavin en 15 min"], ["Le Loft · Ambilly", "À 500 m de la douane de Moillesulaz, tram 17"], ["La Villa · Ville-la-Grand", "Léman Express et tram 17 à pied"]]
+              ? [["Le Lodge · Annemasse", "Direct Léman Express: Eaux-Vives 8 min, Cornavin about 20"], ["Le Loft · Ambilly", "500 m from the Moillesulaz border, tram 17"], ["La Villa · Ville-la-Grand", "Léman Express and tram 17 within walking distance"]]
+              : [["Le Lodge · Annemasse", "Léman Express direct : Eaux-Vives 8 min, Cornavin 20 min env."], ["Le Loft · Ambilly", "À 500 m de la douane de Moillesulaz, tram 17"], ["La Villa · Ville-la-Grand", "Léman Express et tram 17 à pied"]]
             ).map(([t, d]) => (
               <div key={t} className="bg-[#FAF9F6] p-5"><p className="font-medium text-[#1C1917] mb-1">{t}</p><p>{d}</p></div>
             ))}
