@@ -130,12 +130,12 @@ export const situationsFaq: SituationFaq[] = [
     fr: {
       q: "Annemasse, c'est sûr ?",
       a: "Oui, comme dans toute ville-centre d'agglomération : tout dépend du quartier et de l'heure, pas de la commune. Nos maisons sont dans des secteurs résidentiels calmes : Le Lodge à Romagny (Annemasse), La Villa à Ville-la-Grand, Le Loft à Ambilly à deux pas de Moillesulaz. Plus de 100 résidents y ont vécu depuis 2021, dont beaucoup de nouveaux arrivants qui ne connaissaient pas la région. Notre article sur les quartiers d'Annemasse dit, quartier par quartier, où on habiterait et où on éviterait.",
-      more: { href: "/blog/vivre-a-annemasse-avis-honnete-securite-quartiers", label: "Vivre à Annemasse et Gaillard : l'avis honnête" },
+      more: { href: "/blog/vivre-a-annemasse-quand-on-travaille-a-geneve", label: "Vivre à Annemasse quand on travaille à Genève" },
     },
     en: {
       q: "Is Annemasse safe?",
       a: "Yes, as in any central town of a metropolitan area: it depends on the neighbourhood and the hour, not on the town. Our houses are in quiet residential areas: Le Lodge in Romagny (Annemasse), La Villa in Ville-la-Grand, Le Loft in Ambilly a short walk from Moillesulaz. More than 100 residents have lived there since 2021, many of them newcomers who didn't know the area. Our article on Annemasse's neighbourhoods says, block by block, where we would live and where we wouldn't.",
-      more: { href: "/blog/vivre-a-annemasse-avis-honnete-securite-quartiers", label: "Is Annemasse a good place to live? The honest view" },
+      more: { href: "/blog/vivre-a-annemasse-quand-on-travaille-a-geneve", label: "Living in Annemasse when you work in Geneva" },
     },
   },
   {
