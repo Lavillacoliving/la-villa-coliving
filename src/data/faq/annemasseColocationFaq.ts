@@ -6,7 +6,7 @@ import { pickSituations } from "@/data/faq/situationsFaq";
 // page le 07/09/2026 (Lot C2) : désormais FR **et** EN (la route /en servait la FAQ française et son JSON-LD),
 // réponses présentes dans le DOM via FaqSection, bail aligné sur la décision D5 (12 mois, minimum 3, préavis 1),
 // permis G renvoyé à l'OCPM plutôt qu'un délai affirmé. + 4 « situations réelles » (P10, Cornavin, P1, coliving).
-// « 15 min en Léman Express direct » = temps réel Annemasse/Lodge autorisé par CLAUDE.md §1 (qualifié).
+// Trajet train (décision Jérôme 07/09, relecture C2) : Eaux-Vives 8 min, Cornavin ≈ 20 min — les « 15 min » des pages maisons/Annemasse sont à aligner en S2.
 export const annemasseColocationFaq: { fr: QAPair[]; en: QAPair[] } = {
   fr: [
     {
@@ -15,7 +15,7 @@ export const annemasseColocationFaq: { fr: QAPair[]; en: QAPair[] } = {
     },
     {
       q: "Combien de temps pour aller à Genève depuis Annemasse ?",
-      a: "Depuis Annemasse, Genève Cornavin est à 15 minutes en Léman Express direct (sans correspondance) depuis la gare d'Annemasse. En voiture, compte 15-20 min selon la douane (Moillesulaz est la plus rapide). Le Tram 17 TPG (Lancy-Pont-Rouge ↔ Annemasse) dessert aussi le centre de Genève. L'aéroport de Genève est à 25-30 min en voiture.",
+      a: "Depuis la gare d'Annemasse, le Léman Express direct (sans correspondance) met 8 minutes jusqu'à Genève Eaux-Vives et 20 minutes environ jusqu'à Cornavin. En voiture, compte 15-20 min selon la douane (Moillesulaz est la plus rapide). Le Tram 17 TPG (Lancy-Pont-Rouge ↔ Annemasse) dessert aussi le centre de Genève. L'aéroport de Genève est à 25-30 min en voiture.",
     },
     {
       q: "Quel quartier d'Annemasse Agglo choisir : Ville-la-Grand, Ambilly ou Annemasse ?",
@@ -46,7 +46,7 @@ export const annemasseColocationFaq: { fr: QAPair[]; en: QAPair[] } = {
     },
     {
       q: "How long does it take to get to Geneva from Annemasse?",
-      a: "From Annemasse station, Geneva Cornavin is 15 minutes away on the direct Léman Express, no change. By car, count 15-20 min depending on the border crossing (Moillesulaz is the fastest). TPG tram 17 (Lancy-Pont-Rouge ↔ Annemasse) also serves central Geneva. Geneva airport is 25-30 min by car.",
+      a: "From Annemasse station, the direct Léman Express (no change) takes 8 minutes to Geneva Eaux-Vives and about 20 minutes to Cornavin. By car, count 15-20 min depending on the border crossing (Moillesulaz is the fastest). TPG tram 17 (Lancy-Pont-Rouge ↔ Annemasse) also serves central Geneva. Geneva airport is 25-30 min by car.",
     },
     {
       q: "Which part of Annemasse Agglo should you choose: Ville-la-Grand, Ambilly or Annemasse?",

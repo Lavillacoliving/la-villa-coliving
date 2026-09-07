@@ -103,12 +103,12 @@ export const situationsFaq: SituationFaq[] = [
     id: "minutes-to-cornavin",
     fr: {
       q: "Combien de minutes jusqu'à Cornavin depuis chaque maison ?",
-      a: `Compte environ 25 minutes porte-à-porte jusqu'à Genève Cornavin, et ${MIN} jusqu'au centre (Eaux-Vives). Le Lodge est à 9 minutes à pied de la gare d'Annemasse, La Villa et Le Loft à 10 ; de là, le Léman Express rejoint Eaux-Vives en 8 minutes et Cornavin en 15, sans changement. Depuis Le Loft, le tram 17 est à 5 minutes à pied et entre dans Genève par Moillesulaz. Les horaires réels : app CFF ou TPG.`,
+      a: `Compte environ 30 minutes porte-à-porte jusqu'à Genève Cornavin, et ${MIN} jusqu'au centre (Eaux-Vives). Le Lodge est à 9 minutes à pied de la gare d'Annemasse, La Villa et Le Loft à 10 ; de là, le Léman Express rejoint Eaux-Vives en 8 minutes et Cornavin en 20 environ, sans changement. Depuis Le Loft, le tram 17 est à 5 minutes à pied et entre dans Genève par Moillesulaz. Les horaires réels : app CFF ou TPG.`,
       more: { href: "/nos-maisons", label: "Comparer les trois maisons" },
     },
     en: {
       q: "How many minutes to Cornavin from each house?",
-      a: `Count about 25 minutes door-to-door to Geneva Cornavin, and ${MIN} to the city centre (Eaux-Vives). Le Lodge is a 9-minute walk from Annemasse station, La Villa and Le Loft 10; from there the Léman Express reaches Eaux-Vives in 8 minutes and Cornavin in 15, no change. From Le Loft, tram 17 is a 5-minute walk away and enters Geneva through Moillesulaz. Real-time schedules: SBB or TPG apps.`,
+      a: `Count about 30 minutes door-to-door to Geneva Cornavin, and ${MIN} to the city centre (Eaux-Vives). Le Lodge is a 9-minute walk from Annemasse station, La Villa and Le Loft 10; from there the Léman Express reaches Eaux-Vives in 8 minutes and Cornavin in about 20, no change. From Le Loft, tram 17 is a 5-minute walk away and enters Geneva through Moillesulaz. Real-time schedules: SBB or TPG apps.`,
       more: { href: "/nos-maisons", label: "Compare the three houses" },
     },
   },
