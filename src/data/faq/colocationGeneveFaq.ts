@@ -19,6 +19,7 @@ export const colocationGeneveFaq: { fr: QAPair[]; en: QAPair[] } = {
     {
       q: "Comment faire une colocation en Suisse quand on travaille à Genève ?",
       a: `Deux profils, une même solution. Si tu es frontalier, tu vis côté France avec un permis G et tu es imposé à la source à Genève. Si tu es résident suisse et que tu passes côté France, tu deviens frontalier à ton tour. Chez La Villa, le bail est un bail meublé français à ton nom (${STATS.leaseDurationMonths} mois renouvelable, préavis d'${STATS.noticePeriodMonths} mois), la caution est de ${STATS.depositMonths} mois de loyer hors charges et il n'y a ni frais d'agence ni frais de dossier. Aucun historique locatif suisse n'est demandé.`,
+      more: { href: "/blog/s-installer-a-geneve-expatrie-cote-suisse-ou-cote-france", label: "S'installer à Genève : côté Suisse ou France ?" },
     },
     {
       q: "Quel est le meilleur site pour trouver une colocation à Genève ?",
@@ -47,6 +48,7 @@ export const colocationGeneveFaq: { fr: QAPair[]; en: QAPair[] } = {
     {
       q: "How do you share a flat in Switzerland when you work in Geneva?",
       a: `Two profiles, one solution. If you are a cross-border worker, you live on the French side with a G permit and are taxed at source in Geneva. If you are a Swiss resident moving to the French side, you become a cross-border worker in turn. At La Villa the lease is a French furnished lease in your name (${STATS.leaseDurationMonths} months renewable, ${STATS.noticePeriodMonths}-month notice), the deposit is ${STATS.depositMonths} months' rent excluding charges, and there is no agency or application fee. No Swiss rental history is required.`,
+      more: { href: "/blog/s-installer-a-geneve-expatrie-cote-suisse-ou-cote-france", label: "Moving to Geneva: Swiss side or French side?" },
     },
     {
       q: "What is the best website to find a flatshare in Geneva?",

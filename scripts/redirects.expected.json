@@ -174,5 +174,13 @@
   {
     "from": "/en/rooms-september",
     "to": "/en/chambres-disponibles"
+  },
+  {
+    "from": "/blog/colocation-expats-geneve-guide",
+    "to": "/blog/s-installer-a-geneve-expatrie-cote-suisse-ou-cote-france"
+  },
+  {
+    "from": "/en/blog/colocation-expats-geneve-guide",
+    "to": "/en/blog/s-installer-a-geneve-expatrie-cote-suisse-ou-cote-france"
   }
 ]

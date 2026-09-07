@@ -1,0 +1,35 @@
+{
+  "slug": "s-installer-a-geneve-expatrie-cote-suisse-ou-cote-france",
+  "title_fr": "S'installer à Genève : côté Suisse ou France ?",
+  "title_en": "Moving to Geneva: Swiss side or French side?",
+  "excerpt_fr": "Tu arrives à Genève avec un contrat et tu hésites entre la Suisse et la France voisine ? Ton permis décide, ton budget et ton délai font le reste : le guide pour trancher en une lecture.",
+  "excerpt_en": "Arriving in Geneva with a contract and hesitating between Switzerland and neighbouring France? Your permit decides, your budget and timeline do the rest: the guide to settle it in one read.",
+  "meta_description_fr": "Suisse ou France voisine quand tu arrives à Genève ? Permis G ou B, dossier sans garant, délai réaliste, impôt et LAMal : le comparatif pour décider.",
+  "meta_description_en": "Switzerland or the French side when you move to Geneva? G or B permit, no-guarantor file, realistic timeline, tax and health insurance: the comparison.",
+  "author": "Jerome Austin",
+  "category": "geneva",
+  "image_url": "/images/la villa/exterior/La Villa-100.webp",
+  "tags": [
+    "expatrié",
+    "genève",
+    "permis G",
+    "installation",
+    "frontalier"
+  ],
+  "intent_bucket": "medium",
+  "consolidates": [
+    "colocation-expats-geneve-guide"
+  ],
+  "inbound": [
+    {
+      "slug": "living-in-france-working-in-geneva",
+      "anchor_fr": "comment vivre en France tout en travaillant en Suisse",
+      "anchor_en": "seek housing on the French side"
+    },
+    {
+      "slug": "ou-habiter-frontalier-suisse-villes-france-pas-cher",
+      "anchor_fr": "où vivre côté France",
+      "anchor_en": "where to live on the French side"
+    }
+  ]
+}
