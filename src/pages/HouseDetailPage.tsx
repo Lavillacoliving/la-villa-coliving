@@ -1484,7 +1484,8 @@ export function HouseDetailPage() {
           { "@type": "LocationFeatureSpecification", "name": "Parking", "value": true }
         ],
         "numberOfRooms": ROOMS_BY_HOUSE[id as keyof typeof ROOMS_BY_HOUSE] ?? STATS.totalRooms,
-        "sameAs": LAVILLA_SAME_AS
+        // (07/09/2026) profils de l'organisation + fiche annuaire propre à la maison (HOUSES[].sameAs).
+        "sameAs": [...LAVILLA_SAME_AS, ...(HOUSES.find(h => h.slug === id)?.sameAs ?? [])]
       }) }} />
       {/* BreadcrumbList Schema.org */}
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(buildBreadcrumbSchema([
