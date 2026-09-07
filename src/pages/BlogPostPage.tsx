@@ -224,12 +224,24 @@ export function BlogPostPage() {
   }, [slug]);
   async function loadPost(s:string) {
     try {
-      let query = supabase
-        .from("blog_posts").select("*")
-        .eq("slug", s);
-      if (!isPreview) query = query.eq("is_published", true);
-      const { data, error } = await query.single();
-      if (error) throw error;
+      let data: Post | null = null;
+      if (isPreview) {
+        // (07/09/2026) Aperçu des brouillons sans session admin : la RLS n'expose aux anonymes que les
+        // articles publiés, la fonction SECURITY DEFINER blog_post_preview (lecture seule) lit le brouillon
+        // si la clé d'aperçu correspond. Relecture des pages de décision : /blog/<slug>?preview=lavilla2026.
+        const { data: rows, error } = await supabase.rpc("blog_post_preview", { p_slug: s, p_key: "lavilla2026" });
+        if (error) throw error;
+        data = (Array.isArray(rows) ? rows[0] : rows) ?? null;
+        if (!data) throw new Error("preview: article introuvable");
+      } else {
+        const { data: row, error } = await supabase
+          .from("blog_posts").select("*")
+          .eq("slug", s)
+          .eq("is_published", true)
+          .single();
+        if (error) throw error;
+        data = row;
+      }
       setPost(data);
       // Load related articles (same category or recent)
       if (data) loadRelated(data.id, data.category);
