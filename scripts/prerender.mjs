@@ -554,7 +554,9 @@ async function renderRoute(browser, route) {
     console.error(`  ❌ ${route}: ${error.message}`);
     return false;
   } finally {
-    await page.close();
+    // (07/09/2026) Un onglet dont le renderer Chrome a crashé (« detached Frame », « Connection closed »)
+    // ne doit pas faire échouer page.close() et tuer tout le run : la route est déjà comptée en ❌.
+    try { await page.close(); } catch { /* onglet déjà fermé */ }
   }
 }
 

@@ -2,15 +2,14 @@ import { EntityFacts } from "@/components/EntityFacts";
 import { LocalizedLink } from "@/components/LocalizedLink";
 import { WhatsAppButton } from "@/components/WhatsAppButton";
 import { colocGeneveHref } from "@/lib/siteLinks";
-import { useState } from "react";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { SEO } from "@/components/SEO";
+import { FaqSection } from "@/components/FaqSection";
+import { chambreAnnemasseFaq } from "@/data/faq/chambreAnnemasseFaq";
 import {
   BedDouble,
   Train,
   Check,
-  ChevronDown,
-  ChevronUp,
   ArrowRight,
   Euro,
   Calendar,
@@ -23,39 +22,9 @@ import { RoomsEmbed } from "@/components/RoomsEmbed";
 import { HouseAvailabilityLine } from "@/components/HouseAvailabilityLine";
 import { useHouseRooms, splitRooms, type PublicRoom } from "@/lib/availability";
 
-// ───────────────────────────────────────────────────────────────────────
-// FAQ (FR) — cible "chambre à louer annemasse" 170/mois + "studio annemasse" 590/mois
-// ───────────────────────────────────────────────────────────────────────
-const chambreFAQ = [
-  {
-    q: "Quel est le prix d'une chambre meublée à Annemasse chez La Villa Coliving ?",
-    a: `Les 12 chambres du Lodge, à Annemasse Romagny, sont à ${PRICE_CHF_FR}/mois tout inclus : loyer, charges, fibre, ménage des communs 3 fois par semaine, sauna, salle de sport, piscine et jardin, événements. Chaque chambre a sa salle d'eau privative. Pas de frais d'agence, pas de frais de dossier, caution de 2 mois de loyer hors charges, restituée après l'état des lieux.`,
-  },
-  {
-    q: "Les chambres à louer à Annemasse sont-elles vraiment meublées ?",
-    a: "Oui, intégralement : lit double avec sa parure, bureau, placard sur mesure, salle d'eau privative. Les espaces communs du Lodge (cuisine, salon, terrasse, jardin, sauna, salle de sport) sont aussi entièrement équipés. Tu n'as qu'à arriver avec tes valises.",
-  },
-  {
-    q: "Quelle différence entre un studio à Annemasse et une chambre au Lodge ?",
-    a: `Un studio à Annemasse se loue en moyenne 700 à 950 € par mois charges non comprises : eau, électricité, internet, ménage et mobilier s'ajoutent. Au Lodge, ${PRICE_CHF_FR} tout inclus, avec des espaces communs pensés pour vivre et 11 colocataires qui travaillent à Genève ou dans la région. Compare le coût total, pas le loyer affiché.`,
-  },
-  {
-    q: "Pour combien de temps peut-on louer une chambre à Annemasse ?",
-    a: "Le bail meublé est de 12 mois renouvelable, avec un préavis d'un mois. Idéal pour s'installer durablement comme frontalier ou pour une période d'essai à Genève. Des baux plus courts sont étudiés au cas par cas selon les disponibilités.",
-  },
-  {
-    q: "Quelles sont les disponibilités actuelles au Lodge ?",
-    a: "La liste ci-dessus est lue en temps réel sur la même source que nos réservations : chaque chambre libre ou datée y figure avec sa date. S'il n'y a rien à ta date, rejoins la liste d'attente du Lodge, ou regarde les chambres de nos deux autres maisons à Ville-la-Grand et Ambilly sur la page des chambres à louer près de Genève.",
-  },
-  {
-    q: "Comment se passe la visite avant de signer ?",
-    a: "Après ta candidature, on organise une visite sur place ou en visio du Lodge et de la chambre disponible : tour de la maison, présentation des espaces communs et des services, et un échange avec un résident actuel. Réponse sous 48 h, bail signé en ligne.",
-  },
-];
 
 export function ChambreLouerAnnemassePage() {
   const { language } = useLanguage();
-  const [openFAQ, setOpenFAQ] = useState<number | null>(null);
   // (Lot 6 SEO funnel, addendum 04/09) Page re-scopée : l'inventaire du Lodge uniquement (Annemasse),
   // les deux autres maisons vivent sur /chambre-a-louer-geneve. Même store que les pages maisons.
   const lodgeRooms = useHouseRooms("lelodge");
@@ -69,15 +38,6 @@ export function ChambreLouerAnnemassePage() {
     } catch { /* noop */ }
   };
 
-  const faqSchema = {
-    "@context": "https://schema.org",
-    "@type": "FAQPage",
-    mainEntity: chambreFAQ.map((item) => ({
-      "@type": "Question",
-      name: item.q,
-      acceptedAnswer: { "@type": "Answer", text: item.a },
-    })),
-  };
 
   return (
     <main className="relative pt-16">
@@ -91,7 +51,6 @@ export function ChambreLouerAnnemassePage() {
         }
         url="https://www.lavillacoliving.com/chambre-a-louer-annemasse"
         image="https://www.lavillacoliving.com/images/le lodge/rooms/la villa coliving le lodge-78.webp"
-        jsonLd={faqSchema}
       />
 
       {/* ===== HERO ===== */}
@@ -348,39 +307,12 @@ export function ChambreLouerAnnemassePage() {
         </div>
       </section>
 
-      {/* ===== FAQ ===== */}
-      <section className="py-24 lg:py-32 bg-white">
-        <div className="max-w-3xl mx-auto px-6">
-          <h2
-            className="text-3xl md:text-4xl font-light text-[#1C1917] mb-12 text-center"
-            style={{ fontFamily: '"DM Serif Display", serif' }}
-          >
-            {language === "en" ? "Frequently asked questions" : "Questions fréquentes"}
-          </h2>
-          <div className="space-y-4">
-            {chambreFAQ.map((item, i) => (
-              <div key={i} className="bg-[#FAF9F6] border border-[#E7E5E4]">
-                <button
-                  onClick={() => setOpenFAQ(openFAQ === i ? null : i)}
-                  className="w-full flex items-center justify-between px-6 py-5 text-left"
-                >
-                  <span className="font-medium text-[#1C1917] pr-4">{item.q}</span>
-                  {openFAQ === i ? (
-                    <ChevronUp className="w-5 h-5 text-[#D4A574] flex-shrink-0" />
-                  ) : (
-                    <ChevronDown className="w-5 h-5 text-[#78716C] flex-shrink-0" />
-                  )}
-                </button>
-                {openFAQ === i && (
-                  <div className="px-6 pb-5 text-[#57534E] leading-relaxed border-t border-[#E7E5E4] pt-4">
-                    {item.a}
-                  </div>
-                )}
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
+      {/* ===== FAQ (Lot C2, 07/09/2026) — FaqSection : FR + EN, réponses dans le DOM, un seul émetteur FAQPage ===== */}
+      <FaqSection
+        title={language === "en" ? "Frequently asked questions" : "Questions fréquentes"}
+        items={chambreAnnemasseFaq[language === "en" ? "en" : "fr"]}
+        emitSchema
+      />
 
       {/* ===== CTA ===== */}
       <section className="py-24 lg:py-32 bg-[#1C1917] text-white">

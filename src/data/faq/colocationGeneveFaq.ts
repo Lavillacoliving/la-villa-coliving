@@ -1,4 +1,5 @@
 import type { QAPair } from "@/lib/structuredData";
+import { pickSituations } from "@/data/faq/situationsFaq";
 import { STATS, PRICE_CHF_FR, PRICE_CHF_EN, PRICE_SHARED_CHF_FR, PRICE_SHARED_CHF_EN } from "@/data/stats";
 
 // FAQ de /colocation-geneve — spécification révisée du 04/09/2026 (Lot 5, gel levé) : les 4 questions
@@ -31,6 +32,8 @@ export const colocationGeneveFaq: { fr: QAPair[]; en: QAPair[] } = {
       q: "Quel délai pour emménager ?",
       a: `Candidature en ligne en 2 minutes, réponse sous 48 h, visite sur place ou en visio, bail signé en ligne : tu peux emménager en une semaine quand une chambre est libre. Les disponibilités réelles des ${STATS.totalHouses} maisons sont affichées sur cette page et sur la page des chambres disponibles ; s'il n'y a rien à ta date, la liste d'attente te prévient dès qu'une chambre se libère.`,
     },
+    // Lot C2 (07/09/2026) : 4 des 10 « situations réelles » (P17, P14, garant, P1)
+    ...pickSituations(["studio-vs-room", "no-swiss-payslip", "guarantor", "job-in-a-month"], "fr"),
   ],
   en: [
     {
@@ -57,5 +60,6 @@ export const colocationGeneveFaq: { fr: QAPair[]; en: QAPair[] } = {
       q: "How quickly can you move in?",
       a: `Online application in 2 minutes, reply within 48 h, visit on site or by video, lease signed online: you can move in within a week when a room is free. Real availability across the ${STATS.totalHouses} houses is shown on this page and on the available rooms page; if nothing matches your date, the waiting list tells you as soon as a room opens up.`,
     },
+    ...pickSituations(["studio-vs-room", "no-swiss-payslip", "guarantor", "job-in-a-month"], "en"),
   ],
 };

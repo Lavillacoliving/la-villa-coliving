@@ -2,17 +2,16 @@ import { EntityFacts } from "@/components/EntityFacts";
 import { LocalizedLink } from "@/components/LocalizedLink";
 import { WhatsAppButton } from "@/components/WhatsAppButton";
 import { colocGeneveHref } from "@/lib/siteLinks";
-import { useState } from "react";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { SEO } from "@/components/SEO";
+import { FaqSection } from "@/components/FaqSection";
+import { annemasseColocationFaq } from "@/data/faq/annemasseColocationFaq";
 import {
   MapPin,
   Train,
   Home,
   Users,
   Check,
-  ChevronDown,
-  ChevronUp,
   ArrowRight,
   Euro,
 } from "lucide-react";
@@ -25,43 +24,9 @@ import {
   type HouseKey,
 } from "@/lib/availability";
 
-// ───────────────────────────────────────────────────────────────────────
-// FAQ (FR) — cible "colocation annemasse" 880/mois + secondaires
-// ───────────────────────────────────────────────────────────────────────
-const annemasseFAQ = [
-  {
-    q: "Combien coûte une colocation à Annemasse chez La Villa Coliving ?",
-    a: `Nos chambres privatives à Annemasse Agglo (Ville-la-Grand, Ambilly, Annemasse) sont à partir de ${PRICE_SHARED_CHF_FR}/mois tout inclus. Le prix comprend le loyer, les charges (eau, électricité, chauffage), la fibre jusqu'à 8 Gb/s, le ménage 3 fois par semaine des communs, l'accès à la piscine chauffée, à la salle de sport et au sauna, les cours de yoga et fitness privés hebdomadaires, et les événements communautaires mensuels. Pas de frais d'agence, pas de frais de dossier.`,
-  },
-  {
-    q: "Combien de temps pour aller à Genève depuis Annemasse ?",
-    a: "Depuis Annemasse, Genève Cornavin est à 15 minutes en Léman Express direct (sans correspondance) depuis la gare d'Annemasse. En voiture, compte 15-20 min selon la douane (Moillesulaz est la plus rapide). Le Tram 17 TPG (Lancy-Pont-Rouge ↔ Annemasse) dessert aussi le centre de Genève. L'aéroport de Genève est à 25-30 min en voiture.",
-  },
-  {
-    q: "Quel quartier d'Annemasse Agglo choisir : Ville-la-Grand, Ambilly ou Annemasse ?",
-    a: "Cela dépend de ta priorité. Ambilly est la commune la plus proche de la frontière suisse (Moillesulaz à 5 min à pied, Tram 17 à 5 min — idéal si tu veux marcher ou pédaler vers Genève). Ville-la-Grand est résidentielle et calme, frontière mitoyenne, idéale pour ceux qui cherchent du vert (réserve naturelle du Foron à la porte). Annemasse centre (quartier Romagny pour Le Lodge) offre la proximité de la gare Léman Express et de toutes les commodités urbaines.",
-  },
-  {
-    q: "Faut-il un permis G pour vivre à Annemasse et travailler à Genève ?",
-    a: "Oui, pour travailler à Genève en habitant côté France, tu as besoin d'un permis G (permis frontalier). Ton employeur suisse en fait la demande. Annemasse Agglo se situe dans la zone frontalière éligible. Le permis G est délivré rapidement (souvent en quelques semaines) une fois le contrat signé.",
-  },
-  {
-    q: "Quelle est la durée du bail à Annemasse ?",
-    a: "Le bail est un contrat de location meublée de 12 mois renouvelable, avec un préavis d'1 mois. Cela convient aux frontaliers qui s'installent durablement comme à ceux en période d'essai à Genève. Le bail respecte le cadre français (loi Alur), avec une caution de 2 mois hors charges et aucun frais d'agence.",
-  },
-  {
-    q: "Quelle différence entre colocation classique et coliving à Annemasse ?",
-    a: "Une colocation classique implique généralement de gérer soi-même les charges (électricité, eau, internet), le ménage, l'entretien, et de meubler sa chambre. Notre coliving à Annemasse inclut tout dans un seul loyer : charges, fibre, ménage 3x/semaine, mobilier design, accès aux espaces premium (piscine, gym, sauna), événements communautaires. Le prix au mètre carré reste cohérent avec une colocation classique haut de gamme à Annemasse, mais sans aucune mauvaise surprise.",
-  },
-  {
-    q: "Comment réserver une chambre à Annemasse ?",
-    a: "Remplis le formulaire sur notre page Candidature. Nous te rappelons sous 48h pour un échange (motivation, contexte pro, disponibilité). Si le fit est bon, une visite est organisée dans la résidence qui correspond à ton profil (La Villa à Ville-la-Grand, Le Loft à Ambilly, Le Lodge à Annemasse Romagny). L'emménagement peut se faire en 2 à 4 semaines selon les disponibilités.",
-  },
-];
 
 export function AnnemasseColocationPage() {
   const { language } = useLanguage();
-  const [openFAQ, setOpenFAQ] = useState<number | null>(null);
 
   // R5 (checkpoint 21/08) — la page devient une destination : dispo réelle des
   // 3 maisons d'Annemasse Agglo (v_public_rooms via useRoomAvailability, jamais
@@ -83,16 +48,6 @@ export function AnnemasseColocationPage() {
     }))
     .filter((c) => c.label && c.tone);
 
-  // JSON-LD FAQPage — rich snippet
-  const faqSchema = {
-    "@context": "https://schema.org",
-    "@type": "FAQPage",
-    mainEntity: annemasseFAQ.map((item) => ({
-      "@type": "Question",
-      name: item.q,
-      acceptedAnswer: { "@type": "Answer", text: item.a },
-    })),
-  };
 
   return (
     <main className="relative pt-16">
@@ -111,7 +66,6 @@ export function AnnemasseColocationPage() {
         }
         url="https://www.lavillacoliving.com/annemasse-colocation"
         image="https://www.lavillacoliving.com/images/le lodge/exterior/la villa coliving le lodge-14.webp"
-        jsonLd={faqSchema}
       />
 
       {/* ===== HERO ===== */}
@@ -455,39 +409,12 @@ export function AnnemasseColocationPage() {
         </div>
       </section>
 
-      {/* ===== FAQ ===== */}
-      <section className="py-24 lg:py-32 bg-[#FAF9F6]">
-        <div className="max-w-3xl mx-auto px-6">
-          <h2
-            className="text-3xl md:text-4xl font-light text-[#1C1917] mb-12 text-center"
-            style={{ fontFamily: '"DM Serif Display", serif' }}
-          >
-            {language === "en" ? "Frequently asked questions about Annemasse coliving" : "Questions fréquentes sur la colocation à Annemasse"}
-          </h2>
-          <div className="space-y-4">
-            {annemasseFAQ.map((item, i) => (
-              <div key={i} className="bg-white border border-[#E7E5E4]">
-                <button
-                  onClick={() => setOpenFAQ(openFAQ === i ? null : i)}
-                  className="w-full flex items-center justify-between px-6 py-5 text-left"
-                >
-                  <span className="font-medium text-[#1C1917] pr-4">{item.q}</span>
-                  {openFAQ === i ? (
-                    <ChevronUp className="w-5 h-5 text-[#D4A574] flex-shrink-0" />
-                  ) : (
-                    <ChevronDown className="w-5 h-5 text-[#78716C] flex-shrink-0" />
-                  )}
-                </button>
-                {openFAQ === i && (
-                  <div className="px-6 pb-5 text-[#57534E] leading-relaxed border-t border-[#E7E5E4] pt-4">
-                    {item.a}
-                  </div>
-                )}
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
+      {/* ===== FAQ (Lot C2, 07/09/2026) — FaqSection : FR + EN, réponses dans le DOM, un seul émetteur FAQPage ===== */}
+      <FaqSection
+        title={language === "en" ? "Frequently asked questions about Annemasse coliving" : "Questions fréquentes sur la colocation à Annemasse"}
+        items={annemasseColocationFaq[L]}
+        emitSchema
+      />
 
       {/* ===== CTA ===== */}
       <section className="py-24 lg:py-32 bg-[#1C1917] text-white">

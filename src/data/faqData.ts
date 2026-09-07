@@ -2,11 +2,14 @@
 // Organized by categories for better SEO structure
 
 import { STATS, PRICE_CHF_FR, PRICE_CHF_EN, PRICE_SHARED_EN_NUM, PRICE_SHARED_CHF_FR, PRICE_SHARED_CHF_EN } from "@/data/stats";
+import { situationsFaq } from "@/data/faq/situationsFaq";
 export interface FAQItem {
   id: string;
   question: { en: string; fr: string };
   answer: { en: string; fr: string };
   category: string;
+  /** Lien de suite sous la réponse (Lot C2) — hors JSON-LD. */
+  more?: { href: string; label: { en: string; fr: string } };
 }
 
 export const faqCategories = {
@@ -21,6 +24,7 @@ export const faqCategories = {
     'Application Process',
     'Living Experience',
     'Services & Amenities',
+    'Real-life situations',
   ],
   fr: [
     'Pour Commencer',
@@ -33,6 +37,7 @@ export const faqCategories = {
     'Processus de Candidature',
     'Expérience de Vie',
     'Services & Équipements',
+    'Situations réelles',
   ],
 };
 
@@ -1090,6 +1095,15 @@ export const faqData: FAQItem[] = [
       fr: 'Oui, nous avons une couverture WiFi haut débit dans toutes nos maisons, incluant les chambres, espaces communs, jardins et terrasses. Notre réseau mesh assure une connectivité forte et fiable où que tu sois dans la maison.',
     },
   },
+  // SITUATIONS RÉELLES (Lot C2, 07/09/2026) — les 10 questions posées aux assistants, source unique
+  // src/data/faq/situationsFaq.ts (partagée avec les mini-FAQ des pages money).
+  ...situationsFaq.map((s) => ({
+    id: `situation-${s.id}`,
+    category: 'Real-life situations',
+    question: { en: s.en.q, fr: s.fr.q },
+    answer: { en: s.en.a, fr: s.fr.a },
+    more: s.fr.more && s.en.more ? { href: s.fr.more.href, label: { en: s.en.more.label, fr: s.fr.more.label } } : undefined,
+  })),
 ];
 
 // Helper function to get FAQ by category
