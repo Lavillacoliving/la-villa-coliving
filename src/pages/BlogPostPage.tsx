@@ -29,7 +29,7 @@ interface Post {
   meta_description_fr:string|null; meta_description_en:string|null;
   author:string; category:string;
   image_url:string|null;
-  read_time_min:number; published_at:string;
+  read_time_min:number; published_at:string|null; // null tant que l'article est un brouillon (aperçu)
   updated_at:string|null;
   tags:string[];
 }
@@ -442,8 +442,8 @@ export function BlogPostPage() {
         url: "https://www.lavillacoliving.com/logos/logo-full.png",
       },
     },
-    datePublished: post.published_at,
-    dateModified: post.updated_at || post.published_at,
+    datePublished: post.published_at ?? post.updated_at ?? undefined,
+    dateModified: post.updated_at || post.published_at || undefined,
     mainEntityOfPage: {
       "@type": "WebPage",
       // (Lot C0) URL de la page réellement servie : /en/blog/… sur la version anglaise (aligné sur le fil d'Ariane).
@@ -508,8 +508,9 @@ export function BlogPostPage() {
                 post.author
               )}
             </span>
-            <span className="flex items-center gap-2"><Calendar className="w-4 h-4" />{fmtD(post.published_at)}</span>
-            {post.updated_at && post.updated_at.slice(0,10) > post.published_at.slice(0,10) && (
+            {/* (07/09/2026) published_at est NULL pour un brouillon en aperçu : ne jamais appeler .slice dessus (plantage « Cette page n'a pas pu se charger »). */}
+            <span className="flex items-center gap-2"><Calendar className="w-4 h-4" />{fmtD(post.published_at ?? post.updated_at ?? new Date().toISOString())}</span>
+            {post.updated_at && post.published_at && post.updated_at.slice(0,10) > post.published_at.slice(0,10) && (
               <span className="text-[#A8A29E]">{language === "en" ? `· Updated ${fmtD(post.updated_at)}` : `· Mis à jour le ${fmtD(post.updated_at)}`}</span>
             )}
             <span className="flex items-center gap-2"><Clock className="w-4 h-4" />{post.read_time_min} min</span>
