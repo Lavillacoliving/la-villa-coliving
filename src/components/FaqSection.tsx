@@ -7,6 +7,7 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion";
 import { buildFaqPageSchema, type QAPair } from "@/lib/structuredData";
+import { LocalizedLink } from "@/components/LocalizedLink";
 
 interface FaqSectionProps {
   /** Titre localisé (résolu par la page appelante). */
@@ -72,6 +73,16 @@ export function FaqSection({
               </AccordionTrigger>
               <AccordionContent className="text-[#57534E] pb-5 leading-relaxed">
                 {item.a}
+                {item.more && (
+                  <p className="mt-3">
+                    <LocalizedLink
+                      to={item.more.href}
+                      className="text-[#b8860b] underline underline-offset-4 hover:text-[#1C1917]"
+                    >
+                      {item.more.label} →
+                    </LocalizedLink>
+                  </p>
+                )}
               </AccordionContent>
             </AccordionItem>
           ))}

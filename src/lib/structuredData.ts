@@ -42,7 +42,8 @@ export const LAVILLA_PHONE = "+33664315134";
 export const LAVILLA_EMAIL = "contact@lavillacoliving.com";
 
 /** Une question / réponse, déjà résolue dans la langue de la page. */
-export type QAPair = { q: string; a: string };
+/** `more` (Lot C2) = lien de suite affiché sous la réponse ; jamais dans le JSON-LD (texte balisé = texte visible). */
+export type QAPair = { q: string; a: string; more?: { href: string; label: string } };
 
 /**
  * Adresse postale du siège — source unique.
