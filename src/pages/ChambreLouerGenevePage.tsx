@@ -257,13 +257,13 @@ export function ChambreLouerGenevePage() {
           <h2 className={h2} style={serif}>{en ? `${MIN} minutes door to door from Geneva` : `À ${MIN} min porte-à-porte de Genève`}</h2>
           <p className="text-[#57534E] leading-relaxed max-w-3xl mx-auto mb-8">
             {en
-              ? `Door to door, count ${MIN} minutes to the centre of Geneva: Léman Express from Annemasse (Eaux-Vives in 8 minutes, Cornavin in 15 minutes by direct train), tram 17 from the Moillesulaz border, TPG buses. The border is a few minutes from every house.`
-              : `Porte à porte, compte ${MIN} minutes jusqu'au centre de Genève : Léman Express depuis Annemasse (Eaux-Vives en 8 minutes, Cornavin en 15 minutes de train direct), tram 17 depuis la douane de Moillesulaz, bus TPG. La frontière est à quelques minutes de chaque maison.`}
+              ? `Door to door, count ${MIN} minutes to the centre of Geneva: Léman Express from Annemasse (Eaux-Vives in 8 minutes, Cornavin in about 20 by direct train), tram 17 from the Moillesulaz border, TPG buses. The border is a few minutes from every house.`
+              : `Porte à porte, compte ${MIN} minutes jusqu'au centre de Genève : Léman Express depuis Annemasse (Eaux-Vives en 8 minutes, Cornavin en 20 minutes environ de train direct), tram 17 depuis la douane de Moillesulaz, bus TPG. La frontière est à quelques minutes de chaque maison.`}
           </p>
           <div className="grid sm:grid-cols-3 gap-4 text-sm text-[#44403C]">
             {(en
-              ? [["Le Lodge · Annemasse", "Léman Express direct, Cornavin in 15 min"], ["Le Loft · Ambilly", "500 m from the Moillesulaz border, tram 17"], ["La Villa · Ville-la-Grand", "Léman Express and tram 17 within walking distance"]]
-              : [["Le Lodge · Annemasse", "Léman Express direct, Cornavin en 15 min"], ["Le Loft · Ambilly", "À 500 m de la douane de Moillesulaz, tram 17"], ["La Villa · Ville-la-Grand", "Léman Express et tram 17 à pied"]]
+              ? [["Le Lodge · Annemasse", "Direct Léman Express: Eaux-Vives 8 min, Cornavin about 20"], ["Le Loft · Ambilly", "500 m from the Moillesulaz border, tram 17"], ["La Villa · Ville-la-Grand", "Léman Express and tram 17 within walking distance"]]
+              : [["Le Lodge · Annemasse", "Léman Express direct : Eaux-Vives 8 min, Cornavin 20 min env."], ["Le Loft · Ambilly", "À 500 m de la douane de Moillesulaz, tram 17"], ["La Villa · Ville-la-Grand", "Léman Express et tram 17 à pied"]]
             ).map(([t, d]) => <div key={t} className="bg-[#FAF9F6] p-5"><p className="font-medium text-[#1C1917] mb-1">{t}</p><p>{d}</p></div>)}
           </div>
         </div>
