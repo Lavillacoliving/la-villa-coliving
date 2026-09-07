@@ -42,6 +42,8 @@ const BUCKET_BY_SLUG: Record<string, IntentBucket> = {
   "ou-habiter-frontalier-suisse-villes-france-pas-cher": "ville",
   "organisations-internationales-geneve-ou-habiter": "ville",
   "ecole-internationale-geneve-frontalier-ou-habiter": "ville",
+  // (C3, 09/2026) page de décision « Vivre à Annemasse et Gaillard : l'avis honnête »
+  "vivre-a-annemasse-avis-honnete-securite-quartiers": "ville",
   // 🟠 admin — tax/admin authority content, soft CTA only
   "fiscalite-frontalier-geneve-impots-2026": "admin",
   "declaration-impots-frontalier-2026": "admin",

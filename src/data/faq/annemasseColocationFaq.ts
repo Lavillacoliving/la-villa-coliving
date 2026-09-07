@@ -20,6 +20,7 @@ export const annemasseColocationFaq: { fr: QAPair[]; en: QAPair[] } = {
     {
       q: "Quel quartier d'Annemasse Agglo choisir : Ville-la-Grand, Ambilly ou Annemasse ?",
       a: "Cela dépend de ta priorité. Ambilly est la commune la plus proche de la frontière suisse (Moillesulaz à 5 min à pied, Tram 17 à 5 min — idéal si tu veux marcher ou pédaler vers Genève). Ville-la-Grand est résidentielle et calme, frontière mitoyenne, idéale pour ceux qui cherchent du vert (réserve naturelle du Foron à la porte). Annemasse centre (quartier Romagny pour Le Lodge) offre la proximité de la gare Léman Express et de toutes les commodités urbaines.",
+      more: { href: "/blog/vivre-a-annemasse-avis-honnete-securite-quartiers", label: "Vivre à Annemasse et Gaillard : l'avis honnête" },
     },
     {
       q: "Faut-il un permis G pour vivre à Annemasse et travailler à Genève ?",
@@ -51,6 +52,7 @@ export const annemasseColocationFaq: { fr: QAPair[]; en: QAPair[] } = {
     {
       q: "Which part of Annemasse Agglo should you choose: Ville-la-Grand, Ambilly or Annemasse?",
       a: "It depends on your priority. Ambilly is the closest to the Swiss border (Moillesulaz a 5-minute walk away, tram 17 at 5 minutes: ideal if you want to walk or cycle to Geneva). Ville-la-Grand is residential and quiet, right on the border, ideal if you want greenery (the Foron nature reserve on your doorstep). Central Annemasse (the Romagny district for Le Lodge) gives you the Léman Express station and every urban convenience nearby.",
+      more: { href: "/blog/vivre-a-annemasse-avis-honnete-securite-quartiers", label: "Is Annemasse a good place to live? The honest view" },
     },
     {
       q: "Do you need a G permit to live in Annemasse and work in Geneva?",
