@@ -11,7 +11,7 @@ Ce n'est pas une affaire de goût, c'est une affaire de règles. Trois paramètr
 
 Le permis d'abord. Si tu habites en Suisse avec un contrat suisse, tu reçois un permis de séjour, en général un permis B. Si tu habites en France et travailles à Genève, tu es frontalier et tu reçois un permis G, demandé auprès de l'Office cantonal de la population et des migrations (OCPM). La différence, c'est qui y a droit tout de suite.
 
-Le budget ensuite. À Genève, l'impôt est retenu à la source sur ton salaire dans les deux cas. Ce qui change, c'est le logement : d'après les annonces relevées par notre Observatoire du logement frontalier en juin 2026, un studio à Genève se loue entre 1 800 et 2 500 CHF par mois hors charges, avec un taux de vacance inférieur à 1 % (OCSTAT). Côté France, le même budget donne une chambre dans une maison ou un appartement entier, avec un bail français, un dossier français et un trajet quotidien.
+Le budget ensuite. À Genève, l'impôt est retenu à la source sur ton salaire dans les deux cas. Ce qui change, c'est le logement : d'après les annonces relevées en 2026, un studio à Genève se loue entre 1 200 et 2 500 CHF par mois hors charges, avec un taux de vacance inférieur à 1 % (OCSTAT). Côté France, le même budget donne une chambre dans une maison ou un appartement entier, avec un bail français, un dossier français et un trajet quotidien.
 
 Le délai enfin. Trouver un logement à Genève prend souvent quatre à huit semaines sans historique locatif suisse ni fiches de salaire suisses. Côté France, une colocation se trouve en deux à six semaines, un coliving en une à deux semaines si une chambre est libre. Chez nous, le délai médian entre la candidature et l'emménagement est de trente jours (données 2026).
 
@@ -29,7 +29,7 @@ Le délai enfin. Trouver un logement à Genève prend souvent quatre à huit sem
 
 | Critère | Habiter à Genève | Habiter côté France |
 |---|---|---|
-| Loyer d'un studio | 1 800 à 2 500 CHF hors charges (Observatoire La Villa, juin 2026) | 1 300 à 1 400 € charges comprises pour 27 à 30 m² meublés à Annemasse (annonces, septembre 2026) |
+| Loyer d'un studio | 1 200 à 2 500 CHF hors charges | 1 300 à 1 400 € charges comprises pour 27 à 30 m² meublés à Annemasse (annonces, septembre 2026) |
 | Dossier de location | Trois fiches de salaire suisses, extrait des poursuites, souvent un garant ou une garantie bancaire | Fiches de salaire ou contrat de travail, souvent un garant en France pour une location classique |
 | Dépôt de garantie | Jusqu'à trois mois de loyer, sur un compte bloqué à ton nom (art. 257e du Code des obligations) | Un à deux mois de loyer selon le bail ; deux mois hors charges en meublé |
 | Délai réaliste | Quatre à huit semaines sans historique suisse | Deux à six semaines en colocation classique, une à deux semaines en coliving |
@@ -52,11 +52,11 @@ Ce qui bloque : un studio en ville dans les quatre premières semaines, sauf rel
 
 | Option | Prix | Délai réaliste | Dossier demandé | Durée minimum |
 |---|---|---|---|---|
-| Studio en ville (Genève) | 1 800 à 2 500 CHF hors charges (Observatoire La Villa, juin 2026) | 4 à 8 semaines | 3 fiches de salaire suisses, extrait des poursuites, garant ou garantie bancaire, dépôt jusqu'à 3 mois | 12 mois en pratique |
+| Studio en ville (Genève) | 1 200 à 2 500 CHF hors charges | 4 à 8 semaines | 3 fiches de salaire suisses, extrait des poursuites, garant ou garantie bancaire, dépôt jusqu'à 3 mois | 12 mois en pratique |
 | Colocation classique côté France | 600 à 1 000 € selon la ville (annonces, septembre 2026) | 2 à 6 semaines | Fiches de salaire, souvent un garant en France, dépôt 1 à 2 mois | 12 mois le plus souvent |
 | Coliving côté France (La Villa) | dès {{PRIX_DES}} tout inclus, {{PRIX_PRIVATIF}} avec salle d'eau privative | 1 à 2 semaines si une chambre est libre | Contrat de travail ou promesse d'embauche, pièce d'identité, caution {{CAUTION_MOIS}} mois hors charges | 3 mois |
 | Studio meublé ou appart'hôtel côté France | 1 300 à 1 600 € charges comprises (annonces, septembre 2026) | 1 jour à 2 semaines | Carte bancaire ou dossier léger | 1 nuit à 1 mois |
-| Appart'hôtel à Genève | 4 000 à 7 000 CHF par mois en long séjour (tarifs affichés, septembre 2026) | 1 jour | Carte bancaire | 1 nuit |
+| Appart'hôtel à Genève | 700 à 1 700 CHF la semaine selon la résidence et la saison (tarifs affichés, septembre 2026) | 1 jour | Carte bancaire | 1 nuit |
 
 <!-- entity-facts -->
 

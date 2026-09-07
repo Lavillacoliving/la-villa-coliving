@@ -11,7 +11,7 @@ This is not a matter of taste, it is a matter of rules. Three parameters settle 
 
 The permit first. If you live in Switzerland with a Swiss contract, you receive a residence permit, usually a B permit. If you live in France and work in Geneva, you are a cross-border worker and receive a G permit, requested from the cantonal population and migration office (OCPM). The difference is who is entitled to which one right away.
 
-The budget next. In Geneva, tax is withheld at source from your salary in both cases. What changes is housing: according to the listings surveyed by our cross-border housing Observatory in June 2026, a studio in Geneva rents for 1,800 to 2,500 CHF a month excluding charges, with a vacancy rate below 1% (OCSTAT). On the French side, the same budget gets you a room in a house or a whole flat, with a French lease, a French file and a daily commute.
+The budget next. In Geneva, tax is withheld at source from your salary in both cases. What changes is housing: according to the listings surveyed in 2026, a studio in Geneva rents for 1,200 to 2,500 CHF a month excluding charges, with a vacancy rate below 1% (OCSTAT). On the French side, the same budget gets you a room in a house or a whole flat, with a French lease, a French file and a daily commute.
 
 The timeline last. Finding a flat in Geneva often takes four to eight weeks without a Swiss rental history or Swiss payslips. On the French side, a classic flatshare takes two to six weeks, a coliving one to two weeks if a room is free. With us, the median time between application and move-in is thirty days (2026 data).
 
@@ -29,7 +29,7 @@ The timeline last. Finding a flat in Geneva often takes four to eight weeks with
 
 | Criterion | Living in Geneva | Living on the French side |
 |---|---|---|
-| Rent for a studio | 1,800 to 2,500 CHF excluding charges (La Villa Observatory, June 2026) | 1,300 to 1,400 € including charges for 27 to 30 m² furnished in Annemasse (listings, September 2026) |
+| Rent for a studio | 1,200 to 2,500 CHF excluding charges | 1,300 to 1,400 € including charges for 27 to 30 m² furnished in Annemasse (listings, September 2026) |
 | Rental file | Three Swiss payslips, debt-collection register extract, often a guarantor or a bank guarantee | Payslips or employment contract, often a guarantor based in France for a classic rental |
 | Deposit | Up to three months' rent, on a blocked account in your name (art. 257e of the Swiss Code of Obligations) | One to two months' rent depending on the lease; two months excluding charges for furnished rentals |
 | Realistic timeline | Four to eight weeks without a Swiss history | Two to six weeks in a classic flatshare, one to two weeks in coliving |
@@ -52,11 +52,11 @@ What does not work: a studio in the city within the first four weeks, unless you
 
 | Option | Price | Realistic timeline | Paperwork required | Minimum stay |
 |---|---|---|---|---|
-| Studio in the city (Geneva) | 1,800 to 2,500 CHF excluding charges (La Villa Observatory, June 2026) | 4 to 8 weeks | 3 Swiss payslips, debt-collection extract, guarantor or bank guarantee, deposit of up to 3 months | 12 months in practice |
+| Studio in the city (Geneva) | 1,200 to 2,500 CHF excluding charges | 4 to 8 weeks | 3 Swiss payslips, debt-collection extract, guarantor or bank guarantee, deposit of up to 3 months | 12 months in practice |
 | Classic flatshare, French side | 600 to 1,000 € depending on the town (listings, September 2026) | 2 to 6 weeks | Payslips, often a guarantor in France, 1 to 2 months' deposit | 12 months most of the time |
 | Coliving, French side (La Villa) | from {{PRIX_DES}} all-inclusive, {{PRIX_PRIVATIF}} with a private shower room | 1 to 2 weeks if a room is free | Employment contract or job offer, ID, deposit of {{CAUTION_MOIS}} months excluding charges | 3 months |
 | Furnished studio or aparthotel, French side | 1,300 to 1,600 € including charges (listings, September 2026) | 1 day to 2 weeks | Credit card or light file | 1 night to 1 month |
-| Aparthotel in Geneva | 4,000 to 7,000 CHF a month on long stays (rates displayed, September 2026) | 1 day | Credit card | 1 night |
+| Aparthotel in Geneva | 700 to 1,700 CHF a week depending on the residence and the season (rates displayed, September 2026) | 1 day | Credit card | 1 night |
 
 <!-- entity-facts -->
 
