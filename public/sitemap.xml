@@ -359,6 +359,14 @@
 
   <!-- ═══ BLOG ARTICLES — FR ═══ -->
   <url>
+    <loc>https://www.lavillacoliving.com/blog/vivre-a-annemasse-quand-on-travaille-a-geneve</loc>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://www.lavillacoliving.com/blog/vivre-a-annemasse-quand-on-travaille-a-geneve" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.lavillacoliving.com/en/blog/vivre-a-annemasse-quand-on-travaille-a-geneve" />
+    <lastmod>2026-09-08</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
     <loc>https://www.lavillacoliving.com/blog/s-installer-a-geneve-expatrie-cote-suisse-ou-cote-france</loc>
     <xhtml:link rel="alternate" hreflang="fr" href="https://www.lavillacoliving.com/blog/s-installer-a-geneve-expatrie-cote-suisse-ou-cote-france" />
     <xhtml:link rel="alternate" hreflang="en" href="https://www.lavillacoliving.com/en/blog/s-installer-a-geneve-expatrie-cote-suisse-ou-cote-france" />
@@ -367,18 +375,18 @@
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://www.lavillacoliving.com/blog/lodge-annemasse-coliving-premium-portes-geneve</loc>
-    <xhtml:link rel="alternate" hreflang="fr" href="https://www.lavillacoliving.com/blog/lodge-annemasse-coliving-premium-portes-geneve" />
-    <xhtml:link rel="alternate" hreflang="en" href="https://www.lavillacoliving.com/en/blog/lodge-annemasse-coliving-premium-portes-geneve" />
-    <lastmod>2026-09-04</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
     <loc>https://www.lavillacoliving.com/blog/coliving-communaute-reels-amis-geneve-annemasse</loc>
     <xhtml:link rel="alternate" hreflang="fr" href="https://www.lavillacoliving.com/blog/coliving-communaute-reels-amis-geneve-annemasse" />
     <xhtml:link rel="alternate" hreflang="en" href="https://www.lavillacoliving.com/en/blog/coliving-communaute-reels-amis-geneve-annemasse" />
     <lastmod>2026-09-03</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://www.lavillacoliving.com/blog/lodge-annemasse-coliving-premium-portes-geneve</loc>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://www.lavillacoliving.com/blog/lodge-annemasse-coliving-premium-portes-geneve" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.lavillacoliving.com/en/blog/lodge-annemasse-coliving-premium-portes-geneve" />
+    <lastmod>2026-09-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
@@ -418,7 +426,7 @@
     <loc>https://www.lavillacoliving.com/blog/quartiers-annemasse-ou-vivre-selon-profil</loc>
     <xhtml:link rel="alternate" hreflang="fr" href="https://www.lavillacoliving.com/blog/quartiers-annemasse-ou-vivre-selon-profil" />
     <xhtml:link rel="alternate" hreflang="en" href="https://www.lavillacoliving.com/en/blog/quartiers-annemasse-ou-vivre-selon-profil" />
-    <lastmod>2026-09-04</lastmod>
+    <lastmod>2026-09-08</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
@@ -514,7 +522,7 @@
     <loc>https://www.lavillacoliving.com/blog/coliving-annemasse-geneve-frontaliers-avantages</loc>
     <xhtml:link rel="alternate" hreflang="fr" href="https://www.lavillacoliving.com/blog/coliving-annemasse-geneve-frontaliers-avantages" />
     <xhtml:link rel="alternate" hreflang="en" href="https://www.lavillacoliving.com/en/blog/coliving-annemasse-geneve-frontaliers-avantages" />
-    <lastmod>2026-09-04</lastmod>
+    <lastmod>2026-09-08</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
@@ -681,6 +689,14 @@
 
   <!-- ═══ BLOG ARTICLES — EN ═══ -->
   <url>
+    <loc>https://www.lavillacoliving.com/en/blog/vivre-a-annemasse-quand-on-travaille-a-geneve</loc>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://www.lavillacoliving.com/blog/vivre-a-annemasse-quand-on-travaille-a-geneve" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.lavillacoliving.com/en/blog/vivre-a-annemasse-quand-on-travaille-a-geneve" />
+    <lastmod>2026-09-08</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
+  </url>
+  <url>
     <loc>https://www.lavillacoliving.com/en/blog/s-installer-a-geneve-expatrie-cote-suisse-ou-cote-france</loc>
     <xhtml:link rel="alternate" hreflang="fr" href="https://www.lavillacoliving.com/blog/s-installer-a-geneve-expatrie-cote-suisse-ou-cote-france" />
     <xhtml:link rel="alternate" hreflang="en" href="https://www.lavillacoliving.com/en/blog/s-installer-a-geneve-expatrie-cote-suisse-ou-cote-france" />
@@ -689,18 +705,18 @@
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>https://www.lavillacoliving.com/en/blog/lodge-annemasse-coliving-premium-portes-geneve</loc>
-    <xhtml:link rel="alternate" hreflang="fr" href="https://www.lavillacoliving.com/blog/lodge-annemasse-coliving-premium-portes-geneve" />
-    <xhtml:link rel="alternate" hreflang="en" href="https://www.lavillacoliving.com/en/blog/lodge-annemasse-coliving-premium-portes-geneve" />
-    <lastmod>2026-09-04</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.5</priority>
-  </url>
-  <url>
     <loc>https://www.lavillacoliving.com/en/blog/coliving-communaute-reels-amis-geneve-annemasse</loc>
     <xhtml:link rel="alternate" hreflang="fr" href="https://www.lavillacoliving.com/blog/coliving-communaute-reels-amis-geneve-annemasse" />
     <xhtml:link rel="alternate" hreflang="en" href="https://www.lavillacoliving.com/en/blog/coliving-communaute-reels-amis-geneve-annemasse" />
     <lastmod>2026-09-03</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
+  </url>
+  <url>
+    <loc>https://www.lavillacoliving.com/en/blog/lodge-annemasse-coliving-premium-portes-geneve</loc>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://www.lavillacoliving.com/blog/lodge-annemasse-coliving-premium-portes-geneve" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.lavillacoliving.com/en/blog/lodge-annemasse-coliving-premium-portes-geneve" />
+    <lastmod>2026-09-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
@@ -740,7 +756,7 @@
     <loc>https://www.lavillacoliving.com/en/blog/quartiers-annemasse-ou-vivre-selon-profil</loc>
     <xhtml:link rel="alternate" hreflang="fr" href="https://www.lavillacoliving.com/blog/quartiers-annemasse-ou-vivre-selon-profil" />
     <xhtml:link rel="alternate" hreflang="en" href="https://www.lavillacoliving.com/en/blog/quartiers-annemasse-ou-vivre-selon-profil" />
-    <lastmod>2026-09-04</lastmod>
+    <lastmod>2026-09-08</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
@@ -836,7 +852,7 @@
     <loc>https://www.lavillacoliving.com/en/blog/coliving-annemasse-geneve-frontaliers-avantages</loc>
     <xhtml:link rel="alternate" hreflang="fr" href="https://www.lavillacoliving.com/blog/coliving-annemasse-geneve-frontaliers-avantages" />
     <xhtml:link rel="alternate" hreflang="en" href="https://www.lavillacoliving.com/en/blog/coliving-annemasse-geneve-frontaliers-avantages" />
-    <lastmod>2026-09-04</lastmod>
+    <lastmod>2026-09-08</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>

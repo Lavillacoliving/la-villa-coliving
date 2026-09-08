@@ -177,16 +177,20 @@
       "destination": "/prerendered/en-politique-de-confidentialite.html"
     },
     {
+      "source": "/blog/vivre-a-annemasse-quand-on-travaille-a-geneve",
+      "destination": "/prerendered/blog-vivre-a-annemasse-quand-on-travaille-a-geneve.html"
+    },
+    {
       "source": "/blog/s-installer-a-geneve-expatrie-cote-suisse-ou-cote-france",
       "destination": "/prerendered/blog-s-installer-a-geneve-expatrie-cote-suisse-ou-cote-france.html"
     },
     {
-      "source": "/blog/lodge-annemasse-coliving-premium-portes-geneve",
-      "destination": "/prerendered/blog-lodge-annemasse-coliving-premium-portes-geneve.html"
-    },
-    {
       "source": "/blog/coliving-communaute-reels-amis-geneve-annemasse",
       "destination": "/prerendered/blog-coliving-communaute-reels-amis-geneve-annemasse.html"
+    },
+    {
+      "source": "/blog/lodge-annemasse-coliving-premium-portes-geneve",
+      "destination": "/prerendered/blog-lodge-annemasse-coliving-premium-portes-geneve.html"
     },
     {
       "source": "/blog/temps-trajet-annemasse-geneve-par-quartier",
@@ -337,16 +341,20 @@
       "destination": "/prerendered/blog-living-in-france-working-in-geneva.html"
     },
     {
+      "source": "/en/blog/vivre-a-annemasse-quand-on-travaille-a-geneve",
+      "destination": "/prerendered/en-blog-vivre-a-annemasse-quand-on-travaille-a-geneve.html"
+    },
+    {
       "source": "/en/blog/s-installer-a-geneve-expatrie-cote-suisse-ou-cote-france",
       "destination": "/prerendered/en-blog-s-installer-a-geneve-expatrie-cote-suisse-ou-cote-france.html"
     },
     {
-      "source": "/en/blog/lodge-annemasse-coliving-premium-portes-geneve",
-      "destination": "/prerendered/en-blog-lodge-annemasse-coliving-premium-portes-geneve.html"
-    },
-    {
       "source": "/en/blog/coliving-communaute-reels-amis-geneve-annemasse",
       "destination": "/prerendered/en-blog-coliving-communaute-reels-amis-geneve-annemasse.html"
+    },
+    {
+      "source": "/en/blog/lodge-annemasse-coliving-premium-portes-geneve",
+      "destination": "/prerendered/en-blog-lodge-annemasse-coliving-premium-portes-geneve.html"
     },
     {
       "source": "/en/blog/temps-trajet-annemasse-geneve-par-quartier",
