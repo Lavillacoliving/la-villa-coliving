@@ -3,7 +3,7 @@ Oui, Annemasse est un bon endroit pour vivre quand on travaille à Genève, et c
 **En bref**
 - La vraie question n'est pas « Annemasse ou pas », mais « à quelle distance de la gare ou du tram » : c'est ça qui fait la qualité de vie d'un frontalier.
 - La ville est en pleine transformation : écoquartier de l'Étoile autour de la gare (1 200 logements), rénovation de Perrier-Livron-Château-Rouge (plus de 90 millions d'euros), tram 17 prolongé fin 2026.
-- Le coût de la vie est celui de la France, le salaire celui de Genève : les courses coûtent nettement moins cher qu'en Suisse, et un studio se loue trois à quatre fois moins qu'à Genève.
+- Le coût de la vie est celui de la France, le salaire celui de Genève : les courses coûtent nettement moins cher qu'en Suisse, et un studio se loue deux à trois fois moins qu'à Genève.
 
 ## La réponse courte : oui, si tu vises la gare ou le tram
 
@@ -60,7 +60,7 @@ Ce qui ne baisse pas : ton salaire reste imposé à la source à Genève, l'assu
 | Option | Prix | Délai réaliste | Dossier demandé | Durée minimum |
 |---|---|---|---|---|
 | Studio ou T2 meublé à Annemasse | 650 à 1 150 € hors charges (ordres de grandeur 2026, portails et Observatoire) | 2 à 6 semaines | Fiches de salaire, souvent un garant en France, dépôt 1 à 2 mois | 12 mois le plus souvent |
-| Colocation classique dans l'agglomération | 500 à 700 € hors charges (ordres de grandeur 2026) | 2 à 6 semaines | Dossier complet, garant fréquent | 12 mois le plus souvent |
+| Colocation classique dans l'agglomération | 700 à 900 € hors charges (ordres de grandeur 2026) | 2 à 6 semaines | Dossier complet, garant fréquent | 12 mois le plus souvent |
 | Coliving côté France (La Villa) | dès {{PRIX_DES}} tout inclus, {{PRIX_PRIVATIF}} avec salle d'eau privative | 1 à 2 semaines si une chambre est libre | Contrat de travail ou promesse d'embauche, pièce d'identité, caution {{CAUTION_MOIS}} mois hors charges | 3 mois |
 | Studio meublé ou appart'hôtel côté France | 1 300 à 1 600 € charges comprises (annonces, septembre 2026) | 1 jour à 2 semaines | Carte bancaire ou dossier léger | 1 nuit à 1 mois |
 
@@ -70,7 +70,7 @@ Nos trois maisons répondent chacune à un quartier de ce guide : Le Lodge à Ro
 
 ## Quand ce n'est pas le bon choix
 
-Si tu veux sortir tard à Genève plusieurs soirs par semaine, le dernier train et le dernier tram te rappelleront que tu habites de l'autre côté d'une frontière ; un logement côté suisse, ou un budget taxi, sera plus juste. Si ton travail t'impose une voiture chaque jour, la douane aux heures de pointe ne ressemble pas aux temps de train affichés : vise alors une commune plus éloignée des postes-frontière. Si tu arrives en famille, la carte scolaire et la desserte en bus comptent plus que tout ce qui précède : regarde Ville-la-Grand et Vétraz-Monthoux plutôt que le centre. Et si tu cherches un quartier neuf déjà terminé, attends quelques années : le neuf d'Annemasse est en chantier, et c'est justement ce qui fait sa valeur. Pour élargir le rayon, lis [où habiter côté France quand on travaille en Suisse](/blog/ou-habiter-frontalier-suisse-villes-france-pas-cher).
+Si tu veux sortir tard à Genève plusieurs soirs par semaine, le dernier train et le dernier tram te rappelleront que tu habites de l'autre côté d'une frontière ; un logement côté suisse, ou un budget taxi, sera plus juste. Si ton travail t'impose une voiture chaque jour, la douane aux heures de pointe ne ressemble pas aux temps de train affichés : vise alors une commune plus éloignée des postes-frontière. Si tu arrives en famille, la carte scolaire et la desserte en bus comptent plus que tout ce qui précède : regarde Ville-la-Grand et Vétraz-Monthoux plutôt que le centre. Pour élargir le rayon, lis [où habiter côté France quand on travaille en Suisse](/blog/ou-habiter-frontalier-suisse-villes-france-pas-cher).
 
 ## Questions fréquentes
 

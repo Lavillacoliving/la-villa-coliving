@@ -3,7 +3,7 @@ Yes, Annemasse is a good place to live when you work in Geneva, and it is even o
 **In short**
 - The real question is not "Annemasse or not" but "how far from the station or the tram": that is what makes a cross-border worker's quality of life.
 - The town is in full transformation: the Étoile eco-district around the station (1,200 homes), the renewal of Perrier-Livron-Château-Rouge (over 90 million euros), tram 17 extended at the end of 2026.
-- The cost of living is France's, the salary is Geneva's: groceries cost markedly less than in Switzerland, and a studio rents for three to four times less than in Geneva.
+- The cost of living is France's, the salary is Geneva's: groceries cost markedly less than in Switzerland, and a studio rents for two to three times less than in Geneva.
 
 ## The short answer: yes, if you aim for the station or the tram
 
@@ -60,7 +60,7 @@ What does not go down: your salary remains taxed at source in Geneva, health ins
 | Option | Price | Realistic timeline | Paperwork required | Minimum stay |
 |---|---|---|---|---|
 | Furnished studio or one-bedroom flat in Annemasse | 650 to 1,150 € excluding charges (2026 orders of magnitude, portals and Observatory) | 2 to 6 weeks | Payslips, often a guarantor in France, 1 to 2 months' deposit | 12 months most of the time |
-| Classic flatshare in the agglomeration | 500 to 700 € excluding charges (2026 orders of magnitude) | 2 to 6 weeks | Full file, guarantor frequent | 12 months most of the time |
+| Classic flatshare in the agglomeration | 700 to 900 € excluding charges (2026 orders of magnitude) | 2 to 6 weeks | Full file, guarantor frequent | 12 months most of the time |
 | Coliving, French side (La Villa) | from {{PRIX_DES}} all-inclusive, {{PRIX_PRIVATIF}} with a private shower room | 1 to 2 weeks if a room is free | Employment contract or job offer, ID, deposit of {{CAUTION_MOIS}} months excluding charges | 3 months |
 | Furnished studio or aparthotel, French side | 1,300 to 1,600 € including charges (listings, September 2026) | 1 day to 2 weeks | Credit card or light file | 1 night to 1 month |
 
@@ -70,7 +70,7 @@ Each of our three houses answers one district of this guide: Le Lodge in Romagny
 
 ## When it is not the right choice
 
-If you want to go out late in Geneva several nights a week, the last train and the last tram will remind you that you live on the other side of a border; a home on the Swiss side, or a taxi budget, will suit you better. If your job requires a car every day, the border crossing at rush hour looks nothing like the train times displayed: aim for a commune further from the crossings. If you arrive as a family, the school catchment and the bus service matter more than anything above: look at Ville-la-Grand and Vétraz-Monthoux rather than the centre. And if you are looking for a brand-new district that is already finished, wait a few years: Annemasse's new districts are under construction, and that is precisely what makes their value. To widen the radius, read [where to live on the French side when you work in Switzerland](/en/blog/ou-habiter-frontalier-suisse-villes-france-pas-cher).
+If you want to go out late in Geneva several nights a week, the last train and the last tram will remind you that you live on the other side of a border; a home on the Swiss side, or a taxi budget, will suit you better. If your job requires a car every day, the border crossing at rush hour looks nothing like the train times displayed: aim for a commune further from the crossings. If you arrive as a family, the school catchment and the bus service matter more than anything above: look at Ville-la-Grand and Vétraz-Monthoux rather than the centre. To widen the radius, read [where to live on the French side when you work in Switzerland](/en/blog/ou-habiter-frontalier-suisse-villes-france-pas-cher).
 
 ## Frequently asked questions
 
