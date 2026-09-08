@@ -2,7 +2,7 @@ For a young professional arriving with a contract in Geneva, the room on the Fre
 
 **In short**
 - The advertised rent tells you nothing: compare what each category includes, bills, furniture, cleaning, sport, transport and deposit.
-- A studio in Geneva sits between 1,200 and 2,500 CHF a month excluding charges, before furniture, deposit and subscriptions; a room on the French side between 800 and 1,250 € all-in in a classic flatshare, and from {{PRIX_DES}} in premium coliving (contractual rent in euros: from {{PRIX_DES_EUR}}).
+- A studio in Geneva sits between 1,200 and 2,500 CHF a month excluding charges, before furniture, deposit and subscriptions; a room on the French side between 800 and 1,250 € all-in in a classic flatshare, and from {{PRIX_DES}}/{{PRIX_DES_EUR}} in premium coliving.
 - The right category depends on what you expect from your home: time for your job, a social life, comfort, or the total autonomy of a studio.
 
 ## What each category really includes, item by item
@@ -11,7 +11,7 @@ The real cost of a home is the rent plus everything the listing does not show, a
 
 | Item | Studio in Geneva | Classic flatshare, French side | Premium coliving, French side (La Villa) | Large coliving residence, French side |
 |---|---|---|---|---|
-| Advertised rent | 1,200 to 2,500 CHF excluding charges (listings, 2026) | 600 to 1,000 € excluding charges depending on the town (listings, September 2026) | from {{PRIX_DES}} all-inclusive (contractual rent in euros: {{PRIX_DES_EUR}}), {{PRIX_PRIVATIF}} with a private shower room ({{PRIX_PRIVATIF_EUR}}) | from 750 € all-inclusive for a room with private bathroom, studios from 920 € (residence website, September 2026) |
+| Advertised rent | 1,200 to 2,500 CHF excluding charges (listings, 2026) | 600 to 1,000 € excluding charges depending on the town (listings, September 2026) | from {{PRIX_DES}}/{{PRIX_DES_EUR}} all-inclusive, {{PRIX_PRIVATIF}}/{{PRIX_PRIVATIF_EUR}} with a private shower room | from 750 € all-inclusive for a room with private bathroom, studios from 920 € (residence website, September 2026) |
 | Charges, heating, electricity | 150 to 280 CHF | 60 to 100 € | included | water, electricity and heating included |
 | Internet | 40 to 70 CHF | 10 to 15 € per person | fibre up to 8 Gb/s included | wifi included |
 | Radio and TV licence | 28 CHF (335 CHF a year, Serafe) | included in local taxes | none | none |
@@ -26,7 +26,7 @@ The real cost of a home is the rent plus everything the listing does not show, a
 | Home cinema and streaming | to pay | everyone their own subscription | included | not stated |
 | Community life | none | depends on the flatmates | yoga, sport and events every week | events programme included |
 | Transport to work | 70 CHF (unireso Tout Genève, tpg 2026) | 116.50 € (Léman Pass monthly, 2026) | 116.50 € (Léman Pass monthly, 2026) | cross-border bus, often a car |
-| **Real monthly total** | **rent + 300 to 450 CHF of bills and subscriptions, + furniture if empty** | **800 to 1,250 €** | **{{PRIX_DES}} + transport, nothing else (contractual rent in euros: {{PRIX_DES_EUR}})** | **750 € + options + transport** |
+| **Real monthly total** | **rent + 300 to 450 CHF of bills and subscriptions, + furniture if empty** | **800 to 1,250 €** | **{{PRIX_DES}}/{{PRIX_DES_EUR}} + transport, nothing else** | **750 € + options + transport** |
 | Deposit and entry costs | up to 3 months' rent on a blocked account (art. 257e of the Swiss Code of Obligations) | 1 to 2 months, guarantor frequent | deposit of {{CAUTION_MOIS}} months excluding charges, 0 € in application and agency fees | application fee of one month capped at 990 €, deposit not stated, guarantor unless on a permanent contract earning 3 times the rent |
 | Move-in time | 4 to 8 weeks without a Swiss history | 2 to 6 weeks | 72 h if a room is free | contact within 24 to 48 h after pre-booking |
 
@@ -52,7 +52,7 @@ Read this table line by line and the gap changes meaning. The studio in Geneva c
 |---|---|---|---|---|
 | Studio in the city (Geneva) | 1,200 to 2,500 CHF excluding charges (listings, 2026) | 4 to 8 weeks without a Swiss history | 3 Swiss payslips, debt-collection extract, guarantor or bank guarantee, deposit of up to 3 months | 12 months in practice |
 | Classic flatshare, French side | 600 to 1,000 € excluding charges depending on the town (listings, September 2026) | 2 to 6 weeks | Payslips, often a guarantor in France, 1 to 2 months' deposit | 12 months most of the time |
-| Premium coliving, French side (La Villa) | from {{PRIX_DES}} all-inclusive (contractual rent in euros: {{PRIX_DES_EUR}}), {{PRIX_PRIVATIF}} with a private shower room ({{PRIX_PRIVATIF_EUR}}) | 72 h if a room is free | Employment contract or job offer, ID, deposit of {{CAUTION_MOIS}} months excluding charges | 3 months |
+| Premium coliving, French side (La Villa) | from {{PRIX_DES}}/{{PRIX_DES_EUR}} all-inclusive, {{PRIX_PRIVATIF}}/{{PRIX_PRIVATIF_EUR}} with a private shower room | 72 h if a room is free | Employment contract or job offer, ID, deposit of {{CAUTION_MOIS}} months excluding charges | 3 months |
 | Large coliving residence, French side | from 750 € all-inclusive (residence website, September 2026) | contact within 24 to 48 h after pre-booking | Online file, guarantor unless on a permanent contract earning 3 times the rent, application fee of one month capped at 990 € | one month's notice, minimum length not stated |
 | Furnished studio or aparthotel, French side | 1,300 to 1,600 € including charges (listings, September 2026) | 1 day to 2 weeks | Credit card or light file | 1 night to 1 month |
 
@@ -72,7 +72,7 @@ Coliving is not for everyone, and saying so avoids pointless visits. A couple or
 
 **Studio in Geneva or a room on the French side: which costs less, all-in?**
 
-The room on the French side, by a wide margin, once you add everything up. A studio in Geneva rents for 1,200 to 2,500 CHF a month excluding charges according to the listings surveyed in 2026, plus 300 to 450 CHF of bills, electricity, internet and licence fee, plus furniture if it is empty and a blocked deposit of up to three months' rent. A room in a classic flatshare on the French side comes to 800 to 1,250 € all-in; in premium coliving, the rent from {{PRIX_DES}} (contractual rent in euros: from {{PRIX_DES_EUR}}) includes everything except transport.
+The room on the French side, by a wide margin, once you add everything up. A studio in Geneva rents for 1,200 to 2,500 CHF a month excluding charges according to the listings surveyed in 2026, plus 300 to 450 CHF of bills, electricity, internet and licence fee, plus furniture if it is empty and a blocked deposit of up to three months' rent. A room in a classic flatshare on the French side comes to 800 to 1,250 € all-in; in premium coliving, the rent from {{PRIX_DES}}/{{PRIX_DES_EUR}} includes everything except transport.
 
 **Coliving or flatshare: what is the concrete difference?**
 
