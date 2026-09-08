@@ -1039,6 +1039,16 @@
       "source": "/en/rooms-september",
       "destination": "/en/chambres-disponibles",
       "statusCode": 301
+    },
+    {
+      "source": "/blog/colocation-expats-geneve-guide",
+      "destination": "/blog/s-installer-a-geneve-expatrie-cote-suisse-ou-cote-france",
+      "permanent": true
+    },
+    {
+      "source": "/en/blog/colocation-expats-geneve-guide",
+      "destination": "/en/blog/s-installer-a-geneve-expatrie-cote-suisse-ou-cote-france",
+      "permanent": true
     }
   ],
   "headers": [

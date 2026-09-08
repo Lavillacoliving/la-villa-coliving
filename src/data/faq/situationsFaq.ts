@@ -91,12 +91,12 @@ export const situationsFaq: SituationFaq[] = [
     fr: {
       q: "Je suis expatrié non-UE : je peux vivre côté France en travaillant à Genève ?",
       a: `Souvent oui, mais pas automatiquement : habiter en France avec un emploi à Genève fait de toi un frontalier, et pour un ressortissant hors UE/AELE le passage du permis B au statut de frontalier (permis G) dépend de ta situation et de l'accord des autorités genevoises. Vérifie auprès de l'OCPM (ge.ch) et de ton employeur avant de signer un bail, côté France comme côté Suisse. Nos maisons accueillent des résidents de tous horizons ; si ta situation le permet, la suite est la même pour tout le monde : candidature, réponse sous ${H} h, visite.`,
-      more: { href: "/blog/permis-g-frontalier-geneve", label: "Permis G : le guide" },
+      more: { href: "/blog/s-installer-a-geneve-expatrie-cote-suisse-ou-cote-france", label: "S'installer à Genève : côté Suisse ou France ?" },
     },
     en: {
       q: "I'm a non-EU expat: can I live on the French side while working in Geneva?",
       a: `Often yes, but not automatically: living in France with a job in Geneva makes you a cross-border worker, and for non-EU/EFTA nationals moving from a B permit to cross-border status (G permit) depends on your situation and on approval by the Geneva authorities. Check with the OCPM (ge.ch) and your employer before signing any lease, on either side of the border. Our houses welcome residents from everywhere; once your situation allows it, the process is the same for everyone: application, reply within ${H} h, visit.`,
-      more: { href: "/blog/permis-g-frontalier-geneve", label: "G permit: the guide" },
+      more: { href: "/blog/s-installer-a-geneve-expatrie-cote-suisse-ou-cote-france", label: "Moving to Geneva: Swiss side or French side?" },
     },
   },
   {

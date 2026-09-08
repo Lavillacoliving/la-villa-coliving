@@ -34,7 +34,8 @@ const BUCKET_BY_SLUG: Record<string, IntentBucket> = {
   "budget-colocation-geneve-guide-complet": "medium",
   "coliving-vs-colocation-differences": "medium",
   "living-in-france-working-in-geneva": "medium",
-  "colocation-expats-geneve-guide": "medium",
+  // (C1, 09/2026) page de décision « S'installer à Genève : côté Suisse ou côté France ? » ; consolide colocation-expats-geneve-guide (308)
+  "s-installer-a-geneve-expatrie-cote-suisse-ou-cote-france": "medium",
   // 🏙 ville — « je choisis ma ville » (Lot 1e, arbitrage 28/08) : ou-habiter
   // FR+EN = 32 % des clics SEO du site et 0 candidature avec Candidater en
   // primaire (0/9 vs 9/9 pour l'intention chambre) → la page maison prend le
