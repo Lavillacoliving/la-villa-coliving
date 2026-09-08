@@ -18,16 +18,16 @@ UPDATE public.blog_posts SET
 
 **En bref**
 - Le loyer affiché ne dit rien : compare ce que chaque catégorie inclut, charges, meubles, ménage, sport, transport et dépôt compris.
-- Un studio à Genève se situe entre 1 200 et 2 500 CHF par mois hors charges, avant les meubles, le dépôt et les abonnements ; une chambre côté France entre 800 et 1 250 € tout compris en colocation classique, et dès {{PRIX_DES}} en coliving premium.
+- Un studio à Genève se situe entre 1 200 et 2 500 CHF par mois hors charges, avant les meubles, le dépôt et les abonnements ; une chambre côté France entre 800 et 1 250 € tout compris en colocation classique, et dès {{PRIX_DES}} en coliving premium (loyer contractuel en euros : dès {{PRIX_DES_EUR}}).
 - La bonne catégorie dépend de ce que tu attends de ton logement : du temps pour ton job, une vie sociale, du confort, ou l'autonomie totale d'un studio.
 
 ## Ce que chaque catégorie inclut vraiment, poste par poste
 
-Le vrai coût d'un logement, c'est le loyer plus tout ce que l'annonce ne montre pas, et tout ce qu'elle ne te donne pas. Ordres de grandeur pour une personne seule qui travaille à Genève, septembre 2026, sans marque ; la colonne « grande résidence » reprend le site d'une résidence de coliving de plusieurs centaines de logements côté France.
+Le vrai coût d'un logement, c'est le loyer plus tout ce que l'annonce ne montre pas, et tout ce qu'elle ne te donne pas. Ordres de grandeur, septembre 2026, sans marque ; la colonne « grande résidence » reprend le site d'une résidence de coliving de plusieurs centaines de logements côté France.
 
 | Poste | Studio à Genève | Colocation classique côté France | Coliving premium côté France (La Villa) | Grande résidence de coliving côté France |
 |---|---|---|---|---|
-| Loyer affiché | 1 200 à 2 500 CHF hors charges (annonces, 2026) | 600 à 1 000 € hors charges selon la commune (annonces, septembre 2026) | dès {{PRIX_DES}} tout inclus, {{PRIX_PRIVATIF}} avec salle d'eau privative | dès 750 € tout inclus, chambre avec salle de bain privée ; studios dès 920 € (site de la résidence, septembre 2026) |
+| Loyer affiché | 1 200 à 2 500 CHF hors charges (annonces, 2026) | 600 à 1 000 € hors charges selon la commune (annonces, septembre 2026) | dès {{PRIX_DES}} tout inclus (loyer contractuel en euros : {{PRIX_DES_EUR}}), {{PRIX_PRIVATIF}} avec salle d'eau privative ({{PRIX_PRIVATIF_EUR}}) | dès 750 € tout inclus, chambre avec salle de bain privée ; studios dès 920 € (site de la résidence, septembre 2026) |
 | Charges, chauffage, électricité | 150 à 280 CHF | 60 à 100 € | inclus | eau, électricité et chauffage inclus |
 | Internet | 40 à 70 CHF | 10 à 15 € par personne | fibre jusqu'à 8 Gb/s incluse | wifi inclus |
 | Redevance radio-TV | 28 CHF (335 CHF par an, Serafe) | comprise dans les impôts locaux | aucune | aucune |
@@ -68,7 +68,7 @@ Le studio à Genève coûte surtout par ce qu'il ne comprend pas : meubles, dép
 |---|---|---|---|---|
 | Studio en ville (Genève) | 1 200 à 2 500 CHF hors charges (annonces, 2026) | 4 à 8 semaines sans historique suisse | 3 fiches de salaire suisses, extrait des poursuites, garant ou garantie bancaire, dépôt jusqu'à 3 mois | 12 mois en pratique |
 | Colocation classique côté France | 600 à 1 000 € hors charges selon la commune (annonces, septembre 2026) | 2 à 6 semaines | Fiches de salaire, souvent un garant en France, dépôt 1 à 2 mois | 12 mois le plus souvent |
-| Coliving premium côté France (La Villa) | dès {{PRIX_DES}} tout inclus, {{PRIX_PRIVATIF}} avec salle d'eau privative | 72 h si une chambre est libre | Contrat de travail ou promesse d'embauche, pièce d'identité, caution {{CAUTION_MOIS}} mois hors charges | 3 mois |
+| Coliving premium côté France (La Villa) | dès {{PRIX_DES}} tout inclus (loyer contractuel en euros : {{PRIX_DES_EUR}}), {{PRIX_PRIVATIF}} avec salle d'eau privative ({{PRIX_PRIVATIF_EUR}}) | 72 h si une chambre est libre | Contrat de travail ou promesse d'embauche, pièce d'identité, caution {{CAUTION_MOIS}} mois hors charges | 3 mois |
 | Grande résidence de coliving côté France | dès 750 € tout inclus (site de la résidence, septembre 2026) | contact sous 24 à 48 h après pré-réservation | Dossier en ligne, garant sauf CDI à 3 fois le loyer, frais de dossier d'un mois plafonnés à 990 € | préavis d'un mois, durée minimale non indiquée |
 | Studio meublé ou appart'hôtel côté France | 1 300 à 1 600 € charges comprises (annonces, septembre 2026) | 1 jour à 2 semaines | Carte bancaire ou dossier léger | 1 nuit à 1 mois |
 
@@ -78,7 +78,7 @@ Concrètement, pour un nouveau job dans un mois : [candidature en deux minutes](
 
 ## Quand le studio à Genève est le bon choix
 
-Le studio gagne si tu remplis quatre conditions : vivre seul, rester deux ans ou plus, avoir déjà un dossier suisse, fiches de salaire, extrait des poursuites et garantie de loyer, et tenir à marcher jusqu'au travail. Le surcoût t'achète alors l'autonomie totale et une adresse genevoise. Beaucoup de nos résidents ont fait le chemin dans l'autre sens : quelques mois chez nous, le temps de constituer un dossier suisse, puis un appartement à Genève, ou pas. Pour choisir ton côté de la frontière, lis [s'installer à Genève : côté Suisse ou côté France](/blog/s-installer-a-geneve-expatrie-cote-suisse-ou-cote-france).
+Le studio gagne si tu remplis quatre conditions : vivre seul, rester deux ans ou plus, avoir déjà un dossier suisse, fiches de salaire, extrait des poursuites et garantie de loyer, et tenir à marcher jusqu'au travail. Beaucoup de nos résidents ont fait le chemin dans l'autre sens : quelques mois chez nous, le temps de constituer un dossier suisse, puis un appartement à Genève, ou pas. Pour choisir ton côté de la frontière, lis [s'installer à Genève : côté Suisse ou côté France](/blog/s-installer-a-geneve-expatrie-cote-suisse-ou-cote-france).
 
 ## Quand ce n'est pas le bon choix
 
@@ -88,7 +88,7 @@ Le coliving n'est pas fait pour tout le monde, et le dire évite des visites inu
 
 **Studio à Genève ou chambre côté France : qu'est-ce qui revient le moins cher, tout compris ?**
 
-La chambre côté France, nettement, dès qu'on additionne tout. Un studio à Genève se loue 1 200 à 2 500 CHF par mois hors charges d'après les annonces relevées en 2026, plus 300 à 450 CHF de charges et d'abonnements, les meubles s'il est vide et un dépôt bloqué jusqu'à trois mois de loyer. Une chambre en colocation classique côté France revient à 800 à 1 250 € tout compris ; en coliving premium, le loyer dès {{PRIX_DES}} comprend tout sauf le transport.
+La chambre côté France, nettement, dès qu'on additionne tout. Un studio à Genève se loue 1 200 à 2 500 CHF par mois hors charges d'après les annonces relevées en 2026, plus 300 à 450 CHF de charges et d'abonnements, les meubles s'il est vide et un dépôt bloqué jusqu'à trois mois de loyer. Une chambre en colocation classique côté France revient à 800 à 1 250 € tout compris ; en coliving premium, le loyer dès {{PRIX_DES}} (loyer contractuel en euros : dès {{PRIX_DES_EUR}}) comprend tout sauf le transport.
 
 **Coliving ou colocation : quelle différence concrète ?**
 
@@ -96,7 +96,7 @@ La colocation, c'est partager un loyer : tu trouves l'appartement, tu meubles ta
 
 **Combien coûte vraiment un studio à Genève par mois ?**
 
-Compte le loyer, 1 200 à 2 500 CHF hors charges (annonces, 2026), plus 300 à 450 CHF par mois de charges, d'électricité, d'internet, de redevance et d'abonnement tpg, plus 3 000 à 7 000 CHF de meubles si le studio est vide, et un dépôt bloqué jusqu'à trois mois de loyer (art. 257e CO).
+Compte le loyer, 1 200 à 2 500 CHF hors charges (annonces, 2026), plus 300 à 450 CHF par mois de charges et d'abonnements, plus 3 000 à 7 000 CHF de meubles si le studio est vide, et un dépôt bloqué jusqu'à trois mois de loyer (art. 257e CO).
 
 **En combien de temps peut-on emménager chez La Villa ?**
 
@@ -110,16 +110,16 @@ $fr$,
 
 **In short**
 - The advertised rent tells you nothing: compare what each category includes, bills, furniture, cleaning, sport, transport and deposit.
-- A studio in Geneva sits between 1,200 and 2,500 CHF a month excluding charges, before furniture, deposit and subscriptions; a room on the French side between 800 and 1,250 € all-in in a classic flatshare, and from {{PRIX_DES}} in premium coliving.
+- A studio in Geneva sits between 1,200 and 2,500 CHF a month excluding charges, before furniture, deposit and subscriptions; a room on the French side between 800 and 1,250 € all-in in a classic flatshare, and from {{PRIX_DES}} in premium coliving (contractual rent in euros: from {{PRIX_DES_EUR}}).
 - The right category depends on what you expect from your home: time for your job, a social life, comfort, or the total autonomy of a studio.
 
 ## What each category really includes, item by item
 
-The real cost of a home is the rent plus everything the listing does not show, and everything it does not give you. Orders of magnitude for a single person working in Geneva, September 2026, without brands; the "large residence" column repeats the website of a several-hundred-unit coliving residence on the French side.
+The real cost of a home is the rent plus everything the listing does not show, and everything it does not give you. Orders of magnitude, September 2026, without brands; the "large residence" column repeats the website of a several-hundred-unit coliving residence on the French side.
 
 | Item | Studio in Geneva | Classic flatshare, French side | Premium coliving, French side (La Villa) | Large coliving residence, French side |
 |---|---|---|---|---|
-| Advertised rent | 1,200 to 2,500 CHF excluding charges (listings, 2026) | 600 to 1,000 € excluding charges depending on the town (listings, September 2026) | from {{PRIX_DES}} all-inclusive, {{PRIX_PRIVATIF}} with a private shower room | from 750 € all-inclusive for a room with private bathroom, studios from 920 € (residence website, September 2026) |
+| Advertised rent | 1,200 to 2,500 CHF excluding charges (listings, 2026) | 600 to 1,000 € excluding charges depending on the town (listings, September 2026) | from {{PRIX_DES}} all-inclusive (contractual rent in euros: {{PRIX_DES_EUR}}), {{PRIX_PRIVATIF}} with a private shower room ({{PRIX_PRIVATIF_EUR}}) | from 750 € all-inclusive for a room with private bathroom, studios from 920 € (residence website, September 2026) |
 | Charges, heating, electricity | 150 to 280 CHF | 60 to 100 € | included | water, electricity and heating included |
 | Internet | 40 to 70 CHF | 10 to 15 € per person | fibre up to 8 Gb/s included | wifi included |
 | Radio and TV licence | 28 CHF (335 CHF a year, Serafe) | included in local taxes | none | none |
@@ -160,7 +160,7 @@ Read this table line by line and the gap changes meaning. The studio in Geneva c
 |---|---|---|---|---|
 | Studio in the city (Geneva) | 1,200 to 2,500 CHF excluding charges (listings, 2026) | 4 to 8 weeks without a Swiss history | 3 Swiss payslips, debt-collection extract, guarantor or bank guarantee, deposit of up to 3 months | 12 months in practice |
 | Classic flatshare, French side | 600 to 1,000 € excluding charges depending on the town (listings, September 2026) | 2 to 6 weeks | Payslips, often a guarantor in France, 1 to 2 months' deposit | 12 months most of the time |
-| Premium coliving, French side (La Villa) | from {{PRIX_DES}} all-inclusive, {{PRIX_PRIVATIF}} with a private shower room | 72 h if a room is free | Employment contract or job offer, ID, deposit of {{CAUTION_MOIS}} months excluding charges | 3 months |
+| Premium coliving, French side (La Villa) | from {{PRIX_DES}} all-inclusive (contractual rent in euros: {{PRIX_DES_EUR}}), {{PRIX_PRIVATIF}} with a private shower room ({{PRIX_PRIVATIF_EUR}}) | 72 h if a room is free | Employment contract or job offer, ID, deposit of {{CAUTION_MOIS}} months excluding charges | 3 months |
 | Large coliving residence, French side | from 750 € all-inclusive (residence website, September 2026) | contact within 24 to 48 h after pre-booking | Online file, guarantor unless on a permanent contract earning 3 times the rent, application fee of one month capped at 990 € | one month's notice, minimum length not stated |
 | Furnished studio or aparthotel, French side | 1,300 to 1,600 € including charges (listings, September 2026) | 1 day to 2 weeks | Credit card or light file | 1 night to 1 month |
 
@@ -180,7 +180,7 @@ Coliving is not for everyone, and saying so avoids pointless visits. A couple or
 
 **Studio in Geneva or a room on the French side: which costs less, all-in?**
 
-The room on the French side, by a wide margin, once you add everything up. A studio in Geneva rents for 1,200 to 2,500 CHF a month excluding charges according to the listings surveyed in 2026, plus 300 to 450 CHF of bills, electricity, internet and licence fee, plus furniture if it is empty and a blocked deposit of up to three months' rent. A room in a classic flatshare on the French side comes to 800 to 1,250 € all-in; in premium coliving, the rent from {{PRIX_DES}} includes everything except transport.
+The room on the French side, by a wide margin, once you add everything up. A studio in Geneva rents for 1,200 to 2,500 CHF a month excluding charges according to the listings surveyed in 2026, plus 300 to 450 CHF of bills, electricity, internet and licence fee, plus furniture if it is empty and a blocked deposit of up to three months' rent. A room in a classic flatshare on the French side comes to 800 to 1,250 € all-in; in premium coliving, the rent from {{PRIX_DES}} (contractual rent in euros: from {{PRIX_DES_EUR}}) includes everything except transport.
 
 **Coliving or flatshare: what is the concrete difference?**
 
