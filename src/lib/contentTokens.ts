@@ -16,6 +16,10 @@
  */
 import {
   STATS,
+  EUR_SHARED_EN_NUM,
+  EUR_SHARED_FR_NUM,
+  EUR_STANDARD_EN_NUM,
+  EUR_STANDARD_FR_NUM,
   PRICE_CHF_EN,
   PRICE_CHF_FR,
   PRICE_SHARED_CHF_EN,
@@ -27,6 +31,8 @@ export type ContentLang = "fr" | "en";
 export const CONTENT_TOKENS = [
   "PRIX_DES",
   "PRIX_PRIVATIF",
+  "PRIX_DES_EUR",
+  "PRIX_PRIVATIF_EUR",
   "NB_CHAMBRES",
   "NB_MAISONS",
   "MIN_GENEVE",
@@ -41,6 +47,11 @@ function tokenValue(token: ContentToken, lang: ContentLang): string {
       return lang === "en" ? PRICE_SHARED_CHF_EN : PRICE_SHARED_CHF_FR;
     case "PRIX_PRIVATIF":
       return lang === "en" ? PRICE_CHF_EN : PRICE_CHF_FR;
+    // Loyer contractuel en euros (D7) — même gabarit que la fiche entité (src/data/entityFacts.ts).
+    case "PRIX_DES_EUR":
+      return lang === "en" ? `€${EUR_SHARED_EN_NUM}` : `${EUR_SHARED_FR_NUM} €`;
+    case "PRIX_PRIVATIF_EUR":
+      return lang === "en" ? `€${EUR_STANDARD_EN_NUM}` : `${EUR_STANDARD_FR_NUM} €`;
     case "NB_CHAMBRES":
       return String(STATS.totalRooms);
     case "NB_MAISONS":

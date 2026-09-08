@@ -7,7 +7,7 @@
  * change, changer l'autre (les scripts Node ne chargent pas le TS de l'app).
  */
 
-export const CONTENT_TOKENS = ['PRIX_DES', 'PRIX_PRIVATIF', 'NB_CHAMBRES', 'NB_MAISONS', 'MIN_GENEVE', 'CAUTION_MOIS'];
+export const CONTENT_TOKENS = ['PRIX_DES', 'PRIX_PRIVATIF', 'PRIX_DES_EUR', 'PRIX_PRIVATIF_EUR', 'NB_CHAMBRES', 'NB_MAISONS', 'MIN_GENEVE', 'CAUTION_MOIS'];
 export const ENTITY_FACTS_MARKER = '<!-- entity-facts -->';
 export const ENTITY_FACTS_MARKER_RE = /^[ \t]*<!--\s*entity-facts\s*-->[ \t]*$/gm;
 
