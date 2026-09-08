@@ -130,6 +130,14 @@ async function checkDb(m) {
   return { failures, rooms: rows.length };
 }
 
+/** Slugs des pages de décision versionnées dans content/decision-pages/ (hors gabarit `_TEMPLATE`). */
+export async function decisionPageSlugs() {
+  try {
+    const entries = await fs.readdir(path.join(ROOT, 'content', 'decision-pages'));
+    return entries.filter((f) => f.endsWith('.meta.json') && !f.startsWith('_')).map((f) => f.replace(/\.meta\.json$/, '')).sort();
+  } catch { return []; }
+}
+
 async function checkHtml(m) {
   const failures = [], warnings = [];
   const F = m.ENTITY_FACTS;
@@ -137,6 +145,12 @@ async function checkHtml(m) {
   const inScope = new Map(); // file → lang
   for (const r of ENTITY_FACTS_MONEY_ROUTES) { inScope.set(routeToFile(r, 'fr'), 'fr'); inScope.set(routeToFile(r, 'en'), 'en'); }
   for (const slug of m.ENTITY_FACTS_ARTICLES ?? []) { inScope.set(`blog-${slug}.html`, 'fr'); inScope.set(`en-blog-${slug}.html`, 'en'); }
+  // Pages de décision (brief « Conquête IA », C0) : elles posent le marqueur <!-- entity-facts --> dans leur
+  // markdown, donc le bloc est rendu ; leur périmètre se déduit de content/decision-pages/<slug>.meta.json.
+  // Seules les pages publiées (fichier prérendu présent) entrent dans le périmètre : un brouillon n'a pas de HTML.
+  for (const slug of await decisionPageSlugs()) {
+    if (files.includes(`blog-${slug}.html`)) { inScope.set(`blog-${slug}.html`, 'fr'); inScope.set(`en-blog-${slug}.html`, 'en'); }
+  }
   for (const f of inScope.keys()) if (!files.includes(f)) failures.push(`${f} : page prérendue ABSENTE (périmètre du bloc entité)`);
   const strings = { fr: m.entityFactsStrings('fr').map(norm), en: m.entityFactsStrings('en').map(norm) };
   let blocks = 0, minuteWarnings = 0, vousPages = 0;
