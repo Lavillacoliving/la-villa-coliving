@@ -177,16 +177,20 @@
       "destination": "/prerendered/en-politique-de-confidentialite.html"
     },
     {
-      "source": "/blog/temps-trajet-annemasse-geneve-par-quartier",
-      "destination": "/prerendered/blog-temps-trajet-annemasse-geneve-par-quartier.html"
+      "source": "/blog/s-installer-a-geneve-expatrie-cote-suisse-ou-cote-france",
+      "destination": "/prerendered/blog-s-installer-a-geneve-expatrie-cote-suisse-ou-cote-france.html"
+    },
+    {
+      "source": "/blog/lodge-annemasse-coliving-premium-portes-geneve",
+      "destination": "/prerendered/blog-lodge-annemasse-coliving-premium-portes-geneve.html"
     },
     {
       "source": "/blog/coliving-communaute-reels-amis-geneve-annemasse",
       "destination": "/prerendered/blog-coliving-communaute-reels-amis-geneve-annemasse.html"
     },
     {
-      "source": "/blog/lodge-annemasse-coliving-premium-portes-geneve",
-      "destination": "/prerendered/blog-lodge-annemasse-coliving-premium-portes-geneve.html"
+      "source": "/blog/temps-trajet-annemasse-geneve-par-quartier",
+      "destination": "/prerendered/blog-temps-trajet-annemasse-geneve-par-quartier.html"
     },
     {
       "source": "/blog/quitter-son-logement-guide-pratique",
@@ -329,24 +333,24 @@
       "destination": "/prerendered/blog-budget-colocation-geneve-guide-complet.html"
     },
     {
-      "source": "/blog/colocation-expats-geneve-guide",
-      "destination": "/prerendered/blog-colocation-expats-geneve-guide.html"
-    },
-    {
       "source": "/blog/living-in-france-working-in-geneva",
       "destination": "/prerendered/blog-living-in-france-working-in-geneva.html"
     },
     {
-      "source": "/en/blog/temps-trajet-annemasse-geneve-par-quartier",
-      "destination": "/prerendered/en-blog-temps-trajet-annemasse-geneve-par-quartier.html"
+      "source": "/en/blog/s-installer-a-geneve-expatrie-cote-suisse-ou-cote-france",
+      "destination": "/prerendered/en-blog-s-installer-a-geneve-expatrie-cote-suisse-ou-cote-france.html"
+    },
+    {
+      "source": "/en/blog/lodge-annemasse-coliving-premium-portes-geneve",
+      "destination": "/prerendered/en-blog-lodge-annemasse-coliving-premium-portes-geneve.html"
     },
     {
       "source": "/en/blog/coliving-communaute-reels-amis-geneve-annemasse",
       "destination": "/prerendered/en-blog-coliving-communaute-reels-amis-geneve-annemasse.html"
     },
     {
-      "source": "/en/blog/lodge-annemasse-coliving-premium-portes-geneve",
-      "destination": "/prerendered/en-blog-lodge-annemasse-coliving-premium-portes-geneve.html"
+      "source": "/en/blog/temps-trajet-annemasse-geneve-par-quartier",
+      "destination": "/prerendered/en-blog-temps-trajet-annemasse-geneve-par-quartier.html"
     },
     {
       "source": "/en/blog/quitter-son-logement-guide-pratique",
@@ -487,10 +491,6 @@
     {
       "source": "/en/blog/budget-colocation-geneve-guide-complet",
       "destination": "/prerendered/en-blog-budget-colocation-geneve-guide-complet.html"
-    },
-    {
-      "source": "/en/blog/colocation-expats-geneve-guide",
-      "destination": "/prerendered/en-blog-colocation-expats-geneve-guide.html"
     },
     {
       "source": "/en/blog/living-in-france-working-in-geneva",
