@@ -10,8 +10,8 @@ BEGIN;
 UPDATE public.blog_posts SET
   title_fr = 'Coliving, colocation ou studio à Genève ?',
   title_en = 'Coliving, flatshare or studio in Geneva?',
-  excerpt_fr = 'Studio à Genève, colocation classique ou coliving côté France : le coût mensuel réel de chaque catégorie, tout compris, puis la décision profil par profil, du célibataire pressé au séjour de moins de six mois.',
-  excerpt_en = 'Studio in Geneva, classic flatshare or coliving on the French side: the real all-in monthly cost of each category, then the decision profile by profile, from the newcomer in a hurry to the stay under six months.',
+  excerpt_fr = 'Studio à Genève, colocation classique ou coliving côté France : ce que chaque catégorie inclut vraiment, tout compris, puis six raisons de choisir une chambre chez nous, et les cas où ce n''est pas le bon choix.',
+  excerpt_en = 'Studio in Geneva, classic flatshare or coliving on the French side: what each category really includes, all-in, then six reasons to choose a room with us, and the cases where it is not the right choice.',
   meta_description_fr = 'Studio à Genève, colocation ou coliving côté France ? Le coût réel tout compris de chaque catégorie, puis la réponse selon ton profil et ton budget.',
   meta_description_en = 'Studio in Geneva, flatshare or coliving on the French side? The real all-in cost of each category, then the answer for your profile and budget.',
   content_fr = $fr$Pour un jeune actif qui arrive avec un contrat à Genève, la chambre côté France gagne dans la plupart des cas : le même budget qu'un studio genevois t'achète une chambre meublée dans une maison avec piscine, sauna et salle de sport, des colocataires qui t'attendent, et un trajet de 20 minutes porte-à-porte jusqu'au centre. Le studio reste le bon choix si tu veux vivre seul, en ville, pour deux ans ou plus, avec un dossier suisse déjà prêt. Ce guide met les vrais chiffres côte à côte, puis tranche selon ce que tu attends de ton logement.
