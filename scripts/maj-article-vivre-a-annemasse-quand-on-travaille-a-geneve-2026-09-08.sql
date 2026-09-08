@@ -1,8 +1,8 @@
 -- ============================================================================
 -- Mise à jour : vivre-a-annemasse-quand-on-travaille-a-geneve (page de décision — brief « Conquête IA »)
 -- Généré le 2026-09-08 par scripts/build-article-sql.mjs depuis content/decision-pages/vivre-a-annemasse-quand-on-travaille-a-geneve.{fr,en}.md + .meta.json
--- Mode : update (brouillon, is_published = false) · à appliquer par Jérôme (SQL Editor / MCP)
--- Relecture : https://www.lavillacoliving.com/blog/vivre-a-annemasse-quand-on-travaille-a-geneve?preview=lavilla2026 (et /en/blog/…)
+-- Mode : update + publication · à appliquer par Jérôme (SQL Editor / MCP)
+-- ⚠️ PUBLIER = appliquer ce SQL ET merger le code dans la même séance (prérendu 05 h / 13 h UTC).
 -- ============================================================================
 
 BEGIN;
@@ -211,8 +211,28 @@ $en$,
   image_url = '/images/la villa/exterior/La Villa-107.webp',
   read_time_min = 11,
   tags = ARRAY['annemasse', 'ville-la-grand', 'frontalier', 'quartiers', 'léman express'],
+  is_published = true,
+  published_at = COALESCE(published_at, now()),
   updated_at = now()
 WHERE slug = 'vivre-a-annemasse-quand-on-travaille-a-geneve';
+
+-- Lien entrant depuis « quartiers-annemasse-ou-vivre-selon-profil » (ancre FR « le guide honnête 2026 », EN « the honest 2026 guide ») — idempotent
+UPDATE public.blog_posts SET
+  content_fr = replace(content_fr, 'le guide honnête 2026', '[le guide honnête 2026](/blog/vivre-a-annemasse-quand-on-travaille-a-geneve)'),
+  content_en = replace(content_en, 'the honest 2026 guide', '[the honest 2026 guide](/en/blog/vivre-a-annemasse-quand-on-travaille-a-geneve)'),
+  updated_at = now()
+WHERE slug = 'quartiers-annemasse-ou-vivre-selon-profil'
+  AND content_fr NOT LIKE '%](/blog/vivre-a-annemasse-quand-on-travaille-a-geneve)%'
+  AND (content_fr LIKE '%le guide honnête 2026%' OR content_en LIKE '%the honest 2026 guide%');
+
+-- Lien entrant depuis « coliving-annemasse-geneve-frontaliers-avantages » (ancre FR « Vivre à Annemasse tout en travaillant à Genève », EN « Living in Annemasse while working in Geneva ») — idempotent
+UPDATE public.blog_posts SET
+  content_fr = replace(content_fr, 'Vivre à Annemasse tout en travaillant à Genève', '[Vivre à Annemasse tout en travaillant à Genève](/blog/vivre-a-annemasse-quand-on-travaille-a-geneve)'),
+  content_en = replace(content_en, 'Living in Annemasse while working in Geneva', '[Living in Annemasse while working in Geneva](/en/blog/vivre-a-annemasse-quand-on-travaille-a-geneve)'),
+  updated_at = now()
+WHERE slug = 'coliving-annemasse-geneve-frontaliers-avantages'
+  AND content_fr NOT LIKE '%](/blog/vivre-a-annemasse-quand-on-travaille-a-geneve)%'
+  AND (content_fr LIKE '%Vivre à Annemasse tout en travaillant à Genève%' OR content_en LIKE '%Living in Annemasse while working in Geneva%');
 
 COMMIT;
 
