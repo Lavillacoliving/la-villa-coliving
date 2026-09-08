@@ -32,7 +32,7 @@ const BUCKET_BY_SLUG: Record<string, IntentBucket> = {
   "coliving-frais-dossier-geneve-annemasse": "high",
   // 🟡 medium — planning, budget, comparison
   "budget-colocation-geneve-guide-complet": "medium",
-  "coliving-vs-colocation-differences": "medium",
+  "coliving-colocation-ou-studio-geneve-comparatif": "medium",
   "living-in-france-working-in-geneva": "medium",
   // (C1, 09/2026) page de décision « S'installer à Genève : côté Suisse ou côté France ? » ; consolide colocation-expats-geneve-guide (308)
   "s-installer-a-geneve-expatrie-cote-suisse-ou-cote-france": "medium",

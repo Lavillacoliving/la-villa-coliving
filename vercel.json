@@ -900,12 +900,12 @@
     },
     {
       "source": "/blog/coliving-vs-colocation-choisir-mode-vie-geneve-frontalier",
-      "destination": "/blog/coliving-vs-colocation-differences",
+      "destination": "/blog/coliving-colocation-ou-studio-geneve-comparatif",
       "permanent": true
     },
     {
       "source": "/en/blog/coliving-vs-colocation-choisir-mode-vie-geneve-frontalier",
-      "destination": "/en/blog/coliving-vs-colocation-differences",
+      "destination": "/en/blog/coliving-colocation-ou-studio-geneve-comparatif",
       "permanent": true
     },
     {
@@ -950,12 +950,12 @@
     },
     {
       "source": "/blog/studio-geneve-vs-colocation-france-budget",
-      "destination": "/blog/budget-colocation-geneve-guide-complet",
+      "destination": "/blog/coliving-colocation-ou-studio-geneve-comparatif",
       "permanent": true
     },
     {
       "source": "/en/blog/studio-geneve-vs-colocation-france-budget",
-      "destination": "/en/blog/budget-colocation-geneve-guide-complet",
+      "destination": "/en/blog/coliving-colocation-ou-studio-geneve-comparatif",
       "permanent": true
     },
     {
@@ -1056,6 +1056,16 @@
     {
       "source": "/en/blog/colocation-expats-geneve-guide",
       "destination": "/en/blog/s-installer-a-geneve-expatrie-cote-suisse-ou-cote-france",
+      "permanent": true
+    },
+    {
+      "source": "/blog/coliving-vs-colocation-differences",
+      "destination": "/blog/coliving-colocation-ou-studio-geneve-comparatif",
+      "permanent": true
+    },
+    {
+      "source": "/en/blog/coliving-vs-colocation-differences",
+      "destination": "/en/blog/coliving-colocation-ou-studio-geneve-comparatif",
       "permanent": true
     }
   ],
