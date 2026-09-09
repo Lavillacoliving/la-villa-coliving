@@ -17,13 +17,13 @@ Le vrai coût d'un logement, c'est le loyer plus tout ce que l'annonce ne montre
 | Redevance radio-TV | 28 CHF (335 CHF par an, Serafe) | comprise dans les impôts locaux | aucune | aucune |
 | Meubles | 3 000 à 7 000 CHF si le studio est vide | 300 à 800 € pour la chambre | chambre meublée et décorée, rien à acheter | meublé, kit vaisselle et literie fournis à l'arrivée |
 | Ménage des espaces communs | toi | à négocier entre colocataires | 3 fois par semaine, inclus | inclus ; le ménage de ta chambre est une option payante |
-| Produits du quotidien (entretien) | à acheter | à acheter et à partager | inclus | non indiqué |
+| Produits du quotidien (entretien) | à acheter | à acheter et à partager | inclus | non ou rarement |
 | Serviettes et draps | à acheter | à acheter | fournis | literie fournie, changement de draps en option à 20 € par mois |
 | Salle de sport | 80 à 120 CHF par mois en salle | abonnement à payer | dans la maison, incluse | incluse |
-| Piscine | non | non | dans le jardin, chauffée | non indiquée |
-| Sauna | non | non | oui | non indiqué |
-| Jardin et barbecue | non | rarement | oui | jardins paysagers, barbecue non indiqué |
-| Home cinéma et streaming | à payer | chacun son abonnement | inclus | non indiqué |
+| Piscine | non | non | dans le jardin, chauffée | non ou rarement |
+| Sauna | non | non | oui | non ou rarement |
+| Jardin et barbecue | non | rarement | oui | jardins paysagers ; barbecue non ou rarement |
+| Home cinéma et streaming | à payer | chacun son abonnement | inclus | non ou rarement |
 | Animations communautaires | aucune | selon les colocataires | yoga, sport et événements chaque semaine | programme d'événements inclus |
 | Transport vers le travail | 70 CHF (unireso Tout Genève, tpg 2026) | 116,50 € (Léman Pass mensuel, 2026) | 116,50 € (Léman Pass mensuel, 2026) | bus transfrontalier, souvent la voiture |
 | **Total mensuel réel** | **loyer + 300 à 450 CHF de charges et d'abonnements, + meubles si vide** | **800 à 1 250 €** | **{{PRIX_DES}}/{{PRIX_DES_EUR}} + le transport, rien d'autre** | **750 € + options + le transport** |
@@ -76,7 +76,7 @@ La chambre côté France, nettement, dès qu'on additionne tout. Un studio à Ge
 
 **Coliving ou colocation : quelle différence concrète ?**
 
-La colocation, c'est partager un loyer : tu trouves l'appartement, tu meubles ta chambre, tu répartis les charges et le ménage entre colocataires, avec un bail de douze mois et souvent un garant. Le coliving, c'est partager une maison déjà organisée : chambre meublée, charges, fibre et ménage des communs compris, résidents sélectionnés, un seul interlocuteur, et chez nous un bail meublé de résidence principale de 12 mois, avec un engagement minimum de 3 mois, puis tu es libre avec un mois de préavis. Tu paies plus cher au mois, tu achètes l'espace, le confort et le temps que tu ne passes pas à gérer.
+La colocation, c'est partager un loyer : tu trouves l'appartement, tu meubles ta chambre, tu répartis les charges et le ménage entre colocataires, avec un bail de douze mois et souvent un garant. Le coliving premium, c'est une maison pensée pour bien vivre à plusieurs : une chambre meublée et décorée, la fibre, le ménage des communs trois fois par semaine, les draps et les serviettes fournis, la piscine chauffée, le sauna, la salle de sport et le home cinéma dans la maison, des colocataires sélectionnés qui travaillent à Genève comme toi, des événements chaque semaine, et un seul interlocuteur pour tout. Chez nous, le bail meublé de résidence principale de 12 mois prévoit un engagement minimum de 3 mois, puis tu es libre avec un mois de préavis. Tu paies plus cher au mois qu'en colocation classique, et tu gagnes du temps, du confort, une vie sociale immédiate et un cadre que même un studio à Genève ne t'offre pas.
 
 **Combien coûte vraiment un studio à Genève par mois ?**
 

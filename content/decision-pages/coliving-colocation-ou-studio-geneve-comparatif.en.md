@@ -17,13 +17,13 @@ The real cost of a home is the rent plus everything the listing does not show, a
 | Radio and TV licence | 28 CHF (335 CHF a year, Serafe) | included in local taxes | none | none |
 | Furniture | 3,000 to 7,000 CHF if the studio is empty | 300 to 800 € for the room | furnished and decorated room, nothing to buy | furnished, crockery kit and bedding provided on arrival |
 | Cleaning of common areas | you | to negotiate between flatmates | 3 times a week, included | included; cleaning of your room is a paid option |
-| Everyday household products | to buy | to buy and share | included | not stated |
+| Everyday household products | to buy | to buy and share | included | no or rarely |
 | Towels and bed linen | to buy | to buy | provided | bedding provided, sheet changes as an option at 20 € a month |
 | Gym | 80 to 120 CHF a month at a gym | membership to pay | in the house, included | included |
-| Pool | no | no | in the garden, heated | not stated |
-| Sauna | no | no | yes | not stated |
-| Garden and barbecue | no | rarely | yes | landscaped gardens, barbecue not stated |
-| Home cinema and streaming | to pay | everyone their own subscription | included | not stated |
+| Pool | no | no | in the garden, heated | no or rarely |
+| Sauna | no | no | yes | no or rarely |
+| Garden and barbecue | no | rarely | yes | landscaped gardens; barbecue no or rarely |
+| Home cinema and streaming | to pay | everyone their own subscription | included | no or rarely |
 | Community life | none | depends on the flatmates | yoga, sport and events every week | events programme included |
 | Transport to work | 70 CHF (unireso Tout Genève, tpg 2026) | 116.50 € (Léman Pass monthly, 2026) | 116.50 € (Léman Pass monthly, 2026) | cross-border bus, often a car |
 | **Real monthly total** | **rent + 300 to 450 CHF of bills and subscriptions, + furniture if empty** | **800 to 1,250 €** | **{{PRIX_DES}}/{{PRIX_DES_EUR}} + transport, nothing else** | **750 € + options + transport** |
@@ -76,7 +76,7 @@ The room on the French side, by a wide margin, once you add everything up. A stu
 
 **Coliving or flatshare: what is the concrete difference?**
 
-A flatshare means sharing a rent: you find the flat, furnish your room, split the bills and the cleaning between flatmates, with a twelve-month lease and often a guarantor. Coliving means sharing a house that is already organised: furnished room, bills, fibre and cleaning of the common areas included, selected residents, a single point of contact, and with us a 12-month furnished primary-residence lease, with a minimum commitment of 3 months, then you are free to leave with one month's notice. You pay more per month, and you buy space, comfort and the time you do not spend managing.
+A flatshare means sharing a rent: you find the flat, furnish your room, split the bills and the cleaning between flatmates, with a twelve-month lease and often a guarantor. Premium coliving is a house designed for living well together: a furnished and decorated room, fibre, the common areas cleaned three times a week, sheets and towels provided, a heated pool, a sauna, a gym and a home cinema in the house, selected flatmates who work in Geneva like you, events every week, and a single point of contact for everything. With us, the 12-month furnished primary-residence lease comes with a minimum commitment of 3 months, then you are free to leave with one month's notice. You pay more per month than in a classic flatshare, and you gain time, comfort, an immediate social life and a setting that even a studio in Geneva does not give you.
 
 **How much does a studio in Geneva really cost per month?**
 
