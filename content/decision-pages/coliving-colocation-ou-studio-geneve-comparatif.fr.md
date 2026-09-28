@@ -15,11 +15,11 @@ Ce que chaque format change au quotidien pour une personne seule qui travaille �
 | Te faire des amis | à construire seul, par le travail et les clubs | selon les colocataires trouvés au hasard des annonces | dès le premier soir, dans une maison de 7 à 12 résidents sélectionnés qui travaillent à Genève | plusieurs centaines de résidents : étudiants, jeunes actifs et voyageurs |
 | Espace de vie | tout le studio, sans espace partagé | une chambre et une part de l'appartement | chambre de 16 à 24 m², 37 à 42 m² d'espace de vie par colocataire, jardin | chambre de 10 à 15 m² ou studio de 14 à 27 m² (portail de location, 2026) |
 | Infrastructures | celles de l'immeuble, souvent une buanderie | celles de l'appartement | piscine dans chaque maison, chauffée à La Villa et au Loft, sauna, salle de sport, home cinéma à La Villa et au Loft, jardin, barbecue | espace bien-être et sauna, salle de sport, salle de cinéma, karaoké, bar, studios de musique ; pas de piscine |
-| Ménage et services | toi, et tout le reste à souscrire | à répartir entre colocataires | ménage des communs 3 fois par semaine, produits du quotidien, draps et serviettes fournis, fibre jusqu'à 8 Gb/s | communs entretenus ; ménage de ton logement, linge et laverie en option payante |
+| Ménage et services | toi, et tout le reste à souscrire | à répartir entre colocataires | ménage des communs 3 fois par semaine, produits du quotidien, draps et serviettes fournis, fibre jusqu'à 8 Gb/s | communs entretenus. OPTION payante : ménage de ton logement, linge et laverie |
 | Animations communautaires | aucune | selon les colocataires | yoga et fitness privés chaque semaine, pizza party chaque mois | programme d'événements inclus |
 | Aller travailler à Genève | à pied, en tram ou en bus, 70 CHF par mois (unireso, tpg 2026) | selon la commune, 116,50 € par mois avec le Léman Pass (2026) | gare d'Annemasse à 9 ou 10 min à pied, Eaux-Vives en 8 min et Cornavin en 20 min environ en Léman Express, centre en 20 min porte-à-porte | bus D et M vers le centre, gare de Saint-Julien à 10 min en voiture |
 | Pannes, factures, gestion | toi, face à la régie | entre colocataires | un seul interlocuteur pour tout | l'équipe de la résidence, via une application |
-| Coût total par mois | loyer de 1 200 à 2 500 CHF hors charges (médiane 1 475 CHF, RealAdvisor, septembre 2026), plus 300 à 450 CHF de charges et d'abonnements | 800 à 1 250 € avec charges et transport | dès {{PRIX_DES}}/{{PRIX_DES_EUR}} tout inclus, plus le transport | dès 690 € tout inclus pour une chambre, studios dès 920 €, plus les options et le transport |
+| Coût total par mois | loyer de 1 200 à 2 500 CHF hors charges (médiane 1 475 CHF, RealAdvisor, septembre 2026), plus 300 à 450 CHF de charges et d'abonnements | 800 à 1 250 € avec charges et transport | dès {{PRIX_DES}}/{{PRIX_DES_EUR}} tout inclus, plus le transport | dès 690 € pour une chambre, studios dès 920 €, plus les options et le transport |
 | Coût au m² | environ 44 CHF par mois hors charges (522 CHF le m² par an, RealAdvisor, septembre 2026) | environ 20 €, loyer moyen à Annemasse (SeLoger, 2026), meubles en plus | {{PRIX_M_CARRE}} tout compris, rapporté à l'espace de vie par colocataire | 46 à 69 € par m² de chambre, pour une chambre de 10 à 15 m² dès 690 € |
 
 Lis la colonne du coliving premium de haut en bas : tu emménages en 72 h avec ta valise, tu dînes avec tes colocataires dès le premier soir, piscine, sauna et salle de sport sont chez toi, et le ménage est fait pour toi. Le studio à Genève t'offre la ville et l'autonomie, mais tout le reste est à construire seul. La colocation classique coûte moins cher au mois, contre le hasard des colocataires et un appartement à organiser. La grande résidence mise sur le nombre et les équipements en immeuble, avec les services du quotidien en option et un trajet en bus.
@@ -36,7 +36,7 @@ Lis la colonne du coliving premium de haut en bas : tu emménages en 72 h avec t
 
 **Tu veux vivre premium.** Verdict : coliving. Une maison, pas un immeuble : chambre meublée et décorée de 16 à 24 m², salle d'eau privative si tu la choisis, 37 à 42 m² d'espace de vie par colocataire, et des services qu'aucun studio genevois ne comprend. Le prix d'entrée est plus haut qu'une colocation classique, le niveau aussi.
 
-**Tu veux un concept de condo à la sauce genevoise.** Verdict : coliving. Piscine, salle de sport, sauna et jardin partagés entre résidents, comme dans un condo, mais dans une maison à taille humaine, avec des colocataires internationaux et le centre de Genève à 20 minutes porte-à-porte. Le format tient depuis 2021 : un séjour moyen de 13 mois, et une note de 4,9/5 dans nos enquêtes résidents.
+**Tu veux un style de vie à taille humaine.** Verdict : coliving. Piscine, salle de sport, sauna et jardin partagés entre résidents, comme dans un condo, mais dans une maison à taille humaine, avec des colocataires internationaux et le centre de Genève à 20 minutes porte-à-porte.
 
 ## Les options de logement, catégorie par catégorie
 
@@ -45,7 +45,7 @@ Lis la colonne du coliving premium de haut en bas : tu emménages en 72 h avec t
 | Studio en ville (Genève) | 1 200 à 2 500 CHF hors charges (annonces, 2026) | 4 à 8 semaines sans historique suisse | 3 fiches de salaire suisses, extrait des poursuites, garant ou garantie bancaire, dépôt jusqu'à 3 mois | 12 mois en pratique |
 | Colocation classique côté France | 600 à 1 000 € hors charges selon la commune (annonces, septembre 2026) | 2 à 6 semaines | Fiches de salaire, souvent un garant en France, dépôt 1 à 2 mois | 12 mois le plus souvent |
 | Coliving premium côté France (La Villa) | dès {{PRIX_DES}}/{{PRIX_DES_EUR}} tout inclus, {{PRIX_PRIVATIF}}/{{PRIX_PRIVATIF_EUR}} avec salle d'eau privative | 72 h si une chambre est libre | Contrat de travail ou promesse d'embauche, pièce d'identité, caution {{CAUTION_MOIS}} mois hors charges | 3 mois |
-| Grande résidence de coliving côté France | dès 690 € tout inclus (site de la résidence, septembre 2026) | contact sous 24 à 48 h après pré-réservation | Garant sauf CDI à 3 fois le loyer, frais de dossier d'un mois plafonnés à 990 € | préavis d'un mois |
+| Grande résidence de coliving côté France | dès 690 € (site de la résidence, septembre 2026) | contact sous 24 à 48 h après pré-réservation | Garant sauf CDI à 3 fois le loyer, frais de dossier d'un mois plafonnés à 990 € | préavis d'un mois |
 | Studio meublé ou appart'hôtel côté France | 1 300 à 1 600 € charges comprises (annonces, septembre 2026) | 1 jour à 2 semaines | Carte bancaire ou dossier léger | 1 nuit à 1 mois |
 
 <!-- entity-facts -->
@@ -81,7 +81,3 @@ En 72 h quand une chambre est libre : candidature en deux minutes, réponse sous
 **Combien de temps pour aller travailler à Genève depuis les maisons ?**
 
 Les trois maisons sont à 9 ou 10 minutes à pied de la gare d'Annemasse, d'où le Léman Express rejoint Genève Eaux-Vives en 8 minutes et Cornavin en 20 minutes environ, sans changement ; Le Loft est aussi à 5 minutes à pied du tram 17. Porte-à-porte, compte 20 minutes jusqu'au centre de Genève, et 116,50 € par mois pour le Léman Pass (2026).
-
-**Faut-il un garant pour une chambre côté France ?**
-
-En colocation classique, très souvent oui, et un garant établi en France, ce qu'un nouvel arrivant n'a pas. Chez nous, le dossier se limite au contrat de travail ou à la promesse d'embauche, à une pièce d'identité et à la caution de {{CAUTION_MOIS}} mois hors charges ; un garant n'est discuté qu'au cas par cas, quand le contrat ne couvre pas le loyer, et toujours avant la visite.

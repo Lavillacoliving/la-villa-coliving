@@ -15,11 +15,11 @@ What each format changes day to day for a single person working in Geneva, in Se
 | Making friends | built alone, through work and clubs | depends on the flatmates found through listings | from the first evening, in a house of 7 to 12 selected residents who work in Geneva | several hundred residents: students, young professionals and travellers |
 | Living space | the whole studio, no shared space | a room and a share of the flat | room of 16 to 24 m², 37 to 42 m² of living space per flatmate, garden | room of 10 to 15 m² or studio of 14 to 27 m² (rental portal, 2026) |
 | Facilities | those of the building, often a laundry room | those of the flat | a pool in every house, heated at La Villa and Le Loft, sauna, gym, home cinema at La Villa and Le Loft, garden, barbecue | wellness area and sauna, gym, cinema room, karaoke, bar, music studios; no pool |
-| Cleaning and services | you, and everything else to subscribe | to share out between flatmates | common areas cleaned 3 times a week, everyday products, sheets and towels provided, fibre up to 8 Gb/s | common areas maintained; cleaning of your unit, linen and laundry as paid options |
+| Cleaning and services | you, and everything else to subscribe | to share out between flatmates | common areas cleaned 3 times a week, everyday products, sheets and towels provided, fibre up to 8 Gb/s | common areas maintained. PAID OPTION: cleaning of your unit, linen and laundry |
 | Community life | none | depends on the flatmates | private yoga and fitness every week, a pizza party every month | events programme included |
 | Getting to work in Geneva | on foot, by tram or bus, 70 CHF a month (unireso, tpg 2026) | depends on the town, 116.50 € a month with the Léman Pass (2026) | Annemasse station a 9 or 10-min walk away, Eaux-Vives in 8 min and Cornavin in about 20 by Léman Express, the centre 20 min door-to-door | buses D and M to the centre, Saint-Julien station 10 min by car |
 | Breakdowns, bills, admin | you, facing the letting agency | between flatmates | a single point of contact for everything | the residence team, through an app |
-| Total monthly cost | rent of 1,200 to 2,500 CHF excluding charges (median 1,475 CHF, RealAdvisor, September 2026), plus 300 to 450 CHF of bills and subscriptions | 800 to 1,250 € with bills and transport | from {{PRIX_DES}}/{{PRIX_DES_EUR}} all-inclusive, plus transport | from 690 € all-inclusive for a room, studios from 920 €, plus options and transport |
+| Total monthly cost | rent of 1,200 to 2,500 CHF excluding charges (median 1,475 CHF, RealAdvisor, September 2026), plus 300 to 450 CHF of bills and subscriptions | 800 to 1,250 € with bills and transport | from {{PRIX_DES}}/{{PRIX_DES_EUR}} all-inclusive, plus transport | from 690 € for a room, studios from 920 €, plus options and transport |
 | Cost per m² | about 44 CHF a month excluding charges (522 CHF per m² a year, RealAdvisor, September 2026) | about 20 €, average rent in Annemasse (SeLoger, 2026), furniture extra | {{PRIX_M_CARRE}} all-in, per m² of living space per flatmate | 46 to 69 € per m² of room, for a 10 to 15 m² room from 690 € |
 
 Read the premium coliving column from top to bottom: you move in within 72 h with your suitcase, you have dinner with your flatmates from the first evening, pool, sauna and gym are at home, and the cleaning is done for you. The studio in Geneva gives you the city and autonomy, but everything else is yours to build alone. The classic flatshare costs less per month, against the luck of the draw with flatmates and a flat to organise. The large residence relies on numbers and facilities in a block, with everyday services as options and a commute by bus.
@@ -36,7 +36,7 @@ Read the premium coliving column from top to bottom: you move in within 72 h wit
 
 **You want to live premium.** Verdict: coliving. A house, not a block: a furnished and decorated room of 16 to 24 m², a private shower room if you choose it, 37 to 42 m² of living space per flatmate, and services no Geneva studio includes. The entry price is higher than a classic flatshare, and so is the level.
 
-**You want a condo concept, Geneva style.** Verdict: coliving. Pool, gym, sauna and garden shared between residents, like in a condo, but in a human-sized house, with international flatmates and central Geneva 20 minutes door-to-door. The format has held since 2021: an average stay of 13 months, and a 4.9/5 score in our resident surveys.
+**You want a human-scale way of life.** Verdict: coliving. Pool, gym, sauna and garden shared between residents, like in a condo, but in a human-sized house, with international flatmates and central Geneva 20 minutes door-to-door.
 
 ## The housing options, category by category
 
@@ -45,7 +45,7 @@ Read the premium coliving column from top to bottom: you move in within 72 h wit
 | Studio in the city (Geneva) | 1,200 to 2,500 CHF excluding charges (listings, 2026) | 4 to 8 weeks without a Swiss history | 3 Swiss payslips, debt-collection extract, guarantor or bank guarantee, deposit of up to 3 months | 12 months in practice |
 | Classic flatshare, French side | 600 to 1,000 € excluding charges depending on the town (listings, September 2026) | 2 to 6 weeks | Payslips, often a guarantor in France, 1 to 2 months' deposit | 12 months most of the time |
 | Premium coliving, French side (La Villa) | from {{PRIX_DES}}/{{PRIX_DES_EUR}} all-inclusive, {{PRIX_PRIVATIF}}/{{PRIX_PRIVATIF_EUR}} with a private shower room | 72 h if a room is free | Employment contract or job offer, ID, deposit of {{CAUTION_MOIS}} months excluding charges | 3 months |
-| Large coliving residence, French side | from 690 € all-inclusive (residence website, September 2026) | contact within 24 to 48 h after pre-booking | Guarantor unless on a permanent contract earning 3 times the rent, application fee of one month capped at 990 € | one month's notice |
+| Large coliving residence, French side | from 690 € (residence website, September 2026) | contact within 24 to 48 h after pre-booking | Guarantor unless on a permanent contract earning 3 times the rent, application fee of one month capped at 990 € | one month's notice |
 | Furnished studio or aparthotel, French side | 1,300 to 1,600 € including charges (listings, September 2026) | 1 day to 2 weeks | Credit card or light file | 1 night to 1 month |
 
 <!-- entity-facts -->
@@ -81,7 +81,3 @@ Within 72 h when a room is free: a two-minute application, a reply within 48 h, 
 **How long does it take to get to work in Geneva from the houses?**
 
 All three houses are a 9 or 10-minute walk from Annemasse station, where the Léman Express reaches Geneva Eaux-Vives in 8 minutes and Cornavin in about 20 minutes, with no change; Le Loft is also a 5-minute walk from tram 17. Door-to-door, count 20 minutes to central Geneva, and 116.50 € a month for the Léman Pass (2026).
-
-**Do I need a guarantor for a room on the French side?**
-
-In a classic flatshare, very often yes, and a guarantor based in France, which a newcomer does not have. With us, the file is limited to the employment contract or job offer, an ID and the deposit of {{CAUTION_MOIS}} months excluding charges; a guarantor is only discussed case by case, when the contract does not cover the rent, and always before the visit.
