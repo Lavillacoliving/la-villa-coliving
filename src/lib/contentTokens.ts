@@ -16,6 +16,8 @@
  */
 import {
   STATS,
+  STATS_SHARED_BATH,
+  CONTRACT_EUR,
   EUR_SHARED_EN_NUM,
   EUR_SHARED_FR_NUM,
   EUR_STANDARD_EN_NUM,
@@ -33,6 +35,7 @@ export const CONTENT_TOKENS = [
   "PRIX_PRIVATIF",
   "PRIX_DES_EUR",
   "PRIX_PRIVATIF_EUR",
+  "PRIX_M_CARRE",
   "NB_CHAMBRES",
   "NB_MAISONS",
   "MIN_GENEVE",
@@ -52,6 +55,18 @@ function tokenValue(token: ContentToken, lang: ContentLang): string {
       return lang === "en" ? `€${EUR_SHARED_EN_NUM}` : `${EUR_SHARED_FR_NUM} €`;
     case "PRIX_PRIVATIF_EUR":
       return lang === "en" ? `€${EUR_STANDARD_EN_NUM}` : `${EUR_STANDARD_FR_NUM} €`;
+    // Coût au m² d'espace de vie (décision Jérôme 28/09/2026, C4) : loyer tout inclus ÷ espace de vie
+    // par colocataire (STATS.livingSpacePerResidentMin/Max). Bas = palier salle d'eau partagée ÷ max,
+    // haut = palier standard ÷ min ; CHF affiché puis € contractuel, arrondis à l'unité.
+    case "PRIX_M_CARRE": {
+      const lo = (n: number) => Math.round(n / STATS.livingSpacePerResidentMax);
+      const hi = (n: number) => Math.round(n / STATS.livingSpacePerResidentMin);
+      const chf = [lo(STATS_SHARED_BATH.priceChf), hi(STATS.priceChf)];
+      const eur = [lo(CONTRACT_EUR.sharedBath), hi(CONTRACT_EUR.standard)];
+      return lang === "en"
+        ? `CHF ${chf[0]} to ${chf[1]}/€${eur[0]} to ${eur[1]}`
+        : `${chf[0]} à ${chf[1]} CHF/${eur[0]} à ${eur[1]} €`;
+    }
     case "NB_CHAMBRES":
       return String(STATS.totalRooms);
     case "NB_MAISONS":
