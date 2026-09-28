@@ -37,6 +37,12 @@ const ROUTES = [
   ...STATIC.map((r) => (r === '/' ? '/en' : `/en${r}`)),
   '/chambres-disponibles',
   '/en/chambres-disponibles',
+  // Fiches chambres (28/09/2026) : une du Lodge FR + EN, celle du Loft.
+  '/lelodge/chambre-4',
+  '/en/lelodge/chambre-4',
+  '/leloft/chambre-4',
+  // Fiche NON consultable (chambre occupée sans date au moment du rendu) : vue « pas disponible ».
+  '/lelodge/chambre-2',
   '/colocation-geneve',
   '/en/colocation-geneve',
   '/chambre-a-louer-geneve',

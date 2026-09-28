@@ -1919,31 +1919,54 @@ export function HouseDetailPage() {
                         <span>{language === "en" ? "Bathroom" : "Salle de bain"}</span>
                       </div>
                       <ul className="divide-y divide-[#E7E5E4]">
-                        {occupied.map((room) => {
-                          const surface = roomSurface(room);
-                          const floor = floorLabel(room, uiLang);
-                          const bath = bathroomLabel(room, uiLang);
-                          const specs = roomSpecs(room, uiLang);
-                          return (
-                            <li
-                              key={room.room_number}
-                              className="px-5 py-3.5 flex items-center justify-between gap-4 md:grid md:grid-cols-[1.4fr_0.7fr_0.9fr_1.3fr]"
-                            >
-                              <div className="min-w-0">
-                                <p className="font-black text-[#1C1917]">
-                                  {language === "en" ? `Room ${room.room_number}` : `Chambre ${room.room_number}`}
-                                </p>
-                                {specs && <p className="text-sm text-[#78716C] md:hidden">{specs}</p>}
-                                {language !== "en" && room.location_detail && (
-                                  <p className="text-xs text-[#78716C]">{room.location_detail.trim()}</p>
-                                )}
-                              </div>
-                              <span className="hidden md:block text-sm text-[#57534E]">{surface !== null ? `${surface} m²` : "—"}</span>
-                              <span className="hidden md:block text-sm text-[#57534E]">{floor ?? "—"}</span>
-                              <span className="hidden md:block text-sm text-[#57534E]">{bath ?? "—"}</span>
-                            </li>
-                          );
-                        })}
+                        {(() => {
+                          // (28/09/2026, demande Jérôme) Miniature par chambre — SEULEMENT si chaque
+                          // chambre de la liste a sa propre photo (au Lodge : sa photo principale,
+                          // toutes différentes, cf. LODGE_HERO_ORDER). Jamais la photo de TYPE
+                          // répétée : c'est le motif du rollback du 02/09 rappelé plus haut.
+                          const thumbs = occupied.map((room) => roomGallery(id, room.room_number)?.[0]);
+                          const showThumbs = thumbs.every(Boolean);
+                          return occupied.map((room, i) => {
+                            const surface = roomSurface(room);
+                            const floor = floorLabel(room, uiLang);
+                            const bath = bathroomLabel(room, uiLang);
+                            const specs = roomSpecs(room, uiLang);
+                            const thumb = showThumbs ? thumbs[i] : undefined;
+                            return (
+                              <li
+                                key={room.room_number}
+                                className="px-5 py-3.5 flex items-center justify-between gap-4 md:grid md:grid-cols-[1.4fr_0.7fr_0.9fr_1.3fr]"
+                              >
+                                <div className="min-w-0 flex items-center gap-4">
+                                  {thumb && (
+                                    <img
+                                      src={thumb.src}
+                                      alt={thumb.alt[uiLang]}
+                                      width={thumb.w}
+                                      height={thumb.h}
+                                      loading="lazy"
+                                      decoding="async"
+                                      className="w-16 h-12 md:w-20 md:h-14 shrink-0 rounded-lg object-cover bg-[#F5F2ED]"
+                                      {...responsiveImage(thumb.src, "80px")}
+                                    />
+                                  )}
+                                  <div className="min-w-0">
+                                    <p className="font-black text-[#1C1917]">
+                                      {language === "en" ? `Room ${room.room_number}` : `Chambre ${room.room_number}`}
+                                    </p>
+                                    {specs && <p className="text-sm text-[#78716C] md:hidden">{specs}</p>}
+                                    {language !== "en" && room.location_detail && (
+                                      <p className="text-xs text-[#78716C]">{room.location_detail.trim()}</p>
+                                    )}
+                                  </div>
+                                </div>
+                                <span className="hidden md:block text-sm text-[#57534E]">{surface !== null ? `${surface} m²` : "—"}</span>
+                                <span className="hidden md:block text-sm text-[#57534E]">{floor ?? "—"}</span>
+                                <span className="hidden md:block text-sm text-[#57534E]">{bath ?? "—"}</span>
+                              </li>
+                            );
+                          });
+                        })()}
                       </ul>
                     </div>
                   </>

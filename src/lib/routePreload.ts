@@ -56,7 +56,9 @@ export function preloadRouteModule(pathname: string): Promise<unknown> {
   else if (p.startsWith("/en/")) p = p.slice(3);
 
   const loader =
-    p.startsWith("/blog/")
+    /^\/(lavilla|leloft|lelodge)\/chambre-\d+$/.test(p)
+      ? () => import("@/pages/RoomDetailPage")
+      : p.startsWith("/blog/")
       ? () => import("@/pages/BlogPostPage")
       : (STATIC_LOADERS[p] ??
         // URL inconnue avec contenu prérendu = 404.html (NotFoundPage)

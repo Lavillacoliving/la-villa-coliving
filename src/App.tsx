@@ -11,6 +11,7 @@ import { ScrollToTop } from "@/components/ScrollToTop";
 import { AvailabilityEmbed } from "@/components/AvailabilityEmbed";
 import { RouteChangeTracker } from "@/lib/routeTracking";
 import { InternalRefCapture } from "@/components/InternalRefCapture";
+import { ROOM_PAGE_PATHS } from "@/data/roomPages";
 import { lazyWithRetry } from "@/lib/lazyWithRetry";
 import { ErrorBoundary } from "@/components/ErrorBoundary";
 
@@ -27,6 +28,8 @@ const RatesPage = lazyWithRetry(() => import("@/pages/RatesPageV4").then(m => ({
 const FAQPage = lazyWithRetry(() => import("@/pages/FAQPageV4").then(m => ({ default: m.FAQPageV4 })), "FAQPage");
 const JoinPage = lazyWithRetry(() => import("@/pages/JoinPageV4").then(m => ({ default: m.JoinPageV4 })), "JoinPage");
 const HouseDetailPage = lazyWithRetry(() => import("@/pages/HouseDetailPage").then(m => ({ default: m.HouseDetailPage })), "HouseDetailPage");
+// Fiches chambres (28/09/2026) — une route par chambre listée dans src/data/roomPages.json.
+const RoomDetailPage = lazyWithRetry(() => import("@/pages/RoomDetailPage").then(m => ({ default: m.RoomDetailPage })), "RoomDetailPage");
 const BlogPage = lazyWithRetry(() => import("@/pages/BlogPage").then(m => ({ default: m.BlogPage })), "BlogPage");
 const BlogPostPage = lazyWithRetry(() => import("@/pages/BlogPostPage").then(m => ({ default: m.BlogPostPage })), "BlogPostPage");
 const ColocationGenevePage = lazyWithRetry(() => import("@/pages/ColocationGenevePage").then(m => ({ default: m.ColocationGenevePage })), "ColocationGenevePage");
@@ -120,6 +123,7 @@ function AppContent() {
         <Route path="/lavilla" element={<HouseDetailPage />} />
         <Route path="/leloft" element={<HouseDetailPage />} />
         <Route path="/lelodge" element={<HouseDetailPage />} />
+        {ROOM_PAGE_PATHS.map((p) => <Route key={p} path={p} element={<RoomDetailPage />} />)}
         <Route path="/investisseurs" element={<InvestisseursPage />} />
         <Route path="/observatoire-logement-frontalier-geneve" element={<ObservatoireLogementPage />} />
         <Route path="/qui-sommes-nous" element={<QuiSommesNousPage />} />
@@ -145,6 +149,7 @@ function AppContent() {
         <Route path="/en/lavilla" element={<HouseDetailPage />} />
         <Route path="/en/leloft" element={<HouseDetailPage />} />
         <Route path="/en/lelodge" element={<HouseDetailPage />} />
+        {ROOM_PAGE_PATHS.map((p) => <Route key={`/en${p}`} path={`/en${p}`} element={<RoomDetailPage />} />)}
         <Route path="/en/investisseurs" element={<InvestisseursPage />} />
         <Route path="/en/observatoire-logement-frontalier-geneve" element={<ObservatoireLogementPage />} />
         <Route path="/en/qui-sommes-nous" element={<QuiSommesNousPage />} />

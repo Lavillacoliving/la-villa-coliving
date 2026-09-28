@@ -100,6 +100,13 @@ for (const g of LP_LIGHTBOX_SOURCES) if (!SOURCES.includes(g)) SOURCES.push(g);
 // src/data/roomPhotos.ts (LODGE_STANDARD_ROOM / LODGE_COMMON_INTERIOR / LODGE_EXTERIOR).
 const LODGE_STANDARD_SOURCES = [
   '/images/le lodge/rooms/standard/chambre-vue-large.webp',
+  '/images/le lodge/rooms/standard/chambre-lit-bureau.webp',          // ajouts du 28/09/2026
+  '/images/le lodge/rooms/standard/chambre-fauteuil-salle-eau.webp',
+  '/images/le lodge/rooms/standard/chambre-coin-fauteuil.webp',
+  '/images/le lodge/rooms/standard/sdb-vue-ensemble.webp',
+  '/images/le lodge/rooms/standard/chambre-lit-placards.webp',
+  '/images/le lodge/rooms/standard/chambre-vue-depuis-le-lit.webp',
+  '/images/le lodge/rooms/standard/chambre-lit-fenetre-bureau.webp',  // photo principale ch. 12 (1-68)
   '/images/le lodge/rooms/standard/chambre-lit.webp',
   '/images/le lodge/rooms/standard/chambre-chevet.webp',
   '/images/le lodge/rooms/standard/chambre-bureau.webp',
@@ -122,6 +129,16 @@ const LODGE_STANDARD_SOURCES = [
   '/images/le lodge/exterior/lodge-hamac-jardin.webp',
 ];
 for (const g of LODGE_STANDARD_SOURCES) if (!SOURCES.includes(g)) SOURCES.push(g);
+// Fiche chambre 4 du Loft (28/09/2026) — src/data/roomPhotos.ts « leloft:4 ».
+const LOFT_CH4_SOURCES = [
+  '/images/le loft/rooms/Chambre 4/chambre-4-vue-large.webp',
+  '/images/le loft/rooms/Chambre 4/chambre-4-coin-fauteuil.webp',
+  '/images/le loft/rooms/Chambre 4/chambre-4-fenetre.webp',
+  '/images/le loft/rooms/Chambre 4/chambre-4-sous-les-toits.webp',
+  '/images/le loft/rooms/Chambre 4/chambre-4-lit.webp',
+  '/images/le loft/rooms/Chambre 4/chambre-4-salle-eau.webp',
+];
+for (const g of LOFT_CH4_SOURCES) if (!SOURCES.includes(g)) SOURCES.push(g);
 
 
 // Héros plein écran sous voile dégradé (Scrim) : qualité plus basse invisible à l'œil.
@@ -131,6 +148,13 @@ const QUALITY_OVERRIDES = {
   '/images/la villa coliving le loft piscine.webp': 62,
 };
 const WIDTHS = [480, 768, 1024, 1440];
+// Miniatures (28/09/2026) : la liste des chambres occupées des pages maisons affiche la photo
+// principale de chaque chambre du Lodge en 80 px → variante 240 (écran ×3) pour ces seules
+// photos, au lieu de servir la 480 dix fois sur mobile.
+const THUMB_WIDTH = 240;
+const THUMB_SOURCES = new Set(
+  LODGE_STANDARD_SOURCES.filter((s) => /\/rooms\/standard\/(chambre|sdb)-/.test(s)),
+);
 const QUALITY = 70; // les originaux sont déjà ~q70 : au-dessus, les variantes grossissent
 const REENCODE_OVER_KB = 150; // original lourd → variante recompressée à sa largeur native
 
@@ -142,7 +166,7 @@ for (const src of SOURCES) {
   let meta, stat;
   try { meta = await sharp(abs).metadata(); stat = await fs.stat(abs); }
   catch (e) { console.error(`✗ ${src} introuvable (${e.message})`); process.exitCode = 1; continue; }
-  const widths = WIDTHS.filter(w => w < meta.width);
+  const widths = [...(THUMB_SOURCES.has(src) ? [THUMB_WIDTH] : []), ...WIDTHS].filter(w => w < meta.width);
   if (stat.size / 1024 > REENCODE_OVER_KB && !widths.includes(meta.width)) widths.push(meta.width);
   const done = [];
   for (const w of widths) {

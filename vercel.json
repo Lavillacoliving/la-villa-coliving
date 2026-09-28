@@ -505,6 +505,110 @@
       "destination": "/prerendered/en-blog-living-in-france-working-in-geneva.html"
     },
     {
+      "source": "/lelodge/chambre-1",
+      "destination": "/prerendered/lelodge-chambre-1.html"
+    },
+    {
+      "source": "/lelodge/chambre-2",
+      "destination": "/prerendered/lelodge-chambre-2.html"
+    },
+    {
+      "source": "/lelodge/chambre-3",
+      "destination": "/prerendered/lelodge-chambre-3.html"
+    },
+    {
+      "source": "/lelodge/chambre-4",
+      "destination": "/prerendered/lelodge-chambre-4.html"
+    },
+    {
+      "source": "/lelodge/chambre-5",
+      "destination": "/prerendered/lelodge-chambre-5.html"
+    },
+    {
+      "source": "/lelodge/chambre-6",
+      "destination": "/prerendered/lelodge-chambre-6.html"
+    },
+    {
+      "source": "/lelodge/chambre-7",
+      "destination": "/prerendered/lelodge-chambre-7.html"
+    },
+    {
+      "source": "/lelodge/chambre-8",
+      "destination": "/prerendered/lelodge-chambre-8.html"
+    },
+    {
+      "source": "/lelodge/chambre-9",
+      "destination": "/prerendered/lelodge-chambre-9.html"
+    },
+    {
+      "source": "/lelodge/chambre-10",
+      "destination": "/prerendered/lelodge-chambre-10.html"
+    },
+    {
+      "source": "/lelodge/chambre-11",
+      "destination": "/prerendered/lelodge-chambre-11.html"
+    },
+    {
+      "source": "/lelodge/chambre-12",
+      "destination": "/prerendered/lelodge-chambre-12.html"
+    },
+    {
+      "source": "/leloft/chambre-4",
+      "destination": "/prerendered/leloft-chambre-4.html"
+    },
+    {
+      "source": "/en/lelodge/chambre-1",
+      "destination": "/prerendered/en-lelodge-chambre-1.html"
+    },
+    {
+      "source": "/en/lelodge/chambre-2",
+      "destination": "/prerendered/en-lelodge-chambre-2.html"
+    },
+    {
+      "source": "/en/lelodge/chambre-3",
+      "destination": "/prerendered/en-lelodge-chambre-3.html"
+    },
+    {
+      "source": "/en/lelodge/chambre-4",
+      "destination": "/prerendered/en-lelodge-chambre-4.html"
+    },
+    {
+      "source": "/en/lelodge/chambre-5",
+      "destination": "/prerendered/en-lelodge-chambre-5.html"
+    },
+    {
+      "source": "/en/lelodge/chambre-6",
+      "destination": "/prerendered/en-lelodge-chambre-6.html"
+    },
+    {
+      "source": "/en/lelodge/chambre-7",
+      "destination": "/prerendered/en-lelodge-chambre-7.html"
+    },
+    {
+      "source": "/en/lelodge/chambre-8",
+      "destination": "/prerendered/en-lelodge-chambre-8.html"
+    },
+    {
+      "source": "/en/lelodge/chambre-9",
+      "destination": "/prerendered/en-lelodge-chambre-9.html"
+    },
+    {
+      "source": "/en/lelodge/chambre-10",
+      "destination": "/prerendered/en-lelodge-chambre-10.html"
+    },
+    {
+      "source": "/en/lelodge/chambre-11",
+      "destination": "/prerendered/en-lelodge-chambre-11.html"
+    },
+    {
+      "source": "/en/lelodge/chambre-12",
+      "destination": "/prerendered/en-lelodge-chambre-12.html"
+    },
+    {
+      "source": "/en/leloft/chambre-4",
+      "destination": "/prerendered/en-leloft-chambre-4.html"
+    },
+    {
       "source": "/portail",
       "destination": "/_spa.html"
     },
@@ -1129,6 +1233,24 @@
     },
     {
       "source": "/(portail|dashboard)/:path*",
+      "headers": [
+        {
+          "key": "X-Robots-Tag",
+          "value": "noindex"
+        }
+      ]
+    },
+    {
+      "source": "/(lavilla|leloft|lelodge)/(chambre-[0-9]+)",
+      "headers": [
+        {
+          "key": "X-Robots-Tag",
+          "value": "noindex"
+        }
+      ]
+    },
+    {
+      "source": "/en/(lavilla|leloft|lelodge)/(chambre-[0-9]+)",
       "headers": [
         {
           "key": "X-Robots-Tag",

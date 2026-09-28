@@ -16,23 +16,25 @@ import { useLanguage } from "@/contexts/LanguageContext";
 interface WhatsAppButtonProps {
   context?: string;
   bottomClass?: string;
+  /** Message pré-rempli complet (fiches chambres) — remplace le texte générique construit sur `context`. */
+  message?: string;
 }
 
 const WHATSAPP_NUMBER = "33664315134";
 
-export function WhatsAppButton({ context, bottomClass = "bottom-6" }: WhatsAppButtonProps) {
+export function WhatsAppButton({ context, bottomClass = "bottom-6", message: customMessage }: WhatsAppButtonProps) {
   const [showTooltip, setShowTooltip] = useState(false);
   const { language } = useLanguage();
   const { pathname } = useLocation();
   const en = language === "en";
 
-  const message = context
+  const message = customMessage ?? (context
     ? en
       ? `Hi! I've just read "${context}" and I'm looking for a room at La Villa Coliving.`
       : `Bonjour ! Je viens de lire « ${context} » et je cherche une chambre chez La Villa Coliving.`
     : en
       ? "Hi! I'm looking for a room at La Villa Coliving."
-      : "Bonjour ! Je cherche une chambre chez La Villa Coliving.";
+      : "Bonjour ! Je cherche une chambre chez La Villa Coliving.");
 
   const href = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(message)}`;
 
