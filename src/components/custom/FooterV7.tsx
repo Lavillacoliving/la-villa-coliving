@@ -33,6 +33,10 @@ export function FooterV7() {
       path: "/nos-maisons",
       label: language === "en" ? "Our Houses" : "Nos Maisons",
     },
+    {
+      path: "/chambres-disponibles",
+      label: language === "en" ? "Available rooms" : "Chambres disponibles",
+    },
     { path: "/services", label: language === "en" ? "Services" : "Services" },
     { path: "/tarifs", label: language === "en" ? "Rates" : "Tarifs" },
     { path: "/faq", label: "FAQ" },
