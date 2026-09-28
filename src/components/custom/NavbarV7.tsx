@@ -39,6 +39,12 @@ export function NavbarV7() {
       path: "/nos-maisons",
       label: language === "en" ? "Our Houses" : "Nos Maisons",
     },
+    {
+      // (28/09/2026, décision Jérôme) Page money de l'intention « chambre libre » (cible Google
+      // Ads, bloc offre « high ») : liée depuis toutes les pages, plus seulement le hero.
+      path: "/chambres-disponibles",
+      label: language === "en" ? "Available Rooms" : "Chambres disponibles",
+    },
     { path: "/services", label: "Services" },
     { path: "/tarifs", label: language === "en" ? "Rates" : "Tarifs" },
     { path: "/blog", label: "Blog" },
@@ -67,8 +73,9 @@ export function NavbarV7() {
             />
           </LocalizedLink>
 
-          {/* Desktop Navigation */}
-          <div className="hidden lg:flex items-center gap-5">
+          {/* Desktop Navigation — 6 entrées depuis « Chambres disponibles » (28/09/2026) :
+              écart resserré de 1024 à 1279 px pour que « Blog » ne colle pas à « EN ». */}
+          <div className="hidden lg:flex items-center gap-4 xl:gap-5">
             {navLinks.map((link) => (
               <LocalizedLink
                 key={link.path}

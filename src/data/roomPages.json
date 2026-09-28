@@ -1,0 +1,5 @@
+{
+  "_comment": "Fiches chambres (pages dédiées /<maison>/chambre-<n>, FR + EN, noindex). Source unique lue par src/data/roomPages.ts ET scripts/prerender.mjs (routes prérendues + rewrites). Demande Jérôme du 28/09/2026 : toutes les chambres du Lodge + la chambre 4 du Loft.",
+  "lelodge": [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12],
+  "leloft": [4]
+}

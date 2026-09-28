@@ -86,7 +86,15 @@ const EXTRA_RENDER_ROUTES = ['/404'];
 // ⚠️ Garder synchronisé avec les en-têtes X-Robots-Tag de vercel.json.
 // (Lot 3 SEO funnel, 03/09/2026) Vide : la LP /chambres-septembre est remplacée par
 // /chambres-disponibles, page indexable (STATIC_ROUTES_FR) — 301 dans vercel.json.
-const NOINDEX_PRERENDERED_ROUTES = [];
+// (28/09/2026) Fiches chambres : /lelodge/chambre-4… FR + EN, listées dans src/data/roomPages.json
+// (source unique partagée avec l'app). Pages de conversion à partager, noindex : 13 pages quasi
+// identiques d'une maison seraient de la génération en masse (CLAUDE.md §4). Prérendues pour le
+// LCP et pour l'aperçu des liens (WhatsApp, Instagram lisent og:image dans le HTML).
+const ROOM_PAGES = JSON.parse(await fs.readFile(path.join(__dirname, '..', 'src', 'data', 'roomPages.json'), 'utf-8'));
+const ROOM_PAGE_ROUTES_FR = Object.entries(ROOM_PAGES)
+  .filter(([k]) => !k.startsWith('_'))
+  .flatMap(([house, rooms]) => rooms.map((n) => `/${house}/chambre-${n}`));
+const NOINDEX_PRERENDERED_ROUTES = [...ROOM_PAGE_ROUTES_FR, ...ROOM_PAGE_ROUTES_FR.map((r) => `/en${r}`)];
 
 // Client-only routes (no prerendered HTML) that must keep receiving the SPA shell.
 // This replaces the old '/(.*)' catch-all: anything NOT listed here, not a static
@@ -520,7 +528,9 @@ async function renderRoute(browser, route) {
     // Inject canonical URL (SEO: tells Google this is the authoritative URL)
     const canonicalUrl = `${SITE_URL}${route === '/' ? '' : route}`;
     const canonicalTag = `<link rel="canonical" href="${canonicalUrl}" />`;
-    if (!is404Route && !html.includes('rel="canonical"')) {
+    // Pas de canonical sur une page noindex (404, fiches chambres) : signaux contradictoires.
+    const isNoindexRoute = NOINDEX_PRERENDERED_ROUTES.includes(route);
+    if (!is404Route && !isNoindexRoute && !html.includes('rel="canonical"')) {
       html = html.replace('</head>', `    ${canonicalTag}\n  </head>`);
     }
 

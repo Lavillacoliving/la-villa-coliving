@@ -481,6 +481,85 @@ export const RESPONSIVE_IMAGES: Record<string, { original: number; widths: numbe
   "/images/le lodge/rooms/standard/chambre-vue-large.webp": {
     "original": 1920,
     "widths": [
+      240,
+      480,
+      768,
+      1024,
+      1440
+    ],
+    "reencoded": false
+  },
+  "/images/le lodge/rooms/standard/chambre-lit-bureau.webp": {
+    "original": 1920,
+    "widths": [
+      240,
+      480,
+      768,
+      1024,
+      1440
+    ],
+    "reencoded": false
+  },
+  "/images/le lodge/rooms/standard/chambre-fauteuil-salle-eau.webp": {
+    "original": 1920,
+    "widths": [
+      240,
+      480,
+      768,
+      1024,
+      1440
+    ],
+    "reencoded": false
+  },
+  "/images/le lodge/rooms/standard/chambre-coin-fauteuil.webp": {
+    "original": 1920,
+    "widths": [
+      240,
+      480,
+      768,
+      1024,
+      1440,
+      1920
+    ],
+    "reencoded": true
+  },
+  "/images/le lodge/rooms/standard/sdb-vue-ensemble.webp": {
+    "original": 1920,
+    "widths": [
+      240,
+      480,
+      768,
+      1024,
+      1440
+    ],
+    "reencoded": false
+  },
+  "/images/le lodge/rooms/standard/chambre-lit-placards.webp": {
+    "original": 1920,
+    "widths": [
+      240,
+      480,
+      768,
+      1024,
+      1440
+    ],
+    "reencoded": false
+  },
+  "/images/le lodge/rooms/standard/chambre-vue-depuis-le-lit.webp": {
+    "original": 1920,
+    "widths": [
+      240,
+      480,
+      768,
+      1024,
+      1440
+    ],
+    "reencoded": false
+  },
+  "/images/le lodge/rooms/standard/chambre-lit-fenetre-bureau.webp": {
+    "original": 1920,
+    "widths": [
+      240,
       480,
       768,
       1024,
@@ -491,6 +570,7 @@ export const RESPONSIVE_IMAGES: Record<string, { original: number; widths: numbe
   "/images/le lodge/rooms/standard/chambre-lit.webp": {
     "original": 1277,
     "widths": [
+      240,
       480,
       768,
       1024
@@ -500,6 +580,7 @@ export const RESPONSIVE_IMAGES: Record<string, { original: number; widths: numbe
   "/images/le lodge/rooms/standard/chambre-chevet.webp": {
     "original": 1277,
     "widths": [
+      240,
       480,
       768,
       1024
@@ -509,6 +590,7 @@ export const RESPONSIVE_IMAGES: Record<string, { original: number; widths: numbe
   "/images/le lodge/rooms/standard/chambre-bureau.webp": {
     "original": 1277,
     "widths": [
+      240,
       480,
       768,
       1024
@@ -518,6 +600,7 @@ export const RESPONSIVE_IMAGES: Record<string, { original: number; widths: numbe
   "/images/le lodge/rooms/standard/sdb-douche.webp": {
     "original": 1280,
     "widths": [
+      240,
       480,
       768,
       1024
@@ -527,6 +610,7 @@ export const RESPONSIVE_IMAGES: Record<string, { original: number; widths: numbe
   "/images/le lodge/rooms/standard/sdb-vasque.webp": {
     "original": 1920,
     "widths": [
+      240,
       480,
       768,
       1024,
@@ -537,6 +621,7 @@ export const RESPONSIVE_IMAGES: Record<string, { original: number; widths: numbe
   "/images/le lodge/rooms/standard/sdb-robinet.webp": {
     "original": 1277,
     "widths": [
+      240,
       480,
       768,
       1024
@@ -666,5 +751,66 @@ export const RESPONSIVE_IMAGES: Record<string, { original: number; widths: numbe
       1086
     ],
     "reencoded": true
+  },
+  "/images/le loft/rooms/Chambre 4/chambre-4-vue-large.webp": {
+    "original": 1920,
+    "widths": [
+      480,
+      768,
+      1024,
+      1440
+    ],
+    "reencoded": false
+  },
+  "/images/le loft/rooms/Chambre 4/chambre-4-coin-fauteuil.webp": {
+    "original": 1920,
+    "widths": [
+      480,
+      768,
+      1024,
+      1440,
+      1920
+    ],
+    "reencoded": true
+  },
+  "/images/le loft/rooms/Chambre 4/chambre-4-fenetre.webp": {
+    "original": 1920,
+    "widths": [
+      480,
+      768,
+      1024,
+      1440,
+      1920
+    ],
+    "reencoded": true
+  },
+  "/images/le loft/rooms/Chambre 4/chambre-4-sous-les-toits.webp": {
+    "original": 1440,
+    "widths": [
+      480,
+      768,
+      1024,
+      1440
+    ],
+    "reencoded": true
+  },
+  "/images/le loft/rooms/Chambre 4/chambre-4-lit.webp": {
+    "original": 1440,
+    "widths": [
+      480,
+      768,
+      1024,
+      1440
+    ],
+    "reencoded": true
+  },
+  "/images/le loft/rooms/Chambre 4/chambre-4-salle-eau.webp": {
+    "original": 1440,
+    "widths": [
+      480,
+      768,
+      1024
+    ],
+    "reencoded": false
   }
 };
