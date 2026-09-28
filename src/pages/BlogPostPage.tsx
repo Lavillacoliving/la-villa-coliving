@@ -20,6 +20,7 @@ import { isYmyl } from "@/lib/ymyl";
 import { resolveContentTokens } from "@/lib/contentTokens";
 import { EntityFacts } from "@/components/EntityFacts";
 import { ENTITY_FACTS_ARTICLES, fallbackEntityFactsCut } from "@/data/entityFactsArticles";
+import { NotFoundPage } from "@/pages/NotFoundPage";
 
 interface Post {
   id:string; slug:string;
@@ -193,6 +194,15 @@ function readEmbedded(): EmbeddedBlogData | null {
   return embeddedCache;
 }
 
+// (28/09/2026, fix soft-404) Un slug sans prérendu reçoit dist/404.html en HTTP 404 (plus de repli SPA
+// pour /blog/:slug dans vercel.json, sauf ?preview). main.tsx a noté le chemin de ce document : le premier
+// rendu est alors la vue « introuvable », identique au 404.html (hydratation sans #418), et loadPost vérifie
+// quand même en base — un article publié depuis le dashboard après le dernier prérendu finit par s'afficher.
+function servedNotFoundHere(): boolean {
+  const stash = (window as unknown as { __PRERENDER_STATE__?: Record<string, string> }).__PRERENDER_STATE__;
+  return !!stash?.__not_found__ && stash.__not_found__ === window.location.pathname;
+}
+
 export function BlogPostPage() {
   const { slug } = useParams<{slug:string}>();
   const { language } = useLanguage();
@@ -206,7 +216,7 @@ export function BlogPostPage() {
   });
   const [loading, setLoading] = useState(() => {
     const emb = readEmbedded();
-    return !(emb && emb.post?.slug === slug);
+    return !(emb && emb.post?.slug === slug) && !servedNotFoundHere();
   });
   const [searchParams] = useSearchParams();
   const isPreview = searchParams.get("preview") === "lavilla2026";
@@ -234,11 +244,12 @@ export function BlogPostPage() {
         data = (Array.isArray(rows) ? rows[0] : rows) ?? null;
         if (!data) throw new Error("preview: article introuvable");
       } else {
+        // maybeSingle : 0 ligne = article introuvable (data null), pas une erreur.
         const { data: row, error } = await supabase
           .from("blog_posts").select("*")
           .eq("slug", s)
           .eq("is_published", true)
-          .single();
+          .maybeSingle();
         if (error) throw error;
         data = row;
       }
@@ -276,14 +287,9 @@ export function BlogPostPage() {
       </div>
     </main>
   );
-  if(!post) return (
-    <main className="relative pt-16">
-      <div className="py-32 text-center">
-        <p className="text-[#57534E] text-lg mb-4">{language==="en"?"Article not found":"Article introuvable"}</p>
-        <LocalizedLink to="/blog" className="text-[#D4A574] hover:underline">{language==="en"?"Back to blog":"Retour au blog"}</LocalizedLink>
-      </div>
-    </main>
-  );
+  // Article introuvable (slug inconnu, dépublié, clé d'aperçu erronée) : noindex, <title> « Article
+  // introuvable », ni canonical, ni hreflang, ni JSON-LD — et le même corps que le 404.html prérendu.
+  if(!post) return <NotFoundPage article />;
 
   const title = (language==="en"&&post.title_en)?post.title_en:post.title_fr;
   const excerpt = (language==="en"&&post.excerpt_en)?post.excerpt_en:post.excerpt_fr;
@@ -463,6 +469,8 @@ export function BlogPostPage() {
         image={post.image_url || undefined}
         type="article"
         jsonLd={blogPostingSchema}
+        // Aperçu (?preview=…, brouillon compris) : jamais indexable — X-Robots-Tag aussi dans vercel.json.
+        noindex={isPreview}
       />
       <Helmet>
         <script type="application/ld+json">{JSON.stringify(buildBreadcrumbSchema([

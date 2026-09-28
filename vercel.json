@@ -534,11 +534,23 @@
     },
     {
       "source": "/blog/:slug",
-      "destination": "/_spa.html"
+      "destination": "/_spa.html",
+      "has": [
+        {
+          "type": "query",
+          "key": "preview"
+        }
+      ]
     },
     {
       "source": "/en/blog/:slug",
-      "destination": "/_spa.html"
+      "destination": "/_spa.html",
+      "has": [
+        {
+          "type": "query",
+          "key": "preview"
+        }
+      ]
     }
   ],
   "trailingSlash": false,
@@ -1102,6 +1114,36 @@
     },
     {
       "source": "/_spa.html",
+      "headers": [
+        {
+          "key": "X-Robots-Tag",
+          "value": "noindex"
+        }
+      ]
+    },
+    {
+      "source": "/blog/:slug",
+      "has": [
+        {
+          "type": "query",
+          "key": "preview"
+        }
+      ],
+      "headers": [
+        {
+          "key": "X-Robots-Tag",
+          "value": "noindex"
+        }
+      ]
+    },
+    {
+      "source": "/en/blog/:slug",
+      "has": [
+        {
+          "type": "query",
+          "key": "preview"
+        }
+      ],
       "headers": [
         {
           "key": "X-Robots-Tag",

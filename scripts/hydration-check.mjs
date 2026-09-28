@@ -43,6 +43,17 @@ const ROUTES = [
   '/en/chambre-a-louer-geneve',
 ];
 
+// (28/09/2026, fix soft-404) URL sans prérendu : Vercel sert 404.html (en HTTP 404). Servies ici avec
+// le 404.html prérendu, comme en production : un slug d'article inconnu (BlogPostPage démarre sur la
+// vue « introuvable », identique au 404) et une page inconnue (NotFoundPage), en FR et en EN (le 404
+// est prérendu en français : main.tsx fait un rendu client sur /en/… au lieu d'hydrater).
+const NOT_FOUND_ROUTES = [
+  '/blog/article-inexistant-garde-hydratation',
+  '/page-inexistante-garde-hydratation',
+  '/en/blog/article-inexistant-garde-hydratation',
+  '/en/page-inexistante-garde-hydratation',
+];
+
 const MIME = {
   '.html': 'text/html; charset=utf-8', '.js': 'application/javascript', '.css': 'text/css',
   '.svg': 'image/svg+xml', '.json': 'application/json', '.webp': 'image/webp', '.png': 'image/png',
@@ -62,13 +73,15 @@ async function main() {
   const puppeteer = (await import('puppeteer')).default;
   // Premier article de blog publié (prérendu) : couvre BlogPostPage et son embed.
   const blogFile = (await fs.readdir(PRERENDERED)).filter((f) => /^blog-.*\.html$/.test(f)).sort()[0];
-  const routes = blogFile ? [...ROUTES, `/blog/${blogFile.replace(/^blog-/, '').replace(/\.html$/, '')}`] : ROUTES;
+  const routes = [...(blogFile ? [...ROUTES, `/blog/${blogFile.replace(/^blog-/, '').replace(/\.html$/, '')}`] : ROUTES), ...NOT_FOUND_ROUTES];
 
   const server = http.createServer(async (req, res) => {
     const url = decodeURIComponent(req.url.split('?')[0]);
     const candidates = url.startsWith('/assets/') || path.extname(url)
       ? [path.join(DIST, url)]
-      : [path.join(PRERENDERED, fileFor(url)), path.join(DIST, url, 'index.html'), path.join(DIST, '_spa.html'), path.join(DIST, 'index.html')];
+      : NOT_FOUND_ROUTES.includes(url)
+        ? [path.join(PRERENDERED, '404.html')]
+        : [path.join(PRERENDERED, fileFor(url)), path.join(DIST, url, 'index.html'), path.join(DIST, '_spa.html'), path.join(DIST, 'index.html')];
     for (const file of candidates) {
       try {
         const data = await fs.readFile(file);
