@@ -1069,6 +1069,36 @@
       "source": "/en/blog/colocation-expats-geneve-guide",
       "destination": "/en/blog/s-installer-a-geneve-expatrie-cote-suisse-ou-cote-france",
       "permanent": true
+    },
+    {
+      "source": "/blog/s-installer-a-geneve-expatrie-cote-suisse-cote-france",
+      "destination": "/blog/s-installer-a-geneve-expatrie-cote-suisse-ou-cote-france",
+      "permanent": true
+    },
+    {
+      "source": "/en/blog/s-installer-a-geneve-expatrie-cote-suisse-cote-france",
+      "destination": "/en/blog/s-installer-a-geneve-expatrie-cote-suisse-ou-cote-france",
+      "permanent": true
+    },
+    {
+      "source": "/blog/s-installer-a-geneve-expatrie-cote-suisse-out-cote-france",
+      "destination": "/blog/s-installer-a-geneve-expatrie-cote-suisse-ou-cote-france",
+      "permanent": true
+    },
+    {
+      "source": "/en/blog/s-installer-a-geneve-expatrie-cote-suisse-out-cote-france",
+      "destination": "/en/blog/s-installer-a-geneve-expatrie-cote-suisse-ou-cote-france",
+      "permanent": true
+    },
+    {
+      "source": "/blog/vivre-a-annemasse-quand-on-travaille-a-gen%C3%A8ve",
+      "destination": "/blog/vivre-a-annemasse-quand-on-travaille-a-geneve",
+      "permanent": true
+    },
+    {
+      "source": "/en/blog/vivre-a-annemasse-quand-on-travaille-a-gen%C3%A8ve",
+      "destination": "/en/blog/vivre-a-annemasse-quand-on-travaille-a-geneve",
+      "permanent": true
     }
   ],
   "headers": [

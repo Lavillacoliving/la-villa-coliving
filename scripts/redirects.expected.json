@@ -182,5 +182,29 @@
   {
     "from": "/en/blog/colocation-expats-geneve-guide",
     "to": "/en/blog/s-installer-a-geneve-expatrie-cote-suisse-ou-cote-france"
+  },
+  {
+    "from": "/blog/s-installer-a-geneve-expatrie-cote-suisse-cote-france",
+    "to": "/blog/s-installer-a-geneve-expatrie-cote-suisse-ou-cote-france"
+  },
+  {
+    "from": "/en/blog/s-installer-a-geneve-expatrie-cote-suisse-cote-france",
+    "to": "/en/blog/s-installer-a-geneve-expatrie-cote-suisse-ou-cote-france"
+  },
+  {
+    "from": "/blog/s-installer-a-geneve-expatrie-cote-suisse-out-cote-france",
+    "to": "/blog/s-installer-a-geneve-expatrie-cote-suisse-ou-cote-france"
+  },
+  {
+    "from": "/en/blog/s-installer-a-geneve-expatrie-cote-suisse-out-cote-france",
+    "to": "/en/blog/s-installer-a-geneve-expatrie-cote-suisse-ou-cote-france"
+  },
+  {
+    "from": "/blog/vivre-a-annemasse-quand-on-travaille-a-gen%C3%A8ve",
+    "to": "/blog/vivre-a-annemasse-quand-on-travaille-a-geneve"
+  },
+  {
+    "from": "/en/blog/vivre-a-annemasse-quand-on-travaille-a-gen%C3%A8ve",
+    "to": "/en/blog/vivre-a-annemasse-quand-on-travaille-a-geneve"
   }
 ]
