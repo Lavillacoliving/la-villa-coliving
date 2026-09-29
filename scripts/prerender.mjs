@@ -100,11 +100,16 @@ const NOINDEX_PRERENDERED_ROUTES = [...ROOM_PAGE_ROUTES_FR, ...ROOM_PAGE_ROUTES_
 // This replaces the old '/(.*)' catch-all: anything NOT listed here, not a static
 // file and not a prerendered rewrite now falls through to 404.html (real 404).
 // ⚠️ Keep in sync with the non-prerendered routes of src/App.tsx.
-// The /blog/:slug fallbacks come AFTER the per-slug prerendered rewrites (order
-// matters): known articles keep their prerendered HTML, but an article published
-// outside the n8n flow (e.g. dashboard "Publier") renders client-side immediately
-// instead of 404ing until the next prerender run. They also cap the blast radius
-// if the blog rewrites ever got wiped (Supabase outage during a prerender run).
+// (28/09/2026, fix soft-404) Articles : plus de repli SPA inconditionnel pour /blog/:slug.
+// Il servait _spa.html en HTTP 200 (titre de l'accueil, aucun noindex) à tout slug inconnu ou
+// mal tapé — Google en indexait. Un slug sans prérendu tombe désormais sur 404.html en 404.
+// Seul l'aperçu (?preview=…) garde le shell : BlogPostPage y charge le brouillon via la RPC
+// blog_post_preview (+ X-Robots-Tag noindex dans vercel.json). Placés APRÈS les rewrites par
+// slug : un article publié appelé avec ?preview garde son HTML prérendu.
+// Contrepartie : un article publié hors circuit (bouton « Publier » du dashboard) répond 404
+// aux robots jusqu'au prochain prérendu (cron 05:00/13:00 UTC ou push sur main) ; les
+// visiteurs le voient quand même (BlogPostPage l'interroge par-dessus le 404.html).
+// La panne Supabase pendant un prérendu est couverte par le FAIL-FAST de fetchBlogSlugs.
 const SPA_FALLBACK_REWRITES = [
   { source: '/portail', destination: '/_spa.html' },
   { source: '/portail/:path*', destination: '/_spa.html' },
@@ -113,8 +118,8 @@ const SPA_FALLBACK_REWRITES = [
   { source: '/reset-password', destination: '/_spa.html' },
   { source: '/mon-espace', destination: '/_spa.html' },
   { source: '/questionnaire-depart/:token', destination: '/_spa.html' },
-  { source: '/blog/:slug', destination: '/_spa.html' },
-  { source: '/en/blog/:slug', destination: '/_spa.html' },
+  { source: '/blog/:slug', destination: '/_spa.html', has: [{ type: 'query', key: 'preview' }] },
+  { source: '/en/blog/:slug', destination: '/_spa.html', has: [{ type: 'query', key: 'preview' }] },
 ];
 
 // ─────────────────────────────────────────────
@@ -547,6 +552,14 @@ async function renderRoute(browser, route) {
     const wordCount = textContent.split(' ').filter(w => w.length > 2).length;
     if (wordCount < 50) {
       console.error(`  ❌ ${route} → only ${wordCount} words (empty shell?) — NOT writing the file`);
+      return false;
+    }
+
+    // (28/09/2026, fix soft-404) Un article publié doit embarquer ses données : sans elles, la capture
+    // est la vue « introuvable » (noindex depuis ce correctif) — l'écrire désindexerait l'article
+    // (fetch Supabase en échec pendant le rendu). La route échoue, donc rien n'est commité.
+    if (/^\/(en\/)?blog\/[^/]+$/.test(route) && !html.includes('id="__blog_post_data__"')) {
+      console.error(`  ❌ ${route} → article non rendu (pas de __blog_post_data__, vue « introuvable ») — NOT writing the file`);
       return false;
     }
 
