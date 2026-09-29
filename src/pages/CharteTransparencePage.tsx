@@ -9,8 +9,8 @@ import { SEO } from "@/components/SEO";
 //    d'unification éditoriale qui voudrait la basculer au vouvoiement.
 // La version française fait foi ; l'anglais est la traduction fournie par Jérôme.
 // Date en dur, à mettre à jour à chaque modification substantielle.
-const LAST_UPDATED_FR = "1er septembre 2026";
-const LAST_UPDATED_EN = "September 1, 2026";
+const LAST_UPDATED_FR = "29 septembre 2026";
+const LAST_UPDATED_EN = "September 29, 2026";
 
 function Section({ title, children }: { title: string; children: React.ReactNode }) {
   return (
