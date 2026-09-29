@@ -2,7 +2,7 @@ Pour un jeune actif qui arrive avec un contrat à Genève, le format de logement
 
 **En bref**
 - Le vrai écart entre les formats n'est pas le loyer, c'est la vie qu'il t'achète : l'emménagement, les gens autour de toi, l'espace, le sport, le ménage et le trajet.
-- Le coliving premium réunit ce que les autres formats séparent : emménagement en 72 h, colocataires sélectionnés dès le premier soir, piscine et sauna à la maison, ménage des communs trois fois par semaine, gare à pied.
+- Le coliving premium réunit ce que les autres formats séparent : emménagement en 72 h dès le premier contact si une chambre est disponible, colocataires sélectionnés dès le premier soir, piscine et sauna à la maison, ménage des communs trois fois par semaine, gare à pied.
 - Côté budget, un studio à Genève se loue 1 200 à 2 500 CHF par mois hors charges. Côté France, une colocation classique revient à 600 à 1 000 € charges comprises, et le coliving premium démarre à {{PRIX_DES}}/{{PRIX_DES_EUR}} tout inclus, transport en plus dans les deux cas.
 
 ## Les quatre formats, critère par critère
@@ -21,7 +21,7 @@ Ce que chaque format change au quotidien pour une personne seule qui travaille �
 | Pannes, factures, gestion | toi, face à la régie | entre colocataires | un seul interlocuteur pour tout | l'équipe de la résidence, via une application |
 | Coût total par mois | loyer de 1 200 à 2 500 CHF hors charges selon les annonces (loyer médian 1 475 CHF, RealAdvisor, septembre 2026), plus 300 à 450 CHF de charges et d'abonnements | 700 à 1 100 € charges et transport compris | dès {{PRIX_DES}}/{{PRIX_DES_EUR}} tout inclus, plus le transport | dès 690 € pour une chambre, studios dès 920 €, plus les options et le transport |
 
-Lis la colonne du coliving premium de haut en bas : tu emménages en 72 h avec ta valise, tu dînes avec tes colocataires dès le premier soir, piscine, sauna et salle de sport sont chez toi, et le ménage des communs est fait pour toi. Le studio à Genève t'offre la ville et l'autonomie, mais tout le reste est à construire seul. La colocation classique coûte moins cher au mois, contre le hasard des colocataires et un appartement à organiser. La grande résidence mise sur sa taille et ses nombreux espaces partagés en immeuble, avec le ménage de ton logement et le linge en option, et un trajet en bus avec correspondance.
+Lis la colonne du coliving premium de haut en bas : si une chambre est disponible, tu emménages en 72 h avec ta valise, tu dînes avec tes colocataires dès le premier soir, piscine, sauna et salle de sport sont chez toi, et le ménage des communs est fait pour toi. Le studio à Genève t'offre la ville et l'autonomie, mais tout le reste est à construire seul. La colocation classique coûte moins cher au mois, contre le hasard des colocataires et un appartement à organiser. La grande résidence mise sur sa taille et ses nombreux espaces partagés en immeuble, avec le ménage de ton logement et le linge en option, et un trajet en bus avec correspondance.
 
 ## Décision par profil : six raisons de choisir une chambre chez nous
 
@@ -49,7 +49,7 @@ Lis la colonne du coliving premium de haut en bas : tu emménages en 72 h avec t
 
 <!-- entity-facts -->
 
-Concrètement, pour un nouveau job dans un mois : [candidature en deux minutes](/candidature), réponse sous 48 h, visite sur place ou en visio, bail signé en ligne : si une chambre est disponible, tu emménages 72 h après ton premier contact. Les [chambres disponibles](/chambres-disponibles) sont visibles en direct, ce que le loyer inclut est détaillé sur la [page des tarifs](/tarifs), et les trois maisons avec leur trajet sont sur [notre page colocation à Genève côté France](/colocation-geneve).
+Concrètement, pour un nouveau job dans un mois : [candidature en deux minutes](/candidature), réponse sous 48 h, visite sur place ou en visio, bail signé en ligne. Si une chambre est disponible, tu emménages 72 h après ton premier contact. Les [chambres disponibles](/chambres-disponibles) sont visibles en direct, ce que le loyer inclut est détaillé sur la [page des tarifs](/tarifs), et les trois maisons avec leur trajet sont sur [notre page colocation à Genève côté France](/colocation-geneve).
 
 ## Quand le studio à Genève est le bon choix
 
@@ -57,13 +57,13 @@ Le studio gagne si tu remplis quatre conditions : vivre seul, rester deux ans ou
 
 ## Quand ce n'est pas le bon choix
 
-Le coliving n'est pas fait pour tout le monde. Un couple qui veut partager une seule chambre, ou une famille, a besoin d'un logement entier : chez nous, une chambre accueille une seule personne, un couple peut venir en prenant deux chambres, et un deux-pièces meublé côté France se loue 1 200 à 1 500 € par mois charges comprises (annonces, septembre 2026). Un séjour touristique de quelques semaines relève d'une résidence hôtelière. Un budget total sous 1 200 € par mois oriente vers la colocation classique : notre [guide pour trouver une colocation près de Genève](/blog/trouver-colocation-geneve-frontalier) te donne les groupes, les portails et les pièges. Et si ta voiture est indispensable chaque jour, un logement plus loin des postes-frontière sera plus logique. Pour comparer les communes côté France, lis [où habiter côté France quand on travaille en Suisse](/blog/ou-habiter-frontalier-suisse-villes-france-pas-cher).
+Le coliving n'est pas fait pour tout le monde. Un couple qui veut partager une seule chambre, ou une famille, a besoin d'un logement entier : un deux-pièces meublé côté France se loue 1 200 à 1 500 € par mois charges comprises (annonces, septembre 2026). Chez nous, une chambre accueille une seule personne ; un couple peut venir en prenant deux chambres. Un séjour touristique de quelques semaines relève d'une résidence hôtelière. Un budget total sous 1 200 € par mois oriente vers la colocation classique : notre [guide pour trouver une colocation près de Genève](/blog/trouver-colocation-geneve-frontalier) te donne les groupes, les portails et les pièges. Et si ta voiture est indispensable chaque jour, un logement plus loin des postes-frontière sera plus logique. Pour comparer les communes côté France, lis [où habiter côté France quand on travaille en Suisse](/blog/ou-habiter-frontalier-suisse-villes-france-pas-cher).
 
 ## Questions fréquentes
 
 **Studio à Genève ou chambre côté France : qu'est-ce qui change vraiment au quotidien ?**
 
-Presque tout, sauf ton travail. En studio à Genève, tu as la ville à pied et l'autonomie totale, mais tu emménages en quatre à huit semaines, tu meubles, tu gères et tu te fais des amis seul. En coliving premium côté France, tu emménages en 72 h, tu dînes avec tes colocataires dès le premier soir, tu as piscine, sauna et salle de sport à la maison et le ménage des communs fait, pour un trajet de 20 minutes porte-à-porte jusqu'au centre de Genève.
+Presque tout, sauf ton travail. En studio à Genève, tu as la ville à pied et l'autonomie totale, mais tu emménages en quatre à huit semaines, tu meubles, tu gères et tu te fais des amis seul. En coliving premium côté France, tu emménages en 72 h dès ton premier contact si une chambre est disponible, tu dînes avec tes colocataires dès le premier soir, tu as piscine, sauna et salle de sport à la maison et le ménage des communs fait, pour un trajet de 20 minutes porte-à-porte jusqu'au centre de Genève.
 
 **Coliving ou colocation : quelle différence concrète ?**
 

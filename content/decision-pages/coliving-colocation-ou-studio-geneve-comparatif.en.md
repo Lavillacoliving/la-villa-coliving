@@ -2,7 +2,7 @@ For a young professional arriving with a contract in Geneva, what the housing fo
 
 **In short**
 - The real gap between the formats is not the rent, it is the life it buys you: moving in, the people around you, space, sport, cleaning and the commute.
-- Premium coliving brings together what the other formats keep apart: move-in within 72 h, selected flatmates from the first evening, pool and sauna at home, common areas cleaned three times a week, a station within walking distance.
+- Premium coliving brings together what the other formats keep apart: move-in within 72 h of your first contact if a room is available, selected flatmates from the first evening, pool and sauna at home, common areas cleaned three times a week, a station within walking distance.
 - Budget-wise, a studio in Geneva rents for CHF 1,200 to 2,500 a month excluding charges. On the French side, a classic flatshare costs €600 to €1,000 including charges, and premium coliving starts at {{PRIX_DES}}/{{PRIX_DES_EUR}} all-inclusive, with transport on top in both cases.
 
 ## The four formats, criterion by criterion
@@ -21,7 +21,7 @@ What each format changes day to day for a single person working in Geneva, in Se
 | Repairs, bills, admin | you, dealing with the letting agency | between flatmates | a single point of contact for everything | the residence team, through an app |
 | Total monthly cost | rent of CHF 1,200 to 2,500 excluding charges according to listings (median rent CHF 1,475, RealAdvisor, September 2026), plus CHF 300 to 450 of bills and subscriptions | €700 to €1,100 including bills and transport | from {{PRIX_DES}}/{{PRIX_DES_EUR}} all-inclusive, plus transport | from €690 for a room, studios from €920, plus options and transport |
 
-Read the premium coliving column from top to bottom: you move in within 72 h with your suitcase, you have dinner with your flatmates from the first evening, pool, sauna and gym are at home, and the common areas are cleaned for you. A studio in Geneva gives you the city and independence, but everything else is yours to build alone. The classic flatshare costs less per month, but you take pot luck with flatmates and have a flat to organise. The large residence relies on its size and its many shared spaces in a large apartment block, with cleaning of your unit and linen as options, and a bus commute with a change.
+Read the premium coliving column from top to bottom: if a room is available, you move in within 72 h with your suitcase, you have dinner with your flatmates from the first evening, pool, sauna and gym are at home, and the common areas are cleaned for you. A studio in Geneva gives you the city and independence, but everything else is yours to build alone. The classic flatshare costs less per month, but you take pot luck with flatmates and have a flat to organise. The large residence relies on its size and its many shared spaces in a large apartment block, with cleaning of your unit and linen as options, and a bus commute with a change.
 
 ## Decision by profile: six reasons to choose a room with us
 
@@ -49,7 +49,7 @@ Read the premium coliving column from top to bottom: you move in within 72 h wit
 
 <!-- entity-facts -->
 
-In practice, for a new job in a month: [a two-minute application](/en/candidature), a reply within 48 h, a visit on site or by video, a lease signed online: if a room is available, you move in 72 h after your first contact. [Available rooms](/en/chambres-disponibles) are shown live, what the rent includes is detailed on the [rates page](/en/tarifs), and the three houses with their commute are on [our page for flatshares in Geneva, French side](/en/colocation-geneve).
+In practice, for a new job in a month: [a two-minute application](/en/candidature), a reply within 48 h, a visit on site or by video, a lease signed online. If a room is available, you move in 72 h after your first contact. [Available rooms](/en/chambres-disponibles) are shown live, what the rent includes is detailed on the [rates page](/en/tarifs), and the three houses with their commute are on [our page for flatshares in Geneva, French side](/en/colocation-geneve).
 
 ## When a studio in Geneva is the right choice
 
@@ -57,13 +57,13 @@ A studio wins if you meet four conditions: living alone, staying two years or mo
 
 ## When it is not the right choice
 
-Coliving is not for everyone. A couple who want to share a single room, or a family, need a whole home: with us, each room is let to one person, a couple can come by taking two rooms, and a furnished one-bedroom flat on the French side rents for €1,200 to €1,500 a month including charges (listings, September 2026). A tourist stay of a few weeks belongs in a serviced residence. A total budget under €1,200 a month points to a classic flatshare: our [guide to finding a flatshare near Geneva](/en/blog/trouver-colocation-geneve-frontalier) gives you the groups, the portals and the traps. And if your car is essential every day, a home further from the border crossings will make more sense. To compare the French-side towns, read [where to live on the French side when you work in Switzerland](/en/blog/ou-habiter-frontalier-suisse-villes-france-pas-cher).
+Coliving is not for everyone. A couple who want to share a single room, or a family, need a whole home: a furnished one-bedroom flat on the French side rents for €1,200 to €1,500 a month including charges (listings, September 2026). With us, each room is let to one person; a couple can come by taking two rooms. A tourist stay of a few weeks belongs in a serviced residence. A total budget under €1,200 a month points to a classic flatshare: our [guide to finding a flatshare near Geneva](/en/blog/trouver-colocation-geneve-frontalier) gives you the groups, the portals and the traps. And if your car is essential every day, a home further from the border crossings will make more sense. To compare the French-side towns, read [where to live on the French side when you work in Switzerland](/en/blog/ou-habiter-frontalier-suisse-villes-france-pas-cher).
 
 ## Frequently asked questions
 
 **Studio in Geneva or a room on the French side: what really changes day to day?**
 
-Almost everything except your job. In a Geneva studio, you have the city on foot and total independence, but you move in after four to eight weeks, you furnish, you manage and you make friends on your own. In premium coliving on the French side, you move in within 72 h, you have dinner with your flatmates from the first evening, you have a pool, a sauna and a gym at home and the common areas cleaned for you, for a 20-minute door-to-door commute to central Geneva.
+Almost everything except your job. In a Geneva studio, you have the city on foot and total independence, but you move in after four to eight weeks, you furnish, you manage and you make friends on your own. In premium coliving on the French side, you move in within 72 h of your first contact if a room is available, you have dinner with your flatmates from the first evening, you have a pool, a sauna and a gym at home and the common areas cleaned for you, for a 20-minute door-to-door commute to central Geneva.
 
 **Coliving or flatshare: what is the concrete difference?**
 
@@ -75,7 +75,7 @@ Yes, and quickly, because the house is designed for it. With us, you live with 6
 
 **How quickly can I move in with La Villa Coliving?**
 
-Within 72 h of your first contact, if a room is available: a two-minute application, a reply within 48 h, a visit on site or by video, a lease signed online, and you arrive with your suitcase in a furnished room, linen and towels provided. Available rooms and rooms opening up soon are shown live on the site.
+Within 72 h of your first contact, if a room is available: a two-minute application, a reply within 48 h, a visit on site or by video, a lease signed online, and you arrive with your suitcase in a furnished room, sheets and towels provided. Available rooms and rooms opening up soon are shown live on the site.
 
 **How long does it take to get to work in Geneva from the houses?**
 
