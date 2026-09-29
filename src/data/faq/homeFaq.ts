@@ -57,7 +57,7 @@ export const homeFaq: { fr: QAPair[]; en: QAPair[] } = {
     },
     {
       q: "How does the application work?",
-      a: "You fill in the application form in 2 minutes, and we reply within 48h. Then: a chat to get to know each other, a house visit, and if everything lines up and a room is available, you can move in within 72 h of your first contact. No commitment and no application fees — the average stay with us is 13 months (9 months excluding long stays).",
+      a: "You fill in the application form in 2 minutes, and we reply within 48 h. Then: a chat to get to know each other, a house visit, and if everything lines up and a room is available, you can move in within 72 h of your first contact. No commitment and no application fees — the average stay with us is 13 months (9 months excluding long stays).",
     },
   ],
 };

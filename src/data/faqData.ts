@@ -310,7 +310,7 @@ export const faqData: FAQItem[] = [
     },
     answer: {
       en: 'Yes, we require a security deposit equivalent to two months\' rent excluding charges. This deposit is held for the duration of your stay and returned within 30 days of move-out if there is no damage, otherwise within 2 months, minus any deductions for damages beyond normal wear and tear.',
-      fr: 'Oui, nous exigeons une caution équivalente à deux mois de loyer hors charges. Cette caution est conservée pendant la durée de ton séjour et restituée sous 30 jours après ton départ si aucune dégradation n\'est constatée, sinon sous 2 mois, moins toute déduction pour dommages au-delà de l\'usure normale.',
+      fr: 'Oui, nous exigeons une caution équivalente à deux mois de loyer hors charges. Cette caution est conservée pendant la durée de ton séjour et restituée sous 30 jours après ton départ si aucune dégradation n\'est constatée, sinon sous 2 mois, déduction faite des éventuels dommages au-delà de l\'usure normale.',
     },
   },
   {
@@ -321,8 +321,8 @@ export const faqData: FAQItem[] = [
       fr: 'Y a-t-il des frais d\'agence ?',
     },
     answer: {
-      en: 'No. La Villa rents its houses directly, with no middleman: so there are no agency fees, no application fee, no booking fee and no check-in fee. You pay your all-inclusive rent and a fully refundable deposit — that\'s it. And it\'s not a temporary offer: it\'s our model.',
-      fr: 'Non. La Villa loue ses maisons en direct, sans intermédiaire : il n\'y a donc aucun honoraire d\'agence, aucun frais de dossier, aucun frais de réservation et aucun frais d\'état des lieux. Tu règles ton loyer tout inclus et une caution intégralement restituée — c\'est tout. Et ce n\'est pas une offre temporaire : c\'est notre modèle.',
+      en: 'No. La Villa rents its houses directly, with no middleman: so there are no agency fees, no application fee, no booking fee and no check-in fee. You pay your all-inclusive rent and a refundable deposit — that\'s it. And it\'s not a temporary offer: it\'s our model.',
+      fr: 'Non. La Villa loue ses maisons en direct, sans intermédiaire : il n\'y a donc aucun honoraire d\'agence, aucun frais de dossier, aucun frais de réservation et aucun frais d\'état des lieux. Tu règles ton loyer tout inclus et une caution remboursable — c\'est tout. Et ce n\'est pas une offre temporaire : c\'est notre modèle.',
     },
   },
   {

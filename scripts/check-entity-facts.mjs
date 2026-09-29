@@ -43,7 +43,9 @@ const FORBIDDEN = [
   { re: /25[\u00A0\u202F ]?(à|-|–|to)[\u00A0\u202F ]?35[\u00A0\u202F ]?min/i, label: '« 25 à 35 minutes » (trajet Genève non qualifié)', unlessQualified: true },
   { re: /minimum stay (?:of|is) two months|séjour minimum (?:de|est de) deux mois|minimum de deux mois/i, label: '« séjour minimum deux mois »' },
   { re: /bail flexible 1 à 12 mois|1 à 12 mois|1 to 12 months/i, label: '« bail 1 à 12 mois »' },
-  { re: /emménag\w*( possible)? en (moins d['’]une |une |1 |deux |2 |1 à 2 |2 à 4 )?semaines?|emménagement 1 sem\.|move[- ]in( possible)? within (a|one|1|2|two|1-2|2 to 4) weeks?|move in within (a|one|1|2|two|1-2|2 to 4) weeks?/i, label: '« emménagement en une/deux semaines » (délai = 72 h dès le premier contact si une chambre est disponible, décision 29/09/2026)' },
+  // Délai d'emménagement La Villa (décision 29/09/2026) : « 72 h dès le premier contact si une chambre est disponible ».
+  // Exempté dans une phrase qui parle du marché (studio, colocation classique, régie…) ; les témoignages (« j'ai emménagé 2 semaines après ») ne matchent pas.
+  { re: /emménag\w*(?:[\u00A0\u202F ]+[\wÀ-ÿ'’-]+){0,3}?[\u00A0\u202F ]+en[\u00A0\u202F ]+(?:moins d['’]une|une|1|deux|2|1 à 2|2 à 4)[\u00A0\u202F ]+semaines?|emménagement 1 sem\.|(?:1 à 2|2 à 4) semaines entre la candidature|en moyenne 2 à 4 semaines|move[- ]in(?:[\u00A0\u202F ]+\S+){0,3}?[\u00A0\u202F ]+within[\u00A0\u202F ]+(?:a|one|1|2|two|1-2|2 to 4)[\u00A0\u202F ]+weeks?|(?:1-2|2 to 4) weeks from (?:initial )?application|usually 2 to 4 weeks|une semaine suffit quand la chambre|one week is enough when the room|visite peut s['’]organiser sous 2 semaines|visit can be organi[sz]ed within 2 weeks/i, unless: /colocation classique|classic flatshare|studio|appartement|\bflat\b|régie|letting agency|Airbnb|marché|market/i, label: '« emménagement en une/deux semaines » (délai = 72 h dès le premier contact si une chambre est disponible, décision 29/09/2026)' },
   { re: /engagement minimum de|minimum commitment of|(?<![\d,.])(trois|3) mois minimum|(?<![\d,.])(three|3)-month minimum|(notre )?format (d'accueil )?commence à (trois|3) mois|our format starts at (three|3) months|engagement de (trois|3) mois|(three|3)-month commitment/i, label: '« engagement minimum de 3 mois » (retiré le 29/09/2026, D5 révisée)' },
   { re: /\[FAIT À CONFIRMER|\[À VÉRIFIER|\{\{[A-Z_]+\}\}/, label: 'placeholder' },
   // Décision Jérôme 07/09/2026 : train Annemasse → Cornavin ≈ 20 min. Les anciens « Cornavin 15 min » passaient la règle des
@@ -174,9 +176,10 @@ async function checkHtml(m) {
     if (!/^(en-)?(mentions-legales|politique-de-confidentialite)\.html$/.test(f)) {
       for (const fb of FORBIDDEN) {
         if (!fb.re.test(text)) continue;
-        if (fb.unlessQualified) {
-          // Interdit seulement dans une phrase sans qualificatif (à pied, vélo, Moillesulaz, aéroport…).
-          const bad = textBlocks(html).flatMap((b) => b.split(/(?<=[.!?;])\s+/)).filter((sen) => fb.re.test(sen) && !MINUTE_QUALIFIER.test(sen));
+        if (fb.unlessQualified || fb.unless) {
+          // Interdit seulement dans une phrase sans qualificatif (à pied, vélo, Moillesulaz, aéroport…) ou hors exception propre à la règle (`unless`).
+          const exempt = fb.unless ?? MINUTE_QUALIFIER;
+          const bad = textBlocks(html).flatMap((b) => b.split(/(?<=[.!?;])\s+/)).filter((sen) => fb.re.test(sen) && !exempt.test(sen));
           if (bad.length === 0) continue;
           failures.push(`${f} : ${fb.label} — « ${bad[0].slice(0, 120)}… »`);
           continue;

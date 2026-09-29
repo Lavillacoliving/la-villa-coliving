@@ -6,7 +6,10 @@
 --   · portail résidents (property_content, « Préparer ton départ », 3 maisons) : plus de « rupture anticipée au cas par cas »
 --   · articles : caution jamais chiffrée (EN « 2,760 CHF » → 2 mois de loyer hors charges), séjour moyen canonique (13 mois),
 --     plus de « sans pénalité de bail » (le bail garde des frais de remise en location : ne jamais promettre « sans frais » au départ)
+--   · articles : « caution intégralement restituée » / « fully refundable » → remboursable (retenues possibles) ; per diem OI FR = EN
+--   · calendrier n8n : délai 72 h, promesse « pas de garant » retirée (D6)
 --   · stratégie n8n v5 (v4 désactivée, jamais supprimée)
+-- Relu par une revue contradictoire (28 constats, tous corrigés) ; UPDATE du Lodge rendu idempotent.
 -- ORDRE : GO Jérôme → ce SQL via MCP (précontrôle du 29/09 : chaque phrase présente exactement 1 fois, 3 pour property_content)
 --         → push de la branche fix/delais-72h-caution (la garde « emménagement en une/deux semaines » de check-entity-facts
 --         échouerait sur les articles si le push précédait le SQL).
@@ -48,11 +51,15 @@ UPDATE public.blog_posts SET
   updated_at = now()
 WHERE slug = 'fiscalite-frontalier-geneve-impots-2026';
 UPDATE public.blog_posts SET
-  content_fr = replace(replace(content_fr,
+  content_fr = replace(replace(replace(replace(content_fr,
     'Nous réservons des chambres pour les arrivées rapides (moins de 2 semaines).',
     'Si une chambre est disponible, tu peux emménager en 72 h dès ton premier contact.'),
     'il faut pouvoir partir sans pénalité de bail',
     'il faut pouvoir partir vite, avec un préavis court'),
+    'couvre parfaitement le dépôt de garantie du coliving (2 mois de loyer hors charges)',
+    'couvre une bonne partie du dépôt de garantie du coliving (2 mois de loyer hors charges)'),
+    'est pensé pour ces arrivées rapides',
+    'est pensé pour les arrivées rapides'),
   content_en = replace(replace(replace(content_en,
     'We reserve rooms for quick arrivals (under 2 weeks).',
     'If a room is available, you can move in within 72 h of your first contact.'),
@@ -70,20 +77,34 @@ UPDATE public.blog_posts SET
     'et à la cohérence de l''expérience de vie que nous voulons offrir. Et tu restes libre de partir à tout moment, avec un mois de préavis.'),
   content_en = replace(replace(content_en,
     '**Why only 12-month leases and no shorter formulas?**',
-    '**Why a 12-month lease rather than shorter formulas?**'),
+    '**Why a 12-month lease rather than short stays?**'),
     'and the coherence of the living experience we want to offer.',
     'and the coherence of the living experience we want to offer. And you remain free to leave at any time with one month''s notice.'),
   updated_at = now()
-WHERE slug = 'lodge-annemasse-coliving-premium-portes-geneve';
+WHERE slug = 'lodge-annemasse-coliving-premium-portes-geneve'
+  AND content_fr NOT LIKE '%Et tu restes libre de partir à tout moment, avec un mois de préavis.%';
 UPDATE public.blog_posts SET
-  content_fr = replace(content_fr,
+  content_fr = replace(replace(content_fr,
     '(nos résidents restent de 6 mois à 3 ans)',
     '(nos résidents restent 13 mois en moyenne, 9 mois hors longs séjours)'),
-  content_en = replace(content_en,
+    'une caution intégralement restituée. C''est tout.',
+    'une caution remboursable. C''est tout.'),
+  content_en = replace(replace(content_en,
     '(our residents stay from 6 months to 3 years)',
     '(our residents stay 13 months on average, 9 months excluding long stays)'),
+    'a fully refundable deposit. That''s it.',
+    'a refundable deposit. That''s it.'),
   updated_at = now()
 WHERE slug = 'coliving-frais-dossier-geneve-annemasse';
+UPDATE public.blog_posts SET
+  content_fr = replace(content_fr,
+    'une caution intégralement restituée — c''est tout.',
+    'une caution remboursable — c''est tout.'),
+  content_en = replace(content_en,
+    'a fully refundable deposit — that is it.',
+    'a refundable deposit — that is it.'),
+  updated_at = now()
+WHERE slug = 'guide-ressources-frontalier-geneve';
 
 -- 2. Bot (knowledge_base) : plus de règle « 3 mois », délai 72 h, restitution de la caution
 UPDATE public.knowledge_base SET answer = 'Oui. Vous signez un bail meublé de 12 mois et vous restez libre de partir à tout moment, avec un mois de préavis. Une maison n''est pas un hôtel : nous accueillons des gens qui s''installent, pas des séjours à la nuit, et c''est ce qui rend le quotidien agréable pour tous.', answer_en = 'Yes. You sign a 12-month furnished lease and you''re free to leave at any time with one month''s notice. A house isn''t a hotel: we welcome people who settle in, not overnight stays, and that''s what makes everyday life pleasant for everyone.', updated_at = now()
@@ -121,8 +142,9 @@ UPDATE public.property_content SET
   updated_at = now(), updated_by = 'Claude Code — décisions Jérôme 29/09/2026'
 WHERE id IN ('720abb98-dbe0-47c9-b94e-37a840292bdb', '2322adc9-7507-4fe6-a48f-e9f36bbefe00', '0f8c9945-c122-4c56-a9e8-ad3a06e68939');
 
--- 4. Calendrier n8n
+-- 4. Calendrier n8n (délai, promesse « pas de garant » retirée, D6)
 UPDATE public.blog_calendar SET key_points = replace(key_points::text, 'Option coliving : emménagement en 2 semaines, dossier simplifié', 'Option coliving : emménagement en 72 h dès le premier contact si une chambre est disponible, dossier simplifié')::jsonb, updated_at = now() WHERE id = '27da94d1-47fb-4f76-a447-60a28173e529';
+UPDATE public.blog_calendar SET key_points = replace(key_points::text, 'Pas de garant français exigé, pas de frais de dossier', 'Pas de frais de dossier')::jsonb, updated_at = now() WHERE id::text LIKE '4055edab%';
 
 -- 5. Stratégie éditoriale n8n v5 (v4 désactivée, jamais supprimée)
 UPDATE public.blog_editorial_strategy SET is_active = false WHERE version = 4;

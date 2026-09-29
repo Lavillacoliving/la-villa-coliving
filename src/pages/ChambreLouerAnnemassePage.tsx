@@ -287,8 +287,8 @@ export function ChambreLouerAnnemassePage() {
                 num: "4",
                 title_fr: "Emménagement en 72 h",
                 title_en: "Move in within 72 h",
-                desc_fr: "Bail meublé signé en ligne, caution 2 mois hors charges, emménagement avec une valise 72 h dès ton premier contact si une chambre est disponible.",
-                desc_en: "Furnished lease signed online, 2-month deposit excluding charges, move in with a suitcase within 72 h of your first contact if a room is available.",
+                desc_fr: "Bail meublé signé en ligne, caution 2 mois hors charges. Si une chambre est disponible, tu emménages avec une valise en 72 h dès ton premier contact.",
+                desc_en: "Furnished lease signed online, 2-month deposit excluding charges. If a room is available, you move in with a suitcase within 72 h of your first contact.",
               },
             ].map((step, i) => (
               <div key={i} className="text-center">
