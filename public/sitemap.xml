@@ -359,10 +359,18 @@
 
   <!-- ═══ BLOG ARTICLES — FR ═══ -->
   <url>
+    <loc>https://www.lavillacoliving.com/blog/coliving-colocation-ou-studio-geneve-comparatif</loc>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://www.lavillacoliving.com/blog/coliving-colocation-ou-studio-geneve-comparatif" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.lavillacoliving.com/en/blog/coliving-colocation-ou-studio-geneve-comparatif" />
+    <lastmod>2026-09-29</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
     <loc>https://www.lavillacoliving.com/blog/vivre-a-annemasse-quand-on-travaille-a-geneve</loc>
     <xhtml:link rel="alternate" hreflang="fr" href="https://www.lavillacoliving.com/blog/vivre-a-annemasse-quand-on-travaille-a-geneve" />
     <xhtml:link rel="alternate" hreflang="en" href="https://www.lavillacoliving.com/en/blog/vivre-a-annemasse-quand-on-travaille-a-geneve" />
-    <lastmod>2026-09-08</lastmod>
+    <lastmod>2026-09-29</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
@@ -370,7 +378,7 @@
     <loc>https://www.lavillacoliving.com/blog/s-installer-a-geneve-expatrie-cote-suisse-ou-cote-france</loc>
     <xhtml:link rel="alternate" hreflang="fr" href="https://www.lavillacoliving.com/blog/s-installer-a-geneve-expatrie-cote-suisse-ou-cote-france" />
     <xhtml:link rel="alternate" hreflang="en" href="https://www.lavillacoliving.com/en/blog/s-installer-a-geneve-expatrie-cote-suisse-ou-cote-france" />
-    <lastmod>2026-09-08</lastmod>
+    <lastmod>2026-09-29</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
@@ -378,7 +386,7 @@
     <loc>https://www.lavillacoliving.com/blog/coliving-communaute-reels-amis-geneve-annemasse</loc>
     <xhtml:link rel="alternate" hreflang="fr" href="https://www.lavillacoliving.com/blog/coliving-communaute-reels-amis-geneve-annemasse" />
     <xhtml:link rel="alternate" hreflang="en" href="https://www.lavillacoliving.com/en/blog/coliving-communaute-reels-amis-geneve-annemasse" />
-    <lastmod>2026-09-03</lastmod>
+    <lastmod>2026-09-29</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
@@ -386,7 +394,7 @@
     <loc>https://www.lavillacoliving.com/blog/lodge-annemasse-coliving-premium-portes-geneve</loc>
     <xhtml:link rel="alternate" hreflang="fr" href="https://www.lavillacoliving.com/blog/lodge-annemasse-coliving-premium-portes-geneve" />
     <xhtml:link rel="alternate" hreflang="en" href="https://www.lavillacoliving.com/en/blog/lodge-annemasse-coliving-premium-portes-geneve" />
-    <lastmod>2026-09-04</lastmod>
+    <lastmod>2026-09-29</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
@@ -402,7 +410,7 @@
     <loc>https://www.lavillacoliving.com/blog/quitter-son-logement-guide-pratique</loc>
     <xhtml:link rel="alternate" hreflang="fr" href="https://www.lavillacoliving.com/blog/quitter-son-logement-guide-pratique" />
     <xhtml:link rel="alternate" hreflang="en" href="https://www.lavillacoliving.com/en/blog/quitter-son-logement-guide-pratique" />
-    <lastmod>2026-09-04</lastmod>
+    <lastmod>2026-09-29</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
@@ -474,7 +482,7 @@
     <loc>https://www.lavillacoliving.com/blog/trouver-colocation-geneve-frontalier</loc>
     <xhtml:link rel="alternate" hreflang="fr" href="https://www.lavillacoliving.com/blog/trouver-colocation-geneve-frontalier" />
     <xhtml:link rel="alternate" hreflang="en" href="https://www.lavillacoliving.com/en/blog/trouver-colocation-geneve-frontalier" />
-    <lastmod>2026-09-07</lastmod>
+    <lastmod>2026-09-29</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
@@ -506,7 +514,7 @@
     <loc>https://www.lavillacoliving.com/blog/coliving-frais-dossier-geneve-annemasse</loc>
     <xhtml:link rel="alternate" hreflang="fr" href="https://www.lavillacoliving.com/blog/coliving-frais-dossier-geneve-annemasse" />
     <xhtml:link rel="alternate" hreflang="en" href="https://www.lavillacoliving.com/en/blog/coliving-frais-dossier-geneve-annemasse" />
-    <lastmod>2026-09-04</lastmod>
+    <lastmod>2026-09-29</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
@@ -594,7 +602,7 @@
     <loc>https://www.lavillacoliving.com/blog/organisations-internationales-geneve-ou-habiter</loc>
     <xhtml:link rel="alternate" hreflang="fr" href="https://www.lavillacoliving.com/blog/organisations-internationales-geneve-ou-habiter" />
     <xhtml:link rel="alternate" hreflang="en" href="https://www.lavillacoliving.com/en/blog/organisations-internationales-geneve-ou-habiter" />
-    <lastmod>2026-09-08</lastmod>
+    <lastmod>2026-09-29</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
@@ -655,14 +663,6 @@
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://www.lavillacoliving.com/blog/coliving-vs-colocation-differences</loc>
-    <xhtml:link rel="alternate" hreflang="fr" href="https://www.lavillacoliving.com/blog/coliving-vs-colocation-differences" />
-    <xhtml:link rel="alternate" hreflang="en" href="https://www.lavillacoliving.com/en/blog/coliving-vs-colocation-differences" />
-    <lastmod>2026-09-05</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
     <loc>https://www.lavillacoliving.com/blog/grand-geneve-2026-nouveautes-frontaliers</loc>
     <xhtml:link rel="alternate" hreflang="fr" href="https://www.lavillacoliving.com/blog/grand-geneve-2026-nouveautes-frontaliers" />
     <xhtml:link rel="alternate" hreflang="en" href="https://www.lavillacoliving.com/en/blog/grand-geneve-2026-nouveautes-frontaliers" />
@@ -674,7 +674,7 @@
     <loc>https://www.lavillacoliving.com/blog/budget-colocation-geneve-guide-complet</loc>
     <xhtml:link rel="alternate" hreflang="fr" href="https://www.lavillacoliving.com/blog/budget-colocation-geneve-guide-complet" />
     <xhtml:link rel="alternate" hreflang="en" href="https://www.lavillacoliving.com/en/blog/budget-colocation-geneve-guide-complet" />
-    <lastmod>2026-09-07</lastmod>
+    <lastmod>2026-09-29</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
@@ -682,17 +682,25 @@
     <loc>https://www.lavillacoliving.com/blog/living-in-france-working-in-geneva</loc>
     <xhtml:link rel="alternate" hreflang="fr" href="https://www.lavillacoliving.com/blog/living-in-france-working-in-geneva" />
     <xhtml:link rel="alternate" hreflang="en" href="https://www.lavillacoliving.com/en/blog/living-in-france-working-in-geneva" />
-    <lastmod>2026-09-08</lastmod>
+    <lastmod>2026-09-29</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
 
   <!-- ═══ BLOG ARTICLES — EN ═══ -->
   <url>
+    <loc>https://www.lavillacoliving.com/en/blog/coliving-colocation-ou-studio-geneve-comparatif</loc>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://www.lavillacoliving.com/blog/coliving-colocation-ou-studio-geneve-comparatif" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.lavillacoliving.com/en/blog/coliving-colocation-ou-studio-geneve-comparatif" />
+    <lastmod>2026-09-29</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
+  </url>
+  <url>
     <loc>https://www.lavillacoliving.com/en/blog/vivre-a-annemasse-quand-on-travaille-a-geneve</loc>
     <xhtml:link rel="alternate" hreflang="fr" href="https://www.lavillacoliving.com/blog/vivre-a-annemasse-quand-on-travaille-a-geneve" />
     <xhtml:link rel="alternate" hreflang="en" href="https://www.lavillacoliving.com/en/blog/vivre-a-annemasse-quand-on-travaille-a-geneve" />
-    <lastmod>2026-09-08</lastmod>
+    <lastmod>2026-09-29</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
@@ -700,7 +708,7 @@
     <loc>https://www.lavillacoliving.com/en/blog/s-installer-a-geneve-expatrie-cote-suisse-ou-cote-france</loc>
     <xhtml:link rel="alternate" hreflang="fr" href="https://www.lavillacoliving.com/blog/s-installer-a-geneve-expatrie-cote-suisse-ou-cote-france" />
     <xhtml:link rel="alternate" hreflang="en" href="https://www.lavillacoliving.com/en/blog/s-installer-a-geneve-expatrie-cote-suisse-ou-cote-france" />
-    <lastmod>2026-09-08</lastmod>
+    <lastmod>2026-09-29</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
@@ -708,7 +716,7 @@
     <loc>https://www.lavillacoliving.com/en/blog/coliving-communaute-reels-amis-geneve-annemasse</loc>
     <xhtml:link rel="alternate" hreflang="fr" href="https://www.lavillacoliving.com/blog/coliving-communaute-reels-amis-geneve-annemasse" />
     <xhtml:link rel="alternate" hreflang="en" href="https://www.lavillacoliving.com/en/blog/coliving-communaute-reels-amis-geneve-annemasse" />
-    <lastmod>2026-09-03</lastmod>
+    <lastmod>2026-09-29</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
@@ -716,7 +724,7 @@
     <loc>https://www.lavillacoliving.com/en/blog/lodge-annemasse-coliving-premium-portes-geneve</loc>
     <xhtml:link rel="alternate" hreflang="fr" href="https://www.lavillacoliving.com/blog/lodge-annemasse-coliving-premium-portes-geneve" />
     <xhtml:link rel="alternate" hreflang="en" href="https://www.lavillacoliving.com/en/blog/lodge-annemasse-coliving-premium-portes-geneve" />
-    <lastmod>2026-09-04</lastmod>
+    <lastmod>2026-09-29</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
@@ -732,7 +740,7 @@
     <loc>https://www.lavillacoliving.com/en/blog/quitter-son-logement-guide-pratique</loc>
     <xhtml:link rel="alternate" hreflang="fr" href="https://www.lavillacoliving.com/blog/quitter-son-logement-guide-pratique" />
     <xhtml:link rel="alternate" hreflang="en" href="https://www.lavillacoliving.com/en/blog/quitter-son-logement-guide-pratique" />
-    <lastmod>2026-09-04</lastmod>
+    <lastmod>2026-09-29</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
@@ -804,7 +812,7 @@
     <loc>https://www.lavillacoliving.com/en/blog/trouver-colocation-geneve-frontalier</loc>
     <xhtml:link rel="alternate" hreflang="fr" href="https://www.lavillacoliving.com/blog/trouver-colocation-geneve-frontalier" />
     <xhtml:link rel="alternate" hreflang="en" href="https://www.lavillacoliving.com/en/blog/trouver-colocation-geneve-frontalier" />
-    <lastmod>2026-09-07</lastmod>
+    <lastmod>2026-09-29</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
@@ -836,7 +844,7 @@
     <loc>https://www.lavillacoliving.com/en/blog/coliving-frais-dossier-geneve-annemasse</loc>
     <xhtml:link rel="alternate" hreflang="fr" href="https://www.lavillacoliving.com/blog/coliving-frais-dossier-geneve-annemasse" />
     <xhtml:link rel="alternate" hreflang="en" href="https://www.lavillacoliving.com/en/blog/coliving-frais-dossier-geneve-annemasse" />
-    <lastmod>2026-09-04</lastmod>
+    <lastmod>2026-09-29</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
@@ -924,7 +932,7 @@
     <loc>https://www.lavillacoliving.com/en/blog/organisations-internationales-geneve-ou-habiter</loc>
     <xhtml:link rel="alternate" hreflang="fr" href="https://www.lavillacoliving.com/blog/organisations-internationales-geneve-ou-habiter" />
     <xhtml:link rel="alternate" hreflang="en" href="https://www.lavillacoliving.com/en/blog/organisations-internationales-geneve-ou-habiter" />
-    <lastmod>2026-09-08</lastmod>
+    <lastmod>2026-09-29</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
@@ -985,14 +993,6 @@
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>https://www.lavillacoliving.com/en/blog/coliving-vs-colocation-differences</loc>
-    <xhtml:link rel="alternate" hreflang="fr" href="https://www.lavillacoliving.com/blog/coliving-vs-colocation-differences" />
-    <xhtml:link rel="alternate" hreflang="en" href="https://www.lavillacoliving.com/en/blog/coliving-vs-colocation-differences" />
-    <lastmod>2026-09-05</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.5</priority>
-  </url>
-  <url>
     <loc>https://www.lavillacoliving.com/en/blog/grand-geneve-2026-nouveautes-frontaliers</loc>
     <xhtml:link rel="alternate" hreflang="fr" href="https://www.lavillacoliving.com/blog/grand-geneve-2026-nouveautes-frontaliers" />
     <xhtml:link rel="alternate" hreflang="en" href="https://www.lavillacoliving.com/en/blog/grand-geneve-2026-nouveautes-frontaliers" />
@@ -1004,7 +1004,7 @@
     <loc>https://www.lavillacoliving.com/en/blog/budget-colocation-geneve-guide-complet</loc>
     <xhtml:link rel="alternate" hreflang="fr" href="https://www.lavillacoliving.com/blog/budget-colocation-geneve-guide-complet" />
     <xhtml:link rel="alternate" hreflang="en" href="https://www.lavillacoliving.com/en/blog/budget-colocation-geneve-guide-complet" />
-    <lastmod>2026-09-07</lastmod>
+    <lastmod>2026-09-29</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
@@ -1012,7 +1012,7 @@
     <loc>https://www.lavillacoliving.com/en/blog/living-in-france-working-in-geneva</loc>
     <xhtml:link rel="alternate" hreflang="fr" href="https://www.lavillacoliving.com/blog/living-in-france-working-in-geneva" />
     <xhtml:link rel="alternate" hreflang="en" href="https://www.lavillacoliving.com/en/blog/living-in-france-working-in-geneva" />
-    <lastmod>2026-09-08</lastmod>
+    <lastmod>2026-09-29</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>

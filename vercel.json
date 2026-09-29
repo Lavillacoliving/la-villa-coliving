@@ -177,6 +177,10 @@
       "destination": "/prerendered/en-politique-de-confidentialite.html"
     },
     {
+      "source": "/blog/coliving-colocation-ou-studio-geneve-comparatif",
+      "destination": "/prerendered/blog-coliving-colocation-ou-studio-geneve-comparatif.html"
+    },
+    {
       "source": "/blog/vivre-a-annemasse-quand-on-travaille-a-geneve",
       "destination": "/prerendered/blog-vivre-a-annemasse-quand-on-travaille-a-geneve.html"
     },
@@ -325,10 +329,6 @@
       "destination": "/prerendered/blog-demenager-geneve-frontalier-checklist.html"
     },
     {
-      "source": "/blog/coliving-vs-colocation-differences",
-      "destination": "/prerendered/blog-coliving-vs-colocation-differences.html"
-    },
-    {
       "source": "/blog/grand-geneve-2026-nouveautes-frontaliers",
       "destination": "/prerendered/blog-grand-geneve-2026-nouveautes-frontaliers.html"
     },
@@ -339,6 +339,10 @@
     {
       "source": "/blog/living-in-france-working-in-geneva",
       "destination": "/prerendered/blog-living-in-france-working-in-geneva.html"
+    },
+    {
+      "source": "/en/blog/coliving-colocation-ou-studio-geneve-comparatif",
+      "destination": "/prerendered/en-blog-coliving-colocation-ou-studio-geneve-comparatif.html"
     },
     {
       "source": "/en/blog/vivre-a-annemasse-quand-on-travaille-a-geneve",
@@ -487,10 +491,6 @@
     {
       "source": "/en/blog/demenager-geneve-frontalier-checklist",
       "destination": "/prerendered/en-blog-demenager-geneve-frontalier-checklist.html"
-    },
-    {
-      "source": "/en/blog/coliving-vs-colocation-differences",
-      "destination": "/prerendered/en-blog-coliving-vs-colocation-differences.html"
     },
     {
       "source": "/en/blog/grand-geneve-2026-nouveautes-frontaliers",
