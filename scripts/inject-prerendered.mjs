@@ -167,10 +167,13 @@ function extractSeoTags(html) {
  */
 function buildSeoHeadTags(seo, route) {
   const tags = [];
+  // (28/09/2026) Page noindex (fiches chambres) : ni canonical ni hreflang — mais les balises
+  // OG/Twitter restent, c'est elles que WhatsApp et Instagram lisent pour l'aperçu du lien.
+  const noindex = /noindex/i.test(seo.metaName?.robots ?? '');
 
   // Canonical URL (from pre-rendered or computed from route)
   const canonicalUrl = seo.canonical || `${SITE_URL}${route}`;
-  tags.push(`<link rel="canonical" href="${canonicalUrl}" />`);
+  if (!noindex) tags.push(`<link rel="canonical" href="${canonicalUrl}" />`);
 
   // Meta name tags (keywords, robots, author, language)
   for (const [name, content] of Object.entries(seo.metaName || {})) {
@@ -219,7 +222,7 @@ function buildSeoHeadTags(seo, route) {
   // Hreflang tags (from pre-rendered or computed from route).
   // Une route sans équivalent dans l'autre langue n'a pas de cluster : on
   // n'émet rien, quelle que soit la source. Voir scripts/hreflang-overrides.mjs.
-  if (HREFLANG_NO_ALTERNATES.has(route)) {
+  if (noindex || HREFLANG_NO_ALTERNATES.has(route)) {
     // rien
   } else if (seo.hreflang && seo.hreflang.length > 0) {
     for (const { lang, href } of seo.hreflang) {

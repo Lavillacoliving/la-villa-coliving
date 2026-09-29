@@ -3,6 +3,7 @@ import { LocalizedLink } from "@/components/LocalizedLink";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { thousands } from "@/data/stats";
 import { roomGallery } from "@/data/roomPhotos";
+import { isRoomPageOpen, roomPagePath } from "@/data/roomPages";
 import { BADGE_CHIP_CLASS, roomBadge, roomSpecs, type HouseKey, type PublicRoom } from "@/lib/availability";
 
 /**
@@ -85,7 +86,14 @@ export function RoomCard({ house, houseName, room, fallbackImage, showHouse = fa
           <p className="text-xs font-semibold uppercase tracking-wider text-[#B8860B] mb-1">{houseName}</p>
         )}
         <h3 className="text-lg font-black text-[#1C1917] mb-1">
-          {language === "en" ? `Room ${room.room_number}` : `Chambre ${room.room_number}`}
+          {/* (28/09/2026) Fiche chambre quand elle existe ET est consultable (roomPages.ts). */}
+          {isRoomPageOpen(house, room) ? (
+            <LocalizedLink to={roomPagePath(house, room.room_number)} className="hover:text-[#B8860B] transition-colors">
+              {language === "en" ? `Room ${room.room_number}` : `Chambre ${room.room_number}`}
+            </LocalizedLink>
+          ) : (
+            language === "en" ? `Room ${room.room_number}` : `Chambre ${room.room_number}`
+          )}
         </h3>
         {specs && <p className="text-sm text-[#78716C] mb-1">{specs}</p>}
         {language !== "en" && room.location_detail && (
@@ -104,6 +112,15 @@ export function RoomCard({ house, houseName, room, fallbackImage, showHouse = fa
               )}
               <span className="text-sm font-light text-[#78716C]"> {t.houseDetail.perMonth}</span>
             </p>
+          )}
+          {isRoomPageOpen(house, room) && (
+            <LocalizedLink
+              to={roomPagePath(house, room.room_number)}
+              className="mb-3 inline-flex items-center gap-1.5 text-sm font-semibold text-[#1C1917] underline underline-offset-4 hover:text-[#B8860B]"
+            >
+              {language === "en" ? "See the room's page" : "Voir la fiche de la chambre"}
+              <ArrowRight className="w-3.5 h-3.5" />
+            </LocalizedLink>
           )}
           <LocalizedLink
             to={`/candidature?property_interest=${house}&room_interest=chambre-${room.room_number}`}

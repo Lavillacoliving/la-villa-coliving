@@ -4,7 +4,12 @@ import { useLanguage } from "@/contexts/LanguageContext";
 import { Home, ArrowLeft } from "lucide-react";
 import { SEO } from "@/components/SEO";
 
-export function NotFoundPage() {
+// Prérendue en /404 → dist/404.html, que Vercel sert en HTTP 404 pour toute URL sans fichier ni
+// rewrite — dont /blog/<slug> sans prérendu depuis le 28/09/2026 (fix soft-404).
+// `article` : réutilisée par BlogPostPage pour un article introuvable. Même corps que le 404.html
+// (hydratation sans #418 quand Vercel l'a servi), seules les balises de tête changent.
+// `data-not-found` : repère lu par main.tsx avant l'hydratation (document servi = ce 404).
+export function NotFoundPage({ article = false }: { article?: boolean }) {
   const { language } = useLanguage();
 
   const keyLinks =
@@ -23,15 +28,25 @@ export function NotFoundPage() {
         ];
 
   return (
-    <main className="relative pt-16">
+    <main className="relative pt-16" data-not-found="">
+      {/* noindex ⇒ ni canonical ni hreflang (SEO.tsx) ; omitLocalBusiness : aucun JSON-LD sur une 404. */}
       <SEO
-        title={language === "en" ? "404 — Page Not Found" : "404 — Page introuvable"}
+        title={
+          article
+            ? language === "en" ? "Article not found" : "Article introuvable"
+            : language === "en" ? "404 — Page Not Found" : "404 — Page introuvable"
+        }
         description={
-          language === "en"
-            ? "The page you are looking for does not exist."
-            : "La page que tu cherches n'existe pas."
+          article
+            ? language === "en"
+              ? "This article does not exist or has been moved."
+              : "Cet article n'existe pas ou a été déplacé."
+            : language === "en"
+              ? "The page you are looking for does not exist."
+              : "La page que tu cherches n'existe pas."
         }
         noindex
+        omitLocalBusiness
       />
       <section className="min-h-[70vh] flex items-center justify-center bg-white">
         <div className="container-custom text-center">
@@ -45,7 +60,7 @@ export function NotFoundPage() {
             className="text-3xl md:text-4xl font-bold text-[#1C1917] mb-4"
             style={{ fontFamily: '"DM Serif Display", serif' }}
           >
-            {language === "en" ? "Page Not Found" : "Page Introuvable"}
+            {language === "en" ? "Page Not Found" : "Page introuvable"}
           </h2>
           <p className="text-lg text-[#57534E] max-w-md mx-auto mb-8">
             {language === "en"
@@ -65,7 +80,7 @@ export function NotFoundPage() {
               className="inline-flex items-center gap-2 px-6 py-3 border-2 border-[#E7E5E4] text-[#1C1917] font-medium rounded-lg hover:border-[#44403C] transition-colors"
             >
               <ArrowLeft size={18} />
-              {language === "en" ? "View Our Houses" : "Voir Nos Maisons"}
+              {language === "en" ? "View Our Houses" : "Voir nos maisons"}
             </LocalizedLink>
           </div>
           <nav aria-label={language === "en" ? "Key pages" : "Pages clés"}>

@@ -505,6 +505,110 @@
       "destination": "/prerendered/en-blog-living-in-france-working-in-geneva.html"
     },
     {
+      "source": "/lelodge/chambre-1",
+      "destination": "/prerendered/lelodge-chambre-1.html"
+    },
+    {
+      "source": "/lelodge/chambre-2",
+      "destination": "/prerendered/lelodge-chambre-2.html"
+    },
+    {
+      "source": "/lelodge/chambre-3",
+      "destination": "/prerendered/lelodge-chambre-3.html"
+    },
+    {
+      "source": "/lelodge/chambre-4",
+      "destination": "/prerendered/lelodge-chambre-4.html"
+    },
+    {
+      "source": "/lelodge/chambre-5",
+      "destination": "/prerendered/lelodge-chambre-5.html"
+    },
+    {
+      "source": "/lelodge/chambre-6",
+      "destination": "/prerendered/lelodge-chambre-6.html"
+    },
+    {
+      "source": "/lelodge/chambre-7",
+      "destination": "/prerendered/lelodge-chambre-7.html"
+    },
+    {
+      "source": "/lelodge/chambre-8",
+      "destination": "/prerendered/lelodge-chambre-8.html"
+    },
+    {
+      "source": "/lelodge/chambre-9",
+      "destination": "/prerendered/lelodge-chambre-9.html"
+    },
+    {
+      "source": "/lelodge/chambre-10",
+      "destination": "/prerendered/lelodge-chambre-10.html"
+    },
+    {
+      "source": "/lelodge/chambre-11",
+      "destination": "/prerendered/lelodge-chambre-11.html"
+    },
+    {
+      "source": "/lelodge/chambre-12",
+      "destination": "/prerendered/lelodge-chambre-12.html"
+    },
+    {
+      "source": "/leloft/chambre-4",
+      "destination": "/prerendered/leloft-chambre-4.html"
+    },
+    {
+      "source": "/en/lelodge/chambre-1",
+      "destination": "/prerendered/en-lelodge-chambre-1.html"
+    },
+    {
+      "source": "/en/lelodge/chambre-2",
+      "destination": "/prerendered/en-lelodge-chambre-2.html"
+    },
+    {
+      "source": "/en/lelodge/chambre-3",
+      "destination": "/prerendered/en-lelodge-chambre-3.html"
+    },
+    {
+      "source": "/en/lelodge/chambre-4",
+      "destination": "/prerendered/en-lelodge-chambre-4.html"
+    },
+    {
+      "source": "/en/lelodge/chambre-5",
+      "destination": "/prerendered/en-lelodge-chambre-5.html"
+    },
+    {
+      "source": "/en/lelodge/chambre-6",
+      "destination": "/prerendered/en-lelodge-chambre-6.html"
+    },
+    {
+      "source": "/en/lelodge/chambre-7",
+      "destination": "/prerendered/en-lelodge-chambre-7.html"
+    },
+    {
+      "source": "/en/lelodge/chambre-8",
+      "destination": "/prerendered/en-lelodge-chambre-8.html"
+    },
+    {
+      "source": "/en/lelodge/chambre-9",
+      "destination": "/prerendered/en-lelodge-chambre-9.html"
+    },
+    {
+      "source": "/en/lelodge/chambre-10",
+      "destination": "/prerendered/en-lelodge-chambre-10.html"
+    },
+    {
+      "source": "/en/lelodge/chambre-11",
+      "destination": "/prerendered/en-lelodge-chambre-11.html"
+    },
+    {
+      "source": "/en/lelodge/chambre-12",
+      "destination": "/prerendered/en-lelodge-chambre-12.html"
+    },
+    {
+      "source": "/en/leloft/chambre-4",
+      "destination": "/prerendered/en-leloft-chambre-4.html"
+    },
+    {
       "source": "/portail",
       "destination": "/_spa.html"
     },
@@ -534,11 +638,23 @@
     },
     {
       "source": "/blog/:slug",
-      "destination": "/_spa.html"
+      "destination": "/_spa.html",
+      "has": [
+        {
+          "type": "query",
+          "key": "preview"
+        }
+      ]
     },
     {
       "source": "/en/blog/:slug",
-      "destination": "/_spa.html"
+      "destination": "/_spa.html",
+      "has": [
+        {
+          "type": "query",
+          "key": "preview"
+        }
+      ]
     }
   ],
   "trailingSlash": false,
@@ -1067,6 +1183,36 @@
       "source": "/en/blog/coliving-vs-colocation-differences",
       "destination": "/en/blog/coliving-colocation-ou-studio-geneve-comparatif",
       "permanent": true
+    },
+    {
+      "source": "/blog/s-installer-a-geneve-expatrie-cote-suisse-cote-france",
+      "destination": "/blog/s-installer-a-geneve-expatrie-cote-suisse-ou-cote-france",
+      "permanent": true
+    },
+    {
+      "source": "/en/blog/s-installer-a-geneve-expatrie-cote-suisse-cote-france",
+      "destination": "/en/blog/s-installer-a-geneve-expatrie-cote-suisse-ou-cote-france",
+      "permanent": true
+    },
+    {
+      "source": "/blog/s-installer-a-geneve-expatrie-cote-suisse-out-cote-france",
+      "destination": "/blog/s-installer-a-geneve-expatrie-cote-suisse-ou-cote-france",
+      "permanent": true
+    },
+    {
+      "source": "/en/blog/s-installer-a-geneve-expatrie-cote-suisse-out-cote-france",
+      "destination": "/en/blog/s-installer-a-geneve-expatrie-cote-suisse-ou-cote-france",
+      "permanent": true
+    },
+    {
+      "source": "/blog/vivre-a-annemasse-quand-on-travaille-a-gen%C3%A8ve",
+      "destination": "/blog/vivre-a-annemasse-quand-on-travaille-a-geneve",
+      "permanent": true
+    },
+    {
+      "source": "/en/blog/vivre-a-annemasse-quand-on-travaille-a-gen%C3%A8ve",
+      "destination": "/en/blog/vivre-a-annemasse-quand-on-travaille-a-geneve",
+      "permanent": true
     }
   ],
   "headers": [
@@ -1120,6 +1266,36 @@
       ]
     },
     {
+      "source": "/blog/:slug",
+      "has": [
+        {
+          "type": "query",
+          "key": "preview"
+        }
+      ],
+      "headers": [
+        {
+          "key": "X-Robots-Tag",
+          "value": "noindex"
+        }
+      ]
+    },
+    {
+      "source": "/en/blog/:slug",
+      "has": [
+        {
+          "type": "query",
+          "key": "preview"
+        }
+      ],
+      "headers": [
+        {
+          "key": "X-Robots-Tag",
+          "value": "noindex"
+        }
+      ]
+    },
+    {
       "source": "/questionnaire-depart/:path*",
       "headers": [
         {
@@ -1139,6 +1315,24 @@
     },
     {
       "source": "/(portail|dashboard)/:path*",
+      "headers": [
+        {
+          "key": "X-Robots-Tag",
+          "value": "noindex"
+        }
+      ]
+    },
+    {
+      "source": "/(lavilla|leloft|lelodge)/(chambre-[0-9]+)",
+      "headers": [
+        {
+          "key": "X-Robots-Tag",
+          "value": "noindex"
+        }
+      ]
+    },
+    {
+      "source": "/en/(lavilla|leloft|lelodge)/(chambre-[0-9]+)",
       "headers": [
         {
           "key": "X-Robots-Tag",

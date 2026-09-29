@@ -69,6 +69,10 @@ for (const id of ["__blog_post_data__", "__blog_list_data__", "__latest_blog_dat
   const el = document.getElementById(id);
   if (el?.textContent) prerenderState[id] = el.textContent;
 }
+// (28/09/2026, fix soft-404) Document servi = 404.html (NotFoundPage prérendue, repère data-not-found) :
+// Vercel l'envoie en HTTP 404 pour toute URL sans prérendu, dont /blog/<slug inconnu>. On note le
+// chemin : BlogPostPage s'hydrate alors sur ce même rendu (pas de #418) avant d'interroger la base.
+if (rootElement.querySelector("main[data-not-found]")) prerenderState.__not_found__ = window.location.pathname;
 (window as unknown as { __PRERENDER_STATE__: Record<string, string> }).__PRERENDER_STATE__ = prerenderState;
 const app = (
   <StrictMode>
@@ -81,8 +85,13 @@ if (rootElement.children.length > 0) {
   // Le chunk lazy de la page est préchargé d'abord : la boundary Suspense
   // (déshydratée grâce aux marqueurs posés par scripts/prerender.mjs) est ainsi
   // hydratée immédiatement, sans fenêtre de course avec les premiers setState.
+  // Exception : 404.html est prérendu en français (route /404). Sur une URL /en/…, le rendu anglais ne
+  // peut pas s'hydrater dessus (textes différents → #418 à chaque 404 anglaise, constaté en prod le
+  // 28/09) : rendu client direct, même résultat visible, sans erreur.
+  const frenchNotFoundOnEnglishUrl = !!prerenderState.__not_found__ && /^\/en(\/|$)/.test(window.location.pathname);
   preloadRouteModule(window.location.pathname).then(() => {
-    hydrateRoot(rootElement, app, { onRecoverableError: reportHydrationError });
+    if (frenchNotFoundOnEnglishUrl) createRoot(rootElement).render(app);
+    else hydrateRoot(rootElement, app, { onRecoverableError: reportHydrationError });
   });
 } else {
   // SPA fallback (dashboard, portail, etc.): render from scratch
