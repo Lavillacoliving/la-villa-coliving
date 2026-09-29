@@ -9,8 +9,8 @@ import { SEO } from "@/components/SEO";
 //    d'unification éditoriale qui voudrait la basculer au vouvoiement.
 // La version française fait foi ; l'anglais est la traduction fournie par Jérôme.
 // Date en dur, à mettre à jour à chaque modification substantielle.
-const LAST_UPDATED_FR = "1er septembre 2026";
-const LAST_UPDATED_EN = "September 1, 2026";
+const LAST_UPDATED_FR = "29 septembre 2026";
+const LAST_UPDATED_EN = "September 29, 2026";
 
 function Section({ title, children }: { title: string; children: React.ReactNode }) {
   return (
@@ -68,7 +68,7 @@ export function CharteTransparencePage() {
                 </p>
               </Section>
 
-              <Section title="Zero fees to move in — and a three-month commitment">
+              <Section title="Zero fees to move in — and the freedom to leave">
                 <p>
                   <strong>
                     No agency fees, no application fees, no viewing or check-in fees: you pay
@@ -78,10 +78,9 @@ export function CharteTransparencePage() {
                   happy here.
                 </p>
                 <p>
-                  In return, we ask you to stay at least three months. A house is not a hotel: every
-                  abrupt departure unsettles the people who remain, and it's their daily life we're
-                  protecting. After those three months, you're free to leave whenever you want, with
-                  one month's notice.
+                  You sign a 12-month furnished lease and stay free to leave at any time, with one
+                  month's notice. A house is not a hotel: we welcome people who settle in, not
+                  nightly stays, and that is what makes daily life pleasant for everyone.
                 </p>
               </Section>
 
@@ -171,7 +170,7 @@ export function CharteTransparencePage() {
                 </p>
               </Section>
 
-              <Section title="Zéro frais pour entrer — et un engagement de trois mois">
+              <Section title="Zéro frais pour entrer — et la liberté de partir">
                 <p>
                   <strong>
                     Pas de frais d'agence, pas de frais de dossier, pas de frais de visite ni
@@ -181,10 +180,10 @@ export function CharteTransparencePage() {
                   parce que tu es bien.
                 </p>
                 <p>
-                  En échange, nous te demandons de rester au moins trois mois. Une maison n'est pas
-                  un hôtel : chaque départ précipité déstabilise ceux qui restent, et c'est leur
-                  quotidien que nous protégeons. Passé ces trois mois, tu es libre de partir quand
-                  tu veux, avec un mois de préavis.
+                  Tu signes un bail meublé de 12 mois et tu restes libre de partir à tout moment,
+                  avec un mois de préavis. Une maison n'est pas un hôtel : nous accueillons des gens
+                  qui s'installent, pas des séjours à la nuit, et c'est ce qui rend le quotidien
+                  agréable pour tous.
                 </p>
               </Section>
 

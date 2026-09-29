@@ -116,12 +116,12 @@ export const situationsFaq: SituationFaq[] = [
     id: "minimum-duration",
     fr: {
       q: "Quelle est la durée minimale ?",
-      a: `Trois mois. Le bail est un bail meublé de ${STATS.leaseDurationMonths} mois à ton nom, avec un engagement minimum de ${STATS.leaseMinimumMonths} mois ; passé ce cap, tu pars quand tu veux avec ${STATS.noticePeriodMonths} mois de préavis, sans frais. Pas de nuit ni de semaine à la carte : nos maisons vivent avec des gens qui s'installent, même pour une mission ou une période d'essai.`,
+      a: `Il n'y a pas de durée minimale imposée. Le bail est un bail meublé de ${STATS.leaseDurationMonths} mois à ton nom, et tu pars quand tu veux avec ${STATS.noticePeriodMonths} mois de préavis. Pas de nuit ni de semaine à la carte : nos maisons vivent avec des gens qui s'installent, même pour une mission ou une période d'essai.`,
       more: { href: "/charte-transparence", label: "Ce qui est écrit dans le bail" },
     },
     en: {
       q: "What's the minimum stay?",
-      a: `Three months. The lease is a ${STATS.leaseDurationMonths}-month furnished lease in your name with a ${STATS.leaseMinimumMonths}-month minimum commitment; after that you leave whenever you want with ${STATS.noticePeriodMonths} month's notice, no fees. No nightly or weekly stays: our houses are lived in by people who settle in, even for an assignment or a probation period.`,
+      a: `There is no set minimum. The lease is a ${STATS.leaseDurationMonths}-month furnished lease in your name, and you leave whenever you want with ${STATS.noticePeriodMonths} month's notice. No nightly or weekly stays: our houses are lived in by people who settle in, even for an assignment or a probation period.`,
       more: { href: "/charte-transparence", label: "What the lease says" },
     },
   },

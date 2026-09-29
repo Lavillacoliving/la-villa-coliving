@@ -393,8 +393,8 @@ export const faqData: FAQItem[] = [
       fr: 'Y a-t-il une durée de séjour minimum ?',
     },
     answer: {
-      en: 'Yes: leases run 12 months with a 3-month minimum commitment; after that you can leave whenever you like with 1 month\'s notice. This keeps the community stable while leaving you flexible.',
-      fr: 'Oui : le bail est de 12 mois, avec un engagement minimum de 3 mois ; ensuite tu peux partir quand tu veux avec 1 mois de préavis. Cela garde la communauté stable tout en te laissant de la souplesse.',
+      en: 'No set minimum: leases run 12 months, and you can leave whenever you like with 1 month\'s notice. Our houses are for people who settle in, not for nightly or weekly stays.',
+      fr: 'Pas de durée minimale imposée : le bail est de 12 mois, et tu peux partir quand tu veux avec 1 mois de préavis. Nos maisons accueillent des gens qui s\'installent, pas des séjours à la nuit ou à la semaine.',
     },
   },
   {
@@ -701,8 +701,8 @@ export const faqData: FAQItem[] = [
       fr: 'Quelles sont les exigences pour candidater ?',
     },
     answer: {
-      en: 'We look for open-minded, respectful individuals who share our community values. You should be employed or have a stable income source, be able to commit to our minimum stay requirement, and be excited about community living. We welcome applicants from all backgrounds and nationalities.',
-      fr: 'Nous recherchons des personnes ouvertes d\'esprit et respectueuses qui partagent nos valeurs communautaires. Tu dois avoir un emploi ou une source de revenus stable, pouvoir t\'engager sur notre durée de séjour minimum, et être enthousiaste à l\'idée de la vie communautaire. Nous accueillons des candidats de tous horizons et nationalités.',
+      en: 'We look for open-minded, respectful individuals who share our community values. You should be employed or have a stable income source, plan to settle in rather than stay a few nights, and be excited about community living. We welcome applicants from all backgrounds and nationalities.',
+      fr: 'Nous recherchons des personnes ouvertes d\'esprit et respectueuses qui partagent nos valeurs communautaires. Tu dois avoir un emploi ou une source de revenus stable, venir pour t\'installer plutôt que pour quelques nuits, et être enthousiaste à l\'idée de la vie communautaire. Nous accueillons des candidats de tous horizons et nationalités.',
     },
   },
   {
@@ -1031,8 +1031,8 @@ export const faqData: FAQItem[] = [
       fr: 'Puis-je rester seulement quelques mois ?',
     },
     answer: {
-      en: 'Yes, from 3 months: the lease is a 12-month lease with a 3-month minimum commitment, and after that you can leave with just 1 month\'s notice. That works well for project-based work, internships, or trying out life in the Geneva area.',
-      fr: 'Oui, à partir de 3 mois : le bail est de 12 mois avec un engagement minimum de 3 mois, puis tu peux partir avec seulement 1 mois de préavis. Pratique pour une mission, un stage ou pour tester la vie dans la région de Genève.',
+      en: 'Yes: the lease is a 12-month lease, and you can leave at any time with just 1 month\'s notice. That works well for project-based work, internships, or trying out life in the Geneva area.',
+      fr: 'Oui : le bail est de 12 mois, et tu peux partir à tout moment avec seulement 1 mois de préavis. Pratique pour une mission, un stage ou pour tester la vie dans la région de Genève.',
     },
   },
   {
@@ -1067,8 +1067,8 @@ export const faqData: FAQItem[] = [
       fr: 'Les couples peuvent-ils vivre à La Villa ?',
     },
     answer: {
-      en: 'Our rooms are designed for individual residents, and our community dynamic works best with single occupants. However, we occasionally have larger rooms that can accommodate couples. Please contact us to discuss your specific situation.',
-      fr: 'Nos chambres sont conçues pour des résidents individuels, et notre dynamique communautaire fonctionne mieux avec des occupants seuls. Cependant, nous avons occasionnellement des chambres plus grandes qui peuvent accommoder des couples. Contacte-nous pour parler de ta situation.',
+      en: 'Yes, as long as each person has their own room: every room is let to one person, so a couple can live with us by taking two rooms. Contact us to check which rooms are available side by side.',
+      fr: 'Oui, à condition que chacun ait sa chambre : une chambre accueille une seule personne, donc un couple peut vivre chez nous en prenant deux chambres. Contacte-nous pour savoir quelles chambres sont disponibles en même temps.',
     },
   },
   {

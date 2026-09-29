@@ -1000,8 +1000,8 @@ export function ObservatoireLogementFrontalierPage() {
               </div>
               <p className="text-sm text-[#44403C] leading-relaxed max-w-2xl mx-auto mt-4">
                 {en
-                  ? "In both readings: a furnished and equipped home, all services and charges included, a selected community, no agency or application fees, and the flexibility of a short lease."
-                  : "Dans les deux lectures : un logement meublé et équipé, tous les services et charges compris, une communauté sélectionnée, aucun frais d'agence ni de dossier, et la flexibilité d'un bail court."}
+                  ? "In both readings: a furnished and equipped home, all services and charges included, a selected community, no agency or application fees, and a furnished lease you can end at any time with one month's notice."
+                  : "Dans les deux lectures : un logement meublé et équipé, tous les services et charges compris, une communauté sélectionnée, aucun frais d'agence ni de dossier, et un bail meublé résiliable à tout moment avec un mois de préavis."}
               </p>
               <p className="text-xs uppercase tracking-[0.18em] text-[#A0623C] font-semibold mt-6 mb-3">
                 {en ? `What CHF ${BAROMETRE.rentMedianChf}/month covers` : `Ce que couvrent les ${BAROMETRE.rentMedianChf} CHF par mois`}

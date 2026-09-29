@@ -39,7 +39,7 @@ It is the only area of the agglomeration where you go out at night without a car
 
 It is the argument everyone knows, and it is true. Switzerland is the most expensive country in Europe for food, around 60% above the European average, while France is close to that average (Eurostat, comparative price levels, 2024). Doing your shopping in Annemasse on a Geneva salary is the most visible gain of cross-border status, and it shows on every receipt. Restaurants and going out follow the same logic.
 
-Housing next. In Annemasse, a furnished studio rents, as an order of magnitude, for 650 to 820 € a month excluding charges, a furnished one-bedroom flat for 900 to 1,150 € (portals and Observatory, 2026). In Geneva, according to the listings surveyed in 2026, a studio rents for 1,200 to 2,500 CHF a month excluding charges. At equal size, the ratio runs from one to three.
+Housing next. In Annemasse, a furnished studio rents, as an order of magnitude, for 650 to 820 € a month excluding charges, a furnished one-bedroom flat for 1,200 to 1,500 € including charges (listings, September 2026). In Geneva, according to the listings surveyed in 2026, a studio rents for 1,200 to 2,500 CHF a month excluding charges. At equal size, the ratio runs from one to three.
 
 What does not go down: your salary remains taxed at source in Geneva, health insurance is chosen within three months of starting work between LAMal and French insurance (ameli.fr, April 2026), and fuel adds up if you drive. The right method: compare the total monthly cost, housing, bills, transport and insurance included, not the advertised rent.
 
@@ -59,9 +59,9 @@ What does not go down: your salary remains taxed at source in Geneva, health ins
 
 | Option | Price | Realistic timeline | Paperwork required | Minimum stay |
 |---|---|---|---|---|
-| Furnished studio or one-bedroom flat in Annemasse | 650 to 1,150 € excluding charges (2026 orders of magnitude, portals and Observatory) | 2 to 6 weeks | Payslips, often a guarantor in France, 1 to 2 months' deposit | 12 months most of the time |
-| Classic flatshare in the agglomeration | 700 to 900 € excluding charges (2026 orders of magnitude) | 2 to 6 weeks | Full file, guarantor frequent | 12 months most of the time |
-| Coliving, French side (La Villa) | from {{PRIX_DES}} all-inclusive, {{PRIX_PRIVATIF}} with a private shower room | 1 to 2 weeks if a room is free | Employment contract or job offer, ID, deposit of {{CAUTION_MOIS}} months excluding charges | 3 months |
+| Furnished studio or one-bedroom flat in Annemasse | 650 to 820 € excluding charges for a studio, 1,200 to 1,500 € including charges for a one-bedroom flat (listings, 2026) | 2 to 6 weeks | Payslips, often a guarantor in France, 1 to 2 months' deposit | one-year lease, one month's notice |
+| Classic flatshare in the agglomeration | 700 to 900 € excluding charges (2026 orders of magnitude) | 2 to 6 weeks | Full file, guarantor frequent | one-year lease, one month's notice when furnished |
+| Coliving, French side (La Villa) | from {{PRIX_DES}}/{{PRIX_DES_EUR}} all-inclusive, {{PRIX_PRIVATIF}}/{{PRIX_PRIVATIF_EUR}} with a private shower room | 72 h from first contact if a room is available | Employment contract or job offer, ID, deposit of {{CAUTION_MOIS}} months excluding charges | none: 12-month lease, one month's notice |
 | Furnished studio or aparthotel, French side | 1,300 to 1,600 € including charges (listings, September 2026) | 1 day to 2 weeks | Credit card or light file | 1 night to 1 month |
 
 <!-- entity-facts -->

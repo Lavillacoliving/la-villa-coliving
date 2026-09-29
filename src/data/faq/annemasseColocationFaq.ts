@@ -4,7 +4,7 @@ import { pickSituations } from "@/data/faq/situationsFaq";
 
 // FAQ de /annemasse-colocation — les 7 questions historiques (cible « colocation annemasse »), sorties de la
 // page le 07/09/2026 (Lot C2) : désormais FR **et** EN (la route /en servait la FAQ française et son JSON-LD),
-// réponses présentes dans le DOM via FaqSection, bail aligné sur la décision D5 (12 mois, minimum 3, préavis 1),
+// réponses présentes dans le DOM via FaqSection, bail aligné sur la D5 révisée le 29/09/2026 (12 mois, libre de partir à tout moment, préavis 1),
 // permis G renvoyé à l'OCPM plutôt qu'un délai affirmé. + 4 « situations réelles » (P10, Cornavin, P1, coliving).
 // Trajet train (décision Jérôme 07/09, relecture C2) : Eaux-Vives 8 min, Cornavin ≈ 20 min — les « 15 min » des pages maisons/Annemasse sont à aligner en S2.
 export const annemasseColocationFaq: { fr: QAPair[]; en: QAPair[] } = {
@@ -28,7 +28,7 @@ export const annemasseColocationFaq: { fr: QAPair[]; en: QAPair[] } = {
     },
     {
       q: "Quelle est la durée du bail à Annemasse ?",
-      a: `Le bail est un contrat de location meublée de ${STATS.leaseDurationMonths} mois renouvelable, avec un engagement minimum de ${STATS.leaseMinimumMonths} mois puis un préavis d'${STATS.noticePeriodMonths} mois. Cela convient aux frontaliers qui s'installent durablement comme à ceux en période d'essai à Genève. Le bail respecte le cadre français (loi Alur), avec une caution de ${STATS.depositMonths} mois hors charges et aucun frais d'agence.`,
+      a: `Le bail est un contrat de location meublée de ${STATS.leaseDurationMonths} mois renouvelable, et tu peux partir quand tu veux avec un préavis d'${STATS.noticePeriodMonths} mois. Cela convient aux frontaliers qui s'installent durablement comme à ceux en période d'essai à Genève. Le bail respecte le cadre français (loi Alur), avec une caution de ${STATS.depositMonths} mois hors charges et aucun frais d'agence.`,
     },
     {
       q: "Quelle différence entre colocation classique et coliving à Annemasse ?",
@@ -60,7 +60,7 @@ export const annemasseColocationFaq: { fr: QAPair[]; en: QAPair[] } = {
     },
     {
       q: "How long is the lease in Annemasse?",
-      a: `A ${STATS.leaseDurationMonths}-month renewable furnished lease with a ${STATS.leaseMinimumMonths}-month minimum commitment, then ${STATS.noticePeriodMonths} month's notice. It suits cross-border workers settling in for good as well as people on a probation period in Geneva. The lease follows French law (loi Alur), with a deposit of ${STATS.depositMonths} months' rent excluding charges and no agency fee.`,
+      a: `A ${STATS.leaseDurationMonths}-month renewable furnished lease, and you can leave whenever you want with ${STATS.noticePeriodMonths} month's notice. It suits cross-border workers settling in for good as well as people on a probation period in Geneva. The lease follows French law (loi Alur), with a deposit of ${STATS.depositMonths} months' rent excluding charges and no agency fee.`,
     },
     {
       q: "What is the difference between a classic flatshare and coliving in Annemasse?",

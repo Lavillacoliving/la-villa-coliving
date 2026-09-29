@@ -13,7 +13,7 @@ Le permis d'abord. Si tu habites en Suisse avec un contrat suisse, tu reçois un
 
 Le budget ensuite. À Genève, l'impôt est retenu à la source sur ton salaire dans les deux cas. Ce qui change, c'est le logement : d'après les annonces relevées en 2026, un studio à Genève se loue entre 1 200 et 2 500 CHF par mois hors charges, avec un taux de vacance inférieur à 1 % (OCSTAT). Côté France, le même budget donne une chambre dans une maison ou un appartement entier, avec un bail français, un dossier français et un trajet quotidien.
 
-Le délai enfin. Trouver un logement à Genève prend souvent quatre à huit semaines sans historique locatif suisse ni fiches de salaire suisses. Côté France, une colocation se trouve en deux à six semaines, un coliving en une à deux semaines si une chambre est libre. Chez nous, le délai médian entre la candidature et l'emménagement est de trente jours (données 2026).
+Le délai enfin. Trouver un logement à Genève prend souvent quatre à huit semaines sans historique locatif suisse ni fiches de salaire suisses. Côté France, une colocation se trouve en deux à six semaines. Chez nous, le délai médian entre la candidature et l'emménagement est de trente jours (données 2026), et 72 h suffisent dès le premier contact quand une chambre est disponible.
 
 ## Quatre profils, quatre marges de manœuvre
 
@@ -53,14 +53,14 @@ Ce qui bloque : un studio en ville dans les quatre premières semaines, sauf rel
 | Option | Prix | Délai réaliste | Dossier demandé | Durée minimum |
 |---|---|---|---|---|
 | Studio en ville (Genève) | 1 200 à 2 500 CHF hors charges | 4 à 8 semaines | 3 fiches de salaire suisses, extrait des poursuites, garant ou garantie bancaire, dépôt jusqu'à 3 mois | 12 mois en pratique |
-| Colocation classique côté France | 600 à 1 000 € selon la ville (annonces, septembre 2026) | 2 à 6 semaines | Fiches de salaire, souvent un garant en France, dépôt 1 à 2 mois | 12 mois le plus souvent |
-| Coliving côté France (La Villa) | dès {{PRIX_DES}} tout inclus, {{PRIX_PRIVATIF}} avec salle d'eau privative | 1 à 2 semaines si une chambre est libre | Contrat de travail ou promesse d'embauche, pièce d'identité, caution {{CAUTION_MOIS}} mois hors charges | 3 mois |
+| Colocation classique côté France | 600 à 1 000 € selon la ville (annonces, septembre 2026) | 2 à 6 semaines | Fiches de salaire, souvent un garant en France, dépôt 1 à 2 mois | bail d'un an, préavis d'un mois en meublé |
+| Coliving côté France (La Villa) | dès {{PRIX_DES}}/{{PRIX_DES_EUR}} tout inclus, {{PRIX_PRIVATIF}}/{{PRIX_PRIVATIF_EUR}} avec salle d'eau privative | 72 h dès le premier contact si une chambre est disponible | Contrat de travail ou promesse d'embauche, pièce d'identité, caution {{CAUTION_MOIS}} mois hors charges | aucune : bail de 12 mois, préavis d'un mois |
 | Studio meublé ou appart'hôtel côté France | 1 300 à 1 600 € charges comprises (annonces, septembre 2026) | 1 jour à 2 semaines | Carte bancaire ou dossier léger | 1 nuit à 1 mois |
 | Appart'hôtel à Genève | 700 à 1 700 CHF la semaine selon la résidence et la saison (tarifs affichés, septembre 2026) | 1 jour | Carte bancaire | 1 nuit |
 
 <!-- entity-facts -->
 
-Pour un nouveau job dans un mois, la mécanique côté coliving est simple : dossier en deux minutes, [réponse sous 48 h](/candidature), visite sur place ou en visio dans la semaine, bail signé en ligne, et [les chambres libres](/chambres-disponibles) sont visibles en direct. Si tu vises une colocation classique ou un studio, le [guide pour trouver une colocation à Genève](/blog/trouver-colocation-geneve-frontalier) détaille les portails, les groupes et les pièges.
+Pour un nouveau job dans un mois, la mécanique côté coliving est simple : dossier en deux minutes, [réponse sous 48 h](/candidature), visite sur place ou en visio, bail signé en ligne, emménagement 72 h après ton premier contact si une chambre est disponible, et [les chambres libres](/chambres-disponibles) sont visibles en direct. Si tu vises une colocation classique ou un studio, le [guide pour trouver une colocation à Genève](/blog/trouver-colocation-geneve-frontalier) détaille les portails, les groupes et les pièges.
 
 ## Les 30 premiers jours, semaine par semaine
 
@@ -70,7 +70,7 @@ Pour un nouveau job dans un mois, la mécanique côté coliving est simple : dos
 
 **Semaine 3, l'administratif qui compte.** Impôts : rien à faire tout de suite, l'impôt est retenu à la source ; tu noteras la demande de quasi-résident pour le printemps suivant si 90 % de tes revenus sont imposables en Suisse. Abonnement Léman Express ou TPG, médecin traitant.
 
-**Semaine 4, le premier bilan.** Le logement choisi tient-il ses promesses de trajet et de budget ? Si oui, tu prolonges. Si non, un bail de trois mois minimum, comme le nôtre, te laisse partir avec un mois de préavis sans avoir perdu l'année.
+**Semaine 4, le premier bilan.** Le logement choisi tient-il ses promesses de trajet et de budget ? Si oui, tu prolonges. Si non, un bail comme le nôtre te laisse partir avec un mois de préavis sans avoir perdu l'année.
 
 ## Quand ce n'est pas le bon choix
 
@@ -84,7 +84,7 @@ Pas en gardant le permis B : habiter en France et travailler à Genève, c'est l
 
 **Combien de temps pour trouver un logement ?**
 
-À Genève, compte quatre à huit semaines sans historique locatif suisse. Côté France, deux à six semaines pour une colocation classique, et une à deux semaines en coliving quand une chambre est libre. Chez La Villa, le délai médian entre la candidature et l'emménagement est de trente jours (données 2026), une semaine suffit quand la chambre est prête.
+À Genève, compte quatre à huit semaines sans historique locatif suisse. Côté France, deux à six semaines pour une colocation classique, et une à deux semaines en coliving quand une chambre est libre. Chez La Villa, le délai médian entre la candidature et l'emménagement est de trente jours (données 2026), et 72 h suffisent dès le premier contact quand une chambre est disponible.
 
 **Sans garant suisse, c'est possible ?**
 
@@ -96,4 +96,4 @@ Pour le logement, oui, à surface égale : c'est ce que montrent les annonces re
 
 **Et si je perds mon job ?**
 
-Un frontalier qui perd son emploi est indemnisé par son pays de résidence, donc par France Travail, sur la base de son salaire suisse, avec le document U1 remis par l'assurance chômage suisse (France Travail et Unédic, 2026). Ton permis G tombe avec le contrat. Côté logement, un bail de trois mois minimum avec un mois de préavis, comme chez La Villa, limite le risque : tu n'es pas engagé sur une année.
+Un frontalier qui perd son emploi est indemnisé par son pays de résidence, donc par France Travail, sur la base de son salaire suisse, avec le document U1 remis par l'assurance chômage suisse (France Travail et Unédic, 2026). Ton permis G tombe avec le contrat. Côté logement, un bail avec un mois de préavis, comme chez La Villa, limite le risque : tu n'es pas engagé sur une année.

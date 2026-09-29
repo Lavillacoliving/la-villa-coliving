@@ -43,6 +43,7 @@ const FORBIDDEN = [
   { re: /25[\u00A0\u202F ]?(à|-|–|to)[\u00A0\u202F ]?35[\u00A0\u202F ]?min/i, label: '« 25 à 35 minutes » (trajet Genève non qualifié)', unlessQualified: true },
   { re: /minimum stay (?:of|is) two months|séjour minimum (?:de|est de) deux mois|minimum de deux mois/i, label: '« séjour minimum deux mois »' },
   { re: /bail flexible 1 à 12 mois|1 à 12 mois|1 to 12 months/i, label: '« bail 1 à 12 mois »' },
+  { re: /engagement minimum de|minimum commitment of|(?<![\d,.])(trois|3) mois minimum|(?<![\d,.])(three|3)-month minimum|(notre )?format (d'accueil )?commence à (trois|3) mois|our format starts at (three|3) months|engagement de (trois|3) mois|(three|3)-month commitment/i, label: '« engagement minimum de 3 mois » (retiré le 29/09/2026, D5 révisée)' },
   { re: /\[FAIT À CONFIRMER|\[À VÉRIFIER|\{\{[A-Z_]+\}\}/, label: 'placeholder' },
   // Décision Jérôme 07/09/2026 : train Annemasse → Cornavin ≈ 20 min. Les anciens « Cornavin 15 min » passaient la règle des
   // minutes (Cornavin = qualificatif) : interdits explicitement, dans les deux sens de la phrase.

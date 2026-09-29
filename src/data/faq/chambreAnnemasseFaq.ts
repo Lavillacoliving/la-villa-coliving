@@ -21,7 +21,7 @@ export const chambreAnnemasseFaq: { fr: QAPair[]; en: QAPair[] } = {
     },
     {
       q: "Pour combien de temps peut-on louer une chambre à Annemasse ?",
-      a: `Le bail meublé est de ${STATS.leaseDurationMonths} mois renouvelable, avec un engagement minimum de ${STATS.leaseMinimumMonths} mois, puis un préavis d'${STATS.noticePeriodMonths} mois. Idéal pour s'installer durablement comme frontalier ou pour une période d'essai à Genève : passé les trois premiers mois, tu pars quand tu veux.`,
+      a: `Le bail meublé est de ${STATS.leaseDurationMonths} mois renouvelable, et tu peux partir à tout moment avec un préavis d'${STATS.noticePeriodMonths} mois. Idéal pour s'installer durablement comme frontalier ou pour une période d'essai à Genève.`,
     },
     {
       q: "Quelles sont les disponibilités actuelles au Lodge ?",
@@ -48,7 +48,7 @@ export const chambreAnnemasseFaq: { fr: QAPair[]; en: QAPair[] } = {
     },
     {
       q: "How long can you rent a room in Annemasse for?",
-      a: `The furnished lease runs ${STATS.leaseDurationMonths} months, renewable, with a ${STATS.leaseMinimumMonths}-month minimum commitment and then ${STATS.noticePeriodMonths} month's notice. Ideal to settle in for good as a cross-border worker or for a probation period in Geneva: after the first three months you leave whenever you want.`,
+      a: `The furnished lease runs ${STATS.leaseDurationMonths} months, renewable, and you can leave at any time with ${STATS.noticePeriodMonths} month's notice. Ideal to settle in for good as a cross-border worker or for a probation period in Geneva.`,
     },
     {
       q: "What is the current availability at the Lodge?",

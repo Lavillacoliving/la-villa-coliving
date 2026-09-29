@@ -468,7 +468,7 @@ export function JoinPageV4() {
                     <option value="">
                       {language === "en" ? "Select duration" : "Sélectionner la durée"}
                     </option>
-                    {/* (S2, D5) Libellé « 3 mois » = engagement minimum ; la valeur « 2-3 » reste la clé LEASE_DURATION_MAP de l'edge. */}
+                    {/* Libellé « 3 mois » = durée souhaitée la plus courte proposée (plus d'engagement minimum depuis le 29/09/2026) ; la valeur « 2-3 » reste la clé LEASE_DURATION_MAP de l'edge. */}
                     <option value="2-3">
                       {language === "en" ? "3 months" : "3 mois"}
                     </option>

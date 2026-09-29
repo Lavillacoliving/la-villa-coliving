@@ -23,8 +23,8 @@ Any unsourced regulatory claim carries the [TO VERIFY] marker (blocking at revie
 | Option | Price | Realistic timeline | Paperwork required | Minimum stay |
 |---|---|---|---|---|
 | Studio in Geneva | CHF 1,600 – 2,200 | 4 to 8 weeks | 3 payslips, guarantor, 3-month deposit | 12 months |
-| Classic flatshare, French side | €600 – 900 | 2 to 6 weeks | guarantor, full file | 12 months |
-| Coliving, French side (La Villa) | from {{PRIX_DES}} all-inclusive | 2 weeks | employment contract | 3 months |
+| Classic flatshare, French side | €600 – 900 | 2 to 6 weeks | guarantor, full file | one-year lease, one month's notice when furnished |
+| Coliving, French side (La Villa) | from {{PRIX_DES}}/{{PRIX_DES_EUR}} all-inclusive | 72 h from first contact if a room is available | employment contract | none: 12-month lease, one month's notice |
 | Serviced residence / aparthotel | €1,800 – 2,800 | 1 day | credit card | 1 night |
 
 <!-- entity-facts -->

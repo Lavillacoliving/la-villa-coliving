@@ -23,8 +23,8 @@ Un fait réglementaire non sourcé porte le marqueur [À VÉRIFIER] (bloquant en
 | Option | Prix | Délai réaliste | Dossier demandé | Durée minimum |
 |---|---|---|---|---|
 | Studio en ville (Genève) | 1 600 – 2 200 CHF | 4 à 8 semaines | 3 fiches de salaire, garant, dépôt 3 mois | 12 mois |
-| Colocation classique côté France | 600 – 900 € | 2 à 6 semaines | garant, dossier complet | 12 mois |
-| Coliving côté France (La Villa) | dès {{PRIX_DES}} tout inclus | 2 semaines | contrat de travail | 3 mois |
+| Colocation classique côté France | 600 – 900 € | 2 à 6 semaines | garant, dossier complet | bail d'un an, préavis d'un mois en meublé |
+| Coliving côté France (La Villa) | dès {{PRIX_DES}}/{{PRIX_DES_EUR}} tout inclus | 72 h dès le premier contact si une chambre est disponible | contrat de travail | aucune : bail de 12 mois, préavis d'un mois |
 | Résidence / appart'hôtel | 1 800 – 2 800 € | 1 jour | carte bancaire | 1 nuit |
 
 <!-- entity-facts -->
