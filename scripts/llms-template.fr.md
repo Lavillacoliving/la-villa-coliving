@@ -16,7 +16,7 @@
 
 ## Candidature — comment ça marche
 - Formulaire en 2 minutes sur https://www.lavillacoliving.com/candidature — réponse sous {{RESPONSE_HOURS}} h
-- Ensuite : un échange pour faire connaissance, une visite de la maison, et un emménagement possible en 2 semaines
+- Ensuite : un échange pour faire connaissance, une visite de la maison, et un emménagement en 72 h dès le premier contact si une chambre est disponible
 - 0 frais de dossier, 0 frais d'agence ; caution de {{DEPOSIT_MONTHS}} mois de loyer hors charges, restituée au départ
 - Contact direct WhatsApp : https://wa.me/33664315134
 - Parrainage : un résident qui recommande un candidat retenu reçoit 150 € (le candidat l'indique simplement dans le formulaire)

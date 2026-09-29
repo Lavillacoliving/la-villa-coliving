@@ -18,7 +18,7 @@ export const tarifsFaq: { fr: QAPair[]; en: QAPair[] } = {
     },
     {
       q: "Quel est le montant de la caution chez La Villa Coliving ?",
-      a: "La caution chez La Villa Coliving correspond à deux mois de loyer hors charges, conformément à la réglementation. Elle te sera intégralement restituée sous 30 jours après ton départ, déduction faite d'éventuels dégâts. Aucun frais d'entrée non remboursable ne s'y ajoute : tu règles ton premier loyer et cette caution, c'est tout.",
+      a: "La caution chez La Villa Coliving correspond à deux mois de loyer hors charges, conformément à la réglementation. Elle t'est restituée sous 30 jours après ton départ si aucune dégradation n'est constatée, sinon sous 2 mois, déduction faite des éventuels dégâts. Aucun frais d'entrée non remboursable ne s'y ajoute : tu règles ton premier loyer et cette caution, c'est tout.",
     },
     {
       q: "Le prix varie-t-il selon la maison ou la chambre ?",
@@ -56,7 +56,7 @@ export const tarifsFaq: { fr: QAPair[]; en: QAPair[] } = {
     },
     {
       q: "How much is the security deposit at La Villa Coliving?",
-      a: "The deposit at La Villa Coliving is two months' rent excluding charges, in line with regulations. It is fully returned within 30 days of your departure, less any damage. No non-refundable move-in fee is added: you pay your first month's rent and this deposit, that's all.",
+      a: "The deposit at La Villa Coliving is two months' rent excluding charges, in line with regulations. It is returned within 30 days of your departure if there is no damage, otherwise within 2 months, less any damage. No non-refundable move-in fee is added: you pay your first month's rent and this deposit, that's all.",
     },
     {
       q: "Does the price vary by house or room?",

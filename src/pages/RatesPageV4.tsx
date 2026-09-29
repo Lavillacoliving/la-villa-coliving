@@ -1014,8 +1014,8 @@ export function RatesPageV4() {
               </h3>
               <p className="text-[#57534E] leading-relaxed">
                 {language === "en"
-                  ? "We require a security deposit equivalent to two months' rent excluding charges (standard in France). It is returned in full within 30 days of move-out, minus any deductions for damages. Payment can be spread over the first 2 months. A refundable deposit, yes — non-refundable move-in fees, never."
-                  : "Nous demandons une caution de deux mois de loyer hors charges (standard en France). Elle est restituée intégralement dans les 30 jours suivant le départ, déduction faite des éventuels dommages. Le paiement peut être étalé sur les 2 premiers mois. Une caution remboursable, oui — des frais d'entrée non remboursables, jamais."}
+                  ? "We require a security deposit equivalent to two months' rent excluding charges (standard in France). It is returned within 30 days of move-out if there is no damage, otherwise within 2 months, minus any deductions for damages. Payment can be spread over the first 2 months. A refundable deposit, yes — non-refundable move-in fees, never."
+                  : "Nous demandons une caution de deux mois de loyer hors charges (standard en France). Elle est restituée sous 30 jours après ton départ si aucune dégradation n'est constatée, sinon sous 2 mois, déduction faite des éventuels dommages. Le paiement peut être étalé sur les 2 premiers mois. Une caution remboursable, oui — des frais d'entrée non remboursables, jamais."}
               </p>
             </div>
             <div className="bg-[#FAF9F6] p-10">

@@ -36,7 +36,7 @@ export const annemasseColocationFaq: { fr: QAPair[]; en: QAPair[] } = {
     },
     {
       q: "Comment réserver une chambre à Annemasse ?",
-      a: `Remplis le formulaire sur notre page Candidature. Nous te rappelons sous ${STATS.responseHours} h pour un échange (motivation, contexte pro, disponibilité). Si le fit est bon, une visite est organisée dans la résidence qui correspond à ton profil (La Villa à Ville-la-Grand, Le Loft à Ambilly, Le Lodge à Annemasse Romagny). L'emménagement peut se faire en 2 à 4 semaines selon les disponibilités.`,
+      a: `Remplis le formulaire sur notre page Candidature. Nous te rappelons sous ${STATS.responseHours} h pour un échange (motivation, contexte pro, disponibilité). Si le fit est bon, une visite est organisée dans la résidence qui correspond à ton profil (La Villa à Ville-la-Grand, Le Loft à Ambilly, Le Lodge à Annemasse Romagny). Si une chambre est disponible, tu peux emménager en 72 h dès ton premier contact.`,
     },
     ...pickSituations(["annemasse-safe", "minutes-to-cornavin", "job-in-a-month", "coliving-or-flatshare"], "fr"),
   ],
@@ -68,7 +68,7 @@ export const annemasseColocationFaq: { fr: QAPair[]; en: QAPair[] } = {
     },
     {
       q: "How do I book a room in Annemasse?",
-      a: `Fill in the form on our application page. We call you back within ${STATS.responseHours} h for a chat (motivation, work context, availability). If it's a good fit, we organise a visit of the house that matches your profile (La Villa in Ville-la-Grand, Le Loft in Ambilly, Le Lodge in Annemasse Romagny). Move-in can happen within 2 to 4 weeks depending on availability.`,
+      a: `Fill in the form on our application page. We call you back within ${STATS.responseHours} h for a chat (motivation, work context, availability). If it's a good fit, we organise a visit of the house that matches your profile (La Villa in Ville-la-Grand, Le Loft in Ambilly, Le Lodge in Annemasse Romagny). If a room is available, you can move in within 72 h of your first contact.`,
     },
     ...pickSituations(["annemasse-safe", "minutes-to-cornavin", "job-in-a-month", "coliving-or-flatshare"], "en"),
   ],

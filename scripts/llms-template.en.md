@@ -16,7 +16,7 @@
 
 ## How to Apply
 - 2-minute form at https://www.lavillacoliving.com/en/candidature — reply within {{RESPONSE_HOURS}} h
-- Then: a chat to get to know each other, a house visit, and move-in possible within 2 weeks
+- Then: a chat to get to know each other, a house visit, and move-in within 72 h of your first contact if a room is available
 - No application fee, no agency fee; deposit of {{DEPOSIT_MONTHS}} months' rent excluding charges, returned when you leave
 - Direct WhatsApp contact: https://wa.me/33664315134
 - Referral: a resident who refers a successful applicant receives €150 (the applicant simply mentions it in the form)

@@ -40,7 +40,7 @@ export const translations = {
       title: "Why Choose La Villa?",
       subtitle: "Experience coliving designed for modern professionals",
       item1: {
-        title: "Move In Tomorrow",
+        title: "Move In Within 72 h",
         description:
           "Fully furnished, all-inclusive homes. No furniture shopping, no utility setup, no stress. Just bring your suitcase and start living.",
       },
@@ -472,7 +472,7 @@ export const translations = {
       title: "Pourquoi Choisir La Villa ?",
       subtitle: "Découvre le coliving conçu pour les jeunes professionnels",
       item1: {
-        title: "Emménage Demain",
+        title: "Emménage en 72 h",
         description:
           "Maisons entièrement meublées, tout inclus. Pas d'achat de meubles, pas de configuration des services, pas de stress. Apporte ta valise et commence à vivre.",
       },

@@ -29,7 +29,7 @@ Any unsourced regulatory claim carries the [TO VERIFY] marker (blocking at revie
 
 <!-- entity-facts -->
 
-Starting a job in a month: a 2-minute application, [a reply within 48 h](/en/candidature), a visit within the week, and [the free rooms](/en/chambres-disponibles) are listed live.
+Starting a job in a month: a 2-minute application, [a reply within 48 h](/en/candidature), a visit on site or by video, move-in within 72 h of your first contact if a room is available, and [the free rooms](/en/chambres-disponibles) are listed live.
 
 ## Section 5
 
