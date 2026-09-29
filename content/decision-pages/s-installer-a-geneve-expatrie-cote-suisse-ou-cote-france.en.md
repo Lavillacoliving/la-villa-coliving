@@ -13,7 +13,7 @@ The permit first. If you live in Switzerland with a Swiss contract, you receive 
 
 The budget next. In Geneva, tax is withheld at source from your salary in both cases. What changes is housing: according to the listings surveyed in 2026, a studio in Geneva rents for 1,200 to 2,500 CHF a month excluding charges, with a vacancy rate below 1% (OCSTAT). On the French side, the same budget gets you a room in a house or a whole flat, with a French lease, a French file and a daily commute.
 
-The timeline last. Finding a flat in Geneva often takes four to eight weeks without a Swiss rental history or Swiss payslips. On the French side, a classic flatshare takes two to six weeks, a coliving one to two weeks if a room is free. With us, the median time between application and move-in is thirty days (2026 data), and 72 h from your first contact is enough when a room is available.
+The timeline last. Finding a flat in Geneva often takes four to eight weeks without a Swiss rental history or Swiss payslips. On the French side, a classic flatshare takes two to six weeks. With us, the median time between application and move-in is thirty days (2026 data), and 72 h from your first contact is enough when a room is available.
 
 ## Four profiles, four degrees of freedom
 

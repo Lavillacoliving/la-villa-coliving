@@ -13,7 +13,7 @@ Le permis d'abord. Si tu habites en Suisse avec un contrat suisse, tu reçois un
 
 Le budget ensuite. À Genève, l'impôt est retenu à la source sur ton salaire dans les deux cas. Ce qui change, c'est le logement : d'après les annonces relevées en 2026, un studio à Genève se loue entre 1 200 et 2 500 CHF par mois hors charges, avec un taux de vacance inférieur à 1 % (OCSTAT). Côté France, le même budget donne une chambre dans une maison ou un appartement entier, avec un bail français, un dossier français et un trajet quotidien.
 
-Le délai enfin. Trouver un logement à Genève prend souvent quatre à huit semaines sans historique locatif suisse ni fiches de salaire suisses. Côté France, une colocation se trouve en deux à six semaines, un coliving en une à deux semaines si une chambre est libre. Chez nous, le délai médian entre la candidature et l'emménagement est de trente jours (données 2026), et 72 h suffisent dès le premier contact quand une chambre est disponible.
+Le délai enfin. Trouver un logement à Genève prend souvent quatre à huit semaines sans historique locatif suisse ni fiches de salaire suisses. Côté France, une colocation se trouve en deux à six semaines. Chez nous, le délai médian entre la candidature et l'emménagement est de trente jours (données 2026), et 72 h suffisent dès le premier contact quand une chambre est disponible.
 
 ## Quatre profils, quatre marges de manœuvre
 
