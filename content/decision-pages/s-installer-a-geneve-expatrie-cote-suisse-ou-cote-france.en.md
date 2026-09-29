@@ -13,7 +13,7 @@ The permit first. If you live in Switzerland with a Swiss contract, you receive 
 
 The budget next. In Geneva, tax is withheld at source from your salary in both cases. What changes is housing: according to the listings surveyed in 2026, a studio in Geneva rents for 1,200 to 2,500 CHF a month excluding charges, with a vacancy rate below 1% (OCSTAT). On the French side, the same budget gets you a room in a house or a whole flat, with a French lease, a French file and a daily commute.
 
-The timeline last. Finding a flat in Geneva often takes four to eight weeks without a Swiss rental history or Swiss payslips. On the French side, a classic flatshare takes two to six weeks, a coliving one to two weeks if a room is free. With us, the median time between application and move-in is thirty days (2026 data).
+The timeline last. Finding a flat in Geneva often takes four to eight weeks without a Swiss rental history or Swiss payslips. On the French side, a classic flatshare takes two to six weeks, a coliving one to two weeks if a room is free. With us, the median time between application and move-in is thirty days (2026 data), and 72 h from your first contact is enough when a room is available.
 
 ## Four profiles, four degrees of freedom
 
@@ -53,14 +53,14 @@ What does not work: a studio in the city within the first four weeks, unless you
 | Option | Price | Realistic timeline | Paperwork required | Minimum stay |
 |---|---|---|---|---|
 | Studio in the city (Geneva) | 1,200 to 2,500 CHF excluding charges | 4 to 8 weeks | 3 Swiss payslips, debt-collection extract, guarantor or bank guarantee, deposit of up to 3 months | 12 months in practice |
-| Classic flatshare, French side | 600 to 1,000 € depending on the town (listings, September 2026) | 2 to 6 weeks | Payslips, often a guarantor in France, 1 to 2 months' deposit | 12 months most of the time |
-| Coliving, French side (La Villa) | from {{PRIX_DES}} all-inclusive, {{PRIX_PRIVATIF}} with a private shower room | 1 to 2 weeks if a room is free | Employment contract or job offer, ID, deposit of {{CAUTION_MOIS}} months excluding charges | 3 months |
+| Classic flatshare, French side | 600 to 1,000 € depending on the town (listings, September 2026) | 2 to 6 weeks | Payslips, often a guarantor in France, 1 to 2 months' deposit | one-year lease, one month's notice when furnished |
+| Coliving, French side (La Villa) | from {{PRIX_DES}}/{{PRIX_DES_EUR}} all-inclusive, {{PRIX_PRIVATIF}}/{{PRIX_PRIVATIF_EUR}} with a private shower room | 72 h from first contact if a room is available | Employment contract or job offer, ID, deposit of {{CAUTION_MOIS}} months excluding charges | none: 12-month lease, one month's notice |
 | Furnished studio or aparthotel, French side | 1,300 to 1,600 € including charges (listings, September 2026) | 1 day to 2 weeks | Credit card or light file | 1 night to 1 month |
 | Aparthotel in Geneva | 700 to 1,700 CHF a week depending on the residence and the season (rates displayed, September 2026) | 1 day | Credit card | 1 night |
 
 <!-- entity-facts -->
 
-For a new job in a month, the coliving mechanics are simple: a two-minute application, [a reply within 48 h](/en/candidature), a visit on site or by video within the week, a lease signed online, and [the free rooms](/en/chambres-disponibles) are visible live. If you are aiming for a classic flatshare or a studio instead, the [guide to finding a flatshare in Geneva](/en/blog/trouver-colocation-geneve-frontalier) covers the portals, the groups and the traps.
+For a new job in a month, the coliving mechanics are simple: a two-minute application, [a reply within 48 h](/en/candidature), a visit on site or by video, a lease signed online, move-in 72 h after your first contact if a room is available, and [the free rooms](/en/chambres-disponibles) are visible live. If you are aiming for a classic flatshare or a studio instead, the [guide to finding a flatshare in Geneva](/en/blog/trouver-colocation-geneve-frontalier) covers the portals, the groups and the traps.
 
 ## The first 30 days, week by week
 
@@ -70,7 +70,7 @@ For a new job in a month, the coliving mechanics are simple: a two-minute applic
 
 **Week 3, the paperwork that matters.** Taxes: nothing to do right away, tax is withheld at source; you note the quasi-resident request for the following spring if 90% of your income is taxable in Switzerland. Léman Express or TPG pass, family doctor.
 
-**Week 4, the first review.** Does the housing you chose keep its promises on commute and budget? If yes, you extend. If not, a lease with a three-month minimum, like ours, lets you leave with one month's notice without having lost the year.
+**Week 4, the first review.** Does the housing you chose keep its promises on commute and budget? If yes, you extend. If not, a lease like ours lets you leave with one month's notice without having lost the year.
 
 ## When it is not the right choice
 
@@ -84,7 +84,7 @@ Not while keeping the B permit: living in France and working in Geneva is cross-
 
 **How long does it take to find housing?**
 
-In Geneva, count four to eight weeks without a Swiss rental history, sometimes more in sought-after neighbourhoods. On the French side, two to six weeks for a classic flatshare, and one to two weeks in coliving when a room is free. At La Villa, the median time between application and move-in is thirty days (2026 data), and one week is enough when the room is ready.
+In Geneva, count four to eight weeks without a Swiss rental history, sometimes more in sought-after neighbourhoods. On the French side, two to six weeks for a classic flatshare, and one to two weeks in coliving when a room is free. At La Villa, the median time between application and move-in is thirty days (2026 data), and 72 h from your first contact is enough when a room is available.
 
 **Is it possible without a Swiss guarantor?**
 
@@ -96,4 +96,4 @@ For housing, yes, at equal size: that is what the listings surveyed by our Obser
 
 **What if I lose my job?**
 
-A cross-border worker who loses their job is paid by their country of residence, so by France Travail, on the basis of their Swiss salary, with the U1 document issued by the Swiss unemployment insurance (France Travail and Unédic, 2026). Your G permit ends with the contract. On the housing side, a lease with a three-month minimum and one month's notice, like La Villa's, limits the risk: you are not committed for a year.
+A cross-border worker who loses their job is paid by their country of residence, so by France Travail, on the basis of their Swiss salary, with the U1 document issued by the Swiss unemployment insurance (France Travail and Unédic, 2026). Your G permit ends with the contract. On the housing side, a lease with one month's notice, like La Villa's, limits the risk: you are not committed for a year.

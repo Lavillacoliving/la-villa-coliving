@@ -4,7 +4,7 @@ import { pickSituations } from "@/data/faq/situationsFaq";
 
 // FAQ de /annemasse-colocation — les 7 questions historiques (cible « colocation annemasse »), sorties de la
 // page le 07/09/2026 (Lot C2) : désormais FR **et** EN (la route /en servait la FAQ française et son JSON-LD),
-// réponses présentes dans le DOM via FaqSection, bail aligné sur la décision D5 (12 mois, minimum 3, préavis 1),
+// réponses présentes dans le DOM via FaqSection, bail aligné sur la D5 révisée le 29/09/2026 (12 mois, libre de partir à tout moment, préavis 1),
 // permis G renvoyé à l'OCPM plutôt qu'un délai affirmé. + 4 « situations réelles » (P10, Cornavin, P1, coliving).
 // Trajet train (décision Jérôme 07/09, relecture C2) : Eaux-Vives 8 min, Cornavin ≈ 20 min — les « 15 min » des pages maisons/Annemasse sont à aligner en S2.
 export const annemasseColocationFaq: { fr: QAPair[]; en: QAPair[] } = {

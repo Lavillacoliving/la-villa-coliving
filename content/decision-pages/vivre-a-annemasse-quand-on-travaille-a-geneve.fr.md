@@ -39,7 +39,7 @@ C'est le seul secteur de l'agglomération où l'on sort le soir sans voiture : l
 
 C'est l'argument que tout le monde connaît, et il est vrai. La Suisse est le pays le plus cher d'Europe pour l'alimentation, autour de 60 % au-dessus de la moyenne européenne, quand la France est proche de cette moyenne (Eurostat, niveaux de prix comparés, 2024). Faire ses courses à Annemasse avec un salaire genevois, c'est l'écart le plus visible du statut de frontalier, et il se voit chaque semaine sur le ticket de caisse. Les restaurants et les sorties suivent la même logique.
 
-Le logement ensuite. À Annemasse, un studio meublé se loue en ordre de grandeur 650 à 820 € par mois hors charges, un deux-pièces meublé 900 à 1 150 € (portails et Observatoire, 2026). À Genève, d'après les annonces relevées en 2026, un studio se loue entre 1 200 et 2 500 CHF par mois hors charges. À surface égale, le rapport va de un à trois.
+Le logement ensuite. À Annemasse, un studio meublé se loue en ordre de grandeur 650 à 820 € par mois hors charges, un deux-pièces meublé 1 200 à 1 500 € charges comprises (annonces, septembre 2026). À Genève, d'après les annonces relevées en 2026, un studio se loue entre 1 200 et 2 500 CHF par mois hors charges. À surface égale, le rapport va de un à trois.
 
 Ce qui ne baisse pas : ton salaire reste imposé à la source à Genève, l'assurance maladie se choisit dans les trois mois suivant la prise d'emploi entre LAMal et assurance française (ameli.fr, avril 2026), et l'essence s'ajoute si tu roules. La bonne méthode : compare le coût total mensuel, logement, charges, transport et assurance compris, pas le loyer affiché.
 
@@ -59,9 +59,9 @@ Ce qui ne baisse pas : ton salaire reste imposé à la source à Genève, l'assu
 
 | Option | Prix | Délai réaliste | Dossier demandé | Durée minimum |
 |---|---|---|---|---|
-| Studio ou T2 meublé à Annemasse | 650 à 1 150 € hors charges (ordres de grandeur 2026, portails et Observatoire) | 2 à 6 semaines | Fiches de salaire, souvent un garant en France, dépôt 1 à 2 mois | 12 mois le plus souvent |
-| Colocation classique dans l'agglomération | 700 à 900 € hors charges (ordres de grandeur 2026) | 2 à 6 semaines | Dossier complet, garant fréquent | 12 mois le plus souvent |
-| Coliving côté France (La Villa) | dès {{PRIX_DES}} tout inclus, {{PRIX_PRIVATIF}} avec salle d'eau privative | 1 à 2 semaines si une chambre est libre | Contrat de travail ou promesse d'embauche, pièce d'identité, caution {{CAUTION_MOIS}} mois hors charges | 3 mois |
+| Studio ou T2 meublé à Annemasse | 650 à 820 € hors charges pour un studio, 1 200 à 1 500 € charges comprises pour un T2 (annonces, 2026) | 2 à 6 semaines | Fiches de salaire, souvent un garant en France, dépôt 1 à 2 mois | bail d'un an, préavis d'un mois |
+| Colocation classique dans l'agglomération | 700 à 900 € hors charges (ordres de grandeur 2026) | 2 à 6 semaines | Dossier complet, garant fréquent | bail d'un an, préavis d'un mois en meublé |
+| Coliving côté France (La Villa) | dès {{PRIX_DES}}/{{PRIX_DES_EUR}} tout inclus, {{PRIX_PRIVATIF}}/{{PRIX_PRIVATIF_EUR}} avec salle d'eau privative | 72 h dès le premier contact si une chambre est disponible | Contrat de travail ou promesse d'embauche, pièce d'identité, caution {{CAUTION_MOIS}} mois hors charges | aucune : bail de 12 mois, préavis d'un mois |
 | Studio meublé ou appart'hôtel côté France | 1 300 à 1 600 € charges comprises (annonces, septembre 2026) | 1 jour à 2 semaines | Carte bancaire ou dossier léger | 1 nuit à 1 mois |
 
 <!-- entity-facts -->
