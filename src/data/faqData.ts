@@ -1067,8 +1067,8 @@ export const faqData: FAQItem[] = [
       fr: 'Les couples peuvent-ils vivre à La Villa ?',
     },
     answer: {
-      en: 'Our rooms are designed for individual residents, and our community dynamic works best with single occupants. However, we occasionally have larger rooms that can accommodate couples. Please contact us to discuss your specific situation.',
-      fr: 'Nos chambres sont conçues pour des résidents individuels, et notre dynamique communautaire fonctionne mieux avec des occupants seuls. Cependant, nous avons occasionnellement des chambres plus grandes qui peuvent accommoder des couples. Contacte-nous pour parler de ta situation.',
+      en: 'Yes, as long as each person has their own room: every room is let to one person, so a couple can live with us by taking two rooms. Contact us to check which rooms are available side by side.',
+      fr: 'Oui, à condition que chacun ait sa chambre : une chambre accueille une seule personne, donc un couple peut vivre chez nous en prenant deux chambres. Contacte-nous pour savoir quelles chambres sont disponibles en même temps.',
     },
   },
   {
