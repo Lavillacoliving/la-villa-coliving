@@ -18,7 +18,7 @@
  *    refusée au build par check-entity-facts.mjs.
  *
  * Décisions Jérôme du 04-05/09/2026 (plan §2 bis) : D1-D3 trajets par maison · D4 20 min partout ·
- * D5 « Bail de 12 mois. Engagement minimum de 3 mois, puis tu es libre avec 1 mois de préavis. » ·
+ * D5 « Bail de 12 mois : tu es libre de partir à tout moment avec 1 mois de préavis. » (révisée le 29/09/2026, plus d'engagement minimum) ·
  * D6 aucune promesse sur le garant, seule la caution (2 mois hors charges) · D7 loyer contractuel en € ·
  * D9 16-24 m² (bornes de v_public_rooms) · D10 Instagram la_villa_coliving_geneva, pas de Facebook ·
  * D12 le bloc ne cite que le prix d'appel « dès 1 370 CHF » (jamais 1 430).
@@ -39,7 +39,7 @@ export type EntityLang = "fr" | "en";
 export type EntityHouseSlug = keyof typeof ROOMS_BY_HOUSE;
 
 /** Incrémenter à chaque changement de texte : porté par data-entity-facts-version, comparé par la CI. */
-export const ENTITY_FACTS_VERSION = "2026-09-05";
+export const ENTITY_FACTS_VERSION = "2026-09-29";
 /** Préfixe d'une valeur non encore arbitrée (bloquant au build). */
 export const ENTITY_FACTS_PLACEHOLDER = "[FAIT À CONFIRMER";
 
@@ -115,7 +115,7 @@ export const ENTITY_FACTS = {
   cleaningPerWeek: STATS.cleaningPerWeek,
   fiberSpeed: STATS.fiberSpeed,
   depositMonths: STATS.depositMonths,
-  lease: { months: STATS.leaseDurationMonths, minimumMonths: STATS.leaseMinimumMonths, noticeMonths: STATS.noticePeriodMonths },
+  lease: { months: STATS.leaseDurationMonths, noticeMonths: STATS.noticePeriodMonths },
   genevaMinutes: MIN,
   founders: [FOUNDERS.jerome.name, FOUNDERS.fanny.name] as readonly string[],
   foundingDate: FOUNDING_DATE,
@@ -153,7 +153,7 @@ export function entityFactsText(lang: EntityLang): EntityFactsText {
       bullets: [
         `All-inclusive rent from ${F.price.en.fromChf}/month (contractual rent in euros: from ${F.price.en.fromEur}) — utilities, fibre up to ${F.fiberSpeed}, common-area cleaning ${F.cleaningPerWeek} times a week, pool, sauna, gym, streaming, yoga and events included.`,
         `No application fee, no agency fee. Deposit: ${F.depositMonths} months' rent, excluding charges.`,
-        `${F.lease.months}-month lease. Minimum commitment of ${F.lease.minimumMonths} months, then you're free to leave with ${F.lease.noticeMonths} month's notice.`,
+        `${F.lease.months}-month lease: you're free to leave at any time with ${F.lease.noticeMonths} month's notice.`,
         `Commute: ${commutes}.`,
         `Who it's for: cross-border workers, expats and young professionals working in Geneva. Founded in ${F.foundingLabel.en} by ${F.founders.join(" and ")} and run directly by them — ${F.totalResidents}+ residents welcomed.`,
       ],
@@ -169,7 +169,7 @@ export function entityFactsText(lang: EntityLang): EntityFactsText {
     bullets: [
       `Loyer tout inclus dès ${F.price.fr.fromChf}/mois (loyer contractuel en euros : dès ${F.price.fr.fromEur}) — charges, fibre jusqu'à ${F.fiberSpeed}, ménage des espaces communs ${F.cleaningPerWeek} fois par semaine, piscine, sauna, salle de sport, streaming, yoga et événements compris.`,
       `0 € de frais de dossier, 0 € de frais d'agence. Caution : ${F.depositMonths} mois de loyer hors charges.`,
-      `Bail de ${F.lease.months} mois. Engagement minimum de ${F.lease.minimumMonths} mois, puis tu es libre avec ${F.lease.noticeMonths} mois de préavis.`,
+      `Bail de ${F.lease.months} mois : tu es libre de partir à tout moment avec ${F.lease.noticeMonths} mois de préavis.`,
       `Trajets : ${commutes}.`,
       `Pour qui : frontaliers, expats et jeunes professionnels qui travaillent à Genève. Fondée en ${F.foundingLabel.fr} par ${F.founders.join(" et ")}, gérée en direct — ${F.totalResidents}+ résidents accueillis.`,
     ],

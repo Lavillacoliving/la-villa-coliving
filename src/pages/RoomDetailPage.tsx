@@ -199,8 +199,8 @@ export function RoomDetailPage() {
     ? ["No application or agency fee", `Deposit: ${ENTITY_FACTS.depositMonths} months' rent, excluding charges`, `Reply within ${ENTITY_FACTS.responseHours} hours`, "Video tour available"]
     : ["0 € de frais de dossier et d'agence", `Caution : ${ENTITY_FACTS.depositMonths} mois de loyer hors charges`, `Réponse sous ${ENTITY_FACTS.responseHours} h`, "Visite en visio possible"];
   const lease = en
-    ? `${ENTITY_FACTS.lease.months}-month lease. Minimum commitment of ${ENTITY_FACTS.lease.minimumMonths} months, then you're free to leave with ${ENTITY_FACTS.lease.noticeMonths} month's notice.`
-    : `Bail de ${ENTITY_FACTS.lease.months} mois. Engagement minimum de ${ENTITY_FACTS.lease.minimumMonths} mois, puis tu es libre avec ${ENTITY_FACTS.lease.noticeMonths} mois de préavis.`;
+    ? `${ENTITY_FACTS.lease.months}-month lease: you're free to leave at any time with ${ENTITY_FACTS.lease.noticeMonths} month's notice.`
+    : `Bail de ${ENTITY_FACTS.lease.months} mois : tu es libre de partir à tout moment avec ${ENTITY_FACTS.lease.noticeMonths} mois de préavis.`;
 
   const specs: { icon: typeof Maximize; label: string; value: string }[] = [
     ...(surface !== null ? [{ icon: Maximize, label: en ? "Size" : "Surface", value: `${surface} m²` }] : []),

@@ -40,9 +40,10 @@ export const STATS = {
   priceChf: chfAffiche(CONTRACT_EUR.standard), // 1 430 — dérivé, ne plus saisir en dur
   depositMonths: 2,
   leaseDurationMonths: 12,
-  // (Lot S1, D5 Jérôme 04/09/2026) « Bail de 12 mois. Engagement minimum de 3 mois, puis tu es
-  // libre avec 1 mois de préavis. » — phrase canonique dans src/data/entityFacts.ts.
-  leaseMinimumMonths: 3,
+  // (D5 révisée par Jérôme le 29/09/2026) « Bail de 12 mois : tu es libre de partir à tout moment
+  // avec 1 mois de préavis. » — plus d'engagement minimum de 3 mois (le bail n'en contient pas :
+  // préavis d'un mois du locataire en meublé, art. 25-8 loi du 6 juillet 1989). Phrase canonique
+  // dans src/data/entityFacts.ts.
   noticePeriodMonths: 1,
   responseHours: 48, // « réponse sous 48 h » — promesse du formulaire et de l'auto-réponse
   // (Lot 7, 04/09/2026) Décision Jérôme Q1 : surfaces lues dans `rooms` (v_public_rooms : min 15,5 → 16, max 24,0 m²).
