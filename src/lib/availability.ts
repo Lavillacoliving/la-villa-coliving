@@ -78,6 +78,9 @@ function subscribe(listener: () => void): () => void {
 }
 
 function publish(rows: HouseSummary[]): void {
+  // Une donnée fraîche prime TOUJOURS sur l'embed : sans ce drapeau, le premier getSnapshot()
+  // appelé après le fetch (navigation interne) relisait l'embed et écrasait la donnée (cf. publishRooms).
+  initialised = true;
   snapshot = rows;
   for (const listener of listeners) listener();
 }
@@ -128,6 +131,13 @@ function getRoomsSnapshot(): PublicRoom[] | null {
 }
 
 function publishRooms(rows: PublicRoom[]): void {
+  // (Correctif 30/09/2026 — « Aucune chambre libre » en prod) Sur une page sans liste de chambres
+  // (accueil, blog, tarifs…), le fetch du hero publiait les 29 lignes SANS marquer le canal comme
+  // initialisé. Au clic « Chambres disponibles » (menu, navigation interne), le premier
+  // getRoomsSnapshot() relisait alors l'embed — absent de cette page — et remplaçait les 29 lignes
+  // par null, sans nouveau fetch (fetchStarted) : liste vide jusqu'au rechargement. Idem pour les
+  // cartes des pages maisons ouvertes par navigation interne.
+  roomsInitialised = true;
   roomsSnapshot = rows;
   for (const listener of listeners) listener();
 }
@@ -173,7 +183,9 @@ async function refresh(): Promise<void> {
       publishRooms(rooms);
     }
   } catch (e) {
-    // Jamais bloquant : les libellés retombent sur la variante qualitative.
+    // Jamais bloquant : les libellés retombent sur la variante qualitative. Le prochain
+    // montage (page suivante) retente — sinon un échec réseau figeait la liste pour toute la visite.
+    fetchStarted = false;
     console.error("Room availability load:", e);
   }
 }
