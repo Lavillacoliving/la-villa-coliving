@@ -31,7 +31,7 @@ export const homeFaq: { fr: QAPair[]; en: QAPair[] } = {
     },
     {
       q: "Comment se passe la candidature ?",
-      a: "Tu remplis le formulaire de candidature en 2 minutes, et on te répond sous 48 h. Ensuite : un échange pour faire connaissance, une visite de la maison, et si tout est aligné, tu peux emménager en une semaine. Sans engagement et sans frais de dossier — la durée de séjour moyenne chez nous est de 13 mois (9 mois hors longs séjours).",
+      a: "Tu remplis le formulaire de candidature en 2 minutes, et on te répond sous 48 h. Ensuite : un échange pour faire connaissance, une visite de la maison, et si tout est aligné et qu'une chambre est disponible, tu peux emménager en 72 h dès ton premier contact. Sans engagement et sans frais de dossier — la durée de séjour moyenne chez nous est de 13 mois (9 mois hors longs séjours).",
     },
   ],
   en: [
@@ -57,7 +57,7 @@ export const homeFaq: { fr: QAPair[]; en: QAPair[] } = {
     },
     {
       q: "How does the application work?",
-      a: "You fill in the application form in 2 minutes, and we reply within 48h. Then: a chat to get to know each other, a house visit, and if everything lines up you can move in within a week. No commitment and no application fees — the average stay with us is 13 months (9 months excluding long stays).",
+      a: "You fill in the application form in 2 minutes, and we reply within 48 h. Then: a chat to get to know each other, a house visit, and if everything lines up and a room is available, you can move in within 72 h of your first contact. No commitment and no application fees — the average stay with us is 13 months (9 months excluding long stays).",
     },
   ],
 };

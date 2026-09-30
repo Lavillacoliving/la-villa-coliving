@@ -193,7 +193,7 @@ export function ChambreLouerAnnemassePage() {
               ? [
                   "12 furnished rooms — one house, one community",
                   `All inclusive ${PRICE_CHF_EN}/month (no surprises)`,
-                  "Move in within a week (no paperwork friction)",
+                  "Move in within 72 h of your first contact if a room is available (no paperwork friction)",
                   "Léman Express direct: Eaux-Vives in 8 min, central Geneva 20 min door to door",
                   "Sauna, gym, pool and garden at the Lodge",
                   "fiber internet up to 8 Gb/s",
@@ -206,7 +206,7 @@ export function ChambreLouerAnnemassePage() {
               : [
                   "12 chambres meublées — une maison, une communauté",
                   `Tout inclus ${PRICE_CHF_FR}/mois (zéro surprise)`,
-                  "Emménagement en moins d'une semaine (zéro friction administrative)",
+                  "Emménagement en 72 h dès le premier contact si une chambre est disponible (zéro friction administrative)",
                   "Léman Express direct : Eaux-Vives en 8 min, centre de Genève à 20 min porte-à-porte",
                   "Sauna, salle de sport, piscine et jardin au Lodge",
                   "Internet fibre jusqu'à 8 Gb/s",
@@ -285,10 +285,10 @@ export function ChambreLouerAnnemassePage() {
               },
               {
                 num: "4",
-                title_fr: "Emménagement 1 sem.",
-                title_en: "Move in within a week",
-                desc_fr: "Bail meublé signé en ligne, caution 2 mois hors charges, emménagement avec une valise.",
-                desc_en: "Furnished lease signed online, 2-month deposit excluding charges, move in with a suitcase.",
+                title_fr: "Emménagement en 72 h",
+                title_en: "Move in within 72 h",
+                desc_fr: "Bail meublé signé en ligne, caution 2 mois hors charges. Si une chambre est disponible, tu emménages avec une valise en 72 h dès ton premier contact.",
+                desc_en: "Furnished lease signed online, 2-month deposit excluding charges. If a room is available, you move in with a suitcase within 72 h of your first contact.",
               },
             ].map((step, i) => (
               <div key={i} className="text-center">

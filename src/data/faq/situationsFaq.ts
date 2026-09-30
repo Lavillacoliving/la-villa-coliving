@@ -38,12 +38,12 @@ export const situationsFaq: SituationFaq[] = [
     id: "job-in-a-month",
     fr: {
       q: "Je commence un job à Genève dans un mois : je peux avoir une chambre en 30 jours ?",
-      a: `Oui, si une chambre est libre à ta date : candidature en ligne en 2 minutes, réponse sous ${H} h, visite sur place ou en visio, bail signé en ligne. Le délai médian entre la candidature et l'emménagement chez nous est de 30 jours (données 2026), et une semaine suffit quand la chambre est prête. Les disponibilités réelles des ${STATS.totalHouses} maisons sont affichées en temps réel sur la page des chambres disponibles ; s'il n'y a rien à ta date, la liste d'attente te prévient dès qu'une chambre se libère.`,
+      a: `Oui, si une chambre est libre à ta date : candidature en ligne en 2 minutes, réponse sous ${H} h, visite sur place ou en visio, bail signé en ligne. Le délai médian entre la candidature et l'emménagement chez nous est de 30 jours (données 2026), et 72 h suffisent dès ton premier contact quand une chambre est disponible. Les disponibilités réelles des ${STATS.totalHouses} maisons sont affichées en temps réel sur la page des chambres disponibles ; s'il n'y a rien à ta date, la liste d'attente te prévient dès qu'une chambre se libère.`,
       more: { href: "/chambres-disponibles", label: "Voir les chambres disponibles" },
     },
     en: {
       q: "I start a job in Geneva in a month: can I get a room with you within 30 days?",
-      a: `Yes, if a room is free on your date: two-minute online application, reply within ${H} h, visit on site or by video, lease signed online. The median time between application and move-in at La Villa is 30 days (2026 data), and one week is enough when the room is ready. Live availability for the ${STATS.totalHouses} houses is shown on the available rooms page; if nothing matches your date, the waiting list alerts you as soon as a room frees up.`,
+      a: `Yes, if a room is free on your date: two-minute online application, reply within ${H} h, visit on site or by video, lease signed online. The median time between application and move-in at La Villa is 30 days (2026 data), and 72 h from your first contact is enough when a room is available. Live availability for the ${STATS.totalHouses} houses is shown on the available rooms page; if nothing matches your date, the waiting list alerts you as soon as a room frees up.`,
       more: { href: "/chambres-disponibles", label: "See available rooms" },
     },
   },
@@ -155,12 +155,12 @@ export const situationsFaq: SituationFaq[] = [
     id: "how-to-apply",
     fr: {
       q: "Comment candidater, et en combien de temps j'ai une réponse ?",
-      a: `Le formulaire en ligne prend 2 minutes : qui tu es, où tu travailles, quand tu veux arriver et pour combien de temps. On te répond sous ${H} h, par e-mail puis par téléphone ou WhatsApp, pour caler une visite sur place ou en visio. Si la chambre te plaît, le bail se signe en ligne et tu peux emménager en une semaine. Aucun frais à aucune étape.`,
+      a: `Le formulaire en ligne prend 2 minutes : qui tu es, où tu travailles, quand tu veux arriver et pour combien de temps. On te répond sous ${H} h, par e-mail puis par téléphone ou WhatsApp, pour caler une visite sur place ou en visio. Si une chambre disponible te plaît, le bail se signe en ligne et tu peux emménager en 72 h dès ton premier contact. Aucun frais à aucune étape.`,
       more: { href: "/candidature", label: "Remplir le formulaire" },
     },
     en: {
       q: "How do I apply, and how fast do I get an answer?",
-      a: `The online form takes 2 minutes: who you are, where you work, when you want to arrive and for how long. We reply within ${H} h, by email then phone or WhatsApp, to set up a visit on site or by video. If you like the room, the lease is signed online and you can move in within a week. No fees at any step.`,
+      a: `The online form takes 2 minutes: who you are, where you work, when you want to arrive and for how long. We reply within ${H} h, by email then phone or WhatsApp, to set up a visit on site or by video. If you like an available room, the lease is signed online and you can move in within 72 h of your first contact. No fees at any step.`,
       more: { href: "/candidature", label: "Fill in the form" },
     },
   },

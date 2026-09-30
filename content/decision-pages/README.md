@@ -8,7 +8,7 @@ FAQPage, byline, fil d'Ariane) est celui de tous les articles ; trois extensions
 1. **Bloc entité** : une ligne `<!-- entity-facts -->` seule, **après le tableau d'options, jamais en tête**
    (hors des 40 % de début). `BlogPostPage` la remplace par `<EntityFacts/>` (fiche de faits canonique, Lot S1).
    Le paragraphe qui suit = la phrase de contexte propre à la page (« Pour un nouveau job dans un mois : dossier
-   en 2 minutes, réponse sous 48 h, emménagement 72 h dès le premier contact si une chambre est disponible »).
+   en 2 minutes, réponse sous 48 h, emménagement en 72 h dès le premier contact si une chambre est disponible »).
 2. **Tokens de faits** (jamais de prix en dur) : `{{PRIX_DES}}` (dès 1 370 CHF), `{{PRIX_PRIVATIF}}` (1 430 CHF),
    `{{NB_CHAMBRES}}`, `{{NB_MAISONS}}`, `{{MIN_GENEVE}}`, `{{CAUTION_MOIS}}` — uniquement dans le contenu
    (pas dans les titres, extraits ni metas). Source : `src/lib/contentTokens.ts` ← `src/data/stats.ts`.

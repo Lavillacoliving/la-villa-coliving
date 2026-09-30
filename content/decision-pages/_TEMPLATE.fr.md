@@ -29,7 +29,7 @@ Un fait réglementaire non sourcé porte le marqueur [À VÉRIFIER] (bloquant en
 
 <!-- entity-facts -->
 
-Pour un nouveau job dans un mois : dossier en 2 minutes, [réponse sous 48 h](/candidature), visite dans la semaine, et [les chambres libres](/chambres-disponibles) sont visibles en direct.
+Pour un nouveau job dans un mois : dossier en 2 minutes, [réponse sous 48 h](/candidature), visite sur place ou en visio, emménagement en 72 h dès le premier contact si une chambre est disponible, et [les chambres libres](/chambres-disponibles) sont visibles en direct.
 
 ## Section 5
 

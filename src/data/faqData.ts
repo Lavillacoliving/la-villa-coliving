@@ -309,8 +309,8 @@ export const faqData: FAQItem[] = [
       fr: 'Y a-t-il une caution ?',
     },
     answer: {
-      en: 'Yes, we require a security deposit equivalent to two months\' rent excluding charges. This deposit is held for the duration of your stay and returned within 30 days of move-out, minus any deductions for damages beyond normal wear and tear.',
-      fr: 'Oui, nous exigeons une caution équivalente à deux mois de loyer hors charges. Cette caution est conservée pendant la durée de ton séjour et restituée dans les 30 jours suivant le départ, moins toute déduction pour dommages au-delà de l\'usure normale.',
+      en: 'Yes, we require a security deposit equivalent to two months\' rent excluding charges. This deposit is held for the duration of your stay and returned within 30 days of move-out if there is no damage, otherwise within 2 months, minus any deductions for damages beyond normal wear and tear.',
+      fr: 'Oui, nous exigeons une caution équivalente à deux mois de loyer hors charges. Cette caution est conservée pendant la durée de ton séjour et restituée sous 30 jours après ton départ si aucune dégradation n\'est constatée, sinon sous 2 mois, déduction faite des éventuels dommages au-delà de l\'usure normale.',
     },
   },
   {
@@ -321,8 +321,8 @@ export const faqData: FAQItem[] = [
       fr: 'Y a-t-il des frais d\'agence ?',
     },
     answer: {
-      en: 'No. La Villa rents its houses directly, with no middleman: so there are no agency fees, no application fee, no booking fee and no check-in fee. You pay your all-inclusive rent and a fully refundable deposit — that\'s it. And it\'s not a temporary offer: it\'s our model.',
-      fr: 'Non. La Villa loue ses maisons en direct, sans intermédiaire : il n\'y a donc aucun honoraire d\'agence, aucun frais de dossier, aucun frais de réservation et aucun frais d\'état des lieux. Tu règles ton loyer tout inclus et une caution intégralement restituée — c\'est tout. Et ce n\'est pas une offre temporaire : c\'est notre modèle.',
+      en: 'No. La Villa rents its houses directly, with no middleman: so there are no agency fees, no application fee, no booking fee and no check-in fee. You pay your all-inclusive rent and a refundable deposit — that\'s it. And it\'s not a temporary offer: it\'s our model.',
+      fr: 'Non. La Villa loue ses maisons en direct, sans intermédiaire : il n\'y a donc aucun honoraire d\'agence, aucun frais de dossier, aucun frais de réservation et aucun frais d\'état des lieux. Tu règles ton loyer tout inclus et une caution remboursable — c\'est tout. Et ce n\'est pas une offre temporaire : c\'est notre modèle.',
     },
   },
   {
@@ -713,8 +713,8 @@ export const faqData: FAQItem[] = [
       fr: 'Combien de temps dure le processus de candidature ?',
     },
     answer: {
-      en: 'The typical timeline is 1-2 weeks from initial application to move-in. This includes the video call, house visit, application review, and lease signing. If you have urgent timing needs, please let us know and we\'ll do our best to accommodate.',
-      fr: 'Le délai typique est de 1 à 2 semaines entre la candidature initiale et l\'emménagement. Cela inclut l\'appel vidéo, la visite de la maison, l\'examen de la candidature et la signature du bail. Si ton calendrier est serré, dis-le-nous : on fera de notre mieux pour s\'adapter.',
+      en: 'If a room is available, you can move in within 72 h of your first contact. That includes the video call, the house visit (on site or by video), the application review and the lease signing. If your timing is tight, let us know and we\'ll do our best to accommodate.',
+      fr: 'Si une chambre est disponible, tu peux emménager en 72 h dès ton premier contact. Ce délai inclut l\'appel vidéo, la visite de la maison (sur place ou en visio), l\'examen de la candidature et la signature du bail. Si ton calendrier est serré, dis-le-nous : on fera de notre mieux pour s\'adapter.',
     },
   },
   {

@@ -429,8 +429,8 @@ export function AnnemasseColocationPage() {
           </h2>
           <p className="text-lg text-white/80 mb-10 leading-relaxed">
             {language === "en"
-              ? "Tell us about you and your move plans — we get back to you within 48 hours, and a visit can be organised within 2 weeks."
-              : "Dis-nous qui tu es et ton projet d'emménagement — on revient sous 48h, et une visite peut s'organiser sous 2 semaines."}
+              ? "Tell us about you and your move plans — we get back to you within 48 h, and if a room is available you can move in within 72 h of your first contact."
+              : "Dis-nous qui tu es et ton projet — on revient sous 48 h, et si une chambre est disponible, tu peux emménager en 72 h dès ton premier contact."}
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <LocalizedLink

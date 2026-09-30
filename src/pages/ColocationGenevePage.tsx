@@ -332,7 +332,7 @@ export function ColocationGenevePage() {
         <div className="max-w-3xl mx-auto px-6 text-center">
           <h2 className="text-3xl md:text-4xl font-light mb-6" style={serif}>{en ? "Ready to find your room near Geneva?" : "Prêt à trouver ta chambre près de Genève ?"}</h2>
           <p className="text-[#78716C] text-lg mb-10 max-w-xl mx-auto">
-            {en ? "Apply in 2 minutes. Reply within 48 h. Move in within a week." : "Candidate en 2 minutes. Réponse sous 48 h. Emménagement en une semaine."}
+            {en ? "Apply in 2 minutes. Reply within 48 h. Move in within 72 h of your first contact if a room is available." : "Candidate en 2 minutes. Réponse sous 48 h. Emménagement en 72 h dès le premier contact si une chambre est disponible."}
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <LocalizedLink to="/chambres-disponibles" className="inline-flex items-center gap-2 bg-[#D4A574] text-white px-8 py-4 text-sm uppercase tracking-wider hover:bg-[#44403C] transition-colors">

@@ -211,8 +211,8 @@ export function JoinPageV4() {
       <SEO
         title={language === "en" ? "Apply in 2 minutes, reply within 48 h" : "Candidater en 2 minutes, réponse sous 48 h"}
         description={language === "en"
-          ? "Apply to join La Villa Coliving near Geneva. Simple process, move in within a week. Furnished all-inclusive rooms for cross-border workers & expats."
-          : "Candidate en 30 secondes, sans engagement. Réponse sous 48 h, emménagement possible en 2 semaines. Chambres meublées tout inclus près de Genève."}
+          ? "Apply in 2 minutes: reply within 48 h, move in within 72 h of your first contact if a room is available. Furnished all-inclusive rooms near Geneva."
+          : "Candidate en 2 minutes. Réponse sous 48 h, emménagement en 72 h dès le premier contact si une chambre est disponible. Chambres meublées près de Genève."}
         url="https://www.lavillacoliving.com/candidature"
       />
       {/* Hero compacté (S33) : ≤ 0,8 écran, le formulaire doit arriver vite. */}
@@ -468,9 +468,9 @@ export function JoinPageV4() {
                     <option value="">
                       {language === "en" ? "Select duration" : "Sélectionner la durée"}
                     </option>
-                    {/* Libellé « 3 mois » = durée souhaitée la plus courte proposée (plus d'engagement minimum depuis le 29/09/2026) ; la valeur « 2-3 » reste la clé LEASE_DURATION_MAP de l'edge. */}
+                    {/* Libellé « Jusqu'à 3 mois » : plus de durée minimale depuis le 29/09/2026 (bail de 12 mois, libre de partir à tout moment) ; la valeur « 2-3 » reste la clé LEASE_DURATION_MAP de l'edge. */}
                     <option value="2-3">
-                      {language === "en" ? "3 months" : "3 mois"}
+                      {language === "en" ? "Up to 3 months" : "Jusqu'à 3 mois"}
                     </option>
                     <option value="3-6">
                       {language === "en" ? "3-6 months" : "3-6 mois"}
@@ -816,8 +816,8 @@ export function JoinPageV4() {
               {
                 q_fr: "Combien de temps entre la candidature et l'emménagement ?",
                 q_en: "How long from application to move-in?",
-                a_fr: "En moyenne 2 à 4 semaines. Étape 1 : réponse sous 48h. Étape 2 : appel vidéo (30 min). Étape 3 : visite physique ou virtuelle. Étape 4 : signature en ligne du bail + caution. Étape 5 : emménagement avec une valise.",
-                a_en: "Usually 2 to 4 weeks. Step 1: reply within 48h. Step 2: video call (30 min). Step 3: physical or virtual tour. Step 4: online lease signing + deposit. Step 5: move in with a suitcase.",
+                a_fr: "72 h dès ton premier contact si une chambre est disponible. Étape 1 : réponse sous 48 h. Étape 2 : appel vidéo (30 min). Étape 3 : visite physique ou virtuelle. Étape 4 : signature en ligne du bail + caution. Étape 5 : emménagement avec une valise.",
+                a_en: "Within 72 h of your first contact if a room is available. Step 1: reply within 48 h. Step 2: video call (30 min). Step 3: physical or virtual tour. Step 4: online lease signing + deposit. Step 5: move in with a suitcase.",
               },
               {
                 q_fr: "Quel est le loyer et que comprend-il vraiment ?",
@@ -828,8 +828,8 @@ export function JoinPageV4() {
               {
                 q_fr: "Quelle est la durée minimale du bail ?",
                 q_en: "What is the minimum lease duration?",
-                a_fr: "Le bail standard est de 12 mois renouvelable, avec préavis d'1 mois. Cadre conforme à la loi française (Alur). Nous étudions au cas par cas des séjours plus courts (6 mois) selon disponibilité.",
-                a_en: "Standard lease is 12 months renewable, with 1-month notice. Compliant with French Alur law. We consider shorter stays (6 months) case-by-case depending on availability.",
+                a_fr: "Aucune durée minimale imposée : le bail est de 12 mois renouvelable, et tu es libre de partir à tout moment avec 1 mois de préavis. Cadre conforme à la loi française (Alur).",
+                a_en: "No set minimum: the lease is 12 months, renewable, and you are free to leave at any time with 1 month's notice. Compliant with French Alur law.",
               },
               {
                 q_fr: "Je peux visiter avant de signer ?",
