@@ -17,6 +17,7 @@ import { maisonsFaq } from "@/data/faq/maisonsFaq";
 import {
   useAllRooms,
   useRoomAvailability,
+  useRoomsLoadFailed,
   splitRooms,
   formatFreeDate,
   globalAvailabilityLabel,
@@ -64,6 +65,10 @@ export function ChambresDisponiblesPage() {
 
   const all = useAllRooms();
   const availability = useRoomAvailability();
+  // (Correctif 30/09/2026) Sans données (navigation interne depuis une page qui ne les charge
+  // pas, fetch en cours ou raté) : état neutre, JAMAIS « Aucune chambre libre ». Premier rendu
+  // prérendu inchangé : l'embed porte les 29 lignes, `known` est vrai.
+  const loadFailed = useRoomsLoadFailed();
   const { candidates } = splitRooms(all.rooms);
 
   // Filtres pilotés par l'URL (Q4) — l'URL EST l'état ; lus après hydratation seulement.
@@ -104,7 +109,9 @@ export function ChambresDisponiblesPage() {
   };
 
   // Prochaines disponibilités par maison (résumés embarqués) — jamais « complet ».
-  const houseLine = (house: HouseKey): { text: string; tone: BadgeTone } => {
+  const houseLine = (house: HouseKey): { text: string; tone: BadgeTone } | null => {
+    // Résumés pas encore connus : rien plutôt qu'un faux « pas de date annoncée » (comme HouseAvailabilityLine).
+    if (!availability.known) return null;
     const h = availability.byHouse[house];
     if (availability.known && h.available > 0) {
       return {
@@ -223,7 +230,45 @@ export function ChambresDisponiblesPage() {
       {/* Les chambres — libres maintenant puis libérations datées (splitRooms). */}
       <section className="py-14 lg:py-20">
         <div className="container-custom">
-          {shown.length > 0 ? (
+          {!all.known ? (
+            loadFailed ? (
+              <div role="alert" className="bg-[#FAF9F6] border border-[#E7E5E4] rounded-2xl p-8 md:p-10 text-center">
+                <h2 className="text-2xl md:text-3xl font-light text-[#1C1917] mb-3" style={{ fontFamily: '"DM Serif Display", serif' }}>
+                  {en ? "The rooms didn't load" : "Les chambres ne se sont pas chargées"}
+                </h2>
+                <p className="text-[#57534E] max-w-xl mx-auto">
+                  {en
+                    ? "Your connection may have dropped. Reload the page to see the rooms free now or soon, or message us on WhatsApp."
+                    : "Ta connexion a peut-être coupé. Recharge la page pour voir les chambres libres maintenant ou bientôt, ou écris-nous sur WhatsApp."}
+                </p>
+                <button
+                  type="button"
+                  onClick={() => window.location.reload()}
+                  className="mt-5 inline-flex items-center justify-center gap-2 px-5 py-2.5 bg-[#1C1917] text-white text-sm font-semibold rounded-lg hover:bg-[#44403C] transition-colors"
+                >
+                  {en ? "Reload the page" : "Recharger la page"}
+                </button>
+              </div>
+            ) : (
+              // Chargement : squelettes de cartes, aucun texte qui affirmerait l'absence de chambre.
+              <div role="status" aria-live="polite">
+                <span className="sr-only">{en ? "Loading the available rooms…" : "Chargement des chambres disponibles…"}</span>
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" aria-hidden="true">
+                  {[0, 1, 2].map((i) => (
+                    <div key={i} className="bg-white rounded-2xl border border-[#E7E5E4] overflow-hidden animate-pulse">
+                      <div className="h-48 bg-[#F5F2ED]" />
+                      <div className="p-6 space-y-3">
+                        <div className="h-4 w-1/3 bg-[#F5F2ED] rounded" />
+                        <div className="h-5 w-1/2 bg-[#EDE8E1] rounded" />
+                        <div className="h-4 w-2/3 bg-[#F5F2ED] rounded" />
+                        <div className="h-10 w-full bg-[#F5F2ED] rounded-lg mt-6" />
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )
+          ) : shown.length > 0 ? (
             <>
               <h2 className="text-2xl md:text-3xl font-light text-[#1C1917] mb-8" style={{ fontFamily: '"DM Serif Display", serif' }}>
                 {en
@@ -290,10 +335,12 @@ export function ChambresDisponiblesPage() {
                   <div className="p-6 flex flex-col flex-1">
                     <h3 className="text-lg font-black text-[#1C1917]">{HOUSES[k].label}</h3>
                     <p className="text-xs text-[#78716C] mb-3">{en ? HOUSES[k].descEn : HOUSES[k].descFr}</p>
-                    <p className="text-sm text-[#44403C] inline-flex items-start gap-2 mb-5">
-                      <span className={`mt-1.5 w-2 h-2 rounded-full shrink-0 ${BADGE_DOT_CLASS[line.tone]}`} aria-hidden="true" />
-                      <span>{line.text}</span>
-                    </p>
+                    {line && (
+                      <p className="text-sm text-[#44403C] inline-flex items-start gap-2 mb-5">
+                        <span className={`mt-1.5 w-2 h-2 rounded-full shrink-0 ${BADGE_DOT_CLASS[line.tone]}`} aria-hidden="true" />
+                        <span>{line.text}</span>
+                      </p>
+                    )}
                     <LocalizedLink
                       to={`/candidature?property_interest=${k}&room_interest=liste-attente`}
                       onClick={() => track("cta_click", { cta_position: "waitlist", cta_target: "/candidature", house: k, language })}

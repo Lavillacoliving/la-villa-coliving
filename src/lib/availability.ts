@@ -78,6 +78,9 @@ function subscribe(listener: () => void): () => void {
 }
 
 function publish(rows: HouseSummary[]): void {
+  // Une donnée fraîche prime TOUJOURS sur l'embed : sans ce drapeau, le premier getSnapshot()
+  // appelé après le fetch (navigation interne) relisait l'embed et écrasait la donnée (cf. publishRooms).
+  initialised = true;
   snapshot = rows;
   for (const listener of listeners) listener();
 }
@@ -128,6 +131,13 @@ function getRoomsSnapshot(): PublicRoom[] | null {
 }
 
 function publishRooms(rows: PublicRoom[]): void {
+  // (Correctif 30/09/2026 — « Aucune chambre libre » en prod) Sur une page sans liste de chambres
+  // (accueil, blog, tarifs…), le fetch du hero publiait les 29 lignes SANS marquer le canal comme
+  // initialisé. Au clic « Chambres disponibles » (menu, navigation interne), le premier
+  // getRoomsSnapshot() relisait alors l'embed — absent de cette page — et remplaçait les 29 lignes
+  // par null, sans nouveau fetch (fetchStarted) : liste vide jusqu'au rechargement. Idem pour les
+  // cartes des pages maisons ouvertes par navigation interne.
+  roomsInitialised = true;
   roomsSnapshot = rows;
   for (const listener of listeners) listener();
 }
@@ -158,23 +168,64 @@ const ROOM_COLUMNS =
   "bathroom_type,bathroom_detail,has_parking,has_balcony,has_terrace," +
   "has_private_entrance,rent_chf,rent_eur,availability,available_from";
 
+// (Correctif 30/09/2026) Réseau mobile : une requête qui ne répond jamais bloquait fetchStarted
+// pour toute la visite → délai max, puis nouvelles tentatives tant qu'une page affiche le store.
+const FETCH_TIMEOUT_MS = 10_000;
+const MAX_ATTEMPTS = 3;
+const RETRY_DELAY_MS = 2_000;
+let failedAttempts = 0;
+// Chargement définitivement raté (après MAX_ATTEMPTS) : les pages affichent un message neutre
+// au lieu d'un faux « aucune chambre ». Canal séparé (useRoomsLoadFailed) : le snapshot des
+// lignes ne change pas en cas d'échec, useSyncExternalStore ne re-rendrait pas.
+let roomsLoadFailed = false;
+
+function setRoomsLoadFailed(value: boolean): void {
+  if (roomsLoadFailed === value) return;
+  roomsLoadFailed = value;
+  for (const listener of listeners) listener();
+}
+
 async function refresh(): Promise<void> {
   if (fetchStarted) return;
   fetchStarted = true;
+  // Nouvelle tentative (page suivante après 3 échecs) : l'écran repasse en « chargement »,
+  // pas en « échec » pendant qu'on charge. Jamais pendant l'hydratation (appelé depuis un effet).
+  setRoomsLoadFailed(false);
+  let timer: ReturnType<typeof setTimeout> | undefined;
   try {
-    const { data, error } = await supabase
-      .from("v_public_rooms")
-      .select(ROOM_COLUMNS);
-    if (error) throw error;
-    // Vue vide = anomalie (elle rend 29 lignes) → on garde l'état embarqué.
-    if (data && data.length > 0) {
-      const rooms = data as unknown as PublicRoom[];
-      publish(summarise(rooms));
-      publishRooms(rooms);
+    let query = supabase.from("v_public_rooms").select(ROOM_COLUMNS);
+    if (typeof AbortSignal !== "undefined" && typeof AbortSignal.timeout === "function") {
+      query = query.abortSignal(AbortSignal.timeout(FETCH_TIMEOUT_MS));
     }
+    // Minuterie en plus de l'abortSignal : couvre les navigateurs sans AbortSignal.timeout
+    // (iOS < 16) et l'étape getSession() de supabase-js, que le signal n'interrompt pas.
+    const timeout = new Promise<never>((_, reject) => {
+      timer = setTimeout(() => reject(new Error("v_public_rooms : délai dépassé")), FETCH_TIMEOUT_MS + 1_000);
+    });
+    const { data, error } = await Promise.race([query, timeout]);
+    if (error) throw error;
+    // Vue vide = anomalie (elle rend 29 lignes) : traitée comme un échec → nouvelle tentative,
+    // l'état embarqué reste affiché en attendant.
+    if (!data || data.length === 0) throw new Error("v_public_rooms : aucune ligne");
+    const rooms = data as unknown as PublicRoom[];
+    failedAttempts = 0;
+    roomsLoadFailed = false; // notifié par les publish ci-dessous
+    publish(summarise(rooms));
+    publishRooms(rooms);
   } catch (e) {
-    // Jamais bloquant : les libellés retombent sur la variante qualitative.
+    // Jamais bloquant : les libellés retombent sur la variante qualitative. fetchStarted remis à
+    // false : sinon un échec figeait la liste pour toute la visite (plus aucun fetch).
+    fetchStarted = false;
+    failedAttempts += 1;
     console.error("Room availability load:", e);
+    if (failedAttempts < MAX_ATTEMPTS) {
+      // Retente pour la page AFFICHÉE (ses effets ont déjà tourné et ne rappelleront pas refresh).
+      if (listeners.size > 0) setTimeout(() => void refresh(), RETRY_DELAY_MS * failedAttempts);
+    } else {
+      setRoomsLoadFailed(true);
+    }
+  } finally {
+    clearTimeout(timer);
   }
 }
 
@@ -369,11 +420,23 @@ export function useAllRooms(): { known: boolean; rooms: PublicRoom[] } {
   useEffect(() => {
     void refresh();
   }, []);
-  if (!rows) return { known: false, rooms: [] };
+  // (Correctif 30/09/2026) Arrivée sur une page MAISON : son embed ne contient que ses lignes.
+  // Tant que le fetch n'a pas répondu, ne pas présenter ce morceau comme l'inventaire complet
+  // (liste partielle, voire faux « aucune chambre libre ») → inconnu, les pages affichent leur
+  // état neutre. Premier rendu inchangé : les pages « toutes maisons » embarquent les 29 lignes.
+  if (!rows || !HOUSE_KEYS.every((k) => rows.some((r) => r.house_slug === k))) return { known: false, rooms: [] };
   const rooms = [...rows].sort(
     (a, b) => HOUSE_KEYS.indexOf(a.house_slug) - HOUSE_KEYS.indexOf(b.house_slug) || a.room_number - b.room_number,
   );
   return { known: rooms.length > 0, rooms };
+}
+
+const getRoomsLoadFailed = () => roomsLoadFailed;
+const getRoomsLoadFailedServer = () => false;
+
+/** `true` quand le chargement des chambres a échoué après toutes les tentatives (jamais au premier rendu). */
+export function useRoomsLoadFailed(): boolean {
+  return useSyncExternalStore(subscribe, getRoomsLoadFailed, getRoomsLoadFailedServer);
 }
 
 /** Snapshot brut pour RoomsEmbed : les lignes de `house`, ou TOUTES sans argument (null tant que rien n'est chargé). */
