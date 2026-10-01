@@ -155,12 +155,12 @@ export const situationsFaq: SituationFaq[] = [
     id: "how-to-apply",
     fr: {
       q: "Comment candidater, et en combien de temps j'ai une réponse ?",
-      a: `Le formulaire en ligne prend 2 minutes : qui tu es, où tu travailles, quand tu veux arriver et pour combien de temps. On te répond sous ${H} h, par e-mail puis par téléphone ou WhatsApp, pour caler une visite sur place ou en visio. Si une chambre disponible te plaît, le bail se signe en ligne et tu peux emménager en 72 h dès ton premier contact. Aucun frais à aucune étape.`,
+      a: `Le formulaire en ligne prend 2 minutes : ton nom, ton email et ton téléphone (et, si tu veux, ton canal de contact préféré). Juste après l'envoi, deux questions facultatives : quand tu veux arriver et pour combien de temps. On te répond sous ${H} h, par e-mail puis par téléphone ou WhatsApp, pour caler une visite sur place ou en visio. Si une chambre disponible te plaît, le bail se signe en ligne et tu peux emménager en 72 h dès ton premier contact. Aucun frais à aucune étape.`,
       more: { href: "/candidature", label: "Remplir le formulaire" },
     },
     en: {
       q: "How do I apply, and how fast do I get an answer?",
-      a: `The online form takes 2 minutes: who you are, where you work, when you want to arrive and for how long. We reply within ${H} h, by email then phone or WhatsApp, to set up a visit on site or by video. If you like an available room, the lease is signed online and you can move in within 72 h of your first contact. No fees at any step.`,
+      a: `The online form takes 2 minutes: your name, email and phone number (and, if you like, how you'd prefer to be reached). Right after sending, two optional questions: when you want to arrive and for how long. We reply within ${H} h, by email then phone or WhatsApp, to set up a visit on site or by video. If you like an available room, the lease is signed online and you can move in within 72 h of your first contact. No fees at any step.`,
       more: { href: "/candidature", label: "Fill in the form" },
     },
   },

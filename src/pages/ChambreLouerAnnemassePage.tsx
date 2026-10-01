@@ -266,8 +266,8 @@ export function ChambreLouerAnnemassePage() {
                 num: "1",
                 title_fr: "Candidature en ligne",
                 title_en: "Online application",
-                desc_fr: "5 min pour remplir ton profil (motivation, contexte pro, dates d'emménagement).",
-                desc_en: "5 min to fill your profile (motivation, pro context, move-in dates).",
+                desc_fr: "2 minutes : tes coordonnées ; ta date d'emménagement et la durée, si tu les connais, juste après l'envoi.",
+                desc_en: "2 minutes: your contact details; your move-in date and length of stay, if you know them, right after sending.",
               },
               {
                 num: "2",
@@ -328,7 +328,7 @@ export function ChambreLouerAnnemassePage() {
           </h2>
           <p className="text-lg text-white/80 mb-10 leading-relaxed">
             {language === "en"
-              ? "Disponibilités change weekly across our 29 rooms. Fill the form, we get back within 48h with the rooms that match your move-in date and profile."
+              ? "Availability changes every week across our 29 rooms. Fill the form, we get back within 48h with the rooms that match your move-in date and profile."
               : "Les disponibilités évoluent chaque semaine sur nos 29 chambres. Remplis le formulaire, on revient sous 48h avec les chambres qui matchent ta date d'emménagement et ton profil."}
           </p>
           <LocalizedLink

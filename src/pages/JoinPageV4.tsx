@@ -10,8 +10,17 @@ import { useRoomAvailability, useHouseRooms, shortAvailabilityLabel, type HouseK
 import { housePriceLabel } from "@/lib/housePrice";
 import { attributionPayload, internalRefPayload, isTestSession, landingPayload } from "@/lib/attribution";
 import { HOUSES } from "@/data/houses";
+import { CandidatureDetails } from "@/components/CandidatureDetails";
 
 type FormStatus = "idle" | "submitting" | "success" | "error";
+
+// (Lot A, 01/10/2026) Canal préféré — pastilles facultatives sous le téléphone. Valeurs = clés de
+// CONTACT_PREFERENCE_LABELS dans l'edge v19 (valeur inconnue ignorée là-bas, sans erreur).
+const CONTACT_OPTIONS: Array<{ value: string; fr: string; en: string }> = [
+  { value: "whatsapp", fr: "WhatsApp", en: "WhatsApp" },
+  { value: "call", fr: "Appel", en: "Phone call" },
+  { value: "email", fr: "Email", en: "Email" },
+];
 
 const EDGE_FUNCTION_URL = `${SUPABASE_URL}/functions/v1/send-candidature-email`;
 
@@ -54,15 +63,23 @@ export function JoinPageV4() {
   const refProperty = (searchParams.get("property_interest") ?? "").slice(0, 64);
   const refRoom = (searchParams.get("room_interest") ?? "").slice(0, 64);
   // Période d'arrivée pré-choisie depuis le bloc « pipeline » des pages maisons
-  // (03/09/2026) : mêmes valeurs que le select ci-dessous. Appliquée APRÈS le montage
-  // (ref + effet) : le HTML prérendu n'a aucune option sélectionnée, zéro mismatch.
+  // (03/09/2026). (Lot A, 01/10/2026) Plus de liste dans le formulaire : la valeur, si elle est
+  // l'une des 4 attendues, part SILENCIEUSEMENT dans le payload (handleSubmit) — pas
+  // d'<input hidden>, dont la valeur différerait du HTML prérendu sans query. Le bloc post-envoi
+  // ne repose alors que la question de la durée.
   const refArrival = (["asap", "1-3-months", "3-6-months", "later"] as const).find(
     (v) => v === searchParams.get("arrival"),
   ) ?? "";
-  const arrivalRef = useRef<HTMLSelectElement>(null);
+  // (Lot A) Jeton du mode « compléments » (edge v19), reçu au succès ; absent → pas de bloc.
+  const [detailsToken, setDetailsToken] = useState<string | null>(null);
+  // (Lot A) Carte de succès ramenée dans la vue : plus courte que le formulaire, elle pouvait
+  // rester au-dessus de l'écran sur mobile (triple soumission du 22/09).
+  const successRef = useRef<HTMLDivElement>(null);
   useEffect(() => {
-    if (refArrival && arrivalRef.current && !arrivalRef.current.value) arrivalRef.current.value = refArrival;
-  }, [refArrival]);
+    if (status !== "success" || !successRef.current) return;
+    const reduce = typeof window.matchMedia === "function" && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    successRef.current.scrollIntoView({ behavior: reduce ? "auto" : "smooth", block: "start" });
+  }, [status]);
   // En-tête contextuel (Lot 1d) : quand le candidat arrive d'un CTA maison ou
   // chambre, le formulaire accuse réception de son choix (continuité du
   // parcours). Slug inconnu → pas d'en-tête, jamais d'erreur. Aucune donnée
@@ -83,11 +100,12 @@ export function JoinPageV4() {
   // aussi toute la session (sessionStorage, cf. src/lib/attribution.ts — protocole LOT F).
   const isTest = searchParams.get("test") === "1" || isTestSession();
 
-  // Formulaire 1 ÉTAPE depuis S33 (10/08/2026). Les champs arrival/duration,
-  // retirés à cette date, sont RÉTABLIS le 29/08/2026 (demande Jérôme) — dans
-  // l'étape unique, pas de retour au stepper. L'Edge Function les a toujours
-  // acceptés (rétrocompatible depuis v11) : arrival → move_in_date/notes,
-  // duration → lease_duration/notes, mêmes valeurs d'options qu'avant le retrait.
+  // Formulaire 1 ÉTAPE depuis S33 (10/08/2026). Les champs arrival/duration, retirés à cette
+  // date puis rétablis (obligatoires) le 29/08/2026, quittent à nouveau le formulaire principal
+  // le 01/10/2026 (Lot A du brief « Formulaire, hydratation, mesure ») : complétion 80 → 60 %,
+  // 77 → 60 % à chaque fois qu'ils étaient obligatoires. Ils sont posés APRÈS l'envoi, dans le
+  // bloc facultatif CandidatureDetails (edge v19, mode « details ») ; l'edge les accepte toujours
+  // dans le payload principal (?arrival= des pages maisons, ancien bundle en cache).
   const telemetry = useFormTelemetry({
     formId: "candidature",
     formDestination: "supabase-edge",
@@ -117,6 +135,8 @@ export function JoinPageV4() {
     if (refArticle) payload.ref_article = refArticle;
     if (refProperty) payload.property_interest = refProperty;
     if (refRoom) payload.room_interest = refRoom;
+    // (Lot A) Période pré-choisie sur une page maison, transmise sans être affichée.
+    if (refArrival) payload.arrival = refArrival;
     if (isTest) payload.isTest = "1";
     // Attribution technique Ads (utm_* + gclid) capturée à l'atterrissage de la session
     // (first-touch, sessionStorage — src/lib/attribution.ts) → colonnes dédiées côté base
@@ -172,6 +192,13 @@ export function JoinPageV4() {
         );
       }
 
+      // (Lot A) Jeton du bloc « 2 questions » (edge v19) ; absent (edge v18, doublon,
+      // même email < 10 min) → pas de bloc, rien d'autre ne change.
+      setDetailsToken(
+        data && typeof data === "object" && "details_token" in data && typeof data.details_token === "string"
+          ? data.details_token
+          : null,
+      );
       setStatus("success");
 
       // Succès reçu : la clé a fait son travail — une éventuelle candidature
@@ -183,6 +210,8 @@ export function JoinPageV4() {
       telemetry.trackSubmit({
         lead_source: payload.source || "unknown",
         submit_latency_ms: Math.round(performance.now() - submitStartedAt),
+        // (Lot A) Canal préféré choisi (dimension personnalisée contact_pref).
+        contact_pref: payload.contact_preference || "none",
       });
 
       form.reset();
@@ -312,7 +341,7 @@ export function JoinPageV4() {
           </div>
 
           {status === "success" ? (
-            <div className="bg-white border border-[#E7E5E4] p-12 md:p-16 text-center">
+            <div ref={successRef} className="bg-white border border-[#E7E5E4] p-12 md:p-16 text-center scroll-mt-24">
               <div className="w-16 h-16 bg-[#D4A574] rounded-full flex items-center justify-center mx-auto mb-6">
                 <Check className="w-8 h-8 text-white" strokeWidth={3} />
               </div>
@@ -332,10 +361,25 @@ export function JoinPageV4() {
                   ? "We've sent you a confirmation email and will get back to you within 48 hours."
                   : "Tu vas recevoir un email de confirmation. On te recontacte sous 48h."}
               </p>
+              {/* (Lot A) 2 questions facultatives après l'envoi — jamais bloquantes. */}
+              {detailsToken && (
+                <CandidatureDetails
+                  token={detailsToken}
+                  language={L}
+                  arrivalKnown={!!refArrival}
+                  endpoint={EDGE_FUNCTION_URL}
+                  anonKey={SUPABASE_ANON_KEY}
+                  baseParams={{
+                    language: L,
+                    property_interest: refProperty || "none",
+                    room_interest: refRoom || "none",
+                  }}
+                />
+              )}
               <button
                 type="button"
-                onClick={() => setStatus("idle")}
-                className="text-sm text-[#78716C] underline hover:text-[#1C1917] transition-colors"
+                onClick={() => { setDetailsToken(null); setStatus("idle"); }}
+                className={`text-sm text-[#78716C] underline hover:text-[#1C1917] transition-colors${detailsToken ? " mt-8" : ""}`}
               >
                 {language === "en" ? "Submit another application" : "Envoyer une autre candidature"}
               </button>
@@ -419,69 +463,35 @@ export function JoinPageV4() {
                     name="phone"
                     required
                     autoComplete="tel"
+                    aria-describedby="phone-help"
                     className="w-full px-4 py-3 border border-[#E7E5E4] focus:border-[#D4A574] focus:outline-none transition-colors"
                   />
-                </div>
-                {/* Séjour — rétablis le 29/08/2026 (cf. note en tête de composant).
-                    Valeurs d'options = clés des maps ARRIVAL_LABELS / LEASE_DURATION_MAP
-                    de l'Edge send-candidature-email : ne pas les renommer sans elle. */}
-                <div>
-                  <label className="block text-sm text-[#57534E] mb-2">
+                  {/* (Lot A, 01/10/2026) Réassurance toujours visible — pas un placeholder. */}
+                  <p id="phone-help" className="mt-2 text-xs text-[#78716C]">
                     {language === "en"
-                      ? "When would you like to join?"
-                      : "Quand souhaites-tu nous rejoindre ?"}
-                  </label>
-                  <select
-                    name="arrival"
-                    ref={arrivalRef}
-                    required
-                    className="w-full px-4 py-3 border border-[#E7E5E4] focus:border-[#D4A574] focus:outline-none transition-colors bg-white"
-                  >
-                    <option value="">
-                      {language === "en" ? "Select arrival period" : "Sélectionner la période"}
-                    </option>
-                    <option value="asap">
-                      {language === "en" ? "As soon as possible (within 1 month)" : "Le plus tôt possible (sous 1 mois)"}
-                    </option>
-                    <option value="1-3-months">
-                      {language === "en" ? "Within 1 to 3 months" : "Dans 1 à 3 mois"}
-                    </option>
-                    <option value="3-6-months">
-                      {language === "en" ? "Within 3 to 6 months" : "Dans 3 à 6 mois"}
-                    </option>
-                    <option value="later">
-                      {language === "en" ? "Later / not decided yet" : "Plus tard / pas encore décidé"}
-                    </option>
-                  </select>
-                </div>
-                <div>
-                  <label className="block text-sm text-[#57534E] mb-2">
-                    {language === "en"
-                      ? "How long do you plan to stay?"
-                      : "Combien de temps comptes-tu rester ?"}
-                  </label>
-                  <select
-                    name="duration"
-                    required
-                    className="w-full px-4 py-3 border border-[#E7E5E4] focus:border-[#D4A574] focus:outline-none transition-colors bg-white"
-                  >
-                    <option value="">
-                      {language === "en" ? "Select duration" : "Sélectionner la durée"}
-                    </option>
-                    {/* Libellé « Jusqu'à 3 mois » : plus de durée minimale depuis le 29/09/2026 (bail de 12 mois, libre de partir à tout moment) ; la valeur « 2-3 » reste la clé LEASE_DURATION_MAP de l'edge. */}
-                    <option value="2-3">
-                      {language === "en" ? "Up to 3 months" : "Jusqu'à 3 mois"}
-                    </option>
-                    <option value="3-6">
-                      {language === "en" ? "3-6 months" : "3-6 mois"}
-                    </option>
-                    <option value="6-12">
-                      {language === "en" ? "6-12 months" : "6-12 mois"}
-                    </option>
-                    <option value="12+">
-                      {language === "en" ? "12+ months" : "12+ mois"}
-                    </option>
-                  </select>
+                      ? "Only used to set up your chat with Fanny. Never any sales calls."
+                      : "Uniquement pour caler ton échange avec Fanny. Jamais de démarchage."}
+                  </p>
+                  {/* (Lot A) Canal préféré — facultatif, un geste, aucune présélection, jamais
+                      `required` : un groupe radio natif (clavier, lecteurs d'écran), pastilles
+                      d'au moins 44 px. Arrivée et durée : posées APRÈS l'envoi (CandidatureDetails). */}
+                  <fieldset className="mt-4">
+                    <legend className="block text-sm text-[#57534E] mb-2">
+                      {language === "en"
+                        ? "How would you like us to reach you? (optional)"
+                        : "Comment préfères-tu qu'on te contacte ? (facultatif)"}
+                    </legend>
+                    <div className="flex flex-wrap gap-2">
+                      {CONTACT_OPTIONS.map((o) => (
+                        <label key={o.value} className="cursor-pointer">
+                          <input type="radio" name="contact_preference" value={o.value} className="peer sr-only" />
+                          <span className="inline-flex items-center justify-center min-h-[44px] px-4 border border-[#E7E5E4] text-sm text-[#57534E] transition-colors hover:border-[#D4A574] peer-checked:border-[#D4A574] peer-checked:bg-[#FAF9F6] peer-checked:text-[#1C1917] peer-focus-visible:ring-2 peer-focus-visible:ring-[#D4A574] peer-focus-visible:ring-offset-1">
+                            {language === "en" ? o.en : o.fr}
+                          </span>
+                        </label>
+                      ))}
+                    </div>
+                  </fieldset>
                 </div>
                 <div className="md:col-span-2">
                   <label className="block text-sm text-[#57534E] mb-2">
@@ -559,10 +569,16 @@ export function JoinPageV4() {
               </div>
             )}
 
-            {/* Submit */}
+            {/* Submit — (Lot A) form_submit_click au clic, AVANT la validation native (Entrée
+                comprise), puis form_invalid pour chaque champ bloqué pendant cette tentative. */}
             <button
               type="submit"
               disabled={status === "submitting"}
+              onClick={(e) => {
+                const choice = e.currentTarget.form?.elements.namedItem("contact_preference");
+                const pref = choice && "value" in choice ? String(choice.value || "") : "";
+                telemetry.trackSubmitClick({ contact_pref: pref || "none" });
+              }}
               className="w-full py-4 bg-[#1C1917] text-white font-bold hover:bg-[#D4A574] transition-colors flex items-center justify-center gap-2 disabled:opacity-60 disabled:cursor-not-allowed"
             >
               {status === "submitting" ? (
@@ -579,7 +595,13 @@ export function JoinPageV4() {
                 </>
               )}
             </button>
-            <p className="text-sm text-[#78716C] text-center mt-4">
+            {/* (Lot A, 01/10/2026) Juste sous le bouton : visible avec lui à 390 px. */}
+            <p className="text-xs text-[#57534E] text-center mt-3">
+              {language === "en"
+                ? "Early applicants are the first to know when a room becomes available."
+                : "Les premiers candidats sont les premiers prévenus quand une chambre se libère."}
+            </p>
+            <p className="text-sm text-[#78716C] text-center mt-3">
               {language === "en" ? "30 seconds, no commitment" : "30 secondes, sans engagement"}
             </p>
             <p className="text-xs text-[#78716C] text-center mt-1">
@@ -838,10 +860,11 @@ export function JoinPageV4() {
                 a_en: "Yes, always. Physical tour (30-45 min) or virtual if you're abroad. You also meet a current resident to get an honest first-hand take on community life.",
               },
               {
-                q_fr: "Et si je ne sais pas encore quelle date d'arrivée mettre ?",
+                // (Lot A, 01/10/2026) Le formulaire ne demande plus la date : réponse alignée.
+                q_fr: "Et si je ne connais pas encore ma date d'arrivée ?",
                 q_en: "What if I don't know my arrival date yet?",
-                a_fr: "Pas de souci — choisis \"Plus tard / pas encore décidé\". On revient vers toi avec les chambres disponibles et on cale ensemble une date qui te convient. Candidater ne t'engage à rien.",
-                a_en: "No worries — pick \"Later / not decided yet\". We'll get back to you with available rooms and we'll set a date together. Applying doesn't commit you to anything.",
+                a_fr: "Aucun souci : le formulaire ne te la demande pas. Juste après l'envoi, tu peux nous indiquer une période si tu la connais déjà ; sinon, on cale ensemble une date au premier échange. Candidater ne t'engage à rien.",
+                a_en: "No problem: the form doesn't ask for it. Right after sending, you can tell us a rough period if you already know it; otherwise, we'll set a date together on our first call. Applying doesn't commit you to anything.",
               },
             ].map((item, i) => (
               <div key={i} className="bg-[#FAF9F6] border border-[#E7E5E4]">
