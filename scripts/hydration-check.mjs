@@ -173,6 +173,15 @@ async function main() {
   if (failures.length > 0) {
     console.error(`\n❌ ${failures.length} chargement(s) avec erreur d'hydratation — pages NON publiables.\n`);
     for (const f of failures) console.error(`--- ${f.route} [${f.device}]\n${f.message}\n`);
+    // En CI : une annotation par échec, lisible sans connexion (API check-runs/…/annotations),
+    // alors que les journaux GitHub Actions exigent un compte (constat du 01/10/2026).
+    if (process.env.GITHUB_ACTIONS) {
+      for (const f of failures.slice(0, 10)) {
+        const msg = f.message.slice(0, 900).replace(/%/g, '%25').replace(/\r/g, '%0D').replace(/\n/g, '%0A');
+        const title = `Hydratation ${f.route} [${f.device}]`.replace(/%/g, '%25').replace(/:/g, '%3A').replace(/,/g, '%2C');
+        console.log(`::error title=${title}::${msg}`);
+      }
+    }
     process.exit(1);
   }
   console.log('\n🎉 Aucune erreur d\'hydratation.\n');
