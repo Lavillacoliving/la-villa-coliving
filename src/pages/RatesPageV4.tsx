@@ -6,6 +6,8 @@ import { LocalizedLink } from "@/components/LocalizedLink";
 import { colocGeneveHref } from "@/lib/siteLinks";
 import { Helmet } from "react-helmet";
 import { SEO } from "@/components/SEO";
+import { MONTHS_EN, MONTHS_FR } from "@/lib/dates";
+import { nextMonthValue, useRenderMonth } from "@/lib/renderMonth";
 import { FaqSection } from "@/components/FaqSection";
 import { tarifsFaq } from "@/data/faq/tarifsFaq";
 import { buildBreadcrumbSchema, buildRoomsAggregateOfferSchema } from "@/lib/structuredData";
@@ -18,6 +20,10 @@ import {
 
 export function RatesPageV4() {
   const { language } = useLanguage();
+  // (Lot B, 01/10/2026) « Places limitées pour <mois prochain> » : calculé depuis le mois embarqué
+  // par le prérendu (pied de page), plus avec new Date() + toLocaleDateString au rendu — #418 chaque
+  // 1ᵉʳ du mois entre minuit et le prérendu de 05:00 UTC. Resynchronisé après l'hydratation.
+  const nextMonth = nextMonthValue(useRenderMonth());
 
   const includedItems = [
     language === "en"
@@ -1126,10 +1132,8 @@ export function RatesPageV4() {
           </h2>
           <p className="text-lg text-white/80 max-w-xl mx-auto mb-8">
             {(() => {
-              const now = new Date();
-              const next = new Date(now.getFullYear(), now.getMonth() + 1, 1);
-              const monthFr = next.toLocaleDateString("fr-FR", { month: "long", year: "numeric" });
-              const monthEn = next.toLocaleDateString("en-US", { month: "long", year: "numeric" });
+              const monthFr = `${MONTHS_FR[nextMonth.monthIndex]} ${nextMonth.year}`;
+              const monthEn = `${MONTHS_EN[nextMonth.monthIndex]} ${nextMonth.year}`;
               return language === "en"
                 ? `Save ${MONTHLY_SAVINGS_CHF} CHF/month and join ${STATS.totalResidents}+ happy residents. Limited spots for ${monthEn}.`
                 : `Économise ${MONTHLY_SAVINGS_CHF} CHF/mois et rejoins ${STATS.totalResidents}+ résidents heureux. Places limitées pour ${monthFr}.`;

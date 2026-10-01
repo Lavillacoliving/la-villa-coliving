@@ -151,3 +151,17 @@
     background: #44403C;
   }
 }
+
+/* (Lot B, 01/10/2026) /candidature?property_interest=<maison> chargée directement : l'en-tête
+   contextuel n'est rendu qu'APRÈS l'hydratation (JoinPageV4 — le HTML prérendu est commun à toutes
+   les query strings). La classe html.lvc-cand-ctx (script #lvc-cand-ctx d'index.html, retirée par
+   JoinPageV4 dès que l'en-tête disparaît) réserve sa hauteur — bloc + marge mb-6 — et masque la
+   micro-réassurance dès la première peinture. Hauteurs mesurées sur la production le 01/10/2026
+   (tools/out/lotB-measure.mjs) : 134 px jusqu'à 430 px de large (maison, chambre, liste d'attente,
+   FR/EN), 122 px à partir de 768 px. Seul « Cette chambre vient de partir » (lien vers une chambre
+   louée depuis) ajoute encore 50 à 80 px après coup. */
+html.lvc-cand-ctx .cand-ctx-slot { min-height: 134px; }
+@media (min-width: 640px) {
+  html.lvc-cand-ctx .cand-ctx-slot { min-height: 122px; }
+}
+html.lvc-cand-ctx .cand-micro { display: none; }

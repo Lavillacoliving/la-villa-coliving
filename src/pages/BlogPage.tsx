@@ -4,6 +4,7 @@ import { useLanguage } from "@/contexts/LanguageContext";
 import { supabase } from "@/lib/supabase";
 import { Search, Clock, Calendar, User } from "lucide-react";
 import { SEO } from "@/components/SEO";
+import { formatLongDate } from "@/lib/dates";
 
 interface BlogPost {
   id: string; slug: string;
@@ -73,7 +74,8 @@ export function BlogPage() {
     const mc = ac==="all"||p.category===ac;
     return ms&&mc;
   });
-  const fmtD = (d:string) => new Date(d).toLocaleDateString(language==="en"?"en-US":"fr-FR",{year:"numeric",month:"long",day:"numeric"});
+  // (Lot B, 01/10/2026) Date calendaire de Paris, mise en forme maison : identique au prérendu sur tout appareil.
+  const fmtD = (d:string) => formatLongDate(d, language==="en"?"en":"fr");
   const cats = Object.keys(CL);
 
   return (
