@@ -506,7 +506,18 @@ async function renderRoute(browser, route) {
       shell.insertBefore(document.createComment('/$'), footer);
 
       const root = document.getElementById('root');
-      const walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT);
+      // (Lot B, 01/10/2026) JAMAIS dans un <script>/<style> : Chromium découpe tout texte de plus de
+      // 65 536 caractères inséré par innerHTML en plusieurs nœuds — le séparateur atterrissait alors
+      // DANS le JSON embarqué (__blog_post_data__ de guide-ressources-frontalier-geneve, 87 864 car. :
+      // « order of <!-- -->magnitude »), relu tel quel au premier rendu client → #418 « text » sur
+      // /en/blog/guide-ressources-frontalier-geneve. Le contenu d'un script n'est pas hydraté comme du
+      // texte : aucun séparateur n'y a de sens.
+      const RAW_TEXT_PARENTS = new Set(['SCRIPT', 'STYLE', 'TEMPLATE', 'NOSCRIPT', 'TEXTAREA']);
+      const walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT, {
+        acceptNode: (n) => (n.parentElement && RAW_TEXT_PARENTS.has(n.parentElement.tagName)
+          ? NodeFilter.FILTER_REJECT
+          : NodeFilter.FILTER_ACCEPT),
+      });
       const needSeparator = [];
       let node;
       while ((node = walker.nextNode())) {
@@ -526,6 +537,15 @@ async function renderRoute(browser, route) {
     }
 
     let html = await page.content();
+
+    // (Lot B, 01/10/2026) Garde : un état embarqué (<script type="application/json">) ne doit contenir
+    // aucun marqueur de commentaire — sinon le premier rendu client relit un JSON altéré (#418).
+    for (const m of html.matchAll(/<script type="application\/json" id="([^"]+)">([\s\S]*?)<\/script>/g)) {
+      if (m[2].includes('<!--')) {
+        console.error(`  ❌ ${route} → état embarqué ${m[1]} altéré (marqueur de commentaire dans le JSON)`);
+        return false;
+      }
+    }
 
     // B5: set <html lang> to match the route language (EN pages were defaulting to "fr")
     const isEnRoute = route === '/en' || route.startsWith('/en/');
