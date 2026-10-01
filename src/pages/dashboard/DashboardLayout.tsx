@@ -100,6 +100,14 @@ export default function DashboardLayout() {
 
   useEffect(() => { checkAuth(); }, []);
 
+  // (Lot C, 01/10/2026) Appareil de l'équipe : une connexion admin réussie (étape `ready`) pose le
+  // drapeau « trafic interne » lu par la garde analytics d'index.html → GA4 traffic_type=internal et
+  // pas de Clarity sur le site public. Jamais à la simple visite de /dashboard.
+  useEffect(() => {
+    if (step !== 'ready') return;
+    try { localStorage.setItem('lvc_internal', '1'); } catch { /* stockage indisponible */ }
+  }, [step]);
+
   const login = async (e: React.FormEvent) => {
     e.preventDefault(); setBusy(true); setErr('');
     const { error } = await supabase.auth.signInWithPassword({ email, password: pw });
