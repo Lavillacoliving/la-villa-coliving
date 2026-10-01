@@ -7,11 +7,12 @@ import { SEO } from "@/components/SEO";
 // EN = traduction de courtoisie ; la version française fait foi.
 // ⚠️ Deux adaptations vs le document source, signalées à Jérôme :
 //   1. §2a liste les champs RÉELS du formulaire actuel (pas de date de naissance
-//      ni de situation professionnelle — retirés du formulaire lors du CRO 06/2026).
+//      ni de situation professionnelle — retirés du formulaire lors du CRO 06/2026 ;
+//      01/10/2026 : canal préféré facultatif, arrivée et durée posées après l'envoi).
 //   2. §2d/§7 : pas de référence à un « bandeau cookies » tant qu'aucun bandeau
 //      n'existe sur le site (note cookies du doc source manquante — à trancher).
-const LAST_UPDATED_FR = "24 août 2026";
-const LAST_UPDATED_EN = "August 24, 2026";
+const LAST_UPDATED_FR = "1er octobre 2026";
+const LAST_UPDATED_EN = "October 1, 2026";
 
 function Section({ title, children }: { title: string; children: React.ReactNode }) {
   return (
@@ -78,8 +79,9 @@ export function PolitiqueConfidentialitePage() {
               <Section title="2. Data we collect and purposes">
                 <p>
                   <strong>a) Application form.</strong> When you apply to join one of our houses,
-                  we collect: first name, last name, email address, phone number, planned arrival
-                  period, intended length of stay and how you heard about us.
+                  we collect: first name, last name, email address, phone number, preferred contact
+                  channel (optional) and how you heard about us. Right after sending, you may also
+                  tell us your planned arrival period and intended length of stay (optional).
                   <br />
                   <em>Purpose:</em> reviewing your application, contacting you and organising the
                   next steps (exchange, discovery call, visit).{" "}
@@ -246,8 +248,9 @@ export function PolitiqueConfidentialitePage() {
                 <p>
                   <strong>a) Formulaire de candidature.</strong> Lorsque vous candidatez pour
                   rejoindre l'une de nos maisons, nous collectons : prénom, nom, adresse email,
-                  numéro de téléphone, période d'arrivée souhaitée, durée de séjour envisagée et
-                  la manière dont vous nous avez connus.
+                  numéro de téléphone, canal de contact préféré (facultatif) et la manière dont vous
+                  nous avez connus. Juste après l'envoi, vous pouvez aussi nous indiquer la période
+                  d'arrivée souhaitée et la durée de séjour envisagée (facultatif).
                   <br />
                   <em>Finalité :</em> étudier votre candidature, vous recontacter et organiser les
                   étapes suivantes (échange, appel découverte, visite).{" "}

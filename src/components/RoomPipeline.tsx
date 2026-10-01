@@ -11,8 +11,9 @@ import { embedJson, readEmbeddedArray } from "@/lib/prerenderEmbeddedState";
  * Le problème réglé : la section montrait l'occupation du jour (« 6 chambres occupées »)
  * alors que ce que la maison vend, c'est la PROCHAINE libération — les résidents restent
  * 13 mois en moyenne, des chambres se libèrent toute l'année. Ce bloc prend la place
- * dans la file : « Candidater pour <mois> » (période transmise au formulaire, champ
- * `arrival` déjà compris par l'Edge send-candidature-email) et, sans dossier,
+ * dans la file : « Candidater pour <mois> » (période transmise au formulaire via ?arrival=,
+ * envoyée sans être affichée dans le payload `arrival` de l'Edge send-candidature-email —
+ * Lot A du 01/10/2026) et, sans dossier,
  * « Juste me prévenir » (prénom + e-mail + mois → table `waitlist`, écriture anonyme
  * autorisée par la policy waitlist_insert_anon).
  *
