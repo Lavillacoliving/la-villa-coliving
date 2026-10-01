@@ -1,4 +1,36 @@
 // Supabase Edge Function — send-candidature-email
+// v19 — 10/2026 — Formulaire allégé + 2 questions après l'envoi (Lot A du brief « Formulaire,
+//   hydratation, mesure » du 30/09/2026, plan + débrief validés par Jérôme le 30/09)
+//   CHANGEMENTS vs v18 :
+//   1. Mode « compléments » (`mode: "details"`, branche isolée en tête) : les 2 questions
+//      facultatives arrivée/durée, posées sur l'écran de succès, mettent à jour LA MÊME ligne
+//      `prospects` — `lease_duration` seulement si NULL, lignes « Souhait d'arrivée : » /
+//      « Durée souhaitée : » seulement si absentes, PATCH conditionné à la valeur lue de `notes`
+//      (jamais d'écrasement d'une saisie), idempotent (`updated:false` au rejeu). Autorisé par un
+//      jeton HMAC à 1 h (`details_token`) renvoyé par le chemin normal — prospect, clé de
+//      soumission, id Resend de la notification. Aucun email candidat, aucune écriture
+//      `form_submissions`, aucun changement de schéma.
+//   2. Email « Compléments » (admin seulement, mêmes destinataires que la notification) envoyé
+//      SEULEMENT quand quelque chose a été écrit, dans le fil de la notification (« Re: » +
+//      In-Reply-To / References = message_id Resend de la notification).
+//   3. Notification admin orientée Fanny : plus de lignes « — » pour l'arrivée et la durée (une
+//      phrase annonce l'email « Compléments ») ; libellés au lieu des clés brutes ; canal préféré
+//      accolé au téléphone.
+//   4. Canal préféré `contact_preference` ∈ whatsapp | call | email (pastilles facultatives) :
+//      ligne « Canal préféré : … » dans `notes`, phrase « Fanny te contacte par … » dans
+//      l'auto-réponse. Valeur hors liste ignorée SANS erreur.
+//   5. Destinataires supplémentaires facultatifs des emails admin : secrets
+//      `CANDIDATURE_NOTIFY_TO` / `CANDIDATURE_NOTIFY_CC` (listes séparées par des virgules),
+//      jamais en dur, IGNORÉS pour une soumission `is_test`.
+//   6. Insert `prospects` en `return=representation&select=id` (id du jeton) ; tables de
+//      libellés au niveau module ; « Jusqu'à 3 mois » aligné sur le formulaire (29/09).
+//   Le jeton est construit APRÈS les emails, sous try/catch : il ne peut ni faire échouer une
+//   candidature ni empêcher ses emails. Pas de jeton sur le honeypot, sur un doublon de clé, ni
+//   sur le chemin « même email < 10 min » (on n'écrit jamais sur la fiche d'un autre).
+//   Rétrocompatible : un front v18 ignore `details_token` ; la v18 ignorait déjà tout champ inconnu.
+//   Tests hors production : tools/test/edge-candidature.test.mjs (Deno simulé, PostgREST et
+//   Resend factices). Ordre de déploiement : merge sur main → déploiement v19 DEPUIS main (MCP,
+//   verify_jwt: true) → test express ?test=1 avec le front actuel → merge du front.
 // v18 — 09/2026 — Canal déclaré « Assistant IA » (Lot S3 du brief Socle entité, plan validé 04/09)
 //   CHANGEMENTS vs v17 :
 //   1. Nouvelle valeur du select `source` du formulaire : `ai-assistant` (libellé « Assistant IA
@@ -171,28 +203,169 @@ const FIELD_LABELS: Record<string, { fr: string; en: string }> = {
   phone: { fr: "téléphone", en: "phone number" },
 };
 
-function buildAdminEmail(data: Record<string, string>): string {
+// (v19) Tables de libellés au niveau module : le chemin normal (notes, emails) et le mode
+// « compléments » s'en servent tous les deux. Clés = valeurs des listes du front (JoinPageV4,
+// CandidatureDetails) : ne jamais les renommer d'un seul côté.
+const ARRIVAL_LABELS: Record<string, string> = {
+  "asap": "Le plus tôt possible (sous 1 mois)",
+  "1-3-months": "Dans 1 à 3 mois",
+  "3-6-months": "Dans 3 à 6 mois",
+  "later": "Plus tard / pas encore décidé",
+};
+// lease_duration est contraint (prospects_lease_duration_check) : seules 3_mois / 6_mois /
+// 12_mois / flexible passent.
+const LEASE_DURATION_MAP: Record<string, string> = {
+  "2-3": "3_mois",
+  "3-6": "6_mois",
+  "6-12": "12_mois",
+  "12+": "12_mois",
+};
+// (v19) « Jusqu'à 3 mois » : libellé du formulaire depuis le 29/09/2026 (plus de durée minimale ;
+// la clé « 2-3 » reste celle de LEASE_DURATION_MAP).
+const DURATION_LABELS: Record<string, string> = {
+  "2-3": "Jusqu'à 3 mois",
+  "3-6": "3-6 mois",
+  "6-12": "6-12 mois",
+  "12+": "12+ mois",
+};
+// (v19) Canal préféré — pastilles facultatives sous le téléphone.
+const CONTACT_PREFERENCE_LABELS: Record<string, string> = {
+  "whatsapp": "WhatsApp",
+  "call": "Appel",
+  "email": "Email",
+};
+const CONTACT_PREFERENCE_PHRASES: Record<"fr" | "en", Record<string, string>> = {
+  fr: { whatsapp: "par WhatsApp", call: "par téléphone", email: "par email" },
+  en: { whatsapp: "on WhatsApp", call: "by phone", email: "by email" },
+};
+
+/** Lecture d'une table de libellés sans jamais remonter au prototype (« constructor »…). */
+function own(map: Record<string, string>, key: string): string | null {
+  return Object.prototype.hasOwnProperty.call(map, key) ? map[key] : null;
+}
+
+/**
+ * (v19) Destinataires supplémentaires des emails admin (Fanny, si Jérôme le décide) : secrets
+ * d'environnement, jamais en dur ; adresses invalides ignorées ; AUCUN pour une soumission de
+ * test — les emails [TEST] ne partent qu'à ADMIN_EMAIL.
+ */
+function extraAdminRecipients(isTest: boolean): { to: string[]; cc: string[] } {
+  if (isTest) return { to: [], cc: [] };
+  const list = (name: string): string[] =>
+    (Deno.env.get(name) ?? "")
+      .split(",")
+      .map((s) => s.trim())
+      .filter((s) => s.length > 0 && isValidEmail(s) && s.toLowerCase() !== ADMIN_EMAIL);
+  return { to: list("CANDIDATURE_NOTIFY_TO"), cc: list("CANDIDATURE_NOTIFY_CC") };
+}
+
+// (v19) Jeton du mode « compléments » : base64url(JSON) + "." + base64url(HMAC-SHA256).
+// Clé = SUPABASE_SERVICE_ROLE_KEY (déjà présente dans l'environnement de la fonction), message
+// préfixé d'un libellé de domaine : aucun secret à créer ni à faire transiter. Contenu : id du
+// prospect (pid), clé de soumission (sk), id Resend de la notification admin (nid — pour le fil
+// d'emails), expiration (exp, en ms) à 1 h.
+const DETAILS_TOKEN_LABEL = "candidature-details-v1";
+const DETAILS_TOKEN_TTL_MS = 60 * 60 * 1000;
+
+interface DetailsTokenPayload {
+  v: 1;
+  pid: string;
+  sk: string;
+  nid: string | null;
+  exp: number;
+}
+
+function base64UrlEncode(bytes: Uint8Array): string {
+  let bin = "";
+  for (const b of bytes) bin += String.fromCharCode(b);
+  return btoa(bin).replace(/\+/g, "-").replace(/\//g, "_").replace(/=+$/, "");
+}
+
+function base64UrlDecode(text: string): Uint8Array {
+  const b64 = text.replace(/-/g, "+").replace(/_/g, "/") + "===".slice((text.length + 3) % 4);
+  return Uint8Array.from(atob(b64), (c) => c.charCodeAt(0));
+}
+
+async function detailsHmac(secret: string, body: string): Promise<Uint8Array> {
+  const enc = new TextEncoder();
+  const key = await crypto.subtle.importKey("raw", enc.encode(secret), { name: "HMAC", hash: "SHA-256" }, false, ["sign"]);
+  return new Uint8Array(await crypto.subtle.sign("HMAC", key, enc.encode(`${DETAILS_TOKEN_LABEL}.${body}`)));
+}
+
+async function signDetailsToken(payload: DetailsTokenPayload, secret: string): Promise<string> {
+  const body = base64UrlEncode(new TextEncoder().encode(JSON.stringify(payload)));
+  return `${body}.${base64UrlEncode(await detailsHmac(secret, body))}`;
+}
+
+/** Jeton valide et non expiré → son contenu ; sinon null (comparaison à temps constant). */
+async function verifyDetailsToken(token: string, secret: string, now: number): Promise<DetailsTokenPayload | null> {
+  try {
+    const parts = String(token ?? "").split(".");
+    if (parts.length !== 2 || !parts[0] || !parts[1]) return null;
+    const expected = await detailsHmac(secret, parts[0]);
+    const given = base64UrlDecode(parts[1]);
+    if (given.length !== expected.length) return null;
+    let diff = 0;
+    for (let i = 0; i < expected.length; i++) diff |= expected[i] ^ given[i];
+    if (diff !== 0) return null;
+    const payload = JSON.parse(new TextDecoder().decode(base64UrlDecode(parts[0]))) as DetailsTokenPayload;
+    if (!payload || payload.v !== 1 || typeof payload.exp !== "number") return null;
+    if (typeof payload.pid !== "string" || !/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(payload.pid)) return null;
+    if (now > payload.exp) return null;
+    return payload;
+  } catch {
+    return null;
+  }
+}
+
+// (v19) Lignes « séjour » de la notification : jamais de « — » pour l'arrivée et la durée (Fanny
+// lit les candidatures dans ses emails). Inconnues → une phrase annonce l'email « Compléments » ;
+// connues (?arrival= des pages maisons, ancien front) → leur libellé.
+const STAY_NOT_YET_BOTH = "Pas encore renseignées. Le candidat peut les ajouter juste après l'envoi ; si c'est le cas, un email « Compléments » suivra dans ce fil.";
+const STAY_NOT_YET_ONE = "Pas encore renseignée. Le candidat peut l'ajouter juste après l'envoi ; si c'est le cas, un email « Compléments » suivra dans ce fil.";
+
+function arrivalLabel(raw: string): string | null {
+  const v = raw.trim();
+  if (!v) return null;
+  if (/^\d{4}-\d{2}-\d{2}$/.test(v)) return v;
+  return own(ARRIVAL_LABELS, v) ?? v;
+}
+
+function durationLabel(raw: string): string | null {
+  const v = raw.trim();
+  if (!v) return null;
+  return own(DURATION_LABELS, v) ?? v;
+}
+
+function buildAdminEmail(data: Record<string, string>, contactPref: string | null = null): string {
+  const arrival = arrivalLabel(data.arrival ?? "");
+  const duration = durationLabel(data.duration ?? "");
+  const stayRows: Array<[string, string]> = arrival || duration
+    ? [
+      ["Date d'arrivée souhaitée", arrival ?? STAY_NOT_YET_ONE],
+      ["Durée du séjour", duration ?? STAY_NOT_YET_ONE],
+    ]
+    : [["Arrivée et durée", STAY_NOT_YET_BOTH]];
+  const prefLabel = contactPref ? own(CONTACT_PREFERENCE_LABELS, contactPref) : null;
+  // Valeurs déjà échappées : le canal préféré est mis en gras, accolé au téléphone (v19).
   const rows: Array<[string, string]> = [
-    ["Prénom", data.firstName],
-    ["Nom", data.lastName],
-    ["Email", data.email],
-    ["Téléphone", data.phone],
-    ["Date de naissance", data.birthDate || "—"],
-    ["Poste", data.job || "—"],
-    // v11 : arrival/duration retirés du formulaire 1 étape — affichés seulement
-    // si un (ancien) front les envoie encore. Fanny qualifie ces points à l'appel.
-    ["Date d'arrivée souhaitée", data.arrival || "—"],
-    ["Durée du séjour", data.duration || "—"],
-    ["Comment a entendu parler", data.source || "—"],
+    ["Prénom", escapeHtml(data.firstName)],
+    ["Nom", escapeHtml(data.lastName)],
+    ["Email", escapeHtml(data.email)],
+    ["Téléphone", escapeHtml(data.phone) + (prefLabel ? ` — <strong>préfère ${escapeHtml(prefLabel)}</strong>` : "")],
+    ["Date de naissance", escapeHtml(data.birthDate || "—")],
+    ["Poste", escapeHtml(data.job || "—")],
+    ...stayRows.map(([label, value]): [string, string] => [label, escapeHtml(value)]),
+    ["Comment a entendu parler", escapeHtml(data.source || "—")],
     // Programme parrainage : le nom du parrain déclaré doit être visible dès la
     // notification, pour le rattachement par Fanny à la qualification.
-    ["Parrainé par", (data.referrerName ?? "").trim().slice(0, 80) || "—"],
+    ["Parrainé par", escapeHtml((data.referrerName ?? "").trim().slice(0, 80) || "—")],
   ];
 
-  const tableRows = rows.map(([label, value]) => `
+  const tableRows = rows.map(([label, valueHtml]) => `
     <tr>
       <td style="padding:10px 14px;border-bottom:1px solid #E7E5E4;font-size:13px;color:#78716C;width:200px;vertical-align:top;">${escapeHtml(label)}</td>
-      <td style="padding:10px 14px;border-bottom:1px solid #E7E5E4;font-size:14px;color:#1C1917;">${escapeHtml(value)}</td>
+      <td style="padding:10px 14px;border-bottom:1px solid #E7E5E4;font-size:14px;color:#1C1917;">${valueHtml}</td>
     </tr>
   `).join("");
 
@@ -264,9 +437,17 @@ const AUTORESPONSE_TEXTS = {
   },
 } as const;
 
-function buildAutoresponseEmail(firstName: string, language: "fr" | "en"): string {
+function buildAutoresponseEmail(firstName: string, language: "fr" | "en", contactPref: string | null = null): string {
   const safeFirstName = escapeHtml(firstName);
   const T = AUTORESPONSE_TEXTS[language];
+  // (v19) Canal choisi par le candidat → l'étape 2 dit comment Fanny le contacte (sous le titre
+  // « On te recontacte sous 48h. », inchangé). Sans canal : texte historique.
+  const phrase = contactPref ? own(CONTACT_PREFERENCE_PHRASES[language], contactPref) : null;
+  const step2Body = phrase
+    ? (language === "en"
+      ? `Fanny will reach out ${phrase} to get to know you — no pressure, no commitment.`
+      : `Fanny te contacte ${phrase} pour faire connaissance — sans pression, sans engagement.`)
+    : T.step2Body;
   return `<!DOCTYPE html>
 <html lang="${T.htmlLang}">
 <head>
@@ -302,7 +483,7 @@ function buildAutoresponseEmail(firstName: string, language: "fr" | "en"): strin
         </td></tr>
         <tr><td style="padding:0 0 26px 0;">
           <p style="margin:0 0 6px 0;font-size:16px;font-weight:600;color:#1C1917;">${T.step2Title}</p>
-          <p style="margin:0;font-size:14px;line-height:1.65;color:#57534E;">${T.step2Body}</p>
+          <p style="margin:0;font-size:14px;line-height:1.65;color:#57534E;">${step2Body}</p>
         </td></tr>
         <tr><td style="padding:0;">
           <p style="margin:0 0 6px 0;font-size:16px;font-weight:600;color:#1C1917;">${T.step3Title}</p>
@@ -376,6 +557,204 @@ async function alertN8n(payload: Record<string, unknown>): Promise<void> {
   }
 }
 
+// (v19) Email « Compléments » — admin seulement, dans le fil de la notification.
+function buildDetailsEmail(
+  p: { first_name: string; last_name: string | null; email: string | null },
+  arrival: string | null,
+  duration: string | null,
+): string {
+  const rows: Array<[string, string]> = [];
+  if (arrival) rows.push(["Arrivée souhaitée", arrival]);
+  if (duration) rows.push(["Durée souhaitée", duration]);
+  const tableRows = rows.map(([label, value]) => `
+    <tr>
+      <td style="padding:10px 14px;border-bottom:1px solid #E7E5E4;font-size:13px;color:#78716C;width:200px;vertical-align:top;">${escapeHtml(label)}</td>
+      <td style="padding:10px 14px;border-bottom:1px solid #E7E5E4;font-size:14px;color:#1C1917;">${escapeHtml(value)}</td>
+    </tr>
+  `).join("");
+  return `<!DOCTYPE html>
+<html><body style="margin:0;padding:30px;background:#FAF9F6;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif;">
+  <table cellspacing="0" cellpadding="0" border="0" align="center" width="100%" style="max-width:640px;margin:0 auto;background:#FFFFFF;border:1px solid #E7E5E4;">
+    <tr>
+      <td style="padding:24px 30px;background:#1C1917;color:#FFFFFF;">
+        <p style="margin:0;font-size:11px;letter-spacing:3px;text-transform:uppercase;color:#D4A574;">Compléments de candidature</p>
+        <h1 style="margin:4px 0 0 0;font-size:20px;font-weight:500;">${escapeHtml(p.first_name)} ${escapeHtml(p.last_name ?? "")}</h1>
+      </td>
+    </tr>
+    <tr>
+      <td style="padding:24px 30px;">
+        <table cellspacing="0" cellpadding="0" border="0" width="100%">${tableRows}</table>
+      </td>
+    </tr>
+    <tr>
+      <td style="padding:20px 30px;background:#FAF9F6;border-top:1px solid #E7E5E4;text-align:center;">
+        <p style="margin:0;font-size:12px;color:#78716C;">Réponses données juste après l'envoi de la candidature.${p.email ? ` Réponse rapide : il suffit de cliquer sur "Répondre" — ta réponse partira directement à ${escapeHtml(p.email)}.` : ""}</p>
+      </td>
+    </tr>
+  </table>
+</body></html>`;
+}
+
+/** (v19) message_id de la notification (GET /emails/:id, API Resend) → en-têtes du fil. */
+async function resendMessageId(nid: string | null, apiKey: string): Promise<string | null> {
+  if (!nid || !/^[0-9A-Za-z-]{8,64}$/.test(nid)) return null;
+  try {
+    const res = await fetch(`${RESEND_API_URL}/${encodeURIComponent(nid)}`, {
+      headers: { "Authorization": `Bearer ${apiKey}` },
+    });
+    if (!res.ok) return null;
+    const body = await res.json().catch(() => ({})) as { message_id?: unknown };
+    const mid = typeof body.message_id === "string" ? body.message_id.trim() : "";
+    if (!mid) return null;
+    return mid.startsWith("<") ? mid : `<${mid}>`;
+  } catch {
+    return null;
+  }
+}
+
+/**
+ * (v19) Mode « compléments » : les 2 questions facultatives (arrivée, durée) posées sur l'écran de
+ * succès écrivent sur LA MÊME ligne `prospects`, seulement là où rien n'est encore renseigné.
+ * Ni `form_submissions` ni email candidat ; email « Compléments » admin seulement si écrit.
+ */
+async function handleDetails(
+  data: Record<string, string>,
+  language: "fr" | "en",
+  cors: Record<string, string>,
+  apiKey: string,
+): Promise<Response> {
+  const json = (status: number, body: Record<string, unknown>) =>
+    new Response(JSON.stringify(body), { status, headers: { ...cors, "Content-Type": "application/json" } });
+  const expired = () => json(401, {
+    error: language === "en"
+      ? "This link has expired: your answers weren't saved — we'll cover them on our call."
+      : "Ce lien a expiré : tes réponses n'ont pas été enregistrées, on en parlera à l'échange.",
+  });
+
+  const sbUrl = Deno.env.get("SUPABASE_URL");
+  const sbKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY");
+  if (!sbUrl || !sbKey) {
+    console.error("details mode: SUPABASE_URL / SUPABASE_SERVICE_ROLE_KEY missing");
+    return json(500, { error: "Server configuration error" });
+  }
+
+  const now = Date.now();
+  const token = await verifyDetailsToken(String(data.details_token ?? ""), sbKey, now);
+  if (!token) return expired();
+
+  const arrivalKey = String(data.arrival ?? "").trim();
+  const durationKey = String(data.duration ?? "").trim();
+  const arrivalOk = !arrivalKey || own(ARRIVAL_LABELS, arrivalKey) !== null;
+  const durationOk = !durationKey || own(DURATION_LABELS, durationKey) !== null;
+  if (!arrivalOk || !durationOk || (!arrivalKey && !durationKey)) {
+    return json(400, { error: language === "en" ? "Invalid answer." : "Réponse invalide." });
+  }
+
+  type ProspectRow = {
+    id: string;
+    first_name: string;
+    last_name: string | null;
+    email: string | null;
+    lease_duration: string | null;
+    move_in_date: string | null;
+    notes: string | null;
+    created_at: string;
+    is_test: boolean | null;
+  };
+  const headers = { "apikey": sbKey, "Authorization": `Bearer ${sbKey}` };
+  const readRow = async (): Promise<ProspectRow | null> => {
+    const res = await fetch(
+      `${sbUrl}/rest/v1/prospects?id=eq.${encodeURIComponent(token.pid)}&select=id,first_name,last_name,email,lease_duration,move_in_date,notes,created_at,is_test`,
+      { headers },
+    );
+    if (!res.ok) throw new Error(`prospects read ${res.status}`);
+    const rows = await res.json();
+    return Array.isArray(rows) && rows[0] ? rows[0] as ProspectRow : null;
+  };
+
+  try {
+    // Deux passes au plus : si la ligne a changé entre la lecture et l'écriture (saisie
+    // simultanée au dashboard), on relit et on recalcule une seule fois.
+    for (let attempt = 0; attempt < 2; attempt++) {
+      const row = await readRow();
+      if (!row) return expired();
+      const createdAt = Date.parse(row.created_at);
+      if (!Number.isFinite(createdAt) || now - createdAt > DETAILS_TOKEN_TTL_MS + 5 * 60 * 1000) return expired();
+
+      // « Seulement si encore vide » : une valeur déjà connue (formulaire, ?arrival=, saisie de
+      // l'équipe) n'est jamais remplacée — ni par un rejeu, ni par une autre réponse.
+      const lines = (row.notes ?? "").split("\n");
+      const hasArrival = row.move_in_date !== null || lines.some((l) => l.startsWith("Souhait d'arrivée :"));
+      const hasDuration = row.lease_duration !== null || lines.some((l) => l.startsWith("Durée souhaitée :"));
+      const writeArrival = arrivalKey && !hasArrival ? own(ARRIVAL_LABELS, arrivalKey) : null;
+      const writeDuration = durationKey && !hasDuration ? own(DURATION_LABELS, durationKey) : null;
+      if (!writeArrival && !writeDuration) return json(200, { success: true, updated: false });
+
+      const added = [
+        ...(writeArrival ? [`Souhait d'arrivée : ${writeArrival}`] : []),
+        ...(writeDuration ? [`Durée souhaitée : ${writeDuration}`] : []),
+      ].join("\n");
+      const filters = [
+        `id=eq.${encodeURIComponent(row.id)}`,
+        // PATCH conditionné à la valeur lue : jamais d'écrasement d'une saisie intercalée.
+        // Pas de `or=(…)` : PostgREST y exige de citer , . : ( ), que les notes contiennent.
+        row.notes === null ? "notes=is.null" : `notes=eq.${encodeURIComponent(row.notes)}`,
+        ...(writeDuration ? ["lease_duration=is.null"] : []),
+        "select=id",
+      ].join("&");
+      const patch = await fetch(`${sbUrl}/rest/v1/prospects?${filters}`, {
+        method: "PATCH",
+        headers: { ...headers, "Content-Type": "application/json", "Prefer": "return=representation" },
+        body: JSON.stringify({
+          notes: row.notes ? `${row.notes}\n${added}` : added,
+          ...(writeDuration ? { lease_duration: own(LEASE_DURATION_MAP, durationKey) } : {}),
+          updated_at: new Date().toISOString(),
+        }),
+      });
+      if (!patch.ok) throw new Error(`prospects patch ${patch.status} ${await patch.text().catch(() => "")}`);
+      const updated = await patch.json().catch(() => []);
+      if (!Array.isArray(updated) || updated.length === 0) continue;
+
+      // Email « Compléments » : best-effort, après l'écriture (la réponse reste updated:true).
+      try {
+        const isTest = row.is_test === true;
+        const extra = extraAdminRecipients(isTest);
+        const messageId = await resendMessageId(token.nid, apiKey);
+        const res = await sendEmail({
+          from: FROM_ADMIN_NOTIF,
+          to: [ADMIN_EMAIL, ...extra.to],
+          ...(extra.cc.length > 0 ? { cc: extra.cc } : {}),
+          ...(row.email ? { reply_to: row.email } : {}),
+          subject: `Re: ${isTest ? "[TEST] " : ""}[Candidature] ${row.first_name} ${row.last_name ?? ""}`.trimEnd(),
+          ...(messageId ? { headers: { "In-Reply-To": messageId, "References": messageId } } : {}),
+          html: buildDetailsEmail(row, writeArrival, writeDuration),
+        }, apiKey);
+        if (!res.ok) {
+          console.error("Details email failed", res);
+          await alertN8n({
+            event: "candidature_details_email_failed",
+            submission_key: token.sk,
+            is_test: isTest,
+            resend_status: res.status,
+            at: new Date().toISOString(),
+          });
+        }
+      } catch (e) {
+        console.error("details email threw (non bloquant)", e);
+      }
+      return json(200, { success: true, updated: true });
+    }
+    return json(409, { error: language === "en" ? "Please try again in a moment." : "Réessaie dans un instant." });
+  } catch (e) {
+    console.error("details mode failed", e);
+    return json(502, {
+      error: language === "en"
+        ? "Your answers couldn't be saved — we'll cover them on our call."
+        : "Tes réponses n'ont pas pu être enregistrées — on en parlera à l'échange.",
+    });
+  }
+}
+
 Deno.serve(async (req: Request) => {
   const origin = req.headers.get("Origin");
   const cors = corsHeaders(origin);
@@ -427,6 +806,12 @@ Deno.serve(async (req: Request) => {
       ? (data.language as "fr" | "en")
       : refererLang;
 
+  // (v19) Mode « compléments » (2 questions facultatives après l'envoi) : branche isolée, qui
+  // ne touche ni la validation, ni form_submissions, ni les emails du chemin normal.
+  if (data.mode === "details") {
+    return await handleDetails(data, language, cors, apiKey);
+  }
+
   // Honeypot anti-spam : si rempli, on simule un succès (sans envoyer d'email)
   if (data.botcheck && data.botcheck.trim().length > 0) {
     return new Response(JSON.stringify({ success: true }), {
@@ -461,6 +846,11 @@ Deno.serve(async (req: Request) => {
 
   // Soumission de test (v12) : /candidature?test=1 → exclue des comptages.
   const isTest = ["1", "true"].includes(String(data.isTest ?? "").trim().toLowerCase());
+
+  // (v19) Canal préféré (pastilles facultatives sous le téléphone) : une valeur hors liste est
+  // ignorée SANS erreur — un champ facultatif ne bloque jamais une candidature.
+  const contactPrefRaw = String(data.contact_preference ?? "").trim().toLowerCase();
+  const contactPref = own(CONTACT_PREFERENCE_LABELS, contactPrefRaw) !== null ? contactPrefRaw : null;
 
   // Idempotence (v15) : uuid v4 posé par le front (sessionStorage, au premier clic
   // submit, réutilisé tant que le succès n'est pas reçu — livré avec le lot 1b).
@@ -531,12 +921,15 @@ Deno.serve(async (req: Request) => {
     Object.fromEntries(Object.entries(body).filter(([k]) => !(LANDING_KEYS as readonly string[]).includes(k)));
 
   // 1. Email de notification admin
+  //    (v19) + destinataires supplémentaires facultatifs (secrets d'env, jamais en test).
+  const extraRecipients = extraAdminRecipients(isTest);
   const adminEmail = {
     from: FROM_ADMIN_NOTIF,
-    to: [ADMIN_EMAIL],
+    to: [ADMIN_EMAIL, ...extraRecipients.to],
+    ...(extraRecipients.cc.length > 0 ? { cc: extraRecipients.cc } : {}),
     reply_to: data.email,
     subject: `${isTest ? "[TEST] " : ""}[Candidature] ${data.firstName} ${data.lastName}`,
-    html: buildAdminEmail(data),
+    html: buildAdminEmail(data, contactPref),
   };
 
   // 2. Auto-réponse au candidat (dans sa langue)
@@ -548,7 +941,7 @@ Deno.serve(async (req: Request) => {
       ? "Your application to La Villa — received"
       // Tutoiement (v15) — aligné sur AUTORESPONSE_TEXTS.fr, décision Jérôme 28/08.
       : "Ta candidature à La Villa — bien reçue",
-    html: buildAutoresponseEmail(data.firstName, language),
+    html: buildAutoresponseEmail(data.firstName, language, contactPref),
   };
 
   // (v15) Les emails partent EN DERNIER, après les écritures — voir plus bas.
@@ -664,6 +1057,9 @@ Deno.serve(async (req: Request) => {
   //    clé service_role (RLS : `prospects` est inaccessible en anon), déjà disponible dans
   //    l'environnement de la fonction (même clé que la journalisation ci-dessus). Aucune clé
   //    secrète n'est exposée côté client.
+  //    (v19) L'id du prospect créé est relu (return=representation) pour le jeton du mode
+  //    « compléments » ; il reste null sur le chemin « même email < 10 min » (pas de jeton).
+  let prospectId: string | null = null;
   try {
     const sbUrl = Deno.env.get("SUPABASE_URL");
     const sbKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY");
@@ -676,12 +1072,7 @@ Deno.serve(async (req: Request) => {
       const isIsoDate = /^\d{4}-\d{2}-\d{2}$/.test(arrivalRaw);
       const moveInDate = isIsoDate ? arrivalRaw : null;
 
-      const ARRIVAL_LABELS: Record<string, string> = {
-        "asap": "Le plus tôt possible (sous 1 mois)",
-        "1-3-months": "Dans 1 à 3 mois",
-        "3-6-months": "Dans 3 à 6 mois",
-        "later": "Plus tard / pas encore décidé",
-      };
+      // (v19) ARRIVAL_LABELS / LEASE_DURATION_MAP / DURATION_LABELS : tables au niveau module.
       const CHANNEL_LABELS: Record<string, string> = {
         "google": "Google",
         "ai-assistant": "Assistant IA", // v18 — canal déclaré « Assistant IA (ChatGPT, Perplexity, Gemini…) »
@@ -709,31 +1100,19 @@ Deno.serve(async (req: Request) => {
         "resident-referral": "parrainage",
         "other": "autre",
       };
-      // lease_duration est contraint (prospects_lease_duration_check) : seules 3_mois / 6_mois /
-      // 12_mois / flexible passent. Mapping conservé pour rétrocompatibilité (v11).
-      const LEASE_DURATION_MAP: Record<string, string> = {
-        "2-3": "3_mois",
-        "3-6": "6_mois",
-        "6-12": "12_mois",
-        "12+": "12_mois",
-      };
-      const DURATION_LABELS: Record<string, string> = {
-        "2-3": "2-3 mois",
-        "3-6": "3-6 mois",
-        "6-12": "6-12 mois",
-        "12+": "12+ mois",
-      };
       const durationRaw = (data.duration ?? "").trim();
-      const leaseDuration = LEASE_DURATION_MAP[durationRaw] ?? null;
+      const leaseDuration = own(LEASE_DURATION_MAP, durationRaw);
 
       // notes : tout ce qui n'a pas de colonne dédiée dans `prospects`.
       const notesParts: string[] = [];
       const birthDate = (data.birthDate ?? "").trim();
       if (birthDate) notesParts.push(`Né(e) le ${birthDate}`);
       if (arrivalRaw && !moveInDate) {
-        notesParts.push(`Souhait d'arrivée : ${ARRIVAL_LABELS[arrivalRaw] ?? arrivalRaw}`);
+        notesParts.push(`Souhait d'arrivée : ${own(ARRIVAL_LABELS, arrivalRaw) ?? arrivalRaw}`);
       }
-      if (durationRaw) notesParts.push(`Durée souhaitée : ${DURATION_LABELS[durationRaw] ?? durationRaw}`);
+      if (durationRaw) notesParts.push(`Durée souhaitée : ${own(DURATION_LABELS, durationRaw) ?? durationRaw}`);
+      // (v19) Canal préféré, lisible par Fanny à côté des autres réponses.
+      if (contactPref) notesParts.push(`Canal préféré : ${CONTACT_PREFERENCE_LABELS[contactPref]}`);
       // Attribution — deux couches (plan blog-conversion 07/07/2026) :
       // 1) DÉCLARÉE : « Comment as-tu entendu parler ? » (optionnel depuis v11) →
       //    prospects.source + libellé gardé en notes.
@@ -806,14 +1185,15 @@ Deno.serve(async (req: Request) => {
       if (recentProspectExists) {
         console.log("prospects insert skipped: même email < 10 min (resoumission)");
       } else {
+        // (v19) return=representation + select=id : seul l'id revient, pour le jeton.
         const insertProspect = (body: Record<string, unknown>) =>
-          fetch(`${sbUrl}/rest/v1/prospects`, {
+          fetch(`${sbUrl}/rest/v1/prospects?select=id`, {
             method: "POST",
             headers: {
               "apikey": sbKey,
               "Authorization": `Bearer ${sbKey}`,
               "Content-Type": "application/json",
-              "Prefer": "return=minimal",
+              "Prefer": "return=representation",
             },
             body: JSON.stringify(body),
           });
@@ -843,6 +1223,13 @@ Deno.serve(async (req: Request) => {
         }
         if (!insertRes.ok) {
           console.error("prospects insert failed", insertRes.status, await insertRes.text().catch(() => ""));
+        } else {
+          // (v19) Corps illisible → pas de jeton ; la candidature, elle, est enregistrée.
+          try {
+            const rows = await insertRes.json();
+            const id = Array.isArray(rows) ? rows[0]?.id : null;
+            if (typeof id === "string") prospectId = id;
+          } catch { /* pas de jeton, rien d'autre ne change */ }
         }
       }
     } else {
@@ -878,10 +1265,32 @@ Deno.serve(async (req: Request) => {
     console.error("Candidate autoresponse failed", candidateRes);
   }
 
+  // 6. (v19) Jeton du mode « compléments » — construit APRÈS les emails, sous try/catch : il ne
+  //    peut ni faire échouer la candidature ni empêcher ses emails (un 500 suivi d'un rejeu de la
+  //    même clé tomberait sur le chemin doublon, qui ne renvoie aucun email). Exige la ligne
+  //    form_submissions, la clé et l'id du prospect créé par CETTE soumission.
+  let detailsToken: string | null = null;
+  try {
+    const secret = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY");
+    if (secret && submissionSaved && submissionKey && prospectId) {
+      const nid = adminRes.ok ? (adminRes.body as { id?: unknown } | null)?.id : null;
+      detailsToken = await signDetailsToken({
+        v: 1,
+        pid: prospectId,
+        sk: submissionKey,
+        nid: typeof nid === "string" ? nid : null,
+        exp: Date.now() + DETAILS_TOKEN_TTL_MS,
+      }, secret);
+    }
+  } catch (e) {
+    console.error("details token failed (non bloquant)", e);
+  }
+
   return new Response(JSON.stringify({
     success: true,
     autoresponseSent: candidateRes.ok,
     adminNotified: adminRes.ok,
+    ...(detailsToken ? { details_token: detailsToken } : {}),
   }), {
     headers: { ...cors, "Content-Type": "application/json" },
   });
