@@ -1,19 +1,53 @@
 <!doctype html>
 <html lang="fr">
   <head>
-    <!-- Google tag (gtag.js) -->
-    <script
-      async
-      src="https://www.googletagmanager.com/gtag/js?id=G-HW98R11W6M"
-    ></script>
-    <script>
-      window.dataLayer = window.dataLayer || [];
-      function gtag() {
-        dataLayer.push(arguments);
-      }
-      gtag("js", new Date());
-
-      gtag("config", "G-HW98R11W6M");
+    <meta charset="UTF-8" />
+    <!-- Google tag (gtag.js) — GARDE ANALYTICS (Lot C du brief « Formulaire, hydratation, mesure »,
+         01/10/2026). Avant : tag statique sans aucune garde → 26 % des événements GA4 depuis juin
+         venaient de nos propres outils (prérendu CI et local à 800×600, garde d'hydratation à
+         390×844 et 1440×900, nom d'hôte localhost). GA4 est désormais chargé PAR CE SCRIPT, et
+         seulement si :
+           - le navigateur n'est pas automatisé (navigator.webdriver) ni un robot déclaré (UA) ;
+           - le nom d'hôte est celui de la production (www. ou nu) — ni localhost ni previews ;
+           - la page n'est pas dans l'espace résident/équipe (même liste que Clarity ci-dessous).
+         Trafic interne : ?internal=1 pose localStorage.lvc_internal (?internal=0 le retire), une
+         connexion admin au dashboard aussi ; ?test=1 et la session de test lvc_test_session
+         comptent aussi → traffic_type: 'internal' (filtre de données GA4) et pas de Clarity.
+         ?ga_debug=1 (mémorisé dans l'onglet) force GA4 partout, debug_mode + traffic_type internal :
+         seule porte pour DebugView et la capture réseau des vérifications.
+         Règles du script : aucun marqueur de commentaire HTML à l'intérieur (scripts/lib/html-comments.mjs
+         nettoie tout le <head>, scripts compris), stockages toujours sous try/catch, syntaxe ES5.
+         Tests : tools/test/analytics-guard.test.mjs. -->
+    <script id="lvc-analytics">
+      (function (w, d, n, l) {
+        var ID = "G-HW98R11W6M";
+        w.dataLayer = w.dataLayer || [];
+        w.gtag = function () { w.dataLayer.push(arguments); };
+        function qp(k) { var m = new RegExp("[?&]" + k + "=([^&#]*)").exec(l.search); return m ? m[1] : null; }
+        function get(s, k) { try { var x = w[s]; return x ? x.getItem(k) : null; } catch (e) { return null; } }
+        function put(s, k, v) { try { var x = w[s]; if (x) { if (v === null) x.removeItem(k); else x.setItem(k, v); } } catch (e) {} }
+        if (qp("internal") === "1") put("localStorage", "lvc_internal", "1");
+        if (qp("internal") === "0") put("localStorage", "lvc_internal", null);
+        if (qp("ga_debug") === "1") put("sessionStorage", "lvc_ga_debug", "1");
+        if (qp("ga_debug") === "0") put("sessionStorage", "lvc_ga_debug", null);
+        var debug = qp("ga_debug") === "1" || get("sessionStorage", "lvc_ga_debug") === "1";
+        var bot = n.webdriver === true || /[a-z]bot\/|bot-google|adsbot|mediapartners|storebot|crawler|spider|slurp|headless|lighthouse|inspectiontool|googleother|facebookexternalhit|bingpreview|chatgpt-user|phantomjs/i.test(n.userAgent || "");
+        var internal = debug || get("localStorage", "lvc_internal") === "1" || qp("test") === "1" || get("sessionStorage", "lvc_test_session") === "1";
+        var prod = /^(www\.)?lavillacoliving\.com$/.test(l.hostname);
+        var priv = /^\/(portail|dashboard|mon-espace|reset-password|questionnaire-depart)(\/|$)/.test(l.pathname);
+        var ga = debug || (!bot && prod && !priv);
+        w.__lvcAnalytics = { ga: ga, internal: internal, bot: bot, debug: debug };
+        if (!ga) return;
+        var s = d.createElement("script");
+        s.async = true;
+        s.src = "https://www.googletagmanager.com/gtag/js?id=" + ID;
+        d.head.appendChild(s);
+        w.gtag("js", new Date());
+        var c = {};
+        if (internal) c.traffic_type = "internal";
+        if (debug) c.debug_mode = true;
+        w.gtag("config", ID, c);
+      })(window, document, navigator, location);
     </script>
 
     <!-- Microsoft Clarity — INTÉGRATION TEMPORAIRE (24/08/2026).
@@ -21,11 +55,16 @@
          cause côté atterrissage (rebond immédiat / lecture sans formulaire / formulaire
          abandonné). Clarity n'enregistre que vers l'avant : l'autopsie du passé passe par GA4.
 
-         DÉSINSTALLATION PRÉVUE MI-SEPTEMBRE 2026, à la clôture de l'enquête. Retirer alors :
+         DÉSINSTALLATION : prévue mi-septembre, REPORTÉE par Jérôme le 30/09/2026 — pas avant J+28 du
+         lot A (les enregistrements de /candidature servent à lire l'hésitation en fin de formulaire).
+         Retirer alors :
            1. ce bloc ;
            2. les mentions Clarity de src/pages/PolitiqueConfidentialitePage.tsx
               (sections 2d, 3, 4 et 7, en FR ET en EN) ;
            3. la ligne correspondante de ../lavilla-docs/Infrastructure_LaVilla.md section 9 bis.
+
+         Lot C (01/10/2026) : ni navigateur automatisé ou robot, ni trafic interne (drapeaux lus dans
+         window.__lvcAnalytics, posé par le script GA4 ci-dessus).
 
          Deux gardes volontaires (GO Jérôme du 24/08/2026) :
 
@@ -41,8 +80,10 @@
             texte rendu. Limite assumée de cette version « simple » : le test n'a lieu qu'au
             chargement, donc une navigation SPA depuis / vers /portail reste enregistrée.
             L'étanchéité complète demanderait clarity("stop") sur changement de route. -->
-    <script type="text/javascript">
+    <script id="lvc-clarity" type="text/javascript">
       (function () {
+        var g = window.__lvcAnalytics || {};
+        if (g.bot || g.internal) return;
         if (window.location.hostname !== "www.lavillacoliving.com") return;
         if (/^\/(portail|dashboard|mon-espace|reset-password|questionnaire-depart)(\/|$)/.test(window.location.pathname)) return;
         (function(c,l,a,r,i,t,y){
@@ -52,7 +93,6 @@
         })(window, document, "clarity", "script", "y7eiydr6dv");
       })();
     </script>
-    <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="theme-color" content="#000000" />
 

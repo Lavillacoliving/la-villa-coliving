@@ -12,6 +12,13 @@
 //   - sessionStorage, PAS localStorage : un revenant J+3 compte organique — biais
 //     conservateur voulu (on sous-compte le payant, on ne pollue jamais le juge
 //     organique = les candidatures nettes du bulletin) ;
+//     → AMENDÉ le 30/09/2026 (GO Jérôme, brief « Formulaire, hydratation, mesure », Lot C.4) :
+//       sessionStorage reste la vérité de l'onglet, mais une COPIE localStorage
+//       (`lvc_first_touch`, 30 min glissantes d'inactivité) amorce un onglet neuf — un lien
+//       ouvert dans un nouvel onglet garde sa page d'atterrissage et sa première touche
+//       (cas réel : candidature EN du 14/09). Le revenant J+3 reste organique (copie expirée) ;
+//       un onglet qui arrive avec ses propres utm_* / gclid n'est jamais amorcé. Voir
+//       seedFromMirror() / touchMirror() en fin de fichier ;
 //   - aucune normalisation hors trim + 256 caractères (l'Edge Function fait pareil).
 //
 // À la soumission, JoinPageV4 joint ces champs au payload de `send-candidature-email`
@@ -368,5 +375,101 @@ export function isTestSession(): boolean {
     return store.getItem(TEST_SESSION_STORAGE_KEY) === "1";
   } catch {
     return false;
+  }
+}
+
+// ── Première touche entre onglets (Lot C.4, 30/09/2026 — GO Jérôme, version hybride) ────────
+// sessionStorage reste la vérité de chaque onglet (rien ne change dans un onglet). Une copie
+// localStorage de `lvc_attribution` + `lvc_landing`, rafraîchie à chaque chargement et à chaque
+// navigation SPA, sert UNIQUEMENT à amorcer un onglet neuf ouvert pendant la même visite
+// (30 min sans activité au plus, comme une session GA4). Exclus : le marqueur de test (une
+// soumission de test passe toujours par /candidature?test=1) et tout onglet qui arrive avec
+// ses propres utm_* / gclid (une campagne explicite démarre sa propre première touche).
+
+export const FIRST_TOUCH_MIRROR_KEY = "lvc_first_touch";
+/** Inactivité au-delà de laquelle la copie n'amorce plus rien (30 min, comme une session GA4). */
+export const FIRST_TOUCH_TTL_MS = 30 * 60 * 1000;
+
+interface FirstTouchMirror {
+  attribution?: StoredAttribution;
+  landing?: StoredLanding;
+  /** Dernière activité (ISO 8601) dans un onglet du site — l'expiration est glissante. */
+  last_seen_at: string;
+}
+
+function mirrorStorage(): Storage | null {
+  try {
+    if (typeof window === "undefined" || !window.localStorage) return null;
+    return window.localStorage;
+  } catch {
+    return null;
+  }
+}
+
+/** Copie encore fraîche, ou `null` (absente, illisible, expirée, horloge incohérente). */
+function readMirror(now: number): FirstTouchMirror | null {
+  const store = mirrorStorage();
+  if (!store) return null;
+  try {
+    const raw = store.getItem(FIRST_TOUCH_MIRROR_KEY);
+    if (!raw) return null;
+    const parsed: unknown = JSON.parse(raw);
+    if (!parsed || typeof parsed !== "object") return null;
+    const mirror = parsed as FirstTouchMirror;
+    const seen = Date.parse(mirror.last_seen_at ?? "");
+    if (!Number.isFinite(seen) || now - seen > FIRST_TOUCH_TTL_MS || seen - now > 5 * 60 * 1000) return null;
+    return mirror;
+  } catch {
+    return null;
+  }
+}
+
+/**
+ * Amorce un onglet NEUF depuis la copie partagée (appelée dans main.tsx AVANT les captures,
+ * qui restent write-once). Sans effet si l'onglet porte déjà une première touche, si l'URL
+ * porte des utm_* / gclid, ou si la copie est expirée. Renvoie true si l'onglet a été amorcé.
+ */
+export function seedFromMirror(search: string = window.location.search, now: number = Date.now()): boolean {
+  const store = storage();
+  if (!store) return false;
+  try {
+    if (store.getItem(ATTRIBUTION_STORAGE_KEY) || store.getItem(LANDING_STORAGE_KEY)) return false;
+    if (parseAttributionParams(search)) return false;
+    const mirror = readMirror(now);
+    if (!mirror) return false;
+    let seeded = false;
+    if (mirror.attribution && typeof mirror.attribution === "object") {
+      store.setItem(ATTRIBUTION_STORAGE_KEY, JSON.stringify(mirror.attribution));
+      seeded = true;
+    }
+    if (mirror.landing && typeof mirror.landing.landing_page === "string") {
+      store.setItem(LANDING_STORAGE_KEY, JSON.stringify(mirror.landing));
+      seeded = true;
+    }
+    return seeded;
+  } catch {
+    return false;
+  }
+}
+
+/**
+ * Recopie la première touche de l'onglet dans la copie partagée et repousse son expiration
+ * (main.tsx après les captures, InternalRefCapture à chaque navigation SPA).
+ */
+export function touchMirror(now: number = Date.now()): void {
+  const store = mirrorStorage();
+  if (!store) return;
+  try {
+    const attribution = getStoredAttribution();
+    const landing = getStoredLanding();
+    if (!attribution && !landing) return;
+    const record: FirstTouchMirror = {
+      ...(attribution ? { attribution } : {}),
+      ...(landing ? { landing } : {}),
+      last_seen_at: new Date(now).toISOString(),
+    };
+    store.setItem(FIRST_TOUCH_MIRROR_KEY, JSON.stringify(record));
+  } catch {
+    /* noop — l'attribution ne casse jamais la page */
   }
 }

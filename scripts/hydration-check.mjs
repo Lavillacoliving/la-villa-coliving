@@ -22,6 +22,7 @@ import fs from 'fs/promises';
 import path from 'path';
 import http from 'http';
 import { fileURLToPath } from 'url';
+import { blockAnalytics } from './lib/block-analytics.mjs';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const ROOT = path.join(__dirname, '..');
@@ -112,6 +113,8 @@ async function main() {
       const page = await browser.newPage();
       await page.setViewport(cfg.viewport);
       await page.setUserAgent(cfg.ua);
+      // Lot C (01/10/2026) : aucun hit GA4/Clarity (ex-« 390×844 » et « 1440×900 » de GA4).
+      await blockAnalytics(page);
       const hits = [];
       page.on('console', (m) => { if (['error', 'warning'].includes(m.type()) && HYDRATION_RE.test(m.text())) hits.push(m.text()); });
       page.on('pageerror', (e) => { if (HYDRATION_RE.test(e.message)) hits.push(e.message); });

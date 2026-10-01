@@ -15,6 +15,7 @@
  */
 
 import { stripAuthoringComments } from './lib/html-comments.mjs';
+import { blockAnalytics } from './lib/block-analytics.mjs';
 import fs from 'fs/promises';
 import path from 'path';
 import { fileURLToPath } from 'url';
@@ -464,6 +465,9 @@ function generateBreadcrumbJsonLd(route, html) {
 
 async function renderRoute(browser, route) {
   const page = await browser.newPage();
+  // Lot C (01/10/2026) : aucun hit GA4/Clarity depuis le prérendu (ex-« 800×600 » de GA4) — la garde
+  // d'index.html ne charge déjà rien sous automatisation ; ceci est la seconde ceinture.
+  await blockAnalytics(page);
   try {
     await page.goto(`${BASE_URL}${route}`, {
       waitUntil: 'networkidle0',

@@ -3,7 +3,7 @@ import { createRoot, hydrateRoot } from "react-dom/client";
 import "./index.css";
 import App from "./App.tsx";
 import { preloadRouteModule } from "@/lib/routePreload";
-import { captureAttribution, captureInternalRef, captureLanding, captureTestFlag } from "@/lib/attribution";
+import { captureAttribution, captureInternalRef, captureLanding, captureTestFlag, seedFromMirror, touchMirror } from "@/lib/attribution";
 import { recoverFromChunkError } from "@/lib/lazyWithRetry";
 
 // Attribution Ads (utm_* + gclid) et marqueur de test (?test=1) : capturés ICI, dès
@@ -11,6 +11,10 @@ import { recoverFromChunkError } from "@/lib/lazyWithRetry";
 // quelle que soit la page d'entrée (/, /en, blog, pages Annemasse…). First-touch de
 // session, write-once, sessionStorage (voir src/lib/attribution.ts). Aucun accès au DOM :
 // zéro impact sur l'hydratation. Brief UTM/GCLID du 22/08/2026 (prérequis Ads 25/08).
+// (Lot C.4, 30/09/2026) Un onglet NEUF ouvert pendant la visite reprend d'abord la première
+// touche partagée (copie localStorage, 30 min glissantes) — sauf s'il arrive avec ses propres
+// utm_* / gclid. Les captures ci-dessous restent write-once et inchangées.
+seedFromMirror();
 captureAttribution();
 captureTestFlag();
 // Lot 1 attribution (03/09/2026) : page d'atterrissage + referrer de la session (write-once,
@@ -19,6 +23,8 @@ captureTestFlag();
 // (captureAttribution, ci-dessus) prime toujours sur l'interne.
 captureLanding();
 captureInternalRef();
+// (Lot C.4) Copie partagée rafraîchie après les captures (expiration glissante).
+touchMirror();
 
 // Lot C (02/09/2026) — dépendance préchargée introuvable (Vite émet `vite:preloadError` quand un
 // <link rel="modulepreload"> d'un import dynamique échoue, typiquement un chunk renommé par un
