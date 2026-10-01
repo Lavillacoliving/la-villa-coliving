@@ -29,6 +29,7 @@
 import { useEffect, useSyncExternalStore } from "react";
 import { supabase } from "@/lib/supabase";
 import { readEmbeddedArray } from "@/lib/prerenderEmbeddedState";
+import { MONTHS_EN, MONTHS_FR } from "@/lib/dates";
 
 export const AVAILABILITY_EMBED_ID = "__room_availability_data__";
 // (Lot 3) Lignes chambres de LA maison rendue, embarquées par sa page prérendue
@@ -467,14 +468,7 @@ export function roomBadge(room: PublicRoom, lang: "fr" | "en"): { label: string;
 
 // ── Libellés (FR/EN) ───────────────────────────────────────────────────────
 
-const MONTHS_FR = [
-  "janvier", "février", "mars", "avril", "mai", "juin",
-  "juillet", "août", "septembre", "octobre", "novembre", "décembre",
-];
-const MONTHS_EN = [
-  "January", "February", "March", "April", "May", "June",
-  "July", "August", "September", "October", "November", "December",
-];
+// Noms des mois : source unique src/lib/dates.ts (Lot B, 01/10/2026).
 
 /**
  * « 10 septembre » / « September 10 » à partir de « YYYY-MM-DD ».

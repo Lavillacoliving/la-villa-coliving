@@ -5,7 +5,7 @@ import { localizePath } from "@/lib/localizedPath";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { supabase } from "@/lib/supabase";
 import { Clock, Calendar, User, ArrowLeft } from "lucide-react";
-import ReactMarkdown from "react-markdown";
+import ReactMarkdown, { defaultUrlTransform } from "react-markdown";
 import remarkGfm from "remark-gfm";
 import { Helmet } from "react-helmet";
 import { SEO } from "@/components/SEO";
@@ -21,6 +21,13 @@ import { resolveContentTokens } from "@/lib/contentTokens";
 import { EntityFacts } from "@/components/EntityFacts";
 import { ENTITY_FACTS_ARTICLES, fallbackEntityFactsCut } from "@/data/entityFactsArticles";
 import { NotFoundPage } from "@/pages/NotFoundPage";
+import { formatLongDate } from "@/lib/dates";
+
+// (Lot B, 01/10/2026) react-markdown neutralise les liens tel: (liste de protocoles sûrs) : on les
+// autorise pour les numéros utiles des guides, liés explicitement depuis que format-detection
+// (index.html) empêche iOS de les transformer en liens — et de casser l'hydratation.
+const blogUrlTransform = (url: string): string =>
+  /^tel:\+?[0-9 .-]{6,20}$/i.test(url) ? url : defaultUrlTransform(url);
 
 interface Post {
   id:string; slug:string;
@@ -309,7 +316,8 @@ export function BlogPostPage() {
   const metaDescription = language==="en"
     ? (post.meta_description_en || excerpt)
     : (post.meta_description_fr || excerpt);
-  const fmtD = (d:string) => new Date(d).toLocaleDateString(language==="en"?"en-US":"fr-FR",{year:"numeric",month:"long",day:"numeric"});
+  // (Lot B, 01/10/2026) Date calendaire de Paris, mise en forme maison : identique au prérendu sur tout appareil.
+  const fmtD = (d:string) => formatLongDate(d, language==="en"?"en":"fr");
 
   // Localize language-neutral internal paths for the EN site (/x → /en/x).
   const loc = (p: string) => localizePath(p, language);
@@ -400,6 +408,10 @@ export function BlogPostPage() {
         // Content stores language-neutral paths; on the EN site, prefix /en so
         // anglophone readers stay on EN pages (every FR route has an /en twin).
         return <LocalizedLink to={loc(internalPath)} className="text-[#D4A574] hover:underline">{children}</LocalizedLink>;
+      }
+      // (Lot B) Numéro de téléphone : lien natif, même onglet.
+      if (href && href.startsWith('tel:')) {
+        return <a href={href} className="text-[#D4A574] hover:underline">{children}</a>;
       }
       // External links open in new tab
       return <a href={href} className="text-[#D4A574] hover:underline" target="_blank" rel="noopener noreferrer">{children}</a>;
@@ -571,12 +583,12 @@ export function BlogPostPage() {
               let prev = 0;
               cuts.forEach((c, i) => {
                 const slice = content.slice(prev, c.at);
-                if (slice.trim()) out.push(<ReactMarkdown key={`md-${i}`} remarkPlugins={[remarkGfm]} components={mdComponents}>{slice}</ReactMarkdown>);
+                if (slice.trim()) out.push(<ReactMarkdown key={`md-${i}`} remarkPlugins={[remarkGfm]} components={mdComponents} urlTransform={blogUrlTransform}>{slice}</ReactMarkdown>);
                 out.push(<Fragment key={`cut-${i}`}>{c.node}</Fragment>);
                 prev = c.at + c.len;
               });
               const tail = content.slice(prev);
-              if (tail.trim()) out.push(<ReactMarkdown key="md-tail" remarkPlugins={[remarkGfm]} components={mdComponents}>{tail}</ReactMarkdown>);
+              if (tail.trim()) out.push(<ReactMarkdown key="md-tail" remarkPlugins={[remarkGfm]} components={mdComponents} urlTransform={blogUrlTransform}>{tail}</ReactMarkdown>);
               // Article de l'allowlist sans titre dans les 40 % finaux : le bloc ferme l'article.
               if (!entityCut && ENTITY_FACTS_ARTICLES.has(post.slug)) out.push(<EntityFacts key="entity-facts-tail" page={post.slug} />);
               return out;

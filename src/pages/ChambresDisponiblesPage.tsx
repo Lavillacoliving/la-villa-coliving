@@ -1,5 +1,6 @@
 import { EntityFacts } from "@/components/EntityFacts";
-import { lazy, Suspense, useState, useSyncExternalStore } from "react";
+import { lazy, Suspense, useState } from "react";
+import { useHydrated } from "@/hooks/useHydrated";
 import { useSearchParams } from "react-router-dom";
 import { ArrowRight, Check } from "lucide-react";
 import { SEO } from "@/components/SEO";
@@ -46,10 +47,8 @@ type BathFilter = "privative" | "partagee";
 const isHouseKey = (v: string | null): v is HouseKey => v === "lavilla" || v === "leloft" || v === "lelodge";
 const isBathFilter = (v: string | null): v is BathFilter => v === "privative" || v === "partagee";
 
-// `true` seulement après hydratation : pendant l'hydratation React lit le snapshot serveur
-// (false) → premier rendu client = HTML prérendu (liste complète), puis re-rendu filtré.
-const noopSubscribe = () => () => {};
-const useHydrated = () => useSyncExternalStore(noopSubscribe, () => true, () => false);
+// `true` seulement après hydratation (src/hooks/useHydrated.ts) : pendant l'hydratation React lit
+// le snapshot serveur (false) → premier rendu client = HTML prérendu (liste complète), puis re-rendu filtré.
 
 function track(event: string, params: Record<string, unknown>) {
   try {

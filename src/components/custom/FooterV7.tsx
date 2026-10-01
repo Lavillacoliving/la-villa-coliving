@@ -6,6 +6,7 @@ import { Instagram, Mail, MapPin, Phone } from "lucide-react";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { colocGeneveHref } from "@/lib/siteLinks";
 import { applyHref, trackApplyClick } from "@/lib/houseContext";
+import { RenderMonthEmbed, useRenderMonth } from "@/lib/renderMonth";
 
 /**
  * VERSION 9: STONE & BRASS — CONDO PREMIUM
@@ -14,6 +15,10 @@ import { applyHref, trackApplyClick } from "@/lib/houseContext";
 
 export function FooterV7() {
   const { language } = useLanguage();
+  // (Lot B, 01/10/2026) Année du copyright = mois embarqué par le prérendu (hydratation identique,
+  // même au 1ᵉʳ janvier avant le prérendu de 05:00 UTC), resynchronisé après l'hydratation. Le pied
+  // de page porte l'embed __render_month__ pour toutes les pages (aussi lu par /tarifs).
+  const renderMonth = useRenderMonth();
   const location = useLocation();
   // Lot A (Q9) : sur une page maison, les CTA portent ?property_interest=<slug>.
   const applyTo = applyHref(location.pathname);
@@ -180,7 +185,7 @@ export function FooterV7() {
         {/* Bottom */}
         <div className="mt-16 pt-8 border-t border-white/[0.08] flex flex-col md:flex-row items-center justify-between gap-4">
           <p className="text-[#A8A29E] text-sm">
-            &copy; {new Date().getFullYear()} La Villa Coliving.{" "}
+            &copy; {renderMonth.slice(0, 4)} La Villa Coliving.{" "}
             {language === "en"
               ? "Made in Grand Genève."
               : "Fait au Grand Genève."}
@@ -212,6 +217,7 @@ export function FooterV7() {
           </p>
         </div>
       </div>
+      <RenderMonthEmbed month={renderMonth} />
     </footer>
   );
 }

@@ -54,6 +54,27 @@ const ROUTES = [
 // le 404.html prérendu, comme en production : un slug d'article inconnu (BlogPostPage démarre sur la
 // vue « introuvable », identique au 404) et une page inconnue (NotFoundPage), en FR et en EN (le 404
 // est prérendu en français : main.tsx fait un rendu client sur /en/… au lieu d'hydrater).
+// (Lot B, 01/10/2026) URL AVEC query : servies, comme sur Vercel, par le snapshot SANS query (le serveur
+// ci-dessous ignore la query). L'en-tête contextuel de /candidature (maison, chambre, liste d'attente,
+// chambre partie, slug piégé) ne doit plus jamais diverger du HTML prérendu (#418 du 30/09).
+const QUERY_ROUTES = [
+  '/candidature?property_interest=lelodge',
+  '/candidature?property_interest=leloft&room_interest=chambre-5',
+  '/candidature?property_interest=lavilla&room_interest=liste-attente',
+  '/candidature?property_interest=lelodge&room_interest=chambre-99',
+  '/en/candidature?property_interest=leloft&room_interest=chambre-2',
+  '/candidature?property_interest=constructor',
+];
+
+// (Lot B) Index du blog et articles qui citent un numéro de téléphone (format-detection, liens tel:).
+const BLOG_ROUTES = ['/blog', '/en/blog', '/blog/guide-ressources-frontalier-geneve', '/en/blog/guide-ressources-frontalier-geneve'];
+
+// (Lot B) Horloge décalée : le lecteur charge la page des semaines après le prérendu (changement de mois
+// et d'année). Tout texte calculé avec new Date() au rendu (année du pied de page, mois de /tarifs)
+// divergerait du HTML — il doit venir du mois embarqué (src/lib/renderMonth.tsx).
+const CLOCK_SHIFT_DAYS = 95;
+const CLOCK_SHIFT_ROUTES = ['/', '/tarifs', '/en/tarifs', '/candidature?property_interest=lelodge'];
+
 const NOT_FOUND_ROUTES = [
   '/blog/article-inexistant-garde-hydratation',
   '/page-inexistante-garde-hydratation',
@@ -80,7 +101,7 @@ async function main() {
   const puppeteer = (await import('puppeteer')).default;
   // Premier article de blog publié (prérendu) : couvre BlogPostPage et son embed.
   const blogFile = (await fs.readdir(PRERENDERED)).filter((f) => /^blog-.*\.html$/.test(f)).sort()[0];
-  const routes = [...(blogFile ? [...ROUTES, `/blog/${blogFile.replace(/^blog-/, '').replace(/\.html$/, '')}`] : ROUTES), ...NOT_FOUND_ROUTES];
+  const routes = [...(blogFile ? [...ROUTES, `/blog/${blogFile.replace(/^blog-/, '').replace(/\.html$/, '')}`] : ROUTES), ...QUERY_ROUTES, ...BLOG_ROUTES, ...NOT_FOUND_ROUTES];
 
   const server = http.createServer(async (req, res) => {
     const url = decodeURIComponent(req.url.split('?')[0]);
@@ -106,31 +127,46 @@ async function main() {
     mobile: { viewport: { width: 390, height: 844, deviceScaleFactor: 2, isMobile: true, hasTouch: true }, ua: 'Mozilla/5.0 (Linux; Android 13; SM-S911B) AppleWebKit/537.36 (KHTML, like Gecko) SamsungBrowser/23.0 Chrome/115.0.0.0 Mobile Safari/537.36' },
     desktop: { viewport: { width: 1440, height: 900 }, ua: 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/128.0 Safari/537.36 Edg/128.0' },
   };
-  console.log(`\n💧 Garde hydratation — ${routes.length} routes × ${Object.keys(DEVICES).length} profils\n`);
+  console.log(`\n💧 Garde hydratation — ${routes.length} routes × ${Object.keys(DEVICES).length} profils + ${CLOCK_SHIFT_ROUTES.length} routes à l'horloge +${CLOCK_SHIFT_DAYS} j\n`);
   const failures = [];
-  for (const route of routes) {
-    for (const [device, cfg] of Object.entries(DEVICES)) {
-      const page = await browser.newPage();
-      await page.setViewport(cfg.viewport);
-      await page.setUserAgent(cfg.ua);
-      // Lot C (01/10/2026) : aucun hit GA4/Clarity (ex-« 390×844 » et « 1440×900 » de GA4).
-      await blockAnalytics(page);
-      const hits = [];
-      page.on('console', (m) => { if (['error', 'warning'].includes(m.type()) && HYDRATION_RE.test(m.text())) hits.push(m.text()); });
-      page.on('pageerror', (e) => { if (HYDRATION_RE.test(e.message)) hits.push(e.message); });
-      try {
-        await page.goto(`http://localhost:${PORT}${route}`, { waitUntil: 'networkidle0', timeout: 45000 });
-        await new Promise((r) => setTimeout(r, 2000));
-        const hydrated = await page.evaluate(() => !!document.getElementById('root')?.children.length);
-        if (!hydrated) hits.push('#root vide après chargement');
-      } catch (e) {
-        hits.push(`chargement : ${e.message}`);
-      }
-      await page.close();
-      const ok = hits.length === 0;
-      console.log(`${ok ? '✅' : '❌'} ${route} [${device}]${ok ? '' : ` — ${hits[0].split('\n')[0].slice(0, 160)}`}`);
-      if (!ok) failures.push({ route, device, message: hits[0].slice(0, 2000) });
+  const runs = [
+    ...routes.flatMap((route) => Object.keys(DEVICES).map((device) => ({ route, device, shift: 0 }))),
+    ...CLOCK_SHIFT_ROUTES.map((route) => ({ route, device: 'desktop', shift: CLOCK_SHIFT_DAYS })),
+  ];
+  for (const { route, device: profile, shift } of runs) {
+    const cfg = DEVICES[profile];
+    const device = shift ? `${profile}, horloge +${shift} j` : profile;
+    const page = await browser.newPage();
+    await page.setViewport(cfg.viewport);
+    await page.setUserAgent(cfg.ua);
+    if (shift) {
+      // Date décalée AVANT tout script de la page (new Date(), Date.now()).
+      await page.evaluateOnNewDocument((ms) => {
+        const RealDate = Date;
+        class ShiftedDate extends RealDate {
+          constructor(...args) { if (args.length === 0) super(RealDate.now() + ms); else super(...args); }
+          static now() { return RealDate.now() + ms; }
+        }
+        globalThis.Date = ShiftedDate;
+      }, shift * 86400000);
     }
+    // Lot C (01/10/2026) : aucun hit GA4/Clarity (ex-« 390×844 » et « 1440×900 » de GA4).
+    await blockAnalytics(page);
+    const hits = [];
+    page.on('console', (m) => { if (['error', 'warning'].includes(m.type()) && HYDRATION_RE.test(m.text())) hits.push(m.text()); });
+    page.on('pageerror', (e) => { if (HYDRATION_RE.test(e.message)) hits.push(e.message); });
+    try {
+      await page.goto(`http://localhost:${PORT}${route}`, { waitUntil: 'networkidle0', timeout: 45000 });
+      await new Promise((r) => setTimeout(r, 2000));
+      const hydrated = await page.evaluate(() => !!document.getElementById('root')?.children.length);
+      if (!hydrated) hits.push('#root vide après chargement');
+    } catch (e) {
+      hits.push(`chargement : ${e.message}`);
+    }
+    await page.close();
+    const ok = hits.length === 0;
+    console.log(`${ok ? '✅' : '❌'} ${route} [${device}]${ok ? '' : ` — ${hits[0].split('\n')[0].slice(0, 160)}`}`);
+    if (!ok) failures.push({ route, device, message: hits[0].slice(0, 2000) });
   }
   await browser.close();
   server.close();

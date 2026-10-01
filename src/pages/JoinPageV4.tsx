@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState, type FormEvent } from "react";
+import { useEffect, useLayoutEffect, useRef, useState, type FormEvent } from "react";
 import { useSearchParams } from "react-router-dom";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { ArrowRight, Check, Shield, Loader2, Star, Users, Calendar, ChevronDown, ChevronUp, MessageCircle, Sparkles } from "lucide-react";
@@ -11,6 +11,7 @@ import { housePriceLabel } from "@/lib/housePrice";
 import { attributionPayload, internalRefPayload, isTestSession, landingPayload } from "@/lib/attribution";
 import { HOUSES } from "@/data/houses";
 import { CandidatureDetails } from "@/components/CandidatureDetails";
+import { useHydrated } from "@/hooks/useHydrated";
 
 type FormStatus = "idle" | "submitting" | "success" | "error";
 
@@ -82,9 +83,26 @@ export function JoinPageV4() {
   }, [status]);
   // En-tête contextuel (Lot 1d) : quand le candidat arrive d'un CTA maison ou
   // chambre, le formulaire accuse réception de son choix (continuité du
-  // parcours). Slug inconnu → pas d'en-tête, jamais d'erreur. Aucune donnée
-  // dynamique dedans : rendu serveur/client identique, zéro risque #418.
-  const contextHouse = (HOUSES as Record<string, (typeof HOUSES)[keyof typeof HOUSES]>)[refProperty] ?? null;
+  // parcours). Slug inconnu → pas d'en-tête, jamais d'erreur.
+  // (Lot B, 01/10/2026) Rendu APRÈS l'hydratation : Vercel sert le MÊME HTML prérendu, sans
+  // query, pour /candidature?… — calculer l'en-tête au premier rendu le rendait différent du HTML
+  // et React jetait tout le contenu de la page, formulaire compris (#418 à chaque chargement
+  // direct d'un lien maison ou chambre). En navigation interne (cas le plus fréquent), useHydrated
+  // vaut déjà true : l'en-tête s'affiche au premier rendu. Au chargement direct, sa hauteur est
+  // réservée dès la première peinture par la classe `lvc-cand-ctx` (script #lvc-cand-ctx
+  // d'index.html + src/index.css). La réservation reste tant que l'en-tête est affiché (aucun
+  // rétrécissement au montage) et tombe dès qu'il disparaît (navigation SPA vers /candidature sans
+  // maison, départ de la page). hasOwnProperty : `?property_interest=constructor` ne remonte plus
+  // au prototype.
+  const hydrated = useHydrated();
+  const contextHouse = hydrated && Object.prototype.hasOwnProperty.call(HOUSES, refProperty)
+    ? (HOUSES as Record<string, (typeof HOUSES)[keyof typeof HOUSES]>)[refProperty]
+    : null;
+  useLayoutEffect(() => {
+    if (!hydrated || contextHouse) return;
+    document.documentElement.classList.remove("lvc-cand-ctx");
+  }, [hydrated, contextHouse]);
+  useLayoutEffect(() => () => document.documentElement.classList.remove("lvc-cand-ctx"), []);
   const contextRoomNum = refRoom.match(/^chambre-?(\d+)$/)?.[1] ?? null;
   // (Lot 3 SEO funnel — Q3) Liste d'attente d'une maison, et chambre partie entre le clic et
   // le formulaire : `useHouseRooms` n'a aucune donnée au premier rendu sur cette page (pas
@@ -286,7 +304,9 @@ export function JoinPageV4() {
           </div>
 
           {/* En-tête contextuel (Lot 1d) — accuse réception du choix maison/chambre
-              porté par ?property_interest (± room_interest). */}
+              porté par ?property_interest (± room_interest). (Lot B) Emplacement toujours rendu,
+              vide dans le HTML prérendu : hauteur réservée par html.lvc-cand-ctx (index.css). */}
+          <div className="cand-ctx-slot">
           {contextHouse && (
             <div className="mb-6 bg-white border border-[#E7E5E4] p-4 flex items-center gap-4">
               <img
@@ -323,6 +343,7 @@ export function JoinPageV4() {
               </div>
             </div>
           )}
+          </div>
 
           {/* Reassurance strip */}
           <div className="flex flex-wrap justify-center gap-6 mb-8 text-sm text-[#57534E]">
@@ -403,7 +424,7 @@ export function JoinPageV4() {
             {/* Micro-réassurance (Lot 1d) — une ligne, uniquement quand le candidat
                 arrive sans contexte maison (l'en-tête contextuel la remplace sinon). */}
             {!contextHouse && (
-              <p className="text-xs text-[#78716C] text-center mb-6">
+              <p className="cand-micro text-xs text-[#78716C] text-center mb-6">
                 {language === "en"
                   ? "2 minutes is all it takes — reply within 48h."
                   : "2 minutes suffisent — réponse sous 48 h."}

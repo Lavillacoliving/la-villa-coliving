@@ -94,6 +94,22 @@
       })();
     </script>
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <!-- (Lot B, 01/10/2026) iOS Safari transforme les numéros, dates et adresses en liens AVANT
+         l'hydratation → mismatch #418 (texte) sur les articles qui citent un numéro en clair. Les
+         numéros utiles sont des liens tel: explicites (SQL scripts/blog-liens-tel-2026-10.sql). -->
+    <meta name="format-detection" content="telephone=no, date=no, email=no, address=no" />
+    <!-- (Lot B, 01/10/2026) /candidature?property_interest=<maison connue> : l'en-tête contextuel
+         n'est rendu qu'APRÈS l'hydratation (le HTML prérendu est commun à toutes les query strings).
+         Cette classe réserve sa hauteur et masque la micro-réassurance dès la première peinture
+         (src/index.css) ; JoinPageV4 la retire une fois l'en-tête monté. Liste des maisons = clés de
+         HOUSES (src/data/houses.ts), tenue synchronisée par tools/test/cand-ctx.test.mjs. -->
+    <script id="lvc-cand-ctx">
+      (function (l) {
+        if (!/^\/(en\/)?candidature\/?$/.test(l.pathname)) return;
+        var m = /[?&]property_interest=([^&#]*)/.exec(l.search);
+        if (m && /^(lavilla|leloft|lelodge)$/.test(m[1])) document.documentElement.classList.add("lvc-cand-ctx");
+      })(location);
+    </script>
     <meta name="theme-color" content="#000000" />
 
     <!-- Favicon -->
