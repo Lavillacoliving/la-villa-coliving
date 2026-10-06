@@ -8,10 +8,11 @@ import { STATS, STATS_DISPLAY, PRICE_SHARED_CHF_FR, PRICE_SHARED_CHF_EN, CONTRAC
 import { useFormTelemetry } from "@/hooks/useFormTelemetry";
 import { useRoomAvailability, useHouseRooms, shortAvailabilityLabel, type HouseKey } from "@/lib/availability";
 import { housePriceLabel } from "@/lib/housePrice";
-import { attributionPayload, internalRefPayload, isTestSession, landingPayload } from "@/lib/attribution";
+import { attributionPayload, internalRefPayload, isTestSession, landingPayload, storedOffer } from "@/lib/attribution";
 import { HOUSES } from "@/data/houses";
 import { CandidatureDetails } from "@/components/CandidatureDetails";
 import { useHydrated } from "@/hooks/useHydrated";
+import { OFFER_QUERY_KEY, OFFER_TEXTS, normalizeOffer } from "@/data/offer";
 
 type FormStatus = "idle" | "submitting" | "success" | "error";
 
@@ -71,6 +72,13 @@ export function JoinPageV4() {
   const refArrival = (["asap", "1-3-months", "3-6-months", "later"] as const).find(
     (v) => v === searchParams.get("arrival"),
   ) ?? "";
+  // Offre commerciale (brief « Pose tes valises avant l'hiver », 06/10/2026) : `?offre=hiver` posé par
+  // /offre-hiver, le bandeau et les cartes chambres de l'offre ; conservé pour la session si le candidat
+  // navigue avant de soumettre (src/lib/attribution.ts). Une valeur inconnue est ignorée en silence :
+  // un paramètre d'offre ne bloque jamais une candidature. Transmis à l'edge (v20) dans le payload
+  // (handleSubmit) et à GA4 (`offer` sur form_start / form_submit_click / form_submit via baseParams) —
+  // pas d'<input hidden>, dont la valeur différerait du HTML prérendu (même règle que `arrival`).
+  const refOffer = normalizeOffer(searchParams.get(OFFER_QUERY_KEY)) || normalizeOffer(storedOffer());
   // (Lot A) Jeton du mode « compléments » (edge v19), reçu au succès ; absent → pas de bloc.
   const [detailsToken, setDetailsToken] = useState<string | null>(null);
   // (Lot A) Carte de succès ramenée dans la vue : plus courte que le formulaire, elle pouvait
@@ -133,6 +141,8 @@ export function JoinPageV4() {
       ref_article: refArticle || "none",
       property_interest: refProperty || "none",
       room_interest: refRoom || "none",
+      // Offre (06/10/2026) — Jérôme l'enregistre en dimension personnalisée GA4.
+      offer: refOffer || "none",
     },
   });
 
@@ -155,6 +165,9 @@ export function JoinPageV4() {
     if (refRoom) payload.room_interest = refRoom;
     // (Lot A) Période pré-choisie sur une page maison, transmise sans être affichée.
     if (refArrival) payload.arrival = refArrival;
+    // Offre commerciale (06/10/2026) : champ `offer` ∈ {hiver} — l'edge v20 l'écrit dans prospects.notes
+    // (« Offre : … »), en tête de la notification admin et dans form_submissions.offer.
+    if (refOffer) payload.offer = refOffer;
     if (isTest) payload.isTest = "1";
     // Attribution technique Ads (utm_* + gclid) capturée à l'atterrissage de la session
     // (first-touch, sessionStorage — src/lib/attribution.ts) → colonnes dédiées côté base
@@ -588,6 +601,18 @@ export function JoinPageV4() {
               <div role="alert" className="mb-6 p-4 bg-red-50 border border-red-200 text-red-800 text-sm">
                 {errorMessage}
               </div>
+            )}
+
+            {/* Offre « Pose tes valises » (06/10/2026) — une ligne au-dessus du bouton quand
+                ?offre=hiver est présent (ou mémorisé pour la session). Rendue APRÈS l'hydratation :
+                le HTML prérendu de /candidature est commun à toutes les query strings (règle du Lot B). */}
+            {hydrated && refOffer === "hiver" && (
+              <p
+                data-offer-line
+                className="mb-4 px-4 py-3 bg-[#FAF9F6] border border-[#D4A574] text-sm text-[#1C1917] text-center"
+              >
+                {OFFER_TEXTS[L].formLine}
+              </p>
             )}
 
             {/* Submit — (Lot A) form_submit_click au clic, AVANT la validation native (Entrée

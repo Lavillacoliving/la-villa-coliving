@@ -14,6 +14,12 @@ interface SEOProps {
   jsonLd?: Record<string, unknown>;
   noindex?: boolean;
   /**
+   * Page noindex qui garde quand même sa canonical auto-référente (page d'offre temporaire
+   * /offre-hiver, brief du 06/10/2026 : « noindex, follow, canonical sur elle-même »). Toujours
+   * sans hreflang. inject-prerendered.mjs conserve la canonical trouvée dans le HTML prérendu.
+   */
+  selfCanonical?: boolean;
+  /**
    * Coupe le LocalBusiness générique quand la page émet déjà une fiche business
    * plus riche portant le même @id (cas de l'accueil : LodgingBusiness) —
    * sinon Google voit deux fiches concurrentes sur la même URL.
@@ -29,6 +35,7 @@ export function SEO({
   type = "website",
   jsonLd,
   noindex = false,
+  selfCanonical = false,
   omitLocalBusiness = false,
 }: SEOProps) {
   const { language } = useLanguage();
@@ -71,8 +78,8 @@ export function SEO({
         <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1" />
       )}
       <meta name="language" content={language} />
-      {/* Pas de canonical ni de hreflang sur une page noindex (404) */}
-      {!noindex && <link rel="canonical" href={siteUrl} />}
+      {/* Pas de canonical ni de hreflang sur une page noindex (404) — sauf canonical demandée (selfCanonical) */}
+      {(!noindex || selfCanonical) && <link rel="canonical" href={siteUrl} />}
 
       {/* Hreflang tags pour le SEO multilingue.
           Le miroir mécanique /en/X → /X ne vaut que si la page FR existe VRAIMENT :

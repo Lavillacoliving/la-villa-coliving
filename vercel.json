@@ -609,6 +609,14 @@
       "destination": "/prerendered/en-leloft-chambre-4.html"
     },
     {
+      "source": "/offre-hiver",
+      "destination": "/prerendered/offre-hiver.html"
+    },
+    {
+      "source": "/en/winter-offer",
+      "destination": "/prerendered/en-winter-offer.html"
+    },
+    {
       "source": "/portail",
       "destination": "/_spa.html"
     },
@@ -1333,6 +1341,24 @@
     },
     {
       "source": "/en/(lavilla|leloft|lelodge)/(chambre-[0-9]+)",
+      "headers": [
+        {
+          "key": "X-Robots-Tag",
+          "value": "noindex"
+        }
+      ]
+    },
+    {
+      "source": "/offre-hiver",
+      "headers": [
+        {
+          "key": "X-Robots-Tag",
+          "value": "noindex"
+        }
+      ]
+    },
+    {
+      "source": "/en/winter-offer",
       "headers": [
         {
           "key": "X-Robots-Tag",

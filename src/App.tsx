@@ -74,6 +74,10 @@ const ResetPasswordPage = lazyWithRetry(() => import("@/pages/ResetPasswordPage"
 // LP payante (brief LOT 2) — noindex, hors sitemap, aucun lien interne entrant.
 const ChambresDisponiblesPage = lazyWithRetry(() =>
   import("@/pages/ChambresDisponiblesPage").then(m => ({ default: m.ChambresDisponiblesPage })), "ChambresDisponiblesPage");
+// Offre « Pose tes valises avant l'hiver » (brief du 06/10/2026) : page temporaire, noindex + canonical
+// auto-référente, prérendue (liens Facebook/Ads). Slug EN différent : /en/winter-offer (src/lib/localizedPath.ts).
+const OfferHiverPage = lazyWithRetry(() =>
+  import("@/pages/OfferHiverPage").then(m => ({ default: m.OfferHiverPage })), "OfferHiverPage");
 
 function AppContent() {
   const location = useLocation();
@@ -117,6 +121,9 @@ function AppContent() {
             L'ancienne LP Ads /chambres-septembre redirige (301 dans vercel.json, Navigate en SPA). */}
         <Route path="/chambres-disponibles" element={<ChambresDisponiblesPage />} />
         <Route path="/chambres-septembre" element={<Navigate to="/chambres-disponibles" replace />} />
+        {/* Offre hiver (06/10/2026) — /winter-offer sans /en n'existe pas : renvoyé vers la page FR. */}
+        <Route path="/offre-hiver" element={<OfferHiverPage />} />
+        <Route path="/winter-offer" element={<Navigate to="/offre-hiver" replace />} />
         <Route path="/join-us" element={<Navigate to="/candidature" replace />} />
         <Route path="/blog" element={<BlogPage />} />
         <Route path="/blog/:slug" element={<BlogPostPage />} />
@@ -144,6 +151,8 @@ function AppContent() {
         <Route path="/en/candidature" element={<JoinPage />} />
         <Route path="/en/chambres-disponibles" element={<ChambresDisponiblesPage />} />
         <Route path="/en/rooms-september" element={<Navigate to="/en/chambres-disponibles" replace />} />
+        <Route path="/en/winter-offer" element={<OfferHiverPage />} />
+        <Route path="/en/offre-hiver" element={<Navigate to="/en/winter-offer" replace />} />
         <Route path="/en/blog" element={<BlogPage />} />
         <Route path="/en/blog/:slug" element={<BlogPostPage />} />
         <Route path="/en/lavilla" element={<HouseDetailPage />} />

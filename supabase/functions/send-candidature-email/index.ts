@@ -1,4 +1,21 @@
 // Supabase Edge Function — send-candidature-email
+// v20 — 06/10/2026 — Offre « Pose tes valises avant l'hiver » (brief Jérôme du 06/10, mise en ligne 07/10)
+//   CHANGEMENTS vs v19 :
+//   1. Payload optionnel `offer` ∈ { hiver } (posé par le front depuis `?offre=hiver`). Validé contre
+//      OFFER_LABELS : toute autre valeur est IGNORÉE sans erreur — un paramètre d'offre ne bloque
+//      jamais une candidature.
+//   2. `prospects.notes` : ligne « Offre : Pose tes valises (−30 % 1ᵉʳ mois, emménagement ≤ 30/11) »,
+//      EN TÊTE des notes (Fanny la lit en premier). Aucune colonne `prospects` ajoutée.
+//   3. Notification admin : la même ligne en tête de l'email (bandeau sous le titre), avant le tableau.
+//   4. `form_submissions.offer` (text NULL — migration scripts/migration-form-submissions-offer-2026-10-06.sql,
+//      à appliquer par Jérôme) : jointe à l'insert QUE si une offre est présente ; en tête de la cascade
+//      (« du plus récent au plus établi ») : si la colonne n'existe pas encore, l'insert est rejoué SANS
+//      elle — la candidature n'est jamais perdue pour un champ neuf. Sans offre, corps identiques à la v19.
+//   5. AUCUN changement de logique d'envoi, d'idempotence, du mode « compléments » ni des emails candidat.
+//   Rétrocompatible : un front v19 n'envoie pas `offer` → comportement v19 strictement identique.
+//   Tests hors production : tools/test/edge-candidature.test.mjs. Ordre de déploiement : migration
+//   (facultative, Jérôme) → merge sur main → déploiement v20 DEPUIS main (MCP, verify_jwt: true) →
+//   test express /candidature?test=1&offre=hiver → merge/déploiement du front.
 // v19 — 10/2026 — Formulaire allégé + 2 questions après l'envoi (Lot A du brief « Formulaire,
 //   hydratation, mesure » du 30/09/2026, plan + débrief validés par Jérôme le 30/09)
 //   CHANGEMENTS vs v18 :
@@ -238,6 +255,11 @@ const CONTACT_PREFERENCE_PHRASES: Record<"fr" | "en", Record<string, string>> = 
   fr: { whatsapp: "par WhatsApp", call: "par téléphone", email: "par email" },
   en: { whatsapp: "on WhatsApp", call: "by phone", email: "by email" },
 };
+// (v20) Offres commerciales — clés = valeurs du paramètre `?offre=` du site (src/data/offer.ts).
+// Libellé = la ligne écrite dans prospects.notes et en tête de la notification admin (brief §1).
+const OFFER_LABELS: Record<string, string> = {
+  "hiver": "Pose tes valises (−30 % 1ᵉʳ mois, emménagement ≤ 30/11)",
+};
 
 /** Lecture d'une table de libellés sans jamais remonter au prototype (« constructor »…). */
 function own(map: Record<string, string>, key: string): string | null {
@@ -337,7 +359,7 @@ function durationLabel(raw: string): string | null {
   return own(DURATION_LABELS, v) ?? v;
 }
 
-function buildAdminEmail(data: Record<string, string>, contactPref: string | null = null): string {
+function buildAdminEmail(data: Record<string, string>, contactPref: string | null = null, offerLabel: string | null = null): string {
   const arrival = arrivalLabel(data.arrival ?? "");
   const duration = durationLabel(data.duration ?? "");
   const stayRows: Array<[string, string]> = arrival || duration
@@ -378,6 +400,9 @@ function buildAdminEmail(data: Record<string, string>, contactPref: string | nul
         <h1 style="margin:4px 0 0 0;font-size:20px;font-weight:500;">${escapeHtml(data.firstName)} ${escapeHtml(data.lastName)}</h1>
       </td>
     </tr>
+    ${offerLabel ? `<tr>
+      <td style="padding:12px 30px;background:#F5E7D3;border-bottom:1px solid #E7E5E4;font-size:14px;color:#7A5215;"><strong>Offre : ${escapeHtml(offerLabel)}</strong></td>
+    </tr>` : ""}
     <tr>
       <td style="padding:24px 30px;">
         <table cellspacing="0" cellpadding="0" border="0" width="100%">${tableRows}</table>
@@ -852,6 +877,14 @@ Deno.serve(async (req: Request) => {
   const contactPrefRaw = String(data.contact_preference ?? "").trim().toLowerCase();
   const contactPref = own(CONTACT_PREFERENCE_LABELS, contactPrefRaw) !== null ? contactPrefRaw : null;
 
+  // (v20) Offre commerciale (`?offre=hiver` → payload `offer`) : validée contre OFFER_LABELS, une valeur
+  // hors liste est ignorée SANS erreur — un paramètre d'offre ne bloque jamais une candidature.
+  const offerRaw = String(data.offer ?? "").trim().toLowerCase();
+  const offer: string | null = own(OFFER_LABELS, offerRaw) !== null ? offerRaw : null;
+  const offerLabel: string | null = offer ? OFFER_LABELS[offer] : null;
+  const withoutOffer = (body: Record<string, unknown>): Record<string, unknown> =>
+    Object.fromEntries(Object.entries(body).filter(([k]) => k !== "offer"));
+
   // Idempotence (v15) : uuid v4 posé par le front (sessionStorage, au premier clic
   // submit, réutilisé tant que le succès n'est pas reçu — livré avec le lot 1b).
   // Format validé ici ; absent ou invalide → null (ancien front) : pas
@@ -929,7 +962,8 @@ Deno.serve(async (req: Request) => {
     ...(extraRecipients.cc.length > 0 ? { cc: extraRecipients.cc } : {}),
     reply_to: data.email,
     subject: `${isTest ? "[TEST] " : ""}[Candidature] ${data.firstName} ${data.lastName}`,
-    html: buildAdminEmail(data, contactPref),
+    // (v20) La ligne « Offre : … » en tête de l'email quand une offre est présente.
+    html: buildAdminEmail(data, contactPref, offerLabel),
   };
 
   // 2. Auto-réponse au candidat (dans sa langue)
@@ -989,21 +1023,26 @@ Deno.serve(async (req: Request) => {
         ...interestFields,
         // v17 : page d'atterrissage / referrer / page de soumission — même règle.
         ...landingFields,
+        // v20 : offre commerciale — jointe QUE si une offre valide est présente.
+        ...(offer ? { offer } : {}),
       };
-      // Cascade v13/v14/v17 conservée, exprimée en tentatives ordonnées « du plus
-      // récent au plus établi » : complet → sans atterrissage → sans intérêt →
+      // Cascade v13/v14/v17/v20 conservée, exprimée en tentatives ordonnées « du plus
+      // récent au plus établi » : complet → sans offre → sans atterrissage → sans intérêt →
       // sans attribution. Un 409/23505 (submission_key) court-circuite : c'est un
       // doublon, pas un refus de schéma.
       const attempts: Array<Record<string, unknown>> = [submissionRow];
-      if (hasLanding) attempts.push(withoutLanding(submissionRow));
-      if (hasInterest) attempts.push(withoutInterest(withoutLanding(submissionRow)));
-      if (hasAttribution) attempts.push(withoutAttribution(withoutInterest(withoutLanding(submissionRow))));
+      // (v20) Colonne `offer` pas encore créée (migration facultative) → rejoué sans elle, en premier.
+      const base = offer ? withoutOffer(submissionRow) : submissionRow;
+      if (offer) attempts.push(base);
+      if (hasLanding) attempts.push(withoutLanding(base));
+      if (hasInterest) attempts.push(withoutInterest(withoutLanding(base)));
+      if (hasAttribution) attempts.push(withoutAttribution(withoutInterest(withoutLanding(base))));
       if (submissionKey) {
         // Filet v15 : migration submission_key pas encore appliquée (colonne
         // inconnue) → dernier recours SANS la clé. La trace prime sur
         // l'idempotence — une candidature n'est jamais perdue pour un champ neuf.
         const { submission_key: _unused, ...withoutKey } =
-          withoutAttribution(withoutInterest(withoutLanding(submissionRow))) as Record<string, unknown> & { submission_key?: string };
+          withoutAttribution(withoutInterest(withoutLanding(base))) as Record<string, unknown> & { submission_key?: string };
         attempts.push(withoutKey);
       }
       for (const body of attempts) {
@@ -1105,6 +1144,8 @@ Deno.serve(async (req: Request) => {
 
       // notes : tout ce qui n'a pas de colonne dédiée dans `prospects`.
       const notesParts: string[] = [];
+      // (v20) L'offre EN TÊTE des notes : c'est la première chose que Fanny doit voir sur la fiche.
+      if (offerLabel) notesParts.push(`Offre : ${offerLabel}`);
       const birthDate = (data.birthDate ?? "").trim();
       if (birthDate) notesParts.push(`Né(e) le ${birthDate}`);
       if (arrivalRaw && !moveInDate) {

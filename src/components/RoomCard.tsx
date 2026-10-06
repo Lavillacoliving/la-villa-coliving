@@ -29,9 +29,11 @@ export type RoomCardProps = {
   /** Ouvre la visionneuse ; absent = photo non cliquable. */
   onOpenPhotos?: (room: PublicRoom, photoIndex: number) => void;
   onCtaClick?: (room: PublicRoom) => void;
+  /** (Offre hiver, 06/10/2026) Paramètres d'URL ajoutés EN TÊTE de la query du CTA, ex. « offre=hiver ». */
+  ctaParams?: string;
 };
 
-export function RoomCard({ house, houseName, room, fallbackImage, showHouse = false, onOpenPhotos, onCtaClick }: RoomCardProps) {
+export function RoomCard({ house, houseName, room, fallbackImage, showHouse = false, onOpenPhotos, onCtaClick, ctaParams }: RoomCardProps) {
   const { t, language } = useLanguage();
   const uiLang = language === "en" ? "en" as const : "fr" as const;
   // Pack dédié, ou galerie standard du Lodge (chambre → communs → extérieurs).
@@ -123,7 +125,7 @@ export function RoomCard({ house, houseName, room, fallbackImage, showHouse = fa
             </LocalizedLink>
           )}
           <LocalizedLink
-            to={`/candidature?property_interest=${house}&room_interest=chambre-${room.room_number}`}
+            to={`/candidature?${ctaParams ? `${ctaParams}&` : ""}property_interest=${house}&room_interest=chambre-${room.room_number}`}
             onClick={() => onCtaClick?.(room)}
             className="w-full inline-flex items-center justify-center gap-2 px-5 py-2.5 bg-[#D4A574] text-[#1C1917] text-sm font-semibold rounded-lg hover:bg-[#E0BB8A] transition-colors"
           >

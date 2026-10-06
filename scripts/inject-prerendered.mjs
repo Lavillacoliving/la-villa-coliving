@@ -172,8 +172,10 @@ function buildSeoHeadTags(seo, route) {
   const noindex = /noindex/i.test(seo.metaName?.robots ?? '');
 
   // Canonical URL (from pre-rendered or computed from route)
+  // (06/10/2026) Page noindex qui porte quand même une canonical dans son HTML prérendu (composant SEO,
+  // prop selfCanonical — /offre-hiver) : conservée telle quelle. Les fiches chambres n'en émettent pas.
   const canonicalUrl = seo.canonical || `${SITE_URL}${route}`;
-  if (!noindex) tags.push(`<link rel="canonical" href="${canonicalUrl}" />`);
+  if (!noindex || seo.canonical) tags.push(`<link rel="canonical" href="${canonicalUrl}" />`);
 
   // Meta name tags (keywords, robots, author, language)
   for (const [name, content] of Object.entries(seo.metaName || {})) {
