@@ -3,6 +3,7 @@ import { useLocation } from "react-router-dom";
 import { Menu, X } from "lucide-react";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { LocalizedLink } from "@/components/LocalizedLink";
+import { LanguageSwitchLink } from "@/components/LanguageSwitchLink";
 import { localizePath } from "@/lib/localizedPath";
 import { colocGeneveHref } from "@/lib/siteLinks";
 import { applyHref, trackApplyClick } from "@/lib/houseContext";
@@ -15,7 +16,7 @@ import { applyHref, trackApplyClick } from "@/lib/houseContext";
 export function NavbarV7() {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const { language, toggleLanguage } = useLanguage();
+  const { language } = useLanguage();
   const location = useLocation();
   // Lot A (Q9) : sur une page maison, le CTA porte ?property_interest=<slug>.
   const applyTo = applyHref(location.pathname);
@@ -96,13 +97,10 @@ export function NavbarV7() {
 
           {/* Right Section */}
           <div className="hidden lg:flex items-center gap-4">
-            {/* Language Toggle */}
-            <button
-              onClick={toggleLanguage}
-              className="text-sm text-[#78716C] hover:text-[#1C1917] transition-colors duration-300"
-            >
+            {/* Language Toggle — vrai lien crawlable vers la page miroir (08/10/2026) */}
+            <LanguageSwitchLink className="text-sm text-[#78716C] hover:text-[#1C1917] transition-colors duration-300">
               {language === "en" ? "FR" : "EN"}
-            </button>
+            </LanguageSwitchLink>
 
             {/* Portail */}
             <LocalizedLink
@@ -160,12 +158,9 @@ export function NavbarV7() {
                 {language === "en" ? "Portal" : "Portail"}
               </LocalizedLink>
               <div className="flex items-center gap-4 pt-4 mt-4 border-t border-[#E7E5E4]">
-                <button
-                  onClick={toggleLanguage}
-                  className="text-sm text-[#78716C] px-4"
-                >
+                <LanguageSwitchLink className="text-sm text-[#78716C] px-4">
                   {language === "en" ? "FR" : "EN"}
-                </button>
+                </LanguageSwitchLink>
                 <LocalizedLink
                   to={applyTo}
                   onClick={() => { setIsMobileMenuOpen(false); trackApplyClick("nav_mobile", location.pathname, language); }}

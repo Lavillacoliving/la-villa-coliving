@@ -2,6 +2,7 @@ import { INSTAGRAM_URL } from "@/lib/structuredData";
 import { STATS } from "@/data/stats";
 import { useLocation } from "react-router-dom";
 import { LocalizedLink } from "@/components/LocalizedLink";
+import { LanguageSwitchLink } from "@/components/LanguageSwitchLink";
 import { Instagram, Mail, MapPin, Phone } from "lucide-react";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { colocGeneveHref } from "@/lib/siteLinks";
@@ -190,8 +191,9 @@ export function FooterV7() {
               ? "Made in Grand Genève."
               : "Fait au Grand Genève."}
           </p>
-          <nav aria-label={language === "en" ? "Legal" : "Légal"}>
-            <ul className="flex items-center gap-6">
+          <nav aria-label={language === "en" ? "Legal and language" : "Légal et langue"}>
+            {/* flex-wrap : 3 liens dépassent 343 px sur un téléphone de 375 px (FR) */}
+            <ul className="flex flex-wrap items-center justify-center gap-x-6 gap-y-2">
               <li>
                 <LocalizedLink
                   to="/mentions-legales"
@@ -207,6 +209,13 @@ export function FooterV7() {
                 >
                   {language === "en" ? "Privacy" : "Confidentialité"}
                 </LocalizedLink>
+              </li>
+              {/* Lien texte vers la version miroir (08/10/2026) : chemin d'exploration FR ↔ EN depuis
+                  chaque page, en plus du sélecteur de la barre de navigation. */}
+              <li>
+                <LanguageSwitchLink className="text-[#A8A29E] hover:text-[#E0BB8A] transition-colors duration-300 text-sm">
+                  {language === "en" ? "Version française" : "English version"}
+                </LanguageSwitchLink>
               </li>
             </ul>
           </nav>
