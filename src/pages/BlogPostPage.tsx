@@ -22,6 +22,7 @@ import { EntityFacts } from "@/components/EntityFacts";
 import { ENTITY_FACTS_ARTICLES, fallbackEntityFactsCut } from "@/data/entityFactsArticles";
 import { NotFoundPage } from "@/pages/NotFoundPage";
 import { formatLongDate } from "@/lib/dates";
+import { pickRelatedPosts } from "@/lib/relatedPosts";
 
 // (Lot B, 01/10/2026) react-markdown neutralise les liens tel: (liste de protocoles sûrs) : on les
 // autorise pour les numéros utiles des guides, liés explicitement depuis que format-detection
@@ -234,7 +235,7 @@ export function BlogPostPage() {
     if (emb && emb.post?.slug === slug && !isPreview) {
       // Premier montage sur page prerendue : état initial déjà en place, pas de fetch.
       // Filet : si le prerender a capturé avant l'arrivée des articles liés, les charger.
-      if (!emb.related || emb.related.length === 0) loadRelated(emb.post.id, emb.post.category);
+      if (!emb.related || emb.related.length === 0) loadRelated(emb.post.id, emb.post.slug, emb.post.category);
       return;
     }
     loadPost(slug);
@@ -261,27 +262,27 @@ export function BlogPostPage() {
         data = row;
       }
       setPost(data);
-      // Load related articles (same category or recent)
-      if (data) loadRelated(data.id, data.category);
+      // Articles connexes : même catégorie d'abord, choix déterministe (src/lib/relatedPosts.ts)
+      if (data) loadRelated(data.id, data.slug, data.category);
     } catch(e) { console.error("Blog post load:",e); }
     finally { setLoading(false); }
   }
 
-  async function loadRelated(postId:string, category:string) {
+  // (08/10/2026, audit GSC EN-5) TOUS les articles publiés sont candidats (colonnes légères, ~40 lignes),
+  // puis choix déterministe dans src/lib/relatedPosts.ts : même catégorie d'abord, ordre de l'anneau de
+  // hachage. L'ancien `.order(published_at).limit(20)` ne proposait que 12 articles sur 41, jamais les
+  // plus anciens. Déterministe = même résultat au prérendu (figé dans __blog_post_data__) et en
+  // navigation SPA (rappel côté client), quel que soit l'ordre renvoyé par Supabase.
+  async function loadRelated(postId:string, postSlug:string, category:string) {
     try {
       const { data, error } = await supabase
         .from("blog_posts")
         .select("id,slug,title_fr,title_en,excerpt_fr,excerpt_en,image_url,read_time_min,category")
         .eq("is_published", true)
-        .neq("id", postId)
-        .order("published_at", { ascending: false })
-        .limit(20);
+        .neq("id", postId);
       if (error) throw error;
       if (!data) return;
-      // Prioritize same-category articles, then fill with recent ones
-      const sameCategory = data.filter(p => p.category === category);
-      const others = data.filter(p => p.category !== category);
-      setRelated([...sameCategory, ...others].slice(0, 3));
+      setRelated(pickRelatedPosts(postSlug, category, data as RelatedPost[], 3));
     } catch(e) { console.error("Related posts load:", e); }
   }
 
