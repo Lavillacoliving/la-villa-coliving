@@ -3,6 +3,7 @@ import { supabase } from '@/lib/supabase';
 import { useToast } from '@/components/ui/Toast';
 import { pdf } from '@react-pdf/renderer';
 import { BailPDF } from './BailPDF';
+import { computeFraisEntree } from './bailFrais';
 import { logAudit } from '@/lib/auditLog';
 import { getBailleurLines } from '@/lib/entities';
 import { useIsMobile } from '@/hooks/use-mobile';
@@ -71,7 +72,8 @@ interface FormData {
   charges_energy: number;
   charges_maintenance: number;
   charges_services: number;
-  frais_remise_location: number;
+  frais_dossier_m2: number;
+  frais_edl_m2: number;
   irl_trimestre: string;
   irl_indice: number;
   clauses_particulieres: string;
@@ -177,6 +179,16 @@ function fCHF(n: number): string {
   }).format(n);
 }
 
+// Montants au centime (frais au m²)
+function fEUR2(n: number): string {
+  return new Intl.NumberFormat('fr-FR', {
+    style: 'currency',
+    currency: 'EUR',
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2,
+  }).format(n);
+}
+
 function generateContractHTML(data: ContractData): string {
   const {
     property,
@@ -193,6 +205,7 @@ function generateContractHTML(data: ContractData): string {
 
   // Charges are stored in EUR — convert to CHF for display
   const totalChargesEUR = form.charges_energy + form.charges_maintenance + form.charges_services;
+  const frais = computeFraisEntree(room.surface_m2, form.frais_dossier_m2, form.frais_edl_m2);
 
   const chargesTable = property.is_coliving ? `
     <p style="font-size:9px;color:#666;">Le montant mensuel des charges forfaitaires et des services est inclus dans le loyer principal.</p>
@@ -263,7 +276,7 @@ function generateContractHTML(data: ContractData): string {
         .contract-container {
           max-width: 210mm;
           margin: 0 auto;
-          padding: 20mm 14mm;
+          padding: 20mm 21mm;
           background: white;
           page-break-after: always;
         }
@@ -444,7 +457,7 @@ function generateContractHTML(data: ContractData): string {
           }
           .contract-container {
             max-width: 100%;
-            padding: 20mm 14mm;
+            padding: 20mm 21mm;
             page-break-after: always;
           }
         }
@@ -487,6 +500,8 @@ function generateContractHTML(data: ContractData): string {
           Entre les parties ci-dessus désignées, il est convenu ce qui suit.
         </div>
 
+        <div class="page-break"></div>
+
         <h2>ARTICLE II — OBJET DU CONTRAT</h2>
         <div class="article">
           ${property.is_coliving ? `
@@ -527,7 +542,7 @@ function generateContractHTML(data: ContractData): string {
           <p><strong>Accès aux parties communes :</strong></p>
           <ul>${commonAreasList}</ul>` : ''}
           ${property.is_coliving ? `
-          <p><strong style="color:#c9a96e;">Charges & Services inclus dans le forfait location TOUT INCLUS à « La Villa »</strong></p>
+          <p><strong style="color:#000;text-transform:uppercase;">Charges & Services inclus dans le forfait location TOUT INCLUS à « La Villa »</strong></p>
 
           <h3>EAU & ÉNERGIE :</h3>
           <ul>
@@ -600,6 +615,8 @@ function generateContractHTML(data: ContractData): string {
           À l'expiration de cette période, le contrat se renouvelle par reconduction tacite pour des périodes successives de ${durationInWordsPreview(form.lease_duration_months || 12)} mois, sauf dénonciation notifiée au moins un mois avant l'expiration du contrat par le locataire, ou trois mois par le bailleur.
           <br/><br/>
           Conformément à l'article 25-8 de la loi n° 89-462 du 6 juillet 1989, le locataire peut donner congé à tout moment, avec un préavis d'un mois.
+          <h3>Visites en cas de congé :</h3>
+          <p>En cas de congé donné par l'une ou l'autre des parties, le Locataire autorise le Bailleur ou son mandataire à faire visiter le logement en vue de sa relocation. Ces visites se tiennent les jours ouvrables, dans la limite de deux heures par jour, selon des créneaux convenus ensemble et moyennant un préavis de 48 heures. Le Locataire peut demander que ses effets personnels soient rangés ou couverts au préalable.</p>
         </div>
 
         <div class="page-break"></div>
@@ -607,7 +624,7 @@ function generateContractHTML(data: ContractData): string {
         <h2>ARTICLE IV — CONDITIONS FINANCIÈRES</h2>
         <div class="article">
           ${property.is_coliving ? `
-          <h3><strong>Loyer mensuel :</strong> ${fEUR(loyer_eur)} (${fCHF(form.loyer_chf)} au taux BCE du ${form.exchange_rate_date} : ${form.exchange_rate} — pour indication uniquement)</h3>
+          <h3><strong style="font-size:14pt;">Loyer mensuel : ${fEUR(loyer_eur)}</strong> (${fCHF(form.loyer_chf)} au taux BCE du ${form.exchange_rate_date} : ${form.exchange_rate} — pour indication uniquement)</h3>
           ${(!data.prorata_days || !data.prorata_total_days || data.prorata_days >= data.prorata_total_days)
             ? '<p><em>Entrée le 1er du mois — pas de prorata.</em></p>'
             : '<p><strong>Prorata du premier mois :</strong> Du ' + fDate(form.entry_date) + ' au dernier jour du mois (' + data.prorata_days + '/' + data.prorata_total_days + ' jours) :</p><ul><li><strong>En EUR :</strong> <strong style="color:#c9a96e;">' + fEUR(data.prorata_eur) + '</strong></li></ul>'}
@@ -628,21 +645,19 @@ function generateContractHTML(data: ContractData): string {
             <li>Indice de référence : ${form.irl_indice}</li>
             <li>La révision s'effectue chaque année à la date anniversaire du contrat.</li>
           </ul>
-          ${form.frais_remise_location > 0 ? `
-          <h3>Frais de remise en location : ${fEUR(form.frais_remise_location)} — offerts à partir de 3 mois de présence</h3>
-          <p>Le départ anticipé d'un locataire oblige le bailleur à engager, indépendamment de l'état du logement restitué, l'ensemble des démarches nécessaires pour remettre le logement en location :</p>
+          ${frais.total > 0 ? `
+          <h3 style="color:#000;text-transform:uppercase;">Frais de dossier et d'état des lieux d'entrée : ${fEUR2(frais.total)} TTC — offerts à partir de 3 mois de présence</h3>
+          <p>Ces frais rémunèrent les prestations assurées par le bailleur pour la mise en place de la location. Ils sont calculés sur la surface de la chambre louée, soit ${frais.surface.toLocaleString('fr-FR')} m² :</p>
           <ul>
-            <li>Création et diffusion de nouvelles annonces sur les différents supports ;</li>
-            <li>Traitement des candidatures, organisation et tenue des visites ;</li>
-            <li>Recherche et sélection d'un nouveau locataire (vérification du dossier, rédaction du contrat) ;</li>
-            <li>Installation du nouveau locataire (accueil, remise des clés, mise à jour des accès) ;</li>
-            <li>Formalités administratives liées au changement de locataire (déclarations d'occupation, démarches techniques et administratives).</li>
+            <li>Frais de dossier (visite du logement, constitution du dossier, rédaction du bail) : ${fEUR2(form.frais_dossier_m2)} TTC/m², soit ${fEUR2(frais.dossier)} TTC ;</li>
+            <li>Prestation d'état des lieux d'entrée : ${fEUR2(form.frais_edl_m2)} TTC/m², soit ${fEUR2(frais.edl)} TTC.</li>
           </ul>
-          <p>Ces frais, fixés forfaitairement à ${fEUR(form.frais_remise_location)}, sont offerts au locataire dont le séjour atteint 3 mois à compter de la date d'entrée. En cas de départ avant ce délai, ils restent à sa charge.</p>` : ''}
+          <p>Ces frais, d'un montant total de ${fEUR2(frais.total)} TTC, sont offerts au locataire dont le séjour atteint 3 mois à compter de la date d'entrée. En cas de départ avant ce délai, ils restent à sa charge.</p>` : ''}
           <h3>Modalités de paiement :</h3>
           <ul>
-            <li><strong style="color:#c9a96e;">Le loyer et les charges doivent être versés avant le 5 du mois.</strong></li>
+            <li><strong style="color:#000;text-transform:uppercase;">Le loyer et les charges doivent être versés avant le 5 du mois.</strong></li>
             <li>Virement bancaire sur le compte du bailleur.</li>
+            <li>Toute somme due et non réglée à son échéance porte intérêts au taux légal à compter de la mise en demeure du locataire (article 1231-6 du Code civil).</li>
           </ul>
           ${property.name?.includes('Villa') || property.name?.includes('lavilla')
             ? `<div class="bank-details">
@@ -664,15 +679,17 @@ function generateContractHTML(data: ContractData): string {
         </div>
 
         <h2>ARTICLE V — GARANTIES</h2>
-        <div class="article">
+        <div class="article" style="color:#000;text-transform:uppercase;font-weight:bold;">
           ${property.is_coliving
-            ? `Le locataire versera un dépôt de garantie égal à deux (2) mois de loyer hors charges, soit <strong style="color:#c9a96e;">${fEUR(depot_eur)}</strong>, restitué dans les deux (2) mois suivant la fin du contrat, selon l'état des lieux.`
-            : `Le locataire versera un dépôt de garantie égal à un (1) mois de loyer hors charges, soit <strong style="color:#c9a96e;">${fEUR(depot_eur)}</strong>, restitué dans les deux (2) mois suivant la fin du contrat, déduction faite des sommes éventuellement dues.`}
+            ? `Le locataire versera un dépôt de garantie égal à deux (2) mois de loyer hors charges, soit <strong>${fEUR(depot_eur)}</strong>, restitué dans les deux (2) mois suivant la fin du contrat, selon l'état des lieux.`
+            : `Le locataire versera un dépôt de garantie égal à un (1) mois de loyer hors charges, soit <strong>${fEUR(depot_eur)}</strong>, restitué dans les deux (2) mois suivant la fin du contrat, déduction faite des sommes éventuellement dues.`}
         </div>
 
         <h2>ARTICLE VI — CLAUSE RÉSOLUTOIRE</h2>
         <div class="article">
-          Le bailleur se réserve le droit de résilier le contrat en cas de non-paiement du loyer ou des charges, sans préjudice du droit de poursuivre le recouvrement des sommes dues.
+          <p>À défaut de paiement à son terme de tout ou partie du loyer ou des charges, ou à défaut de versement du dépôt de garantie, le présent contrat sera résilié de plein droit six (6) semaines après la délivrance au locataire d'un commandement de payer demeuré infructueux, conformément à l'article 24 de la loi n° 89-462 du 6 juillet 1989.</p>
+          <p>Le présent contrat sera également résilié de plein droit à défaut pour le locataire de justifier d'une assurance contre les risques locatifs, un (1) mois après un commandement demeuré infructueux, conformément à l'article 7 g) de la loi n° 89-462 du 6 juillet 1989.</p>
+          <p>Une fois la résiliation acquise, le locataire devra libérer les lieux. À défaut, son expulsion pourra être ordonnée par le juge des contentieux de la protection.</p>
         </div>
 
         <div class="page-break"></div>
@@ -783,14 +800,14 @@ function generateContractHTML(data: ContractData): string {
           ${form.clauses_particulieres.replace(/\n/g, '<br/>')}
         </div>` : ''}
 
+        <div style="text-align:center;font-size:9px;margin-top:30px;">Fait à ${ph(property.siege_social?.split(',')[0] || '', 'Ville')}, à la date de la signature électronique.</div>
+
         <div class="signature-section">
           <div class="signature-box">
-            <div>Fait à ${ph(property.siege_social?.split(',')[0] || '', 'Ville')}</div>
             <div style="font-size:9px;margin-top:15px;">Signature du bailleur</div>
             <div style="font-size:9px;margin-top:30px;font-style:italic;">${property.manager_name || 'Jérôme AUSTIN'}</div>
           </div>
           <div class="signature-box">
-            <div>Le ${fDate(form.entry_date)}</div>
             <div style="font-size:9px;margin-top:15px;">Signature du locataire</div>
             <div style="font-size:9px;margin-top:30px;font-style:italic;">${ph(form.locataire_prenom, 'Prénom')} ${ph(form.locataire_nom, 'Nom')}</div>
           </div>
@@ -892,7 +909,8 @@ export default function DashboardNouveauBailPage() {
     charges_energy: 130,
     charges_maintenance: 200,
     charges_services: 90,
-    frais_remise_location: 350,
+    frais_dossier_m2: 10.09,
+    frais_edl_m2: 3.03,
     irl_trimestre: '3ème trimestre 2025',
     irl_indice: 145.77,
     clauses_particulieres: '',
@@ -1872,14 +1890,14 @@ export default function DashboardNouveauBailPage() {
         />
 
         <label style={{ display: 'block', marginBottom: '8px', fontSize: '13px', color: '#666' }}>
-          Frais de remise en location — moins de 3 mois (EUR)
+          Frais de dossier — visite, dossier, rédaction du bail (EUR TTC / m²)
         </label>
         <input
           type="number"
-          step="1"
-          value={form.frais_remise_location}
+          step="0.01"
+          value={form.frais_dossier_m2}
           onChange={(e) =>
-            setForm((prev) => ({ ...prev, frais_remise_location: parseInt(e.target.value) || 0 }))
+            setForm((prev) => ({ ...prev, frais_dossier_m2: parseFloat(e.target.value) || 0 }))
           }
           style={{
             width: '100%',
@@ -1890,6 +1908,41 @@ export default function DashboardNouveauBailPage() {
             fontSize: '14px',
           }}
         />
+
+        <label style={{ display: 'block', marginBottom: '8px', fontSize: '13px', color: '#666' }}>
+          Prestation d'état des lieux d'entrée (EUR TTC / m²)
+        </label>
+        <input
+          type="number"
+          step="0.01"
+          value={form.frais_edl_m2}
+          onChange={(e) =>
+            setForm((prev) => ({ ...prev, frais_edl_m2: parseFloat(e.target.value) || 0 }))
+          }
+          style={{
+            width: '100%',
+            padding: '10px',
+            marginBottom: '10px',
+            borderRadius: '4px',
+            border: '1px solid #ddd',
+            fontSize: '14px',
+          }}
+        />
+
+        {/* Récap frais d'entrée — calculés sur la surface de la chambre, offerts à partir de 3 mois */}
+        {selectedRoom && (() => {
+          const frais = computeFraisEntree(selectedRoom.surface_m2, form.frais_dossier_m2, form.frais_edl_m2);
+          return frais.surface > 0 ? (
+            <div style={{ fontSize: '12px', color: '#666', marginBottom: '15px' }}>
+              {frais.surface.toLocaleString('fr-FR')} m² → dossier {fEUR2(frais.dossier)} + état des lieux {fEUR2(frais.edl)} ={' '}
+              <strong style={{ color: '#b8860b' }}>{fEUR2(frais.total)} TTC</strong>, offerts à partir de 3 mois de présence.
+            </div>
+          ) : (
+            <div style={{ fontSize: '12px', color: '#c0392b', marginBottom: '15px' }}>
+              Surface de la chambre non renseignée (onglet Maisons) : la clause de frais n'apparaîtra pas dans le bail.
+            </div>
+          );
+        })()}
 
         {/* Récap caution dynamique — loi Alur : meublé ≤ 2 mois HORS charges */}
         <div style={{
