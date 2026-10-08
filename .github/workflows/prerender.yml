@@ -9,8 +9,9 @@
 # What it does:
 # - Fetches published blog slugs from Supabase
 # - Updates vercel.json with blog rewrites
-# - Generates sitemap.xml with all routes + hreflang
 # - Pre-renders all pages (static + blog) with Puppeteer
+# - Generates sitemap.xml with all routes + hreflang (after rendering since 08/10/2026: a static
+#   page's <lastmod> only moves when its rendered content changed)
 # - Commits and pushes changes → triggers Vercel auto-deploy
 #
 # Loop prevention: pushes from github-actions[bot] don't trigger new workflows.
@@ -62,6 +63,12 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+
+      # (08/10/2026, audit GSC SYS-05) Base de comparaison IndexNow : le sitemap publié AVANT ce run.
+      # Pas HEAD~1 : quand le run ne commit rien, HEAD~1 n'est pas le sitemap précédent. Sans copie,
+      # indexnow-ping.mjs soumet tout le sitemap (comportement historique).
+      - name: Mémoriser le sitemap publié (base IndexNow)
+        run: cp public/sitemap.xml "$RUNNER_TEMP/sitemap.prev.xml" || echo "Pas de sitemap publié — IndexNow soumettra tout le sitemap"
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
@@ -144,6 +151,10 @@ jobs:
       # et répondent 404 depuis 2023-2024. Google découvre via le sitemap déclaré
       # dans GSC ; Bing (et les assistants IA qui sourcent sur son index :
       # ChatGPT, Copilot) passent par IndexNow (A4-bis, 04/08/2026).
+      # (08/10/2026) Seules les <loc> nouvelles ou dont le <lastmod> a changé depuis le sitemap
+      # mémorisé avant le prérendu ; aucune → rien n'est soumis (journal explicite). Chaque changement
+      # ne partant qu'une fois, --wait-live attend (6 min au plus) que le déploiement Vercel du commit
+      # du bot soit en ligne avant de soumettre. Sortie toujours 0.
       - name: Notify Bing/IndexNow with updated URLs
         if: success()
-        run: node scripts/indexnow-ping.mjs
+        run: node scripts/indexnow-ping.mjs --previous "$RUNNER_TEMP/sitemap.prev.xml" --wait-live

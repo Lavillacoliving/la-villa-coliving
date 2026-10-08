@@ -16,6 +16,8 @@
 
 import { stripAuthoringComments } from './lib/html-comments.mjs';
 import { blockAnalytics } from './lib/block-analytics.mjs';
+import { contentFingerprint } from './lib/content-fingerprint.mjs';
+import { parseSitemapLastmod, w3cDatetime } from './lib/sitemap-lastmod.mjs';
 import fs from 'fs/promises';
 import path from 'path';
 import { fileURLToPath } from 'url';
@@ -149,6 +151,63 @@ function httpsGet(url, headers) {
 // published_at). Used by generateSitemap so <lastmod> reflects the real edit date
 // instead of the build date (real freshness signal for Google).
 const BLOG_LASTMOD = new Map();
+
+// ─────────────────────────────────────────────
+// <lastmod> honnête pour les pages statiques
+// ─────────────────────────────────────────────
+//
+// PROBLÈME (constaté le 26/08/2026, confirmé par l'audit GSC du 07/10, EN-6/SYS-04) : generateSitemap
+// datait les ~44 pages statiques FR+EN à `today`. Le prérendu tourne chaque jour (cron 05:00 et
+// 13:00 UTC) : ces URL annonçaient « modifiée aujourd'hui » tous les jours, contenu changé ou non, et
+// Google finit par ignorer le <lastmod> de tout le sitemap. Les articles, eux, sont datés par
+// updated_at (BLOG_LASTMOD) : inchangé.
+//
+// SOLUTION : une page statique n'est datée du run que si son contenu SERVI a réellement changé depuis
+// le run précédent (empreinte de scripts/lib/content-fingerprint.mjs : #root + balises SEO comme
+// l'injection, hachages d'assets, identifiants useId/Radix, ordre des JSON-LD, marqueurs du mois de
+// rendu et année du copyright neutralisés, mais PAS les disponibilités). Sinon elle garde la date
+// déjà publiée dans le sitemap précédent. Le sitemap est donc généré APRÈS le rendu.
+//
+// Format : date ET heure UTC (W3C Datetime, `2026-10-08T13:04:21+00:00`, admis par sitemaps.org et
+// Google) pour une page statique modifiée. À la journée, un second changement le même jour (cron de
+// 13:00 après celui de 05:00 : c'est sa raison d'être, la fraîcheur des disponibilités) laissait le
+// <lastmod> identique, invisible pour Google comme pour IndexNow (qui compare les <lastmod>). Les
+// articles restent datés à la journée (updated_at).
+//
+// Pourquoi pas git : l'Action utilise actions/checkout@v4 sans `fetch-depth` (clone superficiel de
+// profondeur 1), `git log` n'y a aucun historique. La comparaison de contenu est autonome.
+//
+// route → true si le HTML rendu diffère (empreinte) du fichier de public/prerendered/ du run précédent.
+const CONTENT_CHANGED = new Map();
+
+// URL absolue → <lastmod> lu dans le sitemap.xml du run précédent ('YYYY-MM-DD' ou W3C Datetime).
+const PREVIOUS_LASTMOD = new Map();
+
+/**
+ * Relit le sitemap.xml publié pour conserver la date des pages inchangées. À appeler AVANT
+ * generateSitemap (qui l'écrase). Absent ou illisible (premier run) : les pages statiques sont datées
+ * du run, comme avant.
+ */
+async function loadPreviousLastmod() {
+  try {
+    const xml = await fs.readFile(SITEMAP_PATH, 'utf-8');
+    for (const [loc, lastmod] of parseSitemapLastmod(xml)) if (lastmod) PREVIOUS_LASTMOD.set(loc, lastmod);
+    console.log(`  📅 ${PREVIOUS_LASTMOD.size} dates de modification relues du sitemap précédent\n`);
+  } catch {
+    console.log('  📅 Pas de sitemap précédent — les pages statiques seront datées du run\n');
+  }
+}
+
+/**
+ * <lastmod> d'une page statique : l'horodatage du run (`runStamp`, W3C Datetime) si son contenu a
+ * changé pendant ce run, sinon la valeur déjà publiée. Une route NON rendue pendant ce run
+ * (PRERENDER_ONLY, pas de navigateur) : on ne sait rien, on ne prétend rien, la valeur publiée est
+ * conservée. Aucune valeur publiée (nouvelle route) : horodatage du run.
+ */
+function staticLastmod(route, runStamp) {
+  if (CONTENT_CHANGED.get(route) === true) return runStamp;
+  return PREVIOUS_LASTMOD.get(`${SITE_URL}${route}`) || runStamp;
+}
 
 async function fetchBlogSlugs() {
   console.log('  📡 Fetching published blog slugs from Supabase...');
@@ -593,7 +652,18 @@ async function renderRoute(browser, route) {
 
     await fs.mkdir(OUTPUT_DIR, { recursive: true });
     // (Lot S1.7) Commentaires d'auteur retirés, marqueurs React conservés (scripts/lib/html-comments.mjs).
-    await fs.writeFile(outputPath, stripAuthoringComments(html), 'utf-8');
+    const finalHtml = stripAuthoringComments(html);
+
+    // (08/10/2026) Le contenu de CETTE page a-t-il réellement changé depuis le run précédent ? On
+    // compare au fichier encore sur disque (version committée en CI), sous la même forme que celle
+    // écrite : alimente le <lastmod> des pages statiques (voir CONTENT_CHANGED, staticLastmod).
+    let previousHtml = null;
+    try {
+      previousHtml = await fs.readFile(outputPath, 'utf-8');
+    } catch { /* première génération de cette route */ }
+    CONTENT_CHANGED.set(route, previousHtml === null || contentFingerprint(previousHtml) !== contentFingerprint(finalHtml));
+
+    await fs.writeFile(outputPath, finalHtml, 'utf-8');
 
     console.log(`  ✅ ${route} → ${wordCount} words`);
     return true;
@@ -665,6 +735,8 @@ const STATIC_PAGE_CONFIG = {
 async function generateSitemap(blogSlugs) {
   console.log('  🗺️  Generating sitemap.xml...');
   const today = new Date().toISOString().slice(0, 10);
+  // (08/10/2026) Horodatage du run pour les pages statiques modifiées (voir staticLastmod).
+  const runStamp = w3cDatetime(new Date());
 
   // frPath / enPath à `null` => aucune balise alternate pour cette langue.
   // Une page sans équivalent réel ne doit PAS en déclarer un (cf. le pilier EN
@@ -683,12 +755,21 @@ async function generateSitemap(blogSlugs) {
 
   const entries = [];
 
+  // (08/10/2026) <lastmod> des pages statiques : horodatage du run seulement si le contenu a changé
+  // pendant ce run, sinon la valeur déjà publiée (staticLastmod). Compteur pour le journal du run.
+  let datedThisRun = 0;
+  const lastmodOf = (route) => {
+    const lastmod = staticLastmod(route, runStamp);
+    if (lastmod === runStamp) datedThisRun++;
+    return lastmod;
+  };
+
   // FR static pages
   entries.push('  <!-- ═══ STATIC PAGES — FR ═══ -->');
   for (const route of STATIC_ROUTES_FR) {
     const config = STATIC_PAGE_CONFIG[route] || { priority: '0.5', changefreq: 'monthly' };
     const enRoute = route === '/' ? '/en' : `/en${route}`;
-    entries.push(sitemapEntry(route, route, enRoute, config.priority, config.changefreq, today));
+    entries.push(sitemapEntry(route, route, enRoute, config.priority, config.changefreq, lastmodOf(route)));
   }
 
   // EN static pages (lower priority than FR equivalents)
@@ -698,8 +779,11 @@ async function generateSitemap(blogSlugs) {
     const enRoute = route === '/' ? '/en' : `/en${route}`;
     const frRoute = route;  // FR path = the original route
     const enPriority = (parseFloat(config.priority) - 0.1).toFixed(1);
-    entries.push(sitemapEntry(enRoute, frRoute, enRoute, enPriority, config.changefreq, today));
+    entries.push(sitemapEntry(enRoute, frRoute, enRoute, enPriority, config.changefreq, lastmodOf(enRoute)));
   }
+  const staticChanged = [...CONTENT_CHANGED].filter(([r, changed]) => changed && STATIC_ROUTES.includes(r)).map(([r]) => r);
+  console.log(`  📅 Pages statiques : ${datedThisRun}/${STATIC_ROUTES.length} datées de ce run (${runStamp}), les autres gardent leur date publiée`);
+  if (staticChanged.length > 0) console.log(`     contenu modifié pendant ce run : ${staticChanged.join(', ')}`);
   // Pilier EN conservé hors boucle (le FR est consolidé → 308 vers l'article,
   // 07/07/2026). Il n'a donc PLUS de pendant français : aucun alternate `fr`.
   //
@@ -769,8 +853,9 @@ async function main() {
   // Step 2: Update vercel.json (always run — EN static routes + blog routes)
   await updateVercelJson(blogRoutes);
 
-  // Step 2b: Generate sitemap.xml with all routes + hreflang
-  await generateSitemap(blogRoutes);
+  // Step 2b: relire les <lastmod> déjà publiés AVANT de réécrire le sitemap. (08/10/2026) Le sitemap
+  // est désormais généré APRÈS le rendu (étape 6) : il doit savoir quelles pages ont réellement changé.
+  await loadPreviousLastmod();
 
   // Step 3: Check for browser
   console.log(`  🔍 Preparing to render ${allRoutes.length} pages (${STATIC_ROUTES_FR.length} FR static + ${STATIC_ROUTES_EN.length} EN static + ${blogRoutes.length} blog)...\n`);
@@ -781,6 +866,9 @@ async function main() {
     console.log('  ⚠️  No Chrome/Chromium found — skipping pre-rendering.');
     console.log('  💡 Run "npm run prerender" locally on Mac to generate pre-rendered pages.');
     console.log('  ℹ️  The site will work as a normal SPA without pre-rendering.\n');
+    // Le sitemap reste régénéré (routes et articles ont pu changer) : aucune page n'ayant été
+    // rendue, chaque page statique conserve sa date publiée.
+    await generateSitemap(blogRoutes);
     process.exit(0);
   }
 
@@ -814,6 +902,12 @@ async function main() {
     console.error('   Nothing committed — fix the issue and re-run.');
     process.exit(1);
   }
+
+  // Step 6 (08/10/2026): sitemap.xml APRÈS le rendu, pour dater chaque page statique sur son
+  // changement de contenu réel plutôt que sur la date du build. Avec PRERENDER_ONLY, les routes non
+  // rendues gardent leur date publiée.
+  console.log('');
+  await generateSitemap(blogRoutes);
 
   console.log(`\n🎉 Pre-rendering complete! ${allRoutes.length} pages saved to public/prerendered/`);
   console.log('  💡 Commit all changes (including vercel.json) and push to deploy.\n');
