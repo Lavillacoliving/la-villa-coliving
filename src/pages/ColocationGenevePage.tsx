@@ -51,7 +51,15 @@ export function ColocationGenevePage() {
     } catch { /* noop */ }
   };
 
-  const offerSchema = {
+  // (Correctif 08/10/2026) Offer émis SEULEMENT une fois l'inventaire connu (v_public_rooms chargée).
+  // react-helmet (react-side-effect) enregistre chaque instance dès UNSAFE_componentWillMount : quand
+  // React 19 abandonne un rendu (rendu de la page interrompu par l'arrivée des chambres), l'instance
+  // abandonnée n'est jamais démontée et garde ses props. Helmet dédoublonne les <script> par contenu :
+  // l'Offer PreOrder du rendu à 0 chambre survivait à côté de l'Offer InStock (FR ou EN dans les 16
+  // runs du bot du 01 au 08/10), et scripts/inject-prerendered.mjs sert le premier bloc de chaque @type. Sans Offer
+  // avant le chargement, une instance fantôme n'a plus rien de contradictoire à laisser (même idiome
+  // que l'ItemList de /chambres-disponibles). Garde CI : check-entity-facts (Offer contradictoires).
+  const offerSchema = allRooms.known ? {
     "@context": "https://schema.org",
     "@type": "Offer",
     name: en ? "Furnished room in shared housing near Geneva, French side" : "Chambre meublée en colocation près de Genève, côté France",
@@ -65,7 +73,7 @@ export function ColocationGenevePage() {
     url: PILLAR_URL,
     seller: { "@type": "Organization", name: "La Villa Coliving", url: "https://www.lavillacoliving.com" },
     areaServed: [{ "@type": "City", name: "Genève" }, { "@type": "City", name: "Annemasse" }],
-  };
+  } : undefined;
   const webPageSchema = {
     "@context": "https://schema.org",
     "@type": "WebPage",

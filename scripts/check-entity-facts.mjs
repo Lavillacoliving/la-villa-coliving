@@ -8,7 +8,8 @@
  *      money + 8 articles (FR et EN), version identique, chaque phrase canonique présente une fois ;
  *      0 bloc ailleurs ; aucune chaîne périmée (1 380 CHF, ménage 2×, 25-35 min, séjour 2 mois, bail 1 à
  *      12 mois, placeholders) dans le texte visible du site ; JSON-LD : ≤ 1 LocalBusiness/LodgingBusiness
- *      d'entité et ≤ 1 FAQPage par page, 0 aggregateRating, numberOfRooms cohérents ;
+ *      d'entité et ≤ 1 FAQPage par page, 0 aggregateRating, numberOfRooms cohérents, aucun Offer/AggregateOffer
+ *      de premier niveau contradictoire (jsonLdConflicts, 08/10/2026) ;
  *   c) public/llms.txt et public/en/llms.txt = régénération (scripts/build-llms-txt.mjs).
  *   d) (Lot L2 « Emplacement et transport », 09/10/2026) règles d'emplacement : formulations D6/D7 interdites partout
  *      (« mitoyenne », « TPN », numéros de bus, « tram à 1 min », « 500 m, 5 min à pied », « CHUV », « terminus du
@@ -35,6 +36,7 @@ import https from 'https';
 import { fileURLToPath, pathToFileURL } from 'url';
 import { loadEntityFacts, ROOT } from './lib/load-entity-facts.mjs';
 import { renderLlms, LLMS_FILES } from './build-llms-txt.mjs';
+import { jsonLdContents, jsonLdServedKey } from './lib/prerendered-extract.mjs';
 
 const PRERENDERED = path.join(ROOT, 'public', 'prerendered');
 const args = process.argv.slice(2);
@@ -335,6 +337,45 @@ export function socialProofVerdict(result, totalResidents) {
   return { failures, warnings, info };
 }
 
+const OFFER_TYPES = new Set(['Offer', 'AggregateOffer']);
+/**
+ * (08/10/2026) Blocs JSON-LD de PREMIER NIVEAU en conflit. scripts/inject-prerendered.mjs ne sert que le
+ * premier bloc de chaque @type (jsonLdServedKey) : deux blocs de même @type au contenu différent = l'un
+ * des deux perdu, selon l'ordre du run. Cas d'origine : /colocation-geneve, Offer InStock + Offer PreOrder
+ * laissé par une instance react-helmet fantôme (11 prérendus bot sur 13), Google voyait l'un ou l'autre.
+ * Échec : Offer/AggregateOffer de premier niveau à disponibilité contradictoire, ou deux blocs Offer
+ * (resp. AggregateOffer) différents. Avertissement : deux blocs différents de tout autre @type.
+ * Les offres IMBRIQUÉES ne comptent pas : l'ItemList de /chambres-disponibles mêle légitimement des
+ * chambres InStock et PreOrder, et l'AggregateOffer du LocalBusiness ne dépend pas de l'inventaire.
+ */
+export function jsonLdConflicts(html) {
+  const byKey = new Map();
+  const availabilities = new Set();
+  let offers = 0;
+  for (const content of jsonLdContents(html)) {
+    const key = jsonLdServedKey(content);
+    if (!byKey.has(key)) byKey.set(key, new Set());
+    byKey.get(key).add(content.replace(/\s+/g, ' '));
+    let j;
+    try { j = JSON.parse(content); } catch { try { j = JSON.parse(decodeEntities(content)); } catch { continue; } }
+    const top = Array.isArray(j) ? j : Array.isArray(j?.['@graph']) ? j['@graph'] : [j];
+    for (const n of top) {
+      if (!n || !OFFER_TYPES.has(n['@type'])) continue;
+      offers++;
+      if (n.availability) availabilities.add(String(n.availability).replace(/^https?:\/\/schema\.org\//, ''));
+    }
+  }
+  const failures = [], warnings = [];
+  if (availabilities.size > 1) failures.push(`${offers} blocs Offer/AggregateOffer à disponibilité contradictoire (${[...availabilities].join(' / ')}) — l'injection ne sert que le premier de chaque @type`);
+  for (const [key, contents] of byKey) {
+    if (contents.size < 2) continue;
+    const msg = `${contents.size} blocs JSON-LD « ${key} » différents — l'injection ne sert que le premier`;
+    if (!OFFER_TYPES.has(key)) warnings.push(msg);
+    else if (availabilities.size <= 1) failures.push(msg);
+  }
+  return { failures, warnings };
+}
+
 async function checkDb(m) {
   const failures = [];
   const F = m.ENTITY_FACTS;
@@ -452,6 +493,9 @@ async function checkHtml(m) {
       if (!ok) failures.push(`${f} : numberOfRooms=${n.numberOfRooms} hors {${[F.totalRooms, ...F.houses.map((h) => h.rooms)].join(',')}}`);
     }
     for (const n of nodes) if (n['@type'] === 'AggregateOffer' && (String(n.lowPrice) !== String(F.price.fromChf) || String(n.highPrice) !== String(F.price.standardChf))) failures.push(`${f} : AggregateOffer ${n.lowPrice}-${n.highPrice} ≠ ${F.price.fromChf}-${F.price.standardChf}`);
+    const conflicts = jsonLdConflicts(html);
+    failures.push(...conflicts.failures.map((c) => `${f} : ${c}`));
+    warnings.push(...conflicts.warnings.map((c) => `${f} : ${c}`));
     // Règle des minutes (S2) — minuteIssues() ; les pages de transport de l'Observatoire et du blog en sont exemptées.
     if (!/^(en-)?(observatoire|blog-(transport|temps-trajet|cout-transport))/.test(f)) {
       for (const issue of minuteIssues(html, F.genevaMinutes)) { minuteWarnings++; (STRICT ? failures : warnings).push(`${f} : ${issue}`); }
