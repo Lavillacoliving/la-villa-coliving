@@ -920,13 +920,8 @@
       "permanent": true
     },
     {
-      "source": "/fr/",
-      "destination": "/",
-      "permanent": true
-    },
-    {
       "source": "/fr/members",
-      "destination": "/le-coliving",
+      "destination": "/candidature",
       "permanent": true
     },
     {
@@ -971,7 +966,7 @@
     },
     {
       "source": "/category/all-products",
-      "destination": "/",
+      "destination": "/nos-maisons",
       "permanent": true
     },
     {

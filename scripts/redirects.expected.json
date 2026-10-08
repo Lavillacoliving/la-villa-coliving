@@ -214,5 +214,21 @@
   {
     "from": "/en/blog/vivre-a-annemasse-quand-on-travaille-a-gen%C3%A8ve",
     "to": "/en/blog/vivre-a-annemasse-quand-on-travaille-a-geneve"
+  },
+  {
+    "from": "/category/all-products",
+    "to": "/nos-maisons"
+  },
+  {
+    "from": "/fr/category/all-products",
+    "to": "/nos-maisons"
+  },
+  {
+    "from": "/members",
+    "to": "/candidature"
+  },
+  {
+    "from": "/fr/members",
+    "to": "/candidature"
   }
 ]
