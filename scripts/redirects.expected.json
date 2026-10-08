@@ -230,5 +230,13 @@
   {
     "from": "/fr/members",
     "to": "/candidature"
+  },
+  {
+    "from": "/blog/coliving-annemasse-geneve-frontaliers-avantage",
+    "to": "/blog/coliving-annemasse-geneve-frontaliers-avantages"
+  },
+  {
+    "from": "/en/blog/coliving-annemasse-geneve-frontaliers-avantage",
+    "to": "/en/blog/coliving-annemasse-geneve-frontaliers-avantages"
   }
 ]

@@ -1208,6 +1208,16 @@
       "source": "/en/blog/vivre-a-annemasse-quand-on-travaille-a-gen%C3%A8ve",
       "destination": "/en/blog/vivre-a-annemasse-quand-on-travaille-a-geneve",
       "permanent": true
+    },
+    {
+      "source": "/blog/coliving-annemasse-geneve-frontaliers-avantage",
+      "destination": "/blog/coliving-annemasse-geneve-frontaliers-avantages",
+      "permanent": true
+    },
+    {
+      "source": "/en/blog/coliving-annemasse-geneve-frontaliers-avantage",
+      "destination": "/en/blog/coliving-annemasse-geneve-frontaliers-avantages",
+      "permanent": true
     }
   ],
   "headers": [
