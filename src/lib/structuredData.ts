@@ -384,7 +384,31 @@ export function buildAboutPageSchema(language: "fr" | "en" = "fr"): Record<strin
   };
 }
 
-/** Fil d'ariane (BreadcrumbList) — items {name, url} déjà localisés. */
+/**
+ * URL interne sans slash final : `vercel.json` déclare `trailingSlash: false`, donc « /en/ » répond 308 → « /en ».
+ * La racine garde son « / » (`https://www.lavillacoliving.com/`). Query et fragment conservés ; URL externe intacte
+ * (le `sameAs` Instagram finit par « / » et doit le garder).
+ * (Audit indexation 07/10/2026 : 45 pages EN déclaraient `"item":"https://www.lavillacoliving.com/en/"`.)
+ */
+export function withoutTrailingSlash(url: string): string {
+  if (!url.startsWith("/") && !url.startsWith(SITE)) return url;
+  const m = url.match(/^([^?#]*?)\/+([?#].*)?$/);
+  if (!m) return url;
+  const base = m[1];
+  if (base === "" || base === SITE) return url; // racine
+  return base + (m[2] ?? "");
+}
+
+/** Accueil localisé, forme canonique : `…/` en français, `…/en` (sans slash final) en anglais. */
+export function homeUrl(language: "fr" | "en"): string {
+  return language === "en" ? `${SITE}/en` : `${SITE}/`;
+}
+
+/**
+ * Fil d'ariane (BreadcrumbList) — items {name, url} déjà localisés.
+ * Chaque `item` est normalisé sans slash final (hors racine) : un appelant qui fabrique « …/en/ » ne
+ * peut plus publier une URL redirigée. Garde CI : étape 6 de scripts/check-redirects.mjs.
+ */
 export function buildBreadcrumbSchema(items: { name: string; url: string }[]): Record<string, unknown> {
   return {
     "@context": "https://schema.org",
@@ -393,7 +417,7 @@ export function buildBreadcrumbSchema(items: { name: string; url: string }[]): R
       "@type": "ListItem",
       position: i + 1,
       name: it.name,
-      item: it.url,
+      item: withoutTrailingSlash(it.url),
     })),
   };
 }

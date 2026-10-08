@@ -9,7 +9,7 @@ import ReactMarkdown, { defaultUrlTransform } from "react-markdown";
 import remarkGfm from "remark-gfm";
 import { Helmet } from "react-helmet";
 import { SEO } from "@/components/SEO";
-import { buildBreadcrumbSchema, buildFaqPageSchema, getFounderByAuthorName, ABOUT_PAGE_LIVE } from "@/lib/structuredData";
+import { buildBreadcrumbSchema, buildFaqPageSchema, getFounderByAuthorName, ABOUT_PAGE_LIVE, homeUrl } from "@/lib/structuredData";
 import { getIntentBucket } from "@/data/blogIntentBuckets";
 import { BlocOffre } from "@/components/BlocOffre";
 import { markInternalRef } from "@/lib/attribution";
@@ -487,7 +487,7 @@ export function BlogPostPage() {
       />
       <Helmet>
         <script type="application/ld+json">{JSON.stringify(buildBreadcrumbSchema([
-          { name: language === "en" ? "Home" : "Accueil", url: `https://www.lavillacoliving.com${language === "en" ? "/en" : ""}/` },
+          { name: language === "en" ? "Home" : "Accueil", url: homeUrl(language) },
           { name: "Blog", url: `https://www.lavillacoliving.com${language === "en" ? "/en" : ""}/blog` },
           { name: title, url: `https://www.lavillacoliving.com${language === "en" ? "/en" : ""}/blog/${post.slug}` },
         ]))}</script>

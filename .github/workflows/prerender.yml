@@ -87,6 +87,10 @@ jobs:
 
       # Garde Lot C0 (brief « Conquête IA », 09/2026) : redirections sans chaîne, aucune URL du
       # sitemap redirigée, paires de consolidation attendues (scripts/redirects.expected.json).
+      # Étape 6 (audit indexation 07/10/2026) : aucune URL interne du HTML prérendu ni de llms.txt (liens,
+      # canonical, hreflang, JSON-LD) vers une redirection, un slash final, l'apex ou http. Un lien écrit dans
+      # le markdown d'un article (contenu en base) n'est qu'un avertissement. Échecs et avertissements sont
+      # publiés en annotations. Pas de --dist ici : dist/ date du « vite build » ci-dessus, donc d'AVANT le prérendu.
       - name: Vérifier les redirections
         run: node scripts/check-redirects.mjs --expect scripts/redirects.expected.json
 

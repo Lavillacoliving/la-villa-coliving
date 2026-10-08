@@ -52,10 +52,21 @@ Vérifie les extracteurs sur des données synthétiques (`tools/test/`). À lanc
 
 Trois contrôles supplémentaires, exécutés en CI après le prérendu (`.github/workflows/prerender.yml`) et à la main :
 
-- `npm run check:redirects` — `vercel.json` × `public/sitemap.xml` : aucune chaîne de redirection, aucune URL du
-  sitemap redirigée, paires de consolidation attendues (`scripts/redirects.expected.json`). Après un déploiement :
-  `node scripts/check-redirects.mjs --expect scripts/redirects.expected.json --net` (308 puis 200 en un saut).
-  Pour ajouter une redirection sans créer de chaîne : `node scripts/redirects.mjs --add /blog/ancien /blog/nouveau`.
+- `npm run check:redirects` — `vercel.json` × `public/sitemap.xml` × `public/prerendered/*.html` : aucune chaîne de
+  redirection, aucune URL du sitemap redirigée, paires de consolidation attendues (`scripts/redirects.expected.json`),
+  et (depuis l'audit d'indexation du 07/10/2026) aucune URL interne du HTML prérendu ni de `llms.txt` — liens,
+  canonical, hreflang, og:url, JSON-LD `item`/`url`/`@id`/`mainEntityOfPage`/`sameAs`/`target` — qui redirige :
+  source de `vercel.json`, slash final (« /en/ »), apex sans www, http. Un lien écrit dans le markdown d'un article
+  (en base) n'est qu'un avertissement, à repointer depuis le dashboard ou en SQL ; tout le reste bloque le bot. En
+  CI, échecs et avertissements sont aussi publiés en annotations (lisibles sans compte GitHub). Le HTML lu est celui
+  du DERNIER prérendu (`public/prerendered/`) : après une modification de code, lance d'abord `npm run build:local`,
+  sinon la garde juge l'ancien HTML. `--no-html` saute ce contrôle, `--dist` y ajoute `dist/` (hors CI uniquement).
+  Après un déploiement :
+  `node scripts/check-redirects.mjs --expect scripts/redirects.expected.json --net` (308 puis 200 en un saut ; l'apex
+  en 307 n'y est qu'un avertissement : c'est un réglage Vercel > Domains, pas `vercel.json`).
+  Pour ajouter une redirection sans créer de chaîne : `node scripts/redirects.mjs --add /blog/ancien /blog/nouveau`
+  (c'est aussi la commande que le dashboard affiche, à transmettre à Claude, quand on renomme le slug d'un article
+  publié ; le dashboard refuse de renommer un slug cité par le code : fiche entité, maillage, page de décision).
 - `npm run check:competitors` — aucun nom de concurrent dans le HTML prérendu ni `llms.txt`. La liste n'est jamais
   dans le repo : copier `scripts/competitors.example.json` en `scripts/competitors.local.json` (gitignoré) ; en CI,
   secret GitHub `COMPETITOR_NAMES` (noms séparés par des virgules). Sans liste : avertissement, pas de blocage.

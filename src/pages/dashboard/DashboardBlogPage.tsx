@@ -1,6 +1,9 @@
 import { useState, useEffect, useCallback } from 'react';
 import { supabase } from '@/lib/supabase';
 import { logAudit } from '@/lib/auditLog';
+import { checkBlogSlugChange, isBlogSlugLockedByCode, isValidBlogSlug, normalizeBlogSlug, postsLinkingToSlug } from '@/lib/blogSlug';
+import { ENTITY_FACTS_ARTICLES } from '@/data/entityFactsArticles';
+import { COLOC_GENEVE_ARTICLE } from '@/lib/siteLinks';
 
 interface BlogPost {
   id: string;
@@ -36,6 +39,9 @@ export default function DashboardBlogPage() {
   const [editTab, setEditTab] = useState<EditTab>('fr');
   const [saving, setSaving] = useState(false);
   const [saved, setSaved] = useState(false);
+  // Slug (audit indexation 07/10/2026) : erreur de saisie, et commande de redirection à lancer après un renommage.
+  // Rattachés à l'article (id) : ils ne réapparaissent pas sur un autre article ouvert ensuite.
+  const [slugMsg, setSlugMsg] = useState<{ id: string; error?: string; command?: string; from?: string; linking?: string[] } | null>(null);
   const [searchParams] = useState(() => new URLSearchParams(window.location.search));
 
   const fetchPosts = useCallback(async () => {
@@ -66,8 +72,8 @@ export default function DashboardBlogPage() {
   const draftCount = posts.filter(p => !p.is_published).length;
   const publishedCount = posts.filter(p => p.is_published).length;
 
-  const save = async (updates: Partial<BlogPost>) => {
-    if (!editPost) return;
+  const save = async (updates: Partial<BlogPost>): Promise<boolean> => {
+    if (!editPost) return false;
     setSaving(true);
     const { error } = await supabase
       .from('blog_posts')
@@ -75,17 +81,83 @@ export default function DashboardBlogPage() {
       .eq('id', editPost.id);
     if (!error) {
       setEditPost({ ...editPost, ...updates });
+      // Copie locale tenue à jour tout de suite : commitSlug y lit le dernier slug ENREGISTRÉ.
+      setPosts(ps => ps.map(p => (p.id === editPost.id ? { ...p, ...updates } : p)));
       setSaved(true);
       setTimeout(() => setSaved(false), 2000);
       await logAudit('update', 'blog_post', editPost.id, { fields: Object.keys(updates) });
       fetchPosts();
     }
     setSaving(false);
+    return !error;
+  };
+
+  // Slug figé par le code (fiche entité, maillage, page de décision) : le renommer ici bloquerait le bot de prérendu.
+  const isSlugLocked = (post: BlogPost, slug: string) =>
+    isBlogSlugLockedByCode(slug, [post.content_fr, post.content_en], [...ENTITY_FACTS_ARTICLES, COLOC_GENEVE_ARTICLE.replace(/^\/blog\//, '')]);
+
+  // Slug : normalisé (sans accents, minuscules, tirets) et validé avant tout enregistrement. Renommer un article
+  // PUBLIÉ casse son URL : confirmation obligatoire + commande de redirection affichée (scripts/redirects.mjs), à
+  // transmettre à Claude (Jérôme ne manipule pas le repo), avec la liste des articles qui lient encore l'ancienne URL.
+  const commitSlug = async () => {
+    if (!editPost) return;
+    const stored = posts.find(p => p.id === editPost.id) ?? editPost; // dernière version ENREGISTRÉE
+    const current = stored.slug;
+    const check = checkBlogSlugChange(editPost.slug, current, editPost.is_published, isSlugLocked(stored, current));
+    if (check.kind === 'invalid') {
+      setSlugMsg({ id: editPost.id, error: `Slug refusé : il faut au moins une lettre ou un chiffre. Slug conservé : ${current}` });
+      setEditPost({ ...editPost, slug: current });
+      return;
+    }
+    if (check.kind === 'locked') {
+      setSlugMsg({ id: editPost.id, error: `Ce slug est utilisé dans le code du site (fiche entité, maillage ou page de décision) : le changer ici bloquerait le prochain déploiement. Demande le renommage à Claude, qui le fera avec le code. Slug conservé : ${current}` });
+      setEditPost({ ...editPost, slug: current });
+      return;
+    }
+    setSlugMsg(null);
+    if (check.kind === 'unchanged') {
+      if (editPost.slug !== check.slug) setEditPost({ ...editPost, slug: check.slug });
+      return;
+    }
+    const linking = check.redirect === 'none' ? [] : postsLinkingToSlug(posts, current, editPost.id).map(p => p.title_fr || p.slug);
+    const linkingText = linking.length
+      ? `\n\n${linking.length} autre(s) article(s) lient encore /blog/${current} : ${linking.join(' · ')}. Repointe ensuite ces liens vers /blog/${check.slug}, sinon ils passeront par la redirection.`
+      : '';
+    const redirectText = check.redirect === 'command'
+      ? `Après l'enregistrement, transmets cette commande à Claude (elle restera affichée sous le champ) :\n${check.redirectCommand}`
+      : `L'ancien slug n'est pas au format : demande à Claude d'ajouter la redirection depuis « ${current} ».`;
+    if (check.redirect !== 'none' && !window.confirm(
+      `Cet article est publié. Si tu changes son slug, /blog/${current} et /en/blog/${current} tomberont en 404 au prochain passage du bot de prérendu, sauf si une redirection est ajoutée.\n\n`
+      + `Nouveau slug : ${check.slug}\n\n${redirectText}${linkingText}\n\nConfirmer le changement de slug ?`,
+    )) {
+      setEditPost({ ...editPost, slug: current });
+      return;
+    }
+    if (await save({ slug: check.slug })) {
+      if (check.redirect !== 'none') setSlugMsg({ id: editPost.id, command: check.redirectCommand ?? undefined, from: current, linking });
+    } else {
+      setSlugMsg({ id: editPost.id, error: `Enregistrement refusé (slug « ${check.slug} » déjà utilisé ?). Slug conservé : ${current}` });
+      setEditPost({ ...editPost, slug: current });
+    }
   };
 
   const publish = async () => {
     if (!editPost) return;
-    await save({ is_published: true, published_at: new Date().toISOString() });
+    // Un brouillon importé (n8n, SQL) peut porter un slug hors format : on le corrige avant de le mettre en ligne.
+    const slugFix: Partial<BlogPost> = {};
+    if (!isValidBlogSlug(editPost.slug)) {
+      const fixed = normalizeBlogSlug(editPost.slug);
+      if (!isValidBlogSlug(fixed) || isSlugLocked(editPost, editPost.slug)) {
+        setEditTab('meta');
+        setSlugMsg({ id: editPost.id, error: isValidBlogSlug(fixed)
+          ? `Slug « ${editPost.slug} » hors format et utilisé par le code du site : demande à Claude de le corriger avant de publier.`
+          : 'Slug invalide : corrige-le ici avant de publier.' });
+        return;
+      }
+      if (!window.confirm(`Le slug « ${editPost.slug} » n'est pas au bon format. L'article sera publié sous /blog/${fixed}. Continuer ?`)) return;
+      slugFix.slug = fixed;
+    }
+    if (!(await save({ ...slugFix, is_published: true, published_at: new Date().toISOString() }))) return;
     setEditPost(null);
     setTab('published');
   };
@@ -269,7 +341,30 @@ export default function DashboardBlogPage() {
       {editTab === 'meta' && (
         <div>
           <label style={labelStyle}>Slug</label>
-          <input value={editPost.slug} onChange={e => setEditPost({ ...editPost, slug: e.target.value })} onBlur={() => save({ slug: editPost.slug })} style={inputStyle} />
+          <input value={editPost.slug} onChange={e => { setEditPost({ ...editPost, slug: e.target.value }); if (slugMsg?.error) setSlugMsg(null); }} onBlur={commitSlug} style={inputStyle} />
+          {normalizeBlogSlug(editPost.slug) !== editPost.slug && (
+            <p style={{ margin: '4px 0 0', fontSize: '12px', color: '#888' }}>
+              Sera enregistré : <code>{normalizeBlogSlug(editPost.slug) || '(vide)'}</code> (minuscules, chiffres et tirets, sans accents)
+            </p>
+          )}
+          {slugMsg?.id === editPost.id && slugMsg.error && <p style={{ margin: '4px 0 0', fontSize: '12px', color: '#dc3545' }}>{slugMsg.error}</p>}
+          {slugMsg?.id === editPost.id && slugMsg.from && (
+            <div style={{ marginTop: '6px', padding: '8px 10px', background: '#fff3cd', borderRadius: '8px', fontSize: '12px', color: '#856404' }}>
+              {slugMsg.command ? (
+                <>
+                  Redirection à faire ajouter par Claude (transmets-lui cette commande) :
+                  <code style={{ display: 'block', marginTop: '4px', userSelect: 'all', wordBreak: 'break-all', color: '#1a1a2e' }}>{slugMsg.command}</code>
+                </>
+              ) : (
+                <>Ancien slug hors format : demande à Claude d'ajouter la redirection depuis « {slugMsg.from} ».</>
+              )}
+              {slugMsg.linking && slugMsg.linking.length > 0 && (
+                <div style={{ marginTop: '6px' }}>
+                  Articles qui lient encore /blog/{slugMsg.from} (liens à repointer vers /blog/{editPost.slug}) : {slugMsg.linking.join(' · ')}
+                </div>
+              )}
+            </div>
+          )}
 
           <label style={labelStyle}>Catégorie</label>
           <select value={editPost.category} onChange={e => { const v = e.target.value; setEditPost({ ...editPost, category: v }); save({ category: v }); }} style={inputStyle}>

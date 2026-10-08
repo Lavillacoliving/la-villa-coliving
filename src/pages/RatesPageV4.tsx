@@ -10,7 +10,7 @@ import { MONTHS_EN, MONTHS_FR } from "@/lib/dates";
 import { nextMonthValue, useRenderMonth } from "@/lib/renderMonth";
 import { FaqSection } from "@/components/FaqSection";
 import { tarifsFaq } from "@/data/faq/tarifsFaq";
-import { buildBreadcrumbSchema, buildRoomsAggregateOfferSchema } from "@/lib/structuredData";
+import { buildBreadcrumbSchema, buildRoomsAggregateOfferSchema, homeUrl } from "@/lib/structuredData";
 import { STATS, PRICE_FR_NUM, PRICE_EN_NUM, PRICE_CHF_FR, PRICE_CHF_EN, PRICE_SHARED_FR_NUM, PRICE_SHARED_EN_NUM, PRICE_SHARED_CHF_FR, PRICE_SHARED_CHF_EN, CONTRACT_EUR, EUR_STANDARD_FR_NUM, EUR_SHARED_FR_NUM, EUR_STANDARD_EN_NUM, EUR_SHARED_EN_NUM } from "@/data/stats";
 import {
   MONTHLY_SAVINGS_CHF,
@@ -328,7 +328,7 @@ export function RatesPageV4() {
       <Helmet>
         {/* URLs localisées (…/en/tarifs en anglais) — même pattern que HouseDetailPage/BlogPostPage */}
         <script type="application/ld+json">{JSON.stringify(buildBreadcrumbSchema([
-          { name: language === "en" ? "Home" : "Accueil", url: `https://www.lavillacoliving.com${language === "en" ? "/en" : ""}/` },
+          { name: language === "en" ? "Home" : "Accueil", url: homeUrl(language) },
           { name: language === "en" ? "Rates" : "Tarifs", url: `https://www.lavillacoliving.com${language === "en" ? "/en" : ""}/tarifs` },
         ]))}</script>
         <script type="application/ld+json">{JSON.stringify(buildRoomsAggregateOfferSchema({

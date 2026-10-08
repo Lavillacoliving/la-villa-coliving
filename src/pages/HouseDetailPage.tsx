@@ -6,7 +6,7 @@ import { responsiveImage } from "@/lib/responsiveImage";
 import { LocalizedLink } from "@/components/LocalizedLink";
 import { colocGeneveHref } from "@/lib/siteLinks";
 import { Scrim } from "@/components/Scrim";
-import { buildBreadcrumbSchema, HOUSES, LAVILLA_SAME_AS, ORG_ID } from "@/lib/structuredData";
+import { buildBreadcrumbSchema, homeUrl, HOUSES, LAVILLA_SAME_AS, ORG_ID } from "@/lib/structuredData";
 import {
   MapPin,
   Users,
@@ -1492,7 +1492,7 @@ export function HouseDetailPage() {
       })}</script>
       {/* BreadcrumbList Schema.org */}
       <script type="application/ld+json">{JSON.stringify(buildBreadcrumbSchema([
-        { name: language === "en" ? "Home" : "Accueil", url: `https://www.lavillacoliving.com${language === "en" ? "/en" : ""}/` },
+        { name: language === "en" ? "Home" : "Accueil", url: homeUrl(language) },
         { name: language === "en" ? "Our houses" : "Nos maisons", url: `https://www.lavillacoliving.com${language === "en" ? "/en" : ""}/nos-maisons` },
         { name: id === "lavilla" ? "La Villa" : id === "leloft" ? "Le Loft" : "Le Lodge", url: `https://www.lavillacoliving.com${language === "en" ? "/en" : ""}/${id}` },
       ]))}</script>
