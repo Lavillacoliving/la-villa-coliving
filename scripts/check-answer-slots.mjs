@@ -30,8 +30,9 @@ import { routeToFile, visibleText, textBlocks } from './check-entity-facts.mjs';
  * (script#__blog_post_data__ = contenu de la base au prérendu) contient déjà le texte — le SQL est passé et le prérendu
  * ne le montre pas : ÉCHEC. Le commit de gel passe la constante à true après la séance SQL : tout créneau absent
  * devient un échec. Les pages money (créneaux en JSX) sont toujours strictes.
+ * Gel du 09/10/2026 : SQL L1 appliqué en base le 09/10 (14 h 29 → 14 h 46 UTC), prérendu relancé (run #423).
  */
-export const ANSWER_SLOTS_LIVE = false;
+export const ANSWER_SLOTS_LIVE = true;
 
 const PRERENDERED = path.join(ROOT, 'public', 'prerendered');
 const args = process.argv.slice(2);

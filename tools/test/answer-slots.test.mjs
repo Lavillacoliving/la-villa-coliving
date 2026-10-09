@@ -312,7 +312,7 @@ test('runChecks : bloc hors périmètre, page absente, variante/version/texte fa
 
 test('runChecks : créneaux absents — stricts sur les pages money, adaptatifs sur les articles (avertissement, ou échec si déjà en base ou si live)', () => {
   const pages = syntheticPages({ dropNeedles: true });
-  const adaptive = runChecks(m, pages);
+  const adaptive = runChecks(m, pages, { live: false }); // mode adaptatif explicite (gel du 09/10 : ANSWER_SLOTS_LIVE = true par défaut)
   const moneyMissing = 2 * 2 * 3; // 2 routes money × FR/EN × 3 phrases de commune
   assert.equal(adaptive.stats.needleFailures, moneyMissing, adaptive.failures.join('\n'));
   assert.ok(adaptive.failures.every((x) => /^(en-)?(annemasse-colocation|chambre-a-louer-annemasse)\.html : créneau/.test(x)), adaptive.failures.join('\n'));
@@ -322,7 +322,7 @@ test('runChecks : créneaux absents — stricts sur les pages money, adaptatifs 
   const slug = 'quartiers-annemasse-ou-vivre-selon-profil';
   const withDb = page('<p>rien</p>', { lang: 'fr', embedded: { post: { slug, content_fr: `Texte. ${m.communeSentence('lelodge', 'fr')}`, content_en: 'y' }, related: [] } });
   pages.set(`blog-${slug}.html`, withDb);
-  const r2 = runChecks(m, pages);
+  const r2 = runChecks(m, pages, { live: false });
   assert.ok(r2.failures.some((x) => x.startsWith(`blog-${slug}.html : créneau « commune:lelodge »`) && /présent dans l'état embarqué/.test(x)), r2.failures.join('\n'));
   // Mode live : tout créneau absent est un échec.
   const live = runChecks(m, pages, { live: true });
@@ -340,7 +340,7 @@ test('runChecks : marqueur orphelin, promesse garant (code strict / article adap
   pages.set('en-blog-t.html', page('<h1>Transport</h1><aside><h3>Renting in France with No French Guarantor: The Cross-Border Guide</h3><p>You will need a guarantor, they say.</p></aside>', { lang: 'en', embedded: { post: { slug: 't', content_en: 'Trains.', content_fr: '' }, related: [{ title_en: 'Renting in France with No French Guarantor: The Cross-Border Guide', excerpt_en: 'You will need a guarantor, they say.' }] } }));
   pages.set('en-blog.html', page('<h2>Renting in France with No French Guarantor: The Cross-Border Guide</h2>', { lang: 'en' }));
   pages.set('colocation-geneve.html', pages.get('colocation-geneve.html').replace('<main>', `<main><p>${Array(13).fill('La Villa Coliving').join(' · ')}</p>`));
-  const r = runChecks(m, pages);
+  const r = runChecks(m, pages, { live: false }); // comportement adaptatif testé explicitement
   const f = r.failures.join('\n');
   assert.match(f, /faq\.html : marqueur orphelin visible/);
   assert.match(f, /faq\.html : « tu auras besoin d'un garant » dans le texte visible/);
