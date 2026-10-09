@@ -10,7 +10,12 @@
  *      12 mois, placeholders) dans le texte visible du site ; JSON-LD : ≤ 1 LocalBusiness/LodgingBusiness
  *      d'entité et ≤ 1 FAQPage par page, 0 aggregateRating, numberOfRooms cohérents ;
  *   c) public/llms.txt et public/en/llms.txt = régénération (scripts/build-llms-txt.mjs).
- * Options : --no-db (hors ligne) · --strict (règle des minutes et vouvoiement en échec, pas en avertissement)
+ *   d) (Lot L2 « Emplacement et transport », 09/10/2026) règles d'emplacement : formulations D6/D7 interdites partout
+ *      (« mitoyenne », « TPN », numéros de bus, « tram à 1 min », « 500 m, 5 min à pied », « CHUV », « terminus du
+ *      Léman Express »…), « 15 min » en rapport avec Genève même en voiture (D1), et — pages en CODE seulement (hors
+ *      blog-*) — toute promesse en voiture ou durée vers l'aéroport. Les deux dernières suivent le régime de la règle
+ *      des minutes : échec en --strict, avertissement sinon. Fonctions pures testées dans tools/test/location-rules.test.mjs.
+ * Options : --no-db (hors ligne) · --strict (règle des minutes, règles L2 et vouvoiement en échec, pas en avertissement)
  *           --json-ld /route (dump des blocs JSON-LD d'une page dans tools/out/) · --tutoiement (rapport)
  * Modèle : scripts/house-pages-check.mjs (collecte, impression, exit 1). Exécuté par prerender.yml après
  * house-pages-check et avant hydration-check. En local : `npm run check:facts` après `npm run build:local`.
@@ -53,8 +58,62 @@ const FORBIDDEN = [
   // Forme directe seulement (« Cornavin en 15 min », « Cornavin: 15 min ») : la forme inverse « …15 min, à Cornavin en 22 min »
   // (Eaux-Vives puis Cornavin dans la même phrase) est légitime.
   { re: /Cornavin[^.!?,;()]{0,12}\b15 ?min/i, label: '« Cornavin 15 min » (train ≈ 20 min depuis le 07/09)' },
+  // ── (Lot L2 « Emplacement et transport », 09/10/2026) formulations d'emplacement interdites, toutes pages sauf légales ──
+  // D6 — la frontière de La Villa : le Foron, rivière-frontière, borde la rue (src/data/houseLocation.ts). Singulier
+  // seulement (« communes mitoyennes » = les communes entre elles), « adjoins » (pas « adjoining towns »), « border next door ».
+  { re: /\bmitoyenne\b|\badjoins\b|border-adjacent|border next door/i, label: 'frontière « mitoyenne » (D6 : le Foron, rivière-frontière, borde la rue)' },
+  // « right on the border » est la phrase de quartier A.2 du Loft (Ambilly, D6) : exempté quand la phrase nomme Ambilly.
+  { re: /right on the border/i, unless: /Ambilly/i, label: '« right on the border » hors Ambilly (D6)' },
+  // D7 — aucun numéro de ligne de bus ; « TPN » = réseau de Nyon ; un arrêt s'écrit « arrêt de bus <nom> à N min à pied ».
+  { re: /\bTPN\b/, label: '« TPN » (réseau de Nyon — D7)' },
+  { re: /\bligne 61\b|\bline 61\b|ligne de bus 7\b|\bbus 7\b|bus line 7\b/i, label: 'numéro de ligne de bus (D7 : arrêt nommé, sans numéro)' },
+  { re: /Place de l['’]Étoile à 1 min/i, label: '« Place de l\'Étoile à 1 min » (D7 : Parc Montessuit à 13 min à pied)' },
+  { re: /(?<![\d,.\-–])1 min à pied|(?<![\d,.\-–])1-minute walk/i, requires: /\btram/i, label: '« tram à 1 min à pied » (D7)' },
+  { re: /au pas de la porte/i, label: '« au pas de la porte » (D7)' },
+  { re: /500[   ]?m, 5 min (?:à pied|walk)/i, label: '« 500 m, 5 min à pied » (Loft : frontière à 600 m, 8 min à pied — D6)' },
+  { re: /\bCHUV\b/, label: '« CHUV » (l\'hôpital de Genève est le HUG)' },
+  { re: /terminus (?:\p{L}+ )?du Léman Express|(?:\p{L}+ )?terminus of the Léman Express|Léman Express terminus/iu, label: '« terminus du Léman Express » (faux : écrire « gare d\'Annemasse »)' },
+  // « autoroute A40 » n'est PAS ici : un article peut conseiller d'éviter ses abords (bruit) ; sur une page en code,
+  // c'est une promesse routière → règle « promesse en voiture » (carPromiseIssues, A40_RE).
 ];
-const MINUTE_QUALIFIER = /(?<![\p{L}\p{N}])(?:à pied|on foot|walk\p{L}*|vélo|bike|cycl\p{L}*|voiture|car|driving|aéroport|airport|bus|tram\p{L}*|Cornavin|Eaux-Vives|CERN|Nations|heure de pointe|rush hour|gare|station|Léman Express|CEVA|Moillesulaz|frontière|border|visio|vidéo|video|appel|call|Annemasse[ \-–↔]+Gen[èe]v[ea])(?![\p{L}\p{N}])/iu;
+// (Lot L2, 09/10/2026) + Rive, Champel, Lancy, Puplinge, Foron, Voie Verte, porte-à-porte / door to door : destinations et
+// modes nommés par TRANSIT (src/data/stats.ts) — une minute qualifiée par l'un d'eux n'est pas « Genève seul ».
+export const MINUTE_QUALIFIER = /(?<![\p{L}\p{N}])(?:à pied|on foot|walk\p{L}*|vélo|bike|cycl\p{L}*|voiture|car|driving|aéroport|airport|bus|tram\p{L}*|Cornavin|Eaux-Vives|Rive|Champel|Lancy|Puplinge|Foron|Voie Verte|porte[ -]à[ -]porte|door[ -]to[ -]door|CERN|Nations|heure de pointe|rush hour|gare|station|Léman Express|CEVA|Moillesulaz|frontière|border|visio|vidéo|video|appel|call|Annemasse[ \-–↔]+Gen[èe]v[ea])(?![\p{L}\p{N}])/iu;
+
+// ── (Lot L2, 09/10/2026) règles d'emplacement — fonctions pures (tools/test/location-rules.test.mjs) ──────────────
+// Espaces admis entre un nombre et son unité : normal, insécable U+00A0 (thousands(), « 15 min » prérendu), fine U+202F.
+/** Page dont le texte vient du CODE (money, maisons, FAQ…) ; blog-*, en-blog-* et l'index du blog viennent de la base. */
+export const isCodePage = (file) => !/^(en-)?blog(-|\.html$)/.test(file);
+export const GENEVA_RE = /Gen[èe]v[ea]/i;
+/**
+ * Formes interdites de D1 : « 15 min », « 15 minutes », « 15-minute », « 15-20 min », « 15 à 20 min », « 15 to 20 minutes »
+ * (le 15 n'est pas la fin d'un autre nombre : « 115 min », « 2.15 » passent). Une autre fourchette qui commence par 15
+ * (« 15-25 min » d'un tableau de marché sur une colocation À Genève) n'est pas visée : décision à prendre page par page.
+ */
+export const FIFTEEN_MIN_RE = /(?<![\d,.])15(?:[   ]?(?:[-–]|à|to)[   ]?20)?[   ]?(?:min\b|minutes?\b|-minute\b)/i;
+/**
+ * Seules exceptions (D1), toutes rattachées AU 15 (pas à la phrase entière, sinon « 15 min en voiture, gare à 5 min à pied »
+ * passerait) : marche (« 15 minutes à pied », « a 15-minute walk », « walking 15 minutes »), cadence (« toutes les 15 »,
+ * « every 15 »), supplément (« 15 min de plus / plus loin / extra / additional »), temps de lecture (« 15 min de lecture »).
+ */
+export const FIFTEEN_MIN_EXEMPT = [
+  /15(?:[   ]?(?:[-–]|à|to)[   ]?20)?[   ]?(?:min(?:utes?)?['’]?|-minute)[   ]?(?:à pied|on foot|walk|walking|de marche)/i,
+  /\b(?:walk|walking|marche|marcher)[^.;!?]{0,12}?(?<![\d,.])15\b/i,
+  /\b(?:toutes les|every)[^.;!?]{0,12}?(?<![\d,.])15\b/i,
+  /(?<![\d,.])15[^.;!?]{0,20}?\b(?:de plus|plus loin|extra|supplémentaires?|additional)\b|\bextra[^.;!?]{0,8}?(?<![\d,.])15\b/i,
+  /(?<![\d,.])15[   ]?min(?:utes?)?[   ]?(?:de lecture|read)\b/i,
+];
+export const isFifteenExempt = (sentence) => FIFTEEN_MIN_EXEMPT.some((re) => re.test(sentence));
+/**
+ * Promesse en voiture : une durée (« 15 min », « 10-15 minutes », « 5-minute ») suivie de « en voiture », « by car »,
+ * « drive / driving », d'une cellule « | Voiture » / « | Car » ou de « voiture (…) » / « car (…) » ; ou une durée précédée
+ * de « voiture : » / « car: » / « driving: ». « car » seul n'est jamais pris (conjonction française).
+ */
+export const CAR_MINUTES_RE = /(?<![\d,.])\d{1,3}(?:[   ]?(?:[-–]|à|to)[   ]?\d{1,3})?[   ]?(?:min\b|minutes?\b|-minute\b)[^.;!?]{0,30}?(?:\ben voiture\b|\bby car\b|\bdriv(?:e|ing)\b|\|[   ]?(?:voiture|car)\b|\b(?:voiture|car)(?=[   ]?\())|\b(?:voiture|car|driving|drive)[   ]?:[^.;!?]{0,25}?(?<![\d,.])\d{1,3}(?:[   ]?(?:[-–]|à|to)[   ]?\d{1,3})?[   ]?(?:min\b|minutes?\b|-minute\b)/iu;
+/** Durée vers l'aéroport, dans un sens ou dans l'autre (« Aéroport de Genève : 25 min », « 30 minutes to the airport », « GVA … 40 min »). */
+export const AIRPORT_MINUTES_RE = /(?:a[ée]roport|airport|\bGVA\b)[^.;!?]{0,80}?(?<![\d,.])\d{1,3}[   ]?(?:min\b|minutes?\b|-minute\b)|(?<![\d,.])\d{1,3}[   ]?(?:min\b|minutes?\b|-minute\b)[^.;!?]{0,50}?(?:a[ée]roport|airport|\bGVA\b)/iu;
+/** L'autoroute A40 n'est jamais un argument d'accès sur une page en code (D1 : aucune promesse routière). */
+export const A40_RE = /\bA40\b/;
 
 export function routeToFile(route, lang) {
   const r = lang === 'en' ? (route === '/' ? '/en' : `/en${route}`) : route;
@@ -91,8 +150,87 @@ export function textBlocks(html) {
     .map((chunk) => decodeEntities(chunk.replace(/<[^>]+>/g, ' ')).replace(/[ \t\r\n]+/g, ' ').trim())
     .filter(Boolean);
 }
+/** (Lot L2) Lignes de tableau (<tr>…</tr>) en texte : une durée et sa destination vivent souvent dans deux cellules voisines. */
+export function tableRows(html) {
+  const body = html.replace(/^[\s\S]*?<\/head>/, '').replace(/<script[\s\S]*?<\/script>/g, ' ').replace(/<style[\s\S]*?<\/style>/g, ' ').replace(/<!--[\s\S]*?-->/g, ' ');
+  return [...body.matchAll(/<tr\b[^>]*>([\s\S]*?)<\/tr>/gi)]
+    .map((m) => decodeEntities(m[1].replace(/<\/t[dh]>/gi, ' | ').replace(/<[^>]+>/g, ' ')).replace(/[ \t\r\n]+/g, ' ').trim())
+    .filter(Boolean);
+}
+/** Phrases du texte visible : blocs découpés à la ponctuation forte, plus les lignes de tableau entières. */
+export function sentences(html) {
+  return textBlocks(html).flatMap((b) => b.split(/(?<=[.!?;])\s+/)).concat(tableRows(html));
+}
 const norm = (s) => s.replace(/[ \t\r\n]+/g, ' ').trim();
 const count = (hay, needle) => (needle ? hay.split(needle).length - 1 : 0);
+
+/** Chaînes interdites (FORBIDDEN) d'une page : un message par règle touchée, avec la première phrase fautive. */
+export function forbiddenIssues(html, text = visibleText(html)) {
+  const out = [];
+  let sens = null;
+  for (const fb of FORBIDDEN) {
+    if (!fb.re.test(text)) continue;
+    if (fb.unlessQualified || fb.unless || fb.requires) {
+      // Interdit seulement dans une phrase sans qualificatif (à pied, vélo, Moillesulaz, aéroport…), hors exception propre
+      // à la règle (`unless`), et — pour `requires` — seulement quand la phrase porte aussi ce contexte (ex. « tram »).
+      const exempt = fb.unless ?? (fb.unlessQualified ? MINUTE_QUALIFIER : null);
+      sens ??= sentences(html);
+      const bad = sens.filter((sen) => fb.re.test(sen) && !(exempt && exempt.test(sen)) && (!fb.requires || fb.requires.test(sen)));
+      if (bad.length === 0) continue;
+      out.push(`${fb.label} — « ${bad[0].slice(0, 120)}… »`);
+      continue;
+    }
+    const i = text.search(fb.re);
+    out.push(`${fb.label} dans le texte visible — « …${text.slice(Math.max(0, i - 60), i + 60)}… »`);
+  }
+  return out;
+}
+
+/**
+ * Règle des minutes (S2, 07/09/2026) : dans un bloc de texte (p, li, h*, td…) qui nomme Genève, toute valeur « N min »
+ * ≠ canonique doit être qualifiée (à pied, tram, Cornavin, aéroport…). Temps de lecture ignorés. Sur les blocs seulement
+ * (pas les lignes de tableau entières : comportement inchangé depuis S2, la CI tourne en --strict).
+ */
+export function minuteIssues(html, genevaMinutes) {
+  const out = [];
+  for (const sentence of textBlocks(html).flatMap((b) => b.split(/(?<=[.!?;])\s+/))) {
+    if (!GENEVA_RE.test(sentence)) continue;
+    const ms = [...sentence.matchAll(/(?<![\d,.])(\d{1,2})[   ]?(?:min\b|minutes?\b)(?![   ]?(?:de lecture|read))/gi)].map((x) => Number(x[1]));
+    for (const v of ms) if (v !== genevaMinutes && !MINUTE_QUALIFIER.test(sentence)) out.push(`« ${v} min » non canonique ni qualifié — « ${sentence.slice(0, 110)}… »`);
+  }
+  return out;
+}
+
+/** Un message par texte fautif distinct (une cellule et sa ligne de tableau ne comptent qu'une fois). */
+function collectMatches(html, rules) {
+  const seen = new Set(), out = [];
+  for (const s of sentences(html)) {
+    for (const r of rules) {
+      const m = r.test(s);
+      if (!m || seen.has(`${r.label}|${m}`)) continue;
+      seen.add(`${r.label}|${m}`);
+      out.push(`${r.label} — « ${s.slice(0, 120)}… »`);
+    }
+  }
+  return out;
+}
+
+/** (Lot L2, D1) « 15 min » dans une phrase qui nomme Genève — interdit même qualifié par la voiture (exceptions : isFifteenExempt). */
+export function geneva15Issues(html) {
+  return collectMatches(html, [{
+    label: '« 15 min » en rapport avec Genève (D1 : n\'existe plus, même en voiture)',
+    test: (s) => (GENEVA_RE.test(s) && !isFifteenExempt(s) ? s.match(FIFTEEN_MIN_RE)?.[0] : null),
+  }]);
+}
+
+/** (Lot L2, D1) Pages en CODE seulement : promesse en voiture, durée vers l'aéroport ou autoroute A40 = à supprimer, pas à qualifier. */
+export function carPromiseIssues(html) {
+  return collectMatches(html, [
+    { label: 'promesse en voiture (jamais, D1)', test: (s) => s.match(CAR_MINUTES_RE)?.[0] },
+    { label: 'durée vers l\'aéroport (jamais, D1)', test: (s) => s.match(AIRPORT_MINUTES_RE)?.[0] },
+    { label: '« autoroute A40 » (jamais de promesse routière, D1)', test: (s) => s.match(A40_RE)?.[0] },
+  ]);
+}
 function jsonLdBlocks(html) {
   const out = [];
   for (const m of html.matchAll(/<script type="application\/ld\+json"[^>]*>([\s\S]*?)<\/script>/g)) {
@@ -157,7 +295,7 @@ async function checkHtml(m) {
   }
   for (const f of inScope.keys()) if (!files.includes(f)) failures.push(`${f} : page prérendue ABSENTE (périmètre du bloc entité)`);
   const strings = { fr: m.entityFactsStrings('fr').map(norm), en: m.entityFactsStrings('en').map(norm) };
-  let blocks = 0, minuteWarnings = 0, vousPages = 0;
+  let blocks = 0, minuteWarnings = 0, locationIssues = 0, vousPages = 0;
   for (const f of files) {
     const html = await fs.readFile(path.join(PRERENDERED, f), 'utf8');
     const text = visibleText(html);
@@ -172,20 +310,15 @@ async function checkHtml(m) {
         if (n !== 1) failures.push(`${f} : phrase canonique présente ${n} fois (attendu 1) — « ${s.slice(0, 70)}… »`);
       }
     } else if (nBlocks > 0) failures.push(`${f} : bloc entité hors périmètre (${nBlocks})`);
-    // Chaînes périmées (texte visible)
-    if (!/^(en-)?(mentions-legales|politique-de-confidentialite)\.html$/.test(f)) {
-      for (const fb of FORBIDDEN) {
-        if (!fb.re.test(text)) continue;
-        if (fb.unlessQualified || fb.unless) {
-          // Interdit seulement dans une phrase sans qualificatif (à pied, vélo, Moillesulaz, aéroport…) ou hors exception propre à la règle (`unless`).
-          const exempt = fb.unless ?? MINUTE_QUALIFIER;
-          const bad = textBlocks(html).flatMap((b) => b.split(/(?<=[.!?;])\s+/)).filter((sen) => fb.re.test(sen) && !exempt.test(sen));
-          if (bad.length === 0) continue;
-          failures.push(`${f} : ${fb.label} — « ${bad[0].slice(0, 120)}… »`);
-          continue;
-        }
-        failures.push(`${f} : ${fb.label} dans le texte visible — « …${text.slice(Math.max(0, text.search(fb.re) - 60), text.search(fb.re) + 60)}… »`);
-      }
+    const legal = /^(en-)?(mentions-legales|politique-de-confidentialite)\.html$/.test(f);
+    // Chaînes périmées ou interdites (texte visible) — dont les formulations D6/D7 du lot L2.
+    if (!legal) for (const issue of forbiddenIssues(html, text)) failures.push(`${f} : ${issue}`);
+    // (Lot L2, 09/10/2026) « 15 min » + Genève (toutes pages) ; promesse en voiture / aéroport (pages en code seulement).
+    // Même régime que la règle des minutes : échec en --strict, avertissement sinon.
+    if (!legal) {
+      const l2 = geneva15Issues(html).concat(isCodePage(f) ? carPromiseIssues(html) : []);
+      locationIssues += l2.length;
+      for (const issue of l2) (STRICT ? failures : warnings).push(`${f} : ${issue}`);
     }
     // JSON-LD
     const nodes = collectTypes(jsonLdBlocks(html));
@@ -200,16 +333,9 @@ async function checkHtml(m) {
       if (!ok) failures.push(`${f} : numberOfRooms=${n.numberOfRooms} hors {${[F.totalRooms, ...F.houses.map((h) => h.rooms)].join(',')}}`);
     }
     for (const n of nodes) if (n['@type'] === 'AggregateOffer' && (String(n.lowPrice) !== String(F.price.fromChf) || String(n.highPrice) !== String(F.price.standardChf))) failures.push(`${f} : AggregateOffer ${n.lowPrice}-${n.highPrice} ≠ ${F.price.fromChf}-${F.price.standardChf}`);
-    // Règle des minutes (S2) : dans un bloc de texte (p, li, h*, td…) qui nomme Genève, toute valeur
-    // « N min » ≠ canonique doit être qualifiée (à pied, tram, Cornavin, aéroport…). Temps de lecture ignorés.
+    // Règle des minutes (S2) — minuteIssues() ; les pages de transport de l'Observatoire et du blog en sont exemptées.
     if (!/^(en-)?(observatoire|blog-(transport|temps-trajet|cout-transport))/.test(f)) {
-      for (const block of textBlocks(html)) {
-        for (const sentence of block.split(/(?<=[.!?;])\s+/)) {
-          if (!/Gen[èe]v[ea]/i.test(sentence)) continue;
-          const ms = [...sentence.matchAll(/(?<![\d,.])(\d{1,2})[\u00A0\u202F ]?(?:min\b|minutes?\b)(?![\u00A0\u202F ]?(?:de lecture|read))/gi)].map((x) => Number(x[1]));
-          for (const v of ms) if (v !== F.genevaMinutes && !MINUTE_QUALIFIER.test(sentence)) { minuteWarnings++; (STRICT ? failures : warnings).push(`${f} : « ${v} min » non canonique ni qualifié — « ${sentence.slice(0, 110)}… »`); }
-        }
-      }
+      for (const issue of minuteIssues(html, F.genevaMinutes)) { minuteWarnings++; (STRICT ? failures : warnings).push(`${f} : ${issue}`); }
     }
     // Tutoiement (S4 — garde anti-régression, FR hors pages légales/B2B)
     if (!f.startsWith('en-') && !VOUVOIEMENT_ALLOW.test(f)) {
@@ -217,7 +343,7 @@ async function checkHtml(m) {
       if (hits > 0) { vousPages++; warnings.push(`${f} : ${hits} forme(s) de vouvoiement`); } // toujours en avertissement, même en --strict (S4 = garde anti-régression)
     }
   }
-  return { failures, warnings, files: files.length, blocks, minuteWarnings, vousPages };
+  return { failures, warnings, files: files.length, blocks, minuteWarnings, locationIssues, vousPages };
 }
 
 async function checkLlms(m) {
@@ -252,7 +378,7 @@ async function main() {
   }
   const h = await checkHtml(m);
   failures.push(...h.failures);
-  console.log(`${h.failures.length ? '❌' : '✅'} HTML : ${h.files} fichiers, ${h.blocks} pages en périmètre (bloc attendu), ${h.minuteWarnings} minute(s) non canonique(s), ${h.vousPages} page(s) FR avec vouvoiement`);
+  console.log(`${h.failures.length ? '❌' : '✅'} HTML : ${h.files} fichiers, ${h.blocks} pages en périmètre (bloc attendu), ${h.minuteWarnings} minute(s) non canonique(s), ${h.locationIssues} règle(s) d'emplacement L2 (15 min Genève, voiture, aéroport, A40${STRICT ? ' — bloquantes' : ' — avertissements, --strict pour bloquer'}), ${h.vousPages} page(s) FR avec vouvoiement`);
   for (const w of h.warnings.slice(0, args.includes('--tutoiement') || args.includes('--verbose') ? 500 : 12)) console.log(`   ⚠️  ${w}`);
   if (h.warnings.length > 12 && !args.includes('--verbose') && !args.includes('--tutoiement')) console.log(`   ⚠️  … ${h.warnings.length - 12} avertissement(s) de plus (--verbose)`);
   const l = await checkLlms(m);

@@ -72,3 +72,14 @@ Trois contrôles supplémentaires, exécutés en CI après le prérendu (`.githu
   secret GitHub `COMPETITOR_NAMES` (noms séparés par des virgules). Sans liste : avertissement, pas de blocage.
 - `npm run article:sql -- <slug> --mode insert|update` — valide un brouillon `content/decision-pages/<slug>.*` et
   écrit le SQL de publication (voir `content/decision-pages/README.md`).
+- `npm run check:facts -- --strict` — fiche entité × `v_public_rooms` × HTML prérendu × `llms.txt`, plus (Lot L2
+  « Emplacement et transport », 09/10/2026) les règles d'emplacement : formulations D6/D7 interdites sur toutes les
+  pages sauf légales (« mitoyenne », « TPN », numéro de ligne de bus, « tram à 1 min », « 500 m, 5 min à pied »,
+  « CHUV », « terminus du Léman Express »), « 15 min » dans une phrase qui nomme Genève (même en voiture) et, sur
+  les pages en code seulement (hors blog), toute promesse en voiture, durée vers l'aéroport ou « A40 » — ces deux
+  dernières règles bloquent en `--strict` (la CI), avertissent sinon. `node scripts/house-pages-check.mjs` vérifie en
+  plus, par maison et par langue, la phrase de quartier (une fois), la ligne de trajet `ENTITY_HOUSES[].commute` dans
+  les 1 500 premiers caractères après le H1, `data-house-location-version`, le lien « Calculer mon trajet » (Google
+  Maps depuis l'adresse de la maison) et `ROOM_SURFACE_BY_HOUSE` = min/max de `v_public_rooms.surface_m2`. Ces deux
+  gardes lisent `public/prerendered/` : après une modification de code, `npm run build:local` d'abord. Tests :
+  `tools/test/location-rules.test.mjs`, `house-location.test.mjs`, `house-pages-check.test.mjs`.

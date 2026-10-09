@@ -10,12 +10,21 @@
  * Exécuté par .github/workflows/prerender.yml APRÈS le prérendu et AVANT le commit des pages :
  * un échec bloque la publication. En local : `node scripts/house-pages-check.mjs` après
  * `npm run build:local`.
+ *
+ * (Lot L2 « Emplacement et transport », 09/10/2026) En plus, par maison et par langue, la section Localisation est
+ * comparée à la source unique src/data/houseLocation.ts (chargée via esbuild) : phrase de quartier A.2 présente
+ * exactement une fois, ligne de trajet ENTITY_HOUSES[].commute dans les 1 500 premiers caractères du <main> après le
+ * H1, attribut data-house-location-version = HOUSE_LOCATION_VERSION, lien « Calculer mon trajet » vers Google Maps
+ * depuis l'adresse de la maison ; et ROOM_SURFACE_BY_HOUSE (stats.ts) = Math.round(min/max de v_public_rooms.surface_m2)
+ * par maison. Fonctions pures exportées, testées dans tools/test/house-pages-check.test.mjs.
  */
 
 import fs from 'fs/promises';
 import path from 'path';
 import https from 'https';
-import { fileURLToPath } from 'url';
+import { fileURLToPath, pathToFileURL } from 'url';
+import { loadEntityFacts } from './lib/load-entity-facts.mjs';
+import { visibleText } from './check-entity-facts.mjs';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const PRERENDERED = path.join(__dirname, '..', 'public', 'prerendered');
@@ -58,7 +67,66 @@ function extractEmbed(html, id) {
   try { return JSON.parse(m[1]); } catch { return null; }
 }
 
-async function checkHouse(slug, rooms) {
+// ── (Lot L2 « Emplacement et transport », 09/10/2026) section Localisation × src/data/houseLocation.ts ──────────────
+
+/** Fenêtre (caractères de texte visible après le H1) dans laquelle la ligne de trajet doit apparaître : hero + début de longDescription. */
+export const COMMUTE_WINDOW = 1500;
+
+/** Texte visible du <main> (sinon du corps) à partir du H1 — le hero précède la description, d'où la fenêtre de 1 500 caractères. */
+export function mainTextAfterH1(html) {
+  const main = html.match(/<main\b[\s\S]*?<\/main>/i)?.[0] ?? html.replace(/^[\s\S]*?<\/head>/, '');
+  const text = visibleText(main);
+  const h1 = html.match(/<h1\b[^>]*>([\s\S]*?)<\/h1>/i)?.[1];
+  const h1Text = h1 ? visibleText(h1) : '';
+  const i = h1Text ? text.indexOf(h1Text) : -1;
+  return i >= 0 ? text.slice(i) : text;
+}
+
+/**
+ * Section Localisation d'une page maison prérendue (FR ou EN) : (1) houseNeighbourhood(slug, lang) exactement une fois dans
+ * le texte visible ; (2) la ligne courte ENTITY_HOUSES[].commute dans les COMMUTE_WINDOW premiers caractères après le H1 ;
+ * (3) data-house-location-version="<HOUSE_LOCATION_VERSION>" une fois ; (4) le lien « Calculer mon trajet » / « Check my
+ * commute » pointe vers google.com/maps/dir/ avec l'adresse de la maison encodée (houseDirectionsUrl).
+ */
+export function checkHouseLocation(html, slug, lang, m) {
+  const file = lang === 'fr' ? `${slug}.html` : `en-${slug}.html`;
+  const house = m.ENTITY_HOUSES.find((h) => h.slug === slug);
+  if (!house) return [`${file} : ${slug} absent de ENTITY_HOUSES — nouvelle maison ? → src/data/stats.ts (ROOMS_BY_HOUSE, TRANSIT, ROOM_SURFACE_BY_HOUSE), entityFacts.ts, houseLocation.ts`];
+  const failures = [];
+  const text = visibleText(html);
+  const neighbourhood = m.houseNeighbourhood(slug, lang);
+  const n = count(text, neighbourhood);
+  if (n !== 1) failures.push(`${file} : phrase de quartier (houseNeighbourhood) présente ${n} fois dans le texte visible (attendu exactement 1) — « ${neighbourhood.slice(0, 60)}… »`);
+  const commute = house.commute[lang];
+  if (!mainTextAfterH1(html).slice(0, COMMUTE_WINDOW).includes(commute)) failures.push(`${file} : ligne de trajet « ${commute} » absente des ${COMMUTE_WINDOW} premiers caractères après le H1 (longDescription doit la porter en tête)`);
+  const versionAttr = `data-house-location-version="${m.HOUSE_LOCATION_VERSION}"`;
+  const v = count(html, versionAttr);
+  if (v !== 1) failures.push(`${file} : ${versionAttr} présent ${v} fois (attendu 1)`);
+  const url = m.houseDirectionsUrl(slug, lang);
+  const label = m.houseDirectionsLabel(lang);
+  if (!url.startsWith('https://www.google.com/maps/dir/') || !url.includes(encodeURIComponent(m.houseAddressLine(slug)))) failures.push(`${file} : houseDirectionsUrl ne pointe pas vers google.com/maps/dir/ avec l'adresse encodée — ${url}`);
+  if (!html.replace(/&amp;/g, '&').includes(`href="${url}"`)) failures.push(`${file} : lien « ${label} » absent (href attendu : ${url})`);
+  if (!text.includes(label)) failures.push(`${file} : libellé « ${label} » absent du texte visible`);
+  return failures;
+}
+
+/** ROOM_SURFACE_BY_HOUSE (src/data/stats.ts) = Math.round(min / max de v_public_rooms.surface_m2) pour chaque maison publique. */
+export function checkRoomSurfaceByHouse(byHouse, m) {
+  const failures = [];
+  const src = m.ROOM_SURFACE_BY_HOUSE;
+  for (const [slug, rooms] of byHouse) {
+    const exp = src[slug];
+    if (!exp) { failures.push(`${slug} : absent de ROOM_SURFACE_BY_HOUSE (src/data/stats.ts) — nouvelle maison ?`); continue; }
+    const sizes = rooms.map((r) => Number(r.surface_m2)).filter((n) => Number.isFinite(n) && n > 0);
+    if (sizes.length === 0) continue; // surface_m2 absent : la garde /tarifs l'a déjà signalé
+    const min = Math.round(Math.min(...sizes)), max = Math.round(Math.max(...sizes));
+    if (min !== exp.min || max !== exp.max) failures.push(`${slug} : ROOM_SURFACE_BY_HOUSE = ${exp.min}-${exp.max} m², v_public_rooms = ${min}-${max} m² (Math.round du min/max de surface_m2)`);
+  }
+  for (const slug of Object.keys(src)) if (!byHouse.has(slug)) failures.push(`${slug} : dans ROOM_SURFACE_BY_HOUSE mais aucune chambre publique en base`);
+  return failures;
+}
+
+async function checkHouse(slug, rooms, m) {
   const failures = [];
   const candidates = rooms.filter((r) => r.availability === 'available' || !!r.available_from);
   for (const lang of ['fr', 'en']) {
@@ -97,6 +165,8 @@ async function checkHouse(slug, rooms) {
     if (!html.includes('<!--$-->') || !html.includes('<!--/$-->')) failures.push(`${file} : marqueurs Suspense <!--$--> absents (hydratation #418 garantie)`);
     // 6. Pas de dispo chiffrée en dur : le badge doit venir de l'embed résumé.
     if (!extractEmbed(html, '__room_availability_data__')) failures.push(`${file} : embed __room_availability_data__ absent`);
+    // 7. (Lot L2, 09/10/2026) Section Localisation = source unique houseLocation.ts.
+    failures.push(...checkHouseLocation(html, slug, lang, m));
   }
   return failures;
 }
@@ -159,11 +229,15 @@ async function checkRoomSizeRange(rooms) {
 }
 
 async function main() {
-  console.log('\n🏠 Garde pages maisons — v_public_rooms × public/prerendered/\n');
-  const byHouse = await fetchRooms();
+  console.log('\n🏠 Garde pages maisons — v_public_rooms × public/prerendered/ × houseLocation.ts\n');
+  const [byHouse, m] = await Promise.all([fetchRooms(), loadEntityFacts()]);
   let total = 0;
+  const surfaceFailures = checkRoomSurfaceByHouse(byHouse, m);
+  total += surfaceFailures.length;
+  console.log(`${surfaceFailures.length === 0 ? '✅' : '❌'} ROOM_SURFACE_BY_HOUSE (stats.ts) = v_public_rooms par maison`);
+  for (const f of surfaceFailures) console.log(`   • ${f}`);
   for (const [slug, rooms] of byHouse) {
-    const failures = await checkHouse(slug, rooms);
+    const failures = await checkHouse(slug, rooms, m);
     total += failures.length;
     const candidates = rooms.filter((r) => r.availability === 'available' || !!r.available_from).length;
     console.log(`${failures.length === 0 ? '✅' : '❌'} ${slug} — ${rooms.length} chambres, ${candidates} candidate(s)`);
@@ -180,7 +254,10 @@ async function main() {
     console.error(`\n❌ ${total} problème(s) — pages maisons NON publiables.`);
     process.exit(1);
   }
-  console.log('\n🎉 Pages maisons cohérentes avec la base (FR + EN).\n');
+  console.log('\n🎉 Pages maisons cohérentes avec la base et la source d\'emplacement (FR + EN).\n');
 }
 
-main().catch((err) => { console.error('Fatal:', err.message); process.exit(1); });
+// Importable par les tests (fonctions pures ci-dessus) : main() ne tourne qu'en exécution directe.
+if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) {
+  main().catch((err) => { console.error('Fatal:', err.message); process.exit(1); });
+}
