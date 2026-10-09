@@ -60,7 +60,7 @@ export const HOUSE_NEARBY: Record<HouseSlug, readonly NearbyPlace[]> = {
   lavilla: [
     { id: "supermarket", fr: "Supermarché E.Leclerc", en: "E.Leclerc supermarket", walkMin: 12, distanceM: 850 },
     { id: "townhall", fr: "Mairie de Ville-la-Grand", en: "Ville-la-Grand town hall", walkMin: 22 },
-    { id: "foron", fr: "Zone naturelle du Foron, la rivière-frontière, le long de la rue", en: "The Foron nature area, the border river, along the street" },
+    { id: "foron", fr: "Zone naturelle du Foron, la rivière-frontière, le long de la rue", en: "The Foron nature reserve, the border river, along the street" },
   ],
   leloft: [
     { id: "townhall", fr: "Mairie d'Ambilly", en: "Ambilly town hall", walkMin: 5 },
@@ -87,7 +87,8 @@ export function houseNearby(slug: HouseSlug, lang: LocLang): string[] {
   return HOUSE_NEARBY[slug].map((p) => {
     const label = lang === "en" ? p.en : p.fr;
     if (p.walkMin === undefined) return label;
-    return `${label} : ${lang === "en" ? walkEn(p.walkMin, p.distanceM) : walkFr(p.walkMin, p.distanceM)}`;
+    // Ponctuation de la langue : « label : valeur » en FR (espace insécable avant le deux-points), « label: value » en EN.
+    return lang === "en" ? `${label}: ${walkEn(p.walkMin, p.distanceM)}` : `${label} : ${walkFr(p.walkMin, p.distanceM)}`;
   });
 }
 
@@ -97,8 +98,8 @@ export function houseNeighbourhood(slug: HouseSlug, lang: LocLang): string {
   if (slug === "lavilla") {
     const plot = HOUSE_SURFACES.lavilla.plotM2;
     return lang === "en"
-      ? `A quiet residential street in Ville-la-Grand, beside the Foron — the river that marks the Swiss border — and its nature area. A ${thousands(plot, ",")} m² garden, Annemasse station a ${T.lavilla.stationWalkMin}-minute walk away, a supermarket ${nearbyMin("lavilla", "supermarket")} minutes away.`
-      : `Rue résidentielle calme de Ville-la-Grand, en bordure du Foron — la rivière qui marque la frontière suisse — et de sa zone naturelle. Jardin de ${thousands(plot, " ")} m², gare d'Annemasse à ${T.lavilla.stationWalkMin} min à pied, supermarché à ${nearbyMin("lavilla", "supermarket")} min.`;
+      ? `A quiet residential street in Ville-la-Grand, beside the Foron — the river that marks the Swiss border — and its nature reserve. A ${thousands(plot, ",")} m² garden, Annemasse station a ${T.lavilla.stationWalkMin}-minute walk away, a supermarket ${nearbyMin("lavilla", "supermarket")} minutes away.`
+      : `Rue résidentielle calme de Ville-la-Grand, en bordure du Foron — la rivière qui marque la frontière suisse — et de sa zone naturelle. Jardin de ${thousands(plot, " ")} m², gare d'Annemasse à ${T.lavilla.stationWalkMin} min à pied, supermarché à ${nearbyMin("lavilla", "supermarket")} min.`;
   }
   if (slug === "leloft") {
     return lang === "en"
