@@ -19,7 +19,9 @@
  *    défaut Léman Express, tram 17 = ancre du Loft seulement, deux nombres (train fixe + porte-à-porte de la maison), le
  *    « 20 min » de marque = STATS_DISPLAY.distance, jamais « environ / moins de / ~ / 15-20 / 20-25 », « 15 min » n'existe plus.
  *  - Jamais de promesse en voiture ni de temps vers l'aéroport (phrase retirée ou remplacée par un fait mesuré) ; vélo =
- *    valeurs Voie Verte de TRANSIT seulement.
+ *    valeurs Voie Verte de TRANSIT seulement. Aéroport (relecture adverse du 09/10) : aucun Léman Express n'est direct
+ *    jusqu'à Genève-Aéroport (changement à Cornavin) — on écrit l'énoncé de la FAQ /faq (src/data/faqData.ts, id
+ *    airport-access), constante AIRPORT ci-dessous, sans minute.
  *  - D6 : jamais « mitoyenne » / « adjoins » / « border-adjacent » / « next door » pour La Villa : le Foron, rivière-frontière,
  *    borde la rue ; Le Loft : frontière (le Foron) à 600 m, 8 min à pied, douane de Moillesulaz à 1,8 km ; Le Lodge : rien.
  *  - D7 : aucun numéro de ligne de bus, jamais « TPN » ; un arrêt se décrit « arrêt de bus <nom> à N min à pied » ; pas de
@@ -66,6 +68,16 @@ function facts(m) {
 
 const LEX_FR = 'https://www.lemanexpress.com/';
 const LEX_EN = 'https://www.lemanexpress.com/en/';
+
+/**
+ * Accès à l'aéroport — même énoncé que la FAQ /faq (src/data/faqData.ts, id airport-access) : le Léman Express ne dessert
+ * pas Genève-Aéroport depuis Annemasse (correspondance à Cornavin) ; aucune minute (règle D1 de Jérôme). Pas un chiffre,
+ * donc une chaîne littérale est admise ici.
+ */
+const AIRPORT = {
+  fr: "en train depuis la gare d'Annemasse : Léman Express jusqu'à Genève Cornavin, puis correspondance pour l'aéroport",
+  en: 'by train from Annemasse station: Léman Express to Geneva Cornavin, then a connection to the airport',
+};
 
 // ── La liste ───────────────────────────────────────────────────────────────────────────────────────
 
@@ -121,20 +133,20 @@ const EDITS = [
   },
   {
     slug: 'quartiers-annemasse-ou-vivre-selon-profil', lang: 'fr', mechanism: 'D7',
-    note: 'L28 : « Genève se rejoint à vélo en quelques minutes » (vélo non mesuré) → Rive par la Voie Verte, 23 min depuis Le Loft ; terminus du tram 17 « à Moillesulaz » (faux) → Annemasse, arrêt Parc Montessuit ; Loft « 5 minutes à pied du Tram 17 — Genève centre en ~20 min » → 8 min, arrêt Croix-d\'Ambilly, Rive en 23 min de tram, 32 min porte-à-porte',
+    note: 'L28 : « Genève se rejoint à vélo en quelques minutes » (vélo non mesuré) → Rive par la Voie Verte, 23 min depuis Le Loft ; « terminus côté français à Moillesulaz » (faux, et tout « terminus » est périssable) → arrêts nommés de la source (Croix-d\'Ambilly à Ambilly, Parc Montessuit à Annemasse) ; Loft « 5 minutes à pied du Tram 17 — Genève centre en ~20 min » → 8 min, arrêt Croix-d\'Ambilly, Rive en 23 min de tram, 32 min porte-à-porte',
     find: "Depuis là, Genève se rejoint à vélo en quelques minutes par les pistes cyclables transfrontalières, ou en **Tram 17** (terminus côté français à Moillesulaz). Notre [Loft, à Ambilly](/leloft), est à 5 minutes à pied du Tram 17 — Genève centre en ~20 min sans changement, et sa piscine intérieure",
     replace: (m) => {
       const { B } = facts(m); const L = B.leloft;
-      return `Depuis là, le centre de Genève (Rive) se rejoint à vélo par la Voie Verte (${L.bikeToRiveMin} min depuis Le Loft), ou en **Tram 17** (terminus côté français aujourd'hui à Annemasse, arrêt ${B.lelodge.tramStop.name}). Notre [Loft, à Ambilly](/leloft), est à ${L.tramWalkMin} min à pied du Tram 17 (arrêt ${L.tramStop.name}) — Rive, au centre de Genève, en ${L.tramStop.tramToRiveMin} min de tram sans changement, ${L.riveDoorToDoorMin} min porte-à-porte, et sa piscine intérieure`;
+      return `Depuis là, le centre de Genève (Rive) se rejoint à vélo par la Voie Verte (${L.bikeToRiveMin} min depuis Le Loft), ou en **Tram 17** (arrêts ${L.tramStop.name} à Ambilly, ${B.lelodge.tramStop.name} à Annemasse). Notre [Loft, à Ambilly](/leloft), est à ${L.tramWalkMin} min à pied du Tram 17 (arrêt ${L.tramStop.name}) — Rive, au centre de Genève, en ${L.tramStop.tramToRiveMin} min de tram sans changement, ${L.riveDoorToDoorMin} min porte-à-porte, et sa piscine intérieure`;
     },
   },
   {
     slug: 'quartiers-annemasse-ou-vivre-selon-profil', lang: 'en', mechanism: 'D7',
-    note: 'L27: “Geneva is a few minutes by bike” (unmeasured bike time) → Rive on the Voie Verte, 23 min from Le Loft; tram 17 terminus “at Moillesulaz” (wrong) → Annemasse, Parc Montessuit stop; Loft “5 minutes\' walk from Tram 17 — central Geneva in ~20 min” → 8 min, Croix-d\'Ambilly stop, Rive in 23 min by tram, 32 min door to door',
+    note: 'L27: “Geneva is a few minutes by bike” (unmeasured bike time) → Rive on the Voie Verte, 23 min from Le Loft; “French terminus at Moillesulaz” (wrong, and any “terminus” is perishable) → named stops from the source (Croix-d\'Ambilly in Ambilly, Parc Montessuit in Annemasse); Loft “5 minutes\' walk from Tram 17 — central Geneva in ~20 min” → 8 min, Croix-d\'Ambilly stop, Rive in 23 min by tram, 32 min door to door',
     find: "From there, Geneva is a few minutes by bike via the cross-border cycle paths, or by **Tram 17** (French terminus at Moillesulaz). Our [Loft, in Ambilly](/en/leloft), is 5 minutes' walk from Tram 17 — central Geneva in ~20 min with no change, plus an indoor pool",
     replace: (m) => {
       const { B } = facts(m); const L = B.leloft;
-      return `From there, central Geneva (Rive) is reached by bike on the Voie Verte (${L.bikeToRiveMin} min from Le Loft), or by **Tram 17** (French terminus today in Annemasse, ${B.lelodge.tramStop.name} stop). Our [Loft, in Ambilly](/en/leloft), is an ${L.tramWalkMin}-minute walk from Tram 17 (${L.tramStop.name} stop) — Rive, in central Geneva, in ${L.tramStop.tramToRiveMin} min by tram with no change, ${L.riveDoorToDoorMin} min door to door, plus an indoor pool`;
+      return `From there, central Geneva (Rive) is reached by bike on the Voie Verte (${L.bikeToRiveMin} min from Le Loft), or by **Tram 17** (${L.tramStop.name} stop in Ambilly, ${B.lelodge.tramStop.name} stop in Annemasse). Our [Loft, in Ambilly](/en/leloft), is an ${L.tramWalkMin}-minute walk from Tram 17 (${L.tramStop.name} stop) — Rive, in central Geneva, in ${L.tramStop.tramToRiveMin} min by tram with no change, ${L.riveDoorToDoorMin} min door to door, plus an indoor pool`;
     },
   },
   {
@@ -297,29 +309,29 @@ const EDITS = [
   },
   {
     slug: 'temps-trajet-annemasse-geneve-par-quartier', lang: 'fr', mechanism: 'D1',
-    note: 'L88 : « Léman Express jusqu\'à Genève-Aéroport (30 min, direct) » → temps vers l\'aéroport retiré (règle D1 de Jérôme), le fait « direct » reste',
+    note: 'L88 : « Léman Express jusqu\'à Genève-Aéroport (30 min, direct) » → faux (aucun Léman Express direct : changement à Cornavin) et minute vers l\'aéroport interdite → énoncé de la FAQ airport-access, sans minute',
     find: "Annemasse avec Léman Express jusqu'à Genève-Aéroport (30 min, direct).",
-    replace: () => "Annemasse, avec le Léman Express direct jusqu'à Genève-Aéroport.",
+    replace: () => `Annemasse, ${AIRPORT.fr}.`,
   },
   {
     slug: 'temps-trajet-annemasse-geneve-par-quartier', lang: 'en', mechanism: 'D1',
-    note: 'L87: “Léman Express to Geneva Airport (30 min, direct)” → airport time removed (Jérôme\'s D1 rule), the “direct” fact stays',
+    note: 'L87: “Léman Express to Geneva Airport (30 min, direct)” → wrong (no direct Léman Express: change at Cornavin) and airport minute forbidden → wording of the airport-access FAQ, no minute',
     find: 'Annemasse with Léman Express to Geneva Airport (30 min, direct).',
-    replace: () => 'Annemasse, with the direct Léman Express to Geneva Airport.',
+    replace: () => `Annemasse, ${AIRPORT.en}.`,
   },
 
   // ═══ transport-annemasse-geneve-leman-express ═══════════════════════════════════════════════════
   {
     slug: 'transport-annemasse-geneve-leman-express', lang: 'fr', mechanism: 'D1',
-    note: 'L8 : « Annemasse-Genève-Cornavin = 20 minutes. Aéroport (Cointrin) = 25 minutes » → Eaux-Vives 7 / Cornavin 23 ; aéroport : « Léman Express direct depuis Annemasse », sans minute',
+    note: 'L8 : « Annemasse-Genève-Cornavin = 20 minutes. Aéroport (Cointrin) = 25 minutes » → Eaux-Vives 7 / Cornavin 23 ; aéroport : énoncé de la FAQ airport-access (Léman Express jusqu\'à Cornavin, puis correspondance — aucun train direct), sans minute',
     find: '**Temps** : Annemasse-Genève-Cornavin = 20 minutes. Aéroport (Cointrin) = 25 minutes de Annemasse.',
-    replace: (m) => { const f = facts(m); return `**Temps** : Annemasse-Genève-Eaux-Vives = ${f.ev} minutes, Annemasse-Genève-Cornavin = ${f.corn} minutes. Aéroport (Cointrin) : Léman Express direct depuis Annemasse.`; },
+    replace: (m) => { const f = facts(m); return `**Temps** : Annemasse-Genève-Eaux-Vives = ${f.ev} minutes, Annemasse-Genève-Cornavin = ${f.corn} minutes. Aéroport (Cointrin) ${AIRPORT.fr}.`; },
   },
   {
     slug: 'transport-annemasse-geneve-leman-express', lang: 'en', mechanism: 'D1',
-    note: 'L7: “Annemasse-Geneva-Cornavin = 20 minutes. Airport (Cointrin) = 25 minutes” → Eaux-Vives 7 / Cornavin 23; airport: “direct Léman Express from Annemasse”, no minute',
+    note: 'L7: “Annemasse-Geneva-Cornavin = 20 minutes. Airport (Cointrin) = 25 minutes” → Eaux-Vives 7 / Cornavin 23; airport: wording of the airport-access FAQ (Léman Express to Cornavin, then a connection — no direct train), no minute',
     find: '**Time**: Annemasse-Geneva-Cornavin = 20 minutes. Airport (Cointrin) = 25 minutes from Annemasse.',
-    replace: (m) => { const f = facts(m); return `**Time**: Annemasse-Geneva Eaux-Vives = ${f.ev} minutes, Annemasse-Geneva-Cornavin = ${f.corn} minutes. Airport (Cointrin): direct Léman Express from Annemasse.`; },
+    replace: (m) => { const f = facts(m); return `**Time**: Annemasse-Geneva Eaux-Vives = ${f.ev} minutes, Annemasse-Geneva-Cornavin = ${f.corn} minutes. Airport (Cointrin) ${AIRPORT.en}.`; },
   },
   {
     slug: 'transport-annemasse-geneve-leman-express', lang: 'fr', mechanism: 'fix',
@@ -383,15 +395,15 @@ const EDITS = [
   },
   {
     slug: 'transport-annemasse-geneve-leman-express', lang: 'fr', mechanism: 'D1',
-    note: 'L104 tableau « Depuis Ville-la-Grand » : « Centre (Cornavin) | 22 min » présenté comme porte-à-porte → 23 min de train, 38 min porte-à-porte depuis La Villa',
+    note: 'L104 tableau « Depuis Ville-la-Grand » : « Centre (Cornavin) | 22 min » présenté comme porte-à-porte → la cellule porte les deux nombres et le mode : 23 min de train · 38 min porte-à-porte depuis La Villa (Léman Express)',
     find: '| Centre (Cornavin) | 22 min | 20-25 → 40-55 min | 35-50 min | 30-40 min |',
-    replace: (m) => { const f = facts(m); return `| Centre (Cornavin) | ${f.corn} min de train, ${f.B.lavilla.cornavinDoorToDoorMin} min porte-à-porte depuis La Villa | 20-25 → 40-55 min | 35-50 min | 30-40 min |`; },
+    replace: (m) => { const f = facts(m); return `| Centre (Cornavin) | ${f.corn} min de train · ${f.B.lavilla.cornavinDoorToDoorMin} min porte-à-porte depuis La Villa (Léman Express) | 20-25 → 40-55 min | 35-50 min | 30-40 min |`; },
   },
   {
     slug: 'transport-annemasse-geneve-leman-express', lang: 'en', mechanism: 'D1',
-    note: 'L98 “From Ville-la-Grand” table: “Center (Cornavin) | 22 min” presented as door to door → 23 min by train, 38 min door to door from La Villa',
+    note: 'L98 “From Ville-la-Grand” table: “Center (Cornavin) | 22 min” presented as door to door → the cell carries both numbers and the mode: 23 min by train · 38 min door to door from La Villa (Léman Express)',
     find: '| Center (Cornavin) | 22 min | 20-25 → 40-55 min | 35-50 min | 30-40 min |',
-    replace: (m) => { const f = facts(m); return `| Center (Cornavin) | ${f.corn} min by train, ${f.B.lavilla.cornavinDoorToDoorMin} min door to door from La Villa | 20-25 → 40-55 min | 35-50 min | 30-40 min |`; },
+    replace: (m) => { const f = facts(m); return `| Center (Cornavin) | ${f.corn} min by train · ${f.B.lavilla.cornavinDoorToDoorMin} min door to door from La Villa (Léman Express) | 20-25 → 40-55 min | 35-50 min | 30-40 min |`; },
   },
   {
     slug: 'transport-annemasse-geneve-leman-express', lang: 'fr', mechanism: 'D1',
@@ -431,27 +443,27 @@ const EDITS = [
   },
   {
     slug: 'transport-annemasse-geneve-leman-express', lang: 'fr', mechanism: 'D1',
-    note: 'L117 : « Vers l\'aéroport, le Léman Express est direct (30 min) » → minute vers l\'aéroport retirée',
+    note: 'L117 : « Vers l\'aéroport, le Léman Express est direct (30 min) » → faux (changement à Cornavin) et minute interdite → énoncé de la FAQ airport-access',
     find: "Vers l'aéroport, le Léman Express est direct (30 min).",
-    replace: () => "Vers l'aéroport, le Léman Express est direct.",
+    replace: () => `Vers l'aéroport, ${AIRPORT.fr}.`,
   },
   {
     slug: 'transport-annemasse-geneve-leman-express', lang: 'en', mechanism: 'D1',
-    note: 'L111: “To the airport, the Léman Express is direct (30 min)” → airport minute removed',
+    note: 'L111: “To the airport, the Léman Express is direct (30 min)” → wrong (change at Cornavin) and minute forbidden → wording of the airport-access FAQ',
     find: 'To the airport, the Léman Express is direct (30 min).',
-    replace: () => 'To the airport, the Léman Express is direct.',
+    replace: () => `To the airport, ${AIRPORT.en}.`,
   },
   {
     slug: 'transport-annemasse-geneve-leman-express', lang: 'fr', mechanism: 'D1',
-    note: 'L123 : « Léman Express direct jusqu\'à Genève-Aéroport (30 min) » → minute retirée',
+    note: 'L123 : « Léman Express direct jusqu\'à Genève-Aéroport (30 min) » → faux (changement à Cornavin) et minute interdite → énoncé de la FAQ airport-access',
     find: "- **Aéroport** : Annemasse, Léman Express direct jusqu'à Genève-Aéroport (30 min).",
-    replace: () => "- **Aéroport** : Annemasse, Léman Express direct jusqu'à Genève-Aéroport.",
+    replace: () => `- **Aéroport** : Annemasse, ${AIRPORT.fr}.`,
   },
   {
     slug: 'transport-annemasse-geneve-leman-express', lang: 'en', mechanism: 'D1',
-    note: 'L117: “direct Léman Express to Geneva Airport (30 min)” → minute removed',
+    note: 'L117: “direct Léman Express to Geneva Airport (30 min)” → wrong (change at Cornavin) and minute forbidden → wording of the airport-access FAQ',
     find: '- **Airport**: Annemasse, direct Léman Express to Geneva Airport (30 min).',
-    replace: () => '- **Airport**: Annemasse, direct Léman Express to Geneva Airport.',
+    replace: () => `- **Airport**: Annemasse, ${AIRPORT.en}.`,
   },
 
   // ═══ coliving-geneve-frontaliers-guide-complet (corps + post Facebook) ═════════════════════════
@@ -617,15 +629,15 @@ const EDITS = [
   },
   {
     slug: 'ou-habiter-frontalier-suisse-villes-france-pas-cher', lang: 'fr', mechanism: 'D6',
-    note: 'L68 fiche Ambilly : « Frontière à pied : 5 min · 10 min en voiture, 10 min en Tram, 20 min en CEVA » → le Foron à 8 min (600 m du Loft) · Rive en 23 min de tram 17, Eaux-Vives en 7 min de Léman Express',
+    note: 'L68 fiche Ambilly : « Frontière à pied : 5 min · 10 min en voiture, 10 min en Tram, 20 min en CEVA » → le Foron à 8 min (600 m du Loft) · deux nombres par mode puisque la maison est nommée (D1.3) : Rive en 23 min de tram 17 (32 min porte-à-porte depuis Le Loft), Genève-Eaux-Vives en 7 min de Léman Express (24 min porte-à-porte)',
     find: '**Frontière à pied** : 5 min · **Temps de trajet Genève** : 10 min en voiture, 10 min en Tram, 20 min en CEVA',
-    replace: (m) => { const f = facts(m); const L = f.B.leloft; return `**Frontière à pied** : ${L.border.foronWalkMin} min (le Foron, à ${formatDistance(L.border.foronDistanceM, 'fr')} du Loft) · **Temps de trajet Genève** : Rive en ${L.tramStop.tramToRiveMin} min de tram 17, Genève-Eaux-Vives en ${f.ev} min de Léman Express`; },
+    replace: (m) => { const f = facts(m); const L = f.B.leloft; return `**Frontière à pied** : ${L.border.foronWalkMin} min (le Foron, à ${formatDistance(L.border.foronDistanceM, 'fr')} du Loft) · **Temps de trajet Genève** : Rive en ${L.tramStop.tramToRiveMin} min de tram 17 (${L.riveDoorToDoorMin} min porte-à-porte depuis Le Loft), Genève-Eaux-Vives en ${f.ev} min de Léman Express (${L.eauxVivesDoorToDoorMin} min porte-à-porte)`; },
   },
   {
     slug: 'ou-habiter-frontalier-suisse-villes-france-pas-cher', lang: 'en', mechanism: 'D6',
-    note: 'L71 Ambilly card: “Walk to border: 5 min · 10 min by car, 10 min by tram, 20 min by CEVA” → the Foron 8 min (600 m from Le Loft) · Rive in 23 min by tram 17, Eaux-Vives in 7 min by Léman Express',
+    note: 'L71 Ambilly card: “Walk to border: 5 min · 10 min by car, 10 min by tram, 20 min by CEVA” → the Foron 8 min (600 m from Le Loft) · two numbers per mode since the house is named (D1.3): Rive in 23 min by tram 17 (32 min door to door from Le Loft), Geneva Eaux-Vives in 7 min by Léman Express (24 min door to door)',
     find: '**Walk to border**: 5 min · **Commute to Geneva**: 10 min by car, 10 min by tram, 20 min by CEVA',
-    replace: (m) => { const f = facts(m); const L = f.B.leloft; return `**Walk to border**: ${L.border.foronWalkMin} min (the Foron, ${formatDistance(L.border.foronDistanceM, 'en')} from Le Loft) · **Commute to Geneva**: Rive in ${L.tramStop.tramToRiveMin} min by tram 17, Geneva Eaux-Vives in ${f.ev} min by Léman Express`; },
+    replace: (m) => { const f = facts(m); const L = f.B.leloft; return `**Walk to border**: ${L.border.foronWalkMin} min (the Foron, ${formatDistance(L.border.foronDistanceM, 'en')} from Le Loft) · **Commute to Geneva**: Rive in ${L.tramStop.tramToRiveMin} min by tram 17 (${L.riveDoorToDoorMin} min door to door from Le Loft), Geneva Eaux-Vives in ${f.ev} min by Léman Express (${L.eauxVivesDoorToDoorMin} min door to door)`; },
   },
   {
     slug: 'ou-habiter-frontalier-suisse-villes-france-pas-cher', lang: 'fr', mechanism: 'D6',
@@ -653,27 +665,27 @@ const EDITS = [
   },
   {
     slug: 'ou-habiter-frontalier-suisse-villes-france-pas-cher', lang: 'fr', mechanism: 'D1',
-    note: 'L83 tableau récapitulatif : « Annemasse | 15-20 min » (mode non précisé) → 18 min porte-à-porte jusqu\'à Genève-Eaux-Vives (Léman Express, depuis Le Lodge)',
+    note: 'L83 tableau récapitulatif : « Annemasse | 15-20 min » (mode non précisé) → deux nombres (D1.3, maison nommée) : Genève-Eaux-Vives en 7 min de Léman Express, 18 min porte-à-porte depuis Le Lodge',
     find: '| Annemasse | 15-20 min |',
-    replace: (m) => `| Annemasse | ${facts(m).B.lelodge.eauxVivesDoorToDoorMin} min porte-à-porte jusqu'à Genève-Eaux-Vives (Léman Express, depuis Le Lodge) |`,
+    replace: (m) => { const f = facts(m); return `| Annemasse | Genève-Eaux-Vives en ${f.ev} min de Léman Express, ${f.B.lelodge.eauxVivesDoorToDoorMin} min porte-à-porte depuis Le Lodge |`; },
   },
   {
     slug: 'ou-habiter-frontalier-suisse-villes-france-pas-cher', lang: 'en', mechanism: 'D1',
-    note: 'L88 summary table: “Annemasse | 15-20 min” (no mode) → 18 min door to door to Geneva Eaux-Vives (Léman Express, from Le Lodge)',
+    note: 'L88 summary table: “Annemasse | 15-20 min” (no mode) → two numbers (D1.3, house named): Geneva Eaux-Vives in 7 min by Léman Express, 18 min door to door from Le Lodge',
     find: '| Annemasse | 15-20 min |',
-    replace: (m) => `| Annemasse | ${facts(m).B.lelodge.eauxVivesDoorToDoorMin} min door to door to Geneva Eaux-Vives (Léman Express, from Le Lodge) |`,
+    replace: (m) => { const f = facts(m); return `| Annemasse | Geneva Eaux-Vives in ${f.ev} min by Léman Express, ${f.B.lelodge.eauxVivesDoorToDoorMin} min door to door from Le Lodge |`; },
   },
   {
     slug: 'ou-habiter-frontalier-suisse-villes-france-pas-cher', lang: 'fr', mechanism: 'D1',
-    note: 'L84 tableau récapitulatif : « Ville-la-Grand | 12-20 min » → 22 min porte-à-porte jusqu\'à Genève-Eaux-Vives (Léman Express, depuis La Villa)',
+    note: 'L84 tableau récapitulatif : « Ville-la-Grand | 12-20 min » → deux nombres (D1.3, maison nommée) : Genève-Eaux-Vives en 7 min de Léman Express, 22 min porte-à-porte depuis La Villa',
     find: '| **Ville-la-Grand** | **12-20 min** |',
-    replace: (m) => `| **Ville-la-Grand** | **${facts(m).B.lavilla.eauxVivesDoorToDoorMin} min porte-à-porte jusqu'à Genève-Eaux-Vives (Léman Express, depuis La Villa)** |`,
+    replace: (m) => { const f = facts(m); return `| **Ville-la-Grand** | **Genève-Eaux-Vives en ${f.ev} min de Léman Express, ${f.B.lavilla.eauxVivesDoorToDoorMin} min porte-à-porte depuis La Villa** |`; },
   },
   {
     slug: 'ou-habiter-frontalier-suisse-villes-france-pas-cher', lang: 'en', mechanism: 'D1',
-    note: 'L89 summary table: “Ville-la-Grand | 12-20 min” → 22 min door to door to Geneva Eaux-Vives (Léman Express, from La Villa)',
+    note: 'L89 summary table: “Ville-la-Grand | 12-20 min” → two numbers (D1.3, house named): Geneva Eaux-Vives in 7 min by Léman Express, 22 min door to door from La Villa',
     find: '| **Ville-la-Grand** | **12-20 min** |',
-    replace: (m) => `| **Ville-la-Grand** | **${facts(m).B.lavilla.eauxVivesDoorToDoorMin} min door to door to Geneva Eaux-Vives (Léman Express, from La Villa)** |`,
+    replace: (m) => { const f = facts(m); return `| **Ville-la-Grand** | **Geneva Eaux-Vives in ${f.ev} min by Léman Express, ${f.B.lavilla.eauxVivesDoorToDoorMin} min door to door from La Villa** |`; },
   },
   {
     slug: 'ou-habiter-frontalier-suisse-villes-france-pas-cher', lang: 'fr', mechanism: 'D7',
@@ -744,6 +756,18 @@ const EDITS = [
     note: 'L390: “about twenty minutes from Geneva, on the French side” (unqualified) → D1 formula (GENEVA_COMMUTE_FORMULA)',
     find: 'a set of houses with all-inclusive furnished rooms about twenty minutes from Geneva, on the French side, designed for',
     replace: (m) => `a set of houses with all-inclusive furnished rooms on the French side (${facts(m).formula.en}), designed for`,
+  },
+  {
+    slug: 'guide-ressources-frontalier-geneve', lang: 'fr', mechanism: 'D1',
+    note: 'L217 tableau des modes : « Léman Express | ~115 CHF | ~20 min » (destination absente, « ~ ») → 7 min (Genève-Eaux-Vives), 23 min (Cornavin), comme temps-trajet et transport (relecture du 09/10)',
+    find: '| Léman Express | ~115 CHF | ~20 min | Très élevée |',
+    replace: (m) => { const f = facts(m); return `| Léman Express | ~115 CHF | ${f.ev} min (Genève-Eaux-Vives), ${f.corn} min (Cornavin) | Très élevée |`; },
+  },
+  {
+    slug: 'guide-ressources-frontalier-geneve', lang: 'en', mechanism: 'D1',
+    note: 'L215 modes table: “Léman Express | ~115 CHF | ~20 min” (no destination, “~”) → 7 min (Geneva Eaux-Vives), 23 min (Cornavin), as in temps-trajet and transport (review of 9 Oct.)',
+    find: '| Léman Express | ~115 CHF | ~20 min | Very high |',
+    replace: (m) => { const f = facts(m); return `| Léman Express | ~115 CHF | ${f.ev} min (Geneva Eaux-Vives), ${f.corn} min (Cornavin) | Very high |`; },
   },
   {
     slug: 'guide-ressources-frontalier-geneve', lang: 'fr', mechanism: 'D1',
@@ -855,9 +879,9 @@ const EDITS = [
   },
   {
     slug: 'budget-colocation-geneve-guide-complet', lang: 'fr', mechanism: 'D1',
-    note: 'L33 (absent en EN) : « On parle de 20 minutes de trajet » (non qualifié) → 20 minutes porte-à-porte jusqu\'à Genève-Eaux-Vives',
+    note: 'L33 (absent en EN) : « On parle de 20 minutes de trajet » (non qualifié) → le « 20 min » de marque sous sa forme canonique (STATS_DISPLAY.distance)',
     find: 'On parle de 20 minutes de trajet, pas de 2 heures.',
-    replace: (m) => `On parle de ${facts(m).MIN} minutes porte-à-porte jusqu'à Genève-Eaux-Vives, pas de 2 heures.`,
+    replace: (m) => `On parle de ${facts(m).dist.fr} — pas de 2 heures.`,
   },
   {
     slug: 'budget-colocation-geneve-guide-complet', lang: 'fr', mechanism: 'D1',
@@ -913,30 +937,30 @@ const EDITS = [
   },
   {
     slug: 'cout-de-la-vie-suisse-france-frontalier-2026', lang: 'fr', mechanism: 'D1',
-    note: 'L113 ancre : « colocation tout inclus à 20 min de Genève » → « … à 20 min de Genève-Eaux-Vives »',
+    note: 'L113 ancre : « colocation tout inclus à 20 min de Genève » → le « 20 min » de marque sous sa forme canonique (STATS_DISPLAY.distance)',
     find: '[colocation tout inclus à 20 min de Genève](/blog/trouver-colocation-geneve-frontalier)',
-    replace: (m) => `[colocation tout inclus à ${facts(m).MIN} min de Genève-Eaux-Vives](/blog/trouver-colocation-geneve-frontalier)`,
+    replace: (m) => `[colocation tout inclus à ${facts(m).dist.fr}](/blog/trouver-colocation-geneve-frontalier)`,
   },
   {
     slug: 'cout-de-la-vie-suisse-france-frontalier-2026', lang: 'en', mechanism: 'D1',
-    note: 'L112 anchor: “all-inclusive coliving 20 min from Geneva” → “… 20 min from Geneva Eaux-Vives”',
+    note: 'L112 anchor: “all-inclusive coliving 20 min from Geneva” → the brand “20 min” in its canonical form (STATS_DISPLAY.distance)',
     find: '[all-inclusive coliving 20 min from Geneva](/en/colocation-geneve)',
-    replace: (m) => `[all-inclusive coliving ${facts(m).MIN} min from Geneva Eaux-Vives](/en/colocation-geneve)`,
+    replace: (m) => `[all-inclusive coliving ${facts(m).dist.en}](/en/colocation-geneve)`,
   },
 
   // ═══ ancre « coliving tout inclus à 20 min de Genève » (allocations, ecole, quitter, salaire) ═══
   ...['allocations-familiales-frontalier-geneve-2026', 'ecole-internationale-geneve-frontalier-ou-habiter', 'quitter-son-logement-guide-pratique', 'salaire-suisse-net-frontalier-2026'].flatMap((slug) => [
     {
       slug, lang: 'fr', mechanism: 'D1',
-      note: 'ancre de lien « coliving tout inclus à 20 min de Genève » → « … à 20 min de Genève-Eaux-Vives » (D1 : destination nommée)',
+      note: 'ancre de lien « coliving tout inclus à 20 min de Genève » → le « 20 min » de marque sous sa forme canonique (STATS_DISPLAY.distance, D1)',
       find: '[coliving tout inclus à 20 min de Genève](/blog/trouver-colocation-geneve-frontalier)',
-      replace: (m) => `[coliving tout inclus à ${facts(m).MIN} min de Genève-Eaux-Vives](/blog/trouver-colocation-geneve-frontalier)`,
+      replace: (m) => `[coliving tout inclus à ${facts(m).dist.fr}](/blog/trouver-colocation-geneve-frontalier)`,
     },
     {
       slug, lang: 'en', mechanism: 'D1',
-      note: 'link anchor “all-inclusive coliving 20 min from Geneva” → “… 20 min from Geneva Eaux-Vives” (D1: named destination)',
+      note: 'link anchor “all-inclusive coliving 20 min from Geneva” → the brand “20 min” in its canonical form (STATS_DISPLAY.distance, D1)',
       find: '[all-inclusive coliving 20 min from Geneva](/en/colocation-geneve)',
-      replace: (m) => `[all-inclusive coliving ${facts(m).MIN} min from Geneva Eaux-Vives](/en/colocation-geneve)`,
+      replace: (m) => `[all-inclusive coliving ${facts(m).dist.en}](/en/colocation-geneve)`,
     },
   ]),
 
@@ -1043,35 +1067,35 @@ const EDITS = [
   },
   {
     slug: 'trouver-colocation-geneve-frontalier', lang: 'fr', mechanism: 'D1',
-    note: 'L53 (absent en EN) : ancre « notre coliving à 20 minutes de Genève » → « … à 20 min de Genève-Eaux-Vives »',
+    note: 'L53 (absent en EN) : ancre « notre coliving à 20 minutes de Genève » → le « 20 min » de marque sous sa forme canonique (STATS_DISPLAY.distance)',
     find: '[notre coliving à 20 minutes de Genève](/)',
-    replace: (m) => `[notre coliving à ${facts(m).MIN} min de Genève-Eaux-Vives](/)`,
+    replace: (m) => `[notre coliving à ${facts(m).dist.fr}](/)`,
   },
 
   // ═══ coliving-transfrontalier-geneve-annemasse-nouvelle-vie ═════════════════════════════════════
   {
     slug: 'coliving-transfrontalier-geneve-annemasse-nouvelle-vie', lang: 'fr', mechanism: 'D1',
-    note: 'L4 H2 « Le matin : 20 minutes, porte à porte » (destination absente ; pas un titre d\'ancrage) → jusqu\'à Genève-Eaux-Vives',
+    note: 'L4 H2 « Le matin : 20 minutes, porte à porte » (destination absente ; pas un titre d\'ancrage) → le « 20 min » de marque sous sa forme canonique (STATS_DISPLAY.distance)',
     find: '## Le matin : 20 minutes, porte à porte',
-    replace: (m) => `## Le matin : ${facts(m).MIN} minutes porte-à-porte jusqu'à Genève-Eaux-Vives`,
+    replace: (m) => `## Le matin : ${facts(m).dist.fr}`,
   },
   {
     slug: 'coliving-transfrontalier-geneve-annemasse-nouvelle-vie', lang: 'en', mechanism: 'D1',
-    note: 'L3 H2 “Mornings: 20 minutes, door to door” (no destination; not an anchoring heading) → to Geneva Eaux-Vives',
+    note: 'L3 H2 “Mornings: 20 minutes, door to door” (no destination; not an anchoring heading) → the brand “20 min” in its canonical form (STATS_DISPLAY.distance)',
     find: '## Mornings: 20 minutes, door to door',
-    replace: (m) => `## Mornings: ${facts(m).MIN} minutes door to door to Geneva Eaux-Vives`,
+    replace: (m) => `## Mornings: ${facts(m).dist.en}`,
   },
   {
     slug: 'coliving-transfrontalier-geneve-annemasse-nouvelle-vie', lang: 'fr', mechanism: 'D1',
-    note: 'L6 : « le centre de Genève est à environ 20 minutes en Léman Express ou en tram » (« environ ») → Eaux-Vives 20 min porte-à-porte, centre (Rive) 30 min',
+    note: 'L6 : « le centre de Genève est à environ 20 minutes en Léman Express ou en tram » (« environ ») → forme canonique STATS_DISPLAY.distance (« tu es à 20 min de Genève-Eaux-Vives en Léman Express, porte-à-porte ») + centre (Rive) 30 min',
     find: 'le centre de Genève est à environ 20 minutes en Léman Express ou [en tram](https://www.tpg.ch/).',
-    replace: (m) => { const f = facts(m); return `Genève-Eaux-Vives est à ${f.MIN} minutes porte-à-porte en Léman Express, et le centre (Rive) à ${f.centre} minutes, en train ou [en tram](https://www.tpg.ch/).`; },
+    replace: (m) => { const f = facts(m); return `tu es à ${f.dist.fr}, et à ${f.centre} minutes du centre (Rive), en train ou [en tram](https://www.tpg.ch/).`; },
   },
   {
     slug: 'coliving-transfrontalier-geneve-annemasse-nouvelle-vie', lang: 'en', mechanism: 'D1',
-    note: 'L5: “central Geneva is about 20 minutes away by Léman Express or tram” (“about”) → Eaux-Vives 20 min door to door, city centre (Rive) 30 min',
+    note: 'L5: “central Geneva is about 20 minutes away by Léman Express or tram” (“about”) → canonical form STATS_DISPLAY.distance (“you are 20 min from Geneva Eaux-Vives by Léman Express, door to door”) + city centre (Rive) 30 min',
     find: 'central Geneva is about 20 minutes away by Léman Express [or tram](https://www.tpg.ch/).',
-    replace: (m) => { const f = facts(m); return `Geneva Eaux-Vives is ${f.MIN} minutes door to door by Léman Express, and the city centre (Rive) ${f.centre} minutes, by train [or tram](https://www.tpg.ch/).`; },
+    replace: (m) => { const f = facts(m); return `you are ${f.dist.en}, and ${f.centre} minutes from the city centre (Rive), by train [or tram](https://www.tpg.ch/).`; },
   },
   {
     slug: 'coliving-transfrontalier-geneve-annemasse-nouvelle-vie', lang: 'fr', mechanism: 'D1',
@@ -1127,6 +1151,8 @@ const EDITS = [
 export const POST_STATE_WATCH = [
   /(?<![\d,.])\b15 ?min/i, /mitoyenne/i, /adjoin/i, /border-adjacent/i, /\bTPN\b/, /ligne 80|line 80/i,
   /9 minutes? (à pied|walk)|9-minute walk/i, /\bCEVA\b/, /terminus (français )?du Léman Express|French terminus of the Léman Express/i,
+  // (relecture du 09/10) aucun Léman Express n'est direct jusqu'à l'aéroport : « direct … aéroport » dans une même phrase = reste à corriger.
+  /direct[^.\n]{0,40}(a[ée]roport|airport)|(a[ée]roport|airport)[^.\n]{0,40}\bdirect/i,
 ];
 
 /** En-tête, légende et versions propres au lot (lus par scripts/build-slots-sql.mjs). */
@@ -1163,7 +1189,7 @@ export function buildEdits(m) {
     if (typeof e.find !== 'string' || !e.find) throw new Error(`edit #${i + 1} (${e.slug}/${e.lang}) : find vide`);
     if (typeof replace !== 'string' || !replace) throw new Error(`edit #${i + 1} (${e.slug}/${e.lang}) : replace vide (une suppression doit garder un contexte)`);
     if (replace === e.find) throw new Error(`edit #${i + 1} (${e.slug}/${e.lang}) : replace identique à find`);
-    if (/\b(en voiture|by car|driving)\b|(?<![\d,.])\b15 ?min|a[ée]roport.*\d+ ?min|airport.*\d+ ?min|mitoyen|adjoin|\bTPN\b|ligne \d|line \d|\bbus \d/i.test(replace)) throw new Error(`edit #${i + 1} (${e.slug}/${e.lang}) : formulation interdite (D1/D6/D7) dans le nouveau texte — « ${replace.slice(0, 80)} »`);
+    if (/\b(en voiture|by car|driving)\b|(?<![\d,.])\b15 ?min|a[ée]roport.*\d+ ?min|airport.*\d+ ?min|direct[^.\n]{0,40}(a[ée]roport|airport)|(a[ée]roport|airport)[^.\n]{0,40}\bdirect|mitoyen|adjoin|\bTPN\b|ligne \d|line \d|\bbus \d|terminus/i.test(replace)) throw new Error(`edit #${i + 1} (${e.slug}/${e.lang}) : formulation interdite (D1/D6/D7, aéroport « direct », « terminus ») dans le nouveau texte — « ${replace.slice(0, 80)} »`);
     return { slug: e.slug, lang: e.lang, mechanism: e.mechanism, note: e.note, find: e.find, replace, ...(e.column ? { column: e.column } : {}) };
   });
 }
