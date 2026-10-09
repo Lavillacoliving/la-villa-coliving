@@ -30,11 +30,11 @@ import {
 // (Lot L1, 10/2026) Phrase d'accroche de chaque carte maison ; le trajet vient de ENTITY_HOUSES[].commute
 // (source unique, D1-L1). Plus de « frontière mitoyenne » (D6) ni de minutes en dur.
 // (Lot L2, 09/10/2026) Surfaces lues dans HOUSE_SURFACES (D2) ; frontière de La Villa = formulation A.2 (le Foron,
-// rivière-frontière, borde la rue) ; Le Lodge : aucune promesse de frontière.
+// rivière-frontière, borde la rue) ; Le Lodge : aucune promesse de frontière. Milliers FR = espace insécable U+00A0.
 const S = HOUSE_SURFACES;
 const HOUSE_INTRO: Record<EntityHouseSlug, { fr: string; en: string }> = {
   lavilla: {
-    fr: `${S.lavilla.livingM2} m² sur un domaine de ${thousands(S.lavilla.plotM2, " ")} m² en bordure du Foron — la rivière qui marque la frontière suisse — et de sa zone naturelle. Piscine extérieure chauffée 12×5 m, sauna, salle de sport.`,
+    fr: `${S.lavilla.livingM2} m² sur un domaine de ${thousands(S.lavilla.plotM2, " ")} m² en bordure du Foron — la rivière qui marque la frontière suisse — et de sa zone naturelle. Piscine extérieure chauffée 12×5 m, sauna, salle de sport.`,
     en: `${S.lavilla.livingM2} m² on a ${thousands(S.lavilla.plotM2, ",")} m² estate beside the Foron — the river that marks the Swiss border — and its nature area. Heated outdoor pool 12×5 m, sauna, gym.`,
   },
   leloft: {
@@ -42,7 +42,7 @@ const HOUSE_INTRO: Record<EntityHouseSlug, { fr: string; en: string }> = {
     en: `A ${S.leloft.livingM2} m² townhouse, urban design, indoor pool heated year-round, terrace. The house closest to tram 17.`,
   },
   lelodge: {
-    fr: `Ouvert en janvier 2026 dans le quartier de Romagny. ${S.lelodge.livingM2} m² sur 4 bâtiments au cœur de ${thousands(S.lelodge.plotM2, " ")} m² de jardins.`,
+    fr: `Ouvert en janvier 2026 dans le quartier de Romagny. ${S.lelodge.livingM2} m² sur 4 bâtiments au cœur de ${thousands(S.lelodge.plotM2, " ")} m² de jardins.`,
     en: `Opened in January 2026 in the Romagny district. ${S.lelodge.livingM2} m² over 4 buildings in ${thousands(S.lelodge.plotM2, ",")} m² of gardens.`,
   },
 };
@@ -56,6 +56,8 @@ const houseRange = (pick: (h: HouseTransit) => number): readonly [number, number
   return [Math.min(...v), Math.max(...v)];
 };
 const [CORNAVIN_DTD_MIN, CORNAVIN_DTD_MAX] = houseRange((h) => h.cornavinDoorToDoorMin);
+// (Lot L2, 09/10/2026) Rive dérivé de byHouse comme Cornavin — suit les valeurs par maison, plus TRANSIT.riveDoorToDoorMin/Max.
+const [RIVE_DTD_MIN, RIVE_DTD_MAX] = houseRange((h) => h.riveDoorToDoorMin);
 const [BIKE_RIVE_MIN, BIKE_RIVE_MAX] = houseRange((h) => h.bikeToRiveMin);
 const TRAM_TO_RIVE = TRANSIT.byHouse.leloft.tramStop.tramToRiveMin;
 
@@ -96,9 +98,9 @@ export function AnnemasseColocationPage() {
         }
         description={
           language === "en"
-            // (D1, 09/10/2026 ; Lot L2) « 20 min » = libellé canonique STATS_DISPLAY.distance, jamais une variante ; meta ≤ 160 c.
-            ? `Shared housing in Annemasse: ${STATS.totalRooms} furnished rooms all inclusive from ${PRICE_SHARED_CHF_EN}/month, ${STATS_DISPLAY.en.distance}. No agency fee.`
-            : `Colocation Annemasse : ${STATS.totalRooms} chambres meublées tout inclus dès ${PRICE_SHARED_CHF_FR}/mois, à ${STATS_DISPLAY.fr.distance}. Sans frais d'agence.`
+            // (D1, 09/10/2026 ; Lot L2) « 20 min » = libellé canonique STATS_DISPLAY.distance, jamais une variante ; meta ≤ 155 c. (FR 150 / EN 150, mesuré).
+            ? `Shared housing in Annemasse: ${STATS.totalRooms} rooms all inclusive from ${PRICE_SHARED_CHF_EN}/month, ${STATS_DISPLAY.en.distance}. No agency fee.`
+            : `Colocation Annemasse : ${STATS.totalRooms} chambres tout inclus dès ${PRICE_SHARED_CHF_FR}/mois, à ${STATS_DISPLAY.fr.distance}. Sans frais d'agence.`
         }
         url="https://www.lavillacoliving.com/annemasse-colocation"
         image="https://www.lavillacoliving.com/images/le lodge/exterior/la villa coliving le lodge-14.webp"
@@ -317,7 +319,7 @@ export function AnnemasseColocationPage() {
                   ],
                   [
                     language === "en" ? "City centre (Rive)" : "Centre de Genève (Rive)",
-                    language === "en" ? `${TRANSIT.riveDoorToDoorMin} to ${TRANSIT.riveDoorToDoorMax} min door to door depending on the house` : `${TRANSIT.riveDoorToDoorMin} à ${TRANSIT.riveDoorToDoorMax} min porte-à-porte selon la maison`,
+                    language === "en" ? `${RIVE_DTD_MIN} to ${RIVE_DTD_MAX} min door to door depending on the house` : `${RIVE_DTD_MIN} à ${RIVE_DTD_MAX} min porte-à-porte selon la maison`,
                     language === "en" ? `Léman Express; tram 17 from Ambilly (${TRAM_TO_RIVE} min by tram)` : `Léman Express ; tram 17 depuis Ambilly (${TRAM_TO_RIVE} min de tram)`,
                   ],
                   [
@@ -519,9 +521,10 @@ export function AnnemasseColocationPage() {
           <p className="text-[#57534E] leading-relaxed">
             {/* (Lot L2, 09/10/2026) D1/D6 : plus de « quelques minutes de la frontière » ni de « Genève centre à 20 minutes » — communes
                 frontalières nommées, « 20 min » au libellé canonique. */}
+            {/* Fin de phrase après le lien en un seul nœud texte (anti-#418). */}
             {language === "en"
-              ? <>Only one of our houses is in Annemasse itself, Le Lodge; La Villa and Le Loft are in Ville-la-Grand and Ambilly, two border towns in Annemasse Agglo. All three make up our <LocalizedLink to={colocGeneveHref(language)} className="text-[#1C1917] underline hover:text-[#D4A574]">shared housing in Geneva, French side</LocalizedLink>: same services, same community, {STATS_DISPLAY.en.distance}.</>
-              : <>Une seule de nos maisons est à Annemasse même, Le Lodge ; La Villa et Le Loft sont à Ville-la-Grand et à Ambilly, deux communes frontalières d'Annemasse Agglo. Les trois forment notre <LocalizedLink to={colocGeneveHref(language)} className="text-[#1C1917] underline hover:text-[#D4A574]">colocation à Genève côté France</LocalizedLink> : mêmes services, même communauté, à {STATS_DISPLAY.fr.distance}.</>}
+              ? <>Only one of our houses is in Annemasse itself, Le Lodge; La Villa and Le Loft are in Ville-la-Grand and Ambilly, two border towns in Annemasse Agglo. All three make up our <LocalizedLink to={colocGeneveHref(language)} className="text-[#1C1917] underline hover:text-[#D4A574]">shared housing in Geneva, French side</LocalizedLink>{`: same services, same community, ${STATS_DISPLAY.en.distance}.`}</>
+              : <>Une seule de nos maisons est à Annemasse même, Le Lodge ; La Villa et Le Loft sont à Ville-la-Grand et à Ambilly, deux communes frontalières d'Annemasse Agglo. Les trois forment notre <LocalizedLink to={colocGeneveHref(language)} className="text-[#1C1917] underline hover:text-[#D4A574]">colocation à Genève côté France</LocalizedLink>{` : mêmes services, même communauté, à ${STATS_DISPLAY.fr.distance}.`}</>}
           </p>
         </div>
       </section>

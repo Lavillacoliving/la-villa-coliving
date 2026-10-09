@@ -125,9 +125,11 @@ export function HousesPreviewV7() {
                 <span className="absolute top-4 left-4 bg-white/90 backdrop-blur-sm text-[#1C1917] text-xs font-semibold px-3 py-1.5 rounded-lg">
                   {house.residents} {language === "en" ? "residents" : "résidents"}
                 </span>
-                {/* Tag transport — (Lot L2, 09/10/2026) libellé canonique D1 ; max-w + text-right : replie sans chevaucher le tag résidents. */}
+                {/* Tag transport — (Lot L2, 09/10/2026) libellé canonique D1 dès sm ; sur mobile, forme courte SANS minute
+                    (destination + mode, pas de « 20 min » hors libellé canonique) : le libellé complet tenait sur 3 lignes à 375 px. */}
                 <span className="absolute top-4 right-4 max-w-[60%] text-right bg-black/60 backdrop-blur-sm text-white text-xs font-medium px-3 py-1.5 rounded-lg">
-                  {STATS_DISPLAY[L].distance}
+                  <span className="hidden sm:inline">{STATS_DISPLAY[L].distance}</span>
+                  <span className="sm:hidden">{L === "en" ? "Geneva Eaux-Vives by Léman Express" : "Genève-Eaux-Vives en Léman Express"}</span>
                 </span>
                 {/* Availability badge — couleur dérivée de la dispo réelle, pas du libellé.
                     Libellé null (dispo inconnue) = pas de badge, jamais de chiffre inventé. */}

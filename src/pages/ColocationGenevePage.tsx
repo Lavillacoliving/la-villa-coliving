@@ -86,10 +86,10 @@ export function ColocationGenevePage() {
         // §6 variante B (décision Q8 : pas de prix dans le title). Meta de la spécification révisée du 04/09.
         // (correction Jérôme 04/09) « tout inclus » dans le title, le seul mot qui distingue la page des annonces ; > 65 c. avec la marque → pas de suffixe (S33).
         title={en ? "Shared housing in Geneva, French side: all-inclusive rooms" : "Colocation à Genève côté France : chambres tout inclus"}
-        // (Lot L2, 09/10/2026) D1 : jamais « à N min du centre » sans destination nommée → STATS_DISPLAY.distance ; meta ≤ 160 c.
+        // (Lot L2, 09/10/2026) D1 : jamais « à N min du centre » sans destination nommée → STATS_DISPLAY.distance ; meta ≤ 155 c. (FR 154 / EN 152, mesuré).
         description={en
-          ? `Shared housing in Geneva, French side: 3 houses ${STATS_DISPLAY.en.distance}. All-inclusive rooms, CHF prices, reply in 48 h.`
-          : `Colocation à Genève côté France : 3 maisons à ${STATS_DISPLAY.fr.distance}. Chambres tout inclus, prix en CHF, réponse sous 48 h.`}
+          ? `Shared housing in Geneva, French side: 3 houses ${STATS_DISPLAY.en.distance}. All-inclusive rooms in CHF, reply in 48 h.`
+          : `Colocation à Genève côté France : 3 maisons à ${STATS_DISPLAY.fr.distance}. Chambres tout inclus en CHF, réponse sous 48 h.`}
         url={PILLAR_URL}
         image="https://www.lavillacoliving.com/images/villa_portrait.webp"
         jsonLd={offerSchema}

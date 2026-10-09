@@ -179,10 +179,11 @@ export const TRANSIT = {
   /** Porte-à-porte Eaux-Vives, min/max des trois maisons — « 18 à 24 min porte-à-porte selon la maison ». */
   doorToDoorEauxVivesMin: 18,
   doorToDoorEauxVivesMax: 24,
-  /** Porte-à-porte jusqu'à Rive (centre), fourchette des trois maisons (Jérôme 09/10) ; détail par maison en L2. */
-  riveDoorToDoorMin: 27,
+  /** Porte-à-porte jusqu'à Rive (centre), fourchette des trois maisons (Jérôme 09/10) ; détail par maison en L2.
+   *  (Lot L2, 09/10/2026) Min = 28, pas 27 : = min de byHouse (31/32/28) — 27-28 mesuré au Lodge, borne haute retenue, règle D1.4. */
+  riveDoorToDoorMin: 28,
   riveDoorToDoorMax: 32,
-  /** « 30 min jusqu'au centre » : arrondi de 27-32 au 5 le plus proche (règle D1.4). */
+  /** « 30 min jusqu'au centre » : arrondi de 28-32 au 5 le plus proche (règle D1.4). */
   centreDoorToDoorMin: 30,
 } as const;
 

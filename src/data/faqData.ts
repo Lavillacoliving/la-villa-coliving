@@ -943,8 +943,20 @@ export const faqData: FAQItem[] = [
       fr: 'Nos maisons disposent de magnifiques espaces extérieurs incluant des jardins, terrasses, espaces BBQ et bien sûr des piscines. Ces espaces sont conçus pour la détente, les échanges sociaux et profiter de l\'air frais. Du mobilier extérieur est fourni pour ton confort.',
     },
   },
-  // (Lot L2, 09/10/2026) Question « trottinettes électriques » retirée : service promis nulle part ailleurs sur le site
-  // (ni /services, ni traductions) — à réintroduire seulement si Jérôme confirme le service.
+  // (Lot L2, 09/10/2026) Entrée conservée telle quelle : le service n'est promis nulle part ailleurs sur le site
+  // (ni /services, ni traductions) — hors périmètre L2, à trancher par Jérôme à part.
+  {
+    id: 'electric-scooters',
+    category: 'Services & Amenities',
+    question: {
+      en: 'Can I use the electric scooters?',
+      fr: 'Puis-je utiliser les trottinettes électriques ?',
+    },
+    answer: {
+      en: 'Yes, electric scooters are available for resident use to explore the local area or get to nearby shops and transport. They\'re a fun, eco-friendly way to get around. Safety guidelines and helmet use are required.',
+      fr: 'Oui, des trottinettes électriques sont disponibles pour l\'usage des résidents pour explorer le quartier ou se rendre aux magasins et transports proches. Ce sont un moyen amusant et écologique de se déplacer. Les consignes de sécurité et le port du casque sont obligatoires.',
+    },
+  },
   {
     id: 'monthly-essentials',
     category: 'Services & Amenities',

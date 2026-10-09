@@ -66,7 +66,8 @@ const FORBIDDEN = [
   { re: /right on the border/i, unless: /Ambilly/i, label: '« right on the border » hors Ambilly (D6)' },
   // D7 — aucun numéro de ligne de bus ; « TPN » = réseau de Nyon ; un arrêt s'écrit « arrêt de bus <nom> à N min à pied ».
   { re: /\bTPN\b/, label: '« TPN » (réseau de Nyon — D7)' },
-  { re: /\bligne 61\b|\bline 61\b|ligne de bus 7\b|\bbus 7\b|bus line 7\b/i, label: 'numéro de ligne de bus (D7 : arrêt nommé, sans numéro)' },
+  // « bus 7 » seul n'est un numéro de ligne que s'il n'est pas suivi d'une unité : « the bus 7 minutes away » est une durée (09/10/2026).
+  { re: /\bligne 61\b|\bline 61\b|ligne de bus 7\b|\bbus 7\b(?![   ]?min)|bus line 7\b/i, label: 'numéro de ligne de bus (D7 : arrêt nommé, sans numéro)' },
   { re: /Place de l['’]Étoile à 1 min/i, label: '« Place de l\'Étoile à 1 min » (D7 : Parc Montessuit à 13 min à pied)' },
   { re: /(?<![\d,.\-–])1 min à pied|(?<![\d,.\-–])1-minute walk/i, requires: /\btram/i, label: '« tram à 1 min à pied » (D7)' },
   { re: /au pas de la porte/i, label: '« au pas de la porte » (D7)' },

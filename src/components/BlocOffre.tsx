@@ -59,7 +59,7 @@ const HEADLINES: Record<IntentBucket, { fr: string; en: string }> = {
   ville: { fr: "Tu compares les villes ? Viens voir à quoi ressemble la vie sur place.", en: "Comparing towns? Come see what living here actually looks like." },
   admin: { fr: "Tu prépares ton installation côté France ?", en: "Planning your move to the French side?" },
   // (D1, 09/10/2026) jamais « du centre » sans qualification : la destination est nommée.
-  life: { fr: `Envie d'habiter à ${STATS.genevaCenterMinutes} min de Genève-Eaux-Vives, sans la galère ?`, en: `Want to live ${STATS.genevaCenterMinutes} min from Geneva Eaux-Vives, hassle-free?` },
+  life: { fr: `Envie d'habiter à ${STATS_DISPLAY.fr.distance}, sans la galère ?`, en: `Want to live ${STATS_DISPLAY.en.distance}, hassle-free?` }, // (Lot L2, 09/10/2026) libellé canonique D1
   coliving: { fr: "Envie de vivre en coliving près de Genève ?", en: "Want to live in coliving near Geneva?" },
 };
 

@@ -219,8 +219,9 @@ export function RatesPageV4() {
     {
       label: { fr: "Loyer mensuel", en: "Monthly rent" },
       // Fourchette publiée = MARKET_ROOM_EUR (source unique, D0 amendement c du 09/10/2026 ; reprise par le bloc « Où chercher »).
+      // (Lot L2, 09/10/2026) Milliers FR = espace insécable U+00A0.
       classic: {
-        fr: `${MARKET_ROOM_EUR.min}-${thousands(MARKET_ROOM_EUR.max, " ")} €`,
+        fr: `${MARKET_ROOM_EUR.min}-${thousands(MARKET_ROOM_EUR.max, " ")} €`,
         en: `€${MARKET_ROOM_EUR.min}-${thousands(MARKET_ROOM_EUR.max, ",")}`,
       },
       villa: {
@@ -248,8 +249,8 @@ export function RatesPageV4() {
         en: "22-28 m² (surveyed August 2026)",
       },
       villa: {
-        // (Lot L2, 09/10/2026) Terrain de La Villa lu dans HOUSE_SURFACES (D2), espace de vie dans STATS — plus de surface en dur.
-        fr: `${STATS.livingSpacePerResidentMin}-${STATS.livingSpacePerResidentMax} m² + extérieurs jusqu'à ${thousands(HOUSE_SURFACES.lavilla.plotM2, " ")} m²`,
+        // (Lot L2, 09/10/2026) Terrain de La Villa lu dans HOUSE_SURFACES (D2), espace de vie dans STATS — plus de surface en dur ; milliers FR = U+00A0.
+        fr: `${STATS.livingSpacePerResidentMin}-${STATS.livingSpacePerResidentMax} m² + extérieurs jusqu'à ${thousands(HOUSE_SURFACES.lavilla.plotM2, " ")} m²`,
         en: `${STATS.livingSpacePerResidentMin}-${STATS.livingSpacePerResidentMax} m² + outdoor areas up to ${thousands(HOUSE_SURFACES.lavilla.plotM2, ",")} m²`,
       },
       studio: {

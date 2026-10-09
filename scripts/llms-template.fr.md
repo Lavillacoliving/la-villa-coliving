@@ -1,6 +1,6 @@
 # La Villa Coliving
 
-> Colocation et coliving premium meublé tout compris, côté France, à {{MIN}} minutes de Genève-Eaux-Vives en Léman Express, porte-à-porte.
+> Colocation et coliving premium meublé tout compris, côté France, à {{DISTANCE}}.
 
 ## Faits clés
 {{FACTS}}

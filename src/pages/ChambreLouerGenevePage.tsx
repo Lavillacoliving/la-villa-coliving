@@ -54,10 +54,10 @@ export function ChambreLouerGenevePage() {
         // §6 variante B : pas de prix dans le title (Q8, confirmé le 04/09) ; meta sans « 3 mois minimum » (Q13, confirmé le 04/09).
         // (ajustement Jérôme 04/09) pluriel aligné sur le H1 + « tout inclus », sans prix (Q8) ; > 65 c. avec la marque → pas de suffixe (S33).
         title={en ? "Rooms to rent near Geneva: furnished, all inclusive" : "Chambres à louer près de Genève : meublées, tout inclus"}
-        // (D1, 09/10/2026 ; Lot L2) « 20 min » = libellé canonique STATS_DISPLAY.distance, jamais une variante — meta ≤ 160 caractères.
+        // (D1, 09/10/2026 ; Lot L2) « 20 min » = libellé canonique STATS_DISPLAY.distance, jamais une variante — meta ≤ 155 caractères (FR 154 / EN 152, mesuré).
         description={en
-          ? `Furnished rooms on the French side, ${STATS_DISPLAY.en.distance}. Bills, fibre, cleaning included, from ${PRICE_SHARED_CHF_EN}. Live dates.`
-          : `Chambres meublées côté France, à ${STATS_DISPLAY.fr.distance} : charges, fibre et ménage compris, dès ${PRICE_SHARED_CHF_FR}. Dispo réelle.`}
+          ? `Furnished rooms, French side, ${STATS_DISPLAY.en.distance}. Bills, fibre, cleaning included, from ${PRICE_SHARED_CHF_EN}. Live dates.`
+          : `Chambres meublées côté France, à ${STATS_DISPLAY.fr.distance} : charges, fibre, ménage inclus, dès ${PRICE_SHARED_CHF_FR}. Dispo réelle.`}
         image="https://www.lavillacoliving.com/images/le loft/rooms/Chambre 5/chambre-5-vue-large.webp"
       />
 

@@ -127,9 +127,10 @@ const capitalize = (s: string): string => s.charAt(0).toUpperCase() + s.slice(1)
 /** Carte latérale « À Proximité » : ligne courte, vélo Voie Verte mesuré, frontière (quand elle est définie), commerces §1.3. */
 function houseNearbyCard(slug: HouseSlug, lang: L2Lang): string[] {
   const border = houseBorder(slug, lang);
+  // Ponctuation de la langue (comme houseNearby) : « … : valeur » en FR, « …: value » en EN.
   const bike = houseCommuteRows(slug, lang)
     .filter((r) => r.mode.startsWith(lang === "en" ? "Bike" : "Vélo"))
-    .map((r) => `${r.mode} — ${r.destination} : ${r.value}`);
+    .map((r) => (lang === "en" ? `${r.mode} — ${r.destination}: ${r.value}` : `${r.mode} — ${r.destination} : ${r.value}`));
   return [capitalize(commuteShort(slug, lang)), ...bike, ...(border ? [border] : []), ...houseNearby(slug, lang)];
 }
 
@@ -1426,10 +1427,10 @@ export function HouseDetailPage() {
         description={(() => {
           // Metas ≤ 155c, factuelles, chiffrées. Pas de "${house.description}" qui dépasse 200c.
           const descs: Record<string, { en: string; fr: string }> = {
-            // (Lot L2, 09/10/2026, D1) Destination nommée + mode (Genève-Eaux-Vives, Léman Express), jamais « du centre » seul ; ≤ 155 c.
+            // (Lot L2, 09/10/2026, D1) Libellé de marque unique STATS_DISPLAY.distance (jamais une variante) ; ≤ 155 c. (FR 151 / EN 147, mesuré).
             lavilla: {
-              en: `La Villa: 10 rooms in Ville-la-Grand. Heated pool, sauna, gym. All-inclusive from ${PRICE_SHARED_CHF_EN}/month. ${STATS.genevaCenterMinutes} min from Geneva Eaux-Vives by Léman Express.`,
-              fr: `La Villa : 10 chambres à Ville-la-Grand. Piscine chauffée, sauna, gym. Tout inclus dès ${PRICE_SHARED_CHF_FR}/mois. ${STATS.genevaCenterMinutes} min de Genève-Eaux-Vives en Léman Express.`,
+              en: `La Villa: 10 rooms in Ville-la-Grand. Pool, sauna, gym, all inclusive from ${PRICE_SHARED_CHF_EN}. ${STATS_DISPLAY.en.distance}.`,
+              fr: `La Villa : 10 chambres à Ville-la-Grand. Piscine, sauna, gym, tout inclus dès ${PRICE_SHARED_CHF_FR}. À ${STATS_DISPLAY.fr.distance}.`,
             },
             leloft: {
               en: `Le Loft: 7 premium rooms in Ambilly. Indoor pool, urban design, Tram 17 to Geneva. All-inclusive: ${PRICE_CHF_EN}/month.`,
@@ -2205,7 +2206,8 @@ export function HouseDetailPage() {
               { q: "Quelle est la durée minimale du bail au Loft ?", a: "Aucune durée minimale imposée : bail de 12 mois, et 1 mois de préavis pour partir quand tu veux — pratique pour les frontaliers en mission ou en période d'essai à Genève." },
               { q: "Y a-t-il une caution et des frais d'agence ?", a: "Caution équivalente à 2 mois de loyer hors charges, restituée sous 30 jours après l'état des lieux de sortie si aucune dégradation n'est constatée, sinon sous 2 mois. Aucun frais d'agence ni de dossier." },
               { q: "Combien de chambres y a-t-il au Loft et sont-elles meublées ?", a: "7 chambres privatives meublées (lit, bureau, placard), toutes avec salle de bain privative. Espaces communs design : cuisine ouverte, salon, terrasse, piscine intérieure chauffée toute l'année." },
-              { q: "Qui peut postuler pour vivre au Loft ?", a: "Profil cible : frontaliers en CDI, jeunes professionnels, expatriés. Sélection sur dossier (justificatif de revenus, motivation, compatibilité avec la communauté). La proximité immédiate de la frontière fait du Loft un favori des frontaliers qui vont au bureau à pied ou en vélo." },
+              // (Lot L2, 09/10/2026, D6) Frontière du Loft = fait mesuré (TRANSIT), plus de « proximité immédiate ».
+              { q: "Qui peut postuler pour vivre au Loft ?", a: `Profil cible : frontaliers en CDI, jeunes professionnels, expatriés. Sélection sur dossier (justificatif de revenus, motivation, compatibilité avec la communauté). La frontière à ${TB.leloft.border.foronWalkMin} min à pied fait du Loft un favori des frontaliers qui vont au bureau à pied ou en vélo.` },
               { q: "Où se trouve Le Loft et à quelle distance de Genève ?", a: `Le Loft se situe au centre d'Ambilly, côté France, à ${TB.leloft.riveDoorToDoorMin} min porte-à-porte du centre de Genève (Rive) par le tram 17 (arrêt ${TB.leloft.tramStop.name} à ${TB.leloft.tramStop.walkMin} min à pied, ${TB.leloft.tramStop.tramToRiveMin} min de tram) et à ${TB.leloft.eauxVivesDoorToDoorMin} min de Genève-Eaux-Vives en Léman Express. C'est l'une des trois maisons de coliving de La Villa Coliving, avec une piscine intérieure chauffée toute l'année et un sauna finlandais.` },
               { q: "Combien de résidents vivent au Loft ?", a: "Le Loft accueille 7 résidents, ce qui en fait la plus intime des maisons de La Villa Coliving. Située à Ambilly, près de Genève, elle offre une chambre meublée privée à chacun et une ambiance très conviviale à taille réduite." },
               { q: "Quels équipements y a-t-il au Loft ?", a: `Le Loft, à Ambilly, dispose d'une piscine intérieure chauffée utilisable toute l'année, d'un sauna finlandais, d'une salle de sport, d'un espace home cinéma et de chambres spacieuses de ${ROOM_SURFACE_BY_HOUSE.leloft.min} à ${ROOM_SURFACE_BY_HOUSE.leloft.max} m². Tout est inclus dans le loyer tout compris de ${PRICE_CHF_FR}/mois.` },
@@ -2217,7 +2219,7 @@ export function HouseDetailPage() {
               { q: "What is the minimum lease term at Le Loft?", a: "No set minimum: a 12-month lease, and 1 month's notice whenever you decide to leave — useful for cross-border workers on assignment or on a trial period in Geneva." },
               { q: "Is there a deposit and any agency fees?", a: "Deposit equivalent to 2 months' rent excluding charges, refunded within 30 days after the move-out inspection if there is no damage, otherwise within 2 months. No agency fees, no application fees." },
               { q: "How many rooms are there at Le Loft and are they furnished?", a: "7 private furnished rooms (bed, desk, wardrobe), all with a private en-suite bathroom. Designer common spaces: open kitchen, living room, terrace, year-round heated indoor pool." },
-              { q: "Who can apply to live at Le Loft?", a: "Target profile: cross-border workers on CDI, young professionals, expats. Selection by application (income proof, motivation, fit with community). The immediate proximity to the border makes Le Loft a favorite among cross-border workers who walk or bike to the office." },
+              { q: "Who can apply to live at Le Loft?", a: `Target profile: cross-border workers on CDI, young professionals, expats. Selection by application (income proof, motivation, fit with community). The border, an ${TB.leloft.border.foronWalkMin}-minute walk away, makes Le Loft a favourite among cross-border workers who walk or bike to the office.` },
               { q: "Where is Le Loft and how far from Geneva?", a: `Le Loft is in the centre of Ambilly, on the French side, ${TB.leloft.riveDoorToDoorMin} minutes door to door from central Geneva (Rive) by tram 17 (${TB.leloft.tramStop.name} stop an ${TB.leloft.tramStop.walkMin}-minute walk away, ${TB.leloft.tramStop.tramToRiveMin} minutes by tram) and ${TB.leloft.eauxVivesDoorToDoorMin} minutes from Geneva Eaux-Vives by Léman Express. It's one of the three La Villa Coliving houses, with an indoor pool heated year-round and a Finnish sauna.` },
               { q: "How many residents live at Le Loft?", a: "Le Loft hosts 7 residents, making it the most intimate of the La Villa Coliving houses. Located in Ambilly, near Geneva, it offers a private furnished room for each resident and a very convivial small-scale atmosphere." },
               { q: "What amenities are there at Le Loft?", a: `Le Loft, in Ambilly, has an indoor pool heated and usable year-round, a Finnish sauna, a gym, a home cinema space and spacious rooms of ${ROOM_SURFACE_BY_HOUSE.leloft.min} to ${ROOM_SURFACE_BY_HOUSE.leloft.max} m². Everything is included in the all-inclusive rent of ${PRICE_CHF_EN}/month.` },

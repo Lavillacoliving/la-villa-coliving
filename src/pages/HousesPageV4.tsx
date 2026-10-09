@@ -26,13 +26,16 @@ const commuteOf = (slug: EntityHouseSlug, lang: "fr" | "en") => {
   if (!h) throw new Error(`entityFacts : maison inconnue ${slug}`);
   return h.commute[lang];
 };
+/** Majuscule initiale pour une cellule de tableau (la ligne courte A.1 commence en minuscule) — comme HousesPreviewV7. */
+const cap = (s: string) => s.charAt(0).toUpperCase() + s.slice(1);
 
 export function HousesPageV4() {
   const { language } = useLanguage();
   const L: "fr" | "en" = language === "en" ? "en" : "fr";
   const availability = useRoomAvailability();
-  const plotVilla = thousands(SURF.lavilla.plotM2, L === "en" ? "," : " ");
-  const plotLodge = thousands(SURF.lelodge.plotM2, L === "en" ? "," : " ");
+  // (Lot L2, 09/10/2026) Milliers FR = espace insécable U+00A0 (une espace ordinaire laissait « 2 000 » sécable).
+  const plotVilla = thousands(SURF.lavilla.plotM2, L === "en" ? "," : " ");
+  const plotLodge = thousands(SURF.lelodge.plotM2, L === "en" ? "," : " ");
 
   const houses = [
     {
@@ -99,7 +102,7 @@ export function HousesPageV4() {
     },
     {
       label: language === "en" ? "Plot" : "Terrain",
-      // (Lot 2, 03/09) séparateur de milliers FR = espace insécable, EN = virgule.
+      // (Lot 2, 03/09 ; corrigé Lot L2, 09/10/2026) séparateur de milliers FR = espace insécable U+00A0 (plotVilla/plotLodge), EN = virgule.
       // (Lot L2, 09/10/2026) Le « 330 m² » du Loft n'était sourcé nulle part → cellule vide (HOUSE_SURFACES.leloft n'a pas de terrain).
       values: [`${plotVilla} m²`, "—", `${plotLodge} m²`],
     },
@@ -141,8 +144,8 @@ export function HousesPageV4() {
     },
     {
       label: language === "en" ? "Transport to Geneva" : "Transport vers Genève",
-      // (Lot L2, 09/10/2026) Ligne courte A.1 par maison (ENTITY_HOUSES, dérivée de TRANSIT) — plus de « CEVA à 9 min ».
-      values: [commuteOf("lavilla", L), commuteOf("leloft", L), commuteOf("lelodge", L)],
+      // (Lot L2, 09/10/2026) Ligne courte A.1 par maison (ENTITY_HOUSES, dérivée de TRANSIT) — plus de « CEVA à 9 min » ; majuscule initiale.
+      values: [cap(commuteOf("lavilla", L)), cap(commuteOf("leloft", L)), cap(commuteOf("lelodge", L))],
     },
     {
       label: language === "en" ? "Price" : "Tarif",
@@ -156,10 +159,10 @@ export function HousesPageV4() {
     <main className="relative pt-16">
       <SEO
         title={language === "en" ? "3 coliving houses near Geneva" : "3 maisons de coliving près de Genève"}
-        // (Lot L2, 09/10/2026) « 20 min » qualifié (STATS_DISPLAY.distance, D1) ; chambres = STATS.totalRooms ; meta ≤ 160 c.
+        // (Lot L2, 09/10/2026) « 20 min » qualifié (STATS_DISPLAY.distance, D1) ; chambres = STATS.totalRooms ; meta ≤ 155 c. (FR 152 / EN 147, mesuré).
         description={language === "en"
-          ? `La Villa, Le Loft, Le Lodge: pool, sauna, gym, ${STATS_DISPLAY.en.distance}. ${STATS.totalRooms} rooms all inclusive from ${PRICE_SHARED_CHF_EN}/month.`
-          : `La Villa, Le Loft, Le Lodge : piscine, sauna, gym, à ${STATS_DISPLAY.fr.distance}. ${STATS.totalRooms} chambres tout inclus dès ${PRICE_SHARED_CHF_FR}/mois.`}
+          ? `La Villa, Le Loft, Le Lodge: pool, sauna, gym, ${STATS_DISPLAY.en.distance}. ${STATS.totalRooms} rooms all inclusive from ${PRICE_SHARED_CHF_EN}.`
+          : `La Villa, Le Loft, Le Lodge : piscine, sauna, gym, à ${STATS_DISPLAY.fr.distance}. ${STATS.totalRooms} chambres tout inclus dès ${PRICE_SHARED_CHF_FR}.`}
         url="https://www.lavillacoliving.com/nos-maisons"
       />
       {/* Hero */}
@@ -217,9 +220,11 @@ export function HousesPageV4() {
                   <span className="absolute top-4 left-4 bg-white/90 backdrop-blur-sm text-[#1C1917] text-xs font-semibold px-3 py-1.5 rounded-lg">
                     {house.capacity} {language === "en" ? "residents" : "résidents"}
                   </span>
-                  {/* (Lot L2, 09/10/2026) Libellé canonique D1 ; max-w + text-right pour qu'il replie sans chevaucher la pastille résidents. */}
+                  {/* (Lot L2, 09/10/2026) Libellé canonique D1 dès sm ; sur mobile, forme courte SANS minute (destination + mode) :
+                      le libellé complet tenait sur 3 lignes à 375 px. */}
                   <span className="absolute top-4 right-4 max-w-[60%] text-right bg-black/60 backdrop-blur-sm text-white text-xs font-medium px-3 py-1.5 rounded-lg">
-                    {STATS_DISPLAY[L].distance}
+                    <span className="hidden sm:inline">{STATS_DISPLAY[L].distance}</span>
+                    <span className="sm:hidden">{L === "en" ? "Geneva Eaux-Vives by Léman Express" : "Genève-Eaux-Vives en Léman Express"}</span>
                   </span>
                   {/* Pastille dispo — couleur dérivée de la dispo réelle (v_public_rooms), pas du libellé.
                       Libellé null (dispo inconnue) = pas de pastille, jamais de chiffre inventé. */}

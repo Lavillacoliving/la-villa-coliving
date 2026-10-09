@@ -127,6 +127,9 @@ test('forbiddenIssues (L2) : formulations légitimes laissées — négatives', 
     'Lidl à 4 min à pied (300 m), 17 à 20 m².',
     'Le tram 17 relie Annemasse à Lancy-Pont-Rouge ; les bus TPG desservent la gare.',
     'Gare d\'Annemasse (Léman Express), un train toutes les 10 min en heure de pointe.',
+    // (09/10/2026) « bus 7 » suivi d'une unité est une durée, pas un numéro de ligne (D7).
+    'Annemasse-Étoile bus stop, the bus 7 minutes away on foot.',
+    'Arrêt de bus 7 min à pied.',
   )), []);
 });
 

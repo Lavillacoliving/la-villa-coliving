@@ -76,6 +76,8 @@ export async function renderLlms(lang, m) {
     .replace('{{OU_CHERCHER}}', m.ouChercherMarkdown(lang))
     .replace('{{HOUSE_LINKS}}', houseLinks(lang, m))
     .replace('{{LIVING_SPACE}}', livingSpace(lang, m))
+    // (Lot L2, 09/10/2026, D1) Libellé de marque unique « 20 min de Genève-Eaux-Vives en Léman Express, porte-à-porte » = STATS_DISPLAY.distance.
+    .replace(/\{\{DISTANCE\}\}/g, m.STATS_DISPLAY[lang].distance)
     .replace(/\{\{MIN\}\}/g, String(F.genevaMinutes))
     .replace(/\{\{RESPONSE_HOURS\}\}/g, String(F.responseHours))
     .replace(/\{\{DEPOSIT_MONTHS\}\}/g, String(F.depositMonths))

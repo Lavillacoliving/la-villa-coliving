@@ -133,7 +133,9 @@ test('ENTITY_HOUSES[].commute = houseCommuteLine ; houseCommuteLong nomme la des
     assert.match(long, /Eaux-Vives/, long);
     assert.match(long, /Voie Verte/, long);
     assert.match(long, new RegExp(`\\b${T.byHouse[slug].eauxVivesDoorToDoorMin} min`), long);
-    if (slug === 'leloft') assert.match(long, /Tram 17/i); else assert.match(long, new RegExp(`\\b${T.trainEauxVivesMin} min`));
+    // (09/10/2026) D1.3 pour les trois maisons, Loft compris : la phrase gare porte le temps de train ET le porte-à-porte.
+    assert.match(long, new RegExp(`\\b${T.trainEauxVivesMin} min`), long);
+    if (slug === 'leloft') assert.match(long, /Tram 17/i);
     assert.ok(m.houseCommuteNote(lang).includes(T.measuredOnLabel[lang]), m.houseCommuteNote(lang));
   }
 });

@@ -1,6 +1,6 @@
 # La Villa Coliving
 
-> Premium furnished all-inclusive coliving on the French side, {{MIN}} minutes from Geneva Eaux-Vives by Léman Express, door to door.
+> Premium furnished all-inclusive coliving on the French side, {{DISTANCE}}.
 
 ## Key Facts
 {{FACTS}}

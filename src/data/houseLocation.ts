@@ -88,7 +88,7 @@ export function houseNearby(slug: HouseSlug, lang: LocLang): string[] {
     const label = lang === "en" ? p.en : p.fr;
     if (p.walkMin === undefined) return label;
     // Ponctuation de la langue : « label : valeur » en FR (espace insécable avant le deux-points), « label: value » en EN.
-    return lang === "en" ? `${label}: ${walkEn(p.walkMin, p.distanceM)}` : `${label} : ${walkFr(p.walkMin, p.distanceM)}`;
+    return lang === "en" ? `${label}: ${walkEn(p.walkMin, p.distanceM)}` : `${label} : ${walkFr(p.walkMin, p.distanceM)}`;
   });
 }
 
@@ -137,9 +137,10 @@ export function houseCommuteLong(slug: HouseSlug, lang: LocLang): string {
   const tr = TRANSIT;
   if (slug === "leloft") {
     const h = T.leloft;
+    // (09/10/2026) Règle D1.3 sur la phrase gare aussi : temps de train fixe + porte-à-porte, deux nombres.
     return lang === "en"
-      ? `Tram 17 is an ${h.tramWalkMin}-minute walk (${h.tramStop.name} stop, ${formatDistance(h.tramStop.distanceM, "en")}): Rive in ${h.tramStop.tramToRiveMin} minutes by tram, ${h.riveDoorToDoorMin} minutes door to door. Annemasse station is an ${h.stationWalkMin}-minute walk (${formatDistance(h.stationDistanceM, "en")}): Geneva Eaux-Vives in ${h.eauxVivesDoorToDoorMin} minutes door to door. By bike: central Geneva (Rive) in ${h.bikeToRiveMin} minutes on the Voie Verte.`
-      : `Tram 17 à ${h.tramWalkMin} min à pied (arrêt ${h.tramStop.name}, ${formatDistance(h.tramStop.distanceM, "fr")}) : Rive en ${h.tramStop.tramToRiveMin} min de tram, ${h.riveDoorToDoorMin} min porte-à-porte. Gare d'Annemasse à ${h.stationWalkMin} min à pied (${formatDistance(h.stationDistanceM, "fr")}) : Genève-Eaux-Vives en ${h.eauxVivesDoorToDoorMin} min porte-à-porte. Vélo : centre de Genève (Rive) en ${h.bikeToRiveMin} min par la Voie Verte.`;
+      ? `Tram 17 is an ${h.tramWalkMin}-minute walk (${h.tramStop.name} stop, ${formatDistance(h.tramStop.distanceM, "en")}): Rive in ${h.tramStop.tramToRiveMin} minutes by tram, ${h.riveDoorToDoorMin} minutes door to door. Annemasse station is an ${h.stationWalkMin}-minute walk (${formatDistance(h.stationDistanceM, "en")}): Geneva Eaux-Vives in ${tr.trainEauxVivesMin} minutes by Léman Express, ${h.eauxVivesDoorToDoorMin} minutes door to door. By bike: central Geneva (Rive) in ${h.bikeToRiveMin} minutes on the Voie Verte.`
+      : `Tram 17 à ${h.tramWalkMin} min à pied (arrêt ${h.tramStop.name}, ${formatDistance(h.tramStop.distanceM, "fr")}) : Rive en ${h.tramStop.tramToRiveMin} min de tram, ${h.riveDoorToDoorMin} min porte-à-porte. Gare d'Annemasse à ${h.stationWalkMin} min à pied (${formatDistance(h.stationDistanceM, "fr")}) : Genève-Eaux-Vives en ${tr.trainEauxVivesMin} min de Léman Express, ${h.eauxVivesDoorToDoorMin} min porte-à-porte. Vélo : centre de Genève (Rive) en ${h.bikeToRiveMin} min par la Voie Verte.`;
   }
   const h = T[slug];
   const extraFr = slug === "lelodge" ? ` Arrêt de bus ${T.lelodge.busStop.name} à ${T.lelodge.busStop.walkMin} min à pied ; tram 17 (${T.lelodge.tramStop.name}) à ${T.lelodge.tramStop.walkMin} min.` : "";
