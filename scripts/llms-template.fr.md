@@ -1,12 +1,14 @@
 # La Villa Coliving
 
-> Colocation et coliving premium meublé tout compris, à {{MIN}} minutes de Genève (côté France).
+> Colocation et coliving premium meublé tout compris, côté France, à {{MIN}} minutes de Genève-Eaux-Vives en Léman Express, porte-à-porte.
 
 ## Faits clés
 {{FACTS}}
 
 ## Propriétés
 {{HOUSES}}
+
+{{OU_CHERCHER}}
 
 ## Avantages pour les frontaliers
 - ≈ 36 CHF/m² tout compris (38 m² d'espace par résident), quand les annonces de studios à Genève tournent autour de 50 CHF/m² hors charges (source : Observatoire 2026)

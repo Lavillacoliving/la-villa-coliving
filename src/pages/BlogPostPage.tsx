@@ -20,6 +20,10 @@ import { isYmyl } from "@/lib/ymyl";
 import { resolveContentTokens } from "@/lib/contentTokens";
 import { EntityFacts } from "@/components/EntityFacts";
 import { ENTITY_FACTS_ARTICLES, fallbackEntityFactsCut } from "@/data/entityFactsArticles";
+import { OuChercher } from "@/components/OuChercher";
+import { OU_CHERCHER_ARTICLES, resolveOuChercherCut } from "@/data/ouChercherArticles";
+import type { OuChercherVariant } from "@/data/answerSlots";
+import { findCommentLines, findContentMarkers, stripCommentLines } from "@/lib/contentMarkers";
 import { NotFoundPage } from "@/pages/NotFoundPage";
 import { formatLongDate } from "@/lib/dates";
 import { pickRelatedPosts } from "@/lib/relatedPosts";
@@ -76,10 +80,11 @@ const CL:Record<string,Record<string,string>>={
 // ou-habiter…) coupent plus tôt (~30 % — le lecteur compare des villes, l'offre
 // doit apparaître avant qu'il reparte), fenêtre décalée en conséquence ; tous
 // les autres gardent le milieu (50 %, fenêtre 25-75 %) — comportement inchangé.
-// (Lot C0, 09/2026) avoidIndex : position du marqueur du bloc entité — les titres à moins de
-// ~900 caractères (≈ 150 mots) de ce point sont écartés pour que les deux blocs (bloc offre
-// mi-article et bloc entité) ne se touchent jamais. Sans marqueur (-1) : comportement inchangé.
-function splitForMidCta(md: string, targetRatio: 0.3 | 0.5 = 0.5, avoidIndex = -1): [string, string] | null {
+// (Lot C0, 09/2026 ; Lot L1, 10/2026) avoid : positions des blocs React déjà insérés (bloc entité,
+// bloc « Où chercher ») — les titres à moins de ~900 caractères (≈ 150 mots) de l'un de ces points
+// sont écartés pour que le bloc offre mi-article ne touche jamais un autre bloc. Liste vide :
+// comportement inchangé.
+function splitForMidCta(md: string, targetRatio: 0.3 | 0.5 = 0.5, avoid: readonly number[] = []): [string, string] | null {
   if (md.includes("```")) return null;
   if (md.split(/\s+/).length <= 650) return null;
   const headings: number[] = [];
@@ -90,7 +95,7 @@ function splitForMidCta(md: string, targetRatio: 0.3 | 0.5 = 0.5, avoidIndex = -
   const target = md.length * targetRatio;
   let best = -1;
   for (const idx of headings) {
-    if (avoidIndex >= 0 && Math.abs(idx - avoidIndex) < 900) continue;
+    if (avoid.some((a) => Math.abs(idx - a) < 900)) continue;
     if (best === -1 || Math.abs(idx - target) < Math.abs(best - target)) best = idx;
   }
   if (best === -1) return null;
@@ -102,16 +107,16 @@ function splitForMidCta(md: string, targetRatio: 0.3 | 0.5 = 0.5, avoidIndex = -
 // (Lot C0, brief « Conquête IA », 09/2026) Marqueur du bloc entité dans le markdown des pages de
 // décision : une ligne `<!-- entity-facts -->` seule. react-markdown 10 rend le HTML brut en TEXTE
 // VISIBLE (pas de rehype-raw) : le marqueur est donc découpé ICI, avant le parseur, et remplacé par
-// <EntityFacts/>. Le paragraphe qui le suit = la phrase de contexte propre à la page. Le marqueur
-// est retiré du texte servant à la FAQ, au sommaire et au wordCount. Fonctions pures : le prérendu
-// (Puppeteer) et le client rendent la même chose.
-const ENTITY_FACTS_MARKER_RE = /^[ \t]*<!--\s*entity-facts\s*-->[ \t]*$/m;
-function findEntityFactsMarker(md: string): { index: number; length: number } | null {
-  const m = ENTITY_FACTS_MARKER_RE.exec(md);
-  return m ? { index: m.index, length: m[0].length } : null;
-}
-function stripEntityFactsMarker(md: string): string {
-  return md.replace(ENTITY_FACTS_MARKER_RE, "");
+// <EntityFacts/>. Le paragraphe qui le suit = la phrase de contexte propre à la page.
+// (Lot L1 « ingénierie des créneaux », 10/2026) Les marqueurs passent par le registre
+// src/lib/contentMarkers.ts (`<!-- entity-facts -->`, `<!-- ou-chercher[:court] -->`) ; TOUTE autre
+// ligne-commentaire est retirée du rendu et du texte servant à la FAQ, au sommaire et au wordCount :
+// plus jamais de marqueur orphelin visible, même si un SQL précède le code. Fonctions pures : le
+// prérendu (Puppeteer) et le client rendent la même chose.
+type MdCut = { index: number; length: number };
+function findEntityFactsMarker(md: string): MdCut | null {
+  const m = findContentMarkers(md).find((x) => x.name === "entity-facts");
+  return m ? { index: m.index, length: m.length } : null;
 }
 
 // Extrait les paires Q/R d'une section FAQ markdown (« # FAQ … », « ## FAQ … » ou
@@ -310,7 +315,22 @@ export function BlogPostPage() {
   // (Lot S1) Les 8 articles les plus cités portent le bloc sans marqueur : coupe de repli avant la
   // conclusion (src/data/entityFactsArticles.ts). Longueur 0 : rien à retirer du texte des metas.
   const entityCut = entityMarker ?? (ENTITY_FACTS_ARTICLES.has(post.slug) ? fallbackEntityFactsCut(content) : null);
-  const contentForMeta = entityMarker ? stripEntityFactsMarker(content) : content;
+  // (Lot L1, 10/2026) Bloc « Où chercher une chambre côté France » : marqueur explicite `<!-- ou-chercher[:court] -->`
+  // (filet, aucun article ne l'utilise au 09/10/2026) sinon allowlist code ancrée sur un titre existant
+  // (src/data/ouChercherArticles.ts). Ancre introuvable : pas de bloc (la garde check-answer-slots échoue).
+  const ouMarker = findContentMarkers(content).find((x) => x.name === "ou-chercher");
+  const ouEntry = OU_CHERCHER_ARTICLES[post.slug];
+  let ouCut: (MdCut & { variant: OuChercherVariant }) | null = null;
+  if (ouMarker) ouCut = { index: ouMarker.index, length: ouMarker.length, variant: ouMarker.variant === "court" ? "short" : "full" };
+  else if (ouEntry) {
+    const c = resolveOuChercherCut(content, ouEntry, L, entityCut ? entityCut.index : null);
+    if (c) ouCut = { ...c, variant: ouEntry.variant };
+  }
+  // Toute autre ligne-commentaire (marqueur inconnu, note d'auteur) est retirée du rendu, jamais affichée.
+  const removalCuts: MdCut[] = findCommentLines(content).filter(
+    (c) => c.index !== entityMarker?.index && c.index !== ouMarker?.index,
+  );
+  const contentForMeta = stripCommentLines(content);
   const faqPairs = extractFaqPairs(contentForMeta);
   const toc = extractToc(contentForMeta);
   // Meta description dédiée si renseignée en base (optimisée SEO), sinon excerpt
@@ -323,7 +343,11 @@ export function BlogPostPage() {
   // Localize language-neutral internal paths for the EN site (/x → /en/x).
   const loc = (p: string) => localizePath(p, language);
   const bucket = getIntentBucket(post.slug, post.category);
-  const midSplit = splitForMidCta(content, bucket === "ville" ? 0.3 : 0.5, entityCut ? entityCut.index : -1);
+  const midSplit = splitForMidCta(
+    content,
+    bucket === "ville" ? 0.3 : 0.5,
+    [entityCut?.index, ouCut?.index].filter((x): x is number => typeof x === "number"),
+  );
 
   // (Lot 1) CTA du corps d'article : UTM virtuels de la session (write-once) + le même
   // event GA4 que le bloc offre, position « body », pour comparer les deux portes.
@@ -572,20 +596,26 @@ export function BlogPostPage() {
 
           <div className="blog-content max-w-none text-[#44403C]" style={{fontSize:"1.1rem",lineHeight:"1.8"}}>
             {/* Le markdown est rendu en tranches, avec des blocs React insérés entre elles :
-                bloc offre mi-article (longs formats > 650 mots, maison + prix + candidature) et,
-                pour les pages de décision, le bloc entité à la place du marqueur (Lot C0). Sans
-                coupe : une seule tranche — rendu identique à l'ancien. Clés stables → hydratation sûre. */}
+                bloc offre mi-article (longs formats > 650 mots, maison + prix + candidature), le bloc
+                « Où chercher » (Lot L1, allowlist ou marqueur) et, pour les pages de décision, le bloc
+                entité à la place du marqueur (Lot C0). Les lignes-commentaires restantes sont des coupes
+                sans nœud (retirées). Sans coupe : une seule tranche — rendu identique à l'ancien.
+                Clés stables (ordre des coupes déterministe) → hydratation sûre. */}
             {(() => {
-              const cuts: { at: number; len: number; node: React.ReactNode }[] = [];
+              const cuts: { at: number; len: number; node: React.ReactNode | null }[] = [];
               if (midSplit) cuts.push({ at: midSplit[0].length, len: 0, node: <BlocOffre variant="mid" slug={post.slug} bucket={bucket} /> });
+              // Tri stable : à index égal (ancre « before-entity-facts »), le bloc « Où chercher » précède le bloc entité.
+              if (ouCut) cuts.push({ at: ouCut.index, len: ouCut.length, node: <OuChercher variant={ouCut.variant} page={post.slug} tone="article" /> });
               if (entityCut) cuts.push({ at: entityCut.index, len: entityCut.length, node: <EntityFacts page={post.slug} /> });
+              for (const c of removalCuts) cuts.push({ at: c.index, len: c.length, node: null });
               cuts.sort((a, b) => a.at - b.at);
               const out: React.ReactNode[] = [];
               let prev = 0;
               cuts.forEach((c, i) => {
+                if (c.at < prev) return; // coupe à l'intérieur d'une zone déjà retirée : ignorée
                 const slice = content.slice(prev, c.at);
                 if (slice.trim()) out.push(<ReactMarkdown key={`md-${i}`} remarkPlugins={[remarkGfm]} components={mdComponents} urlTransform={blogUrlTransform}>{slice}</ReactMarkdown>);
-                out.push(<Fragment key={`cut-${i}`}>{c.node}</Fragment>);
+                if (c.node !== null) out.push(<Fragment key={`cut-${i}`}>{c.node}</Fragment>);
                 prev = c.at + c.len;
               });
               const tail = content.slice(prev);
