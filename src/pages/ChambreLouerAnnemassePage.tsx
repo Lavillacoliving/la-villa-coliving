@@ -254,10 +254,11 @@ export function ChambreLouerAnnemassePage() {
               <li key={h.slug}>{`${h.label} (${h.commune}) : ${h.commute[L]}`}</li>
             ))}
           </ul>
+          {/* (Lot L2, 09/10/2026) D7 : tram 17 = ancre du Loft (Ambilly) uniquement, avec ses deux nombres ; gare d'Annemasse, jamais « terminus ». */}
           <p className="text-[#57534E] leading-relaxed max-w-3xl mx-auto mt-6">
             {language === "en"
-              ? `From Annemasse station, the Léman Express also reaches Champel in ${TRANSIT.trainChampelMin} minutes and Cornavin in ${TRANSIT.trainCornavinMin}, no change; tram 17 links Ambilly and Annemasse to central Geneva.`
-              : `Depuis la gare d'Annemasse, le Léman Express rejoint aussi Champel en ${TRANSIT.trainChampelMin} min et Cornavin en ${TRANSIT.trainCornavinMin}, sans correspondance ; le tram 17 relie Ambilly et Annemasse au centre de Genève.`}
+              ? `From Annemasse station, the Léman Express also reaches Champel in ${TRANSIT.trainChampelMin} minutes and Cornavin in ${TRANSIT.trainCornavinMin}, no change; from Ambilly, tram 17 reaches Rive, in central Geneva, in ${TRANSIT.byHouse.leloft.tramStop.tramToRiveMin} minutes by tram.`
+              : `Depuis la gare d'Annemasse, le Léman Express rejoint aussi Champel en ${TRANSIT.trainChampelMin} min et Cornavin en ${TRANSIT.trainCornavinMin} min, sans correspondance ; depuis Ambilly, le tram 17 rejoint Rive, au centre de Genève, en ${TRANSIT.byHouse.leloft.tramStop.tramToRiveMin} min de tram.`}
           </p>
           <div className="text-center">
             <LocalizedLink

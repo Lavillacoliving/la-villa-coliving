@@ -15,8 +15,9 @@ import {
   ArrowRight,
   Euro,
 } from "lucide-react";
-import { STATS, PRICE_SHARED_CHF_FR, PRICE_SHARED_CHF_EN, TRANSIT } from "@/data/stats";
+import { STATS, STATS_DISPLAY, HOUSE_SURFACES, thousands, PRICE_SHARED_CHF_FR, PRICE_SHARED_CHF_EN, TRANSIT } from "@/data/stats";
 import { ENTITY_HOUSES, type EntityHouseSlug } from "@/data/entityFacts";
+import { houseCommuteNote } from "@/data/houseLocation";
 import { OuChercher } from "@/components/OuChercher";
 import {
   useRoomAvailability,
@@ -27,22 +28,36 @@ import {
 } from "@/lib/availability";
 
 // (Lot L1, 10/2026) Phrase d'accroche de chaque carte maison ; le trajet vient de ENTITY_HOUSES[].commute
-// (source unique, D1-L1). 370 m² (D2) ; plus de « frontière mitoyenne » (D6) ni de minutes en dur.
+// (source unique, D1-L1). Plus de « frontière mitoyenne » (D6) ni de minutes en dur.
+// (Lot L2, 09/10/2026) Surfaces lues dans HOUSE_SURFACES (D2) ; frontière de La Villa = formulation A.2 (le Foron,
+// rivière-frontière, borde la rue) ; Le Lodge : aucune promesse de frontière.
+const S = HOUSE_SURFACES;
 const HOUSE_INTRO: Record<EntityHouseSlug, { fr: string; en: string }> = {
   lavilla: {
-    fr: "370 m² sur un domaine de 2 000 m² bordé par le Foron et sa réserve naturelle. Piscine extérieure chauffée 12×5 m, sauna, salle de sport.",
-    en: "370 m² on a 2,000 m² estate bordered by the Foron river and its nature reserve. Heated outdoor pool 12×5 m, sauna, gym.",
+    fr: `${S.lavilla.livingM2} m² sur un domaine de ${thousands(S.lavilla.plotM2, " ")} m² en bordure du Foron — la rivière qui marque la frontière suisse — et de sa zone naturelle. Piscine extérieure chauffée 12×5 m, sauna, salle de sport.`,
+    en: `${S.lavilla.livingM2} m² on a ${thousands(S.lavilla.plotM2, ",")} m² estate beside the Foron — the river that marks the Swiss border — and its nature area. Heated outdoor pool 12×5 m, sauna, gym.`,
   },
   leloft: {
-    fr: "Design urbain, piscine intérieure chauffée toute l'année, terrasse. La maison la plus proche du tram 17.",
-    en: "Urban design, indoor pool heated year-round, terrace. The house closest to tram 17.",
+    fr: `Maison de ville de ${S.leloft.livingM2} m², design urbain, piscine intérieure chauffée toute l'année, terrasse. La maison la plus proche du tram 17.`,
+    en: `A ${S.leloft.livingM2} m² townhouse, urban design, indoor pool heated year-round, terrace. The house closest to tram 17.`,
   },
   lelodge: {
-    fr: "Ouvert en janvier 2026 dans le quartier de Romagny. 500 m² sur 4 bâtiments au cœur de 1 500 m² de jardins.",
-    en: "Opened in January 2026 in the Romagny district. 500 m² over 4 buildings in 1,500 m² of gardens.",
+    fr: `Ouvert en janvier 2026 dans le quartier de Romagny. ${S.lelodge.livingM2} m² sur 4 bâtiments au cœur de ${thousands(S.lelodge.plotM2, " ")} m² de jardins.`,
+    en: `Opened in January 2026 in the Romagny district. ${S.lelodge.livingM2} m² over 4 buildings in ${thousands(S.lelodge.plotM2, ",")} m² of gardens.`,
   },
 };
 const cap = (s: string) => s.charAt(0).toUpperCase() + s.slice(1);
+
+// (Lot L2, 09/10/2026) Tableau des trajets : train fixe + porte-à-porte « selon la maison » (min/max de TRANSIT.byHouse) —
+// deux nombres, toujours (D1). Aucune ligne voiture, aéroport ni hôpital : rien de mesuré dans la source.
+type HouseTransit = (typeof TRANSIT.byHouse)[keyof typeof TRANSIT.byHouse];
+const houseRange = (pick: (h: HouseTransit) => number): readonly [number, number] => {
+  const v = [TRANSIT.byHouse.lavilla, TRANSIT.byHouse.leloft, TRANSIT.byHouse.lelodge].map(pick);
+  return [Math.min(...v), Math.max(...v)];
+};
+const [CORNAVIN_DTD_MIN, CORNAVIN_DTD_MAX] = houseRange((h) => h.cornavinDoorToDoorMin);
+const [BIKE_RIVE_MIN, BIKE_RIVE_MAX] = houseRange((h) => h.bikeToRiveMin);
+const TRAM_TO_RIVE = TRANSIT.byHouse.leloft.tramStop.tramToRiveMin;
 
 
 export function AnnemasseColocationPage() {
@@ -81,9 +96,9 @@ export function AnnemasseColocationPage() {
         }
         description={
           language === "en"
-            // (D1, 09/10/2026) « 20 min » toujours qualifié : Genève-Eaux-Vives, Léman Express.
-            ? `Shared housing in Annemasse: ${STATS.totalRooms} furnished rooms all inclusive from ${PRICE_SHARED_CHF_EN}/month, Geneva Eaux-Vives ${STATS.genevaCenterMinutes} min door-to-door by Léman Express. No agency fee.`
-            : `Colocation Annemasse : ${STATS.totalRooms} chambres meublées tout inclus dès ${PRICE_SHARED_CHF_FR}/mois, Genève-Eaux-Vives à ${STATS.genevaCenterMinutes} min porte-à-porte en Léman Express. Sans frais d'agence.`
+            // (D1, 09/10/2026 ; Lot L2) « 20 min » = libellé canonique STATS_DISPLAY.distance, jamais une variante ; meta ≤ 160 c.
+            ? `Shared housing in Annemasse: ${STATS.totalRooms} furnished rooms all inclusive from ${PRICE_SHARED_CHF_EN}/month, ${STATS_DISPLAY.en.distance}. No agency fee.`
+            : `Colocation Annemasse : ${STATS.totalRooms} chambres meublées tout inclus dès ${PRICE_SHARED_CHF_FR}/mois, à ${STATS_DISPLAY.fr.distance}. Sans frais d'agence.`
         }
         url="https://www.lavillacoliving.com/annemasse-colocation"
         image="https://www.lavillacoliving.com/images/le lodge/exterior/la villa coliving le lodge-14.webp"
@@ -104,9 +119,10 @@ export function AnnemasseColocationPage() {
               : `Colocation à Annemasse — 29 chambres premium dès ${PRICE_SHARED_CHF_FR}/mois`}
           </h1>
           <p className="text-lg md:text-xl text-[#57534E] max-w-3xl mx-auto leading-relaxed mb-10 font-medium">
+            {/* (Lot L2, 09/10/2026) D1 : destination nommée, libellé canonique STATS_DISPLAY.distance. */}
             {language === "en"
-              ? "Three premium coliving houses in Annemasse Agglo (Ville-la-Grand, Ambilly, Annemasse) — for cross-border workers who want a Swiss salary with French cost of living. Geneva city centre 20 min door-to-door by Léman Express."
-              : "Trois maisons coliving premium dans Annemasse Agglo (Ville-la-Grand, Ambilly, Annemasse) — pour frontaliers qui veulent un salaire suisse avec le coût de la vie français. Centre de Genève à 20 min porte-à-porte en Léman Express."}
+              ? `Three premium coliving houses in Annemasse Agglo (Ville-la-Grand, Ambilly, Annemasse) — for cross-border workers who want a Swiss salary with French cost of living. ${STATS_DISPLAY.en.distance}.`
+              : `Trois maisons coliving premium dans Annemasse Agglo (Ville-la-Grand, Ambilly, Annemasse) — pour frontaliers qui veulent un salaire suisse avec le coût de la vie français. À ${STATS_DISPLAY.fr.distance}.`}
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <LocalizedLink
@@ -169,8 +185,8 @@ export function AnnemasseColocationPage() {
               </h3>
               <p className="text-[#57534E] leading-relaxed">
                 {language === "en"
-                  ? `You keep your Swiss salary and live on the French side, in a real house: 37-42 m² of living space per housemate, pool, sauna and gym included, from ${PRICE_SHARED_CHF_EN}/month all-inclusive — no application or agency fees.`
-                  : `Tu gardes ton salaire suisse et tu vis côté France, dans une vraie maison : 37-42 m² d'espace de vie par colocataire, piscine, sauna et salle de sport inclus, dès ${PRICE_SHARED_CHF_FR}/mois tout inclus — sans frais de dossier ni d'agence.`}
+                  ? `You keep your Swiss salary and live on the French side, in a real house: ${STATS.livingSpacePerResidentMin}-${STATS.livingSpacePerResidentMax} m² of living space per housemate, pool, sauna and gym included, from ${PRICE_SHARED_CHF_EN}/month all-inclusive — no application or agency fees.`
+                  : `Tu gardes ton salaire suisse et tu vis côté France, dans une vraie maison : ${STATS.livingSpacePerResidentMin}-${STATS.livingSpacePerResidentMax} m² d'espace de vie par colocataire, piscine, sauna et salle de sport inclus, dès ${PRICE_SHARED_CHF_FR}/mois tout inclus — sans frais de dossier ni d'agence.`}
               </p>
             </div>
             <div className="text-center">
@@ -178,13 +194,14 @@ export function AnnemasseColocationPage() {
                 <Train className="w-7 h-7 text-[#D4A574]" />
               </div>
               <h3 className="text-xl font-medium text-[#1C1917] mb-3">
-                {/* (D1, 09/10/2026) « 20 min » qualifié ; minutes depuis TRANSIT ; deux ancres : Léman Express et tram 17 (D7). */}
-                {language === "en" ? `Geneva Eaux-Vives in ${STATS.genevaCenterMinutes} min by Léman Express, door to door` : `Genève-Eaux-Vives à ${STATS.genevaCenterMinutes} min en Léman Express, porte-à-porte`}
+                {/* (D1, 09/10/2026) « 20 min » qualifié ; minutes depuis TRANSIT ; deux ancres : Léman Express et tram 17 (D7).
+                    (Lot L2) Libellé canonique STATS_DISPLAY.distance, jamais une variante ; tram 17 = depuis Ambilly, sans bus. */}
+                {language === "en" ? STATS_DISPLAY.en.distance : `À ${STATS_DISPLAY.fr.distance}`}
               </h3>
               <p className="text-[#57534E] leading-relaxed">
                 {language === "en"
-                  ? `Léman Express direct from Annemasse station: Geneva Eaux-Vives in ${TRANSIT.trainEauxVivesMin} minutes, Champel in ${TRANSIT.trainChampelMin}, Cornavin in ${TRANSIT.trainCornavinMin}, no transfer. Tram 17 also links Ambilly and Annemasse to central Geneva.`
-                  : `Léman Express direct depuis la gare d'Annemasse : Genève-Eaux-Vives en ${TRANSIT.trainEauxVivesMin} min, Champel en ${TRANSIT.trainChampelMin}, Cornavin en ${TRANSIT.trainCornavinMin}, sans correspondance. Le tram 17 relie aussi Ambilly et Annemasse au centre de Genève.`}
+                  ? `Léman Express direct from Annemasse station: Geneva Eaux-Vives in ${TRANSIT.trainEauxVivesMin} minutes, Champel in ${TRANSIT.trainChampelMin}, Cornavin in ${TRANSIT.trainCornavinMin}, no transfer — and tram 17 from Ambilly: Rive in ${TRAM_TO_RIVE} minutes by tram.`
+                  : `Léman Express direct depuis la gare d'Annemasse : Genève-Eaux-Vives en ${TRANSIT.trainEauxVivesMin} min, Champel en ${TRANSIT.trainChampelMin} min, Cornavin en ${TRANSIT.trainCornavinMin} min, sans correspondance — et le tram 17 depuis Ambilly : Rive en ${TRAM_TO_RIVE} min de tram.`}
               </p>
             </div>
             <div className="text-center">
@@ -280,13 +297,34 @@ export function AnnemasseColocationPage() {
               </thead>
               <tbody>
                 {[
-                  // (D1-L1, 09/10/2026) Temps de train depuis TRANSIT (relevés du 08/10) ; les autres lignes passent en L2.
-                  [language === "en" ? "Geneva Eaux-Vives" : "Genève Eaux-Vives", `${TRANSIT.trainEauxVivesMin} min`, language === "en" ? "Léman Express direct" : "Léman Express direct"],
-                  [language === "en" ? "Geneva Champel" : "Genève Champel", `${TRANSIT.trainChampelMin} min`, language === "en" ? "Léman Express direct" : "Léman Express direct"],
-                  [language === "en" ? "Geneva Cornavin" : "Genève Cornavin", `${TRANSIT.trainCornavinMin} min`, language === "en" ? "Léman Express direct" : "Léman Express direct"],
-                  [language === "en" ? "Geneva Airport" : "Aéroport de Genève", "25-30 min", language === "en" ? "Car (A40 highway)" : "Voiture (autoroute A40)"],
-                  [language === "en" ? "Moillesulaz Swiss border" : "Frontière de Moillesulaz", "2-5 min", language === "en" ? "Walk / bike (Ambilly), 5 min car (Lodge/Villa)" : "À pied / vélo (Ambilly), 5 min voiture (Lodge/Villa)"],
-                  [language === "en" ? "Geneva CHUV / WHO area" : "Genève CHUV / OMS", "20-25 min", language === "en" ? "Tram 17 + correspondence" : "Tram 17 + correspondance"],
+                  // (D1-L1, 09/10/2026) Temps de train depuis TRANSIT (relevés du 08/10).
+                  // (Lot L2, 09/10/2026) Deux nombres par ligne : train fixe + porte-à-porte « selon la maison » ; centre = Rive, nommé ;
+                  // vélo = Voie Verte mesurée. Lignes Aéroport (voiture), Moillesulaz (voiture) et « CHUV / OMS » supprimées : non mesurées.
+                  [
+                    language === "en" ? "Geneva Eaux-Vives" : "Genève-Eaux-Vives",
+                    language === "en" ? `${TRANSIT.trainEauxVivesMin} min by train · ${TRANSIT.doorToDoorEauxVivesMin} to ${TRANSIT.doorToDoorEauxVivesMax} min door to door depending on the house` : `${TRANSIT.trainEauxVivesMin} min de train · ${TRANSIT.doorToDoorEauxVivesMin} à ${TRANSIT.doorToDoorEauxVivesMax} min porte-à-porte selon la maison`,
+                    "Léman Express direct",
+                  ],
+                  [
+                    language === "en" ? "Geneva Champel" : "Genève-Champel",
+                    language === "en" ? `${TRANSIT.trainChampelMin} min by train` : `${TRANSIT.trainChampelMin} min de train`,
+                    "Léman Express direct",
+                  ],
+                  [
+                    language === "en" ? "Geneva Cornavin" : "Genève Cornavin",
+                    language === "en" ? `${TRANSIT.trainCornavinMin} min by train · ${CORNAVIN_DTD_MIN} to ${CORNAVIN_DTD_MAX} min door to door depending on the house` : `${TRANSIT.trainCornavinMin} min de train · ${CORNAVIN_DTD_MIN} à ${CORNAVIN_DTD_MAX} min porte-à-porte selon la maison`,
+                    "Léman Express direct",
+                  ],
+                  [
+                    language === "en" ? "City centre (Rive)" : "Centre de Genève (Rive)",
+                    language === "en" ? `${TRANSIT.riveDoorToDoorMin} to ${TRANSIT.riveDoorToDoorMax} min door to door depending on the house` : `${TRANSIT.riveDoorToDoorMin} à ${TRANSIT.riveDoorToDoorMax} min porte-à-porte selon la maison`,
+                    language === "en" ? `Léman Express; tram 17 from Ambilly (${TRAM_TO_RIVE} min by tram)` : `Léman Express ; tram 17 depuis Ambilly (${TRAM_TO_RIVE} min de tram)`,
+                  ],
+                  [
+                    language === "en" ? "City centre (Rive)" : "Centre de Genève (Rive)",
+                    language === "en" ? `${BIKE_RIVE_MIN} to ${BIKE_RIVE_MAX} min depending on the house` : `${BIKE_RIVE_MIN} à ${BIKE_RIVE_MAX} min selon la maison`,
+                    language === "en" ? "Bike (Voie Verte)" : "Vélo (Voie Verte)",
+                  ],
                 ].map(([dest, time, mode], i) => (
                   <tr key={i} className={i % 2 === 0 ? "bg-white" : "bg-[#FAF9F6]"}>
                     <td className="border border-[#E7E5E4] px-6 py-3 font-medium text-[#1C1917]">{dest}</td>
@@ -297,6 +335,8 @@ export function AnnemasseColocationPage() {
               </tbody>
             </table>
           </div>
+          {/* (Lot L2, 09/10/2026) Note de méthode (D1.5 : on laisse vérifier) — source unique houseLocation.ts. */}
+          <p className="mt-4 text-xs text-[#78716C] text-center">{houseCommuteNote(L)}</p>
         </div>
       </section>
 
@@ -477,9 +517,11 @@ export function AnnemasseColocationPage() {
             {language === "en" ? "And on the Geneva side?" : "Et côté Genève ?"}
           </h2>
           <p className="text-[#57534E] leading-relaxed">
+            {/* (Lot L2, 09/10/2026) D1/D6 : plus de « quelques minutes de la frontière » ni de « Genève centre à 20 minutes » — communes
+                frontalières nommées, « 20 min » au libellé canonique. */}
             {language === "en"
-              ? <>Only one of our houses is in Annemasse itself, Le Lodge; La Villa and Le Loft are in Ville-la-Grand and Ambilly, in Annemasse Agglo, a few minutes from the border. All three make up our <LocalizedLink to={colocGeneveHref(language)} className="text-[#1C1917] underline hover:text-[#D4A574]">shared housing in Geneva, French side</LocalizedLink>: same services, same community, Geneva city centre 20 minutes away.</>
-              : <>Une seule de nos maisons est à Annemasse même, Le Lodge ; La Villa et Le Loft sont à Ville-la-Grand et à Ambilly, dans Annemasse Agglo, à quelques minutes de la frontière. Les trois forment notre <LocalizedLink to={colocGeneveHref(language)} className="text-[#1C1917] underline hover:text-[#D4A574]">colocation à Genève côté France</LocalizedLink> : mêmes services, même communauté, Genève centre à 20 minutes.</>}
+              ? <>Only one of our houses is in Annemasse itself, Le Lodge; La Villa and Le Loft are in Ville-la-Grand and Ambilly, two border towns in Annemasse Agglo. All three make up our <LocalizedLink to={colocGeneveHref(language)} className="text-[#1C1917] underline hover:text-[#D4A574]">shared housing in Geneva, French side</LocalizedLink>: same services, same community, {STATS_DISPLAY.en.distance}.</>
+              : <>Une seule de nos maisons est à Annemasse même, Le Lodge ; La Villa et Le Loft sont à Ville-la-Grand et à Ambilly, deux communes frontalières d'Annemasse Agglo. Les trois forment notre <LocalizedLink to={colocGeneveHref(language)} className="text-[#1C1917] underline hover:text-[#D4A574]">colocation à Genève côté France</LocalizedLink> : mêmes services, même communauté, à {STATS_DISPLAY.fr.distance}.</>}
           </p>
         </div>
       </section>

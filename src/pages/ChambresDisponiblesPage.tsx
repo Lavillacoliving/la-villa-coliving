@@ -12,7 +12,7 @@ import { WhatsAppButton } from "@/components/WhatsAppButton";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { HOUSES } from "@/data/houses";
 import { roomGallery } from "@/data/roomPhotos";
-import { STATS, PRICE_SHARED_CHF_FR, PRICE_SHARED_CHF_EN } from "@/data/stats";
+import { STATS, STATS_DISPLAY, PRICE_SHARED_CHF_FR, PRICE_SHARED_CHF_EN } from "@/data/stats";
 import { tarifsFaq } from "@/data/faq/tarifsFaq";
 import { maisonsFaq } from "@/data/faq/maisonsFaq";
 import {
@@ -165,9 +165,10 @@ export function ChambresDisponiblesPage() {
       }
     : undefined;
 
+  // (Lot L2, 09/10/2026) « 20 min » toujours qualifié : STATS_DISPLAY.distance (D1).
   const reassurance = en
-    ? ["No agency fee, no application fee", "Reply within 48 hours", "Video tour available", `${STATS.totalResidents}+ residents since ${STATS.foundedYear}`, "All inclusive: bills, fibre, cleaning, pool, sauna, gym", "20 min from Geneva city centre"]
-    : ["0 frais d'agence ni de dossier", "Réponse sous 48 h", "Visite en visio possible", `${STATS.totalResidents}+ résidents depuis ${STATS.foundedYear}`, "Tout inclus : charges, fibre, ménage, piscine, sauna, gym", "20 min du centre de Genève"];
+    ? ["No agency fee, no application fee", "Reply within 48 hours", "Video tour available", `${STATS.totalResidents}+ residents since ${STATS.foundedYear}`, "All inclusive: bills, fibre, cleaning, pool, sauna, gym", STATS_DISPLAY.en.distance]
+    : ["0 frais d'agence ni de dossier", "Réponse sous 48 h", "Visite en visio possible", `${STATS.totalResidents}+ résidents depuis ${STATS.foundedYear}`, "Tout inclus : charges, fibre, ménage, piscine, sauna, gym", STATS_DISPLAY.fr.distance];
 
   const faqItems = [...maisonsFaq[L].slice(0, 2), ...tarifsFaq[L].slice(0, 2)];
 
@@ -195,8 +196,8 @@ export function ChambresDisponiblesPage() {
           </p>
           <p className="mt-3 text-[#57534E] max-w-2xl">
             {en
-              ? `Furnished private rooms in ${STATS.totalHouses} coliving houses on the French side of Geneva, 20 minutes from the centre. All inclusive from ${PRICE_SHARED_CHF_EN}/month, deposit of 2 months' rent excluding charges, no agency or application fee.`
-              : `Chambres privées meublées dans ${STATS.totalHouses} maisons de coliving côté France, à 20 minutes du centre de Genève. Tout inclus dès ${PRICE_SHARED_CHF_FR}/mois, caution de 2 mois de loyer hors charges, 0 frais d'agence ni de dossier.`}
+              ? `Furnished private rooms in ${STATS.totalHouses} coliving houses on the French side of Geneva, ${STATS_DISPLAY.en.distance}. All inclusive from ${PRICE_SHARED_CHF_EN}/month, deposit of 2 months' rent excluding charges, no agency or application fee.`
+              : `Chambres privées meublées dans ${STATS.totalHouses} maisons de coliving côté France, à ${STATS_DISPLAY.fr.distance}. Tout inclus dès ${PRICE_SHARED_CHF_FR}/mois, caution de 2 mois de loyer hors charges, 0 frais d'agence ni de dossier.`}
           </p>
         </div>
       </section>

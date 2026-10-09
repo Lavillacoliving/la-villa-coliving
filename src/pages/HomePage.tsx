@@ -19,7 +19,7 @@ import { SEO } from '@/components/SEO';
 import { FaqSection } from '@/components/FaqSection';
 import { buildHomeLodgingBusinessSchema } from '@/lib/structuredData';
 import { useLanguage } from '@/contexts/LanguageContext';
-import { PRICE_SHARED_CHF_FR, PRICE_SHARED_CHF_EN } from '@/data/stats';
+import { PRICE_SHARED_CHF_FR, PRICE_SHARED_CHF_EN, STATS_DISPLAY } from '@/data/stats';
 import { homeFaq } from '@/data/faq/homeFaq';
 import { useSectionViewTracking } from '@/lib/sectionViewTracking';
 
@@ -118,9 +118,10 @@ export function HomePage() {
           id="faq-coliving-geneve"
           intro={
             <p>
+              {/* (Lot L2, 09/10/2026) « 20 min » toujours qualifié : STATS_DISPLAY.distance (D1). */}
               {language === "en"
-                ? `La Villa Coliving: 29 all-inclusive furnished rooms from ${PRICE_SHARED_CHF_EN}/month in 3 houses with pool, sauna and gym, 20 minutes from Geneva — no application fee.`
-                : `La Villa Coliving : 29 chambres meublées tout inclus dès ${PRICE_SHARED_CHF_FR}/mois dans 3 maisons avec piscine, sauna et salle de sport, à 20 minutes de Genève — sans frais de dossier.`}
+                ? `La Villa Coliving: 29 all-inclusive furnished rooms from ${PRICE_SHARED_CHF_EN}/month in 3 houses with pool, sauna and gym, ${STATS_DISPLAY.en.distance} — no application fee.`
+                : `La Villa Coliving : 29 chambres meublées tout inclus dès ${PRICE_SHARED_CHF_FR}/mois dans 3 maisons avec piscine, sauna et salle de sport, à ${STATS_DISPLAY.fr.distance} — sans frais de dossier.`}
             </p>
           }
         />

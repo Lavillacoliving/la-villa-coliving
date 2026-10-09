@@ -8,7 +8,8 @@ import { MapPin, Users, ArrowRight, Check, X } from "lucide-react";
 import { SEO } from "@/components/SEO";
 import { FaqSection } from "@/components/FaqSection";
 import { maisonsFaq } from "@/data/faq/maisonsFaq";
-import { PRICE_FR_NUM, PRICE_EN_NUM, PRICE_SHARED_FR_NUM, PRICE_SHARED_EN_NUM, PRICE_SHARED_CHF_FR, PRICE_SHARED_CHF_EN, EUR_STANDARD_FR_NUM, EUR_STANDARD_EN_NUM, EUR_SHARED_FR_NUM, EUR_SHARED_EN_NUM } from "@/data/stats";
+import { STATS, STATS_DISPLAY, HOUSE_SURFACES, thousands, PRICE_FR_NUM, PRICE_EN_NUM, PRICE_SHARED_FR_NUM, PRICE_SHARED_EN_NUM, PRICE_SHARED_CHF_FR, PRICE_SHARED_CHF_EN, EUR_STANDARD_FR_NUM, EUR_STANDARD_EN_NUM, EUR_SHARED_FR_NUM, EUR_SHARED_EN_NUM } from "@/data/stats";
+import { ENTITY_HOUSES, type EntityHouseSlug } from "@/data/entityFacts";
 import {
   useRoomAvailability,
   houseBadgeLabel,
@@ -17,9 +18,21 @@ import {
   type HouseKey,
 } from "@/lib/availability";
 
+// (Lot L2, 09/10/2026) Surfaces lues dans HOUSE_SURFACES (D2) ; trajets = ligne courte A.1 de ENTITY_HOUSES (D1) ;
+// « 20 min » toujours qualifié par STATS_DISPLAY.distance. Plus aucune minute ni surface d'emplacement en dur ici.
+const SURF = HOUSE_SURFACES;
+const commuteOf = (slug: EntityHouseSlug, lang: "fr" | "en") => {
+  const h = ENTITY_HOUSES.find((x) => x.slug === slug);
+  if (!h) throw new Error(`entityFacts : maison inconnue ${slug}`);
+  return h.commute[lang];
+};
+
 export function HousesPageV4() {
   const { language } = useLanguage();
+  const L: "fr" | "en" = language === "en" ? "en" : "fr";
   const availability = useRoomAvailability();
+  const plotVilla = thousands(SURF.lavilla.plotM2, L === "en" ? "," : " ");
+  const plotLodge = thousands(SURF.lelodge.plotM2, L === "en" ? "," : " ");
 
   const houses = [
     {
@@ -28,8 +41,8 @@ export function HousesPageV4() {
       location: "Ville-la-Grand",
       description:
         language === "en"
-          ? "370 m² of designed living on a 2,000 m² estate bordering a nature reserve. Heated pool, sauna, gym, and more."
-          : "370 m² de vie design sur un domaine de 2 000 m² bordant une réserve naturelle. Piscine chauffée, sauna, gym et plus.",
+          ? `${SURF.lavilla.livingM2} m² of designed living on a ${plotVilla} m² estate bordering a nature reserve. Heated pool, sauna, gym, and more.`
+          : `${SURF.lavilla.livingM2} m² de vie design sur un domaine de ${plotVilla} m² bordant une réserve naturelle. Piscine chauffée, sauna, gym et plus.`,
       image: "/images/villa_portrait.webp",
       alt: language === "en"
         ? "La Villa — premium coliving with heated pool, gym and sauna in Ville-la-Grand near Geneva"
@@ -37,8 +50,8 @@ export function HousesPageV4() {
       capacity: "10",
       price: language === "en" ? PRICE_EN_NUM : PRICE_FR_NUM,
       features: language === "en"
-        ? ["Heated outdoor pool", "Sauna (5 seats)", "Gym", "2,000 m² garden"]
-        : ["Piscine chauffée extérieure", "Sauna (5 places)", "Salle de sport", "Jardin 2 000 m²"],
+        ? ["Heated outdoor pool", "Sauna (5 seats)", "Gym", `${plotVilla} m² garden`]
+        : ["Piscine chauffée extérieure", "Sauna (5 places)", "Salle de sport", `Jardin ${plotVilla} m²`],
     },
     {
       id: "leloft",
@@ -46,8 +59,8 @@ export function HousesPageV4() {
       location: "Ambilly",
       description:
         language === "en"
-          ? "A 300 m² townhouse with urban sophistication. Year-round heated indoor pool, Finnish sauna, gym, and spacious designer rooms."
-          : "Maison de ville de 300 m² avec sophistication urbaine. Piscine intérieure chauffée toute l'année, sauna finlandais, gym et chambres design spacieuses.",
+          ? `A ${SURF.leloft.livingM2} m² townhouse with urban sophistication. Year-round heated indoor pool, Finnish sauna, gym, and spacious designer rooms.`
+          : `Maison de ville de ${SURF.leloft.livingM2} m² avec sophistication urbaine. Piscine intérieure chauffée toute l'année, sauna finlandais, gym et chambres design spacieuses.`,
       image: "/images/la villa coliving le loft piscine.webp",
       alt: language === "en"
         ? "Le Loft — urban coliving with indoor pool and designer rooms in Ambilly near Geneva"
@@ -67,9 +80,10 @@ export function HousesPageV4() {
           ? "Our newest and largest home (Jan 2026). Pool house, full fitness chalet with sauna & arcade."
           : "Notre maison la plus récente et la plus grande (jan. 2026). Pool house, chalet fitness complet avec sauna et jeu d'arcade.",
       image: "/images/le lodge piscine.webp",
+      // (Lot L2, 09/10/2026) Plus de minute dans l'alt (« 10 min de Genève » n'était soutenu par aucune mesure).
       alt: language === "en"
-        ? "Le Lodge — coliving with pool, gym and gardens in Annemasse, 10 min from Geneva"
-        : "Le Lodge — colocation avec piscine, gym et jardins à Annemasse, 10 min de Genève",
+        ? "Le Lodge — coliving with pool, gym and gardens in Annemasse near Geneva"
+        : "Le Lodge — colocation avec piscine, gym et jardins à Annemasse près de Genève",
       capacity: "12",
       price: language === "en" ? PRICE_EN_NUM : PRICE_FR_NUM,
       features: language === "en"
@@ -81,12 +95,13 @@ export function HousesPageV4() {
   const comparisonRows = [
     {
       label: language === "en" ? "Size" : "Surface",
-      values: ["370 m²", "300 m²", "500 m²"],
+      values: [`${SURF.lavilla.livingM2} m²`, `${SURF.leloft.livingM2} m²`, `${SURF.lelodge.livingM2} m²`],
     },
     {
       label: language === "en" ? "Plot" : "Terrain",
-      // (Lot 2, 03/09) séparateur de milliers FR = espace insécable, EN = virgule
-      values: language === "en" ? ["2,000 m²", "330 m²", "1,500 m²"] : ["2 000 m²", "330 m²", "1 500 m²"],
+      // (Lot 2, 03/09) séparateur de milliers FR = espace insécable, EN = virgule.
+      // (Lot L2, 09/10/2026) Le « 330 m² » du Loft n'était sourcé nulle part → cellule vide (HOUSE_SURFACES.leloft n'a pas de terrain).
+      values: [`${plotVilla} m²`, "—", `${plotLodge} m²`],
     },
     {
       label: language === "en" ? "Residents" : "Résidents",
@@ -126,11 +141,8 @@ export function HousesPageV4() {
     },
     {
       label: language === "en" ? "Transport to Geneva" : "Transport vers Genève",
-      values: [
-        language === "en" ? "CEVA — 9 min walk" : "CEVA à 9 minutes à pied",
-        language === "en" ? "Tram Croix d'Ambilly — 5 min walk" : "Tram Croix d'Ambilly à 5 minutes à pied",
-        language === "en" ? "CEVA — 9 min walk" : "CEVA à 9 minutes à pied",
-      ],
+      // (Lot L2, 09/10/2026) Ligne courte A.1 par maison (ENTITY_HOUSES, dérivée de TRANSIT) — plus de « CEVA à 9 min ».
+      values: [commuteOf("lavilla", L), commuteOf("leloft", L), commuteOf("lelodge", L)],
     },
     {
       label: language === "en" ? "Price" : "Tarif",
@@ -144,9 +156,10 @@ export function HousesPageV4() {
     <main className="relative pt-16">
       <SEO
         title={language === "en" ? "3 coliving houses near Geneva" : "3 maisons de coliving près de Genève"}
+        // (Lot L2, 09/10/2026) « 20 min » qualifié (STATS_DISPLAY.distance, D1) ; chambres = STATS.totalRooms ; meta ≤ 160 c.
         description={language === "en"
-          ? `La Villa, Le Loft, Le Lodge: 3 houses with pool, sauna and gym, 20 min door to door from Geneva. 29 rooms all inclusive from ${PRICE_SHARED_CHF_EN}/month.`
-          : `La Villa, Le Loft, Le Lodge : 3 maisons avec piscine, sauna et gym à 20 min porte-à-porte de Genève. 29 chambres tout inclus dès ${PRICE_SHARED_CHF_FR}/mois.`}
+          ? `La Villa, Le Loft, Le Lodge: pool, sauna, gym, ${STATS_DISPLAY.en.distance}. ${STATS.totalRooms} rooms all inclusive from ${PRICE_SHARED_CHF_EN}/month.`
+          : `La Villa, Le Loft, Le Lodge : piscine, sauna, gym, à ${STATS_DISPLAY.fr.distance}. ${STATS.totalRooms} chambres tout inclus dès ${PRICE_SHARED_CHF_FR}/mois.`}
         url="https://www.lavillacoliving.com/nos-maisons"
       />
       {/* Hero */}
@@ -204,8 +217,9 @@ export function HousesPageV4() {
                   <span className="absolute top-4 left-4 bg-white/90 backdrop-blur-sm text-[#1C1917] text-xs font-semibold px-3 py-1.5 rounded-lg">
                     {house.capacity} {language === "en" ? "residents" : "résidents"}
                   </span>
-                  <span className="absolute top-4 right-4 bg-black/60 backdrop-blur-sm text-white text-xs font-medium px-3 py-1.5 rounded-lg">
-                    {language === "en" ? "20 min Geneva center" : "20 min Genève centre"}
+                  {/* (Lot L2, 09/10/2026) Libellé canonique D1 ; max-w + text-right pour qu'il replie sans chevaucher la pastille résidents. */}
+                  <span className="absolute top-4 right-4 max-w-[60%] text-right bg-black/60 backdrop-blur-sm text-white text-xs font-medium px-3 py-1.5 rounded-lg">
+                    {STATS_DISPLAY[L].distance}
                   </span>
                   {/* Pastille dispo — couleur dérivée de la dispo réelle (v_public_rooms), pas du libellé.
                       Libellé null (dispo inconnue) = pas de pastille, jamais de chiffre inventé. */}
