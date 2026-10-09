@@ -8,12 +8,20 @@
  *   node scripts/build-slots-sql.mjs --dry-run       → n'écrit rien, affiche chaque modification (ancien / nouveau / occurrences)
  *   options : --posts-json <fichier> (lit un export JSON de blog_posts au lieu du REST — développement hors ligne, le SQL
  *             produit est alors marqué comme tel) · --date AAAA-MM-JJ (suffixe des fichiers, défaut SQL_DATE)
+ *             · (Lot L2, 09/10/2026) --edits <fichier> (liste déclarative, relative à scripts/, défaut ./l1-slots.edits.mjs)
+ *             · --name <base> (nom des fichiers scripts/<base>-<date>.sql et .dry-run.md, défaut l1-answer-slots)
+ *
+ * Liste déclarative (module ESM) : `buildEdits(m)` → [{ slug, lang, mechanism, note, find, replace, column? }] ; `column`
+ * (optionnel, Lot L2) cible une autre colonne texte de blog_posts — 'facebook_post_fr' / 'facebook_post_en' — et vaut
+ * `content_<lang>` par défaut. Exports facultatifs : `sqlDoc(m)` (en-tête, légende, versions propres au lot) et
+ * `POST_STATE_WATCH` (motifs supplémentaires à signaler dans le texte résultant).
  *
  * Ce que fait le script :
  *  1. charge la source unique (scripts/lib/load-entity-facts.mjs → src/data/answerSlots.ts, entityFacts.ts, stats.ts) et
- *     résout la liste déclarative scripts/l1-slots.edits.mjs (buildEdits) ;
- *  2. relit le contenu VIVANT (content_fr / content_en) des articles touchés par REST (clé anon, lecture seule — même
- *     motif que scripts/check-entity-facts.mjs) ; jamais d'écriture en base : le SQL est appliqué par Jérôme ;
+ *     résout la liste déclarative (--edits, défaut scripts/l1-slots.edits.mjs : buildEdits) ;
+ *  2. relit le contenu VIVANT (content_fr / content_en, facebook_post_fr / facebook_post_en) des articles touchés par REST
+ *     (clé anon, lecture seule — même motif que scripts/check-entity-facts.mjs) ; jamais d'écriture en base : le SQL est
+ *     appliqué par Jérôme ;
  *  3. exige EXACTEMENT 1 occurrence de chaque `find` dans la colonne vivante, et que le `replace` n'y soit présent
  *     qu'autant de fois qu'il l'est dans `find` (sinon la garde d'idempotence ou le retour arrière seraient faux) ;
  *     simule l'application séquentielle (détecte les chevauchements) ; scanne chaque `replace` : chaînes interdites
@@ -42,6 +50,14 @@ const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBh
 
 // ── Fonctions pures ────────────────────────────────────────────────────────────────────────────────
 
+/** (Lot L2, 09/10/2026) Colonnes texte de blog_posts qu'une modification peut viser ; défaut = content_<lang>. */
+export const COLUMNS = ['content_fr', 'content_en', 'facebook_post_fr', 'facebook_post_en'];
+export function columnOf(edit) {
+  const col = edit.column ?? `content_${edit.lang}`;
+  if (!COLUMNS.includes(col)) throw new Error(`${edit.slug} (${edit.lang}) : colonne « ${col} » inconnue (${COLUMNS.join(', ')})`);
+  return col;
+}
+
 /** Occurrences non chevauchantes de `needle` dans `hay` (0 pour une aiguille vide). */
 export function countOccurrences(hay, needle) {
   if (!needle) return 0;
@@ -62,7 +78,7 @@ export function pickTag(base, texts) {
 export function quoteEdit(edit) {
   const F = sqlDollar(edit.find, pickTag('f', [edit.find]));
   const R = sqlDollar(edit.replace, pickTag('r', [edit.replace]));
-  return { F, R, col: `content_${edit.lang}` };
+  return { F, R, col: columnOf(edit) };
 }
 
 /**
@@ -130,7 +146,7 @@ export function preview(s, max = 72) {
 export function checkEdit(edit, live) {
   const label = `${edit.slug} (${edit.lang}) · ${edit.mechanism} · ${edit.note}`;
   const failures = [];
-  if (typeof live !== 'string') { failures.push(`${label} : colonne content_${edit.lang} absente ou vide en base`); return failures; }
+  if (typeof live !== 'string') { failures.push(`${label} : colonne ${columnOf(edit)} absente ou vide en base`); return failures; }
   const n = countOccurrences(live, edit.find);
   if (n !== 1) failures.push(`${label} : ${n} occurrence(s) de l'ancre en base (attendu 1) — « ${preview(edit.find)} »`);
   const expectedR = countOccurrences(edit.find, edit.replace);
@@ -184,26 +200,46 @@ export const POST_STATE_WATCH = [
   /tu auras besoin d'un garant/i, /you'll need a guarantor/i, /no French guarantor/i, /sans garant français/i,
 ];
 
-/** En-tête + corps du fichier SQL. `meta` : { generatedAt, source, versions: {entity, ouChercher}, live: [{slug, updated_at, fr, en}] }. */
+/** Textes d'en-tête du lot L1 (défaut) ; un autre lot les remplace via `sqlDoc(m)` dans son module de modifications (Lot L2, 09/10/2026). */
+export const DEFAULT_DOC = {
+  name: 'l1-answer-slots',
+  lot: 'Lot L1 « Ingénierie des créneaux » (brief v3.1 du 09/10/2026) — sous-lot L1.E : créneaux M1-M4 et pied commun D1 dans les articles en base',
+  editsFile: 'scripts/l1-slots.edits.mjs',
+  sources: 'textes insérés = source unique src/data/answerSlots.ts + entityFacts.ts + stats.ts',
+  apply: 'À appliquer par Jérôme dans le SQL Editor APRÈS déploiement du code L1 (le bloc « Où chercher » rendu par le code remplace les sections retirées ici).',
+  encoding: 'Fichier UTF-8 : il contient des espaces insécables (U+00A0, « 1 370 ») et le signe moins U+2212 (cout-de-la-vie) — ne pas le faire transiter par un éditeur qui normalise les espaces.',
+  dryRunTitle: 'Lot L1.E — aperçu des modifications SQL des articles en base',
+  legend: 'Légende : « 1 370 » contient un espace insécable (U+00A0) ; « − » est le signe moins U+2212 (cout-de-la-vie) ; les textes « Avant » sont copiés au caractère près depuis la base, les textes « Après » viennent de la source unique (`src/data/answerSlots.ts`, `entityFacts.ts`, `stats.ts`). Mécanismes : M1 retrait de section « Où chercher » (bloc rendu par le code) · M2 phrase de commune · M3 ligne de tableau · M4 réponse « sans fiche de salaire suisse » · footer pied commun (formule D1) · fix correction ponctuelle.',
+};
+
+/** Versions de la source : forme L1 { entity, ouChercher } ou dictionnaire libre { NOM: valeur } (Lot L2). */
+function versionsLine(versions = {}) {
+  if (versions.entity !== undefined) return `ENTITY_FACTS_VERSION ${versions.entity}, OU_CHERCHER_VERSION ${versions.ouChercher}`;
+  return Object.entries(versions).map(([k, v]) => `${k} ${v}`).join(', ');
+}
+
+/** En-tête + corps du fichier SQL. `meta` : { generatedAt, source, versions, live: [{slug, updated_at, fr, en}], doc? } (doc = surcharge de DEFAULT_DOC). */
 export function renderSql(edits, meta) {
+  const doc = { ...DEFAULT_DOC, ...(meta.doc ?? {}) };
   const slugs = [...new Set(edits.map((e) => e.slug))].sort();
   const header = [
     '-- ============================================================================',
-    '-- Lot L1 « Ingénierie des créneaux » (brief v3.1 du 09/10/2026) — sous-lot L1.E : créneaux M1-M4 et pied commun D1 dans les articles en base',
-    `-- Généré le ${meta.generatedAt} par scripts/build-slots-sql.mjs depuis scripts/l1-slots.edits.mjs`,
-    `--   · textes insérés = source unique src/data/answerSlots.ts + entityFacts.ts + stats.ts (ENTITY_FACTS_VERSION ${meta.versions.entity}, OU_CHERCHER_VERSION ${meta.versions.ouChercher})`,
+    `-- ${doc.lot}`,
+    `-- Généré le ${meta.generatedAt} par scripts/build-slots-sql.mjs depuis ${doc.editsFile}`,
+    `--   · ${doc.sources} (${versionsLine(meta.versions)})`,
     `--   · ancres vérifiées sur ${meta.source} : exactement 1 occurrence de chaque ancien texte, nouveau texte absent`,
-    '-- À appliquer par Jérôme dans le SQL Editor APRÈS déploiement du code L1 (le bloc « Où chercher » rendu par le code remplace les sections retirées ici).',
+    `-- ${doc.apply}`,
     '-- Idempotent : chaque UPDATE est gardé par position(ancien) > 0 [AND position(nouveau) = 0 quand le nouveau texte n\'est pas un fragment de l\'ancien] — relancer le fichier est sans effet.',
-    '-- Fichier UTF-8 : il contient des espaces insécables (U+00A0, « 1 370 ») et le signe moins U+2212 (cout-de-la-vie) — ne pas le faire transiter par un éditeur qui normalise les espaces.',
+    `-- ${doc.encoding}`,
     `-- ${edits.length} modifications · ${slugs.length} articles · état en base à la génération (updated_at · longueur fr / en) :`,
     ...meta.live.map((l) => `--   ${l.slug} · ${l.updated_at ?? '?'} · ${l.fr} / ${l.en}`),
     '-- ============================================================================',
   ];
-  const updates = edits.map((e, i) => `-- [${i + 1}/${edits.length}] ${e.slug} (${e.lang}) · ${e.mechanism} · ${e.note}\n${renderUpdate(e)}`);
+  const where = (e) => (e.column && e.column !== `content_${e.lang}` ? `${e.lang}, ${e.column}` : e.lang);
+  const updates = edits.map((e, i) => `-- [${i + 1}/${edits.length}] ${e.slug} (${where(e)}) · ${e.mechanism} · ${e.note}\n${renderUpdate(e)}`);
   const apercu = [
     '-- ── Aperçu des ancrages (ancien → nouveau, première ligne de chaque texte) ──',
-    ...edits.map((e, i) => `-- [${i + 1}] ${e.slug}/${e.lang} · ${e.mechanism} : « ${preview(e.find)} » → « ${preview(e.replace)} »`),
+    ...edits.map((e, i) => `-- [${i + 1}] ${e.slug}/${where(e)} · ${e.mechanism} : « ${preview(e.find)} » → « ${preview(e.replace)} »`),
   ];
   const verification = `-- ── Vérification (lecture seule) : une ligne par article ; fr_ok / en_ok = true quand toutes les modifications de la langue sont en place, NULL = langue non touchée.\n${renderVerification(edits)}`;
   return [header.join('\n'), 'BEGIN;', ...updates, apercu.join('\n'), 'COMMIT;', verification, renderRollbackBlock(edits)].join('\n\n') + '\n';
@@ -211,15 +247,16 @@ export function renderSql(edits, meta) {
 
 /** Diff lisible (markdown) joint à la PR. `rows` : edits enrichis de { count, replaceCount }. */
 export function renderDryRun(rows, meta) {
+  const doc = { ...DEFAULT_DOC, ...(meta.doc ?? {}) };
   const slugs = [...new Set(rows.map((e) => e.slug))].sort();
   const liveBySlug = new Map(meta.live.map((l) => [l.slug, l]));
   const fence = '````';
   const out = [
-    '# Lot L1.E — aperçu des modifications SQL des articles en base',
+    `# ${doc.dryRunTitle}`,
     '',
-    `Généré le ${meta.generatedAt} par \`scripts/build-slots-sql.mjs\` · ancres vérifiées sur ${meta.source} · ${rows.length} modifications sur ${slugs.length} articles · SQL : \`scripts/l1-answer-slots-${meta.date}.sql\`.`,
+    `Généré le ${meta.generatedAt} par \`scripts/build-slots-sql.mjs\` · ancres vérifiées sur ${meta.source} · ${rows.length} modifications sur ${slugs.length} articles · SQL : \`scripts/${doc.name}-${meta.date}.sql\`.`,
     '',
-    'Légende : « 1 370 » contient un espace insécable (U+00A0) ; « − » est le signe moins U+2212 (cout-de-la-vie) ; les textes « Avant » sont copiés au caractère près depuis la base, les textes « Après » viennent de la source unique (`src/data/answerSlots.ts`, `entityFacts.ts`, `stats.ts`). Mécanismes : M1 retrait de section « Où chercher » (bloc rendu par le code) · M2 phrase de commune · M3 ligne de tableau · M4 réponse « sans fiche de salaire suisse » · footer pied commun (formule D1) · fix correction ponctuelle.',
+    doc.legend,
     '',
     '## Résumé par article',
     '',
@@ -235,7 +272,8 @@ export function renderDryRun(rows, meta) {
     '## Détail',
   ];
   rows.forEach((e, i) => {
-    out.push('', `### ${i + 1}. \`${e.slug}\` (${e.lang}) · ${e.mechanism}`, '', e.note, '', `Occurrences de l'ancre en base : ${e.count} (attendu 1) · nouveau texte déjà présent : ${e.replaceCount} (attendu ${countOccurrences(e.find, e.replace)}) · garde « nouveau absent » : ${e.find.includes(e.replace) ? 'non (suppression)' : 'oui'}`, '', '**Avant**', '', `${fence}text`, e.find, fence, '', '**Après**', '', `${fence}text`, e.replace, fence);
+    const where = e.column && e.column !== `content_${e.lang}` ? `${e.lang}, \`${e.column}\`` : e.lang;
+    out.push('', `### ${i + 1}. \`${e.slug}\` (${where}) · ${e.mechanism}`, '', e.note, '', `Occurrences de l'ancre en base : ${e.count} (attendu 1) · nouveau texte déjà présent : ${e.replaceCount} (attendu ${countOccurrences(e.find, e.replace)}) · garde « nouveau absent » : ${e.find.includes(e.replace) ? 'non (suppression)' : 'oui'}`, '', '**Avant**', '', `${fence}text`, e.find, fence, '', '**Après**', '', `${fence}text`, e.replace, fence);
   });
   return out.join('\n') + '\n';
 }
@@ -243,7 +281,7 @@ export function renderDryRun(rows, meta) {
 // ── E/S ────────────────────────────────────────────────────────────────────────────────────────────
 
 async function fetchLive(slugs) {
-  const url = `${SUPABASE_URL}/rest/v1/${TABLE}?select=slug,content_fr,content_en,is_published,updated_at&slug=in.(${slugs.join(',')})`;
+  const url = `${SUPABASE_URL}/rest/v1/${TABLE}?select=slug,${COLUMNS.join(',')},is_published,updated_at&slug=in.(${slugs.join(',')})`;
   const res = await fetch(url, { headers: { apikey: SUPABASE_ANON_KEY, Authorization: `Bearer ${SUPABASE_ANON_KEY}`, Accept: 'application/json' }, signal: AbortSignal.timeout(20000) });
   if (!res.ok) throw new Error(`REST ${res.status} : ${(await res.text()).slice(0, 300)}`);
   return res.json();
@@ -265,19 +303,32 @@ async function main() {
   const postsJson = opt('--posts-json');
   const date = typeof opt('--date') === 'string' ? opt('--date') : SQL_DATE;
   if (!/^\d{4}-\d{2}-\d{2}$/.test(date)) { console.error(`--date « ${date} » : format AAAA-MM-JJ attendu`); process.exit(1); }
+  // (Lot L2, 09/10/2026) Liste déclarative et nom de sortie paramétrables ; défauts = lot L1.
+  const editsFile = typeof opt('--edits') === 'string' ? opt('--edits') : './l1-slots.edits.mjs';
+  const name = typeof opt('--name') === 'string' ? opt('--name') : DEFAULT_DOC.name;
+  if (!/^[a-z0-9][a-z0-9-]*$/.test(name)) { console.error(`--name « ${name} » : minuscules, chiffres et tirets attendus`); process.exit(1); }
+  const editsPath = path.isAbsolute(editsFile) ? editsFile : path.resolve(__dirname, editsFile);
 
   const { loadEntityFacts } = await import('./lib/load-entity-facts.mjs');
-  const { buildEdits } = await import('./l1-slots.edits.mjs');
+  const mod = await import(pathToFileURL(editsPath).href);
+  if (typeof mod.buildEdits !== 'function') { console.error(`${editsFile} : export buildEdits(m) attendu`); process.exit(1); }
   const m = await loadEntityFacts();
-  const edits = buildEdits(m);
+  const edits = mod.buildEdits(m);
+  const doc = { ...(typeof mod.sqlDoc === 'function' ? mod.sqlDoc(m) : {}), name, editsFile: `scripts/${path.basename(editsPath)}` };
+  const watch = [...POST_STATE_WATCH, ...(Array.isArray(mod.POST_STATE_WATCH) ? mod.POST_STATE_WATCH : [])];
   const slugs = [...new Set(edits.map((e) => e.slug))].sort();
 
   const failures = [];
   const warnings = [];
 
-  // Unicité des ancres déclarées (même slug/langue/find deux fois = replace() SQL appliquée deux fois).
+  // Colonnes valides + unicité des ancres déclarées (même slug/colonne/find deux fois = replace() SQL appliquée deux fois).
   const seen = new Set();
-  for (const e of edits) { const k = `${e.slug}\u0000${e.lang}\u0000${e.find}`; if (seen.has(k)) failures.push(`${e.slug} (${e.lang}) : ancre déclarée deux fois — « ${preview(e.find)} »`); seen.add(k); }
+  for (const e of edits) {
+    let col; try { col = columnOf(e); } catch (err) { failures.push(err.message); continue; }
+    const k = `${e.slug}\u0000${col}\u0000${e.find}`;
+    if (seen.has(k)) failures.push(`${e.slug} (${col}) : ancre déclarée deux fois — « ${preview(e.find)} »`);
+    seen.add(k);
+  }
 
   // Chaînes interdites + concurrents dans les textes insérés.
   for (const e of edits) for (const issue of forbiddenIssues(e.replace, e.lang)) failures.push(`${e.slug} (${e.lang}) · ${e.note} : ${issue} dans le nouveau texte`);
@@ -306,19 +357,19 @@ async function main() {
     if (r.is_published === false) warnings.push(`${slug} : is_published = false`);
   }
 
-  // Contrôles par modification + simulation séquentielle par slug/langue.
+  // Contrôles par modification + simulation séquentielle par slug/colonne.
   const enriched = edits.map((e) => {
-    const live = bySlug.get(e.slug)?.[`content_${e.lang}`];
+    const live = bySlug.get(e.slug)?.[columnOf(e)];
     failures.push(...checkEdit(e, live));
     return { ...e, count: typeof live === 'string' ? countOccurrences(live, e.find) : 0, replaceCount: typeof live === 'string' ? countOccurrences(live, e.replace) : 0 };
   });
-  for (const slug of slugs) for (const lang of ['fr', 'en']) {
-    const live = bySlug.get(slug)?.[`content_${lang}`];
-    const mine = edits.filter((e) => e.slug === slug && e.lang === lang);
+  for (const slug of slugs) for (const col of COLUMNS) {
+    const live = bySlug.get(slug)?.[col];
+    const mine = edits.filter((e) => e.slug === slug && columnOf(e) === col);
     if (typeof live !== 'string' || mine.length === 0) continue;
     const sim = applyEdits(live, mine);
     failures.push(...sim.failures);
-    for (const re of POST_STATE_WATCH) if (re.test(sim.text)) warnings.push(`${slug} (${lang}) : après application, le texte contient encore ${re} (passage hors du lot ?)`);
+    for (const re of watch) if (re.test(sim.text)) warnings.push(`${slug} (${col}) : après application, le texte contient encore ${re} (passage hors du lot ?)`);
   }
 
   // Sortie.
@@ -326,13 +377,14 @@ async function main() {
     generatedAt: new Date().toISOString(),
     date,
     source,
-    versions: { entity: m.ENTITY_FACTS_VERSION, ouChercher: m.OU_CHERCHER_VERSION },
+    doc,
+    versions: doc.versions ?? { entity: m.ENTITY_FACTS_VERSION, ouChercher: m.OU_CHERCHER_VERSION },
     live: slugs.map((slug) => { const r = bySlug.get(slug) ?? {}; return { slug, updated_at: r.updated_at, fr: r.content_fr?.length ?? 0, en: r.content_en?.length ?? 0 }; }),
   };
 
   if (dryRun) {
     for (const [i, e] of enriched.entries()) {
-      console.log(`\n[${i + 1}/${enriched.length}] ${e.slug} (${e.lang}) · ${e.mechanism} · ${e.note}`);
+      console.log(`\n[${i + 1}/${enriched.length}] ${e.slug} (${columnOf(e)}) · ${e.mechanism} · ${e.note}`);
       console.log(`  occurrences en base : ${e.count} (attendu 1) · nouveau déjà présent : ${e.replaceCount}`);
       console.log(`  − ${preview(e.find, 160)}`);
       console.log(`  + ${preview(e.replace, 160)}`);
@@ -347,8 +399,8 @@ async function main() {
     process.exit(1);
   }
 
-  const sqlPath = path.join(__dirname, `l1-answer-slots-${date}.sql`);
-  const diffPath = path.join(__dirname, `l1-answer-slots-${date}.dry-run.md`);
+  const sqlPath = path.join(__dirname, `${name}-${date}.sql`);
+  const diffPath = path.join(__dirname, `${name}-${date}.dry-run.md`);
   if (!dryRun) { await fs.writeFile(sqlPath, renderSql(edits, meta), 'utf8'); console.log(`✓ SQL écrit : ${path.relative(process.cwd(), sqlPath)}`); }
   if (writeDiff) { await fs.writeFile(diffPath, renderDryRun(enriched, meta), 'utf8'); console.log(`✓ diff écrit : ${path.relative(process.cwd(), diffPath)}`); }
   if (dryRun && !writeDiff) console.log('(dry-run : rien n\'est écrit)');

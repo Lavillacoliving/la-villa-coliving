@@ -7,7 +7,7 @@ Yes, Annemasse is a good place to live when you work in Geneva, and it is even o
 
 ## The short answer: yes, if you aim for the station or the tram
 
-Annemasse is the central town of an agglomeration of communes pressed against the Geneva border: 37,600 inhabitants (INSEE, 2023 population), a station that is the French terminus of the Léman Express, a cross-border tram, shops, a market, restaurants. It is not a dormitory suburb: it is a small, complete town, a ten-minute walk from Switzerland.
+Annemasse is the central town of an agglomeration of communes pressed against the Geneva border: 37,600 inhabitants (INSEE, 2023 population), a Léman Express station, a cross-border tram, shops, a market, restaurants. It is not a dormitory suburb: it is a small, complete town, 7 minutes by train from Geneva Eaux-Vives.
 
 What makes the difference for a cross-border worker is not the commune but the address. Within walking distance of the station or a tram 17 stop, you live without a car, you save an hour a day compared with driving through the border crossing, and you enjoy the centre on foot. Beyond fifteen minutes on foot from public transport, the advantage fades. The rest of this guide helps you choose that address.
 
@@ -27,7 +27,7 @@ In practice, for you: a brand-new station district, more shops and services on f
 
 From Annemasse station, the Léman Express reaches Geneva Eaux-Vives in 7 minutes and Cornavin in 23 minutes, no change, with a train every ten minutes at peak times. From Ambilly, tram 17 enters Geneva through Moillesulaz. From Annemasse, Ville-la-Grand or Ambilly, count 20 minutes door to door to Geneva Eaux-Vives by Léman Express, less than many commutes inside Geneva, and 30 minutes to the city centre.
 
-Cycling is the other option: the cycle paths cross the border at Moillesulaz, and many residents pedal to Eaux-Vives in about twenty minutes in the warm season. Many cross-border workers end up without a car: train, tram and bike are enough day to day, and driving through the border crossing at rush hour is the one commute to avoid.
+Cycling is the other option: the cycle paths cross the border at Moillesulaz, and many residents pedal to central Geneva (Rive) on the Voie Verte in the warm season, in 23 to 29 minutes depending on the house. Many cross-border workers end up without a car: train, tram and bike are enough day to day, and driving through the border crossing at rush hour is the one commute to avoid.
 
 ## The town centre: market, small restaurants, cinema and concerts
 
@@ -49,9 +49,9 @@ What does not go down: your salary remains taxed at source in Geneva, health ins
 
 **Romagny.** Residential, quiet: the area of cross-border workers who want the train without the station life. In Annemasse itself, Le Lodge by La Villa Coliving (12 rooms, Romagny district, opened in 2026) is a 10-minute walk from the station — Geneva Eaux-Vives in 18 minutes door to door.
 
-**Ambilly.** The commune closest to the Moillesulaz crossing, with tram 17 at the Croix-d'Ambilly stop: the shortcut to Geneva on foot or by bike. Our house Le Loft is there, an 8-minute walk from the tram and 18 minutes from the station.
+**Ambilly.** The commune closest to the Moillesulaz crossing, with tram 17 at the Croix-d'Ambilly stop: the shortcut to Geneva on foot or by bike. Our house Le Loft is there, an 8-minute walk from the tram and an 18-minute walk from the station.
 
-**Ville-la-Grand.** Detached houses, greenery, bordered by the Foron nature reserve, the border next door, a town centre being redeveloped: the family-friendly, quiet commune of the agglomeration, a 14-minute walk from the station from our house La Villa.
+**Ville-la-Grand.** Detached houses, greenery, bordered by the Foron, the border river, and its nature area, a town centre being redeveloped: the family-friendly, quiet commune of the agglomeration, a 14-minute walk from the station from our house La Villa.
 
 **Vétraz-Monthoux.** Even more suburban, one notch further from public transport: the choice of families with a car, less that of a cross-border worker without one.
 
