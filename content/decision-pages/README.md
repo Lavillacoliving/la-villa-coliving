@@ -16,6 +16,18 @@ FAQPage, byline, fil d'Ariane) est celui de tous les articles ; trois extensions
    (EN : `| Option | Price | Realistic timeline | Paperwork required | Minimum stay |`), 4 catégories anonymes
    (studio en ville, colocation classique, coliving côté France, résidence/appart'hôtel) + éventuellement la ligne
    La Villa avec tokens. **Aucune marque autre que La Villa.** Une devise par cellule (CHF côté Genève, € côté France).
+4. **Bloc « Où chercher une chambre côté France »** (Lot L1 « ingénierie des créneaux », 10/2026) : inséré par le
+   CODE, sans marqueur dans le markdown — allowlist `src/data/ouChercherArticles.ts` (slug → variante `full|short` +
+   ancre = titre H2 existant de l'article, ou « juste avant `<!-- entity-facts -->` »). Texte unique
+   `src/data/answerSlots.ts`, rendu `<OuChercher/>`, garde `npm run check:slots` (bloc 1×, texte identique au
+   caractère près, position). **Ne jamais renommer un titre d'ancrage** (`vivre-a-annemasse…` : « Les options de
+   logement, catégorie par catégorie » / « The housing options, category by category ») sans mettre à jour
+   l'allowlist, sinon le bloc disparaît et la CI est rouge (pas de repli en fin d'article). Les phrases de commune
+   (`communeSentence`), la réponse « sans fiche de salaire » (`a6Text`), le libellé de ligne « (ex. La Villa
+   Coliving) » (`comparatifRowLabel`) et la phrase garant (`GUARANTOR_SENTENCE`) se copient depuis ce module
+   (`node -e` via `scripts/lib/load-entity-facts.mjs`), jamais retapés. Marqueurs admis dans le markdown =
+   registre `src/lib/contentMarkers.ts` (`<!-- entity-facts -->`, `<!-- ou-chercher -->`, `<!-- ou-chercher:court -->`) ;
+   toute autre ligne-commentaire est retirée du rendu et refusée par `article:sql`.
 
 ## Règles vérifiées par `npm run article:sql -- <slug> --mode insert|update`
 - 1 800 à 2 500 mots FR, EN à parité (même fourchette) ; sections en `##` (≥ 6) ; « En bref » (3-4 puces) après le chapô ;

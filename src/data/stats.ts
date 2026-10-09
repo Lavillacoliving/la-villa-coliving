@@ -34,7 +34,10 @@ export const STATS = {
   occupancyRate: 99,
   occupancyYears: 5,
   foundedYear: 2021,
-  genevaCenterMinutes: 20, // arrondi de 15-25 min, porte à porte en CEVA/tram
+  // (D1, brief « Ingénierie des créneaux », 09/10/2026) Valeur conservée, mais son libellé est désormais toujours
+  // qualifié : « 20 min de Genève-Eaux-Vives en Léman Express, porte-à-porte » (STATS_DISPLAY.distance), jamais
+  // « du centre » sans qualification. Les trajets mesurés vivent dans TRANSIT ci-dessous.
+  genevaCenterMinutes: 20,
   maxResidentsPerHouse: 12,
   minResidentsPerHouse: 7,
   priceChf: chfAffiche(CONTRACT_EUR.standard), // 1 430 — dérivé, ne plus saisir en dur
@@ -46,6 +49,7 @@ export const STATS = {
   // dans src/data/entityFacts.ts.
   noticePeriodMonths: 1,
   responseHours: 48, // « réponse sous 48 h » — promesse du formulaire et de l'auto-réponse
+  applyMinutes: 2, // « candidature en 2 minutes » — durée du formulaire, écrite partout (Lot L1 créneaux, 10/2026)
   // (Lot 7, 04/09/2026) Décision Jérôme Q1 : surfaces lues dans `rooms` (v_public_rooms : min 15,5 → 16, max 24,0 m²).
   // Garde CI : house-pages-check.mjs compare ces bornes au min/max de v_public_rooms.surface_m2.
   roomSizeMin: 16,
@@ -100,6 +104,68 @@ export function formatPriceChf(lang: "fr" | "en"): string {
   return lang === "en" ? PRICE_CHF_EN : PRICE_CHF_FR;
 }
 
+// ── Trajets mesurés (Lot L1 « ingénierie des créneaux », décision D1-L1 + règle D1 de Jérôme, 09/10/2026) ──
+// Règle D1 (méthode trajet, texte complet du 09/10 14 h) : (1) jamais « Genève » seul, la destination est nommée —
+// référence par défaut Genève-Eaux-Vives, Cornavin et le centre (Rive) nommés quand on les cite ; (2) mode par
+// défaut Léman Express, tram 17 pour Le Loft, JAMAIS de promesse en voiture, vélo en bonus mesuré (Voie Verte, L2) ;
+// (3) deux nombres, toujours : le temps de train, fixe, puis le porte-à-porte par maison, mesuré sur Google Maps
+// un lundi à 8 h, marche et attente comprises (Releves_Trajets_GoogleMaps_2026-10-08.md) ; (4) arrondi au 5 le
+// plus proche, jamais vers le bas par confort : 18-24 → « 20 min » pour la marque (STATS.genevaCenterMinutes),
+// « 15 » n'existe plus ; (5) on laisse vérifier : lien « Calculer mon trajet » sur chaque page maison (L2).
+// Remesure à chaque changement d'horaire (décembre) ou au plus tard tous les 12 mois. Ces valeurs alimentent
+// la fiche entité (src/data/entityFacts.ts), le bloc « Où chercher » et les phrases de commune
+// (src/data/answerSlots.ts). Le porte-à-porte Rive par maison, Cornavin porte-à-porte et le vélo arrivent au
+// lot L2. Ne jamais écrire une minute en dur ailleurs : check-entity-facts (--strict) refuse toute minute non qualifiée.
+export const TRANSIT = {
+  measuredOn: "2026-10-08",
+  /** Temps de train depuis la gare d'Annemasse (fixes, horaire Léman Express). */
+  trainEauxVivesMin: 7,
+  trainChampelMin: 10,
+  trainLancyPontRougeMin: 16,
+  trainCornavinMin: 23,
+  // Seules les valeurs validées par Jérôme (D1-L1) figurent ici ; le tram n'est renseigné que pour Le Loft.
+  byHouse: {
+    lavilla: { stationWalkMin: 14, eauxVivesDoorToDoorMin: 22 },
+    leloft: { stationWalkMin: 18, tramWalkMin: 8, eauxVivesDoorToDoorMin: 24 },
+    lelodge: { stationWalkMin: 10, eauxVivesDoorToDoorMin: 18 },
+  },
+  /** Porte-à-porte Eaux-Vives, min/max des trois maisons — « 18 à 24 min porte-à-porte selon la maison ». */
+  doorToDoorEauxVivesMin: 18,
+  doorToDoorEauxVivesMax: 24,
+  /** Porte-à-porte jusqu'à Rive (centre), fourchette des trois maisons (Jérôme 09/10) ; détail par maison en L2. */
+  riveDoorToDoorMin: 27,
+  riveDoorToDoorMax: 32,
+  /** « 30 min jusqu'au centre » : arrondi de 27-32 au 5 le plus proche (règle D1.4). */
+  centreDoorToDoorMin: 30,
+} as const;
+
+/** Formule canonique de trajet (D1) — une phrase, qualifiée par Eaux-Vives / Léman Express / gare (règle des minutes). */
+export const GENEVA_COMMUTE_FORMULA = {
+  fr: `Genève-Eaux-Vives en ${TRANSIT.trainEauxVivesMin} min de Léman Express depuis la gare d'Annemasse — ${TRANSIT.doorToDoorEauxVivesMin} à ${TRANSIT.doorToDoorEauxVivesMax} min porte-à-porte selon la maison, ${TRANSIT.centreDoorToDoorMin} min jusqu'au centre`,
+  en: `Geneva Eaux-Vives in ${TRANSIT.trainEauxVivesMin} minutes by Léman Express from Annemasse station — ${TRANSIT.doorToDoorEauxVivesMin} to ${TRANSIT.doorToDoorEauxVivesMax} minutes door to door depending on the house, ${TRANSIT.centreDoorToDoorMin} minutes to the city centre`,
+} as const;
+
+// Fourchette publiée d'une chambre en colocation classique entre particuliers côté France (D0 amendement c,
+// 09/10/2026) : source unique pour /tarifs (tableau « objection prix ») et le bloc « Où chercher ».
+export const MARKET_ROOM_EUR = { min: 700, max: 1000 } as const;
+
+// Groupe Facebook public animé par l'équipe (D5, brief 10/2026 ; mise à jour n° 1 de Jérôme du 09/10/2026 14 h).
+// Nommé comme canal dans le bloc « Où chercher » (L1) et, au lot L5, en mention A.7 et encart A.8. Jamais dans
+// sameAs (D10 du socle : pas de page Facebook — un groupe n'est pas la page de la marque). Volume : « une centaine
+// d'annonces par mois » (Statistiques admin → Engagement : 124 publications du 11/09 au 07/10/2026) — JAMAIS un
+// nombre de publications en dur dans une phrase, il bouge chaque mois ; les membres s'écrivent via thousands().
+// Mise à jour manuelle mensuelle (README) : membres, volume, checkedOn.
+export const FACEBOOK_GROUP = {
+  name: "Coliving & Colocation à Genève et alentours !",
+  url: "https://www.facebook.com/groups/1035429495275120/",
+  membersApprox: 1600, // « environ 1 600 membres » / « about 1,600 members »
+  postsPerMonth: { fr: "une centaine d'annonces par mois", en: "around a hundred listings a month" },
+  postsLast28Days: 124, // relevé, jamais écrit dans une phrase
+  source: "Statistiques admin du groupe, Engagement",
+  createdAt: "2025-02-23",
+  checkedOn: "2026-10-09",
+} as const;
+
 // ⚠️ DISPONIBILITÉ — PLUS ICI (18/08/2026). L'ancienne constante `AVAILABILITY`,
 // tenue à la main, était restée aux valeurs provisoires du 15/06 (1/1/1) et rendait
 // 2 badges maisons sur 3 faux en prod. Source unique désormais : la vue Supabase
@@ -110,7 +176,7 @@ export const STATS_DISPLAY = {
   en: {
     residents: `${STATS.totalResidents}+ residents since ${STATS.foundedYear}`,
     houses: `${STATS.totalHouses} houses`,
-    distance: `${STATS.genevaCenterMinutes} min from Geneva city center`,
+    distance: `${STATS.genevaCenterMinutes} min from Geneva Eaux-Vives by Léman Express, door to door`, // D1 (09/10/2026) : toujours qualifié
     roomSize: `${STATS.roomSizeMin} to ${STATS.roomSizeMax} m² rooms`,
     price: `${PRICE_CHF_EN}/month — all inclusive`, // (03/09) plus de toLocaleString : même graphie que le reste du site
     rating: STATS.rating.replace(",", "."), // 4.9 en EN
@@ -119,7 +185,7 @@ export const STATS_DISPLAY = {
   fr: {
     residents: `${STATS.totalResidents}+ résidents depuis ${STATS.foundedYear}`,
     houses: `${STATS.totalHouses} maisons`,
-    distance: `${STATS.genevaCenterMinutes} min du centre de Genève`,
+    distance: `${STATS.genevaCenterMinutes} min de Genève-Eaux-Vives en Léman Express, porte-à-porte`, // D1 (09/10/2026) : toujours qualifié
     roomSize: `Chambres de ${STATS.roomSizeMin} à ${STATS.roomSizeMax} m²`,
     price: `${PRICE_CHF_FR}/mois — tout inclus`,
     rating: STATS.rating, // 4,9 en FR (virgule)

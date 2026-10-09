@@ -1,5 +1,8 @@
 import type { QAPair } from "@/lib/structuredData";
-import { STATS, PRICE_CHF_FR, PRICE_CHF_EN, PRICE_SHARED_CHF_FR, PRICE_SHARED_CHF_EN } from "@/data/stats";
+import { STATS, PRICE_CHF_FR, PRICE_CHF_EN, PRICE_SHARED_CHF_FR, PRICE_SHARED_CHF_EN, TRANSIT } from "@/data/stats";
+import { GUARANTOR_SENTENCE } from "@/data/entityFacts";
+
+const T = TRANSIT;
 
 /**
  * Lot C2 « FAQ offensive » (brief Conquête IA du 04/09/2026, plan validé par Jérôme) : les 10 questions
@@ -31,7 +34,6 @@ export interface SituationFaq {
 }
 
 const H = STATS.responseHours;
-const MIN = STATS.genevaCenterMinutes;
 
 export const situationsFaq: SituationFaq[] = [
   {
@@ -64,12 +66,13 @@ export const situationsFaq: SituationFaq[] = [
     id: "guarantor",
     fr: {
       q: "Il faut un garant ?",
-      a: `Pas d'office. Ce qu'on regarde, c'est ton contrat de travail ou ta promesse d'embauche, et la caution de ${STATS.depositMonths} mois de loyer hors charges couvre le reste. Si ton contrat ne couvre pas le loyer (période d'essai très courte, temps partiel, mission), on en parle avant de te répondre : garant ou autre garantie, au cas par cas, jamais une surprise après la visite.`,
+      // (D0 amendement b, 09/10/2026) Phrase garant canonique GUARANTOR_SENTENCE — la seule formulation admise sur le site.
+      a: `Pas d'office : ${GUARANTOR_SENTENCE.fr}. Ce qu'on regarde, c'est ton contrat de travail ou ta promesse d'embauche, et la caution de ${STATS.depositMonths} mois de loyer hors charges couvre le reste. Les cas où le contrat ne couvre pas le loyer : période d'essai très courte, temps partiel, mission.`,
       more: { href: "/charte-transparence", label: "Lire notre charte de transparence" },
     },
     en: {
       q: "Do you ask for a guarantor?",
-      a: `Not by default. What we look at is your employment contract or job offer, and the deposit of ${STATS.depositMonths} months' rent excluding charges covers the rest. If your contract doesn't cover the rent (very short probation, part-time, short assignment), we talk about it before answering: a guarantor or another guarantee, case by case, never a surprise after the visit.`,
+      a: `Not by default: ${GUARANTOR_SENTENCE.en}. What we look at is your employment contract or job offer, and the deposit of ${STATS.depositMonths} months' rent excluding charges covers the rest. The cases where the contract does not cover the rent: very short probation, part-time, short assignment.`,
       more: { href: "/charte-transparence", label: "Read our transparency charter" },
     },
   },
@@ -103,12 +106,13 @@ export const situationsFaq: SituationFaq[] = [
     id: "minutes-to-cornavin",
     fr: {
       q: "Combien de minutes jusqu'à Cornavin depuis chaque maison ?",
-      a: `Compte environ 30 minutes porte-à-porte jusqu'à Genève Cornavin, et ${MIN} jusqu'au centre (Eaux-Vives). Le Lodge est à 9 minutes à pied de la gare d'Annemasse, La Villa et Le Loft à 10 ; de là, le Léman Express rejoint Eaux-Vives en 8 minutes et Cornavin en 20 environ, sans changement. Depuis Le Loft, le tram 17 est à 5 minutes à pied et entre dans Genève par Moillesulaz. Les horaires réels : app CFF ou TPG.`,
+      // (D1-L1, 09/10/2026) Minutes depuis TRANSIT : train fixe puis porte-à-porte par maison ; jamais « Genève » seul.
+      a: `Depuis la gare d'Annemasse, le Léman Express rejoint Genève-Eaux-Vives en ${T.trainEauxVivesMin} min, Champel en ${T.trainChampelMin} et Cornavin en ${T.trainCornavinMin}, sans changement. La gare est à ${T.byHouse.lelodge.stationWalkMin} min à pied du Lodge, ${T.byHouse.lavilla.stationWalkMin} de La Villa et ${T.byHouse.leloft.stationWalkMin} du Loft ; porte-à-porte jusqu'à Genève-Eaux-Vives, compte ${T.byHouse.lelodge.eauxVivesDoorToDoorMin} min depuis Le Lodge, ${T.byHouse.lavilla.eauxVivesDoorToDoorMin} depuis La Villa et ${T.byHouse.leloft.eauxVivesDoorToDoorMin} depuis Le Loft, et ${T.riveDoorToDoorMin} à ${T.riveDoorToDoorMax} min jusqu'au centre (Rive). Depuis Le Loft, le tram 17 est à ${T.byHouse.leloft.tramWalkMin} min à pied et entre dans Genève par Moillesulaz. Les horaires réels : app CFF ou TPG.`,
       more: { href: "/nos-maisons", label: "Comparer les trois maisons" },
     },
     en: {
       q: "How many minutes to Cornavin from each house?",
-      a: `Count about 30 minutes door-to-door to Geneva Cornavin, and ${MIN} to the city centre (Eaux-Vives). Le Lodge is a 9-minute walk from Annemasse station, La Villa and Le Loft 10; from there the Léman Express reaches Eaux-Vives in 8 minutes and Cornavin in about 20, no change. From Le Loft, tram 17 is a 5-minute walk away and enters Geneva through Moillesulaz. Real-time schedules: SBB or TPG apps.`,
+      a: `From Annemasse station, the Léman Express reaches Geneva Eaux-Vives in ${T.trainEauxVivesMin} minutes, Champel in ${T.trainChampelMin} and Cornavin in ${T.trainCornavinMin}, no change. The station is a ${T.byHouse.lelodge.stationWalkMin}-minute walk from Le Lodge, ${T.byHouse.lavilla.stationWalkMin} from La Villa and ${T.byHouse.leloft.stationWalkMin} from Le Loft; door to door to Geneva Eaux-Vives, count ${T.byHouse.lelodge.eauxVivesDoorToDoorMin} minutes from Le Lodge, ${T.byHouse.lavilla.eauxVivesDoorToDoorMin} from La Villa and ${T.byHouse.leloft.eauxVivesDoorToDoorMin} from Le Loft, and ${T.riveDoorToDoorMin} to ${T.riveDoorToDoorMax} minutes to the city centre (Rive). From Le Loft, tram 17 is an ${T.byHouse.leloft.tramWalkMin}-minute walk away and enters Geneva through Moillesulaz. Real-time schedules: SBB or TPG apps.`,
       more: { href: "/nos-maisons", label: "Compare the three houses" },
     },
   },

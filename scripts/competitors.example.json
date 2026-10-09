@@ -1,5 +1,5 @@
 {
-  "_comment": "Copier en scripts/competitors.local.json (gitignoré) et remplacer par la liste réelle fournie par Jérôme. En CI, la liste vient du secret GitHub COMPETITOR_NAMES (noms séparés par des virgules). Une exclusion `allow` est temporaire : `until` = date de fin (AAAA-MM-JJ), `file` = nom du fichier prérendu (optionnel).",
+  "_comment": "Copier en scripts/competitors.local.json (gitignoré) et remplacer par la liste réelle fournie par Jérôme. En CI, la liste vient du secret GitHub COMPETITOR_NAMES (noms séparés par des virgules). Une exclusion `allow` est temporaire : `until` = date de fin (AAAA-MM-JJ), `file` = nom du fichier prérendu (optionnel). JAMAIS dans la liste : les canaux nommés par décision dans le bloc « Où chercher » (La Carte des Colocs, Leboncoin, Roomlala — D0b/D0b-bis du 09/10/2026) ni les annuaires du sameAs (roomlala.fr, lacartedescolocs) : la garde scanne aussi le JSON-LD et le bloc, chaque run serait rouge.",
   "names": ["Exemple Coliving", "Autre-Marque"],
   "allow": [
     { "name": "Exemple Coliving", "file": "blog-un-article.html", "until": "2026-09-30" }

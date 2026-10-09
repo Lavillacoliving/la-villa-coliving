@@ -15,7 +15,9 @@ import {
   ArrowRight,
   Euro,
 } from "lucide-react";
-import { PRICE_SHARED_CHF_FR, PRICE_SHARED_CHF_EN } from "@/data/stats";
+import { STATS, PRICE_SHARED_CHF_FR, PRICE_SHARED_CHF_EN, TRANSIT } from "@/data/stats";
+import { ENTITY_HOUSES, type EntityHouseSlug } from "@/data/entityFacts";
+import { OuChercher } from "@/components/OuChercher";
 import {
   useRoomAvailability,
   houseBadgeLabel,
@@ -23,6 +25,24 @@ import {
   BADGE_CHIP_CLASS,
   type HouseKey,
 } from "@/lib/availability";
+
+// (Lot L1, 10/2026) Phrase d'accroche de chaque carte maison ; le trajet vient de ENTITY_HOUSES[].commute
+// (source unique, D1-L1). 370 m² (D2) ; plus de « frontière mitoyenne » (D6) ni de minutes en dur.
+const HOUSE_INTRO: Record<EntityHouseSlug, { fr: string; en: string }> = {
+  lavilla: {
+    fr: "370 m² sur un domaine de 2 000 m² bordé par le Foron et sa réserve naturelle. Piscine extérieure chauffée 12×5 m, sauna, salle de sport.",
+    en: "370 m² on a 2,000 m² estate bordered by the Foron river and its nature reserve. Heated outdoor pool 12×5 m, sauna, gym.",
+  },
+  leloft: {
+    fr: "Design urbain, piscine intérieure chauffée toute l'année, terrasse. La maison la plus proche du tram 17.",
+    en: "Urban design, indoor pool heated year-round, terrace. The house closest to tram 17.",
+  },
+  lelodge: {
+    fr: "Ouvert en janvier 2026 dans le quartier de Romagny. 500 m² sur 4 bâtiments au cœur de 1 500 m² de jardins.",
+    en: "Opened in January 2026 in the Romagny district. 500 m² over 4 buildings in 1,500 m² of gardens.",
+  },
+};
+const cap = (s: string) => s.charAt(0).toUpperCase() + s.slice(1);
 
 
 export function AnnemasseColocationPage() {
@@ -61,8 +81,9 @@ export function AnnemasseColocationPage() {
         }
         description={
           language === "en"
-            ? `Shared housing in Annemasse: 29 furnished rooms all inclusive from ${PRICE_SHARED_CHF_EN}/month, Geneva city centre 20 min door-to-door by Léman Express. No agency fee, reply in 48 h.`
-            : `Colocation Annemasse : 29 chambres meublées tout inclus dès ${PRICE_SHARED_CHF_FR}/mois. Centre de Genève à 20 min porte-à-porte en Léman Express. Coliving frontaliers. Sans frais d'agence.`
+            // (D1, 09/10/2026) « 20 min » toujours qualifié : Genève-Eaux-Vives, Léman Express.
+            ? `Shared housing in Annemasse: ${STATS.totalRooms} furnished rooms all inclusive from ${PRICE_SHARED_CHF_EN}/month, Geneva Eaux-Vives ${STATS.genevaCenterMinutes} min door-to-door by Léman Express. No agency fee.`
+            : `Colocation Annemasse : ${STATS.totalRooms} chambres meublées tout inclus dès ${PRICE_SHARED_CHF_FR}/mois, Genève-Eaux-Vives à ${STATS.genevaCenterMinutes} min porte-à-porte en Léman Express. Sans frais d'agence.`
         }
         url="https://www.lavillacoliving.com/annemasse-colocation"
         image="https://www.lavillacoliving.com/images/le lodge/exterior/la villa coliving le lodge-14.webp"
@@ -157,12 +178,13 @@ export function AnnemasseColocationPage() {
                 <Train className="w-7 h-7 text-[#D4A574]" />
               </div>
               <h3 className="text-xl font-medium text-[#1C1917] mb-3">
-                {language === "en" ? "Geneva in 20 min door-to-door" : "Genève à 20 min porte-à-porte"}
+                {/* (D1, 09/10/2026) « 20 min » qualifié ; minutes depuis TRANSIT ; deux ancres : Léman Express et tram 17 (D7). */}
+                {language === "en" ? `Geneva Eaux-Vives in ${STATS.genevaCenterMinutes} min by Léman Express, door to door` : `Genève-Eaux-Vives à ${STATS.genevaCenterMinutes} min en Léman Express, porte-à-porte`}
               </h3>
               <p className="text-[#57534E] leading-relaxed">
                 {language === "en"
-                  ? "Léman Express direct from Annemasse station: Geneva Eaux-Vives in 8 minutes, Cornavin in about 20, no transfer. Tram 17 TPG and direct buses also connect to central Geneva."
-                  : "Léman Express direct depuis la gare d'Annemasse : Genève Eaux-Vives en 8 minutes, Cornavin en 20 minutes environ, sans correspondance. Le Tram 17 TPG et des bus directs desservent aussi le centre de Genève."}
+                  ? `Léman Express direct from Annemasse station: Geneva Eaux-Vives in ${TRANSIT.trainEauxVivesMin} minutes, Champel in ${TRANSIT.trainChampelMin}, Cornavin in ${TRANSIT.trainCornavinMin}, no transfer. Tram 17 also links Ambilly and Annemasse to central Geneva.`
+                  : `Léman Express direct depuis la gare d'Annemasse : Genève-Eaux-Vives en ${TRANSIT.trainEauxVivesMin} min, Champel en ${TRANSIT.trainChampelMin}, Cornavin en ${TRANSIT.trainCornavinMin}, sans correspondance. Le tram 17 relie aussi Ambilly et Annemasse au centre de Genève.`}
               </p>
             </div>
             <div className="text-center">
@@ -199,66 +221,34 @@ export function AnnemasseColocationPage() {
               : "29 chambres meublées dans 3 maisons design — tarification simple tout inclus, ambiances différentes. Choisis la résidence qui colle à ton trajet et ton style de vie."}
           </p>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {/* La Villa */}
-            <LocalizedLink
-              to="/lavilla"
-              className="bg-white p-8 hover:shadow-xl transition-shadow group"
-            >
-              <h3 className="text-2xl font-medium text-[#1C1917] mb-2">La Villa</h3>
-              <p className="text-sm text-[#D4A574] uppercase tracking-wider mb-4">
-                Ville-la-Grand · 10 chambres
-              </p>
-              <p className="text-[#57534E] leading-relaxed mb-6">
-                {language === "en"
-                  ? "370 m² on a 2,000 m² estate bordering a nature reserve. Heated pool 12×5 m, sauna, gym. The Swiss border adjoins La Villa."
-                  : "370 m² sur un domaine de 2 000 m² bordant une réserve naturelle. Piscine chauffée 12×5 m, sauna, gym. La frontière suisse est mitoyenne à La Villa."}
-              </p>
-              <span className="inline-flex items-center gap-2 text-[#D4A574] font-medium group-hover:gap-3 transition-all">
-                {language === "en" ? "Discover La Villa" : "Découvrir La Villa"}
-                <ArrowRight className="w-4 h-4" />
-              </span>
-            </LocalizedLink>
-
-            {/* Le Loft */}
-            <LocalizedLink
-              to="/leloft"
-              className="bg-white p-8 hover:shadow-xl transition-shadow group"
-            >
-              <h3 className="text-2xl font-medium text-[#1C1917] mb-2">Le Loft</h3>
-              <p className="text-sm text-[#D4A574] uppercase tracking-wider mb-4">
-                Ambilly · 7 chambres
-              </p>
-              <p className="text-[#57534E] leading-relaxed mb-6">
-                {language === "en"
-                  ? "Urban design, indoor heated pool year-round, terrace. Le Loft is extremely well connected: Annemasse station is a 10-min walk and Tram 17 (Lancy-Pont-Rouge ↔ Annemasse) a 5-min walk away."
-                  : "Design urbain, piscine intérieure chauffée toute l'année, terrasse. Le Loft est extrêmement bien desservi : la gare d'Annemasse à 10 minutes à pied et le Tram 17 (Lancy-Pont-Rouge ↔ Annemasse) à 5 minutes à pied."}
-              </p>
-              <span className="inline-flex items-center gap-2 text-[#D4A574] font-medium group-hover:gap-3 transition-all">
-                {language === "en" ? "Discover Le Loft" : "Découvrir Le Loft"}
-                <ArrowRight className="w-4 h-4" />
-              </span>
-            </LocalizedLink>
-
-            {/* Le Lodge */}
-            <LocalizedLink
-              to="/lelodge"
-              className="bg-white p-8 hover:shadow-xl transition-shadow group"
-            >
-              <h3 className="text-2xl font-medium text-[#1C1917] mb-2">Le Lodge</h3>
-              <p className="text-sm text-[#D4A574] uppercase tracking-wider mb-4">
-                Annemasse (Romagny) · 12 chambres
-              </p>
-              <p className="text-[#57534E] leading-relaxed mb-6">
-                {language === "en"
-                  ? "Opened January 2026. 500 m² over 4 buildings on 1,500 m² of gardens. Annemasse station 9-min walk — Léman Express direct to Eaux-Vives in 8 min, Cornavin in about 20."
-                  : "Ouvert en janvier 2026. 500 m² sur 4 bâtiments au cœur de 1 500 m² de jardins. Gare d'Annemasse à 9 min à pied — Léman Express direct : Eaux-Vives en 8 min, Cornavin en 20 min environ."}
-              </p>
-              <span className="inline-flex items-center gap-2 text-[#D4A574] font-medium group-hover:gap-3 transition-all">
-                {language === "en" ? "Discover Le Lodge" : "Découvrir Le Lodge"}
-                <ArrowRight className="w-4 h-4" />
-              </span>
-            </LocalizedLink>
+            {/* (Lot L1) Une carte par maison depuis la source unique : commune, chambres, accroche, ligne de trajet A.1. */}
+            {ENTITY_HOUSES.map((h) => (
+              <LocalizedLink
+                key={h.slug}
+                to={`/${h.slug}`}
+                className="bg-white p-8 hover:shadow-xl transition-shadow group"
+              >
+                <h3 className="text-2xl font-medium text-[#1C1917] mb-2">{h.label}</h3>
+                <p className="text-sm text-[#D4A574] uppercase tracking-wider mb-4">
+                  {`${h.commune} · ${h.rooms} ${language === "en" ? "rooms" : "chambres"}`}
+                </p>
+                <p className="text-[#57534E] leading-relaxed mb-3">{HOUSE_INTRO[h.slug][L]}</p>
+                <p className="text-[#57534E] leading-relaxed mb-6">{`${cap(h.commute[L])}.`}</p>
+                <span className="inline-flex items-center gap-2 text-[#D4A574] font-medium group-hover:gap-3 transition-all">
+                  {language === "en" ? `Discover ${h.label}` : `Découvrir ${h.label}`}
+                  <ArrowRight className="w-4 h-4" />
+                </span>
+              </LocalizedLink>
+            ))}
           </div>
+        </div>
+      </section>
+
+      {/* ===== OÙ CHERCHER (Lot L1 « ingénierie des créneaux », 10/2026 : bloc canonique M1 court, entre
+          « Nos 3 maisons » et le tableau des trajets) ===== */}
+      <section className="py-20 lg:py-24 bg-white border-b border-[#E7E5E4]">
+        <div className="max-w-4xl mx-auto px-6">
+          <OuChercher variant="short" page="annemasse-colocation" />
         </div>
       </section>
 
@@ -290,8 +280,10 @@ export function AnnemasseColocationPage() {
               </thead>
               <tbody>
                 {[
-                  [language === "en" ? "Geneva Eaux-Vives (city centre)" : "Genève Eaux-Vives (centre)", "8 min", language === "en" ? "Léman Express direct" : "Léman Express direct"],
-                  [language === "en" ? "Geneva Cornavin" : "Genève Cornavin", language === "en" ? "about 20 min" : "20 min env.", language === "en" ? "Léman Express direct" : "Léman Express direct"],
+                  // (D1-L1, 09/10/2026) Temps de train depuis TRANSIT (relevés du 08/10) ; les autres lignes passent en L2.
+                  [language === "en" ? "Geneva Eaux-Vives" : "Genève Eaux-Vives", `${TRANSIT.trainEauxVivesMin} min`, language === "en" ? "Léman Express direct" : "Léman Express direct"],
+                  [language === "en" ? "Geneva Champel" : "Genève Champel", `${TRANSIT.trainChampelMin} min`, language === "en" ? "Léman Express direct" : "Léman Express direct"],
+                  [language === "en" ? "Geneva Cornavin" : "Genève Cornavin", `${TRANSIT.trainCornavinMin} min`, language === "en" ? "Léman Express direct" : "Léman Express direct"],
                   [language === "en" ? "Geneva Airport" : "Aéroport de Genève", "25-30 min", language === "en" ? "Car (A40 highway)" : "Voiture (autoroute A40)"],
                   [language === "en" ? "Moillesulaz Swiss border" : "Frontière de Moillesulaz", "2-5 min", language === "en" ? "Walk / bike (Ambilly), 5 min car (Lodge/Villa)" : "À pied / vélo (Ambilly), 5 min voiture (Lodge/Villa)"],
                   [language === "en" ? "Geneva CHUV / WHO area" : "Genève CHUV / OMS", "20-25 min", language === "en" ? "Tram 17 + correspondence" : "Tram 17 + correspondance"],

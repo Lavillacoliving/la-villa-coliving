@@ -15,9 +15,18 @@ let cached = null;
 export async function loadEntityFacts() {
   if (cached) return cached;
   const result = await build({
-    // Point d'entrée virtuel : la fiche + l'allowlist des 8 articles porteurs (entityFactsArticles.ts).
+    // Point d'entrée virtuel : la fiche + l'allowlist des 8 articles porteurs (entityFactsArticles.ts) + (Lot L1,
+    // 10/2026) les créneaux de réponse (answerSlots.ts), l'allowlist du bloc « Où chercher » (ouChercherArticles.ts),
+    // le registre des marqueurs (contentMarkers.ts) et les constantes de stats.ts qu'ils exposent (TRANSIT…).
     stdin: {
-      contents: "export * from './src/data/entityFacts'; export * from './src/data/entityFactsArticles';",
+      contents: [
+        "export * from './src/data/entityFacts';",
+        "export * from './src/data/entityFactsArticles';",
+        "export * from './src/data/answerSlots';",
+        "export * from './src/data/ouChercherArticles';",
+        "export * from './src/lib/contentMarkers';",
+        "export { STATS, STATS_DISPLAY, TRANSIT, GENEVA_COMMUTE_FORMULA, MARKET_ROOM_EUR, FACEBOOK_GROUP } from './src/data/stats';",
+      ].join(' '),
       resolveDir: ROOT,
       loader: 'ts',
     },

@@ -11,7 +11,9 @@ import { WaitlistForm } from "@/components/WaitlistForm";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { HOUSES } from "@/data/houses";
 import { colocationGeneveFaq } from "@/data/faq/colocationGeneveFaq";
-import { STATS, STATS_SHARED_BATH, PRICE_CHF_FR, PRICE_CHF_EN, PRICE_SHARED_CHF_FR, PRICE_SHARED_CHF_EN } from "@/data/stats";
+import { STATS, STATS_DISPLAY, STATS_SHARED_BATH, PRICE_CHF_FR, PRICE_CHF_EN, PRICE_SHARED_CHF_FR, PRICE_SHARED_CHF_EN, TRANSIT } from "@/data/stats";
+import { ENTITY_HOUSES } from "@/data/entityFacts";
+import { OuChercher } from "@/components/OuChercher";
 import { COLOC_GENEVE_ARTICLE, COLOC_GENEVE_PILLAR_EN, COLOC_GENEVE_PILLAR_FR } from "@/lib/siteLinks";
 import { useAllRooms, splitRooms, type HouseKey, type PublicRoom } from "@/lib/availability";
 
@@ -23,8 +25,9 @@ import { useAllRooms, splitRooms, type HouseKey, type PublicRoom } from "@/lib/a
  * flottaison → combien ça coûte → comment faire (frontalier ou résident suisse) → nos 3 maisons →
  * à N min de Genève → où chercher → FAQ (FAQPage) → CTA. L'article « Trouver une colocation à Genève »
  * garde l'intention « comment chercher » ; pas de canonical entre les deux.
- * Règles : CHF des deux côtés de toute comparaison, jamais un loyer français en euros ici, aucun
- * concurrent nommé, jamais « complet », tutoiement, prix depuis src/data/stats.ts.
+ * Règles : CHF des deux côtés de toute comparaison, jamais un loyer français en euros ici — à l'exception
+ * du bloc « Où chercher » (Lot L1, 10/2026 : la fourchette MARKET_ROOM_EUR des chambres entre particuliers,
+ * D0-ter), aucun concurrent nommé, jamais « complet », tutoiement, prix depuis src/data/stats.ts.
  * Données : store partagé v_public_rooms (Lot 3) — les cartes sont dans le HTML prérendu (RoomsEmbed).
  */
 const PAGE_LAST_UPDATED = "2026-09-04";
@@ -272,31 +275,30 @@ export function ColocationGenevePage() {
       <section className="py-20 lg:py-24 bg-white">
         <div className="max-w-4xl mx-auto px-6 text-center">
           <Train className="w-12 h-12 text-[#D4A574] mx-auto mb-6" />
-          <h2 className={h2} style={serif}>{en ? `${MIN} minutes door to door from Geneva` : `À ${MIN} min porte-à-porte de Genève`}</h2>
+          {/* (D1, 09/10/2026) « 20 min » toujours qualifié ; minutes depuis TRANSIT, lignes par maison depuis ENTITY_HOUSES. */}
+          <h2 className={h2} style={serif}>{en ? STATS_DISPLAY.en.distance : `À ${STATS_DISPLAY.fr.distance}`}</h2>
           <p className="text-[#57534E] leading-relaxed max-w-3xl mx-auto mb-8">
             {en
-              ? `Door to door, count ${MIN} minutes to the centre of Geneva. Léman Express from Annemasse (Eaux-Vives in 8 minutes, Cornavin direct), tram 17 from the Moillesulaz border, TPG buses, and the border itself is a few minutes away from every house.`
-              : `Porte à porte, compte ${MIN} minutes jusqu'au centre de Genève. Léman Express depuis Annemasse (Eaux-Vives en 8 minutes, Cornavin direct), tram 17 depuis la douane de Moillesulaz, bus TPG, et la frontière elle-même à quelques minutes de chaque maison.`}
+              ? `From Annemasse station, the Léman Express reaches Geneva Eaux-Vives in ${TRANSIT.trainEauxVivesMin} minutes, Champel in ${TRANSIT.trainChampelMin} and Cornavin in ${TRANSIT.trainCornavinMin}, no change. Door to door, count ${TRANSIT.doorToDoorEauxVivesMin} to ${TRANSIT.doorToDoorEauxVivesMax} minutes to Geneva Eaux-Vives depending on the house, and ${TRANSIT.centreDoorToDoorMin} to the city centre. Tram 17 links Ambilly and Annemasse to central Geneva, and the border is a few minutes from every house.`
+              : `Depuis la gare d'Annemasse, le Léman Express rejoint Genève-Eaux-Vives en ${TRANSIT.trainEauxVivesMin} min, Champel en ${TRANSIT.trainChampelMin} et Cornavin en ${TRANSIT.trainCornavinMin}, sans correspondance. Porte-à-porte, compte ${TRANSIT.doorToDoorEauxVivesMin} à ${TRANSIT.doorToDoorEauxVivesMax} min jusqu'à Genève-Eaux-Vives selon la maison, et ${TRANSIT.centreDoorToDoorMin} jusqu'au centre. Le tram 17 relie Ambilly et Annemasse au centre de Genève, et la frontière est à quelques minutes de chaque maison.`}
           </p>
           <div className="grid sm:grid-cols-3 gap-4 text-sm text-[#44403C]">
-            {(en
-              ? [["Le Lodge · Annemasse", "Direct Léman Express: Eaux-Vives 8 min, Cornavin about 20"], ["Le Loft · Ambilly", "500 m from the Moillesulaz border, tram 17"], ["La Villa · Ville-la-Grand", "Léman Express and tram 17 within walking distance"]]
-              : [["Le Lodge · Annemasse", "Léman Express direct : Eaux-Vives 8 min, Cornavin 20 min env."], ["Le Loft · Ambilly", "À 500 m de la douane de Moillesulaz, tram 17"], ["La Villa · Ville-la-Grand", "Léman Express et tram 17 à pied"]]
-            ).map(([t, d]) => (
+            {ENTITY_HOUSES.map((h) => [`${h.label} · ${h.commune}`, h.commute[L]]).map(([t, d]) => (
               <div key={t} className="bg-[#FAF9F6] p-5"><p className="font-medium text-[#1C1917] mb-1">{t}</p><p>{d}</p></div>
             ))}
           </div>
         </div>
       </section>
 
-      {/* ===== H2 — OÙ CHERCHER UNE COLOCATION À GENÈVE ===== */}
+      {/* ===== H2 — OÙ CHERCHER (Lot L1 « ingénierie des créneaux », 10/2026 : bloc canonique M1 complet,
+          titres H2/H3 du composant ; 6e place conservée — Q-pos Jérôme 09/10/2026) ===== */}
       <section className="py-20 lg:py-24 bg-[#FAF9F6]">
         <div className="max-w-4xl mx-auto px-6">
-          <h2 className={h2} style={serif}>{en ? "Where to look for a flatshare in Geneva" : "Où chercher une colocation à Genève"}</h2>
-          <p className="text-[#57534E] leading-relaxed mb-4">
+          <OuChercher variant="full" page="colocation-geneve" />
+          <p className="text-[#57534E] leading-relaxed mt-10 mb-4">
             {en
-              ? "Listing portals, flatmate groups and specialised directories all exist, on both sides of the border. They work, with their share of stale ads, visits that lead nowhere and files to assemble for each landlord. Our guide explains how to search step by step, from the budget to the visit: "
-              : "Les portails d'annonces, les groupes de colocataires et les annuaires spécialisés existent, des deux côtés de la frontière. Ils fonctionnent, avec leur lot d'annonces périmées, de visites pour rien et de dossiers à monter pour chaque propriétaire. Notre guide explique comment chercher, étape par étape, du budget à la visite : "}
+              ? "Our guide explains how to search step by step, from the budget to the visit: "
+              : "Notre guide explique comment chercher, étape par étape, du budget à la visite : "}
             <LocalizedLink to={COLOC_GENEVE_ARTICLE} className={link}>{en ? "finding a flatshare in Geneva" : "trouver une colocation à Genève"}</LocalizedLink>.
           </p>
           <p className="text-[#57534E] leading-relaxed">

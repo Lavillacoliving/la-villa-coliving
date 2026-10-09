@@ -56,7 +56,7 @@ const FORBIDDEN = [
 ];
 const MINUTE_QUALIFIER = /(?<![\p{L}\p{N}])(?:à pied|on foot|walk\p{L}*|vélo|bike|cycl\p{L}*|voiture|car|driving|aéroport|airport|bus|tram\p{L}*|Cornavin|Eaux-Vives|CERN|Nations|heure de pointe|rush hour|gare|station|Léman Express|CEVA|Moillesulaz|frontière|border|visio|vidéo|video|appel|call|Annemasse[ \-–↔]+Gen[èe]v[ea])(?![\p{L}\p{N}])/iu;
 
-function routeToFile(route, lang) {
+export function routeToFile(route, lang) {
   const r = lang === 'en' ? (route === '/' ? '/en' : `/en${route}`) : route;
   return r === '/' ? 'index.html' : `${r.slice(1).replace(/\//g, '-')}.html`;
 }

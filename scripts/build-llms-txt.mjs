@@ -20,7 +20,7 @@ function factsLines(lang, m) {
   if (lang === 'en') {
     return [
       `- ${F.totalRooms} private furnished rooms (${F.surfaces.min} to ${F.surfaces.max} m²) across ${F.totalHouses} houses (La Villa, Le Loft, Le Lodge)`,
-      `- Location: Ville-la-Grand, Ambilly, Annemasse (Haute-Savoie, France) — ${F.genevaMinutes} minutes door-to-door from Geneva city centre`,
+      `- Location: Ville-la-Grand, Ambilly, Annemasse (Haute-Savoie, France) — ${F.commuteFormula.en}`,
       `- Price: all-inclusive from ${F.price.en.fromChf}/month (contractual rent in euros: from ${F.price.en.fromEur}) for the ${villa.sharedBathRooms} La Villa rooms sharing a shower room between 2 rooms; ${std}/month (${stdEur}) with a private shower room`,
       `- Included: utilities, fibre up to ${F.fiberSpeed}, common-area cleaning ${F.cleaningPerWeek} times a week, pool, sauna, gym, streaming, yoga and events`,
       `- Target: Swiss cross-border workers, expats, young professionals working in Geneva`,
@@ -32,7 +32,7 @@ function factsLines(lang, m) {
   }
   return [
     `- ${F.totalRooms} chambres meublées privées (${F.surfaces.min} à ${F.surfaces.max} m²) dans ${F.totalHouses} maisons (La Villa, Le Loft, Le Lodge)`,
-    `- Localisation : Ville-la-Grand, Ambilly, Annemasse (Haute-Savoie, France) — à ${F.genevaMinutes} minutes porte-à-porte du centre de Genève`,
+    `- Localisation : Ville-la-Grand, Ambilly, Annemasse (Haute-Savoie, France) — ${F.commuteFormula.fr}`,
     `- Prix : tout inclus dès ${F.price.fr.fromChf}/mois (loyer contractuel en euros : dès ${F.price.fr.fromEur}) pour les ${villa.sharedBathRooms} chambres de La Villa à salle d'eau partagée entre 2 chambres ; ${std}/mois (${stdEur}) avec salle d'eau privative`,
     `- Inclus : charges, fibre jusqu'à ${F.fiberSpeed}, ménage des espaces communs ${F.cleaningPerWeek} fois par semaine, piscine, sauna, salle de sport, streaming, yoga et événements`,
     `- Public : frontaliers Suisse, expats, jeunes professionnels qui travaillent à Genève`,
@@ -63,6 +63,8 @@ export async function renderLlms(lang, m) {
   return tpl
     .replace('{{FACTS}}', factsLines(lang, m))
     .replace('{{HOUSES}}', houseLines(lang, m))
+    // (Lot L1, 10/2026) Bloc « Où chercher une chambre côté France » — même texte que le composant <OuChercher variant="full"/>.
+    .replace('{{OU_CHERCHER}}', m.ouChercherMarkdown(lang))
     .replace('{{HOUSE_LINKS}}', houseLinks(lang, m))
     .replace(/\{\{MIN\}\}/g, String(F.genevaMinutes))
     .replace(/\{\{RESPONSE_HOURS\}\}/g, String(F.responseHours))

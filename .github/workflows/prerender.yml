@@ -115,6 +115,12 @@ jobs:
       - name: Vérifier la fiche entité
         run: node scripts/check-entity-facts.mjs --strict
 
+      # Garde Lot L1 (brief « Ingénierie des créneaux » v3.1, 09/10/2026) : bloc « Où chercher » présent une fois
+      # sur 4 pages money + 5 articles FR/EN, au caractère près et à l'ancre attendue ; créneaux M2/M3/M4 dans le
+      # texte visible (adaptatif tant que ANSWER_SLOTS_LIVE est false) ; aucun marqueur orphelin ni promesse garant.
+      - name: Vérifier les créneaux de réponse
+        run: node scripts/check-answer-slots.mjs
+
       # Garde Lot B (02/09/2026) : hydrate chaque page prérendue contre le bundle de CE build ;
       # toute erreur d'hydratation (#418/#423/#425) bloque le commit — et donc la production.
       - name: Vérifier l'hydratation des pages prérendues

@@ -10,6 +10,10 @@
 export const CONTENT_TOKENS = ['PRIX_DES', 'PRIX_PRIVATIF', 'PRIX_DES_EUR', 'PRIX_PRIVATIF_EUR', 'NB_CHAMBRES', 'NB_MAISONS', 'MIN_GENEVE', 'CAUTION_MOIS'];
 export const ENTITY_FACTS_MARKER = '<!-- entity-facts -->';
 export const ENTITY_FACTS_MARKER_RE = /^[ \t]*<!--\s*entity-facts\s*-->[ \t]*$/gm;
+/** (Lot L1, 10/2026) Miroirs de src/lib/contentMarkers.ts : registre des marqueurs et lignes-commentaires. */
+export const CONTENT_MARKER_LINE_RE = /^[ \t]*<!--[ \t]*([a-z][a-z-]*)(?::([a-z]+))?[ \t]*-->[ \t]*$/gm;
+export const COMMENT_LINE_RE = /^[ \t]*<!--[^\n]*?-->[ \t]*$/gm;
+export const KNOWN_MARKERS = { 'entity-facts': [], 'ou-chercher': ['court'] };
 
 export const TITLE_SUFFIX = ' | La Villa Coliving';
 export const TITLE_MAX_FULL = 70;      // scripts/seo-lint.mjs TITLE_MAX
@@ -31,18 +35,47 @@ export const OPTIONS_TABLE_HEADERS = {
   en: ['Option', 'Price', 'Realistic timeline', 'Paperwork required', 'Minimum stay'],
 };
 
-export function stripMarker(md) { return String(md).replace(ENTITY_FACTS_MARKER_RE, ''); }
+/** Miroir de contentMarkers.stripCommentLines : retire TOUTE ligne-commentaire (BlogPostPage fait pareil pour les metas). */
+export function stripMarker(md) { return String(md).replace(new RegExp(COMMENT_LINE_RE.source, 'gm'), ''); }
 
 export function wordCount(md) {
   const t = stripMarker(md).replace(/\{\{[A-Z_]+\}\}/g, 'x').trim();
   return t ? t.split(/\s+/).length : 0;
 }
 
+/** Marqueurs `<!-- entity-facts -->` (positions). */
 export function findMarkers(md) {
   const out = [];
   const re = new RegExp(ENTITY_FACTS_MARKER_RE.source, 'gm');
   let m;
   while ((m = re.exec(md)) !== null) out.push({ index: m.index, length: m[0].length });
+  return out;
+}
+
+/** Tous les marqueurs `<!-- nom[:variante] -->` (miroir de contentMarkers.findContentMarkers). */
+export function findAllMarkers(md) {
+  const out = [];
+  const re = new RegExp(CONTENT_MARKER_LINE_RE.source, 'gm');
+  let m;
+  while ((m = re.exec(String(md))) !== null) out.push({ name: m[1], variant: m[2] || undefined, index: m.index, length: m[0].length });
+  return out;
+}
+
+export function isKnownMarker(name, variant) {
+  const variants = KNOWN_MARKERS[name];
+  if (!variants) return false;
+  return variant ? variants.includes(variant) : true;
+}
+
+/** Lignes-commentaires qui ne sont pas un marqueur du registre : jamais rendues, mais un auteur doit le savoir. */
+export function unknownMarkers(md) {
+  const out = [];
+  const re = new RegExp(COMMENT_LINE_RE.source, 'gm');
+  let m;
+  while ((m = re.exec(String(md))) !== null) {
+    const mk = new RegExp(CONTENT_MARKER_LINE_RE.source).exec(m[0]);
+    if (!mk || !isKnownMarker(mk[1], mk[2] || undefined)) out.push(m[0].trim());
+  }
   return out;
 }
 
@@ -121,6 +154,12 @@ export function checkContent(md, lang, opts = {}) {
   if (md.includes('$$')) failures.push(`${lang} : « $$ » interdit dans le contenu (dollar-quoting du SQL)`);
   const unk = unknownTokens(md);
   if (unk.length) failures.push(`${lang} : token(s) inconnu(s) ${unk.map((t) => `{{${t}}}`).join(', ')} (liste : ${CONTENT_TOKENS.join(', ')})`);
+
+  // (Lot L1) Lignes-commentaires hors registre : le site les retire du rendu, mais elles signalent une erreur d'édition.
+  const unk2 = unknownMarkers(md);
+  if (unk2.length) failures.push(`${lang} : ligne(s)-commentaire hors registre ${unk2.map((s) => `« ${s} »`).join(', ')} (registre : ${Object.keys(KNOWN_MARKERS).join(', ')})`);
+  const ouMarkers = findAllMarkers(md).filter((m) => m.name === 'ou-chercher');
+  if (ouMarkers.length > 1) failures.push(`${lang} : ${ouMarkers.length} marqueurs « ou-chercher » (au plus 1)`);
 
   // Marqueur du bloc entité
   const markers = findMarkers(md);
