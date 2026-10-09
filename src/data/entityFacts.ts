@@ -32,6 +32,8 @@ import {
   PRICE_SHARED_CHF_EN,
   EUR_SHARED_FR_NUM,
   EUR_SHARED_EN_NUM,
+  TRANSIT,
+  GENEVA_COMMUTE_FORMULA,
 } from "./stats";
 import { FOUNDERS, FOUNDING_DATE, LAVILLA_SAME_AS } from "../lib/structuredData";
 
@@ -39,7 +41,33 @@ export type EntityLang = "fr" | "en";
 export type EntityHouseSlug = keyof typeof ROOMS_BY_HOUSE;
 
 /** Incrémenter à chaque changement de texte : porté par data-entity-facts-version, comparé par la CI. */
-export const ENTITY_FACTS_VERSION = "2026-09-29";
+// (Lot L1 « ingénierie des créneaux », 09/10/2026) Trajets réalignés sur TRANSIT (D1-L1), paragraphe sur la formule D1.
+export const ENTITY_FACTS_VERSION = "2026-10-09";
+
+/**
+ * Phrase garant canonique (D0 amendement b, Jérôme 09/10/2026) — la SEULE formulation admise sur le site :
+ * jamais « sans garant », jamais « toujours avant la visite ». Reprise par le bloc « Où chercher » (Ton dossier),
+ * la réponse A.6 des articles (src/data/answerSlots.ts) et la FAQ « Il faut un garant ? » (situationsFaq).
+ */
+export const GUARANTOR_SENTENCE = {
+  fr: "un garant n'est demandé qu'au cas par cas, quand le contrat ne couvre pas le loyer — on t'en parle avant de te répondre, jamais après la visite",
+  en: "a guarantor is only asked for case by case, when the contract does not cover the rent — we tell you before we reply, never after the visit",
+} as const;
+
+/** Ligne courte de trajet d'une maison (A.1, D1-L1) : deux segments « a · b » (RoomDetailPage les affiche séparément). */
+export function houseCommuteLine(slug: EntityHouseSlug, lang: EntityLang): string {
+  const T = TRANSIT.byHouse[slug];
+  const ev = T.eauxVivesDoorToDoorMin;
+  if (slug === "leloft") {
+    const tram = TRANSIT.byHouse.leloft.tramWalkMin;
+    return lang === "en"
+      ? `tram 17 stop ${tram} min on foot, Annemasse station ${T.stationWalkMin} min · Geneva Eaux-Vives in ${ev} min door-to-door`
+      : `tram 17 à ${tram} min à pied, gare d'Annemasse à ${T.stationWalkMin} min · Genève-Eaux-Vives en ${ev} min porte-à-porte`;
+  }
+  return lang === "en"
+    ? `Annemasse station ${T.stationWalkMin} min on foot · Geneva Eaux-Vives in ${ev} min door-to-door`
+    : `gare d'Annemasse à ${T.stationWalkMin} min à pied · Genève-Eaux-Vives en ${ev} min porte-à-porte`;
+}
 /** Préfixe d'une valeur non encore arbitrée (bloquant au build). */
 export const ENTITY_FACTS_PLACEHOLDER = "[FAIT À CONFIRMER";
 
@@ -52,8 +80,10 @@ export interface EntityHouse {
   sharedBathRooms: number;
   /** Équipements distinctifs, forme courte (cartes, houses.ts). */
   amenities: Record<EntityLang, string>;
-  /** Trajet canonique (D1-D3), une phrase par maison. */
+  /** Trajet canonique (D1-L1, 09/10/2026) : ligne courte A.1 dérivée de TRANSIT, une phrase par maison. */
   commute: Record<EntityLang, string>;
+  /** Quartier, quand la commune ne suffit pas (Le Lodge : Romagny) — phrases de commune du lot L1. */
+  district?: Record<EntityLang, string>;
 }
 
 const MIN = STATS.genevaCenterMinutes;
@@ -66,10 +96,7 @@ export const ENTITY_HOUSES: readonly EntityHouse[] = [
     rooms: ROOMS_BY_HOUSE.lavilla,
     sharedBathRooms: STATS_SHARED_BATH.rooms,
     amenities: { fr: "piscine extérieure chauffée · sauna · salle de sport", en: "heated outdoor pool · sauna · gym" },
-    commute: {
-      fr: `gare d'Annemasse à 10 min à pied · Genève centre en ${MIN} min porte-à-porte`,
-      en: `Annemasse station 10 min on foot · central Geneva in ${MIN} min door-to-door`,
-    },
+    commute: { fr: houseCommuteLine("lavilla", "fr"), en: houseCommuteLine("lavilla", "en") },
   },
   {
     slug: "leloft",
@@ -78,10 +105,7 @@ export const ENTITY_HOUSES: readonly EntityHouse[] = [
     rooms: ROOMS_BY_HOUSE.leloft,
     sharedBathRooms: 0,
     amenities: { fr: "piscine intérieure chauffée · sauna · salle de sport", en: "heated indoor pool · sauna · gym" },
-    commute: {
-      fr: `gare d'Annemasse à 10 min à pied · tram 17 à 5 min · Genève centre en ${MIN} min porte-à-porte`,
-      en: `Annemasse station 10 min on foot · tram 17 at 5 min · central Geneva in ${MIN} min door-to-door`,
-    },
+    commute: { fr: houseCommuteLine("leloft", "fr"), en: houseCommuteLine("leloft", "en") },
   },
   {
     slug: "lelodge",
@@ -90,10 +114,8 @@ export const ENTITY_HOUSES: readonly EntityHouse[] = [
     rooms: ROOMS_BY_HOUSE.lelodge,
     sharedBathRooms: 0,
     amenities: { fr: "piscine · sauna · chalet fitness", en: "pool · sauna · fitness chalet" },
-    commute: {
-      fr: `gare d'Annemasse à 9 min à pied · Genève centre en ${MIN} min porte-à-porte`,
-      en: `Annemasse station 9 min on foot · central Geneva in ${MIN} min door-to-door`,
-    },
+    commute: { fr: houseCommuteLine("lelodge", "fr"), en: houseCommuteLine("lelodge", "en") },
+    district: { fr: "quartier de Romagny", en: "Romagny district" },
   },
 ];
 
@@ -117,6 +139,9 @@ export const ENTITY_FACTS = {
   depositMonths: STATS.depositMonths,
   lease: { months: STATS.leaseDurationMonths, noticeMonths: STATS.noticePeriodMonths },
   genevaMinutes: MIN,
+  transit: TRANSIT,
+  commuteFormula: GENEVA_COMMUTE_FORMULA,
+  guarantor: GUARANTOR_SENTENCE,
   founders: [FOUNDERS.jerome.name, FOUNDERS.fanny.name] as readonly string[],
   foundingDate: FOUNDING_DATE,
   foundingLabel: { fr: "octobre 2021", en: "October 2021" },
@@ -148,8 +173,8 @@ export function entityFactsText(lang: EntityLang): EntityFactsText {
       title: "La Villa Coliving — the essentials",
       paragraph:
         `La Villa Coliving is ${F.totalHouses} coliving houses on the Geneva border, French side: ${houseList("en")} — ` +
-        `${F.totalRooms} private furnished rooms of ${F.surfaces.min} to ${F.surfaces.max} m², with a pool, sauna and gym in every house, ` +
-        `${F.genevaMinutes} minutes door-to-door from Geneva city centre.`,
+        `${F.totalRooms} private furnished rooms of ${F.surfaces.min} to ${F.surfaces.max} m², with a pool, sauna and gym in every house. ` +
+        `${F.commuteFormula.en}.`,
       bullets: [
         `All-inclusive rent from ${F.price.en.fromChf}/month (contractual rent in euros: from ${F.price.en.fromEur}) — utilities, fibre up to ${F.fiberSpeed}, common-area cleaning ${F.cleaningPerWeek} times a week, pool, sauna, gym, streaming, yoga and events included.`,
         `No application fee, no agency fee. Deposit: ${F.depositMonths} months' rent, excluding charges.`,
@@ -164,8 +189,8 @@ export function entityFactsText(lang: EntityLang): EntityFactsText {
     title: "La Villa Coliving — l'essentiel",
     paragraph:
       `La Villa Coliving, c'est ${F.totalHouses} maisons de coliving à la frontière de Genève, côté France : ${houseList("fr")}, ` +
-      `soit ${F.totalRooms} chambres meublées privées de ${F.surfaces.min} à ${F.surfaces.max} m², avec piscine, sauna et salle de sport dans chaque maison, ` +
-      `à ${F.genevaMinutes} minutes porte-à-porte du centre de Genève.`,
+      `soit ${F.totalRooms} chambres meublées privées de ${F.surfaces.min} à ${F.surfaces.max} m², avec piscine, sauna et salle de sport dans chaque maison. ` +
+      `${F.commuteFormula.fr}.`,
     bullets: [
       `Loyer tout inclus dès ${F.price.fr.fromChf}/mois (loyer contractuel en euros : dès ${F.price.fr.fromEur}) — charges, fibre jusqu'à ${F.fiberSpeed}, ménage des espaces communs ${F.cleaningPerWeek} fois par semaine, piscine, sauna, salle de sport, streaming, yoga et événements compris.`,
       `0 € de frais de dossier, 0 € de frais d'agence. Caution : ${F.depositMonths} mois de loyer hors charges.`,

@@ -2,7 +2,7 @@
 // Règle d'or AEO : le texte d'une réponse balisée doit être IDENTIQUE au texte visible.
 // buildFaqPageSchema() construit donc le FAQPage à partir des mêmes paires {q,a} affichées.
 
-import { STATS, STATS_SHARED_BATH, ROOMS_BY_HOUSE, PRICE_FR_NUM, PRICE_EN_NUM, PRICE_SHARED_FR_NUM, PRICE_SHARED_EN_NUM } from "@/data/stats";
+import { STATS, STATS_SHARED_BATH, ROOMS_BY_HOUSE, PRICE_FR_NUM, PRICE_EN_NUM, PRICE_SHARED_FR_NUM, PRICE_SHARED_EN_NUM, GENEVA_COMMUTE_FORMULA } from "@/data/stats";
 
 const SITE = "https://www.lavillacoliving.com";
 
@@ -138,9 +138,10 @@ export function buildHomeLodgingBusinessSchema(language: "fr" | "en" = "fr"): Re
     "@type": "LodgingBusiness",
     "@id": ORG_ID,
     name: "La Villa Coliving",
+    // (D1, 09/10/2026) Trajet = formule canonique GENEVA_COMMUTE_FORMULA, jamais « N minutes du centre » sans qualification.
     description: en
-      ? `All-inclusive premium coliving near Geneva: ${STATS.totalHouses} houses (${STATS.totalRooms} furnished rooms) ${STATS.genevaCenterMinutes} minutes from Geneva city center, on the French side, with pool, sauna and gym in every house.`
-      : `Coliving premium tout inclus près de Genève : ${STATS.totalHouses} maisons (${STATS.totalRooms} chambres meublées) à ${STATS.genevaCenterMinutes} minutes du centre de Genève, côté France, avec piscine, sauna et salle de sport dans chaque maison.`,
+      ? `All-inclusive premium coliving near Geneva: ${STATS.totalHouses} houses (${STATS.totalRooms} furnished rooms) on the French side, with pool, sauna and gym in every house. ${GENEVA_COMMUTE_FORMULA.en}.`
+      : `Coliving premium tout inclus près de Genève : ${STATS.totalHouses} maisons (${STATS.totalRooms} chambres meublées) côté France, avec piscine, sauna et salle de sport dans chaque maison. ${GENEVA_COMMUTE_FORMULA.fr}.`,
     url: `${SITE}/`,
     logo: `${SITE}/logos/logo-full.png`,
     image: `${SITE}/images/villa_portrait.webp`,
