@@ -1,8 +1,13 @@
 // FAQ Data for SEO - Extensive question/answer database
 // Organized by categories for better SEO structure
 
-import { STATS, PRICE_CHF_FR, PRICE_CHF_EN, PRICE_SHARED_EN_NUM, PRICE_SHARED_CHF_FR, PRICE_SHARED_CHF_EN } from "@/data/stats";
+import { STATS, STATS_DISPLAY, TRANSIT, GENEVA_COMMUTE_FORMULA, PRICE_CHF_FR, PRICE_CHF_EN, PRICE_SHARED_EN_NUM, PRICE_SHARED_CHF_FR, PRICE_SHARED_CHF_EN } from "@/data/stats";
 import { situationsFaq } from "@/data/faq/situationsFaq";
+
+// (Lot L2 « Emplacement et transport », 09/10/2026) Tout fait d'emplacement de /faq vient de TRANSIT / STATS_DISPLAY /
+// GENEVA_COMMUTE_FORMULA (D1 : destination nommée, Léman Express par défaut, deux nombres) ; aucune minute en dur, aucune
+// promesse en voiture ni vers l'aéroport, arrêts de bus nommés sans numéro de ligne (D7), tram 17 = ancre du Loft.
+const TB = TRANSIT.byHouse;
 export interface FAQItem {
   id: string;
   question: { en: string; fr: string };
@@ -113,8 +118,8 @@ export const faqData: FAQItem[] = [
       fr: 'Qu\'est-ce qui différencie La Villa Coliving des autres espaces de coliving ?',
     },
     answer: {
-      en: 'La Villa stands out through our curated community approach, exceptional locations just 20 minutes from Geneva, premium amenities including heated pools and wellness areas, and our commitment to creating genuine connections. We\'re not just a place to sleep—we\'re a lifestyle designed for modern professionals who value both productivity and wellbeing. Our homes are designed spaces, not converted apartments, with every detail thoughtfully considered.',
-      fr: 'La Villa se démarque par notre approche de communauté sélectionnée, nos emplacements exceptionnels à seulement 20 minutes de Genève, nos équipements premium incluant des piscines chauffées et des espaces bien-être, et notre engagement à créer de véritables connexions. Nous ne sommes pas juste un endroit pour dormir—nous sommes un mode de vie conçu pour les professionnels modernes qui valorisent à la fois la productivité et le bien-être. Nos maisons sont des espaces design, pas des appartements convertis, avec chaque détail soigneusement pensé.',
+      en: `La Villa stands out through our curated community approach, exceptional locations ${STATS_DISPLAY.en.distance}, premium amenities including heated pools and wellness areas, and our commitment to creating genuine connections. We're not just a place to sleep—we're a lifestyle designed for modern professionals who value both productivity and wellbeing. Our homes are designed spaces, not converted apartments, with every detail thoughtfully considered.`,
+      fr: `La Villa se démarque par notre approche de communauté sélectionnée, nos emplacements exceptionnels à ${STATS_DISPLAY.fr.distance}, nos équipements premium incluant des piscines chauffées et des espaces bien-être, et notre engagement à créer de véritables connexions. Nous ne sommes pas juste un endroit pour dormir—nous sommes un mode de vie conçu pour les professionnels modernes qui valorisent à la fois la productivité et le bien-être. Nos maisons sont des espaces design, pas des appartements convertis, avec chaque détail soigneusement pensé.`,
     },
   },
   {
@@ -285,8 +290,8 @@ export const faqData: FAQItem[] = [
       fr: 'Combien coûte une chambre chez La Villa Coliving ?',
     },
     answer: {
-      en: `A room at La Villa Coliving costs ${PRICE_CHF_EN} per month all-inclusive with a private bathroom, or ${PRICE_SHARED_CHF_EN} for the 4 rooms at our La Villa house with a shower room shared between 2 rooms (cleaned by our housekeeping team). No hidden fees and no application fee: utilities, fiber internet, cleaning of common areas three times a week, gym, sauna, pool, streaming and community events. Our three houses — La Villa (Ville-la-Grand), Le Loft (Ambilly) and Le Lodge (Annemasse) — are 15-20 minutes from Geneva by Léman Express or tram.`,
-      fr: `Une chambre chez La Villa Coliving coûte ${PRICE_CHF_FR} par mois tout inclus avec salle d'eau privative, ou ${PRICE_SHARED_CHF_FR} pour les 4 chambres de la maison La Villa dont la salle d'eau est partagée entre 2 chambres (entretien par notre équipe de ménage inclus). Sans frais cachés ni frais de dossier : charges, fibre, ménage des espaces communs trois fois par semaine, salle de sport, sauna, piscine, streaming et événements communautaires. Nos trois maisons — La Villa (Ville-la-Grand), Le Loft (Ambilly) et Le Lodge (Annemasse) — sont à 15-20 minutes de Genève en Léman Express ou tram.`,
+      en: `A room at La Villa Coliving costs ${PRICE_CHF_EN} per month all-inclusive with a private bathroom, or ${PRICE_SHARED_CHF_EN} for the 4 rooms at our La Villa house with a shower room shared between 2 rooms (cleaned by our housekeeping team). No hidden fees and no application fee: utilities, fiber internet, cleaning of common areas three times a week, gym, sauna, pool, streaming and community events. Our three houses — La Villa (Ville-la-Grand), Le Loft (Ambilly) and Le Lodge (Annemasse) — are on the French side: ${GENEVA_COMMUTE_FORMULA.en}.`,
+      fr: `Une chambre chez La Villa Coliving coûte ${PRICE_CHF_FR} par mois tout inclus avec salle d'eau privative, ou ${PRICE_SHARED_CHF_FR} pour les 4 chambres de la maison La Villa dont la salle d'eau est partagée entre 2 chambres (entretien par notre équipe de ménage inclus). Sans frais cachés ni frais de dossier : charges, fibre, ménage des espaces communs trois fois par semaine, salle de sport, sauna, piscine, streaming et événements communautaires. Nos trois maisons — La Villa (Ville-la-Grand), Le Loft (Ambilly) et Le Lodge (Annemasse) — sont côté France : ${GENEVA_COMMUTE_FORMULA.fr}.`,
     },
   },
   {
@@ -603,8 +608,8 @@ export const faqData: FAQItem[] = [
       fr: 'Où sont exactement situées les maisons ?',
     },
     answer: {
-      en: 'Our houses are located in the Grand Genève region in France: La Villa in Ville-la-Grand, Le Loft in Ambilly, and Le Lodge in Annemasse. All are about 20 minutes door-to-door from Geneva city centre, with excellent public transport connections.',
-      fr: 'Nos maisons sont situées dans la région du Grand Genève en France : La Villa à Ville-la-Grand, Le Loft à Ambilly et Le Lodge à Annemasse. Toutes sont à environ 20 minutes porte-à-porte du centre de Genève, avec d\'excellentes connexions de transport en commun.',
+      en: `Our houses are located in the Grand Genève region in France: La Villa in Ville-la-Grand, Le Loft in Ambilly, and Le Lodge in Annemasse. All are ${STATS_DISPLAY.en.distance}, with excellent public transport connections.`,
+      fr: `Nos maisons sont situées dans la région du Grand Genève en France : La Villa à Ville-la-Grand, Le Loft à Ambilly et Le Lodge à Annemasse. Toutes sont à ${STATS_DISPLAY.fr.distance}, avec d'excellentes connexions de transport en commun.`,
     },
   },
   {
@@ -615,8 +620,8 @@ export const faqData: FAQItem[] = [
       fr: 'Combien de temps dure le trajet jusqu\'à Genève ?',
     },
     answer: {
-      en: 'Door-to-door, count on about 20 minutes from our houses to Geneva city centre. Each house is a 9-10 minute walk from Annemasse station, then the Léman Express takes you to Eaux-Vives in 8 minutes and to Cornavin in about 12; from Ambilly, tram 17 is an alternative. Many residents find this comparable to or faster than commuting within Geneva itself.',
-      fr: 'Porte-à-porte, compte environ 20 minutes entre nos maisons et le centre de Genève. Chaque maison est à 9-10 minutes à pied de la gare d\'Annemasse, puis le Léman Express te dépose aux Eaux-Vives en 8 minutes et à Cornavin en 12 environ ; depuis Ambilly, le tram 17 est une alternative. Beaucoup de résidents trouvent cela comparable, voire plus rapide, qu\'un trajet dans Genève même.',
+      en: `From Annemasse station, the Léman Express takes you to Geneva Eaux-Vives in ${TRANSIT.trainEauxVivesMin} minutes and to Cornavin in ${TRANSIT.trainCornavinMin} minutes, no change. The station is a ${TB.lelodge.stationWalkMin}-minute walk from Le Lodge, ${TB.lavilla.stationWalkMin} from La Villa and ${TB.leloft.stationWalkMin} from Le Loft: count ${TRANSIT.doorToDoorEauxVivesMin} to ${TRANSIT.doorToDoorEauxVivesMax} minutes door to door to Geneva Eaux-Vives depending on the house, and ${TRANSIT.centreDoorToDoorMin} minutes to the city centre (Rive). From Le Loft, in Ambilly, tram 17 is an ${TB.leloft.tramWalkMin}-minute walk away. Many residents find this comparable to or faster than commuting within Geneva itself.`,
+      fr: `Depuis la gare d'Annemasse, le Léman Express te dépose à Genève-Eaux-Vives en ${TRANSIT.trainEauxVivesMin} min et à Cornavin en ${TRANSIT.trainCornavinMin} min, sans changement. La gare est à ${TB.lelodge.stationWalkMin} min à pied du Lodge, ${TB.lavilla.stationWalkMin} de La Villa et ${TB.leloft.stationWalkMin} du Loft : compte ${TRANSIT.doorToDoorEauxVivesMin} à ${TRANSIT.doorToDoorEauxVivesMax} min porte-à-porte jusqu'à Genève-Eaux-Vives selon la maison, et ${TRANSIT.centreDoorToDoorMin} min jusqu'au centre (Rive). Depuis Le Loft, à Ambilly, le tram 17 est à ${TB.leloft.tramWalkMin} min à pied. Beaucoup de résidents trouvent cela comparable, voire plus rapide, qu'un trajet dans Genève même.`,
     },
   },
   {
@@ -627,8 +632,8 @@ export const faqData: FAQItem[] = [
       fr: 'Les transports en commun sont-ils facilement accessibles ?',
     },
     answer: {
-      en: 'Yes, all our houses are within 8 minutes walking distance of public transport that connects directly to Geneva. The TPG (Geneva public transport) network serves our area, making it easy to get anywhere in the city. We also provide electric scooters for residents to use locally.',
-      fr: 'Oui, toutes nos maisons sont à moins de 8 minutes à pied des transports en commun qui relient directement Genève. Le réseau TPG (transports publics genevois) dessert notre zone, facilitant l\'accès à n\'importe où dans la ville. Nous fournissons également des trottinettes électriques pour que les résidents puissent se déplacer localement.',
+      en: `Yes. Each house has its bus stop within walking distance: ${TB.lavilla.busStop.name}, ${TB.lavilla.busStop.walkMin} minutes from La Villa, ${TB.leloft.busStop.name}, ${TB.leloft.busStop.walkMin} minutes from Le Loft, ${TB.lelodge.busStop.name}, ${TB.lelodge.busStop.walkMin} minutes from Le Lodge. To Geneva, two direct links: the Léman Express from Annemasse station (a ${TB.lelodge.stationWalkMin}-minute walk from Le Lodge, ${TB.lavilla.stationWalkMin} from La Villa and ${TB.leloft.stationWalkMin} from Le Loft) and tram 17, an ${TB.leloft.tramWalkMin}-minute walk from Le Loft.`,
+      fr: `Oui. Chaque maison a son arrêt de bus à pied : ${TB.lavilla.busStop.name} à ${TB.lavilla.busStop.walkMin} min de La Villa, ${TB.leloft.busStop.name} à ${TB.leloft.busStop.walkMin} min du Loft, ${TB.lelodge.busStop.name} à ${TB.lelodge.busStop.walkMin} min du Lodge. Vers Genève, deux liaisons directes : le Léman Express depuis la gare d'Annemasse (à ${TB.lelodge.stationWalkMin} min à pied du Lodge, ${TB.lavilla.stationWalkMin} de La Villa et ${TB.leloft.stationWalkMin} du Loft) et le tram 17, à ${TB.leloft.tramWalkMin} min à pied du Loft.`,
     },
   },
   {
@@ -663,8 +668,9 @@ export const faqData: FAQItem[] = [
       fr: 'À quelle distance est l\'aéroport ?',
     },
     answer: {
-      en: 'Geneva Airport (GVA) is approximately 30-40 minutes away by public transport or car. This makes La Villa an excellent choice for frequent travelers and international professionals.',
-      fr: 'L\'aéroport de Genève (GVA) est à environ 30 à 40 minutes en transport en commun ou en voiture. Cela fait de La Villa un excellent choix pour les voyageurs fréquents et les professionnels internationaux.',
+      // (Lot L2, 09/10/2026) Aucune minute ni voiture vers l'aéroport (D1) : seulement le mode d'accès.
+      en: 'Geneva Airport (GVA) is reached by train from Annemasse station: Léman Express to Geneva Cornavin, then a connection to the airport. This makes La Villa a convenient choice for frequent travellers and international professionals.',
+      fr: 'L\'aéroport de Genève (GVA) se rejoint en train depuis la gare d\'Annemasse : Léman Express jusqu\'à Genève Cornavin, puis correspondance pour l\'aéroport. Cela fait de La Villa un choix pratique pour les voyageurs fréquents et les professionnels internationaux.',
     },
   },
   {
@@ -937,18 +943,8 @@ export const faqData: FAQItem[] = [
       fr: 'Nos maisons disposent de magnifiques espaces extérieurs incluant des jardins, terrasses, espaces BBQ et bien sûr des piscines. Ces espaces sont conçus pour la détente, les échanges sociaux et profiter de l\'air frais. Du mobilier extérieur est fourni pour ton confort.',
     },
   },
-  {
-    id: 'electric-scooters',
-    category: 'Services & Amenities',
-    question: {
-      en: 'Can I use the electric scooters?',
-      fr: 'Puis-je utiliser les trottinettes électriques ?',
-    },
-    answer: {
-      en: 'Yes, electric scooters are available for resident use to explore the local area or get to nearby shops and transport. They\'re a fun, eco-friendly way to get around. Safety guidelines and helmet use are required.',
-      fr: 'Oui, des trottinettes électriques sont disponibles pour l\'usage des résidents pour explorer le quartier ou se rendre aux magasins et transports proches. Ce sont un moyen amusant et écologique de se déplacer. Les consignes de sécurité et le port du casque sont obligatoires.',
-    },
-  },
+  // (Lot L2, 09/10/2026) Question « trottinettes électriques » retirée : service promis nulle part ailleurs sur le site
+  // (ni /services, ni traductions) — à réintroduire seulement si Jérôme confirme le service.
   {
     id: 'monthly-essentials',
     category: 'Services & Amenities',
@@ -983,8 +979,8 @@ export const faqData: FAQItem[] = [
       fr: 'Y a-t-il du coliving près de Genève ?',
     },
     answer: {
-      en: 'Yes! La Villa Coliving offers premium coliving experiences just 20 minutes door-to-door from Geneva city centre. Our houses in Ville-la-Grand, Ambilly, and Annemasse provide easy access to Geneva while offering more space, better amenities, and better value than city-center options.',
-      fr: 'Oui ! La Villa Coliving offre des expériences de coliving premium à 20 minutes porte-à-porte du centre de Genève. Nos maisons à Ville-la-Grand, Ambilly et Annemasse offrent un accès facile à Genève tout en proposant plus d\'espace, de meilleurs équipements et un meilleur rapport qualité-prix que les options en centre-ville.',
+      en: `Yes! La Villa Coliving offers premium coliving experiences ${STATS_DISPLAY.en.distance}. Our houses in Ville-la-Grand, Ambilly, and Annemasse provide easy access to Geneva while offering more space, better amenities, and better value than city-center options.`,
+      fr: `Oui ! La Villa Coliving offre des expériences de coliving premium à ${STATS_DISPLAY.fr.distance}. Nos maisons à Ville-la-Grand, Ambilly et Annemasse offrent un accès facile à Genève tout en proposant plus d'espace, de meilleurs équipements et un meilleur rapport qualité-prix que les options en centre-ville.`,
     },
   },
   {
@@ -995,8 +991,8 @@ export const faqData: FAQItem[] = [
       fr: 'Puis-je vivre en France et travailler à Genève ?',
     },
     answer: {
-      en: 'Absolutely! Many of our residents live in our French houses and work in Geneva. The commute is about 20 minutes door-to-door, which makes it very manageable. Plus, you benefit from lower living costs in France while earning a Swiss salary.',
-      fr: 'Absolument ! Beaucoup de nos résidents vivent dans nos emplacements français et travaillent à Genève. Le trajet est d\'environ 20 minutes porte-à-porte, ce qui est très gérable. En plus, tu profites d\'un coût de la vie plus bas en France tout en gagnant un salaire suisse.',
+      en: `Absolutely! Many of our residents live in our French houses and work in Geneva. The commute is ${STATS_DISPLAY.en.distance}, which makes it very manageable. Plus, you benefit from lower living costs in France while earning a Swiss salary.`,
+      fr: `Absolument ! Beaucoup de nos résidents vivent dans nos emplacements français et travaillent à Genève. Le trajet est de ${STATS_DISPLAY.fr.distance}, ce qui est très gérable. En plus, tu profites d'un coût de la vie plus bas en France tout en gagnant un salaire suisse.`,
     },
   },
   {

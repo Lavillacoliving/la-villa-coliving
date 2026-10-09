@@ -11,7 +11,7 @@
 {{OU_CHERCHER}}
 
 ## Avantages pour les frontaliers
-- ≈ 36 CHF/m² tout compris (38 m² d'espace par résident), quand les annonces de studios à Genève tournent autour de 50 CHF/m² hors charges (source : Observatoire 2026)
+- ≈ 36 CHF/m² tout compris ({{LIVING_SPACE}}), quand les annonces de studios à Genève tournent autour de 50 CHF/m² hors charges (source : Observatoire 2026)
 - Adresse fiscale en France (avantages frontalier)
 - Tout inclus = pas de frais cachés, pas de caution sur les charges
 - Communauté internationale, aide à l'installation
