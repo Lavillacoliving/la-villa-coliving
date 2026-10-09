@@ -23,7 +23,8 @@ export const colocationGeneveFaq: { fr: QAPair[]; en: QAPair[] } = {
     },
     {
       q: "Quel est le meilleur site pour trouver une colocation à Genève ?",
-      a: "Il n'y en a pas un seul : les portails d'annonces, les groupes de colocataires et les annuaires spécialisés existent, avec leur lot d'annonces périmées et de dossiers à monter. Ce que nous ajoutons : une chambre prête à vivre, une communauté déjà là, un seul loyer tout compris et une réponse sous 48 h. Notre guide « Trouver une colocation à Genève » explique comment chercher, étape par étape.",
+      // (Lot L1, 10/2026) Aligné sur le bloc « Où chercher » de la page : quatre canaux, La Villa Coliving nommée dans le créneau « opérateurs de coliving », sans redupliquer la liste.
+      a: `Il n'y en a pas un seul. Côté France, quatre canaux couvrent l'essentiel : les opérateurs de coliving comme La Villa Coliving (${STATS.totalHouses} maisons, ${STATS.totalRooms} chambres, tout inclus), les plateformes de colocation entre particuliers, les groupes Facebook et la bourse du logement du CAGI pour les employés des organisations internationales. Ce que nous ajoutons : une chambre prête à vivre, une communauté déjà là, un seul loyer tout compris et une réponse sous ${STATS.responseHours} h. Notre guide « Trouver une colocation à Genève » explique comment chercher, étape par étape.`,
     },
     {
       q: "Colocation ou coliving : quelle différence ?",
@@ -52,7 +53,7 @@ export const colocationGeneveFaq: { fr: QAPair[]; en: QAPair[] } = {
     },
     {
       q: "What is the best website to find a flatshare in Geneva?",
-      a: "There is no single one: listing portals, flatmate groups and specialised directories all exist, with their share of stale ads and paperwork. What we add: a room ready to live in, a community already there, a single all-inclusive rent and a reply within 48 h. Our guide « Finding a flatshare in Geneva » explains how to search, step by step.",
+      a: `There is no single one. On the French side, four channels cover most of it: coliving operators such as La Villa Coliving (${STATS.totalHouses} houses, ${STATS.totalRooms} rooms, all inclusive), peer-to-peer flatshare platforms, Facebook groups and the CAGI housing exchange for employees of international organisations. What we add: a room ready to live in, a community already there, a single all-inclusive rent and a reply within ${STATS.responseHours} h. Our guide « Finding a flatshare in Geneva » explains how to search, step by step.`,
     },
     {
       q: "Flatshare or coliving: what is the difference?",

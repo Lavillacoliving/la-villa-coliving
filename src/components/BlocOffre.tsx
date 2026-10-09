@@ -2,7 +2,7 @@ import { LocalizedLink } from "@/components/LocalizedLink";
 import { responsiveImage } from "@/lib/responsiveImage";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { ArrowRight, Check } from "lucide-react";
-import { STATS } from "@/data/stats";
+import { STATS, STATS_DISPLAY } from "@/data/stats";
 import { housePriceFrom } from "@/lib/housePrice";
 import {
   useRoomAvailability,
@@ -58,7 +58,8 @@ const HEADLINES: Record<IntentBucket, { fr: string; en: string }> = {
   medium: { fr: "Envie d'un logement tout inclus près de Genève ?", en: "Want all-inclusive housing near Geneva?" },
   ville: { fr: "Tu compares les villes ? Viens voir à quoi ressemble la vie sur place.", en: "Comparing towns? Come see what living here actually looks like." },
   admin: { fr: "Tu prépares ton installation côté France ?", en: "Planning your move to the French side?" },
-  life: { fr: "Envie d'habiter à 20 min du centre de Genève, sans la galère ?", en: "Want to live 20 min from Geneva city center, hassle-free?" },
+  // (D1, 09/10/2026) jamais « du centre » sans qualification : la destination est nommée.
+  life: { fr: `Envie d'habiter à ${STATS.genevaCenterMinutes} min de Genève-Eaux-Vives, sans la galère ?`, en: `Want to live ${STATS.genevaCenterMinutes} min from Geneva Eaux-Vives, hassle-free?` },
   coliving: { fr: "Envie de vivre en coliving près de Genève ?", en: "Want to live in coliving near Geneva?" },
 };
 
@@ -144,8 +145,9 @@ export function BlocOffre({ variant, slug, bucket }: BlocOffreProps) {
       en: `${STATS.totalRooms} furnished rooms across ${STATS.totalHouses} houses`,
     },
     {
-      fr: `À ${STATS.genevaCenterMinutes} min du centre de Genève`,
-      en: `${STATS.genevaCenterMinutes} min from Geneva city center`,
+      // (D1, 09/10/2026) libellé unique, toujours qualifié
+      fr: `À ${STATS_DISPLAY.fr.distance}`,
+      en: STATS_DISPLAY.en.distance,
     },
     {
       // « 0 frais » = conséquence du modèle (location en direct), jamais une « interdiction »

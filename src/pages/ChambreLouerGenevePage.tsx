@@ -10,7 +10,9 @@ import { HouseAvailabilityLine } from "@/components/HouseAvailabilityLine";
 import { WhatsAppButton } from "@/components/WhatsAppButton";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { HOUSES } from "@/data/houses";
-import { STATS, PRICE_CHF_FR, PRICE_CHF_EN, PRICE_SHARED_CHF_FR, PRICE_SHARED_CHF_EN } from "@/data/stats";
+import { STATS, STATS_DISPLAY, PRICE_CHF_FR, PRICE_CHF_EN, PRICE_SHARED_CHF_FR, PRICE_SHARED_CHF_EN, TRANSIT } from "@/data/stats";
+import { ENTITY_HOUSES } from "@/data/entityFacts";
+import { OuChercher } from "@/components/OuChercher";
 import { colocGeneveHref } from "@/lib/siteLinks";
 import { useAllRooms, splitRooms, type HouseKey, type PublicRoom } from "@/lib/availability";
 
@@ -52,9 +54,10 @@ export function ChambreLouerGenevePage() {
         // §6 variante B : pas de prix dans le title (Q8, confirmé le 04/09) ; meta sans « 3 mois minimum » (Q13, confirmé le 04/09).
         // (ajustement Jérôme 04/09) pluriel aligné sur le H1 + « tout inclus », sans prix (Q8) ; > 65 c. avec la marque → pas de suffixe (S33).
         title={en ? "Rooms to rent near Geneva: furnished, all inclusive" : "Chambres à louer près de Genève : meublées, tout inclus"}
+        // (D1, 09/10/2026) « 20 min » toujours qualifié (Genève-Eaux-Vives, Léman Express) — meta ≤ 155 caractères.
         description={en
-          ? `Furnished rooms to rent on the French side, ${MIN} min door to door from Geneva: bills, fibre, cleaning included, from ${PRICE_SHARED_CHF_EN}. Live availability.`
-          : `Chambres meublées à louer côté France, à ${MIN} min porte-à-porte de Genève : charges, fibre et ménage compris, dès ${PRICE_SHARED_CHF_FR} tout inclus. Dispo en temps réel.`}
+          ? `Furnished rooms to rent on the French side, ${MIN} min from Geneva Eaux-Vives by Léman Express: bills, fibre, cleaning included, from ${PRICE_SHARED_CHF_EN}. Live availability.`
+          : `Chambres meublées à louer côté France, à ${MIN} min de Genève-Eaux-Vives en Léman Express : charges, fibre, ménage compris, dès ${PRICE_SHARED_CHF_FR}. Dispo en temps réel.`}
         image="https://www.lavillacoliving.com/images/le loft/rooms/Chambre 5/chambre-5-vue-large.webp"
       />
 
@@ -69,8 +72,8 @@ export function ChambreLouerGenevePage() {
           </h1>
           <p className="text-lg md:text-xl text-[#57534E] max-w-3xl mx-auto leading-relaxed mb-8 font-medium">
             {en
-              ? `Looking for a room to rent in Geneva? Most affordable ones are on the French side, ${MIN} minutes door to door from the centre. Below: every room available in our ${STATS.totalHouses} houses, with date and price in CHF, all inclusive from ${PRICE_SHARED_CHF_EN}/month. Neither a room in someone's home nor a sublet: a lease in your name in a whole house.`
-              : `Tu cherches une chambre à louer à Genève ? La plupart des chambres abordables sont côté France, à ${MIN} minutes porte-à-porte du centre. Ci-dessous, toutes les chambres disponibles dans nos ${STATS.totalHouses} maisons, avec la date et le prix en CHF, tout inclus dès ${PRICE_SHARED_CHF_FR}/mois. Ni chambre chez l'habitant ni sous-location : un bail à ton nom dans une maison entière.`}
+              ? `Looking for a room to rent in Geneva? Most affordable ones are on the French side, ${STATS_DISPLAY.en.distance}. Below: every room available in La Villa Coliving's ${STATS.totalHouses} houses, with date and price in CHF, all inclusive from ${PRICE_SHARED_CHF_EN}/month. Neither a room in someone's home nor a sublet: a lease in your name in a whole house.`
+              : `Tu cherches une chambre à louer à Genève ? La plupart des chambres abordables sont côté France, à ${STATS_DISPLAY.fr.distance}. Ci-dessous, toutes les chambres disponibles dans les ${STATS.totalHouses} maisons de La Villa Coliving, avec la date et le prix en CHF, tout inclus dès ${PRICE_SHARED_CHF_FR}/mois. Ni chambre chez l'habitant ni sous-location : un bail à ton nom dans une maison entière.`}
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <a href="#chambres" className="inline-flex items-center gap-2 px-8 py-4 bg-[#1C1917] text-white font-semibold rounded-full hover:bg-[#44403C] transition-colors">
@@ -115,6 +118,14 @@ export function ChambreLouerGenevePage() {
             <LocalizedLink to="/chambres-disponibles" className={link}>{en ? "Join a waiting list on the available rooms page" : "Rejoins une liste d'attente sur la page des chambres disponibles"}</LocalizedLink>
             {en ? " — we reply within 48 h." : " — on te répond sous 48 h."}
           </p>
+        </div>
+      </section>
+
+      {/* ===== H2 — OÙ CHERCHER (Lot L1 « ingénierie des créneaux », 10/2026 : bloc canonique M1 complet — Q-short
+          Jérôme 09/10/2026 ; ancré avant le H2 stable « Prix… », jamais sur le titre dynamique des chambres) ===== */}
+      <section className="py-20 lg:py-24 bg-white border-t border-[#E7E5E4]">
+        <div className="max-w-4xl mx-auto px-6">
+          <OuChercher variant="full" page="chambre-a-louer-geneve" />
         </div>
       </section>
 
@@ -254,17 +265,15 @@ export function ChambreLouerGenevePage() {
       <section className="py-20 lg:py-24 bg-white">
         <div className="max-w-4xl mx-auto px-6 text-center">
           <Train className="w-12 h-12 text-[#D4A574] mx-auto mb-6" />
-          <h2 className={h2} style={serif}>{en ? `${MIN} minutes door to door from Geneva` : `À ${MIN} min porte-à-porte de Genève`}</h2>
+          {/* (D1, 09/10/2026) « 20 min » toujours qualifié ; minutes depuis TRANSIT, lignes par maison depuis ENTITY_HOUSES. */}
+          <h2 className={h2} style={serif}>{en ? STATS_DISPLAY.en.distance : `À ${STATS_DISPLAY.fr.distance}`}</h2>
           <p className="text-[#57534E] leading-relaxed max-w-3xl mx-auto mb-8">
             {en
-              ? `Door to door, count ${MIN} minutes to the centre of Geneva: Léman Express from Annemasse (Eaux-Vives in 8 minutes, Cornavin in about 20 by direct train), tram 17 from the Moillesulaz border, TPG buses. The border is a few minutes from every house.`
-              : `Porte à porte, compte ${MIN} minutes jusqu'au centre de Genève : Léman Express depuis Annemasse (Eaux-Vives en 8 minutes, Cornavin en 20 minutes environ de train direct), tram 17 depuis la douane de Moillesulaz, bus TPG. La frontière est à quelques minutes de chaque maison.`}
+              ? `From Annemasse station, the Léman Express reaches Geneva Eaux-Vives in ${TRANSIT.trainEauxVivesMin} minutes, Champel in ${TRANSIT.trainChampelMin} and Cornavin in ${TRANSIT.trainCornavinMin}, no change. Door to door, count ${TRANSIT.doorToDoorEauxVivesMin} to ${TRANSIT.doorToDoorEauxVivesMax} minutes to Geneva Eaux-Vives depending on the house, and ${TRANSIT.centreDoorToDoorMin} to the city centre. Tram 17 links Ambilly and Annemasse to central Geneva, and the border is a few minutes from every house.`
+              : `Depuis la gare d'Annemasse, le Léman Express rejoint Genève-Eaux-Vives en ${TRANSIT.trainEauxVivesMin} min, Champel en ${TRANSIT.trainChampelMin} et Cornavin en ${TRANSIT.trainCornavinMin}, sans correspondance. Porte-à-porte, compte ${TRANSIT.doorToDoorEauxVivesMin} à ${TRANSIT.doorToDoorEauxVivesMax} min jusqu'à Genève-Eaux-Vives selon la maison, et ${TRANSIT.centreDoorToDoorMin} jusqu'au centre. Le tram 17 relie Ambilly et Annemasse au centre de Genève, et la frontière est à quelques minutes de chaque maison.`}
           </p>
           <div className="grid sm:grid-cols-3 gap-4 text-sm text-[#44403C]">
-            {(en
-              ? [["Le Lodge · Annemasse", "Direct Léman Express: Eaux-Vives 8 min, Cornavin about 20"], ["Le Loft · Ambilly", "500 m from the Moillesulaz border, tram 17"], ["La Villa · Ville-la-Grand", "Léman Express and tram 17 within walking distance"]]
-              : [["Le Lodge · Annemasse", "Léman Express direct : Eaux-Vives 8 min, Cornavin 20 min env."], ["Le Loft · Ambilly", "À 500 m de la douane de Moillesulaz, tram 17"], ["La Villa · Ville-la-Grand", "Léman Express et tram 17 à pied"]]
-            ).map(([t, d]) => <div key={t} className="bg-[#FAF9F6] p-5"><p className="font-medium text-[#1C1917] mb-1">{t}</p><p>{d}</p></div>)}
+            {ENTITY_HOUSES.map((h) => [`${h.label} · ${h.commune}`, h.commute[L]]).map(([t, d]) => <div key={t} className="bg-[#FAF9F6] p-5"><p className="font-medium text-[#1C1917] mb-1">{t}</p><p>{d}</p></div>)}
           </div>
         </div>
       </section>

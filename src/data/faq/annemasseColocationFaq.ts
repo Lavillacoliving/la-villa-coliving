@@ -1,6 +1,15 @@
 import type { QAPair } from "@/lib/structuredData";
-import { STATS, PRICE_SHARED_CHF_FR, PRICE_SHARED_CHF_EN } from "@/data/stats";
+import { STATS, PRICE_SHARED_CHF_FR, PRICE_SHARED_CHF_EN, TRANSIT } from "@/data/stats";
 import { pickSituations } from "@/data/faq/situationsFaq";
+import { communeSentence } from "@/data/answerSlots";
+
+// (Lot L1 « ingénierie des créneaux », 10/2026) Minutes depuis TRANSIT (D1-L1) ; la réponse « Quel quartier » =
+// les trois phrases de commune (M2, A.5) de src/data/answerSlots.ts — Perplexity reconstruit son tableau de quartiers
+// à partir de cette réponse FAQ (recon L0 du 09/10/2026). Règle D1.2 : jamais de promesse en voiture (ni centre, ni aéroport).
+const T = TRANSIT;
+const LODGE = TRANSIT.byHouse.lelodge;
+const VILLA = TRANSIT.byHouse.lavilla;
+const LOFT = TRANSIT.byHouse.leloft;
 
 // FAQ de /annemasse-colocation — les 7 questions historiques (cible « colocation annemasse »), sorties de la
 // page le 07/09/2026 (Lot C2) : désormais FR **et** EN (la route /en servait la FAQ française et son JSON-LD),
@@ -15,11 +24,11 @@ export const annemasseColocationFaq: { fr: QAPair[]; en: QAPair[] } = {
     },
     {
       q: "Combien de temps pour aller à Genève depuis Annemasse ?",
-      a: "Depuis la gare d'Annemasse, le Léman Express direct (sans correspondance) met 8 minutes jusqu'à Genève Eaux-Vives et 20 minutes environ jusqu'à Cornavin. En voiture, compte 15-20 min selon la douane (Moillesulaz est la plus rapide). Le Tram 17 TPG (Lancy-Pont-Rouge ↔ Annemasse) dessert aussi le centre de Genève. L'aéroport de Genève est à 25-30 min en voiture.",
+      a: `Depuis la gare d'Annemasse, le Léman Express direct (sans correspondance) met ${T.trainEauxVivesMin} min jusqu'à Genève-Eaux-Vives, ${T.trainChampelMin} jusqu'à Champel et ${T.trainCornavinMin} jusqu'à Cornavin. Porte-à-porte jusqu'à Genève-Eaux-Vives : ${VILLA.eauxVivesDoorToDoorMin} min depuis La Villa, ${LOFT.eauxVivesDoorToDoorMin} depuis Le Loft, ${LODGE.eauxVivesDoorToDoorMin} depuis Le Lodge, et ${T.centreDoorToDoorMin} min jusqu'au centre (Rive). Le tram 17 (Lancy-Pont-Rouge ↔ Annemasse) dessert aussi le centre de Genève.`,
     },
     {
       q: "Quel quartier d'Annemasse Agglo choisir : Ville-la-Grand, Ambilly ou Annemasse ?",
-      a: "Cela dépend de ta priorité. Ambilly est la commune la plus proche de la frontière suisse (Moillesulaz à 5 min à pied, Tram 17 à 5 min — idéal si tu veux marcher ou pédaler vers Genève). Ville-la-Grand est résidentielle et calme, frontière mitoyenne, idéale pour ceux qui cherchent du vert (réserve naturelle du Foron à la porte). Annemasse centre (quartier Romagny pour Le Lodge) offre la proximité de la gare Léman Express et de toutes les commodités urbaines.",
+      a: `Cela dépend de ta priorité. ${communeSentence("leloft", "fr")} Ambilly est la commune la plus proche de la frontière suisse, idéale si tu veux marcher ou pédaler vers Genève. ${communeSentence("lavilla", "fr")} Ville-la-Grand est résidentielle et calme, avec la réserve naturelle du Foron à la porte. ${communeSentence("lelodge", "fr")} Annemasse centre offre toutes les commodités urbaines.`,
       more: { href: "/blog/vivre-a-annemasse-quand-on-travaille-a-geneve", label: "Vivre à Annemasse quand on travaille à Genève" },
     },
     {
@@ -47,11 +56,11 @@ export const annemasseColocationFaq: { fr: QAPair[]; en: QAPair[] } = {
     },
     {
       q: "How long does it take to get to Geneva from Annemasse?",
-      a: "From Annemasse station, the direct Léman Express (no change) takes 8 minutes to Geneva Eaux-Vives and about 20 minutes to Cornavin. By car, count 15-20 min depending on the border crossing (Moillesulaz is the fastest). TPG tram 17 (Lancy-Pont-Rouge ↔ Annemasse) also serves central Geneva. Geneva airport is 25-30 min by car.",
+      a: `From Annemasse station, the direct Léman Express (no change) takes ${T.trainEauxVivesMin} minutes to Geneva Eaux-Vives, ${T.trainChampelMin} to Champel and ${T.trainCornavinMin} to Cornavin. Door to door to Geneva Eaux-Vives: ${VILLA.eauxVivesDoorToDoorMin} minutes from La Villa, ${LOFT.eauxVivesDoorToDoorMin} from Le Loft, ${LODGE.eauxVivesDoorToDoorMin} from Le Lodge, and ${T.centreDoorToDoorMin} minutes to the city centre (Rive). Tram 17 (Lancy-Pont-Rouge ↔ Annemasse) also serves central Geneva.`,
     },
     {
       q: "Which part of Annemasse Agglo should you choose: Ville-la-Grand, Ambilly or Annemasse?",
-      a: "It depends on your priority. Ambilly is the closest to the Swiss border (Moillesulaz a 5-minute walk away, tram 17 at 5 minutes: ideal if you want to walk or cycle to Geneva). Ville-la-Grand is residential and quiet, right on the border, ideal if you want greenery (the Foron nature reserve on your doorstep). Central Annemasse (the Romagny district for Le Lodge) gives you the Léman Express station and every urban convenience nearby.",
+      a: `It depends on your priority. ${communeSentence("leloft", "en")} Ambilly is the closest to the Swiss border, ideal if you want to walk or cycle to Geneva. ${communeSentence("lavilla", "en")} Ville-la-Grand is residential and quiet, with the Foron nature reserve on your doorstep. ${communeSentence("lelodge", "en")} Central Annemasse puts every urban convenience nearby.`,
       more: { href: "/blog/vivre-a-annemasse-quand-on-travaille-a-geneve", label: "Living in Annemasse when you work in Geneva" },
     },
     {

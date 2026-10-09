@@ -15,8 +15,15 @@ import {
   Calendar,
   Sparkles,
 } from "lucide-react";
-import { PRICE_CHF_FR, PRICE_CHF_EN } from "@/data/stats";
+import { PRICE_CHF_FR, PRICE_CHF_EN, TRANSIT } from "@/data/stats";
+import { ENTITY_HOUSES } from "@/data/entityFacts";
+import { communeSentences } from "@/data/answerSlots";
+import { OuChercher } from "@/components/OuChercher";
 import { HOUSES } from "@/data/houses";
+
+// (Lot L1 « ingénierie des créneaux », 10/2026) Page scopée Lodge : la valeur de LA maison (D1 : « pages maisons :
+// la valeur de la maison »), jamais le « 20 min » générique ; minutes depuis TRANSIT (D1-L1, relevés du 08/10/2026).
+const LODGE = TRANSIT.byHouse.lelodge;
 import { RoomCard } from "@/components/RoomCard";
 import { RoomsEmbed } from "@/components/RoomsEmbed";
 import { HouseAvailabilityLine } from "@/components/HouseAvailabilityLine";
@@ -29,6 +36,7 @@ export function ChambreLouerAnnemassePage() {
   // les deux autres maisons vivent sur /chambre-a-louer-geneve. Même store que les pages maisons.
   const lodgeRooms = useHouseRooms("lelodge");
   const { candidates, occupied } = splitRooms(lodgeRooms.rooms);
+  const L: "fr" | "en" = language === "en" ? "en" : "fr";
   const trackRoomCta = (room: PublicRoom) => {
     try {
       (window as unknown as { gtag?: (...a: unknown[]) => void }).gtag?.("event", "cta_click", {
@@ -46,8 +54,9 @@ export function ChambreLouerAnnemassePage() {
         title={language === "en" ? "Rooms for rent in Annemasse, all inclusive" : "Chambre à louer à Annemasse, tout inclus"}
         description={
           language === "en"
-            ? `Furnished rooms to rent in Annemasse: the Lodge's 12 rooms, private shower room, ${PRICE_CHF_EN}/month all inclusive, 20 min door-to-door from central Geneva. Reply in 48 h.`
-            : `Chambre meublée à louer à Annemasse : les 12 chambres du Lodge, salle d'eau privative, ${PRICE_CHF_FR}/mois tout inclus, à 20 min porte-à-porte du centre de Genève.`
+            // (D1, 09/10/2026) Valeur du Lodge, qualifiée (Genève-Eaux-Vives, Léman Express) ; meta ≤ 155 caractères.
+            ? `Furnished rooms to rent in Annemasse: the Lodge's 12 rooms, ${PRICE_CHF_EN}/month all inclusive, Geneva Eaux-Vives in ${LODGE.eauxVivesDoorToDoorMin} min door to door by Léman Express.`
+            : `Chambre meublée à louer à Annemasse : les 12 chambres du Lodge, ${PRICE_CHF_FR}/mois tout inclus, Genève-Eaux-Vives en ${LODGE.eauxVivesDoorToDoorMin} min porte-à-porte en Léman Express.`
         }
         url="https://www.lavillacoliving.com/chambre-a-louer-annemasse"
         image="https://www.lavillacoliving.com/images/le lodge/rooms/la villa coliving le lodge-78.webp"
@@ -69,8 +78,8 @@ export function ChambreLouerAnnemassePage() {
           </h1>
           <p className="text-lg md:text-xl text-[#57534E] max-w-3xl mx-auto leading-relaxed mb-10 font-medium">
             {language === "en"
-              ? `12 furnished rooms with private shower room at the Lodge, in Annemasse Romagny, ${PRICE_CHF_EN}/month all inclusive. Léman Express direct to Geneva Eaux-Vives in 8 minutes, 20 minutes door to door from the centre. Renting a room made simpler than a furnished studio: bed, desk, fibre, bills and cleaning included, and a whole house to live in.`
-              : `12 chambres meublées avec salle d'eau privative au Lodge, à Annemasse Romagny, ${PRICE_CHF_FR}/mois tout inclus. Léman Express direct Genève Eaux-Vives en 8 minutes, 20 minutes porte-à-porte depuis le centre. Une location de chambre plus simple qu'un studio meublé : lit, bureau, fibre, charges et ménage compris, et une maison entière pour vivre.`}
+              ? `12 furnished rooms with private shower room at the Lodge, in Annemasse Romagny, ${PRICE_CHF_EN}/month all inclusive. Annemasse station is a ${LODGE.stationWalkMin}-minute walk, then the Léman Express reaches Geneva Eaux-Vives in ${TRANSIT.trainEauxVivesMin} minutes: ${LODGE.eauxVivesDoorToDoorMin} minutes door to door. Renting a room made simpler than a furnished studio: bed, desk, fibre, bills and cleaning included, and a whole house to live in.`
+              : `12 chambres meublées avec salle d'eau privative au Lodge, à Annemasse Romagny, ${PRICE_CHF_FR}/mois tout inclus. La gare d'Annemasse est à ${LODGE.stationWalkMin} min à pied, puis le Léman Express rejoint Genève-Eaux-Vives en ${TRANSIT.trainEauxVivesMin} min : ${LODGE.eauxVivesDoorToDoorMin} min porte-à-porte. Une location de chambre plus simple qu'un studio meublé : lit, bureau, fibre, charges et ménage compris, et une maison entière pour vivre.`}
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <LocalizedLink
@@ -127,7 +136,7 @@ export function ChambreLouerAnnemassePage() {
               <LocalizedLink to="/candidature?property_interest=lelodge&room_interest=liste-attente" className="underline underline-offset-4 hover:text-[#1C1917]">
                 {language === "en" ? "Join the Lodge's waiting list" : "Rejoins la liste d'attente du Lodge"}
               </LocalizedLink>
-              {language === "en" ? " · Rooms in our two other houses, Ville-la-Grand and Ambilly: " : " · Les chambres de nos deux autres maisons, à Ville-la-Grand et Ambilly : "}
+              {language === "en" ? " · Rooms in La Villa Coliving's two other houses, Ville-la-Grand and Ambilly: " : " · Les chambres des deux autres maisons de La Villa Coliving, à Ville-la-Grand et Ambilly : "}
               <LocalizedLink to="/chambre-a-louer-geneve" className="underline underline-offset-4 hover:text-[#1C1917]">
                 {language === "en" ? "rooms to rent near Geneva" : "chambre à louer près de Genève"}
               </LocalizedLink>
@@ -194,7 +203,7 @@ export function ChambreLouerAnnemassePage() {
                   "12 furnished rooms — one house, one community",
                   `All inclusive ${PRICE_CHF_EN}/month (no surprises)`,
                   "Move in within 72 h of your first contact if a room is available (no paperwork friction)",
-                  "Léman Express direct: Eaux-Vives in 8 min, central Geneva 20 min door to door",
+                  `Léman Express direct: Geneva Eaux-Vives in ${TRANSIT.trainEauxVivesMin} min by train, ${LODGE.eauxVivesDoorToDoorMin} min door to door`,
                   "Sauna, gym, pool and garden at the Lodge",
                   "fiber internet up to 8 Gb/s",
                   "Cleaning three times a week of common areas",
@@ -207,7 +216,7 @@ export function ChambreLouerAnnemassePage() {
                   "12 chambres meublées — une maison, une communauté",
                   `Tout inclus ${PRICE_CHF_FR}/mois (zéro surprise)`,
                   "Emménagement en 72 h dès le premier contact si une chambre est disponible (zéro friction administrative)",
-                  "Léman Express direct : Eaux-Vives en 8 min, centre de Genève à 20 min porte-à-porte",
+                  `Léman Express direct : Genève-Eaux-Vives en ${TRANSIT.trainEauxVivesMin} min de train, ${LODGE.eauxVivesDoorToDoorMin} min porte-à-porte`,
                   "Sauna, salle de sport, piscine et jardin au Lodge",
                   "Internet fibre jusqu'à 8 Gb/s",
                   "Ménage 3 fois par semaine des espaces communs",
@@ -226,28 +235,46 @@ export function ChambreLouerAnnemassePage() {
         </div>
       </section>
 
-      {/* ===== TRANSPORT (compact) ===== */}
+      {/* ===== LES TROIS MAISONS ET LEURS TRAJETS (Lot L1, M2 : trois phrases de commune A.5 + lignes de trajet A.1
+          depuis la source unique ; H2 renommé le 09/10/2026) ===== */}
       <section className="py-24 lg:py-32 bg-white">
-        <div className="max-w-4xl mx-auto px-6 text-center">
+        <div className="max-w-4xl mx-auto px-6">
           <Train className="w-12 h-12 text-[#D4A574] mx-auto mb-6" />
           <h2
-            className="text-3xl md:text-4xl font-light text-[#1C1917] mb-6"
+            className="text-3xl md:text-4xl font-light text-[#1C1917] mb-6 text-center"
             style={{ fontFamily: '"DM Serif Display", serif' }}
           >
-            {language === "en" ? "20 minutes door-to-door from central Geneva" : "À 20 minutes porte-à-porte du centre de Genève"}
-          </h2>
-          <p className="text-lg text-[#57534E] leading-relaxed max-w-3xl mx-auto">
             {language === "en"
-              ? "Annemasse station is the Léman Express terminus — direct train to Geneva Eaux-Vives in 8 minutes and Cornavin in about 20, no transfer: 20 minutes door to door from the centre. Tram 17 TPG and direct buses also connect to central Geneva. Whether you commute daily or visit occasionally, our 3 houses are optimised for cross-border life."
-              : "La gare d'Annemasse est le terminus du Léman Express — train direct Genève Eaux-Vives en 8 minutes et Cornavin en 20 minutes environ, sans correspondance : 20 minutes porte-à-porte depuis le centre. Le Tram 17 TPG et des bus directs desservent aussi le centre de Genève. Que tu fasses le trajet quotidien ou occasionnellement, nos 3 maisons sont optimisées pour la vie frontalière."}
+              ? "Annemasse, Ville-la-Grand, Ambilly: La Villa Coliving's three houses and their commutes to Geneva"
+              : "Annemasse, Ville-la-Grand, Ambilly : les trois maisons de La Villa Coliving et leurs trajets vers Genève"}
+          </h2>
+          <p className="text-lg text-[#57534E] leading-relaxed max-w-3xl mx-auto">{communeSentences(L).join(" ")}</p>
+          <ul className="mt-6 space-y-2 text-[#57534E] max-w-3xl mx-auto list-disc pl-6">
+            {ENTITY_HOUSES.map((h) => (
+              <li key={h.slug}>{`${h.label} (${h.commune}) : ${h.commute[L]}`}</li>
+            ))}
+          </ul>
+          <p className="text-[#57534E] leading-relaxed max-w-3xl mx-auto mt-6">
+            {language === "en"
+              ? `From Annemasse station, the Léman Express also reaches Champel in ${TRANSIT.trainChampelMin} minutes and Cornavin in ${TRANSIT.trainCornavinMin}, no change; tram 17 links Ambilly and Annemasse to central Geneva.`
+              : `Depuis la gare d'Annemasse, le Léman Express rejoint aussi Champel en ${TRANSIT.trainChampelMin} min et Cornavin en ${TRANSIT.trainCornavinMin}, sans correspondance ; le tram 17 relie Ambilly et Annemasse au centre de Genève.`}
           </p>
-          <LocalizedLink
-            to="/annemasse-colocation"
-            className="inline-flex items-center gap-2 mt-8 text-[#D4A574] font-medium hover:underline"
-          >
-            {language === "en" ? "See the full Annemasse guide" : "Voir le guide complet d'Annemasse"}
-            <ArrowRight className="w-4 h-4" />
-          </LocalizedLink>
+          <div className="text-center">
+            <LocalizedLink
+              to="/annemasse-colocation"
+              className="inline-flex items-center gap-2 mt-8 text-[#D4A574] font-medium hover:underline"
+            >
+              {language === "en" ? "See the full Annemasse guide" : "Voir le guide complet d'Annemasse"}
+              <ArrowRight className="w-4 h-4" />
+            </LocalizedLink>
+          </div>
+        </div>
+      </section>
+
+      {/* ===== OÙ CHERCHER (Lot L1 « ingénierie des créneaux », 10/2026 : bloc canonique M1 court, avant « Comment louer ») ===== */}
+      <section className="py-20 lg:py-24 bg-white border-t border-[#E7E5E4]">
+        <div className="max-w-4xl mx-auto px-6">
+          <OuChercher variant="short" page="chambre-a-louer-annemasse" />
         </div>
       </section>
 
