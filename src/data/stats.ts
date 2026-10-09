@@ -27,6 +27,23 @@ const chfAffiche = (eur: number): number => Math.floor((eur * TAUX_BCE.eurChf) /
 export const ROOMS_BY_HOUSE = { lavilla: 10, leloft: 7, lelodge: 12 } as const;
 const TOTAL_ROOMS: number = ROOMS_BY_HOUSE.lavilla + ROOMS_BY_HOUSE.leloft + ROOMS_BY_HOUSE.lelodge; // 29
 
+// (D2, brief « Ingénierie des créneaux », 09/10/2026) Surfaces des maisons — valeur du titre / DPE : La Villa 370 m²
+// (coliving.com affichait 380 et 400 : faux). Lue par les pages maisons, /nos-maisons, /annemasse-colocation, les
+// traductions et les phrases de quartier (src/data/houseLocation.ts). Jamais une surface de maison en dur ailleurs.
+export const HOUSE_SURFACES = {
+  lavilla: { livingM2: 370, plotM2: 2000 },
+  leloft: { livingM2: 300 },
+  lelodge: { livingM2: 500, plotM2: 1500, atticM2: 130 },
+} as const;
+// (Lot L2, 09/10/2026) Surfaces des chambres PAR MAISON = Math.round(min / max de v_public_rooms.surface_m2), relevé
+// du 09/10/2026 (La Villa 15,5-24 → 16-24 ; Le Loft 20-23 ; Le Lodge 17-20) — gardées par scripts/house-pages-check.mjs.
+// STATS.roomSizeMin / roomSizeMax restent les bornes des trois maisons réunies.
+export const ROOM_SURFACE_BY_HOUSE = {
+  lavilla: { min: 16, max: 24 },
+  leloft: { min: 20, max: 23 },
+  lelodge: { min: 17, max: 20 },
+} as const;
+
 export const STATS = {
   totalResidents: 100,
   totalRooms: TOTAL_ROOMS,
@@ -114,20 +131,50 @@ export function formatPriceChf(lang: "fr" | "en"): string {
 // « 15 » n'existe plus ; (5) on laisse vérifier : lien « Calculer mon trajet » sur chaque page maison (L2).
 // Remesure à chaque changement d'horaire (décembre) ou au plus tard tous les 12 mois. Ces valeurs alimentent
 // la fiche entité (src/data/entityFacts.ts), le bloc « Où chercher » et les phrases de commune
-// (src/data/answerSlots.ts). Le porte-à-porte Rive par maison, Cornavin porte-à-porte et le vélo arrivent au
-// lot L2. Ne jamais écrire une minute en dur ailleurs : check-entity-facts (--strict) refuse toute minute non qualifiée.
+// (src/data/answerSlots.ts) et, depuis le lot L2 (09/10/2026), les pages maisons, cartes et FAQ via
+// src/data/houseLocation.ts (quartier A.2, ligne A.1, tableau de trajets, commerces). Ne jamais écrire une minute
+// en dur ailleurs : check-entity-facts (--strict) refuse toute minute non qualifiée.
 export const TRANSIT = {
   measuredOn: "2026-10-08",
+  measuredOnLabel: { fr: "8 octobre 2026", en: "8 October 2026" },
   /** Temps de train depuis la gare d'Annemasse (fixes, horaire Léman Express). */
   trainEauxVivesMin: 7,
   trainChampelMin: 10,
   trainLancyPontRougeMin: 16,
   trainCornavinMin: 23,
-  // Seules les valeurs validées par Jérôme (D1-L1) figurent ici ; le tram n'est renseigné que pour Le Loft.
+  /** Cadence en heure de pointe à la gare d'Annemasse (départs relevés 8 h 05, 8 h 12, 8 h 20, 8 h 35). */
+  peakHeadwayMin: 10,
+  // (Lot L2 « Emplacement et transport », 09/10/2026) Par maison : à pied (gare, tram, arrêt de bus NOMMÉ, jamais
+  // numéroté — D7), porte-à-porte mesuré (Eaux-Vives validé D1-L1 ; Rive et Cornavin = relevé §1.3 du brief, borne
+  // haute quand le relevé donne une fourchette : Lodge 27-28 → 28, 34-35 → 35), vélo par la Voie Verte (bonus mesuré).
+  // AUCUNE valeur voiture, AUCUN temps vers l'aéroport (règle D1 de Jérôme : jamais de promesse en voiture).
+  // Consommé par src/data/houseLocation.ts (phrases, tableau de trajets, commerces) — jamais directement par une page.
   byHouse: {
-    lavilla: { stationWalkMin: 14, eauxVivesDoorToDoorMin: 22 },
-    leloft: { stationWalkMin: 18, tramWalkMin: 8, eauxVivesDoorToDoorMin: 24 },
-    lelodge: { stationWalkMin: 10, eauxVivesDoorToDoorMin: 18 },
+    lavilla: {
+      stationWalkMin: 14, stationDistanceM: 1000,
+      busStop: { name: "Albert Hénon", walkMin: 8, distanceM: 600 },
+      eauxVivesDoorToDoorMin: 22, riveDoorToDoorMin: 31, cornavinDoorToDoorMin: 38,
+      bikeToRiveMin: 26, bikeToRiveKm: 7.9,
+      /** Le Foron (rivière-frontière) longe la rue ; passage routier de Puplinge ; douane de Moillesulaz (à vélo). */
+      border: { puplingeWalkMin: 14, puplingeDistanceM: 1100, moillesulazM: 3200, moillesulazBikeMin: 12 },
+    },
+    leloft: {
+      stationWalkMin: 18, stationDistanceM: 1300,
+      tramWalkMin: 8,
+      tramStop: { name: "Croix-d'Ambilly", walkMin: 8, distanceM: 550, tramToRiveMin: 23 },
+      busStop: { name: "Olympe de Gouges", walkMin: 6 },
+      eauxVivesDoorToDoorMin: 24, riveDoorToDoorMin: 32, cornavinDoorToDoorMin: 40,
+      bikeToRiveMin: 23, bikeToRiveKm: 6.5,
+      /** Le Foron à 8 min à pied ; douane de Moillesulaz à 1,8 km (25 min à pied). */
+      border: { foronWalkMin: 8, foronDistanceM: 600, moillesulazM: 1800, moillesulazWalkMin: 25 },
+    },
+    lelodge: {
+      stationWalkMin: 10, stationDistanceM: 750,
+      tramStop: { name: "Parc Montessuit", walkMin: 13, distanceM: 1000 },
+      busStop: { name: "Annemasse-Étoile", walkMin: 2, distanceM: 150 },
+      eauxVivesDoorToDoorMin: 18, riveDoorToDoorMin: 28, cornavinDoorToDoorMin: 35,
+      bikeToRiveMin: 29, bikeToRiveKm: 8.1,
+    },
   },
   /** Porte-à-porte Eaux-Vives, min/max des trois maisons — « 18 à 24 min porte-à-porte selon la maison ». */
   doorToDoorEauxVivesMin: 18,
