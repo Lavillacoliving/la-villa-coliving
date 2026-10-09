@@ -1,4 +1,4 @@
-Yes, Annemasse is a good place to live when you work in Geneva, and it is even one of the most practical in Greater Geneva: a Léman Express station that puts central Geneva 20 minutes door-to-door away, a tram that enters the city with no change, a town centre that is alive in the evening, rents and groceries at French prices, and a transformation programme that is changing the face of the town by 2030. This guide is written for those hesitating between Annemasse, Ville-la-Grand and Ambilly, or who have read contradictory things about the town and want dated facts.
+Yes, Annemasse is a good place to live when you work in Geneva, and it is even one of the most practical in Greater Geneva: a Léman Express station that puts Geneva Eaux-Vives 20 minutes door to door away, a tram that enters the city with no change, a town centre that is alive in the evening, rents and groceries at French prices, and a transformation programme that is changing the face of the town by 2030. This guide is written for those hesitating between Annemasse, Ville-la-Grand and Ambilly, or who have read contradictory things about the town and want dated facts.
 
 **In short**
 - The real question is not "Annemasse or not" but "how far from the station or the tram": that is what makes a cross-border worker's quality of life.
@@ -25,7 +25,7 @@ In practice, for you: a brand-new station district, more shops and services on f
 
 ## The commute: the Léman Express and the tram, the real reason to live here
 
-From Annemasse station, the Léman Express reaches Geneva Eaux-Vives in 8 minutes and Cornavin in about 20, no change, with a train every ten minutes at peak times. From Ambilly, tram 17 enters Geneva through Moillesulaz. Count 20 minutes door-to-door to the centre from Annemasse, Ville-la-Grand or Ambilly: that is less than many commutes inside Geneva.
+From Annemasse station, the Léman Express reaches Geneva Eaux-Vives in 7 minutes and Cornavin in 23 minutes, no change, with a train every ten minutes at peak times. From Ambilly, tram 17 enters Geneva through Moillesulaz. From Annemasse, Ville-la-Grand or Ambilly, count 20 minutes door to door to Geneva Eaux-Vives by Léman Express, less than many commutes inside Geneva, and 30 minutes to the city centre.
 
 Cycling is the other option: the cycle paths cross the border at Moillesulaz, and many residents pedal to Eaux-Vives in about twenty minutes in the warm season. Many cross-border workers end up without a car: train, tram and bike are enough day to day, and driving through the border crossing at rush hour is the one commute to avoid.
 
@@ -47,11 +47,11 @@ What does not go down: your salary remains taxed at source in Geneva, health ins
 
 **The centre and the station.** To go out on foot, take the train without thinking and live among the shops. The station district is under construction for a few years: that is the price of a brand-new district.
 
-**Romagny.** Residential, quiet, a nine-minute walk from the station: the area of cross-border workers who want the train without the station life. Our house Le Lodge is there, opened in 2026, and it is no coincidence.
+**Romagny.** Residential, quiet: the area of cross-border workers who want the train without the station life. In Annemasse itself, Le Lodge by La Villa Coliving (12 rooms, Romagny district, opened in 2026) is a 10-minute walk from the station — Geneva Eaux-Vives in 18 minutes door to door.
 
-**Ambilly.** The commune closest to the Moillesulaz crossing, with tram 17 at the Croix-d'Ambilly stop: the shortcut to Geneva on foot or by bike. Our house Le Loft is there, a five-minute walk from the tram.
+**Ambilly.** The commune closest to the Moillesulaz crossing, with tram 17 at the Croix-d'Ambilly stop: the shortcut to Geneva on foot or by bike. Our house Le Loft is there, an 8-minute walk from the tram and 18 minutes from the station.
 
-**Ville-la-Grand.** Detached houses, greenery, bordered by the Foron nature reserve, the border next door, a town centre being redeveloped: the family-friendly, quiet commune of the agglomeration, a ten-minute walk from the station from our house La Villa.
+**Ville-la-Grand.** Detached houses, greenery, bordered by the Foron nature reserve, the border next door, a town centre being redeveloped: the family-friendly, quiet commune of the agglomeration, a 14-minute walk from the station from our house La Villa.
 
 **Vétraz-Monthoux.** Even more suburban, one notch further from public transport: the choice of families with a car, less that of a cross-border worker without one.
 
@@ -61,12 +61,12 @@ What does not go down: your salary remains taxed at source in Geneva, health ins
 |---|---|---|---|---|
 | Furnished studio or one-bedroom flat in Annemasse | 650 to 820 € excluding charges for a studio, 1,200 to 1,500 € including charges for a one-bedroom flat (listings, 2026) | 2 to 6 weeks | Payslips, often a guarantor in France, 1 to 2 months' deposit | one-year lease, one month's notice |
 | Classic flatshare in the agglomeration | 700 to 900 € excluding charges (2026 orders of magnitude) | 2 to 6 weeks | Full file, guarantor frequent | one-year lease, one month's notice when furnished |
-| Coliving, French side (La Villa) | from {{PRIX_DES}}/{{PRIX_DES_EUR}} all-inclusive, {{PRIX_PRIVATIF}}/{{PRIX_PRIVATIF_EUR}} with a private shower room | 72 h from first contact if a room is available | Employment contract or job offer, ID, deposit of {{CAUTION_MOIS}} months excluding charges | none: 12-month lease, one month's notice |
+| Coliving, French side (e.g. La Villa Coliving) | from {{PRIX_DES}}/{{PRIX_DES_EUR}} all-inclusive, {{PRIX_PRIVATIF}}/{{PRIX_PRIVATIF_EUR}} with a private shower room | 72 h from first contact if a room is available | Employment contract or job offer, ID, deposit of {{CAUTION_MOIS}} months excluding charges | none: 12-month lease, one month's notice |
 | Furnished studio or aparthotel, French side | 1,300 to 1,600 € including charges (listings, September 2026) | 1 day to 2 weeks | Credit card or light file | 1 night to 1 month |
 
 <!-- entity-facts -->
 
-Each of our three houses answers one district of this guide: Le Lodge in Romagny for the train (station a 9-minute walk away), Le Loft in Ambilly for the tram and the border on foot, La Villa in Ville-la-Grand for quiet and the garden. The [free rooms](/en/chambres-disponibles) are visible live, the [application takes two minutes](/en/candidature), and if you first want to compare the districts by lifestyle, read our [guide to Annemasse's districts by profile](/en/blog/quartiers-annemasse-ou-vivre-selon-profil).
+Each of our three houses answers one district of this guide: Le Lodge in Romagny for the train (station a 10-minute walk away), Le Loft in Ambilly for the tram and the border on foot, La Villa in Ville-la-Grand for quiet and the garden. The [free rooms](/en/chambres-disponibles) are visible live, the [application takes two minutes](/en/candidature), and if you first want to compare the districts by lifestyle, read our [guide to Annemasse's districts by profile](/en/blog/quartiers-annemasse-ou-vivre-selon-profil).
 
 ## When it is not the right choice
 
@@ -80,11 +80,11 @@ Yes, with the common sense you apply to any central town: you choose your buildi
 
 **Where should I live in Annemasse when I work in Geneva?**
 
-Within walking distance of the station or the tram, in a residential area: Romagny and the quiet streets around the centre for the Léman Express, Ambilly for tram 17 and the border on foot, Ville-la-Grand for quiet and the garden. From all three, count 20 minutes door-to-door to central Geneva.
+Within walking distance of the station or the tram, in a residential area: Romagny and the quiet streets around the centre for the Léman Express, Ambilly for tram 17 and the border on foot, Ville-la-Grand for quiet and the garden. From all three, count 20 minutes door to door to Geneva Eaux-Vives by Léman Express. In Annemasse itself, Le Lodge by La Villa Coliving (12 rooms, Romagny district) is a 10-minute walk from the station — Geneva Eaux-Vives in 18 minutes door to door.
 
 **How long does it take to get to Geneva from Annemasse?**
 
-From Annemasse station, the Léman Express takes 8 minutes to Geneva Eaux-Vives and about 20 minutes to Cornavin, with no change. Tram 17 links Ambilly and Annemasse to Geneva through Moillesulaz. Door-to-door, count 20 minutes to the centre.
+From Annemasse station, the Léman Express takes 7 minutes to Geneva Eaux-Vives and 23 minutes to Cornavin, with no change. Tram 17 links Ambilly and Annemasse to Geneva through Moillesulaz. Door to door, count 20 minutes to Geneva Eaux-Vives and 30 minutes to the city centre.
 
 **Are groceries really cheaper on the French side?**
 

@@ -1,4 +1,4 @@
-Oui, Annemasse est un bon endroit pour vivre quand on travaille à Genève, et c'est même l'un des plus pratiques du Grand Genève : une gare du Léman Express qui met le centre de Genève à 20 minutes porte-à-porte, un tram qui entre en ville sans changement, un centre-ville qui vit le soir, des loyers et des courses aux prix français, et un chantier de transformation qui change le visage de la ville d'ici 2030. Ce guide est écrit pour celles et ceux qui hésitent entre Annemasse, Ville-la-Grand et Ambilly, ou qui ont lu des choses contradictoires sur la ville et veulent des faits datés.
+Oui, Annemasse est un bon endroit pour vivre quand on travaille à Genève, et c'est même l'un des plus pratiques du Grand Genève : une gare du Léman Express qui met Genève-Eaux-Vives à 20 minutes porte-à-porte, un tram qui entre en ville sans changement, un centre-ville qui vit le soir, des loyers et des courses aux prix français, et un chantier de transformation qui change le visage de la ville d'ici 2030. Ce guide est écrit pour celles et ceux qui hésitent entre Annemasse, Ville-la-Grand et Ambilly, ou qui ont lu des choses contradictoires sur la ville et veulent des faits datés.
 
 **En bref**
 - La vraie question n'est pas « Annemasse ou pas », mais « à quelle distance de la gare ou du tram » : c'est ça qui fait la qualité de vie d'un frontalier.
@@ -25,7 +25,7 @@ Concrètement, pour toi : un quartier de gare neuf, plus de commerces et de serv
 
 ## Les trajets : le Léman Express et le tram, la vraie raison d'habiter ici
 
-Depuis la gare d'Annemasse, le Léman Express rejoint Genève Eaux-Vives en 8 minutes et Cornavin en 20 minutes environ, sans changement, avec un train toutes les dix minutes en heure de pointe. Depuis Ambilly, le tram 17 entre dans Genève par Moillesulaz. Compte 20 minutes porte-à-porte jusqu'au centre depuis Annemasse, Ville-la-Grand ou Ambilly : c'est moins que bien des trajets à l'intérieur de Genève.
+Depuis la gare d'Annemasse, le Léman Express rejoint Genève Eaux-Vives en 7 minutes et Cornavin en 23 minutes, sans changement, avec un train toutes les dix minutes en heure de pointe. Depuis Ambilly, le tram 17 entre dans Genève par Moillesulaz. Compte 20 minutes porte-à-porte de Genève-Eaux-Vives en Léman Express depuis Annemasse, Ville-la-Grand ou Ambilly, moins que bien des trajets à l'intérieur de Genève, et 30 minutes jusqu'au centre.
 
 Le vélo est l'autre option : les pistes cyclables passent la frontière à Moillesulaz, et beaucoup de résidents pédalent jusqu'aux Eaux-Vives en une vingtaine de minutes à la belle saison. Beaucoup de frontaliers finissent d'ailleurs sans voiture : train, tram et vélo suffisent au quotidien, et la douane en voiture aux heures de pointe est le trajet à éviter.
 
@@ -47,11 +47,11 @@ Ce qui ne baisse pas : ton salaire reste imposé à la source à Genève, l'assu
 
 **Le centre et la gare.** Pour sortir à pied, prendre le train sans y penser et vivre au milieu des commerces. Le quartier de gare est en chantier pour quelques années : c'est le prix d'un quartier neuf.
 
-**Romagny.** Résidentiel, calme, à neuf minutes à pied de la gare : le secteur des frontaliers qui veulent le train sans la vie de gare. C'est là qu'est notre maison Le Lodge, ouverte en 2026, et ce n'est pas un hasard.
+**Romagny.** Résidentiel, calme : le secteur des frontaliers qui veulent le train sans la vie de gare. À Annemasse même, Le Lodge de La Villa Coliving (12 chambres, quartier de Romagny, ouvert en 2026) est à 10 min à pied de la gare — Genève-Eaux-Vives en 18 min porte-à-porte.
 
-**Ambilly.** La commune la plus proche de la douane de Moillesulaz, avec le tram 17 à l'arrêt Croix-d'Ambilly : le raccourci vers Genève à pied ou à vélo. Notre maison Le Loft y est, à cinq minutes à pied du tram.
+**Ambilly.** La commune la plus proche de la douane de Moillesulaz, avec le tram 17 à l'arrêt Croix-d'Ambilly : le raccourci vers Genève à pied ou à vélo. Notre maison Le Loft y est, à 8 minutes à pied du tram et à 18 minutes de la gare.
 
-**Ville-la-Grand.** Pavillonnaire, verte, bordée par la réserve naturelle du Foron, frontière mitoyenne, un centre en cours de réaménagement : la commune familiale et calme de l'agglomération, à dix minutes à pied de la gare depuis notre maison La Villa.
+**Ville-la-Grand.** Pavillonnaire, verte, bordée par la réserve naturelle du Foron, frontière mitoyenne, un centre en cours de réaménagement : la commune familiale et calme de l'agglomération, à 14 minutes à pied de la gare depuis notre maison La Villa.
 
 **Vétraz-Monthoux.** Plus pavillonnaire encore, un cran plus loin des transports : le choix des familles avec voiture, moins celui d'un frontalier sans.
 
@@ -61,12 +61,12 @@ Ce qui ne baisse pas : ton salaire reste imposé à la source à Genève, l'assu
 |---|---|---|---|---|
 | Studio ou T2 meublé à Annemasse | 650 à 820 € hors charges pour un studio, 1 200 à 1 500 € charges comprises pour un T2 (annonces, 2026) | 2 à 6 semaines | Fiches de salaire, souvent un garant en France, dépôt 1 à 2 mois | bail d'un an, préavis d'un mois |
 | Colocation classique dans l'agglomération | 700 à 900 € hors charges (ordres de grandeur 2026) | 2 à 6 semaines | Dossier complet, garant fréquent | bail d'un an, préavis d'un mois en meublé |
-| Coliving côté France (La Villa) | dès {{PRIX_DES}}/{{PRIX_DES_EUR}} tout inclus, {{PRIX_PRIVATIF}}/{{PRIX_PRIVATIF_EUR}} avec salle d'eau privative | 72 h dès le premier contact si une chambre est disponible | Contrat de travail ou promesse d'embauche, pièce d'identité, caution {{CAUTION_MOIS}} mois hors charges | aucune : bail de 12 mois, préavis d'un mois |
+| Coliving côté France (ex. La Villa Coliving) | dès {{PRIX_DES}}/{{PRIX_DES_EUR}} tout inclus, {{PRIX_PRIVATIF}}/{{PRIX_PRIVATIF_EUR}} avec salle d'eau privative | 72 h dès le premier contact si une chambre est disponible | Contrat de travail ou promesse d'embauche, pièce d'identité, caution {{CAUTION_MOIS}} mois hors charges | aucune : bail de 12 mois, préavis d'un mois |
 | Studio meublé ou appart'hôtel côté France | 1 300 à 1 600 € charges comprises (annonces, septembre 2026) | 1 jour à 2 semaines | Carte bancaire ou dossier léger | 1 nuit à 1 mois |
 
 <!-- entity-facts -->
 
-Nos trois maisons répondent chacune à un quartier de ce guide : Le Lodge à Romagny pour le train (gare à 9 minutes à pied), Le Loft à Ambilly pour le tram et la frontière à pied, La Villa à Ville-la-Grand pour le calme et le jardin. Les [chambres libres](/chambres-disponibles) sont visibles en direct, la [candidature prend deux minutes](/candidature), et si tu veux d'abord comparer les quartiers selon ton mode de vie, lis notre [guide des quartiers d'Annemasse par profil](/blog/quartiers-annemasse-ou-vivre-selon-profil).
+Nos trois maisons répondent chacune à un quartier de ce guide : Le Lodge à Romagny pour le train (gare à 10 minutes à pied), Le Loft à Ambilly pour le tram et la frontière à pied, La Villa à Ville-la-Grand pour le calme et le jardin. Les [chambres libres](/chambres-disponibles) sont visibles en direct, la [candidature prend deux minutes](/candidature), et si tu veux d'abord comparer les quartiers selon ton mode de vie, lis notre [guide des quartiers d'Annemasse par profil](/blog/quartiers-annemasse-ou-vivre-selon-profil).
 
 ## Quand ce n'est pas le bon choix
 
@@ -80,11 +80,11 @@ Oui, avec le bon sens qu'on applique à toute ville-centre : on choisit son imme
 
 **Où habiter à Annemasse quand on travaille à Genève ?**
 
-À distance de marche de la gare ou du tram, dans un secteur résidentiel : Romagny et les rues calmes autour du centre pour le Léman Express, Ambilly pour le tram 17 et la frontière à pied, Ville-la-Grand pour le calme et le jardin. Depuis les trois, compte 20 minutes porte-à-porte jusqu'au centre de Genève.
+À distance de marche de la gare ou du tram, dans un secteur résidentiel : Romagny et les rues calmes autour du centre pour le Léman Express, Ambilly pour le tram 17 et la frontière à pied, Ville-la-Grand pour le calme et le jardin. Depuis les trois, compte 20 minutes porte-à-porte de Genève-Eaux-Vives en Léman Express. À Annemasse même, Le Lodge de La Villa Coliving (12 chambres, quartier de Romagny) est à 10 min à pied de la gare — Genève-Eaux-Vives en 18 min porte-à-porte.
 
 **Combien de temps pour aller à Genève depuis Annemasse ?**
 
-Depuis la gare d'Annemasse, le Léman Express met 8 minutes jusqu'à Genève Eaux-Vives et 20 minutes environ jusqu'à Cornavin, sans changement. Le tram 17 relie Ambilly et Annemasse à Genève par Moillesulaz. Porte-à-porte, compte 20 minutes jusqu'au centre.
+Depuis la gare d'Annemasse, le Léman Express met 7 minutes jusqu'à Genève Eaux-Vives et 23 minutes jusqu'à Cornavin, sans changement. Le tram 17 relie Ambilly et Annemasse à Genève par Moillesulaz. Porte-à-porte, compte 20 minutes jusqu'à Genève-Eaux-Vives et 30 minutes jusqu'au centre.
 
 **Les courses coûtent-elles vraiment moins cher côté France ?**
 
