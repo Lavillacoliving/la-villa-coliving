@@ -11,7 +11,7 @@ export const CONTENT_TOKENS = ['PRIX_DES', 'PRIX_PRIVATIF', 'PRIX_DES_EUR', 'PRI
 export const ENTITY_FACTS_MARKER = '<!-- entity-facts -->';
 export const ENTITY_FACTS_MARKER_RE = /^[ \t]*<!--\s*entity-facts\s*-->[ \t]*$/gm;
 /** (Lot L1, 10/2026) Miroirs de src/lib/contentMarkers.ts : registre des marqueurs et lignes-commentaires. */
-export const CONTENT_MARKER_LINE_RE = /^[ \t]*<!--\s*([a-z][a-z-]*)(?::([a-z]+))?\s*-->[ \t]*$/gm;
+export const CONTENT_MARKER_LINE_RE = /^[ \t]*<!--[ \t]*([a-z][a-z-]*)(?::([a-z]+))?[ \t]*-->[ \t]*$/gm;
 export const COMMENT_LINE_RE = /^[ \t]*<!--[^\n]*?-->[ \t]*$/gm;
 export const KNOWN_MARKERS = { 'entity-facts': [], 'ou-chercher': ['court'] };
 

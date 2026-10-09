@@ -67,7 +67,13 @@ const QUERY_ROUTES = [
 ];
 
 // (Lot B) Index du blog et articles qui citent un numéro de téléphone (format-detection, liens tel:).
-const BLOG_ROUTES = ['/blog', '/en/blog', '/blog/guide-ressources-frontalier-geneve', '/en/blog/guide-ressources-frontalier-geneve'];
+// (Lot L1, 10/2026) + deux articles porteurs du bloc « Où chercher » (allowlist src/data/ouChercherArticles.ts) :
+// bloc complet ancré sur un titre (trouver-colocation) et bloc court avant le marqueur entité d'une page de décision.
+const BLOG_ROUTES = [
+  '/blog', '/en/blog', '/blog/guide-ressources-frontalier-geneve', '/en/blog/guide-ressources-frontalier-geneve',
+  '/blog/trouver-colocation-geneve-frontalier', '/en/blog/trouver-colocation-geneve-frontalier',
+  '/blog/s-installer-a-geneve-expatrie-cote-suisse-ou-cote-france', '/en/blog/living-in-france-working-in-geneva',
+];
 
 // (Lot B) Horloge décalée : le lecteur charge la page des semaines après le prérendu (changement de mois
 // et d'année). Tout texte calculé avec new Date() au rendu (année du pied de page, mois de /tarifs)

@@ -11,7 +11,7 @@
  *
  * Fonctions pures, imports nuls : même résultat au prérendu (Puppeteer) et au client.
  */
-export const CONTENT_MARKER_LINE_RE = /^[ \t]*<!--\s*([a-z][a-z-]*)(?::([a-z]+))?\s*-->[ \t]*$/gm;
+export const CONTENT_MARKER_LINE_RE = /^[ \t]*<!--[ \t]*([a-z][a-z-]*)(?::([a-z]+))?[ \t]*-->[ \t]*$/gm;
 /** Toute ligne qui n'est qu'un commentaire HTML (sur UNE ligne — jamais à travers plusieurs lignes). */
 export const COMMENT_LINE_RE = /^[ \t]*<!--[^\n]*?-->[ \t]*$/gm;
 
