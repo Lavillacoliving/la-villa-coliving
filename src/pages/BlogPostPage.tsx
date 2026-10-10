@@ -14,7 +14,7 @@ import { getIntentBucket } from "@/data/blogIntentBuckets";
 import { BlocOffre } from "@/components/BlocOffre";
 import { markInternalRef } from "@/lib/attribution";
 import { WhatsAppButton } from "@/components/WhatsAppButton";
-import { PRICE_SHARED_CHF_FR, PRICE_SHARED_CHF_EN } from "@/data/stats";
+import { PRICE_SHARED_CHF_FR, PRICE_SHARED_CHF_EN, STATS_DISPLAY } from "@/data/stats";
 import { YmylNotice, YmylPosture, AuthorBox } from "@/components/YmylNotice";
 import { isYmyl } from "@/lib/ymyl";
 import { resolveContentTokens } from "@/lib/contentTokens";
@@ -650,9 +650,10 @@ export function BlogPostPage() {
             {language === "en" ? "Discover our houses" : "Découvre nos maisons"}
           </h2>
           <p className="text-sm text-[#78716C] text-center mb-10">
+            {/* (Lot L2, 09/10/2026, D1) Rendu sur toutes les pages article : « 20 min » qualifié par STATS_DISPLAY.distance. */}
             {language === "en"
-              ? `Three premium coliving houses 20 min from Geneva city center, all-inclusive from ${PRICE_SHARED_CHF_EN}/month.`
-              : `Trois maisons de coliving premium à 20 min du centre de Genève, tout inclus dès ${PRICE_SHARED_CHF_FR}/mois.`}
+              ? `Three premium coliving houses on the French side, ${STATS_DISPLAY.en.distance}, all-inclusive from ${PRICE_SHARED_CHF_EN}/month.`
+              : `Trois maisons de coliving premium côté France, à ${STATS_DISPLAY.fr.distance}, tout inclus dès ${PRICE_SHARED_CHF_FR}/mois.`}
           </p>
           <div className="grid md:grid-cols-3 gap-6">
             {[

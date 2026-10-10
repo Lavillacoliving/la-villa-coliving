@@ -38,7 +38,6 @@ export function ColocationGenevePage() {
   const { language } = useLanguage();
   const en = language === "en";
   const L = en ? "en" as const : "fr" as const;
-  const MIN = STATS.genevaCenterMinutes;
   const PILLAR_URL = `https://www.lavillacoliving.com${en ? COLOC_GENEVE_PILLAR_EN : COLOC_GENEVE_PILLAR_FR}`;
   const allRooms = useAllRooms();
   const { candidates } = splitRooms(allRooms.rooms);
@@ -87,9 +86,10 @@ export function ColocationGenevePage() {
         // §6 variante B (décision Q8 : pas de prix dans le title). Meta de la spécification révisée du 04/09.
         // (correction Jérôme 04/09) « tout inclus » dans le title, le seul mot qui distingue la page des annonces ; > 65 c. avec la marque → pas de suffixe (S33).
         title={en ? "Shared housing in Geneva, French side: all-inclusive rooms" : "Colocation à Genève côté France : chambres tout inclus"}
+        // (Lot L2, 09/10/2026) D1 : jamais « à N min du centre » sans destination nommée → STATS_DISPLAY.distance ; meta ≤ 155 c. (FR 154 / EN 152, mesuré).
         description={en
-          ? `Shared housing in Geneva, French side: 3 houses ${MIN} min from the centre, furnished room, bills, fibre, cleaning included. Rooms, CHF prices, reply in 48 h.`
-          : `Colocation à Genève côté France : 3 maisons à ${MIN} min du centre, chambre meublée tout inclus. Chambres disponibles, prix en CHF, réponse sous 48 h.`}
+          ? `Shared housing in Geneva, French side: 3 houses ${STATS_DISPLAY.en.distance}. All-inclusive rooms in CHF, reply in 48 h.`
+          : `Colocation à Genève côté France : 3 maisons à ${STATS_DISPLAY.fr.distance}. Chambres tout inclus en CHF, réponse sous 48 h.`}
         url={PILLAR_URL}
         image="https://www.lavillacoliving.com/images/villa_portrait.webp"
         jsonLd={offerSchema}
@@ -109,8 +109,8 @@ export function ColocationGenevePage() {
           </h1>
           <p className="text-lg md:text-xl text-[#57534E] max-w-3xl mx-auto mb-8 leading-relaxed">
             {en
-              ? `Live on the French side, work in Geneva. ${STATS.totalRooms} furnished rooms in ${STATS.totalHouses} houses in Ville-la-Grand, Ambilly and Annemasse, all inclusive from ${PRICE_SHARED_CHF_EN}/month, ${MIN} minutes from the centre. Real availability below, prices in CHF, reply within 48 h.`
-              : `Vis côté France, travaille à Genève. ${STATS.totalRooms} chambres meublées dans ${STATS.totalHouses} maisons à Ville-la-Grand, Ambilly et Annemasse, tout inclus dès ${PRICE_SHARED_CHF_FR}/mois, à ${MIN} minutes du centre. Les disponibilités réelles ci-dessous, les prix en CHF, une réponse sous 48 h.`}
+              ? `Live on the French side, work in Geneva. ${STATS.totalRooms} furnished rooms in ${STATS.totalHouses} houses in Ville-la-Grand, Ambilly and Annemasse, all inclusive from ${PRICE_SHARED_CHF_EN}/month, ${STATS_DISPLAY.en.distance}. Real availability below, prices in CHF, reply within 48 h.`
+              : `Vis côté France, travaille à Genève. ${STATS.totalRooms} chambres meublées dans ${STATS.totalHouses} maisons à Ville-la-Grand, Ambilly et Annemasse, tout inclus dès ${PRICE_SHARED_CHF_FR}/mois, à ${STATS_DISPLAY.fr.distance}. Les disponibilités réelles ci-dessous, les prix en CHF, une réponse sous 48 h.`}
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <a href="#chambres" className="inline-flex items-center gap-2 bg-[#D4A574] text-white px-8 py-4 text-sm uppercase tracking-wider hover:bg-[#44403C] transition-colors">
@@ -130,7 +130,8 @@ export function ColocationGenevePage() {
           <div className="flex flex-wrap justify-center gap-8 mt-10 text-sm text-[#78716C]">
             <span className="flex items-center gap-2"><Home className="w-4 h-4" /> {STATS.totalRooms} {en ? "rooms" : "chambres"}</span>
             <span className="flex items-center gap-2"><Users className="w-4 h-4" /> {STATS.totalHouses} {en ? "houses" : "maisons"}</span>
-            <span className="flex items-center gap-2"><Clock className="w-4 h-4" /> {MIN} min {en ? "from Geneva" : "de Genève"}</span>
+            {/* (Lot L2, 09/10/2026) D1 : « 20 min de Genève » seul interdit → libellé canonique, un seul nœud texte (anti-#418). */}
+            <span className="flex items-center gap-2"><Clock className="w-4 h-4" /> {STATS_DISPLAY[L].distance}</span>
             <span className="flex items-center gap-2"><Euro className="w-4 h-4" /> {en ? `From ${PRICE_SHARED_CHF_EN}/month` : `Dès ${PRICE_SHARED_CHF_FR}/mois`}</span>
           </div>
         </div>
@@ -275,12 +276,14 @@ export function ColocationGenevePage() {
       <section className="py-20 lg:py-24 bg-white">
         <div className="max-w-4xl mx-auto px-6 text-center">
           <Train className="w-12 h-12 text-[#D4A574] mx-auto mb-6" />
-          {/* (D1, 09/10/2026) « 20 min » toujours qualifié ; minutes depuis TRANSIT, lignes par maison depuis ENTITY_HOUSES. */}
+          {/* (D1, 09/10/2026) « 20 min » toujours qualifié ; minutes depuis TRANSIT, lignes par maison depuis ENTITY_HOUSES.
+              (Lot L2) Deux ancres seulement — Léman Express depuis la gare d'Annemasse, tram 17 depuis Ambilly (D7) ; ni bus,
+              ni « quelques minutes » de frontière (D6 : Le Lodge n'a aucune promesse de frontière). */}
           <h2 className={h2} style={serif}>{en ? STATS_DISPLAY.en.distance : `À ${STATS_DISPLAY.fr.distance}`}</h2>
           <p className="text-[#57534E] leading-relaxed max-w-3xl mx-auto mb-8">
             {en
-              ? `From Annemasse station, the Léman Express reaches Geneva Eaux-Vives in ${TRANSIT.trainEauxVivesMin} minutes, Champel in ${TRANSIT.trainChampelMin} and Cornavin in ${TRANSIT.trainCornavinMin}, no change. Door to door, count ${TRANSIT.doorToDoorEauxVivesMin} to ${TRANSIT.doorToDoorEauxVivesMax} minutes to Geneva Eaux-Vives depending on the house, and ${TRANSIT.centreDoorToDoorMin} to the city centre. Tram 17 links Ambilly and Annemasse to central Geneva, and the border is a few minutes from every house.`
-              : `Depuis la gare d'Annemasse, le Léman Express rejoint Genève-Eaux-Vives en ${TRANSIT.trainEauxVivesMin} min, Champel en ${TRANSIT.trainChampelMin} et Cornavin en ${TRANSIT.trainCornavinMin}, sans correspondance. Porte-à-porte, compte ${TRANSIT.doorToDoorEauxVivesMin} à ${TRANSIT.doorToDoorEauxVivesMax} min jusqu'à Genève-Eaux-Vives selon la maison, et ${TRANSIT.centreDoorToDoorMin} jusqu'au centre. Le tram 17 relie Ambilly et Annemasse au centre de Genève, et la frontière est à quelques minutes de chaque maison.`}
+              ? `From Annemasse station, the Léman Express reaches Geneva Eaux-Vives in ${TRANSIT.trainEauxVivesMin} minutes, Champel in ${TRANSIT.trainChampelMin} and Cornavin in ${TRANSIT.trainCornavinMin}, no change. Door to door, count ${TRANSIT.doorToDoorEauxVivesMin} to ${TRANSIT.doorToDoorEauxVivesMax} minutes to Geneva Eaux-Vives depending on the house, and ${TRANSIT.centreDoorToDoorMin} minutes to the city centre (Rive). Two transport anchors: the Léman Express from Annemasse station, and tram 17 from Ambilly (Rive in ${TRANSIT.byHouse.leloft.tramStop.tramToRiveMin} minutes by tram).`
+              : `Depuis la gare d'Annemasse, le Léman Express rejoint Genève-Eaux-Vives en ${TRANSIT.trainEauxVivesMin} min, Champel en ${TRANSIT.trainChampelMin} min et Cornavin en ${TRANSIT.trainCornavinMin} min, sans correspondance. Porte-à-porte, compte ${TRANSIT.doorToDoorEauxVivesMin} à ${TRANSIT.doorToDoorEauxVivesMax} min jusqu'à Genève-Eaux-Vives selon la maison, et ${TRANSIT.centreDoorToDoorMin} min jusqu'au centre (Rive). Deux ancres de transport : le Léman Express depuis la gare d'Annemasse, et le tram 17 depuis Ambilly (Rive en ${TRANSIT.byHouse.leloft.tramStop.tramToRiveMin} min de tram).`}
           </p>
           <div className="grid sm:grid-cols-3 gap-4 text-sm text-[#44403C]">
             {ENTITY_HOUSES.map((h) => [`${h.label} · ${h.commune}`, h.commute[L]]).map(([t, d]) => (

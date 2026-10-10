@@ -91,9 +91,10 @@ export function ColivingPageV4() {
                 : `Le coliving, c'est la colocation avec services hôteliers inclus : chambre meublée, charges, fibre, ménage et espaces communs pensés pour la communauté. À La Villa : 29 chambres, 3 maisons près de Genève, dès ${PRICE_SHARED_CHF_FR}/mois.`}
               {" "}
               {/* (Lot 4) Ancre exacte vers la home, URL championne sur « coliving genève ». */}
+              {/* (Lot L2, 09/10/2026, D1) « 20 min » qualifié par STATS_DISPLAY.distance ; fin de phrase en un seul nœud texte (anti-#418). */}
               {language === "en"
-                ? <>Our <LocalizedLink to="/" className="underline decoration-[#D4A574] decoration-2 underline-offset-4 hover:text-white transition-colors">coliving Geneva</LocalizedLink> is on the French side, 20 minutes from the centre.</>
-                : <>Notre <LocalizedLink to="/" className="underline decoration-[#D4A574] decoration-2 underline-offset-4 hover:text-white transition-colors">coliving Genève</LocalizedLink> se vit côté France, à 20 minutes du centre.</>}
+                ? <>Our <LocalizedLink to="/" className="underline decoration-[#D4A574] decoration-2 underline-offset-4 hover:text-white transition-colors">coliving Geneva</LocalizedLink>{` is on the French side, ${STATS_DISPLAY.en.distance}.`}</>
+                : <>Notre <LocalizedLink to="/" className="underline decoration-[#D4A574] decoration-2 underline-offset-4 hover:text-white transition-colors">coliving Genève</LocalizedLink>{` se vit côté France, à ${STATS_DISPLAY.fr.distance}.`}</>}
             </p>
             <LocalizedLink
               to="/nos-maisons"
@@ -451,10 +452,11 @@ export function ColivingPageV4() {
         // Lien éditorial vers la home (URL championne sur « coliving geneve ») — hors schema FAQPage
         intro={
           <p>
+            {/* (Lot L2, 09/10/2026, D1) « 20 min » qualifié par STATS_DISPLAY.distance ; fin de phrase en un seul nœud texte (anti-#418). */}
             {language === "en" ? (
-              <>Looking for <LocalizedLink to="/" className="underline decoration-[#D4A574] decoration-2 underline-offset-4 hover:text-[#1C1917] transition-colors">coliving in Geneva</LocalizedLink>? Our three houses are {STATS.genevaCenterMinutes} minutes from the city center, on the French side.</>
+              <>Looking for <LocalizedLink to="/" className="underline decoration-[#D4A574] decoration-2 underline-offset-4 hover:text-[#1C1917] transition-colors">coliving in Geneva</LocalizedLink>{`? Our three houses are on the French side, ${STATS_DISPLAY[L].distance}.`}</>
             ) : (
-              <>Tu cherches un <LocalizedLink to="/" className="underline decoration-[#D4A574] decoration-2 underline-offset-4 hover:text-[#1C1917] transition-colors">coliving à Genève</LocalizedLink> ? Nos trois maisons sont à {STATS.genevaCenterMinutes} minutes du centre, côté France.</>
+              <>Tu cherches un <LocalizedLink to="/" className="underline decoration-[#D4A574] decoration-2 underline-offset-4 hover:text-[#1C1917] transition-colors">coliving à Genève</LocalizedLink>{` ? Nos trois maisons sont côté France, à ${STATS_DISPLAY[L].distance}.`}</>
             )}
           </p>
         }

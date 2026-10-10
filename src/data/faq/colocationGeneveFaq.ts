@@ -1,16 +1,17 @@
 import type { QAPair } from "@/lib/structuredData";
 import { pickSituations } from "@/data/faq/situationsFaq";
-import { STATS, PRICE_CHF_FR, PRICE_CHF_EN, PRICE_SHARED_CHF_FR, PRICE_SHARED_CHF_EN } from "@/data/stats";
+import { STATS, STATS_DISPLAY, PRICE_CHF_FR, PRICE_CHF_EN, PRICE_SHARED_CHF_FR, PRICE_SHARED_CHF_EN } from "@/data/stats";
 
 // FAQ de /colocation-geneve — spécification révisée du 04/09/2026 (Lot 5, gel levé) : les 4 questions
 // « Autres questions posées » de la SERP « colocation genève » + « colocation ou coliving ? » + « quel délai ? ».
 // Tutoiement, prix depuis la source unique, aucun concurrent nommé, CHF des deux côtés de la comparaison.
-const MIN = STATS.genevaCenterMinutes;
+// (Lot L2 « Emplacement et transport », 09/10/2026) « 20 min » toujours qualifié (STATS_DISPLAY.distance, D1) : plus de
+// « à 20 minutes du centre », même via STATS.genevaCenterMinutes.
 export const colocationGeneveFaq: { fr: QAPair[]; en: QAPair[] } = {
   fr: [
     {
       q: "Combien coûte une colocation à Genève ?",
-      a: `À Genève même, d'après les annonces relevées en 2026, une chambre en colocation se loue le plus souvent entre 1 000 et 1 500 CHF par mois, charges et internet souvent en plus, et il faut trouver la colocation. Côté France, chez La Villa Coliving, une chambre meublée en maison coûte dès ${PRICE_SHARED_CHF_FR}/mois tout inclus (${PRICE_CHF_FR} avec salle d'eau privative) : charges, fibre, ménage des communs, piscine, sauna, salle de sport et événements compris, à ${MIN} minutes du centre.`,
+      a: `À Genève même, d'après les annonces relevées en 2026, une chambre en colocation se loue le plus souvent entre 1 000 et 1 500 CHF par mois, charges et internet souvent en plus, et il faut trouver la colocation. Côté France, chez La Villa Coliving, une chambre meublée en maison coûte dès ${PRICE_SHARED_CHF_FR}/mois tout inclus (${PRICE_CHF_FR} avec salle d'eau privative) : charges, fibre, ménage des communs, piscine, sauna, salle de sport et événements compris, à ${STATS_DISPLAY.fr.distance}.`,
     },
     {
       q: "Quel est le loyer moyen à Genève ?",
@@ -40,7 +41,7 @@ export const colocationGeneveFaq: { fr: QAPair[]; en: QAPair[] } = {
   en: [
     {
       q: "How much does a flatshare cost in Geneva?",
-      a: `In Geneva itself, based on listings observed in 2026, a room in a shared flat usually rents for 1,000 to 1,500 CHF per month, often with utilities and internet on top, and you still have to find the flatshare. On the French side, at La Villa Coliving, a furnished room in a house costs from ${PRICE_SHARED_CHF_EN}/month all inclusive (${PRICE_CHF_EN} with a private shower room): utilities, fibre, cleaning of the common areas, pool, sauna, gym and events included, ${MIN} minutes from the centre.`,
+      a: `In Geneva itself, based on listings observed in 2026, a room in a shared flat usually rents for 1,000 to 1,500 CHF per month, often with utilities and internet on top, and you still have to find the flatshare. On the French side, at La Villa Coliving, a furnished room in a house costs from ${PRICE_SHARED_CHF_EN}/month all inclusive (${PRICE_CHF_EN} with a private shower room): utilities, fibre, cleaning of the common areas, pool, sauna, gym and events included, ${STATS_DISPLAY.en.distance}.`,
     },
     {
       q: "What is the average rent in Geneva?",

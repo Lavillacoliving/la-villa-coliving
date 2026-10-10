@@ -26,8 +26,8 @@ import { useAllRooms, splitRooms, type HouseKey, type PublicRoom } from "@/lib/a
  * Fact block : « dès 1 370 CHF », 16-24 m² (STATS.roomSizeMin/Max), 20 min porte à porte (décision Jérôme 04/09), caution 2 mois
  * hors charges, 0 frais ; jamais « moins cher que Genève » : coût total et confort, CHF des deux côtés.
  * /chambre-a-louer-annemasse reste la page locale (inventaire du Lodge), liée en croisé.
+ * (Lot L2, 09/10/2026) Le « 20 min » s'écrit uniquement par STATS_DISPLAY.distance — plus de constante MIN locale.
  */
-const MIN = STATS.genevaCenterMinutes;
 
 export function ChambreLouerGenevePage() {
   const { language } = useLanguage();
@@ -54,10 +54,10 @@ export function ChambreLouerGenevePage() {
         // §6 variante B : pas de prix dans le title (Q8, confirmé le 04/09) ; meta sans « 3 mois minimum » (Q13, confirmé le 04/09).
         // (ajustement Jérôme 04/09) pluriel aligné sur le H1 + « tout inclus », sans prix (Q8) ; > 65 c. avec la marque → pas de suffixe (S33).
         title={en ? "Rooms to rent near Geneva: furnished, all inclusive" : "Chambres à louer près de Genève : meublées, tout inclus"}
-        // (D1, 09/10/2026) « 20 min » toujours qualifié (Genève-Eaux-Vives, Léman Express) — meta ≤ 155 caractères.
+        // (D1, 09/10/2026 ; Lot L2) « 20 min » = libellé canonique STATS_DISPLAY.distance, jamais une variante — meta ≤ 155 caractères (FR 154 / EN 152, mesuré).
         description={en
-          ? `Furnished rooms to rent on the French side, ${MIN} min from Geneva Eaux-Vives by Léman Express: bills, fibre, cleaning included, from ${PRICE_SHARED_CHF_EN}. Live availability.`
-          : `Chambres meublées à louer côté France, à ${MIN} min de Genève-Eaux-Vives en Léman Express : charges, fibre, ménage compris, dès ${PRICE_SHARED_CHF_FR}. Dispo en temps réel.`}
+          ? `Furnished rooms, French side, ${STATS_DISPLAY.en.distance}. Bills, fibre, cleaning included, from ${PRICE_SHARED_CHF_EN}. Live dates.`
+          : `Chambres meublées côté France, à ${STATS_DISPLAY.fr.distance} : charges, fibre, ménage inclus, dès ${PRICE_SHARED_CHF_FR}. Dispo réelle.`}
         image="https://www.lavillacoliving.com/images/le loft/rooms/Chambre 5/chambre-5-vue-large.webp"
       />
 
@@ -170,7 +170,7 @@ export function ChambreLouerGenevePage() {
               <h3 className="text-lg font-medium text-[#1C1917] mb-2">{en ? "In the room" : "Dans la chambre"}</h3>
               <p className="text-sm text-[#57534E] leading-relaxed">
                 {en
-                  ? `17 to 23 m², a double bed with linen, a desk, storage, fibre up to 8 Gb/s, and a shower room that is private or shared with a single other room. You arrive with a suitcase.`
+                  ? `${STATS.roomSizeMin} to ${STATS.roomSizeMax} m², a double bed with linen, a desk, storage, fibre up to 8 Gb/s, and a shower room that is private or shared with a single other room. You arrive with a suitcase.`
                   : `${STATS.roomSizeMin} à ${STATS.roomSizeMax} m², un lit double avec sa parure, un bureau, des rangements, la fibre jusqu'à 8 Gb/s, et une salle d'eau privative ou partagée avec une seule autre chambre. Tu arrives avec une valise.`}
               </p>
             </div>
@@ -265,12 +265,14 @@ export function ChambreLouerGenevePage() {
       <section className="py-20 lg:py-24 bg-white">
         <div className="max-w-4xl mx-auto px-6 text-center">
           <Train className="w-12 h-12 text-[#D4A574] mx-auto mb-6" />
-          {/* (D1, 09/10/2026) « 20 min » toujours qualifié ; minutes depuis TRANSIT, lignes par maison depuis ENTITY_HOUSES. */}
+          {/* (D1, 09/10/2026) « 20 min » toujours qualifié ; minutes depuis TRANSIT, lignes par maison depuis ENTITY_HOUSES.
+              (Lot L2) Deux ancres seulement — Léman Express depuis la gare d'Annemasse, tram 17 depuis Ambilly (D7) ; ni bus,
+              ni « quelques minutes » de frontière (D6 : Le Lodge n'a aucune promesse de frontière). */}
           <h2 className={h2} style={serif}>{en ? STATS_DISPLAY.en.distance : `À ${STATS_DISPLAY.fr.distance}`}</h2>
           <p className="text-[#57534E] leading-relaxed max-w-3xl mx-auto mb-8">
             {en
-              ? `From Annemasse station, the Léman Express reaches Geneva Eaux-Vives in ${TRANSIT.trainEauxVivesMin} minutes, Champel in ${TRANSIT.trainChampelMin} and Cornavin in ${TRANSIT.trainCornavinMin}, no change. Door to door, count ${TRANSIT.doorToDoorEauxVivesMin} to ${TRANSIT.doorToDoorEauxVivesMax} minutes to Geneva Eaux-Vives depending on the house, and ${TRANSIT.centreDoorToDoorMin} to the city centre. Tram 17 links Ambilly and Annemasse to central Geneva, and the border is a few minutes from every house.`
-              : `Depuis la gare d'Annemasse, le Léman Express rejoint Genève-Eaux-Vives en ${TRANSIT.trainEauxVivesMin} min, Champel en ${TRANSIT.trainChampelMin} et Cornavin en ${TRANSIT.trainCornavinMin}, sans correspondance. Porte-à-porte, compte ${TRANSIT.doorToDoorEauxVivesMin} à ${TRANSIT.doorToDoorEauxVivesMax} min jusqu'à Genève-Eaux-Vives selon la maison, et ${TRANSIT.centreDoorToDoorMin} jusqu'au centre. Le tram 17 relie Ambilly et Annemasse au centre de Genève, et la frontière est à quelques minutes de chaque maison.`}
+              ? `From Annemasse station, the Léman Express reaches Geneva Eaux-Vives in ${TRANSIT.trainEauxVivesMin} minutes, Champel in ${TRANSIT.trainChampelMin} and Cornavin in ${TRANSIT.trainCornavinMin}, no change. Door to door, count ${TRANSIT.doorToDoorEauxVivesMin} to ${TRANSIT.doorToDoorEauxVivesMax} minutes to Geneva Eaux-Vives depending on the house, and ${TRANSIT.centreDoorToDoorMin} minutes to the city centre (Rive). Two transport anchors: the Léman Express from Annemasse station, and tram 17 from Ambilly (Rive in ${TRANSIT.byHouse.leloft.tramStop.tramToRiveMin} minutes by tram).`
+              : `Depuis la gare d'Annemasse, le Léman Express rejoint Genève-Eaux-Vives en ${TRANSIT.trainEauxVivesMin} min, Champel en ${TRANSIT.trainChampelMin} min et Cornavin en ${TRANSIT.trainCornavinMin} min, sans correspondance. Porte-à-porte, compte ${TRANSIT.doorToDoorEauxVivesMin} à ${TRANSIT.doorToDoorEauxVivesMax} min jusqu'à Genève-Eaux-Vives selon la maison, et ${TRANSIT.centreDoorToDoorMin} min jusqu'au centre (Rive). Deux ancres de transport : le Léman Express depuis la gare d'Annemasse, et le tram 17 depuis Ambilly (Rive en ${TRANSIT.byHouse.leloft.tramStop.tramToRiveMin} min de tram).`}
           </p>
           <div className="grid sm:grid-cols-3 gap-4 text-sm text-[#44403C]">
             {ENTITY_HOUSES.map((h) => [`${h.label} · ${h.commune}`, h.commute[L]]).map(([t, d]) => <div key={t} className="bg-[#FAF9F6] p-5"><p className="font-medium text-[#1C1917] mb-1">{t}</p><p>{d}</p></div>)}

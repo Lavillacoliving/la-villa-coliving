@@ -7,7 +7,7 @@ Oui, Annemasse est un bon endroit pour vivre quand on travaille à Genève, et c
 
 ## La réponse courte : oui, si tu vises la gare ou le tram
 
-Annemasse est la ville-centre d'une agglomération de communes collées à la frontière genevoise : 37 600 habitants (INSEE, population 2023), une gare qui est le terminus français du Léman Express, un tram transfrontalier, des commerces, un marché, des restaurants. Ce n'est pas une banlieue-dortoir : c'est une petite ville complète, à dix minutes à pied de la Suisse.
+Annemasse est la ville-centre d'une agglomération de communes collées à la frontière genevoise : 37 600 habitants (INSEE, population 2023), une gare du Léman Express, un tram transfrontalier, des commerces, un marché, des restaurants. Ce n'est pas une banlieue-dortoir : c'est une petite ville complète, à 7 minutes de train de Genève-Eaux-Vives.
 
 Ce qui fait la différence pour un frontalier, ce n'est pas la commune mais l'adresse. À distance de marche de la gare ou d'un arrêt du tram 17, tu vis sans voiture, tu gagnes une heure par jour par rapport à la douane en voiture, et tu profites du centre à pied. Au-delà de quinze minutes à pied des transports, l'avantage s'effrite. Le reste de ce guide t'aide à choisir cette adresse.
 
@@ -27,7 +27,7 @@ Concrètement, pour toi : un quartier de gare neuf, plus de commerces et de serv
 
 Depuis la gare d'Annemasse, le Léman Express rejoint Genève Eaux-Vives en 7 minutes et Cornavin en 23 minutes, sans changement, avec un train toutes les dix minutes en heure de pointe. Depuis Ambilly, le tram 17 entre dans Genève par Moillesulaz. Compte 20 minutes porte-à-porte de Genève-Eaux-Vives en Léman Express depuis Annemasse, Ville-la-Grand ou Ambilly, moins que bien des trajets à l'intérieur de Genève, et 30 minutes jusqu'au centre.
 
-Le vélo est l'autre option : les pistes cyclables passent la frontière à Moillesulaz, et beaucoup de résidents pédalent jusqu'aux Eaux-Vives en une vingtaine de minutes à la belle saison. Beaucoup de frontaliers finissent d'ailleurs sans voiture : train, tram et vélo suffisent au quotidien, et la douane en voiture aux heures de pointe est le trajet à éviter.
+Le vélo est l'autre option : les pistes cyclables passent la frontière à Moillesulaz, et beaucoup de résidents pédalent jusqu'au centre de Genève (Rive) par la Voie Verte à la belle saison, en 23 à 29 minutes selon la maison. Beaucoup de frontaliers finissent d'ailleurs sans voiture : train, tram et vélo suffisent au quotidien, et la douane en voiture aux heures de pointe est le trajet à éviter.
 
 ## Le centre-ville : marché, petits restos, cinéma et concerts
 
@@ -49,9 +49,9 @@ Ce qui ne baisse pas : ton salaire reste imposé à la source à Genève, l'assu
 
 **Romagny.** Résidentiel, calme : le secteur des frontaliers qui veulent le train sans la vie de gare. À Annemasse même, Le Lodge de La Villa Coliving (12 chambres, quartier de Romagny, ouvert en 2026) est à 10 min à pied de la gare — Genève-Eaux-Vives en 18 min porte-à-porte.
 
-**Ambilly.** La commune la plus proche de la douane de Moillesulaz, avec le tram 17 à l'arrêt Croix-d'Ambilly : le raccourci vers Genève à pied ou à vélo. Notre maison Le Loft y est, à 8 minutes à pied du tram et à 18 minutes de la gare.
+**Ambilly.** La commune la plus proche de la douane de Moillesulaz, avec le tram 17 à l'arrêt Croix-d'Ambilly : le raccourci vers Genève à pied ou à vélo. Notre maison Le Loft y est, à 8 minutes à pied du tram et à 18 minutes à pied de la gare.
 
-**Ville-la-Grand.** Pavillonnaire, verte, bordée par la réserve naturelle du Foron, frontière mitoyenne, un centre en cours de réaménagement : la commune familiale et calme de l'agglomération, à 14 minutes à pied de la gare depuis notre maison La Villa.
+**Ville-la-Grand.** Pavillonnaire, verte, bordée par le Foron, la rivière-frontière, et sa zone naturelle, un centre en cours de réaménagement : la commune familiale et calme de l'agglomération, à 14 minutes à pied de la gare depuis notre maison La Villa.
 
 **Vétraz-Monthoux.** Plus pavillonnaire encore, un cran plus loin des transports : le choix des familles avec voiture, moins celui d'un frontalier sans.
 

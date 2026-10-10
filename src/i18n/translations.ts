@@ -1,4 +1,9 @@
-import { PRICE_CHF_FR, PRICE_CHF_EN } from "@/data/stats";
+import { PRICE_CHF_FR, PRICE_CHF_EN, STATS_DISPLAY, HOUSE_SURFACES, thousands } from "@/data/stats";
+
+// (Lot L2, 09/10/2026) Faits d'emplacement lus dans la source unique (stats.ts n'importe rien : pas de cycle) :
+// « 20 min » toujours qualifié par STATS_DISPLAY.distance (D1), surfaces des maisons par HOUSE_SURFACES (D2).
+const VILLA_PLOT_EN = thousands(HOUSE_SURFACES.lavilla.plotM2, ",");
+const VILLA_PLOT_FR = thousands(HOUSE_SURFACES.lavilla.plotM2, " "); // espace insécable (convention stats.ts)
 
 export const translations = {
   en: {
@@ -92,7 +97,7 @@ export const translations = {
     about: {
       title: "About La Villa",
       description:
-        "La Villa brings together like-minded people in exceptional homes on the French side of Grand Genève, just 20 minutes from Geneva city center.",
+        `La Villa brings together like-minded people in exceptional homes on the French side of Grand Genève, ${STATS_DISPLAY.en.distance}.`,
       description2:
         "Our community is built on shared values: openness, collaboration, and genuine enthusiasm for collective living. Every member is carefully selected to ensure the perfect fit.",
       cta: "Learn About Our Houses",
@@ -112,7 +117,7 @@ export const translations = {
       },
       location: {
         title: "Prime Location",
-        description: "20 min from Geneva city center by train or tram",
+        description: STATS_DISPLAY.en.distance as string, // élargi : `Translations = typeof translations.en` ne doit pas figer le littéral
       },
       comfort: {
         title: "Private Comfort",
@@ -134,7 +139,7 @@ export const translations = {
         name: "La Villa",
         location: "Ville-la-Grand",
         description:
-          "370m² of designed living on a 2,000m² estate bordering a nature reserve.",
+          `${HOUSE_SURFACES.lavilla.livingM2} m² of designed living on a ${VILLA_PLOT_EN} m² estate bordering a nature reserve.`,
         features:
           "Heated pool, sauna, gym, game room, volleyball court & vegetable garden",
         perfectFor: "Nature enthusiasts",
@@ -144,7 +149,7 @@ export const translations = {
         name: "Le Loft",
         location: "Ambilly",
         description:
-          "A 300 m² townhouse with year-round heated indoor pool, Finnish sauna, and outdoor kitchen.",
+          `A ${HOUSE_SURFACES.leloft.livingM2} m² townhouse with year-round heated indoor pool, Finnish sauna, and outdoor kitchen.`,
         features: "Year-round heated indoor pool, Finnish sauna, gym, outdoor kitchen with TV, terraces & spacious designer rooms",
         perfectFor: "Urban professionals",
         capacity: "7 members",
@@ -229,7 +234,7 @@ export const translations = {
       difference: {
         title: "Our Curated Coliving Community",
         description:
-          "We bring together 7 to 12 carefully selected members in thoughtfully designed homes, on the French side, just 20 minutes from Geneva city center. Every detail—from the furniture to the community events—is intentional.",
+          `We bring together 7 to 12 carefully selected members in thoughtfully designed homes, on the French side, ${STATS_DISPLAY.en.distance}. Every detail—from the furniture to the community events—is intentional.`,
         description2:
           "This isn't just shared housing. It's a lifestyle upgrade designed for modern professionals who refuse to compromise on quality, community, or convenience.",
       },
@@ -524,7 +529,7 @@ export const translations = {
     about: {
       title: "À Propos de La Villa",
       description:
-        "La Villa réunit des personnes partageant les mêmes valeurs dans des maisons exceptionnelles côté France, dans le Grand Genève, à seulement 20 min du centre de Genève.",
+        `La Villa réunit des personnes partageant les mêmes valeurs dans des maisons exceptionnelles côté France, dans le Grand Genève, à ${STATS_DISPLAY.fr.distance}.`,
       description2:
         "Notre communauté repose sur des valeurs communes : ouverture, collaboration et enthousiasme authentique pour la vie collective. Chaque membre est soigneusement sélectionné pour garantir une parfaite harmonie.",
       cta: "Découvrir Nos Maisons",
@@ -544,7 +549,7 @@ export const translations = {
       },
       location: {
         title: "Emplacement Privilégié",
-        description: "20 min du centre de Genève en CEVA ou tram",
+        description: STATS_DISPLAY.fr.distance as string,
       },
       comfort: {
         title: "Confort Privé",
@@ -566,7 +571,7 @@ export const translations = {
         name: "La Villa",
         location: "Ville-la-Grand",
         description:
-          "370 m² de vie design sur un domaine de 2 000 m² bordant une réserve naturelle.",
+          `${HOUSE_SURFACES.lavilla.livingM2} m² de vie design sur un domaine de ${VILLA_PLOT_FR} m² bordant une réserve naturelle.`,
         features:
           "Piscine chauffée, sauna, salle de sport, salle de jeux, terrain de volley & potager",
         perfectFor: "Amoureux de la nature",
@@ -576,7 +581,7 @@ export const translations = {
         name: "Le Loft",
         location: "Ambilly",
         description:
-          "Maison de ville de 300 m² avec piscine intérieure chauffée toute l'année, sauna finlandais et cuisine extérieure.",
+          `Maison de ville de ${HOUSE_SURFACES.leloft.livingM2} m² avec piscine intérieure chauffée toute l'année, sauna finlandais et cuisine extérieure.`,
         features:
           "Piscine intérieure chauffée toute l'année, sauna finlandais, salle de sport, cuisine extérieure avec TV, terrasses & chambres design spacieuses",
         perfectFor: "Professionnels urbains",
@@ -663,7 +668,7 @@ export const translations = {
       difference: {
         title: "Notre Communauté Coliving Sélectionnée",
         description:
-          "Nous réunissons 7 à 12 membres soigneusement sélectionnés dans des maisons pensées dans les moindres détails, à seulement 20 minutes du centre de Genève, côté France. Chaque détail — du mobilier aux événements communautaires — est intentionnel.",
+          `Nous réunissons 7 à 12 membres soigneusement sélectionnés dans des maisons pensées dans les moindres détails, à ${STATS_DISPLAY.fr.distance}, côté France. Chaque détail — du mobilier aux événements communautaires — est intentionnel.`,
         description2:
           "Ce n'est pas juste une colocation. C'est une véritable élévation de mode de vie conçue pour les professionnels qui refusent de compromettre sur la qualité, la communauté ou la commodité.",
       },

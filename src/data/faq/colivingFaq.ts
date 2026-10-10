@@ -1,7 +1,9 @@
 import type { QAPair } from "@/lib/structuredData";
-import { PRICE_SHARED_CHF_FR, PRICE_SHARED_CHF_EN, STATS } from "@/data/stats";
+import { PRICE_SHARED_CHF_FR, PRICE_SHARED_CHF_EN, STATS, STATS_DISPLAY } from "@/data/stats";
 
 // §4 du playbook AEO — /le-coliving (définitionnel). Tutoiement, texte verbatim.
+// (Lot L2 « Emplacement et transport », 09/10/2026) « 20 min » toujours qualifié (STATS_DISPLAY.distance, D1) ; surfaces EN
+// depuis STATS (plus de « 17 to 25 m² » en dur).
 export const colivingFaq: { fr: QAPair[]; en: QAPair[] } = {
   fr: [
     {
@@ -34,7 +36,7 @@ export const colivingFaq: { fr: QAPair[]; en: QAPair[] } = {
     },
     {
       q: "Y a-t-il du coliving près de Genève ?",
-      a: `Oui. La Villa Coliving gère trois maisons de coliving à 20 minutes du centre de Genève, côté France : à Ville-la-Grand, Ambilly et Annemasse. Chacune propose des chambres meublées de ${STATS.roomSizeMin} à ${STATS.roomSizeMax} m², tout inclus dès ${PRICE_SHARED_CHF_FR}/mois, avec piscine, sauna et salle de sport.`,
+      a: `Oui. La Villa Coliving gère trois maisons de coliving côté France, à ${STATS_DISPLAY.fr.distance} : à Ville-la-Grand, Ambilly et Annemasse. Chacune propose des chambres meublées de ${STATS.roomSizeMin} à ${STATS.roomSizeMax} m², tout inclus dès ${PRICE_SHARED_CHF_FR}/mois, avec piscine, sauna et salle de sport.`,
     },
   ],
   en: [
@@ -68,7 +70,7 @@ export const colivingFaq: { fr: QAPair[]; en: QAPair[] } = {
     },
     {
       q: "Is there coliving near Geneva?",
-      a: `Yes. La Villa Coliving runs three coliving houses 20 minutes from Geneva city center, on the French side: in Ville-la-Grand, Ambilly and Annemasse. Each offers furnished rooms of 17 to 25 m², all inclusive from ${PRICE_SHARED_CHF_EN}/month, with a pool, sauna and gym.`,
+      a: `Yes. La Villa Coliving runs three coliving houses on the French side, ${STATS_DISPLAY.en.distance}: in Ville-la-Grand, Ambilly and Annemasse. Each offers furnished rooms of ${STATS.roomSizeMin} to ${STATS.roomSizeMax} m², all inclusive from ${PRICE_SHARED_CHF_EN}/month, with a pool, sauna and gym.`,
     },
   ],
 };

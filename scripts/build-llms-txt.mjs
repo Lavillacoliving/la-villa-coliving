@@ -1,6 +1,7 @@
 /**
  * Génère public/llms.txt (FR) et public/en/llms.txt (EN) depuis la fiche de faits canonique
- * (src/data/entityFacts.ts) et les gabarits scripts/llms-template.{fr,en}.md (Lot S1.3).
+ * (src/data/entityFacts.ts, + STATS pour {{LIVING_SPACE}} depuis le lot L2 du 09/10/2026) et les gabarits
+ * scripts/llms-template.{fr,en}.md (Lot S1.3).
  * Les fichiers générés sont COMMITTÉS (le workflow ne committe que le prérendu) ; la garde
  * scripts/check-entity-facts.mjs régénère en mémoire et échoue s'ils diffèrent → « npm run build:llms ».
  * La date « Dernière mise à jour » = ENTITY_FACTS_VERSION (pas la date du jour : sortie déterministe).
@@ -49,6 +50,14 @@ function houseLines(lang, m) {
     : `- ${h.label} : ${h.rooms} chambres, ${h.commune} — ${h.amenities.fr}. ${h.commute.fr.charAt(0).toUpperCase()}${h.commute.fr.slice(1)}.`)).join('\n');
 }
 
+/** (Lot L2, 09/10/2026) Espace de vie par colocataire — STATS.livingSpacePerResidentMin/Max (fact block §1), plus de « 38 m² » en dur. */
+function livingSpace(lang, m) {
+  const S = m.STATS;
+  return lang === 'en'
+    ? `${S.livingSpacePerResidentMin} to ${S.livingSpacePerResidentMax} m² of living space per flatmate`
+    : `${S.livingSpacePerResidentMin} à ${S.livingSpacePerResidentMax} m² d'espace de vie par colocataire`;
+}
+
 function houseLinks(lang, m) {
   return m.ENTITY_FACTS.houses.map((h) => (lang === 'en'
     ? `- ${h.label} (${h.rooms} rooms): https://www.lavillacoliving.com/en/${h.slug}`
@@ -66,6 +75,9 @@ export async function renderLlms(lang, m) {
     // (Lot L1, 10/2026) Bloc « Où chercher une chambre côté France » — même texte que le composant <OuChercher variant="full"/>.
     .replace('{{OU_CHERCHER}}', m.ouChercherMarkdown(lang))
     .replace('{{HOUSE_LINKS}}', houseLinks(lang, m))
+    .replace('{{LIVING_SPACE}}', livingSpace(lang, m))
+    // (Lot L2, 09/10/2026, D1) Libellé de marque unique « 20 min de Genève-Eaux-Vives en Léman Express, porte-à-porte » = STATS_DISPLAY.distance.
+    .replace(/\{\{DISTANCE\}\}/g, m.STATS_DISPLAY[lang].distance)
     .replace(/\{\{MIN\}\}/g, String(F.genevaMinutes))
     .replace(/\{\{RESPONSE_HOURS\}\}/g, String(F.responseHours))
     .replace(/\{\{DEPOSIT_MONTHS\}\}/g, String(F.depositMonths))

@@ -5,7 +5,12 @@ import { GUARANTOR_SENTENCE } from "@/data/entityFacts";
 // (Lot L1 « ingénierie des créneaux », 10/2026) Trajets depuis TRANSIT (D1-L1), « 20 min » toujours qualifié
 // (STATS_DISPLAY.distance), réponse A.6 (dossier en trois pièces + phrase garant canonique) dans « Comment se
 // passe la candidature ? » — pas dans le hero (mobile).
+// (Lot L2 « Emplacement et transport », 09/10/2026) Cadence de pointe (TRANSIT.peakHeadwayMin) et vélo Voie Verte
+// (min/max de TRANSIT.byHouse.*.bikeToRiveMin) depuis la source ; aucune promesse en voiture (D1).
 const T = TRANSIT;
+const BIKE_TO_RIVE = Object.values(T.byHouse).map((h) => h.bikeToRiveMin);
+const BIKE_MIN = Math.min(...BIKE_TO_RIVE);
+const BIKE_MAX = Math.max(...BIKE_TO_RIVE);
 
 // FAQ de l'accueil — front A6 « coliving genève » (PAA + AEO). Tutoiement,
 // texte verbatim : ces réponses sont AUSSI balisées FAQPage (règle d'or :
@@ -33,7 +38,7 @@ export const homeFaq: { fr: QAPair[]; en: QAPair[] } = {
     },
     {
       q: "Comment rejoindre Genève depuis les maisons ?",
-      a: `Les trois maisons sont dans le Grand Genève, côté France, à Ville-la-Grand, Ambilly et Annemasse. Depuis la gare d'Annemasse, le Léman Express rejoint Genève-Eaux-Vives en ${T.trainEauxVivesMin} min, avec un train toutes les 10 minutes en heure de pointe. Porte-à-porte jusqu'à Genève-Eaux-Vives : ${T.byHouse.lavilla.eauxVivesDoorToDoorMin} min depuis La Villa, ${T.byHouse.leloft.eauxVivesDoorToDoorMin} depuis Le Loft, ${T.byHouse.lelodge.eauxVivesDoorToDoorMin} depuis Le Lodge, et ${T.centreDoorToDoorMin} min jusqu'au centre.`,
+      a: `Les trois maisons sont dans le Grand Genève, côté France, à Ville-la-Grand, Ambilly et Annemasse. Depuis la gare d'Annemasse, le Léman Express rejoint Genève-Eaux-Vives en ${T.trainEauxVivesMin} min, avec un train toutes les ${T.peakHeadwayMin} minutes en heure de pointe. Porte-à-porte jusqu'à Genève-Eaux-Vives : ${T.byHouse.lavilla.eauxVivesDoorToDoorMin} min depuis La Villa, ${T.byHouse.leloft.eauxVivesDoorToDoorMin} depuis Le Loft, ${T.byHouse.lelodge.eauxVivesDoorToDoorMin} depuis Le Lodge, et ${T.centreDoorToDoorMin} min jusqu'au centre (Rive). À vélo, le centre de Genève (Rive) est à ${BIKE_MIN} à ${BIKE_MAX} min par la Voie Verte selon la maison.`,
     },
     {
       q: "Comment se passe la candidature ?",
@@ -59,7 +64,7 @@ export const homeFaq: { fr: QAPair[]; en: QAPair[] } = {
     },
     {
       q: "How do you get to Geneva from the houses?",
-      a: `All three houses are in Greater Geneva, on the French side, in Ville-la-Grand, Ambilly and Annemasse. From Annemasse station, the Léman Express reaches Geneva Eaux-Vives in ${T.trainEauxVivesMin} minutes, with a train every 10 minutes at peak times. Door to door to Geneva Eaux-Vives: ${T.byHouse.lavilla.eauxVivesDoorToDoorMin} minutes from La Villa, ${T.byHouse.leloft.eauxVivesDoorToDoorMin} from Le Loft, ${T.byHouse.lelodge.eauxVivesDoorToDoorMin} from Le Lodge, and ${T.centreDoorToDoorMin} minutes to the city centre.`,
+      a: `All three houses are in Greater Geneva, on the French side, in Ville-la-Grand, Ambilly and Annemasse. From Annemasse station, the Léman Express reaches Geneva Eaux-Vives in ${T.trainEauxVivesMin} minutes, with a train every ${T.peakHeadwayMin} minutes at peak times. Door to door to Geneva Eaux-Vives: ${T.byHouse.lavilla.eauxVivesDoorToDoorMin} minutes from La Villa, ${T.byHouse.leloft.eauxVivesDoorToDoorMin} from Le Loft, ${T.byHouse.lelodge.eauxVivesDoorToDoorMin} from Le Lodge, and ${T.centreDoorToDoorMin} minutes to the city centre (Rive). By bike, central Geneva (Rive) is ${BIKE_MIN} to ${BIKE_MAX} minutes away on the Voie Verte, depending on the house.`,
     },
     {
       q: "How does the application work?",

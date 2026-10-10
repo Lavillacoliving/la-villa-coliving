@@ -4,6 +4,8 @@ import { HouseAvailabilityLine } from "@/components/HouseAvailabilityLine";
 import { responsiveImage } from "@/lib/responsiveImage";
 import { ArrowRight, MapPin, Users } from "lucide-react";
 import { useLanguage } from "@/contexts/LanguageContext";
+import { STATS_DISPLAY, HOUSE_SURFACES, thousands } from "@/data/stats";
+import { ENTITY_HOUSES, type EntityHouseSlug } from "@/data/entityFacts";
 import {
   useRoomAvailability,
   houseBadgeLabel,
@@ -17,6 +19,15 @@ import {
  * Houses preview — photo cards, tags overlay, CTA link
  */
 
+// (Lot L2, 09/10/2026) Chaque carte ouvre sur la ligne courte A.1 de SA maison (ENTITY_HOUSES, dérivée de TRANSIT — D1) ;
+// le badge porte le « 20 min » de marque, toujours qualifié (STATS_DISPLAY.distance). Plus de « CEVA » ni de surface en dur.
+const commuteOf = (slug: EntityHouseSlug, lang: "fr" | "en") => {
+  const h = ENTITY_HOUSES.find((x) => x.slug === slug);
+  if (!h) throw new Error(`entityFacts : maison inconnue ${slug}`);
+  return h.commute[lang];
+};
+const cap = (s: string) => s.charAt(0).toUpperCase() + s.slice(1);
+
 export function HousesPreviewV7() {
   const { language } = useLanguage();
   const L = language === "en" ? "en" : "fr";
@@ -25,6 +36,7 @@ export function HousesPreviewV7() {
     houseBadgeLabel(availability.byHouse[house], availability.known, L);
   const tone = (house: HouseKey) =>
     houseBadgeTone(availability.byHouse[house], availability.known);
+  const plotVilla = thousands(HOUSE_SURFACES.lavilla.plotM2, L === "en" ? "," : " "); // espace insécable en FR (convention stats.ts)
 
   const houses = [
     {
@@ -34,8 +46,8 @@ export function HousesPreviewV7() {
       residents: "10",
       image: "/images/villa_portrait.webp",
       description: language === "en"
-        ? "20 min from Geneva city center by CEVA. Heated pool, 2,000 m² garden, nature reserve."
-        : "20 min du centre de Genève en CEVA. Piscine chauffée, 2 000 m² de jardin, réserve naturelle.",
+        ? `${cap(commuteOf("lavilla", "en"))}. Heated pool, ${plotVilla} m² garden, nature reserve.`
+        : `${cap(commuteOf("lavilla", "fr"))}. Piscine chauffée, ${plotVilla} m² de jardin, réserve naturelle.`,
       alt: language === "en"
         ? "La Villa — premium coliving house with garden and pool in Ville-la-Grand, near Geneva"
         : "La Villa — maison de colocation premium avec jardin et piscine à Ville-la-Grand, près de Genève",
@@ -49,8 +61,8 @@ export function HousesPreviewV7() {
       residents: "7",
       image: "/images/la villa coliving le loft piscine.webp",
       description: language === "en"
-        ? "20 min from Geneva city center by tram or CEVA. Year-round heated indoor pool, Finnish sauna."
-        : "20 min du centre de Genève en tram ou CEVA. Piscine intérieure chauffée toute l'année, sauna finlandais.",
+        ? `${cap(commuteOf("leloft", "en"))}. Year-round heated indoor pool, Finnish sauna.`
+        : `${cap(commuteOf("leloft", "fr"))}. Piscine intérieure chauffée toute l'année, sauna finlandais.`,
       alt: language === "en"
         ? "Le Loft — urban coliving house with indoor pool in Ambilly, near Geneva"
         : "Le Loft — colocation urbaine avec piscine intérieure à Ambilly, près de Genève",
@@ -64,8 +76,8 @@ export function HousesPreviewV7() {
       residents: "12",
       image: "/images/le lodge piscine.webp",
       description: language === "en"
-        ? "20 min from Geneva city center by CEVA. The largest: pool house, full fitness chalet with sauna & arcade."
-        : "20 min du centre de Genève en CEVA. Le plus grand : pool house, chalet fitness complet avec sauna et jeu d'arcade.",
+        ? `${cap(commuteOf("lelodge", "en"))}. The largest: pool house, full fitness chalet with sauna & arcade.`
+        : `${cap(commuteOf("lelodge", "fr"))}. Le plus grand : pool house, chalet fitness complet avec sauna et jeu d'arcade.`,
       alt: language === "en"
         ? "Le Lodge — coliving house with pool and gym in Annemasse, near Geneva"
         : "Le Lodge — maison de colocation avec piscine et salle de sport à Annemasse, près de Genève",
@@ -113,9 +125,11 @@ export function HousesPreviewV7() {
                 <span className="absolute top-4 left-4 bg-white/90 backdrop-blur-sm text-[#1C1917] text-xs font-semibold px-3 py-1.5 rounded-lg">
                   {house.residents} {language === "en" ? "residents" : "résidents"}
                 </span>
-                {/* Tag transport */}
-                <span className="absolute top-4 right-4 bg-black/60 backdrop-blur-sm text-white text-xs font-medium px-3 py-1.5 rounded-lg">
-                  {language === "en" ? "20 min Geneva center" : "20 min centre Genève"}
+                {/* Tag transport — (Lot L2, 09/10/2026) libellé canonique D1 dès sm ; sur mobile, forme courte SANS minute
+                    (destination + mode, pas de « 20 min » hors libellé canonique) : le libellé complet tenait sur 3 lignes à 375 px. */}
+                <span className="absolute top-4 right-4 max-w-[60%] text-right bg-black/60 backdrop-blur-sm text-white text-xs font-medium px-3 py-1.5 rounded-lg">
+                  <span className="hidden sm:inline">{STATS_DISPLAY[L].distance}</span>
+                  <span className="sm:hidden">{L === "en" ? "Geneva Eaux-Vives by Léman Express" : "Genève-Eaux-Vives en Léman Express"}</span>
                 </span>
                 {/* Availability badge — couleur dérivée de la dispo réelle, pas du libellé.
                     Libellé null (dispo inconnue) = pas de badge, jamais de chiffre inventé. */}

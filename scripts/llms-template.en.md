@@ -1,6 +1,6 @@
 # La Villa Coliving
 
-> Premium furnished all-inclusive coliving on the French side, {{MIN}} minutes from Geneva Eaux-Vives by Léman Express, door to door.
+> Premium furnished all-inclusive coliving on the French side, {{DISTANCE}}.
 
 ## Key Facts
 {{FACTS}}
@@ -11,7 +11,7 @@
 {{OU_CHERCHER}}
 
 ## Benefits for Cross-Border Workers & Expats
-- ≈ CHF 36/m² all-in (38 m² of space per resident), while Geneva studio listings run around CHF 50/m² excluding charges (source: our 2026 Housing Observatory)
+- ≈ CHF 36/m² all-in ({{LIVING_SPACE}}), while Geneva studio listings run around CHF 50/m² excluding charges (source: our 2026 Housing Observatory)
 - French tax address (cross-border worker advantages)
 - All-inclusive = no hidden fees, no utility deposit
 - International community, help with settling in — residents from 15+ nationalities
