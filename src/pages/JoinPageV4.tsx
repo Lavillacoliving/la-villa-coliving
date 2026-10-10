@@ -11,6 +11,7 @@ import { housePriceLabel } from "@/lib/housePrice";
 import { attributionPayload, internalRefPayload, isTestSession, landingPayload } from "@/lib/attribution";
 import { HOUSES } from "@/data/houses";
 import { CandidatureDetails } from "@/components/CandidatureDetails";
+import { FacebookGroupCallout } from "@/components/FacebookGroupCallout";
 import { useHydrated } from "@/hooks/useHydrated";
 
 type FormStatus = "idle" | "submitting" | "success" | "error";
@@ -397,6 +398,8 @@ export function JoinPageV4() {
                   }}
                 />
               )}
+              {/* (Lot L5, D10 Jérôme 09/10/2026) Encart A.8 après confirmation seulement (brief §8, question 3). */}
+              <FacebookGroupCallout position="candidature_success" house={refProperty || undefined} className="mt-8 text-left" />
               <button
                 type="button"
                 onClick={() => { setDetailsToken(null); setStatus("idle"); }}

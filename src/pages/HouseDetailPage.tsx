@@ -70,6 +70,7 @@ import { SEO } from "@/components/SEO";
 import { WhatsAppButton } from "@/components/WhatsAppButton";
 import { HouseMap } from "@/components/HouseMap";
 import { RoomPipeline } from "@/components/RoomPipeline";
+import { FacebookGroupCallout } from "@/components/FacebookGroupCallout";
 import {
   Carousel,
   CarouselContent,
@@ -2020,6 +2021,9 @@ export function HouseDetailPage() {
               ))}
             </div>
           )}
+          {/* (Lot L5, D10 Jérôme 09/10/2026) Encart A.8 sous la liste des chambres — texte unique answerSlots.ts, hors du
+              ternaire (présent que la liste vienne de la base ou du repli statique). */}
+          <FacebookGroupCallout position="house_rooms" house={id} className="mt-10" />
         </div>
       </section>
 
