@@ -18,7 +18,7 @@ export function InvestisseursPage() {
   const { language } = useLanguage();
   const L = language === "en" ? "en" : "fr";
   // (Lot L3, D3 Jérôme 09/10/2026) Ancien taux d'occupation « sur 5 ans » retiré : la page B2B est la SEULE à publier
-  // l'occupation, toujours avec sa base (OCCUPANCY_DISPLAY : « ≈ N % de jours-chambre occupés depuis l'ouverture (sept. 2021 →
+  // l'occupation, toujours avec sa base (OCCUPANCY_DISPLAY : « ≈ N % de jours-chambre occupés depuis l'ouverture (oct. 2021 →
   // mois de mesure) »). Les années d'exploitation (YEARS_IN_OPERATION) et le nombre de maisons viennent aussi de stats.ts.
   const occ = OCCUPANCY_DISPLAY[L];
 

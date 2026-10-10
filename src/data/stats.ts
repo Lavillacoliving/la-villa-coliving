@@ -258,8 +258,10 @@ export const GOOGLE_REVIEWS_LINK_LABEL = { fr: "Voir les avis", en: "See the rev
 // (méthodologie first-party datée) jusqu'au prochain bulletin. Remesure à chaque mise à jour mensuelle (README).
 export const OCCUPANCY = {
   pct: 98,
-  since: "2021-09-17", // première entrée (La Villa)
-  sinceLabel: { fr: "sept. 2021", en: "Sept. 2021" },
+  since: "2021-09-17", // première entrée (La Villa) — la mesure de la vue démarre là (jours-chambre inclus, méthode conservatrice)
+  // (Décision Jérôme 10/10/2026) La date d'ouverture PUBLIÉE est octobre 2021, partout (fiche entité, llms, Observatoire,
+  // /qui-sommes-nous et /investisseurs) : le libellé de la fenêtre ne dit plus « sept. 2021 » même si la première entrée est du 17/09.
+  sinceLabel: { fr: "oct. 2021", en: "Oct. 2021" },
   measuredOn: "2026-10-10", // première lecture réelle de v_social_proof (97,7 % → 98)
   measuredOnLabel: { fr: "oct. 2026", en: "Oct. 2026" },
   basis: "jours-chambre plafonnés à la capacité, resident_history ∪ tenants (v_social_proof)",
