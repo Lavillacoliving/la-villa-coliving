@@ -40,6 +40,23 @@ export function extractRootContent(html) {
 }
 
 /**
+ * Contenus des blocs JSON-LD de tout le document, trimés, dans l'ordre (lecture de l'injection).
+ */
+export function jsonLdContents(html) {
+  return [...html.matchAll(/<script\s+type="application\/ld\+json"[^>]*>([\s\S]*?)<\/script>/g)].map((m) => m[1].trim());
+}
+
+/**
+ * Clé de dédoublonnage d'un bloc JSON-LD à l'injection : son premier "@type" (repli : ses 50 premiers
+ * caractères). Seul le PREMIER bloc de chaque clé est servi. Partagée avec la garde
+ * scripts/check-entity-facts.mjs (blocs de même clé au contenu différent, 08/10/2026).
+ */
+export function jsonLdServedKey(content) {
+  const typeMatch = content.match(/"@type"\s*:\s*"([^"]+)"/);
+  return typeMatch ? typeMatch[1] : content.substring(0, 50);
+}
+
+/**
  * Extract ALL SEO-relevant tags from pre-rendered <head>
  * Returns an object with all extracted data
  */
@@ -80,14 +97,11 @@ export function extractSeoTags(html) {
   }
 
   // JSON-LD scripts — collect from entire HTML, deduplicate by @type
-  const jsonLdFullPattern = /<script\s+type="application\/ld\+json"[^>]*>([\s\S]*?)<\/script>/g;
   seo.jsonLd = [];
   const seenTypes = new Set();
-  while ((m = jsonLdFullPattern.exec(html)) !== null) {
-    const content = m[1].trim();
+  for (const content of jsonLdContents(html)) {
     // Deduplicate by @type to prevent multiple LodgingBusiness/Organization/FAQPage
-    const typeMatch = content.match(/"@type"\s*:\s*"([^"]+)"/);
-    const type = typeMatch ? typeMatch[1] : content.substring(0, 50);
+    const type = jsonLdServedKey(content);
     if (!seenTypes.has(type)) {
       seenTypes.add(type);
       seo.jsonLd.push(content);

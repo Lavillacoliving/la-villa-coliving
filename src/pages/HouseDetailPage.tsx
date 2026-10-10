@@ -6,7 +6,7 @@ import { responsiveImage } from "@/lib/responsiveImage";
 import { LocalizedLink } from "@/components/LocalizedLink";
 import { colocGeneveHref } from "@/lib/siteLinks";
 import { Scrim } from "@/components/Scrim";
-import { buildBreadcrumbSchema, homeUrl, HOUSES, LAVILLA_SAME_AS, ORG_ID } from "@/lib/structuredData";
+import { buildBreadcrumbSchema, homeUrl, HOUSES, buildHouseLodgingNode } from "@/lib/structuredData";
 import {
   MapPin,
   Users,
@@ -24,7 +24,7 @@ import {
   Sun,
 } from "lucide-react";
 import { useLanguage } from "@/contexts/LanguageContext";
-import { STATS, STATS_DISPLAY, ROOMS_BY_HOUSE, HOUSE_SURFACES, ROOM_SURFACE_BY_HOUSE, TRANSIT, thousands, PRICE_FR_NUM, PRICE_EN_NUM, PRICE_CHF_FR, PRICE_CHF_EN, PRICE_SHARED_FR_NUM, PRICE_SHARED_EN_NUM, PRICE_SHARED_CHF_FR, PRICE_SHARED_CHF_EN, EUR_STANDARD_FR_NUM, EUR_STANDARD_EN_NUM, EUR_SHARED_FR_NUM, EUR_SHARED_EN_NUM } from "@/data/stats";
+import { STATS_DISPLAY, HOUSE_SURFACES, ROOM_SURFACE_BY_HOUSE, TRANSIT, thousands, PRICE_FR_NUM, PRICE_EN_NUM, PRICE_CHF_FR, PRICE_CHF_EN, PRICE_SHARED_FR_NUM, PRICE_SHARED_EN_NUM, PRICE_SHARED_CHF_FR, PRICE_SHARED_CHF_EN, EUR_STANDARD_FR_NUM, EUR_STANDARD_EN_NUM, EUR_SHARED_FR_NUM, EUR_SHARED_EN_NUM } from "@/data/stats";
 // (Lot L2 « Emplacement et transport », 09/10/2026) Source unique des faits d'emplacement : plus aucune minute,
 // distance ou surface en dur dans cette page (règle D1/D6/D7 de Jérôme, recon L0.2a).
 import { ENTITY_HOUSES } from "@/data/entityFacts";
@@ -1451,53 +1451,14 @@ export function HouseDetailPage() {
       {/* LocalBusiness Schema.org */}
       {/* (S2, 07/09/2026) JSON-LD via Helmet → dans <head> uniquement (les scripts inline du corps étaient recopiés en tête par inject-prerendered : doublons). */}
       <Helmet>
-      <script type="application/ld+json">{JSON.stringify({
-        "@context": "https://schema.org",
-        "@type": "LodgingBusiness",
-        // (Lot S1) @id propre + rattachement à l'entité mère : les 3 fiches maison ne flottent plus.
-        "@id": `https://www.lavillacoliving.com/${id}#lodging`,
-        "parentOrganization": { "@id": ORG_ID },
-        "name": `La Villa Coliving — ${house.name}`,
-        "description": house.description,
-        "image": `https://www.lavillacoliving.com${house.image}`,
-        "url": `https://www.lavillacoliving.com/${id}`,
-        "telephone": "+33664315134",
-        "email": "contact@lavillacoliving.com",
-        // `streetAddress` contenait le nom de la commune, dupliqué depuis
-        // `addressLocality` — les 3 fiches maison annonçaient donc une adresse
-        // sans rue. Les vraies rues vivent dans HOUSES (structuredData.ts),
-        // source unique déjà utilisée par le schema de l'accueil.
-        "address": {
-          "@type": "PostalAddress",
-          "streetAddress": HOUSES.find(h => h.slug === id)?.streetAddress ?? "",
-          "addressLocality": HOUSES.find(h => h.slug === id)?.addressLocality ?? "",
-          "postalCode": HOUSES.find(h => h.slug === id)?.postalCode ?? "74100",
-          "addressRegion": "Haute-Savoie",
-          "addressCountry": "FR"
-        },
-        // Geo rooftop-exacte depuis HOUSES (source unique, BAN 15/08/2026) — les
-        // valeurs codées en dur ici divergeaient de structuredData.ts.
-        "geo": {
-          "@type": "GeoCoordinates",
-          "latitude": HOUSES.find(h => h.slug === id)?.geo.lat,
-          "longitude": HOUSES.find(h => h.slug === id)?.geo.lng
-        },
-        // (Lot S1) priceRange localisé (était en français sur les pages EN).
-        "priceRange": language === "en"
-          ? (id === "lavilla" ? `CHF ${PRICE_SHARED_EN_NUM}–${PRICE_EN_NUM}/month` : `CHF ${PRICE_EN_NUM}/month`)
-          : (id === "lavilla" ? `${PRICE_SHARED_FR_NUM}–${PRICE_FR_NUM} CHF/mois` : `${PRICE_FR_NUM} CHF/mois`),
-        "currenciesAccepted": "EUR",
-        "amenityFeature": [
-          { "@type": "LocationFeatureSpecification", "name": "Swimming Pool", "value": true },
-          { "@type": "LocationFeatureSpecification", "name": "Sauna", "value": true },
-          { "@type": "LocationFeatureSpecification", "name": "Gym", "value": true },
-          { "@type": "LocationFeatureSpecification", "name": "WiFi", "value": true },
-          { "@type": "LocationFeatureSpecification", "name": "Parking", "value": true }
-        ],
-        "numberOfRooms": ROOMS_BY_HOUSE[id as keyof typeof ROOMS_BY_HOUSE] ?? STATS.totalRooms,
-        // (07/09/2026) profils de l'organisation + fiche annuaire propre à la maison (HOUSES[].sameAs).
-        "sameAs": [...LAVILLA_SAME_AS, ...(HOUSES.find(h => h.slug === id)?.sameAs ?? [])]
-      })}</script>
+      {/* (Lot L6.2, 10/10/2026) UN seul nœud LodgingBusiness par maison, construit par buildHouseLodgingNode (structuredData.ts) —
+          le même que `department[]` des fiches d'organisation (nom, @id #lodging, parentOrganization, adresse, geo, numberOfRooms,
+          priceRange, amenityFeature, sameAs). Description et image de la page en surcharge ; plus de `currenciesAccepted`. */}
+      <script type="application/ld+json">{JSON.stringify(buildHouseLodgingNode(
+        HOUSES.find((h) => h.slug === id) ?? HOUSES[0],
+        language === "en" ? "en" : "fr",
+        { context: true, description: house.description, image: `https://www.lavillacoliving.com${house.image}` },
+      ))}</script>
       {/* BreadcrumbList Schema.org */}
       <script type="application/ld+json">{JSON.stringify(buildBreadcrumbSchema([
         { name: language === "en" ? "Home" : "Accueil", url: homeUrl(language) },

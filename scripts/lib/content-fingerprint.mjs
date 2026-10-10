@@ -44,8 +44,9 @@
  * de contenu de /chambres-disponibles, des pages maisons, de la home… : la page doit alors être datée
  * du run (verdict EN-6 de l'audit). Le clignotement du bloc Offer de /colocation-geneve (InStock ou
  * PreOrder selon le run : deux blocs Offer différents dans le HTML prérendu, l'injection sert le
- * premier) est un vrai écart du contenu servi, laissé visible exprès : il relève d'un lot séparé
- * (ColocationGenevePage.tsx, garde « un seul Offer par page »).
+ * premier) est un vrai écart du contenu servi, laissé visible exprès. Corrigé à la source le 08/10/2026
+ * (fix/offer-colocation-geneve : Offer émis une fois les chambres chargées, ColocationGenevePage.tsx)
+ * et gardé en CI (jsonLdConflicts, scripts/check-entity-facts.mjs).
  *
  * Fonctions PURES ; testées dans tools/test/content-fingerprint.test.mjs.
  */
