@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useState, type FormEvent } from "react";
+import { STATS } from "@/data/stats";
 import { ArrowRight, BellRing, CalendarClock } from "lucide-react";
 import { LocalizedLink } from "@/components/LocalizedLink";
 import { supabase } from "@/lib/supabase";
@@ -148,8 +149,8 @@ export function RoomPipeline({ house, houseName, en, hasCandidates, onApplyClick
           </h3>
           <p className="text-[#57534E] font-medium leading-relaxed max-w-2xl">
             {en
-              ? `Our residents stay 13 months on average: rooms open up all year round in our three houses${hasCandidates ? ", not only the one above" : ""}. Tell us when you'd like to move in and we'll offer you the first room that matches — before it even shows up here.`
-              : `Nos résidents restent 13 mois en moyenne : des chambres se libèrent toute l'année dans nos trois maisons${hasCandidates ? ", pas seulement celle ci-dessus" : ""}. Dis-nous quand tu veux emménager, on te propose la première chambre qui correspond — avant même qu'elle n'apparaisse ici.`}
+              ? `Our residents stay ${STATS.averageStayMonths} months on average: rooms open up all year round in our three houses${hasCandidates ? ", not only the one above" : ""}. Tell us when you'd like to move in and we'll offer you the first room that matches — before it even shows up here.`
+              : `Nos résidents restent ${STATS.averageStayMonths} mois en moyenne : des chambres se libèrent toute l'année dans nos trois maisons${hasCandidates ? ", pas seulement celle ci-dessus" : ""}. Dis-nous quand tu veux emménager, on te propose la première chambre qui correspond — avant même qu'elle n'apparaisse ici.`}
           </p>
 
           {/* Mois souhaité + candidature (période transmise au formulaire) */}

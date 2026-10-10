@@ -16,7 +16,7 @@ const BIKE_MAX = Math.max(...BIKE_TO_RIVE);
 // texte verbatim : ces réponses sont AUSSI balisées FAQPage (règle d'or :
 // le texte balisé doit être identique au texte visible).
 // Faits verrouillés : prix via stats.ts, caution 2 mois hors charges,
-// durée « 13 mois en moyenne (9 mois hors longs séjours) », jamais de
+// durée « 13 mois en moyenne (9 mois hors longs séjours) » (STATS.averageStayMonths), jamais de
 // comparaison « moins cher que Genève » (voir src/data/barometre.ts).
 export const homeFaq: { fr: QAPair[]; en: QAPair[] } = {
   fr: [
@@ -42,7 +42,7 @@ export const homeFaq: { fr: QAPair[]; en: QAPair[] } = {
     },
     {
       q: "Comment se passe la candidature ?",
-      a: `Tu remplis le formulaire de candidature en ${STATS.applyMinutes} minutes, et on te répond sous ${STATS.responseHours} h. Ensuite : un échange pour faire connaissance, une visite de la maison, et si tout est aligné et qu'une chambre est disponible, tu peux emménager en 72 h dès ton premier contact. Pas encore de fiche de salaire suisse ? Le dossier tient en trois pièces : contrat de travail signé ou promesse d'embauche, pièce d'identité, caution de ${STATS.depositMonths} mois de loyer hors charges ; ${GUARANTOR_SENTENCE.fr}. Sans engagement et sans frais de dossier — la durée de séjour moyenne chez nous est de 13 mois (9 mois hors longs séjours).`,
+      a: `Tu remplis le formulaire de candidature en ${STATS.applyMinutes} minutes, et on te répond sous ${STATS.responseHours} h. Ensuite : un échange pour faire connaissance, une visite de la maison, et si tout est aligné et qu'une chambre est disponible, tu peux emménager en 72 h dès ton premier contact. Pas encore de fiche de salaire suisse ? Le dossier tient en trois pièces : contrat de travail signé ou promesse d'embauche, pièce d'identité, caution de ${STATS.depositMonths} mois de loyer hors charges ; ${GUARANTOR_SENTENCE.fr}. Sans engagement et sans frais de dossier — la durée de séjour moyenne chez nous est de ${STATS.averageStayMonths} mois (9 mois hors longs séjours).`,
     },
   ],
   en: [
@@ -68,7 +68,7 @@ export const homeFaq: { fr: QAPair[]; en: QAPair[] } = {
     },
     {
       q: "How does the application work?",
-      a: `You fill in the application form in ${STATS.applyMinutes} minutes, and we reply within ${STATS.responseHours} h. Then: a chat to get to know each other, a house visit, and if everything lines up and a room is available, you can move in within 72 h of your first contact. No Swiss payslip yet? The file comes down to three items: a signed employment contract or job offer, an ID, and a deposit of ${STATS.depositMonths} months' rent excluding bills; ${GUARANTOR_SENTENCE.en}. No commitment and no application fees — the average stay with us is 13 months (9 months excluding long stays).`,
+      a: `You fill in the application form in ${STATS.applyMinutes} minutes, and we reply within ${STATS.responseHours} h. Then: a chat to get to know each other, a house visit, and if everything lines up and a room is available, you can move in within 72 h of your first contact. No Swiss payslip yet? The file comes down to three items: a signed employment contract or job offer, an ID, and a deposit of ${STATS.depositMonths} months' rent excluding bills; ${GUARANTOR_SENTENCE.en}. No commitment and no application fees — the average stay with us is ${STATS.averageStayMonths} months (9 months excluding long stays).`,
     },
   ],
 };
