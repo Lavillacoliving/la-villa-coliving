@@ -45,11 +45,14 @@ export const ROOM_SURFACE_BY_HOUSE = {
 } as const;
 
 export const STATS = {
+  // (Lot L3, D3 Jérôme 09/10/2026) « 100+ » conservé, désormais soutenu par la base : 119 résidents distincts (lecture réelle de la vue le 10/10/2026) depuis le
+  // 17/09/2021 (resident_history ∪ tenants, vue v_social_proof — cf. STATS_SOURCE). Jamais « 150 ».
   totalResidents: 100,
   totalRooms: TOTAL_ROOMS,
   totalHouses: 3,
-  occupancyRate: 99,
-  occupancyYears: 5,
+  // (Lot L3, D3, 09/10/2026) L'ancien couple « taux d'occupation / sur 5 ans » est RETIRÉ de STATS : aucune mesure ne le
+  // soutenait. La base mesurée vit dans OCCUPANCY (réservée à /investisseurs) ; le hero et /candidature affichent
+  // averageStayMonths à la place.
   foundedYear: 2021,
   // (D1, brief « Ingénierie des créneaux », 09/10/2026) Valeur conservée, mais son libellé est désormais toujours
   // qualifié : « 20 min de Genève-Eaux-Vives en Léman Express, porte-à-porte » (STATS_DISPLAY.distance), jamais
@@ -83,7 +86,8 @@ export const STATS = {
   // ⚠️ Maintenu à la main jusqu'à la mise en base (septembre) : doit TOUJOURS égaler le nombre
   // d'items réellement listés sur /tarifs (24 depuis le retrait du panier repas au 01/09/2026).
   includedItems: 24,
-  rating: "4,9", // note interne ; graphie virgule en FR, point en EN (cf. ratingDisplay)
+  // (Lot L3, D4, 09/10/2026) L'ancienne note interne (`rating`, NPS résidents) est RETIRÉE : la seule note publiée est
+  // GOOGLE_REVIEWS (fiche Google), rendue par STATS_DISPLAY.googleRating.
 } as const;
 
 // ── Prix public affiché ────────────────────────────────────────────────
@@ -214,6 +218,66 @@ export const FACEBOOK_GROUP = {
   checkedOn: "2026-10-09",
 } as const;
 
+// ── Note Google (Lot L3 « Note Google et preuves », décision D4 de Jérôme du 09/10/2026) ─────────────────
+// Fiche Google Business unique « La Villa Coliving » (34 rue du Foron, Ville-la-Grand ; Le Loft et Le Lodge n'ont pas de
+// fiche). Relevé du 08/10/2026 : 4,8/5, 36 avis. Règles : toujours étiquetée « sur Google » / « on Google »
+// (STATS_DISPLAY.googleRating), toujours accompagnée du lien « Voir les avis » vers `url` (nouvel onglet, rel noopener
+// noreferrer, lien normal) ; JAMAIS d'aggregateRating ni de Review en JSON-LD (garde check-entity-facts). Remplace
+// l'ancienne note interne (NPS résidents), retirée partout le 09/10/2026 (12 pages + 2 articles en base).
+// Mise à jour MANUELLE mensuelle (src/data/README.md) : rating / ratingEn / count / checkedOn, puis ENTITY_FACTS_VERSION
+// (la puce « Avis » de la fiche entité change) et les 2 articles qui portent la note en dur (SQL).
+export const GOOGLE_REVIEWS = {
+  rating: "4,8", // graphie FR (virgule)
+  ratingEn: "4.8", // graphie EN (point)
+  count: 36,
+  /** Fiche Google (avis lisibles) — lien stable par cid. Le lien « ÉCRIRE un avis » (g.page/r/…/review) reste dans
+   *  QuestionnaireDepartPage : ce n'est pas le même usage. */
+  url: "https://maps.google.com/?cid=14514002506022967350",
+  checkedOn: "2026-10-08",
+} as const;
+export const GOOGLE_REVIEWS_LINK_LABEL = { fr: "Voir les avis", en: "See the reviews" } as const;
+
+// ── Occupation mesurée (Lot L3, D3 Jérôme 09/10/2026) ─────────────────────────────────────────────────
+// L'ancien « taux d'occupation sur 5 ans » est RETIRÉ du site (hero, /candidature, /investisseurs, llms.txt) : aucune mesure
+// ne le soutenait. Nouvelle base, chiffrée en lecture seule le 09/10/2026 (dry-run de la vue v_social_proof : jours-chambre
+// occupés, plafonnés à la capacité de chaque maison, resident_history ∪ tenants) : La Villa 99,5 %, Le Loft 94,4 %,
+// Le Lodge 97,0 %, ensemble 97,7 % → arrondi à 98. RÉSERVÉ à /investisseurs, toujours écrit avec sa base
+// (OCCUPANCY_DISPLAY). ⚠️ Nouvelle base à faire VALIDER par Jérôme ; l'Observatoire garde sa propre fourchette
+// (méthodologie first-party datée) jusqu'au prochain bulletin. Remesure à chaque mise à jour mensuelle (README).
+export const OCCUPANCY = {
+  pct: 98,
+  since: "2021-09-17", // première entrée (La Villa)
+  sinceLabel: { fr: "sept. 2021", en: "Sept. 2021" },
+  measuredOn: "2026-10-10", // première lecture réelle de v_social_proof (97,7 % → 98)
+  measuredOnLabel: { fr: "oct. 2026", en: "Oct. 2026" },
+  basis: "jours-chambre plafonnés à la capacité, resident_history ∪ tenants (v_social_proof)",
+} as const;
+
+/** Années d'exploitation (« 5 ans d'expérience » sur /investisseurs), dérivées sans Date : année de la dernière mesure
+ *  d'occupation − année de fondation. Suit OCCUPANCY.measuredOn à chaque relevé mensuel (Lot L3, 10/10/2026). */
+export const YEARS_IN_OPERATION = Number(OCCUPANCY.measuredOn.slice(0, 4)) - STATS.foundedYear;
+
+/** Libellés de l'occupation pour /investisseurs — valeur, étiquette courte (tuiles) et phrase complète avec la base. */
+export const OCCUPANCY_DISPLAY = {
+  fr: {
+    value: `≈ ${OCCUPANCY.pct} %`, // U+00A0 avant « % »
+    label: `de jours-chambre occupés depuis l'ouverture (${OCCUPANCY.sinceLabel.fr} → ${OCCUPANCY.measuredOnLabel.fr})`,
+    sentence: `≈ ${OCCUPANCY.pct} % de jours-chambre occupés depuis l'ouverture (${OCCUPANCY.sinceLabel.fr} → ${OCCUPANCY.measuredOnLabel.fr}, historique des occupants et dashboard)`,
+  },
+  en: {
+    value: `≈ ${OCCUPANCY.pct}%`,
+    label: `of room-days occupied since opening (${OCCUPANCY.sinceLabel.en} → ${OCCUPANCY.measuredOnLabel.en})`,
+    sentence: `≈ ${OCCUPANCY.pct}% of room-days occupied since opening (${OCCUPANCY.sinceLabel.en} → ${OCCUPANCY.measuredOnLabel.en}, resident history and dashboard)`,
+  },
+} as const;
+
+// Base des preuves sociales (Lot L3, 09/10/2026) : ce qui soutient chaque chiffre de STATS. Lue par la garde CI en mode
+// adaptatif : avertissement tant que la vue v_social_proof n'existe pas (migration scripts/resident-history-2026-10-09.sql
+// à appliquer par Jérôme), échec si elle existe et que distinct_residents_since_opening < STATS.totalResidents.
+export const STATS_SOURCE = {
+  totalResidents: "resident_history ∪ tenants, vue v_social_proof : 119 distincts au 10/10/2026 (≥ 100 ; migration appliquée le 10/10/2026)",
+} as const;
+
 // ⚠️ DISPONIBILITÉ — PLUS ICI (18/08/2026). L'ancienne constante `AVAILABILITY`,
 // tenue à la main, était restée aux valeurs provisoires du 15/06 (1/1/1) et rendait
 // 2 badges maisons sur 3 faux en prod. Source unique désormais : la vue Supabase
@@ -227,8 +291,11 @@ export const STATS_DISPLAY = {
     distance: `${STATS.genevaCenterMinutes} min from Geneva Eaux-Vives by Léman Express, door to door`, // D1 (09/10/2026) : toujours qualifié
     roomSize: `${STATS.roomSizeMin} to ${STATS.roomSizeMax} m² rooms`,
     price: `${PRICE_CHF_EN}/month — all inclusive`, // (03/09) plus de toLocaleString : même graphie que le reste du site
-    rating: STATS.rating.replace(",", "."), // 4.9 en EN
-    ratingSourced: `${STATS.rating.replace(",", ".")}/5 — resident surveys`,
+    // (Lot L3, D4, 09/10/2026) Note Google, toujours étiquetée « on Google » ; `googleRatingValue` + `googleRatingLabel`
+    // = les deux moitiés pour les tuiles (valeur en gros, étiquette dessous), `googleRating` = la phrase entière.
+    googleRatingValue: `${GOOGLE_REVIEWS.ratingEn}/5`,
+    googleRatingLabel: `on Google (${GOOGLE_REVIEWS.count} reviews)`,
+    googleRating: `${GOOGLE_REVIEWS.ratingEn}/5 on Google (${GOOGLE_REVIEWS.count} reviews)`,
   },
   fr: {
     residents: `${STATS.totalResidents}+ résidents depuis ${STATS.foundedYear}`,
@@ -236,7 +303,8 @@ export const STATS_DISPLAY = {
     distance: `${STATS.genevaCenterMinutes} min de Genève-Eaux-Vives en Léman Express, porte-à-porte`, // D1 (09/10/2026) : toujours qualifié
     roomSize: `Chambres de ${STATS.roomSizeMin} à ${STATS.roomSizeMax} m²`,
     price: `${PRICE_CHF_FR}/mois — tout inclus`,
-    rating: STATS.rating, // 4,9 en FR (virgule)
-    ratingSourced: `${STATS.rating}/5 — enquêtes résidents`,
+    googleRatingValue: `${GOOGLE_REVIEWS.rating}/5`,
+    googleRatingLabel: `sur Google (${GOOGLE_REVIEWS.count} avis)`,
+    googleRating: `${GOOGLE_REVIEWS.rating}/5 sur Google (${GOOGLE_REVIEWS.count} avis)`,
   },
 } as const;

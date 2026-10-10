@@ -35,7 +35,6 @@ export const translations = {
     // Trust Badges - New Section
     trustBadges: {
       members: "Happy Members",
-      rating: "Member Rating",
       commute: "To Geneva",
       houses: "Unique Houses",
     },
@@ -467,7 +466,6 @@ export const translations = {
     // Trust Badges - New Section
     trustBadges: {
       members: "Membres Heureux",
-      rating: "Note des Membres",
       commute: "De Genève",
       houses: "Maisons Uniques",
     },

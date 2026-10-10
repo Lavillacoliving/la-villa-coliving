@@ -6,7 +6,7 @@ import { useLanguage } from "@/contexts/LanguageContext";
 import { SEO } from "@/components/SEO";
 import { buildDatasetSchema } from "@/lib/structuredData";
 import { BAROMETRE, STUDIO_FULL_COST } from "@/data/barometre";
-import { PRICE_FR_NUM, PRICE_EN_NUM, PRICE_SHARED_FR_NUM, PRICE_SHARED_EN_NUM } from "@/data/stats";
+import { STATS, PRICE_FR_NUM, PRICE_EN_NUM, PRICE_SHARED_FR_NUM, PRICE_SHARED_EN_NUM } from "@/data/stats";
 import { Train, Bus, Bike, Car, Wallet, Download, ArrowRight, MapPin, Info, Home, Users, Check, ChevronDown, ImageDown } from "lucide-react";
 
 // ──────────────────────────────────────────────────────────────────────────
@@ -116,9 +116,10 @@ export function ObservatoireLogementFrontalierPage() {
     name: en
       ? "Cross-border housing observatory — Studio rent × Commute, left-bank Geneva (2026)"
       : "Observatoire du logement frontalier — Loyer studio × Trajet, rive gauche de Genève (2026)",
+    // (Lot L3, 09/10/2026) « 100+ résidents depuis 2021 » lu depuis STATS (plus de littéral) ; le « 98-99 % » de l'Observatoire reste.
     description: en
-      ? "Advertised studio rent (Observatory survey on Le Figaro Immobilier, June 2026) crossed with commute time to Geneva-Eaux-Vives, for 17 municipalities of the French Genevois along the Léman Express axis, including peak-hour train frequency. Geneva, a two-speed market: sitting tenants 35 CHF/m² (OCSTAT 2025) vs. newcomers ≈ 50 CHF/m² in today's listings (Homegate survey, +44%). Includes first-party aggregates from La Villa Coliving's 3 houses (100+ residents since 2021), clearly labelled. Conversions at €1 = CHF 0.92 (July 2026)."
-      : "Loyer d'annonce d'un studio (relevé de l'Observatoire sur Le Figaro Immobilier, juin 2026) croisé au temps de trajet vers Genève-Eaux-Vives, pour 17 communes du Genevois français le long de l'axe Léman Express, avec la cadence des trains en heure de pointe. Genève, marché à deux vitesses : locataire en place 35 CHF/m² (OCSTAT 2025) vs nouvel arrivant ≈ 50 CHF/m² dans les annonces (relevé Homegate, +44 %). Inclut les agrégats first-party des 3 maisons La Villa Coliving (100+ résidents depuis 2021), clairement étiquetés. Conversions au taux 1 € = 0,92 CHF (juillet 2026).",
+      ? `Advertised studio rent (Observatory survey on Le Figaro Immobilier, June 2026) crossed with commute time to Geneva-Eaux-Vives, for 17 municipalities of the French Genevois along the Léman Express axis, including peak-hour train frequency. Geneva, a two-speed market: sitting tenants 35 CHF/m² (OCSTAT 2025) vs. newcomers ≈ 50 CHF/m² in today's listings (Homegate survey, +44%). Includes first-party aggregates from La Villa Coliving's ${STATS.totalHouses} houses (${STATS.totalResidents}+ residents since ${STATS.foundedYear}), clearly labelled. Conversions at €1 = CHF 0.92 (July 2026).`
+      : `Loyer d'annonce d'un studio (relevé de l'Observatoire sur Le Figaro Immobilier, juin 2026) croisé au temps de trajet vers Genève-Eaux-Vives, pour 17 communes du Genevois français le long de l'axe Léman Express, avec la cadence des trains en heure de pointe. Genève, marché à deux vitesses : locataire en place 35 CHF/m² (OCSTAT 2025) vs nouvel arrivant ≈ 50 CHF/m² dans les annonces (relevé Homegate, +44 %). Inclut les agrégats first-party des ${STATS.totalHouses} maisons La Villa Coliving (${STATS.totalResidents}+ résidents depuis ${STATS.foundedYear}), clairement étiquetés. Conversions au taux 1 € = 0,92 CHF (juillet 2026).`,
     url: `${SITE}/observatoire-logement-frontalier-geneve`,
     csvUrls: [`${SITE}${CSV_URL}`, `${SITE}${CSV_GENEVA_URL}`, `${SITE}${CSV_LAVILLA_URL}`],
     datePublished: PAGE_FIRST_PUBLISHED,

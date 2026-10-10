@@ -2,6 +2,7 @@
  * Bloc « La Villa Coliving — l'essentiel » — fiche de faits canonique (Lot S1, brief « Socle entité »).
  *
  * Rendu IDENTIQUE partout (14 pages money + 8 articles, FR et EN) : la valeur pour un modèle de langage
+ * (Lot L3, D4 — 10/10/2026 : la puce « Avis » est suivie du lien « Voir les avis » vers la fiche Google, élément séparé.)
  * est la répétition à l'identique. Aucune variante courte/longue, aucune date, aucune disponibilité,
  * aucun appel Supabase : le composant ne dépend que de src/data/entityFacts.ts (chaînes plates),
  * donc le HTML prérendu et le premier rendu client sont identiques (aucun risque #418).
@@ -68,7 +69,25 @@ export function EntityFacts({ page, houseSlug, children, className = "" }: Entit
       {children ? <p className="leading-relaxed mb-4 text-[#57534E]">{children}</p> : null}
       <ul className="list-disc pl-6 space-y-2 mb-6">
         {t.bullets.map((b, i) => (
-          <li key={i} className="leading-relaxed">{b}</li>
+          <li key={i} className="leading-relaxed">
+            {b === t.reviewsLink.bullet ? (
+              // (Lot L3, D4) La note n'est jamais publiée sans le lien vers la fiche Google : phrase = un nœud texte dans son
+              // <span>, puis un espace et le <a> (aucun nœud texte adjacent → le HTML prérendu reste hydratable).
+              <>
+                <span>{b}</span>{" "}
+                <a
+                  href={t.reviewsLink.href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="underline underline-offset-4 text-[#1C1917] hover:text-[#D4A574] transition-colors"
+                >
+                  {t.reviewsLink.label}
+                </a>
+              </>
+            ) : (
+              b
+            )}
+          </li>
         ))}
       </ul>
       <LocalizedLink

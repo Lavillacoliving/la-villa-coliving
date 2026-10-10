@@ -28,7 +28,8 @@ function factsLines(lang, m) {
       `- ${F.lease.months}-month lease: free to leave at any time with ${F.lease.noticeMonths} month's notice`,
       `- No application fee, no agency fee; deposit of ${F.depositMonths} months' rent excluding charges`,
       `- ${F.totalResidents}+ residents welcomed since ${F.foundingLabel.en}, run directly by the two founders (${F.founders.join(' and ')}), regular events (pizza nights, yoga classes, afterworks)`,
-      `- 99% occupancy rate over 5 years`,
+      // (Lot L3, Jérôme 09/10/2026) D3 : ancienne ligne « occupancy over 5 years » retirée ; D4 : note Google (STATS_DISPLAY.googleRating) + lien fiche.
+      `- Reviews: ${m.STATS_DISPLAY.en.googleRating} — ${F.googleReviews.url}`,
     ].join('\n');
   }
   return [
@@ -40,7 +41,8 @@ function factsLines(lang, m) {
     `- Bail de ${F.lease.months} mois : libre de partir à tout moment avec ${F.lease.noticeMonths} mois de préavis`,
     `- Sans frais de dossier ni d'agence ; caution de ${F.depositMonths} mois de loyer hors charges`,
     `- ${F.totalResidents}+ résidents accueillis depuis ${F.foundingLabel.fr}, gestion en direct par les deux fondateurs (${F.founders.join(' et ')}), événements réguliers (pizza party, cours de yoga, afterworks)`,
-    `- 99% d'occupation sur 5 ans d'exploitation`,
+    // (Lot L3, Jérôme 09/10/2026) D3 : ancienne ligne « occupation sur 5 ans » retirée ; D4 : note Google (STATS_DISPLAY.googleRating) + lien fiche.
+    `- Avis : ${m.STATS_DISPLAY.fr.googleRating} — ${F.googleReviews.url}`,
   ].join('\n');
 }
 
@@ -82,7 +84,7 @@ export async function renderLlms(lang, m) {
     .replace(/\{\{RESPONSE_HOURS\}\}/g, String(F.responseHours))
     .replace(/\{\{DEPOSIT_MONTHS\}\}/g, String(F.depositMonths))
     .replace('{{INSTAGRAM}}', instagram)
-    .replace('{{UPDATED}}', F.version);
+    .replace('{{UPDATED}}', F.version.slice(0, 10)); // AAAA-MM-JJ : un suffixe de version (b, c…) ne fuit pas dans llms.txt
 }
 
 export const LLMS_FILES = { fr: path.join(ROOT, 'public', 'llms.txt'), en: path.join(ROOT, 'public', 'en', 'llms.txt') };

@@ -135,12 +135,12 @@ export const situationsFaq: SituationFaq[] = [
     fr: {
       q: "Annemasse, c'est sûr ?",
       // (Lot L2, 09/10/2026) « à deux pas de Moillesulaz » → tram 17 à pied depuis Le Loft (TRANSIT, D1/D3).
-      a: `Oui, comme dans toute ville-centre d'agglomération : tout dépend du quartier et de l'heure, pas de la commune. Nos maisons sont dans des secteurs résidentiels calmes : Le Lodge à Romagny (Annemasse), La Villa à Ville-la-Grand, Le Loft à Ambilly, à ${T.byHouse.leloft.tramWalkMin} min à pied du tram 17. Plus de 100 résidents y ont vécu depuis 2021, dont beaucoup de nouveaux arrivants qui ne connaissaient pas la région. Notre article sur les quartiers d'Annemasse dit, quartier par quartier, où on habiterait et où on éviterait.`,
+      a: `Oui, comme dans toute ville-centre d'agglomération : tout dépend du quartier et de l'heure, pas de la commune. Nos maisons sont dans des secteurs résidentiels calmes : Le Lodge à Romagny (Annemasse), La Villa à Ville-la-Grand, Le Loft à Ambilly, à ${T.byHouse.leloft.tramWalkMin} min à pied du tram 17. Plus de ${STATS.totalResidents} résidents y ont vécu depuis ${STATS.foundedYear}, dont beaucoup de nouveaux arrivants qui ne connaissaient pas la région. Notre article sur les quartiers d'Annemasse dit, quartier par quartier, où on habiterait et où on éviterait.`,
       more: { href: "/blog/vivre-a-annemasse-quand-on-travaille-a-geneve", label: "Vivre à Annemasse quand on travaille à Genève" },
     },
     en: {
       q: "Is Annemasse safe?",
-      a: `Yes, as in any central town of a metropolitan area: it depends on the neighbourhood and the hour, not on the town. Our houses are in quiet residential areas: Le Lodge in Romagny (Annemasse), La Villa in Ville-la-Grand, Le Loft in Ambilly, an ${T.byHouse.leloft.tramWalkMin}-minute walk from tram 17. More than 100 residents have lived there since 2021, many of them newcomers who didn't know the area. Our article on Annemasse's neighbourhoods says, block by block, where we would live and where we wouldn't.`,
+      a: `Yes, as in any central town of a metropolitan area: it depends on the neighbourhood and the hour, not on the town. Our houses are in quiet residential areas: Le Lodge in Romagny (Annemasse), La Villa in Ville-la-Grand, Le Loft in Ambilly, an ${T.byHouse.leloft.tramWalkMin}-minute walk from tram 17. More than ${STATS.totalResidents} residents have lived there since ${STATS.foundedYear}, many of them newcomers who didn't know the area. Our article on Annemasse's neighbourhoods says, block by block, where we would live and where we wouldn't.`,
       more: { href: "/blog/vivre-a-annemasse-quand-on-travaille-a-geneve", label: "Living in Annemasse when you work in Geneva" },
     },
   },
