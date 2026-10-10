@@ -226,6 +226,16 @@ export const FACEBOOK_GROUP = {
 // l'ancienne note interne (NPS résidents), retirée partout le 09/10/2026 (12 pages + 2 articles en base).
 // Mise à jour MANUELLE mensuelle (src/data/README.md) : rating / ratingEn / count / checkedOn, puis ENTITY_FACTS_VERSION
 // (la puce « Avis » de la fiche entité change) et les 2 articles qui portent la note en dur (SQL).
+// (Lot L4 « Justification du prix », D8 — 10/10/2026) Repères du marché publiés sur /tarifs et /qui-sommes-nous depuis 2026 :
+// jamais un concurrent nommé (on parle de « résidences de coliving » et de « colocation classique »). Lus par src/data/priceFacts.ts
+// (FAQ A.3), RatesPageV4 (section « objection prix ») et QuiSommesNousPage. À revérifier avec les faits de /tarifs (checkedOn).
+export const MARKET_COMPARISON = {
+  megaColivingMaxRooms: 776, // plus grande résidence de coliving près de Genève — « jusqu'à 776 chambres dans un même bâtiment »
+  megaColivingCommonM2PerResident: 4, // « moins de 4 m² d'espaces communs par résident » (≈ 3 000 m² partagés / 776)
+  classicRoomM2: { min: 9, max: 12 }, // chambre d'une colocation classique « le plus souvent 9 à 12 m² »
+  checkedOn: "2026-10-08",
+} as const;
+
 export const GOOGLE_REVIEWS = {
   rating: "4,8", // graphie FR (virgule)
   ratingEn: "4.8", // graphie EN (point)

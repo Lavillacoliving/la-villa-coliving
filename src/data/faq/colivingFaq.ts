@@ -1,5 +1,6 @@
 import type { QAPair } from "@/lib/structuredData";
 import { PRICE_SHARED_CHF_FR, PRICE_SHARED_CHF_EN, STATS, STATS_DISPLAY } from "@/data/stats";
+import { priceJustificationFaq } from "@/data/priceFacts";
 
 // §4 du playbook AEO — /le-coliving (définitionnel). Tutoiement, texte verbatim.
 // (Lot L2 « Emplacement et transport », 09/10/2026) « 20 min » toujours qualifié (STATS_DISPLAY.distance, D1) ; surfaces EN
@@ -34,6 +35,8 @@ export const colivingFaq: { fr: QAPair[]; en: QAPair[] } = {
       q: "Quel est le prix d'une colocation à Genève ?",
       a: `Compte 1 200 à 1 600 CHF par mois pour une chambre en colocation dans le centre de Genève, et 900 à 1 200 CHF en périphérie. Côté France voisine, une chambre se loue plutôt entre 600 et 900 € par mois, hors charges. À ces montants s'ajoutent souvent la caution, un garant et d'éventuels frais d'agence. En coliving, tout est réuni dans un loyer unique : chez La Villa Coliving, la chambre meublée tout inclus démarre dès ${PRICE_SHARED_CHF_FR}/mois, sans frais de dossier.`,
     },
+    // (Lot L4, D8 — 10/10/2026) FAQ A.3 de justification du prix — texte unique src/data/priceFacts.ts.
+    priceJustificationFaq("fr"),
     {
       q: "Y a-t-il du coliving près de Genève ?",
       a: `Oui. La Villa Coliving gère trois maisons de coliving côté France, à ${STATS_DISPLAY.fr.distance} : à Ville-la-Grand, Ambilly et Annemasse. Chacune propose des chambres meublées de ${STATS.roomSizeMin} à ${STATS.roomSizeMax} m², tout inclus dès ${PRICE_SHARED_CHF_FR}/mois, avec piscine, sauna et salle de sport.`,
@@ -68,6 +71,7 @@ export const colivingFaq: { fr: QAPair[]; en: QAPair[] } = {
       q: "How much does a room in a Geneva flatshare cost?",
       a: `Expect CHF 1,200 to 1,600 per month for a room in a shared flat in central Geneva, and CHF 900 to 1,200 on the outskirts. On the French side of the border, a room usually rents for 600 to 900 € per month, excluding utilities. On top of that, expect a deposit, often a guarantor, and sometimes agency fees. Coliving bundles everything into a single rent: at La Villa Coliving, an all-inclusive furnished room starts from ${PRICE_SHARED_CHF_EN}/month, with no application fee.`,
     },
+    priceJustificationFaq("en"),
     {
       q: "Is there coliving near Geneva?",
       a: `Yes. La Villa Coliving runs three coliving houses on the French side, ${STATS_DISPLAY.en.distance}: in Ville-la-Grand, Ambilly and Annemasse. Each offers furnished rooms of ${STATS.roomSizeMin} to ${STATS.roomSizeMax} m², all inclusive from ${PRICE_SHARED_CHF_EN}/month, with a pool, sauna and gym.`,
