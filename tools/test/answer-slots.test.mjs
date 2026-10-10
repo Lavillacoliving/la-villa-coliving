@@ -98,7 +98,7 @@ test('resolveNeedle : chaque clé de L1_TARGETS se résout en phrase canonique ;
   assert.throws(() => resolveNeedle(m, 'inconnu', 'fr'), /clé de créneau inconnue/);
   for (const t of L1_TARGETS) for (const lang of LANGS) for (const k of t.needles) assert.ok(resolveNeedle(m, k, lang).length > 10, `${t.route} ${k} ${lang}`);
   assert.equal(typeof ANSWER_SLOTS_LIVE, 'boolean');
-  assert.equal(L1_TARGETS.length, 14);
+  assert.equal(L1_TARGETS.length, 16); // 14 cibles L1 + guide-ressources et arnaques (mention Facebook A.7, Lot L5)
 });
 
 // ── Fonctions pures sur fixtures HTML ─────────────────────────────────────────────────────────────────────────────

@@ -52,11 +52,11 @@ export const OU_CHERCHER_MONEY_ROUTES = Object.freeze({
 export const L1_TARGETS = Object.freeze([
   { route: '/annemasse-colocation', needles: ['commune:lelodge', 'commune:lavilla', 'commune:leloft'] },
   { route: '/chambre-a-louer-annemasse', needles: ['commune:lelodge', 'commune:lavilla', 'commune:leloft'] },
-  { route: '/blog/ou-habiter-frontalier-suisse-villes-france-pas-cher', needles: ['commune:lelodge', 'commune:lavilla', 'commune:leloft'] },
+  { route: '/blog/ou-habiter-frontalier-suisse-villes-france-pas-cher', needles: ['commune:lelodge', 'commune:lavilla', 'commune:leloft', 'facebookMention'] },
   { route: '/blog/quartiers-annemasse-ou-vivre-selon-profil', needles: ['commune:lelodge'] },
   { route: '/blog/colocation-annemasse-ville-la-grand-ambilly', needles: ['commune:lelodge', 'commune:lavilla', 'commune:leloft'] },
   { route: '/blog/vivre-a-annemasse-quand-on-travaille-a-geneve', needles: ['commune:lelodge:2026', 'commune:lelodge'] },
-  { route: '/blog/budget-colocation-geneve-guide-complet', needles: ['budgetRowLabel', 'budgetVariantText', 'a6Text'] },
+  { route: '/blog/budget-colocation-geneve-guide-complet', needles: ['budgetRowLabel', 'budgetVariantText', 'a6Text', 'facebookMention'] },
   { route: '/blog/cout-de-la-vie-suisse-france-frontalier-2026', needles: ['coutDeLaVieRowLabel'] },
   { route: '/blog/coliving-colocation-ou-studio-geneve-comparatif', needles: ['comparatifRowLabel'] },
   { route: '/blog/s-installer-a-geneve-expatrie-cote-suisse-ou-cote-france', needles: ['a6Text', 'guarantor'] },
@@ -64,6 +64,10 @@ export const L1_TARGETS = Object.freeze([
   { route: '/blog/living-in-france-working-in-geneva', needles: ['a6Text'] },
   { route: '/blog/demenager-geneve-frontalier-checklist', needles: ['a6Text'] },
   { route: '/blog/dossier-location-frontalier-suisse-france', needles: ['a6Text'] },
+  // (Lot L5, D5) mention canonique A.7 du groupe Facebook, posée par SQL (scripts/l5-facebook.edits.mjs) devant une ancre de
+  // l'article — budget et ou-habiter la portent aussi (clé ajoutée à leur entrée ci-dessus).
+  { route: '/blog/guide-ressources-frontalier-geneve', needles: ['facebookMention'] },
+  { route: '/blog/arnaques-logement-frontalier-geneve-eviter', needles: ['facebookMention'] },
 ]);
 
 /** Promesses sur le garant interdites (D6). « sans garant français » n'est PAS interdit (titre d'article). */
@@ -72,6 +76,8 @@ export const FORBIDDEN_PHRASES = Object.freeze([
   { re: /you['’]ll need a guarantor/i, label: '« you\'ll need a guarantor »' },
   { re: /you will need a guarantor/i, label: '« you will need a guarantor »' },
   { re: /no French guarantor/i, label: '« no French guarantor »' },
+  // (Lot L5.4) interdit tant que les règles du groupe Facebook ne sont pas épinglées : aucune promesse de modération ou de vérification.
+  { re: /annonces v[ée]rifi[ée]es|verified listings|mod[ée]r[ée]e?s? contre les arnaques|moderated against scams/i, label: '« annonces vérifiées » / « modéré contre les arnaques » (L5.4)' },
 ]);
 
 /**
@@ -106,6 +112,7 @@ export function resolveNeedle(m, key, lang) {
   const [kind, slug, opened] = key.split(':');
   if (kind === 'commune') return m.communeSentence(slug, lang, opened ? { openedIn: Number(opened) } : {});
   if (kind === 'guarantor') return m.GUARANTOR_SENTENCE[lang];
+  if (kind === 'facebookMention') return m.facebookMention(lang); // (Lot L5) mention A.7 dans 4 articles
   if (['a6Text', 'budgetRowLabel', 'budgetVariantText', 'comparatifRowLabel', 'coutDeLaVieRowLabel'].includes(kind)) return m[kind](lang);
   throw new Error(`check-answer-slots : clé de créneau inconnue « ${key} »`);
 }
@@ -271,6 +278,38 @@ export function embeddedHasText(html, lang, needle) {
 
 export const brandCount = (text) => String(text).split(BRAND).length - 1;
 
+/** (Lot L5, D10) Nombre d'encarts A.8 (<aside id="facebook-group">) dans une page. */
+export function countFacebookCallout(html) {
+  return (String(html).match(/<aside[^>]*\sid="facebook-group"/g) || []).length;
+}
+
+/**
+ * (Lot L5, D10) Encart A.8 : exactement 1 par page de FACEBOOK_CALLOUT_ROUTES (FR + EN), texte identique à la source
+ * (phrase + libellé du lien, data-facebook-group-version), 0 ailleurs. L'écran de confirmation de /candidature n'est pas prérendu.
+ */
+export function checkFacebookCallouts(m, pages) {
+  const failures = [], warnings = [];
+  const routes = m.FACEBOOK_CALLOUT_ROUTES ?? [];
+  const scope = new Map();
+  for (const r of routes) { scope.set(routeToFile(r, 'fr'), 'fr'); scope.set(routeToFile(r, 'en'), 'en'); }
+  for (const [f, lang] of scope) {
+    const html = pages.get(f);
+    if (html === undefined) { warnings.push(`${f} : page prérendue absente (périmètre de l'encart Facebook A.8 — l'absence d'une page money est un échec de check-entity-facts)`); continue; }
+    const n = countFacebookCallout(html);
+    if (n !== 1) { failures.push(`${f} : ${n} encart(s) Facebook A.8 (attendu exactement 1)`); continue; }
+    if (m.FACEBOOK_GROUP_VERSION && !html.includes(`data-facebook-group-version="${m.FACEBOOK_GROUP_VERSION}"`)) failures.push(`${f} : version de l'encart Facebook ≠ ${m.FACEBOOK_GROUP_VERSION}`);
+    const text = visibleText(html);
+    const c = m.facebookCallout(lang);
+    for (const str of [c.sentence, c.cta]) {
+      const k = text.split(str).length - 1;
+      if (k !== 1) failures.push(`${f} : texte de l'encart Facebook présent ${k} fois (attendu 1) — « ${str.slice(0, 60)}… »`);
+    }
+    if (!html.includes(m.FACEBOOK_GROUP.url)) failures.push(`${f} : lien du groupe Facebook absent de l'encart`);
+  }
+  for (const [f, html] of pages) if (!scope.has(f) && countFacebookCallout(html) > 0) failures.push(`${f} : encart Facebook A.8 hors périmètre`);
+  return { failures, warnings };
+}
+
 /** Page alimentée par la base (index du blog et articles) : adaptative tant que ANSWER_SLOTS_LIVE = false. */
 export const isDbPage = (file) => /^(en-)?blog(-.+)?\.html$/.test(file);
 
@@ -279,7 +318,7 @@ export const isDbPage = (file) => /^(en-)?blog(-.+)?\.html$/.test(file);
 export function runChecks(m, pages, { m1Only = false, live = ANSWER_SLOTS_LIVE } = {}) {
   const failures = [], warnings = [];
   const files = [...pages.keys()].sort();
-  const stats = { files: files.length, sourceIssues: 0, perimeter: 0, blocksOk: 0, m1Failures: 0, outOfScope: 0, orphanPages: 0, needlesChecked: 0, needleFailures: 0, needleWarnings: 0, forbiddenFailures: 0, forbiddenWarnings: 0, densityPages: 0 };
+  const stats = { files: files.length, sourceIssues: 0, perimeter: 0, blocksOk: 0, m1Failures: 0, outOfScope: 0, orphanPages: 0, needlesChecked: 0, needleFailures: 0, facebookFailures: 0, facebookPages: 0, needleWarnings: 0, forbiddenFailures: 0, forbiddenWarnings: 0, densityPages: 0 };
   const push = (list, counter, msg) => { list.push(msg); stats[counter]++; };
 
   // Source
@@ -369,6 +408,14 @@ export function runChecks(m, pages, { m1Only = false, live = ANSWER_SLOTS_LIVE }
     if (html === undefined) continue;
     const n = brandCount(visibleText(html));
     if (n > BRAND_MAX) push(warnings, 'densityPages', `${f} : « ${BRAND} » ${n} fois dans le texte visible (> ${BRAND_MAX})`);
+  }
+
+  // (Lot L5) Encart A.8 — règles 1-2 (indépendant du mode adaptatif : code, pas base)
+  if (!m1Only) {
+    const fb = checkFacebookCallouts(m, pages);
+    for (const msg of fb.failures) push(failures, 'facebookFailures', msg);
+    for (const msg of fb.warnings) warnings.push(msg);
+    stats.facebookPages = (m.FACEBOOK_CALLOUT_ROUTES ?? []).length * 2;
   }
 
   return { failures, warnings, stats };
