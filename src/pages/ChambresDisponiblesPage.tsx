@@ -1,4 +1,5 @@
 import { EntityFacts } from "@/components/EntityFacts";
+import { buildAvailableRoomsItemList } from "@/lib/structuredData";
 import { FacebookGroupCallout } from "@/components/FacebookGroupCallout";
 import { lazy, Suspense, useState } from "react";
 import { useHydrated } from "@/hooks/useHydrated";
@@ -61,7 +62,6 @@ export function ChambresDisponiblesPage() {
   const { language } = useLanguage();
   const en = language === "en";
   const L = en ? "en" as const : "fr" as const;
-  const prefix = en ? "/en" : "";
 
   const all = useAllRooms();
   const availability = useRoomAvailability();
@@ -133,38 +133,15 @@ export function ChambresDisponiblesPage() {
     return { tone: "full", text: en ? "no date announced yet — join the waiting list" : "pas de date annoncée pour l'instant — rejoins la liste d'attente" };
   };
 
-  const title = en ? "Available rooms near Geneva" : "Chambres disponibles près de Genève";
+  // (Lot L6.5, 10/10/2026) La page est la « plateforme » de La Villa pour les assistants : titre explicite (3 maisons, prix, dates — jamais un montant dans le titre).
+  const title = en ? `Available rooms near Geneva — ${STATS.totalHouses} houses, prices, dates` : `Chambres disponibles près de Genève — ${STATS.totalHouses} maisons, prix, dates`;
   const description = en
     ? `Every room free now or opening soon in our ${STATS.totalHouses} houses near Geneva, with date and all-inclusive price from ${PRICE_SHARED_CHF_EN}. Reply within 48 h.`
     : `Toutes les chambres libres ou à libérer dans nos ${STATS.totalHouses} maisons près de Genève, avec date et prix tout inclus dès ${PRICE_SHARED_CHF_FR}. Réponse sous 48 h.`;
 
-  // JSON-LD ItemList d'Offer (Lot 7.3 anticipé) — dérivé du même snapshot que le rendu,
-  // sans filtre : identique au prérendu et au premier rendu client.
-  const itemList = candidates.length > 0
-    ? {
-        "@context": "https://schema.org",
-        "@type": "ItemList",
-        name: en ? "Available rooms — La Villa Coliving" : "Chambres disponibles — La Villa Coliving",
-        numberOfItems: candidates.length,
-        itemListElement: candidates.map((r, i) => ({
-          "@type": "ListItem",
-          position: i + 1,
-          item: {
-            "@type": "Offer",
-            name: `${HOUSES[r.house_slug].label} — ${en ? "Room" : "Chambre"} ${r.room_number}`,
-            url: `https://www.lavillacoliving.com${prefix}/${r.house_slug}`,
-            ...(r.rent_chf !== null ? { price: r.rent_chf, priceCurrency: "CHF" } : {}),
-            availability: r.availability === "available" ? "https://schema.org/InStock" : "https://schema.org/PreOrder",
-            ...(r.available_from ? { availabilityStarts: r.available_from } : {}),
-            itemOffered: {
-              "@type": "Accommodation",
-              name: `${en ? "Room" : "Chambre"} ${r.room_number} — ${HOUSES[r.house_slug].label}`,
-              ...(r.surface_m2 ? { floorSize: { "@type": "QuantitativeValue", value: Number(r.surface_m2), unitCode: "MTK" } } : {}),
-            },
-          },
-        })),
-      }
-    : undefined;
+  // (Lot L6.5) JSON-LD ItemList d'Offer — dérivé du même snapshot que le rendu, sans filtre (identique au prérendu et au premier
+  // rendu client) ; construit par buildAvailableRoomsItemList (structuredData.ts) : prix mensuel, LeaseOut, offeredBy, maison par @id.
+  const itemList = buildAvailableRoomsItemList(candidates, L);
 
   // (Lot L2, 09/10/2026) « 20 min » toujours qualifié : STATS_DISPLAY.distance (D1).
   const reassurance = en
@@ -189,7 +166,7 @@ export function ChambresDisponiblesPage() {
             {en ? `${STATS.totalRooms} rooms · ${STATS.totalHouses} houses` : `${STATS.totalRooms} chambres · ${STATS.totalHouses} maisons`}
           </span>
           <h1 className="text-4xl md:text-5xl lg:text-6xl font-light text-[#1C1917] mb-5" style={{ fontFamily: '"DM Serif Display", serif' }}>
-            {en ? "Available rooms" : "Chambres disponibles"}
+            {en ? "Available rooms near Geneva" : "Chambres disponibles près de Genève"}
           </h1>
           <p className="text-lg text-[#44403C] max-w-2xl inline-flex items-center gap-2">
             <span className="w-2 h-2 bg-[#B8860B] rounded-full animate-pulse shrink-0" aria-hidden="true" />

@@ -3,7 +3,7 @@ import { Helmet } from "react-helmet";
 import { LocalizedLink } from "@/components/LocalizedLink";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { SEO } from "@/components/SEO";
-import { buildBreadcrumbSchema, HOUSES, LAVILLA_EMAIL, LAVILLA_PHONE, LAVILLA_POSTAL_ADDRESS, LAVILLA_SAME_AS } from "@/lib/structuredData";
+import { buildBreadcrumbSchema, HOUSES, LAVILLA_EMAIL, LAVILLA_PHONE, LAVILLA_POSTAL_ADDRESS, LAVILLA_SAME_AS, ORG_ID, LAVILLA_ALTERNATE_NAMES } from "@/lib/structuredData";
 import { STATS, STATS_DISPLAY, PRICE_SHARED_CHF_FR, PRICE_SHARED_CHF_EN, MARKET_COMPARISON } from "@/data/stats";
 import {
   Linkedin,
@@ -59,7 +59,9 @@ export function QuiSommesNousPage() {
     primaryImageOfPage: `${SITE}${IMG_HISTOIRE}`,
     mainEntity: {
       "@type": "Organization",
+      "@id": ORG_ID, // (Lot L6.1) même nœud que le LocalBusiness de toutes les pages → une seule entité
       name: "La Villa Coliving",
+      alternateName: [...LAVILLA_ALTERNATE_NAMES], // (D11)
       url: SITE,
       logo: `${SITE}/logos/logo-full.png`,
       email: LAVILLA_EMAIL,

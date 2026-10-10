@@ -141,7 +141,10 @@ function buildSeoHeadTags(seo, route) {
   // JSON-LD scripts
   for (const jsonLd of (seo.jsonLd || [])) {
     if (jsonLd) {
-      tags.push(`<script type="application/ld+json">${jsonLd}</script>`);
+      // (Lot L6, 10/10/2026) data-react-helmet="true" : à l'hydratation, react-helmet ne gère que les balises qu'il marque — sans
+      // l'attribut il AJOUTAIT ses blocs à côté des blocs injectés (DOM rendu de /colocation-geneve constaté le 09/10 : 9 blocs
+      // dont 2 FAQPage) ; avec, il les remplace par les siens (identiques, mêmes sources).
+      tags.push(`<script type="application/ld+json" data-react-helmet="true">${jsonLd}</script>`);
     }
   }
 
