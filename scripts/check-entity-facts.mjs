@@ -281,6 +281,45 @@ export function carPromiseIssues(html) {
     { label: '« autoroute A40 » (jamais de promesse routière, D1)', test: (s) => s.match(A40_RE)?.[0] },
   ]);
 }
+/** (Lot L6) Règles pures sur les nœuds JSON-LD aplatis d'une page (collectTypes). */
+export function entityGraphIssues(nodes, file, m) {
+  const issues = [];
+  const alt = m.LAVILLA_ALTERNATE_NAMES ? [...m.LAVILLA_ALTERNATE_NAMES] : null;
+  const houses = m.HOUSES ?? [];
+  const bySlug = new Map(houses.map((h) => [h.slug, h]));
+  const lodgingIds = new Map(houses.map((h) => [`${h.url}#lodging`, h]));
+  const houseFile = /^(en-)?(lavilla|leloft|lelodge)\.html$/.exec(file);
+  let ownLodging = 0;
+  for (const n of nodes) {
+    if (!n || typeof n !== 'object') continue;
+    if (typeof n['@id'] === 'string' && n['@id'].endsWith('#organization') && ['LocalBusiness', 'LodgingBusiness', 'Organization'].includes(n['@type'])) {
+      if (alt && JSON.stringify(n.alternateName ?? null) !== JSON.stringify(alt)) issues.push(`fiche d'organisation sans les alternateName D11 (${JSON.stringify(n.alternateName ?? null).slice(0, 80)})`);
+      if (m.GOOGLE_BUSINESS_PROFILE_URL && !(Array.isArray(n.sameAs) && n.sameAs.includes(m.GOOGLE_BUSINESS_PROFILE_URL))) issues.push('fiche d\'organisation sans la fiche Google (cid) dans sameAs');
+    }
+    if (n['@type'] === 'LodgingBusiness' && !(typeof n['@id'] === 'string' && n['@id'].endsWith('#organization'))) {
+      const id = typeof n['@id'] === 'string' ? n['@id'] : '';
+      const h = lodgingIds.get(id);
+      if (!h) issues.push(`LodgingBusiness de maison sans @id <url>#lodging connu (${id || 'sans @id'})`);
+      else {
+        if (n.parentOrganization?.['@id'] !== m.ORG_ID) issues.push(`${h.slug} : nœud #lodging sans parentOrganization @id de l'entité`);
+        const expected = m.ENTITY_FACTS.houses.find((x) => x.slug === h.slug)?.rooms;
+        if (expected !== undefined && Number(n.numberOfRooms) !== expected) issues.push(`${h.slug} : numberOfRooms=${n.numberOfRooms} ≠ ${expected}`);
+        if (houseFile && houseFile[2] === h.slug && !n.department) ownLodging++;
+      }
+    }
+    if (n.currenciesAccepted !== undefined) issues.push('currenciesAccepted interdit (loyer contractuel en euros, affichage CHF)');
+    if (n['@type'] === 'Offer' && n.offeredBy === undefined && n.seller === undefined) issues.push('Offer sans offeredBy / seller');
+    if (n['@type'] === 'Offer' && n.numberOfRooms !== undefined) issues.push('numberOfRooms sur une Offer de chambre');
+    if (n['@type'] === 'Accommodation' && n.numberOfRooms !== undefined) issues.push('numberOfRooms sur une Accommodation (chambre)');
+  }
+  // Une page maison porte son propre nœud #lodging au premier niveau (bloc autonome) : exactement 1 nœud de SA maison hors department.
+  if (houseFile) {
+    const own = nodes.filter((n) => n && n['@type'] === 'LodgingBusiness' && n['@id'] === `${bySlug.get(houseFile[2])?.url}#lodging` && n['@context']).length;
+    if (own !== 1) issues.push(`${own} bloc(s) LodgingBusiness autonome(s) de la maison ${houseFile[2]} (attendu 1)`);
+  }
+  return issues;
+}
+
 function jsonLdBlocks(html) {
   const out = [];
   for (const m of html.matchAll(/<script type="application\/ld\+json"[^>]*>([\s\S]*?)<\/script>/g)) {
@@ -493,6 +532,11 @@ async function checkHtml(m) {
       if (!ok) failures.push(`${f} : numberOfRooms=${n.numberOfRooms} hors {${[F.totalRooms, ...F.houses.map((h) => h.rooms)].join(',')}}`);
     }
     for (const n of nodes) if (n['@type'] === 'AggregateOffer' && (String(n.lowPrice) !== String(F.price.fromChf) || String(n.highPrice) !== String(F.price.standardChf))) failures.push(`${f} : AggregateOffer ${n.lowPrice}-${n.highPrice} ≠ ${F.price.fromChf}-${F.price.standardChf}`);
+    // (Lot L6, 10/10/2026) Entité : chaque fiche d'organisation (@id #organization) porte les alternateName D11 et le sameAs de la
+    // source ; chaque LodgingBusiness de maison (department ou bloc de page maison) a l'@id <url>#lodging, parentOrganization et le
+    // numberOfRooms de sa maison ; `currenciesAccepted` interdit ; une page maison porte exactement 1 nœud #lodging de SA maison ;
+    // les Offer d'un ItemList sont rattachées (offeredBy @id) et n'ont jamais numberOfRooms.
+    for (const issue of entityGraphIssues(nodes, f, m)) failures.push(`${f} : ${issue}`);
     const conflicts = jsonLdConflicts(html);
     failures.push(...conflicts.failures.map((c) => `${f} : ${c}`));
     warnings.push(...conflicts.warnings.map((c) => `${f} : ${c}`));

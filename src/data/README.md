@@ -28,3 +28,11 @@ mécaniquement après un bump de version), `npm run check:facts`, et un commit p
 - Chambres : `ROOMS_BY_HOUSE` = `v_public_rooms` (garde CI) ; disponibilité **jamais** en dur (`src/lib/availability.ts`).
 - Chaînes plates, un nœud texte par phrase, jamais `toLocaleString` ni `Date` dans les textes rendus (anti-#418).
 - FR = tutoiement (sauf mentions légales et `/investisseurs`, registre B2B), EN = « you » ; parité FR/EN ; jamais un concurrent nommé.
+
+## Entité et annuaires (Lot L6, 10/10/2026)
+
+- **NAP** (nom, adresses, téléphone, URL) = `LAVILLA_NAP` (`src/lib/structuredData.ts`), dans la forme exacte de la fiche Google (une seule fiche pour les trois maisons) : « La Villa Coliving » · +33 6 64 31 51 34 · https://www.lavillacoliving.com · siège 34 rue du Foron, 74100 Ville-la-Grand, France · Le Loft 1 rue des Marronniers, 74100 Ambilly · Le Lodge 8 rue de Romagny, 74100 Annemasse. À reporter **tel quel** sur bookmycoliving, coliving.com et La Carte des Colocs (action Jérôme) ; toute divergence (abréviation, numéro différent) affaiblit l'entité.
+- **sameAs** : `LAVILLA_SAME_AS` (Instagram, fiche Google par `cid` = `GOOGLE_REVIEWS.url`, La Carte des Colocs `.com`, profil Roomlala) au niveau de l'organisation ; `HOUSES[].sameAs` par maison (bookmycoliving ×3, coliving.com pour La Villa, annonces Roomlala). Jamais de page Facebook (D10) ; LinkedIn seulement si Jérôme confirme une page entreprise.
+- **alternateName** (D11) : `LAVILLA_ALTERNATE_NAMES` — sur chaque fiche d'organisation, vérifié par `check:facts`.
+- **Bing** (D12) : pas de balise ni de `BingSiteAuth.xml` — importer les sites vérifiés depuis Google Search Console dans Bing Webmaster Tools (compte Google de Jérôme) ; repli seulement si l'import échoue.
+- Validation après déploiement : validator.schema.org et Rich Results Test sur `/`, `/lavilla`, `/leloft`, `/lelodge`, `/nos-maisons`, `/tarifs`, `/chambres-disponibles`, un article — un seul nœud par @id, aucune propriété inventée.
