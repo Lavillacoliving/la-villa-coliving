@@ -235,6 +235,68 @@ export function coutDeLaVieRowLabel(lang: EntityLang): string {
 }
 
 /** Incohérences détectables sans base (la CI appelle aussi check-answer-slots). */
+// ── (Lot L5 « Groupe Facebook comme ressource nommée », D5 validé le 08/10, D10 = oui — 10/10/2026) ───────────────────
+// A.7 = mention canonique dans 4 articles (SQL, texte markdown avec le nom du groupe en lien) ; A.8 = encart « Pas de chambre
+// libre chez nous ? » (<FacebookGroupCallout/>) sous la liste des chambres des 3 pages maisons, sur /chambres-disponibles et sur
+// l'écran de confirmation de /candidature. Le canal 3 du bloc « Où chercher » (ci-dessus) nomme déjà le groupe sur les pages
+// porteuses du bloc. Interdit tant que les règles du groupe ne sont pas épinglées (L5.4) : « annonces vérifiées »,
+// « modéré contre les arnaques ». Lien normal (jamais nofollow), nouvel onglet. Jamais dans sameAs (D10 du socle).
+
+/** Incrémenter à chaque changement de texte A.7/A.8 : porté par data-facebook-group-version. */
+export const FACEBOOK_GROUP_VERSION = "2026-10-10";
+
+/** Articles porteurs de la mention A.7 (SQL généré par scripts/l5-facebook.edits.mjs) : le paragraphe est inséré juste AVANT
+ *  l'ancre (un titre unique de l'article, par langue). La garde (check-answer-slots, L1_TARGETS) exige la phrase dans le texte visible. */
+export const FACEBOOK_MENTION_ARTICLES: Readonly<Record<string, { fr: string; en: string }>> = {
+  "budget-colocation-geneve-guide-complet": { fr: "### 3. Coliving premium (", en: "### 3. Premium coliving (" },
+  "ou-habiter-frontalier-suisse-villes-france-pas-cher": { fr: "\n## En résumé\n", en: "\n## TL;DR\n" },
+  "guide-ressources-frontalier-geneve": { fr: "\n# Et chez La Villa ?\n", en: "\n# And at La Villa?\n" },
+  "arnaques-logement-frontalier-geneve-eviter": { fr: "\n## L'alternative sécurisée : le coliving\n", en: "\n## The Secure Alternative: Coliving\n" },
+};
+
+/** Pages prérendues qui portent l'encart A.8 (FR + /en) — exactement une fois chacune ; l'écran de confirmation de
+ *  /candidature le porte aussi mais n'est pas prérendu (test unitaire seulement). */
+export const FACEBOOK_CALLOUT_ROUTES = ["/lavilla", "/leloft", "/lelodge", "/chambres-disponibles"] as const;
+
+/** A.7 — mention canonique (texte visible). */
+export function facebookMention(lang: EntityLang): string {
+  const g = FACEBOOK_GROUP;
+  if (lang === "en") {
+    return `For a standard flatshare, the public Facebook group "${g.name}" (about ${membersEn} members, ${g.postsPerMonth.en} covering Geneva and the French border area) gathers room and flatmate listings. It is run by the La Villa Coliving team.`;
+  }
+  return `Pour une colocation classique, le groupe Facebook public « ${g.name} » (environ ${membersFr} membres, ${g.postsPerMonth.fr} sur Genève et la France voisine) regroupe des annonces de chambres et de colocataires. Il est animé par l'équipe de La Villa Coliving.`;
+}
+
+/** A.7 en markdown pour les articles : même texte visible, le nom du groupe porte le lien (ouvert en nouvel onglet par BlogPostPage). */
+export function facebookMentionMarkdown(lang: EntityLang): string {
+  const g = FACEBOOK_GROUP;
+  const quoted = lang === "en" ? `"${g.name}"` : `« ${g.name} »`;
+  return facebookMention(lang).replace(quoted, `[${quoted}](${g.url})`);
+}
+
+/** A.8 — encart « Pas de chambre libre chez nous ? » : une phrase (un nœud texte) + le libellé du lien. */
+export function facebookCallout(lang: EntityLang): { sentence: string; cta: string } {
+  const g = FACEBOOK_GROUP;
+  if (lang === "en") {
+    return {
+      sentence: `No room free with us on your dates? The Facebook group "${g.name}", run by our team, posts ${g.postsPerMonthShort.en} for flatshares in the area every month.`,
+      cta: "Join the group",
+    };
+  }
+  return {
+    sentence: `Pas de chambre libre chez nous aux bonnes dates ? Le groupe Facebook « ${g.name} », animé par notre équipe, publie chaque mois ${g.postsPerMonthShort.fr} de colocation dans la région.`,
+    cta: "Rejoindre le groupe",
+  };
+}
+
+/** Toutes les chaînes A.7/A.8 rendues (pour la garde et les tests). */
+export function facebookStrings(lang: EntityLang): string[] {
+  const c = facebookCallout(lang);
+  return [facebookMention(lang), c.sentence, c.cta];
+}
+
+const FACEBOOK_FORBIDDEN = /annonces v[ée]rifi[ée]es|verified listings|mod[ée]r[ée]e?s? contre les arnaques|moderated against scams/i;
+
 export function answerSlotsIssues(): string[] {
   const issues: string[] = [];
   const all: Array<[string, string]> = [];
@@ -255,5 +317,19 @@ export function answerSlotsIssues(): string[] {
     if (ouChercherStrings("fr", v).length !== ouChercherStrings("en", v).length) issues.push(`bloc ${v} : FR et EN n'ont pas le même nombre de chaînes`);
   }
   if (!ouChercherStrings("fr", "short").every((s) => ouChercherStrings("fr", "full").includes(s))) issues.push("bloc court FR ⊄ bloc complet FR");
+  // (Lot L5) A.7 / A.8 : nom du groupe au caractère près, membres via thousands(), aucune promesse interdite, parité, markdown = texte.
+  for (const lang of ["fr", "en"] as const) {
+    for (const str of facebookStrings(lang)) {
+      if (FACEBOOK_FORBIDDEN.test(str)) issues.push(`${lang} : promesse interdite (L5.4) — « ${str.slice(0, 60)}… »`);
+      if (/<[a-z]/i.test(str) || /\{\{/.test(str)) issues.push(`${lang} : balise ou token dans une chaîne Facebook`);
+      if (lang === "fr" && /\b(vous|votre|vos)\b/i.test(str)) issues.push(`fr : vouvoiement — « ${str.slice(0, 60)}… »`);
+    }
+    if (!facebookMention(lang).includes(FACEBOOK_GROUP.name) || !facebookCallout(lang).sentence.includes(FACEBOOK_GROUP.name)) issues.push(`${lang} : nom du groupe absent`);
+    if (!facebookMention(lang).includes(lang === "en" ? membersEn : membersFr)) issues.push(`${lang} : nombre de membres absent de A.7`);
+    const md = facebookMentionMarkdown(lang);
+    if (md.replace(/\[([^\]]+)\]\([^)]+\)/, "$1") !== facebookMention(lang)) issues.push(`${lang} : le markdown A.7 ne rend pas le même texte que la mention`);
+    if (!md.includes(FACEBOOK_GROUP.url)) issues.push(`${lang} : lien du groupe absent du markdown A.7`);
+  }
+  if (facebookStrings("fr").length !== facebookStrings("en").length) issues.push("A.7/A.8 : parité FR/EN");
   return issues;
 }

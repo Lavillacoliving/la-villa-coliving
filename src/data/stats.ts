@@ -207,11 +207,13 @@ export const MARKET_ROOM_EUR = { min: 700, max: 1000 } as const;
 // d'annonces par mois » (Statistiques admin → Engagement : 124 publications du 11/09 au 07/10/2026) — JAMAIS un
 // nombre de publications en dur dans une phrase, il bouge chaque mois ; les membres s'écrivent via thousands().
 // Mise à jour manuelle mensuelle (README) : membres, volume, checkedOn.
+const FACEBOOK_POSTS_SHORT = { fr: "une centaine d'annonces", en: "around a hundred listings" } as const; // (Lot L5) réutilisé par A.7 et A.8
 export const FACEBOOK_GROUP = {
   name: "Coliving & Colocation à Genève et alentours !",
   url: "https://www.facebook.com/groups/1035429495275120/",
   membersApprox: 1600, // « environ 1 600 membres » / « about 1,600 members »
-  postsPerMonth: { fr: "une centaine d'annonces par mois", en: "around a hundred listings a month" },
+  postsPerMonthShort: FACEBOOK_POSTS_SHORT,
+  postsPerMonth: { fr: `${FACEBOOK_POSTS_SHORT.fr} par mois`, en: `${FACEBOOK_POSTS_SHORT.en} a month` },
   postsLast28Days: 124, // relevé, jamais écrit dans une phrase
   source: "Statistiques admin du groupe, Engagement",
   createdAt: "2025-02-23",

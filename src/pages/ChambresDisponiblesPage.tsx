@@ -1,4 +1,5 @@
 import { EntityFacts } from "@/components/EntityFacts";
+import { FacebookGroupCallout } from "@/components/FacebookGroupCallout";
 import { lazy, Suspense, useState } from "react";
 import { useHydrated } from "@/hooks/useHydrated";
 import { useSearchParams } from "react-router-dom";
@@ -382,6 +383,8 @@ export function ChambresDisponiblesPage() {
               {en ? "All our furnished rooms, French side" : "Toutes nos chambres meublées, côté France"}
             </LocalizedLink>
           </p>
+          {/* (Lot L5, D10) Encart A.8 — le groupe Facebook comme ressource quand aucune date ne convient. */}
+          <FacebookGroupCallout position="chambres_disponibles" className="mt-10 max-w-3xl mx-auto" />
         </div>
       </section>
 
