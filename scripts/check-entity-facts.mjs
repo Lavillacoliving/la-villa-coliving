@@ -15,6 +15,13 @@
  *      Léman Express »…), « 15 min » en rapport avec Genève même en voiture (D1), et — pages en CODE seulement (hors
  *      blog-*) — toute promesse en voiture ou durée vers l'aéroport. Les deux dernières suivent le régime de la règle
  *      des minutes : échec en --strict, avertissement sinon. Fonctions pures testées dans tools/test/location-rules.test.mjs.
+ *   e) (Lot L3 « Note Google et preuves », 09/10/2026, décisions D3/D4 de Jérôme) preuves sociales : « 4,9/5 » / « 4.9/5 »,
+ *      « enquêtes résidents » / « resident surveys », « 150 résidents », « 50+ personnes » interdits partout ; « 99 % » à côté
+ *      d'« occupation » / « occupancy » / « taux » interdit hors Observatoire (qui garde son « 98-99 % » first-party daté) ;
+ *      JSON-LD : 0 aggregateRating et 0 « "@type": "Review" » (la note Google se lit sur la fiche, jamais balisée sur son
+ *      propre site). Base : v_social_proof (resident_history ∪ tenants, dédoublonnés) — mode adaptatif : avertissement tant
+ *      que la vue n'existe pas (migration scripts/resident-history-2026-10-09.sql à appliquer par Jérôme), échec si elle
+ *      existe et que distinct_residents_since_opening < STATS.totalResidents. Fonctions pures : tools/test/social-proof-rules.test.mjs.
  * Options : --no-db (hors ligne) · --strict (règle des minutes, règles L2 et vouvoiement en échec, pas en avertissement)
  *           --json-ld /route (dump des blocs JSON-LD d'une page dans tools/out/) · --tutoiement (rapport)
  * Modèle : scripts/house-pages-check.mjs (collecte, impression, exit 1). Exécuté par prerender.yml après
@@ -76,7 +83,32 @@ const FORBIDDEN = [
   { re: /terminus (?:\p{L}+ )?du Léman Express|(?:\p{L}+ )?terminus of the Léman Express|Léman Express terminus/iu, label: '« terminus du Léman Express » (faux : écrire « gare d\'Annemasse »)' },
   // « autoroute A40 » n'est PAS ici : un article peut conseiller d'éviter ses abords (bruit) ; sur une page en code,
   // c'est une promesse routière → règle « promesse en voiture » (carPromiseIssues, A40_RE).
+  // ── (Lot L3 « Note Google et preuves », décisions D3/D4 de Jérôme du 09/10/2026) preuves sociales, toutes pages sauf légales ──
+  // D4 — la seule note publiée est GOOGLE_REVIEWS (« 4,8/5 sur Google (36 avis) », STATS_DISPLAY.googleRating, src/data/stats.ts) ;
+  // l'ancienne note interne « 4,9/5 (enquêtes résidents) » disparaît de toutes les pages (12 pages + 2 articles en base).
+  { re: /(?<![\d,.])4[,.]9[   ]?(?:\/[   ]?5\b|(?:sur|out of)[   ]5\b)/i, label: '« 4,9/5 » (ancienne note interne — D4 : la seule note est GOOGLE_REVIEWS, étiquetée « sur Google »)' },
+  { re: /enquêtes? résidents?|resident surveys?/i, label: '« enquêtes résidents » / « resident surveys » (D4 : la note est celle de Google, étiquetée « sur Google »)' },
+  // D3 — « 100+ résidents » est la seule formule (STATS.totalResidents, soutenue par v_social_proof) : jamais 150, jamais « 50+ par an ».
+  // Le nombre n'est pas la fin d'un autre (« 1 150 résidents » du marché : séparateur de milliers normal ou insécable).
+  { re: /(?<![\d,.]|\d[   ])150[   ]?\+?[   ]?r[ée]sidents?\b/i, label: '« 150 résidents » (D3 : « 100+ », STATS.totalResidents)' },
+  { re: /(?<![\d,.]|\d[   ])50[   ]?\+[   ]?(?:personnes|people|r[ée]sidents?)\b/i, label: '« 50+ personnes par an » (D3 : retiré)' },
+  // D3 — « 99 % d'occupation (sur 5 ans) » retiré ; seul l'Observatoire garde son « 98-99 % » (méthodologie first-party datée).
+  // Contexte = fenêtre de ±NEAR_WINDOW caractères du texte visible aplati (`near`) : la tuile voisine d'une grille de statistiques
+  // (« 99% » dans un bloc, « Taux d'occupation » dans le suivant) compte — une phrase seule ne suffirait pas. Le « 99 » peut
+  // suivre un tiret (« 98-99 % ») : hors Observatoire, c'est aussi interdit.
+  { re: /(?<![\d,.])99[   ]?%/, near: /occup(?:ation|ancy|é|ied)|\btaux\b|\brate\b/i, skipFile: /^(en-)?observatoire/, label: '« 99 % » d\'occupation (D3 : retiré ; l\'Observatoire seul garde son « 98-99 % » daté)' },
 ];
+/** (Lot L3) Demi-largeur, en caractères, de la fenêtre de contexte des règles `near`. */
+export const NEAR_WINDOW = 120;
+/** (Lot L3) Première fenêtre de ±span caractères autour d'une occurrence de `re` dans `text` qui porte aussi `near` ; null sinon. */
+export function nearWindow(text, re, near, span = NEAR_WINDOW) {
+  const g = new RegExp(re.source, re.flags.includes('g') ? re.flags : `${re.flags}g`);
+  for (const m of String(text).matchAll(g)) {
+    const win = text.slice(Math.max(0, m.index - span), m.index + m[0].length + span);
+    if (near.test(win)) return win;
+  }
+  return null;
+}
 // (Lot L2, 09/10/2026) + Rive, Champel, Lancy, Puplinge, Foron, Voie Verte, porte-à-porte / door to door : destinations et
 // modes nommés par TRANSIT (src/data/stats.ts) — une minute qualifiée par l'un d'eux n'est pas « Genève seul ».
 export const MINUTE_QUALIFIER = /(?<![\p{L}\p{N}])(?:à pied|on foot|walk\p{L}*|vélo|bike|cycl\p{L}*|voiture|car|driving|aéroport|airport|bus|tram\p{L}*|Cornavin|Eaux-Vives|Rive|Champel|Lancy|Puplinge|Foron|Voie Verte|porte[ -]à[ -]porte|door[ -]to[ -]door|CERN|Nations|heure de pointe|rush hour|gare|station|Léman Express|CEVA|Moillesulaz|frontière|border|visio|vidéo|video|appel|call|Annemasse[ \-–↔]+Gen[èe]v[ea])(?![\p{L}\p{N}])/iu;
@@ -165,12 +197,22 @@ export function sentences(html) {
 const norm = (s) => s.replace(/[ \t\r\n]+/g, ' ').trim();
 const count = (hay, needle) => (needle ? hay.split(needle).length - 1 : 0);
 
-/** Chaînes interdites (FORBIDDEN) d'une page : un message par règle touchée, avec la première phrase fautive. */
-export function forbiddenIssues(html, text = visibleText(html)) {
+/**
+ * Chaînes interdites (FORBIDDEN) d'une page : un message par règle touchée, avec la première phrase fautive.
+ * `file` (Lot L3, facultatif) = nom du fichier prérendu : une règle `skipFile` ne s'applique pas aux pages qu'il désigne.
+ */
+export function forbiddenIssues(html, text = visibleText(html), file = '') {
   const out = [];
   let sens = null;
   for (const fb of FORBIDDEN) {
+    if (fb.skipFile && fb.skipFile.test(file)) continue;
     if (!fb.re.test(text)) continue;
+    if (fb.near) {
+      // (Lot L3) Interdit seulement quand le contexte proche (texte visible aplati, tuile voisine comprise) porte aussi `near`.
+      const win = nearWindow(text, fb.re, fb.near);
+      if (win) out.push(`${fb.label} — « …${win.slice(0, 160)}… »`);
+      continue;
+    }
     if (fb.unlessQualified || fb.unless || fb.requires) {
       // Interdit seulement dans une phrase sans qualificatif (à pied, vélo, Moillesulaz, aéroport…), hors exception propre
       // à la règle (`unless`), et — pour `requires` — seulement quand la phrase porte aussi ce contexte (ex. « tram »).
@@ -244,11 +286,55 @@ function collectTypes(node, acc = []) {
   else if (node && typeof node === 'object') { if (node['@type']) acc.push(node); for (const v of Object.values(node)) collectTypes(v, acc); }
   return acc;
 }
+const hasType = (n, t) => (Array.isArray(n['@type']) ? n['@type'].includes(t) : n['@type'] === t);
+
+/**
+ * (Lot L3, D4 Jérôme 09/10/2026) Aucune note balisée : ni aggregateRating (interdit depuis S1 — la note 4,9 était un NPS
+ * interne ; la note Google ne se balise pas davantage sur son propre site), ni « "@type": "Review" ». La preuve = un lien
+ * « Voir les avis » vers la fiche Google (GOOGLE_REVIEWS.url). `nodes` = nœuds JSON-LD déjà collectés (évite une relecture).
+ */
+export function ratingMarkupIssues(html, nodes = collectTypes(jsonLdBlocks(html))) {
+  const out = [];
+  if (/aggregateRating/.test(html)) out.push('aggregateRating interdit (D4 : la note Google se lit sur la fiche, jamais balisée sur son propre site)');
+  if (nodes.some((n) => hasType(n, 'Review')) || /"@type"\s*:\s*"Review"/.test(html)) out.push('« "@type": "Review" » interdit en JSON-LD (D4 : aucun avis balisé, un lien « Voir les avis » vers la fiche Google)');
+  return out;
+}
+
+// ── (Lot L3, D3 Jérôme 09/10/2026) « 100+ résidents » soutenu par la base ─────────────────────────────────────────────
+export const SOCIAL_PROOF_VIEW = 'v_social_proof';
+export const SOCIAL_PROOF_MIGRATION = 'scripts/resident-history-2026-10-09.sql';
+/**
+ * Verdict pur sur la lecture de v_social_proof. `result` = { rows } (vue lue) ou { error } (message d'erreur REST).
+ * Mode adaptatif : vue absente (HTTP 404 / PGRST205 / 42P01, migration pas encore appliquée) → avertissement ; autre erreur
+ * réseau → avertissement « injoignable » ; 401/403/42501 (vue présente, GRANT anon perdu) → échec ; vue présente → échec si
+ * distinct_residents_since_opening < totalResidents.
+ */
+export function socialProofVerdict(result, totalResidents) {
+  const failures = [], warnings = [];
+  if (result.error !== undefined) {
+    const msg = String(result.error);
+    if (/HTTP 404|PGRST205|42P01/.test(msg)) warnings.push(`${SOCIAL_PROOF_VIEW} absente : migration ${SOCIAL_PROOF_MIGRATION} à appliquer (« ${totalResidents}+ résidents » non vérifié en base)`);
+    // (relecture 10/10) 401/403/42501 = la vue existe mais anon ne peut plus la lire : GRANT perdu, pas une panne réseau → échec.
+    else if (/HTTP 40[13]|42501|permission denied/i.test(msg)) failures.push(`${SOCIAL_PROOF_VIEW} présente mais non lisible en anon (${msg.slice(0, 80)}) : rejouer le GRANT SELECT de ${SOCIAL_PROOF_MIGRATION}`);
+    else warnings.push(`${SOCIAL_PROOF_VIEW} injoignable (${msg.slice(0, 120)}) — comparaison ignorée`);
+    return { failures, warnings, info: null };
+  }
+  const row = Array.isArray(result.rows) ? result.rows[0] : undefined;
+  const n = Number(row?.distinct_residents_since_opening);
+  if (!row || !Number.isFinite(n)) {
+    failures.push(`base : ${SOCIAL_PROOF_VIEW} présente mais sans distinct_residents_since_opening lisible (${JSON.stringify(result.rows).slice(0, 120)})`);
+    return { failures, warnings, info: null };
+  }
+  const info = { distinct: n, since: row.first_move_in ?? null, occupancyPctAll: row.occupancy_pct_all ?? null, computedOn: row.computed_on ?? null };
+  if (n < totalResidents) failures.push(`base : ${n} résidents distincts depuis l'ouverture (${SOCIAL_PROOF_VIEW}) < STATS.totalResidents ${totalResidents} — « ${totalResidents}+ résidents » n'est plus soutenu`);
+  return { failures, warnings, info };
+}
 
 async function checkDb(m) {
   const failures = [];
   const F = m.ENTITY_FACTS;
-  const rows = await httpsGet(`${SUPABASE_URL}/rest/v1/v_public_rooms?select=house_slug,rent_chf,rent_eur,surface_m2,bathroom_type`, { apikey: SUPABASE_ANON_KEY, Accept: 'application/json' });
+  const headers = { apikey: SUPABASE_ANON_KEY, Accept: 'application/json' };
+  const rows = await httpsGet(`${SUPABASE_URL}/rest/v1/v_public_rooms?select=house_slug,rent_chf,rent_eur,surface_m2,bathroom_type`, headers);
   if (!Array.isArray(rows) || rows.length === 0) throw new Error('v_public_rooms vide');
   const byHouse = new Map();
   for (const r of rows) { if (!byHouse.has(r.house_slug)) byHouse.set(r.house_slug, []); byHouse.get(r.house_slug).push(r); }
@@ -270,7 +356,13 @@ async function checkDb(m) {
     const lo = Math.round(Math.min(...m2)), hi = Math.round(Math.max(...m2));
     if (lo !== F.surfaces.min || hi !== F.surfaces.max) failures.push(`base : surfaces ${lo}-${hi} m² (Math.round de v_public_rooms) ≠ fiche ${F.surfaces.min}-${F.surfaces.max}`);
   }
-  return { failures, rooms: rows.length };
+  // (Lot L3, D3) « 100+ résidents » : v_social_proof (resident_history ∪ tenants, dédoublonnés sur le nom normalisé). La vue
+  // n'existe pas tant que Jérôme n'a pas appliqué la migration → socialProofVerdict la traite en avertissement, pas en échec.
+  const sp = await httpsGet(`${SUPABASE_URL}/rest/v1/${SOCIAL_PROOF_VIEW}?select=distinct_residents_since_opening,first_move_in,current_residents,occupancy_pct_all,computed_on`, headers)
+    .then((r) => ({ rows: r })).catch((e) => ({ error: e.message }));
+  const social = socialProofVerdict(sp, m.STATS.totalResidents);
+  failures.push(...social.failures);
+  return { failures, warnings: social.warnings, rooms: rows.length, social: social.info };
 }
 
 /** Slugs des pages de décision versionnées dans content/decision-pages/ (hors gabarit `_TEMPLATE`). */
@@ -312,8 +404,9 @@ async function checkHtml(m) {
       }
     } else if (nBlocks > 0) failures.push(`${f} : bloc entité hors périmètre (${nBlocks})`);
     const legal = /^(en-)?(mentions-legales|politique-de-confidentialite)\.html$/.test(f);
-    // Chaînes périmées ou interdites (texte visible) — dont les formulations D6/D7 du lot L2.
-    if (!legal) for (const issue of forbiddenIssues(html, text)) failures.push(`${f} : ${issue}`);
+    // Chaînes périmées ou interdites (texte visible) — dont les formulations D6/D7 du lot L2 et les preuves sociales du lot L3
+    // (le nom du fichier porte l'exemption de l'Observatoire pour « 99 % »).
+    if (!legal) for (const issue of forbiddenIssues(html, text, f)) failures.push(`${f} : ${issue}`);
     // (Lot L2, 09/10/2026) « 15 min » + Genève (toutes pages) ; promesse en voiture / aéroport (pages en code seulement).
     // Même régime que la règle des minutes : échec en --strict, avertissement sinon.
     if (!legal) {
@@ -328,7 +421,8 @@ async function checkHtml(m) {
     const faq = nodes.filter((n) => n['@type'] === 'FAQPage').length;
     if (lb + lodgingOrg > 1) failures.push(`${f} : ${lb + lodgingOrg} fiches business d'entité (LocalBusiness/LodgingBusiness @organization) — une seule attendue`);
     if (faq > 1) failures.push(`${f} : ${faq} blocs FAQPage (un seul attendu)`);
-    if (/aggregateRating/.test(html)) failures.push(`${f} : aggregateRating interdit (note 4,9 = NPS interne)`);
+    // (Lot L3, D4) 0 aggregateRating, 0 Review : la note Google n'est jamais balisée sur son propre site.
+    for (const issue of ratingMarkupIssues(html, nodes)) failures.push(`${f} : ${issue}`);
     for (const n of nodes) if (n.numberOfRooms !== undefined) {
       const ok = [F.totalRooms, ...F.houses.map((h) => h.rooms)].includes(Number(n.numberOfRooms));
       if (!ok) failures.push(`${f} : numberOfRooms=${n.numberOfRooms} hors {${[F.totalRooms, ...F.houses.map((h) => h.rooms)].join(',')}}`);
@@ -365,7 +459,13 @@ async function main() {
   failures.push(...internal.map((i) => `source : ${i}`));
   console.log(`   version ${m.ENTITY_FACTS.version} · ${m.ENTITY_FACTS.totalRooms} chambres · dès ${m.ENTITY_FACTS.price.fr.fromChf} · ${internal.length} incohérence(s) interne(s)`);
   if (!args.includes('--no-db')) {
-    try { const db = await checkDb(m); failures.push(...db.failures); console.log(`${db.failures.length ? '❌' : '✅'} base : ${db.rooms} chambres publiques comparées`); }
+    try {
+      const db = await checkDb(m); failures.push(...db.failures);
+      // (Lot L3) v_social_proof : chiffre affiché quand la vue existe ; sinon l'avertissement « migration à appliquer » suit.
+      const social = db.social ? ` · ${db.social.distinct} résidents distincts depuis ${db.social.since ?? '?'} (${SOCIAL_PROOF_VIEW}, ≥ ${m.STATS.totalResidents} attendu)` : '';
+      console.log(`${db.failures.length ? '❌' : '✅'} base : ${db.rooms} chambres publiques comparées${social}`);
+      for (const w of db.warnings) console.log(`   ⚠️  ${w}`);
+    }
     catch (e) { console.log(`⚠️  base injoignable (${e.message}) — comparaison ignorée`); }
   }
   const jsonDump = opt('--json-ld');

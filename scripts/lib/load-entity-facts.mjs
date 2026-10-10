@@ -19,7 +19,9 @@ export async function loadEntityFacts() {
     // 10/2026) les créneaux de réponse (answerSlots.ts), l'allowlist du bloc « Où chercher » (ouChercherArticles.ts),
     // le registre des marqueurs (contentMarkers.ts) + (Lot L2, 09/10/2026) l'emplacement par maison (houseLocation.ts :
     // quartier, frontière, trajets, commerces, lien « Calculer mon trajet », HOUSE_LOCATION_VERSION) et les constantes
-    // de stats.ts qu'ils exposent (TRANSIT, HOUSE_SURFACES, ROOM_SURFACE_BY_HOUSE…).
+    // de stats.ts qu'ils exposent (TRANSIT, HOUSE_SURFACES, ROOM_SURFACE_BY_HOUSE…) + (Lot L3 « Note Google et preuves »,
+    // 09/10/2026) la note Google (GOOGLE_REVIEWS, GOOGLE_REVIEWS_LINK_LABEL), l'occupation mesurée (OCCUPANCY, OCCUPANCY_DISPLAY)
+    // et la base des preuves (STATS_SOURCE), lus par scripts/l3-social-proof.edits.mjs et la garde check-entity-facts.
     stdin: {
       contents: [
         "export * from './src/data/entityFacts';",
@@ -28,7 +30,7 @@ export async function loadEntityFacts() {
         "export * from './src/data/ouChercherArticles';",
         "export * from './src/lib/contentMarkers';",
         "export * from './src/data/houseLocation';",
-        "export { STATS, STATS_DISPLAY, TRANSIT, GENEVA_COMMUTE_FORMULA, MARKET_ROOM_EUR, FACEBOOK_GROUP, HOUSE_SURFACES, ROOM_SURFACE_BY_HOUSE } from './src/data/stats';",
+        "export { STATS, STATS_DISPLAY, TRANSIT, GENEVA_COMMUTE_FORMULA, MARKET_ROOM_EUR, FACEBOOK_GROUP, HOUSE_SURFACES, ROOM_SURFACE_BY_HOUSE, GOOGLE_REVIEWS, GOOGLE_REVIEWS_LINK_LABEL, OCCUPANCY, OCCUPANCY_DISPLAY, STATS_SOURCE } from './src/data/stats';",
       ].join(' '),
       resolveDir: ROOT,
       loader: 'ts',
