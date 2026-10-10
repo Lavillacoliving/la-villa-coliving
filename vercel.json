@@ -1218,6 +1218,16 @@
       "source": "/en/blog/coliving-annemasse-geneve-frontaliers-avantage",
       "destination": "/en/blog/coliving-annemasse-geneve-frontaliers-avantages",
       "permanent": true
+    },
+    {
+      "source": "/blog/s-installer-geneve-expatrie-cote-suisse-cote-france",
+      "destination": "/blog/s-installer-a-geneve-expatrie-cote-suisse-ou-cote-france",
+      "permanent": true
+    },
+    {
+      "source": "/en/blog/s-installer-geneve-expatrie-cote-suisse-cote-france",
+      "destination": "/en/blog/s-installer-a-geneve-expatrie-cote-suisse-ou-cote-france",
+      "permanent": true
     }
   ],
   "headers": [

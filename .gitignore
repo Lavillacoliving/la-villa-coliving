@@ -29,3 +29,6 @@ tools/out/
 
 # Liste des noms de concurrents (garde check-no-competitor) — jamais versionnée
 scripts/competitors.local.json
+
+# Python (scripts/import-resident-history.py)
+__pycache__/
