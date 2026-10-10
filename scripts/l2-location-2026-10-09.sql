@@ -1,8 +1,8 @@
 -- ============================================================================
 -- Lot L2 « Emplacement et transport » (brief « Ingénierie des créneaux » v3.1 du 09/10/2026, règles D1 / D6 / D7 de Jérôme) : faits d'emplacement des articles en base
--- Généré le 2026-10-09T16:31:26.609Z par scripts/build-slots-sql.mjs depuis scripts/l2-location.edits.mjs
---   · textes insérés = source unique src/data/stats.ts (TRANSIT, STATS_DISPLAY, GENEVA_COMMUTE_FORMULA) + entityFacts.ts (houseCommuteLine, prix d'appel) (ENTITY_FACTS_VERSION 2026-10-09, TRANSIT.measuredOn 2026-10-08)
---   · ancres vérifiées sur le contenu vivant de blog_posts (REST anon, lecture seule) le 2026-10-09T16:31:26.599Z : exactement 1 occurrence de chaque ancien texte, nouveau texte absent
+-- Généré le 2026-10-10T07:53:54.608Z par scripts/build-slots-sql.mjs depuis scripts/l2-location.edits.mjs
+--   · textes insérés = source unique src/data/stats.ts (TRANSIT, STATS_DISPLAY, GENEVA_COMMUTE_FORMULA) + entityFacts.ts (houseCommuteLine, prix d'appel) (ENTITY_FACTS_VERSION 2026-10-09b, TRANSIT.measuredOn 2026-10-08)
+--   · ancres vérifiées sur le contenu vivant de blog_posts (REST anon, lecture seule) le 2026-10-10T07:53:54.598Z : exactement 1 occurrence de chaque ancien texte, nouveau texte absent
 -- À appliquer par Jérôme dans le SQL Editor, indépendant du code (aucun composant à déployer) ; relancer le prérendu ensuite.
 -- Idempotent : chaque UPDATE est gardé par position(ancien) > 0 [AND position(nouveau) = 0 quand le nouveau texte n'est pas un fragment de l'ancien] — relancer le fichier est sans effet.
 -- Fichier UTF-8 : il contient des espaces insécables (U+00A0, « 1 370 ») et des caractères typographiques (« — », « – », « · », « → », « ⭐ », émojis) — ne pas le faire transiter par un éditeur qui normalise les espaces.
