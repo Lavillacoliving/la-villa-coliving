@@ -1,6 +1,7 @@
 import type { QAPair } from "@/lib/structuredData";
 import { pickSituations } from "@/data/faq/situationsFaq";
 import { STATS, STATS_DISPLAY, PRICE_CHF_FR, PRICE_CHF_EN, PRICE_SHARED_CHF_FR, PRICE_SHARED_CHF_EN } from "@/data/stats";
+import { priceJustificationFaq } from "@/data/priceFacts";
 
 // FAQ de /colocation-geneve — spécification révisée du 04/09/2026 (Lot 5, gel levé) : les 4 questions
 // « Autres questions posées » de la SERP « colocation genève » + « colocation ou coliving ? » + « quel délai ? ».
@@ -17,6 +18,8 @@ export const colocationGeneveFaq: { fr: QAPair[]; en: QAPair[] } = {
       q: "Quel est le loyer moyen à Genève ?",
       a: "Pour un studio à Genève, compte 1 200 à 2 500 CHF par mois hors charges d'après les annonces relevées en 2026, et un taux de vacance inférieur à 1 % (OCSTAT) : l'offre est rare et les dossiers exigeants. C'est pour ça que beaucoup de frontaliers et de nouveaux arrivants cherchent leur colocation côté France, où le même budget donne une chambre dans une maison entière avec ses espaces communs.",
     },
+    // (Lot L4, D8 — 10/10/2026) FAQ A.3 de justification du prix — texte unique src/data/priceFacts.ts.
+    priceJustificationFaq("fr"),
     {
       q: "Comment faire une colocation en Suisse quand on travaille à Genève ?",
       a: `Deux profils, une même solution. Si tu es frontalier, tu vis côté France avec un permis G et tu es imposé à la source à Genève. Si tu es résident suisse et que tu passes côté France, tu deviens frontalier à ton tour. Chez La Villa, le bail est un bail meublé français à ton nom (${STATS.leaseDurationMonths} mois renouvelable, préavis d'${STATS.noticePeriodMonths} mois), la caution est de ${STATS.depositMonths} mois de loyer hors charges et il n'y a ni frais d'agence ni frais de dossier. Aucun historique locatif suisse n'est demandé.`,
@@ -47,6 +50,7 @@ export const colocationGeneveFaq: { fr: QAPair[]; en: QAPair[] } = {
       q: "What is the average rent in Geneva?",
       a: "For a studio in Geneva, count 1,200 to 2,500 CHF per month excluding charges based on listings observed in 2026, with a vacancy rate below 1% (OCSTAT): supply is scarce and files demanding. That is why many cross-border workers and newcomers look for their flatshare on the French side, where the same budget gets you a room in a whole house with its shared spaces.",
     },
+    priceJustificationFaq("en"),
     {
       q: "How do you share a flat in Switzerland when you work in Geneva?",
       a: `Two profiles, one solution. If you are a cross-border worker, you live on the French side with a G permit and are taxed at source in Geneva. If you are a Swiss resident moving to the French side, you become a cross-border worker in turn. At La Villa the lease is a French furnished lease in your name (${STATS.leaseDurationMonths} months renewable, ${STATS.noticePeriodMonths}-month notice), the deposit is ${STATS.depositMonths} months' rent excluding charges, and there is no agency or application fee. No Swiss rental history is required.`,

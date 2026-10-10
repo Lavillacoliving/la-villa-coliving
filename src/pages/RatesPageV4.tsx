@@ -11,7 +11,8 @@ import { nextMonthValue, useRenderMonth } from "@/lib/renderMonth";
 import { FaqSection } from "@/components/FaqSection";
 import { tarifsFaq } from "@/data/faq/tarifsFaq";
 import { buildBreadcrumbSchema, buildRoomsAggregateOfferSchema, homeUrl } from "@/lib/structuredData";
-import { STATS, HOUSE_SURFACES, PRICE_FR_NUM, PRICE_EN_NUM, PRICE_CHF_FR, PRICE_CHF_EN, PRICE_SHARED_FR_NUM, PRICE_SHARED_EN_NUM, PRICE_SHARED_CHF_FR, PRICE_SHARED_CHF_EN, CONTRACT_EUR, EUR_STANDARD_FR_NUM, EUR_SHARED_FR_NUM, EUR_STANDARD_EN_NUM, EUR_SHARED_EN_NUM, MARKET_ROOM_EUR, thousands } from "@/data/stats";
+import { STATS, HOUSE_SURFACES, PRICE_FR_NUM, PRICE_EN_NUM, PRICE_CHF_FR, PRICE_CHF_EN, PRICE_SHARED_FR_NUM, PRICE_SHARED_EN_NUM, PRICE_SHARED_CHF_FR, PRICE_SHARED_CHF_EN, CONTRACT_EUR, EUR_STANDARD_FR_NUM, EUR_SHARED_FR_NUM, EUR_STANDARD_EN_NUM, EUR_SHARED_EN_NUM, MARKET_ROOM_EUR, thousands, MARKET_COMPARISON } from "@/data/stats";
+import { PRICE_KEY_SENTENCE } from "@/data/priceFacts";
 import {
   MONTHLY_SAVINGS_CHF,
   VILLA_EUR_PER_M2_FR,
@@ -232,7 +233,7 @@ export function RatesPageV4() {
     },
     {
       label: { fr: "Surface chambre", en: "Room size" },
-      classic: { fr: "9-12 m² (le plus souvent)", en: "9-12 m² (most often)" },
+      classic: { fr: `${MARKET_COMPARISON.classicRoomM2.min}-${MARKET_COMPARISON.classicRoomM2.max} m² (le plus souvent)`, en: `${MARKET_COMPARISON.classicRoomM2.min}-${MARKET_COMPARISON.classicRoomM2.max} m² (most often)` },
       villa: {
         fr: `${STATS.roomSizeMin}-${STATS.roomSizeMax} m²`,
         en: `${STATS.roomSizeMin}-${STATS.roomSizeMax} m²`,
@@ -365,6 +366,11 @@ export function RatesPageV4() {
               </>
             )}
           </h1>
+          {/* (Lot L4, D8 — 10/10/2026) Phrase-clé A.4 en chapeau du bloc tarifs — texte unique src/data/priceFacts.ts,
+              repris en puce de la fiche entité ci-dessous (la garde l'attend 2× sur cette page). Un seul nœud texte. */}
+          <p className="text-lg text-[#44403C] max-w-2xl mx-auto mb-4">
+            {PRICE_KEY_SENTENCE[language === "en" ? "en" : "fr"]}
+          </p>
           <p className="text-xl text-[#57534E] max-w-2xl mx-auto mb-4">
             {language === "en"
               ? `from ${PRICE_SHARED_EN_NUM} CHF/month (€${EUR_SHARED_EN_NUM}/month) — All inclusive`
@@ -440,7 +446,7 @@ export function RatesPageV4() {
                 <p>
                   {language === "en" ? (
                     <>
-                      A standard flatshare room is usually 9-12 m². Ours are{" "}
+                      A standard flatshare room is usually {MARKET_COMPARISON.classicRoomM2.min}-{MARKET_COMPARISON.classicRoomM2.max} m². Ours are{" "}
                       <strong>{STATS.roomSizeMin}-{STATS.roomSizeMax} m²</strong> — up to twice that.
                       And it does not stop at your door: counting the common areas, each housemate
                       has <strong>37-42 m² of living space</strong>, again about twice what a classic
@@ -448,7 +454,7 @@ export function RatesPageV4() {
                     </>
                   ) : (
                     <>
-                      Une chambre en colocation classique fait le plus souvent 9 à 12 m². Les nôtres
+                      Une chambre en colocation classique fait le plus souvent {MARKET_COMPARISON.classicRoomM2.min} à {MARKET_COMPARISON.classicRoomM2.max} m². Les nôtres
                       font <strong>{STATS.roomSizeMin} à {STATS.roomSizeMax} m²</strong> — jusqu'à
                       deux fois plus. Et ça ne s'arrête pas à ta porte : espaces communs compris,
                       chaque colocataire dispose de{" "}
@@ -734,10 +740,10 @@ export function RatesPageV4() {
               <p className="text-[#44403C] leading-relaxed">
                 {language === "en" ? (
                   <>
-                    Near Geneva, recent mega-colivings house up to 776 rooms in a
+                    Near Geneva, recent mega-colivings house up to {MARKET_COMPARISON.megaColivingMaxRooms} rooms in a
                     single building, with around 3,000 m² of shared spaces —{" "}
                     <strong>
-                      less than 4 m² of common areas per resident
+                      less than {MARKET_COMPARISON.megaColivingCommonM2PerResident} m² of common areas per resident
                     </strong>
                     . Here: {STATS.minResidentsPerHouse} to{" "}
                     {STATS.maxResidentsPerHouse} flatmates per house,{" "}
@@ -748,11 +754,11 @@ export function RatesPageV4() {
                   </>
                 ) : (
                   <>
-                    Près de Genève, les méga-colivings récents logent jusqu'à 776
+                    Près de Genève, les méga-colivings récents logent jusqu'à {MARKET_COMPARISON.megaColivingMaxRooms}
                     chambres dans un même bâtiment, avec environ 3 000 m²
                     d'espaces partagés —{" "}
                     <strong>
-                      soit moins de 4 m² d'espaces communs par résident
+                      soit moins de {MARKET_COMPARISON.megaColivingCommonM2PerResident} m² d'espaces communs par résident
                     </strong>
                     . Chez nous : {STATS.minResidentsPerHouse} à{" "}
                     {STATS.maxResidentsPerHouse} colocataires par maison,{" "}

@@ -23,6 +23,8 @@
  *      que la vue n'existe pas (migration scripts/resident-history-2026-10-09.sql à appliquer par Jérôme), échec si elle
  *      existe et que distinct_residents_since_opening < STATS.totalResidents. Fonctions pures : tools/test/social-proof-rules.test.mjs.
  * Options : --no-db (hors ligne) · --strict (règle des minutes, règles L2 et vouvoiement en échec, pas en avertissement)
+ * (Lot L4 « Justification du prix », D8, 10/10/2026) FAQ A.3 exactement 1× sur PRICE_FAQ_ROUTES (FR/EN), 0× ailleurs ; phrase-clé A.4
+ * 2× sur /tarifs (chapeau + fiche), 1× sur les autres pages de la fiche ; l'ancienne question « pourquoi plus élevés » est interdite.
  *           --json-ld /route (dump des blocs JSON-LD d'une page dans tools/out/) · --tutoiement (rapport)
  * Modèle : scripts/house-pages-check.mjs (collecte, impression, exit 1). Exécuté par prerender.yml après
  * house-pages-check et avant hydration-check. En local : `npm run check:facts` après `npm run build:local`.
@@ -97,6 +99,9 @@ const FORBIDDEN = [
   // (« 99% » dans un bloc, « Taux d'occupation » dans le suivant) compte — une phrase seule ne suffirait pas. Le « 99 » peut
   // suivre un tiret (« 98-99 % ») : hors Observatoire, c'est aussi interdit.
   { re: /(?<![\d,.])99[   ]?%/, near: /occup(?:ation|ancy|é|ied)|\btaux\b|\brate\b/i, skipFile: /^(en-)?observatoire/, label: '« 99 % » d\'occupation (D3 : retiré ; l\'Observatoire seul garde son « 98-99 % » daté)' },
+  // ── (Lot L4 « Justification du prix », D8 de Jérôme du 09/10/2026) l'ancienne FAQ « pourquoi plus élevés » (tarifsFaq index 1 et
+  // faqData why-higher-prices) est remplacée par la FAQ A.3 de src/data/priceFacts.ts : la question périmée ne doit réapparaître nulle part.
+  { re: /Pourquoi les prix sont-ils plus élevés qu['’]une colocation classique|Why are your prices higher than a standard flatshare/i, label: 'ancienne FAQ « pourquoi plus élevés » (D8 : remplacée par la FAQ A.3, src/data/priceFacts.ts)' },
 ];
 /** (Lot L3) Demi-largeur, en caractères, de la fenêtre de contexte des règles `near`. */
 export const NEAR_WINDOW = 120;
@@ -388,6 +393,15 @@ async function checkHtml(m) {
   }
   for (const f of inScope.keys()) if (!files.includes(f)) failures.push(`${f} : page prérendue ABSENTE (périmètre du bloc entité)`);
   const strings = { fr: m.entityFactsStrings('fr').map(norm), en: m.entityFactsStrings('en').map(norm) };
+  // (Lot L4, D8) FAQ A.3 : 1× (question + réponse) sur PRICE_FAQ_ROUTES FR/EN, 0× ailleurs ; phrase-clé A.4 : 2× sur /tarifs
+  // (chapeau du bloc tarifs + puce de la fiche entité), 1× sur toute autre page de la fiche (comparaison générique ci-dessous).
+  const priceScope = new Map();
+  for (const r of m.PRICE_FAQ_ROUTES ?? []) { priceScope.set(routeToFile(r, 'fr'), 'fr'); priceScope.set(routeToFile(r, 'en'), 'en'); }
+  const priceFaq = m.priceJustificationFaq ? { fr: m.priceJustificationFaq('fr'), en: m.priceJustificationFaq('en') } : null;
+  const keySentence = m.PRICE_KEY_SENTENCE ? { fr: norm(m.PRICE_KEY_SENTENCE.fr), en: norm(m.PRICE_KEY_SENTENCE.en) } : null;
+  const keyRoute = m.PRICE_KEY_SENTENCE_ROUTE ?? '/tarifs';
+  const keyFiles = new Set([routeToFile(keyRoute, 'fr'), routeToFile(keyRoute, 'en')]);
+  for (const f of priceScope.keys()) if (!files.includes(f)) failures.push(`${f} : page prérendue ABSENTE (périmètre de la FAQ prix A.3)`);
   let blocks = 0, minuteWarnings = 0, locationIssues = 0, vousPages = 0;
   for (const f of files) {
     const html = await fs.readFile(path.join(PRERENDERED, f), 'utf8');
@@ -400,9 +414,19 @@ async function checkHtml(m) {
       if (!html.includes(`data-entity-facts-version="${F.version}"`)) failures.push(`${f} : version du bloc ≠ ${F.version}`);
       for (const s of strings[lang]) {
         const n = count(text, s);
-        if (n !== 1) failures.push(`${f} : phrase canonique présente ${n} fois (attendu 1) — « ${s.slice(0, 70)}… »`);
+        const expected = keySentence && s === keySentence[lang] && keyFiles.has(f) ? 2 : 1; // A.4 : chapeau + fiche sur /tarifs
+        if (n !== expected) failures.push(`${f} : phrase canonique présente ${n} fois (attendu ${expected}) — « ${s.slice(0, 70)}… »`);
       }
     } else if (nBlocks > 0) failures.push(`${f} : bloc entité hors périmètre (${nBlocks})`);
+    // (Lot L4, D8) FAQ A.3 — texte identique au caractère près sur les pages du périmètre, absente ailleurs.
+    if (priceFaq) {
+      const pl = f.startsWith('en-') ? 'en' : 'fr';
+      const nQ = count(text, norm(priceFaq[pl].q)), nA = count(text, norm(priceFaq[pl].a));
+      if (priceScope.has(f)) {
+        if (nQ !== 1 || nA !== 1) failures.push(`${f} : FAQ prix A.3 — question ${nQ}×, réponse ${nA}× (attendu 1 et 1)`);
+      } else if (nQ + nA > 0) failures.push(`${f} : FAQ prix A.3 hors périmètre (question ${nQ}×, réponse ${nA}×)`);
+      if (keySentence && !lang && count(text, keySentence[pl]) > 0) failures.push(`${f} : phrase-clé A.4 hors fiche entité`);
+    }
     const legal = /^(en-)?(mentions-legales|politique-de-confidentialite)\.html$/.test(f);
     // Chaînes périmées ou interdites (texte visible) — dont les formulations D6/D7 du lot L2 et les preuves sociales du lot L3
     // (le nom du fichier porte l'exemption de l'Observatoire pour « 99 % »).

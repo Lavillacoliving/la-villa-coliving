@@ -41,6 +41,7 @@ import {
   GOOGLE_REVIEWS_LINK_LABEL,
 } from "./stats";
 import { FOUNDERS, FOUNDING_DATE, LAVILLA_SAME_AS } from "../lib/structuredData";
+import { PRICE_KEY_SENTENCE } from "./priceFacts";
 
 export type EntityLang = "fr" | "en";
 export type EntityHouseSlug = keyof typeof ROOMS_BY_HOUSE;
@@ -48,6 +49,8 @@ export type EntityHouseSlug = keyof typeof ROOMS_BY_HOUSE;
 /** Incrémenter à chaque changement de texte : porté par data-entity-facts-version, comparé par la CI. */
 // (Lot L1 « ingénierie des créneaux », 09/10/2026) Trajets réalignés sur TRANSIT (D1-L1), paragraphe sur la formule D1.
 // (Lot L3, relecture adverse du 10/10/2026) La puce « Avis » expose son lien (reviewsLink) : la fiche ne publie jamais la note sans « Voir les avis ».
+// (Lot L4 « justification du prix », D8, 10/10/2026) Puce « phrase-clé » A.4 (PRICE_KEY_SENTENCE, src/data/priceFacts.ts) après le loyer ;
+// la même phrase ouvre le bloc tarifs de /tarifs — la garde l'attend donc 2× sur /tarifs, 1× ailleurs.
 // (Lot L3, 10/10/2026) Puce « Avis : 4,8/5 sur Google (36 avis). » ajoutée (D4) — à incrémenter à chaque relevé mensuel
 // (la date sert aussi de « Dernière mise à jour » dans llms.txt : garder une vraie date AAAA-MM-JJ, suffixe b, c… si besoin).
 export const ENTITY_FACTS_VERSION = "2026-10-10";
@@ -199,6 +202,7 @@ export function entityFactsText(lang: EntityLang): EntityFactsText {
         `${F.commuteFormula.en}.`,
       bullets: [
         `All-inclusive rent from ${F.price.en.fromChf}/month (contractual rent in euros: from ${F.price.en.fromEur}) — utilities, fibre up to ${F.fiberSpeed}, common-area cleaning ${F.cleaningPerWeek} times a week, pool, sauna, gym, streaming, yoga and events included.`,
+        PRICE_KEY_SENTENCE.en,
         `No application fee, no agency fee. Deposit: ${F.depositMonths} months' rent, excluding charges.`,
         `${F.lease.months}-month lease: you're free to leave at any time with ${F.lease.noticeMonths} month's notice.`,
         `Commute: ${commutes}.`,
@@ -217,6 +221,7 @@ export function entityFactsText(lang: EntityLang): EntityFactsText {
       `${F.commuteFormula.fr}.`,
     bullets: [
       `Loyer tout inclus dès ${F.price.fr.fromChf}/mois (loyer contractuel en euros : dès ${F.price.fr.fromEur}) — charges, fibre jusqu'à ${F.fiberSpeed}, ménage des espaces communs ${F.cleaningPerWeek} fois par semaine, piscine, sauna, salle de sport, streaming, yoga et événements compris.`,
+      PRICE_KEY_SENTENCE.fr,
       `0 € de frais de dossier, 0 € de frais d'agence. Caution : ${F.depositMonths} mois de loyer hors charges.`,
       `Bail de ${F.lease.months} mois : tu es libre de partir à tout moment avec ${F.lease.noticeMonths} mois de préavis.`,
       `Trajets : ${commutes}.`,

@@ -1,8 +1,11 @@
 // FAQ Data for SEO - Extensive question/answer database
 // Organized by categories for better SEO structure
 
-import { STATS, STATS_DISPLAY, TRANSIT, GENEVA_COMMUTE_FORMULA, PRICE_CHF_FR, PRICE_CHF_EN, PRICE_SHARED_EN_NUM, PRICE_SHARED_CHF_FR, PRICE_SHARED_CHF_EN } from "@/data/stats";
+import { STATS_DISPLAY, TRANSIT, GENEVA_COMMUTE_FORMULA, PRICE_CHF_FR, PRICE_CHF_EN, PRICE_SHARED_EN_NUM, PRICE_SHARED_CHF_FR, PRICE_SHARED_CHF_EN } from "@/data/stats";
 import { situationsFaq } from "@/data/faq/situationsFaq";
+import { priceJustificationFaq } from "@/data/priceFacts";
+
+const PRICE_FAQ = { fr: priceJustificationFaq("fr"), en: priceJustificationFaq("en") };
 
 // (Lot L2 « Emplacement et transport », 09/10/2026) Tout fait d'emplacement de /faq vient de TRANSIT / STATS_DISPLAY /
 // GENEVA_COMMUTE_FORMULA (D1 : destination nommée, Léman Express par défaut, deux nombres) ; aucune minute en dur, aucune
@@ -297,14 +300,9 @@ export const faqData: FAQItem[] = [
   {
     id: 'why-higher-prices',
     category: 'Pricing & Payments',
-    question: {
-      en: 'Why are your prices higher than a standard flatshare?',
-      fr: 'Pourquoi les prix sont-ils plus élevés qu\'une colocation classique ?',
-    },
-    answer: {
-      en: `Because you're not getting the same thing. Our rooms are ${STATS.roomSizeMin}-${STATS.roomSizeMax} m² (vs 9-12 m² for most local flatshares), every house has a pool, sauna and gym, professional cleaning is included, a dedicated team maintains the house (gardener, pool technician), and community life is organised monthly. Per square metre and like-for-like on services, La Villa is at market price — all inclusive from ${PRICE_SHARED_CHF_EN}/month, with no application or agency fees.`,
-      fr: `Parce que tu n'obtiens pas la même chose. Nos chambres font ${STATS.roomSizeMin} à ${STATS.roomSizeMax} m² (contre 9-12 m² pour la plupart des colocations locales), chaque maison a piscine, sauna et salle de sport, le ménage professionnel est inclus, une équipe entretient la maison (jardinier, pisciniste) et la vie communautaire est organisée chaque mois. Au m² et à services équivalents, La Villa est dans les prix du marché — tout inclus dès ${PRICE_SHARED_CHF_FR}/mois, sans frais de dossier ni d'agence.`,
-    },
+    // (Lot L4, D8 — 10/10/2026) FAQ A.3 : même texte que /tarifs, /le-coliving, /colocation-geneve, /chambre-a-louer-geneve (src/data/priceFacts.ts).
+    question: { en: PRICE_FAQ.en.q, fr: PRICE_FAQ.fr.q },
+    answer: { en: PRICE_FAQ.en.a, fr: PRICE_FAQ.fr.a },
   },
   {
     id: 'security-deposit',

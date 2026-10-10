@@ -4,7 +4,7 @@ import { LocalizedLink } from "@/components/LocalizedLink";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { SEO } from "@/components/SEO";
 import { buildBreadcrumbSchema, HOUSES, LAVILLA_EMAIL, LAVILLA_PHONE, LAVILLA_POSTAL_ADDRESS, LAVILLA_SAME_AS } from "@/lib/structuredData";
-import { STATS, STATS_DISPLAY, PRICE_SHARED_CHF_FR, PRICE_SHARED_CHF_EN } from "@/data/stats";
+import { STATS, STATS_DISPLAY, PRICE_SHARED_CHF_FR, PRICE_SHARED_CHF_EN, MARKET_COMPARISON } from "@/data/stats";
 import {
   Linkedin,
   Mail,
@@ -135,8 +135,8 @@ export function QuiSommesNousPage() {
       icon: HeartHandshake,
       title: en ? "Not a factory" : "Pas une usine",
       text: en
-        ? "A stone's throw from Geneva, the new mega-residences pack up to 776 rooms — with less than 4 m² of communal space per resident. With us: 7 to 12 housemates per house, 37 to 42 m² of living space each, and whole gardens to share. You don't build a community in a building lobby."
-        : "À deux pas de Genève, les nouvelles méga-résidences logent jusqu'à 776 chambres — avec moins de 4 m² d'espaces communs par résident. Chez nous : 7 à 12 colocataires par maison, 37 à 42 m² d'espace de vie chacun, et des jardins entiers à partager. On ne compose pas une communauté dans un hall d'immeuble.",
+        ? `A stone's throw from Geneva, the new mega-residences pack up to ${MARKET_COMPARISON.megaColivingMaxRooms} rooms — with less than ${MARKET_COMPARISON.megaColivingCommonM2PerResident} m² of communal space per resident. With us: ${STATS.minResidentsPerHouse} to ${STATS.maxResidentsPerHouse} housemates per house, ${STATS.livingSpacePerResidentMin} to ${STATS.livingSpacePerResidentMax} m² of living space each, and whole gardens to share. You don't build a community in a building lobby.`
+        : `À deux pas de Genève, les nouvelles méga-résidences logent jusqu'à ${MARKET_COMPARISON.megaColivingMaxRooms} chambres — avec moins de ${MARKET_COMPARISON.megaColivingCommonM2PerResident} m² d'espaces communs par résident. Chez nous : ${STATS.minResidentsPerHouse} à ${STATS.maxResidentsPerHouse} colocataires par maison, ${STATS.livingSpacePerResidentMin} à ${STATS.livingSpacePerResidentMax} m² d'espace de vie chacun, et des jardins entiers à partager. On ne compose pas une communauté dans un hall d'immeuble.`,
     },
     {
       icon: Gem,

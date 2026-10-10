@@ -22,6 +22,8 @@ export async function loadEntityFacts() {
     // de stats.ts qu'ils exposent (TRANSIT, HOUSE_SURFACES, ROOM_SURFACE_BY_HOUSE…) + (Lot L3 « Note Google et preuves »,
     // 09/10/2026) la note Google (GOOGLE_REVIEWS, GOOGLE_REVIEWS_LINK_LABEL), l'occupation mesurée (OCCUPANCY, OCCUPANCY_DISPLAY)
     // et la base des preuves (STATS_SOURCE), lus par scripts/l3-social-proof.edits.mjs et la garde check-entity-facts.
+    // + (Lot L4 « Justification du prix », D8, 10/10/2026) la FAQ A.3 et la phrase-clé A.4 (priceFacts.ts : priceJustificationFaq,
+    // PRICE_KEY_SENTENCE, PRICE_FAQ_ROUTES, priceFactsStrings, priceFactsIssues) et les repères du marché (MARKET_COMPARISON).
     stdin: {
       contents: [
         "export * from './src/data/entityFacts';",
@@ -30,7 +32,8 @@ export async function loadEntityFacts() {
         "export * from './src/data/ouChercherArticles';",
         "export * from './src/lib/contentMarkers';",
         "export * from './src/data/houseLocation';",
-        "export { STATS, STATS_DISPLAY, TRANSIT, GENEVA_COMMUTE_FORMULA, MARKET_ROOM_EUR, FACEBOOK_GROUP, HOUSE_SURFACES, ROOM_SURFACE_BY_HOUSE, GOOGLE_REVIEWS, GOOGLE_REVIEWS_LINK_LABEL, OCCUPANCY, OCCUPANCY_DISPLAY, STATS_SOURCE } from './src/data/stats';",
+        "export * from './src/data/priceFacts';",
+        "export { STATS, STATS_DISPLAY, TRANSIT, GENEVA_COMMUTE_FORMULA, MARKET_ROOM_EUR, FACEBOOK_GROUP, HOUSE_SURFACES, ROOM_SURFACE_BY_HOUSE, GOOGLE_REVIEWS, GOOGLE_REVIEWS_LINK_LABEL, OCCUPANCY, OCCUPANCY_DISPLAY, STATS_SOURCE, MARKET_COMPARISON } from './src/data/stats';",
       ].join(' '),
       resolveDir: ROOT,
       loader: 'ts',
