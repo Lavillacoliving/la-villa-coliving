@@ -22,9 +22,13 @@
  * D6 aucune promesse sur le garant, seule la caution (2 mois hors charges) · D7 loyer contractuel en € ·
  * D9 16-24 m² (bornes de v_public_rooms) · D10 Instagram la_villa_coliving_geneva, pas de Facebook ·
  * D12 le bloc ne cite que le prix d'appel « dès 1 370 CHF » (jamais 1 430).
+ * (Lot L3, D4 Jérôme 09/10/2026) Puce « Avis : 4,8/5 sur Google (36 avis). » = GOOGLE_REVIEWS via STATS_DISPLAY.googleRating ;
+ * jamais d'aggregateRating. Le lien « Voir les avis » vit dans les pages (hero, /candidature…), pas dans la fiche (chaînes plates).
  */
 import {
   STATS,
+  STATS_DISPLAY,
+  GOOGLE_REVIEWS,
   STATS_SHARED_BATH,
   CONTRACT_EUR,
   ROOMS_BY_HOUSE,
@@ -34,6 +38,7 @@ import {
   EUR_SHARED_EN_NUM,
   TRANSIT,
   GENEVA_COMMUTE_FORMULA,
+  GOOGLE_REVIEWS_LINK_LABEL,
 } from "./stats";
 import { FOUNDERS, FOUNDING_DATE, LAVILLA_SAME_AS } from "../lib/structuredData";
 
@@ -42,7 +47,10 @@ export type EntityHouseSlug = keyof typeof ROOMS_BY_HOUSE;
 
 /** Incrémenter à chaque changement de texte : porté par data-entity-facts-version, comparé par la CI. */
 // (Lot L1 « ingénierie des créneaux », 09/10/2026) Trajets réalignés sur TRANSIT (D1-L1), paragraphe sur la formule D1.
-export const ENTITY_FACTS_VERSION = "2026-10-09";
+// (Lot L3, relecture adverse du 10/10/2026) La puce « Avis » expose son lien (reviewsLink) : la fiche ne publie jamais la note sans « Voir les avis ».
+// (Lot L3, 10/10/2026) Puce « Avis : 4,8/5 sur Google (36 avis). » ajoutée (D4) — à incrémenter à chaque relevé mensuel
+// (la date sert aussi de « Dernière mise à jour » dans llms.txt : garder une vraie date AAAA-MM-JJ, suffixe b, c… si besoin).
+export const ENTITY_FACTS_VERSION = "2026-10-10";
 
 /**
  * Phrase garant canonique (D0 amendement b, Jérôme 09/10/2026) — la SEULE formulation admise sur le site :
@@ -148,6 +156,16 @@ export const ENTITY_FACTS = {
   totalResidents: STATS.totalResidents,
   responseHours: STATS.responseHours,
   sameAs: LAVILLA_SAME_AS,
+  // (Lot L3, D4, 09/10/2026) Note Google — phrases prêtes (STATS_DISPLAY.googleRating) + url de la fiche pour llms.txt.
+  googleReviews: {
+    rating: GOOGLE_REVIEWS.rating,
+    ratingEn: GOOGLE_REVIEWS.ratingEn,
+    count: GOOGLE_REVIEWS.count,
+    url: GOOGLE_REVIEWS.url,
+    checkedOn: GOOGLE_REVIEWS.checkedOn,
+    fr: STATS_DISPLAY.fr.googleRating,
+    en: STATS_DISPLAY.en.googleRating,
+  },
 } as const;
 
 export interface EntityFactsText {
@@ -155,6 +173,9 @@ export interface EntityFactsText {
   paragraph: string;
   bullets: readonly string[];
   cta: string;
+  /** (Lot L3, D4) La puce « Avis : … » est TOUJOURS suivie du lien « Voir les avis » vers la fiche Google : le composant rend
+   *  la phrase (un nœud texte) puis un <a> séparé — le libellé du lien n'entre pas dans entityFactsStrings (il vit aussi dans le hero). */
+  reviewsLink: { bullet: string; label: string; href: string };
 }
 
 const houseList = (lang: EntityLang): string =>
@@ -168,6 +189,7 @@ const houseList = (lang: EntityLang): string =>
 export function entityFactsText(lang: EntityLang): EntityFactsText {
   const F = ENTITY_FACTS;
   const commutes = ENTITY_HOUSES.map((h) => `${h.label} — ${h.commute[lang]}`).join(" ; ");
+  const reviewsBullet = { fr: `Avis : ${F.googleReviews.fr}.`, en: `Reviews: ${F.googleReviews.en}.` };
   if (lang === "en") {
     return {
       title: "La Villa Coliving — the essentials",
@@ -180,9 +202,11 @@ export function entityFactsText(lang: EntityLang): EntityFactsText {
         `No application fee, no agency fee. Deposit: ${F.depositMonths} months' rent, excluding charges.`,
         `${F.lease.months}-month lease: you're free to leave at any time with ${F.lease.noticeMonths} month's notice.`,
         `Commute: ${commutes}.`,
+        reviewsBullet.en,
         `Who it's for: cross-border workers, expats and young professionals working in Geneva. Founded in ${F.foundingLabel.en} by ${F.founders.join(" and ")} and run directly by them — ${F.totalResidents}+ residents welcomed.`,
       ],
       cta: `Apply — reply within ${F.responseHours} h`,
+      reviewsLink: { bullet: reviewsBullet.en, label: GOOGLE_REVIEWS_LINK_LABEL.en, href: F.googleReviews.url },
     };
   }
   return {
@@ -196,9 +220,11 @@ export function entityFactsText(lang: EntityLang): EntityFactsText {
       `0 € de frais de dossier, 0 € de frais d'agence. Caution : ${F.depositMonths} mois de loyer hors charges.`,
       `Bail de ${F.lease.months} mois : tu es libre de partir à tout moment avec ${F.lease.noticeMonths} mois de préavis.`,
       `Trajets : ${commutes}.`,
+      reviewsBullet.fr,
       `Pour qui : frontaliers, expats et jeunes professionnels qui travaillent à Genève. Fondée en ${F.foundingLabel.fr} par ${F.founders.join(" et ")}, gérée en direct — ${F.totalResidents}+ résidents accueillis.`,
     ],
     cta: `Candidater — réponse sous ${F.responseHours} h`,
+    reviewsLink: { bullet: reviewsBullet.fr, label: GOOGLE_REVIEWS_LINK_LABEL.fr, href: F.googleReviews.url },
   };
 }
 

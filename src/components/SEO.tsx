@@ -113,7 +113,8 @@ export function SEO({
 
       {/* Structured Data — LocalBusiness (défaut sur toutes les pages) — SEO local. (Lot S1, 05/09/2026)
           Construit par buildLocalBusinessSchema : 3 maisons en department, offre agrégée, sameAs, tout
-          lu depuis les sources uniques. PAS d'aggregateRating (la note 4,9/5 = NPS interne, non balisable). */}
+          lu depuis les sources uniques. PAS d'aggregateRating ni de Review (D4, 09/10/2026) : la note publiée est celle de
+          la fiche Google (GOOGLE_REVIEWS), jamais balisée sur son propre site. */}
       {!omitLocalBusiness && <script type="application/ld+json">
         {JSON.stringify(buildLocalBusinessSchema(language === "en" ? "en" : "fr", siteDescription))}
       </script>}

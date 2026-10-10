@@ -11,7 +11,7 @@ import { WaitlistForm } from "@/components/WaitlistForm";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { HOUSES } from "@/data/houses";
 import { colocationGeneveFaq } from "@/data/faq/colocationGeneveFaq";
-import { STATS, STATS_DISPLAY, STATS_SHARED_BATH, PRICE_CHF_FR, PRICE_CHF_EN, PRICE_SHARED_CHF_FR, PRICE_SHARED_CHF_EN, TRANSIT } from "@/data/stats";
+import { STATS, STATS_DISPLAY, STATS_SHARED_BATH, PRICE_CHF_FR, PRICE_CHF_EN, PRICE_SHARED_CHF_FR, PRICE_SHARED_CHF_EN, TRANSIT, GOOGLE_REVIEWS, GOOGLE_REVIEWS_LINK_LABEL } from "@/data/stats";
 import { ENTITY_HOUSES } from "@/data/entityFacts";
 import { OuChercher } from "@/components/OuChercher";
 import { COLOC_GENEVE_ARTICLE, COLOC_GENEVE_PILLAR_EN, COLOC_GENEVE_PILLAR_FR } from "@/lib/siteLinks";
@@ -121,10 +121,17 @@ export function ColocationGenevePage() {
               {en ? "Apply" : "Candidater"}
             </LocalizedLink>
           </div>
+          {/* (Lot L3, D4 Jérôme 09/10/2026) Note Google (STATS_DISPLAY.googleRating) + lien « Voir les avis » ; l'ancienne
+              note interne (NPS) n'est plus publiée. Une phrase = un nœud texte, le lien est un élément à part. */}
           <p className="mt-6 text-sm text-[#57534E]">
-            {en
-              ? `★ ${STATS.rating.replace(",", ".")}/5 (resident surveys) · ${STATS.totalResidents}+ residents since ${STATS.foundedYear} · no agency fee, no application fee`
-              : `★ ${STATS.rating}/5 (enquêtes résidents) · ${STATS.totalResidents}+ résidents depuis ${STATS.foundedYear} · 0 frais d'agence, 0 frais de dossier`}
+            <span>
+              {en
+                ? `★ ${STATS_DISPLAY.en.googleRating} · ${STATS_DISPLAY.en.residents} · no agency fee, no application fee`
+                : `★ ${STATS_DISPLAY.fr.googleRating} · ${STATS_DISPLAY.fr.residents} · 0 frais d'agence, 0 frais de dossier`}
+            </span>
+            <a href={GOOGLE_REVIEWS.url} target="_blank" rel="noopener noreferrer" className="ml-2 underline underline-offset-4 hover:text-[#1C1917] transition-colors">
+              {GOOGLE_REVIEWS_LINK_LABEL[L]}
+            </a>
           </p>
           <p className="mt-1 text-xs text-[#A8A29E]">{en ? `Updated ${lastUpdatedLabel}` : `Mis à jour le ${lastUpdatedLabel}`}</p>
           <div className="flex flex-wrap justify-center gap-8 mt-10 text-sm text-[#78716C]">

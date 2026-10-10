@@ -4,7 +4,7 @@ import { colocGeneveHref } from "@/lib/siteLinks";
 import { Scrim } from "@/components/Scrim";
 import { ArrowRight, ChevronDown, Home, Users, Heart, MapPin } from "lucide-react";
 import { useLanguage } from "@/contexts/LanguageContext";
-import { STATS, STATS_DISPLAY, PRICE_SHARED_CHF_FR, PRICE_SHARED_CHF_EN } from "@/data/stats";
+import { STATS, STATS_DISPLAY, PRICE_SHARED_CHF_FR, PRICE_SHARED_CHF_EN, GOOGLE_REVIEWS, GOOGLE_REVIEWS_LINK_LABEL } from "@/data/stats";
 import { ENTITY_HOUSES } from "@/data/entityFacts";
 import { useRoomAvailability, globalAvailabilityLabel } from "@/lib/availability";
 
@@ -117,8 +117,10 @@ export function HeroV7() {
               : "Tout est compris — pas de frais de dossier, pas d'honoraires d'agence, pas de frais cachés."}
           </p>
 
-          {/* Social proof */}
-          <div className="flex items-center gap-3 mb-12 md:mb-14">
+          {/* Social proof — (Lot L3, D4 Jérôme 09/10/2026) note de la fiche Google (STATS_DISPLAY.googleRating, toujours
+              « sur Google ») + lien « Voir les avis » vers la fiche ; l'ancienne note interne (NPS) n'est plus publiée.
+              Une phrase = un nœud texte ; le lien est un élément à part (anti-#418). */}
+          <div className="flex flex-wrap items-center gap-x-3 gap-y-1 mb-12 md:mb-14">
             <div className="flex items-center gap-1">
               {[1,2,3,4,5].map(i => (
                 <svg key={i} className="w-4 h-4 text-[#E0BB8A]" fill="currentColor" viewBox="0 0 20 20">
@@ -126,12 +128,17 @@ export function HeroV7() {
                 </svg>
               ))}
             </div>
-            <span
-              className="text-white/90 text-sm font-medium"
-              title={language === "en" ? "Average rating — resident surveys 2021-2026" : "Note moyenne — enquêtes résidents 2021-2026"}
-            >
-              {`${STATS_DISPLAY[L].rating}/5 ${language === "en" ? "(resident surveys)" : "(enquêtes résidents)"} — ${STATS_DISPLAY[L].residents}`}
+            <span className="text-white/90 text-sm font-medium">
+              {`${STATS_DISPLAY[L].googleRating} — ${STATS_DISPLAY[L].residents}`}
             </span>
+            <a
+              href={GOOGLE_REVIEWS.url}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-white/80 text-sm underline underline-offset-4 hover:text-white transition-colors"
+            >
+              {GOOGLE_REVIEWS_LINK_LABEL[L]}
+            </a>
           </div>
 
           {/* Availability signal — dispo réelle (v_public_rooms), dates comprises.
@@ -171,8 +178,9 @@ export function HeroV7() {
                 label: language === "en" ? "All inclusive / month" : "Tout inclus / mois",
               },
               {
-                value: `${STATS.occupancyRate}%`,
-                label: language === "en" ? `Occupancy over ${STATS.occupancyYears} yrs` : `Taux d'occupation sur ${STATS.occupancyYears} ans`,
+                // (Lot L3, D3 Jérôme 09/10/2026) Ancien taux d'occupation « sur 5 ans » retiré (non mesuré) → séjour moyen (fact block §1).
+                value: language === "en" ? `${STATS.averageStayMonths} months` : `${STATS.averageStayMonths} mois`,
+                label: language === "en" ? "Average stay" : "De séjour en moyenne",
               },
             ].map((stat, index) => (
               <div key={index}>

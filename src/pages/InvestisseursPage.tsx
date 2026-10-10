@@ -1,6 +1,6 @@
 import { useLanguage } from "@/contexts/LanguageContext";
 import { SEO } from "@/components/SEO";
-import { STATS } from "@/data/stats";
+import { STATS, OCCUPANCY_DISPLAY, YEARS_IN_OPERATION, OCCUPANCY } from "@/data/stats";
 import {
   ArrowRight,
   Users,
@@ -16,6 +16,11 @@ import {
 
 export function InvestisseursPage() {
   const { language } = useLanguage();
+  const L = language === "en" ? "en" : "fr";
+  // (Lot L3, D3 Jérôme 09/10/2026) Ancien taux d'occupation « sur 5 ans » retiré : la page B2B est la SEULE à publier
+  // l'occupation, toujours avec sa base (OCCUPANCY_DISPLAY : « ≈ N % de jours-chambre occupés depuis l'ouverture (sept. 2021 →
+  // mois de mesure) »). Les années d'exploitation (YEARS_IN_OPERATION) et le nombre de maisons viennent aussi de stats.ts.
+  const occ = OCCUPANCY_DISPLAY[L];
 
   const scrollTo = (id: string) => {
     const el = document.getElementById(id);
@@ -32,8 +37,8 @@ export function InvestisseursPage() {
         }
         description={
           language === "en"
-            ? "Entrust your exceptional property to La Villa Coliving. 99% occupancy over 5 years, premium community management under our brand. Contact us."
-            : "Confiez votre bien d'exception à La Villa Coliving. 99% d'occupation sur 5 ans, gestion de communauté premium sous notre marque. Contactez-nous."
+            ? `Entrust your property to La Villa Coliving: ${occ.value} of room-days occupied since ${OCCUPANCY.sinceLabel.en}, premium community management under our brand.`
+            : `Confiez votre bien à La Villa Coliving : ${occ.value} de jours-chambre occupés depuis ${OCCUPANCY.sinceLabel.fr}, gestion de communauté premium sous notre marque.`
         }
         url="https://www.lavillacoliving.com/investisseurs"
       />
@@ -82,28 +87,22 @@ export function InvestisseursPage() {
         <div className="container-custom mt-16 pt-10 border-t border-stone-700">
           <div className="grid grid-cols-2 md:grid-cols-3 gap-8 text-center">
             <div>
-              <p className="text-4xl md:text-5xl font-bold text-white mb-2">
-                99%
-              </p>
-              <p className="text-stone-400 text-sm">
-                {language === "en"
-                  ? "Occupancy rate over 5 years"
-                  : "Taux d'occupation sur 5 ans"}
-              </p>
+              <p className="text-4xl md:text-5xl font-bold text-white mb-2">{occ.value}</p>
+              <p className="text-stone-400 text-sm">{occ.label}</p>
             </div>
             <div>
               <p className="text-4xl md:text-5xl font-bold text-white mb-2">
-                {STATS.totalResidents}+
+                {`${STATS.totalResidents}+`}
               </p>
               <p className="text-stone-400 text-sm">
                 {language === "en"
-                  ? "Residents welcomed since 2021"
-                  : "Résidents accueillis depuis 2021"}
+                  ? `Residents welcomed since ${STATS.foundedYear}`
+                  : `Résidents accueillis depuis ${STATS.foundedYear}`}
               </p>
             </div>
             <div className="col-span-2 md:col-span-1">
               <p className="text-4xl md:text-5xl font-bold text-white mb-2">
-                3
+                {STATS.totalHouses}
               </p>
               <p className="text-stone-400 text-sm">
                 {language === "en"
@@ -147,8 +146,8 @@ export function InvestisseursPage() {
               </p>
               <p className="text-[#57534E] leading-relaxed">
                 {language === "en"
-                  ? "Result: our houses have maintained 99% occupancy since 2021, with 12-month leases and controlled turnover. This isn't seasonal rental — it's a stable-yield real estate asset."
-                  : "Résultat : nos maisons affichent 99% d'occupation depuis 2021, avec des baux de 12 mois et un turnover maîtrisé. Ce n'est pas de la location saisonnière — c'est un actif immobilier à rendement stable."}
+                  ? `Result: ${occ.sentence}, with ${STATS.leaseDurationMonths}-month leases and controlled turnover. This isn't seasonal rental — it's a stable-yield real estate asset.`
+                  : `Résultat : ${occ.sentence}, avec des baux de ${STATS.leaseDurationMonths} mois et un turnover maîtrisé. Ce n'est pas de la location saisonnière — c'est un actif immobilier à rendement stable.`}
               </p>
             </div>
 
@@ -322,15 +321,15 @@ export function InvestisseursPage() {
                 className="text-4xl font-bold text-[#1C1917] mb-1"
                 style={{ fontFamily: '"DM Serif Display", serif' }}
               >
-                99%
+                {occ.value}
               </p>
               <p className="text-sm font-semibold text-[#D4A574] uppercase tracking-wider mb-3">
-                {language === "en" ? "Occupancy rate" : "Taux d'occupation"}
+                {language === "en" ? "Room-days occupied" : "Jours-chambre occupés"}
               </p>
               <p className="text-[#57534E] text-sm leading-relaxed">
                 {language === "en"
-                  ? "Over 5 years, our houses have virtually never had a vacancy. Our residents stay between 6 months and 3 years."
-                  : "Sur 5 ans, nos maisons n'ont quasiment jamais eu de vacance. Nos résidents restent entre 6 mois et 3 ans."}
+                  ? `${occ.sentence}, across all ${STATS.totalHouses} houses. Vacancy stays marginal, and our residents stay ${STATS.averageStayMonths} months on average.`
+                  : `${occ.sentence}, sur l'ensemble des ${STATS.totalHouses} maisons. La vacance reste marginale, et nos résidents restent ${STATS.averageStayMonths} mois en moyenne.`}
               </p>
             </div>
 
@@ -366,7 +365,7 @@ export function InvestisseursPage() {
                 className="text-4xl font-bold text-[#1C1917] mb-1"
                 style={{ fontFamily: '"DM Serif Display", serif' }}
               >
-                {language === "en" ? "5 years" : "5 ans"}
+                {language === "en" ? `${YEARS_IN_OPERATION} years` : `${YEARS_IN_OPERATION} ans`}
               </p>
               <p className="text-sm font-semibold text-[#D4A574] uppercase tracking-wider mb-3">
                 {language === "en" ? "Of experience" : "D'expérience"}

@@ -332,8 +332,8 @@ export function QuiSommesNousPage() {
               <ul className="grid md:grid-cols-2 gap-x-8 gap-y-4">
                 {[
                   {
-                    fr: <><strong className="text-[#1C1917]">Depuis octobre 2021, plus de {STATS.totalResidents} résidents accueillis</strong> — un vrai historique, pas une promesse.</>,
-                    en: <><strong className="text-[#1C1917]">Since October 2021, {STATS.totalResidents}+ residents hosted</strong> — a real track record, not a promise.</>,
+                    fr: <><strong className="text-[#1C1917]">{`Depuis octobre ${STATS.foundedYear}, plus de ${STATS.totalResidents} résidents accueillis`}</strong> — un vrai historique, pas une promesse.</>,
+                    en: <><strong className="text-[#1C1917]">{`Since October ${STATS.foundedYear}, ${STATS.totalResidents}+ residents hosted`}</strong> — a real track record, not a promise.</>,
                   },
                   {
                     fr: <><strong className="text-[#1C1917]">De vraies maisons, de vraies adresses.</strong> Viens les visiter avant de signer — sur place ou en visio.</>,

@@ -24,6 +24,8 @@ export const ORG_ID = `${SITE}/#organization`;
  * d'identité) et housing.cagi.ch (tableau de bord privé, aucune page publique). bookmycoliving, LinkedIn :
  * aucune page publique trouvée.
  * INSTAGRAM_URL doit rester en tête : scripts/build-llms-txt.mjs lit sameAs[0].
+ * (Lot L3, D4, 09/10/2026) Le lien « Voir les avis » affiché sur le site = GOOGLE_REVIEWS.url (src/data/stats.ts, forme
+ * stable par cid) — même fiche que le lien share.google ci-dessous, conservé tel quel dans sameAs.
  */
 export const INSTAGRAM_URL = "https://www.instagram.com/la_villa_coliving_geneva/";
 export const LACARTEDESCOLOCS_PRO_URL = "https://www.lacartedescolocs.com/pro/la_villa_coliving";
@@ -128,7 +130,8 @@ export function buildFaqPageSchema(items: QAPair[]): Record<string, unknown> {
 
 /**
  * Entité mère de l'accueil : LodgingBusiness avec les 3 maisons en `department`.
- * PAS d'`aggregateRating` (la note 4,9 vient d'un NPS interne → non balisable).
+ * PAS d'`aggregateRating` ni de `Review` (D4, 09/10/2026) : la note publiée est celle de la fiche Google (GOOGLE_REVIEWS),
+ * et Google n'affiche pas les avis auto-balisés d'un LocalBusiness sur son propre site — garde check-entity-facts.
  * Prix / fibre sourcés depuis STATS pour rester cohérents partout.
  */
 export function buildHomeLodgingBusinessSchema(language: "fr" | "en" = "fr"): Record<string, unknown> {
@@ -219,7 +222,7 @@ export function buildHomeLodgingBusinessSchema(language: "fr" | "en" = "fr"): Re
  * LocalBusiness générique de TOUTES les pages (émis par SEO.tsx, sauf l'accueil qui porte le
  * LodgingBusiness ci-dessus avec le même @id). (Lot S1, 05/09/2026) Généralisé : les 3 maisons en
  * `department`, l'offre agrégée en `makesOffer`, `numberOfRooms`, `sameAs` — tous lus depuis les
- * sources uniques (STATS, ROOMS_BY_HOUSE, HOUSES, LAVILLA_SAME_AS). PAS d'aggregateRating.
+ * sources uniques (STATS, ROOMS_BY_HOUSE, HOUSES, LAVILLA_SAME_AS). PAS d'aggregateRating ni de Review (D4, 09/10/2026).
  */
 export function buildLocalBusinessSchema(language: "fr" | "en", description: string): Record<string, unknown> {
   const en = language === "en";
@@ -346,7 +349,8 @@ export function buildFounderPersonSchema(founder: Founder, language: "fr" | "en"
 /**
  * Schema de la page « Qui sommes-nous » : Organization complète (foundingDate,
  * founder → 2 Person, legalName) dans un @graph avec la fiche AboutPage.
- * PAS d'aggregateRating (règle du site : note 4,9 = enquêtes internes, non balisable).
+ * PAS d'aggregateRating ni de Review (D4, 09/10/2026 : la note Google se lit sur la fiche, jamais balisée ici).
+ * (Lot L3) « 100+ résidents accueillis » = STATS.totalResidents, soutenu par v_social_proof (STATS_SOURCE).
  */
 export function buildAboutPageSchema(language: "fr" | "en" = "fr"): Record<string, unknown> {
   const en = language === "en";

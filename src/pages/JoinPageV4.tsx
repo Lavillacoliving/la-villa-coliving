@@ -1,10 +1,10 @@
 import { useEffect, useLayoutEffect, useRef, useState, type FormEvent } from "react";
 import { useSearchParams } from "react-router-dom";
 import { useLanguage } from "@/contexts/LanguageContext";
-import { ArrowRight, Check, Shield, Loader2, Star, Users, Calendar, ChevronDown, ChevronUp, MessageCircle, Sparkles } from "lucide-react";
+import { ArrowRight, Check, Shield, Loader2, Star, Users, Calendar, ChevronDown, ChevronUp, MessageCircle } from "lucide-react";
 import { SEO } from "@/components/SEO";
 import { SUPABASE_URL, SUPABASE_ANON_KEY } from "@/lib/supabase";
-import { STATS, STATS_DISPLAY, PRICE_SHARED_CHF_FR, PRICE_SHARED_CHF_EN, CONTRACT_EUR, EUR_STANDARD_FR_NUM, EUR_SHARED_FR_NUM, EUR_STANDARD_EN_NUM, EUR_SHARED_EN_NUM } from "@/data/stats";
+import { STATS, STATS_DISPLAY, PRICE_SHARED_CHF_FR, PRICE_SHARED_CHF_EN, CONTRACT_EUR, EUR_STANDARD_FR_NUM, EUR_SHARED_FR_NUM, EUR_STANDARD_EN_NUM, EUR_SHARED_EN_NUM, GOOGLE_REVIEWS, GOOGLE_REVIEWS_LINK_LABEL } from "@/data/stats";
 import { useFormTelemetry } from "@/hooks/useFormTelemetry";
 import { useRoomAvailability, useHouseRooms, shortAvailabilityLabel, type HouseKey } from "@/lib/availability";
 import { housePriceLabel } from "@/lib/housePrice";
@@ -774,36 +774,44 @@ export function JoinPageV4() {
         </div>
       </section>
 
-      {/* Social proof stats — chiffres business pour rassurer (CRO win #1) */}
+      {/* Social proof stats — chiffres business pour rassurer (CRO win #1).
+          (Lot L3, Jérôme 09/10/2026) D3 : ancien taux d'occupation « sur 5 ans » retiré → séjour moyen (STATS.averageStayMonths) ;
+          D4 : note Google (STATS_DISPLAY.googleRatingValue/Label) + lien « Voir les avis » ; année = STATS.foundedYear. */}
       <section className="py-12 bg-[#FAF9F6] border-y border-[#E7E5E4]">
         <div className="container-custom">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-4xl mx-auto text-center">
             <div className="flex flex-col items-center">
               <Users className="w-8 h-8 text-[#D4A574] mb-3" />
               <p className="text-3xl font-light text-[#1C1917] mb-1" style={{ fontFamily: '"DM Serif Display", serif' }}>
-                {STATS.totalResidents}+
+                {`${STATS.totalResidents}+`}
               </p>
               <p className="text-sm text-[#57534E]">
-                {language === "en" ? "Residents since 2021" : "Résidents depuis 2021"}
+                {language === "en" ? `Residents since ${STATS.foundedYear}` : `Résidents depuis ${STATS.foundedYear}`}
               </p>
             </div>
             <div className="flex flex-col items-center">
-              <Sparkles className="w-8 h-8 text-[#D4A574] mb-3" />
+              <Calendar className="w-8 h-8 text-[#D4A574] mb-3" />
               <p className="text-3xl font-light text-[#1C1917] mb-1" style={{ fontFamily: '"DM Serif Display", serif' }}>
-                99%
+                {language === "en" ? `${STATS.averageStayMonths} months` : `${STATS.averageStayMonths} mois`}
               </p>
               <p className="text-sm text-[#57534E]">
-                {language === "en" ? "Occupancy rate over 5 years" : "Taux d'occupation sur 5 ans"}
+                {language === "en" ? "Average stay" : "De séjour en moyenne"}
               </p>
             </div>
             <div className="flex flex-col items-center">
               <Star className="w-8 h-8 text-[#D4A574] mb-3 fill-[#D4A574]" />
               <p className="text-3xl font-light text-[#1C1917] mb-1" style={{ fontFamily: '"DM Serif Display", serif' }}>
-                {STATS_DISPLAY[L].rating}/5
+                {STATS_DISPLAY[L].googleRatingValue}
               </p>
-              <p className="text-sm text-[#57534E]">
-                {language === "en" ? "Average rating from residents" : "Note moyenne des résidents"}
-              </p>
+              <p className="text-sm text-[#57534E]">{STATS_DISPLAY[L].googleRatingLabel}</p>
+              <a
+                href={GOOGLE_REVIEWS.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="mt-1 text-sm text-[#D4A574] underline underline-offset-4 hover:text-[#1C1917] transition-colors"
+              >
+                {GOOGLE_REVIEWS_LINK_LABEL[L]}
+              </a>
             </div>
           </div>
         </div>

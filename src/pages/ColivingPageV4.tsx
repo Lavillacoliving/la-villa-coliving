@@ -6,7 +6,7 @@ import { colocGeneveHref } from "@/lib/siteLinks";
 import { SEO } from "@/components/SEO";
 import { FaqSection } from "@/components/FaqSection";
 import { colivingFaq } from "@/data/faq/colivingFaq";
-import { STATS, STATS_DISPLAY, PRICE_SHARED_CHF_FR, PRICE_SHARED_CHF_EN } from "@/data/stats";
+import { STATS, STATS_DISPLAY, PRICE_SHARED_CHF_FR, PRICE_SHARED_CHF_EN, GOOGLE_REVIEWS, GOOGLE_REVIEWS_LINK_LABEL } from "@/data/stats";
 
 export function ColivingPageV4() {
   const { t, language } = useLanguage();
@@ -329,8 +329,9 @@ export function ColivingPageV4() {
                   : "Chez La Villa, nos résidents deviennent famille. Dîners partagés, yoga matinal, weekends au ski—notre communauté crée des liens qui durent bien au-delà de ton séjour."}
               </p>
 
-              {/* Stats au lieu de portraits */}
-              <div className="flex items-center gap-8 mb-6">
+              {/* Stats au lieu de portraits — (Lot L3, D4 Jérôme 09/10/2026) note Google + lien « Voir les avis » ;
+                  l'ancienne note interne (NPS) n'est plus publiée. */}
+              <div className="flex flex-wrap items-center gap-x-8 gap-y-3 mb-6">
                 <div className="flex items-center gap-2">
                   <Users className="w-5 h-5 text-[#D4A574]" />
                   <span className="text-sm text-[#57534E]">
@@ -341,9 +342,15 @@ export function ColivingPageV4() {
                 </div>
                 <div className="flex items-center gap-2">
                   <Star className="w-5 h-5 text-[#D4A574]" />
-                  <span className="text-sm text-[#57534E]">
-                    {language === "en" ? `${STATS_DISPLAY[L].rating}/5 · resident surveys` : `Note ${STATS_DISPLAY[L].rating}/5 · enquêtes résidents`}
-                  </span>
+                  <span className="text-sm text-[#57534E]">{STATS_DISPLAY[L].googleRating}</span>
+                  <a
+                    href={GOOGLE_REVIEWS.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-sm text-[#D4A574] underline underline-offset-4 hover:text-[#1C1917] transition-colors"
+                  >
+                    {GOOGLE_REVIEWS_LINK_LABEL[L]}
+                  </a>
                 </div>
               </div>
 

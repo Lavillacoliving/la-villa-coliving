@@ -1,6 +1,7 @@
 // Baromètre du logement frontalier — données FIRST-PARTY La Villa (agrégées, anonymisées).
-// Chiffres fournis par Jérôme (juillet 2026). Périmètre : 3 maisons, 29 chambres,
-// 100+ résidents depuis octobre 2021 (STATS = source unique pour rooms/année/occupation).
+// Chiffres fournis par Jérôme (juillet 2026). Périmètre : STATS.totalHouses maisons, STATS.totalRooms chambres,
+// STATS.totalResidents+ résidents depuis octobre 2021 (STATS = source unique pour rooms/année ; OCCUPANCY pour l'occupation
+// mesurée depuis le lot L3 du 09/10/2026).
 // MAJ annuelle prévue à chaque édition du Baromètre.
 //
 // ⚠️ Règles d'affichage (verrouillées) :
@@ -18,7 +19,7 @@
 //    Publier une médiane calculée là-dessus serait moins honnête que le 13/9.
 //    À revoir dès que le registre historique complet est disponible.
 
-import { STATS } from "@/data/stats";
+import { STATS, OCCUPANCY } from "@/data/stats";
 
 export const BAROMETRE = {
   // Le coût — la money-stat
@@ -29,7 +30,10 @@ export const BAROMETRE = {
   // La signature
   tenureAvgMonths: 13, // moyenne
   // La tension
-  occupancyPct: STATS.occupancyRate, // 99 affiché ; méthodo : « 98-99 % selon les périodes »
+  // (Lot L3, D3, 09/10/2026) L'ancien taux d'occupation de STATS est retiré → OCCUPANCY.pct (jours-chambre plafonnés,
+  // mesuré le 09/10/2026). Non rendu : l'Observatoire affiche encore sa propre fourchette (méthodologie first-party datée)
+  // — à réaligner au prochain bulletin.
+  occupancyPct: OCCUPANCY.pct,
   applicationsPerMonth: "30-45",
   // Le profil
   frontaliersPct: 100,
