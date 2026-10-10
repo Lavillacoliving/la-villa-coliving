@@ -43,7 +43,18 @@ export function extractRootContent(html) {
  * Contenus des blocs JSON-LD de tout le document, trimés, dans l'ordre (lecture de l'injection).
  */
 export function jsonLdContents(html) {
-  return [...html.matchAll(/<script\s+type="application\/ld\+json"[^>]*>([\s\S]*?)<\/script>/g)].map((m) => m[1].trim());
+  return jsonLdBlocks(html).map((b) => b.content);
+}
+
+/**
+ * (10/10/2026) Blocs JSON-LD avec leur origine : `helmet` = true si la balise du prérendu portait data-react-helmet (bloc rendu
+ * par react-helmet, que Helmet remplacera à l'hydratation), false pour un bloc écrit en dur dans le corps ou ajouté par le
+ * pipeline (BreadcrumbList de scripts/prerender.mjs) — celui-là doit rester SANS l'attribut, sinon Helmet le retire du DOM
+ * après hydratation (constaté sur /colocation-geneve le 10/10/2026).
+ */
+export function jsonLdBlocks(html) {
+  return [...html.matchAll(/<script\s+type="application\/ld\+json"([^>]*)>([\s\S]*?)<\/script>/g)]
+    .map((m) => ({ attrs: m[1], helmet: /data-react-helmet/.test(m[1]), content: m[2].trim() }));
 }
 
 /**
@@ -98,13 +109,15 @@ export function extractSeoTags(html) {
 
   // JSON-LD scripts — collect from entire HTML, deduplicate by @type
   seo.jsonLd = [];
+  seo.jsonLdHelmet = []; // aligné sur seo.jsonLd : true = bloc rendu par react-helmet (l'injection remet l'attribut), false = bloc du pipeline / du corps
   const seenTypes = new Set();
-  for (const content of jsonLdContents(html)) {
+  for (const { content, helmet } of jsonLdBlocks(html)) {
     // Deduplicate by @type to prevent multiple LodgingBusiness/Organization/FAQPage
     const type = jsonLdServedKey(content);
     if (!seenTypes.has(type)) {
       seenTypes.add(type);
       seo.jsonLd.push(content);
+      seo.jsonLdHelmet.push(helmet);
     }
   }
 

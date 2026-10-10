@@ -139,14 +139,15 @@ function buildSeoHeadTags(seo, route) {
   }
 
   // JSON-LD scripts
-  for (const jsonLd of (seo.jsonLd || [])) {
-    if (jsonLd) {
-      // (Lot L6, 10/10/2026) data-react-helmet="true" : à l'hydratation, react-helmet ne gère que les balises qu'il marque — sans
-      // l'attribut il AJOUTAIT ses blocs à côté des blocs injectés (DOM rendu de /colocation-geneve constaté le 09/10 : 9 blocs
-      // dont 2 FAQPage) ; avec, il les remplace par les siens (identiques, mêmes sources).
-      tags.push(`<script type="application/ld+json" data-react-helmet="true">${jsonLd}</script>`);
-    }
-  }
+  (seo.jsonLd || []).forEach((jsonLd, i) => {
+    if (!jsonLd) return;
+    // (Lot L6, 10/10/2026) data-react-helmet="true" SEULEMENT pour les blocs rendus par react-helmet (seo.jsonLdHelmet) : à
+    // l'hydratation, Helmet remplace les balises qu'il marque — sans l'attribut il AJOUTAIT ses blocs à côté des blocs injectés
+    // (DOM de /colocation-geneve constaté le 09/10 : 9 blocs dont 2 FAQPage). Un bloc du pipeline (BreadcrumbList de prerender.mjs)
+    // ou écrit dans le corps reste SANS l'attribut, sinon Helmet le retire du DOM après hydratation (constaté le 10/10).
+    const helmet = seo.jsonLdHelmet?.[i] ? ' data-react-helmet="true"' : '';
+    tags.push(`<script type="application/ld+json"${helmet}>${jsonLd}</script>`);
+  });
 
   return tags.join('\n    ');
 }
