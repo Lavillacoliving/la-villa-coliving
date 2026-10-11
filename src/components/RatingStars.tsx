@@ -19,7 +19,8 @@ export interface RatingStarsProps {
 }
 
 export function RatingStars({ value = GOOGLE_REVIEWS.value, lang = "fr", className = "w-4 h-4 text-[#E0BB8A]", emptyClassName = "text-white/30" }: RatingStarsProps) {
-  const label = lang === "en" ? `${GOOGLE_REVIEWS.ratingEn} out of 5` : `${GOOGLE_REVIEWS.rating} sur 5`;
+  // Libellé lu dérivé de la valeur RENDUE (= GOOGLE_REVIEWS.ratingEn/rating par défaut) : une valeur passée en prop reste cohérente.
+  const label = lang === "en" ? `${value.toFixed(1)} out of 5` : `${value.toFixed(1).replace(".", ",")} sur 5`;
   return (
     <span className="inline-flex items-center gap-1" role="img" aria-label={label}>
       {[0, 1, 2, 3, 4].map((i) => {

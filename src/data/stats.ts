@@ -250,12 +250,13 @@ export const GOOGLE_REVIEWS = {
 } as const;
 export const GOOGLE_REVIEWS_LINK_LABEL = { fr: "Voir les avis", en: "See the reviews" } as const;
 
-// ── Occupation mesurée (Lot L3, D3 Jérôme 09/10/2026) ─────────────────────────────────────────────────
-// L'ancien « taux d'occupation sur 5 ans » est RETIRÉ du site (hero, /candidature, /investisseurs, llms.txt) : aucune mesure
-// ne le soutenait. Nouvelle base, chiffrée en lecture seule le 09/10/2026 (dry-run de la vue v_social_proof : jours-chambre
-// occupés, plafonnés à la capacité de chaque maison, resident_history ∪ tenants) : La Villa 99,5 %, Le Loft 94,4 %,
-// Le Lodge 97,0 %, ensemble 97,7 % → arrondi à 98. RÉSERVÉ à /investisseurs, toujours écrit avec sa base
-// (OCCUPANCY_DISPLAY). ⚠️ Nouvelle base à faire VALIDER par Jérôme ; l'Observatoire garde sa propre fourchette
+// ── Occupation mesurée (Lot L3, D3 Jérôme 09/10/2026 · A1 Jérôme 11/10/2026) ────────────────────────────────────────────
+// L'ancien « taux d'occupation sur 5 ans » est RETIRÉ du site (hero, /candidature, llms.txt) : aucune mesure ne le soutenait.
+// La mesure vit en base : vue v_social_proof (resident_history ∪ tenants, jours-chambre occupés plafonnés à la capacité de chaque
+// maison). v1 du 10/10/2026 : ensemble 97,7 % (La Villa 99,5 · Loft 94,4 · Lodge 97,0). v2 du 11/10/2026
+// (scripts/v-social-proof-v2-2026-10-11.sql) : colonne occupancy_pct_all_steady = même ratio HORS les 42 premiers jours de chaque
+// maison → 99,1 % (La Villa 99,9 · Loft 97,1 · Lodge 100,0) — c'est la valeur publiée, VALIDÉE par Jérôme le 11/10 (A1).
+// RÉSERVÉE à /investisseurs, toujours écrite avec sa base (OCCUPANCY_DISPLAY) ; l'Observatoire garde sa propre fourchette
 // (méthodologie first-party datée) jusqu'au prochain bulletin. Remesure à chaque mise à jour mensuelle (README).
 export const OCCUPANCY = {
   // (Décision Jérôme 11/10/2026, point A1) Chiffre publié = occupation HORS montée en charge : les rampUpWeeks premières
@@ -279,17 +280,18 @@ export const OCCUPANCY = {
 export const YEARS_IN_OPERATION = Number(OCCUPANCY.measuredOn.slice(0, 4)) - STATS.foundedYear;
 
 /** Libellés de l'occupation pour /investisseurs — valeur, étiquette courte (tuiles) et phrase complète avec la base. */
-const OCC_PCT_FR = String(OCCUPANCY.pct).replace(".", ","); // « 99,1 »
+const OCC_PCT_FR = OCCUPANCY.pct.toFixed(1).replace(".", ","); // « 99,1 » — toujours 1 décimale (99.0 → « 99,0 », jamais « 99 »)
+const OCC_PCT_EN = OCCUPANCY.pct.toFixed(1); // « 99.1 »
 export const OCCUPANCY_DISPLAY = {
   fr: {
-    value: `${OCC_PCT_FR} %`, // U+00A0 avant « % » — valeur exacte, sans « ≈ »
+    value: `${OCC_PCT_FR} %`, // insécable U+00A0 avant « % » (typographie FR, pas de retour à la ligne entre le chiffre et %) — valeur exacte, sans « ≈ »
     label: `de jours-chambre occupés hors les ${OCCUPANCY.rampUpWeeks} premières semaines de chaque maison (${OCCUPANCY.sinceLabel.fr} → ${OCCUPANCY.measuredOnLabel.fr})`,
-    sentence: `${OCC_PCT_FR} % de jours-chambre occupés depuis l'ouverture, hors les ${OCCUPANCY.rampUpWeeks} premières semaines de chaque maison (${OCCUPANCY.sinceLabel.fr} → ${OCCUPANCY.measuredOnLabel.fr}, historique des occupants et dashboard)`,
+    sentence: `${OCC_PCT_FR} % de jours-chambre occupés depuis l'ouverture, hors les ${OCCUPANCY.rampUpWeeks} premières semaines de chaque maison (${OCCUPANCY.sinceLabel.fr} → ${OCCUPANCY.measuredOnLabel.fr}, historique des occupants et dashboard)`,
   },
   en: {
-    value: `${OCCUPANCY.pct}%`,
+    value: `${OCC_PCT_EN}%`,
     label: `of room-days occupied excluding each house's first ${OCCUPANCY.rampUpWeeks} weeks (${OCCUPANCY.sinceLabel.en} → ${OCCUPANCY.measuredOnLabel.en})`,
-    sentence: `${OCCUPANCY.pct}% of room-days occupied since opening, excluding each house's first ${OCCUPANCY.rampUpWeeks} weeks (${OCCUPANCY.sinceLabel.en} → ${OCCUPANCY.measuredOnLabel.en}, resident history and dashboard)`,
+    sentence: `${OCC_PCT_EN}% of room-days occupied since opening, excluding each house's first ${OCCUPANCY.rampUpWeeks} weeks (${OCCUPANCY.sinceLabel.en} → ${OCCUPANCY.measuredOnLabel.en}, resident history and dashboard)`,
   },
 } as const;
 

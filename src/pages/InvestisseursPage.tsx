@@ -38,7 +38,7 @@ export function InvestisseursPage() {
         description={
           language === "en"
             ? `Entrust your property to La Villa Coliving: ${occ.value} of room-days occupied since ${OCCUPANCY.sinceLabel.en}, excluding ramp-up; premium community management under our brand.`
-            : `Confiez votre bien à La Villa Coliving : ${occ.value} de jours-chambre occupés depuis ${OCCUPANCY.sinceLabel.fr} (hors montée en charge), gestion de communauté premium.`
+            : `Confiez votre bien à La Villa Coliving : ${occ.value} de jours-chambre occupés depuis ${OCCUPANCY.sinceLabel.fr} (hors montée en charge), gestion premium sous notre marque.`
         }
         url="https://www.lavillacoliving.com/investisseurs"
       />
