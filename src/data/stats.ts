@@ -279,7 +279,7 @@ export const OCCUPANCY = {
  *  d'occupation − année de fondation. Suit OCCUPANCY.measuredOn à chaque relevé mensuel (Lot L3, 10/10/2026). */
 export const YEARS_IN_OPERATION = Number(OCCUPANCY.measuredOn.slice(0, 4)) - STATS.foundedYear;
 
-/** Libellés de l'occupation pour /investisseurs — valeur, étiquette courte (tuiles) et phrase complète avec la base. */
+/** Libellés de l'occupation pour /investisseurs, l'Observatoire et llms.txt — valeur, étiquette courte (tuiles) et phrase complète avec la base. */
 const OCC_PCT_FR = OCCUPANCY.pct.toFixed(1).replace(".", ","); // « 99,1 » — toujours 1 décimale (99.0 → « 99,0 », jamais « 99 »)
 const OCC_PCT_EN = OCCUPANCY.pct.toFixed(1); // « 99.1 »
 export const OCCUPANCY_DISPLAY = {

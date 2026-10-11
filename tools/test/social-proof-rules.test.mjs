@@ -1,6 +1,6 @@
 // Règles de preuves sociales de la garde scripts/check-entity-facts.mjs (Lot L3 « Note Google et preuves », décisions D3/D4
 // de Jérôme du 09/10/2026) : « 4,9/5 » et « enquêtes résidents » interdits, « 150 résidents » / « 50+ personnes » interdits,
-// « 99 % » d'occupation interdit hors Observatoire, JSON-LD sans aggregateRating ni Review, verdict adaptatif sur la vue
+// « 99 % » d'occupation interdit partout (Observatoire compris depuis le 11/10/2026), JSON-LD sans aggregateRating ni Review, verdict adaptatif sur la vue
 // v_social_proof — sur des fixtures HTML ; puis la liste déclarative scripts/l3-social-proof.edits.mjs contre la source réelle.
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
@@ -54,7 +54,7 @@ test('D3 : « 150 résidents » / « 150+ residents » / « more than 150 reside
   assert.deepEqual(forbiddenIssues(p('100+ résidents depuis 2021', '100+ residents since 2021', 'Plus de 100 résidents ont choisi nos maisons', '250+ personnes', '1 150 résidents à Genève', '50 personnes', '7 à 12 résidents par maison')), []);
 });
 
-test('D3 : « 99 % » d\'occupation interdit hors Observatoire — phrase, tuile voisine, « 98-99 % » ; sans contexte d\'occupation, rien', () => {
+test('D3 : « 99 % » d\'occupation interdit partout (Observatoire compris depuis le 11/10/2026) — phrase, tuile voisine, « 98-99 % » ; sans contexte d\'occupation, rien', () => {
   only(forbiddenIssues(p('99 % d\'occupation sur 5 ans'), undefined, 'index.html'), /99 %/);
   only(forbiddenIssues(p('99% occupancy rate over 5 years'), undefined, 'en.html'), /99 %/);
   only(forbiddenIssues(tile('99%', 'Taux d\'occupation sur 5 ans'), undefined, 'candidature.html'), /99 %/);
@@ -86,6 +86,8 @@ test('A2 : le CSV public de l\'Observatoire porte la même occupation que la sou
   assert.equal(observatoireCsvIssues(csv.replace(/^taux_occupation;[^;]*;/m, 'taux_occupation;99;'), m).length, 1, 'valeur arrondie = échec');
   assert.equal(observatoireCsvIssues(csv.replace(/^taux_occupation;[^;]*;/m, 'taux_occupation;99,1;'), m).length, 1, 'virgule décimale = échec (convention point des CSV publiés)');
   assert.equal(observatoireCsvIssues('cle;valeur\nloyer;1360', m).length, 1, 'ligne absente = échec');
+  assert.equal(observatoireCsvIssues(csv.replace(`${m.OCCUPANCY.rampUpWeeks} premieres semaines`, '8 premieres semaines'), m).length, 1, 'nombre de semaines ≠ rampUpWeeks = échec');
+  assert.equal(observatoireCsvIssues(csv.replace(m.OCCUPANCY.measuredOnLabel.fr, 'janv. 2027'), m).length, 1, 'relevé ≠ measuredOnLabel = échec');
 });
 
 test('nearWindow : fenêtre de ±NEAR_WINDOW autour de la première occurrence qui porte le contexte ; null sinon', () => {

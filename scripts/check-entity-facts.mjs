@@ -362,7 +362,9 @@ export function observatoireCsvIssues(csv, m) {
   const cells = line.split(';');
   const value = /^\d+(?:\.\d+)?$/.test(cells[1] || '') ? Number(cells[1]) : NaN;
   if (!Number.isFinite(value) || value !== m.OCCUPANCY.pct) issues.push(`CSV Observatoire : taux_occupation « ${cells[1]} » ≠ OCCUPANCY.pct ${m.OCCUPANCY.pct} (point décimal attendu, relevé mensuel à reporter à la main)`);
-  if (!/premieres semaines|premières semaines|first \d+ weeks/i.test(line)) issues.push('CSV Observatoire : la note de taux_occupation ne cite pas la montée en charge exclue (« hors les 6 premieres semaines… »)');
+  const weeks = new RegExp(`${m.OCCUPANCY.rampUpWeeks} premi[eè]res semaines|first ${m.OCCUPANCY.rampUpWeeks} weeks`, 'i');
+  if (!weeks.test(line)) issues.push(`CSV Observatoire : la note de taux_occupation ne cite pas « hors les ${m.OCCUPANCY.rampUpWeeks} premieres semaines » (montée en charge exclue, OCCUPANCY.rampUpWeeks)`);
+  if (!line.includes(m.OCCUPANCY.measuredOnLabel.fr)) issues.push(`CSV Observatoire : la note de taux_occupation ne cite pas le relevé « ${m.OCCUPANCY.measuredOnLabel.fr} » (OCCUPANCY.measuredOnLabel)`);
   return issues;
 }
 
@@ -462,9 +464,6 @@ async function checkDb(m) {
   }
   // (Lot L3, D3) « 100+ résidents » : v_social_proof (resident_history ∪ tenants, dédoublonnés sur le nom normalisé). La vue
   // n'existe pas tant que Jérôme n'a pas appliqué la migration → socialProofVerdict la traite en avertissement, pas en échec.
-  // (A2, 11/10/2026) CSV public de l'Observatoire = même occupation que la source.
-  try { failures.push(...observatoireCsvIssues(await fs.readFile(path.join(ROOT, 'public', 'data', 'observatoire-lavilla-2026.csv'), 'utf8'), m)); }
-  catch (e) { failures.push(`CSV Observatoire illisible : ${e.message}`); }
   const sp = await httpsGet(`${SUPABASE_URL}/rest/v1/${SOCIAL_PROOF_VIEW}?select=distinct_residents_since_opening,first_move_in,current_residents,occupancy_pct_all,computed_on`, headers)
     .then((r) => ({ rows: r })).catch((e) => ({ error: e.message }));
   const social = socialProofVerdict(sp, m.STATS.totalResidents);
@@ -616,6 +615,9 @@ async function main() {
   console.log(`${h.failures.length ? '❌' : '✅'} HTML : ${h.files} fichiers, ${h.blocks} pages en périmètre (bloc attendu), ${h.minuteWarnings} minute(s) non canonique(s), ${h.locationIssues} règle(s) d'emplacement L2 (15 min Genève, voiture, aéroport, A40${STRICT ? ' — bloquantes' : ' — avertissements, --strict pour bloquer'}), ${h.vousPages} page(s) FR avec vouvoiement`);
   for (const w of h.warnings.slice(0, args.includes('--tutoiement') || args.includes('--verbose') ? 500 : 12)) console.log(`   ⚠️  ${w}`);
   if (h.warnings.length > 12 && !args.includes('--verbose') && !args.includes('--tutoiement')) console.log(`   ⚠️  … ${h.warnings.length - 12} avertissement(s) de plus (--verbose)`);
+  // (A2, 11/10/2026) CSV public de l'Observatoire = même occupation que la source — contrôle local, hors base (indépendant de --no-db).
+  try { failures.push(...observatoireCsvIssues(await fs.readFile(path.join(ROOT, 'public', 'data', 'observatoire-lavilla-2026.csv'), 'utf8'), m)); }
+  catch (e) { failures.push(`CSV Observatoire illisible : ${e.message}`); }
   const l = await checkLlms(m);
   failures.push(...l);
   console.log(`${l.length ? '❌' : '✅'} llms.txt FR/EN = régénération depuis la source`);

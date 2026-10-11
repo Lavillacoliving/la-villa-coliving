@@ -129,7 +129,7 @@ export function ouChercherText(lang: EntityLang, variant: OuChercherVariant): Ou
     {
       key: "facebook",
       h3: "Les groupes Facebook",
-      p: `Le groupe public « ${FACEBOOK_GROUP.name} » (environ ${membersFr} membres, ${FACEBOOK_GROUP.postsPerMonth.fr}) et les groupes de frontaliers. Le premier est animé et modéré par l'équipe de La Villa Coliving : règles épinglées, annonces douteuses retirées.`,
+      p: `Le groupe public « ${FACEBOOK_GROUP.name} » (environ ${membersFr} membres, ${FACEBOOK_GROUP.postsPerMonth.fr}) et les groupes de frontaliers. Ce groupe public est animé et modéré par l'équipe de La Villa Coliving : règles épinglées, annonces douteuses retirées.`,
     },
     {
       key: "cagi",
@@ -240,8 +240,8 @@ export function coutDeLaVieRowLabel(lang: EntityLang): string {
 // libre chez nous ? » (<FacebookGroupCallout/>) sous la liste des chambres des 3 pages maisons, sur /chambres-disponibles et sur
 // l'écran de confirmation de /candidature. Le canal 3 du bloc « Où chercher » (ci-dessus) nomme déjà le groupe sur les pages
 // porteuses du bloc. (C3, 11/10/2026) Règles du groupe publiées et épinglées par Jérôme → l'interdit L5.4 est levé pour « modéré » :
-// les trois surfaces disent « animé et modéré par l'équipe de La Villa Coliving : règles épinglées, annonces douteuses retirées »
-// (option B validée). « Annonces vérifiées » / « verified listings » reste INTERDIT (on retire ce qui est douteux, on ne vérifie
+// canal 3 et A.7 disent, au mot près, « animé et modéré par l'équipe de La Villa Coliving : règles épinglées, annonces douteuses
+// retirées », A.8 en forme courte « animé et modéré par notre équipe (règles épinglées, annonces douteuses retirées) » (option B). « Annonces vérifiées » / « verified listings » reste INTERDIT (on retire ce qui est douteux, on ne vérifie
 // pas chaque logement). Lien normal (jamais nofollow), nouvel onglet. Jamais dans sameAs (D10 du socle).
 
 /** Incrémenter à chaque changement de texte A.7/A.8 : porté par data-facebook-group-version. */

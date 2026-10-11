@@ -66,7 +66,6 @@ function houseLinks(lang, m) {
     : `- ${h.label} (${h.rooms} ch.) : https://www.lavillacoliving.com/${h.slug}`)).join('\n');
 }
 
-/** Rendu complet d'un llms.txt (pur : même sortie pour une même source). */
 /** (A2, 11/10/2026) Occupation du volet « Vu de nos maisons » : valeur exacte + base, depuis la source unique (OCCUPANCY). */
 function occupancyLine(lang, m) {
   const o = m.OCCUPANCY, d = m.OCCUPANCY_DISPLAY[lang];
@@ -75,6 +74,7 @@ function occupancyLine(lang, m) {
     : `${d.value} des jours-chambre hors les ${o.rampUpWeeks} premières semaines de chaque maison (${o.sinceLabel.fr} → ${o.measuredOnLabel.fr})`;
 }
 
+/** Rendu complet d'un llms.txt (pur : même sortie pour une même source). */
 export async function renderLlms(lang, m) {
   const tpl = await fs.readFile(path.join(__dirname, `llms-template.${lang}.md`), 'utf8');
   const F = m.ENTITY_FACTS;
