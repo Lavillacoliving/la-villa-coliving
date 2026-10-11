@@ -18,8 +18,9 @@
  *      des minutes : échec en --strict, avertissement sinon. Fonctions pures testées dans tools/test/location-rules.test.mjs.
  *   e) (Lot L3 « Note Google et preuves », 09/10/2026, décisions D3/D4 de Jérôme) preuves sociales : « 4,9/5 » / « 4.9/5 »,
  *      « enquêtes résidents » / « resident surveys », « 150 résidents », « 50+ personnes » interdits partout ; « 99 % » à côté
- *      d'« occupation » / « occupancy » / « taux » interdit (exemption historique de l'Observatoire conservée dans le code, sans
- *      objet depuis le 11/10/2026 : il lit la valeur exacte d'OCCUPANCY, « 99,1 % », qui ne déclenche pas la règle) ;
+ *      d'« occupation » / « occupancy » / « taux » interdit PARTOUT, Observatoire compris depuis le 11/10/2026 (A2 : il lit la
+ *      valeur exacte d'OCCUPANCY, « 99,1 % », seule forme admise) ; la ligne taux_occupation du CSV public de l'Observatoire doit
+ *      être égale à OCCUPANCY.pct (observatoireCsvIssues) ;
  *      JSON-LD : 0 aggregateRating et 0 « "@type": "Review" » (la note Google se lit sur la fiche, jamais balisée sur son
  *      propre site). Base : v_social_proof (resident_history ∪ tenants, dédoublonnés) — mode adaptatif : avertissement tant
  *      que la vue n'existe pas (migration scripts/resident-history-2026-10-09.sql à appliquer par Jérôme), échec si elle
@@ -98,13 +99,13 @@ const FORBIDDEN = [
   { re: /(?<![\d,.]|\d[   ])150[   ]?\+?[   ]?r[ée]sidents?\b/i, label: '« 150 résidents » (D3 : « 100+ », STATS.totalResidents)' },
   { re: /(?<![\d,.]|\d[   ])50[   ]?\+[   ]?(?:personnes|people|r[ée]sidents?)\b/i, label: '« 50+ personnes par an » (D3 : retiré)' },
   // D3 — « 99 % d'occupation (sur 5 ans) » retiré. L'Observatoire gardait son « 98-99 % » (méthodologie first-party datée) jusqu'au
-  // 11/10/2026 (A2) : il lit désormais OCCUPANCY_DISPLAY (« 99,1 % ») ; l'exemption skipFile reste, sans objet, par prudence.
+  // 11/10/2026 (A2) : il lit désormais OCCUPANCY_DISPLAY (« 99,1 % ») et n'est PLUS exempté (skipFile retiré le 11/10).
   // (11/10/2026, décision A1) /investisseurs publie la valeur EXACTE d'OCCUPANCY (« 99,1 % », hors montée en charge) : « 99,1 % » ne
   // matche pas « 99 % » (la virgule suit le 99), ce qui est voulu — l'arrondi « 99 % » reste interdit.
   // Contexte = fenêtre de ±NEAR_WINDOW caractères du texte visible aplati (`near`) : la tuile voisine d'une grille de statistiques
   // (« 99% » dans un bloc, « Taux d'occupation » dans le suivant) compte — une phrase seule ne suffirait pas. Le « 99 » peut
-  // suivre un tiret (« 98-99 % ») : hors Observatoire, c'est aussi interdit.
-  { re: /(?<![\d,.])99[   ]?%/, near: /occup(?:ation|ancy|é|ied)|\btaux\b|\brate\b/i, skipFile: /^(en-)?observatoire/, label: '« 99 % » d\'occupation (D3 : retiré ; l\'Observatoire seul garde son « 98-99 % » daté)' },
+  // suivre un tiret (« 98-99 % ») : c'est aussi interdit, Observatoire compris.
+  { re: /(?<![\d,.])99[   ]?%/, near: /occup(?:ation|ancy|é|ied)|\btaux\b|\brate\b/i, label: '« 99 % » d\'occupation arrondi (D3 : retiré partout, Observatoire compris depuis le 11/10/2026 ; seule la valeur exacte d\'OCCUPANCY est admise)' },
   // ── (Lot L4 « Justification du prix », D8 de Jérôme du 09/10/2026) l'ancienne FAQ « pourquoi plus élevés » (tarifsFaq index 1 et
   // faqData why-higher-prices) est remplacée par la FAQ A.3 de src/data/priceFacts.ts : la question périmée ne doit réapparaître nulle part.
   { re: /Pourquoi les prix sont-ils plus élevés qu['’]une colocation classique|Why are your prices higher than a standard flatshare/i, label: 'ancienne FAQ « pourquoi plus élevés » (D8 : remplacée par la FAQ A.3, src/data/priceFacts.ts)' },
@@ -351,6 +352,20 @@ export function ratingMarkupIssues(html, nodes = collectTypes(jsonLdBlocks(html)
 }
 
 // ── (Lot L3, D3 Jérôme 09/10/2026) « 100+ résidents » soutenu par la base ─────────────────────────────────────────────
+/** (A2, 11/10/2026) Le CSV public de l'Observatoire (public/data/observatoire-lavilla-2026.csv, recopie manuelle au relevé mensuel)
+ *  doit porter la même occupation que la source : ligne `taux_occupation;<valeur>;…` avec <valeur> = OCCUPANCY.pct (point décimal,
+ *  convention des CSV publiés) et une note qui cite la montée en charge exclue. Pure, testée dans social-proof-rules.test.mjs. */
+export function observatoireCsvIssues(csv, m) {
+  const issues = [];
+  const line = String(csv).split(/\r?\n/).find((l) => l.startsWith('taux_occupation;'));
+  if (!line) return ['CSV Observatoire : ligne « taux_occupation » absente'];
+  const cells = line.split(';');
+  const value = /^\d+(?:\.\d+)?$/.test(cells[1] || '') ? Number(cells[1]) : NaN;
+  if (!Number.isFinite(value) || value !== m.OCCUPANCY.pct) issues.push(`CSV Observatoire : taux_occupation « ${cells[1]} » ≠ OCCUPANCY.pct ${m.OCCUPANCY.pct} (point décimal attendu, relevé mensuel à reporter à la main)`);
+  if (!/premieres semaines|premières semaines|first \d+ weeks/i.test(line)) issues.push('CSV Observatoire : la note de taux_occupation ne cite pas la montée en charge exclue (« hors les 6 premieres semaines… »)');
+  return issues;
+}
+
 export const SOCIAL_PROOF_VIEW = 'v_social_proof';
 export const SOCIAL_PROOF_MIGRATION = 'scripts/resident-history-2026-10-09.sql';
 /**
@@ -447,6 +462,9 @@ async function checkDb(m) {
   }
   // (Lot L3, D3) « 100+ résidents » : v_social_proof (resident_history ∪ tenants, dédoublonnés sur le nom normalisé). La vue
   // n'existe pas tant que Jérôme n'a pas appliqué la migration → socialProofVerdict la traite en avertissement, pas en échec.
+  // (A2, 11/10/2026) CSV public de l'Observatoire = même occupation que la source.
+  try { failures.push(...observatoireCsvIssues(await fs.readFile(path.join(ROOT, 'public', 'data', 'observatoire-lavilla-2026.csv'), 'utf8'), m)); }
+  catch (e) { failures.push(`CSV Observatoire illisible : ${e.message}`); }
   const sp = await httpsGet(`${SUPABASE_URL}/rest/v1/${SOCIAL_PROOF_VIEW}?select=distinct_residents_since_opening,first_move_in,current_residents,occupancy_pct_all,computed_on`, headers)
     .then((r) => ({ rows: r })).catch((e) => ({ error: e.message }));
   const social = socialProofVerdict(sp, m.STATS.totalResidents);

@@ -91,7 +91,7 @@ export function ouChercherText(lang: EntityLang, variant: OuChercherVariant): Ou
       {
         key: "facebook",
         h3: "Facebook groups",
-        p: `The public group "${FACEBOOK_GROUP.name}" (about ${membersEn} members, ${FACEBOOK_GROUP.postsPerMonth.en}, run and moderated by the La Villa Coliving team: pinned rules, suspicious listings removed), and cross-border commuter groups.`,
+        p: `The public group "${FACEBOOK_GROUP.name}" (about ${membersEn} members, ${FACEBOOK_GROUP.postsPerMonth.en}) and cross-border commuter groups. The former is run and moderated by the La Villa Coliving team: pinned rules, suspicious listings removed.`,
       },
       {
         key: "cagi",
@@ -129,7 +129,7 @@ export function ouChercherText(lang: EntityLang, variant: OuChercherVariant): Ou
     {
       key: "facebook",
       h3: "Les groupes Facebook",
-      p: `Le groupe public « ${FACEBOOK_GROUP.name} » (environ ${membersFr} membres, ${FACEBOOK_GROUP.postsPerMonth.fr}, animé et modéré par l'équipe de La Villa Coliving : règles épinglées, annonces douteuses retirées), et les groupes de frontaliers.`,
+      p: `Le groupe public « ${FACEBOOK_GROUP.name} » (environ ${membersFr} membres, ${FACEBOOK_GROUP.postsPerMonth.fr}) et les groupes de frontaliers. Le premier est animé et modéré par l'équipe de La Villa Coliving : règles épinglées, annonces douteuses retirées.`,
     },
     {
       key: "cagi",

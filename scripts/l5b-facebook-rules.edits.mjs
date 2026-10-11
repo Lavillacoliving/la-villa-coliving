@@ -30,6 +30,15 @@ const MOVE = {
   },
 };
 
+/** (Relecture du 11/10) Après le déplacement, deux paragraphes consécutifs s'ouvraient par « Pour un … » / « Pour une … » : la phrase
+ *  de l'article qui précède la mention est retouchée dans le même SQL (texte de l'article, pas de la source). */
+const ANAPHORA = {
+  'arnaques-logement-frontalier-geneve-eviter': {
+    fr: { find: "Pour un nouveau frontalier qui ne connaît pas encore le marché local, c'est une sécurité non négligeable :", replace: "Un nouveau frontalier qui ne connaît pas encore le marché local y gagne une sécurité non négligeable :" },
+    en: { find: "For a new cross-border worker who doesn't yet know the local market, this is significant security:", replace: "A new cross-border worker who doesn't yet know the local market gains real security here:" },
+  },
+};
+
 /** Motifs à signaler (avertissement) dans le texte RÉSULTANT : promesse interdite ou volume chiffré en dur. */
 export const POST_STATE_WATCH = [/annonces v[ée]rifi[ée]es|verified listings/i, /\d{3}[   ]?(publications|posts)\b/i];
 
@@ -72,6 +81,8 @@ export function buildEdits(m) {
         out.push({ slug, lang, mechanism: 'A7', note: 'mention A.7 enrichie (C3 : animé et modéré, règles épinglées), même emplacement', find: old, replace: neu });
       } else {
         out.push({ slug, lang, mechanism: 'A7', note: `retrait de la mention A.7 en fin de section (avant « ${mv.from.trim().slice(0, 50)} »)`, find: `\n${old}\n${mv.from}`, replace: mv.from });
+        const an = ANAPHORA[slug]?.[lang];
+        if (an) out.push({ slug, lang, mechanism: 'A7', note: 'phrase précédente retouchée (anaphore « Pour un… / Pour une… » après le déplacement)', find: an.find, replace: an.replace });
         out.push({ slug, lang, mechanism: 'A7', note: `mention A.7 enrichie réinsérée avant « ${mv.to.trim().slice(0, 50)} » (C2)`, find: mv.to, replace: `\n${neu}\n${mv.to}` });
       }
     }

@@ -1,6 +1,6 @@
 # C3/C2 — groupe Facebook : aperçu des substitutions et du déplacement SQL dans les articles en base
 
-Généré le 2026-10-11T12:18:54.044Z par `scripts/build-slots-sql.mjs` · ancres vérifiées sur le contenu vivant de blog_posts (REST anon, lecture seule) le 2026-10-11T12:18:54.042Z · 10 modifications sur 4 articles · SQL : `scripts/l5b-facebook-rules-2026-10-11.sql`.
+Généré le 2026-10-11T12:49:19.405Z par `scripts/build-slots-sql.mjs` · ancres vérifiées sur le contenu vivant de blog_posts (REST anon, lecture seule) le 2026-10-11T12:49:19.403Z · 12 modifications sur 4 articles · SQL : `scripts/l5b-facebook-rules-2026-10-11.sql`.
 
 Légende : « Avant » = texte copié au caractère près depuis la base ; « Après » = mention A.7 enrichie (option B) à la même place, ou déplacée (arnaques).
 
@@ -8,7 +8,7 @@ Légende : « Avant » = texte copié au caractère près depuis la base ; « Ap
 
 | Article | FR | EN | updated_at en base | fr / en (caractères) |
 |---|---|---|---|---|
-| `arnaques-logement-frontalier-geneve-eviter` | 2 (A7, A7) | 2 (A7, A7) | 2026-10-10T08:58:53.487537+00:00 | 12236 / 11070 |
+| `arnaques-logement-frontalier-geneve-eviter` | 3 (A7, A7, A7) | 3 (A7, A7, A7) | 2026-10-10T08:58:53.487537+00:00 | 12236 / 11070 |
 | `budget-colocation-geneve-guide-complet` | 1 (A7) | 1 (A7) | 2026-10-10T08:58:53.487537+00:00 | 18403 / 14296 |
 | `guide-ressources-frontalier-geneve` | 1 (A7) | 1 (A7) | 2026-10-10T08:58:53.487537+00:00 | 44598 / 40757 |
 | `ou-habiter-frontalier-suisse-villes-france-pas-cher` | 1 (A7) | 1 (A7) | 2026-10-10T08:58:53.487537+00:00 | 9434 / 8932 |
@@ -149,6 +149,24 @@ Pour une colocation classique, le groupe Facebook public [« Coliving & Colocati
 
 ### 8. `arnaques-logement-frontalier-geneve-eviter` (fr) · A7
 
+phrase précédente retouchée (anaphore « Pour un… / Pour une… » après le déplacement)
+
+Occurrences de l'ancre en base : 1 (attendu 1) · nouveau texte déjà présent : 0 (attendu 0) · garde « nouveau absent » : oui
+
+**Avant**
+
+````text
+Pour un nouveau frontalier qui ne connaît pas encore le marché local, c'est une sécurité non négligeable :
+````
+
+**Après**
+
+````text
+Un nouveau frontalier qui ne connaît pas encore le marché local y gagne une sécurité non négligeable :
+````
+
+### 9. `arnaques-logement-frontalier-geneve-eviter` (fr) · A7
+
 mention A.7 enrichie réinsérée avant « ## Au-delà des arnaques : les erreurs classiques à » (C2)
 
 Occurrences de l'ancre en base : 1 (attendu 1) · nouveau texte déjà présent : 0 (attendu 0) · garde « nouveau absent » : oui
@@ -171,7 +189,7 @@ Pour une colocation classique, le groupe Facebook public [« Coliving & Colocati
 
 ````
 
-### 9. `arnaques-logement-frontalier-geneve-eviter` (en) · A7
+### 10. `arnaques-logement-frontalier-geneve-eviter` (en) · A7
 
 retrait de la mention A.7 en fin de section (avant « ## The Secure Alternative: Coliving »)
 
@@ -195,7 +213,25 @@ For a standard flatshare, the public Facebook group ["Coliving & Colocation à G
 
 ````
 
-### 10. `arnaques-logement-frontalier-geneve-eviter` (en) · A7
+### 11. `arnaques-logement-frontalier-geneve-eviter` (en) · A7
+
+phrase précédente retouchée (anaphore « Pour un… / Pour une… » après le déplacement)
+
+Occurrences de l'ancre en base : 1 (attendu 1) · nouveau texte déjà présent : 0 (attendu 0) · garde « nouveau absent » : oui
+
+**Avant**
+
+````text
+For a new cross-border worker who doesn't yet know the local market, this is significant security:
+````
+
+**Après**
+
+````text
+A new cross-border worker who doesn't yet know the local market gains real security here:
+````
+
+### 12. `arnaques-logement-frontalier-geneve-eviter` (en) · A7
 
 mention A.7 enrichie réinsérée avant « ## Beyond Scams: The Classic Mistakes to Avoid » (C2)
 
