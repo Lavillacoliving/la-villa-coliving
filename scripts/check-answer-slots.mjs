@@ -77,8 +77,9 @@ export const FORBIDDEN_PHRASES = Object.freeze([
   { re: /you['’]ll need a guarantor/i, label: '« you\'ll need a guarantor »' },
   { re: /you will need a guarantor/i, label: '« you will need a guarantor »' },
   { re: /no French guarantor/i, label: '« no French guarantor »' },
-  // (Lot L5.4) interdit tant que les règles du groupe Facebook ne sont pas épinglées : aucune promesse de modération ou de vérification.
-  { re: /annonces v[ée]rifi[ée]es|verified listings|mod[ée]r[ée]e?s? contre les arnaques|moderated against scams/i, label: '« annonces vérifiées » / « modéré contre les arnaques » (L5.4)' },
+  // (Lot L5.4, réduit le 11/10/2026 — C3) Les règles du groupe Facebook sont publiées et épinglées : « modéré » est autorisé.
+  // « Annonces vérifiées » reste interdit : on retire les annonces douteuses, on ne vérifie pas chaque logement.
+  { re: /annonces v[ée]rifi[ée]es|verified listings/i, label: '« annonces vérifiées » / « verified listings » (L5.4)' },
 ]);
 
 /**

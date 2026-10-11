@@ -51,7 +51,7 @@ export const STATS = {
   totalRooms: TOTAL_ROOMS,
   totalHouses: 3,
   // (Lot L3, D3, 09/10/2026) L'ancien couple « taux d'occupation / sur 5 ans » est RETIRÉ de STATS : aucune mesure ne le
-  // soutenait. La base mesurée vit dans OCCUPANCY (réservée à /investisseurs) ; le hero et /candidature affichent
+  // soutenait. La base mesurée vit dans OCCUPANCY (publiée sur /investisseurs et l'Observatoire) ; le hero et /candidature affichent
   // averageStayMonths à la place.
   foundedYear: 2021,
   // (D1, brief « Ingénierie des créneaux », 09/10/2026) Valeur conservée, mais son libellé est désormais toujours
@@ -256,8 +256,8 @@ export const GOOGLE_REVIEWS_LINK_LABEL = { fr: "Voir les avis", en: "See the rev
 // maison). v1 du 10/10/2026 : ensemble 97,7 % (La Villa 99,5 · Loft 94,4 · Lodge 97,0). v2 du 11/10/2026
 // (scripts/v-social-proof-v2-2026-10-11.sql) : colonne occupancy_pct_all_steady = même ratio HORS les 42 premiers jours de chaque
 // maison → 99,1 % (La Villa 99,9 · Loft 97,1 · Lodge 100,0) — c'est la valeur publiée, VALIDÉE par Jérôme le 11/10 (A1).
-// RÉSERVÉE à /investisseurs, toujours écrite avec sa base (OCCUPANCY_DISPLAY) ; l'Observatoire garde sa propre fourchette
-// (méthodologie first-party datée) jusqu'au prochain bulletin. Remesure à chaque mise à jour mensuelle (README).
+// PUBLIÉE sur /investisseurs et sur l'Observatoire (tuile, phrase « Côté tension », méthodologie, CSV, llms.txt — A2 du 11/10/2026),
+// toujours écrite avec sa base (OCCUPANCY_DISPLAY). Remesure à chaque mise à jour mensuelle (README).
 export const OCCUPANCY = {
   // (Décision Jérôme 11/10/2026, point A1) Chiffre publié = occupation HORS montée en charge : les rampUpWeeks premières
   // semaines suivant l'ouverture de chaque maison (= sa première entrée) sont exclues — colonne occupancy_pct_all_steady de
@@ -279,7 +279,7 @@ export const OCCUPANCY = {
  *  d'occupation − année de fondation. Suit OCCUPANCY.measuredOn à chaque relevé mensuel (Lot L3, 10/10/2026). */
 export const YEARS_IN_OPERATION = Number(OCCUPANCY.measuredOn.slice(0, 4)) - STATS.foundedYear;
 
-/** Libellés de l'occupation pour /investisseurs — valeur, étiquette courte (tuiles) et phrase complète avec la base. */
+/** Libellés de l'occupation pour /investisseurs, l'Observatoire et llms.txt — valeur, étiquette courte (tuiles) et phrase complète avec la base. */
 const OCC_PCT_FR = OCCUPANCY.pct.toFixed(1).replace(".", ","); // « 99,1 » — toujours 1 décimale (99.0 → « 99,0 », jamais « 99 »)
 const OCC_PCT_EN = OCCUPANCY.pct.toFixed(1); // « 99.1 »
 export const OCCUPANCY_DISPLAY = {

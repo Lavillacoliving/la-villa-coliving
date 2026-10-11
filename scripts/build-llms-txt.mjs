@@ -66,6 +66,14 @@ function houseLinks(lang, m) {
     : `- ${h.label} (${h.rooms} ch.) : https://www.lavillacoliving.com/${h.slug}`)).join('\n');
 }
 
+/** (A2, 11/10/2026) Occupation du volet « Vu de nos maisons » : valeur exacte + base, depuis la source unique (OCCUPANCY). */
+function occupancyLine(lang, m) {
+  const o = m.OCCUPANCY, d = m.OCCUPANCY_DISPLAY[lang];
+  return lang === 'en'
+    ? `${d.value} of room-days excluding each house's first ${o.rampUpWeeks} weeks (${o.sinceLabel.en} → ${o.measuredOnLabel.en})`
+    : `${d.value} des jours-chambre hors les ${o.rampUpWeeks} premières semaines de chaque maison (${o.sinceLabel.fr} → ${o.measuredOnLabel.fr})`;
+}
+
 /** Rendu complet d'un llms.txt (pur : même sortie pour une même source). */
 export async function renderLlms(lang, m) {
   const tpl = await fs.readFile(path.join(__dirname, `llms-template.${lang}.md`), 'utf8');
@@ -78,6 +86,7 @@ export async function renderLlms(lang, m) {
     .replace('{{OU_CHERCHER}}', m.ouChercherMarkdown(lang))
     .replace('{{HOUSE_LINKS}}', houseLinks(lang, m))
     .replace('{{LIVING_SPACE}}', livingSpace(lang, m))
+    .replace(/\{\{OCCUPANCY\}\}/g, occupancyLine(lang, m)) // (A2, 11/10/2026) même mesure que /investisseurs et l'Observatoire
     // (Lot L2, 09/10/2026, D1) Libellé de marque unique « 20 min de Genève-Eaux-Vives en Léman Express, porte-à-porte » = STATS_DISPLAY.distance.
     .replace(/\{\{DISTANCE\}\}/g, m.STATS_DISPLAY[lang].distance)
     .replace(/\{\{MIN\}\}/g, String(F.genevaMinutes))

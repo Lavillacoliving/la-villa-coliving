@@ -11,7 +11,8 @@
  * (nom du groupe en lien markdown, ouvert en nouvel onglet par le rendu du blog ; texte visible = facebookMention(lang), que la
  * garde check-answer-slots exige dans ces 4 articles, FR et EN). Aucun nombre en dur ici : membres via thousands(), volume
  * « une centaine d'annonces par mois » (FACEBOOK_GROUP.postsPerMonth) ; jamais un nombre de publications (il bouge chaque mois).
- * Interdits L5.4 (règles du groupe pas encore épinglées) : « annonces vérifiées », « modéré contre les arnaques ».
+ * Interdit L5.4 (réduit le 11/10/2026, règles du groupe épinglées — C3) : « annonces vérifiées » seulement. La mention enrichie
+ * (« animé et modéré … règles épinglées, annonces douteuses retirées ») est livrée par scripts/l5b-facebook-rules.edits.mjs.
  * Les 4 autres articles listés par le brief (trouver-colocation, living-in-france, s-installer, vivre-a-annemasse) et les pages
  * money portent déjà le groupe via le canal 3 du bloc « Où chercher » (L1) : rien à insérer.
  * FR = tutoiement, EN = « you », parité (1 insertion par langue et par article), aucun concurrent nommé.
@@ -19,7 +20,7 @@
 
 /** Motifs à signaler (avertissement) dans le texte RÉSULTANT : une promesse interdite ou un volume chiffré en dur. */
 export const POST_STATE_WATCH = [
-  /annonces v[ée]rifi[ée]es|verified listings|mod[ée]r[ée]e?s? contre les arnaques|moderated against scams/i,
+  /annonces v[ée]rifi[ée]es|verified listings/i,
   /\d{3}[   ]?(publications|posts)\b/i,
 ];
 
@@ -42,7 +43,7 @@ function assertSource(m) {
   for (const lang of ['fr', 'en']) {
     const md = m.facebookMentionMarkdown(lang);
     if (!md.includes(m.FACEBOOK_GROUP.name) || !md.includes(`](${m.FACEBOOK_GROUP.url})`)) throw new Error(`l5-facebook.edits : markdown ${lang} sans nom ou sans lien du groupe`);
-    if (/annonces v[ée]rifi[ée]es|verified listings|mod[ée]r[ée]e?s? contre les arnaques|moderated against scams/i.test(md)) throw new Error(`l5-facebook.edits : promesse interdite (L5.4) dans la mention ${lang}`);
+    if (/annonces v[ée]rifi[ée]es|verified listings/i.test(md)) throw new Error(`l5-facebook.edits : promesse interdite (L5.4) dans la mention ${lang}`);
   }
 }
 

@@ -42,11 +42,18 @@ test('A.8 : phrase + libellé du lien, nom du groupe, volume court, « Rejoindre
   assert.deepEqual([...m.FACEBOOK_CALLOUT_ROUTES], ['/lavilla', '/leloft', '/lelodge', '/chambres-disponibles']);
 });
 
-test('L5.4 : « annonces vérifiées » / « modéré contre les arnaques » interdits ; les textes A.7/A.8 ne les contiennent pas', () => {
+test('L5.4 (réduit le 11/10/2026, règles épinglées — C3) : « annonces vérifiées » reste interdit, « modéré » autorisé ; A.7/A.8 disent « règles épinglées »', () => {
   const rule = FORBIDDEN_PHRASES.find((f) => /vérifiées/.test(f.label));
   assert.ok(rule, 'règle L5.4 présente');
-  for (const bad of ['des annonces vérifiées chaque jour', 'verified listings only', 'un groupe modéré contre les arnaques', 'moderated against scams']) assert.match(bad, rule.re);
-  for (const lang of LANGS) for (const s of m.facebookStrings(lang)) assert.doesNotMatch(s, rule.re, s);
+  for (const bad of ['des annonces vérifiées chaque jour', 'verified listings only']) assert.match(bad, rule.re);
+  for (const ok of ['un groupe modéré contre les arnaques', 'moderated against scams', 'animé et modéré par notre équipe']) assert.doesNotMatch(ok, rule.re);
+  for (const lang of LANGS) {
+    for (const s of m.facebookStrings(lang)) assert.doesNotMatch(s, rule.re, s);
+    const pinned = lang === 'en' ? /run and moderated by .*pinned rules, suspicious listings removed/ : /animé et modéré par .*règles épinglées, annonces douteuses retirées/;
+    assert.match(m.facebookMention(lang), pinned, `${lang} : A.7`);
+    assert.match(m.facebookCallout(lang).sentence, pinned, `${lang} : A.8`);
+    assert.ok(m.ouChercherStrings(lang, 'short').some((s) => pinned.test(s)), `${lang} : canal 3 du bloc`);
+  }
 });
 
 test('garde : aiguille « facebookMention » résolue, 4 articles ciblés, 0 ou 1 encart par page', () => {

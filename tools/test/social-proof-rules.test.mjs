@@ -1,11 +1,12 @@
 // Règles de preuves sociales de la garde scripts/check-entity-facts.mjs (Lot L3 « Note Google et preuves », décisions D3/D4
 // de Jérôme du 09/10/2026) : « 4,9/5 » et « enquêtes résidents » interdits, « 150 résidents » / « 50+ personnes » interdits,
-// « 99 % » d'occupation interdit hors Observatoire, JSON-LD sans aggregateRating ni Review, verdict adaptatif sur la vue
+// « 99 % » d'occupation interdit partout (Observatoire compris depuis le 11/10/2026), JSON-LD sans aggregateRating ni Review, verdict adaptatif sur la vue
 // v_social_proof — sur des fixtures HTML ; puis la liste déclarative scripts/l3-social-proof.edits.mjs contre la source réelle.
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
+import { readFile } from 'node:fs/promises';
 import {
-  forbiddenIssues, nearWindow, NEAR_WINDOW, ratingMarkupIssues, socialProofVerdict, SOCIAL_PROOF_VIEW, SOCIAL_PROOF_MIGRATION, visibleText } from '../../scripts/check-entity-facts.mjs';
+  observatoireCsvIssues, forbiddenIssues, nearWindow, NEAR_WINDOW, ratingMarkupIssues, socialProofVerdict, SOCIAL_PROOF_VIEW, SOCIAL_PROOF_MIGRATION, visibleText } from '../../scripts/check-entity-facts.mjs';
 import { buildEdits, sqlDoc, POST_STATE_WATCH } from '../../scripts/l3-social-proof.edits.mjs';
 import { forbiddenIssues as insertedForbidden, applyEdits, checkEdit } from '../../scripts/build-slots-sql.mjs';
 import { loadEntityFacts } from '../../scripts/lib/load-entity-facts.mjs';
@@ -53,7 +54,7 @@ test('D3 : « 150 résidents » / « 150+ residents » / « more than 150 reside
   assert.deepEqual(forbiddenIssues(p('100+ résidents depuis 2021', '100+ residents since 2021', 'Plus de 100 résidents ont choisi nos maisons', '250+ personnes', '1 150 résidents à Genève', '50 personnes', '7 à 12 résidents par maison')), []);
 });
 
-test('D3 : « 99 % » d\'occupation interdit hors Observatoire — phrase, tuile voisine, « 98-99 % » ; sans contexte d\'occupation, rien', () => {
+test('D3 : « 99 % » d\'occupation interdit partout (Observatoire compris depuis le 11/10/2026) — phrase, tuile voisine, « 98-99 % » ; sans contexte d\'occupation, rien', () => {
   only(forbiddenIssues(p('99 % d\'occupation sur 5 ans'), undefined, 'index.html'), /99 %/);
   only(forbiddenIssues(p('99% occupancy rate over 5 years'), undefined, 'en.html'), /99 %/);
   only(forbiddenIssues(tile('99%', 'Taux d\'occupation sur 5 ans'), undefined, 'candidature.html'), /99 %/);
@@ -66,15 +67,27 @@ test('D3 : « 99 % » d\'occupation interdit hors Observatoire — phrase, tuile
   assert.deepEqual(forbiddenIssues(p('Taux d\'occupation 1999 %')), [], 'le 99 n\'est pas la fin d\'un autre nombre');
 });
 
-test('D3 : l\'Observatoire (FR et EN) garde son « 98-99 % » d\'occupation (méthodologie first-party datée)', () => {
+test('A2 (11/10/2026) : l\'Observatoire n\'est plus exempté — « 98-99 % » y est interdit comme ailleurs, la valeur exacte « 99,1 % » passe', async () => {
+  const m = await loadEntityFacts();
   const obs = p('Taux d\'occupation observé : 98-99 % sur les trois maisons (méthodologie first-party, relevé daté).');
-  assert.deepEqual(forbiddenIssues(obs, undefined, 'observatoire-logement-frontalier-geneve.html'), []);
-  assert.deepEqual(forbiddenIssues(obs, undefined, 'en-observatoire-logement-frontalier-geneve.html'), []);
-  assert.equal(forbiddenIssues(obs, undefined, 'blog-observatoire-x.html').length, 1, 'un article qui recopie le chiffre n\'est pas l\'Observatoire');
-  // L'exemption ne couvre que « 99 % » : les autres règles restent actives sur l'Observatoire.
+  for (const f of ['observatoire-logement-frontalier-geneve.html', 'en-observatoire-logement-frontalier-geneve.html', 'blog-observatoire-x.html']) only(forbiddenIssues(obs, undefined, f), /99 %/, f);
   const r = forbiddenIssues(p('4,9/5 (enquêtes résidents)', 'occupation 98-99 %'), undefined, 'observatoire-logement-frontalier-geneve.html');
-  assert.equal(r.length, 2, r.join('\n'));
-  assert.ok(r.some((x) => x.startsWith('« 4,9/5 »')) && r.some((x) => x.startsWith('« enquêtes résidents »')) && !r.some((x) => x.startsWith('« 99 % »')), r.join('\n'));
+  assert.equal(r.length, 3, r.join('\n'));
+  for (const lang of ['fr', 'en']) {
+    const html = `<html><body><main><p>${m.OCCUPANCY_DISPLAY[lang].value} ${lang === 'en' ? 'occupancy excluding ramp-up since Oct. 2021' : 'occupation hors montée en charge depuis oct. 2021'}</p></main></body></html>`;
+    assert.deepEqual(forbiddenIssues(html, undefined, `${lang === 'en' ? 'en-' : ''}observatoire-logement-frontalier-geneve.html`), [], `${lang} : la tuile Observatoire passe`);
+  }
+});
+
+test('A2 : le CSV public de l\'Observatoire porte la même occupation que la source (observatoireCsvIssues)', async () => {
+  const m = await loadEntityFacts();
+  const csv = await readFile(new URL('../../public/data/observatoire-lavilla-2026.csv', import.meta.url), 'utf8');
+  assert.deepEqual(observatoireCsvIssues(csv, m), []);
+  assert.equal(observatoireCsvIssues(csv.replace(/^taux_occupation;[^;]*;/m, 'taux_occupation;99;'), m).length, 1, 'valeur arrondie = échec');
+  assert.equal(observatoireCsvIssues(csv.replace(/^taux_occupation;[^;]*;/m, 'taux_occupation;99,1;'), m).length, 1, 'virgule décimale = échec (convention point des CSV publiés)');
+  assert.equal(observatoireCsvIssues('cle;valeur\nloyer;1360', m).length, 1, 'ligne absente = échec');
+  assert.equal(observatoireCsvIssues(csv.replace(`${m.OCCUPANCY.rampUpWeeks} premieres semaines`, '8 premieres semaines'), m).length, 1, 'nombre de semaines ≠ rampUpWeeks = échec');
+  assert.equal(observatoireCsvIssues(csv.replace(m.OCCUPANCY.measuredOnLabel.fr, 'janv. 2027'), m).length, 1, 'relevé ≠ measuredOnLabel = échec');
 });
 
 test('nearWindow : fenêtre de ±NEAR_WINDOW autour de la première occurrence qui porte le contexte ; null sinon', () => {

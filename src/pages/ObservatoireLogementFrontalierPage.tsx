@@ -6,7 +6,7 @@ import { useLanguage } from "@/contexts/LanguageContext";
 import { SEO } from "@/components/SEO";
 import { buildDatasetSchema } from "@/lib/structuredData";
 import { BAROMETRE, STUDIO_FULL_COST } from "@/data/barometre";
-import { STATS, PRICE_FR_NUM, PRICE_EN_NUM, PRICE_SHARED_FR_NUM, PRICE_SHARED_EN_NUM } from "@/data/stats";
+import { STATS, OCCUPANCY, OCCUPANCY_DISPLAY, PRICE_FR_NUM, PRICE_EN_NUM, PRICE_SHARED_FR_NUM, PRICE_SHARED_EN_NUM } from "@/data/stats";
 import { Train, Bus, Bike, Car, Wallet, Download, ArrowRight, MapPin, Info, Home, Users, Check, ChevronDown, ImageDown } from "lucide-react";
 
 // ──────────────────────────────────────────────────────────────────────────
@@ -104,7 +104,7 @@ export function ObservatoireLogementFrontalierPage() {
   const [sortDir, setSortDir] = useState(1);
 
   const PAGE_FIRST_PUBLISHED = "2026-06-16";
-  const PAGE_LAST_UPDATED = "2026-07-06"; // à caler sur la date réelle de mise en ligne au moment du merge
+  const PAGE_LAST_UPDATED = "2026-10-11"; // 11/10/2026 : occupation alignée sur la mesure du site (A2 — OCCUPANCY, hors montée en charge)
   const updatedLabel = new Date(PAGE_LAST_UPDATED).toLocaleDateString(en ? "en-US" : "fr-FR", {
     year: "numeric",
     month: "long",
@@ -116,7 +116,8 @@ export function ObservatoireLogementFrontalierPage() {
     name: en
       ? "Cross-border housing observatory — Studio rent × Commute, left-bank Geneva (2026)"
       : "Observatoire du logement frontalier — Loyer studio × Trajet, rive gauche de Genève (2026)",
-    // (Lot L3, 09/10/2026) « 100+ résidents depuis 2021 » lu depuis STATS (plus de littéral) ; le « 98-99 % » de l'Observatoire reste.
+    // (Lot L3, 09/10/2026) « 100+ résidents depuis 2021 » lu depuis STATS (plus de littéral). (A2, 11/10/2026) L'occupation est lue
+    // depuis OCCUPANCY / OCCUPANCY_DISPLAY (tuile + phrase « Côté tension ») : plus de « 98-99 % » figé ; CSV aligné à la main.
     description: en
       ? `Advertised studio rent (Observatory survey on Le Figaro Immobilier, June 2026) crossed with commute time to Geneva-Eaux-Vives, for 17 municipalities of the French Genevois along the Léman Express axis, including peak-hour train frequency. Geneva, a two-speed market: sitting tenants 35 CHF/m² (OCSTAT 2025) vs. newcomers ≈ 50 CHF/m² in today's listings (Homegate survey, +44%). Includes first-party aggregates from La Villa Coliving's ${STATS.totalHouses} houses (${STATS.totalResidents}+ residents since ${STATS.foundedYear}), clearly labelled. Conversions at €1 = CHF 0.92 (July 2026).`
       : `Loyer d'annonce d'un studio (relevé de l'Observatoire sur Le Figaro Immobilier, juin 2026) croisé au temps de trajet vers Genève-Eaux-Vives, pour 17 communes du Genevois français le long de l'axe Léman Express, avec la cadence des trains en heure de pointe. Genève, marché à deux vitesses : locataire en place 35 CHF/m² (OCSTAT 2025) vs nouvel arrivant ≈ 50 CHF/m² dans les annonces (relevé Homegate, +44 %). Inclut les agrégats first-party des ${STATS.totalHouses} maisons La Villa Coliving (${STATS.totalResidents}+ résidents depuis ${STATS.foundedYear}), clairement étiquetés. Conversions au taux 1 € = 0,92 CHF (juillet 2026).`,
@@ -825,8 +826,9 @@ export function ObservatoireLogementFrontalierPage() {
                   label: en ? "average length of stay" : "durée moyenne de séjour",
                 },
                 {
-                  fig: "98-99 %",
-                  label: en ? "average occupancy since Oct. 2021" : "occupation moyenne depuis oct. 2021",
+                  // (A2, 11/10/2026) même mesure que /investisseurs : jours-chambre hors montée en charge (v_social_proof v2), plus de « 98-99 % » figé
+                  fig: OCCUPANCY_DISPLAY[en ? "en" : "fr"].value,
+                  label: en ? `occupancy excluding ramp-up since ${OCCUPANCY.sinceLabel.en}` : `occupation hors montée en charge depuis ${OCCUPANCY.sinceLabel.fr}`,
                 },
               ].map((s) => (
                 <div key={s.label} className="bg-white border border-[#E7E5E4] rounded-xl p-3 sm:p-4 text-center">
@@ -1067,8 +1069,8 @@ export function ObservatoireLogementFrontalierPage() {
             </div>
             <p className="text-sm text-[#57534E] leading-relaxed mt-5">
               {en
-                ? `On market tension: occupancy runs at 98-99%, applications come in at ${BAROMETRE.applicationsPerMonth} per month, and a vacated room is re-let in under a week.`
-                : `Côté tension : le taux d'occupation s'établit à 98-99 %, les candidatures arrivent au rythme de ${BAROMETRE.applicationsPerMonth} par mois, et une chambre libérée se reloue en moins d'une semaine.`}
+                ? `On market tension: occupancy runs at ${OCCUPANCY_DISPLAY.en.value} of room-days, excluding each house's first ${OCCUPANCY.rampUpWeeks} weeks (${OCCUPANCY.sinceLabel.en} → ${OCCUPANCY.measuredOnLabel.en}); applications come in at ${BAROMETRE.applicationsPerMonth} per month, and a vacated room is re-let in under a week.`
+                : `Côté tension : le taux d'occupation s'établit à ${OCCUPANCY_DISPLAY.fr.value} des jours-chambre, hors les ${OCCUPANCY.rampUpWeeks} premières semaines de chaque maison (${OCCUPANCY.sinceLabel.fr} → ${OCCUPANCY.measuredOnLabel.fr}) ; les candidatures arrivent au rythme de ${BAROMETRE.applicationsPerMonth} par mois, et une chambre libérée se reloue en moins d'une semaine.`}
             </p>
             <SourceLine center={false}>
               {en
@@ -1138,7 +1140,7 @@ export function ObservatoireLogementFrontalierPage() {
               <ul className="list-disc pl-5 mt-1.5 space-y-1">
                 <li>{en ? `Anonymised aggregates from our ${BAROMETRE.housesCount} houses (${BAROMETRE.roomsCount} rooms, ${BAROMETRE.residentsCovered} residents since October 2021) — an operator's sample, not a market census.` : `Agrégats anonymisés issus de nos ${BAROMETRE.housesCount} maisons (${BAROMETRE.roomsCount} chambres, ${BAROMETRE.residentsCovered} résidents depuis octobre 2021) — un échantillon d'exploitant, pas un recensement du marché.`}</li>
                 {/* (Lot L2, 09/10/2026) Correctif : chaînes entre guillemets → template literals, les « ${PRICE_…} » s'affichaient en clair. */}
-                <li>{en ? `Rent: 2026 median of current rents, billed in CHF, all-inclusive. Today's entry prices (${PRICE_SHARED_EN_NUM} CHF with a shared shower room, ${PRICE_EN_NUM} CHF with a private bathroom) sit above this median — the gap comes from older leases still running. Occupancy: average across all houses since October 2021 — 98-99% depending on the year and the house; a recently opened house can temporarily sit below that level during its ramp-up. Length of stay: average over all residents.` : `Loyer : médiane 2026 des loyers en cours, facturés en CHF, tout compris. Les prix d'entrée actuels (${PRICE_SHARED_FR_NUM} CHF avec salle d'eau partagée, ${PRICE_FR_NUM} CHF avec salle de bain privative) sont au-dessus de cette médiane — l'écart vient des baux plus anciens toujours en cours. Occupation : moyenne toutes maisons confondues depuis octobre 2021 — 98-99 % selon les années et les maisons ; une maison récemment ouverte peut passer temporairement en dessous pendant sa montée en charge. Durée de séjour : moyenne sur l'ensemble des résidents.`}</li>
+                <li>{en ? `Rent: 2026 median of current rents, billed in CHF, all-inclusive. Today's entry prices (${PRICE_SHARED_EN_NUM} CHF with a shared shower room, ${PRICE_EN_NUM} CHF with a private bathroom) sit above this median — the gap comes from older leases still running. Occupancy: occupied room-days over available room-days, capped at each house's capacity, since ${OCCUPANCY.sinceLabel.en}; the published figure excludes each house's first ${OCCUPANCY.rampUpWeeks} weeks after opening (ramp-up) and stands at ${OCCUPANCY_DISPLAY.en.value} as of ${OCCUPANCY.measuredOnLabel.en} — source: resident history and dashboard (aggregated view, no personal data). Length of stay: average over all residents.` : `Loyer : médiane 2026 des loyers en cours, facturés en CHF, tout compris. Les prix d'entrée actuels (${PRICE_SHARED_FR_NUM} CHF avec salle d'eau partagée, ${PRICE_FR_NUM} CHF avec salle de bain privative) sont au-dessus de cette médiane — l'écart vient des baux plus anciens toujours en cours. Occupation : jours-chambre occupés rapportés aux jours-chambre disponibles, plafonnés à la capacité de chaque maison, depuis ${OCCUPANCY.sinceLabel.fr} ; la valeur publiée exclut les ${OCCUPANCY.rampUpWeeks} premières semaines suivant l'ouverture de chaque maison (montée en charge) et s'établit à ${OCCUPANCY_DISPLAY.fr.value} (relevé : ${OCCUPANCY.measuredOnLabel.fr}) — source : historique des occupants et dashboard (vue agrégée, aucune donnée nominative). Durée de séjour : moyenne sur l'ensemble des résidents.`}</li>
                 <li>{en ? `Space per resident: total habitable surface ÷ number of residents — La Villa ${BAROMETRE.m2PerHouse.lavilla} m², Le Lodge ${BAROMETRE.m2PerHouse.lelodge} m², Le Loft ${BAROMETRE.m2PerHouse.leloft} m² (private rooms ${BAROMETRE.roomSizeMin}-${BAROMETRE.roomSizeMax} m²). The “≈ ${BAROMETRE.chfPerM2AllIn} CHF/m² all-inclusive” is therefore not directly comparable to a net rent per m² — the difference in scope is stated and detailed here.` : `Surface par résident : surface habitable totale ÷ nombre de résidents — La Villa ${BAROMETRE.m2PerHouse.lavilla} m², Le Lodge ${BAROMETRE.m2PerHouse.lelodge} m², Le Loft ${BAROMETRE.m2PerHouse.leloft} m² (chambres privées ${BAROMETRE.roomSizeMin}-${BAROMETRE.roomSizeMax} m²). Le « ≈ ${BAROMETRE.chfPerM2AllIn} CHF/m² tout compris » n'est donc pas directement comparable à un loyer net au m² — l'écart de périmètre est assumé et détaillé ici.`}</li>
                 <li>{en ? "“Full cost” table: every assumption is posted under the table itself." : "Tableau « coût complet » : toutes les hypothèses sont affichées sous le tableau lui-même."}</li>
               </ul>
