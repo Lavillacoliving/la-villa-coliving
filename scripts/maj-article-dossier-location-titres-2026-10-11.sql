@@ -2,7 +2,8 @@
 -- les metas de l'article dossier-location-frontalier-suisse-france promettaient « sans garant français » (promesse absolue,
 -- contraire à D6) alors que le corps dit « garant au cas par cas » depuis le lot L1. Slug et H1 du corps inchangés (URL et
 -- positions conservées) ; l'extrait (excerpt) ne cite pas le garant et reste tel quel. Idempotent : chaque champ n'est réécrit
--- que s'il porte encore l'ancienne valeur. Dry-run montré à Jérôme avant application (.dry-run.md).
+-- que s'il porte encore l'ancienne valeur. Dry-run validé par Jérôme (« E1 OK ») et APPLIQUÉ le 11/10/2026 à 09:34 UTC via MCP
+-- execute_sql ; vérification : titres et metas en place (151 / 148 caractères). NE PAS REJOUER (sans effet : garde par ancienne valeur).
 BEGIN;
 UPDATE public.blog_posts
 SET title_fr = CASE WHEN title_fr = 'Louer en France sans garant français : le dossier du frontalier' THEN 'Dossier de location frontalier : les pièces, le garant au cas par cas' ELSE title_fr END,
