@@ -18,7 +18,7 @@ export function InvestisseursPage() {
   const { language } = useLanguage();
   const L = language === "en" ? "en" : "fr";
   // (Lot L3, D3 Jérôme 09/10/2026) Ancien taux d'occupation « sur 5 ans » retiré : la page B2B est la SEULE à publier
-  // l'occupation, toujours avec sa base (OCCUPANCY_DISPLAY : « ≈ N % de jours-chambre occupés depuis l'ouverture (oct. 2021 →
+  // l'occupation, toujours avec sa base (OCCUPANCY_DISPLAY : « N % de jours-chambre occupés depuis l'ouverture, hors les 6 premières semaines de chaque maison (oct. 2021 →
   // mois de mesure) »). Les années d'exploitation (YEARS_IN_OPERATION) et le nombre de maisons viennent aussi de stats.ts.
   const occ = OCCUPANCY_DISPLAY[L];
 
@@ -37,8 +37,8 @@ export function InvestisseursPage() {
         }
         description={
           language === "en"
-            ? `Entrust your property to La Villa Coliving: ${occ.value} of room-days occupied since ${OCCUPANCY.sinceLabel.en}, premium community management under our brand.`
-            : `Confiez votre bien à La Villa Coliving : ${occ.value} de jours-chambre occupés depuis ${OCCUPANCY.sinceLabel.fr}, gestion de communauté premium sous notre marque.`
+            ? `Entrust your property to La Villa Coliving: ${occ.value} of room-days occupied since ${OCCUPANCY.sinceLabel.en}, excluding ramp-up; premium community management under our brand.`
+            : `Confiez votre bien à La Villa Coliving : ${occ.value} de jours-chambre occupés depuis ${OCCUPANCY.sinceLabel.fr} (hors montée en charge), gestion de communauté premium.`
         }
         url="https://www.lavillacoliving.com/investisseurs"
       />

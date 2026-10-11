@@ -4,6 +4,7 @@ import { colocGeneveHref } from "@/lib/siteLinks";
 import { Scrim } from "@/components/Scrim";
 import { ArrowRight, ChevronDown, Home, Users, Heart, MapPin } from "lucide-react";
 import { useLanguage } from "@/contexts/LanguageContext";
+import { RatingStars } from "@/components/RatingStars";
 import { STATS, STATS_DISPLAY, PRICE_SHARED_CHF_FR, PRICE_SHARED_CHF_EN, GOOGLE_REVIEWS, GOOGLE_REVIEWS_LINK_LABEL } from "@/data/stats";
 import { ENTITY_HOUSES } from "@/data/entityFacts";
 import { useRoomAvailability, globalAvailabilityLabel } from "@/lib/availability";
@@ -121,13 +122,8 @@ export function HeroV7() {
               « sur Google ») + lien « Voir les avis » vers la fiche ; l'ancienne note interne (NPS) n'est plus publiée.
               Une phrase = un nœud texte ; le lien est un élément à part (anti-#418). */}
           <div className="flex flex-wrap items-center gap-x-3 gap-y-1 mb-12 md:mb-14">
-            <div className="flex items-center gap-1">
-              {[1,2,3,4,5].map(i => (
-                <svg key={i} className="w-4 h-4 text-[#E0BB8A]" fill="currentColor" viewBox="0 0 20 20">
-                  <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-                </svg>
-              ))}
-            </div>
+            {/* (A9, 11/10/2026) Étoiles proportionnelles à la note (4,8 → 4 pleines + 80 %), déterministes. */}
+            <RatingStars lang={L} />
             <span className="text-white/90 text-sm font-medium">
               {`${STATS_DISPLAY[L].googleRating} — ${STATS_DISPLAY[L].residents}`}
             </span>

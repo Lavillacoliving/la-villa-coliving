@@ -241,6 +241,7 @@ export const MARKET_COMPARISON = {
 export const GOOGLE_REVIEWS = {
   rating: "4,8", // graphie FR (virgule)
   ratingEn: "4.8", // graphie EN (point)
+  value: 4.8, // (A9, 11/10/2026) nombre pour les étoiles proportionnelles (RatingStars) — = ratingEn
   count: 36,
   /** Fiche Google (avis lisibles) — lien stable par cid. Le lien « ÉCRIRE un avis » (g.page/r/…/review) reste dans
    *  QuestionnaireDepartPage : ce n'est pas le même usage. */
@@ -257,14 +258,20 @@ export const GOOGLE_REVIEWS_LINK_LABEL = { fr: "Voir les avis", en: "See the rev
 // (OCCUPANCY_DISPLAY). ⚠️ Nouvelle base à faire VALIDER par Jérôme ; l'Observatoire garde sa propre fourchette
 // (méthodologie first-party datée) jusqu'au prochain bulletin. Remesure à chaque mise à jour mensuelle (README).
 export const OCCUPANCY = {
-  pct: 98,
+  // (Décision Jérôme 11/10/2026, point A1) Chiffre publié = occupation HORS montée en charge : les rampUpWeeks premières
+  // semaines suivant l'ouverture de chaque maison (= sa première entrée) sont exclues — colonne occupancy_pct_all_steady de
+  // v_social_proof (v2, scripts/v-social-proof-v2-2026-10-11.sql). Valeur EXACTE, jamais arrondie à « 99 % » (D3 avait retiré
+  // ce chiffre faute de preuve ; il est désormais mesuré : 99,1 % au 11/10/2026 — La Villa 99,9 · Loft 97,1 · Lodge 100,0 ;
+  // 97,7 % sans exclusion). Relevé mensuel : mettre à jour pct, measuredOn, measuredOnLabel (README).
+  pct: 99.1,
+  rampUpWeeks: 6, // = ramp_up_days 42 dans la vue
   since: "2021-09-17", // première entrée (La Villa) — la mesure de la vue démarre là (jours-chambre inclus, méthode conservatrice)
   // (Décision Jérôme 10/10/2026) La date d'ouverture PUBLIÉE est octobre 2021, partout (fiche entité, llms, Observatoire,
   // /qui-sommes-nous et /investisseurs) : le libellé de la fenêtre ne dit plus « sept. 2021 » même si la première entrée est du 17/09.
   sinceLabel: { fr: "oct. 2021", en: "Oct. 2021" },
-  measuredOn: "2026-10-10", // première lecture réelle de v_social_proof (97,7 % → 98)
+  measuredOn: "2026-10-11", // lecture de v_social_proof v2 (occupancy_pct_all_steady)
   measuredOnLabel: { fr: "oct. 2026", en: "Oct. 2026" },
-  basis: "jours-chambre plafonnés à la capacité, resident_history ∪ tenants (v_social_proof)",
+  basis: "jours-chambre plafonnés à la capacité, hors les 6 premières semaines de chaque maison, resident_history ∪ tenants (v_social_proof.occupancy_pct_all_steady)",
 } as const;
 
 /** Années d'exploitation (« 5 ans d'expérience » sur /investisseurs), dérivées sans Date : année de la dernière mesure
@@ -272,16 +279,17 @@ export const OCCUPANCY = {
 export const YEARS_IN_OPERATION = Number(OCCUPANCY.measuredOn.slice(0, 4)) - STATS.foundedYear;
 
 /** Libellés de l'occupation pour /investisseurs — valeur, étiquette courte (tuiles) et phrase complète avec la base. */
+const OCC_PCT_FR = String(OCCUPANCY.pct).replace(".", ","); // « 99,1 »
 export const OCCUPANCY_DISPLAY = {
   fr: {
-    value: `≈ ${OCCUPANCY.pct} %`, // U+00A0 avant « % »
-    label: `de jours-chambre occupés depuis l'ouverture (${OCCUPANCY.sinceLabel.fr} → ${OCCUPANCY.measuredOnLabel.fr})`,
-    sentence: `≈ ${OCCUPANCY.pct} % de jours-chambre occupés depuis l'ouverture (${OCCUPANCY.sinceLabel.fr} → ${OCCUPANCY.measuredOnLabel.fr}, historique des occupants et dashboard)`,
+    value: `${OCC_PCT_FR} %`, // U+00A0 avant « % » — valeur exacte, sans « ≈ »
+    label: `de jours-chambre occupés hors les ${OCCUPANCY.rampUpWeeks} premières semaines de chaque maison (${OCCUPANCY.sinceLabel.fr} → ${OCCUPANCY.measuredOnLabel.fr})`,
+    sentence: `${OCC_PCT_FR} % de jours-chambre occupés depuis l'ouverture, hors les ${OCCUPANCY.rampUpWeeks} premières semaines de chaque maison (${OCCUPANCY.sinceLabel.fr} → ${OCCUPANCY.measuredOnLabel.fr}, historique des occupants et dashboard)`,
   },
   en: {
-    value: `≈ ${OCCUPANCY.pct}%`,
-    label: `of room-days occupied since opening (${OCCUPANCY.sinceLabel.en} → ${OCCUPANCY.measuredOnLabel.en})`,
-    sentence: `≈ ${OCCUPANCY.pct}% of room-days occupied since opening (${OCCUPANCY.sinceLabel.en} → ${OCCUPANCY.measuredOnLabel.en}, resident history and dashboard)`,
+    value: `${OCCUPANCY.pct}%`,
+    label: `of room-days occupied excluding each house's first ${OCCUPANCY.rampUpWeeks} weeks (${OCCUPANCY.sinceLabel.en} → ${OCCUPANCY.measuredOnLabel.en})`,
+    sentence: `${OCCUPANCY.pct}% of room-days occupied since opening, excluding each house's first ${OCCUPANCY.rampUpWeeks} weeks (${OCCUPANCY.sinceLabel.en} → ${OCCUPANCY.measuredOnLabel.en}, resident history and dashboard)`,
   },
 } as const;
 
@@ -289,7 +297,8 @@ export const OCCUPANCY_DISPLAY = {
 // adaptatif : avertissement tant que la vue v_social_proof n'existe pas (migration scripts/resident-history-2026-10-09.sql
 // à appliquer par Jérôme), échec si elle existe et que distinct_residents_since_opening < STATS.totalResidents.
 export const STATS_SOURCE = {
-  totalResidents: "resident_history ∪ tenants, vue v_social_proof : 119 distincts au 10/10/2026 (≥ 100 ; migration appliquée le 10/10/2026)",
+  totalResidents: "resident_history ∪ tenants, vue v_social_proof : 119 distincts au 11/10/2026 (≥ 100 ; migration appliquée le 10/10/2026, vue v2 le 11/10)",
+  occupancy: "v_social_proof.occupancy_pct_all_steady = 99,1 % au 11/10/2026 (ramp_up_days 42 ; 97,7 % depuis l'ouverture sans exclusion)",
 } as const;
 
 // ⚠️ DISPONIBILITÉ — PLUS ICI (18/08/2026). L'ancienne constante `AVAILABILITY`,

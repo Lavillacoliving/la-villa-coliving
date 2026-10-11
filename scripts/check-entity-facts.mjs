@@ -97,6 +97,8 @@ const FORBIDDEN = [
   { re: /(?<![\d,.]|\d[   ])150[   ]?\+?[   ]?r[ée]sidents?\b/i, label: '« 150 résidents » (D3 : « 100+ », STATS.totalResidents)' },
   { re: /(?<![\d,.]|\d[   ])50[   ]?\+[   ]?(?:personnes|people|r[ée]sidents?)\b/i, label: '« 50+ personnes par an » (D3 : retiré)' },
   // D3 — « 99 % d'occupation (sur 5 ans) » retiré ; seul l'Observatoire garde son « 98-99 % » (méthodologie first-party datée).
+  // (11/10/2026, décision A1) /investisseurs publie la valeur EXACTE d'OCCUPANCY (« 99,1 % », hors montée en charge) : « 99,1 % » ne
+  // matche pas « 99 % » (la virgule suit le 99), ce qui est voulu — l'arrondi « 99 % » reste interdit.
   // Contexte = fenêtre de ±NEAR_WINDOW caractères du texte visible aplati (`near`) : la tuile voisine d'une grille de statistiques
   // (« 99% » dans un bloc, « Taux d'occupation » dans le suivant) compte — une phrase seule ne suffirait pas. Le « 99 » peut
   // suivre un tiret (« 98-99 % ») : hors Observatoire, c'est aussi interdit.
