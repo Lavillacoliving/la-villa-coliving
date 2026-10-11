@@ -18,7 +18,8 @@
  *      des minutes : échec en --strict, avertissement sinon. Fonctions pures testées dans tools/test/location-rules.test.mjs.
  *   e) (Lot L3 « Note Google et preuves », 09/10/2026, décisions D3/D4 de Jérôme) preuves sociales : « 4,9/5 » / « 4.9/5 »,
  *      « enquêtes résidents » / « resident surveys », « 150 résidents », « 50+ personnes » interdits partout ; « 99 % » à côté
- *      d'« occupation » / « occupancy » / « taux » interdit hors Observatoire (qui garde son « 98-99 % » first-party daté) ;
+ *      d'« occupation » / « occupancy » / « taux » interdit (exemption historique de l'Observatoire conservée dans le code, sans
+ *      objet depuis le 11/10/2026 : il lit la valeur exacte d'OCCUPANCY, « 99,1 % », qui ne déclenche pas la règle) ;
  *      JSON-LD : 0 aggregateRating et 0 « "@type": "Review" » (la note Google se lit sur la fiche, jamais balisée sur son
  *      propre site). Base : v_social_proof (resident_history ∪ tenants, dédoublonnés) — mode adaptatif : avertissement tant
  *      que la vue n'existe pas (migration scripts/resident-history-2026-10-09.sql à appliquer par Jérôme), échec si elle
@@ -96,7 +97,8 @@ const FORBIDDEN = [
   // Le nombre n'est pas la fin d'un autre (« 1 150 résidents » du marché : séparateur de milliers normal ou insécable).
   { re: /(?<![\d,.]|\d[   ])150[   ]?\+?[   ]?r[ée]sidents?\b/i, label: '« 150 résidents » (D3 : « 100+ », STATS.totalResidents)' },
   { re: /(?<![\d,.]|\d[   ])50[   ]?\+[   ]?(?:personnes|people|r[ée]sidents?)\b/i, label: '« 50+ personnes par an » (D3 : retiré)' },
-  // D3 — « 99 % d'occupation (sur 5 ans) » retiré ; seul l'Observatoire garde son « 98-99 % » (méthodologie first-party datée).
+  // D3 — « 99 % d'occupation (sur 5 ans) » retiré. L'Observatoire gardait son « 98-99 % » (méthodologie first-party datée) jusqu'au
+  // 11/10/2026 (A2) : il lit désormais OCCUPANCY_DISPLAY (« 99,1 % ») ; l'exemption skipFile reste, sans objet, par prudence.
   // (11/10/2026, décision A1) /investisseurs publie la valeur EXACTE d'OCCUPANCY (« 99,1 % », hors montée en charge) : « 99,1 % » ne
   // matche pas « 99 % » (la virgule suit le 99), ce qui est voulu — l'arrondi « 99 % » reste interdit.
   // Contexte = fenêtre de ±NEAR_WINDOW caractères du texte visible aplati (`near`) : la tuile voisine d'une grille de statistiques

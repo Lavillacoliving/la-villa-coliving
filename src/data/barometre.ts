@@ -31,8 +31,8 @@ export const BAROMETRE = {
   tenureAvgMonths: 13, // moyenne
   // La tension
   // (Lot L3, D3, 09/10/2026 ; A1, 11/10/2026) L'ancien taux d'occupation de STATS est retiré → OCCUPANCY.pct (jours-chambre plafonnés,
-  // hors les 6 premières semaines de chaque maison : 99,1 % au 11/10/2026). Non rendu : l'Observatoire affiche encore sa propre fourchette (méthodologie first-party datée)
-  // — à réaligner au prochain bulletin.
+  // hors les 6 premières semaines de chaque maison : 99,1 % au 11/10/2026). (A2, 11/10/2026) L'Observatoire lit désormais OCCUPANCY_DISPLAY
+  // directement (tuile + phrase + CSV public/data/observatoire-lavilla-2026.csv à mettre à jour à la main au relevé mensuel).
   occupancyPct: OCCUPANCY.pct,
   applicationsPerMonth: "30-45",
   // Le profil

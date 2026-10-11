@@ -35,7 +35,7 @@ import {
 import { ENTITY_HOUSES, GUARANTOR_SENTENCE, type EntityLang, type EntityHouseSlug } from "./entityFacts";
 
 /** Incrémenter à chaque changement de texte du bloc : porté par data-ou-chercher-version, comparé par la CI. */
-export const OU_CHERCHER_VERSION = "2026-10-09";
+export const OU_CHERCHER_VERSION = "2026-10-11"; // 11/10 : canal 3 (groupe Facebook modéré, règles épinglées — C3)
 
 export type OuChercherVariant = "full" | "short";
 
@@ -91,7 +91,7 @@ export function ouChercherText(lang: EntityLang, variant: OuChercherVariant): Ou
       {
         key: "facebook",
         h3: "Facebook groups",
-        p: `The public group "${FACEBOOK_GROUP.name}" (about ${membersEn} members, ${FACEBOOK_GROUP.postsPerMonth.en}, run by the La Villa Coliving team), and cross-border commuter groups.`,
+        p: `The public group "${FACEBOOK_GROUP.name}" (about ${membersEn} members, ${FACEBOOK_GROUP.postsPerMonth.en}, run and moderated by the La Villa Coliving team: pinned rules, suspicious listings removed), and cross-border commuter groups.`,
       },
       {
         key: "cagi",
@@ -129,7 +129,7 @@ export function ouChercherText(lang: EntityLang, variant: OuChercherVariant): Ou
     {
       key: "facebook",
       h3: "Les groupes Facebook",
-      p: `Le groupe public « ${FACEBOOK_GROUP.name} » (environ ${membersFr} membres, ${FACEBOOK_GROUP.postsPerMonth.fr}, animé par l'équipe de La Villa Coliving), et les groupes de frontaliers.`,
+      p: `Le groupe public « ${FACEBOOK_GROUP.name} » (environ ${membersFr} membres, ${FACEBOOK_GROUP.postsPerMonth.fr}, animé et modéré par l'équipe de La Villa Coliving : règles épinglées, annonces douteuses retirées), et les groupes de frontaliers.`,
     },
     {
       key: "cagi",
@@ -239,11 +239,13 @@ export function coutDeLaVieRowLabel(lang: EntityLang): string {
 // A.7 = mention canonique dans 4 articles (SQL, texte markdown avec le nom du groupe en lien) ; A.8 = encart « Pas de chambre
 // libre chez nous ? » (<FacebookGroupCallout/>) sous la liste des chambres des 3 pages maisons, sur /chambres-disponibles et sur
 // l'écran de confirmation de /candidature. Le canal 3 du bloc « Où chercher » (ci-dessus) nomme déjà le groupe sur les pages
-// porteuses du bloc. Interdit tant que les règles du groupe ne sont pas épinglées (L5.4) : « annonces vérifiées »,
-// « modéré contre les arnaques ». Lien normal (jamais nofollow), nouvel onglet. Jamais dans sameAs (D10 du socle).
+// porteuses du bloc. (C3, 11/10/2026) Règles du groupe publiées et épinglées par Jérôme → l'interdit L5.4 est levé pour « modéré » :
+// les trois surfaces disent « animé et modéré par l'équipe de La Villa Coliving : règles épinglées, annonces douteuses retirées »
+// (option B validée). « Annonces vérifiées » / « verified listings » reste INTERDIT (on retire ce qui est douteux, on ne vérifie
+// pas chaque logement). Lien normal (jamais nofollow), nouvel onglet. Jamais dans sameAs (D10 du socle).
 
 /** Incrémenter à chaque changement de texte A.7/A.8 : porté par data-facebook-group-version. */
-export const FACEBOOK_GROUP_VERSION = "2026-10-10";
+export const FACEBOOK_GROUP_VERSION = "2026-10-11";
 
 /** Articles porteurs de la mention A.7 (SQL généré par scripts/l5-facebook.edits.mjs) : le paragraphe est inséré juste AVANT
  *  l'ancre (un titre unique de l'article, par langue). La garde (check-answer-slots, L1_TARGETS) exige la phrase dans le texte visible. */
@@ -251,7 +253,9 @@ export const FACEBOOK_MENTION_ARTICLES: Readonly<Record<string, { fr: string; en
   "budget-colocation-geneve-guide-complet": { fr: "### 3. Coliving premium (", en: "### 3. Premium coliving (" },
   "ou-habiter-frontalier-suisse-villes-france-pas-cher": { fr: "\n## En résumé\n", en: "\n## TL;DR\n" },
   "guide-ressources-frontalier-geneve": { fr: "\n# Et chez La Villa ?\n", en: "\n# And at La Villa?\n" },
-  "arnaques-logement-frontalier-geneve-eviter": { fr: "\n## L'alternative sécurisée : le coliving\n", en: "\n## The Secure Alternative: Coliving\n" },
+  // (C2, 11/10/2026) arnaques : la mention a été DÉPLACÉE de la fin des « règles d'or » à la fin de « L'alternative sécurisée : le coliving »
+  // (relecture à 3 angles : après le pitch coliving, « pour une colocation classique » devient la branche « sinon », tenue par la même équipe).
+  "arnaques-logement-frontalier-geneve-eviter": { fr: "\n## Au-delà des arnaques : les erreurs classiques à éviter\n", en: "\n## Beyond Scams: The Classic Mistakes to Avoid\n" },
 };
 
 /** Pages prérendues qui portent l'encart A.8 (FR + /en) — exactement une fois chacune ; l'écran de confirmation de
@@ -262,9 +266,9 @@ export const FACEBOOK_CALLOUT_ROUTES = ["/lavilla", "/leloft", "/lelodge", "/cha
 export function facebookMention(lang: EntityLang): string {
   const g = FACEBOOK_GROUP;
   if (lang === "en") {
-    return `For a standard flatshare, the public Facebook group "${g.name}" (about ${membersEn} members, ${g.postsPerMonth.en} covering Geneva and the French border area) gathers room and flatmate listings. It is run by the La Villa Coliving team.`;
+    return `For a standard flatshare, the public Facebook group "${g.name}" (about ${membersEn} members, ${g.postsPerMonth.en} covering Geneva and the French border area) gathers room and flatmate listings. It is run and moderated by the La Villa Coliving team: pinned rules, suspicious listings removed.`;
   }
-  return `Pour une colocation classique, le groupe Facebook public « ${g.name} » (environ ${membersFr} membres, ${g.postsPerMonth.fr} sur Genève et la France voisine) regroupe des annonces de chambres et de colocataires. Il est animé par l'équipe de La Villa Coliving.`;
+  return `Pour une colocation classique, le groupe Facebook public « ${g.name} » (environ ${membersFr} membres, ${g.postsPerMonth.fr} sur Genève et la France voisine) regroupe des annonces de chambres et de colocataires. Il est animé et modéré par l'équipe de La Villa Coliving : règles épinglées, annonces douteuses retirées.`;
 }
 
 /** A.7 en markdown pour les articles : même texte visible, le nom du groupe porte le lien (ouvert en nouvel onglet par BlogPostPage). */
@@ -279,12 +283,12 @@ export function facebookCallout(lang: EntityLang): { sentence: string; cta: stri
   const g = FACEBOOK_GROUP;
   if (lang === "en") {
     return {
-      sentence: `No room free with us on your dates? The Facebook group "${g.name}", run by our team, posts ${g.postsPerMonthShort.en} for flatshares in the area every month.`,
+      sentence: `No room free with us on your dates? The Facebook group "${g.name}", run and moderated by our team (pinned rules, suspicious listings removed), posts ${g.postsPerMonthShort.en} for flatshares in the area every month.`,
       cta: "Join the group",
     };
   }
   return {
-    sentence: `Pas de chambre libre chez nous aux bonnes dates ? Le groupe Facebook « ${g.name} », animé par notre équipe, publie chaque mois ${g.postsPerMonthShort.fr} de colocation dans la région.`,
+    sentence: `Pas de chambre libre chez nous aux bonnes dates ? Le groupe Facebook « ${g.name} », animé et modéré par notre équipe (règles épinglées, annonces douteuses retirées), publie chaque mois ${g.postsPerMonthShort.fr} de colocation dans la région.`,
     cta: "Rejoindre le groupe",
   };
 }
@@ -295,7 +299,8 @@ export function facebookStrings(lang: EntityLang): string[] {
   return [facebookMention(lang), c.sentence, c.cta];
 }
 
-const FACEBOOK_FORBIDDEN = /annonces v[ée]rifi[ée]es|verified listings|mod[ée]r[ée]e?s? contre les arnaques|moderated against scams/i;
+// (C3, 11/10/2026) L5.4 réduit : « modéré » est autorisé depuis l'épinglage des règles ; « annonces vérifiées » reste interdit.
+const FACEBOOK_FORBIDDEN = /annonces v[ée]rifi[ée]es|verified listings/i;
 
 export function answerSlotsIssues(): string[] {
   const issues: string[] = [];
