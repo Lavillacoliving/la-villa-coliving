@@ -28,6 +28,9 @@
 --  6. Documentée dans Schema_Supabase_LaVilla.md § 8.4 et Infrastructure_LaVilla.md § 7 (lavilla-docs).
 --
 -- APPLIQUÉE le 10/10/2026 à 08:38 UTC via MCP apply_migration (version 20261010083834), GO « pour tout » de Jérôme du 10/10.
+-- ⚠️ La définition de v_social_proof ci-dessous est la v1, REMPLACÉE le 11/10/2026 par scripts/v-social-proof-v2-2026-10-11.sql
+--    (colonnes ramp_up_days, by_house_steady, occupancy_pct_all_steady en plus — la valeur publiée sur /investisseurs). Rejouer
+--    CE fichier entier (DROP + CREATE de la v1) ferait régresser la vue : après un rejeu, réappliquer la v2.
 -- Appliqué par Jérôme dans le SQL Editor (règle : les migrations ne sont jamais appliquées par le site ni par Claude Code
 -- sans demande explicite — GO de Jérôme du 10/10/2026 pour ce lot). Coller le fichier ASSEMBLÉ entier en UTF-8 (noms accentués).
 -- Idempotent : IF NOT EXISTS, DELETE des lignes importées + INSERT (resynchronisation), CREATE OR REPLACE FUNCTION, DROP VIEW IF

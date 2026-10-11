@@ -5,8 +5,7 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import {
-  forbiddenIssues, nearWindow, NEAR_WINDOW, ratingMarkupIssues, socialProofVerdict, SOCIAL_PROOF_VIEW, SOCIAL_PROOF_MIGRATION,
-} from '../../scripts/check-entity-facts.mjs';
+  forbiddenIssues, nearWindow, NEAR_WINDOW, ratingMarkupIssues, socialProofVerdict, SOCIAL_PROOF_VIEW, SOCIAL_PROOF_MIGRATION, visibleText } from '../../scripts/check-entity-facts.mjs';
 import { buildEdits, sqlDoc, POST_STATE_WATCH } from '../../scripts/l3-social-proof.edits.mjs';
 import { forbiddenIssues as insertedForbidden, applyEdits, checkEdit } from '../../scripts/build-slots-sql.mjs';
 import { loadEntityFacts } from '../../scripts/lib/load-entity-facts.mjs';
@@ -218,4 +217,17 @@ test('fiche entité : la puce « Avis » est suivie du lien « Voir les avis » 
     assert.equal(t.reviewsLink.label, m.GOOGLE_REVIEWS_LINK_LABEL[lang]);
     assert.ok(!m.entityFactsStrings(lang).includes(t.reviewsLink.label), `${lang} : le libellé du lien n'est pas une chaîne canonique comptée 1×`);
   }
+});
+
+test('A1 (11/10/2026) : la phrase exacte d\'OCCUPANCY_DISPLAY (« 99,1 % … ») passe la garde, « 99 % d\'occupation » non ; GOOGLE_REVIEWS.value = ratingEn', async () => {
+  const m = await loadEntityFacts();
+  for (const lang of ['fr', 'en']) {
+    const html = `<html><body><main><p>${m.OCCUPANCY_DISPLAY[lang].sentence}</p><p>${m.OCCUPANCY_DISPLAY[lang].value} ${m.OCCUPANCY_DISPLAY[lang].label}</p></main></body></html>`;
+    assert.deepEqual(forbiddenIssues(html, visibleText(html), lang === 'en' ? 'en-investisseurs.html' : 'investisseurs.html'), [], lang);
+    assert.doesNotMatch(m.OCCUPANCY_DISPLAY[lang].value, /≈/, 'valeur exacte, sans ≈');
+  }
+  const bad = '<html><body><p>≈ 99 % d\'occupation depuis l\'ouverture</p></body></html>';
+  assert.ok(forbiddenIssues(bad, visibleText(bad), 'investisseurs.html').length > 0);
+  assert.equal(String(m.GOOGLE_REVIEWS.value), m.GOOGLE_REVIEWS.ratingEn);
+  assert.equal(m.OCCUPANCY.rampUpWeeks * 7, 42);
 });
