@@ -3,7 +3,7 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { loadEntityFacts } from '../../scripts/lib/load-entity-facts.mjs';
-import { checkHouseLocation, checkRoomSurfaceByHouse, mainTextAfterH1, COMMUTE_WINDOW } from '../../scripts/house-pages-check.mjs';
+import { checkHouseLocation, checkRoomSurfaceByHouse, mainTextAfterH1, COMMUTE_WINDOW, exactLocationLeaks } from '../../scripts/house-pages-check.mjs';
 
 const m = await loadEntityFacts();
 const SLUGS = ['lavilla', 'leloft', 'lelodge'];
@@ -24,7 +24,7 @@ function housePage(slug, lang, { version = m.HOUSE_LOCATION_VERSION, commute = t
   return `<!DOCTYPE html><html lang="${lang}"><head><title>t</title><meta name="description" content="${nb}"></head><body>` +
     `<nav>La Villa Coliving</nav><main class="relative"><p>Accueil › Maisons</p><h1 class="x">${h.label} — <span>coliving</span></h1>` +
     `<p>${h.commune}, Grand Genève 10 résidents 370 m² Candidater Tout inclus : dès 1&nbsp;370 CHF/mois</p><h2>À propos</h2><p>${enc(desc)}</p>${middle}` +
-    `<section data-house-location-version="${version}"><h2>Localisation</h2>${Array(neighbourhoodTimes).fill(`<p>${nb}</p>`).join('')}` +
+    `<section data-house-location-version="${version}"><h2>Localisation</h2>${Array(neighbourhoodTimes).fill(`<p>${nb}</p>`).join('')}<p>${enc(m.houseZone(slug, lang))}</p>` +
     `<table><tbody><tr><th>Mode</th><td>Dest</td><td>7 min</td></tr></tbody></table>` +
     `${link ? `<a href="${url}" target="_blank" rel="noopener noreferrer">${m.houseDirectionsLabel(lang)}</a>` : ''}</section>` +
     `<aside id="entity-facts"><p>${enc(h.commute[lang])}</p></aside></main></body></html>`;
@@ -79,7 +79,7 @@ test('checkHouseLocation : phrase de quartier 0 ou 2 fois, version absente ou p�
 test('checkHouseLocation : page de production AVANT le lot L2 (sans section) → les quatre règles tombent, messages lisibles', () => {
   const legacy = `<!DOCTYPE html><html><head></head><body><main><h1>La Villa</h1><p>Notre maison amirale, à 10 minutes à pied de la gare d'Annemasse.</p><section><h2>Localisation</h2><p>La frontière suisse est mitoyenne à La Villa.</p></section></main></body></html>`;
   const r = checkHouseLocation(legacy, 'lavilla', 'fr', m);
-  assert.equal(r.length, 5, r.join('\n'));
+  assert.equal(r.length, 6, r.join('\n')); // + zone absente (12/10/2026)
   assert.ok(r.every((x) => x.startsWith('lavilla.html : ')));
 });
 
@@ -97,4 +97,19 @@ test('checkRoomSurfaceByHouse : ROOM_SURFACE_BY_HOUSE = Math.round(min/max) de v
   // Cohérence source : les bornes des trois maisons réunies = STATS.roomSizeMin / Max.
   assert.equal(Math.min(...Object.values(S).map((x) => x.min)), m.STATS.roomSizeMin);
   assert.equal(Math.max(...Object.values(S).map((x) => x.max)), m.STATS.roomSizeMax);
+});
+
+test('exactLocationLeaks (12/10/2026, sécurité) : rue d\'une maison (casse, encodage d\'URL, « + ») ou coordonnées exactes = fuite ; zone et point arrondi = rien', () => {
+  const H = m.HOUSES;
+  assert.deepEqual(exactLocationLeaks('<p>Annemasse (74100), quartier de Romagny</p><script>{"latitude":46.19,"longitude":6.24}</script>', H), []);
+  assert.deepEqual(exactLocationLeaks(`<p>${H[2].streetAddress.toUpperCase()}</p>`, H), [H[2].streetAddress]);
+  assert.deepEqual(exactLocationLeaks(`<a href="https://www.google.com/maps/dir/?origin=${encodeURIComponent(H[0].streetAddress)}">x</a>`, H), [H[0].streetAddress]);
+  assert.deepEqual(exactLocationLeaks(`"latitude":${H[1].geo.lat},"longitude":${H[1].geo.lng}`, H), [String(H[1].geo.lat), String(H[1].geo.lng)]);
+  // Le siège social des mentions légales n'est pas une maison : jamais signalé.
+  assert.deepEqual(exactLocationLeaks('<p>Siège social : 8 rue du Mont Blanc, 74100 Annemasse</p>', H), []);
+});
+
+test('checkHouseLocation : zone absente ou lien « Calculer mon trajet » depuis l\'adresse → échec', () => {
+  const page = housePage('lelodge', 'fr').replace(enc(m.houseZone('lelodge', 'fr')), '');
+  assert.ok(checkHouseLocation(page, 'lelodge', 'fr', m).some((f) => f.includes('houseZone')));
 });

@@ -37,7 +37,10 @@ test('L6.2 : un nœud LodgingBusiness par maison — @id, nom, numberOfRooms, pr
       assert.ok(n.alternateName.includes(h.label) && n.alternateName.includes(`La Villa Coliving — ${h.commune}`));
       assert.equal(n.parentOrganization['@id'], m.ORG_ID);
       assert.equal(n.numberOfRooms, eh.rooms);
-      assert.equal(n.address.streetAddress, h.streetAddress);
+      // (12/10/2026, sécurité) Ni rue ni coordonnées exactes dans le nœud maison : commune + point public arrondi.
+      assert.equal(n.address.streetAddress, undefined);
+      assert.equal(n.address.addressLocality, h.addressLocality);
+      assert.deepEqual([n.geo.latitude, n.geo.longitude], [m.publicGeo(h).lat, m.publicGeo(h).lng]);
       assert.equal(n.currenciesAccepted, undefined);
       assert.equal(n.aggregateRating, undefined);
       assert.ok(n.sameAs.some((u) => /bookmycoliving\.com\/property\//.test(u)), `${h.slug} : bookmycoliving`);

@@ -65,13 +65,14 @@ export const LAVILLA_EMAIL = "contact@lavillacoliving.com";
 export type QAPair = { q: string; a: string; more?: { href: string; label: string } };
 
 /**
- * Adresse postale du siège — source unique.
+ * Adresse postale PUBLIQUE de l'entité (JSON-LD de toutes les pages) — source unique.
  * `addressRegion` inclus : le bloc LocalBusiness de SEO.tsx le portait déjà,
  * pas HOUSES[0] ; les deux divergaient.
+ * (12/10/2026, sécurité — cambriolage, décision Jérôme) SANS rue : commune, code postal, région, pays. Les rues des maisons
+ * ne sont plus publiées par le site (HOUSES[].streetAddress reste une donnée INTERNE : baux, portail, NAP des annuaires).
  */
 export const LAVILLA_POSTAL_ADDRESS = {
   "@type": "PostalAddress",
-  streetAddress: "34 rue du Foron",
   addressLocality: "Ville-la-Grand",
   addressRegion: "Haute-Savoie",
   postalCode: "74100",
@@ -86,16 +87,33 @@ export interface HouseInfo {
   label: string;
   commune: string;
   url: string;
+  /** INTERNE — jamais rendue publiquement (12/10/2026) : baux, portail, NAP des annuaires. Garde : house-pages-check. */
   streetAddress: string;
   addressLocality: string;
   postalCode: string;
-  /** Coordonnées rooftop-exactes (Base Adresse Nationale, géocodées le 15/08/2026, score > 0,95). */
+  /** INTERNE — coordonnées rooftop-exactes (BAN, 15/08/2026). Le site ne publie que publicGeo(h) (arrondi ≈ 1 km). */
   geo: { lat: number; lng: number };
+  /** (12/10/2026) Zone publiée à la place de l'adresse : commune, code postal et quartier déjà décrit sur la page. */
+  zone: { fr: string; en: string };
+  /**
+   * (12/10/2026) Point PUBLIC de la maison : choisi à la main à 430-530 m de la maison, dans la même commune et en France
+   * (vérifié par géocodage inverse OpenStreetMap le 12/10/2026). Un simple arrondi au centième plaçait le centre de la
+   * carte de La Villa à Puplinge (Suisse). Seules coordonnées publiées par le site (publicGeo).
+   */
+  publicPoint: { lat: number; lng: number };
   /** (Lot L6.2) Image principale (chemin site) et équipements de CETTE maison (FR/EN) — même liste que ENTITY_HOUSES.amenities. */
   image: string;
   amenityFeatures: { fr: readonly string[]; en: readonly string[] };
   /** Fiches publiques de CETTE maison sur les annuaires (s'ajoutent à LAVILLA_SAME_AS dans son LodgingBusiness). */
   sameAs?: string[];
+}
+
+/**
+ * (12/10/2026, sécurité — décision Jérôme) Coordonnées PUBLIÉES d'une maison = son point public (HOUSES[].publicPoint, à
+ * environ 500 m, même commune). Seule forme de coordonnées que le site affiche ou sérialise (JSON-LD, carte, itinéraires).
+ */
+export function publicGeo(h: { publicPoint: { lat: number; lng: number } }): { lat: number; lng: number } {
+  return { lat: h.publicPoint.lat, lng: h.publicPoint.lng };
 }
 
 /** Les 3 maisons — source unique pour le schema (adresses confirmées, geo BAN rooftop). */
@@ -110,6 +128,8 @@ export const HOUSES: HouseInfo[] = [
     addressLocality: "Ville-la-Grand",
     postalCode: "74100",
     geo: { lat: 46.205146, lng: 6.232634 },
+    zone: { fr: "Ville-la-Grand (74100), en bordure du Foron", en: "Ville-la-Grand (74100), beside the Foron" },
+    publicPoint: { lat: 46.2015, lng: 6.237 },
     image: "/images/la villa jardin.webp",
     amenityFeatures: {
       fr: ["Piscine extérieure chauffée", "Sauna", "Salle de sport", `Internet fibre jusqu'à ${STATS.fiberSpeed}`, "Ménage des parties communes inclus"],
@@ -133,6 +153,8 @@ export const HOUSES: HouseInfo[] = [
     addressLocality: "Ambilly",
     postalCode: "74100",
     geo: { lat: 46.196367, lng: 6.226278 },
+    zone: { fr: "Centre d'Ambilly (74100)", en: "Central Ambilly (74100)" },
+    publicPoint: { lat: 46.1985, lng: 6.231 },
     image: "/images/la villa coliving le loft piscine.webp",
     amenityFeatures: {
       fr: ["Piscine intérieure chauffée", "Sauna", "Salle de sport", `Internet fibre jusqu'à ${STATS.fiberSpeed}`, "Ménage des parties communes inclus"],
@@ -154,6 +176,8 @@ export const HOUSES: HouseInfo[] = [
     addressLocality: "Annemasse",
     postalCode: "74100",
     geo: { lat: 46.194519, lng: 6.241576 },
+    zone: { fr: "Annemasse (74100), quartier de Romagny", en: "Annemasse (74100), Romagny district" },
+    publicPoint: { lat: 46.19, lng: 6.24 },
     image: "/images/le lodge/exterior/la villa coliving le lodge-14.webp",
     amenityFeatures: {
       fr: ["Piscine", "Sauna", "Chalet fitness", `Internet fibre jusqu'à ${STATS.fiberSpeed}`, "Ménage des parties communes inclus"],
@@ -219,15 +243,15 @@ export function buildHouseLodgingNode(
     ...(opts.description ? { description: opts.description } : {}),
     telephone: LAVILLA_PHONE,
     email: LAVILLA_EMAIL,
+    // (12/10/2026) Sans rue ni coordonnées exactes : commune, code postal et point arrondi (publicGeo).
     address: {
       "@type": "PostalAddress",
-      streetAddress: h.streetAddress,
       addressLocality: h.addressLocality,
       addressRegion: "Haute-Savoie",
       postalCode: h.postalCode,
       addressCountry: "FR",
     },
-    geo: { "@type": "GeoCoordinates", latitude: h.geo.lat, longitude: h.geo.lng },
+    geo: { "@type": "GeoCoordinates", latitude: publicGeo(h).lat, longitude: publicGeo(h).lng },
     numberOfRooms: rooms,
     priceRange,
     amenityFeature: (en ? h.amenityFeatures.en : h.amenityFeatures.fr).map((name) => ({ "@type": "LocationFeatureSpecification", name, value: true })),
@@ -290,7 +314,7 @@ export function buildAvailableRoomsItemList(candidates: readonly RoomOfferInput[
             ...(h
               ? {
                   containedInPlace: { "@id": houseLodgingId(h.slug) },
-                  address: { "@type": "PostalAddress", streetAddress: h.streetAddress, addressLocality: h.addressLocality, postalCode: h.postalCode, addressCountry: "FR" },
+                  address: { "@type": "PostalAddress", addressLocality: h.addressLocality, postalCode: h.postalCode, addressCountry: "FR" },
                 }
               : {}),
           },
@@ -308,7 +332,8 @@ export const LAVILLA_NAP = {
   phoneDisplay: "+33 6 64 31 51 34",
   email: LAVILLA_EMAIL,
   url: SITE,
-  headOffice: `${LAVILLA_POSTAL_ADDRESS.streetAddress}, ${LAVILLA_POSTAL_ADDRESS.postalCode} ${LAVILLA_POSTAL_ADDRESS.addressLocality}, France`,
+  // Donnée INTERNE (annuaires, README) : jamais rendue par le site — l'adresse publique n'a plus de rue (12/10/2026).
+  headOffice: `${HOUSES[0].streetAddress}, ${HOUSES[0].postalCode} ${HOUSES[0].addressLocality}, France`,
   houses: HOUSES.map((h) => ({ label: h.label, address: `${h.streetAddress}, ${h.postalCode} ${h.addressLocality}, France` })),
 } as const;
 
@@ -385,7 +410,7 @@ export function buildHomeLodgingBusinessSchema(language: "fr" | "en" = "fr"): Re
     // adresses par maison vivaient déjà dans `department[].address`, mais
     // l'entité mère n'en avait aucune.
     address: LAVILLA_POSTAL_ADDRESS,
-    geo: { "@type": "GeoCoordinates", latitude: HOUSES[0].geo.lat, longitude: HOUSES[0].geo.lng },
+    geo: { "@type": "GeoCoordinates", latitude: publicGeo(HOUSES[0]).lat, longitude: publicGeo(HOUSES[0]).lng },
     department: HOUSES.map((h) => buildHouseLodgingNode(h, language)),
   };
 }
@@ -412,7 +437,7 @@ export function buildLocalBusinessSchema(language: "fr" | "en", description: str
     email: LAVILLA_EMAIL,
     priceRange: en ? `CHF ${PRICE_SHARED_EN_NUM}–${PRICE_EN_NUM}/month` : `${PRICE_SHARED_FR_NUM}–${PRICE_FR_NUM} CHF/mois`,
     address: LAVILLA_POSTAL_ADDRESS,
-    geo: { "@type": "GeoCoordinates", latitude: HOUSES[0].geo.lat, longitude: HOUSES[0].geo.lng },
+    geo: { "@type": "GeoCoordinates", latitude: publicGeo(HOUSES[0]).lat, longitude: publicGeo(HOUSES[0]).lng },
     areaServed: ["Genève", "Annemasse", "Ville-la-Grand", "Ambilly", "Grand Genève"],
     numberOfRooms: STATS.totalRooms,
     makesOffer: {

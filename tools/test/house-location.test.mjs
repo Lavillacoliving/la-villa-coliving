@@ -51,11 +51,14 @@ test('formatDistance : 750 → « 750 m », 1000 → « 1 km », 1300 → « 1,3
   assert.equal(m.formatDistance(1300, 'en'), '1.3 km');
 });
 
-test('houseDirectionsUrl : itinéraire Google Maps en transports depuis l\'adresse encodée de la maison vers Genève-Eaux-Vives', () => {
+test('houseDirectionsUrl : itinéraire Google Maps en transports depuis le point PUBLIC arrondi de la maison (jamais son adresse, 12/10/2026) vers Genève-Eaux-Vives', () => {
   for (const slug of SLUGS) for (const lang of LANGS) {
     const url = m.houseDirectionsUrl(slug, lang);
+    const h = m.HOUSES.find((x) => x.slug === slug);
+    const g = m.publicGeo(h);
     assert.ok(url.startsWith('https://www.google.com/maps/dir/?api=1&'), url);
-    assert.ok(url.includes(`origin=${encodeURIComponent(m.houseAddressLine(slug))}`), `${slug}/${lang} : adresse encodée absente — ${url}`);
+    assert.ok(url.includes(`origin=${encodeURIComponent(`${g.lat},${g.lng}`)}`), `${slug}/${lang} : point public absent — ${url}`);
+    assert.ok(!url.includes(encodeURIComponent(m.houseAddressLine(slug))) && !url.includes(encodeURIComponent(h.streetAddress)), `${slug}/${lang} : adresse dans l'URL — ${url}`);
     assert.ok(url.includes('travelmode=transit'), url);
     assert.match(url, /destination=[^&]*Eaux-Vives/, url);
     assert.doesNotMatch(url, /[  ]/, 'URL sans espace brut');
@@ -138,4 +141,25 @@ test('ENTITY_HOUSES[].commute = houseCommuteLine ; houseCommuteLong nomme la des
     if (slug === 'leloft') assert.match(long, /Tram 17/i);
     assert.ok(m.houseCommuteNote(lang).includes(T.measuredOnLabel[lang]), m.houseCommuteNote(lang));
   }
+});
+
+test('zone publiée (12/10/2026) : publicGeo = point public à 300-650 m de la maison (dans le cercle de la carte, jamais les coordonnées exactes), houseZone FR/EN sans rue, note « adresse exacte à la visite »', () => {
+  for (const slug of SLUGS) {
+    const h = m.HOUSES.find((x) => x.slug === slug);
+    const g = m.publicGeo(h);
+    for (const c of [g.lat, g.lng]) assert.ok((String(c).split('.')[1] ?? '').length <= 4, `${slug} : ${c} a plus de 4 décimales`);
+    const dLat = (g.lat - h.geo.lat) * 111_000;
+    const dLng = (g.lng - h.geo.lng) * 111_000 * Math.cos((h.geo.lat * Math.PI) / 180);
+    const d = Math.hypot(dLat, dLng);
+    // ≥ 300 m : le point ne désigne pas la maison ; ≤ 650 m : la maison reste dans le cercle « zone approximative » (rayon ≈ 730 m).
+    assert.ok(d >= 300 && d <= 650, `${slug} : point public à ${Math.round(d)} m de la maison (attendu entre 300 et 650 m)`);
+    for (const lang of LANGS) {
+      const z = m.houseZone(slug, lang);
+      assert.ok(z.includes(h.addressLocality.replace(/^Ambilly$/, 'Ambilly')) && z.includes(h.postalCode), `${slug}/${lang} : ${z}`);
+      assert.ok(!/\brue\b|street|\d+ rue/i.test(z), `${slug}/${lang} : zone avec rue — ${z}`);
+      assert.ok(!z.toLowerCase().includes(h.streetAddress.toLowerCase()), `${slug}/${lang} : ${z}`);
+    }
+  }
+  assert.equal(m.houseExactAddressNote('fr'), "L'adresse exacte t'est communiquée à la prise de rendez-vous de visite.");
+  assert.equal(m.houseExactAddressNote('en'), 'We share the exact address when you book a visit.');
 });

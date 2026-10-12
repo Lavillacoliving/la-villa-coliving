@@ -6,7 +6,7 @@ import { responsiveImage } from "@/lib/responsiveImage";
 import { LocalizedLink } from "@/components/LocalizedLink";
 import { colocGeneveHref } from "@/lib/siteLinks";
 import { Scrim } from "@/components/Scrim";
-import { buildBreadcrumbSchema, homeUrl, HOUSES, buildHouseLodgingNode } from "@/lib/structuredData";
+import { buildBreadcrumbSchema, homeUrl, HOUSES, buildHouseLodgingNode, publicGeo } from "@/lib/structuredData";
 import {
   MapPin,
   Users,
@@ -31,7 +31,8 @@ import { ENTITY_HOUSES } from "@/data/entityFacts";
 import {
   HOUSE_LOCATION_VERSION,
   formatDistance,
-  houseAddressLine,
+  houseZone,
+  houseExactAddressNote,
   houseBorder,
   houseCommuteLong,
   houseCommuteRows,
@@ -2020,7 +2021,7 @@ export function HouseDetailPage() {
 
       {/* Location — custom section per house (audit P0-1: capture local SEO intent + Léman Express signal) */}
       {/* (Lot L2 « Emplacement et transport », 09/10/2026) Plus aucun littéral : quartier A.2 + frontière D6 (houseNeighbourhood /
-          houseBorder), adresse = HOUSES (houseAddressLine), trajets = <HouseCommuteTable/> (TRANSIT), commerces §1.3 (houseNearby).
+          houseBorder), zone = HOUSES (houseZone — jamais l'adresse, 12/10/2026), trajets = <HouseCommuteTable/> (TRANSIT), commerces §1.3 (houseNearby).
           La section porte data-house-location-version (HOUSE_LOCATION_VERSION) pour les gardes. */}
       {(() => {
         const slug = id as HouseSlug;
@@ -2029,7 +2030,8 @@ export function HouseDetailPage() {
         const data = {
           intro: houseNeighbourhood(slug, L),
           border: houseBorder(slug, L),
-          address: houseAddressLine(slug),
+          // (12/10/2026, sécurité) Zone et non plus adresse : houseZone + houseExactAddressNote.
+          address: houseZone(slug, L),
           nearby: houseNearby(slug, L),
         };
         return (
@@ -2060,9 +2062,10 @@ export function HouseDetailPage() {
                 <div>
                   <h3 className="text-xl font-black mb-4 text-[#1C1917] flex items-center gap-2">
                     <MapPin size={20} className="text-[#D4A574]" />
-                    {language === "en" ? "Address" : "Adresse"}
+                    {language === "en" ? "Neighbourhood" : "Quartier"}
                   </h3>
-                  <p className="text-[#57534E] font-medium mb-6">{data.address}</p>
+                  <p className="text-[#57534E] font-medium mb-1">{data.address}</p>
+                  <p className="text-sm text-[#78716C] mb-6">{houseExactAddressNote(language === "en" ? "en" : "fr")}</p>
 
                   <h3 className="text-xl font-black mb-4 text-[#1C1917] flex items-center gap-2">
                     <Clock size={20} className="text-[#D4A574]" />
@@ -2119,19 +2122,21 @@ export function HouseDetailPage() {
                 </div>
               </div>
 
-              {/* Plan Google Maps chargé au clic (demande Jérôme 02/09, Lot A) — coordonnées
-                  rooftop de HOUSES, même source que le JSON-LD LodgingBusiness ci-dessus. */}
+              {/* Plan Google Maps chargé au clic (demande Jérôme 02/09, Lot A) — (12/10/2026, sécurité) ZONE de la maison :
+                  point public arrondi (publicGeo, même source que le JSON-LD), sans épingle, jamais l'adresse. */}
               {(() => {
-                const geo = HOUSES.find((h) => h.slug === id);
-                return geo ? (
+                const h = HOUSES.find((x) => x.slug === id);
+                if (!h) return null;
+                const g = publicGeo(h);
+                return (
                   <HouseMap
                     name={house.name}
-                    address={data.address}
-                    lat={geo.geo.lat}
-                    lng={geo.geo.lng}
+                    zone={data.address}
+                    lat={g.lat}
+                    lng={g.lng}
                     en={language === "en"}
                   />
-                ) : null;
+                );
               })()}
             </div>
           </section>

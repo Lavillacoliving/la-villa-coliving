@@ -17,6 +17,11 @@
  * H1, attribut data-house-location-version = HOUSE_LOCATION_VERSION, lien « Calculer mon trajet » vers Google Maps
  * depuis l'adresse de la maison ; et ROOM_SURFACE_BY_HOUSE (stats.ts) = Math.round(min/max de v_public_rooms.surface_m2)
  * par maison. Fonctions pures exportées, testées dans tools/test/house-pages-check.test.mjs.
+ *
+ * (12/10/2026, sécurité — cambriolage, décision Jérôme) Le site ne publie plus l'emplacement exact des maisons : la page
+ * maison affiche la ZONE (houseZone), « Calculer mon trajet » part du point public arrondi (publicGeo), et AUCUNE page
+ * prérendue (texte, attributs, JSON-LD) ne peut contenir une rue de maison (HOUSES[].streetAddress) ni ses coordonnées
+ * exactes (exactLocationLeaks) — un échec bloque la publication.
  */
 
 import fs from 'fs/promises';
@@ -104,7 +109,12 @@ export function checkHouseLocation(html, slug, lang, m) {
   if (v !== 1) failures.push(`${file} : ${versionAttr} présent ${v} fois (attendu 1)`);
   const url = m.houseDirectionsUrl(slug, lang);
   const label = m.houseDirectionsLabel(lang);
-  if (!url.startsWith('https://www.google.com/maps/dir/') || !url.includes(encodeURIComponent(m.houseAddressLine(slug)))) failures.push(`${file} : houseDirectionsUrl ne pointe pas vers google.com/maps/dir/ avec l'adresse encodée — ${url}`);
+  const h = m.HOUSES.find((x) => x.slug === slug);
+  const g = m.publicGeo(h);
+  if (!url.startsWith('https://www.google.com/maps/dir/') || !url.includes(`origin=${encodeURIComponent(`${g.lat},${g.lng}`)}`)) failures.push(`${file} : houseDirectionsUrl ne part pas du point public arrondi (publicGeo) — ${url}`);
+  if (url.includes(encodeURIComponent(h.streetAddress))) failures.push(`${file} : houseDirectionsUrl contient l'adresse de la maison — ${url}`);
+  const zone = m.houseZone(slug, lang);
+  if (!text.includes(zone)) failures.push(`${file} : zone « ${zone} » (houseZone) absente du texte visible`);
   if (!html.replace(/&amp;/g, '&').includes(`href="${url}"`)) failures.push(`${file} : lien « ${label} » absent (href attendu : ${url})`);
   if (!text.includes(label)) failures.push(`${file} : libellé « ${label} » absent du texte visible`);
   return failures;
@@ -237,6 +247,35 @@ async function checkRoomSizeRange(rooms) {
   return failures;
 }
 
+/**
+ * (12/10/2026, sécurité) Fuites de l'emplacement exact dans une page prérendue : rue d'une maison (insensible à la casse, avec
+ * ou sans encodage d'URL) ou coordonnées exactes (≥ 4 décimales). Renvoie les chaînes trouvées. Pur.
+ */
+export function exactLocationLeaks(html, houses) {
+  const lower = html.toLowerCase();
+  const leaks = [];
+  for (const h of houses) {
+    const street = h.streetAddress.toLowerCase();
+    if (lower.includes(street) || lower.includes(encodeURIComponent(street)) || lower.includes(street.replace(/ /g, '+'))) leaks.push(h.streetAddress);
+    for (const c of [h.geo.lat, h.geo.lng]) {
+      const s = String(c);
+      if (s.split('.')[1]?.length >= 4 && html.includes(s.slice(0, s.indexOf('.') + 5))) leaks.push(s);
+    }
+  }
+  return leaks;
+}
+
+async function checkNoExactLocation(m) {
+  const files = (await fs.readdir(PRERENDERED)).filter((f) => f.endsWith('.html'));
+  const failures = [];
+  for (const file of files) {
+    const leaks = exactLocationLeaks(await fs.readFile(path.join(PRERENDERED, file), 'utf-8'), m.HOUSES);
+    if (leaks.length) failures.push(`${file} : emplacement exact publié (${[...new Set(leaks)].join(', ')}) — zone et publicGeo seulement (décision du 12/10/2026)`);
+  }
+  console.log(`${failures.length === 0 ? '✅' : '❌'} emplacement exact des maisons absent des ${files.length} pages prérendues`);
+  return failures;
+}
+
 async function main() {
   console.log('\n🏠 Garde pages maisons — v_public_rooms × public/prerendered/ × houseLocation.ts\n');
   const [byHouse, m] = await Promise.all([fetchRooms(), loadEntityFacts()]);
@@ -259,6 +298,9 @@ async function main() {
   const sizeFailures = await checkRoomSizeRange([...byHouse.values()].flat());
   total += sizeFailures.length;
   for (const f of sizeFailures) console.log(`   • ${f}`);
+  const leakFailures = await checkNoExactLocation(m);
+  total += leakFailures.length;
+  for (const f of leakFailures) console.log(`   • ${f}`);
   if (total > 0) {
     console.error(`\n❌ ${total} problème(s) — pages maisons NON publiables.`);
     process.exit(1);
