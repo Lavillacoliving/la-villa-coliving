@@ -396,7 +396,7 @@ function getHousesData(lang: string): Record<string, HouseData> {
     features: isEn ? [
       "Heated 12×5m swimming pool (mid-April to end of September)",
       "5-seat sauna",
-      "Fully equipped gym",
+      "Fully equipped gym, open 24/7",
       "TV & gaming room (PS5, PS4 & Switch)",
       "XXL barbecue & multiple terraces",
       "Volleyball court",
@@ -408,7 +408,7 @@ function getHousesData(lang: string): Record<string, HouseData> {
     ] : [
       "Piscine chauffée 12×5 m (mi-avril à fin septembre)",
       "Sauna 5 places",
-      "Salle de sport équipée",
+      "Salle de sport équipée, accessible 24h/24",
       "Salle TV & gaming (PS5, PS4 & Switch)",
       "BBQ XXL & terrasses multiples",
       "Terrain de volley",
@@ -803,7 +803,7 @@ function getHousesData(lang: string): Record<string, HouseData> {
     features: isEn ? [
       "Year-round heated indoor pool",
       "Finnish sauna (2 seats) in the pool area",
-      "Fully equipped modern gym",
+      "Fully equipped modern gym, open 24/7",
       "Large south-facing terraces",
       "XXL outdoor kitchen with TV",
       "Parking included",
@@ -814,7 +814,7 @@ function getHousesData(lang: string): Record<string, HouseData> {
     ] : [
       "Piscine intérieure chauffée toute l'année",
       "Sauna finlandais (2 places) dans l'espace piscine",
-      "Salle de sport moderne équipée",
+      "Salle de sport moderne équipée, accessible 24h/24",
       "Grandes terrasses plein sud",
       "Cuisine extérieure XXL avec TV",
       "Parking inclus",
@@ -1250,7 +1250,7 @@ function getHousesData(lang: string): Record<string, HouseData> {
     },
     features: isEn ? [
       "12×5m outdoor swimming pool (mid-April to end of September)",
-      "Dedicated fitness chalet with sauna (5 seats)",
+      "Dedicated fitness chalet with sauna (5 seats), open 24/7",
       "Pool house with full outdoor kitchen, BBQ XXL",
       "Ping pong, arcade machine, pétanque",
       "Shuffleboard & foosball",
@@ -1261,7 +1261,7 @@ function getHousesData(lang: string): Record<string, HouseData> {
       "DPE B energy rating",
     ] : [
       "Piscine extérieure 12×5 m (mi-avril à fin septembre)",
-      "Chalet fitness dédié avec sauna (5 places)",
+      "Chalet fitness dédié avec sauna (5 places), accessible 24h/24",
       "Pool house avec cuisine d'été complète, BBQ XXL",
       "Ping pong, jeu d'arcade, pétanque",
       "Jeux de palets & babyfoot",
@@ -2148,7 +2148,7 @@ export function HouseDetailPage() {
               { q: "Qui peut postuler pour vivre à La Villa ?", a: "Profil cible : frontaliers en CDI, jeunes professionnels, expatriés et résidents fiscaux français travaillant à Genève. Sélection sur dossier (justificatif de revenus, motivation, compatibilité avec la communauté). Pas de critère d'âge strict, mais la majorité des résidents ont entre 25 et 40 ans." },
               { q: "Où se trouve La Villa et à quelle distance de Genève ?", a: `La Villa se situe à Ville-la-Grand, côté France, à ${TB.lavilla.eauxVivesDoorToDoorMin} min porte-à-porte de Genève-Eaux-Vives en Léman Express (gare d'Annemasse à ${TB.lavilla.stationWalkMin} min à pied, puis ${TRANSIT.trainEauxVivesMin} min de train) et à ${TB.lavilla.riveDoorToDoorMin} min du centre de Genève (Rive). C'est l'une des trois maisons de coliving de La Villa Coliving, avec une piscine extérieure chauffée et ${m2(HOUSE_SURFACES.lavilla.plotM2, "fr")} de jardin en bordure du Foron, la rivière-frontière, et de sa zone naturelle.` },
               { q: "Combien de résidents vivent à La Villa ?", a: "La Villa accueille 10 résidents dans une maison de coliving à Ville-la-Grand, près de Genève. C'est une maison à taille humaine, pensée pour que les liens se créent naturellement, avec une chambre meublée privée pour chacun et de larges espaces communs." },
-              { q: "Quels équipements y a-t-il à La Villa ?", a: `La Villa, à Ville-la-Grand, dispose d'une piscine extérieure chauffée, d'un sauna infrarouge, d'une salle de sport, d'une salle de jeu, d'un espace home cinéma, de ${m2(HOUSE_SURFACES.lavilla.plotM2, "fr")} de jardin et d'espaces communs design. Tout est inclus dans le loyer tout compris, dès ${PRICE_SHARED_CHF_FR}/mois à La Villa.` },
+              { q: "Quels équipements y a-t-il à La Villa ?", a: `La Villa, à Ville-la-Grand, dispose d'une piscine extérieure chauffée, d'un sauna infrarouge, d'une salle de sport accessible 24h/24, d'une salle de jeu, d'un espace home cinéma, de ${m2(HOUSE_SURFACES.lavilla.plotM2, "fr")} de jardin et d'espaces communs design. Tout est inclus dans le loyer tout compris, dès ${PRICE_SHARED_CHF_FR}/mois à La Villa.` },
               { q: "La Villa est-elle bien reliée à Genève ?", a: `Oui. Depuis La Villa, la gare d'Annemasse est à ${TB.lavilla.stationWalkMin} min à pied et le Léman Express direct rejoint Genève-Eaux-Vives en ${TRANSIT.trainEauxVivesMin} min — ${TB.lavilla.eauxVivesDoorToDoorMin} min porte-à-porte, ${TB.lavilla.cornavinDoorToDoorMin} min jusqu'à Cornavin. La maison combine ce bon accès avec un cadre verdoyant — ${m2(HOUSE_SURFACES.lavilla.plotM2, "fr")} de jardin et la zone naturelle du Foron, la rivière-frontière qui longe la rue.` },
             ],
             en: [
@@ -2160,7 +2160,7 @@ export function HouseDetailPage() {
               { q: "Who can apply to live at La Villa?", a: "Target profile: cross-border workers on CDI, young professionals, expatriates and French tax residents working in Geneva. Selection by application (income proof, motivation, fit with the community). No strict age limit, but most residents are 25-40 years old." },
               { q: "Where is La Villa and how far from Geneva?", a: `La Villa is in Ville-la-Grand, on the French side, ${TB.lavilla.eauxVivesDoorToDoorMin} minutes door to door from Geneva Eaux-Vives by Léman Express (Annemasse station is a ${TB.lavilla.stationWalkMin}-minute walk, then ${TRANSIT.trainEauxVivesMin} minutes by train) and ${TB.lavilla.riveDoorToDoorMin} minutes from the city centre (Rive). It's one of the three La Villa Coliving houses, with a heated outdoor pool and ${m2(HOUSE_SURFACES.lavilla.plotM2, "en")} of garden beside the Foron, the border river, and its nature area.` },
               { q: "How many residents live at La Villa?", a: "La Villa hosts 10 residents in a coliving house in Ville-la-Grand, near Geneva. It's a human-scale house, designed so connections form naturally, with a private furnished room for each resident and large common areas." },
-              { q: "What amenities are there at La Villa?", a: `La Villa, in Ville-la-Grand, has a heated outdoor pool, an infrared sauna, a gym, a games room, a home cinema space, ${m2(HOUSE_SURFACES.lavilla.plotM2, "en")} of garden and designer common areas. Everything is included in the all-inclusive rent, from ${PRICE_SHARED_CHF_EN}/month at La Villa.` },
+              { q: "What amenities are there at La Villa?", a: `La Villa, in Ville-la-Grand, has a heated outdoor pool, an infrared sauna, a gym open 24/7, a games room, a home cinema space, ${m2(HOUSE_SURFACES.lavilla.plotM2, "en")} of garden and designer common areas. Everything is included in the all-inclusive rent, from ${PRICE_SHARED_CHF_EN}/month at La Villa.` },
               { q: "Is La Villa well connected to Geneva?", a: `Yes. From La Villa, Annemasse station is a ${TB.lavilla.stationWalkMin}-minute walk and the direct Léman Express reaches Geneva Eaux-Vives in ${TRANSIT.trainEauxVivesMin} minutes — ${TB.lavilla.eauxVivesDoorToDoorMin} minutes door to door, ${TB.lavilla.cornavinDoorToDoorMin} minutes to Cornavin. The house combines this good access with green surroundings — ${m2(HOUSE_SURFACES.lavilla.plotM2, "en")} of garden and the Foron nature area, the border river running along the street.` },
             ],
           },
@@ -2175,7 +2175,7 @@ export function HouseDetailPage() {
               { q: "Qui peut postuler pour vivre au Loft ?", a: `Profil cible : frontaliers en CDI, jeunes professionnels, expatriés. Sélection sur dossier (justificatif de revenus, motivation, compatibilité avec la communauté). La frontière à ${TB.leloft.border.foronWalkMin} min à pied fait du Loft un favori des frontaliers qui vont au bureau à pied ou en vélo.` },
               { q: "Où se trouve Le Loft et à quelle distance de Genève ?", a: `Le Loft se situe au centre d'Ambilly, côté France, à ${TB.leloft.riveDoorToDoorMin} min porte-à-porte du centre de Genève (Rive) par le tram 17 (arrêt ${TB.leloft.tramStop.name} à ${TB.leloft.tramStop.walkMin} min à pied, ${TB.leloft.tramStop.tramToRiveMin} min de tram) et à ${TB.leloft.eauxVivesDoorToDoorMin} min de Genève-Eaux-Vives en Léman Express. C'est l'une des trois maisons de coliving de La Villa Coliving, avec une piscine intérieure chauffée toute l'année et un sauna finlandais.` },
               { q: "Combien de résidents vivent au Loft ?", a: "Le Loft accueille 7 résidents, ce qui en fait la plus intime des maisons de La Villa Coliving. Située à Ambilly, près de Genève, elle offre une chambre meublée privée à chacun et une ambiance très conviviale à taille réduite." },
-              { q: "Quels équipements y a-t-il au Loft ?", a: `Le Loft, à Ambilly, dispose d'une piscine intérieure chauffée utilisable toute l'année, d'un sauna finlandais, d'une salle de sport, d'un espace home cinéma et de chambres spacieuses de ${ROOM_SURFACE_BY_HOUSE.leloft.min} à ${ROOM_SURFACE_BY_HOUSE.leloft.max} m². Tout est inclus dans le loyer tout compris de ${PRICE_CHF_FR}/mois.` },
+              { q: "Quels équipements y a-t-il au Loft ?", a: `Le Loft, à Ambilly, dispose d'une piscine intérieure chauffée utilisable toute l'année, d'un sauna finlandais, d'une salle de sport accessible 24h/24, d'un espace home cinéma et de chambres spacieuses de ${ROOM_SURFACE_BY_HOUSE.leloft.min} à ${ROOM_SURFACE_BY_HOUSE.leloft.max} m². Tout est inclus dans le loyer tout compris de ${PRICE_CHF_FR}/mois.` },
               { q: "Peut-on nager toute l'année au Loft ?", a: "Oui. Le Loft, à Ambilly, est la maison de La Villa Coliving dotée d'une piscine intérieure chauffée, accessible toute l'année quelle que soit la saison, ainsi que d'un sauna finlandais. C'est inclus dans ton loyer, comme l'ensemble des services." },
             ],
             en: [
@@ -2187,7 +2187,7 @@ export function HouseDetailPage() {
               { q: "Who can apply to live at Le Loft?", a: `Target profile: cross-border workers on CDI, young professionals, expats. Selection by application (income proof, motivation, fit with community). The border, an ${TB.leloft.border.foronWalkMin}-minute walk away, makes Le Loft a favourite among cross-border workers who walk or bike to the office.` },
               { q: "Where is Le Loft and how far from Geneva?", a: `Le Loft is in the centre of Ambilly, on the French side, ${TB.leloft.riveDoorToDoorMin} minutes door to door from central Geneva (Rive) by tram 17 (${TB.leloft.tramStop.name} stop an ${TB.leloft.tramStop.walkMin}-minute walk away, ${TB.leloft.tramStop.tramToRiveMin} minutes by tram) and ${TB.leloft.eauxVivesDoorToDoorMin} minutes from Geneva Eaux-Vives by Léman Express. It's one of the three La Villa Coliving houses, with an indoor pool heated year-round and a Finnish sauna.` },
               { q: "How many residents live at Le Loft?", a: "Le Loft hosts 7 residents, making it the most intimate of the La Villa Coliving houses. Located in Ambilly, near Geneva, it offers a private furnished room for each resident and a very convivial small-scale atmosphere." },
-              { q: "What amenities are there at Le Loft?", a: `Le Loft, in Ambilly, has an indoor pool heated and usable year-round, a Finnish sauna, a gym, a home cinema space and spacious rooms of ${ROOM_SURFACE_BY_HOUSE.leloft.min} to ${ROOM_SURFACE_BY_HOUSE.leloft.max} m². Everything is included in the all-inclusive rent of ${PRICE_CHF_EN}/month.` },
+              { q: "What amenities are there at Le Loft?", a: `Le Loft, in Ambilly, has an indoor pool heated and usable year-round, a Finnish sauna, a gym open 24/7, a home cinema space and spacious rooms of ${ROOM_SURFACE_BY_HOUSE.leloft.min} to ${ROOM_SURFACE_BY_HOUSE.leloft.max} m². Everything is included in the all-inclusive rent of ${PRICE_CHF_EN}/month.` },
               { q: "Can you swim year-round at Le Loft?", a: "Yes. Le Loft, in Ambilly, is the La Villa Coliving house with an indoor heated pool, accessible year-round whatever the season, plus a Finnish sauna. It's included in your rent, like all services." },
             ],
           },
@@ -2201,7 +2201,7 @@ export function HouseDetailPage() {
               { q: "Qu'est-ce qui rend Le Lodge unique parmi les 3 maisons ?", a: `Le Lodge est notre maison la plus récente (ouverte janvier 2026) et la plus grande (${HOUSE_SURFACES.lelodge.livingM2} m² sur ${m2(HOUSE_SURFACES.lelodge.plotM2, "fr")}). Elle dispose de 4 bâtiments : la résidence principale, un chalet fitness dédié avec sauna finlandais, un pool house avec cuisine d'été complète et une zone de rangement de ${HOUSE_SURFACES.lelodge.atticM2} m². DPE B (performance énergétique). C'est aussi la plus proche de la gare d'Annemasse pour le Léman Express (${TB.lelodge.stationWalkMin} min à pied).` },
               { q: "Où se trouve Le Lodge et à quelle distance de Genève ?", a: `Le Lodge se situe à Annemasse, côté France, dans le quartier de Romagny, à ${TB.lelodge.eauxVivesDoorToDoorMin} min porte-à-porte de Genève-Eaux-Vives en Léman Express (gare d'Annemasse à ${TB.lelodge.stationWalkMin} min à pied, puis ${TRANSIT.trainEauxVivesMin} min de train) et à ${TB.lelodge.riveDoorToDoorMin} min du centre de Genève (Rive). C'est la plus grande des trois maisons de coliving de La Villa Coliving, avec une piscine extérieure et un pool house, un chalet fitness complet et un sauna.` },
               { q: "Combien de résidents vivent au Lodge ?", a: "Le Lodge accueille 12 résidents, ce qui en fait la plus grande maison de La Villa Coliving. Située à Annemasse, près de Genève, elle conserve une taille humaine tout en offrant les espaces les plus généreux : espace home cinéma, piscine, pool house / salle de jeu, chalet fitness et grands espaces communs." },
-              { q: "Quels équipements y a-t-il au Lodge ?", a: `Le Lodge, à Annemasse, dispose d'une piscine avec pool house/salle de jeu, d'un chalet fitness complet avec grand sauna finlandais, d'une salle de sport, d'une pièce home cinéma dédiée, d'un jeu d'arcade et de larges espaces communs. Tout est inclus dans le loyer tout compris de ${PRICE_CHF_FR}/mois, comme dans les trois maisons de La Villa Coliving.` },
+              { q: "Quels équipements y a-t-il au Lodge ?", a: `Le Lodge, à Annemasse, dispose d'une piscine avec pool house/salle de jeu, d'un chalet fitness complet avec grand sauna finlandais, d'une salle de sport accessible 24h/24, d'une pièce home cinéma dédiée, d'un jeu d'arcade et de larges espaces communs. Tout est inclus dans le loyer tout compris de ${PRICE_CHF_FR}/mois, comme dans les trois maisons de La Villa Coliving.` },
               { q: "Y a-t-il du coliving à Annemasse ?", a: `Oui. Le Lodge est la maison de coliving de La Villa Coliving à Annemasse : 12 résidents, chambres meublées de ${ROOM_SURFACE_BY_HOUSE.lelodge.min} à ${ROOM_SURFACE_BY_HOUSE.lelodge.max} m², pool house, chalet fitness et sauna, le tout à ${TB.lelodge.eauxVivesDoorToDoorMin} min porte-à-porte de Genève-Eaux-Vives en Léman Express. Tout inclus à ${PRICE_CHF_FR}/mois.` },
             ],
             en: [
@@ -2213,7 +2213,7 @@ export function HouseDetailPage() {
               { q: "What makes Le Lodge unique among your 3 houses?", a: `Le Lodge is our newest (opened January 2026) and largest house (${HOUSE_SURFACES.lelodge.livingM2} m² on ${m2(HOUSE_SURFACES.lelodge.plotM2, "en")}). It has 4 buildings: the main residence, a dedicated fitness chalet with Finnish sauna, a pool house with full outdoor kitchen, and a ${HOUSE_SURFACES.lelodge.atticM2} m² storage area. DPE B energy rating. It's also the closest to Annemasse station for the Léman Express (a ${TB.lelodge.stationWalkMin}-minute walk).` },
               { q: "Where is Le Lodge and how far from Geneva?", a: `Le Lodge is in Annemasse, on the French side, in the Romagny district, ${TB.lelodge.eauxVivesDoorToDoorMin} minutes door to door from Geneva Eaux-Vives by Léman Express (Annemasse station is a ${TB.lelodge.stationWalkMin}-minute walk, then ${TRANSIT.trainEauxVivesMin} minutes by train) and ${TB.lelodge.riveDoorToDoorMin} minutes from the city centre (Rive). It's the largest of the three La Villa Coliving houses, with an outdoor pool and a pool house, a full fitness chalet and a sauna.` },
               { q: "How many residents live at Le Lodge?", a: "Le Lodge hosts 12 residents, making it the largest La Villa Coliving house. Located in Annemasse, near Geneva, it keeps a human scale while offering the most generous spaces: home cinema, pool, pool house / games room, fitness chalet and large common areas." },
-              { q: "What amenities are there at Le Lodge?", a: `Le Lodge, in Annemasse, has a pool with a pool house/games room, a full fitness chalet with a large Finnish sauna, a gym, a dedicated home-cinema room, an arcade game and large common areas. Everything is included in the all-inclusive rent of ${PRICE_CHF_EN}/month, as in all three La Villa Coliving houses.` },
+              { q: "What amenities are there at Le Lodge?", a: `Le Lodge, in Annemasse, has a pool with a pool house/games room, a full fitness chalet with a large Finnish sauna, a gym open 24/7, a dedicated home-cinema room, an arcade game and large common areas. Everything is included in the all-inclusive rent of ${PRICE_CHF_EN}/month, as in all three La Villa Coliving houses.` },
               { q: "Is there coliving in Annemasse?", a: `Yes. Le Lodge is the La Villa Coliving coliving house in Annemasse: 12 residents, furnished rooms of ${ROOM_SURFACE_BY_HOUSE.lelodge.min} to ${ROOM_SURFACE_BY_HOUSE.lelodge.max} m², pool house, fitness chalet and sauna, all ${TB.lelodge.eauxVivesDoorToDoorMin} minutes door to door from Geneva Eaux-Vives by Léman Express. All inclusive at ${PRICE_CHF_EN}/month.` },
             ],
           },

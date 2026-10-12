@@ -308,7 +308,7 @@ export const translations = {
         },
         wellness: {
           title: "Wellness Included",
-          description: "Fully equipped gym and sauna, because balance matters.",
+          description: "Fully equipped gym (24/7 access) and sauna, because balance matters.",
         },
         entertainment: {
           title: "Entertainment Hub",
@@ -353,7 +353,7 @@ export const translations = {
           "Professional-grade fiber internet (up to 8 Gb/s)",
           "Housekeeping three times a week",
           "Pool, sauna & garden maintenance",
-          "Fully equipped gym",
+          "Fully equipped gym, open 24/7",
           "Weekly private yoga class",
           "Weekly private fitness class",
           "Monthly pizza party",
@@ -745,7 +745,7 @@ export const translations = {
         wellness: {
           title: "Bien-être Inclus",
           description:
-            "Salle de sport équipée et sauna, parce que l'équilibre compte.",
+            "Salle de sport équipée (accès 24h/24) et sauna, parce que l'équilibre compte.",
         },
         entertainment: {
           title: "Espace Divertissement",
@@ -792,7 +792,7 @@ export const translations = {
           "Internet fibre pro (jusqu'à 8 Gb/s)",
           "Ménage des communs 3 fois par semaine",
           "Entretien piscine, sauna & jardin",
-          "Salle de sport équipée",
+          "Salle de sport équipée, accessible 24h/24",
           "Cours de yoga privé hebdomadaire",
           "Cours de fitness privé hebdomadaire",
           "Pizza Party mensuelle",
