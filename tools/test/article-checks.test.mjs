@@ -75,3 +75,29 @@ test('helpers SQL', () => {
   assert.throws(() => sqlDollar('x $md$ y'));
   assert.equal(readTimeMin(1900), 10);
 });
+
+// ── (Lot L1, 10/2026) Registre des marqueurs : lignes-commentaires hors registre, wordCount sans aucun commentaire ──
+import { unknownMarkers, findAllMarkers, isKnownMarker, KNOWN_MARKERS, COMMENT_LINE_RE } from '../../scripts/lib/article-checks.mjs';
+
+test('unknownMarkers : signale <!-- foo --> et <!-- ou-chercher:long -->, pas les marqueurs du registre', () => {
+  const md = 'A\n<!-- foo -->\nB\n<!-- ou-chercher:long -->\nC\n<!-- ou-chercher:court -->\nD\n<!-- entity-facts -->\nE\n  <!-- note d\'auteur, à relire -->  \nF';
+  assert.deepEqual(unknownMarkers(md), ['<!-- foo -->', '<!-- ou-chercher:long -->', '<!-- note d\'auteur, à relire -->']);
+  assert.deepEqual(unknownMarkers('<!-- ou-chercher:court -->\n<!-- entity-facts -->\n<!-- ou-chercher -->'), []);
+  assert.deepEqual(unknownMarkers('texte <!-- foo --> inline'), [], 'un commentaire inline n\'est pas une ligne-commentaire');
+  assert.equal(isKnownMarker('ou-chercher', 'long'), false);
+  assert.equal(isKnownMarker('ou-chercher', 'court'), true);
+  assert.equal(isKnownMarker('entity-facts'), true);
+  assert.deepEqual(Object.keys(KNOWN_MARKERS).sort(), ['entity-facts', 'ou-chercher']);
+  const all = findAllMarkers(md);
+  assert.deepEqual(all.map((x) => [x.name, x.variant]), [['foo', undefined], ['ou-chercher', 'long'], ['ou-chercher', 'court'], ['entity-facts', undefined]]);
+  assert.equal(new RegExp(COMMENT_LINE_RE.source, 'm').test('<!-- a\nb -->'), false, 'jamais à travers plusieurs lignes');
+});
+
+test('wordCount : toute ligne-commentaire est ignorée (connue ou non), les commentaires inline comptent comme du texte', () => {
+  assert.equal(wordCount('un deux\n<!-- entity-facts -->\ntrois'), 3);
+  assert.equal(wordCount('un deux\n<!-- ou-chercher:court -->\ntrois'), 3);
+  assert.equal(wordCount('un deux\n  <!-- note d\'auteur très longue à ne pas compter -->  \ntrois'), 3);
+  assert.equal(wordCount('un deux\n<!-- foo -->\n<!-- bar -->\ntrois quatre'), 4);
+  assert.equal(wordCount('<!-- seul -->'), 0);
+  assert.equal(wordCount('un <!-- x --> deux'), 5, 'inline : non retiré, ses 3 jetons comptent (react-markdown l\'afficherait, la garde d\'orphelins le verrait)');
+});

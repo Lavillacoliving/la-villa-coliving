@@ -1,17 +1,19 @@
 import type { QAPair } from "@/lib/structuredData";
 import { STATS, PRICE_CHF_FR, PRICE_CHF_EN, PRICE_SHARED_CHF_FR, PRICE_SHARED_CHF_EN } from "@/data/stats";
+import { priceJustificationFaq } from "@/data/priceFacts";
 
 // §2 du playbook AEO — /tarifs (page canonique prix). Tutoiement, texte verbatim.
+// (Lot L2 « Emplacement et transport », 09/10/2026) Surfaces de chambres uniquement depuis STATS.roomSizeMin/Max
+// (« 17 et 25 », « 17 to 25 », « 17 and 23 m² » en dur : retirés).
 export const tarifsFaq: { fr: QAPair[]; en: QAPair[] } = {
   fr: [
     {
       q: "Qu'est-ce qui est inclus dans le loyer chez La Villa Coliving ?",
       a: `Chez La Villa Coliving, ton loyer tout inclus dès ${PRICE_SHARED_CHF_FR}/mois couvre la chambre meublée de ${STATS.roomSizeMin} à ${STATS.roomSizeMax} m², toutes les charges, l'internet fibre jusqu'à 8 Gb/s, le ménage des parties communes trois fois par semaine, l'accès à la piscine, au sauna et à la salle de sport, les cours de yoga et fitness et les événements. Un seul paiement par mois, sans frais de dossier, sans frais cachés.`,
     },
-    {
-      q: "Pourquoi les prix sont-ils plus élevés qu'une colocation classique ?",
-      a: `Parce que tu n'obtiens pas la même chose. Nos chambres font ${STATS.roomSizeMin} à ${STATS.roomSizeMax} m² (contre 9-12 m² pour la plupart des colocations locales), chaque maison a piscine, sauna et salle de sport, le ménage professionnel est inclus, une équipe entretient la maison (jardinier, pisciniste) et la vie communautaire est organisée chaque mois. Au m² et à services équivalents, La Villa est dans les prix du marché — tout inclus dès ${PRICE_SHARED_CHF_FR}/mois, sans frais de dossier ni d'agence.`,
-    },
+    // (Lot L4, D8 — 10/10/2026) FAQ A.3 de justification du prix : texte unique src/data/priceFacts.ts (aussi /faq, /le-coliving,
+    // /colocation-geneve, /chambre-a-louer-geneve ; /chambres-disponibles via tarifsFaq.slice(0, 2)).
+    priceJustificationFaq("fr"),
     {
       q: "Y a-t-il des frais de dossier ou d'agence chez La Villa Coliving ?",
       a: "Non, aucun. Chez La Villa Coliving, tu ne paies ni frais de dossier, ni honoraires d'agence, ni frais de réservation, ni frais d'état des lieux : 0 € à l'entrée. Sur le marché du coliving, ces frais vont souvent de 200 à 700 €. Nous louons nos maisons en direct, sans intermédiaire : il n'y a donc rien à facturer pour entrer.",
@@ -22,7 +24,7 @@ export const tarifsFaq: { fr: QAPair[]; en: QAPair[] } = {
     },
     {
       q: "Le prix varie-t-il selon la maison ou la chambre ?",
-      a: `Oui, il existe deux niveaux. La plupart des chambres (25 sur 29) disposent d'une salle d'eau privative : ${PRICE_CHF_FR}/mois tout inclus. Les 4 chambres de la maison La Villa qui partagent une salle d'eau entre 2 chambres sont à ${PRICE_SHARED_CHF_FR}/mois — son entretien est assuré par notre équipe de ménage. Toutes les chambres font entre 17 et 25 m² et donnent accès aux mêmes équipements — piscine, sauna et salle de sport — dans les trois maisons.`,
+      a: `Oui, il existe deux niveaux. La plupart des chambres (25 sur 29) disposent d'une salle d'eau privative : ${PRICE_CHF_FR}/mois tout inclus. Les 4 chambres de la maison La Villa qui partagent une salle d'eau entre 2 chambres sont à ${PRICE_SHARED_CHF_FR}/mois — son entretien est assuré par notre équipe de ménage. Toutes les chambres font de ${STATS.roomSizeMin} à ${STATS.roomSizeMax} m² et donnent accès aux mêmes équipements — piscine, sauna et salle de sport — dans les trois maisons.`,
     },
     {
       q: "Combien coûte une colocation tout inclus près de Genève ?",
@@ -44,12 +46,9 @@ export const tarifsFaq: { fr: QAPair[]; en: QAPair[] } = {
   en: [
     {
       q: "What's included in the rent at La Villa Coliving?",
-      a: `At La Villa Coliving, your all-inclusive rent from ${PRICE_SHARED_CHF_EN}/month covers a furnished room of 17 to 25 m², all utilities, fibre internet up to 8 Gb/s, cleaning of common areas three times a week, access to the pool, sauna and gym, yoga and fitness classes and community events. A single monthly payment, with no application fees and no hidden costs.`,
+      a: `At La Villa Coliving, your all-inclusive rent from ${PRICE_SHARED_CHF_EN}/month covers a furnished room of ${STATS.roomSizeMin} to ${STATS.roomSizeMax} m², all utilities, fibre internet up to 8 Gb/s, cleaning of common areas three times a week, access to the pool, sauna and gym, yoga and fitness classes and community events. A single monthly payment, with no application fees and no hidden costs.`,
     },
-    {
-      q: "Why are your prices higher than a standard flatshare?",
-      a: `Because you're not getting the same thing. Our rooms are ${STATS.roomSizeMin}-${STATS.roomSizeMax} m² (vs 9-12 m² for most local flatshares), every house has a pool, sauna and gym, professional cleaning is included, a dedicated team maintains the house (gardener, pool technician), and community life is organised monthly. Per square metre and like-for-like on services, La Villa is at market price — all inclusive from ${PRICE_SHARED_CHF_EN}/month, with no application or agency fees.`,
-    },
+    priceJustificationFaq("en"),
     {
       q: "Are there application or agency fees at La Villa Coliving?",
       a: "No, none. At La Villa Coliving you pay no application fee, no agency commission, no booking fee and no check-in inventory fee: €0 to move in. On the coliving market, these fees often range from €200 to €700. We rent our houses directly, with no middleman, so there is nothing to charge you to move in.",
@@ -60,7 +59,7 @@ export const tarifsFaq: { fr: QAPair[]; en: QAPair[] } = {
     },
     {
       q: "Does the price vary by house or room?",
-      a: `Yes, there are two levels. Most rooms (25 of 29) have a private bathroom: ${PRICE_CHF_EN}/month all inclusive. The 4 rooms at our La Villa house that share a shower room between 2 rooms are ${PRICE_SHARED_CHF_EN}/month — it is cleaned by our housekeeping team. All rooms are between 17 and 23 m² and give access to the same amenities — pool, sauna and gym — across the three houses.`,
+      a: `Yes, there are two levels. Most rooms (25 of 29) have a private bathroom: ${PRICE_CHF_EN}/month all inclusive. The 4 rooms at our La Villa house that share a shower room between 2 rooms are ${PRICE_SHARED_CHF_EN}/month — it is cleaned by our housekeeping team. All rooms are ${STATS.roomSizeMin} to ${STATS.roomSizeMax} m² and give access to the same amenities — pool, sauna and gym — across the three houses.`,
     },
     {
       q: "How much does all-inclusive shared housing near Geneva cost?",

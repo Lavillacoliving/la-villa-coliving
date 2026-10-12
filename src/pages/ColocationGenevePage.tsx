@@ -11,7 +11,9 @@ import { WaitlistForm } from "@/components/WaitlistForm";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { HOUSES } from "@/data/houses";
 import { colocationGeneveFaq } from "@/data/faq/colocationGeneveFaq";
-import { STATS, STATS_SHARED_BATH, PRICE_CHF_FR, PRICE_CHF_EN, PRICE_SHARED_CHF_FR, PRICE_SHARED_CHF_EN } from "@/data/stats";
+import { STATS, STATS_DISPLAY, STATS_SHARED_BATH, PRICE_CHF_FR, PRICE_CHF_EN, PRICE_SHARED_CHF_FR, PRICE_SHARED_CHF_EN, TRANSIT, GOOGLE_REVIEWS, GOOGLE_REVIEWS_LINK_LABEL } from "@/data/stats";
+import { ENTITY_HOUSES } from "@/data/entityFacts";
+import { OuChercher } from "@/components/OuChercher";
 import { COLOC_GENEVE_ARTICLE, COLOC_GENEVE_PILLAR_EN, COLOC_GENEVE_PILLAR_FR } from "@/lib/siteLinks";
 import { useAllRooms, splitRooms, type HouseKey, type PublicRoom } from "@/lib/availability";
 
@@ -23,8 +25,9 @@ import { useAllRooms, splitRooms, type HouseKey, type PublicRoom } from "@/lib/a
  * flottaison → combien ça coûte → comment faire (frontalier ou résident suisse) → nos 3 maisons →
  * à N min de Genève → où chercher → FAQ (FAQPage) → CTA. L'article « Trouver une colocation à Genève »
  * garde l'intention « comment chercher » ; pas de canonical entre les deux.
- * Règles : CHF des deux côtés de toute comparaison, jamais un loyer français en euros ici, aucun
- * concurrent nommé, jamais « complet », tutoiement, prix depuis src/data/stats.ts.
+ * Règles : CHF des deux côtés de toute comparaison, jamais un loyer français en euros ici — à l'exception
+ * du bloc « Où chercher » (Lot L1, 10/2026 : la fourchette MARKET_ROOM_EUR des chambres entre particuliers,
+ * D0-ter), aucun concurrent nommé, jamais « complet », tutoiement, prix depuis src/data/stats.ts.
  * Données : store partagé v_public_rooms (Lot 3) — les cartes sont dans le HTML prérendu (RoomsEmbed).
  */
 const PAGE_LAST_UPDATED = "2026-09-04";
@@ -35,7 +38,6 @@ export function ColocationGenevePage() {
   const { language } = useLanguage();
   const en = language === "en";
   const L = en ? "en" as const : "fr" as const;
-  const MIN = STATS.genevaCenterMinutes;
   const PILLAR_URL = `https://www.lavillacoliving.com${en ? COLOC_GENEVE_PILLAR_EN : COLOC_GENEVE_PILLAR_FR}`;
   const allRooms = useAllRooms();
   const { candidates } = splitRooms(allRooms.rooms);
@@ -49,7 +51,15 @@ export function ColocationGenevePage() {
     } catch { /* noop */ }
   };
 
-  const offerSchema = {
+  // (Correctif 08/10/2026) Offer émis SEULEMENT une fois l'inventaire connu (v_public_rooms chargée).
+  // react-helmet (react-side-effect) enregistre chaque instance dès UNSAFE_componentWillMount : quand
+  // React 19 abandonne un rendu (rendu de la page interrompu par l'arrivée des chambres), l'instance
+  // abandonnée n'est jamais démontée et garde ses props. Helmet dédoublonne les <script> par contenu :
+  // l'Offer PreOrder du rendu à 0 chambre survivait à côté de l'Offer InStock (FR ou EN dans les 16
+  // runs du bot du 01 au 08/10), et scripts/inject-prerendered.mjs sert le premier bloc de chaque @type. Sans Offer
+  // avant le chargement, une instance fantôme n'a plus rien de contradictoire à laisser (même idiome
+  // que l'ItemList de /chambres-disponibles). Garde CI : check-entity-facts (Offer contradictoires).
+  const offerSchema = allRooms.known ? {
     "@context": "https://schema.org",
     "@type": "Offer",
     name: en ? "Furnished room in shared housing near Geneva, French side" : "Chambre meublée en colocation près de Genève, côté France",
@@ -63,7 +73,7 @@ export function ColocationGenevePage() {
     url: PILLAR_URL,
     seller: { "@type": "Organization", name: "La Villa Coliving", url: "https://www.lavillacoliving.com" },
     areaServed: [{ "@type": "City", name: "Genève" }, { "@type": "City", name: "Annemasse" }],
-  };
+  } : undefined;
   const webPageSchema = {
     "@context": "https://schema.org",
     "@type": "WebPage",
@@ -84,9 +94,10 @@ export function ColocationGenevePage() {
         // §6 variante B (décision Q8 : pas de prix dans le title). Meta de la spécification révisée du 04/09.
         // (correction Jérôme 04/09) « tout inclus » dans le title, le seul mot qui distingue la page des annonces ; > 65 c. avec la marque → pas de suffixe (S33).
         title={en ? "Shared housing in Geneva, French side: all-inclusive rooms" : "Colocation à Genève côté France : chambres tout inclus"}
+        // (Lot L2, 09/10/2026) D1 : jamais « à N min du centre » sans destination nommée → STATS_DISPLAY.distance ; meta ≤ 155 c. (FR 154 / EN 152, mesuré).
         description={en
-          ? `Shared housing in Geneva, French side: 3 houses ${MIN} min from the centre, furnished room, bills, fibre, cleaning included. Rooms, CHF prices, reply in 48 h.`
-          : `Colocation à Genève côté France : 3 maisons à ${MIN} min du centre, chambre meublée tout inclus. Chambres disponibles, prix en CHF, réponse sous 48 h.`}
+          ? `Shared housing in Geneva, French side: 3 houses ${STATS_DISPLAY.en.distance}. All-inclusive rooms in CHF, reply in 48 h.`
+          : `Colocation à Genève côté France : 3 maisons à ${STATS_DISPLAY.fr.distance}. Chambres tout inclus en CHF, réponse sous 48 h.`}
         url={PILLAR_URL}
         image="https://www.lavillacoliving.com/images/villa_portrait.webp"
         jsonLd={offerSchema}
@@ -106,8 +117,8 @@ export function ColocationGenevePage() {
           </h1>
           <p className="text-lg md:text-xl text-[#57534E] max-w-3xl mx-auto mb-8 leading-relaxed">
             {en
-              ? `Live on the French side, work in Geneva. ${STATS.totalRooms} furnished rooms in ${STATS.totalHouses} houses in Ville-la-Grand, Ambilly and Annemasse, all inclusive from ${PRICE_SHARED_CHF_EN}/month, ${MIN} minutes from the centre. Real availability below, prices in CHF, reply within 48 h.`
-              : `Vis côté France, travaille à Genève. ${STATS.totalRooms} chambres meublées dans ${STATS.totalHouses} maisons à Ville-la-Grand, Ambilly et Annemasse, tout inclus dès ${PRICE_SHARED_CHF_FR}/mois, à ${MIN} minutes du centre. Les disponibilités réelles ci-dessous, les prix en CHF, une réponse sous 48 h.`}
+              ? `Live on the French side, work in Geneva. ${STATS.totalRooms} furnished rooms in ${STATS.totalHouses} houses in Ville-la-Grand, Ambilly and Annemasse, all inclusive from ${PRICE_SHARED_CHF_EN}/month, ${STATS_DISPLAY.en.distance}. Real availability below, prices in CHF, reply within 48 h.`
+              : `Vis côté France, travaille à Genève. ${STATS.totalRooms} chambres meublées dans ${STATS.totalHouses} maisons à Ville-la-Grand, Ambilly et Annemasse, tout inclus dès ${PRICE_SHARED_CHF_FR}/mois, à ${STATS_DISPLAY.fr.distance}. Les disponibilités réelles ci-dessous, les prix en CHF, une réponse sous 48 h.`}
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <a href="#chambres" className="inline-flex items-center gap-2 bg-[#D4A574] text-white px-8 py-4 text-sm uppercase tracking-wider hover:bg-[#44403C] transition-colors">
@@ -118,16 +129,24 @@ export function ColocationGenevePage() {
               {en ? "Apply" : "Candidater"}
             </LocalizedLink>
           </div>
+          {/* (Lot L3, D4 Jérôme 09/10/2026) Note Google (STATS_DISPLAY.googleRating) + lien « Voir les avis » ; l'ancienne
+              note interne (NPS) n'est plus publiée. Une phrase = un nœud texte, le lien est un élément à part. */}
           <p className="mt-6 text-sm text-[#57534E]">
-            {en
-              ? `★ ${STATS.rating.replace(",", ".")}/5 (resident surveys) · ${STATS.totalResidents}+ residents since ${STATS.foundedYear} · no agency fee, no application fee`
-              : `★ ${STATS.rating}/5 (enquêtes résidents) · ${STATS.totalResidents}+ résidents depuis ${STATS.foundedYear} · 0 frais d'agence, 0 frais de dossier`}
+            <span>
+              {en
+                ? `★ ${STATS_DISPLAY.en.googleRating} · ${STATS_DISPLAY.en.residents} · no agency fee, no application fee`
+                : `★ ${STATS_DISPLAY.fr.googleRating} · ${STATS_DISPLAY.fr.residents} · 0 frais d'agence, 0 frais de dossier`}
+            </span>
+            <a href={GOOGLE_REVIEWS.url} target="_blank" rel="noopener noreferrer" className="ml-2 underline underline-offset-4 hover:text-[#1C1917] transition-colors">
+              {GOOGLE_REVIEWS_LINK_LABEL[L]}
+            </a>
           </p>
           <p className="mt-1 text-xs text-[#A8A29E]">{en ? `Updated ${lastUpdatedLabel}` : `Mis à jour le ${lastUpdatedLabel}`}</p>
           <div className="flex flex-wrap justify-center gap-8 mt-10 text-sm text-[#78716C]">
             <span className="flex items-center gap-2"><Home className="w-4 h-4" /> {STATS.totalRooms} {en ? "rooms" : "chambres"}</span>
             <span className="flex items-center gap-2"><Users className="w-4 h-4" /> {STATS.totalHouses} {en ? "houses" : "maisons"}</span>
-            <span className="flex items-center gap-2"><Clock className="w-4 h-4" /> {MIN} min {en ? "from Geneva" : "de Genève"}</span>
+            {/* (Lot L2, 09/10/2026) D1 : « 20 min de Genève » seul interdit → libellé canonique, un seul nœud texte (anti-#418). */}
+            <span className="flex items-center gap-2"><Clock className="w-4 h-4" /> {STATS_DISPLAY[L].distance}</span>
             <span className="flex items-center gap-2"><Euro className="w-4 h-4" /> {en ? `From ${PRICE_SHARED_CHF_EN}/month` : `Dès ${PRICE_SHARED_CHF_FR}/mois`}</span>
           </div>
         </div>
@@ -272,31 +291,32 @@ export function ColocationGenevePage() {
       <section className="py-20 lg:py-24 bg-white">
         <div className="max-w-4xl mx-auto px-6 text-center">
           <Train className="w-12 h-12 text-[#D4A574] mx-auto mb-6" />
-          <h2 className={h2} style={serif}>{en ? `${MIN} minutes door to door from Geneva` : `À ${MIN} min porte-à-porte de Genève`}</h2>
+          {/* (D1, 09/10/2026) « 20 min » toujours qualifié ; minutes depuis TRANSIT, lignes par maison depuis ENTITY_HOUSES.
+              (Lot L2) Deux ancres seulement — Léman Express depuis la gare d'Annemasse, tram 17 depuis Ambilly (D7) ; ni bus,
+              ni « quelques minutes » de frontière (D6 : Le Lodge n'a aucune promesse de frontière). */}
+          <h2 className={h2} style={serif}>{en ? STATS_DISPLAY.en.distance : `À ${STATS_DISPLAY.fr.distance}`}</h2>
           <p className="text-[#57534E] leading-relaxed max-w-3xl mx-auto mb-8">
             {en
-              ? `Door to door, count ${MIN} minutes to the centre of Geneva. Léman Express from Annemasse (Eaux-Vives in 8 minutes, Cornavin direct), tram 17 from the Moillesulaz border, TPG buses, and the border itself is a few minutes away from every house.`
-              : `Porte à porte, compte ${MIN} minutes jusqu'au centre de Genève. Léman Express depuis Annemasse (Eaux-Vives en 8 minutes, Cornavin direct), tram 17 depuis la douane de Moillesulaz, bus TPG, et la frontière elle-même à quelques minutes de chaque maison.`}
+              ? `From Annemasse station, the Léman Express reaches Geneva Eaux-Vives in ${TRANSIT.trainEauxVivesMin} minutes, Champel in ${TRANSIT.trainChampelMin} and Cornavin in ${TRANSIT.trainCornavinMin}, no change. Door to door, count ${TRANSIT.doorToDoorEauxVivesMin} to ${TRANSIT.doorToDoorEauxVivesMax} minutes to Geneva Eaux-Vives depending on the house, and ${TRANSIT.centreDoorToDoorMin} minutes to the city centre (Rive). Two transport anchors: the Léman Express from Annemasse station, and tram 17 from Ambilly (Rive in ${TRANSIT.byHouse.leloft.tramStop.tramToRiveMin} minutes by tram).`
+              : `Depuis la gare d'Annemasse, le Léman Express rejoint Genève-Eaux-Vives en ${TRANSIT.trainEauxVivesMin} min, Champel en ${TRANSIT.trainChampelMin} min et Cornavin en ${TRANSIT.trainCornavinMin} min, sans correspondance. Porte-à-porte, compte ${TRANSIT.doorToDoorEauxVivesMin} à ${TRANSIT.doorToDoorEauxVivesMax} min jusqu'à Genève-Eaux-Vives selon la maison, et ${TRANSIT.centreDoorToDoorMin} min jusqu'au centre (Rive). Deux ancres de transport : le Léman Express depuis la gare d'Annemasse, et le tram 17 depuis Ambilly (Rive en ${TRANSIT.byHouse.leloft.tramStop.tramToRiveMin} min de tram).`}
           </p>
           <div className="grid sm:grid-cols-3 gap-4 text-sm text-[#44403C]">
-            {(en
-              ? [["Le Lodge · Annemasse", "Direct Léman Express: Eaux-Vives 8 min, Cornavin about 20"], ["Le Loft · Ambilly", "500 m from the Moillesulaz border, tram 17"], ["La Villa · Ville-la-Grand", "Léman Express and tram 17 within walking distance"]]
-              : [["Le Lodge · Annemasse", "Léman Express direct : Eaux-Vives 8 min, Cornavin 20 min env."], ["Le Loft · Ambilly", "À 500 m de la douane de Moillesulaz, tram 17"], ["La Villa · Ville-la-Grand", "Léman Express et tram 17 à pied"]]
-            ).map(([t, d]) => (
+            {ENTITY_HOUSES.map((h) => [`${h.label} · ${h.commune}`, h.commute[L]]).map(([t, d]) => (
               <div key={t} className="bg-[#FAF9F6] p-5"><p className="font-medium text-[#1C1917] mb-1">{t}</p><p>{d}</p></div>
             ))}
           </div>
         </div>
       </section>
 
-      {/* ===== H2 — OÙ CHERCHER UNE COLOCATION À GENÈVE ===== */}
+      {/* ===== H2 — OÙ CHERCHER (Lot L1 « ingénierie des créneaux », 10/2026 : bloc canonique M1 complet,
+          titres H2/H3 du composant ; 6e place conservée — Q-pos Jérôme 09/10/2026) ===== */}
       <section className="py-20 lg:py-24 bg-[#FAF9F6]">
         <div className="max-w-4xl mx-auto px-6">
-          <h2 className={h2} style={serif}>{en ? "Where to look for a flatshare in Geneva" : "Où chercher une colocation à Genève"}</h2>
-          <p className="text-[#57534E] leading-relaxed mb-4">
+          <OuChercher variant="full" page="colocation-geneve" />
+          <p className="text-[#57534E] leading-relaxed mt-10 mb-4">
             {en
-              ? "Listing portals, flatmate groups and specialised directories all exist, on both sides of the border. They work, with their share of stale ads, visits that lead nowhere and files to assemble for each landlord. Our guide explains how to search step by step, from the budget to the visit: "
-              : "Les portails d'annonces, les groupes de colocataires et les annuaires spécialisés existent, des deux côtés de la frontière. Ils fonctionnent, avec leur lot d'annonces périmées, de visites pour rien et de dossiers à monter pour chaque propriétaire. Notre guide explique comment chercher, étape par étape, du budget à la visite : "}
+              ? "Our guide explains how to search step by step, from the budget to the visit: "
+              : "Notre guide explique comment chercher, étape par étape, du budget à la visite : "}
             <LocalizedLink to={COLOC_GENEVE_ARTICLE} className={link}>{en ? "finding a flatshare in Geneva" : "trouver une colocation à Genève"}</LocalizedLink>.
           </p>
           <p className="text-[#57534E] leading-relaxed">

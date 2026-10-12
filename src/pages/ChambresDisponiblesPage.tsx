@@ -1,4 +1,6 @@
 import { EntityFacts } from "@/components/EntityFacts";
+import { buildAvailableRoomsItemList } from "@/lib/structuredData";
+import { FacebookGroupCallout } from "@/components/FacebookGroupCallout";
 import { lazy, Suspense, useState } from "react";
 import { useHydrated } from "@/hooks/useHydrated";
 import { useSearchParams } from "react-router-dom";
@@ -12,7 +14,7 @@ import { WhatsAppButton } from "@/components/WhatsAppButton";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { HOUSES } from "@/data/houses";
 import { roomGallery } from "@/data/roomPhotos";
-import { STATS, PRICE_SHARED_CHF_FR, PRICE_SHARED_CHF_EN } from "@/data/stats";
+import { STATS, STATS_DISPLAY, PRICE_SHARED_CHF_FR, PRICE_SHARED_CHF_EN } from "@/data/stats";
 import { tarifsFaq } from "@/data/faq/tarifsFaq";
 import { maisonsFaq } from "@/data/faq/maisonsFaq";
 import {
@@ -60,7 +62,6 @@ export function ChambresDisponiblesPage() {
   const { language } = useLanguage();
   const en = language === "en";
   const L = en ? "en" as const : "fr" as const;
-  const prefix = en ? "/en" : "";
 
   const all = useAllRooms();
   const availability = useRoomAvailability();
@@ -132,42 +133,20 @@ export function ChambresDisponiblesPage() {
     return { tone: "full", text: en ? "no date announced yet — join the waiting list" : "pas de date annoncée pour l'instant — rejoins la liste d'attente" };
   };
 
-  const title = en ? "Available rooms near Geneva" : "Chambres disponibles près de Genève";
+  // (Lot L6.5, 10/10/2026) La page est la « plateforme » de La Villa pour les assistants : titre explicite (3 maisons, prix, dates — jamais un montant dans le titre).
+  const title = en ? `Available rooms near Geneva — ${STATS.totalHouses} houses, prices, dates` : `Chambres disponibles près de Genève — ${STATS.totalHouses} maisons, prix, dates`;
   const description = en
     ? `Every room free now or opening soon in our ${STATS.totalHouses} houses near Geneva, with date and all-inclusive price from ${PRICE_SHARED_CHF_EN}. Reply within 48 h.`
     : `Toutes les chambres libres ou à libérer dans nos ${STATS.totalHouses} maisons près de Genève, avec date et prix tout inclus dès ${PRICE_SHARED_CHF_FR}. Réponse sous 48 h.`;
 
-  // JSON-LD ItemList d'Offer (Lot 7.3 anticipé) — dérivé du même snapshot que le rendu,
-  // sans filtre : identique au prérendu et au premier rendu client.
-  const itemList = candidates.length > 0
-    ? {
-        "@context": "https://schema.org",
-        "@type": "ItemList",
-        name: en ? "Available rooms — La Villa Coliving" : "Chambres disponibles — La Villa Coliving",
-        numberOfItems: candidates.length,
-        itemListElement: candidates.map((r, i) => ({
-          "@type": "ListItem",
-          position: i + 1,
-          item: {
-            "@type": "Offer",
-            name: `${HOUSES[r.house_slug].label} — ${en ? "Room" : "Chambre"} ${r.room_number}`,
-            url: `https://www.lavillacoliving.com${prefix}/${r.house_slug}`,
-            ...(r.rent_chf !== null ? { price: r.rent_chf, priceCurrency: "CHF" } : {}),
-            availability: r.availability === "available" ? "https://schema.org/InStock" : "https://schema.org/PreOrder",
-            ...(r.available_from ? { availabilityStarts: r.available_from } : {}),
-            itemOffered: {
-              "@type": "Accommodation",
-              name: `${en ? "Room" : "Chambre"} ${r.room_number} — ${HOUSES[r.house_slug].label}`,
-              ...(r.surface_m2 ? { floorSize: { "@type": "QuantitativeValue", value: Number(r.surface_m2), unitCode: "MTK" } } : {}),
-            },
-          },
-        })),
-      }
-    : undefined;
+  // (Lot L6.5) JSON-LD ItemList d'Offer — dérivé du même snapshot que le rendu, sans filtre (identique au prérendu et au premier
+  // rendu client) ; construit par buildAvailableRoomsItemList (structuredData.ts) : prix mensuel, LeaseOut, offeredBy, maison par @id.
+  const itemList = buildAvailableRoomsItemList(candidates, L);
 
+  // (Lot L2, 09/10/2026) « 20 min » toujours qualifié : STATS_DISPLAY.distance (D1).
   const reassurance = en
-    ? ["No agency fee, no application fee", "Reply within 48 hours", "Video tour available", `${STATS.totalResidents}+ residents since ${STATS.foundedYear}`, "All inclusive: bills, fibre, cleaning, pool, sauna, gym", "20 min from Geneva city centre"]
-    : ["0 frais d'agence ni de dossier", "Réponse sous 48 h", "Visite en visio possible", `${STATS.totalResidents}+ résidents depuis ${STATS.foundedYear}`, "Tout inclus : charges, fibre, ménage, piscine, sauna, gym", "20 min du centre de Genève"];
+    ? ["No agency fee, no application fee", "Reply within 48 hours", "Video tour available", `${STATS.totalResidents}+ residents since ${STATS.foundedYear}`, "All inclusive: bills, fibre, cleaning, pool, sauna, gym", STATS_DISPLAY.en.distance]
+    : ["0 frais d'agence ni de dossier", "Réponse sous 48 h", "Visite en visio possible", `${STATS.totalResidents}+ résidents depuis ${STATS.foundedYear}`, "Tout inclus : charges, fibre, ménage, piscine, sauna, gym", STATS_DISPLAY.fr.distance];
 
   const faqItems = [...maisonsFaq[L].slice(0, 2), ...tarifsFaq[L].slice(0, 2)];
 
@@ -187,7 +166,7 @@ export function ChambresDisponiblesPage() {
             {en ? `${STATS.totalRooms} rooms · ${STATS.totalHouses} houses` : `${STATS.totalRooms} chambres · ${STATS.totalHouses} maisons`}
           </span>
           <h1 className="text-4xl md:text-5xl lg:text-6xl font-light text-[#1C1917] mb-5" style={{ fontFamily: '"DM Serif Display", serif' }}>
-            {en ? "Available rooms" : "Chambres disponibles"}
+            {en ? "Available rooms near Geneva" : "Chambres disponibles près de Genève"}
           </h1>
           <p className="text-lg text-[#44403C] max-w-2xl inline-flex items-center gap-2">
             <span className="w-2 h-2 bg-[#B8860B] rounded-full animate-pulse shrink-0" aria-hidden="true" />
@@ -195,8 +174,8 @@ export function ChambresDisponiblesPage() {
           </p>
           <p className="mt-3 text-[#57534E] max-w-2xl">
             {en
-              ? `Furnished private rooms in ${STATS.totalHouses} coliving houses on the French side of Geneva, 20 minutes from the centre. All inclusive from ${PRICE_SHARED_CHF_EN}/month, deposit of 2 months' rent excluding charges, no agency or application fee.`
-              : `Chambres privées meublées dans ${STATS.totalHouses} maisons de coliving côté France, à 20 minutes du centre de Genève. Tout inclus dès ${PRICE_SHARED_CHF_FR}/mois, caution de 2 mois de loyer hors charges, 0 frais d'agence ni de dossier.`}
+              ? `Furnished private rooms in ${STATS.totalHouses} coliving houses on the French side of Geneva, ${STATS_DISPLAY.en.distance}. All inclusive from ${PRICE_SHARED_CHF_EN}/month, deposit of 2 months' rent excluding charges, no agency or application fee.`
+              : `Chambres privées meublées dans ${STATS.totalHouses} maisons de coliving côté France, à ${STATS_DISPLAY.fr.distance}. Tout inclus dès ${PRICE_SHARED_CHF_FR}/mois, caution de 2 mois de loyer hors charges, 0 frais d'agence ni de dossier.`}
           </p>
         </div>
       </section>
@@ -381,6 +360,8 @@ export function ChambresDisponiblesPage() {
               {en ? "All our furnished rooms, French side" : "Toutes nos chambres meublées, côté France"}
             </LocalizedLink>
           </p>
+          {/* (Lot L5, D10) Encart A.8 — le groupe Facebook comme ressource quand aucune date ne convient. */}
+          <FacebookGroupCallout position="chambres_disponibles" className="mt-10 max-w-3xl mx-auto" />
         </div>
       </section>
 

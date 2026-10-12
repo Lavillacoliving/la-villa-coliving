@@ -9,6 +9,7 @@ import {
 } from "@react-pdf/renderer";
 import { getBailleurLines } from "@/lib/entities";
 import { numberInWordsFr } from "@/lib/frenchNumbers";
+import { computeFraisEntree } from "./bailFrais";
 
 interface Property {
   id: string;
@@ -68,7 +69,8 @@ interface FormData {
   charges_energy: number;
   charges_maintenance: number;
   charges_services: number;
-  frais_remise_location: number;
+  frais_dossier_m2: number;
+  frais_edl_m2: number;
   irl_trimestre: string;
   irl_indice: number;
   clauses_particulieres: string;
@@ -124,6 +126,16 @@ function fEUR(n: number): string {
   }).format(n).replace(/[\s\u00A0\u202F\u2009]/g, " ");
 }
 
+// Montants au centime (frais au m\u00B2)
+function fEUR2(n: number): string {
+  return new Intl.NumberFormat("fr-FR", {
+    style: "currency",
+    currency: "EUR",
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2,
+  }).format(n).replace(/[\s\u00A0\u202F\u2009]/g, " ");
+}
+
 function fCHF(n: number): string {
   return new Intl.NumberFormat("fr-CH", {
     style: "currency",
@@ -141,7 +153,7 @@ const s = StyleSheet.create({
     color: "#333",
     paddingTop: 50,
     paddingBottom: 50,
-    paddingHorizontal: 45,
+    paddingHorizontal: 60,
   },
   headerBlock: {
     textAlign: "center",
@@ -273,8 +285,8 @@ const s = StyleSheet.create({
   pageFooter: {
     position: "absolute",
     bottom: 20,
-    left: 45,
-    right: 45,
+    left: 60,
+    right: 60,
     textAlign: "center",
     fontSize: 8,
     color: "#999",
@@ -319,6 +331,31 @@ export function BailPDF({ data }: { data: BailPDFData }) {
   const totalCharges = form.charges_energy + form.charges_maintenance + form.charges_services;
   const rate = form.exchange_rate || 0.9145;
   const ville = property.siege_social?.split(",")[0]?.trim() || "[Ville]";
+  const frais = computeFraisEntree(room.surface_m2, form.frais_dossier_m2, form.frais_edl_m2);
+  const hasClausesParticulieres = !!form.clauses_particulieres?.trim();
+
+  // Bloc signatures, rattaché au dernier article (annexes ou clauses particulières)
+  // dans le même bloc insécable : il ne se retrouve jamais seul en dernière page.
+  // Pas de date : c'est celle de la signature électronique (Yousign).
+  const signatureBlock = (
+    <View>
+      <Text style={{ fontSize: 9, textAlign: "center", marginTop: 30 }}>{"Fait à "}{ville}{", à la date de la signature électronique."}</Text>
+      <View style={[s.signatureSection, { marginTop: 30 }]}>
+        <View style={s.signatureBox}>
+          <Text style={s.signatureLabel}>Signature du bailleur</Text>
+          <Text style={s.signatureName}>{property.manager_name || "J\u00E9r\u00F4me AUSTIN"}</Text>
+        </View>
+        <View style={s.signatureBox}>
+          <Text style={s.signatureLabel}>Signature du locataire</Text>
+          <Text style={s.signatureName}>{ph(form.locataire_prenom, "Pr\u00E9nom")} {ph(form.locataire_nom, "Nom")}</Text>
+        </View>
+      </View>
+
+      <View style={s.footer}>
+        <Text>{"Lu et approuvé"}</Text>
+      </View>
+    </View>
+  );
 
   return (
     <Document>
@@ -366,15 +403,15 @@ export function BailPDF({ data }: { data: BailPDFData }) {
         </View>
 
         {/* ---------- ARTICLE I ---------- */}
-        <View wrap={false} minPresenceAhead={40}>
+        <View wrap={false}>
           <Text style={s.articleTitle}>{"ARTICLE I \u2014 D\u00C9SIGNATION DES PARTIES"}</Text>
           <Text style={s.body}>
             {"Entre les parties ci-dessus d\u00E9sign\u00E9es, il est convenu ce qui suit."}
           </Text>
         </View>
 
-        {/* ---------- ARTICLE II ---------- */}
-        <View minPresenceAhead={60}>
+        {/* ---------- ARTICLE II (nouvelle page) ---------- */}
+        <View break minPresenceAhead={60}>
           <Text style={s.articleTitle}>{"ARTICLE II \u2014 OBJET DU CONTRAT"}</Text>
         </View>
 
@@ -437,7 +474,7 @@ export function BailPDF({ data }: { data: BailPDFData }) {
         {/* Charges & Services coliving */}
         {property.is_coliving ? (
           <View>
-            <Text style={[s.subTitle, { color: gold }]}>{"Charges & Services inclus dans le forfait location TOUT INCLUS à «La Villa»"}</Text>
+            <Text style={[s.subTitle, { color: "#000", textTransform: "uppercase" }]}>{"Charges & Services inclus dans le forfait location TOUT INCLUS à «La Villa»"}</Text>
 
             <Text style={[s.subTitle, { fontSize: 9, marginTop: 8 }]}>{"EAU & ÉNERGIE :"}</Text>
             <Bullet>{"\u00C9lectricit\u00E9"}</Bullet>
@@ -509,7 +546,7 @@ export function BailPDF({ data }: { data: BailPDFData }) {
         )}
 
         {/* ---------- ARTICLE III ---------- */}
-        <View wrap={false} minPresenceAhead={30}>
+        <View wrap={false}>
           <Text style={s.articleTitle}>{"ARTICLE III \u2014 DATE DE PRISE D\u2019EFFET ET DUR\u00C9E"}</Text>
           <Text style={[s.body, { fontFamily: "Helvetica-Bold" }]}>
             {"La location prend effet le "}{fDate(form.entry_date)}{" pour une dur\u00E9e de "}{durationInWords(form.lease_duration_months || 12)}{" ("}{form.lease_duration_months || 12}{") mois, soit jusqu\u2019au "}{fDate(exit_date)}.
@@ -520,19 +557,23 @@ export function BailPDF({ data }: { data: BailPDFData }) {
           <Text style={s.body}>
             {"Conform\u00E9ment \u00E0 l\u2019article 25-8 de la loi n\u00B0 89-462 du 6 juillet 1989, le locataire peut donner cong\u00E9 \u00E0 tout moment, avec un pr\u00E9avis d\u2019un mois."}
           </Text>
+          <Text style={s.subTitle}>{"Visites en cas de cong\u00E9 :"}</Text>
+          <Text style={s.body}>
+            {"En cas de cong\u00E9 donn\u00E9 par l\u2019une ou l\u2019autre des parties, le Locataire autorise le Bailleur ou son mandataire \u00E0 faire visiter le logement en vue de sa relocation. Ces visites se tiennent les jours ouvrables, dans la limite de deux heures par jour, selon des cr\u00E9neaux convenus ensemble et moyennant un pr\u00E9avis de 48 heures. Le Locataire peut demander que ses effets personnels soient rang\u00E9s ou couverts au pr\u00E9alable."}
+          </Text>
           <Text style={[s.body, { fontSize: 9, fontStyle: "italic", color: "#555", marginTop: 4 }]}>
             {"Le pr\u00E9sent contrat est conclu en vue d\u2019affecter le logement \u00E0 la r\u00E9sidence principale du locataire au sens de l\u2019article 2 de la loi n\u00B0 89-462 du 6 juillet 1989."}
           </Text>
         </View>
 
-        {/* ---------- ARTICLE IV ---------- */}
-        <View minPresenceAhead={60}>
+        {/* ---------- ARTICLE IV (nouvelle page) ---------- */}
+        <View break minPresenceAhead={60}>
           <Text style={s.articleTitle}>{"ARTICLE IV \u2014 CONDITIONS FINANCI\u00C8RES"}</Text>
         </View>
 
         {property.is_coliving ? (
           <View>
-            <Text style={s.subTitle}><Text style={{ fontFamily: "Helvetica-Bold" }}>Loyer mensuel :</Text> {fEUR(loyer_eur)} ({fCHF(form.loyer_chf)} au taux BCE du {form.exchange_rate_date || "\u2014"} : {rate}{" \u2014 pour indication uniquement"})</Text>
+            <Text style={s.subTitle}><Text style={{ fontFamily: "Helvetica-Bold", fontSize: 13 }}>Loyer mensuel : {fEUR(loyer_eur)}</Text> ({fCHF(form.loyer_chf)} au taux BCE du {form.exchange_rate_date || "\u2014"} : {rate}{" \u2014 pour indication uniquement"})</Text>
             {prorata_days > 0 && prorata_total_days > 0 && prorata_days < prorata_total_days ? (
               <View>
                 <Text style={[s.body, { marginTop: 6, fontFamily: "Helvetica-Bold" }]}>
@@ -589,31 +630,29 @@ export function BailPDF({ data }: { data: BailPDFData }) {
         <Bullet>{"La r\u00E9vision s\u2019effectue chaque ann\u00E9e \u00E0 la date anniversaire du contrat."}</Bullet>
 
         <Text style={s.subTitle}>{"Modalit\u00E9s de paiement :"}</Text>
-        <Bullet><Text style={{ fontFamily: "Helvetica-Bold", color: gold }}>{"Le loyer et les charges doivent \u00EAtre vers\u00E9s avant le 5 du mois."}</Text></Bullet>
+        <Bullet><Text style={{ fontFamily: "Helvetica-Bold", color: "#000", textTransform: "uppercase" }}>{"Le loyer et les charges doivent \u00EAtre vers\u00E9s avant le 5 du mois."}</Text></Bullet>
         <Bullet>Virement bancaire sur le compte du bailleur.</Bullet>
+        <Bullet>{"Toute somme due et non réglée à son échéance porte intérêts au taux légal à compter de la mise en demeure du locataire (article 1231-6 du Code civil)."}</Bullet>
 
-        {form.frais_remise_location > 0 && (
-          <View minPresenceAhead={60} style={{ marginTop: 8 }}>
-            <Text style={[s.subTitle, { color: gold }]}>
-              {"Frais de remise en location : "}{fEUR(form.frais_remise_location)}{" — offerts à partir de 3 mois de présence"}
+        {frais.total > 0 && (
+          <View wrap={false} style={{ marginTop: 8 }}>
+            <Text style={[s.subTitle, { color: "#000", textTransform: "uppercase" }]}>
+              {"Frais de dossier et d’état des lieux d’entrée : "}{fEUR2(frais.total)}{" TTC — offerts à partir de 3 mois de présence"}
             </Text>
             <Text style={s.body}>
-              {"Le départ anticipé d'un locataire oblige le bailleur à engager, indépendamment de l'état du logement restitué, l'ensemble des démarches nécessaires pour remettre le logement en location :"}
+              {"Ces frais rémunèrent les prestations assurées par le bailleur pour la mise en place de la location. Ils sont calculés sur la surface de la chambre louée, soit "}{frais.surface.toLocaleString("fr-FR")}{" m² :"}
             </Text>
-            <Bullet>{"Création et diffusion de nouvelles annonces sur les différents supports ;"}</Bullet>
-            <Bullet>{"Traitement des candidatures, organisation et tenue des visites ;"}</Bullet>
-            <Bullet>{"Recherche et sélection d'un nouveau locataire (vérification du dossier, rédaction du contrat) ;"}</Bullet>
-            <Bullet>{"Installation du nouveau locataire (accueil, remise des clés, mise à jour des accès) ;"}</Bullet>
-            <Bullet>{"Formalités administratives liées au changement de locataire (déclarations d'occupation, démarches techniques et administratives)."}</Bullet>
+            <Bullet>{"Frais de dossier (visite du logement, constitution du dossier, rédaction du bail) : "}{fEUR2(form.frais_dossier_m2)}{" TTC/m², soit "}{fEUR2(frais.dossier)}{" TTC ;"}</Bullet>
+            <Bullet>{"Prestation d’état des lieux d’entrée : "}{fEUR2(form.frais_edl_m2)}{" TTC/m², soit "}{fEUR2(frais.edl)}{" TTC."}</Bullet>
             <Text style={[s.body, { marginTop: 4 }]}>
-              {"Ces frais, fixés forfaitairement à "}{fEUR(form.frais_remise_location)}{", sont offerts au locataire dont le séjour atteint 3 mois à compter de la date d'entrée. En cas de départ avant ce délai, ils restent à sa charge."}
+              {"Ces frais, d’un montant total de "}{fEUR2(frais.total)}{" TTC, sont offerts au locataire dont le séjour atteint 3 mois à compter de la date d’entrée. En cas de départ avant ce délai, ils restent à sa charge."}
             </Text>
           </View>
         )}
 
         {/* Bank Details */}
         {(property.name?.includes('Villa') || property.name?.includes('lavilla')) && (
-          <View style={[s.partyBox, { marginTop: 12 }]}>
+          <View wrap={false} style={[s.partyBox, { marginTop: 12 }]}>
             <Text style={s.partyLabel}>{"Coordonnées bancaires du bailleur :"}</Text>
             <Text style={{ marginBottom: 2, fontSize: 9 }}><Text style={{ fontFamily: "Helvetica-Bold" }}>{"Banque : "}</Text>{"Banque Palatine"}</Text>
             <Text style={{ marginBottom: 2, fontSize: 9 }}><Text style={{ fontFamily: "Helvetica-Bold" }}>{"Titulaire : "}</Text>{"Jérôme Austin / Fanny Piot"}</Text>
@@ -623,7 +662,7 @@ export function BailPDF({ data }: { data: BailPDFData }) {
         )}
 
         {(property.name?.includes('Loft') || property.name?.includes('Lodge') || property.name?.includes('leloft') || property.name?.includes('lelodge')) && (
-          <View style={[s.partyBox, { marginTop: 12 }]}>
+          <View wrap={false} style={[s.partyBox, { marginTop: 12 }]}>
             <Text style={s.partyLabel}>{"Coordonnées bancaires du bailleur :"}</Text>
             <Text style={{ marginBottom: 2, fontSize: 9 }}><Text style={{ fontFamily: "Helvetica-Bold" }}>{"Banque : "}</Text>{"Banque Palatine"}</Text>
             <Text style={{ marginBottom: 2, fontSize: 9 }}><Text style={{ fontFamily: "Helvetica-Bold" }}>{"Titulaire : "}</Text>{"SCI Sleep In"}</Text>
@@ -635,10 +674,10 @@ export function BailPDF({ data }: { data: BailPDFData }) {
         {/* ---------- ARTICLE V ---------- */}
         <View wrap={false} minPresenceAhead={30}>
           <Text style={s.articleTitle}>{"ARTICLE V \u2014 GARANTIES"}</Text>
-          <Text style={s.body}>
+          <Text style={[s.body, { fontFamily: "Helvetica-Bold", color: "#000", textTransform: "uppercase" }]}>
             {property.is_coliving
-              ? <>{"Le locataire versera un d\u00E9p\u00F4t de garantie \u00E9gal \u00E0 deux (2) mois de loyer hors charges, soit "}<Text style={{ fontFamily: "Helvetica-Bold", color: gold }}>{fEUR(depot_eur)}</Text>{", restitu\u00E9 dans les deux (2) mois suivant la fin du contrat, selon l\u2019\u00E9tat des lieux."}</>
-              : <>{"Le locataire versera un d\u00E9p\u00F4t de garantie \u00E9gal \u00E0 un (1) mois de loyer hors charges, soit "}<Text style={{ fontFamily: "Helvetica-Bold", color: gold }}>{fEUR(depot_eur)}</Text>{", restitu\u00E9 dans les deux (2) mois suivant la fin du contrat, d\u00E9duction faite des sommes \u00E9ventuellement dues."}</>
+              ? <>{"Le locataire versera un d\u00E9p\u00F4t de garantie \u00E9gal \u00E0 deux (2) mois de loyer hors charges, soit "}<Text style={{ fontFamily: "Helvetica-Bold" }}>{fEUR(depot_eur)}</Text>{", restitu\u00E9 dans les deux (2) mois suivant la fin du contrat, selon l\u2019\u00E9tat des lieux."}</>
+              : <>{"Le locataire versera un d\u00E9p\u00F4t de garantie \u00E9gal \u00E0 un (1) mois de loyer hors charges, soit "}<Text style={{ fontFamily: "Helvetica-Bold" }}>{fEUR(depot_eur)}</Text>{", restitu\u00E9 dans les deux (2) mois suivant la fin du contrat, d\u00E9duction faite des sommes \u00E9ventuellement dues."}</>
             }
           </Text>
         </View>
@@ -647,7 +686,13 @@ export function BailPDF({ data }: { data: BailPDFData }) {
         <View wrap={false} minPresenceAhead={30}>
           <Text style={s.articleTitle}>{"ARTICLE VI \u2014 CLAUSE R\u00C9SOLUTOIRE"}</Text>
           <Text style={s.body}>
-            {"Le bailleur se r\u00E9serve le droit de r\u00E9silier le contrat en cas de non-paiement du loyer ou des charges, sans pr\u00E9judice du droit de poursuivre le recouvrement des sommes dues."}
+            {"À défaut de paiement à son terme de tout ou partie du loyer ou des charges, ou à défaut de versement du dépôt de garantie, le présent contrat sera résilié de plein droit six (6) semaines après la délivrance au locataire d’un commandement de payer demeuré infructueux, conformément à l’article 24 de la loi n° 89-462 du 6 juillet 1989."}
+          </Text>
+          <Text style={s.body}>
+            {"Le présent contrat sera également résilié de plein droit à défaut pour le locataire de justifier d’une assurance contre les risques locatifs, un (1) mois après un commandement demeuré infructueux, conformément à l’article 7 g) de la loi n° 89-462 du 6 juillet 1989."}
+          </Text>
+          <Text style={s.body}>
+            {"Une fois la résiliation acquise, le locataire devra libérer les lieux. À défaut, son expulsion pourra être ordonnée par le juge des contentieux de la protection."}
           </Text>
         </View>
 
@@ -769,8 +814,8 @@ export function BailPDF({ data }: { data: BailPDFData }) {
           </View>
         )}
 
-        {/* ---------- ANNEXES ---------- */}
-        <View wrap={false} minPresenceAhead={20}>
+        {/* ---------- ANNEXES (+ signatures si pas de clauses particulières) ---------- */}
+        <View wrap={false}>
           <Text style={s.articleTitle}>{property.is_coliving ? "ARTICLE XIII \u2014 ANNEXES" : "ARTICLE XII \u2014 ANNEXES"}</Text>
           <Text style={s.body}>{"Sont annex\u00E9es au pr\u00E9sent contrat :"}</Text>
           {!property.is_coliving && <Bullet>{"Notice d\u2019information relative aux droits et obligations des locataires et des bailleurs"}</Bullet>}
@@ -780,35 +825,17 @@ export function BailPDF({ data }: { data: BailPDFData }) {
           {(form.annexe_documents || []).map((doc: string, i: number) => (
             <Bullet key={i}>{doc}</Bullet>
           ))}
+          {!hasClausesParticulieres && signatureBlock}
         </View>
 
         {/* ---------- Clauses particulières ---------- */}
-        {form.clauses_particulieres?.trim() ? (
-          <View wrap={false} minPresenceAhead={30}>
+        {hasClausesParticulieres ? (
+          <View wrap={false}>
             <Text style={s.articleTitle}>{"CLAUSES PARTICULI\u00C8RES"}</Text>
             <Text style={s.body}>{form.clauses_particulieres}</Text>
+            {signatureBlock}
           </View>
         ) : null}
-
-        {/* ---------- SIGNATURES ---------- */}
-        <View wrap={false}>
-          <View style={s.signatureSection}>
-            <View style={s.signatureBox}>
-              <Text style={{ fontSize: 9 }}>{"Fait \u00E0 "}{ville}</Text>
-              <Text style={s.signatureLabel}>Signature du bailleur</Text>
-              <Text style={s.signatureName}>{property.manager_name || "J\u00E9r\u00F4me AUSTIN"}</Text>
-            </View>
-            <View style={s.signatureBox}>
-              <Text style={{ fontSize: 9 }}>Le {fDate(form.entry_date)}</Text>
-              <Text style={s.signatureLabel}>Signature du locataire</Text>
-              <Text style={s.signatureName}>{ph(form.locataire_prenom, "Pr\u00E9nom")} {ph(form.locataire_nom, "Nom")}</Text>
-            </View>
-          </View>
-
-          <View style={s.footer}>
-            <Text>{"Lu et approuvé"}</Text>
-          </View>
-        </View>
 
         {/* Fixed footer — direct child of Page for fixed positioning */}
         <View style={s.pageFooter} fixed>

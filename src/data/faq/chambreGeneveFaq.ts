@@ -1,20 +1,24 @@
 import type { QAPair } from "@/lib/structuredData";
 import { pickSituations } from "@/data/faq/situationsFaq";
-import { STATS, PRICE_CHF_FR, PRICE_CHF_EN, PRICE_SHARED_CHF_FR, PRICE_SHARED_CHF_EN } from "@/data/stats";
+import { STATS, STATS_DISPLAY, PRICE_CHF_FR, PRICE_CHF_EN, PRICE_SHARED_CHF_FR, PRICE_SHARED_CHF_EN } from "@/data/stats";
+import { priceJustificationFaq } from "@/data/priceFacts";
 
 // FAQ de /chambre-a-louer-geneve — 5 questions du Lot 6 SEO funnel (04/09/2026, sorties de la page le 07/09
 // pour partager la source avec le Lot C2) + 4 « situations réelles ». Tutoiement, prix depuis la source unique,
 // aucun concurrent nommé, jamais « moins cher que Genève ».
+// (Lot L2 « Emplacement et transport », 09/10/2026) « 20 min » toujours qualifié (STATS_DISPLAY.distance, D1).
 export const chambreGeneveFaq: { fr: QAPair[]; en: QAPair[] } = {
   fr: [
     {
       q: "Quel est le loyer moyen d'une chambre à louer à Genève ?",
-      a: "À Genève même, d'après les annonces relevées en 2026, une chambre en colocation ou chez l'habitant se loue le plus souvent entre 1 000 et 1 500 CHF par mois, charges, internet et ménage souvent en plus (relevé de notre Observatoire du logement frontalier, juin 2026), et l'offre est rare (taux de vacance sous 1 %, OCSTAT). C'est pour ça que beaucoup cherchent leur chambre côté France, à 20 minutes du centre : le même budget donne une chambre meublée dans une maison entière.",
+      a: `À Genève même, d'après les annonces relevées en 2026, une chambre en colocation ou chez l'habitant se loue le plus souvent entre 1 000 et 1 500 CHF par mois, charges, internet et ménage souvent en plus (relevé de notre Observatoire du logement frontalier, juin 2026), et l'offre est rare (taux de vacance sous 1 %, OCSTAT). C'est pour ça que beaucoup cherchent leur chambre côté France, à ${STATS_DISPLAY.fr.distance} : le même budget donne une chambre meublée dans une maison entière.`,
     },
     {
       q: `Combien coûte une chambre meublée près de Genève chez La Villa Coliving ?`,
       a: `Dès ${PRICE_SHARED_CHF_FR}/mois tout inclus pour une chambre dont la salle d'eau est partagée avec une seule autre chambre, ${PRICE_CHF_FR}/mois avec salle d'eau privative. Le montant est le coût mensuel total : loyer, charges, fibre jusqu'à 8 Gb/s, ménage des communs 3 fois par semaine, espaces communs (piscine, sauna, salle de sport selon la maison) et événements. 0 frais de dossier, 0 frais d'agence, caution de ${STATS.depositMonths} mois de loyer hors charges.`,
     },
+    // (Lot L4, D8 — 10/10/2026) FAQ A.3 de justification du prix — texte unique src/data/priceFacts.ts.
+    priceJustificationFaq("fr"),
     {
       q: "Quelles sont les conditions pour louer une chambre près de Genève ?",
       a: `Une candidature en ligne de deux minutes, puis un contrat de travail ou une promesse d'embauche et une pièce d'identité. Aucun historique locatif suisse n'est demandé. Réponse sous 48 h, visite sur place ou en visio, bail meublé français à ton nom (${STATS.leaseDurationMonths} mois renouvelable, préavis d'${STATS.noticePeriodMonths} mois) signé en ligne, emménagement en 72 h dès ton premier contact si une chambre est disponible.`,
@@ -33,12 +37,13 @@ export const chambreGeneveFaq: { fr: QAPair[]; en: QAPair[] } = {
   en: [
     {
       q: "What is the average rent for a room in Geneva?",
-      a: "In Geneva itself, based on listings observed in 2026, a room in a shared flat or in someone's home usually rents for 1,000 to 1,500 CHF a month, often with bills, internet and cleaning on top (our cross-border housing Observatory survey, June 2026), and supply is scarce (vacancy rate below 1%, OCSTAT). That is why many people look for their room on the French side, 20 minutes from the centre: the same budget gets a furnished room in a whole house.",
+      a: `In Geneva itself, based on listings observed in 2026, a room in a shared flat or in someone's home usually rents for 1,000 to 1,500 CHF a month, often with bills, internet and cleaning on top (our cross-border housing Observatory survey, June 2026), and supply is scarce (vacancy rate below 1%, OCSTAT). That is why many people look for their room on the French side, ${STATS_DISPLAY.en.distance}: the same budget gets a furnished room in a whole house.`,
     },
     {
       q: "How much is a furnished room near Geneva at La Villa Coliving?",
       a: `From ${PRICE_SHARED_CHF_EN}/month all inclusive for a room whose shower room is shared with one other room, ${PRICE_CHF_EN}/month with a private shower room. The figure is the total monthly cost: rent, bills, fibre up to 8 Gb/s, cleaning of the common areas 3 times a week, shared spaces (pool, sauna, gym depending on the house) and events. No application or agency fee, deposit of ${STATS.depositMonths} months' rent excluding charges.`,
     },
+    priceJustificationFaq("en"),
     {
       q: "What are the conditions to rent a room near Geneva?",
       a: `A two-minute online application, then an employment contract or job offer and an ID. No Swiss rental history is required. Reply within 48 h, visit on site or by video, French furnished lease in your name (${STATS.leaseDurationMonths} months renewable, ${STATS.noticePeriodMonths}-month notice) signed online, move-in within 72 h of your first contact if a room is available.`,

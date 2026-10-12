@@ -189,16 +189,16 @@
       "destination": "/prerendered/blog-s-installer-a-geneve-expatrie-cote-suisse-ou-cote-france.html"
     },
     {
-      "source": "/blog/coliving-communaute-reels-amis-geneve-annemasse",
-      "destination": "/prerendered/blog-coliving-communaute-reels-amis-geneve-annemasse.html"
+      "source": "/blog/temps-trajet-annemasse-geneve-par-quartier",
+      "destination": "/prerendered/blog-temps-trajet-annemasse-geneve-par-quartier.html"
     },
     {
       "source": "/blog/lodge-annemasse-coliving-premium-portes-geneve",
       "destination": "/prerendered/blog-lodge-annemasse-coliving-premium-portes-geneve.html"
     },
     {
-      "source": "/blog/temps-trajet-annemasse-geneve-par-quartier",
-      "destination": "/prerendered/blog-temps-trajet-annemasse-geneve-par-quartier.html"
+      "source": "/blog/coliving-communaute-reels-amis-geneve-annemasse",
+      "destination": "/prerendered/blog-coliving-communaute-reels-amis-geneve-annemasse.html"
     },
     {
       "source": "/blog/quitter-son-logement-guide-pratique",
@@ -353,16 +353,16 @@
       "destination": "/prerendered/en-blog-s-installer-a-geneve-expatrie-cote-suisse-ou-cote-france.html"
     },
     {
-      "source": "/en/blog/coliving-communaute-reels-amis-geneve-annemasse",
-      "destination": "/prerendered/en-blog-coliving-communaute-reels-amis-geneve-annemasse.html"
+      "source": "/en/blog/temps-trajet-annemasse-geneve-par-quartier",
+      "destination": "/prerendered/en-blog-temps-trajet-annemasse-geneve-par-quartier.html"
     },
     {
       "source": "/en/blog/lodge-annemasse-coliving-premium-portes-geneve",
       "destination": "/prerendered/en-blog-lodge-annemasse-coliving-premium-portes-geneve.html"
     },
     {
-      "source": "/en/blog/temps-trajet-annemasse-geneve-par-quartier",
-      "destination": "/prerendered/en-blog-temps-trajet-annemasse-geneve-par-quartier.html"
+      "source": "/en/blog/coliving-communaute-reels-amis-geneve-annemasse",
+      "destination": "/prerendered/en-blog-coliving-communaute-reels-amis-geneve-annemasse.html"
     },
     {
       "source": "/en/blog/quitter-son-logement-guide-pratique",
@@ -928,13 +928,8 @@
       "permanent": true
     },
     {
-      "source": "/fr/",
-      "destination": "/",
-      "permanent": true
-    },
-    {
       "source": "/fr/members",
-      "destination": "/le-coliving",
+      "destination": "/candidature",
       "permanent": true
     },
     {
@@ -979,7 +974,7 @@
     },
     {
       "source": "/category/all-products",
-      "destination": "/",
+      "destination": "/nos-maisons",
       "permanent": true
     },
     {
@@ -1220,6 +1215,26 @@
     {
       "source": "/en/blog/vivre-a-annemasse-quand-on-travaille-a-gen%C3%A8ve",
       "destination": "/en/blog/vivre-a-annemasse-quand-on-travaille-a-geneve",
+      "permanent": true
+    },
+    {
+      "source": "/blog/coliving-annemasse-geneve-frontaliers-avantage",
+      "destination": "/blog/coliving-annemasse-geneve-frontaliers-avantages",
+      "permanent": true
+    },
+    {
+      "source": "/en/blog/coliving-annemasse-geneve-frontaliers-avantage",
+      "destination": "/en/blog/coliving-annemasse-geneve-frontaliers-avantages",
+      "permanent": true
+    },
+    {
+      "source": "/blog/s-installer-geneve-expatrie-cote-suisse-cote-france",
+      "destination": "/blog/s-installer-a-geneve-expatrie-cote-suisse-ou-cote-france",
+      "permanent": true
+    },
+    {
+      "source": "/en/blog/s-installer-geneve-expatrie-cote-suisse-cote-france",
+      "destination": "/en/blog/s-installer-a-geneve-expatrie-cote-suisse-ou-cote-france",
       "permanent": true
     }
   ],

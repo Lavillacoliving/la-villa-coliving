@@ -2,7 +2,7 @@
 import { Wallet, Heart, CalendarDays, Trophy, Sparkles, Users, MapPin, ArrowRight } from "lucide-react";
 import { LocalizedLink } from "@/components/LocalizedLink";
 import { useLanguage } from "@/contexts/LanguageContext";
-import { STATS } from "@/data/stats";
+import { STATS, STATS_DISPLAY } from "@/data/stats";
 
 /**
  * VERSION 9: STONE & BRASS
@@ -61,7 +61,8 @@ export function WhyChooseUsV7() {
             {/* Location badge */}
             <div className="inline-flex items-center gap-2 mt-6 px-5 py-2.5 bg-white border border-[#E7E5E4] rounded-xl text-sm font-medium text-[#44403C]">
               <MapPin className="w-4 h-4 text-[#D4A574]" />
-              {language === "en" ? `${STATS.genevaCenterMinutes} min from Geneva city center` : `${STATS.genevaCenterMinutes} min du centre de Genève`}
+              {/* (D1, 09/10/2026) « 20 min » toujours qualifié — libellé unique STATS_DISPLAY.distance */}
+              {language === "en" ? STATS_DISPLAY.en.distance : STATS_DISPLAY.fr.distance}
             </div>
           </div>
 

@@ -1,4 +1,4 @@
-Tu as signé, ou tu vas signer, un contrat à Genève, et tu hésites entre habiter en Suisse et habiter en France voisine. Réponse courte : ton permis décide de ce que tu as le droit de faire, ton budget et ton délai décident du reste, et pour la plupart des salariés qui arrivent, la France voisine est possible dès le premier jour à condition de connaître trois règles. Ce guide est écrit pour les expatriés qui débarquent avec un contrat suisse, et surtout pour ceux qui doivent être installés dans les trente jours.
+Tu as signé, ou tu vas signer, un contrat à Genève, et tu hésites entre habiter en Suisse et en France voisine. Réponse courte : ton permis décide de ce que tu as le droit de faire, ton budget et ton délai font le reste, et pour la plupart des salariés qui arrivent, la France voisine est possible dès le premier jour si tu connais trois règles. Ce guide s'adresse aux expatriés qui débarquent avec un contrat suisse, surtout à ceux qui doivent être installés dans les trente jours.
 
 **En bref**
 - La vraie question n'est pas « Suisse ou France ? » mais « quel permis, quel budget, quel délai ? ».
@@ -7,23 +7,23 @@ Tu as signé, ou tu vas signer, un contrat à Genève, et tu hésites entre habi
 
 ## Ce qui tranche vraiment : permis, budget, délai
 
-Ce n'est pas une affaire de goût, c'est une affaire de règles. Trois paramètres décident avant tout le reste : ton permis (où tu as le droit d'habiter), ton budget net après impôt à la source (ce que tu peux payer) et ton délai (ce qui est réaliste avant ton premier jour).
+Pas une affaire de goût, une affaire de règles. Trois paramètres décident : ton permis (où tu as le droit d'habiter), ton budget net après impôt à la source (ce que tu peux payer) et ton délai (ce qui est réaliste avant ton premier jour).
 
-Le permis d'abord. Si tu habites en Suisse avec un contrat suisse, tu reçois un permis de séjour, en général un permis B. Si tu habites en France et travailles à Genève, tu es frontalier et tu reçois un permis G, demandé auprès de l'Office cantonal de la population et des migrations (OCPM). La différence, c'est qui y a droit tout de suite.
+Le permis d'abord. Si tu habites en Suisse avec un contrat suisse, tu reçois un permis de séjour, en général un permis B. Si tu habites en France et travailles à Genève, tu es frontalier et tu reçois un permis G, demandé auprès de l'Office cantonal de la population et des migrations (OCPM). La différence : qui y a droit tout de suite.
 
 Le budget ensuite. À Genève, l'impôt est retenu à la source sur ton salaire dans les deux cas. Ce qui change, c'est le logement : d'après les annonces relevées en 2026, un studio à Genève se loue entre 1 200 et 2 500 CHF par mois hors charges, avec un taux de vacance inférieur à 1 % (OCSTAT). Côté France, le même budget donne une chambre dans une maison ou un appartement entier, avec un bail français, un dossier français et un trajet quotidien.
 
-Le délai enfin. Trouver un logement à Genève prend souvent quatre à huit semaines sans historique locatif suisse ni fiches de salaire suisses. Côté France, une colocation se trouve en deux à six semaines. Chez nous, le délai médian entre la candidature et l'emménagement est de trente jours (données 2026), et 72 h suffisent dès le premier contact quand une chambre est disponible.
+Le délai enfin. Trouver un logement à Genève prend souvent quatre à huit semaines sans historique locatif ni fiches de salaire suisses. Côté France, une colocation se trouve en deux à six semaines. Chez nous, le délai médian entre la candidature et l'emménagement est de trente jours (données 2026), et 72 h suffisent dès le premier contact quand une chambre est disponible.
 
 ## Quatre profils, quatre marges de manœuvre
 
 **Salarié citoyen de l'UE ou de l'AELE.** Tu peux habiter côté France dès ton arrivée. Le permis G se demande sur la base de ton contrat de travail ; la seule contrainte durable est de rentrer à ton domicile français au moins une fois par semaine (OCPM, page « Demander un permis de travail frontalier », mise à jour juillet 2025). Tu peux donc signer un bail en France avant ton premier jour, puis lancer la demande.
 
-**Ressortissant d'un pays hors UE/AELE.** C'est le profil pour lequel la France voisine n'est pas automatique. Pour un permis G, l'OCPM exige d'avoir « depuis six mois au moins, son domicile régulier dans la zone frontalière voisine », un droit de séjour durable dans le pays voisin, et de « retourner au moins un jour par semaine dans son domicile à l'étranger » ; l'employeur dépose la demande, doit prouver une recherche infructueuse sur les marchés suisse et européen, et le délai annoncé est de douze semaines (OCPM, page « Activité salariée pour frontalier hors UE/AELE », mise à jour du 16 février 2026). En clair : si tu arrives de l'extérieur de l'Europe avec un permis B, tu commences en Suisse, et la France voisine devient une option après six mois de résidence régulière en zone frontalière, avec un titre de séjour français durable. Vérifie ta situation avec ton employeur et l'OCPM avant de signer quoi que ce soit.
+**Ressortissant d'un pays hors UE/AELE.** Le profil pour lequel la France voisine n'est pas automatique. Pour un permis G, l'OCPM exige d'avoir « depuis six mois au moins, son domicile régulier dans la zone frontalière voisine », un droit de séjour durable dans le pays voisin, et de « retourner au moins un jour par semaine dans son domicile à l'étranger » ; l'employeur dépose la demande, doit prouver une recherche infructueuse sur les marchés suisse et européen, et le délai annoncé est de douze semaines (OCPM, page « Activité salariée pour frontalier hors UE/AELE », mise à jour du 16 février 2026). En clair : si tu arrives de l'extérieur de l'Europe avec un permis B, tu commences en Suisse, et la France voisine devient une option après six mois de résidence régulière en zone frontalière, avec un titre de séjour français durable. Vérifie ta situation avec ton employeur et l'OCPM avant de signer.
 
 **Personnel des organisations internationales.** Avec une carte de légitimation du DFAE, tu es dans un cadre à part. Beaucoup de fonctionnaires internationaux vivent en France voisine, et la bourse du logement du Centre d'accueil de la Genève internationale (CAGI) publie des offres à Genève, dans le canton de Vaud et en France voisine. Les modalités de résidence en France passent par le service du protocole de ton organisation : renseigne-toi avant de t'engager sur un bail.
 
-**Couple ou famille.** Le permis du conjoint dépend de sa nationalité et de son activité, et une famille a besoin d'un logement entier, d'écoles et souvent d'une voiture : la question devient quel côté offre ce logement dans ton budget, avec un trajet supportable pour les deux. Pour un couple sans enfant arrivé avec un seul contrat, trois à six mois de transition côté France sont fréquents, le temps de chercher sans pression.
+**Couple ou famille.** Le permis du conjoint dépend de sa nationalité et de son activité, et une famille a besoin d'un logement entier, d'écoles et souvent d'une voiture : la question devient quel côté offre ce logement dans ton budget, avec un trajet supportable pour les deux. Pour un couple sans enfant arrivé avec un seul contrat, trois à six mois de transition côté France sont fréquents.
 
 ## Suisse ou France : le tableau qui tranche
 
@@ -35,16 +35,16 @@ Le délai enfin. Trouver un logement à Genève prend souvent quatre à huit sem
 | Délai réaliste | Quatre à huit semaines sans historique suisse | Deux à six semaines en colocation classique, une à deux semaines en coliving |
 | Impôt sur le salaire | Retenu à la source, puis déclaration genevoise | Retenu à la source à Genève ; déclaration en France des revenus mondiaux, sans double imposition ; quasi-résident possible si 90 % de tes revenus sont imposables en Suisse (AFC Genève, formulaire DRIS/TOU avant le 31 mars) |
 | Assurance maladie | LAMal obligatoire | Droit d'option dans les trois mois suivant la prise d'emploi : LAMal ou assurance française ; choix irrévocable, LAMal par défaut (ameli.fr, avril 2026) |
-| Trajet domicile-travail | Tram, bus ou vélo dans la ville | Depuis Annemasse, Genève Eaux-Vives en 8 minutes de Léman Express et Cornavin en 20 minutes environ ; compte 20 minutes porte-à-porte jusqu'au centre depuis Ville-la-Grand, Ambilly ou Annemasse |
+| Trajet domicile-travail | Tram, bus ou vélo dans la ville | Depuis Annemasse, Genève Eaux-Vives en 7 minutes de Léman Express et Cornavin en 23 minutes ; compte 20 minutes porte-à-porte de Genève-Eaux-Vives en Léman Express depuis Ville-la-Grand, Ambilly ou Annemasse |
 | Chômage en cas de perte d'emploi | Assurance chômage suisse | Indemnisation par France Travail sur la base du salaire suisse, avec le document U1 (Unédic, 2026) |
 
 Lecture rapide : citoyen de l'UE, célibataire, délai court, la colonne de droite marche dès la première semaine ; arrivée de l'extérieur de l'Europe ou famille, la colonne de gauche est ton point de départ.
 
 ## Sans fiche de salaire suisse ni garant : ce qui passe, ce qui bloque
 
-C'est l'objection numéro un des nouveaux arrivants, et elle est fondée. À Genève, une régie demande le plus souvent trois fiches de salaire, un extrait des poursuites et une garantie de loyer ; sans historique suisse, ton dossier passe derrière celui d'un résident. Côté France, une agence classique demande des fiches de salaire et, très souvent, un garant domicilié en France, ce qu'un expatrié n'a pas.
+L'objection numéro un des nouveaux arrivants, et elle est fondée. À Genève, une régie demande le plus souvent trois fiches de salaire, un extrait des poursuites et une garantie de loyer ; sans historique suisse, ton dossier passe derrière celui d'un résident. Côté France, une agence classique demande des fiches de salaire et, très souvent, un garant domicilié en France, ce qu'un expatrié n'a pas.
 
-Ce qui passe : les logements dont le bailleur évalue ton contrat de travail plutôt que ton passé. Chez La Villa, le dossier tient en trois pièces, un contrat de travail signé ou une promesse d'embauche, une pièce d'identité, et la caution de {{CAUTION_MOIS}} mois de loyer hors charges. Un garant n'est demandé qu'au cas par cas, quand le contrat ne couvre pas le loyer, et on te le dit avant la visite, jamais après. Les résidences hôtelières passent aussi, carte bancaire en main, à un prix qui ne dure pas.
+Ce qui passe : Pas encore de fiche de salaire suisse ? Certains bailleurs côté France évaluent ton contrat plutôt que ton passé : chez La Villa Coliving, le dossier tient en trois pièces (contrat de travail signé ou promesse d'embauche, pièce d'identité, caution de 2 mois de loyer hors charges) et un garant n'est demandé qu'au cas par cas, quand le contrat ne couvre pas le loyer — on t'en parle avant de te répondre, jamais après la visite.
 
 Ce qui bloque : un studio en ville dans les quatre premières semaines, sauf relation personnelle ou logement d'entreprise. Beaucoup de nos résidents ont commencé côté France, constitué trois fiches de salaire suisses, puis déménagé, ou sont restés.
 
@@ -53,8 +53,8 @@ Ce qui bloque : un studio en ville dans les quatre premières semaines, sauf rel
 | Option | Prix | Délai réaliste | Dossier demandé | Durée minimum |
 |---|---|---|---|---|
 | Studio en ville (Genève) | 1 200 à 2 500 CHF hors charges | 4 à 8 semaines | 3 fiches de salaire suisses, extrait des poursuites, garant ou garantie bancaire, dépôt jusqu'à 3 mois | 12 mois en pratique |
-| Colocation classique côté France | 600 à 1 000 € selon la ville (annonces, septembre 2026) | 2 à 6 semaines | Fiches de salaire, souvent un garant en France, dépôt 1 à 2 mois | bail d'un an, préavis d'un mois en meublé |
-| Coliving côté France (La Villa) | dès {{PRIX_DES}}/{{PRIX_DES_EUR}} tout inclus, {{PRIX_PRIVATIF}}/{{PRIX_PRIVATIF_EUR}} avec salle d'eau privative | 72 h dès le premier contact si une chambre est disponible | Contrat de travail ou promesse d'embauche, pièce d'identité, caution {{CAUTION_MOIS}} mois hors charges | aucune : bail de 12 mois, préavis d'un mois |
+| Colocation classique côté France | 700 à 1 000 € selon la ville (annonces, septembre 2026) | 2 à 6 semaines | Fiches de salaire, souvent un garant en France, dépôt 1 à 2 mois | bail d'un an, préavis d'un mois en meublé |
+| Coliving côté France (ex. La Villa Coliving) | dès {{PRIX_DES}}/{{PRIX_DES_EUR}} tout inclus, {{PRIX_PRIVATIF}}/{{PRIX_PRIVATIF_EUR}} avec salle d'eau privative | 72 h dès le premier contact si une chambre est disponible | Contrat de travail ou promesse d'embauche, pièce d'identité, caution {{CAUTION_MOIS}} mois hors charges ; un garant n'est demandé qu'au cas par cas, quand le contrat ne couvre pas le loyer — on t'en parle avant de te répondre, jamais après la visite | aucune : bail de 12 mois, préavis d'un mois |
 | Studio meublé ou appart'hôtel côté France | 1 300 à 1 600 € charges comprises (annonces, septembre 2026) | 1 jour à 2 semaines | Carte bancaire ou dossier léger | 1 nuit à 1 mois |
 | Appart'hôtel à Genève | 700 à 1 700 CHF la semaine selon la résidence et la saison (tarifs affichés, septembre 2026) | 1 jour | Carte bancaire | 1 nuit |
 
@@ -64,17 +64,17 @@ Pour un nouveau job dans un mois, la mécanique côté coliving est simple : dos
 
 ## Les 30 premiers jours, semaine par semaine
 
-**Semaine 1, avant même d'arriver.** Tu choisis ton camp avec le tableau ci-dessus. Si c'est la France voisine, tu envoies deux ou trois candidatures et tu demandes une visite en visio. Tu réunis les pièces universelles : passeport, contrat de travail, attestation de l'employeur.
+**Semaine 1, avant même d'arriver.** Tu choisis ton camp avec le tableau. Si c'est la France voisine, tu envoies deux ou trois candidatures et tu demandes une visite en visio. Tu réunis les pièces universelles : passeport, contrat de travail, attestation de l'employeur.
 
 **Semaine 2, l'arrivée.** Tu signes ton bail, tu ouvres un compte bancaire (une banque suisse pour le salaire, une banque française si tu vis en France), et ton employeur lance le permis B ou G. Si tu vis côté France, note la date de ta prise d'emploi : ton droit d'option pour l'assurance maladie court à partir de là, pendant trois mois, et le choix est irrévocable (ameli.fr, avril 2026). Demande deux devis avant la fin du deuxième mois.
 
-**Semaine 3, l'administratif qui compte.** Impôts : rien à faire tout de suite, l'impôt est retenu à la source ; tu noteras la demande de quasi-résident pour le printemps suivant si 90 % de tes revenus sont imposables en Suisse. Abonnement Léman Express ou TPG, médecin traitant.
+**Semaine 3, l'administratif qui compte.** Impôts : rien à faire tout de suite, ils sont retenus à la source ; tu noteras la demande de quasi-résident pour le printemps suivant si 90 % de tes revenus sont imposables en Suisse. Abonnement Léman Express ou TPG, médecin traitant.
 
-**Semaine 4, le premier bilan.** Le logement choisi tient-il ses promesses de trajet et de budget ? Si oui, tu prolonges. Si non, un bail comme le nôtre te laisse partir avec un mois de préavis sans avoir perdu l'année.
+**Semaine 4, le premier bilan.** Le logement choisi tient-il ses promesses de trajet et de budget ? Si oui, tu prolonges. Si non, un bail comme le nôtre te laisse partir avec un mois de préavis, sans perdre l'année.
 
 ## Quand ce n'est pas le bon choix
 
-La France voisine n'est pas faite pour tout le monde, autant le dire. Si tu es ressortissant d'un pays hors UE/AELE et que tu arrives directement de l'étranger, commence en Suisse : la règle des six mois est claire. Si tu viens pour une mission de quelques semaines, une résidence hôtelière est plus adaptée qu'un bail. Si tu arrives en famille avec des enfants, il te faut un logement entier et une école, pas une chambre dans une maison partagée. Si ton travail t'impose une voiture, le trajet frontalier aux heures de pointe ne ressemble pas aux temps de train affichés. Et si ton budget logement est inférieur à 1 200 € par mois tout compris, une colocation classique côté France sera plus juste qu'un coliving. Pour comparer les villes frontalières entre elles, lis [où habiter côté France quand on travaille en Suisse](/blog/ou-habiter-frontalier-suisse-villes-france-pas-cher).
+La France voisine n'est pas faite pour tout le monde. Si tu es ressortissant d'un pays hors UE/AELE et que tu arrives directement de l'étranger, commence en Suisse : la règle des six mois est claire. Si tu viens pour une mission de quelques semaines, une résidence hôtelière est plus adaptée qu'un bail. Si tu arrives en famille avec des enfants, il te faut un logement entier et une école, pas une chambre dans une maison partagée. Si ton travail t'impose une voiture, le trajet frontalier aux heures de pointe ne ressemble pas aux temps de train affichés. Et si ton budget logement est inférieur à 1 200 € par mois tout compris, une colocation classique côté France sera plus juste qu'un coliving. Pour comparer les villes frontalières, lis [où habiter côté France quand on travaille en Suisse](/blog/ou-habiter-frontalier-suisse-villes-france-pas-cher).
 
 ## Questions fréquentes
 
@@ -88,7 +88,7 @@ Pas en gardant le permis B : habiter en France et travailler à Genève, c'est l
 
 **Sans garant suisse, c'est possible ?**
 
-Oui. Une régie genevoise demande le plus souvent un garant ou une garantie bancaire, mais côté France, plusieurs bailleurs évaluent ton contrat de travail plutôt qu'un garant. Chez nous, le dossier se limite au contrat de travail ou à la promesse d'embauche, à une pièce d'identité et à la caution de {{CAUTION_MOIS}} mois hors charges ; un garant n'est discuté qu'au cas par cas, avant la visite.
+Oui. Une régie genevoise demande le plus souvent un garant ou une garantie bancaire ; côté France, plusieurs bailleurs évaluent ton contrat de travail plutôt qu'un garant. Chez nous, le dossier tient en trois pièces (contrat de travail signé ou promesse d'embauche, pièce d'identité, caution de {{CAUTION_MOIS}} mois hors charges) et un garant n'est demandé qu'au cas par cas, quand le contrat ne couvre pas le loyer — on t'en parle avant de te répondre, jamais après la visite.
 
 **Le coût de la vie est-il vraiment plus bas côté France ?**
 

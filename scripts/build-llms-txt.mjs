@@ -1,6 +1,7 @@
 /**
  * Génère public/llms.txt (FR) et public/en/llms.txt (EN) depuis la fiche de faits canonique
- * (src/data/entityFacts.ts) et les gabarits scripts/llms-template.{fr,en}.md (Lot S1.3).
+ * (src/data/entityFacts.ts, + STATS pour {{LIVING_SPACE}} depuis le lot L2 du 09/10/2026) et les gabarits
+ * scripts/llms-template.{fr,en}.md (Lot S1.3).
  * Les fichiers générés sont COMMITTÉS (le workflow ne committe que le prérendu) ; la garde
  * scripts/check-entity-facts.mjs régénère en mémoire et échoue s'ils diffèrent → « npm run build:llms ».
  * La date « Dernière mise à jour » = ENTITY_FACTS_VERSION (pas la date du jour : sortie déterministe).
@@ -20,26 +21,28 @@ function factsLines(lang, m) {
   if (lang === 'en') {
     return [
       `- ${F.totalRooms} private furnished rooms (${F.surfaces.min} to ${F.surfaces.max} m²) across ${F.totalHouses} houses (La Villa, Le Loft, Le Lodge)`,
-      `- Location: Ville-la-Grand, Ambilly, Annemasse (Haute-Savoie, France) — ${F.genevaMinutes} minutes door-to-door from Geneva city centre`,
+      `- Location: Ville-la-Grand, Ambilly, Annemasse (Haute-Savoie, France) — ${F.commuteFormula.en}`,
       `- Price: all-inclusive from ${F.price.en.fromChf}/month (contractual rent in euros: from ${F.price.en.fromEur}) for the ${villa.sharedBathRooms} La Villa rooms sharing a shower room between 2 rooms; ${std}/month (${stdEur}) with a private shower room`,
       `- Included: utilities, fibre up to ${F.fiberSpeed}, common-area cleaning ${F.cleaningPerWeek} times a week, pool, sauna, gym, streaming, yoga and events`,
       `- Target: Swiss cross-border workers, expats, young professionals working in Geneva`,
       `- ${F.lease.months}-month lease: free to leave at any time with ${F.lease.noticeMonths} month's notice`,
       `- No application fee, no agency fee; deposit of ${F.depositMonths} months' rent excluding charges`,
       `- ${F.totalResidents}+ residents welcomed since ${F.foundingLabel.en}, run directly by the two founders (${F.founders.join(' and ')}), regular events (pizza nights, yoga classes, afterworks)`,
-      `- 99% occupancy rate over 5 years`,
+      // (Lot L3, Jérôme 09/10/2026) D3 : ancienne ligne « occupancy over 5 years » retirée ; D4 : note Google (STATS_DISPLAY.googleRating) + lien fiche.
+      `- Reviews: ${m.STATS_DISPLAY.en.googleRating} — ${F.googleReviews.url}`,
     ].join('\n');
   }
   return [
     `- ${F.totalRooms} chambres meublées privées (${F.surfaces.min} à ${F.surfaces.max} m²) dans ${F.totalHouses} maisons (La Villa, Le Loft, Le Lodge)`,
-    `- Localisation : Ville-la-Grand, Ambilly, Annemasse (Haute-Savoie, France) — à ${F.genevaMinutes} minutes porte-à-porte du centre de Genève`,
+    `- Localisation : Ville-la-Grand, Ambilly, Annemasse (Haute-Savoie, France) — ${F.commuteFormula.fr}`,
     `- Prix : tout inclus dès ${F.price.fr.fromChf}/mois (loyer contractuel en euros : dès ${F.price.fr.fromEur}) pour les ${villa.sharedBathRooms} chambres de La Villa à salle d'eau partagée entre 2 chambres ; ${std}/mois (${stdEur}) avec salle d'eau privative`,
     `- Inclus : charges, fibre jusqu'à ${F.fiberSpeed}, ménage des espaces communs ${F.cleaningPerWeek} fois par semaine, piscine, sauna, salle de sport, streaming, yoga et événements`,
     `- Public : frontaliers Suisse, expats, jeunes professionnels qui travaillent à Genève`,
     `- Bail de ${F.lease.months} mois : libre de partir à tout moment avec ${F.lease.noticeMonths} mois de préavis`,
     `- Sans frais de dossier ni d'agence ; caution de ${F.depositMonths} mois de loyer hors charges`,
     `- ${F.totalResidents}+ résidents accueillis depuis ${F.foundingLabel.fr}, gestion en direct par les deux fondateurs (${F.founders.join(' et ')}), événements réguliers (pizza party, cours de yoga, afterworks)`,
-    `- 99% d'occupation sur 5 ans d'exploitation`,
+    // (Lot L3, Jérôme 09/10/2026) D3 : ancienne ligne « occupation sur 5 ans » retirée ; D4 : note Google (STATS_DISPLAY.googleRating) + lien fiche.
+    `- Avis : ${m.STATS_DISPLAY.fr.googleRating} — ${F.googleReviews.url}`,
   ].join('\n');
 }
 
@@ -49,10 +52,26 @@ function houseLines(lang, m) {
     : `- ${h.label} : ${h.rooms} chambres, ${h.commune} — ${h.amenities.fr}. ${h.commute.fr.charAt(0).toUpperCase()}${h.commute.fr.slice(1)}.`)).join('\n');
 }
 
+/** (Lot L2, 09/10/2026) Espace de vie par colocataire — STATS.livingSpacePerResidentMin/Max (fact block §1), plus de « 38 m² » en dur. */
+function livingSpace(lang, m) {
+  const S = m.STATS;
+  return lang === 'en'
+    ? `${S.livingSpacePerResidentMin} to ${S.livingSpacePerResidentMax} m² of living space per flatmate`
+    : `${S.livingSpacePerResidentMin} à ${S.livingSpacePerResidentMax} m² d'espace de vie par colocataire`;
+}
+
 function houseLinks(lang, m) {
   return m.ENTITY_FACTS.houses.map((h) => (lang === 'en'
     ? `- ${h.label} (${h.rooms} rooms): https://www.lavillacoliving.com/en/${h.slug}`
     : `- ${h.label} (${h.rooms} ch.) : https://www.lavillacoliving.com/${h.slug}`)).join('\n');
+}
+
+/** (A2, 11/10/2026) Occupation du volet « Vu de nos maisons » : valeur exacte + base, depuis la source unique (OCCUPANCY). */
+function occupancyLine(lang, m) {
+  const o = m.OCCUPANCY, d = m.OCCUPANCY_DISPLAY[lang];
+  return lang === 'en'
+    ? `${d.value} of room-days excluding each house's first ${o.rampUpWeeks} weeks (${o.sinceLabel.en} → ${o.measuredOnLabel.en})`
+    : `${d.value} des jours-chambre hors les ${o.rampUpWeeks} premières semaines de chaque maison (${o.sinceLabel.fr} → ${o.measuredOnLabel.fr})`;
 }
 
 /** Rendu complet d'un llms.txt (pur : même sortie pour une même source). */
@@ -63,12 +82,18 @@ export async function renderLlms(lang, m) {
   return tpl
     .replace('{{FACTS}}', factsLines(lang, m))
     .replace('{{HOUSES}}', houseLines(lang, m))
+    // (Lot L1, 10/2026) Bloc « Où chercher une chambre côté France » — même texte que le composant <OuChercher variant="full"/>.
+    .replace('{{OU_CHERCHER}}', m.ouChercherMarkdown(lang))
     .replace('{{HOUSE_LINKS}}', houseLinks(lang, m))
+    .replace('{{LIVING_SPACE}}', livingSpace(lang, m))
+    .replace(/\{\{OCCUPANCY\}\}/g, occupancyLine(lang, m)) // (A2, 11/10/2026) même mesure que /investisseurs et l'Observatoire
+    // (Lot L2, 09/10/2026, D1) Libellé de marque unique « 20 min de Genève-Eaux-Vives en Léman Express, porte-à-porte » = STATS_DISPLAY.distance.
+    .replace(/\{\{DISTANCE\}\}/g, m.STATS_DISPLAY[lang].distance)
     .replace(/\{\{MIN\}\}/g, String(F.genevaMinutes))
     .replace(/\{\{RESPONSE_HOURS\}\}/g, String(F.responseHours))
     .replace(/\{\{DEPOSIT_MONTHS\}\}/g, String(F.depositMonths))
     .replace('{{INSTAGRAM}}', instagram)
-    .replace('{{UPDATED}}', F.version);
+    .replace('{{UPDATED}}', F.version.slice(0, 10)); // AAAA-MM-JJ : un suffixe de version (b, c…) ne fuit pas dans llms.txt
 }
 
 export const LLMS_FILES = { fr: path.join(ROOT, 'public', 'llms.txt'), en: path.join(ROOT, 'public', 'en', 'llms.txt') };

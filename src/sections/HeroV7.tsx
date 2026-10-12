@@ -4,8 +4,16 @@ import { colocGeneveHref } from "@/lib/siteLinks";
 import { Scrim } from "@/components/Scrim";
 import { ArrowRight, ChevronDown, Home, Users, Heart, MapPin } from "lucide-react";
 import { useLanguage } from "@/contexts/LanguageContext";
-import { STATS, STATS_DISPLAY, PRICE_SHARED_CHF_FR, PRICE_SHARED_CHF_EN } from "@/data/stats";
+import { RatingStars } from "@/components/RatingStars";
+import { STATS, STATS_DISPLAY, PRICE_SHARED_CHF_FR, PRICE_SHARED_CHF_EN, GOOGLE_REVIEWS, GOOGLE_REVIEWS_LINK_LABEL } from "@/data/stats";
+import { ENTITY_HOUSES } from "@/data/entityFacts";
 import { useRoomAvailability, globalAvailabilityLabel } from "@/lib/availability";
+
+/** « Ville-la-Grand, Ambilly et Annemasse » — communes dans l'ordre de la source unique. */
+const HERO_COMMUNES = {
+  fr: ENTITY_HOUSES.map((h) => h.commune).reduce((acc, c, i, a) => (i === 0 ? c : i === a.length - 1 ? `${acc} et ${c}` : `${acc}, ${c}`), ""),
+  en: ENTITY_HOUSES.map((h) => h.commune).reduce((acc, c, i, a) => (i === 0 ? c : i === a.length - 1 ? `${acc} and ${c}` : `${acc}, ${c}`), ""),
+};
 
 /**
  * VERSION 9: STONE & BRASS — Condo premium contemporain
@@ -25,7 +33,7 @@ export function HeroV7() {
         <div className="absolute inset-0">
           <img
             src="/images/la villa jardin.webp"
-            alt={language === "en" ? "La Villa Coliving — premium house with pool, 20 min from Geneva city center" : "La Villa Coliving — maison premium avec piscine à 20 min du centre de Genève"}
+            alt={language === "en" ? `La Villa Coliving — premium house with pool, ${STATS_DISPLAY.en.distance}` : `La Villa Coliving — maison premium avec piscine, à ${STATS_DISPLAY.fr.distance}`}
             className="w-full h-full object-cover"
             width={1920}
             height={1080}
@@ -74,11 +82,13 @@ export function HeroV7() {
             )}
           </h1>
 
-          {/* Description */}
+          {/* Description — texte arrêté par Jérôme le 09/10/2026 (Lot L1, D1 complet) : la marque, les 3 communes,
+              « côté France », le trajet qualifié (STATS_DISPLAY.distance, jamais « du centre »), « sans frais de
+              dossier » ; pas de temps de train ici (il vit dans la fiche entité). Une seule chaîne = un seul nœud texte. */}
           <p className="text-base md:text-lg text-white max-w-xl mb-6 leading-relaxed font-light [text-shadow:0_2px_10px_rgba(0,0,0,0.55)]">
             {language === "en"
-              ? `Your private room in a house with pool, 20 min from Geneva city center. From ${PRICE_SHARED_CHF_EN}/month, all inclusive.`
-              : `Ta chambre privée dans une maison avec piscine, à 20 min du centre de Genève. Dès ${PRICE_SHARED_CHF_FR}/mois tout inclus.`}
+              ? `Your private room at La Villa Coliving: ${STATS.totalHouses} houses with pool, sauna and gym in ${HERO_COMMUNES.en}, on the French side, ${STATS_DISPLAY.en.distance}. From ${PRICE_SHARED_CHF_EN}/month, all inclusive, no application fee.`
+              : `Ta chambre privée chez La Villa Coliving : ${STATS.totalHouses} maisons avec piscine, sauna et salle de sport à ${HERO_COMMUNES.fr}, côté France, à ${STATS_DISPLAY.fr.distance}. Dès ${PRICE_SHARED_CHF_FR}/mois tout inclus, sans frais de dossier.`}
           </p>
 
           {/* CTAs — remontés au-dessus de la réassurance/preuve sociale : GA4 montre que
@@ -108,21 +118,23 @@ export function HeroV7() {
               : "Tout est compris — pas de frais de dossier, pas d'honoraires d'agence, pas de frais cachés."}
           </p>
 
-          {/* Social proof */}
-          <div className="flex items-center gap-3 mb-12 md:mb-14">
-            <div className="flex items-center gap-1">
-              {[1,2,3,4,5].map(i => (
-                <svg key={i} className="w-4 h-4 text-[#E0BB8A]" fill="currentColor" viewBox="0 0 20 20">
-                  <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-                </svg>
-              ))}
-            </div>
-            <span
-              className="text-white/90 text-sm font-medium"
-              title={language === "en" ? "Average rating — resident surveys 2021-2026" : "Note moyenne — enquêtes résidents 2021-2026"}
-            >
-              {`${STATS_DISPLAY[L].rating}/5 ${language === "en" ? "(resident surveys)" : "(enquêtes résidents)"} — ${STATS_DISPLAY[L].residents}`}
+          {/* Social proof — (Lot L3, D4 Jérôme 09/10/2026) note de la fiche Google (STATS_DISPLAY.googleRating, toujours
+              « sur Google ») + lien « Voir les avis » vers la fiche ; l'ancienne note interne (NPS) n'est plus publiée.
+              Une phrase = un nœud texte ; le lien est un élément à part (anti-#418). */}
+          <div className="flex flex-wrap items-center gap-x-3 gap-y-1 mb-12 md:mb-14">
+            {/* (A9, 11/10/2026) Étoiles proportionnelles à la note (4,8 → 4 pleines + 80 %), déterministes. */}
+            <RatingStars lang={L} />
+            <span className="text-white/90 text-sm font-medium">
+              {`${STATS_DISPLAY[L].googleRating} — ${STATS_DISPLAY[L].residents}`}
             </span>
+            <a
+              href={GOOGLE_REVIEWS.url}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-white/80 text-sm underline underline-offset-4 hover:text-white transition-colors"
+            >
+              {GOOGLE_REVIEWS_LINK_LABEL[L]}
+            </a>
           </div>
 
           {/* Availability signal — dispo réelle (v_public_rooms), dates comprises.
@@ -162,8 +174,9 @@ export function HeroV7() {
                 label: language === "en" ? "All inclusive / month" : "Tout inclus / mois",
               },
               {
-                value: `${STATS.occupancyRate}%`,
-                label: language === "en" ? `Occupancy over ${STATS.occupancyYears} yrs` : `Taux d'occupation sur ${STATS.occupancyYears} ans`,
+                // (Lot L3, D3 Jérôme 09/10/2026) Ancien taux d'occupation « sur 5 ans » retiré (non mesuré) → séjour moyen (fact block §1).
+                value: language === "en" ? `${STATS.averageStayMonths} months` : `${STATS.averageStayMonths} mois`,
+                label: language === "en" ? "Average stay" : "De séjour en moyenne",
               },
             ].map((stat, index) => (
               <div key={index}>
@@ -323,7 +336,7 @@ export function HeroV7() {
                 { icon: Home, text: language === "en" ? "Real houses, not residences" : "De vraies maisons, pas des résidences", bold: language === "en" ? "Real houses" : "vraies maisons" },
                 { icon: Users, text: language === "en" ? `${STATS.minResidentsPerHouse} to ${STATS.maxResidentsPerHouse} residents per house` : `${STATS.minResidentsPerHouse} à ${STATS.maxResidentsPerHouse} résidents par maison`, bold: language === "en" ? `${STATS.minResidentsPerHouse} to ${STATS.maxResidentsPerHouse}` : `${STATS.minResidentsPerHouse} à ${STATS.maxResidentsPerHouse}` },
                 { icon: Heart, text: language === "en" ? "Real colivings, not shared flats" : "De vrais colivings, pas des colocs", bold: language === "en" ? "Real colivings" : "vrais colivings" },
-                { icon: MapPin, text: language === "en" ? `${STATS.genevaCenterMinutes} min from Geneva city center` : `${STATS.genevaCenterMinutes} min du centre de Genève`, bold: `${STATS.genevaCenterMinutes} min` },
+                { icon: MapPin, text: STATS_DISPLAY[L].distance, bold: `${STATS.genevaCenterMinutes} min` }, // (D1, 09/10/2026) libellé toujours qualifié
               ].map((item, index) => (
                 <div key={index} className="flex items-center gap-3">
                   <div className="w-9 h-9 bg-white/[0.08] rounded-lg flex items-center justify-center">

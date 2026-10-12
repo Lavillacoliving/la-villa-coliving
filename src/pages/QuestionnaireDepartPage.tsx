@@ -13,7 +13,9 @@ import { SUPABASE_URL } from '@/lib/supabase';
  */
 
 const FN_URL = `${SUPABASE_URL}/functions/v1/exit-survey`;
-// Fiche Google Business unique de La Villa Coliving (avis publics).
+// Fiche Google Business unique de La Villa Coliving (avis publics) — lien « ÉCRIRE un avis ».
+// (Lot L3, 09/10/2026) Volontairement distinct de GOOGLE_REVIEWS.url (src/data/stats.ts, lien « Voir les avis » par cid) :
+// ici on ouvre le formulaire d'avis, pas la fiche. Ne pas remplacer par le cid.
 const GOOGLE_REVIEW_URL = 'https://g.page/r/CTbYoHhhGGzJEBM/review';
 
 type Lang = 'fr' | 'en';

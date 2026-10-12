@@ -1,12 +1,18 @@
 import type { QAPair } from "@/lib/structuredData";
-import { PRICE_CHF_FR, PRICE_CHF_EN, PRICE_SHARED_CHF_FR, PRICE_SHARED_CHF_EN } from "@/data/stats";
+import { PRICE_CHF_FR, PRICE_CHF_EN, PRICE_SHARED_CHF_FR, PRICE_SHARED_CHF_EN, STATS_DISPLAY } from "@/data/stats";
+import { ENTITY_HOUSES } from "@/data/entityFacts";
 
 // §9 du playbook AEO — /nos-maisons (vue d'ensemble & choix). Tutoiement, texte verbatim.
+// (Lot L2 « Emplacement et transport », 09/10/2026) « 20 min » toujours qualifié (STATS_DISPLAY.distance, D1) ; trajets
+// par maison = les trois lignes courtes ENTITY_HOUSES[].commute (A.1), jamais une minute en dur. Séparateur « : » (pas
+// « — ») : la garde check-entity-facts exige la puce « Trajets : … » de la fiche entité exactement une fois par page.
+const commutes = (lang: "fr" | "en") => ENTITY_HOUSES.map((h) => `${h.label}${lang === "en" ? ": " : " : "}${h.commute[lang]}`).join(". ");
+
 export const maisonsFaq: { fr: QAPair[]; en: QAPair[] } = {
   fr: [
     {
       q: "Combien de maisons de coliving La Villa propose-t-elle près de Genève ?",
-      a: "La Villa Coliving gère trois maisons de coliving à moins de 20 minutes du centre de Genève, côté France : La Villa à Ville-la-Grand (10 résidents), Le Loft à Ambilly (7 résidents) et Le Lodge à Annemasse (12 résidents). Chacune dispose d'une piscine, d'un sauna, d'une salle de sport et d'un espace home cinéma.",
+      a: `La Villa Coliving gère trois maisons de coliving côté France, à ${STATS_DISPLAY.fr.distance} : La Villa à Ville-la-Grand (10 résidents), Le Loft à Ambilly (7 résidents) et Le Lodge à Annemasse (12 résidents). Chacune dispose d'une piscine, d'un sauna, d'une salle de sport et d'un espace home cinéma.`,
     },
     {
       q: "Quelle maison choisir entre La Villa, Le Loft et Le Lodge ?",
@@ -18,13 +24,13 @@ export const maisonsFaq: { fr: QAPair[]; en: QAPair[] } = {
     },
     {
       q: "Les maisons sont-elles toutes proches de Genève ?",
-      a: "Oui. Les trois maisons de La Villa Coliving se trouvent à moins de 20 minutes porte-à-porte du centre de Genève, côté France : en Léman Express depuis la gare d'Annemasse (à 10 min à pied de La Villa, 9 min du Lodge) ou en tram pour Le Loft, à Ambilly.",
+      a: `Oui. Les trois maisons de La Villa Coliving sont côté France, à ${STATS_DISPLAY.fr.distance}. ${commutes("fr")}.`,
     },
   ],
   en: [
     {
       q: "How many coliving houses does La Villa offer near Geneva?",
-      a: "La Villa Coliving runs three coliving houses under 20 minutes from Geneva city center, on the French side: La Villa in Ville-la-Grand (10 residents), Le Loft in Ambilly (7 residents) and Le Lodge in Annemasse (12 residents). Each has a pool, a sauna, a gym and a home cinema space.",
+      a: `La Villa Coliving runs three coliving houses on the French side, ${STATS_DISPLAY.en.distance}: La Villa in Ville-la-Grand (10 residents), Le Loft in Ambilly (7 residents) and Le Lodge in Annemasse (12 residents). Each has a pool, a sauna, a gym and a home cinema space.`,
     },
     {
       q: "Which house should you choose between La Villa, Le Loft and Le Lodge?",
@@ -36,7 +42,7 @@ export const maisonsFaq: { fr: QAPair[]; en: QAPair[] } = {
     },
     {
       q: "Are all the houses close to Geneva?",
-      a: "Yes. All three La Villa Coliving houses are under 20 minutes door-to-door from Geneva city center, on the French side: by Léman Express from Annemasse station (a 10-min walk from La Villa, 9 min from Le Lodge) or by tram for Le Loft, in Ambilly.",
+      a: `Yes. All three La Villa Coliving houses are on the French side, ${STATS_DISPLAY.en.distance}. ${commutes("en")}.`,
     },
   ],
 };

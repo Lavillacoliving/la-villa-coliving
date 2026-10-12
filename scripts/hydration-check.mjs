@@ -74,7 +74,13 @@ const QUERY_ROUTES = [
 ];
 
 // (Lot B) Index du blog et articles qui citent un numéro de téléphone (format-detection, liens tel:).
-const BLOG_ROUTES = ['/blog', '/en/blog', '/blog/guide-ressources-frontalier-geneve', '/en/blog/guide-ressources-frontalier-geneve'];
+// (Lot L1, 10/2026) + deux articles porteurs du bloc « Où chercher » (allowlist src/data/ouChercherArticles.ts) :
+// bloc complet ancré sur un titre (trouver-colocation) et bloc court avant le marqueur entité d'une page de décision.
+const BLOG_ROUTES = [
+  '/blog', '/en/blog', '/blog/guide-ressources-frontalier-geneve', '/en/blog/guide-ressources-frontalier-geneve',
+  '/blog/trouver-colocation-geneve-frontalier', '/en/blog/trouver-colocation-geneve-frontalier',
+  '/blog/s-installer-a-geneve-expatrie-cote-suisse-ou-cote-france', '/en/blog/living-in-france-working-in-geneva',
+];
 
 // (Lot B) Horloge décalée : le lecteur charge la page des semaines après le prérendu (changement de mois
 // et d'année). Tout texte calculé avec new Date() au rendu (année du pied de page, mois de /tarifs)
@@ -105,6 +111,49 @@ function fileFor(route) {
 // Erreurs d'hydratation (dev ET prod). Les avertissements d'attributs (dev uniquement,
 // « A tree hydrated but some attributes… ») ne font PAS échouer : React les ignore en prod.
 const HYDRATION_RE = /Hydration failed|Minified React error #4(18|23|25)|regenerated on the client|Text content does not match|did not match/i;
+
+// (08/10/2026, lot A indexation) Lien de changement de langue crawlable (LanguageSwitchLink). Un href
+// faux ne fait pas échouer l'hydratation (écart d'attribut ignoré, ci-dessus) : on lit donc le HTML
+// prérendu de CHAQUE page. Attendu : au moins 2 <a hreflang> (barre de navigation + pied de page) vers
+// la version miroir, sans query ni hash, et qui répond (page prérendue). Page indexable : la cible est
+// son <link rel="alternate" hreflang>. Page noindex (fiches chambres…) : une page prérendue de l'autre
+// langue. 404.html (partagé par toutes les URL inconnues, prérendu en français) : la constante /en.
+const SITE_ORIGIN = 'https://www.lavillacoliving.com';
+const attrOf = (attrs, name) => (attrs.match(new RegExp(`(?:^|\\s)${name}="([^"]*)"`, 'i')) || [])[1];
+
+async function checkLanguageLinks() {
+  const files = (await fs.readdir(PRERENDERED)).filter((f) => f.endsWith('.html'));
+  const existing = new Set(files);
+  const failures = [];
+  for (const file of files) {
+    const html = await fs.readFile(path.join(PRERENDERED, file), 'utf-8');
+    const target = attrOf((html.match(/<html\s([^>]*)>/i) || [, ''])[1], 'lang') === 'en' ? 'fr' : 'en';
+    let expected = null;
+    if (file === '404.html') expected = target === 'en' ? '/en' : '/';
+    else {
+      const alt = [...html.split('</head>')[0].matchAll(/<link\s([^>]*)>/gi)]
+        .map((m) => m[1])
+        .find((a) => attrOf(a, 'rel') === 'alternate' && attrOf(a, 'hreflang')?.toLowerCase() === target);
+      if (alt && attrOf(alt, 'href')) expected = attrOf(alt, 'href').replace(SITE_ORIGIN, '') || '/';
+    }
+    const links = [...html.matchAll(/<a\s((?:[^>"']|"[^"]*"|'[^']*')*)>/gi)]
+      .map((m) => m[1])
+      .filter((a) => attrOf(a, 'hreflang') !== undefined)
+      .map((a) => ({ href: attrOf(a, 'href') ?? '', lang: attrOf(a, 'hreflang') }));
+    const problems = [];
+    if (links.length < 2) problems.push(`${links.length} lien(s) de langue <a hreflang> (attendu ≥ 2 : barre + pied de page)`);
+    for (const { href, lang } of links) {
+      const inTarget = target === 'en' ? href === '/en' || href.startsWith('/en/') : !(href === '/en' || href.startsWith('/en/'));
+      if (lang !== target) problems.push(`hreflang="${lang}" (attendu ${target}) sur ${href}`);
+      if (/[?#]/.test(href)) problems.push(`query ou hash dans ${href}`);
+      if (expected !== null && href !== expected) problems.push(`href ${href} ≠ miroir attendu ${expected}`);
+      if (!href.startsWith('/') || !inTarget || !existing.has(fileFor(href))) problems.push(`cible ${href} : pas une page prérendue en ${target}`);
+    }
+    if (problems.length) failures.push({ route: file, device: 'lien de langue', message: [...new Set(problems)].join(' · ') });
+  }
+  console.log(`${failures.length ? '❌' : '✅'} Liens de langue : ${files.length} pages prérendues lues, ${failures.length} en anomalie`);
+  return failures;
+}
 
 async function main() {
   const puppeteer = (await import('puppeteer')).default;
@@ -137,7 +186,7 @@ async function main() {
     desktop: { viewport: { width: 1440, height: 900 }, ua: 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/128.0 Safari/537.36 Edg/128.0' },
   };
   console.log(`\n💧 Garde hydratation — ${routes.length} routes × ${Object.keys(DEVICES).length} profils + ${CLOCK_SHIFT_ROUTES.length} routes à l'horloge +${CLOCK_SHIFT_DAYS} j\n`);
-  const failures = [];
+  const failures = await checkLanguageLinks();
   const runs = [
     ...routes.flatMap((route) => Object.keys(DEVICES).map((device) => ({ route, device, shift: 0 }))),
     ...CLOCK_SHIFT_ROUTES.map((route) => ({ route, device: 'desktop', shift: CLOCK_SHIFT_DAYS })),

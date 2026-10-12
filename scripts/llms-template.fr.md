@@ -1,6 +1,6 @@
 # La Villa Coliving
 
-> Colocation et coliving premium meublé tout compris, à {{MIN}} minutes de Genève (côté France).
+> Colocation et coliving premium meublé tout compris, côté France, à {{DISTANCE}}.
 
 ## Faits clés
 {{FACTS}}
@@ -8,8 +8,10 @@
 ## Propriétés
 {{HOUSES}}
 
+{{OU_CHERCHER}}
+
 ## Avantages pour les frontaliers
-- ≈ 36 CHF/m² tout compris (38 m² d'espace par résident), quand les annonces de studios à Genève tournent autour de 50 CHF/m² hors charges (source : Observatoire 2026)
+- ≈ 36 CHF/m² tout compris ({{LIVING_SPACE}}), quand les annonces de studios à Genève tournent autour de 50 CHF/m² hors charges (source : Observatoire 2026)
 - Adresse fiscale en France (avantages frontalier)
 - Tout inclus = pas de frais cachés, pas de caution sur les charges
 - Communauté internationale, aide à l'installation
@@ -24,7 +26,7 @@
 ## Données ouvertes — Observatoire du logement frontalier
 - Étude annuelle : loyer d'annonce d'un studio croisé au temps de trajet vers Genève-Eaux-Vives, pour 17 communes du Genevois français (corridor Léman Express)
 - Chiffre clé 2026 : à Genève, un nouvel arrivant paie environ +44 % au m² qu'un locataire en place (annonces ≈ 50 CHF/m² vs 35 CHF/m² OCSTAT pour les baux en cours)
-- Volet « Vu de nos maisons » (données first-party La Villa, agrégées) : loyer médian d'une chambre 1 360 CHF/mois tout compris (médiane 2026 des loyers en cours), ≈ 38 m² par résident soit ≈ 36 CHF/m² tout compris, durée de séjour 13 mois en moyenne (9 mois hors longs séjours), occupation 98-99 %, 100 % de frontaliers
+- Volet « Vu de nos maisons » (données first-party La Villa, agrégées) : loyer médian d'une chambre 1 360 CHF/mois tout compris (médiane 2026 des loyers en cours), ≈ 38 m² par résident soit ≈ 36 CHF/m² tout compris, durée de séjour 13 mois en moyenne (9 mois hors longs séjours), occupation {{OCCUPANCY}}, 100 % de frontaliers
 - Page : https://www.lavillacoliving.com/observatoire-logement-frontalier-geneve
 - Données CSV (communes françaises) : https://www.lavillacoliving.com/data/observatoire-data-2026.csv
 - Données CSV (Genève) : https://www.lavillacoliving.com/data/observatoire-geneve-2026.csv

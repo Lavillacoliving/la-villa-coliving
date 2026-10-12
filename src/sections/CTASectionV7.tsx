@@ -1,7 +1,7 @@
 import { LocalizedLink } from "@/components/LocalizedLink";
 import { ArrowRight } from 'lucide-react';
 import { useLanguage } from '@/contexts/LanguageContext';
-import { STATS } from '@/data/stats';
+import { STATS, STATS_DISPLAY } from '@/data/stats';
 
 /**
  * VERSION 9: STONE & BRASS — CONDO PREMIUM
@@ -27,9 +27,10 @@ export function CTASectionV7() {
 
           {/* Subtitle */}
           <p className="text-white/60 text-lg leading-relaxed mb-12 max-w-xl mx-auto">
+            {/* (Lot L2, 09/10/2026, D1) « 20 min » toujours qualifié : STATS_DISPLAY.distance, jamais « du centre de Genève ». */}
             {language === 'en'
-              ? `Over ${STATS.totalResidents} residents have chosen our houses since ${STATS.foundedYear}. Pool, sauna, gym, private yoga and fitness classes, pizza nights — all included in ${STATS.totalHouses} human-scale houses, ${STATS.genevaCenterMinutes} min from Geneva city center.`
-              : `Plus de ${STATS.totalResidents} résidents ont choisi nos maisons depuis ${STATS.foundedYear}. Piscine, sauna, salle de sport, cours de yoga et fitness privés, pizza party — tout inclus dans ${STATS.totalHouses} maisons à taille humaine, à ${STATS.genevaCenterMinutes} min du centre de Genève.`}
+              ? `Over ${STATS.totalResidents} residents have chosen our houses since ${STATS.foundedYear}. Pool, sauna, gym, private yoga and fitness classes, pizza nights — all included in ${STATS.totalHouses} human-scale houses, ${STATS_DISPLAY.en.distance}.`
+              : `Plus de ${STATS.totalResidents} résidents ont choisi nos maisons depuis ${STATS.foundedYear}. Piscine, sauna, salle de sport, cours de yoga et fitness privés, pizza party — tout inclus dans ${STATS.totalHouses} maisons à taille humaine, à ${STATS_DISPLAY.fr.distance}.`}
           </p>
 
           {/* CTAs */}

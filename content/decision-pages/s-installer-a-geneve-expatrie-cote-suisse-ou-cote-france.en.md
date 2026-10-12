@@ -35,7 +35,7 @@ The timeline last. Finding a flat in Geneva often takes four to eight weeks with
 | Realistic timeline | Four to eight weeks without a Swiss history | Two to six weeks in a classic flatshare, one to two weeks in coliving |
 | Tax on your salary | Withheld at source, then a Geneva tax return | Withheld at source in Geneva; worldwide income declared in France, without double taxation; quasi-resident status possible if 90% of your income is taxable in Switzerland (Geneva tax administration, DRIS/TOU form before 31 March) |
 | Health insurance | Compulsory LAMal | Right of option within three months of starting work: LAMal or French health insurance; irrevocable choice, LAMal by default (ameli.fr, April 2026) |
-| Commute | Tram, bus or bike within the city | From Annemasse, Geneva Eaux-Vives in 8 minutes by Léman Express and Cornavin in about 20; count 20 minutes door-to-door to the centre from Ville-la-Grand, Ambilly or Annemasse |
+| Commute | Tram, bus or bike within the city | From Annemasse, Geneva Eaux-Vives in 7 minutes by Léman Express and Cornavin in 23 minutes; count 20 minutes door to door to Geneva Eaux-Vives by Léman Express from Ville-la-Grand, Ambilly or Annemasse |
 | Unemployment if you lose your job | Swiss unemployment insurance | Paid by France Travail on the basis of your Swiss salary, with the U1 document (Unédic, 2026) |
 
 Quick read: EU citizen, single, short timeline, the right-hand column works from the first week; arriving from outside Europe or as a family, the left-hand column is your starting point.
@@ -44,7 +44,7 @@ Quick read: EU citizen, single, short timeline, the right-hand column works from
 
 It is the number one objection of newcomers, and it is well founded. In Geneva, a letting agency most often asks for three payslips, a debt-collection extract and a rent guarantee; without a Swiss history, your file ranks behind a resident's. On the French side, a classic agency asks for payslips and, very often, a guarantor based in France, which an expat does not have.
 
-What works: housing where the landlord assesses your employment contract rather than your past. At La Villa, the file comes down to three items, a signed employment contract or a job offer, an ID, and the deposit of {{CAUTION_MOIS}} months' rent excluding charges. A guarantor is only asked for case by case, when the contract does not cover the rent, and we tell you before the visit, never after. Serviced residences work too, with a credit card, at a price not meant to last.
+What works: No Swiss payslip yet? Some landlords on the French side assess your contract rather than your history: at La Villa Coliving the file comes down to three items (a signed employment contract or job offer, an ID, and a deposit of two months' rent excluding bills) and a guarantor is only asked for case by case, when the contract does not cover the rent — we tell you before we reply, never after the visit.
 
 What does not work: a studio in the city within the first four weeks, unless you have a personal connection or company housing. Many of our residents started on the French side, built up three Swiss payslips, then moved, or stayed.
 
@@ -53,8 +53,8 @@ What does not work: a studio in the city within the first four weeks, unless you
 | Option | Price | Realistic timeline | Paperwork required | Minimum stay |
 |---|---|---|---|---|
 | Studio in the city (Geneva) | 1,200 to 2,500 CHF excluding charges | 4 to 8 weeks | 3 Swiss payslips, debt-collection extract, guarantor or bank guarantee, deposit of up to 3 months | 12 months in practice |
-| Classic flatshare, French side | 600 to 1,000 € depending on the town (listings, September 2026) | 2 to 6 weeks | Payslips, often a guarantor in France, 1 to 2 months' deposit | one-year lease, one month's notice when furnished |
-| Coliving, French side (La Villa) | from {{PRIX_DES}}/{{PRIX_DES_EUR}} all-inclusive, {{PRIX_PRIVATIF}}/{{PRIX_PRIVATIF_EUR}} with a private shower room | 72 h from first contact if a room is available | Employment contract or job offer, ID, deposit of {{CAUTION_MOIS}} months excluding charges | none: 12-month lease, one month's notice |
+| Classic flatshare, French side | 700 to 1,000 € depending on the town (listings, September 2026) | 2 to 6 weeks | Payslips, often a guarantor in France, 1 to 2 months' deposit | one-year lease, one month's notice when furnished |
+| Coliving, French side (e.g. La Villa Coliving) | from {{PRIX_DES}}/{{PRIX_DES_EUR}} all-inclusive, {{PRIX_PRIVATIF}}/{{PRIX_PRIVATIF_EUR}} with a private shower room | 72 h from first contact if a room is available | Employment contract or job offer, ID, deposit of {{CAUTION_MOIS}} months excluding charges; a guarantor is only asked for case by case, when the contract does not cover the rent — we tell you before we reply, never after the visit | none: 12-month lease, one month's notice |
 | Furnished studio or aparthotel, French side | 1,300 to 1,600 € including charges (listings, September 2026) | 1 day to 2 weeks | Credit card or light file | 1 night to 1 month |
 | Aparthotel in Geneva | 700 to 1,700 CHF a week depending on the residence and the season (rates displayed, September 2026) | 1 day | Credit card | 1 night |
 
@@ -88,7 +88,7 @@ In Geneva, count four to eight weeks without a Swiss rental history, sometimes m
 
 **Is it possible without a Swiss guarantor?**
 
-Yes. A Geneva letting agency most often asks for a guarantor or a bank guarantee, but on the French side several landlords assess your employment contract rather than a guarantor. With us, the file is limited to the employment contract or job offer, an ID and the deposit of {{CAUTION_MOIS}} months excluding charges; a guarantor is only discussed case by case, before the visit.
+Yes. A Geneva letting agency most often asks for a guarantor or a bank guarantee; on the French side several landlords assess your employment contract rather than a guarantor. With us, the file comes down to three items (a signed employment contract or job offer, an ID, a deposit of {{CAUTION_MOIS}} months excluding charges) and a guarantor is only asked for case by case, when the contract does not cover the rent — we tell you before we reply, never after the visit.
 
 **Is the cost of living really lower on the French side?**
 

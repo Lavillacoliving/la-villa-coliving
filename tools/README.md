@@ -52,12 +52,34 @@ Vérifie les extracteurs sur des données synthétiques (`tools/test/`). À lanc
 
 Trois contrôles supplémentaires, exécutés en CI après le prérendu (`.github/workflows/prerender.yml`) et à la main :
 
-- `npm run check:redirects` — `vercel.json` × `public/sitemap.xml` : aucune chaîne de redirection, aucune URL du
-  sitemap redirigée, paires de consolidation attendues (`scripts/redirects.expected.json`). Après un déploiement :
-  `node scripts/check-redirects.mjs --expect scripts/redirects.expected.json --net` (308 puis 200 en un saut).
-  Pour ajouter une redirection sans créer de chaîne : `node scripts/redirects.mjs --add /blog/ancien /blog/nouveau`.
+- `npm run check:redirects` — `vercel.json` × `public/sitemap.xml` × `public/prerendered/*.html` : aucune chaîne de
+  redirection, aucune URL du sitemap redirigée, paires de consolidation attendues (`scripts/redirects.expected.json`),
+  et (depuis l'audit d'indexation du 07/10/2026) aucune URL interne du HTML prérendu ni de `llms.txt` — liens,
+  canonical, hreflang, og:url, JSON-LD `item`/`url`/`@id`/`mainEntityOfPage`/`sameAs`/`target` — qui redirige :
+  source de `vercel.json`, slash final (« /en/ »), apex sans www, http. Un lien écrit dans le markdown d'un article
+  (en base) n'est qu'un avertissement, à repointer depuis le dashboard ou en SQL ; tout le reste bloque le bot. En
+  CI, échecs et avertissements sont aussi publiés en annotations (lisibles sans compte GitHub). Le HTML lu est celui
+  du DERNIER prérendu (`public/prerendered/`) : après une modification de code, lance d'abord `npm run build:local`,
+  sinon la garde juge l'ancien HTML. `--no-html` saute ce contrôle, `--dist` y ajoute `dist/` (hors CI uniquement).
+  Après un déploiement :
+  `node scripts/check-redirects.mjs --expect scripts/redirects.expected.json --net` (308 puis 200 en un saut ; l'apex
+  en 307 n'y est qu'un avertissement : c'est un réglage Vercel > Domains, pas `vercel.json`).
+  Pour ajouter une redirection sans créer de chaîne : `node scripts/redirects.mjs --add /blog/ancien /blog/nouveau`
+  (c'est aussi la commande que le dashboard affiche, à transmettre à Claude, quand on renomme le slug d'un article
+  publié ; le dashboard refuse de renommer un slug cité par le code : fiche entité, maillage, page de décision).
 - `npm run check:competitors` — aucun nom de concurrent dans le HTML prérendu ni `llms.txt`. La liste n'est jamais
   dans le repo : copier `scripts/competitors.example.json` en `scripts/competitors.local.json` (gitignoré) ; en CI,
   secret GitHub `COMPETITOR_NAMES` (noms séparés par des virgules). Sans liste : avertissement, pas de blocage.
 - `npm run article:sql -- <slug> --mode insert|update` — valide un brouillon `content/decision-pages/<slug>.*` et
   écrit le SQL de publication (voir `content/decision-pages/README.md`).
+- `npm run check:facts -- --strict` — fiche entité × `v_public_rooms` × HTML prérendu × `llms.txt`, plus (Lot L2
+  « Emplacement et transport », 09/10/2026) les règles d'emplacement : formulations D6/D7 interdites sur toutes les
+  pages sauf légales (« mitoyenne », « TPN », numéro de ligne de bus, « tram à 1 min », « 500 m, 5 min à pied »,
+  « CHUV », « terminus du Léman Express »), « 15 min » dans une phrase qui nomme Genève (même en voiture) et, sur
+  les pages en code seulement (hors blog), toute promesse en voiture, durée vers l'aéroport ou « A40 » — ces deux
+  dernières règles bloquent en `--strict` (la CI), avertissent sinon. `node scripts/house-pages-check.mjs` vérifie en
+  plus, par maison et par langue, la phrase de quartier (une fois), la ligne de trajet `ENTITY_HOUSES[].commute` dans
+  les 1 500 premiers caractères après le H1, `data-house-location-version`, le lien « Calculer mon trajet » (Google
+  Maps depuis l'adresse de la maison) et `ROOM_SURFACE_BY_HOUSE` = min/max de `v_public_rooms.surface_m2`. Ces deux
+  gardes lisent `public/prerendered/` : après une modification de code, `npm run build:local` d'abord. Tests :
+  `tools/test/location-rules.test.mjs`, `house-location.test.mjs`, `house-pages-check.test.mjs`.

@@ -9,19 +9,24 @@ import ReactMarkdown, { defaultUrlTransform } from "react-markdown";
 import remarkGfm from "remark-gfm";
 import { Helmet } from "react-helmet";
 import { SEO } from "@/components/SEO";
-import { buildBreadcrumbSchema, buildFaqPageSchema, getFounderByAuthorName, ABOUT_PAGE_LIVE } from "@/lib/structuredData";
+import { buildBreadcrumbSchema, buildFaqPageSchema, getFounderByAuthorName, ABOUT_PAGE_LIVE, homeUrl } from "@/lib/structuredData";
 import { getIntentBucket } from "@/data/blogIntentBuckets";
 import { BlocOffre } from "@/components/BlocOffre";
 import { markInternalRef } from "@/lib/attribution";
 import { WhatsAppButton } from "@/components/WhatsAppButton";
-import { PRICE_SHARED_CHF_FR, PRICE_SHARED_CHF_EN } from "@/data/stats";
+import { PRICE_SHARED_CHF_FR, PRICE_SHARED_CHF_EN, STATS_DISPLAY } from "@/data/stats";
 import { YmylNotice, YmylPosture, AuthorBox } from "@/components/YmylNotice";
 import { isYmyl } from "@/lib/ymyl";
 import { resolveContentTokens } from "@/lib/contentTokens";
 import { EntityFacts } from "@/components/EntityFacts";
 import { ENTITY_FACTS_ARTICLES, fallbackEntityFactsCut } from "@/data/entityFactsArticles";
+import { OuChercher } from "@/components/OuChercher";
+import { OU_CHERCHER_ARTICLES, resolveOuChercherCut } from "@/data/ouChercherArticles";
+import type { OuChercherVariant } from "@/data/answerSlots";
+import { findCommentLines, findContentMarkers, stripCommentLines } from "@/lib/contentMarkers";
 import { NotFoundPage } from "@/pages/NotFoundPage";
 import { formatLongDate } from "@/lib/dates";
+import { pickRelatedPosts } from "@/lib/relatedPosts";
 
 // (Lot B, 01/10/2026) react-markdown neutralise les liens tel: (liste de protocoles sûrs) : on les
 // autorise pour les numéros utiles des guides, liés explicitement depuis que format-detection
@@ -75,10 +80,11 @@ const CL:Record<string,Record<string,string>>={
 // ou-habiter…) coupent plus tôt (~30 % — le lecteur compare des villes, l'offre
 // doit apparaître avant qu'il reparte), fenêtre décalée en conséquence ; tous
 // les autres gardent le milieu (50 %, fenêtre 25-75 %) — comportement inchangé.
-// (Lot C0, 09/2026) avoidIndex : position du marqueur du bloc entité — les titres à moins de
-// ~900 caractères (≈ 150 mots) de ce point sont écartés pour que les deux blocs (bloc offre
-// mi-article et bloc entité) ne se touchent jamais. Sans marqueur (-1) : comportement inchangé.
-function splitForMidCta(md: string, targetRatio: 0.3 | 0.5 = 0.5, avoidIndex = -1): [string, string] | null {
+// (Lot C0, 09/2026 ; Lot L1, 10/2026) avoid : positions des blocs React déjà insérés (bloc entité,
+// bloc « Où chercher ») — les titres à moins de ~900 caractères (≈ 150 mots) de l'un de ces points
+// sont écartés pour que le bloc offre mi-article ne touche jamais un autre bloc. Liste vide :
+// comportement inchangé.
+function splitForMidCta(md: string, targetRatio: 0.3 | 0.5 = 0.5, avoid: readonly number[] = []): [string, string] | null {
   if (md.includes("```")) return null;
   if (md.split(/\s+/).length <= 650) return null;
   const headings: number[] = [];
@@ -89,7 +95,7 @@ function splitForMidCta(md: string, targetRatio: 0.3 | 0.5 = 0.5, avoidIndex = -
   const target = md.length * targetRatio;
   let best = -1;
   for (const idx of headings) {
-    if (avoidIndex >= 0 && Math.abs(idx - avoidIndex) < 900) continue;
+    if (avoid.some((a) => Math.abs(idx - a) < 900)) continue;
     if (best === -1 || Math.abs(idx - target) < Math.abs(best - target)) best = idx;
   }
   if (best === -1) return null;
@@ -101,16 +107,16 @@ function splitForMidCta(md: string, targetRatio: 0.3 | 0.5 = 0.5, avoidIndex = -
 // (Lot C0, brief « Conquête IA », 09/2026) Marqueur du bloc entité dans le markdown des pages de
 // décision : une ligne `<!-- entity-facts -->` seule. react-markdown 10 rend le HTML brut en TEXTE
 // VISIBLE (pas de rehype-raw) : le marqueur est donc découpé ICI, avant le parseur, et remplacé par
-// <EntityFacts/>. Le paragraphe qui le suit = la phrase de contexte propre à la page. Le marqueur
-// est retiré du texte servant à la FAQ, au sommaire et au wordCount. Fonctions pures : le prérendu
-// (Puppeteer) et le client rendent la même chose.
-const ENTITY_FACTS_MARKER_RE = /^[ \t]*<!--\s*entity-facts\s*-->[ \t]*$/m;
-function findEntityFactsMarker(md: string): { index: number; length: number } | null {
-  const m = ENTITY_FACTS_MARKER_RE.exec(md);
-  return m ? { index: m.index, length: m[0].length } : null;
-}
-function stripEntityFactsMarker(md: string): string {
-  return md.replace(ENTITY_FACTS_MARKER_RE, "");
+// <EntityFacts/>. Le paragraphe qui le suit = la phrase de contexte propre à la page.
+// (Lot L1 « ingénierie des créneaux », 10/2026) Les marqueurs passent par le registre
+// src/lib/contentMarkers.ts (`<!-- entity-facts -->`, `<!-- ou-chercher[:court] -->`) ; TOUTE autre
+// ligne-commentaire est retirée du rendu et du texte servant à la FAQ, au sommaire et au wordCount :
+// plus jamais de marqueur orphelin visible, même si un SQL précède le code. Fonctions pures : le
+// prérendu (Puppeteer) et le client rendent la même chose.
+type MdCut = { index: number; length: number };
+function findEntityFactsMarker(md: string): MdCut | null {
+  const m = findContentMarkers(md).find((x) => x.name === "entity-facts");
+  return m ? { index: m.index, length: m.length } : null;
 }
 
 // Extrait les paires Q/R d'une section FAQ markdown (« # FAQ … », « ## FAQ … » ou
@@ -234,7 +240,7 @@ export function BlogPostPage() {
     if (emb && emb.post?.slug === slug && !isPreview) {
       // Premier montage sur page prerendue : état initial déjà en place, pas de fetch.
       // Filet : si le prerender a capturé avant l'arrivée des articles liés, les charger.
-      if (!emb.related || emb.related.length === 0) loadRelated(emb.post.id, emb.post.category);
+      if (!emb.related || emb.related.length === 0) loadRelated(emb.post.id, emb.post.slug, emb.post.category);
       return;
     }
     loadPost(slug);
@@ -261,27 +267,27 @@ export function BlogPostPage() {
         data = row;
       }
       setPost(data);
-      // Load related articles (same category or recent)
-      if (data) loadRelated(data.id, data.category);
+      // Articles connexes : même catégorie d'abord, choix déterministe (src/lib/relatedPosts.ts)
+      if (data) loadRelated(data.id, data.slug, data.category);
     } catch(e) { console.error("Blog post load:",e); }
     finally { setLoading(false); }
   }
 
-  async function loadRelated(postId:string, category:string) {
+  // (08/10/2026, audit GSC EN-5) TOUS les articles publiés sont candidats (colonnes légères, ~40 lignes),
+  // puis choix déterministe dans src/lib/relatedPosts.ts : même catégorie d'abord, ordre de l'anneau de
+  // hachage. L'ancien `.order(published_at).limit(20)` ne proposait que 12 articles sur 41, jamais les
+  // plus anciens. Déterministe = même résultat au prérendu (figé dans __blog_post_data__) et en
+  // navigation SPA (rappel côté client), quel que soit l'ordre renvoyé par Supabase.
+  async function loadRelated(postId:string, postSlug:string, category:string) {
     try {
       const { data, error } = await supabase
         .from("blog_posts")
         .select("id,slug,title_fr,title_en,excerpt_fr,excerpt_en,image_url,read_time_min,category")
         .eq("is_published", true)
-        .neq("id", postId)
-        .order("published_at", { ascending: false })
-        .limit(20);
+        .neq("id", postId);
       if (error) throw error;
       if (!data) return;
-      // Prioritize same-category articles, then fill with recent ones
-      const sameCategory = data.filter(p => p.category === category);
-      const others = data.filter(p => p.category !== category);
-      setRelated([...sameCategory, ...others].slice(0, 3));
+      setRelated(pickRelatedPosts(postSlug, category, data as RelatedPost[], 3));
     } catch(e) { console.error("Related posts load:", e); }
   }
 
@@ -309,7 +315,22 @@ export function BlogPostPage() {
   // (Lot S1) Les 8 articles les plus cités portent le bloc sans marqueur : coupe de repli avant la
   // conclusion (src/data/entityFactsArticles.ts). Longueur 0 : rien à retirer du texte des metas.
   const entityCut = entityMarker ?? (ENTITY_FACTS_ARTICLES.has(post.slug) ? fallbackEntityFactsCut(content) : null);
-  const contentForMeta = entityMarker ? stripEntityFactsMarker(content) : content;
+  // (Lot L1, 10/2026) Bloc « Où chercher une chambre côté France » : marqueur explicite `<!-- ou-chercher[:court] -->`
+  // (filet, aucun article ne l'utilise au 09/10/2026) sinon allowlist code ancrée sur un titre existant
+  // (src/data/ouChercherArticles.ts). Ancre introuvable : pas de bloc (la garde check-answer-slots échoue).
+  const ouMarker = findContentMarkers(content).find((x) => x.name === "ou-chercher");
+  const ouEntry = OU_CHERCHER_ARTICLES[post.slug];
+  let ouCut: (MdCut & { variant: OuChercherVariant }) | null = null;
+  if (ouMarker) ouCut = { index: ouMarker.index, length: ouMarker.length, variant: ouMarker.variant === "court" ? "short" : "full" };
+  else if (ouEntry) {
+    const c = resolveOuChercherCut(content, ouEntry, L, entityCut ? entityCut.index : null);
+    if (c) ouCut = { ...c, variant: ouEntry.variant };
+  }
+  // Toute autre ligne-commentaire (marqueur inconnu, note d'auteur) est retirée du rendu, jamais affichée.
+  const removalCuts: MdCut[] = findCommentLines(content).filter(
+    (c) => c.index !== entityMarker?.index && c.index !== ouMarker?.index,
+  );
+  const contentForMeta = stripCommentLines(content);
   const faqPairs = extractFaqPairs(contentForMeta);
   const toc = extractToc(contentForMeta);
   // Meta description dédiée si renseignée en base (optimisée SEO), sinon excerpt
@@ -322,7 +343,11 @@ export function BlogPostPage() {
   // Localize language-neutral internal paths for the EN site (/x → /en/x).
   const loc = (p: string) => localizePath(p, language);
   const bucket = getIntentBucket(post.slug, post.category);
-  const midSplit = splitForMidCta(content, bucket === "ville" ? 0.3 : 0.5, entityCut ? entityCut.index : -1);
+  const midSplit = splitForMidCta(
+    content,
+    bucket === "ville" ? 0.3 : 0.5,
+    [entityCut?.index, ouCut?.index].filter((x): x is number => typeof x === "number"),
+  );
 
   // (Lot 1) CTA du corps d'article : UTM virtuels de la session (write-once) + le même
   // event GA4 que le bloc offre, position « body », pour comparer les deux portes.
@@ -486,7 +511,7 @@ export function BlogPostPage() {
       />
       <Helmet>
         <script type="application/ld+json">{JSON.stringify(buildBreadcrumbSchema([
-          { name: language === "en" ? "Home" : "Accueil", url: `https://www.lavillacoliving.com${language === "en" ? "/en" : ""}/` },
+          { name: language === "en" ? "Home" : "Accueil", url: homeUrl(language) },
           { name: "Blog", url: `https://www.lavillacoliving.com${language === "en" ? "/en" : ""}/blog` },
           { name: title, url: `https://www.lavillacoliving.com${language === "en" ? "/en" : ""}/blog/${post.slug}` },
         ]))}</script>
@@ -571,20 +596,26 @@ export function BlogPostPage() {
 
           <div className="blog-content max-w-none text-[#44403C]" style={{fontSize:"1.1rem",lineHeight:"1.8"}}>
             {/* Le markdown est rendu en tranches, avec des blocs React insérés entre elles :
-                bloc offre mi-article (longs formats > 650 mots, maison + prix + candidature) et,
-                pour les pages de décision, le bloc entité à la place du marqueur (Lot C0). Sans
-                coupe : une seule tranche — rendu identique à l'ancien. Clés stables → hydratation sûre. */}
+                bloc offre mi-article (longs formats > 650 mots, maison + prix + candidature), le bloc
+                « Où chercher » (Lot L1, allowlist ou marqueur) et, pour les pages de décision, le bloc
+                entité à la place du marqueur (Lot C0). Les lignes-commentaires restantes sont des coupes
+                sans nœud (retirées). Sans coupe : une seule tranche — rendu identique à l'ancien.
+                Clés stables (ordre des coupes déterministe) → hydratation sûre. */}
             {(() => {
-              const cuts: { at: number; len: number; node: React.ReactNode }[] = [];
+              const cuts: { at: number; len: number; node: React.ReactNode | null }[] = [];
               if (midSplit) cuts.push({ at: midSplit[0].length, len: 0, node: <BlocOffre variant="mid" slug={post.slug} bucket={bucket} /> });
+              // Tri stable : à index égal (ancre « before-entity-facts »), le bloc « Où chercher » précède le bloc entité.
+              if (ouCut) cuts.push({ at: ouCut.index, len: ouCut.length, node: <OuChercher variant={ouCut.variant} page={post.slug} tone="article" /> });
               if (entityCut) cuts.push({ at: entityCut.index, len: entityCut.length, node: <EntityFacts page={post.slug} /> });
+              for (const c of removalCuts) cuts.push({ at: c.index, len: c.length, node: null });
               cuts.sort((a, b) => a.at - b.at);
               const out: React.ReactNode[] = [];
               let prev = 0;
               cuts.forEach((c, i) => {
+                if (c.at < prev) return; // coupe à l'intérieur d'une zone déjà retirée : ignorée
                 const slice = content.slice(prev, c.at);
                 if (slice.trim()) out.push(<ReactMarkdown key={`md-${i}`} remarkPlugins={[remarkGfm]} components={mdComponents} urlTransform={blogUrlTransform}>{slice}</ReactMarkdown>);
-                out.push(<Fragment key={`cut-${i}`}>{c.node}</Fragment>);
+                if (c.node !== null) out.push(<Fragment key={`cut-${i}`}>{c.node}</Fragment>);
                 prev = c.at + c.len;
               });
               const tail = content.slice(prev);
@@ -619,9 +650,10 @@ export function BlogPostPage() {
             {language === "en" ? "Discover our houses" : "Découvre nos maisons"}
           </h2>
           <p className="text-sm text-[#78716C] text-center mb-10">
+            {/* (Lot L2, 09/10/2026, D1) Rendu sur toutes les pages article : « 20 min » qualifié par STATS_DISPLAY.distance. */}
             {language === "en"
-              ? `Three premium coliving houses 20 min from Geneva city center, all-inclusive from ${PRICE_SHARED_CHF_EN}/month.`
-              : `Trois maisons de coliving premium à 20 min du centre de Genève, tout inclus dès ${PRICE_SHARED_CHF_FR}/mois.`}
+              ? `Three premium coliving houses on the French side, ${STATS_DISPLAY.en.distance}, all-inclusive from ${PRICE_SHARED_CHF_EN}/month.`
+              : `Trois maisons de coliving premium côté France, à ${STATS_DISPLAY.fr.distance}, tout inclus dès ${PRICE_SHARED_CHF_FR}/mois.`}
           </p>
           <div className="grid md:grid-cols-3 gap-6">
             {[
