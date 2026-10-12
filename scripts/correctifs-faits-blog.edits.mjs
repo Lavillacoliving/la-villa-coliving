@@ -13,6 +13,10 @@
  * 3a, plafond 7 258 CHF) ; F colocation-annemasse (loyers côté France en €, seuil d'arnaque sans CHF) ; G 7 metas vides ;
  * H Lodge 1 430 CHF dans extrait/meta, coliving-transfrontalier « dès 1 370 CHF ». F : seuil d'arnaque et négociation sans CHF
  * (les 4 fourchettes par commune en € restent en attente). Espaces insécables conservées (U+00A0 dans les chaînes).
+ * ⚠️ Après application (12/10, 08:41 UTC) : la substitution A1/A2 « tu arrives avec ta valise… » insérait la phrase CANONIQUE du bail
+ * dans le corps de ou-habiter, déjà portée par la fiche entité de la page → garde check-entity-facts rouge (« présente 2 fois ») ;
+ * reformulée par scripts/maj-article-ou-habiter-bail-2026-10-12.sql. Règle à retenir : dans un article porteur du bloc entité, le corps
+ * paraphrase les faits canoniques (bail, caution, 72 h), il ne recopie jamais la phrase de la fiche.
  */
 
 export const POST_STATE_WATCH = [/15-20 min/i, /sans bail/i];
