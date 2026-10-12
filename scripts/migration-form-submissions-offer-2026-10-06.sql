@@ -7,7 +7,9 @@
 -- n'y serait présente que quand la case est vide — inexploitable. `prospects` n'est pas touché : l'offre
 -- y est écrite dans `notes` (ligne « Offre : … », en tête), comme la page d'atterrissage (Q11b).
 --
--- À appliquer par Jérôme (SQL Editor ou MCP apply_migration), AVANT ou APRÈS le déploiement de la v20 :
+-- ✅ APPLIQUÉE le 12/10/2026 (MCP apply_migration `form_submissions_offer_2026_10_12`, décision Jérôme du 12/10),
+-- avant le déploiement de la v20. Conserver ce fichier pour la trace. Rappel du principe d'origine :
+-- à appliquer par Jérôme (SQL Editor ou MCP apply_migration), AVANT ou APRÈS le déploiement de la v20 :
 -- l'edge joint `offer` à l'insert seulement quand une offre est présente et, si la colonne manque encore,
 -- rejoue l'insert sans elle (cascade) — aucune candidature n'est perdue, seule la colonne reste NULL.
 -- Les 4 vues dépendantes (v_form_submissions_clean, reporting.v_candidatures_jour/semaine/mois) ne sont

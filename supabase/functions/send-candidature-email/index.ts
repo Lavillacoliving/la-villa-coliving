@@ -1,10 +1,11 @@
 // Supabase Edge Function — send-candidature-email
-// v20 — 06/10/2026 — Offre « Pose tes valises avant l'hiver » (brief Jérôme du 06/10, mise en ligne 07/10)
+// v20 — 06/10/2026, libellé révisé le 12/10/2026 — Offre « Pose tes valises avant l'hiver » (brief Jérôme du 06/10,
+//   rebrief −50 % du 12/10 : bail signé du 15/10 au 25/11 inclus, démarrage à la libération ; mise en ligne 14/10)
 //   CHANGEMENTS vs v19 :
 //   1. Payload optionnel `offer` ∈ { hiver } (posé par le front depuis `?offre=hiver`). Validé contre
 //      OFFER_LABELS : toute autre valeur est IGNORÉE sans erreur — un paramètre d'offre ne bloque
 //      jamais une candidature.
-//   2. `prospects.notes` : ligne « Offre : Pose tes valises (−30 % 1ᵉʳ mois, emménagement ≤ 30/11) »,
+//   2. `prospects.notes` : ligne « Offre : Pose tes valises (−50 % 1er mois, bail signé ≤ 25/11, démarrage à la libération) »,
 //      EN TÊTE des notes (Fanny la lit en premier). Aucune colonne `prospects` ajoutée.
 //   3. Notification admin : la même ligne en tête de l'email (bandeau sous le titre), avant le tableau.
 //   4. `form_submissions.offer` (text NULL — migration scripts/migration-form-submissions-offer-2026-10-06.sql,
@@ -258,7 +259,7 @@ const CONTACT_PREFERENCE_PHRASES: Record<"fr" | "en", Record<string, string>> = 
 // (v20) Offres commerciales — clés = valeurs du paramètre `?offre=` du site (src/data/offer.ts).
 // Libellé = la ligne écrite dans prospects.notes et en tête de la notification admin (brief §1).
 const OFFER_LABELS: Record<string, string> = {
-  "hiver": "Pose tes valises (−30 % 1ᵉʳ mois, emménagement ≤ 30/11)",
+  "hiver": "Pose tes valises (−50 % 1er mois, bail signé ≤ 25/11, démarrage à la libération)",
 };
 
 /** Lecture d'une table de libellés sans jamais remonter au prototype (« constructor »…). */

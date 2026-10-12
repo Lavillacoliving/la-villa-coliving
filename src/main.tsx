@@ -88,6 +88,9 @@ if (rootElement.querySelector("main[data-not-found]")) prerenderState.__not_foun
 if (rootElement.querySelector(".lvc-offer-banner")) prerenderState.__offer_banner__ = "1";
 const offerMain = rootElement.querySelector("main[data-offer-state]");
 if (offerMain) prerenderState.__offer_state__ = offerMain.getAttribute("data-offer-state") ?? "";
+// (Rebrief −50 %, 12/10/2026) Jour de Paris utilisé par le prérendu pour les lignes « Bail au … » des cartes de l'offre.
+const offerToday = rootElement.querySelector("main[data-offer-today]");
+if (offerToday) prerenderState.__offer_today__ = offerToday.getAttribute("data-offer-today") ?? "";
 (window as unknown as { __PRERENDER_STATE__: Record<string, string> }).__PRERENDER_STATE__ = prerenderState;
 const app = (
   <StrictMode>

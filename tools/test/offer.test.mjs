@@ -1,7 +1,7 @@
-// Offre « Pose tes valises avant l'hiver » (brief Jérôme du 06/10/2026).
+// Offre « Pose tes valises avant l'hiver » (brief Jérôme du 06/10/2026, rebrief −50 % du 12/10/2026).
 // 1. src/data/offer.ts (sans import, chargé tel quel par Node 24) : dates, filtre des chambres, remise.
 // 2. Le script inline #lvc-offer d'index.html (bandeau avant la première peinture) doit rester
-//    identique à offer.ts : fin de l'offre, pages du bandeau, clé et durée de fermeture.
+//    identique à offer.ts : début et fin de l'offre, pages du bandeau, clé et durée de fermeture.
 // 3. src/lib/attribution.ts : `?offre=hiver` mémorisé pour la session, valeur inconnue ignorée.
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
@@ -45,21 +45,55 @@ function run(url, { now = DURING, local = new MemoryStorage(), storageThrows = f
   return classes.has('lvc-offer-on');
 }
 
-test('offer.ts : dates, fin d\'offre (15/11 inclus, heure de Paris), remise', () => {
-  assert.equal(O.OFFER_START, '2026-10-07');
-  assert.equal(O.OFFER_END, '2026-11-15');
-  assert.equal(O.MOVE_IN_DEADLINE, '2026-11-30');
-  assert.equal(O.isOfferActive(Date.parse('2026-11-15T23:30:00+01:00')), true);
-  assert.equal(O.isOfferActive(Date.parse('2026-11-16T00:00:00+01:00')), false);
+test('offer.ts : dates, début (15/10 0 h) et fin d\'offre (25/11 inclus, heure de Paris), remise de 50 %', () => {
+  assert.equal(O.OFFER_START, '2026-10-15');
+  assert.equal(O.OFFER_END, '2026-11-25');
+  assert.equal('MOVE_IN_DEADLINE' in O, false, 'MOVE_IN_DEADLINE retiré (rebrief du 12/10)');
+  assert.equal(O.ALREADY_FREE_START_DAYS, 7);
+  assert.equal(O.OFFER_DISCOUNT_PERCENT, 50);
+  assert.equal(O.isOfferStarted(Date.parse('2026-10-14T23:59:00+02:00')), false);
+  assert.equal(O.isOfferStarted(Date.parse('2026-10-15T00:00:00+02:00')), true);
+  assert.equal(O.isOfferActive(Date.parse('2026-11-25T23:30:00+01:00')), true);
+  assert.equal(O.isOfferActive(Date.parse('2026-11-26T00:00:00+01:00')), false);
   assert.equal(O.isOfferActive(DURING), true);
-  assert.equal(O.discountedFirstMonth(1370), 959);
-  assert.equal(O.discountedFirstMonth(1430), 1001);
-  assert.equal(O.formatOfferDate('2026-11-15', 'fr'), '15 novembre');
-  assert.equal(O.formatOfferDate('2026-12-01', 'fr'), '1ᵉʳ décembre');
-  assert.equal(O.formatOfferDate('2026-12-01', 'en'), '1 December');
+  assert.equal(O.discountedFirstMonth(1370), 685);
+  assert.equal(O.discountedFirstMonth(1430), 715);
+  assert.equal(O.discountedFirstMonth(1470), 735);
+  assert.equal(O.discountedFirstMonth(1530), 765);
+  assert.equal(O.formatOfferDate('2026-11-25', 'fr'), '25\u00a0novembre'); // insécable : la date ne se coupe pas
+  assert.equal(O.formatOfferDate('2026-11-25', 'en'), '25\u00a0November');
+  assert.equal(O.formatOfferDate('2026-12-01', 'fr'), '1ᵉʳ\u00a0décembre');
 });
 
-test('offer.ts : chambres concernées = libres maintenant ou libérées au plus tard le 30/11 (ch. 4 du Loft exclue)', () => {
+// Textes du rebrief à l'espace près, l'insécable (U+00A0) comptant pour une espace : jour + mois, et « % » en FR.
+const sp = (s) => s.replace(/\u00a0/g, ' ');
+test('offer.ts : textes du bandeau et du formulaire (rebrief §2.1, verbatim)', () => {
+  assert.ok(O.OFFER_TEXTS.fr.formLine.includes('−50\u00a0%'), 'insécable avant « % »');
+  assert.equal(sp(O.OFFER_TEXTS.fr.banner), 'Ton 1er mois à moitié prix si tu signes d\'ici le 25 novembre →');
+  assert.equal(sp(O.OFFER_TEXTS.en.banner), 'Half price on your first month if you sign by 25 November →');
+  assert.equal(sp(O.OFFER_TEXTS.fr.formLine), 'Offre Pose tes valises : −50 % sur ton premier mois pour tout bail signé d\'ici le 25 novembre.');
+  assert.equal(sp(O.OFFER_TEXTS.en.formLine), 'Settle-in offer: 50% off your first month for any lease signed by 25 November.');
+  assert.equal(O.OFFER_TEXTS.fr.name, 'Pose tes valises avant l\'hiver');
+});
+
+test('offer.ts : jour de Paris et ligne de démarrage du bail (date à venir, chambre libre, date passée ou du jour)', () => {
+  assert.equal(O.parisDateIso(Date.parse('2026-10-14T22:30:00Z')), '2026-10-15'); // 0 h 30 à Paris (UTC+2)
+  assert.equal(O.parisDateIso(Date.parse('2026-11-25T22:59:00Z')), '2026-11-25'); // 23 h 59 à Paris (UTC+1)
+  const today = '2026-10-15';
+  const loft4 = { availability: 'occupied', available_from: '2026-12-16' };
+  assert.deepEqual(O.leaseStartOf(loft4, today), { kind: 'date', iso: '2026-12-16' });
+  assert.equal(sp(O.leaseStartLabel(O.leaseStartOf(loft4, today), 'fr')), 'Bail au 16 décembre');
+  assert.equal(sp(O.leaseStartLabel(O.leaseStartOf(loft4, today), 'en')), 'Lease from 16 December');
+  const free = { availability: 'available', available_from: null };
+  assert.equal(O.leaseStartLabel(O.leaseStartOf(free, today), 'fr'), 'Bail dans les 7 jours suivant la signature');
+  assert.equal(O.leaseStartLabel(O.leaseStartOf(free, today), 'en'), 'Lease within 7 days of signing');
+  // Date du jour ou passée (état pas encore mis à jour) : traitée comme une chambre libre (décision du 12/10).
+  assert.deepEqual(O.leaseStartOf({ availability: 'occupied', available_from: '2026-10-15' }, today), { kind: 'within' });
+  assert.deepEqual(O.leaseStartOf({ availability: 'occupied', available_from: '2026-10-01' }, today), { kind: 'within' });
+  assert.deepEqual(O.leaseStartOf({ availability: 'occupied', available_from: '2026-10-16' }, today), { kind: 'date', iso: '2026-10-16' });
+});
+
+test('offer.ts : chambres concernées = libres maintenant ou avec une date de libération connue (ch. 4 du Loft incluse)', () => {
   const rooms = [
     { house_slug: 'lavilla', room_number: 8, availability: 'available', available_from: null },
     { house_slug: 'lelodge', room_number: 7, availability: 'occupied', available_from: '2026-10-30' },
@@ -68,7 +102,7 @@ test('offer.ts : chambres concernées = libres maintenant ou libérées au plus 
     { house_slug: 'leloft', room_number: 4, availability: 'occupied', available_from: '2026-12-16' },
     { house_slug: 'leloft', room_number: 5, availability: 'occupied', available_from: null },
   ];
-  assert.deepEqual(rooms.filter(O.isOfferRoom).map((r) => `${r.house_slug}:${r.room_number}`), ['lavilla:8', 'lelodge:7', 'lelodge:1', 'lelodge:2']);
+  assert.deepEqual(rooms.filter(O.isOfferRoom).map((r) => `${r.house_slug}:${r.room_number}`), ['lavilla:8', 'lelodge:7', 'lelodge:1', 'lelodge:2', 'leloft:4']);
 });
 
 test('offer.ts : normalisation du paramètre et pages du bandeau', () => {
@@ -82,7 +116,9 @@ test('offer.ts : normalisation du paramètre et pages du bandeau', () => {
 test('index.html #lvc-offer : existe, ES5 sans marqueur de commentaire HTML, synchronisé avec offer.ts', () => {
   assert.ok(SCRIPT, 'script #lvc-offer introuvable');
   assert.ok(!SCRIPT.includes('<!--') && !SCRIPT.includes('-->'));
-  const end = /Date\.parse\("([^"]+)"\)/.exec(SCRIPT)?.[1];
+  const start = /var START = Date\.parse\("([^"]+)"\)/.exec(SCRIPT)?.[1];
+  assert.equal(Date.parse(start), O.OFFER_START_MS, 'début de l\'offre différent de OFFER_START_MS');
+  const end = /var END = Date\.parse\("([^"]+)"\)/.exec(SCRIPT)?.[1];
   assert.equal(Date.parse(end), O.OFFER_END_EXCLUSIVE_MS, 'fin de l\'offre différente de OFFER_END_EXCLUSIVE_MS');
   assert.equal(/var KEY = "([^"]+)"/.exec(SCRIPT)?.[1], O.OFFER_BANNER_DISMISS_KEY);
   const days = Number(/var DAYS = (\d+) \* 864e5/.exec(SCRIPT)?.[1]);
@@ -108,9 +144,11 @@ test('index.html #lvc-offer : fermé depuis moins de 7 jours → masqué ; plus 
   assert.equal(run('/tarifs', { storageThrows: true }), true);
 });
 
-test('index.html #lvc-offer : plus jamais après la fin de l\'offre (15/11 inclus)', () => {
-  assert.equal(run('/', { now: Date.parse('2026-11-15T23:59:00+01:00') }), true);
-  assert.equal(run('/', { now: Date.parse('2026-11-16T00:00:01+01:00') }), false);
+test('index.html #lvc-offer : jamais avant le 15/10 à 0 h ni après la fin de l\'offre (25/11 inclus)', () => {
+  assert.equal(run('/', { now: Date.parse('2026-10-14T21:00:00+02:00') }), false); // mise en ligne du 14/10 au soir
+  assert.equal(run('/', { now: Date.parse('2026-10-15T00:00:00+02:00') }), true);
+  assert.equal(run('/', { now: Date.parse('2026-11-25T23:59:00+01:00') }), true);
+  assert.equal(run('/', { now: Date.parse('2026-11-26T00:00:01+01:00') }), false);
   assert.equal(run('/chambres-disponibles', { now: DURING + 95 * DAY }), false); // horloge décalée de la garde d'hydratation
 });
 

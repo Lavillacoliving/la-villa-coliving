@@ -42,6 +42,8 @@ export type RoomCardProps = {
   onCtaClick?: (room: PublicRoom) => void;
   /** (Offre hiver, 06/10/2026) Paramètres d'URL ajoutés EN TÊTE de la query du CTA, ex. « offre=hiver ». */
   ctaParams?: string;
+  /** (Offre hiver −50 %, rebrief du 12/10/2026) Ligne de démarrage du bail, ex. « Bail au 16 décembre » — carte par défaut, page de l'offre seulement. */
+  leaseStart?: string;
   /**
    * (12/10/2026, refonte /chambres-disponibles validée par Jérôme) « featured » = grande carte horizontale d'une chambre libre
    * maintenant ; « compact » = petite carte en retrait d'une libération datée ; « default » = carte historique (pages maisons, inchangée).
@@ -51,7 +53,7 @@ export type RoomCardProps = {
   commune?: string;
 };
 
-export function RoomCard({ house, houseName, room, fallbackImage, showHouse = false, onOpenPhotos, onCtaClick, ctaParams, variant = "default", commune }: RoomCardProps) {
+export function RoomCard({ house, houseName, room, fallbackImage, showHouse = false, onOpenPhotos, onCtaClick, ctaParams, leaseStart, variant = "default", commune }: RoomCardProps) {
   const { t, language } = useLanguage();
   const uiLang = language === "en" ? "en" as const : "fr" as const;
   // Pack dédié, ou galerie standard du Lodge (chambre → communs → extérieurs).
@@ -261,6 +263,9 @@ export function RoomCard({ house, houseName, room, fallbackImage, showHouse = fa
           <p className="text-xs text-[#78716C] mb-3">{room.location_detail.trim()}</p>
         )}
         <div className="mt-auto pt-3">
+          {leaseStart && (
+            <p data-lease-start className="mb-2 text-sm font-semibold text-[#7A5215]">{leaseStart}</p>
+          )}
           {room.rent_chf !== null && (
             <p className="text-xl font-black text-[#D4A574] mb-4">
               {language === "en"

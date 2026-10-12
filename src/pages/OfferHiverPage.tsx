@@ -14,7 +14,7 @@ import { readPrerenderFlag } from "@/lib/prerenderEmbeddedState";
 import type { QAPair } from "@/lib/structuredData";
 import { splitRooms, useAllRooms, useRoomsLoadFailed, type PublicRoom } from "@/lib/availability";
 import {
-  MOVE_IN_DEADLINE,
+  ALREADY_FREE_START_DAYS,
   OFFER_DISCOUNT_PERCENT,
   OFFER_END,
   OFFER_ID,
@@ -25,12 +25,16 @@ import {
   formatOfferDate,
   isOfferActive,
   isOfferRoom,
+  leaseStartLabel,
+  leaseStartOf,
+  parisDateIso,
   trackOfferCta,
 } from "@/data/offer";
 
 /**
  * /offre-hiver · /en/winter-offer — Offre A « Pose tes valises avant l'hiver » (brief Jérôme du
- * 06/10/2026, communication Facebook + Ads à partir du 07/10).
+ * 06/10/2026 ; rebrief du 12/10/2026 : −50 % sur le premier mois, caution en 2 ou 3 fois, bail signé du
+ * 15/10 au 25/11 inclus, bail démarrant à la libération ; communication Facebook + Ads à partir du 15/10).
  *
  * Page TEMPORAIRE : noindex + canonical auto-référente (pas de concurrence avec /chambres-disponibles),
  * prérendue (LCP des liens d'annonce), hors sitemap. Les dates viennent de src/data/offer.ts ; après
@@ -41,10 +45,12 @@ import {
  * reproduit le HTML prérendu (repère `__offer_state__` capturé par main.tsx sur <main data-offer-state>),
  * puis la page se resynchronise sur la date réelle (useHydrated) — même modèle que les filtres de
  * /chambres-disponibles. Les chambres viennent de l'embed de la page (RoomsEmbed, 29 lignes) et du
- * composant partagé RoomCard, filtrées (pur) sur « libre au plus tard le 30/11 » — la ch. 4 du Loft
- * (16/12) n'apparaît donc pas.
+ * composant partagé RoomCard, filtrées (pur) sur « libre maintenant ou datée » (rebrief D5 : la ch. 4 du
+ * Loft, libre le 16/12, en fait partie). Le compteur du hero (D7) = la longueur de cette même liste. La
+ * ligne « Bail au … » dépend du jour de Paris : le premier rendu client relit celui du prérendu (repère
+ * `__offer_today__` capturé par main.tsx sur <main data-offer-today>), puis se resynchronise.
  *
- * Formulation (brief §0) : la remise est un geste commercial appliqué sur le premier loyer — jamais
+ * Formulation (brief §0) : la remise est un geste commercial appliqué sur le premier mois — jamais
  * « loyer réduit », « loyer à … », ni prix barré/remplacé ; le loyer contractuel reste affiché tel quel.
  */
 
@@ -65,13 +71,6 @@ function ApplyButton({ en, L, className = "" }: { en: boolean; L: "fr" | "en"; c
   );
 }
 
-/** Lendemain de MOVE_IN_DEADLINE (« 1ᵉʳ décembre ») — calcul UTC, pur. */
-function nextDayIso(iso: string): string {
-  const [y, m, d] = iso.split("-").map(Number);
-  const next = new Date(Date.UTC(y, m - 1, d + 1));
-  return `${next.getUTCFullYear()}-${String(next.getUTCMonth() + 1).padStart(2, "0")}-${String(next.getUTCDate()).padStart(2, "0")}`;
-}
-
 export function OfferHiverPage() {
   const { language } = useLanguage();
   const en = language === "en";
@@ -90,16 +89,14 @@ export function OfferHiverPage() {
 
   const endLabel = formatOfferDate(OFFER_END, L);
   const startLabel = formatOfferDate(OFFER_START, L);
-  const moveInLabel = formatOfferDate(MOVE_IN_DEADLINE, L);
-  const beforeLabel = formatOfferDate(nextDayIso(MOVE_IN_DEADLINE), L);
   const year = OFFER_END.slice(0, 4);
 
   const title = en
     ? `Settle in before winter: ${OFFER_DISCOUNT_PERCENT}% off your first month`
-    : `Pose tes valises avant l'hiver : −${OFFER_DISCOUNT_PERCENT} % sur ton premier mois`;
+    : `Pose tes valises avant l'hiver : −${OFFER_DISCOUNT_PERCENT}\u00a0% sur ton premier mois`;
   const description = en
-    ? `30% off your first month + deposit in 3 instalments if you move in by ${beforeLabel}. All-inclusive furnished rooms near Geneva. Apply until ${endLabel}.`
-    : `−30 % sur ton premier mois et caution en 3 fois si tu emménages avant le ${beforeLabel}. Chambres tout inclus près de Genève. Jusqu'au ${endLabel}.`;
+    ? `Half of your first month on us and your deposit in 2 or 3 instalments, for any lease signed by ${endLabel}. All-inclusive rooms near Geneva.`
+    : `La moitié de ton premier mois offerte et la caution en 2 ou 3 fois, pour tout bail signé d'ici le ${endLabel}. Chambres tout inclus près de Genève.`;
 
   if (ended) {
     return (
@@ -128,19 +125,27 @@ export function OfferHiverPage() {
     );
   }
 
-  return <OfferActive en={en} L={L} title={title} description={description} labels={{ endLabel, startLabel, moveInLabel, beforeLabel, year }} />;
+  return <OfferActive en={en} L={L} title={title} description={description} labels={{ endLabel, startLabel, year }} />;
 }
 
-type Labels = { endLabel: string; startLabel: string; moveInLabel: string; beforeLabel: string; year: string };
+type Labels = { endLabel: string; startLabel: string; year: string };
 
 function OfferActive({ en, L, title, description, labels }: { en: boolean; L: "fr" | "en"; title: string; description: string; labels: Labels }) {
-  const { endLabel, startLabel, moveInLabel, beforeLabel, year } = labels;
+  const { endLabel, startLabel, year } = labels;
   const T = OFFER_TEXTS[L];
+  // Jour de Paris des lignes « Bail au … » : celui du prérendu pendant l'hydratation, puis le jour réel.
+  const hydrated = useHydrated();
+  const todayIso = hydrated ? parisDateIso() : (readPrerenderFlag("__offer_today__") || parisDateIso());
 
   // Chambres de l'offre : même store que /chambres-disponibles (embed → premier rendu identique au HTML).
   const all = useAllRooms();
   const loadFailed = useRoomsLoadFailed();
   const rooms = splitRooms(all.rooms).candidates.filter(isOfferRoom);
+  // Compteur du hero (D7) : même liste, même source ; masqué tant qu'elle est inconnue ou vide.
+  const roomsCount = all.known ? rooms.length : 0;
+  const countLabel = en
+    ? `${roomsCount} ${roomsCount === 1 ? "room" : "rooms"} included`
+    : `${roomsCount} ${roomsCount === 1 ? "chambre concernée" : "chambres concernées"}`;
   const onRoomCta = (room: PublicRoom) =>
     trackOfferCta("rooms", { house: room.house_slug, room_id: `chambre-${room.room_number}`, language: L });
 
@@ -152,53 +157,67 @@ function OfferActive({ en, L, title, description, labels }: { en: boolean; L: "f
   ];
 
   const whoFor = en
-    ? ["You're moving to Geneva for a new job.", "You're in an Airbnb, a sublet or staying with friends.", "Your lease ends at the end of November."]
-    : ["Tu arrives à Genève pour un nouveau poste.", "Tu es en Airbnb, en sous-location ou chez des amis.", "Ton bail se termine fin novembre."];
+    ? ["You're moving to Geneva for a new job.", "You're in an Airbnb, a sublet or staying with friends.", "You're still serving notice on your current place: the half month we offer covers the overlap."]
+    : ["Tu arrives à Genève pour un nouveau poste.", "Tu es en Airbnb, en sous-location ou chez des amis.", "Ton préavis court encore : la moitié offerte absorbe le chevauchement."];
 
   const included = en
     ? ["Utilities (water, electricity, heating)", "Fibre internet", `Cleaning ${STATS.cleaningPerWeek} times a week`, "Pool", "Sauna", "Gym", "No agency fee, no application fee"]
     : ["Charges (eau, électricité, chauffage)", "Internet fibre", `Ménage ${STATS.cleaningPerWeek} fois par semaine`, "Piscine", "Sauna", "Salle de sport", "0 frais d'agence ni de dossier"];
 
+  const months = STATS.depositMonths;
   const faq: QAPair[] = en
     ? [
-        { q: "Until when can I apply?", a: `Until ${endLabel} ${year}. The offer applies to any application sent between ${startLabel} and ${endLabel}, for a move-in by ${moveInLabel} at the latest.` },
-        { q: "What if I can only move in in December?", a: `The offer doesn't apply: it's reserved for move-ins by ${moveInLabel}. Apply anyway — we'll let you know as soon as a room frees up.` },
-        { q: "How does the deposit in 3 instalments work?", a: `The deposit is still ${STATS.depositMonths} months' rent excluding charges. You pay it in three thirds: one third when you sign the lease, one third with your 2nd month's rent, one third with your 3rd. It's returned when you leave, under the usual conditions.` },
-        { q: "Can it be combined with another offer?", a: "No. One offer per person, and it can't be combined with any other offer." },
+        { q: "Until when?", a: `Until ${endLabel} ${year}: the offer applies to any lease signed by then, for an application received from ${startLabel}.` },
+        { q: "What if my room only frees up in December?", a: `The offer still applies: your lease starts the day the room frees up, as long as you sign it by ${endLabel}.` },
+        { q: "When does my lease start?", a: `The day the room frees up, or within ${ALREADY_FREE_START_DAYS} days of signing if it's already free. Still serving notice on your current place? That's exactly what the half month we offer is for.` },
+        { q: "How does the deposit in 2 or 3 instalments work?", a: `The deposit is still ${months} months' rent excluding charges. In 2 instalments: half at signature, the other half with your 2nd month's rent. In 3: one third at signature, one third with your 2nd month's rent, one third with your 3rd. It's returned when you leave, under the usual conditions.` },
+        { q: "Can it be combined?", a: "No. One offer per person, not combinable with any other offer." },
         { q: "Does the lease length change?", a: `No: ${STATS.leaseDurationMonths}-month lease, you leave whenever you want with ${STATS.noticePeriodMonths} month's notice. The rent written in your lease is the normal rent; the discount is a commercial gesture applied to your first month.` },
         { q: "Can I visit by video call?", a: "Yes. Visit on site or by video call, as you prefer — and you also meet a current resident for an honest take on life in the house." },
       ]
     : [
-        { q: "Jusqu'à quand je peux candidater ?", a: `Jusqu'au ${endLabel} ${year}. L'offre s'applique à toute candidature envoyée entre le ${startLabel} et le ${endLabel}, pour un emménagement au plus tard le ${moveInLabel}.` },
-        { q: "Et si je ne peux emménager qu'en décembre ?", a: `L'offre ne s'applique pas : elle est réservée aux emménagements au plus tard le ${moveInLabel}. Candidate quand même, on te prévient dès qu'une chambre se libère.` },
-        { q: "Comment marche la caution en 3 fois ?", a: `La caution reste de ${STATS.depositMonths} mois de loyer hors charges. Tu la règles en trois tiers : un tiers à la signature du bail, un tiers avec ton 2ᵉ loyer, un tiers avec ton 3ᵉ. Elle t'est restituée à ton départ dans les conditions habituelles.` },
-        { q: "C'est cumulable avec une autre offre ?", a: "Non. Une seule offre par personne, et elle n'est pas cumulable avec une autre offre." },
+        { q: "Jusqu'à quand ?", a: `Jusqu'au ${endLabel} ${year} : l'offre s'applique à tout bail signé d'ici là, pour une candidature reçue à partir du ${startLabel}.` },
+        { q: "Et si ma chambre ne se libère qu'en décembre ?", a: `L'offre s'applique quand même : ton bail démarre le jour où la chambre se libère, à condition de le signer d'ici le ${endLabel}.` },
+        { q: "Mon bail démarre quand ?", a: `Le jour où la chambre se libère, ou dans les ${ALREADY_FREE_START_DAYS} jours suivant la signature si elle est déjà libre. Ton préavis court encore ? C'est justement à ça que sert la moitié offerte.` },
+        { q: "Comment marche la caution en 2 ou 3 fois ?", a: `La caution reste de ${months} mois de loyer hors charges. En 2 fois : la moitié à la signature, l'autre avec ton 2ᵉ loyer. En 3 fois : un tiers à la signature, un tiers avec ton 2ᵉ loyer, un tiers avec ton 3ᵉ. Elle t'est restituée à ton départ dans les conditions habituelles.` },
+        { q: "C'est cumulable ?", a: "Non. Une seule offre par personne, non cumulable avec une autre offre." },
         { q: "La durée du bail change ?", a: `Non : bail de ${STATS.leaseDurationMonths} mois, tu pars quand tu veux avec ${STATS.noticePeriodMonths} mois de préavis. Le loyer inscrit à ton bail est le loyer normal ; la remise est un geste commercial appliqué sur ton premier mois.` },
         { q: "Je peux visiter en visio ?", a: "Oui. Visite sur place ou en visio, au choix, et tu rencontres aussi un résident actuel pour un retour honnête sur la vie de la maison." },
       ];
 
   return (
-    <main data-offer-state="active" className="relative pt-16 bg-white">
+    <main data-offer-state="active" data-offer-today={todayIso} className="relative pt-16 bg-white">
       <SEO title={title} description={description} noindex selfCanonical />
 
-      {/* 1. Hero — sans image (LCP = le H1) ; date limite + bouton visibles sans défiler à 390 px. */}
+      {/* 1. Hero — sans image (LCP = le H1) ; date limite + bouton visibles sans défiler à 390 px.
+          Rebrief du 12/10 : nom de l'offre en surtitre, H1 = la promesse (D6), compteur de chambres (D7). */}
       <section className="py-10 md:py-16 lg:py-20 bg-[#F5F2ED]">
         <div className="container-custom max-w-3xl text-center">
-          <p className="inline-flex items-center gap-2 px-4 py-2 mb-5 bg-white border border-[#D4A574] rounded-full text-xs sm:text-sm font-medium text-[#1C1917]">
-            <span className="w-2 h-2 bg-[#B8860B] rounded-full shrink-0" aria-hidden="true" />
-            {en ? `Offer valid for any application until ${endLabel}.` : `Offre valable pour toute candidature jusqu'au ${endLabel}.`}
-          </p>
+          <p className="mb-3 text-xs sm:text-sm font-semibold uppercase tracking-[0.18em] text-[#9A5B08]">{T.name}</p>
           <h1 className="text-4xl md:text-5xl lg:text-6xl font-light text-[#1C1917] mb-4" style={{ fontFamily: '"DM Serif Display", serif' }}>
-            {T.name}
+            {en ? "Half price on your first month" : "Ton premier mois à moitié prix"}
           </h1>
-          <p className="text-lg md:text-xl text-[#44403C] mb-7">
+          <p className="text-lg md:text-xl text-[#44403C] mb-6">
             {en
-              ? `30% off your first month + deposit in 3 instalments, if you move in by ${beforeLabel}.`
-              : `−30 % sur ton premier mois + caution en 3 fois, si tu emménages avant le ${beforeLabel}.`}
+              ? `Sign by ${endLabel}: one month upfront to move in, not three. Your deposit in 2 or 3 instalments, no fees. Your rent stays the same.`
+              : `Signe d'ici le ${endLabel} : un mois à sortir pour emménager, pas trois. Ta caution en 2 ou 3 fois, sans frais. Ton loyer, lui, ne change pas.`}
           </p>
-          <ApplyButton en={en} L={L} className="w-full sm:w-auto" />
+          <p className="inline-flex items-center gap-2 px-4 py-2 bg-white border border-[#D4A574] rounded-full text-xs sm:text-sm font-medium text-[#1C1917]">
+            <span className="w-2 h-2 bg-[#B8860B] rounded-full shrink-0" aria-hidden="true" />
+            {en ? `Offer valid for any lease signed by ${endLabel}` : `Offre valable pour tout bail signé jusqu'au ${endLabel}`}
+          </p>
+          {roomsCount > 0 && (
+            <p data-offer-count className="mt-2 text-sm font-semibold text-[#1C1917]">
+              <a href="#chambres-offre" className="underline underline-offset-4 hover:text-[#9A5B08]">{countLabel}</a>
+            </p>
+          )}
+          <div className="mt-6">
+            <ApplyButton en={en} L={L} className="w-full sm:w-auto" />
+          </div>
           <p className="mt-3 text-sm text-[#57534E]">
-            {en ? `2-minute application. Reply within ${STATS.responseHours} h.` : `Candidature en 2 minutes. Réponse sous ${STATS.responseHours} h.`}
+            {en
+              ? `${STATS.applyMinutes}-minute application. Reply within ${STATS.responseHours} h. First approved application, first served.`
+              : `Candidature en ${STATS.applyMinutes} minutes. Réponse sous ${STATS.responseHours} h. Premier dossier validé, premier servi.`}
           </p>
         </div>
       </section>
@@ -220,14 +239,14 @@ function OfferActive({ en, L, title, description, labels }: { en: boolean; L: "f
         </div>
       </section>
 
-      {/* 3. Les chambres — composant partagé, filtré sur « libre au plus tard le 30/11 ». */}
-      <section className="py-14 lg:py-20">
+      {/* 3. Les chambres — composant partagé, filtré sur « libre maintenant ou datée » (rebrief D5). */}
+      <section id="chambres-offre" className="py-14 lg:py-20 scroll-mt-20">
         <div className="container-custom">
           <h2 className="text-2xl md:text-3xl font-light text-[#1C1917] mb-2" style={{ fontFamily: '"DM Serif Display", serif' }}>
             {en ? "The rooms included in the offer" : "Les chambres concernées"}
           </h2>
           <p className="text-[#57534E] mb-8">
-            {en ? `Free now, or opening by ${moveInLabel} at the latest.` : `Libres maintenant, ou libérées au plus tard le ${moveInLabel}.`}
+            {en ? "Free now or opening soon. Your lease starts the day the room frees up." : "Libres maintenant ou bientôt. Ton bail démarre le jour où la chambre se libère."}
           </p>
           {!all.known ? (
             loadFailed ? (
@@ -273,6 +292,7 @@ function OfferActive({ en, L, title, description, labels }: { en: boolean; L: "f
                   fallbackImage={HOUSES[room.house_slug].img}
                   showHouse
                   ctaParams={OFFER_QUERY}
+                  leaseStart={leaseStartLabel(leaseStartOf(room, todayIso), L)}
                   onCtaClick={onRoomCta}
                 />
               ))}
@@ -308,12 +328,12 @@ function OfferActive({ en, L, title, description, labels }: { en: boolean; L: "f
                 {tiers.map((t) => (
                   <tr key={t.chf} className="border-t border-[#E7E5E4]">
                     <td className="px-4 py-4 text-[#1C1917]">
-                      <span className="font-semibold">{fmtChf(t.chf, en)}</span>
-                      <span className="text-[#78716C]"> ({fmtEur(t.eur, en)})</span>
+                      <span className="font-semibold whitespace-nowrap">{fmtChf(t.chf, en)}</span>{" "}
+                      <span className="text-[#78716C] whitespace-nowrap">({fmtEur(t.eur, en)})</span>
                     </td>
                     <td className="px-4 py-4 text-[#1C1917]">
-                      <span className="font-semibold text-[#9A5B08]">{fmtChf(discountedFirstMonth(t.chf), en)}</span>
-                      <span className="text-[#78716C]"> ({fmtEur(discountedFirstMonth(t.eur), en)})</span>
+                      <span className="font-semibold text-[#9A5B08] whitespace-nowrap">{fmtChf(discountedFirstMonth(t.chf), en)}</span>{" "}
+                      <span className="text-[#78716C] whitespace-nowrap">({fmtEur(discountedFirstMonth(t.eur), en)})</span>
                     </td>
                   </tr>
                 ))}
@@ -321,8 +341,8 @@ function OfferActive({ en, L, title, description, labels }: { en: boolean; L: "f
                   <td className="px-4 py-4 text-[#1C1917] font-semibold">{en ? "Deposit" : "Caution"}</td>
                   <td className="px-4 py-4 text-[#1C1917]">
                     {en
-                      ? `${STATS.depositMonths} months' rent excluding charges, paid in 3 instalments: ⅓ at signature, ⅓ with the 2nd month's rent, ⅓ with the 3rd.`
-                      : `${STATS.depositMonths} mois de loyer hors charges, payée en 3 fois : ⅓ à la signature, ⅓ avec le 2ᵉ loyer, ⅓ avec le 3ᵉ.`}
+                      ? `${STATS.depositMonths} months' rent excluding charges, in 2 instalments (½ at signature, ½ with the 2nd month's rent) or 3 (⅓ at signature, ⅓ with the 2nd, ⅓ with the 3rd).`
+                      : `${STATS.depositMonths} mois de loyer hors charges, en 2 fois (½ à la signature, ½ avec le 2ᵉ loyer) ou en 3 fois (⅓ à la signature, ⅓ avec le 2ᵉ loyer, ⅓ avec le 3ᵉ).`}
                   </td>
                 </tr>
               </tbody>
@@ -335,8 +355,8 @@ function OfferActive({ en, L, title, description, labels }: { en: boolean; L: "f
           </p>
           <p className="mt-2 text-xs text-[#78716C]">
             {en
-              ? `Conditions: application between ${startLabel} and ${endLabel} ${year} · move-in by ${moveInLabel} ${year} at the latest · usual lease (${STATS.leaseDurationMonths} months, ${STATS.noticePeriodMonths} month's notice) · one offer per person, not combinable with any other offer. CHF amounts are indicative (${CONTRACT_EUR.rateLabelEn} rate); the contractual rent is in euros.`
-              : `Conditions : candidature entre le ${startLabel} et le ${endLabel} ${year} · emménagement au plus tard le ${moveInLabel} ${year} · bail habituel (${STATS.leaseDurationMonths} mois, préavis ${STATS.noticePeriodMonths} mois) · une seule offre par personne, non cumulable avec une autre offre. Montants en CHF indicatifs (taux d'${CONTRACT_EUR.rateLabelFr}) ; le loyer contractuel est en euros.`}
+              ? `Conditions: lease signed between ${startLabel} and ${endLabel} ${year} inclusive, for an application received from ${startLabel} · lease starting the day the room frees up (within ${ALREADY_FREE_START_DAYS} days of signing if it's already free) · first approved application, first served · usual lease (${STATS.leaseDurationMonths} months, ${STATS.noticePeriodMonths} month's notice) · one offer per person, not combinable with any other offer. CHF amounts are indicative (${CONTRACT_EUR.rateLabelEn} rate); the contractual rent is in euros.`
+              : `Conditions : bail signé entre le ${startLabel} et le ${endLabel} ${year} inclus, pour une candidature reçue à partir du ${startLabel} · bail démarrant le jour où la chambre se libère (dans les ${ALREADY_FREE_START_DAYS} jours suivant la signature si elle est déjà libre) · premier dossier validé, premier servi · bail habituel (${STATS.leaseDurationMonths} mois, préavis ${STATS.noticePeriodMonths} mois) · une seule offre par personne, non cumulable avec une autre offre. Montants en CHF indicatifs (taux d'${CONTRACT_EUR.rateLabelFr}) ; le loyer contractuel est en euros.`}
           </p>
         </div>
       </section>
@@ -358,20 +378,18 @@ function OfferActive({ en, L, title, description, labels }: { en: boolean; L: "f
         </div>
       </section>
 
-      {/* 6. FAQ de l'offre — JSON-LD FAQPage construit depuis ces 6 questions (page seule, pas situationsFaq). */}
+      {/* 6. FAQ de l'offre — JSON-LD FAQPage construit depuis ces 7 questions (page seule, pas situationsFaq). */}
       <FaqSection title={en ? "The offer, question by question" : "L'offre, question par question"} items={faq} emitSchema id="faq-offre" />
 
       {/* 7. Rappel du bouton + ligne du lot A. */}
       <section className="py-16 lg:py-24 bg-white">
         <div className="container-custom max-w-3xl text-center">
           <h2 className="text-2xl md:text-3xl font-light text-[#1C1917] mb-6" style={{ fontFamily: '"DM Serif Display", serif' }}>
-            {en ? `Settle in before ${beforeLabel}` : `Pose tes valises avant le ${beforeLabel}`}
+            {en ? `Settle in before winter: sign by ${endLabel}` : `Pose tes valises avant l'hiver : signe d'ici le ${endLabel}`}
           </h2>
           <ApplyButton en={en} L={L} className="w-full sm:w-auto" />
           <p className="mt-4 text-sm text-[#57534E]">
-            {en
-              ? "Early applicants are the first to know when a room becomes available."
-              : "Les premiers candidats sont les premiers prévenus quand une chambre se libère."}
+            {en ? "First approved application, first served." : "Premier dossier validé, premier servi."}
           </p>
         </div>
       </section>

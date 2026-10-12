@@ -370,7 +370,7 @@ test('CORS : localhost:5173 et :4173 autorisés pour les tests locaux, origine i
 });
 
 // ── v20 — offre « Pose tes valises avant l'hiver » (brief Jérôme du 06/10/2026) ─────────────────
-const OFFER_LINE = 'Offre : Pose tes valises (−30 % 1ᵉʳ mois, emménagement ≤ 30/11)';
+const OFFER_LINE = 'Offre : Pose tes valises (−50 % 1er mois, bail signé ≤ 25/11, démarrage à la libération)';
 const fsBodies = (be) => be.calls.filter((c) => c.method === 'POST' && c.url.pathname === '/rest/v1/form_submissions').map((c) => c.body);
 
 test('offer=hiver : ligne « Offre : … » EN TÊTE des notes, en tête de l\'email admin, form_submissions.offer', async () => {

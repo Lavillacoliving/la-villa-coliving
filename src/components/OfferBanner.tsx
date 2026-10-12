@@ -12,13 +12,15 @@ import {
   OFFER_TEXTS,
   isOfferActive,
   isOfferBannerPath,
+  isOfferStarted,
   trackOfferCta,
 } from "@/data/offer";
 
 /**
  * Bandeau fin de l'offre « Pose tes valises avant l'hiver » (brief Jérôme du 06/10/2026, §3).
  * Rendu DANS le <header> fixe de NavbarV7, au-dessus de la barre de navigation, sur les pages de
- * OFFER_BANNER_PATHS (FR + miroirs EN) ; fermable (localStorage, 7 jours) ; disparaît après OFFER_END.
+ * OFFER_BANNER_PATHS (FR + miroirs EN) ; fermable (localStorage, 7 jours) ; n'apparaît qu'à partir d'OFFER_START
+ * (15/10 à 0 h, heure de Paris — décision Jérôme du 12/10) et disparaît après OFFER_END.
  *
  * Zéro décalage à l'hydratation (même logique que le correctif #418 du Lot B) :
  *  - le HTML prérendu contient le bandeau (le prérendu tourne pendant l'offre, sans localStorage) ;
@@ -49,7 +51,7 @@ export function OfferBanner() {
   const [closed, setClosed] = useState(false);
 
   // État réel (après hydratation, et dès le premier rendu en navigation SPA ou au prérendu).
-  const live = isOfferBannerPath(pathname) && !closed && isOfferActive() && !dismissedRecently();
+  const live = isOfferBannerPath(pathname) && !closed && isOfferStarted() && isOfferActive() && !dismissedRecently();
   // Pendant l'hydratation : ce que le HTML prérendu contient, ni plus ni moins.
   const visible = hydrated ? live : readPrerenderFlag("__offer_banner__") === "1";
 
