@@ -13,6 +13,8 @@ import { RoomsEmbed } from "@/components/RoomsEmbed";
 import { WhatsAppButton } from "@/components/WhatsAppButton";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { HOUSES } from "@/data/houses";
+import { ENTITY_HOUSES } from "@/data/entityFacts";
+import { MONTHS_FR, MONTHS_EN } from "@/lib/dates";
 import { roomGallery } from "@/data/roomPhotos";
 import { STATS, STATS_DISPLAY, PRICE_SHARED_CHF_FR, PRICE_SHARED_CHF_EN } from "@/data/stats";
 import { tarifsFaq } from "@/data/faq/tarifsFaq";
@@ -48,6 +50,7 @@ const HOUSE_ORDER: HouseKey[] = ["lavilla", "leloft", "lelodge"];
 type BathFilter = "privative" | "partagee";
 const isHouseKey = (v: string | null): v is HouseKey => v === "lavilla" || v === "leloft" || v === "lelodge";
 const isBathFilter = (v: string | null): v is BathFilter => v === "privative" || v === "partagee";
+const COMMUNE: Record<HouseKey, string> = Object.fromEntries(ENTITY_HOUSES.map((h) => [h.slug, h.commune])) as Record<HouseKey, string>;
 
 // `true` seulement après hydratation (src/hooks/useHydrated.ts) : pendant l'hydratation React lit
 // le snapshot serveur (false) → premier rendu client = HTML prérendu (liste complète), puis re-rendu filtré.
@@ -92,6 +95,24 @@ export function ChambresDisponiblesPage() {
     (!bathFilter || (bathFilter === "privative" ? r.bathroom_type === "private" : r.bathroom_type !== "private")),
   );
   const filtered = houseFilter !== null || bathFilter !== null;
+  // (12/10/2026, maquette validée par Jérôme) Les chambres libres maintenant en avant (grandes cartes), les libérations
+  // datées en retrait (cartes compactes, triées par date par splitRooms). Même source que la liste : premier rendu = prérendu.
+  const availableShown = shown.filter((r) => r.availability === "available");
+  const soonShown = shown.filter((r) => r.availability !== "available");
+  const availableCount = candidates.filter((r) => r.availability === "available").length;
+  const soonRooms = candidates.filter((r) => r.availability !== "available");
+  const lastSoon = soonRooms.reduce<string | null>((max, r) => (r.available_from && (!max || r.available_from > max) ? r.available_from : max), null);
+  const lastSoonMonth = lastSoon ? Number(lastSoon.slice(5, 7)) - 1 : -1;
+  const pillNow = all.known && availableCount > 0
+    ? (en
+      ? `${availableCount} room${availableCount > 1 ? "s" : ""} free now`
+      : `${availableCount} chambre${availableCount > 1 ? "s" : ""} libre${availableCount > 1 ? "s" : ""} maintenant`)
+    : null;
+  const pillSoon = all.known && soonRooms.length > 0 && lastSoonMonth >= 0 && lastSoonMonth <= 11
+    ? (en
+      ? `${soonRooms.length} room${soonRooms.length > 1 ? "s" : ""} opening up by ${MONTHS_EN[lastSoonMonth]}`
+      : `${soonRooms.length} chambre${soonRooms.length > 1 ? "s" : ""} se libère${soonRooms.length > 1 ? "nt" : ""} d'ici ${MONTHS_FR[lastSoonMonth]}`)
+    : null;
 
   // Visionneuse — une seule à la fois, chargée à la demande.
   const [viewer, setViewer] = useState<{ house: HouseKey; roomNumber: number; index: number } | null>(null);
@@ -104,7 +125,7 @@ export function ChambresDisponiblesPage() {
   const onRoomCta = (room: PublicRoom) => {
     track("cta_click", {
       cta_position: "available_room_card", cta_target: "/candidature", house: room.house_slug,
-      room_id: `chambre-${room.room_number}`, language,
+      room_id: `chambre-${room.room_number}`, room_status: room.availability === "available" ? "available" : "upcoming", language,
     });
   };
 
@@ -168,10 +189,26 @@ export function ChambresDisponiblesPage() {
           <h1 className="text-4xl md:text-5xl lg:text-6xl font-light text-[#1C1917] mb-5" style={{ fontFamily: '"DM Serif Display", serif' }}>
             {en ? "Available rooms near Geneva" : "Chambres disponibles près de Genève"}
           </h1>
-          <p className="text-lg text-[#44403C] max-w-2xl inline-flex items-center gap-2">
-            <span className="w-2 h-2 bg-[#B8860B] rounded-full animate-pulse shrink-0" aria-hidden="true" />
-            {globalAvailabilityLabel(availability, L)}
-          </p>
+          {pillNow || pillSoon ? (
+            <div className="flex flex-wrap gap-3">
+              {pillNow && (
+                <a href="#libre-maintenant" className="inline-flex items-center gap-2.5 min-h-[44px] px-4 rounded-full bg-[#1C1917] text-white text-sm font-semibold hover:bg-[#44403C] transition-colors">
+                  <span className="w-2 h-2 bg-[#D4A574] rounded-full animate-pulse shrink-0" aria-hidden="true" />
+                  {pillNow}
+                </a>
+              )}
+              {pillSoon && (
+                <a href="#bientot" className="inline-flex items-center min-h-[44px] px-4 rounded-full bg-white border border-[#D6D3CE] text-[#44403C] text-sm font-medium hover:border-[#1C1917] transition-colors">
+                  {pillSoon}
+                </a>
+              )}
+            </div>
+          ) : (
+            <p className="text-lg text-[#44403C] max-w-2xl inline-flex items-center gap-2">
+              <span className="w-2 h-2 bg-[#B8860B] rounded-full animate-pulse shrink-0" aria-hidden="true" />
+              {globalAvailabilityLabel(availability, L)}
+            </p>
+          )}
           <p className="mt-3 text-[#57534E] max-w-2xl">
             {en
               ? `Furnished private rooms in ${STATS.totalHouses} coliving houses on the French side of Geneva, ${STATS_DISPLAY.en.distance}. All inclusive from ${PRICE_SHARED_CHF_EN}/month, deposit of 2 months' rent excluding charges, no agency or application fee.`
@@ -205,8 +242,8 @@ export function ChambresDisponiblesPage() {
         </div>
       </section>
 
-      {/* Les chambres — libres maintenant puis libérations datées (splitRooms). */}
-      <section className="py-14 lg:py-20">
+      {/* Les chambres — libres maintenant en avant (grandes cartes), libérations datées en retrait (section suivante). */}
+      <section id="libre-maintenant" className="py-14 lg:py-20 scroll-mt-24">
         <div className="container-custom">
           {!all.known ? (
             loadFailed ? (
@@ -247,27 +284,39 @@ export function ChambresDisponiblesPage() {
               </div>
             )
           ) : shown.length > 0 ? (
-            <>
-              <h2 className="text-2xl md:text-3xl font-light text-[#1C1917] mb-8" style={{ fontFamily: '"DM Serif Display", serif' }}>
+            availableShown.length > 0 ? (
+              <>
+                <div className="flex flex-wrap items-baseline justify-between gap-x-6 gap-y-1 mb-8">
+                  <h2 className="text-3xl md:text-4xl font-light text-[#1C1917]" style={{ fontFamily: '"DM Serif Display", serif' }}>
+                    {en ? "Free now" : "Libre maintenant"}
+                  </h2>
+                  <p className="text-sm text-[#57534E]">
+                    {en ? "Move in within 72 h of your first contact." : "Emménagement possible sous 72 h dès le premier contact."}
+                  </p>
+                </div>
+                <div className="space-y-6">
+                  {availableShown.map((room) => (
+                    <RoomCard
+                      key={`${room.house_slug}:${room.room_number}`}
+                      variant="featured"
+                      house={room.house_slug}
+                      houseName={HOUSES[room.house_slug].label}
+                      commune={COMMUNE[room.house_slug]}
+                      room={room}
+                      fallbackImage={HOUSES[room.house_slug].img}
+                      onOpenPhotos={openPhotos}
+                      onCtaClick={onRoomCta}
+                    />
+                  ))}
+                </div>
+              </>
+            ) : (
+              <p className="text-lg text-[#44403C] max-w-2xl">
                 {en
-                  ? `${shown.length} room${shown.length > 1 ? "s" : ""} free now or opening soon`
-                  : `${shown.length} chambre${shown.length > 1 ? "s" : ""} libre${shown.length > 1 ? "s" : ""} maintenant ou bientôt`}
-              </h2>
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                {shown.map((room) => (
-                  <RoomCard
-                    key={`${room.house_slug}:${room.room_number}`}
-                    house={room.house_slug}
-                    houseName={HOUSES[room.house_slug].label}
-                    room={room}
-                    fallbackImage={HOUSES[room.house_slug].img}
-                    showHouse
-                    onOpenPhotos={openPhotos}
-                    onCtaClick={onRoomCta}
-                  />
-                ))}
-              </div>
-            </>
+                  ? "No room is free today: here are the next openings. You can already apply for the date that suits you."
+                  : "Pas de chambre libre aujourd'hui : voici les prochaines libérations. Tu peux déjà candidater pour la date qui te convient."}
+              </p>
+            )
           ) : (
             <div className="bg-[#FAF9F6] border border-[#E7E5E4] rounded-2xl p-8 md:p-10 text-center">
               <h2 className="text-2xl md:text-3xl font-light text-[#1C1917] mb-3" style={{ fontFamily: '"DM Serif Display", serif' }}>
@@ -290,12 +339,43 @@ export function ChambresDisponiblesPage() {
         </div>
       </section>
 
+      {/* (12/10/2026) Bientôt disponibles — en retrait : fond pierre, cartes compactes, photos désaturées, triées par date. */}
+      {all.known && soonShown.length > 0 && (
+        <section id="bientot" aria-labelledby="bientot-titre" className="py-12 lg:py-16 bg-[#EFEBE4] border-t border-[#E7E5E4] scroll-mt-24">
+          <div className="container-custom">
+            <div className="flex flex-wrap items-baseline justify-between gap-x-6 gap-y-1 mb-6">
+              <h2 id="bientot-titre" className="text-2xl md:text-[1.7rem] font-light text-[#44403C]" style={{ fontFamily: '"DM Serif Display", serif' }}>
+                {en ? "Opening soon" : "Bientôt disponibles"}
+              </h2>
+              <p className="text-sm text-[#57534E]">
+                {en ? "Apply now for the date that suits you." : "Candidate dès maintenant pour la date qui te convient."}
+              </p>
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+              {soonShown.map((room) => (
+                <RoomCard
+                  key={`${room.house_slug}:${room.room_number}`}
+                  variant="compact"
+                  house={room.house_slug}
+                  houseName={HOUSES[room.house_slug].label}
+                  commune={COMMUNE[room.house_slug]}
+                  room={room}
+                  fallbackImage={HOUSES[room.house_slug].img}
+                  onOpenPhotos={openPhotos}
+                  onCtaClick={onRoomCta}
+                />
+              ))}
+            </div>
+          </div>
+        </section>
+      )}
+
       {/* Prochaines disponibilités et liste d'attente par maison (Q3) — toujours présent :
           la page vend la PROCHAINE libération, pas l'occupation du jour. */}
       <section className="py-14 lg:py-20 bg-[#FAF9F6] border-y border-[#E7E5E4]">
         <div className="container-custom">
           <h2 className="text-2xl md:text-3xl font-light text-[#1C1917] mb-2" style={{ fontFamily: '"DM Serif Display", serif' }}>
-            {en ? "Next openings, house by house" : "Prochaines disponibilités, maison par maison"}
+            {en ? "No room on your date? Join your house's waiting list" : "Pas de chambre à ta date ? Rejoins la liste d'attente de ta maison"}
           </h2>
           <p className="text-[#57534E] mb-8">
             {en
