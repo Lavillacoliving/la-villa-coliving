@@ -21,13 +21,13 @@
  *  - Imports RELATIFS, zéro React, chaînes plates (anti-#418), nombres ≥ 1 000 via thousands(), aucune date calculée.
  */
 import { TRANSIT, HOUSE_SURFACES, thousands } from "./stats";
-import { HOUSES } from "../lib/structuredData";
+import { HOUSES, publicGeo } from "../lib/structuredData";
 
 export type HouseSlug = keyof typeof TRANSIT.byHouse;
 export type LocLang = "fr" | "en";
 
 /** Incrémenter à chaque changement de texte ou de valeur (porté par data-house-location-version sur les pages maisons). */
-export const HOUSE_LOCATION_VERSION = "2026-10-09";
+export const HOUSE_LOCATION_VERSION = "2026-10-12";
 
 export const HOUSE_SLUGS: readonly HouseSlug[] = ["lavilla", "leloft", "lelodge"] as const;
 
@@ -218,11 +218,15 @@ export function houseCommuteNote(lang: LocLang): string {
     : `Mesures Google Maps du ${TRANSIT.measuredOnLabel.fr}, à pied ; transports un lundi à 8 h, marche et attente comprises.`;
 }
 
-/** Lien « Calculer mon trajet » : itinéraire Google Maps en transports depuis l'adresse de la maison (D1.5). */
+/**
+ * Lien « Calculer mon trajet » : itinéraire Google Maps en transports vers Genève-Eaux-Vives (D1.5). (12/10/2026, sécurité)
+ * L'origine est le point PUBLIC arrondi de la maison (publicGeo, ≈ 500 m), plus jamais son adresse.
+ */
 export function houseDirectionsUrl(slug: HouseSlug, lang: LocLang): string {
   const h = HOUSES.find((x) => x.slug === slug);
   if (!h) throw new Error(`houseLocation: adresse inconnue pour ${slug}`);
-  const origin = encodeURIComponent(`${h.streetAddress}, ${h.postalCode} ${h.addressLocality}, France`);
+  const g = publicGeo(h);
+  const origin = encodeURIComponent(`${g.lat},${g.lng}`);
   const destination = encodeURIComponent(lang === "en" ? "Genève-Eaux-Vives station" : "Gare de Genève-Eaux-Vives");
   return `https://www.google.com/maps/dir/?api=1&origin=${origin}&destination=${destination}&travelmode=transit`;
 }
@@ -231,8 +235,23 @@ export function houseDirectionsLabel(lang: LocLang): string {
   return lang === "en" ? "Check my commute" : "Calculer mon trajet";
 }
 
-/* ── Adresse affichée (doublon supprimé : une seule origine, HOUSES) ─────────────────────────────────────── */
+/* ── Zone affichée (12/10/2026, sécurité) : plus jamais l'adresse ─────────────────────────────────────────── */
 
+/** Zone publiée à la place de l'adresse : « Annemasse (74100), quartier de Romagny ». */
+export function houseZone(slug: HouseSlug, lang: LocLang): string {
+  const h = HOUSES.find((x) => x.slug === slug);
+  if (!h) throw new Error(`houseLocation: zone inconnue pour ${slug}`);
+  return h.zone[lang];
+}
+
+/** Phrase sous la zone : l'adresse exacte n'est donnée qu'au rendez-vous de visite. */
+export function houseExactAddressNote(lang: LocLang): string {
+  return lang === "en"
+    ? "We share the exact address when you book a visit."
+    : "L'adresse exacte t'est communiquée à la prise de rendez-vous de visite.";
+}
+
+/** INTERNE — adresse postale complète (gardes, annuaires). JAMAIS rendue sur le site : la garde house-pages-check l'interdit. */
 export function houseAddressLine(slug: HouseSlug): string {
   const h = HOUSES.find((x) => x.slug === slug);
   if (!h) throw new Error(`houseLocation: adresse inconnue pour ${slug}`);
@@ -246,6 +265,8 @@ export function houseLocationStrings(slug: HouseSlug, lang: LocLang): string[] {
   const border = houseBorder(slug, lang);
   return [
     houseNeighbourhood(slug, lang),
+    houseZone(slug, lang),
+    houseExactAddressNote(lang),
     houseCommuteLong(slug, lang),
     ...(border ? [border] : []),
     ...houseNearby(slug, lang),
