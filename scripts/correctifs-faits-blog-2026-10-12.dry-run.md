@@ -1,6 +1,6 @@
 # Correctifs de faits du blog — aperçu des substitutions SQL (12/10/2026)
 
-Généré le 2026-10-12T08:04:44.715Z par `scripts/build-slots-sql.mjs` · ancres vérifiées sur le contenu vivant de blog_posts (REST anon, lecture seule) le 2026-10-12T08:04:44.713Z · 36 modifications sur 6 articles · SQL : `scripts/correctifs-faits-blog-2026-10-12.sql`.
+Généré le 2026-10-12T08:39:30.899Z par `scripts/build-slots-sql.mjs` · ancres vérifiées sur le contenu vivant de blog_posts (REST anon, lecture seule) le 2026-10-12T08:39:30.897Z · 28 modifications sur 6 articles · SQL : `scripts/correctifs-faits-blog-2026-10-12.sql`.
 
 Légende : « Avant » = texte en base au 12/10 ; « Après » = texte corrigé.
 
@@ -9,7 +9,7 @@ Légende : « Avant » = texte en base au 12/10 ; « Après » = texte corrigé.
 | Article | FR | EN | updated_at en base | fr / en (caractères) |
 |---|---|---|---|---|
 | `coliving-transfrontalier-geneve-annemasse-nouvelle-vie` | 1 (FAITS) | 1 (FAITS) | 2026-10-10T08:07:50.44606+00:00 | 3892 / 3759 |
-| `colocation-annemasse-ville-la-grand-ambilly` | 6 (FAITS, FAITS, FAITS, FAITS, FAITS, FAITS) | 6 (FAITS, FAITS, FAITS, FAITS, FAITS, FAITS) | 2026-10-09T14:33:23.72146+00:00 | 8614 / 7691 |
+| `colocation-annemasse-ville-la-grand-ambilly` | 2 (FAITS, FAITS) | 2 (FAITS, FAITS) | 2026-10-09T14:33:23.72146+00:00 | 8614 / 7691 |
 | `fiscalite-frontalier-geneve-impots-2026` | 3 (FAITS, FAITS, FAITS) | 3 (FAITS, FAITS, FAITS) | 2026-10-09T14:33:23.72146+00:00 | 10583 / 9942 |
 | `lodge-annemasse-coliving-premium-portes-geneve` | 2 (FAITS, FAITS) | 2 (FAITS, FAITS) | 2026-10-10T08:36:26.258805+00:00 | 15213 / 13537 |
 | `ou-habiter-frontalier-suisse-villes-france-pas-cher` | 3 (FAITS, FAITS, FAITS) | 4 (FAITS, FAITS, FAITS, FAITS) | 2026-10-11T13:28:56.701083+00:00 | 9492 / 8989 |
@@ -77,22 +77,22 @@ Occurrences de l'ancre en base : 1 (attendu 1) · nouveau texte déjà présent 
 
 ### 4. `ou-habiter-frontalier-suisse-villes-france-pas-cher` (en) · FAITS
 
-A2 — correctif de faits (lot du 08/10/2026, rejoué le 12/10 sur l'état courant de la base)
+A2 — correctif de faits (lot du 08/10/2026, rejoué le 12/10 sur l'état courant de la base) — h1 EN en double retiré avec une ancre de contexte (retour arrière réel)
 
-Occurrences de l'ancre en base : 1 (attendu 1) · nouveau texte déjà présent : 0 (attendu 0) · garde « nouveau absent » : non (suppression)
+Occurrences de l'ancre en base : 1 (attendu 1) · nouveau texte déjà présent : 1 (attendu 1) · garde « nouveau absent » : non (suppression)
 
 **Avant**
 
 ````text
 # Where to live as a Geneva cross-border worker? The guide to 7 French towns
 
-
+You landed a job in Geneva
 ````
 
 **Après**
 
 ````text
-
+You landed a job in Geneva
 ````
 
 ### 5. `ou-habiter-frontalier-suisse-villes-france-pas-cher` (en) · FAITS
@@ -368,78 +368,6 @@ Occurrences de l'ancre en base : 1 (attendu 1) · nouveau texte déjà présent 
 **Avant**
 
 ````text
-**Annemasse centre (près de la gare)** : Prix : 1000-1400 CHF.
-````
-
-**Après**
-
-````text
-**Annemasse centre (près de la gare)** : Prix : 600-800 €/mois.
-````
-
-### 20. `colocation-annemasse-ville-la-grand-ambilly` (fr) · FAITS
-
-F1 — correctif de faits (lot du 08/10/2026, rejoué le 12/10 sur l'état courant de la base)
-
-Occurrences de l'ancre en base : 1 (attendu 1) · nouveau texte déjà présent : 0 (attendu 0) · garde « nouveau absent » : oui
-
-**Avant**
-
-````text
-**Annemasse Nord** : Prix : 950-1250 CHF.
-````
-
-**Après**
-
-````text
-**Annemasse Nord** : Prix : 550-750 €/mois.
-````
-
-### 21. `colocation-annemasse-ville-la-grand-ambilly` (fr) · FAITS
-
-F1 — correctif de faits (lot du 08/10/2026, rejoué le 12/10 sur l'état courant de la base)
-
-Occurrences de l'ancre en base : 1 (attendu 1) · nouveau texte déjà présent : 0 (attendu 0) · garde « nouveau absent » : oui
-
-**Avant**
-
-````text
-**Ville-la-Grand** : Prix : 900-1250 CHF.
-````
-
-**Après**
-
-````text
-**Ville-la-Grand** : Prix : 500-700 €/mois.
-````
-
-### 22. `colocation-annemasse-ville-la-grand-ambilly` (fr) · FAITS
-
-F1 — correctif de faits (lot du 08/10/2026, rejoué le 12/10 sur l'état courant de la base)
-
-Occurrences de l'ancre en base : 1 (attendu 1) · nouveau texte déjà présent : 0 (attendu 0) · garde « nouveau absent » : oui
-
-**Avant**
-
-````text
-**Ambilly** : Prix : 850-1150 CHF.
-````
-
-**Après**
-
-````text
-**Ambilly** : Prix : 500-750 €/mois.
-````
-
-### 23. `colocation-annemasse-ville-la-grand-ambilly` (fr) · FAITS
-
-F1 — correctif de faits (lot du 08/10/2026, rejoué le 12/10 sur l'état courant de la base)
-
-Occurrences de l'ancre en base : 1 (attendu 1) · nouveau texte déjà présent : 0 (attendu 0) · garde « nouveau absent » : oui
-
-**Avant**
-
-````text
 Loyer bizarrement bas (moins de 750 CHF une belle chambre)?
 ````
 
@@ -449,7 +377,7 @@ Loyer bizarrement bas (moins de 750 CHF une belle chambre)?
 Loyer bizarrement bas (bien en dessous de 550 € pour une belle chambre)?
 ````
 
-### 24. `colocation-annemasse-ville-la-grand-ambilly` (fr) · FAITS
+### 20. `colocation-annemasse-ville-la-grand-ambilly` (fr) · FAITS
 
 F1 — correctif de faits (lot du 08/10/2026, rejoué le 12/10 sur l'état courant de la base)
 
@@ -467,79 +395,7 @@ Demander 200 CHF de baisse sur un 1000 CHF.
 Demander 20 % de baisse sur le loyer.
 ````
 
-### 25. `colocation-annemasse-ville-la-grand-ambilly` (en) · FAITS
-
-F2 — correctif de faits (lot du 08/10/2026, rejoué le 12/10 sur l'état courant de la base)
-
-Occurrences de l'ancre en base : 1 (attendu 1) · nouveau texte déjà présent : 0 (attendu 0) · garde « nouveau absent » : oui
-
-**Avant**
-
-````text
-**Annemasse center (near station)**: Price: 1000-1400 CHF.
-````
-
-**Après**
-
-````text
-**Annemasse center (near station)**: Price: 600-800 €/month.
-````
-
-### 26. `colocation-annemasse-ville-la-grand-ambilly` (en) · FAITS
-
-F2 — correctif de faits (lot du 08/10/2026, rejoué le 12/10 sur l'état courant de la base)
-
-Occurrences de l'ancre en base : 1 (attendu 1) · nouveau texte déjà présent : 0 (attendu 0) · garde « nouveau absent » : oui
-
-**Avant**
-
-````text
-**Annemasse North**: Price: 950-1250 CHF.
-````
-
-**Après**
-
-````text
-**Annemasse North**: Price: 550-750 €/month.
-````
-
-### 27. `colocation-annemasse-ville-la-grand-ambilly` (en) · FAITS
-
-F2 — correctif de faits (lot du 08/10/2026, rejoué le 12/10 sur l'état courant de la base)
-
-Occurrences de l'ancre en base : 1 (attendu 1) · nouveau texte déjà présent : 0 (attendu 0) · garde « nouveau absent » : oui
-
-**Avant**
-
-````text
-**Ville-la-Grand**: Price: 900-1250 CHF.
-````
-
-**Après**
-
-````text
-**Ville-la-Grand**: Price: 500-700 €/month.
-````
-
-### 28. `colocation-annemasse-ville-la-grand-ambilly` (en) · FAITS
-
-F2 — correctif de faits (lot du 08/10/2026, rejoué le 12/10 sur l'état courant de la base)
-
-Occurrences de l'ancre en base : 1 (attendu 1) · nouveau texte déjà présent : 0 (attendu 0) · garde « nouveau absent » : oui
-
-**Avant**
-
-````text
-**Ambilly**: Price: 850-1150 CHF.
-````
-
-**Après**
-
-````text
-**Ambilly**: Price: 500-750 €/month.
-````
-
-### 29. `colocation-annemasse-ville-la-grand-ambilly` (en) · FAITS
+### 21. `colocation-annemasse-ville-la-grand-ambilly` (en) · FAITS
 
 F2 — correctif de faits (lot du 08/10/2026, rejoué le 12/10 sur l'état courant de la base)
 
@@ -557,7 +413,7 @@ Price weirdly low (less than 750 CHF nice room)?
 Price weirdly low (well under 550 € for a nice room)?
 ````
 
-### 30. `colocation-annemasse-ville-la-grand-ambilly` (en) · FAITS
+### 22. `colocation-annemasse-ville-la-grand-ambilly` (en) · FAITS
 
 F2 — correctif de faits (lot du 08/10/2026, rejoué le 12/10 sur l'état courant de la base)
 
@@ -575,7 +431,7 @@ Ask 200 CHF off a 1000 CHF rent.
 Ask for 20% off the rent.
 ````
 
-### 31. `lodge-annemasse-coliving-premium-portes-geneve` (fr, `excerpt_fr`) · FAITS
+### 23. `lodge-annemasse-coliving-premium-portes-geneve` (fr, `excerpt_fr`) · FAITS
 
 H1 — correctif de faits (lot du 08/10/2026, rejoué le 12/10 sur l'état courant de la base)
 
@@ -593,7 +449,7 @@ Occurrences de l'ancre en base : 1 (attendu 1) · nouveau texte déjà présent 
 1 430 CHF/mois tout inclus
 ````
 
-### 32. `lodge-annemasse-coliving-premium-portes-geneve` (en, `excerpt_en`) · FAITS
+### 24. `lodge-annemasse-coliving-premium-portes-geneve` (en, `excerpt_en`) · FAITS
 
 H2 — correctif de faits (lot du 08/10/2026, rejoué le 12/10 sur l'état courant de la base)
 
@@ -611,7 +467,7 @@ all-inclusive at CHF 1,370/month
 all-inclusive at CHF 1,430/month
 ````
 
-### 33. `lodge-annemasse-coliving-premium-portes-geneve` (fr, `meta_description_fr`) · FAITS
+### 25. `lodge-annemasse-coliving-premium-portes-geneve` (fr, `meta_description_fr`) · FAITS
 
 H3 — correctif de faits (lot du 08/10/2026, rejoué le 12/10 sur l'état courant de la base)
 
@@ -629,7 +485,7 @@ Occurrences de l'ancre en base : 1 (attendu 1) · nouveau texte déjà présent 
 1 430 CHF/mois tout inclus
 ````
 
-### 34. `lodge-annemasse-coliving-premium-portes-geneve` (en, `meta_description_en`) · FAITS
+### 26. `lodge-annemasse-coliving-premium-portes-geneve` (en, `meta_description_en`) · FAITS
 
 H4 — correctif de faits (lot du 08/10/2026, rejoué le 12/10 sur l'état courant de la base)
 
@@ -647,7 +503,7 @@ all-inclusive at CHF 1,370/month
 all-inclusive at CHF 1,430/month
 ````
 
-### 35. `coliving-transfrontalier-geneve-annemasse-nouvelle-vie` (fr, `meta_description_fr`) · FAITS
+### 27. `coliving-transfrontalier-geneve-annemasse-nouvelle-vie` (fr, `meta_description_fr`) · FAITS
 
 H5 — correctif de faits (lot du 08/10/2026, rejoué le 12/10 sur l'état courant de la base)
 
@@ -665,7 +521,7 @@ Occurrences de l'ancre en base : 1 (attendu 1) · nouveau texte déjà présent 
 , dès 1 370 CHF tout compris,
 ````
 
-### 36. `coliving-transfrontalier-geneve-annemasse-nouvelle-vie` (en, `meta_description_en`) · FAITS
+### 28. `coliving-transfrontalier-geneve-annemasse-nouvelle-vie` (en, `meta_description_en`) · FAITS
 
 H6 — correctif de faits (lot du 08/10/2026, rejoué le 12/10 sur l'état courant de la base)
 

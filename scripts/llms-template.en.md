@@ -26,8 +26,8 @@
 ## Open Data — Cross-Border Housing Observatory
 - Annual study: studio listing rents crossed with travel time to Geneva Eaux-Vives, for 17 French communes on the Léman Express corridor
 - Key 2026 figure: in Geneva, a newcomer pays about +44% per m² vs a sitting tenant (listings ≈ CHF 50/m² vs CHF 35/m² OCSTAT for existing leases)
-- Page: https://www.lavillacoliving.com/en/observatoire-logement-frontalier-geneve
 - "Seen from our houses" (first-party La Villa data, aggregated): median room rent CHF 1,360/month all-inclusive (2026 median of current rents), ≈ 38 m² per resident i.e. ≈ CHF 36/m² all-inclusive, average stay 13 months (9 months excluding long stays), occupancy {{OCCUPANCY}}, 100% cross-border workers
+- Page: https://www.lavillacoliving.com/en/observatoire-logement-frontalier-geneve
 - CSV data (French communes): https://www.lavillacoliving.com/data/observatoire-data-2026.csv
 - CSV data (Geneva): https://www.lavillacoliving.com/data/observatoire-geneve-2026.csv
 - CSV data (La Villa first-party): https://www.lavillacoliving.com/data/observatoire-lavilla-2026.csv

@@ -1,7 +1,7 @@
 /**
  * Lot « correctifs de faits du blog » (préparé le 08/10/2026, GO de Jérôme le 12/10/2026) — liste DÉCLARATIVE rejouée sur l'état
  * courant de la base : les 70 paires find/replace du SQL du 08/10 (scripts/correctifs-faits-blog-2026-10-08.sql, branche
- * content/correctifs-faits-blog, jamais appliqué) ont été reclassées contre la base vivante le 12/10 : 36 applicables (ici),
+ * content/correctifs-faits-blog, jamais appliqué) ont été reclassées contre la base vivante le 12/10 : 28 applicables (ici : 36 moins les 8 fourchettes de loyer par commune de colocation-annemasse, mises de côté le 12/10 — elles contrediraient le bloc « Où chercher » de la même page, décision de Jérôme attendue sur la fourchette canonique),
  * 4 à occurrences multiples + 7 metas vides (scripts/correctifs-faits-blog-complement-2026-10-12.sql : replace() global gardé par comptage, metas gardées « vide »),
  * 25 caduques (pied EN « 15-20 minutes from Geneva » déjà réécrit par L2), 5 caduques (puce « Sans bail » et filtre Leboncoin
  * réécrits par L1, « 15-20 minutes » de budget-colocation réécrit par L2). Consommée par scripts/build-slots-sql.mjs :
@@ -11,14 +11,15 @@
  * Contenu : A ou-habiter (bail 12 mois / 1 mois de préavis, garant et caution hors « démarches évitées », « À lire aussi » lié,
  * h1 EN en double retiré) ; C fiscalite / assurance (« dès 1 370 CHF ») ; D fiscalite (2e « À lire aussi ») ; E salaire (règle des 40 %,
  * 3a, plafond 7 258 CHF) ; F colocation-annemasse (loyers côté France en €, seuil d'arnaque sans CHF) ; G 7 metas vides ;
- * H Lodge 1 430 CHF dans extrait/meta, coliving-transfrontalier « dès 1 370 CHF ». Espaces insécables conservées (U+00A0 dans les chaînes).
+ * H Lodge 1 430 CHF dans extrait/meta, coliving-transfrontalier « dès 1 370 CHF ». F : seuil d'arnaque et négociation sans CHF
+ * (les 4 fourchettes par commune en € restent en attente). Espaces insécables conservées (U+00A0 dans les chaînes).
  */
 
 export const POST_STATE_WATCH = [/15-20 min/i, /sans bail/i];
 
 export function sqlDoc() {
   return {
-    lot: 'Correctifs de faits du blog (lot du 08/10/2026, GO Jérôme 12/10/2026) : 36 substitutions sur 13 articles, 5 colonnes de metas/extraits.',
+    lot: 'Correctifs de faits du blog (lot du 08/10/2026, GO Jérôme 12/10/2026) : 28 substitutions sur 6 articles (dont 6 sur des extraits/metas) ; complément (4 replace() globaux + 7 metas) à part.',
     sources: 'paires reprises du SQL du 08/10 (scripts/correctifs-faits-blog-2026-10-08.sql), reclassées contre la base le 12/10 ; aucune donnée nouvelle',
     apply: 'Indépendant du code (textes d\'articles seulement) ; republication par le bot au prochain push ou cron.',
     encoding: 'Fichier UTF-8 avec insécables U+00A0 — ne pas normaliser.',
@@ -61,9 +62,9 @@ const EDITS = [
     "lang": "en",
     "column": "content_en",
     "mechanism": "FAITS",
-    "note": "A2 — correctif de faits (lot du 08/10/2026, rejoué le 12/10 sur l'état courant de la base)",
-    "find": "# Where to live as a Geneva cross-border worker? The guide to 7 French towns\n\n",
-    "replace": ""
+    "note": "A2 — correctif de faits (lot du 08/10/2026, rejoué le 12/10 sur l'état courant de la base) — h1 EN en double retiré avec une ancre de contexte (retour arrière réel)",
+    "find": "# Where to live as a Geneva cross-border worker? The guide to 7 French towns\n\nYou landed a job in Geneva",
+    "replace": "You landed a job in Geneva"
   },
   {
     "slug": "ou-habiter-frontalier-suisse-villes-france-pas-cher",
@@ -197,42 +198,6 @@ const EDITS = [
     "column": "content_fr",
     "mechanism": "FAITS",
     "note": "F1 — correctif de faits (lot du 08/10/2026, rejoué le 12/10 sur l'état courant de la base)",
-    "find": "**Annemasse centre (près de la gare)** : Prix : 1000-1400 CHF.",
-    "replace": "**Annemasse centre (près de la gare)** : Prix : 600-800 €/mois."
-  },
-  {
-    "slug": "colocation-annemasse-ville-la-grand-ambilly",
-    "lang": "fr",
-    "column": "content_fr",
-    "mechanism": "FAITS",
-    "note": "F1 — correctif de faits (lot du 08/10/2026, rejoué le 12/10 sur l'état courant de la base)",
-    "find": "**Annemasse Nord** : Prix : 950-1250 CHF.",
-    "replace": "**Annemasse Nord** : Prix : 550-750 €/mois."
-  },
-  {
-    "slug": "colocation-annemasse-ville-la-grand-ambilly",
-    "lang": "fr",
-    "column": "content_fr",
-    "mechanism": "FAITS",
-    "note": "F1 — correctif de faits (lot du 08/10/2026, rejoué le 12/10 sur l'état courant de la base)",
-    "find": "**Ville-la-Grand** : Prix : 900-1250 CHF.",
-    "replace": "**Ville-la-Grand** : Prix : 500-700 €/mois."
-  },
-  {
-    "slug": "colocation-annemasse-ville-la-grand-ambilly",
-    "lang": "fr",
-    "column": "content_fr",
-    "mechanism": "FAITS",
-    "note": "F1 — correctif de faits (lot du 08/10/2026, rejoué le 12/10 sur l'état courant de la base)",
-    "find": "**Ambilly** : Prix : 850-1150 CHF.",
-    "replace": "**Ambilly** : Prix : 500-750 €/mois."
-  },
-  {
-    "slug": "colocation-annemasse-ville-la-grand-ambilly",
-    "lang": "fr",
-    "column": "content_fr",
-    "mechanism": "FAITS",
-    "note": "F1 — correctif de faits (lot du 08/10/2026, rejoué le 12/10 sur l'état courant de la base)",
     "find": "Loyer bizarrement bas (moins de 750 CHF une belle chambre)?",
     "replace": "Loyer bizarrement bas (bien en dessous de 550 € pour une belle chambre)?"
   },
@@ -244,42 +209,6 @@ const EDITS = [
     "note": "F1 — correctif de faits (lot du 08/10/2026, rejoué le 12/10 sur l'état courant de la base)",
     "find": "Demander 200 CHF de baisse sur un 1000 CHF.",
     "replace": "Demander 20 % de baisse sur le loyer."
-  },
-  {
-    "slug": "colocation-annemasse-ville-la-grand-ambilly",
-    "lang": "en",
-    "column": "content_en",
-    "mechanism": "FAITS",
-    "note": "F2 — correctif de faits (lot du 08/10/2026, rejoué le 12/10 sur l'état courant de la base)",
-    "find": "**Annemasse center (near station)**: Price: 1000-1400 CHF.",
-    "replace": "**Annemasse center (near station)**: Price: 600-800 €/month."
-  },
-  {
-    "slug": "colocation-annemasse-ville-la-grand-ambilly",
-    "lang": "en",
-    "column": "content_en",
-    "mechanism": "FAITS",
-    "note": "F2 — correctif de faits (lot du 08/10/2026, rejoué le 12/10 sur l'état courant de la base)",
-    "find": "**Annemasse North**: Price: 950-1250 CHF.",
-    "replace": "**Annemasse North**: Price: 550-750 €/month."
-  },
-  {
-    "slug": "colocation-annemasse-ville-la-grand-ambilly",
-    "lang": "en",
-    "column": "content_en",
-    "mechanism": "FAITS",
-    "note": "F2 — correctif de faits (lot du 08/10/2026, rejoué le 12/10 sur l'état courant de la base)",
-    "find": "**Ville-la-Grand**: Price: 900-1250 CHF.",
-    "replace": "**Ville-la-Grand**: Price: 500-700 €/month."
-  },
-  {
-    "slug": "colocation-annemasse-ville-la-grand-ambilly",
-    "lang": "en",
-    "column": "content_en",
-    "mechanism": "FAITS",
-    "note": "F2 — correctif de faits (lot du 08/10/2026, rejoué le 12/10 sur l'état courant de la base)",
-    "find": "**Ambilly**: Price: 850-1150 CHF.",
-    "replace": "**Ambilly**: Price: 500-750 €/month."
   },
   {
     "slug": "colocation-annemasse-ville-la-grand-ambilly",

@@ -149,6 +149,8 @@ export function checkEdit(edit, live) {
   const label = `${edit.slug} (${edit.lang}) · ${edit.mechanism} · ${edit.note}`;
   const failures = [];
   if (typeof live !== 'string') { failures.push(`${label} : colonne ${columnOf(edit)} absente ou vide en base`); return failures; }
+  // (12/10/2026) Une suppression sans contexte (replace vide) rendrait le retour arrière inopérant (replace(x, '', y) = x) : exiger une ancre conservée.
+  if (edit.replace === '') failures.push(`${label} : suppression sans contexte (replace vide) — garder une ancre dans find/replace pour que le retour arrière soit réel`);
   const n = countOccurrences(live, edit.find);
   if (n !== 1) failures.push(`${label} : ${n} occurrence(s) de l'ancre en base (attendu 1) — « ${preview(edit.find)} »`);
   const expectedR = countOccurrences(edit.find, edit.replace);
@@ -228,7 +230,7 @@ export function renderSql(edits, meta) {
     '-- ============================================================================',
     `-- ${doc.lot}`,
     `-- Généré le ${meta.generatedAt} par scripts/build-slots-sql.mjs depuis ${doc.editsFile}`,
-    `--   · ${doc.sources} (${versionsLine(meta.versions)})`,
+    `--   · ${doc.sources}${versionsLine(meta.versions) ? ` (${versionsLine(meta.versions)})` : ''}`,
     `--   · ancres vérifiées sur ${meta.source} : exactement 1 occurrence de chaque ancien texte, nouveau texte absent`,
     `-- ${doc.apply}`,
     '-- Idempotent : chaque UPDATE est gardé par position(ancien) > 0 [AND position(nouveau) = 0 quand le nouveau texte n\'est pas un fragment de l\'ancien] — relancer le fichier est sans effet.',

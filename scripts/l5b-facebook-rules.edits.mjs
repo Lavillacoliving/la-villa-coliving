@@ -1,5 +1,9 @@
 /**
- * C3 (11/10/2026) — règles du groupe Facebook publiées et épinglées par Jérôme → l'interdit L5.4 est réduit (« modéré » autorisé,
+ * ARCHIVE — SQL appliqué le 11/10/2026 (scripts/l5b-facebook-rules-2026-10-11.sql). Depuis le 12/10 la formule est « règles publiées »
+ * (Jérôme n'épingle pas les règles) : la bascule est portée par scripts/c3b-facebook-wording.edits.mjs. NE PAS RELANCER ce générateur :
+ * sa NEW_TAIL (« épinglées ») ne correspond plus à la source, assertSource s'arrêterait — c'est voulu, le fichier documente l'archive.
+ *
+ * C3 (11/10/2026) — règles du groupe Facebook publiées par Jérôme (épinglage annoncé, non fait) → l'interdit L5.4 est réduit (« modéré » autorisé,
  * « annonces vérifiées » toujours interdit) et la mention canonique A.7 des 4 articles en base est ENRICHIE (option B validée) :
  * « … Il est animé et modéré par l'équipe de La Villa Coliving : règles publiées, annonces douteuses retirées. » (EN à parité).
  * Liste DÉCLARATIVE consommée par scripts/build-slots-sql.mjs :
@@ -19,8 +23,8 @@
 
 const OLD_TAIL = { fr: "Il est animé par l'équipe de La Villa Coliving.", en: 'It is run by the La Villa Coliving team.' };
 const NEW_TAIL = {
-  fr: "Il est animé et modéré par l'équipe de La Villa Coliving : règles publiées, annonces douteuses retirées.",
-  en: 'It is run and moderated by the La Villa Coliving team: published rules, suspicious listings removed.',
+  fr: "Il est animé et modéré par l'équipe de La Villa Coliving : règles épinglées, annonces douteuses retirées.",
+  en: 'It is run and moderated by the La Villa Coliving team: pinned rules, suspicious listings removed.',
 };
 /** Déplacement C2 (arnaques) : `from` = titre qui suivait la mention (ancienne ancre L5), `to` = titre qui la suit désormais. */
 const MOVE = {
