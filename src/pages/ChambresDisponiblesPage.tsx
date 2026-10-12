@@ -129,6 +129,15 @@ export function ChambresDisponiblesPage() {
     });
   };
 
+  // (12/10/2026, demande Jérôme) « Découvrir la maison » : événement DISTINCT de cta_click, pour ne pas gonfler
+  // les clics vers /candidature dans les rapports.
+  const onHouseDiscover = (room: PublicRoom) => {
+    track("house_discover_click", {
+      house: room.house_slug, room_id: `chambre-${room.room_number}`,
+      room_status: room.availability === "available" ? "available" : "upcoming", page: "chambres_disponibles", language,
+    });
+  };
+
   // Prochaines disponibilités par maison (résumés embarqués) — jamais « complet ».
   const houseLine = (house: HouseKey): { text: string; tone: BadgeTone } | null => {
     // Résumés pas encore connus : rien plutôt qu'un faux « pas de date annoncée » (comme HouseAvailabilityLine).
@@ -306,6 +315,8 @@ export function ChambresDisponiblesPage() {
                       fallbackImage={HOUSES[room.house_slug].img}
                       onOpenPhotos={openPhotos}
                       onCtaClick={onRoomCta}
+                      houseCta
+                      onHouseClick={onHouseDiscover}
                     />
                   ))}
                 </div>
@@ -348,7 +359,7 @@ export function ChambresDisponiblesPage() {
                 {en ? "Opening soon" : "Bientôt disponibles"}
               </h2>
               <p className="text-sm text-[#57534E]">
-                {en ? "Apply now for the date that suits you." : "Candidate dès maintenant pour la date qui te convient."}
+                {en ? "Discover the house, then apply for the date that suits you." : "Découvre la maison, puis candidate pour la date qui te convient."}
               </p>
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
@@ -363,6 +374,8 @@ export function ChambresDisponiblesPage() {
                   fallbackImage={HOUSES[room.house_slug].img}
                   onOpenPhotos={openPhotos}
                   onCtaClick={onRoomCta}
+                  houseCta
+                  onHouseClick={onHouseDiscover}
                 />
               ))}
             </div>

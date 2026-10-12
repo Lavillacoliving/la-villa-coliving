@@ -41,6 +41,14 @@ export type RoomCardProps = {
   onOpenPhotos?: (room: PublicRoom, photoIndex: number) => void;
   onCtaClick?: (room: PublicRoom) => void;
   /**
+   * (12/10/2026, demandes Jérôme) « Découvrir la maison » sur /chambres-disponibles : la maison est le point fort de
+   * l'offre, et candidater après quelques photos de chambre est un engagement trop fort. Carte featured : bouton
+   * principal AU-DESSUS de « Candidater pour cette chambre » (conservé). Carte compact : À LA PLACE de « Réserver cette
+   * date ». Absent = cartes inchangées (pages maisons : on y est déjà). Garde : scripts/house-pages-check.mjs.
+   */
+  houseCta?: boolean;
+  onHouseClick?: (room: PublicRoom) => void;
+  /**
    * (12/10/2026, refonte /chambres-disponibles validée par Jérôme) « featured » = grande carte horizontale d'une chambre libre
    * maintenant ; « compact » = petite carte en retrait d'une libération datée ; « default » = carte historique (pages maisons, inchangée).
    */
@@ -49,7 +57,7 @@ export type RoomCardProps = {
   commune?: string;
 };
 
-export function RoomCard({ house, houseName, room, fallbackImage, showHouse = false, onOpenPhotos, onCtaClick, variant = "default", commune }: RoomCardProps) {
+export function RoomCard({ house, houseName, room, fallbackImage, showHouse = false, onOpenPhotos, onCtaClick, houseCta = false, onHouseClick, variant = "default", commune }: RoomCardProps) {
   const { t, language } = useLanguage();
   const uiLang = language === "en" ? "en" as const : "fr" as const;
   // Pack dédié, ou galerie standard du Lodge (chambre → communs → extérieurs).
@@ -155,23 +163,36 @@ export function RoomCard({ house, houseName, room, fallbackImage, showHouse = fa
               </p>
             </div>
           )}
-          <div className="mt-auto flex flex-wrap gap-3">
-            <LocalizedLink
-              to={ctaHref}
-              onClick={() => onCtaClick?.(room)}
-              className="inline-flex items-center justify-center gap-2 min-h-[48px] px-6 bg-[#D4A574] text-[#1C1917] text-sm font-semibold rounded-lg hover:bg-[#E0BB8A] transition-colors"
-            >
-              {en ? "Apply for this room" : "Candidater pour cette chambre"}
-              <ArrowRight className="w-4 h-4" />
-            </LocalizedLink>
-            {pageOpen && (
+          <div className="mt-auto flex flex-col gap-3">
+            {houseCta && (
               <LocalizedLink
-                to={roomPagePath(house, room.room_number)}
-                className="inline-flex items-center justify-center gap-2 min-h-[48px] px-5 border border-[#D6D3CE] text-[#1C1917] text-sm font-semibold rounded-lg hover:border-[#1C1917] transition-colors"
+                to={`/${house}`}
+                onClick={() => onHouseClick?.(room)}
+                data-house-cta
+                className="inline-flex items-center justify-center gap-2 min-h-[48px] px-6 bg-[#1C1917] text-white text-sm font-semibold rounded-lg hover:bg-[#44403C] transition-colors"
               >
-                {en ? "See the room's page" : "Voir la fiche"}
+                {en ? "Discover the house" : "Découvrir la maison"}
+                <ArrowRight className="w-4 h-4" />
               </LocalizedLink>
             )}
+            <div className="flex flex-wrap gap-3">
+              <LocalizedLink
+                to={ctaHref}
+                onClick={() => onCtaClick?.(room)}
+                className="inline-flex items-center justify-center gap-2 min-h-[48px] px-6 bg-[#D4A574] text-[#1C1917] text-sm font-semibold rounded-lg hover:bg-[#E0BB8A] transition-colors"
+              >
+                {en ? "Apply for this room" : "Candidater pour cette chambre"}
+                <ArrowRight className="w-4 h-4" />
+              </LocalizedLink>
+              {pageOpen && (
+                <LocalizedLink
+                  to={roomPagePath(house, room.room_number)}
+                  className="inline-flex items-center justify-center gap-2 min-h-[48px] px-5 border border-[#D6D3CE] text-[#1C1917] text-sm font-semibold rounded-lg hover:border-[#1C1917] transition-colors"
+                >
+                  {en ? "See the room's page" : "Voir la fiche"}
+                </LocalizedLink>
+              )}
+            </div>
           </div>
         </div>
       </article>
@@ -211,14 +232,26 @@ export function RoomCard({ house, houseName, room, fallbackImage, showHouse = fa
               <span className="text-xs text-[#78716C]">{eur ? ` (${eur})` : ""} {t.houseDetail.perMonth}</span>
             </p>
           )}
-          <LocalizedLink
-            to={ctaHref}
-            onClick={() => onCtaClick?.(room)}
-            className="mt-auto inline-flex items-center gap-1.5 min-h-[44px] text-sm font-semibold text-[#57534E] hover:text-[#1C1917]"
-          >
-            {en ? "Book this date" : "Réserver cette date"}
-            <ArrowRight className="w-3.5 h-3.5" aria-hidden="true" />
-          </LocalizedLink>
+          {houseCta ? (
+            <LocalizedLink
+              to={`/${house}`}
+              onClick={() => onHouseClick?.(room)}
+              data-house-cta
+              className="mt-auto inline-flex items-center gap-1.5 min-h-[44px] text-sm font-semibold text-[#1C1917] hover:text-[#8A6508]"
+            >
+              {en ? "Discover the house" : "Découvrir la maison"}
+              <ArrowRight className="w-3.5 h-3.5" aria-hidden="true" />
+            </LocalizedLink>
+          ) : (
+            <LocalizedLink
+              to={ctaHref}
+              onClick={() => onCtaClick?.(room)}
+              className="mt-auto inline-flex items-center gap-1.5 min-h-[44px] text-sm font-semibold text-[#57534E] hover:text-[#1C1917]"
+            >
+              {en ? "Book this date" : "Réserver cette date"}
+              <ArrowRight className="w-3.5 h-3.5" aria-hidden="true" />
+            </LocalizedLink>
+          )}
         </div>
       </article>
     );
