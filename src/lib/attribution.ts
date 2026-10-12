@@ -378,6 +378,52 @@ export function isTestSession(): boolean {
   }
 }
 
+// ── Offre commerciale (brief « Pose tes valises avant l'hiver », 06/10/2026) ────────────────────
+// `?offre=hiver` posé sur /candidature par la page /offre-hiver, le bandeau et les cartes chambres
+// de l'offre. Mémorisé pour la SESSION (même mécanique que le marqueur de test : sessionStorage,
+// jamais la copie localStorage de la première touche) : un candidat qui navigue vers une page
+// maison avant de soumettre garde son offre. La visite de /offre-hiver elle-même la pose aussi
+// (OfferPage) — un candidat venu de la campagne qui candidate ensuite depuis une page maison est
+// quand même rattaché à l'offre. Valeur inconnue : ignorée en silence, jamais écrite.
+
+export const OFFER_STORAGE_KEY = "lvc_offer";
+const KNOWN_OFFERS = ["hiver"] as const;
+
+/** Mémorise l'offre `value` si elle est connue. Renvoie la valeur écrite, ou "". */
+export function markOffer(value: string | null | undefined): string {
+  const store = storage();
+  if (!store) return "";
+  const v = String(value ?? "").trim().toLowerCase();
+  if (!(KNOWN_OFFERS as readonly string[]).includes(v)) return "";
+  try {
+    store.setItem(OFFER_STORAGE_KEY, v);
+    return v;
+  } catch {
+    return "";
+  }
+}
+
+/** Lit `?offre=` sur l'URL courante (main.tsx au chargement, InternalRefCapture à chaque navigation SPA). */
+export function captureOffer(search: string = window.location.search): string {
+  try {
+    return markOffer(new URLSearchParams(search).get("offre"));
+  } catch {
+    return "";
+  }
+}
+
+/** Offre mémorisée pour la session, ou "". */
+export function storedOffer(): string {
+  const store = storage();
+  if (!store) return "";
+  try {
+    const v = store.getItem(OFFER_STORAGE_KEY) ?? "";
+    return (KNOWN_OFFERS as readonly string[]).includes(v) ? v : "";
+  } catch {
+    return "";
+  }
+}
+
 // ── Première touche entre onglets (Lot C.4, 30/09/2026 — GO Jérôme, version hybride) ────────
 // sessionStorage reste la vérité de chaque onglet (rien ne change dans un onglet). Une copie
 // localStorage de `lvc_attribution` + `lvc_landing`, rafraîchie à chaque chargement et à chaque

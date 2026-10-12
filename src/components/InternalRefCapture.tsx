@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import { useLocation } from "react-router-dom";
-import { captureInternalRef, touchMirror } from "@/lib/attribution";
+import { captureInternalRef, captureOffer, touchMirror } from "@/lib/attribution";
 
 // Lot 1 attribution (03/09/2026) — pendant SPA de l'appel de main.tsx : une navigation
 // interne (LocalizedLink) ne recharge pas la page, donc `?src=bloc_offre&article=…`
@@ -14,6 +14,8 @@ export function InternalRefCapture() {
   const { search, pathname } = useLocation();
   useEffect(() => {
     captureInternalRef(search, pathname);
+    // (Offre hiver, 06/10/2026) `?offre=hiver` relu à chaque navigation SPA, comme `?src=`.
+    captureOffer(search);
     touchMirror();
   }, [search, pathname]);
   return null;

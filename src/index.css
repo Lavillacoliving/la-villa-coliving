@@ -165,3 +165,27 @@ html.lvc-cand-ctx .cand-ctx-slot { min-height: 134px; }
   html.lvc-cand-ctx .cand-ctx-slot { min-height: 122px; }
 }
 html.lvc-cand-ctx .cand-micro { display: none; }
+
+/* (Offre « Pose tes valises avant l'hiver », 06/10/2026) Bandeau dans le <header> fixe (OfferBanner).
+   html.lvc-offer-on est posée AVANT la première peinture par le script #lvc-offer d'index.html, puis tenue
+   à jour par OfferBanner après l'hydratation. Hauteur FIXE (deux lignes de texte possibles à 390 px) :
+   l'en-tête grandit d'autant, et les pages dont le <main> compense l'en-tête par `pt-16` (tarifs, colocation
+   Genève, chambre à louer Genève, Annemasse) ou dont la première section le fait (pages maisons) reçoivent la
+   même hauteur en plus — dès le premier rendu, donc sans décalage. Sans la classe, le bandeau n'existe pas
+   visuellement (prérendu commun à tous les lecteurs). */
+html.lvc-offer-on { --lvc-banner-h: 48px; }
+@media (min-width: 640px) {
+  html.lvc-offer-on { --lvc-banner-h: 36px; }
+}
+.lvc-offer-banner { height: var(--lvc-banner-h, 0px); overflow: hidden; }
+html:not(.lvc-offer-on) .lvc-offer-banner { display: none; }
+html.lvc-offer-on #root > div > main.pt-16,
+html.lvc-offer-on #root > div > main > section.pt-16:first-child {
+  padding-top: calc(4rem + var(--lvc-banner-h));
+}
+/* Accueil : le hero (pt-24, min-h-screen, contenu calé en bas) compense l'en-tête lui-même — même
+   hauteur en plus, sinon le bandeau recouvre sa pastille « Coliving boutique » à 390 px. Mise en page
+   seulement : les textes du hero (« 20 min ») ne sont pas touchés (arbitrage séparé). */
+html.lvc-offer-on #root > div > main > [data-home-section="hero"] > section.pt-24 {
+  padding-top: calc(6rem + var(--lvc-banner-h));
+}

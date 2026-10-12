@@ -3,7 +3,7 @@ import { createRoot, hydrateRoot } from "react-dom/client";
 import "./index.css";
 import App from "./App.tsx";
 import { preloadRouteModule } from "@/lib/routePreload";
-import { captureAttribution, captureInternalRef, captureLanding, captureTestFlag, seedFromMirror, touchMirror } from "@/lib/attribution";
+import { captureAttribution, captureInternalRef, captureLanding, captureOffer, captureTestFlag, seedFromMirror, touchMirror } from "@/lib/attribution";
 import { recoverFromChunkError } from "@/lib/lazyWithRetry";
 
 // Attribution Ads (utm_* + gclid) et marqueur de test (?test=1) : capturés ICI, dès
@@ -23,6 +23,8 @@ captureTestFlag();
 // (captureAttribution, ci-dessus) prime toujours sur l'interne.
 captureLanding();
 captureInternalRef();
+// Offre commerciale (06/10/2026) : `?offre=hiver` suit le candidat pour la session (sessionStorage).
+captureOffer();
 // (Lot C.4) Copie partagée rafraîchie après les captures (expiration glissante).
 touchMirror();
 
@@ -79,6 +81,16 @@ for (const id of ["__blog_post_data__", "__blog_list_data__", "__latest_blog_dat
 // Vercel l'envoie en HTTP 404 pour toute URL sans prérendu, dont /blog/<slug inconnu>. On note le
 // chemin : BlogPostPage s'hydrate alors sur ce même rendu (pas de #418) avant d'interroger la base.
 if (rootElement.querySelector("main[data-not-found]")) prerenderState.__not_found__ = window.location.pathname;
+// (Offre hiver, 06/10/2026) Ce que le HTML prérendu contient AVANT l'hydratation : le bandeau de
+// l'offre (dans le <header>) et l'état de /offre-hiver (active / terminée). Le premier rendu client
+// doit reproduire ce HTML, quelle que soit la date du lecteur ou sa fermeture du bandeau (localStorage) ;
+// OfferBanner et OfferPage lisent ces deux repères pendant l'hydratation, puis se resynchronisent.
+if (rootElement.querySelector(".lvc-offer-banner")) prerenderState.__offer_banner__ = "1";
+const offerMain = rootElement.querySelector("main[data-offer-state]");
+if (offerMain) prerenderState.__offer_state__ = offerMain.getAttribute("data-offer-state") ?? "";
+// (Rebrief −50 %, 12/10/2026) Jour de Paris utilisé par le prérendu pour les lignes « Bail au … » des cartes de l'offre.
+const offerToday = rootElement.querySelector("main[data-offer-today]");
+if (offerToday) prerenderState.__offer_today__ = offerToday.getAttribute("data-offer-today") ?? "";
 (window as unknown as { __PRERENDER_STATE__: Record<string, string> }).__PRERENDER_STATE__ = prerenderState;
 const app = (
   <StrictMode>

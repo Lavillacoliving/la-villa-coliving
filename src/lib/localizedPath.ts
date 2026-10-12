@@ -10,6 +10,20 @@ export function isExcludedPath(pathname: string): boolean {
 
 const isExcluded = isExcludedPath;
 
+// Exception à la règle « même slug FR/EN » (offre « Pose tes valises avant l'hiver », 06/10/2026) :
+// /offre-hiver ↔ /en/winter-offer. Les deux sens sont dérivés de cette seule table ; App.tsx porte
+// aussi des <Navigate> de secours (/winter-offer → /offre-hiver, /en/offre-hiver → /en/winter-offer).
+const SLUG_FR_TO_EN: Record<string, string> = { "/offre-hiver": "/winter-offer" };
+const SLUG_EN_TO_FR: Record<string, string> = Object.fromEntries(
+  Object.entries(SLUG_FR_TO_EN).map(([fr, en]) => [en, fr]),
+);
+const toEnPath = (frPath: string): string => {
+  const mapped = Object.prototype.hasOwnProperty.call(SLUG_FR_TO_EN, frPath) ? SLUG_FR_TO_EN[frPath] : frPath;
+  return mapped === "/" ? "/en" : `/en${mapped}`;
+};
+const toFrPath = (enRest: string): string =>
+  Object.prototype.hasOwnProperty.call(SLUG_EN_TO_FR, enRest) ? SLUG_EN_TO_FR[enRest] : enRest;
+
 /**
  * Préfixe un chemin interne par /en quand la langue courante est l'anglais.
  * Idempotent (un chemin déjà en /en/* est rendu tel quel), préserve query et
@@ -24,7 +38,7 @@ export function localizePath(path: string, language: Language): string {
   const suffix = match?.[2] ?? "";
   if (pathname === "/en" || pathname.startsWith("/en/")) return path;
   if (isExcluded(pathname)) return path;
-  return (pathname === "/" ? "/en" : `/en${pathname}`) + suffix;
+  return toEnPath(pathname) + suffix;
 }
 
 /**
@@ -33,7 +47,7 @@ export function localizePath(path: string, language: Language): string {
  */
 export function mirrorPath(pathname: string): string {
   if (pathname === "/en") return "/";
-  if (pathname.startsWith("/en/")) return pathname.slice(3) || "/";
+  if (pathname.startsWith("/en/")) return toFrPath(pathname.slice(3) || "/");
   if (isExcluded(pathname)) return pathname;
-  return pathname === "/" ? "/en" : `/en${pathname}`;
+  return toEnPath(pathname);
 }

@@ -31,6 +31,23 @@ export function readEmbeddedArray<T>(id: string): T[] | null {
   }
 }
 
+/**
+ * (Offre hiver, 06/10/2026) Repère posé par main.tsx AVANT l'hydratation d'après le DOM prérendu
+ * (ex. `__offer_banner__` = "1" si le <header> contenait le bandeau, `__offer_state__` = état de
+ * /offre-hiver). Sert au premier rendu client à reproduire le HTML, puis le composant se resynchronise.
+ * `null` hors navigateur, hors page prérendue ou si rien n'a été capturé.
+ */
+export function readPrerenderFlag(id: string): string | null {
+  if (typeof window === "undefined") return null;
+  try {
+    const stash = (window as unknown as { __PRERENDER_STATE__?: Record<string, string> }).__PRERENDER_STATE__;
+    const value = stash?.[id];
+    return typeof value === "string" ? value : null;
+  } catch {
+    return null;
+  }
+}
+
 /** Sérialisation sûre pour dangerouslySetInnerHTML (« < » échappé). */
 export function embedJson(data: unknown): string {
   return JSON.stringify(data).replace(/</g, "\\u003c");

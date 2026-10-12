@@ -7,6 +7,7 @@ import { LanguageSwitchLink } from "@/components/LanguageSwitchLink";
 import { localizePath } from "@/lib/localizedPath";
 import { colocGeneveHref } from "@/lib/siteLinks";
 import { applyHref, trackApplyClick } from "@/lib/houseContext";
+import { OfferBanner } from "@/components/OfferBanner";
 
 /**
  * VERSION 9: STONE & BRASS — CONDO PREMIUM
@@ -63,6 +64,9 @@ export function NavbarV7() {
           : "bg-white/60 backdrop-blur-lg"
       }`}
     >
+      {/* Offre « Pose tes valises avant l'hiver » (06/10/2026) — bandeau fin au-dessus de la barre,
+          dans le <header> fixe (le shell [header…footer] du prérendu ne change pas). */}
+      <OfferBanner />
       <nav className="container-custom">
         <div className="flex items-center justify-between h-16">
           {/* Logo */}

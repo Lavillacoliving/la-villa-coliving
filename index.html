@@ -110,6 +110,30 @@
         if (m && /^(lavilla|leloft|lelodge)$/.test(m[1])) document.documentElement.classList.add("lvc-cand-ctx");
       })(location);
     </script>
+    <!-- (Offre « Pose tes valises avant l'hiver », 06/10/2026) Bandeau de l'offre, rendu dans le <header>
+         fixe du HTML prérendu : AVANT la première peinture, ce script décide s'il doit être visible
+         (page du bandeau, offre commencée et encore ouverte, pas fermé depuis moins de 7 jours) et pose html.lvc-offer-on
+         — hauteur réservée + compensation des pages (src/index.css). Sans la classe, le bandeau est masqué
+         dès la première peinture ; OfferBanner (React) prend le relais après l'hydratation. Dates, pages
+         et clé = src/data/offer.ts, tenus synchronisés par tools/test/offer.test.mjs. ES5, sans marqueur
+         de commentaire HTML. -->
+    <script id="lvc-offer">
+      (function (w, d, l) {
+        var START = Date.parse("2026-10-15T00:00:00+02:00");
+        var END = Date.parse("2026-11-26T00:00:00+01:00");
+        var KEY = "lvc_offer_hiver_closed";
+        var DAYS = 7 * 864e5;
+        var p = l.pathname.replace(/^\/en(?=\/|$)/, "") || "/";
+        p = p.replace(/\/+$/, "") || "/";
+        if (!/^\/(chambres-disponibles|lavilla|leloft|lelodge|tarifs|colocation-geneve|chambre-a-louer-geneve|annemasse-colocation)$|^\/$/.test(p)) return;
+        var now = Date.now();
+        if (now < START || now >= END) return;
+        var closed = 0;
+        try { closed = Number(w.localStorage.getItem(KEY) || 0); } catch (e) {}
+        if (closed > 0 && now - closed < DAYS) return;
+        d.documentElement.classList.add("lvc-offer-on");
+      })(window, document, location);
+    </script>
     <meta name="theme-color" content="#000000" />
 
     <!-- Favicon -->
