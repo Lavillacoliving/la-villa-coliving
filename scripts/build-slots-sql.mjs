@@ -12,7 +12,8 @@
  *             · --name <base> (nom des fichiers scripts/<base>-<date>.sql et .dry-run.md, défaut l1-answer-slots)
  *
  * Liste déclarative (module ESM) : `buildEdits(m)` → [{ slug, lang, mechanism, note, find, replace, column? }] ; `column`
- * (optionnel, Lot L2) cible une autre colonne texte de blog_posts — 'facebook_post_fr' / 'facebook_post_en' — et vaut
+ * (optionnel, Lot L2 ; extraits/metas depuis le 12/10/2026) cible une autre colonne texte de blog_posts — 'facebook_post_fr' / 'facebook_post_en',
+ *  'excerpt_fr' / 'excerpt_en', 'meta_description_fr' / 'meta_description_en' — et vaut
  * `content_<lang>` par défaut. Exports facultatifs : `sqlDoc(m)` (en-tête, légende, versions propres au lot) et
  * `POST_STATE_WATCH` (motifs supplémentaires à signaler dans le texte résultant).
  *
@@ -51,7 +52,8 @@ const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBh
 // ── Fonctions pures ────────────────────────────────────────────────────────────────────────────────
 
 /** (Lot L2, 09/10/2026) Colonnes texte de blog_posts qu'une modification peut viser ; défaut = content_<lang>. */
-export const COLUMNS = ['content_fr', 'content_en', 'facebook_post_fr', 'facebook_post_en'];
+// (12/10/2026, lot « correctifs de faits ») extraits et metas acceptés aussi : mêmes gardes position(), même diff.
+export const COLUMNS = ['content_fr', 'content_en', 'facebook_post_fr', 'facebook_post_en', 'excerpt_fr', 'excerpt_en', 'meta_description_fr', 'meta_description_en'];
 export function columnOf(edit) {
   const col = edit.column ?? `content_${edit.lang}`;
   if (!COLUMNS.includes(col)) throw new Error(`${edit.slug} (${edit.lang}) : colonne « ${col} » inconnue (${COLUMNS.join(', ')})`);

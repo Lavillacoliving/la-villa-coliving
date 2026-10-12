@@ -35,7 +35,7 @@ import {
 import { ENTITY_HOUSES, GUARANTOR_SENTENCE, type EntityLang, type EntityHouseSlug } from "./entityFacts";
 
 /** Incrémenter à chaque changement de texte du bloc : porté par data-ou-chercher-version, comparé par la CI. */
-export const OU_CHERCHER_VERSION = "2026-10-11"; // 11/10 : canal 3 (groupe Facebook modéré, règles épinglées — C3)
+export const OU_CHERCHER_VERSION = "2026-10-12"; // 12/10 : canal 3 « règles publiées » (Jérôme : règles publiées, pas épinglées)
 
 export type OuChercherVariant = "full" | "short";
 
@@ -91,7 +91,7 @@ export function ouChercherText(lang: EntityLang, variant: OuChercherVariant): Ou
       {
         key: "facebook",
         h3: "Facebook groups",
-        p: `The public group "${FACEBOOK_GROUP.name}" (about ${membersEn} members, ${FACEBOOK_GROUP.postsPerMonth.en}) and cross-border commuter groups. The former is run and moderated by the La Villa Coliving team: pinned rules, suspicious listings removed.`,
+        p: `The public group "${FACEBOOK_GROUP.name}" (about ${membersEn} members, ${FACEBOOK_GROUP.postsPerMonth.en}) and cross-border commuter groups. The former is run and moderated by the La Villa Coliving team: published rules, suspicious listings removed.`,
       },
       {
         key: "cagi",
@@ -129,7 +129,7 @@ export function ouChercherText(lang: EntityLang, variant: OuChercherVariant): Ou
     {
       key: "facebook",
       h3: "Les groupes Facebook",
-      p: `Le groupe public « ${FACEBOOK_GROUP.name} » (environ ${membersFr} membres, ${FACEBOOK_GROUP.postsPerMonth.fr}) et les groupes de frontaliers. Ce groupe public est animé et modéré par l'équipe de La Villa Coliving : règles épinglées, annonces douteuses retirées.`,
+      p: `Le groupe public « ${FACEBOOK_GROUP.name} » (environ ${membersFr} membres, ${FACEBOOK_GROUP.postsPerMonth.fr}) et les groupes de frontaliers. Ce groupe public est animé et modéré par l'équipe de La Villa Coliving : règles publiées, annonces douteuses retirées.`,
     },
     {
       key: "cagi",
@@ -239,13 +239,13 @@ export function coutDeLaVieRowLabel(lang: EntityLang): string {
 // A.7 = mention canonique dans 4 articles (SQL, texte markdown avec le nom du groupe en lien) ; A.8 = encart « Pas de chambre
 // libre chez nous ? » (<FacebookGroupCallout/>) sous la liste des chambres des 3 pages maisons, sur /chambres-disponibles et sur
 // l'écran de confirmation de /candidature. Le canal 3 du bloc « Où chercher » (ci-dessus) nomme déjà le groupe sur les pages
-// porteuses du bloc. (C3, 11/10/2026) Règles du groupe publiées et épinglées par Jérôme → l'interdit L5.4 est levé pour « modéré » :
-// canal 3 et A.7 disent, au mot près, « animé et modéré par l'équipe de La Villa Coliving : règles épinglées, annonces douteuses
-// retirées », A.8 en forme courte « animé et modéré par notre équipe (règles épinglées, annonces douteuses retirées) » (option B). « Annonces vérifiées » / « verified listings » reste INTERDIT (on retire ce qui est douteux, on ne vérifie
+// porteuses du bloc. (C3, 11/10/2026 ; 12/10 : « publiées », Jérôme ne les a pas épinglées) Règles du groupe publiées → L5.4 levé pour « modéré » :
+// canal 3 et A.7 disent, au mot près, « animé et modéré par l'équipe de La Villa Coliving : règles publiées, annonces douteuses
+// retirées », A.8 en forme courte « animé et modéré par notre équipe (règles publiées, annonces douteuses retirées) » (option B). « Annonces vérifiées » / « verified listings » reste INTERDIT (on retire ce qui est douteux, on ne vérifie
 // pas chaque logement). Lien normal (jamais nofollow), nouvel onglet. Jamais dans sameAs (D10 du socle).
 
 /** Incrémenter à chaque changement de texte A.7/A.8 : porté par data-facebook-group-version. */
-export const FACEBOOK_GROUP_VERSION = "2026-10-11";
+export const FACEBOOK_GROUP_VERSION = "2026-10-12";
 
 /** Articles porteurs de la mention A.7 (SQL généré par scripts/l5-facebook.edits.mjs) : le paragraphe est inséré juste AVANT
  *  l'ancre (un titre unique de l'article, par langue). La garde (check-answer-slots, L1_TARGETS) exige la phrase dans le texte visible. */
@@ -266,9 +266,9 @@ export const FACEBOOK_CALLOUT_ROUTES = ["/lavilla", "/leloft", "/lelodge", "/cha
 export function facebookMention(lang: EntityLang): string {
   const g = FACEBOOK_GROUP;
   if (lang === "en") {
-    return `For a standard flatshare, the public Facebook group "${g.name}" (about ${membersEn} members, ${g.postsPerMonth.en} covering Geneva and the French border area) gathers room and flatmate listings. It is run and moderated by the La Villa Coliving team: pinned rules, suspicious listings removed.`;
+    return `For a standard flatshare, the public Facebook group "${g.name}" (about ${membersEn} members, ${g.postsPerMonth.en} covering Geneva and the French border area) gathers room and flatmate listings. It is run and moderated by the La Villa Coliving team: published rules, suspicious listings removed.`;
   }
-  return `Pour une colocation classique, le groupe Facebook public « ${g.name} » (environ ${membersFr} membres, ${g.postsPerMonth.fr} sur Genève et la France voisine) regroupe des annonces de chambres et de colocataires. Il est animé et modéré par l'équipe de La Villa Coliving : règles épinglées, annonces douteuses retirées.`;
+  return `Pour une colocation classique, le groupe Facebook public « ${g.name} » (environ ${membersFr} membres, ${g.postsPerMonth.fr} sur Genève et la France voisine) regroupe des annonces de chambres et de colocataires. Il est animé et modéré par l'équipe de La Villa Coliving : règles publiées, annonces douteuses retirées.`;
 }
 
 /** A.7 en markdown pour les articles : même texte visible, le nom du groupe porte le lien (ouvert en nouvel onglet par BlogPostPage). */
@@ -283,12 +283,12 @@ export function facebookCallout(lang: EntityLang): { sentence: string; cta: stri
   const g = FACEBOOK_GROUP;
   if (lang === "en") {
     return {
-      sentence: `No room free with us on your dates? The Facebook group "${g.name}", run and moderated by our team (pinned rules, suspicious listings removed), posts ${g.postsPerMonthShort.en} for flatshares in the area every month.`,
+      sentence: `No room free with us on your dates? The Facebook group "${g.name}", run and moderated by our team (published rules, suspicious listings removed), posts ${g.postsPerMonthShort.en} for flatshares in the area every month.`,
       cta: "Join the group",
     };
   }
   return {
-    sentence: `Pas de chambre libre chez nous aux bonnes dates ? Le groupe Facebook « ${g.name} », animé et modéré par notre équipe (règles épinglées, annonces douteuses retirées), publie chaque mois ${g.postsPerMonthShort.fr} de colocation dans la région.`,
+    sentence: `Pas de chambre libre chez nous aux bonnes dates ? Le groupe Facebook « ${g.name} », animé et modéré par notre équipe (règles publiées, annonces douteuses retirées), publie chaque mois ${g.postsPerMonthShort.fr} de colocation dans la région.`,
     cta: "Rejoindre le groupe",
   };
 }

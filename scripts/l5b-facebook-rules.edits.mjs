@@ -1,7 +1,7 @@
 /**
  * C3 (11/10/2026) — règles du groupe Facebook publiées et épinglées par Jérôme → l'interdit L5.4 est réduit (« modéré » autorisé,
  * « annonces vérifiées » toujours interdit) et la mention canonique A.7 des 4 articles en base est ENRICHIE (option B validée) :
- * « … Il est animé et modéré par l'équipe de La Villa Coliving : règles épinglées, annonces douteuses retirées. » (EN à parité).
+ * « … Il est animé et modéré par l'équipe de La Villa Coliving : règles publiées, annonces douteuses retirées. » (EN à parité).
  * Liste DÉCLARATIVE consommée par scripts/build-slots-sql.mjs :
  *
  *   node scripts/build-slots-sql.mjs --edits ./l5b-facebook-rules.edits.mjs --name l5b-facebook-rules --write-diff
@@ -19,8 +19,8 @@
 
 const OLD_TAIL = { fr: "Il est animé par l'équipe de La Villa Coliving.", en: 'It is run by the La Villa Coliving team.' };
 const NEW_TAIL = {
-  fr: "Il est animé et modéré par l'équipe de La Villa Coliving : règles épinglées, annonces douteuses retirées.",
-  en: 'It is run and moderated by the La Villa Coliving team: pinned rules, suspicious listings removed.',
+  fr: "Il est animé et modéré par l'équipe de La Villa Coliving : règles publiées, annonces douteuses retirées.",
+  en: 'It is run and moderated by the La Villa Coliving team: published rules, suspicious listings removed.',
 };
 /** Déplacement C2 (arnaques) : `from` = titre qui suivait la mention (ancienne ancre L5), `to` = titre qui la suit désormais. */
 const MOVE = {
@@ -44,7 +44,7 @@ export const POST_STATE_WATCH = [/annonces v[ée]rifi[ée]es|verified listings/i
 
 export function sqlDoc(m) {
   return {
-    lot: "C3 « règles du groupe épinglées » + C2 « emplacement de la mention » (décisions Jérôme du 11/10/2026) : mention A.7 enrichie dans 4 articles, déplacée dans arnaques.",
+    lot: "C3 « règles du groupe publiées » + C2 « emplacement de la mention » (décisions Jérôme du 11/10/2026) : mention A.7 enrichie dans 4 articles, déplacée dans arnaques.",
     sources: 'texte = source unique src/data/answerSlots.ts (facebookMentionMarkdown ← FACEBOOK_GROUP) ; ancienne mention reconstruite (dernière phrase L5 du 10/10) ; ancres = FACEBOOK_MENTION_ARTICLES + MOVE (ce fichier)',
     apply: "À appliquer juste avant le push du code C3 sur main (la garde check:slots exige la mention de la source dans ces 4 articles au prérendu suivant).",
     encoding: "Fichier UTF-8 : guillemets « » et accents — ne pas le faire transiter par un éditeur qui normalise les espaces.",
