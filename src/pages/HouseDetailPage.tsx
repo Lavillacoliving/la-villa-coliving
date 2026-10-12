@@ -1336,6 +1336,11 @@ function getHousesData(lang: string): Record<string, HouseData> {
 };
 }
 
+/** « du Loft », « du Lodge », « de La Villa » (12/10/2026 : le titre affichait « du La Villa »). */
+function ofHouseFr(name: string): string {
+  return name.startsWith("Le ") ? `du ${name.slice(3)}` : `de ${name}`;
+}
+
 export function HouseDetailPage() {
   const location = useLocation();
   // Extract house ID from path: /lavilla → "lavilla", /en/lavilla → "lavilla"
@@ -1871,12 +1876,16 @@ export function HouseDetailPage() {
                   }}
                 />
 
+                {/* (12/10/2026, demande Jérôme) Album photo de la maison remonté ICI, juste avant « Les N autres
+                    chambres » : il arrivait après la localisation, trop tard — la maison est le point fort de l'offre. */}
+                <HouseGallery images={house.photoGallery} houseName={house.name} embedded />
+
                 {occupied.length > 0 && (
                   <>
                     <h3 className="text-lg font-black text-[#1C1917] mb-4">
                       {language === "en"
                         ? (candidates.length > 0 ? `The other ${occupied.length} rooms at ${house.name}` : `The ${occupied.length} rooms at ${house.name}`)
-                        : (candidates.length > 0 ? `Les ${occupied.length} autres chambres du ${house.name.replace(/^Le /, "")}` : `Les ${occupied.length} chambres du ${house.name.replace(/^Le /, "")}`)}
+                        : (candidates.length > 0 ? `Les ${occupied.length} autres chambres ${ofHouseFr(house.name)}` : `Les ${occupied.length} chambres ${ofHouseFr(house.name)}`)}
                     </h3>
                     {/* Panneau structuré (retour Jérôme 03/09 : les lignes « flottaient ») : cadre,
                         lignes séparées, en-tête de colonnes à partir de md, CTA rattaché au pied. */}
@@ -1943,6 +1952,7 @@ export function HouseDetailPage() {
               </>
             );
           })() : (
+            <>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
               {house.rooms.map((room, index) => (
                 <div key={index} className="card-ultra bg-white rounded-2xl border border-[#E7E5E4] shadow-sm overflow-hidden group">
@@ -1982,6 +1992,9 @@ export function HouseDetailPage() {
                 </div>
               ))}
             </div>
+            {/* Repli sans données de chambres : l'album suit les cartes de types (12/10/2026). */}
+            <HouseGallery images={house.photoGallery} houseName={house.name} embedded />
+            </>
           )}
           {/* (Lot L5, D10 Jérôme 09/10/2026) Encart A.8 sous la liste des chambres — texte unique answerSlots.ts, hors du
               ternaire (présent que la liste vienne de la base ou du repli statique). */}
@@ -2130,8 +2143,7 @@ export function HouseDetailPage() {
         );
       })()}
 
-      {/* Photo Gallery */}
-      <HouseGallery images={house.photoGallery} houseName={house.name} />
+      {/* Photo Gallery — (12/10/2026) remontée dans la section Chambres, juste avant « Les N autres chambres ». */}
 
       {/* FAQ — schema FAQPage rich-snippet (audit P0-1, G4) */}
       {(() => {
