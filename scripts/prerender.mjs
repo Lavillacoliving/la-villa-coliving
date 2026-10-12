@@ -97,7 +97,12 @@ const ROOM_PAGES = JSON.parse(await fs.readFile(path.join(__dirname, '..', 'src'
 const ROOM_PAGE_ROUTES_FR = Object.entries(ROOM_PAGES)
   .filter(([k]) => !k.startsWith('_'))
   .flatMap(([house, rooms]) => rooms.map((n) => `/${house}/chambre-${n}`));
-const NOINDEX_PRERENDERED_ROUTES = [...ROOM_PAGE_ROUTES_FR, ...ROOM_PAGE_ROUTES_FR.map((r) => `/en${r}`)];
+// (06/10/2026) Offre « Pose tes valises avant l'hiver » : page temporaire noindex (elle ne doit pas
+// concurrencer /chambres-disponibles), prérendue (liens Facebook/Ads → LCP), canonical auto-référente
+// émise par le composant SEO (selfCanonical), hors sitemap. Slug EN différent : /en/winter-offer.
+// Après OFFER_END (src/data/offer.ts) la page reste servie avec « Cette offre est terminée » — pas de 301.
+const OFFER_ROUTES = ['/offre-hiver', '/en/winter-offer'];
+const NOINDEX_PRERENDERED_ROUTES = [...ROOM_PAGE_ROUTES_FR, ...ROOM_PAGE_ROUTES_FR.map((r) => `/en${r}`), ...OFFER_ROUTES];
 
 // Client-only routes (no prerendered HTML) that must keep receiving the SPA shell.
 // This replaces the old '/(.*)' catch-all: anything NOT listed here, not a static
@@ -609,6 +614,11 @@ async function renderRoute(browser, route) {
     // B5: set <html lang> to match the route language (EN pages were defaulting to "fr")
     const isEnRoute = route === '/en' || route.startsWith('/en/');
     html = html.replace(/<html\s+lang="[^"]*"/, `<html lang="${isEnRoute ? 'en' : 'fr'}"`);
+    // (06/10/2026) Classes d'état posées sur <html> par l'app au rendu (html.lvc-offer-on du bandeau de
+    // l'offre) : jamais dans le snapshot — en production c'est le script inline d'index.html qui décide
+    // avant la première peinture (inject-prerendered repart d'index.html ; ici, le snapshot brut sert à
+    // la garde d'hydratation).
+    html = html.replace(/(<html\b[^>]*?)\s+class="[^"]*"/i, '$1');
 
     // The 404 page must carry neither canonical nor breadcrumb (noindex, served on any unknown URL)
     const is404Route = route === '/404';

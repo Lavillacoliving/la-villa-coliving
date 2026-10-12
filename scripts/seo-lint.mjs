@@ -74,6 +74,18 @@ export async function loadKnownRoutes() {
   return [...new Set(routes)];
 }
 
+/**
+ * (06/10/2026) Toutes les pages prérendues (sitemap ou non : fiches chambres, /offre-hiver sont noindex) — elles répondent
+ * 200, donc un lien interne vers elles n'est pas « mort » (check 6). Lues dans les rewrites de vercel.json.
+ */
+export async function loadPrerenderedRoutes() {
+  const config = JSON.parse(await fs.readFile(VERCEL_JSON, 'utf-8'));
+  return (config.rewrites || [])
+    .filter(r => typeof r.destination === 'string' && r.destination.startsWith('/prerendered/') && !r.has)
+    .map(r => r.source)
+    .filter(s => !s.includes(':'));
+}
+
 export async function loadRedirects() {
   const config = JSON.parse(await fs.readFile(VERCEL_JSON, 'utf-8'));
   const exact = new Set();
@@ -219,7 +231,8 @@ export function normalizeHref(href) {
 async function main() {
   const knownRoutes = await loadKnownRoutes();
   const { exact, patterns, map } = await loadRedirects();
-  const knownSet = new Set(knownRoutes);
+  // Cibles connues = sitemap + pages prérendues hors sitemap (noindex, mais servies en 200).
+  const knownSet = new Set([...knownRoutes, ...(await loadPrerenderedRoutes())]);
 
   const sitemapEntries = await loadSitemapEntries();
 

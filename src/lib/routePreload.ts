@@ -35,6 +35,9 @@ const STATIC_LOADERS: Record<string, Loader> = {
   // (LCP mesuré 4,04 s sur l'ancienne LP le 26/08, dont ~2,9 s d'attente d'hydratation).
   // (Lot 3 SEO funnel) /chambres-disponibles remplace la LP /chambres-septembre (301).
   "/chambres-disponibles": () => import("@/pages/ChambresDisponiblesPage"),
+  // Offre hiver (06/10/2026) : /offre-hiver et son miroir /en/winter-offer (préfixe /en retiré ci-dessous).
+  "/offre-hiver": () => import("@/pages/OfferHiverPage"),
+  "/winter-offer": () => import("@/pages/OfferHiverPage"),
   "/blog": () => import("@/pages/BlogPage"),
   "/lavilla": () => import("@/pages/HouseDetailPage"),
   "/leloft": () => import("@/pages/HouseDetailPage"),

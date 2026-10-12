@@ -40,6 +40,10 @@ export type RoomCardProps = {
   /** Ouvre la visionneuse ; absent = photo non cliquable. */
   onOpenPhotos?: (room: PublicRoom, photoIndex: number) => void;
   onCtaClick?: (room: PublicRoom) => void;
+  /** (Offre hiver, 06/10/2026) Paramètres d'URL ajoutés EN TÊTE de la query du CTA, ex. « offre=hiver ». */
+  ctaParams?: string;
+  /** (Offre hiver −50 %, rebrief du 12/10/2026) Ligne de démarrage du bail, ex. « Bail au 16 décembre » — carte par défaut, page de l'offre seulement. */
+  leaseStart?: string;
   /**
    * (12/10/2026, refonte /chambres-disponibles validée par Jérôme) « featured » = grande carte horizontale d'une chambre libre
    * maintenant ; « compact » = petite carte en retrait d'une libération datée ; « default » = carte historique (pages maisons, inchangée).
@@ -49,7 +53,7 @@ export type RoomCardProps = {
   commune?: string;
 };
 
-export function RoomCard({ house, houseName, room, fallbackImage, showHouse = false, onOpenPhotos, onCtaClick, variant = "default", commune }: RoomCardProps) {
+export function RoomCard({ house, houseName, room, fallbackImage, showHouse = false, onOpenPhotos, onCtaClick, ctaParams, leaseStart, variant = "default", commune }: RoomCardProps) {
   const { t, language } = useLanguage();
   const uiLang = language === "en" ? "en" as const : "fr" as const;
   // Pack dédié, ou galerie standard du Lodge (chambre → communs → extérieurs).
@@ -86,7 +90,7 @@ export function RoomCard({ house, houseName, room, fallbackImage, showHouse = fa
   const en = language === "en";
   const roomLabel = en ? `Room ${room.room_number}` : `Chambre ${room.room_number}`;
   const pageOpen = isRoomPageOpen(house, room);
-  const ctaHref = `/candidature?property_interest=${house}&room_interest=chambre-${room.room_number}`;
+  const ctaHref = `/candidature?${ctaParams ? `${ctaParams}&` : ""}property_interest=${house}&room_interest=chambre-${room.room_number}`;
   const eyebrow = commune ? `${houseName} · ${commune}` : houseName;
   const chf = room.rent_chf !== null ? (en ? `CHF ${thousands(room.rent_chf, ",")}` : `${thousands(room.rent_chf, " ")} CHF`) : null;
   const eur = rentEur !== null ? (en ? `€${thousands(rentEur, ",")}` : `${thousands(rentEur, " ")} €`) : null;
@@ -259,6 +263,9 @@ export function RoomCard({ house, houseName, room, fallbackImage, showHouse = fa
           <p className="text-xs text-[#78716C] mb-3">{room.location_detail.trim()}</p>
         )}
         <div className="mt-auto pt-3">
+          {leaseStart && (
+            <p data-lease-start className="mb-2 text-sm font-semibold text-[#7A5215]">{leaseStart}</p>
+          )}
           {room.rent_chf !== null && (
             <p className="text-xl font-black text-[#D4A574] mb-4">
               {language === "en"
@@ -282,7 +289,7 @@ export function RoomCard({ house, houseName, room, fallbackImage, showHouse = fa
             </LocalizedLink>
           )}
           <LocalizedLink
-            to={`/candidature?property_interest=${house}&room_interest=chambre-${room.room_number}`}
+            to={`/candidature?${ctaParams ? `${ctaParams}&` : ""}property_interest=${house}&room_interest=chambre-${room.room_number}`}
             onClick={() => onCtaClick?.(room)}
             className="w-full inline-flex items-center justify-center gap-2 px-5 py-2.5 bg-[#D4A574] text-[#1C1917] text-sm font-semibold rounded-lg hover:bg-[#E0BB8A] transition-colors"
           >

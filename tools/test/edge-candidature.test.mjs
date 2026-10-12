@@ -20,7 +20,7 @@ assert.equal(typeof handler, 'function', 'Deno.serve non appelé');
 const ADMIN = 'jerome@lavillacoliving.com';
 
 /** Faux Supabase + Resend + n8n. */
-function backend({ dupRecent = false, fsConflict = false, adminEmailFails = false, beforePatch } = {}) {
+function backend({ dupRecent = false, fsConflict = false, fsRejectsOffer = false, adminEmailFails = false, beforePatch } = {}) {
   const prospects = new Map();
   const emails = [];
   const calls = [];
@@ -49,9 +49,10 @@ function backend({ dupRecent = false, fsConflict = false, adminEmailFails = fals
       const table = url.pathname.replace('/rest/v1/', '');
       const q = url.searchParams;
       if (table === 'form_submissions' && method === 'POST') {
-        return fsConflict
-          ? new Response('{"code":"23505","message":"duplicate key value violates unique constraint submission_key"}', { status: 409 })
-          : new Response(null, { status: 201 });
+        if (fsConflict) return new Response('{"code":"23505","message":"duplicate key value violates unique constraint submission_key"}', { status: 409 });
+        // (v20) Migration `offer` pas encore appliquée : PostgREST refuse la colonne inconnue.
+        if (fsRejectsOffer && body && 'offer' in body) return new Response('{"code":"PGRST204","message":"Could not find the \'offer\' column of \'form_submissions\' in the schema cache"}', { status: 400 });
+        return new Response(null, { status: 201 });
       }
       if (table === 'prospects' && method === 'GET' && q.has('email')) {
         return json(200, dupRecent ? [{ id: '00000000-0000-4000-8000-000000000999' }] : []);
@@ -366,4 +367,70 @@ test('CORS : localhost:5173 et :4173 autorisés pour les tests locaux, origine i
   }
   const res = await handler(new Request('https://sb.example/x', { method: 'OPTIONS', headers: { Origin: 'https://evil.example' } }));
   assert.equal(res.headers.get('Access-Control-Allow-Origin'), 'https://www.lavillacoliving.com');
+});
+
+// ── v20 — offre « Pose tes valises avant l'hiver » (brief Jérôme du 06/10/2026) ─────────────────
+const OFFER_LINE = 'Offre : Pose tes valises (−50 % 1er mois, bail signé ≤ 25/11, démarrage à la libération)';
+const fsBodies = (be) => be.calls.filter((c) => c.method === 'POST' && c.url.pathname === '/rest/v1/form_submissions').map((c) => c.body);
+
+test('offer=hiver : ligne « Offre : … » EN TÊTE des notes, en tête de l\'email admin, form_submissions.offer', async () => {
+  const be = backend();
+  const r = await call(be, candidate({ offer: 'hiver', contact_preference: 'whatsapp', source: 'facebook' }));
+  assert.equal(r.status, 200);
+  assert.equal(r.body.success, true);
+  const p = onlyProspect(be);
+  assert.equal(p.notes.split('\n')[0], OFFER_LINE);
+  assert.match(p.notes, /Canal préféré : WhatsApp/);
+  assert.equal(p.source, 'facebook'); // le canal déclaré n'est jamais surchargé par l'offre
+  const html = text(adminMail(be).html);
+  assert.match(html, new RegExp(`<strong>${OFFER_LINE.replace(/[()]/g, '\\$&')}</strong>`));
+  // en tête : avant la première ligne du tableau (Prénom)
+  assert.ok(html.indexOf(OFFER_LINE) < html.indexOf('Prénom'));
+  assert.doesNotMatch(autoReply(be).html, /Offre/); // l'auto-réponse candidat ne change pas
+  const bodies = fsBodies(be);
+  assert.equal(bodies.length, 1);
+  assert.equal(bodies[0].offer, 'hiver');
+  assert.equal(bodies[0].form_type, 'candidature');
+});
+
+test('offer inconnue (xyz, constructor, vide) : ignorée sans erreur, corps identiques à la v19', async () => {
+  for (const value of ['xyz', 'constructor', '', '  ', 'HIVER2']) {
+    const be = backend();
+    const r = await call(be, candidate({ offer: value }));
+    assert.equal(r.status, 200, JSON.stringify(value));
+    assert.equal(onlyProspect(be).notes, null, JSON.stringify(value));
+    assert.doesNotMatch(adminMail(be).html, /Offre :/);
+    assert.ok(!('offer' in fsBodies(be)[0]), JSON.stringify(value));
+  }
+  // casse et espaces normalisés : « Hiver » reste une offre valide
+  const be = backend();
+  await call(be, candidate({ offer: ' Hiver ' }));
+  assert.equal(onlyProspect(be).notes, OFFER_LINE);
+  assert.equal(fsBodies(be)[0].offer, 'hiver');
+});
+
+test('sans offer : aucun changement (ni notes, ni email, ni clé dans form_submissions)', async () => {
+  const be = backend();
+  await call(be, candidate());
+  assert.equal(onlyProspect(be).notes, null);
+  assert.doesNotMatch(adminMail(be).html, /Offre :/);
+  assert.ok(!('offer' in fsBodies(be)[0]));
+});
+
+test('colonne form_submissions.offer absente (migration non appliquée) : rejoué sans elle, candidature sauvée, notes intactes', async () => {
+  const be = backend({ fsRejectsOffer: true });
+  const r = await call(be, candidate({ offer: 'hiver', utm_source: 'facebook', utm_medium: 'social', property_interest: 'lelodge', landing_page: '/offre-hiver' }));
+  assert.equal(r.status, 200);
+  assert.equal(r.body.success, true);
+  assert.equal(typeof r.body.details_token, 'string');
+  const bodies = fsBodies(be);
+  assert.equal(bodies.length, 2);
+  assert.equal(bodies[0].offer, 'hiver');
+  assert.ok(!('offer' in bodies[1]));
+  // seule l'offre est retirée : attribution, intérêt et atterrissage restent dans la 2ᵉ tentative
+  assert.equal(bodies[1].utm_source, 'facebook');
+  assert.equal(bodies[1].property_interest, '45175bde-8b94-446a-9dd4-e6dee4b5a509');
+  assert.equal(bodies[1].landing_page, '/offre-hiver');
+  assert.equal(onlyProspect(be).notes.split('\n')[0], OFFER_LINE);
+  assert.equal(be.emails.length, 2);
 });

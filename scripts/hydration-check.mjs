@@ -48,6 +48,9 @@ const ROUTES = [
   '/en/colocation-geneve',
   '/chambre-a-louer-geneve',
   '/en/chambre-a-louer-geneve',
+  // Offre « Pose tes valises avant l'hiver » (06/10/2026) : page FR + EN (slug différent).
+  '/offre-hiver',
+  '/en/winter-offer',
 ];
 
 // (28/09/2026, fix soft-404) URL sans prérendu : Vercel sert 404.html (en HTTP 404). Servies ici avec
@@ -64,6 +67,10 @@ const QUERY_ROUTES = [
   '/candidature?property_interest=lelodge&room_interest=chambre-99',
   '/en/candidature?property_interest=leloft&room_interest=chambre-2',
   '/candidature?property_interest=constructor',
+  // Offre hiver (06/10/2026) : la ligne « Offre Pose tes valises » n'est rendue qu'après l'hydratation.
+  '/candidature?offre=hiver',
+  '/en/candidature?offre=hiver&property_interest=lelodge&room_interest=chambre-4',
+  '/candidature?offre=xyz',
 ];
 
 // (Lot B) Index du blog et articles qui citent un numéro de téléphone (format-detection, liens tel:).
@@ -79,7 +86,9 @@ const BLOG_ROUTES = [
 // et d'année). Tout texte calculé avec new Date() au rendu (année du pied de page, mois de /tarifs)
 // divergerait du HTML — il doit venir du mois embarqué (src/lib/renderMonth.tsx).
 const CLOCK_SHIFT_DAYS = 95;
-const CLOCK_SHIFT_ROUTES = ['/', '/tarifs', '/en/tarifs', '/candidature?property_interest=lelodge'];
+// (06/10/2026) + /offre-hiver (état « terminée » APRÈS l'hydratation seulement) et les pages du bandeau
+// (le bandeau prérendu doit s'hydrater tel quel, puis disparaître, quelle que soit la date du lecteur).
+const CLOCK_SHIFT_ROUTES = ['/', '/tarifs', '/en/tarifs', '/candidature?property_interest=lelodge', '/offre-hiver', '/en/winter-offer', '/chambres-disponibles'];
 
 const NOT_FOUND_ROUTES = [
   '/blog/article-inexistant-garde-hydratation',
