@@ -173,7 +173,9 @@ async function checkHouse(slug, rooms, m) {
 
 /**
  * (Lot 3 SEO funnel, 03/09/2026) /chambres-disponibles FR + EN : l'embed porte les 29 lignes,
- * chaque chambre candidate a son CTA à deux paramètres, chaque maison sa liste d'attente.
+ * chaque chambre libre a son CTA à deux paramètres, chaque chambre datée son bouton « Découvrir la maison »
+ * (12/10/2026, décision Jérôme : il remplace « Réserver cette date » sur les cartes compactes), chaque maison sa
+ * liste d'attente. On candidate pour une chambre datée depuis la page de sa maison (CTA vérifiés plus haut).
  * Pas de contrôle « 0 lien /candidature nu » ici : le chrome (nav, footer) n'est contextuel
  * que sur les pages maisons.
  */
@@ -196,7 +198,14 @@ async function checkAvailablePage(byHouse) {
     if (n !== all.length) failures.push(`${file} : embed __rooms_level_data__ = ${n} chambre(s), base = ${all.length}`);
     for (const r of candidates) {
       const cta = `href="${prefix}/candidature?property_interest=${r.house_slug}&amp;room_interest=chambre-${r.room_number}"`;
-      if (!html.includes(cta) && !html.includes(cta.replace('&amp;', '&'))) failures.push(`${file} : CTA ${r.house_slug} chambre ${r.room_number} (candidate) absent`);
+      const hasCta = html.includes(cta) || html.includes(cta.replace('&amp;', '&'));
+      if (r.availability === 'available' && !hasCta) failures.push(`${file} : CTA ${r.house_slug} chambre ${r.room_number} (libre) absent`);
+    }
+    // Chambres datées : un bouton « Découvrir la maison » (data-house-cta) vers la page de leur maison, par chambre.
+    for (const slug of byHouse.keys()) {
+      const dated = candidates.filter((r) => r.house_slug === slug && r.availability !== 'available').length;
+      const houseCtas = (html.match(new RegExp(`<a [^>]*href="${prefix}/${slug}"[^>]*data-house-cta|<a [^>]*data-house-cta[^>]*href="${prefix}/${slug}"`, 'g')) || []).length;
+      if (houseCtas < dated) failures.push(`${file} : ${houseCtas} bouton(s) « Découvrir la maison » vers ${prefix}/${slug} pour ${dated} chambre(s) datée(s)`);
     }
     for (const slug of byHouse.keys()) {
       const w = `property_interest=${slug}&amp;room_interest=liste-attente`;

@@ -9,6 +9,11 @@ interface HouseGalleryProps {
     category: 'exterior' | 'interior' | 'common' | 'room' | 'amenity';
   }[];
   houseName: string;
+  /**
+   * (12/10/2026, demande Jérôme) Album intégré DANS la section Chambres de la page maison, juste avant « Les N autres
+   * chambres » : sans section propre (ni fond, ni marges de section, ni décor), ancre #galerie.
+   */
+  embedded?: boolean;
 }
 
 const categoryLabels: Record<'en' | 'fr', Record<string, string>> = {
@@ -35,7 +40,7 @@ const categoryLabels: Record<'en' | 'fr', Record<string, string>> = {
 // (pas de mismatch d'hydratation). Décision Jérôme : 20, les 3 maisons, tracké gallery_expand.
 const INITIAL_VISIBLE = 20;
 
-export function HouseGallery({ images, houseName }: HouseGalleryProps) {
+export function HouseGallery({ images, houseName, embedded = false }: HouseGalleryProps) {
   const { language } = useLanguage();
   const [selectedImage, setSelectedImage] = useState<number | null>(null);
   const [activeFilter, setActiveFilter] = useState<string | null>(null);
@@ -92,13 +97,17 @@ export function HouseGallery({ images, houseName }: HouseGalleryProps) {
     }
   };
 
+  const Wrapper = embedded ? 'div' : 'section';
   return (
-    <section className="py-20 lg:py-28 bg-white relative overflow-hidden">
+    <Wrapper
+      id="galerie"
+      className={embedded ? 'relative mt-4 mb-14 md:mb-20 scroll-mt-24' : 'py-20 lg:py-28 bg-white relative overflow-hidden'}
+    >
       {/* Decorative blobs */}
-      <div className="absolute top-20 right-0 w-96 h-96 bg-[#10b981]/5 blob rounded-full blur-3xl" />
-      <div className="absolute bottom-20 left-0 w-80 h-80 bg-[#f97316]/5 blob-reverse rounded-full blur-3xl" />
+      {!embedded && <div className="absolute top-20 right-0 w-96 h-96 bg-[#10b981]/5 blob rounded-full blur-3xl" />}
+      {!embedded && <div className="absolute bottom-20 left-0 w-80 h-80 bg-[#f97316]/5 blob-reverse rounded-full blur-3xl" />}
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+      <div className={embedded ? 'relative' : 'max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10'}>
         {/* Header */}
         <div className="text-center max-w-3xl mx-auto mb-12">
           <span className="inline-flex items-center gap-2 text-[#f97316] text-sm font-extrabold uppercase tracking-wider mb-4">
@@ -253,6 +262,6 @@ export function HouseGallery({ images, houseName }: HouseGalleryProps) {
           </div>
         </div>
       )}
-    </section>
+    </Wrapper>
   );
 }
