@@ -69,6 +69,47 @@ export const ROOM_PHOTOS: Record<string, RoomPhoto[]> = {
       },
     },
   ],
+  // (13/10/2026, D5 du brief « conversion Ads », photos de Jérôme : PHOTOS/LA VILLA/CH2/best) La Villa, chambre 2 —
+  // rez-de-chaussée côté jardin, salle d'eau privative, terrasse (v_public_rooms). Remplace la photo de la maison sur sa
+  // carte (/chambres-disponibles, /offre-hiver). Ordre : la chambre, le bureau, la salle d'eau, la vue sur la terrasse.
+  "lavilla:2": [
+    {
+      src: "/images/la villa/rooms/Chambre 2/chambre-2-chambre.webp",
+      w: 1440,
+      h: 1920,
+      alt: {
+        fr: "Chambre 2 de La Villa, au rez-de-chaussée : lit double, tête de lit rouille et porte-fenêtre sur le jardin",
+        en: "Room 2 at La Villa, on the ground floor: double bed, rust headboard and French window onto the garden",
+      },
+    },
+    {
+      src: "/images/la villa/rooms/Chambre 2/chambre-2-bureau.webp",
+      w: 1440,
+      h: 1920,
+      alt: {
+        fr: "Le coin bureau de la chambre 2 : bureau en bois, lampe noire et chaise en velours",
+        en: "Room 2's desk corner: wooden desk, black lamp and velvet chair",
+      },
+    },
+    {
+      src: "/images/la villa/rooms/Chambre 2/chambre-2-salle-eau.webp",
+      w: 1440,
+      h: 1920,
+      alt: {
+        fr: "La salle d'eau privative de la chambre 2 : vasque, miroir éclairé et douche",
+        en: "Room 2's private shower room: washbasin, lit mirror and shower",
+      },
+    },
+    {
+      src: "/images/la villa/rooms/Chambre 2/chambre-2-terrasse-jardin.webp",
+      w: 1440,
+      h: 1920,
+      alt: {
+        fr: "Depuis la chambre 2 : la terrasse et le jardin, de plain-pied",
+        en: "From room 2: the terrace and the garden, at ground level",
+      },
+    },
+  ],
   // (03/09/2026, demande Jérôme) Le Loft, chambre 5 — photos de la chambre (source PHOTOS/LOFT CH5).
   // Les communs et extérieurs du même shooting vivent dans LOFT_COMMON_INTERIOR / LOFT_EXTERIOR
   // (partagés par toutes les chambres du Loft qui ont un pack, cf. roomGallerySections).

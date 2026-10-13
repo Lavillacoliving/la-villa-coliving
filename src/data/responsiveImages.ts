@@ -161,6 +161,45 @@ export const RESPONSIVE_IMAGES: Record<string, { original: number; widths: numbe
     ],
     "reencoded": false
   },
+  "/images/la villa/rooms/Chambre 2/chambre-2-chambre.webp": {
+    "original": 1440,
+    "widths": [
+      480,
+      768,
+      1024,
+      1440
+    ],
+    "reencoded": true
+  },
+  "/images/la villa/rooms/Chambre 2/chambre-2-bureau.webp": {
+    "original": 1440,
+    "widths": [
+      480,
+      768,
+      1024
+    ],
+    "reencoded": false
+  },
+  "/images/la villa/rooms/Chambre 2/chambre-2-salle-eau.webp": {
+    "original": 1440,
+    "widths": [
+      480,
+      768,
+      1024,
+      1440
+    ],
+    "reencoded": true
+  },
+  "/images/la villa/rooms/Chambre 2/chambre-2-terrasse-jardin.webp": {
+    "original": 1440,
+    "widths": [
+      480,
+      768,
+      1024,
+      1440
+    ],
+    "reencoded": true
+  },
   "/images/la villa/rooms/La Villa-92.webp": {
     "original": 1920,
     "widths": [

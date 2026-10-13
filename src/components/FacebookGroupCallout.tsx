@@ -1,7 +1,8 @@
 /**
  * Encart A.8 « Pas de chambre libre chez nous ? » (Lot L5 « Groupe Facebook comme ressource nommée », D10 = oui, 10/10/2026).
  *
- * Rendu identique partout : sous la liste des chambres des 3 pages maisons, sur /chambres-disponibles et sur l'écran de
+ * Rendu identique partout : sous la liste des chambres des 3 pages maisons, sur /chambres-disponibles (seulement sans chambre
+ * libre ni datée, D2 du 13/10/2026) et sur l'écran de
  * confirmation de /candidature. Texte unique : src/data/answerSlots.ts (facebookCallout) depuis FACEBOOK_GROUP (stats.ts) —
  * la phrase est UN nœud texte, le lien est un élément séparé (anti-#418 ; la garde compare le texte au caractère près).
  * Lien normal (jamais nofollow), nouvel onglet. Le groupe n'entre jamais dans sameAs (D10 du socle).

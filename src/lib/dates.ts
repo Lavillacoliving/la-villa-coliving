@@ -40,3 +40,29 @@ export function formatLongDate(iso: string, lang: "fr" | "en"): string {
     ? `${MONTHS_EN[month - 1]} ${day}, ${year}`
     : `${day} ${MONTHS_FR[month - 1]} ${year}`;
 }
+
+// Mois abrégés (13/10/2026, brief « conversion Ads » §2.1 et §2.2, option A validée par Jérôme) : pastille de date des
+// cartes « Bientôt disponibles » (« Libre le 15 oct. ») et ligne « Prochaines entrées » de /chambres-disponibles.
+export const MONTHS_SHORT_FR = [
+  "janv.", "févr.", "mars", "avr.", "mai", "juin",
+  "juil.", "août", "sept.", "oct.", "nov.", "déc.",
+];
+export const MONTHS_SHORT_EN = [
+  "Jan", "Feb", "Mar", "Apr", "May", "Jun",
+  "Jul", "Aug", "Sep", "Oct", "Nov", "Dec",
+];
+
+/**
+ * « 15 oct. » / « 15 Oct » à partir de « YYYY-MM-DD » (date de libération de v_public_rooms) ; "" si illisible.
+ * Jour et mois liés par une espace insécable (U+00A0 : la date ne se coupe jamais en fin de ligne). Pur, sans Date :
+ * même texte au prérendu et chez le lecteur (règle de formatFreeDate, availability.ts).
+ */
+export function formatShortDate(iso: string, lang: "fr" | "en"): string {
+  const [, m, d] = String(iso).split("-");
+  const monthIndex = Number(m) - 1;
+  const day = Number(d);
+  if (!Number.isInteger(day) || day < 1 || day > 31 || !Number.isInteger(monthIndex) || monthIndex < 0 || monthIndex > 11) return "";
+  return lang === "en"
+    ? `${day} ${MONTHS_SHORT_EN[monthIndex]}`
+    : `${day === 1 ? "1er" : day} ${MONTHS_SHORT_FR[monthIndex]}`;
+}

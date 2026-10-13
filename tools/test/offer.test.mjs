@@ -76,6 +76,12 @@ test('offer.ts : textes du bandeau et du formulaire (rebrief §2.1, verbatim)', 
   assert.equal(O.OFFER_TEXTS.fr.name, 'Pose tes valises avant l\'hiver');
 });
 
+// (13/10/2026, brief « conversion Ads » §2.2, D3) Suite de la ligne de caution de /chambres-disponibles pendant l'offre.
+test('offer.ts : depositNote construite avec OFFER_END (FR/EN)', () => {
+  assert.equal(sp(O.OFFER_TEXTS.fr.depositNote), 'en 2 ou 3 fois pour tout bail signé d\'ici le 25 novembre');
+  assert.equal(sp(O.OFFER_TEXTS.en.depositNote), 'in 2 or 3 instalments for any lease signed by 25 November');
+});
+
 test('offer.ts : jour de Paris et ligne de démarrage du bail (date à venir, chambre libre, date passée ou du jour)', () => {
   assert.equal(O.parisDateIso(Date.parse('2026-10-14T22:30:00Z')), '2026-10-15'); // 0 h 30 à Paris (UTC+2)
   assert.equal(O.parisDateIso(Date.parse('2026-11-25T22:59:00Z')), '2026-11-25'); // 23 h 59 à Paris (UTC+1)

@@ -47,6 +47,11 @@ const SOURCES = [
   '/images/la villa/rooms/Chambre 8/chambre-8-balcon-piscine.webp',
   '/images/la villa/rooms/Chambre 8/chambre-8-chambre.webp',
   '/images/la villa/rooms/Chambre 8/chambre-8-bureau.webp',
+  // (13/10/2026, D5 du brief « conversion Ads ») La Villa, chambre 2 — carte de /chambres-disponibles et de /offre-hiver.
+  '/images/la villa/rooms/Chambre 2/chambre-2-chambre.webp',
+  '/images/la villa/rooms/Chambre 2/chambre-2-bureau.webp',
+  '/images/la villa/rooms/Chambre 2/chambre-2-salle-eau.webp',
+  '/images/la villa/rooms/Chambre 2/chambre-2-terrasse-jardin.webp',
 ];
 // Galeries (carrousel héros des 3 maisons) : les slides voisins du 1er sont chargés
 // par le navigateur (lazy horizontal) — en pleine taille sans variantes.

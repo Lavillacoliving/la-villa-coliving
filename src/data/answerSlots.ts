@@ -260,7 +260,10 @@ export const FACEBOOK_MENTION_ARTICLES: Readonly<Record<string, { fr: string; en
 
 /** Pages prérendues qui portent l'encart A.8 (FR + /en) — exactement une fois chacune ; l'écran de confirmation de
  *  /candidature le porte aussi mais n'est pas prérendu (test unitaire seulement). */
-export const FACEBOOK_CALLOUT_ROUTES = ["/lavilla", "/leloft", "/lelodge", "/chambres-disponibles"] as const;
+export const FACEBOOK_CALLOUT_ROUTES = ["/lavilla", "/leloft", "/lelodge"] as const;
+/** (13/10/2026, D2 du brief « conversion Ads », décision Jérôme) /chambres-disponibles ne porte l'encart que s'il n'y a
+ *  AUCUNE chambre libre ni datée : 0 ou 1 encart, texte vérifié au caractère près s'il est affiché. */
+export const FACEBOOK_CALLOUT_OPTIONAL_ROUTES = ["/chambres-disponibles"] as const;
 
 /** A.7 — mention canonique (texte visible). */
 export function facebookMention(lang: EntityLang): string {

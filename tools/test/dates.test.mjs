@@ -32,3 +32,20 @@ test('tableaux de mois complets', () => {
   assert.equal(MONTHS_FR[9], 'octobre');
   assert.equal(MONTHS_EN[10], 'November');
 });
+
+// (13/10/2026, brief « conversion Ads » §2.1/§2.2, option A) format court de la pastille et de « Prochaines entrées ».
+import { formatShortDate, MONTHS_SHORT_FR, MONTHS_SHORT_EN } from '../../src/lib/dates.ts';
+
+test('formatShortDate : « 15 oct. » / « 15 Oct », espace insécable, « 1er », entrée illisible = ""', () => {
+  assert.equal(formatShortDate('2026-10-15', 'fr'), '15 oct.');
+  assert.equal(formatShortDate('2026-10-15', 'en'), '15 Oct');
+  assert.equal(formatShortDate('2026-12-16', 'fr'), '16 déc.');
+  assert.equal(formatShortDate('2026-11-01', 'fr'), '1er nov.');
+  assert.equal(formatShortDate('2026-11-01', 'en'), '1 Nov');
+  assert.equal(formatShortDate('2027-02-03', 'fr'), '3 févr.');
+  for (const bad of ['', '2026-13-01', '2026-10-00', '2026-10-15T00:00:00Z', 'n/a']) {
+    assert.equal(formatShortDate(bad, 'fr'), '', bad);
+  }
+  assert.equal(MONTHS_SHORT_FR.length, 12);
+  assert.equal(MONTHS_SHORT_EN.length, 12);
+});

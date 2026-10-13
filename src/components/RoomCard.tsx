@@ -5,6 +5,7 @@ import { useLanguage } from "@/contexts/LanguageContext";
 import { thousands } from "@/data/stats";
 import { roomGallery } from "@/data/roomPhotos";
 import { isRoomPageOpen, roomPagePath } from "@/data/roomPages";
+import { formatShortDate } from "@/lib/dates";
 import { BADGE_CHIP_CLASS, roomBadge, roomSpecs, type HouseKey, type PublicRoom } from "@/lib/availability";
 
 /** (12/10/2026, maquette validée par Jérôme) Équipements de la chambre tirés de v_public_rooms — jamais d'attribut inventé. */
@@ -54,7 +55,8 @@ export type RoomCardProps = {
   onHouseClick?: (room: PublicRoom) => void;
   /**
    * (12/10/2026, refonte /chambres-disponibles validée par Jérôme) « featured » = grande carte horizontale d'une chambre libre
-   * maintenant ; « compact » = petite carte en retrait d'une libération datée ; « default » = carte historique (pages maisons, inchangée).
+   * maintenant ; « compact » = petite carte en retrait d'une libération datée ; « default » = carte historique (pages maisons,
+   * /offre-hiver, pages money ; depuis le 13/10/2026 « Candidater » passe au-dessus du lien vers la fiche).
    */
   variant?: "default" | "featured" | "compact";
   /** Commune de la maison (sur-titre des variantes featured / compact). */
@@ -204,25 +206,31 @@ export function RoomCard({ house, houseName, room, fallbackImage, showHouse = fa
   }
 
   if (variant === "compact") {
+    // (13/10/2026, brief « conversion Ads » §2.1 — D1 et option A de Jérôme) Photo en couleur, pleine opacité ; la date de
+    // libération en pastille SUR la photo à toutes les tailles, format court (« Libre le 15 oct. » / « Free from 15 Oct ») ;
+    // photo mobile élargie de 112 à 144 px pour que la pastille y tienne. Une information, pas un appel.
+    const shortDate = room.available_from ? formatShortDate(room.available_from, uiLang) : "";
+    const datePill = room.availability !== "available" && shortDate
+      ? (en ? `Free from ${shortDate}` : `Libre le ${shortDate}`)
+      : badge.label;
     return (
       <article className="bg-[#FAF9F6] border border-[#E7E5E4] rounded-xl overflow-hidden flex flex-row md:flex-col group">
-        {photoButton("relative w-28 shrink-0 md:w-full md:h-36 overflow-hidden", (
+        {photoButton("relative w-36 shrink-0 md:w-full md:h-36 overflow-hidden", (
           <>
             <img
               src={cover?.src ?? fallbackImage}
               alt={cover ? cover.alt[uiLang] : `${roomLabel} — ${houseName}`}
-              className="absolute inset-0 w-full h-full object-cover saturate-[.75] opacity-90"
+              className="absolute inset-0 w-full h-full object-cover"
               loading="lazy"
               width={cover?.w ?? 800}
               height={cover?.h ?? 600}
             />
-            <span className={`hidden md:inline-block absolute top-3 left-3 text-xs font-semibold px-2.5 py-1 rounded-full ${BADGE_CHIP_CLASS[badge.tone]}`}>
-              {badge.label}
+            <span className={`absolute top-2 left-2 md:top-3 md:left-3 whitespace-nowrap text-xs font-semibold px-2.5 py-1 md:px-3 md:py-1.5 rounded-full ${BADGE_CHIP_CLASS[badge.tone]}`}>
+              {datePill}
             </span>
           </>
         ))}
         <div className="p-3 md:p-4 flex flex-col gap-1 min-w-0 flex-1">
-          <p className="md:hidden text-xs font-bold text-[#7A5215]">{badge.label}</p>
           <p className="text-[11px] font-semibold uppercase tracking-wider text-[#78716C]">{eyebrow}</p>
           <h3 className="text-lg text-[#1C1917] leading-snug" style={{ fontFamily: '"DM Serif Display", serif' }}>
             {pageOpen ? (
@@ -312,15 +320,8 @@ export function RoomCard({ house, houseName, room, fallbackImage, showHouse = fa
               <span className="text-sm font-light text-[#78716C]"> {t.houseDetail.perMonth}</span>
             </p>
           )}
-          {isRoomPageOpen(house, room) && (
-            <LocalizedLink
-              to={roomPagePath(house, room.room_number)}
-              className="mb-3 inline-flex items-center gap-1.5 text-sm font-semibold text-[#1C1917] underline underline-offset-4 hover:text-[#B8860B]"
-            >
-              {language === "en" ? "See the room's page" : "Voir la fiche de la chambre"}
-              <ArrowRight className="w-3.5 h-3.5" />
-            </LocalizedLink>
-          )}
+          {/* (13/10/2026, brief « conversion Ads » §2.5) « Candidater » d'abord, la fiche en lien secondaire dessous — même
+              ordre que la variante featured, sur toutes les utilisations (pages maisons, /offre-hiver, pages money). */}
           <LocalizedLink
             to={`/candidature?${ctaParams ? `${ctaParams}&` : ""}property_interest=${house}&room_interest=chambre-${room.room_number}`}
             onClick={() => onCtaClick?.(room)}
@@ -329,6 +330,17 @@ export function RoomCard({ house, houseName, room, fallbackImage, showHouse = fa
             {language === "en" ? "Apply" : "Candidater"}
             <ArrowRight className="w-4 h-4" />
           </LocalizedLink>
+          {isRoomPageOpen(house, room) && (
+            <div className="mt-3 text-center">
+              <LocalizedLink
+                to={roomPagePath(house, room.room_number)}
+                className="inline-flex items-center gap-1.5 text-sm font-semibold text-[#1C1917] underline underline-offset-4 hover:text-[#B8860B]"
+              >
+                {language === "en" ? "See the room's page" : "Voir la fiche de la chambre"}
+                <ArrowRight className="w-3.5 h-3.5" />
+              </LocalizedLink>
+            </div>
+          )}
         </div>
       </div>
     </div>
