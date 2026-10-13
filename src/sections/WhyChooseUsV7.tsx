@@ -27,10 +27,11 @@ export function WhyChooseUsV7() {
     },
     {
       icon: Trophy,
-      text: language === "en" ? "Exceptional amenities" : "Équipements exceptionnels",
+      // (Retenue premium, lot 1, T4 — 13/10/2026) un fait plutôt qu'un adjectif.
+      text: language === "en" ? "Pool, sauna, gym" : "Piscine, sauna, sport",
       description: language === "en"
-        ? "Pool, sauna, full gym, foosball, board games — a level of amenities unique in coliving."
-        : "Piscine, sauna, salle de sport complète, babyfoot, jeux de société — un niveau de prestations unique en coliving.",
+        ? "A full gym, foosball and board games, in every house."
+        : "Salle de sport complète, babyfoot et jeux de société, dans chaque maison.",
     },
     {
       icon: Sparkles,
@@ -82,8 +83,8 @@ export function WhyChooseUsV7() {
 
             <p className="text-[#78716C] text-base md:text-lg leading-relaxed mb-10 max-w-lg">
               {language === "en"
-                ? `Mega-colivings house 300 people in residences. We welcome ${STATS.minResidentsPerHouse} to ${STATS.maxResidentsPerHouse} professionals in real houses with gardens, pools, and terraces. Bonds form naturally, without forcing it.`
-                : `Les méga-colivings logent 300 personnes dans des résidences. Nous accueillons ${STATS.minResidentsPerHouse} à ${STATS.maxResidentsPerHouse} professionnels dans de vraies maisons avec jardin, piscine et terrasses. Les liens se créent naturellement, sans forcer.`}
+                ? `We welcome ${STATS.minResidentsPerHouse} to ${STATS.maxResidentsPerHouse} professionals in real houses with gardens, pools, and terraces. Bonds form naturally, without forcing it.`
+                : `Nous accueillons ${STATS.minResidentsPerHouse} à ${STATS.maxResidentsPerHouse} professionnels dans de vraies maisons avec jardin, piscine et terrasses. Les liens se créent naturellement, sans forcer.`}
             </p>
 
             {/* Features grid */}

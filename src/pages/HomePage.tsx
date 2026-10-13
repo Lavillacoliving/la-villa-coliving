@@ -68,14 +68,15 @@ export function HomePage() {
       <div data-home-section="houses_preview"><HousesPreview /></div>
       {/* Rangée post-grille (Lot 2) : rattrape ceux qui sortent de la grille sans
           cliquer une maison — deux sorties utiles (comparer / tarifs). Bande
-          discrète, PAS un deuxième hero ; aucune image → zéro CLS. */}
+          discrète, PAS un deuxième hero ; aucune image → zéro CLS. (Retenue premium, lot 1, T10 — 13/10/2026)
+          liens en casse normale, sans capitales espacées. */}
       <div data-home-section="post_grid">
         <div className="bg-white border-b border-[#E7E5E4] py-6 md:py-8">
           <div className="max-w-6xl mx-auto px-6 flex flex-col sm:flex-row items-center justify-center gap-4 sm:gap-12">
             <LocalizedLink
               to="/nos-maisons"
               onClick={() => trackPostGrid("/nos-maisons")}
-              className="inline-flex items-center gap-2 text-sm text-[#57534E] uppercase tracking-wider text-center hover:text-[#1C1917] transition-colors"
+              className="inline-flex items-center gap-2 text-sm text-[#57534E] text-center hover:text-[#1C1917] transition-colors"
             >
               {language === "en"
                 ? "Torn between the three? Compare them"
@@ -85,7 +86,7 @@ export function HomePage() {
             <LocalizedLink
               to="/tarifs"
               onClick={() => trackPostGrid("/tarifs")}
-              className="inline-flex items-center gap-2 text-sm text-[#57534E] uppercase tracking-wider text-center hover:text-[#1C1917] transition-colors"
+              className="inline-flex items-center gap-2 text-sm text-[#57534E] text-center hover:text-[#1C1917] transition-colors"
             >
               {language === "en"
                 ? "All inclusive, one single rent"

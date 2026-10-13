@@ -111,11 +111,12 @@ export function HeroV7() {
             </LocalizedLink>
           </div>
 
-          {/* Réassurance frais — visible sans scroll */}
+          {/* Réassurance frais — visible sans scroll. (Retenue premium, lot 1, T3 — 13/10/2026) « tout inclus » et « sans frais de
+              dossier » sont déjà dans la phrase d'introduction : ne restent que les deux promesses qu'elle ne dit pas. */}
           <p className="text-sm text-white/90 max-w-xl mb-4 font-light [text-shadow:0_2px_10px_rgba(0,0,0,0.55)]">
             {language === "en"
-              ? "Everything included — no application fee, no agency fee, no hidden costs."
-              : "Tout est compris — pas de frais de dossier, pas d'honoraires d'agence, pas de frais cachés."}
+              ? "No agency fee, no hidden costs."
+              : "Pas d'honoraires d'agence, pas de frais cachés."}
           </p>
 
           {/* Social proof — (Lot L3, D4 Jérôme 09/10/2026) note de la fiche Google (STATS_DISPLAY.googleRating, toujours
@@ -230,10 +231,11 @@ export function HeroV7() {
                 </>
               )}
             </h2>
+            {/* (Retenue premium, lot 1, T1 — 13/10/2026) Montrer plutôt que se décrire : un fait, sans comparaison ni superlatif. */}
             <p className="text-white/60 max-w-2xl mx-auto text-base">
               {language === "en"
-                ? `This level of amenities is unheard of in coliving. Most don't even have a pool. We have one in all three houses — plus private yoga, fitness classes, pizza nights, and ${STATS.includedItems - 3} more services included.`
-                : `Ce niveau de prestations est inédit en coliving. La plupart n'ont même pas de piscine. Nous en avons une dans chacune de nos 3 maisons — plus cours de yoga, cours de fitness, pizza party et ${STATS.includedItems - 3} autres services inclus.`}
+                ? `A pool in each of our ${STATS.totalHouses} houses, with sauna and gym, plus yoga and fitness classes, pizza nights and ${STATS.includedItems - 3} more services included.`
+                : `Une piscine dans chacune de nos ${STATS.totalHouses} maisons, avec sauna et salle de sport, plus cours de yoga, cours de fitness, pizza party et ${STATS.includedItems - 3} autres services inclus.`}
             </p>
           </div>
 
@@ -318,11 +320,11 @@ export function HeroV7() {
             ))}
           </div>
 
-          {/* Pricing reminder — text-base (au lieu de sm) : demande Jérôme 29/08 */}
+          {/* Pricing reminder — text-base (au lieu de sm) : demande Jérôme 29/08. (Retenue premium, lot 1, T2 — 13/10/2026) une phrase. */}
           <p className="text-center text-white/50 text-base mt-10 max-w-lg mx-auto">
             {language === "en"
-              ? `All of this is included in your rent. No paid add-ons. No application fee, no agency fee. No hidden fees. Ever.`
-              : `Tout ceci est inclus dans ton loyer. Pas d'options payantes. Pas de frais de dossier, pas d'honoraires d'agence. Pas de frais cachés. Jamais.`}
+              ? "All of this is included in your rent, with no paid add-ons and no application fee."
+              : "Tout ceci est inclus dans ton loyer, sans option payante ni frais de dossier."}
           </p>
         </div>
 
