@@ -114,7 +114,15 @@ async function copyAssets(origin, names, assetsDir, ownSet, deadline, explore) {
     pending = [];
     for (const n of batch) seen.add(n);
     await pool(batch, async (name) => {
-      if (ownSet.has(name)) { present.add(name); return; }
+      if (ownSet.has(name)) {
+        // Déjà produit par ce build (même nom haché = même contenu) : rien à télécharger, mais l'exploration continue
+        // à travers lui (lecture locale), sinon la liste « previous » du manifeste s'arrêterait aux fichiers partagés.
+        present.add(name);
+        if (explore && /\.(js|css)$/.test(name)) {
+          try { pending.push(...extractAssetRefs(await fs.readFile(path.join(assetsDir, name), 'utf8'))); } catch { /* illisible : on n'explore pas plus loin */ }
+        }
+        return;
+      }
       if (seen.size > LIMITS.files) return;
       try {
         const buf = await fetchAsset(origin, name, deadline);

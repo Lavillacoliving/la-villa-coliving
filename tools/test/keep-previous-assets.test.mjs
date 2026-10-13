@@ -122,3 +122,16 @@ test('scénario : source injoignable — aucune copie, manifeste écrit, aucune 
     assert.deepEqual(JSON.parse(await fs.readFile(path.join(next, MANIFEST_FILE), 'utf8')).own, ['index-NEW.js']);
   } finally { await fs.rm(tmp, { recursive: true, force: true }); }
 });
+
+test('scénario : premier déploiement d\'une version identique — l\'exploration traverse les fichiers partagés (manifeste complet)', async () => {
+  const tmp = await fs.mkdtemp(path.join(os.tmpdir(), 'kpa-'));
+  const files = { 'index-SAME.js': 'import("./Page-SAME.js")', 'Page-SAME.js': 'import("./Deep-SAME.js")', 'Deep-SAME.js': 'd' };
+  const live = await makeDist(path.join(tmp, 'live'), files);
+  await fs.writeFile(path.join(live, 'index.html'), '<script type="module" src="/assets/index-SAME.js"></script>');
+  const next = await makeDist(path.join(tmp, 'next'), files);
+  const { server, origin } = await serve(live);
+  try {
+    const r = await run({ env: { KEEP_ASSETS_ORIGIN: origin }, distDir: next });
+    assert.deepEqual(r.previous, ['Deep-SAME.js', 'Page-SAME.js', 'index-SAME.js'], 'toute la version en ligne est listée, rien n\'est téléchargé');
+  } finally { server.close(); await fs.rm(tmp, { recursive: true, force: true }); }
+});
