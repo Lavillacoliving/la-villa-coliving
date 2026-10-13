@@ -175,7 +175,12 @@ export interface EntityFactsText {
   title: string;
   paragraph: string;
   bullets: readonly string[];
+  /** (Retenue premium, lot 1, T13 — Jérôme 13/10/2026) Bouton secondaire en casse normale, sans promesse dans le libellé ;
+   *  la réassurance va en microcopie dessous (`ctaNote`). Ni l'un ni l'autre n'entre dans entityFactsStrings : « Candidater »
+   *  et « Réponse sous 48 h » existent ailleurs sur les pages (barre fixée, cartes, réassurance) ; la garde les vérifie DANS
+   *  le bloc (entityFactsCtaIssues, scripts/check-entity-facts.mjs). */
   cta: string;
+  ctaNote: string;
   /** (Lot L3, D4) La puce « Avis : … » est TOUJOURS suivie du lien « Voir les avis » vers la fiche Google : le composant rend
    *  la phrase (un nœud texte) puis un <a> séparé — le libellé du lien n'entre pas dans entityFactsStrings (il vit aussi dans le hero). */
   reviewsLink: { bullet: string; label: string; href: string };
@@ -209,7 +214,8 @@ export function entityFactsText(lang: EntityLang): EntityFactsText {
         reviewsBullet.en,
         `Who it's for: cross-border workers, expats and young professionals working in Geneva. Founded in ${F.foundingLabel.en} by ${F.founders.join(" and ")} and run directly by them — ${F.totalResidents}+ residents welcomed.`,
       ],
-      cta: `Apply — reply within ${F.responseHours} h`,
+      cta: "Apply",
+      ctaNote: `Reply within ${F.responseHours} h`,
       reviewsLink: { bullet: reviewsBullet.en, label: GOOGLE_REVIEWS_LINK_LABEL.en, href: F.googleReviews.url },
     };
   }
@@ -228,15 +234,19 @@ export function entityFactsText(lang: EntityLang): EntityFactsText {
       reviewsBullet.fr,
       `Pour qui : frontaliers, expats et jeunes professionnels qui travaillent à Genève. Fondée en ${F.foundingLabel.fr} par ${F.founders.join(" et ")}, gérée en direct — ${F.totalResidents}+ résidents accueillis.`,
     ],
-    cta: `Candidater — réponse sous ${F.responseHours} h`,
+    cta: "Candidater",
+    ctaNote: `Réponse sous ${F.responseHours} h`,
     reviewsLink: { bullet: reviewsBullet.fr, label: GOOGLE_REVIEWS_LINK_LABEL.fr, href: F.googleReviews.url },
   };
 }
 
-/** Toutes les chaînes rendues (les deux langues) — pour les gardes. */
+/**
+ * Chaînes canoniques comptées « exactement une fois par page » par les gardes : titre, paragraphe, puces.
+ * Le bouton et sa microcopie (T13, 13/10/2026) en sont exclus — vérifiés une fois DANS le bloc (entityFactsCtaIssues).
+ */
 export function entityFactsStrings(lang: EntityLang): string[] {
   const t = entityFactsText(lang);
-  return [t.title, t.paragraph, ...t.bullets, t.cta];
+  return [t.title, t.paragraph, ...t.bullets];
 }
 
 /** Incohérences internes détectables sans base (la CI ajoute la comparaison avec v_public_rooms). */

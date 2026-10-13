@@ -210,6 +210,25 @@ const norm = (s) => s.replace(/[ \t\r\n]+/g, ' ').trim();
 const count = (hay, needle) => (needle ? hay.split(needle).length - 1 : 0);
 
 /**
+ * (Retenue premium, lot 1, T13 — décision Jérôme du 13/10/2026) Bouton de la fiche (« Candidater » / « Apply ») et sa
+ * microcopie (« Réponse sous 48 h ») : hors du comptage « exactement 1× par page » — ces mots vivent aussi dans la barre
+ * fixée, les cartes chambres et la réassurance —, vérifiés DANS le bloc <aside id="entity-facts"> : exactement un lien
+ * dont le texte est `t.cta`, la microcopie `t.ctaNote` présente une fois. Pur ; `t` = entityFactsText(lang).
+ */
+export function entityFactsCtaIssues(html, t) {
+  const block = String(html).match(/<aside[^>]*\sid="entity-facts"[\s\S]*?<\/aside>/);
+  if (!block) return ['bloc entité introuvable : bouton et microcopie non vérifiés'];
+  const issues = [];
+  const linkTexts = [...block[0].matchAll(/<a\b[^>]*>([\s\S]*?)<\/a>/g)]
+    .map((m) => norm(decodeEntities(m[1].replace(/<!--[\s\S]*?-->/g, '').replace(/<[^>]+>/g, ' '))));
+  const nCta = linkTexts.filter((s) => s === norm(t.cta)).length;
+  if (nCta !== 1) issues.push(`bouton de la fiche « ${t.cta} » présent ${nCta} fois dans le bloc (attendu 1)`);
+  const nNote = count(visibleText(block[0]), norm(t.ctaNote));
+  if (nNote !== 1) issues.push(`microcopie du bouton « ${t.ctaNote} » présente ${nNote} fois dans le bloc (attendu 1)`);
+  return issues;
+}
+
+/**
  * Chaînes interdites (FORBIDDEN) d'une page : un message par règle touchée, avec la première phrase fautive.
  * `file` (Lot L3, facultatif) = nom du fichier prérendu : une règle `skipFile` ne s'applique pas aux pages qu'il désigne.
  */
@@ -518,6 +537,8 @@ async function checkHtml(m) {
         const expected = keySentence && s === keySentence[lang] && keyFiles.has(f) ? 2 : 1; // A.4 : chapeau + fiche sur /tarifs
         if (n !== expected) failures.push(`${f} : phrase canonique présente ${n} fois (attendu ${expected}) — « ${s.slice(0, 70)}… »`);
       }
+      // (T13, 13/10/2026) Bouton et microcopie : une fois DANS le bloc (pas un comptage sur la page).
+      for (const issue of entityFactsCtaIssues(html, m.entityFactsText(lang))) failures.push(`${f} : ${issue}`);
     } else if (nBlocks > 0) failures.push(`${f} : bloc entité hors périmètre (${nBlocks})`);
     // (Lot L4, D8) FAQ A.3 — texte identique au caractère près sur les pages du périmètre, absente ailleurs.
     if (priceFaq) {

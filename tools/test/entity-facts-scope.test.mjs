@@ -46,3 +46,30 @@ test('entityFactsText(lang).paragraph se termine par GENEVA_COMMUTE_FORMULA[lang
     assert.doesNotMatch(formula, /\b15 min/);
   }
 });
+
+// ── (Retenue premium, lot 1, T13 — décision Jérôme du 13/10/2026) Bouton de la fiche en casse normale, sans promesse ;
+//    bouton et microcopie hors du comptage « 1× par page », vérifiés une fois DANS le bloc ──
+import { entityFactsCtaIssues } from '../../scripts/check-entity-facts.mjs';
+
+test('T13 : « Candidater » / « Apply » + microcopie 48 h, hors entityFactsStrings, vérifiés dans le bloc', async () => {
+  const m = await loadEntityFacts();
+  for (const lang of ['fr', 'en']) {
+    const t = m.entityFactsText(lang);
+    const h = m.ENTITY_FACTS.responseHours;
+    assert.equal(t.cta, lang === 'fr' ? 'Candidater' : 'Apply');
+    assert.equal(t.ctaNote, lang === 'fr' ? `Réponse sous ${h} h` : `Reply within ${h} h`);
+    assert.doesNotMatch(t.cta, /\d|réponse|reply/i, `${lang} : aucune promesse dans le libellé du bouton`);
+    assert.ok(!m.entityFactsStrings(lang).includes(t.cta), `${lang} : le bouton n'est pas compté 1× par page`);
+    assert.ok(!m.entityFactsStrings(lang).includes(t.ctaNote), `${lang} : la microcopie n'est pas comptée 1× par page`);
+    // Le même mot ailleurs sur la page (barre fixée, cartes) ne compte pas : seul le bloc est lu.
+    const page = (label, note) =>
+      `<a href="/candidature">${t.cta}</a><p>${t.ctaNote}</p>` +
+      `<aside id="entity-facts" data-entity-facts-version="v"><h2>T</h2><ul><li>P</li></ul>` +
+      `<a href="/candidature?src=entity_facts">${label}</a><p class="mt-2">${note}</p></aside>` +
+      `<div><a href="/candidature">${t.cta}</a></div>`;
+    assert.deepEqual(entityFactsCtaIssues(page(t.cta, t.ctaNote), t), [], `${lang} : bloc conforme`);
+    assert.equal(entityFactsCtaIssues(page(`${t.cta} — 48 h`, t.ctaNote), t).length, 1, `${lang} : ancien libellé refusé`);
+    assert.equal(entityFactsCtaIssues(page(t.cta, ''), t).length, 1, `${lang} : microcopie absente refusée`);
+    assert.equal(entityFactsCtaIssues('<main><p>sans bloc</p></main>', t).length, 1, `${lang} : bloc absent signalé`);
+  }
+});

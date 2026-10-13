@@ -90,13 +90,15 @@ export function EntityFacts({ page, houseSlug, children, className = "" }: Entit
           </li>
         ))}
       </ul>
+      {/* (Retenue premium, lot 1, T13 — 13/10/2026) Bouton secondaire en casse normale ; la réassurance en microcopie dessous. */}
       <LocalizedLink
         to={to}
         onClick={track}
-        className="inline-flex items-center px-6 py-3 bg-[#1C1917] text-white text-sm tracking-wider uppercase hover:bg-[#D4A574] transition-colors"
+        className="inline-flex items-center px-6 py-3 border border-[#1C1917] text-[#1C1917] text-sm font-semibold rounded-lg hover:bg-[#1C1917] hover:text-white transition-colors"
       >
         {t.cta}
       </LocalizedLink>
+      <p className="mt-2 text-sm text-[#57534E]">{t.ctaNote}</p>
     </aside>
   );
 }
