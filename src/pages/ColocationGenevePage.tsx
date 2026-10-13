@@ -388,10 +388,11 @@ export function ColocationGenevePage() {
         </div>
       </section>
 
-      {/* CTA collante mobile */}
+      {/* CTA collante mobile. (Retenue premium, lot 1 — décision Jérôme du 13/10/2026) casse normale, sans promesse dans le
+          libellé ; même style que les barres des pages maisons. */}
       <div className="md:hidden fixed bottom-0 inset-x-0 z-40 bg-white/95 backdrop-blur border-t border-[#E7E5E4] px-4 py-3">
-        <LocalizedLink to="/chambres-disponibles" className="flex items-center justify-center gap-2 w-full bg-[#D4A574] text-white py-3 rounded-lg text-sm font-semibold uppercase tracking-wider">
-          {en ? "Available rooms — reply within 48 h" : "Chambres disponibles — réponse sous 48 h"}
+        <LocalizedLink to="/chambres-disponibles" className="flex items-center justify-center gap-2 w-full bg-[#D4A574] text-[#1C1917] py-3 rounded-lg text-sm font-semibold">
+          {en ? "Available rooms" : "Chambres disponibles"}
           <ArrowRight className="w-4 h-4" />
         </LocalizedLink>
       </div>
