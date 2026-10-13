@@ -417,7 +417,7 @@ export const translations = {
     // House Detail Pages - Enhanced
     houseDetail: {
       features: "Features",
-      services: "Premium Services",
+      services: "Included services", // (Retenue premium, lot 1, T12 — 13/10/2026)
       rooms: "Rooms",
       location: "Location",
       community: "The Community",
@@ -856,7 +856,7 @@ export const translations = {
     // House Detail Pages - Enhanced
     houseDetail: {
       features: "Caractéristiques",
-      services: "Services Premium",
+      services: "Services inclus", // (Retenue premium, lot 1, T12 — 13/10/2026)
       rooms: "Chambres",
       location: "Localisation",
       community: "La Communauté",
