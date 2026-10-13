@@ -15,6 +15,7 @@ import { useLanguage } from "@/contexts/LanguageContext";
 import { HOUSES } from "@/data/houses";
 import { ENTITY_HOUSES } from "@/data/entityFacts";
 import { MONTHS_FR, MONTHS_EN } from "@/lib/dates";
+import { responsiveImage } from "@/lib/responsiveImage";
 import { roomGallery } from "@/data/roomPhotos";
 import { STATS, STATS_DISPLAY, PRICE_SHARED_CHF_FR, PRICE_SHARED_CHF_EN } from "@/data/stats";
 import { tarifsFaq } from "@/data/faq/tarifsFaq";
@@ -350,7 +351,7 @@ export function ChambresDisponiblesPage() {
         </div>
       </section>
 
-      {/* (12/10/2026) Bientôt disponibles — en retrait : fond pierre, cartes compactes, photos désaturées, triées par date. */}
+      {/* (12/10/2026) Bientôt disponibles — en retrait : fond pierre, cartes compactes triées par date ; photos en couleur et date en pastille depuis le 13/10 (D1). */}
       {all.known && soonShown.length > 0 && (
         <section id="bientot" aria-labelledby="bientot-titre" className="py-12 lg:py-16 bg-[#EFEBE4] border-t border-[#E7E5E4] scroll-mt-24">
           <div className="container-custom">
@@ -401,7 +402,8 @@ export function ChambresDisponiblesPage() {
               return (
                 <div key={k} className="bg-white border border-[#E7E5E4] rounded-2xl overflow-hidden flex flex-col">
                   <LocalizedLink to={`/${k}`} className="block relative aspect-[16/9] overflow-hidden">
-                    <img src={HOUSES[k].img} alt={HOUSES[k].label} className="w-full h-full object-cover" loading="lazy" width={800} height={450} />
+                    {/* (13/10/2026, §2.6) Variantes déjà générées (480 → 1024 px) : la photo du Lodge pèse 97 Ko en 480 au lieu de 361 Ko. */}
+                    <img src={HOUSES[k].img} {...responsiveImage(HOUSES[k].img, "(min-width: 768px) 33vw, 100vw")} alt={HOUSES[k].label} className="w-full h-full object-cover" loading="lazy" width={800} height={450} />
                   </LocalizedLink>
                   <div className="p-6 flex flex-col flex-1">
                     <h3 className="text-lg font-black text-[#1C1917]">{HOUSES[k].label}</h3>
