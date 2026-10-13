@@ -24,7 +24,7 @@ import {
   Sun,
 } from "lucide-react";
 import { useLanguage } from "@/contexts/LanguageContext";
-import { STATS_DISPLAY, HOUSE_SURFACES, ROOM_SURFACE_BY_HOUSE, TRANSIT, thousands, PRICE_FR_NUM, PRICE_EN_NUM, PRICE_CHF_FR, PRICE_CHF_EN, PRICE_SHARED_FR_NUM, PRICE_SHARED_EN_NUM, PRICE_SHARED_CHF_FR, PRICE_SHARED_CHF_EN, EUR_STANDARD_FR_NUM, EUR_STANDARD_EN_NUM, EUR_SHARED_FR_NUM, EUR_SHARED_EN_NUM } from "@/data/stats";
+import { STATS, STATS_DISPLAY, HOUSE_SURFACES, ROOM_SURFACE_BY_HOUSE, TRANSIT, thousands, PRICE_FR_NUM, PRICE_EN_NUM, PRICE_CHF_FR, PRICE_CHF_EN, PRICE_SHARED_FR_NUM, PRICE_SHARED_EN_NUM, PRICE_SHARED_CHF_FR, PRICE_SHARED_CHF_EN, EUR_STANDARD_FR_NUM, EUR_STANDARD_EN_NUM, EUR_SHARED_FR_NUM, EUR_SHARED_EN_NUM } from "@/data/stats";
 // (Lot L2 « Emplacement et transport », 09/10/2026) Source unique des faits d'emplacement : plus aucune minute,
 // distance ou surface en dur dans cette page (règle D1/D6/D7 de Jérôme, recon L0.2a).
 import { ENTITY_HOUSES } from "@/data/entityFacts";
@@ -68,7 +68,7 @@ const PhotoLightbox = lazy(() => import("@/components/PhotoLightbox"));
 import { Badge } from "@/components/ui/badge";
 import { HouseGallery } from "@/sections/HouseGallery";
 import { SEO } from "@/components/SEO";
-import { WhatsAppButton } from "@/components/WhatsAppButton";
+import { WhatsAppBarLink, WhatsAppButton } from "@/components/WhatsAppButton";
 import { HouseMap } from "@/components/HouseMap";
 import { RoomPipeline } from "@/components/RoomPipeline";
 import { FacebookGroupCallout } from "@/components/FacebookGroupCallout";
@@ -2335,10 +2335,11 @@ export function HouseDetailPage() {
               ? `Ready to make ${house.name} your home?`
               : `Prêt à faire de ${house.name} ton chez-toi ?`}
           </h2>
+          {/* (Retenue premium, lot 1, T11 — 13/10/2026) Un fait plutôt qu'un superlatif. */}
           <p className="text-lg text-white/90 max-w-2xl mx-auto font-bold mb-8">
             {language === "en"
-              ? "Join our curated community and experience the best of coliving near Geneva."
-              : "Rejoins notre communauté sélectionnée et vis le meilleur du coliving près de Genève."}
+              ? `${STATS.applyMinutes}-minute application, reply within ${STATS.responseHours} h.`
+              : `Candidature en ${STATS.applyMinutes} minutes, réponse sous ${STATS.responseHours} h.`}
           </p>
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
             <LocalizedLink
@@ -2361,21 +2362,24 @@ export function HouseDetailPage() {
       </section>
 
       {/* Funnel P1 — CTA collante MOBILE (cachée en desktop), visible pendant tout le scroll.
-          On garde "Candidater" + réassurance 48h (pas de promesse de réservation). */}
+          (Retenue premium, lot 1, D3 — Jérôme 13/10/2026) « Candidater » sans promesse dans le libellé, et l'icône
+          WhatsApp DANS la barre, à droite : un seul élément flottant sur mobile (la bulle y est masquée). */}
       <div className="md:hidden h-16" aria-hidden="true" />
       <div className="md:hidden fixed bottom-0 inset-x-0 z-40 bg-white/95 backdrop-blur border-t border-[#E7E5E4] px-4 py-3">
-        <LocalizedLink
-          to={`/candidature?property_interest=${id}`}
-          onClick={() => trackCta("sticky_mobile")}
-          className="flex items-center justify-center gap-2 w-full bg-[#D4A574] text-[#1C1917] py-3 rounded-lg text-sm font-semibold"
-        >
-          {language === "en" ? "Apply — reply within 48h" : "Candidater — réponse sous 48h"}
-          <ArrowRight className="w-4 h-4" />
-        </LocalizedLink>
+        <div className="flex items-center gap-3">
+          <LocalizedLink
+            to={`/candidature?property_interest=${id}`}
+            onClick={() => trackCta("sticky_mobile")}
+            className="flex-1 flex items-center justify-center gap-2 bg-[#D4A574] text-[#1C1917] py-3 rounded-lg text-sm font-semibold"
+          >
+            {language === "en" ? "Apply" : "Candidater"}
+            <ArrowRight className="w-4 h-4" />
+          </LocalizedLink>
+          <WhatsAppBarLink context={house.name} />
+        </div>
       </div>
-      {/* WhatsApp flottant contextuel (plan A1, 08/2026) — remonté au-dessus de la
-          CTA collante mobile (z-40, bottom-0) via bottomClass. */}
-      <WhatsAppButton context={house.name} bottomClass="bottom-20 md:bottom-6" />
+      {/* WhatsApp flottant contextuel (plan A1, 08/2026) — ordinateur seulement depuis D3 (sur mobile : icône de la barre). */}
+      <WhatsAppButton context={house.name} hideOnMobile />
     </main>
   );
 }

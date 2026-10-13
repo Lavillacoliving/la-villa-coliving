@@ -4,7 +4,7 @@ import { ArrowRight, BedDouble, Car, Check, ChevronRight, Images, Layers, MapPin
 import { SEO } from "@/components/SEO";
 import { LocalizedLink } from "@/components/LocalizedLink";
 import { RoomsEmbed } from "@/components/RoomsEmbed";
-import { WhatsAppButton } from "@/components/WhatsAppButton";
+import { WhatsAppBarLink, WhatsAppButton } from "@/components/WhatsAppButton";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { HOUSES } from "@/data/houses";
 import { ENTITY_FACTS, ENTITY_HOUSES } from "@/data/entityFacts";
@@ -556,24 +556,28 @@ export function RoomDetailPage() {
         </Suspense>
       )}
 
-      {/* CTA collante MOBILE, comme sur les pages maisons. */}
+      {/* CTA collante MOBILE, comme sur les pages maisons. (Retenue premium, lot 1, D3 étendu aux fiches chambres — Jérôme
+          13/10/2026) icône WhatsApp DANS la barre, à droite ; la bulle flottante est masquée sur mobile. */}
       <div className="md:hidden h-20" aria-hidden="true" />
       <div className="md:hidden fixed bottom-0 inset-x-0 z-40 bg-white/95 backdrop-blur border-t border-[#E7E5E4] px-4 py-3">
-        <LocalizedLink
-          to={applyTo}
-          onClick={() => onApply("sticky_mobile_room")}
-          className="flex items-center justify-center gap-3 w-full bg-[#D4A574] text-[#1C1917] px-4 py-2.5 rounded-lg"
-        >
-          <span className="flex flex-col items-center leading-tight">
-            <span className="text-sm font-semibold">{status.cta}</span>
-            <span className="text-[11px] text-[#1C1917]/75">
-              {en ? `Reply within ${ENTITY_FACTS.responseHours}h` : `Réponse sous ${ENTITY_FACTS.responseHours} h`}
+        <div className="flex items-center gap-3">
+          <LocalizedLink
+            to={applyTo}
+            onClick={() => onApply("sticky_mobile_room")}
+            className="flex-1 flex items-center justify-center gap-3 bg-[#D4A574] text-[#1C1917] px-4 py-2.5 rounded-lg"
+          >
+            <span className="flex flex-col items-center leading-tight">
+              <span className="text-sm font-semibold">{status.cta}</span>
+              <span className="text-[11px] text-[#1C1917]/75">
+                {en ? `Reply within ${ENTITY_FACTS.responseHours}h` : `Réponse sous ${ENTITY_FACTS.responseHours} h`}
+              </span>
             </span>
-          </span>
-          <ArrowRight className="w-4 h-4 shrink-0" />
-        </LocalizedLink>
+            <ArrowRight className="w-4 h-4 shrink-0" />
+          </LocalizedLink>
+          <WhatsAppBarLink context={`${roomName} — ${houseLabel}`} message={whatsappMessage} />
+        </div>
       </div>
-      <WhatsAppButton context={`${roomName} — ${houseLabel}`} message={whatsappMessage} bottomClass="bottom-20 md:bottom-6" />
+      <WhatsAppButton context={`${roomName} — ${houseLabel}`} message={whatsappMessage} hideOnMobile />
     </main>
   );
 }

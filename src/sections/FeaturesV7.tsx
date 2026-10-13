@@ -23,7 +23,7 @@ export function FeaturesV7() {
     },
     {
       icon: Sofa,
-      title: language === 'en' ? 'Fully equipped houses' : 'Maisons ultra-équipées',
+      title: language === 'en' ? 'Fully equipped houses' : 'Maisons entièrement équipées', // (Retenue premium, lot 1, T6)
       description: language === 'en'
         ? 'Double kitchen, designer furniture, TV & gaming room, foosball, BBQ, outdoor kitchen. At Le Lodge: arcade machine.'
         : 'Double cuisine, mobilier design, salle TV & gaming, babyfoot, BBQ, cuisine extérieure. Au Lodge : jeu d\'arcade.',
@@ -45,7 +45,7 @@ export function FeaturesV7() {
     },
     {
       icon: CircleCheck,
-      title: language === 'en' ? 'Truly all inclusive' : 'Vraiment tout inclus',
+      title: language === 'en' ? 'All inclusive' : 'Tout inclus', // (Retenue premium, lot 1, T7)
       description: language === 'en'
         ? `Utilities, fiber up to ${STATS.fiberSpeed}, housekeeping 3×/week, parking, streaming, fitness classes, bed linen — ${STATS.includedItems} services in one rent. No add-ons, no hidden fees.`
         : `Charges, fibre jusqu'à ${STATS.fiberSpeed}, ménage 3×/semaine, parking, streaming, cours de sport, linge de lit — ${STATS.includedItems} services dans un seul loyer. Pas d'options à ajouter, pas de frais cachés.`,

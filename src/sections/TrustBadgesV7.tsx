@@ -12,8 +12,9 @@ export function TrustBadgesV7() {
   const badges = [
     {
       icon: ShieldCheck,
-      title: language === "en" ? "Zero stress, zero surprises" : "Zéro stress, zéro surprise",
-      description: language === "en" ? "One payment, everything included" : "Un seul paiement, tout est inclus",
+      // (Retenue premium, lot 1, T8 — 13/10/2026)
+      title: language === "en" ? "One rent" : "Un seul loyer",
+      description: language === "en" ? "Everything included" : "Tout est inclus",
     },
     {
       icon: Users,

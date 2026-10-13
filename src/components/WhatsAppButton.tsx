@@ -12,18 +12,22 @@ import { useLanguage } from "@/contexts/LanguageContext";
  *   param GA4 `context` de l'event whatsapp_click.
  * - `bottomClass` permet de cohabiter avec les CTA sticky mobiles existantes
  *   (z-40, bottom-0) : passer p.ex. "bottom-20 md:bottom-6" sur ces pages.
+ * - `hideOnMobile` (Retenue premium, lot 1, D3 — 13/10/2026) : pages maisons et fiches chambres, où l'icône
+ *   WhatsApp vit DANS la barre fixée mobile (`WhatsAppBarLink`) — un seul élément flottant à la fois sur mobile.
+ *   La bulle reste inchangée sur ordinateur.
  */
 interface WhatsAppButtonProps {
   context?: string;
   bottomClass?: string;
   /** Message pré-rempli complet (fiches chambres) — remplace le texte générique construit sur `context`. */
   message?: string;
+  hideOnMobile?: boolean;
 }
 
 const WHATSAPP_NUMBER = "33664315134";
 
-export function WhatsAppButton({ context, bottomClass = "bottom-6", message: customMessage }: WhatsAppButtonProps) {
-  const [showTooltip, setShowTooltip] = useState(false);
+/** Lien wa.me + mesure `whatsapp_click` (mêmes paramètres pour la bulle et l'icône de la barre fixée). */
+function useWhatsApp(context: string | undefined, customMessage: string | undefined) {
   const { language } = useLanguage();
   const { pathname } = useLocation();
   const en = language === "en";
@@ -50,8 +54,24 @@ export function WhatsAppButton({ context, bottomClass = "bottom-6", message: cus
     }
   };
 
+  const label = en ? "Contact La Villa Coliving on WhatsApp" : "Contacter La Villa Coliving sur WhatsApp";
+  return { en, href, trackClick, label };
+}
+
+function WhatsAppGlyph({ className }: { className: string }) {
   return (
-    <div className={`fixed ${bottomClass} right-6 z-50 flex items-center gap-3`}>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" className={className} fill="currentColor" aria-hidden="true">
+      <path d="M16.004 0h-.008C7.174 0 0 7.176 0 16c0 3.5 1.128 6.744 3.046 9.378L1.054 31.29l6.118-1.958A15.905 15.905 0 0016.004 32C24.826 32 32 24.822 32 16S24.826 0 16.004 0zm9.336 22.594c-.39 1.1-1.932 2.014-3.182 2.28-.854.18-1.968.324-5.722-1.23-4.806-1.988-7.898-6.868-8.138-7.188-.228-.32-1.918-2.554-1.918-4.872s1.214-3.456 1.644-3.928c.43-.472.94-.59 1.252-.59.312 0 .624.002.898.016.288.014.674-.11.998.762.39 1.05 1.098 3.456 1.176 3.696.078.24.312.766-.078 1.236-.156.236-.39.54-.546.696-.312.312-.234.546.078.94.312.39 1.384 2.282 2.97 3.696 2.042 1.818 3.764 2.38 4.298 2.638.43.208.684.174.936-.104.252-.28 1.084-1.264 1.374-1.698.288-.43.578-.358.976-.214.398.144 2.526 1.192 2.958 1.41.43.214.718.324.824.5.104.18.104 1.028-.286 2.128z" />
+    </svg>
+  );
+}
+
+export function WhatsAppButton({ context, bottomClass = "bottom-6", message: customMessage, hideOnMobile = false }: WhatsAppButtonProps) {
+  const [showTooltip, setShowTooltip] = useState(false);
+  const { en, href, trackClick, label } = useWhatsApp(context, customMessage);
+
+  return (
+    <div className={`fixed ${bottomClass} right-6 z-50 ${hideOnMobile ? "hidden md:flex" : "flex"} items-center gap-3`}>
       {/* Tooltip */}
       {showTooltip && (
         <span className="bg-[#1C1917] text-white text-sm font-medium px-4 py-2 rounded-lg shadow-lg whitespace-nowrap animate-fade-in">
@@ -64,7 +84,7 @@ export function WhatsAppButton({ context, bottomClass = "bottom-6", message: cus
         href={href}
         target="_blank"
         rel="noopener noreferrer"
-        aria-label={en ? "Contact La Villa Coliving on WhatsApp" : "Contacter La Villa Coliving sur WhatsApp"}
+        aria-label={label}
         className="relative w-14 h-14 bg-[#25D366] rounded-full flex items-center justify-center shadow-[0_4px_20px_rgba(37,211,102,0.4)] hover:shadow-[0_6px_28px_rgba(37,211,102,0.5)] hover:scale-105 transition-all duration-300"
         onMouseEnter={() => setShowTooltip(true)}
         onMouseLeave={() => setShowTooltip(false)}
@@ -74,15 +94,29 @@ export function WhatsAppButton({ context, bottomClass = "bottom-6", message: cus
         <span className="absolute inset-0 rounded-full bg-[#25D366] animate-ping opacity-20" />
 
         {/* WhatsApp SVG icon */}
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          viewBox="0 0 32 32"
-          className="w-7 h-7 relative z-10"
-          fill="white"
-        >
-          <path d="M16.004 0h-.008C7.174 0 0 7.176 0 16c0 3.5 1.128 6.744 3.046 9.378L1.054 31.29l6.118-1.958A15.905 15.905 0 0016.004 32C24.826 32 32 24.822 32 16S24.826 0 16.004 0zm9.336 22.594c-.39 1.1-1.932 2.014-3.182 2.28-.854.18-1.968.324-5.722-1.23-4.806-1.988-7.898-6.868-8.138-7.188-.228-.32-1.918-2.554-1.918-4.872s1.214-3.456 1.644-3.928c.43-.472.94-.59 1.252-.59.312 0 .624.002.898.016.288.014.674-.11.998.762.39 1.05 1.098 3.456 1.176 3.696.078.24.312.766-.078 1.236-.156.236-.39.54-.546.696-.312.312-.234.546.078.94.312.39 1.384 2.282 2.97 3.696 2.042 1.818 3.764 2.38 4.298 2.638.43.208.684.174.936-.104.252-.28 1.084-1.264 1.374-1.698.288-.43.578-.358.976-.214.398.144 2.526 1.192 2.958 1.41.43.214.718.324.824.5.104.18.104 1.028-.286 2.128z" />
-        </svg>
+        <WhatsAppGlyph className="w-7 h-7 relative z-10 text-white" />
       </a>
     </div>
+  );
+}
+
+/**
+ * (Retenue premium, lot 1, D3 — 13/10/2026) Icône WhatsApp DANS la barre fixée mobile, à droite du bouton « Candidater »
+ * (pages maisons, fiches chambres). Même lien et même événement `whatsapp_click` (même `context`) que la bulle, qui est
+ * alors masquée sur mobile (`hideOnMobile`). Sobre : pas de pulsation, pas d'ombre.
+ */
+export function WhatsAppBarLink({ context, message: customMessage }: { context?: string; message?: string }) {
+  const { href, trackClick, label } = useWhatsApp(context, customMessage);
+  return (
+    <a
+      href={href}
+      target="_blank"
+      rel="noopener noreferrer"
+      aria-label={label}
+      onClick={trackClick}
+      className="shrink-0 w-11 h-11 flex items-center justify-center rounded-lg border border-[#E7E5E4] bg-white text-[#25D366] hover:border-[#25D366] transition-colors"
+    >
+      <WhatsAppGlyph className="w-6 h-6" />
+    </a>
   );
 }

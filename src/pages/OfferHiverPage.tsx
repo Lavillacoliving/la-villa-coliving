@@ -214,10 +214,11 @@ function OfferActive({ en, L, title, description, labels }: { en: boolean; L: "f
           <div className="mt-6">
             <ApplyButton en={en} L={L} className="w-full sm:w-auto" />
           </div>
+          {/* (Retenue premium, lot 1, D2 — Jérôme 13/10/2026) « Premier dossier validé, premier servi » ne vit plus que dans les conditions. */}
           <p className="mt-3 text-sm text-[#57534E]">
             {en
-              ? `${STATS.applyMinutes}-minute application. Reply within ${STATS.responseHours} h. First approved application, first served.`
-              : `Candidature en ${STATS.applyMinutes} minutes. Réponse sous ${STATS.responseHours} h. Premier dossier validé, premier servi.`}
+              ? `${STATS.applyMinutes}-minute application. Reply within ${STATS.responseHours} h.`
+              : `Candidature en ${STATS.applyMinutes} minutes. Réponse sous ${STATS.responseHours} h.`}
           </p>
         </div>
       </section>
@@ -381,16 +382,13 @@ function OfferActive({ en, L, title, description, labels }: { en: boolean; L: "f
       {/* 6. FAQ de l'offre — JSON-LD FAQPage construit depuis ces 7 questions (page seule, pas situationsFaq). */}
       <FaqSection title={en ? "The offer, question by question" : "L'offre, question par question"} items={faq} emitSchema id="faq-offre" />
 
-      {/* 7. Rappel du bouton + ligne du lot A. */}
+      {/* 7. Rappel du bouton (D2 du 13/10/2026 : plus de ligne « premier servi » ici, elle reste dans les conditions). */}
       <section className="py-16 lg:py-24 bg-white">
         <div className="container-custom max-w-3xl text-center">
           <h2 className="text-2xl md:text-3xl font-light text-[#1C1917] mb-6" style={{ fontFamily: '"DM Serif Display", serif' }}>
             {en ? `Settle in before winter: sign by ${endLabel}` : `Pose tes valises avant l'hiver : signe d'ici le ${endLabel}`}
           </h2>
           <ApplyButton en={en} L={L} className="w-full sm:w-auto" />
-          <p className="mt-4 text-sm text-[#57534E]">
-            {en ? "First approved application, first served." : "Premier dossier validé, premier servi."}
-          </p>
         </div>
       </section>
 

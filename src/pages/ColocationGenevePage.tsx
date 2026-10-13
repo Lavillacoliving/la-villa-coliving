@@ -120,12 +120,13 @@ export function ColocationGenevePage() {
               ? `Live on the French side, work in Geneva. ${STATS.totalRooms} furnished rooms in ${STATS.totalHouses} houses in Ville-la-Grand, Ambilly and Annemasse, all inclusive from ${PRICE_SHARED_CHF_EN}/month, ${STATS_DISPLAY.en.distance}. Real availability below, prices in CHF, reply within 48 h.`
               : `Vis côté France, travaille à Genève. ${STATS.totalRooms} chambres meublées dans ${STATS.totalHouses} maisons à Ville-la-Grand, Ambilly et Annemasse, tout inclus dès ${PRICE_SHARED_CHF_FR}/mois, à ${STATS_DISPLAY.fr.distance}. Les disponibilités réelles ci-dessous, les prix en CHF, une réponse sous 48 h.`}
           </p>
+          {/* (Retenue premium, lot 1 — décision Jérôme du 13/10/2026) casse normale, même traitement que la barre mobile. */}
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <a href="#chambres" className="inline-flex items-center gap-2 bg-[#D4A574] text-white px-8 py-4 text-sm uppercase tracking-wider hover:bg-[#44403C] transition-colors">
+            <a href="#chambres" className="inline-flex items-center gap-2 bg-[#D4A574] text-[#1C1917] px-8 py-4 text-sm font-semibold hover:bg-[#44403C] hover:text-white transition-colors">
               {en ? "See available rooms" : "Voir les chambres disponibles"}
               <ArrowRight className="w-4 h-4" />
             </a>
-            <LocalizedLink to="/candidature" className="inline-flex items-center gap-2 border border-[#1C1917] text-[#1C1917] px-8 py-4 text-sm uppercase tracking-wider hover:bg-[#1C1917] hover:text-white transition-colors">
+            <LocalizedLink to="/candidature" className="inline-flex items-center gap-2 border border-[#1C1917] text-[#1C1917] px-8 py-4 text-sm font-semibold hover:bg-[#1C1917] hover:text-white transition-colors">
               {en ? "Apply" : "Candidater"}
             </LocalizedLink>
           </div>
@@ -354,12 +355,13 @@ export function ColocationGenevePage() {
           <p className="text-[#78716C] text-lg mb-10 max-w-xl mx-auto">
             {en ? "Apply in 2 minutes. Reply within 48 h. Move in within 72 h of your first contact if a room is available." : "Candidate en 2 minutes. Réponse sous 48 h. Emménagement en 72 h dès le premier contact si une chambre est disponible."}
           </p>
+          {/* (Retenue premium, lot 1 — GO de Jérôme du 13/10/2026) casse normale, même traitement que le haut de page et la barre. */}
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <LocalizedLink to="/chambres-disponibles" className="inline-flex items-center gap-2 bg-[#D4A574] text-white px-8 py-4 text-sm uppercase tracking-wider hover:bg-[#44403C] transition-colors">
+            <LocalizedLink to="/chambres-disponibles" className="inline-flex items-center gap-2 bg-[#D4A574] text-[#1C1917] px-8 py-4 text-sm font-semibold hover:bg-[#44403C] hover:text-white transition-colors">
               {en ? "See available rooms" : "Voir les chambres disponibles"}
               <ArrowRight className="w-4 h-4" />
             </LocalizedLink>
-            <LocalizedLink to="/candidature" className="inline-flex items-center gap-2 border border-white/30 text-white px-8 py-4 text-sm uppercase tracking-wider hover:bg-white hover:text-[#1C1917] transition-colors">
+            <LocalizedLink to="/candidature" className="inline-flex items-center gap-2 border border-white/30 text-white px-8 py-4 text-sm font-semibold hover:bg-white hover:text-[#1C1917] transition-colors">
               {en ? "Apply" : "Candidater"}
             </LocalizedLink>
           </div>
@@ -388,10 +390,11 @@ export function ColocationGenevePage() {
         </div>
       </section>
 
-      {/* CTA collante mobile */}
+      {/* CTA collante mobile. (Retenue premium, lot 1 — décision Jérôme du 13/10/2026) casse normale, sans promesse dans le
+          libellé ; même style que les barres des pages maisons. */}
       <div className="md:hidden fixed bottom-0 inset-x-0 z-40 bg-white/95 backdrop-blur border-t border-[#E7E5E4] px-4 py-3">
-        <LocalizedLink to="/chambres-disponibles" className="flex items-center justify-center gap-2 w-full bg-[#D4A574] text-white py-3 rounded-lg text-sm font-semibold uppercase tracking-wider">
-          {en ? "Available rooms — reply within 48 h" : "Chambres disponibles — réponse sous 48 h"}
+        <LocalizedLink to="/chambres-disponibles" className="flex items-center justify-center gap-2 w-full bg-[#D4A574] text-[#1C1917] py-3 rounded-lg text-sm font-semibold">
+          {en ? "Available rooms" : "Chambres disponibles"}
           <ArrowRight className="w-4 h-4" />
         </LocalizedLink>
       </div>
