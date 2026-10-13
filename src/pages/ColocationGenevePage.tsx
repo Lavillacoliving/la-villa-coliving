@@ -355,12 +355,13 @@ export function ColocationGenevePage() {
           <p className="text-[#78716C] text-lg mb-10 max-w-xl mx-auto">
             {en ? "Apply in 2 minutes. Reply within 48 h. Move in within 72 h of your first contact if a room is available." : "Candidate en 2 minutes. Réponse sous 48 h. Emménagement en 72 h dès le premier contact si une chambre est disponible."}
           </p>
+          {/* (Retenue premium, lot 1 — GO de Jérôme du 13/10/2026) casse normale, même traitement que le haut de page et la barre. */}
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <LocalizedLink to="/chambres-disponibles" className="inline-flex items-center gap-2 bg-[#D4A574] text-white px-8 py-4 text-sm uppercase tracking-wider hover:bg-[#44403C] transition-colors">
+            <LocalizedLink to="/chambres-disponibles" className="inline-flex items-center gap-2 bg-[#D4A574] text-[#1C1917] px-8 py-4 text-sm font-semibold hover:bg-[#44403C] hover:text-white transition-colors">
               {en ? "See available rooms" : "Voir les chambres disponibles"}
               <ArrowRight className="w-4 h-4" />
             </LocalizedLink>
-            <LocalizedLink to="/candidature" className="inline-flex items-center gap-2 border border-white/30 text-white px-8 py-4 text-sm uppercase tracking-wider hover:bg-white hover:text-[#1C1917] transition-colors">
+            <LocalizedLink to="/candidature" className="inline-flex items-center gap-2 border border-white/30 text-white px-8 py-4 text-sm font-semibold hover:bg-white hover:text-[#1C1917] transition-colors">
               {en ? "Apply" : "Candidater"}
             </LocalizedLink>
           </div>
