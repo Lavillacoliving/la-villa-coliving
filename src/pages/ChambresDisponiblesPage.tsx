@@ -14,8 +14,9 @@ import { WhatsAppButton } from "@/components/WhatsAppButton";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { HOUSES } from "@/data/houses";
 import { ENTITY_HOUSES } from "@/data/entityFacts";
-import { MONTHS_FR, MONTHS_EN } from "@/lib/dates";
+import { MONTHS_FR, MONTHS_EN, formatShortDate } from "@/lib/dates";
 import { responsiveImage } from "@/lib/responsiveImage";
+import { OFFER_TEXTS, isOfferActive, isOfferStarted } from "@/data/offer";
 import { roomGallery } from "@/data/roomPhotos";
 import { STATS, STATS_DISPLAY, PRICE_SHARED_CHF_FR, PRICE_SHARED_CHF_EN } from "@/data/stats";
 import { tarifsFaq } from "@/data/faq/tarifsFaq";
@@ -114,6 +115,19 @@ export function ChambresDisponiblesPage() {
       ? `${soonRooms.length} room${soonRooms.length > 1 ? "s" : ""} opening up by ${MONTHS_EN[lastSoonMonth]}`
       : `${soonRooms.length} chambre${soonRooms.length > 1 ? "s" : ""} se libère${soonRooms.length > 1 ? "nt" : ""} d'ici ${MONTHS_FR[lastSoonMonth]}`)
     : null;
+  // (13/10/2026, brief « conversion Ads » §2.2, D3) « Prochaines entrées » : mêmes données que les cartes (embed puis store,
+  // aucun écart d'hydratation) — « Maintenant » en tête s'il y a une chambre libre, puis les dates distinctes triées, 3 au
+  // maximum, format court (option A). Une information, pas un appel ; masquée s'il n'y a aucune entrée.
+  const nextEntries = all.known
+    ? [
+      ...(availableCount > 0 ? [en ? "Now" : "Maintenant"] : []),
+      ...[...new Set(soonRooms.map((r) => r.available_from).filter((d): d is string => !!d))].sort()
+        .map((d) => formatShortDate(d, L)).filter(Boolean),
+    ].slice(0, 3)
+    : [];
+  const nextEntriesLine = nextEntries.length > 0
+    ? (en ? `Next move-ins: ${nextEntries.join(" · ")}` : `Prochaines entrées : ${nextEntries.join(" · ")}`)
+    : null;
 
   // Visionneuse — une seule à la fois, chargée à la demande.
   const [viewer, setViewer] = useState<{ house: HouseKey; roomNumber: number; index: number } | null>(null);
@@ -179,6 +193,14 @@ export function ChambresDisponiblesPage() {
     ? ["No agency fee, no application fee", "Reply within 48 hours", "Video tour available", `${STATS.totalResidents}+ residents since ${STATS.foundedYear}`, "All inclusive: bills, fibre, cleaning, pool, sauna, gym", STATS_DISPLAY.en.distance]
     : ["0 frais d'agence ni de dossier", "Réponse sous 48 h", "Visite en visio possible", `${STATS.totalResidents}+ résidents depuis ${STATS.foundedYear}`, "Tout inclus : charges, fibre, ménage, piscine, sauna, gym", STATS_DISPLAY.fr.distance];
 
+  // (13/10/2026, §2.2, D3) Pendant l'offre seulement, la caution et son paiement en 2 ou 3 fois, sous les cartes (liste de
+  // réassurance). Rendue APRÈS l'hydratation (la date du lecteur décide) : absente du HTML prérendu, aucun écart #418.
+  if (hydrated && isOfferStarted() && isOfferActive()) {
+    reassurance.splice(1, 0, en
+      ? `Deposit of ${STATS.depositMonths} months' rent excluding charges, ${OFFER_TEXTS.en.depositNote}`
+      : `Caution de ${STATS.depositMonths} mois de loyer hors charges, ${OFFER_TEXTS.fr.depositNote}`);
+  }
+
   const faqItems = [...maisonsFaq[L].slice(0, 2), ...tarifsFaq[L].slice(0, 2)];
 
   const chip = (active: boolean) =>
@@ -219,10 +241,15 @@ export function ChambresDisponiblesPage() {
               {globalAvailabilityLabel(availability, L)}
             </p>
           )}
+          {nextEntriesLine && (
+            <p data-next-entries className="mt-4 text-sm font-medium text-[#44403C]">{nextEntriesLine}</p>
+          )}
+          {/* (13/10/2026, D3) La caution n'ouvre plus la page : elle vit sous les cartes (fiche entité ; pendant l'offre,
+              aussi dans la liste de réassurance). */}
           <p className="mt-3 text-[#57534E] max-w-2xl">
             {en
-              ? `Furnished private rooms in ${STATS.totalHouses} coliving houses on the French side of Geneva, ${STATS_DISPLAY.en.distance}. All inclusive from ${PRICE_SHARED_CHF_EN}/month, deposit of 2 months' rent excluding charges, no agency or application fee.`
-              : `Chambres privées meublées dans ${STATS.totalHouses} maisons de coliving côté France, à ${STATS_DISPLAY.fr.distance}. Tout inclus dès ${PRICE_SHARED_CHF_FR}/mois, caution de 2 mois de loyer hors charges, 0 frais d'agence ni de dossier.`}
+              ? `Furnished private rooms in ${STATS.totalHouses} coliving houses on the French side of Geneva, ${STATS_DISPLAY.en.distance}. All inclusive from ${PRICE_SHARED_CHF_EN}/month, no agency or application fee.`
+              : `Chambres privées meublées dans ${STATS.totalHouses} maisons de coliving côté France, à ${STATS_DISPLAY.fr.distance}. Tout inclus dès ${PRICE_SHARED_CHF_FR}/mois, 0 frais d'agence ni de dossier.`}
           </p>
         </div>
       </section>
@@ -455,8 +482,12 @@ export function ChambresDisponiblesPage() {
               {en ? "All our furnished rooms, French side" : "Toutes nos chambres meublées, côté France"}
             </LocalizedLink>
           </p>
-          {/* (Lot L5, D10) Encart A.8 — le groupe Facebook comme ressource quand aucune date ne convient. */}
-          <FacebookGroupCallout position="chambres_disponibles" className="mt-10 max-w-3xl mx-auto" />
+          {/* (Lot L5, D10) Encart A.8 — le groupe Facebook comme ressource quand aucune date ne convient. (13/10/2026, D2 du
+              brief « conversion Ads ») Seulement s'il n'y a AUCUNE chambre libre ni datée (listes non filtrées : même
+              rendu au prérendu et à l'hydratation) ; garde check:slots : 0 ou 1 encart sur cette page. */}
+          {all.known && candidates.length === 0 && (
+            <FacebookGroupCallout position="chambres_disponibles" className="mt-10 max-w-3xl mx-auto" />
+          )}
         </div>
       </section>
 

@@ -288,17 +288,22 @@ export function countFacebookCallout(html) {
 /**
  * (Lot L5, D10) Encart A.8 : exactement 1 par page de FACEBOOK_CALLOUT_ROUTES (FR + EN), texte identique à la source
  * (phrase + libellé du lien, data-facebook-group-version), 0 ailleurs. L'écran de confirmation de /candidature n'est pas prérendu.
+ * (13/10/2026, D2 du brief « conversion Ads ») FACEBOOK_CALLOUT_OPTIONAL_ROUTES (/chambres-disponibles) : 0 ou 1 encart — la page
+ * ne l'affiche que s'il n'y a aucune chambre libre ni datée ; s'il est affiché, mêmes contrôles de texte au caractère près.
  */
 export function checkFacebookCallouts(m, pages) {
   const failures = [], warnings = [];
   const routes = m.FACEBOOK_CALLOUT_ROUTES ?? [];
-  const scope = new Map();
-  for (const r of routes) { scope.set(routeToFile(r, 'fr'), 'fr'); scope.set(routeToFile(r, 'en'), 'en'); }
-  for (const [f, lang] of scope) {
+  const optionalRoutes = m.FACEBOOK_CALLOUT_OPTIONAL_ROUTES ?? [];
+  const scope = new Map(); // fichier → { lang, optional }
+  for (const r of routes) { scope.set(routeToFile(r, 'fr'), { lang: 'fr', optional: false }); scope.set(routeToFile(r, 'en'), { lang: 'en', optional: false }); }
+  for (const r of optionalRoutes) { scope.set(routeToFile(r, 'fr'), { lang: 'fr', optional: true }); scope.set(routeToFile(r, 'en'), { lang: 'en', optional: true }); }
+  for (const [f, { lang, optional }] of scope) {
     const html = pages.get(f);
     if (html === undefined) { warnings.push(`${f} : page prérendue absente (périmètre de l'encart Facebook A.8 — l'absence d'une page money est un échec de check-entity-facts)`); continue; }
     const n = countFacebookCallout(html);
-    if (n !== 1) { failures.push(`${f} : ${n} encart(s) Facebook A.8 (attendu exactement 1)`); continue; }
+    if (optional && n === 0) continue; // chambres libres ou datées : encart masqué (D2)
+    if (n !== 1) { failures.push(`${f} : ${n} encart(s) Facebook A.8 (attendu ${optional ? '0 ou 1' : 'exactement 1'})`); continue; }
     if (m.FACEBOOK_GROUP_VERSION && !html.includes(`data-facebook-group-version="${m.FACEBOOK_GROUP_VERSION}"`)) failures.push(`${f} : version de l'encart Facebook ≠ ${m.FACEBOOK_GROUP_VERSION}`);
     const text = visibleText(html);
     const c = m.facebookCallout(lang);
@@ -417,7 +422,7 @@ export function runChecks(m, pages, { m1Only = false, live = ANSWER_SLOTS_LIVE }
     const fb = checkFacebookCallouts(m, pages);
     for (const msg of fb.failures) push(failures, 'facebookFailures', msg);
     for (const msg of fb.warnings) warnings.push(msg);
-    stats.facebookPages = (m.FACEBOOK_CALLOUT_ROUTES ?? []).length * 2;
+    stats.facebookPages = ((m.FACEBOOK_CALLOUT_ROUTES ?? []).length + (m.FACEBOOK_CALLOUT_OPTIONAL_ROUTES ?? []).length) * 2;
   }
 
   return { failures, warnings, stats };

@@ -39,7 +39,9 @@ test('A.8 : phrase + libellé du lien, nom du groupe, volume court, « Rejoindre
   assert.ok(fr.sentence.includes(m.FACEBOOK_GROUP.postsPerMonthShort.fr) && en.sentence.includes(m.FACEBOOK_GROUP.postsPerMonthShort.en));
   assert.equal(fr.cta, 'Rejoindre le groupe'); assert.equal(en.cta, 'Join the group');
   assert.match(fr.sentence, /^Pas de chambre libre chez nous/); assert.match(en.sentence, /^No room free with us/);
-  assert.deepEqual([...m.FACEBOOK_CALLOUT_ROUTES], ['/lavilla', '/leloft', '/lelodge', '/chambres-disponibles']);
+  assert.deepEqual([...m.FACEBOOK_CALLOUT_ROUTES], ['/lavilla', '/leloft', '/lelodge']);
+  // (13/10/2026, D2 du brief « conversion Ads ») /chambres-disponibles : encart seulement sans chambre libre ni datée.
+  assert.deepEqual([...m.FACEBOOK_CALLOUT_OPTIONAL_ROUTES], ['/chambres-disponibles']);
 });
 
 test('L5.4 (réduit le 11/10/2026, règles publiées — C3) : « annonces vérifiées » reste interdit, « modéré » autorisé ; A.7/A.8 disent « règles publiées »', () => {
@@ -76,6 +78,19 @@ test('garde : aiguille « facebookMention » résolue, 4 articles ciblés, 0 ou 
   assert.ok(r.failures.some((f) => /tarifs\.html/.test(f) && /hors périmètre/.test(f)), 'encart hors périmètre = échec');
   assert.ok(!r.failures.some((f) => /^lavilla\.html|^en-lavilla\.html/.test(f)), 'pages conformes sans échec');
   assert.ok(r.warnings.some((f) => /lelodge\.html.*absente/.test(f)), 'page prérendue absente = avertissement (échec déjà porté par check-entity-facts)');
+});
+
+test('D2 (13/10/2026) : /chambres-disponibles accepte 0 ou 1 encart ; s\'il est affiché, texte vérifié au caractère près', () => {
+  const asideOf = (lang, sentence = m.facebookCallout(lang).sentence) =>
+    `<aside id="facebook-group" data-facebook-group-version="${m.FACEBOOK_GROUP_VERSION}"><p>${sentence}</p><a href="${m.FACEBOOK_GROUP.url}">${m.facebookCallout(lang).cta}</a></aside>`;
+  const page = (inner) => `<html><body>${inner}</body></html>`;
+  const base = [['lavilla.html', page(asideOf('fr'))], ['en-lavilla.html', page(asideOf('en'))], ['leloft.html', page(asideOf('fr'))],
+    ['en-leloft.html', page(asideOf('en'))], ['lelodge.html', page(asideOf('fr'))], ['en-lelodge.html', page(asideOf('en'))]];
+  const run = (fr, en) => checkFacebookCallouts(m, new Map([...base, ['chambres-disponibles.html', page(fr)], ['en-chambres-disponibles.html', page(en)]]));
+  assert.deepEqual(run('', '').failures, [], 'chambres libres ou datées : encart masqué, garde verte');
+  assert.deepEqual(run(asideOf('fr'), asideOf('en')).failures, [], 'aucune chambre : encart affiché, conforme');
+  assert.ok(run(asideOf('fr', 'Texte modifié'), '').failures.some((f) => /^chambres-disponibles\.html : texte/.test(f)), 'texte altéré = échec');
+  assert.ok(run(asideOf('fr').repeat(2), '').failures.some((f) => /^chambres-disponibles\.html : 2 encart/.test(f) && /0 ou 1/.test(f)), 'deux encarts = échec');
 });
 
 test('visibleText : la phrase A.8 est retrouvée telle quelle dans un HTML prérendu (apostrophes, insécables)', () => {
