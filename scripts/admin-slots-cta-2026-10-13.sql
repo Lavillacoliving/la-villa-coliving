@@ -1,5 +1,6 @@
 -- ============================================================================
 -- Créneaux nommés des articles admin et phrases d'appel (brief de Jérôme du 13/10/2026, décisions du 13/10) : lot A (56 phrases d'appel + 4 corrections de même cause), lot B (6 articles FR/EN), lot C (preuves sociales D3), « WiFi » à bord retiré (3 articles)
+-- ÉTAT : APPLIQUÉ en base le 13/10/2026 de 17:30 à 17:40 (heure de Paris), en 9 transactions atomiques par article (sauvegarde prise juste avant, à 17:29) ; contenu des 62 colonnes vérifié identique à l'attendu (MD5 puis relecture REST octet par octet). Ne plus régénérer ce fichier : les anciens textes n'existent plus en base. Retour arrière : scripts/backups/admin-slots-cta-2026-10-13.retour-arriere.sql
 -- Généré le 2026-10-13T15:22:16.460Z par scripts/build-slots-sql.mjs depuis scripts/admin-slots-cta.edits.mjs
 --   · source unique (answerSlots.ts, entityFacts.ts, stats.ts) ; fragments copiés de la base le 13/10/2026 ; rapport RAPPORT_Reconnaissance_Creneaux_Admin_CTA_2026-10-13.md
 --   · ancres vérifiées sur le contenu vivant de blog_posts (REST anon, lecture seule) le 2026-10-13T15:22:16.452Z : exactement 1 occurrence de chaque ancien texte, nouveau texte absent
