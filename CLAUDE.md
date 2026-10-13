@@ -18,7 +18,8 @@ Si `../lavilla-docs/` est absent : `git clone git@github.com:Lavillacoliving/lav
 - CI stricte : valider avec `tsc -b` (pas `--noEmit`) avant commit ; build complet local = `npm run build:local`
 - `git pull --rebase` avant tout push (le bot prerender committe en parallèle)
 - **Push sur `main` = déploiement production immédiat** (Vercel). Jamais sans GO explicite de Jérôme.
-- 2 builds Vercel back-to-back après chaque push : le 2ᵉ (commit `auto-prerender:`) fait foi pour le SEO
+- La production se déploie au commit du bot `auto-prerender:` (ou au commit vide qu'il pousse) : Vercel ignore le build du commit poussé (« Ignored Build Step », constat du 13/10/2026) — compter ~20 min entre la fusion et la mise en ligne, gardes CI comprises
+- `npm run build` garde les JS/CSS de la version précédente (`scripts/keep-previous-assets.mjs`, manifeste `/lvc-assets.json`, D6 du 13/10/2026) : une seule version, jamais bloquant ; retour arrière = retirer l'étape du script `build`
 - Sessions concurrentes : travailler sur des branches `feat/*`, ne jamais éditer un checkout sans vérifier `git status`
 
 ## Garde-fous acquisition & autorité (Brief n°2 — 21/08/2026)
