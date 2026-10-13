@@ -18,6 +18,9 @@
  *    minutes en train », paragraphe « 25 minutes jusqu'à Sécheron… voiture 40-60 minutes »). D-B2 : « 18 % » ET « profil
  *    type » retirés, titre neutre. D-B3 : « 29 chambres ».
  *  - Lot C — D3 : « des centaines de frontaliers » → « plus de 100 résidents depuis 2021 ».
+ *  - Décisions complémentaires du 13/10/2026 : « WiFi » à bord du Léman Express (non vérifié) supprimé dans les 3 articles
+ *    qui l'affirmaient (organisations-internationales, cout-transport, guide-ressources), « 10-15 minutes à pied du Palais
+ *    des Nations » conservé (vérifié par Jérôme) ; cible EN de quartiers-annemasse écrite en /en explicite.
  *
  * Règles (identiques à scripts/l1-slots.edits.mjs) : `find` copié AU CARACTÈRE PRÈS depuis la base (instantané du
  * 13/10/2026, espaces insécables U+00A0 écrites `${NB}`) ; `replace` = fonction de la source unique `m` : aucun prix,
@@ -42,17 +45,24 @@ const CTA_HEAD = Object.freeze({
   en: new RegExp(String.raw`^👉 \*\*Looking for (${LINK})(?: or (${LINK}))?\?\*\*`),
 });
 
+/**
+ * Lien d'un texte EN dont la cible interne n'a pas de préfixe /en → cible /en explicite. Le rendu des articles localise
+ * déjà les liens (LocalizedLink : la page publiée pointait vers /en/…) ; on l'écrit en clair dans le source, comme le
+ * correctif L1 des pieds d'article EN (décision Jérôme du 13/10/2026, quartiers-annemasse). Seule ligne concernée.
+ */
+export const enTarget = (link) => link.replace(/\]\((\/(?!en\/)[^)]*)\)$/, '](/en$1)');
+
 /** « [voir nos chambres…](url) » → « [Voir nos chambres…](url) ». */
 export const capitalizeAnchor = (link) => link.replace(/^\[(.)/, (_, c) => `[${c.toUpperCase()}`);
 
 /**
  * Lot A (A.1) : question fixe ; liens sortis de la question, placés en fin de paragraphe après « → », même ancre, même
- * URL, majuscule initiale. Le reste de la ligne est INCHANGÉ (aucune valeur réécrite). Lève si le gabarit est inconnu.
+ * URL (en EN, préfixe /en explicite : voir enTarget), majuscule initiale. Le reste de la ligne est INCHANGÉ (aucune valeur réécrite). Lève si le gabarit est inconnu.
  */
 export function moveLinksOut(line, lang) {
   const head = CTA_HEAD[lang]?.exec(line);
   if (!head) throw new Error(`phrase d'appel 👉 non reconnue (${lang}) : ${line.slice(0, 80)}`);
-  const links = [head[1], head[2]].filter(Boolean).map(capitalizeAnchor).join(' · ');
+  const links = [head[1], head[2]].filter(Boolean).map(capitalizeAnchor).map((l) => (lang === 'en' ? enTarget(l) : l)).join(' · ');
   const rest = line.slice(head[0].length).replace(/\s+$/, '');
   return `👉 **${CTA_QUESTION[lang]}**${rest} → ${links}`;
 }
@@ -176,7 +186,11 @@ This profile has specific needs that coliving naturally fulfills.` },
   B6_rel_fr: { slug: 'choc-culturel-franco-suisse-expatrie-geneve', lang: 'fr', find: `que tes colocataires soient suisses, français ou d'une toute autre nationalité.` },
   B6_rel_en: { slug: 'choc-culturel-franco-suisse-expatrie-geneve', lang: 'en', find: `whether your housemates are Swiss, French or from an entirely different nationality.` },
   B6_concl_en: { slug: 'choc-culturel-franco-suisse-expatrie-geneve', lang: 'en', find: `in a welcoming, open setting.` },
-  B6_concl_fr: { slug: 'choc-culturel-franco-suisse-expatrie-geneve', lang: 'fr', find: `29 résidents de toutes nationalités dans 3 maisons côté France` }
+  B6_concl_fr: { slug: 'choc-culturel-franco-suisse-expatrie-geneve', lang: 'fr', find: `29 résidents de toutes nationalités dans 3 maisons côté France` },
+  W_cout_fr: { slug: 'cout-transport-frontalier-geneve-2026', lang: 'fr', find: `les rames FLIRT du Léman Express sont modernes, climatisées, avec WiFi et prises électriques.` },
+  W_cout_en: { slug: 'cout-transport-frontalier-geneve-2026', lang: 'en', find: `Léman Express FLIRT trainsets are modern, air-conditioned, with WiFi and power outlets.` },
+  W_guide_fr: { slug: 'guide-ressources-frontalier-geneve', lang: 'fr', find: `dans des rames modernes climatisées avec **WiFi et prises électriques**` },
+  W_guide_en: { slug: 'guide-ressources-frontalier-geneve', lang: 'en', find: `in modern air-conditioned units with **WiFi and power sockets**` }
 };
 
 // ── Valeurs de MARCHÉ citées par les articles : ce ne sont PAS des faits La Villa ─────────────────────────────────────
@@ -240,11 +254,12 @@ export const POST_STATE_WATCH = [
   /20-26 ?%/,
   /400-600 CHF/,
   /35-45 min/i,
+  /(rames|trainsets|units|en train|by train)[^.]{0,90}WiFi/i,
 ];
 
 export function sqlDoc() {
   return {
-    lot: "Créneaux nommés des articles admin et phrases d'appel (brief de Jérôme du 13/10/2026, décisions du 13/10) : lot A (56 phrases d'appel + 4 corrections de même cause), lot B (6 articles FR/EN), lot C (preuves sociales D3)",
+    lot: "Créneaux nommés des articles admin et phrases d'appel (brief de Jérôme du 13/10/2026, décisions du 13/10) : lot A (56 phrases d'appel + 4 corrections de même cause), lot B (6 articles FR/EN), lot C (preuves sociales D3), « WiFi » à bord retiré (3 articles)",
     sources: 'source unique (answerSlots.ts, entityFacts.ts, stats.ts) ; fragments copiés de la base le 13/10/2026 ; rapport RAPPORT_Reconnaissance_Creneaux_Admin_CTA_2026-10-13.md',
     apply: "Indépendant du code (textes d'articles) ; à appliquer AVANT de fusionner la garde (règle 7 de check:slots), puis relancer le prérendu.",
     encoding: 'Fichier UTF-8 avec insécables U+00A0 — ne pas normaliser.',
@@ -278,7 +293,7 @@ export function buildEdits(m) {
   }
   out.push(e('A_trajet_fr', 'cta', "« Découvre la [le guide…] » → « Découvre [le guide…] » (A.1)", (f) => f.replace('Découvre la [', 'Découvre [')));
   out.push(e('A_guide_fr', 'cta', "« Découvre notre [chambres…] » → « Découvre nos [chambres…] » (même cause : doublon de pied d'article du lot SEO 5)", (f) => f.replace('Découvre notre [', 'Découvre nos [')));
-  out.push(e('A_guide_en', 'cta', '« Discover our [see our rooms…] » → « [See our rooms…] » ; cibles FR → EN comme le correctif L1 des pieds EN (même cause)',
+  out.push(e('A_guide_en', 'cta', '« Discover our [see our rooms…] » → « [See our rooms…] » (même cause) ; cibles écrites en /en explicite comme L1 (le rendu les localisait déjà)',
     '[See our rooms on the French side](/en/colocation-geneve) and [our all-inclusive rates](/en/tarifs)'));
   out.push(e('A_dossier_fr', 'cta', "« notre [chambres…] accepte » → « nos [chambres…] sont ouvertes » (D-A3)", (f) => f.replace('notre [', 'nos [').replace('accepte les frontaliers', 'sont ouvertes aux frontaliers')));
 
@@ -334,14 +349,20 @@ export function buildEdits(m) {
   }
   out.push(e('B5_surcout_fr', 'fix', 'B5a bis : écart coliving − studio recalculé', `Le surcoût d'environ ${premium.low} à ${premium.high} CHF par mois`));
   out.push(e('B5_surcout_en', 'fix', 'B5a bis: premium recalculated', `The premium of roughly CHF ${premium.low} to ${premium.high} a month`));
-  out.push(e('B5_train_fr', 'travel', 'D-B1 : durées non mesurées retirées (D1)', "Depuis 2019, vivre côté France et travailler aux Nations, c'est un trajet en train, confortablement assis, WiFi inclus."));
-  out.push(e('B5_train_en', 'travel', 'D-B1: unmeasured durations removed (D1)', 'Since 2019, living on the French side and working at the Nations means a train commute, comfortably seated, WiFi included.'));
+  out.push(e('B5_train_fr', 'travel', 'D-B1 : durées non mesurées retirées (D1) ; « WiFi inclus » retiré (non vérifié)', "Depuis 2019, vivre côté France et travailler aux Nations, c'est un trajet en train, confortablement assis."));
+  out.push(e('B5_train_en', 'travel', 'D-B1: unmeasured durations removed (D1); « WiFi included » removed (unverified)', 'Since 2019, living on the French side and working at the Nations means a train commute, comfortably seated.'));
   out.push(e('B5_secheron_fr', 'travel', "D-B1 : paragraphe « 25 minutes jusqu'à Sécheron… voiture 40-60 minutes » retiré", (f) => f.slice(0, f.indexOf('\n\n'))));
   out.push(e('B5_secheron_en', 'travel', 'D-B1: paragraph « 25 minutes to Sécheron… driving 40-60 minutes » removed', (f) => f.slice(0, f.indexOf('\n\n'))));
   out.push(e('B5_profil_fr', 'proof', 'D-B2 : « 18 % » et « profil type » retirés, titre neutre',
     '## Ce dont un expat OI a besoin en arrivant\n\nUn expat OI qui arrive à Genève a des besoins spécifiques que le coliving remplit naturellement.'));
   out.push(e('B5_profil_en', 'proof', 'D-B2: « 18% » and « typical profile » removed, neutral heading',
     '## What an IO expat needs on arrival\n\nAn IO expat arriving in Geneva has specific needs that coliving naturally fulfills.'));
+
+  // ── « WiFi » à bord du Léman Express : non vérifié, supprimé partout (décision de Jérôme du 13/10/2026) ──────────────
+  out.push(e('W_cout_fr', 'fact', '« WiFi » à bord du Léman Express retiré (non vérifié)', 'les rames FLIRT du Léman Express sont modernes, climatisées, avec des prises électriques.'));
+  out.push(e('W_cout_en', 'fact', '« WiFi » on board the Léman Express removed (unverified)', 'Léman Express FLIRT trainsets are modern, air-conditioned, with power outlets.'));
+  out.push(e('W_guide_fr', 'fact', '« WiFi » à bord du Léman Express retiré (non vérifié)', 'dans des rames modernes climatisées avec des **prises électriques**'));
+  out.push(e('W_guide_en', 'fact', '« WiFi » on board the Léman Express removed (unverified)', 'in modern air-conditioned units with **power sockets**'));
 
   // ── Lot B6 — choc-culturel-franco-suisse-expatrie-geneve ─────────────────────────────────────────────────────────────
   out.push(e('B6_rel_fr', 'slot', 'B6 : créneau nommé — relations sociales (reprise du comparatif publié)', (f) =>

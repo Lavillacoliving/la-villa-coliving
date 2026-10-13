@@ -1,6 +1,6 @@
 # Créneaux admin et phrases d'appel — aperçu des substitutions SQL (13/10/2026)
 
-Généré le 2026-10-13T15:06:18.238Z par `scripts/build-slots-sql.mjs` · ancres vérifiées sur le contenu vivant de blog_posts (REST anon, lecture seule) le 2026-10-13T15:06:18.232Z · 88 modifications sur 30 articles · SQL : `scripts/admin-slots-cta-2026-10-13.sql`.
+Généré le 2026-10-13T15:22:16.460Z par `scripts/build-slots-sql.mjs` · ancres vérifiées sur le contenu vivant de blog_posts (REST anon, lecture seule) le 2026-10-13T15:22:16.452Z · 92 modifications sur 31 articles · SQL : `scripts/admin-slots-cta-2026-10-13.sql`.
 
 Légende : « Avant » = texte en base au 13/10/2026 ; « Après » = texte proposé.
 
@@ -18,13 +18,14 @@ Légende : « Avant » = texte en base au 13/10/2026 ; « Après » = texte prop
 | `coliving-annemasse-geneve-frontaliers-avantages` | 1 (cta) | 1 (cta) | 2026-10-10T08:05:59.012724+00:00 | 12585 / 11718 |
 | `colocation-annemasse-ville-la-grand-ambilly` | 1 (cta) | 1 (cta) | 2026-10-12T10:15:00.097119+00:00 | 8641 / 7711 |
 | `cout-de-la-vie-suisse-france-frontalier-2026` | 1 (cta) | 1 (cta) | 2026-10-10T08:07:50.44606+00:00 | 11269 / 9974 |
+| `cout-transport-frontalier-geneve-2026` | 1 (fact) | 1 (fact) | 2026-10-12T08:42:40.495999+00:00 | 9123 / 8499 |
 | `declaration-impots-frontalier-2026` | 1 (cta) | 1 (cta) | 2026-10-09T14:33:23.72146+00:00 | 5474 / 5001 |
 | `demenager-geneve-frontalier-checklist` | 1 (cta) | 1 (cta) | 2026-10-09T14:33:23.72146+00:00 | 9257 / 7767 |
 | `dossier-location-frontalier-suisse-france` | 2 (cta, slot) | 1 (slot) | 2026-10-11T09:34:30.571866+00:00 | 8844 / 8174 |
 | `ecole-internationale-geneve-frontalier-ou-habiter` | 1 (cta) | 1 (cta) | 2026-10-10T08:07:50.44606+00:00 | 11800 / 9981 |
 | `fiscalite-frontalier-geneve-impots-2026` | 3 (cta, slot, fix) | 3 (cta, slot, fix) | 2026-10-12T08:42:40.495999+00:00 | 10590 / 9938 |
 | `grand-geneve-2026-nouveautes-frontaliers` | 1 (cta) | 1 (cta) | 2026-10-09T14:33:23.72146+00:00 | 8651 / 7477 |
-| `guide-ressources-frontalier-geneve` | 2 (cta, cta) | 2 (cta, cta) | 2026-10-12T08:44:08.896536+00:00 | 44655 / 40817 |
+| `guide-ressources-frontalier-geneve` | 3 (cta, cta, fact) | 3 (cta, cta, fact) | 2026-10-12T08:44:08.896536+00:00 | 44655 / 40817 |
 | `living-in-france-working-in-geneva` | 1 (cta) | 1 (cta) | 2026-10-10T08:07:50.44606+00:00 | 15140 / 13345 |
 | `optimiser-espace-coliving-productivite-bien-etre` | 1 (cta) | 1 (cta) | 2026-10-09T14:33:23.72146+00:00 | 3940 / 3551 |
 | `organisations-internationales-geneve-ou-habiter` | 6 (cta, slot, fix, travel, travel, proof) | 6 (cta, slot, fix, travel, travel, proof) | 2026-10-12T08:42:40.495999+00:00 | 8077 / 7403 |
@@ -830,7 +831,7 @@ Occurrences de l'ancre en base : 1 (attendu 1) · nouveau texte déjà présent 
 **Après**
 
 ````text
-👉 **Looking for a place on the French side?** At **La Villa Coliving** (Le Lodge in Annemasse, La Villa in Ville-la-Grand, Le Loft in Ambilly), a furnished all-inclusive room costs from **CHF 1,370/month** — utilities, fiber and cleaning included, no application fee. → [Shared housing in Annemasse](/annemasse-colocation)
+👉 **Looking for a place on the French side?** At **La Villa Coliving** (Le Lodge in Annemasse, La Villa in Ville-la-Grand, Le Loft in Ambilly), a furnished all-inclusive room costs from **CHF 1,370/month** — utilities, fiber and cleaning included, no application fee. → [Shared housing in Annemasse](/en/annemasse-colocation)
 ````
 
 ### 45. `quitter-son-logement-guide-pratique` (fr) · cta
@@ -1087,7 +1088,7 @@ Découvre nos [chambres en colocation côté France](/colocation-geneve)
 
 ### 59. `guide-ressources-frontalier-geneve` (en) · cta
 
-« Discover our [see our rooms…] » → « [See our rooms…] » ; cibles FR → EN comme le correctif L1 des pieds EN (même cause)
+« Discover our [see our rooms…] » → « [See our rooms…] » (même cause) ; cibles écrites en /en explicite comme L1 (le rendu les localisait déjà)
 
 Occurrences de l'ancre en base : 1 (attendu 1) · nouveau texte déjà présent : 0 (attendu 0) · garde « nouveau absent » : oui
 
@@ -1475,7 +1476,7 @@ The premium of roughly CHF 500 to 800 a month
 
 ### 79. `organisations-internationales-geneve-ou-habiter` (fr) · travel
 
-D-B1 : durées non mesurées retirées (D1)
+D-B1 : durées non mesurées retirées (D1) ; « WiFi inclus » retiré (non vérifié)
 
 Occurrences de l'ancre en base : 1 (attendu 1) · nouveau texte déjà présent : 0 (attendu 0) · garde « nouveau absent » : oui
 
@@ -1488,12 +1489,12 @@ Avant 2019, vivre côté France et travailler aux Nations signifiait 1h-1h30 de 
 **Après**
 
 ````text
-Depuis 2019, vivre côté France et travailler aux Nations, c'est un trajet en train, confortablement assis, WiFi inclus.
+Depuis 2019, vivre côté France et travailler aux Nations, c'est un trajet en train, confortablement assis.
 ````
 
 ### 80. `organisations-internationales-geneve-ou-habiter` (en) · travel
 
-D-B1: unmeasured durations removed (D1)
+D-B1: unmeasured durations removed (D1); « WiFi included » removed (unverified)
 
 Occurrences de l'ancre en base : 1 (attendu 1) · nouveau texte déjà présent : 0 (attendu 0) · garde « nouveau absent » : oui
 
@@ -1506,7 +1507,7 @@ Before 2019, living on the French side and working at the Nations meant 1h-1h30 
 **Après**
 
 ````text
-Since 2019, living on the French side and working at the Nations means a train commute, comfortably seated, WiFi included.
+Since 2019, living on the French side and working at the Nations means a train commute, comfortably seated.
 ````
 
 ### 81. `organisations-internationales-geneve-ou-habiter` (fr) · travel
@@ -1597,7 +1598,79 @@ This profile has specific needs that coliving naturally fulfills.
 An IO expat arriving in Geneva has specific needs that coliving naturally fulfills.
 ````
 
-### 85. `choc-culturel-franco-suisse-expatrie-geneve` (fr) · slot
+### 85. `cout-transport-frontalier-geneve-2026` (fr) · fact
+
+« WiFi » à bord du Léman Express retiré (non vérifié)
+
+Occurrences de l'ancre en base : 1 (attendu 1) · nouveau texte déjà présent : 0 (attendu 0) · garde « nouveau absent » : oui
+
+**Avant**
+
+````text
+les rames FLIRT du Léman Express sont modernes, climatisées, avec WiFi et prises électriques.
+````
+
+**Après**
+
+````text
+les rames FLIRT du Léman Express sont modernes, climatisées, avec des prises électriques.
+````
+
+### 86. `cout-transport-frontalier-geneve-2026` (en) · fact
+
+« WiFi » on board the Léman Express removed (unverified)
+
+Occurrences de l'ancre en base : 1 (attendu 1) · nouveau texte déjà présent : 0 (attendu 0) · garde « nouveau absent » : oui
+
+**Avant**
+
+````text
+Léman Express FLIRT trainsets are modern, air-conditioned, with WiFi and power outlets.
+````
+
+**Après**
+
+````text
+Léman Express FLIRT trainsets are modern, air-conditioned, with power outlets.
+````
+
+### 87. `guide-ressources-frontalier-geneve` (fr) · fact
+
+« WiFi » à bord du Léman Express retiré (non vérifié)
+
+Occurrences de l'ancre en base : 1 (attendu 1) · nouveau texte déjà présent : 0 (attendu 0) · garde « nouveau absent » : oui
+
+**Avant**
+
+````text
+dans des rames modernes climatisées avec **WiFi et prises électriques**
+````
+
+**Après**
+
+````text
+dans des rames modernes climatisées avec des **prises électriques**
+````
+
+### 88. `guide-ressources-frontalier-geneve` (en) · fact
+
+« WiFi » on board the Léman Express removed (unverified)
+
+Occurrences de l'ancre en base : 1 (attendu 1) · nouveau texte déjà présent : 0 (attendu 0) · garde « nouveau absent » : oui
+
+**Avant**
+
+````text
+in modern air-conditioned units with **WiFi and power sockets**
+````
+
+**Après**
+
+````text
+in modern air-conditioned units with **power sockets**
+````
+
+### 89. `choc-culturel-franco-suisse-expatrie-geneve` (fr) · slot
 
 B6 : créneau nommé — relations sociales (reprise du comparatif publié)
 
@@ -1615,7 +1688,7 @@ que tes colocataires soient suisses, français ou d'une toute autre nationalité
 que tes colocataires soient suisses, français ou d'une toute autre nationalité. Chez La Villa Coliving, par exemple, chaque maison réunit 7 à 12 personnes qui travaillent à Genève, autour d'une cuisine, d'un jardin et d'une piscine partagés ; le yoga, le fitness et la pizza party du mois créent les premières occasions.
 ````
 
-### 86. `choc-culturel-franco-suisse-expatrie-geneve` (en) · slot
+### 90. `choc-culturel-franco-suisse-expatrie-geneve` (en) · slot
 
 B6: named slot — social relationships (as in the published comparison)
 
@@ -1633,7 +1706,7 @@ whether your housemates are Swiss, French or from an entirely different national
 whether your housemates are Swiss, French or from an entirely different nationality. At La Villa Coliving, for example, each house brings together 7 to 12 people who work in Geneva, around a shared kitchen, garden and pool; yoga, fitness classes and the monthly pizza party create the first occasions.
 ````
 
-### 87. `choc-culturel-franco-suisse-expatrie-geneve` (en) · slot
+### 91. `choc-culturel-franco-suisse-expatrie-geneve` (en) · slot
 
 B6: EN conclusion (parity with FR)
 
@@ -1651,7 +1724,7 @@ in a welcoming, open setting.
 in a welcoming, open setting. That's what La Villa Coliving offers: 29 rooms in three houses on the French side, 20 min from Geneva Eaux-Vives by Léman Express, door to door.
 ````
 
-### 88. `choc-culturel-franco-suisse-expatrie-geneve` (fr) · fix
+### 92. `choc-culturel-franco-suisse-expatrie-geneve` (fr) · fix
 
 D-B3 : « 29 résidents de toutes nationalités » → « 29 chambres »
 

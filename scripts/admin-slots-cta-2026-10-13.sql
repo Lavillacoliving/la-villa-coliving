@@ -1,12 +1,12 @@
 -- ============================================================================
--- Créneaux nommés des articles admin et phrases d'appel (brief de Jérôme du 13/10/2026, décisions du 13/10) : lot A (56 phrases d'appel + 4 corrections de même cause), lot B (6 articles FR/EN), lot C (preuves sociales D3)
--- Généré le 2026-10-13T15:06:18.238Z par scripts/build-slots-sql.mjs depuis scripts/admin-slots-cta.edits.mjs
+-- Créneaux nommés des articles admin et phrases d'appel (brief de Jérôme du 13/10/2026, décisions du 13/10) : lot A (56 phrases d'appel + 4 corrections de même cause), lot B (6 articles FR/EN), lot C (preuves sociales D3), « WiFi » à bord retiré (3 articles)
+-- Généré le 2026-10-13T15:22:16.460Z par scripts/build-slots-sql.mjs depuis scripts/admin-slots-cta.edits.mjs
 --   · source unique (answerSlots.ts, entityFacts.ts, stats.ts) ; fragments copiés de la base le 13/10/2026 ; rapport RAPPORT_Reconnaissance_Creneaux_Admin_CTA_2026-10-13.md
---   · ancres vérifiées sur le contenu vivant de blog_posts (REST anon, lecture seule) le 2026-10-13T15:06:18.232Z : exactement 1 occurrence de chaque ancien texte, nouveau texte absent
+--   · ancres vérifiées sur le contenu vivant de blog_posts (REST anon, lecture seule) le 2026-10-13T15:22:16.452Z : exactement 1 occurrence de chaque ancien texte, nouveau texte absent
 -- Indépendant du code (textes d'articles) ; à appliquer AVANT de fusionner la garde (règle 7 de check:slots), puis relancer le prérendu.
 -- Idempotent : chaque UPDATE est gardé par position(ancien) > 0 [AND position(nouveau) = 0 quand le nouveau texte n'est pas un fragment de l'ancien] — relancer le fichier est sans effet.
 -- Fichier UTF-8 avec insécables U+00A0 — ne pas normaliser.
--- 88 modifications · 30 articles · état en base à la génération (updated_at · longueur fr / en) :
+-- 92 modifications · 31 articles · état en base à la génération (updated_at · longueur fr / en) :
 --   allocations-familiales-frontalier-geneve-2026 · 2026-10-10T08:07:50.44606+00:00 · 11442 / 9839
 --   arnaques-logement-frontalier-geneve-eviter · 2026-10-12T08:44:08.896536+00:00 · 12289 / 11121
 --   assurance-sante-frontalier-lamal-cmu-budget · 2026-10-12T08:42:40.495999+00:00 · 9104 / 8567
@@ -17,6 +17,7 @@
 --   coliving-annemasse-geneve-frontaliers-avantages · 2026-10-10T08:05:59.012724+00:00 · 12585 / 11718
 --   colocation-annemasse-ville-la-grand-ambilly · 2026-10-12T10:15:00.097119+00:00 · 8641 / 7711
 --   cout-de-la-vie-suisse-france-frontalier-2026 · 2026-10-10T08:07:50.44606+00:00 · 11269 / 9974
+--   cout-transport-frontalier-geneve-2026 · 2026-10-12T08:42:40.495999+00:00 · 9123 / 8499
 --   declaration-impots-frontalier-2026 · 2026-10-09T14:33:23.72146+00:00 · 5474 / 5001
 --   demenager-geneve-frontalier-checklist · 2026-10-09T14:33:23.72146+00:00 · 9257 / 7767
 --   dossier-location-frontalier-suisse-france · 2026-10-11T09:34:30.571866+00:00 · 8844 / 8174
@@ -41,7 +42,7 @@
 
 BEGIN;
 
--- [1/88] allocations-familiales-frontalier-geneve-2026 (fr) · cta · phrase d'appel 👉 : question fixe, lien sorti de la question (A.1, D-A2)
+-- [1/92] allocations-familiales-frontalier-geneve-2026 (fr) · cta · phrase d'appel 👉 : question fixe, lien sorti de la question (A.1, D-A2)
 UPDATE blog_posts
 SET content_fr = replace(content_fr, $f$👉 **Tu cherches une [La Villa Coliving, côté France](/colocation-geneve) ?** À **La Villa Coliving** (Ville-la-Grand, Ambilly et Annemasse), une chambre meublée tout inclus coûte à partir de **1 370 CHF/mois** — charges, fibre et ménage compris, sans frais de dossier. Genève-Eaux-Vives en 7 min de Léman Express depuis la gare d'Annemasse — 18 à 24 min porte-à-porte selon la maison, 30 min jusqu'au centre.$f$, $r$👉 **Tu cherches où te loger côté France ?** À **La Villa Coliving** (Ville-la-Grand, Ambilly et Annemasse), une chambre meublée tout inclus coûte à partir de **1 370 CHF/mois** — charges, fibre et ménage compris, sans frais de dossier. Genève-Eaux-Vives en 7 min de Léman Express depuis la gare d'Annemasse — 18 à 24 min porte-à-porte selon la maison, 30 min jusqu'au centre. → [La Villa Coliving, côté France](/colocation-geneve)$r$),
     updated_at = now()
@@ -49,7 +50,7 @@ WHERE slug = 'allocations-familiales-frontalier-geneve-2026'
   AND position($f$👉 **Tu cherches une [La Villa Coliving, côté France](/colocation-geneve) ?** À **La Villa Coliving** (Ville-la-Grand, Ambilly et Annemasse), une chambre meublée tout inclus coûte à partir de **1 370 CHF/mois** — charges, fibre et ménage compris, sans frais de dossier. Genève-Eaux-Vives en 7 min de Léman Express depuis la gare d'Annemasse — 18 à 24 min porte-à-porte selon la maison, 30 min jusqu'au centre.$f$ IN content_fr) > 0
   AND position($r$👉 **Tu cherches où te loger côté France ?** À **La Villa Coliving** (Ville-la-Grand, Ambilly et Annemasse), une chambre meublée tout inclus coûte à partir de **1 370 CHF/mois** — charges, fibre et ménage compris, sans frais de dossier. Genève-Eaux-Vives en 7 min de Léman Express depuis la gare d'Annemasse — 18 à 24 min porte-à-porte selon la maison, 30 min jusqu'au centre. → [La Villa Coliving, côté France](/colocation-geneve)$r$ IN content_fr) = 0;
 
--- [2/88] allocations-familiales-frontalier-geneve-2026 (en) · cta · phrase d'appel 👉 : question fixe, lien sorti de la question (A.1, D-A2)
+-- [2/92] allocations-familiales-frontalier-geneve-2026 (en) · cta · phrase d'appel 👉 : question fixe, lien sorti de la question (A.1, D-A2)
 UPDATE blog_posts
 SET content_en = replace(content_en, $f$👉 **Looking for [La Villa Coliving, French side](/en/colocation-geneve)?** At **La Villa Coliving** (Ville-la-Grand, Ambilly and Annemasse), a fully furnished all-inclusive room costs from **CHF 1,370/month** — utilities, fiber and cleaning included, no application fee. Geneva Eaux-Vives in 7 minutes by Léman Express from Annemasse station — 18 to 24 minutes door to door depending on the house, 30 minutes to the city centre.$f$, $r$👉 **Looking for a place on the French side?** At **La Villa Coliving** (Ville-la-Grand, Ambilly and Annemasse), a fully furnished all-inclusive room costs from **CHF 1,370/month** — utilities, fiber and cleaning included, no application fee. Geneva Eaux-Vives in 7 minutes by Léman Express from Annemasse station — 18 to 24 minutes door to door depending on the house, 30 minutes to the city centre. → [La Villa Coliving, French side](/en/colocation-geneve)$r$),
     updated_at = now()
@@ -57,7 +58,7 @@ WHERE slug = 'allocations-familiales-frontalier-geneve-2026'
   AND position($f$👉 **Looking for [La Villa Coliving, French side](/en/colocation-geneve)?** At **La Villa Coliving** (Ville-la-Grand, Ambilly and Annemasse), a fully furnished all-inclusive room costs from **CHF 1,370/month** — utilities, fiber and cleaning included, no application fee. Geneva Eaux-Vives in 7 minutes by Léman Express from Annemasse station — 18 to 24 minutes door to door depending on the house, 30 minutes to the city centre.$f$ IN content_en) > 0
   AND position($r$👉 **Looking for a place on the French side?** At **La Villa Coliving** (Ville-la-Grand, Ambilly and Annemasse), a fully furnished all-inclusive room costs from **CHF 1,370/month** — utilities, fiber and cleaning included, no application fee. Geneva Eaux-Vives in 7 minutes by Léman Express from Annemasse station — 18 to 24 minutes door to door depending on the house, 30 minutes to the city centre. → [La Villa Coliving, French side](/en/colocation-geneve)$r$ IN content_en) = 0;
 
--- [3/88] arnaques-logement-frontalier-geneve-eviter (fr) · cta · phrase d'appel 👉 : question fixe, lien sorti de la question (A.1, D-A2)
+-- [3/92] arnaques-logement-frontalier-geneve-eviter (fr) · cta · phrase d'appel 👉 : question fixe, lien sorti de la question (A.1, D-A2)
 UPDATE blog_posts
 SET content_fr = replace(content_fr, $f$👉 **Tu cherches une [voir nos chambres côté France](/colocation-geneve) ?** À **La Villa Coliving** (Ville-la-Grand, Ambilly et Annemasse), une chambre meublée tout inclus coûte à partir de **1 370 CHF/mois** — charges, fibre et ménage compris, sans frais de dossier. Genève-Eaux-Vives en 7 min de Léman Express depuis la gare d'Annemasse — 18 à 24 min porte-à-porte selon la maison, 30 min jusqu'au centre.$f$, $r$👉 **Tu cherches où te loger côté France ?** À **La Villa Coliving** (Ville-la-Grand, Ambilly et Annemasse), une chambre meublée tout inclus coûte à partir de **1 370 CHF/mois** — charges, fibre et ménage compris, sans frais de dossier. Genève-Eaux-Vives en 7 min de Léman Express depuis la gare d'Annemasse — 18 à 24 min porte-à-porte selon la maison, 30 min jusqu'au centre. → [Voir nos chambres côté France](/colocation-geneve)$r$),
     updated_at = now()
@@ -65,7 +66,7 @@ WHERE slug = 'arnaques-logement-frontalier-geneve-eviter'
   AND position($f$👉 **Tu cherches une [voir nos chambres côté France](/colocation-geneve) ?** À **La Villa Coliving** (Ville-la-Grand, Ambilly et Annemasse), une chambre meublée tout inclus coûte à partir de **1 370 CHF/mois** — charges, fibre et ménage compris, sans frais de dossier. Genève-Eaux-Vives en 7 min de Léman Express depuis la gare d'Annemasse — 18 à 24 min porte-à-porte selon la maison, 30 min jusqu'au centre.$f$ IN content_fr) > 0
   AND position($r$👉 **Tu cherches où te loger côté France ?** À **La Villa Coliving** (Ville-la-Grand, Ambilly et Annemasse), une chambre meublée tout inclus coûte à partir de **1 370 CHF/mois** — charges, fibre et ménage compris, sans frais de dossier. Genève-Eaux-Vives en 7 min de Léman Express depuis la gare d'Annemasse — 18 à 24 min porte-à-porte selon la maison, 30 min jusqu'au centre. → [Voir nos chambres côté France](/colocation-geneve)$r$ IN content_fr) = 0;
 
--- [4/88] arnaques-logement-frontalier-geneve-eviter (en) · cta · phrase d'appel 👉 : question fixe, lien sorti de la question (A.1, D-A2)
+-- [4/92] arnaques-logement-frontalier-geneve-eviter (en) · cta · phrase d'appel 👉 : question fixe, lien sorti de la question (A.1, D-A2)
 UPDATE blog_posts
 SET content_en = replace(content_en, $f$👉 **Looking for [La Villa Coliving, French side](/en/colocation-geneve)?** At **La Villa Coliving** (Ville-la-Grand, Ambilly and Annemasse), a fully furnished all-inclusive room costs from **CHF 1,370/month** — utilities, fiber and cleaning included, no application fee. Geneva Eaux-Vives in 7 minutes by Léman Express from Annemasse station — 18 to 24 minutes door to door depending on the house, 30 minutes to the city centre.$f$, $r$👉 **Looking for a place on the French side?** At **La Villa Coliving** (Ville-la-Grand, Ambilly and Annemasse), a fully furnished all-inclusive room costs from **CHF 1,370/month** — utilities, fiber and cleaning included, no application fee. Geneva Eaux-Vives in 7 minutes by Léman Express from Annemasse station — 18 to 24 minutes door to door depending on the house, 30 minutes to the city centre. → [La Villa Coliving, French side](/en/colocation-geneve)$r$),
     updated_at = now()
@@ -73,7 +74,7 @@ WHERE slug = 'arnaques-logement-frontalier-geneve-eviter'
   AND position($f$👉 **Looking for [La Villa Coliving, French side](/en/colocation-geneve)?** At **La Villa Coliving** (Ville-la-Grand, Ambilly and Annemasse), a fully furnished all-inclusive room costs from **CHF 1,370/month** — utilities, fiber and cleaning included, no application fee. Geneva Eaux-Vives in 7 minutes by Léman Express from Annemasse station — 18 to 24 minutes door to door depending on the house, 30 minutes to the city centre.$f$ IN content_en) > 0
   AND position($r$👉 **Looking for a place on the French side?** At **La Villa Coliving** (Ville-la-Grand, Ambilly and Annemasse), a fully furnished all-inclusive room costs from **CHF 1,370/month** — utilities, fiber and cleaning included, no application fee. Geneva Eaux-Vives in 7 minutes by Léman Express from Annemasse station — 18 to 24 minutes door to door depending on the house, 30 minutes to the city centre. → [La Villa Coliving, French side](/en/colocation-geneve)$r$ IN content_en) = 0;
 
--- [5/88] assurance-sante-frontalier-lamal-cmu-budget (fr) · cta · phrase d'appel 👉 : question fixe, lien sorti de la question (A.1, D-A2)
+-- [5/92] assurance-sante-frontalier-lamal-cmu-budget (fr) · cta · phrase d'appel 👉 : question fixe, lien sorti de la question (A.1, D-A2)
 UPDATE blog_posts
 SET content_fr = replace(content_fr, $f$👉 **Tu cherches une [colocation à Genève](/colocation-geneve) ?** À **La Villa Coliving** (Ville-la-Grand, Ambilly et Annemasse), une chambre meublée tout inclus coûte à partir de **1 370 CHF/mois** — charges, fibre et ménage compris, sans frais de dossier. Genève-Eaux-Vives en 7 min de Léman Express depuis la gare d'Annemasse — 18 à 24 min porte-à-porte selon la maison, 30 min jusqu'au centre.$f$, $r$👉 **Tu cherches où te loger côté France ?** À **La Villa Coliving** (Ville-la-Grand, Ambilly et Annemasse), une chambre meublée tout inclus coûte à partir de **1 370 CHF/mois** — charges, fibre et ménage compris, sans frais de dossier. Genève-Eaux-Vives en 7 min de Léman Express depuis la gare d'Annemasse — 18 à 24 min porte-à-porte selon la maison, 30 min jusqu'au centre. → [Colocation à Genève](/colocation-geneve)$r$),
     updated_at = now()
@@ -81,7 +82,7 @@ WHERE slug = 'assurance-sante-frontalier-lamal-cmu-budget'
   AND position($f$👉 **Tu cherches une [colocation à Genève](/colocation-geneve) ?** À **La Villa Coliving** (Ville-la-Grand, Ambilly et Annemasse), une chambre meublée tout inclus coûte à partir de **1 370 CHF/mois** — charges, fibre et ménage compris, sans frais de dossier. Genève-Eaux-Vives en 7 min de Léman Express depuis la gare d'Annemasse — 18 à 24 min porte-à-porte selon la maison, 30 min jusqu'au centre.$f$ IN content_fr) > 0
   AND position($r$👉 **Tu cherches où te loger côté France ?** À **La Villa Coliving** (Ville-la-Grand, Ambilly et Annemasse), une chambre meublée tout inclus coûte à partir de **1 370 CHF/mois** — charges, fibre et ménage compris, sans frais de dossier. Genève-Eaux-Vives en 7 min de Léman Express depuis la gare d'Annemasse — 18 à 24 min porte-à-porte selon la maison, 30 min jusqu'au centre. → [Colocation à Genève](/colocation-geneve)$r$ IN content_fr) = 0;
 
--- [6/88] assurance-sante-frontalier-lamal-cmu-budget (en) · cta · phrase d'appel 👉 : question fixe, lien sorti de la question (A.1, D-A2)
+-- [6/92] assurance-sante-frontalier-lamal-cmu-budget (en) · cta · phrase d'appel 👉 : question fixe, lien sorti de la question (A.1, D-A2)
 UPDATE blog_posts
 SET content_en = replace(content_en, $f$👉 **Looking for [La Villa Coliving, French side](/en/colocation-geneve)?** At **La Villa Coliving** (Ville-la-Grand, Ambilly and Annemasse), a fully furnished all-inclusive room costs from **CHF 1,370/month** — utilities, fiber and cleaning included, no application fee. Geneva Eaux-Vives in 7 minutes by Léman Express from Annemasse station — 18 to 24 minutes door to door depending on the house, 30 minutes to the city centre.$f$, $r$👉 **Looking for a place on the French side?** At **La Villa Coliving** (Ville-la-Grand, Ambilly and Annemasse), a fully furnished all-inclusive room costs from **CHF 1,370/month** — utilities, fiber and cleaning included, no application fee. Geneva Eaux-Vives in 7 minutes by Léman Express from Annemasse station — 18 to 24 minutes door to door depending on the house, 30 minutes to the city centre. → [La Villa Coliving, French side](/en/colocation-geneve)$r$),
     updated_at = now()
@@ -89,7 +90,7 @@ WHERE slug = 'assurance-sante-frontalier-lamal-cmu-budget'
   AND position($f$👉 **Looking for [La Villa Coliving, French side](/en/colocation-geneve)?** At **La Villa Coliving** (Ville-la-Grand, Ambilly and Annemasse), a fully furnished all-inclusive room costs from **CHF 1,370/month** — utilities, fiber and cleaning included, no application fee. Geneva Eaux-Vives in 7 minutes by Léman Express from Annemasse station — 18 to 24 minutes door to door depending on the house, 30 minutes to the city centre.$f$ IN content_en) > 0
   AND position($r$👉 **Looking for a place on the French side?** At **La Villa Coliving** (Ville-la-Grand, Ambilly and Annemasse), a fully furnished all-inclusive room costs from **CHF 1,370/month** — utilities, fiber and cleaning included, no application fee. Geneva Eaux-Vives in 7 minutes by Léman Express from Annemasse station — 18 to 24 minutes door to door depending on the house, 30 minutes to the city centre. → [La Villa Coliving, French side](/en/colocation-geneve)$r$ IN content_en) = 0;
 
--- [7/88] avenant-fiscal-40-frontalier-geneve (fr) · cta · phrase d'appel 👉 : question fixe, lien sorti de la question (A.1, D-A2)
+-- [7/92] avenant-fiscal-40-frontalier-geneve (fr) · cta · phrase d'appel 👉 : question fixe, lien sorti de la question (A.1, D-A2)
 UPDATE blog_posts
 SET content_fr = replace(content_fr, $f$👉 **Tu cherches une [chambres en colocation côté France](/colocation-geneve) ?** À **La Villa Coliving** (Ville-la-Grand, Ambilly et Annemasse), une chambre meublée tout inclus coûte à partir de **1 370 CHF/mois** — charges, fibre et ménage compris, sans frais de dossier. Genève-Eaux-Vives en 7 min de Léman Express depuis la gare d'Annemasse — 18 à 24 min porte-à-porte selon la maison, 30 min jusqu'au centre.$f$, $r$👉 **Tu cherches où te loger côté France ?** À **La Villa Coliving** (Ville-la-Grand, Ambilly et Annemasse), une chambre meublée tout inclus coûte à partir de **1 370 CHF/mois** — charges, fibre et ménage compris, sans frais de dossier. Genève-Eaux-Vives en 7 min de Léman Express depuis la gare d'Annemasse — 18 à 24 min porte-à-porte selon la maison, 30 min jusqu'au centre. → [Chambres en colocation côté France](/colocation-geneve)$r$),
     updated_at = now()
@@ -97,7 +98,7 @@ WHERE slug = 'avenant-fiscal-40-frontalier-geneve'
   AND position($f$👉 **Tu cherches une [chambres en colocation côté France](/colocation-geneve) ?** À **La Villa Coliving** (Ville-la-Grand, Ambilly et Annemasse), une chambre meublée tout inclus coûte à partir de **1 370 CHF/mois** — charges, fibre et ménage compris, sans frais de dossier. Genève-Eaux-Vives en 7 min de Léman Express depuis la gare d'Annemasse — 18 à 24 min porte-à-porte selon la maison, 30 min jusqu'au centre.$f$ IN content_fr) > 0
   AND position($r$👉 **Tu cherches où te loger côté France ?** À **La Villa Coliving** (Ville-la-Grand, Ambilly et Annemasse), une chambre meublée tout inclus coûte à partir de **1 370 CHF/mois** — charges, fibre et ménage compris, sans frais de dossier. Genève-Eaux-Vives en 7 min de Léman Express depuis la gare d'Annemasse — 18 à 24 min porte-à-porte selon la maison, 30 min jusqu'au centre. → [Chambres en colocation côté France](/colocation-geneve)$r$ IN content_fr) = 0;
 
--- [8/88] avenant-fiscal-40-frontalier-geneve (en) · cta · phrase d'appel 👉 : question fixe, lien sorti de la question (A.1, D-A2)
+-- [8/92] avenant-fiscal-40-frontalier-geneve (en) · cta · phrase d'appel 👉 : question fixe, lien sorti de la question (A.1, D-A2)
 UPDATE blog_posts
 SET content_en = replace(content_en, $f$👉 **Looking for [La Villa Coliving, French side](/en/colocation-geneve)?** At **La Villa Coliving** (Ville-la-Grand, Ambilly and Annemasse), a fully furnished all-inclusive room costs from **CHF 1,370/month** — utilities, fiber and cleaning included, no application fee. Geneva Eaux-Vives in 7 minutes by Léman Express from Annemasse station — 18 to 24 minutes door to door depending on the house, 30 minutes to the city centre.$f$, $r$👉 **Looking for a place on the French side?** At **La Villa Coliving** (Ville-la-Grand, Ambilly and Annemasse), a fully furnished all-inclusive room costs from **CHF 1,370/month** — utilities, fiber and cleaning included, no application fee. Geneva Eaux-Vives in 7 minutes by Léman Express from Annemasse station — 18 to 24 minutes door to door depending on the house, 30 minutes to the city centre. → [La Villa Coliving, French side](/en/colocation-geneve)$r$),
     updated_at = now()
@@ -105,7 +106,7 @@ WHERE slug = 'avenant-fiscal-40-frontalier-geneve'
   AND position($f$👉 **Looking for [La Villa Coliving, French side](/en/colocation-geneve)?** At **La Villa Coliving** (Ville-la-Grand, Ambilly and Annemasse), a fully furnished all-inclusive room costs from **CHF 1,370/month** — utilities, fiber and cleaning included, no application fee. Geneva Eaux-Vives in 7 minutes by Léman Express from Annemasse station — 18 to 24 minutes door to door depending on the house, 30 minutes to the city centre.$f$ IN content_en) > 0
   AND position($r$👉 **Looking for a place on the French side?** At **La Villa Coliving** (Ville-la-Grand, Ambilly and Annemasse), a fully furnished all-inclusive room costs from **CHF 1,370/month** — utilities, fiber and cleaning included, no application fee. Geneva Eaux-Vives in 7 minutes by Léman Express from Annemasse station — 18 to 24 minutes door to door depending on the house, 30 minutes to the city centre. → [La Villa Coliving, French side](/en/colocation-geneve)$r$ IN content_en) = 0;
 
--- [9/88] banque-telephone-internet-frontalier-bons-plans (fr) · cta · phrase d'appel 👉 : question fixe, lien sorti de la question (A.1, D-A2)
+-- [9/92] banque-telephone-internet-frontalier-bons-plans (fr) · cta · phrase d'appel 👉 : question fixe, lien sorti de la question (A.1, D-A2)
 UPDATE blog_posts
 SET content_fr = replace(content_fr, $f$👉 **Tu cherches une [La Villa Coliving, côté France](/colocation-geneve) ?** À **La Villa Coliving** (Ville-la-Grand, Ambilly et Annemasse), une chambre meublée tout inclus coûte à partir de **1 370 CHF/mois** — charges, fibre et ménage compris, sans frais de dossier. Genève-Eaux-Vives en 7 min de Léman Express depuis la gare d'Annemasse — 18 à 24 min porte-à-porte selon la maison, 30 min jusqu'au centre.$f$, $r$👉 **Tu cherches où te loger côté France ?** À **La Villa Coliving** (Ville-la-Grand, Ambilly et Annemasse), une chambre meublée tout inclus coûte à partir de **1 370 CHF/mois** — charges, fibre et ménage compris, sans frais de dossier. Genève-Eaux-Vives en 7 min de Léman Express depuis la gare d'Annemasse — 18 à 24 min porte-à-porte selon la maison, 30 min jusqu'au centre. → [La Villa Coliving, côté France](/colocation-geneve)$r$),
     updated_at = now()
@@ -113,7 +114,7 @@ WHERE slug = 'banque-telephone-internet-frontalier-bons-plans'
   AND position($f$👉 **Tu cherches une [La Villa Coliving, côté France](/colocation-geneve) ?** À **La Villa Coliving** (Ville-la-Grand, Ambilly et Annemasse), une chambre meublée tout inclus coûte à partir de **1 370 CHF/mois** — charges, fibre et ménage compris, sans frais de dossier. Genève-Eaux-Vives en 7 min de Léman Express depuis la gare d'Annemasse — 18 à 24 min porte-à-porte selon la maison, 30 min jusqu'au centre.$f$ IN content_fr) > 0
   AND position($r$👉 **Tu cherches où te loger côté France ?** À **La Villa Coliving** (Ville-la-Grand, Ambilly et Annemasse), une chambre meublée tout inclus coûte à partir de **1 370 CHF/mois** — charges, fibre et ménage compris, sans frais de dossier. Genève-Eaux-Vives en 7 min de Léman Express depuis la gare d'Annemasse — 18 à 24 min porte-à-porte selon la maison, 30 min jusqu'au centre. → [La Villa Coliving, côté France](/colocation-geneve)$r$ IN content_fr) = 0;
 
--- [10/88] banque-telephone-internet-frontalier-bons-plans (en) · cta · phrase d'appel 👉 : question fixe, lien sorti de la question (A.1, D-A2)
+-- [10/92] banque-telephone-internet-frontalier-bons-plans (en) · cta · phrase d'appel 👉 : question fixe, lien sorti de la question (A.1, D-A2)
 UPDATE blog_posts
 SET content_en = replace(content_en, $f$👉 **Looking for [La Villa Coliving, French side](/en/colocation-geneve)?** At **La Villa Coliving** (Ville-la-Grand, Ambilly and Annemasse), a fully furnished all-inclusive room costs from **CHF 1,370/month** — utilities, fiber and cleaning included, no application fee. Geneva Eaux-Vives in 7 minutes by Léman Express from Annemasse station — 18 to 24 minutes door to door depending on the house, 30 minutes to the city centre.$f$, $r$👉 **Looking for a place on the French side?** At **La Villa Coliving** (Ville-la-Grand, Ambilly and Annemasse), a fully furnished all-inclusive room costs from **CHF 1,370/month** — utilities, fiber and cleaning included, no application fee. Geneva Eaux-Vives in 7 minutes by Léman Express from Annemasse station — 18 to 24 minutes door to door depending on the house, 30 minutes to the city centre. → [La Villa Coliving, French side](/en/colocation-geneve)$r$),
     updated_at = now()
@@ -121,7 +122,7 @@ WHERE slug = 'banque-telephone-internet-frontalier-bons-plans'
   AND position($f$👉 **Looking for [La Villa Coliving, French side](/en/colocation-geneve)?** At **La Villa Coliving** (Ville-la-Grand, Ambilly and Annemasse), a fully furnished all-inclusive room costs from **CHF 1,370/month** — utilities, fiber and cleaning included, no application fee. Geneva Eaux-Vives in 7 minutes by Léman Express from Annemasse station — 18 to 24 minutes door to door depending on the house, 30 minutes to the city centre.$f$ IN content_en) > 0
   AND position($r$👉 **Looking for a place on the French side?** At **La Villa Coliving** (Ville-la-Grand, Ambilly and Annemasse), a fully furnished all-inclusive room costs from **CHF 1,370/month** — utilities, fiber and cleaning included, no application fee. Geneva Eaux-Vives in 7 minutes by Léman Express from Annemasse station — 18 to 24 minutes door to door depending on the house, 30 minutes to the city centre. → [La Villa Coliving, French side](/en/colocation-geneve)$r$ IN content_en) = 0;
 
--- [11/88] budget-colocation-geneve-guide-complet (fr) · cta · phrase d'appel 👉 : question fixe, lien sorti de la question (A.1, D-A2)
+-- [11/92] budget-colocation-geneve-guide-complet (fr) · cta · phrase d'appel 👉 : question fixe, lien sorti de la question (A.1, D-A2)
 UPDATE blog_posts
 SET content_fr = replace(content_fr, $f$👉 **Tu cherches une [voir nos chambres côté France](/colocation-geneve) ?** À **La Villa Coliving** (Ville-la-Grand, Ambilly et Annemasse), une chambre meublée tout inclus coûte à partir de **1 370 CHF/mois** — charges, fibre et ménage compris, sans frais de dossier. Genève-Eaux-Vives en 7 min de Léman Express depuis la gare d'Annemasse — 18 à 24 min porte-à-porte selon la maison, 30 min jusqu'au centre.$f$, $r$👉 **Tu cherches où te loger côté France ?** À **La Villa Coliving** (Ville-la-Grand, Ambilly et Annemasse), une chambre meublée tout inclus coûte à partir de **1 370 CHF/mois** — charges, fibre et ménage compris, sans frais de dossier. Genève-Eaux-Vives en 7 min de Léman Express depuis la gare d'Annemasse — 18 à 24 min porte-à-porte selon la maison, 30 min jusqu'au centre. → [Voir nos chambres côté France](/colocation-geneve)$r$),
     updated_at = now()
@@ -129,7 +130,7 @@ WHERE slug = 'budget-colocation-geneve-guide-complet'
   AND position($f$👉 **Tu cherches une [voir nos chambres côté France](/colocation-geneve) ?** À **La Villa Coliving** (Ville-la-Grand, Ambilly et Annemasse), une chambre meublée tout inclus coûte à partir de **1 370 CHF/mois** — charges, fibre et ménage compris, sans frais de dossier. Genève-Eaux-Vives en 7 min de Léman Express depuis la gare d'Annemasse — 18 à 24 min porte-à-porte selon la maison, 30 min jusqu'au centre.$f$ IN content_fr) > 0
   AND position($r$👉 **Tu cherches où te loger côté France ?** À **La Villa Coliving** (Ville-la-Grand, Ambilly et Annemasse), une chambre meublée tout inclus coûte à partir de **1 370 CHF/mois** — charges, fibre et ménage compris, sans frais de dossier. Genève-Eaux-Vives en 7 min de Léman Express depuis la gare d'Annemasse — 18 à 24 min porte-à-porte selon la maison, 30 min jusqu'au centre. → [Voir nos chambres côté France](/colocation-geneve)$r$ IN content_fr) = 0;
 
--- [12/88] budget-colocation-geneve-guide-complet (en) · cta · phrase d'appel 👉 : question fixe, lien sorti de la question (A.1, D-A2)
+-- [12/92] budget-colocation-geneve-guide-complet (en) · cta · phrase d'appel 👉 : question fixe, lien sorti de la question (A.1, D-A2)
 UPDATE blog_posts
 SET content_en = replace(content_en, $f$👉 **Looking for [La Villa Coliving, French side](/en/colocation-geneve)?** At **La Villa Coliving** (Ville-la-Grand, Ambilly and Annemasse), a fully furnished all-inclusive room costs from **CHF 1,370/month** — utilities, fiber and cleaning included, no application fee. Geneva Eaux-Vives in 7 minutes by Léman Express from Annemasse station — 18 to 24 minutes door to door depending on the house, 30 minutes to the city centre.$f$, $r$👉 **Looking for a place on the French side?** At **La Villa Coliving** (Ville-la-Grand, Ambilly and Annemasse), a fully furnished all-inclusive room costs from **CHF 1,370/month** — utilities, fiber and cleaning included, no application fee. Geneva Eaux-Vives in 7 minutes by Léman Express from Annemasse station — 18 to 24 minutes door to door depending on the house, 30 minutes to the city centre. → [La Villa Coliving, French side](/en/colocation-geneve)$r$),
     updated_at = now()
@@ -137,7 +138,7 @@ WHERE slug = 'budget-colocation-geneve-guide-complet'
   AND position($f$👉 **Looking for [La Villa Coliving, French side](/en/colocation-geneve)?** At **La Villa Coliving** (Ville-la-Grand, Ambilly and Annemasse), a fully furnished all-inclusive room costs from **CHF 1,370/month** — utilities, fiber and cleaning included, no application fee. Geneva Eaux-Vives in 7 minutes by Léman Express from Annemasse station — 18 to 24 minutes door to door depending on the house, 30 minutes to the city centre.$f$ IN content_en) > 0
   AND position($r$👉 **Looking for a place on the French side?** At **La Villa Coliving** (Ville-la-Grand, Ambilly and Annemasse), a fully furnished all-inclusive room costs from **CHF 1,370/month** — utilities, fiber and cleaning included, no application fee. Geneva Eaux-Vives in 7 minutes by Léman Express from Annemasse station — 18 to 24 minutes door to door depending on the house, 30 minutes to the city centre. → [La Villa Coliving, French side](/en/colocation-geneve)$r$ IN content_en) = 0;
 
--- [13/88] choc-culturel-franco-suisse-expatrie-geneve (fr) · cta · phrase d'appel 👉 : question fixe, lien sorti de la question (A.1, D-A2)
+-- [13/92] choc-culturel-franco-suisse-expatrie-geneve (fr) · cta · phrase d'appel 👉 : question fixe, lien sorti de la question (A.1, D-A2)
 UPDATE blog_posts
 SET content_fr = replace(content_fr, $f$👉 **Tu cherches une [colocation à Genève](/colocation-geneve) ?** À **La Villa Coliving** (Ville-la-Grand, Ambilly et Annemasse), une chambre meublée tout inclus coûte à partir de **1 370 CHF/mois** — charges, fibre et ménage compris, sans frais de dossier. Genève-Eaux-Vives en 7 min de Léman Express depuis la gare d'Annemasse — 18 à 24 min porte-à-porte selon la maison, 30 min jusqu'au centre.$f$, $r$👉 **Tu cherches où te loger côté France ?** À **La Villa Coliving** (Ville-la-Grand, Ambilly et Annemasse), une chambre meublée tout inclus coûte à partir de **1 370 CHF/mois** — charges, fibre et ménage compris, sans frais de dossier. Genève-Eaux-Vives en 7 min de Léman Express depuis la gare d'Annemasse — 18 à 24 min porte-à-porte selon la maison, 30 min jusqu'au centre. → [Colocation à Genève](/colocation-geneve)$r$),
     updated_at = now()
@@ -145,7 +146,7 @@ WHERE slug = 'choc-culturel-franco-suisse-expatrie-geneve'
   AND position($f$👉 **Tu cherches une [colocation à Genève](/colocation-geneve) ?** À **La Villa Coliving** (Ville-la-Grand, Ambilly et Annemasse), une chambre meublée tout inclus coûte à partir de **1 370 CHF/mois** — charges, fibre et ménage compris, sans frais de dossier. Genève-Eaux-Vives en 7 min de Léman Express depuis la gare d'Annemasse — 18 à 24 min porte-à-porte selon la maison, 30 min jusqu'au centre.$f$ IN content_fr) > 0
   AND position($r$👉 **Tu cherches où te loger côté France ?** À **La Villa Coliving** (Ville-la-Grand, Ambilly et Annemasse), une chambre meublée tout inclus coûte à partir de **1 370 CHF/mois** — charges, fibre et ménage compris, sans frais de dossier. Genève-Eaux-Vives en 7 min de Léman Express depuis la gare d'Annemasse — 18 à 24 min porte-à-porte selon la maison, 30 min jusqu'au centre. → [Colocation à Genève](/colocation-geneve)$r$ IN content_fr) = 0;
 
--- [14/88] choc-culturel-franco-suisse-expatrie-geneve (en) · cta · phrase d'appel 👉 : question fixe, lien sorti de la question (A.1, D-A2)
+-- [14/92] choc-culturel-franco-suisse-expatrie-geneve (en) · cta · phrase d'appel 👉 : question fixe, lien sorti de la question (A.1, D-A2)
 UPDATE blog_posts
 SET content_en = replace(content_en, $f$👉 **Looking for [La Villa Coliving, French side](/en/colocation-geneve)?** At **La Villa Coliving** (Ville-la-Grand, Ambilly and Annemasse), a fully furnished all-inclusive room costs from **CHF 1,370/month** — utilities, fiber and cleaning included, no application fee. Geneva Eaux-Vives in 7 minutes by Léman Express from Annemasse station — 18 to 24 minutes door to door depending on the house, 30 minutes to the city centre.$f$, $r$👉 **Looking for a place on the French side?** At **La Villa Coliving** (Ville-la-Grand, Ambilly and Annemasse), a fully furnished all-inclusive room costs from **CHF 1,370/month** — utilities, fiber and cleaning included, no application fee. Geneva Eaux-Vives in 7 minutes by Léman Express from Annemasse station — 18 to 24 minutes door to door depending on the house, 30 minutes to the city centre. → [La Villa Coliving, French side](/en/colocation-geneve)$r$),
     updated_at = now()
@@ -153,7 +154,7 @@ WHERE slug = 'choc-culturel-franco-suisse-expatrie-geneve'
   AND position($f$👉 **Looking for [La Villa Coliving, French side](/en/colocation-geneve)?** At **La Villa Coliving** (Ville-la-Grand, Ambilly and Annemasse), a fully furnished all-inclusive room costs from **CHF 1,370/month** — utilities, fiber and cleaning included, no application fee. Geneva Eaux-Vives in 7 minutes by Léman Express from Annemasse station — 18 to 24 minutes door to door depending on the house, 30 minutes to the city centre.$f$ IN content_en) > 0
   AND position($r$👉 **Looking for a place on the French side?** At **La Villa Coliving** (Ville-la-Grand, Ambilly and Annemasse), a fully furnished all-inclusive room costs from **CHF 1,370/month** — utilities, fiber and cleaning included, no application fee. Geneva Eaux-Vives in 7 minutes by Léman Express from Annemasse station — 18 to 24 minutes door to door depending on the house, 30 minutes to the city centre. → [La Villa Coliving, French side](/en/colocation-geneve)$r$ IN content_en) = 0;
 
--- [15/88] coliving-annemasse-geneve-frontaliers-avantages (fr) · cta · phrase d'appel 👉 : question fixe, lien sorti de la question (A.1, D-A2)
+-- [15/92] coliving-annemasse-geneve-frontaliers-avantages (fr) · cta · phrase d'appel 👉 : question fixe, lien sorti de la question (A.1, D-A2)
 UPDATE blog_posts
 SET content_fr = replace(content_fr, $f$👉 **Tu cherches une [chambres en colocation côté France](/colocation-geneve) ou une [colocation à Annemasse](/annemasse-colocation) ?** À **La Villa Coliving**, 29 chambres meublées tout inclus dès **1 370 CHF/mois** dans 3 maisons à Ville-la-Grand, Ambilly et Annemasse — voir aussi nos [lavillacoliving.com/chambre-a-louer-annemasse](/chambre-a-louer-annemasse). Sans frais de dossier.$f$, $r$👉 **Tu cherches où te loger côté France ?** À **La Villa Coliving**, 29 chambres meublées tout inclus dès **1 370 CHF/mois** dans 3 maisons à Ville-la-Grand, Ambilly et Annemasse — voir aussi nos [lavillacoliving.com/chambre-a-louer-annemasse](/chambre-a-louer-annemasse). Sans frais de dossier. → [Chambres en colocation côté France](/colocation-geneve) · [Colocation à Annemasse](/annemasse-colocation)$r$),
     updated_at = now()
@@ -161,7 +162,7 @@ WHERE slug = 'coliving-annemasse-geneve-frontaliers-avantages'
   AND position($f$👉 **Tu cherches une [chambres en colocation côté France](/colocation-geneve) ou une [colocation à Annemasse](/annemasse-colocation) ?** À **La Villa Coliving**, 29 chambres meublées tout inclus dès **1 370 CHF/mois** dans 3 maisons à Ville-la-Grand, Ambilly et Annemasse — voir aussi nos [lavillacoliving.com/chambre-a-louer-annemasse](/chambre-a-louer-annemasse). Sans frais de dossier.$f$ IN content_fr) > 0
   AND position($r$👉 **Tu cherches où te loger côté France ?** À **La Villa Coliving**, 29 chambres meublées tout inclus dès **1 370 CHF/mois** dans 3 maisons à Ville-la-Grand, Ambilly et Annemasse — voir aussi nos [lavillacoliving.com/chambre-a-louer-annemasse](/chambre-a-louer-annemasse). Sans frais de dossier. → [Chambres en colocation côté France](/colocation-geneve) · [Colocation à Annemasse](/annemasse-colocation)$r$ IN content_fr) = 0;
 
--- [16/88] coliving-annemasse-geneve-frontaliers-avantages (en) · cta · phrase d'appel 👉 : question fixe, lien sorti de la question (A.1, D-A2)
+-- [16/92] coliving-annemasse-geneve-frontaliers-avantages (en) · cta · phrase d'appel 👉 : question fixe, lien sorti de la question (A.1, D-A2)
 UPDATE blog_posts
 SET content_en = replace(content_en, $f$👉 **Looking for [La Villa Coliving, French side](/en/colocation-geneve) or [in Annemasse](/en/annemasse-colocation)?** At **La Villa Coliving**, 29 furnished all-inclusive rooms from **CHF 1,370/month** across 3 houses in Ville-la-Grand, Ambilly and Annemasse — see also our [rooms for rent in Annemasse](/en/chambre-a-louer-annemasse). No application fee.$f$, $r$👉 **Looking for a place on the French side?** At **La Villa Coliving**, 29 furnished all-inclusive rooms from **CHF 1,370/month** across 3 houses in Ville-la-Grand, Ambilly and Annemasse — see also our [rooms for rent in Annemasse](/en/chambre-a-louer-annemasse). No application fee. → [La Villa Coliving, French side](/en/colocation-geneve) · [In Annemasse](/en/annemasse-colocation)$r$),
     updated_at = now()
@@ -169,7 +170,7 @@ WHERE slug = 'coliving-annemasse-geneve-frontaliers-avantages'
   AND position($f$👉 **Looking for [La Villa Coliving, French side](/en/colocation-geneve) or [in Annemasse](/en/annemasse-colocation)?** At **La Villa Coliving**, 29 furnished all-inclusive rooms from **CHF 1,370/month** across 3 houses in Ville-la-Grand, Ambilly and Annemasse — see also our [rooms for rent in Annemasse](/en/chambre-a-louer-annemasse). No application fee.$f$ IN content_en) > 0
   AND position($r$👉 **Looking for a place on the French side?** At **La Villa Coliving**, 29 furnished all-inclusive rooms from **CHF 1,370/month** across 3 houses in Ville-la-Grand, Ambilly and Annemasse — see also our [rooms for rent in Annemasse](/en/chambre-a-louer-annemasse). No application fee. → [La Villa Coliving, French side](/en/colocation-geneve) · [In Annemasse](/en/annemasse-colocation)$r$ IN content_en) = 0;
 
--- [17/88] colocation-annemasse-ville-la-grand-ambilly (fr) · cta · phrase d'appel 👉 : question fixe, lien sorti de la question (A.1, D-A2)
+-- [17/92] colocation-annemasse-ville-la-grand-ambilly (fr) · cta · phrase d'appel 👉 : question fixe, lien sorti de la question (A.1, D-A2)
 UPDATE blog_posts
 SET content_fr = replace(content_fr, $f$👉 **Tu cherches une [colocation à Genève](/colocation-geneve) ou une [colocation à Annemasse](/annemasse-colocation) ?** À **La Villa Coliving**, 29 chambres meublées tout inclus dès **1 370 CHF/mois** dans 3 maisons à Ville-la-Grand, Ambilly et Annemasse — voir aussi nos [chambres à louer à Annemasse](/chambre-a-louer-annemasse). Sans frais de dossier.$f$, $r$👉 **Tu cherches où te loger côté France ?** À **La Villa Coliving**, 29 chambres meublées tout inclus dès **1 370 CHF/mois** dans 3 maisons à Ville-la-Grand, Ambilly et Annemasse — voir aussi nos [chambres à louer à Annemasse](/chambre-a-louer-annemasse). Sans frais de dossier. → [Colocation à Genève](/colocation-geneve) · [Colocation à Annemasse](/annemasse-colocation)$r$),
     updated_at = now()
@@ -177,7 +178,7 @@ WHERE slug = 'colocation-annemasse-ville-la-grand-ambilly'
   AND position($f$👉 **Tu cherches une [colocation à Genève](/colocation-geneve) ou une [colocation à Annemasse](/annemasse-colocation) ?** À **La Villa Coliving**, 29 chambres meublées tout inclus dès **1 370 CHF/mois** dans 3 maisons à Ville-la-Grand, Ambilly et Annemasse — voir aussi nos [chambres à louer à Annemasse](/chambre-a-louer-annemasse). Sans frais de dossier.$f$ IN content_fr) > 0
   AND position($r$👉 **Tu cherches où te loger côté France ?** À **La Villa Coliving**, 29 chambres meublées tout inclus dès **1 370 CHF/mois** dans 3 maisons à Ville-la-Grand, Ambilly et Annemasse — voir aussi nos [chambres à louer à Annemasse](/chambre-a-louer-annemasse). Sans frais de dossier. → [Colocation à Genève](/colocation-geneve) · [Colocation à Annemasse](/annemasse-colocation)$r$ IN content_fr) = 0;
 
--- [18/88] colocation-annemasse-ville-la-grand-ambilly (en) · cta · phrase d'appel 👉 : question fixe, lien sorti de la question (A.1, D-A2)
+-- [18/92] colocation-annemasse-ville-la-grand-ambilly (en) · cta · phrase d'appel 👉 : question fixe, lien sorti de la question (A.1, D-A2)
 UPDATE blog_posts
 SET content_en = replace(content_en, $f$👉 **Looking for [a room on the French side](/en/colocation-geneve) or [in Annemasse](/en/annemasse-colocation)?** At **La Villa Coliving**, 29 furnished all-inclusive rooms from **CHF 1,370/month** across 3 houses in Ville-la-Grand, Ambilly and Annemasse — see also our [rooms for rent in Annemasse](/en/chambre-a-louer-annemasse). No application fee.$f$, $r$👉 **Looking for a place on the French side?** At **La Villa Coliving**, 29 furnished all-inclusive rooms from **CHF 1,370/month** across 3 houses in Ville-la-Grand, Ambilly and Annemasse — see also our [rooms for rent in Annemasse](/en/chambre-a-louer-annemasse). No application fee. → [A room on the French side](/en/colocation-geneve) · [In Annemasse](/en/annemasse-colocation)$r$),
     updated_at = now()
@@ -185,7 +186,7 @@ WHERE slug = 'colocation-annemasse-ville-la-grand-ambilly'
   AND position($f$👉 **Looking for [a room on the French side](/en/colocation-geneve) or [in Annemasse](/en/annemasse-colocation)?** At **La Villa Coliving**, 29 furnished all-inclusive rooms from **CHF 1,370/month** across 3 houses in Ville-la-Grand, Ambilly and Annemasse — see also our [rooms for rent in Annemasse](/en/chambre-a-louer-annemasse). No application fee.$f$ IN content_en) > 0
   AND position($r$👉 **Looking for a place on the French side?** At **La Villa Coliving**, 29 furnished all-inclusive rooms from **CHF 1,370/month** across 3 houses in Ville-la-Grand, Ambilly and Annemasse — see also our [rooms for rent in Annemasse](/en/chambre-a-louer-annemasse). No application fee. → [A room on the French side](/en/colocation-geneve) · [In Annemasse](/en/annemasse-colocation)$r$ IN content_en) = 0;
 
--- [19/88] cout-de-la-vie-suisse-france-frontalier-2026 (fr) · cta · phrase d'appel 👉 : question fixe, lien sorti de la question (A.1, D-A2)
+-- [19/92] cout-de-la-vie-suisse-france-frontalier-2026 (fr) · cta · phrase d'appel 👉 : question fixe, lien sorti de la question (A.1, D-A2)
 UPDATE blog_posts
 SET content_fr = replace(content_fr, $f$👉 **Tu cherches une [La Villa Coliving, côté France](/colocation-geneve) ?** À **La Villa Coliving** (Ville-la-Grand, Ambilly et Annemasse), une chambre meublée tout inclus coûte à partir de **1 370 CHF/mois** — charges, fibre et ménage compris, sans frais de dossier. Genève-Eaux-Vives en 7 min de Léman Express depuis la gare d'Annemasse — 18 à 24 min porte-à-porte selon la maison, 30 min jusqu'au centre.$f$, $r$👉 **Tu cherches où te loger côté France ?** À **La Villa Coliving** (Ville-la-Grand, Ambilly et Annemasse), une chambre meublée tout inclus coûte à partir de **1 370 CHF/mois** — charges, fibre et ménage compris, sans frais de dossier. Genève-Eaux-Vives en 7 min de Léman Express depuis la gare d'Annemasse — 18 à 24 min porte-à-porte selon la maison, 30 min jusqu'au centre. → [La Villa Coliving, côté France](/colocation-geneve)$r$),
     updated_at = now()
@@ -193,7 +194,7 @@ WHERE slug = 'cout-de-la-vie-suisse-france-frontalier-2026'
   AND position($f$👉 **Tu cherches une [La Villa Coliving, côté France](/colocation-geneve) ?** À **La Villa Coliving** (Ville-la-Grand, Ambilly et Annemasse), une chambre meublée tout inclus coûte à partir de **1 370 CHF/mois** — charges, fibre et ménage compris, sans frais de dossier. Genève-Eaux-Vives en 7 min de Léman Express depuis la gare d'Annemasse — 18 à 24 min porte-à-porte selon la maison, 30 min jusqu'au centre.$f$ IN content_fr) > 0
   AND position($r$👉 **Tu cherches où te loger côté France ?** À **La Villa Coliving** (Ville-la-Grand, Ambilly et Annemasse), une chambre meublée tout inclus coûte à partir de **1 370 CHF/mois** — charges, fibre et ménage compris, sans frais de dossier. Genève-Eaux-Vives en 7 min de Léman Express depuis la gare d'Annemasse — 18 à 24 min porte-à-porte selon la maison, 30 min jusqu'au centre. → [La Villa Coliving, côté France](/colocation-geneve)$r$ IN content_fr) = 0;
 
--- [20/88] cout-de-la-vie-suisse-france-frontalier-2026 (en) · cta · phrase d'appel 👉 : question fixe, lien sorti de la question (A.1, D-A2)
+-- [20/92] cout-de-la-vie-suisse-france-frontalier-2026 (en) · cta · phrase d'appel 👉 : question fixe, lien sorti de la question (A.1, D-A2)
 UPDATE blog_posts
 SET content_en = replace(content_en, $f$👉 **Looking for [a room on the French side](/en/colocation-geneve)?** At **La Villa Coliving** (Ville-la-Grand, Ambilly and Annemasse), a fully furnished all-inclusive room costs from **CHF 1,370/month** — utilities, fiber and cleaning included, no application fee. Geneva Eaux-Vives in 7 minutes by Léman Express from Annemasse station — 18 to 24 minutes door to door depending on the house, 30 minutes to the city centre.$f$, $r$👉 **Looking for a place on the French side?** At **La Villa Coliving** (Ville-la-Grand, Ambilly and Annemasse), a fully furnished all-inclusive room costs from **CHF 1,370/month** — utilities, fiber and cleaning included, no application fee. Geneva Eaux-Vives in 7 minutes by Léman Express from Annemasse station — 18 to 24 minutes door to door depending on the house, 30 minutes to the city centre. → [A room on the French side](/en/colocation-geneve)$r$),
     updated_at = now()
@@ -201,7 +202,7 @@ WHERE slug = 'cout-de-la-vie-suisse-france-frontalier-2026'
   AND position($f$👉 **Looking for [a room on the French side](/en/colocation-geneve)?** At **La Villa Coliving** (Ville-la-Grand, Ambilly and Annemasse), a fully furnished all-inclusive room costs from **CHF 1,370/month** — utilities, fiber and cleaning included, no application fee. Geneva Eaux-Vives in 7 minutes by Léman Express from Annemasse station — 18 to 24 minutes door to door depending on the house, 30 minutes to the city centre.$f$ IN content_en) > 0
   AND position($r$👉 **Looking for a place on the French side?** At **La Villa Coliving** (Ville-la-Grand, Ambilly and Annemasse), a fully furnished all-inclusive room costs from **CHF 1,370/month** — utilities, fiber and cleaning included, no application fee. Geneva Eaux-Vives in 7 minutes by Léman Express from Annemasse station — 18 to 24 minutes door to door depending on the house, 30 minutes to the city centre. → [A room on the French side](/en/colocation-geneve)$r$ IN content_en) = 0;
 
--- [21/88] declaration-impots-frontalier-2026 (fr) · cta · phrase d'appel 👉 : question fixe, lien sorti de la question (A.1, D-A2)
+-- [21/92] declaration-impots-frontalier-2026 (fr) · cta · phrase d'appel 👉 : question fixe, lien sorti de la question (A.1, D-A2)
 UPDATE blog_posts
 SET content_fr = replace(content_fr, $f$👉 **Tu cherches une [voir nos chambres côté France](/colocation-geneve) ?** À **La Villa Coliving** (Ville-la-Grand, Ambilly et Annemasse), une chambre meublée tout inclus coûte à partir de **1 370 CHF/mois** — charges, fibre et ménage compris, sans frais de dossier. Genève-Eaux-Vives en 7 min de Léman Express depuis la gare d'Annemasse — 18 à 24 min porte-à-porte selon la maison, 30 min jusqu'au centre.$f$, $r$👉 **Tu cherches où te loger côté France ?** À **La Villa Coliving** (Ville-la-Grand, Ambilly et Annemasse), une chambre meublée tout inclus coûte à partir de **1 370 CHF/mois** — charges, fibre et ménage compris, sans frais de dossier. Genève-Eaux-Vives en 7 min de Léman Express depuis la gare d'Annemasse — 18 à 24 min porte-à-porte selon la maison, 30 min jusqu'au centre. → [Voir nos chambres côté France](/colocation-geneve)$r$),
     updated_at = now()
@@ -209,7 +210,7 @@ WHERE slug = 'declaration-impots-frontalier-2026'
   AND position($f$👉 **Tu cherches une [voir nos chambres côté France](/colocation-geneve) ?** À **La Villa Coliving** (Ville-la-Grand, Ambilly et Annemasse), une chambre meublée tout inclus coûte à partir de **1 370 CHF/mois** — charges, fibre et ménage compris, sans frais de dossier. Genève-Eaux-Vives en 7 min de Léman Express depuis la gare d'Annemasse — 18 à 24 min porte-à-porte selon la maison, 30 min jusqu'au centre.$f$ IN content_fr) > 0
   AND position($r$👉 **Tu cherches où te loger côté France ?** À **La Villa Coliving** (Ville-la-Grand, Ambilly et Annemasse), une chambre meublée tout inclus coûte à partir de **1 370 CHF/mois** — charges, fibre et ménage compris, sans frais de dossier. Genève-Eaux-Vives en 7 min de Léman Express depuis la gare d'Annemasse — 18 à 24 min porte-à-porte selon la maison, 30 min jusqu'au centre. → [Voir nos chambres côté France](/colocation-geneve)$r$ IN content_fr) = 0;
 
--- [22/88] declaration-impots-frontalier-2026 (en) · cta · phrase d'appel 👉 : question fixe, lien sorti de la question (A.1, D-A2)
+-- [22/92] declaration-impots-frontalier-2026 (en) · cta · phrase d'appel 👉 : question fixe, lien sorti de la question (A.1, D-A2)
 UPDATE blog_posts
 SET content_en = replace(content_en, $f$👉 **Looking for [a room on the French side](/en/colocation-geneve)?** At **La Villa Coliving** (Ville-la-Grand, Ambilly and Annemasse), a fully furnished all-inclusive room costs from **CHF 1,370/month** — utilities, fiber and cleaning included, no application fee. Geneva Eaux-Vives in 7 minutes by Léman Express from Annemasse station — 18 to 24 minutes door to door depending on the house, 30 minutes to the city centre.$f$, $r$👉 **Looking for a place on the French side?** At **La Villa Coliving** (Ville-la-Grand, Ambilly and Annemasse), a fully furnished all-inclusive room costs from **CHF 1,370/month** — utilities, fiber and cleaning included, no application fee. Geneva Eaux-Vives in 7 minutes by Léman Express from Annemasse station — 18 to 24 minutes door to door depending on the house, 30 minutes to the city centre. → [A room on the French side](/en/colocation-geneve)$r$),
     updated_at = now()
@@ -217,7 +218,7 @@ WHERE slug = 'declaration-impots-frontalier-2026'
   AND position($f$👉 **Looking for [a room on the French side](/en/colocation-geneve)?** At **La Villa Coliving** (Ville-la-Grand, Ambilly and Annemasse), a fully furnished all-inclusive room costs from **CHF 1,370/month** — utilities, fiber and cleaning included, no application fee. Geneva Eaux-Vives in 7 minutes by Léman Express from Annemasse station — 18 to 24 minutes door to door depending on the house, 30 minutes to the city centre.$f$ IN content_en) > 0
   AND position($r$👉 **Looking for a place on the French side?** At **La Villa Coliving** (Ville-la-Grand, Ambilly and Annemasse), a fully furnished all-inclusive room costs from **CHF 1,370/month** — utilities, fiber and cleaning included, no application fee. Geneva Eaux-Vives in 7 minutes by Léman Express from Annemasse station — 18 to 24 minutes door to door depending on the house, 30 minutes to the city centre. → [A room on the French side](/en/colocation-geneve)$r$ IN content_en) = 0;
 
--- [23/88] demenager-geneve-frontalier-checklist (fr) · cta · phrase d'appel 👉 : question fixe, lien sorti de la question (A.1, D-A2)
+-- [23/92] demenager-geneve-frontalier-checklist (fr) · cta · phrase d'appel 👉 : question fixe, lien sorti de la question (A.1, D-A2)
 UPDATE blog_posts
 SET content_fr = replace(content_fr, $f$👉 **Tu cherches une [colocation à Genève](/colocation-geneve) ?** À **La Villa Coliving** (Ville-la-Grand, Ambilly et Annemasse), une chambre meublée tout inclus coûte à partir de **1 370 CHF/mois** — charges, fibre et ménage compris, sans frais de dossier. Genève-Eaux-Vives en 7 min de Léman Express depuis la gare d'Annemasse — 18 à 24 min porte-à-porte selon la maison, 30 min jusqu'au centre.$f$, $r$👉 **Tu cherches où te loger côté France ?** À **La Villa Coliving** (Ville-la-Grand, Ambilly et Annemasse), une chambre meublée tout inclus coûte à partir de **1 370 CHF/mois** — charges, fibre et ménage compris, sans frais de dossier. Genève-Eaux-Vives en 7 min de Léman Express depuis la gare d'Annemasse — 18 à 24 min porte-à-porte selon la maison, 30 min jusqu'au centre. → [Colocation à Genève](/colocation-geneve)$r$),
     updated_at = now()
@@ -225,7 +226,7 @@ WHERE slug = 'demenager-geneve-frontalier-checklist'
   AND position($f$👉 **Tu cherches une [colocation à Genève](/colocation-geneve) ?** À **La Villa Coliving** (Ville-la-Grand, Ambilly et Annemasse), une chambre meublée tout inclus coûte à partir de **1 370 CHF/mois** — charges, fibre et ménage compris, sans frais de dossier. Genève-Eaux-Vives en 7 min de Léman Express depuis la gare d'Annemasse — 18 à 24 min porte-à-porte selon la maison, 30 min jusqu'au centre.$f$ IN content_fr) > 0
   AND position($r$👉 **Tu cherches où te loger côté France ?** À **La Villa Coliving** (Ville-la-Grand, Ambilly et Annemasse), une chambre meublée tout inclus coûte à partir de **1 370 CHF/mois** — charges, fibre et ménage compris, sans frais de dossier. Genève-Eaux-Vives en 7 min de Léman Express depuis la gare d'Annemasse — 18 à 24 min porte-à-porte selon la maison, 30 min jusqu'au centre. → [Colocation à Genève](/colocation-geneve)$r$ IN content_fr) = 0;
 
--- [24/88] demenager-geneve-frontalier-checklist (en) · cta · phrase d'appel 👉 : question fixe, lien sorti de la question (A.1, D-A2)
+-- [24/92] demenager-geneve-frontalier-checklist (en) · cta · phrase d'appel 👉 : question fixe, lien sorti de la question (A.1, D-A2)
 UPDATE blog_posts
 SET content_en = replace(content_en, $f$👉 **Looking for [a room on the French side](/en/colocation-geneve)?** At **La Villa Coliving** (Ville-la-Grand, Ambilly and Annemasse), a fully furnished all-inclusive room costs from **CHF 1,370/month** — utilities, fiber and cleaning included, no application fee. Geneva Eaux-Vives in 7 minutes by Léman Express from Annemasse station — 18 to 24 minutes door to door depending on the house, 30 minutes to the city centre.$f$, $r$👉 **Looking for a place on the French side?** At **La Villa Coliving** (Ville-la-Grand, Ambilly and Annemasse), a fully furnished all-inclusive room costs from **CHF 1,370/month** — utilities, fiber and cleaning included, no application fee. Geneva Eaux-Vives in 7 minutes by Léman Express from Annemasse station — 18 to 24 minutes door to door depending on the house, 30 minutes to the city centre. → [A room on the French side](/en/colocation-geneve)$r$),
     updated_at = now()
@@ -233,7 +234,7 @@ WHERE slug = 'demenager-geneve-frontalier-checklist'
   AND position($f$👉 **Looking for [a room on the French side](/en/colocation-geneve)?** At **La Villa Coliving** (Ville-la-Grand, Ambilly and Annemasse), a fully furnished all-inclusive room costs from **CHF 1,370/month** — utilities, fiber and cleaning included, no application fee. Geneva Eaux-Vives in 7 minutes by Léman Express from Annemasse station — 18 to 24 minutes door to door depending on the house, 30 minutes to the city centre.$f$ IN content_en) > 0
   AND position($r$👉 **Looking for a place on the French side?** At **La Villa Coliving** (Ville-la-Grand, Ambilly and Annemasse), a fully furnished all-inclusive room costs from **CHF 1,370/month** — utilities, fiber and cleaning included, no application fee. Geneva Eaux-Vives in 7 minutes by Léman Express from Annemasse station — 18 to 24 minutes door to door depending on the house, 30 minutes to the city centre. → [A room on the French side](/en/colocation-geneve)$r$ IN content_en) = 0;
 
--- [25/88] ecole-internationale-geneve-frontalier-ou-habiter (fr) · cta · phrase d'appel 👉 : question fixe, lien sorti de la question (A.1, D-A2)
+-- [25/92] ecole-internationale-geneve-frontalier-ou-habiter (fr) · cta · phrase d'appel 👉 : question fixe, lien sorti de la question (A.1, D-A2)
 UPDATE blog_posts
 SET content_fr = replace(content_fr, $f$👉 **Tu cherches une [La Villa Coliving, côté France](/colocation-geneve) ?** À **La Villa Coliving** (Ville-la-Grand, Ambilly et Annemasse), une chambre meublée tout inclus coûte à partir de **1 370 CHF/mois** — charges, fibre et ménage compris, sans frais de dossier. Genève-Eaux-Vives en 7 min de Léman Express depuis la gare d'Annemasse — 18 à 24 min porte-à-porte selon la maison, 30 min jusqu'au centre.$f$, $r$👉 **Tu cherches où te loger côté France ?** À **La Villa Coliving** (Ville-la-Grand, Ambilly et Annemasse), une chambre meublée tout inclus coûte à partir de **1 370 CHF/mois** — charges, fibre et ménage compris, sans frais de dossier. Genève-Eaux-Vives en 7 min de Léman Express depuis la gare d'Annemasse — 18 à 24 min porte-à-porte selon la maison, 30 min jusqu'au centre. → [La Villa Coliving, côté France](/colocation-geneve)$r$),
     updated_at = now()
@@ -241,7 +242,7 @@ WHERE slug = 'ecole-internationale-geneve-frontalier-ou-habiter'
   AND position($f$👉 **Tu cherches une [La Villa Coliving, côté France](/colocation-geneve) ?** À **La Villa Coliving** (Ville-la-Grand, Ambilly et Annemasse), une chambre meublée tout inclus coûte à partir de **1 370 CHF/mois** — charges, fibre et ménage compris, sans frais de dossier. Genève-Eaux-Vives en 7 min de Léman Express depuis la gare d'Annemasse — 18 à 24 min porte-à-porte selon la maison, 30 min jusqu'au centre.$f$ IN content_fr) > 0
   AND position($r$👉 **Tu cherches où te loger côté France ?** À **La Villa Coliving** (Ville-la-Grand, Ambilly et Annemasse), une chambre meublée tout inclus coûte à partir de **1 370 CHF/mois** — charges, fibre et ménage compris, sans frais de dossier. Genève-Eaux-Vives en 7 min de Léman Express depuis la gare d'Annemasse — 18 à 24 min porte-à-porte selon la maison, 30 min jusqu'au centre. → [La Villa Coliving, côté France](/colocation-geneve)$r$ IN content_fr) = 0;
 
--- [26/88] ecole-internationale-geneve-frontalier-ou-habiter (en) · cta · phrase d'appel 👉 : question fixe, lien sorti de la question (A.1, D-A2)
+-- [26/92] ecole-internationale-geneve-frontalier-ou-habiter (en) · cta · phrase d'appel 👉 : question fixe, lien sorti de la question (A.1, D-A2)
 UPDATE blog_posts
 SET content_en = replace(content_en, $f$👉 **Looking for [a room on the French side](/en/colocation-geneve)?** At **La Villa Coliving** (Ville-la-Grand, Ambilly and Annemasse), a fully furnished all-inclusive room costs from **CHF 1,370/month** — utilities, fiber and cleaning included, no application fee. Geneva Eaux-Vives in 7 minutes by Léman Express from Annemasse station — 18 to 24 minutes door to door depending on the house, 30 minutes to the city centre.$f$, $r$👉 **Looking for a place on the French side?** At **La Villa Coliving** (Ville-la-Grand, Ambilly and Annemasse), a fully furnished all-inclusive room costs from **CHF 1,370/month** — utilities, fiber and cleaning included, no application fee. Geneva Eaux-Vives in 7 minutes by Léman Express from Annemasse station — 18 to 24 minutes door to door depending on the house, 30 minutes to the city centre. → [A room on the French side](/en/colocation-geneve)$r$),
     updated_at = now()
@@ -249,7 +250,7 @@ WHERE slug = 'ecole-internationale-geneve-frontalier-ou-habiter'
   AND position($f$👉 **Looking for [a room on the French side](/en/colocation-geneve)?** At **La Villa Coliving** (Ville-la-Grand, Ambilly and Annemasse), a fully furnished all-inclusive room costs from **CHF 1,370/month** — utilities, fiber and cleaning included, no application fee. Geneva Eaux-Vives in 7 minutes by Léman Express from Annemasse station — 18 to 24 minutes door to door depending on the house, 30 minutes to the city centre.$f$ IN content_en) > 0
   AND position($r$👉 **Looking for a place on the French side?** At **La Villa Coliving** (Ville-la-Grand, Ambilly and Annemasse), a fully furnished all-inclusive room costs from **CHF 1,370/month** — utilities, fiber and cleaning included, no application fee. Geneva Eaux-Vives in 7 minutes by Léman Express from Annemasse station — 18 to 24 minutes door to door depending on the house, 30 minutes to the city centre. → [A room on the French side](/en/colocation-geneve)$r$ IN content_en) = 0;
 
--- [27/88] fiscalite-frontalier-geneve-impots-2026 (fr) · cta · phrase d'appel 👉 : question fixe, lien sorti de la question (A.1, D-A2)
+-- [27/92] fiscalite-frontalier-geneve-impots-2026 (fr) · cta · phrase d'appel 👉 : question fixe, lien sorti de la question (A.1, D-A2)
 UPDATE blog_posts
 SET content_fr = replace(content_fr, $f$👉 **Tu cherches une [voir nos chambres côté France](/colocation-geneve) ?** À **La Villa Coliving** (Ville-la-Grand, Ambilly et Annemasse), une chambre meublée tout inclus coûte à partir de **1 370 CHF/mois** — charges, fibre et ménage compris, sans frais de dossier. Genève-Eaux-Vives en 7 min de Léman Express depuis la gare d'Annemasse — 18 à 24 min porte-à-porte selon la maison, 30 min jusqu'au centre.$f$, $r$👉 **Tu cherches où te loger côté France ?** À **La Villa Coliving** (Ville-la-Grand, Ambilly et Annemasse), une chambre meublée tout inclus coûte à partir de **1 370 CHF/mois** — charges, fibre et ménage compris, sans frais de dossier. Genève-Eaux-Vives en 7 min de Léman Express depuis la gare d'Annemasse — 18 à 24 min porte-à-porte selon la maison, 30 min jusqu'au centre. → [Voir nos chambres côté France](/colocation-geneve)$r$),
     updated_at = now()
@@ -257,7 +258,7 @@ WHERE slug = 'fiscalite-frontalier-geneve-impots-2026'
   AND position($f$👉 **Tu cherches une [voir nos chambres côté France](/colocation-geneve) ?** À **La Villa Coliving** (Ville-la-Grand, Ambilly et Annemasse), une chambre meublée tout inclus coûte à partir de **1 370 CHF/mois** — charges, fibre et ménage compris, sans frais de dossier. Genève-Eaux-Vives en 7 min de Léman Express depuis la gare d'Annemasse — 18 à 24 min porte-à-porte selon la maison, 30 min jusqu'au centre.$f$ IN content_fr) > 0
   AND position($r$👉 **Tu cherches où te loger côté France ?** À **La Villa Coliving** (Ville-la-Grand, Ambilly et Annemasse), une chambre meublée tout inclus coûte à partir de **1 370 CHF/mois** — charges, fibre et ménage compris, sans frais de dossier. Genève-Eaux-Vives en 7 min de Léman Express depuis la gare d'Annemasse — 18 à 24 min porte-à-porte selon la maison, 30 min jusqu'au centre. → [Voir nos chambres côté France](/colocation-geneve)$r$ IN content_fr) = 0;
 
--- [28/88] fiscalite-frontalier-geneve-impots-2026 (en) · cta · phrase d'appel 👉 : question fixe, lien sorti de la question (A.1, D-A2)
+-- [28/92] fiscalite-frontalier-geneve-impots-2026 (en) · cta · phrase d'appel 👉 : question fixe, lien sorti de la question (A.1, D-A2)
 UPDATE blog_posts
 SET content_en = replace(content_en, $f$👉 **Looking for [a room on the French side](/en/colocation-geneve)?** At **La Villa Coliving** (Ville-la-Grand, Ambilly and Annemasse), a fully furnished all-inclusive room costs from **CHF 1,370/month** — utilities, fiber and cleaning included, no application fee. Geneva Eaux-Vives in 7 minutes by Léman Express from Annemasse station — 18 to 24 minutes door to door depending on the house, 30 minutes to the city centre.$f$, $r$👉 **Looking for a place on the French side?** At **La Villa Coliving** (Ville-la-Grand, Ambilly and Annemasse), a fully furnished all-inclusive room costs from **CHF 1,370/month** — utilities, fiber and cleaning included, no application fee. Geneva Eaux-Vives in 7 minutes by Léman Express from Annemasse station — 18 to 24 minutes door to door depending on the house, 30 minutes to the city centre. → [A room on the French side](/en/colocation-geneve)$r$),
     updated_at = now()
@@ -265,7 +266,7 @@ WHERE slug = 'fiscalite-frontalier-geneve-impots-2026'
   AND position($f$👉 **Looking for [a room on the French side](/en/colocation-geneve)?** At **La Villa Coliving** (Ville-la-Grand, Ambilly and Annemasse), a fully furnished all-inclusive room costs from **CHF 1,370/month** — utilities, fiber and cleaning included, no application fee. Geneva Eaux-Vives in 7 minutes by Léman Express from Annemasse station — 18 to 24 minutes door to door depending on the house, 30 minutes to the city centre.$f$ IN content_en) > 0
   AND position($r$👉 **Looking for a place on the French side?** At **La Villa Coliving** (Ville-la-Grand, Ambilly and Annemasse), a fully furnished all-inclusive room costs from **CHF 1,370/month** — utilities, fiber and cleaning included, no application fee. Geneva Eaux-Vives in 7 minutes by Léman Express from Annemasse station — 18 to 24 minutes door to door depending on the house, 30 minutes to the city centre. → [A room on the French side](/en/colocation-geneve)$r$ IN content_en) = 0;
 
--- [29/88] grand-geneve-2026-nouveautes-frontaliers (fr) · cta · phrase d'appel 👉 : question fixe, lien sorti de la question (A.1, D-A2)
+-- [29/92] grand-geneve-2026-nouveautes-frontaliers (fr) · cta · phrase d'appel 👉 : question fixe, lien sorti de la question (A.1, D-A2)
 UPDATE blog_posts
 SET content_fr = replace(content_fr, $f$👉 **Tu cherches une [colocation à Genève](/colocation-geneve) ?** À **La Villa Coliving** (Ville-la-Grand, Ambilly et Annemasse), une chambre meublée tout inclus coûte à partir de **1 370 CHF/mois** — charges, fibre et ménage compris, sans frais de dossier. Genève-Eaux-Vives en 7 min de Léman Express depuis la gare d'Annemasse — 18 à 24 min porte-à-porte selon la maison, 30 min jusqu'au centre.$f$, $r$👉 **Tu cherches où te loger côté France ?** À **La Villa Coliving** (Ville-la-Grand, Ambilly et Annemasse), une chambre meublée tout inclus coûte à partir de **1 370 CHF/mois** — charges, fibre et ménage compris, sans frais de dossier. Genève-Eaux-Vives en 7 min de Léman Express depuis la gare d'Annemasse — 18 à 24 min porte-à-porte selon la maison, 30 min jusqu'au centre. → [Colocation à Genève](/colocation-geneve)$r$),
     updated_at = now()
@@ -273,7 +274,7 @@ WHERE slug = 'grand-geneve-2026-nouveautes-frontaliers'
   AND position($f$👉 **Tu cherches une [colocation à Genève](/colocation-geneve) ?** À **La Villa Coliving** (Ville-la-Grand, Ambilly et Annemasse), une chambre meublée tout inclus coûte à partir de **1 370 CHF/mois** — charges, fibre et ménage compris, sans frais de dossier. Genève-Eaux-Vives en 7 min de Léman Express depuis la gare d'Annemasse — 18 à 24 min porte-à-porte selon la maison, 30 min jusqu'au centre.$f$ IN content_fr) > 0
   AND position($r$👉 **Tu cherches où te loger côté France ?** À **La Villa Coliving** (Ville-la-Grand, Ambilly et Annemasse), une chambre meublée tout inclus coûte à partir de **1 370 CHF/mois** — charges, fibre et ménage compris, sans frais de dossier. Genève-Eaux-Vives en 7 min de Léman Express depuis la gare d'Annemasse — 18 à 24 min porte-à-porte selon la maison, 30 min jusqu'au centre. → [Colocation à Genève](/colocation-geneve)$r$ IN content_fr) = 0;
 
--- [30/88] grand-geneve-2026-nouveautes-frontaliers (en) · cta · phrase d'appel 👉 : question fixe, lien sorti de la question (A.1, D-A2)
+-- [30/92] grand-geneve-2026-nouveautes-frontaliers (en) · cta · phrase d'appel 👉 : question fixe, lien sorti de la question (A.1, D-A2)
 UPDATE blog_posts
 SET content_en = replace(content_en, $f$👉 **Looking for [a room on the French side](/en/colocation-geneve)?** At **La Villa Coliving** (Ville-la-Grand, Ambilly and Annemasse), a fully furnished all-inclusive room costs from **CHF 1,370/month** — utilities, fiber and cleaning included, no application fee. Geneva Eaux-Vives in 7 minutes by Léman Express from Annemasse station — 18 to 24 minutes door to door depending on the house, 30 minutes to the city centre.$f$, $r$👉 **Looking for a place on the French side?** At **La Villa Coliving** (Ville-la-Grand, Ambilly and Annemasse), a fully furnished all-inclusive room costs from **CHF 1,370/month** — utilities, fiber and cleaning included, no application fee. Geneva Eaux-Vives in 7 minutes by Léman Express from Annemasse station — 18 to 24 minutes door to door depending on the house, 30 minutes to the city centre. → [A room on the French side](/en/colocation-geneve)$r$),
     updated_at = now()
@@ -281,7 +282,7 @@ WHERE slug = 'grand-geneve-2026-nouveautes-frontaliers'
   AND position($f$👉 **Looking for [a room on the French side](/en/colocation-geneve)?** At **La Villa Coliving** (Ville-la-Grand, Ambilly and Annemasse), a fully furnished all-inclusive room costs from **CHF 1,370/month** — utilities, fiber and cleaning included, no application fee. Geneva Eaux-Vives in 7 minutes by Léman Express from Annemasse station — 18 to 24 minutes door to door depending on the house, 30 minutes to the city centre.$f$ IN content_en) > 0
   AND position($r$👉 **Looking for a place on the French side?** At **La Villa Coliving** (Ville-la-Grand, Ambilly and Annemasse), a fully furnished all-inclusive room costs from **CHF 1,370/month** — utilities, fiber and cleaning included, no application fee. Geneva Eaux-Vives in 7 minutes by Léman Express from Annemasse station — 18 to 24 minutes door to door depending on the house, 30 minutes to the city centre. → [A room on the French side](/en/colocation-geneve)$r$ IN content_en) = 0;
 
--- [31/88] guide-ressources-frontalier-geneve (fr) · cta · phrase d'appel 👉 : question fixe, lien sorti de la question (A.1, D-A2)
+-- [31/92] guide-ressources-frontalier-geneve (fr) · cta · phrase d'appel 👉 : question fixe, lien sorti de la question (A.1, D-A2)
 UPDATE blog_posts
 SET content_fr = replace(content_fr, $f$👉 **Tu cherches une [chambres en colocation côté France](/colocation-geneve) ?** À **La Villa Coliving** (Ville-la-Grand, Ambilly et Annemasse), une chambre meublée tout inclus coûte à partir de **1 370 CHF/mois** — charges, fibre et ménage compris, sans frais de dossier. Genève-Eaux-Vives en 7 min de Léman Express depuis la gare d'Annemasse — 18 à 24 min porte-à-porte selon la maison, 30 min jusqu'au centre.$f$, $r$👉 **Tu cherches où te loger côté France ?** À **La Villa Coliving** (Ville-la-Grand, Ambilly et Annemasse), une chambre meublée tout inclus coûte à partir de **1 370 CHF/mois** — charges, fibre et ménage compris, sans frais de dossier. Genève-Eaux-Vives en 7 min de Léman Express depuis la gare d'Annemasse — 18 à 24 min porte-à-porte selon la maison, 30 min jusqu'au centre. → [Chambres en colocation côté France](/colocation-geneve)$r$),
     updated_at = now()
@@ -289,7 +290,7 @@ WHERE slug = 'guide-ressources-frontalier-geneve'
   AND position($f$👉 **Tu cherches une [chambres en colocation côté France](/colocation-geneve) ?** À **La Villa Coliving** (Ville-la-Grand, Ambilly et Annemasse), une chambre meublée tout inclus coûte à partir de **1 370 CHF/mois** — charges, fibre et ménage compris, sans frais de dossier. Genève-Eaux-Vives en 7 min de Léman Express depuis la gare d'Annemasse — 18 à 24 min porte-à-porte selon la maison, 30 min jusqu'au centre.$f$ IN content_fr) > 0
   AND position($r$👉 **Tu cherches où te loger côté France ?** À **La Villa Coliving** (Ville-la-Grand, Ambilly et Annemasse), une chambre meublée tout inclus coûte à partir de **1 370 CHF/mois** — charges, fibre et ménage compris, sans frais de dossier. Genève-Eaux-Vives en 7 min de Léman Express depuis la gare d'Annemasse — 18 à 24 min porte-à-porte selon la maison, 30 min jusqu'au centre. → [Chambres en colocation côté France](/colocation-geneve)$r$ IN content_fr) = 0;
 
--- [32/88] guide-ressources-frontalier-geneve (en) · cta · phrase d'appel 👉 : question fixe, lien sorti de la question (A.1, D-A2)
+-- [32/92] guide-ressources-frontalier-geneve (en) · cta · phrase d'appel 👉 : question fixe, lien sorti de la question (A.1, D-A2)
 UPDATE blog_posts
 SET content_en = replace(content_en, $f$👉 **Looking for [a room on the French side](/en/colocation-geneve)?** At **La Villa Coliving** (Ville-la-Grand, Ambilly and Annemasse), a fully furnished all-inclusive room costs from **CHF 1,370/month** — utilities, fiber and cleaning included, no application fee. Geneva Eaux-Vives in 7 minutes by Léman Express from Annemasse station — 18 to 24 minutes door to door depending on the house, 30 minutes to the city centre.$f$, $r$👉 **Looking for a place on the French side?** At **La Villa Coliving** (Ville-la-Grand, Ambilly and Annemasse), a fully furnished all-inclusive room costs from **CHF 1,370/month** — utilities, fiber and cleaning included, no application fee. Geneva Eaux-Vives in 7 minutes by Léman Express from Annemasse station — 18 to 24 minutes door to door depending on the house, 30 minutes to the city centre. → [A room on the French side](/en/colocation-geneve)$r$),
     updated_at = now()
@@ -297,7 +298,7 @@ WHERE slug = 'guide-ressources-frontalier-geneve'
   AND position($f$👉 **Looking for [a room on the French side](/en/colocation-geneve)?** At **La Villa Coliving** (Ville-la-Grand, Ambilly and Annemasse), a fully furnished all-inclusive room costs from **CHF 1,370/month** — utilities, fiber and cleaning included, no application fee. Geneva Eaux-Vives in 7 minutes by Léman Express from Annemasse station — 18 to 24 minutes door to door depending on the house, 30 minutes to the city centre.$f$ IN content_en) > 0
   AND position($r$👉 **Looking for a place on the French side?** At **La Villa Coliving** (Ville-la-Grand, Ambilly and Annemasse), a fully furnished all-inclusive room costs from **CHF 1,370/month** — utilities, fiber and cleaning included, no application fee. Geneva Eaux-Vives in 7 minutes by Léman Express from Annemasse station — 18 to 24 minutes door to door depending on the house, 30 minutes to the city centre. → [A room on the French side](/en/colocation-geneve)$r$ IN content_en) = 0;
 
--- [33/88] living-in-france-working-in-geneva (fr) · cta · phrase d'appel 👉 : question fixe, lien sorti de la question (A.1, D-A2)
+-- [33/92] living-in-france-working-in-geneva (fr) · cta · phrase d'appel 👉 : question fixe, lien sorti de la question (A.1, D-A2)
 UPDATE blog_posts
 SET content_fr = replace(content_fr, $f$👉 **Tu cherches une [La Villa Coliving, côté France](/colocation-geneve) ?** À **La Villa Coliving** (Ville-la-Grand, Ambilly et Annemasse), une chambre meublée tout inclus coûte à partir de **1 370 CHF/mois** — charges, fibre et ménage compris, sans frais de dossier. Genève-Eaux-Vives en 7 min de Léman Express depuis la gare d'Annemasse — 18 à 24 min porte-à-porte selon la maison, 30 min jusqu'au centre.$f$, $r$👉 **Tu cherches où te loger côté France ?** À **La Villa Coliving** (Ville-la-Grand, Ambilly et Annemasse), une chambre meublée tout inclus coûte à partir de **1 370 CHF/mois** — charges, fibre et ménage compris, sans frais de dossier. Genève-Eaux-Vives en 7 min de Léman Express depuis la gare d'Annemasse — 18 à 24 min porte-à-porte selon la maison, 30 min jusqu'au centre. → [La Villa Coliving, côté France](/colocation-geneve)$r$),
     updated_at = now()
@@ -305,7 +306,7 @@ WHERE slug = 'living-in-france-working-in-geneva'
   AND position($f$👉 **Tu cherches une [La Villa Coliving, côté France](/colocation-geneve) ?** À **La Villa Coliving** (Ville-la-Grand, Ambilly et Annemasse), une chambre meublée tout inclus coûte à partir de **1 370 CHF/mois** — charges, fibre et ménage compris, sans frais de dossier. Genève-Eaux-Vives en 7 min de Léman Express depuis la gare d'Annemasse — 18 à 24 min porte-à-porte selon la maison, 30 min jusqu'au centre.$f$ IN content_fr) > 0
   AND position($r$👉 **Tu cherches où te loger côté France ?** À **La Villa Coliving** (Ville-la-Grand, Ambilly et Annemasse), une chambre meublée tout inclus coûte à partir de **1 370 CHF/mois** — charges, fibre et ménage compris, sans frais de dossier. Genève-Eaux-Vives en 7 min de Léman Express depuis la gare d'Annemasse — 18 à 24 min porte-à-porte selon la maison, 30 min jusqu'au centre. → [La Villa Coliving, côté France](/colocation-geneve)$r$ IN content_fr) = 0;
 
--- [34/88] living-in-france-working-in-geneva (en) · cta · phrase d'appel 👉 : question fixe, lien sorti de la question (A.1, D-A2)
+-- [34/92] living-in-france-working-in-geneva (en) · cta · phrase d'appel 👉 : question fixe, lien sorti de la question (A.1, D-A2)
 UPDATE blog_posts
 SET content_en = replace(content_en, $f$👉 **Looking for [shared housing near Geneva](/en/colocation-geneve)?** At **La Villa Coliving** (Ville-la-Grand, Ambilly and Annemasse), a fully furnished all-inclusive room costs from **CHF 1,370/month** — utilities, fiber and cleaning included, no application fee. Geneva Eaux-Vives in 7 minutes by Léman Express from Annemasse station — 18 to 24 minutes door to door depending on the house, 30 minutes to the city centre.$f$, $r$👉 **Looking for a place on the French side?** At **La Villa Coliving** (Ville-la-Grand, Ambilly and Annemasse), a fully furnished all-inclusive room costs from **CHF 1,370/month** — utilities, fiber and cleaning included, no application fee. Geneva Eaux-Vives in 7 minutes by Léman Express from Annemasse station — 18 to 24 minutes door to door depending on the house, 30 minutes to the city centre. → [Shared housing near Geneva](/en/colocation-geneve)$r$),
     updated_at = now()
@@ -313,7 +314,7 @@ WHERE slug = 'living-in-france-working-in-geneva'
   AND position($f$👉 **Looking for [shared housing near Geneva](/en/colocation-geneve)?** At **La Villa Coliving** (Ville-la-Grand, Ambilly and Annemasse), a fully furnished all-inclusive room costs from **CHF 1,370/month** — utilities, fiber and cleaning included, no application fee. Geneva Eaux-Vives in 7 minutes by Léman Express from Annemasse station — 18 to 24 minutes door to door depending on the house, 30 minutes to the city centre.$f$ IN content_en) > 0
   AND position($r$👉 **Looking for a place on the French side?** At **La Villa Coliving** (Ville-la-Grand, Ambilly and Annemasse), a fully furnished all-inclusive room costs from **CHF 1,370/month** — utilities, fiber and cleaning included, no application fee. Geneva Eaux-Vives in 7 minutes by Léman Express from Annemasse station — 18 to 24 minutes door to door depending on the house, 30 minutes to the city centre. → [Shared housing near Geneva](/en/colocation-geneve)$r$ IN content_en) = 0;
 
--- [35/88] optimiser-espace-coliving-productivite-bien-etre (fr) · cta · phrase d'appel 👉 : question fixe, lien sorti de la question (A.1, D-A2)
+-- [35/92] optimiser-espace-coliving-productivite-bien-etre (fr) · cta · phrase d'appel 👉 : question fixe, lien sorti de la question (A.1, D-A2)
 UPDATE blog_posts
 SET content_fr = replace(content_fr, $f$👉 **Tu cherches une [voir nos chambres côté France](/colocation-geneve) ?** À **La Villa Coliving** (Ville-la-Grand, Ambilly et Annemasse), une chambre meublée tout inclus coûte à partir de **1 370 CHF/mois** — charges, fibre et ménage compris, sans frais de dossier. Genève-Eaux-Vives en 7 min de Léman Express depuis la gare d'Annemasse — 18 à 24 min porte-à-porte selon la maison, 30 min jusqu'au centre.$f$, $r$👉 **Tu cherches où te loger côté France ?** À **La Villa Coliving** (Ville-la-Grand, Ambilly et Annemasse), une chambre meublée tout inclus coûte à partir de **1 370 CHF/mois** — charges, fibre et ménage compris, sans frais de dossier. Genève-Eaux-Vives en 7 min de Léman Express depuis la gare d'Annemasse — 18 à 24 min porte-à-porte selon la maison, 30 min jusqu'au centre. → [Voir nos chambres côté France](/colocation-geneve)$r$),
     updated_at = now()
@@ -321,7 +322,7 @@ WHERE slug = 'optimiser-espace-coliving-productivite-bien-etre'
   AND position($f$👉 **Tu cherches une [voir nos chambres côté France](/colocation-geneve) ?** À **La Villa Coliving** (Ville-la-Grand, Ambilly et Annemasse), une chambre meublée tout inclus coûte à partir de **1 370 CHF/mois** — charges, fibre et ménage compris, sans frais de dossier. Genève-Eaux-Vives en 7 min de Léman Express depuis la gare d'Annemasse — 18 à 24 min porte-à-porte selon la maison, 30 min jusqu'au centre.$f$ IN content_fr) > 0
   AND position($r$👉 **Tu cherches où te loger côté France ?** À **La Villa Coliving** (Ville-la-Grand, Ambilly et Annemasse), une chambre meublée tout inclus coûte à partir de **1 370 CHF/mois** — charges, fibre et ménage compris, sans frais de dossier. Genève-Eaux-Vives en 7 min de Léman Express depuis la gare d'Annemasse — 18 à 24 min porte-à-porte selon la maison, 30 min jusqu'au centre. → [Voir nos chambres côté France](/colocation-geneve)$r$ IN content_fr) = 0;
 
--- [36/88] optimiser-espace-coliving-productivite-bien-etre (en) · cta · phrase d'appel 👉 : question fixe, lien sorti de la question (A.1, D-A2)
+-- [36/92] optimiser-espace-coliving-productivite-bien-etre (en) · cta · phrase d'appel 👉 : question fixe, lien sorti de la question (A.1, D-A2)
 UPDATE blog_posts
 SET content_en = replace(content_en, $f$👉 **Looking for [shared housing near Geneva](/en/colocation-geneve)?** At **La Villa Coliving** (Ville-la-Grand, Ambilly and Annemasse), a fully furnished all-inclusive room costs from **CHF 1,370/month** — utilities, fiber and cleaning included, no application fee. Geneva Eaux-Vives in 7 minutes by Léman Express from Annemasse station — 18 to 24 minutes door to door depending on the house, 30 minutes to the city centre.$f$, $r$👉 **Looking for a place on the French side?** At **La Villa Coliving** (Ville-la-Grand, Ambilly and Annemasse), a fully furnished all-inclusive room costs from **CHF 1,370/month** — utilities, fiber and cleaning included, no application fee. Geneva Eaux-Vives in 7 minutes by Léman Express from Annemasse station — 18 to 24 minutes door to door depending on the house, 30 minutes to the city centre. → [Shared housing near Geneva](/en/colocation-geneve)$r$),
     updated_at = now()
@@ -329,7 +330,7 @@ WHERE slug = 'optimiser-espace-coliving-productivite-bien-etre'
   AND position($f$👉 **Looking for [shared housing near Geneva](/en/colocation-geneve)?** At **La Villa Coliving** (Ville-la-Grand, Ambilly and Annemasse), a fully furnished all-inclusive room costs from **CHF 1,370/month** — utilities, fiber and cleaning included, no application fee. Geneva Eaux-Vives in 7 minutes by Léman Express from Annemasse station — 18 to 24 minutes door to door depending on the house, 30 minutes to the city centre.$f$ IN content_en) > 0
   AND position($r$👉 **Looking for a place on the French side?** At **La Villa Coliving** (Ville-la-Grand, Ambilly and Annemasse), a fully furnished all-inclusive room costs from **CHF 1,370/month** — utilities, fiber and cleaning included, no application fee. Geneva Eaux-Vives in 7 minutes by Léman Express from Annemasse station — 18 to 24 minutes door to door depending on the house, 30 minutes to the city centre. → [Shared housing near Geneva](/en/colocation-geneve)$r$ IN content_en) = 0;
 
--- [37/88] organisations-internationales-geneve-ou-habiter (fr) · cta · phrase d'appel 👉 : question fixe, lien sorti de la question (A.1, D-A2)
+-- [37/92] organisations-internationales-geneve-ou-habiter (fr) · cta · phrase d'appel 👉 : question fixe, lien sorti de la question (A.1, D-A2)
 UPDATE blog_posts
 SET content_fr = replace(content_fr, $f$👉 **Tu cherches une [colocation à Genève](/colocation-geneve) ?** À **La Villa Coliving** (Ville-la-Grand, Ambilly et Annemasse), une chambre meublée tout inclus coûte à partir de **1 370 CHF/mois** — charges, fibre et ménage compris, sans frais de dossier. Genève-Eaux-Vives en 7 min de Léman Express depuis la gare d'Annemasse — 18 à 24 min porte-à-porte selon la maison, 30 min jusqu'au centre.$f$, $r$👉 **Tu cherches où te loger côté France ?** À **La Villa Coliving** (Ville-la-Grand, Ambilly et Annemasse), une chambre meublée tout inclus coûte à partir de **1 370 CHF/mois** — charges, fibre et ménage compris, sans frais de dossier. Genève-Eaux-Vives en 7 min de Léman Express depuis la gare d'Annemasse — 18 à 24 min porte-à-porte selon la maison, 30 min jusqu'au centre. → [Colocation à Genève](/colocation-geneve)$r$),
     updated_at = now()
@@ -337,7 +338,7 @@ WHERE slug = 'organisations-internationales-geneve-ou-habiter'
   AND position($f$👉 **Tu cherches une [colocation à Genève](/colocation-geneve) ?** À **La Villa Coliving** (Ville-la-Grand, Ambilly et Annemasse), une chambre meublée tout inclus coûte à partir de **1 370 CHF/mois** — charges, fibre et ménage compris, sans frais de dossier. Genève-Eaux-Vives en 7 min de Léman Express depuis la gare d'Annemasse — 18 à 24 min porte-à-porte selon la maison, 30 min jusqu'au centre.$f$ IN content_fr) > 0
   AND position($r$👉 **Tu cherches où te loger côté France ?** À **La Villa Coliving** (Ville-la-Grand, Ambilly et Annemasse), une chambre meublée tout inclus coûte à partir de **1 370 CHF/mois** — charges, fibre et ménage compris, sans frais de dossier. Genève-Eaux-Vives en 7 min de Léman Express depuis la gare d'Annemasse — 18 à 24 min porte-à-porte selon la maison, 30 min jusqu'au centre. → [Colocation à Genève](/colocation-geneve)$r$ IN content_fr) = 0;
 
--- [38/88] organisations-internationales-geneve-ou-habiter (en) · cta · phrase d'appel 👉 : question fixe, lien sorti de la question (A.1, D-A2)
+-- [38/92] organisations-internationales-geneve-ou-habiter (en) · cta · phrase d'appel 👉 : question fixe, lien sorti de la question (A.1, D-A2)
 UPDATE blog_posts
 SET content_en = replace(content_en, $f$👉 **Looking for [shared housing near Geneva](/en/colocation-geneve)?** At **La Villa Coliving** (Ville-la-Grand, Ambilly and Annemasse), a fully furnished all-inclusive room costs from **CHF 1,370/month** — utilities, fiber and cleaning included, no application fee. Geneva Eaux-Vives in 7 minutes by Léman Express from Annemasse station — 18 to 24 minutes door to door depending on the house, 30 minutes to the city centre.$f$, $r$👉 **Looking for a place on the French side?** At **La Villa Coliving** (Ville-la-Grand, Ambilly and Annemasse), a fully furnished all-inclusive room costs from **CHF 1,370/month** — utilities, fiber and cleaning included, no application fee. Geneva Eaux-Vives in 7 minutes by Léman Express from Annemasse station — 18 to 24 minutes door to door depending on the house, 30 minutes to the city centre. → [Shared housing near Geneva](/en/colocation-geneve)$r$),
     updated_at = now()
@@ -345,7 +346,7 @@ WHERE slug = 'organisations-internationales-geneve-ou-habiter'
   AND position($f$👉 **Looking for [shared housing near Geneva](/en/colocation-geneve)?** At **La Villa Coliving** (Ville-la-Grand, Ambilly and Annemasse), a fully furnished all-inclusive room costs from **CHF 1,370/month** — utilities, fiber and cleaning included, no application fee. Geneva Eaux-Vives in 7 minutes by Léman Express from Annemasse station — 18 to 24 minutes door to door depending on the house, 30 minutes to the city centre.$f$ IN content_en) > 0
   AND position($r$👉 **Looking for a place on the French side?** At **La Villa Coliving** (Ville-la-Grand, Ambilly and Annemasse), a fully furnished all-inclusive room costs from **CHF 1,370/month** — utilities, fiber and cleaning included, no application fee. Geneva Eaux-Vives in 7 minutes by Léman Express from Annemasse station — 18 to 24 minutes door to door depending on the house, 30 minutes to the city centre. → [Shared housing near Geneva](/en/colocation-geneve)$r$ IN content_en) = 0;
 
--- [39/88] ou-habiter-frontalier-suisse-villes-france-pas-cher (fr) · cta · phrase d'appel 👉 : question fixe, lien sorti de la question (A.1, D-A2)
+-- [39/92] ou-habiter-frontalier-suisse-villes-france-pas-cher (fr) · cta · phrase d'appel 👉 : question fixe, lien sorti de la question (A.1, D-A2)
 UPDATE blog_posts
 SET content_fr = replace(content_fr, $f$👉 **Tu cherches une [chambres en colocation côté France](/colocation-geneve) ?** À **La Villa Coliving** (Ville-la-Grand, Ambilly et Annemasse), une chambre meublée tout inclus coûte à partir de **1 370 CHF/mois** — charges, fibre et ménage compris, sans frais de dossier. Genève-Eaux-Vives en 7 min de Léman Express depuis la gare d'Annemasse — 18 à 24 min porte-à-porte selon la maison, 30 min jusqu'au centre.$f$, $r$👉 **Tu cherches où te loger côté France ?** À **La Villa Coliving** (Ville-la-Grand, Ambilly et Annemasse), une chambre meublée tout inclus coûte à partir de **1 370 CHF/mois** — charges, fibre et ménage compris, sans frais de dossier. Genève-Eaux-Vives en 7 min de Léman Express depuis la gare d'Annemasse — 18 à 24 min porte-à-porte selon la maison, 30 min jusqu'au centre. → [Chambres en colocation côté France](/colocation-geneve)$r$),
     updated_at = now()
@@ -353,7 +354,7 @@ WHERE slug = 'ou-habiter-frontalier-suisse-villes-france-pas-cher'
   AND position($f$👉 **Tu cherches une [chambres en colocation côté France](/colocation-geneve) ?** À **La Villa Coliving** (Ville-la-Grand, Ambilly et Annemasse), une chambre meublée tout inclus coûte à partir de **1 370 CHF/mois** — charges, fibre et ménage compris, sans frais de dossier. Genève-Eaux-Vives en 7 min de Léman Express depuis la gare d'Annemasse — 18 à 24 min porte-à-porte selon la maison, 30 min jusqu'au centre.$f$ IN content_fr) > 0
   AND position($r$👉 **Tu cherches où te loger côté France ?** À **La Villa Coliving** (Ville-la-Grand, Ambilly et Annemasse), une chambre meublée tout inclus coûte à partir de **1 370 CHF/mois** — charges, fibre et ménage compris, sans frais de dossier. Genève-Eaux-Vives en 7 min de Léman Express depuis la gare d'Annemasse — 18 à 24 min porte-à-porte selon la maison, 30 min jusqu'au centre. → [Chambres en colocation côté France](/colocation-geneve)$r$ IN content_fr) = 0;
 
--- [40/88] ou-habiter-frontalier-suisse-villes-france-pas-cher (en) · cta · phrase d'appel 👉 : question fixe, lien sorti de la question (A.1, D-A2)
+-- [40/92] ou-habiter-frontalier-suisse-villes-france-pas-cher (en) · cta · phrase d'appel 👉 : question fixe, lien sorti de la question (A.1, D-A2)
 UPDATE blog_posts
 SET content_en = replace(content_en, $f$👉 **Looking for [shared housing near Geneva](/en/colocation-geneve)?** At **La Villa Coliving** (Ville-la-Grand, Ambilly and Annemasse), a fully furnished all-inclusive room costs from **CHF 1,370/month** — utilities, fiber and cleaning included, no application fee. Geneva Eaux-Vives in 7 minutes by Léman Express from Annemasse station — 18 to 24 minutes door to door depending on the house, 30 minutes to the city centre.$f$, $r$👉 **Looking for a place on the French side?** At **La Villa Coliving** (Ville-la-Grand, Ambilly and Annemasse), a fully furnished all-inclusive room costs from **CHF 1,370/month** — utilities, fiber and cleaning included, no application fee. Geneva Eaux-Vives in 7 minutes by Léman Express from Annemasse station — 18 to 24 minutes door to door depending on the house, 30 minutes to the city centre. → [Shared housing near Geneva](/en/colocation-geneve)$r$),
     updated_at = now()
@@ -361,7 +362,7 @@ WHERE slug = 'ou-habiter-frontalier-suisse-villes-france-pas-cher'
   AND position($f$👉 **Looking for [shared housing near Geneva](/en/colocation-geneve)?** At **La Villa Coliving** (Ville-la-Grand, Ambilly and Annemasse), a fully furnished all-inclusive room costs from **CHF 1,370/month** — utilities, fiber and cleaning included, no application fee. Geneva Eaux-Vives in 7 minutes by Léman Express from Annemasse station — 18 to 24 minutes door to door depending on the house, 30 minutes to the city centre.$f$ IN content_en) > 0
   AND position($r$👉 **Looking for a place on the French side?** At **La Villa Coliving** (Ville-la-Grand, Ambilly and Annemasse), a fully furnished all-inclusive room costs from **CHF 1,370/month** — utilities, fiber and cleaning included, no application fee. Geneva Eaux-Vives in 7 minutes by Léman Express from Annemasse station — 18 to 24 minutes door to door depending on the house, 30 minutes to the city centre. → [Shared housing near Geneva](/en/colocation-geneve)$r$ IN content_en) = 0;
 
--- [41/88] permis-g-frontalier-geneve (fr) · cta · phrase d'appel 👉 : question fixe, lien sorti de la question (A.1, D-A2)
+-- [41/92] permis-g-frontalier-geneve (fr) · cta · phrase d'appel 👉 : question fixe, lien sorti de la question (A.1, D-A2)
 UPDATE blog_posts
 SET content_fr = replace(content_fr, $f$👉 **Tu cherches une [La Villa Coliving, côté France](/colocation-geneve) ?** À **La Villa Coliving** (Ville-la-Grand, Ambilly et Annemasse), une chambre meublée tout inclus coûte à partir de **1 370 CHF/mois** — charges, fibre et ménage compris, sans frais de dossier. Genève-Eaux-Vives en 7 min de Léman Express depuis la gare d'Annemasse — 18 à 24 min porte-à-porte selon la maison, 30 min jusqu'au centre.$f$, $r$👉 **Tu cherches où te loger côté France ?** À **La Villa Coliving** (Ville-la-Grand, Ambilly et Annemasse), une chambre meublée tout inclus coûte à partir de **1 370 CHF/mois** — charges, fibre et ménage compris, sans frais de dossier. Genève-Eaux-Vives en 7 min de Léman Express depuis la gare d'Annemasse — 18 à 24 min porte-à-porte selon la maison, 30 min jusqu'au centre. → [La Villa Coliving, côté France](/colocation-geneve)$r$),
     updated_at = now()
@@ -369,7 +370,7 @@ WHERE slug = 'permis-g-frontalier-geneve'
   AND position($f$👉 **Tu cherches une [La Villa Coliving, côté France](/colocation-geneve) ?** À **La Villa Coliving** (Ville-la-Grand, Ambilly et Annemasse), une chambre meublée tout inclus coûte à partir de **1 370 CHF/mois** — charges, fibre et ménage compris, sans frais de dossier. Genève-Eaux-Vives en 7 min de Léman Express depuis la gare d'Annemasse — 18 à 24 min porte-à-porte selon la maison, 30 min jusqu'au centre.$f$ IN content_fr) > 0
   AND position($r$👉 **Tu cherches où te loger côté France ?** À **La Villa Coliving** (Ville-la-Grand, Ambilly et Annemasse), une chambre meublée tout inclus coûte à partir de **1 370 CHF/mois** — charges, fibre et ménage compris, sans frais de dossier. Genève-Eaux-Vives en 7 min de Léman Express depuis la gare d'Annemasse — 18 à 24 min porte-à-porte selon la maison, 30 min jusqu'au centre. → [La Villa Coliving, côté France](/colocation-geneve)$r$ IN content_fr) = 0;
 
--- [42/88] permis-g-frontalier-geneve (en) · cta · phrase d'appel 👉 : question fixe, lien sorti de la question (A.1, D-A2)
+-- [42/92] permis-g-frontalier-geneve (en) · cta · phrase d'appel 👉 : question fixe, lien sorti de la question (A.1, D-A2)
 UPDATE blog_posts
 SET content_en = replace(content_en, $f$👉 **Looking for [shared housing near Geneva](/en/colocation-geneve)?** At **La Villa Coliving** (Ville-la-Grand, Ambilly and Annemasse), a fully furnished all-inclusive room costs from **CHF 1,370/month** — utilities, fiber and cleaning included, no application fee. Geneva Eaux-Vives in 7 minutes by Léman Express from Annemasse station — 18 to 24 minutes door to door depending on the house, 30 minutes to the city centre.$f$, $r$👉 **Looking for a place on the French side?** At **La Villa Coliving** (Ville-la-Grand, Ambilly and Annemasse), a fully furnished all-inclusive room costs from **CHF 1,370/month** — utilities, fiber and cleaning included, no application fee. Geneva Eaux-Vives in 7 minutes by Léman Express from Annemasse station — 18 to 24 minutes door to door depending on the house, 30 minutes to the city centre. → [Shared housing near Geneva](/en/colocation-geneve)$r$),
     updated_at = now()
@@ -377,7 +378,7 @@ WHERE slug = 'permis-g-frontalier-geneve'
   AND position($f$👉 **Looking for [shared housing near Geneva](/en/colocation-geneve)?** At **La Villa Coliving** (Ville-la-Grand, Ambilly and Annemasse), a fully furnished all-inclusive room costs from **CHF 1,370/month** — utilities, fiber and cleaning included, no application fee. Geneva Eaux-Vives in 7 minutes by Léman Express from Annemasse station — 18 to 24 minutes door to door depending on the house, 30 minutes to the city centre.$f$ IN content_en) > 0
   AND position($r$👉 **Looking for a place on the French side?** At **La Villa Coliving** (Ville-la-Grand, Ambilly and Annemasse), a fully furnished all-inclusive room costs from **CHF 1,370/month** — utilities, fiber and cleaning included, no application fee. Geneva Eaux-Vives in 7 minutes by Léman Express from Annemasse station — 18 to 24 minutes door to door depending on the house, 30 minutes to the city centre. → [Shared housing near Geneva](/en/colocation-geneve)$r$ IN content_en) = 0;
 
--- [43/88] quartiers-annemasse-ou-vivre-selon-profil (fr) · cta · phrase d'appel 👉 : question fixe, lien sorti de la question (A.1, D-A2)
+-- [43/92] quartiers-annemasse-ou-vivre-selon-profil (fr) · cta · phrase d'appel 👉 : question fixe, lien sorti de la question (A.1, D-A2)
 UPDATE blog_posts
 SET content_fr = replace(content_fr, $f$👉 **Tu cherches une [colocation à Annemasse](/annemasse-colocation) ?** À **La Villa Coliving** (Le Lodge à Annemasse, La Villa à Ville-la-Grand, Le Loft à Ambilly), une chambre meublée tout inclus coûte à partir de **1 370 CHF/mois** — charges, fibre et ménage compris, sans frais de dossier.$f$, $r$👉 **Tu cherches où te loger côté France ?** À **La Villa Coliving** (Le Lodge à Annemasse, La Villa à Ville-la-Grand, Le Loft à Ambilly), une chambre meublée tout inclus coûte à partir de **1 370 CHF/mois** — charges, fibre et ménage compris, sans frais de dossier. → [Colocation à Annemasse](/annemasse-colocation)$r$),
     updated_at = now()
@@ -385,15 +386,15 @@ WHERE slug = 'quartiers-annemasse-ou-vivre-selon-profil'
   AND position($f$👉 **Tu cherches une [colocation à Annemasse](/annemasse-colocation) ?** À **La Villa Coliving** (Le Lodge à Annemasse, La Villa à Ville-la-Grand, Le Loft à Ambilly), une chambre meublée tout inclus coûte à partir de **1 370 CHF/mois** — charges, fibre et ménage compris, sans frais de dossier.$f$ IN content_fr) > 0
   AND position($r$👉 **Tu cherches où te loger côté France ?** À **La Villa Coliving** (Le Lodge à Annemasse, La Villa à Ville-la-Grand, Le Loft à Ambilly), une chambre meublée tout inclus coûte à partir de **1 370 CHF/mois** — charges, fibre et ménage compris, sans frais de dossier. → [Colocation à Annemasse](/annemasse-colocation)$r$ IN content_fr) = 0;
 
--- [44/88] quartiers-annemasse-ou-vivre-selon-profil (en) · cta · phrase d'appel 👉 : question fixe, lien sorti de la question (A.1, D-A2)
+-- [44/92] quartiers-annemasse-ou-vivre-selon-profil (en) · cta · phrase d'appel 👉 : question fixe, lien sorti de la question (A.1, D-A2)
 UPDATE blog_posts
-SET content_en = replace(content_en, $f$👉 **Looking for [shared housing in Annemasse](/annemasse-colocation)?** At **La Villa Coliving** (Le Lodge in Annemasse, La Villa in Ville-la-Grand, Le Loft in Ambilly), a furnished all-inclusive room costs from **CHF 1,370/month** — utilities, fiber and cleaning included, no application fee.$f$, $r$👉 **Looking for a place on the French side?** At **La Villa Coliving** (Le Lodge in Annemasse, La Villa in Ville-la-Grand, Le Loft in Ambilly), a furnished all-inclusive room costs from **CHF 1,370/month** — utilities, fiber and cleaning included, no application fee. → [Shared housing in Annemasse](/annemasse-colocation)$r$),
+SET content_en = replace(content_en, $f$👉 **Looking for [shared housing in Annemasse](/annemasse-colocation)?** At **La Villa Coliving** (Le Lodge in Annemasse, La Villa in Ville-la-Grand, Le Loft in Ambilly), a furnished all-inclusive room costs from **CHF 1,370/month** — utilities, fiber and cleaning included, no application fee.$f$, $r$👉 **Looking for a place on the French side?** At **La Villa Coliving** (Le Lodge in Annemasse, La Villa in Ville-la-Grand, Le Loft in Ambilly), a furnished all-inclusive room costs from **CHF 1,370/month** — utilities, fiber and cleaning included, no application fee. → [Shared housing in Annemasse](/en/annemasse-colocation)$r$),
     updated_at = now()
 WHERE slug = 'quartiers-annemasse-ou-vivre-selon-profil'
   AND position($f$👉 **Looking for [shared housing in Annemasse](/annemasse-colocation)?** At **La Villa Coliving** (Le Lodge in Annemasse, La Villa in Ville-la-Grand, Le Loft in Ambilly), a furnished all-inclusive room costs from **CHF 1,370/month** — utilities, fiber and cleaning included, no application fee.$f$ IN content_en) > 0
-  AND position($r$👉 **Looking for a place on the French side?** At **La Villa Coliving** (Le Lodge in Annemasse, La Villa in Ville-la-Grand, Le Loft in Ambilly), a furnished all-inclusive room costs from **CHF 1,370/month** — utilities, fiber and cleaning included, no application fee. → [Shared housing in Annemasse](/annemasse-colocation)$r$ IN content_en) = 0;
+  AND position($r$👉 **Looking for a place on the French side?** At **La Villa Coliving** (Le Lodge in Annemasse, La Villa in Ville-la-Grand, Le Loft in Ambilly), a furnished all-inclusive room costs from **CHF 1,370/month** — utilities, fiber and cleaning included, no application fee. → [Shared housing in Annemasse](/en/annemasse-colocation)$r$ IN content_en) = 0;
 
--- [45/88] quitter-son-logement-guide-pratique (fr) · cta · phrase d'appel 👉 : question fixe, lien sorti de la question (A.1, D-A2)
+-- [45/92] quitter-son-logement-guide-pratique (fr) · cta · phrase d'appel 👉 : question fixe, lien sorti de la question (A.1, D-A2)
 UPDATE blog_posts
 SET content_fr = replace(content_fr, $f$👉 **Tu cherches une [voir nos chambres côté France](/colocation-geneve) ?** À **La Villa Coliving** (Ville-la-Grand, Ambilly et Annemasse), une chambre meublée tout inclus coûte à partir de **1 370 CHF/mois** — charges, fibre et ménage compris, sans frais de dossier. Genève-Eaux-Vives en 7 min de Léman Express depuis la gare d'Annemasse — 18 à 24 min porte-à-porte selon la maison, 30 min jusqu'au centre.$f$, $r$👉 **Tu cherches où te loger côté France ?** À **La Villa Coliving** (Ville-la-Grand, Ambilly et Annemasse), une chambre meublée tout inclus coûte à partir de **1 370 CHF/mois** — charges, fibre et ménage compris, sans frais de dossier. Genève-Eaux-Vives en 7 min de Léman Express depuis la gare d'Annemasse — 18 à 24 min porte-à-porte selon la maison, 30 min jusqu'au centre. → [Voir nos chambres côté France](/colocation-geneve)$r$),
     updated_at = now()
@@ -401,7 +402,7 @@ WHERE slug = 'quitter-son-logement-guide-pratique'
   AND position($f$👉 **Tu cherches une [voir nos chambres côté France](/colocation-geneve) ?** À **La Villa Coliving** (Ville-la-Grand, Ambilly et Annemasse), une chambre meublée tout inclus coûte à partir de **1 370 CHF/mois** — charges, fibre et ménage compris, sans frais de dossier. Genève-Eaux-Vives en 7 min de Léman Express depuis la gare d'Annemasse — 18 à 24 min porte-à-porte selon la maison, 30 min jusqu'au centre.$f$ IN content_fr) > 0
   AND position($r$👉 **Tu cherches où te loger côté France ?** À **La Villa Coliving** (Ville-la-Grand, Ambilly et Annemasse), une chambre meublée tout inclus coûte à partir de **1 370 CHF/mois** — charges, fibre et ménage compris, sans frais de dossier. Genève-Eaux-Vives en 7 min de Léman Express depuis la gare d'Annemasse — 18 à 24 min porte-à-porte selon la maison, 30 min jusqu'au centre. → [Voir nos chambres côté France](/colocation-geneve)$r$ IN content_fr) = 0;
 
--- [46/88] quitter-son-logement-guide-pratique (en) · cta · phrase d'appel 👉 : question fixe, lien sorti de la question (A.1, D-A2)
+-- [46/92] quitter-son-logement-guide-pratique (en) · cta · phrase d'appel 👉 : question fixe, lien sorti de la question (A.1, D-A2)
 UPDATE blog_posts
 SET content_en = replace(content_en, $f$👉 **Looking for [shared housing near Geneva](/en/colocation-geneve)?** At **La Villa Coliving** (Ville-la-Grand, Ambilly and Annemasse), a fully furnished all-inclusive room costs from **CHF 1,370/month** — utilities, fiber and cleaning included, no application fee. Geneva Eaux-Vives in 7 minutes by Léman Express from Annemasse station — 18 to 24 minutes door to door depending on the house, 30 minutes to the city centre.$f$, $r$👉 **Looking for a place on the French side?** At **La Villa Coliving** (Ville-la-Grand, Ambilly and Annemasse), a fully furnished all-inclusive room costs from **CHF 1,370/month** — utilities, fiber and cleaning included, no application fee. Geneva Eaux-Vives in 7 minutes by Léman Express from Annemasse station — 18 to 24 minutes door to door depending on the house, 30 minutes to the city centre. → [Shared housing near Geneva](/en/colocation-geneve)$r$),
     updated_at = now()
@@ -409,7 +410,7 @@ WHERE slug = 'quitter-son-logement-guide-pratique'
   AND position($f$👉 **Looking for [shared housing near Geneva](/en/colocation-geneve)?** At **La Villa Coliving** (Ville-la-Grand, Ambilly and Annemasse), a fully furnished all-inclusive room costs from **CHF 1,370/month** — utilities, fiber and cleaning included, no application fee. Geneva Eaux-Vives in 7 minutes by Léman Express from Annemasse station — 18 to 24 minutes door to door depending on the house, 30 minutes to the city centre.$f$ IN content_en) > 0
   AND position($r$👉 **Looking for a place on the French side?** At **La Villa Coliving** (Ville-la-Grand, Ambilly and Annemasse), a fully furnished all-inclusive room costs from **CHF 1,370/month** — utilities, fiber and cleaning included, no application fee. Geneva Eaux-Vives in 7 minutes by Léman Express from Annemasse station — 18 to 24 minutes door to door depending on the house, 30 minutes to the city centre. → [Shared housing near Geneva](/en/colocation-geneve)$r$ IN content_en) = 0;
 
--- [47/88] salaire-suisse-net-frontalier-2026 (fr) · cta · phrase d'appel 👉 : question fixe, lien sorti de la question (A.1, D-A2)
+-- [47/92] salaire-suisse-net-frontalier-2026 (fr) · cta · phrase d'appel 👉 : question fixe, lien sorti de la question (A.1, D-A2)
 UPDATE blog_posts
 SET content_fr = replace(content_fr, $f$👉 **Tu cherches une [colocation à Genève](/colocation-geneve) ?** À **La Villa Coliving** (Ville-la-Grand, Ambilly et Annemasse), une chambre meublée tout inclus coûte à partir de **1 370 CHF/mois** — charges, fibre et ménage compris, sans frais de dossier. Genève-Eaux-Vives en 7 min de Léman Express depuis la gare d'Annemasse — 18 à 24 min porte-à-porte selon la maison, 30 min jusqu'au centre.$f$, $r$👉 **Tu cherches où te loger côté France ?** À **La Villa Coliving** (Ville-la-Grand, Ambilly et Annemasse), une chambre meublée tout inclus coûte à partir de **1 370 CHF/mois** — charges, fibre et ménage compris, sans frais de dossier. Genève-Eaux-Vives en 7 min de Léman Express depuis la gare d'Annemasse — 18 à 24 min porte-à-porte selon la maison, 30 min jusqu'au centre. → [Colocation à Genève](/colocation-geneve)$r$),
     updated_at = now()
@@ -417,7 +418,7 @@ WHERE slug = 'salaire-suisse-net-frontalier-2026'
   AND position($f$👉 **Tu cherches une [colocation à Genève](/colocation-geneve) ?** À **La Villa Coliving** (Ville-la-Grand, Ambilly et Annemasse), une chambre meublée tout inclus coûte à partir de **1 370 CHF/mois** — charges, fibre et ménage compris, sans frais de dossier. Genève-Eaux-Vives en 7 min de Léman Express depuis la gare d'Annemasse — 18 à 24 min porte-à-porte selon la maison, 30 min jusqu'au centre.$f$ IN content_fr) > 0
   AND position($r$👉 **Tu cherches où te loger côté France ?** À **La Villa Coliving** (Ville-la-Grand, Ambilly et Annemasse), une chambre meublée tout inclus coûte à partir de **1 370 CHF/mois** — charges, fibre et ménage compris, sans frais de dossier. Genève-Eaux-Vives en 7 min de Léman Express depuis la gare d'Annemasse — 18 à 24 min porte-à-porte selon la maison, 30 min jusqu'au centre. → [Colocation à Genève](/colocation-geneve)$r$ IN content_fr) = 0;
 
--- [48/88] salaire-suisse-net-frontalier-2026 (en) · cta · phrase d'appel 👉 : question fixe, lien sorti de la question (A.1, D-A2)
+-- [48/92] salaire-suisse-net-frontalier-2026 (en) · cta · phrase d'appel 👉 : question fixe, lien sorti de la question (A.1, D-A2)
 UPDATE blog_posts
 SET content_en = replace(content_en, $f$👉 **Looking for [a room on the French side](/en/colocation-geneve)?** At **La Villa Coliving** (Ville-la-Grand, Ambilly and Annemasse), a fully furnished all-inclusive room costs from **CHF 1,370/month** — utilities, fiber and cleaning included, no application fee. Geneva Eaux-Vives in 7 minutes by Léman Express from Annemasse station — 18 to 24 minutes door to door depending on the house, 30 minutes to the city centre.$f$, $r$👉 **Looking for a place on the French side?** At **La Villa Coliving** (Ville-la-Grand, Ambilly and Annemasse), a fully furnished all-inclusive room costs from **CHF 1,370/month** — utilities, fiber and cleaning included, no application fee. Geneva Eaux-Vives in 7 minutes by Léman Express from Annemasse station — 18 to 24 minutes door to door depending on the house, 30 minutes to the city centre. → [A room on the French side](/en/colocation-geneve)$r$),
     updated_at = now()
@@ -425,7 +426,7 @@ WHERE slug = 'salaire-suisse-net-frontalier-2026'
   AND position($f$👉 **Looking for [a room on the French side](/en/colocation-geneve)?** At **La Villa Coliving** (Ville-la-Grand, Ambilly and Annemasse), a fully furnished all-inclusive room costs from **CHF 1,370/month** — utilities, fiber and cleaning included, no application fee. Geneva Eaux-Vives in 7 minutes by Léman Express from Annemasse station — 18 to 24 minutes door to door depending on the house, 30 minutes to the city centre.$f$ IN content_en) > 0
   AND position($r$👉 **Looking for a place on the French side?** At **La Villa Coliving** (Ville-la-Grand, Ambilly and Annemasse), a fully furnished all-inclusive room costs from **CHF 1,370/month** — utilities, fiber and cleaning included, no application fee. Geneva Eaux-Vives in 7 minutes by Léman Express from Annemasse station — 18 to 24 minutes door to door depending on the house, 30 minutes to the city centre. → [A room on the French side](/en/colocation-geneve)$r$ IN content_en) = 0;
 
--- [49/88] se-faire-reseau-geneve-arriver-seul (fr) · cta · phrase d'appel 👉 : question fixe, lien sorti de la question (A.1, D-A2)
+-- [49/92] se-faire-reseau-geneve-arriver-seul (fr) · cta · phrase d'appel 👉 : question fixe, lien sorti de la question (A.1, D-A2)
 UPDATE blog_posts
 SET content_fr = replace(content_fr, $f$👉 **Tu cherches une [chambres en colocation côté France](/colocation-geneve) ?** À **La Villa Coliving** (Ville-la-Grand, Ambilly et Annemasse), une chambre meublée tout inclus coûte à partir de **1 370 CHF/mois** — charges, fibre et ménage compris, sans frais de dossier. Genève-Eaux-Vives en 7 min de Léman Express depuis la gare d'Annemasse — 18 à 24 min porte-à-porte selon la maison, 30 min jusqu'au centre.$f$, $r$👉 **Tu cherches où te loger côté France ?** À **La Villa Coliving** (Ville-la-Grand, Ambilly et Annemasse), une chambre meublée tout inclus coûte à partir de **1 370 CHF/mois** — charges, fibre et ménage compris, sans frais de dossier. Genève-Eaux-Vives en 7 min de Léman Express depuis la gare d'Annemasse — 18 à 24 min porte-à-porte selon la maison, 30 min jusqu'au centre. → [Chambres en colocation côté France](/colocation-geneve)$r$),
     updated_at = now()
@@ -433,7 +434,7 @@ WHERE slug = 'se-faire-reseau-geneve-arriver-seul'
   AND position($f$👉 **Tu cherches une [chambres en colocation côté France](/colocation-geneve) ?** À **La Villa Coliving** (Ville-la-Grand, Ambilly et Annemasse), une chambre meublée tout inclus coûte à partir de **1 370 CHF/mois** — charges, fibre et ménage compris, sans frais de dossier. Genève-Eaux-Vives en 7 min de Léman Express depuis la gare d'Annemasse — 18 à 24 min porte-à-porte selon la maison, 30 min jusqu'au centre.$f$ IN content_fr) > 0
   AND position($r$👉 **Tu cherches où te loger côté France ?** À **La Villa Coliving** (Ville-la-Grand, Ambilly et Annemasse), une chambre meublée tout inclus coûte à partir de **1 370 CHF/mois** — charges, fibre et ménage compris, sans frais de dossier. Genève-Eaux-Vives en 7 min de Léman Express depuis la gare d'Annemasse — 18 à 24 min porte-à-porte selon la maison, 30 min jusqu'au centre. → [Chambres en colocation côté France](/colocation-geneve)$r$ IN content_fr) = 0;
 
--- [50/88] se-faire-reseau-geneve-arriver-seul (en) · cta · phrase d'appel 👉 : question fixe, lien sorti de la question (A.1, D-A2)
+-- [50/92] se-faire-reseau-geneve-arriver-seul (en) · cta · phrase d'appel 👉 : question fixe, lien sorti de la question (A.1, D-A2)
 UPDATE blog_posts
 SET content_en = replace(content_en, $f$👉 **Looking for [shared housing near Geneva](/en/colocation-geneve)?** At **La Villa Coliving** (Ville-la-Grand, Ambilly and Annemasse), a fully furnished all-inclusive room costs from **CHF 1,370/month** — utilities, fiber and cleaning included, no application fee. Geneva Eaux-Vives in 7 minutes by Léman Express from Annemasse station — 18 to 24 minutes door to door depending on the house, 30 minutes to the city centre.$f$, $r$👉 **Looking for a place on the French side?** At **La Villa Coliving** (Ville-la-Grand, Ambilly and Annemasse), a fully furnished all-inclusive room costs from **CHF 1,370/month** — utilities, fiber and cleaning included, no application fee. Geneva Eaux-Vives in 7 minutes by Léman Express from Annemasse station — 18 to 24 minutes door to door depending on the house, 30 minutes to the city centre. → [Shared housing near Geneva](/en/colocation-geneve)$r$),
     updated_at = now()
@@ -441,7 +442,7 @@ WHERE slug = 'se-faire-reseau-geneve-arriver-seul'
   AND position($f$👉 **Looking for [shared housing near Geneva](/en/colocation-geneve)?** At **La Villa Coliving** (Ville-la-Grand, Ambilly and Annemasse), a fully furnished all-inclusive room costs from **CHF 1,370/month** — utilities, fiber and cleaning included, no application fee. Geneva Eaux-Vives in 7 minutes by Léman Express from Annemasse station — 18 to 24 minutes door to door depending on the house, 30 minutes to the city centre.$f$ IN content_en) > 0
   AND position($r$👉 **Looking for a place on the French side?** At **La Villa Coliving** (Ville-la-Grand, Ambilly and Annemasse), a fully furnished all-inclusive room costs from **CHF 1,370/month** — utilities, fiber and cleaning included, no application fee. Geneva Eaux-Vives in 7 minutes by Léman Express from Annemasse station — 18 to 24 minutes door to door depending on the house, 30 minutes to the city centre. → [Shared housing near Geneva](/en/colocation-geneve)$r$ IN content_en) = 0;
 
--- [51/88] teletravail-frontalier-geneve-regles-2026 (fr) · cta · phrase d'appel 👉 : question fixe, lien sorti de la question (A.1, D-A2)
+-- [51/92] teletravail-frontalier-geneve-regles-2026 (fr) · cta · phrase d'appel 👉 : question fixe, lien sorti de la question (A.1, D-A2)
 UPDATE blog_posts
 SET content_fr = replace(content_fr, $f$👉 **Tu cherches une [La Villa Coliving, côté France](/colocation-geneve) ?** À **La Villa Coliving** (Ville-la-Grand, Ambilly et Annemasse), une chambre meublée tout inclus coûte à partir de **1 370 CHF/mois** — charges, fibre et ménage compris, sans frais de dossier. Genève-Eaux-Vives en 7 min de Léman Express depuis la gare d'Annemasse — 18 à 24 min porte-à-porte selon la maison, 30 min jusqu'au centre.$f$, $r$👉 **Tu cherches où te loger côté France ?** À **La Villa Coliving** (Ville-la-Grand, Ambilly et Annemasse), une chambre meublée tout inclus coûte à partir de **1 370 CHF/mois** — charges, fibre et ménage compris, sans frais de dossier. Genève-Eaux-Vives en 7 min de Léman Express depuis la gare d'Annemasse — 18 à 24 min porte-à-porte selon la maison, 30 min jusqu'au centre. → [La Villa Coliving, côté France](/colocation-geneve)$r$),
     updated_at = now()
@@ -449,7 +450,7 @@ WHERE slug = 'teletravail-frontalier-geneve-regles-2026'
   AND position($f$👉 **Tu cherches une [La Villa Coliving, côté France](/colocation-geneve) ?** À **La Villa Coliving** (Ville-la-Grand, Ambilly et Annemasse), une chambre meublée tout inclus coûte à partir de **1 370 CHF/mois** — charges, fibre et ménage compris, sans frais de dossier. Genève-Eaux-Vives en 7 min de Léman Express depuis la gare d'Annemasse — 18 à 24 min porte-à-porte selon la maison, 30 min jusqu'au centre.$f$ IN content_fr) > 0
   AND position($r$👉 **Tu cherches où te loger côté France ?** À **La Villa Coliving** (Ville-la-Grand, Ambilly et Annemasse), une chambre meublée tout inclus coûte à partir de **1 370 CHF/mois** — charges, fibre et ménage compris, sans frais de dossier. Genève-Eaux-Vives en 7 min de Léman Express depuis la gare d'Annemasse — 18 à 24 min porte-à-porte selon la maison, 30 min jusqu'au centre. → [La Villa Coliving, côté France](/colocation-geneve)$r$ IN content_fr) = 0;
 
--- [52/88] teletravail-frontalier-geneve-regles-2026 (en) · cta · phrase d'appel 👉 : question fixe, lien sorti de la question (A.1, D-A2)
+-- [52/92] teletravail-frontalier-geneve-regles-2026 (en) · cta · phrase d'appel 👉 : question fixe, lien sorti de la question (A.1, D-A2)
 UPDATE blog_posts
 SET content_en = replace(content_en, $f$👉 **Looking for [shared housing near Geneva](/en/colocation-geneve)?** At **La Villa Coliving** (Ville-la-Grand, Ambilly and Annemasse), a fully furnished all-inclusive room costs from **CHF 1,370/month** — utilities, fiber and cleaning included, no application fee. Geneva Eaux-Vives in 7 minutes by Léman Express from Annemasse station — 18 to 24 minutes door to door depending on the house, 30 minutes to the city centre.$f$, $r$👉 **Looking for a place on the French side?** At **La Villa Coliving** (Ville-la-Grand, Ambilly and Annemasse), a fully furnished all-inclusive room costs from **CHF 1,370/month** — utilities, fiber and cleaning included, no application fee. Geneva Eaux-Vives in 7 minutes by Léman Express from Annemasse station — 18 to 24 minutes door to door depending on the house, 30 minutes to the city centre. → [Shared housing near Geneva](/en/colocation-geneve)$r$),
     updated_at = now()
@@ -457,7 +458,7 @@ WHERE slug = 'teletravail-frontalier-geneve-regles-2026'
   AND position($f$👉 **Looking for [shared housing near Geneva](/en/colocation-geneve)?** At **La Villa Coliving** (Ville-la-Grand, Ambilly and Annemasse), a fully furnished all-inclusive room costs from **CHF 1,370/month** — utilities, fiber and cleaning included, no application fee. Geneva Eaux-Vives in 7 minutes by Léman Express from Annemasse station — 18 to 24 minutes door to door depending on the house, 30 minutes to the city centre.$f$ IN content_en) > 0
   AND position($r$👉 **Looking for a place on the French side?** At **La Villa Coliving** (Ville-la-Grand, Ambilly and Annemasse), a fully furnished all-inclusive room costs from **CHF 1,370/month** — utilities, fiber and cleaning included, no application fee. Geneva Eaux-Vives in 7 minutes by Léman Express from Annemasse station — 18 to 24 minutes door to door depending on the house, 30 minutes to the city centre. → [Shared housing near Geneva](/en/colocation-geneve)$r$ IN content_en) = 0;
 
--- [53/88] trouver-colocation-geneve-frontalier (fr) · cta · phrase d'appel 👉 : question fixe, lien sorti de la question (A.1, D-A2)
+-- [53/92] trouver-colocation-geneve-frontalier (fr) · cta · phrase d'appel 👉 : question fixe, lien sorti de la question (A.1, D-A2)
 UPDATE blog_posts
 SET content_fr = replace(content_fr, $f$👉 **Tu cherches une [colocation à Genève](/nos-maisons) ?** À **La Villa Coliving** (Ville-la-Grand, Ambilly et Annemasse), une chambre meublée tout inclus coûte à partir de **1 370 CHF/mois** — charges, fibre et ménage compris, sans frais de dossier. Genève-Eaux-Vives en 7 min de Léman Express depuis la gare d'Annemasse — 18 à 24 min porte-à-porte selon la maison, 30 min jusqu'au centre.$f$, $r$👉 **Tu cherches où te loger côté France ?** À **La Villa Coliving** (Ville-la-Grand, Ambilly et Annemasse), une chambre meublée tout inclus coûte à partir de **1 370 CHF/mois** — charges, fibre et ménage compris, sans frais de dossier. Genève-Eaux-Vives en 7 min de Léman Express depuis la gare d'Annemasse — 18 à 24 min porte-à-porte selon la maison, 30 min jusqu'au centre. → [Colocation à Genève](/nos-maisons)$r$),
     updated_at = now()
@@ -465,7 +466,7 @@ WHERE slug = 'trouver-colocation-geneve-frontalier'
   AND position($f$👉 **Tu cherches une [colocation à Genève](/nos-maisons) ?** À **La Villa Coliving** (Ville-la-Grand, Ambilly et Annemasse), une chambre meublée tout inclus coûte à partir de **1 370 CHF/mois** — charges, fibre et ménage compris, sans frais de dossier. Genève-Eaux-Vives en 7 min de Léman Express depuis la gare d'Annemasse — 18 à 24 min porte-à-porte selon la maison, 30 min jusqu'au centre.$f$ IN content_fr) > 0
   AND position($r$👉 **Tu cherches où te loger côté France ?** À **La Villa Coliving** (Ville-la-Grand, Ambilly et Annemasse), une chambre meublée tout inclus coûte à partir de **1 370 CHF/mois** — charges, fibre et ménage compris, sans frais de dossier. Genève-Eaux-Vives en 7 min de Léman Express depuis la gare d'Annemasse — 18 à 24 min porte-à-porte selon la maison, 30 min jusqu'au centre. → [Colocation à Genève](/nos-maisons)$r$ IN content_fr) = 0;
 
--- [54/88] trouver-colocation-geneve-frontalier (en) · cta · phrase d'appel 👉 : question fixe, lien sorti de la question (A.1, D-A2)
+-- [54/92] trouver-colocation-geneve-frontalier (en) · cta · phrase d'appel 👉 : question fixe, lien sorti de la question (A.1, D-A2)
 UPDATE blog_posts
 SET content_en = replace(content_en, $f$👉 **Looking for [shared housing near Geneva](/en/colocation-geneve)?** At **La Villa Coliving** (Ville-la-Grand, Ambilly and Annemasse), a fully furnished all-inclusive room costs from **CHF 1,370/month** — utilities, fiber and cleaning included, no application fee. Geneva Eaux-Vives in 7 minutes by Léman Express from Annemasse station — 18 to 24 minutes door to door depending on the house, 30 minutes to the city centre.$f$, $r$👉 **Looking for a place on the French side?** At **La Villa Coliving** (Ville-la-Grand, Ambilly and Annemasse), a fully furnished all-inclusive room costs from **CHF 1,370/month** — utilities, fiber and cleaning included, no application fee. Geneva Eaux-Vives in 7 minutes by Léman Express from Annemasse station — 18 to 24 minutes door to door depending on the house, 30 minutes to the city centre. → [Shared housing near Geneva](/en/colocation-geneve)$r$),
     updated_at = now()
@@ -473,7 +474,7 @@ WHERE slug = 'trouver-colocation-geneve-frontalier'
   AND position($f$👉 **Looking for [shared housing near Geneva](/en/colocation-geneve)?** At **La Villa Coliving** (Ville-la-Grand, Ambilly and Annemasse), a fully furnished all-inclusive room costs from **CHF 1,370/month** — utilities, fiber and cleaning included, no application fee. Geneva Eaux-Vives in 7 minutes by Léman Express from Annemasse station — 18 to 24 minutes door to door depending on the house, 30 minutes to the city centre.$f$ IN content_en) > 0
   AND position($r$👉 **Looking for a place on the French side?** At **La Villa Coliving** (Ville-la-Grand, Ambilly and Annemasse), a fully furnished all-inclusive room costs from **CHF 1,370/month** — utilities, fiber and cleaning included, no application fee. Geneva Eaux-Vives in 7 minutes by Léman Express from Annemasse station — 18 to 24 minutes door to door depending on the house, 30 minutes to the city centre. → [Shared housing near Geneva](/en/colocation-geneve)$r$ IN content_en) = 0;
 
--- [55/88] vie-quotidienne-frontalier-courses-sport-sorties (fr) · cta · phrase d'appel 👉 : question fixe, lien sorti de la question (A.1, D-A2)
+-- [55/92] vie-quotidienne-frontalier-courses-sport-sorties (fr) · cta · phrase d'appel 👉 : question fixe, lien sorti de la question (A.1, D-A2)
 UPDATE blog_posts
 SET content_fr = replace(content_fr, $f$👉 **Tu cherches une [voir nos chambres côté France](/colocation-geneve) ?** À **La Villa Coliving** (Ville-la-Grand, Ambilly et Annemasse), une chambre meublée tout inclus coûte à partir de **1 370 CHF/mois** — charges, fibre et ménage compris, sans frais de dossier. Genève-Eaux-Vives en 7 min de Léman Express depuis la gare d'Annemasse — 18 à 24 min porte-à-porte selon la maison, 30 min jusqu'au centre.$f$, $r$👉 **Tu cherches où te loger côté France ?** À **La Villa Coliving** (Ville-la-Grand, Ambilly et Annemasse), une chambre meublée tout inclus coûte à partir de **1 370 CHF/mois** — charges, fibre et ménage compris, sans frais de dossier. Genève-Eaux-Vives en 7 min de Léman Express depuis la gare d'Annemasse — 18 à 24 min porte-à-porte selon la maison, 30 min jusqu'au centre. → [Voir nos chambres côté France](/colocation-geneve)$r$),
     updated_at = now()
@@ -481,7 +482,7 @@ WHERE slug = 'vie-quotidienne-frontalier-courses-sport-sorties'
   AND position($f$👉 **Tu cherches une [voir nos chambres côté France](/colocation-geneve) ?** À **La Villa Coliving** (Ville-la-Grand, Ambilly et Annemasse), une chambre meublée tout inclus coûte à partir de **1 370 CHF/mois** — charges, fibre et ménage compris, sans frais de dossier. Genève-Eaux-Vives en 7 min de Léman Express depuis la gare d'Annemasse — 18 à 24 min porte-à-porte selon la maison, 30 min jusqu'au centre.$f$ IN content_fr) > 0
   AND position($r$👉 **Tu cherches où te loger côté France ?** À **La Villa Coliving** (Ville-la-Grand, Ambilly et Annemasse), une chambre meublée tout inclus coûte à partir de **1 370 CHF/mois** — charges, fibre et ménage compris, sans frais de dossier. Genève-Eaux-Vives en 7 min de Léman Express depuis la gare d'Annemasse — 18 à 24 min porte-à-porte selon la maison, 30 min jusqu'au centre. → [Voir nos chambres côté France](/colocation-geneve)$r$ IN content_fr) = 0;
 
--- [56/88] vie-quotidienne-frontalier-courses-sport-sorties (en) · cta · phrase d'appel 👉 : question fixe, lien sorti de la question (A.1, D-A2)
+-- [56/92] vie-quotidienne-frontalier-courses-sport-sorties (en) · cta · phrase d'appel 👉 : question fixe, lien sorti de la question (A.1, D-A2)
 UPDATE blog_posts
 SET content_en = replace(content_en, $f$👉 **Looking for [shared housing near Geneva](/en/colocation-geneve)?** At **La Villa Coliving** (Ville-la-Grand, Ambilly and Annemasse), a fully furnished all-inclusive room costs from **CHF 1,370/month** — utilities, fiber and cleaning included, no application fee. Geneva Eaux-Vives in 7 minutes by Léman Express from Annemasse station — 18 to 24 minutes door to door depending on the house, 30 minutes to the city centre.$f$, $r$👉 **Looking for a place on the French side?** At **La Villa Coliving** (Ville-la-Grand, Ambilly and Annemasse), a fully furnished all-inclusive room costs from **CHF 1,370/month** — utilities, fiber and cleaning included, no application fee. Geneva Eaux-Vives in 7 minutes by Léman Express from Annemasse station — 18 to 24 minutes door to door depending on the house, 30 minutes to the city centre. → [Shared housing near Geneva](/en/colocation-geneve)$r$),
     updated_at = now()
@@ -489,7 +490,7 @@ WHERE slug = 'vie-quotidienne-frontalier-courses-sport-sorties'
   AND position($f$👉 **Looking for [shared housing near Geneva](/en/colocation-geneve)?** At **La Villa Coliving** (Ville-la-Grand, Ambilly and Annemasse), a fully furnished all-inclusive room costs from **CHF 1,370/month** — utilities, fiber and cleaning included, no application fee. Geneva Eaux-Vives in 7 minutes by Léman Express from Annemasse station — 18 to 24 minutes door to door depending on the house, 30 minutes to the city centre.$f$ IN content_en) > 0
   AND position($r$👉 **Looking for a place on the French side?** At **La Villa Coliving** (Ville-la-Grand, Ambilly and Annemasse), a fully furnished all-inclusive room costs from **CHF 1,370/month** — utilities, fiber and cleaning included, no application fee. Geneva Eaux-Vives in 7 minutes by Léman Express from Annemasse station — 18 to 24 minutes door to door depending on the house, 30 minutes to the city centre. → [Shared housing near Geneva](/en/colocation-geneve)$r$ IN content_en) = 0;
 
--- [57/88] temps-trajet-annemasse-geneve-par-quartier (fr) · cta · « Découvre la [le guide…] » → « Découvre [le guide…] » (A.1)
+-- [57/92] temps-trajet-annemasse-geneve-par-quartier (fr) · cta · « Découvre la [le guide…] » → « Découvre [le guide…] » (A.1)
 UPDATE blog_posts
 SET content_fr = replace(content_fr, $f$Découvre la [le guide d'Annemasse](/annemasse-colocation)$f$, $r$Découvre [le guide d'Annemasse](/annemasse-colocation)$r$),
     updated_at = now()
@@ -497,7 +498,7 @@ WHERE slug = 'temps-trajet-annemasse-geneve-par-quartier'
   AND position($f$Découvre la [le guide d'Annemasse](/annemasse-colocation)$f$ IN content_fr) > 0
   AND position($r$Découvre [le guide d'Annemasse](/annemasse-colocation)$r$ IN content_fr) = 0;
 
--- [58/88] guide-ressources-frontalier-geneve (fr) · cta · « Découvre notre [chambres…] » → « Découvre nos [chambres…] » (même cause : doublon de pied d'article du lot SEO 5)
+-- [58/92] guide-ressources-frontalier-geneve (fr) · cta · « Découvre notre [chambres…] » → « Découvre nos [chambres…] » (même cause : doublon de pied d'article du lot SEO 5)
 UPDATE blog_posts
 SET content_fr = replace(content_fr, $f$Découvre notre [chambres en colocation côté France](/colocation-geneve)$f$, $r$Découvre nos [chambres en colocation côté France](/colocation-geneve)$r$),
     updated_at = now()
@@ -505,7 +506,7 @@ WHERE slug = 'guide-ressources-frontalier-geneve'
   AND position($f$Découvre notre [chambres en colocation côté France](/colocation-geneve)$f$ IN content_fr) > 0
   AND position($r$Découvre nos [chambres en colocation côté France](/colocation-geneve)$r$ IN content_fr) = 0;
 
--- [59/88] guide-ressources-frontalier-geneve (en) · cta · « Discover our [see our rooms…] » → « [See our rooms…] » ; cibles FR → EN comme le correctif L1 des pieds EN (même cause)
+-- [59/92] guide-ressources-frontalier-geneve (en) · cta · « Discover our [see our rooms…] » → « [See our rooms…] » (même cause) ; cibles écrites en /en explicite comme L1 (le rendu les localisait déjà)
 UPDATE blog_posts
 SET content_en = replace(content_en, $f$Discover our [see our rooms on the French side](/colocation-geneve) and [our all-inclusive rates](/tarifs)$f$, $r$[See our rooms on the French side](/en/colocation-geneve) and [our all-inclusive rates](/en/tarifs)$r$),
     updated_at = now()
@@ -513,7 +514,7 @@ WHERE slug = 'guide-ressources-frontalier-geneve'
   AND position($f$Discover our [see our rooms on the French side](/colocation-geneve) and [our all-inclusive rates](/tarifs)$f$ IN content_en) > 0
   AND position($r$[See our rooms on the French side](/en/colocation-geneve) and [our all-inclusive rates](/en/tarifs)$r$ IN content_en) = 0;
 
--- [60/88] dossier-location-frontalier-suisse-france (fr) · cta · « notre [chambres…] accepte » → « nos [chambres…] sont ouvertes » (D-A3)
+-- [60/92] dossier-location-frontalier-suisse-france (fr) · cta · « notre [chambres…] accepte » → « nos [chambres…] sont ouvertes » (D-A3)
 UPDATE blog_posts
 SET content_fr = replace(content_fr, $f$notre [chambres en colocation côté France](/colocation-geneve) accepte les frontaliers$f$, $r$nos [chambres en colocation côté France](/colocation-geneve) sont ouvertes aux frontaliers$r$),
     updated_at = now()
@@ -521,7 +522,7 @@ WHERE slug = 'dossier-location-frontalier-suisse-france'
   AND position($f$notre [chambres en colocation côté France](/colocation-geneve) accepte les frontaliers$f$ IN content_fr) > 0
   AND position($r$nos [chambres en colocation côté France](/colocation-geneve) sont ouvertes aux frontaliers$r$ IN content_fr) = 0;
 
--- [61/88] banque-telephone-internet-frontalier-bons-plans (fr) · proof · D3 : « des centaines de frontaliers » → « plus de 100 résidents depuis 2021 »
+-- [61/92] banque-telephone-internet-frontalier-bons-plans (fr) · proof · D3 : « des centaines de frontaliers » → « plus de 100 résidents depuis 2021 »
 UPDATE blog_posts
 SET content_fr = replace(content_fr, $f$Après avoir accompagné des centaines de frontaliers, voici la configuration que nous recommandons :$f$, $r$Après avoir accompagné plus de 100 résidents depuis 2021, voici la configuration que nous recommandons :$r$),
     updated_at = now()
@@ -529,7 +530,7 @@ WHERE slug = 'banque-telephone-internet-frontalier-bons-plans'
   AND position($f$Après avoir accompagné des centaines de frontaliers, voici la configuration que nous recommandons :$f$ IN content_fr) > 0
   AND position($r$Après avoir accompagné plus de 100 résidents depuis 2021, voici la configuration que nous recommandons :$r$ IN content_fr) = 0;
 
--- [62/88] banque-telephone-internet-frontalier-bons-plans (en) · proof · D3: « hundreds of cross-border workers » → « more than 100 residents since 2021 »
+-- [62/92] banque-telephone-internet-frontalier-bons-plans (en) · proof · D3: « hundreds of cross-border workers » → « more than 100 residents since 2021 »
 UPDATE blog_posts
 SET content_en = replace(content_en, $f$After supporting hundreds of cross-border workers, here's the configuration we recommend:$f$, $r$After supporting more than 100 residents since 2021, here's the configuration we recommend:$r$),
     updated_at = now()
@@ -537,7 +538,7 @@ WHERE slug = 'banque-telephone-internet-frontalier-bons-plans'
   AND position($f$After supporting hundreds of cross-border workers, here's the configuration we recommend:$f$ IN content_en) > 0
   AND position($r$After supporting more than 100 residents since 2021, here's the configuration we recommend:$r$ IN content_en) = 0;
 
--- [63/88] choc-culturel-franco-suisse-expatrie-geneve (fr) · proof · D3 : introduction
+-- [63/92] choc-culturel-franco-suisse-expatrie-geneve (fr) · proof · D3 : introduction
 UPDATE blog_posts
 SET content_fr = replace(content_fr, $f$basé sur les retours de centaines de frontaliers passés par La Villa Coliving.$f$, $r$d'après les retours des plus de 100 résidents passés par La Villa Coliving depuis 2021.$r$),
     updated_at = now()
@@ -545,7 +546,7 @@ WHERE slug = 'choc-culturel-franco-suisse-expatrie-geneve'
   AND position($f$basé sur les retours de centaines de frontaliers passés par La Villa Coliving.$f$ IN content_fr) > 0
   AND position($r$d'après les retours des plus de 100 résidents passés par La Villa Coliving depuis 2021.$r$ IN content_fr) = 0;
 
--- [64/88] choc-culturel-franco-suisse-expatrie-geneve (en) · proof · D3: introduction
+-- [64/92] choc-culturel-franco-suisse-expatrie-geneve (en) · proof · D3: introduction
 UPDATE blog_posts
 SET content_en = replace(content_en, $f$based on feedback from hundreds of cross-border workers who've passed through La Villa Coliving.$f$, $r$based on feedback from the more than 100 residents who have lived at La Villa Coliving since 2021.$r$),
     updated_at = now()
@@ -553,7 +554,7 @@ WHERE slug = 'choc-culturel-franco-suisse-expatrie-geneve'
   AND position($f$based on feedback from hundreds of cross-border workers who've passed through La Villa Coliving.$f$ IN content_en) > 0
   AND position($r$based on feedback from the more than 100 residents who have lived at La Villa Coliving since 2021.$r$ IN content_en) = 0;
 
--- [65/88] permis-g-frontalier-geneve (fr) · slot · B1 : créneau nommé — permis G et adresse stable
+-- [65/92] permis-g-frontalier-geneve (fr) · slot · B1 : créneau nommé — permis G et adresse stable
 UPDATE blog_posts
 SET content_fr = replace(content_fr, $f$Le permis G suppose une chose : une **adresse stable côté France** et un retour régulier chez toi. C'est là que le coliving prend tout son sens. Une chambre meublée dans une maison à 20 min de Genève-Eaux-Vives en Léman Express, porte-à-porte te donne un justificatif de domicile clair, un bail propre pour tes démarches, et une communauté de frontaliers qui connaissent déjà les rouages. De quoi sécuriser ton installation pendant que tu gères la partie administrative. Découvre [nos maisons](/nos-maisons).$f$, $r$Le permis G suppose une chose : une **adresse stable côté France** et un retour régulier chez toi. Si tu arrives sans logement, c'est souvent le justificatif de domicile qui bloque le dossier. Chez La Villa Coliving, par exemple (trois maisons à Ville-la-Grand, Ambilly et Annemasse, à 20 min de Genève-Eaux-Vives en Léman Express, porte-à-porte), ta chambre meublée vient avec un bail de résidence principale de 12 mois, utilisable comme justificatif de domicile, et le dossier tient en trois pièces : contrat de travail signé ou promesse d'embauche, pièce d'identité, caution de 2 mois de loyer hors charges. Tu emménages avec des colocataires qui travaillent à Genève et sont passés par les mêmes démarches. Découvre [nos maisons](/nos-maisons).$r$),
     updated_at = now()
@@ -561,7 +562,7 @@ WHERE slug = 'permis-g-frontalier-geneve'
   AND position($f$Le permis G suppose une chose : une **adresse stable côté France** et un retour régulier chez toi. C'est là que le coliving prend tout son sens. Une chambre meublée dans une maison à 20 min de Genève-Eaux-Vives en Léman Express, porte-à-porte te donne un justificatif de domicile clair, un bail propre pour tes démarches, et une communauté de frontaliers qui connaissent déjà les rouages. De quoi sécuriser ton installation pendant que tu gères la partie administrative. Découvre [nos maisons](/nos-maisons).$f$ IN content_fr) > 0
   AND position($r$Le permis G suppose une chose : une **adresse stable côté France** et un retour régulier chez toi. Si tu arrives sans logement, c'est souvent le justificatif de domicile qui bloque le dossier. Chez La Villa Coliving, par exemple (trois maisons à Ville-la-Grand, Ambilly et Annemasse, à 20 min de Genève-Eaux-Vives en Léman Express, porte-à-porte), ta chambre meublée vient avec un bail de résidence principale de 12 mois, utilisable comme justificatif de domicile, et le dossier tient en trois pièces : contrat de travail signé ou promesse d'embauche, pièce d'identité, caution de 2 mois de loyer hors charges. Tu emménages avec des colocataires qui travaillent à Genève et sont passés par les mêmes démarches. Découvre [nos maisons](/nos-maisons).$r$ IN content_fr) = 0;
 
--- [66/88] permis-g-frontalier-geneve (en) · slot · B1: named slot — permis G and a stable address
+-- [66/92] permis-g-frontalier-geneve (en) · slot · B1: named slot — permis G and a stable address
 UPDATE blog_posts
 SET content_en = replace(content_en, $f$The permis G assumes one thing: a **stable address on the French side** and a regular return home. That's exactly where coliving makes sense. A furnished room in a house 20 min from Geneva Eaux-Vives by Léman Express, door to door gives you a clear proof of residence, a clean lease for your paperwork, and a community of cross-border workers who already know the ropes. A solid way to secure your move while you handle the admin side. Discover [our houses](/en/nos-maisons).$f$, $r$The permis G assumes one thing: a **stable address on the French side** and a regular return home. If you arrive without housing, proof of residence is often what holds up the application. At La Villa Coliving, for example (three houses in Ville-la-Grand, Ambilly and Annemasse, 20 min from Geneva Eaux-Vives by Léman Express, door to door), your furnished room comes with a 12-month main-residence lease that works as proof of residence, and the file comes down to three items: a signed employment contract or job offer, an ID, and a deposit of two months' rent excluding bills. You move in with housemates who work in Geneva and have been through the same steps. Discover [our houses](/en/nos-maisons).$r$),
     updated_at = now()
@@ -569,7 +570,7 @@ WHERE slug = 'permis-g-frontalier-geneve'
   AND position($f$The permis G assumes one thing: a **stable address on the French side** and a regular return home. That's exactly where coliving makes sense. A furnished room in a house 20 min from Geneva Eaux-Vives by Léman Express, door to door gives you a clear proof of residence, a clean lease for your paperwork, and a community of cross-border workers who already know the ropes. A solid way to secure your move while you handle the admin side. Discover [our houses](/en/nos-maisons).$f$ IN content_en) > 0
   AND position($r$The permis G assumes one thing: a **stable address on the French side** and a regular return home. If you arrive without housing, proof of residence is often what holds up the application. At La Villa Coliving, for example (three houses in Ville-la-Grand, Ambilly and Annemasse, 20 min from Geneva Eaux-Vives by Léman Express, door to door), your furnished room comes with a 12-month main-residence lease that works as proof of residence, and the file comes down to three items: a signed employment contract or job offer, an ID, and a deposit of two months' rent excluding bills. You move in with housemates who work in Geneva and have been through the same steps. Discover [our houses](/en/nos-maisons).$r$ IN content_en) = 0;
 
--- [67/88] fiscalite-frontalier-geneve-impots-2026 (fr) · slot · B2 : créneau nommé — loyer tout inclus
+-- [67/92] fiscalite-frontalier-geneve-impots-2026 (fr) · slot · B2 : créneau nommé — loyer tout inclus
 UPDATE blog_posts
 SET content_fr = replace(content_fr, $f$Le loyer du coliving, dès 1 370 CHF tout inclus, est particulièrement facile à intégrer$f$, $r$Un loyer de coliving tout inclus (chez La Villa Coliving, 1 370 à 1 430 CHF par mois pour une chambre dans l'une de ses trois maisons, à Ville-la-Grand, Ambilly ou Annemasse) est particulièrement facile à intégrer$r$),
     updated_at = now()
@@ -577,7 +578,7 @@ WHERE slug = 'fiscalite-frontalier-geneve-impots-2026'
   AND position($f$Le loyer du coliving, dès 1 370 CHF tout inclus, est particulièrement facile à intégrer$f$ IN content_fr) > 0
   AND position($r$Un loyer de coliving tout inclus (chez La Villa Coliving, 1 370 à 1 430 CHF par mois pour une chambre dans l'une de ses trois maisons, à Ville-la-Grand, Ambilly ou Annemasse) est particulièrement facile à intégrer$r$ IN content_fr) = 0;
 
--- [68/88] fiscalite-frontalier-geneve-impots-2026 (fr) · fix · B2 : calcul corrigé (prix bas / net haut, prix haut / net bas)
+-- [68/92] fiscalite-frontalier-geneve-impots-2026 (fr) · fix · B2 : calcul corrigé (prix bas / net haut, prix haut / net bas)
 UPDATE blog_posts
 SET content_fr = replace(content_fr, $f$Le coliving représente 20-26 % de ce net — parfaitement dans la zone de confort financier.$f$, $r$Ce loyer représente 20 à 27 % de ce net, sous le seuil des 30 %.$r$),
     updated_at = now()
@@ -585,7 +586,7 @@ WHERE slug = 'fiscalite-frontalier-geneve-impots-2026'
   AND position($f$Le coliving représente 20-26 % de ce net — parfaitement dans la zone de confort financier.$f$ IN content_fr) > 0
   AND position($r$Ce loyer représente 20 à 27 % de ce net, sous le seuil des 30 %.$r$ IN content_fr) = 0;
 
--- [69/88] fiscalite-frontalier-geneve-impots-2026 (en) · slot · B2: named slot — all-inclusive rent
+-- [69/92] fiscalite-frontalier-geneve-impots-2026 (en) · slot · B2: named slot — all-inclusive rent
 UPDATE blog_posts
 SET content_en = replace(content_en, $f$The all-inclusive coliving rent, from 1,370 CHF, is particularly easy to integrate into a budget$f$, $r$An all-inclusive coliving rent (at La Villa Coliving, CHF 1,370 to 1,430 a month for a room in one of its three houses, in Ville-la-Grand, Ambilly or Annemasse) is particularly easy to fit into a budget$r$),
     updated_at = now()
@@ -593,7 +594,7 @@ WHERE slug = 'fiscalite-frontalier-geneve-impots-2026'
   AND position($f$The all-inclusive coliving rent, from 1,370 CHF, is particularly easy to integrate into a budget$f$ IN content_en) > 0
   AND position($r$An all-inclusive coliving rent (at La Villa Coliving, CHF 1,370 to 1,430 a month for a room in one of its three houses, in Ville-la-Grand, Ambilly or Annemasse) is particularly easy to fit into a budget$r$ IN content_en) = 0;
 
--- [70/88] fiscalite-frontalier-geneve-impots-2026 (en) · fix · B2: corrected calculation
+-- [70/92] fiscalite-frontalier-geneve-impots-2026 (en) · fix · B2: corrected calculation
 UPDATE blog_posts
 SET content_en = replace(content_en, $f$Coliving represents 20-26% of this net — perfectly within the financial comfort zone.$f$, $r$This rent represents 20 to 27% of this net, below the 30% threshold.$r$),
     updated_at = now()
@@ -601,7 +602,7 @@ WHERE slug = 'fiscalite-frontalier-geneve-impots-2026'
   AND position($f$Coliving represents 20-26% of this net — perfectly within the financial comfort zone.$f$ IN content_en) > 0
   AND position($r$This rent represents 20 to 27% of this net, below the 30% threshold.$r$ IN content_en) = 0;
 
--- [71/88] salaire-suisse-net-frontalier-2026 (fr) · slot · B3 : créneau nommé — l'arbitrage logement
+-- [71/92] salaire-suisse-net-frontalier-2026 (fr) · slot · B3 : créneau nommé — l'arbitrage logement
 UPDATE blog_posts
 SET content_fr = replace(content_fr, $f$C'est très exactement l'arbitrage que font nos résidents, on le vit avec eux au quotidien. Et si tu pousses la logique jusqu'au coliving tout inclus, tu économises en plus sur les charges, l'internet, le ménage, l'abonnement piscine/gym, les abonnements streaming.$f$, $r$C'est très exactement l'arbitrage que font les résidents de La Villa Coliving, dans nos trois maisons de Ville-la-Grand, Ambilly et Annemasse. Et si tu pousses la logique jusqu'au coliving tout inclus (1 370 à 1 430 CHF par mois), tu économises en plus sur les charges, l'internet, le ménage, la piscine et la salle de sport, les abonnements streaming.$r$),
     updated_at = now()
@@ -609,7 +610,7 @@ WHERE slug = 'salaire-suisse-net-frontalier-2026'
   AND position($f$C'est très exactement l'arbitrage que font nos résidents, on le vit avec eux au quotidien. Et si tu pousses la logique jusqu'au coliving tout inclus, tu économises en plus sur les charges, l'internet, le ménage, l'abonnement piscine/gym, les abonnements streaming.$f$ IN content_fr) > 0
   AND position($r$C'est très exactement l'arbitrage que font les résidents de La Villa Coliving, dans nos trois maisons de Ville-la-Grand, Ambilly et Annemasse. Et si tu pousses la logique jusqu'au coliving tout inclus (1 370 à 1 430 CHF par mois), tu économises en plus sur les charges, l'internet, le ménage, la piscine et la salle de sport, les abonnements streaming.$r$ IN content_fr) = 0;
 
--- [72/88] salaire-suisse-net-frontalier-2026 (en) · slot · B3: named slot — the housing arbitrage
+-- [72/92] salaire-suisse-net-frontalier-2026 (en) · slot · B3: named slot — the housing arbitrage
 UPDATE blog_posts
 SET content_en = replace(content_en, $f$This is exactly the trade-off our residents make, and we live it with them daily. Push it further with all-inclusive coliving: utilities, internet, cleaning, pool/gym subscriptions all included.$f$, $r$This is exactly the trade-off La Villa Coliving's residents make, in our three houses in Ville-la-Grand, Ambilly and Annemasse. Push it further with all-inclusive coliving (CHF 1,370 to 1,430 a month): utilities, internet, cleaning, pool and gym all included.$r$),
     updated_at = now()
@@ -617,7 +618,7 @@ WHERE slug = 'salaire-suisse-net-frontalier-2026'
   AND position($f$This is exactly the trade-off our residents make, and we live it with them daily. Push it further with all-inclusive coliving: utilities, internet, cleaning, pool/gym subscriptions all included.$f$ IN content_en) > 0
   AND position($r$This is exactly the trade-off La Villa Coliving's residents make, in our three houses in Ville-la-Grand, Ambilly and Annemasse. Push it further with all-inclusive coliving (CHF 1,370 to 1,430 a month): utilities, internet, cleaning, pool and gym all included.$r$ IN content_en) = 0;
 
--- [73/88] dossier-location-frontalier-suisse-france (fr) · slot · B4 : un dossier en trois pièces (sans phrase garant, déjà au §7) + preuve sociale D3
+-- [73/92] dossier-location-frontalier-suisse-france (fr) · slot · B4 : un dossier en trois pièces (sans phrase garant, déjà au §7) + preuve sociale D3
 UPDATE blog_posts
 SET content_fr = replace(content_fr, $f$Si le parcours du combattant locatif te décourage, le coliving offre une alternative radicale : un processus de candidature simplifié (contrat de travail ou promesse d'embauche, garant seulement au cas par cas), un bail meublé tout inclus, et une entrée possible en quelques jours.
 
@@ -633,7 +634,7 @@ WHERE slug = 'dossier-location-frontalier-suisse-france'
 
 Plus de 100 résidents sont passés par nos maisons depuis 2021 : nous connaissons les spécificités des contrats suisses, nous raisonnons en CHF, et nous savons qu'un salaire genevois de 5 000 CHF est un excellent profil locataire, même quand les plateformes de location classiques ne le voient pas ainsi.$r$ IN content_fr) = 0;
 
--- [74/88] dossier-location-frontalier-suisse-france (en) · slot · B4: a three-item file (no guarantor sentence, already in §7) + D3 social proof
+-- [74/92] dossier-location-frontalier-suisse-france (en) · slot · B4: a three-item file (no guarantor sentence, already in §7) + D3 social proof
 UPDATE blog_posts
 SET content_en = replace(content_en, $f$If the rental obstacle course discourages you, coliving offers a radical alternative: a simplified application process (employment contract or job offer, a guarantor only case by case), an all-inclusive furnished lease, and move-in possible within days.
 
@@ -649,7 +650,7 @@ At La Villa Coliving, we welcome dozens of cross-border workers every year. We u
 
 More than 100 residents have lived in our houses since 2021: we understand Swiss contract specifics, we think in CHF, and we know that a Geneva salary of CHF 5,000 makes an excellent tenant profile, even when traditional rental platforms don't see it that way.$r$ IN content_en) = 0;
 
--- [75/88] organisations-internationales-geneve-ou-habiter (fr) · slot · B5a + D-B1 : colonne « Trajet → Nations » retirée, ligne La Villa (M3)
+-- [75/92] organisations-internationales-geneve-ou-habiter (fr) · slot · B5a + D-B1 : colonne « Trajet → Nations » retirée, ligne La Villa (M3)
 UPDATE blog_posts
 SET content_fr = replace(content_fr, $f$| Option | Loyer mensuel | Trajet → Nations | Communauté | Flexibilité |
 |---|:---:|:---:|:---:|:---:|
@@ -677,7 +678,7 @@ WHERE slug = 'organisations-internationales-geneve-ou-habiter'
 | Studio côté France | 700-950 € | ❌ Isolé | ✅ Bail souple |
 | Chambre en coliving côté France (La Villa Coliving) | 1 370 – 1 430 CHF, tout inclus | ✅ Maison de 7 à 12 personnes | ✅ 1 mois de préavis |$r$ IN content_fr) = 0;
 
--- [76/88] organisations-internationales-geneve-ou-habiter (en) · slot · B5a + D-B1 : colonne « Trajet → Nations » retirée, ligne La Villa (M3)
+-- [76/92] organisations-internationales-geneve-ou-habiter (en) · slot · B5a + D-B1 : colonne « Trajet → Nations » retirée, ligne La Villa (M3)
 UPDATE blog_posts
 SET content_en = replace(content_en, $f$| Option | Monthly rent | Commute → Nations | Community | Flexibility |
 |---|:---:|:---:|:---:|:---:|
@@ -705,7 +706,7 @@ WHERE slug = 'organisations-internationales-geneve-ou-habiter'
 | Studio French side | 700-950 € | ❌ Isolated | ✅ Flexible |
 | Coliving room on the French side (La Villa Coliving) | 1,370 – 1,430 CHF, all inclusive | ✅ House of 7 to 12 people | ✅ 1 month's notice |$r$ IN content_en) = 0;
 
--- [77/88] organisations-internationales-geneve-ou-habiter (fr) · fix · B5a bis : écart coliving − studio recalculé
+-- [77/92] organisations-internationales-geneve-ou-habiter (fr) · fix · B5a bis : écart coliving − studio recalculé
 UPDATE blog_posts
 SET content_fr = replace(content_fr, $f$Le surcoût de 400-600 CHF$f$, $r$Le surcoût d'environ 500 à 800 CHF par mois$r$),
     updated_at = now()
@@ -713,7 +714,7 @@ WHERE slug = 'organisations-internationales-geneve-ou-habiter'
   AND position($f$Le surcoût de 400-600 CHF$f$ IN content_fr) > 0
   AND position($r$Le surcoût d'environ 500 à 800 CHF par mois$r$ IN content_fr) = 0;
 
--- [78/88] organisations-internationales-geneve-ou-habiter (en) · fix · B5a bis: premium recalculated
+-- [78/92] organisations-internationales-geneve-ou-habiter (en) · fix · B5a bis: premium recalculated
 UPDATE blog_posts
 SET content_en = replace(content_en, $f$The 400-600 CHF premium$f$, $r$The premium of roughly CHF 500 to 800 a month$r$),
     updated_at = now()
@@ -721,23 +722,23 @@ WHERE slug = 'organisations-internationales-geneve-ou-habiter'
   AND position($f$The 400-600 CHF premium$f$ IN content_en) > 0
   AND position($r$The premium of roughly CHF 500 to 800 a month$r$ IN content_en) = 0;
 
--- [79/88] organisations-internationales-geneve-ou-habiter (fr) · travel · D-B1 : durées non mesurées retirées (D1)
+-- [79/92] organisations-internationales-geneve-ou-habiter (fr) · travel · D-B1 : durées non mesurées retirées (D1) ; « WiFi inclus » retiré (non vérifié)
 UPDATE blog_posts
-SET content_fr = replace(content_fr, $f$Avant 2019, vivre côté France et travailler aux Nations signifiait 1h-1h30 de trajet en voiture/bus. Aujourd'hui, c'est 35-45 minutes en train, confortablement assis, WiFi inclus.$f$, $r$Depuis 2019, vivre côté France et travailler aux Nations, c'est un trajet en train, confortablement assis, WiFi inclus.$r$),
+SET content_fr = replace(content_fr, $f$Avant 2019, vivre côté France et travailler aux Nations signifiait 1h-1h30 de trajet en voiture/bus. Aujourd'hui, c'est 35-45 minutes en train, confortablement assis, WiFi inclus.$f$, $r$Depuis 2019, vivre côté France et travailler aux Nations, c'est un trajet en train, confortablement assis.$r$),
     updated_at = now()
 WHERE slug = 'organisations-internationales-geneve-ou-habiter'
   AND position($f$Avant 2019, vivre côté France et travailler aux Nations signifiait 1h-1h30 de trajet en voiture/bus. Aujourd'hui, c'est 35-45 minutes en train, confortablement assis, WiFi inclus.$f$ IN content_fr) > 0
-  AND position($r$Depuis 2019, vivre côté France et travailler aux Nations, c'est un trajet en train, confortablement assis, WiFi inclus.$r$ IN content_fr) = 0;
+  AND position($r$Depuis 2019, vivre côté France et travailler aux Nations, c'est un trajet en train, confortablement assis.$r$ IN content_fr) = 0;
 
--- [80/88] organisations-internationales-geneve-ou-habiter (en) · travel · D-B1: unmeasured durations removed (D1)
+-- [80/92] organisations-internationales-geneve-ou-habiter (en) · travel · D-B1: unmeasured durations removed (D1); « WiFi included » removed (unverified)
 UPDATE blog_posts
-SET content_en = replace(content_en, $f$Before 2019, living on the French side and working at the Nations meant 1h-1h30 commuting by car/bus. Today, it's 35-45 minutes by train, comfortably seated, WiFi included.$f$, $r$Since 2019, living on the French side and working at the Nations means a train commute, comfortably seated, WiFi included.$r$),
+SET content_en = replace(content_en, $f$Before 2019, living on the French side and working at the Nations meant 1h-1h30 commuting by car/bus. Today, it's 35-45 minutes by train, comfortably seated, WiFi included.$f$, $r$Since 2019, living on the French side and working at the Nations means a train commute, comfortably seated.$r$),
     updated_at = now()
 WHERE slug = 'organisations-internationales-geneve-ou-habiter'
   AND position($f$Before 2019, living on the French side and working at the Nations meant 1h-1h30 commuting by car/bus. Today, it's 35-45 minutes by train, comfortably seated, WiFi included.$f$ IN content_en) > 0
-  AND position($r$Since 2019, living on the French side and working at the Nations means a train commute, comfortably seated, WiFi included.$r$ IN content_en) = 0;
+  AND position($r$Since 2019, living on the French side and working at the Nations means a train commute, comfortably seated.$r$ IN content_en) = 0;
 
--- [81/88] organisations-internationales-geneve-ou-habiter (fr) · travel · D-B1 : paragraphe « 25 minutes jusqu'à Sécheron… voiture 40-60 minutes » retiré
+-- [81/92] organisations-internationales-geneve-ou-habiter (fr) · travel · D-B1 : paragraphe « 25 minutes jusqu'à Sécheron… voiture 40-60 minutes » retiré
 UPDATE blog_posts
 SET content_fr = replace(content_fr, $f$minutes à pied du Palais des Nations.
 
@@ -748,7 +749,7 @@ WHERE slug = 'organisations-internationales-geneve-ou-habiter'
 
 Depuis Annemasse en Léman Express : 25 minutes jusqu'à Sécheron, puis 10-15 minutes de marche ou 1 arrêt de bus. Total : 35-45 minutes porte à porte. C'est compétitif avec la voiture en heures de pointe (40-60 minutes avec bouchons et parking).$f$ IN content_fr) > 0;
 
--- [82/88] organisations-internationales-geneve-ou-habiter (en) · travel · D-B1: paragraph « 25 minutes to Sécheron… driving 40-60 minutes » removed
+-- [82/92] organisations-internationales-geneve-ou-habiter (en) · travel · D-B1: paragraph « 25 minutes to Sécheron… driving 40-60 minutes » removed
 UPDATE blog_posts
 SET content_en = replace(content_en, $f$minutes' walk from the Palais des Nations.
 
@@ -759,7 +760,7 @@ WHERE slug = 'organisations-internationales-geneve-ou-habiter'
 
 From Annemasse by Léman Express: 25 minutes to Sécheron, then 10-15 minutes' walk or 1 bus stop. Total: 35-45 minutes door to door. This is competitive with driving during rush hour (40-60 minutes with traffic and parking).$f$ IN content_en) > 0;
 
--- [83/88] organisations-internationales-geneve-ou-habiter (fr) · proof · D-B2 : « 18 % » et « profil type » retirés, titre neutre
+-- [83/92] organisations-internationales-geneve-ou-habiter (fr) · proof · D-B2 : « 18 % » et « profil type » retirés, titre neutre
 UPDATE blog_posts
 SET content_fr = replace(content_fr, $f$## Le profil type de l'expat OI chez La Villa Coliving
 
@@ -779,7 +780,7 @@ Ce profil a des besoins spécifiques que le coliving remplit naturellement.$f$ I
 
 Un expat OI qui arrive à Genève a des besoins spécifiques que le coliving remplit naturellement.$r$ IN content_fr) = 0;
 
--- [84/88] organisations-internationales-geneve-ou-habiter (en) · proof · D-B2: « 18% » and « typical profile » removed, neutral heading
+-- [84/92] organisations-internationales-geneve-ou-habiter (en) · proof · D-B2: « 18% » and « typical profile » removed, neutral heading
 UPDATE blog_posts
 SET content_en = replace(content_en, $f$## The typical IO expat profile at La Villa Coliving
 
@@ -799,7 +800,39 @@ This profile has specific needs that coliving naturally fulfills.$f$ IN content_
 
 An IO expat arriving in Geneva has specific needs that coliving naturally fulfills.$r$ IN content_en) = 0;
 
--- [85/88] choc-culturel-franco-suisse-expatrie-geneve (fr) · slot · B6 : créneau nommé — relations sociales (reprise du comparatif publié)
+-- [85/92] cout-transport-frontalier-geneve-2026 (fr) · fact · « WiFi » à bord du Léman Express retiré (non vérifié)
+UPDATE blog_posts
+SET content_fr = replace(content_fr, $f$les rames FLIRT du Léman Express sont modernes, climatisées, avec WiFi et prises électriques.$f$, $r$les rames FLIRT du Léman Express sont modernes, climatisées, avec des prises électriques.$r$),
+    updated_at = now()
+WHERE slug = 'cout-transport-frontalier-geneve-2026'
+  AND position($f$les rames FLIRT du Léman Express sont modernes, climatisées, avec WiFi et prises électriques.$f$ IN content_fr) > 0
+  AND position($r$les rames FLIRT du Léman Express sont modernes, climatisées, avec des prises électriques.$r$ IN content_fr) = 0;
+
+-- [86/92] cout-transport-frontalier-geneve-2026 (en) · fact · « WiFi » on board the Léman Express removed (unverified)
+UPDATE blog_posts
+SET content_en = replace(content_en, $f$Léman Express FLIRT trainsets are modern, air-conditioned, with WiFi and power outlets.$f$, $r$Léman Express FLIRT trainsets are modern, air-conditioned, with power outlets.$r$),
+    updated_at = now()
+WHERE slug = 'cout-transport-frontalier-geneve-2026'
+  AND position($f$Léman Express FLIRT trainsets are modern, air-conditioned, with WiFi and power outlets.$f$ IN content_en) > 0
+  AND position($r$Léman Express FLIRT trainsets are modern, air-conditioned, with power outlets.$r$ IN content_en) = 0;
+
+-- [87/92] guide-ressources-frontalier-geneve (fr) · fact · « WiFi » à bord du Léman Express retiré (non vérifié)
+UPDATE blog_posts
+SET content_fr = replace(content_fr, $f$dans des rames modernes climatisées avec **WiFi et prises électriques**$f$, $r$dans des rames modernes climatisées avec des **prises électriques**$r$),
+    updated_at = now()
+WHERE slug = 'guide-ressources-frontalier-geneve'
+  AND position($f$dans des rames modernes climatisées avec **WiFi et prises électriques**$f$ IN content_fr) > 0
+  AND position($r$dans des rames modernes climatisées avec des **prises électriques**$r$ IN content_fr) = 0;
+
+-- [88/92] guide-ressources-frontalier-geneve (en) · fact · « WiFi » on board the Léman Express removed (unverified)
+UPDATE blog_posts
+SET content_en = replace(content_en, $f$in modern air-conditioned units with **WiFi and power sockets**$f$, $r$in modern air-conditioned units with **power sockets**$r$),
+    updated_at = now()
+WHERE slug = 'guide-ressources-frontalier-geneve'
+  AND position($f$in modern air-conditioned units with **WiFi and power sockets**$f$ IN content_en) > 0
+  AND position($r$in modern air-conditioned units with **power sockets**$r$ IN content_en) = 0;
+
+-- [89/92] choc-culturel-franco-suisse-expatrie-geneve (fr) · slot · B6 : créneau nommé — relations sociales (reprise du comparatif publié)
 UPDATE blog_posts
 SET content_fr = replace(content_fr, $f$que tes colocataires soient suisses, français ou d'une toute autre nationalité.$f$, $r$que tes colocataires soient suisses, français ou d'une toute autre nationalité. Chez La Villa Coliving, par exemple, chaque maison réunit 7 à 12 personnes qui travaillent à Genève, autour d'une cuisine, d'un jardin et d'une piscine partagés ; le yoga, le fitness et la pizza party du mois créent les premières occasions.$r$),
     updated_at = now()
@@ -807,7 +840,7 @@ WHERE slug = 'choc-culturel-franco-suisse-expatrie-geneve'
   AND position($f$que tes colocataires soient suisses, français ou d'une toute autre nationalité.$f$ IN content_fr) > 0
   AND position($r$que tes colocataires soient suisses, français ou d'une toute autre nationalité. Chez La Villa Coliving, par exemple, chaque maison réunit 7 à 12 personnes qui travaillent à Genève, autour d'une cuisine, d'un jardin et d'une piscine partagés ; le yoga, le fitness et la pizza party du mois créent les premières occasions.$r$ IN content_fr) = 0;
 
--- [86/88] choc-culturel-franco-suisse-expatrie-geneve (en) · slot · B6: named slot — social relationships (as in the published comparison)
+-- [90/92] choc-culturel-franco-suisse-expatrie-geneve (en) · slot · B6: named slot — social relationships (as in the published comparison)
 UPDATE blog_posts
 SET content_en = replace(content_en, $f$whether your housemates are Swiss, French or from an entirely different nationality.$f$, $r$whether your housemates are Swiss, French or from an entirely different nationality. At La Villa Coliving, for example, each house brings together 7 to 12 people who work in Geneva, around a shared kitchen, garden and pool; yoga, fitness classes and the monthly pizza party create the first occasions.$r$),
     updated_at = now()
@@ -815,7 +848,7 @@ WHERE slug = 'choc-culturel-franco-suisse-expatrie-geneve'
   AND position($f$whether your housemates are Swiss, French or from an entirely different nationality.$f$ IN content_en) > 0
   AND position($r$whether your housemates are Swiss, French or from an entirely different nationality. At La Villa Coliving, for example, each house brings together 7 to 12 people who work in Geneva, around a shared kitchen, garden and pool; yoga, fitness classes and the monthly pizza party create the first occasions.$r$ IN content_en) = 0;
 
--- [87/88] choc-culturel-franco-suisse-expatrie-geneve (en) · slot · B6: EN conclusion (parity with FR)
+-- [91/92] choc-culturel-franco-suisse-expatrie-geneve (en) · slot · B6: EN conclusion (parity with FR)
 UPDATE blog_posts
 SET content_en = replace(content_en, $f$in a welcoming, open setting.$f$, $r$in a welcoming, open setting. That's what La Villa Coliving offers: 29 rooms in three houses on the French side, 20 min from Geneva Eaux-Vives by Léman Express, door to door.$r$),
     updated_at = now()
@@ -823,7 +856,7 @@ WHERE slug = 'choc-culturel-franco-suisse-expatrie-geneve'
   AND position($f$in a welcoming, open setting.$f$ IN content_en) > 0
   AND position($r$in a welcoming, open setting. That's what La Villa Coliving offers: 29 rooms in three houses on the French side, 20 min from Geneva Eaux-Vives by Léman Express, door to door.$r$ IN content_en) = 0;
 
--- [88/88] choc-culturel-franco-suisse-expatrie-geneve (fr) · fix · D-B3 : « 29 résidents de toutes nationalités » → « 29 chambres »
+-- [92/92] choc-culturel-franco-suisse-expatrie-geneve (fr) · fix · D-B3 : « 29 résidents de toutes nationalités » → « 29 chambres »
 UPDATE blog_posts
 SET content_fr = replace(content_fr, $f$29 résidents de toutes nationalités dans 3 maisons côté France$f$, $r$29 chambres dans 3 maisons côté France$r$),
     updated_at = now()
@@ -916,10 +949,14 @@ WHERE slug = 'choc-culturel-franco-suisse-expatrie-geneve'
 -- [82] organisations-internationales-geneve-ou-habiter/en · travel : « minutes' walk from the Palais des Nations.⏎⏎From Annemasse by Léman Exp… » → « minutes' walk from the Palais des Nations. »
 -- [83] organisations-internationales-geneve-ou-habiter/fr · proof : « ## Le profil type de l'expat OI chez La Villa Coliving⏎⏎Environ 18 % de… » → « ## Ce dont un expat OI a besoin en arrivant⏎⏎Un expat OI qui arrive à G… »
 -- [84] organisations-internationales-geneve-ou-habiter/en · proof : « ## The typical IO expat profile at La Villa Coliving⏎⏎About 18% of our … » → « ## What an IO expat needs on arrival⏎⏎An IO expat arriving in Geneva ha… »
--- [85] choc-culturel-franco-suisse-expatrie-geneve/fr · slot : « que tes colocataires soient suisses, français ou d'une toute autre nati… » → « que tes colocataires soient suisses, français ou d'une toute autre nati… »
--- [86] choc-culturel-franco-suisse-expatrie-geneve/en · slot : « whether your housemates are Swiss, French or from an entirely different… » → « whether your housemates are Swiss, French or from an entirely different… »
--- [87] choc-culturel-franco-suisse-expatrie-geneve/en · slot : « in a welcoming, open setting. » → « in a welcoming, open setting. That's what La Villa Coliving offers: 29 … »
--- [88] choc-culturel-franco-suisse-expatrie-geneve/fr · fix : « 29 résidents de toutes nationalités dans 3 maisons côté France » → « 29 chambres dans 3 maisons côté France »
+-- [85] cout-transport-frontalier-geneve-2026/fr · fact : « les rames FLIRT du Léman Express sont modernes, climatisées, avec WiFi … » → « les rames FLIRT du Léman Express sont modernes, climatisées, avec des p… »
+-- [86] cout-transport-frontalier-geneve-2026/en · fact : « Léman Express FLIRT trainsets are modern, air-conditioned, with WiFi an… » → « Léman Express FLIRT trainsets are modern, air-conditioned, with power o… »
+-- [87] guide-ressources-frontalier-geneve/fr · fact : « dans des rames modernes climatisées avec **WiFi et prises électriques** » → « dans des rames modernes climatisées avec des **prises électriques** »
+-- [88] guide-ressources-frontalier-geneve/en · fact : « in modern air-conditioned units with **WiFi and power sockets** » → « in modern air-conditioned units with **power sockets** »
+-- [89] choc-culturel-franco-suisse-expatrie-geneve/fr · slot : « que tes colocataires soient suisses, français ou d'une toute autre nati… » → « que tes colocataires soient suisses, français ou d'une toute autre nati… »
+-- [90] choc-culturel-franco-suisse-expatrie-geneve/en · slot : « whether your housemates are Swiss, French or from an entirely different… » → « whether your housemates are Swiss, French or from an entirely different… »
+-- [91] choc-culturel-franco-suisse-expatrie-geneve/en · slot : « in a welcoming, open setting. » → « in a welcoming, open setting. That's what La Villa Coliving offers: 29 … »
+-- [92] choc-culturel-franco-suisse-expatrie-geneve/fr · fix : « 29 résidents de toutes nationalités dans 3 maisons côté France » → « 29 chambres dans 3 maisons côté France »
 
 COMMIT;
 
@@ -940,6 +977,7 @@ SELECT slug,
     WHEN 'coliving-annemasse-geneve-frontaliers-avantages' THEN (position($f$👉 **Tu cherches une [chambres en colocation côté France](/colocation-geneve) ou une [colocation à Annemasse](/annemasse-colocation) ?** À **La Villa Coliving**, 29 chambres meublées tout inclus dès **1 370 CHF/mois** dans 3 maisons à Ville-la-Grand, Ambilly et Annemasse — voir aussi nos [lavillacoliving.com/chambre-a-louer-annemasse](/chambre-a-louer-annemasse). Sans frais de dossier.$f$ IN content_fr) = 0)
     WHEN 'colocation-annemasse-ville-la-grand-ambilly' THEN (position($f$👉 **Tu cherches une [colocation à Genève](/colocation-geneve) ou une [colocation à Annemasse](/annemasse-colocation) ?** À **La Villa Coliving**, 29 chambres meublées tout inclus dès **1 370 CHF/mois** dans 3 maisons à Ville-la-Grand, Ambilly et Annemasse — voir aussi nos [chambres à louer à Annemasse](/chambre-a-louer-annemasse). Sans frais de dossier.$f$ IN content_fr) = 0)
     WHEN 'cout-de-la-vie-suisse-france-frontalier-2026' THEN (position($f$👉 **Tu cherches une [La Villa Coliving, côté France](/colocation-geneve) ?** À **La Villa Coliving** (Ville-la-Grand, Ambilly et Annemasse), une chambre meublée tout inclus coûte à partir de **1 370 CHF/mois** — charges, fibre et ménage compris, sans frais de dossier. Genève-Eaux-Vives en 7 min de Léman Express depuis la gare d'Annemasse — 18 à 24 min porte-à-porte selon la maison, 30 min jusqu'au centre.$f$ IN content_fr) = 0)
+    WHEN 'cout-transport-frontalier-geneve-2026' THEN (position($f$les rames FLIRT du Léman Express sont modernes, climatisées, avec WiFi et prises électriques.$f$ IN content_fr) = 0)
     WHEN 'declaration-impots-frontalier-2026' THEN (position($f$👉 **Tu cherches une [voir nos chambres côté France](/colocation-geneve) ?** À **La Villa Coliving** (Ville-la-Grand, Ambilly et Annemasse), une chambre meublée tout inclus coûte à partir de **1 370 CHF/mois** — charges, fibre et ménage compris, sans frais de dossier. Genève-Eaux-Vives en 7 min de Léman Express depuis la gare d'Annemasse — 18 à 24 min porte-à-porte selon la maison, 30 min jusqu'au centre.$f$ IN content_fr) = 0)
     WHEN 'demenager-geneve-frontalier-checklist' THEN (position($f$👉 **Tu cherches une [colocation à Genève](/colocation-geneve) ?** À **La Villa Coliving** (Ville-la-Grand, Ambilly et Annemasse), une chambre meublée tout inclus coûte à partir de **1 370 CHF/mois** — charges, fibre et ménage compris, sans frais de dossier. Genève-Eaux-Vives en 7 min de Léman Express depuis la gare d'Annemasse — 18 à 24 min porte-à-porte selon la maison, 30 min jusqu'au centre.$f$ IN content_fr) = 0)
     WHEN 'dossier-location-frontalier-suisse-france' THEN (position($f$notre [chambres en colocation côté France](/colocation-geneve) accepte les frontaliers$f$ IN content_fr) = 0
@@ -952,7 +990,8 @@ SELECT slug,
       AND position($f$Le coliving représente 20-26 % de ce net — parfaitement dans la zone de confort financier.$f$ IN content_fr) = 0)
     WHEN 'grand-geneve-2026-nouveautes-frontaliers' THEN (position($f$👉 **Tu cherches une [colocation à Genève](/colocation-geneve) ?** À **La Villa Coliving** (Ville-la-Grand, Ambilly et Annemasse), une chambre meublée tout inclus coûte à partir de **1 370 CHF/mois** — charges, fibre et ménage compris, sans frais de dossier. Genève-Eaux-Vives en 7 min de Léman Express depuis la gare d'Annemasse — 18 à 24 min porte-à-porte selon la maison, 30 min jusqu'au centre.$f$ IN content_fr) = 0)
     WHEN 'guide-ressources-frontalier-geneve' THEN (position($f$👉 **Tu cherches une [chambres en colocation côté France](/colocation-geneve) ?** À **La Villa Coliving** (Ville-la-Grand, Ambilly et Annemasse), une chambre meublée tout inclus coûte à partir de **1 370 CHF/mois** — charges, fibre et ménage compris, sans frais de dossier. Genève-Eaux-Vives en 7 min de Léman Express depuis la gare d'Annemasse — 18 à 24 min porte-à-porte selon la maison, 30 min jusqu'au centre.$f$ IN content_fr) = 0
-      AND position($f$Découvre notre [chambres en colocation côté France](/colocation-geneve)$f$ IN content_fr) = 0)
+      AND position($f$Découvre notre [chambres en colocation côté France](/colocation-geneve)$f$ IN content_fr) = 0
+      AND position($f$dans des rames modernes climatisées avec **WiFi et prises électriques**$f$ IN content_fr) = 0)
     WHEN 'living-in-france-working-in-geneva' THEN (position($f$👉 **Tu cherches une [La Villa Coliving, côté France](/colocation-geneve) ?** À **La Villa Coliving** (Ville-la-Grand, Ambilly et Annemasse), une chambre meublée tout inclus coûte à partir de **1 370 CHF/mois** — charges, fibre et ménage compris, sans frais de dossier. Genève-Eaux-Vives en 7 min de Léman Express depuis la gare d'Annemasse — 18 à 24 min porte-à-porte selon la maison, 30 min jusqu'au centre.$f$ IN content_fr) = 0)
     WHEN 'optimiser-espace-coliving-productivite-bien-etre' THEN (position($f$👉 **Tu cherches une [voir nos chambres côté France](/colocation-geneve) ?** À **La Villa Coliving** (Ville-la-Grand, Ambilly et Annemasse), une chambre meublée tout inclus coûte à partir de **1 370 CHF/mois** — charges, fibre et ménage compris, sans frais de dossier. Genève-Eaux-Vives en 7 min de Léman Express depuis la gare d'Annemasse — 18 à 24 min porte-à-porte selon la maison, 30 min jusqu'au centre.$f$ IN content_fr) = 0)
     WHEN 'organisations-internationales-geneve-ou-habiter' THEN (position($f$👉 **Tu cherches une [colocation à Genève](/colocation-geneve) ?** À **La Villa Coliving** (Ville-la-Grand, Ambilly et Annemasse), une chambre meublée tout inclus coûte à partir de **1 370 CHF/mois** — charges, fibre et ménage compris, sans frais de dossier. Genève-Eaux-Vives en 7 min de Léman Express depuis la gare d'Annemasse — 18 à 24 min porte-à-porte selon la maison, 30 min jusqu'au centre.$f$ IN content_fr) = 0
@@ -1000,6 +1039,7 @@ Ce profil a des besoins spécifiques que le coliving remplit naturellement.$f$ I
     WHEN 'coliving-annemasse-geneve-frontaliers-avantages' THEN (position($f$👉 **Looking for [La Villa Coliving, French side](/en/colocation-geneve) or [in Annemasse](/en/annemasse-colocation)?** At **La Villa Coliving**, 29 furnished all-inclusive rooms from **CHF 1,370/month** across 3 houses in Ville-la-Grand, Ambilly and Annemasse — see also our [rooms for rent in Annemasse](/en/chambre-a-louer-annemasse). No application fee.$f$ IN content_en) = 0)
     WHEN 'colocation-annemasse-ville-la-grand-ambilly' THEN (position($f$👉 **Looking for [a room on the French side](/en/colocation-geneve) or [in Annemasse](/en/annemasse-colocation)?** At **La Villa Coliving**, 29 furnished all-inclusive rooms from **CHF 1,370/month** across 3 houses in Ville-la-Grand, Ambilly and Annemasse — see also our [rooms for rent in Annemasse](/en/chambre-a-louer-annemasse). No application fee.$f$ IN content_en) = 0)
     WHEN 'cout-de-la-vie-suisse-france-frontalier-2026' THEN (position($f$👉 **Looking for [a room on the French side](/en/colocation-geneve)?** At **La Villa Coliving** (Ville-la-Grand, Ambilly and Annemasse), a fully furnished all-inclusive room costs from **CHF 1,370/month** — utilities, fiber and cleaning included, no application fee. Geneva Eaux-Vives in 7 minutes by Léman Express from Annemasse station — 18 to 24 minutes door to door depending on the house, 30 minutes to the city centre.$f$ IN content_en) = 0)
+    WHEN 'cout-transport-frontalier-geneve-2026' THEN (position($f$Léman Express FLIRT trainsets are modern, air-conditioned, with WiFi and power outlets.$f$ IN content_en) = 0)
     WHEN 'declaration-impots-frontalier-2026' THEN (position($f$👉 **Looking for [a room on the French side](/en/colocation-geneve)?** At **La Villa Coliving** (Ville-la-Grand, Ambilly and Annemasse), a fully furnished all-inclusive room costs from **CHF 1,370/month** — utilities, fiber and cleaning included, no application fee. Geneva Eaux-Vives in 7 minutes by Léman Express from Annemasse station — 18 to 24 minutes door to door depending on the house, 30 minutes to the city centre.$f$ IN content_en) = 0)
     WHEN 'demenager-geneve-frontalier-checklist' THEN (position($f$👉 **Looking for [a room on the French side](/en/colocation-geneve)?** At **La Villa Coliving** (Ville-la-Grand, Ambilly and Annemasse), a fully furnished all-inclusive room costs from **CHF 1,370/month** — utilities, fiber and cleaning included, no application fee. Geneva Eaux-Vives in 7 minutes by Léman Express from Annemasse station — 18 to 24 minutes door to door depending on the house, 30 minutes to the city centre.$f$ IN content_en) = 0)
     WHEN 'dossier-location-frontalier-suisse-france' THEN (position($f$If the rental obstacle course discourages you, coliving offers a radical alternative: a simplified application process (employment contract or job offer, a guarantor only case by case), an all-inclusive furnished lease, and move-in possible within days.
@@ -1011,7 +1051,8 @@ At La Villa Coliving, we welcome dozens of cross-border workers every year. We u
       AND position($f$Coliving represents 20-26% of this net — perfectly within the financial comfort zone.$f$ IN content_en) = 0)
     WHEN 'grand-geneve-2026-nouveautes-frontaliers' THEN (position($f$👉 **Looking for [a room on the French side](/en/colocation-geneve)?** At **La Villa Coliving** (Ville-la-Grand, Ambilly and Annemasse), a fully furnished all-inclusive room costs from **CHF 1,370/month** — utilities, fiber and cleaning included, no application fee. Geneva Eaux-Vives in 7 minutes by Léman Express from Annemasse station — 18 to 24 minutes door to door depending on the house, 30 minutes to the city centre.$f$ IN content_en) = 0)
     WHEN 'guide-ressources-frontalier-geneve' THEN (position($f$👉 **Looking for [a room on the French side](/en/colocation-geneve)?** At **La Villa Coliving** (Ville-la-Grand, Ambilly and Annemasse), a fully furnished all-inclusive room costs from **CHF 1,370/month** — utilities, fiber and cleaning included, no application fee. Geneva Eaux-Vives in 7 minutes by Léman Express from Annemasse station — 18 to 24 minutes door to door depending on the house, 30 minutes to the city centre.$f$ IN content_en) = 0
-      AND position($f$Discover our [see our rooms on the French side](/colocation-geneve) and [our all-inclusive rates](/tarifs)$f$ IN content_en) = 0)
+      AND position($f$Discover our [see our rooms on the French side](/colocation-geneve) and [our all-inclusive rates](/tarifs)$f$ IN content_en) = 0
+      AND position($f$in modern air-conditioned units with **WiFi and power sockets**$f$ IN content_en) = 0)
     WHEN 'living-in-france-working-in-geneva' THEN (position($f$👉 **Looking for [shared housing near Geneva](/en/colocation-geneve)?** At **La Villa Coliving** (Ville-la-Grand, Ambilly and Annemasse), a fully furnished all-inclusive room costs from **CHF 1,370/month** — utilities, fiber and cleaning included, no application fee. Geneva Eaux-Vives in 7 minutes by Léman Express from Annemasse station — 18 to 24 minutes door to door depending on the house, 30 minutes to the city centre.$f$ IN content_en) = 0)
     WHEN 'optimiser-espace-coliving-productivite-bien-etre' THEN (position($f$👉 **Looking for [shared housing near Geneva](/en/colocation-geneve)?** At **La Villa Coliving** (Ville-la-Grand, Ambilly and Annemasse), a fully furnished all-inclusive room costs from **CHF 1,370/month** — utilities, fiber and cleaning included, no application fee. Geneva Eaux-Vives in 7 minutes by Léman Express from Annemasse station — 18 to 24 minutes door to door depending on the house, 30 minutes to the city centre.$f$ IN content_en) = 0)
     WHEN 'organisations-internationales-geneve-ou-habiter' THEN (position($f$👉 **Looking for [shared housing near Geneva](/en/colocation-geneve)?** At **La Villa Coliving** (Ville-la-Grand, Ambilly and Annemasse), a fully furnished all-inclusive room costs from **CHF 1,370/month** — utilities, fiber and cleaning included, no application fee. Geneva Eaux-Vives in 7 minutes by Léman Express from Annemasse station — 18 to 24 minutes door to door depending on the house, 30 minutes to the city centre.$f$ IN content_en) = 0
@@ -1044,7 +1085,7 @@ This profile has specific needs that coliving naturally fulfills.$f$ IN content_
     WHEN 'vie-quotidienne-frontalier-courses-sport-sorties' THEN (position($f$👉 **Looking for [shared housing near Geneva](/en/colocation-geneve)?** At **La Villa Coliving** (Ville-la-Grand, Ambilly and Annemasse), a fully furnished all-inclusive room costs from **CHF 1,370/month** — utilities, fiber and cleaning included, no application fee. Geneva Eaux-Vives in 7 minutes by Léman Express from Annemasse station — 18 to 24 minutes door to door depending on the house, 30 minutes to the city centre.$f$ IN content_en) = 0)
   END AS en_ok
 FROM blog_posts
-WHERE slug IN ('allocations-familiales-frontalier-geneve-2026', 'arnaques-logement-frontalier-geneve-eviter', 'assurance-sante-frontalier-lamal-cmu-budget', 'avenant-fiscal-40-frontalier-geneve', 'banque-telephone-internet-frontalier-bons-plans', 'budget-colocation-geneve-guide-complet', 'choc-culturel-franco-suisse-expatrie-geneve', 'coliving-annemasse-geneve-frontaliers-avantages', 'colocation-annemasse-ville-la-grand-ambilly', 'cout-de-la-vie-suisse-france-frontalier-2026', 'declaration-impots-frontalier-2026', 'demenager-geneve-frontalier-checklist', 'dossier-location-frontalier-suisse-france', 'ecole-internationale-geneve-frontalier-ou-habiter', 'fiscalite-frontalier-geneve-impots-2026', 'grand-geneve-2026-nouveautes-frontaliers', 'guide-ressources-frontalier-geneve', 'living-in-france-working-in-geneva', 'optimiser-espace-coliving-productivite-bien-etre', 'organisations-internationales-geneve-ou-habiter', 'ou-habiter-frontalier-suisse-villes-france-pas-cher', 'permis-g-frontalier-geneve', 'quartiers-annemasse-ou-vivre-selon-profil', 'quitter-son-logement-guide-pratique', 'salaire-suisse-net-frontalier-2026', 'se-faire-reseau-geneve-arriver-seul', 'teletravail-frontalier-geneve-regles-2026', 'temps-trajet-annemasse-geneve-par-quartier', 'trouver-colocation-geneve-frontalier', 'vie-quotidienne-frontalier-courses-sport-sorties')
+WHERE slug IN ('allocations-familiales-frontalier-geneve-2026', 'arnaques-logement-frontalier-geneve-eviter', 'assurance-sante-frontalier-lamal-cmu-budget', 'avenant-fiscal-40-frontalier-geneve', 'banque-telephone-internet-frontalier-bons-plans', 'budget-colocation-geneve-guide-complet', 'choc-culturel-franco-suisse-expatrie-geneve', 'coliving-annemasse-geneve-frontaliers-avantages', 'colocation-annemasse-ville-la-grand-ambilly', 'cout-de-la-vie-suisse-france-frontalier-2026', 'cout-transport-frontalier-geneve-2026', 'declaration-impots-frontalier-2026', 'demenager-geneve-frontalier-checklist', 'dossier-location-frontalier-suisse-france', 'ecole-internationale-geneve-frontalier-ou-habiter', 'fiscalite-frontalier-geneve-impots-2026', 'grand-geneve-2026-nouveautes-frontaliers', 'guide-ressources-frontalier-geneve', 'living-in-france-working-in-geneva', 'optimiser-espace-coliving-productivite-bien-etre', 'organisations-internationales-geneve-ou-habiter', 'ou-habiter-frontalier-suisse-villes-france-pas-cher', 'permis-g-frontalier-geneve', 'quartiers-annemasse-ou-vivre-selon-profil', 'quitter-son-logement-guide-pratique', 'salaire-suisse-net-frontalier-2026', 'se-faire-reseau-geneve-arriver-seul', 'teletravail-frontalier-geneve-regles-2026', 'temps-trajet-annemasse-geneve-par-quartier', 'trouver-colocation-geneve-frontalier', 'vie-quotidienne-frontalier-courses-sport-sorties')
 ORDER BY slug;
 
 -- ── Retour arrière (inverse exact, mêmes gardes miroir) : retirer les deux lignes /* et */ puis exécuter le bloc.
@@ -1075,6 +1116,34 @@ SET content_fr = replace(content_fr, $r$que tes colocataires soient suisses, fra
     updated_at = now()
 WHERE slug = 'choc-culturel-franco-suisse-expatrie-geneve'
   AND position($r$que tes colocataires soient suisses, français ou d'une toute autre nationalité. Chez La Villa Coliving, par exemple, chaque maison réunit 7 à 12 personnes qui travaillent à Genève, autour d'une cuisine, d'un jardin et d'une piscine partagés ; le yoga, le fitness et la pizza party du mois créent les premières occasions.$r$ IN content_fr) > 0;
+
+UPDATE blog_posts
+SET content_en = replace(content_en, $r$in modern air-conditioned units with **power sockets**$r$, $f$in modern air-conditioned units with **WiFi and power sockets**$f$),
+    updated_at = now()
+WHERE slug = 'guide-ressources-frontalier-geneve'
+  AND position($r$in modern air-conditioned units with **power sockets**$r$ IN content_en) > 0
+  AND position($f$in modern air-conditioned units with **WiFi and power sockets**$f$ IN content_en) = 0;
+
+UPDATE blog_posts
+SET content_fr = replace(content_fr, $r$dans des rames modernes climatisées avec des **prises électriques**$r$, $f$dans des rames modernes climatisées avec **WiFi et prises électriques**$f$),
+    updated_at = now()
+WHERE slug = 'guide-ressources-frontalier-geneve'
+  AND position($r$dans des rames modernes climatisées avec des **prises électriques**$r$ IN content_fr) > 0
+  AND position($f$dans des rames modernes climatisées avec **WiFi et prises électriques**$f$ IN content_fr) = 0;
+
+UPDATE blog_posts
+SET content_en = replace(content_en, $r$Léman Express FLIRT trainsets are modern, air-conditioned, with power outlets.$r$, $f$Léman Express FLIRT trainsets are modern, air-conditioned, with WiFi and power outlets.$f$),
+    updated_at = now()
+WHERE slug = 'cout-transport-frontalier-geneve-2026'
+  AND position($r$Léman Express FLIRT trainsets are modern, air-conditioned, with power outlets.$r$ IN content_en) > 0
+  AND position($f$Léman Express FLIRT trainsets are modern, air-conditioned, with WiFi and power outlets.$f$ IN content_en) = 0;
+
+UPDATE blog_posts
+SET content_fr = replace(content_fr, $r$les rames FLIRT du Léman Express sont modernes, climatisées, avec des prises électriques.$r$, $f$les rames FLIRT du Léman Express sont modernes, climatisées, avec WiFi et prises électriques.$f$),
+    updated_at = now()
+WHERE slug = 'cout-transport-frontalier-geneve-2026'
+  AND position($r$les rames FLIRT du Léman Express sont modernes, climatisées, avec des prises électriques.$r$ IN content_fr) > 0
+  AND position($f$les rames FLIRT du Léman Express sont modernes, climatisées, avec WiFi et prises électriques.$f$ IN content_fr) = 0;
 
 UPDATE blog_posts
 SET content_en = replace(content_en, $r$## What an IO expat needs on arrival
@@ -1137,17 +1206,17 @@ WHERE slug = 'organisations-internationales-geneve-ou-habiter'
 Depuis Annemasse en Léman Express : 25 minutes jusqu'à Sécheron, puis 10-15 minutes de marche ou 1 arrêt de bus. Total : 35-45 minutes porte à porte. C'est compétitif avec la voiture en heures de pointe (40-60 minutes avec bouchons et parking).$f$ IN content_fr) = 0;
 
 UPDATE blog_posts
-SET content_en = replace(content_en, $r$Since 2019, living on the French side and working at the Nations means a train commute, comfortably seated, WiFi included.$r$, $f$Before 2019, living on the French side and working at the Nations meant 1h-1h30 commuting by car/bus. Today, it's 35-45 minutes by train, comfortably seated, WiFi included.$f$),
+SET content_en = replace(content_en, $r$Since 2019, living on the French side and working at the Nations means a train commute, comfortably seated.$r$, $f$Before 2019, living on the French side and working at the Nations meant 1h-1h30 commuting by car/bus. Today, it's 35-45 minutes by train, comfortably seated, WiFi included.$f$),
     updated_at = now()
 WHERE slug = 'organisations-internationales-geneve-ou-habiter'
-  AND position($r$Since 2019, living on the French side and working at the Nations means a train commute, comfortably seated, WiFi included.$r$ IN content_en) > 0
+  AND position($r$Since 2019, living on the French side and working at the Nations means a train commute, comfortably seated.$r$ IN content_en) > 0
   AND position($f$Before 2019, living on the French side and working at the Nations meant 1h-1h30 commuting by car/bus. Today, it's 35-45 minutes by train, comfortably seated, WiFi included.$f$ IN content_en) = 0;
 
 UPDATE blog_posts
-SET content_fr = replace(content_fr, $r$Depuis 2019, vivre côté France et travailler aux Nations, c'est un trajet en train, confortablement assis, WiFi inclus.$r$, $f$Avant 2019, vivre côté France et travailler aux Nations signifiait 1h-1h30 de trajet en voiture/bus. Aujourd'hui, c'est 35-45 minutes en train, confortablement assis, WiFi inclus.$f$),
+SET content_fr = replace(content_fr, $r$Depuis 2019, vivre côté France et travailler aux Nations, c'est un trajet en train, confortablement assis.$r$, $f$Avant 2019, vivre côté France et travailler aux Nations signifiait 1h-1h30 de trajet en voiture/bus. Aujourd'hui, c'est 35-45 minutes en train, confortablement assis, WiFi inclus.$f$),
     updated_at = now()
 WHERE slug = 'organisations-internationales-geneve-ou-habiter'
-  AND position($r$Depuis 2019, vivre côté France et travailler aux Nations, c'est un trajet en train, confortablement assis, WiFi inclus.$r$ IN content_fr) > 0
+  AND position($r$Depuis 2019, vivre côté France et travailler aux Nations, c'est un trajet en train, confortablement assis.$r$ IN content_fr) > 0
   AND position($f$Avant 2019, vivre côté France et travailler aux Nations signifiait 1h-1h30 de trajet en voiture/bus. Aujourd'hui, c'est 35-45 minutes en train, confortablement assis, WiFi inclus.$f$ IN content_fr) = 0;
 
 UPDATE blog_posts
@@ -1445,10 +1514,10 @@ WHERE slug = 'quitter-son-logement-guide-pratique'
   AND position($f$👉 **Tu cherches une [voir nos chambres côté France](/colocation-geneve) ?** À **La Villa Coliving** (Ville-la-Grand, Ambilly et Annemasse), une chambre meublée tout inclus coûte à partir de **1 370 CHF/mois** — charges, fibre et ménage compris, sans frais de dossier. Genève-Eaux-Vives en 7 min de Léman Express depuis la gare d'Annemasse — 18 à 24 min porte-à-porte selon la maison, 30 min jusqu'au centre.$f$ IN content_fr) = 0;
 
 UPDATE blog_posts
-SET content_en = replace(content_en, $r$👉 **Looking for a place on the French side?** At **La Villa Coliving** (Le Lodge in Annemasse, La Villa in Ville-la-Grand, Le Loft in Ambilly), a furnished all-inclusive room costs from **CHF 1,370/month** — utilities, fiber and cleaning included, no application fee. → [Shared housing in Annemasse](/annemasse-colocation)$r$, $f$👉 **Looking for [shared housing in Annemasse](/annemasse-colocation)?** At **La Villa Coliving** (Le Lodge in Annemasse, La Villa in Ville-la-Grand, Le Loft in Ambilly), a furnished all-inclusive room costs from **CHF 1,370/month** — utilities, fiber and cleaning included, no application fee.$f$),
+SET content_en = replace(content_en, $r$👉 **Looking for a place on the French side?** At **La Villa Coliving** (Le Lodge in Annemasse, La Villa in Ville-la-Grand, Le Loft in Ambilly), a furnished all-inclusive room costs from **CHF 1,370/month** — utilities, fiber and cleaning included, no application fee. → [Shared housing in Annemasse](/en/annemasse-colocation)$r$, $f$👉 **Looking for [shared housing in Annemasse](/annemasse-colocation)?** At **La Villa Coliving** (Le Lodge in Annemasse, La Villa in Ville-la-Grand, Le Loft in Ambilly), a furnished all-inclusive room costs from **CHF 1,370/month** — utilities, fiber and cleaning included, no application fee.$f$),
     updated_at = now()
 WHERE slug = 'quartiers-annemasse-ou-vivre-selon-profil'
-  AND position($r$👉 **Looking for a place on the French side?** At **La Villa Coliving** (Le Lodge in Annemasse, La Villa in Ville-la-Grand, Le Loft in Ambilly), a furnished all-inclusive room costs from **CHF 1,370/month** — utilities, fiber and cleaning included, no application fee. → [Shared housing in Annemasse](/annemasse-colocation)$r$ IN content_en) > 0
+  AND position($r$👉 **Looking for a place on the French side?** At **La Villa Coliving** (Le Lodge in Annemasse, La Villa in Ville-la-Grand, Le Loft in Ambilly), a furnished all-inclusive room costs from **CHF 1,370/month** — utilities, fiber and cleaning included, no application fee. → [Shared housing in Annemasse](/en/annemasse-colocation)$r$ IN content_en) > 0
   AND position($f$👉 **Looking for [shared housing in Annemasse](/annemasse-colocation)?** At **La Villa Coliving** (Le Lodge in Annemasse, La Villa in Ville-la-Grand, Le Loft in Ambilly), a furnished all-inclusive room costs from **CHF 1,370/month** — utilities, fiber and cleaning included, no application fee.$f$ IN content_en) = 0;
 
 UPDATE blog_posts

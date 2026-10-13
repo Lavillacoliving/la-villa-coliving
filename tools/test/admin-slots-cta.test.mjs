@@ -4,7 +4,7 @@ import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { loadEntityFacts } from '../../scripts/lib/load-entity-facts.mjs';
 import {
-  CTA_QUESTION, CTA_LINES, capitalizeAnchor, moveLinksOut, dropColumn, rentShareOfNet, studioPremiumChf, buildEdits,
+  CTA_QUESTION, CTA_LINES, capitalizeAnchor, enTarget, moveLinksOut, dropColumn, rentShareOfNet, studioPremiumChf, buildEdits,
 } from '../../scripts/admin-slots-cta.edits.mjs';
 
 const m = await loadEntityFacts();
@@ -35,9 +35,23 @@ test('CTA_LINES : 56 lignes (28 FR / 28 EN), une par article et par langue, tout
   for (const c of CTA_LINES) assert.doesNotThrow(() => moveLinksOut(c.line, c.lang), c.slug);
 });
 
-test('buildEdits : 88 modifications, (article, langue, ancien texte) uniques', () => {
-  assert.equal(edits.length, 88);
-  assert.equal(new Set(edits.map((e) => `${e.slug}/${e.lang}/${e.find}`)).size, 88);
+test('buildEdits : 92 modifications, (article, langue, ancien texte) uniques', () => {
+  assert.equal(edits.length, 92);
+  assert.equal(new Set(edits.map((e) => `${e.slug}/${e.lang}/${e.find}`)).size, 92);
+});
+
+test('EN : une cible interne sans /en devient /en explicite (quartiers-annemasse) ; FR et cibles /en/ inchangées', () => {
+  assert.equal(enTarget('[Shared housing in Annemasse](/annemasse-colocation)'), '[Shared housing in Annemasse](/en/annemasse-colocation)');
+  assert.equal(enTarget('[A room](/en/colocation-geneve)'), '[A room](/en/colocation-geneve)');
+  const en = '👉 **Looking for [shared housing in Annemasse](/annemasse-colocation)?** At X.';
+  assert.equal(moveLinksOut(en, 'en'), `👉 **${CTA_QUESTION.en}** At X. → [Shared housing in Annemasse](/en/annemasse-colocation)`);
+  const fr = '👉 **Tu cherches une [colocation à Annemasse](/annemasse-colocation) ?** À X.';
+  assert.ok(moveLinksOut(fr, 'fr').endsWith('→ [Colocation à Annemasse](/annemasse-colocation)'));
+});
+
+test('« WiFi » à bord du Léman Express : absent de tout texte inséré (décision du 13/10/2026)', () => {
+  for (const e of edits) assert.ok(!/(rames|trainsets|units|en train|by train|Léman Express|confortablement assis|comfortably seated)[^.]{0,90}WiFi/i.test(e.replace), `${e.slug}/${e.lang}`);
+  assert.equal(edits.filter((e) => e.mechanism === 'fact').length, 4); // cout-transport + guide-ressources, FR et EN
 });
 
 test('après correctif : aucune question 👉 en gras ne porte de lien, aucune forme cassée ne subsiste', () => {
