@@ -54,7 +54,8 @@ export type RoomCardProps = {
   onHouseClick?: (room: PublicRoom) => void;
   /**
    * (12/10/2026, refonte /chambres-disponibles validée par Jérôme) « featured » = grande carte horizontale d'une chambre libre
-   * maintenant ; « compact » = petite carte en retrait d'une libération datée ; « default » = carte historique (pages maisons, inchangée).
+   * maintenant ; « compact » = petite carte en retrait d'une libération datée ; « default » = carte historique (pages maisons,
+   * /offre-hiver, pages money ; depuis le 13/10/2026 « Candidater » passe au-dessus du lien vers la fiche).
    */
   variant?: "default" | "featured" | "compact";
   /** Commune de la maison (sur-titre des variantes featured / compact). */
@@ -312,15 +313,8 @@ export function RoomCard({ house, houseName, room, fallbackImage, showHouse = fa
               <span className="text-sm font-light text-[#78716C]"> {t.houseDetail.perMonth}</span>
             </p>
           )}
-          {isRoomPageOpen(house, room) && (
-            <LocalizedLink
-              to={roomPagePath(house, room.room_number)}
-              className="mb-3 inline-flex items-center gap-1.5 text-sm font-semibold text-[#1C1917] underline underline-offset-4 hover:text-[#B8860B]"
-            >
-              {language === "en" ? "See the room's page" : "Voir la fiche de la chambre"}
-              <ArrowRight className="w-3.5 h-3.5" />
-            </LocalizedLink>
-          )}
+          {/* (13/10/2026, brief « conversion Ads » §2.5) « Candidater » d'abord, la fiche en lien secondaire dessous — même
+              ordre que la variante featured, sur toutes les utilisations (pages maisons, /offre-hiver, pages money). */}
           <LocalizedLink
             to={`/candidature?${ctaParams ? `${ctaParams}&` : ""}property_interest=${house}&room_interest=chambre-${room.room_number}`}
             onClick={() => onCtaClick?.(room)}
@@ -329,6 +323,17 @@ export function RoomCard({ house, houseName, room, fallbackImage, showHouse = fa
             {language === "en" ? "Apply" : "Candidater"}
             <ArrowRight className="w-4 h-4" />
           </LocalizedLink>
+          {isRoomPageOpen(house, room) && (
+            <div className="mt-3 text-center">
+              <LocalizedLink
+                to={roomPagePath(house, room.room_number)}
+                className="inline-flex items-center gap-1.5 text-sm font-semibold text-[#1C1917] underline underline-offset-4 hover:text-[#B8860B]"
+              >
+                {language === "en" ? "See the room's page" : "Voir la fiche de la chambre"}
+                <ArrowRight className="w-3.5 h-3.5" />
+              </LocalizedLink>
+            </div>
+          )}
         </div>
       </div>
     </div>
