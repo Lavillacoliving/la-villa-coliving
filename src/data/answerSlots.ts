@@ -22,6 +22,7 @@
  */
 import {
   STATS,
+  STATS_DISPLAY,
   ROOMS_BY_HOUSE,
   PRICE_FR_NUM,
   PRICE_EN_NUM,
@@ -234,6 +235,75 @@ export function coutDeLaVieRowLabel(lang: EntityLang): string {
     : `− Logement (T2, ou chambre en coliving côté France — ex. La Villa Coliving : ${priceRangeText("fr")} tout inclus, 0 € de frais de dossier, préavis 1 mois)`;
 }
 
+
+// ── Créneaux nommés des articles administratifs (brief de Jérôme du 13/10/2026) ───────────────────────────────────────
+// Six articles très cités par les assistants (Bing AI Performance, 09/07 → 06/10/2026 : le permis G pèse ≈ 50 % des
+// citations Copilot) parlaient « du coliving » dans leur section logement sans nommer La Villa Coliving. Chacun reçoit UN
+// créneau nommé (mécanisme L1). adminSlotSentence() rend la phrase — ou le fragment, ou la cellule — qui porte le nom, au
+// caractère près : posée en base par scripts/admin-slots-cta.edits.mjs, vérifiée dans le texte visible par check:slots
+// (L1_TARGETS, clé « adminSlot:<clé> »). Une seule mention de la marque par créneau (retenue premium du 13/10/2026).
+// Le créneau « dossier » n'a PAS de phrase garant : la formule canonique figure déjà dans l'article (a6Text, § 7).
+
+export type AdminSlotKey = "permis-g" | "fiscalite" | "salaire" | "dossier" | "oi" | "choc";
+export const ADMIN_SLOT_KEYS: readonly AdminSlotKey[] = ["permis-g", "fiscalite", "salaire", "dossier", "oi", "choc"];
+
+const NUMBER_WORDS: Readonly<Record<number, Record<EntityLang, string>>> = {
+  1: { fr: "un", en: "one" },
+  2: { fr: "deux", en: "two" },
+  3: { fr: "trois", en: "three" },
+};
+
+/** 3 → « trois » / « three » ; hors de la table, le chiffre. */
+export const numberWord = (n: number, lang: EntityLang): string => NUMBER_WORDS[n]?.[lang] ?? String(n);
+
+/** « Ville-la-Grand, Ambilly et Annemasse » — communes des maisons, dans l'ordre de ENTITY_HOUSES. */
+export function houseCommunes(lang: EntityLang, conj: string = lang === "en" ? "and" : "et"): string {
+  const c = ENTITY_HOUSES.map((h) => h.commune);
+  return `${c.slice(0, -1).join(", ")} ${conj} ${c[c.length - 1]}`;
+}
+
+const ADMIN_SLOTS: Readonly<Record<AdminSlotKey, Record<EntityLang, () => string>>> = {
+  "permis-g": {
+    fr: () =>
+      `Chez La Villa Coliving, par exemple (${numberWord(STATS.totalHouses, "fr")} maisons à ${houseCommunes("fr")}, à ${STATS_DISPLAY.fr.distance}), ta chambre meublée vient avec un bail de résidence principale de ${STATS.leaseDurationMonths} mois, utilisable comme justificatif de domicile, et le dossier tient en trois pièces : contrat de travail signé ou promesse d'embauche, pièce d'identité, caution de ${STATS.depositMonths} mois de loyer hors charges.`,
+    en: () =>
+      `At La Villa Coliving, for example (${numberWord(STATS.totalHouses, "en")} houses in ${houseCommunes("en")}, ${STATS_DISPLAY.en.distance}), your furnished room comes with a ${STATS.leaseDurationMonths}-month main-residence lease that works as proof of residence, and the file comes down to three items: a signed employment contract or job offer, an ID, and a deposit of ${numberWord(STATS.depositMonths, "en")} months' rent excluding bills.`,
+  },
+  fiscalite: {
+    fr: () =>
+      `Un loyer de coliving tout inclus (chez La Villa Coliving, ${priceRangeText("fr")} par mois pour une chambre dans l'une de ses ${numberWord(STATS.totalHouses, "fr")} maisons, à ${houseCommunes("fr", "ou")})`,
+    en: () =>
+      `An all-inclusive coliving rent (at La Villa Coliving, ${priceRangeText("en")} a month for a room in one of its ${numberWord(STATS.totalHouses, "en")} houses, in ${houseCommunes("en", "or")})`,
+  },
+  salaire: {
+    fr: () =>
+      `C'est très exactement l'arbitrage que font les résidents de La Villa Coliving, dans nos ${numberWord(STATS.totalHouses, "fr")} maisons de ${houseCommunes("fr")}.`,
+    en: () =>
+      `This is exactly the trade-off La Villa Coliving's residents make, in our ${numberWord(STATS.totalHouses, "en")} houses in ${houseCommunes("en")}.`,
+  },
+  dossier: {
+    fr: () =>
+      `Chez La Villa Coliving (${numberWord(STATS.totalHouses, "fr")} maisons à ${houseCommunes("fr")}, ${priceRangeText("fr")} par mois tout inclus), le dossier tient en trois pièces : contrat de travail signé ou promesse d'embauche, pièce d'identité, caution de ${STATS.depositMonths} mois de loyer hors charges.`,
+    en: () =>
+      `At La Villa Coliving (${numberWord(STATS.totalHouses, "en")} houses in ${houseCommunes("en")}, ${priceRangeText("en")} a month all inclusive), the file comes down to three items: a signed employment contract or job offer, an ID, and a deposit of ${numberWord(STATS.depositMonths, "en")} months' rent excluding bills.`,
+  },
+  oi: {
+    fr: () => "Chambre en coliving côté France (La Villa Coliving)",
+    en: () => "Coliving room on the French side (La Villa Coliving)",
+  },
+  choc: {
+    fr: () =>
+      `Chez La Villa Coliving, par exemple, chaque maison réunit ${STATS.minResidentsPerHouse} à ${STATS.maxResidentsPerHouse} personnes qui travaillent à Genève, autour d'une cuisine, d'un jardin et d'une piscine partagés ; le yoga, le fitness et la pizza party du mois créent les premières occasions.`,
+    en: () =>
+      `At La Villa Coliving, for example, each house brings together ${STATS.minResidentsPerHouse} to ${STATS.maxResidentsPerHouse} people who work in Geneva, around a shared kitchen, garden and pool; yoga, fitness classes and the monthly pizza party create the first occasions.`,
+  },
+};
+
+/** Phrase (fragment, cellule) porteuse du nom dans le créneau `key` — source unique des créneaux des articles admin. */
+export function adminSlotSentence(key: AdminSlotKey, lang: EntityLang): string {
+  return ADMIN_SLOTS[key][lang]();
+}
+
 /** Incohérences détectables sans base (la CI appelle aussi check-answer-slots). */
 // ── (Lot L5 « Groupe Facebook comme ressource nommée », D5 validé le 08/10, D10 = oui — 10/10/2026) ───────────────────
 // A.7 = mention canonique dans 4 articles (SQL, texte markdown avec le nom du groupe en lien) ; A.8 = encart « Pas de chambre
@@ -311,6 +381,7 @@ export function answerSlotsIssues(): string[] {
   for (const lang of ["fr", "en"] as const) {
     for (const v of ["full", "short"] as const) for (const s of ouChercherStrings(lang, v)) all.push([`${lang}/${v}`, s]);
     for (const slug of ["lavilla", "leloft", "lelodge"] as const) all.push([`${lang}/commune`, communeSentence(slug, lang)]);
+    for (const k of ADMIN_SLOT_KEYS) all.push([`${lang}/admin:${k}`, adminSlotSentence(k, lang)]);
     all.push([`${lang}/a6`, a6Text(lang)], [`${lang}/budget`, budgetVariantText(lang)], [`${lang}/comparatif`, comparatifRowLabel(lang)], [`${lang}/cout`, coutDeLaVieRowLabel(lang)]);
   }
   for (const [where, s] of all) {
@@ -339,5 +410,12 @@ export function answerSlotsIssues(): string[] {
     if (!md.includes(FACEBOOK_GROUP.url)) issues.push(`${lang} : lien du groupe absent du markdown A.7`);
   }
   if (facebookStrings("fr").length !== facebookStrings("en").length) issues.push("A.7/A.8 : parité FR/EN");
+  // (Brief du 13/10/2026) créneaux nommés des articles admin : la marque exactement une fois par créneau.
+  for (const k of ADMIN_SLOT_KEYS) {
+    for (const lang of ["fr", "en"] as const) {
+      const n = adminSlotSentence(k, lang).split("La Villa Coliving").length - 1;
+      if (n !== 1) issues.push(`admin:${k}/${lang} : « La Villa Coliving » ${n} fois (attendu 1)`);
+    }
+  }
   return issues;
 }

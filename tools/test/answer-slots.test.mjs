@@ -98,7 +98,7 @@ test('resolveNeedle : chaque clé de L1_TARGETS se résout en phrase canonique ;
   assert.throws(() => resolveNeedle(m, 'inconnu', 'fr'), /clé de créneau inconnue/);
   for (const t of L1_TARGETS) for (const lang of LANGS) for (const k of t.needles) assert.ok(resolveNeedle(m, k, lang).length > 10, `${t.route} ${k} ${lang}`);
   assert.equal(typeof ANSWER_SLOTS_LIVE, 'boolean');
-  assert.equal(L1_TARGETS.length, 16); // 14 cibles L1 + guide-ressources et arnaques (mention Facebook A.7, Lot L5)
+  assert.equal(L1_TARGETS.length, 21); // 14 cibles L1 + guide-ressources et arnaques (Lot L5) + 5 articles admin (13/10/2026 ; dossier-location déjà cible)
 });
 
 // ── Fonctions pures sur fixtures HTML ─────────────────────────────────────────────────────────────────────────────
@@ -358,4 +358,45 @@ test('runChecks : marqueur orphelin, promesse garant (code strict / article adap
   const m1 = runChecks(m, pages, { m1Only: true });
   assert.equal(m1.stats.orphanPages, 1);
   assert.equal(m1.stats.forbiddenFailures + m1.stats.densityPages, 0);
+});
+
+// ── (Brief du 13/10/2026) créneaux des articles admin + règle 7 des phrases d'appel ─────────────────────────────────
+import { CTA_BROKEN_PATTERNS, ctaQuestionLinks } from '../../scripts/check-answer-slots.mjs';
+
+test('créneaux admin : six clés, chacune ciblée par L1_TARGETS, « La Villa Coliving » une seule fois par phrase', () => {
+  assert.deepEqual([...m.ADMIN_SLOT_KEYS].sort(), ['choc', 'dossier', 'fiscalite', 'oi', 'permis-g', 'salaire']);
+  const keys = L1_TARGETS.flatMap((t) => t.needles).filter((k) => k.startsWith('adminSlot:')).map((k) => k.split(':')[1]);
+  assert.deepEqual(keys.sort(), [...m.ADMIN_SLOT_KEYS].sort());
+  for (const k of m.ADMIN_SLOT_KEYS) {
+    for (const lang of LANGS) {
+      assert.equal(resolveNeedle(m, `adminSlot:${k}`, lang), m.adminSlotSentence(k, lang));
+      assert.equal(brandCount(m.adminSlotSentence(k, lang)), 1, `${k}/${lang}`);
+    }
+  }
+});
+
+const CTA_BROKEN_HTML = {
+  fr: '<p class="mb-6">👉 <strong class="font-semibold">Tu cherches une <a href="/colocation-geneve">voir nos chambres côté France</a> ?</strong> À <strong>La Villa Coliving</strong> (…).</p>',
+  en: '<p class="mb-6">👉 <strong class="font-semibold">Looking for <a href="/en/colocation-geneve">La Villa Coliving, French side</a>?</strong> At <strong>La Villa Coliving</strong> (…).</p>',
+};
+const CTA_FIXED_HTML = {
+  fr: '<p class="mb-6">👉 <strong class="font-semibold">Tu cherches où te loger côté France ?</strong> À <strong>La Villa Coliving</strong> (…). → <a href="/colocation-geneve">Voir nos chambres côté France</a></p>',
+  en: '<p class="mb-6">👉 <strong class="font-semibold">Looking for a place on the French side?</strong> At <strong>La Villa Coliving</strong> (…). → <a href="/en/colocation-geneve">La Villa Coliving, French side</a></p>',
+};
+
+test('règle 7 — question 👉 en gras avec lien : détectée sur la forme cassée, absente sur la forme corrigée', () => {
+  for (const lang of LANGS) {
+    assert.equal(ctaQuestionLinks(CTA_BROKEN_HTML[lang]).length, 1, lang);
+    assert.deepEqual(ctaQuestionLinks(CTA_FIXED_HTML[lang]), [], lang);
+  }
+  // hors paragraphe 👉 : non concerné
+  assert.deepEqual(ctaQuestionLinks('<p><strong>Une <a href="/x">question</a> ?</strong></p>'), []);
+});
+
+test('règle 7 — motifs cassés : détectés dans le texte visible (y compris l\'espace inséré avant « ? »), absents après correctif', () => {
+  const hits = (html) => CTA_BROKEN_PATTERNS.filter((b) => b.re.test(visibleText(html))).length;
+  assert.equal(hits(CTA_BROKEN_HTML.fr), 1);
+  assert.equal(hits(CTA_BROKEN_HTML.en), 1);
+  assert.equal(hits(CTA_FIXED_HTML.fr), 0);
+  assert.equal(hits(CTA_FIXED_HTML.en), 0);
 });
