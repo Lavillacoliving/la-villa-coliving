@@ -18,6 +18,7 @@ import { PRICE_SHARED_CHF_FR, PRICE_SHARED_CHF_EN, STATS_DISPLAY } from "@/data/
 import { YmylNotice, YmylPosture, AuthorBox } from "@/components/YmylNotice";
 import { isYmyl } from "@/lib/ymyl";
 import { resolveContentTokens } from "@/lib/contentTokens";
+import { nbspThousands } from "@/lib/typography";
 import { EntityFacts } from "@/components/EntityFacts";
 import { ENTITY_FACTS_ARTICLES, fallbackEntityFactsCut } from "@/data/entityFactsArticles";
 import { OuChercher } from "@/components/OuChercher";
@@ -309,8 +310,9 @@ export function BlogPostPage() {
   const L = language === "en" ? "en" : "fr";
   // (Lot C0) Tokens de faits ({{PRIX_DES}}…) résolus depuis la source unique, puis marqueur du
   // bloc entité repéré ; FAQ, sommaire et wordCount travaillent sur le texte sans marqueur.
+  // (16/10/2026) Milliers en espaces insécables (src/lib/typography.ts) : plus de nombre coupé en deux sur mobile.
   const rawContent = (language==="en"&&post.content_en)?post.content_en:post.content_fr;
-  const content = resolveContentTokens(rawContent, L);
+  const content = nbspThousands(resolveContentTokens(rawContent, L));
   const entityMarker = findEntityFactsMarker(content);
   // (Lot S1) Les 8 articles les plus cités portent le bloc sans marqueur : coupe de repli avant la
   // conclusion (src/data/entityFactsArticles.ts). Longueur 0 : rien à retirer du texte des metas.
