@@ -1054,7 +1054,7 @@ export function ObservatoireLogementFrontalierPage() {
             </p>
             <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
               {[
-                { v: `${BAROMETRE.frontaliersPct} %`, l: en ? "cross-border workers" : "frontaliers" },
+                { v: en ? `${BAROMETRE.frontaliersPct}%` : `${BAROMETRE.frontaliersPct}\u00a0%`, l: en ? "cross-border workers" : "frontaliers" },
                 { v: `${BAROMETRE.ageDominant} ${en ? "yrs" : "ans"}`, l: en ? `dominant age group (full range ${BAROMETRE.ageRange})` : `tranche dominante (fourchette ${BAROMETRE.ageRange})` },
                 { v: `${BAROMETRE.singlesPct} / ${BAROMETRE.couplesPct}`, l: en ? "% singles / couples" : "% célibataires / couples" },
                 { v: `${BAROMETRE.tenureAvgMonths} ${en ? "months" : "mois"}`, l: en ? "average length of stay" : "durée moyenne de séjour" },

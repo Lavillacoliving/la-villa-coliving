@@ -533,7 +533,7 @@ export function BlogPostPage() {
             {CL[post.category]?.[language]||post.category}
           </span>
           <h1 className="text-4xl md:text-5xl font-light text-[#1C1917] mb-6" style={{fontFamily: '"DM Serif Display", serif'}}>
-            {title}
+            {typoFr(title)}
           </h1>
           <div className="flex flex-wrap items-center gap-x-6 gap-y-2 text-sm text-[#78716C] mb-8 pb-8 border-b border-[#E7E5E4]">
             <span className="flex items-center gap-2">
@@ -714,7 +714,7 @@ export function BlogPostPage() {
                         {CL[r.category]?.[language] || r.category}
                       </span>
                       <h3 className="text-base font-medium text-[#1C1917] mb-2 line-clamp-2 group-hover:text-[#D4A574] transition-colors" style={{ fontFamily: '"DM Serif Display", serif' }}>
-                        {rTitle}
+                        {typoFr(rTitle)}
                       </h3>
                       <p className="text-sm text-[#57534E] line-clamp-2">{typoFr(rExcerpt)}</p>
                       <span className="flex items-center gap-1 text-xs text-[#78716C] mt-3">

@@ -138,7 +138,7 @@ export function BlogPage() {
                       {CL[post.category]?.[language]||post.category}
                     </span>
                     <h3 className="text-xl font-medium text-[#1C1917] mb-3 line-clamp-2 group-hover:text-[#D4A574] transition-colors" style={{fontFamily: '"DM Serif Display", serif'}}>
-                      {gT(post)}
+                      {typoFr(gT(post))}
                     </h3>
                     <p className="text-[#57534E] text-sm leading-relaxed mb-4 line-clamp-3">{typoFr(gE(post))}</p>
                     {post.tags&&post.tags.length>0&&(

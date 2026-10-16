@@ -111,7 +111,7 @@ export function LatestBlogV7() {
                   className="text-lg font-medium text-[#1C1917] mb-2 line-clamp-2 group-hover:text-[#D4A574] transition-colors"
                   style={{ fontFamily: '"DM Serif Display", serif' }}
                 >
-                  {gT(post)}
+                  {typoFr(gT(post))}
                 </h3>
                 <p className="text-[#57534E] text-sm leading-relaxed mb-3 line-clamp-2">
                   {typoFr(gE(post))}
