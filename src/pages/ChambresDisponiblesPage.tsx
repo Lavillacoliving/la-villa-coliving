@@ -217,7 +217,8 @@ export function ChambresDisponiblesPage() {
       <SEO title={title} description={description} jsonLd={itemList} />
 
       {/* Hero — léger (pas d'image : LCP = le H1), même grammaire que /nos-maisons. */}
-      <section className="pt-32 pb-14 lg:pt-40 lg:pb-20 bg-[#F5F2ED]">
+      {/* (Lot 2 — C1) Marges resserrées sur mobile : avec les filtres sur une ligne, la première carte passe sous la ligne de flottaison à 390 × 844. */}
+      <section className="pt-32 pb-9 md:pb-14 lg:pt-40 lg:pb-20 bg-[#F5F2ED]">
         <div className="container-custom">
           <span className="text-xs text-[#78716C] uppercase tracking-[0.3em] mb-4 block">
             {en ? `${STATS.totalRooms} rooms · ${STATS.totalHouses} houses` : `${STATS.totalRooms} chambres · ${STATS.totalHouses} maisons`}
@@ -288,7 +289,7 @@ export function ChambresDisponiblesPage() {
       </section>
 
       {/* Les chambres — libres maintenant en avant (grandes cartes), libérations datées en retrait (section suivante). */}
-      <section id="libre-maintenant" className="py-14 lg:py-20 scroll-mt-24">
+      <section id="libre-maintenant" className="pt-8 pb-14 md:pt-14 lg:py-20 scroll-mt-24">
         <div className="container-custom">
           {!all.known ? (
             loadFailed ? (
@@ -331,7 +332,7 @@ export function ChambresDisponiblesPage() {
           ) : shown.length > 0 ? (
             availableShown.length > 0 ? (
               <>
-                <div className="flex flex-wrap items-baseline justify-between gap-x-6 gap-y-1 mb-8">
+                <div className="flex flex-wrap items-baseline justify-between gap-x-6 gap-y-1 mb-5 md:mb-8">
                   <h2 className="text-3xl md:text-4xl font-light text-[#1C1917]" style={{ fontFamily: '"DM Serif Display", serif' }}>
                     {en ? "Free now" : "Libre maintenant"}
                   </h2>
