@@ -518,6 +518,20 @@ export function getFounderByAuthorName(author: string | null | undefined): Found
   return null;
 }
 
+/**
+ * (Article « C'est réel ? », D9 / Q17 de Jérôme du 16/10/2026) Valeur ASCII de `blog_posts.author` pour un article signé
+ * des deux fondateurs : byline « Jérôme et Fanny » (prénoms seuls à l'écran), deux Person (noms complets) en JSON-LD.
+ * Miroir : scripts/lib/article-checks.mjs (AUTHOR_DUO).
+ */
+export const AUTHOR_DUO = "Jerome Austin & Fanny Bela";
+
+/** Fondateurs signataires d'un article : [] (auteur générique), [un fondateur] ou [Jérôme, Fanny] pour AUTHOR_DUO. */
+export function getFoundersByAuthorName(author: string | null | undefined): Founder[] {
+  if (author && author.trim().toLowerCase() === AUTHOR_DUO.toLowerCase()) return [FOUNDERS.jerome, FOUNDERS.fanny];
+  const founder = getFounderByAuthorName(author);
+  return founder ? [founder] : [];
+}
+
 /** Person schema d'un fondateur — sameAs = LinkedIn ; url = page fondateurs quand elle est en prod. */
 export function buildFounderPersonSchema(founder: Founder, language: "fr" | "en" = "fr"): Record<string, unknown> {
   return {

@@ -120,3 +120,23 @@ export function WhatsAppBarLink({ context, message: customMessage }: { context?:
     </a>
   );
 }
+
+/**
+ * (Article « C'est réel ? », 16/10/2026) Bouton secondaire en texte « Nous écrire sur WhatsApp » / « Message us on WhatsApp »
+ * (ArticleContactCta). Même lien et même événement `whatsapp_click` (même `context`) que la bulle flottante.
+ */
+export function WhatsAppTextLink({ context, className = "" }: { context?: string; className?: string }) {
+  const { en, href, trackClick } = useWhatsApp(context, undefined);
+  return (
+    <a
+      href={href}
+      target="_blank"
+      rel="noopener noreferrer"
+      onClick={trackClick}
+      className={`inline-flex items-center justify-center gap-2 px-6 py-3 rounded-lg border border-[#1C1917] text-[#1C1917] text-sm font-semibold hover:bg-[#1C1917] hover:text-white transition-colors ${className}`}
+    >
+      <WhatsAppGlyph className="w-5 h-5 text-[#25D366]" />
+      {en ? "Message us on WhatsApp" : "Nous écrire sur WhatsApp"}
+    </a>
+  );
+}

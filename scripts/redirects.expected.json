@@ -238,5 +238,17 @@
   {
     "from": "/en/blog/coliving-annemasse-geneve-frontaliers-avantage",
     "to": "/en/blog/coliving-annemasse-geneve-frontaliers-avantages"
+  },
+  {
+    "from": "/cest-reel",
+    "to": "/blog/non-la-villa-coliving-nest-pas-une-arnaque"
+  },
+  {
+    "from": "/en/cest-reel",
+    "to": "/en/blog/non-la-villa-coliving-nest-pas-une-arnaque"
+  },
+  {
+    "from": "/is-this-real",
+    "to": "/en/blog/non-la-villa-coliving-nest-pas-une-arnaque"
   }
 ]

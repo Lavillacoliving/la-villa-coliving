@@ -8,6 +8,7 @@ import { useLanguage } from "@/contexts/LanguageContext";
 import { colocGeneveHref } from "@/lib/siteLinks";
 import { applyHref, trackApplyClick } from "@/lib/houseContext";
 import { RenderMonthEmbed, useRenderMonth } from "@/lib/renderMonth";
+import { VERIFY_ARTICLE_PATH, VERIFY_LINK_LABEL } from "@/data/verifyArticle";
 
 /**
  * VERSION 9: STONE & BRASS — CONDO PREMIUM
@@ -67,6 +68,8 @@ export function FooterV7() {
       path: "/charte-transparence",
       label: language === "en" ? "Transparency charter" : "Charte de transparence",
     },
+    // (Article « C'est réel ? », 16/10/2026) Lien discret vers l'article de vérification (l'URL courte /cest-reel est réservée au partage).
+    { path: VERIFY_ARTICLE_PATH, label: VERIFY_LINK_LABEL.footer[language === "en" ? "en" : "fr"] },
   ];
 
   return (
