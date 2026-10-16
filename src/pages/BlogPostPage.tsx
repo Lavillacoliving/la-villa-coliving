@@ -9,7 +9,7 @@ import ReactMarkdown, { defaultUrlTransform } from "react-markdown";
 import remarkGfm from "remark-gfm";
 import { Helmet } from "react-helmet";
 import { SEO } from "@/components/SEO";
-import { buildBreadcrumbSchema, buildFaqPageSchema, getFounderByAuthorName, ABOUT_PAGE_LIVE, homeUrl } from "@/lib/structuredData";
+import { buildBreadcrumbSchema, buildFaqPageSchema, getFoundersByAuthorName, ABOUT_PAGE_LIVE, homeUrl } from "@/lib/structuredData";
 import { getIntentBucket } from "@/data/blogIntentBuckets";
 import { BlocOffre } from "@/components/BlocOffre";
 import { markInternalRef } from "@/lib/attribution";
@@ -28,6 +28,9 @@ import { findCommentLines, findContentMarkers, stripCommentLines } from "@/lib/c
 import { NotFoundPage } from "@/pages/NotFoundPage";
 import { formatLongDate } from "@/lib/dates";
 import { pickRelatedPosts } from "@/lib/relatedPosts";
+import { VerifyBlock } from "@/components/VerifyBlock";
+import { ArticleContactCta } from "@/components/ArticleContactCta";
+import { NO_OFFER_ARTICLES, UPDATED_ONLY_ARTICLES } from "@/data/verifyArticle";
 
 // (Lot B, 01/10/2026) react-markdown neutralise les liens tel: (liste de protocoles sûrs) : on les
 // autorise pour les numéros utiles des guides, liés explicitement depuis que format-detection
@@ -328,9 +331,11 @@ export function BlogPostPage() {
     const c = resolveOuChercherCut(content, ouEntry, L, entityCut ? entityCut.index : null);
     if (c) ouCut = { ...c, variant: ouEntry.variant };
   }
+  // (Article « C'est réel ? », 16/10/2026) `<!-- verifier -->` (bloc complet) et `<!-- verifier:court -->` (encadré court) → <VerifyBlock/>.
+  const verifyMarkers = findContentMarkers(content).filter((x) => x.name === "verifier");
   // Toute autre ligne-commentaire (marqueur inconnu, note d'auteur) est retirée du rendu, jamais affichée.
   const removalCuts: MdCut[] = findCommentLines(content).filter(
-    (c) => c.index !== entityMarker?.index && c.index !== ouMarker?.index,
+    (c) => c.index !== entityMarker?.index && c.index !== ouMarker?.index && !verifyMarkers.some((v) => v.index === c.index),
   );
   const contentForMeta = stripCommentLines(content);
   const faqPairs = extractFaqPairs(contentForMeta);
@@ -345,7 +350,9 @@ export function BlogPostPage() {
   // Localize language-neutral internal paths for the EN site (/x → /en/x).
   const loc = (p: string) => localizePath(p, language);
   const bucket = getIntentBucket(post.slug, post.category);
-  const midSplit = splitForMidCta(
+  // (Q13, 16/10/2026) Article sans bloc offre (aucun prix) : ni mi-article ni fin d'article, CTA <ArticleContactCta/> à la place.
+  const noOffer = NO_OFFER_ARTICLES.has(post.slug);
+  const midSplit = noOffer ? null : splitForMidCta(
     content,
     bucket === "ville" ? 0.3 : 0.5,
     [entityCut?.index, ouCut?.index].filter((x): x is number => typeof x === "number"),
@@ -458,7 +465,17 @@ export function BlogPostPage() {
 
   // Auteur nommé (E-E-A-T) : si le champ author correspond à un fondateur, la byline
   // pointe vers /qui-sommes-nous et le schema Person est corroboré par LinkedIn (sameAs).
-  const founder = getFounderByAuthorName(post.author);
+  // (D9 / Q17, 16/10/2026) AUTHOR_DUO → [Jérôme, Fanny] : byline « Jérôme et Fanny », deux Person en JSON-LD.
+  const founders = getFoundersByAuthorName(post.author);
+  const founder = founders.length === 1 ? founders[0] : null;
+  const isDuo = founders.length === 2;
+  const personOf = (f: (typeof founders)[number]) => ({
+    "@type": "Person",
+    name: f.name,
+    jobTitle: f.jobTitle[L],
+    ...(ABOUT_PAGE_LIVE ? { url: "https://www.lavillacoliving.com/qui-sommes-nous" } : {}),
+    sameAs: [f.linkedin],
+  });
 
   // BlogPosting structured data
   const blogPostingSchema = {
@@ -467,14 +484,10 @@ export function BlogPostPage() {
     headline: title,
     description: excerpt,
     image: post.image_url || "https://www.lavillacoliving.com/images/la villa jardin.webp",
-    author: founder
-      ? {
-          "@type": "Person",
-          name: founder.name,
-          jobTitle: founder.jobTitle[L],
-          ...(ABOUT_PAGE_LIVE ? { url: "https://www.lavillacoliving.com/qui-sommes-nous" } : {}),
-          sameAs: [founder.linkedin],
-        }
+    author: isDuo
+      ? founders.map(personOf)
+      : founder
+      ? personOf(founder)
       : {
           "@type": "Person",
           name: post.author,
@@ -538,7 +551,20 @@ export function BlogPostPage() {
           <div className="flex flex-wrap items-center gap-x-6 gap-y-2 text-sm text-[#78716C] mb-8 pb-8 border-b border-[#E7E5E4]">
             <span className="flex items-center gap-2">
               <User className="w-4 h-4" />
-              {founder ? (
+              {isDuo ? (
+                <>
+                  {ABOUT_PAGE_LIVE ? (
+                    <LocalizedLink to="/qui-sommes-nous" className="text-[#44403C] hover:text-[#D4A574] transition-colors">
+                      {founders.map((f) => f.name.split(" ")[0]).join(language === "en" ? " and " : " et ")}
+                    </LocalizedLink>
+                  ) : (
+                    <span className="text-[#44403C]">{founders.map((f) => f.name.split(" ")[0]).join(language === "en" ? " and " : " et ")}</span>
+                  )}
+                  <span className="hidden sm:inline text-[#A8A29E]">
+                    {language === "en" ? "· co-founders of La Villa Coliving" : "· cofondateurs de La Villa Coliving"}
+                  </span>
+                </>
+              ) : founder ? (
                 <>
                   {ABOUT_PAGE_LIVE ? (
                     <LocalizedLink to="/qui-sommes-nous" className="text-[#44403C] hover:text-[#D4A574] transition-colors">
@@ -556,8 +582,13 @@ export function BlogPostPage() {
               )}
             </span>
             {/* (07/09/2026) published_at est NULL pour un brouillon en aperçu : ne jamais appeler .slice dessus (plantage « Cette page n'a pas pu se charger »). */}
-            <span className="flex items-center gap-2"><Calendar className="w-4 h-4" />{fmtD(post.published_at ?? post.updated_at ?? new Date().toISOString())}</span>
-            {post.updated_at && post.published_at && post.updated_at.slice(0,10) > post.published_at.slice(0,10) && (
+            {UPDATED_ONLY_ARTICLES.has(post.slug) ? (
+              // (Q18, 16/10/2026) « Mis à jour le » seul : la page se lit comme un document tenu à jour, pas comme une actualité datée.
+              <span className="flex items-center gap-2"><Calendar className="w-4 h-4" />{language === "en" ? `Updated ${fmtD(post.updated_at ?? post.published_at ?? new Date().toISOString())}` : `Mis à jour le ${fmtD(post.updated_at ?? post.published_at ?? new Date().toISOString())}`}</span>
+            ) : (
+              <span className="flex items-center gap-2"><Calendar className="w-4 h-4" />{fmtD(post.published_at ?? post.updated_at ?? new Date().toISOString())}</span>
+            )}
+            {!UPDATED_ONLY_ARTICLES.has(post.slug) && post.updated_at && post.published_at && post.updated_at.slice(0,10) > post.published_at.slice(0,10) && (
               <span className="text-[#A8A29E]">{language === "en" ? `· Updated ${fmtD(post.updated_at)}` : `· Mis à jour le ${fmtD(post.updated_at)}`}</span>
             )}
             <span className="flex items-center gap-2"><Clock className="w-4 h-4" />{post.read_time_min} min</span>
@@ -609,6 +640,7 @@ export function BlogPostPage() {
               // Tri stable : à index égal (ancre « before-entity-facts »), le bloc « Où chercher » précède le bloc entité.
               if (ouCut) cuts.push({ at: ouCut.index, len: ouCut.length, node: <OuChercher variant={ouCut.variant} page={post.slug} tone="article" /> });
               if (entityCut) cuts.push({ at: entityCut.index, len: entityCut.length, node: <EntityFacts page={post.slug} /> });
+              for (const v of verifyMarkers) cuts.push({ at: v.index, len: v.length, node: <VerifyBlock variant={v.variant === "court" ? "short" : "full"} /> });
               for (const c of removalCuts) cuts.push({ at: c.index, len: c.length, node: null });
               cuts.sort((a, b) => a.at - b.at);
               const out: React.ReactNode[] = [];
@@ -628,6 +660,7 @@ export function BlogPostPage() {
             })()}
           </div>
 
+          {noOffer && <ArticleContactCta slug={post.slug} bucket={bucket} context={title} />}
           {isYmyl(post.slug) && <YmylNotice content={content} />}
           <AuthorBox author={post.author} />
 
@@ -640,7 +673,7 @@ export function BlogPostPage() {
       </article>
 
       {/* Bloc offre fin d'article — photo maison + prix + candidature (attribution ?src=bloc_offre) */}
-      <BlocOffre variant="end" slug={post.slug} bucket={bucket} />
+      {!noOffer && <BlocOffre variant="end" slug={post.slug} bucket={bucket} />}
 
       {/* Discover our houses — internal linking from blog to conversion pages */}
       <section className="py-16 lg:py-20 bg-white border-t border-[#E7E5E4]">
@@ -653,9 +686,14 @@ export function BlogPostPage() {
           </h2>
           <p className="text-sm text-[#78716C] text-center mb-10">
             {/* (Lot L2, 09/10/2026, D1) Rendu sur toutes les pages article : « 20 min » qualifié par STATS_DISPLAY.distance. */}
+            {/* (Q13, 16/10/2026) Article sans prix (NO_OFFER_ARTICLES) : même phrase, sans le loyer. */}
             {language === "en"
-              ? `Three premium coliving houses on the French side, ${STATS_DISPLAY.en.distance}, all-inclusive from ${PRICE_SHARED_CHF_EN}/month.`
-              : `Trois maisons de coliving premium côté France, à ${STATS_DISPLAY.fr.distance}, tout inclus dès ${PRICE_SHARED_CHF_FR}/mois.`}
+              ? noOffer
+                ? `Three premium coliving houses on the French side, ${STATS_DISPLAY.en.distance}.`
+                : `Three premium coliving houses on the French side, ${STATS_DISPLAY.en.distance}, all-inclusive from ${PRICE_SHARED_CHF_EN}/month.`
+              : noOffer
+                ? `Trois maisons de coliving premium côté France, à ${STATS_DISPLAY.fr.distance}.`
+                : `Trois maisons de coliving premium côté France, à ${STATS_DISPLAY.fr.distance}, tout inclus dès ${PRICE_SHARED_CHF_FR}/mois.`}
           </p>
           <div className="grid md:grid-cols-3 gap-6">
             {[

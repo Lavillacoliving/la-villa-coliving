@@ -19,6 +19,8 @@ export const COMMENT_LINE_RE = /^[ \t]*<!--[^\n]*?-->[ \t]*$/gm;
 export const KNOWN_MARKERS: Readonly<Record<string, readonly string[]>> = {
   "entity-facts": [],
   "ou-chercher": ["court"],
+  // (Article « C'est réel ? », 16/10/2026) <VerifyBlock/> : bloc complet, ou encadré court « Vérifier en 30 secondes ».
+  verifier: ["court"],
 };
 
 export interface ContentMarker {

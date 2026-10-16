@@ -1236,6 +1236,21 @@
       "source": "/en/blog/s-installer-geneve-expatrie-cote-suisse-cote-france",
       "destination": "/en/blog/s-installer-a-geneve-expatrie-cote-suisse-ou-cote-france",
       "permanent": true
+    },
+    {
+      "source": "/cest-reel",
+      "destination": "/blog/non-la-villa-coliving-nest-pas-une-arnaque",
+      "permanent": true
+    },
+    {
+      "source": "/en/cest-reel",
+      "destination": "/en/blog/non-la-villa-coliving-nest-pas-une-arnaque",
+      "permanent": true
+    },
+    {
+      "source": "/is-this-real",
+      "destination": "/en/blog/non-la-villa-coliving-nest-pas-une-arnaque",
+      "permanent": true
     }
   ],
   "headers": [

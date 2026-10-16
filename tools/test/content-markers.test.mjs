@@ -37,7 +37,7 @@ test('isKnownMarker : registre et variantes', () => {
   const unknown = m.findContentMarkers('<!-- foo:bar -->');
   assert.equal(unknown.length, 1);
   assert.equal(m.isKnownMarker(unknown[0].name, unknown[0].variant), false);
-  assert.deepEqual(Object.keys(m.KNOWN_MARKERS).sort(), ['entity-facts', 'ou-chercher']);
+  assert.deepEqual(Object.keys(m.KNOWN_MARKERS).sort(), ['entity-facts', 'ou-chercher', 'verifier']);
 });
 
 test('stripCommentLines / findCommentLines : toute ligne-commentaire, connue ou non, indentée ou non', () => {

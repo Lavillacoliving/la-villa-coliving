@@ -115,8 +115,10 @@ async function main() {
   const config = await loadConfig().catch(() => ({ redirects: [] }));
   const isRedirected = (p) => !!findRedirectFor(config, p);
   const words = meta.words ?? undefined; // override test/relecture uniquement — documenté dans le README
+  // (16/10/2026) meta.format : 'decision' (défaut) ou 'service' (article sans prix — README, scripts/lib/article-checks.mjs).
+  const profile = meta.format === 'service' ? 'service' : 'decision';
   for (const [lang, md] of [['fr', fr], ['en', en]]) {
-    const r = checkContent(md, lang, { isRedirected, words });
+    const r = checkContent(md, lang, { isRedirected, words, profile });
     failures.push(...r.failures); warnings.push(...r.warnings);
     console.log(`   ${lang} : ${r.stats.words} mots · ${r.stats.h2} sections · ${r.stats.faq} Q/R · ${r.stats.tables} tableau(x) · ${r.stats.links} liens`);
   }
@@ -133,7 +135,7 @@ async function main() {
   const today = new Date().toISOString().slice(0, 10);
   const parts = [
     `-- ============================================================================`,
-    `-- ${mode === 'insert' ? 'Nouvel article' : 'Mise à jour'} : ${meta.slug} (page de décision — brief « Conquête IA »)`,
+    `-- ${mode === 'insert' ? 'Nouvel article' : 'Mise à jour'} : ${meta.slug} (${profile === 'service' ? 'article de service, sans prix' : 'page de décision — brief « Conquête IA »'})`,
     `-- Généré le ${today} par scripts/build-article-sql.mjs depuis content/decision-pages/${slug}.{fr,en}.md + .meta.json`,
     `-- Mode : ${mode}${publish ? ' + publication' : ' (brouillon, is_published = false)'} · à appliquer par Jérôme (SQL Editor / MCP)`,
     `-- ${publish ? '⚠️ PUBLIER = appliquer ce SQL ET merger le code dans la même séance (prérendu 05 h / 13 h UTC).' : 'Relecture : https://www.lavillacoliving.com/blog/' + slug + '?preview=lavilla2026 (et /en/blog/…)'}`,

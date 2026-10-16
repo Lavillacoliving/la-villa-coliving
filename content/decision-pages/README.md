@@ -29,6 +29,20 @@ FAQPage, byline, fil d'Ariane) est celui de tous les articles ; trois extensions
    registre `src/lib/contentMarkers.ts` (`<!-- entity-facts -->`, `<!-- ou-chercher -->`, `<!-- ou-chercher:court -->`) ;
    toute autre ligne-commentaire est retirée du rendu et refusée par `article:sql`.
 
+5. **Bloc « Trois vérifications »** (article « C'est réel ? », 16/10/2026) : `<!-- verifier -->` (bloc complet : fiche Google,
+   SCI Sleep In sur l'annuaire officiel, pages des trois maisons) et `<!-- verifier:court -->` (encadré « Vérifier en 30 secondes »),
+   au plus 1 de chaque. Rendu `<VerifyBlock/>` ; données = `GOOGLE_REVIEWS`, `LEGAL_ENTITY` (`src/data/entityFacts.ts`), `ENTITY_HOUSES`.
+   Mesure GA4 `verify_click` (`target` = google | registre | maison).
+
+## Profils (`meta.format`)
+- `decision` (défaut) : les règles ci-dessous, inchangées.
+- `service` (16/10/2026) : article de service **sans prix** (ex. `non-la-villa-coliving-nest-pas-une-arnaque`) — ni tableau d'options
+  ni fiche entité (qui portent le prix, marqueur refusé), 800-2 200 mots, ≥ 5 sections `##`, FAQ facultative (validée si présente),
+  mêmes règles de liens, tokens, marqueurs, metas et concurrents. Le slug va aussi dans `NO_OFFER_ARTICLES`
+  (`src/data/verifyArticle.ts`) pour retirer le bloc offre (prix) du gabarit.
+- `author` : `Jerome Austin` ou `Jerome Austin & Fanny Bela` (`AUTHOR_DUO` : byline « Jérôme et Fanny », deux `Person` en JSON-LD).
+- Un title qui contient déjà « La Villa Coliving » est servi sans suffixe au-delà de 65 car. (`SEO.tsx`) : limite 70 car. nus.
+
 ## Règles vérifiées par `npm run article:sql -- <slug> --mode insert|update`
 - 1 800 à 2 500 mots FR, EN à parité (même fourchette) ; sections en `##` (≥ 6) ; « En bref » (3-4 puces) après le chapô ;
   `## Quand ce n'est pas le bon choix` avant la FAQ ; réponse d'abord dans chaque section.

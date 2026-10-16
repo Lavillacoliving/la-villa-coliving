@@ -1,5 +1,12 @@
 import { useLanguage } from "@/contexts/LanguageContext";
 import { SEO } from "@/components/SEO";
+import { LEGAL_ENTITY } from "@/data/entityFacts";
+
+// Typographie (16/10/2026, suite des PR « milliers insécables ») : SIREN, partie SIREN du SIRET et capital en espaces insécables.
+const nbsp = (v: string) => v.replace(/ /g, "\u00A0");
+const SIREN = nbsp(LEGAL_ENTITY.siren);
+const SIRET = `${SIREN} ${LEGAL_ENTITY.siretHq.slice(LEGAL_ENTITY.siren.length + 1)}`;
+const CAPITAL = nbsp(LEGAL_ENTITY.capitalEur);
 
 // Contenu fourni par Jérôme (Pages_Legales_Contenu.md, 2026-06-12).
 // Registre : vouvoiement neutre — exception ASSUMÉE à la règle de tutoiement,
@@ -59,20 +66,20 @@ export function MentionsLegalesPage() {
                   The website <strong>lavillacoliving.com</strong> (the "Site") is published by:
                 </p>
                 <p>
-                  <strong>SLEEP IN</strong>, a French real-estate company (société civile
-                  immobilière — SCI) with a capital of €1,000, trading as{" "}
+                  <strong>{LEGAL_ENTITY.registeredName}</strong>, a French real-estate company (société civile
+                  immobilière — SCI) with a capital of €{LEGAL_ENTITY.capitalEur.replace(" ", ",")}, trading as{" "}
                   <strong>La Villa Coliving</strong>.
                   <br />
                   Activity: rental of furnished accommodation.
                   <br />
-                  Registered with the Thonon-les-Bains Trade and Companies Register (RCS) under
-                  no. <strong>882&nbsp;153&nbsp;810</strong> (registered on 04/03/2020).
+                  Registered with the {LEGAL_ENTITY.rcsCity} Trade and Companies Register (RCS) under
+                  no. <strong>{SIREN}</strong> (registered on {LEGAL_ENTITY.registeredOn}).
                   <br />
-                  SIRET (head office): <strong>882&nbsp;153&nbsp;810 00016</strong>
+                  SIRET (head office): <strong>{SIRET}</strong>
                   <br />
-                  Head office: <strong>8 rue du Mont Blanc, 74100 Annemasse, France</strong>
+                  Head office: <strong>{LEGAL_ENTITY.headOffice}</strong>
                   <br />
-                  EU VAT no.: <strong>FR63882153810</strong>
+                  EU VAT no.: <strong>{LEGAL_ENTITY.vat}</strong>
                 </p>
                 <p>
                   Publication director: <strong>Jérôme Austin</strong>, managing partner.
@@ -150,19 +157,19 @@ export function MentionsLegalesPage() {
                   par :
                 </p>
                 <p>
-                  <strong>SLEEP IN</strong>, société civile immobilière (SCI) au capital de
-                  1&nbsp;000 €, exerçant sous le nom commercial <strong>La Villa Coliving</strong>.
+                  <strong>{LEGAL_ENTITY.registeredName}</strong>, société civile immobilière (SCI) au capital de
+                  {CAPITAL} €, exerçant sous le nom commercial <strong>La Villa Coliving</strong>.
                   <br />
                   Activité : location de logements meublés.
                   <br />
-                  Immatriculée au RCS de Thonon-les-Bains sous le n°{" "}
-                  <strong>882&nbsp;153&nbsp;810</strong> (immatriculation du 04/03/2020).
+                  Immatriculée au RCS de {LEGAL_ENTITY.rcsCity} sous le n°{" "}
+                  <strong>{SIREN}</strong> (immatriculation du {LEGAL_ENTITY.registeredOn}).
                   <br />
-                  SIRET (siège) : <strong>882&nbsp;153&nbsp;810 00016</strong>
+                  SIRET (siège) : <strong>{SIRET}</strong>
                   <br />
-                  Siège social : <strong>8 rue du Mont Blanc, 74100 Annemasse, France</strong>
+                  Siège social : <strong>{LEGAL_ENTITY.headOffice}</strong>
                   <br />
-                  N° de TVA intracommunautaire : <strong>FR63882153810</strong>
+                  N° de TVA intracommunautaire : <strong>{LEGAL_ENTITY.vat}</strong>
                 </p>
                 <p>
                   Directeur de la publication : <strong>Jérôme Austin</strong>, gérant.

@@ -4,6 +4,7 @@
 import { STATS_DISPLAY, TRANSIT, GENEVA_COMMUTE_FORMULA, PRICE_CHF_FR, PRICE_CHF_EN, PRICE_SHARED_EN_NUM, PRICE_SHARED_CHF_FR, PRICE_SHARED_CHF_EN } from "@/data/stats";
 import { situationsFaq } from "@/data/faq/situationsFaq";
 import { priceJustificationFaq } from "@/data/priceFacts";
+import { VERIFY_ARTICLE_PATH, VERIFY_LINK_LABEL } from "@/data/verifyArticle";
 
 const PRICE_FAQ = { fr: priceJustificationFaq("fr"), en: priceJustificationFaq("en") };
 
@@ -732,6 +733,20 @@ export const faqData: FAQItem[] = [
       en: 'We typically schedule house visits after the initial video call as part of the application process. This allows us to get to know you first and ensures the visit is productive for both parties. Virtual tours are also available on our website.',
       fr: 'Nous planifions généralement les visites de maison après l\'appel vidéo initial dans le cadre du processus de candidature. Cela nous permet de faire ta connaissance d\'abord et d\'assurer que la visite est productive pour les deux parties. Des visites virtuelles sont également disponibles sur notre site web.',
     },
+  },
+  {
+    // (Article « C'est réel ? », brief v2 du 15/10/2026) Lien de suite vers l'article (jamais vers l'URL courte /cest-reel : redirection).
+    id: 'is-it-real',
+    category: 'Application Process',
+    question: {
+      en: 'How can I be sure this isn\'t a scam?',
+      fr: 'Comment être sûr que ce n\'est pas une arnaque ?',
+    },
+    answer: {
+      en: 'We never ask you for money before the lease is signed, and you always visit before committing, in person or by live video. Our Google listing, our company and our three houses can be checked in thirty seconds: we\'ve put it all in one article.',
+      fr: 'On ne te demande jamais d\'argent avant la signature du bail, et tu visites toujours avant de t\'engager, sur place ou en visio. Notre fiche Google, notre société et nos trois maisons se vérifient en trente secondes : on a tout réuni dans un article.',
+    },
+    more: { href: VERIFY_ARTICLE_PATH, label: { en: VERIFY_LINK_LABEL.howTo.en, fr: VERIFY_LINK_LABEL.howTo.fr } },
   },
   {
     id: 'rejection-reasons',
