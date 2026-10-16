@@ -61,9 +61,10 @@ const house = (slug: EntityHouseSlug) => {
 const houseParen = (lang: EntityLang) =>
   ENTITY_HOUSES.map((h) => `${h.label} ${lang === "en" ? "in" : "à"} ${h.commune}`).join(", ");
 
-const membersFr = thousands(FACEBOOK_GROUP.membersApprox, " ");
+// (16/10/2026) Milliers en espace insécable, convention FR de stats.ts : « 1 600 » ne se coupe plus sur mobile.
+const membersFr = thousands(FACEBOOK_GROUP.membersApprox, "\u00a0");
 const membersEn = thousands(FACEBOOK_GROUP.membersApprox, ",");
-const marketFr = `${MARKET_ROOM_EUR.min} à ${thousands(MARKET_ROOM_EUR.max, " ")} €`;
+const marketFr = `${MARKET_ROOM_EUR.min} à ${thousands(MARKET_ROOM_EUR.max, "\u00a0")} €`;
 const marketEn = `€${MARKET_ROOM_EUR.min} to €${thousands(MARKET_ROOM_EUR.max, ",")}`;
 
 /** Textes du bloc M1 (A.11 amendé par D0 : titres H2/H3 explicites, phrase garant unique, 700 à 1 000 €, zones sans Gaillard). */
