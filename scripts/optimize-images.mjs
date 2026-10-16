@@ -52,6 +52,12 @@ const SOURCES = [
   '/images/la villa/rooms/Chambre 2/chambre-2-bureau.webp',
   '/images/la villa/rooms/Chambre 2/chambre-2-salle-eau.webp',
   '/images/la villa/rooms/Chambre 2/chambre-2-terrasse-jardin.webp',
+  // (Lot 2 — C3, 16/10/2026) Le Loft, chambre 5 — les 5 photos de la chambre (couverture de carte + premières vues).
+  '/images/le loft/rooms/Chambre 5/chambre-5-vue-large.webp',
+  '/images/le loft/rooms/Chambre 5/chambre-5-fauteuil.webp',
+  '/images/le loft/rooms/Chambre 5/chambre-5-coin-salon.webp',
+  '/images/le loft/rooms/Chambre 5/chambre-5-salle-eau.webp',
+  '/images/le loft/rooms/Chambre 5/chambre-5-douche.webp',
 ];
 // Galeries (carrousel héros des 3 maisons) : les slides voisins du 1er sont chargés
 // par le navigateur (lazy horizontal) — en pleine taille sans variantes.

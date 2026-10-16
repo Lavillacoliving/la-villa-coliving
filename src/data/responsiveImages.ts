@@ -200,6 +200,54 @@ export const RESPONSIVE_IMAGES: Record<string, { original: number; widths: numbe
     ],
     "reencoded": true
   },
+  "/images/le loft/rooms/Chambre 5/chambre-5-vue-large.webp": {
+    "original": 1280,
+    "widths": [
+      480,
+      768,
+      1024
+    ],
+    "reencoded": false
+  },
+  "/images/le loft/rooms/Chambre 5/chambre-5-fauteuil.webp": {
+    "original": 1920,
+    "widths": [
+      480,
+      768,
+      1024,
+      1440,
+      1920
+    ],
+    "reencoded": true
+  },
+  "/images/le loft/rooms/Chambre 5/chambre-5-coin-salon.webp": {
+    "original": 1280,
+    "widths": [
+      480,
+      768,
+      1024,
+      1280
+    ],
+    "reencoded": true
+  },
+  "/images/le loft/rooms/Chambre 5/chambre-5-salle-eau.webp": {
+    "original": 1280,
+    "widths": [
+      480,
+      768,
+      1024
+    ],
+    "reencoded": false
+  },
+  "/images/le loft/rooms/Chambre 5/chambre-5-douche.webp": {
+    "original": 1280,
+    "widths": [
+      480,
+      768,
+      1024
+    ],
+    "reencoded": false
+  },
   "/images/la villa/rooms/La Villa-92.webp": {
     "original": 1920,
     "widths": [

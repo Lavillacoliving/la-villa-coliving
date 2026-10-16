@@ -6,6 +6,7 @@ import { thousands } from "@/data/stats";
 import { roomGallery } from "@/data/roomPhotos";
 import { isRoomPageOpen, roomPagePath } from "@/data/roomPages";
 import { formatShortDate } from "@/lib/dates";
+import { responsiveImage } from "@/lib/responsiveImage";
 import { BADGE_CHIP_CLASS, roomBadge, roomSpecs, type HouseKey, type PublicRoom } from "@/lib/availability";
 
 /** (12/10/2026, maquette validée par Jérôme) Équipements de la chambre tirés de v_public_rooms — jamais d'attribut inventé. */
@@ -75,10 +76,14 @@ export function RoomCard({ house, houseName, room, fallbackImage, showHouse = fa
     room.rent_eur !== null && room.rent_eur !== undefined && Number.isFinite(Number(room.rent_eur))
       ? Math.round(Number(room.rent_eur))
       : null;
+  // (Lot 2 — C3, 16/10/2026) Variantes responsive quand la photo est au manifeste (scripts/optimize-images.mjs) : une
+  // vignette de 144 px ne charge plus l'original de 1 440 px. Chaînes déterministes (même HTML au prérendu et au client).
+  const coverSrc = cover?.src ?? fallbackImage;
   const roomImg = (
     <>
       <img
-        src={cover?.src ?? fallbackImage}
+        src={coverSrc}
+        {...responsiveImage(coverSrc, "(min-width: 1024px) 33vw, (min-width: 768px) 50vw, 100vw")}
         alt={cover
           ? cover.alt[uiLang]
           : `${language === "en" ? "Room" : "Chambre"} ${room.room_number} — ${houseName}`}
@@ -125,7 +130,8 @@ export function RoomCard({ house, houseName, room, fallbackImage, showHouse = fa
         {photoButton("relative md:col-span-7 h-64 sm:h-80 md:h-auto md:min-h-[400px] w-full overflow-hidden", (
           <>
             <img
-              src={cover?.src ?? fallbackImage}
+              src={coverSrc}
+              {...responsiveImage(coverSrc, "(min-width: 768px) 58vw, 100vw")}
               alt={cover ? cover.alt[uiLang] : `${roomLabel} — ${houseName}`}
               className="absolute inset-0 w-full h-full object-cover group-hover:scale-[1.03] transition-transform duration-700"
               loading="lazy"
@@ -218,7 +224,8 @@ export function RoomCard({ house, houseName, room, fallbackImage, showHouse = fa
         {photoButton("relative w-36 shrink-0 md:w-full md:h-36 overflow-hidden", (
           <>
             <img
-              src={cover?.src ?? fallbackImage}
+              src={coverSrc}
+              {...responsiveImage(coverSrc, "(min-width: 768px) 25vw, 144px")}
               alt={cover ? cover.alt[uiLang] : `${roomLabel} — ${houseName}`}
               className="absolute inset-0 w-full h-full object-cover"
               loading="lazy"

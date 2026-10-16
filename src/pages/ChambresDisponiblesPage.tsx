@@ -208,7 +208,7 @@ export function ChambresDisponiblesPage() {
   const faqItems = [...maisonsFaq[L].slice(0, 2), ...tarifsFaq[L].slice(0, 2)];
 
   const chip = (active: boolean) =>
-    `px-4 py-2 rounded-full text-sm font-medium border transition-colors ${
+    `shrink-0 whitespace-nowrap px-3 py-1.5 md:px-4 md:py-2 rounded-full text-sm font-medium border transition-colors ${
       active ? "bg-[#1C1917] text-white border-[#1C1917]" : "bg-white text-[#44403C] border-[#E7E5E4] hover:border-[#1C1917]"
     }`;
 
@@ -258,10 +258,13 @@ export function ChambresDisponiblesPage() {
         </div>
       </section>
 
-      {/* Filtres (Q4) — appliqués après hydratation, URL partageable. */}
-      <section className="py-8 border-b border-[#E7E5E4]">
-        <div className="container-custom flex flex-wrap items-center gap-3">
-          <span className="text-xs uppercase tracking-wider text-[#78716C] mr-1">{en ? "House" : "Maison"}</span>
+      {/* Filtres (Q4) — appliqués après hydratation, URL partageable. (Lot 2 — C1, 16/10/2026, D1-D8 validées) Sur mobile,
+          une seule ligne qui défile horizontalement (≈ 60 px au lieu de 203) : la première carte remonte vers la ligne
+          de flottaison ; inchangé à partir de md. */}
+      <section className="py-3 md:py-8 border-b border-[#E7E5E4]">
+        <div className="container-custom">
+          <div className="-mx-4 px-4 sm:-mx-6 sm:px-6 md:mx-0 md:px-0 flex flex-nowrap md:flex-wrap items-center gap-2 md:gap-3 overflow-x-auto md:overflow-visible [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+          <span className="shrink-0 text-xs uppercase tracking-wider text-[#78716C] mr-1">{en ? "House" : "Maison"}</span>
           <button type="button" className={chip(houseFilter === null)} onClick={() => applyFilter({ maison: null })}>
             {en ? "All" : "Toutes"}
           </button>
@@ -270,7 +273,7 @@ export function ChambresDisponiblesPage() {
               {HOUSES[k].label}
             </button>
           ))}
-          <span className="text-xs uppercase tracking-wider text-[#78716C] ml-4 mr-1">{en ? "Bathroom" : "Salle d'eau"}</span>
+          <span className="shrink-0 text-xs uppercase tracking-wider text-[#78716C] ml-2 md:ml-4 mr-1">{en ? "Bathroom" : "Salle d'eau"}</span>
           <button type="button" className={chip(bathFilter === null)} onClick={() => applyFilter({ sdb: null })}>
             {en ? "All" : "Toutes"}
           </button>
@@ -280,6 +283,7 @@ export function ChambresDisponiblesPage() {
           <button type="button" className={chip(bathFilter === "partagee")} onClick={() => applyFilter({ sdb: bathFilter === "partagee" ? null : "partagee" })}>
             {en ? "Shared" : "Partagée"}
           </button>
+          </div>
         </div>
       </section>
 
