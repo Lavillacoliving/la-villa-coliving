@@ -192,7 +192,7 @@ export function ColocationGenevePage() {
           <p className="text-[#57534E] leading-relaxed mb-6">
             {en
               ? "In Geneva itself, based on listings observed in 2026, a room in a shared flat usually goes for 1,000 to 1,500 CHF a month, utilities and internet often on top; a studio, 1,800 to 2,500 CHF excluding charges, around 50 CHF/m² advertised according to our cross-border housing Observatory survey (June 2026). Supply is scarce (vacancy rate below 1%, OCSTAT) and every file competes with dozens of others."
-              : "À Genève même, d'après les annonces relevées en 2026, une chambre en colocation part le plus souvent entre 1 000 et 1 500 CHF par mois, charges et internet souvent en plus ; un studio, 1 800 à 2 500 CHF hors charges, soit autour de 50 CHF/m² en annonce selon le relevé de notre Observatoire du logement frontalier (juin 2026). L'offre est rare (taux de vacance sous 1 %, OCSTAT) et chaque dossier se bat contre des dizaines d'autres."}
+              : "À Genève même, d'après les annonces relevées en 2026, une chambre en colocation part le plus souvent entre 1\u00a0000 et 1\u00a0500 CHF par mois, charges et internet souvent en plus ; un studio, 1\u00a0800 à 2\u00a0500 CHF hors charges, soit autour de 50 CHF/m² en annonce selon le relevé de notre Observatoire du logement frontalier (juin 2026). L'offre est rare (taux de vacance sous 1\u00a0%, OCSTAT) et chaque dossier se bat contre des dizaines d'autres."}
           </p>
           <p className="text-sm text-[#78716C] mb-6">
             {en ? "Source and method: " : "Source et méthode : "}

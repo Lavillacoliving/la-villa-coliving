@@ -102,8 +102,8 @@ export function RoomCard({ house, houseName, room, fallbackImage, showHouse = fa
   const pageOpen = isRoomPageOpen(house, room);
   const ctaHref = `/candidature?${ctaParams ? `${ctaParams}&` : ""}property_interest=${house}&room_interest=chambre-${room.room_number}`;
   const eyebrow = commune ? `${houseName} · ${commune}` : houseName;
-  const chf = room.rent_chf !== null ? (en ? `CHF ${thousands(room.rent_chf, ",")}` : `${thousands(room.rent_chf, " ")} CHF`) : null;
-  const eur = rentEur !== null ? (en ? `€${thousands(rentEur, ",")}` : `${thousands(rentEur, " ")} €`) : null;
+  const chf = room.rent_chf !== null ? (en ? `CHF ${thousands(room.rent_chf, ",")}` : `${thousands(room.rent_chf, "\u00a0")} CHF`) : null;
+  const eur = rentEur !== null ? (en ? `€${thousands(rentEur, ",")}` : `${thousands(rentEur, "\u00a0")} €`) : null;
   const photoButton = (className: string, children: ReactNode) =>
     gallery && onOpenPhotos ? (
       <button
@@ -311,10 +311,10 @@ export function RoomCard({ house, houseName, room, fallbackImage, showHouse = fa
             <p className="text-xl font-black text-[#D4A574] mb-4">
               {language === "en"
                 ? `CHF ${thousands(room.rent_chf, ",")}`
-                : `${thousands(room.rent_chf, " ")} CHF`}
+                : `${thousands(room.rent_chf, "\u00a0")} CHF`}
               {rentEur !== null && (
                 <span className="text-sm font-light text-[#78716C]">
-                  {language === "en" ? ` (€${thousands(rentEur, ",")})` : ` (${thousands(rentEur, " ")} €)`}
+                  {language === "en" ? ` (€${thousands(rentEur, ",")})` : ` (${thousands(rentEur, "\u00a0")} €)`}
                 </span>
               )}
               <span className="text-sm font-light text-[#78716C]"> {t.houseDetail.perMonth}</span>

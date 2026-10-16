@@ -4,7 +4,7 @@ import { useLanguage } from "@/contexts/LanguageContext";
 import { supabase } from "@/lib/supabase";
 import { readEmbeddedArray, embedJson } from "@/lib/prerenderEmbeddedState";
 import { Clock, ArrowRight } from "lucide-react";
-import { nbspThousands } from "@/lib/typography";
+import { typoFr } from "@/lib/typography";
 
 // État embarqué par le prerender (fix hydratation #418) — id aussi listé dans main.tsx.
 const EMBED_ID = "__latest_blog_data__";
@@ -111,10 +111,10 @@ export function LatestBlogV7() {
                   className="text-lg font-medium text-[#1C1917] mb-2 line-clamp-2 group-hover:text-[#D4A574] transition-colors"
                   style={{ fontFamily: '"DM Serif Display", serif' }}
                 >
-                  {gT(post)}
+                  {typoFr(gT(post))}
                 </h3>
                 <p className="text-[#57534E] text-sm leading-relaxed mb-3 line-clamp-2">
-                  {nbspThousands(gE(post))}
+                  {typoFr(gE(post))}
                 </p>
                 <span className="flex items-center gap-1.5 text-xs text-[#78716C]">
                   <Clock className="w-3.5 h-3.5" />

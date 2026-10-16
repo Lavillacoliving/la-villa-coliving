@@ -12,11 +12,11 @@ export const colocationGeneveFaq: { fr: QAPair[]; en: QAPair[] } = {
   fr: [
     {
       q: "Combien coûte une colocation à Genève ?",
-      a: `À Genève même, d'après les annonces relevées en 2026, une chambre en colocation se loue le plus souvent entre 1 000 et 1 500 CHF par mois, charges et internet souvent en plus, et il faut trouver la colocation. Côté France, chez La Villa Coliving, une chambre meublée en maison coûte dès ${PRICE_SHARED_CHF_FR}/mois tout inclus (${PRICE_CHF_FR} avec salle d'eau privative) : charges, fibre, ménage des communs, piscine, sauna, salle de sport et événements compris, à ${STATS_DISPLAY.fr.distance}.`,
+      a: `À Genève même, d'après les annonces relevées en 2026, une chambre en colocation se loue le plus souvent entre 1\u00a0000 et 1\u00a0500 CHF par mois, charges et internet souvent en plus, et il faut trouver la colocation. Côté France, chez La Villa Coliving, une chambre meublée en maison coûte dès ${PRICE_SHARED_CHF_FR}/mois tout inclus (${PRICE_CHF_FR} avec salle d'eau privative) : charges, fibre, ménage des communs, piscine, sauna, salle de sport et événements compris, à ${STATS_DISPLAY.fr.distance}.`,
     },
     {
       q: "Quel est le loyer moyen à Genève ?",
-      a: "Pour un studio à Genève, compte 1 200 à 2 500 CHF par mois hors charges d'après les annonces relevées en 2026, et un taux de vacance inférieur à 1 % (OCSTAT) : l'offre est rare et les dossiers exigeants. C'est pour ça que beaucoup de frontaliers et de nouveaux arrivants cherchent leur colocation côté France, où le même budget donne une chambre dans une maison entière avec ses espaces communs.",
+      a: "Pour un studio à Genève, compte 1 200 à 2 500 CHF par mois hors charges d'après les annonces relevées en 2026, et un taux de vacance inférieur à 1 % (OCSTAT) : l'offre est rare et les dossiers exigeants. C'est pour ça que beaucoup de frontaliers et de nouveaux arrivants cherchent leur colocation côté France, où le même budget donne une chambre dans une maison entière avec ses espaces communs.",
     },
     // (Lot L4, D8 — 10/10/2026) FAQ A.3 de justification du prix — texte unique src/data/priceFacts.ts.
     priceJustificationFaq("fr"),

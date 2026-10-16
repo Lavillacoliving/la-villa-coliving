@@ -229,7 +229,7 @@ export function RatesPageV4() {
         fr: `dès ${PRICE_SHARED_CHF_FR} tout inclus`,
         en: `from ${PRICE_SHARED_CHF_EN} all inclusive`,
       },
-      studio: { fr: "1 800-2 500 CHF + charges", en: "CHF 1,800-2,500 + utilities" },
+      studio: { fr: "1\u00a0800-2\u00a0500 CHF + charges", en: "CHF 1,800-2,500 + utilities" },
     },
     {
       label: { fr: "Surface chambre", en: "Room size" },
@@ -493,7 +493,7 @@ export function RatesPageV4() {
                 <h3 className="text-lg font-semibold text-[#1C1917] mb-2">
                   {language === "en"
                     ? "3. 100% of costs included, zero surprises"
-                    : "3. 100 % des frais inclus, zéro surprise"}
+                    : "3. 100\u00a0% des frais inclus, zéro surprise"}
                 </h3>
                 <p>
                   {language === "en" ? (
@@ -620,7 +620,7 @@ export function RatesPageV4() {
           <p className="text-[#57534E] italic text-lg mb-2">
             {language === "en"
               ? `"I was paying CHF 2,200 for a tiny studio in Geneva. Here everything's included — pool, gym, and an amazing community."`
-              : `"Je payais 2 200 CHF pour un petit studio à Genève. Ici, tout est inclus — piscine, gym et une communauté incroyable."`}
+              : `"Je payais 2\u00a0200 CHF pour un petit studio à Genève. Ici, tout est inclus — piscine, gym et une communauté incroyable."`}
           </p>
           <p className="text-sm text-[#78716C] mb-6">
             — Marie L., {language === "en" ? "Consultant, cross-border worker" : "Consultante, frontalière"}
@@ -755,7 +755,7 @@ export function RatesPageV4() {
                 ) : (
                   <>
                     Près de Genève, les méga-colivings récents logent jusqu'à {MARKET_COMPARISON.megaColivingMaxRooms}
-                    chambres dans un même bâtiment, avec environ 3 000 m²
+                    chambres dans un même bâtiment, avec environ 3&nbsp;000 m²
                     d'espaces partagés —{" "}
                     <strong>
                       soit moins de {MARKET_COMPARISON.megaColivingCommonM2PerResident} m² d'espaces communs par résident
