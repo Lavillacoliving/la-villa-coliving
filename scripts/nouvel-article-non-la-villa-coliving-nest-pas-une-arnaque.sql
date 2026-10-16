@@ -1,8 +1,8 @@
 -- ============================================================================
 -- Nouvel article : non-la-villa-coliving-nest-pas-une-arnaque (article de service, sans prix)
 -- Généré le 2026-10-16 par scripts/build-article-sql.mjs depuis content/decision-pages/non-la-villa-coliving-nest-pas-une-arnaque.{fr,en}.md + .meta.json
--- Mode : insert (brouillon, is_published = false) · à appliquer par Jérôme (SQL Editor / MCP)
--- Relecture : https://www.lavillacoliving.com/blog/non-la-villa-coliving-nest-pas-une-arnaque?preview=lavilla2026 (et /en/blog/…)
+-- Mode : insert + publication · à appliquer par Jérôme (SQL Editor / MCP)
+-- ⚠️ PUBLIER = appliquer ce SQL ET merger le code dans la même séance (prérendu 05 h / 13 h UTC).
 -- ============================================================================
 
 BEGIN;
@@ -145,8 +145,8 @@ $en$,
   5,
   ARRAY['arnaque', 'logement', 'frontalier', 'annemasse', 'confiance'],
   'manual',
-  false,
-  NULL,
+  true,
+  now(),
   now()
 );
 
