@@ -1092,7 +1092,7 @@ function getHousesData(lang: string): Record<string, HouseData> {
       // Rooms
       {
         src: "/images/le lodge/rooms/la villa coliving le lodge-49.webp",
-        alt: "Le Lodge premium room",
+        alt: "Le Lodge room",
         category: "room",
       },
       {
@@ -1298,8 +1298,8 @@ function getHousesData(lang: string): Record<string, HouseData> {
         priceEur: isEn ? `€${EUR_STANDARD_EN_NUM}` : `${EUR_STANDARD_FR_NUM} €`,
         description: isEn
           // (Lot L2) L'ancienne fourchette en dur était fausse : v_public_rooms donne 17-20 (ROOM_SURFACE_BY_HOUSE.lelodge).
-          ? `Premium private room (${ROOM_SURFACE_BY_HOUSE.lelodge.min} to ${ROOM_SURFACE_BY_HOUSE.lelodge.max} m²) in our newest house. Modern design, private bathroom, quality mattress, and garden access. All 12 rooms have private bathrooms.`
-          : `Chambre privée premium (${ROOM_SURFACE_BY_HOUSE.lelodge.min} à ${ROOM_SURFACE_BY_HOUSE.lelodge.max} m²) dans notre maison la plus récente. Design moderne, salle de bain privative, matelas de qualité et accès jardin. Les 12 chambres ont une salle de bain privative.`,
+          ? `Private room (${ROOM_SURFACE_BY_HOUSE.lelodge.min} to ${ROOM_SURFACE_BY_HOUSE.lelodge.max} m²) in our newest house. Modern design, private bathroom, quality mattress, and garden access. All 12 rooms have private bathrooms.`
+          : `Chambre privée (${ROOM_SURFACE_BY_HOUSE.lelodge.min} à ${ROOM_SURFACE_BY_HOUSE.lelodge.max} m²) dans notre maison la plus récente. Design moderne, salle de bain privative, matelas de qualité et accès jardin. Les 12 chambres ont une salle de bain privative.`,
         image: "/images/le lodge/rooms/la villa coliving le lodge-78.webp",
       },
     ],
@@ -1440,12 +1440,12 @@ export function HouseDetailPage() {
               fr: `La Villa : 10 chambres à Ville-la-Grand. Piscine, sauna, gym, tout inclus dès ${PRICE_SHARED_CHF_FR}. À ${STATS_DISPLAY.fr.distance}.`,
             },
             leloft: {
-              en: `Le Loft: 7 premium rooms in Ambilly. Indoor pool, urban design, Tram 17 to Geneva. All-inclusive: ${PRICE_CHF_EN}/month.`,
-              fr: `Le Loft : 7 chambres premium à Ambilly. Piscine intérieure, design urbain, Tram 17 vers Genève. Tout inclus : ${PRICE_CHF_FR}/mois.`,
+              en: `Le Loft: 7 rooms in Ambilly. Indoor pool, urban design, Tram 17 to Geneva. All-inclusive: ${PRICE_CHF_EN}/month.`,
+              fr: `Le Loft : 7 chambres à Ambilly. Piscine intérieure, design urbain, Tram 17 vers Genève. Tout inclus : ${PRICE_CHF_FR}/mois.`,
             },
             lelodge: {
               en: `Le Lodge: 12 rooms in Annemasse, opened 2026. Pool, gym, sauna, ${TRANSIT.byHouse.lelodge.stationWalkMin}-min walk to the Léman Express. All-inclusive: ${PRICE_CHF_EN}/month.`,
-              fr: `Le Lodge : 12 chambres premium à Annemasse, ouvertes en 2026. Piscine, gym, sauna, gare Léman Express à ${TRANSIT.byHouse.lelodge.stationWalkMin} min à pied. Tout inclus : ${PRICE_CHF_FR}/mois.`,
+              fr: `Le Lodge : 12 chambres à Annemasse, ouvertes en 2026. Piscine, gym, sauna, gare Léman Express à ${TRANSIT.byHouse.lelodge.stationWalkMin} min à pied. Tout inclus : ${PRICE_CHF_FR}/mois.`,
             },
           };
           return descs[id]?.[language === "en" ? "en" : "fr"]

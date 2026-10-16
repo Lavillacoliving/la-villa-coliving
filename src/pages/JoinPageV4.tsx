@@ -757,7 +757,7 @@ export function JoinPageV4() {
               className="text-4xl md:text-5xl font-light text-[#1C1917]"
               style={{ fontFamily: '"DM Serif Display", serif' }}
             >
-              {language === "en" ? "How It Works" : "Comment Ça Marche"}
+              {language === "en" ? "How It Works" : "Comment ça marche"}
             </h2>
           </div>
 

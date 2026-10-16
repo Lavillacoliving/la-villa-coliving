@@ -355,8 +355,8 @@ export function AnnemasseColocationPage() {
           </h2>
           <p className="text-[#57534E] text-center max-w-3xl mx-auto mb-12">
             {language === "en"
-              ? "One payment, zero surprises — everything is included in the rent."
-              : "Un seul paiement, zéro surprise — tout est compris dans le loyer."}
+              ? "Everything is included in the rent."
+              : "Tout est compris dans le loyer."}
           </p>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-4">
             {(language === "en"

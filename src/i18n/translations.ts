@@ -537,7 +537,7 @@ export const translations = {
     features: {
       title: "Tout Est Inclus",
       community: {
-        title: "Communauté Sélectionnée",
+        title: "Communauté sélectionnée",
         description: "Vis avec des personnes qui partagent ton mode de vie",
       },
       amenities: {
@@ -657,33 +657,33 @@ export const translations = {
           "Imagine avoir ta propre chambre privée magnifiquement designée tout en partageant des équipements premium comme des piscines, des salles de sport et des espaces de coworking avec une communauté sélectionnée de professionnels partageant les mêmes valeurs. C'est le coliving.",
       },
       notColocation: {
-        title: "Le Coliving n'est Pas Juste une Colocation",
+        title: "Le coliving n'est pas juste une colocation",
         description:
           "La colocation traditionnelle signifie trouver des colocataires, acheter des meubles, configurer les services et tout gérer soi-même. C'est du travail.",
         description2:
           "Le coliving est différent. Nous avons fait tout le travail pour toi. Ta maison est entièrement meublée, les services sont connectés, la communauté est sélectionnée et tout est géré professionnellement. Tu emménages et commences à vivre.",
       },
       difference: {
-        title: "Notre Communauté Coliving Sélectionnée",
+        title: "Notre communauté coliving sélectionnée",
         description:
           `Nous réunissons 7 à 12 membres soigneusement sélectionnés dans des maisons pensées dans les moindres détails, à ${STATS_DISPLAY.fr.distance}, côté France. Chaque détail — du mobilier aux événements communautaires — est intentionnel.`,
         description2:
           "Ce n'est pas juste une colocation. C'est une véritable élévation de mode de vie conçue pour les professionnels qui refusent de compromettre sur la qualité, la communauté ou la commodité.",
       },
       values: {
-        title: "Nos Valeurs Fondamentales",
+        title: "Nos valeurs fondamentales",
         value1: {
-          title: "Communauté Sélectionnée",
+          title: "Communauté sélectionnée",
           description:
             "Chaque membre est soigneusement sélectionné pour assurer des valeurs partagées et une vie harmonieuse.",
         },
         value2: {
-          title: "Vie Sans Effort",
+          title: "Vie sans effort",
           description:
             "Tout est pris en charge pour que tu puisses te concentrer sur l'essentiel.",
         },
         value3: {
-          title: "Connexions Significatives",
+          title: "Connexions significatives",
           description:
             "Nous créons des espaces où les relations authentiques fleurissent naturellement.",
         },

@@ -588,7 +588,7 @@ export function RatesPageV4() {
               >
                 {language === "en"
                   ? "Everything You Need"
-                  : "Tout Ce Dont Tu As Besoin"}
+                  : "Tout ce dont tu as besoin"}
               </h2>
               <p className="text-lg text-[#57534E] leading-relaxed">
                 {language === "en"
@@ -727,20 +727,20 @@ export function RatesPageV4() {
             {/* Encadré méga-résidences — chiffres publics, concurrent non nommé */}
             <aside className="mt-10 max-w-3xl mx-auto bg-white border border-[#E7E5E4] border-l-4 border-l-[#D4A574] rounded-xl p-6 md:p-8">
               <p className="text-xs font-medium tracking-wider uppercase text-[#D4A574] mb-2">
-                {language === "en" ? "Mega-residences" : "Méga-résidences"}
+                {language === "en" ? "Large residences" : "Grandes résidences"}
               </p>
               <h3
                 className="text-xl md:text-2xl font-medium text-[#1C1917] mb-3"
                 style={{ fontFamily: '"DM Serif Display", serif' }}
               >
                 {language === "en"
-                  ? "And compared to the new coliving mega-residences?"
-                  : "Et face aux nouvelles méga-résidences de coliving ?"}
+                  ? "And compared to the new large coliving residences?"
+                  : "Et face aux nouvelles grandes résidences de coliving ?"}
               </h3>
               <p className="text-[#44403C] leading-relaxed">
                 {language === "en" ? (
                   <>
-                    Near Geneva, recent mega-colivings house up to {MARKET_COMPARISON.megaColivingMaxRooms} rooms in a
+                    Near Geneva, recent large coliving residences house up to {MARKET_COMPARISON.megaColivingMaxRooms} rooms in a
                     single building, with around 3,000 m² of shared spaces —{" "}
                     <strong>
                       less than {MARKET_COMPARISON.megaColivingCommonM2PerResident} m² of common areas per resident
@@ -754,7 +754,7 @@ export function RatesPageV4() {
                   </>
                 ) : (
                   <>
-                    Près de Genève, les méga-colivings récents logent jusqu'à {MARKET_COMPARISON.megaColivingMaxRooms}
+                    Près de Genève, les grandes résidences de coliving récentes logent jusqu'à {MARKET_COMPARISON.megaColivingMaxRooms}
                     chambres dans un même bâtiment, avec environ 3 000 m²
                     d'espaces partagés —{" "}
                     <strong>
@@ -983,7 +983,7 @@ export function RatesPageV4() {
             >
               {language === "en"
                 ? "What's Really Included"
-                : "Ce Qui Est Inclus"}
+                : "Ce qui est inclus"}
             </h2>
             <p className="text-lg text-[#57534E] max-w-2xl mx-auto">
               {language === "en"
@@ -1055,7 +1055,7 @@ export function RatesPageV4() {
         <div className="container-custom">
           <div className="text-center mb-12">
             <h2 className="text-3xl font-light text-[#1C1917] mb-4">
-              {language === "en" ? "Our Houses" : "Nos Maisons"}
+              {language === "en" ? "Our Houses" : "Nos maisons"}
             </h2>
             <p className="text-[#57534E]">
               {language === "en"
@@ -1140,7 +1140,7 @@ export function RatesPageV4() {
           >
             {language === "en"
               ? "Ready to Join?"
-              : "Prêt à Nous Rejoindre ?"}
+              : "Prêt à nous rejoindre ?"}
           </h2>
           <p className="text-lg text-white/80 max-w-xl mx-auto mb-8">
             {(() => {

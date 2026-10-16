@@ -1,7 +1,7 @@
 // FAQ Data for SEO - Extensive question/answer database
 // Organized by categories for better SEO structure
 
-import { STATS_DISPLAY, TRANSIT, GENEVA_COMMUTE_FORMULA, PRICE_CHF_FR, PRICE_CHF_EN, PRICE_SHARED_EN_NUM, PRICE_SHARED_CHF_FR, PRICE_SHARED_CHF_EN } from "@/data/stats";
+import { STATS, STATS_DISPLAY, TRANSIT, GENEVA_COMMUTE_FORMULA, PRICE_CHF_FR, PRICE_CHF_EN, PRICE_SHARED_EN_NUM, PRICE_SHARED_CHF_FR, PRICE_SHARED_CHF_EN } from "@/data/stats";
 import { situationsFaq } from "@/data/faq/situationsFaq";
 import { priceJustificationFaq } from "@/data/priceFacts";
 
@@ -121,8 +121,8 @@ export const faqData: FAQItem[] = [
       fr: 'Qu\'est-ce qui différencie La Villa Coliving des autres espaces de coliving ?',
     },
     answer: {
-      en: `La Villa stands out through our curated community approach, exceptional locations ${STATS_DISPLAY.en.distance}, premium amenities including heated pools and wellness areas, and our commitment to creating genuine connections. We're not just a place to sleep—we're a lifestyle designed for modern professionals who value both productivity and wellbeing. Our homes are designed spaces, not converted apartments, with every detail thoughtfully considered.`,
-      fr: `La Villa se démarque par notre approche de communauté sélectionnée, nos emplacements exceptionnels à ${STATS_DISPLAY.fr.distance}, nos équipements premium incluant des piscines chauffées et des espaces bien-être, et notre engagement à créer de véritables connexions. Nous ne sommes pas juste un endroit pour dormir—nous sommes un mode de vie conçu pour les professionnels modernes qui valorisent à la fois la productivité et le bien-être. Nos maisons sont des espaces design, pas des appartements convertis, avec chaque détail soigneusement pensé.`,
+      en: `La Villa Coliving is ${STATS.totalHouses} houses with a garden, a pool, a sauna and a gym — not a residence: ${STATS.minResidentsPerHouse} to ${STATS.maxResidentsPerHouse} housemates per house, ${STATS_DISPLAY.en.distance}. Housemates are chosen through an application, a video call and a visit, and everything is included in a single rent. Our homes are houses, not converted apartments.`,
+      fr: `La Villa Coliving, ce sont ${STATS.totalHouses} maisons avec jardin, piscine, sauna et salle de sport — pas une résidence : ${STATS.minResidentsPerHouse} à ${STATS.maxResidentsPerHouse} colocataires par maison, à ${STATS_DISPLAY.fr.distance}. Les colocataires sont choisis sur candidature, appel vidéo et visite, et tout est compris dans un seul loyer. Nos maisons sont des maisons, pas des appartements convertis.`,
     },
   },
   {
@@ -195,8 +195,8 @@ export const faqData: FAQItem[] = [
       fr: 'Quels meubles sont inclus dans les chambres ?',
     },
     answer: {
-      en: 'All bedrooms come fully furnished with a premium bed and mattress, high-quality bedding, bedside tables, a desk with chair, wardrobe/closet, lamps, and decorative elements. Rooms are designed to be both functional and aesthetically pleasing, providing everything you need from day one.',
-      fr: 'Toutes les chambres sont entièrement meublées avec un lit et matelas premium, une literie de haute qualité, des tables de chevet, un bureau avec chaise, une armoire/penderie, des lampes et des éléments décoratifs. Les chambres sont conçues pour être à la fois fonctionnelles et esthétiquement agréables, avec tout ce dont tu as besoin dès le premier jour.',
+      en: 'All bedrooms come fully furnished: bed and mattress, bedding, bedside tables, a desk with a chair, a wardrobe, lamps and decorative elements — everything you need from day one.',
+      fr: 'Toutes les chambres sont entièrement meublées : lit et matelas, literie, tables de chevet, bureau avec chaise, armoire ou penderie, lampes et éléments de décoration — tout ce dont tu as besoin dès le premier jour.',
     },
   },
   {
@@ -827,8 +827,8 @@ export const faqData: FAQItem[] = [
       fr: 'Que se passe-t-il s\'il y a des conflits entre résidents ?',
     },
     answer: {
-      en: 'We take community harmony seriously. If conflicts arise, we\'re available to mediate and help find solutions. Our curated selection process helps prevent many issues, but when they do occur, we work with all parties to resolve them respectfully and fairly.',
-      fr: 'Nous prenons l\'harmonie communautaire au sérieux. Si des conflits surviennent, nous sommes disponibles pour médiater et aider à trouver des solutions. Notre processus de sélection sélectionné aide à prévenir de nombreux problèmes, mais quand ils surviennent, nous travaillons avec toutes les parties pour les résoudre respectueusement et équitablement.',
+      en: 'We take the harmony of the house seriously. If a conflict arises, we are available to talk it through and help find a solution. Choosing housemates through an application, a video call and a visit prevents many issues; when they do occur, we work with everyone involved to resolve them respectfully and fairly.',
+      fr: 'Nous prenons l\'harmonie de la maison au sérieux. Si un conflit survient, nous sommes disponibles pour en parler et aider à trouver une solution. Le choix des colocataires sur candidature, appel vidéo et visite évite beaucoup de problèmes ; quand ils arrivent, nous travaillons avec toutes les parties pour les résoudre avec respect et équité.',
     },
   },
   {
