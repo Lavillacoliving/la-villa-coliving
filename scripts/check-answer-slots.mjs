@@ -14,6 +14,9 @@
  *   4. Aucun marqueur orphelin (« <!-- » visible) sur AUCUNE page prérendue.
  *   5. Aucune promesse sur le garant interdite (D6) dans le texte visible — adaptatif pour les articles en base.
  *   6. Densité : plus de 12 « La Villa Coliving » visibles sur une page du périmètre → avertissement.
+ *   7. (Brief du 13/10/2026) Phrases d'appel 👉 : aucune forme cassée par une variation d'ancres (« Tu cherches une La
+ *      Villa… », « Looking for La Villa Coliving, French side? »…) et, règle générale, aucun lien dans la question en gras
+ *      qui se termine par « ? » — le lien vit en fin de paragraphe (« → [ancre](url) »). Toutes les pages prérendues.
  * Options : --m1-only (règles 1, 2, 4 : vert local avant la séance SQL) · --json · --verbose (tous les avertissements).
  * Modèle : scripts/check-entity-facts.mjs (dont on réutilise routeToFile, visibleText, textBlocks). Exécuté par
  * prerender.yml après check-entity-facts et avant hydration-check. En local : `npm run check:slots` après `npm run build:local`.
@@ -64,11 +67,18 @@ export const L1_TARGETS = Object.freeze([
   { route: '/blog/trouver-colocation-geneve-frontalier', needles: ['a6Text'] },
   { route: '/blog/living-in-france-working-in-geneva', needles: ['a6Text'] },
   { route: '/blog/demenager-geneve-frontalier-checklist', needles: ['a6Text'] },
-  { route: '/blog/dossier-location-frontalier-suisse-france', needles: ['a6Text'] },
+  { route: '/blog/dossier-location-frontalier-suisse-france', needles: ['a6Text', 'adminSlot:dossier'] },
   // (Lot L5, D5) mention canonique A.7 du groupe Facebook, posée par SQL (scripts/l5-facebook.edits.mjs) devant une ancre de
   // l'article — budget et ou-habiter la portent aussi (clé ajoutée à leur entrée ci-dessus).
   { route: '/blog/guide-ressources-frontalier-geneve', needles: ['facebookMention'] },
   { route: '/blog/arnaques-logement-frontalier-geneve-eviter', needles: ['facebookMention'] },
+  // (Brief du 13/10/2026) créneaux nommés des articles administratifs : phrase porteuse du nom = adminSlotSentence()
+  // (src/data/answerSlots.ts), posée par SQL (scripts/admin-slots-cta.edits.mjs) ; dossier-location : clé ajoutée ci-dessus.
+  { route: '/blog/permis-g-frontalier-geneve', needles: ['adminSlot:permis-g'] },
+  { route: '/blog/fiscalite-frontalier-geneve-impots-2026', needles: ['adminSlot:fiscalite'] },
+  { route: '/blog/salaire-suisse-net-frontalier-2026', needles: ['adminSlot:salaire'] },
+  { route: '/blog/organisations-internationales-geneve-ou-habiter', needles: ['adminSlot:oi'] },
+  { route: '/blog/choc-culturel-franco-suisse-expatrie-geneve', needles: ['adminSlot:choc'] },
 ]);
 
 /** Promesses sur le garant interdites (D6). « sans garant français » n'est PAS interdit (titre d'article). */
@@ -95,6 +105,38 @@ export function exemptForbidden(text) {
   return t;
 }
 
+/**
+ * (Brief du 13/10/2026, A.4) Formes publiées par la variation d'ancres du lot SEO 5 (04/09/2026), qui remplaçait le lien
+ * où qu'il soit — y compris dans la question du gabarit « 👉 Tu cherches une [ancre](url) ? ». Texte visible.
+ */
+export const CTA_BROKEN_PATTERNS = Object.freeze([
+  { re: /Tu cherches une La Villa/, label: '« Tu cherches une La Villa… »' },
+  { re: /Tu cherches une voir/, label: '« Tu cherches une voir… »' },
+  { re: /Tu cherches une chambres/, label: '« Tu cherches une chambres… »' },
+  { re: /Découvre la le /, label: '« Découvre la le … »' },
+  // Sans « ? » : le texte visible insère une espace entre la fin du lien et le « ? » (« …French side ? »), et la variante
+  // à deux liens se lit « …French side or in Annemasse? ». Après correctif, l'ancre seule suit « → », jamais « Looking for ».
+  { re: /Looking for La Villa Coliving, French side/, label: '« Looking for La Villa Coliving, French side… »' },
+  { re: /\bnotre chambres en colocation/, label: '« notre chambres en colocation… »' },
+  { re: /Discover our see our rooms/, label: '« Discover our see our rooms… »' },
+]);
+
+/**
+ * (A.4, règle générale) Questions en gras des paragraphes 👉 qui portent un lien : le gabarit veut une question FIXE et le
+ * lien en fin de paragraphe. Renvoie le texte des questions fautives (vide si conforme).
+ */
+export function ctaQuestionLinks(html) {
+  const out = [];
+  for (const p of String(html).matchAll(/<p\b[^>]*>([\s\S]*?)<\/p>/gi)) {
+    if (!p[1].includes('👉')) continue;
+    for (const st of p[1].matchAll(/<strong\b[^>]*>([\s\S]*?)<\/strong>/gi)) {
+      const text = st[1].replace(/<[^>]+>/g, '').replace(/\s+/g, ' ').trim();
+      if (text.endsWith('?') && /<a\b/i.test(st[1])) out.push(text);
+    }
+  }
+  return out;
+}
+
 export const BRAND = 'La Villa Coliving';
 export const BRAND_MAX = 12;
 
@@ -115,6 +157,7 @@ export function resolveNeedle(m, key, lang) {
   if (kind === 'commune') return m.communeSentence(slug, lang, opened ? { openedIn: Number(opened) } : {});
   if (kind === 'guarantor') return m.GUARANTOR_SENTENCE[lang];
   if (kind === 'facebookMention') return m.facebookMention(lang); // (Lot L5) mention A.7 dans 4 articles
+  if (kind === 'adminSlot') return m.adminSlotSentence(slug, lang); // (13/10/2026) créneaux des articles admin
   if (['a6Text', 'budgetRowLabel', 'budgetVariantText', 'comparatifRowLabel', 'coutDeLaVieRowLabel'].includes(kind)) return m[kind](lang);
   throw new Error(`check-answer-slots : clé de créneau inconnue « ${key} »`);
 }
@@ -325,7 +368,7 @@ export const isDbPage = (file) => /^(en-)?blog(-.+)?\.html$/.test(file);
 export function runChecks(m, pages, { m1Only = false, live = ANSWER_SLOTS_LIVE } = {}) {
   const failures = [], warnings = [];
   const files = [...pages.keys()].sort();
-  const stats = { files: files.length, sourceIssues: 0, perimeter: 0, blocksOk: 0, m1Failures: 0, outOfScope: 0, orphanPages: 0, needlesChecked: 0, needleFailures: 0, facebookFailures: 0, facebookPages: 0, needleWarnings: 0, forbiddenFailures: 0, forbiddenWarnings: 0, densityPages: 0 };
+  const stats = { files: files.length, sourceIssues: 0, perimeter: 0, blocksOk: 0, m1Failures: 0, outOfScope: 0, orphanPages: 0, needlesChecked: 0, needleFailures: 0, facebookFailures: 0, facebookPages: 0, needleWarnings: 0, forbiddenFailures: 0, forbiddenWarnings: 0, densityPages: 0, ctaFailures: 0 };
   const push = (list, counter, msg) => { list.push(msg); stats[counter]++; };
 
   // Source
@@ -412,6 +455,17 @@ export function runChecks(m, pages, { m1Only = false, live = ANSWER_SLOTS_LIVE }
     }
   }
 
+  // (Brief du 13/10/2026, A.4) Phrases d'appel 👉 : formes cassées + aucun lien dans la question en gras (toutes pages)
+  for (const f of files) {
+    const html = pages.get(f);
+    const text = visibleText(html);
+    for (const b of CTA_BROKEN_PATTERNS) {
+      const hit = b.re.exec(text);
+      if (hit) push(failures, 'ctaFailures', `${f} : phrase d'appel cassée ${b.label} — « …${text.slice(Math.max(0, hit.index - 30), hit.index + 70)}… »`);
+    }
+    for (const q of ctaQuestionLinks(html)) push(failures, 'ctaFailures', `${f} : question 👉 en gras avec un lien — « ${q.slice(0, 90)} » (la question est fixe, le lien va en fin de paragraphe)`);
+  }
+
   // Densité de la marque (périmètre L1 = pages M1 + cibles)
   for (const f of [...new Set([...inScope, ...targetFiles])].sort()) {
     const html = pages.get(f);
@@ -456,6 +510,7 @@ async function main() {
     console.log(`${s.needleFailures ? '❌' : '✅'} M2/M3/M4 : ${s.needlesChecked} créneaux vérifiés sur ${L1_TARGETS.length} routes FR+EN — ${s.needleFailures} échec(s), ${s.needleWarnings} avertissement(s)`);
     console.log(`${s.forbiddenFailures ? '❌' : '✅'} promesses garant interdites : ${s.forbiddenFailures} échec(s), ${s.forbiddenWarnings} avertissement(s)`);
     console.log(`${s.densityPages ? '⚠️ ' : '✅'} densité : ${s.densityPages} page(s) à plus de ${BRAND_MAX} « ${BRAND} »`);
+    console.log(`${s.ctaFailures ? '❌' : '✅'} phrases d'appel 👉 : ${s.ctaFailures} échec(s) sur ${s.files} pages (formes cassées, lien dans la question en gras)`);
   }
   const shown = verbose ? r.warnings : r.warnings.slice(0, 20);
   for (const w of shown) console.log(`   ⚠️  ${w}`);
