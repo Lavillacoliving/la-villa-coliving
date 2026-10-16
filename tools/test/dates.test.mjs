@@ -49,3 +49,15 @@ test('formatShortDate : « 15 oct. » / « 15 Oct », espace insécable, « 1er 
   assert.equal(MONTHS_SHORT_FR.length, 12);
   assert.equal(MONTHS_SHORT_EN.length, 12);
 });
+
+// (Lot 2 — C2, 16/10/2026) Jour de Paris d'un horodatage : date « Mis à jour le » et dateModified de /colocation-geneve.
+import { parisIsoDate } from '../../src/lib/dates.ts';
+
+test('parisIsoDate : calendrier de Paris, zéros de tête, entrée illisible = ""', () => {
+  assert.equal(parisIsoDate('2026-10-08T12:19:16.158423+00:00'), '2026-10-08');
+  assert.equal(parisIsoDate('2026-09-29T23:30:00Z'), '2026-09-30'); // 1 h 30 à Paris le lendemain
+  assert.equal(parisIsoDate('2026-01-05T00:30:00Z'), '2026-01-05');
+  assert.equal(parisIsoDate('2026-09-04T12:00:00Z'), '2026-09-04');
+  assert.equal(parisIsoDate('n/a'), '');
+  assert.equal(formatLongDate('2026-10-08T12:19:16.158423+00:00', 'fr'), '8 octobre 2026');
+});

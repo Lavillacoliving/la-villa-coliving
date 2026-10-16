@@ -41,6 +41,22 @@ export function formatLongDate(iso: string, lang: "fr" | "en"): string {
     : `${day} ${MONTHS_FR[month - 1]} ${year}`;
 }
 
+/** « AAAA-MM-JJ » du jour de Paris d'un horodatage ISO ; "" si illisible. Pure (même sortie prérendu / client). */
+export function parisIsoDate(iso: string): string {
+  const d = new Date(iso);
+  if (Number.isNaN(d.getTime())) return "";
+  let year = 0;
+  let month = 0;
+  let day = 0;
+  for (const part of PARIS_PARTS.formatToParts(d)) {
+    if (part.type === "year") year = Number(part.value);
+    else if (part.type === "month") month = Number(part.value);
+    else if (part.type === "day") day = Number(part.value);
+  }
+  if (!year || month < 1 || month > 12 || !day) return "";
+  return `${year}-${String(month).padStart(2, "0")}-${String(day).padStart(2, "0")}`;
+}
+
 // Mois abrégés (13/10/2026, brief « conversion Ads » §2.1 et §2.2, option A validée par Jérôme) : pastille de date des
 // cartes « Bientôt disponibles » (« Libre le 15 oct. ») et ligne « Prochaines entrées » de /chambres-disponibles.
 export const MONTHS_SHORT_FR = [
