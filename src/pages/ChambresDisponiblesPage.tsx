@@ -17,6 +17,7 @@ import { ENTITY_HOUSES } from "@/data/entityFacts";
 import { MONTHS_FR, MONTHS_EN, formatShortDate } from "@/lib/dates";
 import { responsiveImage } from "@/lib/responsiveImage";
 import { OFFER_TEXTS, isOfferActive, isOfferStarted } from "@/data/offer";
+import { readPrerenderFlag } from "@/lib/prerenderEmbeddedState";
 import { roomGallery } from "@/data/roomPhotos";
 import { STATS, STATS_DISPLAY, PRICE_SHARED_CHF_FR, PRICE_SHARED_CHF_EN } from "@/data/stats";
 import { tarifsFaq } from "@/data/faq/tarifsFaq";
@@ -194,12 +195,15 @@ export function ChambresDisponiblesPage() {
     : ["0 frais d'agence ni de dossier", "Réponse sous 48 h", "Visite en visio possible", `${STATS.totalResidents}+ résidents depuis ${STATS.foundedYear}`, "Tout inclus : charges, fibre, ménage, piscine, sauna, gym", STATS_DISPLAY.fr.distance];
 
   // (13/10/2026, §2.2, D3) Pendant l'offre seulement, la caution et son paiement en 2 ou 3 fois, sous les cartes (liste de
-  // réassurance). Rendue APRÈS l'hydratation (la date du lecteur décide) : absente du HTML prérendu, aucun écart #418.
-  if (hydrated && isOfferStarted() && isOfferActive()) {
-    reassurance.splice(1, 0, en
-      ? `Deposit of ${STATS.depositMonths} months' rent excluding charges, ${OFFER_TEXTS.en.depositNote}`
-      : `Caution de ${STATS.depositMonths} mois de loyer hors charges, ${OFFER_TEXTS.fr.depositNote}`);
-  }
+  // réassurance). (Correctif 16/10/2026) Le prérendu est une capture Puppeteer où useHydrated vaut déjà true : dès le début
+  // de l'offre (15/10), la ligne figurait dans le HTML prérendu mais pas au premier rendu client — #418, prérendus bloqués
+  // par la garde d'hydratation. Même logique que le bandeau (OfferBanner) : pendant l'hydratation, la page reproduit ce
+  // que le HTML contient (repère `__offer_deposit__` capturé par main.tsx) ; une fois hydratée, la date du lecteur décide.
+  const depositLine = en
+    ? `Deposit of ${STATS.depositMonths} months' rent excluding charges, ${OFFER_TEXTS.en.depositNote}`
+    : `Caution de ${STATS.depositMonths} mois de loyer hors charges, ${OFFER_TEXTS.fr.depositNote}`;
+  const showDeposit = hydrated ? isOfferStarted() && isOfferActive() : readPrerenderFlag("__offer_deposit__") === "1";
+  if (showDeposit) reassurance.splice(1, 0, depositLine);
 
   const faqItems = [...maisonsFaq[L].slice(0, 2), ...tarifsFaq[L].slice(0, 2)];
 
@@ -462,7 +466,7 @@ export function ChambresDisponiblesPage() {
         <div className="container-custom">
           <ul className="mx-auto grid max-w-4xl gap-4 sm:grid-cols-2 lg:grid-cols-3">
             {reassurance.map((item) => (
-              <li key={item} className="flex items-start gap-3 rounded-xl border border-[#E7E5E4] bg-white px-5 py-4">
+              <li key={item} data-offer-deposit={item === depositLine ? "1" : undefined} className="flex items-start gap-3 rounded-xl border border-[#E7E5E4] bg-white px-5 py-4">
                 <Check className="mt-0.5 h-5 w-5 shrink-0 text-[#b8860b]" />
                 <span className="text-sm text-[#44403C]">{item}</span>
               </li>

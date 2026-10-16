@@ -91,6 +91,9 @@ if (offerMain) prerenderState.__offer_state__ = offerMain.getAttribute("data-off
 // (Rebrief −50 %, 12/10/2026) Jour de Paris utilisé par le prérendu pour les lignes « Bail au … » des cartes de l'offre.
 const offerToday = rootElement.querySelector("main[data-offer-today]");
 if (offerToday) prerenderState.__offer_today__ = offerToday.getAttribute("data-offer-today") ?? "";
+// (16/10/2026) Ligne « caution en 2 ou 3 fois » de /chambres-disponibles (réassurance) : présente dans le HTML prérendu
+// pendant l'offre ; ChambresDisponiblesPage la reproduit pendant l'hydratation, puis la date du lecteur décide.
+if (rootElement.querySelector("[data-offer-deposit]")) prerenderState.__offer_deposit__ = "1";
 (window as unknown as { __PRERENDER_STATE__: Record<string, string> }).__PRERENDER_STATE__ = prerenderState;
 const app = (
   <StrictMode>
