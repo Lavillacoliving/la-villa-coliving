@@ -421,7 +421,7 @@ export const faqData: FAQItem[] = [
     },
     answer: {
       en: `A studio apartment in Geneva typically costs 1,500-2,500 CHF/month, plus utilities (150-250 CHF), internet (50-80 CHF), gym membership (100-150 CHF), and you\'d need to buy furniture. At La Villa, starting from ${PRICE_SHARED_EN_NUM} CHF, you get a furnished private room, all utilities, internet, gym, pool, sauna, cleaning, and a built-in community. The value is exceptional.`,
-      fr: `Un studio à Genève coûte généralement 1 500-2 500 CHF/mois, plus les charges (150-250 CHF), internet (50-80 CHF), abonnement de salle de sport (100-150 CHF), et il faudrait acheter des meubles. Chez La Villa, à partir de ${PRICE_SHARED_CHF_FR}, tu obtiens une chambre privée meublée, tous les services, internet, salle de sport, piscine, sauna, ménage et une communauté intégrée. La valeur est exceptionnelle.`,
+      fr: `Un studio à Genève coûte généralement 1\u00a0500-2\u00a0500 CHF/mois, plus les charges (150-250 CHF), internet (50-80 CHF), abonnement de salle de sport (100-150 CHF), et il faudrait acheter des meubles. Chez La Villa, à partir de ${PRICE_SHARED_CHF_FR}, tu obtiens une chambre privée meublée, tous les services, internet, salle de sport, piscine, sauna, ménage et une communauté intégrée. La valeur est exceptionnelle.`,
     },
   },
 

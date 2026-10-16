@@ -54,8 +54,8 @@ import {
  * « loyer réduit », « loyer à … », ni prix barré/remplacé ; le loyer contractuel reste affiché tel quel.
  */
 
-const fmtChf = (n: number, en: boolean) => (en ? `CHF ${thousands(n, ",")}` : `${thousands(n, " ")} CHF`);
-const fmtEur = (n: number, en: boolean) => (en ? `€${thousands(n, ",")}` : `${thousands(n, " ")} €`);
+const fmtChf = (n: number, en: boolean) => (en ? `CHF ${thousands(n, ",")}` : `${thousands(n, "\u00a0")} CHF`);
+const fmtEur = (n: number, en: boolean) => (en ? `€${thousands(n, ",")}` : `${thousands(n, "\u00a0")} €`);
 
 /** Bouton « Je candidate » → /candidature?offre=hiver, mesuré en `offer_cta_click` (placement = landing). */
 function ApplyButton({ en, L, className = "" }: { en: boolean; L: "fr" | "en"; className?: string }) {

@@ -66,9 +66,9 @@ export function MentionsLegalesPage() {
                   Activity: rental of furnished accommodation.
                   <br />
                   Registered with the Thonon-les-Bains Trade and Companies Register (RCS) under
-                  no. <strong>882 153 810</strong> (registered on 04/03/2020).
+                  no. <strong>882&nbsp;153&nbsp;810</strong> (registered on 04/03/2020).
                   <br />
-                  SIRET (head office): <strong>882 153 810 00016</strong>
+                  SIRET (head office): <strong>882&nbsp;153&nbsp;810 00016</strong>
                   <br />
                   Head office: <strong>8 rue du Mont Blanc, 74100 Annemasse, France</strong>
                   <br />
@@ -151,14 +151,14 @@ export function MentionsLegalesPage() {
                 </p>
                 <p>
                   <strong>SLEEP IN</strong>, société civile immobilière (SCI) au capital de
-                  1 000 €, exerçant sous le nom commercial <strong>La Villa Coliving</strong>.
+                  1&nbsp;000 €, exerçant sous le nom commercial <strong>La Villa Coliving</strong>.
                   <br />
                   Activité : location de logements meublés.
                   <br />
                   Immatriculée au RCS de Thonon-les-Bains sous le n°{" "}
-                  <strong>882 153 810</strong> (immatriculation du 04/03/2020).
+                  <strong>882&nbsp;153&nbsp;810</strong> (immatriculation du 04/03/2020).
                   <br />
-                  SIRET (siège) : <strong>882 153 810 00016</strong>
+                  SIRET (siège) : <strong>882&nbsp;153&nbsp;810 00016</strong>
                   <br />
                   Siège social : <strong>8 rue du Mont Blanc, 74100 Annemasse, France</strong>
                   <br />

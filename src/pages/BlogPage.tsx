@@ -5,7 +5,7 @@ import { supabase } from "@/lib/supabase";
 import { Search, Clock, Calendar, User } from "lucide-react";
 import { SEO } from "@/components/SEO";
 import { formatLongDate } from "@/lib/dates";
-import { nbspThousands } from "@/lib/typography";
+import { typoFr } from "@/lib/typography";
 
 interface BlogPost {
   id: string; slug: string;
@@ -140,7 +140,7 @@ export function BlogPage() {
                     <h3 className="text-xl font-medium text-[#1C1917] mb-3 line-clamp-2 group-hover:text-[#D4A574] transition-colors" style={{fontFamily: '"DM Serif Display", serif'}}>
                       {gT(post)}
                     </h3>
-                    <p className="text-[#57534E] text-sm leading-relaxed mb-4 line-clamp-3">{nbspThousands(gE(post))}</p>
+                    <p className="text-[#57534E] text-sm leading-relaxed mb-4 line-clamp-3">{typoFr(gE(post))}</p>
                     {post.tags&&post.tags.length>0&&(
                       <div className="flex flex-wrap gap-1.5 mb-4">
                         {post.tags.slice(0,3).map((t)=><span key={t} className="text-xs px-2 py-0.5 bg-[#F5F2ED] text-[#57534E] rounded">{t}</span>)}

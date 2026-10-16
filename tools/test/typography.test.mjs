@@ -2,7 +2,7 @@
 // espace normale entre groupes de milliers → espace insécable, rien d'autre ne bouge.
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { nbspThousands } from '../../src/lib/typography.ts';
+import { nbspThousands, nbspPercent, typoFr } from '../../src/lib/typography.ts';
 
 const NB = ' ';
 
@@ -34,4 +34,17 @@ test('rien à faire : déjà insécable, notation anglaise, années, petits nomb
 test('liens et marqueurs markdown intacts', () => {
   assert.equal(nbspThousands('[le guide](/blog/salaire-suisse-net-frontalier-2026) : 7 000 CHF'), `[le guide](/blog/salaire-suisse-net-frontalier-2026) : 7${NB}000 CHF`);
   assert.equal(nbspThousands('<!-- entity-facts -->'), '<!-- entity-facts -->');
+});
+
+test('pourcentages : espace normale devant « % » après un chiffre → insécable', () => {
+  assert.equal(nbspPercent('20 à 27 % de ce net, sous le seuil des 30 %.'), `20 à 27${NB}% de ce net, sous le seuil des 30${NB}%.`);
+  assert.equal(nbspPercent('Top 10% (anglais, sans espace)'), 'Top 10% (anglais, sans espace)');
+  assert.equal(nbspPercent(`déjà 40${NB}%`), `déjà 40${NB}%`);
+  assert.equal(nbspPercent('le taux % reste'), 'le taux % reste');
+});
+
+test('typoFr : milliers et pourcentages, longueur inchangée', () => {
+  const s = 'Un net de 5 300 à 7 000 CHF, soit 20 à 27 %.';
+  assert.equal(typoFr(s), `Un net de 5${NB}300 à 7${NB}000 CHF, soit 20 à 27${NB}%.`);
+  assert.equal(typoFr(s).length, s.length);
 });

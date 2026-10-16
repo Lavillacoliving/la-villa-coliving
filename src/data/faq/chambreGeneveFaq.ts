@@ -11,7 +11,7 @@ export const chambreGeneveFaq: { fr: QAPair[]; en: QAPair[] } = {
   fr: [
     {
       q: "Quel est le loyer moyen d'une chambre à louer à Genève ?",
-      a: `À Genève même, d'après les annonces relevées en 2026, une chambre en colocation ou chez l'habitant se loue le plus souvent entre 1 000 et 1 500 CHF par mois, charges, internet et ménage souvent en plus (relevé de notre Observatoire du logement frontalier, juin 2026), et l'offre est rare (taux de vacance sous 1 %, OCSTAT). C'est pour ça que beaucoup cherchent leur chambre côté France, à ${STATS_DISPLAY.fr.distance} : le même budget donne une chambre meublée dans une maison entière.`,
+      a: `À Genève même, d'après les annonces relevées en 2026, une chambre en colocation ou chez l'habitant se loue le plus souvent entre 1\u00a0000 et 1\u00a0500 CHF par mois, charges, internet et ménage souvent en plus (relevé de notre Observatoire du logement frontalier, juin 2026), et l'offre est rare (taux de vacance sous 1\u00a0%, OCSTAT). C'est pour ça que beaucoup cherchent leur chambre côté France, à ${STATS_DISPLAY.fr.distance} : le même budget donne une chambre meublée dans une maison entière.`,
     },
     {
       q: `Combien coûte une chambre meublée près de Genève chez La Villa Coliving ?`,

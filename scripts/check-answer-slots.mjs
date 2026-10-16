@@ -383,10 +383,10 @@ export function runChecks(m, pages, { m1Only = false, live = ANSWER_SLOTS_LIVE }
       for (const key of t.needles) {
         const needle = resolveNeedle(m, key, lang);
         stats.needlesChecked++;
-        // (16/10/2026) Un article s'affiche avec ses milliers en espaces insécables (src/lib/typography.ts, BlogPostPage) :
+        // (16/10/2026) Un article s'affiche avec ses milliers et ses « % » en espaces insécables (src/lib/typography.ts, BlogPostPage) :
         // le créneau y est aussi cherché tel que le lecteur le voit (« environ 1 600 membres » de la mention Facebook A.7).
         // Les deux formes sont acceptées : HTML prérendu avant la règle (espace normale) ou après (insécable).
-        if (hasNeedle(text, needle) || (isDb && hasNeedle(text, m.nbspThousands(needle)))) continue;
+        if (hasNeedle(text, needle) || (isDb && hasNeedle(text, m.typoFr(needle)))) continue;
         const msg = `${file} : créneau « ${key} » absent du texte visible — « ${needle.slice(0, 70)}… »`;
         if (!isDb || live) { push(failures, 'needleFailures', msg); continue; }
         const inDb = embeddedHasText(html, lang, needle);

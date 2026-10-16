@@ -28,7 +28,7 @@ export const tarifsFaq: { fr: QAPair[]; en: QAPair[] } = {
     },
     {
       q: "Combien coûte une colocation tout inclus près de Genève ?",
-      a: `Une colocation tout inclus près de Genève comme La Villa Coliving démarre à ${PRICE_SHARED_CHF_FR}/mois : charges, internet fibre, ménage et accès piscine, sauna et salle de sport compris. À titre de comparaison, un studio basique à Genève dépasse souvent 2 000 CHF une fois toutes les charges ajoutées. Un seul paiement, sans frais d'entrée.`,
+      a: `Une colocation tout inclus près de Genève comme La Villa Coliving démarre à ${PRICE_SHARED_CHF_FR}/mois : charges, internet fibre, ménage et accès piscine, sauna et salle de sport compris. À titre de comparaison, un studio basique à Genève dépasse souvent 2\u00a0000 CHF une fois toutes les charges ajoutées. Un seul paiement, sans frais d'entrée.`,
     },
     {
       q: "Y a-t-il des frais cachés ou des suppléments en cours de séjour ?",
@@ -36,7 +36,7 @@ export const tarifsFaq: { fr: QAPair[]; en: QAPair[] } = {
     },
     {
       q: "Comment La Villa se compare-t-elle à la location d'un studio à Genève ?",
-      a: `À Genève, un studio basique additionne loyer, électricité, chauffage, eau, internet, ménage et abonnements pour dépasser souvent 2 000 CHF par mois. Chez La Villa Coliving, tout cela est réuni dans un seul loyer dès ${PRICE_SHARED_CHF_FR} — avec en plus piscine, sauna, salle de sport et une communauté. Et 0 € de frais d'entrée.`,
+      a: `À Genève, un studio basique additionne loyer, électricité, chauffage, eau, internet, ménage et abonnements pour dépasser souvent 2\u00a0000 CHF par mois. Chez La Villa Coliving, tout cela est réuni dans un seul loyer dès ${PRICE_SHARED_CHF_FR} — avec en plus piscine, sauna, salle de sport et une communauté. Et 0 € de frais d'entrée.`,
     },
     {
       q: "Comment se règle le loyer chez La Villa Coliving ?",
