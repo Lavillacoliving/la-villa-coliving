@@ -716,7 +716,7 @@ export function BlogPostPage() {
                       <h3 className="text-base font-medium text-[#1C1917] mb-2 line-clamp-2 group-hover:text-[#D4A574] transition-colors" style={{ fontFamily: '"DM Serif Display", serif' }}>
                         {rTitle}
                       </h3>
-                      <p className="text-sm text-[#57534E] line-clamp-2">{rExcerpt}</p>
+                      <p className="text-sm text-[#57534E] line-clamp-2">{nbspThousands(rExcerpt)}</p>
                       <span className="flex items-center gap-1 text-xs text-[#78716C] mt-3">
                         <Clock className="w-3 h-3" /> {r.read_time_min} min
                       </span>
