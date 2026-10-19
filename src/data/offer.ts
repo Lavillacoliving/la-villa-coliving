@@ -141,6 +141,26 @@ export function trackOfferCta(placement: OfferPlacement, extra: Record<string, s
   }
 }
 
+/** Sections de /offre-hiver mesurées à l'affichage (brief « page de l'offre » du 19/10/2026, §2.C). */
+export type OfferSection = "rooms" | "concretely" | "faq";
+
+/**
+ * `offer_section_view` — paramètres `offer` + `section` (+ contexte libre : `language`). Une fois par section et par page
+ * vue, quand la section est vue à moitié (OfferHiverPage). Sert à savoir si les visiteurs atteignent la grille des chambres.
+ * Même mécanique que trackOfferCta : jamais bloquant.
+ */
+export function trackOfferSectionView(section: OfferSection, extra: Record<string, string | number> = {}): void {
+  try {
+    (window as unknown as { gtag?: (...a: unknown[]) => void }).gtag?.("event", "offer_section_view", {
+      offer: OFFER_ID,
+      section,
+      ...extra,
+    });
+  } catch {
+    /* l'analytics ne bloque jamais l'UI */
+  }
+}
+
 /** « Bail au 16 décembre » / « Lease within 7 days of signing » — ligne de démarrage des cartes de /offre-hiver. Pur. */
 export function leaseStartLabel(start: ReturnType<typeof leaseStartOf>, lang: "fr" | "en"): string {
   if (start.kind === "date") return lang === "en" ? `Lease from ${formatOfferDate(start.iso, "en")}` : `Bail au ${formatOfferDate(start.iso, "fr")}`;
