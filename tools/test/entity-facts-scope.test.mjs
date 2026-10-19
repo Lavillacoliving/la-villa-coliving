@@ -2,7 +2,8 @@
 // (hors gabarit _TEMPLATE) sont reconnues par la garde check-entity-facts (correctif du 08/09/2026).
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { decisionPageSlugs, ENTITY_FACTS_MONEY_ROUTES } from '../../scripts/check-entity-facts.mjs';
+import { decisionPageSlugs, entityFactsDecisionSlugs, ENTITY_FACTS_MONEY_ROUTES } from '../../scripts/check-entity-facts.mjs';
+import { readFileSync } from 'node:fs';
 
 test('decisionPageSlugs() liste les .meta.json de content/decision-pages sans le gabarit', async () => {
   const slugs = await decisionPageSlugs();
@@ -10,6 +11,16 @@ test('decisionPageSlugs() liste les .meta.json de content/decision-pages sans le
   assert.ok(slugs.includes('s-installer-a-geneve-expatrie-cote-suisse-ou-cote-france'), 'C1 attendue dans le périmètre');
   assert.ok(!slugs.some((s) => s.startsWith('_')), 'le gabarit _TEMPLATE ne doit pas entrer dans le périmètre');
   assert.deepEqual(slugs, [...slugs].sort(), 'liste triée (sortie déterministe)');
+});
+
+test('entityFactsDecisionSlugs() : le profil « service » (sans prix ni fiche entité) sort du périmètre, les autres y restent', async () => {
+  const all = await decisionPageSlugs();
+  const withBlock = await entityFactsDecisionSlugs();
+  const fmt = (slug) => JSON.parse(readFileSync(new URL(`../../content/decision-pages/${slug}.meta.json`, import.meta.url), 'utf8')).format ?? 'decision';
+  assert.ok(all.includes('non-la-villa-coliving-nest-pas-une-arnaque'), 'article « C\'est réel ? » versionné');
+  assert.ok(!withBlock.includes('non-la-villa-coliving-nest-pas-une-arnaque'), 'article de service : pas de fiche entité exigée');
+  assert.ok(withBlock.includes('s-installer-a-geneve-expatrie-cote-suisse-ou-cote-france'), 'page de décision C1 : fiche exigée');
+  assert.deepEqual(withBlock, all.filter((s) => fmt(s) !== 'service'));
 });
 
 test('les 14 pages money restent dans le périmètre', () => {
