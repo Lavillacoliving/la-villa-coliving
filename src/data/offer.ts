@@ -126,7 +126,8 @@ export function formatOfferDate(iso: string, lang: "fr" | "en"): string {
 }
 
 // ── Télémétrie GA4 (brief §1) ─────────────────────────────────────────────────────────────────
-export type OfferPlacement = "landing" | "banner" | "rooms";
+/** `sticky` = barre fixe mobile de /offre-hiver (option D du brief du 19/10/2026). */
+export type OfferPlacement = "landing" | "banner" | "rooms" | "sticky";
 
 /** `offer_cta_click` — paramètres `offer` + `placement` (+ contexte libre). Jamais bloquant. */
 export function trackOfferCta(placement: OfferPlacement, extra: Record<string, string | number> = {}): void {
@@ -134,6 +135,26 @@ export function trackOfferCta(placement: OfferPlacement, extra: Record<string, s
     (window as unknown as { gtag?: (...a: unknown[]) => void }).gtag?.("event", "offer_cta_click", {
       offer: OFFER_ID,
       placement,
+      ...extra,
+    });
+  } catch {
+    /* l'analytics ne bloque jamais l'UI */
+  }
+}
+
+/** Sections de /offre-hiver mesurées à l'affichage (brief « page de l'offre » du 19/10/2026, §2.C). */
+export type OfferSection = "rooms" | "concretely" | "faq";
+
+/**
+ * `offer_section_view` — paramètres `offer` + `section` (+ contexte libre : `language`). Une fois par section et par page
+ * vue, quand la section est vue à moitié (OfferHiverPage). Sert à savoir si les visiteurs atteignent la grille des chambres.
+ * Même mécanique que trackOfferCta : jamais bloquant.
+ */
+export function trackOfferSectionView(section: OfferSection, extra: Record<string, string | number> = {}): void {
+  try {
+    (window as unknown as { gtag?: (...a: unknown[]) => void }).gtag?.("event", "offer_section_view", {
+      offer: OFFER_ID,
+      section,
       ...extra,
     });
   } catch {

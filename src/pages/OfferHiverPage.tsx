@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { ArrowRight, Check } from "lucide-react";
 import { SEO } from "@/components/SEO";
 import { LocalizedLink } from "@/components/LocalizedLink";
@@ -29,6 +29,8 @@ import {
   leaseStartOf,
   parisDateIso,
   trackOfferCta,
+  trackOfferSectionView,
+  type OfferSection,
 } from "@/data/offer";
 
 /**
@@ -52,23 +54,113 @@ import {
  *
  * Formulation (brief §0) : la remise est un geste commercial appliqué sur le premier mois — jamais
  * « loyer réduit », « loyer à … », ni prix barré/remplacé ; le loyer contractuel reste affiché tel quel.
+ *
+ * Brief « page de l'offre » du 19/10/2026 (9 visiteurs sur 10 repartent sans cliquer) : ligne « produit » sous le H1
+ * (quoi, où, combien — le prix suit la même liste que le compteur), conditions du hero en une phrase, chambres remontées
+ * en section 2, et mesure `offer_section_view` (rooms · concretely · faq) pour savoir si les visiteurs atteignent la grille.
  */
 
 const fmtChf = (n: number, en: boolean) => (en ? `CHF ${thousands(n, ",")}` : `${thousands(n, "\u00a0")} CHF`);
 const fmtEur = (n: number, en: boolean) => (en ? `€${thousands(n, ",")}` : `${thousands(n, "\u00a0")} €`);
 
-/** Bouton « Je candidate » → /candidature?offre=hiver, mesuré en `offer_cta_click` (placement = landing). */
-function ApplyButton({ en, L, className = "" }: { en: boolean; L: "fr" | "en"; className?: string }) {
+/** Bouton « Je candidate » → /candidature?offre=hiver, mesuré en `offer_cta_click` (placement = landing, sticky pour la barre mobile). */
+function ApplyButton({
+  en,
+  L,
+  className = "",
+  placement = "landing",
+  compact = false,
+}: {
+  en: boolean;
+  L: "fr" | "en";
+  className?: string;
+  placement?: "landing" | "sticky";
+  compact?: boolean;
+}) {
   return (
     <LocalizedLink
       to={`/candidature?${OFFER_QUERY}`}
-      onClick={() => trackOfferCta("landing", { language: L })}
-      className={`inline-flex items-center justify-center gap-2 px-8 py-4 bg-[#1C1917] text-white font-semibold rounded-lg hover:bg-[#44403C] transition-colors ${className}`}
+      onClick={() => trackOfferCta(placement, { language: L })}
+      className={`inline-flex items-center justify-center gap-2 ${compact ? "px-6 py-3 text-sm" : "px-8 py-4"} bg-[#1C1917] text-white font-semibold rounded-lg hover:bg-[#44403C] transition-colors ${className}`}
     >
       {en ? "Apply now" : "Je candidate"}
-      <ArrowRight className="w-5 h-5" />
+      <ArrowRight className={compact ? "w-4 h-4" : "w-5 h-5"} />
     </LocalizedLink>
   );
+}
+
+/**
+ * Option D du brief du 19/10/2026 (à trancher par Jérôme, commit séparé) : barre « Je candidate » fixe en bas, mobile
+ * seulement, même habillage que les barres des pages maisons. Elle apparaît une fois le hero passé et disparaît dès que le
+ * rappel final (section 7, qui a déjà son bouton) arrive à l'écran. Masquée au premier rendu, prérendu compris (capture en
+ * haut de page) : zéro impact d'hydratation.
+ */
+function StickyApplyBar({ en, L }: { en: boolean; L: "fr" | "en" }) {
+  const [visible, setVisible] = useState(false);
+  useEffect(() => {
+    const hero = document.getElementById("offre-hero");
+    const last = document.getElementById("offre-rappel");
+    if (!hero || !last || typeof IntersectionObserver === "undefined") return;
+    let heroPassed = false;
+    let lastReached = false;
+    const observer = new IntersectionObserver((entries) => {
+      for (const entry of entries) {
+        if (entry.target === hero) heroPassed = !entry.isIntersecting && entry.boundingClientRect.top < 0;
+        else lastReached = entry.isIntersecting || entry.boundingClientRect.top < 0;
+      }
+      setVisible(heroPassed && !lastReached);
+    });
+    observer.observe(hero);
+    observer.observe(last);
+    return () => observer.disconnect();
+  }, []);
+  if (!visible) return null;
+  return (
+    <div data-offer-sticky className="md:hidden fixed bottom-0 inset-x-0 z-40 bg-white/95 backdrop-blur border-t border-[#E7E5E4] px-4 py-3">
+      <ApplyButton en={en} L={L} placement="sticky" compact className="w-full" />
+    </div>
+  );
+}
+
+/** Sections mesurées en `offer_section_view` → id de la section dans la page. */
+const TRACKED_SECTIONS: ReadonlyArray<[OfferSection, string]> = [
+  ["rooms", "chambres-offre"],
+  ["concretely", "concretement-offre"],
+  ["faq", "faq-offre"],
+];
+// Paliers de 5 % : de quoi suivre une section plus haute que l'écran (la grille des chambres à 390 px).
+const VIEW_THRESHOLDS = Array.from({ length: 21 }, (_, i) => i / 20);
+
+/**
+ * `offer_section_view` une fois par section et par page vue (brief du 19/10/2026, §2.C). Seuil 0,5 : la moitié de la
+ * section est visible OU elle occupe la moitié de l'écran — sans ce second cas, une section plus haute que deux écrans
+ * (les chambres sur mobile) ne serait jamais comptée. Effet seul, rien de rendu : zéro impact d'hydratation.
+ */
+function useOfferSectionViews(L: "fr" | "en") {
+  useEffect(() => {
+    if (typeof IntersectionObserver === "undefined") return;
+    const targets = new Map<Element, OfferSection>();
+    for (const [section, id] of TRACKED_SECTIONS) {
+      const el = document.getElementById(id);
+      if (el) targets.set(el, section);
+    }
+    const observer = new IntersectionObserver(
+      (entries) => {
+        for (const entry of entries) {
+          const section = targets.get(entry.target);
+          if (!section || !entry.isIntersecting) continue;
+          const viewport = entry.rootBounds?.height ?? window.innerHeight;
+          if (entry.intersectionRatio < 0.5 && entry.intersectionRect.height < viewport / 2) continue;
+          targets.delete(entry.target);
+          observer.unobserve(entry.target);
+          trackOfferSectionView(section, { language: L });
+        }
+      },
+      { threshold: VIEW_THRESHOLDS },
+    );
+    targets.forEach((_, el) => observer.observe(el));
+    return () => observer.disconnect();
+  }, [L]);
 }
 
 export function OfferHiverPage() {
@@ -148,9 +240,18 @@ function OfferActive({ en, L, title, description, labels }: { en: boolean; L: "f
     : `${roomsCount} ${roomsCount === 1 ? "chambre concernée" : "chambres concernées"}`;
   const onRoomCta = (room: PublicRoom) =>
     trackOfferCta("rooms", { house: room.house_slug, room_id: `chambre-${room.room_number}`, language: L });
+  useOfferSectionViews(L);
 
   const shared = STATS_SHARED_BATH.priceChf; // 1 370
   const standard = STATS.priceChf; // 1 430
+
+  // Prix de la ligne « produit » du hero (brief du 19/10/2026, §2.A) : le plus bas des chambres de l'offre — même liste,
+  // même source et même hydratation que le compteur. « dès » / « from » seulement s'il y a plusieurs prix (règle de
+  // Jérôme du 14/10) ; liste inconnue ou vide → prix d'appel du site, avec « dès ».
+  const offerPrices = [...new Set(rooms.map((r) => Number(r.rent_chf)).filter((n) => Number.isFinite(n) && n > 0))];
+  const fromChf = offerPrices.length > 0 ? Math.min(...offerPrices) : shared;
+  const pricePrefix = offerPrices.length === 1 ? "" : en ? "from " : "dès ";
+  const priceLabel = `${fmtChf(fromChf, en)}/${en ? "month" : "mois"}`;
   const tiers = [
     { chf: shared, eur: CONTRACT_EUR.sharedBath },
     { chf: standard, eur: CONTRACT_EUR.standard },
@@ -190,17 +291,44 @@ function OfferActive({ en, L, title, description, labels }: { en: boolean; L: "f
       <SEO title={title} description={description} noindex selfCanonical />
 
       {/* 1. Hero — sans image (LCP = le H1) ; date limite + bouton visibles sans défiler à 390 px.
-          Rebrief du 12/10 : nom de l'offre en surtitre, H1 = la promesse (D6), compteur de chambres (D7). */}
-      <section className="py-10 md:py-16 lg:py-20 bg-[#F5F2ED]">
+          Rebrief du 12/10 : nom de l'offre en surtitre, H1 = la promesse (D6), compteur de chambres (D7).
+          Brief du 19/10 : ligne « produit » sous le H1 (quoi, combien, où), puis les conditions en une phrase. */}
+      <section id="offre-hero" className="py-10 md:py-16 lg:py-20 bg-[#F5F2ED]">
         <div className="container-custom max-w-3xl text-center">
           <p className="mb-3 text-xs sm:text-sm font-semibold uppercase tracking-[0.18em] text-[#9A5B08]">{T.name}</p>
           <h1 className="text-4xl md:text-5xl lg:text-6xl font-light text-[#1C1917] mb-4" style={{ fontFamily: '"DM Serif Display", serif' }}>
             {en ? "Half price on your first month" : "Ton premier mois à moitié prix"}
           </h1>
-          <p className="text-lg md:text-xl text-[#44403C] mb-6">
+          {/* Prix, noms de lieu et mots à trait d'union insécables (pas de « Léman / Express » ni « Eaux- / Vives » à 390 px). */}
+          <p data-offer-product className="text-lg md:text-xl text-[#1C1917] mb-3">
+            {en ? (
+              <>
+                {"A furnished room in a coliving house, "}
+                <span className="whitespace-nowrap">all-inclusive</span>
+                {`, ${pricePrefix}`}
+                <span className="whitespace-nowrap">{priceLabel}</span>
+                {", on the French side, 20 min from Geneva "}
+                <span className="whitespace-nowrap">Eaux-Vives</span>
+                {" by "}
+                <span className="whitespace-nowrap">Léman Express</span>
+                {"."}
+              </>
+            ) : (
+              <>
+                {`Une chambre meublée en coliving, tout inclus, ${pricePrefix}`}
+                <span className="whitespace-nowrap">{priceLabel}</span>
+                {", côté France à 20 min de "}
+                <span className="whitespace-nowrap">Genève-Eaux-Vives</span>
+                {" en "}
+                <span className="whitespace-nowrap">Léman Express</span>
+                {"."}
+              </>
+            )}
+          </p>
+          <p className="text-base md:text-lg text-[#44403C] mb-6">
             {en
-              ? `Sign by ${endLabel}: one month upfront to move in, not three. Your deposit in 2 or 3 instalments, no fees. Your rent stays the same.`
-              : `Signe d'ici le ${endLabel} : un mois à sortir pour emménager, pas trois. Ta caution en 2 ou 3 fois, sans frais. Ton loyer, lui, ne change pas.`}
+              ? `Sign by ${endLabel}: half of your first month is on us and your deposit can be paid in 2 or 3 instalments. Your rent stays the same.`
+              : `Signe d'ici le ${endLabel} : la moitié de ton premier mois est offerte et ta caution se paie en 2 ou 3 fois. Ton loyer, lui, ne change pas.`}
           </p>
           <p className="inline-flex items-center gap-2 px-4 py-2 bg-white border border-[#D4A574] rounded-full text-xs sm:text-sm font-medium text-[#1C1917]">
             <span className="w-2 h-2 bg-[#B8860B] rounded-full shrink-0" aria-hidden="true" />
@@ -223,24 +351,8 @@ function OfferActive({ en, L, title, description, labels }: { en: boolean; L: "f
         </div>
       </section>
 
-      {/* 2. Pour qui — trois cas, une ligne chacun (pas d'autre cible). */}
-      <section className="py-12 lg:py-16 border-b border-[#E7E5E4]">
-        <div className="container-custom max-w-3xl">
-          <h2 className="text-2xl md:text-3xl font-light text-[#1C1917] mb-6" style={{ fontFamily: '"DM Serif Display", serif' }}>
-            {en ? "Who it's for" : "Pour qui ?"}
-          </h2>
-          <ul className="space-y-3">
-            {whoFor.map((line) => (
-              <li key={line} className="flex items-start gap-3 text-[#44403C]">
-                <Check className="mt-0.5 h-5 w-5 shrink-0 text-[#b8860b]" />
-                <span>{line}</span>
-              </li>
-            ))}
-          </ul>
-        </div>
-      </section>
-
-      {/* 3. Les chambres — composant partagé, filtré sur « libre maintenant ou datée » (rebrief D5). */}
+      {/* 2. Les chambres — composant partagé, filtré sur « libre maintenant ou datée » (rebrief D5). Remontées juste
+          sous le hero le 19/10 : les photos disent en une seconde ce qu'on vend. */}
       <section id="chambres-offre" className="py-14 lg:py-20 scroll-mt-20">
         <div className="container-custom">
           <h2 className="text-2xl md:text-3xl font-light text-[#1C1917] mb-2" style={{ fontFamily: '"DM Serif Display", serif' }}>
@@ -311,8 +423,25 @@ function OfferActive({ en, L, title, description, labels }: { en: boolean; L: "f
         </div>
       </section>
 
+      {/* 3. Pour qui — trois cas, une ligne chacun (pas d'autre cible). Filet en haut depuis qu'il suit les chambres. */}
+      <section className="py-12 lg:py-16 border-t border-[#E7E5E4]">
+        <div className="container-custom max-w-3xl">
+          <h2 className="text-2xl md:text-3xl font-light text-[#1C1917] mb-6" style={{ fontFamily: '"DM Serif Display", serif' }}>
+            {en ? "Who it's for" : "Pour qui ?"}
+          </h2>
+          <ul className="space-y-3">
+            {whoFor.map((line) => (
+              <li key={line} className="flex items-start gap-3 text-[#44403C]">
+                <Check className="mt-0.5 h-5 w-5 shrink-0 text-[#b8860b]" />
+                <span>{line}</span>
+              </li>
+            ))}
+          </ul>
+        </div>
+      </section>
+
       {/* 4. Concrètement — tableau simple et honnête ; le loyer contractuel reste visible tel quel. */}
-      <section className="py-14 lg:py-20 bg-[#FAF9F6] border-y border-[#E7E5E4]">
+      <section id="concretement-offre" className="py-14 lg:py-20 bg-[#FAF9F6] border-y border-[#E7E5E4]">
         <div className="container-custom max-w-3xl">
           <h2 className="text-2xl md:text-3xl font-light text-[#1C1917] mb-6" style={{ fontFamily: '"DM Serif Display", serif' }}>
             {en ? "What it means in practice" : "Ce que ça donne concrètement"}
@@ -383,7 +512,7 @@ function OfferActive({ en, L, title, description, labels }: { en: boolean; L: "f
       <FaqSection title={en ? "The offer, question by question" : "L'offre, question par question"} items={faq} emitSchema id="faq-offre" />
 
       {/* 7. Rappel du bouton (D2 du 13/10/2026 : plus de ligne « premier servi » ici, elle reste dans les conditions). */}
-      <section className="py-16 lg:py-24 bg-white">
+      <section id="offre-rappel" className="py-16 lg:py-24 bg-white">
         <div className="container-custom max-w-3xl text-center">
           <h2 className="text-2xl md:text-3xl font-light text-[#1C1917] mb-6" style={{ fontFamily: '"DM Serif Display", serif' }}>
             {en ? `Settle in before winter: sign by ${endLabel}` : `Pose tes valises avant l'hiver : signe d'ici le ${endLabel}`}
@@ -391,6 +520,9 @@ function OfferActive({ en, L, title, description, labels }: { en: boolean; L: "f
           <ApplyButton en={en} L={L} className="w-full sm:w-auto" />
         </div>
       </section>
+
+      {/* Barre « Je candidate » mobile (option D du 19/10/2026). */}
+      <StickyApplyBar en={en} L={L} />
 
       {/* État chambres embarqué au prérendu — toutes maisons, instance unique par page. */}
       <RoomsEmbed />
