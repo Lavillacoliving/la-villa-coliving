@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { ArrowRight, Check } from "lucide-react";
 import { SEO } from "@/components/SEO";
 import { LocalizedLink } from "@/components/LocalizedLink";
@@ -63,17 +63,62 @@ import {
 const fmtChf = (n: number, en: boolean) => (en ? `CHF ${thousands(n, ",")}` : `${thousands(n, "\u00a0")} CHF`);
 const fmtEur = (n: number, en: boolean) => (en ? `€${thousands(n, ",")}` : `${thousands(n, "\u00a0")} €`);
 
-/** Bouton « Je candidate » → /candidature?offre=hiver, mesuré en `offer_cta_click` (placement = landing). */
-function ApplyButton({ en, L, className = "" }: { en: boolean; L: "fr" | "en"; className?: string }) {
+/** Bouton « Je candidate » → /candidature?offre=hiver, mesuré en `offer_cta_click` (placement = landing, sticky pour la barre mobile). */
+function ApplyButton({
+  en,
+  L,
+  className = "",
+  placement = "landing",
+  compact = false,
+}: {
+  en: boolean;
+  L: "fr" | "en";
+  className?: string;
+  placement?: "landing" | "sticky";
+  compact?: boolean;
+}) {
   return (
     <LocalizedLink
       to={`/candidature?${OFFER_QUERY}`}
-      onClick={() => trackOfferCta("landing", { language: L })}
-      className={`inline-flex items-center justify-center gap-2 px-8 py-4 bg-[#1C1917] text-white font-semibold rounded-lg hover:bg-[#44403C] transition-colors ${className}`}
+      onClick={() => trackOfferCta(placement, { language: L })}
+      className={`inline-flex items-center justify-center gap-2 ${compact ? "px-6 py-3 text-sm" : "px-8 py-4"} bg-[#1C1917] text-white font-semibold rounded-lg hover:bg-[#44403C] transition-colors ${className}`}
     >
       {en ? "Apply now" : "Je candidate"}
-      <ArrowRight className="w-5 h-5" />
+      <ArrowRight className={compact ? "w-4 h-4" : "w-5 h-5"} />
     </LocalizedLink>
+  );
+}
+
+/**
+ * Option D du brief du 19/10/2026 (à trancher par Jérôme, commit séparé) : barre « Je candidate » fixe en bas, mobile
+ * seulement, même habillage que les barres des pages maisons. Elle apparaît une fois le hero passé et disparaît dès que le
+ * rappel final (section 7, qui a déjà son bouton) arrive à l'écran. Masquée au premier rendu, prérendu compris (capture en
+ * haut de page) : zéro impact d'hydratation.
+ */
+function StickyApplyBar({ en, L }: { en: boolean; L: "fr" | "en" }) {
+  const [visible, setVisible] = useState(false);
+  useEffect(() => {
+    const hero = document.getElementById("offre-hero");
+    const last = document.getElementById("offre-rappel");
+    if (!hero || !last || typeof IntersectionObserver === "undefined") return;
+    let heroPassed = false;
+    let lastReached = false;
+    const observer = new IntersectionObserver((entries) => {
+      for (const entry of entries) {
+        if (entry.target === hero) heroPassed = !entry.isIntersecting && entry.boundingClientRect.top < 0;
+        else lastReached = entry.isIntersecting || entry.boundingClientRect.top < 0;
+      }
+      setVisible(heroPassed && !lastReached);
+    });
+    observer.observe(hero);
+    observer.observe(last);
+    return () => observer.disconnect();
+  }, []);
+  if (!visible) return null;
+  return (
+    <div data-offer-sticky className="md:hidden fixed bottom-0 inset-x-0 z-40 bg-white/95 backdrop-blur border-t border-[#E7E5E4] px-4 py-3">
+      <ApplyButton en={en} L={L} placement="sticky" compact className="w-full" />
+    </div>
   );
 }
 
@@ -248,7 +293,7 @@ function OfferActive({ en, L, title, description, labels }: { en: boolean; L: "f
       {/* 1. Hero — sans image (LCP = le H1) ; date limite + bouton visibles sans défiler à 390 px.
           Rebrief du 12/10 : nom de l'offre en surtitre, H1 = la promesse (D6), compteur de chambres (D7).
           Brief du 19/10 : ligne « produit » sous le H1 (quoi, combien, où), puis les conditions en une phrase. */}
-      <section className="py-10 md:py-16 lg:py-20 bg-[#F5F2ED]">
+      <section id="offre-hero" className="py-10 md:py-16 lg:py-20 bg-[#F5F2ED]">
         <div className="container-custom max-w-3xl text-center">
           <p className="mb-3 text-xs sm:text-sm font-semibold uppercase tracking-[0.18em] text-[#9A5B08]">{T.name}</p>
           <h1 className="text-4xl md:text-5xl lg:text-6xl font-light text-[#1C1917] mb-4" style={{ fontFamily: '"DM Serif Display", serif' }}>
@@ -467,7 +512,7 @@ function OfferActive({ en, L, title, description, labels }: { en: boolean; L: "f
       <FaqSection title={en ? "The offer, question by question" : "L'offre, question par question"} items={faq} emitSchema id="faq-offre" />
 
       {/* 7. Rappel du bouton (D2 du 13/10/2026 : plus de ligne « premier servi » ici, elle reste dans les conditions). */}
-      <section className="py-16 lg:py-24 bg-white">
+      <section id="offre-rappel" className="py-16 lg:py-24 bg-white">
         <div className="container-custom max-w-3xl text-center">
           <h2 className="text-2xl md:text-3xl font-light text-[#1C1917] mb-6" style={{ fontFamily: '"DM Serif Display", serif' }}>
             {en ? `Settle in before winter: sign by ${endLabel}` : `Pose tes valises avant l'hiver : signe d'ici le ${endLabel}`}
@@ -475,6 +520,9 @@ function OfferActive({ en, L, title, description, labels }: { en: boolean; L: "f
           <ApplyButton en={en} L={L} className="w-full sm:w-auto" />
         </div>
       </section>
+
+      {/* Barre « Je candidate » mobile (option D du 19/10/2026). */}
+      <StickyApplyBar en={en} L={L} />
 
       {/* État chambres embarqué au prérendu — toutes maisons, instance unique par page. */}
       <RoomsEmbed />

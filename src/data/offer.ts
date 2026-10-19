@@ -126,7 +126,8 @@ export function formatOfferDate(iso: string, lang: "fr" | "en"): string {
 }
 
 // ── Télémétrie GA4 (brief §1) ─────────────────────────────────────────────────────────────────
-export type OfferPlacement = "landing" | "banner" | "rooms";
+/** `sticky` = barre fixe mobile de /offre-hiver (option D du brief du 19/10/2026). */
+export type OfferPlacement = "landing" | "banner" | "rooms" | "sticky";
 
 /** `offer_cta_click` — paramètres `offer` + `placement` (+ contexte libre). Jamais bloquant. */
 export function trackOfferCta(placement: OfferPlacement, extra: Record<string, string | number> = {}): void {
