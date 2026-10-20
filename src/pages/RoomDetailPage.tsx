@@ -218,13 +218,13 @@ export function RoomDetailPage() {
     <div className="bg-white rounded-2xl border border-[#E7E5E4] shadow-sm p-6">
       {room?.rent_chf != null && (
         <p className="text-3xl font-black text-[#D4A574]">
-          {en ? `CHF ${thousands(room.rent_chf, ",")}` : `${thousands(room.rent_chf, " ")} CHF`}
+          {en ? `CHF ${thousands(room.rent_chf, ",")}` : `${thousands(room.rent_chf, "\u00a0")} CHF`}
           <span className="text-base font-light text-[#78716C]">{en ? " /month" : " /mois"}</span>
         </p>
       )}
       <p className="text-sm text-[#78716C] mt-1">
         {en ? "All inclusive" : "Tout inclus"}
-        {rentEur !== null && (en ? ` · contractual rent €${thousands(rentEur, ",")}` : ` · loyer contractuel ${thousands(rentEur, " ")} €`)}
+        {rentEur !== null && (en ? ` · contractual rent €${thousands(rentEur, ",")}` : ` · loyer contractuel ${thousands(rentEur, "\u00a0")} €`)}
       </p>
       {status.badge && (
         <p className={`mt-4 inline-flex items-center gap-2 px-3 py-1.5 text-sm font-semibold rounded-lg ${BADGE_PANEL_CLASS[status.tone]}`}>

@@ -1,6 +1,8 @@
 import { useEffect, useLayoutEffect, useRef, useState, type FormEvent } from "react";
 import { useSearchParams } from "react-router-dom";
 import { useLanguage } from "@/contexts/LanguageContext";
+import { LocalizedLink } from "@/components/LocalizedLink";
+import { VERIFY_ARTICLE_PATH, VERIFY_LINK_LABEL } from "@/data/verifyArticle";
 import { ArrowRight, Check, Shield, Loader2, Star, Users, Calendar, ChevronDown, ChevronUp, MessageCircle } from "lucide-react";
 import { SEO } from "@/components/SEO";
 import { SUPABASE_URL, SUPABASE_ANON_KEY } from "@/lib/supabase";
@@ -374,6 +376,12 @@ export function JoinPageV4() {
               {language === "en" ? "No application fee" : "Aucun frais de dossier"}
             </span>
           </div>
+          {/* (Article « C'est réel ? », 16/10/2026) Lien texte discret sous le bandeau de réassurance, toujours visible. */}
+          <p className="-mt-4 mb-8 text-center text-xs">
+            <LocalizedLink to={VERIFY_ARTICLE_PATH} className="text-[#78716C] underline underline-offset-4 hover:text-[#1C1917]">
+              {language === "en" ? `${VERIFY_LINK_LABEL.howTo.en} →` : `${VERIFY_LINK_LABEL.howTo.fr} →`}
+            </LocalizedLink>
+          </p>
 
           {status === "success" ? (
             <div ref={successRef} className="bg-white border border-[#E7E5E4] p-12 md:p-16 text-center scroll-mt-24">

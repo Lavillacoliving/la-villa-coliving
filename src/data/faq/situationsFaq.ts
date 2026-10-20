@@ -80,7 +80,7 @@ export const situationsFaq: SituationFaq[] = [
     id: "studio-vs-room",
     fr: {
       q: "Studio à Genève ou chambre chez La Villa : qu'est-ce qui revient le moins cher, tout compris ?",
-      a: `Compare le coût total, pas le loyer affiché. Un studio à Genève se loue 1 200 à 2 500 CHF par mois hors charges d'après les annonces relevées en 2026, auxquels s'ajoutent charges, internet, meubles et souvent une liste d'attente. Chez nous, une chambre meublée de ${STATS.roomSizeMin} à ${STATS.roomSizeMax} m² coûte dès ${PRICE_SHARED_CHF_FR}/mois (${PRICE_CHF_FR} avec salle d'eau privative), charges, fibre, ménage des communs, piscine, sauna et salle de sport compris, avec ${STATS.livingSpacePerResidentMin} à ${STATS.livingSpacePerResidentMax} m² d'espace de vie par colocataire. Le studio garde un avantage : être seul chez soi. À toi de voir ce que tu achètes.`,
+      a: `Compare le coût total, pas le loyer affiché. Un studio à Genève se loue 1\u00a0200 à 2\u00a0500 CHF par mois hors charges d'après les annonces relevées en 2026, auxquels s'ajoutent charges, internet, meubles et souvent une liste d'attente. Chez nous, une chambre meublée de ${STATS.roomSizeMin} à ${STATS.roomSizeMax} m² coûte dès ${PRICE_SHARED_CHF_FR}/mois (${PRICE_CHF_FR} avec salle d'eau privative), charges, fibre, ménage des communs, piscine, sauna et salle de sport compris, avec ${STATS.livingSpacePerResidentMin} à ${STATS.livingSpacePerResidentMax} m² d'espace de vie par colocataire. Le studio garde un avantage : être seul chez soi. À toi de voir ce que tu achètes.`,
       more: { href: "/blog/coliving-colocation-ou-studio-geneve-comparatif", label: "Coliving, colocation ou studio : le comparatif par profil" },
     },
     en: {

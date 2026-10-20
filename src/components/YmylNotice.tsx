@@ -2,7 +2,7 @@ import { useLanguage } from "@/contexts/LanguageContext";
 import { LocalizedLink } from "@/components/LocalizedLink";
 import { Linkedin } from "lucide-react";
 import { STATS } from "@/data/stats";
-import { getFounderByAuthorName, ABOUT_PAGE_LIVE } from "@/lib/structuredData";
+import { getFounderByAuthorName, getFoundersByAuthorName, ABOUT_PAGE_LIVE, type Founder } from "@/lib/structuredData";
 import { YMYL_ARTICLES, YMYL_NOT_US, extractOfficialSources } from "@/lib/ymyl";
 
 /**
@@ -92,6 +92,9 @@ export function YmylNotice({ content }: { content: string }) {
 export function AuthorBox({ author }: { author: string }) {
   const { language } = useLanguage();
   const fr = language !== "en";
+  const founders = getFoundersByAuthorName(author);
+  // (D9 / Q17, 16/10/2026) Article signé des deux fondateurs : prénoms seuls, un lien « Qui sommes-nous », deux LinkedIn.
+  if (founders.length === 2) return <AuthorBoxDuo fr={fr} founders={founders} />;
   const founder = getFounderByAuthorName(author);
   if (!founder) return null;
   // Tant que /qui-sommes-nous n'est pas routée (ABOUT_PAGE_LIVE=false), le nom
@@ -145,6 +148,52 @@ export function AuthorBox({ author }: { author: string }) {
             <Linkedin size={14} />
             LinkedIn
           </a>
+        </p>
+      </div>
+    </aside>
+  );
+}
+
+/** Bloc auteur d'un article signé « Jérôme et Fanny » (AUTHOR_DUO) — prénoms seuls à l'écran (D9), noms complets en JSON-LD. */
+function AuthorBoxDuo({ fr, founders }: { fr: boolean; founders: Founder[] }) {
+  const names = founders.map((f) => f.name.split(" ")[0]).join(fr ? " et " : " and ");
+  return (
+    <aside className="mt-6 p-5 border border-[#E7E5E4] rounded-lg flex items-start gap-4">
+      <div aria-hidden="true" className="flex -space-x-3 flex-shrink-0">
+        {founders.map((f) => (
+          <div
+            key={f.name}
+            className="w-12 h-12 rounded-full bg-[#1C1917] text-[#D4A574] border-2 border-white flex items-center justify-center text-lg"
+            style={{ fontFamily: '"DM Serif Display", serif' }}
+          >
+            {f.name.charAt(0)}
+          </div>
+        ))}
+      </div>
+      <div className="text-sm text-[#57534E] leading-relaxed">
+        <p>
+          {fr
+            ? `Écrit par ${names}, cofondateurs de La Villa Coliving. Depuis ${STATS.foundedYear}, on loge et on accompagne des frontaliers près de Genève, et on gère nos trois maisons nous-mêmes.`
+            : `Written by ${names}, co-founders of La Villa Coliving. Since ${STATS.foundedYear}, we've housed and supported cross-border workers near Geneva, and we run our three houses ourselves.`}
+        </p>
+        <p className="mt-2 flex flex-wrap items-center gap-x-4 gap-y-1">
+          {ABOUT_PAGE_LIVE && (
+            <LocalizedLink to="/qui-sommes-nous" className="text-[#D4A574] hover:underline">
+              {fr ? "Qui sommes-nous" : "Who we are"}
+            </LocalizedLink>
+          )}
+          {founders.map((f) => (
+            <a
+              key={f.linkedin}
+              href={f.linkedin}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-1 text-[#78716C] hover:text-[#D4A574] transition-colors"
+            >
+              <Linkedin size={14} />
+              {`LinkedIn · ${f.name.split(" ")[0]}`}
+            </a>
+          ))}
         </p>
       </div>
     </aside>

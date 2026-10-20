@@ -87,7 +87,7 @@ test('unknownMarkers : signale <!-- foo --> et <!-- ou-chercher:long -->, pas le
   assert.equal(isKnownMarker('ou-chercher', 'long'), false);
   assert.equal(isKnownMarker('ou-chercher', 'court'), true);
   assert.equal(isKnownMarker('entity-facts'), true);
-  assert.deepEqual(Object.keys(KNOWN_MARKERS).sort(), ['entity-facts', 'ou-chercher']);
+  assert.deepEqual(Object.keys(KNOWN_MARKERS).sort(), ['entity-facts', 'ou-chercher', 'verifier']);
   const all = findAllMarkers(md);
   assert.deepEqual(all.map((x) => [x.name, x.variant]), [['foo', undefined], ['ou-chercher', 'long'], ['ou-chercher', 'court'], ['entity-facts', undefined]]);
   assert.equal(new RegExp(COMMENT_LINE_RE.source, 'm').test('<!-- a\nb -->'), false, 'jamais à travers plusieurs lignes');
@@ -100,4 +100,48 @@ test('wordCount : toute ligne-commentaire est ignorée (connue ou non), les comm
   assert.equal(wordCount('un deux\n<!-- foo -->\n<!-- bar -->\ntrois quatre'), 4);
   assert.equal(wordCount('<!-- seul -->'), 0);
   assert.equal(wordCount('un <!-- x --> deux'), 5, 'inline : non retiré, ses 3 jetons comptent (react-markdown l\'afficherait, la garde d\'orphelins le verrait)');
+});
+
+// (16/10/2026, article « C'est réel ? ») Profil « service » : article sans prix — ni tableau d'options ni fiche entité.
+function serviceDraft({ words = 1200, lang = 'fr', verifier = 1, court = 1, entity = false, faqPairs = 0 } = {}) {
+  const pre = lang === 'en' ? '/en' : '';
+  const links = `[Candidater](${pre}/candidature) · [maisons](${pre}/nos-maisons) · [dossier](${pre}/blog/dossier-location-frontalier-suisse-france)`;
+  const v = Array.from({ length: verifier }, () => '<!-- verifier -->').join('\n\n');
+  const c = Array.from({ length: court }, () => '<!-- verifier:court -->').join('\n\n');
+  const sections = Array.from({ length: 5 }, (_, i) => `## Section ${i + 1}\n\n${filler(Math.floor(words / 5))}`).join('\n\n');
+  const faqMd = faqPairs ? `\n\n## Questions fréquentes\n\n${faq(faqPairs)}` : '';
+  return `Chapô. ${filler(20)}\n\n${c}\n\n${sections}\n\n${v}\n\n${entity ? `${ENTITY_FACTS_MARKER}\n\nphrase.\n\n` : ''}${links}${faqMd}\n`;
+}
+
+test('profil service : conforme sans tableau, sans fiche entité, sans FAQ, sans « pas le bon choix »', () => {
+  const r = checkContent(serviceDraft(), 'fr', { profile: 'service' });
+  assert.deepEqual(r.failures, [], r.failures.join('\n'));
+  const e = checkContent(serviceDraft({ lang: 'en' }), 'en', { profile: 'service' });
+  assert.deepEqual(e.failures, [], e.failures.join('\n'));
+  // Le même brouillon échoue en profil décision (défaut) : la règle par défaut est inchangée.
+  assert.match(checkContent(serviceDraft(), 'fr').failures.join('\n'), /tableau d'options absent/);
+});
+
+test('profil service : fiche entité refusée, marqueurs verifier au plus 1 par variante, mots 800-2 200, FAQ validée si présente', () => {
+  assert.match(checkContent(serviceDraft({ entity: true }), 'fr', { profile: 'service' }).failures.join('\n'), /article de service/);
+  assert.match(checkContent(serviceDraft({ verifier: 2 }), 'fr', { profile: 'service' }).failures.join('\n'), /2 marqueurs « verifier »/);
+  assert.match(checkContent(serviceDraft({ court: 2 }), 'fr', { profile: 'service' }).failures.join('\n'), /2 marqueurs « verifier:court »/);
+  assert.match(checkContent(serviceDraft({ words: 500 }), 'fr', { profile: 'service' }).failures.join('\n'), /mots \(attendu 800-2200\)/);
+  assert.match(checkContent(serviceDraft({ faqPairs: 2 }), 'fr', { profile: 'service' }).failures.join('\n'), /2 paire\(s\) FAQ/);
+});
+
+test('meta : auteur duo accepté sans avertissement, format hors liste refusé', () => {
+  const base = { slug: 'a-b', title_fr: 'Titre', title_en: 'Title', excerpt_fr: 'x', excerpt_en: 'x', meta_description_fr: 'd'.repeat(120), meta_description_en: 'd'.repeat(120), category: 'tips', tags: ['a', 'b', 'c'], image_url: '/x.webp' };
+  const duo = checkMeta({ ...base, author: 'Jerome Austin & Fanny Bela', format: 'service' });
+  assert.deepEqual(duo.failures, []);
+  assert.ok(!duo.warnings.some((w) => /author/.test(w)), duo.warnings.join('\n'));
+  assert.match(checkMeta({ ...base, author: 'Jerome Austin', format: 'blog' }).failures.join('\n'), /format « blog »/);
+});
+
+test('meta : title qui porte déjà la marque — servi nu, limite 70 sans suffixe, avertissement si la marque serait doublée', () => {
+  const base = { slug: 'a-b', title_en: 'Title', excerpt_fr: 'x', excerpt_en: 'x', meta_description_fr: 'd'.repeat(120), meta_description_en: 'd'.repeat(120), author: 'Jerome Austin', category: 'tips', tags: ['a', 'b', 'c'], image_url: '/x.webp' };
+  const ok = checkMeta({ ...base, title_fr: "Non, La Villa Coliving n'est pas une arnaque (et comment le vérifier)" });
+  assert.deepEqual(ok.failures, [], ok.failures.join('\n'));
+  assert.match(checkMeta({ ...base, title_fr: `La Villa Coliving ${'x'.repeat(60)}` }).failures.join('\n'), /servi sans suffixe/);
+  assert.match(checkMeta({ ...base, title_fr: 'La Villa Coliving, court' }).warnings.join('\n'), /deux fois/);
 });

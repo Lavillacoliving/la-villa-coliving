@@ -177,6 +177,10 @@
       "destination": "/prerendered/en-politique-de-confidentialite.html"
     },
     {
+      "source": "/blog/non-la-villa-coliving-nest-pas-une-arnaque",
+      "destination": "/prerendered/blog-non-la-villa-coliving-nest-pas-une-arnaque.html"
+    },
+    {
       "source": "/blog/coliving-colocation-ou-studio-geneve-comparatif",
       "destination": "/prerendered/blog-coliving-colocation-ou-studio-geneve-comparatif.html"
     },
@@ -339,6 +343,10 @@
     {
       "source": "/blog/living-in-france-working-in-geneva",
       "destination": "/prerendered/blog-living-in-france-working-in-geneva.html"
+    },
+    {
+      "source": "/en/blog/non-la-villa-coliving-nest-pas-une-arnaque",
+      "destination": "/prerendered/en-blog-non-la-villa-coliving-nest-pas-une-arnaque.html"
     },
     {
       "source": "/en/blog/coliving-colocation-ou-studio-geneve-comparatif",
@@ -1235,6 +1243,21 @@
     {
       "source": "/en/blog/s-installer-geneve-expatrie-cote-suisse-cote-france",
       "destination": "/en/blog/s-installer-a-geneve-expatrie-cote-suisse-ou-cote-france",
+      "permanent": true
+    },
+    {
+      "source": "/cest-reel",
+      "destination": "/blog/non-la-villa-coliving-nest-pas-une-arnaque",
+      "permanent": true
+    },
+    {
+      "source": "/en/cest-reel",
+      "destination": "/en/blog/non-la-villa-coliving-nest-pas-une-arnaque",
+      "permanent": true
+    },
+    {
+      "source": "/is-this-real",
+      "destination": "/en/blog/non-la-villa-coliving-nest-pas-une-arnaque",
       "permanent": true
     }
   ],

@@ -5,6 +5,7 @@ import { useLanguage } from "@/contexts/LanguageContext";
 import { SEO } from "@/components/SEO";
 import { buildBreadcrumbSchema, HOUSES, LAVILLA_EMAIL, LAVILLA_PHONE, LAVILLA_POSTAL_ADDRESS, LAVILLA_SAME_AS, ORG_ID, LAVILLA_ALTERNATE_NAMES } from "@/lib/structuredData";
 import { STATS, STATS_DISPLAY, PRICE_SHARED_CHF_FR, PRICE_SHARED_CHF_EN, MARKET_COMPARISON } from "@/data/stats";
+import { VERIFY_ARTICLE_PATH, VERIFY_LINK_LABEL } from "@/data/verifyArticle";
 import {
   Linkedin,
   Mail,
@@ -338,8 +339,8 @@ export function QuiSommesNousPage() {
                     en: <><strong className="text-[#1C1917]">{`Since October ${STATS.foundedYear}, ${STATS.totalResidents}+ residents hosted`}</strong> — a real track record, not a promise.</>,
                   },
                   {
-                    fr: <><strong className="text-[#1C1917]">De vraies maisons, de vraies adresses.</strong> Viens les visiter avant de signer — sur place ou en visio.</>,
-                    en: <><strong className="text-[#1C1917]">Real houses, real addresses.</strong> Come visit before you sign — in person or by video call.</>,
+                    fr: <><strong className="text-[#1C1917]">De vraies maisons, de vraies adresses.</strong> Viens les visiter avant de signer — sur place ou en visio. <LocalizedLink to={VERIFY_ARTICLE_PATH} className="text-[#A0623C] underline underline-offset-2 hover:text-[#1C1917]">{VERIFY_LINK_LABEL.howTo.fr}</LocalizedLink>.</>,
+                    en: <><strong className="text-[#1C1917]">Real houses, real addresses.</strong> Come visit before you sign — in person or by video call. <LocalizedLink to={VERIFY_ARTICLE_PATH} className="text-[#A0623C] underline underline-offset-2 hover:text-[#1C1917]">{VERIFY_LINK_LABEL.howTo.en}</LocalizedLink>.</>,
                   },
                   {
                     fr: <><strong className="text-[#1C1917]">Un seul prix, tout inclus.</strong> Aucun frais de dossier, aucun honoraire d'agence.</>,

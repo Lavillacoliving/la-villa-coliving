@@ -498,6 +498,24 @@ export async function decisionPageSlugs() {
   } catch { return []; }
 }
 
+/**
+ * (19/10/2026) Pages de décision qui portent la fiche entité : toutes sauf le profil `service` (meta.format, README de
+ * content/decision-pages, 16/10/2026) — article de service sans prix, « ni tableau d'options ni fiche entité », marqueur
+ * refusé à la rédaction (scripts/lib/article-checks.mjs). Ex. « Non, La Villa Coliving n'est pas une arnaque ». Sans cette
+ * exclusion, la garde exigeait le bloc sur cet article et bloquait tous les prérendus depuis sa publication (16/10, 14 h 44).
+ */
+export async function entityFactsDecisionSlugs() {
+  const out = [];
+  for (const slug of await decisionPageSlugs()) {
+    let format = 'decision';
+    try {
+      format = JSON.parse(await fs.readFile(path.join(ROOT, 'content', 'decision-pages', `${slug}.meta.json`), 'utf8')).format ?? 'decision';
+    } catch { /* meta illisible : profil par défaut (decision), le bloc reste exigé */ }
+    if (format !== 'service') out.push(slug);
+  }
+  return out;
+}
+
 async function checkHtml(m) {
   const failures = [], warnings = [];
   const F = m.ENTITY_FACTS;
@@ -508,7 +526,8 @@ async function checkHtml(m) {
   // Pages de décision (brief « Conquête IA », C0) : elles posent le marqueur <!-- entity-facts --> dans leur
   // markdown, donc le bloc est rendu ; leur périmètre se déduit de content/decision-pages/<slug>.meta.json.
   // Seules les pages publiées (fichier prérendu présent) entrent dans le périmètre : un brouillon n'a pas de HTML.
-  for (const slug of await decisionPageSlugs()) {
+  // Profil `service` exclu (entityFactsDecisionSlugs) : il ne porte pas la fiche, et la garde y vérifie 0 bloc (« hors périmètre »).
+  for (const slug of await entityFactsDecisionSlugs()) {
     if (files.includes(`blog-${slug}.html`)) { inScope.set(`blog-${slug}.html`, 'fr'); inScope.set(`en-blog-${slug}.html`, 'en'); }
   }
   for (const f of inScope.keys()) if (!files.includes(f)) failures.push(`${f} : page prérendue ABSENTE (périmètre du bloc entité)`);

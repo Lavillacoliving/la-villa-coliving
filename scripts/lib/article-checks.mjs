@@ -13,7 +13,7 @@ export const ENTITY_FACTS_MARKER_RE = /^[ \t]*<!--\s*entity-facts\s*-->[ \t]*$/g
 /** (Lot L1, 10/2026) Miroirs de src/lib/contentMarkers.ts : registre des marqueurs et lignes-commentaires. */
 export const CONTENT_MARKER_LINE_RE = /^[ \t]*<!--[ \t]*([a-z][a-z-]*)(?::([a-z]+))?[ \t]*-->[ \t]*$/gm;
 export const COMMENT_LINE_RE = /^[ \t]*<!--[^\n]*?-->[ \t]*$/gm;
-export const KNOWN_MARKERS = { 'entity-facts': [], 'ou-chercher': ['court'] };
+export const KNOWN_MARKERS = { 'entity-facts': [], 'ou-chercher': ['court'], verifier: ['court'] };
 
 export const TITLE_SUFFIX = ' | La Villa Coliving';
 export const TITLE_MAX_FULL = 70;      // scripts/seo-lint.mjs TITLE_MAX
@@ -24,6 +24,16 @@ export const FAQ = { min: 5, max: 8 };
 export const CATEGORIES = ['coliving', 'lifestyle', 'tips', 'geneva', 'community'];
 export const BUCKETS = ['high', 'medium', 'ville', 'admin', 'life', 'coliving'];
 export const AUTHOR_CANONICAL = 'Jerome Austin';
+/** (D9 / Q17, 16/10/2026) Article signé des deux fondateurs — miroir de src/lib/structuredData.ts (AUTHOR_DUO). */
+export const AUTHOR_DUO = 'Jerome Austin & Fanny Bela';
+/**
+ * (Article « C'est réel ? », 16/10/2026) Profils de brouillon (`meta.format`) :
+ *  - `decision` (défaut) : page de décision du brief « Conquête IA » — tableau d'options, fiche entité, FAQ, 1 800-2 500 mots ;
+ *  - `service` : article de service SANS prix (ni tableau d'options ni fiche entité, qui portent le prix) — 800-2 200 mots,
+ *    ≥ 5 sections, FAQ facultative (validée si présente), mêmes règles de liens, de tokens et de marqueurs.
+ */
+export const FORMATS = ['decision', 'service'];
+export const SERVICE_WORDS = { min: 800, max: 2200 };
 
 /** Pages money (au moins un lien sortant obligatoire). */
 export const MONEY_PAGES = ['/colocation-geneve', '/chambre-a-louer-geneve', '/chambres-disponibles', '/annemasse-colocation', '/chambre-a-louer-annemasse', '/tarifs', '/nos-maisons', '/lavilla', '/leloft', '/lelodge', '/le-coliving'];
@@ -148,7 +158,8 @@ function isInternal(href) {
  */
 export function checkContent(md, lang, opts = {}) {
   const failures = [], warnings = [];
-  const words = opts.words ?? WORDS;
+  const service = opts.profile === 'service';
+  const words = opts.words ?? (service ? SERVICE_WORDS : WORDS);
   const n = wordCount(md);
   if (n < words.min || n > words.max) failures.push(`${lang} : ${n} mots (attendu ${words.min}-${words.max})`);
   if (md.includes('$$')) failures.push(`${lang} : « $$ » interdit dans le contenu (dollar-quoting du SQL)`);
@@ -160,11 +171,17 @@ export function checkContent(md, lang, opts = {}) {
   if (unk2.length) failures.push(`${lang} : ligne(s)-commentaire hors registre ${unk2.map((s) => `« ${s} »`).join(', ')} (registre : ${Object.keys(KNOWN_MARKERS).join(', ')})`);
   const ouMarkers = findAllMarkers(md).filter((m) => m.name === 'ou-chercher');
   if (ouMarkers.length > 1) failures.push(`${lang} : ${ouMarkers.length} marqueurs « ou-chercher » (au plus 1)`);
+  for (const variant of [undefined, 'court']) {
+    const n = findAllMarkers(md).filter((m) => m.name === 'verifier' && m.variant === variant).length;
+    if (n > 1) failures.push(`${lang} : ${n} marqueurs « verifier${variant ? `:${variant}` : ''} » (au plus 1)`);
+  }
 
-  // Marqueur du bloc entité
+  // Marqueur du bloc entité (profil `decision` seulement : en `service`, ni fiche entité ni tableau d'options — ils portent le prix)
   const markers = findMarkers(md);
   const tables = extractGfmTables(md);
-  if (markers.length !== 1) failures.push(`${lang} : ${markers.length} marqueur(s) « ${ENTITY_FACTS_MARKER} » (attendu exactement 1)`);
+  if (service) {
+    if (markers.length) failures.push(`${lang} : marqueur « ${ENTITY_FACTS_MARKER} » dans un article de service (la fiche entité affiche le prix)`);
+  } else if (markers.length !== 1) failures.push(`${lang} : ${markers.length} marqueur(s) « ${ENTITY_FACTS_MARKER} » (attendu exactement 1)`);
   else {
     const mk = markers[0];
     if (mk.index < md.length * 0.4) failures.push(`${lang} : le marqueur est dans les 40 % de tête (${Math.round((100 * mk.index) / md.length)} %) — le bloc entité vient après le tableau d'options, jamais en tête`);
@@ -173,24 +190,29 @@ export function checkContent(md, lang, opts = {}) {
     if (!after.trim() || /^(#|\||[-*+]\s|>|\d+\.\s|<!--)/.test(after.trim())) failures.push(`${lang} : le marqueur doit être suivi d'un paragraphe (la phrase de contexte de la page), pas d'un titre/liste/tableau`);
   }
 
-  // Tableau d'options : colonnes imposées, ≥ 4 lignes
+  // Tableau d'options : colonnes imposées, ≥ 4 lignes (profil `decision`)
   const expectedHeaders = (opts.optionsTableHeaders ?? OPTIONS_TABLE_HEADERS)[lang];
   const options = tables.find((t) => t.headers.length === expectedHeaders.length && t.headers.every((h, i) => h.toLowerCase() === expectedHeaders[i].toLowerCase()));
-  if (!options) failures.push(`${lang} : tableau d'options absent — en-têtes attendus « | ${expectedHeaders.join(' | ')} | »`);
-  else if (options.rows < 4) failures.push(`${lang} : tableau d'options à ${options.rows} ligne(s) (attendu ≥ 4 catégories)`);
+  if (!service) {
+    if (!options) failures.push(`${lang} : tableau d'options absent — en-têtes attendus « | ${expectedHeaders.join(' | ')} | »`);
+    else if (options.rows < 4) failures.push(`${lang} : tableau d'options à ${options.rows} ligne(s) (attendu ≥ 4 catégories)`);
+  }
 
   // Structure : sections ##, pas de sommaire auto involontaire (≥ 4 « # »), section « pas le bon choix »
   const hs = extractHeadings(md);
   const h1 = hs.filter((h) => h.level === 1).length;
   const h2 = hs.filter((h) => h.level === 2).length;
   if (h1 >= 4) warnings.push(`${lang} : ${h1} titres « # » → le sommaire automatique s'affichera (voulu ?)`);
-  if (h2 < 6) failures.push(`${lang} : ${h2} sections « ## » (attendu ≥ 6)`);
-  if (!hs.some((h) => /pas le bon choix|not the right (choice|fit)|when (it'?s|it is) not for you|when not to/i.test(h.text))) failures.push(`${lang} : section « Quand ce n'est pas le bon choix » absente`);
-  if (!/^\s*(\*\*|##\s*)?(En bref|In short|Key takeaways)/im.test(md)) warnings.push(`${lang} : bloc « En bref » / « In short » absent après le chapô`);
+  const minH2 = service ? 5 : 6;
+  if (h2 < minH2) failures.push(`${lang} : ${h2} sections « ## » (attendu ≥ ${minH2})`);
+  if (!service) {
+    if (!hs.some((h) => /pas le bon choix|not the right (choice|fit)|when (it'?s|it is) not for you|when not to/i.test(h.text))) failures.push(`${lang} : section « Quand ce n'est pas le bon choix » absente`);
+    if (!/^\s*(\*\*|##\s*)?(En bref|In short|Key takeaways)/im.test(md)) warnings.push(`${lang} : bloc « En bref » / « In short » absent après le chapô`);
+  }
 
   // FAQ : format reconnu par BlogPostPage, 5-8 paires, pas de ### dans la section
   const { pairs, section } = extractFaqPairs(md);
-  if (!section) failures.push(`${lang} : section FAQ absente (titre « ## Questions fréquentes … » ou « ## FAQ … »)`);
+  if (!section) { if (!service) failures.push(`${lang} : section FAQ absente (titre « ## Questions fréquentes … » ou « ## FAQ … »)`); }
   else {
     if (pairs.length < FAQ.min || pairs.length > FAQ.max) failures.push(`${lang} : ${pairs.length} paire(s) FAQ (attendu ${FAQ.min}-${FAQ.max}, format « **Question ?** » + paragraphe)`);
     if (/^###\s/m.test(section)) failures.push(`${lang} : « ### » dans la section FAQ (avalé dans la réponse précédente par extractFaqPairs)`);
@@ -223,8 +245,14 @@ export function checkMeta(meta) {
     const t = meta[`title_${lang}`] ?? '';
     const d = meta[`meta_description_${lang}`] ?? '';
     const x = meta[`excerpt_${lang}`] ?? '';
+    // (16/10/2026) Un title qui porte déjà la marque est servi nu au-delà de 65 car. (src/components/SEO.tsx, brandedTitle) :
+    // la limite est alors TITLE_MAX_FULL sans suffixe ; en deçà, le suffixe serait ajouté et doublerait la marque.
+    const branded = /La Villa Coliving/.test(t);
     if (!t.trim()) failures.push(`title_${lang} manquant`);
-    else if (t.length + TITLE_SUFFIX.length > TITLE_MAX_FULL) failures.push(`title_${lang} : ${t.length} car. + « ${TITLE_SUFFIX} » > ${TITLE_MAX_FULL}`);
+    else if (branded) {
+      if (t.length > TITLE_MAX_FULL) failures.push(`title_${lang} : ${t.length} car. > ${TITLE_MAX_FULL} (title qui porte déjà la marque, servi sans suffixe)`);
+      else if (t.length + TITLE_SUFFIX.length <= 65) warnings.push(`title_${lang} : la marque apparaîtra deux fois (« ${t}${TITLE_SUFFIX} »)`);
+    } else if (t.length + TITLE_SUFFIX.length > TITLE_MAX_FULL) failures.push(`title_${lang} : ${t.length} car. + « ${TITLE_SUFFIX} » > ${TITLE_MAX_FULL}`);
     if (/\d\s?(CHF|€|EUR)/.test(t)) failures.push(`title_${lang} : prix dans le title (interdit — décision S33)`);
     if (!d.trim()) failures.push(`meta_description_${lang} manquante`);
     else if (d.length > META_MAX) failures.push(`meta_description_${lang} : ${d.length} car. > ${META_MAX}`);
@@ -233,7 +261,8 @@ export function checkMeta(meta) {
     else if (x.length > 300) warnings.push(`excerpt_${lang} : ${x.length} car. (long pour une carte)`);
     for (const f of [t, d, x]) if (/\{\{/.test(f)) failures.push(`${lang} : token {{…}} dans title/meta/excerpt (résolus uniquement dans le contenu)`);
   }
-  if (meta.author !== AUTHOR_CANONICAL) warnings.push(`author « ${meta.author} » ≠ « ${AUTHOR_CANONICAL} » : pas de Person + AuthorBox (structuredData.getFounderByAuthorName)`);
+  if (meta.author !== AUTHOR_CANONICAL && meta.author !== AUTHOR_DUO) warnings.push(`author « ${meta.author} » ≠ « ${AUTHOR_CANONICAL} » / « ${AUTHOR_DUO} » : pas de Person + AuthorBox (structuredData.getFoundersByAuthorName)`);
+  if (meta.format !== undefined && !FORMATS.includes(meta.format)) failures.push(`format « ${meta.format} » hors liste (${FORMATS.join(', ')})`);
   if (!CATEGORIES.includes(meta.category)) failures.push(`category « ${meta.category} » hors liste (${CATEGORIES.join(', ')})`);
   if (!Array.isArray(meta.tags) || meta.tags.length < 3) failures.push('tags : tableau de ≥ 3 entrées attendu');
   if (meta.intent_bucket && !BUCKETS.includes(meta.intent_bucket)) failures.push(`intent_bucket « ${meta.intent_bucket} » hors liste (${BUCKETS.join(', ')})`);

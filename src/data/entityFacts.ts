@@ -65,6 +65,26 @@ export const GUARANTOR_SENTENCE = {
   en: "a guarantor is only asked for case by case, when the contract does not cover the rent — we tell you before we reply, never after the visit",
 } as const;
 
+/**
+ * Entité juridique PUBLIÉE (article « Non, La Villa Coliving n'est pas une arnaque », décision Q3 de Jérôme du 16/10/2026) —
+ * source unique du bloc de vérification (<VerifyBlock/>) et des mentions légales. Seule la SCI Sleep In est citée : elle
+ * porte le site et la marque ; la structure de détention de chaque maison n'est pas publiée (ne pas ajouter d'autre entité
+ * sans décision). Valeurs relevées sur l'annuaire officiel le 16/10/2026 (`registryUrl`, forme canonique de la fiche).
+ */
+export const LEGAL_ENTITY = {
+  name: "SCI Sleep In",
+  registeredName: "SLEEP IN",
+  capitalEur: "1 000",
+  siren: "882 153 810",
+  siretHq: "882 153 810 00016",
+  rcsCity: "Thonon-les-Bains",
+  registeredOn: "04/03/2020",
+  headOffice: "8 rue du Mont Blanc, 74100 Annemasse, France",
+  vat: "FR63882153810",
+  registryUrl: "https://annuaire-entreprises.data.gouv.fr/entreprise/sleep-in-882153810",
+  checkedOn: "2026-10-16",
+} as const;
+
 /** Ligne courte de trajet d'une maison (A.1, D1-L1) : deux segments « a · b » (RoomDetailPage les affiche séparément). */
 export function houseCommuteLine(slug: EntityHouseSlug, lang: EntityLang): string {
   const T = TRANSIT.byHouse[slug];

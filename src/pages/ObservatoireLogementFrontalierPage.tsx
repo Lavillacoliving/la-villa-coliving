@@ -71,25 +71,25 @@ const hub = COMMUNES.find((c) => c.name === "Annemasse")!; // 990 € studio, 8 
 // Annonces (arrivant) : relevé juin 2026, n = 25, Ville de Genève → médiane ≈ 50 CHF/m².
 // Écart +44 % (50,4 / 35,0). La médiane arrivant (50,4) ≈ le D9 du stock (51,3).
 const GENEVA_STOCK_M2 = 35; // CHF/m², locataire en place (médiane OCSTAT)
-const GENEVA_STOCK_CHF = "1 050"; // ≈ 35 × 30 m²
+const GENEVA_STOCK_CHF = "1\u00a0050"; // ≈ 35 × 30 m²
 const GENEVA_ANNONCE_M2 = 50; // CHF/m², nouvel arrivant (médiane annonces)
-const GENEVA_ANNONCE_CHF = "1 500"; // ≈ 50 × 30 m²
-const GENEVA_ECART_PCT = "+44 %"; // figé (50,4 / 35,0)
+const GENEVA_ANNONCE_CHF = "1\u00a0500"; // ≈ 50 × 30 m²
+const GENEVA_ECART_PCT = "+44\u00a0%"; // figé (50,4 / 35,0)
 // Déciles du stock OCSTAT (CHF/m²) : D1 20,6 · Q1 26,3 · médiane 35,0 · Q3 42,9 · D9 51,3 → voir observatoire-geneve-2026.csv.
 // Repère transfrontalier « 8 min » : Genève-Eaux-Vives = quartier premium (haut du marché), loyer d'annonce.
-const GENEVA_EAUXVIVES_CHF = "1 750"; // CHF/mois, studio Eaux-Vives (relevé Homegate, juin 2026)
+const GENEVA_EAUXVIVES_CHF = "1\u00a0750"; // CHF/mois, studio Eaux-Vives (relevé Homegate, juin 2026)
 // ── Taux de change (brief correction #2, 07/2026) : plus JAMAIS de « parité » €/CHF. ──
 // Taux figé de l'édition : 1 € = 0,92 CHF (juillet 2026) — affiché partout où l'on convertit.
 // Dérivés (arrondis d'affichage) : 990 € ≈ 910 CHF · 1 750 CHF ≈ 1 900 € · économie 1 750 − 911 ≈ 840 CHF ≈ 910 €
 //   · 1 360 CHF ≈ 1 480 € · studio coût complet 1 344 € ≈ 1 236 CHF (≈ 45 €/m² ≈ 41 CHF/m²).
 const FX_NOTE_FR = "Conversions au taux 1 € = 0,92 CHF (juillet 2026)";
 const FX_NOTE_EN = "Conversions at €1 = CHF 0.92 (July 2026)";
-const GENEVA_EAUXVIVES_EUR = "1 900"; // ≈ 1 750 / 0,92
+const GENEVA_EAUXVIVES_EUR = "1\u00a0900"; // ≈ 1 750 / 0,92
 const HUB_CHF = "910"; // ≈ 990 × 0,92
 const TRANSFRONT_DELTA_CHF = "840"; // 1 750 − (990 × 0,92 ≈ 911)
 const TRANSFRONT_DELTA_EUR = "910"; // ≈ 840 / 0,92
-const COLIVING_EUR = "1 480"; // ≈ 1 360 / 0,92
-const STUDIO_38M2_EUR = "1 700"; // lecture « à surface équivalente » : 38 m² × 44,8 €/m² (coût complet du studio) ≈ 1 702 €
+const COLIVING_EUR = "1\u00a0480"; // ≈ 1 360 / 0,92
+const STUDIO_38M2_EUR = "1\u00a0700"; // lecture « à surface équivalente » : 38 m² × 44,8 €/m² (coût complet du studio) ≈ 1 702 €
 
 type ModeKey = "pt" | "velo" | "voiture";
 type SortKey = "name" | "mois" | ModeKey;
@@ -120,7 +120,7 @@ export function ObservatoireLogementFrontalierPage() {
     // depuis OCCUPANCY / OCCUPANCY_DISPLAY (tuile + phrase « Côté tension ») : plus de « 98-99 % » figé ; CSV aligné à la main.
     description: en
       ? `Advertised studio rent (Observatory survey on Le Figaro Immobilier, June 2026) crossed with commute time to Geneva-Eaux-Vives, for 17 municipalities of the French Genevois along the Léman Express axis, including peak-hour train frequency. Geneva, a two-speed market: sitting tenants 35 CHF/m² (OCSTAT 2025) vs. newcomers ≈ 50 CHF/m² in today's listings (Homegate survey, +44%). Includes first-party aggregates from La Villa Coliving's ${STATS.totalHouses} houses (${STATS.totalResidents}+ residents since ${STATS.foundedYear}), clearly labelled. Conversions at €1 = CHF 0.92 (July 2026).`
-      : `Loyer d'annonce d'un studio (relevé de l'Observatoire sur Le Figaro Immobilier, juin 2026) croisé au temps de trajet vers Genève-Eaux-Vives, pour 17 communes du Genevois français le long de l'axe Léman Express, avec la cadence des trains en heure de pointe. Genève, marché à deux vitesses : locataire en place 35 CHF/m² (OCSTAT 2025) vs nouvel arrivant ≈ 50 CHF/m² dans les annonces (relevé Homegate, +44 %). Inclut les agrégats first-party des ${STATS.totalHouses} maisons La Villa Coliving (${STATS.totalResidents}+ résidents depuis ${STATS.foundedYear}), clairement étiquetés. Conversions au taux 1 € = 0,92 CHF (juillet 2026).`,
+      : `Loyer d'annonce d'un studio (relevé de l'Observatoire sur Le Figaro Immobilier, juin 2026) croisé au temps de trajet vers Genève-Eaux-Vives, pour 17 communes du Genevois français le long de l'axe Léman Express, avec la cadence des trains en heure de pointe. Genève, marché à deux vitesses : locataire en place 35 CHF/m² (OCSTAT 2025) vs nouvel arrivant ≈ 50 CHF/m² dans les annonces (relevé Homegate, +44\u00a0%). Inclut les agrégats first-party des ${STATS.totalHouses} maisons La Villa Coliving (${STATS.totalResidents}+ résidents depuis ${STATS.foundedYear}), clairement étiquetés. Conversions au taux 1 € = 0,92 CHF (juillet 2026).`,
     url: `${SITE}/observatoire-logement-frontalier-geneve`,
     csvUrls: [`${SITE}${CSV_URL}`, `${SITE}${CSV_GENEVA_URL}`, `${SITE}${CSV_LAVILLA_URL}`],
     datePublished: PAGE_FIRST_PUBLISHED,
@@ -134,7 +134,7 @@ export function ObservatoireLogementFrontalierPage() {
     "@type": "Article",
     headline: en
       ? "In Geneva, a newcomer pays 44% more per m² than a sitting tenant — cross-border housing observatory"
-      : "À Genève, un nouvel arrivant paie +44 % au m² qu'un locataire en place — observatoire du logement frontalier",
+      : "À Genève, un nouvel arrivant paie +44\u00a0% au m² qu'un locataire en place — observatoire du logement frontalier",
     inLanguage: en ? "en" : "fr",
     datePublished: PAGE_FIRST_PUBLISHED,
     dateModified: PAGE_LAST_UPDATED,
@@ -249,7 +249,7 @@ export function ObservatoireLogementFrontalierPage() {
         description={
           en
             ? "In Geneva, a newcomer pays 44% more per m² than a sitting tenant. 17 French-Genevois towns ranked by advertised studio rent and commute time. Free open data."
-            : "À Genève, un nouvel arrivant paie +44 % au m² qu'un locataire en place. 17 communes du Genevois français classées par loyer et trajet. Données ouvertes."
+            : "À Genève, un nouvel arrivant paie +44\u00a0% au m² qu'un locataire en place. 17 communes du Genevois français classées par loyer et trajet. Données ouvertes."
         }
         image={`${SITE}/images/observatoire-loyer-trajet-2026.png`}
         type="article"
@@ -380,7 +380,7 @@ export function ObservatoireLogementFrontalierPage() {
                   {en ? (
                     <>In Geneva, a studio's rent depends heavily on how long the lease has been running. Sitting tenants pay a median of <strong className="text-[#1C1917]">CHF 35/m²</strong>, about <strong className="text-[#1C1917]">CHF {GENEVA_STOCK_CHF} per month</strong> — a level held down by protection on existing leases. Current advertised rents stand at <strong className="text-[#1C1917]">about CHF 50/m²</strong> (<strong className="text-[#1C1917]">~CHF {GENEVA_ANNONCE_CHF} per month</strong>), <strong className="text-[#A0623C]">44% higher</strong>.</>
                   ) : (
-                    <>À Genève, le loyer d'un studio dépend fortement de l'ancienneté du bail. Les locataires en place paient une médiane de <strong className="text-[#1C1917]">35 CHF/m²</strong>, soit environ <strong className="text-[#1C1917]">{GENEVA_STOCK_CHF} CHF par mois</strong> — un niveau maintenu bas par la protection des baux en cours. Les loyers d'annonce du jour, eux, s'établissent à <strong className="text-[#1C1917]">environ 50 CHF/m²</strong> (<strong className="text-[#1C1917]">~{GENEVA_ANNONCE_CHF} CHF par mois</strong>), soit <strong className="text-[#A0623C]">44 % de plus</strong>.</>
+                    <>À Genève, le loyer d'un studio dépend fortement de l'ancienneté du bail. Les locataires en place paient une médiane de <strong className="text-[#1C1917]">35 CHF/m²</strong>, soit environ <strong className="text-[#1C1917]">{GENEVA_STOCK_CHF} CHF par mois</strong> — un niveau maintenu bas par la protection des baux en cours. Les loyers d'annonce du jour, eux, s'établissent à <strong className="text-[#1C1917]">environ 50 CHF/m²</strong> (<strong className="text-[#1C1917]">~{GENEVA_ANNONCE_CHF} CHF par mois</strong>), soit <strong className="text-[#A0623C]">44&nbsp;% de plus</strong>.</>
                   )}
                 </p>
               </div>
@@ -414,7 +414,7 @@ export function ObservatoireLogementFrontalierPage() {
                   aria-label={
                     en
                       ? "Two bars: median studio rent per m² in Geneva — sitting tenant 35 CHF/m² versus newcomer about 50 CHF/m², +44%. The newcomer median nearly reaches the 9th decile of sitting leases (51.3)."
-                      : "Deux barres : loyer médian d'un studio au m² à Genève — locataire en place 35 CHF/m² contre nouvel arrivant environ 50 CHF/m², +44 %. La médiane arrivant frôle le 9e décile des baux en place (51,3)."
+                      : "Deux barres : loyer médian d'un studio au m² à Genève — locataire en place 35 CHF/m² contre nouvel arrivant environ 50 CHF/m², +44\u00a0%. La médiane arrivant frôle le 9e décile des baux en place (51,3)."
                   }
                 >
                   <rect x="0" y="0" width="420" height="270" fill="#FAF9F6" rx="8" />
@@ -422,7 +422,7 @@ export function ObservatoireLogementFrontalierPage() {
                   {/* D9 du parc en place = 51,3 */}
                   <line x1="60" y1="42" x2="400" y2="42" stroke="#A0623C" strokeWidth="1" strokeDasharray="4 3" opacity="0.6" />
                   <text x="64" y="37" fontSize="10.5" fill="#A0623C">
-                    {en ? "Top 10% of sitting leases (D9) · 51.3 CHF/m²" : "Les 10 % de baux en place les plus chers (D9) · 51,3 CHF/m²"}
+                    {en ? "Top 10% of sitting leases (D9) · 51.3 CHF/m²" : "Les 10\u00a0% de baux en place les plus chers (D9) · 51,3 CHF/m²"}
                   </text>
                   {/* Barre « en place » = 35 */}
                   <rect x="110" y="96" width="80" height="114" rx="3" fill="#6B8E6B" />
@@ -460,14 +460,14 @@ export function ObservatoireLogementFrontalierPage() {
                 <p className="text-sm text-[#57534E] leading-relaxed">
                   {en
                     ? "A gap between sitting tenants' rents and newcomers' rents exists on the French side too — as on any market where running leases are indexed (IRL) while the market climbs. This observatory does not measure it: there is no public equivalent of OCSTAT for the sitting stock of the French Genevois. The difference with Geneva is one of magnitude and nature: the Geneva gap is measured — the median newcomer pays per m² as much as the top 10% of sitting leases — and it is sustained by a tenancy-protection mechanism with no French equivalent. For a household moving in, the relevant comparison remains, on both sides, advertised rents: ~CHF 1,500 in Geneva versus the French advertised rents on this page."
-                    : "Un écart entre les loyers des locataires en place et ceux des arrivants existe aussi côté France — comme sur tout marché où les baux en cours sont indexés (IRL) pendant que le marché monte. Cet observatoire ne le mesure pas : il n'existe pas, pour le Genevois français, d'équivalent public de l'OCSTAT sur le parc en place. La différence avec Genève est d'ampleur et de nature : l'écart genevois, lui, est mesuré — l'arrivant médian y paie au m² autant que les 10 % de baux en place les plus chers — et il est entretenu par un mécanisme de protection des baux sans équivalent côté France. Pour un ménage qui s'installe, la comparaison pertinente reste, des deux côtés, celle des loyers d'annonce : ~1 500 CHF à Genève contre les loyers d'annonce français de cette page."}
+                    : "Un écart entre les loyers des locataires en place et ceux des arrivants existe aussi côté France — comme sur tout marché où les baux en cours sont indexés (IRL) pendant que le marché monte. Cet observatoire ne le mesure pas : il n'existe pas, pour le Genevois français, d'équivalent public de l'OCSTAT sur le parc en place. La différence avec Genève est d'ampleur et de nature : l'écart genevois, lui, est mesuré — l'arrivant médian y paie au m² autant que les 10\u00a0% de baux en place les plus chers — et il est entretenu par un mécanisme de protection des baux sans équivalent côté France. Pour un ménage qui s'installe, la comparaison pertinente reste, des deux côtés, celle des loyers d'annonce : ~1\u00a0500 CHF à Genève contre les loyers d'annonce français de cette page."}
                 </p>
               </div>
               <div className="mt-5">
                 <SourceLine center={false}>
                   {en
                     ? "Sources: sitting-tenant rents — OCSTAT 2025 (2,294 studios); advertised rents — Observatory survey on Homegate, June 2026 (n = 25). Net rents (excl. heating), City of Geneva."
-                    : "Sources : loyers du parc en place — OCSTAT 2025 (2 294 studios) ; loyers d'annonce — relevé de l'Observatoire sur Homegate, juin 2026 (n = 25). Loyers nets (hors chauffage), Ville de Genève."}
+                    : "Sources : loyers du parc en place — OCSTAT 2025 (2\u00a0294 studios) ; loyers d'annonce — relevé de l'Observatoire sur Homegate, juin 2026 (n = 25). Loyers nets (hors chauffage), Ville de Genève."}
                 </SourceLine>
               </div>
             </div>
@@ -761,7 +761,7 @@ export function ObservatoireLogementFrontalierPage() {
           <p className="text-xs text-[#A8A29E] mt-2">
             {en
               ? `* Geneva reference: advertised studio rent in Eaux-Vives — a premium 8-minute neighbourhood — ≈ 1,750 CHF/mo, i.e. ≈ €${GENEVA_EAUXVIVES_EUR} at the July 2026 rate (Observatory survey on Homegate, June 2026, excluding student/furnished lets). City-wide, the median asking rent is lower (≈ 1,500 CHF). “*” next to a French town = studio not published by Le Figaro, 2-room rent shown instead.`
-              : `* Repère Genève : loyer d'annonce d'un studio à Eaux-Vives — quartier premium à 8 min — ≈ 1 750 CHF/mois, soit ≈ ${GENEVA_EAUXVIVES_EUR} € au taux de juillet 2026 (relevé de l'Observatoire sur Homegate, juin 2026, hors logements étudiants/meublés). À l'échelle de toute la ville, la médiane des annonces est plus basse (≈ 1 500 CHF). « * » devant une commune française = studio non publié par Le Figaro, loyer 2-pièces affiché.`}
+              : `* Repère Genève : loyer d'annonce d'un studio à Eaux-Vives — quartier premium à 8 min — ≈ 1\u00a0750 CHF/mois, soit ≈ ${GENEVA_EAUXVIVES_EUR} € au taux de juillet 2026 (relevé de l'Observatoire sur Homegate, juin 2026, hors logements étudiants/meublés). À l'échelle de toute la ville, la médiane des annonces est plus basse (≈ 1\u00a0500 CHF). « * » devant une commune française = studio non publié par Le Figaro, loyer 2-pièces affiché.`}
           </p>
           <p className="text-xs text-[#A8A29E] mt-2">
             {en
@@ -840,7 +840,7 @@ export function ObservatoireLogementFrontalierPage() {
             <p className="text-[11px] text-[#A8A29E] text-center mt-3">
               {en
                 ? `1,360 CHF = median of current rents (leases signed at different dates); today's entry prices are ${PRICE_SHARED_EN_NUM} CHF (shared shower room) to ${PRICE_EN_NUM} CHF (private bathroom) — detail in the methodology.`
-                : `1 360 CHF = médiane des loyers en cours (baux signés à des dates différentes) ; les prix d'entrée actuels vont de ${PRICE_SHARED_FR_NUM} CHF (salle d'eau partagée) à ${PRICE_FR_NUM} CHF (salle de bain privative) — détail en méthodologie.`}
+                : `1\u00a0360 CHF = médiane des loyers en cours (baux signés à des dates différentes) ; les prix d'entrée actuels vont de ${PRICE_SHARED_FR_NUM} CHF (salle d'eau partagée) à ${PRICE_FR_NUM} CHF (salle de bain privative) — détail en méthodologie.`}
             </p>
             <SourceLine>
               {en
@@ -984,7 +984,7 @@ export function ObservatoireLogementFrontalierPage() {
                     {en ? (
                       <>A coliving room, all-inclusive, comes to <strong className="text-[#1C1917]">≈ 10% more</strong> than a bare 30 m² studio all-in (≈ €{COLIVING_EUR} vs ≈ €1,344).</>
                     ) : (
-                      <>Une chambre en coliving tout inclus revient <strong className="text-[#1C1917]">≈ 10 % plus cher</strong> qu'un studio nu de 30 m² tout compris (≈ {COLIVING_EUR} € contre ≈ 1 344 €).</>
+                      <>Une chambre en coliving tout inclus revient <strong className="text-[#1C1917]">≈ 10&nbsp;% plus cher</strong> qu'un studio nu de 30 m² tout compris (≈ {COLIVING_EUR} € contre ≈ 1&nbsp;344 €).</>
                     )}
                   </p>
                 </div>
@@ -996,7 +996,7 @@ export function ObservatoireLogementFrontalierPage() {
                     {en ? (
                       <>For the ≈ 38 m² a resident actually enjoys, coliving comes to <strong className="text-[#1C1917]">≈ 13% less</strong> than the same surface solo at the studio's full-cost rate (≈ €{COLIVING_EUR} vs ≈ €{STUDIO_38M2_EUR}).</>
                     ) : (
-                      <>Pour les ≈ 38 m² dont dispose réellement un résident, le coliving revient <strong className="text-[#1C1917]">≈ 13 % moins cher</strong> que la même surface en solo au coût complet du studio (≈ {COLIVING_EUR} € contre ≈ {STUDIO_38M2_EUR} €).</>
+                      <>Pour les ≈ 38 m² dont dispose réellement un résident, le coliving revient <strong className="text-[#1C1917]">≈ 13&nbsp;% moins cher</strong> que la même surface en solo au coût complet du studio (≈ {COLIVING_EUR} € contre ≈ {STUDIO_38M2_EUR} €).</>
                     )}
                   </p>
                 </div>
@@ -1032,7 +1032,7 @@ export function ObservatoireLogementFrontalierPage() {
             <p className="text-xs text-[#A8A29E] mt-4">
               {en
                 ? `Posted assumptions: charges ${STUDIO_FULL_COST.chargesEur} €, electricity + internet ${STUDIO_FULL_COST.energyInternetEur} €, furniture ${STUDIO_FULL_COST.furnitureTotalEur.toLocaleString("en")} € spread over ${STUDIO_FULL_COST.furnitureMonths} months, agency fees at the legal cap (15 €/m², French Alur law) spread over ${STUDIO_FULL_COST.furnitureMonths} months. Reference studio 30 m², Annemasse listing rent from the observatory above. Entry cash: 1-month deposit + agency fees + furniture. “Like-for-like surface” reading: 38 m² × the studio's full cost per m² (≈ €44.8/m²) ≈ €1,700 — an extrapolation at constant rate per m². ${FX_NOTE_EN}.`
-                : `Hypothèses affichées : charges ${STUDIO_FULL_COST.chargesEur} €, électricité + internet ${STUDIO_FULL_COST.energyInternetEur} €, meubles ${STUDIO_FULL_COST.furnitureTotalEur.toLocaleString("fr-FR")} € amortis sur ${STUDIO_FULL_COST.furnitureMonths} mois, frais d'agence au plafond légal (15 €/m², loi Alur) amortis sur ${STUDIO_FULL_COST.furnitureMonths} mois. Studio de référence 30 m², loyer d'annonce Annemasse de l'observatoire ci-dessus. À l'entrée : caution 1 mois + agence + meubles. Lecture « à surface équivalente » : 38 m² × le coût complet au m² du studio (≈ 44,8 €/m²) ≈ 1 700 € — extrapolation à taux constant au m². ${FX_NOTE_FR}.`}
+                : `Hypothèses affichées : charges ${STUDIO_FULL_COST.chargesEur} €, électricité + internet ${STUDIO_FULL_COST.energyInternetEur} €, meubles ${STUDIO_FULL_COST.furnitureTotalEur.toLocaleString("fr-FR")} € amortis sur ${STUDIO_FULL_COST.furnitureMonths} mois, frais d'agence au plafond légal (15 €/m², loi Alur) amortis sur ${STUDIO_FULL_COST.furnitureMonths} mois. Studio de référence 30 m², loyer d'annonce Annemasse de l'observatoire ci-dessus. À l'entrée : caution 1 mois + agence + meubles. Lecture « à surface équivalente » : 38 m² × le coût complet au m² du studio (≈ 44,8 €/m²) ≈ 1\u00a0700 € — extrapolation à taux constant au m². ${FX_NOTE_FR}.`}
             </p>
             <SourceLine>
               {en
@@ -1054,7 +1054,7 @@ export function ObservatoireLogementFrontalierPage() {
             </p>
             <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
               {[
-                { v: `${BAROMETRE.frontaliersPct} %`, l: en ? "cross-border workers" : "frontaliers" },
+                { v: en ? `${BAROMETRE.frontaliersPct}%` : `${BAROMETRE.frontaliersPct}\u00a0%`, l: en ? "cross-border workers" : "frontaliers" },
                 { v: `${BAROMETRE.ageDominant} ${en ? "yrs" : "ans"}`, l: en ? `dominant age group (full range ${BAROMETRE.ageRange})` : `tranche dominante (fourchette ${BAROMETRE.ageRange})` },
                 { v: `${BAROMETRE.singlesPct} / ${BAROMETRE.couplesPct}`, l: en ? "% singles / couples" : "% célibataires / couples" },
                 { v: `${BAROMETRE.tenureAvgMonths} ${en ? "months" : "mois"}`, l: en ? "average length of stay" : "durée moyenne de séjour" },
@@ -1109,10 +1109,10 @@ export function ObservatoireLogementFrontalierPage() {
             <div>
               <strong className="text-[#1C1917]">{en ? "Geneva — one solid figure, two readings." : "Genève — un chiffre solide, deux regards."}</strong>
               <ul className="list-disc pl-5 mt-1.5 space-y-1">
-                <li>{en ? "Established tenants: OCSTAT 2025, studios ≤ 37 m², free-market rent, tenants — 2,294 observations, median 35 CHF/m²." : "Parc en place (installés) : OCSTAT 2025, studios ≤ 37 m², loyer libre, locataires — 2 294 observations, médiane 35 CHF/m²."}</li>
+                <li>{en ? "Established tenants: OCSTAT 2025, studios ≤ 37 m², free-market rent, tenants — 2,294 observations, median 35 CHF/m²." : "Parc en place (installés) : OCSTAT 2025, studios ≤ 37 m², loyer libre, locataires — 2\u00a0294 observations, médiane 35 CHF/m²."}</li>
                 <li>{en ? "Listings (newcomers): Observatory survey on the Homegate portal — studios ≤ 37 m² let unfurnished in the City of Geneva, June 2026 — median ≈ 50 CHF/m² (n = 25). Net rents (excl. heating) on both sides, to compare like with like." : "Annonces (arrivants) : relevé de l'Observatoire sur le portail Homegate — studios ≤ 37 m² loués vides en Ville de Genève, juin 2026 — médiane ≈ 50 CHF/m² (n = 25). Loyers nets (hors chauffage) des deux côtés, pour comparer ce qui est comparable."}</li>
-                <li>{en ? "Both cover the same area and the same type of home: the +44% gap is a genuine established-vs-newcomer comparison, not an artefact." : "Les deux portent sur le même périmètre et le même type de logement : l'écart de +44 % est donc une vraie comparaison installés / arrivants, pas un artefact."}</li>
-                <li>{en ? `“8-min” benchmark: advertised studio rent in Geneva-Eaux-Vives ≈ 1,750 CHF/month (≈ €${GENEVA_EAUXVIVES_EUR} at the July 2026 rate) — a premium neighbourhood, from the same Homegate survey; city-wide the median asking rent is lower (≈ 1,500 CHF).` : `Repère « 8 min » : loyer d'annonce d'un studio à Genève-Eaux-Vives ≈ 1 750 CHF/mois (≈ ${GENEVA_EAUXVIVES_EUR} € au taux de juillet 2026) — quartier premium, issu du même relevé Homegate ; la médiane des annonces de toute la ville est plus basse (≈ 1 500 CHF).`}</li>
+                <li>{en ? "Both cover the same area and the same type of home: the +44% gap is a genuine established-vs-newcomer comparison, not an artefact." : "Les deux portent sur le même périmètre et le même type de logement : l'écart de +44\u00a0% est donc une vraie comparaison installés / arrivants, pas un artefact."}</li>
+                <li>{en ? `“8-min” benchmark: advertised studio rent in Geneva-Eaux-Vives ≈ 1,750 CHF/month (≈ €${GENEVA_EAUXVIVES_EUR} at the July 2026 rate) — a premium neighbourhood, from the same Homegate survey; city-wide the median asking rent is lower (≈ 1,500 CHF).` : `Repère « 8 min » : loyer d'annonce d'un studio à Genève-Eaux-Vives ≈ 1\u00a0750 CHF/mois (≈ ${GENEVA_EAUXVIVES_EUR} € au taux de juillet 2026) — quartier premium, issu du même relevé Homegate ; la médiane des annonces de toute la ville est plus basse (≈ 1\u00a0500 CHF).`}</li>
               </ul>
             </div>
             <div>
@@ -1217,7 +1217,7 @@ export function ObservatoireLogementFrontalierPage() {
               className="inline-flex items-center gap-2 border border-[#D4A574] text-[#A0623C] px-5 py-3 text-xs sm:text-sm uppercase tracking-wider hover:bg-[#D4A574] hover:text-white transition-colors rounded-md"
             >
               <ImageDown className="w-4 h-4" />
-              {en ? "Press visual +44% (PNG)" : "Visuel presse +44 % (PNG)"}
+              {en ? "Press visual +44% (PNG)" : "Visuel presse +44\u00a0% (PNG)"}
             </a>
           </div>
 

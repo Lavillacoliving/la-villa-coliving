@@ -23,7 +23,7 @@ import { STATS, OCCUPANCY } from "@/data/stats";
 
 export const BAROMETRE = {
   // Le coût — la money-stat
-  rentMedianChf: "1 360", // médiane actuelle 2026 des loyers en cours, tout inclus, facturés en CHF
+  rentMedianChf: "1 360", // médiane actuelle 2026 des loyers en cours, tout inclus, facturés en CHF
   m2PerResident: 38, // ≈ agrégé : surface habitable ÷ nb de résidents
   m2PerHouse: { lavilla: "37", lelodge: "37,5", leloft: "41,5" },
   chfPerM2AllIn: 36, // ≈ 1 360 / 38
