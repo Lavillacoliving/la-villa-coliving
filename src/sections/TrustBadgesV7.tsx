@@ -18,7 +18,7 @@ export function TrustBadgesV7() {
     },
     {
       icon: Users,
-      title: language === "en" ? "Curated community" : "Communauté sélectionnée",
+      title: language === "en" ? "Human-scale houses" : "Maisons à taille humaine", // (Lot 2 — B3, 16/10/2026) un fait, pas un qualificatif
       description: language === "en" ? "7 to 12 residents per house" : "7 à 12 résidents par maison",
     },
     {

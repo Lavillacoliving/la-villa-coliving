@@ -68,7 +68,8 @@ export function FeaturesV7() {
             {language === 'en' ? `ALL INCLUSIVE — ${STATS.includedItems} SERVICES` : `TOUT INCLUS — ${STATS.includedItems} SERVICES`}
           </span>
           <h2 className="text-3xl md:text-4xl font-bold text-[#1C1917] mt-4 mb-5" style={{ letterSpacing: '-0.025em' }}>
-            {language === 'en' ? 'One payment. Zero surprises.' : 'Un seul paiement. Zéro surprise.'}
+            {/* (Lot 2 — B3, 16/10/2026) Titre descriptif : la promesse « tout inclus » est déjà dite au-dessus et dans les badges. */}
+            {language === 'en' ? 'What your rent includes' : 'Ce que ton loyer comprend'}
           </h2>
           <p className="text-[#78716C] text-base md:text-lg">
             {language === 'en'

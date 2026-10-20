@@ -15,7 +15,8 @@ import { STATS, STATS_DISPLAY, STATS_SHARED_BATH, PRICE_CHF_FR, PRICE_CHF_EN, PR
 import { ENTITY_HOUSES } from "@/data/entityFacts";
 import { OuChercher } from "@/components/OuChercher";
 import { COLOC_GENEVE_ARTICLE, COLOC_GENEVE_PILLAR_EN, COLOC_GENEVE_PILLAR_FR } from "@/lib/siteLinks";
-import { useAllRooms, splitRooms, type HouseKey, type PublicRoom } from "@/lib/availability";
+import { useAllRooms, splitRooms, roomsContentUpdatedAt, type HouseKey, type PublicRoom } from "@/lib/availability";
+import { formatLongDate, parisIsoDate } from "@/lib/dates";
 
 /**
  * /colocation-geneve · /en/colocation-geneve — Lot 5 du plan SEO funnel, spécification révisée du
@@ -30,6 +31,10 @@ import { useAllRooms, splitRooms, type HouseKey, type PublicRoom } from "@/lib/a
  * D0-ter), aucun concurrent nommé, jamais « complet », tutoiement, prix depuis src/data/stats.ts.
  * Données : store partagé v_public_rooms (Lot 3) — les cartes sont dans le HTML prérendu (RoomsEmbed).
  */
+// (Lot 2 — C2, D7 validée par Jérôme le 16/10/2026) Date éditoriale (dernière refonte du texte). La date affichée et le
+// dateModified du JSON-LD = la plus récente entre cette date et la dernière mise à jour de l'inventaire des chambres
+// (v_public_rooms.content_updated_at : greatest updated_at chambres/locataires — jamais la date du prérendu, qui tournerait
+// deux fois par jour sans vrai changement). Même source que les cartes (embed puis store) : aucun écart d'hydratation.
 const PAGE_LAST_UPDATED = "2026-09-04";
 const PAGE_FIRST_PUBLISHED = "2026-02-17";
 const HOUSE_ORDER: HouseKey[] = ["lavilla", "leloft", "lelodge"];
@@ -74,6 +79,11 @@ export function ColocationGenevePage() {
     seller: { "@type": "Organization", name: "La Villa Coliving", url: "https://www.lavillacoliving.com" },
     areaServed: [{ "@type": "City", name: "Genève" }, { "@type": "City", name: "Annemasse" }],
   } : undefined;
+  // Horodatage de référence : midi UTC du jour éditorial (le jour de Paris reste le même), remplacé par la dernière mise à
+  // jour de l'inventaire quand elle est plus récente — formatage maison (formatLongDate), jamais toLocaleDateString.
+  const editorialIso = `${PAGE_LAST_UPDATED}T12:00:00Z`;
+  const roomsUpdatedIso = roomsContentUpdatedAt(allRooms.rooms);
+  const lastUpdatedIso = roomsUpdatedIso && Date.parse(roomsUpdatedIso) > Date.parse(editorialIso) ? roomsUpdatedIso : editorialIso;
   const webPageSchema = {
     "@context": "https://schema.org",
     "@type": "WebPage",
@@ -81,9 +91,9 @@ export function ColocationGenevePage() {
     name: en ? "Shared housing in Geneva, the French-side version" : "Colocation à Genève, version côté France",
     inLanguage: en ? "en" : "fr",
     datePublished: PAGE_FIRST_PUBLISHED,
-    dateModified: PAGE_LAST_UPDATED,
+    dateModified: parisIsoDate(lastUpdatedIso) || PAGE_LAST_UPDATED,
   };
-  const lastUpdatedLabel = new Date(PAGE_LAST_UPDATED).toLocaleDateString(en ? "en-US" : "fr-FR", { year: "numeric", month: "long", day: "numeric", timeZone: "UTC" });
+  const lastUpdatedLabel = formatLongDate(lastUpdatedIso, L);
   const h2 = "text-3xl md:text-4xl font-light text-[#1C1917] mb-6";
   const serif = { fontFamily: "DM Serif Display, serif" } as const;
   const link = "text-[#1C1917] underline underline-offset-4 hover:text-[#D4A574]";

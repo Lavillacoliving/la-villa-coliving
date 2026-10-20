@@ -1,212 +1,13 @@
-import { PRICE_CHF_FR, PRICE_CHF_EN, STATS_DISPLAY, HOUSE_SURFACES, thousands } from "@/data/stats";
+import { STATS_DISPLAY } from "@/data/stats";
 
 // (Lot L2, 09/10/2026) Faits d'emplacement lus dans la source unique (stats.ts n'importe rien : pas de cycle) :
-// « 20 min » toujours qualifié par STATS_DISPLAY.distance (D1), surfaces des maisons par HOUSE_SURFACES (D2).
-const VILLA_PLOT_EN = thousands(HOUSE_SURFACES.lavilla.plotM2, ",");
-const VILLA_PLOT_FR = thousands(HOUSE_SURFACES.lavilla.plotM2, " "); // espace insécable (convention stats.ts)
+// « 20 min » toujours qualifié par STATS_DISPLAY.distance (D1).
+// (Lot 2 — B4, 16/10/2026) Les 14 sections mortes (nav, hero, trustBadges, whyChooseUs, testimonials, about, features, houses,
+// howToJoin, cta, footer, ratesPage, faqPage, joinPage) sont supprimées : les pages V7/V4 portent leurs textes. Restent
+// colivingPage (/le-coliving), servicesPage (/services) et houseDetail (pages maisons).
 
 export const translations = {
   en: {
-    // Navigation
-    nav: {
-      home: "Home",
-      coliving: "The Coliving",
-      services: "Services",
-      houses: "Our Houses",
-      rates: "Rates",
-      faq: "FAQ",
-      joinUs: "Join Us",
-    },
-
-    // Hero
-    hero: {
-      title: "Premium Coliving Houses Geneva | Community Living",
-      subtitle:
-        "Live, work & connect in extraordinary homes designed for vibrant community life.",
-      ctaPrimary: "Explore Our Houses",
-      ctaSecondary: "Check availability",
-      badge1: "All-inclusive living",
-      badge2: "Curated community",
-      badge3: "12-month lease",
-      badge4: "Zero agency fees",
-      availability: "",
-    },
-
-    // Trust Badges - New Section
-    trustBadges: {
-      members: "Happy Members",
-      commute: "To Geneva",
-      houses: "Unique Houses",
-    },
-
-    // Why Choose Us - New Section
-    whyChooseUs: {
-      title: "Why Choose La Villa?",
-      subtitle: "Experience coliving designed for modern professionals",
-      item1: {
-        title: "Move In Within 72 h",
-        description:
-          "Fully furnished, all-inclusive homes. No furniture shopping, no utility setup, no stress. Just bring your suitcase and start living.",
-      },
-      item2: {
-        title: "Work From Paradise",
-        description:
-          "High-speed fiber, and quiet zones. Your productivity sanctuary with a built-in community.",
-      },
-      item3: {
-        title: "Instant Friends",
-        description:
-          "Curated communities of like-minded professionals. No more lonely evenings—your tribe is waiting.",
-      },
-      item4: {
-        title: "Zero Admin Stress",
-        description:
-          "One monthly payment covers everything. We handle cleaning, maintenance, bills, and repairs. You just live.",
-      },
-    },
-
-    // Testimonials - New Section
-    testimonials: {
-      title: "What Our Members Say",
-      subtitle: "Real stories from our community",
-      testimonial1: {
-        quote:
-          "La Villa changed my life. I went from isolated studio living to having a real community. My housemates are now my closest friends.",
-        author: "Sarah M.",
-        role: "Marketing Consultant",
-        house: "La Villa",
-      },
-      testimonial2: {
-        quote:
-          "The best decision I made when moving to Geneva. All-inclusive meant I could focus on my new job instead of apartment hunting.",
-        author: "Thomas K.",
-        role: "Software Engineer",
-        house: "Le Loft",
-      },
-      testimonial3: {
-        quote:
-          "I was skeptical about coliving, but La Villa proved me wrong. The curated community means everyone gets along. It feels like family.",
-        author: "Emma L.",
-        role: "UX Designer",
-        house: "La Villa",
-      },
-    },
-
-    // About
-    about: {
-      title: "About La Villa",
-      description:
-        `La Villa brings together like-minded people in exceptional homes on the French side of Grand Genève, ${STATS_DISPLAY.en.distance}.`,
-      description2:
-        "Our community is built on shared values: openness, collaboration, and genuine enthusiasm for collective living. Every member is carefully selected to ensure the perfect fit.",
-      cta: "Learn About Our Houses",
-    },
-
-    // Features
-    features: {
-      title: "Everything Included",
-      community: {
-        title: "Curated Community",
-        description: "Move in with people who share your lifestyle",
-      },
-      amenities: {
-        title: "Premium Amenities",
-        description:
-          "Designer spaces, heated pool, gym, wellness area & expansive common areas",
-      },
-      location: {
-        title: "Prime Location",
-        description: STATS_DISPLAY.en.distance as string, // élargi : `Translations = typeof translations.en` ne doit pas figer le littéral
-      },
-      comfort: {
-        title: "Private Comfort",
-        description:
-          "Spacious, designed rooms with premium bedding & furnishings",
-      },
-      allInclusive: {
-        title: "Truly All-Inclusive",
-        description:
-          "Utilities, fiber internet, cleaning, fitness classes, community events & more",
-      },
-    },
-
-    // Houses Preview
-    houses: {
-      title: "Our Houses",
-      subtitle: "Three homes. One community.",
-      laVilla: {
-        name: "La Villa",
-        location: "Ville-la-Grand",
-        description:
-          `${HOUSE_SURFACES.lavilla.livingM2} m² of designed living on a ${VILLA_PLOT_EN} m² estate bordering a nature reserve.`,
-        features:
-          "Heated pool, sauna, gym, game room, volleyball court & vegetable garden",
-        perfectFor: "Nature enthusiasts",
-        capacity: "10 members",
-      },
-      leLoft: {
-        name: "Le Loft",
-        location: "Ambilly",
-        description:
-          `A ${HOUSE_SURFACES.leloft.livingM2} m² townhouse with year-round heated indoor pool, Finnish sauna, and outdoor kitchen.`,
-        features: "Year-round heated indoor pool, Finnish sauna, gym, outdoor kitchen with TV, terraces & spacious designer rooms",
-        perfectFor: "Urban professionals",
-        capacity: "7 members",
-      },
-      leLodge: {
-        name: "Le Lodge",
-        location: "Annemasse",
-        description: "Our newest and largest home, open since January 2026. 4 buildings, fitness chalet with sauna, pool house with outdoor kitchen.",
-        features:
-          "Outdoor pool, fitness chalet with sauna, pool house with full outdoor kitchen, BBQ & expansive gardens",
-        perfectFor: "Community seekers",
-        capacity: "12 members",
-      },
-      cta: "Discover",
-      viewAll: "View All Houses",
-    },
-
-    // How to Join
-    howToJoin: {
-      title: "How to Join",
-      step1: {
-        number: "01",
-        title: "Discover",
-        description:
-          "Learn what makes La Villa unique. Coliving is more than shared housing—it's a lifestyle designed for connection, growth, and effortless living.",
-        cta: "Explore The Concept",
-      },
-      step2: {
-        number: "02",
-        title: "Explore",
-        description:
-          "Tour our beautifully designed homes, each crafted for modern community living.",
-        cta: "View Our Houses",
-      },
-      step3: {
-        number: "03",
-        title: "Apply",
-        description:
-          "Complete your application and meet your future community.",
-        cta: "Start Your Application",
-      },
-    },
-
-    // CTA Section
-    cta: {
-      title: "Ready to Experience True Coliving?",
-      subtitle:
-        "Your new home is waiting. Apply now and join our curated community.",
-      button: "Apply Now",
-    },
-
-    // Footer
-    footer: {
-      tagline: "Premium coliving in Grand Genève, France",
-      contact: "Contact",
-      followUs: "Follow Us",
-      rights: "All rights reserved.",
-    },
 
     // The Coliving Page - Enhanced
     colivingPage: {
@@ -337,83 +138,6 @@ export const translations = {
       },
     },
 
-    // Rates Page
-    ratesPage: {
-      hero: {
-        title: "Transparent Pricing",
-        subtitle: `${PRICE_CHF_EN}/month — All inclusive in a house, not a residence`,
-        description: "No hidden fees. No surprises. Just exceptional value.",
-        description2:
-          "When you add up rent, utilities, amenities, and services, La Villa offers more—for less than a Geneva studio.",
-      },
-      included: {
-        title: "What's Included",
-        items: [
-          "Rent & utilities (electricity, water, heating)",
-          "Professional-grade fiber internet (up to 8 Gb/s)",
-          "Housekeeping three times a week",
-          "Pool, sauna & garden maintenance",
-          "Fully equipped gym, open 24/7",
-          "Weekly private yoga class",
-          "Weekly private fitness class",
-          "Monthly pizza party",
-          "Streaming subscriptions (Netflix, Canal+, etc.)",
-          "Seasonal community events",
-          "Parking included",
-          "Full house, annex & grounds maintenance",
-          "Furniture & equipment upkeep",
-          "Basic supplies provided",
-          "Move-out management (check-out, room reset)",
-          "Local taxes included",
-          "Bed linen set & towels provided",
-          "Direct WhatsApp support with founders",
-          "E-bike charging stations (Le Lodge)",
-        ],
-      },
-      deposit: "Security deposit: 2 months' rent excluding charges",
-      noFees: "No agency fees",
-    },
-
-    // FAQ Page
-    faqPage: {
-      hero: {
-        title: "Questions? We've Got Answers.",
-        subtitle: "Everything you need to know about life at La Villa.",
-        contact:
-          "Can't find what you're looking for? Reach out—we're happy to help.",
-      },
-      categories: {
-        title: "Browse by Category",
-      },
-      search: {
-        placeholder: "Search questions...",
-      },
-    },
-
-    // Join Us Page
-    joinPage: {
-      hero: {
-        title: "Join La Villa",
-        subtitle: "Your new home is waiting.",
-        description:
-          "Three simple steps to join our community. We'll guide you through every part of the journey.",
-        steps: "1. Apply → 2. Meet → 3. Move in",
-      },
-      form: {
-        firstName: "First Name",
-        lastName: "Last Name",
-        email: "Email Address",
-        phone: "Phone",
-        birthDate: "Date of Birth",
-        job: "Job Position in Geneva",
-        arrival: "When would you like to join us?",
-        duration: "How long do you plan to stay?",
-        submit: "Submit Application",
-        submitting: "Submitting...",
-        success: "Thank you! We'll be in touch soon.",
-      },
-    },
-
     // House Detail Pages - Enhanced
     houseDetail: {
       features: "Features",
@@ -438,208 +162,6 @@ export const translations = {
   },
 
   fr: {
-    // Navigation
-    nav: {
-      home: "Accueil",
-      coliving: "Le Coliving",
-      services: "Services",
-      houses: "Nos Maisons",
-      rates: "Tarifs",
-      faq: "FAQ",
-      joinUs: "Nous Rejoindre",
-    },
-
-    // Hero
-    hero: {
-      title: "Maisons Coliving Premium Genève | Vie Communautaire",
-      subtitle:
-        "Vis, travaille et connecte-toi dans des maisons extraordinaires conçues pour une vie communautaire vibrante.",
-      ctaPrimary: "Découvrir Nos Maisons",
-      ctaSecondary: "Voir les disponibilités",
-      badge1: "Tout inclus",
-      badge2: "Communauté sélectionnée",
-      badge3: "Bail 12 mois",
-      badge4: "Sans frais d'agence",
-      availability: "",
-    },
-
-    // Trust Badges - New Section
-    trustBadges: {
-      members: "Membres Heureux",
-      commute: "De Genève",
-      houses: "Maisons Uniques",
-    },
-
-    // Why Choose Us - New Section
-    whyChooseUs: {
-      title: "Pourquoi Choisir La Villa ?",
-      subtitle: "Découvre le coliving conçu pour les jeunes professionnels",
-      item1: {
-        title: "Emménage en 72 h",
-        description:
-          "Maisons entièrement meublées, tout inclus. Pas d'achat de meubles, pas de configuration des services, pas de stress. Apporte ta valise et commence à vivre.",
-      },
-      item2: {
-        title: "Travaille Depuis un Cadre d'Exception",
-        description:
-          "Fibre haut débit et zones calmes. Ton sanctuaire de productivité avec une communauté intégrée.",
-      },
-      item3: {
-        title: "Réseau Social Instantané",
-        description:
-          "Communautés sélectionnées de professionnels partageant les mêmes valeurs. Fini les soirées solitaires — ta communauté t'attend.",
-      },
-      item4: {
-        title: "Zéro Stress Administratif",
-        description:
-          "Un paiement mensuel couvre tout. Nous gérons le ménage, la maintenance, les factures et les réparations. Tu vis, c'est tout.",
-      },
-    },
-
-    // Testimonials - New Section
-    testimonials: {
-      title: "Ce Que Disent Nos Membres",
-      subtitle: "Des histoires réelles de notre communauté",
-      testimonial1: {
-        quote:
-          "La Villa a changé ma vie. Je suis passée de la vie isolée en studio à avoir une vraie communauté. Mes colocataires sont maintenant mes amis les plus proches.",
-        author: "Sarah M.",
-        role: "Consultante Marketing",
-        house: "La Villa",
-      },
-      testimonial2: {
-        quote:
-          "La meilleure décision que j'ai prise en déménageant à Genève. Le tout inclus m'a permis de me concentrer sur mon nouveau travail au lieu de chercher un appartement.",
-        author: "Thomas K.",
-        role: "Ingénieur Logiciel",
-        house: "Le Loft",
-      },
-      testimonial3: {
-        quote:
-          "J'étais sceptique sur le coliving, mais La Villa m'a prouvé le contraire. La communauté sélectionnée fait que tout le monde s'entend. C'est comme une famille.",
-        author: "Emma L.",
-        role: "Designer UX",
-        house: "La Villa",
-      },
-    },
-
-    // About
-    about: {
-      title: "À Propos de La Villa",
-      description:
-        `La Villa réunit des personnes partageant les mêmes valeurs dans des maisons exceptionnelles côté France, dans le Grand Genève, à ${STATS_DISPLAY.fr.distance}.`,
-      description2:
-        "Notre communauté repose sur des valeurs communes : ouverture, collaboration et enthousiasme authentique pour la vie collective. Chaque membre est soigneusement sélectionné pour garantir une parfaite harmonie.",
-      cta: "Découvrir Nos Maisons",
-    },
-
-    // Features
-    features: {
-      title: "Tout Est Inclus",
-      community: {
-        title: "Communauté Sélectionnée",
-        description: "Vis avec des personnes qui partagent ton mode de vie",
-      },
-      amenities: {
-        title: "Équipements Premium",
-        description:
-          "Espaces design, piscine chauffée, salle de sport, espace bien-être & vastes espaces communs",
-      },
-      location: {
-        title: "Emplacement Privilégié",
-        description: STATS_DISPLAY.fr.distance as string,
-      },
-      comfort: {
-        title: "Confort Privé",
-        description:
-          "Chambres spacieuses et design avec literie et mobilier premium",
-      },
-      allInclusive: {
-        title: "Vraiment Tout Inclus",
-        description:
-          "Services, fibre optique, ménage, cours de fitness, événements communautaires & plus",
-      },
-    },
-
-    // Houses Preview
-    houses: {
-      title: "Nos Maisons",
-      subtitle: "Trois maisons. Une communauté.",
-      laVilla: {
-        name: "La Villa",
-        location: "Ville-la-Grand",
-        description:
-          `${HOUSE_SURFACES.lavilla.livingM2} m² de vie design sur un domaine de ${VILLA_PLOT_FR} m² bordant une réserve naturelle.`,
-        features:
-          "Piscine chauffée, sauna, salle de sport, salle de jeux, terrain de volley & potager",
-        perfectFor: "Amoureux de la nature",
-        capacity: "10 membres",
-      },
-      leLoft: {
-        name: "Le Loft",
-        location: "Ambilly",
-        description:
-          `Maison de ville de ${HOUSE_SURFACES.leloft.livingM2} m² avec piscine intérieure chauffée toute l'année, sauna finlandais et cuisine extérieure.`,
-        features:
-          "Piscine intérieure chauffée toute l'année, sauna finlandais, salle de sport, cuisine extérieure avec TV, terrasses & chambres design spacieuses",
-        perfectFor: "Professionnels urbains",
-        capacity: "7 membres",
-      },
-      leLodge: {
-        name: "Le Lodge",
-        location: "Annemasse",
-        description:
-          "Notre maison la plus récente et la plus grande, ouverte depuis janvier 2026. 4 bâtiments, chalet fitness avec sauna, pool house avec cuisine d'été.",
-        features:
-          "Piscine extérieure, chalet fitness avec sauna, pool house avec cuisine d'été complète, BBQ & grands jardins",
-        perfectFor: "Chercheurs de communauté",
-        capacity: "12 membres",
-      },
-      cta: "Découvrir",
-      viewAll: "Voir Toutes les Maisons",
-    },
-
-    // How to Join
-    howToJoin: {
-      title: "Comment Nous Rejoindre",
-      step1: {
-        number: "01",
-        title: "Découvrir",
-        description:
-          "Découvre ce qui rend La Villa unique. Le coliving, c'est plus qu'une colocation — c'est un mode de vie conçu pour la connexion, l'épanouissement et le quotidien sans souci.",
-        cta: "Explorer Le Concept",
-      },
-      step2: {
-        number: "02",
-        title: "Explorer",
-        description:
-          "Visitez nos maisons magnifiquement designées, chacune conçue pour la vie communautaire moderne.",
-        cta: "Voir Nos Maisons",
-      },
-      step3: {
-        number: "03",
-        title: "Candidater",
-        description:
-          "Complète ta candidature et rencontre ta future communauté.",
-        cta: "Commencer Ta Candidature",
-      },
-    },
-
-    // CTA Section
-    cta: {
-      title: "Prêt à Vivre le Vrai Coliving ?",
-      subtitle:
-        "Ta nouvelle maison t'attend. Postule maintenant et rejoins notre communauté sélectionnée.",
-      button: "Candidater",
-    },
-
-    // Footer
-    footer: {
-      tagline: "Coliving premium au Grand Genève, côté France",
-      contact: "Contact",
-      followUs: "Suivez-Nous",
-      rights: "Tous droits réservés.",
-    },
 
     // The Coliving Page - Enhanced
     colivingPage: {
@@ -657,33 +179,33 @@ export const translations = {
           "Imagine avoir ta propre chambre privée magnifiquement designée tout en partageant des équipements premium comme des piscines, des salles de sport et des espaces de coworking avec une communauté sélectionnée de professionnels partageant les mêmes valeurs. C'est le coliving.",
       },
       notColocation: {
-        title: "Le Coliving n'est Pas Juste une Colocation",
+        title: "Le coliving n'est pas juste une colocation",
         description:
           "La colocation traditionnelle signifie trouver des colocataires, acheter des meubles, configurer les services et tout gérer soi-même. C'est du travail.",
         description2:
           "Le coliving est différent. Nous avons fait tout le travail pour toi. Ta maison est entièrement meublée, les services sont connectés, la communauté est sélectionnée et tout est géré professionnellement. Tu emménages et commences à vivre.",
       },
       difference: {
-        title: "Notre Communauté Coliving Sélectionnée",
+        title: "Notre communauté coliving sélectionnée",
         description:
           `Nous réunissons 7 à 12 membres soigneusement sélectionnés dans des maisons pensées dans les moindres détails, à ${STATS_DISPLAY.fr.distance}, côté France. Chaque détail — du mobilier aux événements communautaires — est intentionnel.`,
         description2:
           "Ce n'est pas juste une colocation. C'est une véritable élévation de mode de vie conçue pour les professionnels qui refusent de compromettre sur la qualité, la communauté ou la commodité.",
       },
       values: {
-        title: "Nos Valeurs Fondamentales",
+        title: "Nos valeurs fondamentales",
         value1: {
-          title: "Communauté Sélectionnée",
+          title: "Communauté sélectionnée",
           description:
             "Chaque membre est soigneusement sélectionné pour assurer des valeurs partagées et une vie harmonieuse.",
         },
         value2: {
-          title: "Vie Sans Effort",
+          title: "Vie sans effort",
           description:
             "Tout est pris en charge pour que tu puisses te concentrer sur l'essentiel.",
         },
         value3: {
-          title: "Connexions Significatives",
+          title: "Connexions significatives",
           description:
             "Nous créons des espaces où les relations authentiques fleurissent naturellement.",
         },
@@ -772,84 +294,6 @@ export const translations = {
           description:
             "Support WhatsApp direct pour des réponses rapides. Nous sommes à un message.",
         },
-      },
-    },
-
-    // Rates Page
-    ratesPage: {
-      hero: {
-        title: "Tarifs Transparents",
-        subtitle: `${PRICE_CHF_FR}/mois — Tout inclus dans une maison, pas une résidence`,
-        description:
-          "Pas de frais cachés. Pas de surprises. Juste une valeur exceptionnelle.",
-        description2:
-          "Quand tu additionnes loyer, charges, équipements et services, La Villa offre plus — pour moins cher qu'un studio à Genève.",
-      },
-      included: {
-        title: "Ce Qui Est Inclus",
-        items: [
-          "Loyer & charges (électricité, eau, chauffage)",
-          "Internet fibre pro (jusqu'à 8 Gb/s)",
-          "Ménage des communs 3 fois par semaine",
-          "Entretien piscine, sauna & jardin",
-          "Salle de sport équipée, accessible 24h/24",
-          "Cours de yoga privé hebdomadaire",
-          "Cours de fitness privé hebdomadaire",
-          "Pizza Party mensuelle",
-          "Abonnements streaming (Netflix, Canal+, etc.)",
-          "Événements communautaires saisonniers",
-          "Parking inclus",
-          "Entretien complet maison, annexes & espaces extérieurs",
-          "Entretien du mobilier et équipements",
-          "Fournitures de base fournies",
-          "Gestion des départs (check-out, remise en état)",
-          "Taxes locales incluses",
-          "Parure de linge de lit et serviettes fournie",
-          "Support WhatsApp direct avec les fondateurs",
-          "Bornes recharge vélo électrique (Le Lodge)",
-        ],
-      },
-      deposit: "Caution : 2 mois de loyer hors charges",
-      noFees: "Sans frais d'agence",
-    },
-
-    // FAQ Page
-    faqPage: {
-      hero: {
-        title: "Des Questions ? Nous Avons les Réponses.",
-        subtitle: "Tout ce que tu dois savoir sur la vie à La Villa.",
-        contact:
-          "Tu ne trouves pas ce que tu cherches ? Contacte-nous — nous sommes là pour t'aider.",
-      },
-      categories: {
-        title: "Parcourir par Catégorie",
-      },
-      search: {
-        placeholder: "Rechercher des questions...",
-      },
-    },
-
-    // Join Us Page
-    joinPage: {
-      hero: {
-        title: "Rejoindre La Villa",
-        subtitle: "Ta nouvelle maison t'attend.",
-        description:
-          "Trois étapes simples pour rejoindre notre communauté. Nous t'accompagnons à chaque étape du parcours.",
-        steps: "1. Candidater → 2. Rencontrer → 3. Emménager",
-      },
-      form: {
-        firstName: "Prénom",
-        lastName: "Nom",
-        email: "Adresse Email",
-        phone: "Téléphone",
-        birthDate: "Date de Naissance",
-        job: "Poste à Genève",
-        arrival: "Quand souhaites-tu nous rejoindre ?",
-        duration: "Combien de temps comptes-tu rester ?",
-        submit: "Soumettre ma Candidature",
-        submitting: "Envoi en cours...",
-        success: "Merci ! Nous te recontactons très vite.",
       },
     },
 

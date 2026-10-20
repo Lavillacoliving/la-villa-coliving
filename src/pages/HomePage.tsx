@@ -96,7 +96,7 @@ export function HomePage() {
           </div>
         </div>
       </div>
-      {/* features_paiement = la section « Un seul paiement. Zéro surprise. »
+      {/* features_paiement = la section « Ce que ton loyer comprend » (ex-« Un seul paiement. Zéro surprise. », lot 2 du 16/10/2026)
           (FeaturesV7) — métrique d'atteinte du Lot 2 (réf. ~16 % [EST]),
           remontée juste sous la grille par le réordonnancement du Lot 2. */}
       <div data-home-section="features_paiement"><Features /></div>

@@ -116,7 +116,22 @@ export type PublicRoom = {
   rent_eur: number | string | null;
   availability: string;
   available_from: string | null;
+  /** (Lot 2 — C2, 16/10/2026) Dernière mise à jour chambre/locataire (greatest updated_at rooms/tenants, v_public_rooms). */
+  content_updated_at: string | null;
 };
+
+/** (Lot 2 — C2) La plus récente des mises à jour de l'inventaire, ou null (lignes inconnues ou sans date). Pur. */
+export function roomsContentUpdatedAt(rooms: ReadonlyArray<Pick<PublicRoom, "content_updated_at">>): string | null {
+  let best: string | null = null;
+  let bestMs = Number.NEGATIVE_INFINITY;
+  for (const r of rooms) {
+    const iso = r.content_updated_at;
+    if (!iso) continue;
+    const ms = Date.parse(iso);
+    if (Number.isFinite(ms) && ms > bestMs) { bestMs = ms; best = iso; }
+  }
+  return best;
+}
 
 // Second canal du même store : les lignes chambres (Lot 3). Mêmes listeners,
 // même cycle de vie (embed → init synchrone → refresh partagé post-montage).
@@ -167,7 +182,7 @@ function summarise(rooms: RoomRow[]): HouseSummary[] {
 const ROOM_COLUMNS =
   "house_slug,room_number,name,surface_m2,floor,location_detail,description," +
   "bathroom_type,bathroom_detail,has_parking,has_balcony,has_terrace," +
-  "has_private_entrance,rent_chf,rent_eur,availability,available_from";
+  "has_private_entrance,rent_chf,rent_eur,availability,available_from,content_updated_at";
 
 // (Correctif 30/09/2026) Réseau mobile : une requête qui ne répond jamais bloquait fetchStarted
 // pour toute la visite → délai max, puis nouvelles tentatives tant qu'une page affiche le store.

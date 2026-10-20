@@ -71,7 +71,7 @@ export function LatestBlogV7() {
             className="text-3xl md:text-4xl font-light text-[#1C1917] mb-4"
             style={{ fontFamily: '"DM Serif Display", serif' }}
           >
-            {language === "en" ? "Latest Articles" : "Derniers Articles"}
+            {language === "en" ? "Latest Articles" : "Derniers articles"}
           </h2>
           <p className="text-[#57534E] max-w-2xl mx-auto">
             {language === "en"

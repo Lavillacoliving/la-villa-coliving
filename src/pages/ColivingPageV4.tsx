@@ -102,7 +102,7 @@ export function ColivingPageV4() {
             >
               {language === "en"
                 ? "Explore Our Houses"
-                : "Découvrir Nos Maisons"}
+                : "Découvrir nos maisons"}
               <ArrowRight className="w-5 h-5" />
             </LocalizedLink>
           </div>
@@ -194,7 +194,7 @@ export function ColivingPageV4() {
             <span className="text-xs text-[#78716C] uppercase tracking-[0.3em] mb-4 block">
               {language === "en"
                 ? "What Makes Us Different"
-                : "Ce Qui Nous Différencie"}
+                : "Ce qui nous différencie"}
             </span>
             <h2
               className="text-4xl md:text-5xl font-light text-[#1C1917] mb-6"
@@ -233,7 +233,7 @@ export function ColivingPageV4() {
           <div className="grid lg:grid-cols-2 gap-16 items-center">
             <div>
               <span className="text-xs text-[#78716C] uppercase tracking-[0.3em] mb-4 block">
-                {language === "en" ? "Why Choose Us" : "Pourquoi Nous Choisir"}
+                {language === "en" ? "Why Choose Us" : "Pourquoi nous choisir"}
               </span>
               <h2
                 className="text-4xl md:text-5xl font-light text-[#1C1917] mb-8"
@@ -268,7 +268,7 @@ export function ColivingPageV4() {
               >
                 {language === "en"
                   ? "Explore Our Houses"
-                  : "Explorer Nos Maisons"}
+                  : "Explorer nos maisons"}
                 <ArrowRight className="w-5 h-5" />
               </LocalizedLink>
               <p className="mt-4 text-sm text-[#57534E]">
@@ -321,7 +321,7 @@ export function ColivingPageV4() {
               >
                 {language === "en"
                   ? "More Than Roommates"
-                  : "Plus Que Des Colocataires"}
+                  : "Plus que des colocataires"}
               </h2>
               <p className="text-lg text-[#57534E] leading-relaxed mb-6">
                 {language === "en"

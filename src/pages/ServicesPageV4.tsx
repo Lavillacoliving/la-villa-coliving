@@ -167,7 +167,7 @@ export function ServicesPageV4() {
           <div className="max-w-2xl">
             <span className="inline-flex items-center gap-2 px-4 py-2 bg-white/12 backdrop-blur-sm border border-white/15 text-white text-[13px] font-semibold tracking-wider uppercase rounded-full mb-6">
               <Zap className="w-4 h-4 text-[#E0BB8A]" />
-              {language === "en" ? "All-Inclusive Living" : "Vie Tout Inclus"}
+              {language === "en" ? "All-Inclusive Living" : "Vie tout inclus"}
             </span>
 
             <h1
@@ -380,7 +380,7 @@ export function ServicesPageV4() {
               <span className="text-[13px] font-semibold tracking-wider uppercase text-[#78716C] mb-4 block">
                 {language === "en"
                   ? "The La Villa Difference"
-                  : "La Différence La Villa"}
+                  : "La différence La Villa"}
               </span>
               <h2 className="text-3xl md:text-4xl font-bold text-[#1C1917] mb-6 tracking-tight">
                 {language === "en" ? "Say goodbye to" : "Dis adieu aux"}{" "}
