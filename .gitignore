@@ -32,3 +32,17 @@ scripts/competitors.local.json
 
 # Python (scripts/import-resident-history.py)
 __pycache__/
+
+# Photos et vidéos brutes : jamais dans le dépôt. Tout public/ est recopié dans CHAQUE déploiement Vercel
+# (quota « Deployment Storage » du plan Hobby). Convertir en WebP ≤ 1920 px (scripts/convert-images.cjs) :
+# l'original reste sur le disque, seul le .webp est versionné. Exception volontaire : git add -f.
+public/images/**/*.jpg
+public/images/**/*.jpeg
+public/images/**/*.JPG
+public/images/**/*.JPEG
+public/images/**/*.png
+public/images/**/*.PNG
+public/images/**/*.heic
+public/images/**/*.HEIC
+public/**/*.mov
+public/**/*.MOV

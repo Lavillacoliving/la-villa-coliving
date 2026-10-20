@@ -20,6 +20,7 @@ Si `../lavilla-docs/` est absent : `git clone git@github.com:Lavillacoliving/lav
 - **Push sur `main` = déploiement production immédiat** (Vercel). Jamais sans GO explicite de Jérôme.
 - La production se déploie au commit du bot `auto-prerender:` (ou au commit vide qu'il pousse) : Vercel ignore le build du commit poussé (« Ignored Build Step », constat du 13/10/2026) — compter ~20 min entre la fusion et la mise en ligne, gardes CI comprises
 - `npm run build` garde les JS/CSS de la version précédente (`scripts/keep-previous-assets.mjs`, manifeste `/lvc-assets.json`, D6 du 13/10/2026) : une seule version, jamais bloquant ; retour arrière = retirer l'étape du script `build`
+- Images : tout `public/` est recopié dans chaque déploiement Vercel (quota « Deployment Storage » de 10 Go du plan Hobby) → seulement du WebP ≤ 1920 px de large dans `public/images` ; les originaux JPG/PNG/HEIC/MOV restent hors du dépôt (`.gitignore`, `scripts/convert-images.cjs`) ; une ancienne URL `.jpg` reçoit son jumeau `.webp` (rewrite de secours dans `scripts/prerender.mjs`)
 - Sessions concurrentes : travailler sur des branches `feat/*`, ne jamais éditer un checkout sans vérifier `git status`
 
 ## Garde-fous acquisition & autorité (Brief n°2 — 21/08/2026)
