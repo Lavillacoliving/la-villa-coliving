@@ -3,6 +3,7 @@ import { ToastProvider } from '@/components/ui/Toast';
 import { Outlet, useNavigate, useLocation } from 'react-router-dom';
 import { supabase } from '@/lib/supabase';
 import { useIsMobile } from '@/hooks/use-mobile';
+import TotpReplacePanel, { TOTP_ISSUER } from './TotpReplacePanel';
 import '@/dashboard-mobile.css';
 
 const ADMIN_EMAILS = ['jerome@lavillacoliving.com', 'fanny@lavillacoliving.com'];
@@ -38,6 +39,10 @@ export default function DashboardLayout() {
   const [qrUri, setQrUri] = useState('');
   const [factorId, setFactorId] = useState('');
   const [enrollSecret, setEnrollSecret] = useState('');
+  const [enrollUri, setEnrollUri] = useState('');
+  // Tous les codes vérifiés du compte : pendant un remplacement il peut y en avoir deux
+  const [totpFactorIds, setTotpFactorIds] = useState<string[]>([]);
+  const [showCodePanel, setShowCodePanel] = useState(false);
 
   const nav = useNavigate();
   const loc = useLocation();
@@ -60,10 +65,10 @@ export default function DashboardLayout() {
     }
     // aal1 — need to check if user has enrolled factors
     const { data: factors } = await supabase.auth.mfa.listFactors();
-    const totp = factors?.totp?.find(f => f.status === 'verified');
-    if (totp) {
+    const totps = factors?.totp?.filter(f => f.status === 'verified') ?? [];
+    if (totps.length) {
       // Has enrolled factor but needs verification this session
-      setFactorId(totp.id);
+      setTotpFactorIds(totps.map(f => f.id));
       setStep('mfa-verify');
     } else {
       // No factor enrolled yet → enroll
@@ -73,11 +78,12 @@ export default function DashboardLayout() {
 
   const startEnroll = async () => {
     setErr('');
-    const { data, error } = await supabase.auth.mfa.enroll({ factorType: 'totp', friendlyName: 'La Villa Admin' });
+    const { data, error } = await supabase.auth.mfa.enroll({ factorType: 'totp', friendlyName: 'La Villa Admin', issuer: TOTP_ISSUER });
     if (error) { setErr(error.message); return; }
     if (data) {
       setQrUri(data.totp.qr_code);
       setEnrollSecret(data.totp.secret);
+      setEnrollUri(data.totp.uri);
       setFactorId(data.id);
       setStep('mfa-enroll');
     }
@@ -86,16 +92,17 @@ export default function DashboardLayout() {
   const verifyMFA = async (e: React.FormEvent) => {
     e.preventDefault();
     setBusy(true); setErr('');
-    const { data: challenge, error: cErr } = await supabase.auth.mfa.challenge({ factorId });
-    if (cErr) { setErr(cErr.message); setBusy(false); return; }
-    const { error: vErr } = await supabase.auth.mfa.verify({
-      factorId,
-      challengeId: challenge.id,
-      code: totpCode,
-    });
-    if (vErr) { setErr('Code invalide. Réessaie.'); setBusy(false); setTotpCode(''); return; }
-    setStep('ready');
-    setBusy(false);
+    // Plusieurs codes possibles (remplacement en cours) : le bon est celui qui accepte la saisie
+    const ids = step === 'mfa-enroll' ? [factorId] : totpFactorIds;
+    let challengeError = '';
+    for (const id of ids) {
+      const { data: challenge, error: cErr } = await supabase.auth.mfa.challenge({ factorId: id });
+      if (cErr) { challengeError = cErr.message; continue; }
+      const { error: vErr } = await supabase.auth.mfa.verify({ factorId: id, challengeId: challenge.id, code: totpCode });
+      if (!vErr) { setStep('ready'); setBusy(false); return; }
+      challengeError = '';
+    }
+    setErr(challengeError || 'Code invalide. Réessaie.'); setBusy(false); setTotpCode('');
   };
 
   useEffect(() => { checkAuth(); }, []);
@@ -120,6 +127,7 @@ export default function DashboardLayout() {
     await supabase.auth.signOut();
     setStep('login');
     setTotpCode(''); setQrUri(''); setFactorId('');
+    setEnrollUri(''); setTotpFactorIds([]); setShowCodePanel(false);
   };
 
   const S = {
@@ -142,8 +150,8 @@ export default function DashboardLayout() {
       <form onSubmit={login} style={S.card}>
         <h2 style={{ color: '#1a1a2e', marginBottom: '8px' }}>Tableau de Bord</h2>
         <p style={{ color: '#888', marginBottom: '24px', fontSize: '14px' }}>Connexion administrateur</p>
-        <input type="email" value={email} onChange={e => setEmail(e.target.value)} placeholder="Email" required style={S.input} />
-        <input type="password" value={pw} onChange={e => setPw(e.target.value)} placeholder="Mot de passe" required style={S.input} />
+        <input type="email" value={email} onChange={e => setEmail(e.target.value)} placeholder="Email" required autoComplete="username" style={S.input} />
+        <input type="password" value={pw} onChange={e => setPw(e.target.value)} placeholder="Mot de passe" required autoComplete="current-password" style={S.input} />
         {err && <p style={S.err}>{err}</p>}
         <button type="submit" disabled={busy} style={{ ...S.btn, opacity: busy ? 0.6 : 1 }}>{busy ? 'Connexion...' : 'Se connecter'}</button>
       </form>
@@ -156,9 +164,10 @@ export default function DashboardLayout() {
       <form onSubmit={verifyMFA} style={{ ...S.card, width: '440px' }}>
         <h2 style={{ color: '#1a1a2e', marginBottom: '8px' }}>🔒 Activer la double authentification</h2>
         <p style={{ color: '#888', marginBottom: '16px', fontSize: '14px' }}>
-          Scanne ce QR code avec Google Authenticator ou Authy, puis entre le code à 6 chiffres.
+          Scanne ce QR code avec l'appareil photo de ton iPhone (app Mots de passe), Google Authenticator ou Authy, puis entre le code à 6 chiffres.
         </p>
         {qrUri && <img src={qrUri} alt="QR Code TOTP" style={{ width: '200px', height: '200px', margin: '0 auto 16px', display: 'block', borderRadius: '8px' }} />}
+        {enrollUri && <a href={enrollUri} style={{ display: 'block', marginBottom: '12px', color: '#b8860b', fontSize: '14px', fontWeight: 600 }}>Sur cet appareil : ajouter dans Mots de passe</a>}
         {enrollSecret && (
           <p style={{ fontSize: '11px', color: '#aaa', marginBottom: '16px', wordBreak: 'break-all' }}>
             Clé manuelle : <code style={{ background: '#f5f5f5', padding: '2px 6px', borderRadius: '4px' }}>{enrollSecret}</code>
@@ -167,7 +176,7 @@ export default function DashboardLayout() {
         <input
           type="text" inputMode="numeric" pattern="[0-9]*" maxLength={6}
           value={totpCode} onChange={e => setTotpCode(e.target.value.replace(/\D/g, ''))}
-          placeholder="Code à 6 chiffres" required autoFocus className="dash-fs-keep"
+          placeholder="Code à 6 chiffres" required autoFocus autoComplete="one-time-code" className="dash-fs-keep"
           style={{ ...S.input, textAlign: 'center', fontSize: '24px', letterSpacing: '8px', fontWeight: 700 }}
         />
         {err && <p style={S.err}>{err}</p>}
@@ -190,7 +199,7 @@ export default function DashboardLayout() {
         <input
           type="text" inputMode="numeric" pattern="[0-9]*" maxLength={6}
           value={totpCode} onChange={e => setTotpCode(e.target.value.replace(/\D/g, ''))}
-          placeholder="000000" required autoFocus className="dash-fs-keep"
+          placeholder="000000" required autoFocus autoComplete="one-time-code" className="dash-fs-keep"
           style={{ ...S.input, textAlign: 'center', fontSize: '24px', letterSpacing: '8px', fontWeight: 700 }}
         />
         {err && <p style={S.err}>{err}</p>}
@@ -213,6 +222,7 @@ export default function DashboardLayout() {
         </div>
         <div style={{ display: 'flex', gap: '8px', ...(isMobile ? { flexShrink: 0 } : {}) }}>
           <button onClick={() => nav('/')} style={{ background: 'none', border: '1px solid #555', color: '#aaa', padding: '6px 12px', borderRadius: '6px', cursor: 'pointer' }}>Site</button>
+          <button onClick={() => setShowCodePanel(true)} title="Code de connexion (2FA)" style={{ background: 'none', border: '1px solid #555', color: '#aaa', padding: '6px 12px', borderRadius: '6px', cursor: 'pointer' }}>Code 2FA</button>
           <button onClick={logout} style={{ background: '#c0392b', border: 'none', color: '#fff', padding: '6px 12px', borderRadius: '6px', cursor: 'pointer' }}>Logout</button>
         </div>
       </header>
@@ -248,6 +258,7 @@ export default function DashboardLayout() {
       <main style={{ padding: isMobile ? '12px' : '24px', maxWidth: '1400px', margin: '0 auto' }}>
         <Outlet />
       </main>
+      {showCodePanel && <TotpReplacePanel onClose={() => setShowCodePanel(false)} />}
     </div>
     </ToastProvider>
   );
