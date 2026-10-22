@@ -8,6 +8,10 @@ import { logAudit } from '@/lib/auditLog';
 import { getBailleurLines } from '@/lib/entities';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { numberInWordsFr } from '@/lib/frenchNumbers';
+import {
+  depositSchedule, discountError, firstPaymentAfterDiscount, installmentDueLabel, installmentsInWords,
+  normalizeDiscount, normalizeInstallments, type DepositInstallment, type DepositInstallments,
+} from '@/lib/leaseTerms';
 
 interface Property {
   id: string;
@@ -79,6 +83,10 @@ interface FormData {
   clauses_particulieres: string;
   annexe_documents: string[];
   lease_duration_months: number;
+  /** (22/10/2026) Remise libre sur le 1er mois, en EUR charges comprises ; 0 = aucune. */
+  first_month_discount_eur: number;
+  /** (22/10/2026) Caution versée en 1, 2 ou 3 fois (src/lib/leaseTerms.ts). */
+  deposit_installments: DepositInstallments;
 }
 
 // ── Tarif transitoire — bascule des loyers du 01/09/2026 ────────────────
@@ -144,6 +152,11 @@ interface ContractData {
   prorata_chf: number;
   prorata_days: number;
   prorata_total_days: number;
+  /** (22/10/2026) Montant du 1er mois avant remise (prorata ou mois plein), remise, montant après remise. */
+  first_month_eur: number;
+  discount_eur: number;
+  first_payment_eur: number;
+  deposit_schedule: DepositInstallment[];
 }
 
 function ph(val: string | undefined | null, placeholder: string): string {
@@ -189,6 +202,11 @@ function fEUR2(n: number): string {
   }).format(n);
 }
 
+// (22/10/2026) Remise et échéances de caution : à l'euro quand c'est rond, sinon au centime.
+function fAmount(n: number): string {
+  return Number.isInteger(n) ? fEUR(n) : fEUR2(n);
+}
+
 function generateContractHTML(data: ContractData): string {
   const {
     property,
@@ -197,6 +215,10 @@ function generateContractHTML(data: ContractData): string {
     exit_date,
     loyer_eur,
     depot_eur,
+    first_month_eur,
+    discount_eur,
+    first_payment_eur,
+    deposit_schedule,
   } = data;
 
   const commonAreasList = (property.common_areas || [])
@@ -206,6 +228,22 @@ function generateContractHTML(data: ContractData): string {
   // Charges are stored in EUR — convert to CHF for display
   const totalChargesEUR = form.charges_energy + form.charges_maintenance + form.charges_services;
   const frais = computeFraisEntree(room.surface_m2, form.frais_dossier_m2, form.frais_edl_m2);
+
+  // (22/10/2026) Remise sur le 1er mois : geste commercial ponctuel, le loyer du bail ne change pas.
+  const remiseBlock = discount_eur > 0 ? `
+          <h3>Remise exceptionnelle sur le premier mois :</h3>
+          <p>À titre de geste commercial, le bailleur consent au locataire une remise de <strong>${fAmount(discount_eur)}</strong> sur le montant dû au titre du premier mois (${fAmount(first_month_eur)}, charges comprises). Le montant à verser au titre du premier mois est donc de <strong style="color:#c9a96e;">${fAmount(first_payment_eur)}</strong>.</p>
+          <p>Cette remise est accordée une seule fois. Elle ne modifie pas le loyer fixé au présent article, dû en totalité à compter du deuxième mois, et n'a d'effet ni sur la révision annuelle du loyer, ni sur le montant du dépôt de garantie.</p>` : '';
+  // (22/10/2026) Caution en 2 ou 3 fois : échéancier inscrit au bail.
+  const depositInParts = deposit_schedule.length > 1;
+  const depositScheduleBlock = depositInParts ? `
+        <div class="article">
+          <p>Par accord entre les parties, ce dépôt de garantie est versé en ${installmentsInWords(deposit_schedule.length)} fois :</p>
+          <ul>
+            ${deposit_schedule.map((i) => `<li><strong>${fAmount(i.amount)}</strong> ${installmentDueLabel(i, fDate)}${i.index === deposit_schedule.length ? '.' : ' ;'}</li>`).join('')}
+          </ul>
+          <p>Le montant total du dépôt de garantie reste de ${fAmount(depot_eur)}.</p>
+        </div>` : '';
 
   const chargesTable = property.is_coliving ? `
     <p style="font-size:9px;color:#666;">Le montant mensuel des charges forfaitaires et des services est inclus dans le loyer principal.</p>
@@ -639,6 +677,7 @@ function generateContractHTML(data: ContractData): string {
             <li><strong>Montant mensuel :</strong> ${fEUR(totalChargesEUR)}</li>
           </ul>
           <p style="font-size:9px;color:#666;">La régularisation des charges est effectuée annuellement, au vu des dépenses réelles.</p>`}
+          ${remiseBlock}
           <h3>Révision annuelle (IRL) :</h3>
           <ul>
             <li>Trimestre de référence : ${ph(form.irl_trimestre, '3ème trimestre 2025')}</li>
@@ -684,10 +723,11 @@ function generateContractHTML(data: ContractData): string {
             ? `Le locataire versera un dépôt de garantie égal à deux (2) mois de loyer hors charges, soit <strong>${fEUR(depot_eur)}</strong>, restitué dans les deux (2) mois suivant la fin du contrat, selon l'état des lieux.`
             : `Le locataire versera un dépôt de garantie égal à un (1) mois de loyer hors charges, soit <strong>${fEUR(depot_eur)}</strong>, restitué dans les deux (2) mois suivant la fin du contrat, déduction faite des sommes éventuellement dues.`}
         </div>
+        ${depositScheduleBlock}
 
         <h2>ARTICLE VI — CLAUSE RÉSOLUTOIRE</h2>
         <div class="article">
-          <p>À défaut de paiement à son terme de tout ou partie du loyer ou des charges, ou à défaut de versement du dépôt de garantie, le présent contrat sera résilié de plein droit six (6) semaines après la délivrance au locataire d'un commandement de payer demeuré infructueux, conformément à l'article 24 de la loi n° 89-462 du 6 juillet 1989.</p>
+          <p>À défaut de paiement à son terme de tout ou partie du loyer ou des charges, ou à défaut de versement du dépôt de garantie${depositInParts ? ' ou de l\'une de ses échéances' : ''}, le présent contrat sera résilié de plein droit six (6) semaines après la délivrance au locataire d'un commandement de payer demeuré infructueux, conformément à l'article 24 de la loi n° 89-462 du 6 juillet 1989.</p>
           <p>Le présent contrat sera également résilié de plein droit à défaut pour le locataire de justifier d'une assurance contre les risques locatifs, un (1) mois après un commandement demeuré infructueux, conformément à l'article 7 g) de la loi n° 89-462 du 6 juillet 1989.</p>
           <p>Une fois la résiliation acquise, le locataire devra libérer les lieux. À défaut, son expulsion pourra être ordonnée par le juge des contentieux de la protection.</p>
         </div>
@@ -916,6 +956,8 @@ export default function DashboardNouveauBailPage() {
     clauses_particulieres: '',
     annexe_documents: [],
     lease_duration_months: 12,
+    first_month_discount_eur: 0,
+    deposit_installments: 1,
   });
 
   const [selectedProperty, setSelectedProperty] = useState<Property | null>(null);
@@ -1077,6 +1119,14 @@ export default function DashboardNouveauBailPage() {
   };
   const prorata = computeProrata();
 
+  // (22/10/2026) Remise libre sur le 1er mois (prorata ou mois plein) et caution en 1, 2 ou 3 fois.
+  const firstMonthEUR = prorata.days > 0 && prorata.days < prorata.totalDays ? prorata.eur : loyerEUR;
+  const discountEUR = normalizeDiscount(form.first_month_discount_eur);
+  const firstPaymentEUR = firstPaymentAfterDiscount(firstMonthEUR, discountEUR);
+  const discountErr = discountError(firstMonthEUR, discountEUR);
+  const depositInstallments = normalizeInstallments(form.deposit_installments);
+  const depositPlan = depositSchedule(depotEUR, depositInstallments, form.entry_date);
+
   // Generate contract data
   // === SAVE BAIL: create tenant + deactivate old ===
   const doSaveBail = async (oldTenantId?: string) => {
@@ -1128,7 +1178,14 @@ export default function DashboardNouveauBailPage() {
         charges_energy_chf: form.charges_energy,
         charges_maintenance_chf: form.charges_maintenance,
         charges_services_chf: form.charges_services,
-        notes: 'Bail généré automatiquement le ' + new Date().toLocaleDateString('fr-FR'),
+        // (22/10/2026) Conditions particulières : remise sur le 1er mois (le déclencheur payments la retire du loyer
+        // attendu du mois d'entrée) et caution en 1, 2 ou 3 fois (échéances cochées depuis la fiche locataire).
+        first_month_discount_eur: discountEUR > 0 ? discountEUR : null,
+        deposit_installments: depositInstallments,
+        deposit_installments_received: 0,
+        notes: 'Bail généré automatiquement le ' + new Date().toLocaleDateString('fr-FR')
+          + (discountEUR > 0 ? ` · Remise 1er mois : ${discountEUR} €` : '')
+          + (depositInstallments > 1 ? ` · Caution en ${depositInstallments} fois` : ''),
       }).select('id').single();
 
       if (error) throw error;
@@ -1177,6 +1234,8 @@ export default function DashboardNouveauBailPage() {
           charges_energy_chf: form.charges_energy,
           charges_maintenance_chf: form.charges_maintenance,
           charges_services_chf: form.charges_services,
+          first_month_discount_eur: discountEUR > 0 ? discountEUR : null,
+          deposit_installments: depositInstallments,
           status: 'draft',
           is_active: false,
           document_url: documentUrl,
@@ -1240,6 +1299,9 @@ export default function DashboardNouveauBailPage() {
         entry_date: form.entry_date,
         document_url: documentUrl,
         annexe_files_uploaded: uploadedCount,
+        first_month_discount_eur: discountEUR,
+        first_payment_eur: firstPaymentEUR,
+        deposit_installments: depositInstallments,
       });
       if (oldTenantId) {
         logAudit('tenant_deactivated', 'tenant', oldTenantId);
@@ -1247,7 +1309,9 @@ export default function DashboardNouveauBailPage() {
       const parts = [`Locataire ${form.locataire_prenom} ${form.locataire_nom} créé en BROUILLON.`];
       if (documentUrl) parts.push('Bail PDF uploadé.');
       if (uploadedCount > 0) parts.push(`${uploadedCount} annexe(s) uploadée(s).`);
-      parts.push('→ Confirme la signature et la réception de caution depuis sa fiche locataire.');
+      parts.push(depositInstallments > 1
+        ? `→ Confirme la signature depuis sa fiche locataire, puis coche chacune des ${depositInstallments} échéances de caution à réception.`
+        : '→ Confirme la signature et la réception de caution depuis sa fiche locataire.');
       toast.success(parts.join(' '));
     } catch (err: any) {
       toast.error('Erreur: ' + (err.message || err));
@@ -1261,6 +1325,7 @@ export default function DashboardNouveauBailPage() {
     if (!form.locataire_nom || !form.locataire_prenom || !form.locataire_email || !form.entry_date) {
       toast.warning('Remplissez les champs obligatoires : Nom, Prénom, Email, Date d\'entrée'); return;
     }
+    if (discountErr) { toast.warning(discountErr); return; }
     // Check for existing active tenant
     const { data: existing } = await supabase
       .from('tenants').select('id, first_name, last_name')
@@ -1288,6 +1353,10 @@ export default function DashboardNouveauBailPage() {
           prorata_chf: prorata.chf,
           prorata_days: prorata.days,
           prorata_total_days: prorata.totalDays,
+          first_month_eur: firstMonthEUR,
+          discount_eur: discountEUR,
+          first_payment_eur: firstPaymentEUR,
+          deposit_schedule: depositPlan,
         }
       : null;
 
@@ -1976,6 +2045,69 @@ export default function DashboardNouveauBailPage() {
           </div>
         </div>
 
+        {/* (22/10/2026) Conditions particulières : remise libre sur le 1er mois, caution en 1, 2 ou 3 fois (src/lib/leaseTerms.ts). */}
+        <div style={{ marginBottom: '20px', padding: '12px 14px', border: '1px solid #ddd', borderRadius: '6px', background: '#fff' }}>
+          <div style={{ fontWeight: 'bold', marginBottom: '10px', color: '#333', fontSize: '14px' }}>
+            Remise et échelonnement de la caution
+          </div>
+          <label style={{ display: 'block', marginBottom: '6px', fontSize: '13px', color: '#666' }}>
+            Remise sur le 1er mois (€, charges comprises) — vide = aucune
+          </label>
+          <input
+            type="number"
+            min={0}
+            step="1"
+            placeholder="0"
+            value={form.first_month_discount_eur || ''}
+            onChange={(e) => setForm((prev) => ({ ...prev, first_month_discount_eur: parseFloat(e.target.value) || 0 }))}
+            style={{
+              width: '100%',
+              padding: '10px',
+              marginBottom: '6px',
+              borderRadius: '4px',
+              border: `1px solid ${discountErr ? '#c0392b' : '#ddd'}`,
+              fontSize: '14px',
+            }}
+          />
+          <div style={{ fontSize: '12px', color: discountErr ? '#c0392b' : '#666', marginBottom: '12px' }}>
+            {discountErr ?? (discountEUR > 0
+              ? `1er mois : ${fAmount(firstMonthEUR)} − ${fAmount(discountEUR)} = ${fAmount(firstPaymentEUR)} à verser. Le loyer du bail ne change pas.`
+              : `1er mois : ${fAmount(firstMonthEUR)}${prorata.days > 0 && prorata.days < prorata.totalDays ? ' (prorata)' : ''}.`)}
+          </div>
+          <div style={{ fontSize: '13px', color: '#666', marginBottom: '6px' }}>Caution versée en</div>
+          <div role="radiogroup" aria-label="Caution versée en" style={{ display: 'flex', gap: '8px', marginBottom: '8px' }}>
+            {([1, 2, 3] as const).map((n) => (
+              <button
+                key={n}
+                type="button"
+                role="radio"
+                aria-checked={depositInstallments === n}
+                onClick={() => setForm((prev) => ({ ...prev, deposit_installments: n }))}
+                style={{
+                  flex: 1,
+                  padding: '8px',
+                  borderRadius: '4px',
+                  fontSize: '13px',
+                  cursor: 'pointer',
+                  border: `1px solid ${depositInstallments === n ? '#b8860b' : '#ddd'}`,
+                  background: depositInstallments === n ? '#FFF8E7' : '#fff',
+                  fontWeight: depositInstallments === n ? 'bold' : 'normal',
+                  color: '#333',
+                }}
+              >
+                {n} fois
+              </button>
+            ))}
+          </div>
+          {depositPlan.length > 1 && (
+            <ul style={{ margin: 0, paddingLeft: '18px', fontSize: '12px', color: '#3a2e10' }}>
+              {depositPlan.map((i) => (
+                <li key={i.index}>{fAmount(i.amount)} {installmentDueLabel(i, fDate)}</li>
+              ))}
+            </ul>
+          )}
+        </div>
+
         <label style={{ display: 'block', marginBottom: '8px', fontSize: '13px', color: '#666' }}>
           IRL Trimestre de référence — <span style={{
             color: irlStatus === 'live' ? '#0F766E' : irlStatus === 'cache' ? '#B45309' : '#999',
@@ -2236,7 +2368,7 @@ export default function DashboardNouveauBailPage() {
 
         <div className="dash-toolbar" style={{ display: 'flex', gap: '10px' }}>
           <button
-            onClick={async () => { if (!contractData) return; try { const blob = await pdf(BailPDF({ data: contractData })).toBlob(); const url = URL.createObjectURL(blob); const a = document.createElement('a'); a.href = url; a.download = `Bail_${form.locataire_nom || 'Locataire'}_${form.entry_date || 'date'}.pdf`; a.click(); URL.revokeObjectURL(url); } catch (e) { console.error('PDF error:', e); toast.error('Erreur PDF: ' + e); } }}
+            onClick={async () => { if (!contractData) return; if (discountErr) { toast.warning(discountErr); return; } try { const blob = await pdf(BailPDF({ data: contractData })).toBlob(); const url = URL.createObjectURL(blob); const a = document.createElement('a'); a.href = url; a.download = `Bail_${form.locataire_nom || 'Locataire'}_${form.entry_date || 'date'}.pdf`; a.click(); URL.revokeObjectURL(url); } catch (e) { console.error('PDF error:', e); toast.error('Erreur PDF: ' + e); } }}
             disabled={!contractData || rateStatus === 'fallback'}
             title={rateStatus === 'fallback' ? 'Saisis manuellement le taux EUR/CHF du jour avant de générer le bail' : ''}
             style={{

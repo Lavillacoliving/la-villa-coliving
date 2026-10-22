@@ -3,6 +3,7 @@ import { supabase } from '@/lib/supabase';
 import { useToast } from '@/components/ui/Toast';
 import { logAudit } from '@/lib/auditLog';
 import { PROPERTY_FILTER_OPTIONS } from '@/lib/entities';
+import { depositSchedule, nextInstallment, normalizeInstallments } from '@/lib/leaseTerms';
 
 // ─── Types ──────────────────────────────────────────────
 interface Tenant {
@@ -22,6 +23,9 @@ interface Tenant {
   property_id: string;
   entity_id: string | null;
   notes: string | null;
+  // (22/10/2026) Caution en 1, 2 ou 3 fois, échéances reçues cochées depuis la fiche locataire
+  deposit_installments?: number | null;
+  deposit_installments_received?: number | null;
 }
 
 interface Property {
@@ -31,7 +35,7 @@ interface Property {
   entity_id: string;
 }
 
-type DepositStatus = 'en_attente' | 'detenue' | 'a_restituer' | 'restituee' | 'partielle';
+type DepositStatus = 'en_attente' | 'echelonnee' | 'detenue' | 'a_restituer' | 'restituee' | 'partielle';
 
 interface DepositRow extends Tenant {
   deposit_status: DepositStatus;
@@ -59,14 +63,25 @@ function computeStatus(t: Tenant): DepositStatus {
   if (t.deposit_refunded_amount && t.deposit_refunded_amount > 0 && t.deposit_refunded_amount < t.deposit_amount) return 'partielle';
   // Locataire parti → caution à restituer
   if (!t.is_active && t.move_out_date && new Date(t.move_out_date) <= new Date()) return 'a_restituer';
+  // (22/10/2026) Caution en 2 ou 3 fois pas encore entièrement reçue
+  if (normalizeInstallments(t.deposit_installments) > 1 && (t.deposit_installments_received || 0) < normalizeInstallments(t.deposit_installments)) return 'echelonnee';
   // Montant renseigné mais pas encore reçue (pas de date réception)
   if (!t.deposit_received_date) return 'en_attente';
   // Caution reçue et détenue
   return 'detenue';
 }
 
+/** (22/10/2026) Caution échelonnée : échéancier du bail et part déjà reçue. */
+function installmentsOf(t: Tenant) {
+  const plan = depositSchedule(t.deposit_amount || 0, normalizeInstallments(t.deposit_installments), t.move_in_date || '');
+  const done = Math.min(plan.length, t.deposit_installments_received || 0);
+  const received = plan.slice(0, done).reduce((s, i) => s + i.amount, 0);
+  return { plan, done, received, next: nextInstallment(plan, done) };
+}
+
 const STATUS_CONFIG: Record<DepositStatus, { label: string; color: string; bg: string; emoji: string }> = {
   en_attente: { label: 'En attente', color: '#9ca3af', bg: '#f9fafb', emoji: '⏳' },
+  echelonnee: { label: 'Échelonnée', color: '#b45309', bg: '#fffbeb', emoji: '🟡' },
   detenue: { label: 'Détenue', color: '#16a34a', bg: '#f0fdf4', emoji: '🟢' },
   a_restituer: { label: 'À restituer', color: '#d97706', bg: '#fffbeb', emoji: '🟠' },
   restituee: { label: 'Restituée', color: '#3b82f6', bg: '#eff6ff', emoji: '🔵' },
@@ -144,8 +159,12 @@ export default function DashboardCautionsPage() {
   const detenues = filtered.filter(r => r.deposit_status === 'detenue');
   const aRestituer = filtered.filter(r => r.deposit_status === 'a_restituer');
   const restituees = filtered.filter(r => r.deposit_status === 'restituee' || r.deposit_status === 'partielle');
-  const totalEnAttente = enAttente.reduce((s, r) => s + (r.deposit_amount || 0), 0);
-  const totalDetenu = detenues.reduce((s, r) => s + (r.deposit_amount || 0), 0);
+  // (22/10/2026) Cautions échelonnées : la part reçue est détenue, le reste est en attente
+  const echelonnees = filtered.filter(r => r.deposit_status === 'echelonnee');
+  const echelonneesRecu = echelonnees.reduce((s, r) => s + installmentsOf(r).received, 0);
+  const echelonneesTotal = echelonnees.reduce((s, r) => s + (r.deposit_amount || 0), 0);
+  const totalEnAttente = enAttente.reduce((s, r) => s + (r.deposit_amount || 0), 0) + (echelonneesTotal - echelonneesRecu);
+  const totalDetenu = detenues.reduce((s, r) => s + (r.deposit_amount || 0), 0) + echelonneesRecu;
   const totalARestituer = aRestituer.reduce((s, r) => s + (r.deposit_amount || 0), 0);
 
   // Alert: overdue returns
@@ -352,6 +371,7 @@ export default function DashboardCautionsPage() {
         {[
           { v: 'all', l: `Toutes (${rows.length})` },
           { v: 'en_attente', l: `En attente (${rows.filter(r => r.deposit_status === 'en_attente').length})` },
+          { v: 'echelonnee', l: `Échelonnées (${rows.filter(r => r.deposit_status === 'echelonnee').length})` },
           { v: 'detenue', l: `Détenues (${rows.filter(r => r.deposit_status === 'detenue').length})` },
           { v: 'a_restituer', l: `À restituer (${rows.filter(r => r.deposit_status === 'a_restituer').length})` },
           { v: 'restituee', l: `Restituées (${rows.filter(r => r.deposit_status === 'restituee').length})` },
@@ -396,6 +416,16 @@ export default function DashboardCautionsPage() {
                       {cfg.emoji} {cfg.label}
                     </span>
                     {isOverdue && <span style={{ fontSize: '10px', color: '#dc2626', display: 'block', marginTop: '2px' }}>⚠️ En retard (&gt;30j)</span>}
+                    {row.deposit_status === 'echelonnee' && (() => {
+                      const inst = installmentsOf(row);
+                      return (
+                        <span style={{ fontSize: '11px', color: '#92400e', display: 'block', marginTop: '2px' }}>
+                          {inst.done}/{inst.plan.length} reçues
+                          {inst.next && ` · prochaine : ${fmt(inst.next.amount)}${inst.next.dueDate ? ` le ${fmtDate(inst.next.dueDate)}` : ' à la signature'}`}
+                          {' · à cocher dans la fiche locataire'}
+                        </span>
+                      );
+                    })()}
                   </td>
                   <td data-label="Restitution" style={{ padding: '8px 12px', fontSize: '13px' }}>
                     {row.deposit_refunded_date ? (
