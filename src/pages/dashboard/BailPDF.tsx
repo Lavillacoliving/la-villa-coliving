@@ -10,6 +10,7 @@ import {
 import { getBailleurLines } from "@/lib/entities";
 import { numberInWordsFr } from "@/lib/frenchNumbers";
 import { computeFraisEntree } from "./bailFrais";
+import { installmentDueLabel, installmentsInWords, type DepositInstallment, type DepositInstallments } from "@/lib/leaseTerms";
 
 interface Property {
   id: string;
@@ -76,6 +77,8 @@ interface FormData {
   clauses_particulieres: string;
   annexe_documents: string[];
   lease_duration_months: number;
+  first_month_discount_eur: number;
+  deposit_installments: DepositInstallments;
 }
 
 // Helper: nombre en lettres pour la durée (mois) — toute durée saisie (1-999)
@@ -99,6 +102,11 @@ export interface BailPDFData {
   prorata_chf: number;
   prorata_days: number;
   prorata_total_days: number;
+  /** (22/10/2026) Remise sur le 1er mois et échéancier de caution — mêmes valeurs que l'aperçu HTML. */
+  first_month_eur: number;
+  discount_eur: number;
+  first_payment_eur: number;
+  deposit_schedule: DepositInstallment[];
 }
 
 function ph(val: string | undefined | null, placeholder: string): string {
@@ -134,6 +142,13 @@ function fEUR2(n: number): string {
     minimumFractionDigits: 2,
     maximumFractionDigits: 2,
   }).format(n).replace(/[\s\u00A0\u202F\u2009]/g, " ");
+}
+
+// (22/10/2026) Remise et échéances de caution : à l'euro quand c'est rond, sinon au centime.
+function fAmount(n: number): string {
+  // fEUR/fEUR2 rendent des espaces normales (l'espace fine s'affiche « / » en Helvetica) : on remet l'insécable
+  // classique, que react-pdf respecte, pour ne jamais couper « 735 / € » en fin de ligne.
+  return (Number.isInteger(n) ? fEUR(n) : fEUR2(n)).replace(/ /g, "\u00a0");
 }
 
 function fCHF(n: number): string {
@@ -327,7 +342,8 @@ function Numbered({ n, children }: { n: number; children: React.ReactNode }) {
 }
 
 export function BailPDF({ data }: { data: BailPDFData }) {
-  const { property, room, form, exit_date, loyer_eur, depot_eur, prorata_eur, prorata_days, prorata_total_days } = data;
+  const { property, room, form, exit_date, loyer_eur, depot_eur, prorata_eur, prorata_days, prorata_total_days, first_month_eur, discount_eur, first_payment_eur, deposit_schedule } = data;
+  const depositInParts = deposit_schedule.length > 1;
   const totalCharges = form.charges_energy + form.charges_maintenance + form.charges_services;
   const rate = form.exchange_rate || 0.9145;
   const ville = property.siege_social?.split(",")[0]?.trim() || "[Ville]";
@@ -624,6 +640,18 @@ export function BailPDF({ data }: { data: BailPDFData }) {
           </View>
         )}
 
+        {discount_eur > 0 && (
+          <View wrap={false}>
+            <Text style={s.subTitle}>{"Remise exceptionnelle sur le premier mois :"}</Text>
+            <Text style={s.body}>
+              {"À titre de geste commercial, le bailleur consent au locataire une remise de "}<Text style={{ fontFamily: "Helvetica-Bold" }}>{fAmount(discount_eur)}</Text>{" sur le montant dû au titre du premier mois ("}{fAmount(first_month_eur)}{", charges comprises). Le montant à verser au titre du premier mois est donc de "}<Text style={{ fontFamily: "Helvetica-Bold", color: gold }}>{fAmount(first_payment_eur)}</Text>{"."}
+            </Text>
+            <Text style={s.body}>
+              {"Cette remise est accordée une seule fois. Elle ne modifie pas le loyer fixé au présent article, dû en totalité à compter du deuxième mois, et n’a d’effet ni sur la révision annuelle du loyer, ni sur le montant du dépôt de garantie."}
+            </Text>
+          </View>
+        )}
+
         <Text style={s.subTitle}>{"R\u00E9vision annuelle (IRL) :"}</Text>
         <Bullet>{"Trimestre de r\u00E9f\u00E9rence : "}{ph(form.irl_trimestre, "3\u00E8me trimestre 2025")}</Bullet>
         <Bullet>{"Indice de r\u00E9f\u00E9rence : "}{form.irl_indice}</Bullet>
@@ -680,13 +708,22 @@ export function BailPDF({ data }: { data: BailPDFData }) {
               : <>{"Le locataire versera un d\u00E9p\u00F4t de garantie \u00E9gal \u00E0 un (1) mois de loyer hors charges, soit "}<Text style={{ fontFamily: "Helvetica-Bold" }}>{fEUR(depot_eur)}</Text>{", restitu\u00E9 dans les deux (2) mois suivant la fin du contrat, d\u00E9duction faite des sommes \u00E9ventuellement dues."}</>
             }
           </Text>
+          {depositInParts && (
+            <View>
+              <Text style={s.body}>{"Par accord entre les parties, ce dépôt de garantie est versé en "}{installmentsInWords(deposit_schedule.length)}{" fois :"}</Text>
+              {deposit_schedule.map((i) => (
+                <Bullet key={i.index}><Text style={{ fontFamily: "Helvetica-Bold" }}>{fAmount(i.amount)}</Text>{" "}{installmentDueLabel(i, fDate)}{i.index === deposit_schedule.length ? "." : " ;"}</Bullet>
+              ))}
+              <Text style={s.body}>{"Le montant total du dépôt de garantie reste de "}{fAmount(depot_eur)}{"."}</Text>
+            </View>
+          )}
         </View>
 
         {/* ---------- ARTICLE VI ---------- */}
         <View wrap={false} minPresenceAhead={30}>
           <Text style={s.articleTitle}>{"ARTICLE VI \u2014 CLAUSE R\u00C9SOLUTOIRE"}</Text>
           <Text style={s.body}>
-            {"À défaut de paiement à son terme de tout ou partie du loyer ou des charges, ou à défaut de versement du dépôt de garantie, le présent contrat sera résilié de plein droit six (6) semaines après la délivrance au locataire d’un commandement de payer demeuré infructueux, conformément à l’article 24 de la loi n° 89-462 du 6 juillet 1989."}
+            {"À défaut de paiement à son terme de tout ou partie du loyer ou des charges, ou à défaut de versement du dépôt de garantie"}{depositInParts ? " ou de l’une de ses échéances" : ""}{", le présent contrat sera résilié de plein droit six (6) semaines après la délivrance au locataire d’un commandement de payer demeuré infructueux, conformément à l’article 24 de la loi n° 89-462 du 6 juillet 1989."}
           </Text>
           <Text style={s.body}>
             {"Le présent contrat sera également résilié de plein droit à défaut pour le locataire de justifier d’une assurance contre les risques locatifs, un (1) mois après un commandement demeuré infructueux, conformément à l’article 7 g) de la loi n° 89-462 du 6 juillet 1989."}

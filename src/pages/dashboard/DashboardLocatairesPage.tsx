@@ -3,6 +3,7 @@ import { supabase } from '@/lib/supabase';
 import { useToast } from '@/components/ui/Toast';
 import { filterByEntity } from '@/lib/entities';
 import { logAudit } from '@/lib/auditLog';
+import { depositSchedule, installmentDueLabel, nextInstallment, normalizeInstallments } from '@/lib/leaseTerms';
 import IRLRevisionCard from '@/components/dashboard/IRLRevisionCard';
 
 type LeaseStatus = 'draft' | 'sent_yousign' | 'signed' | 'active' | 'cancelled';
@@ -21,6 +22,8 @@ interface Tenant {
   charges_energy_chf: number|null; charges_maintenance_chf: number|null; charges_services_chf: number|null;
   // Cycle de vie du bail (workflow Yousign)
   lease_status: LeaseStatus|null;
+  // (22/10/2026) Conditions particulières du bail : remise sur le 1er mois, caution en 1, 2 ou 3 fois
+  first_month_discount_eur?: number|null; deposit_installments?: number|null; deposit_installments_received?: number|null;
 }
 interface Property {
   id: string; name: string; slug: string; entity_id: string; is_coliving: boolean;
@@ -263,13 +266,40 @@ export default function DashboardLocatairesPage() {
     const upd: any = {
       deposit_received: received,
       deposit_received_date: received ? (modal.deposit_received_date || today) : null,
+      // (22/10/2026) Caution échelonnée : tout reçu = toutes les échéances
+      deposit_installments_received: received ? normalizeInstallments(modal.deposit_installments) : 0,
       updated_at: new Date().toISOString(),
     };
     const { error } = await supabase.from('tenants').update(upd).eq('id', modal.id);
     if (error) { toast.error('Erreur: ' + error.message); return; }
     await logAudit(received ? 'deposit_received' : 'deposit_unreceived', 'tenant', modal.id, { name: `${modal.first_name} ${modal.last_name}`, amount: modal.deposit_amount });
-    setModal({ ...modal, deposit_received: received, deposit_received_date: received ? (modal.deposit_received_date || today) : null });
+    setModal({ ...modal, deposit_received: received, deposit_received_date: received ? (modal.deposit_received_date || today) : null,
+      deposit_installments_received: received ? normalizeInstallments(modal.deposit_installments) : 0 });
     toast.success(received ? 'Caution marquée comme reçue ✓' : 'Caution remise en attente');
+    load();
+  };
+
+  // (22/10/2026) Caution en 2 ou 3 fois : une échéance reçue de plus (+1) ou la dernière annulée (−1).
+  // La dernière échéance reçue vaut réception complète (deposit_received + date), comme la case à cocher.
+  const stepDepositInstallment = async (delta: 1 | -1) => {
+    if (!modal?.id) return;
+    const total = normalizeInstallments(modal.deposit_installments);
+    const done = Math.min(total, Math.max(0, (modal.deposit_installments_received || 0) + delta));
+    const today = new Date().toISOString().split('T')[0];
+    const complete = done === total;
+    const upd = {
+      deposit_installments_received: done,
+      deposit_received: complete,
+      deposit_received_date: complete ? (modal.deposit_received_date || today) : null,
+      updated_at: new Date().toISOString(),
+    };
+    const { error } = await supabase.from('tenants').update(upd).eq('id', modal.id);
+    if (error) { toast.error('Erreur: ' + error.message); return; }
+    await logAudit(delta > 0 ? 'deposit_installment_received' : 'deposit_installment_cancelled', 'tenant', modal.id, {
+      name: `${modal.first_name} ${modal.last_name}`, installment: delta > 0 ? done : done + 1, of: total, amount: modal.deposit_amount,
+    });
+    setModal({ ...modal, ...upd });
+    toast.success(delta > 0 ? (complete ? 'Caution reçue en totalité ✓' : `Échéance ${done}/${total} reçue ✓`) : `Échéance ${done + 1}/${total} remise en attente`);
     load();
   };
 
@@ -545,6 +575,29 @@ export default function DashboardLocatairesPage() {
                   <div><label style={S.fieldLabel}>Date d'entrée</label><input type="date" style={S.input} value={modal.move_in_date||''} onChange={e=>setModal({...modal,move_in_date:e.target.value})}/></div>
                   <div><label style={S.fieldLabel}>Date de sortie</label><input type="date" style={S.input} value={modal.move_out_date||''} onChange={e=>setModal({...modal,move_out_date:e.target.value})}/></div>
                   <div><label style={S.fieldLabel}>Caution (€)</label><input type="number" step="0.01" style={S.input} value={modal.deposit_amount||''} onChange={e=>setModal({...modal,deposit_amount:parseFloat(e.target.value)||null})}/></div>
+                  {normalizeInstallments(modal.deposit_installments) > 1 && modal.id ? (() => {
+                    // (22/10/2026) Caution en 2 ou 3 fois : échéancier du bail, une ligne cochée par échéance reçue.
+                    const plan = depositSchedule(modal.deposit_amount || 0, normalizeInstallments(modal.deposit_installments), modal.move_in_date || '');
+                    const done = modal.deposit_installments_received || 0;
+                    const next = nextInstallment(plan, done);
+                    const fmtD = (iso: string) => new Date(iso + 'T00:00:00').toLocaleDateString('fr-FR');
+                    return (
+                      <div style={{gridColumn:'1 / -1'}}>
+                        <label style={S.fieldLabel}>Réception caution — en {plan.length} fois ({done}/{plan.length} reçues)</label>
+                        <div style={{padding:'8px 10px',border:'1px solid #ddd',borderRadius:'6px',background:modal.deposit_received?'#f0fdf4':'#fffbeb'}}>
+                          {plan.map(i => (
+                            <div key={i.index} style={{fontSize:'13px',color:i.index<=done?'#16a34a':'#92400e',padding:'2px 0'}}>
+                              {i.index<=done ? '✓' : '○'} {i.amount.toLocaleString('fr-FR')} € {installmentDueLabel(i, fmtD)}
+                            </div>
+                          ))}
+                          <div style={{display:'flex',gap:'8px',marginTop:'8px',flexWrap:'wrap'}}>
+                            {next && <button type="button" onClick={()=>stepDepositInstallment(1)} style={{padding:'6px 10px',fontSize:'12px',borderRadius:'6px',border:'1px solid #16a34a',background:'#fff',color:'#16a34a',cursor:'pointer'}}>Échéance {next.index} reçue</button>}
+                            {done > 0 && <button type="button" onClick={()=>stepDepositInstallment(-1)} style={{padding:'6px 10px',fontSize:'12px',borderRadius:'6px',border:'1px solid #ddd',background:'#fff',color:'#6b7280',cursor:'pointer'}}>Annuler l'échéance {done}</button>}
+                          </div>
+                        </div>
+                      </div>
+                    );
+                  })() : (
                   <div>
                     <label style={S.fieldLabel}>Réception caution</label>
                     <div style={{display:'flex',alignItems:'center',gap:'10px',padding:'8px 10px',border:'1px solid #ddd',borderRadius:'6px',background:modal.deposit_received?'#f0fdf4':'#fffbeb'}}>
@@ -554,7 +607,13 @@ export default function DashboardLocatairesPage() {
                       </span>
                     </div>
                   </div>
+                  )}
                 </div>
+                {Number(modal.first_month_discount_eur) > 0 && (
+                  <div style={{fontSize:'12px',color:'#92400e',background:'#fffbeb',border:'1px solid #fde68a',borderRadius:'6px',padding:'6px 10px',margin:'-4px 0 16px'}}>
+                    Remise inscrite au bail : −{Number(modal.first_month_discount_eur).toLocaleString('fr-FR')} € sur le 1er mois (retirée automatiquement du loyer attendu du mois d'entrée).
+                  </div>
+                )}
 
                 {/* === STATUT BAIL (workflow Yousign) === */}
                 {!isNew && (
