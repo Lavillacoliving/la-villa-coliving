@@ -10,7 +10,7 @@ import {
 import { getBailleurLines } from "@/lib/entities";
 import { numberInWordsFr } from "@/lib/frenchNumbers";
 import { computeFraisEntree } from "./bailFrais";
-import { installmentDueLabel, installmentsInWords, type DepositInstallment, type DepositInstallments } from "@/lib/leaseTerms";
+import { entersMidMonth, installmentDueLabel, installmentsInWords, monthLabelFr, type DepositInstallment, type DepositInstallments } from "@/lib/leaseTerms";
 
 interface Property {
   id: string;
@@ -102,10 +102,11 @@ export interface BailPDFData {
   prorata_chf: number;
   prorata_days: number;
   prorata_total_days: number;
-  /** (22/10/2026) Remise sur le 1er mois et échéancier de caution — mêmes valeurs que l'aperçu HTML. */
-  first_month_eur: number;
+  /** (22/10/2026, premier mois complet le 23/10) Remise et échéancier de caution — mêmes valeurs que l'aperçu HTML. */
+  discount_month: string | null;
+  discount_base_eur: number;
   discount_eur: number;
-  first_payment_eur: number;
+  discounted_month_eur: number;
   deposit_schedule: DepositInstallment[];
 }
 
@@ -342,7 +343,8 @@ function Numbered({ n, children }: { n: number; children: React.ReactNode }) {
 }
 
 export function BailPDF({ data }: { data: BailPDFData }) {
-  const { property, room, form, exit_date, loyer_eur, depot_eur, prorata_eur, prorata_days, prorata_total_days, first_month_eur, discount_eur, first_payment_eur, deposit_schedule } = data;
+  const { property, room, form, exit_date, loyer_eur, depot_eur, prorata_eur, prorata_days, prorata_total_days, discount_month, discount_base_eur, discount_eur, discounted_month_eur, deposit_schedule } = data;
+  const discountMonthLabel = monthLabelFr(discount_month);
   const depositInParts = deposit_schedule.length > 1;
   const totalCharges = form.charges_energy + form.charges_maintenance + form.charges_services;
   const rate = form.exchange_rate || 0.9145;
@@ -642,12 +644,12 @@ export function BailPDF({ data }: { data: BailPDFData }) {
 
         {discount_eur > 0 && (
           <View wrap={false}>
-            <Text style={s.subTitle}>{"Remise exceptionnelle sur le premier mois :"}</Text>
+            <Text style={s.subTitle}>{"Remise exceptionnelle sur le premier mois complet :"}</Text>
             <Text style={s.body}>
-              {"À titre de geste commercial, le bailleur consent au locataire une remise de "}<Text style={{ fontFamily: "Helvetica-Bold" }}>{fAmount(discount_eur)}</Text>{" sur le montant dû au titre du premier mois ("}{fAmount(first_month_eur)}{", charges comprises). Le montant à verser au titre du premier mois est donc de "}<Text style={{ fontFamily: "Helvetica-Bold", color: gold }}>{fAmount(first_payment_eur)}</Text>{"."}
+              {"À titre de geste commercial, le bailleur consent au locataire une remise de "}<Text style={{ fontFamily: "Helvetica-Bold" }}>{fAmount(discount_eur)}</Text>{" sur le loyer du premier mois complet de location"}{discountMonthLabel ? `, soit le mois de ${discountMonthLabel}` : ""}{" (montant habituel : "}{fAmount(discount_base_eur)}{", charges comprises). Le montant à verser pour ce mois est donc de "}<Text style={{ fontFamily: "Helvetica-Bold", color: gold }}>{fAmount(discounted_month_eur)}</Text>{"."}{entersMidMonth(form.entry_date) ? " Le prorata dû pour le mois d’entrée n’est pas concerné par cette remise." : ""}
             </Text>
             <Text style={s.body}>
-              {"Cette remise est accordée une seule fois. Elle ne modifie pas le loyer fixé au présent article, dû en totalité à compter du deuxième mois, et n’a d’effet ni sur la révision annuelle du loyer, ni sur le montant du dépôt de garantie."}
+              {"Cette remise est accordée une seule fois. Elle ne modifie pas le loyer fixé au présent article, dû en totalité pour tous les autres mois, et n’a d’effet ni sur la révision annuelle du loyer, ni sur le montant du dépôt de garantie."}
             </Text>
           </View>
         )}

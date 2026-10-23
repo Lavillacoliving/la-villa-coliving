@@ -3,7 +3,7 @@ import { supabase } from '@/lib/supabase';
 import { useToast } from '@/components/ui/Toast';
 import { filterByEntity } from '@/lib/entities';
 import { logAudit } from '@/lib/auditLog';
-import { depositSchedule, installmentDueLabel, nextInstallment, normalizeInstallments } from '@/lib/leaseTerms';
+import { depositSchedule, installmentDueLabel, monthLabelFr, nextInstallment, normalizeInstallments } from '@/lib/leaseTerms';
 import IRLRevisionCard from '@/components/dashboard/IRLRevisionCard';
 
 type LeaseStatus = 'draft' | 'sent_yousign' | 'signed' | 'active' | 'cancelled';
@@ -23,7 +23,8 @@ interface Tenant {
   // Cycle de vie du bail (workflow Yousign)
   lease_status: LeaseStatus|null;
   // (22/10/2026) Conditions particulières du bail : remise sur le 1er mois, caution en 1, 2 ou 3 fois
-  first_month_discount_eur?: number|null; deposit_installments?: number|null; deposit_installments_received?: number|null;
+  first_month_discount_eur?: number|null; first_month_discount_month?: string|null;
+  deposit_installments?: number|null; deposit_installments_received?: number|null;
 }
 interface Property {
   id: string; name: string; slug: string; entity_id: string; is_coliving: boolean;
@@ -253,6 +254,16 @@ export default function DashboardLocatairesPage() {
     }
     const { error } = await supabase.from('tenants').update(extra).eq('id', modal.id);
     if (error) { toast.error('Erreur: ' + error.message); return; }
+    // (23/10/2026) La fiche du bail (`leases`) suit le statut : le portail « Mon bail » ne montre que le bail actif.
+    const leaseSync = next === 'signed' ? { status: 'signed', from: ['draft'] }
+      : next === 'active' ? { status: 'active', is_active: true, from: ['draft', 'signed'] }
+      : next === 'cancelled' ? { status: 'terminated', is_active: false, from: ['draft', 'signed', 'active'] }
+      : null;
+    if (leaseSync) {
+      const { from, ...upd } = leaseSync;
+      const { error: leaseErr } = await supabase.from('leases').update(upd).eq('tenant_id', modal.id).in('status', from);
+      if (leaseErr) toast.warning('Statut du locataire enregistré, mais la fiche du bail n\'a pas suivi : ' + leaseErr.message);
+    }
     await logAudit('lease_status_changed', 'tenant', modal.id, { from: prev, to: next, name: `${modal.first_name} ${modal.last_name}` });
     setModal({ ...modal, lease_status: next, is_active: next==='cancelled' ? false : next==='active' ? true : (modal.is_active!==false) });
     toast.success(`Statut bail → ${LEASE_STATUS_META[next].label}`);
@@ -611,7 +622,7 @@ export default function DashboardLocatairesPage() {
                 </div>
                 {Number(modal.first_month_discount_eur) > 0 && (
                   <div style={{fontSize:'12px',color:'#92400e',background:'#fffbeb',border:'1px solid #fde68a',borderRadius:'6px',padding:'6px 10px',margin:'-4px 0 16px'}}>
-                    Remise inscrite au bail : −{Number(modal.first_month_discount_eur).toLocaleString('fr-FR')} € sur le 1er mois (retirée automatiquement du loyer attendu du mois d'entrée).
+                    Remise inscrite au bail : −{Number(modal.first_month_discount_eur).toLocaleString('fr-FR')} € sur {monthLabelFr(modal.first_month_discount_month) || 'le 1er mois complet'} (retirée automatiquement du loyer attendu de ce mois).
                   </div>
                 )}
 

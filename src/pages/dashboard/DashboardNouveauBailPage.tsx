@@ -9,8 +9,8 @@ import { getBailleurLines } from '@/lib/entities';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { numberInWordsFr } from '@/lib/frenchNumbers';
 import {
-  depositSchedule, discountError, firstPaymentAfterDiscount, installmentDueLabel, installmentsInWords,
-  normalizeDiscount, normalizeInstallments, type DepositInstallment, type DepositInstallments,
+  depositSchedule, discountError, discountMonth, entersMidMonth, firstPaymentAfterDiscount, installmentDueLabel,
+  installmentsInWords, monthLabelFr, normalizeDiscount, normalizeInstallments, type DepositInstallment, type DepositInstallments,
 } from '@/lib/leaseTerms';
 
 interface Property {
@@ -152,10 +152,11 @@ interface ContractData {
   prorata_chf: number;
   prorata_days: number;
   prorata_total_days: number;
-  /** (22/10/2026) Montant du 1er mois avant remise (prorata ou mois plein), remise, montant après remise. */
-  first_month_eur: number;
+  /** (23/10/2026) Remise sur le premier mois complet : mois visé (AAAA-MM), loyer de ce mois, remise, montant après remise. */
+  discount_month: string | null;
+  discount_base_eur: number;
   discount_eur: number;
-  first_payment_eur: number;
+  discounted_month_eur: number;
   deposit_schedule: DepositInstallment[];
 }
 
@@ -215,9 +216,10 @@ function generateContractHTML(data: ContractData): string {
     exit_date,
     loyer_eur,
     depot_eur,
-    first_month_eur,
+    discount_month,
+    discount_base_eur,
     discount_eur,
-    first_payment_eur,
+    discounted_month_eur,
     deposit_schedule,
   } = data;
 
@@ -229,11 +231,12 @@ function generateContractHTML(data: ContractData): string {
   const totalChargesEUR = form.charges_energy + form.charges_maintenance + form.charges_services;
   const frais = computeFraisEntree(room.surface_m2, form.frais_dossier_m2, form.frais_edl_m2);
 
-  // (22/10/2026) Remise sur le 1er mois : geste commercial ponctuel, le loyer du bail ne change pas.
+  // (22/10/2026, règle du premier mois complet le 23/10) Remise : geste commercial ponctuel, le loyer du bail ne change pas.
+  const discountMonthLabel = monthLabelFr(discount_month);
   const remiseBlock = discount_eur > 0 ? `
-          <h3>Remise exceptionnelle sur le premier mois :</h3>
-          <p>À titre de geste commercial, le bailleur consent au locataire une remise de <strong>${fAmount(discount_eur)}</strong> sur le montant dû au titre du premier mois (${fAmount(first_month_eur)}, charges comprises). Le montant à verser au titre du premier mois est donc de <strong style="color:#c9a96e;">${fAmount(first_payment_eur)}</strong>.</p>
-          <p>Cette remise est accordée une seule fois. Elle ne modifie pas le loyer fixé au présent article, dû en totalité à compter du deuxième mois, et n'a d'effet ni sur la révision annuelle du loyer, ni sur le montant du dépôt de garantie.</p>` : '';
+          <h3>Remise exceptionnelle sur le premier mois complet :</h3>
+          <p>À titre de geste commercial, le bailleur consent au locataire une remise de <strong>${fAmount(discount_eur)}</strong> sur le loyer du premier mois complet de location${discountMonthLabel ? `, soit le mois de ${discountMonthLabel}` : ''} (montant habituel : ${fAmount(discount_base_eur)}, charges comprises). Le montant à verser pour ce mois est donc de <strong style="color:#c9a96e;">${fAmount(discounted_month_eur)}</strong>.${entersMidMonth(form.entry_date) ? " Le prorata dû pour le mois d'entrée n'est pas concerné par cette remise." : ''}</p>
+          <p>Cette remise est accordée une seule fois. Elle ne modifie pas le loyer fixé au présent article, dû en totalité pour tous les autres mois, et n'a d'effet ni sur la révision annuelle du loyer, ni sur le montant du dépôt de garantie.</p>` : '';
   // (22/10/2026) Caution en 2 ou 3 fois : échéancier inscrit au bail.
   const depositInParts = deposit_schedule.length > 1;
   const depositScheduleBlock = depositInParts ? `
@@ -1119,11 +1122,12 @@ export default function DashboardNouveauBailPage() {
   };
   const prorata = computeProrata();
 
-  // (22/10/2026) Remise libre sur le 1er mois (prorata ou mois plein) et caution en 1, 2 ou 3 fois.
-  const firstMonthEUR = prorata.days > 0 && prorata.days < prorata.totalDays ? prorata.eur : loyerEUR;
+  // (22/10/2026) Remise libre et caution en 1, 2 ou 3 fois. (23/10/2026) La remise porte sur le premier mois complet :
+  // le mois d'entrée si l'entrée tombe le 1er, sinon le mois suivant ; le prorata d'entrée reste dû normalement.
   const discountEUR = normalizeDiscount(form.first_month_discount_eur);
-  const firstPaymentEUR = firstPaymentAfterDiscount(firstMonthEUR, discountEUR);
-  const discountErr = discountError(firstMonthEUR, discountEUR);
+  const discountMonthIso = discountMonth(form.entry_date);
+  const discountedMonthEUR = firstPaymentAfterDiscount(loyerEUR, discountEUR);
+  const discountErr = discountError(loyerEUR, discountEUR);
   const depositInstallments = normalizeInstallments(form.deposit_installments);
   const depositPlan = depositSchedule(depotEUR, depositInstallments, form.entry_date);
 
@@ -1181,10 +1185,11 @@ export default function DashboardNouveauBailPage() {
         // (22/10/2026) Conditions particulières : remise sur le 1er mois (le déclencheur payments la retire du loyer
         // attendu du mois d'entrée) et caution en 1, 2 ou 3 fois (échéances cochées depuis la fiche locataire).
         first_month_discount_eur: discountEUR > 0 ? discountEUR : null,
+        first_month_discount_month: discountEUR > 0 ? discountMonthIso : null,
         deposit_installments: depositInstallments,
         deposit_installments_received: 0,
         notes: 'Bail généré automatiquement le ' + new Date().toLocaleDateString('fr-FR')
-          + (discountEUR > 0 ? ` · Remise 1er mois : ${discountEUR} €` : '')
+          + (discountEUR > 0 ? ` · Remise 1er mois complet (${monthLabelFr(discountMonthIso)}) : ${discountEUR} €` : '')
           + (depositInstallments > 1 ? ` · Caution en ${depositInstallments} fois` : ''),
       }).select('id').single();
 
@@ -1214,9 +1219,10 @@ export default function DashboardNouveauBailPage() {
       }
 
       // Persist lease record with tenant_id and document_url
-      // Le bail est créé en 'draft' (PDF généré, pas encore envoyé Yousign).
+      // Le bail est créé en 'draft' (PDF généré, pas encore envoyé Yousign). (23/10/2026) 'draft' est accepté par
+      // leases_status_check depuis la migration du 23/10 ; avant, l'insert échouait sans bruit (aucune ligne depuis le 28/04).
       try {
-        await supabase.from('leases').insert({
+        const { error: leaseInsertErr } = await supabase.from('leases').insert({
           tenant_id: tenantId || null,
           tenant_first_name: form.locataire_prenom,
           tenant_last_name: form.locataire_nom,
@@ -1235,14 +1241,17 @@ export default function DashboardNouveauBailPage() {
           charges_maintenance_chf: form.charges_maintenance,
           charges_services_chf: form.charges_services,
           first_month_discount_eur: discountEUR > 0 ? discountEUR : null,
+          first_month_discount_month: discountEUR > 0 ? discountMonthIso : null,
           deposit_installments: depositInstallments,
           status: 'draft',
           is_active: false,
           document_url: documentUrl,
           generated_at: new Date().toISOString(),
         });
+        if (leaseInsertErr) throw leaseInsertErr;
       } catch (leaseErr) {
         console.warn('Lease record not saved:', leaseErr);
+        toast.warning('Locataire et PDF créés, mais la fiche du bail n\'a pas été enregistrée : ' + ((leaseErr as { message?: string })?.message || String(leaseErr)));
       }
 
       // Also create a tenant_documents record for the bail
@@ -1300,7 +1309,8 @@ export default function DashboardNouveauBailPage() {
         document_url: documentUrl,
         annexe_files_uploaded: uploadedCount,
         first_month_discount_eur: discountEUR,
-        first_payment_eur: firstPaymentEUR,
+        first_month_discount_month: discountEUR > 0 ? discountMonthIso : null,
+        discounted_month_eur: discountedMonthEUR,
         deposit_installments: depositInstallments,
       });
       if (oldTenantId) {
@@ -1353,9 +1363,10 @@ export default function DashboardNouveauBailPage() {
           prorata_chf: prorata.chf,
           prorata_days: prorata.days,
           prorata_total_days: prorata.totalDays,
-          first_month_eur: firstMonthEUR,
+          discount_month: discountMonthIso,
+          discount_base_eur: loyerEUR,
           discount_eur: discountEUR,
-          first_payment_eur: firstPaymentEUR,
+          discounted_month_eur: discountedMonthEUR,
           deposit_schedule: depositPlan,
         }
       : null;
@@ -2051,7 +2062,7 @@ export default function DashboardNouveauBailPage() {
             Remise et échelonnement de la caution
           </div>
           <label style={{ display: 'block', marginBottom: '6px', fontSize: '13px', color: '#666' }}>
-            Remise sur le 1er mois (€, charges comprises) — vide = aucune
+            Remise sur le 1er mois complet (€, charges comprises) — vide = aucune
           </label>
           <input
             type="number"
@@ -2071,8 +2082,10 @@ export default function DashboardNouveauBailPage() {
           />
           <div style={{ fontSize: '12px', color: discountErr ? '#c0392b' : '#666', marginBottom: '12px' }}>
             {discountErr ?? (discountEUR > 0
-              ? `1er mois : ${fAmount(firstMonthEUR)} − ${fAmount(discountEUR)} = ${fAmount(firstPaymentEUR)} à verser. Le loyer du bail ne change pas.`
-              : `1er mois : ${fAmount(firstMonthEUR)}${prorata.days > 0 && prorata.days < prorata.totalDays ? ' (prorata)' : ''}.`)}
+              ? `Remise sur ${monthLabelFr(discountMonthIso) || 'le 1er mois complet'} : ${fAmount(loyerEUR)} − ${fAmount(discountEUR)} = ${fAmount(discountedMonthEUR)} à verser.`
+                + (entersMidMonth(form.entry_date) ? ` Le prorata du mois d'entrée (${fAmount(prorata.eur)}) reste dû normalement.` : '')
+                + ' Le loyer du bail ne change pas.'
+              : `Elle portera sur le premier mois complet${monthLabelFr(discountMonthIso) ? ` (${monthLabelFr(discountMonthIso)})` : ''} : le mois d'entrée si l'entrée tombe le 1er, sinon le mois suivant.`)}
           </div>
           <div style={{ fontSize: '13px', color: '#666', marginBottom: '6px' }}>Caution versée en</div>
           <div role="radiogroup" aria-label="Caution versée en" style={{ display: 'flex', gap: '8px', marginBottom: '8px' }}>

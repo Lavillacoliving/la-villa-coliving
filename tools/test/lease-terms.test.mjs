@@ -43,6 +43,17 @@ test('remise : montant libre, jamais négative, plafonnée au 1er versement', ()
   assert.match(L.discountError(332, 735), /dépasse/);
 });
 
+test('mois de la remise : le mois d\'entrée si entrée le 1er, sinon le premier mois complet (règle du 23/10/2026)', () => {
+  assert.equal(L.discountMonth('2026-11-01'), '2026-11');
+  assert.equal(L.discountMonth('2026-11-25'), '2026-12');
+  assert.equal(L.discountMonth('2026-12-15'), '2027-01');
+  assert.equal(L.discountMonth(''), null);
+  assert.equal(L.entersMidMonth('2026-11-01'), false);
+  assert.equal(L.entersMidMonth('2026-11-25'), true);
+  assert.equal(L.monthLabelFr('2026-12'), 'décembre 2026');
+  assert.equal(L.monthLabelFr(null), '');
+});
+
 test('libellés du bail', () => {
   const s = L.depositSchedule(2940, 3, '2026-10-25');
   assert.equal(L.installmentDueLabel(s[0], fr), 'à la signature du bail');
