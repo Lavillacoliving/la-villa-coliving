@@ -671,6 +671,10 @@
           "key": "preview"
         }
       ]
+    },
+    {
+      "source": "/images/:path*.jpg",
+      "destination": "/images/:path*.webp"
     }
   ],
   "trailingSlash": false,

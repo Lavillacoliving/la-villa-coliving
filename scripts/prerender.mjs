@@ -130,6 +130,15 @@ const SPA_FALLBACK_REWRITES = [
   { source: '/en/blog/:slug', destination: '/_spa.html', has: [{ type: 'query', key: 'preview' }] },
 ];
 
+// (20/10/2026, poids des déploiements) Les JPG d'origine de public/images ont quitté le dépôt (~86 Mo copiés
+// dans CHAQUE déploiement Vercel) : le site ne sert que leurs jumeaux .webp. Une ancienne URL .jpg (Google
+// Images, vieux e-mails, partages) reçoit le .webp de même nom au lieu d'un 404. Un rewrite passe APRÈS le
+// système de fichiers : un .jpg encore présent (espace-commun.jpg, la villa event.jpg, chemins stockés en
+// base dans blog_posts.image_url) reste servi tel quel.
+const ASSET_FALLBACK_REWRITES = [
+  { source: '/images/:path*.jpg', destination: '/images/:path*.webp' },
+];
+
 // ─────────────────────────────────────────────
 // Supabase: fetch published blog slugs
 // ─────────────────────────────────────────────
@@ -283,13 +292,13 @@ async function updateVercelJson(blogRoutes) {
     destination: `/prerendered/${route.slice(1).replace(/\//g, '-')}.html`,
   }));
 
-  config.rewrites = [...frStaticRewrites, ...enStaticRewrites, ...blogRewrites, ...noindexRewrites, ...SPA_FALLBACK_REWRITES];
+  config.rewrites = [...frStaticRewrites, ...enStaticRewrites, ...blogRewrites, ...noindexRewrites, ...SPA_FALLBACK_REWRITES, ...ASSET_FALLBACK_REWRITES];
 
   // '/tarifs/' must 308 to '/tarifs' instead of missing every rewrite and dying in 404
   config.trailingSlash = false;
 
   await fs.writeFile(VERCEL_JSON_PATH, JSON.stringify(config, null, 2) + '\n', 'utf-8');
-  console.log(`  ✅ vercel.json updated: ${frStaticRewrites.length} FR static + ${enStaticRewrites.length} EN static + ${blogRewrites.length} blog + ${noindexRewrites.length} LP noindex + ${SPA_FALLBACK_REWRITES.length} SPA fallback rewrites\n`);
+  console.log(`  ✅ vercel.json updated: ${frStaticRewrites.length} FR static + ${enStaticRewrites.length} EN static + ${blogRewrites.length} blog + ${noindexRewrites.length} LP noindex + ${SPA_FALLBACK_REWRITES.length} SPA fallback + ${ASSET_FALLBACK_REWRITES.length} asset fallback rewrites\n`);
 }
 
 // ─────────────────────────────────────────────
