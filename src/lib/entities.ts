@@ -169,6 +169,36 @@ export function getBailleurLines(entityId: string | null | undefined): string[] 
   return ['La Villa Coliving'];
 }
 
+// ==========================================
+// Bail v3 (lot 1, 26/10/2026) — constantes du modèle de données
+// ==========================================
+
+/** entities.legal_form (contrainte entities_legal_form_check). */
+export const LEGAL_FORM_OPTIONS: Array<[string, string]> = [
+  ['indivision', 'Indivision (personnes physiques)'],
+  ['sci', 'SCI'],
+  ['autre', 'Autre'],
+];
+
+/** properties.dpe_class (contrainte properties_dpe_class_check). */
+export const DPE_CLASSES = ['A', 'B', 'C', 'D', 'E', 'F', 'G'] as const;
+
+/** leases.relocation_exception / properties.relocation_exception_default (zone tendue, décret 2015-587). */
+export const RELOCATION_EXCEPTIONS: Array<[string, string]> = [
+  ['first_letting', 'Première mise en location'],
+  ['vacancy_18m', 'Vacance de plus de 18 mois'],
+  ['works', 'Travaux d\'amélioration (≥ 6 mois de loyer)'],
+  ['undervalued', 'Loyer manifestement sous-évalué'],
+];
+
+/** properties.equipment.pool */
+export const POOL_TYPE_OPTIONS: Array<[string, string]> = [
+  ['none', 'Pas de piscine'],
+  ['outdoor', 'Piscine extérieure'],
+  ['outdoor_heated', 'Piscine extérieure chauffée'],
+  ['indoor', 'Piscine intérieure'],
+];
+
 export const ENTITY_CODE_TO_FILTER: Record<string, string> = {
   'LMP': 'la-villa',
   'SCI': 'sleep-in',
