@@ -32,3 +32,6 @@ scripts/competitors.local.json
 
 # Python (scripts/import-resident-history.py)
 __pycache__/
+
+# Bundle Node des maquettes du bail v3 (tools/bail-v3/maquette.tsx)
+tools/bail-v3/.build/
