@@ -20,6 +20,11 @@ if (!fs.existsSync(logo)) { console.error("logo introuvable :", logo); process.e
 
 for (const [key, input] of Object.entries(CASES)) {
   const doc = buildLeaseV3(input);
+  // BAIL_V3_JSON=<dossier> : exporte aussi le document structuré (relecture Word, diff de texte)
+  if (process.env.BAIL_V3_JSON) {
+    fs.mkdirSync(process.env.BAIL_V3_JSON, { recursive: true });
+    fs.writeFileSync(path.join(process.env.BAIL_V3_JSON, `${key}.json`), JSON.stringify(doc, null, 1));
+  }
   const file = path.join(outDir, `Maquette_Bail_v3_${key}.pdf`);
   await renderToFile(<BailV3PDF doc={doc} logoSrc={logo} />, file);
   const p = doc.pricing;
