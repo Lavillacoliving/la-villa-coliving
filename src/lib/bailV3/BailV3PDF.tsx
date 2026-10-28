@@ -21,6 +21,7 @@ const s = StyleSheet.create({
   headerSub: { lineHeight: 1.6, fontSize: 9, color: "#666", marginTop: 2 },
   maquette: { lineHeight: 1.6, fontSize: 8, color: "#999", marginTop: 4, fontFamily: "Helvetica-Oblique" },
   partyBox: { backgroundColor: "#faf8f5", borderLeftWidth: 3, borderLeftColor: gold, padding: 10, marginVertical: 8, fontSize: 9 },
+  boxCentered: { borderWidth: 1, borderColor: gold, borderLeftWidth: 1, alignItems: "center", textAlign: "center", marginHorizontal: 60, marginTop: 10 },
   partyLabel: { lineHeight: 1.6, fontFamily: "Helvetica-Bold", color: gold, fontSize: 10, marginBottom: 4 },
   articleTitle: { lineHeight: 1.6, fontFamily: "Helvetica-Bold", fontSize: 12, marginTop: 18, marginBottom: 6, borderBottomWidth: 1, borderBottomColor: gold, paddingBottom: 4 },
   body: { fontSize: 10, lineHeight: 1.6, textAlign: "justify", marginBottom: 4 },
@@ -81,7 +82,7 @@ function BlockView({ b }: { b: Block }) {
         {b.rows.map((row, ri) => <View key={ri} style={s.tableRow} wrap={false}>{row.map((c, ci) => <Text key={ci} style={[s.gridCell, { width: `${b.widths[ci]}%` }]}>{c}</Text>)}</View>)}
       </View>;
     case "box":
-      return <View style={[s.partyBox, { marginTop: 6 }]} wrap={false}>
+      return <View style={[s.partyBox, { marginTop: 6 }, b.align === "center" ? s.boxCentered : {}]} wrap={false}>
         {b.label && <Text style={[s.partyText, { fontFamily: "Helvetica-Bold", marginBottom: 2 }]}>{b.label}</Text>}
         {b.lines.map((l, i) => <Text key={i} style={s.partyText}>{l}</Text>)}
       </View>;
