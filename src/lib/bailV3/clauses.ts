@@ -27,6 +27,7 @@ export interface LeaseV3Entity {
 }
 export interface LeaseV3Property {
   name: string; address: string; commune: string;
+  building_kind?: string;      // « Maison individuelle » (défaut) ou « Maison de ville » (Le Loft)
   surface_total_m2: number | null; room_count: number; garden_m2: number | null;
   setting_clause_fr: string | null; common_areas: string[]; leisure_equipment: string; dpe_class: string | null;
 }
@@ -149,7 +150,7 @@ export function buildLeaseV3(input: LeaseV3Input): LeaseDoc {
     { t: "p", text: "Bien concerné :", bold: true },
     { t: "bullets", bold: true, items: [`${p.name} - ${p.address}`, `Étage : ${r.floor} - Chambre : ${r.name} - Surface : ${r.surface_m2} m² (salle d'eau comprise)`] },
     { t: "sub", text: "2.1 L'immeuble" },
-    { t: "p", text: `Maison individuelle à usage d'habitation sise ${p.address}, d'une surface habitable totale de ${p.surface_total_m2 ?? "[…]"} m², comprenant ${p.room_count} chambres louées séparément et des parties communes${p.garden_m2 ? `, sur un terrain arboré d'environ ${fNum(p.garden_m2)} m²` : ""}. ${p.setting_clause_fr || ""} Chaque chambre fait l'objet d'un bail distinct (colocation à baux multiples, article 8-1 de la loi du 6 juillet 1989) ; les locataires ne sont pas solidaires entre eux.${p.dpe_class ? ` Diagnostic de performance énergétique : classe ${p.dpe_class}.` : ""}` },
+    { t: "p", text: `${p.building_kind || "Maison individuelle"} à usage d'habitation sise ${p.address}, d'une surface habitable totale de ${p.surface_total_m2 ?? "[…]"} m², comprenant ${p.room_count} chambres louées séparément et des parties communes${p.garden_m2 ? `, sur un terrain arboré d'environ ${fNum(p.garden_m2)} m²` : ""}. ${p.setting_clause_fr || ""} Chaque chambre fait l'objet d'un bail distinct (colocation à baux multiples, article 8-1 de la loi du 6 juillet 1989) ; les locataires ne sont pas solidaires entre eux.${p.dpe_class ? ` Diagnostic de performance énergétique : classe ${p.dpe_class}.` : ""}` },
     { t: "sub", text: "2.2 Le local privatif, fermé à clef, dont le Locataire a la jouissance exclusive" },
     { t: "bullets", items: privBullets },
     { t: "sub", text: "2.3 Accès aux parties communes" },

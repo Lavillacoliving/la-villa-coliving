@@ -98,4 +98,41 @@ export const CASES: Record<string, LeaseV3Input> = {
     },
     services: ANNEXE_A,
   },
+  LeLoft_6_SCI: {
+    maquette: MAQUETTE,
+    entity: {
+      legal_form: "sci", legal_name: "SCI Sleep In", trade_name: "La Villa Coliving",
+      registration: "RCS Thonon-les-Bains 882 153 810", capital_eur: 1000, siege: "8 rue du Mont-Blanc, 74100 Annemasse", vat_mention: VAT,
+      signatories: [{ name: "M. Jérôme AUSTIN", quality: "gérant", order: 1, default: true }], signatory_index: 0,
+      account_holder: "SCI Sleep In", bank: "Banque Palatine", iban: "FR76 4097 8000 4321 3287 5921 415", bic: "BSPFFRPPXXX",
+    },
+    // Données de la maison : table properties (adresse, 7 chambres, parties communes) + seeds du lot 1 (DPE C, 298 m², piscine intérieure, sauna, salle de sport, terrasses ; pas de jardin).
+    property: {
+      name: "Le Loft", building_kind: "Maison de ville", address: "1 rue des Marronniers, 74100 Ambilly", commune: "Ambilly",
+      surface_total_m2: 298, room_count: 7, garden_m2: null, dpe_class: "C",
+      setting_clause_fr: "Le logement objet du présent contrat est situé dans une maison individuelle disposant d'espaces extérieurs aménagés. Le locataire a l'usage, dans les conditions prévues au règlement intérieur annexé, des parties communes intérieures et extérieures de la maison.",
+      common_areas: ["hall d'entrée", "cuisine moderne ouverte", "salon / salle à manger", "salle TV", "salle de sport", "sauna finlandais", "piscine intérieure (toute l'année)", "buanderie", "terrasses orientées sud"],
+      leisure_equipment: "piscine intérieure, sauna, salle de sport",
+    },
+    // Chambre 6 : table rooms (23 m², 2e étage droite, salle d'eau privative, ni terrasse, ni balcon, ni parking).
+    room: {
+      name: "Le Loft 6", number: 6, floor: "deuxième étage", surface_m2: 23, volume_m3: null, bathroom: "private",
+      has_terrace: false, has_balcony: false, has_parking: false,
+      location_detail: "deuxième étage, côté droit",
+      description: "chambre meublée avec salle d'eau privative (douche, lavabo, WC)",
+      bloc_a_text: "[critères de la grille Bloc A — import au lot 4]",
+    },
+    tenant,
+    // Dernier loyer HC du précédent locataire, méthode de la recon (§ bloc A) : dernier bail de la chambre (7 septembre 2026) 1 472 € charges comprises − charges 420 = 1 052 € [à confirmer sur le PDF signé].
+    terms: {
+      start: "2026-12-15", total_cc: 1530, forfait: 356, forfait_year: 2026, forfait_method: "charges provisoires 2026 : 29 883 € pour la maison",
+      prev_hc: 1052, prev_paid_on: "2026-11-05", prev_revision: "aucune (bail du 7 septembre 2026)", prev_departure: "2026-11-30",
+      relocation_exception: null, override: false,
+      irl_label: "3e trimestre 2026", irl_value: 148.06, irl_old_value: 145.77,
+      eur_chf: 0.9227, eur_chf_date: "23 octobre 2026",
+      discount_eur: null, deposit_installments: 3, services_version: "2026-10", edl_tool: "Etadly",
+      rgpd_email: "hello@lavillacoliving.com", zone_tendue: true,
+    },
+    services: ANNEXE_A,
+  },
 };
