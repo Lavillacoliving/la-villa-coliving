@@ -10,7 +10,7 @@ export const ANNEXE_A: ServiceLine[] = [
   { service: "Sauna, salle de sport, électroménager, chaudière : maintenance et dépannage", frequency: "Maintenance préventive annuelle, dépannage", provider: "Prestataires spécialisés", evidence: "Contrats, factures", criterion: "Non" },
   { service: "Consommables des parties communes (papier toilette, essuie-tout, lessive, produits d'entretien)", frequency: "Panier mensuel, réassort à la demande", provider: "Bailleur (achats)", evidence: "Factures, bon de livraison", criterion: "Non" },
   { service: "Connectivité : fibre très haut débit, Wi-Fi dans toute la maison", frequency: "Continu", provider: "Opérateur", evidence: "Contrat, factures", criterion: "Non" },
-  { service: "Animation communautaire : au moins un événement par mois ; box pour un dîner communautaire", frequency: "Mensuel", provider: "Bailleur, fournisseurs", evidence: "Factures", criterion: "Non (ni petit déjeuner, ni restauration)" },
+  { service: "Animation communautaire : au moins un événement par mois", frequency: "Mensuel", provider: "Bailleur, fournisseurs", evidence: "Factures", criterion: "Non (ni petit déjeuner, ni restauration)" },
   { service: "Cours de yoga", frequency: "Mensuel, sur place", provider: "Intervenant indépendant (contrat de prestation)", evidence: "Contrat, factures", criterion: "Non" },
   { service: "Coaching sportif (remise en forme)", frequency: "Mensuel", provider: "Intervenant indépendant", evidence: "Contrat, factures", criterion: "Non" },
   { service: "Assistance et dépannage : canal WhatsApp dédié, réponse sous 48 h ouvrées, organisation des interventions", frequency: "Continu", provider: "Bailleur", evidence: "Journal horodaté des demandes", criterion: "Réception « même non personnalisée » : comptée comme acquise" },
@@ -20,7 +20,7 @@ export const ANNEXE_A: ServiceLine[] = [
 ];
 
 const VAT = "Loyers et charges non soumis à la TVA (article 261 D 4° du CGI)";
-const MAQUETTE = "Maquette du 28 octobre 2026 (relecture n° 1 intégrée) — locataire fictif, données à confirmer entre crochets — ne pas signer";
+const MAQUETTE = "Maquette du 28 octobre 2026 (relecture n° 1 intégrée, v2.1) — locataire fictif, données à confirmer entre crochets — ne pas signer";
 
 const tenant = {
   first_name: "Camille", last_name: "Exemple", dob: "1995-03-14", birthplace: "Lyon (69)", nationality: "française",
