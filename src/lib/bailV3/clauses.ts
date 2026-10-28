@@ -94,6 +94,10 @@ export const ARTICLE_ORDER = [
 ] as const;
 export type ArticleKey = (typeof ARTICLE_ORDER)[number];
 const N = (k: ArticleKey) => roman(ARTICLE_ORDER.indexOf(k) + 1);
+/** Annexes remises à la signature, dans l'ordre (relecture n° 2 du 28/10/2026 : l'état des lieux n'en fait plus partie, il est dressé à l'entrée). */
+export const ANNEX_ORDER = ["notice", "ddt", "reglement"] as const;
+export type AnnexKey = (typeof ANNEX_ORDER)[number];
+const A = (k: AnnexKey) => `annexe ${ANNEX_ORDER.indexOf(k) + 1}`;
 
 const QUALITY = { private: "privative", shared: "partagée avec une autre chambre" };
 
@@ -173,7 +177,7 @@ export function buildLeaseV3(input: LeaseV3Input): LeaseDoc {
     { t: "sub", text: "2.3 Accès aux parties communes" },
     { t: "lines", items: p.common_areas },
     { t: "sub", text: "2.4 Mobilier et équipements" },
-    { t: "p", text: `L'inventaire et l'état détaillé du mobilier de la chambre sont établis contradictoirement lors de l'état des lieux d'entrée (annexe 2, application ${k.edl_tool}) ; ils comprennent la parure de lit et la serviette mises à disposition (article ${N("services")}, 9.3).` },
+    { t: "p", text: `L'inventaire et l'état détaillé du mobilier de la chambre sont établis contradictoirement lors de l'état des lieux d'entrée (application ${k.edl_tool}) ; ils comprennent la parure de lit et la serviette mises à disposition (article ${N("services")}, 9.3).` },
     { t: "sub", text: "2.5 Destination" },
     { t: "p", text: "Résidence principale du Locataire au sens de l'article 2 de la loi du 6 juillet 1989 ; usage exclusif d'habitation ; toute sous-location, cession, location de courte durée ou hébergement prolongé de tiers sans accord écrit est interdite." },
     { t: "sub", text: "2.6 Informations légales (zone tendue)" },
@@ -260,7 +264,7 @@ export function buildLeaseV3(input: LeaseV3Input): LeaseDoc {
     { t: "sub", text: "9.2 Exécution" },
     { t: "p", text: "Les prestations sont rendues par le Bailleur, directement ou par des prestataires qu'il choisit, contracte et rémunère, de manière continue et régulière. Le Bailleur peut en adapter les modalités (jours, horaires, intervenants) sans en réduire le niveau. Une interruption temporaire inférieure à quinze jours (congés, panne, intempéries) n'ouvre droit à aucune réduction." },
     { t: "sub", text: "9.3 Prestations exclues" },
-    { t: "p", text: "Le Bailleur ne fournit pas, et ne propose pas, même à titre optionnel ou payant : le nettoyage de la chambre et de la salle d'eau privatives, qui incombe au Locataire ; le renouvellement ou le blanchissage du linge de lit et de toilette ; le petit déjeuner ni aucun service de restauration. La parure de lit et la serviette mises à disposition à l'entrée sont inventoriées à l'état des lieux (annexe 2), restituées à la sortie, et ne sont ni renouvelées ni blanchies par le Bailleur. Le Bailleur n'assure ni réception ni permanence d'accueil : la remise des clés a lieu lors de l'état des lieux d'entrée, et le canal d'assistance est un service de maintenance et de vie communautaire." },
+    { t: "p", text: "Le Bailleur ne fournit pas, et ne propose pas, même à titre optionnel ou payant : le nettoyage de la chambre et de la salle d'eau privatives, qui incombe au Locataire ; le renouvellement ou le blanchissage du linge de lit et de toilette ; le petit déjeuner ni aucun service de restauration. La parure de lit et la serviette mises à disposition à l'entrée sont inventoriées à l'état des lieux d'entrée, restituées à la sortie, et ne sont ni renouvelées ni blanchies par le Bailleur. Le Bailleur n'assure ni réception ni permanence d'accueil : la remise des clés a lieu lors de l'état des lieux d'entrée, et le canal d'assistance est un service de maintenance et de vie communautaire." },
     { t: "sub", text: "9.4 Preuve des prestations" },
     { t: "p", text: "Le Bailleur conserve les contrats et les factures de ses prestataires et les tient à la disposition du Locataire sur demande. Le Locataire signale toute carence dans les 48 heures ; le Bailleur y remédie dans un délai raisonnable." },
     { t: "sub", text: "9.5 Caractère indissociable" },
@@ -269,7 +273,7 @@ export function buildLeaseV3(input: LeaseV3Input): LeaseDoc {
 
   art("oblig_locataire", "OBLIGATIONS DU LOCATAIRE", [{ t: "p", text: "Le Locataire s'engage à :" }, { t: "numbered", items: [
     "payer le loyer et le forfait de charges aux dates convenues ;",
-    "user paisiblement de la chambre et des parties communes, conformément à leur destination et au règlement intérieur (annexe 4) ; respecter le repos des occupants, notamment entre 22 h et 8 h ;",
+    `user paisiblement de la chambre et des parties communes, conformément à leur destination et au règlement intérieur (${A("reglement")}) ; respecter le repos des occupants, notamment entre 22 h et 8 h ;`,
     "assurer le nettoyage et l'entretien courant de sa chambre et de sa salle d'eau, ainsi que les réparations locatives (décret n° 87-712) ;",
     "ne pas héberger de tiers de manière prolongée sans accord écrit ; répondre des personnes qu'il introduit dans les lieux ;",
     `laisser exécuter les prestations de l'article ${N("services")} et les travaux de l'article ${N("travaux")} ; permettre l'accès à la chambre et les visites dans les conditions de l'article ${N("acces")} ;`,
@@ -280,7 +284,7 @@ export function buildLeaseV3(input: LeaseV3Input): LeaseDoc {
   ] }]);
 
   art("oblig_bailleur", "OBLIGATIONS DU BAILLEUR", [{ t: "p", text: "Le Bailleur s'engage à :" }, { t: "numbered", items: [
-    "délivrer un logement décent et en bon état d'usage et de réparation, avec le mobilier inventorié à l'état des lieux d'entrée (annexe 2) ;",
+    "délivrer un logement décent et en bon état d'usage et de réparation, avec le mobilier inventorié à l'état des lieux d'entrée ;",
     "assurer la jouissance paisible des lieux et en garantir les vices et défauts ;",
     "entretenir les locaux et y faire les réparations autres que locatives ;",
     `fournir les prestations de l'article ${N("services")} et en conserver les justificatifs ;`,
@@ -304,11 +308,11 @@ export function buildLeaseV3(input: LeaseV3Input): LeaseDoc {
     { t: "p", text: "14.3 Le Bailleur conserve un double des clés de la chambre, utilisé uniquement dans les cas prévus au présent article." },
   ]);
 
-  art("edl", "ÉTAT DES LIEUX ET INVENTAIRE", [{ t: "p", text: `L'état des lieux d'entrée et de sortie est établi contradictoirement, sur support numérique (application ${k.edl_tool}), conformément au décret n° 2016-382 ; un exemplaire est remis au Locataire. L'inventaire et l'état détaillé du mobilier, y compris la parure de lit et la serviette mises à disposition, y sont joints (annexe 2). Le Locataire peut demander de compléter l'état des lieux d'entrée dans les dix jours (un mois pour le chauffage).` }], { keepTogether: true });
+  art("edl", "ÉTAT DES LIEUX ET INVENTAIRE", [{ t: "p", text: `L'état des lieux d'entrée et de sortie est établi contradictoirement, sur support numérique (application ${k.edl_tool}), conformément au décret n° 2016-382 ; un exemplaire est remis au Locataire. L'inventaire et l'état détaillé du mobilier, y compris la parure de lit et la serviette mises à disposition, y sont joints. Le Locataire peut demander de compléter l'état des lieux d'entrée dans les dix jours (un mois pour le chauffage).` }], { keepTogether: true });
 
   art("assurance", "ASSURANCE", [{ t: "p", text: "Le Locataire souscrit et maintient pendant toute la durée du bail une assurance multirisques habitation couvrant les risques locatifs et sa responsabilité civile (article 7 g) ; il en justifie à la remise des clés puis chaque année, à l'échéance de son attestation. Le Bailleur assure l'immeuble en qualité de propriétaire non occupant." }], { keepTogether: true });
 
-  art("reglement", "RÈGLEMENT INTÉRIEUR", [{ t: "p", text: "Le règlement intérieur « Bible du Coliver » (annexe 4) précise les règles de vie commune, l'usage des parties communes et les modalités pratiques des prestations. Il est opposable au Locataire ; ses mises à jour lui sont notifiées avec un préavis d'un mois et ne peuvent déroger au présent contrat ni à la loi." }], { keepTogether: true });
+  art("reglement", "RÈGLEMENT INTÉRIEUR", [{ t: "p", text: `Le règlement intérieur « Bible du Coliver » (${A("reglement")}) précise les règles de vie commune, l'usage des parties communes et les modalités pratiques des prestations. Il est opposable au Locataire ; ses mises à jour lui sont notifiées avec un préavis d'un mois et ne peuvent déroger au présent contrat ni à la loi.` }], { keepTogether: true });
 
   art("mandataire", "GESTION PAR MANDATAIRE", [{ t: "p", text: `Sans objet à la date de signature : le Bailleur gère directement l'immeuble et exécute lui-même les prestations de l'article ${N("services")}. S'il confie ultérieurement tout ou partie de la gestion locative et des prestations à un mandataire professionnel en vertu d'un mandat écrit, ce mandataire agira exclusivement au nom et pour le compte du Bailleur ; il ne sera ni bailleur, ni sous-bailleur, ni partie au présent contrat, ne garantira aucun loyer et n'encaissera aucune somme pour son propre compte, les loyers, charges et dépôt de garantie restant payables sur le compte désigné à l'article ${N("finances")} ; les quittances, états des lieux, congés et notifications qu'il établira le seront « pour le compte de ${bailleurShort} ». Le Locataire sera informé par écrit de l'identité du mandataire, de l'étendue de son mandat et de tout changement.` }], { keepTogether: true });
 
@@ -320,12 +324,12 @@ export function buildLeaseV3(input: LeaseV3Input): LeaseDoc {
     { t: "p", text: "20.3 Le contrat est signé électroniquement ; la version française fait foi, toute traduction étant de courtoisie. La nullité d'une clause n'affecte pas les autres." },
     { t: "p", text: "20.4 Sont annexés au présent contrat et remis au Locataire :" },
     { t: "bullets", items: [
-      "Annexe 1 — Notice d'information relative aux droits et obligations des locataires et des bailleurs (arrêté du 29 mai 2015)",
-      `Annexe 2 — État des lieux d'entrée et inventaire du mobilier (application ${k.edl_tool})`,
-      `Annexe 3 — Dossier de diagnostic technique${p.dpe_class ? ` (diagnostic de performance énergétique classe ${p.dpe_class}, état des risques et pollutions et autres diagnostics applicables)` : ""}`,
-      "Annexe 4 — Règlement intérieur « Bible du Coliver »",
+      `${cap(A("notice"))} — Notice d'information relative aux droits et obligations des locataires et des bailleurs (arrêté du 29 mai 2015 modifié), jointe au présent contrat`,
+      `${cap(A("ddt"))} — Dossier de diagnostic technique${p.dpe_class ? ` (diagnostic de performance énergétique classe ${p.dpe_class}, état des risques et pollutions et autres diagnostics applicables)` : ""}`,
+      `${cap(A("reglement"))} — Règlement intérieur « Bible du Coliver »`,
       "Annexe A — Catalogue des prestations",
     ] },
+    { t: "p", small: true, text: `L'état des lieux d'entrée et l'inventaire du mobilier sont dressés à la remise des clés (article ${N("edl")}) et remis au Locataire ; ils ne sont pas annexés à la signature.` },
   ]);
 
   const missing = ARTICLE_ORDER.filter((key) => !defs[key]);
@@ -359,6 +363,9 @@ export function buildLeaseV3(input: LeaseV3Input): LeaseDoc {
   };
 }
 
+function cap(s: string): string {
+  return s.charAt(0).toUpperCase() + s.slice(1);
+}
 function fIrl(n: number): string {
   return n.toFixed(2).replace(".", ",");
 }

@@ -20,7 +20,7 @@ export const ANNEXE_A: ServiceLine[] = [
 ];
 
 const VAT = "Loyers et charges non soumis à la TVA (article 261 D 4° du CGI)";
-const MAQUETTE = "Maquette du 28 octobre 2026 (relecture n° 1 intégrée, v2.1) — locataire fictif, données à confirmer entre crochets — ne pas signer";
+const MAQUETTE = "Maquette du 28 octobre 2026 (relectures n° 1 et 2 intégrées, v3) — locataire fictif, données à confirmer entre crochets — ne pas signer";
 
 const tenant = {
   first_name: "Camille", last_name: "Exemple", dob: "1995-03-14", birthplace: "Lyon (69)", nationality: "française",
