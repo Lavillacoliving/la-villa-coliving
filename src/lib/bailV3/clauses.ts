@@ -32,6 +32,8 @@ export interface LeaseV3Entity {
 export interface LeaseV3Property {
   name: string; address: string; commune: string;
   building_kind?: string;      // « Maison individuelle » (défaut) ou « Maison de ville » (Le Loft)
+  /** Tènement de plusieurs bâtiments (Le Lodge, Jérôme 28/10/2026) : liste rendue en puces sous « Tènement immobilier sis … » ; sinon phrase générique. */
+  buildings?: string[] | null;
   surface_total_m2: number | null; room_count: number; garden_m2: number | null;
   setting_clause_fr: string | null; common_areas: string[]; leisure_equipment: string; dpe_class: string | null;
 }
@@ -62,7 +64,7 @@ export interface LeaseV3Terms {
   rgpd_email: string;
   zone_tendue: boolean;
 }
-export interface ServiceLine { service: string; frequency: string; provider: string; evidence: string; criterion: string }
+export interface ServiceLine { service: string; frequency: string; provider: string; evidence: string }
 export interface LeaseV3Input {
   entity: LeaseV3Entity; property: LeaseV3Property; room: LeaseV3Room; tenant: LeaseV3Tenant; terms: LeaseV3Terms;
   services: ServiceLine[]; maquette?: string | null;
@@ -171,7 +173,7 @@ export function buildLeaseV3(input: LeaseV3Input): LeaseDoc {
     { t: "p", text: "Bien concerné :", bold: true },
     { t: "bullets", bold: true, items: [`${p.name} - ${p.address}`, `Étage : ${r.floor} - Chambre : ${r.name} - Surface : ${r.surface_m2} m² (salle d'eau comprise)`] },
     { t: "sub", text: "2.1 L'immeuble" },
-    { t: "p", text: `${p.building_kind || "Maison individuelle"} à usage d'habitation sise ${p.address}, d'une surface habitable totale de ${p.surface_total_m2 ?? "[…]"} m², comprenant ${p.room_count} chambres louées séparément et des parties communes${p.garden_m2 ? `, sur un terrain arboré d'environ ${fNum(p.garden_m2)} m²` : ""}. ${p.setting_clause_fr || ""} Chaque chambre fait l'objet d'un bail distinct (colocation à baux multiples, article 8-1 de la loi du 6 juillet 1989) ; les locataires ne sont pas solidaires entre eux.${p.dpe_class ? ` Diagnostic de performance énergétique : classe ${p.dpe_class}.` : ""}` },
+    ...immeubleBlocks(p),
     { t: "sub", text: "2.2 Le local privatif, fermé à clef, dont le Locataire a la jouissance exclusive" },
     { t: "bullets", items: privBullets },
     { t: "sub", text: "2.3 Accès aux parties communes" },
@@ -342,7 +344,7 @@ export function buildLeaseV3(input: LeaseV3Input): LeaseDoc {
   const annexes: Article[] = [
     { key: "annexe_a", num: "A", title: `CATALOGUE DES PRESTATIONS — ${p.name.toUpperCase()} (VERSION ${k.services_version})`, first: true, blocks: [
       { t: "p", small: true, text: `Chaque prestation a une fréquence, un exécutant et une preuve conservée par le Bailleur (article ${N("services")}, 9.4). Les prestations exclues de l'article ${N("services")}, 9.3 n'y figurent pas.` },
-      { t: "table", headers: ["Prestation", "Fréquence et modalités", "Exécutant", "Preuve conservée", "Critère TVA 261 D 4° b"], widths: [28, 22, 15, 17, 18], rows: input.services.map((s) => [s.service, s.frequency, s.provider, s.evidence, s.criterion]) },
+      { t: "table", headers: ["Prestation", "Fréquence et modalités", "Exécutant", "Preuve conservée"], widths: [34, 26, 18, 22], rows: input.services.map((s) => [s.service, s.frequency, s.provider, s.evidence]) },
     ] },
   ];
 
@@ -358,11 +360,29 @@ export function buildLeaseV3(input: LeaseV3Input): LeaseDoc {
         : [`${signatory.name}, ${signatory.quality}\npour la ${e.legal_name}`],
       tenant: tenantName,
     },
-    footer: [`${e.trade_name} - lavillacoliving.com`, "8 rue du Mont-Blanc", "74100 Annemasse"],
+    footer: [`${e.trade_name} - lavillacoliving.com`, ...splitAddress(e.siege)],
     pricing: pr,
   };
 }
 
+/** 2.1 L'immeuble : phrase générique, ou tènement de plusieurs bâtiments (intro + puces + suite). */
+function immeubleBlocks(p: LeaseV3Property): Block[] {
+  const suite = `${p.setting_clause_fr || ""} Chaque chambre fait l'objet d'un bail distinct (colocation à baux multiples, article 8-1 de la loi du 6 juillet 1989) ; les locataires ne sont pas solidaires entre eux.${p.dpe_class ? ` Diagnostic de performance énergétique : classe ${p.dpe_class}.` : ""}`.trim();
+  if (p.buildings && p.buildings.length) {
+    const n = ["un", "deux", "trois", "quatre", "cinq", "six"][p.buildings.length - 1] || String(p.buildings.length);
+    return [
+      { t: "p", text: `Tènement immobilier sis ${p.address}, constitué de ${n} bâtiments distincts :` },
+      { t: "bullets", items: p.buildings },
+      { t: "p", text: suite },
+    ];
+  }
+  return [{ t: "p", text: `${p.building_kind || "Maison individuelle"} à usage d'habitation sise ${p.address}, d'une surface habitable totale de ${p.surface_total_m2 ?? "[…]"} m², comprenant ${p.room_count} chambres louées séparément et des parties communes${p.garden_m2 ? `, sur un terrain arboré d'environ ${fNum(p.garden_m2)} m²` : ""}. ${suite}` }];
+}
+/** « 34 rue du Foron, 74100 Ville-la-Grand » → ["34 rue du Foron", "74100 Ville-la-Grand"] (pied de page). */
+function splitAddress(s: string): string[] {
+  const parts = s.split(",").map((x) => x.trim()).filter(Boolean);
+  return parts.length >= 2 ? [parts.slice(0, -1).join(", "), parts[parts.length - 1]] : [s];
+}
 function cap(s: string): string {
   return s.charAt(0).toUpperCase() + s.slice(1);
 }

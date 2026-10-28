@@ -5,22 +5,29 @@
 import type { LeaseV3Input, ServiceLine } from "@/lib/bailV3/clauses";
 
 export const ANNEXE_A: ServiceLine[] = [
-  { service: "Entretien et nettoyage des parties communes intérieures (cuisines, salle à manger, salons, buanderie, sanitaires communs, circulations)", frequency: "3 interventions par semaine, jours fixes", provider: "Entreprise de propreté (contrat annuel)", evidence: "Contrat, factures mensuelles", criterion: "Parties communes seulement, jamais le local privatif ; si l'administration le comptait : 2e critère au plus" },
-  { service: "Entretien des extérieurs : jardin, piscine, élagage", frequency: "Jardin : passages réguliers en saison, élagage annuel ; piscine : entretien en saison, analyse de l'eau, hivernage", provider: "Jardinier, pisciniste (contrats)", evidence: "Contrats, factures", criterion: "Non" },
-  { service: "Sauna, salle de sport, électroménager, chaudière : maintenance et dépannage", frequency: "Maintenance préventive annuelle, dépannage", provider: "Prestataires spécialisés", evidence: "Contrats, factures", criterion: "Non" },
-  { service: "Consommables des parties communes (papier toilette, essuie-tout, lessive, produits d'entretien)", frequency: "Panier mensuel, réassort à la demande", provider: "Bailleur (achats)", evidence: "Factures, bon de livraison", criterion: "Non" },
-  { service: "Connectivité : fibre très haut débit, Wi-Fi dans toute la maison", frequency: "Continu", provider: "Opérateur", evidence: "Contrat, factures", criterion: "Non" },
-  { service: "Animation communautaire : au moins un événement par mois", frequency: "Mensuel", provider: "Bailleur, fournisseurs", evidence: "Factures", criterion: "Non (ni petit déjeuner, ni restauration)" },
-  { service: "Cours de yoga", frequency: "Mensuel, sur place", provider: "Intervenant indépendant (contrat de prestation)", evidence: "Contrat, factures", criterion: "Non" },
-  { service: "Coaching sportif (remise en forme)", frequency: "Mensuel", provider: "Intervenant indépendant", evidence: "Contrat, factures", criterion: "Non" },
-  { service: "Assistance et dépannage : canal WhatsApp dédié, réponse sous 48 h ouvrées, organisation des interventions", frequency: "Continu", provider: "Bailleur", evidence: "Journal horodaté des demandes", criterion: "Réception « même non personnalisée » : comptée comme acquise" },
-  { service: "Gestion de la communauté : comité d'accueil, plateforme numérique (états des lieux, règlement, calendrier), sélection participative des nouveaux colocataires", frequency: "À chaque départ et en continu", provider: "Bailleur et résidents", evidence: "Comptes rendus, historique de la plateforme", criterion: "Idem" },
-  { service: "Kit linge : parure de lit et serviette mises à disposition à l'entrée, restituées à la sortie, jamais renouvelées ni blanchies", frequency: "À l'entrée", provider: "Bailleur", evidence: "État des lieux d'entrée (Etadly)", criterion: "Linge sans renouvellement : non caractérisé (BOI-TVA-CHAMP-10-10-50-20 § 90)" },
-  { service: "Exclus : nettoyage des chambres et salles d'eau privatives (même en option), renouvellement et blanchissage du linge, petit déjeuner et restauration, permanence d'accueil", frequency: "—", provider: "—", evidence: "Liste négative à l'article IX, 9.3", criterion: "Les autres critères restent à zéro" },
+  { service: "Entretien et nettoyage des parties communes intérieures (cuisines, salle à manger, salons, buanderie, sanitaires communs, circulations)", frequency: "3 interventions par semaine, jours fixes", provider: "Entreprise de propreté (contrat annuel)", evidence: "Contrat, factures mensuelles" },
+  { service: "Entretien des extérieurs : jardin, piscine, élagage", frequency: "Jardin : passages réguliers en saison, élagage annuel ; piscine : entretien en saison, analyse de l'eau, hivernage", provider: "Jardinier, pisciniste (contrats)", evidence: "Contrats, factures" },
+  { service: "Sauna, salle de sport, électroménager, chaudière : maintenance et dépannage", frequency: "Maintenance préventive annuelle, dépannage", provider: "Prestataires spécialisés", evidence: "Contrats, factures" },
+  { service: "Consommables des parties communes (papier toilette, essuie-tout, lessive, produits d'entretien)", frequency: "Panier mensuel, réassort à la demande", provider: "Bailleur (achats)", evidence: "Factures, bon de livraison" },
+  { service: "Connectivité : fibre très haut débit, Wi-Fi dans toute la maison", frequency: "Continu", provider: "Opérateur", evidence: "Contrat, factures" },
+  { service: "Animation communautaire : au moins un événement par mois", frequency: "Mensuel", provider: "Bailleur, fournisseurs", evidence: "Factures" },
+  { service: "Cours de yoga", frequency: "Mensuel, sur place", provider: "Intervenant indépendant (contrat de prestation)", evidence: "Contrat, factures" },
+  { service: "Coaching sportif (remise en forme)", frequency: "Mensuel", provider: "Intervenant indépendant", evidence: "Contrat, factures" },
+  { service: "Assistance et dépannage : canal WhatsApp dédié, réponse sous 48 h ouvrées, organisation des interventions", frequency: "Continu", provider: "Bailleur", evidence: "Journal horodaté des demandes" },
+  { service: "Gestion de la communauté : comité d'accueil, plateforme numérique (états des lieux, règlement, calendrier), sélection participative des nouveaux colocataires", frequency: "À chaque départ et en continu", provider: "Bailleur et résidents", evidence: "Comptes rendus, historique de la plateforme" },
+  { service: "Kit linge : parure de lit et serviette mises à disposition à l'entrée, restituées à la sortie, jamais renouvelées ni blanchies", frequency: "À l'entrée", provider: "Bailleur", evidence: "État des lieux d'entrée (Etadly)" },
+  { service: "Exclus : nettoyage des chambres et salles d'eau privatives (même en option), renouvellement et blanchissage du linge, petit déjeuner et restauration, permanence d'accueil", frequency: "—", provider: "—", evidence: "Liste négative à l'article IX, 9.3" },
 ];
 
 const VAT = "Loyers et charges non soumis à la TVA (article 261 D 4° du CGI)";
-const MAQUETTE = "Maquette du 28 octobre 2026 (relectures n° 1 et 2 intégrées, v3) — locataire fictif, données à confirmer entre crochets — ne pas signer";
+
+/** Équipements de la salle d'eau par chambre (Jérôme, 28/10/2026) : WC seulement au Loft 7 et dans les salles d'eau
+ *  partagées de La Villa (chambres 3-4 et 7-8) ; partout ailleurs « douche, lavabo ». À reporter dans rooms.bathroom_detail au lot 4. */
+export function bathroomFixtures(house: "lavilla" | "leloft" | "lelodge", room: number): string {
+  const withWc = { lavilla: [3, 4, 7, 8], leloft: [7], lelodge: [] as number[] };
+  return withWc[house].includes(room) ? "douche, lavabo, WC" : "douche, lavabo";
+}
+const MAQUETTE = "Maquette du 28 octobre 2026 (relectures n° 1 et 2 et ajustements maisons intégrés, v4) — locataire fictif, données à confirmer entre crochets — ne pas signer";
 
 const tenant = {
   first_name: "Camille", last_name: "Exemple", dob: "1995-03-14", birthplace: "Lyon (69)", nationality: "française",
@@ -47,7 +54,7 @@ export const CASES: Record<string, LeaseV3Input> = {
       leisure_equipment: "piscine extérieure chauffée, sauna, salle de sport, salle de jeux",
     },
     room: {
-      name: "La Villa 2", number: 2, floor: "rez-de-chaussée", surface_m2: 16, bathroom: "private", bathroom_detail: "douche, lavabo",
+      name: "La Villa 2", number: 2, floor: "rez-de-chaussée", surface_m2: 16, bathroom: "private", bathroom_detail: bathroomFixtures("lavilla", 2),
       has_terrace: true, has_balcony: false, has_parking: false,
       location_detail: "rez-de-chaussée côté droit, au calme, côté jardin, exposition nord",
       bloc_a_text: "terrasse privative, vue dégagée, absence de vis-à-vis, calme, isolation phonique renforcée",
@@ -74,13 +81,19 @@ export const CASES: Record<string, LeaseV3Input> = {
     },
     property: {
       name: "Le Lodge", address: "8 rue de Romagny, 74100 Annemasse", commune: "Annemasse",
-      surface_total_m2: 458, room_count: 12, garden_m2: 1500, dpe_class: "B",
-      setting_clause_fr: "Le logement objet du présent contrat est situé dans une maison individuelle s'inscrivant dans un cadre paysager attaché à l'immeuble, comprenant un parc arboré et des espaces extérieurs aménagés. Le locataire a l'usage, dans les conditions prévues au règlement intérieur annexé, des parties communes intérieures et extérieures de la maison.",
+      surface_total_m2: 380, room_count: 12, garden_m2: null, dpe_class: "B",
+      buildings: [
+        "une maison individuelle à usage d'habitation d'une surface habitable totale de 380 m², comprenant 12 chambres louées séparément et des parties communes, complétée par un grenier de 100 m² ;",
+        "une maison de piscine aménagée, avec cuisine et salle à manger, de 30 m² ;",
+        "un « chalet fitness » de 65 m², comprenant une salle de sport et un sauna ;",
+        "une réserve de 18 m².",
+      ],
+      setting_clause_fr: "L'ensemble du tènement est aménagé sur un terrain arboré d'environ 1 500 m², avec des espaces extérieurs aménagés, attaché à l'immeuble. Le locataire a l'usage, dans les conditions prévues au règlement intérieur annexé, des parties communes intérieures et extérieures de la maison.",
       common_areas: ["hall d'entrée", "cuisine et salle à manger", "buanderie", "salon", "salle TV", "chalet fitness (salle de sport et sauna)", "terrain arboré d'environ 1 500 m²", "terrasses", "pool house", "piscine extérieure", "grenier"],
       leisure_equipment: "piscine extérieure, sauna, salle de sport, home cinéma",
     },
     room: {
-      name: "Le Lodge 1", number: 1, floor: "premier étage", surface_m2: 18, bathroom: "private", bathroom_detail: "douche, lavabo",
+      name: "Le Lodge 1", number: 1, floor: "premier étage", surface_m2: 18, bathroom: "private", bathroom_detail: bathroomFixtures("lelodge", 1),
       has_terrace: false, has_balcony: false, has_parking: true,
       location_detail: "premier étage, orientation nord, place de parking attribuée dans la propriété",
       bloc_a_text: "calme, exposition, place de parking attribuée, isolation phonique renforcée, fibre",
@@ -115,7 +128,7 @@ export const CASES: Record<string, LeaseV3Input> = {
     },
     // Chambre 6 : table rooms (23 m², 2e étage droite, salle d'eau privative, ni terrasse, ni balcon, ni parking).
     room: {
-      name: "Le Loft 6", number: 6, floor: "deuxième étage", surface_m2: 23, bathroom: "private", bathroom_detail: "douche, lavabo",
+      name: "Le Loft 6", number: 6, floor: "deuxième étage", surface_m2: 23, bathroom: "private", bathroom_detail: bathroomFixtures("leloft", 6),
       has_terrace: false, has_balcony: false, has_parking: false,
       location_detail: "deuxième étage, côté droit",
       bloc_a_text: "[critères de la grille Bloc A — import au lot 4]",

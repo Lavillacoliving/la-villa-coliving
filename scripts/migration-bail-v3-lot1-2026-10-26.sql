@@ -127,7 +127,7 @@ update public.properties set dpe_class = 'C' where slug = 'leloft' and dpe_class
 update public.properties set dpe_class = 'B' where slug = 'lelodge' and dpe_class is null;
 
 update public.properties set surface_total_m2 = 365 where slug = 'lavilla' and surface_total_m2 is null;
-update public.properties set surface_total_m2 = 458 where slug = 'lelodge' and surface_total_m2 is null;
+update public.properties set surface_total_m2 = 380 where slug = 'lelodge' and surface_total_m2 is null; -- maison principale seule (Jérôme 28/10/2026 ; grenier 100 m², pool house 30 m², chalet fitness 65 m², réserve 18 m² dans buildings_fr)
 update public.properties set surface_total_m2 = 298 where slug = 'leloft' and surface_total_m2 is null;
 
 update public.properties set equipment = '{"pool":"outdoor_heated","pool_size":"12×5 m","sauna":true,"sauna_seats":5,"gym":true,"cinema":false,"game_room":true,"pool_house":false,"vegetable_garden":true,"volleyball":true,"terraces":true,"bbq":true,"garden_m2":1950}'::jsonb
@@ -142,9 +142,19 @@ update public.properties set
   setting_clause_en = 'The accommodation covered by this contract is located in a detached house set in landscaped grounds attached to the building, comprising a wooded park and landscaped outdoor areas. The tenant has the use, under the conditions set out in the house rules appended hereto, of the indoor and outdoor common areas of the house.'
 where slug = 'lavilla' and setting_clause_fr is null;
 update public.properties set
-  setting_clause_fr = 'Le logement objet du présent contrat est situé dans une maison individuelle s''inscrivant dans un cadre paysager attaché à l''immeuble, comprenant un parc arboré et des espaces extérieurs aménagés. Le locataire a l''usage, dans les conditions prévues au règlement intérieur annexé, des parties communes intérieures et extérieures de la maison.',
-  setting_clause_en = 'The accommodation covered by this contract is located in a detached house set in landscaped grounds attached to the building, comprising a wooded park and landscaped outdoor areas. The tenant has the use, under the conditions set out in the house rules appended hereto, of the indoor and outdoor common areas of the house.'
+  setting_clause_fr = 'L''ensemble du tènement est aménagé sur un terrain arboré d''environ 1 500 m², avec des espaces extérieurs aménagés, attaché à l''immeuble. Le locataire a l''usage, dans les conditions prévues au règlement intérieur annexé, des parties communes intérieures et extérieures de la maison.',
+  setting_clause_en = 'The whole property is set in wooded grounds of approximately 1,500 m² with landscaped outdoor areas attached to the building. The tenant has the use, under the conditions set out in the house rules appended hereto, of the indoor and outdoor common areas of the house.'
 where slug = 'lelodge' and setting_clause_fr is null;
+
+-- Tènement de plusieurs bâtiments (Le Lodge ; Jérôme 28/10/2026) : liste rendue en puces dans l'article II, 2.1 ; vide = phrase générique.
+alter table public.properties
+  add column if not exists buildings_fr jsonb not null default '[]'::jsonb,
+  add column if not exists buildings_en jsonb not null default '[]'::jsonb;
+comment on column public.properties.buildings_fr is 'Bail v3, article II 2.1 : bâtiments du tènement (puces) ; vide = « Maison individuelle à usage d''habitation sise … ».';
+update public.properties set
+  buildings_fr = '["une maison individuelle à usage d''habitation d''une surface habitable totale de 380 m², comprenant 12 chambres louées séparément et des parties communes, complétée par un grenier de 100 m² ;", "une maison de piscine aménagée, avec cuisine et salle à manger, de 30 m² ;", "un « chalet fitness » de 65 m², comprenant une salle de sport et un sauna ;", "une réserve de 18 m²."]'::jsonb,
+  buildings_en = '["a detached house for residential use with a total habitable area of 380 m², comprising 12 rooms let separately and common areas, plus a 100 m² attic;", "a converted pool house with kitchen and dining room, 30 m²;", "a 65 m² \"fitness chalet\" with gym and sauna;", "an 18 m² storage room."]'::jsonb
+where slug = 'lelodge' and buildings_fr = '[]'::jsonb;
 update public.properties set
   setting_clause_fr = 'Le logement objet du présent contrat est situé dans une maison individuelle disposant d''espaces extérieurs aménagés. Le locataire a l''usage, dans les conditions prévues au règlement intérieur annexé, des parties communes intérieures et extérieures de la maison.',
   setting_clause_en = 'The accommodation covered by this contract is located in a detached house with landscaped outdoor areas. The tenant has the use, under the conditions set out in the house rules appended hereto, of the indoor and outdoor common areas of the house.'
