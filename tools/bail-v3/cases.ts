@@ -27,7 +27,7 @@ export function bathroomFixtures(house: "lavilla" | "leloft" | "lelodge", room: 
   const withWc = { lavilla: [3, 4, 7, 8], leloft: [7], lelodge: [] as number[] };
   return withWc[house].includes(room) ? "douche, lavabo, WC" : "douche, lavabo";
 }
-const MAQUETTE = "Maquette du 29 octobre 2026 (relectures n° 1 à 3 intégrées, v5) — locataire fictif, données à confirmer entre crochets — ne pas signer";
+const MAQUETTE = "Maquette du 29 octobre 2026 (relectures intégrées, v6) — locataire fictif, données à confirmer entre crochets — ne pas signer";
 
 const tenant = {
   first_name: "Camille", last_name: "Exemple", dob: "1995-03-14", birthplace: "Lyon (69)", nationality: "française",
@@ -84,7 +84,7 @@ export const CASES: Record<string, LeaseV3Input> = {
       surface_total_m2: 380, room_count: 12, garden_m2: null, dpe_class: "B",
       buildings: [
         "une maison individuelle à usage d'habitation d'une surface habitable totale de 380 m², comprenant 12 chambres louées séparément et des parties communes, complétée par un grenier de 100 m² ;",
-        "une maison de piscine aménagée, avec cuisine et salle à manger, de 30 m² ;",
+        "une maison de piscine aménagée, avec cuisine et salle à manger, de 26 m² ;",
         "un « chalet fitness » de 65 m², comprenant une salle de sport et un sauna ;",
         "une réserve de 18 m².",
       ],
@@ -122,7 +122,13 @@ export const CASES: Record<string, LeaseV3Input> = {
     property: {
       name: "Le Loft", building_kind: "Maison de ville", address: "1 rue des Marronniers, 74100 Ambilly", commune: "Ambilly",
       surface_total_m2: 298, room_count: 7, garden_m2: null, dpe_class: "C",
-      setting_clause_fr: "Le logement objet du présent contrat est situé dans une maison individuelle disposant d'espaces extérieurs aménagés. Le locataire a l'usage, dans les conditions prévues au règlement intérieur annexé, des parties communes intérieures et extérieures de la maison.",
+      // Relecture Loft de Jérôme (29/10/2026) : deux bâtiments, 238 + 60 m², 234 m² d'extérieurs et terrasses.
+      buildings_intro: "Maison de ville à usage d'habitation sise 1 rue des Marronniers, 74100 Ambilly, d'une surface totale de 298 m² répartie sur deux bâtiments :",
+      buildings: [
+        "le bâtiment principal, d'une surface habitable de 238 m², comprenant 7 chambres louées séparément et des parties communes ;",
+        "le bâtiment annexe, d'une surface de 60 m², comprenant une salle de sport, une salle TV, un sauna et une piscine intérieure.",
+      ],
+      setting_clause_fr: "L'ensemble dispose de 234 m² d'espaces extérieurs et de terrasses aménagés. Le locataire a l'usage, dans les conditions prévues au règlement intérieur annexé, des parties communes intérieures et extérieures de la maison.",
       common_areas: ["hall d'entrée", "cuisine moderne ouverte", "salon / salle à manger", "salle TV", "salle de sport", "sauna finlandais", "piscine intérieure (toute l'année)", "buanderie", "terrasses orientées sud"],
       leisure_equipment: "piscine intérieure, sauna, salle de sport",
     },

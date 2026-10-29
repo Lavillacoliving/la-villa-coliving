@@ -151,13 +151,24 @@ alter table public.properties
   add column if not exists buildings_fr jsonb not null default '[]'::jsonb,
   add column if not exists buildings_en jsonb not null default '[]'::jsonb;
 comment on column public.properties.buildings_fr is 'Bail v3, article II 2.1 : bâtiments du tènement (puces) ; vide = « Maison individuelle à usage d''habitation sise … ».';
+alter table public.properties
+  add column if not exists buildings_intro_fr text,
+  add column if not exists buildings_intro_en text;
+comment on column public.properties.buildings_intro_fr is 'Bail v3, article II 2.1 : phrase qui introduit la liste des bâtiments ; null = « Tènement immobilier sis …, constitué de N bâtiments distincts : ».';
+-- Le Loft (relecture Jérôme 29/10/2026) : maison de ville de 298 m² en deux bâtiments (238 m² habitables + annexe de 60 m²), 234 m² d'extérieurs et terrasses.
 update public.properties set
-  buildings_fr = '["une maison individuelle à usage d''habitation d''une surface habitable totale de 380 m², comprenant 12 chambres louées séparément et des parties communes, complétée par un grenier de 100 m² ;", "une maison de piscine aménagée, avec cuisine et salle à manger, de 30 m² ;", "un « chalet fitness » de 65 m², comprenant une salle de sport et un sauna ;", "une réserve de 18 m²."]'::jsonb,
-  buildings_en = '["a detached house for residential use with a total habitable area of 380 m², comprising 12 rooms let separately and common areas, plus a 100 m² attic;", "a converted pool house with kitchen and dining room, 30 m²;", "a 65 m² \"fitness chalet\" with gym and sauna;", "an 18 m² storage room."]'::jsonb
+  buildings_intro_fr = 'Maison de ville à usage d''habitation sise 1 rue des Marronniers, 74100 Ambilly, d''une surface totale de 298 m² répartie sur deux bâtiments :',
+  buildings_intro_en = 'Townhouse for residential use at 1 rue des Marronniers, 74100 Ambilly, with a total area of 298 m² spread over two buildings:',
+  buildings_fr = '["le bâtiment principal, d''une surface habitable de 238 m², comprenant 7 chambres louées séparément et des parties communes ;", "le bâtiment annexe, d''une surface de 60 m², comprenant une salle de sport, une salle TV, un sauna et une piscine intérieure."]'::jsonb,
+  buildings_en = '["the main building, with a habitable area of 238 m², comprising 7 rooms let separately and common areas;", "the annex building, 60 m², comprising a gym, a TV room, a sauna and an indoor pool."]'::jsonb
+where slug = 'leloft' and buildings_fr = '[]'::jsonb;
+update public.properties set
+  buildings_fr = '["une maison individuelle à usage d''habitation d''une surface habitable totale de 380 m², comprenant 12 chambres louées séparément et des parties communes, complétée par un grenier de 100 m² ;", "une maison de piscine aménagée, avec cuisine et salle à manger, de 26 m² ;", "un « chalet fitness » de 65 m², comprenant une salle de sport et un sauna ;", "une réserve de 18 m²."]'::jsonb,
+  buildings_en = '["a detached house for residential use with a total habitable area of 380 m², comprising 12 rooms let separately and common areas, plus a 100 m² attic;", "a converted pool house with kitchen and dining room, 26 m²;", "a 65 m² \"fitness chalet\" with gym and sauna;", "an 18 m² storage room."]'::jsonb
 where slug = 'lelodge' and buildings_fr = '[]'::jsonb;
 update public.properties set
-  setting_clause_fr = 'Le logement objet du présent contrat est situé dans une maison individuelle disposant d''espaces extérieurs aménagés. Le locataire a l''usage, dans les conditions prévues au règlement intérieur annexé, des parties communes intérieures et extérieures de la maison.',
-  setting_clause_en = 'The accommodation covered by this contract is located in a detached house with landscaped outdoor areas. The tenant has the use, under the conditions set out in the house rules appended hereto, of the indoor and outdoor common areas of the house.'
+  setting_clause_fr = 'L''ensemble dispose de 234 m² d''espaces extérieurs et de terrasses aménagés. Le locataire a l''usage, dans les conditions prévues au règlement intérieur annexé, des parties communes intérieures et extérieures de la maison.',
+  setting_clause_en = 'The property has 234 m² of landscaped outdoor areas and terraces. The tenant has the use, under the conditions set out in the house rules appended hereto, of the indoor and outdoor common areas of the house.'
 where slug = 'leloft' and setting_clause_fr is null;
 
 -- ---------------------------------------------------------------------------------------------------------------

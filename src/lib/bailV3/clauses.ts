@@ -34,6 +34,8 @@ export interface LeaseV3Property {
   building_kind?: string;      // « Maison individuelle » (défaut) ou « Maison de ville » (Le Loft)
   /** Tènement de plusieurs bâtiments (Le Lodge, Jérôme 28/10/2026) : liste rendue en puces sous « Tènement immobilier sis … » ; sinon phrase générique. */
   buildings?: string[] | null;
+  /** Phrase d'introduction de la liste des bâtiments (Le Loft : « Maison de ville … répartie sur deux bâtiments : ») ; défaut = « Tènement immobilier sis … ». */
+  buildings_intro?: string | null;
   surface_total_m2: number | null; room_count: number; garden_m2: number | null;
   setting_clause_fr: string | null; common_areas: string[]; leisure_equipment: string; dpe_class: string | null;
 }
@@ -217,7 +219,7 @@ export function buildLeaseV3(input: LeaseV3Input): LeaseDoc {
   const discount = k.discount_eur && k.discount_eur > 0 ? k.discount_eur : 0;
   const firstFullMonth = Number(k.start.slice(8, 10)) === 1 ? k.start : addMonths(k.start.slice(0, 7) + "-01", 1);
   art("finances", "CONDITIONS FINANCIÈRES", [
-    { t: "p", bold: true, text: `__Loyer mensuel de la chambre, hors charges : ${fEUR(pr.hc)}__ (${fCHF(pr.chfHc)} au taux BCE du ${k.eur_chf_date} : 1\u00a0€ = ${fRate(k.eur_chf)} CHF — pour indication uniquement), payable d'avance avant le 5 de chaque mois, stipulé et payé en euros.` },
+    { t: "p", text: `**__Loyer mensuel de la chambre, hors charges : ${fEUR(pr.hc)}__** (${fCHF(pr.chfHc)} au taux BCE du ${k.eur_chf_date} : 1\u00a0€ = ${fRate(k.eur_chf)} CHF — pour indication uniquement), payable d'avance avant le 5 de chaque mois, stipulé et payé en euros.` },
     ...(capSentence ? [{ t: "p", text: capSentence } as Block] : []),
     { t: "p", text: `Le loyer rémunère la mise à disposition de la chambre, la jouissance des parties communes et des équipements de loisirs de la maison (${p.leisure_equipment}), l'accès internet et les prestations de l'article ${N("services")}. L'exploitation de ces équipements et services est à la charge exclusive du Bailleur et n'entre pas dans le forfait de charges.` },
     { t: "sub", text: "Forfait de charges récupérables :" },
@@ -372,7 +374,7 @@ function immeubleBlocks(p: LeaseV3Property): Block[] {
   if (p.buildings && p.buildings.length) {
     const n = ["un", "deux", "trois", "quatre", "cinq", "six"][p.buildings.length - 1] || String(p.buildings.length);
     return [
-      { t: "p", text: `Tènement immobilier sis ${p.address}, constitué de ${n} bâtiments distincts :` },
+      { t: "p", text: p.buildings_intro || `Tènement immobilier sis ${p.address}, constitué de ${n} bâtiments distincts :` },
       { t: "bullets", items: p.buildings },
       { t: "p", text: suite },
     ];
