@@ -38,12 +38,13 @@ interface FormState {
   forfait_manual: string;            // saisi seulement si la maison n'a pas de forfait courant
   signatory_index: number;           // SCI : gérant signataire
   particular_clauses: string;
+  total_cc_manual: string;           // loyer charges comprises saisi (prérempli avec le palier de la chambre, modifiable)
 }
 const EMPTY_FORM: FormState = {
   property_id: '', room_id: '', nom: '', prenom: '', dob: '', birthplace: '', nationality: '', previous_address: '', email: '', phone: '', profession: '', employer: '',
   entry_date: '', lease_duration_months: 12, discount_eur: 0, deposit_installments: 1,
   prev_hc: '', prev_paid_on: '', prev_revision: '', prev_departure: '', prev_works: 'néant',
-  relocation_exception: '', override: false, override_reason: '', forfait_manual: '', signatory_index: 0, particular_clauses: '',
+  relocation_exception: '', override: false, override_reason: '', forfait_manual: '', signatory_index: 0, particular_clauses: '', total_cc_manual: '',
 };
 
 function todayISO(): string {
@@ -76,6 +77,7 @@ export default function DashboardNouveauBailV3Page() {
   const [services, setServices] = useState<ServiceCatalogRow[]>([]);
   const [roomLeases, setRoomLeases] = useState<LeaseFactsRow[]>([]);
   const [irl, setIrl] = useState<{ label: string; value: number; old: number | null; status: 'live' | 'cache' | 'manual' }>({ label: '3e trimestre 2026', value: 148.06, old: 145.77, status: 'manual' });
+  const [rateText, setRateText] = useState('');       // saisie du taux (texte, pour autoriser la virgule)
   const [rate, setRate] = useState<{ eurChf: number; dateIso: string; status: 'live' | 'fallback' | 'manual' }>({ eurChf: 0, dateIso: todayISO(), status: 'fallback' });
   const [form, setForm] = useState<FormState>(EMPTY_FORM);
   const [saving, setSaving] = useState(false);
@@ -106,7 +108,7 @@ export default function DashboardNouveauBailV3Page() {
       // taux BCE (1 € = X CHF) et IRL via les Edge Functions existantes
       try {
         const { data } = await supabase.functions.invoke('get-exchange-rate');
-        if (data?.ok && data?.rate && data?.date) setRate({ eurChf: Number(data.rate), dateIso: String(data.date), status: 'live' });
+        if (data?.ok && data?.rate && data?.date) { setRate({ eurChf: Number(data.rate), dateIso: String(data.date), status: 'live' }); setRateText(String(data.rate)); }
       } catch { /* saisie manuelle */ }
       try {
         const { data } = await supabase.functions.invoke('get-irl');
@@ -138,6 +140,7 @@ export default function DashboardNouveauBailV3Page() {
         setRoomLeases(rows);
         const facts = previousLeaseFacts(rows, todayISO());
         setForm((f) => ({ ...f,
+          total_cc_manual: room.rent_eur != null ? String(room.rent_eur) : '',
           prev_hc: facts.prev_hc != null ? String(facts.prev_hc) : '', prev_paid_on: facts.prev_paid_on || '', prev_revision: facts.prev_revision || '',
           prev_departure: facts.prev_departure || '', prev_works: 'néant',
           relocation_exception: facts.prev_hc == null ? 'first_letting' : ((property.relocation_exception_default as RelocationException | null) || ''),
@@ -148,7 +151,8 @@ export default function DashboardNouveauBailV3Page() {
 
   // ---------- calculs ----------
   const forfait = currentCharges ? Math.round(Number(currentCharges.per_room_month_eur)) : (Number(form.forfait_manual) || 0);
-  const totalCc = room?.rent_eur != null ? Number(room.rent_eur) : 0;
+  const roomReferenceCc = room?.rent_eur != null ? Number(room.rent_eur) : 0;
+  const totalCc = Number(form.total_cc_manual) > 0 ? Number(form.total_cc_manual) : roomReferenceCc;
   const prevHc = form.prev_hc.trim() === '' ? null : Number(form.prev_hc);
   const pricing = room ? computePricing({
     totalCc, forfait, prevHc, prevDepartureIso: form.prev_departure || null, irlNew: irl.value, irlOld: irl.old || irl.value,
@@ -276,7 +280,7 @@ export default function DashboardNouveauBailV3Page() {
       }
       logAudit('lease_generated', 'tenant', tenantId, {
         lease_version: 'v3', lease_id: leaseId, name: `${form.prenom} ${form.nom}`, property: property.name, room: room.room_number,
-        total_eur: pricing.total, rent_hc_eur: pricing.hc, forfait_eur: forfait, deposit_eur: pricing.deposit, entry_date: form.entry_date,
+        total_eur: pricing.total, room_reference_total_eur: roomReferenceCc, rent_overridden: totalCc !== roomReferenceCc, rent_hc_eur: pricing.hc, forfait_eur: forfait, deposit_eur: pricing.deposit, entry_date: form.entry_date,
         relocation_cap: pricing.cap, capped: pricing.capped, override: form.override, exposed_premium_eur: pricing.exposedPremium,
         discount_eur: discount, deposit_installments: installments, document_url: documentUrl, annexe_files_uploaded: uploaded,
       });
@@ -356,12 +360,20 @@ export default function DashboardNouveauBailV3Page() {
         {room && pricing && (
           <>
             <h3 style={h3}>Loyer et relocation</h3>
+            <label style={label}>Loyer mensuel charges comprises (€) — palier de la fiche chambre : {fEUR(roomReferenceCc)}</label>
+            <input type="number" min={0} step={1} value={form.total_cc_manual} onChange={(e) => set('total_cc_manual', e.target.value)} style={input} />
+            {totalCc !== roomReferenceCc && <div style={{ ...hint, color: '#b45309' }}>Loyer différent du palier de la chambre ({fEUR(roomReferenceCc)}) : l'écart sera journalisé.</div>}
             <div style={{ fontSize: '13px', lineHeight: 1.7, marginBottom: 10 }}>
-              Palier de la chambre : <strong>{fEUR(totalCc)}</strong> charges comprises · forfait <strong>{fEUR(forfait)}</strong> → loyer hors charges cible <strong>{fEUR(pricing.hcTarget)}</strong><br />
-              {rate.eurChf > 0 ? <>CHF indicatif : 1 € = {fRate(rate.eurChf)} CHF au {fDateLong(rate.dateIso)} ({rate.status === 'live' ? 'BCE' : 'saisi'})</> : <span style={{ color: '#b45309' }}>taux BCE manquant</span>}
-              <br />IRL : {irl.label} = {irl.value} {irl.old ? `(n−1 : ${irl.old})` : ''} {irl.status === 'manual' ? '· valeur par défaut, à vérifier' : ''}
+              Forfait de charges <strong>{fEUR(forfait)}</strong> → loyer hors charges cible <strong>{fEUR(pricing.hcTarget)}</strong>
+              {rate.eurChf > 0 ? <><br />CHF indicatif : {fEUR(pricing.total)} = {Math.round(pricing.total * rate.eurChf)} CHF au taux 1 € = {fRate(rate.eurChf)} CHF</> : <><br /><span style={{ color: '#b45309' }}>Taux de change manquant : saisis-le ci-dessous.</span></>}
             </div>
-            {rate.status !== 'live' && (<><label style={label}>Taux du jour (1 € = … CHF)</label><input type="number" step="0.0001" value={rate.eurChf || ''} onChange={(e) => setRate({ eurChf: Number(e.target.value) || 0, dateIso: todayISO(), status: 'manual' })} style={input} /></>)}
+            <label style={label}>Taux de change (1 € = … CHF) — {rate.status === 'live' ? `BCE du ${fDateLong(rate.dateIso)}, modifiable` : rate.status === 'manual' ? `saisi manuellement le ${fDateLong(rate.dateIso)}` : 'API indisponible : saisis le taux du jour'}</label>
+            <input type="text" inputMode="decimal" placeholder="ex. 0,9222" value={rateText} onChange={(e) => { const v = e.target.value; setRateText(v); const n = Number(v.replace(',', '.')); setRate({ eurChf: n > 0 ? n : 0, dateIso: todayISO(), status: 'manual' }); }} style={input} />
+            <div style={{ display: 'flex', gap: 8 }}>
+              <div style={{ flex: 2 }}><label style={label}>IRL : trimestre</label><input value={irl.label} onChange={(e) => setIrl({ ...irl, label: e.target.value, status: 'manual' })} style={input} /></div>
+              <div style={{ flex: 1 }}><label style={label}>Indice</label><input type="number" step="0.01" value={irl.value} onChange={(e) => setIrl({ ...irl, value: Number(e.target.value) || 0, status: 'manual' })} style={input} /></div>
+              <div style={{ flex: 1 }}><label style={label}>Indice n−1</label><input type="number" step="0.01" value={irl.old ?? ''} onChange={(e) => setIrl({ ...irl, old: Number(e.target.value) || null, status: 'manual' })} style={input} /></div>
+            </div>
             <label style={label}>Dernier loyer hors charges du précédent locataire (€) — {roomLeases.length ? `proposé d'après le dernier bail de la chambre` : 'aucun bail connu'}</label>
             {field('prev_hc', 'vide = première mise en location', 'number')}
             <label style={label}>Payé le</label>{field('prev_paid_on', '', 'date')}
