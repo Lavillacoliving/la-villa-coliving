@@ -71,7 +71,7 @@ export interface LeaseV3Input {
 }
 
 export type Block =
-  | { t: "p"; text: string; bold?: boolean; italic?: boolean; small?: boolean }
+  | { t: "p"; text: string; bold?: boolean; italic?: boolean; small?: boolean; spaceBefore?: boolean }
   | { t: "sub"; text: string }
   | { t: "bullets"; items: string[]; bold?: boolean }
   | { t: "numbered"; items: string[] }
@@ -228,7 +228,7 @@ export function buildLeaseV3(input: LeaseV3Input): LeaseDoc {
       { t: "sub", text: "Remise commerciale sur le premier mois complet :" } as Block,
       { t: "p", text: `**À titre de geste commercial, le Bailleur consent au Locataire une remise de ${fEUR(discount)}** sur le loyer et le forfait du premier mois complet de location, soit ${monthLabel(firstFullMonth)} (montant habituel : ${fEUR(pr.total)}). Le montant à verser pour ce mois est donc de ${fEUR(pr.total - discount)}.${pr.prorataDays ? " Le prorata dû pour le mois d'entrée n'est pas concerné par cette remise." : ""} Cette remise est accordée une seule fois ; elle ne modifie ni le loyer, ni sa révision, ni le dépôt de garantie.` } as Block,
     ] : []),
-    { t: "p", text: `Frais de dossier et d'état des lieux d'entrée : ${fEUR(pr.fees)}, non soumis à la TVA — offerts à partir de 3 mois de présence` },
+    { t: "p", spaceBefore: true, text: `Frais de dossier et d'état des lieux d'entrée : ${fEUR(pr.fees)}, non soumis à la TVA — offerts à partir de 3 mois de présence` },
     { t: "p", text: `Ces frais rémunèrent les prestations assurées par le Bailleur pour la mise en place de la location. Ils sont calculés sur la surface de la chambre louée, soit ${r.surface_m2} m² : frais de dossier (visite du logement, constitution du dossier, rédaction du bail) 10 € par m², soit ${fEUR(pr.feeDossier)} ; prestation d'état des lieux d'entrée 3 € par m², soit ${fEUR(pr.feeEdl)}. Ces frais sont offerts au Locataire dont le séjour atteint trois mois à compter de la date d'entrée ; en cas de départ avant ce délai, ils restent à sa charge et sont réglés au plus tard à la restitution des clés. Aucune autre somme n'est due au titre de la location.` },
     { t: "sub", text: "Révision annuelle (IRL) :" },
     { t: "bullets", items: [`Trimestre de référence : ${k.irl_label}`, `Indice de référence : ${fIrl(k.irl_value)}`, "Le loyer et le forfait de charges sont révisés chaque année à la date anniversaire du contrat selon l'indice de référence des loyers."] },

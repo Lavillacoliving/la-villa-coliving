@@ -70,7 +70,7 @@ function inline(text: string): React.ReactNode {
 function BlockView({ b }: { b: Block }) {
   switch (b.t) {
     case "p":
-      return <Text style={[s.body, b.small ? s.small : {}, b.bold ? { fontFamily: "Helvetica-Bold" } : b.italic ? { fontFamily: "Helvetica-Oblique" } : {}]}>{inline(b.text)}</Text>;
+      return <Text style={[s.body, b.small ? s.small : {}, b.bold ? { fontFamily: "Helvetica-Bold" } : b.italic ? { fontFamily: "Helvetica-Oblique" } : {}, b.spaceBefore ? { marginTop: 14 } : {}]}>{inline(b.text)}</Text>;
     case "sub":
       return <Text style={s.subTitle}>{b.text}</Text>;
     case "bullets":
