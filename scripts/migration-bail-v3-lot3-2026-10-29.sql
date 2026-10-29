@@ -143,6 +143,7 @@ begin
   return jsonb_build_object('tenant_id', v_tenant_id, 'lease_id', v_lease_id);
 end;
 $$;
-revoke all on function public.create_lease_v3(jsonb) from public;
-grant execute on function public.create_lease_v3(jsonb) to authenticated;
+-- Checklist §12 (2ter) : SECURITY DEFINER → jamais exécutable par anon (clé publique du site) ; dashboard connecté + service_role.
+revoke all on function public.create_lease_v3(jsonb) from public, anon;
+grant execute on function public.create_lease_v3(jsonb) to authenticated, service_role;
 comment on function public.create_lease_v3(jsonb) is 'Bail v3 (lot 3) : crée le locataire et la fiche du bail en une transaction, désactive l''ancien locataire si fourni. Admin seulement.';
