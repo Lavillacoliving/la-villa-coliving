@@ -76,7 +76,7 @@ export default function DashboardNouveauBailV3Page() {
   const [charges, setCharges] = useState<CurrentChargesRow[]>([]);
   const [services, setServices] = useState<ServiceCatalogRow[]>([]);
   const [roomLeases, setRoomLeases] = useState<LeaseFactsRow[]>([]);
-  const [irl, setIrl] = useState<{ label: string; value: number; old: number | null; status: 'live' | 'cache' | 'manual' }>({ label: '3e trimestre 2026', value: 148.06, old: 145.77, status: 'manual' });
+  const [irl, setIrl] = useState<{ label: string; value: number; old: number | null; oldLabel: string; status: 'live' | 'cache' | 'manual' }>({ label: '', value: 0, old: null, oldLabel: '', status: 'manual' });
   const [rateText, setRateText] = useState('');       // saisie du taux (texte, pour autoriser la virgule)
   const [rate, setRate] = useState<{ eurChf: number; dateIso: string; status: 'live' | 'fallback' | 'manual' }>({ eurChf: 0, dateIso: todayISO(), status: 'fallback' });
   const [form, setForm] = useState<FormState>(EMPTY_FORM);
@@ -110,12 +110,29 @@ export default function DashboardNouveauBailV3Page() {
         const { data } = await supabase.functions.invoke('get-exchange-rate');
         if (data?.ok && data?.rate && data?.date) { setRate({ eurChf: Number(data.rate), dateIso: String(data.date), status: 'live' }); setRateText(String(data.rate)); }
       } catch { /* saisie manuelle */ }
+      // IRL courant (Edge get-irl, série INSEE 001515333) + IRL du même trimestre de l'année précédente, lu dans
+      // irl_indices (série tenue en base) ou, à défaut, dans irl_history (cache de la fonction). Rien n'est codé en dur.
+      let period: string | null = null; let label = ''; let value = 0; let status: 'live' | 'cache' | 'manual' = 'manual';
       try {
         const { data } = await supabase.functions.invoke('get-irl');
-        if (data?.ok && typeof data?.value === 'number' && data?.period_label) {
-          setIrl((prev) => ({ label: String(data.period_label), value: Number(data.value), old: typeof data.previous_year_value === 'number' ? Number(data.previous_year_value) : prev.old, status: data.source === 'insee' ? 'live' : 'cache' }));
+        if (data?.ok && typeof data?.value === 'number' && data?.period_label) { period = String(data.period); label = String(data.period_label); value = Number(data.value); status = data.source === 'insee' ? 'live' : 'cache'; }
+      } catch { /* repli ci-dessous */ }
+      if (!period) {
+        const { data: last } = await supabase.from('irl_indices').select('year, quarter, value').order('year', { ascending: false }).order('quarter', { ascending: false }).limit(1).maybeSingle();
+        if (last) { period = `${last.year}-Q${last.quarter}`; label = `${last.quarter === 1 ? '1er' : `${last.quarter}ème`} trimestre ${last.year}`; value = Number(last.value); status = 'cache'; }
+      }
+      const m = period ? period.match(/^(\d{4})-Q([1-4])$/) : null;
+      let old: number | null = null; let oldLabel = '';
+      if (m) {
+        const y = Number(m[1]) - 1, q = Number(m[2]);
+        const { data: prev } = await supabase.from('irl_indices').select('value').eq('year', y).eq('quarter', q).maybeSingle();
+        if (prev?.value != null) { old = Number(prev.value); oldLabel = `${q === 1 ? '1er' : `${q}ème`} trimestre ${y} (irl_indices)`; }
+        else {
+          const { data: h } = await supabase.from('irl_history').select('value').eq('period', `${y}-Q${q}`).maybeSingle();
+          if (h?.value != null) { old = Number(h.value); oldLabel = `${q === 1 ? '1er' : `${q}ème`} trimestre ${y} (irl_history)`; }
         }
-      } catch { /* valeur par défaut */ }
+      }
+      setIrl({ label, value, old, oldLabel, status });
     };
     load();
   }, [toast]);
@@ -155,7 +172,7 @@ export default function DashboardNouveauBailV3Page() {
   const totalCc = Number(form.total_cc_manual) > 0 ? Number(form.total_cc_manual) : roomReferenceCc;
   const prevHc = form.prev_hc.trim() === '' ? null : Number(form.prev_hc);
   const pricing = room ? computePricing({
-    totalCc, forfait, prevHc, prevDepartureIso: form.prev_departure || null, irlNew: irl.value, irlOld: irl.old || irl.value,
+    totalCc, forfait, prevHc, prevDepartureIso: form.prev_departure || null, irlNew: irl.value || 1, irlOld: irl.old || irl.value || 1,
     zoneTendue: property?.zone_tendue !== false, exception: form.relocation_exception || null, override: form.override,
     surfaceM2: Number(room.surface_m2), startIso: form.entry_date || todayISO(), eurChf: rate.eurChf || 0,
   }) : null;
@@ -209,6 +226,8 @@ export default function DashboardNouveauBailV3Page() {
   if (property && !currentCharges && !(Number(form.forfait_manual) > 0)) blockers.push("Aucun forfait de charges courant pour cette maison : saisis-le dans l'onglet Maisons (lot 2) ou ci-dessous.");
   if (rate.status === 'fallback' && !(rate.eurChf > 0)) blockers.push('Taux BCE indisponible : saisis le taux du jour (1 € = … CHF).');
   if (room && room.rent_eur == null) blockers.push('La chambre n\'a pas de loyer en euros (rooms.rent_eur).');
+  if (!(irl.value > 0)) blockers.push('IRL courant manquant : saisis le trimestre et l\'indice.');
+  if (pricing?.capApplies && !(irl.old && irl.old > 0)) blockers.push('IRL du même trimestre de l\'année précédente manquant : saisis-le (il sert au plafond de relocation).');
   if (pricing?.capped && form.override && form.override_reason.trim().length < 10) blockers.push('La dérogation au plafond de relocation exige un motif (10 caractères minimum).');
   if (!form.nom || !form.prenom || !form.email || !form.entry_date) blockers.push('Nom, prénom, email et date d\'entrée sont obligatoires.');
   if (discount > 0 && pricing && discount > pricing.total) blockers.push('La remise dépasse le loyer du premier mois complet.');
@@ -372,8 +391,9 @@ export default function DashboardNouveauBailV3Page() {
             <div style={{ display: 'flex', gap: 8 }}>
               <div style={{ flex: 2 }}><label style={label}>IRL : trimestre</label><input value={irl.label} onChange={(e) => setIrl({ ...irl, label: e.target.value, status: 'manual' })} style={input} /></div>
               <div style={{ flex: 1 }}><label style={label}>Indice</label><input type="number" step="0.01" value={irl.value} onChange={(e) => setIrl({ ...irl, value: Number(e.target.value) || 0, status: 'manual' })} style={input} /></div>
-              <div style={{ flex: 1 }}><label style={label}>Indice n−1</label><input type="number" step="0.01" value={irl.old ?? ''} onChange={(e) => setIrl({ ...irl, old: Number(e.target.value) || null, status: 'manual' })} style={input} /></div>
+              <div style={{ flex: 1 }}><label style={label}>Indice n−1</label><input type="number" step="0.01" value={irl.old ?? ''} onChange={(e) => setIrl({ ...irl, old: Number(e.target.value) || null, oldLabel: 'saisi', status: 'manual' })} style={input} /></div>
             </div>
+            <div style={hint}>IRL : {irl.status === 'live' ? 'INSEE' : irl.status === 'cache' ? 'cache' : 'saisie manuelle'}{irl.oldLabel ? ` · n−1 : ${irl.oldLabel}` : ' · n−1 introuvable en base, à saisir'}</div>
             <label style={label}>Dernier loyer hors charges du précédent locataire (€) — {roomLeases.length ? `proposé d'après le dernier bail de la chambre` : 'aucun bail connu'}</label>
             {field('prev_hc', 'vide = première mise en location', 'number')}
             <label style={label}>Payé le</label>{field('prev_paid_on', '', 'date')}
