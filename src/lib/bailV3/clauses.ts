@@ -70,6 +70,8 @@ export interface ServiceLine { service: string; frequency: string; provider: str
 export interface LeaseV3Input {
   entity: LeaseV3Entity; property: LeaseV3Property; room: LeaseV3Room; tenant: LeaseV3Tenant; terms: LeaseV3Terms;
   services: ServiceLine[]; maquette?: string | null;
+  /** Clauses particulières saisies dans le générateur (optionnel) : article final, après les dispositions diverses. */
+  particular_clauses?: string | null;
 }
 
 export type Block =
@@ -343,6 +345,11 @@ export function buildLeaseV3(input: LeaseV3Input): LeaseDoc {
     const d = defs[key] as { title: string; blocks: Block[]; opts?: Partial<Article> };
     return { key, num: N(key), title: d.title, blocks: d.blocks, ...(d.opts || {}) };
   });
+  const particular = (input.particular_clauses || "").trim();
+  if (particular) {
+    articles.push({ key: "particulieres", num: roman(ARTICLE_ORDER.length + 1), title: "CLAUSES PARTICULIÈRES", keepTogether: true,
+      blocks: particular.split(/\n\s*\n/).map((para) => ({ t: "p", text: para.replace(/\s*\n\s*/g, " ").trim() }) as Block) });
+  }
 
   const annexes: Article[] = [
     { key: "annexe_a", num: "A", title: `CATALOGUE DES PRESTATIONS — ${p.name.toUpperCase()} (VERSION ${k.services_version})`, first: true, blocks: [

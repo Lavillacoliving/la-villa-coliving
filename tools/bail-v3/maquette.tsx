@@ -11,6 +11,7 @@ import { renderToFile } from "@react-pdf/renderer";
 import { buildLeaseV3 } from "@/lib/bailV3/clauses";
 import { BailV3PDF } from "@/lib/bailV3/BailV3PDF";
 import { CASES } from "./cases";
+import { NOTICE_INFORMATION_2023, NOTICE_SOURCE, NOTICE_TITLE } from "@/data/noticeInformation2023";
 
 const outDir = process.argv[2];
 if (!outDir) { console.error("usage: maquette.mjs <dossier-de-sortie>"); process.exit(1); }
@@ -26,7 +27,7 @@ for (const [key, input] of Object.entries(CASES)) {
     fs.writeFileSync(path.join(process.env.BAIL_V3_JSON, `${key}.json`), JSON.stringify(doc, null, 1));
   }
   const file = path.join(outDir, `Maquette_Bail_v3_${key}.pdf`);
-  await renderToFile(<BailV3PDF doc={doc} logoSrc={logo} />, file);
+  await renderToFile(<BailV3PDF doc={doc} logoSrc={logo} notice={{ title: NOTICE_TITLE, source: NOTICE_SOURCE, sections: NOTICE_INFORMATION_2023 }} />, file);
   const p = doc.pricing;
   console.log(`${key}: HC ${p.hc} € (cible ${p.hcTarget}, plafond ${p.cap ?? "—"}${p.capped ? ", plafonné" : ""}) · total ${p.total} € · dépôt ${p.deposit} € · frais ${p.fees} €` +
     (p.prorataDays ? ` · prorata ${p.prorataDays}/30 = ${p.prorataTotal} €` : "") + ` → ${file}`);

@@ -62,6 +62,7 @@ const DashboardRoadmapPage = lazyWithRetry(() => import("@/pages/dashboard/Dashb
 const DashboardMaisonsPage = lazyWithRetry(() => import("@/pages/dashboard/DashboardMaisonsPage"), "DashboardMaisonsPage");
 const DashboardDispoPage = lazyWithRetry(() => import("@/pages/dashboard/DashboardDispoPage"), "DashboardDispoPage");
 const DashboardNouveauBailPage = lazyWithRetry(() => import("@/pages/dashboard/DashboardNouveauBailPage"), "DashboardNouveauBailPage");
+const DashboardNouveauBailV3Page = lazyWithRetry(() => import("@/pages/dashboard/DashboardNouveauBailV3Page"), "DashboardNouveauBailV3Page");
 const DashboardDocumentsPage = lazyWithRetry(() => import("@/pages/dashboard/DashboardDocumentsPage"), "DashboardDocumentsPage");
 const DashboardEventsPage = lazyWithRetry(() => import("@/pages/dashboard/DashboardEventsPage"), "DashboardEventsPage");
 const DashboardRapprochementPage = lazyWithRetry(() => import("@/pages/dashboard/DashboardRapprochementPage"), "DashboardRapprochementPage");
@@ -190,7 +191,8 @@ function AppContent() {
           <Route path="events" element={<DashboardEventsPage />} />
           <Route path="maisons" element={<DashboardMaisonsPage />} />
           <Route path="dispo" element={<DashboardDispoPage />} />
-          <Route path="nouveau-bail" element={<DashboardNouveauBailPage />} />
+          <Route path="nouveau-bail" element={<DashboardNouveauBailV3Page />} />
+          <Route path="nouveau-bail/v2" element={<DashboardNouveauBailPage />} />
           <Route path="blog" element={<DashboardBlogPage />} />
         </Route>
         <Route path="*" element={<NotFoundPage />} />

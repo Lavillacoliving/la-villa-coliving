@@ -6,6 +6,8 @@
 import React from "react";
 import { Document, Page, Text, View, StyleSheet, Image } from "@react-pdf/renderer";
 import type { LeaseDoc, Block, Article } from "./clauses";
+import { parseInline } from "./inline";
+import type { NoticeSection } from "@/data/noticeInformation2023";
 
 const gold = "#c9a96e";
 
@@ -22,6 +24,8 @@ const s = StyleSheet.create({
   maquette: { lineHeight: 1.6, fontSize: 8, color: "#999", marginTop: 4, fontFamily: "Helvetica-Oblique" },
   partyBox: { backgroundColor: "#faf8f5", borderLeftWidth: 3, borderLeftColor: gold, padding: 10, marginVertical: 8, fontSize: 9 },
   boxCentered: { borderWidth: 1, borderColor: gold, borderLeftWidth: 1, alignItems: "center", textAlign: "center", marginHorizontal: 60, marginTop: 10 },
+  noticeHeading: { fontSize: 8.5, lineHeight: 1.4, fontFamily: "Helvetica-Bold", marginTop: 8, marginBottom: 2 },
+  noticeBody: { fontSize: 8, lineHeight: 1.4, textAlign: "justify", marginBottom: 3 },
   partyLabel: { lineHeight: 1.6, fontFamily: "Helvetica-Bold", color: gold, fontSize: 10, marginBottom: 4 },
   articleTitle: { lineHeight: 1.6, fontFamily: "Helvetica-Bold", fontSize: 12, marginTop: 18, marginBottom: 6, borderBottomWidth: 1, borderBottomColor: gold, paddingBottom: 4 },
   body: { fontSize: 10, lineHeight: 1.6, textAlign: "justify", marginBottom: 4 },
@@ -47,24 +51,14 @@ const s = StyleSheet.create({
   logo: { width: 120, marginBottom: 6, alignSelf: "center" },
 });
 
-/** Marqueurs inline : ** … ** = gras, __ … __ = souligné (combinables). Sans marqueur, la chaîne est rendue telle quelle
+/** Marqueurs inline (gras / souligné) via l'analyseur partagé ; sans marqueur, la chaîne est rendue telle quelle
  *  (pas de Text imbriqué inutile : react-pdf 4 plante sur un Text imbriqué qui suit un tableau coupé entre deux pages). */
 function inline(text: string): React.ReactNode {
-  if (!text.includes("**") && !text.includes("__")) return text;
-  const out: React.ReactNode[] = []; let bold = false, under = false, buf = "", i = 0, k = 0;
-  const flush = () => {
-    if (!buf) return;
-    out.push(bold || under ? <Text key={k++} style={{ ...(bold ? { fontFamily: "Helvetica-Bold" } : {}), ...(under ? { textDecoration: "underline" } : {}) }}>{buf}</Text> : buf);
-    buf = "";
-  };
-  while (i < text.length) {
-    const two = text.slice(i, i + 2);
-    if (two === "**") { flush(); bold = !bold; i += 2; }
-    else if (two === "__") { flush(); under = !under; i += 2; }
-    else { buf += text[i]; i += 1; }
-  }
-  flush();
-  return out;
+  const segs = parseInline(text);
+  if (segs.length === 1 && !segs[0].bold && !segs[0].under) return text;
+  return segs.map((sg, k) => (sg.bold || sg.under
+    ? <Text key={k} style={{ ...(sg.bold ? { fontFamily: "Helvetica-Bold" } : {}), ...(sg.under ? { textDecoration: "underline" } : {}) }}>{sg.text}</Text>
+    : sg.text));
 }
 
 function BlockView({ b }: { b: Block }) {
@@ -116,7 +110,9 @@ function ArticleView({ a, label, trailer }: { a: Article; label: string; trailer
   );
 }
 
-export function BailV3PDF({ doc, logoSrc }: { doc: LeaseDoc; logoSrc: string }) {
+export interface BailV3PDFProps { doc: LeaseDoc; logoSrc: string; notice?: { title: string; source: string; sections: readonly NoticeSection[] } | null }
+
+export function BailV3PDF({ doc, logoSrc, notice }: BailV3PDFProps) {
   const boxWidth = doc.signature.bailleurs.length > 1 ? "30%" : "40%";
   // Groupes de pages : un article marqué pageBreakBefore ouvre une nouvelle Page.
   const pageGroups: Article[][] = [];
@@ -162,6 +158,20 @@ export function BailV3PDF({ doc, logoSrc }: { doc: LeaseDoc; logoSrc: string }) 
         {doc.annexes.map((a, i) => <ArticleView key={"x" + i} a={a} label="ANNEXE" />)}
         {pageFooter}
       </Page>
+      {notice && (
+        <Page size="A4" style={s.page} wrap>
+          <Text style={[s.articleTitle, { marginTop: 0 }]}>{`ANNEXE 1 \u2014 NOTICE D'INFORMATION RELATIVE AUX DROITS ET OBLIGATIONS DES LOCATAIRES ET DES BAILLEURS`}</Text>
+          <Text style={[s.small, { fontSize: 8, marginBottom: 8 }]}>{notice.source}</Text>
+          <Text style={[s.noticeHeading, { fontSize: 9 }]}>{notice.title}</Text>
+          {notice.sections.map((sec, i) => (
+            <View key={i}>
+              <View minPresenceAhead={40}><Text style={s.noticeHeading}>{sec.heading}</Text></View>
+              {sec.paragraphs.map((para, j) => <Text key={j} style={s.noticeBody}>{para}</Text>)}
+            </View>
+          ))}
+          {pageFooter}
+        </Page>
+      )}
     </Document>
   );
 }

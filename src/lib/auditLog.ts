@@ -23,7 +23,7 @@ import { supabase } from '@/lib/supabase';
 export type AuditAction =
   | 'create' | 'update' | 'delete'
   | 'status_change' | 'payment_recorded'
-  | 'lease_generated' | 'tenant_deactivated'
+  | 'lease_generated' | 'tenant_deactivated' | 'relocation_override'
   | 'lease_status_changed'
   | 'irl_applied' | 'irl_dismissed' | 'irl_revision_applied' | 'prospect_converted'
   | 'file_uploaded' | 'file_deleted'
