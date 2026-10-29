@@ -27,7 +27,7 @@ export function bathroomFixtures(house: "lavilla" | "leloft" | "lelodge", room: 
   const withWc = { lavilla: [3, 4, 7, 8], leloft: [7], lelodge: [] as number[] };
   return withWc[house].includes(room) ? "douche, lavabo, WC" : "douche, lavabo";
 }
-const MAQUETTE = "Maquette du 28 octobre 2026 (relectures n° 1 et 2 et ajustements maisons intégrés, v4) — locataire fictif, données à confirmer entre crochets — ne pas signer";
+const MAQUETTE = "Maquette du 29 octobre 2026 (relectures n° 1 à 3 intégrées, v5) — locataire fictif, données à confirmer entre crochets — ne pas signer";
 
 const tenant = {
   first_name: "Camille", last_name: "Exemple", dob: "1995-03-14", birthplace: "Lyon (69)", nationality: "française",
@@ -42,7 +42,7 @@ export const CASES: Record<string, LeaseV3Input> = {
       legal_form: "indivision", legal_name: "Indivision Austin-Piot", trade_name: "La Villa Coliving",
       registration: "SIRET 898 236 518 00012", capital_eur: null, siege: "34 rue du Foron, 74100 Ville-la-Grand", vat_mention: VAT,
       signatories: [{ name: "M. Jérôme AUSTIN", quality: "indivisaire", order: 1 }, { name: "Mme Fanny PIOT", quality: "indivisaire", order: 2 }],
-      sole_signatory: { index: 0, mandate_from: 1, mandate_date: null },
+      sole_signatory: { index: 0, mandate_from: 1, mandate_date: "2026-10-28" },
       account_holder: "M. Jérôme Austin et Mme Fanny Piot", bank: "Banque Palatine", iban: "FR76 4097 8000 4321 3287 5019 897", bic: "BSPFFRPPXXX",
       domicile: "[domicile des indivisaires — à confirmer]",
     },
@@ -50,7 +50,7 @@ export const CASES: Record<string, LeaseV3Input> = {
       name: "La Villa", address: "34 rue du Foron, 74100 Ville-la-Grand", commune: "Ville-la-Grand",
       surface_total_m2: 365, room_count: 10, garden_m2: 1950, dpe_class: "D",
       setting_clause_fr: "Le logement objet du présent contrat est situé dans une maison individuelle s'inscrivant dans un cadre paysager attaché à l'immeuble, comprenant un parc arboré et des espaces extérieurs aménagés. Le locataire a l'usage, dans les conditions prévues au règlement intérieur annexé, des parties communes intérieures et extérieures de la maison.",
-      common_areas: ["hall d'entrée", "double cuisine", "salle à manger", "buanderie", "salle de jeux", "salle TV", "salle de sport", "sauna 5 places", "terrain arboré d'environ 1 950 m²", "piscine extérieure chauffée de 12 × 5 m", "terrasses", "potager", "terrain de volley"],
+      common_areas: ["hall d'entrée", "double cuisine", "salle à manger", "buanderie", "salle de jeux", "salle TV", "salle de sport", "sauna 5 places", "terrain arboré d'environ 1 950 m²", "piscine extérieure chauffée de 12×5m", "terrasses", "potager", "terrain de volley"],
       leisure_equipment: "piscine extérieure chauffée, sauna, salle de sport, salle de jeux",
     },
     room: {

@@ -18,7 +18,7 @@ const s = StyleSheet.create({
   partyText: { fontSize: 9, lineHeight: 1.6 },
   headerBlock: { textAlign: "center", marginBottom: 20, borderBottomWidth: 2, borderBottomColor: gold, paddingBottom: 12 },
   headerTitle: { fontSize: 16, fontFamily: "Helvetica-Bold", marginTop: 6, marginBottom: 4, lineHeight: 1.3 },
-  headerSub: { lineHeight: 1.6, fontSize: 9, color: "#666", marginTop: 2 },
+  headerSub: { lineHeight: 1.6, fontSize: 9, color: "#666", marginTop: 10 },
   maquette: { lineHeight: 1.6, fontSize: 8, color: "#999", marginTop: 4, fontFamily: "Helvetica-Oblique" },
   partyBox: { backgroundColor: "#faf8f5", borderLeftWidth: 3, borderLeftColor: gold, padding: 10, marginVertical: 8, fontSize: 9 },
   boxCentered: { borderWidth: 1, borderColor: gold, borderLeftWidth: 1, alignItems: "center", textAlign: "center", marginHorizontal: 60, marginTop: 10 },
@@ -26,7 +26,7 @@ const s = StyleSheet.create({
   articleTitle: { lineHeight: 1.6, fontFamily: "Helvetica-Bold", fontSize: 12, marginTop: 18, marginBottom: 6, borderBottomWidth: 1, borderBottomColor: gold, paddingBottom: 4 },
   body: { fontSize: 10, lineHeight: 1.6, textAlign: "justify", marginBottom: 4 },
   small: { fontSize: 9, color: "#666" },
-  subTitle: { lineHeight: 1.6, fontFamily: "Helvetica-Bold", fontSize: 10, marginTop: 10, marginBottom: 4 },
+  subTitle: { lineHeight: 1.6, fontFamily: "Helvetica-Bold", fontSize: 10, marginTop: 16, marginBottom: 4 },
   bullet: { flexDirection: "row", marginBottom: 2, paddingLeft: 10 },
   bulletDot: { lineHeight: 1.6, width: 12, fontSize: 10 },
   bulletText: { lineHeight: 1.6, flex: 1, fontSize: 10 },
@@ -47,11 +47,24 @@ const s = StyleSheet.create({
   logo: { width: 120, marginBottom: 6, alignSelf: "center" },
 });
 
-/** Gras inline : les segments entre ** … ** sont rendus en Helvetica-Bold ; sans marqueur, la chaîne est rendue telle quelle
- *  (pas de Text imbriqué : react-pdf 4 plante sur un Text imbriqué qui suit un tableau coupé entre deux pages). */
+/** Marqueurs inline : ** … ** = gras, __ … __ = souligné (combinables). Sans marqueur, la chaîne est rendue telle quelle
+ *  (pas de Text imbriqué inutile : react-pdf 4 plante sur un Text imbriqué qui suit un tableau coupé entre deux pages). */
 function inline(text: string): React.ReactNode {
-  if (!text.includes("**")) return text;
-  return text.split("**").map((part, i) => (i % 2 === 1 ? <Text key={i} style={{ fontFamily: "Helvetica-Bold" }}>{part}</Text> : part));
+  if (!text.includes("**") && !text.includes("__")) return text;
+  const out: React.ReactNode[] = []; let bold = false, under = false, buf = "", i = 0, k = 0;
+  const flush = () => {
+    if (!buf) return;
+    out.push(bold || under ? <Text key={k++} style={{ ...(bold ? { fontFamily: "Helvetica-Bold" } : {}), ...(under ? { textDecoration: "underline" } : {}) }}>{buf}</Text> : buf);
+    buf = "";
+  };
+  while (i < text.length) {
+    const two = text.slice(i, i + 2);
+    if (two === "**") { flush(); bold = !bold; i += 2; }
+    else if (two === "__") { flush(); under = !under; i += 2; }
+    else { buf += text[i]; i += 1; }
+  }
+  flush();
+  return out;
 }
 
 function BlockView({ b }: { b: Block }) {
@@ -61,7 +74,7 @@ function BlockView({ b }: { b: Block }) {
     case "sub":
       return <Text style={s.subTitle}>{b.text}</Text>;
     case "bullets":
-      return <View>{b.items.map((it, i) => (
+      return <View style={{ marginBottom: 8 }}>{b.items.map((it, i) => (
         <View key={i} style={s.bullet}><Text style={s.bulletDot}>{"•"}</Text><Text style={[s.bulletText, b.bold ? { fontFamily: "Helvetica-Bold" } : {}]}>{inline(it)}</Text></View>
       ))}</View>;
     case "numbered":
@@ -82,7 +95,7 @@ function BlockView({ b }: { b: Block }) {
         {b.rows.map((row, ri) => <View key={ri} style={s.tableRow} wrap={false}>{row.map((c, ci) => <Text key={ci} style={[s.gridCell, { width: `${b.widths[ci]}%` }]}>{c}</Text>)}</View>)}
       </View>;
     case "box":
-      return <View style={[s.partyBox, { marginTop: 6 }, b.align === "center" ? s.boxCentered : {}]} wrap={false}>
+      return <View style={[s.partyBox, { marginTop: 12 }, b.align === "center" ? s.boxCentered : {}]} wrap={false}>
         {b.label && <Text style={[s.partyText, { fontFamily: "Helvetica-Bold", marginBottom: 2 }]}>{b.label}</Text>}
         {b.lines.map((l, i) => <Text key={i} style={s.partyText}>{l}</Text>)}
       </View>;
@@ -105,6 +118,10 @@ function ArticleView({ a, label, trailer }: { a: Article; label: string; trailer
 
 export function BailV3PDF({ doc, logoSrc }: { doc: LeaseDoc; logoSrc: string }) {
   const boxWidth = doc.signature.bailleurs.length > 1 ? "30%" : "40%";
+  // Groupes de pages : un article marqué pageBreakBefore ouvre une nouvelle Page.
+  const pageGroups: Article[][] = [];
+  for (const a of doc.articles) { if (a.pageBreakBefore || !pageGroups.length) pageGroups.push([]); pageGroups[pageGroups.length - 1].push(a); }
+  const lastKey = doc.articles[doc.articles.length - 1].key;
   const pageFooter = (
     <View style={s.pageFooter} fixed>
       {doc.footer.map((l, i) => <Text key={i}>{l}</Text>)}
@@ -125,19 +142,20 @@ export function BailV3PDF({ doc, logoSrc }: { doc: LeaseDoc; logoSrc: string }) 
   );
   return (
     <Document title="Contrat de location — La Villa Coliving (bail v3)" author="La Villa Coliving">
-      <Page size="A4" style={s.page} wrap>
-        <View style={s.headerBlock}>
+      {pageGroups.map((group, gi) => (
+      <Page key={gi} size="A4" style={s.page} wrap>
+        {gi === 0 && <View style={s.headerBlock}>
           <Image style={s.logo} src={logoSrc} />
-          <Text style={[s.text, { fontSize: 10, fontFamily: "Helvetica-Bold" }]}>La Villa Coliving</Text>
           <Text style={s.headerTitle}>{doc.title}</Text>
           <Text style={s.headerSub}>{doc.subtitle}</Text>
           {doc.maquette && <Text style={s.maquette}>{doc.maquette}</Text>}
-        </View>
-        <View style={s.partyBox}><Text style={s.partyLabel}>BAILLEUR :</Text>{doc.bailleur.map((l, i) => <Text key={i} style={s.partyText}>{l}</Text>)}</View>
-        <View style={s.partyBox}><Text style={s.partyLabel}>LOCATAIRE :</Text>{doc.locataire.map((l, i) => <Text key={i} style={s.partyText}>{l}</Text>)}</View>
-        {doc.articles.map((a, i) => <ArticleView key={i} a={a} label="ARTICLE" trailer={i === doc.articles.length - 1 ? signatureBlock : undefined} />)}
+        </View>}
+        {gi === 0 && <View style={s.partyBox}><Text style={s.partyLabel}>BAILLEUR :</Text>{doc.bailleur.map((l, i) => <Text key={i} style={s.partyText}>{l}</Text>)}</View>}
+        {gi === 0 && <View style={s.partyBox}><Text style={s.partyLabel}>LOCATAIRE :</Text>{doc.locataire.map((l, i) => <Text key={i} style={s.partyText}>{l}</Text>)}</View>}
+        {group.map((a, i) => <ArticleView key={a.key} a={{ ...a, first: gi > 0 && i === 0 }} label="ARTICLE" trailer={a.key === lastKey ? signatureBlock : undefined} />)}
         {pageFooter}
       </Page>
+      ))}
       {/* Annexes sur une seconde page : un `break` suivi d'un tableau coupé entre deux pages fait planter react-pdf 4
           (« unsupported number ») dès qu'un pied de page fixe est présent ; une nouvelle Page évite le saut forcé. */}
       <Page size="A4" style={s.page} wrap>

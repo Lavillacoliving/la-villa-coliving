@@ -79,7 +79,8 @@ export type Block =
   | { t: "kv"; rows: Array<[string, string]>; totals?: Array<[string, string]>; headers?: [string, string] }
   | { t: "table"; headers: string[]; rows: string[][]; widths: number[] }
   | { t: "box"; label?: string; lines: string[]; align?: "center" };
-export interface Article { key: string; num: string; title: string; blocks: Block[]; first?: boolean; keepTogether?: boolean }
+/** Gras inline : ** … ** ; souligné inline : __ … __ (relecture n° 3 du 29/10/2026 : dates et montants clés soulignés). */
+export interface Article { key: string; num: string; title: string; blocks: Block[]; first?: boolean; keepTogether?: boolean; pageBreakBefore?: boolean }
 export interface LeaseDoc {
   title: string; subtitle: string; maquette: string | null;
   bailleur: string[]; locataire: string[];
@@ -177,7 +178,7 @@ export function buildLeaseV3(input: LeaseV3Input): LeaseDoc {
     { t: "sub", text: "2.2 Le local privatif, fermé à clef, dont le Locataire a la jouissance exclusive" },
     { t: "bullets", items: privBullets },
     { t: "sub", text: "2.3 Accès aux parties communes" },
-    { t: "lines", items: p.common_areas },
+    { t: "bullets", items: p.common_areas },
     { t: "sub", text: "2.4 Mobilier et équipements" },
     { t: "p", text: `L'inventaire et l'état détaillé du mobilier de la chambre sont établis contradictoirement lors de l'état des lieux d'entrée (application ${k.edl_tool}) ; ils comprennent la parure de lit et la serviette mises à disposition (article ${N("services")}, 9.3).` },
     { t: "sub", text: "2.5 Destination" },
@@ -189,15 +190,15 @@ export function buildLeaseV3(input: LeaseV3Input): LeaseDoc {
       `Départ du précédent locataire : ${k.prev_departure ? fDate(k.prev_departure) : "[date]"}`,
       `Travaux réalisés depuis le dernier bail : ${k.prev_works || "néant"}`,
     ] : ["Première mise en location de la chambre : aucun loyer antérieur."] },
-  ]);
+  ], { pageBreakBefore: true });
 
   art("duree", "DURÉE, RENOUVELLEMENT, CONGÉS", [
-    { t: "p", bold: true, text: `La location prend effet le ${fDate(k.start)} pour une durée de douze (12) mois, soit jusqu'au ${fDate(end)} inclus.` },
+    { t: "p", bold: true, text: `La location prend effet le __${fDate(k.start)}__ pour une durée de douze (12) mois, soit jusqu'au ${fDate(end)} inclus.` },
     { t: "p", text: "À son terme, le contrat se renouvelle par tacite reconduction pour des périodes successives de douze mois." },
     { t: "p", text: "Conformément à l'article 25-8 de la loi n° 89-462 du 6 juillet 1989, le Locataire peut donner congé à tout moment, avec un préavis d'un mois. Le Bailleur ne peut donner congé que pour le terme du contrat, avec un préavis de trois mois, en justifiant d'une reprise pour habiter, d'une vente ou d'un motif légitime et sérieux." },
     { t: "p", text: "Le congé est notifié par lettre recommandée avec avis de réception, par acte de commissaire de justice ou par remise en main propre contre récépissé ou émargement." },
     { t: "p", text: `Dès qu'un congé a été donné, les visites de la chambre en vue de sa relocation sont organisées dans les conditions de l'article ${N("acces")}.` },
-  ]);
+  ], { pageBreakBefore: true });
 
   art("effet", "PRISE D'EFFET ET REMISE DES CLÉS", [
     { t: "p", text: pr.prorataDays
@@ -216,7 +217,7 @@ export function buildLeaseV3(input: LeaseV3Input): LeaseDoc {
   const discount = k.discount_eur && k.discount_eur > 0 ? k.discount_eur : 0;
   const firstFullMonth = Number(k.start.slice(8, 10)) === 1 ? k.start : addMonths(k.start.slice(0, 7) + "-01", 1);
   art("finances", "CONDITIONS FINANCIÈRES", [
-    { t: "p", bold: true, text: `Loyer mensuel de la chambre, hors charges : ${fEUR(pr.hc)} (${fCHF(pr.chfHc)} au taux BCE du ${k.eur_chf_date} : 1\u00a0€ = ${fRate(k.eur_chf)} CHF — pour indication uniquement), payable d'avance avant le 5 de chaque mois, stipulé et payé en euros.` },
+    { t: "p", bold: true, text: `__Loyer mensuel de la chambre, hors charges : ${fEUR(pr.hc)}__ (${fCHF(pr.chfHc)} au taux BCE du ${k.eur_chf_date} : 1\u00a0€ = ${fRate(k.eur_chf)} CHF — pour indication uniquement), payable d'avance avant le 5 de chaque mois, stipulé et payé en euros.` },
     ...(capSentence ? [{ t: "p", text: capSentence } as Block] : []),
     { t: "p", text: `Le loyer rémunère la mise à disposition de la chambre, la jouissance des parties communes et des équipements de loisirs de la maison (${p.leisure_equipment}), l'accès internet et les prestations de l'article ${N("services")}. L'exploitation de ces équipements et services est à la charge exclusive du Bailleur et n'entre pas dans le forfait de charges.` },
     { t: "sub", text: "Forfait de charges récupérables :" },
@@ -225,9 +226,9 @@ export function buildLeaseV3(input: LeaseV3Input): LeaseDoc {
     { t: "p", small: true, text: "Le forfait couvre exclusivement : eau froide et chaude, chauffage et production d'eau chaude, fourniture d'énergie, produits et personnel d'entretien et ménage des parties communes, entretien des espaces verts, consommables des parties communes, entretien courant de la chaudière, désinsectisation, taxe d'enlèvement des ordures ménagères, redevance d'assainissement. Ni l'accès internet, ni l'exploitation de la piscine, ni aucune prestation de services n'y figurent." },
     ...(discount ? [
       { t: "sub", text: "Remise commerciale sur le premier mois complet :" } as Block,
-      { t: "p", bold: true, text: `À titre de geste commercial, le Bailleur consent au Locataire une remise de ${fEUR(discount)} sur le loyer et le forfait du premier mois complet de location, soit ${monthLabel(firstFullMonth)} (montant habituel : ${fEUR(pr.total)}). Le montant à verser pour ce mois est donc de ${fEUR(pr.total - discount)}.${pr.prorataDays ? " Le prorata dû pour le mois d'entrée n'est pas concerné par cette remise." : ""} Cette remise est accordée une seule fois ; elle ne modifie ni le loyer, ni sa révision, ni le dépôt de garantie.` } as Block,
+      { t: "p", text: `**À titre de geste commercial, le Bailleur consent au Locataire une remise de ${fEUR(discount)}** sur le loyer et le forfait du premier mois complet de location, soit ${monthLabel(firstFullMonth)} (montant habituel : ${fEUR(pr.total)}). Le montant à verser pour ce mois est donc de ${fEUR(pr.total - discount)}.${pr.prorataDays ? " Le prorata dû pour le mois d'entrée n'est pas concerné par cette remise." : ""} Cette remise est accordée une seule fois ; elle ne modifie ni le loyer, ni sa révision, ni le dépôt de garantie.` } as Block,
     ] : []),
-    { t: "sub", text: `Frais de dossier et d'état des lieux d'entrée : ${fEUR(pr.fees)}, non soumis à la TVA — offerts à partir de 3 mois de présence` },
+    { t: "p", text: `Frais de dossier et d'état des lieux d'entrée : ${fEUR(pr.fees)}, non soumis à la TVA — offerts à partir de 3 mois de présence` },
     { t: "p", text: `Ces frais rémunèrent les prestations assurées par le Bailleur pour la mise en place de la location. Ils sont calculés sur la surface de la chambre louée, soit ${r.surface_m2} m² : frais de dossier (visite du logement, constitution du dossier, rédaction du bail) 10 € par m², soit ${fEUR(pr.feeDossier)} ; prestation d'état des lieux d'entrée 3 € par m², soit ${fEUR(pr.feeEdl)}. Ces frais sont offerts au Locataire dont le séjour atteint trois mois à compter de la date d'entrée ; en cas de départ avant ce délai, ils restent à sa charge et sont réglés au plus tard à la restitution des clés. Aucune autre somme n'est due au titre de la location.` },
     { t: "sub", text: "Révision annuelle (IRL) :" },
     { t: "bullets", items: [`Trimestre de référence : ${k.irl_label}`, `Indice de référence : ${fIrl(k.irl_value)}`, "Le loyer et le forfait de charges sont révisés chaque année à la date anniversaire du contrat selon l'indice de référence des loyers."] },
@@ -238,7 +239,7 @@ export function buildLeaseV3(input: LeaseV3Input): LeaseDoc {
 
   const schedule = depositSchedule(pr.deposit, k.deposit_installments, k.start);
   art("depot", "DÉPÔT DE GARANTIE", [
-    { t: "p", bold: true, text: `Le Locataire verse un dépôt de garantie égal à deux (2) mois de loyer hors charges, soit ${fEUR(pr.deposit)}, restitué dans le délai d'un (1) mois à compter de la remise des clés lorsque l'état des lieux de sortie est conforme à l'état des lieux d'entrée, de deux (2) mois dans le cas contraire, déduction faite des sommes dues et justifiées.` },
+    { t: "p", text: `**__Le Locataire verse un dépôt de garantie égal à deux (2) mois de loyer hors charges, soit ${fEUR(pr.deposit)},__** restitué dans le délai d'un (1) mois à compter de la remise des clés lorsque l'état des lieux de sortie est conforme à l'état des lieux d'entrée, de deux (2) mois dans le cas contraire, déduction faite des sommes dues et justifiées.` },
     ...(schedule.length > 1 ? [{ t: "box", label: `Par accord entre les parties, ce dépôt de garantie est versé en ${schedule.length === 2 ? "deux (2)" : "trois (3)"} fois :`, lines: schedule.map((s, i) => `${fEUR(s.amount)} ${i === 0 ? "à la signature du contrat" : `au plus tard le ${s.dueDate ? fDate(s.dueDate) : "[date]"}, avec le loyer du ${i === 1 ? "deuxième" : "troisième"} mois`}`).concat([`Le montant total du dépôt de garantie reste de ${fEUR(pr.deposit)}.`]) } as Block] : []),
     { t: "p", text: "Passé le délai de restitution, le dépôt est majoré de 10 % du loyer mensuel hors charges par mois de retard commencé (article 22). Il ne porte pas intérêt et ne peut être imputé sur les derniers loyers." },
   ], { keepTogether: true });
