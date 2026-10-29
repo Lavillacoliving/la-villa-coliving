@@ -245,7 +245,6 @@ export function buildLeaseV3(input: LeaseV3Input): LeaseDoc {
   art("depot", "DÉPÔT DE GARANTIE", [
     { t: "p", text: `**__Le Locataire verse un dépôt de garantie égal à deux (2) mois de loyer hors charges, soit ${fEUR(pr.deposit)},__** restitué dans le délai d'un (1) mois à compter de la remise des clés lorsque l'état des lieux de sortie est conforme à l'état des lieux d'entrée, de deux (2) mois dans le cas contraire, déduction faite des sommes dues et justifiées.` },
     ...(schedule.length > 1 ? [{ t: "box", label: `Par accord entre les parties, ce dépôt de garantie est versé en ${schedule.length === 2 ? "deux (2)" : "trois (3)"} fois :`, lines: schedule.map((s, i) => `${fEUR(s.amount)} ${i === 0 ? "à la signature du contrat" : `au plus tard le ${s.dueDate ? fDate(s.dueDate) : "[date]"}, avec le loyer du ${i === 1 ? "deuxième" : "troisième"} mois`}`).concat([`Le montant total du dépôt de garantie reste de ${fEUR(pr.deposit)}.`]) } as Block] : []),
-    { t: "p", text: "Passé le délai de restitution, le dépôt est majoré de 10 % du loyer mensuel hors charges par mois de retard commencé (article 22). Il ne porte pas intérêt et ne peut être imputé sur les derniers loyers." },
   ], { keepTogether: true });
 
   art("garanties", "GARANTIES COMPLÉMENTAIRES", [{ t: "p", text: "Néant." }], { keepTogether: true });
