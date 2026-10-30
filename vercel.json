@@ -177,6 +177,10 @@
       "destination": "/prerendered/en-politique-de-confidentialite.html"
     },
     {
+      "source": "/blog/trouver-logement-avant-d-arriver-geneve",
+      "destination": "/prerendered/blog-trouver-logement-avant-d-arriver-geneve.html"
+    },
+    {
       "source": "/blog/non-la-villa-coliving-nest-pas-une-arnaque",
       "destination": "/prerendered/blog-non-la-villa-coliving-nest-pas-une-arnaque.html"
     },
@@ -329,10 +333,6 @@
       "destination": "/prerendered/blog-coliving-geneve-frontaliers-guide-complet.html"
     },
     {
-      "source": "/blog/demenager-geneve-frontalier-checklist",
-      "destination": "/prerendered/blog-demenager-geneve-frontalier-checklist.html"
-    },
-    {
       "source": "/blog/grand-geneve-2026-nouveautes-frontaliers",
       "destination": "/prerendered/blog-grand-geneve-2026-nouveautes-frontaliers.html"
     },
@@ -343,6 +343,10 @@
     {
       "source": "/blog/living-in-france-working-in-geneva",
       "destination": "/prerendered/blog-living-in-france-working-in-geneva.html"
+    },
+    {
+      "source": "/en/blog/trouver-logement-avant-d-arriver-geneve",
+      "destination": "/prerendered/en-blog-trouver-logement-avant-d-arriver-geneve.html"
     },
     {
       "source": "/en/blog/non-la-villa-coliving-nest-pas-une-arnaque",
@@ -495,10 +499,6 @@
     {
       "source": "/en/blog/coliving-geneve-frontaliers-guide-complet",
       "destination": "/prerendered/en-blog-coliving-geneve-frontaliers-guide-complet.html"
-    },
-    {
-      "source": "/en/blog/demenager-geneve-frontalier-checklist",
-      "destination": "/prerendered/en-blog-demenager-geneve-frontalier-checklist.html"
     },
     {
       "source": "/en/blog/grand-geneve-2026-nouveautes-frontaliers",
