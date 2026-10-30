@@ -21,7 +21,7 @@ Two months is enough, provided you start early on whatever depends on other peop
 
 Before you look at a single listing, decide where you can live, what you can pay in total and whether you'll have a car.
 
-**Your area starts from your workplace.** A job in Eaux-Vives or at the HUG hospitals is a different daily life from a job at the UN or the airport. Our guide to [where to live in France when you work in Geneva](/en/blog/ou-habiter-en-france-quand-on-travaille-a-geneve) works through it profile by profile, and [the French towns near Geneva, compared](/en/blog/ou-habiter-frontalier-suisse-villes-france-pas-cher) give you the list town by town.
+**Your area starts from your workplace.** A job in Eaux-Vives or at the HUG hospitals is a different daily life from a job at the UN or the airport. [The French towns near Geneva, compared](/en/blog/ou-habiter-frontalier-suisse-villes-france-pas-cher) give you the list town by town, with commutes and rents.
 
 **Without a car, stay within walking distance of a Léman Express station or a tram 17 stop.** From Annemasse station, the Léman Express reaches Geneva Eaux-Vives in 7 minutes and Cornavin in 23 minutes, with no change; allow 20 minutes door to door to Geneva Eaux-Vives from Annemasse, Ville-la-Grand or Ambilly. If your job means driving, don't go by train times: test the drive on a weekday morning, or have someone on the spot do it for you.
 
@@ -126,7 +126,6 @@ No, but it's tight: every step takes longer. On the other hand, there are fewer 
 
 ## Further reading
 
-- [Where to live in France when you work in Geneva](/en/blog/ou-habiter-en-france-quand-on-travaille-a-geneve)
 - [French towns near Geneva for cross-border workers](/en/blog/ou-habiter-frontalier-suisse-villes-france-pas-cher)
 - [The real cost of a flatshare near Geneva](/en/blog/budget-colocation-geneve-guide-complet)
 - [Housing scams near Geneva: how to spot them](/en/blog/arnaques-logement-frontalier-geneve-eviter)

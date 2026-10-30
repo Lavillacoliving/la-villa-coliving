@@ -21,7 +21,7 @@ Deux mois suffisent, à condition de lancer tôt ce qui dépend des autres (bail
 
 Avant de regarder une annonce, décide où tu peux habiter, combien tu peux payer au total et si tu auras une voiture.
 
-**Le périmètre part de ton lieu de travail.** Un poste aux Eaux-Vives ou aux HUG ne se vit pas comme un poste aux Nations ou à l'aéroport. Notre guide [où habiter en France quand on travaille à Genève](/blog/ou-habiter-en-france-quand-on-travaille-a-geneve) raisonne profil par profil, et [les villes côté France, comparées](/blog/ou-habiter-frontalier-suisse-villes-france-pas-cher) donnent la liste commune par commune.
+**Le périmètre part de ton lieu de travail.** Un poste aux Eaux-Vives ou aux HUG ne se vit pas comme un poste aux Nations ou à l'aéroport. [Les villes côté France, comparées](/blog/ou-habiter-frontalier-suisse-villes-france-pas-cher) donnent la liste commune par commune, avec les trajets et les loyers.
 
 **Sans voiture, reste à distance de marche d'une gare du Léman Express ou d'un arrêt du tram 17.** Depuis la gare d'Annemasse, le Léman Express rejoint Genève-Eaux-Vives en 7 minutes et Cornavin en 23 minutes, sans changement ; compte 20 minutes porte-à-porte jusqu'à Genève-Eaux-Vives depuis Annemasse, Ville-la-Grand ou Ambilly. Si ton poste t'impose une voiture, ne te fie pas aux temps de train : teste le trajet un matin de semaine, ou fais-le tester par quelqu'un sur place.
 
@@ -126,7 +126,6 @@ Non, mais c'est serré : chaque étape prend plus de temps. En contrepartie, il 
 
 ## Pour aller plus loin
 
-- [Où habiter en France quand on travaille à Genève ?](/blog/ou-habiter-en-france-quand-on-travaille-a-geneve)
 - [Les villes côté France pour les frontaliers](/blog/ou-habiter-frontalier-suisse-villes-france-pas-cher)
 - [Le vrai budget d'une colocation près de Genève](/blog/budget-colocation-geneve-guide-complet)
 - [Arnaques au logement frontalier : les reconnaître](/blog/arnaques-logement-frontalier-geneve-eviter)
