@@ -29,7 +29,7 @@ const BUCKET_BY_SLUG: Record<string, IntentBucket> = {
   "dossier-location-frontalier-suisse-france": "high",
   "arnaques-logement-frontalier-geneve-eviter": "high",
   "non-la-villa-coliving-nest-pas-une-arnaque": "high", // (16/10/2026) article « C'est réel ? » — sans bloc offre (Q13), bucket = paramètre GA4 intent
-  "demenager-geneve-frontalier-checklist": "high",
+  "trouver-logement-avant-d-arriver-geneve": "high", // (30/10/2026) A3 du brief « Genève profils » — absorbe demenager-geneve-frontalier-checklist (308)
   "coliving-frais-dossier-geneve-annemasse": "high",
   // 🟡 medium — planning, budget, comparison
   "budget-colocation-geneve-guide-complet": "medium",
