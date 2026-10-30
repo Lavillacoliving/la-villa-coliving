@@ -66,7 +66,8 @@ export const L1_TARGETS = Object.freeze([
   { route: '/blog/s-installer-a-geneve-expatrie-cote-suisse-ou-cote-france', needles: ['a6Text', 'guarantor'] },
   { route: '/blog/trouver-colocation-geneve-frontalier', needles: ['a6Text'] },
   { route: '/blog/living-in-france-working-in-geneva', needles: ['a6Text'] },
-  { route: '/blog/demenager-geneve-frontalier-checklist', needles: ['a6Text'] },
+  // (30/10/2026, brief « Genève profils ») la checklist déménagement est fondue dans A3 (308) : A3 porte la même réponse A.6.
+  { route: '/blog/trouver-logement-avant-d-arriver-geneve', needles: ['a6Text'] },
   { route: '/blog/dossier-location-frontalier-suisse-france', needles: ['a6Text', 'adminSlot:dossier'] },
   // (Lot L5, D5) mention canonique A.7 du groupe Facebook, posée par SQL (scripts/l5-facebook.edits.mjs) devant une ancre de
   // l'article — budget et ou-habiter la portent aussi (clé ajoutée à leur entrée ci-dessus).
