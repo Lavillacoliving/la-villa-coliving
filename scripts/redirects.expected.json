@@ -137,11 +137,11 @@
   },
   {
     "from": "/blog/arriver-seul-geneve-guide-30-jours",
-    "to": "/blog/demenager-geneve-frontalier-checklist"
+    "to": "/blog/trouver-logement-avant-d-arriver-geneve"
   },
   {
     "from": "/en/blog/arriver-seul-geneve-guide-30-jours",
-    "to": "/en/blog/demenager-geneve-frontalier-checklist"
+    "to": "/en/blog/trouver-logement-avant-d-arriver-geneve"
   },
   {
     "from": "/blog/5-erreurs-logement-frontalier-geneve",
@@ -250,5 +250,13 @@
   {
     "from": "/is-this-real",
     "to": "/en/blog/non-la-villa-coliving-nest-pas-une-arnaque"
+  },
+  {
+    "from": "/blog/demenager-geneve-frontalier-checklist",
+    "to": "/blog/trouver-logement-avant-d-arriver-geneve"
+  },
+  {
+    "from": "/en/blog/demenager-geneve-frontalier-checklist",
+    "to": "/en/blog/trouver-logement-avant-d-arriver-geneve"
   }
 ]
