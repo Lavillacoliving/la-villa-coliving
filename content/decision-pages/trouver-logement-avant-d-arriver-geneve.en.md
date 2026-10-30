@@ -14,8 +14,8 @@ Two months is enough, provided you start early on whatever depends on other peop
 | D-60 | Set your area, your total budget and how you'll commute | Your workplace address, your estimated net salary |
 | D-45 | Search, view by video call, check every landlord | Alerts on two or three channels |
 | D-30 | Submit your file and sign | Employment contract or job offer, ID, deposit ready |
-| D-15 | Work through the moving checklist | Your signed lease, which doubles as proof of address |
-| Day 0 | Check-in inventory, then G permit and health insurance | Lease, ID, employment contract |
+| D-15 | Apply for your G permit and work through the moving checklist | Your signed lease, your employment contract, your ID |
+| Day 0 | Check-in inventory, then health insurance and accounts | Lease, ID, employment contract |
 
 ## D-60: set your area, your budget and how you'll commute
 
@@ -49,7 +49,7 @@ Your employment contract or job offer is the key document: add an ID and a depos
 
 A letting agency will often ask for three payslips, a tax notice and a guarantor in France. Failing that, a letter from your employer (salary, start date) and your latest payslips, even foreign ones, help: [our guide to the rental file](/en/blog/dossier-location-frontalier-suisse-france) lists the documents.
 
-No Swiss payslip yet? Some landlords on the French side assess your contract rather than your history: at La Villa Coliving the file comes down to three items (a signed employment contract or job offer, an ID, and a deposit of two months' rent excluding bills) and a guarantor is only asked for case by case, when the contract does not cover the rent — we tell you before we reply, never after the visit. Our three houses are in Ville-la-Grand, Ambilly and Annemasse, 20 min from Geneva Eaux-Vives by Léman Express, door to door, for CHF 1,370 to 1,430 a month all inclusive. The 12-month furnished main-residence lease works as proof of address for your G permit; there's no application fee, and the deposit can be paid in two or three instalments.
+No Swiss payslip yet? Some landlords on the French side assess your contract rather than your history: at La Villa Coliving the file comes down to three items (a signed employment contract or job offer, an ID, and a deposit of two months' rent excluding bills) and a guarantor is only asked for case by case, when the contract does not cover the rent — we tell you before we reply, never after the visit. Our three houses are in Ville-la-Grand, Ambilly and Annemasse, 20 min from Geneva Eaux-Vives by Léman Express, door to door, for CHF 1,370 to 1,430 a month all inclusive. The 12-month furnished main-residence lease works as proof of residence; there's no application fee, and the deposit can be paid in two or three instalments.
 
 **Signing remotely.** A lease can be signed online: under French law, an electronic signature carries the same weight as a paper one (Civil Code, articles 1366 and 1367). The check-in inventory, however, happens when the keys are handed over (law of 6 July 1989, article 3-2), and the deposit on a furnished let can't exceed two months' rent excluding bills (same law, article 25-6).
 
@@ -70,8 +70,9 @@ If your job starts in January, now is the window: our [available rooms](/en/cham
 
 ## D-15: the moving checklist
 
-Your lease is signed; what's left is your paperwork, the utilities, your mail and your things.
+Your lease is signed; what's left is your G permit, your paperwork, the utilities, your mail and your things.
 
+- **G permit:** as an EU or EFTA national, you file the application yourself online with the OCPM, before your first day at work, with your ID and your employment contract. You need a home on the French side that you return to at least once a week. You can start work as soon as your complete application has been sent; the permit itself takes 12 weeks on average, currently four months (OCPM, October 2026). [Our G permit guide](/en/blog/permis-g-frontalier-geneve) has the details.
 - **Paperwork, as PDFs and originals:** employment contract, ID, signed lease, home insurance certificate if your place doesn't include it.
 - **Utilities:** in a studio, order electricity and internet as soon as you sign (up to two weeks each). In a flatshare or coliving, check what's included.
 - **Mail:** set up forwarding with La Poste and give your new address to your employer and your bank.
@@ -81,9 +82,7 @@ Your lease is signed; what's left is your paperwork, the utilities, your mail an
 
 ## Day 0 to day 30: arrive, register, breathe
 
-On day 0 you do the check-in inventory and photograph everything; within the month you apply for your G permit, choose your health insurance and open your accounts.
-
-**The G permit.** As an EU or EFTA national, you file the application yourself online with the OCPM, with your contract, your ID and proof of address in France: your lease. Delivery takes about three months, but you can start work as soon as your complete application has been sent ([our G permit guide](/en/blog/permis-g-frontalier-geneve)).
+On day 0 you do the check-in inventory and photograph everything; within the month you choose your health insurance and open your accounts.
 
 **Health insurance.** Your start date opens your right of option: three months to choose between LAMal and French health insurance, and the choice can't be undone (ameli.fr, April 2026). [Our LAMal vs CMU-PUMa comparison](/en/blog/assurance-sante-frontalier-lamal-cmu-budget) helps you decide.
 
@@ -137,7 +136,7 @@ No, but it's tight: every step takes longer. On the other hand, there are fewer 
 
 ## The bottom line
 
-Getting a home on the French side before you arrive in Geneva comes down to timing: area and budget at D-60, searching at D-45, signing at D-30 with a file that works without a Swiss payslip, the checklist at D-15. Your lease then doubles as proof of address for your G permit. For January, November is when to get started.
+Getting a home on the French side before you arrive in Geneva comes down to timing: area and budget at D-60, searching at D-45, signing at D-30 with a file that works without a Swiss payslip, the checklist at D-15. Your G permit application goes in before your first day at work. For January, November is when to get started.
 
 ---
 

@@ -14,8 +14,8 @@ Deux mois suffisent, à condition de lancer tôt ce qui dépend des autres (bail
 | J-60 | Tu fixes ton périmètre, ton budget total et ton mode de transport | L'adresse de ton lieu de travail, ton salaire net estimé |
 | J-45 | Tu cherches, tu visites en visio, tu vérifies chaque bailleur | Des alertes sur deux ou trois canaux |
 | J-30 | Tu déposes ton dossier et tu signes | Contrat de travail ou promesse d'embauche, pièce d'identité, caution disponible |
-| J-15 | Tu déroules la checklist déménagement | Ton bail signé, qui sert de justificatif de domicile |
-| J0 | État des lieux, puis permis G et assurance maladie | Bail, pièce d'identité, contrat de travail |
+| J-15 | Tu déposes ta demande de permis G et tu déroules la checklist déménagement | Ton bail signé, ton contrat de travail, ta pièce d'identité |
+| J0 | État des lieux, puis assurance maladie et comptes | Bail, pièce d'identité, contrat de travail |
 
 ## J-60 : fixer ton périmètre, ton budget et ton mode de transport
 
@@ -49,7 +49,7 @@ Ton contrat de travail ou ta promesse d'embauche est ta pièce maîtresse : ajou
 
 Une agence te demandera souvent trois bulletins, un avis d'imposition et un garant en France. À défaut, une attestation de ton employeur (salaire, date de prise de poste) et tes derniers bulletins, même étrangers, aident : [le guide du dossier de location](/blog/dossier-location-frontalier-suisse-france) liste les pièces.
 
-Pas encore de fiche de salaire suisse ? Certains bailleurs côté France évaluent ton contrat plutôt que ton passé : chez La Villa Coliving, le dossier tient en trois pièces (contrat de travail signé ou promesse d'embauche, pièce d'identité, caution de 2 mois de loyer hors charges) et un garant n'est demandé qu'au cas par cas, quand le contrat ne couvre pas le loyer — on t'en parle avant de te répondre, jamais après la visite. Nos trois maisons sont à Ville-la-Grand, Ambilly et Annemasse, à 20 min de Genève-Eaux-Vives en Léman Express, porte-à-porte, pour 1 370 à 1 430 CHF par mois tout inclus. Le bail meublé de résidence principale de 12 mois sert de justificatif de domicile pour ton permis G ; il n'y a aucun frais de dossier, et la caution peut se régler en deux ou trois fois.
+Pas encore de fiche de salaire suisse ? Certains bailleurs côté France évaluent ton contrat plutôt que ton passé : chez La Villa Coliving, le dossier tient en trois pièces (contrat de travail signé ou promesse d'embauche, pièce d'identité, caution de 2 mois de loyer hors charges) et un garant n'est demandé qu'au cas par cas, quand le contrat ne couvre pas le loyer — on t'en parle avant de te répondre, jamais après la visite. Nos trois maisons sont à Ville-la-Grand, Ambilly et Annemasse, à 20 min de Genève-Eaux-Vives en Léman Express, porte-à-porte, pour 1 370 à 1 430 CHF par mois tout inclus. Le bail meublé de résidence principale de 12 mois est utilisable comme justificatif de domicile ; il n'y a aucun frais de dossier, et la caution peut se régler en deux ou trois fois.
 
 **Signer à distance.** Un bail se signe en ligne : la signature électronique vaut la signature sur papier (Code civil, art. 1366 et 1367). L'état des lieux d'entrée, lui, se fait à la remise des clés (loi du 6 juillet 1989, art. 3-2), et le dépôt de garantie d'un meublé ne dépasse pas deux mois de loyer hors charges (même loi, art. 25-6).
 
@@ -70,8 +70,9 @@ Pour un poste qui commence en janvier, la bonne fenêtre, c'est maintenant : nos
 
 ## J-15 : la checklist déménagement
 
-Ton bail est signé ; il reste tes papiers, les contrats du logement, le courrier et tes affaires.
+Ton bail est signé ; il reste ton permis G, tes papiers, les contrats du logement, le courrier et tes affaires.
 
+- **Permis G :** ressortissant de l'UE ou de l'AELE, tu déposes toi-même la demande en ligne auprès de l'OCPM, avant ton premier jour de travail, avec ta pièce d'identité et ton contrat de travail. Il te faut un domicile côté France, où tu rentres au moins une fois par semaine. Tu peux commencer à travailler dès l'envoi du dossier complet ; la délivrance prend en moyenne 12 semaines, 4 mois en ce moment (OCPM, octobre 2026). Le détail est dans [le guide du permis G](/blog/permis-g-frontalier-geneve).
 - **Papiers, en PDF et en original :** contrat de travail, pièce d'identité, bail signé, attestation d'assurance habitation si le logement ne l'inclut pas.
 - **Contrats du logement :** dans un studio, commande l'électricité et la box internet dès la signature (jusqu'à deux semaines chacun). En colocation ou en coliving, vérifie ce qui est inclus.
 - **Courrier :** fais-le suivre par La Poste et donne ta nouvelle adresse à ton employeur et à ta banque.
@@ -81,9 +82,7 @@ Ton bail est signé ; il reste tes papiers, les contrats du logement, le courrie
 
 ## J0 → J+30 : arriver, déclarer, respirer
 
-Le jour J, tu fais l'état des lieux et tu photographies tout ; dans le mois, tu déposes ta demande de permis G, tu choisis ton assurance maladie et tu ouvres tes comptes.
-
-**Le permis G.** Ressortissant de l'UE ou de l'AELE, tu déposes toi-même la demande en ligne auprès de l'OCPM, avec ton contrat, ta pièce d'identité et un justificatif de domicile en France : ton bail. Compte environ trois mois pour la délivrance, mais tu peux travailler dès l'envoi du dossier complet ([le guide du permis G](/blog/permis-g-frontalier-geneve)).
+Le jour J, tu fais l'état des lieux et tu photographies tout ; dans le mois, tu choisis ton assurance maladie et tu ouvres tes comptes.
 
 **L'assurance maladie.** Ta prise d'emploi ouvre ton droit d'option : trois mois pour choisir entre la LAMal et l'assurance maladie française, et le choix est irrévocable (ameli.fr, avril 2026). [Notre comparatif LAMal ou CMU-PUMa](/blog/assurance-sante-frontalier-lamal-cmu-budget) t'aide à trancher.
 
@@ -137,7 +136,7 @@ Non, mais c'est serré : chaque étape prend plus de temps. En contrepartie, il 
 
 ## En clair
 
-Se loger côté France avant d'arriver à Genève se joue sur le calendrier : périmètre et budget à J-60, recherche à J-45, signature à J-30 avec un dossier sans fiche de salaire suisse, checklist à J-15. Ton bail sert ensuite de justificatif de domicile pour le permis G. Pour janvier, c'est en novembre qu'il faut s'y mettre.
+Se loger côté France avant d'arriver à Genève se joue sur le calendrier : périmètre et budget à J-60, recherche à J-45, signature à J-30 avec un dossier sans fiche de salaire suisse, checklist à J-15. Ta demande de permis G part avant ton premier jour de travail. Pour janvier, c'est en novembre qu'il faut s'y mettre.
 
 ---
 
