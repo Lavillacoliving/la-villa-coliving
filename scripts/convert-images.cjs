@@ -4,7 +4,9 @@
  *
  * - Convertit tous les JPG et PNG dans public/images/ en WebP
  * - Qualité 80, largeur max 1920px
- * - Conserve les originaux (ne les supprime pas)
+ * - Conserve les originaux sur le disque (ne les supprime pas) ; ils sont ignorés par git (.gitignore) :
+ *   seul le .webp part en déploiement
+ * - Les pages référencent le .webp ; un ancien lien .jpg reçoit le .webp (rewrite de secours, scripts/prerender.mjs)
  * - Skip les fichiers déjà convertis (.webp existant)
  */
 
