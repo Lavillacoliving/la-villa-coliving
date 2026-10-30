@@ -53,7 +53,8 @@ const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBh
 
 /** (Lot L2, 09/10/2026) Colonnes texte de blog_posts qu'une modification peut viser ; défaut = content_<lang>. */
 // (12/10/2026, lot « correctifs de faits ») extraits et metas acceptés aussi : mêmes gardes position(), même diff.
-export const COLUMNS = ['content_fr', 'content_en', 'facebook_post_fr', 'facebook_post_en', 'excerpt_fr', 'excerpt_en', 'meta_description_fr', 'meta_description_en'];
+// (30/10/2026, brief « Genève profils », B8 et lot B) titres aussi : find = titre complet en base.
+export const COLUMNS = ['content_fr', 'content_en', 'facebook_post_fr', 'facebook_post_en', 'excerpt_fr', 'excerpt_en', 'meta_description_fr', 'meta_description_en', 'title_fr', 'title_en'];
 export function columnOf(edit) {
   const col = edit.column ?? `content_${edit.lang}`;
   if (!COLUMNS.includes(col)) throw new Error(`${edit.slug} (${edit.lang}) : colonne « ${col} » inconnue (${COLUMNS.join(', ')})`);
