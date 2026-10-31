@@ -1,13 +1,13 @@
 -- ============================================================================
 -- B8 (brief « Genève profils » du 30/10/2026) : page pilier living-in-france-working-in-geneva — titre FR court, méta FR, deux H2 PAA, renvois vers « villes » et A3, corrections D-B8b.
--- Généré le 2026-10-30T14:57:19.934Z par scripts/build-slots-sql.mjs depuis scripts/b8-living-in-france.edits.mjs
+-- Généré le 2026-10-30T18:17:11.386Z par scripts/build-slots-sql.mjs depuis scripts/b8-living-in-france.edits.mjs
 --   · chaînes relevées sur la base vivante le 30/10 ; chiffres = articles détaillés du site (assurance-sante, salaire-suisse-net, cout-transport) et OCPM (page « Activité salariée pour frontalier UE/AELE », mise à jour du 19/10/2026)
---   · ancres vérifiées sur le contenu vivant de blog_posts (REST anon, lecture seule) le 2026-10-30T14:57:19.932Z : exactement 1 occurrence de chaque ancien texte, nouveau texte absent
+--   · ancres vérifiées sur le contenu vivant de blog_posts (REST anon, lecture seule) le 2026-10-30T18:17:11.382Z : exactement 1 occurrence de chaque ancien texte, nouveau texte absent
 -- Après la publication d'A3 (le texte lie /blog/trouver-logement-avant-d-arriver-geneve). Republication par le bot au prochain push ou cron.
 -- Idempotent : chaque UPDATE est gardé par position(ancien) > 0 [AND position(nouveau) = 0 quand le nouveau texte n'est pas un fragment de l'ancien] — relancer le fichier est sans effet.
 -- Fichier UTF-8 avec espaces insécables — ne pas normaliser les espaces.
 -- 35 modifications · 1 articles · état en base à la génération (updated_at · longueur fr / en) :
---   living-in-france-working-in-geneva · 2026-10-13T15:33:46.184445+00:00 · 15162 / 13374
+--   living-in-france-working-in-geneva · 2026-10-30T17:15:30.671729+00:00 · 15164 / 13374
 -- ============================================================================
 
 BEGIN;
@@ -442,7 +442,7 @@ The capital of French cross-border workers. Léman Express station, plenty of sh
 
 **Ambilly**
 
-Right on the border, between Annemasse and Geneva, served by tram 17, which runs straight into Geneva. Restaurants, shops and markets on the spot. Vibe: urban and multicultural.
+Ambilly sits right on the border, between Annemasse and Geneva, served by tram 17, which runs straight into Geneva. Restaurants, shops and markets on the spot. Vibe: urban and multicultural.
 
 **Ville-la-Grand**
 
@@ -486,7 +486,7 @@ The capital of French cross-border workers. Léman Express station, plenty of sh
 
 **Ambilly**
 
-Right on the border, between Annemasse and Geneva, served by tram 17, which runs straight into Geneva. Restaurants, shops and markets on the spot. Vibe: urban and multicultural.
+Ambilly sits right on the border, between Annemasse and Geneva, served by tram 17, which runs straight into Geneva. Restaurants, shops and markets on the spot. Vibe: urban and multicultural.
 
 **Ville-la-Grand**
 
@@ -737,7 +737,7 @@ The capital of French cross-border workers. Léman Express station, plenty of sh
 
 **Ambilly**
 
-Right on the border, between Annemasse and Geneva, served by tram 17, which runs straight into Geneva. Restaurants, shops and markets on the spot. Vibe: urban and multicultural.
+Ambilly sits right on the border, between Annemasse and Geneva, served by tram 17, which runs straight into Geneva. Restaurants, shops and markets on the spot. Vibe: urban and multicultural.
 
 **Ville-la-Grand**
 
@@ -780,7 +780,7 @@ The capital of French cross-border workers. Léman Express station, plenty of sh
 
 **Ambilly**
 
-Right on the border, between Annemasse and Geneva, served by tram 17, which runs straight into Geneva. Restaurants, shops and markets on the spot. Vibe: urban and multicultural.
+Ambilly sits right on the border, between Annemasse and Geneva, served by tram 17, which runs straight into Geneva. Restaurants, shops and markets on the spot. Vibe: urban and multicultural.
 
 **Ville-la-Grand**
 

@@ -1,6 +1,6 @@
 # B8 — page pilier « Vivre en France, travailler à Genève » : aperçu SQL
 
-Généré le 2026-10-30T14:57:19.934Z par `scripts/build-slots-sql.mjs` · ancres vérifiées sur le contenu vivant de blog_posts (REST anon, lecture seule) le 2026-10-30T14:57:19.932Z · 35 modifications sur 1 articles · SQL : `scripts/b8-living-in-france-2026-10-30.sql`.
+Généré le 2026-10-30T18:17:11.386Z par `scripts/build-slots-sql.mjs` · ancres vérifiées sur le contenu vivant de blog_posts (REST anon, lecture seule) le 2026-10-30T18:17:11.382Z · 35 modifications sur 1 articles · SQL : `scripts/b8-living-in-france-2026-10-30.sql`.
 
 Légende : « Avant » = texte en base au 30/10 ; « Après » = texte proposé. BRIEF = demandé par le brief ; FAITS = correction D-B8b.
 
@@ -8,7 +8,7 @@ Légende : « Avant » = texte en base au 30/10 ; « Après » = texte proposé.
 
 | Article | FR | EN | updated_at en base | fr / en (caractères) |
 |---|---|---|---|---|
-| `living-in-france-working-in-geneva` | 19 (BRIEF, BRIEF, FAITS, FAITS, FAITS, BRIEF, FAITS, FAITS, FAITS, FAITS, FAITS, BRIEF, FAITS, FAITS, FAITS, BRIEF, FAITS, FAITS, BRIEF) | 16 (FAITS, FAITS, FAITS, BRIEF, FAITS, FAITS, FAITS, FAITS, FAITS, BRIEF, FAITS, FAITS, FAITS, BRIEF, FAITS, FAITS) | 2026-10-13T15:33:46.184445+00:00 | 15162 / 13374 |
+| `living-in-france-working-in-geneva` | 19 (BRIEF, BRIEF, FAITS, FAITS, FAITS, BRIEF, FAITS, FAITS, FAITS, FAITS, FAITS, BRIEF, FAITS, FAITS, FAITS, BRIEF, FAITS, FAITS, BRIEF) | 16 (FAITS, FAITS, FAITS, BRIEF, FAITS, FAITS, FAITS, FAITS, FAITS, BRIEF, FAITS, FAITS, FAITS, BRIEF, FAITS, FAITS) | 2026-10-30T17:15:30.671729+00:00 | 15164 / 13374 |
 
 ## Détail
 
@@ -649,7 +649,7 @@ The capital of French cross-border workers. Léman Express station, plenty of sh
 
 **Ambilly**
 
-Right on the border, between Annemasse and Geneva, served by tram 17, which runs straight into Geneva. Restaurants, shops and markets on the spot. Vibe: urban and multicultural.
+Ambilly sits right on the border, between Annemasse and Geneva, served by tram 17, which runs straight into Geneva. Restaurants, shops and markets on the spot. Vibe: urban and multicultural.
 
 **Ville-la-Grand**
 
