@@ -16,7 +16,7 @@ Four criteria, the same for every town, and the sources are in the text.
 
 More than 116,000 [cross-border workers](https://statistique.ge.ch/domaines/03/03_05/tableaux.asp) work in the canton of Geneva (OCSTAT, end of 2025), and most of them picked their town on a colleague's tip. You have the numbers.
 
-## 1. Annemasse: the hub town, 7 minutes from Geneva by train
+## 1. Annemasse: the hub town, 7 minutes from Geneva Eaux-Vives by Léman Express
 
 Annemasse is the only real town on the border: 37,600 inhabitants (INSEE 2023), a Léman Express station, a cross-border tram, a market, restaurants, a cinema. From the station, Geneva Eaux-Vives is 7 minutes away and Cornavin 23, with a train every 10 minutes at rush hour. One- or two-room asking rent: €22.6/m², about €840 for 37 m². Tram 17 gains three stops in the town at the end of 2026 (Annemasse Agglo).
 
