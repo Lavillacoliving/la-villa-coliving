@@ -246,12 +246,12 @@ export function ColocationGenevePage() {
             {(en
               ? [
                   ["The lease", `A French furnished lease in your name: ${STATS.leaseDurationMonths} months renewable, ${STATS.noticePeriodMonths}-month notice. No Swiss rental history required, no sublet.`],
-                  ["The deposit", `${STATS.depositMonths} months' rent excluding charges, returned at the end of your stay. On the Swiss side, deposits often reach 3 months and the file is heavier.`],
+                  ["The deposit", `${STATS.depositMonths} months' rent excluding charges, payable in 1, 2 or 3 instalments depending on your application, returned at the end of your stay. On the Swiss side, deposits often reach 3 months and the file is heavier.`],
                   ["The file", "An employment contract or job offer and an ID are enough. No agency fee, no application fee: you pay your first rent and the deposit, nothing else."],
                 ]
               : [
                   ["Le bail", `Un bail meublé français à ton nom : ${STATS.leaseDurationMonths} mois renouvelable, préavis d'${STATS.noticePeriodMonths} mois. Aucun historique locatif suisse demandé, pas de sous-location.`],
-                  ["La caution", `${STATS.depositMonths} mois de loyer hors charges, restitués en fin de séjour. Côté suisse, les dépôts atteignent souvent 3 mois et le dossier est plus lourd.`],
+                  ["La caution", `${STATS.depositMonths} mois de loyer hors charges, payable en 1, 2 ou 3 fois selon ton dossier, restitués en fin de séjour. Côté suisse, les dépôts atteignent souvent 3 mois et le dossier est plus lourd.`],
                   ["Le dossier", "Un contrat de travail ou une promesse d'embauche et une pièce d'identité suffisent. 0 frais d'agence, 0 frais de dossier : tu règles ton premier loyer et la caution, rien d'autre."],
                 ]
             ).map(([t, d]) => (

@@ -34,7 +34,7 @@ export const homeFaq: { fr: QAPair[]; en: QAPair[] } = {
     },
     {
       q: "Y a-t-il des frais de dossier ou d'agence ?",
-      a: "Non, aucun. Tu ne paies ni frais de dossier, ni honoraires d'agence, ni frais de réservation : 0 € à l'entrée. Nous louons nos maisons en direct, sans intermédiaire. Le seul autre montant est la caution de deux mois de loyer hors charges, restituée après ton départ.",
+      a: "Non, aucun. Tu ne paies ni frais de dossier, ni honoraires d'agence, ni frais de réservation : 0 € à l'entrée. Nous louons nos maisons en direct, sans intermédiaire. Le seul autre montant est la caution de deux mois de loyer hors charges, payable en 1, 2 ou 3 fois selon ton dossier et restituée après ton départ.",
     },
     {
       q: "Comment rejoindre Genève depuis les maisons ?",
@@ -60,7 +60,7 @@ export const homeFaq: { fr: QAPair[]; en: QAPair[] } = {
     },
     {
       q: "Are there application or agency fees?",
-      a: "No, none. You pay no application fee, no agency commission and no booking fee: €0 to move in. We rent our houses directly, with no middleman. The only other amount is the deposit of two months' rent excluding charges, returned after you leave.",
+      a: "No, none. You pay no application fee, no agency commission and no booking fee: €0 to move in. We rent our houses directly, with no middleman. The only other amount is the deposit of two months' rent excluding charges, payable in 1, 2 or 3 instalments depending on your application and returned after you leave.",
     },
     {
       q: "How do you get to Geneva from the houses?",

@@ -315,8 +315,8 @@ export function RatesPageV4() {
       label: { fr: "Caution", en: "Deposit" },
       classic: { fr: "variable", en: "varies" },
       villa: {
-        fr: `${STATS.depositMonths} mois hors charges, étalable`,
-        en: `${STATS.depositMonths} months excluding utilities, can be split`,
+        fr: `${STATS.depositMonths} mois hors charges, en 1, 2 ou 3 fois`,
+        en: `${STATS.depositMonths} months excluding utilities, in 1, 2 or 3 instalments`,
       },
       studio: { fr: "3 mois usuels", en: "3 months customary" },
     },
@@ -923,8 +923,8 @@ export function RatesPageV4() {
                 </span>
                 <span className="text-lg font-bold text-[#1C1917]">
                   {language === "en"
-                    ? "Your first month's rent + a refundable deposit. That's it."
-                    : "Ton 1er loyer + une caution remboursable. C'est tout."}
+                    ? "Your first month's rent + a refundable deposit, which you can pay in 2 or 3 instalments depending on your application. That's it."
+                    : "Ton 1er loyer + une caution remboursable, que tu peux payer en 2 ou 3 fois selon ton dossier. C'est tout."}
                 </span>
               </div>
             </div>
@@ -1032,8 +1032,8 @@ export function RatesPageV4() {
               </h3>
               <p className="text-[#57534E] leading-relaxed">
                 {language === "en"
-                  ? "We require a security deposit equivalent to two months' rent excluding charges (standard in France). It is returned within 30 days of move-out if there is no damage, otherwise within 2 months, minus any deductions for damages. Payment can be spread over the first 2 months. A refundable deposit, yes — non-refundable move-in fees, never."
-                  : "Nous demandons une caution de deux mois de loyer hors charges (standard en France). Elle est restituée sous 30 jours après ton départ si aucune dégradation n'est constatée, sinon sous 2 mois, déduction faite des éventuels dommages. Le paiement peut être étalé sur les 2 premiers mois. Une caution remboursable, oui — des frais d'entrée non remboursables, jamais."}
+                  ? "We require a security deposit equivalent to two months' rent excluding charges (standard in France). It can be paid in one go, in 2 instalments (half at signing, half with your 2nd month's rent) or in 3 (a third at signing, then a third with your 2nd and 3rd month's rent); La Villa sets the number of instalments when your application is approved, based on your financial situation. It is returned within 30 days of move-out if there is no damage, otherwise within 2 months, minus any deductions for damages. A refundable deposit, yes — non-refundable move-in fees, never."
+                  : "Nous demandons une caution de deux mois de loyer hors charges (standard en France). Elle se paie en une fois, en 2 fois (la moitié à la signature, l'autre avec ton 2ᵉ loyer) ou en 3 fois (un tiers à la signature, puis un tiers avec tes 2ᵉ et 3ᵉ loyers) ; le nombre de versements est fixé par La Villa au moment de valider ton dossier, en fonction de ta situation financière. Elle est restituée sous 30 jours après ton départ si aucune dégradation n'est constatée, sinon sous 2 mois, déduction faite des éventuels dommages. Une caution remboursable, oui — des frais d'entrée non remboursables, jamais."}
               </p>
             </div>
             <div className="bg-[#FAF9F6] p-10">
