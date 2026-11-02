@@ -30,7 +30,7 @@ Ton lieu de travail fait la moitié de la réponse : Genève s'étire d'est en o
 | Aux Eaux-Vives, à Champel ou aux HUG | Annemasse, Ville-la-Grand, Ambilly | Léman Express depuis la gare d'Annemasse : Genève-Eaux-Vives en 7 min, Genève-Champel en 10 min ; compte 20 à 25 min porte-à-porte jusqu'aux Eaux-Vives |
 | À Cornavin ou dans le centre | Annemasse, Ville-la-Grand, Ambilly | Léman Express jusqu'à Cornavin en 23 min, sans changement ; tram 17 depuis Ambilly jusqu'à Rive |
 | À Lancy, Carouge ou Plan-les-Ouates | Annemasse, ou Saint-Julien-en-Genevois | Léman Express jusqu'à Lancy-Pont-Rouge en 16 min depuis Annemasse ; bus direct depuis Saint-Julien |
-| Aux Nations, à l'aéroport ou au CERN | Ferney-Voltaire et le Pays de Gex | Bus depuis Ferney-Voltaire : le centre de Genève en 20 min ; teste ton trajet exact avant de signer |
+| Aux Nations, à l'aéroport ou au CERN | Ferney-Voltaire et le Pays de Gex | Bus TPG direct depuis Ferney-Voltaire : Cornavin en une quarantaine de minutes porte-à-porte ; teste ton trajet exact avant de signer |
 
 Les temps quartier par quartier, gare par gare, sont dans [notre article sur les temps de trajet entre Annemasse et Genève](/blog/temps-trajet-annemasse-geneve-par-quartier).
 
@@ -45,7 +45,7 @@ Trois zones collent à ce profil :
 
 Arriver seul, c'est aussi arriver sans réseau. Une colocation ou un coliving règle les deux problèmes d'un coup : un logement meublé dès le premier soir, et des gens avec qui dîner. [Se faire un réseau à Genève](/blog/se-faire-reseau-geneve-arriver-seul) donne d'autres pistes pour les premières semaines.
 
-C'est pour ce profil qu'on a pensé La Villa Coliving : trois maisons à Ville-la-Grand, Ambilly et Annemasse, à 20 min de Genève-Eaux-Vives en Léman Express, porte-à-porte, avec des chambres meublées pour une personne à 1 370 à 1 430 CHF par mois tout inclus. Le dossier tient en trois pièces : contrat de travail signé ou promesse d'embauche, pièce d'identité, caution de 2 mois de loyer hors charges. 0 € de frais de dossier, 0 € de frais d'agence, et la caution peut se régler en deux ou trois fois.
+C'est pour ce profil qu'on a pensé La Villa Coliving : trois maisons à Ville-la-Grand, Ambilly et Annemasse, à 20 min de Genève-Eaux-Vives en Léman Express, porte-à-porte, avec des chambres meublées pour une personne à 1 370 à 1 430 CHF par mois tout inclus. Le dossier tient en trois pièces : contrat de travail signé ou promesse d'embauche, pièce d'identité, caution de 2 mois de loyer hors charges. 0 € de frais de dossier, 0 € de frais d'agence, et la caution peut se régler en 2 ou 3 fois selon ton dossier.
 
 ## Profil 2 — Tu as une voiture et tu travailles rive droite, aux Nations ou à l'aéroport
 
@@ -136,7 +136,7 @@ En Léman Express, 7 minutes jusqu'à Genève-Eaux-Vives et 23 minutes jusqu'à 
 
 **Où habiter quand on travaille aux Nations ?**
 
-Côté France, Ferney-Voltaire et le Pays de Gex sont du bon côté de Genève : depuis Ferney, le bus rejoint le centre de Genève en 20 minutes. Depuis Annemasse, le Léman Express t'amène à Cornavin en 23 minutes, puis il reste la fin du trajet en tram ou en bus.
+Côté France, Ferney-Voltaire et le Pays de Gex sont du bon côté de Genève : depuis Ferney, un bus TPG direct met Cornavin à une quarantaine de minutes porte-à-porte. Depuis Annemasse, le Léman Express t'amène à Cornavin en 23 minutes, puis il reste la fin du trajet en tram ou en bus.
 
 ## Pour aller plus loin
 
@@ -174,7 +174,7 @@ Your workplace is half the answer: Geneva stretches from east to west, and the s
 | In Eaux-Vives, Champel or at the HUG hospitals | Annemasse, Ville-la-Grand, Ambilly | Léman Express from Annemasse station: Geneva Eaux-Vives in 7 min, Geneva Champel in 10 min; allow 20 to 25 min door to door to Eaux-Vives |
 | At Cornavin or in the centre | Annemasse, Ville-la-Grand, Ambilly | Léman Express to Cornavin in 23 min, no change; tram 17 from Ambilly to Rive |
 | In Lancy, Carouge or Plan-les-Ouates | Annemasse, or Saint-Julien-en-Genevois | Léman Express to Lancy-Pont-Rouge in 16 min from Annemasse; direct bus from Saint-Julien |
-| In the UN district, at the airport or at CERN | Ferney-Voltaire and the Pays de Gex | Bus from Ferney-Voltaire: central Geneva in 20 min; test your exact route before you sign |
+| In the UN district, at the airport or at CERN | Ferney-Voltaire and the Pays de Gex | Direct TPG bus from Ferney-Voltaire: Cornavin in about 40 minutes door to door; test your exact route before you sign |
 
 Times for each neighbourhood, station by station, are in [our guide to commuting times between Annemasse and Geneva](/en/blog/temps-trajet-annemasse-geneve-par-quartier).
 
@@ -189,7 +189,7 @@ Three areas fit this profile:
 
 Arriving alone also means arriving without a network. A flatshare or a coliving solves both at once: a furnished place from the first night, and people to have dinner with. [Building a network in Geneva](/en/blog/se-faire-reseau-geneve-arriver-seul) has more ideas for the first few weeks.
 
-This is the profile we had in mind for La Villa Coliving: three houses in Ville-la-Grand, Ambilly and Annemasse, 20 min from Geneva Eaux-Vives by Léman Express, door to door, with furnished single rooms at CHF 1,370 to 1,430 a month, all inclusive. The file comes down to three items: a signed employment contract or job offer, an ID, and a deposit of two months' rent excluding bills. No application fee, no agency fee, and the deposit can be paid in two or three instalments.
+This is the profile we had in mind for La Villa Coliving: three houses in Ville-la-Grand, Ambilly and Annemasse, 20 min from Geneva Eaux-Vives by Léman Express, door to door, with furnished single rooms at CHF 1,370 to 1,430 a month, all inclusive. The file comes down to three items: a signed employment contract or job offer, an ID, and a deposit of two months' rent excluding bills. No application fee, no agency fee, and the deposit can be paid in 2 or 3 instalments depending on your application.
 
 ## Profile 2: you have a car and you work on the right bank, in the UN district or at the airport
 
@@ -258,13 +258,13 @@ To follow prices over time, [the cross-border housing observatory](/en/observato
 
 ## FAQ
 
-**What is the closest French town to Geneva?**
+**How much does a room on the French side cost?**
 
-Several French towns share a border with the canton of Geneva: Ambilly and Ville-la-Grand, next to Annemasse, on the east side; Ferney-Voltaire to the north; Saint-Julien-en-Genevois to the south-west. "Closest" matters less than your commute: pick the one on the same side of Geneva as your office.
+Allow €700 to €1,000 a month for a room in a standard flatshare, depending on the town, with bills often extra (2026). A premium coliving room, all inclusive, starts from {{PRIX_DES}}/{{PRIX_DES_EUR}} a month. Compare the total cost rather than the rent alone: a cheap place you have to furnish and connect to every utility can end up costing more.
 
-**Can you live on the French side without a car?**
+**Where should I live if I'm only in Geneva for 6 to 12 months?**
 
-Yes, if you choose a place around a Léman Express station or a tram 17 stop. From Annemasse station, the Léman Express reaches Geneva Eaux-Vives in 7 minutes and Cornavin in 23 minutes, with no change.
+Somewhere furnished, with short notice. A standard furnished lease runs for a year, but you can leave at any time with one month's notice; the "bail mobilité", from 1 to 10 months, is for people in training, on an internship, on a temporary assignment or relocating for work. If you don't yet know how long you'll stay, a furnished flatshare or a coliving, often all inclusive, is the most flexible option.
 
 **Is Annemasse a good place to live if you work in Geneva?**
 

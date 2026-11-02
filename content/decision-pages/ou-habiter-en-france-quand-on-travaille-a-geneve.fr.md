@@ -14,7 +14,7 @@ Ton lieu de travail fait la moitié de la réponse : Genève s'étire d'est en o
 | Aux Eaux-Vives, à Champel ou aux HUG | Annemasse, Ville-la-Grand, Ambilly | Léman Express depuis la gare d'Annemasse : Genève-Eaux-Vives en 7 min, Genève-Champel en 10 min ; compte 20 à 25 min porte-à-porte jusqu'aux Eaux-Vives |
 | À Cornavin ou dans le centre | Annemasse, Ville-la-Grand, Ambilly | Léman Express jusqu'à Cornavin en 23 min, sans changement ; tram 17 depuis Ambilly jusqu'à Rive |
 | À Lancy, Carouge ou Plan-les-Ouates | Annemasse, ou Saint-Julien-en-Genevois | Léman Express jusqu'à Lancy-Pont-Rouge en 16 min depuis Annemasse ; bus direct depuis Saint-Julien |
-| Aux Nations, à l'aéroport ou au CERN | Ferney-Voltaire et le Pays de Gex | Bus depuis Ferney-Voltaire : le centre de Genève en 20 min ; teste ton trajet exact avant de signer |
+| Aux Nations, à l'aéroport ou au CERN | Ferney-Voltaire et le Pays de Gex | Bus TPG direct depuis Ferney-Voltaire : Cornavin en une quarantaine de minutes porte-à-porte ; teste ton trajet exact avant de signer |
 
 Les temps quartier par quartier, gare par gare, sont dans [notre article sur les temps de trajet entre Annemasse et Genève](/blog/temps-trajet-annemasse-geneve-par-quartier).
 
@@ -29,7 +29,7 @@ Trois zones collent à ce profil :
 
 Arriver seul, c'est aussi arriver sans réseau. Une colocation ou un coliving règle les deux problèmes d'un coup : un logement meublé dès le premier soir, et des gens avec qui dîner. [Se faire un réseau à Genève](/blog/se-faire-reseau-geneve-arriver-seul) donne d'autres pistes pour les premières semaines.
 
-C'est pour ce profil qu'on a pensé La Villa Coliving : trois maisons à Ville-la-Grand, Ambilly et Annemasse, à 20 min de Genève-Eaux-Vives en Léman Express, porte-à-porte, avec des chambres meublées pour une personne à 1 370 à 1 430 CHF par mois tout inclus. Le dossier tient en trois pièces : contrat de travail signé ou promesse d'embauche, pièce d'identité, caution de 2 mois de loyer hors charges. 0 € de frais de dossier, 0 € de frais d'agence, et la caution peut se régler en deux ou trois fois.
+C'est pour ce profil qu'on a pensé La Villa Coliving : trois maisons à Ville-la-Grand, Ambilly et Annemasse, à 20 min de Genève-Eaux-Vives en Léman Express, porte-à-porte, avec des chambres meublées pour une personne à 1 370 à 1 430 CHF par mois tout inclus. Le dossier tient en trois pièces : contrat de travail signé ou promesse d'embauche, pièce d'identité, caution de 2 mois de loyer hors charges. 0 € de frais de dossier, 0 € de frais d'agence, et la caution peut se régler en 2 ou 3 fois selon ton dossier.
 
 ## Profil 2 — Tu as une voiture et tu travailles rive droite, aux Nations ou à l'aéroport
 
@@ -120,7 +120,7 @@ En Léman Express, 7 minutes jusqu'à Genève-Eaux-Vives et 23 minutes jusqu'à 
 
 **Où habiter quand on travaille aux Nations ?**
 
-Côté France, Ferney-Voltaire et le Pays de Gex sont du bon côté de Genève : depuis Ferney, le bus rejoint le centre de Genève en 20 minutes. Depuis Annemasse, le Léman Express t'amène à Cornavin en 23 minutes, puis il reste la fin du trajet en tram ou en bus.
+Côté France, Ferney-Voltaire et le Pays de Gex sont du bon côté de Genève : depuis Ferney, un bus TPG direct met Cornavin à une quarantaine de minutes porte-à-porte. Depuis Annemasse, le Léman Express t'amène à Cornavin en 23 minutes, puis il reste la fin du trajet en tram ou en bus.
 
 ## Pour aller plus loin
 

@@ -4,9 +4,9 @@
  *   node scripts/build-slots-sql.mjs --edits ./a1-publication.edits.mjs --name a1-publication-liens --date 2026-11-02 --write-diff
  *  - D-S6 (retour) : A3 retrouve ses deux liens par langue vers A1 (phrase du J-60, puce de « Pour aller plus loin »), retirés le 30/10
  *    parce qu'A1 n'était pas publié.
- *  - LIENS : liens entrants demandés par le brief (§3 A1) : villes (FR = phrase du brief ; EN = même phrase, B7 viendra ensuite),
- *    quartiers Annemasse, vivre à Annemasse, temps de trajet, s'installer, budget colocation, trouver une colocation, guide ressources
+ *  - LIENS : liens entrants demandés par le brief (§3 A1) : quartiers Annemasse, vivre à Annemasse, temps de trajet, s'installer, budget colocation, trouver une colocation, guide ressources
  *    (section logement), B8. Ancres variées (règle du Plan Autorité) : deux seulement reprennent le titre exact d'A1.
+ *    « villes » retirée le 02/11 : l'article a été réécrit par une autre session le jour même ; son lien vers A1 passera par ses fichiers.
  * ORDRE : ce SQL APRÈS le SQL de publication d'A1 (maj-article-ou-habiter-en-france-quand-on-travaille-a-geneve-<date>.sql), dans la même
  * séance : aucun lien ne doit viser A1 tant qu'il n'est pas publié.
  */
@@ -15,7 +15,7 @@ export const POST_STATE_WATCH = [/\]\(\/blog\/ou-habiter-en-france-quand-on-trav
 
 export function sqlDoc() {
   return {
-    lot: 'Publication d\'A1 (brief « Genève profils » du 30/10/2026) : liens entrants vers A1 (villes, quartiers, vivre à Annemasse, temps de trajet, s\'installer, budget, trouver une colocation, guide ressources, B8) et retour des liens d\'A3 (D-S6).',
+    lot: 'Publication d\'A1 (brief « Genève profils » du 30/10/2026) : liens entrants vers A1 (quartiers, vivre à Annemasse, temps de trajet, s\'installer, budget, trouver une colocation, guide ressources, B8) et retour des liens d\'A3 (D-S6).',
     sources: 'chaînes relevées sur la base vivante le 02/11',
     apply: 'APRÈS le SQL de publication d\'A1 (maj-article-ou-habiter-en-france-quand-on-travaille-a-geneve-<date>.sql), dans la même séance, sur feu vert de Jérôme.',
     encoding: 'Fichier UTF-8 — ne pas normaliser les espaces.',
@@ -62,23 +62,8 @@ const EDITS = [
     find: "- [French towns near Geneva for cross-border workers](/en/blog/ou-habiter-frontalier-suisse-villes-france-pas-cher)",
     replace: `- [Where to live in France when you work in Geneva](${A1_EN})\n- [French towns near Geneva for cross-border workers](/en/blog/ou-habiter-frontalier-suisse-villes-france-pas-cher)`,
   },
-  // ── Villes (B7 pour le reste) ───────────────────────────────────────────────────────────────
-  {
-    slug: 'ou-habiter-frontalier-suisse-villes-france-pas-cher',
-    lang: 'fr',
-    mechanism: 'LIENS',
-    note: 'villes · phrase de renvoi en ouverture (texte du brief, §3 A1)',
-    find: "Voici les **7 meilleures villes frontalières** pour habiter côté France quand on travaille à Genève en 2026, classées par rapport qualité-prix.",
-    replace: `Voici les **7 meilleures villes frontalières** pour habiter côté France quand on travaille à Genève en 2026, classées par rapport qualité-prix. Tu travailles à Genève et tu hésites entre ces villes ? [Le choix par profil](${A1_FR}) t'aide à trancher.`,
-  },
-  {
-    slug: 'ou-habiter-frontalier-suisse-villes-france-pas-cher',
-    lang: 'en',
-    mechanism: 'LIENS',
-    note: 'towns · pointer sentence in the opening (EN twin of the brief\'s FR sentence; B7 adds the rest)',
-    find: "Here are the **7 best cross-border towns** to live on the French side when you work in Geneva in 2026, ranked by value for money.",
-    replace: `Here are the **7 best cross-border towns** to live on the French side when you work in Geneva in 2026, ranked by value for money. Working in Geneva and torn between these towns? [Choosing by profile](${A1_EN}) helps you decide.`,
-  },
+  // ── Villes : aucun lien ici (02/11). « villes » a été réécrite le 02/11 par une autre session (branche
+  //    content/ou-habiter-villes-frontalieres) : son lien vers A1 entre par ses fichiers source, pas par cette liste.
   // ── Quartiers Annemasse ─────────────────────────────────────────────────────────────────────
   {
     slug: 'quartiers-annemasse-ou-vivre-selon-profil',
