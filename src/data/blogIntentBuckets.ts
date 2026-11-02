@@ -46,6 +46,8 @@ const BUCKET_BY_SLUG: Record<string, IntentBucket> = {
   "ecole-internationale-geneve-frontalier-ou-habiter": "ville",
   // (C3, 09/2026) page de décision « Vivre à Annemasse quand on travaille à Genève »
   "vivre-a-annemasse-quand-on-travaille-a-geneve": "ville",
+  // (02/11/2026) A1 du brief « Genève profils » — « Où habiter en France quand on travaille à Genève ? », guide par profil
+  "ou-habiter-en-france-quand-on-travaille-a-geneve": "ville",
   // 🟠 admin — tax/admin authority content, soft CTA only
   "fiscalite-frontalier-geneve-impots-2026": "admin",
   "declaration-impots-frontalier-2026": "admin",
