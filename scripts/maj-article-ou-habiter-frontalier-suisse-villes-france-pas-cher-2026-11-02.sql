@@ -32,6 +32,8 @@ Quatre critères, les mêmes pour toutes, sources dans le texte.
 
 Plus de 116 000 [frontaliers](https://statistique.ge.ch/domaines/03/03_05/tableaux.asp) travaillent dans le canton de Genève (OCSTAT, fin 2025), et la plupart ont choisi leur ville sur un conseil de collègue. Toi, tu as les chiffres.
 
+Si tu préfères partir de ton profil plutôt que de la carte, où tu travailles dans Genève, voiture ou pas, budget et durée, lis notre guide [« Où habiter en France quand on travaille à Genève ? »](/blog/ou-habiter-en-france-quand-on-travaille-a-geneve) : il raisonne profil par profil, ici on compare commune par commune.
+
 ## 1. Annemasse : la ville-centre, à 7 minutes de Genève-Eaux-Vives en Léman Express
 
 Annemasse est la seule vraie ville de la frontière : 37 600 habitants (INSEE 2023), une gare du Léman Express, un tram transfrontalier, un marché, des restaurants, un cinéma. Depuis la gare, Genève-Eaux-Vives est à 7 minutes et Cornavin à 23, avec un train toutes les 10 minutes en heure de pointe. Loyer d'annonce T1-T2 : 22,6 €/m², soit ≈ 840 € pour 37 m². Le tram 17 gagne trois arrêts dans la ville fin 2026 (Annemasse Agglo).
@@ -183,6 +185,8 @@ Four criteria, the same for every town, and the sources are in the text.
 4. **What you do in the evening.** A lively centre, a market, a lake, or a dormitory town: we say which.
 
 More than 116,000 [cross-border workers](https://statistique.ge.ch/domaines/03/03_05/tableaux.asp) work in the canton of Geneva (OCSTAT, end of 2025), and most of them picked their town on a colleague's tip. You have the numbers.
+
+If you would rather start from your profile than from the map, where you work in Geneva, car or no car, budget and length of stay, read our guide [“Where to live in France when you work in Geneva”](/en/blog/ou-habiter-en-france-quand-on-travaille-a-geneve): it works profile by profile, while this one compares town by town.
 
 ## 1. Annemasse: the hub town, 7 minutes from Geneva Eaux-Vives by Léman Express
 
