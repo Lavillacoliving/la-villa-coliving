@@ -492,6 +492,7 @@ export function AnnemasseColocationPage() {
           </h2>
           <ul className="grid grid-cols-1 md:grid-cols-2 gap-3 text-sm max-w-3xl mx-auto">
             {[
+              { fr: "Colocation à Annemasse, Ville-la-Grand et Ambilly : où et comment trouver une chambre", en: "Flatshare in Annemasse, Ville-la-Grand and Ambilly: where and how to find a room", slug: "colocation-annemasse-ville-la-grand-ambilly" },
               { fr: "Où habiter quand on est frontalier suisse — Top 7 villes côté France", en: "Where to live as a Swiss cross-border worker — Top 7 French towns", slug: "ou-habiter-frontalier-suisse-villes-france-pas-cher" },
               { fr: "Télétravail frontalier Genève : règles 2026", en: "Cross-border remote work Geneva: 2026 rules", slug: "teletravail-frontalier-geneve-regles-2026" },
               { fr: "Grand Genève 2026 : nouveautés pour les frontaliers", en: "Greater Geneva 2026: what's new for cross-border workers", slug: "grand-geneve-2026-nouveautes-frontaliers" },

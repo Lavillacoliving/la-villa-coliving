@@ -1281,6 +1281,16 @@
       "source": "/en/blog/demenager-geneve-frontalier-checklist",
       "destination": "/en/blog/trouver-logement-avant-d-arriver-geneve",
       "permanent": true
+    },
+    {
+      "source": "/blog/avenant-fiscal-40-frontalier-geneve",
+      "destination": "/blog/teletravail-frontalier-geneve-regles-2026",
+      "permanent": true
+    },
+    {
+      "source": "/en/blog/avenant-fiscal-40-frontalier-geneve",
+      "destination": "/en/blog/teletravail-frontalier-geneve-regles-2026",
+      "permanent": true
     }
   ],
   "headers": [
