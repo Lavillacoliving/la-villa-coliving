@@ -8,7 +8,7 @@ import { RoomsEmbed } from "@/components/RoomsEmbed";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { useHydrated } from "@/hooks/useHydrated";
 import { HOUSES } from "@/data/houses";
-import { STATS, STATS_SHARED_BATH, CONTRACT_EUR, thousands } from "@/data/stats";
+import { STATS, STATS_SHARED_BATH, CONTRACT_EUR, PRICE_SHARED_CHF_EN, PRICE_SHARED_CHF_FR, thousands } from "@/data/stats";
 import { markOffer } from "@/lib/attribution";
 import { readPrerenderFlag } from "@/lib/prerenderEmbeddedState";
 import type { QAPair } from "@/lib/structuredData";
@@ -43,7 +43,10 @@ import {
  * Page TEMPORAIRE : noindex + canonical auto-référente (pas de concurrence avec /chambres-disponibles),
  * prérendue (LCP des liens d'annonce), hors sitemap. Les dates viennent de src/data/offer.ts ; après
  * OFFER_END la page affiche « Cette offre est terminée » avec un lien vers /chambres-disponibles — pas
- * de 301 : les liens Facebook et Ads doivent continuer à tomber sur une page qui explique.
+ * de 301 : les liens Facebook et Ads doivent continuer à tomber sur une page qui explique. (Décision A de Jérôme
+ * du 02/11/2026) L'état « terminée » rappelle aussi ce qui ne change pas — loyer tout inclus, bail, 0 frais, caution
+ * payable en 1, 2 ou 3 fois selon le dossier, visite — avec un lien vers /faq : le post Reddit du 02/11 (r/geneva)
+ * renvoie vers /en/winter-offer ; title et description propres à cet état (plus de « −50 % » une fois l'offre close).
  *
  * Hydratation : l'état « terminée » dépend de la date du lecteur. Pendant l'hydratation le premier rendu
  * reproduit le HTML prérendu (repère `__offer_state__` capturé par main.tsx sur <main data-offer-state>),
@@ -193,13 +196,32 @@ export function OfferHiverPage() {
     : `La moitié de ton premier mois offerte pour tout bail signé d'ici le ${endLabel}. Chambres tout inclus près de Genève.`;
 
   if (ended) {
+    // (Décision A de Jérôme, 02/11/2026) Une page « terminée » qui explique : ce qui ne change pas, avec ou sans offre.
+    // Valeurs des constantes (STATS, PRICE_SHARED_CHF_*), aucun chiffre nouveau ; title/description propres à cet état.
+    const endedTitle = en ? "This offer has ended" : "Cette offre est terminée";
+    const endedDescription = en
+      ? `“${T.name}” closed on ${endLabel} ${year}. What stays the same: all-inclusive rent, ${STATS.leaseDurationMonths}-month lease, no fees, deposit payable in 1, 2 or 3 instalments depending on your application.`
+      : `L'offre « ${T.name} » s'est terminée le ${endLabel} ${year}. Ce qui ne change pas : loyer tout inclus, bail de ${STATS.leaseDurationMonths} mois, 0 frais, caution payable en 1, 2 ou 3 fois selon ton dossier.`;
+    const stays = en
+      ? [
+          `All-inclusive rent from ${PRICE_SHARED_CHF_EN}/month: utilities, fibre, common-area cleaning, pool, sauna and gym included.`,
+          `${STATS.leaseDurationMonths}-month lease: you're free to leave at any time with ${STATS.noticePeriodMonths} month's notice.`,
+          `No application fee, no agency fee. Deposit: ${STATS.depositMonths} months' rent excluding charges, payable in 1, 2 or 3 instalments depending on your application.`,
+          "Visit on site or by video call, as you prefer.",
+        ]
+      : [
+          `Loyer tout inclus dès ${PRICE_SHARED_CHF_FR}/mois : charges, fibre, ménage des espaces communs, piscine, sauna et salle de sport compris.`,
+          `Bail de ${STATS.leaseDurationMonths} mois : tu es libre de partir à tout moment avec ${STATS.noticePeriodMonths} mois de préavis.`,
+          `0 € de frais de dossier, 0 € de frais d'agence. Caution : ${STATS.depositMonths} mois de loyer hors charges, payable en 1, 2 ou 3 fois selon ton dossier.`,
+          "Visite sur place ou en visio, au choix.",
+        ];
     return (
       <main data-offer-state="ended" className="relative pt-16 bg-white">
-        <SEO title={title} description={description} noindex selfCanonical />
+        <SEO title={endedTitle} description={endedDescription} noindex selfCanonical />
         <section className="py-20 lg:py-28 bg-[#F5F2ED]">
           <div className="container-custom max-w-2xl text-center">
             <h1 className="text-4xl md:text-5xl font-light text-[#1C1917] mb-5" style={{ fontFamily: '"DM Serif Display", serif' }}>
-              {en ? "This offer has ended" : "Cette offre est terminée"}
+              {endedTitle}
             </h1>
             <p className="text-lg text-[#44403C] mb-8">
               {en
@@ -213,6 +235,26 @@ export function OfferHiverPage() {
               {en ? "See available rooms" : "Voir les chambres disponibles"}
               <ArrowRight className="w-5 h-5" />
             </LocalizedLink>
+          </div>
+        </section>
+        <section className="py-16 lg:py-20 bg-white">
+          <div className="container-custom max-w-2xl">
+            <h2 className="text-2xl md:text-3xl font-light text-[#1C1917] mb-6 text-center" style={{ fontFamily: '"DM Serif Display", serif' }}>
+              {en ? "What stays the same, offer or not" : "Ce qui ne change pas, avec ou sans offre"}
+            </h2>
+            <ul className="space-y-3 text-[#44403C] leading-relaxed">
+              {stays.map((item) => (
+                <li key={item} className="flex items-start gap-3">
+                  <Check className="mt-1 h-5 w-5 shrink-0 text-[#b8860b]" aria-hidden="true" />
+                  <span>{item}</span>
+                </li>
+              ))}
+            </ul>
+            <p className="mt-8 text-center">
+              <LocalizedLink to="/faq" className="text-[#b8860b] underline underline-offset-4 hover:text-[#1C1917]">
+                {en ? "Read the FAQ" : "Lire la FAQ"}
+              </LocalizedLink>
+            </p>
           </div>
         </section>
       </main>
