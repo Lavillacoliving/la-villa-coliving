@@ -53,12 +53,12 @@ export const situationsFaq: SituationFaq[] = [
     id: "no-swiss-payslip",
     fr: {
       q: "Je n'ai pas encore de fiche de salaire suisse : mon dossier passe quand même ?",
-      a: `Oui. Pour un premier contrat en Suisse, on ne peut pas te demander ce que tu n'as pas encore : ton dossier, c'est ton contrat de travail signé ou ta promesse d'embauche, et une pièce d'identité. Aucun historique locatif suisse n'est demandé. Tu règles ton premier loyer et la caution (${STATS.depositMonths} mois de loyer hors charges), et rien d'autre : ni frais de dossier ni frais d'agence.`,
+      a: `Oui. Pour un premier contrat en Suisse, on ne peut pas te demander ce que tu n'as pas encore : ton dossier, c'est ton contrat de travail signé ou ta promesse d'embauche, et une pièce d'identité. Aucun historique locatif suisse n'est demandé. Tu règles ton premier loyer et la caution (${STATS.depositMonths} mois de loyer hors charges, payable en 1, 2 ou 3 fois selon ton dossier), et rien d'autre : ni frais de dossier ni frais d'agence.`,
       more: { href: "/candidature", label: "Candidater en 2 minutes" },
     },
     en: {
       q: "I don't have a Swiss payslip yet: will my application still go through?",
-      a: `Yes. For a first contract in Switzerland we can't ask for what you don't have yet: your file is your signed employment contract or job offer, plus an ID. No Swiss rental history is required. You pay your first month's rent and the deposit (${STATS.depositMonths} months' rent excluding charges), nothing else: no application fee, no agency fee.`,
+      a: `Yes. For a first contract in Switzerland we can't ask for what you don't have yet: your file is your signed employment contract or job offer, plus an ID. No Swiss rental history is required. You pay your first month's rent and the deposit (${STATS.depositMonths} months' rent excluding charges, payable in 1, 2 or 3 instalments depending on your application), nothing else: no application fee, no agency fee.`,
       more: { href: "/candidature", label: "Apply in 2 minutes" },
     },
   },

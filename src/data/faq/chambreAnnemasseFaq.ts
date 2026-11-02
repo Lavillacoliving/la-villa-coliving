@@ -9,7 +9,7 @@ export const chambreAnnemasseFaq: { fr: QAPair[]; en: QAPair[] } = {
   fr: [
     {
       q: "Quel est le prix d'une chambre meublée à Annemasse chez La Villa Coliving ?",
-      a: `Les 12 chambres du Lodge, à Annemasse Romagny, sont à ${PRICE_CHF_FR}/mois tout inclus : loyer, charges, fibre, ménage des communs ${STATS.cleaningPerWeek} fois par semaine, sauna, salle de sport, piscine et jardin, événements. Chaque chambre a sa salle d'eau privative. Pas de frais d'agence, pas de frais de dossier, caution de ${STATS.depositMonths} mois de loyer hors charges, restituée après l'état des lieux.`,
+      a: `Les 12 chambres du Lodge, à Annemasse Romagny, sont à ${PRICE_CHF_FR}/mois tout inclus : loyer, charges, fibre, ménage des communs ${STATS.cleaningPerWeek} fois par semaine, sauna, salle de sport, piscine et jardin, événements. Chaque chambre a sa salle d'eau privative. Pas de frais d'agence, pas de frais de dossier, caution de ${STATS.depositMonths} mois de loyer hors charges, payable en 1, 2 ou 3 fois selon ton dossier et restituée après l'état des lieux.`,
     },
     {
       q: "Les chambres à louer à Annemasse sont-elles vraiment meublées ?",
@@ -36,7 +36,7 @@ export const chambreAnnemasseFaq: { fr: QAPair[]; en: QAPair[] } = {
   en: [
     {
       q: "How much is a furnished room in Annemasse at La Villa Coliving?",
-      a: `The Lodge's 12 rooms, in Annemasse Romagny, cost ${PRICE_CHF_EN}/month all inclusive: rent, bills, fibre, cleaning of the common areas ${STATS.cleaningPerWeek} times a week, sauna, gym, pool and garden, events. Every room has its own private shower room. No agency fee, no application fee, deposit of ${STATS.depositMonths} months' rent excluding charges, returned after the check-out inspection.`,
+      a: `The Lodge's 12 rooms, in Annemasse Romagny, cost ${PRICE_CHF_EN}/month all inclusive: rent, bills, fibre, cleaning of the common areas ${STATS.cleaningPerWeek} times a week, sauna, gym, pool and garden, events. Every room has its own private shower room. No agency fee, no application fee, deposit of ${STATS.depositMonths} months' rent excluding charges, payable in 1, 2 or 3 instalments depending on your application and returned after the check-out inspection.`,
     },
     {
       q: "Are the rooms for rent in Annemasse really furnished?",

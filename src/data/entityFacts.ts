@@ -53,7 +53,8 @@ export type EntityHouseSlug = keyof typeof ROOMS_BY_HOUSE;
 // la même phrase ouvre le bloc tarifs de /tarifs — la garde l'attend donc 2× sur /tarifs, 1× ailleurs.
 // (Lot L3, 10/10/2026) Puce « Avis : 4,8/5 sur Google (36 avis). » ajoutée (D4) — à incrémenter à chaque relevé mensuel
 // (la date sert aussi de « Dernière mise à jour » dans llms.txt : garder une vraie date AAAA-MM-JJ, suffixe b, c… si besoin).
-export const ENTITY_FACTS_VERSION = "2026-10-10";
+// (02/11/2026, brief « caution permanente ») Puce caution : « payable en 1, 2 ou 3 fois selon ton dossier » (règle permanente, D3-bis).
+export const ENTITY_FACTS_VERSION = "2026-11-02";
 
 /**
  * Phrase garant canonique (D0 amendement b, Jérôme 09/10/2026) — la SEULE formulation admise sur le site :
@@ -228,7 +229,7 @@ export function entityFactsText(lang: EntityLang): EntityFactsText {
       bullets: [
         `All-inclusive rent from ${F.price.en.fromChf}/month (contractual rent in euros: from ${F.price.en.fromEur}) — utilities, fibre up to ${F.fiberSpeed}, common-area cleaning ${F.cleaningPerWeek} times a week, pool, sauna, gym, streaming, yoga and events included.`,
         PRICE_KEY_SENTENCE.en,
-        `No application fee, no agency fee. Deposit: ${F.depositMonths} months' rent, excluding charges.`,
+        `No application fee, no agency fee. Deposit: ${F.depositMonths} months' rent excluding charges, payable in 1, 2 or 3 instalments depending on your application.`,
         `${F.lease.months}-month lease: you're free to leave at any time with ${F.lease.noticeMonths} month's notice.`,
         `Commute: ${commutes}.`,
         reviewsBullet.en,
@@ -248,7 +249,7 @@ export function entityFactsText(lang: EntityLang): EntityFactsText {
     bullets: [
       `Loyer tout inclus dès ${F.price.fr.fromChf}/mois (loyer contractuel en euros : dès ${F.price.fr.fromEur}) — charges, fibre jusqu'à ${F.fiberSpeed}, ménage des espaces communs ${F.cleaningPerWeek} fois par semaine, piscine, sauna, salle de sport, streaming, yoga et événements compris.`,
       PRICE_KEY_SENTENCE.fr,
-      `0 € de frais de dossier, 0 € de frais d'agence. Caution : ${F.depositMonths} mois de loyer hors charges.`,
+      `0 € de frais de dossier, 0 € de frais d'agence. Caution : ${F.depositMonths} mois de loyer hors charges, payable en 1, 2 ou 3 fois selon ton dossier.`,
       `Bail de ${F.lease.months} mois : tu es libre de partir à tout moment avec ${F.lease.noticeMonths} mois de préavis.`,
       `Trajets : ${commutes}.`,
       reviewsBullet.fr,

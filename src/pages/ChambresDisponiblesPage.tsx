@@ -16,8 +16,6 @@ import { HOUSES } from "@/data/houses";
 import { ENTITY_HOUSES } from "@/data/entityFacts";
 import { MONTHS_FR, MONTHS_EN, formatShortDate } from "@/lib/dates";
 import { responsiveImage } from "@/lib/responsiveImage";
-import { OFFER_TEXTS, isOfferActive, isOfferStarted } from "@/data/offer";
-import { readPrerenderFlag } from "@/lib/prerenderEmbeddedState";
 import { roomGallery } from "@/data/roomPhotos";
 import { STATS, STATS_DISPLAY, PRICE_SHARED_CHF_FR, PRICE_SHARED_CHF_EN } from "@/data/stats";
 import { tarifsFaq } from "@/data/faq/tarifsFaq";
@@ -194,16 +192,13 @@ export function ChambresDisponiblesPage() {
     ? ["No agency fee, no application fee", "Reply within 48 hours", "Video tour available", `${STATS.totalResidents}+ residents since ${STATS.foundedYear}`, "All inclusive: bills, fibre, cleaning, pool, sauna, gym", STATS_DISPLAY.en.distance]
     : ["0 frais d'agence ni de dossier", "Réponse sous 48 h", "Visite en visio possible", `${STATS.totalResidents}+ résidents depuis ${STATS.foundedYear}`, "Tout inclus : charges, fibre, ménage, piscine, sauna, gym", STATS_DISPLAY.fr.distance];
 
-  // (13/10/2026, §2.2, D3) Pendant l'offre seulement, la caution et son paiement en 2 ou 3 fois, sous les cartes (liste de
-  // réassurance). (Correctif 16/10/2026) Le prérendu est une capture Puppeteer où useHydrated vaut déjà true : dès le début
-  // de l'offre (15/10), la ligne figurait dans le HTML prérendu mais pas au premier rendu client — #418, prérendus bloqués
-  // par la garde d'hydratation. Même logique que le bandeau (OfferBanner) : pendant l'hydratation, la page reproduit ce
-  // que le HTML contient (repère `__offer_deposit__` capturé par main.tsx) ; une fois hydratée, la date du lecteur décide.
+  // (02/11/2026, brief « caution permanente ») La caution en 2 ou 3 fois est une règle permanente (D3-bis : « selon ton
+  // dossier »), plus un avantage de l'offre : la ligne vit en permanence dans la liste de réassurance, sans condition
+  // d'offre ni repère de prérendu (l'ancien `__offer_deposit__` du correctif #418 du 16/10 n'a plus lieu d'être).
   const depositLine = en
-    ? `Deposit of ${STATS.depositMonths} months' rent excluding charges, ${OFFER_TEXTS.en.depositNote}`
-    : `Caution de ${STATS.depositMonths} mois de loyer hors charges, ${OFFER_TEXTS.fr.depositNote}`;
-  const showDeposit = hydrated ? isOfferStarted() && isOfferActive() : readPrerenderFlag("__offer_deposit__") === "1";
-  if (showDeposit) reassurance.splice(1, 0, depositLine);
+    ? `Deposit of ${STATS.depositMonths} months' rent excluding charges, payable in 2 or 3 instalments depending on your application`
+    : `Caution de ${STATS.depositMonths} mois de loyer hors charges, payable en 2 ou 3 fois selon ton dossier`;
+  reassurance.splice(1, 0, depositLine);
 
   const faqItems = [...maisonsFaq[L].slice(0, 2), ...tarifsFaq[L].slice(0, 2)];
 
@@ -249,8 +244,8 @@ export function ChambresDisponiblesPage() {
           {nextEntriesLine && (
             <p data-next-entries className="mt-4 text-sm font-medium text-[#44403C]">{nextEntriesLine}</p>
           )}
-          {/* (13/10/2026, D3) La caution n'ouvre plus la page : elle vit sous les cartes (fiche entité ; pendant l'offre,
-              aussi dans la liste de réassurance). */}
+          {/* (13/10/2026, D3) La caution n'ouvre plus la page : elle vit sous les cartes (fiche entité et liste de
+              réassurance — règle permanente depuis le 02/11/2026). */}
           <p className="mt-3 text-[#57534E] max-w-2xl">
             {en
               ? `Furnished private rooms in ${STATS.totalHouses} coliving houses on the French side of Geneva, ${STATS_DISPLAY.en.distance}. All inclusive from ${PRICE_SHARED_CHF_EN}/month, no agency or application fee.`
@@ -471,7 +466,7 @@ export function ChambresDisponiblesPage() {
         <div className="container-custom">
           <ul className="mx-auto grid max-w-4xl gap-4 sm:grid-cols-2 lg:grid-cols-3">
             {reassurance.map((item) => (
-              <li key={item} data-offer-deposit={item === depositLine ? "1" : undefined} className="flex items-start gap-3 rounded-xl border border-[#E7E5E4] bg-white px-5 py-4">
+              <li key={item} className="flex items-start gap-3 rounded-xl border border-[#E7E5E4] bg-white px-5 py-4">
                 <Check className="mt-0.5 h-5 w-5 shrink-0 text-[#b8860b]" />
                 <span className="text-sm text-[#44403C]">{item}</span>
               </li>

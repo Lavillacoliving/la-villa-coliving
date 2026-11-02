@@ -313,8 +313,8 @@ export const faqData: FAQItem[] = [
       fr: 'Y a-t-il une caution ?',
     },
     answer: {
-      en: 'Yes, we require a security deposit equivalent to two months\' rent excluding charges. This deposit is held for the duration of your stay and returned within 30 days of move-out if there is no damage, otherwise within 2 months, minus any deductions for damages beyond normal wear and tear.',
-      fr: 'Oui, nous exigeons une caution équivalente à deux mois de loyer hors charges. Cette caution est conservée pendant la durée de ton séjour et restituée sous 30 jours après ton départ si aucune dégradation n\'est constatée, sinon sous 2 mois, déduction faite des éventuels dommages au-delà de l\'usure normale.',
+      en: 'Yes: 2 months\' rent excluding charges. It can be paid in one go, in 2 instalments (half at signing, half with your 2nd month\'s rent) or in 3 (a third at signing, then a third with your 2nd and 3rd month\'s rent). La Villa sets the number of instalments when your application is approved, based on your financial situation. It\'s returned within 30 days of the move-out inspection if nothing is damaged, otherwise within 2 months.',
+      fr: 'Oui : 2 mois de loyer hors charges. Elle peut se payer en une fois, en 2 fois (la moitié à la signature, l\'autre avec ton 2ᵉ loyer) ou en 3 fois (un tiers à la signature, puis un tiers avec tes 2ᵉ et 3ᵉ loyers). Le nombre de versements est fixé par La Villa au moment de valider ton dossier, en fonction de ta situation financière. La caution t\'est restituée sous 30 jours après l\'état des lieux de sortie si rien n\'est abîmé, sinon sous 2 mois.',
     },
   },
   {

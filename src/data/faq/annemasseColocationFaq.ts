@@ -39,7 +39,7 @@ export const annemasseColocationFaq: { fr: QAPair[]; en: QAPair[] } = {
     },
     {
       q: "Quelle est la durée du bail à Annemasse ?",
-      a: `Le bail est un contrat de location meublée de ${STATS.leaseDurationMonths} mois renouvelable, et tu peux partir quand tu veux avec un préavis d'${STATS.noticePeriodMonths} mois. Cela convient aux frontaliers qui s'installent durablement comme à ceux en période d'essai à Genève. Le bail respecte le cadre français (loi Alur), avec une caution de ${STATS.depositMonths} mois hors charges et aucun frais d'agence.`,
+      a: `Le bail est un contrat de location meublée de ${STATS.leaseDurationMonths} mois renouvelable, et tu peux partir quand tu veux avec un préavis d'${STATS.noticePeriodMonths} mois. Cela convient aux frontaliers qui s'installent durablement comme à ceux en période d'essai à Genève. Le bail respecte le cadre français (loi Alur), avec une caution de ${STATS.depositMonths} mois hors charges, payable en 1, 2 ou 3 fois selon ton dossier, et aucun frais d'agence.`,
     },
     {
       q: "Quelle différence entre colocation classique et coliving à Annemasse ?",
@@ -71,7 +71,7 @@ export const annemasseColocationFaq: { fr: QAPair[]; en: QAPair[] } = {
     },
     {
       q: "How long is the lease in Annemasse?",
-      a: `A ${STATS.leaseDurationMonths}-month renewable furnished lease, and you can leave whenever you want with ${STATS.noticePeriodMonths} month's notice. It suits cross-border workers settling in for good as well as people on a probation period in Geneva. The lease follows French law (loi Alur), with a deposit of ${STATS.depositMonths} months' rent excluding charges and no agency fee.`,
+      a: `A ${STATS.leaseDurationMonths}-month renewable furnished lease, and you can leave whenever you want with ${STATS.noticePeriodMonths} month's notice. It suits cross-border workers settling in for good as well as people on a probation period in Geneva. The lease follows French law (loi Alur), with a deposit of ${STATS.depositMonths} months' rent excluding charges, payable in 1, 2 or 3 instalments depending on your application, and no agency fee.`,
     },
     {
       q: "What is the difference between a classic flatshare and coliving in Annemasse?",

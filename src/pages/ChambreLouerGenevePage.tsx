@@ -152,8 +152,8 @@ export function ChambreLouerGenevePage() {
             </p>
             <ul className="grid sm:grid-cols-2 gap-2 text-sm text-[#44403C]">
               {(en
-                ? [`Furnished room, ${STATS.roomSizeMin}-${STATS.roomSizeMax} m²`, "Bills, water, heating, fibre up to 8 Gb/s", "Cleaning of common areas 3×/week", "Pool, sauna, gym depending on the house", "No agency fee, no application fee", `Deposit: ${STATS.depositMonths} months' rent excluding charges`]
-                : [`Chambre meublée, ${STATS.roomSizeMin} à ${STATS.roomSizeMax} m²`, "Charges, eau, chauffage, fibre jusqu'à 8 Gb/s", "Ménage des communs 3×/semaine", "Piscine, sauna, salle de sport selon la maison", "0 frais d'agence, 0 frais de dossier", `Caution : ${STATS.depositMonths} mois de loyer hors charges`]
+                ? [`Furnished room, ${STATS.roomSizeMin}-${STATS.roomSizeMax} m²`, "Bills, water, heating, fibre up to 8 Gb/s", "Cleaning of common areas 3×/week", "Pool, sauna, gym depending on the house", "No agency fee, no application fee", `Deposit: ${STATS.depositMonths} months' rent excluding charges, payable in 1, 2 or 3 instalments depending on your application`]
+                : [`Chambre meublée, ${STATS.roomSizeMin} à ${STATS.roomSizeMax} m²`, "Charges, eau, chauffage, fibre jusqu'à 8 Gb/s", "Ménage des communs 3×/semaine", "Piscine, sauna, salle de sport selon la maison", "0 frais d'agence, 0 frais de dossier", `Caution : ${STATS.depositMonths} mois de loyer hors charges, payable en 1, 2 ou 3 fois selon ton dossier`]
               ).map((item) => <li key={item} className="flex items-start gap-2"><Check className="w-4 h-4 text-[#D4A574] mt-0.5 flex-shrink-0" />{item}</li>)}
             </ul>
           </div>
@@ -219,7 +219,7 @@ export function ChambreLouerGenevePage() {
               { num: "1", fr: ["Candidature en ligne", "2 minutes : tes coordonnées ; ta date d'arrivée et la durée, si tu les connais, juste après l'envoi."], en: ["Online application", "2 minutes: your contact details; your move-in date and length of stay, if you know them, right after sending."] },
               { num: "2", fr: ["Dossier", "Contrat de travail ou promesse d'embauche, pièce d'identité. Aucun historique locatif suisse demandé."], en: ["File", "Employment contract or job offer, ID. No Swiss rental history required."] },
               { num: "3", fr: ["Réponse sous 48 h et visite", "Sur place ou en visio, de la maison et de la chambre."], en: ["Reply within 48 h and visit", "On site or by video, of the house and the room."] },
-              { num: "4", fr: ["Bail et emménagement", `Bail meublé à ton nom signé en ligne, caution de ${STATS.depositMonths} mois hors charges, tu arrives avec ta valise.`], en: ["Lease and move-in", `Furnished lease in your name signed online, ${STATS.depositMonths}-month deposit excluding charges, you arrive with your suitcase.`] },
+              { num: "4", fr: ["Bail et emménagement", `Bail meublé à ton nom signé en ligne, caution de ${STATS.depositMonths} mois hors charges payable en 1, 2 ou 3 fois selon ton dossier, tu arrives avec ta valise.`], en: ["Lease and move-in", `Furnished lease in your name signed online, ${STATS.depositMonths}-month deposit excluding charges payable in 1, 2 or 3 instalments depending on your application, you arrive with your suitcase.`] },
             ].map((step) => (
               <div key={step.num} className="text-center">
                 <div className="w-12 h-12 rounded-full bg-[#1C1917] text-white font-bold text-lg flex items-center justify-center mx-auto mb-4">{step.num}</div>
