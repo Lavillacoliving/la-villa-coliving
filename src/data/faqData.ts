@@ -1075,8 +1075,8 @@ export const faqData: FAQItem[] = [
       fr: 'Les couples peuvent-ils vivre à La Villa ?',
     },
     answer: {
-      en: 'Yes, as long as each person has their own room: every room is let to one person, so a couple can live with us by taking two rooms. Contact us to check which rooms are available side by side.',
-      fr: 'Oui, à condition que chacun ait sa chambre : une chambre accueille une seule personne, donc un couple peut vivre chez nous en prenant deux chambres. Contacte-nous pour savoir quelles chambres sont disponibles en même temps.',
+      en: 'Yes, as long as each person has their own room: every room is let to one person, so a couple can live with us by taking two rooms. Contact us to check which rooms are available side by side. If you want to share a single room, or you\'re coming as a family, a studio or a flat on the French side will suit you better.',
+      fr: 'Oui, à condition que chacun ait sa chambre : une chambre accueille une seule personne, donc un couple peut vivre chez nous en prenant deux chambres. Contacte-nous pour savoir quelles chambres sont disponibles en même temps. Si tu veux partager une seule chambre à deux, ou si tu viens en famille, un studio ou un appartement côté France sera plus adapté.',
     },
   },
   {

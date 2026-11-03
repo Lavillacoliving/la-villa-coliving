@@ -96,7 +96,7 @@ The worst, because everything slows down: holidays, agencies and landlords away,
 
 ## When it's not the right choice
 
-If your employer is housing you in Geneva for the first few weeks, view places in person and sign afterwards. If you need to live in Switzerland, read [Swiss side or French side](/en/blog/s-installer-a-geneve-expatrie-cote-suisse-ou-cote-france) instead. As a couple or a family, look for a studio or a flat, and plan on the longer timelines in the table. And if your job is in the canton of Vaud, the French side of Geneva may not be the right side.
+If your employer is housing you in Geneva for the first few weeks, view places in person and sign afterwards. If you need to live in Switzerland, read [Swiss side or French side](/en/blog/s-installer-a-geneve-expatrie-cote-suisse-ou-cote-france) instead. As a family, or as a couple who want a place of your own, look for a studio or a flat, and plan on the longer timelines in the table. And if your job is in the canton of Vaud, the French side of Geneva may not be the right side.
 
 ## FAQ
 
