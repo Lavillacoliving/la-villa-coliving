@@ -79,7 +79,7 @@ We'd rather tell you before you sign: here are four cases where the place you're
 - **The wrong side of Geneva.** Annemasse for a job at CERN, or Ferney-Voltaire for a job in Champel: you cross the city morning and evening.
 - **A listing that looks too good.** Rent well below the market, a landlord "abroad", payment requested before a viewing: [housing scams near Geneva](/en/blog/arnaques-logement-frontalier-geneve-eviter) shows the cases we come across.
 
-And if you're coming as a couple or a family, our format isn't the right one: our rooms are for one person. Look for a one- or two-bedroom flat instead, and plan on the longer timelines in the table below.
+And if you're coming as a family, or as a couple who want a place of your own, our format isn't the right one: with us, each room is for one person (a couple can take two). Look for a one- or two-bedroom flat instead, and plan on the longer timelines in the table below.
 
 ## Rents on the French side: ballpark figures
 

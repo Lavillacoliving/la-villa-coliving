@@ -96,7 +96,7 @@ Le pire, parce que tout ralentit : fêtes, congés des agences et des bailleurs,
 
 ## Quand ce n'est pas le bon choix
 
-Si ton employeur te loge les premières semaines à Genève, visite sur place et signe ensuite. Si tu dois résider en Suisse, lis plutôt [s'installer côté Suisse ou côté France](/blog/s-installer-a-geneve-expatrie-cote-suisse-ou-cote-france). En couple ou en famille, vise un studio ou un appartement, avec le délai haut du tableau. Et si ton poste est dans le canton de Vaud, le Genevois français n'est pas forcément le bon côté.
+Si ton employeur te loge les premières semaines à Genève, visite sur place et signe ensuite. Si tu dois résider en Suisse, lis plutôt [s'installer côté Suisse ou côté France](/blog/s-installer-a-geneve-expatrie-cote-suisse-ou-cote-france). En famille, ou en couple qui veut son propre logement, vise un studio ou un appartement, avec le délai haut du tableau. Et si ton poste est dans le canton de Vaud, le Genevois français n'est pas forcément le bon côté.
 
 ## Questions fréquentes
 

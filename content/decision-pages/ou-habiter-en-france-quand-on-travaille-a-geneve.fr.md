@@ -79,7 +79,7 @@ On préfère te le dire avant que tu signes : voici quatre cas où l'adresse que
 - **Le mauvais côté de Genève.** Annemasse pour un poste au CERN, ou Ferney-Voltaire pour un poste à Champel : tu traverses la ville matin et soir.
 - **Une annonce trop belle.** Loyer bien sous le marché, propriétaire « à l'étranger », paiement demandé avant la visite : [les arnaques au logement près de Genève](/blog/arnaques-logement-frontalier-geneve-eviter) montrent les cas qu'on voit passer.
 
-Et si tu viens en couple ou en famille, notre formule n'est pas la bonne : nos chambres sont pour une personne. Cherche plutôt un T2 ou un T3, et prévois les délais les plus longs du tableau ci-dessous.
+Et si tu viens en famille, ou en couple qui veut son propre logement, notre formule n'est pas la bonne : chez nous, une chambre accueille une seule personne (un couple peut en prendre deux). Cherche plutôt un T2 ou un T3, et prévois les délais les plus longs du tableau ci-dessous.
 
 ## Loyers côté France : les ordres de grandeur
 
