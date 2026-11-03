@@ -52,7 +52,7 @@ const BUCKET_BY_SLUG: Record<string, IntentBucket> = {
   "fiscalite-frontalier-geneve-impots-2026": "admin",
   "declaration-impots-frontalier-2026": "admin",
   "3e-pilier-frontalier-geneve": "admin",
-  "avenant-fiscal-40-frontalier-geneve": "admin",
+  // (lot B, 11/2026) avenant-fiscal-40-frontalier-geneve fondu dans teletravail-frontalier-geneve-regles-2026 (308)
   "teletravail-frontalier-geneve-regles-2026": "admin",
   "permis-g-frontalier-geneve": "admin",
   "assurance-sante-frontalier-lamal-cmu-budget": "admin",
