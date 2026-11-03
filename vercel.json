@@ -201,12 +201,12 @@
       "destination": "/prerendered/blog-s-installer-a-geneve-expatrie-cote-suisse-ou-cote-france.html"
     },
     {
-      "source": "/blog/coliving-communaute-reels-amis-geneve-annemasse",
-      "destination": "/prerendered/blog-coliving-communaute-reels-amis-geneve-annemasse.html"
-    },
-    {
       "source": "/blog/temps-trajet-annemasse-geneve-par-quartier",
       "destination": "/prerendered/blog-temps-trajet-annemasse-geneve-par-quartier.html"
+    },
+    {
+      "source": "/blog/coliving-communaute-reels-amis-geneve-annemasse",
+      "destination": "/prerendered/blog-coliving-communaute-reels-amis-geneve-annemasse.html"
     },
     {
       "source": "/blog/lodge-annemasse-coliving-premium-portes-geneve",
@@ -259,10 +259,6 @@
     {
       "source": "/blog/permis-g-frontalier-geneve",
       "destination": "/prerendered/blog-permis-g-frontalier-geneve.html"
-    },
-    {
-      "source": "/blog/avenant-fiscal-40-frontalier-geneve",
-      "destination": "/prerendered/blog-avenant-fiscal-40-frontalier-geneve.html"
     },
     {
       "source": "/blog/coliving-frais-dossier-geneve-annemasse",
@@ -373,12 +369,12 @@
       "destination": "/prerendered/en-blog-s-installer-a-geneve-expatrie-cote-suisse-ou-cote-france.html"
     },
     {
-      "source": "/en/blog/coliving-communaute-reels-amis-geneve-annemasse",
-      "destination": "/prerendered/en-blog-coliving-communaute-reels-amis-geneve-annemasse.html"
-    },
-    {
       "source": "/en/blog/temps-trajet-annemasse-geneve-par-quartier",
       "destination": "/prerendered/en-blog-temps-trajet-annemasse-geneve-par-quartier.html"
+    },
+    {
+      "source": "/en/blog/coliving-communaute-reels-amis-geneve-annemasse",
+      "destination": "/prerendered/en-blog-coliving-communaute-reels-amis-geneve-annemasse.html"
     },
     {
       "source": "/en/blog/lodge-annemasse-coliving-premium-portes-geneve",
@@ -431,10 +427,6 @@
     {
       "source": "/en/blog/permis-g-frontalier-geneve",
       "destination": "/prerendered/en-blog-permis-g-frontalier-geneve.html"
-    },
-    {
-      "source": "/en/blog/avenant-fiscal-40-frontalier-geneve",
-      "destination": "/prerendered/en-blog-avenant-fiscal-40-frontalier-geneve.html"
     },
     {
       "source": "/en/blog/coliving-frais-dossier-geneve-annemasse",

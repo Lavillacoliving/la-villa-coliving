@@ -14,7 +14,7 @@
     <loc>https://www.lavillacoliving.com/annemasse-colocation</loc>
     <xhtml:link rel="alternate" hreflang="fr" href="https://www.lavillacoliving.com/annemasse-colocation" />
     <xhtml:link rel="alternate" hreflang="en" href="https://www.lavillacoliving.com/en/annemasse-colocation" />
-    <lastmod>2026-11-02T14:22:13+00:00</lastmod>
+    <lastmod>2026-11-03T06:48:09+00:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
   </url>
@@ -102,7 +102,7 @@
     <loc>https://www.lavillacoliving.com/blog</loc>
     <xhtml:link rel="alternate" hreflang="fr" href="https://www.lavillacoliving.com/blog" />
     <xhtml:link rel="alternate" hreflang="en" href="https://www.lavillacoliving.com/en/blog" />
-    <lastmod>2026-11-02T13:18:57+00:00</lastmod>
+    <lastmod>2026-11-03T06:48:09+00:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
@@ -192,7 +192,7 @@
     <loc>https://www.lavillacoliving.com/en/annemasse-colocation</loc>
     <xhtml:link rel="alternate" hreflang="fr" href="https://www.lavillacoliving.com/annemasse-colocation" />
     <xhtml:link rel="alternate" hreflang="en" href="https://www.lavillacoliving.com/en/annemasse-colocation" />
-    <lastmod>2026-11-02T14:22:13+00:00</lastmod>
+    <lastmod>2026-11-03T06:48:09+00:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
@@ -280,7 +280,7 @@
     <loc>https://www.lavillacoliving.com/en/blog</loc>
     <xhtml:link rel="alternate" hreflang="fr" href="https://www.lavillacoliving.com/blog" />
     <xhtml:link rel="alternate" hreflang="en" href="https://www.lavillacoliving.com/en/blog" />
-    <lastmod>2026-11-02T13:18:57+00:00</lastmod>
+    <lastmod>2026-11-03T06:48:09+00:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.6</priority>
   </url>
@@ -407,18 +407,18 @@
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://www.lavillacoliving.com/blog/coliving-communaute-reels-amis-geneve-annemasse</loc>
-    <xhtml:link rel="alternate" hreflang="fr" href="https://www.lavillacoliving.com/blog/coliving-communaute-reels-amis-geneve-annemasse" />
-    <xhtml:link rel="alternate" hreflang="en" href="https://www.lavillacoliving.com/en/blog/coliving-communaute-reels-amis-geneve-annemasse" />
-    <lastmod>2026-10-10</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
     <loc>https://www.lavillacoliving.com/blog/temps-trajet-annemasse-geneve-par-quartier</loc>
     <xhtml:link rel="alternate" hreflang="fr" href="https://www.lavillacoliving.com/blog/temps-trajet-annemasse-geneve-par-quartier" />
     <xhtml:link rel="alternate" hreflang="en" href="https://www.lavillacoliving.com/en/blog/temps-trajet-annemasse-geneve-par-quartier" />
     <lastmod>2026-11-02</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://www.lavillacoliving.com/blog/coliving-communaute-reels-amis-geneve-annemasse</loc>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://www.lavillacoliving.com/blog/coliving-communaute-reels-amis-geneve-annemasse" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.lavillacoliving.com/en/blog/coliving-communaute-reels-amis-geneve-annemasse" />
+    <lastmod>2026-10-10</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
@@ -450,7 +450,7 @@
     <loc>https://www.lavillacoliving.com/blog/cout-de-la-vie-suisse-france-frontalier-2026</loc>
     <xhtml:link rel="alternate" hreflang="fr" href="https://www.lavillacoliving.com/blog/cout-de-la-vie-suisse-france-frontalier-2026" />
     <xhtml:link rel="alternate" hreflang="en" href="https://www.lavillacoliving.com/en/blog/cout-de-la-vie-suisse-france-frontalier-2026" />
-    <lastmod>2026-10-13</lastmod>
+    <lastmod>2026-11-03</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
@@ -458,7 +458,7 @@
     <loc>https://www.lavillacoliving.com/blog/quartiers-annemasse-ou-vivre-selon-profil</loc>
     <xhtml:link rel="alternate" hreflang="fr" href="https://www.lavillacoliving.com/blog/quartiers-annemasse-ou-vivre-selon-profil" />
     <xhtml:link rel="alternate" hreflang="en" href="https://www.lavillacoliving.com/en/blog/quartiers-annemasse-ou-vivre-selon-profil" />
-    <lastmod>2026-11-02</lastmod>
+    <lastmod>2026-11-03</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
@@ -482,7 +482,7 @@
     <loc>https://www.lavillacoliving.com/blog/guide-ressources-frontalier-geneve</loc>
     <xhtml:link rel="alternate" hreflang="fr" href="https://www.lavillacoliving.com/blog/guide-ressources-frontalier-geneve" />
     <xhtml:link rel="alternate" hreflang="en" href="https://www.lavillacoliving.com/en/blog/guide-ressources-frontalier-geneve" />
-    <lastmod>2026-11-02</lastmod>
+    <lastmod>2026-11-03</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
@@ -506,7 +506,7 @@
     <loc>https://www.lavillacoliving.com/blog/trouver-colocation-geneve-frontalier</loc>
     <xhtml:link rel="alternate" hreflang="fr" href="https://www.lavillacoliving.com/blog/trouver-colocation-geneve-frontalier" />
     <xhtml:link rel="alternate" hreflang="en" href="https://www.lavillacoliving.com/en/blog/trouver-colocation-geneve-frontalier" />
-    <lastmod>2026-11-02</lastmod>
+    <lastmod>2026-11-03</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
@@ -514,7 +514,7 @@
     <loc>https://www.lavillacoliving.com/blog/declaration-impots-frontalier-2026</loc>
     <xhtml:link rel="alternate" hreflang="fr" href="https://www.lavillacoliving.com/blog/declaration-impots-frontalier-2026" />
     <xhtml:link rel="alternate" hreflang="en" href="https://www.lavillacoliving.com/en/blog/declaration-impots-frontalier-2026" />
-    <lastmod>2026-10-13</lastmod>
+    <lastmod>2026-11-03</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
@@ -522,15 +522,7 @@
     <loc>https://www.lavillacoliving.com/blog/permis-g-frontalier-geneve</loc>
     <xhtml:link rel="alternate" hreflang="fr" href="https://www.lavillacoliving.com/blog/permis-g-frontalier-geneve" />
     <xhtml:link rel="alternate" hreflang="en" href="https://www.lavillacoliving.com/en/blog/permis-g-frontalier-geneve" />
-    <lastmod>2026-10-30</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://www.lavillacoliving.com/blog/avenant-fiscal-40-frontalier-geneve</loc>
-    <xhtml:link rel="alternate" hreflang="fr" href="https://www.lavillacoliving.com/blog/avenant-fiscal-40-frontalier-geneve" />
-    <xhtml:link rel="alternate" hreflang="en" href="https://www.lavillacoliving.com/en/blog/avenant-fiscal-40-frontalier-geneve" />
-    <lastmod>2026-10-13</lastmod>
+    <lastmod>2026-11-03</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
@@ -618,7 +610,7 @@
     <loc>https://www.lavillacoliving.com/blog/teletravail-frontalier-geneve-regles-2026</loc>
     <xhtml:link rel="alternate" hreflang="fr" href="https://www.lavillacoliving.com/blog/teletravail-frontalier-geneve-regles-2026" />
     <xhtml:link rel="alternate" hreflang="en" href="https://www.lavillacoliving.com/en/blog/teletravail-frontalier-geneve-regles-2026" />
-    <lastmod>2026-10-13</lastmod>
+    <lastmod>2026-11-03</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
@@ -642,7 +634,7 @@
     <loc>https://www.lavillacoliving.com/blog/fiscalite-frontalier-geneve-impots-2026</loc>
     <xhtml:link rel="alternate" hreflang="fr" href="https://www.lavillacoliving.com/blog/fiscalite-frontalier-geneve-impots-2026" />
     <xhtml:link rel="alternate" hreflang="en" href="https://www.lavillacoliving.com/en/blog/fiscalite-frontalier-geneve-impots-2026" />
-    <lastmod>2026-10-13</lastmod>
+    <lastmod>2026-11-03</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
@@ -650,7 +642,7 @@
     <loc>https://www.lavillacoliving.com/blog/assurance-sante-frontalier-lamal-cmu-budget</loc>
     <xhtml:link rel="alternate" hreflang="fr" href="https://www.lavillacoliving.com/blog/assurance-sante-frontalier-lamal-cmu-budget" />
     <xhtml:link rel="alternate" hreflang="en" href="https://www.lavillacoliving.com/en/blog/assurance-sante-frontalier-lamal-cmu-budget" />
-    <lastmod>2026-10-13</lastmod>
+    <lastmod>2026-11-03</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
@@ -666,7 +658,7 @@
     <loc>https://www.lavillacoliving.com/blog/colocation-annemasse-ville-la-grand-ambilly</loc>
     <xhtml:link rel="alternate" hreflang="fr" href="https://www.lavillacoliving.com/blog/colocation-annemasse-ville-la-grand-ambilly" />
     <xhtml:link rel="alternate" hreflang="en" href="https://www.lavillacoliving.com/en/blog/colocation-annemasse-ville-la-grand-ambilly" />
-    <lastmod>2026-10-13</lastmod>
+    <lastmod>2026-11-03</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
@@ -690,7 +682,7 @@
     <loc>https://www.lavillacoliving.com/blog/budget-colocation-geneve-guide-complet</loc>
     <xhtml:link rel="alternate" hreflang="fr" href="https://www.lavillacoliving.com/blog/budget-colocation-geneve-guide-complet" />
     <xhtml:link rel="alternate" hreflang="en" href="https://www.lavillacoliving.com/en/blog/budget-colocation-geneve-guide-complet" />
-    <lastmod>2026-11-02</lastmod>
+    <lastmod>2026-11-03</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
@@ -753,18 +745,18 @@
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>https://www.lavillacoliving.com/en/blog/coliving-communaute-reels-amis-geneve-annemasse</loc>
-    <xhtml:link rel="alternate" hreflang="fr" href="https://www.lavillacoliving.com/blog/coliving-communaute-reels-amis-geneve-annemasse" />
-    <xhtml:link rel="alternate" hreflang="en" href="https://www.lavillacoliving.com/en/blog/coliving-communaute-reels-amis-geneve-annemasse" />
-    <lastmod>2026-10-10</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.5</priority>
-  </url>
-  <url>
     <loc>https://www.lavillacoliving.com/en/blog/temps-trajet-annemasse-geneve-par-quartier</loc>
     <xhtml:link rel="alternate" hreflang="fr" href="https://www.lavillacoliving.com/blog/temps-trajet-annemasse-geneve-par-quartier" />
     <xhtml:link rel="alternate" hreflang="en" href="https://www.lavillacoliving.com/en/blog/temps-trajet-annemasse-geneve-par-quartier" />
     <lastmod>2026-11-02</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
+  </url>
+  <url>
+    <loc>https://www.lavillacoliving.com/en/blog/coliving-communaute-reels-amis-geneve-annemasse</loc>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://www.lavillacoliving.com/blog/coliving-communaute-reels-amis-geneve-annemasse" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.lavillacoliving.com/en/blog/coliving-communaute-reels-amis-geneve-annemasse" />
+    <lastmod>2026-10-10</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
@@ -796,7 +788,7 @@
     <loc>https://www.lavillacoliving.com/en/blog/cout-de-la-vie-suisse-france-frontalier-2026</loc>
     <xhtml:link rel="alternate" hreflang="fr" href="https://www.lavillacoliving.com/blog/cout-de-la-vie-suisse-france-frontalier-2026" />
     <xhtml:link rel="alternate" hreflang="en" href="https://www.lavillacoliving.com/en/blog/cout-de-la-vie-suisse-france-frontalier-2026" />
-    <lastmod>2026-10-13</lastmod>
+    <lastmod>2026-11-03</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
@@ -804,7 +796,7 @@
     <loc>https://www.lavillacoliving.com/en/blog/quartiers-annemasse-ou-vivre-selon-profil</loc>
     <xhtml:link rel="alternate" hreflang="fr" href="https://www.lavillacoliving.com/blog/quartiers-annemasse-ou-vivre-selon-profil" />
     <xhtml:link rel="alternate" hreflang="en" href="https://www.lavillacoliving.com/en/blog/quartiers-annemasse-ou-vivre-selon-profil" />
-    <lastmod>2026-11-02</lastmod>
+    <lastmod>2026-11-03</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
@@ -828,7 +820,7 @@
     <loc>https://www.lavillacoliving.com/en/blog/guide-ressources-frontalier-geneve</loc>
     <xhtml:link rel="alternate" hreflang="fr" href="https://www.lavillacoliving.com/blog/guide-ressources-frontalier-geneve" />
     <xhtml:link rel="alternate" hreflang="en" href="https://www.lavillacoliving.com/en/blog/guide-ressources-frontalier-geneve" />
-    <lastmod>2026-11-02</lastmod>
+    <lastmod>2026-11-03</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
@@ -852,7 +844,7 @@
     <loc>https://www.lavillacoliving.com/en/blog/trouver-colocation-geneve-frontalier</loc>
     <xhtml:link rel="alternate" hreflang="fr" href="https://www.lavillacoliving.com/blog/trouver-colocation-geneve-frontalier" />
     <xhtml:link rel="alternate" hreflang="en" href="https://www.lavillacoliving.com/en/blog/trouver-colocation-geneve-frontalier" />
-    <lastmod>2026-11-02</lastmod>
+    <lastmod>2026-11-03</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
@@ -860,7 +852,7 @@
     <loc>https://www.lavillacoliving.com/en/blog/declaration-impots-frontalier-2026</loc>
     <xhtml:link rel="alternate" hreflang="fr" href="https://www.lavillacoliving.com/blog/declaration-impots-frontalier-2026" />
     <xhtml:link rel="alternate" hreflang="en" href="https://www.lavillacoliving.com/en/blog/declaration-impots-frontalier-2026" />
-    <lastmod>2026-10-13</lastmod>
+    <lastmod>2026-11-03</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
@@ -868,15 +860,7 @@
     <loc>https://www.lavillacoliving.com/en/blog/permis-g-frontalier-geneve</loc>
     <xhtml:link rel="alternate" hreflang="fr" href="https://www.lavillacoliving.com/blog/permis-g-frontalier-geneve" />
     <xhtml:link rel="alternate" hreflang="en" href="https://www.lavillacoliving.com/en/blog/permis-g-frontalier-geneve" />
-    <lastmod>2026-10-30</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.5</priority>
-  </url>
-  <url>
-    <loc>https://www.lavillacoliving.com/en/blog/avenant-fiscal-40-frontalier-geneve</loc>
-    <xhtml:link rel="alternate" hreflang="fr" href="https://www.lavillacoliving.com/blog/avenant-fiscal-40-frontalier-geneve" />
-    <xhtml:link rel="alternate" hreflang="en" href="https://www.lavillacoliving.com/en/blog/avenant-fiscal-40-frontalier-geneve" />
-    <lastmod>2026-10-13</lastmod>
+    <lastmod>2026-11-03</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
@@ -964,7 +948,7 @@
     <loc>https://www.lavillacoliving.com/en/blog/teletravail-frontalier-geneve-regles-2026</loc>
     <xhtml:link rel="alternate" hreflang="fr" href="https://www.lavillacoliving.com/blog/teletravail-frontalier-geneve-regles-2026" />
     <xhtml:link rel="alternate" hreflang="en" href="https://www.lavillacoliving.com/en/blog/teletravail-frontalier-geneve-regles-2026" />
-    <lastmod>2026-10-13</lastmod>
+    <lastmod>2026-11-03</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
@@ -988,7 +972,7 @@
     <loc>https://www.lavillacoliving.com/en/blog/fiscalite-frontalier-geneve-impots-2026</loc>
     <xhtml:link rel="alternate" hreflang="fr" href="https://www.lavillacoliving.com/blog/fiscalite-frontalier-geneve-impots-2026" />
     <xhtml:link rel="alternate" hreflang="en" href="https://www.lavillacoliving.com/en/blog/fiscalite-frontalier-geneve-impots-2026" />
-    <lastmod>2026-10-13</lastmod>
+    <lastmod>2026-11-03</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
@@ -996,7 +980,7 @@
     <loc>https://www.lavillacoliving.com/en/blog/assurance-sante-frontalier-lamal-cmu-budget</loc>
     <xhtml:link rel="alternate" hreflang="fr" href="https://www.lavillacoliving.com/blog/assurance-sante-frontalier-lamal-cmu-budget" />
     <xhtml:link rel="alternate" hreflang="en" href="https://www.lavillacoliving.com/en/blog/assurance-sante-frontalier-lamal-cmu-budget" />
-    <lastmod>2026-10-13</lastmod>
+    <lastmod>2026-11-03</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
@@ -1012,7 +996,7 @@
     <loc>https://www.lavillacoliving.com/en/blog/colocation-annemasse-ville-la-grand-ambilly</loc>
     <xhtml:link rel="alternate" hreflang="fr" href="https://www.lavillacoliving.com/blog/colocation-annemasse-ville-la-grand-ambilly" />
     <xhtml:link rel="alternate" hreflang="en" href="https://www.lavillacoliving.com/en/blog/colocation-annemasse-ville-la-grand-ambilly" />
-    <lastmod>2026-10-13</lastmod>
+    <lastmod>2026-11-03</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
@@ -1036,7 +1020,7 @@
     <loc>https://www.lavillacoliving.com/en/blog/budget-colocation-geneve-guide-complet</loc>
     <xhtml:link rel="alternate" hreflang="fr" href="https://www.lavillacoliving.com/blog/budget-colocation-geneve-guide-complet" />
     <xhtml:link rel="alternate" hreflang="en" href="https://www.lavillacoliving.com/en/blog/budget-colocation-geneve-guide-complet" />
-    <lastmod>2026-11-02</lastmod>
+    <lastmod>2026-11-03</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
