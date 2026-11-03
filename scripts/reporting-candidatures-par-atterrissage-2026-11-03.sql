@@ -2,7 +2,8 @@
 -- (brief « Genève profils » v2 du 30/10/2026, §6, lot D ; D-D1 = oui, Jérôme 03/11/2026). Candidatures par mois, page
 -- d'atterrissage (form_submissions.landing_page, capturée depuis le 03/09/2026), famille (blog / site / inconnue) et langue.
 -- Lecture seule : vue agrégée (non modifiable), droits réservés à postgres comme les autres vues du schéma reporting.
--- Migration MCP apply_migration « reporting_candidatures_par_atterrissage_2026_11_03 » (bloc BEGIN … COMMIT ci-dessous).
+-- Appliquée le 03/11/2026 par MCP apply_migration « reporting_candidatures_par_atterrissage_2026_11_03 » (version 20261103120441) :
+-- corps = le bloc BEGIN … COMMIT ci-dessous, sans BEGIN ni COMMIT. Contrôles passés ; 24 lignes au 03/11 (inconnue 75, site 33, blog 7).
 --
 -- Écarts assumés avec la requête du brief (même résultat sur les données du 03/11, voir la revue du lot D) :
 --   1. mois en heure de Paris (created_at AT TIME ZONE 'Europe/Paris'), comme reporting.v_candidatures_mois : les deux vues
