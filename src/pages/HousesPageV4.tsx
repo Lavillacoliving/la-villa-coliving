@@ -7,6 +7,7 @@ import { useLanguage } from "@/contexts/LanguageContext";
 import { MapPin, Users, ArrowRight, Check, X } from "lucide-react";
 import { SEO } from "@/components/SEO";
 import { FaqSection } from "@/components/FaqSection";
+import { FacebookGroupLine } from "@/components/FacebookGroupLine";
 import { maisonsFaq } from "@/data/faq/maisonsFaq";
 import { STATS, STATS_DISPLAY, HOUSE_SURFACES, thousands, PRICE_FR_NUM, PRICE_EN_NUM, PRICE_SHARED_FR_NUM, PRICE_SHARED_EN_NUM, PRICE_SHARED_CHF_FR, PRICE_SHARED_CHF_EN, EUR_STANDARD_FR_NUM, EUR_STANDARD_EN_NUM, EUR_SHARED_FR_NUM, EUR_SHARED_EN_NUM } from "@/data/stats";
 import { ENTITY_HOUSES, type EntityHouseSlug } from "@/data/entityFacts";
@@ -402,6 +403,8 @@ export function HousesPageV4() {
         title={language === "en" ? "Our houses — frequently asked questions" : "Nos maisons — questions fréquentes"}
         items={maisonsFaq[language === "en" ? "en" : "fr"]}
         emitSchema
+        // (Brief du 05/11/2026, D2) Groupe Facebook nommé et attribué, en fin de page, avant la phrase d'appel.
+        outro={<FacebookGroupLine position="nos_maisons_end" />}
       />
 
       {/* CTA */}

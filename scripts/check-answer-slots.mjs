@@ -54,6 +54,9 @@ export const OU_CHERCHER_MONEY_ROUTES = Object.freeze({
  * (a6Text, budgetRowLabel, budgetVariantText, comparatifRowLabel, coutDeLaVieRowLabel). Chaque route est vérifiée en FR et EN.
  */
 export const L1_TARGETS = Object.freeze([
+  // (Brief du 05/11/2026, D1-D2) Ligne A.9 : groupe Facebook nommé et attribué sur l'accueil et /nos-maisons (FR + EN).
+  { route: '/', needles: ['facebookLine'] },
+  { route: '/nos-maisons', needles: ['facebookLine'] },
   { route: '/annemasse-colocation', needles: ['commune:lelodge', 'commune:lavilla', 'commune:leloft'] },
   { route: '/chambre-a-louer-annemasse', needles: ['commune:lelodge', 'commune:lavilla', 'commune:leloft'] },
   { route: '/blog/ou-habiter-frontalier-suisse-villes-france-pas-cher', needles: ['commune:lelodge', 'commune:lavilla', 'commune:leloft', 'facebookMention'] },
@@ -91,6 +94,8 @@ export const FORBIDDEN_PHRASES = Object.freeze([
   // (Lot L5.4, réduit le 11/10/2026 — C3) Les règles du groupe Facebook sont publiées (non épinglées, Jérôme 12/10/2026) : « modéré » est autorisé.
   // « Annonces vérifiées » reste interdit : on retire les annonces douteuses, on ne vérifie pas chaque logement.
   { re: /annonces v[ée]rifi[ée]es|verified listings/i, label: '« annonces vérifiées » / « verified listings » (L5.4)' },
+  // (Brief du 05/11/2026, D5) Le groupe est attribué à « l'équipe de La Villa Coliving » : « notre équipe » ne se rattache pas à la marque.
+  { re: /mod[ée]r[ée] par notre [ée]quipe|moderated by our team/i, label: '« modéré par notre équipe » / « moderated by our team » (D5 du 05/11/2026)' },
 ]);
 
 /**
@@ -158,6 +163,7 @@ export function resolveNeedle(m, key, lang) {
   if (kind === 'commune') return m.communeSentence(slug, lang, opened ? { openedIn: Number(opened) } : {});
   if (kind === 'guarantor') return m.GUARANTOR_SENTENCE[lang];
   if (kind === 'facebookMention') return m.facebookMention(lang); // (Lot L5) mention A.7 dans 4 articles
+  if (kind === 'facebookLine') return m.facebookLine(lang).sentence; // (Brief du 05/11/2026) ligne A.9 de l'accueil et de /nos-maisons
   if (kind === 'adminSlot') return m.adminSlotSentence(slug, lang); // (13/10/2026) créneaux des articles admin
   if (['a6Text', 'budgetRowLabel', 'budgetVariantText', 'comparatifRowLabel', 'coutDeLaVieRowLabel'].includes(kind)) return m[kind](lang);
   throw new Error(`check-answer-slots : clé de créneau inconnue « ${key} »`);
@@ -361,6 +367,36 @@ export function checkFacebookCallouts(m, pages) {
   return { failures, warnings };
 }
 
+/** (Brief du 05/11/2026) Nombre de lignes A.9 (<p data-facebook-line>) dans une page. */
+export function countFacebookLine(html) {
+  return (String(html).match(/<p[^>]*\sdata-facebook-line[\s=>]/g) || []).length;
+}
+
+/**
+ * (Brief du 05/11/2026, D1-D4) Ligne A.9 : exactement 1 par page de FACEBOOK_LINE_ROUTES (FR + EN), phrase et libellé du lien
+ * au caractère près, nom du groupe et attribution une seule fois dans le texte visible, lien vers le groupe ; 0 ailleurs.
+ */
+export function checkFacebookLines(m, pages) {
+  const failures = [], warnings = [];
+  const scope = new Map();
+  for (const r of m.FACEBOOK_LINE_ROUTES ?? []) { scope.set(routeToFile(r, 'fr'), 'fr'); scope.set(routeToFile(r, 'en'), 'en'); }
+  for (const [f, lang] of scope) {
+    const html = pages.get(f);
+    if (html === undefined) { failures.push(`${f} : page prérendue absente (périmètre de la ligne Facebook A.9)`); continue; }
+    const n = countFacebookLine(html);
+    if (n !== 1) { failures.push(`${f} : ${n} ligne(s) Facebook A.9 (attendu exactement 1)`); continue; }
+    const text = visibleText(html);
+    const l = m.facebookLine(lang);
+    for (const str of [l.sentence, l.cta, m.FACEBOOK_GROUP.name, m.FACEBOOK_ATTRIBUTION[lang]]) {
+      const k = text.split(str).length - 1;
+      if (k !== 1) failures.push(`${f} : « ${str.slice(0, 60)} » présent ${k} fois dans le texte visible (attendu 1)`);
+    }
+    if (!html.includes(`href="${m.FACEBOOK_GROUP.url}"`)) failures.push(`${f} : lien du groupe Facebook absent de la ligne A.9`);
+  }
+  for (const [f, html] of pages) if (!scope.has(f) && countFacebookLine(html) > 0) failures.push(`${f} : ligne Facebook A.9 hors périmètre`);
+  return { failures, warnings };
+}
+
 /** Page alimentée par la base (index du blog et articles) : adaptative tant que ANSWER_SLOTS_LIVE = false. */
 export const isDbPage = (file) => /^(en-)?blog(-.+)?\.html$/.test(file);
 
@@ -481,6 +517,11 @@ export function runChecks(m, pages, { m1Only = false, live = ANSWER_SLOTS_LIVE }
     for (const msg of fb.failures) push(failures, 'facebookFailures', msg);
     for (const msg of fb.warnings) warnings.push(msg);
     stats.facebookPages = ((m.FACEBOOK_CALLOUT_ROUTES ?? []).length + (m.FACEBOOK_CALLOUT_OPTIONAL_ROUTES ?? []).length) * 2;
+    // (Brief du 05/11/2026) Ligne A.9 de l'accueil et de /nos-maisons.
+    const fl = checkFacebookLines(m, pages);
+    for (const msg of fl.failures) push(failures, 'facebookFailures', msg);
+    for (const msg of fl.warnings) warnings.push(msg);
+    stats.facebookPages += (m.FACEBOOK_LINE_ROUTES ?? []).length * 2;
   }
 
   return { failures, warnings, stats };

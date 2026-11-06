@@ -4,7 +4,7 @@ import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { loadEntityFacts } from '../../scripts/lib/load-entity-facts.mjs';
 import { visibleText } from '../../scripts/check-entity-facts.mjs';
-import { resolveNeedle, FORBIDDEN_PHRASES, L1_TARGETS, countFacebookCallout, checkFacebookCallouts } from '../../scripts/check-answer-slots.mjs';
+import { resolveNeedle, FORBIDDEN_PHRASES, L1_TARGETS, countFacebookCallout, checkFacebookCallouts, countFacebookLine, checkFacebookLines } from '../../scripts/check-answer-slots.mjs';
 
 const m = await loadEntityFacts();
 const LANGS = ['fr', 'en'];
@@ -99,4 +99,46 @@ test('visibleText : la phrase A.8 est retrouvée telle quelle dans un HTML prér
     const html = `<aside id="facebook-group"><p>${c.sentence.replace(/'/g, '&#x27;')}</p><a>${c.cta}</a></aside>`;
     assert.ok(visibleText(html).includes(c.sentence), lang);
   }
+});
+
+// ── Brief du 05/11/2026 (D1-D5) : ligne A.9 sur l'accueil et /nos-maisons, attribution à la marque partout ─────────────
+test('A.9 : textes arrêtés par Jérôme au mot près (FR/EN), lien séparé, routes / et /nos-maisons', () => {
+  const fr = m.facebookLine('fr'), en = m.facebookLine('en');
+  assert.equal(fr.sentence, 'Tu cherches aussi ailleurs ? Notre groupe Facebook public « Coliving & Colocation à Genève et alentours ! », animé et modéré par l\'équipe de La Villa Coliving, publie chaque semaine des chambres et colocations côté France, les nôtres et celles des autres.');
+  assert.equal(en.sentence, 'Looking elsewhere too? Our public Facebook group "Coliving & Colocation à Genève et alentours !", run and moderated by the La Villa Coliving team, posts rooms and flatshares on the French side every week — ours and other people\'s.');
+  assert.equal(fr.cta, 'Voir le groupe'); assert.equal(en.cta, 'See the group');
+  assert.deepEqual([...m.FACEBOOK_LINE_ROUTES], ['/', '/nos-maisons']);
+  for (const lang of LANGS) {
+    assert.equal(resolveNeedle(m, 'facebookLine', lang), m.facebookLine(lang).sentence);
+    assert.equal(m.facebookLine(lang).sentence.split(m.FACEBOOK_GROUP.name).length - 1, 1, `${lang} : nom du groupe une fois`);
+  }
+  for (const route of m.FACEBOOK_LINE_ROUTES) assert.ok(L1_TARGETS.some((x) => x.route === route && x.needles.includes('facebookLine')), route);
+});
+
+test('D5 : encart A.8 attribué à « l\'équipe de La Villa Coliving » / « the La Villa Coliving team », plus jamais « notre équipe » ; la garde l\'interdit', () => {
+  assert.match(m.facebookCallout('fr').sentence, /animé et modéré par l'équipe de La Villa Coliving \(règles publiées, annonces douteuses retirées\)/);
+  assert.match(m.facebookCallout('en').sentence, /run and moderated by the La Villa Coliving team \(published rules, suspicious listings removed\)/);
+  for (const lang of LANGS) for (const s of m.facebookStrings(lang)) assert.doesNotMatch(s, /modéré par notre équipe|moderated by our team/i, s);
+  const rule = FORBIDDEN_PHRASES.find((f) => /notre équipe/.test(f.label));
+  assert.ok(rule, 'règle D5 présente');
+  for (const bad of ['Le groupe, animé et modéré par notre équipe (règles publiées)', 'run and moderated by our team']) assert.match(bad, rule.re);
+  for (const ok of [m.facebookCallout('fr').sentence, m.facebookLine('en').sentence, 'notre équipe te répond sous 48 h']) assert.doesNotMatch(ok, rule.re);
+});
+
+test('garde A.9 : exactement 1 ligne par page cible (FR + EN), texte au caractère près, nom et attribution 1×, lien ; 0 ailleurs', () => {
+  const line = (lang) => `<p data-facebook-line="true" data-facebook-group-version="${m.FACEBOOK_GROUP_VERSION}">${m.facebookLine(lang).sentence} <a href="${m.FACEBOOK_GROUP.url}" target="_blank" rel="noopener">${m.facebookLine(lang).cta}</a></p>`;
+  const page = (inner) => `<html><body><main>${inner}</main></body></html>`;
+  const ok = new Map([['index.html', page(line('fr'))], ['en.html', page(line('en'))], ['nos-maisons.html', page(line('fr'))], ['en-nos-maisons.html', page(line('en'))], ['tarifs.html', page('')]]);
+  assert.equal(countFacebookLine(page(line('fr'))), 1); assert.equal(countFacebookLine(page('')), 0);
+  assert.deepEqual(checkFacebookLines(m, ok).failures, []);
+  const twice = new Map(ok); twice.set('index.html', page(line('fr') + line('fr')));
+  assert.ok(checkFacebookLines(m, twice).failures.some((f) => /index\.html : 2 ligne/.test(f)));
+  const missing = new Map(ok); missing.set('en-nos-maisons.html', page(''));
+  assert.ok(checkFacebookLines(m, missing).failures.some((f) => /en-nos-maisons\.html : 0 ligne/.test(f)));
+  const dupName = new Map(ok); dupName.set('nos-maisons.html', page(line('fr') + `<p>${m.FACEBOOK_GROUP.name}</p>`));
+  assert.ok(checkFacebookLines(m, dupName).failures.some((f) => /nos-maisons\.html : « Coliving & Colocation/.test(f) && /2 fois/.test(f)));
+  const outside = new Map(ok); outside.set('tarifs.html', page(line('fr')));
+  assert.ok(checkFacebookLines(m, outside).failures.some((f) => /tarifs\.html : ligne Facebook A\.9 hors périmètre/.test(f)));
+  const noLink = new Map(ok); noLink.set('en.html', page(line('en').replace(m.FACEBOOK_GROUP.url, 'https://example.org/')));
+  assert.ok(checkFacebookLines(m, noLink).failures.some((f) => /en\.html : lien du groupe/.test(f)));
 });
