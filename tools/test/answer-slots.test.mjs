@@ -3,7 +3,7 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { loadEntityFacts } from '../../scripts/lib/load-entity-facts.mjs';
-import { visibleText } from '../../scripts/check-entity-facts.mjs';
+import { visibleText, routeToFile } from '../../scripts/check-entity-facts.mjs';
 import {
   ANSWER_SLOTS_LIVE, L1_TARGETS, OU_CHERCHER_MONEY_ROUTES, FORBIDDEN_PHRASES, BRAND_MAX,
   ouChercherPerimeter, resolveNeedle, tagAttrs, countOuChercher, extractOuChercherSection, compareBlocks,
@@ -98,7 +98,7 @@ test('resolveNeedle : chaque clé de L1_TARGETS se résout en phrase canonique ;
   assert.throws(() => resolveNeedle(m, 'inconnu', 'fr'), /clé de créneau inconnue/);
   for (const t of L1_TARGETS) for (const lang of LANGS) for (const k of t.needles) assert.ok(resolveNeedle(m, k, lang).length > 10, `${t.route} ${k} ${lang}`);
   assert.equal(typeof ANSWER_SLOTS_LIVE, 'boolean');
-  assert.equal(L1_TARGETS.length, 21); // 14 cibles L1 + guide-ressources et arnaques (Lot L5) + 5 articles admin (13/10/2026 ; dossier-location déjà cible)
+  assert.equal(L1_TARGETS.length, 23); // 14 cibles L1 + guide-ressources et arnaques (Lot L5) + 5 articles admin (13/10/2026 ; dossier-location déjà cible) + / et /nos-maisons (ligne Facebook A.9, 05/11/2026)
 });
 
 // ── Fonctions pures sur fixtures HTML ─────────────────────────────────────────────────────────────────────────────
@@ -268,9 +268,13 @@ function syntheticPages({ mutateBlock, dropNeedles = false } = {}) {
     pages.set(p.file, page(body, { lang: p.lang, embedded: p.kind === 'article' ? { post: { slug: p.route.slice(6), content_fr: 'x', content_en: 'y' }, related: [] } : null }));
   }
   for (const t of L1_TARGETS) for (const lang of LANGS) {
-    const file = perimeter.find((p) => p.route === t.route && p.lang === lang)?.file ?? `${lang === 'en' ? 'en-' : ''}${t.route.slice(1).replace(/\//g, '-')}.html`;
-    const needles = dropNeedles ? [] : t.needles.map((k) => resolveNeedle(m, k, lang));
-    const body = `<p>${needles.map((n) => n.replace(/\u00A0/g, '&nbsp;')).join('</p><p>')}</p><aside class="offer"><p>La Villa Coliving</p></aside>`;
+    const file = perimeter.find((p) => p.route === t.route && p.lang === lang)?.file ?? routeToFile(t.route, lang);
+    const keys = dropNeedles ? [] : t.needles;
+    // (05/11/2026) La ligne Facebook A.9 est rendue avec son marquage réel (<p data-facebook-line> + lien séparé), comme FacebookGroupLine.
+    const para = (k) => (k === 'facebookLine'
+      ? `<p data-facebook-line="true" data-facebook-group-version="${m.FACEBOOK_GROUP_VERSION}">${m.facebookLine(lang).sentence} <a href="${m.FACEBOOK_GROUP.url}" target="_blank" rel="noopener">${m.facebookLine(lang).cta}</a></p>`
+      : `<p>${resolveNeedle(m, k, lang).replace(/\u00A0/g, '&nbsp;')}</p>`);
+    const body = `${keys.length ? keys.map(para).join('') : '<p></p>'}<aside class="offer"><p>La Villa Coliving</p></aside>`;
     const existing = pages.get(file);
     pages.set(file, existing ? existing.replace('<main>', `<main>${body}`) : page(body, { lang, embedded: t.route.startsWith('/blog/') ? { post: { slug: t.route.slice(6), content_fr: 'x', content_en: 'y' }, related: [] } : null }));
   }
@@ -313,9 +317,10 @@ test('runChecks : bloc hors périmètre, page absente, variante/version/texte fa
 test('runChecks : créneaux absents — stricts sur les pages money, adaptatifs sur les articles (avertissement, ou échec si déjà en base ou si live)', () => {
   const pages = syntheticPages({ dropNeedles: true });
   const adaptive = runChecks(m, pages, { live: false }); // mode adaptatif explicite (gel du 09/10 : ANSWER_SLOTS_LIVE = true par défaut)
-  const moneyMissing = 2 * 2 * 3; // 2 routes money × FR/EN × 3 phrases de commune
+  const moneyMissing = 2 * 2 * 3 + 2 * 2; // 2 routes money × FR/EN × 3 phrases de commune + ligne A.9 de / et /nos-maisons × FR/EN (code : strict)
   assert.equal(adaptive.stats.needleFailures, moneyMissing, adaptive.failures.join('\n'));
-  assert.ok(adaptive.failures.every((x) => /^(en-)?(annemasse-colocation|chambre-a-louer-annemasse)\.html : créneau/.test(x)), adaptive.failures.join('\n'));
+  // La ligne A.9 absente échoue aussi au contrôle « exactement 1 ligne » (checkFacebookLines).
+  assert.ok(adaptive.failures.every((x) => /^(en-)?(annemasse-colocation|chambre-a-louer-annemasse)\.html : créneau/.test(x) || /^(index|en|nos-maisons|en-nos-maisons)\.html : (créneau « facebookLine »|0 ligne\(s\) Facebook A\.9)/.test(x)), adaptive.failures.join('\n'));
   assert.equal(adaptive.stats.needleWarnings, adaptive.stats.needlesChecked - moneyMissing);
   assert.ok(adaptive.warnings.some((w) => /blog-budget-colocation-geneve-guide-complet\.html : créneau « budgetRowLabel » absent .*SQL du lot pas encore appliqué/.test(w)));
   // SQL déjà appliqué (créneau dans l'état embarqué) mais prérendu sans le texte : échec même en mode adaptatif.

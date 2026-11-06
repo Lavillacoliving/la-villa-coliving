@@ -22,6 +22,8 @@ interface FaqSectionProps {
   id?: string;
   className?: string;
   intro?: ReactNode;
+  /** (05/11/2026) Ligne facultative sous les questions (ex. groupe Facebook A.9 de /nos-maisons) — hors JSON-LD FAQPage. */
+  outro?: ReactNode;
 }
 
 /**
@@ -38,6 +40,7 @@ export function FaqSection({
   id = "faq",
   className = "",
   intro,
+  outro,
 }: FaqSectionProps) {
   if (!items?.length) return null;
   return (
@@ -87,6 +90,7 @@ export function FaqSection({
             </AccordionItem>
           ))}
         </Accordion>
+        {outro && <div className="mt-10 text-center">{outro}</div>}
       </div>
     </section>
   );
