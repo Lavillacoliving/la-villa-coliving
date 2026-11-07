@@ -3,6 +3,9 @@ import { supabase } from '@/lib/supabase';
 import { useToast } from '@/components/ui/Toast';
 import PropertyContentEditor from '@/components/PropertyContentEditor';
 import { useIsMobile } from '@/hooks/use-mobile';
+import { logAudit } from '@/lib/auditLog';
+import { LEGAL_FORM_OPTIONS, DPE_CLASSES, POOL_TYPE_OPTIONS } from '@/lib/entities';
+import type { EntityRow, EntityLegalRow, Signatory, Mandate, PropertyEquipment, CurrentChargesRow } from '@/lib/bailV3/types';
 
 interface Property {
   id: string;
@@ -32,6 +35,13 @@ interface Property {
   charges_energy_chf: number;
   charges_maintenance_chf: number;
   charges_services_chf: number;
+  // Bail v3, lot 1 (26/10/2026)
+  dpe_class: string | null;
+  surface_total_m2: number | null;
+  equipment: PropertyEquipment | null;
+  setting_clause_fr: string | null;
+  setting_clause_en: string | null;
+  zone_tendue: boolean;
 }
 
 interface Room {
@@ -66,6 +76,24 @@ interface Tenant {
   room_number: number;
   is_active: boolean;
 }
+
+const EQUIPMENT_FLAGS: Array<[keyof PropertyEquipment, string]> = [
+  ['sauna', 'Sauna'], ['gym', 'Salle de sport'], ['cinema', 'Home cinéma'], ['game_room', 'Salle de jeux'],
+  ['pool_house', 'Pool house'], ['vegetable_garden', 'Potager'], ['volleyball', 'Terrain de volley'],
+  ['terraces', 'Terrasses'], ['bbq', 'Barbecue'],
+];
+
+function equipmentSummary(eq: PropertyEquipment | null): string {
+  if (!eq) return '—';
+  const parts: string[] = [];
+  const pool = POOL_TYPE_OPTIONS.find(([v]) => v === eq.pool)?.[1];
+  if (pool && eq.pool !== 'none') parts.push(pool + (eq.pool_size ? ` (${eq.pool_size})` : ''));
+  for (const [key, label] of EQUIPMENT_FLAGS) if (eq[key]) parts.push(label);
+  if (eq.garden_m2) parts.push(`jardin ${eq.garden_m2.toLocaleString('fr-FR')} m²`);
+  return parts.length ? parts.join(' · ') : '—';
+}
+
+const EMPTY_SIGNATORY: Signatory = { name: '', quality: '', order: 1, default: false };
 
 function fmt(n: number, currency = 'CHF') {
   return n.toLocaleString('fr-FR', { minimumFractionDigits: 0, maximumFractionDigits: 0 }) + ' ' + currency;
@@ -110,6 +138,69 @@ export default function DashboardMaisonsPage() {
   const [editPropertyData, setEditPropertyData] = useState<Partial<Property> | null>(null);
   const [savingProperty, setSavingProperty] = useState(false);
   const [deleteConfirm, setDeleteConfirm] = useState<{label:string,fn:()=>void}|null>(null);
+  // Bail v3, lot 1 : bailleurs (entities + entity_legal) et forfait de charges courant (vue)
+  const [entities, setEntities] = useState<EntityRow[]>([]);
+  const [entityLegal, setEntityLegal] = useState<Record<string, EntityLegalRow>>({});
+  const [currentCharges, setCurrentCharges] = useState<Record<string, CurrentChargesRow>>({});
+  const [editingEntityId, setEditingEntityId] = useState<string | null>(null);
+  const [editEntity, setEditEntity] = useState<Partial<EntityRow> | null>(null);
+  const [editSignatories, setEditSignatories] = useState<Signatory[]>([]);
+  const [editMandate, setEditMandate] = useState<Mandate | null>(null);
+  const [savingEntity, setSavingEntity] = useState(false);
+
+  const loadEntities = useCallback(async () => {
+    const [eRes, lRes, cRes] = await Promise.all([
+      supabase.from('entities').select('*').order('code'),
+      supabase.from('entity_legal').select('*'),
+      supabase.from('v_property_current_charges').select('*'),
+    ]);
+    setEntities((eRes.data as EntityRow[]) || []);
+    const legal: Record<string, EntityLegalRow> = {};
+    for (const row of (lRes.data as EntityLegalRow[]) || []) legal[row.entity_id] = row;
+    setEntityLegal(legal);
+    const charges: Record<string, CurrentChargesRow> = {};
+    for (const row of (cRes.data as CurrentChargesRow[]) || []) charges[row.property_id] = row;
+    setCurrentCharges(charges);
+  }, []);
+
+  const startEditEntity = (e: EntityRow) => {
+    setEditingEntityId(e.id);
+    setEditEntity({ ...e });
+    const legal = entityLegal[e.id];
+    setEditSignatories(legal?.signatories?.length ? legal.signatories.map(sg => ({ ...sg })) : [{ ...EMPTY_SIGNATORY }]);
+    setEditMandate(legal?.mandate ? { ...legal.mandate } : null);
+  };
+
+  const saveEntity = async () => {
+    if (!editingEntityId || !editEntity) return;
+    const signatories = editSignatories.filter(sg => sg.name.trim()).map((sg, i) => ({ ...sg, name: sg.name.trim(), quality: sg.quality.trim(), order: i + 1 }));
+    if (signatories.length === 0) { toast.warning('Au moins un signataire'); return; }
+    if (editEntity.legal_form === 'indivision' && signatories.length < 2) { toast.warning('Une indivision a au moins deux signataires'); return; }
+    setSavingEntity(true);
+    const { error: e1 } = await supabase.from('entities').update({
+      legal_form: editEntity.legal_form || null,
+      legal_name: editEntity.legal_name || null,
+      trade_name: editEntity.trade_name || null,
+      registration: editEntity.registration || null,
+      capital_eur: editEntity.capital_eur ?? null,
+      siege: editEntity.siege || null,
+      vat_mention: editEntity.vat_mention || 'Loyers et charges non soumis à la TVA (article 261 D 4° du CGI)',
+      iban: editEntity.iban || null,
+      bic: editEntity.bic || null,
+    }).eq('id', editingEntityId);
+    const mandate = editMandate && editMandate.mandatary.trim() ? editMandate : null;
+    const { error: e2 } = e1 ? { error: null } : await supabase.from('entity_legal').upsert(
+      { entity_id: editingEntityId, signatories, mandate, updated_at: new Date().toISOString() },
+      { onConflict: 'entity_id' },
+    );
+    setSavingEntity(false);
+    const error = e1 || e2;
+    if (error) { toast.error('Erreur: ' + error.message); return; }
+    logAudit('update', 'entity', editingEntityId, { legal_form: editEntity.legal_form, legal_name: editEntity.legal_name, signatories: signatories.map(sg => sg.name), mandate: mandate ? mandate.mandatary : null });
+    toast.success('Bailleur enregistré');
+    setEditingEntityId(null); setEditEntity(null);
+    loadEntities();
+  };
 
   const load = useCallback(async () => {
     setLoading(true);
@@ -125,7 +216,8 @@ export default function DashboardMaisonsPage() {
       setSelectedPropertyId(pRes.data[0].id);
     }
     setLoading(false);
-  }, [selectedPropertyId]);
+    loadEntities();
+  }, [selectedPropertyId, loadEntities]);
 
   useEffect(() => {
     load();
@@ -225,6 +317,13 @@ export default function DashboardMaisonsPage() {
       charges_energy_chf: editPropertyData.charges_energy_chf || 0,
       charges_maintenance_chf: editPropertyData.charges_maintenance_chf || 0,
       charges_services_chf: editPropertyData.charges_services_chf || 0,
+      // Bail v3, lot 1
+      dpe_class: editPropertyData.dpe_class || null,
+      surface_total_m2: editPropertyData.surface_total_m2 || null,
+      equipment: editPropertyData.equipment || {},
+      setting_clause_fr: editPropertyData.setting_clause_fr || null,
+      setting_clause_en: editPropertyData.setting_clause_en || null,
+      zone_tendue: editPropertyData.zone_tendue !== false,
     };
     const { error } = await supabase.from('properties').update(data).eq('id', selectedPropertyId);
     setSavingProperty(false);
@@ -337,7 +436,30 @@ export default function DashboardMaisonsPage() {
                       <p style={S.label}>ID Fiscal</p>
                       <p style={{ margin: 0, fontSize: '14px', color: '#1a1a2e' }}>{selectedProperty.id_fiscal || '—'}</p>
                     </div>
+                    <div>
+                      <p style={S.label}>DPE · surface totale · zone</p>
+                      <p style={{ margin: 0, fontSize: '14px', color: '#1a1a2e' }}>
+                        {selectedProperty.dpe_class ? `Classe ${selectedProperty.dpe_class}` : 'DPE —'} · {selectedProperty.surface_total_m2 ? `${selectedProperty.surface_total_m2} m²` : 'surface —'} · {selectedProperty.zone_tendue ? 'zone tendue' : 'hors zone tendue'}
+                      </p>
+                    </div>
+                    <div>
+                      <p style={S.label}>Forfait de charges courant (bail v3)</p>
+                      <p style={{ margin: 0, fontSize: '14px', color: '#1a1a2e' }}>
+                        {currentCharges[selectedProperty.id]
+                          ? `${currentCharges[selectedProperty.id].per_room_month_eur.toLocaleString('fr-FR', { minimumFractionDigits: 2 })} € / chambre / mois — exercice ${currentCharges[selectedProperty.id].fiscal_year}, ${currentCharges[selectedProperty.id].status === 'valide' ? 'validé' : 'provisoire'} (${currentCharges[selectedProperty.id].room_count} chambres, ${currentCharges[selectedProperty.id].total_recoverable_eur.toLocaleString('fr-FR')} €/an)`
+                          : 'Aucun forfait saisi'}
+                      </p>
+                    </div>
                   </div>
+                  {selectedProperty.is_coliving && (
+                    <div style={{ marginTop: '16px' }}>
+                      <p style={S.label}>Équipements (art. 2.1)</p>
+                      <p style={{ margin: 0, fontSize: '13px', color: '#555' }}>{equipmentSummary(selectedProperty.equipment)}</p>
+                      {selectedProperty.setting_clause_fr && (
+                        <p style={{ margin: '8px 0 0', fontSize: '12px', color: '#777', fontStyle: 'italic' }}>{selectedProperty.setting_clause_fr}</p>
+                      )}
+                    </div>
+                  )}
                   {selectedProperty.common_areas && selectedProperty.common_areas.length > 0 && (
                     <div style={{ marginTop: '16px' }}>
                       <p style={S.label}>Espaces communs</p>
@@ -406,6 +528,7 @@ export default function DashboardMaisonsPage() {
                         value={editPropertyData?.legal_entity_type || 'SCI'}
                         onChange={e => setEditPropertyData({ ...editPropertyData, legal_entity_type: e.target.value })}
                       >
+                        <option value="Indivision">Indivision</option>
                         <option value="SCI">SCI</option>
                         <option value="SARL">SARL</option>
                         <option value="Auto-entrepreneur">Auto-entrepreneur</option>
@@ -426,6 +549,63 @@ export default function DashboardMaisonsPage() {
                         value={editPropertyData?.tva || ''}
                         onChange={e => setEditPropertyData({ ...editPropertyData, tva: e.target.value })}
                       />
+                    </div>
+                  </div>
+                  <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '12px', marginBottom: '12px' }}>
+                    <div>
+                      <label style={S.fieldLabel}>Classe DPE</label>
+                      <select style={S.input} value={editPropertyData?.dpe_class || ''} onChange={e => setEditPropertyData({ ...editPropertyData, dpe_class: e.target.value || null })}>
+                        <option value="">—</option>
+                        {DPE_CLASSES.map(c => <option key={c} value={c}>{c}</option>)}
+                      </select>
+                    </div>
+                    <div>
+                      <label style={S.fieldLabel}>Surface totale (m²)</label>
+                      <input type="number" step="0.01" style={S.input} value={editPropertyData?.surface_total_m2 ?? ''} onChange={e => setEditPropertyData({ ...editPropertyData, surface_total_m2: e.target.value === '' ? null : Number(e.target.value) })} />
+                    </div>
+                    <div>
+                      <label style={S.fieldLabel}>Zone tendue</label>
+                      <label style={{ fontSize: '13px', display: 'flex', alignItems: 'center', gap: '6px', marginTop: '8px' }}>
+                        <input type="checkbox" checked={editPropertyData?.zone_tendue !== false} onChange={e => setEditPropertyData({ ...editPropertyData, zone_tendue: e.target.checked })} />
+                        plafond de relocation (dernier loyer HC × IRL)
+                      </label>
+                    </div>
+                  </div>
+                  <div style={{ marginBottom: '12px', padding: '12px', background: '#f9f7f4', borderRadius: '8px' }}>
+                    <label style={{ ...S.fieldLabel, display: 'block', marginBottom: '8px' }}>Équipements de la maison (art. 2.1 du bail v3)</label>
+                    <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : '1fr 1fr 1fr', gap: '8px' }}>
+                      <div>
+                        <label style={S.fieldLabel}>Piscine</label>
+                        <select style={S.input} value={editPropertyData?.equipment?.pool || 'none'} onChange={e => setEditPropertyData({ ...editPropertyData, equipment: { ...(editPropertyData?.equipment || {}), pool: e.target.value as PropertyEquipment['pool'] } })}>
+                          {POOL_TYPE_OPTIONS.map(([v, l]) => <option key={v} value={v}>{l}</option>)}
+                        </select>
+                      </div>
+                      <div>
+                        <label style={S.fieldLabel}>Dimensions du bassin</label>
+                        <input style={S.input} value={editPropertyData?.equipment?.pool_size || ''} onChange={e => setEditPropertyData({ ...editPropertyData, equipment: { ...(editPropertyData?.equipment || {}), pool_size: e.target.value || undefined } })} />
+                      </div>
+                      <div>
+                        <label style={S.fieldLabel}>Jardin (m²)</label>
+                        <input type="number" style={S.input} value={editPropertyData?.equipment?.garden_m2 ?? ''} onChange={e => setEditPropertyData({ ...editPropertyData, equipment: { ...(editPropertyData?.equipment || {}), garden_m2: e.target.value === '' ? undefined : Number(e.target.value) } })} />
+                      </div>
+                    </div>
+                    <div style={{ display: 'flex', flexWrap: 'wrap', gap: '12px', marginTop: '8px' }}>
+                      {EQUIPMENT_FLAGS.map(([key, label]) => (
+                        <label key={key} style={{ fontSize: '13px', display: 'flex', alignItems: 'center', gap: '4px' }}>
+                          <input type="checkbox" checked={!!editPropertyData?.equipment?.[key]} onChange={e => setEditPropertyData({ ...editPropertyData, equipment: { ...(editPropertyData?.equipment || {}), [key]: e.target.checked } })} />
+                          {label}
+                        </label>
+                      ))}
+                    </div>
+                  </div>
+                  <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : '1fr 1fr', gap: '12px', marginBottom: '12px' }}>
+                    <div>
+                      <label style={S.fieldLabel}>Phrase de cadre de l'art. 2.1 (FR)</label>
+                      <textarea style={{ ...S.input, height: '90px' }} value={editPropertyData?.setting_clause_fr || ''} onChange={e => setEditPropertyData({ ...editPropertyData, setting_clause_fr: e.target.value })} />
+                    </div>
+                    <div>
+                      <label style={S.fieldLabel}>Phrase de cadre de l'art. 2.1 (EN)</label>
+                      <textarea style={{ ...S.input, height: '90px' }} value={editPropertyData?.setting_clause_en || ''} onChange={e => setEditPropertyData({ ...editPropertyData, setting_clause_en: e.target.value })} />
                     </div>
                   </div>
                   <div style={{ marginBottom: '12px' }}>
@@ -492,6 +672,100 @@ export default function DashboardMaisonsPage() {
                   </div>
                 </>
               )}
+            </div>
+
+            {/* Bailleurs (bail v3, lot 1) : identité juridique, signataires, mandat */}
+            <div style={{ ...S.card, marginBottom: '20px' }}>
+              <h3 style={{ margin: '0 0 4px', fontSize: '16px', color: '#1a1a2e' }}>Bailleurs (entités juridiques)</h3>
+              <p style={{ margin: '0 0 12px', fontSize: '12px', color: '#777' }}>Bloc imprimé en tête du bail v3. Les signataires et le mandat ne sont lisibles que par l'administrateur.</p>
+              {entities.filter(e => e.code !== 'MB').map(e => {
+                const legal = entityLegal[e.id];
+                const isEditing = editingEntityId === e.id && editEntity;
+                return (
+                  <div key={e.id} style={{ borderTop: '1px solid #eee', padding: '12px 0' }}>
+                    {!isEditing ? (
+                      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: '12px' }}>
+                        <div style={{ fontSize: '13px', color: '#1a1a2e', lineHeight: 1.6 }}>
+                          <strong>{e.legal_name || e.name}</strong> — {LEGAL_FORM_OPTIONS.find(([v]) => v === e.legal_form)?.[1] || 'forme non renseignée'}
+                          {e.trade_name && <> · enseigne {e.trade_name}</>}
+                          <br />{e.registration || 'immatriculation —'}{e.capital_eur ? ` · capital ${e.capital_eur.toLocaleString('fr-FR')} €` : ''} · siège {e.siege || '—'}
+                          <br /><span style={{ color: '#777' }}>{e.vat_mention}</span>
+                          <br />Signataires : {legal?.signatories?.length ? legal.signatories.map(sg => `${sg.name} (${sg.quality}${sg.default ? ', par défaut' : ''})`).join(' ; ') : '—'}
+                          {' · '}Mandat : {legal?.mandate ? `${legal.mandate.mandatary} depuis le ${legal.mandate.since}` : 'aucun (art. 17 dormant)'}
+                        </div>
+                        <button onClick={() => startEditEntity(e)} style={{ ...S.btn, background: '#fff', border: '1px solid #ddd', fontSize: '12px', whiteSpace: 'nowrap' }}>Éditer</button>
+                      </div>
+                    ) : (
+                      <div>
+                        <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : '1fr 1fr 1fr', gap: '10px', marginBottom: '10px' }}>
+                          <div>
+                            <label style={S.fieldLabel}>Forme juridique</label>
+                            <select style={S.input} value={editEntity?.legal_form || ''} onChange={ev => setEditEntity({ ...editEntity, legal_form: (ev.target.value || null) as EntityRow['legal_form'] })}>
+                              <option value="">—</option>
+                              {LEGAL_FORM_OPTIONS.map(([v, l]) => <option key={v} value={v}>{l}</option>)}
+                            </select>
+                          </div>
+                          <div>
+                            <label style={S.fieldLabel}>Dénomination (imprimée au bail)</label>
+                            <input style={S.input} value={editEntity?.legal_name || ''} onChange={ev => setEditEntity({ ...editEntity, legal_name: ev.target.value })} />
+                          </div>
+                          <div>
+                            <label style={S.fieldLabel}>Enseigne</label>
+                            <input style={S.input} value={editEntity?.trade_name || ''} onChange={ev => setEditEntity({ ...editEntity, trade_name: ev.target.value })} />
+                          </div>
+                          <div>
+                            <label style={S.fieldLabel}>Immatriculation (SIRET / RCS)</label>
+                            <input style={S.input} value={editEntity?.registration || ''} onChange={ev => setEditEntity({ ...editEntity, registration: ev.target.value })} />
+                          </div>
+                          <div>
+                            <label style={S.fieldLabel}>Capital (€, SCI)</label>
+                            <input type="number" style={S.input} value={editEntity?.capital_eur ?? ''} onChange={ev => setEditEntity({ ...editEntity, capital_eur: ev.target.value === '' ? null : Number(ev.target.value) })} />
+                          </div>
+                          <div>
+                            <label style={S.fieldLabel}>Siège</label>
+                            <input style={S.input} value={editEntity?.siege || ''} onChange={ev => setEditEntity({ ...editEntity, siege: ev.target.value })} />
+                          </div>
+                          <div>
+                            <label style={S.fieldLabel}>IBAN</label>
+                            <input style={S.input} value={editEntity?.iban || ''} onChange={ev => setEditEntity({ ...editEntity, iban: ev.target.value })} />
+                          </div>
+                          <div>
+                            <label style={S.fieldLabel}>BIC</label>
+                            <input style={S.input} value={editEntity?.bic || ''} onChange={ev => setEditEntity({ ...editEntity, bic: ev.target.value })} />
+                          </div>
+                          <div>
+                            <label style={S.fieldLabel}>Mention TVA</label>
+                            <input style={S.input} value={editEntity?.vat_mention || ''} onChange={ev => setEditEntity({ ...editEntity, vat_mention: ev.target.value })} />
+                          </div>
+                        </div>
+                        <label style={{ ...S.fieldLabel, display: 'block', marginBottom: '6px' }}>Signataires du bail (ordre d'impression ; « par défaut » = proposé dans le générateur)</label>
+                        {editSignatories.map((sg, i) => (
+                          <div key={i} style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : '2fr 2fr auto auto', gap: '8px', alignItems: 'center', marginBottom: '6px' }}>
+                            <input style={S.input} placeholder="Nom" value={sg.name} onChange={ev => setEditSignatories(editSignatories.map((x, j) => j === i ? { ...x, name: ev.target.value } : x))} />
+                            <input style={S.input} placeholder="Qualité (gérant, propriétaire indivis…)" value={sg.quality} onChange={ev => setEditSignatories(editSignatories.map((x, j) => j === i ? { ...x, quality: ev.target.value } : x))} />
+                            <label style={{ fontSize: '12px', display: 'flex', alignItems: 'center', gap: '4px' }}>
+                              <input type="checkbox" checked={!!sg.default} onChange={ev => setEditSignatories(editSignatories.map((x, j) => j === i ? { ...x, default: ev.target.checked } : x))} /> par défaut
+                            </label>
+                            <button onClick={() => setEditSignatories(editSignatories.filter((_, j) => j !== i))} style={{ ...S.btn, background: '#fff', border: '1px solid #ddd', fontSize: '12px' }}>✕</button>
+                          </div>
+                        ))}
+                        <button onClick={() => setEditSignatories([...editSignatories, { ...EMPTY_SIGNATORY, order: editSignatories.length + 1 }])} style={{ ...S.btn, background: '#fff', border: '1px solid #ddd', fontSize: '12px', marginBottom: '10px' }}>+ Signataire</button>
+                        <label style={{ ...S.fieldLabel, display: 'block', marginBottom: '6px' }}>Mandat de gestion (art. 17 — vide = dormant)</label>
+                        <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : '2fr 1fr 2fr 2fr', gap: '8px', marginBottom: '10px' }}>
+                          <input style={S.input} placeholder="Mandataire" value={editMandate?.mandatary || ''} onChange={ev => setEditMandate({ ...(editMandate || { mandatary: '', since: '', scope: '' }), mandatary: ev.target.value })} />
+                          <input type="date" style={S.input} value={editMandate?.since || ''} onChange={ev => setEditMandate({ ...(editMandate || { mandatary: '', since: '', scope: '' }), since: ev.target.value })} />
+                          <input style={S.input} placeholder="Étendue du mandat" value={editMandate?.scope || ''} onChange={ev => setEditMandate({ ...(editMandate || { mandatary: '', since: '', scope: '' }), scope: ev.target.value })} />
+                          <input style={S.input} placeholder="Compte d'encaissement" value={editMandate?.account || ''} onChange={ev => setEditMandate({ ...(editMandate || { mandatary: '', since: '', scope: '' }), account: ev.target.value || undefined })} />
+                        </div>
+                        <div style={{ display: 'flex', gap: '8px', justifyContent: 'flex-end' }}>
+                          <button onClick={() => { setEditingEntityId(null); setEditEntity(null); }} style={{ ...S.btn, background: '#fff', border: '1px solid #ddd' }}>Annuler</button>
+                          <button onClick={saveEntity} disabled={savingEntity} style={{ ...S.btn, background: '#b8860b', color: '#fff', fontWeight: 600 }}>{savingEntity ? '...' : 'Enregistrer'}</button>
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                );
+              })}
             </div>
 
             {/* Rooms grid */}

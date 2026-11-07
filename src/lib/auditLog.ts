@@ -40,7 +40,8 @@ export type AuditEntityType =
   | 'tenant' | 'prospect' | 'payment' | 'maintenance_ticket'
   | 'event' | 'lease' | 'document' | 'room' | 'property'
   | 'bank_transaction' | 'invoice' | 'deposit' | 'blog_post'
-  | 'mfa_factor';
+  | 'mfa_factor'
+  | 'entity';
 
 export async function logAudit(
   action: AuditAction,
