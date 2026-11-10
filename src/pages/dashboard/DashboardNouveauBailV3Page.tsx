@@ -35,6 +35,7 @@ interface FormState {
   discount_eur: number; deposit_installments: DepositInstallments;
   prev_hc: string; prev_paid_on: string; prev_revision: string; prev_departure: string; prev_works: string;
   relocation_exception: '' | RelocationException; override: boolean; override_reason: string;
+  cap_decided: boolean;              // plafond de relocation sous le tarif : Jérôme a choisi (tarif ou plafond), jamais de choix par défaut
   forfait_manual: string;            // saisi seulement si la maison n'a pas de forfait courant
   signatory_index: number;           // SCI : gérant signataire
   particular_clauses: string;
@@ -44,7 +45,7 @@ const EMPTY_FORM: FormState = {
   property_id: '', room_id: '', nom: '', prenom: '', dob: '', birthplace: '', nationality: '', previous_address: '', email: '', phone: '', profession: '', employer: '',
   entry_date: '', lease_duration_months: 12, discount_eur: 0, deposit_installments: 1,
   prev_hc: '', prev_paid_on: '', prev_revision: '', prev_departure: '', prev_works: 'néant',
-  relocation_exception: '', override: false, override_reason: '', forfait_manual: '', signatory_index: 0, particular_clauses: '', total_cc_manual: '',
+  relocation_exception: '', override: false, override_reason: '', cap_decided: false, forfait_manual: '', signatory_index: 0, particular_clauses: '', total_cc_manual: '',
 };
 
 function todayISO(): string {
@@ -161,7 +162,7 @@ export default function DashboardNouveauBailV3Page() {
           prev_hc: facts.prev_hc != null ? String(facts.prev_hc) : '', prev_paid_on: facts.prev_paid_on || '', prev_revision: facts.prev_revision || '',
           prev_departure: facts.prev_departure || '', prev_works: 'néant',
           relocation_exception: facts.prev_hc == null ? 'first_letting' : ((property.relocation_exception_default as RelocationException | null) || ''),
-          override: false, override_reason: '' }));
+          override: false, override_reason: '', cap_decided: false }));
       });
     return () => { cancelled = true; };
   }, [property, room]);
@@ -223,11 +224,14 @@ export default function DashboardNouveauBailV3Page() {
 
   // ---------- garde-fous ----------
   const blockers: string[] = [];
-  if (property && !currentCharges && !(Number(form.forfait_manual) > 0)) blockers.push("Aucun forfait de charges courant pour cette maison : saisis-le dans l'onglet Maisons (lot 2) ou ci-dessous.");
+  if (property && !currentCharges && !(Number(form.forfait_manual) > 0)) blockers.push("Aucun forfait de charges en vigueur pour cette maison : saisis-le dans l'onglet Maisons (carte « Forfait de charges ») ou ci-dessous.");
   if (rate.status === 'fallback' && !(rate.eurChf > 0)) blockers.push('Taux BCE indisponible : saisis le taux du jour (1 € = … CHF).');
   if (room && room.rent_eur == null) blockers.push('La chambre n\'a pas de loyer en euros (rooms.rent_eur).');
   if (!(irl.value > 0)) blockers.push('IRL courant manquant : saisis le trimestre et l\'indice.');
   if (pricing?.capApplies && !(irl.old && irl.old > 0)) blockers.push('IRL du même trimestre de l\'année précédente manquant : saisis-le (il sert au plafond de relocation).');
+  // Le loyer d'une chambre (1 470 € salle d'eau partagée, 1 530 € privative) ne change jamais sans décision de Jérôme (10/11/2026) :
+  // quand le plafond de relocation est sous le tarif, le formulaire ne choisit pas à sa place.
+  if (pricing?.capped && !form.cap_decided) blockers.push('Le plafond de relocation est inférieur au tarif de la chambre : choisis entre garder le tarif et appliquer le plafond.');
   if (pricing?.capped && form.override && form.override_reason.trim().length < 10) blockers.push('La dérogation au plafond de relocation exige un motif (10 caractères minimum).');
   if (!form.nom || !form.prenom || !form.email || !form.entry_date) blockers.push('Nom, prénom, email et date d\'entrée sont obligatoires.');
   if (discount > 0 && pricing && discount > pricing.total) blockers.push('La remise dépasse le loyer du premier mois complet.');
@@ -409,7 +413,9 @@ export default function DashboardNouveauBailV3Page() {
               pricing.capped ? (
                 <div style={warn}>
                   Plafond de relocation : {fEUR(pricing.cap)} hors charges (dernier loyer {fEUR(prevHc || 0)} × {irl.value} / {irl.old || irl.value}), en dessous du loyer cible {fEUR(pricing.hcTarget)}.
-                  <label style={{ display: 'block', marginTop: 8 }}><input type="checkbox" checked={form.override} onChange={(e) => set('override', e.target.checked)} /> Appliquer quand même le loyer cible (dérogation, écart {fEUR(pricing.hcTarget - pricing.cap)} par mois, journalisé)</label>
+                  <div style={{ marginTop: 8, fontWeight: 600 }}>À toi de choisir (rien n'est appliqué par défaut) :</div>
+                  <label style={{ display: 'block', marginTop: 6 }}><input type="radio" name="cap_choice" checked={form.cap_decided && form.override} onChange={() => setForm((f) => ({ ...f, override: true, cap_decided: true }))} /> Garder le tarif : {fEUR(pricing.hcTarget + forfait)} charges comprises (dérogation motivée, écart {fEUR(pricing.hcTarget - pricing.cap)} par mois, journalisé)</label>
+                  <label style={{ display: 'block', marginTop: 4 }}><input type="radio" name="cap_choice" checked={form.cap_decided && !form.override} onChange={() => setForm((f) => ({ ...f, override: false, cap_decided: true }))} /> Appliquer le plafond : {fEUR(pricing.cap + forfait)} charges comprises</label>
                   {form.override && <input placeholder="Motif de la dérogation (obligatoire)" value={form.override_reason} onChange={(e) => set('override_reason', e.target.value)} style={{ ...input, marginTop: 8 }} />}
                 </div>
               ) : <div style={ok}>Plafond de relocation {fEUR(pricing.cap)} ≥ loyer cible : le décret est respecté.</div>
