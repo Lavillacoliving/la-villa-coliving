@@ -65,6 +65,7 @@ const DashboardNouveauBailPage = lazyWithRetry(() => import("@/pages/dashboard/D
 const DashboardNouveauBailV3Page = lazyWithRetry(() => import("@/pages/dashboard/DashboardNouveauBailV3Page"), "DashboardNouveauBailV3Page");
 // Aperçu de développement du bail v3 (jamais dans le bundle de production : branche morte quand DEV est faux)
 const BailV3PreviewDev = import.meta.env.DEV ? lazyWithRetry(() => import("@/pages/dev/BailV3PreviewDev"), "BailV3PreviewDev") : null;
+const ChargesPreviewDev = import.meta.env.DEV ? lazyWithRetry(() => import("@/pages/dev/ChargesPreviewDev"), "ChargesPreviewDev") : null;
 const DashboardDocumentsPage = lazyWithRetry(() => import("@/pages/dashboard/DashboardDocumentsPage"), "DashboardDocumentsPage");
 const DashboardEventsPage = lazyWithRetry(() => import("@/pages/dashboard/DashboardEventsPage"), "DashboardEventsPage");
 const DashboardRapprochementPage = lazyWithRetry(() => import("@/pages/dashboard/DashboardRapprochementPage"), "DashboardRapprochementPage");
@@ -179,6 +180,7 @@ function AppContent() {
           <Route path="communaute" element={<CommunautePage />} />
         </Route>
         {BailV3PreviewDev && <Route path="/dev/bail-v3" element={<BailV3PreviewDev />} />}
+        {ChargesPreviewDev && <Route path="/dev/charges" element={<ChargesPreviewDev />} />}
         <Route path="/dashboard" element={<DashboardLayout />}>
           <Route index element={<Navigate to="/dashboard/loyers" replace />} />
           <Route path="loyers" element={<DashboardLoyersPage />} />

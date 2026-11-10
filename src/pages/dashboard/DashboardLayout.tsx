@@ -4,6 +4,7 @@ import { Outlet, useNavigate, useLocation } from 'react-router-dom';
 import { supabase } from '@/lib/supabase';
 import { useIsMobile } from '@/hooks/use-mobile';
 import TotpReplacePanel, { TOTP_ISSUER } from './TotpReplacePanel';
+import ChargesReminderBanner from '@/components/dashboard/ChargesReminderBanner';
 import '@/dashboard-mobile.css';
 
 const ADMIN_EMAILS = ['jerome@lavillacoliving.com', 'fanny@lavillacoliving.com'];
@@ -256,6 +257,7 @@ export default function DashboardLayout() {
       )}
 
       <main style={{ padding: isMobile ? '12px' : '24px', maxWidth: '1400px', margin: '0 auto' }}>
+        <ChargesReminderBanner />
         <Outlet />
       </main>
       {showCodePanel && <TotpReplacePanel onClose={() => setShowCodePanel(false)} />}

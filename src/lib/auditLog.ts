@@ -24,6 +24,7 @@ export type AuditAction =
   | 'create' | 'update' | 'delete'
   | 'status_change' | 'payment_recorded'
   | 'lease_generated' | 'tenant_deactivated' | 'relocation_override'
+  | 'charges_saved' | 'charges_validated' | 'charges_reopened'
   | 'lease_status_changed'
   | 'irl_applied' | 'irl_dismissed' | 'irl_revision_applied' | 'prospect_converted'
   | 'file_uploaded' | 'file_deleted'
@@ -41,7 +42,7 @@ export type AuditEntityType =
   | 'event' | 'lease' | 'document' | 'room' | 'property'
   | 'bank_transaction' | 'invoice' | 'deposit' | 'blog_post'
   | 'mfa_factor'
-  | 'entity';
+  | 'entity' | 'property_charges';
 
 export async function logAudit(
   action: AuditAction,

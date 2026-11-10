@@ -36,3 +36,11 @@ export const CHARGE_POSTES: readonly ChargePoste[] = [
 export function chargePosteLabel(code: string): string {
   return CHARGE_POSTES.find((p) => p.code === code)?.label ?? code;
 }
+
+/**
+ * TEOM relevée sur les avis de taxe foncière (colonne « Taxe ordures ménagères »), par exercice et par maison :
+ * préremplit la ligne TEOM d'un nouvel exercice. À compléter chaque année à réception des avis (septembre).
+ */
+export const TEOM_BY_YEAR: Readonly<Record<number, Readonly<Record<string, number>>>> = {
+  2026: { lavilla: 685, lelodge: 451, leloft: 528 },
+};

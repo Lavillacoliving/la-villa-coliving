@@ -2,6 +2,8 @@ import { useState, useEffect, useCallback } from 'react';
 import { supabase } from '@/lib/supabase';
 import { useToast } from '@/components/ui/Toast';
 import PropertyContentEditor from '@/components/PropertyContentEditor';
+import PropertyChargesCard from '@/components/dashboard/PropertyChargesCard';
+import { CHARGES_CHANGED_EVENT } from '@/components/dashboard/ChargesReminderBanner';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { logAudit } from '@/lib/auditLog';
 import { LEGAL_FORM_OPTIONS, DPE_CLASSES, POOL_TYPE_OPTIONS } from '@/lib/entities';
@@ -443,7 +445,7 @@ export default function DashboardMaisonsPage() {
                       </p>
                     </div>
                     <div>
-                      <p style={S.label}>Forfait de charges courant (bail v3)</p>
+                      <p style={S.label}>Forfait de charges en vigueur (bail v3)</p>
                       <p style={{ margin: 0, fontSize: '14px', color: '#1a1a2e' }}>
                         {currentCharges[selectedProperty.id]
                           ? `${currentCharges[selectedProperty.id].per_room_month_eur.toLocaleString('fr-FR', { minimumFractionDigits: 2 })} € / chambre / mois — exercice ${currentCharges[selectedProperty.id].fiscal_year}, ${currentCharges[selectedProperty.id].status === 'valide' ? 'validé' : 'provisoire'} (${currentCharges[selectedProperty.id].room_count} chambres, ${currentCharges[selectedProperty.id].total_recoverable_eur.toLocaleString('fr-FR')} €/an)`
@@ -483,7 +485,7 @@ export default function DashboardMaisonsPage() {
                   )}
                   {selectedProperty.is_coliving && (
                     <div style={{ marginTop: '16px', padding: '12px', background: '#f9f7f4', borderRadius: '8px', borderLeft: '3px solid #c9a96e' }}>
-                      <p style={{ ...S.label, color: '#c9a96e' }}>Charges forfaitaires mensuelles (EUR)</p>
+                      <p style={{ ...S.label, color: '#c9a96e' }}>Charges de l'ancien générateur de bail (v2), en euros par mois</p>
                       <div style={{ display: 'flex', flexWrap: isMobile ? 'wrap' : 'nowrap', gap: '20px', fontSize: '14px' }}>
                         <span>Énergie : <strong>{selectedProperty.charges_energy_chf || 0} €</strong></span>
                         <span>Maintenance : <strong>{selectedProperty.charges_maintenance_chf || 0} €</strong></span>
@@ -631,7 +633,7 @@ export default function DashboardMaisonsPage() {
                     />
                   </div>
                   <div style={{ marginTop: '16px', padding: '12px', background: '#f9f7f4', borderRadius: '8px', borderLeft: '3px solid #c9a96e' }}>
-                    <label style={{ fontSize: '13px', fontWeight: 600, color: '#c9a96e', marginBottom: '8px', display: 'block' }}>Charges forfaitaires mensuelles (EUR)</label>
+                    <label style={{ fontSize: '13px', fontWeight: 600, color: '#c9a96e', marginBottom: '8px', display: 'block' }}>Charges de l'ancien générateur de bail (v2), en euros par mois</label>
                     <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '8px' }}>
                       <div>
                         <label style={S.fieldLabel}>Énergie</label>
@@ -677,6 +679,20 @@ export default function DashboardMaisonsPage() {
                 </>
               )}
             </div>
+
+            {/* Forfait de charges (bail v3, lot 2) : saisie manuelle par exercice, validation, état récapitulatif */}
+            {selectedProperty.is_coliving && (() => {
+              const lessorEntity = entities.find(e => e.id === selectedProperty.entity_id);
+              return (
+                <PropertyChargesCard
+                  key={selectedProperty.id}
+                  property={{ id: selectedProperty.id, slug: selectedProperty.slug, name: selectedProperty.name, address: selectedProperty.address, room_count: selectedProperty.room_count }}
+                  lessor={lessorEntity ? { name: lessorEntity.legal_name || lessorEntity.name, address: lessorEntity.siege || null } : null}
+                  isMobile={isMobile}
+                  onChanged={() => { loadEntities(); window.dispatchEvent(new Event(CHARGES_CHANGED_EVENT)); }}
+                />
+              );
+            })()}
 
             {/* Bailleurs (bail v3, lot 1) : identité juridique, signataires, mandat */}
             <div style={{ ...S.card, marginBottom: '20px' }}>
