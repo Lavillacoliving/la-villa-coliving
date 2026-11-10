@@ -3,8 +3,10 @@ import { useSearchParams } from "react-router-dom";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { LocalizedLink } from "@/components/LocalizedLink";
 import { VERIFY_ARTICLE_PATH, VERIFY_LINK_LABEL } from "@/data/verifyArticle";
-import { ArrowRight, Check, Shield, Loader2, Star, Users, Calendar, ChevronDown, ChevronUp, MessageCircle } from "lucide-react";
+import { ArrowRight, Check, Shield, Loader2, Star, Users, Calendar, MessageCircle } from "lucide-react";
 import { SEO } from "@/components/SEO";
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
+import { buildFaqPageSchema, type QAPair } from "@/lib/structuredData";
 import { SUPABASE_URL, SUPABASE_ANON_KEY } from "@/lib/supabase";
 import { STATS, STATS_DISPLAY, PRICE_SHARED_CHF_FR, PRICE_SHARED_CHF_EN, CONTRACT_EUR, EUR_STANDARD_FR_NUM, EUR_SHARED_FR_NUM, EUR_STANDARD_EN_NUM, EUR_SHARED_EN_NUM, GOOGLE_REVIEWS, GOOGLE_REVIEWS_LINK_LABEL } from "@/data/stats";
 import { useFormTelemetry } from "@/hooks/useFormTelemetry";
@@ -37,13 +39,56 @@ const EDGE_FUNCTION_URL = `${SUPABASE_URL}/functions/v1/send-candidature-email`;
 // dans la même session reçoit une nouvelle clé.
 const SUBMISSION_KEY_STORAGE = "candidature_submission_key";
 
+// (03/11/2026) FAQ contextuelle de la page. Rendue par l'accordéon partagé (`forceMount` : les réponses restent dans
+// le DOM, donc dans le HTML prérendu) et balisée FAQPage via <SEO jsonLd> à partir des MÊMES paires. Auparavant
+// l'accordéon maison n'insérait la réponse qu'au clic : le HTML servi n'avait que les questions, sans FAQPage.
+// Chiffres : STATS / PRICE_* / EUR_* (fibre et ménage lus dans STATS ; prix introduit par « dès », règle du socle).
+const JOIN_FAQ: Array<{ q_fr: string; q_en: string; a_fr: string; a_en: string }> = [
+  {
+    q_fr: "Qui peut postuler ? Y a-t-il un profil type ?",
+    q_en: "Who can apply? Is there a typical profile?",
+    a_fr: "Notre communauté est principalement composée de frontaliers en CDI à Genève, de jeunes professionnels et d'expats. Nous sélectionnons sur dossier (justificatif de revenus, motivation, compatibilité avec la communauté). Pas de critère d'âge strict, mais la majorité de nos résidents ont entre 25 et 40 ans.",
+    a_en: "Our community is mainly cross-border workers on permanent contracts (CDI) in Geneva, young professionals and expats. We select based on application (income proof, motivation, fit with community). No strict age limit, but most residents are 25-40 years old.",
+  },
+  {
+    q_fr: "Combien de temps entre la candidature et l'emménagement ?",
+    q_en: "How long from application to move-in?",
+    a_fr: "72 h dès ton premier contact si une chambre est disponible. Étape 1 : réponse sous 48 h. Étape 2 : appel vidéo (30 min). Étape 3 : visite physique ou virtuelle. Étape 4 : signature en ligne du bail + caution. Étape 5 : emménagement avec une valise.",
+    a_en: "Within 72 h of your first contact if a room is available. Step 1: reply within 48 h. Step 2: video call (30 min). Step 3: physical or virtual tour. Step 4: online lease signing + deposit. Step 5: move in with a suitcase.",
+  },
+  {
+    q_fr: "Quel est le loyer et que comprend-il vraiment ?",
+    q_en: "What is the rent and what does it really include?",
+    a_fr: `Dès ${PRICE_SHARED_CHF_FR}/mois tout inclus : chambre meublée, charges (eau, électricité, chauffage), fibre jusqu'à ${STATS.fiberSpeed}, ménage des espaces communs ${STATS.cleaningPerWeek} fois par semaine, accès piscine/sauna/gym, cours de yoga et fitness privés, abonnements streaming, événements communautaires mensuels. Caution : 2 mois de loyer hors charges, payable en 1, 2 ou 3 fois selon ton dossier. Aucun frais d'agence, aucun frais de dossier. Le loyer contractuel est libellé en euros : de ${EUR_SHARED_FR_NUM} à ${EUR_STANDARD_FR_NUM} €/mois selon la chambre. Les montants en CHF affichés sur le site sont indicatifs (taux d'${CONTRACT_EUR.rateLabelFr}).`,
+    a_en: `From ${PRICE_SHARED_CHF_EN}/month all-inclusive: furnished room, utilities (water, electricity, heating), fibre up to ${STATS.fiberSpeed}, common-area cleaning ${STATS.cleaningPerWeek} times a week, pool/sauna/gym access, private yoga and fitness classes, streaming subscriptions, monthly community events. Deposit: 2 months' rent excluding charges, payable in 1, 2 or 3 instalments depending on your application. No agency fees, no application fees. The contractual rent is set in euros: €${EUR_SHARED_EN_NUM}–€${EUR_STANDARD_EN_NUM}/month depending on the room. CHF amounts shown on the site are indicative (${CONTRACT_EUR.rateLabelEn} rate).`,
+  },
+  {
+    q_fr: "Quelle est la durée minimale du bail ?",
+    q_en: "What is the minimum lease duration?",
+    a_fr: "Aucune durée minimale imposée : le bail est de 12 mois renouvelable, et tu es libre de partir à tout moment avec 1 mois de préavis. Cadre conforme à la loi française (Alur).",
+    a_en: "No set minimum: the lease is 12 months, renewable, and you are free to leave at any time with 1 month's notice. Compliant with French Alur law.",
+  },
+  {
+    q_fr: "Je peux visiter avant de signer ?",
+    q_en: "Can I visit before signing?",
+    a_fr: "Oui, c'est systématique. Visite physique (30-45 min) ou virtuelle si tu es à l'étranger. Tu rencontres aussi un coliver actuel pour avoir un retour terrain honnête sur la vie communautaire.",
+    a_en: "Yes, always. Physical tour (30-45 min) or virtual if you're abroad. You also meet a current resident to get an honest first-hand take on community life.",
+  },
+  {
+    // (Lot A, 01/10/2026) Le formulaire ne demande plus la date : réponse alignée.
+    q_fr: "Et si je ne connais pas encore ma date d'arrivée ?",
+    q_en: "What if I don't know my arrival date yet?",
+    a_fr: "Aucun souci : le formulaire ne te la demande pas. Juste après l'envoi, tu peux nous indiquer une période si tu la connais déjà ; sinon, on cale ensemble une date au premier échange. Candidater ne t'engage à rien.",
+    a_en: "No problem: the form doesn't ask for it. Right after sending, you can tell us a rough period if you already know it; otherwise, we'll set a date together on our first call. Applying doesn't commit you to anything.",
+  },
+];
+
 export function JoinPageV4() {
   const { language } = useLanguage();
   const L = language === "en" ? "en" : "fr";
   const availability = useRoomAvailability();
   const [status, setStatus] = useState<FormStatus>("idle");
   const [errorMessage, setErrorMessage] = useState<string>("");
-  const [openFAQ, setOpenFAQ] = useState<number | null>(null);
   // Canal déclaré — contrôlé pour pouvoir afficher le champ conditionnel
   // « parrain » quand le candidat dit venir d'un résident (programme parrainage).
   const [sourceChoice, setSourceChoice] = useState("");
@@ -269,6 +314,10 @@ export function JoinPageV4() {
     }
   }
 
+  const faqItems: QAPair[] = JOIN_FAQ.map((item) =>
+    language === "en" ? { q: item.q_en, a: item.a_en } : { q: item.q_fr, a: item.a_fr },
+  );
+
   return (
     <main className="relative pt-16">
       <SEO
@@ -277,6 +326,7 @@ export function JoinPageV4() {
           ? "Apply in 2 minutes: reply within 48 h, move in within 72 h of your first contact if a room is available. Furnished all-inclusive rooms near Geneva."
           : "Candidate en 2 minutes. Réponse sous 48 h, emménagement en 72 h dès le premier contact si une chambre est disponible. Chambres meublées près de Genève."}
         url="https://www.lavillacoliving.com/candidature"
+        jsonLd={buildFaqPageSchema(faqItems)}
       />
       {/* Hero compacté (S33) : ≤ 0,8 écran, le formulaire doit arriver vite. */}
       <section className="py-10 md:py-14 bg-white">
@@ -892,69 +942,23 @@ export function JoinPageV4() {
               {language === "en" ? "Frequently asked questions" : "Questions fréquentes"}
             </h2>
           </div>
-          <div className="space-y-3">
-            {[
-              {
-                q_fr: "Qui peut postuler ? Y a-t-il un profil type ?",
-                q_en: "Who can apply? Is there a typical profile?",
-                a_fr: "Notre communauté est principalement composée de frontaliers en CDI à Genève, de jeunes professionnels et d'expats. Nous sélectionnons sur dossier (justificatif de revenus, motivation, compatibilité avec la communauté). Pas de critère d'âge strict, mais la majorité de nos résidents ont entre 25 et 40 ans.",
-                a_en: "Our community is mainly cross-border workers on permanent contracts (CDI) in Geneva, young professionals and expats. We select based on application (income proof, motivation, fit with community). No strict age limit, but most residents are 25-40 years old.",
-              },
-              {
-                q_fr: "Combien de temps entre la candidature et l'emménagement ?",
-                q_en: "How long from application to move-in?",
-                a_fr: "72 h dès ton premier contact si une chambre est disponible. Étape 1 : réponse sous 48 h. Étape 2 : appel vidéo (30 min). Étape 3 : visite physique ou virtuelle. Étape 4 : signature en ligne du bail + caution. Étape 5 : emménagement avec une valise.",
-                a_en: "Within 72 h of your first contact if a room is available. Step 1: reply within 48 h. Step 2: video call (30 min). Step 3: physical or virtual tour. Step 4: online lease signing + deposit. Step 5: move in with a suitcase.",
-              },
-              {
-                q_fr: "Quel est le loyer et que comprend-il vraiment ?",
-                q_en: "What is the rent and what does it really include?",
-                a_fr: `À partir de ${PRICE_SHARED_CHF_FR}/mois tout inclus : chambre meublée, charges (eau, électricité, chauffage), fibre 8 Gbps, ménage 3 fois par semaine, accès piscine/sauna/gym, cours de yoga et fitness privés, abonnements streaming, événements communautaires mensuels. Caution 2 mois de loyer hors charges. Aucun frais d'agence, aucun frais de dossier. Le loyer contractuel est libellé en euros : de ${EUR_SHARED_FR_NUM} à ${EUR_STANDARD_FR_NUM} €/mois selon la chambre. Les montants en CHF affichés sur le site sont indicatifs (taux d'${CONTRACT_EUR.rateLabelFr}).`,
-                a_en: `From ${PRICE_SHARED_CHF_EN}/month all-inclusive: furnished room, utilities (water, electricity, heating), 8 Gbps fiber, cleaning three times a week, pool/sauna/gym access, private yoga and fitness classes, streaming subscriptions, monthly community events. Deposit: 2 months' rent excl. utilities. No agency fees, no application fees. The contractual rent is set in euros: €${EUR_SHARED_EN_NUM}–€${EUR_STANDARD_EN_NUM}/month depending on the room. CHF amounts shown on the site are indicative (${CONTRACT_EUR.rateLabelEn} rate).`,
-              },
-              {
-                q_fr: "Quelle est la durée minimale du bail ?",
-                q_en: "What is the minimum lease duration?",
-                a_fr: "Aucune durée minimale imposée : le bail est de 12 mois renouvelable, et tu es libre de partir à tout moment avec 1 mois de préavis. Cadre conforme à la loi française (Alur).",
-                a_en: "No set minimum: the lease is 12 months, renewable, and you are free to leave at any time with 1 month's notice. Compliant with French Alur law.",
-              },
-              {
-                q_fr: "Je peux visiter avant de signer ?",
-                q_en: "Can I visit before signing?",
-                a_fr: "Oui, c'est systématique. Visite physique (30-45 min) ou virtuelle si tu es à l'étranger. Tu rencontres aussi un coliver actuel pour avoir un retour terrain honnête sur la vie communautaire.",
-                a_en: "Yes, always. Physical tour (30-45 min) or virtual if you're abroad. You also meet a current resident to get an honest first-hand take on community life.",
-              },
-              {
-                // (Lot A, 01/10/2026) Le formulaire ne demande plus la date : réponse alignée.
-                q_fr: "Et si je ne connais pas encore ma date d'arrivée ?",
-                q_en: "What if I don't know my arrival date yet?",
-                a_fr: "Aucun souci : le formulaire ne te la demande pas. Juste après l'envoi, tu peux nous indiquer une période si tu la connais déjà ; sinon, on cale ensemble une date au premier échange. Candidater ne t'engage à rien.",
-                a_en: "No problem: the form doesn't ask for it. Right after sending, you can tell us a rough period if you already know it; otherwise, we'll set a date together on our first call. Applying doesn't commit you to anything.",
-              },
-            ].map((item, i) => (
-              <div key={i} className="bg-[#FAF9F6] border border-[#E7E5E4]">
-                <button
-                  type="button"
-                  onClick={() => setOpenFAQ(openFAQ === i ? null : i)}
-                  className="w-full flex items-center justify-between px-5 py-4 text-left"
-                >
-                  <span className="text-sm md:text-base font-medium text-[#1C1917] pr-4">
-                    {language === "en" ? item.q_en : item.q_fr}
-                  </span>
-                  {openFAQ === i ? (
-                    <ChevronUp className="w-5 h-5 text-[#D4A574] flex-shrink-0" />
-                  ) : (
-                    <ChevronDown className="w-5 h-5 text-[#78716C] flex-shrink-0" />
-                  )}
-                </button>
-                {openFAQ === i && (
-                  <div className="px-5 pb-5 text-sm text-[#57534E] leading-relaxed border-t border-[#E7E5E4] pt-4">
-                    {language === "en" ? item.a_en : item.a_fr}
-                  </div>
-                )}
-              </div>
+          {/* Accordéon partagé (forceMount) : les 6 réponses sont dans le HTML prérendu et dans le FAQPage de <SEO>. */}
+          <Accordion type="single" collapsible className="space-y-3">
+            {faqItems.map((item, i) => (
+              <AccordionItem
+                key={i}
+                value={`join-faq-${i}`}
+                className="bg-[#FAF9F6] border border-[#E7E5E4] last:border-b px-5"
+              >
+                <AccordionTrigger className="py-4 text-left text-sm md:text-base font-medium text-[#1C1917] hover:no-underline [&>svg]:size-5 [&>svg]:text-[#78716C]">
+                  {item.q}
+                </AccordionTrigger>
+                <AccordionContent className="pt-4 pb-5 text-sm text-[#57534E] leading-relaxed border-t border-[#E7E5E4]">
+                  {item.a}
+                </AccordionContent>
+              </AccordionItem>
             ))}
-          </div>
+          </Accordion>
         </div>
       </section>
 

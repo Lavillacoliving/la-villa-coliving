@@ -26,7 +26,7 @@ function factsLines(lang, m) {
       `- Included: utilities, fibre up to ${F.fiberSpeed}, common-area cleaning ${F.cleaningPerWeek} times a week, pool, sauna, gym, streaming, yoga and events`,
       `- Target: Swiss cross-border workers, expats, young professionals working in Geneva`,
       `- ${F.lease.months}-month lease: free to leave at any time with ${F.lease.noticeMonths} month's notice`,
-      `- No application fee, no agency fee; deposit of ${F.depositMonths} months' rent excluding charges`,
+      `- No application fee, no agency fee; deposit of ${F.depositMonths} months' rent excluding charges, payable in 1, 2 or 3 instalments depending on your application`,
       `- ${F.totalResidents}+ residents welcomed since ${F.foundingLabel.en}, run directly by the two founders (${F.founders.join(' and ')}), regular events (pizza nights, yoga classes, afterworks)`,
       // (Lot L3, Jérôme 09/10/2026) D3 : ancienne ligne « occupancy over 5 years » retirée ; D4 : note Google (STATS_DISPLAY.googleRating) + lien fiche.
       `- Reviews: ${m.STATS_DISPLAY.en.googleRating} — ${F.googleReviews.url}`,
@@ -39,7 +39,7 @@ function factsLines(lang, m) {
     `- Inclus : charges, fibre jusqu'à ${F.fiberSpeed}, ménage des espaces communs ${F.cleaningPerWeek} fois par semaine, piscine, sauna, salle de sport, streaming, yoga et événements`,
     `- Public : frontaliers Suisse, expats, jeunes professionnels qui travaillent à Genève`,
     `- Bail de ${F.lease.months} mois : libre de partir à tout moment avec ${F.lease.noticeMonths} mois de préavis`,
-    `- Sans frais de dossier ni d'agence ; caution de ${F.depositMonths} mois de loyer hors charges`,
+    `- Sans frais de dossier ni d'agence ; caution de ${F.depositMonths} mois de loyer hors charges, payable en 1, 2 ou 3 fois selon ton dossier`,
     `- ${F.totalResidents}+ résidents accueillis depuis ${F.foundingLabel.fr}, gestion en direct par les deux fondateurs (${F.founders.join(' et ')}), événements réguliers (pizza party, cours de yoga, afterworks)`,
     // (Lot L3, Jérôme 09/10/2026) D3 : ancienne ligne « occupation sur 5 ans » retirée ; D4 : note Google (STATS_DISPLAY.googleRating) + lien fiche.
     `- Avis : ${m.STATS_DISPLAY.fr.googleRating} — ${F.googleReviews.url}`,

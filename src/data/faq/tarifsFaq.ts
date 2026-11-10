@@ -20,7 +20,7 @@ export const tarifsFaq: { fr: QAPair[]; en: QAPair[] } = {
     },
     {
       q: "Quel est le montant de la caution chez La Villa Coliving ?",
-      a: "La caution chez La Villa Coliving correspond à deux mois de loyer hors charges, conformément à la réglementation. Elle t'est restituée sous 30 jours après ton départ si aucune dégradation n'est constatée, sinon sous 2 mois, déduction faite des éventuels dégâts. Aucun frais d'entrée non remboursable ne s'y ajoute : tu règles ton premier loyer et cette caution, c'est tout.",
+      a: "La caution chez La Villa Coliving correspond à deux mois de loyer hors charges, conformément à la réglementation. Elle peut se payer en une fois, en 2 fois (la moitié à la signature, l'autre avec ton 2ᵉ loyer) ou en 3 fois (un tiers à la signature, puis un tiers avec tes 2ᵉ et 3ᵉ loyers) ; le nombre de versements est fixé par La Villa au moment de valider ton dossier, en fonction de ta situation financière. Elle t'est restituée sous 30 jours après ton départ si aucune dégradation n'est constatée, sinon sous 2 mois, déduction faite des éventuels dégâts. Aucun frais d'entrée non remboursable ne s'y ajoute : tu règles ton premier loyer et cette caution, c'est tout.",
     },
     {
       q: "Le prix varie-t-il selon la maison ou la chambre ?",
@@ -55,7 +55,7 @@ export const tarifsFaq: { fr: QAPair[]; en: QAPair[] } = {
     },
     {
       q: "How much is the security deposit at La Villa Coliving?",
-      a: "The deposit at La Villa Coliving is two months' rent excluding charges, in line with regulations. It is returned within 30 days of your departure if there is no damage, otherwise within 2 months, less any damage. No non-refundable move-in fee is added: you pay your first month's rent and this deposit, that's all.",
+      a: "The deposit at La Villa Coliving is two months' rent excluding charges, in line with regulations. It can be paid in one go, in 2 instalments (half at signing, half with your 2nd month's rent) or in 3 (a third at signing, then a third with your 2nd and 3rd month's rent); La Villa sets the number of instalments when your application is approved, based on your financial situation. It is returned within 30 days of your departure if there is no damage, otherwise within 2 months, less any damage. No non-refundable move-in fee is added: you pay your first month's rent and this deposit, that's all.",
     },
     {
       q: "Does the price vary by house or room?",

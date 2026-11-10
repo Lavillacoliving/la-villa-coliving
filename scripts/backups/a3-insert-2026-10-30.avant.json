@@ -1,0 +1,21 @@
+{
+  "slug": "trouver-logement-avant-d-arriver-geneve",
+  "checked_at": "2026-10-30T15:12:14.806Z",
+  "state_before": {
+    "slug_exists": false,
+    "blog_posts_total": 61,
+    "blog_posts_published": 42,
+    "triggers": [
+      "blog_posts_updated_at (update_blog_updated_at)"
+    ]
+  },
+  "expected_after": {
+    "is_published": false,
+    "length_fr": 14553,
+    "length_en": 14045,
+    "md5_fr": "d2081d3840b02ba9d54cc705bf57e499",
+    "md5_en": "2ab99a848e89db5b233ed6b4143b645b"
+  },
+  "sql": "scripts/nouvel-article-trouver-logement-avant-d-arriver-geneve.sql",
+  "commit_drafts": "1a327fd8"
+}

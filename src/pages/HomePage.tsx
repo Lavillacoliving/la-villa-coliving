@@ -16,6 +16,7 @@ import { LocalizedLink } from '@/components/LocalizedLink';
 import { ArrowRight } from 'lucide-react';
 import { WhatsAppButton } from "@/components/WhatsAppButton";
 import { SEO } from '@/components/SEO';
+import { FacebookGroupLine } from "@/components/FacebookGroupLine";
 import { FaqSection } from '@/components/FaqSection';
 import { buildHomeLodgingBusinessSchema } from '@/lib/structuredData';
 import { useLanguage } from '@/contexts/LanguageContext';
@@ -93,6 +94,10 @@ export function HomePage() {
                 : "Tout inclus, un seul loyer"}
               <ArrowRight className="w-4 h-4 flex-none text-[#D4A574]" />
             </LocalizedLink>
+          </div>
+          {/* (Brief du 05/11/2026, D1) Groupe Facebook nommé et attribué, sous la section maisons : une phrase + un lien, sans encart. */}
+          <div className="max-w-2xl mx-auto px-6 mt-5 text-center">
+            <FacebookGroupLine position="home_houses" />
           </div>
         </div>
       </div>

@@ -312,11 +312,14 @@ export function adminSlotSentence(key: AdminSlotKey, lang: EntityLang): string {
 // l'écran de confirmation de /candidature. Le canal 3 du bloc « Où chercher » (ci-dessus) nomme déjà le groupe sur les pages
 // porteuses du bloc. (C3, 11/10/2026 ; 12/10 : « publiées », Jérôme ne les a pas épinglées) Règles du groupe publiées → L5.4 levé pour « modéré » :
 // canal 3 et A.7 disent, au mot près, « animé et modéré par l'équipe de La Villa Coliving : règles publiées, annonces douteuses
-// retirées », A.8 en forme courte « animé et modéré par notre équipe (règles publiées, annonces douteuses retirées) » (option B). « Annonces vérifiées » / « verified listings » reste INTERDIT (on retire ce qui est douteux, on ne vérifie
+// retirées », A.8 en forme courte « animé et modéré par l'équipe de La Villa Coliving (règles publiées, annonces douteuses retirées) » (D5 du brief
+// du 05/11/2026 : « notre équipe » ne se rattache pas à la marque pour un robot ; avant : option B « par notre équipe »).
+// A.9 (brief du 05/11/2026, D1-D4) : une phrase + un lien (<FacebookGroupLine/>, jamais d'encart) sur l'accueil (sous la section maisons) et
+// sur /nos-maisons (fin de page, avant la phrase d'appel), FR + EN. « Annonces vérifiées » / « verified listings » reste INTERDIT (on retire ce qui est douteux, on ne vérifie
 // pas chaque logement). Lien normal (jamais nofollow), nouvel onglet. Jamais dans sameAs (D10 du socle).
 
 /** Incrémenter à chaque changement de texte A.7/A.8 : porté par data-facebook-group-version. */
-export const FACEBOOK_GROUP_VERSION = "2026-10-12";
+export const FACEBOOK_GROUP_VERSION = "2026-11-05";
 
 /** Articles porteurs de la mention A.7 (SQL généré par scripts/l5-facebook.edits.mjs) : le paragraphe est inséré juste AVANT
  *  l'ancre (un titre unique de l'article, par langue). La garde (check-answer-slots, L1_TARGETS) exige la phrase dans le texte visible. */
@@ -335,6 +338,10 @@ export const FACEBOOK_CALLOUT_ROUTES = ["/lavilla", "/leloft", "/lelodge"] as co
 /** (13/10/2026, D2 du brief « conversion Ads », décision Jérôme) /chambres-disponibles ne porte l'encart que s'il n'y a
  *  AUCUNE chambre libre ni datée : 0 ou 1 encart, texte vérifié au caractère près s'il est affiché. */
 export const FACEBOOK_CALLOUT_OPTIONAL_ROUTES = ["/chambres-disponibles"] as const;
+/** (Brief du 05/11/2026, D1-D2) Pages prérendues qui portent la ligne A.9 (FR + /en) — exactement une fois chacune. */
+export const FACEBOOK_LINE_ROUTES = ["/", "/nos-maisons"] as const;
+/** Attribution exacte (même formule que le canal 3, A.7, A.8 et A.9) : un robot doit rattacher le groupe à la marque. */
+export const FACEBOOK_ATTRIBUTION = { fr: "animé et modéré par l'équipe de La Villa Coliving", en: "run and moderated by the La Villa Coliving team" } as const;
 
 /** A.7 — mention canonique (texte visible). */
 export function facebookMention(lang: EntityLang): string {
@@ -357,20 +364,39 @@ export function facebookCallout(lang: EntityLang): { sentence: string; cta: stri
   const g = FACEBOOK_GROUP;
   if (lang === "en") {
     return {
-      sentence: `No room free with us on your dates? The Facebook group "${g.name}", run and moderated by our team (published rules, suspicious listings removed), posts ${g.postsPerMonthShort.en} for flatshares in the area every month.`,
+      sentence: `No room free with us on your dates? The Facebook group "${g.name}", run and moderated by the La Villa Coliving team (published rules, suspicious listings removed), posts ${g.postsPerMonthShort.en} for flatshares in the area every month.`,
       cta: "Join the group",
     };
   }
   return {
-    sentence: `Pas de chambre libre chez nous aux bonnes dates ? Le groupe Facebook « ${g.name} », animé et modéré par notre équipe (règles publiées, annonces douteuses retirées), publie chaque mois ${g.postsPerMonthShort.fr} de colocation dans la région.`,
+    sentence: `Pas de chambre libre chez nous aux bonnes dates ? Le groupe Facebook « ${g.name} », animé et modéré par l'équipe de La Villa Coliving (règles publiées, annonces douteuses retirées), publie chaque mois ${g.postsPerMonthShort.fr} de colocation dans la région.`,
     cta: "Rejoindre le groupe",
   };
 }
 
-/** Toutes les chaînes A.7/A.8 rendues (pour la garde et les tests). */
+/**
+ * A.9 (brief du 05/11/2026, D3-D4) — ligne de l'accueil et de /nos-maisons : une phrase (un nœud texte), puis un lien séparé vers
+ * le groupe (règle « une phrase = un nœud texte »). Texte arrêté par Jérôme, au mot près.
+ */
+export function facebookLine(lang: EntityLang): { sentence: string; cta: string } {
+  const g = FACEBOOK_GROUP;
+  if (lang === "en") {
+    return {
+      sentence: `Looking elsewhere too? Our public Facebook group "${g.name}", ${FACEBOOK_ATTRIBUTION.en}, posts rooms and flatshares on the French side every week — ours and other people's.`,
+      cta: "See the group",
+    };
+  }
+  return {
+    sentence: `Tu cherches aussi ailleurs ? Notre groupe Facebook public « ${g.name} », ${FACEBOOK_ATTRIBUTION.fr}, publie chaque semaine des chambres et colocations côté France, les nôtres et celles des autres.`,
+    cta: "Voir le groupe",
+  };
+}
+
+/** Toutes les chaînes A.7/A.8/A.9 rendues (pour la garde et les tests). */
 export function facebookStrings(lang: EntityLang): string[] {
   const c = facebookCallout(lang);
-  return [facebookMention(lang), c.sentence, c.cta];
+  const l = facebookLine(lang);
+  return [facebookMention(lang), c.sentence, c.cta, l.sentence, l.cta];
 }
 
 // (C3, 11/10/2026) L5.4 réduit : « modéré » est autorisé depuis l'épinglage des règles ; « annonces vérifiées » reste interdit.
@@ -404,13 +430,18 @@ export function answerSlotsIssues(): string[] {
       if (/<[a-z]/i.test(str) || /\{\{/.test(str)) issues.push(`${lang} : balise ou token dans une chaîne Facebook`);
       if (lang === "fr" && /\b(vous|votre|vos)\b/i.test(str)) issues.push(`fr : vouvoiement — « ${str.slice(0, 60)}… »`);
     }
-    if (!facebookMention(lang).includes(FACEBOOK_GROUP.name) || !facebookCallout(lang).sentence.includes(FACEBOOK_GROUP.name)) issues.push(`${lang} : nom du groupe absent`);
+    if (!facebookMention(lang).includes(FACEBOOK_GROUP.name) || !facebookCallout(lang).sentence.includes(FACEBOOK_GROUP.name) || !facebookLine(lang).sentence.includes(FACEBOOK_GROUP.name)) issues.push(`${lang} : nom du groupe absent`);
+    // (Brief du 05/11/2026, D5) Attribution à la marque dans l'encart A.8 et la ligne A.9 ; plus jamais « notre équipe » / « our team ».
+    for (const s of [facebookCallout(lang).sentence, facebookLine(lang).sentence]) {
+      if (!s.includes(FACEBOOK_ATTRIBUTION[lang])) issues.push(`${lang} : attribution « ${FACEBOOK_ATTRIBUTION[lang]} » absente — « ${s.slice(0, 60)}… »`);
+    }
+    if (facebookStrings(lang).some((s) => /modéré par notre équipe|moderated by our team/i.test(s))) issues.push(`${lang} : « notre équipe » / « our team » au lieu de la marque (D5)`);
     if (!facebookMention(lang).includes(lang === "en" ? membersEn : membersFr)) issues.push(`${lang} : nombre de membres absent de A.7`);
     const md = facebookMentionMarkdown(lang);
     if (md.replace(/\[([^\]]+)\]\([^)]+\)/, "$1") !== facebookMention(lang)) issues.push(`${lang} : le markdown A.7 ne rend pas le même texte que la mention`);
     if (!md.includes(FACEBOOK_GROUP.url)) issues.push(`${lang} : lien du groupe absent du markdown A.7`);
   }
-  if (facebookStrings("fr").length !== facebookStrings("en").length) issues.push("A.7/A.8 : parité FR/EN");
+  if (facebookStrings("fr").length !== facebookStrings("en").length) issues.push("A.7/A.8/A.9 : parité FR/EN");
   // (Brief du 13/10/2026) créneaux nommés des articles admin : la marque exactement une fois par créneau.
   for (const k of ADMIN_SLOT_KEYS) {
     for (const lang of ["fr", "en"] as const) {

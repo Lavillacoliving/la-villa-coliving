@@ -1,5 +1,6 @@
 // Offre A « Pose tes valises avant l'hiver » — brief Jérôme du 06/10/2026, rebrief du 12/10/2026 (−50 % sur le
-// premier mois, caution en 2 ou 3 fois, bail signé du 15/10 au 25/11 inclus, bail démarrant à la libération).
+// premier mois, bail signé du 15/10 au 25/11 inclus, bail démarrant à la libération). (02/11/2026, brief « caution
+// permanente ») La caution en 1, 2 ou 3 fois est une règle permanente, plus un avantage de l'offre : src/data/entityFacts.ts.
 // SOURCE UNIQUE des dates, des libellés et de la mesure de l'offre : page /offre-hiver, bandeau,
 // ligne du formulaire, filtre des chambres. Aucun import : ce module est aussi chargé tel quel
 // sous Node par tools/test/offer.test.mjs, qui vérifie que le script inline #lvc-offer
@@ -179,15 +180,11 @@ export const OFFER_TEXTS = {
     banner: `Ton 1er mois à moitié prix si tu signes d'ici le ${END_FR} →`,
     bannerClose: "Fermer ce message",
     formLine: `Offre Pose tes valises : −${OFFER_DISCOUNT_PERCENT}\u00a0% sur ton premier mois pour tout bail signé d'ici le ${END_FR}.`,
-    /** (13/10/2026, brief « conversion Ads » §2.2, D3) Suite de la ligne de caution de /chambres-disponibles, pendant l'offre
-     *  seulement (isOfferStarted() && isOfferActive()) : « Caution de 2 mois de loyer hors charges, » + depositNote. */
-    depositNote: `en 2 ou 3 fois pour tout bail signé d'ici le ${END_FR}`,
   },
   en: {
     name: "Settle in before winter",
     banner: `Half price on your first month if you sign by ${END_EN} →`,
     bannerClose: "Close this message",
     formLine: `Settle-in offer: ${OFFER_DISCOUNT_PERCENT}% off your first month for any lease signed by ${END_EN}.`,
-    depositNote: `in 2 or 3 instalments for any lease signed by ${END_EN}`,
   },
 } as const;

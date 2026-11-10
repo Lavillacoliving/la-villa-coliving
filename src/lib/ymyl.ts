@@ -10,7 +10,6 @@ export const YMYL_ARTICLES: Record<string, YmylDomain> = {
   "fiscalite-frontalier-geneve-impots-2026": "fiscal",
   "declaration-impots-frontalier-2026": "fiscal",
   "salaire-suisse-net-frontalier-2026": "fiscal",
-  "avenant-fiscal-40-frontalier-geneve": "fiscal",
   "teletravail-frontalier-geneve-regles-2026": "fiscal",
   "permis-g-frontalier-geneve": "immigration",
   "allocations-familiales-frontalier-geneve-2026": "fiscal",

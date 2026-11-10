@@ -177,6 +177,14 @@
       "destination": "/prerendered/en-politique-de-confidentialite.html"
     },
     {
+      "source": "/blog/ou-habiter-en-france-quand-on-travaille-a-geneve",
+      "destination": "/prerendered/blog-ou-habiter-en-france-quand-on-travaille-a-geneve.html"
+    },
+    {
+      "source": "/blog/trouver-logement-avant-d-arriver-geneve",
+      "destination": "/prerendered/blog-trouver-logement-avant-d-arriver-geneve.html"
+    },
+    {
       "source": "/blog/non-la-villa-coliving-nest-pas-une-arnaque",
       "destination": "/prerendered/blog-non-la-villa-coliving-nest-pas-une-arnaque.html"
     },
@@ -253,10 +261,6 @@
       "destination": "/prerendered/blog-permis-g-frontalier-geneve.html"
     },
     {
-      "source": "/blog/avenant-fiscal-40-frontalier-geneve",
-      "destination": "/prerendered/blog-avenant-fiscal-40-frontalier-geneve.html"
-    },
-    {
       "source": "/blog/coliving-frais-dossier-geneve-annemasse",
       "destination": "/prerendered/blog-coliving-frais-dossier-geneve-annemasse.html"
     },
@@ -329,10 +333,6 @@
       "destination": "/prerendered/blog-coliving-geneve-frontaliers-guide-complet.html"
     },
     {
-      "source": "/blog/demenager-geneve-frontalier-checklist",
-      "destination": "/prerendered/blog-demenager-geneve-frontalier-checklist.html"
-    },
-    {
       "source": "/blog/grand-geneve-2026-nouveautes-frontaliers",
       "destination": "/prerendered/blog-grand-geneve-2026-nouveautes-frontaliers.html"
     },
@@ -343,6 +343,14 @@
     {
       "source": "/blog/living-in-france-working-in-geneva",
       "destination": "/prerendered/blog-living-in-france-working-in-geneva.html"
+    },
+    {
+      "source": "/en/blog/ou-habiter-en-france-quand-on-travaille-a-geneve",
+      "destination": "/prerendered/en-blog-ou-habiter-en-france-quand-on-travaille-a-geneve.html"
+    },
+    {
+      "source": "/en/blog/trouver-logement-avant-d-arriver-geneve",
+      "destination": "/prerendered/en-blog-trouver-logement-avant-d-arriver-geneve.html"
     },
     {
       "source": "/en/blog/non-la-villa-coliving-nest-pas-une-arnaque",
@@ -421,10 +429,6 @@
       "destination": "/prerendered/en-blog-permis-g-frontalier-geneve.html"
     },
     {
-      "source": "/en/blog/avenant-fiscal-40-frontalier-geneve",
-      "destination": "/prerendered/en-blog-avenant-fiscal-40-frontalier-geneve.html"
-    },
-    {
       "source": "/en/blog/coliving-frais-dossier-geneve-annemasse",
       "destination": "/prerendered/en-blog-coliving-frais-dossier-geneve-annemasse.html"
     },
@@ -495,10 +499,6 @@
     {
       "source": "/en/blog/coliving-geneve-frontaliers-guide-complet",
       "destination": "/prerendered/en-blog-coliving-geneve-frontaliers-guide-complet.html"
-    },
-    {
-      "source": "/en/blog/demenager-geneve-frontalier-checklist",
-      "destination": "/prerendered/en-blog-demenager-geneve-frontalier-checklist.html"
     },
     {
       "source": "/en/blog/grand-geneve-2026-nouveautes-frontaliers",
@@ -671,6 +671,10 @@
           "key": "preview"
         }
       ]
+    },
+    {
+      "source": "/images/:path*.jpg",
+      "destination": "/images/:path*.webp"
     }
   ],
   "trailingSlash": false,
@@ -1127,12 +1131,12 @@
     },
     {
       "source": "/blog/arriver-seul-geneve-guide-30-jours",
-      "destination": "/blog/demenager-geneve-frontalier-checklist",
+      "destination": "/blog/trouver-logement-avant-d-arriver-geneve",
       "permanent": true
     },
     {
       "source": "/en/blog/arriver-seul-geneve-guide-30-jours",
-      "destination": "/en/blog/demenager-geneve-frontalier-checklist",
+      "destination": "/en/blog/trouver-logement-avant-d-arriver-geneve",
       "permanent": true
     },
     {
@@ -1258,6 +1262,26 @@
     {
       "source": "/is-this-real",
       "destination": "/en/blog/non-la-villa-coliving-nest-pas-une-arnaque",
+      "permanent": true
+    },
+    {
+      "source": "/blog/demenager-geneve-frontalier-checklist",
+      "destination": "/blog/trouver-logement-avant-d-arriver-geneve",
+      "permanent": true
+    },
+    {
+      "source": "/en/blog/demenager-geneve-frontalier-checklist",
+      "destination": "/en/blog/trouver-logement-avant-d-arriver-geneve",
+      "permanent": true
+    },
+    {
+      "source": "/blog/avenant-fiscal-40-frontalier-geneve",
+      "destination": "/blog/teletravail-frontalier-geneve-regles-2026",
+      "permanent": true
+    },
+    {
+      "source": "/en/blog/avenant-fiscal-40-frontalier-geneve",
+      "destination": "/en/blog/teletravail-frontalier-geneve-regles-2026",
       "permanent": true
     }
   ],

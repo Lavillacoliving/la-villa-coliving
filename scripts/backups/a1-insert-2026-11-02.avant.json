@@ -1,0 +1,22 @@
+{
+  "slug": "ou-habiter-en-france-quand-on-travaille-a-geneve",
+  "checked_at": "2026-11-02T11:20:00.861Z",
+  "state_before": {
+    "slug_exists": false,
+    "blog_posts_total": 62,
+    "blog_posts_published": 42,
+    "triggers": [
+      "blog_posts_updated_at (update_blog_updated_at)"
+    ]
+  },
+  "expected_after": {
+    "is_published": false,
+    "length_fr": 14777,
+    "length_en": 14356,
+    "md5_fr": "25ee6240fec4f5bf7ab6667e81af8277",
+    "md5_en": "114c41efaadddb01197fc333efed0fff",
+    "nbsp_fr": 12
+  },
+  "sql": "scripts/nouvel-article-ou-habiter-en-france-quand-on-travaille-a-geneve.sql",
+  "commit_drafts": "f0a1481f"
+}

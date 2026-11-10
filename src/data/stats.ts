@@ -37,11 +37,13 @@ export const HOUSE_SURFACES = {
 } as const;
 // (Lot L2, 09/10/2026) Surfaces des chambres PAR MAISON = Math.round(min / max de v_public_rooms.surface_m2), relevé
 // du 09/10/2026 (La Villa 15,5-24 → 16-24 ; Le Loft 20-23 ; Le Lodge 17-20) — gardées par scripts/house-pages-check.mjs.
+// (10/11/2026, décision Jérôme) Le Lodge 18-20 : la chambre 6, seule à 17 m², mesure 18 m² (`rooms.surface_m2` corrigé
+// le même jour — la garde compare cette constante à la base, les deux changent ensemble).
 // STATS.roomSizeMin / roomSizeMax restent les bornes des trois maisons réunies.
 export const ROOM_SURFACE_BY_HOUSE = {
   lavilla: { min: 16, max: 24 },
   leloft: { min: 20, max: 23 },
-  lelodge: { min: 17, max: 20 },
+  lelodge: { min: 18, max: 20 },
 } as const;
 
 export const STATS = {

@@ -1,0 +1,27 @@
+{
+  "slug": "trouver-logement-avant-d-arriver-geneve",
+  "title_fr": "Se loger côté France avant d'arriver à Genève",
+  "title_en": "Moving to Geneva? Find housing in France first",
+  "excerpt_fr": "Tu commences à Genève dans deux mois et tu cherches un logement côté France sans pouvoir visiter ? Le calendrier à rebours qu'on conseille, de J-60 au jour J : où chercher, comment vérifier un bailleur, le dossier sans fiche de salaire suisse et la checklist du déménagement.",
+  "excerpt_en": "Starting in Geneva in two months and looking for a place on the French side without being able to visit? The countdown we recommend, from D-60 to day 0: where to look, how to check a landlord, a rental file with no Swiss payslip and the moving checklist.",
+  "meta_description_fr": "Tu commences à Genève en janvier ? Le calendrier J-60 → J0 pour te loger côté France à distance : où chercher, arnaques, dossier sans fiche de paie suisse.",
+  "meta_description_en": "Starting in Geneva in January? A 60-day countdown to secure housing on the French side remotely: where to look, scams, a file with no Swiss payslip.",
+  "author": "Jerome Austin",
+  "category": "tips",
+  "image_url": "/images/le loft/exterior/la villa coliving le loft-114.webp",
+  "tags": [
+    "arrivée",
+    "mutation",
+    "relocation",
+    "logement",
+    "frontalier",
+    "genève",
+    "checklist",
+    "2027"
+  ],
+  "intent_bucket": "high",
+  "consolidates": [
+    "demenager-geneve-frontalier-checklist"
+  ],
+  "inbound": []
+}

@@ -8,7 +8,7 @@ import { RoomsEmbed } from "@/components/RoomsEmbed";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { useHydrated } from "@/hooks/useHydrated";
 import { HOUSES } from "@/data/houses";
-import { STATS, STATS_SHARED_BATH, CONTRACT_EUR, thousands } from "@/data/stats";
+import { STATS, STATS_SHARED_BATH, CONTRACT_EUR, PRICE_SHARED_CHF_EN, PRICE_SHARED_CHF_FR, thousands } from "@/data/stats";
 import { markOffer } from "@/lib/attribution";
 import { readPrerenderFlag } from "@/lib/prerenderEmbeddedState";
 import type { QAPair } from "@/lib/structuredData";
@@ -35,13 +35,18 @@ import {
 
 /**
  * /offre-hiver · /en/winter-offer — Offre A « Pose tes valises avant l'hiver » (brief Jérôme du
- * 06/10/2026 ; rebrief du 12/10/2026 : −50 % sur le premier mois, caution en 2 ou 3 fois, bail signé du
+ * 06/10/2026 ; rebrief du 12/10/2026 : −50 % sur le premier mois, bail signé du
  * 15/10 au 25/11 inclus, bail démarrant à la libération ; communication Facebook + Ads à partir du 15/10).
+ * (02/11/2026, brief « caution permanente ») La caution en 1, 2 ou 3 fois n'est plus un avantage de l'offre : règle
+ * permanente pour tout bail (src/data/entityFacts.ts, FAQ du site) ; la FAQ et le tableau de l'offre le rappellent.
  *
  * Page TEMPORAIRE : noindex + canonical auto-référente (pas de concurrence avec /chambres-disponibles),
  * prérendue (LCP des liens d'annonce), hors sitemap. Les dates viennent de src/data/offer.ts ; après
  * OFFER_END la page affiche « Cette offre est terminée » avec un lien vers /chambres-disponibles — pas
- * de 301 : les liens Facebook et Ads doivent continuer à tomber sur une page qui explique.
+ * de 301 : les liens Facebook et Ads doivent continuer à tomber sur une page qui explique. (Décision A de Jérôme
+ * du 02/11/2026) L'état « terminée » rappelle aussi ce qui ne change pas — loyer tout inclus, bail, 0 frais, caution
+ * payable en 1, 2 ou 3 fois selon le dossier, visite — avec un lien vers /faq : le post Reddit du 02/11 (r/geneva)
+ * renvoie vers /en/winter-offer ; title et description propres à cet état (plus de « −50 % » une fois l'offre close).
  *
  * Hydratation : l'état « terminée » dépend de la date du lecteur. Pendant l'hydratation le premier rendu
  * reproduit le HTML prérendu (repère `__offer_state__` capturé par main.tsx sur <main data-offer-state>),
@@ -187,17 +192,36 @@ export function OfferHiverPage() {
     ? `Settle in before winter: ${OFFER_DISCOUNT_PERCENT}% off your first month`
     : `Pose tes valises avant l'hiver : −${OFFER_DISCOUNT_PERCENT}\u00a0% sur ton premier mois`;
   const description = en
-    ? `Half of your first month on us and your deposit in 2 or 3 instalments, for any lease signed by ${endLabel}. All-inclusive rooms near Geneva.`
-    : `La moitié de ton premier mois offerte et la caution en 2 ou 3 fois, pour tout bail signé d'ici le ${endLabel}. Chambres tout inclus près de Genève.`;
+    ? `Half of your first month on us for any lease signed by ${endLabel}. All-inclusive rooms near Geneva.`
+    : `La moitié de ton premier mois offerte pour tout bail signé d'ici le ${endLabel}. Chambres tout inclus près de Genève.`;
 
   if (ended) {
+    // (Décision A de Jérôme, 02/11/2026) Une page « terminée » qui explique : ce qui ne change pas, avec ou sans offre.
+    // Valeurs des constantes (STATS, PRICE_SHARED_CHF_*), aucun chiffre nouveau ; title/description propres à cet état.
+    const endedTitle = en ? "This offer has ended" : "Cette offre est terminée";
+    const endedDescription = en
+      ? `“${T.name}” closed on ${endLabel} ${year}. What stays the same: all-inclusive rent, ${STATS.leaseDurationMonths}-month lease, no fees, deposit payable in 1, 2 or 3 instalments depending on your application.`
+      : `L'offre « ${T.name} » s'est terminée le ${endLabel} ${year}. Ce qui ne change pas : loyer tout inclus, bail de ${STATS.leaseDurationMonths} mois, 0 frais, caution payable en 1, 2 ou 3 fois selon ton dossier.`;
+    const stays = en
+      ? [
+          `All-inclusive rent from ${PRICE_SHARED_CHF_EN}/month: utilities, fibre, common-area cleaning, pool, sauna and gym included.`,
+          `${STATS.leaseDurationMonths}-month lease: you're free to leave at any time with ${STATS.noticePeriodMonths} month's notice.`,
+          `No application fee, no agency fee. Deposit: ${STATS.depositMonths} months' rent excluding charges, payable in 1, 2 or 3 instalments depending on your application.`,
+          "Visit on site or by video call, as you prefer.",
+        ]
+      : [
+          `Loyer tout inclus dès ${PRICE_SHARED_CHF_FR}/mois : charges, fibre, ménage des espaces communs, piscine, sauna et salle de sport compris.`,
+          `Bail de ${STATS.leaseDurationMonths} mois : tu es libre de partir à tout moment avec ${STATS.noticePeriodMonths} mois de préavis.`,
+          `0 € de frais de dossier, 0 € de frais d'agence. Caution : ${STATS.depositMonths} mois de loyer hors charges, payable en 1, 2 ou 3 fois selon ton dossier.`,
+          "Visite sur place ou en visio, au choix.",
+        ];
     return (
       <main data-offer-state="ended" className="relative pt-16 bg-white">
-        <SEO title={title} description={description} noindex selfCanonical />
+        <SEO title={endedTitle} description={endedDescription} noindex selfCanonical />
         <section className="py-20 lg:py-28 bg-[#F5F2ED]">
           <div className="container-custom max-w-2xl text-center">
             <h1 className="text-4xl md:text-5xl font-light text-[#1C1917] mb-5" style={{ fontFamily: '"DM Serif Display", serif' }}>
-              {en ? "This offer has ended" : "Cette offre est terminée"}
+              {endedTitle}
             </h1>
             <p className="text-lg text-[#44403C] mb-8">
               {en
@@ -211,6 +235,26 @@ export function OfferHiverPage() {
               {en ? "See available rooms" : "Voir les chambres disponibles"}
               <ArrowRight className="w-5 h-5" />
             </LocalizedLink>
+          </div>
+        </section>
+        <section className="py-16 lg:py-20 bg-white">
+          <div className="container-custom max-w-2xl">
+            <h2 className="text-2xl md:text-3xl font-light text-[#1C1917] mb-6 text-center" style={{ fontFamily: '"DM Serif Display", serif' }}>
+              {en ? "What stays the same, offer or not" : "Ce qui ne change pas, avec ou sans offre"}
+            </h2>
+            <ul className="space-y-3 text-[#44403C] leading-relaxed">
+              {stays.map((item) => (
+                <li key={item} className="flex items-start gap-3">
+                  <Check className="mt-1 h-5 w-5 shrink-0 text-[#b8860b]" aria-hidden="true" />
+                  <span>{item}</span>
+                </li>
+              ))}
+            </ul>
+            <p className="mt-8 text-center">
+              <LocalizedLink to="/faq" className="text-[#b8860b] underline underline-offset-4 hover:text-[#1C1917]">
+                {en ? "Read the FAQ" : "Lire la FAQ"}
+              </LocalizedLink>
+            </p>
           </div>
         </section>
       </main>
@@ -271,7 +315,7 @@ function OfferActive({ en, L, title, description, labels }: { en: boolean; L: "f
         { q: "Until when?", a: `Until ${endLabel} ${year}: the offer applies to any lease signed by then, for an application received from ${startLabel}.` },
         { q: "What if my room only frees up in December?", a: `The offer still applies: your lease starts the day the room frees up, as long as you sign it by ${endLabel}.` },
         { q: "When does my lease start?", a: `The day the room frees up, or within ${ALREADY_FREE_START_DAYS} days of signing if it's already free. Still serving notice on your current place? That's exactly what the half month we offer is for.` },
-        { q: "How does the deposit in 2 or 3 instalments work?", a: `The deposit is still ${months} months' rent excluding charges. In 2 instalments: half at signature, the other half with your 2nd month's rent. In 3: one third at signature, one third with your 2nd month's rent, one third with your 3rd. It's returned when you leave, under the usual conditions.` },
+        { q: "How does the deposit in 2 or 3 instalments work?", a: `This applies to all our leases, offer or not. The deposit is still ${months} months' rent excluding charges. In 2 instalments: half at signature, the other half with your 2nd month's rent. In 3: one third at signature, one third with your 2nd month's rent, one third with your 3rd. La Villa sets the number of instalments when your application is approved, based on your financial situation. It's returned when you leave, under the usual conditions.` },
         { q: "Can it be combined?", a: "No. One offer per person, not combinable with any other offer." },
         { q: "Does the lease length change?", a: `No: ${STATS.leaseDurationMonths}-month lease, you leave whenever you want with ${STATS.noticePeriodMonths} month's notice. The rent written in your lease is the normal rent; the discount is a commercial gesture applied to your first month.` },
         { q: "Can I visit by video call?", a: "Yes. Visit on site or by video call, as you prefer — and you also meet a current resident for an honest take on life in the house." },
@@ -280,7 +324,7 @@ function OfferActive({ en, L, title, description, labels }: { en: boolean; L: "f
         { q: "Jusqu'à quand ?", a: `Jusqu'au ${endLabel} ${year} : l'offre s'applique à tout bail signé d'ici là, pour une candidature reçue à partir du ${startLabel}.` },
         { q: "Et si ma chambre ne se libère qu'en décembre ?", a: `L'offre s'applique quand même : ton bail démarre le jour où la chambre se libère, à condition de le signer d'ici le ${endLabel}.` },
         { q: "Mon bail démarre quand ?", a: `Le jour où la chambre se libère, ou dans les ${ALREADY_FREE_START_DAYS} jours suivant la signature si elle est déjà libre. Ton préavis court encore ? C'est justement à ça que sert la moitié offerte.` },
-        { q: "Comment marche la caution en 2 ou 3 fois ?", a: `La caution reste de ${months} mois de loyer hors charges. En 2 fois : la moitié à la signature, l'autre avec ton 2ᵉ loyer. En 3 fois : un tiers à la signature, un tiers avec ton 2ᵉ loyer, un tiers avec ton 3ᵉ. Elle t'est restituée à ton départ dans les conditions habituelles.` },
+        { q: "Comment marche la caution en 2 ou 3 fois ?", a: `C'est valable pour tous nos baux, avec ou sans offre. La caution reste de ${months} mois de loyer hors charges. En 2 fois : la moitié à la signature, l'autre avec ton 2ᵉ loyer. En 3 fois : un tiers à la signature, un tiers avec ton 2ᵉ loyer, un tiers avec ton 3ᵉ. Le nombre de versements est fixé par La Villa au moment de valider ton dossier, en fonction de ta situation financière. Elle t'est restituée à ton départ dans les conditions habituelles.` },
         { q: "C'est cumulable ?", a: "Non. Une seule offre par personne, non cumulable avec une autre offre." },
         { q: "La durée du bail change ?", a: `Non : bail de ${STATS.leaseDurationMonths} mois, tu pars quand tu veux avec ${STATS.noticePeriodMonths} mois de préavis. Le loyer inscrit à ton bail est le loyer normal ; la remise est un geste commercial appliqué sur ton premier mois.` },
         { q: "Je peux visiter en visio ?", a: "Oui. Visite sur place ou en visio, au choix, et tu rencontres aussi un résident actuel pour un retour honnête sur la vie de la maison." },
@@ -327,8 +371,8 @@ function OfferActive({ en, L, title, description, labels }: { en: boolean; L: "f
           </p>
           <p className="text-base md:text-lg text-[#44403C] mb-6">
             {en
-              ? `Sign by ${endLabel}: half of your first month is on us and your deposit can be paid in 2 or 3 instalments. Your rent stays the same.`
-              : `Signe d'ici le ${endLabel} : la moitié de ton premier mois est offerte et ta caution se paie en 2 ou 3 fois. Ton loyer, lui, ne change pas.`}
+              ? `Sign by ${endLabel}: half of your first month is on us. Your rent stays the same.`
+              : `Signe d'ici le ${endLabel} : la moitié de ton premier mois est offerte. Ton loyer, lui, ne change pas.`}
           </p>
           <p className="inline-flex items-center gap-2 px-4 py-2 bg-white border border-[#D4A574] rounded-full text-xs sm:text-sm font-medium text-[#1C1917]">
             <span className="w-2 h-2 bg-[#B8860B] rounded-full shrink-0" aria-hidden="true" />
@@ -471,8 +515,8 @@ function OfferActive({ en, L, title, description, labels }: { en: boolean; L: "f
                   <td className="px-4 py-4 text-[#1C1917] font-semibold">{en ? "Deposit" : "Caution"}</td>
                   <td className="px-4 py-4 text-[#1C1917]">
                     {en
-                      ? `${STATS.depositMonths} months' rent excluding charges, in 2 instalments (½ at signature, ½ with the 2nd month's rent) or 3 (⅓ at signature, ⅓ with the 2nd, ⅓ with the 3rd).`
-                      : `${STATS.depositMonths} mois de loyer hors charges, en 2 fois (½ à la signature, ½ avec le 2ᵉ loyer) ou en 3 fois (⅓ à la signature, ⅓ avec le 2ᵉ loyer, ⅓ avec le 3ᵉ).`}
+                      ? `${STATS.depositMonths} months' rent excluding charges, payable in 1, 2 or 3 instalments as for all our leases: in 2 (½ at signature, ½ with the 2nd month's rent) or 3 (⅓ at signature, ⅓ with the 2nd, ⅓ with the 3rd). La Villa sets the number of instalments based on your financial situation.`
+                      : `${STATS.depositMonths} mois de loyer hors charges, payable en 1, 2 ou 3 fois comme pour tous nos baux : en 2 fois (½ à la signature, ½ avec le 2ᵉ loyer) ou en 3 fois (⅓ à la signature, ⅓ avec le 2ᵉ loyer, ⅓ avec le 3ᵉ). Le nombre de versements est fixé par La Villa selon ta situation financière.`}
                   </td>
                 </tr>
               </tbody>

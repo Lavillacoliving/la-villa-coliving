@@ -29,7 +29,7 @@ const BUCKET_BY_SLUG: Record<string, IntentBucket> = {
   "dossier-location-frontalier-suisse-france": "high",
   "arnaques-logement-frontalier-geneve-eviter": "high",
   "non-la-villa-coliving-nest-pas-une-arnaque": "high", // (16/10/2026) article « C'est réel ? » — sans bloc offre (Q13), bucket = paramètre GA4 intent
-  "demenager-geneve-frontalier-checklist": "high",
+  "trouver-logement-avant-d-arriver-geneve": "high", // (30/10/2026) A3 du brief « Genève profils » — absorbe demenager-geneve-frontalier-checklist (308)
   "coliving-frais-dossier-geneve-annemasse": "high",
   // 🟡 medium — planning, budget, comparison
   "budget-colocation-geneve-guide-complet": "medium",
@@ -46,11 +46,13 @@ const BUCKET_BY_SLUG: Record<string, IntentBucket> = {
   "ecole-internationale-geneve-frontalier-ou-habiter": "ville",
   // (C3, 09/2026) page de décision « Vivre à Annemasse quand on travaille à Genève »
   "vivre-a-annemasse-quand-on-travaille-a-geneve": "ville",
+  // (02/11/2026) A1 du brief « Genève profils » — « Où habiter en France quand on travaille à Genève ? », guide par profil
+  "ou-habiter-en-france-quand-on-travaille-a-geneve": "ville",
   // 🟠 admin — tax/admin authority content, soft CTA only
   "fiscalite-frontalier-geneve-impots-2026": "admin",
   "declaration-impots-frontalier-2026": "admin",
   "3e-pilier-frontalier-geneve": "admin",
-  "avenant-fiscal-40-frontalier-geneve": "admin",
+  // (lot B, 11/2026) avenant-fiscal-40-frontalier-geneve fondu dans teletravail-frontalier-geneve-regles-2026 (308)
   "teletravail-frontalier-geneve-regles-2026": "admin",
   "permis-g-frontalier-geneve": "admin",
   "assurance-sante-frontalier-lamal-cmu-budget": "admin",
