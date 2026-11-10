@@ -211,7 +211,7 @@ export const translations = {
         },
       },
       benefits: {
-        title: "Avantages de Nos Maisons Coliving",
+        title: "Avantages de nos maisons coliving",
         benefit1: "Pas d'achat de meubles ni de tracas de déménagement",
         benefit2: "Tous les services inclus en un seul paiement",
         benefit3:
@@ -303,10 +303,10 @@ export const translations = {
       services: "Services inclus", // (Retenue premium, lot 1, T12 — 13/10/2026)
       rooms: "Chambres",
       location: "Localisation",
-      community: "La Communauté",
-      lifestyle: "Mode de Vie",
+      community: "La communauté",
+      lifestyle: "Mode de vie",
       gallery: "Galerie",
-      checkRates: "Voir les Tarifs",
+      checkRates: "Voir les tarifs",
       apply: "Candidater",
       from: "À partir de",
       perMonth: "/mois",
@@ -316,7 +316,7 @@ export const translations = {
       soon: "Ouverture Prochaine",
       viewRooms: "Voir les Chambres",
       virtualTour: "Visite Virtuelle",
-      nearby: "À Proximité",
+      nearby: "À proximité",
     },
   },
 };

@@ -60,8 +60,8 @@ export const faqData: FAQItem[] = [
       fr: 'Qu\'est-ce que le coliving ?',
     },
     answer: {
-      en: 'Coliving is a modern housing concept where individuals share a fully furnished home with private bedrooms and shared common spaces. It combines the privacy of your own room with the benefits of community living, all in a hassle-free, all-inclusive package. Unlike traditional renting, coliving provides instant community, premium amenities, and flexible terms.',
-      fr: 'Le coliving est un concept de logement moderne où les individus partagent une maison entièrement meublée avec des chambres privées et des espaces communs partagés. Il combine l\'intimité de ta propre chambre avec les avantages de la vie communautaire, le tout dans un package tout inclus sans tracas. Contrairement à la location traditionnelle, le coliving offre une communauté instantanée, des équipements premium et des conditions flexibles.',
+      en: 'Coliving is a modern housing concept where individuals share a fully furnished home with private bedrooms and shared common spaces. It combines the privacy of your own room with the benefits of community living, all in a hassle-free, all-inclusive package. Unlike traditional renting, coliving provides instant community, shared amenities, and flexible terms.',
+      fr: 'Le coliving est un concept de logement moderne où les individus partagent une maison entièrement meublée avec des chambres privées et des espaces communs partagés. Il combine l\'intimité de ta propre chambre avec les avantages de la vie communautaire, le tout dans un package tout inclus sans tracas. Contrairement à la location traditionnelle, le coliving offre une communauté instantanée, des équipements partagés et des conditions flexibles.',
     },
   },
   {
@@ -72,8 +72,8 @@ export const faqData: FAQItem[] = [
       fr: 'Quelle est la différence entre coliving et colocation ?',
     },
     answer: {
-      en: 'While both involve shared living, coliving is fundamentally different from colocation. Colocation typically means renting an apartment together and handling everything yourselves—furniture, utilities, cleaning, and finding compatible roommates. Coliving provides a turnkey solution: fully furnished spaces, all utilities included, professional cleaning, curated communities, premium amenities, and a supportive environment designed for modern living. At La Villa, we handle all the logistics so you can focus on living.',
-      fr: 'Bien que les deux impliquent le partage de logement, le coliving est fondamentalement différent de la colocation. La colocation signifie généralement louer un appartement ensemble et tout gérer toi-même — meubles, services, ménage et recherche de colocataires compatibles. Le coliving offre une solution clé en main : espaces entièrement meublés, tous les services inclus, ménage professionnel, communautés sélectionnées, équipements premium et un environnement favorable conçu pour la vie moderne. Chez La Villa, nous gérons toute la logistique pour que tu puisses te concentrer sur l\'essentiel : vivre.',
+      en: 'While both involve shared living, coliving is fundamentally different from colocation. Colocation typically means renting an apartment together and handling everything yourselves—furniture, utilities, cleaning, and finding compatible roommates. Coliving provides a turnkey solution: fully furnished spaces, all utilities included, professional cleaning, housemates chosen on application, shared amenities, and a supportive environment designed for modern living. At La Villa, we handle all the logistics so you can focus on living.',
+      fr: 'Bien que les deux impliquent le partage de logement, le coliving est fondamentalement différent de la colocation. La colocation signifie généralement louer un appartement ensemble et tout gérer toi-même — meubles, services, ménage et recherche de colocataires compatibles. Le coliving offre une solution clé en main : espaces entièrement meublés, tous les services inclus, ménage professionnel, colocataires choisis sur candidature, équipements partagés et un environnement favorable conçu pour la vie moderne. Chez La Villa, nous gérons toute la logistique pour que tu puisses te concentrer sur l\'essentiel : vivre.',
     },
   },
   {
