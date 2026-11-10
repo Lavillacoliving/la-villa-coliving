@@ -14,7 +14,13 @@
 -- B = tables : un locataire actif lit seulement sa maison, le bailleur de sa maison et les chambres de sa maison.
 -- Rien ne change pour le tableau de bord (administrateur avec double authentification), le site public (vues
 -- v_public_rooms et v_social_proof), les fonctions Edge et n8n (clé de service).
--- Retour arrière : scripts/securite-portail-2026-11-10.rollback.sql. À appliquer seulement sur GO écrit de Jérôme.
+-- Retour arrière : scripts/securite-portail-2026-11-10.rollback.sql.
+--
+-- APPLIQUÉ EN PRODUCTION LE 10/11/2026 (« GO sécurité » de Jérôme), migrations securite_portail_2026_11_10 et
+-- securite_portail_2026_11_10_revoke_anon. Vérifié après application : compte connecté non locataire = 0 fichier,
+-- 0 maison, 0 bailleur, 0 chambre ; locataire = son dossier (14 fichiers pour la fiche testée), 1 maison, 1 bailleur,
+-- les chambres de sa maison ; administrateur = 324 fichiers, 4 maisons, 3 bailleurs, 30 chambres ; visiteur = 29
+-- chambres publiques, rien d'interne (contrôlé aussi par l'API publique).
 
 begin;
 
@@ -51,6 +57,8 @@ as $$
   where t.email = (auth.jwt() ->> 'email') and t.is_active = true and t.property_id is not null;
 $$;
 revoke all on function public.my_tenant_property_ids() from public;
+-- Supabase ouvre par défaut toute nouvelle fonction au rôle anon : on le retire (signalé par le contrôle de sécurité).
+revoke execute on function public.my_tenant_property_ids() from anon;
 grant execute on function public.my_tenant_property_ids() to authenticated;
 
 drop policy if exists "Authenticated read properties" on public.properties;
