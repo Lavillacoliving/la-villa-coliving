@@ -25,6 +25,8 @@ export interface LeaseFactsRow {
   lease_version: string | null; status: string | null; start_date: string | null; end_date: string | null;
   /** Départage deux baux de même date d'entrée (brouillon puis bail signé) : le plus récemment créé l'emporte. */
   created_at?: string | null;
+  /** Fiche du locataire de ce bail (jointure `tenants`) : une fiche annulée = personne jamais venue ; `move_out_date` = départ réel. */
+  tenants?: { lease_status?: string | null; move_out_date?: string | null } | null;
   rent_eur: number | null; rent_hc_eur: number | null; charges_forfait_eur: number | null;
   charges_energy_chf: number | null; charges_maintenance_chf: number | null; charges_services_chf: number | null;
 }
@@ -151,14 +153,33 @@ export function leaseRentHc(l: LeaseFactsRow): number | null {
 
 export interface PreviousLeaseFacts { prev_hc: number | null; prev_paid_on: string | null; prev_revision: string | null; prev_departure: string | null; source: string | null }
 
-/** Dernier bail de la chambre (hors annulés), pour l'encadré 2.6 : proposé au générateur, modifiable par Jérôme. */
+/**
+ * Un bail ne compte comme « bail du précédent locataire » que s'il a vraiment couru (10/11/2026, La Villa 8 : trois
+ * brouillons de personnes jamais venues passaient devant la vraie locataire sortante) :
+ *  - pas un brouillon (jamais signé) ;
+ *  - pas le bail d'une fiche annulée — le tableau de bord passe alors le bail à `terminated`, comme un vrai départ ;
+ *  - pas un bail qui n'a pas encore commencé (bail signé d'un futur entrant).
+ */
+export function isPastTenancy(l: LeaseFactsRow, todayIso: string): boolean {
+  if (!l.start_date || l.start_date > todayIso) return false;
+  if (l.status === 'draft') return false;
+  if (l.tenants?.lease_status === 'cancelled') return false;
+  return true;
+}
+
+/** Dernier bail ayant vraiment couru dans la chambre, pour l'encadré 2.6 : proposé au générateur, modifiable par Jérôme. */
 export function previousLeaseFacts(leases: LeaseFactsRow[], todayIso: string): PreviousLeaseFacts {
-  const usable = leases.filter((l) => l.status !== 'cancelled' && l.start_date)
+  const usable = leases.filter((l) => isPastTenancy(l, todayIso))
     .sort((a, b) => b.start_date!.localeCompare(a.start_date!) || (b.created_at || "").localeCompare(a.created_at || ""));
   const last = usable[0];
   if (!last) return { prev_hc: null, prev_paid_on: null, prev_revision: null, prev_departure: null, source: null };
   const hc = leaseRentHc(last);
-  const departure = last.end_date && last.end_date < todayIso ? last.end_date : null;
+  // Départ : la fiche du locataire fait foi (date de sortie réelle ou prévue ; pas de date = locataire en place). La fin
+  // théorique d'un bail reconduit tacitement n'est pas un départ (bail échu le 25/04/2026, sortie réelle le 28/08/2026).
+  // Sans fiche jointe, on garde l'ancien repli : la fin du bail si elle est passée.
+  const departure = last.tenants
+    ? (last.tenants.move_out_date || null)
+    : (last.end_date && last.end_date < todayIso ? last.end_date : null);
   // dernier loyer payé : le 5 du dernier mois d'occupation connu (modifiable)
   const refMonth = (departure || todayIso).slice(0, 7);
   const olderThanAYear = last.start_date! < new Date(new Date(todayIso).getTime() - 365 * 86400000).toISOString().slice(0, 10);
