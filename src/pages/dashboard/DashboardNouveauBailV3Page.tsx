@@ -149,7 +149,7 @@ export default function DashboardNouveauBailV3Page() {
     if (!property || !room) { setRoomLeases([]); return; }
     let cancelled = false;
     supabase.from('leases')
-      .select('lease_version, status, start_date, end_date, rent_eur, rent_hc_eur, charges_forfait_eur, charges_energy_chf, charges_maintenance_chf, charges_services_chf')
+      .select('lease_version, status, start_date, end_date, created_at, rent_eur, rent_hc_eur, charges_forfait_eur, charges_energy_chf, charges_maintenance_chf, charges_services_chf')
       .eq('property_id', property.id).eq('room_number', room.room_number).order('start_date', { ascending: false }).limit(10)
       .then(({ data }) => {
         if (cancelled) return;

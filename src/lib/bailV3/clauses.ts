@@ -34,9 +34,10 @@ export interface LeaseV3Property {
   building_kind?: string;      // « Maison individuelle » (défaut) ou « Maison de ville » (Le Loft)
   /** Tènement de plusieurs bâtiments (Le Lodge, Jérôme 28/10/2026) : liste rendue en puces sous « Tènement immobilier sis … » ; sinon phrase générique. */
   buildings?: string[] | null;
-  /** Phrase d'introduction de la liste des bâtiments (Le Loft : « Maison de ville … répartie sur deux bâtiments : ») ; défaut = « Tènement immobilier sis … ». */
+  /** Phrase d'introduction de la liste des bâtiments, seulement pour déroger au texte généré (« Tènement immobilier sis …, [surfaces], constitué de N bâtiments distincts : » ; maison de ville : « … répartie sur N bâtiments : »). */
   buildings_intro?: string | null;
-  surface_total_m2: number | null; room_count: number; garden_m2: number | null;
+  /** Surface habitable totale et surface totale intérieure (m²) : les deux sont imprimées à l'article 2.1 (Jérôme, 10/11/2026). Le parc ou le terrain figure dans la clause de cadre, une seule fois. */
+  surface_total_m2: number | null; surface_interior_m2?: number | null; room_count: number;
   setting_clause_fr: string | null; common_areas: string[]; leisure_equipment: string; dpe_class: string | null;
 }
 export interface LeaseV3Room {
@@ -176,7 +177,8 @@ export function buildLeaseV3(input: LeaseV3Input): LeaseDoc {
   ].filter((x): x is string => !!x);
   art("objet", "OBJET ET DÉSIGNATION", [
     { t: "p", text: "Bien concerné :", bold: true },
-    { t: "bullets", bold: true, items: [`${p.name} - ${p.address}`, `Étage : ${r.floor} - Chambre : ${r.name} - Surface : ${r.surface_m2} m² (salle d'eau comprise)`] },
+    // « salle d'eau comprise » seulement pour une salle d'eau privative : une salle d'eau partagée n'est pas dans la surface de la chambre (Jérôme, 10/11/2026).
+    { t: "bullets", bold: true, items: [`${p.name} - ${p.address}`, `Étage : ${r.floor} - Chambre : ${r.name} - Surface : ${fNum(r.surface_m2)} m²${r.bathroom === "private" ? " (salle d'eau comprise)" : ""}`] },
     { t: "sub", text: "2.1 L'immeuble" },
     ...immeubleBlocks(p),
     { t: "sub", text: "2.2 Le local privatif, fermé à clef, dont le Locataire a la jouissance exclusive" },
@@ -233,7 +235,7 @@ export function buildLeaseV3(input: LeaseV3Input): LeaseDoc {
       { t: "p", text: `**À titre de geste commercial, le Bailleur consent au Locataire une remise de ${fEUR(discount)}** sur le loyer et le forfait du premier mois complet de location, soit ${monthLabel(firstFullMonth)} (montant habituel : ${fEUR(pr.total)}). Le montant à verser pour ce mois est donc de ${fEUR(pr.total - discount)}.${pr.prorataDays ? " Le prorata dû pour le mois d'entrée n'est pas concerné par cette remise." : ""} Cette remise est accordée une seule fois ; elle ne modifie ni le loyer, ni sa révision, ni le dépôt de garantie.` } as Block,
     ] : []),
     { t: "p", spaceBefore: true, text: `Frais de dossier et d'état des lieux d'entrée : ${fEUR(pr.fees)}, non soumis à la TVA — offerts à partir de 3 mois de présence` },
-    { t: "p", text: `Ces frais rémunèrent les prestations assurées par le Bailleur pour la mise en place de la location. Ils sont calculés sur la surface de la chambre louée, soit ${r.surface_m2} m² : frais de dossier (visite du logement, constitution du dossier, rédaction du bail) 10 € par m², soit ${fEUR(pr.feeDossier)} ; prestation d'état des lieux d'entrée 3 € par m², soit ${fEUR(pr.feeEdl)}. Ces frais sont offerts au Locataire dont le séjour atteint trois mois à compter de la date d'entrée ; en cas de départ avant ce délai, ils restent à sa charge et sont réglés au plus tard à la restitution des clés. Aucune autre somme n'est due au titre de la location.` },
+    { t: "p", text: `Ces frais rémunèrent les prestations assurées par le Bailleur pour la mise en place de la location. Ils sont calculés sur la surface de la chambre louée, soit ${fNum(r.surface_m2)} m² : frais de dossier (visite du logement, constitution du dossier, rédaction du bail) 10 € par m², soit ${fEUR(pr.feeDossier)} ; prestation d'état des lieux d'entrée 3 € par m², soit ${fEUR(pr.feeEdl)}. Ces frais sont offerts au Locataire dont le séjour atteint trois mois à compter de la date d'entrée ; en cas de départ avant ce délai, ils restent à sa charge et sont réglés au plus tard à la restitution des clés. Aucune autre somme n'est due au titre de la location.` },
     { t: "sub", text: "Révision annuelle (IRL) :" },
     { t: "bullets", items: [`Trimestre de référence : ${k.irl_label}`, `Indice de référence : ${fIrl(k.irl_value)}`, "Le loyer et le forfait de charges sont révisés chaque année à la date anniversaire du contrat selon l'indice de référence des loyers."] },
     { t: "sub", text: "Modalités de paiement :" },
@@ -374,18 +376,33 @@ export function buildLeaseV3(input: LeaseV3Input): LeaseDoc {
   };
 }
 
-/** 2.1 L'immeuble : phrase générique, ou tènement de plusieurs bâtiments (intro + puces + suite). */
+/** « d'une surface habitable totale de 365 m² et d'une surface totale intérieure de 380 m² » (article 2.1, Jérôme 10/11/2026). */
+function surfacesPhrase(p: LeaseV3Property): string {
+  const habitable = `d'une surface habitable totale de ${p.surface_total_m2 != null ? fNum(p.surface_total_m2) : "[…]"} m²`;
+  return p.surface_interior_m2 != null ? `${habitable} et d'une surface totale intérieure de ${fNum(p.surface_interior_m2)} m²` : habitable;
+}
+
+/**
+ * 2.1 L'immeuble : une maison (phrase unique) ou plusieurs bâtiments (introduction + puces + suite). Les surfaces sont
+ * générées depuis la fiche maison, jamais recopiées dans un texte libre ; le parc ou le terrain n'est cité que dans la
+ * clause de cadre (setting_clause_fr), une seule fois.
+ */
 function immeubleBlocks(p: LeaseV3Property): Block[] {
   const suite = `${p.setting_clause_fr || ""} Chaque chambre fait l'objet d'un bail distinct (colocation à baux multiples, article 8-1 de la loi du 6 juillet 1989) ; les locataires ne sont pas solidaires entre eux.${p.dpe_class ? ` Diagnostic de performance énergétique : classe ${p.dpe_class}.` : ""}`.trim();
+  const kind = p.building_kind || "Maison individuelle";
   if (p.buildings && p.buildings.length) {
     const n = ["un", "deux", "trois", "quatre", "cinq", "six"][p.buildings.length - 1] || String(p.buildings.length);
+    // Maison de ville (Le Loft) : une maison répartie sur plusieurs bâtiments ; sinon un tènement de bâtiments distincts (Le Lodge).
+    const intro = kind === "Maison de ville"
+      ? `${kind} à usage d'habitation sise ${p.address}, ${surfacesPhrase(p)}, répartie sur ${n} bâtiments :`
+      : `Tènement immobilier sis ${p.address}, ${surfacesPhrase(p)}, constitué de ${n} bâtiments distincts :`;
     return [
-      { t: "p", text: p.buildings_intro || `Tènement immobilier sis ${p.address}, constitué de ${n} bâtiments distincts :` },
+      { t: "p", text: p.buildings_intro || intro },
       { t: "bullets", items: p.buildings },
       { t: "p", text: suite },
     ];
   }
-  return [{ t: "p", text: `${p.building_kind || "Maison individuelle"} à usage d'habitation sise ${p.address}, d'une surface habitable totale de ${p.surface_total_m2 ?? "[…]"} m², comprenant ${p.room_count} chambres louées séparément et des parties communes${p.garden_m2 ? `, sur un terrain arboré d'environ ${fNum(p.garden_m2)} m²` : ""}. ${suite}` }];
+  return [{ t: "p", text: `${kind} à usage d'habitation sise ${p.address}, ${surfacesPhrase(p)}, comprenant ${p.room_count} chambres louées séparément et des parties communes. ${suite}` }];
 }
 /** « 34 rue du Foron, 74100 Ville-la-Grand » → ["34 rue du Foron", "74100 Ville-la-Grand"] (pied de page). */
 function splitAddress(s: string): string[] {
@@ -398,8 +415,10 @@ function cap(s: string): string {
 function fIrl(n: number): string {
   return n.toFixed(2).replace(".", ",");
 }
+/** 1948 \u2192 \u00ab 1 948 \u00bb, 15.5 \u2192 \u00ab 15,5 \u00bb (milliers en espace ins\u00e9cable, virgule d\u00e9cimale). */
 function fNum(n: number): string {
-  return String(n).replace(/\B(?=(\d{3})+(?!\d))/g, "\u00a0");
+  const [int, dec] = String(n).split(".");
+  return int.replace(/\B(?=(\d{3})+(?!\d))/g, "\u00a0") + (dec ? `,${dec}` : "");
 }
 function exceptionLabel(x: RelocationException | null): string {
   return ({ first_letting: "première mise en location", vacancy_18m: "logement vacant depuis plus de dix-huit mois", works: "travaux d'amélioration d'un montant au moins égal à six mois de loyer", undervalued: "loyer manifestement sous-évalué" } as Record<string, string>)[x || ""] || "exception";

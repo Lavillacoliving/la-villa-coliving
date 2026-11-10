@@ -60,7 +60,10 @@ export interface PropertyEquipment {
   volleyball?: boolean;
   terraces?: boolean;
   bbq?: boolean;
+  /** Terrain ou parc (m²) : information de la fiche maison ; le bail le cite dans la clause de cadre (setting_clause_fr), une seule fois. */
   garden_m2?: number;
+  /** Surface totale intérieure (m², tous bâtiments, habitable ou non) imprimée à l'article 2.1 à côté de la surface habitable (Jérôme, 10/11/2026). */
+  interior_total_m2?: number;
 }
 
 export interface PropertyChargesRow {

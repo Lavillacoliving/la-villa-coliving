@@ -439,7 +439,7 @@ export default function DashboardMaisonsPage() {
                     <div>
                       <p style={S.label}>DPE · surface totale · zone</p>
                       <p style={{ margin: 0, fontSize: '14px', color: '#1a1a2e' }}>
-                        {selectedProperty.dpe_class ? `Classe ${selectedProperty.dpe_class}` : 'DPE —'} · {selectedProperty.surface_total_m2 ? `${selectedProperty.surface_total_m2} m²` : 'surface —'} · {selectedProperty.zone_tendue ? 'zone tendue' : 'hors zone tendue'}
+                        {selectedProperty.dpe_class ? `Classe ${selectedProperty.dpe_class}` : 'DPE —'} · {selectedProperty.surface_total_m2 ? `${selectedProperty.surface_total_m2} m² habitables` : 'surface —'}{selectedProperty.equipment?.interior_total_m2 ? ` · ${selectedProperty.equipment.interior_total_m2} m² intérieurs` : ''} · {selectedProperty.zone_tendue ? 'zone tendue' : 'hors zone tendue'}
                       </p>
                     </div>
                     <div>
@@ -560,8 +560,12 @@ export default function DashboardMaisonsPage() {
                       </select>
                     </div>
                     <div>
-                      <label style={S.fieldLabel}>Surface totale (m²)</label>
+                      <label style={S.fieldLabel}>Surface habitable totale (m²)</label>
                       <input type="number" step="0.01" style={S.input} value={editPropertyData?.surface_total_m2 ?? ''} onChange={e => setEditPropertyData({ ...editPropertyData, surface_total_m2: e.target.value === '' ? null : Number(e.target.value) })} />
+                    </div>
+                    <div>
+                      <label style={S.fieldLabel}>Surface totale intérieure (m²)</label>
+                      <input type="number" step="0.01" style={S.input} value={editPropertyData?.equipment?.interior_total_m2 ?? ''} onChange={e => setEditPropertyData({ ...editPropertyData, equipment: { ...(editPropertyData?.equipment || {}), interior_total_m2: e.target.value === '' ? undefined : Number(e.target.value) } })} />
                     </div>
                     <div>
                       <label style={S.fieldLabel}>Zone tendue</label>

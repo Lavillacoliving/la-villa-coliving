@@ -23,6 +23,8 @@ export interface RoomV3Row {
 /** Colonnes de leases utiles au « dernier loyer du précédent locataire ». */
 export interface LeaseFactsRow {
   lease_version: string | null; status: string | null; start_date: string | null; end_date: string | null;
+  /** Départage deux baux de même date d'entrée (brouillon puis bail signé) : le plus récemment créé l'emporte. */
+  created_at?: string | null;
   rent_eur: number | null; rent_hc_eur: number | null; charges_forfait_eur: number | null;
   charges_energy_chf: number | null; charges_maintenance_chf: number | null; charges_services_chf: number | null;
 }
@@ -112,8 +114,8 @@ export function propertyToLease(p: PropertyV3Row): LeaseV3Property {
     buildings: p.buildings_fr && p.buildings_fr.length ? p.buildings_fr : null,
     buildings_intro: p.buildings_intro_fr || null,
     surface_total_m2: p.surface_total_m2,
+    surface_interior_m2: eq?.interior_total_m2 ?? null,
     room_count: p.room_count,
-    garden_m2: eq?.garden_m2 ?? null,
     setting_clause_fr: p.setting_clause_fr,
     common_areas: (p.common_areas || []).map(normalizeCommonArea),
     leisure_equipment: leisureEquipmentText(eq),
@@ -151,7 +153,8 @@ export interface PreviousLeaseFacts { prev_hc: number | null; prev_paid_on: stri
 
 /** Dernier bail de la chambre (hors annulés), pour l'encadré 2.6 : proposé au générateur, modifiable par Jérôme. */
 export function previousLeaseFacts(leases: LeaseFactsRow[], todayIso: string): PreviousLeaseFacts {
-  const usable = leases.filter((l) => l.status !== 'cancelled' && l.start_date).sort((a, b) => (b.start_date! > a.start_date! ? 1 : -1));
+  const usable = leases.filter((l) => l.status !== 'cancelled' && l.start_date)
+    .sort((a, b) => b.start_date!.localeCompare(a.start_date!) || (b.created_at || "").localeCompare(a.created_at || ""));
   const last = usable[0];
   if (!last) return { prev_hc: null, prev_paid_on: null, prev_revision: null, prev_departure: null, source: null };
   const hc = leaseRentHc(last);

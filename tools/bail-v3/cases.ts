@@ -36,10 +36,11 @@ export const CASES: Record<string, LeaseV3Input> = {
     },
     property: {
       name: "La Villa", address: "34 rue du Foron, 74100 Ville-la-Grand", commune: "Ville-la-Grand",
-      surface_total_m2: 365, room_count: 10, garden_m2: 1950, dpe_class: "D",
-      setting_clause_fr: "Le logement objet du présent contrat est situé dans une maison individuelle s'inscrivant dans un cadre paysager attaché à l'immeuble, comprenant un parc arboré et des espaces extérieurs aménagés. Le locataire a l'usage, dans les conditions prévues au règlement intérieur annexé, des parties communes intérieures et extérieures de la maison.",
-      common_areas: ["hall d'entrée", "double cuisine", "salle à manger", "buanderie", "salle de jeux", "salle TV", "salle de sport", "sauna 5 places", "terrain arboré d'environ 1 950 m²", "piscine extérieure chauffée de 12×5m", "terrasses", "potager", "terrain de volley"],
-      leisure_equipment: "piscine extérieure chauffée, sauna, salle de sport, salle de jeux",
+      // Classeur « mise en ligne » validé par Jérôme le 10/11/2026 : 365 m² habitables, 380 m² intérieurs, parc de 1 948 m² cité une fois (clause de cadre), home cinéma.
+      surface_total_m2: 365, surface_interior_m2: 380, room_count: 10, dpe_class: "D",
+      setting_clause_fr: "Le logement objet du présent contrat est situé dans une maison individuelle s'inscrivant dans un cadre paysager attaché à l'immeuble, comprenant un parc arboré de 1 948 m² et des espaces extérieurs aménagés. Le locataire a l'usage, dans les conditions prévues au règlement intérieur annexé, des parties communes intérieures et extérieures de la maison.",
+      common_areas: ["hall d'entrée", "double cuisine", "salle à manger", "buanderie", "salle de jeu", "salle TV", "salle de sport", "salle sauna 5 places", "terrain arboré (1948m²)", "piscine extérieure chauffée (12×5m)", "terrasses", "potager", "terrain de volleyball"],
+      leisure_equipment: "piscine extérieure chauffée, sauna, salle de sport, home cinéma, salle de jeux",
     },
     room: {
       name: "La Villa 2", number: 2, floor: "rez-de-chaussée", surface_m2: 16, bathroom: "private", bathroom_detail: bathroomFixtures("lavilla", 2),
@@ -69,7 +70,8 @@ export const CASES: Record<string, LeaseV3Input> = {
     },
     property: {
       name: "Le Lodge", address: "8 rue de Romagny, 74100 Annemasse", commune: "Annemasse",
-      surface_total_m2: 380, room_count: 12, garden_m2: null, dpe_class: "B",
+      // 589 m² intérieurs = maison 380 + grenier 100 + pool house 26 + chalet fitness 65 + réserve 18 (Jérôme, 10/11/2026).
+      surface_total_m2: 380, surface_interior_m2: 589, room_count: 12, dpe_class: "B",
       buildings: [
         "une maison individuelle à usage d'habitation d'une surface habitable totale de 380 m², comprenant 12 chambres louées séparément et des parties communes, complétée par un grenier de 100 m² ;",
         "une maison de piscine aménagée, avec cuisine et salle à manger, de 26 m² ;",
@@ -109,16 +111,16 @@ export const CASES: Record<string, LeaseV3Input> = {
     // Données de la maison : table properties (adresse, 7 chambres, parties communes) + seeds du lot 1 (DPE C, 298 m², piscine intérieure, sauna, salle de sport, terrasses ; pas de jardin).
     property: {
       name: "Le Loft", building_kind: "Maison de ville", address: "1 rue des Marronniers, 74100 Ambilly", commune: "Ambilly",
-      surface_total_m2: 298, room_count: 7, garden_m2: null, dpe_class: "C",
-      // Relecture Loft de Jérôme (29/10/2026) : deux bâtiments, 238 + 60 m², 234 m² d'extérieurs et terrasses.
-      buildings_intro: "Maison de ville à usage d'habitation sise 1 rue des Marronniers, 74100 Ambilly, d'une surface totale de 298 m² répartie sur deux bâtiments :",
+      // Relecture Loft de Jérôme (29/10/2026) puis classeur du 10/11/2026 : deux bâtiments, 249 m² habitables + annexe de 60 m² = 309 m² intérieurs,
+      // 234 m² d'extérieurs et terrasses ; l'introduction (« Maison de ville … répartie sur deux bâtiments : ») est générée avec les surfaces.
+      surface_total_m2: 249, surface_interior_m2: 309, room_count: 7, dpe_class: "C",
       buildings: [
-        "le bâtiment principal, d'une surface habitable de 238 m², comprenant 7 chambres louées séparément et des parties communes ;",
+        "le bâtiment principal, d'une surface habitable de 249 m², comprenant 7 chambres louées séparément et des parties communes ;",
         "le bâtiment annexe, d'une surface de 60 m², comprenant une salle de sport, une salle TV, un sauna et une piscine intérieure.",
       ],
       setting_clause_fr: "L'ensemble dispose de 234 m² d'espaces extérieurs et de terrasses aménagés. Le locataire a l'usage, dans les conditions prévues au règlement intérieur annexé, des parties communes intérieures et extérieures de la maison.",
-      common_areas: ["hall d'entrée", "cuisine moderne ouverte", "salon / salle à manger", "salle TV", "salle de sport", "sauna finlandais", "piscine intérieure (toute l'année)", "buanderie", "terrasses orientées sud"],
-      leisure_equipment: "piscine intérieure, sauna, salle de sport",
+      common_areas: ["hall d'entrée", "2 cuisines", "salon / salle à manger", "salle TV", "salle de sport", "sauna finlandais", "piscine intérieure (toute l'année)", "buanderie", "terrasses orientées sud"],
+      leisure_equipment: "piscine intérieure, sauna, salle de sport, home cinéma",
     },
     // Chambre 6 : table rooms (23 m², 2e étage droite, salle d'eau privative, ni terrasse, ni balcon, ni parking).
     room: {
