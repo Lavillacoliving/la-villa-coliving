@@ -9,6 +9,11 @@ import { typoFr } from "@/lib/typography";
 // État embarqué par le prerender (fix hydratation #418) — id aussi listé dans main.tsx.
 const EMBED_ID = "__latest_blog_data__";
 
+// (Lot 2 « retenue premium », sous-lot A — D8 validée par Jérôme le 16/10/2026) L'accueil montre les 2 derniers articles
+// (6 avant, dont 3 visibles sur mobile) : la section pesait 2,2 écrans à 390 px ; le lien « Voir tous les articles » mène au reste.
+// La coupe est aussi appliquée au rendu : un ancien état embarqué de 6 articles n'en affiche que 2.
+const HOME_POSTS = 2;
+
 interface BlogPost {
   id: string;
   slug: string;
@@ -47,7 +52,7 @@ export function LatestBlogV7() {
         .select("id,slug,title_fr,title_en,excerpt_fr,excerpt_en,image_url,read_time_min,category")
         .eq("is_published", true)
         .order("published_at", { ascending: false })
-        .limit(6);
+        .limit(HOME_POSTS);
       if (error) throw error;
       setPosts(data || []);
     } catch (e) {
@@ -80,14 +85,12 @@ export function LatestBlogV7() {
           </p>
         </div>
 
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {posts.map((post, index) => (
+        <div className="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto">
+          {posts.slice(0, HOME_POSTS).map((post) => (
             <LocalizedLink
               to={`/blog/${post.slug}`}
               key={post.id}
-              // Lot 2 : 3 cartes en mobile (la liste de 6 poussait la FAQ et le
-              // CTA final hors de portée), les 6 restent visibles dès md.
-              className={`group bg-[#FAF9F6] border border-[#E7E5E4] overflow-hidden transition-all duration-300 hover:border-[#D4A574]/30 hover:shadow-lg${index >= 3 ? " hidden md:block" : ""}`}
+              className="group bg-[#FAF9F6] border border-[#E7E5E4] overflow-hidden transition-all duration-300 hover:border-[#D4A574]/30 hover:shadow-lg"
             >
               <div className="aspect-[16/10] overflow-hidden bg-[#F5F2ED]">
                 {post.image_url ? (

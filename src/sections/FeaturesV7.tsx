@@ -60,10 +60,12 @@ export function FeaturesV7() {
   ];
 
   return (
-    <section className="py-24 md:py-32 bg-[#FAF9F6]">
+    // (Lot 2 — sous-lot A, A6) Compacté sur mobile : marges réduites et icône à gauche du texte (la section mesurait
+    // 2,3 écrans à 390 px). Aucun texte retiré ni replié ; rendu inchangé à partir de md.
+    <section className="py-14 md:py-32 bg-[#FAF9F6]">
       <div className="container-custom">
         {/* Header */}
-        <div className="text-center max-w-2xl mx-auto mb-14 md:mb-16">
+        <div className="text-center max-w-2xl mx-auto mb-8 md:mb-16">
           <span className="text-[#44403C] text-[13px] font-semibold tracking-[0.1em] uppercase">
             {language === 'en' ? `ALL INCLUSIVE — ${STATS.includedItems} SERVICES` : `TOUT INCLUS — ${STATS.includedItems} SERVICES`}
           </span>
@@ -79,7 +81,7 @@ export function FeaturesV7() {
           {/* Lien contextuel -> /tarifs (maillage interne) */}
           <LocalizedLink
             to="/tarifs"
-            className="inline-flex items-center gap-1.5 mt-6 font-semibold text-[#44403C] underline decoration-[#D4A574] decoration-2 underline-offset-4 hover:text-[#1C1917] transition-colors"
+            className="inline-flex items-center gap-1.5 mt-4 md:mt-6 font-semibold text-[#44403C] underline decoration-[#D4A574] decoration-2 underline-offset-4 hover:text-[#1C1917] transition-colors"
           >
             {language === 'en' ? 'See full pricing' : 'Voir le détail des tarifs'}
             <ArrowRight className="w-4 h-4" />
@@ -87,17 +89,19 @@ export function FeaturesV7() {
         </div>
 
         {/* Features grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 md:gap-5">
           {features.map((feature, index) => (
             <div
               key={index}
-              className="p-6 md:p-7 bg-white rounded-2xl border border-[#E7E5E4] hover:border-[#44403C]/20 hover:shadow-[0_4px_24px_rgba(0,0,0,0.06)] hover:translate-y-[-2px] transition-all duration-300"
+              className="flex gap-4 p-4 md:block md:p-7 bg-white rounded-2xl border border-[#E7E5E4] hover:border-[#44403C]/20 hover:shadow-[0_4px_24px_rgba(0,0,0,0.06)] hover:translate-y-[-2px] transition-all duration-300"
             >
-              <div className="w-12 h-12 bg-[#F5F2ED] rounded-xl flex items-center justify-center mb-5">
+              <div className="w-10 h-10 md:w-12 md:h-12 shrink-0 bg-[#F5F2ED] rounded-xl flex items-center justify-center md:mb-5">
                 <feature.icon className="w-5 h-5 text-[#44403C]" />
               </div>
-              <h3 className="text-base font-semibold text-[#1C1917] mb-2">{feature.title}</h3>
-              <p className="text-[#78716C] text-sm leading-relaxed">{feature.description}</p>
+              <div className="min-w-0">
+                <h3 className="text-base font-semibold text-[#1C1917] mb-1 md:mb-2">{feature.title}</h3>
+                <p className="text-[#78716C] text-sm leading-relaxed">{feature.description}</p>
+              </div>
             </div>
           ))}
         </div>
