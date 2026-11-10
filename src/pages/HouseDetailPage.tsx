@@ -22,6 +22,8 @@ import {
   Car,
   TreePine,
   Sun,
+  ChevronDown,
+  type LucideIcon,
 } from "lucide-react";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { STATS, STATS_DISPLAY, HOUSE_SURFACES, ROOM_SURFACE_BY_HOUSE, TRANSIT, thousands, PRICE_FR_NUM, PRICE_EN_NUM, PRICE_CHF_FR, PRICE_CHF_EN, PRICE_SHARED_FR_NUM, PRICE_SHARED_EN_NUM, PRICE_SHARED_CHF_FR, PRICE_SHARED_CHF_EN, EUR_STANDARD_FR_NUM, EUR_STANDARD_EN_NUM, EUR_SHARED_FR_NUM, EUR_SHARED_EN_NUM } from "@/data/stats";
@@ -90,7 +92,9 @@ interface HouseData {
   name: string;
   location: string;
   description: string;
-  longDescription: string;
+  /** (Lot 2 — sous-lot A) Deux morceaux : `lead` (toujours affiché, porte la ligne de trajet en tête) et `rest`
+   *  (replié sur mobile sous « Lire la suite »). Affichés bout à bout, ils forment le paragraphe d'origine. */
+  longDescription: { lead: string; rest: string };
   image: string;
   gallery: string[];
   photoGallery: GalleryImage[];
@@ -149,8 +153,8 @@ function getHousesData(lang: string): Record<string, HouseData> {
       ? `${HOUSE_SURFACES.lavilla.livingM2} m² of designed living on a ${m2(HOUSE_SURFACES.lavilla.plotM2, "en")} estate bordering a nature reserve. Heated pool, sauna, gym, and 10 spacious rooms.`
       : `${HOUSE_SURFACES.lavilla.livingM2} m² de vie design sur un domaine de ${m2(HOUSE_SURFACES.lavilla.plotM2, "fr")} bordant une réserve naturelle. Piscine chauffée, sauna, salle de sport et 10 chambres spacieuses.`,
     longDescription: isEn
-      ? `Our flagship house, in Ville-la-Grand: ${commuteShort("lavilla", "en")}. ${HOUSE_SURFACES.lavilla.livingM2} m² for 10 housemates on a ${m2(HOUSE_SURFACES.lavilla.plotM2, "en")} estate bordering a nature reserve. Day to day: a heated 12×5 m pool, a 5-seat sauna, a fully equipped gym and 8 Gb/s fiber. All rooms are furnished with Emma or Tediber mattresses — 6 with a private en-suite bathroom at ${PRICE_CHF_EN}/month, 4 with 2 shower rooms each shared between just 2 rooms, at ${PRICE_SHARED_CHF_EN}/month (shower-room cleaning is included in the rent — no hassle!). All-inclusive rent covers utilities, fiber, cleaning of common areas three times a week, pool and garden upkeep. No application fee, reply within 48h.`
-      : `Notre maison amirale, à Ville-la-Grand : ${commuteShort("lavilla", "fr")}. ${HOUSE_SURFACES.lavilla.livingM2} m² pour 10 colocataires, sur un domaine de ${m2(HOUSE_SURFACES.lavilla.plotM2, "fr")} en bordure de réserve naturelle. Au quotidien : piscine chauffée de 12×5 m, sauna 5 places, salle de sport équipée et fibre 8 Gb/s. Toutes les chambres sont meublées avec matelas Emma ou Tediber — 6 avec salle de bain privative à ${PRICE_CHF_FR}/mois, 4 avec 2 salles d'eau partagées, chacune entre 2 chambres seulement, à ${PRICE_SHARED_CHF_FR}/mois (leur ménage est inclus dans le loyer : pas de tracas !). Loyer tout inclus : charges, fibre, ménage 3×/semaine des espaces communs, entretien piscine et jardin. 0 frais de dossier, réponse sous 48 h.`,
+      ? { lead: `Our flagship house, in Ville-la-Grand: ${commuteShort("lavilla", "en")}. ${HOUSE_SURFACES.lavilla.livingM2} m² for 10 housemates on a ${m2(HOUSE_SURFACES.lavilla.plotM2, "en")} estate bordering a nature reserve. Day to day: a heated 12×5 m pool, a 5-seat sauna, a fully equipped gym and 8 Gb/s fiber.`, rest: `All rooms are furnished with Emma or Tediber mattresses — 6 with a private en-suite bathroom at ${PRICE_CHF_EN}/month, 4 with 2 shower rooms each shared between just 2 rooms, at ${PRICE_SHARED_CHF_EN}/month (shower-room cleaning is included in the rent — no hassle!). All-inclusive rent covers utilities, fiber, cleaning of common areas three times a week, pool and garden upkeep. No application fee, reply within 48h.` }
+      : { lead: `Notre maison amirale, à Ville-la-Grand : ${commuteShort("lavilla", "fr")}. ${HOUSE_SURFACES.lavilla.livingM2} m² pour 10 colocataires, sur un domaine de ${m2(HOUSE_SURFACES.lavilla.plotM2, "fr")} en bordure de réserve naturelle. Au quotidien : piscine chauffée de 12×5 m, sauna 5 places, salle de sport équipée et fibre 8 Gb/s.`, rest: `Toutes les chambres sont meublées avec matelas Emma ou Tediber — 6 avec salle de bain privative à ${PRICE_CHF_FR}/mois, 4 avec 2 salles d'eau partagées, chacune entre 2 chambres seulement, à ${PRICE_SHARED_CHF_FR}/mois (leur ménage est inclus dans le loyer : pas de tracas !). Loyer tout inclus : charges, fibre, ménage 3×/semaine des espaces communs, entretien piscine et jardin. 0 frais de dossier, réponse sous 48 h.` },
     image: "/images/la villa jardin.webp",
     gallery: [
       "/images/la villa/rooms/La Villa-92.webp",
@@ -500,8 +504,8 @@ function getHousesData(lang: string): Record<string, HouseData> {
       // Lot A (02/09/2026, texte Jérôme) : ouverture « maison la plus intime », clôture salle d'eau privative au prix
       // constant (jamais un montant en dur). Lot L2 (09/10/2026, D6) : frontière = le Foron à 600 m (TRANSIT), plus
       // plus l'ancienne distance non mesurée ; ligne courte A.1 dans les 300 premiers caractères (D1).
-      ? `Le Loft is our most intimate house: 7 residents in a ${HOUSE_SURFACES.leloft.livingM2} m² townhouse in the centre of Ambilly, ${formatDistance(T.leloft.border.foronDistanceM, "en")} from the Swiss border (the Foron river) — ${commuteShort("leloft", "en")}. Its year-round heated indoor pool — virtually unique in European coliving — is the centerpiece of this exceptional property. The Finnish sauna, fully equipped gym, designer interiors, outdoor kitchen with TV, and spacious terraces make Le Loft ideal for those who appreciate the finer things while valuing genuine community. It's also a house where every room has its own private shower room, at ${PRICE_CHF_EN} all-inclusive.`
-      : `Le Loft, c'est notre maison la plus intime : 7 résidents, une maison de ville de ${HOUSE_SURFACES.leloft.livingM2} m² au centre d'Ambilly, à ${formatDistance(T.leloft.border.foronDistanceM, "fr")} de la frontière suisse (le Foron) — ${commuteShort("leloft", "fr")}. Sa piscine intérieure chauffée toute l'année — quasi unique en coliving européen — est la pièce maîtresse de ce bien d'exception. Le sauna finlandais, la salle de sport équipée, les intérieurs design, la cuisine extérieure avec TV et les terrasses spacieuses font du Loft un lieu idéal pour ceux qui apprécient le raffinement tout en valorisant la vraie communauté. C'est aussi une maison où chaque chambre a sa salle d'eau privative, à ${PRICE_CHF_FR} tout compris.`,
+      ? { lead: `Le Loft is our most intimate house: 7 residents in a ${HOUSE_SURFACES.leloft.livingM2} m² townhouse in the centre of Ambilly, ${formatDistance(T.leloft.border.foronDistanceM, "en")} from the Swiss border (the Foron river) — ${commuteShort("leloft", "en")}. Its year-round heated indoor pool — virtually unique in European coliving — is the centerpiece of this exceptional property.`, rest: `The Finnish sauna, fully equipped gym, designer interiors, outdoor kitchen with TV, and spacious terraces make Le Loft ideal for those who appreciate the finer things while valuing genuine community. It's also a house where every room has its own private shower room, at ${PRICE_CHF_EN} all-inclusive.` }
+      : { lead: `Le Loft, c'est notre maison la plus intime : 7 résidents, une maison de ville de ${HOUSE_SURFACES.leloft.livingM2} m² au centre d'Ambilly, à ${formatDistance(T.leloft.border.foronDistanceM, "fr")} de la frontière suisse (le Foron) — ${commuteShort("leloft", "fr")}. Sa piscine intérieure chauffée toute l'année — quasi unique en coliving européen — est la pièce maîtresse de ce bien d'exception.`, rest: `Le sauna finlandais, la salle de sport équipée, les intérieurs design, la cuisine extérieure avec TV et les terrasses spacieuses font du Loft un lieu idéal pour ceux qui apprécient le raffinement tout en valorisant la vraie communauté. C'est aussi une maison où chaque chambre a sa salle d'eau privative, à ${PRICE_CHF_FR} tout compris.` },
     image: "/images/la villa coliving le loft piscine.webp",
     gallery: [
       "/images/le loft/rooms/la villa coliving le loft-21.webp",
@@ -893,8 +897,8 @@ function getHousesData(lang: string): Record<string, HouseData> {
       ? `Our newest and largest home, open since January 2026. ${HOUSE_SURFACES.lelodge.livingM2} m² on ${m2(HOUSE_SURFACES.lelodge.plotM2, "en")}, pool house, full fitness chalet with sauna & arcade.`
       : `Notre maison la plus récente et la plus grande, ouverte depuis janvier 2026. ${HOUSE_SURFACES.lelodge.livingM2} m² sur ${m2(HOUSE_SURFACES.lelodge.plotM2, "fr")}, pool house, chalet fitness complet avec sauna et jeu d'arcade.`,
     longDescription: isEn
-      ? `Le Lodge is our newest coliving in Annemasse, opened January 2026 in the quiet residential Romagny district: ${commuteShort("lelodge", "en")}. Within ${HOUSE_SURFACES.lelodge.livingM2} m² spread across 4 buildings at the heart of ${m2(HOUSE_SURFACES.lelodge.plotM2, "en")} of gardens, 12 housemates share a dedicated fitness chalet with Finnish sauna, a pool house with full outdoor kitchen, and a main residence designed to combine privacy and community living. Each furnished room has its own en-suite bathroom, ergonomic desk and fiber internet. Direct Léman Express from Annemasse station: Geneva Eaux-Vives in ${TRANSIT.trainEauxVivesMin} minutes, Champel in ${TRANSIT.trainChampelMin}, Cornavin in ${TRANSIT.trainCornavinMin}, no transfer — a train every ${TRANSIT.peakHeadwayMin} minutes at peak time. Ideal for cross-border workers commuting daily, and young professionals who value a real community over a faceless apartment block. All-inclusive rent (utilities, fiber, common cleaning three times a week, private fitness classes) at ${PRICE_CHF_EN}/month. No agency fees.`
-      : `Le Lodge est notre coliving le plus récent à Annemasse, ouvert en janvier 2026 dans le quartier résidentiel calme de Romagny : ${commuteShort("lelodge", "fr")}. Dans ${HOUSE_SURFACES.lelodge.livingM2} m² répartis sur 4 bâtiments au cœur de ${m2(HOUSE_SURFACES.lelodge.plotM2, "fr")} de jardins, 12 colocataires partagent un chalet fitness dédié avec sauna finlandais, un pool house avec cuisine d'été complète et une résidence principale conçue pour combiner intimité et vie communautaire. Chaque chambre meublée dispose de sa salle de bain privative, d'un bureau ergonomique et de la fibre. Léman Express direct depuis la gare d'Annemasse : Genève-Eaux-Vives en ${TRANSIT.trainEauxVivesMin} min, Champel en ${TRANSIT.trainChampelMin} min, Cornavin en ${TRANSIT.trainCornavinMin} min, sans correspondance — un train toutes les ${TRANSIT.peakHeadwayMin} min en heure de pointe. Idéal pour les frontaliers qui font le trajet quotidien, et les jeunes pros qui valorisent une vraie communauté plutôt qu'un immeuble anonyme. Loyer tout inclus (charges, fibre, ménage commun 3 fois par semaine, cours de fitness privés) : ${PRICE_CHF_FR}/mois. Sans frais d'agence.`,
+      ? { lead: `Le Lodge is our newest coliving in Annemasse, opened January 2026 in the quiet residential Romagny district: ${commuteShort("lelodge", "en")}. Within ${HOUSE_SURFACES.lelodge.livingM2} m² spread across 4 buildings at the heart of ${m2(HOUSE_SURFACES.lelodge.plotM2, "en")} of gardens, 12 housemates share a dedicated fitness chalet with Finnish sauna, a pool house with full outdoor kitchen, and a main residence designed to combine privacy and community living.`, rest: `Each furnished room has its own en-suite bathroom, ergonomic desk and fiber internet. Direct Léman Express from Annemasse station: Geneva Eaux-Vives in ${TRANSIT.trainEauxVivesMin} minutes, Champel in ${TRANSIT.trainChampelMin}, Cornavin in ${TRANSIT.trainCornavinMin}, no transfer — a train every ${TRANSIT.peakHeadwayMin} minutes at peak time. Ideal for cross-border workers commuting daily, and young professionals who value a real community over a faceless apartment block. All-inclusive rent (utilities, fiber, common cleaning three times a week, private fitness classes) at ${PRICE_CHF_EN}/month. No agency fees.` }
+      : { lead: `Le Lodge est notre coliving le plus récent à Annemasse, ouvert en janvier 2026 dans le quartier résidentiel calme de Romagny : ${commuteShort("lelodge", "fr")}. Dans ${HOUSE_SURFACES.lelodge.livingM2} m² répartis sur 4 bâtiments au cœur de ${m2(HOUSE_SURFACES.lelodge.plotM2, "fr")} de jardins, 12 colocataires partagent un chalet fitness dédié avec sauna finlandais, un pool house avec cuisine d'été complète et une résidence principale conçue pour combiner intimité et vie communautaire.`, rest: `Chaque chambre meublée dispose de sa salle de bain privative, d'un bureau ergonomique et de la fibre. Léman Express direct depuis la gare d'Annemasse : Genève-Eaux-Vives en ${TRANSIT.trainEauxVivesMin} min, Champel en ${TRANSIT.trainChampelMin} min, Cornavin en ${TRANSIT.trainCornavinMin} min, sans correspondance — un train toutes les ${TRANSIT.peakHeadwayMin} min en heure de pointe. Idéal pour les frontaliers qui font le trajet quotidien, et les jeunes pros qui valorisent une vraie communauté plutôt qu'un immeuble anonyme. Loyer tout inclus (charges, fibre, ménage commun 3 fois par semaine, cours de fitness privés) : ${PRICE_CHF_FR}/mois. Sans frais d'agence.` },
     image: "/images/le lodge/exterior/la villa coliving le lodge-14.webp",
     gallery: [
       "/images/le lodge/rooms/la villa coliving le lodge-104.webp",
@@ -1341,6 +1345,68 @@ function ofHouseFr(name: string): string {
   return name.startsWith("Le ") ? `du ${name.slice(3)}` : `de ${name}`;
 }
 
+/** (Lot 2 — sous-lot A, D5) Nombre de questions dépliées dans la FAQ d'une maison ; les suivantes sont sous un bouton. */
+const FAQ_VISIBLE = 5;
+
+/**
+ * (Lot 2 — sous-lot A, D2) Un volet du bloc « Ce qui est inclus ».
+ * Mobile : carte repliable — fermée, la liste s'affiche en aperçu de deux lignes (les mêmes <li>, mis en ligne et séparés
+ * par « · ») ; ouverte, c'est la liste à puces. À partir de md : titre + liste sur deux colonnes, toujours visibles
+ * (le rendu d'avant). Un seul exemplaire du texte dans le HTML, quel que soit l'état ; fermé au prérendu comme au premier
+ * rendu du navigateur (aucun écart d'hydratation). `panelId` est passé en dur : pas de useId (les identifiants générés
+ * diffèrent entre le prérendu et l'hydratation).
+ */
+function IncludedGroup({ panelId, title, items, icon: Icon, iconClass, last = false, onToggle }: {
+  panelId: string;
+  title: string;
+  items: string[];
+  icon: LucideIcon;
+  iconClass: string;
+  last?: boolean;
+  /** Mesure du repli (GA4 fold_toggle) : reçoit le nouvel état. */
+  onToggle?: (open: boolean) => void;
+}) {
+  const [open, setOpen] = useState(false);
+  return (
+    <div className={`rounded-2xl border border-[#E7E5E4] bg-white p-4 md:rounded-none md:border-0 md:bg-transparent md:p-0${last ? "" : " md:mb-12"}`}>
+      <h3 className="text-base font-bold text-[#1C1917] md:text-2xl md:font-black md:mb-6">
+        <button
+          type="button"
+          aria-expanded={open}
+          aria-controls={panelId}
+          onClick={() => { onToggle?.(!open); setOpen((v) => !v); }}
+          className="md:hidden w-full flex items-center justify-between gap-3 text-left"
+        >
+          <span className="flex items-center gap-2">
+            <span>{title}</span>
+            <span className="px-2 py-0.5 rounded-full bg-[#F5F2ED] text-xs font-semibold text-[#57534E]">{items.length}</span>
+          </span>
+          <ChevronDown className={`w-5 h-5 shrink-0 text-[#57534E] transition-transform ${open ? "rotate-180" : ""}`} aria-hidden="true" />
+        </button>
+        <span className="hidden md:inline">{title}</span>
+      </h3>
+      <ul
+        id={panelId}
+        className={open
+          ? "mt-3 space-y-2.5 md:mt-0 md:space-y-0 md:grid md:grid-cols-2 md:gap-4"
+          : "mt-1.5 line-clamp-2 text-sm md:mt-0 md:text-base md:grid md:grid-cols-2 md:gap-4 md:overflow-visible"}
+      >
+        {items.map((item, index) => (
+          <li
+            key={index}
+            className={open
+              ? "flex items-start gap-3"
+              : "inline after:content-['_·_'] last:after:content-none md:flex md:items-start md:gap-3 md:after:content-none"}
+          >
+            <Icon className={`${iconClass} mt-1 flex-shrink-0${open ? "" : " hidden md:block"}`} size={18} aria-hidden="true" />
+            <span className="text-[#57534E] font-medium">{item}</span>
+          </li>
+        ))}
+      </ul>
+    </div>
+  );
+}
+
 export function HouseDetailPage() {
   const location = useLocation();
   // Extract house ID from path: /lavilla → "lavilla", /en/lavilla → "lavilla"
@@ -1372,6 +1438,15 @@ export function HouseDetailPage() {
       });
     } catch { /* noop */ }
   };
+  // (Lot 2 — sous-lot A) Mesure des replis (GA4 `fold_toggle`) : savoir si le contenu replié sur mobile est consulté —
+  // intro, autres chambres, suite de la FAQ, volets de « Ce qui est inclus ». Même garde que les CTA : jamais bloquant.
+  const trackFold = (fold: string, open: boolean) => {
+    try {
+      (window as unknown as { gtag?: (...a: unknown[]) => void }).gtag?.("event", "fold_toggle", {
+        fold, state: open ? "open" : "closed", house: id, language,
+      });
+    } catch { /* noop */ }
+  };
 
   // (Lot 3) Chambres réelles de la maison + visionneuse photos (patterns LP).
   const houseRooms = useHouseRooms(id as HouseKey);
@@ -1383,6 +1458,11 @@ export function HouseDetailPage() {
   const heroBadgeLabel = heroBadge?.label ?? availabilityBadge;
   const heroBadgeTone = heroBadge?.tone ?? badgeTone;
   const [roomViewer, setRoomViewer] = useState<{ key: string; roomNumber: number; index: number } | null>(null);
+  // (Lot 2 — sous-lot A) Replis de la page (intro, autres chambres, suite de la FAQ) : fermés au prérendu comme au premier
+  // rendu du navigateur — aucun écart d'hydratation ; le contenu replié reste dans le HTML.
+  const [introOpen, setIntroOpen] = useState(false);
+  const [othersOpen, setOthersOpen] = useState(false);
+  const [faqOpen, setFaqOpen] = useState(false);
   const openRoomViewer = (room: PublicRoom, photoIndex: number) => {
     setRoomViewer({ key: `${id}:${room.room_number}`, roomNumber: room.room_number, index: photoIndex });
     try {
@@ -1574,230 +1654,41 @@ export function HouseDetailPage() {
         </div>
       </section>
 
-      {/* Description */}
-      <section className="section-padding py-14 md:py-20 relative bg-white">
+      {/* (Lot 2 « retenue premium », sous-lot A — cadrage D1 à D5 validé par Jérôme le 16/10/2026, décisions du 10/11/2026)
+          Ordre de la page : hero → intro courte → Chambres → album compact → « Ce qui est inclus » → Localisation →
+          fiche « l'essentiel » → FAQ → comparer → encart final. Sur mobile, la page mesurait 24,7 écrans (390 × 844) et les
+          chambres n'arrivaient qu'au 7ᵉ. Rien n'est retiré du HTML : textes repliés ou masqués en CSS, mêmes H2, même FAQPage. */}
+      {/* Intro courte : les premières phrases (la ligne de trajet reste en tête — garde house-pages-check), puis « Lire la
+          suite » sur mobile. Le texte complet est toujours dans le HTML, et toujours affiché à partir de md. */}
+      <section className="py-8 md:py-16 relative bg-white">
         <div className="container-custom">
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-12">
-            {/* Main Content */}
-            <div className="lg:col-span-2">
-              <h2
-                className="text-3xl md:text-4xl mb-6 text-[#1C1917]"
-                style={{ fontFamily: '"DM Serif Display", serif' }}
-              >
-                {language === "en"
-                  ? `About ${house.name}`
-                  : `À propos de ${house.name}`}
-              </h2>
-              <p className="text-lg text-[#57534E] leading-relaxed mb-8 font-medium">
-                {house.longDescription}
-              </p>
-              <p className="text-sm text-[#78716C] mb-8 flex items-center gap-2">
-                <Zap size={14} className="text-[#78716C]" />
-                {language === "en"
-                  ? `Energy performance (DPE): ${house.specs.dpe} · ${house.specs.size}`
-                  : `Diagnostic de performance énergétique (DPE) : ${house.specs.dpe} · ${house.specs.size}`}
-              </p>
-
-              {/* (Lot S1) Fiche de faits canonique — CTA avec property_interest (garde house-pages-check) */}
-              <EntityFacts page={id} houseSlug={id as HouseKey}>
-                {language === "en"
-                  ? `This page is about ${house.name}; the three houses share the same all-inclusive package.`
-                  : `Cette page décrit ${house.name} ; les trois maisons partagent le même tout-inclus.`}
-              </EntityFacts>
-
-              {/* Features */}
-              <h3 className="text-2xl font-black mb-6 text-[#1C1917]">
-                {t.houseDetail.features}
-              </h3>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-12">
-                {house.features.map((feature, index) => (
-                  <div key={index} className="flex items-start gap-3">
-                    <Check
-                      className="text-[#D4A574] mt-1 flex-shrink-0"
-                      size={18}
-                    />
-                    <span className="text-[#57534E] font-medium">
-                      {feature}
-                    </span>
-                  </div>
-                ))}
-              </div>
-
-              {/* Services */}
-              <h3 className="text-2xl font-black mb-6 text-[#1C1917]">
-                {t.houseDetail.services}
-              </h3>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-12">
-                {house.services.map((service, index) => (
-                  <div key={index} className="flex items-start gap-3">
-                    <Check
-                      className="text-[#D4A574] mt-1 flex-shrink-0"
-                      size={18}
-                    />
-                    <span className="text-[#57534E] font-medium">
-                      {service}
-                    </span>
-                  </div>
-                ))}
-              </div>
-
-              {/* Community */}
-              <h3 className="text-2xl font-black mb-6 text-[#1C1917]">
-                {t.houseDetail.community}
-              </h3>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-12">
-                {house.community.map((item, index) => (
-                  <div key={index} className="flex items-start gap-3">
-                    <Star
-                      className="text-[#D4A574] mt-1 flex-shrink-0"
-                      size={18}
-                    />
-                    <span className="text-[#57534E] font-medium">{item}</span>
-                  </div>
-                ))}
-              </div>
-
-              {/* Lifestyle */}
-              <h3 className="text-2xl font-black mb-6 text-[#1C1917]">
-                {t.houseDetail.lifestyle}
-              </h3>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-12">
-                {house.lifestyle.map((item, index) => (
-                  <div key={index} className="flex items-start gap-3">
-                    <Sun
-                      className="text-[#78716C] mt-1 flex-shrink-0"
-                      size={18}
-                    />
-                    <span className="text-[#57534E] font-medium">{item}</span>
-                  </div>
-                ))}
-              </div>
-            </div>
-
-            {/* Sidebar */}
-            <div className="lg:col-span-1">
-              <div className="sticky top-24 space-y-6">
-                {/* Pricing Card */}
-                <div className="card-ultra bg-white rounded-2xl border border-[#E7E5E4] shadow-sm p-8">
-                  {/* La Villa : plancher 1 370 (4 ch. sur 10 à salle d'eau partagée). Loft/Lodge : prix unique 1 430. */}
-                  <p className="text-sm text-[#78716C] mb-2 font-bold">
-                    {id === "lavilla"
-                      ? (language === "en" ? "From" : "À partir de")
-                      : (language === "en" ? "Monthly rent" : "Loyer mensuel")}
-                  </p>
-                  <p className="text-4xl font-black text-[#D4A574] mb-2">
-                    {id === "lavilla"
-                      ? (language === "en" ? PRICE_SHARED_EN_NUM : PRICE_SHARED_FR_NUM)
-                      : house.price}{" "}
-                    CHF{" "}
-                    <span className="text-xl font-light text-[#78716C]">
-                      {id === "lavilla"
-                        ? (language === "en" ? `(€${EUR_SHARED_EN_NUM})` : `(${EUR_SHARED_FR_NUM} €)`)
-                        : (language === "en" ? `(€${EUR_STANDARD_EN_NUM})` : `(${EUR_STANDARD_FR_NUM} €)`)}
-                    </span>
-                  </p>
-                  <p className="text-[#78716C] mb-4 font-medium">
-                    {t.houseDetail.perMonth}
-                  </p>
-
-                  {/* 0 € move-in fees badge */}
-                  <div className="mb-4">
-                    <span className="inline-flex items-center gap-2 px-3 py-1.5 bg-[#1C1917] text-white text-sm font-semibold rounded-lg">
-                      {language === "en" ? "€0 move-in fees" : "0 € de frais d'entrée"}
-                    </span>
-                  </div>
-
-                  {/* Availability badge */}
-                  {availabilityBadge && badgeTone && (
-                    <div className="mb-4">
-                      <span className={`inline-flex items-center gap-2 px-3 py-1.5 text-sm font-semibold rounded-lg ${BADGE_PANEL_CLASS[badgeTone]}`}>
-                        <span className={`w-2 h-2 rounded-full ${BADGE_DOT_CLASS[badgeTone]} ${isAvailable ? "animate-pulse" : ""}`} />
-                        {availabilityBadge}
-                      </span>
-                    </div>
-                  )}
-
-                  <div className="flex flex-col gap-3">
-                    <LocalizedLink
-                      to={`/candidature?property_interest=${id}`}
-                      onClick={() => trackCta("house_sidebar")}
-                      className="w-full inline-flex items-center justify-center gap-2 px-6 py-3 bg-[#1C1917] text-white font-semibold rounded-xl hover:bg-[#D4A574] transition-colors"
-                    >
-                      {canApplyNow
-                        ? t.houseDetail.apply
-                        : language === "en" ? "Join waitlist" : "Liste d'attente"}
-                      <ArrowRight size={18} />
-                    </LocalizedLink>
-                    <LocalizedLink
-                      to="/tarifs"
-                      className="w-full text-center text-sm text-[#78716C] hover:text-[#1C1917] hover:underline transition-colors mt-1"
-                    >
-                      {t.houseDetail.checkRates}
-                    </LocalizedLink>
-                    <a
-                      href="https://wa.me/33664315134"
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="w-full text-center text-sm text-[#78716C] hover:text-[#D4A574] transition-colors"
-                    >
-                      {language === "en"
-                        ? "Or ask us on WhatsApp →"
-                        : "Ou pose-nous une question sur WhatsApp →"}
-                    </a>
-                  </div>
-                </div>
-
-                {/* Quick Info Card */}
-                <div className="card-ultra bg-white rounded-2xl border border-[#E7E5E4] shadow-sm p-6">
-                  <h4 className="font-bold text-[#1C1917] mb-4">
-                    {language === "en" ? "Quick Info" : "Infos Rapides"}
-                  </h4>
-                  <div className="space-y-3">
-                    <div className="flex items-center gap-3 text-[#57534E]">
-                      <Clock size={18} className="text-[#D4A574]" />
-                      {/* (Lot L2, 09/10/2026, D1) Libellé de marque unique, toujours qualifié : STATS_DISPLAY.distance. */}
-                      <span className="text-sm">
-                        {STATS_DISPLAY[language === "en" ? "en" : "fr"].distance}
-                      </span>
-                    </div>
-                    <div className="flex items-center gap-3 text-[#57534E]">
-                      <Wifi size={18} className="text-[#D4A574]" />
-                      <span className="text-sm">{language === "en" ? "Fiber up to 8 Gb/s" : "Fibre jusqu'à 8 Gb/s"}</span>
-                    </div>
-                    <div className="flex items-center gap-3 text-[#57534E]">
-                      <Car size={18} className="text-[#78716C]" />
-                      <span className="text-sm">{language === "en" ? "Parking Available" : "Parking disponible"}</span>
-                    </div>
-                    <div className="flex items-center gap-3 text-[#57534E]">
-                      <Coffee size={18} className="text-[#D4A574]" />
-                      <span className="text-sm">{language === "en" ? "All-inclusive" : "Tout inclus"}</span>
-                    </div>
-                  </div>
-                </div>
-
-                {/* Nearby Card */}
-                <div className="card-ultra bg-white rounded-2xl border border-[#E7E5E4] shadow-sm p-6">
-                  <h4 className="font-bold text-[#1C1917] mb-4">
-                    {t.houseDetail.nearby}
-                  </h4>
-                  <div className="space-y-3">
-                    {house.nearby.map((item, index) => (
-                      <div
-                        key={index}
-                        className="flex items-start gap-3 text-[#57534E]"
-                      >
-                        <TreePine
-                          size={18}
-                          className="text-[#D4A574] mt-0.5 flex-shrink-0"
-                        />
-                        <span className="text-sm">{item}</span>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
+          <h2
+            className="text-3xl md:text-4xl mb-4 md:mb-6 text-[#1C1917]"
+            style={{ fontFamily: '"DM Serif Display", serif' }}
+          >
+            {language === "en"
+              ? `About ${house.name}`
+              : `À propos de ${house.name}`}
+          </h2>
+          <p className="text-base md:text-lg text-[#57534E] leading-relaxed font-medium max-w-3xl">
+            {house.longDescription.lead}
+            <span className={introOpen ? undefined : "hidden md:inline"}>{` ${house.longDescription.rest}`}</span>
+          </p>
+          {!introOpen && (
+            <button
+              type="button"
+              onClick={() => { setIntroOpen(true); trackFold("intro", true); }}
+              className="md:hidden mt-2 text-sm font-semibold text-[#1C1917] underline underline-offset-4"
+            >
+              {language === "en" ? "Read more" : "Lire la suite"}
+            </button>
+          )}
+          <p className="text-sm text-[#78716C] mt-4 md:mt-6 flex items-center gap-2">
+            <Zap size={14} className="text-[#78716C]" />
+            {language === "en"
+              ? `Energy performance (DPE): ${house.specs.dpe} · ${house.specs.size}`
+              : `Diagnostic de performance énergétique (DPE) : ${house.specs.dpe} · ${house.specs.size}`}
+          </p>
         </div>
       </section>
 
@@ -1811,7 +1702,7 @@ export function HouseDetailPage() {
           doit y être. Sans données (vue vide, vieux HTML prérendu) : repli sur les
           cartes de types — jamais de section vide. Interdit : cloner le modèle
           fichier-statique de l'ancienne LP (supprimée le 03/09, Lot 3 SEO funnel). */}
-      <section className="section-padding py-14 md:py-20 relative bg-[#FAF9F6]">
+      <section className="py-8 md:py-20 relative bg-[#FAF9F6]">
         <div className="container-custom">
           <h2
             className="text-3xl md:text-4xl mb-6 text-[#1C1917]"
@@ -1823,7 +1714,7 @@ export function HouseDetailPage() {
           {/* Intro : les types de chambres (ex-cartes), en texte. */}
           <div className="mb-10 space-y-1.5 max-w-3xl">
             {house.rooms.map((roomType, index) => (
-              <p key={index} className="text-[#78716C]">
+              <p key={index} className="text-[15px] md:text-base text-[#78716C]">
                 <span className="font-semibold text-[#1C1917]">{roomType.type}</span>
                 {" — "}
                 {roomType.description}
@@ -1876,20 +1767,36 @@ export function HouseDetailPage() {
                   }}
                 />
 
-                {/* (12/10/2026, demande Jérôme) Album photo de la maison remonté ICI, juste avant « Les N autres
-                    chambres » : il arrivait après la localisation, trop tard — la maison est le point fort de l'offre. */}
-                <HouseGallery images={house.photoGallery} houseName={house.name} embedded />
-
                 {occupied.length > 0 && (
                   <>
-                    <h3 className="text-lg font-black text-[#1C1917] mb-4">
+                    {/* (Lot 2 — sous-lot A, décision Jérôme du 10/11/2026) Sur mobile, quand des chambres candidates sont affichées
+                        au-dessus, la liste des autres chambres se replie sous un bouton (≈ un demi-écran). Elle reste dans le
+                        HTML (garde : chaque « Chambre N » nommée) et toujours dépliée à partir de md. Sans chambre candidate,
+                        elle reste visible : c'est alors la seule vue des chambres. */}
+                    {candidates.length > 0 && (
+                      <h3 className="md:hidden mb-4">
+                        <button
+                          type="button"
+                          aria-expanded={othersOpen}
+                          aria-controls="autres-chambres"
+                          onClick={() => { trackFold("other_rooms", !othersOpen); setOthersOpen((v) => !v); }}
+                          className="w-full flex items-center justify-between gap-3 px-5 py-3.5 bg-white border border-[#E7E5E4] rounded-2xl text-left text-base font-bold text-[#1C1917]"
+                        >
+                          {language === "en"
+                            ? `See the other ${occupied.length} rooms at ${house.name}`
+                            : `Voir les ${occupied.length} autres chambres ${ofHouseFr(house.name)}`}
+                          <ChevronDown className={`w-5 h-5 shrink-0 text-[#57534E] transition-transform ${othersOpen ? "rotate-180" : ""}`} aria-hidden="true" />
+                        </button>
+                      </h3>
+                    )}
+                    <h3 className={`text-lg font-black text-[#1C1917] mb-4${candidates.length > 0 ? " hidden md:block" : ""}`}>
                       {language === "en"
                         ? (candidates.length > 0 ? `The other ${occupied.length} rooms at ${house.name}` : `The ${occupied.length} rooms at ${house.name}`)
                         : (candidates.length > 0 ? `Les ${occupied.length} autres chambres ${ofHouseFr(house.name)}` : `Les ${occupied.length} chambres ${ofHouseFr(house.name)}`)}
                     </h3>
                     {/* Panneau structuré (retour Jérôme 03/09 : les lignes « flottaient ») : cadre,
                         lignes séparées, en-tête de colonnes à partir de md, CTA rattaché au pied. */}
-                    <div className="bg-white border border-[#E7E5E4] rounded-2xl overflow-hidden shadow-sm">
+                    <div id="autres-chambres" className={`${candidates.length > 0 && !othersOpen ? "hidden md:block " : ""}bg-white border border-[#E7E5E4] rounded-2xl overflow-hidden shadow-sm`}>
                       <div className="hidden md:grid md:grid-cols-[1.4fr_0.7fr_0.9fr_1.3fr] gap-4 px-5 py-3 bg-[#FAF9F6] border-b border-[#E7E5E4] text-xs font-semibold uppercase tracking-wider text-[#78716C]">
                         <span>{language === "en" ? "Room" : "Chambre"}</span>
                         <span>{language === "en" ? "Size" : "Surface"}</span>
@@ -1992,8 +1899,6 @@ export function HouseDetailPage() {
                 </div>
               ))}
             </div>
-            {/* Repli sans données de chambres : l'album suit les cartes de types (12/10/2026). */}
-            <HouseGallery images={house.photoGallery} houseName={house.name} embedded />
             </>
           )}
           {/* (Lot L5, D10 Jérôme 09/10/2026) Encart A.8 sous la liste des chambres — texte unique answerSlots.ts, hors du
@@ -2019,6 +1924,159 @@ export function HouseDetailPage() {
         </Suspense>
       )}
 
+      {/* (Lot 2 — sous-lot A, D1) Album compact, dans sa propre section après les chambres : 6 vignettes et « Voir les N photos »
+          (visionneuse plein écran). Il était inséré au milieu de la section Chambres avec 20 vignettes. */}
+      <HouseGallery images={house.photoGallery} featured={[house.image, ...house.gallery]} houseName={house.name} />
+
+      {/* « Ce qui est inclus » (D2) : caractéristiques, services, communauté et mode de vie réunis sous un seul titre.
+          Sur mobile, quatre volets repliés (aperçu de deux lignes, liste complète au toucher) ; à partir de md, les listes
+          restent dépliées comme avant. */}
+      <section className="py-8 md:py-20 relative bg-[#FAF9F6]">
+        <div className="container-custom">
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-12">
+            <div className="lg:col-span-2">
+              <h2
+                className="text-3xl md:text-4xl mb-5 md:mb-8 text-[#1C1917]"
+                style={{ fontFamily: '"DM Serif Display", serif' }}
+              >
+                {language === "en" ? "What's included" : "Ce qui est inclus"}
+              </h2>
+              {/* flex + gap (et non space-y) : space-y annulerait la marge basse md:mb-12 des volets à partir de md. */}
+              <div className="flex flex-col gap-2 md:block">
+                <IncludedGroup panelId="inclus-caracteristiques" title={t.houseDetail.features} items={house.features} icon={Check} iconClass="text-[#D4A574]" onToggle={(o) => trackFold("included_features", o)} />
+                <IncludedGroup panelId="inclus-services" title={t.houseDetail.services} items={house.services} icon={Check} iconClass="text-[#D4A574]" onToggle={(o) => trackFold("included_services", o)} />
+                <IncludedGroup panelId="inclus-communaute" title={t.houseDetail.community} items={house.community} icon={Star} iconClass="text-[#D4A574]" onToggle={(o) => trackFold("included_community", o)} />
+                <IncludedGroup panelId="inclus-mode-de-vie" title={t.houseDetail.lifestyle} items={house.lifestyle} icon={Sun} iconClass="text-[#78716C]" last onToggle={(o) => trackFold("included_lifestyle", o)} />
+              </div>
+            </div>
+
+            {/* Cartes latérales — (D3) masquées sous lg : elles redisent le hero et la localisation ; leurs liens restent dans le HTML. */}
+            <div className="hidden lg:block lg:col-span-1">
+              <div className="sticky top-24 space-y-6">
+                {/* Pricing Card */}
+                <div className="card-ultra bg-white rounded-2xl border border-[#E7E5E4] shadow-sm p-8">
+                  {/* La Villa : plancher 1 370 (4 ch. sur 10 à salle d'eau partagée). Loft/Lodge : prix unique 1 430. */}
+                  <p className="text-sm text-[#78716C] mb-2 font-bold">
+                    {id === "lavilla"
+                      ? (language === "en" ? "From" : "À partir de")
+                      : (language === "en" ? "Monthly rent" : "Loyer mensuel")}
+                  </p>
+                  <p className="text-4xl font-black text-[#D4A574] mb-2">
+                    {id === "lavilla"
+                      ? (language === "en" ? PRICE_SHARED_EN_NUM : PRICE_SHARED_FR_NUM)
+                      : house.price}{" "}
+                    CHF{" "}
+                    <span className="text-xl font-light text-[#78716C]">
+                      {id === "lavilla"
+                        ? (language === "en" ? `(€${EUR_SHARED_EN_NUM})` : `(${EUR_SHARED_FR_NUM} €)`)
+                        : (language === "en" ? `(€${EUR_STANDARD_EN_NUM})` : `(${EUR_STANDARD_FR_NUM} €)`)}
+                    </span>
+                  </p>
+                  <p className="text-[#78716C] mb-4 font-medium">
+                    {t.houseDetail.perMonth}
+                  </p>
+
+                  {/* 0 € move-in fees badge */}
+                  <div className="mb-4">
+                    <span className="inline-flex items-center gap-2 px-3 py-1.5 bg-[#1C1917] text-white text-sm font-semibold rounded-lg">
+                      {language === "en" ? "€0 move-in fees" : "0 € de frais d'entrée"}
+                    </span>
+                  </div>
+
+                  {/* Availability badge */}
+                  {availabilityBadge && badgeTone && (
+                    <div className="mb-4">
+                      <span className={`inline-flex items-center gap-2 px-3 py-1.5 text-sm font-semibold rounded-lg ${BADGE_PANEL_CLASS[badgeTone]}`}>
+                        <span className={`w-2 h-2 rounded-full ${BADGE_DOT_CLASS[badgeTone]} ${isAvailable ? "animate-pulse" : ""}`} />
+                        {availabilityBadge}
+                      </span>
+                    </div>
+                  )}
+
+                  <div className="flex flex-col gap-3">
+                    <LocalizedLink
+                      to={`/candidature?property_interest=${id}`}
+                      onClick={() => trackCta("house_sidebar")}
+                      className="w-full inline-flex items-center justify-center gap-2 px-6 py-3 bg-[#1C1917] text-white font-semibold rounded-xl hover:bg-[#D4A574] transition-colors"
+                    >
+                      {canApplyNow
+                        ? t.houseDetail.apply
+                        : language === "en" ? "Join waitlist" : "Liste d'attente"}
+                      <ArrowRight size={18} />
+                    </LocalizedLink>
+                    <LocalizedLink
+                      to="/tarifs"
+                      className="w-full text-center text-sm text-[#78716C] hover:text-[#1C1917] hover:underline transition-colors mt-1"
+                    >
+                      {t.houseDetail.checkRates}
+                    </LocalizedLink>
+                    <a
+                      href="https://wa.me/33664315134"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="w-full text-center text-sm text-[#78716C] hover:text-[#D4A574] transition-colors"
+                    >
+                      {language === "en"
+                        ? "Or ask us on WhatsApp →"
+                        : "Ou pose-nous une question sur WhatsApp →"}
+                    </a>
+                  </div>
+                </div>
+
+                {/* Quick Info Card */}
+                <div className="card-ultra bg-white rounded-2xl border border-[#E7E5E4] shadow-sm p-6">
+                  <h4 className="font-bold text-[#1C1917] mb-4">
+                    {language === "en" ? "Quick Info" : "Infos rapides"}
+                  </h4>
+                  <div className="space-y-3">
+                    <div className="flex items-center gap-3 text-[#57534E]">
+                      <Clock size={18} className="text-[#D4A574]" />
+                      {/* (Lot L2, 09/10/2026, D1) Libellé de marque unique, toujours qualifié : STATS_DISPLAY.distance. */}
+                      <span className="text-sm">
+                        {STATS_DISPLAY[language === "en" ? "en" : "fr"].distance}
+                      </span>
+                    </div>
+                    <div className="flex items-center gap-3 text-[#57534E]">
+                      <Wifi size={18} className="text-[#D4A574]" />
+                      <span className="text-sm">{language === "en" ? "Fiber up to 8 Gb/s" : "Fibre jusqu'à 8 Gb/s"}</span>
+                    </div>
+                    <div className="flex items-center gap-3 text-[#57534E]">
+                      <Car size={18} className="text-[#78716C]" />
+                      <span className="text-sm">{language === "en" ? "Parking Available" : "Parking disponible"}</span>
+                    </div>
+                    <div className="flex items-center gap-3 text-[#57534E]">
+                      <Coffee size={18} className="text-[#D4A574]" />
+                      <span className="text-sm">{language === "en" ? "All-inclusive" : "Tout inclus"}</span>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Nearby Card */}
+                <div className="card-ultra bg-white rounded-2xl border border-[#E7E5E4] shadow-sm p-6">
+                  <h4 className="font-bold text-[#1C1917] mb-4">
+                    {t.houseDetail.nearby}
+                  </h4>
+                  <div className="space-y-3">
+                    {house.nearby.map((item, index) => (
+                      <div
+                        key={index}
+                        className="flex items-start gap-3 text-[#57534E]"
+                      >
+                        <TreePine
+                          size={18}
+                          className="text-[#D4A574] mt-0.5 flex-shrink-0"
+                        />
+                        <span className="text-sm">{item}</span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* Location — custom section per house (audit P0-1: capture local SEO intent + Léman Express signal) */}
       {/* (Lot L2 « Emplacement et transport », 09/10/2026) Plus aucun littéral : quartier A.2 + frontière D6 (houseNeighbourhood /
           houseBorder), zone = HOUSES (houseZone — jamais l'adresse, 12/10/2026), trajets = <HouseCommuteTable/> (TRANSIT), commerces §1.3 (houseNearby).
@@ -2035,7 +2093,7 @@ export function HouseDetailPage() {
           nearby: houseNearby(slug, L),
         };
         return (
-          <section className="section-padding py-14 md:py-20 relative bg-white" data-house-location-version={HOUSE_LOCATION_VERSION}>
+          <section className="py-8 md:py-20 relative bg-white" data-house-location-version={HOUSE_LOCATION_VERSION}>
             <div className="container-custom max-w-5xl">
               <h2
                 className="text-3xl md:text-4xl mb-6 text-[#1C1917]"
@@ -2046,7 +2104,7 @@ export function HouseDetailPage() {
                   : `Localisation : ${house.name} à ${house.location.split(',')[0]}`}
               </h2>
               {/* Phrase de quartier (A.2) puis, quand elle existe, la seule formulation de la frontière (D6) — un nœud texte par phrase. */}
-              <p className="text-lg text-[#57534E] leading-relaxed mb-4 font-medium">{data.intro}</p>
+              <p className="text-base md:text-lg text-[#57534E] leading-relaxed mb-4 font-medium">{data.intro}</p>
               {data.border ? (
                 <p className="text-[#57534E] leading-relaxed mb-4 font-medium">{data.border}</p>
               ) : null}
@@ -2143,7 +2201,17 @@ export function HouseDetailPage() {
         );
       })()}
 
-      {/* Photo Gallery — (12/10/2026) remontée dans la section Chambres, juste avant « Les N autres chambres ». */}
+      {/* (Lot S1) Fiche de faits canonique — CTA avec property_interest (garde house-pages-check).
+          (Lot 2 — sous-lot A, D1) Après la localisation : elle précédait les chambres (près de 2 écrans sur mobile). */}
+      <section className="pb-8 md:pb-20 relative bg-white">
+        <div className="container-custom max-w-3xl">
+          <EntityFacts page={id} houseSlug={id as HouseKey} className="!my-0 text-[15px] md:text-base">
+            {language === "en"
+              ? `This page is about ${house.name}; the three houses share the same all-inclusive package.`
+              : `Cette page décrit ${house.name} ; les trois maisons partagent le même tout-inclus.`}
+          </EntityFacts>
+        </div>
+      </section>
 
       {/* FAQ — schema FAQPage rich-snippet (audit P0-1, G4) */}
       {(() => {
@@ -2251,25 +2319,47 @@ export function HouseDetailPage() {
             acceptedAnswer: { "@type": "Answer", text: a },
           })),
         };
+        const faqCard = ({ q, a }: QA, i: number) => (
+          <div key={i} className="card-ultra bg-white rounded-2xl border border-[#E7E5E4] shadow-sm p-5 md:p-6">
+            <dt className="text-base md:text-lg font-black text-[#1C1917] mb-2 md:mb-3">{q}</dt>
+            <dd className="text-[15px] md:text-base text-[#57534E] font-medium leading-relaxed">{a}</dd>
+          </div>
+        );
         return (
           <>
             <Helmet><script type="application/ld+json">{JSON.stringify(faqJsonLd)}</script></Helmet>
-            <section className="section-padding py-14 md:py-20 relative bg-[#FAF9F6]">
+            <section className="py-8 md:py-20 relative bg-[#FAF9F6]">
               <div className="container-custom max-w-3xl">
                 <h2
-                  className="text-3xl md:text-4xl mb-8 text-[#1C1917]"
+                  className="text-3xl md:text-4xl mb-5 md:mb-8 text-[#1C1917]"
                   style={{ fontFamily: '"DM Serif Display", serif' }}
                 >
                   {language === "en" ? "Frequently asked questions" : "Questions fréquentes"}
                 </h2>
-                <dl className="space-y-6">
-                  {faqs.map(({ q, a }, i) => (
-                    <div key={i} className="card-ultra bg-white rounded-2xl border border-[#E7E5E4] shadow-sm p-6">
-                      <dt className="text-lg font-black text-[#1C1917] mb-3">{q}</dt>
-                      <dd className="text-[#57534E] font-medium leading-relaxed">{a}</dd>
-                    </div>
-                  ))}
+                {/* (Lot 2 — sous-lot A, D5) Les 5 premières questions dépliées, les suivantes sous un bouton : toutes restent
+                    dans le HTML, et le FAQPage ci-dessus est construit depuis la liste complète. */}
+                <dl className="space-y-4 md:space-y-6">
+                  {faqs.slice(0, FAQ_VISIBLE).map(faqCard)}
                 </dl>
+                {faqs.length > FAQ_VISIBLE && (
+                  <>
+                    <button
+                      type="button"
+                      aria-expanded={faqOpen}
+                      aria-controls="faq-suite"
+                      onClick={() => { trackFold("faq_more", !faqOpen); setFaqOpen((v) => !v); }}
+                      className="mt-4 md:mt-6 w-full flex items-center justify-between gap-3 px-5 py-4 md:px-6 bg-white border border-[#E7E5E4] rounded-2xl text-left font-bold text-[#1C1917] hover:border-[#D4A574] transition-colors"
+                    >
+                      {language === "en"
+                        ? `See the ${faqs.length - FAQ_VISIBLE} other questions`
+                        : `Voir les ${faqs.length - FAQ_VISIBLE} autres questions`}
+                      <ChevronDown className={`w-5 h-5 shrink-0 text-[#57534E] transition-transform ${faqOpen ? "rotate-180" : ""}`} aria-hidden="true" />
+                    </button>
+                    <dl id="faq-suite" className={`${faqOpen ? "" : "hidden "}mt-4 md:mt-6 space-y-4 md:space-y-6`}>
+                      {faqs.slice(FAQ_VISIBLE).map(faqCard)}
+                    </dl>
+                  </>
+                )}
               </div>
             </section>
           </>
@@ -2278,15 +2368,16 @@ export function HouseDetailPage() {
 
       {/* Cross-house discovery — GA4 path data shows visitors loop back through
           /nos-maisons to compare; link the siblings directly to shorten the loop. */}
-      <section className="section-padding py-14 md:py-20 relative bg-white">
+      <section className="py-8 md:py-20 relative bg-white">
         <div className="container-custom">
           <h2
-            className="text-3xl md:text-4xl mb-8 text-[#1C1917]"
+            className="text-3xl md:text-4xl mb-5 md:mb-8 text-[#1C1917]"
             style={{ fontFamily: '"DM Serif Display", serif' }}
           >
             {language === "en" ? "Compare with our other houses" : "Compare avec nos autres maisons"}
           </h2>
-          <div className="grid md:grid-cols-2 gap-6">
+          {/* (Lot 2 — sous-lot A) Sur mobile, deux cartes compactes (vignette + nom) au lieu de deux photos pleine largeur. */}
+          <div className="grid md:grid-cols-2 gap-3 md:gap-6">
             {(Object.keys(housesData) as Array<keyof typeof housesData>)
               .filter((hid) => hid !== id)
               .map((hid) => {
@@ -2295,17 +2386,18 @@ export function HouseDetailPage() {
                   <LocalizedLink
                     key={hid}
                     to={language === "en" ? `/en/${hid}` : `/${hid}`}
-                    className="group card-ultra overflow-hidden hover:shadow-lg transition-all"
+                    className="group card-ultra overflow-hidden hover:shadow-lg transition-all flex items-center gap-4 p-2.5 border border-[#E7E5E4] rounded-2xl md:block md:p-0 md:border-0 md:rounded-none"
                   >
-                    <div className="aspect-[16/9] overflow-hidden">
+                    <div className="w-28 h-[84px] shrink-0 overflow-hidden rounded-xl md:w-auto md:h-auto md:aspect-[16/9] md:rounded-none">
                       <img
                         src={other.image}
                         alt={`${other.name} — coliving ${other.location}`}
                         className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                         loading="lazy"
+                        {...responsiveImage(other.image, "(min-width: 768px) 50vw, 112px")}
                       />
                     </div>
-                    <div className="p-6 flex items-center justify-between">
+                    <div className="flex-1 min-w-0 flex items-center justify-between gap-3 pr-2 md:p-6">
                       <div>
                         <h3
                           className="text-xl text-[#1C1917] mb-1 group-hover:text-[#D4A574] transition-colors"
@@ -2327,7 +2419,7 @@ export function HouseDetailPage() {
       </section>
 
       {/* CTA Section */}
-      <section className="py-20 relative bg-[#1C1917] overflow-hidden">
+      <section className="py-14 md:py-20 relative bg-[#1C1917] overflow-hidden">
         <div className="absolute top-10 left-10 w-32 h-32 bg-white/15 blob hidden lg:block" />
         <div className="absolute bottom-10 right-10 w-24 h-24 bg-[#D4A574]/40 blob-reverse hidden lg:block" />
 

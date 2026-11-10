@@ -3,7 +3,7 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { loadEntityFacts } from '../../scripts/lib/load-entity-facts.mjs';
-import { checkHouseLocation, checkRoomSurfaceByHouse, mainTextAfterH1, COMMUTE_WINDOW, exactLocationLeaks } from '../../scripts/house-pages-check.mjs';
+import { checkHouseLocation, checkRoomSurfaceByHouse, mainTextAfterH1, COMMUTE_WINDOW, exactLocationLeaks, checkFaqInHtml } from '../../scripts/house-pages-check.mjs';
 
 const m = await loadEntityFacts();
 const SLUGS = ['lavilla', 'leloft', 'lelodge'];
@@ -112,4 +112,25 @@ test('exactLocationLeaks (12/10/2026, sécurité) : rue d\'une maison (casse, en
 test('checkHouseLocation : zone absente ou lien « Calculer mon trajet » depuis l\'adresse → échec', () => {
   const page = housePage('lelodge', 'fr').replace(enc(m.houseZone('lelodge', 'fr')), '');
   assert.ok(checkHouseLocation(page, 'lelodge', 'fr', m).some((f) => f.includes('houseZone')));
+});
+
+// (Lot 2 « retenue premium », sous-lot A — 11/2026) FAQ repliée : le repli masque, il ne retire jamais une question du HTML.
+function faqPage(questions, shown) {
+  const ld = { '@context': 'https://schema.org', '@type': 'FAQPage', mainEntity: questions.map((q) => ({ '@type': 'Question', name: q, acceptedAnswer: { '@type': 'Answer', text: 'r' } })) };
+  return `<!DOCTYPE html><html><head><script type="application/ld+json" data-react-helmet="true">${JSON.stringify(ld)}</script></head><body><main>` +
+    `<dl>${shown.slice(0, 1).map((q) => `<div><dt>${enc(q)}</dt><dd>r</dd></div>`).join('')}</dl>` +
+    `<dl id="faq-suite" class="hidden">${shown.slice(1).map((q) => `<div><dt>${enc(q)}</dt><dd>r</dd></div>`).join('')}</dl></main></body></html>`;
+}
+
+test('checkFaqInHtml : questions repliées mais présentes → aucun échec (apostrophes et espaces insécables compris)', () => {
+  const qs = ["Quel est le loyer mensuel à La Villa et que comprend-il ?", "Y a-t-il une caution et des frais d'agence ?", "Où se trouve La Villa & à quelle distance ?"];
+  assert.deepEqual(checkFaqInHtml(faqPage(qs, qs), 'lavilla.html'), []);
+});
+
+test('checkFaqInHtml : une question du FAQPage retirée du HTML → un échec qui la nomme ; FAQPage absent → échec', () => {
+  const qs = ['Question A ?', 'Question B ?', 'Question C ?'];
+  const r = checkFaqInHtml(faqPage(qs, ['Question A ?', 'Question C ?']), 'leloft.html');
+  assert.equal(r.length, 1);
+  assert.match(r[0], /Question B/);
+  assert.equal(checkFaqInHtml('<html><head></head><body><main><dl></dl></main></body></html>', 'lelodge.html').length, 1);
 });
