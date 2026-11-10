@@ -1297,7 +1297,7 @@ function getHousesData(lang: string): Record<string, HouseData> {
         price: isEn ? `${PRICE_EN_NUM} CHF` : `${PRICE_FR_NUM} CHF`,
         priceEur: isEn ? `€${EUR_STANDARD_EN_NUM}` : `${EUR_STANDARD_FR_NUM} €`,
         description: isEn
-          // (Lot L2) L'ancienne fourchette en dur était fausse : v_public_rooms donne 17-20 (ROOM_SURFACE_BY_HOUSE.lelodge).
+          // (Lot L2) L'ancienne fourchette en dur était fausse : la fourchette vient de v_public_rooms (ROOM_SURFACE_BY_HOUSE.lelodge, 18-20 depuis le 10/11/2026).
           ? `Private room (${ROOM_SURFACE_BY_HOUSE.lelodge.min} to ${ROOM_SURFACE_BY_HOUSE.lelodge.max} m²) in our newest house. Modern design, private bathroom, quality mattress, and garden access. All 12 rooms have private bathrooms.`
           : `Chambre privée (${ROOM_SURFACE_BY_HOUSE.lelodge.min} à ${ROOM_SURFACE_BY_HOUSE.lelodge.max} m²) dans notre maison la plus récente. Design moderne, salle de bain privative, matelas de qualité et accès jardin. Les 12 chambres ont une salle de bain privative.`,
         image: "/images/le lodge/rooms/la villa coliving le lodge-78.webp",
