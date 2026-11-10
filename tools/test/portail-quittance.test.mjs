@@ -2,28 +2,48 @@
 // répartition loyer / charges de la quittance, bailleur imprimé, bail ouvert par « Voir mon bail », doublons de fiches.
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { isV3Fiche, quittanceSplit, quittanceLessor, findLeaseDocument, documentLocation, filesNotInDocuments, pickTenantFiche, addressLines } from '../../src/lib/portail/quittance.ts';
+import { hasLeaseAmounts, currentLeaseSplit, quittanceSplit, quittanceLessor, findLeaseDocument, documentLocation, filesNotInDocuments, pickTenantFiche, addressLines } from '../../src/lib/portail/quittance.ts';
 
 const v3 = { rent_eur: 1186, charges_forfait_eur: 344, move_in_date: '2026-12-10' };
 const old = { rent_eur: null, charges_forfait_eur: null, move_in_date: '2026-03-01' };
 
-test('fiche v3 : loyer hors charges et forfait renseignés ; sinon bail antérieur', () => {
-  assert.equal(isV3Fiche(v3), true);
-  assert.equal(isV3Fiche(old), false);
-  assert.equal(isV3Fiche({ rent_eur: 1186, charges_forfait_eur: null, move_in_date: null }), false);
-  assert.equal(isV3Fiche({ rent_eur: 0, charges_forfait_eur: 344, move_in_date: null }), false);
+test('fiche avec les montants de son bail : loyer hors charges et forfait renseignés ; sinon calcul d’origine', () => {
+  assert.equal(hasLeaseAmounts(v3), true);
+  assert.equal(hasLeaseAmounts(old), false);
+  assert.equal(hasLeaseAmounts({ rent_eur: 1186, charges_forfait_eur: null, move_in_date: null }), false);
+  assert.equal(hasLeaseAmounts({ rent_eur: 0, charges_forfait_eur: 344, move_in_date: null }), false);
+});
+
+// Bail antérieur rattrapé : la fiche porte le loyer hors charges et le forfait de son bail, à sa signature.
+const rattrape = { rent_eur: 1095.73, charges_forfait_eur: 344.27, move_in_date: '2025-05-12' };
+
+test('bail antérieur rattrapé : même répartition qu’un bail v3, y compris après la révision annuelle', () => {
+  // loyer du bail : 1 440 € charges comprises → 1 095,73 + 344,27
+  assert.deepEqual(quittanceSplit({ received: 1440, month: '2026-04', fiche: rattrape, propertyCharges: 360 }), { rent: 1095.73, charges: 344.27, basis: 'bail' });
+  // après révision (1 451,19 € versés) : le loyer et les charges gardent les proportions du bail
+  const r = quittanceSplit({ received: 1451.19, month: '2026-11', fiche: rattrape, propertyCharges: 360 });
+  assert.equal(r.charges, 346.95);
+  assert.equal(r.rent, 1104.24);
+  assert.equal(Math.round((r.rent + r.charges) * 100) / 100, 1451.19);
+});
+
+test('encart « Mon bail » : loyer hors charges et forfait d’aujourd’hui = le loyer actuel dans les proportions du bail', () => {
+  assert.deepEqual(currentLeaseSplit(1530, v3), { rent: 1186, charges: 344 }, 'pas de révision : les deux montants du bail');
+  assert.deepEqual(currentLeaseSplit(1451.19, rattrape), { rent: 1104.24, charges: 346.95 }, 'loyer révisé : les deux lignes font le loyer affiché');
+  assert.deepEqual(currentLeaseSplit(0, v3), { rent: 1186, charges: 344 }, 'loyer actuel absent : montants du bail');
+  assert.equal(currentLeaseSplit(1460, old), null, 'fiche sans montants : pas de ligne');
 });
 
 test('bail v3, mois complet : la quittance reprend le loyer hors charges et le forfait du bail', () => {
-  assert.deepEqual(quittanceSplit({ received: 1530, month: '2027-01', fiche: v3, propertyCharges: 360 }), { rent: 1186, charges: 344, basis: 'bail_v3' });
+  assert.deepEqual(quittanceSplit({ received: 1530, month: '2027-01', fiche: v3, propertyCharges: 360 }), { rent: 1186, charges: 344, basis: 'bail' });
 });
 
 test('bail v3, mois d’entrée : le prorata en trentièmes du bail, au centime', () => {
   // entrée le 10 : 21/30 → loyer 830,20 + forfait 240,80 = 1 071,00
-  assert.deepEqual(quittanceSplit({ received: 1071, month: '2026-12', fiche: v3, propertyCharges: 360 }), { rent: 830.2, charges: 240.8, basis: 'bail_v3' });
+  assert.deepEqual(quittanceSplit({ received: 1071, month: '2026-12', fiche: v3, propertyCharges: 360 }), { rent: 830.2, charges: 240.8, basis: 'bail' });
   // entrée le 15 d'une chambre à 1 194 + 336 : 16/30 → 636,80 + 179,20
   const lodge = { rent_eur: 1194, charges_forfait_eur: 336, move_in_date: '2026-12-15' };
-  assert.deepEqual(quittanceSplit({ received: 816, month: '2026-12', fiche: lodge, propertyCharges: 420 }), { rent: 636.8, charges: 179.2, basis: 'bail_v3' });
+  assert.deepEqual(quittanceSplit({ received: 816, month: '2026-12', fiche: lodge, propertyCharges: 420 }), { rent: 636.8, charges: 179.2, basis: 'bail' });
 });
 
 test('bail v3, remise du premier mois et mois révisés : mêmes proportions que le bail', () => {
@@ -38,7 +58,7 @@ test('bail v3, remise du premier mois et mois révisés : mêmes proportions que
   assert.equal(Math.round((r.rent + r.charges) * 100) / 100, 1552.95);
 });
 
-test('bail antérieur : calcul d’origine inchangé (charges de la fiche maison, loyer jamais négatif)', () => {
+test('fiche sans montants : calcul d’origine inchangé (charges de la fiche maison, loyer jamais négatif)', () => {
   assert.deepEqual(quittanceSplit({ received: 1460, month: '2026-10', fiche: old, propertyCharges: 360 }), { rent: 1100, charges: 360, basis: 'fiche_maison' });
   assert.deepEqual(quittanceSplit({ received: 300, month: '2026-10', fiche: old, propertyCharges: 360 }), { rent: 0, charges: 360, basis: 'fiche_maison' });
 });

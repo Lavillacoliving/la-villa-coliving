@@ -8,7 +8,7 @@ import { pdf } from '@react-pdf/renderer';
 import { QuittancePDF } from './QuittancePDF';
 import { AttestationResidencePDF } from './AttestationResidencePDF';
 import { FileText, Download, Home } from 'lucide-react';
-import { documentLocation, filesNotInDocuments, findLeaseDocument, isV3Fiche, quittanceLessor, quittanceSplit } from '@/lib/portail/quittance';
+import { currentLeaseSplit, documentLocation, filesNotInDocuments, findLeaseDocument, hasLeaseAmounts, quittanceLessor, quittanceSplit } from '@/lib/portail/quittance';
 
 interface PortailContext {
   tenant: TenantInfo;
@@ -81,15 +81,15 @@ export function MonBailPage() {
       const lastDay = new Date(year, monthIdx + 1, 0).getDate();
       const pad = (n: number) => n.toString().padStart(2, '0');
 
-      // Bail v3 : la fiche porte le loyer hors charges et le forfait → répartition dans les proportions du bail,
-      // bailleur = entité juridique de la maison. Bail antérieur : calcul et libellés d'origine (charges de la fiche
+      // La fiche porte les montants de son bail (bail v3, ou bail antérieur rattrapé) → répartition dans les proportions
+      // du bail, bailleur = entité juridique de la maison. Sinon : calcul et libellés d'origine (charges de la fiche
       // maison, en euros malgré le suffixe _chf ; « La Villa Coliving », nom propre pour un bien non coliving).
-      const v3 = isV3Fiche(tenant);
+      const withAmounts = hasLeaseAmounts(tenant);
       const split = quittanceSplit({
         received: payment.received_amount, month: payment.month, fiche: tenant,
         propertyCharges: (tenant.charges_energy_chf || 0) + (tenant.charges_maintenance_chf || 0) + (tenant.charges_services_chf || 0),
       });
-      const lessor = quittanceLessor({ ...tenant, entity: tenant.lessor_entity }, v3);
+      const lessor = quittanceLessor({ ...tenant, entity: tenant.lessor_entity }, withAmounts);
 
       // Build full property address with city
       // If city is not already in address, append "74100 City"
@@ -103,7 +103,7 @@ export function MonBailPage() {
         bailleur_name: lessor.name,
         bailleur_address: lessor.address,
         bailleur_siret: lessor.siret,
-        ...(split.basis === 'bail_v3' ? {
+        ...(split.basis === 'bail' ? {
           bailleur_designation: lessor.designation, bailleur_registration: lessor.registration, brand_name: lessor.brand,
           rent_label: 'Loyer hors charges', charges_label: 'Forfait de charges',
         } : {}),
@@ -315,7 +315,8 @@ export function MonBailPage() {
   // n'est pas lisible par un locataire). Les fichiers déjà listés comme documents ne sont pas répétés plus bas.
   const leaseDoc = findLeaseDocument(tenant.id, tenantDocs, storageDocs);
   const otherFiles = filesNotInDocuments(tenant.id, tenantDocs, storageDocs);
-  const v3Fiche = isV3Fiche(tenant);
+  // Loyer hors charges et forfait d'aujourd'hui : le loyer actuel réparti dans les proportions du bail (nul sans montants).
+  const leaseSplit = currentLeaseSplit(tenant.current_rent, tenant);
   const errorNote = downloadError
     ? <p className="text-sm text-red-700 bg-red-50 rounded-lg p-3 mt-3" role="alert">{lang.downloadFailed} {downloadError}</p>
     : null;
@@ -340,10 +341,10 @@ export function MonBailPage() {
             <span className="text-gray-500">{lang.rent}</span>
             <span className="font-bold text-[#b8860b]">{formatCurrency(tenant.current_rent)}</span>
           </div>
-          {v3Fiche && (
+          {leaseSplit && (
             <div className="flex justify-between sm:flex-col sm:gap-1">
               <span className="text-gray-500">{lang.rentHc} / {lang.forfait}</span>
-              <span className="font-medium">{formatCurrency(Number(tenant.rent_eur))} / {formatCurrency(Number(tenant.charges_forfait_eur))}</span>
+              <span className="font-medium">{formatCurrency(leaseSplit.rent)} / {formatCurrency(leaseSplit.charges)}</span>
             </div>
           )}
           <div className="flex justify-between sm:flex-col sm:gap-1">

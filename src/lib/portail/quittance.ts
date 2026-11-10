@@ -3,43 +3,61 @@
  * 10/11/2026). Fonctions pures, sans import : la page Mon bail les appelle, tools/test/portail-quittance.test.mjs
  * les vérifie.
  *
- * Deux générations de fiches locataire cohabitent :
- *  - bail v3 : la fiche porte le loyer hors charges (tenants.rent_eur) et le forfait de charges
- *    (tenants.charges_forfait_eur) ; le bailleur est l'entité juridique de la maison (entities) ;
- *  - baux antérieurs : la fiche n'a pas ces deux montants ; la quittance garde son calcul d'origine (charges de la
- *    fiche maison, bailleur « La Villa Coliving »), inchangé tant que Jérôme n'a pas tranché le rattrapage.
+ * Deux cas, selon ce que porte la fiche du locataire :
+ *  - la fiche porte les montants de son bail — loyer hors charges (tenants.rent_eur) et forfait de charges
+ *    (tenants.charges_forfait_eur) : tous les baux v3 (le générateur les écrit) et les baux antérieurs une fois
+ *    rattrapés. La quittance répartit la somme reçue dans les proportions du bail ; le bailleur est l'entité
+ *    juridique de la maison (entities), celle des contrats : « SCI Sleep In » au Lodge et au Loft, l'indivision de
+ *    Fanny Piot et Jérôme Austin à La Villa (les quittances de l'outil docgen du serveur nomment aussi la SCI) ;
+ *  - la fiche n'a pas ces deux montants : la quittance garde son calcul d'origine (charges de la fiche maison,
+ *    bailleur « La Villa Coliving »).
  */
 
 const r2 = (n: number) => Math.round(n * 100) / 100;
 
 export interface QuittanceFiche {
-  rent_eur: number | null | undefined;             // loyer hors charges du bail v3
-  charges_forfait_eur: number | null | undefined;  // forfait de charges du bail v3
+  rent_eur: number | null | undefined;             // loyer hors charges du bail, à sa signature
+  charges_forfait_eur: number | null | undefined;  // forfait de charges du bail, à sa signature
   move_in_date: string | null | undefined;         // AAAA-MM-JJ
 }
 
-/** La fiche vient-elle d'un bail v3 (loyer hors charges et forfait renseignés) ? */
-export function isV3Fiche(f: QuittanceFiche): boolean {
+/** La fiche porte-t-elle les montants de son bail (loyer hors charges et forfait renseignés) ? */
+export function hasLeaseAmounts(f: QuittanceFiche): boolean {
   return Number(f.rent_eur) > 0 && f.charges_forfait_eur != null && Number(f.charges_forfait_eur) >= 0;
+}
+
+/**
+ * Loyer hors charges et forfait d'aujourd'hui, pour l'encart « Mon bail » : le loyer actuel de la fiche (révisé chaque
+ * année) réparti dans les proportions du bail. Tant qu'aucune révision n'a eu lieu, ce sont les deux montants du bail.
+ * Nul si la fiche ne porte pas les montants de son bail.
+ */
+export function currentLeaseSplit(currentRent: number | null | undefined, f: QuittanceFiche): { rent: number; charges: number } | null {
+  if (!hasLeaseAmounts(f)) return null;
+  const hc = Number(f.rent_eur);
+  const forfait = Number(f.charges_forfait_eur);
+  const total = Number(currentRent) || 0;
+  if (total <= 0 || Math.abs(total - (hc + forfait)) <= 0.011) return { rent: hc, charges: forfait };
+  const charges = r2(total * forfait / (hc + forfait));
+  return { rent: r2(total - charges), charges };
 }
 
 export interface QuittanceSplit {
   rent: number;      // loyer hors charges
   charges: number;   // charges
-  basis: "bail_v3" | "fiche_maison";
+  basis: "bail" | "fiche_maison";
 }
 
 /**
  * Répartition d'une somme reçue entre loyer et charges.
- * Bail v3 : dans les proportions du bail (loyer hors charges / forfait). La même règle couvre le mois complet, le
+ * Fiche avec les montants du bail : dans les proportions du bail (loyer hors charges / forfait). La même règle couvre le mois complet, le
  * prorata d'entrée ou de sortie, la remise du premier mois (consentie « sur le loyer et le forfait ») et les mois
  * d'avant ou d'après une révision annuelle (loyer et forfait sont révisés ensemble). Pour le mois d'entrée, quand la
  * somme reçue est exactement le prorata en trentièmes du bail, la quittance reprend ses deux montants au centime.
- * Baux antérieurs : calcul d'origine — charges de la fiche maison, loyer = reçu − charges (jamais négatif).
+ * Fiche sans ces montants : calcul d'origine — charges de la fiche maison, loyer = reçu − charges (jamais négatif).
  */
 export function quittanceSplit(o: { received: number; month: string; fiche: QuittanceFiche; propertyCharges: number }): QuittanceSplit {
   const received = Number(o.received) || 0;
-  if (!isV3Fiche(o.fiche)) {
+  if (!hasLeaseAmounts(o.fiche)) {
     const charges = Number(o.propertyCharges) || 0;
     return { rent: Math.max(0, received - charges), charges, basis: "fiche_maison" };
   }
@@ -56,12 +74,12 @@ export function quittanceSplit(o: { received: number; month: string; fiche: Quit
       if (Math.abs(received - (prorataHc + prorataForfait)) <= 0.011) charges = prorataForfait;
     }
   }
-  return { rent: r2(received - charges), charges, basis: "bail_v3" };
+  return { rent: r2(received - charges), charges, basis: "bail" };
 }
 
 export interface LessorSource {
   is_coliving: boolean;
-  legal_entity_name: string | null | undefined;   // properties.legal_entity_name (baux antérieurs)
+  legal_entity_name: string | null | undefined;   // properties.legal_entity_name (présentation d'origine)
   siege_social: string | null | undefined;        // properties.siege_social
   siret: string | null | undefined;               // properties.siret
   property_address: string | null | undefined;
@@ -73,15 +91,18 @@ export interface QuittanceLessor {
   name: string;                 // nom imprimé du bailleur
   designation: string;          // dans une phrase : « la SCI Sleep In », « l'Indivision Austin-Piot »
   address: string;
-  siret: string;                // baux antérieurs : « SIRET : … »
-  registration: string | null;  // bail v3 : immatriculation telle qu'au bail
+  siret: string;                // présentation d'origine : « SIRET : … »
+  registration: string | null;  // entité juridique : immatriculation telle qu'au bail
   brand: string;                // enseigne (« La Villa Coliving ») : adresse du locataire et pied de page
 }
 
-/** Bailleur imprimé sur la quittance : l'entité juridique pour un bail v3, le libellé d'origine sinon. */
-export function quittanceLessor(src: LessorSource, v3: boolean): QuittanceLessor {
+/**
+ * Bailleur imprimé sur la quittance : l'entité juridique de la maison quand la fiche porte les montants de son bail
+ * (`withLeaseAmounts`) et que l'entité a une identité juridique ; le libellé d'origine sinon.
+ */
+export function quittanceLessor(src: LessorSource, withLeaseAmounts: boolean): QuittanceLessor {
   const brand = src.entity?.trade_name || "La Villa Coliving";
-  if (v3 && src.entity?.legal_name) {
+  if (withLeaseAmounts && src.entity?.legal_name) {
     const name = src.entity.legal_name;
     const bare = name.replace(/^(SCI|Indivision)\s+/i, "");
     const designation = src.entity.legal_form === "sci" ? `la SCI ${bare}` : src.entity.legal_form === "indivision" ? `l'Indivision ${bare}` : name;
