@@ -1,24 +1,28 @@
 /**
  * Page de développement (jamais servie en production : route montée seulement si import.meta.env.DEV) : la carte
  * « Forfait de charges » de l'onglet Maisons et le bandeau de rappel, branchés sur des données en mémoire (les trois
- * forfaits provisoires 2026), pour vérifier l'écran sans compte admin ni écriture en base.
+ * forfaits provisoires 2026, et Mont-Blanc sans aucune saisie : logement loué en entier), pour vérifier l'écran sans
+ * compte admin ni écriture en base.
  * http://localhost:5175/dev/charges?maison=lelodge&today=2027-02-10
  */
 import { useMemo, useState } from 'react';
 import { ToastProvider } from '@/components/ui/Toast';
 import PropertyChargesCard from '@/components/dashboard/PropertyChargesCard';
 import { ChargesReminderView } from '@/components/dashboard/ChargesReminderBanner';
-import { expectedChargesYear, housesMissingCharges } from '@/lib/bailV3/charges';
+import { expectedChargesYear, housesFollowedForCharges, housesMissingCharges } from '@/lib/bailV3/charges';
 import { memoryChargesStore } from '@/lib/bailV3/chargesStore';
-import type { ChargesExercise } from '@/lib/bailV3/chargesEntry';
+import type { ChargesExercise, ChargesUnit } from '@/lib/bailV3/chargesEntry';
 
-const HOUSES = [
-  { id: 'lavilla', slug: 'lavilla', name: 'La Villa', address: '34 rue du Foron - 74100 Ville-la-Grand - France', room_count: 10, lessor: { name: 'Indivision Austin-Piot', address: '34 rue du Foron, 74100 Ville-la-Grand' }, total: 41312 },
-  { id: 'lelodge', slug: 'lelodge', name: 'Le Lodge', address: '8 rue de Romagny - 74100 Annemasse - France', room_count: 12, lessor: { name: 'SCI Sleep In', address: '8 rue du Mont-Blanc, 74100 Annemasse' }, total: 48372 },
-  { id: 'leloft', slug: 'leloft', name: 'Le Loft', address: '1 rue des Marronniers - 74100 Ambilly - France', room_count: 7, lessor: { name: 'SCI Sleep In', address: '8 rue du Mont-Blanc, 74100 Annemasse' }, total: 29883 },
+interface PreviewHouse { id: string; slug: string; name: string; address: string; room_count: number; is_coliving: boolean; unit: ChargesUnit; lessor: { name: string; address: string } | null; total: number | null }
+const HOUSES: PreviewHouse[] = [
+  { id: 'lavilla', slug: 'lavilla', name: 'La Villa', address: '34 rue du Foron - 74100 Ville-la-Grand - France', room_count: 10, is_coliving: true, unit: 'chambre', lessor: { name: 'Indivision Austin-Piot', address: '34 rue du Foron, 74100 Ville-la-Grand' }, total: 41312 },
+  { id: 'lelodge', slug: 'lelodge', name: 'Le Lodge', address: '8 rue de Romagny - 74100 Annemasse - France', room_count: 12, is_coliving: true, unit: 'chambre', lessor: { name: 'SCI Sleep In', address: '8 rue du Mont-Blanc, 74100 Annemasse' }, total: 48372 },
+  { id: 'leloft', slug: 'leloft', name: 'Le Loft', address: '1 rue des Marronniers - 74100 Ambilly - France', room_count: 7, is_coliving: true, unit: 'chambre', lessor: { name: 'SCI Sleep In', address: '8 rue du Mont-Blanc, 74100 Annemasse' }, total: 29883 },
+  // Mont-Blanc : appartement loué en entier, hors générateur de bail ; aucune saisie au départ, aucun bailleur imprimé.
+  { id: 'montblanc', slug: 'montblanc', name: 'Mont-Blanc', address: '8 rue du Mont-Blanc - 74100 Annemasse', room_count: 1, is_coliving: false, unit: 'logement', lessor: null, total: null },
 ];
 
-const SEED: ChargesExercise[] = HOUSES.map((h) => ({
+const SEED: ChargesExercise[] = HOUSES.filter((h): h is PreviewHouse & { total: number } => h.total != null).map((h) => ({
   id: `seed-${h.id}`, property_id: h.id, fiscal_year: 2026, method: 'provisional_2025_plus_10', status: 'provisoire',
   total_recoverable_eur: h.total, room_count: h.room_count, per_room_month_eur: Math.round((h.total / h.room_count / 12) * 100) / 100,
   effective_from: '2026-10-26', validated_at: null, validated_by: null, notes: 'Forfait provisoire : réel 2025 récupérable + 10 %.',
@@ -31,7 +35,7 @@ export default function ChargesPreviewDev() {
   const house = HOUSES.find((h) => h.id === params.get('maison')) || HOUSES[0];
   const store = useMemo(() => memoryChargesStore(SEED), []);
   const [, setTick] = useState(0);
-  const missing = housesMissingCharges(store.all(), HOUSES, today);
+  const missing = housesMissingCharges(store.all(), housesFollowedForCharges(HOUSES, store.all()), today);
   return (
     <ToastProvider>
       <div className="dash" style={{ background: '#FAF8F5', minHeight: '100vh', padding: 24 }}>
@@ -42,7 +46,7 @@ export default function ChargesPreviewDev() {
             {['2026-11-10', '2027-02-10', '2028-02-10'].map((d) => <a key={d} href={`?maison=${house.id}&today=${d}`} style={{ margin: '0 6px', fontWeight: d === today ? 700 : 400 }}>{d}</a>)}
           </p>
           <ChargesReminderView houses={missing} year={expectedChargesYear(today)} />
-          <PropertyChargesCard key={house.id} property={house} lessor={house.lessor} store={store} todayIso={today} onChanged={() => setTick((t) => t + 1)} />
+          <PropertyChargesCard key={house.id} property={house} lessor={house.lessor} unit={house.unit} store={store} todayIso={today} onChanged={() => setTick((t) => t + 1)} />
         </div>
       </div>
     </ToastProvider>

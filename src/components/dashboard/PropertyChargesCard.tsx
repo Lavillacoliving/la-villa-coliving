@@ -10,14 +10,18 @@
  *
  * Toutes les règles sont dans src/lib/bailV3/charges.ts et chargesEntry.ts (testées) ; l'accès à la base passe par
  * l'interface ChargesStore (Supabase ici, mémoire dans l'aperçu /dev/charges).
+ *
+ * `unit` : « chambre » pour un coliving (forfait par chambre, lu par le générateur de bail v3) ; « logement » pour un
+ * bien loué en entier, hors générateur (Mont-Blanc, ouvert le 10/11/2026) : même saisie, montant par mois, libellés
+ * sans chambres ni baux générés (chargesWording).
  */
 import { useEffect, useRef, useState } from 'react';
 import { useToast } from '@/components/ui/Toast';
 import { CHARGE_POSTES } from '@/data/chargePostes';
 import { PROJECTION_POSTE, currentExercise, exerciseStanding, localTodayIso, printedForfaitEur, type ExerciseStanding } from '@/lib/bailV3/charges';
 import {
-  draftFromExercise, draftIssues, draftToPayload, draftTotals, forfaitChange, lineForPoste, newExerciseDraft, replaceProjection,
-  publicLabel, statementFromExercise, validationIssues, type ChargeLineDraft, type ChargesExercise, type ExerciseDraft,
+  chargesWording, draftFromExercise, draftIssues, draftToPayload, draftTotals, forfaitChange, lineForPoste, newExerciseDraft, replaceProjection,
+  publicLabel, statementFromExercise, validationIssues, type ChargeLineDraft, type ChargesExercise, type ChargesUnit, type ExerciseDraft,
 } from '@/lib/bailV3/chargesEntry';
 import { supabaseChargesStore, type ChargesStore } from '@/lib/bailV3/chargesStore';
 import { leaseAddress } from '@/lib/bailV3/buildInput';
@@ -28,6 +32,8 @@ interface Props {
   /** Bailleur imprimé sur l'état récapitulatif (entité juridique de la maison). */
   lessor: { name: string; address: string | null } | null;
   isMobile?: boolean;
+  /** Unité de location : la chambre (coliving, défaut) ou le logement entier (Mont-Blanc). */
+  unit?: ChargesUnit;
   store?: ChargesStore;
   /** Date du jour (AAAA-MM-JJ) : seulement pour l'aperçu de développement. */
   todayIso?: string;
@@ -57,10 +63,10 @@ const GRID = 'minmax(190px, 2.2fr) 120px 76px 110px minmax(130px, 1.3fr) 34px';
 function message(e: unknown): string {
   return e instanceof Error ? e.message : String(e);
 }
-function standingText(st: ExerciseStanding): string {
+function standingText(st: ExerciseStanding, unit: ChargesUnit): string {
   switch (st.kind) {
-    case 'current': return 'En vigueur : c\'est le forfait des nouveaux baux.';
-    case 'future': return `S'appliquera aux baux générés à partir du ${fDate(st.from)}.`;
+    case 'current': return unit === 'chambre' ? 'En vigueur : c\'est le forfait des nouveaux baux.' : 'En vigueur.';
+    case 'future': return unit === 'chambre' ? `S'appliquera aux baux générés à partir du ${fDate(st.from)}.` : `S'appliquera à partir du ${fDate(st.from)}.`;
     case 'future_needs_validation': return `Date d'effet le ${fDate(st.from)}, mais tant que cet exercice n'est pas validé, l'exercice ${st.by} (validé) reste appliqué.`;
     case 'needs_validation': return `Pas encore appliqué : l'exercice ${st.by} est validé et prime sur un exercice provisoire. Valide celui-ci pour qu'il s'applique.`;
     case 'superseded': return `Remplacé par l'exercice ${st.by}.`;
@@ -68,7 +74,7 @@ function standingText(st: ExerciseStanding): string {
   }
 }
 
-export default function PropertyChargesCard({ property, lessor, isMobile = false, store = supabaseChargesStore, todayIso, onChanged }: Props) {
+export default function PropertyChargesCard({ property, lessor, isMobile = false, unit = 'chambre', store = supabaseChargesStore, todayIso, onChanged }: Props) {
   const toast = useToast();
   const today = todayIso || localTodayIso();
   const [data, setData] = useState<{ propertyId: string; rows: ChargesExercise[] } | null>(null);
@@ -107,7 +113,10 @@ export default function PropertyChargesCard({ property, lessor, isMobile = false
   const issues = mine && !readOnly ? draftIssues(mine, { rows, todayIso: today }) : [];
   const vIssues = mine && !readOnly ? validationIssues(mine) : [];
   const hasProjection = !!mine?.lines.some((l) => l.poste_code === PROJECTION_POSTE);
-  const standing = saved ? standingText(exerciseStanding(rows, saved.id, today)) : '';
+  const standing = saved ? standingText(exerciseStanding(rows, saved.id, today), unit) : '';
+  const w = chargesWording(unit, mine?.room_count ?? property.room_count);
+  /** Montant affiché d'un forfait : arrondi à l'euro pour une chambre (ce que le bail imprime), exact pour un logement entier. */
+  const shown = (perRoomMonth: number) => fEUR(w.rounded ? printedForfaitEur(perRoomMonth) : perRoomMonth);
   const headerMismatch = !!saved && Math.abs(saved.lines.reduce((s, l) => s + l.recoverable_eur, 0) - saved.total_recoverable_eur) > 0.005;
   const canDelete = !!saved && !readOnly && (!current || !!currentExercise(rows.filter((r) => r.id !== saved.id), property.id, today));
   // Montants de l'exercice précédent, pour repérer une faute de frappe d'un coup d'œil.
@@ -175,7 +184,7 @@ export default function PropertyChargesCard({ property, lessor, isMobile = false
     setBusy('pdf');
     try {
       const [{ pdf }, { ChargesStatementPDF }] = await Promise.all([import('@react-pdf/renderer'), import('@/lib/bailV3/ChargesStatementPDF')]);
-      const st = statementFromExercise(saved, { name: property.name, address: leaseAddress(property.address) }, lessor, today);
+      const st = statementFromExercise(saved, { name: property.name, address: leaseAddress(property.address) }, lessor, today, unit);
       const blob = await pdf(<ChargesStatementPDF st={st} logoSrc={`${window.location.origin}/logos/logo-full.png`} />).toBlob();
       const url = URL.createObjectURL(blob);
       const a = document.createElement('a');
@@ -190,11 +199,8 @@ export default function PropertyChargesCard({ property, lessor, isMobile = false
 
   return (
     <div style={S.card} data-testid="charges-card">
-      <h3 style={S.h3}>Forfait de charges (bail v3)</h3>
-      <p style={S.hint}>
-        Tu recopies ici les charges récupérables de la maison, exercice par exercice, d'après la clôture de ton cabinet comptable.
-        Le forfait d'une chambre = total récupérable ÷ nombre de chambres ÷ 12 mois. Le générateur de bail prend le forfait en vigueur.
-      </p>
+      <h3 style={S.h3}>{w.title}</h3>
+      <p style={S.hint}>{w.intro}</p>
 
       {failed && <div style={S.error}>Lecture des charges impossible : {failed}</div>}
       {!ready && !failed && <p style={{ color: GOLD, fontSize: '13px' }}>Chargement…</p>}
@@ -203,8 +209,10 @@ export default function PropertyChargesCard({ property, lessor, isMobile = false
         <>
           <div style={S.info} data-testid="charges-current">
             {current
-              ? <>Forfait en vigueur : <strong>{fEUR(printedForfaitEur(current.per_room_month_eur))} par chambre et par mois</strong> ({fEUR(current.per_room_month_eur)} avant arrondi) — exercice {current.fiscal_year}, {current.status === 'valide' ? 'validé' : 'provisoire'}, depuis le {fDate(current.effective_from)}.</>
-              : <>Aucun forfait en vigueur pour cette maison : le générateur de bail demandera de le saisir à la main.</>}
+              ? <>{w.inForce} : <strong>{shown(current.per_room_month_eur)} {w.perUnit}</strong>{w.rounded ? <> ({fEUR(current.per_room_month_eur)} avant arrondi)</> : null} — exercice {current.fiscal_year}, {current.status === 'valide' ? 'validé' : 'provisoire'}, depuis le {fDate(current.effective_from)}.</>
+              : unit === 'chambre'
+                ? <>Aucun forfait en vigueur pour cette maison : le générateur de bail demandera de le saisir à la main.</>
+                : <>Aucune charge en vigueur pour ce bien.</>}
           </div>
 
           <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap', alignItems: 'center', marginBottom: '14px' }}>
@@ -220,7 +228,7 @@ export default function PropertyChargesCard({ property, lessor, isMobile = false
             {!(mine && !mine.id) && <button onClick={startNew} style={S.ghost}>+ Nouvel exercice</button>}
           </div>
 
-          {!mine && <p style={{ fontSize: '13px', color: '#555' }}>Aucune charge saisie pour cette maison. Clique sur « Nouvel exercice » pour commencer.</p>}
+          {!mine && <p style={{ fontSize: '13px', color: '#555' }}>Aucune charge saisie pour l'instant. Clique sur « Nouvel exercice » pour commencer.</p>}
 
           {mine && totals && (
             <>
@@ -291,16 +299,18 @@ export default function PropertyChargesCard({ property, lessor, isMobile = false
               )}
 
               <div style={{ ...S.info, fontSize: '14px' }} data-testid="charges-totals">
-                Total récupérable <strong>{fEUR(totals.total)}</strong> ÷ {mine.room_count} chambres ÷ 12 mois = {fEUR(totals.perRoomMonth)}
-                {' → '}<strong style={{ color: GOLD }}>{fEUR(totals.printed)} par chambre et par mois dans les baux</strong>
-                {current && current.id !== mine.id && <span style={{ color: '#777' }}> (en vigueur aujourd'hui : {fEUR(printedForfaitEur(current.per_room_month_eur))})</span>}
+                Total récupérable <strong>{fEUR(totals.total)}</strong> {w.divisor} ={' '}
+                {w.rounded
+                  ? <>{fEUR(totals.perRoomMonth)}{' → '}<strong style={{ color: GOLD }}>{fEUR(totals.printed)} {w.perUnit} dans les baux</strong></>
+                  : <strong style={{ color: GOLD }}>{fEUR(totals.perRoomMonth)} {w.perUnit}</strong>}
+                {current && current.id !== mine.id && <span style={{ color: '#777' }}> (en vigueur aujourd'hui : {shown(current.per_room_month_eur)})</span>}
               </div>
 
               <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : '220px 1fr', gap: '12px', marginBottom: '12px' }}>
                 <div>
                   <label style={S.label}>Date d'effet</label>
                   <input type="date" aria-label="Date d'effet" value={mine.effective_from} disabled={readOnly} onChange={(e) => edit((d) => ({ ...d, effective_from: e.target.value }))} style={S.input} />
-                  <div style={{ fontSize: '11px', color: '#999', marginTop: '4px' }}>Les baux générés à partir de cette date utilisent ce forfait.</div>
+                  <div style={{ fontSize: '11px', color: '#999', marginTop: '4px' }}>{w.effectiveHint}</div>
                 </div>
                 <div>
                   <label style={S.label}>Notes internes (jamais imprimées)</label>
@@ -310,7 +320,7 @@ export default function PropertyChargesCard({ property, lessor, isMobile = false
 
               {saveEffect?.changes && saveEffect.after && (
                 <div style={S.warn} data-testid="charges-effect">
-                  En enregistrant, le forfait des nouveaux baux passe {saveEffect.before ? <>de {fEUR(saveEffect.before.printed)} </> : null}à <strong>{fEUR(saveEffect.after.printed)}</strong> dès aujourd'hui. Les baux déjà signés ne bougent pas.
+                  En enregistrant, le forfait {w.scope} passe {saveEffect.before ? <>de {fEUR(saveEffect.before.printed)} </> : null}à <strong>{fEUR(saveEffect.after.printed)}</strong> dès aujourd'hui. {w.signedNote}
                 </div>
               )}
               {!readOnly && issues.length > 0 && (dirty || !mine.id) && (
@@ -331,11 +341,11 @@ export default function PropertyChargesCard({ property, lessor, isMobile = false
                 <div style={S.warn} data-testid="charges-confirm">
                   <strong>Valider les charges {mine.fiscal_year} de {property.name} ?</strong><br />
                   {change.changes && change.after
-                    ? <>Dès la validation, les nouveaux baux utiliseront un forfait de <strong>{fEUR(change.after.printed)}</strong> (exercice {change.after.fiscal_year}){change.before ? <>, au lieu de {fEUR(change.before.printed)}</> : null}.</>
+                    ? <>Dès la validation, le forfait {w.scope} sera de <strong>{fEUR(change.after.printed)}</strong> (exercice {change.after.fiscal_year}){change.before ? <>, au lieu de {fEUR(change.before.printed)}</> : null}.</>
                     : mine.effective_from > today
-                      ? <>Le forfait d'aujourd'hui ne change pas ; celui-ci ({fEUR(totals.printed)}) s'appliquera à partir du {fDate(mine.effective_from)}.</>
-                      : <>Le forfait appliqué aux nouveaux baux ne change pas.</>}
-                  {' '}Les baux déjà signés ne bougent pas. Un exercice validé ne se modifie plus, sauf correction motivée et journalisée.
+                      ? <>{change.before ? 'Le forfait d\'aujourd\'hui ne change pas' : 'Rien n\'est en vigueur aujourd\'hui'} ; celui-ci ({shown(totals.perRoomMonth)}) s'appliquera à partir du {fDate(mine.effective_from)}.</>
+                      : <>Le forfait {w.scope} ne change pas.</>}
+                  {' '}{w.signedNote} Un exercice validé ne se modifie plus, sauf correction motivée et journalisée.
                   <div style={{ marginTop: '8px', display: 'flex', gap: '8px' }}>
                     <button onClick={validate} disabled={!!busy} style={{ ...S.btn, background: '#166534', color: '#fff', fontWeight: 600 }}>{busy === 'validate' ? 'Validation…' : 'Confirmer la validation'}</button>
                     <button onClick={() => setConfirm(null)} style={S.ghost}>Annuler</button>

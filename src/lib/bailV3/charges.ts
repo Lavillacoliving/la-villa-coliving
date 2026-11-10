@@ -112,6 +112,14 @@ export function housesMissingCharges<T extends ChargesExerciseFacts, H extends {
   )));
 }
 
+/**
+ * Biens suivis par le rappel de février : les colivings, et tout autre bien dès sa première saisie (Mont-Blanc,
+ * loué en entier : ouvert à la saisie le 10/11/2026, sans rappel tant que Jérôme n'y a rien saisi).
+ */
+export function housesFollowedForCharges<H extends { id: string; is_coliving?: boolean | null }>(houses: H[], rows: Array<{ property_id: string }>): H[] {
+  return houses.filter((h) => !!h.is_coliving || rows.some((r) => r.property_id === h.id));
+}
+
 /** Date du jour au fuseau du navigateur, AAAA-MM-JJ (les dates d'effet sont des dates civiles, pas des instants UTC). */
 export function localTodayIso(now: Date = new Date()): string {
   return `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, "0")}-${String(now.getDate()).padStart(2, "0")}`;

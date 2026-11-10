@@ -10,7 +10,7 @@ import path from "node:path";
 import fs from "node:fs";
 import { renderToFile } from "@react-pdf/renderer";
 import { ChargesStatementPDF } from "@/lib/bailV3/ChargesStatementPDF";
-import { statementFromExercise, type ChargesExercise } from "@/lib/bailV3/chargesEntry";
+import { statementFromExercise, type ChargesExercise, type ChargesUnit } from "@/lib/bailV3/chargesEntry";
 import { chargePosteLabel } from "@/data/chargePostes";
 
 const outDir = process.argv[2];
@@ -23,7 +23,7 @@ const line = (id: string, n: number, poste: string, amount: number, pct: number,
   recoverable_eur: Math.round(amount * pct) / 100, source, sort_order: n,
 });
 
-export const SAMPLE_EXERCISES: Record<string, { house: { name: string; address: string }; lessor: { name: string; address: string }; ex: ChargesExercise }> = {
+export const SAMPLE_EXERCISES: Record<string, { house: { name: string; address: string }; lessor: { name: string; address: string } | null; unit?: ChargesUnit; ex: ChargesExercise }> = {
   LaVilla_2026_provisoire: {
     house: { name: "La Villa", address: "34 rue du Foron, 74100 Ville-la-Grand" },
     lessor: { name: "Indivision Austin-Piot", address: "34 rue du Foron, 74100 Ville-la-Grand" },
@@ -51,11 +51,27 @@ export const SAMPLE_EXERCISES: Record<string, { house: { name: string; address: 
       ],
     },
   },
+  // Bien loué en entier, hors générateur de bail : montant par mois, pas de mention du forfait légal, pas de bailleur imprimé.
+  MontBlanc_exemple_logement_entier: {
+    house: { name: "Mont-Blanc", address: "8 rue du Mont-Blanc, 74100 Annemasse" },
+    lessor: null,
+    unit: "logement",
+    ex: {
+      id: "mb-2026", property_id: "mb", fiscal_year: 2026, method: "manual_closing", status: "valide", total_recoverable_eur: 0, room_count: 1,
+      per_room_month_eur: 0, effective_from: "2027-03-01", validated_at: "2027-02-18T09:30:00Z", validated_by: "exemple", notes: null,
+      lines: [
+        line("mb-2026", 0, "eau", 1320.4, 100, "clôture cabinet 2026"),
+        line("mb-2026", 1, "energie", 2980, 100, "clôture cabinet 2026"),
+        line("mb-2026", 2, "chaudiere_entretien", 210, 90, "contrat d'entretien"),
+        line("mb-2026", 3, "teom", 412, 100, "avis de taxe foncière 2026"),
+      ],
+    },
+  },
 };
 
-for (const [key, { house, lessor, ex }] of Object.entries(SAMPLE_EXERCISES)) {
-  const st = statementFromExercise(ex, house, lessor, "2026-11-10");
+for (const [key, { house, lessor, unit, ex }] of Object.entries(SAMPLE_EXERCISES)) {
+  const st = statementFromExercise(ex, house, lessor, "2026-11-10", unit);
   const file = path.join(outDir, `Etat_charges_${key}.pdf`);
   await renderToFile(<ChargesStatementPDF st={st} logoSrc={fs.existsSync(logo) ? logo : null} />, file);
-  console.log(`${key}: total ${st.total} € · ${st.per_room_month} € par chambre et par mois · imprimé ${st.printed} € → ${file}`);
+  console.log(`${key} (${st.unit}) : total ${st.total} € · ${st.per_room_month} € par mois et par ${st.unit} → ${file}`);
 }

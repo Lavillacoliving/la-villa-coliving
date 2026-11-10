@@ -3,6 +3,10 @@
  * le document que le bail v3 tient « à la disposition du Locataire » (article du loyer, forfait de charges).
  * Mêmes styles que le bail (BailV3PDF.tsx : Helvetica 10, filets dorés, encadré beige, tableau à en-tête doré).
  * Contenu = ChargesStatement (chargesEntry.ts) : jamais les notes internes de la saisie.
+ *
+ * Deux présentations selon `st.unit` : « chambre » = forfait du bail v3 (loi de 1989, réparti entre les chambres,
+ * arrondi à l'euro) ; « logement » = bien loué en entier, hors générateur (Mont-Blanc) : montant mensuel exact, et
+ * aucune mention du forfait légal, les conditions de prise en charge étant celles de son bail.
  */
 import { Document, Page, Text, View, StyleSheet, Image } from "@react-pdf/renderer";
 import type { ChargesStatement } from "./chargesEntry";
@@ -46,6 +50,7 @@ function statusSentence(st: ChargesStatement): string {
 }
 
 export function ChargesStatementPDF({ st, logoSrc }: { st: ChargesStatement; logoSrc?: string | null }) {
+  const whole = st.unit === "logement";
   return (
     <Document title={`État récapitulatif des charges ${st.fiscal_year} - ${st.house.name}`} author="La Villa Coliving">
       <Page size="A4" style={s.page}>
@@ -57,13 +62,13 @@ export function ChargesStatementPDF({ st, logoSrc }: { st: ChargesStatement; log
 
         <View style={s.box}>
           {st.lessor ? <><Text style={s.boxLabel}>BAILLEUR :</Text><Text style={s.boxText}>{`${st.lessor.name}${st.lessor.address ? ` - ${st.lessor.address}` : ""}`}</Text></> : null}
-          <Text style={[s.boxLabel, st.lessor ? { marginTop: 4 } : {}]}>MAISON :</Text>
+          <Text style={[s.boxLabel, st.lessor ? { marginTop: 4 } : {}]}>{whole ? "BIEN :" : "MAISON :"}</Text>
           <Text style={s.boxText}>{`${st.house.name} - ${st.house.address}`}</Text>
         </View>
 
-        <Text style={s.body}>{`${statusSentence(st)} Forfait applicable aux baux signés à compter du ${fDate(st.effective_from)}.`}</Text>
+        <Text style={s.body}>{`${statusSentence(st)} ${whole ? "Montant applicable" : "Forfait applicable aux baux signés"} à compter du ${fDate(st.effective_from)}.`}</Text>
 
-        <Text style={s.sectionTitle}>Charges récupérables de la maison</Text>
+        <Text style={s.sectionTitle}>{whole ? "Charges récupérables du bien" : "Charges récupérables de la maison"}</Text>
         <View style={s.headRow}>
           <Text style={[s.cellBold, { width: W.poste }]}>Poste</Text>
           <Text style={[s.cellBold, right, { width: W.amount }]}>Montant annuel</Text>
@@ -86,17 +91,29 @@ export function ChargesStatementPDF({ st, logoSrc }: { st: ChargesStatement; log
           <Text style={[s.cell, { width: W.source }]}> </Text>
         </View>
 
-        <View wrap={false}>
-          <Text style={s.sectionTitle}>Calcul du forfait mensuel par chambre</Text>
-          <View style={s.row}><Text style={[s.cell, { width: "70%" }]}>Total récupérable de l'exercice</Text><Text style={[s.cell, right, { width: "30%" }]}>{fEUR(st.total)}</Text></View>
-          <View style={s.row}><Text style={[s.cell, { width: "70%" }]}>Nombre de chambres de la maison (répartition à parts égales)</Text><Text style={[s.cell, right, { width: "30%" }]}>{String(st.room_count)}</Text></View>
-          <View style={s.row}><Text style={[s.cell, { width: "70%" }]}>{`Forfait par chambre et par mois (total ÷ ${st.room_count} chambres ÷ 12 mois)`}</Text><Text style={[s.cell, right, { width: "30%" }]}>{fEUR(st.per_room_month)}</Text></View>
-          <View style={s.totalRow}><Text style={[s.cellBold, { width: "70%" }]}>FORFAIT MENSUEL INSCRIT AUX BAUX (arrondi à l'euro)</Text><Text style={[s.cellBold, right, { width: "30%" }]}>{fEUR(st.printed)}</Text></View>
-          {/* Le calcul et sa base légale restent sur la même page (jamais une mention seule en page 2). */}
-          <Text style={s.small}>
-            Forfait de charges de l'article 25-10 de la loi n° 89-462 du 6 juillet 1989 : les charges récupérables de la maison (décret n° 87-713 du 26 août 1987) sont réparties à parts égales entre les chambres et rapportées au mois, sans régularisation ; le forfait est révisé comme le loyer. L'exploitation des équipements de loisirs, l'accès internet et les prestations de services sont compris dans le loyer et n'entrent pas dans ce forfait.
-          </Text>
-        </View>
+        {/* Le calcul et sa mention restent sur la même page (jamais une mention seule en page 2). */}
+        {whole ? (
+          <View wrap={false}>
+            <Text style={s.sectionTitle}>Montant mensuel des charges</Text>
+            <View style={s.row}><Text style={[s.cell, { width: "70%" }]}>Total récupérable de l'exercice</Text><Text style={[s.cell, right, { width: "30%" }]}>{fEUR(st.total)}</Text></View>
+            {st.room_count > 1 ? <View style={s.row}><Text style={[s.cell, { width: "70%" }]}>Nombre de logements (répartition à parts égales)</Text><Text style={[s.cell, right, { width: "30%" }]}>{String(st.room_count)}</Text></View> : null}
+            <View style={s.totalRow}><Text style={[s.cellBold, { width: "70%" }]}>{st.room_count > 1 ? `CHARGES PAR LOGEMENT ET PAR MOIS (total ÷ ${st.room_count} logements ÷ 12 mois)` : "CHARGES PAR MOIS (total ÷ 12 mois)"}</Text><Text style={[s.cellBold, right, { width: "30%" }]}>{fEUR(st.per_room_month)}</Text></View>
+            <Text style={s.small}>
+              État établi d'après les dépenses de l'exercice. Les conditions de prise en charge de ces charges par le locataire sont celles prévues au bail.
+            </Text>
+          </View>
+        ) : (
+          <View wrap={false}>
+            <Text style={s.sectionTitle}>Calcul du forfait mensuel par chambre</Text>
+            <View style={s.row}><Text style={[s.cell, { width: "70%" }]}>Total récupérable de l'exercice</Text><Text style={[s.cell, right, { width: "30%" }]}>{fEUR(st.total)}</Text></View>
+            <View style={s.row}><Text style={[s.cell, { width: "70%" }]}>Nombre de chambres de la maison (répartition à parts égales)</Text><Text style={[s.cell, right, { width: "30%" }]}>{String(st.room_count)}</Text></View>
+            <View style={s.row}><Text style={[s.cell, { width: "70%" }]}>{`Forfait par chambre et par mois (total ÷ ${st.room_count} chambres ÷ 12 mois)`}</Text><Text style={[s.cell, right, { width: "30%" }]}>{fEUR(st.per_room_month)}</Text></View>
+            <View style={s.totalRow}><Text style={[s.cellBold, { width: "70%" }]}>FORFAIT MENSUEL INSCRIT AUX BAUX (arrondi à l'euro)</Text><Text style={[s.cellBold, right, { width: "30%" }]}>{fEUR(st.printed)}</Text></View>
+            <Text style={s.small}>
+              Forfait de charges de l'article 25-10 de la loi n° 89-462 du 6 juillet 1989 : les charges récupérables de la maison (décret n° 87-713 du 26 août 1987) sont réparties à parts égales entre les chambres et rapportées au mois, sans régularisation ; le forfait est révisé comme le loyer. L'exploitation des équipements de loisirs, l'accès internet et les prestations de services sont compris dans le loyer et n'entrent pas dans ce forfait.
+            </Text>
+          </View>
+        )}
 
         <Text style={s.pageFooter} fixed>{`La Villa Coliving - lavillacoliving.com\nÉtat établi le ${fDate(st.generated_on)}`}</Text>
       </Page>

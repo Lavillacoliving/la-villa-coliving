@@ -6,7 +6,7 @@
 import { useEffect, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { supabase } from '@/lib/supabase';
-import { expectedChargesYear, housesMissingCharges, localTodayIso, type ChargesExerciseFacts } from '@/lib/bailV3/charges';
+import { expectedChargesYear, housesFollowedForCharges, housesMissingCharges, localTodayIso, type ChargesExerciseFacts } from '@/lib/bailV3/charges';
 
 /** Événement émis par l'onglet Maisons après une écriture : le bandeau se met à jour sans recharger la page. */
 export const CHARGES_CHANGED_EVENT = 'lvc-charges-changed';
@@ -38,12 +38,15 @@ export default function ChargesReminderBanner() {
   useEffect(() => {
     let cancelled = false;
     Promise.all([
-      supabase.from('properties').select('id, name').eq('is_coliving', true).order('name'),
+      supabase.from('properties').select('id, name, is_coliving').order('name'),
       supabase.from('property_charges').select('id, property_id, fiscal_year, method, status, effective_from'),
     ]).then(([houses, charges]) => {
       // Lecture réservée à l'administrateur : en cas d'erreur, pas de bandeau plutôt qu'une fausse alerte.
       if (cancelled || houses.error || charges.error) return;
-      setMissing(housesMissingCharges((charges.data || []) as ChargesExerciseFacts[], (houses.data || []) as Array<{ id: string; name: string }>, localTodayIso()));
+      const rows = (charges.data || []) as ChargesExerciseFacts[];
+      // Les colivings, et tout autre bien dès sa première saisie (Mont-Blanc) : jamais de rappel pour un bien encore vide.
+      const followed = housesFollowedForCharges((houses.data || []) as Array<{ id: string; name: string; is_coliving: boolean | null }>, rows);
+      setMissing(housesMissingCharges(rows, followed, localTodayIso()));
     });
     return () => { cancelled = true; };
   }, [pathname, tick]);

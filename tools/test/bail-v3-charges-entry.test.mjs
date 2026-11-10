@@ -189,3 +189,48 @@ test('état récapitulatif : libellés sans repère interne, total et forfait re
   assert.ok(!JSON.stringify(st).includes('note interne'));
   assert.equal(m.publicLabel('Internet et abonnements (D2 : dans le loyer)'), 'Internet et abonnements');
 });
+
+// ───────── bien loué en entier (Mont-Blanc, 10/11/2026) ─────────
+test('logement entier : montant par mois, sans chambres ni baux générés ; coliving inchangé', () => {
+  const room = m.chargesWording('chambre', 10);
+  assert.equal(room.perUnit, 'par chambre et par mois');
+  assert.equal(room.divisor, '÷ 10 chambres ÷ 12 mois');
+  assert.equal(room.rounded, true);
+  assert.match(room.intro, /générateur de bail prend le forfait/);
+  const whole = m.chargesWording('logement', 1);
+  assert.equal(whole.title, 'Charges du logement');
+  assert.equal(whole.perUnit, 'par mois');
+  assert.equal(whole.divisor, '÷ 12 mois');
+  assert.equal(whole.rounded, false);
+  assert.match(whole.intro, /hors du générateur de bail/);
+  for (const text of Object.values(whole).filter((v) => typeof v === 'string')) assert.ok(!/chambre/i.test(text), text);
+  assert.equal(m.chargesWording('logement', 3).divisor, '÷ 3 logements ÷ 12 mois');
+  // même calcul : total ÷ 1 logement ÷ 12
+  const d = draft([{ poste_code: 'eau', amount: '1 800' }, { poste_code: 'teom', amount: '612,40' }], { property_id: 'mb', room_count: 1 });
+  assert.equal(m.draftTotals(d).perRoomMonth, 201.03);
+});
+
+test('logement entier : état récapitulatif marqué « logement », sans bailleur quand il n’a pas d’identité juridique', () => {
+  const ex = {
+    id: 'mb26', property_id: 'mb', fiscal_year: 2026, method: 'manual_closing', status: 'valide', total_recoverable_eur: 2412.4, room_count: 1,
+    per_room_month_eur: 201.03, effective_from: '2027-03-01', validated_at: '2027-02-12T10:00:00Z', validated_by: 'x', notes: null,
+    lines: [{ id: 'l1', property_charges_id: 'mb26', poste_code: 'eau', label: 'Eau froide et chaude (résidents et communs)', amount_eur: 2412.4, recoverable_pct: 100, recoverable_eur: 2412.4, source: null, sort_order: 0 }],
+  };
+  const st = m.statementFromExercise(ex, { name: 'Mont-Blanc', address: '8 rue du Mont-Blanc, 74100 Annemasse' }, null, '2027-02-12', 'logement');
+  assert.equal(st.unit, 'logement');
+  assert.equal(st.lessor, null);
+  assert.equal(st.per_room_month, 201.03);
+  // par défaut : la chambre (les trois colivings)
+  assert.equal(m.statementFromExercise(ex, { name: 'x', address: 'y' }, null, '2027-02-12').unit, 'chambre');
+});
+
+test('rappel : un bien loué en entier n’est suivi qu’à partir de sa première saisie', () => {
+  const houses = [{ id: VILLA, name: 'La Villa', is_coliving: true }, { id: 'mb', name: 'Mont-Blanc', is_coliving: false }];
+  assert.deepEqual(m.housesFollowedForCharges(houses, [seed]).map((h) => h.name), ['La Villa']);
+  // aujourd'hui : Mont-Blanc est vide, aucun rappel pour lui ni en 2026 ni en février 2027
+  assert.deepEqual(m.housesMissingCharges([seed], m.housesFollowedForCharges(houses, [seed]), '2027-02-10').map((h) => h.name), ['La Villa']);
+  // dès qu'il a une saisie, il entre dans le cycle
+  const mb = { id: 'mb26', property_id: 'mb', fiscal_year: 2026, method: 'manual_closing', status: 'valide', effective_from: '2027-03-01' };
+  assert.deepEqual(m.housesFollowedForCharges(houses, [seed, mb]).map((h) => h.name), ['La Villa', 'Mont-Blanc']);
+  assert.deepEqual(m.housesMissingCharges([seed, mb], m.housesFollowedForCharges(houses, [seed, mb]), '2028-02-10').map((h) => h.name), ['La Villa', 'Mont-Blanc']);
+});

@@ -445,11 +445,11 @@ export default function DashboardMaisonsPage() {
                       </p>
                     </div>
                     <div>
-                      <p style={S.label}>Forfait de charges en vigueur (bail v3)</p>
+                      <p style={S.label}>{selectedProperty.is_coliving ? 'Forfait de charges en vigueur (bail v3)' : 'Charges en vigueur'}</p>
                       <p style={{ margin: 0, fontSize: '14px', color: '#1a1a2e' }}>
                         {currentCharges[selectedProperty.id]
-                          ? `${currentCharges[selectedProperty.id].per_room_month_eur.toLocaleString('fr-FR', { minimumFractionDigits: 2 })} € / chambre / mois — exercice ${currentCharges[selectedProperty.id].fiscal_year}, ${currentCharges[selectedProperty.id].status === 'valide' ? 'validé' : 'provisoire'} (${currentCharges[selectedProperty.id].room_count} chambres, ${currentCharges[selectedProperty.id].total_recoverable_eur.toLocaleString('fr-FR')} €/an)`
-                          : 'Aucun forfait saisi'}
+                          ? `${currentCharges[selectedProperty.id].per_room_month_eur.toLocaleString('fr-FR', { minimumFractionDigits: 2 })} € ${selectedProperty.is_coliving ? '/ chambre / mois' : '/ mois'} — exercice ${currentCharges[selectedProperty.id].fiscal_year}, ${currentCharges[selectedProperty.id].status === 'valide' ? 'validé' : 'provisoire'} (${selectedProperty.is_coliving ? `${currentCharges[selectedProperty.id].room_count} chambres, ` : ''}${currentCharges[selectedProperty.id].total_recoverable_eur.toLocaleString('fr-FR')} €/an)`
+                          : selectedProperty.is_coliving ? 'Aucun forfait saisi' : 'Aucune charge saisie'}
                       </p>
                     </div>
                   </div>
@@ -680,14 +680,17 @@ export default function DashboardMaisonsPage() {
               )}
             </div>
 
-            {/* Forfait de charges (bail v3, lot 2) : saisie manuelle par exercice, validation, état récapitulatif */}
-            {selectedProperty.is_coliving && (() => {
+            {/* Forfait de charges (bail v3, lot 2) : saisie manuelle par exercice, validation, état récapitulatif.
+                Tous les biens : par chambre pour un coliving, par mois pour un logement loué en entier (Mont-Blanc, 10/11/2026). */}
+            {(() => {
               const lessorEntity = entities.find(e => e.id === selectedProperty.entity_id);
               return (
                 <PropertyChargesCard
                   key={selectedProperty.id}
                   property={{ id: selectedProperty.id, slug: selectedProperty.slug, name: selectedProperty.name, address: selectedProperty.address, room_count: selectedProperty.room_count }}
-                  lessor={lessorEntity ? { name: lessorEntity.legal_name || lessorEntity.name, address: lessorEntity.siege || null } : null}
+                  // Bailleur imprimé sur l'état récapitulatif seulement s'il a une identité juridique (carte Bailleurs) : jamais un libellé interne.
+                  lessor={lessorEntity?.legal_name ? { name: lessorEntity.legal_name, address: lessorEntity.siege || null } : null}
+                  unit={selectedProperty.is_coliving ? 'chambre' : 'logement'}
                   isMobile={isMobile}
                   onChanged={() => { loadEntities(); window.dispatchEvent(new Event(CHARGES_CHANGED_EVENT)); }}
                 />

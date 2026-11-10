@@ -12,6 +12,50 @@ import {
 } from "./charges";
 import type { PropertyChargesLineRow, PropertyChargesRow } from "./types";
 
+/** Unité de location d'un bien : la chambre (coliving, bail v3) ou le logement entier (Mont-Blanc, hors générateur). */
+export type ChargesUnit = "chambre" | "logement";
+
+/** Libellés de l'écran et de l'état récapitulatif selon l'unité de location. */
+export interface ChargesWording {
+  title: string;          // titre de la carte
+  intro: string;          // phrase d'explication sous le titre
+  inForce: string;        // « Forfait en vigueur » | « Charges en vigueur »
+  perUnit: string;        // « par chambre et par mois » | « par mois »
+  divisor: string;        // « ÷ 10 chambres ÷ 12 mois » | « ÷ 12 mois »
+  scope: string;          // ce que le forfait concerne : « des nouveaux baux » | « de ce bien »
+  signedNote: string;     // rappel : ce qui est déjà signé ne bouge pas
+  effectiveHint: string;  // sous la date d'effet
+  rounded: boolean;       // le bail v3 imprime l'arrondi à l'euro ; un logement entier garde le montant exact
+}
+
+export function chargesWording(unit: ChargesUnit, roomCount: number): ChargesWording {
+  if (unit === "logement") {
+    const single = roomCount <= 1;
+    return {
+      title: "Charges du logement",
+      intro: `Tu recopies ici les charges récupérables de ce bien, exercice par exercice, d'après la clôture de ton cabinet comptable. Le montant mensuel = total récupérable ${single ? "÷ 12 mois" : "÷ nombre de logements ÷ 12 mois"}. Ce bien est loué en entier, hors du générateur de bail : la saisie sert au suivi et à l'état récapitulatif.`,
+      inForce: "Charges en vigueur",
+      perUnit: single ? "par mois" : "par logement et par mois",
+      divisor: single ? "÷ 12 mois" : `÷ ${roomCount} logements ÷ 12 mois`,
+      scope: "de ce bien",
+      signedNote: "Le bail en cours ne bouge pas.",
+      effectiveHint: "Date à partir de laquelle ce montant s'applique.",
+      rounded: false,
+    };
+  }
+  return {
+    title: "Forfait de charges (bail v3)",
+    intro: "Tu recopies ici les charges récupérables de la maison, exercice par exercice, d'après la clôture de ton cabinet comptable. Le forfait d'une chambre = total récupérable ÷ nombre de chambres ÷ 12 mois. Le générateur de bail prend le forfait en vigueur.",
+    inForce: "Forfait en vigueur",
+    perUnit: "par chambre et par mois",
+    divisor: `÷ ${roomCount} chambres ÷ 12 mois`,
+    scope: "des nouveaux baux",
+    signedNote: "Les baux déjà signés ne bougent pas.",
+    effectiveHint: "Les baux générés à partir de cette date utilisent ce forfait.",
+    rounded: true,
+  };
+}
+
 /** Une saisie complète : la ligne `property_charges` et ses lignes de postes. */
 export interface ChargesExercise extends PropertyChargesRow { lines: PropertyChargesLineRow[] }
 
@@ -135,7 +179,7 @@ export function draftIssues(d: ExerciseDraft, ctx: { rows: ChargesExerciseFacts[
   if (!Number.isInteger(d.fiscal_year) || d.fiscal_year < 2021 || d.fiscal_year > thisYear + 1) issues.push(`L'exercice doit être une année entre 2021 et ${thisYear + 1}.`);
   if (ctx.rows.some((r) => r.property_id === d.property_id && r.fiscal_year === d.fiscal_year && r.id !== d.id)) issues.push(`L'exercice ${d.fiscal_year} existe déjà pour cette maison : ouvre-le au lieu d'en créer un second.`);
   if (!/^\d{4}-\d{2}-\d{2}$/.test(d.effective_from) || Number.isNaN(Date.parse(d.effective_from))) issues.push("La date d'effet est obligatoire.");
-  if (!(d.room_count > 0)) issues.push("Le nombre de chambres de la maison est manquant.");
+  if (!(d.room_count > 0)) issues.push("Le nombre de chambres ou de logements de la fiche du bien est manquant.");
   const seen = new Set<string>();
   d.lines.forEach((l, i) => {
     const name = l.label.trim() || chargePosteLabel(l.poste_code) || `ligne ${i + 1}`;
@@ -205,6 +249,8 @@ export function draftToPayload(d: ExerciseDraft): ExercisePayload {
 
 /** Contenu de l'« État récapitulatif des charges » (PDF remis au locataire sur demande) — jamais les notes internes. */
 export interface ChargesStatement {
+  /** Chambre = forfait du bail v3 (loi de 1989, arrondi à l'euro) ; logement = bien loué en entier, montant exact, sans mention du forfait légal. */
+  unit: ChargesUnit;
   house: { name: string; address: string };
   lessor: { name: string; address: string | null } | null;
   fiscal_year: number;
@@ -225,7 +271,7 @@ export function publicLabel(label: string): string {
   return label.replace(/\s*\(D\d+[^)]*\)/g, "").trim();
 }
 
-export function statementFromExercise(ex: ChargesExercise, house: { name: string; address: string }, lessor: { name: string; address: string | null } | null, generatedOnIso: string): ChargesStatement {
+export function statementFromExercise(ex: ChargesExercise, house: { name: string; address: string }, lessor: { name: string; address: string | null } | null, generatedOnIso: string, unit: ChargesUnit = "chambre"): ChargesStatement {
   const lines = ex.lines.slice().sort((a, b) => a.sort_order - b.sort_order).map((l) => ({
     label: publicLabel(l.label), amount: Number(l.amount_eur), pct: Number(l.recoverable_pct),
     recoverable: recoverableEur(Number(l.amount_eur), Number(l.recoverable_pct)), source: l.source || "",
@@ -233,7 +279,7 @@ export function statementFromExercise(ex: ChargesExercise, house: { name: string
   const total = Math.round(lines.reduce((s, l) => s + l.recoverable, 0) * 100) / 100;
   const perRoomMonth = perRoomMonthEur(total, ex.room_count);
   return {
-    house, lessor, fiscal_year: ex.fiscal_year,
+    unit, house, lessor, fiscal_year: ex.fiscal_year,
     provisional: ex.status !== "valide",
     projection: ex.lines.some((l) => l.poste_code === PROJECTION_POSTE),
     validated_on: ex.validated_at ? ex.validated_at.slice(0, 10) : null,
