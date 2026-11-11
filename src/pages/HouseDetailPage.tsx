@@ -2250,7 +2250,7 @@ export function HouseDetailPage() {
           (Lot 2 — sous-lot A, D1) Après la localisation : elle précédait les chambres (près de 2 écrans sur mobile). */}
       <section className="pb-8 md:pb-20 relative bg-white">
         <div className="container-custom max-w-3xl">
-          <EntityFacts page={id} houseSlug={id as HouseKey} className="!my-0 text-[15px] md:text-base">
+          <EntityFacts page={id} houseSlug={id as HouseKey} className="!my-0 text-[15px] md:text-base" collapseOnMobile>
             {language === "en"
               ? `This page is about ${house.name}; the three houses share the same all-inclusive package.`
               : `Cette page décrit ${house.name} ; les trois maisons partagent le même tout-inclus.`}

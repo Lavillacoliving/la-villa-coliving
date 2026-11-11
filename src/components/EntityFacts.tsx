@@ -15,8 +15,13 @@
  * maisons (→ ?property_interest=<slug>, exigé par scripts/house-pages-check.mjs) ; `children` = UNE phrase
  * de contexte propre à la page (pages de décision), rendue hors des chaînes canoniques.
  * Attribution : porte interne `entity_facts` (src/lib/attribution.ts), même mécanique que BlocOffre.
+ *
+ * `collapseOnMobile` (sous-lot A, décision Jérôme du 11/11/2026 — pages maisons seulement) : sur mobile, la fiche
+ * s'arrête après son premier paragraphe, sous un bouton « Voir tout l'essentiel ». Le reste (phrase de contexte, puces,
+ * bouton, microcopie) est masqué en CSS et reste dans le HTML : la garde check:facts lit toujours les mêmes phrases.
+ * Replié au prérendu comme au premier rendu du navigateur (aucun écart d'hydratation) ; toujours déplié à partir de md.
  */
-import type { ReactNode } from "react";
+import { useState, type ReactNode } from "react";
 import { LocalizedLink } from "@/components/LocalizedLink";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { markInternalRef } from "@/lib/attribution";
@@ -28,12 +33,16 @@ export interface EntityFactsProps {
   houseSlug?: HouseKey;
   children?: ReactNode;
   className?: string;
+  /** Sur mobile, replie la fiche après son premier paragraphe (tout reste dans le HTML). Pages maisons. */
+  collapseOnMobile?: boolean;
 }
 
-export function EntityFacts({ page, houseSlug, children, className = "" }: EntityFactsProps) {
+export function EntityFacts({ page, houseSlug, children, className = "", collapseOnMobile = false }: EntityFactsProps) {
   const { language } = useLanguage();
   const L = language === "en" ? "en" : "fr";
   const t = entityFactsText(L);
+  const [open, setOpen] = useState(false);
+  const folded = collapseOnMobile && !open;
 
   const params = new URLSearchParams();
   if (houseSlug) params.set("property_interest", houseSlug);
@@ -66,6 +75,25 @@ export function EntityFacts({ page, houseSlug, children, className = "" }: Entit
         {t.title}
       </h2>
       <p className="leading-relaxed mb-4">{t.paragraph}</p>
+      {folded ? (
+        <button
+          type="button"
+          aria-expanded={false}
+          aria-controls="entity-facts-more"
+          onClick={() => {
+            setOpen(true);
+            try {
+              (window as unknown as { gtag?: (...a: unknown[]) => void }).gtag?.("event", "fold_toggle", {
+                fold: "entity_facts", state: "open", house: houseSlug ?? "none", language,
+              });
+            } catch { /* noop */ }
+          }}
+          className="md:hidden text-sm font-semibold text-[#1C1917] underline underline-offset-4"
+        >
+          {L === "en" ? "See all the essentials" : "Voir tout l'essentiel"}
+        </button>
+      ) : null}
+      <div id="entity-facts-more" className={folded ? "hidden md:block" : undefined}>
       {children ? <p className="leading-relaxed mb-4 text-[#57534E]">{children}</p> : null}
       <ul className="list-disc pl-6 space-y-2 mb-6">
         {t.bullets.map((b, i) => (
@@ -99,6 +127,7 @@ export function EntityFacts({ page, houseSlug, children, className = "" }: Entit
         {t.cta}
       </LocalizedLink>
       <p className="mt-2 text-sm text-[#57534E]">{t.ctaNote}</p>
+      </div>
     </aside>
   );
 }
