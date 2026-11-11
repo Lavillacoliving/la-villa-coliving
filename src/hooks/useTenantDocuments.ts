@@ -1,20 +1,27 @@
 import { useEffect, useState, useCallback } from 'react';
 import { supabase } from '@/lib/supabase';
 
+/**
+ * Ligne de la table tenant_documents telle qu'elle existe en base : id, tenant_id, type, label, file_url, month,
+ * uploaded_at. (Jusqu'au 10/11/2026 ce fichier décrivait des colonnes inexistantes — document_type, external_url,
+ * uploaded_by — et l'ancien générateur de bail n'y enregistrait donc rien.)
+ */
 export interface TenantDocument {
   id: string;
   tenant_id: string;
-  document_type: string;
+  type: string;
   label: string;
   file_url: string | null;
-  external_url: string | null;
-  nockee_report_id: string | null;
+  /** Mois concerné (AAAA-MM) pour une quittance. */
+  month: string | null;
   uploaded_at: string;
-  uploaded_by: string | null;
 }
 
 export const DOCUMENT_TYPES = [
-  { value: 'bail', label_fr: 'Bail signé', label_en: 'Signed Lease' },
+  // « Bail » et non « Bail signé » : le PDF déposé par le générateur est la version à signer.
+  { value: 'bail', label_fr: 'Bail', label_en: 'Lease' },
+  { value: 'annexe', label_fr: 'Annexe du bail', label_en: 'Lease appendix' },
+  { value: 'quittance', label_fr: 'Quittance de loyer', label_en: 'Rent receipt' },
   { value: 'edl_entree', label_fr: 'État des lieux entrée', label_en: 'Check-in Report' },
   { value: 'edl_sortie', label_fr: 'État des lieux sortie', label_en: 'Check-out Report' },
   { value: 'attestation', label_fr: 'Attestation', label_en: 'Certificate' },
@@ -56,21 +63,19 @@ export function useTenantDocuments(tenantId: string | null) {
  */
 export async function addTenantDocument(doc: {
   tenant_id: string;
-  document_type: string;
+  type: string;
   label: string;
   file_url?: string;
-  external_url?: string;
-  uploaded_by?: string;
+  month?: string;
 }) {
   const { data, error } = await supabase
     .from('tenant_documents')
     .insert({
       tenant_id: doc.tenant_id,
-      document_type: doc.document_type,
+      type: doc.type,
       label: doc.label,
       file_url: doc.file_url || null,
-      external_url: doc.external_url || null,
-      uploaded_by: doc.uploaded_by || 'dashboard',
+      month: doc.month || null,
     })
     .select()
     .single();
@@ -95,8 +100,7 @@ export async function uploadTenantFile(
   tenantId: string,
   file: File,
   documentType: string,
-  label: string,
-  uploadedBy?: string
+  label: string
 ) {
   const timestamp = Date.now();
   const safeName = file.name.replace(/[^a-zA-Z0-9._-]/g, '_');
@@ -114,10 +118,9 @@ export async function uploadTenantFile(
     .from('tenant_documents')
     .insert({
       tenant_id: tenantId,
-      document_type: documentType,
+      type: documentType,
       label: label || file.name,
       file_url: path, // Store the relative path, not the full URL
-      uploaded_by: uploadedBy || 'dashboard',
     })
     .select()
     .single();

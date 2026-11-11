@@ -1257,12 +1257,13 @@ export default function DashboardNouveauBailPage() {
       // Also create a tenant_documents record for the bail
       if (documentUrl && tenantId) {
         try {
+          // Colonnes réelles de tenant_documents (type, label, file_url) : « document_type » et « uploaded_by »
+          // n'existent pas, l'enregistrement échouait en silence jusqu'au 10/11/2026.
           await supabase.from('tenant_documents').insert({
             tenant_id: tenantId,
-            document_type: 'bail',
+            type: 'bail',
             label: `Bail ${form.locataire_prenom} ${form.locataire_nom} — ${selectedProperty.name}`,
             file_url: documentUrl,
-            uploaded_by: 'dashboard-bail-generator',
           });
         } catch (docErr) {
           console.warn('Tenant document record not saved:', docErr);
@@ -1282,10 +1283,9 @@ export default function DashboardNouveauBailPage() {
             if (!upErr) {
               await supabase.from('tenant_documents').insert({
                 tenant_id: tenantId,
-                document_type: 'annexe',
+                type: 'annexe',
                 label: label || file.name,
                 file_url: storagePath,
-                uploaded_by: 'dashboard-bail-generator',
               });
               uploadedCount++;
             } else {

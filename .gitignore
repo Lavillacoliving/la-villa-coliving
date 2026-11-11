@@ -33,6 +33,9 @@ scripts/competitors.local.json
 # Python (scripts/import-resident-history.py)
 __pycache__/
 
+# Bundle Node des maquettes du bail v3 (tools/bail-v3/maquette.tsx)
+tools/bail-v3/.build/
+
 # Photos et vidéos brutes : jamais dans le dépôt. Tout public/ est recopié dans CHAQUE déploiement Vercel
 # (quota « Deployment Storage » du plan Hobby). Convertir en WebP ≤ 1920 px (scripts/convert-images.cjs) :
 # l'original reste sur le disque, seul le .webp est versionné. Exception volontaire : git add -f.

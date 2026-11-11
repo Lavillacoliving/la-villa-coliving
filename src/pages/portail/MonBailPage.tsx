@@ -7,7 +7,8 @@ import { supabase } from '@/lib/supabase';
 import { pdf } from '@react-pdf/renderer';
 import { QuittancePDF } from './QuittancePDF';
 import { AttestationResidencePDF } from './AttestationResidencePDF';
-import { FileText, Download, ExternalLink, Home } from 'lucide-react';
+import { FileText, Download, Home } from 'lucide-react';
+import { currentLeaseSplit, documentLocation, filesNotInDocuments, findLeaseDocument, hasLeaseAmounts, quittanceLessor, quittanceSplit } from '@/lib/portail/quittance';
 
 interface PortailContext {
   tenant: TenantInfo;
@@ -24,20 +25,8 @@ export function MonBailPage() {
   const [storageDocs, setStorageDocs] = useState<{name:string,updated_at:string|null,metadata:{size?:number}|null}[]>([]);
   const [_storageLoading, setStorageLoading] = useState(true);
 
-  // Fetch bail link from leases table
-  const [bailUrl, setBailUrl] = useState<string | null>(null);
-  useEffect(() => {
-    async function fetchBail() {
-      const { data } = await supabase
-        .from('leases')
-        .select('document_url')
-        .eq('tenant_id', tenant.id)
-        .eq('is_active', true)
-        .maybeSingle();
-      if (data?.document_url) setBailUrl(data.document_url);
-    }
-    fetchBail();
-  }, [tenant.id]);
+  // Un message quand un document ne peut pas être téléchargé (plutôt qu'un bouton sans effet).
+  const [downloadError, setDownloadError] = useState<string | null>(null);
 
   const loadStorageDocs = useCallback(async () => {
     setStorageLoading(true);
@@ -58,8 +47,10 @@ export function MonBailPage() {
   };
 
   const downloadTenantDoc = async (fileUrl: string, label: string) => {
-    const { data, error } = await supabase.storage.from('operations').download(fileUrl);
-    if (error || !data) return;
+    setDownloadError(null);
+    const where = documentLocation(fileUrl);
+    const { data, error } = await supabase.storage.from(where.bucket).download(where.path);
+    if (error || !data) { setDownloadError(label); return; }
     const url = URL.createObjectURL(data);
     const a = document.createElement('a');
     a.href = url; a.download = label; a.click();
@@ -90,17 +81,15 @@ export function MonBailPage() {
       const lastDay = new Date(year, monthIdx + 1, 0).getDate();
       const pad = (n: number) => n.toString().padStart(2, '0');
 
-      // Charges are stored in EUR in Supabase (despite column names ending in _chf)
-      const chargesEUR = (tenant.charges_energy_chf || 0) + (tenant.charges_maintenance_chf || 0) + (tenant.charges_services_chf || 0);
-      const loyerNu = Math.max(0, payment.received_amount - chargesEUR);
-
-      // Bailleur : "La Villa Coliving" pour coliving, nom propre pour non-coliving (Mont-Blanc)
-      const isSleepIn = tenant.legal_entity_name?.toLowerCase().includes('sleep in');
-      const isColiving = tenant.is_coliving;
-      const bailleurName = isColiving ? 'La Villa Coliving' : (tenant.legal_entity_name || 'La Villa Coliving');
-      const bailleurAddress = isSleepIn
-        ? 'Sleep In SCI \u2014 ' + (tenant.siege_social || tenant.property_address)
-        : (tenant.siege_social || tenant.property_address);
+      // La fiche porte les montants de son bail (bail v3, ou bail antérieur rattrapé) → répartition dans les proportions
+      // du bail, bailleur = entité juridique de la maison. Sinon : calcul et libellés d'origine (charges de la fiche
+      // maison, en euros malgré le suffixe _chf ; « La Villa Coliving », nom propre pour un bien non coliving).
+      const withAmounts = hasLeaseAmounts(tenant);
+      const split = quittanceSplit({
+        received: payment.received_amount, month: payment.month, fiche: tenant,
+        propertyCharges: (tenant.charges_energy_chf || 0) + (tenant.charges_maintenance_chf || 0) + (tenant.charges_services_chf || 0),
+      });
+      const lessor = quittanceLessor({ ...tenant, entity: tenant.lessor_entity }, withAmounts);
 
       // Build full property address with city
       // If city is not already in address, append "74100 City"
@@ -111,9 +100,13 @@ export function MonBailPage() {
         : (addr + ', 74100 ' + city + ' \u2013 France');
 
       const data = {
-        bailleur_name: bailleurName,
-        bailleur_address: bailleurAddress,
-        bailleur_siret: tenant.siret || '',
+        bailleur_name: lessor.name,
+        bailleur_address: lessor.address,
+        bailleur_siret: lessor.siret,
+        ...(split.basis === 'bail' ? {
+          bailleur_designation: lessor.designation, bailleur_registration: lessor.registration, brand_name: lessor.brand,
+          rent_label: 'Loyer hors charges', charges_label: 'Forfait de charges',
+        } : {}),
         locataire_name: `${tenant.first_name} ${tenant.last_name}`,
         property_name: tenant.property_name,
         property_address: fullAddress,
@@ -122,8 +115,8 @@ export function MonBailPage() {
         month_label: monthLabel,
         period_start: `${pad(1)}/${pad(monthIdx + 1)}/${year}`,
         period_end: `${pad(lastDay)}/${pad(monthIdx + 1)}/${year}`,
-        loyer_nu: loyerNu,
-        charges: chargesEUR,
+        loyer_nu: split.rent,
+        charges: split.charges,
         total: payment.received_amount,
         payment_date: new Date(payment.payment_date).toLocaleDateString('fr-FR'),
         generated_date: new Date().toLocaleDateString('fr-FR'),
@@ -203,6 +196,9 @@ export function MonBailPage() {
       property: 'Propriété',
       room: 'Chambre',
       rent: 'Loyer mensuel',
+      rentHc: 'dont loyer hors charges',
+      forfait: 'dont forfait de charges',
+      downloadFailed: 'Ce document n\'est pas disponible pour le moment :',
       moveIn: 'Date d\'entrée',
       moveOut: 'Date de fin',
       deposit: 'Dépôt de garantie',
@@ -241,6 +237,9 @@ export function MonBailPage() {
       property: 'Property',
       room: 'Room',
       rent: 'Monthly rent',
+      rentHc: 'of which rent excluding charges',
+      forfait: 'of which flat-rate service charges',
+      downloadFailed: 'This document is not available at the moment:',
       moveIn: 'Move-in date',
       moveOut: 'End date',
       deposit: 'Security deposit',
@@ -312,6 +311,16 @@ export function MonBailPage() {
     return dt ? (language === 'en' ? dt.label_en : dt.label_fr) : type;
   };
 
+  // « Voir mon bail » : le document « bail » de la fiche, sinon le fichier Bail… du dossier (la table des baux
+  // n'est pas lisible par un locataire). Les fichiers déjà listés comme documents ne sont pas répétés plus bas.
+  const leaseDoc = findLeaseDocument(tenant.id, tenantDocs, storageDocs);
+  const otherFiles = filesNotInDocuments(tenant.id, tenantDocs, storageDocs);
+  // Loyer hors charges et forfait d'aujourd'hui : le loyer actuel réparti dans les proportions du bail (nul sans montants).
+  const leaseSplit = currentLeaseSplit(tenant.current_rent, tenant);
+  const errorNote = downloadError
+    ? <p className="text-sm text-red-700 bg-red-50 rounded-lg p-3 mt-3" role="alert">{lang.downloadFailed} {downloadError}</p>
+    : null;
+
   return (
     <div className="space-y-6">
       {/* Lease Info Card */}
@@ -332,6 +341,12 @@ export function MonBailPage() {
             <span className="text-gray-500">{lang.rent}</span>
             <span className="font-bold text-[#b8860b]">{formatCurrency(tenant.current_rent)}</span>
           </div>
+          {leaseSplit && (
+            <div className="flex justify-between sm:flex-col sm:gap-1">
+              <span className="text-gray-500">{lang.rentHc} / {lang.forfait}</span>
+              <span className="font-medium">{formatCurrency(leaseSplit.rent)} / {formatCurrency(leaseSplit.charges)}</span>
+            </div>
+          )}
           <div className="flex justify-between sm:flex-col sm:gap-1">
             <span className="text-gray-500">{lang.moveIn}</span>
             <span className="font-medium">{formatDate(tenant.move_in_date)}</span>
@@ -363,15 +378,16 @@ export function MonBailPage() {
         </div>
 
         {/* Bail PDF link */}
-        {bailUrl && (
+        {leaseDoc && (
           <div className="mt-4 pt-4 border-t border-gray-100">
             <button
-              onClick={() => downloadTenantDoc(bailUrl, `Bail_${tenant.last_name}.pdf`)}
+              onClick={() => downloadTenantDoc(leaseDoc.path, `Bail_${tenant.last_name}.pdf`)}
               className="inline-flex items-center gap-2 px-4 py-2 text-sm font-medium text-[#b8860b] bg-[#b8860b]/10 rounded-lg hover:bg-[#b8860b]/20 transition-colors"
             >
               <FileText className="w-4 h-4" />
               {lang.viewBail}
             </button>
+            {errorNote}
           </div>
         )}
       </div>
@@ -418,10 +434,11 @@ export function MonBailPage() {
         </h2>
         {docsDbLoading ? (
           <div className="animate-pulse text-sm text-gray-400">...</div>
-        ) : tenantDocs.length === 0 && storageDocs.length === 0 ? (
+        ) : tenantDocs.length === 0 && otherFiles.length === 0 ? (
           <p className="text-sm text-gray-500">{lang.noDocuments}</p>
         ) : (
           <div className="space-y-2">
+            {errorNote}
             {/* Documents from tenant_documents table */}
             {tenantDocs.map((doc) => (
               <div key={doc.id} className="flex items-center justify-between p-3 rounded-lg border border-gray-100 hover:bg-gray-50 transition-colors">
@@ -430,7 +447,7 @@ export function MonBailPage() {
                   <div className="min-w-0">
                     <p className="text-sm font-medium text-gray-900 truncate">{doc.label}</p>
                     <p className="text-xs text-gray-400">
-                      {getDocTypeLabel(doc.document_type)}
+                      {getDocTypeLabel(doc.type)}
                       {doc.uploaded_at ? ` — ${new Date(doc.uploaded_at).toLocaleDateString(language === 'en' ? 'en-GB' : 'fr-FR')}` : ''}
                     </p>
                   </div>
@@ -443,22 +460,12 @@ export function MonBailPage() {
                     <Download className="w-3 h-3" />
                     {lang.download}
                   </button>
-                ) : doc.external_url ? (
-                  <a
-                    href={doc.external_url}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="ml-3 px-3 py-1.5 text-xs font-medium text-[#b8860b] bg-[#b8860b]/10 rounded-lg hover:bg-[#b8860b]/20 transition-colors flex-shrink-0 inline-flex items-center gap-1"
-                  >
-                    <ExternalLink className="w-3 h-3" />
-                    {lang.download}
-                  </a>
                 ) : null}
               </div>
             ))}
 
             {/* Legacy documents from Storage (backward compat) */}
-            {storageDocs.map((doc) => {
+            {otherFiles.map((doc) => {
               const ext = doc.name.split('.').pop()?.toLowerCase() || '';
               const icon = ext === 'pdf' ? '📄' : ext === 'jpg' || ext === 'jpeg' || ext === 'png' ? '🖼️' : '📎';
               return (

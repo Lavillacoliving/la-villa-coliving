@@ -38,7 +38,7 @@ interface ExitSurvey {
 // Métadonnées d'affichage du statut bail
 const LEASE_STATUS_META: Record<LeaseStatus, { label: string; color: string; bg: string }> = {
   draft:        { label: 'Brouillon',         color: '#7c3aed', bg: '#ede9fe' },
-  sent_yousign: { label: 'Envoyé (Yousign)',  color: '#0891b2', bg: '#cffafe' },
+  sent_yousign: { label: 'Envoyé en signature', color: '#0891b2', bg: '#cffafe' }, // valeur DB conservée (ex-Yousign) ; signature manuelle via DocuSeal depuis le 26/10/2026
   signed:       { label: 'Signé',             color: '#0d9488', bg: '#ccfbf1' },
   active:       { label: 'Actif',             color: '#16a34a', bg: '#dcfce7' },
   cancelled:    { label: 'Annulé',            color: '#dc2626', bg: '#fee2e2' },
@@ -663,7 +663,7 @@ export default function DashboardLocatairesPage() {
                       )}
                     </div>
                     <div style={{marginTop:'8px',fontSize:'11px',color:'#9ca3af',lineHeight:1.4}}>
-                      Brouillon → Envoyé Yousign → Signé → Actif. La caution se confirme séparément (champ ci-dessus).
+                      Brouillon → Envoyé en signature → Signé → Actif. La caution se confirme séparément (champ ci-dessus).
                     </div>
                   </div>
                 )}
