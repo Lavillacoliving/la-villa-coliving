@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { supabase } from '@/lib/supabase';
 import { useToast } from '@/components/ui/Toast';
 import { logAudit } from '@/lib/auditLog';
+import { nextLeaseAnniversary, hasLeftBy } from '@/lib/irlAnniversary';
 import { pdf, Document, Page, Text, StyleSheet } from '@react-pdf/renderer';
 
 interface Props { tenant: any; propertyName: string; onApplied?: () => void; }
@@ -66,6 +67,11 @@ export default function IRLRevisionCard({ tenant, propertyName, onApplied }: Pro
 
   if (!tenant.move_in_date) return <p style={{color:'#888',padding:'20px'}}>Pas de date d'entrée renseignée — impossible de calculer l'anniversaire du bail.</p>;
   if (indices.length === 0) return <p style={{color:'#888',padding:'20px'}}>Chargement des indices IRL…</p>;
+  // Même règle que les rappels de « Suivi Loyers » : pas d'anniversaire avant un an de bail (entrée à venir),
+  // pas de révision pour un locataire qui sera parti à l'anniversaire.
+  const nextAnniversary = nextLeaseAnniversary(tenant.move_in_date, new Date());
+  if (!nextAnniversary) return <p style={{color:'#888',padding:'20px'}}>Locataire pas encore entré : la première révision du loyer se fera au premier anniversaire du bail.</p>;
+  if (hasLeftBy(tenant.move_out_date, nextAnniversary)) return <p style={{color:'#888',padding:'20px'}}>Départ renseigné avant le prochain anniversaire du bail : aucune révision de loyer à préparer.</p>;
 
   // Anniversaire du bail (jour/mois de la date d'entrée)
   const moveIn = new Date(tenant.move_in_date);
