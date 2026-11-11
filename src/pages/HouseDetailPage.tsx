@@ -31,6 +31,7 @@ import { STATS, STATS_DISPLAY, HOUSE_SURFACES, ROOM_SURFACE_BY_HOUSE, TRANSIT, t
 // (Lot L2 « Emplacement et transport », 09/10/2026) Source unique des faits d'emplacement : plus aucune minute,
 // distance ou surface en dur dans cette page (règle D1/D6/D7 de Jérôme, recon L0.2a).
 import { ENTITY_HOUSES } from "@/data/entityFacts";
+import { ALBUM_COVERS } from "@/data/albumCovers";
 import {
   HOUSE_LOCATION_VERSION,
   formatDistance,
@@ -1970,7 +1971,7 @@ export function HouseDetailPage() {
 
       {/* (Lot 2 — sous-lot A, D1) Album compact, dans sa propre section après les chambres : 6 vignettes et « Voir les N photos »
           (visionneuse plein écran). Il était inséré au milieu de la section Chambres avec 20 vignettes. */}
-      <HouseGallery images={house.photoGallery} featured={[house.image, ...house.gallery]} houseName={house.name} />
+      <HouseGallery images={house.photoGallery} cover={ALBUM_COVERS[id]} featured={[house.image, ...house.gallery]} houseName={house.name} />
 
       {/* « Ce qui est inclus » (D2) : caractéristiques, services, communauté et mode de vie réunis sous un seul titre.
           Sur mobile, quatre volets repliés (aperçu de deux lignes, liste complète au toucher) ; à partir de md, les listes

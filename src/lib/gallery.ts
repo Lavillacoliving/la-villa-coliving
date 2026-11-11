@@ -84,3 +84,32 @@ export function albumPicks(images: { src: string; category: string }[], featured
   }
   return picks;
 }
+
+/**
+ * Vignettes de l'album choisies à la main (src/data/albumCovers.ts, décision Jérôme du 11/11/2026).
+ *
+ * `cover` est la liste des `src` à montrer, dans l'ordre d'affichage : elle est suivie telle quelle. Une entrée absente de
+ * l'album ou répétée est ignorée ; s'il manque alors des vignettes, ou si la maison n'a pas de liste, la suite vient du
+ * choix automatique (albumPicks), sans doublon. Renvoie des indices dans `images`, comme albumPicks. Pur et déterministe.
+ */
+export function albumCover(images: { src: string; category: string }[], cover: string[] | undefined, featured: string[], n: number): number[] {
+  const picks: number[] = [];
+  const seen = new Set<string>();
+  for (const src of cover ?? []) {
+    if (picks.length >= n) break;
+    if (seen.has(src)) continue;
+    const i = images.findIndex((img) => img.src === src);
+    if (i === -1) continue;
+    seen.add(src);
+    picks.push(i);
+  }
+  if (picks.length < n) {
+    for (const i of albumPicks(images, featured, n + picks.length)) {
+      if (picks.length >= n) break;
+      if (seen.has(images[i].src)) continue;
+      seen.add(images[i].src);
+      picks.push(i);
+    }
+  }
+  return picks;
+}

@@ -2,7 +2,7 @@ import { lazy, Suspense, useState } from 'react';
 import { Grid3X3 } from 'lucide-react';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { responsiveImage } from '@/lib/responsiveImage';
-import { albumPicks } from '@/lib/gallery';
+import { albumCover } from '@/lib/gallery';
 import type { LightboxPhoto } from '@/components/PhotoLightbox';
 
 // Visionneuse plein écran partagée avec les photos de chambres (Radix, balayage tactile, clavier) : chargée à l'ouverture seulement.
@@ -17,7 +17,9 @@ interface HouseGalleryProps {
     category: GalleryCategory;
   }[];
   houseName: string;
-  /** Photos à montrer en vignette, par `src` (celles du carrousel du hero) ; complétées automatiquement s'il en manque. */
+  /** Vignettes choisies à la main, par `src`, dans l'ordre d'affichage (src/data/albumCovers.ts). */
+  cover?: string[];
+  /** Sans liste `cover`, ou si elle est incomplète : photos à préférer, par `src` (celles du carrousel du hero). */
   featured?: string[];
 }
 
@@ -49,14 +51,14 @@ const categoryLabels: Record<'en' | 'fr', Record<GalleryCategory, string>> = {
  */
 const COMPACT_VISIBLE = 6;
 
-export function HouseGallery({ images, houseName, featured = [] }: HouseGalleryProps) {
+export function HouseGallery({ images, houseName, cover, featured = [] }: HouseGalleryProps) {
   const { language } = useLanguage();
   const L = language === 'en' ? 'en' : 'fr';
   const [viewer, setViewer] = useState<number | null>(null);
 
   if (images.length === 0) return null;
 
-  const picks = albumPicks(images, featured, COMPACT_VISIBLE);
+  const picks = albumCover(images, cover, featured, COMPACT_VISIBLE);
   const categories = [...new Set(images.map((img) => img.category))];
   // Légende de la visionneuse dans la langue de la page (les `alt` historiques de l'album sont en anglais).
   const photos: LightboxPhoto[] = images.map((img) => ({
