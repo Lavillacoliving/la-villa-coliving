@@ -93,27 +93,33 @@ export function TestimonialsCarouselV7() {
               <Quote className="w-10 h-10 text-[#D4A574]" />
             </div>
 
-            {/* Testimonial text */}
-            <p className="text-lg md:text-xl text-[#44403C] leading-relaxed text-center italic mb-8">
-              "{testimonials[currentIndex].quote}"
-            </p>
-
-            {/* Author */}
-            <div className="flex items-center justify-center gap-4">
-              <div className="w-12 h-12 rounded-full bg-[#F5F2ED] flex items-center justify-center text-[#44403C] text-sm font-semibold">
-                {testimonials[currentIndex].initials}
-              </div>
-              <div>
-                <div className="text-[#1C1917] font-semibold">{testimonials[currentIndex].name}</div>
-                <div className="text-[#78716C] text-sm">
-                  {testimonials[currentIndex].location} &bull; {testimonials[currentIndex].role}
-                </div>
-                {testimonials[currentIndex].subtitle && (
-                  <div className="text-[#D4A574] text-xs mt-0.5">
-                    {testimonials[currentIndex].subtitle}
+            {/* Témoignages — (11/11/2026) tous dans la même case de grille, un seul visible : la carte garde la hauteur du
+                plus long. Avant, elle changeait de hauteur à chaque rotation (jusqu'à 220 px sur téléphone) et tout ce
+                qui suit dans la page bougeait pendant la lecture. */}
+            <div className="grid grid-cols-1">
+              {testimonials.map((item, index) => (
+                <div
+                  key={index}
+                  className={`col-start-1 row-start-1 self-center${index === currentIndex ? '' : ' invisible'}`}
+                  aria-hidden={index === currentIndex ? undefined : true}
+                >
+                  <p className="text-lg md:text-xl text-[#44403C] leading-relaxed text-center italic mb-8">
+                    {`"${item.quote}"`}
+                  </p>
+                  <div className="flex items-center justify-center gap-4">
+                    <div className="w-12 h-12 rounded-full bg-[#F5F2ED] flex items-center justify-center text-[#44403C] text-sm font-semibold">
+                      {item.initials}
+                    </div>
+                    <div>
+                      <div className="text-[#1C1917] font-semibold">{item.name}</div>
+                      <div className="text-[#78716C] text-sm">{`${item.location} \u2022 ${item.role}`}</div>
+                      {item.subtitle && (
+                        <div className="text-[#D4A574] text-xs mt-0.5">{item.subtitle}</div>
+                      )}
+                    </div>
                   </div>
-                )}
-              </div>
+                </div>
+              ))}
             </div>
           </div>
 

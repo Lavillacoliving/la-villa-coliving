@@ -140,6 +140,16 @@ export function checkFaqInHtml(html, file) {
   return missing.map((name) => `${file} : question du FAQPage absente du HTML — « ${name.slice(0, 70)} » (un repli masque, il ne retire pas)`);
 }
 
+/**
+ * (11/11/2026) Accord du nom des maisons en français : « du Loft », « du Lodge », « au Loft », jamais « de Le Loft » ni
+ * « à Le Lodge » (les titres « À propos de Le Loft » et « Prêt à faire de Le Lodge ton chez-toi ? » étaient en production).
+ * Dans le code : ofHouseFr() de HouseDetailPage.tsx. Pur ; renvoie les échecs.
+ */
+export function checkHouseNameGrammar(html, file) {
+  const found = [...new Set(visibleText(html).match(/(?:\bde|à) Le (?:Loft|Lodge)\b/g) ?? [])];
+  return found.map((f) => `${file} : « ${f} » dans le texte visible — écrire « du Loft », « du Lodge », « au Loft », « au Lodge » (ofHouseFr)`);
+}
+
 /** ROOM_SURFACE_BY_HOUSE (src/data/stats.ts) = Math.round(min / max de v_public_rooms.surface_m2) pour chaque maison publique. */
 export function checkRoomSurfaceByHouse(byHouse, m) {
   const failures = [];
@@ -199,6 +209,8 @@ async function checkHouse(slug, rooms, m) {
     failures.push(...checkHouseLocation(html, slug, lang, m));
     // 8. (Lot 2 — sous-lot A, 11/2026) FAQ repliée : toutes les questions du FAQPage restent dans le HTML.
     failures.push(...checkFaqInHtml(html, file));
+    // 9. (11/11/2026) Accord du nom des maisons : jamais « de Le Loft » ni « à Le Lodge » sur une page française.
+    if (lang === 'fr') failures.push(...checkHouseNameGrammar(html, file));
   }
   return failures;
 }

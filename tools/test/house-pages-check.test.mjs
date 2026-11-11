@@ -3,7 +3,7 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { loadEntityFacts } from '../../scripts/lib/load-entity-facts.mjs';
-import { checkHouseLocation, checkRoomSurfaceByHouse, mainTextAfterH1, COMMUTE_WINDOW, exactLocationLeaks, checkFaqInHtml } from '../../scripts/house-pages-check.mjs';
+import { checkHouseLocation, checkRoomSurfaceByHouse, mainTextAfterH1, COMMUTE_WINDOW, exactLocationLeaks, checkFaqInHtml, checkHouseNameGrammar } from '../../scripts/house-pages-check.mjs';
 
 const m = await loadEntityFacts();
 const SLUGS = ['lavilla', 'leloft', 'lelodge'];
@@ -133,4 +133,19 @@ test('checkFaqInHtml : une question du FAQPage retirée du HTML → un échec qu
   assert.equal(r.length, 1);
   assert.match(r[0], /Question B/);
   assert.equal(checkFaqInHtml('<html><head></head><body><main><dl></dl></main></body></html>', 'lelodge.html').length, 1);
+});
+
+
+// (11/11/2026) Accord du nom des maisons : « À propos de Le Loft » était en production.
+test('checkHouseNameGrammar : « du Loft », « au Lodge », « de La Villa » et l\'anglais passent', () => {
+  const ok = '<html><body><main><h2>À propos du Loft</h2><h2>Prêt à faire du Lodge ton chez-toi ?</h2><p>Quel est le loyer au Loft ? Les 12 chambres du Lodge. À propos de La Villa. Trajets depuis Le Loft. Cette page décrit Le Lodge ; About Le Loft.</p></main></body></html>';
+  assert.deepEqual(checkHouseNameGrammar(ok, 'leloft.html'), []);
+});
+
+test('checkHouseNameGrammar : « de Le Loft » ou « à Le Lodge » → un échec par formule, une seule fois', () => {
+  const bad = '<html><body><main><h2>À propos de Le Loft</h2><h2>Prêt à faire de Le Loft ton chez-toi ?</h2><p>Bienvenue à Le Lodge.</p></main></body></html>';
+  const r = checkHouseNameGrammar(bad, 'leloft.html');
+  assert.equal(r.length, 2);
+  assert.match(r[0], /de Le Loft/);
+  assert.match(r[1], /à Le Lodge/);
 });

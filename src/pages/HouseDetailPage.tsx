@@ -1,6 +1,6 @@
 import { EntityFacts } from "@/components/EntityFacts";
 import { Helmet } from "react-helmet";
-import { lazy, Suspense, useState } from "react";
+import { lazy, Suspense, useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 import { responsiveImage } from "@/lib/responsiveImage";
 import { LocalizedLink } from "@/components/LocalizedLink";
@@ -12,6 +12,7 @@ import {
   Users,
   Maximize,
   Zap,
+  ArrowLeft,
   ArrowRight,
   Check,
   BedDouble,
@@ -80,6 +81,7 @@ import {
   CarouselItem,
   CarouselNext,
   CarouselPrevious,
+  type CarouselApi,
 } from "@/components/ui/carousel";
 
 interface GalleryImage {
@@ -1463,6 +1465,21 @@ export function HouseDetailPage() {
   const [introOpen, setIntroOpen] = useState(false);
   const [othersOpen, setOthersOpen] = useState(false);
   const [faqOpen, setFaqOpen] = useState(false);
+  // (11/11/2026) Flèches du carrousel du haut de page. En dessous de xl, elles sont dans la rangée du bouton « Candidater »
+  // (voir le hero) et pilotent le carrousel par son API. État de départ identique au prérendu : première photo affichée,
+  // flèche « précédente » inactive.
+  const [heroApi, setHeroApi] = useState<CarouselApi>();
+  const [heroNav, setHeroNav] = useState({ prev: false, next: true });
+  useEffect(() => {
+    if (!heroApi) return;
+    const update = () => setHeroNav({ prev: heroApi.canScrollPrev(), next: heroApi.canScrollNext() });
+    heroApi.on("select", update);
+    heroApi.on("reInit", update);
+    return () => {
+      heroApi.off("select", update);
+      heroApi.off("reInit", update);
+    };
+  }, [heroApi]);
   const openRoomViewer = (room: PublicRoom, photoIndex: number) => {
     setRoomViewer({ key: `${id}:${room.room_number}`, roomNumber: room.room_number, index: photoIndex });
     try {
@@ -1554,11 +1571,13 @@ export function HouseDetailPage() {
       </Helmet>
       {/* Hero Gallery */}
       <section className="relative pt-16">
-        <Carousel className="w-full">
+        <Carousel className="w-full" setApi={setHeroApi}>
           <CarouselContent>
             {[house.image, ...house.gallery].map((img, index) => (
               <CarouselItem key={index}>
-                <div className="relative h-[60vh] md:h-[70vh]">
+                {/* (11/11/2026) min-h : sur un écran court (360 × 740, téléphone à l'horizontale), 60vh ne suffisait pas au
+                    texte posé sur la photo — la pastille de disponibilité passait sous l'en-tête fixe. */}
+                <div className="relative h-[60vh] min-h-[500px] md:h-[70vh]">
                   <img
                     src={img}
                     alt={`${house.name} coliving ${house.location} — ${language === "en" ? "premium colocation near Geneva" : "colocation premium près de Genève"} (${index + 1})`}
@@ -1574,8 +1593,11 @@ export function HouseDetailPage() {
               </CarouselItem>
             ))}
           </CarouselContent>
-          <CarouselPrevious className="left-4 bg-white/90 border-2 border-[#E7E5E4] text-[#1C1917] hover:bg-white shadow-sharp" />
-          <CarouselNext className="right-4 bg-white/90 border-2 border-[#E7E5E4] text-[#1C1917] hover:bg-white shadow-sharp" />
+          {/* (11/11/2026) Flèches de part et d'autre de la photo : à partir de xl seulement. En dessous, le titre occupe toute
+              la largeur et elles tombaient dessus (téléphone, tablette, ordinateur de moins de 1 280 px) : voir la rangée du
+              bouton « Candidater ». */}
+          <CarouselPrevious className="left-4 hidden xl:inline-flex bg-white/90 border-2 border-[#E7E5E4] text-[#1C1917] hover:bg-white shadow-sharp" />
+          <CarouselNext className="right-4 hidden xl:inline-flex bg-white/90 border-2 border-[#E7E5E4] text-[#1C1917] hover:bg-white shadow-sharp" />
         </Carousel>
 
         {/* House Info Overlay */}
@@ -1639,7 +1661,7 @@ export function HouseDetailPage() {
                 {t.houseDetail.apply}
                 <ArrowRight className="w-5 h-5" />
               </LocalizedLink>
-              <span className="text-sm font-semibold text-[#1C1917] bg-white/85 backdrop-blur px-4 py-2 rounded-full">
+              <span className="order-3 md:order-none text-sm font-semibold text-[#1C1917] bg-white/85 backdrop-blur px-4 py-2 rounded-full">
                 {/* La Villa : 4 chambres sur 10 à salle d'eau partagée → plancher 1 370 (dérivé, stats.ts) */}
                 {id === "lavilla"
                   ? (language === "en"
@@ -1649,6 +1671,28 @@ export function HouseDetailPage() {
                       ? `All-inclusive: ${PRICE_CHF_EN}/month — no application fee`
                       : `Tout inclus : ${PRICE_CHF_FR}/mois — 0 frais de dossier`)}
               </span>
+              {/* (11/11/2026) Flèches du carrousel en dessous de xl : à droite du bouton « Candidater » sur téléphone
+                  (la pastille de prix passe dessous), en bout de rangée sur tablette. Jamais sur le texte. */}
+              <div className="order-2 md:order-none ml-auto flex items-center gap-2 xl:hidden">
+                <button
+                  type="button"
+                  onClick={() => heroApi?.scrollPrev()}
+                  disabled={!heroNav.prev}
+                  aria-label={language === "en" ? "Previous photo" : "Photo précédente"}
+                  className="flex size-10 items-center justify-center rounded-full border-2 border-[#E7E5E4] bg-white/90 text-[#1C1917] shadow-sharp transition-colors hover:bg-white disabled:opacity-50"
+                >
+                  <ArrowLeft className="w-4 h-4" />
+                </button>
+                <button
+                  type="button"
+                  onClick={() => heroApi?.scrollNext()}
+                  disabled={!heroNav.next}
+                  aria-label={language === "en" ? "Next photo" : "Photo suivante"}
+                  className="flex size-10 items-center justify-center rounded-full border-2 border-[#E7E5E4] bg-white/90 text-[#1C1917] shadow-sharp transition-colors hover:bg-white disabled:opacity-50"
+                >
+                  <ArrowRight className="w-4 h-4" />
+                </button>
+              </div>
             </div>
           </div>
         </div>
@@ -1668,7 +1712,7 @@ export function HouseDetailPage() {
           >
             {language === "en"
               ? `About ${house.name}`
-              : `À propos de ${house.name}`}
+              : `À propos ${ofHouseFr(house.name)}`}
           </h2>
           <p className="text-base md:text-lg text-[#57534E] leading-relaxed font-medium max-w-3xl">
             {house.longDescription.lead}
@@ -2430,7 +2474,7 @@ export function HouseDetailPage() {
           >
             {language === "en"
               ? `Ready to make ${house.name} your home?`
-              : `Prêt à faire de ${house.name} ton chez-toi ?`}
+              : `Prêt à faire ${ofHouseFr(house.name)} ton chez-toi ?`}
           </h2>
           {/* (Retenue premium, lot 1, T11 — 13/10/2026) Un fait plutôt qu'un superlatif. */}
           <p className="text-lg text-white/90 max-w-2xl mx-auto font-bold mb-8">
