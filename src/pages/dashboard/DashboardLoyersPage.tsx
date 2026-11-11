@@ -3,6 +3,7 @@ import { supabase } from '@/lib/supabase';
 import { useToast } from '@/components/ui/Toast';
 import { ENTITY_SLUGS, PROPERTY_ADDRESSES } from '@/lib/entities';
 import { logAudit } from '@/lib/auditLog';
+import { nextLeaseAnniversary, hasLeftBy } from '@/lib/irlAnniversary';
 import { pdf } from '@react-pdf/renderer';
 import CourrierIRLPDF from './CourrierIRLPDF';
 
@@ -16,7 +17,7 @@ interface Tenant {
   id: string; first_name: string; last_name: string;
   room_number: number; current_rent: number;
   property_id: string; is_active: boolean; phone?: string; email?: string;
-  move_in_date: string | null; date_of_birth: string | null;
+  move_in_date: string | null; move_out_date?: string | null; date_of_birth: string | null;
   preferred_language?: string; due_day?: number;
   properties?: { name: string } | null;
 }
@@ -288,9 +289,10 @@ export default function DashboardLoyersPage() {
       latestIrlRef = `T${lQ} ${lY}`;
       const today = new Date();
       tenants.filter(t=>t.is_active && t.move_in_date).forEach(t => {
-        const moveIn = new Date(t.move_in_date!);
-        let next = new Date(today.getFullYear(),moveIn.getMonth(),moveIn.getDate());
-        if (next < today) next.setFullYear(next.getFullYear()+1);
+        // Pas de rappel avant le premier anniversaire (une entrée à venir n'en est pas un), ni pour un
+        // locataire qui sera parti à cette date (fiche encore active après un départ) — 11/11/2026.
+        const next = nextLeaseAnniversary(t.move_in_date!, today);
+        if (!next || hasLeftBy(t.move_out_date, next)) return;
         const days = Math.ceil((next.getTime()-today.getTime())/(1000*60*60*24));
         if (days <= 61 && days >= 0) {
           const newRent = Math.round(t.current_rent * factor * 100)/100;
