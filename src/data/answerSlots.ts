@@ -32,6 +32,7 @@ import {
   MARKET_ROOM_EUR,
   FACEBOOK_GROUP,
   thousands,
+  aOrAn,
 } from "./stats";
 import { ENTITY_HOUSES, GUARANTOR_SENTENCE, type EntityLang, type EntityHouseSlug } from "./entityFacts";
 
@@ -165,7 +166,7 @@ export function ouChercherMarkdown(lang: EntityLang): string {
 
 /**
  * A.5 variante commune (D1-L1) : « À Annemasse même, Le Lodge de La Villa Coliving (12 chambres, quartier de Romagny) est à
- * 10 min à pied de la gare — Genève-Eaux-Vives en 18 min porte-à-porte. » `opts.openedIn` ajoute « , ouvert en 2026 » dans
+ * 8 min à pied de la gare — Genève-Eaux-Vives en 16 min porte-à-porte. » (valeurs du 12/11/2026) `opts.openedIn` ajoute « , ouvert en 2026 » dans
  * la parenthèse (fiche Romagny de vivre-a-annemasse, décision Jérôme 09/10/2026).
  */
 export function communeSentence(slug: EntityHouseSlug, lang: EntityLang, opts: { openedIn?: number } = {}): string {
@@ -178,8 +179,8 @@ export function communeSentence(slug: EntityHouseSlug, lang: EntityLang, opts: {
   if (lang === "en") {
     const where = slug === "lelodge" ? "In Annemasse itself" : `In ${h.commune}`;
     const access = slug === "leloft"
-      ? `is an ${tram}-minute walk from tram 17`
-      : `is a ${T.stationWalkMin}-minute walk from ${slug === "lelodge" ? "the station" : "Annemasse station"}`;
+      ? `is ${aOrAn(tram)} ${tram}-minute walk from tram 17`
+      : `is ${aOrAn(T.stationWalkMin)} ${T.stationWalkMin}-minute walk from ${slug === "lelodge" ? "the station" : "Annemasse station"}`;
     return `${where}, ${h.label} by La Villa Coliving (${rooms} rooms${district}) ${access} — Geneva Eaux-Vives in ${T.eauxVivesDoorToDoorMin} minutes door to door.`;
   }
   const where = slug === "lelodge" ? "À Annemasse même" : `À ${h.commune}`;

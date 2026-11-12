@@ -106,6 +106,16 @@ export const STATS = {
 export const thousands = (n: number, sep: string) =>
   String(n).replace(/\B(?=(\d{3})+(?!\d))/g, sep);
 
+/**
+ * (12/11/2026) Article anglais devant un nombre dit à voix haute : « an 8-minute walk », « a 9-minute walk ».
+ * « an » quand le nombre commence par un son voyelle : 8, 11, 18, 80-89, 800-899. Toute phrase EN qui interpole un
+ * temps de trajet passe par ici (les valeurs changent, l'article doit suivre : bug « a 8-minute walk » du 12/11).
+ */
+export function aOrAn(n: number): "a" | "an" {
+  const s = String(Math.abs(Math.trunc(n)));
+  return s.startsWith("8") || s === "11" || s === "18" ? "an" : "a";
+}
+
 export const PRICE_FR_NUM = thousands(STATS.priceChf, " "); // « 1 430 » — U+00A0 insécable classique (la fine U+202F était quasi invisible → le nombre se lisait collé)
 export const PRICE_EN_NUM = thousands(STATS.priceChf, ",");      // « 1,430 »
 export const PRICE_CHF_FR = `${PRICE_FR_NUM} CHF`;               // « 1 430 CHF »
@@ -140,9 +150,23 @@ export function formatPriceChf(lang: "fr" | "en"): string {
 // (src/data/answerSlots.ts) et, depuis le lot L2 (09/10/2026), les pages maisons, cartes et FAQ via
 // src/data/houseLocation.ts (quartier A.2, ligne A.1, tableau de trajets, commerces). Ne jamais écrire une minute
 // en dur ailleurs : check-entity-facts (--strict) refuse toute minute non qualifiée.
+// (12/11/2026, décision Jérôme) Temps à pied jusqu'à la gare d'Annemasse = valeurs données par Jérôme le 12/11/2026 :
+// La Villa 9 min (700 m), Le Loft 9 min (700 m), Le Lodge 8 min (900 m) ; E.Leclerc de La Villa 9 min (700 m), dans
+// houseLocation.ts. Maintenues par décision explicite APRÈS une vérification sur plan (OpenStreetMap, plus court chemin
+// depuis l'adresse : 865 m, 968 m et 781 m ; Le Loft est à 862 m de la gare à vol d'oiseau) : ne pas les « corriger »
+// sans lui. Porte-à-porte recalculés = nouvelle marche + part transport du relevé Google Maps du 08/10 (ancien
+// porte-à-porte moins ancienne marche) : Eaux-Vives 17 / 17 / 16, Rive 26 / 32 (tram, inchangé) / 26, Cornavin 33 / 33 / 33.
+// Le Loft reprend la part transport de La Villa (même gare, mêmes trains) : son relevé du 08/10 (24 min) ne passait pas
+// par la gare à pied. Marque : 16-17 s'arrondirait à 15, interdit, et jamais vers le bas, donc « 20 min » inchangé.
+// Tram 17 prolongé le 17/10/2026 (Parc Montessuit → Perrier-Aubrac) : l'arrêt de la place de l'Étoile s'appelle « Barbusse »
+// (horaire TPG) ; Le Lodge en est à 2 min à pied, environ 150 m (mesure sur plan du 12/11, validée par Jérôme). L'arrêt de bus
+// « Annemasse-Étoile » du Lodge (aucun arrêt ne porte ce nom) est retiré : le tram, au même endroit, le remplace.
 export const TRANSIT = {
   measuredOn: "2026-10-08",
   measuredOnLabel: { fr: "8 octobre 2026", en: "8 October 2026" },
+  /** (12/11/2026) Temps à pied gare, E.Leclerc et tram du Lodge : relevés de l'équipe (Jérôme), novembre 2026. */
+  walkCheckedOn: "2026-11-12",
+  walkCheckedOnLabel: { fr: "novembre 2026", en: "November 2026" },
   /** Temps de train depuis la gare d'Annemasse (fixes, horaire Léman Express). */
   trainEauxVivesMin: 7,
   trainChampelMin: 10,
@@ -157,39 +181,39 @@ export const TRANSIT = {
   // Consommé par src/data/houseLocation.ts (phrases, tableau de trajets, commerces) — jamais directement par une page.
   byHouse: {
     lavilla: {
-      stationWalkMin: 14, stationDistanceM: 1000,
+      stationWalkMin: 9, stationDistanceM: 700,
       busStop: { name: "Albert Hénon", walkMin: 8, distanceM: 600 },
-      eauxVivesDoorToDoorMin: 22, riveDoorToDoorMin: 31, cornavinDoorToDoorMin: 38,
+      eauxVivesDoorToDoorMin: 17, riveDoorToDoorMin: 26, cornavinDoorToDoorMin: 33,
       bikeToRiveMin: 26, bikeToRiveKm: 7.9,
       /** Le Foron (rivière-frontière) longe la rue ; passage routier de Puplinge ; douane de Moillesulaz (à vélo). */
       border: { puplingeWalkMin: 14, puplingeDistanceM: 1100, moillesulazM: 3200, moillesulazBikeMin: 12 },
     },
     leloft: {
-      stationWalkMin: 18, stationDistanceM: 1300,
+      stationWalkMin: 9, stationDistanceM: 700,
       tramWalkMin: 8,
       tramStop: { name: "Croix-d'Ambilly", walkMin: 8, distanceM: 550, tramToRiveMin: 23 },
       busStop: { name: "Olympe de Gouges", walkMin: 6 },
-      eauxVivesDoorToDoorMin: 24, riveDoorToDoorMin: 32, cornavinDoorToDoorMin: 40,
+      eauxVivesDoorToDoorMin: 17, riveDoorToDoorMin: 32, cornavinDoorToDoorMin: 33,
       bikeToRiveMin: 23, bikeToRiveKm: 6.5,
       /** Le Foron à 8 min à pied ; douane de Moillesulaz à 1,8 km (25 min à pied). */
       border: { foronWalkMin: 8, foronDistanceM: 600, moillesulazM: 1800, moillesulazWalkMin: 25 },
     },
     lelodge: {
-      stationWalkMin: 10, stationDistanceM: 750,
-      tramStop: { name: "Parc Montessuit", walkMin: 13, distanceM: 1000 },
-      busStop: { name: "Annemasse-Étoile", walkMin: 2, distanceM: 150 },
-      eauxVivesDoorToDoorMin: 18, riveDoorToDoorMin: 28, cornavinDoorToDoorMin: 35,
+      stationWalkMin: 8, stationDistanceM: 900,
+      tramStop: { name: "Barbusse", place: { fr: "place de l'Étoile", en: "Place de l'Étoile" }, walkMin: 2, distanceM: 150 },
+      eauxVivesDoorToDoorMin: 16, riveDoorToDoorMin: 26, cornavinDoorToDoorMin: 33,
       bikeToRiveMin: 29, bikeToRiveKm: 8.1,
     },
   },
-  /** Porte-à-porte Eaux-Vives, min/max des trois maisons — « 18 à 24 min porte-à-porte selon la maison ». */
-  doorToDoorEauxVivesMin: 18,
-  doorToDoorEauxVivesMax: 24,
+  /** Porte-à-porte Eaux-Vives, min/max des trois maisons — « 16 à 17 min porte-à-porte selon la maison » (18 à 24 avant le 12/11/2026). */
+  doorToDoorEauxVivesMin: 16,
+  doorToDoorEauxVivesMax: 17,
   /** Porte-à-porte jusqu'à Rive (centre), fourchette des trois maisons (Jérôme 09/10) ; détail par maison en L2.
    *  (Lot L2, 09/10/2026) Min = 28, pas 27 : = min de byHouse (31/32/28) — 27-28 mesuré au Lodge, borne haute retenue, règle D1.4. */
-  riveDoorToDoorMin: 28,
+  /** (12/11/2026) = min de byHouse (26/32/26). */
+  riveDoorToDoorMin: 26,
   riveDoorToDoorMax: 32,
-  /** « 30 min jusqu'au centre » : arrondi de 28-32 au 5 le plus proche (règle D1.4). */
+  /** « 30 min jusqu'au centre » : arrondi de 26-32 au 5 supérieur (règle D1.4 ; 28-32 avant le 12/11/2026). */
   centreDoorToDoorMin: 30,
 } as const;
 

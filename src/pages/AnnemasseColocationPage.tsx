@@ -38,8 +38,8 @@ const HOUSE_INTRO: Record<EntityHouseSlug, { fr: string; en: string }> = {
     en: `${S.lavilla.livingM2} m² on a ${thousands(S.lavilla.plotM2, ",")} m² estate beside the Foron — the river that marks the Swiss border — and its nature area. Heated outdoor pool 12×5 m, sauna, gym.`,
   },
   leloft: {
-    fr: `Maison de ville de ${S.leloft.livingM2} m², design urbain, piscine intérieure chauffée toute l'année, terrasse. La maison la plus proche du tram 17.`,
-    en: `A ${S.leloft.livingM2} m² townhouse, urban design, indoor pool heated year-round, terrace. The house closest to tram 17.`,
+    fr: `Maison de ville de ${S.leloft.livingM2} m², design urbain, piscine intérieure chauffée toute l'année, terrasse.`,
+    en: `A ${S.leloft.livingM2} m² townhouse, urban design, indoor pool heated year-round, terrace.`,
   },
   lelodge: {
     fr: `Ouvert en janvier 2026 dans le quartier de Romagny. ${S.lelodge.livingM2} m² sur 4 bâtiments au cœur de ${thousands(S.lelodge.plotM2, " ")} m² de jardins.`,
@@ -56,6 +56,12 @@ const houseRange = (pick: (h: HouseTransit) => number): readonly [number, number
   return [Math.min(...v), Math.max(...v)];
 };
 const [CORNAVIN_DTD_MIN, CORNAVIN_DTD_MAX] = houseRange((h) => h.cornavinDoorToDoorMin);
+// (12/11/2026) Fourchette « selon la maison » : une seule valeur quand les trois maisons sont égales (Cornavin 33/33/33),
+// jamais « 33 à 33 min ».
+const dtdRange = (min: number, max: number, en: boolean): string =>
+  min === max
+    ? (en ? `${min} min door to door from each house` : `${min} min porte-à-porte depuis chaque maison`)
+    : (en ? `${min} to ${max} min door to door depending on the house` : `${min} à ${max} min porte-à-porte selon la maison`);
 // (Lot L2, 09/10/2026) Rive dérivé de byHouse comme Cornavin — suit les valeurs par maison, plus TRANSIT.riveDoorToDoorMin/Max.
 const [RIVE_DTD_MIN, RIVE_DTD_MAX] = houseRange((h) => h.riveDoorToDoorMin);
 const [BIKE_RIVE_MIN, BIKE_RIVE_MAX] = houseRange((h) => h.bikeToRiveMin);
@@ -304,7 +310,7 @@ export function AnnemasseColocationPage() {
                   // vélo = Voie Verte mesurée. Lignes Aéroport (voiture), Moillesulaz (voiture) et « CHUV / OMS » supprimées : non mesurées.
                   [
                     language === "en" ? "Geneva Eaux-Vives" : "Genève-Eaux-Vives",
-                    language === "en" ? `${TRANSIT.trainEauxVivesMin} min by train · ${TRANSIT.doorToDoorEauxVivesMin} to ${TRANSIT.doorToDoorEauxVivesMax} min door to door depending on the house` : `${TRANSIT.trainEauxVivesMin} min de train · ${TRANSIT.doorToDoorEauxVivesMin} à ${TRANSIT.doorToDoorEauxVivesMax} min porte-à-porte selon la maison`,
+                    language === "en" ? `${TRANSIT.trainEauxVivesMin} min by train · ${dtdRange(TRANSIT.doorToDoorEauxVivesMin, TRANSIT.doorToDoorEauxVivesMax, true)}` : `${TRANSIT.trainEauxVivesMin} min de train · ${dtdRange(TRANSIT.doorToDoorEauxVivesMin, TRANSIT.doorToDoorEauxVivesMax, false)}`,
                     "Léman Express direct",
                   ],
                   [
@@ -314,12 +320,12 @@ export function AnnemasseColocationPage() {
                   ],
                   [
                     language === "en" ? "Geneva Cornavin" : "Genève Cornavin",
-                    language === "en" ? `${TRANSIT.trainCornavinMin} min by train · ${CORNAVIN_DTD_MIN} to ${CORNAVIN_DTD_MAX} min door to door depending on the house` : `${TRANSIT.trainCornavinMin} min de train · ${CORNAVIN_DTD_MIN} à ${CORNAVIN_DTD_MAX} min porte-à-porte selon la maison`,
+                    language === "en" ? `${TRANSIT.trainCornavinMin} min by train · ${dtdRange(CORNAVIN_DTD_MIN, CORNAVIN_DTD_MAX, true)}` : `${TRANSIT.trainCornavinMin} min de train · ${dtdRange(CORNAVIN_DTD_MIN, CORNAVIN_DTD_MAX, false)}`,
                     "Léman Express direct",
                   ],
                   [
                     language === "en" ? "City centre (Rive)" : "Centre de Genève (Rive)",
-                    language === "en" ? `${RIVE_DTD_MIN} to ${RIVE_DTD_MAX} min door to door depending on the house` : `${RIVE_DTD_MIN} à ${RIVE_DTD_MAX} min porte-à-porte selon la maison`,
+                    language === "en" ? dtdRange(RIVE_DTD_MIN, RIVE_DTD_MAX, true) : dtdRange(RIVE_DTD_MIN, RIVE_DTD_MAX, false),
                     language === "en" ? `Léman Express; tram 17 from Ambilly (${TRAM_TO_RIVE} min by tram)` : `Léman Express ; tram 17 depuis Ambilly (${TRAM_TO_RIVE} min de tram)`,
                   ],
                   [

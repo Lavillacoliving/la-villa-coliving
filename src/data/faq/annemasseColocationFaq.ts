@@ -1,5 +1,5 @@
 import type { QAPair } from "@/lib/structuredData";
-import { STATS, PRICE_SHARED_CHF_FR, PRICE_SHARED_CHF_EN, TRANSIT } from "@/data/stats";
+import { STATS, PRICE_SHARED_CHF_FR, PRICE_SHARED_CHF_EN, TRANSIT, aOrAn } from "@/data/stats";
 import { pickSituations } from "@/data/faq/situationsFaq";
 import { communeSentence } from "@/data/answerSlots";
 
@@ -58,11 +58,11 @@ export const annemasseColocationFaq: { fr: QAPair[]; en: QAPair[] } = {
     },
     {
       q: "How long does it take to get to Geneva from Annemasse?",
-      a: `From Annemasse station, the direct Léman Express (no change) takes ${T.trainEauxVivesMin} minutes to Geneva Eaux-Vives, ${T.trainChampelMin} to Champel and ${T.trainCornavinMin} to Cornavin. Door to door to Geneva Eaux-Vives: ${VILLA.eauxVivesDoorToDoorMin} minutes from La Villa, ${LOFT.eauxVivesDoorToDoorMin} from Le Loft, ${LODGE.eauxVivesDoorToDoorMin} from Le Lodge, and ${T.centreDoorToDoorMin} minutes to the city centre (Rive). From Le Loft, in Ambilly, tram 17 is an ${LOFT.tramWalkMin}-minute walk: Rive in ${LOFT.tramStop.tramToRiveMin} minutes by tram, ${LOFT.riveDoorToDoorMin} minutes door to door.`,
+      a: `From Annemasse station, the direct Léman Express (no change) takes ${T.trainEauxVivesMin} minutes to Geneva Eaux-Vives, ${T.trainChampelMin} to Champel and ${T.trainCornavinMin} to Cornavin. Door to door to Geneva Eaux-Vives: ${VILLA.eauxVivesDoorToDoorMin} minutes from La Villa, ${LOFT.eauxVivesDoorToDoorMin} from Le Loft, ${LODGE.eauxVivesDoorToDoorMin} from Le Lodge, and ${T.centreDoorToDoorMin} minutes to the city centre (Rive). From Le Loft, in Ambilly, tram 17 is ${aOrAn(LOFT.tramWalkMin)} ${LOFT.tramWalkMin}-minute walk: Rive in ${LOFT.tramStop.tramToRiveMin} minutes by tram, ${LOFT.riveDoorToDoorMin} minutes door to door.`,
     },
     {
       q: "Which part of Annemasse Agglo should you choose: Ville-la-Grand, Ambilly or Annemasse?",
-      a: `It depends on your priority. ${communeSentence("leloft", "en")} Ambilly is the town closest to the Swiss border: the Foron, the border river, is an ${LOFT.border.foronWalkMin}-minute walk away, and central Geneva (Rive) is ${LOFT.bikeToRiveMin} minutes by bike on the Voie Verte. ${communeSentence("lavilla", "en")} Ville-la-Grand is residential and quiet, beside the Foron and its nature area. ${communeSentence("lelodge", "en")} Central Annemasse puts every urban convenience nearby.`,
+      a: `It depends on your priority. ${communeSentence("leloft", "en")} Ambilly is the town closest to the Swiss border: the Foron, the border river, is ${aOrAn(LOFT.border.foronWalkMin)} ${LOFT.border.foronWalkMin}-minute walk away, and central Geneva (Rive) is ${LOFT.bikeToRiveMin} minutes by bike on the Voie Verte. ${communeSentence("lavilla", "en")} Ville-la-Grand is residential and quiet, beside the Foron and its nature area. ${communeSentence("lelodge", "en")} Central Annemasse puts every urban convenience nearby.`,
       more: { href: "/blog/vivre-a-annemasse-quand-on-travaille-a-geneve", label: "Living in Annemasse when you work in Geneva" },
     },
     {

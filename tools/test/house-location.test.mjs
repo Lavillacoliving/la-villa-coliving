@@ -163,3 +163,31 @@ test('zone publiée (12/10/2026) : publicGeo = point public à 300-650 m de la m
   assert.equal(m.houseExactAddressNote('fr'), "L'adresse exacte t'est communiquée à la prise de rendez-vous de visite.");
   assert.equal(m.houseExactAddressNote('en'), 'We share the exact address when you book a visit.');
 });
+
+// (12/11/2026, décision Jérôme) Gare à pied 9 / 9 / 8 min ; tram 17 du Lodge = arrêt Barbusse, place de l'Étoile (prolongement
+// du 17/10/2026) ; plus d'arrêt de bus au Lodge ; article anglais calculé (« an 8-minute walk ») ; note de méthode datée des deux relevés.
+test('12/11/2026 : tram du Lodge (Barbusse, place de l\'Étoile), plus de bus « Annemasse-Étoile », articles anglais, note des deux relevés', () => {
+  assert.equal(m.aOrAn(8), 'an'); assert.equal(m.aOrAn(9), 'a'); assert.equal(m.aOrAn(11), 'an'); assert.equal(m.aOrAn(18), 'an');
+  assert.equal(m.aOrAn(1), 'a'); assert.equal(m.aOrAn(83), 'an'); assert.equal(m.aOrAn(23), 'a');
+  const lodge = T.byHouse.lelodge;
+  assert.equal(lodge.tramStop.name, 'Barbusse');
+  assert.equal(lodge.busStop, undefined, 'la ligne de bus du Lodge est retirée');
+  for (const lang of LANGS) {
+    const rows = m.houseCommuteRows('lelodge', lang);
+    const tram = rows.filter((r) => /Tram 17/.test(r.destination));
+    assert.equal(tram.length, 1, `lelodge/${lang} : une ligne « Tram 17 »`);
+    assert.match(tram[0].destination, /Barbusse/); assert.match(tram[0].destination, /[Pp]lace de l'Étoile/);
+    assert.equal(tram[0].value, `${lodge.tramStop.walkMin} min (${m.formatDistance(lodge.tramStop.distanceM, lang)})`);
+    for (const s of m.houseLocationStrings('lelodge', lang)) {
+      assert.doesNotMatch(s, /Annemasse-Étoile|Montessuit/, s);
+      assert.doesNotMatch(s, /\barrêt de bus\b|\bbus stop\b/i, s);
+    }
+    assert.ok(m.houseCommuteNote(lang).includes(T.walkCheckedOnLabel[lang]), m.houseCommuteNote(lang));
+  }
+  assert.match(m.houseCommuteLong('lelodge', 'en'), /Annemasse station is an 8-minute walk/);
+  assert.match(m.houseCommuteLong('leloft', 'en'), /Annemasse station is a 9-minute walk/);
+  assert.match(m.communeSentence('lelodge', 'en'), /is an 8-minute walk from the station/);
+  // La phrase de quartier du Lodge distingue la gare (8 min) du centre-ville (10 min, HOUSE_NEARBY).
+  const centre = m.HOUSE_NEARBY.lelodge.find((x) => x.id === 'centre').walkMin;
+  assert.match(m.houseNeighbourhood('lelodge', 'fr'), new RegExp(`gare à ${lodge.stationWalkMin} min, centre-ville à ${centre} min`));
+});

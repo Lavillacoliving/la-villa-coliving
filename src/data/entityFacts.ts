@@ -54,7 +54,8 @@ export type EntityHouseSlug = keyof typeof ROOMS_BY_HOUSE;
 // (Lot L3, 10/10/2026) Puce « Avis : 4,8/5 sur Google (36 avis). » ajoutée (D4) — à incrémenter à chaque relevé mensuel
 // (la date sert aussi de « Dernière mise à jour » dans llms.txt : garder une vraie date AAAA-MM-JJ, suffixe b, c… si besoin).
 // (02/11/2026, brief « caution permanente ») Puce caution : « payable en 1, 2 ou 3 fois selon ton dossier » (règle permanente, D3-bis).
-export const ENTITY_FACTS_VERSION = "2026-11-02";
+// (12/11/2026, décision Jérôme) Trajets : gare à pied 9 / 9 / 8 min, porte-à-porte Eaux-Vives 17 / 17 / 16, formule « 16 à 17 min ».
+export const ENTITY_FACTS_VERSION = "2026-11-12";
 
 /**
  * Phrase garant canonique (D0 amendement b, Jérôme 09/10/2026) — la SEULE formulation admise sur le site :
