@@ -116,6 +116,39 @@ test('forbiddenIssues (L2) : formulations D6/D7 interdites — positives', () =>
   one(p('Genève-Eaux-Vives en 7 min de Léman Express — 18 à 24 min porte-à-porte selon la maison'), /18 à 24 min porte-à-porte/);
   one(p('Geneva Eaux-Vives in 7 minutes — 18 to 24 minutes door to door depending on the house'), /18 à 24 min porte-à-porte/);
   assert.deepEqual(forbiddenIssues(p('Un bail de 18 à 24 mois.', 'Genève-Eaux-Vives en 7 min de Léman Express — 16 à 17 min porte-à-porte selon la maison')), []);
+
+  // (12/11/2026, lot « borne basse ») Ancienne valeur du centre et ancienne ligne Cornavin : interdites partout (formule, reprises
+  // écrites à la main, variante « du centre (Rive) », graphie « center ») quand la phrase porte le contexte de la formule
+  // (porte-à-porte, Eaux-Vives, « (Rive) ») ; la nouvelle formule, les fourchettes, les durées en heures, les autres modes nommés
+  // (vélo, bus, tram, voiture) et les autres « 30 min » passent.
+  one(p('Genève-Eaux-Vives en 7 min de Léman Express depuis la gare d\'Annemasse — 16 à 17 min porte-à-porte selon la maison, 30 min jusqu\'au centre.'), /30 min jusqu'au centre/);
+  one(p('16 to 17 minutes door to door depending on the house, 30 minutes to the city centre.'), /30 min jusqu'au centre/);
+  one(p('Door to door, count 20 minutes to Geneva Eaux-Vives and 30 minutes to the city center.'), /30 min jusqu'au centre/);
+  one(p('Porte-à-porte, compte 20 minutes jusqu\'à Genève-Eaux-Vives et 30 minutes jusqu’au centre.'), /30 min jusqu'au centre/);
+  one(p('Tu es à 20 min de Genève-Eaux-Vives en Léman Express, et à 30 minutes du centre (Rive).'), /30 min jusqu'au centre/);
+  one(p('You are 20 min from Geneva Eaux-Vives by Léman Express, and 30 minutes from the city centre (Rive).'), /30 min jusqu'au centre/);
+  one(p('Compte 20 minutes porte-à-porte de Genève-Eaux-Vives depuis Annemasse, et 30\u00a0minutes jusqu\'au centre.'), /30 min jusqu'au centre/);
+  one(p('23 min de train · 33 min porte-à-porte depuis chaque maison'), /33 min porte-à-porte depuis chaque maison/);
+  one(p('23 min by train · 33 min door to door from each house'), /33 min porte-à-porte depuis chaque maison/);
+  assert.deepEqual(forbiddenIssues(p(
+    'Genève-Eaux-Vives en 7 min de Léman Express depuis la gare d\'Annemasse — 16 à 17 min porte-à-porte selon la maison, 25 min jusqu\'au centre.',
+    '16 to 17 minutes door to door depending on the house, 25 minutes to the city centre.',
+    'et à 25 minutes du centre (Rive), en train ou en tram.', 'and 25 minutes from the city centre (Rive), by train or tram.',
+    'studio moyen à moins de 30 min de Genève (Léman Express)', 'un train toutes les 30 minutes', 'Étape 2 : appel vidéo (30 min).',
+    'celle qui met ton travail à moins de 30 minutes porte-à-porte sans voiture', '130 min jusqu\'au centre',
+    '23 min de train · 33 min porte-à-porte depuis La Villa', '23 min de train · 32 à 33 min porte-à-porte selon la maison',
+    '23 min by train · 32 to 33 min door to door depending on the house', 'Centre de Genève (Rive) : 25 à 32 min porte-à-porte selon la maison',
+    'et entre 25 et 32 minutes du centre (Rive) selon la maison, en train ou en tram.',
+    // sans le contexte de la formule
+    'Depuis Gaillard, compte 30 min jusqu\'au centre.', 'From Gaillard, allow 30 minutes to the city centre.',
+    // fourchettes et durées en heures
+    'Le trajet prend 20 à 30 min jusqu\'au centre, porte-à-porte.', 'Compte 25-30 minutes jusqu\'au centre en heure de pointe, porte-à-porte.',
+    'Allow 25 to 30 minutes to the city centre door to door at rush hour.', 'Depuis Thonon, compte 1 h 30 min jusqu\'au centre, porte-à-porte.',
+    // autre mode nommé (vélo, bus, tram, voiture)
+    'À vélo par la Voie Verte, compte 30 min jusqu\'au centre (Rive).', 'By e-bike: 30 minutes to the city centre (Rive) on the Voie Verte.',
+    'En tram 17, compte 30 min jusqu\'au centre (Rive), porte-à-porte.', 'By tram 17, allow 30 minutes to the city centre (Rive), door to door.',
+    'Le bus met 30 min jusqu\'au centre (Rive).', 'En voiture, compte 30 min jusqu\'au centre (Rive) hors heure de pointe.',
+  )), []);
 });
 
 test('forbiddenIssues (L2) : formulations légitimes laissées — négatives', () => {

@@ -25,7 +25,7 @@ Concrètement, pour toi : un quartier de gare neuf, plus de commerces et de serv
 
 ## Les trajets : le Léman Express et le tram, la vraie raison d'habiter ici
 
-Depuis la gare d'Annemasse, le Léman Express rejoint Genève Eaux-Vives en 7 minutes et Cornavin en 23 minutes, sans changement, avec un train toutes les dix minutes en heure de pointe. Depuis Ambilly, le tram 17 entre dans Genève par Moillesulaz. Compte 20 minutes porte-à-porte de Genève-Eaux-Vives en Léman Express depuis Annemasse, Ville-la-Grand ou Ambilly, moins que bien des trajets à l'intérieur de Genève, et 30 minutes jusqu'au centre.
+Depuis la gare d'Annemasse, le Léman Express rejoint Genève Eaux-Vives en 7 minutes et Cornavin en 23 minutes, sans changement, avec un train toutes les dix minutes en heure de pointe. Depuis Ambilly, le tram 17 entre dans Genève par Moillesulaz. Compte 20 minutes porte-à-porte de Genève-Eaux-Vives en Léman Express depuis Annemasse, Ville-la-Grand ou Ambilly, moins que bien des trajets à l'intérieur de Genève, et 25 minutes jusqu'au centre.
 
 Le vélo est l'autre option : les pistes cyclables passent la frontière à Moillesulaz, et beaucoup de résidents pédalent jusqu'au centre de Genève (Rive) par la Voie Verte à la belle saison, en 23 à 29 minutes selon la maison. Beaucoup de frontaliers finissent d'ailleurs sans voiture : train, tram et vélo suffisent au quotidien, et la douane en voiture aux heures de pointe est le trajet à éviter.
 
@@ -84,7 +84,7 @@ Oui, avec le bon sens qu'on applique à toute ville-centre : on choisit son imme
 
 **Combien de temps pour aller à Genève depuis Annemasse ?**
 
-Depuis la gare d'Annemasse, le Léman Express met 7 minutes jusqu'à Genève Eaux-Vives et 23 minutes jusqu'à Cornavin, sans changement. Le tram 17 relie Ambilly et Annemasse à Genève par Moillesulaz. Porte-à-porte, compte 20 minutes jusqu'à Genève-Eaux-Vives et 30 minutes jusqu'au centre.
+Depuis la gare d'Annemasse, le Léman Express met 7 minutes jusqu'à Genève Eaux-Vives et 23 minutes jusqu'à Cornavin, sans changement. Le tram 17 relie Ambilly et Annemasse à Genève par Moillesulaz. Porte-à-porte, compte 20 minutes jusqu'à Genève-Eaux-Vives et 25 minutes jusqu'au centre.
 
 **Les courses coûtent-elles vraiment moins cher côté France ?**
 

@@ -13,7 +13,8 @@ const T = m.TRANSIT;
 test('houseLocationIssues() : aucune incohérence interne ; HOUSE_SLUGS et HOUSE_LOCATION_VERSION', () => {
   assert.deepEqual(m.houseLocationIssues(), []);
   assert.deepEqual([...m.HOUSE_SLUGS], SLUGS);
-  assert.match(m.HOUSE_LOCATION_VERSION, /^\d{4}-\d{2}-\d{2}$/);
+  // (12/11/2026) Date AAAA-MM-JJ, suffixe b, c… pour un second changement le même jour (comme ENTITY_FACTS_VERSION).
+  assert.match(m.HOUSE_LOCATION_VERSION, /^\d{4}-\d{2}-\d{2}[a-z]?$/);
 });
 
 test('parité FR/EN : même nombre de lignes de trajet, de commerces et de chaînes ; mêmes nombres ligne à ligne', () => {

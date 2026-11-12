@@ -155,9 +155,17 @@ export function formatPriceChf(lang: "fr" | "en"): string {
 // houseLocation.ts. Maintenues par décision explicite APRÈS une vérification sur plan (OpenStreetMap, plus court chemin
 // depuis l'adresse : 865 m, 968 m et 781 m ; Le Loft est à 862 m de la gare à vol d'oiseau) : ne pas les « corriger »
 // sans lui. Porte-à-porte recalculés = nouvelle marche + part transport du relevé Google Maps du 08/10 (ancien
-// porte-à-porte moins ancienne marche) : Eaux-Vives 17 / 17 / 16, Rive 26 / 32 (tram, inchangé) / 26, Cornavin 33 / 33 / 33.
+// porte-à-porte moins ancienne marche) : Eaux-Vives 17 / 17 / 16, Rive 26 / 32 (tram, inchangé) / 25, Cornavin 33 / 33 / 32
+// (Le Lodge : borne basse du relevé, paragraphe ci-dessous ; 26 et 33 le matin du 12/11, avec la borne haute).
 // Le Loft reprend la part transport de La Villa (même gare, mêmes trains) : son relevé du 08/10 (24 min) ne passait pas
 // par la gare à pied. Marque : 16-17 s'arrondirait à 15, interdit, et jamais vers le bas, donc « 20 min » inchangé.
+// (12/11/2026, décision Jérôme, lot « borne basse ») Relevé en FOURCHETTE : on annonce TOUJOURS la borne basse, pour toutes
+// les maisons (la « borne haute » du lot L2 est abandonnée). Seul Le Lodge avait des fourchettes (relevé du 08/10, marche de
+// 10 min comprise) : Rive 27-28 → 27, Cornavin 34-35 → 34 ; part transport 17 et 24 min ; avec sa marche de 8 min : Rive 25,
+// Cornavin 32 (avec la borne haute : 26 et 33 le matin du 12/11, 28 et 35 avant, marche de 10 min). La Villa et Le Loft :
+// mesures uniques, inchangées. À ne pas confondre avec D1.4 : l'arrondi au 5 supérieur, « jamais vers le bas », ne vaut que
+// pour les agrégats de marque — « 25 min jusqu'au centre » = 5 supérieur du meilleur porte-à-porte jusqu'à Rive (25, Le Lodge ;
+// « 30 min jusqu'au centre » avant ce lot).
 // Tram 17 prolongé le 17/10/2026 (Parc Montessuit → Perrier-Aubrac) : l'arrêt de la place de l'Étoile s'appelle « Barbusse »
 // (horaire TPG) ; Le Lodge en est à 2 min à pied, environ 150 m (mesure sur plan du 12/11, validée par Jérôme). L'arrêt de bus
 // « Annemasse-Étoile » du Lodge (aucun arrêt ne porte ce nom) est retiré : le tram, au même endroit, le remplace.
@@ -176,7 +184,9 @@ export const TRANSIT = {
   peakHeadwayMin: 10,
   // (Lot L2 « Emplacement et transport », 09/10/2026) Par maison : à pied (gare, tram, arrêt de bus NOMMÉ, jamais
   // numéroté — D7), porte-à-porte mesuré (Eaux-Vives validé D1-L1 ; Rive et Cornavin = relevé §1.3 du brief, borne
-  // haute quand le relevé donne une fourchette : Lodge 27-28 → 28, 34-35 → 35), vélo par la Voie Verte (bonus mesuré).
+  // BASSE quand le relevé donne une fourchette, pour toutes les maisons — décision Jérôme du 12/11/2026 : Lodge 27-28 → 27,
+  // 34-35 → 34, marche de 10 min comprise ; la borne haute, 28 et 35, a servi du 09/10 au 12/11/2026), vélo par la Voie
+  // Verte (bonus mesuré).
   // AUCUNE valeur voiture, AUCUN temps vers l'aéroport (règle D1 de Jérôme : jamais de promesse en voiture).
   // Consommé par src/data/houseLocation.ts (phrases, tableau de trajets, commerces) — jamais directement par une page.
   byHouse: {
@@ -201,7 +211,7 @@ export const TRANSIT = {
     lelodge: {
       stationWalkMin: 8, stationDistanceM: 900,
       tramStop: { name: "Barbusse", place: { fr: "place de l'Étoile", en: "Place de l'Étoile" }, walkMin: 2, distanceM: 150 },
-      eauxVivesDoorToDoorMin: 16, riveDoorToDoorMin: 26, cornavinDoorToDoorMin: 33,
+      eauxVivesDoorToDoorMin: 16, riveDoorToDoorMin: 25, cornavinDoorToDoorMin: 32,
       bikeToRiveMin: 29, bikeToRiveKm: 8.1,
     },
   },
@@ -209,11 +219,13 @@ export const TRANSIT = {
   doorToDoorEauxVivesMin: 16,
   doorToDoorEauxVivesMax: 17,
   /** Porte-à-porte jusqu'à Rive (centre), fourchette des trois maisons (Jérôme 09/10) ; détail par maison en L2.
-   *  Min = min de byHouse : 26 depuis le 12/11/2026 (26/32/26) ; 28 avant (31/32/28, 27-28 mesuré au Lodge, borne haute retenue, règle D1.4). */
-  riveDoorToDoorMin: 26,
+   *  Min = min de byHouse : 25 depuis le lot « borne basse » du 12/11/2026 (26/32/25 : Le Lodge, 27-28 mesuré, borne basse) ;
+   *  26 le matin du 12/11 (26/32/26) ; 28 avant (31/32/28, borne haute du Lodge, abandonnée). */
+  riveDoorToDoorMin: 25,
   riveDoorToDoorMax: 32,
-  /** « 30 min jusqu'au centre » : arrondi de 26-32 au 5 supérieur (règle D1.4 ; 28-32 avant le 12/11/2026). */
-  centreDoorToDoorMin: 30,
+  /** « 25 min jusqu'au centre » : 5 supérieur du meilleur porte-à-porte jusqu'à Rive (25, Le Lodge) — règle D1.4, contrôlée par
+   *  houseLocationIssues() ; « 30 min » avant le lot « borne basse » du 12/11/2026 (5 supérieur de 26, et de 28 avant). */
+  centreDoorToDoorMin: 25,
 } as const;
 
 /** Formule canonique de trajet (D1) — une phrase, qualifiée par Eaux-Vives / Léman Express / gare (règle des minutes). */

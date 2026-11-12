@@ -87,6 +87,16 @@ const FORBIDDEN = [
   // (12/11/2026) Ancienne fourchette porte-à-porte (GENEVA_COMMUTE_FORMULA avant les temps à pied de Jérôme) : un article ou un
   // brouillon du générateur qui la reprendrait contredirait la fiche entité (« 16 à 17 min »).
   { re: /(?<![\d,.])18\s?(?:à|to|-|–)\s?24\s?min(?:utes)?\s+(?:porte-à-porte|door[ -]to[ -]door)/i, label: '« 18 à 24 min porte-à-porte » (fourchette d\'avant le 12/11/2026)' },
+  // (12/11/2026, lot « borne basse », décision Jérôme) Le Lodge est à 25 min de Rive et 32 min de Cornavin : la formule dit « 25 min
+  // jusqu'au centre » (TRANSIT.centreDoorToDoorMin) et Cornavin « 32 à 33 min porte-à-porte selon la maison ». L'ancienne valeur du
+  // centre (formule, reprises écrites à la main, « du centre (Rive) ») et l'ancienne ligne Cornavin sont interdites partout. Formes
+  // étroites : la phrase doit porter le contexte de la formule (porte-à-porte, Eaux-Vives ou « (Rive) ») ; une fourchette (« 20 à
+  // 30 min »), une durée en heures (« 1 h 30 min ») ou un autre mode nommé (vélo, bus, tram, voiture) passent, comme « un train
+  // toutes les 30 min », « à moins de 30 min de Genève » et « 33 min porte-à-porte depuis La Villa ». Règles DATÉES (30 et 33 en
+  // dur) : à revoir à chaque remesure de TRANSIT (src/data/README.md, ligne « Trajets »).
+  // Conséquence : le SQL des articles (scripts/trajets-lodge-borne-basse-2026-11-12.sql) s'applique AVANT la fusion, sinon le robot échoue.
+  { re: /(?<![\d,.]|\d\s?(?:à|to|[-–]|h)\s?)30\s?min(?:utes)?\s+(?:jusqu['’]au centre|to the city cent(?:re|er)|du centre \(Rive\)|from the city cent(?:re|er) \(Rive\))/i, requires: /porte[ -]à[ -]porte|door[ -]to[ -]door|Eaux-Vives|\(Rive\)/i, unless: /\b(?:vélo|bike|cycl\w*|bus|tram\w*|voiture|by car|driv\w*)\b/i, label: '« 30 min jusqu\'au centre » (valeur d\'avant le lot « borne basse » du 12/11/2026 : 25 min, TRANSIT.centreDoorToDoorMin)' },
+  { re: /(?<![\d,.])33\s?min(?:utes)?\s+(?:porte-à-porte depuis chaque maison|door[ -]to[ -]door from each house)/i, label: '« 33 min porte-à-porte depuis chaque maison » (Cornavin : 32 à 33 min selon la maison depuis le lot « borne basse » du 12/11/2026)' },
   { re: /500[   ]?m, 5 min (?:à pied|walk)/i, label: '« 500 m, 5 min à pied » (Loft : frontière à 600 m, 8 min à pied — D6)' },
   { re: /\bCHUV\b/, label: '« CHUV » (l\'hôpital de Genève est le HUG)' },
   { re: /terminus (?:\p{L}+ )?du Léman Express|(?:\p{L}+ )?terminus of the Léman Express|Léman Express terminus/iu, label: '« terminus du Léman Express » (faux : écrire « gare d\'Annemasse »)' },
