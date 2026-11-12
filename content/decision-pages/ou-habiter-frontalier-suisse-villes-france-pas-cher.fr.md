@@ -22,7 +22,7 @@ Si tu préfères partir de ton profil plutôt que de la carte, où tu travailles
 
 Annemasse est la seule vraie ville de la frontière : 37 600 habitants (INSEE 2023), une gare du Léman Express, un tram transfrontalier, un marché, des restaurants, un cinéma. Depuis la gare, Genève-Eaux-Vives est à 7 minutes et Cornavin à 23, avec un train toutes les 10 minutes en heure de pointe. Loyer d'annonce T1-T2 : 22,6 €/m², soit ≈ 840 € pour 37 m². Le tram 17 gagne trois arrêts dans la ville fin 2026 (Annemasse Agglo).
 
-À Annemasse même, Le Lodge de La Villa Coliving (12 chambres, quartier de Romagny) est à 10 min à pied de la gare — Genève-Eaux-Vives en 18 min porte-à-porte.
+À Annemasse même, Le Lodge de La Villa Coliving (12 chambres, quartier de Romagny) est à 8 min à pied de la gare — Genève-Eaux-Vives en 16 min porte-à-porte.
 
 **Pour qui ?** Qui veut sortir à pied et prendre le train sans y penser. Pour choisir ton quartier : [notre guide complet d'Annemasse](/blog/vivre-a-annemasse-quand-on-travaille-a-geneve) et [le comparatif des quartiers par profil](/blog/quartiers-annemasse-ou-vivre-selon-profil).
 
@@ -30,15 +30,15 @@ Annemasse est la seule vraie ville de la frontière : 37 600 habitants (INSEE 20
 
 Collée à Annemasse, pavillonnaire, bordée par le Foron, la rivière-frontière. Pas de gare : on marche jusqu'à celle d'Annemasse. Loyer d'annonce T1-T2 : 17,1 €/m², soit ≈ 630 € pour 37 m², le plus bas des sept villes de ce guide. Les annonces de studios de 2026 dépassent nettement cet indicateur (voir notre [Observatoire](/observatoire-logement-frontalier-geneve)) : marché tendu, pas hors de prix.
 
-À Ville-la-Grand, La Villa de La Villa Coliving (10 chambres) est à 14 min à pied de la gare d'Annemasse — Genève-Eaux-Vives en 22 min porte-à-porte.
+À Ville-la-Grand, La Villa de La Villa Coliving (10 chambres) est à 9 min à pied de la gare d'Annemasse — Genève-Eaux-Vives en 17 min porte-à-porte.
 
 **Pour qui ?** Couples, familles, et qui veut un jardin à prix français avec le train à un quart d'heure à pied.
 
 ## 3. Ambilly : la frontière à pied et le tram 17
 
-Ambilly touche la frontière : depuis Le Loft, le Foron est à 600 m, 8 min à pied, et la douane de Moillesulaz à 1,8 km. Le tram 17 entre dans Genève sans changement (Rive en 23 min depuis l'arrêt Croix-d'Ambilly) et la gare d'Annemasse est à 18 min à pied. Loyer d'annonce T1-T2 : 24,5 €/m², soit ≈ 910 € pour 37 m² : la proximité se paie.
+Ambilly touche la frontière : depuis Le Loft, le Foron est à 600 m, 8 min à pied, et la douane de Moillesulaz à 1,8 km. Le tram 17 entre dans Genève sans changement (Rive en 23 min depuis l'arrêt Croix-d'Ambilly) et la gare d'Annemasse est à 9 min à pied. Loyer d'annonce T1-T2 : 24,5 €/m², soit ≈ 910 € pour 37 m² : la proximité se paie.
 
-À Ambilly, Le Loft de La Villa Coliving (7 chambres) est à 8 min à pied du tram 17 — Genève-Eaux-Vives en 24 min porte-à-porte.
+À Ambilly, Le Loft de La Villa Coliving (7 chambres) est à 8 min à pied du tram 17 — Genève-Eaux-Vives en 17 min porte-à-porte.
 
 **Pour qui ?** Frontaliers sans voiture qui travaillent rive gauche ou au centre, et cyclistes : la Voie Verte file jusqu'à Rive.
 
@@ -77,9 +77,9 @@ Casino, golf, thermes, un lac, et la Suisse vaudoise à côté. En transports pu
 
 | Ville | Trajet mesuré (transports publics) | Loyer d'annonce T1-T2, 2025 | Pour qui |
 |---|---|---|---|
-| Annemasse | Genève-Eaux-Vives en 7 min de Léman Express, 18 min porte-à-porte depuis Le Lodge | 22,6 €/m² (≈ 840 €) | Ville complète, sans voiture |
-| Ville-la-Grand | Genève-Eaux-Vives en 7 min de Léman Express, 22 min porte-à-porte depuis La Villa | 17,1 €/m² (≈ 630 €) | Calme, budget, familles |
-| Ambilly | Tram 17 : Rive en 23 min ; Genève-Eaux-Vives en 24 min porte-à-porte depuis Le Loft | 24,5 €/m² (≈ 910 €) | Frontière à pied, vélo |
+| Annemasse | Genève-Eaux-Vives en 7 min de Léman Express, 16 min porte-à-porte depuis Le Lodge | 22,6 €/m² (≈ 840 €) | Ville complète, sans voiture |
+| Ville-la-Grand | Genève-Eaux-Vives en 7 min de Léman Express, 17 min porte-à-porte depuis La Villa | 17,1 €/m² (≈ 630 €) | Calme, budget, familles |
+| Ambilly | Tram 17 : Rive en 23 min ; Genève-Eaux-Vives en 17 min porte-à-porte depuis Le Loft | 24,5 €/m² (≈ 910 €) | Frontière à pied, vélo |
 | Saint-Julien-en-Genevois | Bel-Air en 45 min de bus porte-à-porte | 23,8 €/m² (≈ 880 €) | Plainpalais, Carouge, HUG |
 | Ferney-Voltaire | Cornavin en 40 min de bus porte-à-porte | 30,8 €/m² (≈ 1 140 €) | ONU, OMS, Nations |
 | Thonon-les-Bains | Genève-Eaux-Vives en 43 min de Léman Express, 50 min porte-à-porte | 18,9 €/m² (≈ 700 €) | Lac, budget, télétravail |

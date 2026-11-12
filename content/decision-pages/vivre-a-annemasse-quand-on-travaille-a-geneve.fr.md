@@ -47,11 +47,11 @@ Ce qui ne baisse pas : ton salaire reste imposé à la source à Genève, l'assu
 
 **Le centre et la gare.** Pour sortir à pied, prendre le train sans y penser et vivre au milieu des commerces. Le quartier de gare est en chantier pour quelques années : c'est le prix d'un quartier neuf.
 
-**Romagny.** Résidentiel, calme : le secteur des frontaliers qui veulent le train sans la vie de gare. À Annemasse même, Le Lodge de La Villa Coliving (12 chambres, quartier de Romagny, ouvert en 2026) est à 10 min à pied de la gare — Genève-Eaux-Vives en 18 min porte-à-porte.
+**Romagny.** Résidentiel, calme : le secteur des frontaliers qui veulent le train sans la vie de gare. À Annemasse même, Le Lodge de La Villa Coliving (12 chambres, quartier de Romagny, ouvert en 2026) est à 8 min à pied de la gare — Genève-Eaux-Vives en 16 min porte-à-porte.
 
-**Ambilly.** La commune la plus proche de la douane de Moillesulaz, avec le tram 17 à l'arrêt Croix-d'Ambilly : le raccourci vers Genève à pied ou à vélo. Notre maison Le Loft y est, à 8 minutes à pied du tram et à 18 minutes à pied de la gare.
+**Ambilly.** La commune la plus proche de la douane de Moillesulaz, avec le tram 17 à l'arrêt Croix-d'Ambilly : le raccourci vers Genève à pied ou à vélo. Notre maison Le Loft y est, à 8 minutes à pied du tram et à 9 minutes à pied de la gare.
 
-**Ville-la-Grand.** Pavillonnaire, verte, bordée par le Foron, la rivière-frontière, et sa zone naturelle, un centre en cours de réaménagement : la commune familiale et calme de l'agglomération, à 14 minutes à pied de la gare depuis notre maison La Villa.
+**Ville-la-Grand.** Pavillonnaire, verte, bordée par le Foron, la rivière-frontière, et sa zone naturelle, un centre en cours de réaménagement : la commune familiale et calme de l'agglomération, à 9 minutes à pied de la gare depuis notre maison La Villa.
 
 **Vétraz-Monthoux.** Plus pavillonnaire encore, un cran plus loin des transports : le choix des familles avec voiture, moins celui d'un frontalier sans.
 
@@ -66,7 +66,7 @@ Ce qui ne baisse pas : ton salaire reste imposé à la source à Genève, l'assu
 
 <!-- entity-facts -->
 
-Nos trois maisons répondent chacune à un quartier de ce guide : Le Lodge à Romagny pour le train (gare à 10 minutes à pied), Le Loft à Ambilly pour le tram et la frontière à pied, La Villa à Ville-la-Grand pour le calme et le jardin. Les [chambres libres](/chambres-disponibles) sont visibles en direct, la [candidature prend deux minutes](/candidature), et si tu veux d'abord comparer les quartiers selon ton mode de vie, lis notre [guide des quartiers d'Annemasse par profil](/blog/quartiers-annemasse-ou-vivre-selon-profil).
+Nos trois maisons répondent chacune à un quartier de ce guide : Le Lodge à Romagny pour le train (gare à 8 minutes à pied), Le Loft à Ambilly pour le tram et la frontière à pied, La Villa à Ville-la-Grand pour le calme et le jardin. Les [chambres libres](/chambres-disponibles) sont visibles en direct, la [candidature prend deux minutes](/candidature), et si tu veux d'abord comparer les quartiers selon ton mode de vie, lis notre [guide des quartiers d'Annemasse par profil](/blog/quartiers-annemasse-ou-vivre-selon-profil).
 
 ## Quand ce n'est pas le bon choix
 
@@ -80,7 +80,7 @@ Oui, avec le bon sens qu'on applique à toute ville-centre : on choisit son imme
 
 **Où habiter à Annemasse quand on travaille à Genève ?**
 
-À distance de marche de la gare ou du tram, dans un secteur résidentiel : Romagny et les rues calmes autour du centre pour le Léman Express, Ambilly pour le tram 17 et la frontière à pied, Ville-la-Grand pour le calme et le jardin. Depuis les trois, compte 20 minutes porte-à-porte de Genève-Eaux-Vives en Léman Express. À Annemasse même, Le Lodge de La Villa Coliving (12 chambres, quartier de Romagny) est à 10 min à pied de la gare — Genève-Eaux-Vives en 18 min porte-à-porte.
+À distance de marche de la gare ou du tram, dans un secteur résidentiel : Romagny et les rues calmes autour du centre pour le Léman Express, Ambilly pour le tram 17 et la frontière à pied, Ville-la-Grand pour le calme et le jardin. Depuis les trois, compte 20 minutes porte-à-porte de Genève-Eaux-Vives en Léman Express. À Annemasse même, Le Lodge de La Villa Coliving (12 chambres, quartier de Romagny) est à 8 min à pied de la gare — Genève-Eaux-Vives en 16 min porte-à-porte.
 
 **Combien de temps pour aller à Genève depuis Annemasse ?**
 

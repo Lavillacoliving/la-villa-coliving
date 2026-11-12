@@ -47,11 +47,11 @@ What does not go down: your salary remains taxed at source in Geneva, health ins
 
 **The centre and the station.** To go out on foot, take the train without thinking and live among the shops. The station district is under construction for a few years: that is the price of a brand-new district.
 
-**Romagny.** Residential, quiet: the area of cross-border workers who want the train without the station life. In Annemasse itself, Le Lodge by La Villa Coliving (12 rooms, Romagny district, opened in 2026) is a 10-minute walk from the station — Geneva Eaux-Vives in 18 minutes door to door.
+**Romagny.** Residential, quiet: the area of cross-border workers who want the train without the station life. In Annemasse itself, Le Lodge by La Villa Coliving (12 rooms, Romagny district, opened in 2026) is an 8-minute walk from the station — Geneva Eaux-Vives in 16 minutes door to door.
 
-**Ambilly.** The commune closest to the Moillesulaz crossing, with tram 17 at the Croix-d'Ambilly stop: the shortcut to Geneva on foot or by bike. Our house Le Loft is there, an 8-minute walk from the tram and an 18-minute walk from the station.
+**Ambilly.** The commune closest to the Moillesulaz crossing, with tram 17 at the Croix-d'Ambilly stop: the shortcut to Geneva on foot or by bike. Our house Le Loft is there, an 8-minute walk from the tram and a 9-minute walk from the station.
 
-**Ville-la-Grand.** Detached houses, greenery, bordered by the Foron, the border river, and its nature area, a town centre being redeveloped: the family-friendly, quiet commune of the agglomeration, a 14-minute walk from the station from our house La Villa.
+**Ville-la-Grand.** Detached houses, greenery, bordered by the Foron, the border river, and its nature area, a town centre being redeveloped: the family-friendly, quiet commune of the agglomeration, a 9-minute walk from the station from our house La Villa.
 
 **Vétraz-Monthoux.** Even more suburban, one notch further from public transport: the choice of families with a car, less that of a cross-border worker without one.
 
@@ -66,7 +66,7 @@ What does not go down: your salary remains taxed at source in Geneva, health ins
 
 <!-- entity-facts -->
 
-Each of our three houses answers one district of this guide: Le Lodge in Romagny for the train (station a 10-minute walk away), Le Loft in Ambilly for the tram and the border on foot, La Villa in Ville-la-Grand for quiet and the garden. The [free rooms](/en/chambres-disponibles) are visible live, the [application takes two minutes](/en/candidature), and if you first want to compare the districts by lifestyle, read our [guide to Annemasse's districts by profile](/en/blog/quartiers-annemasse-ou-vivre-selon-profil).
+Each of our three houses answers one district of this guide: Le Lodge in Romagny for the train (station an 8-minute walk away), Le Loft in Ambilly for the tram and the border on foot, La Villa in Ville-la-Grand for quiet and the garden. The [free rooms](/en/chambres-disponibles) are visible live, the [application takes two minutes](/en/candidature), and if you first want to compare the districts by lifestyle, read our [guide to Annemasse's districts by profile](/en/blog/quartiers-annemasse-ou-vivre-selon-profil).
 
 ## When it is not the right choice
 
@@ -80,7 +80,7 @@ Yes, with the common sense you apply to any central town: you choose your buildi
 
 **Where should I live in Annemasse when I work in Geneva?**
 
-Within walking distance of the station or the tram, in a residential area: Romagny and the quiet streets around the centre for the Léman Express, Ambilly for tram 17 and the border on foot, Ville-la-Grand for quiet and the garden. From all three, count 20 minutes door to door to Geneva Eaux-Vives by Léman Express. In Annemasse itself, Le Lodge by La Villa Coliving (12 rooms, Romagny district) is a 10-minute walk from the station — Geneva Eaux-Vives in 18 minutes door to door.
+Within walking distance of the station or the tram, in a residential area: Romagny and the quiet streets around the centre for the Léman Express, Ambilly for tram 17 and the border on foot, Ville-la-Grand for quiet and the garden. From all three, count 20 minutes door to door to Geneva Eaux-Vives by Léman Express. In Annemasse itself, Le Lodge by La Villa Coliving (12 rooms, Romagny district) is an 8-minute walk from the station — Geneva Eaux-Vives in 16 minutes door to door.
 
 **How long does it take to get to Geneva from Annemasse?**
 
