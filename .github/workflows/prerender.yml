@@ -13,6 +13,7 @@
 # - Generates sitemap.xml with all routes + hreflang (after rendering since 08/10/2026: a static
 #   page's <lastmod> only moves when its rendered content changed)
 # - Commits and pushes changes → triggers Vercel auto-deploy
+#   (12/11/2026) Cron et n8n : pas de commit si seul du bruit de rendu a bougé (scripts/prerender-noise-only.mjs)
 #
 # Loop prevention: pushes from github-actions[bot] don't trigger new workflows.
 # Extra safety: paths-ignore excludes prerendered files and sitemap.
@@ -146,6 +147,18 @@ jobs:
               git push
               echo "🚀 Commit vide poussé — Vercel déploie le bundle du push"
             fi
+          # (12/11/2026, alerte Vercel « Deployment Storage » : 10 Go du plan Hobby atteints, ~140 Mo par
+          # déploiement) Cron ou n8n dont le rendu ne change RIEN de servi (identifiants useId/Radix, ordre
+          # des JSON-LD, repère data-offer-today) : pas de commit, donc pas de déploiement. Rejoué sur les
+          # 45 commits du cron du 20/10 au 12/11 : 23 évités, aucune disponibilité ni texte perdu.
+          # Seulement si HEAD est un commit du bot : la production sert alors exactement HEAD. Si HEAD est un
+          # push humain (son run a pu être annulé par la concurrence), on commite comme avant pour déployer.
+          elif { [ "${{ github.event_name }}" = "schedule" ] || [ "${{ github.event_name }}" = "repository_dispatch" ]; } \
+               && [ "$(git log -1 --format=%an)" = "github-actions[bot]" ] \
+               && node scripts/prerender-noise-only.mjs; then
+            git reset -q
+            git checkout -- public/prerendered/ vercel.json public/sitemap.xml
+            echo "♻️ Rendu identique au contenu servi — pas de commit, pas de déploiement"
           else
             BLOG_COUNT=$(ls public/prerendered/blog-*.html 2>/dev/null | wc -l)
             STATIC_COUNT=$(ls public/prerendered/*.html 2>/dev/null | wc -l)
