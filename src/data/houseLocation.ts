@@ -20,6 +20,9 @@
  *  - (12/11/2026, décision Jérôme) Gare à pied : La Villa 9 min (700 m), Le Loft 9 min (700 m), Le Lodge 8 min (900 m) ;
  *    E.Leclerc de La Villa 9 min (700 m) ; tram 17 du Lodge = arrêt Barbusse, place de l'Étoile, 2 min (150 m) depuis le
  *    prolongement du 17/10/2026 ; arrêt de bus du Lodge retiré. Détail et porte-à-porte recalculés : commentaire de TRANSIT.
+ *  - (12/11/2026, décision Jérôme, lot « borne basse ») Relevé en fourchette : toujours la borne basse, pour toutes les maisons
+ *    (Le Lodge : Rive 25 min, Cornavin 32 min). L'arrondi au 5 supérieur ne vaut que pour les agrégats de marque
+ *    (TRANSIT.centreDoorToDoorMin, « 25 min jusqu'au centre »).
  *  - Mesures : Releves_Trajets_GoogleMaps_2026-10-08.md (brief §1.3) — TRANSIT.measuredOn ; remesure à chaque changement
  *    d'horaire (décembre) ou au plus tard tous les 12 mois.
  *  - Imports RELATIFS, zéro React, chaînes plates (anti-#418), nombres ≥ 1 000 via thousands(), aucune date calculée.
@@ -30,8 +33,10 @@ import { HOUSES, publicGeo } from "../lib/structuredData";
 export type HouseSlug = keyof typeof TRANSIT.byHouse;
 export type LocLang = "fr" | "en";
 
-/** Incrémenter à chaque changement de texte ou de valeur (porté par data-house-location-version sur les pages maisons). */
-export const HOUSE_LOCATION_VERSION = "2026-11-12";
+/** Incrémenter à chaque changement de texte ou de valeur (porté par data-house-location-version sur les pages maisons) :
+ *  date AAAA-MM-JJ, suffixe b, c… pour un second changement le même jour (12/11/2026, « b » = lot « borne basse » :
+ *  Le Lodge à 25 min de Rive et 32 min de Cornavin). */
+export const HOUSE_LOCATION_VERSION = "2026-11-12b";
 
 export const HOUSE_SLUGS: readonly HouseSlug[] = ["lavilla", "leloft", "lelodge"] as const;
 

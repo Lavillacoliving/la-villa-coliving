@@ -56,8 +56,8 @@ const houseRange = (pick: (h: HouseTransit) => number): readonly [number, number
   return [Math.min(...v), Math.max(...v)];
 };
 const [CORNAVIN_DTD_MIN, CORNAVIN_DTD_MAX] = houseRange((h) => h.cornavinDoorToDoorMin);
-// (12/11/2026) Fourchette « selon la maison » : une seule valeur quand les trois maisons sont égales (Cornavin 33/33/33),
-// jamais « 33 à 33 min ».
+// (12/11/2026) Fourchette « selon la maison » : une seule valeur quand les trois maisons sont égales, jamais « 33 à 33 min »
+// (cas de Cornavin, 33/33/33, jusqu'au lot « borne basse » du 12/11/2026 ; depuis : 33/33/32 → « 32 à 33 min »).
 const dtdRange = (min: number, max: number, en: boolean): string =>
   min === max
     ? (en ? `${min} min door to door from each house` : `${min} min porte-à-porte depuis chaque maison`)
