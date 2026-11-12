@@ -1,71 +1,84 @@
-import { useState } from 'react';
-import { X, ChevronLeft, ChevronRight, Grid3X3, Maximize2 } from 'lucide-react';
+import { lazy, Suspense, useState } from 'react';
+import { Grid3X3 } from 'lucide-react';
 import { useLanguage } from '@/contexts/LanguageContext';
+import { responsiveImage } from '@/lib/responsiveImage';
+import { albumCover } from '@/lib/gallery';
+import type { LightboxPhoto } from '@/components/PhotoLightbox';
+
+// Visionneuse plein écran partagée avec les photos de chambres (Radix, balayage tactile, clavier) : chargée à l'ouverture seulement.
+const PhotoLightbox = lazy(() => import('@/components/PhotoLightbox'));
+
+type GalleryCategory = 'exterior' | 'interior' | 'common' | 'room' | 'amenity';
 
 interface HouseGalleryProps {
   images: {
     src: string;
     alt: string;
-    category: 'exterior' | 'interior' | 'common' | 'room' | 'amenity';
+    category: GalleryCategory;
   }[];
   houseName: string;
-  /**
-   * (12/10/2026, demande Jérôme) Album intégré DANS la section Chambres de la page maison, juste avant « Les N autres
-   * chambres » : sans section propre (ni fond, ni marges de section, ni décor), ancre #galerie.
-   */
-  embedded?: boolean;
+  /** Vignettes choisies à la main, par `src`, dans l'ordre d'affichage (src/data/albumCovers.ts). */
+  cover?: string[];
+  /** Sans liste `cover`, ou si elle est incomplète : photos à préférer, par `src` (celles du carrousel du hero). */
+  featured?: string[];
 }
 
-const categoryLabels: Record<'en' | 'fr', Record<string, string>> = {
+const categoryLabels: Record<'en' | 'fr', Record<GalleryCategory, string>> = {
   en: {
     exterior: 'Exterior',
     interior: 'Interior',
-    common: 'Common Areas',
+    common: 'Common areas',
     room: 'Rooms',
     amenity: 'Amenities',
   },
   fr: {
     exterior: 'Extérieur',
     interior: 'Intérieur',
-    common: 'Espaces Communs',
+    common: 'Espaces communs',
     room: 'Chambres',
     amenity: 'Équipements',
   },
 };
 
-// (Lot A — A6, 02/09/2026) Vignettes affichées au chargement. Scrollmap Clarity : 90 % des
-// visiteurs atteignent la section Chambres puis décrochent en entrant dans la galerie (44 à 66
-// photos = 27 points de hauteur de page). On coupe à 20, le reste se déroule à la demande ;
-// aucune photo n'est retirée du repo ni de la visionneuse. État initial identique au prérendu
-// (pas de mismatch d'hydratation). Décision Jérôme : 20, les 3 maisons, tracké gallery_expand.
-const INITIAL_VISIBLE = 20;
+/**
+ * (Lot 2 « retenue premium », sous-lot A — cadrage A1, validé par Jérôme le 16/10/2026) Album COMPACT : 6 vignettes et un
+ * bouton « Voir les N photos » qui ouvre la visionneuse plein écran sur tout l'album.
+ *
+ * Pourquoi : à 390 px, les 20 vignettes de l'ancien album (Lot A du 02/09) occupaient encore près de 3 écrans et
+ * repoussaient la localisation et la FAQ ; la scrollmap Clarity montrait le décrochage à l'entrée de la galerie.
+ * Aucune photo n'est retirée du dépôt ni de la visionneuse. État initial identique au prérendu (aucun état dérivé du
+ * navigateur) : pas d'écart d'hydratation.
+ */
+const COMPACT_VISIBLE = 6;
 
-export function HouseGallery({ images, houseName, embedded = false }: HouseGalleryProps) {
+export function HouseGallery({ images, houseName, cover, featured = [] }: HouseGalleryProps) {
   const { language } = useLanguage();
-  const [selectedImage, setSelectedImage] = useState<number | null>(null);
-  const [activeFilter, setActiveFilter] = useState<string | null>(null);
-  const [expanded, setExpanded] = useState(false);
+  const L = language === 'en' ? 'en' : 'fr';
+  const [viewer, setViewer] = useState<number | null>(null);
 
-  const filteredImages = activeFilter
-    ? images.filter((img) => img.category === activeFilter)
-    : images;
-  // Préfixe de filteredImages : l'index d'une vignette reste valable pour la visionneuse.
-  const visibleImages = expanded ? filteredImages : filteredImages.slice(0, INITIAL_VISIBLE);
-  const hiddenCount = filteredImages.length - visibleImages.length;
+  if (images.length === 0) return null;
 
-  const changeFilter = (category: string | null) => {
-    setActiveFilter(category);
-    setExpanded(false);
-  };
+  const picks = albumCover(images, cover, featured, COMPACT_VISIBLE);
+  const categories = [...new Set(images.map((img) => img.category))];
+  // Légende de la visionneuse dans la langue de la page (les `alt` historiques de l'album sont en anglais).
+  const photos: LightboxPhoto[] = images.map((img) => ({
+    src: img.src,
+    alt: {
+      fr: `${houseName} — ${categoryLabels.fr[img.category]}`,
+      en: `${houseName} — ${categoryLabels.en[img.category]}`,
+    },
+  }));
 
-  const expand = () => {
-    setExpanded(true);
+  const open = (index: number, source: 'tile' | 'button') => {
+    setViewer(index);
     try {
-      (window as unknown as { gtag?: (...a: unknown[]) => void }).gtag?.("event", "gallery_expand", {
+      // Même nom d'événement que l'ancien « Voir plus de photos » : la série GA4 continue.
+      (window as unknown as { gtag?: (...a: unknown[]) => void }).gtag?.('event', 'gallery_expand', {
         house: houseName,
-        filter: activeFilter ?? "all",
-        shown: visibleImages.length,
-        total: filteredImages.length,
+        mode: 'viewer',
+        source,
+        shown: picks.length,
+        total: images.length,
         language,
       });
     } catch {
@@ -73,195 +86,73 @@ export function HouseGallery({ images, houseName, embedded = false }: HouseGalle
     }
   };
 
-  const categories = [...new Set(images.map((img) => img.category))];
+  const categoryList = categories.map((c) => categoryLabels[L][c].toLowerCase()).join(', ');
 
-  const openLightbox = (index: number) => {
-    setSelectedImage(index);
-    document.body.style.overflow = 'hidden';
-  };
-
-  const closeLightbox = () => {
-    setSelectedImage(null);
-    document.body.style.overflow = 'auto';
-  };
-
-  const goToPrevious = () => {
-    if (selectedImage !== null) {
-      setSelectedImage(selectedImage === 0 ? filteredImages.length - 1 : selectedImage - 1);
-    }
-  };
-
-  const goToNext = () => {
-    if (selectedImage !== null) {
-      setSelectedImage(selectedImage === filteredImages.length - 1 ? 0 : selectedImage + 1);
-    }
-  };
-
-  const Wrapper = embedded ? 'div' : 'section';
   return (
-    <Wrapper
-      id="galerie"
-      className={embedded ? 'relative mt-4 mb-14 md:mb-20 scroll-mt-24' : 'py-20 lg:py-28 bg-white relative overflow-hidden'}
-    >
-      {/* Decorative blobs */}
-      {!embedded && <div className="absolute top-20 right-0 w-96 h-96 bg-[#10b981]/5 blob rounded-full blur-3xl" />}
-      {!embedded && <div className="absolute bottom-20 left-0 w-80 h-80 bg-[#f97316]/5 blob-reverse rounded-full blur-3xl" />}
-
-      <div className={embedded ? 'relative' : 'max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10'}>
-        {/* Header */}
-        <div className="text-center max-w-3xl mx-auto mb-12">
-          <span className="inline-flex items-center gap-2 text-[#f97316] text-sm font-extrabold uppercase tracking-wider mb-4">
-            <span className="w-8 h-1.5 bg-[#f97316] rounded-full" />
-            {language === 'en' ? 'Photo Gallery' : 'Galerie Photos'}
-            <span className="w-8 h-1.5 bg-[#f97316] rounded-full" />
-          </span>
-          <h2 
-            className="text-3xl md:text-4xl lg:text-5xl font-bold text-[#0f172a] mb-4"
-            style={{ fontFamily: '"Plus Jakarta Sans", sans-serif' }}
-          >
-            {language === 'en' ? `Explore ${houseName}` : `Découvre ${houseName}`}
-          </h2>
-          <p className="text-lg text-gray-600">
-            {language === 'en' 
-              ? 'Take a virtual tour through our spaces' 
-              : 'Fais une visite virtuelle de nos espaces'}
-          </p>
-        </div>
-
-        {/* Filter Buttons */}
-        <div className="flex flex-wrap justify-center gap-3 mb-10">
-          <button
-            onClick={() => changeFilter(null)}
-            className={`flex items-center gap-2 px-5 py-2.5 rounded-full font-bold transition-all ${
-              activeFilter === null
-                ? 'bg-[#10b981] text-white shadow-lg shadow-[#10b981]/25'
-                : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
-            }`}
-          >
-            <Grid3X3 className="w-4 h-4" />
-            {language === 'en' ? 'All' : 'Tout'}
-          </button>
-          {categories.map((category) => (
-            <button
-              key={category}
-              onClick={() => changeFilter(category)}
-              className={`px-5 py-2.5 rounded-full font-bold transition-all ${
-                activeFilter === category
-                  ? 'bg-[#10b981] text-white shadow-lg shadow-[#10b981]/25'
-                  : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
-              }`}
-            >
-              {categoryLabels[language][category]}
-            </button>
-          ))}
-        </div>
-
-        {/* Image Grid */}
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-          {visibleImages.map((image, index) => (
-            <div
-              key={index}
-              onClick={() => openLightbox(index)}
-              className="group relative aspect-square rounded-2xl overflow-hidden cursor-pointer shadow-lg hover:shadow-xl transition-all duration-500"
-            >
-              <img
-                src={image.src}
-                alt={image.alt}
-                className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
-                loading="lazy"
-              />
-              
-              {/* Overlay */}
-              <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-              
-              {/* Category Badge */}
-              <div className="absolute top-3 left-3 px-3 py-1 bg-white/90 backdrop-blur-sm rounded-full text-xs font-bold text-[#0f172a] opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                {categoryLabels[language][image.category]}
-              </div>
-              
-              {/* Expand Icon */}
-              <div className="absolute bottom-3 right-3 w-10 h-10 bg-white/90 backdrop-blur-sm rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                <Maximize2 className="w-5 h-5 text-[#0f172a]" />
-              </div>
-            </div>
-          ))}
-        </div>
-
-        {/* Voir plus (A6) */}
-        {hiddenCount > 0 && (
-          <div className="text-center mt-10">
-            <button
-              type="button"
-              onClick={expand}
-              className="inline-flex items-center gap-2 px-7 py-3.5 bg-[#1C1917] text-white font-semibold rounded-full hover:bg-[#D4A574] hover:text-[#1C1917] transition-colors"
-            >
-              {language === 'en'
-                ? `See more photos (${hiddenCount} more)`
-                : `Voir plus de photos (${hiddenCount} restantes)`}
-            </button>
-          </div>
-        )}
-
-        {/* Image Count */}
-        <p className="text-center text-gray-500 mt-8">
-          {hiddenCount > 0
-            ? (language === 'en'
-                ? `${visibleImages.length} of ${filteredImages.length} photos`
-                : `${visibleImages.length} sur ${filteredImages.length} photos`)
-            : `${filteredImages.length} photos`}
-          {activeFilter && ` · ${categoryLabels[language][activeFilter]}`}
+    <section id="galerie" className="py-8 md:py-20 bg-white relative scroll-mt-24">
+      <div className="container-custom">
+        <h2
+          className="text-3xl md:text-4xl mb-2 text-[#1C1917]"
+          style={{ fontFamily: '"DM Serif Display", serif' }}
+        >
+          {L === 'en' ? `Explore ${houseName}` : `Découvre ${houseName}`}
+        </h2>
+        <p className="text-sm md:text-base text-[#57534E] mb-5 md:mb-8">
+          {L === 'en'
+            ? `${images.length} photos: ${categoryList}.`
+            : `${images.length} photos\u00A0: ${categoryList}.`}
         </p>
+
+        <div className="grid grid-cols-2 md:grid-cols-3 gap-2 md:gap-4">
+          {picks.map((index) => {
+            const image = images[index];
+            return (
+              <button
+                type="button"
+                key={index}
+                onClick={() => open(index, 'tile')}
+                aria-label={L === 'en'
+                  ? `Open the photo: ${categoryLabels.en[image.category]}`
+                  : `Agrandir la photo : ${categoryLabels.fr[image.category]}`}
+                className="group relative aspect-[4/3] overflow-hidden rounded-xl bg-[#F5F2ED] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#1C1917]"
+              >
+                <img
+                  src={image.src}
+                  alt={image.alt}
+                  className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                  loading="lazy"
+                  decoding="async"
+                  {...responsiveImage(image.src, '(min-width: 768px) 33vw, 50vw')}
+                />
+              </button>
+            );
+          })}
+        </div>
+
+        <div className="mt-4 md:mt-8">
+          <button
+            type="button"
+            onClick={() => open(0, 'button')}
+            className="w-full md:w-auto inline-flex items-center justify-center gap-2 px-7 py-3.5 border border-[#1C1917] text-[#1C1917] font-semibold rounded-xl hover:bg-[#1C1917] hover:text-white transition-colors"
+          >
+            <Grid3X3 className="w-4 h-4" aria-hidden="true" />
+            {L === 'en' ? `See all ${images.length} photos` : `Voir les ${images.length} photos`}
+          </button>
+        </div>
       </div>
 
-      {/* Lightbox */}
-      {selectedImage !== null && (
-        <div 
-          className="fixed inset-0 z-50 bg-black/95 flex items-center justify-center"
-          onClick={closeLightbox}
-        >
-          {/* Close Button */}
-          <button
-            onClick={closeLightbox}
-            className="absolute top-6 right-6 w-12 h-12 bg-white/10 hover:bg-white/20 rounded-full flex items-center justify-center transition-colors z-10"
-          >
-            <X className="w-6 h-6 text-white" />
-          </button>
-
-          {/* Navigation */}
-          <button
-            onClick={(e) => { e.stopPropagation(); goToPrevious(); }}
-            className="absolute left-6 top-1/2 -translate-y-1/2 w-14 h-14 bg-white/10 hover:bg-white/20 rounded-full flex items-center justify-center transition-colors z-10"
-          >
-            <ChevronLeft className="w-8 h-8 text-white" />
-          </button>
-          
-          <button
-            onClick={(e) => { e.stopPropagation(); goToNext(); }}
-            className="absolute right-6 top-1/2 -translate-y-1/2 w-14 h-14 bg-white/10 hover:bg-white/20 rounded-full flex items-center justify-center transition-colors z-10"
-          >
-            <ChevronRight className="w-8 h-8 text-white" />
-          </button>
-
-          {/* Image */}
-          <div 
-            className="max-w-6xl max-h-[85vh] px-20"
-            onClick={(e) => e.stopPropagation()}
-          >
-            <img
-              src={filteredImages[selectedImage].src}
-              alt={filteredImages[selectedImage].alt}
-              className="max-w-full max-h-[80vh] object-contain rounded-lg"
-            />
-            
-            {/* Caption */}
-            <div className="text-center mt-4">
-              <span className="inline-block px-4 py-2 bg-white/10 backdrop-blur-sm rounded-full text-sm text-white/80">
-                {categoryLabels[language][filteredImages[selectedImage].category]} · {selectedImage + 1} / {filteredImages.length}
-              </span>
-            </div>
-          </div>
-        </div>
+      {viewer !== null && (
+        <Suspense fallback={null}>
+          <PhotoLightbox
+            photos={photos}
+            index={viewer}
+            onIndexChange={setViewer}
+            onClose={() => setViewer(null)}
+            en={L === 'en'}
+            title={houseName}
+          />
+        </Suspense>
       )}
-    </Wrapper>
+    </section>
   );
 }

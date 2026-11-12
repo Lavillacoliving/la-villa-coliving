@@ -22,6 +22,10 @@
  * maison affiche la ZONE (houseZone), « Calculer mon trajet » part du point public arrondi (publicGeo), et AUCUNE page
  * prérendue (texte, attributs, JSON-LD) ne peut contenir une rue de maison (HOUSES[].streetAddress) ni ses coordonnées
  * exactes (exactLocationLeaks) — un échec bloque la publication.
+ *
+ * (Lot 2 « retenue premium », sous-lot A — 11/2026) La FAQ d'une page maison n'affiche plus que ses 5 premières questions,
+ * les suivantes sont repliées sous un bouton : checkFaqInHtml vérifie que TOUTES les questions du JSON-LD FAQPage restent
+ * dans le texte du HTML prérendu (un repli masque, il ne retire jamais).
  */
 
 import fs from 'fs/promises';
@@ -120,6 +124,32 @@ export function checkHouseLocation(html, slug, lang, m) {
   return failures;
 }
 
+/**
+ * (Lot 2 — sous-lot A, 11/2026) FAQ repliée d'une page maison : chaque question du JSON-LD FAQPage (construit depuis la liste
+ * complète) doit figurer dans le texte du HTML prérendu — repliée ou non. Pur ; renvoie les échecs.
+ */
+export function checkFaqInHtml(html, file) {
+  const blocks = [...html.matchAll(/<script[^>]*type="application\/ld\+json"[^>]*>([\s\S]*?)<\/script>/g)]
+    .map((x) => { try { return JSON.parse(x[1]); } catch { return null; } })
+    .filter(Boolean)
+    .flatMap((b) => (Array.isArray(b) ? b : [b]));
+  const faq = blocks.find((b) => b['@type'] === 'FAQPage');
+  if (!faq || !Array.isArray(faq.mainEntity) || faq.mainEntity.length === 0) return [`${file} : JSON-LD FAQPage absent ou vide`];
+  const text = visibleText(html);
+  const missing = faq.mainEntity.map((q) => visibleText(String(q.name ?? ''))).filter((name) => !name || !text.includes(name));
+  return missing.map((name) => `${file} : question du FAQPage absente du HTML — « ${name.slice(0, 70)} » (un repli masque, il ne retire pas)`);
+}
+
+/**
+ * (11/11/2026) Accord du nom des maisons en français : « du Loft », « du Lodge », « au Loft », jamais « de Le Loft » ni
+ * « à Le Lodge » (les titres « À propos de Le Loft » et « Prêt à faire de Le Lodge ton chez-toi ? » étaient en production).
+ * Dans le code : ofHouseFr() de HouseDetailPage.tsx. Pur ; renvoie les échecs.
+ */
+export function checkHouseNameGrammar(html, file) {
+  const found = [...new Set(visibleText(html).match(/(?:\bde|à) Le (?:Loft|Lodge)\b/g) ?? [])];
+  return found.map((f) => `${file} : « ${f} » dans le texte visible — écrire « du Loft », « du Lodge », « au Loft », « au Lodge » (ofHouseFr)`);
+}
+
 /** ROOM_SURFACE_BY_HOUSE (src/data/stats.ts) = Math.round(min / max de v_public_rooms.surface_m2) pour chaque maison publique. */
 export function checkRoomSurfaceByHouse(byHouse, m) {
   const failures = [];
@@ -177,6 +207,10 @@ async function checkHouse(slug, rooms, m) {
     if (!extractEmbed(html, '__room_availability_data__')) failures.push(`${file} : embed __room_availability_data__ absent`);
     // 7. (Lot L2, 09/10/2026) Section Localisation = source unique houseLocation.ts.
     failures.push(...checkHouseLocation(html, slug, lang, m));
+    // 8. (Lot 2 — sous-lot A, 11/2026) FAQ repliée : toutes les questions du FAQPage restent dans le HTML.
+    failures.push(...checkFaqInHtml(html, file));
+    // 9. (11/11/2026) Accord du nom des maisons : jamais « de Le Loft » ni « à Le Lodge » sur une page française.
+    if (lang === 'fr') failures.push(...checkHouseNameGrammar(html, file));
   }
   return failures;
 }

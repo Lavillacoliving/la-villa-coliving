@@ -23,8 +23,10 @@ import { responsiveImage } from "@/lib/responsiveImage";
 
 export interface LightboxPhoto {
   src: string;
-  w: number;
-  h: number;
+  /** Dimensions intrinsèques, quand elles sont connues (photos de chambres). L'album d'une maison ne les porte pas :
+   *  l'image se cale alors sur sa taille naturelle, bornée par l'écran (sous-lot A, 11/2026). */
+  w?: number;
+  h?: number;
   alt: { fr: string; en: string };
 }
 
