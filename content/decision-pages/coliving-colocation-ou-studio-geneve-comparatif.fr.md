@@ -79,4 +79,4 @@ En 72 h dès ton premier contact, si une chambre est disponible : candidature en
 
 **Combien de temps pour aller travailler à Genève depuis les maisons ?**
 
-Les trois maisons sont à 8, 9 et 9 minutes à pied de la gare d'Annemasse (Le Lodge, La Villa, Le Loft), d'où le Léman Express rejoint Genève Eaux-Vives en 7 minutes et Cornavin en 23 minutes, sans changement ; Le Loft est aussi à 8 minutes à pied du tram 17. Porte-à-porte, compte 20 minutes jusqu'à Genève-Eaux-Vives et 30 minutes jusqu'au centre, et 119,50 € par mois pour le Léman Pass (2026).
+Les trois maisons sont à 8, 9 et 9 minutes à pied de la gare d'Annemasse (Le Lodge, La Villa, Le Loft), d'où le Léman Express rejoint Genève Eaux-Vives en 7 minutes et Cornavin en 23 minutes, sans changement ; Le Loft est aussi à 8 minutes à pied du tram 17. Porte-à-porte, compte 20 minutes jusqu'à Genève-Eaux-Vives et 25 minutes jusqu'au centre, et 119,50 € par mois pour le Léman Pass (2026).

@@ -79,4 +79,4 @@ Within 72 h of your first contact, if a room is available: a two-minute applicat
 
 **How long does it take to get to work in Geneva from the houses?**
 
-The three houses are an 8, 9 and 9-minute walk from Annemasse station (Le Lodge, La Villa, Le Loft), from where the Léman Express gets you to Geneva Eaux-Vives in 7 minutes and Cornavin in 23 minutes, with no change; Le Loft is also an 8-minute walk from tram 17. Door to door, allow 20 minutes to Geneva Eaux-Vives and 30 minutes to the city centre, and €119.50 a month for the Léman Pass (2026).
+The three houses are an 8, 9 and 9-minute walk from Annemasse station (Le Lodge, La Villa, Le Loft), from where the Léman Express gets you to Geneva Eaux-Vives in 7 minutes and Cornavin in 23 minutes, with no change; Le Loft is also an 8-minute walk from tram 17. Door to door, allow 20 minutes to Geneva Eaux-Vives and 25 minutes to the city centre, and €119.50 a month for the Léman Pass (2026).

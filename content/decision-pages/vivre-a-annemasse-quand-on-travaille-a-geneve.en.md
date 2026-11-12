@@ -25,7 +25,7 @@ In practice, for you: a brand-new station district, more shops and services on f
 
 ## The commute: the Léman Express and the tram, the real reason to live here
 
-From Annemasse station, the Léman Express reaches Geneva Eaux-Vives in 7 minutes and Cornavin in 23 minutes, no change, with a train every ten minutes at peak times. From Ambilly, tram 17 enters Geneva through Moillesulaz. From Annemasse, Ville-la-Grand or Ambilly, count 20 minutes door to door to Geneva Eaux-Vives by Léman Express, less than many commutes inside Geneva, and 30 minutes to the city centre.
+From Annemasse station, the Léman Express reaches Geneva Eaux-Vives in 7 minutes and Cornavin in 23 minutes, no change, with a train every ten minutes at peak times. From Ambilly, tram 17 enters Geneva through Moillesulaz. From Annemasse, Ville-la-Grand or Ambilly, count 20 minutes door to door to Geneva Eaux-Vives by Léman Express, less than many commutes inside Geneva, and 25 minutes to the city centre.
 
 Cycling is the other option: the cycle paths cross the border at Moillesulaz, and many residents pedal to central Geneva (Rive) on the Voie Verte in the warm season, in 23 to 29 minutes depending on the house. Many cross-border workers end up without a car: train, tram and bike are enough day to day, and driving through the border crossing at rush hour is the one commute to avoid.
 
@@ -84,7 +84,7 @@ Within walking distance of the station or the tram, in a residential area: Romag
 
 **How long does it take to get to Geneva from Annemasse?**
 
-From Annemasse station, the Léman Express takes 7 minutes to Geneva Eaux-Vives and 23 minutes to Cornavin, with no change. Tram 17 links Ambilly and Annemasse to Geneva through Moillesulaz. Door to door, count 20 minutes to Geneva Eaux-Vives and 30 minutes to the city centre.
+From Annemasse station, the Léman Express takes 7 minutes to Geneva Eaux-Vives and 23 minutes to Cornavin, with no change. Tram 17 links Ambilly and Annemasse to Geneva through Moillesulaz. Door to door, count 20 minutes to Geneva Eaux-Vives and 25 minutes to the city centre.
 
 **Are groceries really cheaper on the French side?**
 
