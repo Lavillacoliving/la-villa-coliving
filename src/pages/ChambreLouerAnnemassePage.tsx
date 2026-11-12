@@ -15,7 +15,7 @@ import {
   Calendar,
   Sparkles,
 } from "lucide-react";
-import { PRICE_CHF_FR, PRICE_CHF_EN, TRANSIT } from "@/data/stats";
+import { PRICE_CHF_FR, PRICE_CHF_EN, TRANSIT, aOrAn } from "@/data/stats";
 import { ENTITY_HOUSES } from "@/data/entityFacts";
 import { communeSentences } from "@/data/answerSlots";
 import { OuChercher } from "@/components/OuChercher";
@@ -78,7 +78,7 @@ export function ChambreLouerAnnemassePage() {
           </h1>
           <p className="text-lg md:text-xl text-[#57534E] max-w-3xl mx-auto leading-relaxed mb-10 font-medium">
             {language === "en"
-              ? `12 furnished rooms with private shower room at the Lodge, in Annemasse Romagny, ${PRICE_CHF_EN}/month all inclusive. Annemasse station is a ${LODGE.stationWalkMin}-minute walk, then the Léman Express reaches Geneva Eaux-Vives in ${TRANSIT.trainEauxVivesMin} minutes: ${LODGE.eauxVivesDoorToDoorMin} minutes door to door. Renting a room made simpler than a furnished studio: bed, desk, fibre, bills and cleaning included, and a whole house to live in.`
+              ? `12 furnished rooms with private shower room at the Lodge, in Annemasse Romagny, ${PRICE_CHF_EN}/month all inclusive. Annemasse station is ${aOrAn(LODGE.stationWalkMin)} ${LODGE.stationWalkMin}-minute walk, then the Léman Express reaches Geneva Eaux-Vives in ${TRANSIT.trainEauxVivesMin} minutes: ${LODGE.eauxVivesDoorToDoorMin} minutes door to door. Renting a room made simpler than a furnished studio: bed, desk, fibre, bills and cleaning included, and a whole house to live in.`
               : `12 chambres meublées avec salle d'eau privative au Lodge, à Annemasse Romagny, ${PRICE_CHF_FR}/mois tout inclus. La gare d'Annemasse est à ${LODGE.stationWalkMin} min à pied, puis le Léman Express rejoint Genève-Eaux-Vives en ${TRANSIT.trainEauxVivesMin} min : ${LODGE.eauxVivesDoorToDoorMin} min porte-à-porte. Une location de chambre plus simple qu'un studio meublé : lit, bureau, fibre, charges et ménage compris, et une maison entière pour vivre.`}
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">

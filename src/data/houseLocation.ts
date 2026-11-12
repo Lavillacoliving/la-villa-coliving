@@ -12,22 +12,26 @@
  * Règles (ne pas rediscuter) :
  *  - D1, méthode trajet : la destination est toujours nommée (Genève-Eaux-Vives par défaut ; Champel, Cornavin, le
  *    centre (Rive) quand on les cite) ; mode par défaut Léman Express, tram 17 pour Le Loft ; deux nombres, toujours :
- *    le temps de train (fixe) puis le porte-à-porte de la maison (mesuré un lundi à 8 h, marche et attente comprises) ;
+ *    le temps de train (fixe) puis le porte-à-porte de la maison (depuis le 12/11/2026 : temps à pied de l'équipe + part
+ *    transport du relevé Google Maps d'un lundi à 8 h, attente comprise) ;
  *    JAMAIS de promesse en voiture (ni d'aéroport en voiture) ; vélo en bonus mesuré (Voie Verte) ; « 15 min » n'existe plus.
  *  - D6 : phrases de quartier A.2 ; le Foron (rivière-frontière) borde La Villa — jamais « mitoyenne » / « adjoins ».
  *  - D7 : aucun numéro de ligne de bus ; un arrêt se décrit « arrêt de bus X à N min à pied ». Deux ancres : Léman Express, tram 17.
+ *  - (12/11/2026, décision Jérôme) Gare à pied : La Villa 9 min (700 m), Le Loft 9 min (700 m), Le Lodge 8 min (900 m) ;
+ *    E.Leclerc de La Villa 9 min (700 m) ; tram 17 du Lodge = arrêt Barbusse, place de l'Étoile, 2 min (150 m) depuis le
+ *    prolongement du 17/10/2026 ; arrêt de bus du Lodge retiré. Détail et porte-à-porte recalculés : commentaire de TRANSIT.
  *  - Mesures : Releves_Trajets_GoogleMaps_2026-10-08.md (brief §1.3) — TRANSIT.measuredOn ; remesure à chaque changement
  *    d'horaire (décembre) ou au plus tard tous les 12 mois.
  *  - Imports RELATIFS, zéro React, chaînes plates (anti-#418), nombres ≥ 1 000 via thousands(), aucune date calculée.
  */
-import { TRANSIT, HOUSE_SURFACES, thousands } from "./stats";
+import { STATS, TRANSIT, HOUSE_SURFACES, thousands, aOrAn } from "./stats";
 import { HOUSES, publicGeo } from "../lib/structuredData";
 
 export type HouseSlug = keyof typeof TRANSIT.byHouse;
 export type LocLang = "fr" | "en";
 
 /** Incrémenter à chaque changement de texte ou de valeur (porté par data-house-location-version sur les pages maisons). */
-export const HOUSE_LOCATION_VERSION = "2026-10-12";
+export const HOUSE_LOCATION_VERSION = "2026-11-12";
 
 export const HOUSE_SLUGS: readonly HouseSlug[] = ["lavilla", "leloft", "lelodge"] as const;
 
@@ -58,7 +62,7 @@ export interface NearbyPlace {
 
 export const HOUSE_NEARBY: Record<HouseSlug, readonly NearbyPlace[]> = {
   lavilla: [
-    { id: "supermarket", fr: "Supermarché E.Leclerc", en: "E.Leclerc supermarket", walkMin: 12, distanceM: 850 },
+    { id: "supermarket", fr: "Supermarché E.Leclerc", en: "E.Leclerc supermarket", walkMin: 9, distanceM: 700 },
     { id: "townhall", fr: "Mairie de Ville-la-Grand", en: "Ville-la-Grand town hall", walkMin: 22 },
     { id: "foron", fr: "Zone naturelle du Foron, la rivière-frontière, le long de la rue", en: "The Foron nature reserve, the border river, along the street" },
   ],
@@ -98,7 +102,7 @@ export function houseNeighbourhood(slug: HouseSlug, lang: LocLang): string {
   if (slug === "lavilla") {
     const plot = HOUSE_SURFACES.lavilla.plotM2;
     return lang === "en"
-      ? `A quiet residential street in Ville-la-Grand, beside the Foron — the river that marks the Swiss border — and its nature reserve. A ${thousands(plot, ",")} m² garden, Annemasse station a ${T.lavilla.stationWalkMin}-minute walk away, a supermarket ${nearbyMin("lavilla", "supermarket")} minutes away.`
+      ? `A quiet residential street in Ville-la-Grand, beside the Foron — the river that marks the Swiss border — and its nature reserve. A ${thousands(plot, ",")} m² garden, Annemasse station ${aOrAn(T.lavilla.stationWalkMin)} ${T.lavilla.stationWalkMin}-minute walk away, a supermarket ${nearbyMin("lavilla", "supermarket")} minutes away.`
       : `Rue résidentielle calme de Ville-la-Grand, en bordure du Foron — la rivière qui marque la frontière suisse — et de sa zone naturelle. Jardin de ${thousands(plot, " ")} m², gare d'Annemasse à ${T.lavilla.stationWalkMin} min à pied, supermarché à ${nearbyMin("lavilla", "supermarket")} min.`;
   }
   if (slug === "leloft") {
@@ -108,8 +112,8 @@ export function houseNeighbourhood(slug: HouseSlug, lang: LocLang): string {
   }
   const shops = Math.max(nearbyMin("lelodge", "lidl"), nearbyMin("lelodge", "supermarket"));
   return lang === "en"
-    ? `The residential Romagny district of Annemasse: quiet streets of houses, Lidl and Carrefour Market ${shops} minutes on foot, station and town centre ${T.lelodge.stationWalkMin} minutes away.`
-    : `Quartier résidentiel de Romagny, à Annemasse : rues calmes de maisons, Lidl et Carrefour Market à ${shops} min à pied, gare et centre-ville à ${T.lelodge.stationWalkMin} min.`;
+    ? `The residential Romagny district of Annemasse: quiet streets of houses, Lidl and Carrefour Market ${shops} minutes on foot, the station ${T.lelodge.stationWalkMin} minutes and the town centre ${nearbyMin("lelodge", "centre")} minutes away.`
+    : `Quartier résidentiel de Romagny, à Annemasse : rues calmes de maisons, Lidl et Carrefour Market à ${shops} min à pied, gare à ${T.lelodge.stationWalkMin} min, centre-ville à ${nearbyMin("lelodge", "centre")} min.`;
 }
 
 /* ── Frontière suisse (une seule formulation par maison, D6) ──────────────────────────────────────────────── */
@@ -119,13 +123,13 @@ export function houseBorder(slug: HouseSlug, lang: LocLang): string | undefined 
   if (slug === "lavilla") {
     const b = T.lavilla.border;
     return lang === "en"
-      ? `The Swiss border: the Foron, the border river, runs along the street; the Puplinge road crossing is a ${b.puplingeWalkMin}-minute walk (${formatDistance(b.puplingeDistanceM, "en")}), the Moillesulaz crossing ${formatDistance(b.moillesulazM, "en")} away (${b.moillesulazBikeMin} minutes by bike).`
+      ? `The Swiss border: the Foron, the border river, runs along the street; the Puplinge road crossing is ${aOrAn(b.puplingeWalkMin)} ${b.puplingeWalkMin}-minute walk (${formatDistance(b.puplingeDistanceM, "en")}), the Moillesulaz crossing ${formatDistance(b.moillesulazM, "en")} away (${b.moillesulazBikeMin} minutes by bike).`
       : `La frontière suisse : le Foron, la rivière-frontière, longe la rue ; passage routier de Puplinge à ${b.puplingeWalkMin} min à pied (${formatDistance(b.puplingeDistanceM, "fr")}), douane de Moillesulaz à ${formatDistance(b.moillesulazM, "fr")} (${b.moillesulazBikeMin} min à vélo).`;
   }
   if (slug === "leloft") {
     const b = T.leloft.border;
     return lang === "en"
-      ? `The Swiss border (the Foron river) is ${formatDistance(b.foronDistanceM, "en")} away, an ${b.foronWalkMin}-minute walk; the Moillesulaz crossing is ${formatDistance(b.moillesulazM, "en")} away (a ${b.moillesulazWalkMin}-minute walk).`
+      ? `The Swiss border (the Foron river) is ${formatDistance(b.foronDistanceM, "en")} away, ${aOrAn(b.foronWalkMin)} ${b.foronWalkMin}-minute walk; the Moillesulaz crossing is ${formatDistance(b.moillesulazM, "en")} away (a ${b.moillesulazWalkMin}-minute walk).`
       : `La frontière suisse (le Foron) est à ${formatDistance(b.foronDistanceM, "fr")}, ${b.foronWalkMin} min à pied ; la douane de Moillesulaz à ${formatDistance(b.moillesulazM, "fr")} (${b.moillesulazWalkMin} min à pied).`;
   }
   return undefined;
@@ -139,14 +143,16 @@ export function houseCommuteLong(slug: HouseSlug, lang: LocLang): string {
     const h = T.leloft;
     // (09/10/2026) Règle D1.3 sur la phrase gare aussi : temps de train fixe + porte-à-porte, deux nombres.
     return lang === "en"
-      ? `Tram 17 is an ${h.tramWalkMin}-minute walk (${h.tramStop.name} stop, ${formatDistance(h.tramStop.distanceM, "en")}): Rive in ${h.tramStop.tramToRiveMin} minutes by tram, ${h.riveDoorToDoorMin} minutes door to door. Annemasse station is an ${h.stationWalkMin}-minute walk (${formatDistance(h.stationDistanceM, "en")}): Geneva Eaux-Vives in ${tr.trainEauxVivesMin} minutes by Léman Express, ${h.eauxVivesDoorToDoorMin} minutes door to door. By bike: central Geneva (Rive) in ${h.bikeToRiveMin} minutes on the Voie Verte.`
+      ? `Tram 17 is ${aOrAn(h.tramWalkMin)} ${h.tramWalkMin}-minute walk (${h.tramStop.name} stop, ${formatDistance(h.tramStop.distanceM, "en")}): Rive in ${h.tramStop.tramToRiveMin} minutes by tram, ${h.riveDoorToDoorMin} minutes door to door. Annemasse station is ${aOrAn(h.stationWalkMin)} ${h.stationWalkMin}-minute walk (${formatDistance(h.stationDistanceM, "en")}): Geneva Eaux-Vives in ${tr.trainEauxVivesMin} minutes by Léman Express, ${h.eauxVivesDoorToDoorMin} minutes door to door. By bike: central Geneva (Rive) in ${h.bikeToRiveMin} minutes on the Voie Verte.`
       : `Tram 17 à ${h.tramWalkMin} min à pied (arrêt ${h.tramStop.name}, ${formatDistance(h.tramStop.distanceM, "fr")}) : Rive en ${h.tramStop.tramToRiveMin} min de tram, ${h.riveDoorToDoorMin} min porte-à-porte. Gare d'Annemasse à ${h.stationWalkMin} min à pied (${formatDistance(h.stationDistanceM, "fr")}) : Genève-Eaux-Vives en ${tr.trainEauxVivesMin} min de Léman Express, ${h.eauxVivesDoorToDoorMin} min porte-à-porte. Vélo : centre de Genève (Rive) en ${h.bikeToRiveMin} min par la Voie Verte.`;
   }
   const h = T[slug];
-  const extraFr = slug === "lelodge" ? ` Arrêt de bus ${T.lelodge.busStop.name} à ${T.lelodge.busStop.walkMin} min à pied ; tram 17 (${T.lelodge.tramStop.name}) à ${T.lelodge.tramStop.walkMin} min.` : "";
-  const extraEn = slug === "lelodge" ? ` ${T.lelodge.busStop.name} bus stop is a ${T.lelodge.busStop.walkMin}-minute walk; tram 17 (${T.lelodge.tramStop.name}) is ${T.lelodge.tramStop.walkMin} minutes away.` : "";
+  // (12/11/2026) Le Lodge : tram 17 depuis le prolongement du 17/10/2026 (arrêt Barbusse, place de l'Étoile) ; plus d'arrêt de bus.
+  const ts = T.lelodge.tramStop;
+  const extraFr = slug === "lelodge" ? ` Tram 17 à ${ts.walkMin} min à pied (arrêt ${ts.name}, ${ts.place.fr}, ${formatDistance(ts.distanceM, "fr")}).` : "";
+  const extraEn = slug === "lelodge" ? ` Tram 17 is ${aOrAn(ts.walkMin)} ${ts.walkMin}-minute walk (${ts.name} stop, ${ts.place.en}, ${formatDistance(ts.distanceM, "en")}).` : "";
   return lang === "en"
-    ? `Annemasse station is a ${h.stationWalkMin}-minute walk (${formatDistance(h.stationDistanceM, "en")}). Direct Léman Express trains: Geneva Eaux-Vives in ${tr.trainEauxVivesMin} minutes, Champel in ${tr.trainChampelMin}, Cornavin in ${tr.trainCornavinMin} — ${h.eauxVivesDoorToDoorMin} minutes door to door to Eaux-Vives, ${h.riveDoorToDoorMin} minutes to the city centre (Rive).${extraEn} By bike: central Geneva (Rive) in ${h.bikeToRiveMin} minutes on the Voie Verte.`
+    ? `Annemasse station is ${aOrAn(h.stationWalkMin)} ${h.stationWalkMin}-minute walk (${formatDistance(h.stationDistanceM, "en")}). Direct Léman Express trains: Geneva Eaux-Vives in ${tr.trainEauxVivesMin} minutes, Champel in ${tr.trainChampelMin}, Cornavin in ${tr.trainCornavinMin} — ${h.eauxVivesDoorToDoorMin} minutes door to door to Eaux-Vives, ${h.riveDoorToDoorMin} minutes to the city centre (Rive).${extraEn} By bike: central Geneva (Rive) in ${h.bikeToRiveMin} minutes on the Voie Verte.`
     : `Gare d'Annemasse à ${h.stationWalkMin} min à pied (${formatDistance(h.stationDistanceM, "fr")}). Léman Express direct : Genève-Eaux-Vives en ${tr.trainEauxVivesMin} min, Champel en ${tr.trainChampelMin} min, Cornavin en ${tr.trainCornavinMin} min — ${h.eauxVivesDoorToDoorMin} min porte-à-porte jusqu'aux Eaux-Vives, ${h.riveDoorToDoorMin} min jusqu'au centre (Rive).${extraFr} Vélo : centre de Genève (Rive) en ${h.bikeToRiveMin} min par la Voie Verte.`;
 }
 
@@ -174,9 +180,9 @@ export function houseCommuteRows(slug: HouseSlug, lang: LocLang): CommuteRow[] {
     rows.push({ mode: en ? "On foot" : "À pied", destination: en ? `Tram 17, ${s.name} stop` : `Tram 17, arrêt ${s.name}`, value: `${s.walkMin} min (${formatDistance(s.distanceM, lang)})` });
   }
   if (slug === "lelodge") {
-    const b = T.lelodge.busStop, s = T.lelodge.tramStop;
-    rows.push({ mode: en ? "On foot" : "À pied", destination: en ? `${b.name} bus stop` : `Arrêt de bus ${b.name}`, value: `${b.walkMin} min (${formatDistance(b.distanceM, lang)})` });
-    rows.push({ mode: en ? "On foot" : "À pied", destination: en ? `Tram 17, ${s.name} stop` : `Tram 17, arrêt ${s.name}`, value: `${s.walkMin} min (${formatDistance(s.distanceM, lang)})` });
+    // (12/11/2026, décision Jérôme) Arrêt Barbusse, place de l'Étoile (tram 17 prolongé le 17/10/2026) ; ligne de bus retirée.
+    const s = T.lelodge.tramStop;
+    rows.push({ mode: en ? "On foot" : "À pied", destination: en ? `Tram 17, ${s.name} stop, ${s.place.en}` : `Tram 17, arrêt ${s.name}, ${s.place.fr}`, value: `${s.walkMin} min (${formatDistance(s.distanceM, lang)})` });
   }
   if (slug === "lavilla") {
     const b = T.lavilla.busStop;
@@ -214,8 +220,8 @@ export function houseCommuteRows(slug: HouseSlug, lang: LocLang): CommuteRow[] {
 /** Note de méthode affichée sous le tableau (D1.3 : « on laisse vérifier »). */
 export function houseCommuteNote(lang: LocLang): string {
   return lang === "en"
-    ? `Google Maps measurements of ${TRANSIT.measuredOnLabel.en}, on foot; public transport on a Monday at 8 am, walking and waiting included.`
-    : `Mesures Google Maps du ${TRANSIT.measuredOnLabel.fr}, à pied ; transports un lundi à 8 h, marche et attente comprises.`;
+    ? `Google Maps measurements of ${TRANSIT.measuredOnLabel.en} and our team's (${TRANSIT.walkCheckedOnLabel.en}), on foot; public transport on a Monday at 8 am, walking and waiting included.`
+    : `Mesures Google Maps du ${TRANSIT.measuredOnLabel.fr} et de notre équipe (${TRANSIT.walkCheckedOnLabel.fr}), à pied ; transports un lundi à 8 h, marche et attente comprises.`;
 }
 
 /**
@@ -275,6 +281,9 @@ export function houseLocationStrings(slug: HouseSlug, lang: LocLang): string[] {
   ];
 }
 
+/** (12/11/2026) Article anglais faux devant une durée (« a 8-minute », « an 9-minute ») ou « 1 minutes ». « an 11 / 18 / 8x » sont justes. */
+export const EN_ARTICLE_ISSUE_RE = /\ba (?:8|11|18|8\d)-minute\b|\ban (?:[1-79]|1[02-79]|[2-79]\d)-minute\b|\b1 minutes\b/;
+
 /** Incohérences détectables sans base : promesse en voiture, « 15 min », placeholder, parité FR/EN. */
 export function houseLocationIssues(): string[] {
   const issues: string[] = [];
@@ -287,8 +296,23 @@ export function houseLocationIssues(): string[] {
         if (/(?<![\d,.])15 ?min/i.test(s)) issues.push(`${slug}/${lang} : « 15 min » — « ${s.slice(0, 60)}… »`);
         if (/mitoyen|adjoin|\bTPN\b|ligne \d|line \d|\bbus \d/i.test(s)) issues.push(`${slug}/${lang} : formulation interdite (D6/D7) — « ${s.slice(0, 60)}… »`);
         if (/\[FAIT À CONFIRMER|\{\{|undefined|NaN/.test(s)) issues.push(`${slug}/${lang} : placeholder — « ${s.slice(0, 60)}… »`);
+        if (EN_ARTICLE_ISSUE_RE.test(s)) issues.push(`${slug}/${lang} : article ou pluriel anglais faux — « ${s.slice(0, 60)}… »`);
       }
     }
   }
+  // (12/11/2026) Agrégats saisis à la main dans TRANSIT : ils doivent suivre byHouse (un 18/24 oublié passait sans bruit).
+  const range = (pick: (h: (typeof T)[HouseSlug]) => number): [number, number] => {
+    const v = HOUSE_SLUGS.map((s) => pick(T[s]));
+    return [Math.min(...v), Math.max(...v)];
+  };
+  const ceil5 = (n: number) => Math.ceil(n / 5) * 5;
+  const [evMin, evMax] = range((h) => h.eauxVivesDoorToDoorMin);
+  if (TRANSIT.doorToDoorEauxVivesMin !== evMin || TRANSIT.doorToDoorEauxVivesMax !== evMax) issues.push(`TRANSIT.doorToDoorEauxVives ${TRANSIT.doorToDoorEauxVivesMin}-${TRANSIT.doorToDoorEauxVivesMax} ≠ maisons ${evMin}-${evMax}`);
+  const [rvMin, rvMax] = range((h) => h.riveDoorToDoorMin);
+  if (TRANSIT.riveDoorToDoorMin !== rvMin || TRANSIT.riveDoorToDoorMax !== rvMax) issues.push(`TRANSIT.riveDoorToDoor ${TRANSIT.riveDoorToDoorMin}-${TRANSIT.riveDoorToDoorMax} ≠ maisons ${rvMin}-${rvMax}`);
+  if (TRANSIT.centreDoorToDoorMin !== ceil5(rvMin)) issues.push(`TRANSIT.centreDoorToDoorMin ${TRANSIT.centreDoorToDoorMin} ≠ ${ceil5(rvMin)} (D1.4 : 5 supérieur de ${rvMin})`);
+  // Marque D1.4 : 5 supérieur du meilleur porte-à-porte Eaux-Vives, jamais 15 (« 15 min » n'existe plus), jamais vers le bas.
+  const brand = Math.max(20, ceil5(evMin));
+  if (STATS.genevaCenterMinutes !== brand) issues.push(`STATS.genevaCenterMinutes ${STATS.genevaCenterMinutes} ≠ ${brand} (D1.4)`);
   return issues;
 }

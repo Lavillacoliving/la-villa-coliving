@@ -37,7 +37,7 @@ export async function loadEntityFacts() {
         // des articles tels que le lecteur les voit.
         "export * from './src/lib/typography';",
         "export { ORG_ID, ORG_IDENTITY, LAVILLA_ALTERNATE_NAMES, LAVILLA_SAME_AS, GOOGLE_BUSINESS_PROFILE_URL, HOUSES, publicGeo, LAVILLA_NAP, houseLodgingId, buildHouseLodgingNode, buildAvailableRoomsItemList, buildLocalBusinessSchema, buildHomeLodgingBusinessSchema } from './src/lib/structuredData';",
-        "export { STATS, STATS_DISPLAY, TRANSIT, GENEVA_COMMUTE_FORMULA, MARKET_ROOM_EUR, FACEBOOK_GROUP, HOUSE_SURFACES, ROOM_SURFACE_BY_HOUSE, GOOGLE_REVIEWS, GOOGLE_REVIEWS_LINK_LABEL, OCCUPANCY, OCCUPANCY_DISPLAY, STATS_SOURCE, MARKET_COMPARISON } from './src/data/stats';",
+        "export { STATS, STATS_DISPLAY, TRANSIT, aOrAn, GENEVA_COMMUTE_FORMULA, MARKET_ROOM_EUR, FACEBOOK_GROUP, HOUSE_SURFACES, ROOM_SURFACE_BY_HOUSE, GOOGLE_REVIEWS, GOOGLE_REVIEWS_LINK_LABEL, OCCUPANCY, OCCUPANCY_DISPLAY, STATS_SOURCE, MARKET_COMPARISON } from './src/data/stats';",
       ].join(' '),
       resolveDir: ROOT,
       loader: 'ts',

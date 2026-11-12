@@ -80,7 +80,7 @@ test('houseCommuteRows : Loft = ligne « Tram 17 » vers Rive ; Villa et Lodge =
       assert.match(tram[0].value, new RegExp(`^${h.tramStop.tramToRiveMin} min .*\\b${h.riveDoorToDoorMin} min\\b`), tram[0].value);
       assert.equal(rive.length, 0, 'le Loft n\'a pas de ligne Rive « Transports » en plus du tram');
     } else {
-      assert.equal(tram.length, 0, `${slug}/${lang} : le tram 17 est l'ancre du Loft seulement`);
+      assert.equal(tram.length, 0, `${slug}/${lang} : seul Le Loft a une ligne « Tram 17 → Rive » (Le Lodge a son arrêt Barbusse en ligne « À pied »)`);
       assert.equal(rive.length, 1, `${slug}/${lang}`);
       assert.match(rive[0].value, new RegExp(`^${h.riveDoorToDoorMin} min`), rive[0].value);
     }
@@ -162,4 +162,42 @@ test('zone publiée (12/10/2026) : publicGeo = point public à 300-650 m de la m
   }
   assert.equal(m.houseExactAddressNote('fr'), "L'adresse exacte t'est communiquée à la prise de rendez-vous de visite.");
   assert.equal(m.houseExactAddressNote('en'), 'We share the exact address when you book a visit.');
+});
+
+// (12/11/2026, décision Jérôme) Gare à pied 9 / 9 / 8 min ; tram 17 du Lodge = arrêt Barbusse, place de l'Étoile (prolongement
+// du 17/10/2026) ; plus d'arrêt de bus au Lodge ; article anglais calculé (« an 8-minute walk ») ; note de méthode datée des deux relevés.
+test('12/11/2026 : tram du Lodge (Barbusse, place de l\'Étoile), plus de bus « Annemasse-Étoile », articles anglais, note des deux relevés', () => {
+  assert.equal(m.aOrAn(8), 'an'); assert.equal(m.aOrAn(9), 'a'); assert.equal(m.aOrAn(11), 'an'); assert.equal(m.aOrAn(18), 'an');
+  assert.equal(m.aOrAn(1), 'a'); assert.equal(m.aOrAn(83), 'an'); assert.equal(m.aOrAn(23), 'a');
+  const lodge = T.byHouse.lelodge;
+  assert.equal(lodge.tramStop.name, 'Barbusse');
+  assert.equal(lodge.busStop, undefined, 'la ligne de bus du Lodge est retirée');
+  for (const lang of LANGS) {
+    const rows = m.houseCommuteRows('lelodge', lang);
+    const tram = rows.filter((r) => /Tram 17/.test(r.destination));
+    assert.equal(tram.length, 1, `lelodge/${lang} : une ligne « Tram 17 »`);
+    assert.match(tram[0].destination, /Barbusse/); assert.match(tram[0].destination, /[Pp]lace de l'Étoile/);
+    assert.equal(tram[0].value, `${lodge.tramStop.walkMin} min (${m.formatDistance(lodge.tramStop.distanceM, lang)})`);
+    for (const s of m.houseLocationStrings('lelodge', lang)) {
+      assert.doesNotMatch(s, /Annemasse-Étoile|Montessuit/, s);
+      assert.doesNotMatch(s, /\barrêt de bus\b|\bbus stop\b/i, s);
+    }
+    assert.ok(m.houseCommuteNote(lang).includes(T.walkCheckedOnLabel[lang]), m.houseCommuteNote(lang));
+  }
+  assert.match(m.houseCommuteLong('lelodge', 'en'), /Annemasse station is an 8-minute walk/);
+  assert.match(m.houseCommuteLong('leloft', 'en'), /Annemasse station is a 9-minute walk/);
+  assert.match(m.communeSentence('lelodge', 'en'), /is an 8-minute walk from the station/);
+  // La phrase de quartier du Lodge distingue la gare (8 min) du centre-ville (10 min, HOUSE_NEARBY).
+  const centre = m.HOUSE_NEARBY.lelodge.find((x) => x.id === 'centre').walkMin;
+  assert.match(m.houseNeighbourhood('lelodge', 'fr'), new RegExp(`gare à ${lodge.stationWalkMin} min, centre-ville à ${centre} min`));
+});
+
+test('12/11/2026 (relecture) : garde d\'article anglais sans faux positif, phrase de commune du Loft avec la gare', () => {
+  const re = m.EN_ARTICLE_ISSUE_RE;
+  for (const ok of ['is an 8-minute walk', 'is an 11-minute walk', 'is an 18-minute walk', 'is a 9-minute walk', 'is a 2-minute walk', 'an 83-minute ride']) assert.equal(re.test(ok), false, ok);
+  for (const bad of ['is a 8-minute walk', 'is a 11-minute walk', 'is an 9-minute walk', 'is an 12-minute walk', 'is 1 minutes away']) assert.equal(re.test(bad), true, bad);
+  const fr = m.communeSentence('leloft', 'fr'), en = m.communeSentence('leloft', 'en');
+  const L = T.byHouse.leloft;
+  assert.match(fr, new RegExp(`du tram 17 et à ${L.stationWalkMin} min de la gare d'Annemasse — Genève-Eaux-Vives en ${L.eauxVivesDoorToDoorMin} min porte-à-porte`));
+  assert.match(en, new RegExp(`from tram 17 and ${m.aOrAn(L.stationWalkMin)} ${L.stationWalkMin}-minute walk from Annemasse station — Geneva Eaux-Vives in ${L.eauxVivesDoorToDoorMin} minutes door to door`));
 });

@@ -1,5 +1,5 @@
 import type { QAPair } from "@/lib/structuredData";
-import { STATS, PRICE_CHF_FR, PRICE_CHF_EN, PRICE_SHARED_CHF_FR, PRICE_SHARED_CHF_EN, TRANSIT } from "@/data/stats";
+import { STATS, PRICE_CHF_FR, PRICE_CHF_EN, PRICE_SHARED_CHF_FR, PRICE_SHARED_CHF_EN, TRANSIT, aOrAn } from "@/data/stats";
 import { GUARANTOR_SENTENCE } from "@/data/entityFacts";
 
 const T = TRANSIT;
@@ -113,7 +113,7 @@ export const situationsFaq: SituationFaq[] = [
     },
     en: {
       q: "How many minutes to Cornavin from each house?",
-      a: `From Annemasse station, the Léman Express reaches Geneva Eaux-Vives in ${T.trainEauxVivesMin} minutes, Champel in ${T.trainChampelMin} and Cornavin in ${T.trainCornavinMin}, no change. The station is a ${T.byHouse.lelodge.stationWalkMin}-minute walk from Le Lodge, ${T.byHouse.lavilla.stationWalkMin} from La Villa and ${T.byHouse.leloft.stationWalkMin} from Le Loft; door to door to Cornavin, count ${T.byHouse.lelodge.cornavinDoorToDoorMin} minutes from Le Lodge, ${T.byHouse.lavilla.cornavinDoorToDoorMin} from La Villa and ${T.byHouse.leloft.cornavinDoorToDoorMin} from Le Loft (${T.byHouse.lelodge.eauxVivesDoorToDoorMin}, ${T.byHouse.lavilla.eauxVivesDoorToDoorMin} and ${T.byHouse.leloft.eauxVivesDoorToDoorMin} minutes to Geneva Eaux-Vives). From Le Loft, tram 17 is an ${T.byHouse.leloft.tramWalkMin}-minute walk away and enters Geneva through Moillesulaz. Real-time schedules: SBB or TPG apps.`,
+      a: `From Annemasse station, the Léman Express reaches Geneva Eaux-Vives in ${T.trainEauxVivesMin} minutes, Champel in ${T.trainChampelMin} and Cornavin in ${T.trainCornavinMin}, no change. The station is ${aOrAn(T.byHouse.lelodge.stationWalkMin)} ${T.byHouse.lelodge.stationWalkMin}-minute walk from Le Lodge, ${T.byHouse.lavilla.stationWalkMin} from La Villa and ${T.byHouse.leloft.stationWalkMin} from Le Loft; door to door to Cornavin, count ${T.byHouse.lelodge.cornavinDoorToDoorMin} minutes from Le Lodge, ${T.byHouse.lavilla.cornavinDoorToDoorMin} from La Villa and ${T.byHouse.leloft.cornavinDoorToDoorMin} from Le Loft (${T.byHouse.lelodge.eauxVivesDoorToDoorMin}, ${T.byHouse.lavilla.eauxVivesDoorToDoorMin} and ${T.byHouse.leloft.eauxVivesDoorToDoorMin} minutes to Geneva Eaux-Vives). From Le Loft, tram 17 is ${aOrAn(T.byHouse.leloft.tramWalkMin)} ${T.byHouse.leloft.tramWalkMin}-minute walk away and enters Geneva through Moillesulaz. Real-time schedules: SBB or TPG apps.`,
       more: { href: "/nos-maisons", label: "Compare the three houses" },
     },
   },
@@ -140,7 +140,7 @@ export const situationsFaq: SituationFaq[] = [
     },
     en: {
       q: "Is Annemasse safe?",
-      a: `Yes, as in any central town of a metropolitan area: it depends on the neighbourhood and the hour, not on the town. Our houses are in quiet residential areas: Le Lodge in Romagny (Annemasse), La Villa in Ville-la-Grand, Le Loft in Ambilly, an ${T.byHouse.leloft.tramWalkMin}-minute walk from tram 17. More than ${STATS.totalResidents} residents have lived there since ${STATS.foundedYear}, many of them newcomers who didn't know the area. Our article on Annemasse's neighbourhoods says, block by block, where we would live and where we wouldn't.`,
+      a: `Yes, as in any central town of a metropolitan area: it depends on the neighbourhood and the hour, not on the town. Our houses are in quiet residential areas: Le Lodge in Romagny (Annemasse), La Villa in Ville-la-Grand, Le Loft in Ambilly, ${aOrAn(T.byHouse.leloft.tramWalkMin)} ${T.byHouse.leloft.tramWalkMin}-minute walk from tram 17. More than ${STATS.totalResidents} residents have lived there since ${STATS.foundedYear}, many of them newcomers who didn't know the area. Our article on Annemasse's neighbourhoods says, block by block, where we would live and where we wouldn't.`,
       more: { href: "/blog/vivre-a-annemasse-quand-on-travaille-a-geneve", label: "Living in Annemasse when you work in Geneva" },
     },
   },

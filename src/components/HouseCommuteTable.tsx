@@ -38,7 +38,7 @@ export function HouseCommuteTable({ slug, lang, className = "" }: HouseCommuteTa
     <div className={`not-prose ${className}`} data-house-commute-table={slug}>
       <div className="overflow-x-auto rounded-lg border border-[#E7E5E4] bg-[#FAF9F6]">
         {/* Largeurs fixées (26 / 32 / 42 %) et marges réduites sur mobile : la colonne « Temps » porte deux nombres
-            (« 7 min de train · 22 min porte-à-porte ») et doit tenir en 2-3 lignes à 375 px (contrôle visuel du 09/10). */}
+            (« 7 min de train · 17 min porte-à-porte ») et doit tenir en 2-3 lignes à 375 px (contrôle visuel du 09/10). */}
         <table className="w-full table-fixed text-sm text-left text-[#44403C]">
           <colgroup>
             <col className="w-[26%]" />
