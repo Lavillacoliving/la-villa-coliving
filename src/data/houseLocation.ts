@@ -12,7 +12,8 @@
  * Règles (ne pas rediscuter) :
  *  - D1, méthode trajet : la destination est toujours nommée (Genève-Eaux-Vives par défaut ; Champel, Cornavin, le
  *    centre (Rive) quand on les cite) ; mode par défaut Léman Express, tram 17 pour Le Loft ; deux nombres, toujours :
- *    le temps de train (fixe) puis le porte-à-porte de la maison (mesuré un lundi à 8 h, marche et attente comprises) ;
+ *    le temps de train (fixe) puis le porte-à-porte de la maison (depuis le 12/11/2026 : temps à pied de l'équipe + part
+ *    transport du relevé Google Maps d'un lundi à 8 h, attente comprise) ;
  *    JAMAIS de promesse en voiture (ni d'aéroport en voiture) ; vélo en bonus mesuré (Voie Verte) ; « 15 min » n'existe plus.
  *  - D6 : phrases de quartier A.2 ; le Foron (rivière-frontière) borde La Villa — jamais « mitoyenne » / « adjoins ».
  *  - D7 : aucun numéro de ligne de bus ; un arrêt se décrit « arrêt de bus X à N min à pied ». Deux ancres : Léman Express, tram 17.
@@ -122,13 +123,13 @@ export function houseBorder(slug: HouseSlug, lang: LocLang): string | undefined 
   if (slug === "lavilla") {
     const b = T.lavilla.border;
     return lang === "en"
-      ? `The Swiss border: the Foron, the border river, runs along the street; the Puplinge road crossing is a ${b.puplingeWalkMin}-minute walk (${formatDistance(b.puplingeDistanceM, "en")}), the Moillesulaz crossing ${formatDistance(b.moillesulazM, "en")} away (${b.moillesulazBikeMin} minutes by bike).`
+      ? `The Swiss border: the Foron, the border river, runs along the street; the Puplinge road crossing is ${aOrAn(b.puplingeWalkMin)} ${b.puplingeWalkMin}-minute walk (${formatDistance(b.puplingeDistanceM, "en")}), the Moillesulaz crossing ${formatDistance(b.moillesulazM, "en")} away (${b.moillesulazBikeMin} minutes by bike).`
       : `La frontière suisse : le Foron, la rivière-frontière, longe la rue ; passage routier de Puplinge à ${b.puplingeWalkMin} min à pied (${formatDistance(b.puplingeDistanceM, "fr")}), douane de Moillesulaz à ${formatDistance(b.moillesulazM, "fr")} (${b.moillesulazBikeMin} min à vélo).`;
   }
   if (slug === "leloft") {
     const b = T.leloft.border;
     return lang === "en"
-      ? `The Swiss border (the Foron river) is ${formatDistance(b.foronDistanceM, "en")} away, an ${b.foronWalkMin}-minute walk; the Moillesulaz crossing is ${formatDistance(b.moillesulazM, "en")} away (a ${b.moillesulazWalkMin}-minute walk).`
+      ? `The Swiss border (the Foron river) is ${formatDistance(b.foronDistanceM, "en")} away, ${aOrAn(b.foronWalkMin)} ${b.foronWalkMin}-minute walk; the Moillesulaz crossing is ${formatDistance(b.moillesulazM, "en")} away (a ${b.moillesulazWalkMin}-minute walk).`
       : `La frontière suisse (le Foron) est à ${formatDistance(b.foronDistanceM, "fr")}, ${b.foronWalkMin} min à pied ; la douane de Moillesulaz à ${formatDistance(b.moillesulazM, "fr")} (${b.moillesulazWalkMin} min à pied).`;
   }
   return undefined;
@@ -280,6 +281,9 @@ export function houseLocationStrings(slug: HouseSlug, lang: LocLang): string[] {
   ];
 }
 
+/** (12/11/2026) Article anglais faux devant une durée (« a 8-minute », « an 9-minute ») ou « 1 minutes ». « an 11 / 18 / 8x » sont justes. */
+export const EN_ARTICLE_ISSUE_RE = /\ba (?:8|11|18|8\d)-minute\b|\ban (?:[1-79]|1[02-79]|[2-79]\d)-minute\b|\b1 minutes\b/;
+
 /** Incohérences détectables sans base : promesse en voiture, « 15 min », placeholder, parité FR/EN. */
 export function houseLocationIssues(): string[] {
   const issues: string[] = [];
@@ -292,7 +296,7 @@ export function houseLocationIssues(): string[] {
         if (/(?<![\d,.])15 ?min/i.test(s)) issues.push(`${slug}/${lang} : « 15 min » — « ${s.slice(0, 60)}… »`);
         if (/mitoyen|adjoin|\bTPN\b|ligne \d|line \d|\bbus \d/i.test(s)) issues.push(`${slug}/${lang} : formulation interdite (D6/D7) — « ${s.slice(0, 60)}… »`);
         if (/\[FAIT À CONFIRMER|\{\{|undefined|NaN/.test(s)) issues.push(`${slug}/${lang} : placeholder — « ${s.slice(0, 60)}… »`);
-        if (/\ba (?:8|11|18|8\d)-minute\b|\ban (?:[1-79]|1[0-79]|[2-79]\d)-minute\b|\b1 minutes\b/.test(s)) issues.push(`${slug}/${lang} : article ou pluriel anglais faux — « ${s.slice(0, 60)}… »`);
+        if (EN_ARTICLE_ISSUE_RE.test(s)) issues.push(`${slug}/${lang} : article ou pluriel anglais faux — « ${s.slice(0, 60)}… »`);
       }
     }
   }

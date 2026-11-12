@@ -176,16 +176,18 @@ export function communeSentence(slug: EntityHouseSlug, lang: EntityLang, opts: {
   const opened = opts.openedIn ? (lang === "en" ? `, opened in ${opts.openedIn}` : `, ouvert en ${opts.openedIn}`) : "";
   const district = (h.district ? `, ${h.district[lang]}` : "") + opened;
   const tram = TRANSIT.byHouse.leloft.tramWalkMin;
+  // (12/11/2026, relecture) Le Loft nomme aussi la gare : son porte-à-porte Eaux-Vives (17 min) passe par la gare d'Annemasse,
+  // pas par le tram 17 (Rive en tram : 32 min). Sans la gare, la phrase prêtait au tram le temps du Léman Express.
   if (lang === "en") {
     const where = slug === "lelodge" ? "In Annemasse itself" : `In ${h.commune}`;
     const access = slug === "leloft"
-      ? `is ${aOrAn(tram)} ${tram}-minute walk from tram 17`
+      ? `is ${aOrAn(tram)} ${tram}-minute walk from tram 17 and ${aOrAn(T.stationWalkMin)} ${T.stationWalkMin}-minute walk from Annemasse station`
       : `is ${aOrAn(T.stationWalkMin)} ${T.stationWalkMin}-minute walk from ${slug === "lelodge" ? "the station" : "Annemasse station"}`;
     return `${where}, ${h.label} by La Villa Coliving (${rooms} rooms${district}) ${access} — Geneva Eaux-Vives in ${T.eauxVivesDoorToDoorMin} minutes door to door.`;
   }
   const where = slug === "lelodge" ? "À Annemasse même" : `À ${h.commune}`;
   const access = slug === "leloft"
-    ? `est à ${tram} min à pied du tram 17`
+    ? `est à ${tram} min à pied du tram 17 et à ${T.stationWalkMin} min de la gare d'Annemasse`
     : `est à ${T.stationWalkMin} min à pied de la gare${slug === "lelodge" ? "" : " d'Annemasse"}`;
   return `${where}, ${h.label} de La Villa Coliving (${rooms} chambres${district}) ${access} — Genève-Eaux-Vives en ${T.eauxVivesDoorToDoorMin} min porte-à-porte.`;
 }

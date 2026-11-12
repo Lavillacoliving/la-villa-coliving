@@ -16,7 +16,7 @@ const LOFT = TRANSIT.byHouse.leloft;
 // réponses présentes dans le DOM via FaqSection, bail aligné sur la D5 révisée le 29/09/2026 (12 mois, libre de partir à tout moment, préavis 1),
 // permis G renvoyé à l'OCPM plutôt qu'un délai affirmé. + 4 « situations réelles » (P10, Cornavin, P1, coliving).
 // (Lot L2 « Emplacement et transport », 09/10/2026) Trajets = TRANSIT (train 7 / 10 / 23 min, porte-à-porte par maison) ;
-// tram 17 = ancre du Loft seulement (à pied depuis Le Loft, D1/D7) ; quartiers : le Foron, rivière-frontière, borde La Villa
+// tram 17 = ancre du Loft (Croix-d'Ambilly, 8 min) ; depuis le 17/10/2026, arrêt Barbusse à 2 min du Lodge (à pied depuis Le Loft, D1/D7) ; quartiers : le Foron, rivière-frontière, borde La Villa
 // (D6, jamais « mitoyenne »), Ambilly = Foron à pied + vélo Voie Verte mesuré ; aucune voiture, aucun aéroport.
 export const annemasseColocationFaq: { fr: QAPair[]; en: QAPair[] } = {
   fr: [

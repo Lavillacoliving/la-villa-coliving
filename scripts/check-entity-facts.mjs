@@ -84,6 +84,9 @@ const FORBIDDEN = [
   { re: /Place de l['’]Étoile à 1 min/i, label: '« Place de l\'Étoile à 1 min » (D7 ; depuis le 17/10/2026, arrêt Barbusse à 2 min à pied du Lodge)' },
   { re: /(?<![\d,.\-–])1 min à pied|(?<![\d,.\-–])1-minute walk/i, requires: /\btram/i, label: '« tram à 1 min à pied » (D7)' },
   { re: /au pas de la porte/i, label: '« au pas de la porte » (D7)' },
+  // (12/11/2026) Ancienne fourchette porte-à-porte (GENEVA_COMMUTE_FORMULA avant les temps à pied de Jérôme) : un article ou un
+  // brouillon du générateur qui la reprendrait contredirait la fiche entité (« 16 à 17 min »).
+  { re: /(?<![\d,.])18\s?(?:à|to|-|–)\s?24\s?min(?:utes)?\s+(?:porte-à-porte|door[ -]to[ -]door)/i, label: '« 18 à 24 min porte-à-porte » (fourchette d\'avant le 12/11/2026)' },
   { re: /500[   ]?m, 5 min (?:à pied|walk)/i, label: '« 500 m, 5 min à pied » (Loft : frontière à 600 m, 8 min à pied — D6)' },
   { re: /\bCHUV\b/, label: '« CHUV » (l\'hôpital de Genève est le HUG)' },
   { re: /terminus (?:\p{L}+ )?du Léman Express|(?:\p{L}+ )?terminus of the Léman Express|Léman Express terminus/iu, label: '« terminus du Léman Express » (faux : écrire « gare d\'Annemasse »)' },

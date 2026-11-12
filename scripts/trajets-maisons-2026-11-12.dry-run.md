@@ -1,6 +1,6 @@
 # Trajets des maisons — aperçu des substitutions SQL des articles (12/11/2026)
 
-Généré le 2026-11-12T13:32:53.285Z par `scripts/build-slots-sql.mjs` · ancres vérifiées sur le contenu vivant de blog_posts (REST anon, lecture seule) le 2026-11-12T13:32:53.277Z · 124 modifications sur 33 articles · SQL : `scripts/trajets-maisons-2026-11-12.sql`.
+Généré le 2026-11-12T14:18:37.204Z par `scripts/build-slots-sql.mjs` · ancres vérifiées sur le contenu vivant de blog_posts (REST anon, lecture seule) le 2026-11-12T14:18:37.190Z · 130 modifications sur 33 articles · SQL : `scripts/trajets-maisons-2026-11-12.sql`.
 
 Légende : « Avant » = texte en base au 12/11/2026 ; « Après » = texte calculé depuis la source unique de la branche.
 
@@ -24,11 +24,11 @@ Légende : « Avant » = texte en base au 12/11/2026 ; « Après » = texte calc
 | `grand-geneve-2026-nouveautes-frontaliers` | 1 (formule D1) | 1 (formule D1) | 2026-10-13T15:33:01.979749+00:00 | 8673 / 7506 |
 | `guide-ressources-frontalier-geneve` | 3 (formule D1, formule D1, tableau) | 3 (formule D1, formule D1, tableau) | 2026-11-03T06:13:37.833224+00:00 | 40430 / 37274 |
 | `living-in-france-working-in-geneva` | 1 (formule D1) | 1 (formule D1) | 2026-11-02T12:54:15.442979+00:00 | 17553 / 15935 |
-| `lodge-annemasse-coliving-premium-portes-geneve` | 3 (phrase, phrase, phrase) | 3 (phrase, phrase, phrase) | 2026-10-12T08:41:56.358413+00:00 | 15213 / 13537 |
+| `lodge-annemasse-coliving-premium-portes-geneve` | 5 (phrase, phrase, phrase, extrait, méta) | 5 (phrase, phrase, extrait, méta, phrase) | 2026-10-12T08:41:56.358413+00:00 | 15213 / 13537 |
 | `optimiser-espace-coliving-productivite-bien-etre` | 1 (formule D1) | 1 (formule D1) | 2026-10-13T15:33:46.184445+00:00 | 3962 / 3580 |
 | `organisations-internationales-geneve-ou-habiter` | 1 (formule D1) | 1 (formule D1) | 2026-10-30T17:15:30.671729+00:00 | 7443 / 6821 |
 | `ou-habiter-en-france-quand-on-travaille-a-geneve` | 1 (formule D1) | 1 (formule D1) | 2026-11-03T09:33:28.111242+00:00 | 14927 / 14746 |
-| `ou-habiter-frontalier-suisse-villes-france-pas-cher` | 7 (phrase de commune, phrase de commune, phrase de commune, phrase, tableau, tableau, tableau) | 7 (phrase de commune, phrase de commune, phrase de commune, phrase, tableau, tableau, tableau) | 2026-11-02T13:41:00.390492+00:00 | 15367 / 15358 |
+| `ou-habiter-frontalier-suisse-villes-france-pas-cher` | 8 (phrase de commune, phrase de commune, phrase de commune, phrase, tableau, tableau, tableau, phrase) | 8 (phrase de commune, phrase de commune, phrase de commune, phrase, tableau, tableau, tableau, phrase) | 2026-11-02T13:41:00.390492+00:00 | 15367 / 15358 |
 | `permis-g-frontalier-geneve` | 1 (formule D1) | 1 (formule D1) | 2026-11-03T06:13:37.833224+00:00 | 6156 / 5798 |
 | `quartiers-annemasse-ou-vivre-selon-profil` | 6 (phrase de commune, ligne de trajet, ligne de trajet, ligne de trajet, phrase de commune, phrase) | 6 (phrase de commune, ligne de trajet, ligne de trajet, ligne de trajet, phrase de commune, phrase) | 2026-11-03T06:13:37.833224+00:00 | 10138 / 9034 |
 | `quitter-son-logement-guide-pratique` | 1 (formule D1) | 1 (formule D1) | 2026-10-30T17:15:30.671729+00:00 | 11516 / 10993 |
@@ -1067,7 +1067,7 @@ Occurrences de l'ancre en base : 1 (attendu 1) · nouveau texte déjà présent 
 **Après**
 
 ````text
-À Ambilly, Le Loft de La Villa Coliving (7 chambres) est à 8 min à pied du tram 17 — Genève-Eaux-Vives en 17 min porte-à-porte.
+À Ambilly, Le Loft de La Villa Coliving (7 chambres) est à 8 min à pied du tram 17 et à 9 min de la gare d'Annemasse — Genève-Eaux-Vives en 17 min porte-à-porte.
 ````
 
 ### 58. `ou-habiter-frontalier-suisse-villes-france-pas-cher` (en) · phrase de commune
@@ -1085,7 +1085,7 @@ In Ambilly, Le Loft by La Villa Coliving (7 rooms) is an 8-minute walk from tram
 **Après**
 
 ````text
-In Ambilly, Le Loft by La Villa Coliving (7 rooms) is an 8-minute walk from tram 17 — Geneva Eaux-Vives in 17 minutes door to door.
+In Ambilly, Le Loft by La Villa Coliving (7 rooms) is an 8-minute walk from tram 17 and a 9-minute walk from Annemasse station — Geneva Eaux-Vives in 17 minutes door to door.
 ````
 
 ### 59. `colocation-annemasse-ville-la-grand-ambilly` (fr) · phrase de commune
@@ -1175,7 +1175,7 @@ Occurrences de l'ancre en base : 1 (attendu 1) · nouveau texte déjà présent 
 **Après**
 
 ````text
-À Ambilly, Le Loft de La Villa Coliving (7 chambres) est à 8 min à pied du tram 17 — Genève-Eaux-Vives en 17 min porte-à-porte.
+À Ambilly, Le Loft de La Villa Coliving (7 chambres) est à 8 min à pied du tram 17 et à 9 min de la gare d'Annemasse — Genève-Eaux-Vives en 17 min porte-à-porte.
 ````
 
 ### 64. `colocation-annemasse-ville-la-grand-ambilly` (en) · phrase de commune
@@ -1193,7 +1193,7 @@ In Ambilly, Le Loft by La Villa Coliving (7 rooms) is an 8-minute walk from tram
 **Après**
 
 ````text
-In Ambilly, Le Loft by La Villa Coliving (7 rooms) is an 8-minute walk from tram 17 — Geneva Eaux-Vives in 17 minutes door to door.
+In Ambilly, Le Loft by La Villa Coliving (7 rooms) is an 8-minute walk from tram 17 and a 9-minute walk from Annemasse station — Geneva Eaux-Vives in 17 minutes door to door.
 ````
 
 ### 65. `quartiers-annemasse-ou-vivre-selon-profil` (fr) · phrase de commune
@@ -1646,7 +1646,79 @@ is a 10-minute walk away.
 is an 8-minute walk away.
 ````
 
-### 90. `lodge-annemasse-coliving-premium-portes-geneve` (en) · phrase
+### 90. `lodge-annemasse-coliving-premium-portes-geneve` (fr, `excerpt_fr`) · extrait
+
+extrait : gare à pied
+
+Occurrences de l'ancre en base : 1 (attendu 1) · nouveau texte déjà présent : 0 (attendu 0) · garde « nouveau absent » : oui
+
+**Avant**
+
+````text
+à 9 minutes de la gare
+````
+
+**Après**
+
+````text
+à 8 minutes de la gare
+````
+
+### 91. `lodge-annemasse-coliving-premium-portes-geneve` (en, `excerpt_en`) · extrait
+
+excerpt: walk to the station
+
+Occurrences de l'ancre en base : 1 (attendu 1) · nouveau texte déjà présent : 0 (attendu 0) · garde « nouveau absent » : oui
+
+**Avant**
+
+````text
+9 minutes from the station
+````
+
+**Après**
+
+````text
+8 minutes from the station
+````
+
+### 92. `lodge-annemasse-coliving-premium-portes-geneve` (fr, `meta_description_fr`) · méta
+
+méta-description : gare à pied
+
+Occurrences de l'ancre en base : 1 (attendu 1) · nouveau texte déjà présent : 0 (attendu 0) · garde « nouveau absent » : oui
+
+**Avant**
+
+````text
+à 9 min de la gare
+````
+
+**Après**
+
+````text
+à 8 min de la gare
+````
+
+### 93. `lodge-annemasse-coliving-premium-portes-geneve` (en, `meta_description_en`) · méta
+
+meta description: walk to the station
+
+Occurrences de l'ancre en base : 1 (attendu 1) · nouveau texte déjà présent : 0 (attendu 0) · garde « nouveau absent » : oui
+
+**Avant**
+
+````text
+9 min from the station
+````
+
+**Après**
+
+````text
+8 min from the station
+````
+
+### 94. `lodge-annemasse-coliving-premium-portes-geneve` (en) · phrase
 
 strategic location
 
@@ -1664,7 +1736,7 @@ a 10-minute walk from Annemasse station, Geneva Eaux-Vives in 18 minutes door to
 an 8-minute walk from Annemasse station, Geneva Eaux-Vives in 16 minutes door to door
 ````
 
-### 91. `ou-habiter-frontalier-suisse-villes-france-pas-cher` (fr) · phrase
+### 95. `ou-habiter-frontalier-suisse-villes-france-pas-cher` (fr) · phrase
 
 Ambilly : gare à pied depuis Le Loft
 
@@ -1682,7 +1754,7 @@ et la gare d'Annemasse est à 18 min à pied.
 et la gare d'Annemasse est à 9 min à pied.
 ````
 
-### 92. `ou-habiter-frontalier-suisse-villes-france-pas-cher` (en) · phrase
+### 96. `ou-habiter-frontalier-suisse-villes-france-pas-cher` (en) · phrase
 
 Ambilly: walk to the station from Le Loft
 
@@ -1700,7 +1772,7 @@ and Annemasse station is an 18-minute walk.
 and Annemasse station is a 9-minute walk.
 ````
 
-### 93. `ou-habiter-frontalier-suisse-villes-france-pas-cher` (fr) · tableau
+### 97. `ou-habiter-frontalier-suisse-villes-france-pas-cher` (fr) · tableau
 
 ligne Annemasse (Le Lodge)
 
@@ -1718,7 +1790,7 @@ Occurrences de l'ancre en base : 1 (attendu 1) · nouveau texte déjà présent 
 | Genève-Eaux-Vives en 7 min de Léman Express, 16 min porte-à-porte depuis Le Lodge |
 ````
 
-### 94. `ou-habiter-frontalier-suisse-villes-france-pas-cher` (fr) · tableau
+### 98. `ou-habiter-frontalier-suisse-villes-france-pas-cher` (fr) · tableau
 
 ligne Ville-la-Grand (La Villa)
 
@@ -1736,7 +1808,7 @@ Occurrences de l'ancre en base : 1 (attendu 1) · nouveau texte déjà présent 
 | Genève-Eaux-Vives en 7 min de Léman Express, 17 min porte-à-porte depuis La Villa |
 ````
 
-### 95. `ou-habiter-frontalier-suisse-villes-france-pas-cher` (fr) · tableau
+### 99. `ou-habiter-frontalier-suisse-villes-france-pas-cher` (fr) · tableau
 
 ligne Ambilly (Le Loft)
 
@@ -1745,16 +1817,16 @@ Occurrences de l'ancre en base : 1 (attendu 1) · nouveau texte déjà présent 
 **Avant**
 
 ````text
-Genève-Eaux-Vives en 24 min porte-à-porte depuis Le Loft
+Tram 17 : Rive en 23 min ; Genève-Eaux-Vives en 24 min porte-à-porte depuis Le Loft
 ````
 
 **Après**
 
 ````text
-Genève-Eaux-Vives en 17 min porte-à-porte depuis Le Loft
+Tram 17 : Rive en 23 min ; Léman Express : Genève-Eaux-Vives en 17 min porte-à-porte depuis Le Loft
 ````
 
-### 96. `ou-habiter-frontalier-suisse-villes-france-pas-cher` (en) · tableau
+### 100. `ou-habiter-frontalier-suisse-villes-france-pas-cher` (en) · tableau
 
 Annemasse row (Le Lodge)
 
@@ -1772,7 +1844,7 @@ Occurrences de l'ancre en base : 1 (attendu 1) · nouveau texte déjà présent 
 | Geneva Eaux-Vives in 7 min by Léman Express, 16 min door to door from Le Lodge |
 ````
 
-### 97. `ou-habiter-frontalier-suisse-villes-france-pas-cher` (en) · tableau
+### 101. `ou-habiter-frontalier-suisse-villes-france-pas-cher` (en) · tableau
 
 Ville-la-Grand row (La Villa)
 
@@ -1790,7 +1862,7 @@ Occurrences de l'ancre en base : 1 (attendu 1) · nouveau texte déjà présent 
 | Geneva Eaux-Vives in 7 min by Léman Express, 17 min door to door from La Villa |
 ````
 
-### 98. `ou-habiter-frontalier-suisse-villes-france-pas-cher` (en) · tableau
+### 102. `ou-habiter-frontalier-suisse-villes-france-pas-cher` (en) · tableau
 
 Ambilly row (Le Loft)
 
@@ -1799,16 +1871,52 @@ Occurrences de l'ancre en base : 1 (attendu 1) · nouveau texte déjà présent 
 **Avant**
 
 ````text
-Geneva Eaux-Vives in 24 min door to door from Le Loft
+Tram 17: Rive in 23 min; Geneva Eaux-Vives in 24 min door to door from Le Loft
 ````
 
 **Après**
 
 ````text
-Geneva Eaux-Vives in 17 min door to door from Le Loft
+Tram 17: Rive in 23 min; Léman Express: Geneva Eaux-Vives in 17 min door to door from Le Loft
 ````
 
-### 99. `quartiers-annemasse-ou-vivre-selon-profil` (fr) · phrase
+### 103. `ou-habiter-frontalier-suisse-villes-france-pas-cher` (fr) · phrase
+
+Ville-la-Grand : pour qui
+
+Occurrences de l'ancre en base : 1 (attendu 1) · nouveau texte déjà présent : 0 (attendu 0) · garde « nouveau absent » : oui
+
+**Avant**
+
+````text
+avec le train à un quart d'heure à pied.
+````
+
+**Après**
+
+````text
+avec le train à moins d'un quart d'heure à pied.
+````
+
+### 104. `ou-habiter-frontalier-suisse-villes-france-pas-cher` (en) · phrase
+
+Ville-la-Grand: for whom
+
+Occurrences de l'ancre en base : 1 (attendu 1) · nouveau texte déjà présent : 0 (attendu 0) · garde « nouveau absent » : oui
+
+**Avant**
+
+````text
+with the train a quarter of an hour away on foot.
+````
+
+**Après**
+
+````text
+with the train less than a quarter of an hour away on foot.
+````
+
+### 105. `quartiers-annemasse-ou-vivre-selon-profil` (fr) · phrase
 
 La Villa : registre résidentiel
 
@@ -1826,7 +1934,7 @@ gare d'Annemasse à 14 min à pied, Genève-Eaux-Vives en 22 min porte-à-porte
 gare d'Annemasse à 9 min à pied, Genève-Eaux-Vives en 17 min porte-à-porte
 ````
 
-### 100. `quartiers-annemasse-ou-vivre-selon-profil` (en) · phrase
+### 106. `quartiers-annemasse-ou-vivre-selon-profil` (en) · phrase
 
 La Villa: residential register
 
@@ -1844,7 +1952,7 @@ Annemasse station is a 14-minute walk, Geneva Eaux-Vives 22 minutes door to door
 Annemasse station is a 9-minute walk, Geneva Eaux-Vives 17 minutes door to door
 ````
 
-### 101. `temps-trajet-annemasse-geneve-par-quartier` (fr) · phrase
+### 107. `temps-trajet-annemasse-geneve-par-quartier` (fr) · phrase
 
 Léman Express depuis La Villa
 
@@ -1862,7 +1970,7 @@ Occurrences de l'ancre en base : 1 (attendu 1) · nouveau texte déjà présent 
 (gare à 9 min à pied de La Villa, à Ville-la-Grand)
 ````
 
-### 102. `temps-trajet-annemasse-geneve-par-quartier` (en) · phrase
+### 108. `temps-trajet-annemasse-geneve-par-quartier` (en) · phrase
 
 Léman Express from La Villa
 
@@ -1880,7 +1988,7 @@ Occurrences de l'ancre en base : 1 (attendu 1) · nouveau texte déjà présent 
 (station a 9-min walk from La Villa, in Ville-la-Grand)
 ````
 
-### 103. `temps-trajet-annemasse-geneve-par-quartier` (fr) · phrase
+### 109. `temps-trajet-annemasse-geneve-par-quartier` (fr) · phrase
 
 Ambilly : gare à pied depuis Le Loft
 
@@ -1898,7 +2006,7 @@ La gare d'Annemasse est à 18 minutes à pied du Loft
 La gare d'Annemasse est à 9 minutes à pied du Loft
 ````
 
-### 104. `temps-trajet-annemasse-geneve-par-quartier` (en) · phrase
+### 110. `temps-trajet-annemasse-geneve-par-quartier` (en) · phrase
 
 Ambilly: walk to the station from Le Loft
 
@@ -1916,7 +2024,7 @@ Annemasse station is an 18-minute walk from Le Loft
 Annemasse station is a 9-minute walk from Le Loft
 ````
 
-### 105. `temps-trajet-annemasse-geneve-par-quartier` (fr) · phrase
+### 111. `temps-trajet-annemasse-geneve-par-quartier` (fr) · phrase
 
 Annemasse : gare à pied depuis Le Lodge
 
@@ -1934,7 +2042,7 @@ est à Annemasse, à 10 minutes à pied de la gare.
 est à Annemasse, à 8 minutes à pied de la gare.
 ````
 
-### 106. `temps-trajet-annemasse-geneve-par-quartier` (en) · phrase
+### 112. `temps-trajet-annemasse-geneve-par-quartier` (en) · phrase
 
 Annemasse: walk to the station from Le Lodge
 
@@ -1952,7 +2060,7 @@ is in Annemasse, a 10-minute walk from the station.
 is in Annemasse, an 8-minute walk from the station.
 ````
 
-### 107. `temps-trajet-annemasse-geneve-par-quartier` (fr) · phrase
+### 113. `temps-trajet-annemasse-geneve-par-quartier` (fr) · phrase
 
 les trois maisons
 
@@ -1970,7 +2078,7 @@ La Villa à Ville-la-Grand est à 14 minutes à pied de la gare d'Annemasse. Le 
 La Villa à Ville-la-Grand est à 9 minutes à pied de la gare d'Annemasse. Le Loft à Ambilly, à 9 minutes à pied de la gare et à 8 minutes du tram 17. Le Lodge à Annemasse, à 8 minutes à pied.
 ````
 
-### 108. `temps-trajet-annemasse-geneve-par-quartier` (en) · phrase
+### 114. `temps-trajet-annemasse-geneve-par-quartier` (en) · phrase
 
 the three houses
 
@@ -1988,7 +2096,7 @@ La Villa in Ville-la-Grand is a 14-minute walk from Annemasse station. Le Loft i
 La Villa in Ville-la-Grand is a 9-minute walk from Annemasse station. Le Loft in Ambilly, a 9-minute walk from the station and 8 minutes from tram 17. Le Lodge in Annemasse, an 8-minute walk.
 ````
 
-### 109. `temps-trajet-annemasse-geneve-par-quartier` (fr) · phrase
+### 115. `temps-trajet-annemasse-geneve-par-quartier` (fr) · phrase
 
 Plan-les-Ouates : La Villa
 
@@ -2006,7 +2114,7 @@ La Villa (10 chambres) est à 14 min à pied de la gare.
 La Villa (10 chambres) est à 9 min à pied de la gare.
 ````
 
-### 110. `temps-trajet-annemasse-geneve-par-quartier` (en) · phrase
+### 116. `temps-trajet-annemasse-geneve-par-quartier` (en) · phrase
 
 Plan-les-Ouates: La Villa
 
@@ -2024,7 +2132,7 @@ La Villa (10 rooms) is a 14-min walk from the station
 La Villa (10 rooms) is a 9-min walk from the station
 ````
 
-### 111. `transport-annemasse-geneve-leman-express` (fr) · phrase
+### 117. `transport-annemasse-geneve-leman-express` (fr) · phrase
 
 depuis nos maisons
 
@@ -2042,7 +2150,7 @@ Depuis nos maisons : 10 min à pied du Lodge (Annemasse), 14 min de La Villa (Vi
 Depuis nos maisons : 8 min à pied du Lodge (Annemasse), 9 min de La Villa (Ville-la-Grand), 9 min du Loft (Ambilly)
 ````
 
-### 112. `transport-annemasse-geneve-leman-express` (en) · phrase
+### 118. `transport-annemasse-geneve-leman-express` (en) · phrase
 
 from our houses
 
@@ -2060,7 +2168,7 @@ From our houses: a 10-min walk from Le Lodge (Annemasse), 14 min from La Villa (
 From our houses: an 8-min walk from Le Lodge (Annemasse), 9 min from La Villa (Ville-la-Grand), 9 min from Le Loft (Ambilly)
 ````
 
-### 113. `transport-annemasse-geneve-leman-express` (fr) · tableau
+### 119. `transport-annemasse-geneve-leman-express` (fr) · tableau
 
 Cornavin porte-à-porte depuis La Villa
 
@@ -2078,7 +2186,7 @@ Occurrences de l'ancre en base : 1 (attendu 1) · nouveau texte déjà présent 
 23 min de train · 33 min porte-à-porte depuis La Villa
 ````
 
-### 114. `transport-annemasse-geneve-leman-express` (en) · tableau
+### 120. `transport-annemasse-geneve-leman-express` (en) · tableau
 
 Cornavin door to door from La Villa
 
@@ -2096,7 +2204,7 @@ Occurrences de l'ancre en base : 1 (attendu 1) · nouveau texte déjà présent 
 23 min by train · 33 min door to door from La Villa
 ````
 
-### 115. `transport-annemasse-geneve-leman-express` (fr) · phrase
+### 121. `transport-annemasse-geneve-leman-express` (fr) · phrase
 
 Ville-la-Grand : gare à pied
 
@@ -2114,7 +2222,7 @@ La gare d'Annemasse est à 14 min à pied de La Villa, à Ville-la-Grand.
 La gare d'Annemasse est à 9 min à pied de La Villa, à Ville-la-Grand.
 ````
 
-### 116. `transport-annemasse-geneve-leman-express` (en) · phrase
+### 122. `transport-annemasse-geneve-leman-express` (en) · phrase
 
 Ville-la-Grand: walk to the station
 
@@ -2132,7 +2240,7 @@ Annemasse station is a 14-min walk from La Villa, in Ville-la-Grand
 Annemasse station is a 9-min walk from La Villa, in Ville-la-Grand
 ````
 
-### 117. `transport-annemasse-geneve-leman-express` (fr) · phrase
+### 123. `transport-annemasse-geneve-leman-express` (fr) · phrase
 
 Ambilly : gare et tram depuis Le Loft
 
@@ -2150,7 +2258,7 @@ La gare d'Annemasse est à 18 min à pied du Loft, le tram 17 à 8 min.
 La gare d'Annemasse est à 9 min à pied du Loft, le tram 17 à 8 min.
 ````
 
-### 118. `transport-annemasse-geneve-leman-express` (en) · phrase
+### 124. `transport-annemasse-geneve-leman-express` (en) · phrase
 
 Ambilly: station and tram from Le Loft
 
@@ -2168,7 +2276,7 @@ Annemasse station is an 18-min walk from Le Loft, tram 17 an 8-min walk.
 Annemasse station is a 9-min walk from Le Loft, tram 17 an 8-min walk.
 ````
 
-### 119. `vivre-a-annemasse-quand-on-travaille-a-geneve` (fr) · phrase
+### 125. `vivre-a-annemasse-quand-on-travaille-a-geneve` (fr) · phrase
 
 Ambilly : Le Loft
 
@@ -2186,7 +2294,7 @@ Notre maison Le Loft y est, à 8 minutes à pied du tram et à 18 minutes à pie
 Notre maison Le Loft y est, à 8 minutes à pied du tram et à 9 minutes à pied de la gare.
 ````
 
-### 120. `vivre-a-annemasse-quand-on-travaille-a-geneve` (en) · phrase
+### 126. `vivre-a-annemasse-quand-on-travaille-a-geneve` (en) · phrase
 
 Ambilly: Le Loft
 
@@ -2204,7 +2312,7 @@ Our house Le Loft is there, an 8-minute walk from the tram and an 18-minute walk
 Our house Le Loft is there, an 8-minute walk from the tram and a 9-minute walk from the station.
 ````
 
-### 121. `vivre-a-annemasse-quand-on-travaille-a-geneve` (fr) · phrase
+### 127. `vivre-a-annemasse-quand-on-travaille-a-geneve` (fr) · phrase
 
 Ville-la-Grand : La Villa
 
@@ -2222,7 +2330,7 @@ Occurrences de l'ancre en base : 1 (attendu 1) · nouveau texte déjà présent 
 à 9 minutes à pied de la gare depuis notre maison La Villa.
 ````
 
-### 122. `vivre-a-annemasse-quand-on-travaille-a-geneve` (en) · phrase
+### 128. `vivre-a-annemasse-quand-on-travaille-a-geneve` (en) · phrase
 
 Ville-la-Grand: La Villa
 
@@ -2240,7 +2348,7 @@ a 14-minute walk from the station from our house La Villa.
 a 9-minute walk from the station from our house La Villa.
 ````
 
-### 123. `vivre-a-annemasse-quand-on-travaille-a-geneve` (fr) · phrase
+### 129. `vivre-a-annemasse-quand-on-travaille-a-geneve` (fr) · phrase
 
 nos trois maisons : Le Lodge
 
@@ -2258,7 +2366,7 @@ Le Lodge à Romagny pour le train (gare à 10 minutes à pied)
 Le Lodge à Romagny pour le train (gare à 8 minutes à pied)
 ````
 
-### 124. `vivre-a-annemasse-quand-on-travaille-a-geneve` (en) · phrase
+### 130. `vivre-a-annemasse-quand-on-travaille-a-geneve` (en) · phrase
 
 our three houses: Le Lodge
 

@@ -111,6 +111,11 @@ test('forbiddenIssues (L2) : formulations D6/D7 interdites — positives', () =>
   assert.ok(tpn.some((x) => /TPN/.test(x)) && tpn.some((x) => /numéro de ligne de bus/.test(x)));
   const etoile = forbiddenIssues(p('Tram Place de l\'Étoile à 1 min à pied'));
   assert.equal(etoile.length, 2, etoile.join('\n'));
+
+  // (12/11/2026) Ancienne fourchette du pied D1 : interdite partout ; « 18 à 24 mois » ou une autre fourchette passent.
+  one(p('Genève-Eaux-Vives en 7 min de Léman Express — 18 à 24 min porte-à-porte selon la maison'), /18 à 24 min porte-à-porte/);
+  one(p('Geneva Eaux-Vives in 7 minutes — 18 to 24 minutes door to door depending on the house'), /18 à 24 min porte-à-porte/);
+  assert.deepEqual(forbiddenIssues(p('Un bail de 18 à 24 mois.', 'Genève-Eaux-Vives en 7 min de Léman Express — 16 à 17 min porte-à-porte selon la maison')), []);
 });
 
 test('forbiddenIssues (L2) : formulations légitimes laissées — négatives', () => {

@@ -32,13 +32,13 @@ Collée à Annemasse, pavillonnaire, bordée par le Foron, la rivière-frontièr
 
 À Ville-la-Grand, La Villa de La Villa Coliving (10 chambres) est à 9 min à pied de la gare d'Annemasse — Genève-Eaux-Vives en 17 min porte-à-porte.
 
-**Pour qui ?** Couples, familles, et qui veut un jardin à prix français avec le train à un quart d'heure à pied.
+**Pour qui ?** Couples, familles, et qui veut un jardin à prix français avec le train à moins d'un quart d'heure à pied.
 
 ## 3. Ambilly : la frontière à pied et le tram 17
 
 Ambilly touche la frontière : depuis Le Loft, le Foron est à 600 m, 8 min à pied, et la douane de Moillesulaz à 1,8 km. Le tram 17 entre dans Genève sans changement (Rive en 23 min depuis l'arrêt Croix-d'Ambilly) et la gare d'Annemasse est à 9 min à pied. Loyer d'annonce T1-T2 : 24,5 €/m², soit ≈ 910 € pour 37 m² : la proximité se paie.
 
-À Ambilly, Le Loft de La Villa Coliving (7 chambres) est à 8 min à pied du tram 17 — Genève-Eaux-Vives en 17 min porte-à-porte.
+À Ambilly, Le Loft de La Villa Coliving (7 chambres) est à 8 min à pied du tram 17 et à 9 min de la gare d'Annemasse — Genève-Eaux-Vives en 17 min porte-à-porte.
 
 **Pour qui ?** Frontaliers sans voiture qui travaillent rive gauche ou au centre, et cyclistes : la Voie Verte file jusqu'à Rive.
 
@@ -79,7 +79,7 @@ Casino, golf, thermes, un lac, et la Suisse vaudoise à côté. En transports pu
 |---|---|---|---|
 | Annemasse | Genève-Eaux-Vives en 7 min de Léman Express, 16 min porte-à-porte depuis Le Lodge | 22,6 €/m² (≈ 840 €) | Ville complète, sans voiture |
 | Ville-la-Grand | Genève-Eaux-Vives en 7 min de Léman Express, 17 min porte-à-porte depuis La Villa | 17,1 €/m² (≈ 630 €) | Calme, budget, familles |
-| Ambilly | Tram 17 : Rive en 23 min ; Genève-Eaux-Vives en 17 min porte-à-porte depuis Le Loft | 24,5 €/m² (≈ 910 €) | Frontière à pied, vélo |
+| Ambilly | Tram 17 : Rive en 23 min ; Léman Express : Genève-Eaux-Vives en 17 min porte-à-porte depuis Le Loft | 24,5 €/m² (≈ 910 €) | Frontière à pied, vélo |
 | Saint-Julien-en-Genevois | Bel-Air en 45 min de bus porte-à-porte | 23,8 €/m² (≈ 880 €) | Plainpalais, Carouge, HUG |
 | Ferney-Voltaire | Cornavin en 40 min de bus porte-à-porte | 30,8 €/m² (≈ 1 140 €) | ONU, OMS, Nations |
 | Thonon-les-Bains | Genève-Eaux-Vives en 43 min de Léman Express, 50 min porte-à-porte | 18,9 €/m² (≈ 700 €) | Lac, budget, télétravail |

@@ -6,7 +6,7 @@
  *
  * Décisions (code : commit « fix(trajets) » de la branche fix/trajets-maisons-2026-11, commentaire de TRANSIT) :
  *  - gare d'Annemasse à pied : La Villa 9 min, Le Loft 9 min, Le Lodge 8 min (valeurs de Jérôme, maintenues après une
- *    vérification sur plan qui donnait des chemins plus longs) ; porte-à-porte Eaux-Vives 17 / 17 / 16, Cornavin 33 / 33 / 33 ;
+ *    vérification sur plan qui donnait des temps de marche plus longs) ; porte-à-porte Eaux-Vives 17 / 17 / 16, Cornavin 33 / 33 / 33 ;
  *    formule D1 « 16 à 17 min porte-à-porte selon la maison » ;
  *  - tram 17 du Lodge : arrêt Barbusse, place de l'Étoile, 2 min (aucun article ne citait l'ancien arrêt du Lodge).
  * Périmètre : les 42 articles publiés, lus le 12/11/2026 (REST anon). Trois familles :
@@ -86,7 +86,7 @@ const COMMUNE_TARGETS = Object.freeze([
 
 export function sqlDoc() {
   return {
-    lot: "Trajets des maisons (décisions de Jérôme du 12/11/2026) : temps à pied jusqu'à la gare (9 / 9 / 8 min), porte-à-porte recalculés (Eaux-Vives 17 / 17 / 16, Cornavin 33), formule D1 « 16 à 17 min », dans 33 articles publiés",
+    lot: "Trajets des maisons (décisions de Jérôme du 12/11/2026) : temps à pied jusqu'à la gare (9 / 9 / 8 min), porte-à-porte recalculés (Eaux-Vives 17 / 17 / 16, Cornavin 33), formule D1 « 16 à 17 min », dans 33 articles publiés (+ extrait et méta du Lodge)",
     sources: 'source unique (stats.ts TRANSIT, houseLocation.ts, answerSlots.ts, entityFacts.ts) de la branche fix/trajets-maisons-2026-11 ; textes « Avant » lus en base le 12/11/2026',
     apply: "À appliquer JUSTE AVANT la fusion de la branche fix/trajets-maisons-2026-11 (check:slots compare les phrases de commune au code : un passage du robot entre les deux échoue et fige la production). Vérifier d'abord qu'aucun prérendu ne tourne (gh run list).",
     encoding: 'Fichier UTF-8 : tirets cadratins (U+2014), points médians (U+00B7), apostrophes droites — ne pas normaliser.',
@@ -107,7 +107,7 @@ export function buildEdits(m) {
     ? (lang === 'en' ? `${cMin} min door to door from each house` : `${cMin} min porte-à-porte depuis chaque maison`)
     : (lang === 'en' ? `${cMin} to ${cMax} min door to door depending on the house` : `${cMin} à ${cMax} min porte-à-porte selon la maison`));
   const E = [];
-  const add = (slug, lang, mechanism, note, find, replace) => E.push({ slug, lang, mechanism, note, find, replace });
+  const add = (slug, lang, mechanism, note, find, replace, column) => E.push({ slug, lang, mechanism, note, find, replace, ...(column ? { column } : {}) });
 
   // ── A. Pied d'article D1 ───────────────────────────────────────────────────────────────────────────────────
   for (const slug of FOOTER_SLUGS) for (const lang of LANGS) add(slug, lang, 'formule D1', "pied d'article : porte-à-porte selon la maison", OLD.formula[lang], m.GENEVA_COMMUTE_FORMULA[lang]);
@@ -154,6 +154,11 @@ export function buildEdits(m) {
   add(LO, 'fr', 'phrase', 'localisation stratégique', "à 10 minutes à pied de la gare d'Annemasse, Genève-Eaux-Vives en 18 minutes porte-à-porte", `à ${walk.lodge} minutes à pied de la gare d'Annemasse, Genève-Eaux-Vives en ${G.eauxVivesDoorToDoorMin} minutes porte-à-porte`);
   add(LO, 'en', 'phrase', 'introduction: walk to the station', 'our house in Annemasse, a 10-minute walk from Annemasse station.', `our house in Annemasse, ${a(walk.lodge)} ${walk.lodge}-minute walk from Annemasse station.`);
   add(LO, 'en', 'phrase', 'the house: walk to the station', 'is a 10-minute walk away.', `is ${a(walk.lodge)} ${walk.lodge}-minute walk away.`);
+  // (relecture du 12/11) Extrait et méta de l'article du Lodge : « 9 minutes de la gare » (valeur d'avant le lot L2) → valeur du 12/11.
+  add(LO, 'fr', 'extrait', 'extrait : gare à pied', 'à 9 minutes de la gare', `à ${walk.lodge} minutes de la gare`, 'excerpt_fr');
+  add(LO, 'en', 'extrait', 'excerpt: walk to the station', '9 minutes from the station', `${walk.lodge} minutes from the station`, 'excerpt_en');
+  add(LO, 'fr', 'méta', 'méta-description : gare à pied', 'à 9 min de la gare', `à ${walk.lodge} min de la gare`, 'meta_description_fr');
+  add(LO, 'en', 'méta', 'meta description: walk to the station', '9 min from the station', `${walk.lodge} min from the station`, 'meta_description_en');
   add(LO, 'en', 'phrase', 'strategic location', 'a 10-minute walk from Annemasse station, Geneva Eaux-Vives in 18 minutes door to door', `${a(walk.lodge)} ${walk.lodge}-minute walk from Annemasse station, Geneva Eaux-Vives in ${G.eauxVivesDoorToDoorMin} minutes door to door`);
 
   const OH = 'ou-habiter-frontalier-suisse-villes-france-pas-cher';
@@ -161,10 +166,14 @@ export function buildEdits(m) {
   add(OH, 'en', 'phrase', 'Ambilly: walk to the station from Le Loft', 'and Annemasse station is an 18-minute walk.', `and Annemasse station is ${a(walk.loft)} ${walk.loft}-minute walk.`);
   add(OH, 'fr', 'tableau', 'ligne Annemasse (Le Lodge)', '| Genève-Eaux-Vives en 7 min de Léman Express, 18 min porte-à-porte depuis Le Lodge |', `| Genève-Eaux-Vives en ${T.trainEauxVivesMin} min de Léman Express, ${G.eauxVivesDoorToDoorMin} min porte-à-porte depuis Le Lodge |`);
   add(OH, 'fr', 'tableau', 'ligne Ville-la-Grand (La Villa)', '| Genève-Eaux-Vives en 7 min de Léman Express, 22 min porte-à-porte depuis La Villa |', `| Genève-Eaux-Vives en ${T.trainEauxVivesMin} min de Léman Express, ${V.eauxVivesDoorToDoorMin} min porte-à-porte depuis La Villa |`);
-  add(OH, 'fr', 'tableau', 'ligne Ambilly (Le Loft)', 'Genève-Eaux-Vives en 24 min porte-à-porte depuis Le Loft', `Genève-Eaux-Vives en ${L.eauxVivesDoorToDoorMin} min porte-à-porte depuis Le Loft`);
+  // (relecture du 12/11) Le Loft : les 17 min passent par la gare (Léman Express), pas par le tram 17 cité juste avant.
+  add(OH, 'fr', 'tableau', 'ligne Ambilly (Le Loft)', 'Tram 17 : Rive en 23 min ; Genève-Eaux-Vives en 24 min porte-à-porte depuis Le Loft', `Tram 17 : Rive en ${L.tramStop.tramToRiveMin} min ; Léman Express : Genève-Eaux-Vives en ${L.eauxVivesDoorToDoorMin} min porte-à-porte depuis Le Loft`);
   add(OH, 'en', 'tableau', 'Annemasse row (Le Lodge)', '| Geneva Eaux-Vives in 7 min by Léman Express, 18 min door to door from Le Lodge |', `| Geneva Eaux-Vives in ${T.trainEauxVivesMin} min by Léman Express, ${G.eauxVivesDoorToDoorMin} min door to door from Le Lodge |`);
   add(OH, 'en', 'tableau', 'Ville-la-Grand row (La Villa)', '| Geneva Eaux-Vives in 7 min by Léman Express, 22 min door to door from La Villa |', `| Geneva Eaux-Vives in ${T.trainEauxVivesMin} min by Léman Express, ${V.eauxVivesDoorToDoorMin} min door to door from La Villa |`);
-  add(OH, 'en', 'tableau', 'Ambilly row (Le Loft)', 'Geneva Eaux-Vives in 24 min door to door from Le Loft', `Geneva Eaux-Vives in ${L.eauxVivesDoorToDoorMin} min door to door from Le Loft`);
+  add(OH, 'en', 'tableau', 'Ambilly row (Le Loft)', 'Tram 17: Rive in 23 min; Geneva Eaux-Vives in 24 min door to door from Le Loft', `Tram 17: Rive in ${L.tramStop.tramToRiveMin} min; Léman Express: Geneva Eaux-Vives in ${L.eauxVivesDoorToDoorMin} min door to door from Le Loft`);
+  // (relecture du 12/11) Ville-la-Grand, « Pour qui ? » : le quart d'heure collait à l'ancien 14 min de La Villa, cité juste avant.
+  add(OH, 'fr', 'phrase', 'Ville-la-Grand : pour qui', "avec le train à un quart d'heure à pied.", "avec le train à moins d'un quart d'heure à pied.");
+  add(OH, 'en', 'phrase', 'Ville-la-Grand: for whom', 'with the train a quarter of an hour away on foot.', 'with the train less than a quarter of an hour away on foot.');
 
   const QA = 'quartiers-annemasse-ou-vivre-selon-profil';
   add(QA, 'fr', 'phrase', 'La Villa : registre résidentiel', "gare d'Annemasse à 14 min à pied, Genève-Eaux-Vives en 22 min porte-à-porte", `gare d'Annemasse à ${walk.villa} min à pied, Genève-Eaux-Vives en ${V.eauxVivesDoorToDoorMin} min porte-à-porte`);

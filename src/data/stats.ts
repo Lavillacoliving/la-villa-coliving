@@ -143,7 +143,7 @@ export function formatPriceChf(lang: "fr" | "en"): string {
 // défaut Léman Express, tram 17 pour Le Loft, JAMAIS de promesse en voiture, vélo en bonus mesuré (Voie Verte, L2) ;
 // (3) deux nombres, toujours : le temps de train, fixe, puis le porte-à-porte par maison, mesuré sur Google Maps
 // un lundi à 8 h, marche et attente comprises (Releves_Trajets_GoogleMaps_2026-10-08.md) ; (4) arrondi au 5 le
-// plus proche, jamais vers le bas par confort : 18-24 → « 20 min » pour la marque (STATS.genevaCenterMinutes),
+// plus proche, jamais vers le bas par confort : 18-24 (16-17 depuis le 12/11/2026) → « 20 min » pour la marque (STATS.genevaCenterMinutes),
 // « 15 » n'existe plus ; (5) on laisse vérifier : lien « Calculer mon trajet » sur chaque page maison (L2).
 // Remesure à chaque changement d'horaire (décembre) ou au plus tard tous les 12 mois. Ces valeurs alimentent
 // la fiche entité (src/data/entityFacts.ts), le bloc « Où chercher » et les phrases de commune
@@ -209,8 +209,7 @@ export const TRANSIT = {
   doorToDoorEauxVivesMin: 16,
   doorToDoorEauxVivesMax: 17,
   /** Porte-à-porte jusqu'à Rive (centre), fourchette des trois maisons (Jérôme 09/10) ; détail par maison en L2.
-   *  (Lot L2, 09/10/2026) Min = 28, pas 27 : = min de byHouse (31/32/28) — 27-28 mesuré au Lodge, borne haute retenue, règle D1.4. */
-  /** (12/11/2026) = min de byHouse (26/32/26). */
+   *  Min = min de byHouse : 26 depuis le 12/11/2026 (26/32/26) ; 28 avant (31/32/28, 27-28 mesuré au Lodge, borne haute retenue, règle D1.4). */
   riveDoorToDoorMin: 26,
   riveDoorToDoorMax: 32,
   /** « 30 min jusqu'au centre » : arrondi de 26-32 au 5 supérieur (règle D1.4 ; 28-32 avant le 12/11/2026). */

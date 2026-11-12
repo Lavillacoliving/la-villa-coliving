@@ -32,13 +32,13 @@ Next door to Annemasse, residential, bordered by the Foron, the border river. No
 
 In Ville-la-Grand, La Villa by La Villa Coliving (10 rooms) is a 9-minute walk from Annemasse station — Geneva Eaux-Vives in 17 minutes door to door.
 
-**For whom?** Couples, families, and anyone who wants a garden at French prices with the train a quarter of an hour away on foot.
+**For whom?** Couples, families, and anyone who wants a garden at French prices with the train less than a quarter of an hour away on foot.
 
 ## 3. Ambilly: the border on foot and tram 17
 
 Ambilly touches the border: from Le Loft, the Foron is 600 m away, an 8-minute walk, and the Moillesulaz crossing 1.8 km. Tram 17 runs into Geneva with no change (Rive in 23 minutes from the Croix-d'Ambilly stop) and Annemasse station is a 9-minute walk. One- or two-room asking rent: €24.5/m², about €910 for 37 m²: proximity has a price.
 
-In Ambilly, Le Loft by La Villa Coliving (7 rooms) is an 8-minute walk from tram 17 — Geneva Eaux-Vives in 17 minutes door to door.
+In Ambilly, Le Loft by La Villa Coliving (7 rooms) is an 8-minute walk from tram 17 and a 9-minute walk from Annemasse station — Geneva Eaux-Vives in 17 minutes door to door.
 
 **For whom?** Car-free workers on the left bank or in the centre, and cyclists: the Voie Verte runs straight to Rive.
 
@@ -79,7 +79,7 @@ Casino, golf, spa, a lake, and the canton of Vaud next door. By public transport
 |---|---|---|---|
 | Annemasse | Geneva Eaux-Vives in 7 min by Léman Express, 16 min door to door from Le Lodge | €22.6/m² (≈ €840) | Complete town, car-free |
 | Ville-la-Grand | Geneva Eaux-Vives in 7 min by Léman Express, 17 min door to door from La Villa | €17.1/m² (≈ €630) | Quiet, budget, families |
-| Ambilly | Tram 17: Rive in 23 min; Geneva Eaux-Vives in 17 min door to door from Le Loft | €24.5/m² (≈ €910) | Border on foot, cycling |
+| Ambilly | Tram 17: Rive in 23 min; Léman Express: Geneva Eaux-Vives in 17 min door to door from Le Loft | €24.5/m² (≈ €910) | Border on foot, cycling |
 | Saint-Julien-en-Genevois | Bel-Air in 45 min by bus, door to door | €23.8/m² (≈ €880) | Plainpalais, Carouge, HUG |
 | Ferney-Voltaire | Cornavin in 40 min by bus, door to door | €30.8/m² (≈ €1,140) | UN, WHO, Nations |
 | Thonon-les-Bains | Geneva Eaux-Vives in 43 min by Léman Express, 50 min door to door | €18.9/m² (≈ €700) | Lake, budget, remote work |
