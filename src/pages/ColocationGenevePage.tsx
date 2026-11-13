@@ -9,14 +9,17 @@ import { trackPriceWhyClick, type PriceWhyVariant } from "@/data/allInclusive";
 import { RoomsEmbed } from "@/components/RoomsEmbed";
 import { HouseAvailabilityLine } from "@/components/HouseAvailabilityLine";
 import { WaitlistForm } from "@/components/WaitlistForm";
+import { AppartRooms } from "@/components/appart/AppartRooms";
 import { useLanguage } from "@/contexts/LanguageContext";
-import { HOUSES } from "@/data/houses";
+import { HOUSES, placeCard } from "@/data/houses";
 import { colocationGeneveFaq } from "@/data/faq/colocationGeneveFaq";
 import { STATS, STATS_DISPLAY, HOUSES_FROM, PRICE_CHF_FR, PRICE_CHF_EN, PRICE_FROM_CHF_FR, PRICE_FROM_CHF_EN, TRANSIT, GOOGLE_REVIEWS, GOOGLE_REVIEWS_LINK_LABEL, sharedBathPricesText } from "@/data/stats";
-import { ENTITY_HOUSES } from "@/data/entityFacts";
+import { ENTITY_FACTS, ENTITY_HOUSES } from "@/data/entityFacts";
+import { APPART } from "@/data/appart";
+import { MAISON_KEYS } from "@/data/places";
 import { OuChercher } from "@/components/OuChercher";
 import { COLOC_GENEVE_ARTICLE, COLOC_GENEVE_PILLAR_EN, COLOC_GENEVE_PILLAR_FR } from "@/lib/siteLinks";
-import { useAllRooms, splitRooms, roomsContentUpdatedAt, type HouseKey, type PublicRoom } from "@/lib/availability";
+import { useAllRooms, useHouseRooms, splitRooms, roomsContentUpdatedAt, type PlaceRoom } from "@/lib/availability";
 import { formatLongDate, parisIsoDate } from "@/lib/dates";
 
 /**
@@ -31,14 +34,19 @@ import { formatLongDate, parisIsoDate } from "@/lib/dates";
  * du bloc « Où chercher » (Lot L1, 10/2026 : la fourchette MARKET_ROOM_EUR des chambres entre particuliers,
  * D0-ter), aucun concurrent nommé, jamais « complet », tutoiement, prix depuis src/data/stats.ts.
  * Données : store partagé v_public_rooms (Lot 3) — les cartes sont dans le HTML prérendu (RoomsEmbed).
+ * (L'Appart, étape E4 — décision n° 31, à confirmer) Ses chambres ont leur sous-section, après celles des maisons
+ * (<AppartRooms/>) : cartes standard avec le badge de gamme (état B), ou un repli vers /lappart (état A). Le titre « N
+ * chambres… disponibles » et les lignes de disponibilité restent ceux des maisons.
  */
 // (Lot 2 — C2, D7 validée par Jérôme le 16/10/2026) Date éditoriale (dernière refonte du texte). La date affichée et le
 // dateModified du JSON-LD = la plus récente entre cette date et la dernière mise à jour de l'inventaire des chambres
 // (v_public_rooms.content_updated_at : greatest updated_at chambres/locataires — jamais la date du prérendu, qui tournerait
 // deux fois par jour sans vrai changement). Même source que les cartes (embed puis store) : aucun écart d'hydratation.
+// (L'Appart, E4) L'inventaire de la page = les maisons ET L'Appart.
 const PAGE_LAST_UPDATED = "2026-09-04";
 const PAGE_FIRST_PUBLISHED = "2026-02-17";
-const HOUSE_ORDER: HouseKey[] = ["lavilla", "leloft", "lelodge"];
+// Carte de L'Appart (nom, vignette) : jamais la description « piscine · jardin » d'une maison (src/data/houses.ts).
+const APPART_CARD = placeCard(APPART.key);
 
 export function ColocationGenevePage() {
   const { language } = useLanguage();
@@ -48,7 +56,11 @@ export function ColocationGenevePage() {
   const allRooms = useAllRooms();
   const { candidates } = splitRooms(allRooms.rooms);
   const n = candidates.length;
-  const trackRoomCta = (room: PublicRoom) => {
+  // (L'Appart, E4) Ses chambres, à part : `known` = la vue a des lignes de L'Appart (état B), sinon le repli (état A).
+  const appart = useHouseRooms(APPART.key);
+  const { candidates: appartCandidates } = splitRooms(appart.rooms);
+  // (L'Appart, E4) Mesure commune aux cartes des maisons et de L'Appart : `house` = la clé PUBLIQUE du lieu.
+  const trackRoomCta = (room: PlaceRoom) => {
     try {
       (window as unknown as { gtag?: (...a: unknown[]) => void }).gtag?.("event", "cta_click", {
         cta_position: "coloc_geneve_room_card", cta_target: "/candidature", house: room.house_slug,
@@ -57,7 +69,7 @@ export function ColocationGenevePage() {
     } catch { /* noop */ }
   };
   // (13/11/2026) Lien « Ce que comprend le prix » des cartes : événement price_why_click, distinct de cta_click.
-  const trackPriceWhy = (room: PublicRoom, variant: PriceWhyVariant) =>
+  const trackPriceWhy = (room: PlaceRoom, variant: PriceWhyVariant) =>
     trackPriceWhyClick({ house: room.house_slug, roomNumber: room.room_number, variant, page: "colocation_geneve", language: L });
 
   // (Correctif 08/10/2026) Offer émis SEULEMENT une fois l'inventaire connu (v_public_rooms chargée).
@@ -86,7 +98,7 @@ export function ColocationGenevePage() {
   // Horodatage de référence : midi UTC du jour éditorial (le jour de Paris reste le même), remplacé par la dernière mise à
   // jour de l'inventaire quand elle est plus récente — formatage maison (formatLongDate), jamais toLocaleDateString.
   const editorialIso = `${PAGE_LAST_UPDATED}T12:00:00Z`;
-  const roomsUpdatedIso = roomsContentUpdatedAt(allRooms.rooms);
+  const roomsUpdatedIso = roomsContentUpdatedAt([...allRooms.rooms, ...appart.rooms]);
   const lastUpdatedIso = roomsUpdatedIso && Date.parse(roomsUpdatedIso) > Date.parse(editorialIso) ? roomsUpdatedIso : editorialIso;
   const webPageSchema = {
     "@context": "https://schema.org",
@@ -109,9 +121,10 @@ export function ColocationGenevePage() {
         // (correction Jérôme 04/09) « tout inclus » dans le title, le seul mot qui distingue la page des annonces ; > 65 c. avec la marque → pas de suffixe (S33).
         title={en ? "Shared housing in Geneva, French side: all-inclusive rooms" : "Colocation à Genève côté France : chambres tout inclus"}
         // (Lot L2, 09/10/2026) D1 : jamais « à N min du centre » sans destination nommée → STATS_DISPLAY.distance ; meta ≤ 155 c. (FR 154 / EN 152, mesuré).
+        // (L'Appart, E4, S11.1) La page liste aussi L'Appart ; « Chambres tout inclus en CHF » retiré pour tenir dans 155 caractères.
         description={en
-          ? `Shared housing in Geneva, French side: 3 houses ${STATS_DISPLAY.en.distance}. All-inclusive rooms in CHF, reply in 48 h.`
-          : `Colocation à Genève côté France : 3 maisons à ${STATS_DISPLAY.fr.distance}. Chambres tout inclus en CHF, réponse sous 48 h.`}
+          ? `Shared housing in Geneva, French side: ${STATS.totalHouses} coliving houses and ${APPART.name}, ${STATS_DISPLAY.en.distance}. Reply in 48 h.`
+          : `Colocation à Genève côté France : ${STATS.totalHouses} maisons de coliving et ${APPART.name}, à ${STATS_DISPLAY.fr.distance}. Réponse sous 48 h.`}
         url={PILLAR_URL}
         image="https://www.lavillacoliving.com/images/villa_portrait.webp"
         jsonLd={offerSchema}
@@ -129,10 +142,11 @@ export function ColocationGenevePage() {
           <h1 className="text-4xl md:text-5xl lg:text-6xl font-light text-[#1C1917] mb-6 leading-tight" style={serif}>
             {en ? "Shared housing in Geneva, the French-side version" : "Colocation à Genève, version côté France"}
           </h1>
+          {/* (L'Appart, E4, S11.2) Chaque gamme dans sa phrase, maisons d'abord ; aucun équipement à côté d'un prix de L'Appart. */}
           <p className="text-lg md:text-xl text-[#57534E] max-w-3xl mx-auto mb-8 leading-relaxed">
             {en
-              ? `Live on the French side, work in Geneva. ${STATS.totalRooms} furnished rooms in ${STATS.totalHouses} houses in Ville-la-Grand, Ambilly and Annemasse, all inclusive from ${PRICE_FROM_CHF_EN}/month, ${STATS_DISPLAY.en.distance}. Real availability below, prices in CHF, reply within 48 h.`
-              : `Vis côté France, travaille à Genève. ${STATS.totalRooms} chambres meublées dans ${STATS.totalHouses} maisons à Ville-la-Grand, Ambilly et Annemasse, tout inclus dès ${PRICE_FROM_CHF_FR}/mois, à ${STATS_DISPLAY.fr.distance}. Les disponibilités réelles ci-dessous, les prix en CHF, une réponse sous 48 h.`}
+              ? `Live on the French side, work in Geneva. ${STATS.totalRooms} furnished rooms in ${STATS.totalHouses} coliving houses in Ville-la-Grand, Ambilly and Annemasse, all inclusive from ${PRICE_FROM_CHF_EN}/month, ${STATS_DISPLAY.en.distance}. And ${APPART.rooms.total} rooms at ${APPART.name}, our flatshare near ${APPART.commune} station, from ${APPART.price.from.en.chf}/month. Real availability below, prices in CHF, reply within 48 h.`
+              : `Vis côté France, travaille à Genève. ${STATS.totalRooms} chambres meublées dans ${STATS.totalHouses} maisons de coliving à Ville-la-Grand, Ambilly et Annemasse, tout inclus dès ${PRICE_FROM_CHF_FR}/mois, à ${STATS_DISPLAY.fr.distance}. Et ${APPART.rooms.total} chambres à ${APPART.name}, notre colocation près de la gare d'${APPART.commune}, dès ${APPART.price.from.fr.chf}/mois. Les disponibilités réelles ci-dessous, les prix en CHF, une réponse sous 48 h.`}
           </p>
           {/* (Retenue premium, lot 1 — décision Jérôme du 13/10/2026) casse normale, même traitement que la barre mobile. */}
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
@@ -157,12 +171,15 @@ export function ColocationGenevePage() {
             </a>
           </p>
           <p className="mt-1 text-xs text-[#A8A29E]">{en ? `Updated ${lastUpdatedLabel}` : `Mis à jour le ${lastUpdatedLabel}`}</p>
+          {/* (L'Appart, E4, S11.3) Repères de la marque (33 chambres : ENTITY_FACTS.brand) ; un « dès » par gamme, chacun dans son repère.
+              Chaque repère = un seul nœud texte (anti-#418). */}
           <div className="flex flex-wrap justify-center gap-8 mt-10 text-sm text-[#78716C]">
-            <span className="flex items-center gap-2"><Home className="w-4 h-4" /> {STATS.totalRooms} {en ? "rooms" : "chambres"}</span>
-            <span className="flex items-center gap-2"><Users className="w-4 h-4" /> {STATS.totalHouses} {en ? "houses" : "maisons"}</span>
+            <span className="flex items-center gap-2"><Home className="w-4 h-4" /> {en ? `${ENTITY_FACTS.brand.totalRooms} rooms` : `${ENTITY_FACTS.brand.totalRooms} chambres`}</span>
+            <span className="flex items-center gap-2"><Users className="w-4 h-4" /> {en ? `${STATS.totalHouses} houses and ${APPART.name}` : `${STATS.totalHouses} maisons et ${APPART.name}`}</span>
             {/* (Lot L2, 09/10/2026) D1 : « 20 min de Genève » seul interdit → libellé canonique, un seul nœud texte (anti-#418). */}
             <span className="flex items-center gap-2"><Clock className="w-4 h-4" /> {STATS_DISPLAY[L].distance}</span>
-            <span className="flex items-center gap-2"><Euro className="w-4 h-4" /> {en ? `From ${PRICE_FROM_CHF_EN}/month` : `Dès ${PRICE_FROM_CHF_FR}/mois`}</span>
+            <span className="flex items-center gap-2"><Euro className="w-4 h-4" /> {en ? `Houses from ${PRICE_FROM_CHF_EN}/month` : `Maisons dès ${PRICE_FROM_CHF_FR}/mois`}</span>
+            <span className="flex items-center gap-2"><Euro className="w-4 h-4" /> {en ? `${APPART.name} from ${APPART.price.from.en.chf}/month` : `${APPART.name} dès ${APPART.price.from.fr.chf}/mois`}</span>
           </div>
         </div>
       </section>
@@ -175,10 +192,11 @@ export function ColocationGenevePage() {
               ? (en ? `${n} shared-housing room${n > 1 ? "s" : ""} available near Geneva` : `${n} chambre${n > 1 ? "s" : ""} en colocation disponible${n > 1 ? "s" : ""} près de Genève`)
               : (en ? "Next openings near Geneva, house by house" : "Prochaines disponibilités près de Genève, maison par maison")}
           </h2>
+          {/* (L'Appart, E4, S11.4) « … nos 3 maisons et de L'Appart » ; le reste de la phrase ne bouge pas. */}
           <p className="text-[#57534E] mb-8 max-w-2xl">
             {en
-              ? "Real availability of our 3 houses, read from the same data as our bookings: room, size, bathroom, price in CHF, opening date. Each room has its own application."
-              : "La dispo réelle de nos 3 maisons, lue sur la même source que nos réservations : chambre, surface, salle d'eau, prix en CHF, date de libération. Chaque chambre a sa propre candidature."}
+              ? `Real availability of our ${STATS.totalHouses} houses and ${APPART.name}, read from the same data as our bookings: room, size, bathroom, price in CHF, opening date. Each room has its own application.`
+              : `La dispo réelle de nos ${STATS.totalHouses} maisons et de ${APPART.name}, lue sur la même source que nos réservations : chambre, surface, salle d'eau, prix en CHF, date de libération. Chaque chambre a sa propre candidature.`}
           </p>
           {n > 0 && (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
@@ -188,7 +206,7 @@ export function ColocationGenevePage() {
             </div>
           )}
           <div className="flex flex-col gap-2 mb-6">
-            {HOUSE_ORDER.map((k) => <HouseAvailabilityLine key={k} house={k} />)}
+            {MAISON_KEYS.map((k) => <HouseAvailabilityLine key={k} house={k} />)}
           </div>
           <p className="text-sm text-[#57534E]">
             {en ? "Nothing at your date? " : "Rien à ta date ? "}
@@ -196,6 +214,19 @@ export function ColocationGenevePage() {
             {en ? " — we reply within 48 h. " : " — on te répond sous 48 h. "}
             <LocalizedLink to="/chambres-disponibles" className={link}>{en ? "All available rooms, with dates and prices" : "Toutes les chambres disponibles, dates et prix"}</LocalizedLink>
           </p>
+          {/* (L'Appart, étape E4 — décision n° 31, à confirmer) Sous-section à part, après les maisons : cartes standard avec le
+              badge de gamme (état B), ou le repli vers /lappart (état A). Rendue une fois les chambres chargées, comme les cartes. */}
+          {allRooms.known && (
+            <AppartRooms known={appart.known} fallback discoverLink page="colocation_geneve" headingLevel={3} className="mt-12 pt-10 border-t border-[#E7E5E4]">
+              {appartCandidates.length > 0 && (
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                  {appartCandidates.map((room) => (
+                    <RoomCard key={`${room.house_slug}:${room.room_number}`} house={room.house_slug} houseName={APPART_CARD.label} room={room} fallbackImage={APPART_CARD.img} onCtaClick={trackRoomCta} onPriceWhyClick={trackPriceWhy} showGammeBadge />
+                  ))}
+                </div>
+              )}
+            </AppartRooms>
+          )}
         </div>
       </section>
 
@@ -282,7 +313,7 @@ export function ColocationGenevePage() {
               : `${STATS.totalRooms} chambres dans ${STATS.totalHouses} maisons, ${STATS.livingSpacePerResidentMin} à ${STATS.livingSpacePerResidentMax} m² d'espace de vie par colocataire. Chaque maison a son caractère ; les trois partagent le même loyer tout inclus et la même communauté.`}
           </p>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            {HOUSE_ORDER.map((k) => (
+            {MAISON_KEYS.map((k) => (
               <div key={k} className="bg-white border border-[#E7E5E4] rounded-2xl overflow-hidden flex flex-col">
                 <LocalizedLink to={`/${k}`} className="block relative aspect-[16/10] overflow-hidden">
                   <img src={HOUSES[k].img} alt={HOUSES[k].label} className="w-full h-full object-cover" loading="lazy" width={800} height={500} />
