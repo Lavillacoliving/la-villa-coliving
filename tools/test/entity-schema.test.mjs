@@ -59,7 +59,7 @@ test('L6.2 : un nœud LodgingBusiness par maison — @id, nom, numberOfRooms, pr
 
 test('L6.5 : ItemList des chambres — Offer mensuelle, LeaseOut, offeredBy, Accommodation rattachée à sa maison, jamais numberOfRooms ; vide → undefined', () => {
   const rooms = [
-    { house_slug: 'lavilla', room_number: 3, rent_chf: 1370, availability: 'available', available_from: null, surface_m2: '16' },
+    { house_slug: 'lavilla', room_number: 3, rent_chf: 1370, rent_eur: '1470.00', availability: 'available', available_from: null, surface_m2: '16' },
     { house_slug: 'lelodge', room_number: 11, rent_chf: 1430, availability: 'soon', available_from: '2026-11-01', surface_m2: 18 },
     { house_slug: 'leloft', room_number: 2, rent_chf: null, availability: 'soon', available_from: null, surface_m2: null },
   ];
@@ -68,7 +68,10 @@ test('L6.5 : ItemList des chambres — Offer mensuelle, LeaseOut, offeredBy, Acc
     const list = m.buildAvailableRoomsItemList(rooms, lang);
     assert.equal(list['@type'], 'ItemList'); assert.equal(list.numberOfItems, 3);
     const offers = list.itemListElement.map((x) => x.item);
-    assert.equal(offers[0].priceSpecification.unitCode, 'MON'); assert.equal(offers[0].price, 1370);
+    // (L'Appart, 13/11/2026) Deux spécifications de prix quand le loyer contractuel en euros est connu : CHF (affiché) puis EUR.
+    assert.deepEqual(offers[0].priceSpecification.map((p) => [p['@type'], p.price, p.priceCurrency, p.unitCode]), [['UnitPriceSpecification', 1370, 'CHF', 'MON'], ['UnitPriceSpecification', 1470, 'EUR', 'MON']]);
+    assert.equal(offers[0].price, 1370); assert.equal(offers[0].priceCurrency, 'CHF');
+    assert.deepEqual(offers[1].priceSpecification.map((p) => p.priceCurrency), ['CHF'], 'sans loyer en euros : CHF seul');
     assert.equal(offers[0].availability, 'https://schema.org/InStock'); assert.equal(offers[1].availability, 'https://schema.org/PreOrder');
     assert.equal(offers[1].availabilityStarts, '2026-11-01');
     assert.equal(offers[2].price, undefined, 'sans loyer connu, pas de prix');

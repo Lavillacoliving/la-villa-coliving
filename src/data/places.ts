@@ -94,3 +94,26 @@ export function roomLabel(place: PlaceKey, roomNumber: number, lang: "fr" | "en"
   if (place === APPART_KEY && roomNumber === APPART_SUITE_ROOM_NUMBER) return "Suite";
   return lang === "en" ? `Room ${roomNumber}` : `Chambre ${roomNumber}`;
 }
+
+/** Personnes au plus dans la suite de L'Appart : la seule chambre de La Villa Coliving qui se loue à deux (une ailleurs). */
+export const APPART_SUITE_MAX_OCCUPANTS = 2;
+
+/** Capacité affichée sur la carte d'une chambre : « 1 ou 2 personnes » pour la suite de L'Appart, `null` ailleurs (une
+ *  chambre = une personne : rien à dire, la carte reste celle d'aujourd'hui). */
+export function roomCapacityLabel(place: PlaceKey, roomNumber: number, lang: "fr" | "en"): string | null {
+  if (place !== APPART_KEY || roomNumber !== APPART_SUITE_ROOM_NUMBER) return null;
+  return lang === "en" ? `1 or ${APPART_SUITE_MAX_OCCUPANTS} people` : `1 ou ${APPART_SUITE_MAX_OCCUPANTS} personnes`;
+}
+
+/** Badge de gamme des cartes de L'Appart dans les listes qui mêlent les deux gammes (« L'Appart · colocation ») ; `null` pour
+ *  une maison (ses cartes n'en portent pas). */
+export function placeGammeBadge(place: PlaceKey, lang: "fr" | "en"): string | null {
+  if (place !== APPART_KEY) return null;
+  return lang === "en" ? `${PLACE_LABEL.lappart} · flatshare` : `${PLACE_LABEL.lappart} · colocation`;
+}
+
+/** Bouton des cartes vers la page du lieu : « Découvrir la maison » (maisons) / « Découvrir L'Appart ». */
+export function placeDiscoverLabel(place: PlaceKey, lang: "fr" | "en"): string {
+  if (place === APPART_KEY) return lang === "en" ? `Discover ${PLACE_LABEL.lappart}` : `Découvrir ${PLACE_LABEL.lappart}`;
+  return lang === "en" ? "Discover the house" : "Découvrir la maison";
+}

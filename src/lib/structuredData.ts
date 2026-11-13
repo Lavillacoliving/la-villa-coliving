@@ -3,7 +3,8 @@
 // buildFaqPageSchema() construit donc le FAQPage à partir des mêmes paires {q,a} affichées.
 
 import { STATS, HOUSES_FROM, ROOMS_BY_HOUSE, PRICE_FR_NUM, PRICE_EN_NUM, PRICE_FROM_FR_NUM, PRICE_FROM_EN_NUM, GENEVA_COMMUTE_FORMULA, GOOGLE_REVIEWS } from "@/data/stats";
-import type { MaisonKey } from "@/data/places";
+import { APPART_KEY, isPlaceKey, roomLabel, type AppartKey, type MaisonKey, type PlaceKey } from "@/data/places";
+import { APPART } from "@/data/appart";
 
 const SITE = "https://www.lavillacoliving.com";
 
@@ -82,9 +83,12 @@ export const LAVILLA_POSTAL_ADDRESS = {
   addressCountry: "FR",
 } as const;
 
-export interface HouseInfo {
-  /** (L'Appart, 12/11/2026) Une des 3 maisons : le nœud d'une maison (piscine, sauna, salle de sport) ne se construit pas pour un autre lieu. */
-  slug: MaisonKey;
+/**
+ * (L'Appart, 13/11/2026) Ce que le site publie d'un LIEU, maison ou L'Appart : commune, code postal, zone, point public, image,
+ * équipements, fiches d'annuaires. Jamais de rue ni de coordonnées exactes (L'Appart n'en a pas dans le code).
+ */
+export interface PlaceInfo {
+  slug: PlaceKey;
   /** Libellé affiché du schema `department` (historique : « La Villa — Ville-la-Grand »). */
   name: string;
   /** (Lot L6.2) Nom court de la maison et commune — bases du nom et des alternateName du nœud LodgingBusiness. */
@@ -94,8 +98,6 @@ export interface HouseInfo {
   // (13/11/2026) Plus de `streetAddress` : aucune rue de maison dans le code (base : properties.address ; garde check:locations).
   addressLocality: string;
   postalCode: string;
-  /** INTERNE — coordonnées rooftop-exactes (BAN, 15/08/2026). Le site ne publie que publicGeo(h) (arrondi ≈ 1 km). */
-  geo: { lat: number; lng: number };
   /** (12/10/2026) Zone publiée à la place de l'adresse : commune, code postal et quartier déjà décrit sur la page. */
   zone: { fr: string; en: string };
   /**
@@ -109,6 +111,14 @@ export interface HouseInfo {
   amenityFeatures: { fr: readonly string[]; en: readonly string[] };
   /** Fiches publiques de CETTE maison sur les annuaires (s'ajoutent à LAVILLA_SAME_AS dans son LodgingBusiness). */
   sameAs?: string[];
+}
+
+/** Une des 3 maisons : un lieu, plus ses coordonnées exactes INTERNES. */
+export interface HouseInfo extends PlaceInfo {
+  /** (L'Appart, 12/11/2026) Une des 3 maisons : le nœud d'une maison (piscine, sauna, salle de sport) ne se construit pas pour un autre lieu. */
+  slug: MaisonKey;
+  /** INTERNE — coordonnées rooftop-exactes (BAN, 15/08/2026). Le site ne publie que publicGeo(h) (arrondi ≈ 1 km). */
+  geo: { lat: number; lng: number };
 }
 
 /**
@@ -191,6 +201,38 @@ export const HOUSES: HouseInfo[] = [
 ];
 
 /**
+ * (L'Appart, 13/11/2026) L'Appart comme LIEU publié (src/data/appart.ts pour les faits) : commune, code postal, zone, point
+ * public, image, équipements — sans rue ni coordonnées du logement (aucune dans le code). Point public = la gare d'Annemasse
+ * (décision n° 28 de la critique du 13/11, à confirmer) : lieu public, à 5 min à pied, relevé sur OpenStreetMap (nœud
+ * « Annemasse », railway=station) ; la carte, le lien « Calculer mon trajet » et le JSON-LD partent de là, et la page le dit.
+ * Équipements : ceux de L'Appart (jamais piscine, sauna ni salle de sport : ce sont les maisons).
+ */
+export const APPART_PLACE: PlaceInfo & { slug: AppartKey } = {
+  slug: APPART_KEY,
+  name: `${APPART.name} — ${APPART.commune}`,
+  label: APPART.name,
+  commune: APPART.commune,
+  url: `${SITE}/${APPART_KEY}`,
+  addressLocality: APPART.commune,
+  postalCode: APPART.postalCode,
+  zone: { fr: `${APPART.commune} (${APPART.postalCode}), quartier de la gare`, en: `${APPART.commune} (${APPART.postalCode}), station district` },
+  publicPoint: { lat: 46.1996, lng: 6.2371 },
+  // = LAPPART_HERO.wide.src (src/data/appartPhotos.ts, test appart.test.mjs) : écrit ici pour que le module d'entrée ne charge pas
+  // le manifeste des photos de L'Appart (ce module est dans le morceau d'entrée, par SEO.tsx et le pied de page).
+  image: "/images/lappart/lappart-cuisine-5.webp",
+  amenityFeatures: {
+    fr: ["Internet fibre", "Streaming", "Ménage des parties communes inclus", "Balcon", "Ascenseur", "Local à vélos"],
+    en: ["Fibre internet", "Streaming", "Common areas cleaning included", "Balcony", "Lift", "Bike storage"],
+  },
+};
+
+/** Lieu publié d'une clé publique (maison ou L'Appart) ; `undefined` pour une clé inconnue. */
+export function placeInfo(place: string): PlaceInfo | undefined {
+  if (!isPlaceKey(place)) return undefined;
+  return place === APPART_KEY ? APPART_PLACE : HOUSES.find((h) => h.slug === place);
+}
+
+/**
  * FAQPage construit depuis les paires VISIBLES → garantit JSON-LD == texte affiché
  * (condition #2 du playbook AEO). À passer à <SEO jsonLd> ou via un <Helmet> dédié.
  */
@@ -212,6 +254,8 @@ const SHARED_BATH_HOUSE_SLUG = "lavilla";
 
 /** Identifiant stable du nœud LodgingBusiness d'une maison (référencé par @id depuis l'ItemList des chambres). */
 export const houseLodgingId = (slug: string): string => `${SITE}/${slug}#lodging`;
+/** (L'Appart, 13/11/2026) Même identifiant, typé : le nœud LodgingBusiness d'un lieu public (maison ou L'Appart). */
+export const placeLodgingId = (place: PlaceKey): string => houseLodgingId(place);
 
 /**
  * (Lot L6.2, brief v3.1 A.10 — 10/10/2026) LE nœud LodgingBusiness d'une maison, construit UNE seule fois ici et utilisé par
@@ -260,12 +304,55 @@ export function buildHouseLodgingNode(
   };
 }
 
+/**
+ * (L'Appart, 13/11/2026) LE nœud LodgingBusiness de L'Appart, construit une seule fois ici : bloc autonome de /lappart (étape E3)
+ * et entrée de `department[]` des fiches de la marque (étape E5). Même forme que celui d'une maison (@id `<url>#lodging`,
+ * `parentOrganization`, adresse sans rue, point public), avec ses faits à lui : `numberOfRooms` 4, `priceRange` 730–990 CHF,
+ * ses équipements (fibre, streaming, ménage des communs, balcon, ascenseur, local à vélos) — jamais piscine, sauna ni salle de
+ * sport, jamais d'AggregateOffer ni de `currenciesAccepted`. Textes : source des textes de L'Appart du 13/11/2026 (« à confirmer »).
+ */
+export function buildAppartLodgingNode(language: "fr" | "en" = "fr", opts: { context?: boolean } = {}): Record<string, unknown> {
+  const en = language === "en";
+  const p = APPART_PLACE;
+  const A = APPART;
+  const description = en
+    ? `${A.name}, La Villa Coliving's flatshare in ${A.commune}, near the station: ${A.rooms.total} furnished rooms of ${A.rooms.surface.min} to ${A.rooms.surface.max} m² in a ${A.flat.surfaceM2} m² flat, with bills, fibre, streaming and cleaning of the shared areas included.`
+    : `${A.name}, la colocation de La Villa Coliving à ${A.commune}, quartier de la gare : ${A.rooms.total} chambres meublées de ${A.rooms.surface.min} à ${A.rooms.surface.max} m² dans un appartement de ${A.flat.surfaceM2} m², charges, fibre, streaming et ménage des communs compris.`;
+  const low = A.price.from, high = A.price.room.chf >= A.price.suite.chf ? A.price.room : A.price.suite;
+  return {
+    ...(opts.context ? { "@context": "https://schema.org" } : {}),
+    "@type": "LodgingBusiness",
+    "@id": placeLodgingId(p.slug),
+    name: `La Villa Coliving — ${p.label}`,
+    alternateName: [p.label, `La Villa Coliving — ${p.label}, ${p.commune}`],
+    parentOrganization: { "@id": ORG_ID },
+    url: p.url,
+    image: `${SITE}${p.image}`,
+    description,
+    telephone: LAVILLA_PHONE,
+    email: LAVILLA_EMAIL,
+    address: {
+      "@type": "PostalAddress",
+      addressLocality: p.addressLocality,
+      addressRegion: "Haute-Savoie",
+      postalCode: p.postalCode,
+      addressCountry: "FR",
+    },
+    geo: { "@type": "GeoCoordinates", latitude: publicGeo(p).lat, longitude: publicGeo(p).lng },
+    numberOfRooms: A.rooms.total,
+    priceRange: en ? `CHF ${low.en.chfNum}–${high.en.chfNum}/month` : `${low.fr.chfNum}–${high.fr.chfNum} CHF/mois`,
+    amenityFeature: (en ? p.amenityFeatures.en : p.amenityFeatures.fr).map((name) => ({ "@type": "LocationFeatureSpecification", name, value: true })),
+  };
+}
+
 /** Chambre candidate telle que la sert v_public_rooms (forme minimale : pas d'import de src/lib/availability ici, ce module est
  *  aussi chargé par les scripts Node). */
 export interface RoomOfferInput {
   house_slug: string;
   room_number: number;
   rent_chf: number | null;
+  /** (L'Appart, 13/11/2026) Loyer contractuel en euros (numeric PostgREST : nombre ou chaîne) — seconde spécification de prix. */
+  rent_eur?: number | string | null;
   availability: string;
   available_from: string | null;
   surface_m2: number | string | null;
@@ -287,21 +374,30 @@ export function buildAvailableRoomsItemList(candidates: readonly RoomOfferInput[
     name: en ? "Available rooms — La Villa Coliving" : "Chambres disponibles — La Villa Coliving",
     numberOfItems: candidates.length,
     itemListElement: candidates.map((r, i) => {
-      const h = HOUSES.find((x) => x.slug === r.house_slug);
+      // (L'Appart, 13/11/2026) Lieu public de la chambre, maison ou L'Appart : libellé (« Suite » pour la n° 5 de L'Appart),
+      // rattachement au nœud du lieu, loyer en CHF ET loyer contractuel en euros (deux UnitPriceSpecification).
+      const h = placeInfo(r.house_slug);
       const label = h?.label ?? r.house_slug;
-      const roomName = `${en ? "Room" : "Chambre"} ${r.room_number} — ${label}`;
+      const room = isPlaceKey(r.house_slug) ? roomLabel(r.house_slug, r.room_number, language) : `${en ? "Room" : "Chambre"} ${r.room_number}`;
+      const roomName = `${room} — ${label}`;
+      const eur = r.rent_eur === null || r.rent_eur === undefined || r.rent_eur === "" ? null : Number(r.rent_eur);
+      const monthly = (price: number, priceCurrency: "CHF" | "EUR") =>
+        ({ "@type": "UnitPriceSpecification", price, priceCurrency, unitCode: "MON", unitText: en ? "per month" : "par mois" });
       return {
         "@type": "ListItem",
         position: i + 1,
         item: {
           "@type": "Offer",
-          name: `${label} — ${en ? "Room" : "Chambre"} ${r.room_number}`,
+          name: `${label} — ${room}`,
           url: `${SITE}${prefix}/${r.house_slug}`,
           ...(r.rent_chf !== null
             ? {
                 price: r.rent_chf,
                 priceCurrency: "CHF",
-                priceSpecification: { "@type": "UnitPriceSpecification", price: r.rent_chf, priceCurrency: "CHF", unitCode: "MON", unitText: en ? "per month" : "par mois" },
+                priceSpecification: [
+                  monthly(r.rent_chf, "CHF"),
+                  ...(eur !== null && Number.isFinite(eur) ? [monthly(eur, "EUR")] : []),
+                ],
               }
             : {}),
           availability: r.availability === "available" ? "https://schema.org/InStock" : "https://schema.org/PreOrder",
@@ -314,7 +410,7 @@ export function buildAvailableRoomsItemList(candidates: readonly RoomOfferInput[
             ...(r.surface_m2 ? { floorSize: { "@type": "QuantitativeValue", value: Number(r.surface_m2), unitCode: "MTK" } } : {}),
             ...(h
               ? {
-                  containedInPlace: { "@id": houseLodgingId(h.slug) },
+                  containedInPlace: { "@id": placeLodgingId(h.slug) },
                   address: { "@type": "PostalAddress", addressLocality: h.addressLocality, postalCode: h.postalCode, addressCountry: "FR" },
                 }
               : {}),

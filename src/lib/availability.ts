@@ -385,6 +385,8 @@ const FLOOR_EN: Record<string, string> = {
   "Étage 1": "1st floor",
   "Étage 2": "2nd floor",
   "Étage 3": "3rd floor",
+  // (L'Appart, 13/11/2026) Ses 4 chambres sont au 5e étage (valeur de la base après la bascule : « Étage 5 »).
+  "Étage 5": "5th floor",
 };
 
 /** Étage d'une chambre, FR tel quel / EN traduit — ou null si inconnu. */

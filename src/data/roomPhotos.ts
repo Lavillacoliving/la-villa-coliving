@@ -5,12 +5,17 @@
 // sans galerie). Compléter au fil des shootings — mêmes règles que la LP :
 // dimensions RÉELLES obligatoires (le cadre est calculé du ratio, borné, sinon
 // les portraits sont recadrés de 40 %+).
+import { LAPPART_ROOM_COVER } from "./appartPhotos";
+import { assertNever, type PlaceKey } from "./places";
+
 export type RoomPhoto = {
   src: string;
   w: number;
   h: number;
   alt: { fr: string; en: string };
 };
+// (L'Appart, 13/11/2026) Ses photos (pièces communes seulement : les chambres, « photos à venir ») vivent dans
+// src/data/appartPhotos.ts ; ce manifeste n'a aucune clé « lappart:N » tant qu'aucune chambre n'est photographiée.
 
 export const ROOM_PHOTOS: Record<string, RoomPhoto[]> = {
   "lavilla:8": [
@@ -281,4 +286,22 @@ export function roomGallerySections(house: string, roomNumber: number): GalleryS
 /** Galerie à plat pour la visionneuse (cartes, pages maisons, /chambres-disponibles). */
 export function roomGallery(house: string, roomNumber: number): RoomPhoto[] | undefined {
   return roomGallerySections(house, roomNumber)?.flatMap((s) => s.photos);
+}
+
+/**
+ * (L'Appart, 13/11/2026) Photo d'une carte de chambre SANS galerie, quand le lieu n'a pas encore de photos de chambres
+ * (décision de Jérôme du 12/11 : « photos à venir ») : une pièce commune, avec son propre texte alternatif, et la légende
+ * « Photo de la chambre à venir » (RoomCard). `null` pour une maison : sa carte garde sa photo de type, inchangée.
+ */
+export function roomPendingCover(place: PlaceKey): RoomPhoto | null {
+  switch (place) {
+    case "lavilla":
+    case "leloft":
+    case "lelodge":
+      return null;
+    case "lappart":
+      return LAPPART_ROOM_COVER;
+    default:
+      return assertNever(place);
+  }
 }

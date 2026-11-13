@@ -150,7 +150,9 @@ export interface PriceTier {
   fr: { chfNum: string; chf: string; eurNum: string; eur: string };
   en: { chfNum: string; chf: string; eurNum: string; eur: string };
 }
-function priceTier(eur: number): PriceTier {
+/** Palier d'un loyer contractuel en euros. (L'Appart, 13/11/2026) Exporté : les loyers de L'Appart (APPART_CONTRACT_EUR,
+ *  src/data/appart.ts) passent par la même dérivation que ceux des maisons — euros saisis, francs dérivés, mêmes graphies. */
+export function priceTier(eur: number): PriceTier {
   const chf = chfAffiche(eur);
   return {
     eur,
@@ -251,17 +253,21 @@ export function formatPriceChf(lang: "fr" | "en"): string {
 // Tram 17 prolongé le 17/10/2026 (Parc Montessuit → Perrier-Aubrac) : l'arrêt de la place de l'Étoile s'appelle « Barbusse »
 // (horaire TPG) ; Le Lodge en est à 2 min à pied, environ 150 m (mesure sur plan du 12/11, validée par Jérôme). L'arrêt de bus
 // « Annemasse-Étoile » du Lodge (aucun arrêt ne porte ce nom) est retiré : le tram, au même endroit, le remplace.
+/** Temps de train depuis la gare d'Annemasse (fixes, horaire Léman Express). (L'Appart, 13/11/2026) Communs aux deux gammes :
+ *  TRANSIT (maisons) et L'Appart (src/data/appartLocation.ts) les lisent ici — un seul relevé. Les trajets de L'Appart restent
+ *  hors de TRANSIT (APPART.transit, src/data/appart.ts) : les fourchettes de la marque décrivent les maisons. */
+export const ANNEMASSE_TRAIN_MIN = { eauxVives: 7, champel: 10, lancyPontRouge: 16, cornavin: 23 } as const;
 export const TRANSIT = {
   measuredOn: "2026-10-08",
   measuredOnLabel: { fr: "8 octobre 2026", en: "8 October 2026" },
   /** (12/11/2026) Temps à pied gare, E.Leclerc et tram du Lodge : relevés de l'équipe (Jérôme), novembre 2026. */
   walkCheckedOn: "2026-11-12",
   walkCheckedOnLabel: { fr: "novembre 2026", en: "November 2026" },
-  /** Temps de train depuis la gare d'Annemasse (fixes, horaire Léman Express). */
-  trainEauxVivesMin: 7,
-  trainChampelMin: 10,
-  trainLancyPontRougeMin: 16,
-  trainCornavinMin: 23,
+  /** Temps de train depuis la gare d'Annemasse (fixes, horaire Léman Express) : ANNEMASSE_TRAIN_MIN. */
+  trainEauxVivesMin: ANNEMASSE_TRAIN_MIN.eauxVives,
+  trainChampelMin: ANNEMASSE_TRAIN_MIN.champel,
+  trainLancyPontRougeMin: ANNEMASSE_TRAIN_MIN.lancyPontRouge,
+  trainCornavinMin: ANNEMASSE_TRAIN_MIN.cornavin,
   /** Cadence en heure de pointe à la gare d'Annemasse (départs relevés 8 h 05, 8 h 12, 8 h 20, 8 h 35). */
   peakHeadwayMin: 10,
   // (Lot L2 « Emplacement et transport », 09/10/2026) Par maison : à pied (gare, tram, arrêt de bus NOMMÉ, jamais

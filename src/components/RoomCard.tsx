@@ -4,14 +4,15 @@ import { LocalizedLink } from "@/components/LocalizedLink";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { thousands } from "@/data/stats";
 import { cardInclusions, type PriceWhyVariant } from "@/data/allInclusive";
-import { roomGallery } from "@/data/roomPhotos";
+import { roomGallery, roomPendingCover } from "@/data/roomPhotos";
 import { isRoomPageOpen, roomPagePath } from "@/data/roomPages";
+import { isAppartKey, placeDiscoverLabel, placeGammeBadge, roomCapacityLabel, roomLabel, type PlaceKey } from "@/data/places";
 import { formatShortDate } from "@/lib/dates";
 import { responsiveImage } from "@/lib/responsiveImage";
-import { BADGE_CHIP_CLASS, roomBadge, roomSpecs, type HouseKey, type PublicRoom } from "@/lib/availability";
+import { BADGE_CHIP_CLASS, roomBadge, roomSpecs, type PlaceRoom, type PublicRoom } from "@/lib/availability";
 
 /** (12/10/2026, maquette validée par Jérôme) Équipements de la chambre tirés de v_public_rooms — jamais d'attribut inventé. */
-function roomExtras(room: PublicRoom, lang: "fr" | "en"): string[] {
+function roomExtras(room: PlaceRoom, lang: "fr" | "en"): string[] {
   const out: string[] = [];
   if (room.has_balcony) out.push(lang === "en" ? "Balcony" : "Balcon");
   if (room.has_terrace) out.push(lang === "en" ? "Terrace" : "Terrasse");
@@ -31,18 +32,21 @@ function roomExtras(room: PublicRoom, lang: "fr" | "en"): string[] {
  * Pureté d'hydratation : tout est dérivé de props stables (room_number, galerie statique) —
  * jamais d'aléatoire ni de Date au rendu. Le tracking (visionneuse, CTA) reste au parent.
  */
-export type RoomCardProps = {
-  house: HouseKey;
+export type RoomCardProps<R extends PlaceRoom = PublicRoom> = {
+  /** (L'Appart, 13/11/2026) Lieu de la carte : une maison ou L'Appart (clé publique). Une carte de L'Appart garde son libellé
+   *  (« Suite » pour la n° 5), sa capacité (« 1 ou 2 personnes »), sa ligne « tout compris » de gamme et, tant que ses chambres
+   *  n'ont pas de photo, une pièce commune avec SON texte alternatif et la légende « Photo de la chambre à venir ». */
+  house: PlaceKey;
   /** Nom affiché de la maison (« Le Loft ») — alt de repli et sur-titre. */
   houseName: string;
-  room: PublicRoom;
+  room: R;
   /** Photo de TYPE de la maison quand la chambre n'a pas de pack dédié (déterministe). */
   fallbackImage: string;
   /** Affiche la maison au-dessus du n° de chambre (page toutes maisons). */
   showHouse?: boolean;
   /** Ouvre la visionneuse ; absent = photo non cliquable. */
-  onOpenPhotos?: (room: PublicRoom, photoIndex: number) => void;
-  onCtaClick?: (room: PublicRoom) => void;
+  onOpenPhotos?: (room: R, photoIndex: number) => void;
+  onCtaClick?: (room: R) => void;
   /** (Offre hiver, 06/10/2026) Paramètres d'URL ajoutés EN TÊTE de la query du CTA, ex. « offre=hiver ». */
   ctaParams?: string;
   /** (Offre hiver −50 %, rebrief du 12/10/2026) Ligne de démarrage du bail, ex. « Bail au 16 décembre » — carte par défaut, page de l'offre seulement. */
@@ -54,7 +58,7 @@ export type RoomCardProps = {
    * date ». Absent = cartes inchangées (pages maisons : on y est déjà). Garde : scripts/house-pages-check.mjs.
    */
   houseCta?: boolean;
-  onHouseClick?: (room: PublicRoom) => void;
+  onHouseClick?: (room: R) => void;
   /**
    * (12/10/2026, refonte /chambres-disponibles validée par Jérôme) « featured » = grande carte horizontale d'une chambre libre
    * maintenant ; « compact » = petite carte en retrait d'une libération datée ; « default » = carte historique (pages maisons,
@@ -70,7 +74,10 @@ export type RoomCardProps = {
    */
   showInclusions?: boolean;
   /** Clic sur le lien « Ce que comprend le prix » — la mesure reste au parent, comme pour `onCtaClick`. */
-  onPriceWhyClick?: (room: PublicRoom, variant: PriceWhyVariant) => void;
+  onPriceWhyClick?: (room: R, variant: PriceWhyVariant) => void;
+  /** (L'Appart, 13/11/2026) Badge de gamme (« L'Appart · colocation ») au-dessus du nom de la chambre : listes qui mêlent les
+   *  deux gammes seulement, jamais sur la page du lieu. Sans effet sur une carte de maison (aucun badge). */
+  showGammeBadge?: boolean;
 };
 
 // Lien « Ce que comprend le prix » : discret (taille xs, souligné), mais avec une zone de toucher de 30 px de haut
@@ -81,16 +88,31 @@ export type RoomCardProps = {
 const PRICE_WHY_LINK_CLASS =
   "relative inline-block rounded-sm text-[#57534E] underline underline-offset-2 hover:text-[#1C1917] transition-colors after:absolute after:inset-x-0 after:-top-0.5 after:-bottom-3 after:content-[''] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#44403C] focus-visible:ring-offset-2";
 
-export function RoomCard({ house, houseName, room, fallbackImage, showHouse = false, onOpenPhotos, onCtaClick, ctaParams, leaseStart, houseCta = false, onHouseClick, variant = "default", commune, showInclusions = true, onPriceWhyClick }: RoomCardProps) {
+// Légende posée sur la photo d'une carte sans photo de chambre (L'Appart) : lisible sur toute photo, retour à la ligne permis
+// dans la petite photo de la carte « compact ».
+const PHOTO_PENDING_CLASS = "absolute bottom-2 left-2 max-w-[calc(100%-1rem)] text-[11px] leading-tight font-medium px-2 py-1 rounded-md bg-black/65 text-white";
+const GAMME_BADGE_CLASS = "inline-block mb-1 text-[11px] font-semibold uppercase tracking-wider px-2 py-0.5 rounded-full bg-[#F5F0E8] text-[#7A5215]";
+
+export function RoomCard<R extends PlaceRoom = PublicRoom>({ house, houseName, room, fallbackImage, showHouse = false, onOpenPhotos, onCtaClick, ctaParams, leaseStart, houseCta = false, onHouseClick, variant = "default", commune, showInclusions = true, onPriceWhyClick, showGammeBadge = false }: RoomCardProps<R>) {
   const { t, language } = useLanguage();
   const uiLang = language === "en" ? "en" as const : "fr" as const;
   // Ne dépend que de la gamme (house_slug) et de la langue : même texte au prérendu et dans le navigateur.
   const inclusions = showInclusions ? cardInclusions({ house, roomHouse: room.house_slug, variant, lang: uiLang }) : null;
   // Pack dédié, ou galerie standard du Lodge (chambre → communs → extérieurs).
   const gallery = roomGallery(house, room.room_number);
-  const cover = gallery?.[0];
+  // (L'Appart, 13/11/2026) Sans photo de chambre : une pièce commune du lieu, avec SON texte alternatif (jamais « Chambre 2 —
+  // L'Appart » sur une photo de cuisine) et la légende « Photo de la chambre à venir ». `null` pour une maison : carte inchangée.
+  const pendingCover = gallery ? null : roomPendingCover(house);
+  const cover = gallery?.[0] ?? pendingCover ?? undefined;
+  const pendingLegend = pendingCover ? (
+    <span data-photo-pending className={PHOTO_PENDING_CLASS}>
+      {uiLang === "en" ? "Room photo coming soon" : "Photo de la chambre à venir"}
+    </span>
+  ) : null;
   const badge = roomBadge(room, uiLang);
   const specs = roomSpecs(room, uiLang);
+  // « Chambre 4 » / « Room 4 » ; la n° 5 de L'Appart s'appelle « Suite » (src/data/places.ts).
+  const label = roomLabel(house, room.room_number, uiLang);
   const rentEur =
     room.rent_eur !== null && room.rent_eur !== undefined && Number.isFinite(Number(room.rent_eur))
       ? Math.round(Number(room.rent_eur))
@@ -103,9 +125,7 @@ export function RoomCard({ house, houseName, room, fallbackImage, showHouse = fa
       <img
         src={coverSrc}
         {...responsiveImage(coverSrc, "(min-width: 1024px) 33vw, (min-width: 768px) 50vw, 100vw")}
-        alt={cover
-          ? cover.alt[uiLang]
-          : `${language === "en" ? "Room" : "Chambre"} ${room.room_number} — ${houseName}`}
+        alt={cover ? cover.alt[uiLang] : `${label} — ${houseName}`}
         className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
         loading="lazy"
         width={cover?.w ?? 800}
@@ -119,10 +139,16 @@ export function RoomCard({ house, houseName, room, fallbackImage, showHouse = fa
           {gallery.length} photos
         </span>
       )}
+      {pendingLegend}
     </>
   );
   const en = language === "en";
-  const roomLabel = en ? `Room ${room.room_number}` : `Chambre ${room.room_number}`;
+  // « 1 ou 2 personnes » sous la suite de L'Appart ; rien sur les autres cartes.
+  const capacity = roomCapacityLabel(house, room.room_number, uiLang);
+  const gammeBadge = showGammeBadge ? placeGammeBadge(house, uiLang) : null;
+  // Équipements de la chambre (balcon, entrée privée) sur les cartes « default » et « compact » de L'Appart seulement : la
+  // carte « featured » les montre déjà pour tous les lieux ; les cartes des maisons restent celles d'aujourd'hui.
+  const appartExtras = isAppartKey(house) ? roomExtras(room, uiLang).join(" · ") || null : null;
   const pageOpen = isRoomPageOpen(house, room);
   const ctaHref = `/candidature?${ctaParams ? `${ctaParams}&` : ""}property_interest=${house}&room_interest=chambre-${room.room_number}`;
   const eyebrow = commune ? `${houseName} · ${commune}` : houseName;
@@ -151,7 +177,7 @@ export function RoomCard({ house, houseName, room, fallbackImage, showHouse = fa
             <img
               src={coverSrc}
               {...responsiveImage(coverSrc, "(min-width: 768px) 58vw, 100vw")}
-              alt={cover ? cover.alt[uiLang] : `${roomLabel} — ${houseName}`}
+              alt={cover ? cover.alt[uiLang] : `${label} — ${houseName}`}
               className="absolute inset-0 w-full h-full object-cover group-hover:scale-[1.03] transition-transform duration-700"
               loading="lazy"
               width={cover?.w ?? 1200}
@@ -165,21 +191,24 @@ export function RoomCard({ house, houseName, room, fallbackImage, showHouse = fa
                 {gallery.length} photos
               </span>
             )}
+            {pendingLegend}
           </>
         ))}
         <div className="md:col-span-5 p-6 md:p-8 flex flex-col gap-4">
           <div>
+            {gammeBadge && <p data-gamme-badge className={GAMME_BADGE_CLASS}>{gammeBadge}</p>}
             <p className="text-xs font-semibold uppercase tracking-wider text-[#8A6508] mb-1">{eyebrow}</p>
             <h3 className="text-3xl text-[#1C1917] leading-tight" style={{ fontFamily: '"DM Serif Display", serif' }}>
               {pageOpen ? (
-                <LocalizedLink to={roomPagePath(house, room.room_number)} className="hover:text-[#8A6508] transition-colors">{roomLabel}</LocalizedLink>
-              ) : roomLabel}
+                <LocalizedLink to={roomPagePath(house, room.room_number)} className="hover:text-[#8A6508] transition-colors">{label}</LocalizedLink>
+              ) : label}
             </h3>
             {!en && room.location_detail && <p className="mt-1 text-sm text-[#57534E]">{room.location_detail.trim()}</p>}
           </div>
           <ul className="space-y-1.5 text-sm text-[#44403C]">
             {specs && <li>{specs}</li>}
             {extras.length > 0 && <li>{extras.join(" · ")}</li>}
+            {capacity && <li>{capacity}</li>}
           </ul>
           {chf && (
             <div className="pt-4 border-t border-[#E7E5E4]">
@@ -207,7 +236,7 @@ export function RoomCard({ house, houseName, room, fallbackImage, showHouse = fa
                 data-house-cta
                 className="inline-flex items-center justify-center gap-2 min-h-[48px] px-6 bg-[#1C1917] text-white text-sm font-semibold rounded-lg hover:bg-[#44403C] transition-colors"
               >
-                {en ? "Discover the house" : "Découvrir la maison"}
+                {placeDiscoverLabel(house, uiLang)}
                 <ArrowRight className="w-4 h-4" />
               </LocalizedLink>
             )}
@@ -250,7 +279,7 @@ export function RoomCard({ house, houseName, room, fallbackImage, showHouse = fa
             <img
               src={coverSrc}
               {...responsiveImage(coverSrc, "(min-width: 768px) 25vw, 144px")}
-              alt={cover ? cover.alt[uiLang] : `${roomLabel} — ${houseName}`}
+              alt={cover ? cover.alt[uiLang] : `${label} — ${houseName}`}
               className="absolute inset-0 w-full h-full object-cover"
               loading="lazy"
               width={cover?.w ?? 800}
@@ -259,16 +288,20 @@ export function RoomCard({ house, houseName, room, fallbackImage, showHouse = fa
             <span className={`absolute top-2 left-2 md:top-3 md:left-3 whitespace-nowrap text-xs font-semibold px-2.5 py-1 md:px-3 md:py-1.5 rounded-full ${BADGE_CHIP_CLASS[badge.tone]}`}>
               {datePill}
             </span>
+            {pendingLegend}
           </>
         ))}
         <div className="p-3 md:p-4 flex flex-col gap-1 min-w-0 flex-1">
+          {gammeBadge && <p data-gamme-badge className={GAMME_BADGE_CLASS}>{gammeBadge}</p>}
           <p className="text-[11px] font-semibold uppercase tracking-wider text-[#78716C]">{eyebrow}</p>
           <h3 className="text-lg text-[#1C1917] leading-snug" style={{ fontFamily: '"DM Serif Display", serif' }}>
             {pageOpen ? (
-              <LocalizedLink to={roomPagePath(house, room.room_number)} className="hover:text-[#8A6508] transition-colors">{roomLabel}</LocalizedLink>
-            ) : roomLabel}
+              <LocalizedLink to={roomPagePath(house, room.room_number)} className="hover:text-[#8A6508] transition-colors">{label}</LocalizedLink>
+            ) : label}
           </h3>
           {specs && <p className="text-xs text-[#57534E] leading-relaxed">{specs}</p>}
+          {appartExtras && <p className="text-xs text-[#57534E] leading-relaxed">{appartExtras}</p>}
+          {capacity && <p className="text-xs text-[#57534E] leading-relaxed">{capacity}</p>}
           {chf && (
             <p className="text-sm text-[#1C1917] mt-1">
               <strong>{chf}</strong>
@@ -286,7 +319,7 @@ export function RoomCard({ house, houseName, room, fallbackImage, showHouse = fa
               data-house-cta
               className="mt-auto inline-flex items-center gap-1.5 min-h-[44px] text-sm font-semibold text-[#1C1917] hover:text-[#8A6508]"
             >
-              {en ? "Discover the house" : "Découvrir la maison"}
+              {placeDiscoverLabel(house, uiLang)}
               <ArrowRight className="w-3.5 h-3.5" aria-hidden="true" />
             </LocalizedLink>
           ) : (
@@ -321,6 +354,7 @@ export function RoomCard({ house, houseName, room, fallbackImage, showHouse = fa
         <div className="relative h-48 w-full overflow-hidden">{roomImg}</div>
       )}
       <div className="p-6 flex flex-col flex-1">
+        {gammeBadge && <p data-gamme-badge className={GAMME_BADGE_CLASS}>{gammeBadge}</p>}
         {showHouse && (
           <p className="text-xs font-semibold uppercase tracking-wider text-[#B8860B] mb-1">{houseName}</p>
         )}
@@ -328,13 +362,15 @@ export function RoomCard({ house, houseName, room, fallbackImage, showHouse = fa
           {/* (28/09/2026) Fiche chambre quand elle existe ET est consultable (roomPages.ts). */}
           {isRoomPageOpen(house, room) ? (
             <LocalizedLink to={roomPagePath(house, room.room_number)} className="hover:text-[#B8860B] transition-colors">
-              {language === "en" ? `Room ${room.room_number}` : `Chambre ${room.room_number}`}
+              {label}
             </LocalizedLink>
           ) : (
-            language === "en" ? `Room ${room.room_number}` : `Chambre ${room.room_number}`
+            label
           )}
         </h3>
         {specs && <p className="text-sm text-[#78716C] mb-1">{specs}</p>}
+        {appartExtras && <p className="text-sm text-[#78716C] mb-1">{appartExtras}</p>}
+        {capacity && <p className="text-sm text-[#78716C] mb-1">{capacity}</p>}
         {language !== "en" && room.location_detail && (
           <p className="text-xs text-[#78716C] mb-3">{room.location_detail.trim()}</p>
         )}

@@ -41,6 +41,7 @@ import {
 import { FOUNDERS, FOUNDING_DATE, LAVILLA_SAME_AS } from "../lib/structuredData";
 import { PRICE_KEY_SENTENCE } from "./priceFacts";
 import type { MaisonKey } from "./places";
+import { APPART } from "./appart";
 
 export type EntityLang = "fr" | "en";
 /** Une des 3 maisons — alias de `MaisonKey` (src/data/places.ts) : ENTITY_HOUSES et la fiche ne décrivent que les maisons. */
@@ -68,6 +69,27 @@ export const ENTITY_FACTS_VERSION = "2026-11-19";
 export const GUARANTOR_SENTENCE = {
   fr: "un garant n'est demandé qu'au cas par cas, quand le contrat ne couvre pas le loyer — on t'en parle avant de te répondre, jamais après la visite",
   en: "a guarantor is only asked for case by case, when the contract does not cover the rent — we tell you before we reply, never after the visit",
+} as const;
+
+/*
+ * (L'Appart, 13/11/2026) Phrases de la fiche COMMUNES aux deux gammes — mêmes bail, caution, frais et réponse à L'Appart que
+ * dans les maisons. Exportées par leur nom pour la fiche de L'Appart (src/data/appartFacts.ts, `appartFactsText`), qui les
+ * reprend au caractère près ; la fiche de la marque les lit ici aussi : son texte ne change pas d'un caractère.
+ */
+/** Puce « bail » des deux fiches (D5 révisée le 29/09/2026). */
+export const LEASE_SENTENCE = {
+  fr: `Bail de ${STATS.leaseDurationMonths} mois : tu es libre de partir à tout moment avec ${STATS.noticePeriodMonths} mois de préavis.`,
+  en: `${STATS.leaseDurationMonths}-month lease: you're free to leave at any time with ${STATS.noticePeriodMonths} month's notice.`,
+} as const;
+/** Puce « frais et caution » des deux fiches (caution jamais chiffrée ; versements : règle permanente du 02/11/2026). */
+export const FEES_DEPOSIT_SENTENCE = {
+  fr: `0 € de frais de dossier, 0 € de frais d'agence. Caution : ${STATS.depositMonths} mois de loyer hors charges, payable en 1, 2 ou 3 fois selon ton dossier.`,
+  en: `No application fee, no agency fee. Deposit: ${STATS.depositMonths} months' rent excluding charges, payable in 1, 2 or 3 instalments depending on your application.`,
+} as const;
+/** Bouton des deux fiches et sa microcopie (T13 du 13/10/2026 : hors du comptage « 1× par page », vérifiés dans le bloc). */
+export const ENTITY_FACTS_CTA = {
+  fr: { cta: "Candidater", note: `Réponse sous ${STATS.responseHours} h` },
+  en: { cta: "Apply", note: `Reply within ${STATS.responseHours} h` },
 } as const;
 
 /**
@@ -156,6 +178,47 @@ export const ENTITY_HOUSES: readonly EntityHouse[] = [
   },
 ];
 
+/**
+ * (L'Appart, 13/11/2026) Les faits des MAISONS que les textes de L'Appart citent quand ils y RENVOIENT (« Tu veux piscine et
+ * sauna ? Les maisons, dès 1 290 CHF. », FAQ « la différence avec les maisons », bloc « Tu veux piscine et sauna ? ») : seule
+ * porte des faits des maisons vers src/data/appartFacts.ts, qui n'importe ni STATS ni les tables des maisons (règle de
+ * frontière, eslint.config.js et tools/test/appart-boundary.test.mjs). Ces textes sont les exceptions de la garde de gamme.
+ */
+export const MAISONS_REFERRAL = {
+  totalHouses: STATS.totalHouses,
+  houses: ENTITY_HOUSES.map((h) => ({ label: h.label, commune: h.commune })),
+  surfaces: { min: STATS.roomSizeMin, max: STATS.roomSizeMax },
+  residents: { min: STATS.minResidentsPerHouse, max: STATS.maxResidentsPerHouse },
+  cleaningPerWeek: STATS.cleaningPerWeek,
+  /** Nombre de services de la grille de /tarifs (celle des maisons : « la liste des 24 services […] est celle des maisons »). */
+  includedItems: STATS.includedItems,
+  from: { fr: HOUSES_FROM.fr.chf, en: HOUSES_FROM.en.chf },
+} as const;
+
+/** Renvoi de L'Appart vers les maisons (« dès » des maisons = HOUSES_FROM) : dernière cellule de la ligne « Piscine, sauna,
+ *  salle de sport » du tableau de L'Appart, lien vers /nos-maisons. */
+export const MAISONS_CROSS_LINK = {
+  fr: `Tu veux piscine et sauna ? Les maisons, dès ${HOUSES_FROM.fr.chf}.`,
+  en: `Want a pool and a sauna? The houses, from ${HOUSES_FROM.en.chf}.`,
+} as const;
+
+/** « Dès » de la marque : le plus bas des deux gammes (L'Appart, 730 CHF / 790 €). */
+const BRAND_FROM = APPART.price.from.eur < HOUSES_FROM.eur ? APPART.price.from : HOUSES_FROM;
+
+/**
+ * (L'Appart, 13/11/2026) Phrases canoniques de L'Appart et de la marque (Lot 4, textes du 13/11 « à confirmer ») : la fiche de
+ * L'Appart (/lappart) les porte telles quelles (paragraphe et dernière puce) ; la fiche de la marque les portera aussi (étape
+ * E5). La garde les compte exactement une fois par page porteuse : jamais dans un bloc statique « L'Appart ».
+ */
+export const APPART_CANONICAL_SENTENCE = {
+  fr: `${APPART.name}, ${APPART.descriptor.fr} : ${APPART.rooms.total} chambres meublées de ${APPART.rooms.surface.min} à ${APPART.rooms.surface.max} m² dans un appartement de ${APPART.flat.surfaceM2} m², charges, fibre, streaming et ménage des communs compris, dès ${APPART.price.from.fr.chf}/mois (loyer contractuel en euros : dès ${APPART.price.from.fr.eur}). La suite accueille une ou deux personnes.`,
+  en: `${APPART.name}, a ${APPART.descriptor.en}: ${APPART.rooms.total} furnished rooms of ${APPART.rooms.surface.min} to ${APPART.rooms.surface.max} m² in a ${APPART.flat.surfaceM2} m² flat, bills, fibre, streaming and cleaning of the shared areas included, from ${APPART.price.from.en.chf}/month (contractual rent in euros: from ${APPART.price.from.en.eur}). The suite is for one or two people.`,
+} as const;
+export const BRAND_CANONICAL_SENTENCE = {
+  fr: `La Villa Coliving : ${STATS.totalHouses + 1} adresses côté France, à la frontière de Genève — ${STATS.totalHouses} maisons de coliving et un appartement en colocation, ${STATS.totalRooms + APPART.rooms.total} chambres, tout compris dès ${BRAND_FROM.fr.chf}/mois (loyer contractuel en euros : dès ${BRAND_FROM.fr.eur}).`,
+  en: `La Villa Coliving: ${STATS.totalHouses + 1} locations on the Geneva border, French side — ${STATS.totalHouses} coliving houses and one shared flat, ${STATS.totalRooms + APPART.rooms.total} rooms, all inclusive from ${BRAND_FROM.en.chf}/month (contractual rent in euros: from ${BRAND_FROM.en.eur}).`,
+} as const;
+
 export const ENTITY_FACTS = {
   version: ENTITY_FACTS_VERSION,
   name: "La Villa Coliving",
@@ -200,6 +263,40 @@ export const ENTITY_FACTS = {
     fr: STATS_DISPLAY.fr.googleRating,
     en: STATS_DISPLAY.en.googleRating,
   },
+  // (L'Appart, 13/11/2026) Les clés ci-dessus gardent leur sens « maisons » (3 maisons, 29 chambres, 16-24 m², « dès 1 290 CHF ») :
+  // aucune garde ni gabarit existant ne change. L'Appart et la marque ont leurs propres blocs, lus par les gardes par gamme.
+  /** L'Appart (APPART, src/data/appart.ts) : ce que v_public_rooms doit rendre pour lui après la bascule (garde check:facts). */
+  appart: {
+    name: APPART.name,
+    rooms: APPART.rooms.total,
+    numbers: APPART.rooms.numbers,
+    suite: APPART.rooms.suite.number,
+    sharedBathRooms: APPART.rooms.standard.numbers.length,
+    surfaces: { min: APPART.rooms.surface.min, max: APPART.rooms.surface.max },
+    price: {
+      fromChf: APPART.price.from.chf,
+      fromEur: APPART.price.from.eur,
+      toChf: Math.max(APPART.price.room.chf, APPART.price.suite.chf),
+      toEur: Math.max(APPART.price.room.eur, APPART.price.suite.eur),
+      /** Chambre par chambre (numéros = rooms.room_number) : loyer, surface, salle d'eau. */
+      tiers: [
+        { rooms: APPART.rooms.standard.numbers, eur: APPART.price.room.eur, chf: APPART.price.room.chf, surfaceM2: APPART.rooms.standard.surfaceM2, bathroom: "shared" as const },
+        { rooms: [APPART.rooms.suite.number] as readonly number[], eur: APPART.price.suite.eur, chf: APPART.price.suite.chf, surfaceM2: APPART.rooms.suite.surfaceM2, bathroom: "private" as const },
+      ],
+    },
+    opensOn: APPART.opensOn,
+  },
+  /** La marque (les deux gammes) : 4 adresses, 33 chambres, de 730 à 1 430 CHF — jamais une valeur « maisons » ci-dessus. */
+  brand: {
+    places: STATS.totalHouses + 1,
+    totalRooms: STATS.totalRooms + APPART.rooms.total,
+    price: {
+      fromChf: BRAND_FROM.chf,
+      fromEur: BRAND_FROM.eur,
+      toChf: Math.max(STATS.priceChf, APPART.price.suite.chf, APPART.price.room.chf),
+      toEur: Math.max(CONTRACT_EUR.standard, APPART.price.suite.eur, APPART.price.room.eur),
+    },
+  },
 } as const;
 
 export interface EntityFactsText {
@@ -239,14 +336,14 @@ export function entityFactsText(lang: EntityLang): EntityFactsText {
       bullets: [
         `All-inclusive rent from ${F.price.en.fromChf}/month (contractual rent in euros: from ${F.price.en.fromEur}) — utilities, fibre up to ${F.fiberSpeed}, common-area cleaning ${F.cleaningPerWeek} times a week, pool, sauna, gym, streaming, yoga and events included.`,
         PRICE_KEY_SENTENCE.en,
-        `No application fee, no agency fee. Deposit: ${F.depositMonths} months' rent excluding charges, payable in 1, 2 or 3 instalments depending on your application.`,
-        `${F.lease.months}-month lease: you're free to leave at any time with ${F.lease.noticeMonths} month's notice.`,
+        FEES_DEPOSIT_SENTENCE.en,
+        LEASE_SENTENCE.en,
         `Commute: ${commutes}.`,
         reviewsBullet.en,
         `Who it's for: cross-border workers, expats and young professionals working in Geneva. Founded in ${F.foundingLabel.en} by ${F.founders.join(" and ")} and run directly by them — ${F.totalResidents}+ residents welcomed.`,
       ],
-      cta: "Apply",
-      ctaNote: `Reply within ${F.responseHours} h`,
+      cta: ENTITY_FACTS_CTA.en.cta,
+      ctaNote: ENTITY_FACTS_CTA.en.note,
       reviewsLink: { bullet: reviewsBullet.en, label: GOOGLE_REVIEWS_LINK_LABEL.en, href: F.googleReviews.url },
     };
   }
@@ -259,14 +356,14 @@ export function entityFactsText(lang: EntityLang): EntityFactsText {
     bullets: [
       `Loyer tout inclus dès ${F.price.fr.fromChf}/mois (loyer contractuel en euros : dès ${F.price.fr.fromEur}) — charges, fibre jusqu'à ${F.fiberSpeed}, ménage des espaces communs ${F.cleaningPerWeek} fois par semaine, piscine, sauna, salle de sport, streaming, yoga et événements compris.`,
       PRICE_KEY_SENTENCE.fr,
-      `0 € de frais de dossier, 0 € de frais d'agence. Caution : ${F.depositMonths} mois de loyer hors charges, payable en 1, 2 ou 3 fois selon ton dossier.`,
-      `Bail de ${F.lease.months} mois : tu es libre de partir à tout moment avec ${F.lease.noticeMonths} mois de préavis.`,
+      FEES_DEPOSIT_SENTENCE.fr,
+      LEASE_SENTENCE.fr,
       `Trajets : ${commutes}.`,
       reviewsBullet.fr,
       `Pour qui : frontaliers, expats et jeunes professionnels qui travaillent à Genève. Fondée en ${F.foundingLabel.fr} par ${F.founders.join(" et ")}, gérée en direct — ${F.totalResidents}+ résidents accueillis.`,
     ],
-    cta: "Candidater",
-    ctaNote: `Réponse sous ${F.responseHours} h`,
+    cta: ENTITY_FACTS_CTA.fr.cta,
+    ctaNote: ENTITY_FACTS_CTA.fr.note,
     reviewsLink: { bullet: reviewsBullet.fr, label: GOOGLE_REVIEWS_LINK_LABEL.fr, href: F.googleReviews.url },
   };
 }
@@ -286,9 +383,19 @@ export function entityFactsIssues(): string[] {
   const sum = ENTITY_HOUSES.reduce((n, h) => n + h.rooms, 0);
   if (sum !== ENTITY_FACTS.totalRooms) issues.push(`somme des chambres par maison (${sum}) ≠ totalRooms (${ENTITY_FACTS.totalRooms})`);
   if (ENTITY_HOUSES.length !== ENTITY_FACTS.totalHouses) issues.push(`nombre de maisons (${ENTITY_HOUSES.length}) ≠ totalHouses (${ENTITY_FACTS.totalHouses})`);
+  // (L'Appart, 13/11/2026) La marque = les maisons + L'Appart, jamais une saisie : 4 adresses, 33 chambres, fourchette des deux gammes.
+  const A = ENTITY_FACTS.appart, B = ENTITY_FACTS.brand, P = ENTITY_FACTS.price;
+  if (B.places !== ENTITY_FACTS.totalHouses + 1) issues.push(`adresses de la marque (${B.places}) ≠ maisons (${ENTITY_FACTS.totalHouses}) + L'Appart`);
+  if (B.totalRooms !== ENTITY_FACTS.totalRooms + A.rooms) issues.push(`chambres de la marque (${B.totalRooms}) ≠ ${ENTITY_FACTS.totalRooms} + ${A.rooms}`);
+  if (B.price.fromChf !== Math.min(P.fromChf, A.price.fromChf) || B.price.fromEur !== Math.min(P.fromEur, A.price.fromEur)) issues.push("« dès » de la marque ≠ le plus bas des deux gammes");
+  if (B.price.toChf !== Math.max(P.standardChf, A.price.toChf) || B.price.toEur !== Math.max(P.standardEur, A.price.toEur)) issues.push("haut de fourchette de la marque ≠ le plus haut des deux gammes");
+  const tierRooms = A.price.tiers.flatMap((t) => [...t.rooms]).sort((a, b) => a - b);
+  if (tierRooms.join() !== [...A.numbers].sort((a, b) => a - b).join()) issues.push(`L'Appart : chambres des paliers (${tierRooms.join(", ")}) ≠ numéros (${A.numbers.join(", ")})`);
+  if (A.price.fromChf >= P.fromChf) issues.push("L'Appart : son « dès » n'est plus sous celui des maisons — revoir la doctrine des deux gammes");
+  const shared = [LEASE_SENTENCE, FEES_DEPOSIT_SENTENCE, APPART_CANONICAL_SENTENCE, BRAND_CANONICAL_SENTENCE, MAISONS_CROSS_LINK];
   for (const lang of ["fr", "en"] as const) {
-    for (const s of entityFactsStrings(lang)) {
-      if (s.includes(ENTITY_FACTS_PLACEHOLDER) || /\{\{|\[À VÉRIFIER/.test(s)) issues.push(`${lang} : placeholder dans « ${s.slice(0, 60)}… »`);
+    for (const s of [...entityFactsStrings(lang), ...shared.map((x) => x[lang])]) {
+      if (s.includes(ENTITY_FACTS_PLACEHOLDER) || /\{\{|\[À VÉRIFIER|undefined|NaN/.test(s)) issues.push(`${lang} : placeholder dans « ${s.slice(0, 60)}… »`);
       if (/\d\.\d{3}/.test(s)) issues.push(`${lang} : séparateur de milliers non canonique dans « ${s.slice(0, 60)}… »`);
     }
   }
