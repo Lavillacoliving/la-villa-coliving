@@ -1,12 +1,21 @@
 // FAQ Data for SEO - Extensive question/answer database
 // Organized by categories for better SEO structure
 
-import { STATS, STATS_DISPLAY, TRANSIT, aOrAn, GENEVA_COMMUTE_FORMULA, PRICE_CHF_FR, PRICE_CHF_EN, PRICE_FROM_EN_NUM, PRICE_FROM_CHF_FR, sharedBathTiersText } from "@/data/stats";
+import { STATS, STATS_DISPLAY, TRANSIT, aOrAn, GENEVA_COMMUTE_FORMULA, PRICE_CHF_FR, PRICE_CHF_EN, PRICE_FROM_EN_NUM, PRICE_FROM_CHF_FR, sharedBathTiersText, thousands } from "@/data/stats";
 import { situationsFaq } from "@/data/faq/situationsFaq";
 import { priceJustificationFaq } from "@/data/priceFacts";
 import { VERIFY_ARTICLE_PATH, VERIFY_LINK_LABEL } from "@/data/verifyArticle";
+import { appartPriceFaq } from "@/data/faq/tarifsFaq";
+import { APPART } from "@/data/appart";
 
 const PRICE_FAQ = { fr: priceJustificationFaq("fr"), en: priceJustificationFaq("en") };
+
+// (L'Appart, Lot 4, étape E5 — textes du 13/11/2026, « à confirmer ») Réponses de prix à deux gammes, chacune dans sa phrase
+// (règle V2) ; nombres de L'Appart lus dans APPART, jamais tapés. La suite à deux : forme P5 (« 1 060 € par mois, soit 530 € par
+// personne à deux »), jamais « dès 530 € ».
+const AP = APPART.price;
+const SUITE_M2 = APPART.rooms.suite.surfaceM2;
+const PER_PERSON = { fr: `${thousands(AP.suitePerPersonEur, "\u00a0")} €`, en: `€${thousands(AP.suitePerPersonEur, ",")}` };
 
 // (Lot L2 « Emplacement et transport », 09/10/2026) Tout fait d'emplacement de /faq vient de TRANSIT / STATS_DISPLAY /
 // GENEVA_COMMUTE_FORMULA (D1 : destination nommée, Léman Express par défaut, deux nombres) ; aucune minute en dur, aucune
@@ -294,16 +303,26 @@ export const faqData: FAQItem[] = [
       fr: 'Combien coûte une chambre chez La Villa Coliving ?',
     },
     answer: {
-      en: `A room at La Villa Coliving costs ${PRICE_CHF_EN} per month all-inclusive with a private bathroom. The 4 rooms at our La Villa house with a shower room shared between 2 rooms (cleaned by our housekeeping team) cost ${sharedBathTiersText("en")}. No hidden fees and no application fee: utilities, fiber internet, cleaning of common areas three times a week, gym, sauna, pool, streaming and community events. Our three houses — La Villa (Ville-la-Grand), Le Loft (Ambilly) and Le Lodge (Annemasse) — are on the French side: ${GENEVA_COMMUTE_FORMULA.en}.`,
-      fr: `Une chambre chez La Villa Coliving coûte ${PRICE_CHF_FR} par mois tout inclus avec salle d'eau privative. Les 4 chambres de la maison La Villa dont la salle d'eau est partagée entre 2 chambres (entretien par notre équipe de ménage inclus) coûtent ${sharedBathTiersText("fr")}. Sans frais cachés ni frais de dossier : charges, fibre, ménage des espaces communs trois fois par semaine, salle de sport, sauna, piscine, streaming et événements communautaires. Nos trois maisons — La Villa (Ville-la-Grand), Le Loft (Ambilly) et Le Lodge (Annemasse) — sont côté France : ${GENEVA_COMMUTE_FORMULA.fr}.`,
+      // (L'Appart, E5) « Dans les maisons » en tête, L'Appart à la fin (paliers : question de prix, décision n° 24 à confirmer).
+      en: `In La Villa Coliving's houses, a room costs ${PRICE_CHF_EN} per month all-inclusive with a private bathroom. The 4 rooms at our La Villa house with a shower room shared between 2 rooms (cleaned by our housekeeping team) cost ${sharedBathTiersText("en")}. No hidden fees and no application fee: utilities, fiber internet, cleaning of common areas three times a week, gym, sauna, pool, streaming and community events. Our three houses — La Villa (Ville-la-Grand), Le Loft (Ambilly) and Le Lodge (Annemasse) — are on the French side: ${GENEVA_COMMUTE_FORMULA.en}. At ${APPART.name}, our flatshare in ${APPART.commune}, a ${APPART.rooms.standard.surfaceM2} m² room costs ${AP.room.en.chf} a month and the ${SUITE_M2} m² suite ${AP.suite.en.chf}, with bills, fibre, streaming and cleaning of the shared areas included.`,
+      fr: `Dans les maisons de La Villa Coliving, une chambre coûte ${PRICE_CHF_FR} par mois tout inclus avec salle d'eau privative. Les 4 chambres de la maison La Villa dont la salle d'eau est partagée entre 2 chambres (entretien par notre équipe de ménage inclus) coûtent ${sharedBathTiersText("fr")}. Sans frais cachés ni frais de dossier : charges, fibre, ménage des espaces communs trois fois par semaine, salle de sport, sauna, piscine, streaming et événements communautaires. Nos trois maisons — La Villa (Ville-la-Grand), Le Loft (Ambilly) et Le Lodge (Annemasse) — sont côté France : ${GENEVA_COMMUTE_FORMULA.fr}. À ${APPART.name}, notre colocation à ${APPART.commune}, une chambre de ${APPART.rooms.standard.surfaceM2} m² coûte ${AP.room.fr.chf} par mois et la suite de ${SUITE_M2} m² ${AP.suite.fr.chf}, charges, fibre, streaming et ménage des communs compris.`,
     },
   },
+  // (L'Appart, E5) Deux questions nouvelles d'intention budget, texte unique src/data/faq/tarifsFaq.ts (aussi sur /tarifs).
+  ...appartPriceFaq.fr.map((fr, i) => ({
+    id: ['cheapest-room', 'flatshare-under-800'][i],
+    category: 'Pricing & Payments',
+    question: { en: appartPriceFaq.en[i].q, fr: fr.q },
+    answer: { en: appartPriceFaq.en[i].a, fr: fr.a },
+  })),
   {
     id: 'why-higher-prices',
     category: 'Pricing & Payments',
     // (Lot L4, D8 — 10/10/2026) FAQ A.3 : même texte que /tarifs, /le-coliving, /colocation-geneve, /chambre-a-louer-geneve (src/data/priceFacts.ts).
     question: { en: PRICE_FAQ.en.q, fr: PRICE_FAQ.fr.q },
     answer: { en: PRICE_FAQ.en.a, fr: PRICE_FAQ.fr.a },
+    // (L'Appart, étape E5) Lien « Voir L'Appart » sous la réponse, comme sur les 5 autres pages de la FAQ A.3.
+    more: PRICE_FAQ.fr.more && PRICE_FAQ.en.more ? { href: PRICE_FAQ.fr.more.href, label: { en: PRICE_FAQ.en.more.label, fr: PRICE_FAQ.fr.more.label } } : undefined,
   },
   {
     id: 'security-deposit',
@@ -1075,8 +1094,9 @@ export const faqData: FAQItem[] = [
       fr: 'Les couples peuvent-ils vivre à La Villa ?',
     },
     answer: {
-      en: 'Yes, as long as each person has their own room: every room is let to one person, so a couple can live with us by taking two rooms. Contact us to check which rooms are available side by side. If you want to share a single room, or you\'re coming as a family, a studio or a flat on the French side will suit you better.',
-      fr: 'Oui, à condition que chacun ait sa chambre : une chambre accueille une seule personne, donc un couple peut vivre chez nous en prenant deux chambres. Contacte-nous pour savoir quelles chambres sont disponibles en même temps. Si tu veux partager une seule chambre à deux, ou si tu viens en famille, un studio ou un appartement côté France sera plus adapté.',
+      // (L'Appart, E5) La suite de L'Appart se loue à une ou deux personnes (forme P5) ; dans les maisons, une chambre = une personne.
+      en: `Yes. At ${APPART.name}, La Villa Coliving's flatshare in ${APPART.commune}, the ${SUITE_M2} m² suite is let to one or two people: ${AP.suite.en.eur} a month, or ${PER_PERSON.en} each for two. In the houses, each room is for one person: a couple can live there by taking two rooms — contact us to check which ones are available at the same time. If you're coming as a family, a flat on the French side will suit you better.`,
+      fr: `Oui. À ${APPART.name}, la colocation de La Villa Coliving à ${APPART.commune}, la suite de ${SUITE_M2} m² se loue à une ou deux personnes : ${AP.suite.fr.eur} par mois, soit ${PER_PERSON.fr} par personne à deux. Dans les maisons, une chambre accueille une seule personne : un couple peut y vivre en prenant deux chambres, contacte-nous pour savoir lesquelles sont disponibles en même temps. Si tu viens en famille, un appartement côté France sera plus adapté.`,
     },
   },
   {

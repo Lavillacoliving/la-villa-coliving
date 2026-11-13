@@ -317,7 +317,9 @@ test('runChecks : bloc hors périmètre, page absente, variante/version/texte fa
 test('runChecks : créneaux absents — stricts sur les pages money, adaptatifs sur les articles (avertissement, ou échec si déjà en base ou si live)', () => {
   const pages = syntheticPages({ dropNeedles: true });
   const adaptive = runChecks(m, pages, { live: false }); // mode adaptatif explicite (gel du 09/10 : ANSWER_SLOTS_LIVE = true par défaut)
-  const moneyMissing = 2 * 2 * 3 + 2 * 2; // 2 routes money × FR/EN × 3 phrases de commune + ligne A.9 de / et /nos-maisons × FR/EN (code : strict)
+  // 2 routes money × FR/EN × 3 phrases de commune + (L'Appart, E5) sa phrase de commune sur /annemasse-colocation × FR/EN
+  // + ligne A.9 de / et /nos-maisons × FR/EN (code : strict).
+  const moneyMissing = 2 * 2 * 3 + 2 + 2 * 2;
   assert.equal(adaptive.stats.needleFailures, moneyMissing, adaptive.failures.join('\n'));
   // La ligne A.9 absente échoue aussi au contrôle « exactement 1 ligne » (checkFacebookLines).
   assert.ok(adaptive.failures.every((x) => /^(en-)?(annemasse-colocation|chambre-a-louer-annemasse)\.html : créneau/.test(x) || /^(index|en|nos-maisons|en-nos-maisons)\.html : (créneau « facebookLine »|0 ligne\(s\) Facebook A\.9)/.test(x)), adaptive.failures.join('\n'));

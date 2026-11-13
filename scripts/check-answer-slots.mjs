@@ -57,7 +57,9 @@ export const L1_TARGETS = Object.freeze([
   // (Brief du 05/11/2026, D1-D2) Ligne A.9 : groupe Facebook nommé et attribué sur l'accueil et /nos-maisons (FR + EN).
   { route: '/', needles: ['facebookLine'] },
   { route: '/nos-maisons', needles: ['facebookLine'] },
-  { route: '/annemasse-colocation', needles: ['commune:lelodge', 'commune:lavilla', 'commune:leloft'] },
+  // (L'Appart, étape E5) + la phrase de commune de L'Appart, forme « à la suite » (FAQ « Quel quartier… », page en code). Elle reste
+  // HORS des cibles d'articles (critique C10 : son SQL attend la bascule) — seule la page /annemasse-colocation l'exige.
+  { route: '/annemasse-colocation', needles: ['commune:lelodge', 'commune:lavilla', 'commune:leloft', 'appartCommune:suite'] },
   { route: '/chambre-a-louer-annemasse', needles: ['commune:lelodge', 'commune:lavilla', 'commune:leloft'] },
   { route: '/blog/ou-habiter-frontalier-suisse-villes-france-pas-cher', needles: ['commune:lelodge', 'commune:lavilla', 'commune:leloft', 'facebookMention'] },
   { route: '/blog/quartiers-annemasse-ou-vivre-selon-profil', needles: ['commune:lelodge'] },
@@ -161,6 +163,8 @@ export function hasNeedle(text, needle) {
 export function resolveNeedle(m, key, lang) {
   const [kind, slug, opened] = key.split(':');
   if (kind === 'commune') return m.communeSentence(slug, lang, opened ? { openedIn: Number(opened) } : {});
+  // (L'Appart, étape E5) Phrase de commune de L'Appart (src/data/appartFacts.ts) ; « :suite » = forme qui suit la phrase du Lodge.
+  if (kind === 'appartCommune') return m.appartCommuneSentence(lang, { following: slug === 'suite' });
   if (kind === 'guarantor') return m.GUARANTOR_SENTENCE[lang];
   if (kind === 'facebookMention') return m.facebookMention(lang); // (Lot L5) mention A.7 dans 4 articles
   if (kind === 'facebookLine') return m.facebookLine(lang).sentence; // (Brief du 05/11/2026) ligne A.9 de l'accueil et de /nos-maisons

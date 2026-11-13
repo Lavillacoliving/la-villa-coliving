@@ -1,5 +1,6 @@
 import { INSTAGRAM_URL } from "@/lib/structuredData";
 import { STATS } from "@/data/stats";
+import { APPART } from "@/data/appart";
 import { useLocation } from "react-router-dom";
 import { LocalizedLink } from "@/components/LocalizedLink";
 import { LanguageSwitchLink } from "@/components/LanguageSwitchLink";
@@ -40,6 +41,8 @@ export function FooterV7() {
       path: "/nos-maisons",
       label: language === "en" ? "Our Houses" : "Nos Maisons",
     },
+    // (L'Appart, Lot 4, étape E5 — Q16, à confirmer) Lien vers L'Appart juste après « Nos Maisons » ; rien dans la barre du haut.
+    { path: `/${APPART.key}`, label: APPART.name },
     {
       path: "/chambres-disponibles",
       label: language === "en" ? "Available rooms" : "Chambres disponibles",
@@ -86,9 +89,11 @@ export function FooterV7() {
               />
             </LocalizedLink>
             <p className="text-[#A8A29E] max-w-md mb-6 leading-relaxed">
+              {/* (L'Appart, E5 — texte du 13/11/2026 « à confirmer ») Une phrase de plus pour L'Appart, sans prix ; jamais une phrase
+                  canonique ici (le pied de page est sur les pages de la fiche, qui compte chaque phrase une fois). */}
               {language === "en"
-                ? `Boutique coliving in Greater Geneva. ${STATS.totalHouses} houses, ${STATS.totalRooms} rooms, pool, sauna and gym in every house. All inclusive.`
-                : `Coliving boutique au Grand Genève. ${STATS.totalHouses} maisons, ${STATS.totalRooms} chambres, piscine, sauna et salle de sport dans chaque maison. Tout inclus.`}
+                ? `Boutique coliving in Greater Geneva. ${STATS.totalHouses} houses, ${STATS.totalRooms} rooms, pool, sauna and gym in every house. And ${APPART.name}, our flatshare in ${APPART.commune}: ${APPART.rooms.total} rooms near the station. All inclusive.`
+                : `Coliving boutique au Grand Genève. ${STATS.totalHouses} maisons, ${STATS.totalRooms} chambres, piscine, sauna et salle de sport dans chaque maison. Et ${APPART.name}, notre colocation à ${APPART.commune} : ${APPART.rooms.total} chambres près de la gare. Tout inclus.`}
             </p>
             <div className="flex items-center gap-3">
               <a

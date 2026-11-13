@@ -2,6 +2,13 @@ import type { QAPair } from "@/lib/structuredData";
 import { STATS, PRICE_FROM_CHF_FR, PRICE_FROM_CHF_EN, TRANSIT, aOrAn } from "@/data/stats";
 import { pickSituations } from "@/data/faq/situationsFaq";
 import { communeSentence } from "@/data/answerSlots";
+import { APPART } from "@/data/appart";
+import { appartCommuneSentence } from "@/data/appartFacts";
+
+// (L'Appart, Lot 4, étape E5 — textes du 13/11/2026, « à confirmer ») Page d'intention Annemasse : L'Appart ouvre la réponse de prix
+// (sa phrase, puis celle des trois maisons de coliving, chacune avec son « dès ») ; la réponse « Quel quartier » ajoute la phrase de
+// commune de L'Appart, forme « à la suite » (après celle du Lodge) — vérifiée par check:slots sur cette page (appartCommune:suite).
+const APPART_FROM = APPART.price.from;
 
 // (Lot L1 « ingénierie des créneaux », 10/2026) Minutes depuis TRANSIT (D1-L1) ; la réponse « Quel quartier » =
 // les trois phrases de commune (M2, A.5) de src/data/answerSlots.ts — Perplexity reconstruit son tableau de quartiers
@@ -22,7 +29,7 @@ export const annemasseColocationFaq: { fr: QAPair[]; en: QAPair[] } = {
   fr: [
     {
       q: "Combien coûte une colocation à Annemasse chez La Villa Coliving ?",
-      a: `Nos chambres privatives à Annemasse Agglo (Ville-la-Grand, Ambilly, Annemasse) sont à partir de ${PRICE_FROM_CHF_FR}/mois tout inclus. Le prix comprend le loyer, les charges (eau, électricité, chauffage), la fibre jusqu'à 8 Gb/s, le ménage ${STATS.cleaningPerWeek} fois par semaine des communs, l'accès à la piscine chauffée, à la salle de sport et au sauna, les cours de yoga et fitness privés hebdomadaires, et les événements communautaires mensuels. Pas de frais d'agence, pas de frais de dossier.`,
+      a: `À ${APPART.name}, notre colocation près de la gare d'${APPART.commune}, une chambre coûte à partir de ${APPART_FROM.fr.chf}/mois, charges, fibre, streaming et ménage des communs compris. Dans nos trois maisons de coliving d'Annemasse Agglo (Ville-la-Grand, Ambilly, Annemasse), les chambres sont à partir de ${PRICE_FROM_CHF_FR}/mois tout inclus. Le prix comprend le loyer, les charges (eau, électricité, chauffage), la fibre jusqu'à 8 Gb/s, le ménage ${STATS.cleaningPerWeek} fois par semaine des communs, l'accès à la piscine chauffée, à la salle de sport et au sauna, les cours de yoga et fitness privés hebdomadaires, et les événements communautaires mensuels. Pas de frais d'agence, pas de frais de dossier.`,
     },
     {
       q: "Combien de temps pour aller à Genève depuis Annemasse ?",
@@ -30,7 +37,7 @@ export const annemasseColocationFaq: { fr: QAPair[]; en: QAPair[] } = {
     },
     {
       q: "Quel quartier d'Annemasse Agglo choisir : Ville-la-Grand, Ambilly ou Annemasse ?",
-      a: `Cela dépend de ta priorité. ${communeSentence("leloft", "fr")} Ambilly est la commune la plus proche de la frontière suisse : le Foron, la rivière-frontière, à ${LOFT.border.foronWalkMin} min à pied, et le centre de Genève (Rive) en ${LOFT.bikeToRiveMin} min à vélo par la Voie Verte. ${communeSentence("lavilla", "fr")} Ville-la-Grand est résidentielle et calme, en bordure du Foron et de sa zone naturelle. ${communeSentence("lelodge", "fr")} Annemasse centre offre toutes les commodités urbaines.`,
+      a: `Cela dépend de ta priorité. ${communeSentence("leloft", "fr")} Ambilly est la commune la plus proche de la frontière suisse : le Foron, la rivière-frontière, à ${LOFT.border.foronWalkMin} min à pied, et le centre de Genève (Rive) en ${LOFT.bikeToRiveMin} min à vélo par la Voie Verte. ${communeSentence("lavilla", "fr")} Ville-la-Grand est résidentielle et calme, en bordure du Foron et de sa zone naturelle. ${communeSentence("lelodge", "fr")} ${appartCommuneSentence("fr", { following: true })} Annemasse centre offre toutes les commodités urbaines.`,
       more: { href: "/blog/vivre-a-annemasse-quand-on-travaille-a-geneve", label: "Vivre à Annemasse quand on travaille à Genève" },
     },
     {
@@ -54,7 +61,7 @@ export const annemasseColocationFaq: { fr: QAPair[]; en: QAPair[] } = {
   en: [
     {
       q: "How much does a flatshare room in Annemasse cost at La Villa Coliving?",
-      a: `Our private rooms in Annemasse Agglo (Ville-la-Grand, Ambilly, Annemasse) start at ${PRICE_FROM_CHF_EN}/month all inclusive. The price covers rent, bills (water, electricity, heating), fibre up to 8 Gb/s, cleaning of the common areas ${STATS.cleaningPerWeek} times a week, access to the heated pool, gym and sauna, weekly private yoga and fitness classes, and monthly community events. No agency fee, no application fee.`,
+      a: `At ${APPART.name}, our flatshare near ${APPART.commune} station, a room costs from ${APPART_FROM.en.chf}/month, with bills, fibre, streaming and cleaning of the shared areas included. In our three coliving houses in Annemasse Agglo (Ville-la-Grand, Ambilly, Annemasse), rooms start at ${PRICE_FROM_CHF_EN}/month all inclusive. The price covers rent, bills (water, electricity, heating), fibre up to 8 Gb/s, cleaning of the common areas ${STATS.cleaningPerWeek} times a week, access to the heated pool, gym and sauna, weekly private yoga and fitness classes, and monthly community events. No agency fee, no application fee.`,
     },
     {
       q: "How long does it take to get to Geneva from Annemasse?",
@@ -62,7 +69,7 @@ export const annemasseColocationFaq: { fr: QAPair[]; en: QAPair[] } = {
     },
     {
       q: "Which part of Annemasse Agglo should you choose: Ville-la-Grand, Ambilly or Annemasse?",
-      a: `It depends on your priority. ${communeSentence("leloft", "en")} Ambilly is the town closest to the Swiss border: the Foron, the border river, is ${aOrAn(LOFT.border.foronWalkMin)} ${LOFT.border.foronWalkMin}-minute walk away, and central Geneva (Rive) is ${LOFT.bikeToRiveMin} minutes by bike on the Voie Verte. ${communeSentence("lavilla", "en")} Ville-la-Grand is residential and quiet, beside the Foron and its nature area. ${communeSentence("lelodge", "en")} Central Annemasse puts every urban convenience nearby.`,
+      a: `It depends on your priority. ${communeSentence("leloft", "en")} Ambilly is the town closest to the Swiss border: the Foron, the border river, is ${aOrAn(LOFT.border.foronWalkMin)} ${LOFT.border.foronWalkMin}-minute walk away, and central Geneva (Rive) is ${LOFT.bikeToRiveMin} minutes by bike on the Voie Verte. ${communeSentence("lavilla", "en")} Ville-la-Grand is residential and quiet, beside the Foron and its nature area. ${communeSentence("lelodge", "en")} ${appartCommuneSentence("en", { following: true })} Central Annemasse puts every urban convenience nearby.`,
       more: { href: "/blog/vivre-a-annemasse-quand-on-travaille-a-geneve", label: "Living in Annemasse when you work in Geneva" },
     },
     {

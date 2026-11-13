@@ -1,6 +1,12 @@
 import type { QAPair } from "@/lib/structuredData";
 import { STATS, PRICE_CHF_FR, PRICE_CHF_EN } from "@/data/stats";
 import { pickSituations } from "@/data/faq/situationsFaq";
+import { APPART } from "@/data/appart";
+
+// (L'Appart, Lot 4 — texte du 13/11/2026 « à confirmer », marqué E4 dans la source, posé à l'étape E5 qui tient src/data/faq/*) La page
+// devient celle des deux adresses d'Annemasse, L'Appart devant : sa phrase de prix ouvre la réponse (paliers : question de prix,
+// décision n° 24 à confirmer), le Lodge suit. Nombres lus dans APPART.
+const AP = APPART.price;
 
 // FAQ de /chambre-a-louer-annemasse (inventaire du Lodge) — les 6 questions du Lot 6 SEO funnel, sorties de
 // la page le 07/09/2026 (Lot C2) : FR **et** EN, réponses dans le DOM via FaqSection, durée alignée sur D5
@@ -9,7 +15,7 @@ export const chambreAnnemasseFaq: { fr: QAPair[]; en: QAPair[] } = {
   fr: [
     {
       q: "Quel est le prix d'une chambre meublée à Annemasse chez La Villa Coliving ?",
-      a: `Les 12 chambres du Lodge, à Annemasse Romagny, sont à ${PRICE_CHF_FR}/mois tout inclus : loyer, charges, fibre, ménage des communs ${STATS.cleaningPerWeek} fois par semaine, sauna, salle de sport, piscine et jardin, événements. Chaque chambre a sa salle d'eau privative. Pas de frais d'agence, pas de frais de dossier, caution de ${STATS.depositMonths} mois de loyer hors charges, payable en 1, 2 ou 3 fois selon ton dossier et restituée après l'état des lieux.`,
+      a: `À ${APPART.name}, notre colocation du quartier de la gare, une chambre de ${APPART.rooms.standard.surfaceM2} m² est à ${AP.room.fr.chf}/mois et la suite de ${APPART.rooms.suite.surfaceM2} m² à ${AP.suite.fr.chf}/mois, charges, fibre, streaming et ménage des communs compris. Les 12 chambres du Lodge, à Annemasse Romagny, sont à ${PRICE_CHF_FR}/mois tout inclus : loyer, charges, fibre, ménage des communs ${STATS.cleaningPerWeek} fois par semaine, sauna, salle de sport, piscine et jardin, événements. Chaque chambre a sa salle d'eau privative. Pas de frais d'agence, pas de frais de dossier, caution de ${STATS.depositMonths} mois de loyer hors charges, payable en 1, 2 ou 3 fois selon ton dossier et restituée après l'état des lieux.`,
     },
     {
       q: "Les chambres à louer à Annemasse sont-elles vraiment meublées ?",
@@ -36,7 +42,7 @@ export const chambreAnnemasseFaq: { fr: QAPair[]; en: QAPair[] } = {
   en: [
     {
       q: "How much is a furnished room in Annemasse at La Villa Coliving?",
-      a: `The Lodge's 12 rooms, in Annemasse Romagny, cost ${PRICE_CHF_EN}/month all inclusive: rent, bills, fibre, cleaning of the common areas ${STATS.cleaningPerWeek} times a week, sauna, gym, pool and garden, events. Every room has its own private shower room. No agency fee, no application fee, deposit of ${STATS.depositMonths} months' rent excluding charges, payable in 1, 2 or 3 instalments depending on your application and returned after the check-out inspection.`,
+      a: `At ${APPART.name}, our flatshare near the station, a ${APPART.rooms.standard.surfaceM2} m² room is ${AP.room.en.chf}/month and the ${APPART.rooms.suite.surfaceM2} m² suite ${AP.suite.en.chf}/month, with bills, fibre, streaming and cleaning of the shared areas included. The Lodge's 12 rooms, in Annemasse Romagny, cost ${PRICE_CHF_EN}/month all inclusive: rent, bills, fibre, cleaning of the common areas ${STATS.cleaningPerWeek} times a week, sauna, gym, pool and garden, events. Every room has its own private shower room. No agency fee, no application fee, deposit of ${STATS.depositMonths} months' rent excluding charges, payable in 1, 2 or 3 instalments depending on your application and returned after the check-out inspection.`,
     },
     {
       q: "Are the rooms for rent in Annemasse really furnished?",

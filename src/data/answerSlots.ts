@@ -30,6 +30,10 @@ import {
   PRICE_EN_NUM,
   PRICE_FROM_FR_NUM,
   PRICE_FROM_EN_NUM,
+  EUR_FROM_FR_NUM,
+  EUR_FROM_EN_NUM,
+  EUR_STANDARD_FR_NUM,
+  EUR_STANDARD_EN_NUM,
   TRANSIT,
   MARKET_ROOM_EUR,
   FACEBOOK_GROUP,
@@ -38,9 +42,10 @@ import {
 } from "./stats";
 import { ENTITY_HOUSES, GUARANTOR_SENTENCE, type EntityLang, type EntityHouseSlug } from "./entityFacts";
 import { PLACE_PAGE_KEYS, type PlaceKey } from "./places";
+import { APPART } from "./appart";
 
 /** Incrémenter à chaque changement de texte du bloc : porté par data-ou-chercher-version, comparé par la CI. */
-export const OU_CHERCHER_VERSION = "2026-11-19"; // 19/11 : ligne opérateur « de 1 290 à 1 430 CHF par mois » (palier des chambres 7 et 8 de La Villa) ; 12/10 : canal 3 « règles publiées »
+export const OU_CHERCHER_VERSION = "2026-11-21"; // 21/11 (L'Appart) : ligne opérateur à deux gammes (maisons puis L'Appart, euros dans une 3e phrase) ; 19/11 : ligne opérateur « de 1 290 à 1 430 CHF par mois » (palier des chambres 7 et 8 de La Villa) ; 12/10 : canal 3 « règles publiées »
 
 export type OuChercherVariant = "full" | "short";
 
@@ -66,6 +71,14 @@ const house = (slug: EntityHouseSlug) => {
 const houseParen = (lang: EntityLang) =>
   ENTITY_HOUSES.map((h) => `${h.label} ${lang === "en" ? "in" : "à"} ${h.commune}`).join(", ");
 
+/**
+ * (L'Appart, Lot 4, étape E5 — textes du 13/11/2026, « à confirmer ») La ligne « opérateurs » nomme les DEUX gammes, maisons
+ * d'abord (surface de marque) : une phrase par gamme, puis les euros dans une troisième (D0-ter : CHF et € jamais dans la même
+ * phrase) ; jamais un prix de L'Appart dans la phrase de la piscine (règle V2). Fourchette de L'Appart = ses deux paliers (APPART).
+ */
+const APPART_LOW = APPART.price.from;
+const APPART_HIGH = APPART.price.room.chf >= APPART.price.suite.chf ? APPART.price.room : APPART.price.suite;
+
 // (16/10/2026) Milliers en espace insécable, convention FR de stats.ts : « 1 600 » ne se coupe plus sur mobile.
 const membersFr = thousands(FACEBOOK_GROUP.membersApprox, "\u00a0");
 const membersEn = thousands(FACEBOOK_GROUP.membersApprox, ",");
@@ -87,7 +100,7 @@ export function ouChercherText(lang: EntityLang, variant: OuChercherVariant): Ou
       {
         key: "operators",
         h3: "Coliving operators on the French side",
-        p: `La Villa Coliving: ${STATS.totalHouses} houses (${houseParen("en")}), ${STATS.totalRooms} furnished rooms of ${STATS.roomSizeMin} to ${STATS.roomSizeMax} m², pool, sauna and gym, all inclusive from CHF ${PRICE_FROM_EN_NUM} to ${PRICE_EN_NUM} a month. No application fee, your employment contract is the file. Apply in ${STATS.applyMinutes} minutes, answer within ${STATS.responseHours} hours.`,
+        p: `La Villa Coliving: ${STATS.totalHouses} coliving houses (${houseParen("en")}), ${STATS.totalRooms} furnished rooms of ${STATS.roomSizeMin} to ${STATS.roomSizeMax} m², pool, sauna and gym, all inclusive from CHF ${PRICE_FROM_EN_NUM} to ${PRICE_EN_NUM} a month. And ${APPART.name}, a ${APPART.descriptor.en}: ${APPART.rooms.total} rooms of ${APPART.rooms.surface.min} to ${APPART.rooms.surface.max} m², with bills, fibre, streaming and cleaning of the shared areas included, from CHF ${APPART_LOW.en.chfNum} to ${APPART_HIGH.en.chfNum} a month. In euros: €${APPART_LOW.en.eurNum} to €${APPART_HIGH.en.eurNum} a month at ${APPART.name}, €${EUR_FROM_EN_NUM} to €${EUR_STANDARD_EN_NUM} in the houses. No application fee, your employment contract is the file. Apply in ${STATS.applyMinutes} minutes, answer within ${STATS.responseHours} hours.`,
       },
       {
         key: "platforms",
@@ -125,7 +138,7 @@ export function ouChercherText(lang: EntityLang, variant: OuChercherVariant): Ou
     {
       key: "operators",
       h3: "Les opérateurs de coliving côté France",
-      p: `La Villa Coliving : ${STATS.totalHouses} maisons (${houseParen("fr")}), ${STATS.totalRooms} chambres meublées de ${STATS.roomSizeMin} à ${STATS.roomSizeMax} m², piscine, sauna et salle de sport, tout inclus de ${PRICE_FROM_FR_NUM} à ${PRICE_FR_NUM} CHF par mois. 0 € de frais de dossier, dossier = contrat de travail. Candidature en ${STATS.applyMinutes} min, réponse sous ${STATS.responseHours} h.`,
+      p: `La Villa Coliving : ${STATS.totalHouses} maisons de coliving (${houseParen("fr")}), ${STATS.totalRooms} chambres meublées de ${STATS.roomSizeMin} à ${STATS.roomSizeMax} m², piscine, sauna et salle de sport, tout inclus de ${PRICE_FROM_FR_NUM} à ${PRICE_FR_NUM} CHF par mois. Et ${APPART.name}, ${APPART.descriptor.fr} : ${APPART.rooms.total} chambres de ${APPART.rooms.surface.min} à ${APPART.rooms.surface.max} m², charges, fibre, streaming et ménage des communs compris, de ${APPART_LOW.fr.chfNum} à ${APPART_HIGH.fr.chfNum} CHF par mois. En euros : de ${APPART_LOW.fr.eurNum} à ${APPART_HIGH.fr.eurNum} € par mois à ${APPART.name}, de ${EUR_FROM_FR_NUM} à ${EUR_STANDARD_FR_NUM} € dans les maisons. 0 € de frais de dossier, dossier = contrat de travail. Candidature en ${STATS.applyMinutes} min, réponse sous ${STATS.responseHours} h.`,
     },
     {
       key: "platforms",
@@ -250,6 +263,9 @@ export function coutDeLaVieRowLabel(lang: EntityLang): string {
 // caractère près : posée en base par scripts/admin-slots-cta.edits.mjs, vérifiée dans le texte visible par check:slots
 // (L1_TARGETS, clé « adminSlot:<clé> »). Une seule mention de la marque par créneau (retenue premium du 13/10/2026).
 // Le créneau « dossier » n'a PAS de phrase garant : la formule canonique figure déjà dans l'article (a6Text, § 7).
+// (L'Appart, étape E5 — décision n° 23 de la critique du 13/11/2026, à confirmer) Le créneau « dossier », seul des six, nomme aussi
+// L'Appart : sa parenthèse décrit toute l'offre (le dossier en trois pièces vaut pour les deux gammes). Texte copié dans l'article
+// par le SQL n° 10a (scripts/lappart-creneau-dossier.edits.mjs), qui part JUSTE AVANT la fusion du code : check:slots compare.
 
 export type AdminSlotKey = "permis-g" | "fiscalite" | "salaire" | "dossier" | "oi" | "choc";
 export const ADMIN_SLOT_KEYS: readonly AdminSlotKey[] = ["permis-g", "fiscalite", "salaire", "dossier", "oi", "choc"];
@@ -290,9 +306,9 @@ const ADMIN_SLOTS: Readonly<Record<AdminSlotKey, Record<EntityLang, () => string
   },
   dossier: {
     fr: () =>
-      `Chez La Villa Coliving (${numberWord(STATS.totalHouses, "fr")} maisons à ${houseCommunes("fr")}, ${priceRangeText("fr")} par mois tout inclus), le dossier tient en trois pièces : contrat de travail signé ou promesse d'embauche, pièce d'identité, caution de ${STATS.depositMonths} mois de loyer hors charges.`,
+      `Chez La Villa Coliving (${numberWord(STATS.totalHouses, "fr")} maisons de coliving à ${houseCommunes("fr")}, ${priceRangeText("fr")} par mois tout inclus, et une colocation à ${APPART.commune} dès ${APPART_LOW.fr.chf} par mois), le dossier tient en trois pièces : contrat de travail signé ou promesse d'embauche, pièce d'identité, caution de ${STATS.depositMonths} mois de loyer hors charges.`,
     en: () =>
-      `At La Villa Coliving (${numberWord(STATS.totalHouses, "en")} houses in ${houseCommunes("en")}, ${priceRangeText("en")} a month all inclusive), the file comes down to three items: a signed employment contract or job offer, an ID, and a deposit of ${numberWord(STATS.depositMonths, "en")} months' rent excluding bills.`,
+      `At La Villa Coliving (${numberWord(STATS.totalHouses, "en")} coliving houses in ${houseCommunes("en")}, ${priceRangeText("en")} a month all inclusive, and a flatshare in ${APPART.commune} from ${APPART_LOW.en.chf} a month), the file comes down to three items: a signed employment contract or job offer, an ID, and a deposit of ${numberWord(STATS.depositMonths, "en")} months' rent excluding bills.`,
   },
   oi: {
     fr: () => "Chambre en coliving côté France (La Villa Coliving)",

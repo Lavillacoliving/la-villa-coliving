@@ -19,11 +19,37 @@ test('D11 : alternateName identiques sur les fiches d\'organisation (LocalBusine
       assert.ok(node.sameAs.includes(m.GOOGLE_BUSINESS_PROFILE_URL));
       assert.ok(!node.sameAs.some((u) => /share\.google/.test(u)), 'plus de lien court share.google');
       assert.ok(!node.sameAs.some((u) => /facebook\.com/.test(u)), 'jamais Facebook dans sameAs (D10)');
-      assert.equal(node.department.length, 3);
+      // (L'Appart, étape E5) La marque : les 3 maisons puis L'Appart dans `department`.
+      assert.equal(node.department.length, 4);
+      assert.deepEqual(node.department.map((d) => d['@id']), [...m.HOUSES.map((h) => `${h.url}#lodging`), m.placeLodgingId(m.APPART_KEY)]);
       for (const d of node.department) { assert.match(d['@id'], /#lodging$/); assert.equal(d.parentOrganization['@id'], m.ORG_ID); }
     }
   }
   assert.equal(m.GOOGLE_BUSINESS_PROFILE_URL, m.GOOGLE_REVIEWS.url);
+});
+
+test('(L\'Appart, E5) fiches de la marque : 33 chambres = ENTITY_FACTS.brand, priceRange de la marque, une offre par gamme, aucun équipement des maisons', () => {
+  const NB = '\u00A0';
+  const B = m.ENTITY_FACTS.brand, A = m.ENTITY_FACTS.appart, F = m.ENTITY_FACTS;
+  for (const lang of LANGS) {
+    for (const node of [m.buildLocalBusinessSchema(lang, 'desc'), m.buildHomeLodgingBusinessSchema(lang)]) {
+      assert.equal(node.numberOfRooms, B.totalRooms);
+      assert.equal(node.numberOfRooms, node.department.reduce((n, d) => n + d.numberOfRooms, 0), 'somme des lieux');
+      assert.equal(node.priceRange, lang === 'en' ? `CHF ${B.price.fromChf}–1,430/month` : `${B.price.fromChf}–1${NB}430 CHF/mois`);
+      assert.equal(B.price.toChf, 1430);
+      // Deux offres, une par gamme, jamais 730–1 430 sur une seule.
+      assert.ok(Array.isArray(node.makesOffer) && node.makesOffer.length === 2);
+      const [maisons, appart] = node.makesOffer;
+      assert.deepEqual([maisons.lowPrice, maisons.highPrice, maisons.offerCount], [String(F.price.fromChf), String(F.price.standardChf), F.totalRooms]);
+      assert.deepEqual([appart.lowPrice, appart.highPrice, appart.offerCount], [String(A.price.fromChf), String(A.price.toChf), A.rooms]);
+      assert.equal(appart.availabilityStarts, A.opensOn);
+      assert.equal(appart.availability, undefined, 'aucune disponibilité affirmée pour L\'Appart (elle se lit chambre par chambre)');
+      assert.doesNotMatch(`${appart.name} ${appart.description}`, /piscine|sauna|salle de sport|\bpool\b|\bgym\b/i);
+      // Les équipements des maisons vivent sur leurs nœuds, jamais sur la fiche de la marque.
+      for (const a of node.amenityFeature ?? []) assert.doesNotMatch(a.name, /piscine|sauna|salle de sport|\bpool\b|\bgym\b/i, a.name);
+      for (const a of node.amenityFeature ?? []) assert.ok(!a.name.includes(m.STATS.fiberSpeed), `débit de fibre des maisons sur la fiche de la marque : ${a.name}`);
+    }
+  }
 });
 
 test('L6.2 : un nœud LodgingBusiness par maison — @id, nom, numberOfRooms, priceRange, amenityFeature = ENTITY_HOUSES.amenities, sameAs bookmycoliving, pas de currenciesAccepted', () => {
@@ -102,9 +128,8 @@ test('garde entityGraphIssues : fiche sans alternateName, nœud maison sans pare
 
 test('(L\'Appart, E2g) entityGraphIssues par lieu : le nœud de L\'Appart est reconnu (4 chambres) ; sa page porte son bloc autonome dès qu\'elle existe', () => {
   for (const lang of LANGS) {
-    // Fiche de la marque telle que l'étape E5 la posera : les 3 maisons et L'Appart dans `department`.
-    const org = m.buildLocalBusinessSchema(lang, 'd');
-    const brand = { ...org, numberOfRooms: 33, department: [...org.department, m.buildAppartLodgingNode(lang)] };
+    // Fiche de la marque (étape E5) : les 3 maisons et L'Appart dans `department`.
+    const brand = m.buildLocalBusinessSchema(lang, 'd');
     assert.deepEqual(entityGraphIssues(flatten(brand), 'tarifs.html', m), []);
     const wrong = JSON.parse(JSON.stringify(brand)); wrong.department[3].numberOfRooms = 5;
     assert.deepEqual(entityGraphIssues(flatten(wrong), 'tarifs.html', m), ['lappart : numberOfRooms=5 ≠ 4']);

@@ -213,23 +213,22 @@ test('textes de la source : aucune phrase de L\'Appart ne porte un de ses montan
 // ── JSON-LD ──────────────────────────────────────────────────────────────────────────────────────────────────────────────────
 
 const flatten = (node, acc = []) => { if (Array.isArray(node)) node.forEach((x) => flatten(x, acc)); else if (node && typeof node === 'object') { if (node['@type']) acc.push(node); for (const v of Object.values(node)) flatten(v, acc); } return acc; };
-/** Fiche de l'organisation telle que l'étape E5 la posera : 4 lieux dans `department`, 33 chambres, une offre par gamme. */
+/** Fiche de l'organisation de la marque (posée à l'étape E5) : 4 lieux dans `department`, 33 chambres, une offre par gamme. */
 function brandOrg(lang = 'fr') {
-  const org = m.buildLocalBusinessSchema(lang, 'd');
-  const houses = org.makesOffer;
-  return {
-    ...org,
-    numberOfRooms: m.ENTITY_FACTS.brand.totalRooms,
-    department: [...org.department, m.buildAppartLodgingNode(lang)],
-    makesOffer: [houses, { ...houses, name: 'Chambre en colocation à Annemasse', lowPrice: String(m.APPART.price.from.chf), highPrice: String(m.APPART.price.suite.chf), offerCount: m.APPART.rooms.total }],
-  };
+  return m.buildLocalBusinessSchema(lang, 'd');
+}
+/** La même fiche réduite aux seules maisons (forme d'avant l'étape E5) : 3 lieux, 29 chambres, l'offre des maisons. */
+function maisonsOrg(lang = 'fr') {
+  const org = brandOrg(lang);
+  return { ...org, numberOfRooms: m.ENTITY_FACTS.totalRooms, department: org.department.slice(0, 3), makesOffer: org.makesOffer[0] };
 }
 
-test('JSON-LD par gamme : les fiches de l\'organisation d\'aujourd\'hui et celle de l\'étape E5 passent ; le nœud de L\'Appart aussi', () => {
+test('JSON-LD par gamme : les fiches de l\'organisation (marque, depuis l\'étape E5, et maisons seules) passent ; le nœud de L\'Appart aussi', () => {
   for (const lang of LANGS) {
     assert.deepEqual(jsonLdGammeIssues(flatten(m.buildLocalBusinessSchema(lang, 'd')), m), []);
     assert.deepEqual(jsonLdGammeIssues(flatten(m.buildHomeLodgingBusinessSchema(lang)), m), []);
     assert.deepEqual(jsonLdGammeIssues(flatten(brandOrg(lang)), m), []);
+    assert.deepEqual(jsonLdGammeIssues(flatten(maisonsOrg(lang)), m), []);
     assert.deepEqual(jsonLdGammeIssues(flatten(m.buildAppartLodgingNode(lang, { context: true })), m), []);
     const list = m.buildAvailableRoomsItemList(ROWS_B.filter((r) => r.availability === 'available' || r.available_from), lang);
     assert.deepEqual(jsonLdGammeIssues(flatten(list), m), []);
@@ -239,7 +238,7 @@ test('JSON-LD par gamme : les fiches de l\'organisation d\'aujourd\'hui et celle
 test('JSON-LD par gamme : numberOfRooms à sa place (33 sur la fiche seulement, = somme de department ; 4 sur L\'Appart seulement)', () => {
   const org = brandOrg();
   assert.ok(jsonLdGammeIssues(flatten({ ...org, numberOfRooms: 29 }), m).includes('fiche de l\'organisation : numberOfRooms=29 ≠ somme de ses lieux (department) 33'));
-  const today = m.buildLocalBusinessSchema('fr', 'd');
+  const today = maisonsOrg();
   assert.ok(jsonLdGammeIssues(flatten({ ...today, numberOfRooms: 33 }), m).includes('fiche de l\'organisation : numberOfRooms=33 ≠ somme de ses lieux (department) 29'));
   assert.ok(jsonLdGammeIssues(flatten({ ...today, numberOfRooms: 10, department: undefined }), m).some((i) => /fiche de l'organisation : numberOfRooms=10 \(attendu 29 pour les maisons ou 33 pour la marque\)/.test(i)));
   assert.deepEqual(jsonLdGammeIssues([{ '@type': 'LodgingBusiness', '@id': 'x#lodging', numberOfRooms: 33 }], m), ['numberOfRooms=33 (chambres de la marque) hors de la fiche de l\'organisation']);

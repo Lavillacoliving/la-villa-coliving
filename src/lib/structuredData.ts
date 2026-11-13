@@ -2,7 +2,7 @@
 // Règle d'or AEO : le texte d'une réponse balisée doit être IDENTIQUE au texte visible.
 // buildFaqPageSchema() construit donc le FAQPage à partir des mêmes paires {q,a} affichées.
 
-import { STATS, HOUSES_FROM, ROOMS_BY_HOUSE, PRICE_FR_NUM, PRICE_EN_NUM, PRICE_FROM_FR_NUM, PRICE_FROM_EN_NUM, GENEVA_COMMUTE_FORMULA, GOOGLE_REVIEWS } from "@/data/stats";
+import { STATS, HOUSES_FROM, ROOMS_BY_HOUSE, PRICE_FR_NUM, PRICE_EN_NUM, PRICE_FROM_FR_NUM, PRICE_FROM_EN_NUM, GENEVA_COMMUTE_FORMULA, GOOGLE_REVIEWS, thousands } from "@/data/stats";
 import { APPART_KEY, isPlaceKey, roomLabel, type AppartKey, type MaisonKey, type PlaceKey } from "@/data/places";
 import { APPART } from "@/data/appart";
 
@@ -432,11 +432,71 @@ export const LAVILLA_NAP = {
   url: SITE,
 } as const;
 
+// ── (L'Appart, Lot 4, étape E5) La marque dans les données structurées : deux gammes, jamais fondues ─────────────────────
+// Les deux fiches d'organisation (LodgingBusiness de l'accueil, LocalBusiness de toutes les pages) décrivent la MARQUE : les
+// 3 maisons et L'Appart dans `department`, 33 chambres, `priceRange` de la marque (« 730–1 430 CHF/mois »), et UNE OFFRE PAR
+// GAMME dans `makesOffer` (décision n° 16 de la critique, à confirmer : une offre unique 730–1 430 mettrait 730 CHF à côté de
+// la piscine) ; plus de piscine, de sauna ni de salle de sport dans leur `amenityFeature` (ils restent sur les nœuds des
+// maisons, Q17). Valeurs dérivées des sources (STATS, HOUSES_FROM, APPART) ; ce module, chargé par le morceau d'entrée (SEO.tsx),
+// n'importe jamais src/data/entityFacts.ts — tools/test/entity-schema.test.mjs égale ces nombres à ENTITY_FACTS.brand.
+/** Chambres de la marque : les 29 des maisons + les 4 de L'Appart. */
+const BRAND_ROOMS = STATS.totalRooms + APPART.rooms.total;
+/** Fourchette de la marque : du « dès » le plus bas des deux gammes au loyer le plus haut. */
+const BRAND_LOW = APPART.price.from.chf < HOUSES_FROM.chf ? APPART.price.from : HOUSES_FROM;
+const BRAND_HIGH_CHF = Math.max(STATS.priceChf, APPART.price.room.chf, APPART.price.suite.chf);
+const brandPriceRange = (en: boolean): string =>
+  en ? `CHF ${BRAND_LOW.en.chfNum}–${thousands(BRAND_HIGH_CHF, ",")}/month` : `${BRAND_LOW.fr.chfNum}–${thousands(BRAND_HIGH_CHF, " ")} CHF/mois`;
+
+/** Les deux offres agrégées de la marque, une par gamme (textes du 13/11/2026, « à confirmer ») : maisons 1 290–1 430 CHF
+ *  (29 chambres), L'Appart 730–990 CHF (4 chambres, ouverture APPART.opensOn — `availabilityStarts`, aucune disponibilité
+ *  affirmée : elle se lit chambre par chambre dans v_public_rooms). Jamais un équipement des maisons dans l'offre de L'Appart. */
+function brandOffers(language: "fr" | "en"): Record<string, unknown>[] {
+  const en = language === "en";
+  const A = APPART;
+  const url = `${SITE}${en ? "/en" : ""}/tarifs`;
+  const seller = { "@type": "Organization", name: "La Villa Coliving", url: SITE };
+  const appartHigh = A.price.room.chf >= A.price.suite.chf ? A.price.room : A.price.suite;
+  return [
+    {
+      "@type": "AggregateOffer",
+      name: en ? "Furnished room in a coliving house near Geneva" : "Chambre meublée en maison de coliving près de Genève",
+      description: en
+        ? `Furnished room of ${STATS.roomSizeMin} to ${STATS.roomSizeMax} m² in a coliving house: all utilities, fibre internet, cleaning of the common areas, pool, sauna and gym included. No application fee.`
+        : `Chambre meublée de ${STATS.roomSizeMin} à ${STATS.roomSizeMax} m² dans une maison de coliving : charges, internet fibre, ménage des communs, piscine, sauna et salle de sport inclus. Sans frais de dossier.`,
+      lowPrice: String(HOUSES_FROM.chf),
+      highPrice: String(STATS.priceChf),
+      priceCurrency: "CHF",
+      offerCount: STATS.totalRooms,
+      availability: "https://schema.org/InStock",
+      url,
+      seller,
+    },
+    {
+      "@type": "AggregateOffer",
+      name: en ? `Furnished room in a flatshare in ${A.commune} (${A.name})` : `Chambre meublée en colocation à ${A.commune} (${A.name})`,
+      description: en
+        ? `Furnished room of ${A.rooms.surface.min} to ${A.rooms.surface.max} m² at ${A.name}, a ${A.descriptor.en}: bills, fibre, streaming and cleaning of the shared areas included. No application fee.`
+        : `Chambre meublée de ${A.rooms.surface.min} à ${A.rooms.surface.max} m² à ${A.name}, ${A.descriptor.fr} : charges, fibre, streaming et ménage des communs inclus. Sans frais de dossier.`,
+      lowPrice: String(A.price.from.chf),
+      highPrice: String(appartHigh.chf),
+      priceCurrency: "CHF",
+      offerCount: A.rooms.total,
+      availabilityStarts: A.opensOn,
+      url,
+      seller,
+    },
+  ];
+}
+
+/** Les 4 lieux de la marque dans `department` : les 3 maisons (leurs nœuds) puis L'Appart (le sien). */
+const brandDepartments = (language: "fr" | "en"): Record<string, unknown>[] =>
+  [...HOUSES.map((h) => buildHouseLodgingNode(h, language)), buildAppartLodgingNode(language)];
+
 /**
- * Entité mère de l'accueil : LodgingBusiness avec les 3 maisons en `department`.
+ * Entité mère de l'accueil : LodgingBusiness avec les 3 maisons et L'Appart en `department` (étape E5).
  * PAS d'`aggregateRating` ni de `Review` (D4, 09/10/2026) : la note publiée est celle de la fiche Google (GOOGLE_REVIEWS),
  * et Google n'affiche pas les avis auto-balisés d'un LocalBusiness sur son propre site — garde check-entity-facts.
- * Prix / fibre sourcés depuis STATS pour rester cohérents partout.
+ * Prix / fibre sourcés depuis STATS et APPART pour rester cohérents partout.
  */
 export function buildHomeLodgingBusinessSchema(language: "fr" | "en" = "fr"): Record<string, unknown> {
   const en = language === "en";
@@ -447,45 +507,30 @@ export function buildHomeLodgingBusinessSchema(language: "fr" | "en" = "fr"): Re
     name: "La Villa Coliving",
     alternateName: [...LAVILLA_ALTERNATE_NAMES], // (L6.1, D11)
     // (D1, 09/10/2026) Trajet = formule canonique GENEVA_COMMUTE_FORMULA, jamais « N minutes du centre » sans qualification.
+    // (L'Appart, E5) Les deux gammes nommées, sans prix ; la formule de trajet qui suit reste celle des maisons.
     description: en
-      ? `All-inclusive premium coliving near Geneva: ${STATS.totalHouses} houses (${STATS.totalRooms} furnished rooms) on the French side, with pool, sauna and gym in every house. ${GENEVA_COMMUTE_FORMULA.en}.`
-      : `Coliving premium tout inclus près de Genève : ${STATS.totalHouses} maisons (${STATS.totalRooms} chambres meublées) côté France, avec piscine, sauna et salle de sport dans chaque maison. ${GENEVA_COMMUTE_FORMULA.fr}.`,
+      ? `All-inclusive coliving and flatshare near Geneva, on the French side: ${STATS.totalHouses} coliving houses (${STATS.totalRooms} furnished rooms), with pool, sauna and gym in every house, and ${APPART.name}, a ${APPART.rooms.total}-room flatshare in ${APPART.commune}. ${GENEVA_COMMUTE_FORMULA.en}.`
+      : `Coliving et colocation tout compris près de Genève, côté France : ${STATS.totalHouses} maisons de coliving (${STATS.totalRooms} chambres meublées), avec piscine, sauna et salle de sport dans chaque maison, et ${APPART.name}, une colocation de ${APPART.rooms.total} chambres à ${APPART.commune}. ${GENEVA_COMMUTE_FORMULA.fr}.`,
     url: `${SITE}/`,
     logo: `${SITE}/logos/logo-full.png`,
     image: `${SITE}/images/villa_portrait.webp`,
     telephone: LAVILLA_PHONE,
     email: LAVILLA_EMAIL,
-    priceRange: en ? `CHF ${PRICE_FROM_EN_NUM}–${PRICE_EN_NUM}/month` : `${PRICE_FROM_FR_NUM}–${PRICE_FR_NUM} CHF/mois`,
-    // Offre citable par les moteurs et les IA (AI Overviews cite déjà nos prix —
-    // autant qu'ils viennent d'une donnée structurée exacte). Prix via STATS :
-    // trois paliers depuis le 19/11/2026 → AggregateOffer 1 290–1 430 (HOUSES_FROM, le « dès » des maisons → STATS.priceChf).
-    makesOffer: {
-      "@type": "AggregateOffer",
-      name: en
-        ? "All-inclusive furnished room in coliving near Geneva"
-        : "Chambre meublée tout inclus en coliving près de Genève",
-      description: en
-        ? `Furnished room of ${STATS.roomSizeMin} to ${STATS.roomSizeMax} m², all utilities, fibre internet, cleaning, pool, sauna and gym included. No application fee.`
-        : `Chambre meublée de ${STATS.roomSizeMin} à ${STATS.roomSizeMax} m², charges, internet fibre, ménage, piscine, sauna et salle de sport inclus. Sans frais de dossier.`,
-      lowPrice: String(HOUSES_FROM.chf),
-      highPrice: String(STATS.priceChf),
-      priceCurrency: "CHF",
-      offerCount: STATS.totalRooms,
-      availability: "https://schema.org/InStock",
-      url: `${SITE}${en ? "/en" : ""}/tarifs`,
-      seller: { "@type": "Organization", name: "La Villa Coliving", url: SITE },
-    },
+    priceRange: brandPriceRange(en),
+    // Offres citables par les moteurs et les IA (AI Overviews cite déjà nos prix — autant qu'ils viennent d'une donnée
+    // structurée exacte) : une par gamme (maisons 1 290–1 430, L'Appart 730–990), jamais une seule qui mêle les deux.
+    makesOffer: brandOffers(language),
     areaServed: ["Genève", "Annemasse", "Ville-la-Grand", "Ambilly", "Grand Genève"],
     knowsLanguage: ["fr", "en"],
+    // (L'Appart, E5) Équipements COMMUNS aux deux gammes seulement, avec les mots du nœud de L'Appart (APPART_PLACE) : piscine,
+    // sauna, salle de sport et le débit de fibre des maisons (STATS.fiberSpeed) vivent sur les nœuds des maisons (department),
+    // jamais sur la fiche de la marque, qui porte aussi L'Appart (garde check:facts, brandAmenityIssues).
     amenityFeature: [
-      { "@type": "LocationFeatureSpecification", name: en ? "Swimming pool" : "Piscine", value: true },
-      { "@type": "LocationFeatureSpecification", name: "Sauna", value: true },
-      { "@type": "LocationFeatureSpecification", name: en ? "Gym (24/7 access)" : "Salle de sport (accès 24h/24)", value: true },
-      { "@type": "LocationFeatureSpecification", name: en ? `Fiber internet up to ${STATS.fiberSpeed}` : `Internet fibre jusqu'à ${STATS.fiberSpeed}`, value: true },
+      { "@type": "LocationFeatureSpecification", name: en ? "Fibre internet" : "Internet fibre", value: true },
       { "@type": "LocationFeatureSpecification", name: en ? "Common areas cleaning included" : "Ménage des parties communes inclus", value: true },
     ],
     sameAs: LAVILLA_SAME_AS,
-    numberOfRooms: STATS.totalRooms,
+    numberOfRooms: BRAND_ROOMS,
     // E-E-A-T : mêmes champs identité que le LocalBusiness générique (qu'il remplace
     // sur l'accueil depuis le 15/08 — prop omitLocalBusiness de SEO.tsx).
     foundingDate: FOUNDING_DATE,
@@ -506,15 +551,16 @@ export function buildHomeLodgingBusinessSchema(language: "fr" | "en" = "fr"): Re
     // l'entité mère n'en avait aucune.
     address: LAVILLA_POSTAL_ADDRESS,
     geo: { "@type": "GeoCoordinates", latitude: publicGeo(HOUSES[0]).lat, longitude: publicGeo(HOUSES[0]).lng },
-    department: HOUSES.map((h) => buildHouseLodgingNode(h, language)),
+    department: brandDepartments(language),
   };
 }
 
 /**
  * LocalBusiness générique de TOUTES les pages (émis par SEO.tsx, sauf l'accueil qui porte le
- * LodgingBusiness ci-dessus avec le même @id). (Lot S1, 05/09/2026) Généralisé : les 3 maisons en
- * `department`, l'offre agrégée en `makesOffer`, `numberOfRooms`, `sameAs` — tous lus depuis les
- * sources uniques (STATS, ROOMS_BY_HOUSE, HOUSES, LAVILLA_SAME_AS). PAS d'aggregateRating ni de Review (D4, 09/10/2026).
+ * LodgingBusiness ci-dessus avec le même @id). (Lot S1, 05/09/2026) Généralisé : les lieux en
+ * `department`, les offres agrégées en `makesOffer`, `numberOfRooms`, `sameAs` — tous lus depuis les
+ * sources uniques (STATS, ROOMS_BY_HOUSE, HOUSES, APPART, LAVILLA_SAME_AS). PAS d'aggregateRating ni de Review (D4, 09/10/2026).
+ * (L'Appart, E5) La marque : 3 maisons + L'Appart en `department`, 33 chambres, une offre par gamme.
  */
 export function buildLocalBusinessSchema(language: "fr" | "en", description: string): Record<string, unknown> {
   const en = language === "en";
@@ -530,22 +576,13 @@ export function buildLocalBusinessSchema(language: "fr" | "en", description: str
     description,
     telephone: LAVILLA_PHONE,
     email: LAVILLA_EMAIL,
-    priceRange: en ? `CHF ${PRICE_FROM_EN_NUM}–${PRICE_EN_NUM}/month` : `${PRICE_FROM_FR_NUM}–${PRICE_FR_NUM} CHF/mois`,
+    priceRange: brandPriceRange(en),
     address: LAVILLA_POSTAL_ADDRESS,
     geo: { "@type": "GeoCoordinates", latitude: publicGeo(HOUSES[0]).lat, longitude: publicGeo(HOUSES[0]).lng },
     areaServed: ["Genève", "Annemasse", "Ville-la-Grand", "Ambilly", "Grand Genève"],
-    numberOfRooms: STATS.totalRooms,
-    makesOffer: {
-      "@type": "AggregateOffer",
-      name: en ? "All-inclusive furnished room in coliving near Geneva" : "Chambre meublée tout inclus en coliving près de Genève",
-      lowPrice: String(HOUSES_FROM.chf),
-      highPrice: String(STATS.priceChf),
-      priceCurrency: "CHF",
-      offerCount: STATS.totalRooms,
-      availability: "https://schema.org/InStock",
-      url: `${SITE}${en ? "/en" : ""}/tarifs`,
-    },
-    department: HOUSES.map((h) => buildHouseLodgingNode(h, language)),
+    numberOfRooms: BRAND_ROOMS,
+    makesOffer: brandOffers(language),
+    department: brandDepartments(language),
     // E-E-A-T : fondation + fondateurs identifiables (sameAs LinkedIn) sur toutes les pages.
     foundingDate: FOUNDING_DATE,
     founder: [buildFounderPersonSchema(FOUNDERS.jerome, language), buildFounderPersonSchema(FOUNDERS.fanny, language)],

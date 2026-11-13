@@ -37,6 +37,12 @@
  *      seulement dans les textes qui les nient ou renvoient aux maisons ; partout (et dans llms.txt), jamais un montant de
  *      L'Appart et un équipement des maisons dans la même phrase ; JSON-LD par gamme (numberOfRooms, AggregateOffer, nœud de
  *      L'Appart). Garde « aucune clé interne » (scripts/lib/internal-keys.mjs) sur tout ce qui est publié.
+ *   g) (L'Appart, Lot 4, étape E5) les trois phrases canoniques (marque, maisons, L'Appart — src/data/entityFacts.ts) : chacune
+ *      1× sur une page de la fiche de la marque, 1× de plus (marque, L'Appart) sur la page de la fiche « L'Appart — l'essentiel »,
+ *      0× ailleurs (canonicalSentenceIssues), et 1× dans chaque llms.txt, sans jeton {{…}} non résolu ; la fiche de la marque
+ *      (nœud #organization qui porte L'Appart) n'a aucun équipement des maisons ni leur débit de fibre dans amenityFeature
+ *      (brandAmenityIssues) ;
+ *      chaînes interdites : « dès 530 € » (P5) et « au L'Appart » / « du L'Appart » (nom propre, V7).
  * Options : --no-db (hors ligne) · --strict (règle des minutes, règles L2 et vouvoiement en échec, pas en avertissement)
  * (Lot L4 « Justification du prix », D8, 10/10/2026) FAQ A.3 exactement 1× sur PRICE_FAQ_ROUTES (FR/EN), 0× ailleurs ; phrase-clé A.4
  * 2× sur /tarifs (chapeau + fiche), 1× sur les autres pages de la fiche ; l'ancienne question « pourquoi plus élevés » est interdite.
@@ -54,6 +60,7 @@ import { jsonLdContents, jsonLdServedKey } from './lib/prerendered-extract.mjs';
 import {
   classifyViewRows, unknownPlaceMessage, appartDbIssues, isAppartPageFile, appartPageFiles, appartPageTextIssues,
   gammeSentenceIssues, llmsGammeIssues, jsonLdGammeIssues, appartTeaserExpectedText, appartInclusionLineIssues, APPART_TEASER_ALL_REQUIRED,
+  HOUSE_AMENITY_RE,
 } from './lib/gamme-rules.mjs';
 import { internalKeySurfaceIssues } from './lib/internal-keys.mjs';
 
@@ -139,6 +146,12 @@ const FORBIDDEN = [
   // ── (Lot L4 « Justification du prix », D8 de Jérôme du 09/10/2026) l'ancienne FAQ « pourquoi plus élevés » (tarifsFaq index 1 et
   // faqData why-higher-prices) est remplacée par la FAQ A.3 de src/data/priceFacts.ts : la question périmée ne doit réapparaître nulle part.
   { re: /Pourquoi les prix sont-ils plus élevés qu['’]une colocation classique|Why are your prices higher than a standard flatshare/i, label: 'ancienne FAQ « pourquoi plus élevés » (D8 : remplacée par la FAQ A.3, src/data/priceFacts.ts)' },
+  // ── (L'Appart, Lot 4, étape E5) ──
+  // P5 : la suite de L'Appart à deux = « 1 060 € par mois, soit 530 € par personne à deux » ; 530 € n'est jamais un « dès » (le « dès »
+  // de L'Appart = son palier bas, APPART.price.from). Borné : « dès 1 530 € » (loyer des maisons) ne matche pas.
+  { re: /(?<![\p{L}\p{N}])(?:dès|à partir de|from|starting (?:at|from))[\u00A0\u202F ]+(?:530[\u00A0\u202F ]?(?:€|EUR(?![\p{L}])|euros?(?![\p{L}]))|(?:€|EUR)[\u00A0\u202F ]?530(?!\d))/iu, label: '« dès 530 € » (P5 : 530 € = la suite de L\'Appart à deux, par personne ; jamais un « dès »)' },
+  // V7 : « L'Appart » est un nom propre — « à L'Appart », « de L'Appart », jamais « au L'Appart » ni « du L'Appart » (« l'appartement » passe).
+  { re: /(?<![\p{L}])(?:[Aa]u|[Dd]u)[\u00A0\u202F ]+L['’]Appart(?![\p{L}])/u, label: '« au L\'Appart » / « du L\'Appart » (nom propre : « à L\'Appart », « de L\'Appart »)' },
 ];
 /** (Lot L3) Demi-largeur, en caractères, de la fenêtre de contexte des règles `near`. */
 export const NEAR_WINDOW = 120;
@@ -256,6 +269,48 @@ export function entityFactsCtaIssues(html, t, id = 'entity-facts') {
   if (nCta !== 1) issues.push(`bouton de la fiche « ${t.cta} » présent ${nCta} fois dans le bloc (attendu 1)`);
   const nNote = count(visibleText(block[0]), norm(t.ctaNote));
   if (nNote !== 1) issues.push(`microcopie du bouton « ${t.ctaNote} » présente ${nNote} fois dans le bloc (attendu 1)`);
+  return issues;
+}
+
+/**
+ * (L'Appart, Lot 4, étape E5) Les trois phrases canoniques de src/data/entityFacts.ts, comptées dans le texte visible d'une page :
+ * chacune 1× sur une page de la fiche de la marque (`brandFiche` : puce ou paragraphe de la fiche) ; la marque et L'Appart 1× de
+ * plus sur une page de la fiche « L'Appart — l'essentiel » (`appartFiche`, /lappart) ; 0× ailleurs — une phrase canonique ne se
+ * recopie jamais dans un autre bloc (bloc statique, FAQ, pied de page). Comparaison au caractère près (espaces normalisés). Pure.
+ */
+export function canonicalSentenceIssues(text, lang, { brandFiche = false, appartFiche = false } = {}, m) {
+  const both = (brandFiche ? 1 : 0) + (appartFiche ? 1 : 0);
+  const want = [
+    ['de la marque', m.BRAND_CANONICAL_SENTENCE[lang], both],
+    ['des maisons', m.MAISONS_CANONICAL_SENTENCE[lang], brandFiche ? 1 : 0],
+    [`de ${m.APPART.name}`, m.APPART_CANONICAL_SENTENCE[lang], both],
+  ];
+  const issues = [];
+  for (const [label, sentence, expected] of want) {
+    const n = count(text, norm(sentence));
+    if (n !== expected) issues.push(`phrase canonique ${label} présente ${n} fois (attendu ${expected}) — « ${norm(sentence).slice(0, 70)}… »`);
+  }
+  return issues;
+}
+
+/**
+ * (L'Appart, Lot 4, étape E5) Fiche de la MARQUE = nœud @id #organization qui porte L'Appart (numberOfRooms de la marque, ou le
+ * nœud de L'Appart dans `department`) : aucun équipement des maisons dans `amenityFeature`. La marque porte deux gammes ; piscine,
+ * sauna, salle de sport et le débit de fibre des maisons restent sur le nœud de chaque maison (department), jamais sur ce qui
+ * décrit aussi L'Appart. Pure.
+ */
+export function brandAmenityIssues(nodes, m) {
+  const B = m.ENTITY_FACTS.brand, appartId = m.placeLodgingId(m.APPART_KEY);
+  // Le débit de la fibre des maisons (« 8 Gb/s ») est un fait des maisons, faux pour L'Appart (CLAUDE.md § 1) : même règle.
+  const speed = m.ENTITY_FACTS.fiberSpeed;
+  const issues = [];
+  for (const n of nodes ?? []) {
+    if (!n || typeof n !== 'object' || typeof n['@id'] !== 'string' || !n['@id'].endsWith('#organization')) continue;
+    const dept = Array.isArray(n.department) ? n.department : [];
+    if (Number(n.numberOfRooms) !== B.totalRooms && !dept.some((d) => d?.['@id'] === appartId)) continue;
+    const names = (Array.isArray(n.amenityFeature) ? n.amenityFeature : []).map((a) => String(a?.name ?? ''));
+    for (const s of names.filter((x) => HOUSE_AMENITY_RE.test(x) || (speed && x.includes(speed)))) issues.push(`fiche de la marque (${[].concat(n['@type']).join('/')}) : équipement des maisons « ${s} » dans amenityFeature — il appartient au nœud de chaque maison (department)`);
+  }
   return issues;
 }
 
@@ -838,6 +893,11 @@ async function checkHtml(m) {
     // numberOfRooms de sa maison ; `currenciesAccepted` interdit ; une page maison porte exactement 1 nœud #lodging de SA maison ;
     // les Offer d'un ItemList sont rattachées (offeredBy @id) et n'ont jamais numberOfRooms.
     for (const issue of entityGraphIssues(nodes, f, m)) failures.push(`${f} : ${issue}`);
+    // (L'Appart, E5) Fiche de la marque sans équipement des maisons ; trois phrases canoniques : 1× par fiche, 0× ailleurs.
+    for (const issue of brandAmenityIssues(nodes, m)) failures.push(`${f} : ${issue}`);
+    // Langue de la page : celle du périmètre quand il y en a une (l'accueil anglais est « en.html », sans tiret), sinon le préfixe.
+    const pageLang = lang ?? appartFactsLang ?? (f === 'en.html' || f.startsWith('en-') ? 'en' : 'fr');
+    if (!legal) for (const issue of canonicalSentenceIssues(text, pageLang, { brandFiche: Boolean(lang), appartFiche: Boolean(appartFactsLang) }, m)) failures.push(`${f} : ${issue}`);
     const conflicts = jsonLdConflicts(html);
     failures.push(...conflicts.failures.map((c) => `${f} : ${c}`));
     warnings.push(...conflicts.warnings.map((c) => `${f} : ${c}`));
@@ -870,6 +930,10 @@ async function checkLlms(m) {
     if (expected !== actual) failures.push(`${path.relative(ROOT, LLMS_FILES[lang])} : périmé par rapport à la source — lance « npm run build:llms »`);
     // (L'Appart, E2g) Règle c : jamais un montant de L'Appart et un équipement des maisons dans la même phrase ou ligne de tableau.
     for (const issue of llmsGammeIssues(actual, m)) failures.push(`${path.relative(ROOT, LLMS_FILES[lang])} : ${issue}`);
+    // (L'Appart, E5) Les trois phrases canoniques, une fois chacune (faits clés 1 à 3) ; aucun jeton du gabarit laissé tel quel.
+    for (const issue of canonicalSentenceIssues(actual, lang, { brandFiche: true }, m)) failures.push(`${path.relative(ROOT, LLMS_FILES[lang])} : ${issue}`);
+    const token = actual.match(/\{\{[A-Z_]+\}\}/);
+    if (token) failures.push(`${path.relative(ROOT, LLMS_FILES[lang])} : jeton ${token[0]} non résolu (scripts/build-llms-txt.mjs, renderLlms)`);
   }
   return failures;
 }

@@ -37,8 +37,9 @@ export const AUTHOR_DUO = 'Jerome Austin & Fanny Bela';
 export const FORMATS = ['decision', 'service'];
 export const SERVICE_WORDS = { min: 800, max: 2200 };
 
-/** Pages money (au moins un lien sortant obligatoire). */
-export const MONEY_PAGES = ['/colocation-geneve', '/chambre-a-louer-geneve', '/chambres-disponibles', '/annemasse-colocation', '/chambre-a-louer-annemasse', '/tarifs', '/nos-maisons', '/lavilla', '/leloft', '/lelodge', '/le-coliving'];
+/** Pages money (au moins un lien sortant obligatoire). (L'Appart, Lot 4, étape E5) + /lappart : un lien vers L'Appart compte comme
+ *  un lien vers une page money (clé PUBLIQUE de la page, APPART.key — jamais la clé interne de la base). */
+export const MONEY_PAGES = ['/colocation-geneve', '/chambre-a-louer-geneve', '/chambres-disponibles', '/annemasse-colocation', '/chambre-a-louer-annemasse', '/tarifs', '/nos-maisons', '/lavilla', '/leloft', '/lelodge', '/le-coliving', '/lappart'];
 /** Piliers éditoriaux (au moins un lien sortant obligatoire). */
 export const PILLAR_ARTICLES = ['/blog/trouver-colocation-geneve-frontalier', '/blog/budget-colocation-geneve-guide-complet', '/blog/ou-habiter-frontalier-suisse-villes-france-pas-cher', '/blog/living-in-france-working-in-geneva', '/blog/guide-ressources-frontalier-geneve', '/blog/dossier-location-frontalier-suisse-france', '/blog/colocation-annemasse-ville-la-grand-ambilly'];
 

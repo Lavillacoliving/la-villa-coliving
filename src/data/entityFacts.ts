@@ -25,6 +25,10 @@
  * « dès 1 370 CHF » du 01/09 au 18/11/2026) — jamais 1 430, jamais le détail des paliers.
  * (Lot L3, D4 Jérôme 09/10/2026) Puce « Avis : 4,8/5 sur Google (36 avis). » = GOOGLE_REVIEWS via STATS_DISPLAY.googleRating ;
  * jamais d'aggregateRating. Le lien « Voir les avis » vit dans les pages (hero, /candidature…), pas dans la fiche (chaînes plates).
+ * (L'Appart, Lot 4 du brief du 12/11/2026, textes du 13/11 « à confirmer ») La fiche porte les TROIS phrases canoniques : la marque
+ * (paragraphe, « dès » de la marque = celui de L'Appart), les maisons (puce 1, leur « dès » D12) et L'Appart (puce 4) ; chaque
+ * prix n'y est écrit qu'une fois, jamais un prix de L'Appart dans la phrase d'un équipement des maisons (règle V2, par phrase).
+ * `/lappart` ne porte pas cette fiche mais la sienne (src/data/appartFacts.ts, décision n° 13).
  */
 import {
   STATS,
@@ -42,6 +46,7 @@ import { FOUNDERS, FOUNDING_DATE, LAVILLA_SAME_AS } from "../lib/structuredData"
 import { PRICE_KEY_SENTENCE } from "./priceFacts";
 import type { MaisonKey } from "./places";
 import { APPART } from "./appart";
+import { appartCommuteLine } from "./appartLocation";
 
 export type EntityLang = "fr" | "en";
 /** Une des 3 maisons — alias de `MaisonKey` (src/data/places.ts) : ENTITY_HOUSES et la fiche ne décrivent que les maisons. */
@@ -59,7 +64,11 @@ export type EntityHouseSlug = MaisonKey;
 // (12/11/2026, décision Jérôme, lot « borne basse », suffixe « b ») Formule : « 25 min jusqu'au centre » (30 avant) — Le Lodge à 25 min de Rive.
 // (13/11/2026, décision Jérôme du 12/11) Prix d'appel des maisons : « dès 1 290 CHF/mois (loyer contractuel en euros : dès 1 380 €) » —
 // chambres 7 et 8 de La Villa (1 370 CHF / 1 470 € avant). Mise en ligne retenue : le 19/11/2026 ; si la séance glisse, redater ENTITY_FACTS_VERSION, OU_CHERCHER_VERSION et PRICE_FACTS_VERSION, puis npm run build:llms.
-export const ENTITY_FACTS_VERSION = "2026-11-19";
+// (L'Appart, Lot 4) Fiche recomposée : trois phrases canoniques (marque, maisons, L'Appart), neuf puces, L'Appart dans les
+// trajets, « 100+ résidents accueillis dans les maisons ». Version du jour de la mise en ligne de L'Appart : si elle glisse,
+// redater ENTITY_FACTS_VERSION, OU_CHERCHER_VERSION, PRICE_FACTS_VERSION, APPART_FACTS_VERSION et APPART_LOCATION_VERSION,
+// puis npm run build:llms.
+export const ENTITY_FACTS_VERSION = "2026-11-21";
 
 /**
  * Phrase garant canonique (D0 amendement b, Jérôme 09/10/2026) — la SEULE formulation admise sur le site :
@@ -207,8 +216,9 @@ const BRAND_FROM = APPART.price.from.eur < HOUSES_FROM.eur ? APPART.price.from :
 
 /**
  * (L'Appart, 13/11/2026) Phrases canoniques de L'Appart et de la marque (Lot 4, textes du 13/11 « à confirmer ») : la fiche de
- * L'Appart (/lappart) les porte telles quelles (paragraphe et dernière puce) ; la fiche de la marque les portera aussi (étape
- * E5). La garde les compte exactement une fois par page porteuse : jamais dans un bloc statique « L'Appart ».
+ * L'Appart (/lappart) les porte telles quelles (paragraphe et dernière puce) ; la fiche de la marque aussi (paragraphe et puce 4,
+ * étape E5), avec la phrase des maisons (MAISONS_CANONICAL_SENTENCE, puce 1). La garde les compte exactement une fois par page
+ * porteuse : jamais dans un bloc statique « L'Appart », jamais dans le pied de page. llms.txt les répète au caractère près.
  */
 export const APPART_CANONICAL_SENTENCE = {
   fr: `${APPART.name}, ${APPART.descriptor.fr} : ${APPART.rooms.total} chambres meublées de ${APPART.rooms.surface.min} à ${APPART.rooms.surface.max} m² dans un appartement de ${APPART.flat.surfaceM2} m², charges, fibre, streaming et ménage des communs compris, dès ${APPART.price.from.fr.chf}/mois (loyer contractuel en euros : dès ${APPART.price.from.fr.eur}). La suite accueille une ou deux personnes.`,
@@ -217,6 +227,12 @@ export const APPART_CANONICAL_SENTENCE = {
 export const BRAND_CANONICAL_SENTENCE = {
   fr: `La Villa Coliving : ${STATS.totalHouses + 1} adresses côté France, à la frontière de Genève — ${STATS.totalHouses} maisons de coliving et un appartement en colocation, ${STATS.totalRooms + APPART.rooms.total} chambres, tout compris dès ${BRAND_FROM.fr.chf}/mois (loyer contractuel en euros : dès ${BRAND_FROM.fr.eur}).`,
   en: `La Villa Coliving: ${STATS.totalHouses + 1} locations on the Geneva border, French side — ${STATS.totalHouses} coliving houses and one shared flat, ${STATS.totalRooms + APPART.rooms.total} rooms, all inclusive from ${BRAND_FROM.en.chf}/month (contractual rent in euros: from ${BRAND_FROM.en.eur}).`,
+} as const;
+/** (L'Appart, 13/11/2026, étape E5) Phrase canonique des MAISONS : les 3 maisons, leurs 29 chambres, leurs équipements, leur
+ *  « dès » (HOUSES_FROM, D12) — puce 1 de la fiche de la marque et ligne de llms.txt. Jamais un prix de L'Appart dedans. */
+export const MAISONS_CANONICAL_SENTENCE = {
+  fr: `${STATS.totalHouses} maisons de coliving (${ENTITY_HOUSES.map((h) => `${h.label} · ${h.commune}`).join(", ")}) : ${STATS.totalRooms} chambres meublées de ${STATS.roomSizeMin} à ${STATS.roomSizeMax} m², piscine, sauna et salle de sport, tout compris dès ${HOUSES_FROM.fr.chf}/mois (loyer contractuel en euros : dès ${HOUSES_FROM.fr.eur}).`,
+  en: `${STATS.totalHouses} coliving houses (${ENTITY_HOUSES.map((h) => `${h.label} · ${h.commune}`).join(", ")}): ${STATS.totalRooms} furnished rooms of ${STATS.roomSizeMin} to ${STATS.roomSizeMax} m², pool, sauna and gym, all inclusive from ${HOUSES_FROM.en.chf}/month (contractual rent in euros: from ${HOUSES_FROM.en.eur}).`,
 } as const;
 
 export const ENTITY_FACTS = {
@@ -314,33 +330,31 @@ export interface EntityFactsText {
   reviewsLink: { bullet: string; label: string; href: string };
 }
 
-const houseList = (lang: EntityLang): string =>
-  ENTITY_HOUSES.map((h, i) => {
-    const rooms = lang === "en" ? `${h.rooms} rooms` : `${h.rooms} chambres`;
-    const sep = i === ENTITY_HOUSES.length - 1 ? (lang === "en" ? " and " : " et ") : i === 0 ? "" : ", ";
-    return `${sep}${h.label} ${lang === "en" ? "in" : "à"} ${h.commune} (${rooms})`;
-  }).join("");
-
-/** Le texte canonique — identique sur toutes les pages, langue par langue. */
+/**
+ * Le texte canonique — identique sur toutes les pages, langue par langue. (L'Appart, étape E5, textes du 13/11 « à confirmer »)
+ * Paragraphe = phrase de la marque + formule de trajet des maisons ; puces : maisons (phrase canonique), ce que leur loyer comprend
+ * en plus (sans prix), phrase-clé A.4, L'Appart (phrase canonique), frais et caution, bail, trajets (les 3 maisons puis L'Appart,
+ * APPART.transit — jamais dans la formule de la marque), note Google, « pour qui » (100+ résidents accueillis DANS LES MAISONS).
+ */
 export function entityFactsText(lang: EntityLang): EntityFactsText {
   const F = ENTITY_FACTS;
-  const commutes = ENTITY_HOUSES.map((h) => `${h.label} — ${h.commute[lang]}`).join(" ; ");
+  // Séparateur des trajets : « ; » précédé d'une espace en français, collé au mot en anglais (« door-to-door; Le Loft »).
+  const commutes = [...ENTITY_HOUSES.map((h) => `${h.label} — ${h.commute[lang]}`), `${APPART.name} — ${appartCommuteLine(lang)}`].join(lang === "en" ? "; " : " ; ");
   const reviewsBullet = { fr: `Avis : ${F.googleReviews.fr}.`, en: `Reviews: ${F.googleReviews.en}.` };
   if (lang === "en") {
     return {
       title: "La Villa Coliving — the essentials",
-      paragraph:
-        `La Villa Coliving is ${F.totalHouses} coliving houses on the Geneva border, French side: ${houseList("en")} — ` +
-        `${F.totalRooms} private furnished rooms of ${F.surfaces.min} to ${F.surfaces.max} m², with a pool, sauna and gym in every house. ` +
-        `${F.commuteFormula.en}.`,
+      paragraph: `${BRAND_CANONICAL_SENTENCE.en} ${F.commuteFormula.en}.`,
       bullets: [
-        `All-inclusive rent from ${F.price.en.fromChf}/month (contractual rent in euros: from ${F.price.en.fromEur}) — utilities, fibre up to ${F.fiberSpeed}, common-area cleaning ${F.cleaningPerWeek} times a week, pool, sauna, gym, streaming, yoga and events included.`,
+        MAISONS_CANONICAL_SENTENCE.en,
+        `In the houses, the rent also covers utilities, fibre up to ${F.fiberSpeed}, common-area cleaning ${F.cleaningPerWeek} times a week, streaming, yoga and events.`,
         PRICE_KEY_SENTENCE.en,
+        APPART_CANONICAL_SENTENCE.en,
         FEES_DEPOSIT_SENTENCE.en,
         LEASE_SENTENCE.en,
         `Commute: ${commutes}.`,
         reviewsBullet.en,
-        `Who it's for: cross-border workers, expats and young professionals working in Geneva. Founded in ${F.foundingLabel.en} by ${F.founders.join(" and ")} and run directly by them — ${F.totalResidents}+ residents welcomed.`,
+        `Who it's for: cross-border workers, expats and young professionals working in Geneva. Founded in ${F.foundingLabel.en} by ${F.founders.join(" and ")} and run directly by them — ${F.totalResidents}+ residents welcomed in the houses.`,
       ],
       cta: ENTITY_FACTS_CTA.en.cta,
       ctaNote: ENTITY_FACTS_CTA.en.note,
@@ -349,18 +363,17 @@ export function entityFactsText(lang: EntityLang): EntityFactsText {
   }
   return {
     title: "La Villa Coliving — l'essentiel",
-    paragraph:
-      `La Villa Coliving, c'est ${F.totalHouses} maisons de coliving à la frontière de Genève, côté France : ${houseList("fr")}, ` +
-      `soit ${F.totalRooms} chambres meublées privées de ${F.surfaces.min} à ${F.surfaces.max} m², avec piscine, sauna et salle de sport dans chaque maison. ` +
-      `${F.commuteFormula.fr}.`,
+    paragraph: `${BRAND_CANONICAL_SENTENCE.fr} ${F.commuteFormula.fr}.`,
     bullets: [
-      `Loyer tout inclus dès ${F.price.fr.fromChf}/mois (loyer contractuel en euros : dès ${F.price.fr.fromEur}) — charges, fibre jusqu'à ${F.fiberSpeed}, ménage des espaces communs ${F.cleaningPerWeek} fois par semaine, piscine, sauna, salle de sport, streaming, yoga et événements compris.`,
+      MAISONS_CANONICAL_SENTENCE.fr,
+      `Dans les maisons, le loyer comprend aussi les charges, la fibre jusqu'à ${F.fiberSpeed}, le ménage des espaces communs ${F.cleaningPerWeek} fois par semaine, le streaming, le yoga et les événements.`,
       PRICE_KEY_SENTENCE.fr,
+      APPART_CANONICAL_SENTENCE.fr,
       FEES_DEPOSIT_SENTENCE.fr,
       LEASE_SENTENCE.fr,
       `Trajets : ${commutes}.`,
       reviewsBullet.fr,
-      `Pour qui : frontaliers, expats et jeunes professionnels qui travaillent à Genève. Fondée en ${F.foundingLabel.fr} par ${F.founders.join(" et ")}, gérée en direct — ${F.totalResidents}+ résidents accueillis.`,
+      `Pour qui : frontaliers, expats et jeunes professionnels qui travaillent à Genève. Fondée en ${F.foundingLabel.fr} par ${F.founders.join(" et ")}, gérée en direct — ${F.totalResidents}+ résidents accueillis dans les maisons.`,
     ],
     cta: ENTITY_FACTS_CTA.fr.cta,
     ctaNote: ENTITY_FACTS_CTA.fr.note,
@@ -392,8 +405,14 @@ export function entityFactsIssues(): string[] {
   const tierRooms = A.price.tiers.flatMap((t) => [...t.rooms]).sort((a, b) => a - b);
   if (tierRooms.join() !== [...A.numbers].sort((a, b) => a - b).join()) issues.push(`L'Appart : chambres des paliers (${tierRooms.join(", ")}) ≠ numéros (${A.numbers.join(", ")})`);
   if (A.price.fromChf >= P.fromChf) issues.push("L'Appart : son « dès » n'est plus sous celui des maisons — revoir la doctrine des deux gammes");
-  const shared = [LEASE_SENTENCE, FEES_DEPOSIT_SENTENCE, APPART_CANONICAL_SENTENCE, BRAND_CANONICAL_SENTENCE, MAISONS_CROSS_LINK];
+  const shared = [LEASE_SENTENCE, FEES_DEPOSIT_SENTENCE, APPART_CANONICAL_SENTENCE, BRAND_CANONICAL_SENTENCE, MAISONS_CANONICAL_SENTENCE, MAISONS_CROSS_LINK];
   for (const lang of ["fr", "en"] as const) {
+    // (L'Appart, E5) La fiche de la marque porte les trois phrases canoniques, chacune exactement une fois (paragraphe, puces 1 et 4).
+    const fiche = entityFactsStrings(lang).join("\n");
+    for (const [label, c] of [["marque", BRAND_CANONICAL_SENTENCE], ["maisons", MAISONS_CANONICAL_SENTENCE], ["L'Appart", APPART_CANONICAL_SENTENCE]] as const) {
+      const n = fiche.split(c[lang]).length - 1;
+      if (n !== 1) issues.push(`${lang} : phrase canonique « ${label} » ${n} fois dans la fiche de la marque (attendu 1)`);
+    }
     for (const s of [...entityFactsStrings(lang), ...shared.map((x) => x[lang])]) {
       if (s.includes(ENTITY_FACTS_PLACEHOLDER) || /\{\{|\[À VÉRIFIER|undefined|NaN/.test(s)) issues.push(`${lang} : placeholder dans « ${s.slice(0, 60)}… »`);
       if (/\d\.\d{3}/.test(s)) issues.push(`${lang} : séparateur de milliers non canonique dans « ${s.slice(0, 60)}… »`);

@@ -4,6 +4,8 @@
  * Loft et du Lodge ne sont pas fixées, tableau 12 mois refusé — D9).
  *
  * Module PUR (zéro React, imports relatifs : chargé par esbuild dans scripts/lib/load-entity-facts.mjs pour la garde CI et les tests).
+ * (L'Appart, étape E5) La réponse A.3 finit par la phrase P3 (« Si ton budget est plus serré, L'Appart… dès 730 CHF par mois. En
+ * euros : dès 790 €. ») et porte un lien de suite « Voir L'Appart » (`more`, rendu sous la réponse, hors du FAQPage JSON-LD).
  * Trois surfaces consomment le MÊME texte, au caractère près :
  *   - la FAQ A.3 (`priceJustificationFaq`) : remplace l'ancienne question « Pourquoi les prix sont-ils plus élevés qu'une colocation
  *     classique ? » dans src/data/faq/tarifsFaq.ts (index 1 → /tarifs et /chambres-disponibles via tarifsFaq.slice(0, 2)) et
@@ -33,11 +35,12 @@ import {
   EUR_FROM_EN_NUM,
   EUR_STANDARD_EN_NUM,
 } from "./stats";
+import { APPART } from "./appart";
 
 export type PriceLang = "fr" | "en";
 
 /** Bump à chaque changement de texte (sert aux docs et aux PR ; la garde compare les chaînes elles-mêmes). */
-export const PRICE_FACTS_VERSION = "2026-11-19"; // 19/11/2026 : A.3 « 1 290 à 1 430 CHF », « 1 380 à 1 530 € » (palier des chambres 7 et 8 de La Villa)
+export const PRICE_FACTS_VERSION = "2026-11-21"; // 21/11/2026 (L'Appart) : phrase P3 de L'Appart et lien « Voir L'Appart » ; 19/11/2026 : A.3 « 1 290 à 1 430 CHF », « 1 380 à 1 530 € » (palier des chambres 7 et 8 de La Villa)
 
 /** Pages qui portent la FAQ A.3 (FR + jumelle /en) — exactement une fois chacune ; 0 ailleurs. */
 export const PRICE_FAQ_ROUTES = [
@@ -74,6 +77,24 @@ function noticeLabel(lang: PriceLang): string {
 
 const M = MARKET_COMPARISON;
 
+/**
+ * (L'Appart, Lot 4, étape E5 — phrase P3 validée par Jérôme, textes du 13/11/2026) L'objection de prix trouve une réponse dans la
+ * marque : la réponse A.3 finit par deux phrases sur L'Appart, son « dès » en francs puis en euros (CHF et € jamais dans la même
+ * phrase), sans équipement des maisons dans ces phrases (règle V2). Le lien « Voir L'Appart » se rend À PART, sous la réponse
+ * (`more` : jamais dans le texte balisé du FAQPage, la réponse reste une chaîne sans balise). Aucun prix de L'Appart n'est tapé.
+ */
+export function appartBudgetSentences(lang: PriceLang): string {
+  const P = APPART.price.from;
+  return lang === "en"
+    ? `If your budget is tighter, ${APPART.name}, our flatshare in ${APPART.commune}, has rooms from ${P.en.chf} a month. In euros: from ${P.en.eur}.`
+    : `Si ton budget est plus serré, ${APPART.name}, notre colocation à ${APPART.commune}, propose des chambres dès ${P.fr.chf} par mois. En euros : dès ${P.fr.eur}.`;
+}
+/** Lien de suite de la FAQ A.3 (vers la page de L'Appart), affiché sous la réponse. */
+const APPART_MORE = {
+  fr: { href: `/${APPART.key}`, label: `Voir ${APPART.name}` },
+  en: { href: `/${APPART.key}`, label: `See ${APPART.name}` },
+} as const;
+
 /** A.3 — la FAQ de justification du prix (D8), FR puis EN. */
 export function priceJustificationFaq(lang: PriceLang): QAPair {
   if (lang === "en") {
@@ -85,7 +106,9 @@ export function priceJustificationFaq(lang: PriceLang): QAPair {
         `At La Villa, ${PRICE_FROM_CHF_EN} to ${PRICE_EN_NUM} a month pays for a ${STATS.roomSizeMin} to ${STATS.roomSizeMax} m² room in a house of ${STATS.minResidentsPerHouse} to ${STATS.maxResidentsPerHouse} people, a pool, a sauna and a gym in the house, cleaning of the shared areas ${timesPerWeek("en")}, fibre, streaming and yoga classes. ` +
         `The contractual rent is €${EUR_FROM_EN_NUM} to ${EUR_STANDARD_EN_NUM} a month, with €0 in application or agency fees. ` +
         `Over ${STATS.leaseDurationMonths} months, part of the gap comes back through what you do not pay for separately: gym, variable bills, subscriptions, move-in fees. ` +
-        `And the ${STATS.leaseDurationMonths}-month lease can be ended with ${noticeLabel("en")}.`,
+        `And the ${STATS.leaseDurationMonths}-month lease can be ended with ${noticeLabel("en")}. ` +
+        appartBudgetSentences("en"),
+      more: { ...APPART_MORE.en },
     };
   }
   return {
@@ -96,7 +119,9 @@ export function priceJustificationFaq(lang: PriceLang): QAPair {
       `Chez La Villa, ${PRICE_FROM_FR_NUM} à ${PRICE_CHF_FR} par mois paient une chambre de ${STATS.roomSizeMin} à ${STATS.roomSizeMax} m² dans une maison de ${STATS.minResidentsPerHouse} à ${STATS.maxResidentsPerHouse} personnes, une piscine, un sauna et une salle de sport dans la maison, le ménage des espaces communs ${timesPerWeek("fr")}, la fibre, le streaming et les cours de yoga. ` +
       `Le loyer contractuel est de ${EUR_FROM_FR_NUM} à ${EUR_STANDARD_FR_NUM} € par mois, avec 0 € de frais de dossier ou d'agence. ` +
       `Sur ${STATS.leaseDurationMonths} mois, une partie de l'écart revient par ce qui n'est pas à payer à côté : salle de sport, charges variables, abonnements, frais d'entrée. ` +
-      `Et le bail de ${STATS.leaseDurationMonths} mois se quitte avec ${noticeLabel("fr")}.`,
+      `Et le bail de ${STATS.leaseDurationMonths} mois se quitte avec ${noticeLabel("fr")}. ` +
+      appartBudgetSentences("fr"),
+    more: { ...APPART_MORE.fr },
   };
 }
 
@@ -136,6 +161,12 @@ export function priceFactsIssues(): string[] {
     if (!faq.a.includes(`${STATS.roomSizeMin} ${lang === "en" ? "to" : "à"} ${STATS.roomSizeMax} m²`)) issues.push(`${lang}.a : surface des chambres absente`);
     if (!faq.a.includes(lang === "en" ? "€0" : "0 €")) issues.push(`${lang}.a : « 0 € de frais » absent`);
     if (!/La Villa/.test(faq.q) || !/La Villa/.test(faq.a)) issues.push(`${lang} : la marque doit être nommée dans la question et la réponse`);
+    // (L'Appart, E5) Phrase P3 : le « dès » de L'Appart, jamais à côté d'un équipement des maisons (règle V2, par phrase), et son lien.
+    for (const sentence of sentencesOf(appartBudgetSentences(lang))) {
+      if (/piscine|sauna|salle de sport|\bpool\b|\bgym\b/i.test(sentence)) issues.push(`${lang}.a : prix de L'Appart et équipement des maisons dans la même phrase — « ${sentence.slice(0, 60)}… »`);
+    }
+    if (!faq.a.endsWith(appartBudgetSentences(lang))) issues.push(`${lang}.a : la phrase P3 de L'Appart doit finir la réponse`);
+    if (faq.more?.href !== `/${APPART.key}`) issues.push(`${lang} : lien « ${APPART_MORE[lang].label} » absent sous la réponse A.3`);
   }
   if (sentencesOf(priceJustificationFaq("fr").a).length !== sentencesOf(priceJustificationFaq("en").a).length) issues.push("A.3 : nombre de phrases FR ≠ EN");
   return issues;
