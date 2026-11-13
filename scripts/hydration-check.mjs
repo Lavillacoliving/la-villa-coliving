@@ -32,7 +32,8 @@ const PORT = 3458;
 
 // Pages hydratées : les 7 pages du brief (FR + EN), /chambres-disponibles (Lot 3 SEO funnel) et le premier article de blog.
 // (Lot S1, 05/09/2026) + les pages qui portent la fiche entité : /faq, /le-coliving, /qui-sommes-nous, pages Annemasse.
-const STATIC = ['/', '/nos-maisons', '/lavilla', '/leloft', '/lelodge', '/candidature', '/tarifs', '/faq', '/le-coliving', '/qui-sommes-nous', '/annemasse-colocation', '/chambre-a-louer-annemasse'];
+// (L'Appart, étape E3, 13/11/2026) + /lappart (FR et EN), une page de lieu comme les maisons.
+const STATIC = ['/', '/nos-maisons', '/lavilla', '/leloft', '/lelodge', '/lappart', '/candidature', '/tarifs', '/faq', '/le-coliving', '/qui-sommes-nous', '/annemasse-colocation', '/chambre-a-louer-annemasse'];
 const ROUTES = [
   ...STATIC,
   ...STATIC.map((r) => (r === '/' ? '/en' : `/en${r}`)),
@@ -44,6 +45,9 @@ const ROUTES = [
   '/leloft/chambre-4',
   // Fiche NON consultable (chambre occupée sans date au moment du rendu) : vue « pas disponible ».
   '/lelodge/chambre-2',
+  // (L'Appart, étape E3) Ses fiches : une chambre en français, la suite en anglais (fiches statiques en état A, datées en état B).
+  '/lappart/chambre-2',
+  '/en/lappart/chambre-5',
   '/colocation-geneve',
   '/en/colocation-geneve',
   '/chambre-a-louer-geneve',
@@ -71,6 +75,11 @@ const QUERY_ROUTES = [
   '/candidature?offre=hiver',
   '/en/candidature?offre=hiver&property_interest=lelodge&room_interest=chambre-4',
   '/candidature?offre=xyz',
+  // (L'Appart, étape E3) En-tête de L'Appart (chambre, suite, liste d'attente), offre hiver exclue (D5), tuiles des maisons
+  // masquées (D4) : tout après l'hydratation, jamais au premier rendu.
+  '/candidature?property_interest=lappart&room_interest=chambre-2',
+  '/en/candidature?property_interest=lappart&room_interest=chambre-5',
+  '/candidature?offre=hiver&property_interest=lappart&room_interest=liste-attente',
 ];
 
 // (Lot B) Index du blog et articles qui citent un numéro de téléphone (format-detection, liens tel:).
@@ -88,7 +97,8 @@ const BLOG_ROUTES = [
 const CLOCK_SHIFT_DAYS = 95;
 // (06/10/2026) + /offre-hiver (état « terminée » APRÈS l'hydratation seulement) et les pages du bandeau
 // (le bandeau prérendu doit s'hydrater tel quel, puis disparaître, quelle que soit la date du lecteur).
-const CLOCK_SHIFT_ROUTES = ['/', '/tarifs', '/en/tarifs', '/candidature?property_interest=lelodge', '/offre-hiver', '/en/winter-offer', '/chambres-disponibles'];
+// (L'Appart, étape E3) + /lappart : sa liste d'attente embarque son mois de référence, comme les pages maisons.
+const CLOCK_SHIFT_ROUTES = ['/', '/tarifs', '/en/tarifs', '/candidature?property_interest=lelodge', '/offre-hiver', '/en/winter-offer', '/chambres-disponibles', '/lappart'];
 
 const NOT_FOUND_ROUTES = [
   '/blog/article-inexistant-garde-hydratation',

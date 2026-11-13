@@ -78,13 +78,13 @@ export function roomFromPath(pathname: string): { place: PlaceKey; roomNumber: n
 }
 
 /**
- * Lieux qui ONT une page prérendue (/<clé> et /en/<clé>) : les 3 maisons, tant que la page de L'Appart n'existe pas.
- * Interrupteur unique du contexte de navigation (src/lib/houseContext.ts) et de l'encart Facebook des pages de lieu
- * (src/data/answerSlots.ts). Les listes écrites à la main ailleurs le suivent, tools/test/places.test.mjs l'exige :
- * vercel.json, index.html, scripts/prerender.mjs, scripts/hydration-check.mjs, src/lib/routePreload.ts, src/App.tsx,
- * src/data/roomPages.json.
+ * Lieux qui ONT une page prérendue (/<clé> et /en/<clé>) : les 3 maisons et, depuis l'étape E3 (13/11/2026), L'Appart.
+ * Interrupteur unique du contexte de navigation (src/lib/houseContext.ts), de l'encart Facebook des pages de lieu
+ * (src/data/answerSlots.ts) et des gardes des pages de lieu (house-pages-check, check:facts). Les listes écrites à la main
+ * ailleurs le suivent, tools/test/places.test.mjs l'exige : vercel.json, index.html, scripts/prerender.mjs,
+ * scripts/hydration-check.mjs, src/lib/routePreload.ts, src/App.tsx, src/data/roomPages.json.
  */
-export const PLACE_PAGE_KEYS: readonly PlaceKey[] = MAISON_KEYS;
+export const PLACE_PAGE_KEYS: readonly PlaceKey[] = PLACE_KEYS;
 
 /** Numéro de la suite de L'Appart (décision à confirmer) : sa seule saisie dans le code. */
 export const APPART_SUITE_ROOM_NUMBER = 5;

@@ -113,8 +113,10 @@ test('(L\'Appart, E2g) entityGraphIssues par lieu : le nœud de L\'Appart est re
   }
   const node = m.buildAppartLodgingNode('fr', { context: true });
   const org = m.buildLocalBusinessSchema('fr', 'd');
-  // Tant que L'Appart n'a pas de page (PLACE_PAGE_KEYS = les 3 maisons), rien n'est exigé sur lappart.html.
-  assert.deepEqual(entityGraphIssues(flatten([org]), 'lappart.html', m), []);
+  // Tant que L'Appart n'a pas de page (PLACE_PAGE_KEYS = les 3 maisons), rien n'est exigé sur lappart.html ; depuis l'étape E3
+  // (13/11/2026), la valeur réelle l'exige.
+  assert.deepEqual(entityGraphIssues(flatten([org]), 'lappart.html', { ...m, PLACE_PAGE_KEYS: m.MAISON_KEYS }), []);
+  assert.deepEqual(entityGraphIssues(flatten([org]), 'lappart.html', m), ['0 bloc(s) LodgingBusiness autonome(s) du lieu lappart (attendu 1)']);
   // Dès l'étape E3 (PLACE_PAGE_KEYS = les 4 lieux) : exactement un bloc autonome de L'Appart, sur sa page FR et EN.
   const e3 = { ...m, PLACE_PAGE_KEYS: m.PLACE_KEYS };
   assert.deepEqual(entityGraphIssues(flatten([node, org]), 'lappart.html', e3), []);

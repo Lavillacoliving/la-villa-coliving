@@ -1401,7 +1401,7 @@
       ]
     },
     {
-      "source": "/(lavilla|leloft|lelodge)/(chambre-[0-9]+)",
+      "source": "/(lavilla|leloft|lelodge|lappart)/(chambre-[0-9]+)",
       "headers": [
         {
           "key": "X-Robots-Tag",
@@ -1410,7 +1410,7 @@
       ]
     },
     {
-      "source": "/en/(lavilla|leloft|lelodge)/(chambre-[0-9]+)",
+      "source": "/en/(lavilla|leloft|lelodge|lappart)/(chambre-[0-9]+)",
       "headers": [
         {
           "key": "X-Robots-Tag",

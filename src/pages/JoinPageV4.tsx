@@ -10,10 +10,13 @@ import { buildFaqPageSchema, type QAPair } from "@/lib/structuredData";
 import { SUPABASE_URL, SUPABASE_ANON_KEY } from "@/lib/supabase";
 import { STATS, STATS_DISPLAY, PRICE_FROM_CHF_FR, PRICE_FROM_CHF_EN, CONTRACT_EUR, EUR_STANDARD_FR_NUM, EUR_FROM_FR_NUM, EUR_STANDARD_EN_NUM, EUR_FROM_EN_NUM, GOOGLE_REVIEWS, GOOGLE_REVIEWS_LINK_LABEL } from "@/data/stats";
 import { useFormTelemetry } from "@/hooks/useFormTelemetry";
-import { useRoomAvailability, useHouseRooms, shortAvailabilityLabel, type HouseKey } from "@/lib/availability";
-import { housePriceLabel } from "@/lib/housePrice";
+import { useRoomAvailability, useHouseRooms, shortAvailabilityLabel } from "@/lib/availability";
+import { placePriceLabel } from "@/lib/housePrice";
 import { attributionPayload, internalRefPayload, isTestSession, landingPayload, storedOffer } from "@/lib/attribution";
-import { HOUSES } from "@/data/houses";
+import { placeCard } from "@/data/houses";
+import { APPART_KEY, isAppartKey, isPlaceKey } from "@/data/places";
+import { appartCandidatureHeader, appartCandidaturePriceLine, appartCandidatureRoomGone } from "@/data/appartCandidature";
+import { toInternalPropertySlug } from "@/lib/placeBridge";
 import { CandidatureDetails } from "@/components/CandidatureDetails";
 import { FacebookGroupCallout } from "@/components/FacebookGroupCallout";
 import { useHydrated } from "@/hooks/useHydrated";
@@ -126,7 +129,9 @@ export function JoinPageV4() {
   // un paramètre d'offre ne bloque jamais une candidature. Transmis à l'edge (v20) dans le payload
   // (handleSubmit) et à GA4 (`offer` sur form_start / form_submit_click / form_submit via baseParams) —
   // pas d'<input hidden>, dont la valeur différerait du HTML prérendu (même règle que `arrival`).
-  const refOffer = normalizeOffer(searchParams.get(OFFER_QUERY_KEY)) || normalizeOffer(storedOffer());
+  // (L'Appart, D5 / décision n° 32, à confirmer) L'offre ne concerne que les maisons : pour une candidature de L'Appart, ni la ligne
+  // de l'offre, ni le champ `offer` envoyé à l'Edge, ni la dimension GA4.
+  const refOffer = refProperty === APPART_KEY ? "" : normalizeOffer(searchParams.get(OFFER_QUERY_KEY)) || normalizeOffer(storedOffer());
   // (Lot A) Jeton du mode « compléments » (edge v19), reçu au succès ; absent → pas de bloc.
   const [detailsToken, setDetailsToken] = useState<string | null>(null);
   // (Lot A) Carte de succès ramenée dans la vue : plus courte que le formulaire, elle pouvait
@@ -150,23 +155,25 @@ export function JoinPageV4() {
   // rétrécissement au montage) et tombe dès qu'il disparaît (navigation SPA vers /candidature sans
   // maison, départ de la page). hasOwnProperty : `?property_interest=constructor` ne remonte plus
   // au prototype.
+  // (L'Appart, étape E3) Lieu public : une maison ou L'Appart (clé publique, src/data/places.ts) ; isPlaceKey compare aux clés
+  // exactes (`?property_interest=constructor` ne remonte pas au prototype). Carte : placeCard (L'Appart : son nom, sa vignette).
   const hydrated = useHydrated();
-  const contextHouse = hydrated && Object.prototype.hasOwnProperty.call(HOUSES, refProperty)
-    ? (HOUSES as Record<string, (typeof HOUSES)[keyof typeof HOUSES]>)[refProperty]
-    : null;
+  const contextPlace = hydrated && isPlaceKey(refProperty) ? refProperty : null;
+  const contextHouse = contextPlace ? placeCard(contextPlace) : null;
+  const contextIsAppart = isAppartKey(contextPlace);
   useLayoutEffect(() => {
-    if (!hydrated || contextHouse) return;
+    if (!hydrated || contextPlace) return;
     document.documentElement.classList.remove("lvc-cand-ctx");
-  }, [hydrated, contextHouse]);
+  }, [hydrated, contextPlace]);
   useLayoutEffect(() => () => document.documentElement.classList.remove("lvc-cand-ctx"), []);
   const contextRoomNum = refRoom.match(/^chambre-?(\d+)$/)?.[1] ?? null;
   // (Lot 3 SEO funnel — Q3) Liste d'attente d'une maison, et chambre partie entre le clic et
   // le formulaire : `useHouseRooms` n'a aucune donnée au premier rendu sur cette page (pas
   // d'embed chambres) → note affichée seulement après le refresh client, zéro mismatch.
   const contextIsWaitlist = refRoom === "liste-attente";
-  const contextRooms = useHouseRooms((contextHouse ? refProperty : "lavilla") as HouseKey);
+  const contextRooms = useHouseRooms(contextPlace ?? "lavilla");
   const contextRoomGone =
-    !!contextHouse && !!contextRoomNum && contextRooms.known &&
+    !!contextPlace && !!contextRoomNum && contextRooms.known &&
     !contextRooms.rooms.some((r) => String(r.room_number) === contextRoomNum && (r.availability === "available" || !!r.available_from));
   // Soumission de TEST (équipe) : /candidature?test=1 → prospects.is_test = true côté
   // Edge (v12), exclue du bulletin et des comptages. Jamais exposée dans l'UI.
@@ -209,7 +216,9 @@ export function JoinPageV4() {
     // Couche « observée » de l'attribution (l'URL d'arrivée), à côté du canal déclaré.
     if (refSrc) payload.ref_src = refSrc;
     if (refArticle) payload.ref_article = refArticle;
-    if (refProperty) payload.property_interest = refProperty;
+    // (L'Appart, Q9) L'Edge et le tableau de bord ne connaissent que la clé INTERNE de la base : le pont la donne au moment de
+    // l'envoi (src/lib/placeBridge.ts) ; une maison garde sa clé, une valeur inconnue passe telle quelle. GA4 garde la clé publique.
+    if (refProperty) payload.property_interest = toInternalPropertySlug(refProperty);
     if (refRoom) payload.room_interest = refRoom;
     // (Lot A) Période pré-choisie sur une page maison, transmise sans être affichée.
     if (refArrival) payload.arrival = refArrival;
@@ -383,28 +392,43 @@ export function JoinPageV4() {
                 height={64}
               />
               <div className="text-left">
-                <p className="text-sm text-[#1C1917]">
-                  {L === "en" ? "Your application is for: " : "Ta candidature concerne : "}
-                  <strong>
-                    {contextHouse.label}
-                    {refRoom
-                      ? ` — ${contextRoomNum
-                        ? (L === "en" ? `room ${contextRoomNum}` : `chambre ${contextRoomNum}`)
-                        : contextIsWaitlist ? (L === "en" ? "waiting list" : "liste d'attente") : refRoom}`
-                      : ""}
-                  </strong>
-                </p>
+                {/* (L'Appart, étape E3) Textes de L'Appart : src/data/appartCandidature.ts (« L'Appart — chambre 2 », « — suite »). */}
+                {contextIsAppart ? (() => {
+                  const h = appartCandidatureHeader(L, { number: contextRoomNum ? Number(contextRoomNum) : null, waitlist: contextIsWaitlist });
+                  return (
+                    <p className="text-sm text-[#1C1917]">
+                      {h.lead}
+                      <strong>{h.subject}</strong>
+                    </p>
+                  );
+                })() : (
+                  <p className="text-sm text-[#1C1917]">
+                    {L === "en" ? "Your application is for: " : "Ta candidature concerne : "}
+                    <strong>
+                      {contextHouse.label}
+                      {refRoom
+                        ? ` — ${contextRoomNum
+                          ? (L === "en" ? `room ${contextRoomNum}` : `chambre ${contextRoomNum}`)
+                          : contextIsWaitlist ? (L === "en" ? "waiting list" : "liste d'attente") : refRoom}`
+                        : ""}
+                    </strong>
+                  </p>
+                )}
                 {contextRoomGone && (
                   <p className="text-xs text-[#9A5B08] mt-1">
-                    {L === "en"
+                    {contextIsAppart
+                      ? appartCandidatureRoomGone(L)
+                      : L === "en"
                       ? "This room has just been taken — send your application anyway, we'll offer you the next one in this house."
                       : "Cette chambre vient de partir — envoie quand même ta candidature, on te propose la prochaine libération dans cette maison."}
                   </p>
                 )}
                 <p className="text-xs text-[#57534E] mt-1">
-                  {L === "en"
-                    ? <>All inclusive {housePriceLabel(refProperty as HouseKey, "en")} · Reply within 48h</>
-                    : <>Tout inclus {housePriceLabel(refProperty as HouseKey, "fr")} · Réponse sous 48 h</>}
+                  {contextIsAppart
+                    ? appartCandidaturePriceLine(L)
+                    : L === "en"
+                    ? <>All inclusive {placePriceLabel(contextPlace ?? "lavilla", "en")} · Reply within 48h</>
+                    : <>Tout inclus {placePriceLabel(contextPlace ?? "lavilla", "fr")} · Réponse sous 48 h</>}
                 </p>
               </div>
             </div>
@@ -863,45 +887,49 @@ export function JoinPageV4() {
       {/* Social proof stats — chiffres business pour rassurer (CRO win #1).
           (Lot L3, Jérôme 09/10/2026) D3 : ancien taux d'occupation « sur 5 ans » retiré → séjour moyen (STATS.averageStayMonths) ;
           D4 : note Google (STATS_DISPLAY.googleRatingValue/Label) + lien « Voir les avis » ; année = STATS.foundedYear. */}
-      <section className="py-12 bg-[#FAF9F6] border-y border-[#E7E5E4]">
-        <div className="container-custom">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-4xl mx-auto text-center">
-            <div className="flex flex-col items-center">
-              <Users className="w-8 h-8 text-[#D4A574] mb-3" />
-              <p className="text-3xl font-light text-[#1C1917] mb-1" style={{ fontFamily: '"DM Serif Display", serif' }}>
-                {`${STATS.totalResidents}+`}
-              </p>
-              <p className="text-sm text-[#57534E]">
-                {language === "en" ? `Residents since ${STATS.foundedYear}` : `Résidents depuis ${STATS.foundedYear}`}
-              </p>
-            </div>
-            <div className="flex flex-col items-center">
-              <Calendar className="w-8 h-8 text-[#D4A574] mb-3" />
-              <p className="text-3xl font-light text-[#1C1917] mb-1" style={{ fontFamily: '"DM Serif Display", serif' }}>
-                {language === "en" ? `${STATS.averageStayMonths} months` : `${STATS.averageStayMonths} mois`}
-              </p>
-              <p className="text-sm text-[#57534E]">
-                {language === "en" ? "Average stay" : "De séjour en moyenne"}
-              </p>
-            </div>
-            <div className="flex flex-col items-center">
-              <Star className="w-8 h-8 text-[#D4A574] mb-3 fill-[#D4A574]" />
-              <p className="text-3xl font-light text-[#1C1917] mb-1" style={{ fontFamily: '"DM Serif Display", serif' }}>
-                {STATS_DISPLAY[L].googleRatingValue}
-              </p>
-              <p className="text-sm text-[#57534E]">{STATS_DISPLAY[L].googleRatingLabel}</p>
-              <a
-                href={GOOGLE_REVIEWS.url}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="mt-1 text-sm text-[#D4A574] underline underline-offset-4 hover:text-[#1C1917] transition-colors"
-              >
-                {GOOGLE_REVIEWS_LINK_LABEL[L]}
-              </a>
+      {/* (L'Appart, D4 / décision n° 13, à confirmer) Preuves des MAISONS : jamais attachées à L'Appart — masquées pour une
+          candidature de L'Appart, APRÈS l'hydratation seulement (le HTML prérendu est commun à toutes les query strings). */}
+      {!(hydrated && refProperty === APPART_KEY) && (
+        <section className="py-12 bg-[#FAF9F6] border-y border-[#E7E5E4]">
+          <div className="container-custom">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-4xl mx-auto text-center">
+              <div className="flex flex-col items-center">
+                <Users className="w-8 h-8 text-[#D4A574] mb-3" />
+                <p className="text-3xl font-light text-[#1C1917] mb-1" style={{ fontFamily: '"DM Serif Display", serif' }}>
+                  {`${STATS.totalResidents}+`}
+                </p>
+                <p className="text-sm text-[#57534E]">
+                  {language === "en" ? `Residents since ${STATS.foundedYear}` : `Résidents depuis ${STATS.foundedYear}`}
+                </p>
+              </div>
+              <div className="flex flex-col items-center">
+                <Calendar className="w-8 h-8 text-[#D4A574] mb-3" />
+                <p className="text-3xl font-light text-[#1C1917] mb-1" style={{ fontFamily: '"DM Serif Display", serif' }}>
+                  {language === "en" ? `${STATS.averageStayMonths} months` : `${STATS.averageStayMonths} mois`}
+                </p>
+                <p className="text-sm text-[#57534E]">
+                  {language === "en" ? "Average stay" : "De séjour en moyenne"}
+                </p>
+              </div>
+              <div className="flex flex-col items-center">
+                <Star className="w-8 h-8 text-[#D4A574] mb-3 fill-[#D4A574]" />
+                <p className="text-3xl font-light text-[#1C1917] mb-1" style={{ fontFamily: '"DM Serif Display", serif' }}>
+                  {STATS_DISPLAY[L].googleRatingValue}
+                </p>
+                <p className="text-sm text-[#57534E]">{STATS_DISPLAY[L].googleRatingLabel}</p>
+                <a
+                  href={GOOGLE_REVIEWS.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="mt-1 text-sm text-[#D4A574] underline underline-offset-4 hover:text-[#1C1917] transition-colors"
+                >
+                  {GOOGLE_REVIEWS_LINK_LABEL[L]}
+                </a>
+              </div>
             </div>
           </div>
-        </div>
-      </section>
+        </section>
+      )}
 
       {/* WhatsApp alternative + FAQ contextuelle (CRO wins #4 + #8) */}
       <section className="py-20 lg:py-24 bg-white">

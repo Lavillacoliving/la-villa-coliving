@@ -1,5 +1,6 @@
 {
-  "_comment": "Fiches chambres (pages dédiées /<maison>/chambre-<n>, FR + EN, noindex). Source unique lue par src/data/roomPages.ts ET scripts/prerender.mjs (routes prérendues + rewrites). Demande Jérôme du 28/09/2026 : toutes les chambres du Lodge + la chambre 4 du Loft.",
+  "_comment": "Fiches chambres (pages dédiées /<lieu>/chambre-<n>, FR + EN, noindex). Source unique lue par src/data/roomPages.ts ET scripts/prerender.mjs (routes prérendues + rewrites). Demande Jérôme du 28/09/2026 : toutes les chambres du Lodge + la chambre 4 du Loft. L'Appart (13/11/2026, décision P6) : ses 4 chambres, la suite au n° 5 (page AppartRoomPage).",
   "lelodge": [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12],
-  "leloft": [4]
+  "leloft": [4],
+  "lappart": [2, 3, 4, 5]
 }

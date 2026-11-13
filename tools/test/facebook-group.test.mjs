@@ -39,7 +39,8 @@ test('A.8 : phrase + libellé du lien, nom du groupe, volume court, « Rejoindre
   assert.ok(fr.sentence.includes(m.FACEBOOK_GROUP.postsPerMonthShort.fr) && en.sentence.includes(m.FACEBOOK_GROUP.postsPerMonthShort.en));
   assert.equal(fr.cta, 'Rejoindre le groupe'); assert.equal(en.cta, 'Join the group');
   assert.match(fr.sentence, /^Pas de chambre libre chez nous/); assert.match(en.sentence, /^No room free with us/);
-  assert.deepEqual([...m.FACEBOOK_CALLOUT_ROUTES], ['/lavilla', '/leloft', '/lelodge']);
+  // (L'Appart, étape E3, 13/11/2026) Les pages de lieu (PLACE_PAGE_KEYS) : les 3 maisons et L'Appart, encart sous ses chambres.
+  assert.deepEqual([...m.FACEBOOK_CALLOUT_ROUTES], ['/lavilla', '/leloft', '/lelodge', '/lappart']);
   // (13/10/2026, D2 du brief « conversion Ads ») /chambres-disponibles : encart seulement sans chambre libre ni datée.
   assert.deepEqual([...m.FACEBOOK_CALLOUT_OPTIONAL_ROUTES], ['/chambres-disponibles']);
 });
@@ -85,7 +86,8 @@ test('D2 (13/10/2026) : /chambres-disponibles accepte 0 ou 1 encart ; s\'il est 
     `<aside id="facebook-group" data-facebook-group-version="${m.FACEBOOK_GROUP_VERSION}"><p>${sentence}</p><a href="${m.FACEBOOK_GROUP.url}">${m.facebookCallout(lang).cta}</a></aside>`;
   const page = (inner) => `<html><body>${inner}</body></html>`;
   const base = [['lavilla.html', page(asideOf('fr'))], ['en-lavilla.html', page(asideOf('en'))], ['leloft.html', page(asideOf('fr'))],
-    ['en-leloft.html', page(asideOf('en'))], ['lelodge.html', page(asideOf('fr'))], ['en-lelodge.html', page(asideOf('en'))]];
+    ['en-leloft.html', page(asideOf('en'))], ['lelodge.html', page(asideOf('fr'))], ['en-lelodge.html', page(asideOf('en'))],
+    ['lappart.html', page(asideOf('fr'))], ['en-lappart.html', page(asideOf('en'))]];
   const run = (fr, en) => checkFacebookCallouts(m, new Map([...base, ['chambres-disponibles.html', page(fr)], ['en-chambres-disponibles.html', page(en)]]));
   assert.deepEqual(run('', '').failures, [], 'chambres libres ou datées : encart masqué, garde verte');
   assert.deepEqual(run(asideOf('fr'), asideOf('en')).failures, [], 'aucune chambre : encart affiché, conforme');

@@ -3,7 +3,8 @@ import { STATS } from "@/data/stats";
 import { ArrowRight, BellRing, CalendarClock } from "lucide-react";
 import { LocalizedLink } from "@/components/LocalizedLink";
 import { supabase } from "@/lib/supabase";
-import type { HouseKey } from "@/lib/availability";
+import type { AppartKey, MaisonKey } from "@/data/places";
+import { toInternalPropertySlug } from "@/lib/placeBridge";
 import { embedJson, readEmbeddedArray } from "@/lib/prerenderEmbeddedState";
 
 /**
@@ -26,16 +27,38 @@ import { embedJson, readEmbeddedArray } from "@/lib/prerenderEmbeddedState";
  * courant a changé (HTML prérendu la veille du 1er), la liste est resynchronisée — après
  * l'hydratation, donc sans mismatch. Les états du mini-formulaire sont vides des deux côtés.
  * ⚠️ PIPELINE_EMBED_ID est enregistré dans la liste de capture de src/main.tsx.
+ *
+ * (L'Appart, étape E3, 13/11/2026) Le bloc sert aussi à la page de L'Appart (liste d'attente sur le modèle des pages maisons,
+ * Q17). Son texte est fourni par la page (`texts`, src/data/appartPage.ts) : celui des maisons cite le séjour moyen et « nos
+ * trois maisons », des preuves des maisons qui ne s'attachent jamais à L'Appart — le type l'exige pour L'Appart, et les pages
+ * des maisons n'embarquent aucun texte de L'Appart. Les liens gardent la clé PUBLIQUE ; l'insertion dans la liste d'attente
+ * reçoit la clé interne de la base (toInternalPropertySlug, src/lib/placeBridge.ts — le tableau de bord ne connaît qu'elle).
  */
 
-interface RoomPipelineProps {
-  house: HouseKey;
+/** Textes du bloc propres à un lieu : titre, paragraphe, note du mini-formulaire, confirmation. */
+export interface RoomPipelineTexts {
+  title: string;
+  text: string;
+  note: string;
+  done: string;
+}
+
+type RoomPipelineProps = {
   houseName: string;
   en: boolean;
   /** Une chambre est libre ou datée juste au-dessus : on parle des suivantes. */
   hasCandidates: boolean;
   onApplyClick: (month: string) => void;
-}
+} & (
+  | { house: MaisonKey; texts?: undefined; fromMonth?: undefined }
+  | {
+      house: AppartKey;
+      texts: RoomPipelineTexts;
+      /** Premier mois proposé (« AAAA-MM ») : avant l'ouverture de L'Appart, on n'emménage pas avant elle. Constante : même
+       *  liste au prérendu et au premier rendu du navigateur. */
+      fromMonth?: string;
+    }
+);
 
 type MonthOption = { value: string; label: string; period: ArrivalPeriod };
 type ArrivalPeriod = "asap" | "1-3-months" | "3-6-months" | "later";
@@ -59,11 +82,21 @@ function currentMonthValue(): string {
   return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}`;
 }
 
-/** 7 mois glissants à partir du mois de référence « AAAA-MM » — pur, déterministe. */
-function upcomingMonths(refMonth: string, en: boolean): MonthOption[] {
+/** Écart en mois entre deux mois « AAAA-MM » (b − a). */
+function monthsBetween(a: string, b: string): number {
+  const [ya, ma] = a.split("-").map(Number);
+  const [yb, mb] = b.split("-").map(Number);
+  return (yb - ya) * 12 + (mb - ma);
+}
+
+/** 7 mois glissants à partir du mois de référence « AAAA-MM » — pur, déterministe. (L'Appart) `fromMonth` : la liste commence au
+ *  plus tôt à ce mois (la période d'arrivée reste comptée depuis le mois de référence). */
+function upcomingMonths(refMonth: string, en: boolean, fromMonth?: string): MonthOption[] {
   const [y, m] = refMonth.split("-").map(Number);
   const names = en ? MONTHS_EN : MONTHS_FR;
-  return Array.from({ length: 7 }, (_, i) => {
+  const start = fromMonth ? Math.max(0, monthsBetween(refMonth, fromMonth)) : 0;
+  return Array.from({ length: 7 }, (_, k) => {
+    const i = start + k;
     const d = new Date(y, (m - 1) + i, 1);
     const value = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}`;
     return { value, label: `${names[d.getMonth()]} ${d.getFullYear()}`, period: periodFor(i) };
@@ -78,7 +111,7 @@ function track(event: string, params: Record<string, unknown>): void {
   }
 }
 
-export function RoomPipeline({ house, houseName, en, hasCandidates, onApplyClick }: RoomPipelineProps) {
+export function RoomPipeline({ house, houseName, en, hasCandidates, onApplyClick, texts, fromMonth }: RoomPipelineProps) {
   // Mois de référence : celui embarqué par le prérendu (hydratation identique), sinon le
   // mois courant (prérendu lui-même, ou navigation SPA sans HTML prérendu).
   const [refMonth, setRefMonth] = useState<string>(
@@ -89,10 +122,12 @@ export function RoomPipeline({ house, houseName, en, hasCandidates, onApplyClick
     // eslint-disable-next-line react-hooks/set-state-in-effect -- volontaire : mise à jour post-hydratation, jamais au premier rendu
     if (currentMonthValue() !== refMonth) setRefMonth(currentMonthValue());
   }, [refMonth]);
-  const months = useMemo<MonthOption[]>(() => upcomingMonths(refMonth, en), [refMonth, en]);
+  const months = useMemo<MonthOption[]>(() => upcomingMonths(refMonth, en, fromMonth), [refMonth, en, fromMonth]);
   const [monthChoice, setMonth] = useState("");
-  // Par défaut : le mois prochain (le premier de la liste étant le mois en cours).
-  const month = monthChoice || months[1]?.value || months[0]?.value || "";
+  // Par défaut : le mois prochain (le premier de la liste étant le mois en cours) ; (L'Appart) le premier mois proposé quand la
+  // liste commence après le mois en cours (avant l'ouverture).
+  const startsLater = !!fromMonth && monthsBetween(refMonth, fromMonth) > 0;
+  const month = monthChoice || (startsLater ? months[0]?.value : months[1]?.value) || months[0]?.value || "";
   const [showAlert, setShowAlert] = useState(false);
   const [firstName, setFirstName] = useState("");
   const [email, setEmail] = useState("");
@@ -117,11 +152,12 @@ export function RoomPipeline({ house, houseName, en, hasCandidates, onApplyClick
       nom: firstName.trim().slice(0, 80),
       email: email.trim().slice(0, 120),
       profil: "site_pipeline",
-      propriete_souhaitee: house,
+      // Clé INTERNE de la base (le tableau de bord retrouve le lieu par elle) ; partout ailleurs, la clé publique.
+      propriete_souhaitee: toInternalPropertySlug(house),
       date_souhaitee: month || null,
-      message: en
-        ? `Room alert — ${houseName} house page`
-        : `Alerte libération — page maison ${houseName}`,
+      message: texts
+        ? (en ? `Room alert — ${houseName} page` : `Alerte libération — page ${houseName}`)
+        : (en ? `Room alert — ${houseName} house page` : `Alerte libération — page maison ${houseName}`),
     });
     if (error) {
       setStatus("error");
@@ -145,10 +181,12 @@ export function RoomPipeline({ house, houseName, en, hasCandidates, onApplyClick
             className="text-2xl md:text-3xl text-[#1C1917] mb-3"
             style={{ fontFamily: '"DM Serif Display", serif' }}
           >
-            {en ? "A room frees up? You're told first." : "Une chambre se libère ? Tu es prévenu en premier."}
+            {texts ? texts.title : (en ? "A room frees up? You're told first." : "Une chambre se libère ? Tu es prévenu en premier.")}
           </h3>
           <p className="text-[#57534E] font-medium leading-relaxed max-w-2xl">
-            {en
+            {texts
+              ? texts.text
+              : en
               ? `Our residents stay ${STATS.averageStayMonths} months on average: rooms open up all year round in our three houses${hasCandidates ? ", not only the one above" : ""}. Tell us when you'd like to move in and we'll offer you the first room that matches — before it even shows up here.`
               : `Nos résidents restent ${STATS.averageStayMonths} mois en moyenne : des chambres se libèrent toute l'année dans nos trois maisons${hasCandidates ? ", pas seulement celle ci-dessus" : ""}. Dis-nous quand tu veux emménager, on te propose la première chambre qui correspond — avant même qu'elle n'apparaisse ici.`}
           </p>
@@ -194,7 +232,9 @@ export function RoomPipeline({ house, houseName, en, hasCandidates, onApplyClick
           {showAlert && status !== "done" && (
             <form onSubmit={submitAlert} className="mt-5 pt-5 border-t border-[#E7E5E4]">
               <p className="text-sm text-[#57534E] mb-3">
-                {en
+                {texts
+                  ? texts.note
+                  : en
                   ? `No application needed: one email when a room opens up at ${houseName} for ${monthLabel || "your month"}.`
                   : `Sans dossier : un e-mail quand une chambre se libère au ${houseName.replace(/^Le /, "")} pour ${monthLabel || "ton mois"}.`}
               </p>
@@ -257,7 +297,9 @@ export function RoomPipeline({ house, houseName, en, hasCandidates, onApplyClick
           )}
           {status === "done" && (
             <p className="mt-5 pt-5 border-t border-[#E7E5E4] text-[#0F5132] font-semibold">
-              {en
+              {texts
+                ? texts.done
+                : en
                 ? `Noted! We'll email you as soon as a room opens up at ${houseName}${monthLabel ? ` for ${monthLabel}` : ""}.`
                 : `C'est noté ! On t'écrit dès qu'une chambre se libère au ${houseName.replace(/^Le /, "")}${monthLabel ? ` pour ${monthLabel}` : ""}.`}
             </p>

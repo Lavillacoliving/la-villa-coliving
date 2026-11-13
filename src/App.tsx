@@ -12,6 +12,7 @@ import { AvailabilityEmbed } from "@/components/AvailabilityEmbed";
 import { RouteChangeTracker } from "@/lib/routeTracking";
 import { InternalRefCapture } from "@/components/InternalRefCapture";
 import { ROOM_PAGE_PATHS } from "@/data/roomPages";
+import { isMaisonKey, roomFromPath } from "@/data/places";
 import { lazyWithRetry } from "@/lib/lazyWithRetry";
 import { ErrorBoundary } from "@/components/ErrorBoundary";
 
@@ -30,6 +31,9 @@ const JoinPage = lazyWithRetry(() => import("@/pages/JoinPageV4").then(m => ({ d
 const HouseDetailPage = lazyWithRetry(() => import("@/pages/HouseDetailPage").then(m => ({ default: m.HouseDetailPage })), "HouseDetailPage");
 // Fiches chambres (28/09/2026) — une route par chambre listée dans src/data/roomPages.json.
 const RoomDetailPage = lazyWithRetry(() => import("@/pages/RoomDetailPage").then(m => ({ default: m.RoomDetailPage })), "RoomDetailPage");
+// (L'Appart, étape E3) Sa page et ses fiches chambres : des pages à part (les pages des maisons ne changent pas).
+const LAppartPage = lazyWithRetry(() => import("@/pages/LAppartPage").then(m => ({ default: m.LAppartPage })), "LAppartPage");
+const AppartRoomPage = lazyWithRetry(() => import("@/pages/AppartRoomPage").then(m => ({ default: m.AppartRoomPage })), "AppartRoomPage");
 const BlogPage = lazyWithRetry(() => import("@/pages/BlogPage").then(m => ({ default: m.BlogPage })), "BlogPage");
 const BlogPostPage = lazyWithRetry(() => import("@/pages/BlogPostPage").then(m => ({ default: m.BlogPostPage })), "BlogPostPage");
 const ColocationGenevePage = lazyWithRetry(() => import("@/pages/ColocationGenevePage").then(m => ({ default: m.ColocationGenevePage })), "ColocationGenevePage");
@@ -83,6 +87,13 @@ const ChambresDisponiblesPage = lazyWithRetry(() =>
 const OfferHiverPage = lazyWithRetry(() =>
   import("@/pages/OfferHiverPage").then(m => ({ default: m.OfferHiverPage })), "OfferHiverPage");
 
+/** (L'Appart, étape E3) Fiche chambre : celle d'une maison (RoomDetailPage) ou celle de L'Appart (AppartRoomPage), selon le lieu
+ *  du chemin (src/data/places.ts). Même règle dans src/lib/routePreload.ts (préchargement avant l'hydratation). */
+function roomPageElement(path: string) {
+  const room = roomFromPath(path);
+  return room && !isMaisonKey(room.place) ? <AppartRoomPage /> : <RoomDetailPage />;
+}
+
 function AppContent() {
   const location = useLocation();
   const isDashboard = location.pathname.startsWith('/dashboard');
@@ -134,7 +145,8 @@ function AppContent() {
         <Route path="/lavilla" element={<HouseDetailPage />} />
         <Route path="/leloft" element={<HouseDetailPage />} />
         <Route path="/lelodge" element={<HouseDetailPage />} />
-        {ROOM_PAGE_PATHS.map((p) => <Route key={p} path={p} element={<RoomDetailPage />} />)}
+        <Route path="/lappart" element={<LAppartPage />} />
+        {ROOM_PAGE_PATHS.map((p) => <Route key={p} path={p} element={roomPageElement(p)} />)}
         <Route path="/investisseurs" element={<InvestisseursPage />} />
         <Route path="/observatoire-logement-frontalier-geneve" element={<ObservatoireLogementPage />} />
         <Route path="/qui-sommes-nous" element={<QuiSommesNousPage />} />
@@ -162,7 +174,8 @@ function AppContent() {
         <Route path="/en/lavilla" element={<HouseDetailPage />} />
         <Route path="/en/leloft" element={<HouseDetailPage />} />
         <Route path="/en/lelodge" element={<HouseDetailPage />} />
-        {ROOM_PAGE_PATHS.map((p) => <Route key={`/en${p}`} path={`/en${p}`} element={<RoomDetailPage />} />)}
+        <Route path="/en/lappart" element={<LAppartPage />} />
+        {ROOM_PAGE_PATHS.map((p) => <Route key={`/en${p}`} path={`/en${p}`} element={roomPageElement(p)} />)}
         <Route path="/en/investisseurs" element={<InvestisseursPage />} />
         <Route path="/en/observatoire-logement-frontalier-geneve" element={<ObservatoireLogementPage />} />
         <Route path="/en/qui-sommes-nous" element={<QuiSommesNousPage />} />

@@ -394,7 +394,10 @@ test('headTexts : titre, descriptions et titres Open Graph / Twitter, entités d
 test('pages de L\'Appart : sa page et ses fiches, FR et EN ; exigées seulement quand L\'Appart a sa page (PLACE_PAGE_KEYS, étape E3)', () => {
   for (const f of ['lappart.html', 'en-lappart.html', 'lappart-chambre-2.html', 'en-lappart-chambre-5.html']) assert.ok(isAppartPageFile(f, m), f);
   for (const f of ['lavilla.html', 'lelodge-chambre-4.html', 'blog-lappart.html', 'lappart-chambre-123.html', 'tarifs.html']) assert.ok(!isAppartPageFile(f, m), f);
-  assert.deepEqual(appartPageFiles(m, { lappart: [2, 3, 4, 5] }), [], 'avant l\'étape E3');
+  // Avant l'étape E3 (PLACE_PAGE_KEYS = les 3 maisons) : rien n'est exigé. Depuis E3 (13/11/2026), L'Appart a sa page : la
+  // valeur réelle exige sa page et ses 4 fiches, FR et EN.
+  assert.deepEqual(appartPageFiles({ ...m, PLACE_PAGE_KEYS: m.MAISON_KEYS }, { lappart: [2, 3, 4, 5] }), [], 'avant l\'étape E3');
+  assert.equal(appartPageFiles(m, { lappart: [2, 3, 4, 5] }).length, 10, 'depuis l\'étape E3');
   const e3 = { ...m, PLACE_PAGE_KEYS: m.PLACE_KEYS };
   assert.deepEqual(appartPageFiles(e3, { lappart: [2, 5] }), ['lappart.html', 'en-lappart.html', 'lappart-chambre-2.html', 'en-lappart-chambre-2.html', 'lappart-chambre-5.html', 'en-lappart-chambre-5.html']);
   assert.deepEqual(appartPageFiles(e3, {}), ['lappart.html', 'en-lappart.html']);

@@ -460,6 +460,18 @@ test('pages maisons : la carte ne reçoit ni ligne ni lien (showInclusions={fals
   assert.doesNotMatch(cards[0], /onPriceWhyClick/);
 });
 
+test('page de L\'Appart (étape E3) : ses cartes ne reçoivent ni ligne ni lien (showInclusions={false}), comme les pages maisons', () => {
+  // Ses chambres (pas de ligne « tout compris » sur la page du lieu, D4 du Lot 5) et, quand L'Appart est complet, les chambres des
+  // maisons (leur ligne nommerait piscine et sauna sur une page de L'Appart : garde de gamme).
+  const src = read('src/pages/LAppartPage.tsx');
+  const cards = [...src.matchAll(/<RoomCard\b[\s\S]*?\/>/g)].map((m) => m[0]);
+  assert.equal(cards.length, 2, 'ses chambres, et les chambres des maisons quand L\'Appart est complet');
+  for (const card of cards) {
+    assert.match(card, /\bshowInclusions=\{false\}/);
+    assert.doesNotMatch(card, /onPriceWhyClick/);
+  }
+});
+
 test('pages à cartes : le lien est mesuré partout où il s\'affiche, avec un nom de page propre', () => {
   const pages = {
     'src/pages/ChambresDisponiblesPage.tsx': 'chambres_disponibles',
@@ -480,9 +492,10 @@ test('pages à cartes : le lien est mesuré partout où il s\'affiche, avec un n
       assert.doesNotMatch(card, /showInclusions/, file);
     }
   }
-  // Inventaire : tout fichier qui monte une carte chambre est soit mesuré ci-dessus, soit une page maison (sans ligne).
+  // Inventaire : tout fichier qui monte une carte chambre est soit mesuré ci-dessus, soit une page de lieu (sans ligne : les
+  // pages maisons et, depuis l'étape E3 du 13/11/2026, la page de L'Appart).
   // Une nouvelle page à cartes doit choisir : ligne et lien mesurés, ou `showInclusions={false}` — puis s'ajouter ici.
-  const known = [...Object.keys(pages), 'src/pages/HouseDetailPage.tsx'].sort();
+  const known = [...Object.keys(pages), 'src/pages/HouseDetailPage.tsx', 'src/pages/LAppartPage.tsx'].sort();
   const users = sourceFiles('src').filter((file) => /<RoomCard\b/.test(read(file))).sort();
   assert.deepEqual(users, known);
 });
