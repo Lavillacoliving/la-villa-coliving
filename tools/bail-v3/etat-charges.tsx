@@ -25,8 +25,8 @@ const line = (id: string, n: number, poste: string, amount: number, pct: number,
 
 export const SAMPLE_EXERCISES: Record<string, { house: { name: string; address: string }; lessor: { name: string; address: string } | null; unit?: ChargesUnit; ex: ChargesExercise }> = {
   LaVilla_2026_provisoire: {
-    house: { name: "La Villa", address: "34 rue du Foron, 74100 Ville-la-Grand" },
-    lessor: { name: "Indivision Austin-Piot", address: "34 rue du Foron, 74100 Ville-la-Grand" },
+    house: { name: "La Villa", address: "1 rue des Exemples, 74100 Ville-la-Grand" },
+    lessor: { name: "Indivision Austin-Piot", address: "1 rue des Exemples, 74100 Ville-la-Grand" },
     ex: {
       id: "villa-2026", property_id: "villa", fiscal_year: 2026, method: "provisional_2025_plus_10", status: "provisoire", total_recoverable_eur: 41312, room_count: 10,
       per_room_month_eur: 344.27, effective_from: "2026-10-26", validated_at: null, validated_by: null, notes: "note interne",
@@ -34,8 +34,8 @@ export const SAMPLE_EXERCISES: Record<string, { house: { name: string; address: 
     },
   },
   LeLodge_2026_exemple_cloture: {
-    house: { name: "Le Lodge", address: "8 rue de Romagny, 74100 Annemasse" },
-    lessor: { name: "SCI Sleep In", address: "8 rue du Mont-Blanc, 74100 Annemasse" },
+    house: { name: "Le Lodge", address: "3 rue des Exemples, 74100 Annemasse" },
+    lessor: { name: "SCI Sleep In", address: "4 rue du Faux-Exemple, 74100 Annemasse" },
     ex: {
       id: "lodge-2026", property_id: "lodge", fiscal_year: 2026, method: "manual_closing", status: "valide", total_recoverable_eur: 0, room_count: 12,
       per_room_month_eur: 0, effective_from: "2027-03-01", validated_at: "2027-02-18T09:30:00Z", validated_by: "exemple", notes: null,
@@ -53,7 +53,7 @@ export const SAMPLE_EXERCISES: Record<string, { house: { name: string; address: 
   },
   // Bien loué en entier, hors générateur de bail : montant par mois, pas de mention du forfait légal, pas de bailleur imprimé.
   MontBlanc_exemple_logement_entier: {
-    house: { name: "Mont-Blanc", address: "8 rue du Mont-Blanc, 74100 Annemasse" },
+    house: { name: "Mont-Blanc", address: "4 rue du Faux-Exemple, 74100 Annemasse" },
     lessor: null,
     unit: "logement",
     ex: {

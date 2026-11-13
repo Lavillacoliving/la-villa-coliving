@@ -15,13 +15,18 @@
  * comparée à la source unique src/data/houseLocation.ts (chargée via esbuild) : phrase de quartier A.2 présente
  * exactement une fois, ligne de trajet ENTITY_HOUSES[].commute dans les 1 500 premiers caractères du <main> après le
  * H1, attribut data-house-location-version = HOUSE_LOCATION_VERSION, lien « Calculer mon trajet » vers Google Maps
- * depuis l'adresse de la maison ; et ROOM_SURFACE_BY_HOUSE (stats.ts) = Math.round(min/max de v_public_rooms.surface_m2)
+ * depuis le point public de la maison (jamais sa rue, 12/10/2026) ; et ROOM_SURFACE_BY_HOUSE (stats.ts) = Math.round(min/max de v_public_rooms.surface_m2)
  * par maison. Fonctions pures exportées, testées dans tools/test/house-pages-check.test.mjs.
  *
  * (12/10/2026, sécurité — cambriolage, décision Jérôme) Le site ne publie plus l'emplacement exact des maisons : la page
  * maison affiche la ZONE (houseZone), « Calculer mon trajet » part du point public arrondi (publicGeo), et AUCUNE page
- * prérendue (texte, attributs, JSON-LD) ne peut contenir une rue de maison (HOUSES[].streetAddress) ni ses coordonnées
- * exactes (exactLocationLeaks) — un échec bloque la publication.
+ * prérendue (texte, attributs, JSON-LD) ne peut contenir une rue de maison ni ses coordonnées exactes
+ * (exactLocationLeaks) — un échec bloque la publication.
+ * (13/11/2026, lot « sécurité des adresses ») Plus aucune rue dans le dépôt : les rues à chercher viennent de la même
+ * source hors dépôt que `npm run check:locations` (scripts/lib/private-locations.mjs — secret LVC_PRIVATE_LOCATIONS en CI,
+ * fichier désigné par LVC_PRIVATE_LOCATIONS_FILE en local). Sans source, la garde le dit et ne contrôle que les
+ * coordonnées. Un échec ne cite jamais la rue : seulement la clé du lieu et le fichier (pour le siège social, le
+ * libellé « siège social », jamais la clé de son lieu).
  *
  * (Lot 2 « retenue premium », sous-lot A — 11/2026) La FAQ d'une page maison n'affiche plus que ses 5 premières questions,
  * les suivantes sont repliées sous un bouton : checkFaqInHtml vérifie que TOUTES les questions du JSON-LD FAQPage restent
@@ -34,6 +39,7 @@ import https from 'https';
 import { fileURLToPath, pathToFileURL } from 'url';
 import { loadEntityFacts } from './lib/load-entity-facts.mjs';
 import { visibleText } from './check-entity-facts.mjs';
+import { loadPrivateLocations, buildStreetMatchers, scanStreets, PrivateLocationsError, LOCATIONS_ENV, LOCATIONS_FILE_ENV, LEGAL_PRERENDERED_PAGES, HEAD_OFFICE_KEY } from './lib/private-locations.mjs';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const PRERENDERED = path.join(__dirname, '..', 'public', 'prerendered');
@@ -95,9 +101,11 @@ export function mainTextAfterH1(html) {
  * Section Localisation d'une page maison prérendue (FR ou EN) : (1) houseNeighbourhood(slug, lang) exactement une fois dans
  * le texte visible ; (2) la ligne courte ENTITY_HOUSES[].commute dans les COMMUTE_WINDOW premiers caractères après le H1 ;
  * (3) data-house-location-version="<HOUSE_LOCATION_VERSION>" une fois ; (4) le lien « Calculer mon trajet » / « Check my
- * commute » pointe vers google.com/maps/dir/ avec l'adresse de la maison encodée (houseDirectionsUrl).
+ * commute » pointe vers google.com/maps/dir/ depuis le point public de la maison (houseDirectionsUrl), jamais depuis sa rue.
+ * `streetMatchers` (facultatif) : détecteurs des rues, bâtis depuis la source hors dépôt — un lien qui en contient une
+ * n'est jamais recopié dans un message.
  */
-export function checkHouseLocation(html, slug, lang, m) {
+export function checkHouseLocation(html, slug, lang, m, streetMatchers = []) {
   const file = lang === 'fr' ? `${slug}.html` : `en-${slug}.html`;
   const house = m.ENTITY_HOUSES.find((h) => h.slug === slug);
   if (!house) return [`${file} : ${slug} absent de ENTITY_HOUSES — nouvelle maison ? → src/data/stats.ts (ROOMS_BY_HOUSE, TRANSIT, ROOM_SURFACE_BY_HOUSE), entityFacts.ts, houseLocation.ts`];
@@ -115,11 +123,13 @@ export function checkHouseLocation(html, slug, lang, m) {
   const label = m.houseDirectionsLabel(lang);
   const h = m.HOUSES.find((x) => x.slug === slug);
   const g = m.publicGeo(h);
-  if (!url.startsWith('https://www.google.com/maps/dir/') || !url.includes(`origin=${encodeURIComponent(`${g.lat},${g.lng}`)}`)) failures.push(`${file} : houseDirectionsUrl ne part pas du point public arrondi (publicGeo) — ${url}`);
-  if (url.includes(encodeURIComponent(h.streetAddress))) failures.push(`${file} : houseDirectionsUrl contient l'adresse de la maison — ${url}`);
+  const urlHasStreet = scanStreets(url, streetMatchers).length > 0;
+  const shownUrl = urlHasStreet ? '(lien non affiché : il contient une rue)' : url;
+  if (!url.startsWith('https://www.google.com/maps/dir/') || !url.includes(`origin=${encodeURIComponent(`${g.lat},${g.lng}`)}`)) failures.push(`${file} : houseDirectionsUrl ne part pas du point public arrondi (publicGeo) — ${shownUrl}`);
+  if (urlHasStreet) failures.push(`${file} : houseDirectionsUrl contient la rue d'une maison — l'itinéraire part du point public (publicGeo)`);
   const zone = m.houseZone(slug, lang);
   if (!text.includes(zone)) failures.push(`${file} : zone « ${zone} » (houseZone) absente du texte visible`);
-  if (!html.replace(/&amp;/g, '&').includes(`href="${url}"`)) failures.push(`${file} : lien « ${label} » absent (href attendu : ${url})`);
+  if (!html.replace(/&amp;/g, '&').includes(`href="${url}"`)) failures.push(`${file} : lien « ${label} » absent (href attendu : ${shownUrl})`);
   if (!text.includes(label)) failures.push(`${file} : libellé « ${label} » absent du texte visible`);
   return failures;
 }
@@ -166,7 +176,7 @@ export function checkRoomSurfaceByHouse(byHouse, m) {
   return failures;
 }
 
-async function checkHouse(slug, rooms, m) {
+async function checkHouse(slug, rooms, m, streetMatchers = []) {
   const failures = [];
   const candidates = rooms.filter((r) => r.availability === 'available' || !!r.available_from);
   for (const lang of ['fr', 'en']) {
@@ -206,7 +216,7 @@ async function checkHouse(slug, rooms, m) {
     // 6. Pas de dispo chiffrée en dur : le badge doit venir de l'embed résumé.
     if (!extractEmbed(html, '__room_availability_data__')) failures.push(`${file} : embed __room_availability_data__ absent`);
     // 7. (Lot L2, 09/10/2026) Section Localisation = source unique houseLocation.ts.
-    failures.push(...checkHouseLocation(html, slug, lang, m));
+    failures.push(...checkHouseLocation(html, slug, lang, m, streetMatchers));
     // 8. (Lot 2 — sous-lot A, 11/2026) FAQ repliée : toutes les questions du FAQPage restent dans le HTML.
     failures.push(...checkFaqInHtml(html, file));
     // 9. (11/11/2026) Accord du nom des maisons : jamais « de Le Loft » ni « à Le Lodge » sur une page française.
@@ -282,44 +292,80 @@ async function checkRoomSizeRange(rooms) {
 }
 
 /**
- * (12/10/2026, sécurité) Fuites de l'emplacement exact dans une page prérendue : rue d'une maison (insensible à la casse, avec
- * ou sans encodage d'URL) ou coordonnées exactes (≥ 4 décimales). Renvoie les chaînes trouvées. Pur.
+ * (12/10/2026, sécurité) Fuites de l'emplacement exact dans une page prérendue : rue d'une maison ou coordonnées exactes
+ * (≥ 4 décimales). (13/11/2026) Les rues viennent de `streetMatchers` (source hors dépôt, scripts/lib/private-locations.mjs :
+ * casse, accents, encodage d'URL, « + », balises, rue sans son numéro) ; sans détecteur, seules les coordonnées sont
+ * contrôlées. `legalPage` : le siège social de la société éditrice (lieu `allowedOnLegalPages`) est toléré sur une page
+ * légale, et nulle part ailleurs. Renvoie des LIBELLÉS (clé du lieu, maison), jamais la rue ni la coordonnée ; le siège
+ * social est désigné comme tel, jamais par la clé de son lieu (un journal public relierait ce lieu à une adresse publiée). Pur.
  */
-export function exactLocationLeaks(html, houses) {
-  const lower = html.toLowerCase();
+export function exactLocationLeaks(html, houses, streetMatchers = [], { legalPage = false } = {}) {
   const leaks = [];
+  for (const hit of scanStreets(html, streetMatchers, { html: true })) {
+    if (hit.allowedOnLegalPages && legalPage) continue;
+    const label = hit.key === HEAD_OFFICE_KEY ? 'siège social hors page légale' : `rue du lieu « ${hit.key} »`;
+    if (!leaks.includes(label)) leaks.push(label);
+  }
   for (const h of houses) {
-    const street = h.streetAddress.toLowerCase();
-    if (lower.includes(street) || lower.includes(encodeURIComponent(street)) || lower.includes(street.replace(/ /g, '+'))) leaks.push(h.streetAddress);
-    for (const c of [h.geo.lat, h.geo.lng]) {
+    for (const [axis, c] of [['latitude', h.geo.lat], ['longitude', h.geo.lng]]) {
       const s = String(c);
-      if (s.split('.')[1]?.length >= 4 && html.includes(s.slice(0, s.indexOf('.') + 5))) leaks.push(s);
+      if (s.split('.')[1]?.length >= 4 && html.includes(s.slice(0, s.indexOf('.') + 5))) leaks.push(`${axis} exacte de ${h.slug}`);
     }
   }
   return leaks;
 }
 
-async function checkNoExactLocation(m) {
-  const files = (await fs.readdir(PRERENDERED)).filter((f) => f.endsWith('.html'));
+/** Toutes les pages prérendues de `dir` (public/prerendered/ par défaut ; un autre dossier dans les tests). */
+export async function checkNoExactLocation(m, streetMatchers = [], dir = PRERENDERED) {
+  const files = (await fs.readdir(dir)).filter((f) => f.endsWith('.html'));
   const failures = [];
   for (const file of files) {
-    const leaks = exactLocationLeaks(await fs.readFile(path.join(PRERENDERED, file), 'utf-8'), m.HOUSES);
-    if (leaks.length) failures.push(`${file} : emplacement exact publié (${[...new Set(leaks)].join(', ')}) — zone et publicGeo seulement (décision du 12/10/2026)`);
+    const leaks = exactLocationLeaks(await fs.readFile(path.join(dir, file), 'utf-8'), m.HOUSES, streetMatchers, { legalPage: LEGAL_PRERENDERED_PAGES.includes(file) });
+    if (leaks.length) failures.push(`${file} : emplacement exact publié (${leaks.join(', ')}) — zone et publicGeo seulement (décision du 12/10/2026)`);
   }
-  console.log(`${failures.length === 0 ? '✅' : '❌'} emplacement exact des maisons absent des ${files.length} pages prérendues`);
+  const scope = streetMatchers.length > 0 ? 'rues et coordonnées exactes des maisons absentes' : 'coordonnées exactes des maisons absentes (rues NON contrôlées : aucune source)';
+  console.log(`${failures.length === 0 ? '✅' : '❌'} emplacement exact — ${scope} des ${files.length} pages prérendues`);
   return failures;
+}
+
+/**
+ * (13/11/2026) Détecteurs des rues depuis la source hors dépôt. Sans source : avertissement visible et liste vide (la garde
+ * ne contrôle alors que les coordonnées ; `npm run check:locations` porte le contrôle complet). Source invalide : échec.
+ * `env` : variables lues (process.env par défaut ; un objet dans les tests).
+ */
+export async function loadStreetMatchers({ env = process.env } = {}) {
+  let source;
+  try {
+    source = await loadPrivateLocations({ env, root: path.join(__dirname, '..') });
+  } catch (e) {
+    if (e instanceof PrivateLocationsError) { console.error(`\n❌ ${e.message}`); process.exit(1); }
+    throw e;
+  }
+  if (!source.places) {
+    console.log(`⚠️  Rues des maisons NON contrôlées par cette garde : aucune source (${LOCATIONS_ENV} vide, ${LOCATIONS_FILE_ENV} absent). Coordonnées exactes contrôlées.`);
+    return [];
+  }
+  return buildStreetMatchers(source.places);
+}
+
+/**
+ * Message final d'un passage réussi. Sans source des rues, il redit que les rues n'ont pas été contrôlées :
+ * l'avertissement du début défile hors de l'écran, ce message-ci est le dernier lu. Pur.
+ */
+export function successMessage(streetsChecked) {
+  return `Pages maisons cohérentes avec la base et la source d'emplacement (FR + EN)${streetsChecked ? '' : ' — rues des maisons NON contrôlées : aucune source'}.`;
 }
 
 async function main() {
   console.log('\n🏠 Garde pages maisons — v_public_rooms × public/prerendered/ × houseLocation.ts\n');
-  const [byHouse, m] = await Promise.all([fetchRooms(), loadEntityFacts()]);
+  const [byHouse, m, streetMatchers] = await Promise.all([fetchRooms(), loadEntityFacts(), loadStreetMatchers()]);
   let total = 0;
   const surfaceFailures = checkRoomSurfaceByHouse(byHouse, m);
   total += surfaceFailures.length;
   console.log(`${surfaceFailures.length === 0 ? '✅' : '❌'} ROOM_SURFACE_BY_HOUSE (stats.ts) = v_public_rooms par maison`);
   for (const f of surfaceFailures) console.log(`   • ${f}`);
   for (const [slug, rooms] of byHouse) {
-    const failures = await checkHouse(slug, rooms, m);
+    const failures = await checkHouse(slug, rooms, m, streetMatchers);
     total += failures.length;
     const candidates = rooms.filter((r) => r.availability === 'available' || !!r.available_from).length;
     console.log(`${failures.length === 0 ? '✅' : '❌'} ${slug} — ${rooms.length} chambres, ${candidates} candidate(s)`);
@@ -332,14 +378,14 @@ async function main() {
   const sizeFailures = await checkRoomSizeRange([...byHouse.values()].flat());
   total += sizeFailures.length;
   for (const f of sizeFailures) console.log(`   • ${f}`);
-  const leakFailures = await checkNoExactLocation(m);
+  const leakFailures = await checkNoExactLocation(m, streetMatchers);
   total += leakFailures.length;
   for (const f of leakFailures) console.log(`   • ${f}`);
   if (total > 0) {
     console.error(`\n❌ ${total} problème(s) — pages maisons NON publiables.`);
     process.exit(1);
   }
-  console.log('\n🎉 Pages maisons cohérentes avec la base et la source d\'emplacement (FR + EN).\n');
+  console.log(`\n🎉 ${successMessage(streetMatchers.length > 0)}\n`);
 }
 
 // Importable par les tests (fonctions pures ci-dessus) : main() ne tourne qu'en exécution directe.

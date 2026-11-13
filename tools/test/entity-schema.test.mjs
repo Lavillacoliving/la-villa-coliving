@@ -4,6 +4,7 @@ import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { loadEntityFacts } from '../../scripts/lib/load-entity-facts.mjs';
 import { entityGraphIssues } from '../../scripts/check-entity-facts.mjs';
+import { scanGenericAddresses } from '../../scripts/lib/private-locations.mjs';
 
 const m = await loadEntityFacts();
 const LANGS = ['fr', 'en'];
@@ -95,9 +96,11 @@ test('garde entityGraphIssues : fiche sans alternateName, nœud maison sans pare
   assert.ok(entityGraphIssues(flatten([m.buildHouseLodgingNode(m.HOUSES[0], 'fr', { context: true }), org]), 'leloft.html', m).some((i) => /autonome/.test(i)), 'bloc d\'une autre maison = échec');
 });
 
-test('L6.6 : NAP — nom, téléphone affiché et E.164, 3 adresses dans la forme de la fiche Google', () => {
+test('L6.6 : NAP — nom, téléphone affiché et E.164 ; plus aucune adresse dans le code (13/11/2026 : base et documentation privée)', () => {
   assert.equal(m.LAVILLA_NAP.name, 'La Villa Coliving');
   assert.equal(m.LAVILLA_NAP.phoneE164.replace(/\s/g, ''), m.LAVILLA_NAP.phoneDisplay.replace(/\s/g, ''));
-  assert.equal(m.LAVILLA_NAP.houses.length, 3);
-  assert.match(m.LAVILLA_NAP.houses[0].address, /^34 rue du Foron, 74100 Ville-la-Grand, France$/);
+  assert.deepEqual(Object.keys(m.LAVILLA_NAP).sort(), ['email', 'name', 'phoneDisplay', 'phoneE164', 'url']);
+  for (const h of m.HOUSES) assert.equal(Object.hasOwn(h, 'streetAddress'), false, `${h.slug} : HOUSES ne porte plus de rue`);
+  // Aucune forme « numéro + voie » dans ce que le module expose aux pages (NAP, maisons, identité de l'organisation).
+  assert.deepEqual(scanGenericAddresses(JSON.stringify([m.LAVILLA_NAP, m.HOUSES, m.ORG_IDENTITY])), []);
 });

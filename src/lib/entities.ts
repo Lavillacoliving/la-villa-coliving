@@ -1,4 +1,3 @@
-import { HOUSES as HOUSE_INFO } from './structuredData';
 /**
  * Shared entity/property constants for consistent filtering across dashboard tabs.
  * Sleep In SCI owns Le Loft + Le Lodge.
@@ -47,13 +46,9 @@ export const PROPERTY_FILTER_OPTIONS = [
   { value: 'lelodge', label: 'Le Lodge' },
 ];
 
-// Property slug → full address (for PDF generation, letters, etc.)
-// (Lot S1, 05/09/2026) Dérivées de HOUSES (src/lib/structuredData.ts, adresses géocodées BAN) :
-// une seule source pour le JSON-LD public et les baux PDF. Décision Jérôme D11 : Le Loft est au
-// 1 rue des Marronniers (l'ancienne valeur « 2 » était fausse).
-export const PROPERTY_ADDRESSES: Record<string, string> = Object.fromEntries(
-  HOUSE_INFO.map((h) => [h.slug, `${h.streetAddress}, ${h.postalCode} ${h.addressLocality}`]),
-);
+// (13/11/2026, lot « sécurité des adresses ») Plus de PROPERTY_ADDRESSES : aucune adresse de maison dans le code.
+// Un écran qui a besoin d'une adresse (courrier, bail, quittance, état des charges) la lit en base, dans
+// `properties.address`, avec la session connectée (RLS) — mise en forme : src/lib/propertyAddress.ts.
 
 // ==========================================
 // Prospects — sources

@@ -69,7 +69,9 @@ export type QAPair = { q: string; a: string; more?: { href: string; label: strin
  * `addressRegion` inclus : le bloc LocalBusiness de SEO.tsx le portait déjà,
  * pas HOUSES[0] ; les deux divergaient.
  * (12/10/2026, sécurité — cambriolage, décision Jérôme) SANS rue : commune, code postal, région, pays. Les rues des maisons
- * ne sont plus publiées par le site (HOUSES[].streetAddress reste une donnée INTERNE : baux, portail, NAP des annuaires).
+ * ne sont plus publiées par le site. (13/11/2026, lot « sécurité des adresses ») Elles ne sont plus écrites dans ce dépôt
+ * non plus : HOUSES n'a plus de champ `streetAddress`. Le tableau de bord et le portail lisent l'adresse en base
+ * (`properties.address`, session connectée) ; la garde `npm run check:locations` refuse toute rue de maison dans le code.
  */
 export const LAVILLA_POSTAL_ADDRESS = {
   "@type": "PostalAddress",
@@ -87,8 +89,7 @@ export interface HouseInfo {
   label: string;
   commune: string;
   url: string;
-  /** INTERNE — jamais rendue publiquement (12/10/2026) : baux, portail, NAP des annuaires. Garde : house-pages-check. */
-  streetAddress: string;
+  // (13/11/2026) Plus de `streetAddress` : aucune rue de maison dans le code (base : properties.address ; garde check:locations).
   addressLocality: string;
   postalCode: string;
   /** INTERNE — coordonnées rooftop-exactes (BAN, 15/08/2026). Le site ne publie que publicGeo(h) (arrondi ≈ 1 km). */
@@ -116,7 +117,7 @@ export function publicGeo(h: { publicPoint: { lat: number; lng: number } }): { l
   return { lat: h.publicPoint.lat, lng: h.publicPoint.lng };
 }
 
-/** Les 3 maisons — source unique pour le schema (adresses confirmées, geo BAN rooftop). */
+/** Les 3 maisons — source unique pour le schema (commune, code postal, zone et point public ; aucune rue, geo BAN rooftop). */
 export const HOUSES: HouseInfo[] = [
   {
     slug: "lavilla",
@@ -124,7 +125,6 @@ export const HOUSES: HouseInfo[] = [
     label: "La Villa",
     commune: "Ville-la-Grand",
     url: `${SITE}/lavilla`,
-    streetAddress: "34 rue du Foron",
     addressLocality: "Ville-la-Grand",
     postalCode: "74100",
     geo: { lat: 46.205146, lng: 6.232634 },
@@ -149,7 +149,6 @@ export const HOUSES: HouseInfo[] = [
     label: "Le Loft",
     commune: "Ambilly",
     url: `${SITE}/leloft`,
-    streetAddress: "1 rue des Marronniers",
     addressLocality: "Ambilly",
     postalCode: "74100",
     geo: { lat: 46.196367, lng: 6.226278 },
@@ -172,7 +171,6 @@ export const HOUSES: HouseInfo[] = [
     label: "Le Lodge",
     commune: "Annemasse",
     url: `${SITE}/lelodge`,
-    streetAddress: "8 rue de Romagny",
     addressLocality: "Annemasse",
     postalCode: "74100",
     geo: { lat: 46.194519, lng: 6.241576 },
@@ -324,17 +322,15 @@ export function buildAvailableRoomsItemList(candidates: readonly RoomOfferInput[
   };
 }
 
-/** (Lot L6.6) NAP — nom, adresses, téléphone, URL dans la forme exacte de la fiche Google (une seule fiche pour les trois
- *  maisons, décision Jérôme) ; à reporter tel quel sur bookmycoliving, coliving.com et La Carte des Colocs (src/data/README.md). */
+/** (Lot L6.6) NAP — nom, téléphone, e-mail et URL dans la forme exacte de la fiche Google (une seule fiche pour les trois
+ *  maisons, décision Jérôme). (13/11/2026, lot « sécurité des adresses ») Les adresses du NAP (siège, maisons) ne sont plus
+ *  dans le code : elles vivent dans la documentation privée, d'où elles se reportent sur les annuaires (src/data/README.md). */
 export const LAVILLA_NAP = {
   name: "La Villa Coliving",
   phoneE164: LAVILLA_PHONE,
   phoneDisplay: "+33 6 64 31 51 34",
   email: LAVILLA_EMAIL,
   url: SITE,
-  // Donnée INTERNE (annuaires, README) : jamais rendue par le site — l'adresse publique n'a plus de rue (12/10/2026).
-  headOffice: `${HOUSES[0].streetAddress}, ${HOUSES[0].postalCode} ${HOUSES[0].addressLocality}, France`,
-  houses: HOUSES.map((h) => ({ label: h.label, address: `${h.streetAddress}, ${h.postalCode} ${h.addressLocality}, France` })),
 } as const;
 
 /**

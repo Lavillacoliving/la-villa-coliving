@@ -30,6 +30,13 @@ tools/out/
 # Liste des noms de concurrents (garde check-no-competitor) — jamais versionnée
 scripts/competitors.local.json
 
+# Rues des maisons (garde check:locations) — la source vit HORS du dépôt (LVC_PRIVATE_LOCATIONS_FILE) et la garde
+# refuse un fichier placé ici. Ces motifs ne sont qu'un filet : jamais de fichier de rues dans le dépôt.
+lvc-private-locations*.json
+*private-locations*.json
+*.locations.local.json
+scripts/locations.local.json
+
 # Python (scripts/import-resident-history.py)
 __pycache__/
 

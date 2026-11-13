@@ -63,30 +63,30 @@ test('fiche sans montants : calcul d’origine inchangé (charges de la fiche ma
   assert.deepEqual(quittanceSplit({ received: 300, month: '2026-10', fiche: old, propertyCharges: 360 }), { rent: 0, charges: 360, basis: 'fiche_maison' });
 });
 
-const lodgeProperty = { is_coliving: true, legal_entity_name: 'Sleep In', siege_social: '8 rue du Mont-Blanc – 74100 Annemasse – France', siret: '882 153 810 00016', property_address: '8 rue de Romagny - 74100 Annemasse',
-  entity: { legal_name: 'SCI Sleep In', legal_form: 'sci', trade_name: 'La Villa Coliving', registration: 'RCS Thonon-les-Bains 882 153 810 — SIRET 882 153 810 00016', siege: '8 rue du Mont-Blanc, 74100 Annemasse' } };
+const lodgeProperty = { is_coliving: true, legal_entity_name: 'Sleep In', siege_social: '4 rue du Faux-Exemple – 74100 Annemasse – France', siret: '882 153 810 00016', property_address: '3 rue des Exemples - 74100 Annemasse',
+  entity: { legal_name: 'SCI Sleep In', legal_form: 'sci', trade_name: 'La Villa Coliving', registration: 'RCS Thonon-les-Bains 882 153 810 — SIRET 882 153 810 00016', siege: '4 rue du Faux-Exemple, 74100 Annemasse' } };
 
 test('bailleur d’un bail v3 : l’entité juridique de la maison, avec son immatriculation', () => {
   const l = quittanceLessor(lodgeProperty, true);
   assert.equal(l.name, 'SCI Sleep In');
   assert.equal(l.designation, 'la SCI Sleep In');
-  assert.equal(l.address, '8 rue du Mont-Blanc, 74100 Annemasse');
+  assert.equal(l.address, '4 rue du Faux-Exemple, 74100 Annemasse');
   assert.equal(l.registration, 'RCS Thonon-les-Bains 882 153 810 — SIRET 882 153 810 00016');
   assert.equal(l.siret, '');
   assert.equal(l.brand, 'La Villa Coliving');
-  const villa = quittanceLessor({ ...lodgeProperty, legal_entity_name: 'LA VILLA', entity: { legal_name: 'Indivision Austin-Piot', legal_form: 'indivision', trade_name: 'La Villa Coliving', registration: 'SIRET 898 236 518 00012', siege: '34 rue du Foron, 74100 Ville-la-Grand' } }, true);
+  const villa = quittanceLessor({ ...lodgeProperty, legal_entity_name: 'LA VILLA', entity: { legal_name: 'Indivision Austin-Piot', legal_form: 'indivision', trade_name: 'La Villa Coliving', registration: 'SIRET 898 236 518 00012', siege: '1 rue des Exemples, 74100 Ville-la-Grand' } }, true);
   assert.equal(villa.designation, "l'Indivision Austin-Piot");
 });
 
 test('bailleur d’un bail antérieur : libellé d’origine inchangé', () => {
   const l = quittanceLessor(lodgeProperty, false);
   assert.equal(l.name, 'La Villa Coliving');
-  assert.equal(l.address, 'Sleep In SCI — 8 rue du Mont-Blanc – 74100 Annemasse – France');
+  assert.equal(l.address, 'Sleep In SCI — 4 rue du Faux-Exemple – 74100 Annemasse – France');
   assert.equal(l.siret, '882 153 810 00016');
   assert.equal(l.registration, null);
   assert.equal(l.brand, 'La Villa Coliving');
   // bien non coliving (Mont-Blanc) : nom propre de la fiche maison ; entité sans identité juridique → jamais utilisée
-  const mb = quittanceLessor({ is_coliving: false, legal_entity_name: 'LA VILLA', siege_social: '34 rue du Foron – 74100 Ville-la-Grand – France', siret: '898 236 518 00012', property_address: 'x', entity: { legal_name: null, legal_form: 'autre', trade_name: null, registration: null, siege: null } }, true);
+  const mb = quittanceLessor({ is_coliving: false, legal_entity_name: 'LA VILLA', siege_social: '1 rue des Exemples – 74100 Ville-la-Grand – France', siret: '898 236 518 00012', property_address: 'x', entity: { legal_name: null, legal_form: 'autre', trade_name: null, registration: null, siege: null } }, true);
   assert.equal(mb.name, 'LA VILLA');
   assert.equal(mb.registration, null);
 });
@@ -118,11 +118,11 @@ test('fiches en double au même e-mail : la vraie chambre la plus récente (jama
   assert.equal(pickTenantFiche([]), null);
 });
 
-test('adresses : une ligne par élément, jamais de coupure dans « Ville-la-Grand » ni « Mont-Blanc », pays retiré', () => {
-  assert.deepEqual(addressLines('34 rue du Foron – 74100 Ville-la-Grand – France'), ['34 rue du Foron', '74100 Ville-la-Grand']);
-  assert.deepEqual(addressLines('34 rue du Foron - 74100 Ville-la-Grand - France'), ['34 rue du Foron', '74100 Ville-la-Grand']);
-  assert.deepEqual(addressLines('8 rue du Mont-Blanc, 74100 Annemasse'), ['8 rue du Mont-Blanc', '74100 Annemasse']);
-  assert.deepEqual(addressLines('Sleep In SCI \u2014 8 rue du Mont-Blanc – 74100 Annemasse – France'), ['Sleep In SCI', '8 rue du Mont-Blanc', '74100 Annemasse']);
-  assert.deepEqual(addressLines('8 rue de Romagny - 74100 Annemasse, 74100 Annemasse – France'), ['8 rue de Romagny', '74100 Annemasse', '74100 Annemasse']);
+test('adresses : une ligne par élément, jamais de coupure dans « Ville-la-Grand » ni dans un nom de voie à trait d\'union (« Faux-Exemple »), pays retiré', () => {
+  assert.deepEqual(addressLines('1 rue des Exemples – 74100 Ville-la-Grand – France'), ['1 rue des Exemples', '74100 Ville-la-Grand']);
+  assert.deepEqual(addressLines('1 rue des Exemples - 74100 Ville-la-Grand - France'), ['1 rue des Exemples', '74100 Ville-la-Grand']);
+  assert.deepEqual(addressLines('4 rue du Faux-Exemple, 74100 Annemasse'), ['4 rue du Faux-Exemple', '74100 Annemasse']);
+  assert.deepEqual(addressLines('Sleep In SCI \u2014 4 rue du Faux-Exemple – 74100 Annemasse – France'), ['Sleep In SCI', '4 rue du Faux-Exemple', '74100 Annemasse']);
+  assert.deepEqual(addressLines('3 rue des Exemples - 74100 Annemasse, 74100 Annemasse – France'), ['3 rue des Exemples', '74100 Annemasse', '74100 Annemasse']);
   assert.deepEqual(addressLines(null), []);
 });

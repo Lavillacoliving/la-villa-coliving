@@ -28,14 +28,14 @@ export const CASES: Record<string, LeaseV3Input> = {
     maquette: MAQUETTE,
     entity: {
       legal_form: "indivision", legal_name: "Indivision Austin-Piot", trade_name: "La Villa Coliving",
-      registration: "SIRET 898 236 518 00012", capital_eur: null, siege: "34 rue du Foron, 74100 Ville-la-Grand", vat_mention: VAT,
+      registration: "SIRET 898 236 518 00012", capital_eur: null, siege: "1 rue des Exemples, 74100 Ville-la-Grand", vat_mention: VAT,
       signatories: [{ name: "M. Jérôme AUSTIN", quality: "indivisaire", order: 1 }, { name: "Mme Fanny PIOT", quality: "indivisaire", order: 2 }],
       sole_signatory: { index: 0, mandate_from: 1, mandate_date: "2026-10-28" },
       account_holder: "M. Jérôme Austin et Mme Fanny Piot", bank: "Banque Palatine", iban: "FR76 4097 8000 4321 3287 5019 897", bic: "BSPFFRPPXXX",
       domicile: "[domicile des indivisaires — à confirmer]",
     },
     property: {
-      name: "La Villa", address: "34 rue du Foron, 74100 Ville-la-Grand", commune: "Ville-la-Grand",
+      name: "La Villa", address: "1 rue des Exemples, 74100 Ville-la-Grand", commune: "Ville-la-Grand",
       // Classeur « mise en ligne » validé par Jérôme le 10/11/2026 : 365 m² habitables, 380 m² intérieurs, parc de 1 948 m² cité une fois (clause de cadre), home cinéma.
       surface_total_m2: 365, surface_interior_m2: 380, room_count: 10, dpe_class: "D",
       setting_clause_fr: "Le logement objet du présent contrat est situé dans une maison individuelle s'inscrivant dans un cadre paysager attaché à l'immeuble, comprenant un parc arboré de 1 948 m² et des espaces extérieurs aménagés. Le locataire a l'usage, dans les conditions prévues au règlement intérieur annexé, des parties communes intérieures et extérieures de la maison.",
@@ -64,12 +64,12 @@ export const CASES: Record<string, LeaseV3Input> = {
     maquette: MAQUETTE,
     entity: {
       legal_form: "sci", legal_name: "SCI Sleep In", trade_name: "La Villa Coliving",
-      registration: "RCS Thonon-les-Bains 882 153 810", capital_eur: 1000, siege: "8 rue du Mont-Blanc, 74100 Annemasse", vat_mention: VAT,
+      registration: "RCS Thonon-les-Bains 882 153 810", capital_eur: 1000, siege: "4 rue du Faux-Exemple, 74100 Annemasse", vat_mention: VAT,
       signatories: [{ name: "M. Jérôme AUSTIN", quality: "gérant", order: 1, default: true }], signatory_index: 0,
       account_holder: "SCI Sleep In", bank: "Banque Palatine", iban: "FR76 4097 8000 4321 3287 5921 415", bic: "BSPFFRPPXXX",
     },
     property: {
-      name: "Le Lodge", address: "8 rue de Romagny, 74100 Annemasse", commune: "Annemasse",
+      name: "Le Lodge", address: "3 rue des Exemples, 74100 Annemasse", commune: "Annemasse",
       // 589 m² intérieurs = maison 380 + grenier 100 + pool house 26 + chalet fitness 65 + réserve 18 (Jérôme, 10/11/2026).
       surface_total_m2: 380, surface_interior_m2: 589, room_count: 12, dpe_class: "B",
       buildings: [
@@ -104,13 +104,13 @@ export const CASES: Record<string, LeaseV3Input> = {
     maquette: MAQUETTE,
     entity: {
       legal_form: "sci", legal_name: "SCI Sleep In", trade_name: "La Villa Coliving",
-      registration: "RCS Thonon-les-Bains 882 153 810", capital_eur: 1000, siege: "8 rue du Mont-Blanc, 74100 Annemasse", vat_mention: VAT,
+      registration: "RCS Thonon-les-Bains 882 153 810", capital_eur: 1000, siege: "4 rue du Faux-Exemple, 74100 Annemasse", vat_mention: VAT,
       signatories: [{ name: "M. Jérôme AUSTIN", quality: "gérant", order: 1, default: true }], signatory_index: 0,
       account_holder: "SCI Sleep In", bank: "Banque Palatine", iban: "FR76 4097 8000 4321 3287 5921 415", bic: "BSPFFRPPXXX",
     },
     // Données de la maison : table properties (adresse, 7 chambres, parties communes) + seeds du lot 1 (DPE C, 298 m², piscine intérieure, sauna, salle de sport, terrasses ; pas de jardin).
     property: {
-      name: "Le Loft", building_kind: "Maison de ville", address: "1 rue des Marronniers, 74100 Ambilly", commune: "Ambilly",
+      name: "Le Loft", building_kind: "Maison de ville", address: "2 rue des Exemples, 74100 Ambilly", commune: "Ambilly",
       // Relecture Loft de Jérôme (29/10/2026) puis classeur du 10/11/2026 : deux bâtiments, 249 m² habitables + annexe de 60 m² = 309 m² intérieurs,
       // 234 m² d'extérieurs et terrasses ; l'introduction (« Maison de ville … répartie sur deux bâtiments : ») est générée avec les surfaces.
       surface_total_m2: 249, surface_interior_m2: 309, room_count: 7, dpe_class: "C",

@@ -14,6 +14,7 @@
     "check:competitors": "node scripts/check-no-competitor.mjs",
     "check:facts": "node scripts/check-entity-facts.mjs",
     "check:slots": "node scripts/check-answer-slots.mjs",
+    "check:locations": "node scripts/check-private-locations.mjs",
     "build:llms": "node scripts/build-llms-txt.mjs",
     "article:sql": "node scripts/build-article-sql.mjs",
     "link:graph": "node tools/link-graph.mjs",

@@ -19,24 +19,24 @@ if (!outDir) { console.error("usage: quittance-exemples.mjs <dossier-de-sortie>"
 fs.mkdirSync(outDir, { recursive: true });
 
 const LODGE: LessorSource = {
-  is_coliving: true, legal_entity_name: "Sleep In", siege_social: "8 rue du Mont-Blanc – 74100 Annemasse – France", siret: "882 153 810 00016",
-  property_address: "8 rue de Romagny - 74100 Annemasse",
-  entity: { legal_name: "SCI Sleep In", legal_form: "sci", trade_name: "La Villa Coliving", registration: "RCS Thonon-les-Bains 882 153 810 — SIRET 882 153 810 00016", siege: "8 rue du Mont-Blanc, 74100 Annemasse" },
+  is_coliving: true, legal_entity_name: "Sleep In", siege_social: "4 rue du Faux-Exemple – 74100 Annemasse – France", siret: "882 153 810 00016",
+  property_address: "3 rue des Exemples - 74100 Annemasse",
+  entity: { legal_name: "SCI Sleep In", legal_form: "sci", trade_name: "La Villa Coliving", registration: "RCS Thonon-les-Bains 882 153 810 — SIRET 882 153 810 00016", siege: "4 rue du Faux-Exemple, 74100 Annemasse" },
 };
 const VILLA: LessorSource = {
-  is_coliving: true, legal_entity_name: "LA VILLA", siege_social: "34 rue du Foron – 74100 Ville-la-Grand – France", siret: "898 236 518 00012",
-  property_address: "34 rue du Foron - 74100 Ville-la-Grand",
-  entity: { legal_name: "Indivision Austin-Piot", legal_form: "indivision", trade_name: "La Villa Coliving", registration: "SIRET 898 236 518 00012", siege: "34 rue du Foron, 74100 Ville-la-Grand" },
+  is_coliving: true, legal_entity_name: "LA VILLA", siege_social: "1 rue des Exemples – 74100 Ville-la-Grand – France", siret: "898 236 518 00012",
+  property_address: "1 rue des Exemples - 74100 Ville-la-Grand",
+  entity: { legal_name: "Indivision Austin-Piot", legal_form: "indivision", trade_name: "La Villa Coliving", registration: "SIRET 898 236 518 00012", siege: "1 rue des Exemples, 74100 Ville-la-Grand" },
 };
 
 interface Case { house: string; address: string; room: string; lessor: LessorSource; fiche: QuittanceFiche; propertyCharges: number; month: string; label: string; start: string; end: string; received: number }
 const CASES: Record<string, Case> = {
-  v3_LeLodge_mois_complet: { house: "Le Lodge", address: "8 rue de Romagny - 74100 Annemasse - France", room: "1", lessor: LODGE, fiche: { rent_eur: 1194, charges_forfait_eur: 336, move_in_date: "2026-12-15" }, propertyCharges: 420, month: "2027-01", label: "Janvier 2027", start: "01/01/2027", end: "31/01/2027", received: 1530 },
-  v3_LeLodge_mois_entree: { house: "Le Lodge", address: "8 rue de Romagny - 74100 Annemasse - France", room: "1", lessor: LODGE, fiche: { rent_eur: 1194, charges_forfait_eur: 336, move_in_date: "2026-12-15" }, propertyCharges: 420, month: "2026-12", label: "Décembre 2026", start: "01/12/2026", end: "31/12/2026", received: 816 },
-  v3_LaVilla_mois_complet: { house: "La Villa", address: "34 rue du Foron - 74100 Ville-la-Grand - France", room: "7", lessor: VILLA, fiche: { rent_eur: 1126, charges_forfait_eur: 344, move_in_date: "2026-12-01" }, propertyCharges: 360, month: "2027-01", label: "Janvier 2027", start: "01/01/2027", end: "31/01/2027", received: 1470 },
+  v3_LeLodge_mois_complet: { house: "Le Lodge", address: "3 rue des Exemples - 74100 Annemasse - France", room: "1", lessor: LODGE, fiche: { rent_eur: 1194, charges_forfait_eur: 336, move_in_date: "2026-12-15" }, propertyCharges: 420, month: "2027-01", label: "Janvier 2027", start: "01/01/2027", end: "31/01/2027", received: 1530 },
+  v3_LeLodge_mois_entree: { house: "Le Lodge", address: "3 rue des Exemples - 74100 Annemasse - France", room: "1", lessor: LODGE, fiche: { rent_eur: 1194, charges_forfait_eur: 336, move_in_date: "2026-12-15" }, propertyCharges: 420, month: "2026-12", label: "Décembre 2026", start: "01/12/2026", end: "31/12/2026", received: 816 },
+  v3_LaVilla_mois_complet: { house: "La Villa", address: "1 rue des Exemples - 74100 Ville-la-Grand - France", room: "7", lessor: VILLA, fiche: { rent_eur: 1126, charges_forfait_eur: 344, move_in_date: "2026-12-01" }, propertyCharges: 360, month: "2027-01", label: "Janvier 2027", start: "01/01/2027", end: "31/01/2027", received: 1470 },
   // Bail antérieur rattrapé : la fiche porte les montants du bail (1 440 € charges comprises → 1 095,73 + 344,27), loyer révisé à 1 451,19 €.
-  bail_anterieur_rattrape_LaVilla: { house: "La Villa", address: "34 rue du Foron - 74100 Ville-la-Grand - France", room: "5", lessor: VILLA, fiche: { rent_eur: 1095.73, charges_forfait_eur: 344.27, move_in_date: "2025-05-12" }, propertyCharges: 360, month: "2026-11", label: "Novembre 2026", start: "01/11/2026", end: "30/11/2026", received: 1451.19 },
-  bail_anterieur_LaVilla: { house: "La Villa", address: "34 rue du Foron - 74100 Ville-la-Grand - France", room: "7", lessor: VILLA, fiche: { rent_eur: null, charges_forfait_eur: null, move_in_date: "2026-03-01" }, propertyCharges: 360, month: "2026-10", label: "Octobre 2026", start: "01/10/2026", end: "31/10/2026", received: 1460 },
+  bail_anterieur_rattrape_LaVilla: { house: "La Villa", address: "1 rue des Exemples - 74100 Ville-la-Grand - France", room: "5", lessor: VILLA, fiche: { rent_eur: 1095.73, charges_forfait_eur: 344.27, move_in_date: "2025-05-12" }, propertyCharges: 360, month: "2026-11", label: "Novembre 2026", start: "01/11/2026", end: "30/11/2026", received: 1451.19 },
+  bail_anterieur_LaVilla: { house: "La Villa", address: "1 rue des Exemples - 74100 Ville-la-Grand - France", room: "7", lessor: VILLA, fiche: { rent_eur: null, charges_forfait_eur: null, move_in_date: "2026-03-01" }, propertyCharges: 360, month: "2026-10", label: "Octobre 2026", start: "01/10/2026", end: "31/10/2026", received: 1460 },
 };
 
 for (const [key, c] of Object.entries(CASES)) {

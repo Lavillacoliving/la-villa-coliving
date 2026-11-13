@@ -404,7 +404,7 @@ function immeubleBlocks(p: LeaseV3Property): Block[] {
   }
   return [{ t: "p", text: `${kind} à usage d'habitation sise ${p.address}, ${surfacesPhrase(p)}, comprenant ${p.room_count} chambres louées séparément et des parties communes. ${suite}` }];
 }
-/** « 34 rue du Foron, 74100 Ville-la-Grand » → ["34 rue du Foron", "74100 Ville-la-Grand"] (pied de page). */
+/** « 1 rue des Exemples, 74100 Ville-la-Grand » → ["1 rue des Exemples", "74100 Ville-la-Grand"] (pied de page). */
 function splitAddress(s: string): string[] {
   const parts = s.split(",").map((x) => x.trim()).filter(Boolean);
   return parts.length >= 2 ? [parts.slice(0, -1).join(", "), parts[parts.length - 1]] : [s];

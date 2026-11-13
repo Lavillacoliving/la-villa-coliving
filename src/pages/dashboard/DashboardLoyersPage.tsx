@@ -1,7 +1,8 @@
 import { useState, useEffect, useCallback } from 'react';
 import { supabase } from '@/lib/supabase';
 import { useToast } from '@/components/ui/Toast';
-import { ENTITY_SLUGS, PROPERTY_ADDRESSES } from '@/lib/entities';
+import { ENTITY_SLUGS } from '@/lib/entities';
+import { propertyAddressLine, missingAddressMessage } from '@/lib/propertyAddress';
 import { logAudit } from '@/lib/auditLog';
 import { nextLeaseAnniversary, hasLeftBy } from '@/lib/irlAnniversary';
 import { pdf } from '@react-pdf/renderer';
@@ -21,7 +22,8 @@ interface Tenant {
   preferred_language?: string; due_day?: number;
   properties?: { name: string } | null;
 }
-interface Property { id: string; name: string; slug: string; entity_id: string; }
+// `address` : lue en base (properties.address, session admin) — aucune adresse de maison dans le code (13/11/2026).
+interface Property { id: string; name: string; slug: string; entity_id: string; address: string | null; }
 interface IRLEntry { value: number; variation: number; }
 
 const STATUS_COLORS: Record<string,string> = {
@@ -155,6 +157,8 @@ export default function DashboardLoyersPage() {
   const toast = useToast();
   const [tenants, setTenants] = useState<Tenant[]>([]);
   const [properties, setProperties] = useState<Property[]>([]);
+  // Lecture des maisons en échec : le courrier IRL le dit au lieu de partir sans adresse d'expéditeur.
+  const [propertiesLoadFailed, setPropertiesLoadFailed] = useState(false);
   const [irlData, setIrlData] = useState<Record<string,IRLEntry>>({});
   const [month, setMonth] = useState(() => new Date().toISOString().slice(0,7));
   const [entityFilter, setEntityFilter] = useState('all');
@@ -175,13 +179,14 @@ export default function DashboardLoyersPage() {
     const [pRes,tRes,prRes,irlRes] = await Promise.all([
       supabase.from('payments').select('*').eq('month',month),
       supabase.from('tenants').select('*,properties(name)').eq('is_active',true),
-      supabase.from('properties').select('id,name,slug,entity_id'),
+      supabase.from('properties').select('id,name,slug,entity_id,address'),
       supabase.from('irl_indices').select('year,quarter,value,variation_pct').order('year').order('quarter'),
     ]);
     const existingPayments = pRes.data || [];
     const activeTenants = tRes.data || [];
     setTenants(activeTenants);
     setProperties(prRes.data||[]);
+    setPropertiesLoadFailed(!!prRes.error);
     const irl: Record<string,IRLEntry> = {};
     (irlRes.data||[]).forEach((d:any) => { irl[d.year+'-Q'+d.quarter] = {value:parseFloat(d.value),variation:parseFloat(d.variation_pct)}; });
     setIrlData(irl);
@@ -268,7 +273,8 @@ export default function DashboardLoyersPage() {
   const sortedGroups = Object.values(grouped).sort((a,b) => a.prop.name.localeCompare(b.prop.name));
 
   // IRL reminders
-  interface IRLReminder { name:string; firstName:string; lastName:string; room:number; property:string; propertyAddress:string; daysUntil:number; date:Date; currentRent:number; newRent:number; pct:string; tenantId:string; irlRef:string; irlOld:number; irlNew:number; }
+  // propertyAddress : ligne d'expéditeur du courrier, tirée de properties.address ; null tant que la base ne la donne pas.
+  interface IRLReminder { name:string; firstName:string; lastName:string; room:number; property:string; propertyAddress:string|null; daysUntil:number; date:Date; currentRent:number; newRent:number; pct:string; tenantId:string; irlRef:string; irlOld:number; irlNew:number; }
   const irlReminders: IRLReminder[] = [];
   const irlKeys = Object.keys(irlData).sort().reverse();
   // Stale-IRL detection : compare table's latest index with what INSEE should have published by today
@@ -299,8 +305,7 @@ export default function DashboardLoyersPage() {
           if (newRent > t.current_rent) {
             const prop = properties.find(p=>p.id===t.property_id);
             const propName = prop?.name||'';
-            const propSlug = prop?.slug||'';
-            irlReminders.push({name:t.first_name+' '+t.last_name,firstName:t.first_name,lastName:t.last_name,room:t.room_number,property:propName,propertyAddress:PROPERTY_ADDRESSES[propSlug]||'',daysUntil:days,date:next,currentRent:t.current_rent,newRent,pct,tenantId:t.id,irlRef:latestIrlRef,irlOld:prev.value,irlNew:latest.value});
+            irlReminders.push({name:t.first_name+' '+t.last_name,firstName:t.first_name,lastName:t.last_name,room:t.room_number,property:propName,propertyAddress:propertyAddressLine(prop?.address),daysUntil:days,date:next,currentRent:t.current_rent,newRent,pct,tenantId:t.id,irlRef:latestIrlRef,irlOld:prev.value,irlNew:latest.value});
           }
         }
       });
@@ -368,6 +373,10 @@ export default function DashboardLoyersPage() {
   };
 
   const generateIRLPDF = async (r: IRLReminder) => {
+    // (13/11/2026) L'adresse d'expéditeur vient de la base (properties.address) : aucune valeur par défaut dans le code.
+    // Sans adresse (lecture des maisons en échec, ou fiche sans adresse), pas de courrier : on dit pourquoi.
+    const propertyAddress = r.propertyAddress;
+    if (!propertyAddress) { toast.error(missingAddressMessage(r.property, propertiesLoadFailed)); return; }
     const effectiveDate = r.date.toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' });
     const firstMonth = new Date(r.date.getFullYear(), r.date.getMonth(), 1);
     const firstPaymentMonth = firstMonth.toLocaleDateString('fr-FR', { month: 'long', year: 'numeric' });
@@ -379,7 +388,7 @@ export default function DashboardLoyersPage() {
             tenantLastName: r.lastName,
             roomNumber: r.room,
             propertyName: r.property,
-            propertyAddress: r.propertyAddress,
+            propertyAddress,
             currentRent: r.currentRent,
             newRent: r.newRent,
             variationPct: r.pct,

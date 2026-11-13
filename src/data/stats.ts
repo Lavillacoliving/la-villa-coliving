@@ -258,7 +258,7 @@ export const FACEBOOK_GROUP = {
 } as const;
 
 // ── Note Google (Lot L3 « Note Google et preuves », décision D4 de Jérôme du 09/10/2026) ─────────────────
-// Fiche Google Business unique « La Villa Coliving » (34 rue du Foron, Ville-la-Grand ; Le Loft et Le Lodge n'ont pas de
+// Fiche Google Business unique « La Villa Coliving » (celle de La Villa, à Ville-la-Grand ; Le Loft et Le Lodge n'ont pas de
 // fiche). Relevé du 08/10/2026 : 4,8/5, 36 avis. Règles : toujours étiquetée « sur Google » / « on Google »
 // (STATS_DISPLAY.googleRating), toujours accompagnée du lien « Voir les avis » vers `url` (nouvel onglet, rel noopener
 // noreferrer, lien normal) ; JAMAIS d'aggregateRating ni de Review en JSON-LD (garde check-entity-facts). Remplace

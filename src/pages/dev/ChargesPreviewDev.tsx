@@ -15,11 +15,11 @@ import type { ChargesExercise, ChargesUnit } from '@/lib/bailV3/chargesEntry';
 
 interface PreviewHouse { id: string; slug: string; name: string; address: string; room_count: number; is_coliving: boolean; unit: ChargesUnit; lessor: { name: string; address: string } | null; total: number | null }
 const HOUSES: PreviewHouse[] = [
-  { id: 'lavilla', slug: 'lavilla', name: 'La Villa', address: '34 rue du Foron - 74100 Ville-la-Grand - France', room_count: 10, is_coliving: true, unit: 'chambre', lessor: { name: 'Indivision Austin-Piot', address: '34 rue du Foron, 74100 Ville-la-Grand' }, total: 41312 },
-  { id: 'lelodge', slug: 'lelodge', name: 'Le Lodge', address: '8 rue de Romagny - 74100 Annemasse - France', room_count: 12, is_coliving: true, unit: 'chambre', lessor: { name: 'SCI Sleep In', address: '8 rue du Mont-Blanc, 74100 Annemasse' }, total: 48372 },
-  { id: 'leloft', slug: 'leloft', name: 'Le Loft', address: '1 rue des Marronniers - 74100 Ambilly - France', room_count: 7, is_coliving: true, unit: 'chambre', lessor: { name: 'SCI Sleep In', address: '8 rue du Mont-Blanc, 74100 Annemasse' }, total: 29883 },
+  { id: 'lavilla', slug: 'lavilla', name: 'La Villa', address: '1 rue des Exemples - 74100 Ville-la-Grand - France', room_count: 10, is_coliving: true, unit: 'chambre', lessor: { name: 'Indivision Austin-Piot', address: '1 rue des Exemples, 74100 Ville-la-Grand' }, total: 41312 },
+  { id: 'lelodge', slug: 'lelodge', name: 'Le Lodge', address: '3 rue des Exemples - 74100 Annemasse - France', room_count: 12, is_coliving: true, unit: 'chambre', lessor: { name: 'SCI Sleep In', address: '4 rue du Faux-Exemple, 74100 Annemasse' }, total: 48372 },
+  { id: 'leloft', slug: 'leloft', name: 'Le Loft', address: '2 rue des Exemples - 74100 Ambilly - France', room_count: 7, is_coliving: true, unit: 'chambre', lessor: { name: 'SCI Sleep In', address: '4 rue du Faux-Exemple, 74100 Annemasse' }, total: 29883 },
   // Mont-Blanc : appartement loué en entier, hors générateur de bail ; aucune saisie au départ, aucun bailleur imprimé.
-  { id: 'montblanc', slug: 'montblanc', name: 'Mont-Blanc', address: '8 rue du Mont-Blanc - 74100 Annemasse', room_count: 1, is_coliving: false, unit: 'logement', lessor: null, total: null },
+  { id: 'montblanc', slug: 'montblanc', name: 'Mont-Blanc', address: '4 rue du Faux-Exemple - 74100 Annemasse', room_count: 1, is_coliving: false, unit: 'logement', lessor: null, total: null },
 ];
 
 const SEED: ChargesExercise[] = HOUSES.filter((h): h is PreviewHouse & { total: number } => h.total != null).map((h) => ({

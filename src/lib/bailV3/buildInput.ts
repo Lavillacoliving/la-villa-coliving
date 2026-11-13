@@ -31,7 +31,7 @@ export interface LeaseFactsRow {
   charges_energy_chf: number | null; charges_maintenance_chf: number | null; charges_services_chf: number | null;
 }
 
-/** « 1 rue des Marronniers - 74100 Ambilly - France » → « 1 rue des Marronniers, 74100 Ambilly ». */
+/** « 2 rue des Exemples - 74100 Ambilly - France » → « 2 rue des Exemples, 74100 Ambilly ». */
 export function leaseAddress(raw: string): string {
   return raw.split(/\s+[-–]\s+/).map((s) => s.trim()).filter((s) => s && !/^france$/i.test(s)).join(", ");
 }

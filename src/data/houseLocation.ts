@@ -5,9 +5,10 @@
  * Pourquoi : la recon L0.2a (09/10/2026) a trouvé tous les faits d'emplacement écrits en dur dans le code, avec des
  * valeurs contradictoires entre pages (« gare à 10 / 9 / moins de 10 min », « tram à 1 min », « 15 min en voiture »,
  * « frontière mitoyenne » contre « Moillesulaz à 2 km », « TPN ligne 61 »…). Tout fait d'emplacement se lit ICI ;
- * les nombres viennent de TRANSIT / HOUSE_SURFACES (src/data/stats.ts, maître numérique) et les adresses de HOUSES
- * (src/lib/structuredData.ts). Les pages maisons, les cartes, les FAQ et les scripts (llms, gardes) consomment ces
- * fonctions ; aucune minute, distance ou surface d'emplacement ne s'écrit ailleurs.
+ * les nombres viennent de TRANSIT / HOUSE_SURFACES (src/data/stats.ts, maître numérique) ; la commune, la zone et le
+ * point public de HOUSES (src/lib/structuredData.ts — plus aucune rue depuis le 13/11/2026). Les pages maisons, les
+ * cartes, les FAQ et les scripts (llms, gardes) consomment ces fonctions ; aucune minute, distance ou surface
+ * d'emplacement ne s'écrit ailleurs.
  *
  * Règles (ne pas rediscuter) :
  *  - D1, méthode trajet : la destination est toujours nommée (Genève-Eaux-Vives par défaut ; Champel, Cornavin, le
@@ -262,12 +263,7 @@ export function houseExactAddressNote(lang: LocLang): string {
     : "L'adresse exacte t'est communiquée à la prise de rendez-vous de visite.";
 }
 
-/** INTERNE — adresse postale complète (gardes, annuaires). JAMAIS rendue sur le site : la garde house-pages-check l'interdit. */
-export function houseAddressLine(slug: HouseSlug): string {
-  const h = HOUSES.find((x) => x.slug === slug);
-  if (!h) throw new Error(`houseLocation: adresse inconnue pour ${slug}`);
-  return `${h.streetAddress}, ${h.postalCode} ${h.addressLocality}`;
-}
+// (13/11/2026, lot « sécurité des adresses ») houseAddressLine() est supprimée : ce module ne connaît plus aucune rue.
 
 /* ── Gardes ───────────────────────────────────────────────────────────────────────────────────────────────── */
 

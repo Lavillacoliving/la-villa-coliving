@@ -179,7 +179,7 @@ test('état récapitulatif : libellés sans repère interne, total et forfait re
     per_room_month_eur: 344.27, effective_from: '2026-10-26', validated_at: null, validated_by: null, notes: 'note interne à ne pas imprimer',
     lines: [{ id: 'l1', property_charges_id: 's26', poste_code: 'projection_2025_plus_10', label: 'Projection : charges récupérables réelles 2025 + 10 % (D12-bis)', amount_eur: 41312, recoverable_pct: 100, recoverable_eur: 41312, source: null, sort_order: 0 }],
   };
-  const st = m.statementFromExercise(ex, { name: 'La Villa', address: '34 rue du Foron, 74100 Ville-la-Grand' }, { name: 'Indivision Austin-Piot', address: '34 rue du Foron, 74100 Ville-la-Grand' }, '2026-11-10');
+  const st = m.statementFromExercise(ex, { name: 'La Villa', address: '1 rue des Exemples, 74100 Ville-la-Grand' }, { name: 'Indivision Austin-Piot', address: '1 rue des Exemples, 74100 Ville-la-Grand' }, '2026-11-10');
   assert.equal(st.lines[0].label, 'Projection : charges récupérables réelles 2025 + 10 %');
   assert.equal(st.total, 41312);
   assert.equal(st.per_room_month, 344.27);
@@ -216,7 +216,7 @@ test('logement entier : état récapitulatif marqué « logement », sans baille
     per_room_month_eur: 201.03, effective_from: '2027-03-01', validated_at: '2027-02-12T10:00:00Z', validated_by: 'x', notes: null,
     lines: [{ id: 'l1', property_charges_id: 'mb26', poste_code: 'eau', label: 'Eau froide et chaude (résidents et communs)', amount_eur: 2412.4, recoverable_pct: 100, recoverable_eur: 2412.4, source: null, sort_order: 0 }],
   };
-  const st = m.statementFromExercise(ex, { name: 'Mont-Blanc', address: '8 rue du Mont-Blanc, 74100 Annemasse' }, null, '2027-02-12', 'logement');
+  const st = m.statementFromExercise(ex, { name: 'Mont-Blanc', address: '4 rue du Faux-Exemple, 74100 Annemasse' }, null, '2027-02-12', 'logement');
   assert.equal(st.unit, 'logement');
   assert.equal(st.lessor, null);
   assert.equal(st.per_room_month, 201.03);

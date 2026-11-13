@@ -7,7 +7,7 @@
  * texte, donc les gardes peuvent comparer le texte au caractère près (houseLocationStrings).
  * Rendu sobre, cohérent avec <EntityFacts/> : bordures #E7E5E4, fond #FAF9F6, lien or #b8860b.
  * D1.5 (« on laisse vérifier ») : note de méthode sous le tableau + lien « Calculer mon trajet » (Google Maps,
- * transports, depuis l'adresse de la maison), nouvel onglet.
+ * transports, depuis le point public de la maison — jamais sa rue, 12/10/2026), nouvel onglet.
  */
 import { useLanguage } from "@/contexts/LanguageContext";
 import { ENTITY_HOUSES } from "@/data/entityFacts";
