@@ -23,7 +23,7 @@
  */
 import { APPART } from "./appart";
 import { appartCommuteLine } from "./appartLocation";
-import { appartGammeExempt, appartOpeningSentence, appartRoomPhotosSentence } from "./appartFacts";
+import { appartFullTitle, appartGammeExempt, appartOpeningSentence, appartRoomPhotosSentence } from "./appartFacts";
 import { ENTITY_FACTS_CTA, FEES_DEPOSIT_SENTENCE, GUARANTOR_SENTENCE, MAISONS_REFERRAL } from "./entityFacts";
 import { ANNEMASSE_TRAIN_MIN, aOrAn, thousands } from "./stats";
 import { APPART_SUITE_ROOM_NUMBER, roomCapacityLabel, roomLabel } from "./places";
@@ -295,13 +295,13 @@ export function appartWaitlistText(lang: AppartPageLang): AppartWaitlistText {
 export function appartFullText(lang: AppartPageLang): { title: string; text: string; link: string } {
   if (lang === "en") {
     return {
-      title: `${A.name} is full for now`,
+      title: appartFullTitle("en"),
       text: `All ${word(A.rooms.total, "en")} rooms are let. The prices don't change: ${P.room.en.chf} a month for a room, ${P.suite.en.chf} for the suite. Leave us your move-in month and we'll let you know as soon as a room opens up.`,
       link: "See all available rooms",
     };
   }
   return {
-    title: `${A.name} est complet pour le moment`,
+    title: appartFullTitle("fr"),
     text: `Les ${word(A.rooms.total, "fr")} chambres sont louées. Les prix ne changent pas : ${P.room.fr.chf} par mois pour une chambre, ${P.suite.fr.chf} pour la suite. Laisse-nous ton mois d'arrivée, on te prévient dès qu'une chambre se libère.`,
     link: "Voir toutes les chambres disponibles",
   };
@@ -476,26 +476,32 @@ export function appartRoomBreadcrumb(roomNumber: number, lang: AppartPageLang): 
 /**
  * Description de la fiche (partage : annonces, WhatsApp). `date` = date de la vue déjà formatée (état B), sinon la date
  * d'ouverture fixe, dans sa forme unique (« L'Appart ouvre à la location le 1er février 2027 »).
+ * (Corrections du 13/11/2026, relecture technique) `availableNow` = la vue dit la chambre libre (après l'ouverture) : la phrase de
+ * la pastille (« Libre maintenant », roomBadge) prend la place de « Libre dès le … », jamais la date d'ouverture passée — variante
+ * absente de la source, à relire par Jérôme.
  */
-export function appartRoomDescription(roomNumber: number, lang: AppartPageLang, date?: MaybeDate): string {
+export function appartRoomDescription(roomNumber: number, lang: AppartPageLang, date?: MaybeDate, availableNow = false): string {
   const B = BRAND_TERMS;
+  const status = availableNow
+    ? (lang === "en" ? "Available now" : "Libre maintenant")
+    : date ? (lang === "en" ? `Available from ${date}` : `Libre dès le ${date}`) : null;
   if (isAppartSuite(roomNumber)) {
     if (lang === "en") {
-      return date
-        ? `The suite at ${A.name} in ${A.commune}: ${SUITE.surfaceM2} m², private shower room and toilet, for one or two people. Available from ${date}. All-inclusive.`
+      return status
+        ? `The suite at ${A.name} in ${A.commune}: ${SUITE.surfaceM2} m², private shower room and toilet, for one or two people. ${status}. All-inclusive.`
         : `The suite at ${A.name} in ${A.commune}: ${SUITE.surfaceM2} m², private shower room and toilet, for one or two people. ${appartOpeningSentence("en")}`;
     }
-    return date
-      ? `La suite de ${A.name} à ${A.commune} : ${SUITE.surfaceM2} m², salle d'eau et WC privés, pour une ou deux personnes. Libre dès le ${date}. Tout compris.`
+    return status
+      ? `La suite de ${A.name} à ${A.commune} : ${SUITE.surfaceM2} m², salle d'eau et WC privés, pour une ou deux personnes. ${status}. Tout compris.`
       : `La suite de ${A.name} à ${A.commune} : ${SUITE.surfaceM2} m², salle d'eau et WC privés, pour une ou deux personnes. ${appartOpeningSentence("fr")}`;
   }
   if (lang === "en") {
-    return date
-      ? `Room ${roomNumber} at ${A.name} in ${A.commune}: ${STD.surfaceM2} m², shared shower room. Available from ${date}. All-inclusive, no application fee, reply within ${B.responseHours} h.`
+    return status
+      ? `Room ${roomNumber} at ${A.name} in ${A.commune}: ${STD.surfaceM2} m², shared shower room. ${status}. All-inclusive, no application fee, reply within ${B.responseHours} h.`
       : `Room ${roomNumber} at ${A.name} in ${A.commune}: ${STD.surfaceM2} m², shared shower room. ${appartOpeningSentence("en")} All-inclusive, no application fee.`;
   }
-  return date
-    ? `Chambre ${roomNumber} de ${A.name} à ${A.commune} : ${STD.surfaceM2} m², salle d'eau partagée. Libre dès le ${date}. Tout compris, 0 frais de dossier, réponse sous ${B.responseHours} h.`
+  return status
+    ? `Chambre ${roomNumber} de ${A.name} à ${A.commune} : ${STD.surfaceM2} m², salle d'eau partagée. ${status}. Tout compris, 0 frais de dossier, réponse sous ${B.responseHours} h.`
     : `Chambre ${roomNumber} de ${A.name} à ${A.commune} : ${STD.surfaceM2} m², salle d'eau partagée. ${appartOpeningSentence("fr")} Tout compris, 0 frais de dossier.`;
 }
 
@@ -706,6 +712,7 @@ export function appartPageIssues(): string[] {
     for (const n of [2, 3, 4, APPART_SUITE_ROOM_NUMBER]) {
       const u = appartRoomUnavailable(n, lang), pr = appartRoomPrice(n, lang);
       all.push(appartRoomTitle(n, lang), appartRoomH1(n, lang), ...appartRoomBreadcrumb(n, lang), appartRoomDescription(n, lang), appartRoomDescription(n, lang, "x"),
+        appartRoomDescription(n, lang, null, true),
         appartRoomIntro(n, lang), appartRoomStatus(lang), appartRoomStatus(lang, "x"), pr.chf, pr.note, ...(pr.suiteForTwo ? [pr.suiteForTwo] : []),
         ...appartRoomSpecs(n, lang).map((x) => x.value), u.title, u.description, u.h1, u.text, u.cta, appartRoomWhatsapp(n, lang), appartRoomWhatsapp(n, lang, "x"));
     }

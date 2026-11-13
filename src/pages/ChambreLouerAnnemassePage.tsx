@@ -130,7 +130,7 @@ export function ChambreLouerAnnemassePage() {
       <section className="py-16 lg:py-20 bg-white">
         <div className="max-w-6xl mx-auto px-6">
           <AppartTeaser page="/chambre-a-louer-annemasse" />
-          <AppartRooms known={appart.known} page="chambre_a_louer_annemasse" headingLevel={3} className="mt-12">
+          <AppartRooms known={appart.known} full={appartCandidates.length === 0} page="chambre_a_louer_annemasse" headingLevel={3} className="mt-12">
             {appartCandidates.length > 0 && (
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 {appartCandidates.map((room) => (

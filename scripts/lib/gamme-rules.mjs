@@ -101,6 +101,9 @@ const isoDay = (v) => (v === null || v === undefined || v === '' ? null : String
  *     francs, surface (Math.round, règle du Lot 7) et salle d'eau de chaque chambre ;
  *   - avant APPART.opensOn : aucune chambre « libre », et toute date de libération = APPART.opensOn ; à partir de cette date :
  *     plus de contrôle de date, un avertissement (retirer « dès février 2027 » des textes).
+ *     Cas limite connu (relecture technique du 13/11/2026) : un locataire entré avant l'ouverture dont la date de sortie est saisie
+ *     avant le 1er février 2027 → la vue rend cette date, échec jusqu'à l'ouverture (changer opensOn n'y fait rien). Consigne
+ *     (CLAUDE.md, « Date d'ouverture ») : pas de date de sortie pour un tel locataire avant l'ouverture.
  */
 export function appartDbIssues(rows, m, { today } = {}) {
   const A = m.ENTITY_FACTS.appart;

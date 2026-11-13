@@ -255,7 +255,7 @@ export function AppartRoomPage() {
       {settled && (
         <SEO
           title={appartRoomTitle(n, L)}
-          description={appartRoomDescription(n, L, date)}
+          description={appartRoomDescription(n, L, date, availableNow)}
           noindex
           image={`${SITE}${LAPPART_HERO.wide.src}`}
         />

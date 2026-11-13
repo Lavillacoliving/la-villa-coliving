@@ -21,6 +21,13 @@ const m = await loadEntityFacts();
 const fixture = (s) => { const j = JSON.parse(readFileSync(path.join(ROOT, `tools/test/fixtures/v_public_rooms.etat-${s}.json`), 'utf8')); return Array.isArray(j) ? j : j.rows; };
 const ROWS = { A: fixture('A'), B: fixture('B') };
 const KEY = m.APPART_KEY;
+// (Corrections du 13/11/2026) États dérivés des relevés, pour l'encart Facebook et l'état « complet » : une chambre « pleine » =
+// occupée sans date de libération (ni carte ni candidature).
+const fullRow = (r) => ({ ...r, availability: 'occupied', available_from: null });
+ROWS.housesFull = ROWS.B.map((r) => (r.house_slug === KEY ? r : fullRow(r)));      // maisons pleines, L'Appart daté (état B)
+ROWS.appartFull = ROWS.B.map((r) => (r.house_slug === KEY ? fullRow(r) : r));      // L'Appart complet, maisons de l'état B
+ROWS.allFull = ROWS.B.map(fullRow);                                                // rien de libre ni de daté
+ROWS.housesFullA = ROWS.A.map(fullRow);                                            // maisons pleines, L'Appart absent de la vue
 const HOUSE_AMENITY = /piscine|sauna|salle de sport|\bpools?\b|\bgym\b/i;
 const LANGS = ['fr', 'en'];
 const PAGES = ['/chambres-disponibles', '/colocation-geneve', '/chambre-a-louer-geneve', '/chambre-a-louer-annemasse'];
@@ -84,6 +91,7 @@ function renderState(state) {
   }
 }
 const R = { A: renderState('A'), B: renderState('B') };
+for (const s of ['housesFull', 'appartFull', 'allFull', 'housesFullA']) R[s] = renderState(s);
 rmSync(dir, { recursive: true, force: true });
 
 /** La section L'Appart d'une page rendue, de sa balise d'ouverture à sa balise de fin (aucune section imbriquée dedans) : son
@@ -253,6 +261,38 @@ test('JSON-LD de /chambres-disponibles : en B, les offres de L\'Appart après ce
       assert.deepEqual(o.priceSpecification.map((p) => [p.price, p.priceCurrency]), [[r.rent_chf, 'CHF'], [Number(r.rent_eur), 'EUR']]);
       assert.equal(o.itemOffered.containedInPlace['@id'], `https://www.lavillacoliving.com/${KEY}#lodging`);
       assert.doesNotMatch(JSON.stringify(o), HOUSE_AMENITY);
+    }
+  }
+});
+
+test('encart Facebook de /chambres-disponibles (D2) : seulement s\'il n\'y a AUCUNE chambre libre ni datée, celles de L\'Appart comprises', () => {
+  // (Corrections du 13/11/2026, relecture technique) Maisons pleines mais L'Appart daté : 0 encart sous ses cartes.
+  const callouts = (html) => (html.match(/<aside[^>]*\sid="facebook-group"/g) || []).length;
+  for (const lang of LANGS) {
+    const at = (s) => `${lang}, ${s}`;
+    const page = (s) => R[s][`${lang}:/chambres-disponibles`].html;
+    assert.equal(callouts(page('B')), 0, at('état B'));
+    assert.equal(count(appartSection(page('housesFull')), 'data-gamme-badge'), m.APPART.rooms.total, at('maisons pleines : cartes de L\'Appart'));
+    assert.equal(callouts(page('housesFull')), 0, at('maisons pleines, L\'Appart daté'));
+    assert.equal(callouts(page('allFull')), 1, at('rien de libre ni de daté'));
+    assert.equal(callouts(page('housesFullA')), 1, at('maisons pleines, L\'Appart absent de la vue (repli)'));
+  }
+});
+
+test('état « complet » de L\'Appart dans les 4 listes : une ligne le dit (titre de l\'état complet de /lappart), aucune carte, sa liste d\'attente', () => {
+  // (Corrections du 13/11/2026, relecture technique) Sans cette ligne, la section n'avait que son titre, son chapeau et le lien.
+  for (const route of PAGES) {
+    for (const lang of LANGS) {
+      const t = m.appartListText(lang);
+      assert.equal(t.full, m.appartFullTitle(lang), lang);
+      for (const s of ['appartFull', 'allFull']) {
+        const sec = appartSection(R[s][`${lang}:${route}`].html), at = `${s}, ${lang} ${route}`;
+        assert.equal(count(sec, 'data-appart-full'), 1, at);
+        assert.equal(count(text(sec), t.full), 1, at);
+        assert.equal(count(sec, 'data-gamme-badge'), 0, `${at} : aucune carte`);
+        assert.equal(count(sec, `property_interest=${KEY}&amp;room_interest=liste-attente`), 1, `${at} : liste d'attente`);
+      }
+      for (const s of ['B', 'housesFull']) assert.equal(count(appartSection(R[s][`${lang}:${route}`].html), 'data-appart-full'), 0, `${s}, ${lang} ${route}`);
     }
   }
 });

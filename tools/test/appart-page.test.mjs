@@ -228,6 +228,11 @@ test('/lappart, état complet (B+) : liste d\'attente en tête, chambres sans bo
     assert.equal(countFacebookCallout(page), 1, at);
     assert.deepEqual(gammeMixIssues(page, lang === 'en' ? 'en-lappart.html' : 'lappart.html', m), [], at);
     assert.ok(t.includes(P.appartFullText(lang).title), at);
+    // (Corrections du 13/11/2026) « … Tu peux candidater dès maintenant pour réserver une chambre » est la phrase des états A et B
+    // (PAGE-LAPPART § 12.1) : jamais au-dessus du bloc « complet » ; en A et en B, elle est là.
+    const before = P.appartRoomsSection(lang).beforeOpening;
+    assert.ok(!t.includes(before), `${at} : phrase « avant l'ouverture » au-dessus du bloc « complet »`);
+    for (const s of ['A', 'B']) assert.ok(visibleText(html(R[s][lang].page)).includes(before), `état ${s}, ${lang} : phrase « avant l'ouverture »`);
     // Les 4 chambres nommées, « Complet », aucun bouton à leur numéro.
     for (const n of [2, 3, 4, 5]) assert.ok(t.includes(m.roomLabel('lappart', n, lang)), `${at} ${n}`);
     assert.ok(count(t, lang === 'en' ? 'Fully booked' : 'Complet') >= 4, at);
@@ -248,6 +253,38 @@ test('/lappart, état complet (B+) : liste d\'attente en tête, chambres sans bo
       assert.ok(visibleText(rp).includes(P.appartRoomUnavailable(n, lang).h1), `${at}, fiche ${n}`);
       assert.doesNotMatch(rp, /room_interest=chambre-/, `${at}, fiche ${n}`);
       assert.deepEqual(gammeMixIssues(rp, `${lang === 'en' ? 'en-' : ''}lappart-chambre-${n}.html`, m), [], `${at}, fiche ${n}`);
+    }
+  }
+});
+
+test('description d\'une fiche : sans date et datée = la source au caractère près ; libre maintenant = la pastille, jamais la date d\'ouverture', async () => {
+  const P = await bundleData();
+  const nb = (s) => s.replace(/[  ]/g, ' ');
+  // Source du 13/11/2026 (chambre.meta.*) : {numero} = 2, {date} = « 1er février » / « February 1 ».
+  const want = {
+    fr: {
+      2: ["Chambre 2 de L'Appart à Annemasse : 12 m², salle d'eau partagée. L'Appart ouvre à la location le 1er février 2027. Tout compris, 0 frais de dossier.",
+        "Chambre 2 de L'Appart à Annemasse : 12 m², salle d'eau partagée. Libre dès le 1er février. Tout compris, 0 frais de dossier, réponse sous 48 h."],
+      5: ["La suite de L'Appart à Annemasse : 22 m², salle d'eau et WC privés, pour une ou deux personnes. L'Appart ouvre à la location le 1er février 2027.",
+        "La suite de L'Appart à Annemasse : 22 m², salle d'eau et WC privés, pour une ou deux personnes. Libre dès le 1er février. Tout compris."],
+    },
+    en: {
+      2: ["Room 2 at L'Appart in Annemasse: 12 m², shared shower room. L'Appart opens for rent on 1 February 2027. All-inclusive, no application fee.",
+        "Room 2 at L'Appart in Annemasse: 12 m², shared shower room. Available from February 1. All-inclusive, no application fee, reply within 48 h."],
+      5: ["The suite at L'Appart in Annemasse: 22 m², private shower room and toilet, for one or two people. L'Appart opens for rent on 1 February 2027.",
+        "The suite at L'Appart in Annemasse: 22 m², private shower room and toilet, for one or two people. Available from February 1. All-inclusive."],
+    },
+  };
+  for (const lang of LANGS) {
+    const date = lang === 'en' ? 'February 1' : '1er février';
+    for (const n of [2, 5]) {
+      const at = `${lang}, n° ${n}`;
+      assert.equal(nb(P.appartRoomDescription(n, lang)), want[lang][n][0], `${at}, sans date`);
+      assert.equal(nb(P.appartRoomDescription(n, lang, date)), want[lang][n][1], `${at}, datée`);
+      // (Corrections du 13/11/2026) Libre maintenant (après l'ouverture) : la phrase de la pastille à la place de la date.
+      const now = nb(P.appartRoomDescription(n, lang, null, true));
+      assert.equal(now, want[lang][n][1].replace(lang === 'en' ? `Available from ${date}` : `Libre dès le ${date}`, lang === 'en' ? 'Available now' : 'Libre maintenant'), `${at}, libre maintenant`);
+      assert.ok(!now.includes('2027'), `${at} : date d'ouverture dans la description d'une chambre libre`);
     }
   }
 });

@@ -456,7 +456,7 @@ export function ChambresDisponiblesPage() {
       {all.known && houseFilter === null && (
         <div className="py-12 lg:py-16 bg-white border-t border-[#E7E5E4]">
           <div className="container-custom">
-            <AppartRooms known={appart.known} fallback page="chambres_disponibles">
+            <AppartRooms known={appart.known} fallback full={appartCandidates.length === 0} page="chambres_disponibles">
               {appartAvailableShown.length > 0 && (
                 <div className="space-y-6 mb-6">
                   {appartAvailableShown.map((room) => (
@@ -574,8 +574,10 @@ export function ChambresDisponiblesPage() {
           </p>
           {/* (Lot L5, D10) Encart A.8 — le groupe Facebook comme ressource quand aucune date ne convient. (13/10/2026, D2 du
               brief « conversion Ads ») Seulement s'il n'y a AUCUNE chambre libre ni datée (listes non filtrées : même
-              rendu au prérendu et à l'hydratation) ; garde check:slots : 0 ou 1 encart sur cette page. */}
-          {all.known && candidates.length === 0 && (
+              rendu au prérendu et à l'hydratation) ; garde check:slots : 0 ou 1 encart sur cette page.
+              (Corrections du 13/11/2026, relecture technique) « Aucune » compte aussi les chambres de L'Appart (libres ou
+              datées, même état embarqué) : l'encart ne se pose jamais sous ses cartes. */}
+          {all.known && candidates.length === 0 && appartCandidates.length === 0 && (
             <FacebookGroupCallout position="chambres_disponibles" className="mt-10 max-w-3xl mx-auto" />
           )}
         </div>

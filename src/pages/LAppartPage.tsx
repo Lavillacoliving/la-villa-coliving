@@ -352,7 +352,9 @@ export function LAppartPage() {
         <div className="container-custom">
           <h2 className="text-3xl md:text-4xl mb-4 text-[#1C1917]" style={heading}>{roomsText.title}</h2>
           <div className="mb-8 space-y-3 max-w-3xl text-[15px] md:text-base text-[#57534E]">
-            <p className="font-semibold text-[#1C1917]">{roomsText.beforeOpening}</p>
+            {/* (Corrections du 13/11/2026) « … Tu peux candidater dès maintenant » appartient aux états A et B (PAGE-LAPPART § 12.1) :
+                jamais au-dessus du bloc « complet » (§ 12.3), qui le remplace. */}
+            {!full && <p className="font-semibold text-[#1C1917]">{roomsText.beforeOpening}</p>}
             <p>{roomsText.intro}</p>
             <p>{roomsText.frank}</p>
             {!stateB && <p>{roomsText.stateA}</p>}

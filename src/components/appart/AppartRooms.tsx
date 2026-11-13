@@ -43,6 +43,9 @@ export interface AppartRoomsProps {
   className?: string;
   /** Les cartes de L'Appart (état B), rendues par la page. Rien : chapeau et liens seuls (aucune chambre libre ni datée). */
   children?: ReactNode;
+  /** (Corrections du 13/11/2026) La vue rend L'Appart mais aucune chambre libre ni datée (état « complet ») : une ligne le dit,
+   *  au-dessus de la liste d'attente. À calculer sur TOUTES les chambres de L'Appart (jamais après un filtre de la page). */
+  full?: boolean;
 }
 
 const TITLE_ID = "appart-rooms-titre";
@@ -51,7 +54,7 @@ const WAITLIST_PATH = `/candidature?property_interest=${APPART.key}&room_interes
 const LINK_CLASS =
   "inline-flex items-center gap-2 min-h-[44px] text-sm font-semibold text-[#1C1917] underline underline-offset-4 hover:text-[#8A6508] transition-colors";
 
-export function AppartRooms({ known, fallback = false, discoverLink = false, page, headingLevel = 2, className = "", children }: AppartRoomsProps) {
+export function AppartRooms({ known, fallback = false, discoverLink = false, page, headingLevel = 2, className = "", children, full = false }: AppartRoomsProps) {
   const { language } = useLanguage();
   if (!known && !fallback) return null;
   const L = language === "en" ? "en" : "fr";
@@ -72,6 +75,7 @@ export function AppartRooms({ known, fallback = false, discoverLink = false, pag
       {known ? (
         <>
           <p className="mt-2 mb-6 max-w-3xl text-[#57534E] leading-relaxed">{t.lead}</p>
+          {full && <p data-appart-full className="max-w-3xl font-semibold text-[#1C1917]">{t.full}</p>}
           {children}
           <div className="mt-6 flex flex-wrap items-center gap-x-6 gap-y-2">
             <LocalizedLink

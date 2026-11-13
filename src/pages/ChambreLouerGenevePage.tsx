@@ -142,7 +142,7 @@ export function ChambreLouerGenevePage() {
           {/* (L'Appart, étape E4 — décision n° 31, à confirmer) Sous-section à part, après les maisons : cartes standard avec le
               badge de gamme (état B), ou le repli vers /lappart (état A). Rendue une fois les chambres chargées, comme les cartes. */}
           {allRooms.known && (
-            <AppartRooms known={appart.known} fallback discoverLink page="chambre_a_louer_geneve" headingLevel={3} className="mt-12 pt-10 border-t border-[#E7E5E4]">
+            <AppartRooms known={appart.known} fallback discoverLink full={appartCandidates.length === 0} page="chambre_a_louer_geneve" headingLevel={3} className="mt-12 pt-10 border-t border-[#E7E5E4]">
               {appartCandidates.length > 0 && (
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                   {appartCandidates.map((room) => (

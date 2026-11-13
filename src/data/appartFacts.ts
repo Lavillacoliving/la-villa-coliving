@@ -350,6 +350,15 @@ export interface AppartListText {
   fallbackLink: string;
   /** Lien de la liste d'attente de L'Appart. */
   waitlist: string;
+  /** État « complet » (la vue rend L'Appart, aucune chambre libre ni datée) : la ligne posée au-dessus de la liste d'attente.
+   *  (Corrections du 13/11/2026) La source n'écrit rien pour les listes dans cet état : c'est le titre de l'état « complet » de
+   *  /lappart (`page.complet.titre`, appartFullTitle), repris tel quel — à relire par Jérôme. */
+  full: string;
+}
+
+/** Titre de l'état « complet » (source : `page.complet.titre`) — /lappart et la section L'Appart des listes. */
+export function appartFullTitle(lang: AppartLang): string {
+  return lang === "en" ? `${A.name} is full for now` : `${A.name} est complet pour le moment`;
 }
 
 export function appartListText(lang: AppartLang): AppartListText {
@@ -360,6 +369,7 @@ export function appartListText(lang: AppartLang): AppartListText {
       fallbackText: `${appartOpeningSentence("en")} Our ${A.descriptor.en}: ${A.rooms.total} furnished rooms from ${P.from.en.chf} a month, with bills, fibre, streaming and cleaning of the shared areas included.`,
       fallbackLink: `Discover ${A.name} and its rooms`,
       waitlist: `Join ${A.name}'s waiting list`,
+      full: appartFullTitle("en"),
     };
   }
   return {
@@ -368,6 +378,7 @@ export function appartListText(lang: AppartLang): AppartListText {
     fallbackText: `${appartOpeningSentence("fr")} Notre ${A.descriptor.fr} : ${A.rooms.total} chambres meublées dès ${P.from.fr.chf} par mois, charges, fibre, streaming et ménage des communs compris.`,
     fallbackLink: `Découvrir ${A.name} et ses chambres`,
     waitlist: `Rejoins la liste d'attente de ${A.name}`,
+    full: appartFullTitle("fr"),
   };
 }
 
@@ -405,7 +416,7 @@ export function appartFactsAllStrings(lang: AppartLang): string[] {
       const t = appartTeaser(route, lang);
       return [...(t.eyebrow ? [t.eyebrow] : []), t.title, t.text, t.link];
     }),
-    list.title, list.lead, list.fallbackText, list.fallbackLink, list.waitlist,
+    list.title, list.lead, list.fallbackText, list.fallbackLink, list.waitlist, list.full,
     appartOpeningSentence(lang), appartRoomPhotosSentence(lang), appartNoHouseAmenitiesSentence(lang),
     appartCommuneSentence(lang), appartCommuneSentence(lang, { following: true }),
     ...Object.values(appartGammeExempt(lang)).flatMap((v) => (typeof v === "string" ? [v] : [...v])),
