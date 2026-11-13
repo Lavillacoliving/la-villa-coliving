@@ -142,7 +142,10 @@ test('état B : /chambres-disponibles — 4 cartes compactes de L\'Appart, « D�
     const discover = sec.match(new RegExp(`<a [^>]*href="${prefixOf(lang)}/${KEY}"[^>]*data-house-cta|<a [^>]*data-house-cta[^>]*href="${prefixOf(lang)}/${KEY}"`, 'g')) ?? [];
     assert.equal(discover.length, m.APPART.rooms.total, `${lang} : un bouton « ${m.placeDiscoverLabel(KEY, lang)} » par chambre datée`);
     assert.equal(count(html, `property_interest=${KEY}&amp;room_interest=liste-attente`), 1, `${lang} : liste d'attente de L'Appart`);
-    assert.equal(count(html, `href="${prefixOf(lang)}/${KEY}"`), m.APPART.rooms.total + 1, `${lang} : cartes + nom lié du chapeau, rien d'autre vers /${KEY}`);
+    // Hors des cartes : le nom lié du chapeau (E4) et le lien « Voir L'Appart » sous la FAQ A.3, rendue sur cette page
+    // (priceJustificationFaq().more, étape E5).
+    assert.equal(m.priceJustificationFaq(lang).more?.href, `/${KEY}`, `${lang} : lien de suite de la FAQ A.3`);
+    assert.equal(count(html, `href="${prefixOf(lang)}/${KEY}"`), m.APPART.rooms.total + 2, `${lang} : cartes + nom lié du chapeau + lien de la FAQ A.3, rien d'autre vers /${KEY}`);
   }
 });
 
