@@ -100,6 +100,31 @@ test('garde entityGraphIssues : fiche sans alternateName, nœud maison sans pare
   assert.ok(entityGraphIssues(flatten([m.buildHouseLodgingNode(m.HOUSES[0], 'fr', { context: true }), org]), 'leloft.html', m).some((i) => /autonome/.test(i)), 'bloc d\'une autre maison = échec');
 });
 
+test('(L\'Appart, E2g) entityGraphIssues par lieu : le nœud de L\'Appart est reconnu (4 chambres) ; sa page porte son bloc autonome dès qu\'elle existe', () => {
+  for (const lang of LANGS) {
+    // Fiche de la marque telle que l'étape E5 la posera : les 3 maisons et L'Appart dans `department`.
+    const org = m.buildLocalBusinessSchema(lang, 'd');
+    const brand = { ...org, numberOfRooms: 33, department: [...org.department, m.buildAppartLodgingNode(lang)] };
+    assert.deepEqual(entityGraphIssues(flatten(brand), 'tarifs.html', m), []);
+    const wrong = JSON.parse(JSON.stringify(brand)); wrong.department[3].numberOfRooms = 5;
+    assert.deepEqual(entityGraphIssues(flatten(wrong), 'tarifs.html', m), ['lappart : numberOfRooms=5 ≠ 4']);
+    const orphan = JSON.parse(JSON.stringify(brand)); delete orphan.department[3].parentOrganization;
+    assert.deepEqual(entityGraphIssues(flatten(orphan), 'tarifs.html', m), ['lappart : nœud #lodging sans parentOrganization @id de l\'entité']);
+  }
+  const node = m.buildAppartLodgingNode('fr', { context: true });
+  const org = m.buildLocalBusinessSchema('fr', 'd');
+  // Tant que L'Appart n'a pas de page (PLACE_PAGE_KEYS = les 3 maisons), rien n'est exigé sur lappart.html.
+  assert.deepEqual(entityGraphIssues(flatten([org]), 'lappart.html', m), []);
+  // Dès l'étape E3 (PLACE_PAGE_KEYS = les 4 lieux) : exactement un bloc autonome de L'Appart, sur sa page FR et EN.
+  const e3 = { ...m, PLACE_PAGE_KEYS: m.PLACE_KEYS };
+  assert.deepEqual(entityGraphIssues(flatten([node, org]), 'lappart.html', e3), []);
+  assert.deepEqual(entityGraphIssues(flatten([m.buildAppartLodgingNode('en', { context: true }), m.buildLocalBusinessSchema('en', 'd')]), 'en-lappart.html', e3), []);
+  assert.deepEqual(entityGraphIssues(flatten([org]), 'lappart.html', e3), ['0 bloc(s) LodgingBusiness autonome(s) du lieu lappart (attendu 1)']);
+  assert.deepEqual(entityGraphIssues(flatten([node, node, org]), 'lappart.html', e3), ['2 bloc(s) LodgingBusiness autonome(s) du lieu lappart (attendu 1)']);
+  // Les pages des maisons, inchangées.
+  assert.deepEqual(entityGraphIssues(flatten([m.buildHouseLodgingNode(m.HOUSES[1], 'fr', { context: true }), org]), 'leloft.html', e3), []);
+});
+
 test('L6.6 : NAP — nom, téléphone affiché et E.164 ; plus aucune adresse dans le code (13/11/2026 : base et documentation privée)', () => {
   assert.equal(m.LAVILLA_NAP.name, 'La Villa Coliving');
   assert.equal(m.LAVILLA_NAP.phoneE164.replace(/\s/g, ''), m.LAVILLA_NAP.phoneDisplay.replace(/\s/g, ''));
