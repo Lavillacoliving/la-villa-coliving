@@ -3,6 +3,7 @@ import { ArrowRight } from "lucide-react";
 import { LocalizedLink } from "@/components/LocalizedLink";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { thousands } from "@/data/stats";
+import { cardInclusions, type PriceWhyVariant } from "@/data/allInclusive";
 import { roomGallery } from "@/data/roomPhotos";
 import { isRoomPageOpen, roomPagePath } from "@/data/roomPages";
 import { formatShortDate } from "@/lib/dates";
@@ -62,11 +63,29 @@ export type RoomCardProps = {
   variant?: "default" | "featured" | "compact";
   /** Commune de la maison (sur-titre des variantes featured / compact). */
   commune?: string;
+  /**
+   * (13/11/2026, décisions Jérôme des 12 et 13/11) Ligne « tout compris » à côté du prix, et lien « Ce que comprend le
+   * prix » vers /tarifs sur les cartes featured et default des maisons. Textes, gamme et lien : src/data/allInclusive.ts.
+   * `false` sur les pages maisons : la carte y reste telle qu'elle était (aucun changement visuel sur ces pages).
+   */
+  showInclusions?: boolean;
+  /** Clic sur le lien « Ce que comprend le prix » — la mesure reste au parent, comme pour `onCtaClick`. */
+  onPriceWhyClick?: (room: PublicRoom, variant: PriceWhyVariant) => void;
 };
 
-export function RoomCard({ house, houseName, room, fallbackImage, showHouse = false, onOpenPhotos, onCtaClick, ctaParams, leaseStart, houseCta = false, onHouseClick, variant = "default", commune }: RoomCardProps) {
+// Lien « Ce que comprend le prix » : discret (taille xs, souligné), mais avec une zone de toucher de 30 px de haut
+// (minimum WCAG 2.5.8 : 24 px). La zone est un pseudo-élément qui déborde du texte de 2 px au-dessus (moitié de l'écart
+// `mt-1` avec la ligne « tout compris » : elle ne la touche pas, même arrondie au pixel) et de 12 px au-dessous (il reste
+// 4 px avant le bouton) : la mise en page ne change pas. Focus au clavier : anneau au ras du texte, même style que le
+// bouton de la barre de navigation (le contour par défaut du navigateur engloberait toute la zone de toucher).
+const PRICE_WHY_LINK_CLASS =
+  "relative inline-block rounded-sm text-[#57534E] underline underline-offset-2 hover:text-[#1C1917] transition-colors after:absolute after:inset-x-0 after:-top-0.5 after:-bottom-3 after:content-[''] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#44403C] focus-visible:ring-offset-2";
+
+export function RoomCard({ house, houseName, room, fallbackImage, showHouse = false, onOpenPhotos, onCtaClick, ctaParams, leaseStart, houseCta = false, onHouseClick, variant = "default", commune, showInclusions = true, onPriceWhyClick }: RoomCardProps) {
   const { t, language } = useLanguage();
   const uiLang = language === "en" ? "en" as const : "fr" as const;
+  // Ne dépend que de la gamme (house_slug) et de la langue : même texte au prérendu et dans le navigateur.
+  const inclusions = showInclusions ? cardInclusions({ house, roomHouse: room.house_slug, variant, lang: uiLang }) : null;
   // Pack dédié, ou galerie standard du Lodge (chambre → communs → extérieurs).
   const gallery = roomGallery(house, room.room_number);
   const cover = gallery?.[0];
@@ -168,11 +187,16 @@ export function RoomCard({ house, houseName, room, fallbackImage, showHouse = fa
                 <span className="text-3xl" style={{ fontFamily: '"DM Serif Display", serif' }}>{chf}</span>
                 <span className="text-sm text-[#57534E]">{eur ? ` (${eur})` : ""} {t.houseDetail.perMonth}</span>
               </p>
-              <p className="mt-1 text-xs text-[#57534E]">
-                {en
-                  ? "Bills, fibre, cleaning, pool, sauna and gym included. No application fee."
-                  : "Charges, fibre, ménage, piscine, sauna et salle de sport compris. 0 frais de dossier."}
-              </p>
+              {inclusions && (
+                <p data-all-inclusive={inclusions.gamme} className="mt-1 text-xs text-[#57534E]">{inclusions.line}</p>
+              )}
+              {inclusions?.link && (
+                <p className="mt-1 text-xs">
+                  <LocalizedLink to={inclusions.link.to} onClick={() => onPriceWhyClick?.(room, "featured")} data-price-why className={PRICE_WHY_LINK_CLASS}>
+                    {inclusions.link.label}
+                  </LocalizedLink>
+                </p>
+              )}
             </div>
           )}
           <div className="mt-auto flex flex-col gap-3">
@@ -251,6 +275,10 @@ export function RoomCard({ house, houseName, room, fallbackImage, showHouse = fa
               <span className="text-xs text-[#78716C]">{eur ? ` (${eur})` : ""} {t.houseDetail.perMonth}</span>
             </p>
           )}
+          {/* Version courte, sans lien : la carte reste une information, pas un appel. */}
+          {chf && inclusions && (
+            <p data-all-inclusive={inclusions.gamme} className="text-xs text-[#57534E]">{inclusions.line}</p>
+          )}
           {houseCta ? (
             <LocalizedLink
               to={`/${house}`}
@@ -315,7 +343,7 @@ export function RoomCard({ house, houseName, room, fallbackImage, showHouse = fa
             <p data-lease-start className="mb-2 text-sm font-semibold text-[#7A5215]">{leaseStart}</p>
           )}
           {room.rent_chf !== null && (
-            <p className="text-xl font-black text-[#D4A574] mb-4">
+            <p className={`text-xl font-black text-[#D4A574] ${inclusions ? "mb-1" : "mb-4"}`}>
               {language === "en"
                 ? `CHF ${thousands(room.rent_chf, ",")}`
                 : `${thousands(room.rent_chf, "\u00a0")} CHF`}
@@ -326,6 +354,19 @@ export function RoomCard({ house, houseName, room, fallbackImage, showHouse = fa
               )}
               <span className="text-sm font-light text-[#78716C]"> {t.houseDetail.perMonth}</span>
             </p>
+          )}
+          {/* Sous le prix, avant le bouton. Sans `inclusions` (pages maisons), le prix garde sa marge : carte inchangée. */}
+          {room.rent_chf !== null && inclusions && (
+            <div className="mb-4">
+              <p data-all-inclusive={inclusions.gamme} className="text-xs text-[#78716C]">{inclusions.line}</p>
+              {inclusions.link && (
+                <p className="mt-1 text-xs">
+                  <LocalizedLink to={inclusions.link.to} onClick={() => onPriceWhyClick?.(room, "default")} data-price-why className={PRICE_WHY_LINK_CLASS}>
+                    {inclusions.link.label}
+                  </LocalizedLink>
+                </p>
+              )}
+            </div>
           )}
           {/* (13/10/2026, brief « conversion Ads » §2.5) « Candidater » d'abord, la fiche en lien secondaire dessous — même
               ordre que la variante featured, sur toutes les utilisations (pages maisons, /offre-hiver, pages money). */}

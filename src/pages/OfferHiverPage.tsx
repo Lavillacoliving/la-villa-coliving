@@ -4,6 +4,7 @@ import { SEO } from "@/components/SEO";
 import { LocalizedLink } from "@/components/LocalizedLink";
 import { FaqSection } from "@/components/FaqSection";
 import { RoomCard } from "@/components/RoomCard";
+import { trackPriceWhyClick, type PriceWhyVariant } from "@/data/allInclusive";
 import { RoomsEmbed } from "@/components/RoomsEmbed";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { useHydrated } from "@/hooks/useHydrated";
@@ -284,6 +285,9 @@ function OfferActive({ en, L, title, description, labels }: { en: boolean; L: "f
     : `${roomsCount} ${roomsCount === 1 ? "chambre concernée" : "chambres concernées"}`;
   const onRoomCta = (room: PublicRoom) =>
     trackOfferCta("rooms", { house: room.house_slug, room_id: `chambre-${room.room_number}`, language: L });
+  // (13/11/2026) Lien « Ce que comprend le prix » des cartes : événement price_why_click, distinct de offer_cta_click.
+  const onPriceWhy = (room: PublicRoom, variant: PriceWhyVariant) =>
+    trackPriceWhyClick({ house: room.house_slug, roomNumber: room.room_number, variant, page: "offre_hiver", language: L });
   useOfferSectionViews(L);
 
   const shared = STATS_SHARED_BATH.priceChf; // 1 370
@@ -451,6 +455,7 @@ function OfferActive({ en, L, title, description, labels }: { en: boolean; L: "f
                   ctaParams={OFFER_QUERY}
                   leaseStart={leaseStartLabel(leaseStartOf(room, todayIso), L)}
                   onCtaClick={onRoomCta}
+                  onPriceWhyClick={onPriceWhy}
                 />
               ))}
             </div>

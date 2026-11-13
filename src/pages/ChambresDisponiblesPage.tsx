@@ -9,6 +9,7 @@ import { SEO } from "@/components/SEO";
 import { LocalizedLink } from "@/components/LocalizedLink";
 import { FaqSection } from "@/components/FaqSection";
 import { RoomCard } from "@/components/RoomCard";
+import { trackPriceWhyClick, type PriceWhyVariant } from "@/data/allInclusive";
 import { RoomsEmbed } from "@/components/RoomsEmbed";
 import { WhatsAppButton } from "@/components/WhatsAppButton";
 import { useLanguage } from "@/contexts/LanguageContext";
@@ -151,6 +152,10 @@ export function ChambresDisponiblesPage() {
       room_status: room.availability === "available" ? "available" : "upcoming", page: "chambres_disponibles", language,
     });
   };
+
+  // (13/11/2026) Lien « Ce que comprend le prix » des cartes : événement price_why_click, distinct de cta_click.
+  const onPriceWhy = (room: PublicRoom, variant: PriceWhyVariant) =>
+    trackPriceWhyClick({ house: room.house_slug, roomNumber: room.room_number, variant, page: "chambres_disponibles", language: L });
 
   // Prochaines disponibilités par maison (résumés embarqués) — jamais « complet ».
   const houseLine = (house: HouseKey): { text: string; tone: BadgeTone } | null => {
@@ -349,6 +354,7 @@ export function ChambresDisponiblesPage() {
                       onCtaClick={onRoomCta}
                       houseCta
                       onHouseClick={onHouseDiscover}
+                      onPriceWhyClick={onPriceWhy}
                     />
                   ))}
                 </div>

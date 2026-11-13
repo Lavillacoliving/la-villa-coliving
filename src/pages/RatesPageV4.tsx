@@ -1,3 +1,5 @@
+import { useEffect, useLayoutEffect } from "react";
+import { useLocation } from "react-router-dom";
 import { EntityFacts } from "@/components/EntityFacts";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { WhatsAppButton } from "@/components/WhatsAppButton";
@@ -18,9 +20,102 @@ import {
   VILLA_EUR_PER_M2_FR,
   VILLA_EUR_PER_M2_EN,
 } from "@/data/pricingComparison";
+import { PRICE_INCLUDES_ANCHOR } from "@/data/allInclusive";
+import { mirrorPath } from "@/lib/localizedPath";
+
+/**
+ * Arrivée sur /tarifs#objection-prix — lien « Ce que comprend le prix » des cartes chambres (13/11/2026).
+ *
+ * Sans ceci, la page s'ouvre en haut : ScrollToTop remonte à chaque changement de page et au chargement, avec ou sans
+ * ancre. La correction est limitée à cette page (décision Jérôme du 13/11/2026) : ScrollToTop n'est pas modifié et les
+ * autres pages défilent comme avant.
+ *
+ *  - La section se cale sous l'en-tête fixe par sa marge de défilement (classe `scroll-mt-…` de la section, qui suit la
+ *    hauteur du bandeau de l'offre). `scrollIntoView` la respecte, le saut natif du navigateur aussi.
+ *  - Deux temps. Avant la première image (useLayoutEffect) : la page s'affiche directement sur la section. Puis, après
+ *    ScrollToTop (useEffect ; ScrollToTop est monté plus haut dans l'arbre, son effet passe avant) : on recale.
+ *  - Ensuite la section est maintenue en place tant que le lecteur n'a pas touché la page : les polices arrivent après
+ *    le premier rendu (display=swap) et la déplacent, et au chargement direct le saut animé du navigateur vers l'ancre
+ *    (scroll-behavior: smooth) continue quelques images après un défilement instantané.
+ *  - Bascule de langue : l'URL miroir garde l'ancre, mais le lecteur reste où il lisait (LanguageContext restaure sa
+ *    position). La page qui se démonte note donc l'entrée d'historique de sa page miroir, et l'arrivée ne défile pas.
+ */
+const USER_INPUT_EVENTS = ["wheel", "touchstart", "pointerdown", "keydown"] as const;
+/** Durée pendant laquelle un défilement étranger est attribué au saut animé du navigateur, pas au lecteur. */
+const ANCHOR_SETTLE_MS = 1000;
+
+/** Entrée d'historique (chemin + clé) de la page miroir quand la dernière sortie de /tarifs est une bascule de langue. */
+let languageSwitchArrival: { pathname: string; key: string } | null = null;
+
+function isLanguageSwitchArrival(pathname: string, key: string): boolean {
+  return languageSwitchArrival?.pathname === pathname && languageSwitchArrival.key === key;
+}
+
+/** À appeler quand la page se démonte : l'URL du navigateur est alors déjà celle de la page suivante. */
+function noteDeparture(pathname: string): void {
+  const next = window.location.pathname;
+  if (next === pathname) return; // même page (ancre ou paramètres modifiés) : rien à noter
+  const state = window.history.state as { key?: unknown } | null;
+  const nextKey = state?.key;
+  languageSwitchArrival = next === mirrorPath(pathname) && typeof nextKey === "string" ? { pathname: next, key: nextKey } : null;
+}
+
+function alignToAnchor(target: Element): void {
+  // 'instant' : la page a scroll-behavior: smooth, et un défilement animé serait interrompu par le recalage suivant.
+  target.scrollIntoView({ behavior: "instant", block: "start" });
+}
+
+/** Cale `target` sous l'en-tête et l'y garde jusqu'au premier geste du lecteur. Renvoie la fonction d'arrêt. */
+function holdInView(target: Element): () => void {
+  const startedAt = performance.now();
+  let expectedY = 0;
+  function align() {
+    if (!target.isConnected) return; // page en cours de démontage : l'effet arrête tout juste après
+    alignToAnchor(target);
+    expectedY = window.scrollY;
+  }
+  // Toute variation de hauteur de la page (polices, contenu tardif) peut déplacer la section.
+  const observer = typeof ResizeObserver === "function" ? new ResizeObserver(align) : null;
+  function stop() {
+    observer?.disconnect();
+    for (const name of USER_INPUT_EVENTS) window.removeEventListener(name, stop);
+    window.removeEventListener("scroll", onScroll);
+  }
+  // Défilement qui ne vient pas d'ici. Pendant la première seconde, c'est la fin du saut animé du navigateur : on
+  // recale. Ensuite, c'est le lecteur (barre de défilement, qui n'émet aucun des événements ci-dessus) : il a la main.
+  function onScroll() {
+    if (Math.abs(window.scrollY - expectedY) <= 2) return;
+    if (performance.now() - startedAt < ANCHOR_SETTLE_MS) align();
+    else stop();
+  }
+  align();
+  observer?.observe(document.body);
+  for (const name of USER_INPUT_EVENTS) window.addEventListener(name, stop, { passive: true });
+  window.addEventListener("scroll", onScroll, { passive: true });
+  return stop;
+}
+
+function usePriceAnchorArrival(): void {
+  const { pathname, hash, key } = useLocation();
+  const wanted = hash === `#${PRICE_INCLUDES_ANCHOR}`;
+  useLayoutEffect(() => {
+    if (wanted && !isLanguageSwitchArrival(pathname, key)) {
+      const target = document.getElementById(PRICE_INCLUDES_ANCHOR);
+      if (target) alignToAnchor(target);
+    }
+    // Nettoyage de mise en page : il passe avant les effets de la page suivante, qui lit cette note dès son montage.
+    return () => noteDeparture(pathname);
+  }, [pathname, wanted, key]);
+  useEffect(() => {
+    if (!wanted || isLanguageSwitchArrival(pathname, key)) return;
+    const target = document.getElementById(PRICE_INCLUDES_ANCHOR);
+    return target ? holdInView(target) : undefined;
+  }, [pathname, wanted, key]);
+}
 
 export function RatesPageV4() {
   const { language } = useLanguage();
+  usePriceAnchorArrival();
   // (Lot B, 01/10/2026) « Places limitées pour <mois prochain> » : calculé depuis le mois embarqué
   // par le prérendu (pied de page), plus avec new Date() + toLocaleDateString au rendu — #418 chaque
   // 1ᵉʳ du mois entre minuit et le prérendu de 05:00 UTC. Resynchronisé après l'hydratation.
@@ -414,8 +509,10 @@ export function RatesPageV4() {
         <div className="max-w-3xl mx-auto px-6"><EntityFacts page="tarifs" /></div>
       </section>
 
-      {/* OBJECTION PRIX — « Oui, nos prix sont plus élevés » + tableau comparatif 3 colonnes */}
-      <section className="py-20 bg-[#FAF9F6]" id="objection-prix">
+      {/* OBJECTION PRIX — « Oui, nos prix sont plus élevés » + tableau comparatif 3 colonnes.
+          (13/11/2026) Cible du lien « Ce que comprend le prix » des cartes chambres : la marge de défilement cale la section
+          sous l'en-tête fixe (barre de 4rem + bandeau de l'offre, variable --lvc-banner-h de src/index.css). */}
+      <section className="py-20 bg-[#FAF9F6] scroll-mt-[calc(4rem+var(--lvc-banner-h,0px))]" id={PRICE_INCLUDES_ANCHOR}>
         <div className="container-custom">
           <div className="max-w-3xl mx-auto">
             <h2

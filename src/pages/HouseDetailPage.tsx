@@ -1783,6 +1783,8 @@ export function HouseDetailPage() {
                       // (Lot 3 SEO funnel) Carte partagée avec /chambres-disponibles — JSX extrait
                       // à l'identique. Repli déterministe sur la photo de TYPE (pureté d'hydratation :
                       // room_number est stable, jamais d'aléatoire au rendu).
+                      // (13/11/2026, décision Jérôme) `showInclusions={false}` : ni ligne « tout compris » ni lien sur
+                      // les cartes des pages maisons — la pastille du haut de page dit déjà « Tout inclus » avec le prix.
                       <RoomCard
                         key={room.room_number}
                         house={id as HouseKey}
@@ -1791,6 +1793,7 @@ export function HouseDetailPage() {
                         fallbackImage={house.rooms[(room.room_number - 1) % house.rooms.length].image}
                         onOpenPhotos={openRoomViewer}
                         onCtaClick={trackRoomCta}
+                        showInclusions={false}
                       />
                     ))}
                   </div>
