@@ -1,0 +1,41 @@
+{
+ "relevele": "2026-11-13",
+ "source": "SELECT en lecture seule (connecteur MCP) du 13/11/2026 sur rooms et properties : maison, numéro de chambre et loyers seulement — ni identifiant, ni adresse. Empreintes recontrôlées en base par seance/02a-repetition-chambres.sql.",
+ "chambres_modifiees": [
+  {
+   "house": "lavilla",
+   "room_number": 7,
+   "rent_eur": 1470,
+   "rent_chf": 1370
+  },
+  {
+   "house": "lavilla",
+   "room_number": 8,
+   "rent_eur": 1470,
+   "rent_chf": 1370
+  }
+ ],
+ "prix_appel_modifie": {
+  "maison": "lavilla",
+  "price_chf": 1370
+ },
+ "cible": {
+  "chambres": [
+   7,
+   8
+  ],
+  "rent_eur": 1380,
+  "rent_chf": 1290,
+  "price_chf": 1290
+ },
+ "empreintes": {
+  "rooms": {
+   "avant": "1493fc65a47e4f212fda37e7de655d75",
+   "apres": "ae51aa5def33a1ecc6638d9f1c7a0b9d"
+  },
+  "prices": {
+   "avant": "b326f28585e9d9eae2c1552abe9c95dc",
+   "apres": "750333cd0d94816d2acad4ce7bfb27b8"
+  }
+ }
+}

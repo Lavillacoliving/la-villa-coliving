@@ -29,7 +29,7 @@ Trois zones collent à ce profil :
 
 Arriver seul, c'est aussi arriver sans réseau. Une colocation ou un coliving règle les deux problèmes d'un coup : un logement meublé dès le premier soir, et des gens avec qui dîner. [Se faire un réseau à Genève](/blog/se-faire-reseau-geneve-arriver-seul) donne d'autres pistes pour les premières semaines.
 
-C'est pour ce profil qu'on a pensé La Villa Coliving : trois maisons à Ville-la-Grand, Ambilly et Annemasse, à 20 min de Genève-Eaux-Vives en Léman Express, porte-à-porte, avec des chambres meublées pour une personne à 1 370 à 1 430 CHF par mois tout inclus. Le dossier tient en trois pièces : contrat de travail signé ou promesse d'embauche, pièce d'identité, caution de 2 mois de loyer hors charges. 0 € de frais de dossier, 0 € de frais d'agence, et la caution peut se régler en 2 ou 3 fois selon ton dossier.
+C'est pour ce profil qu'on a pensé La Villa Coliving : trois maisons à Ville-la-Grand, Ambilly et Annemasse, à 20 min de Genève-Eaux-Vives en Léman Express, porte-à-porte, avec des chambres meublées pour une personne à {{PRIX_FOURCHETTE}} par mois tout inclus. Le dossier tient en trois pièces : contrat de travail signé ou promesse d'embauche, pièce d'identité, caution de 2 mois de loyer hors charges. 0 € de frais de dossier, 0 € de frais d'agence, et la caution peut se régler en 2 ou 3 fois selon ton dossier.
 
 ## Profil 2 — Tu as une voiture et tu travailles rive droite, aux Nations ou à l'aéroport
 
@@ -140,4 +140,4 @@ Côté France, on choisit d'abord un trajet, puis une commune. Pour un poste aux
 
 ---
 
-👉 **Tu cherches où te loger côté France ?** À **La Villa Coliving** (Ville-la-Grand, Ambilly et Annemasse), une chambre meublée tout inclus coûte à partir de **1 370 CHF/mois** — charges, fibre et ménage compris, sans frais de dossier. Genève-Eaux-Vives en 7 min de Léman Express depuis la gare d'Annemasse — 16 à 17 min porte-à-porte selon la maison, 25 min jusqu'au centre. → [Nos maisons côté France](/colocation-geneve)
+👉 **Tu cherches où te loger côté France ?** À **La Villa Coliving** (Ville-la-Grand, Ambilly et Annemasse), une chambre meublée tout inclus coûte à partir de **{{PRIX_DES}}/mois** — charges, fibre et ménage compris, sans frais de dossier. Genève-Eaux-Vives en 7 min de Léman Express depuis la gare d'Annemasse — 16 à 17 min porte-à-porte selon la maison, 25 min jusqu'au centre. → [Nos maisons côté France](/colocation-geneve)

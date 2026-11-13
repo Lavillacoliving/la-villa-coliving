@@ -1,0 +1,1199 @@
+{
+ "_lisezmoi": "md5 des articles du lot prix-chambres-7-8 à chaque étape. texte = [content_fr, content_en] ; metas = [meta_description_fr, meta_description_en, facebook_post_fr, facebook_post_en] (colonne vide ou NULL = md5 de la chaîne vide). Ordre : avant → sql1 → sql3 (+ sql4 pour les metas) → sql3bis.",
+ "empreintes": {
+  "avant": {
+   "texte": "30243d47e632eb3f792341ef257021ab",
+   "metas": "41df41c82d94c3193336f59d30eacea7"
+  },
+  "sql1": "072be17064d7eb915d5c39b2c3115cd2",
+  "sql3": "a45ee6d8b0c8f115f47a9525829d7001",
+  "sql4": "06263bd69f89cfd042c1c586ca492b82",
+  "sql3bis": "79458f8f2e33b27df41ce955b63a6079"
+ },
+ "articles": {
+  "allocations-familiales-frontalier-geneve-2026": {
+   "avant": {
+    "texte": [
+     "498125f1071094ac5821407b1f48fc64",
+     "3916990ac6a85b5955e887567ff9241a"
+    ],
+    "metas": [
+     "ed3c66625e983b1177bd06839a6fbe4b",
+     "d9fa0dbb804cf66e0464cc3db99c386c",
+     "d41d8cd98f00b204e9800998ecf8427e",
+     "d41d8cd98f00b204e9800998ecf8427e"
+    ]
+   },
+   "sql1": [
+    "e79369a52cd84d86c156147ef3206ed9",
+    "f1a26a08f21654d0a73eef182443975c"
+   ],
+   "sql3": [
+    "e79369a52cd84d86c156147ef3206ed9",
+    "f1a26a08f21654d0a73eef182443975c"
+   ],
+   "sql4": [
+    "ed3c66625e983b1177bd06839a6fbe4b",
+    "d9fa0dbb804cf66e0464cc3db99c386c",
+    "d41d8cd98f00b204e9800998ecf8427e",
+    "d41d8cd98f00b204e9800998ecf8427e"
+   ],
+   "sql3bis": [
+    "e79369a52cd84d86c156147ef3206ed9",
+    "f1a26a08f21654d0a73eef182443975c"
+   ]
+  },
+  "arnaques-logement-frontalier-geneve-eviter": {
+   "avant": {
+    "texte": [
+     "decab98e498573ec8fc89bda541a7965",
+     "2a21f34e0fbf2b83e5456d269528e2d2"
+    ],
+    "metas": [
+     "7f9a2429c0537885662c1fc78ecef5fb",
+     "c22eb3be376706056101373ed0fbc9c5",
+     "d41d8cd98f00b204e9800998ecf8427e",
+     "d41d8cd98f00b204e9800998ecf8427e"
+    ]
+   },
+   "sql1": [
+    "a0a272aa9f1e3c5e8b38f823ddfa3557",
+    "8aa16939a7d1726ad26db227306ec84c"
+   ],
+   "sql3": [
+    "a0a272aa9f1e3c5e8b38f823ddfa3557",
+    "8aa16939a7d1726ad26db227306ec84c"
+   ],
+   "sql4": [
+    "7f9a2429c0537885662c1fc78ecef5fb",
+    "c22eb3be376706056101373ed0fbc9c5",
+    "d41d8cd98f00b204e9800998ecf8427e",
+    "d41d8cd98f00b204e9800998ecf8427e"
+   ],
+   "sql3bis": [
+    "a0a272aa9f1e3c5e8b38f823ddfa3557",
+    "8aa16939a7d1726ad26db227306ec84c"
+   ]
+  },
+  "assurance-sante-frontalier-lamal-cmu-budget": {
+   "avant": {
+    "texte": [
+     "8d6a3cf91d96541e836316f4c1faeab2",
+     "5043b66f0e4864fa50dd9fb444af6be9"
+    ],
+    "metas": [
+     "c36bbb9675bc3640926b02282bce94a7",
+     "f12a2576d5e6d08d29895d15ae74e654",
+     "d41d8cd98f00b204e9800998ecf8427e",
+     "d41d8cd98f00b204e9800998ecf8427e"
+    ]
+   },
+   "sql1": [
+    "e7f262ed2811d39d9e9c6826ffba1e2f",
+    "fbfc33a174d297a34fff75fb1c6fb3c5"
+   ],
+   "sql3": [
+    "1a4b3fe8451a9e722ac75060d0151544",
+    "09e8e5060862b513b248866d6bc6b298"
+   ],
+   "sql4": [
+    "c36bbb9675bc3640926b02282bce94a7",
+    "f12a2576d5e6d08d29895d15ae74e654",
+    "d41d8cd98f00b204e9800998ecf8427e",
+    "d41d8cd98f00b204e9800998ecf8427e"
+   ],
+   "sql3bis": [
+    "1a4b3fe8451a9e722ac75060d0151544",
+    "09e8e5060862b513b248866d6bc6b298"
+   ]
+  },
+  "banque-telephone-internet-frontalier-bons-plans": {
+   "avant": {
+    "texte": [
+     "2e4fe88dc026233ec694b841d7d6380c",
+     "791ff9a68ebe98fb79428887db8acd36"
+    ],
+    "metas": [
+     "9e6c9a857a844faac7004936abdd34e5",
+     "790a757820f5db07676d689c18f89748",
+     "d41d8cd98f00b204e9800998ecf8427e",
+     "d41d8cd98f00b204e9800998ecf8427e"
+    ]
+   },
+   "sql1": [
+    "3e2150ef4e0ab67da199abe57c267f1f",
+    "d157a0dc3f237107a45f00036c0080f3"
+   ],
+   "sql3": [
+    "3e2150ef4e0ab67da199abe57c267f1f",
+    "d157a0dc3f237107a45f00036c0080f3"
+   ],
+   "sql4": [
+    "9e6c9a857a844faac7004936abdd34e5",
+    "790a757820f5db07676d689c18f89748",
+    "d41d8cd98f00b204e9800998ecf8427e",
+    "d41d8cd98f00b204e9800998ecf8427e"
+   ],
+   "sql3bis": [
+    "3e2150ef4e0ab67da199abe57c267f1f",
+    "d157a0dc3f237107a45f00036c0080f3"
+   ]
+  },
+  "budget-colocation-geneve-guide-complet": {
+   "avant": {
+    "texte": [
+     "5636302ac33ba16a8df57c7ffce746a1",
+     "ce9883a02a7b7c1303428b72fd67655c"
+    ],
+    "metas": [
+     "813f1cc2af8eb4378625b213d7f46ae3",
+     "bc5ed456d639bc0307aa473bc557da05",
+     "d41d8cd98f00b204e9800998ecf8427e",
+     "d41d8cd98f00b204e9800998ecf8427e"
+    ]
+   },
+   "sql1": [
+    "c31ed259f60ac5205056b6238ab9d4c8",
+    "9ea22e86d9cdd6afa01b915be33a0e64"
+   ],
+   "sql3": [
+    "28a6c1a686605bc6552aac98632a4ffa",
+    "8bd65f1d95ea0568f9762ef7510e60ca"
+   ],
+   "sql4": [
+    "813f1cc2af8eb4378625b213d7f46ae3",
+    "bc5ed456d639bc0307aa473bc557da05",
+    "d41d8cd98f00b204e9800998ecf8427e",
+    "d41d8cd98f00b204e9800998ecf8427e"
+   ],
+   "sql3bis": [
+    "e77fdcc13fc98aaf8bbd28413b8fbea6",
+    "5177fade977371178ebb568cab3c487d"
+   ]
+  },
+  "choc-culturel-franco-suisse-expatrie-geneve": {
+   "avant": {
+    "texte": [
+     "d041ed1ec207749463eaaccc5305fa72",
+     "b983aaf83e0416c180f43470244a5a46"
+    ],
+    "metas": [
+     "78d2afc97e101570a9d0f33eb1d4f155",
+     "d8c3a1b3d7ea31ffbfbc92746378d1e6",
+     "d41d8cd98f00b204e9800998ecf8427e",
+     "d41d8cd98f00b204e9800998ecf8427e"
+    ]
+   },
+   "sql1": [
+    "021c53edee917447a40717d4cb3d40a2",
+    "cd3eec4f6c20fc99187bbad7e72e07cb"
+   ],
+   "sql3": [
+    "021c53edee917447a40717d4cb3d40a2",
+    "cd3eec4f6c20fc99187bbad7e72e07cb"
+   ],
+   "sql4": [
+    "78d2afc97e101570a9d0f33eb1d4f155",
+    "d8c3a1b3d7ea31ffbfbc92746378d1e6",
+    "d41d8cd98f00b204e9800998ecf8427e",
+    "d41d8cd98f00b204e9800998ecf8427e"
+   ],
+   "sql3bis": [
+    "021c53edee917447a40717d4cb3d40a2",
+    "cd3eec4f6c20fc99187bbad7e72e07cb"
+   ]
+  },
+  "coliving-annemasse-geneve-frontaliers-avantages": {
+   "avant": {
+    "texte": [
+     "b5aff1db4bc19409e0694dd5aafbb0d3",
+     "8b49f2e6a92054d0585dab932417bf2a"
+    ],
+    "metas": [
+     "dbade08348b32dcb71b9684e950f6026",
+     "42d2e58f5474e7df2b95a45956b940b9",
+     "d44f1c44e4d5fb99755030ca1e6b16fc",
+     "662b7c0b3a399ac3cc930332b024c04e"
+    ]
+   },
+   "sql1": [
+    "6fca2d851cbac1deea10f93ee7389f09",
+    "efb7699e18fbf08a3d32b957ee3ad9c0"
+   ],
+   "sql3": [
+    "6fca2d851cbac1deea10f93ee7389f09",
+    "efb7699e18fbf08a3d32b957ee3ad9c0"
+   ],
+   "sql4": [
+    "dbade08348b32dcb71b9684e950f6026",
+    "42d2e58f5474e7df2b95a45956b940b9",
+    "d44f1c44e4d5fb99755030ca1e6b16fc",
+    "662b7c0b3a399ac3cc930332b024c04e"
+   ],
+   "sql3bis": [
+    "6fca2d851cbac1deea10f93ee7389f09",
+    "efb7699e18fbf08a3d32b957ee3ad9c0"
+   ]
+  },
+  "coliving-communaute-reels-amis-geneve-annemasse": {
+   "avant": {
+    "texte": [
+     "b71b1dda649a6643eaa1d4a265cb6c45",
+     "172e9e4ed5bbb2da66e32a2d18b3c2f2"
+    ],
+    "metas": [
+     "17957947ccade191f4ad6dfc77b5ad3f",
+     "9e90b08ea98e8eaf5df4b96e63e74c06",
+     "2e2aadc29061cfcfb32067ce160a1578",
+     "1f75c6707d34e75b0167e6ef3d94bfd5"
+    ]
+   },
+   "sql1": [
+    "597dcda3b31700cd078d51301224f0a0",
+    "96c1bfe1ad947eadc7ff251da39a6170"
+   ],
+   "sql3": [
+    "597dcda3b31700cd078d51301224f0a0",
+    "96c1bfe1ad947eadc7ff251da39a6170"
+   ],
+   "sql4": [
+    "17957947ccade191f4ad6dfc77b5ad3f",
+    "9e90b08ea98e8eaf5df4b96e63e74c06",
+    "2e2aadc29061cfcfb32067ce160a1578",
+    "1f75c6707d34e75b0167e6ef3d94bfd5"
+   ],
+   "sql3bis": [
+    "597dcda3b31700cd078d51301224f0a0",
+    "96c1bfe1ad947eadc7ff251da39a6170"
+   ]
+  },
+  "coliving-frais-dossier-geneve-annemasse": {
+   "avant": {
+    "texte": [
+     "6c584eb1c666a3757759150216e89863",
+     "eceea3cfbf314cbd28849509b1a7c330"
+    ],
+    "metas": [
+     "ddb99025d5a147211dae1d6329b3dd72",
+     "a30a58581de9dcdab2c7abb598c866b0",
+     "d41d8cd98f00b204e9800998ecf8427e",
+     "d41d8cd98f00b204e9800998ecf8427e"
+    ]
+   },
+   "sql1": [
+    "37a562375841619b0a852c7839e12727",
+    "8f5607d5683cbbcaea1c6257a4540779"
+   ],
+   "sql3": [
+    "37a562375841619b0a852c7839e12727",
+    "8f5607d5683cbbcaea1c6257a4540779"
+   ],
+   "sql4": [
+    "ddb99025d5a147211dae1d6329b3dd72",
+    "a30a58581de9dcdab2c7abb598c866b0",
+    "d41d8cd98f00b204e9800998ecf8427e",
+    "d41d8cd98f00b204e9800998ecf8427e"
+   ],
+   "sql3bis": [
+    "37a562375841619b0a852c7839e12727",
+    "8f5607d5683cbbcaea1c6257a4540779"
+   ]
+  },
+  "coliving-geneve-frontaliers-guide-complet": {
+   "avant": {
+    "texte": [
+     "94669bd75e3e5ebf8674cf3fff218541",
+     "2e22c24cd1444c1cd67e8b1680934728"
+    ],
+    "metas": [
+     "debb7f9af119243f9d13e20c8a95652a",
+     "9f5ad0c2f76ed6c6d32494e99ac7ca2f",
+     "e4cf2d9e5a7cb3351417663d340ac68f",
+     "8c20b023a0effd80bdb0ec7625538473"
+    ]
+   },
+   "sql1": [
+    "f75052f94bab36944fcd71462f302b4f",
+    "f5185766934b3b4fc6446bafd6ee7b35"
+   ],
+   "sql3": [
+    "f75052f94bab36944fcd71462f302b4f",
+    "f5185766934b3b4fc6446bafd6ee7b35"
+   ],
+   "sql4": [
+    "49e74e3d691d76ee9ecf7f14131def64",
+    "18d68f6f9e636733dec845b20d682a53",
+    "38c94b84959d3b97436c6a4dd638fae0",
+    "9748ec1730f682b66ef4e2129e7729bd"
+   ],
+   "sql3bis": [
+    "f75052f94bab36944fcd71462f302b4f",
+    "f5185766934b3b4fc6446bafd6ee7b35"
+   ]
+  },
+  "coliving-transfrontalier-geneve-annemasse-nouvelle-vie": {
+   "avant": {
+    "texte": [
+     "3bbf0a7592e8267fef85c61caf85647c",
+     "92358e745e252add58daf0b833826c4d"
+    ],
+    "metas": [
+     "da00ed1113a98da6ff21a09e7b398762",
+     "86a85f001e18af762409ed99b257aa30",
+     "92b7ac0b3a9a98dfc0e5972c6ad3e7f7",
+     "e05fb6d50bfb3eb1afdf8d2c45c9e7d4"
+    ]
+   },
+   "sql1": [
+    "76e799c0daa4ed423a69550be39a8e15",
+    "69627a8cacc9cb03d299fa62815a6782"
+   ],
+   "sql3": [
+    "76e799c0daa4ed423a69550be39a8e15",
+    "69627a8cacc9cb03d299fa62815a6782"
+   ],
+   "sql4": [
+    "7b820acef18b129a6683b7b589500aa1",
+    "822de73a7c7ba292138df0dbaede61dc",
+    "901ade8f5796fa4ef06b47b4ba5d9ff5",
+    "9a587565243d00eb3c69258b43a3abe7"
+   ],
+   "sql3bis": [
+    "76e799c0daa4ed423a69550be39a8e15",
+    "69627a8cacc9cb03d299fa62815a6782"
+   ]
+  },
+  "colocation-annemasse-ville-la-grand-ambilly": {
+   "avant": {
+    "texte": [
+     "e2759aaf33a777bedb35aa89489baab1",
+     "49c29be53292ab634801a6516d00c1ae"
+    ],
+    "metas": [
+     "2ab2607c40286af0a051e27fe5b4fc4c",
+     "0b3de3b9ed8c21a6eb8af7e424752e90",
+     "d41d8cd98f00b204e9800998ecf8427e",
+     "d41d8cd98f00b204e9800998ecf8427e"
+    ]
+   },
+   "sql1": [
+    "b2894b6458ef90099f987a9726ea47d0",
+    "a25b158196586800d46e8eff396a0dad"
+   ],
+   "sql3": [
+    "e3ce76481fd540797c13a5b378487043",
+    "55adb58529711053bc2563fb98006ec7"
+   ],
+   "sql4": [
+    "2ab2607c40286af0a051e27fe5b4fc4c",
+    "0b3de3b9ed8c21a6eb8af7e424752e90",
+    "d41d8cd98f00b204e9800998ecf8427e",
+    "d41d8cd98f00b204e9800998ecf8427e"
+   ],
+   "sql3bis": [
+    "02fcffdee5786dce4764a0e06d3d7dc1",
+    "6e21462cbefb4187f2ac9824367a9892"
+   ]
+  },
+  "cout-de-la-vie-suisse-france-frontalier-2026": {
+   "avant": {
+    "texte": [
+     "551a233f45e3fa68b7458499f29da75d",
+     "7521631a936fbf4d9e0bd41e295c0cf3"
+    ],
+    "metas": [
+     "9fda00cc4dacbfbe46b655794c23dedc",
+     "bbb1b3579ed9e39657787a159998c26f",
+     "d41d8cd98f00b204e9800998ecf8427e",
+     "d41d8cd98f00b204e9800998ecf8427e"
+    ]
+   },
+   "sql1": [
+    "8dc53f0773ee7555e7f83263a001d5a4",
+    "9c06252cdf4a4d23f5c9932feadaf592"
+   ],
+   "sql3": [
+    "0b93529f83b082fa84439998edd9f921",
+    "534da8a8a2547ebe27c36c4d3a031518"
+   ],
+   "sql4": [
+    "9fda00cc4dacbfbe46b655794c23dedc",
+    "bbb1b3579ed9e39657787a159998c26f",
+    "d41d8cd98f00b204e9800998ecf8427e",
+    "d41d8cd98f00b204e9800998ecf8427e"
+   ],
+   "sql3bis": [
+    "780f07cf7d7c00a3e2c736cd0047acc3",
+    "9c28b27de2aedf9541ee403e769898eb"
+   ]
+  },
+  "cout-transport-frontalier-geneve-2026": {
+   "avant": {
+    "texte": [
+     "f0058ecc34ffe115e995ba2453142467",
+     "00fa668731c14f2284bb0bdb7c5e93bb"
+    ],
+    "metas": [
+     "f56f2248c20a9fa4ea93e9ac9f6dc7f0",
+     "6cd5004fefd633b6308c428b4b3d9d7f",
+     "d41d8cd98f00b204e9800998ecf8427e",
+     "d41d8cd98f00b204e9800998ecf8427e"
+    ]
+   },
+   "sql1": [
+    "685ca45925c4ff36daf5bb8b3fc8260f",
+    "14bc08cbc63d4f9396ddb72289c25c7e"
+   ],
+   "sql3": [
+    "685ca45925c4ff36daf5bb8b3fc8260f",
+    "14bc08cbc63d4f9396ddb72289c25c7e"
+   ],
+   "sql4": [
+    "f56f2248c20a9fa4ea93e9ac9f6dc7f0",
+    "6cd5004fefd633b6308c428b4b3d9d7f",
+    "d41d8cd98f00b204e9800998ecf8427e",
+    "d41d8cd98f00b204e9800998ecf8427e"
+   ],
+   "sql3bis": [
+    "685ca45925c4ff36daf5bb8b3fc8260f",
+    "14bc08cbc63d4f9396ddb72289c25c7e"
+   ]
+  },
+  "declaration-impots-frontalier-2026": {
+   "avant": {
+    "texte": [
+     "30b7521a312c4dad3afb7457d05cd799",
+     "6494579df6046fea658bf81ddd9645b4"
+    ],
+    "metas": [
+     "51f5f910016c36d8d951beaceaabbcbf",
+     "a110507cd9e6b32d4a35444fa510c7d3",
+     "d41d8cd98f00b204e9800998ecf8427e",
+     "d41d8cd98f00b204e9800998ecf8427e"
+    ]
+   },
+   "sql1": [
+    "7579cb289d62486eff0528c029cc58a7",
+    "da16b1607adc15e973f15d5c4935847a"
+   ],
+   "sql3": [
+    "7579cb289d62486eff0528c029cc58a7",
+    "da16b1607adc15e973f15d5c4935847a"
+   ],
+   "sql4": [
+    "51f5f910016c36d8d951beaceaabbcbf",
+    "a110507cd9e6b32d4a35444fa510c7d3",
+    "d41d8cd98f00b204e9800998ecf8427e",
+    "d41d8cd98f00b204e9800998ecf8427e"
+   ],
+   "sql3bis": [
+    "7579cb289d62486eff0528c029cc58a7",
+    "da16b1607adc15e973f15d5c4935847a"
+   ]
+  },
+  "dossier-location-frontalier-suisse-france": {
+   "avant": {
+    "texte": [
+     "1661f15c804208d026208e71313cfae2",
+     "057bfdf36f207d3197faf59be26e2e85"
+    ],
+    "metas": [
+     "5896855e311ab06a3e508778d11f1541",
+     "73327dde86d9f3a31cbfe37e6b1be500",
+     "d41d8cd98f00b204e9800998ecf8427e",
+     "d41d8cd98f00b204e9800998ecf8427e"
+    ]
+   },
+   "sql1": [
+    "a91414517ae8ccfbd38fac22e2899545",
+    "848f68242e27af5259571bc8d0a47e3f"
+   ],
+   "sql3": [
+    "f147b8aca3beb03047f85d5ab9088d06",
+    "5d8bd3803389fbc96b3b6e9d96d6022e"
+   ],
+   "sql4": [
+    "5896855e311ab06a3e508778d11f1541",
+    "73327dde86d9f3a31cbfe37e6b1be500",
+    "d41d8cd98f00b204e9800998ecf8427e",
+    "d41d8cd98f00b204e9800998ecf8427e"
+   ],
+   "sql3bis": [
+    "1c9fd08b65a02f7e4f870fabb8e98c50",
+    "6a162d434367e2ff3500ab821a87ea6a"
+   ]
+  },
+  "ecole-internationale-geneve-frontalier-ou-habiter": {
+   "avant": {
+    "texte": [
+     "3d9ea69577de8cef8aac16d263fccce3",
+     "d9f1fcda9205be8cf1886e23f819f094"
+    ],
+    "metas": [
+     "3b0ad9ce71544c7743da3bf1a548d5a5",
+     "4eddca24298566360a15a75cb18e6068",
+     "d41d8cd98f00b204e9800998ecf8427e",
+     "d41d8cd98f00b204e9800998ecf8427e"
+    ]
+   },
+   "sql1": [
+    "9122bb124765422957f589768b9fe9db",
+    "81e4a3f2e0022c6bbd9ed31aa04ee0ad"
+   ],
+   "sql3": [
+    "9122bb124765422957f589768b9fe9db",
+    "81e4a3f2e0022c6bbd9ed31aa04ee0ad"
+   ],
+   "sql4": [
+    "3b0ad9ce71544c7743da3bf1a548d5a5",
+    "4eddca24298566360a15a75cb18e6068",
+    "d41d8cd98f00b204e9800998ecf8427e",
+    "d41d8cd98f00b204e9800998ecf8427e"
+   ],
+   "sql3bis": [
+    "9122bb124765422957f589768b9fe9db",
+    "81e4a3f2e0022c6bbd9ed31aa04ee0ad"
+   ]
+  },
+  "espaces-verts-coliving-lodge-annemasse": {
+   "avant": {
+    "texte": [
+     "5f676cd1e1877de4164321909aaca062",
+     "6b6981cb96eda40c5e4126794d0badb5"
+    ],
+    "metas": [
+     "81fbb9f4a5235c95f27b0319db9bd43d",
+     "e68e62d0b762f974c65324fccf565708",
+     "063055d6245438fd8479c83910f5b0d8",
+     "8cf19da57b6586236b3416bbe1bd6ef0"
+    ]
+   },
+   "sql1": [
+    "85f9684e3e9981a48e329ea210af6c6f",
+    "b43508604e3ff9967d8a6aa09013bd24"
+   ],
+   "sql3": [
+    "85f9684e3e9981a48e329ea210af6c6f",
+    "b43508604e3ff9967d8a6aa09013bd24"
+   ],
+   "sql4": [
+    "81fbb9f4a5235c95f27b0319db9bd43d",
+    "e68e62d0b762f974c65324fccf565708",
+    "063055d6245438fd8479c83910f5b0d8",
+    "8cf19da57b6586236b3416bbe1bd6ef0"
+   ],
+   "sql3bis": [
+    "85f9684e3e9981a48e329ea210af6c6f",
+    "b43508604e3ff9967d8a6aa09013bd24"
+   ]
+  },
+  "fiscalite-frontalier-geneve-impots-2026": {
+   "avant": {
+    "texte": [
+     "3c57c0166ea3087aecc24f13afcfbdf6",
+     "cc6553974a658c34df0a8fdf111548c4"
+    ],
+    "metas": [
+     "499c929844a7ddebe7b11e0fb4c1ebcd",
+     "c3f5bcde7611d774c892e624d1b98b66",
+     "d41d8cd98f00b204e9800998ecf8427e",
+     "d41d8cd98f00b204e9800998ecf8427e"
+    ]
+   },
+   "sql1": [
+    "e90900b11661bb98b9210a4d21285820",
+    "32c0951a6765365fc2a4c3f589562eae"
+   ],
+   "sql3": [
+    "1336874d38afd114a2baf48ff0751768",
+    "a7d4fb8be31f004f499995c2380c9cec"
+   ],
+   "sql4": [
+    "499c929844a7ddebe7b11e0fb4c1ebcd",
+    "c3f5bcde7611d774c892e624d1b98b66",
+    "d41d8cd98f00b204e9800998ecf8427e",
+    "d41d8cd98f00b204e9800998ecf8427e"
+   ],
+   "sql3bis": [
+    "66e071d1a76a875e1cfd14f2f15f2d48",
+    "97d11ac02770348b1e15e0332667b1c6"
+   ]
+  },
+  "grand-geneve-2026-nouveautes-frontaliers": {
+   "avant": {
+    "texte": [
+     "df07300c90e3a78ccd648ecc45c6962b",
+     "ddae62627d582ad072e6a92b1ec0fa11"
+    ],
+    "metas": [
+     "06ce00f4ee8b08bf345a71dfbaab8e23",
+     "fc53b4fc7ddcaf9a11326e0e1725d8fa",
+     "d41d8cd98f00b204e9800998ecf8427e",
+     "d41d8cd98f00b204e9800998ecf8427e"
+    ]
+   },
+   "sql1": [
+    "837b05da46713e9ef2faf2d5e95cd1c3",
+    "ef7502f1c758d4c489e09dacc2b298de"
+   ],
+   "sql3": [
+    "837b05da46713e9ef2faf2d5e95cd1c3",
+    "ef7502f1c758d4c489e09dacc2b298de"
+   ],
+   "sql4": [
+    "06ce00f4ee8b08bf345a71dfbaab8e23",
+    "fc53b4fc7ddcaf9a11326e0e1725d8fa",
+    "d41d8cd98f00b204e9800998ecf8427e",
+    "d41d8cd98f00b204e9800998ecf8427e"
+   ],
+   "sql3bis": [
+    "837b05da46713e9ef2faf2d5e95cd1c3",
+    "ef7502f1c758d4c489e09dacc2b298de"
+   ]
+  },
+  "guide-ressources-frontalier-geneve": {
+   "avant": {
+    "texte": [
+     "6de2758f7809a98a869e9636d78c9ad5",
+     "9a193874b4ff02d846aaac22f408288f"
+    ],
+    "metas": [
+     "da543b338dcbf1353b3155c47023dc0a",
+     "f164deb5118b44368431856b70c342ae",
+     "d41d8cd98f00b204e9800998ecf8427e",
+     "d41d8cd98f00b204e9800998ecf8427e"
+    ]
+   },
+   "sql1": [
+    "e429ed1caec4b6e9ce9945335c16017f",
+    "47a1551d0adf6ab9137b31ac0b1ec6f5"
+   ],
+   "sql3": [
+    "f25f8fb40f376358cb816759a31f338b",
+    "d02c624f42363d0a5b00e228374e1d6a"
+   ],
+   "sql4": [
+    "da543b338dcbf1353b3155c47023dc0a",
+    "f164deb5118b44368431856b70c342ae",
+    "d41d8cd98f00b204e9800998ecf8427e",
+    "d41d8cd98f00b204e9800998ecf8427e"
+   ],
+   "sql3bis": [
+    "e0374d23d1d65f565a3d64ecee0efc0f",
+    "1f99bba7865030ecaca3e2132406c5b1"
+   ]
+  },
+  "living-in-france-working-in-geneva": {
+   "avant": {
+    "texte": [
+     "1c27716be6523110142bb55c4d129f68",
+     "009645a7ec866906fada80d50ca31a58"
+    ],
+    "metas": [
+     "8ca2cd7e0e4f6795989335dd96ff881c",
+     "f9d3767038f971c47cc29c662ba4c8db",
+     "d41d8cd98f00b204e9800998ecf8427e",
+     "d41d8cd98f00b204e9800998ecf8427e"
+    ]
+   },
+   "sql1": [
+    "ab7d4c95ffdb005c48b96bcc494104e4",
+    "93b373c06334f0adb0dc972e9a0c5b7c"
+   ],
+   "sql3": [
+    "ab7d4c95ffdb005c48b96bcc494104e4",
+    "93b373c06334f0adb0dc972e9a0c5b7c"
+   ],
+   "sql4": [
+    "8ca2cd7e0e4f6795989335dd96ff881c",
+    "f9d3767038f971c47cc29c662ba4c8db",
+    "d41d8cd98f00b204e9800998ecf8427e",
+    "d41d8cd98f00b204e9800998ecf8427e"
+   ],
+   "sql3bis": [
+    "ab7d4c95ffdb005c48b96bcc494104e4",
+    "93b373c06334f0adb0dc972e9a0c5b7c"
+   ]
+  },
+  "lodge-annemasse-coliving-premium-portes-geneve": {
+   "avant": {
+    "texte": [
+     "c611f41f82d024a47848dc530ef459d7",
+     "96bcbe9ef34878095f42c08db303f368"
+    ],
+    "metas": [
+     "a50ddcf4fb7413ed29e5aa93be805ae8",
+     "9b3f9847c9a0ad116e07b357900382bb",
+     "7777c9e8226f5e74c22d50e5b66a6396",
+     "999f6b5d11ba1be376c98ae0b105cde6"
+    ]
+   },
+   "sql1": [
+    "c611f41f82d024a47848dc530ef459d7",
+    "96bcbe9ef34878095f42c08db303f368"
+   ],
+   "sql3": [
+    "c611f41f82d024a47848dc530ef459d7",
+    "96bcbe9ef34878095f42c08db303f368"
+   ],
+   "sql4": [
+    "a50ddcf4fb7413ed29e5aa93be805ae8",
+    "9b3f9847c9a0ad116e07b357900382bb",
+    "48a22573ac2b26060e59bf27110ab7ba",
+    "76c59d6555f552ad075370379e1cb556"
+   ],
+   "sql3bis": [
+    "c611f41f82d024a47848dc530ef459d7",
+    "96bcbe9ef34878095f42c08db303f368"
+   ]
+  },
+  "optimiser-espace-coliving-productivite-bien-etre": {
+   "avant": {
+    "texte": [
+     "7414c1ad5b614423ee7521d7daf98461",
+     "a2d035498057962f260332d696ea0eaa"
+    ],
+    "metas": [
+     "969a8925394923cdf09dc39cea7b74b6",
+     "63944ce6919e2b1605d4aad52e698bc2",
+     "c9cf3eb1f39683469695dfe3cd1b8a40",
+     "263c5b3802b83824622f4c6f89f8fe26"
+    ]
+   },
+   "sql1": [
+    "c11c245c11951cea4716450ca19c6827",
+    "fbac1fd59af8ba57171543c468501cc6"
+   ],
+   "sql3": [
+    "c11c245c11951cea4716450ca19c6827",
+    "fbac1fd59af8ba57171543c468501cc6"
+   ],
+   "sql4": [
+    "969a8925394923cdf09dc39cea7b74b6",
+    "63944ce6919e2b1605d4aad52e698bc2",
+    "c9cf3eb1f39683469695dfe3cd1b8a40",
+    "263c5b3802b83824622f4c6f89f8fe26"
+   ],
+   "sql3bis": [
+    "c11c245c11951cea4716450ca19c6827",
+    "fbac1fd59af8ba57171543c468501cc6"
+   ]
+  },
+  "organisations-internationales-geneve-ou-habiter": {
+   "avant": {
+    "texte": [
+     "f58015e7e69c048031e57fd26171c6b0",
+     "4cd6b72892b1b2a841bafc9a2bb7891f"
+    ],
+    "metas": [
+     "c88fe0860467f9acd7739598d177d134",
+     "54115c6e26c316a5e6a682b3c4f30b28",
+     "d41d8cd98f00b204e9800998ecf8427e",
+     "d41d8cd98f00b204e9800998ecf8427e"
+    ]
+   },
+   "sql1": [
+    "45ca18b88584d0ed06ecde70cb112cab",
+    "51e97c16ce7ffa4159a723230339db8d"
+   ],
+   "sql3": [
+    "2e19ccf7568ba9b69559efcdd47708f9",
+    "7d18ca6b6b35a1c17d22b321b76ceba3"
+   ],
+   "sql4": [
+    "c88fe0860467f9acd7739598d177d134",
+    "54115c6e26c316a5e6a682b3c4f30b28",
+    "d41d8cd98f00b204e9800998ecf8427e",
+    "d41d8cd98f00b204e9800998ecf8427e"
+   ],
+   "sql3bis": [
+    "aa8c3e47ba6f02e6b75c63acc3bfc403",
+    "0153c8d996c3fcc27f099f0fd17d62f5"
+   ]
+  },
+  "ou-habiter-en-france-quand-on-travaille-a-geneve": {
+   "avant": {
+    "texte": [
+     "89cacf647c58e7974aa5de5c3273c111",
+     "e3c4434ad7768eb1b5ffea92e879cbf1"
+    ],
+    "metas": [
+     "87baf61235674799111e592c3759d51d",
+     "d0a3d468482e2755dd37cd1d8ffbfa25",
+     "d41d8cd98f00b204e9800998ecf8427e",
+     "d41d8cd98f00b204e9800998ecf8427e"
+    ]
+   },
+   "sql1": [
+    "6e52ecfa4e9fc808e97db82908e82d94",
+    "cac318bb85f9ff5fe26d37a0a2b7f44c"
+   ],
+   "sql3": [
+    "c71270a8aa651923e88314960024af7f",
+    "fda4cb660eeb3cbee73db442c499f876"
+   ],
+   "sql4": [
+    "87baf61235674799111e592c3759d51d",
+    "d0a3d468482e2755dd37cd1d8ffbfa25",
+    "d41d8cd98f00b204e9800998ecf8427e",
+    "d41d8cd98f00b204e9800998ecf8427e"
+   ],
+   "sql3bis": [
+    "fa39c5377ca02f7d6e5102e84e1e9b9e",
+    "5ecaa0538e65e5c345296feed6a53c41"
+   ]
+  },
+  "permis-g-frontalier-geneve": {
+   "avant": {
+    "texte": [
+     "f23b0894fe85deb4b7940b5d6dcf774b",
+     "b5d4c43c484712f79356de233d6999c1"
+    ],
+    "metas": [
+     "5790873eb67968733c7e986497f2c087",
+     "c06614811a25685fa5bdf4e156eadb8e",
+     "d41d8cd98f00b204e9800998ecf8427e",
+     "d41d8cd98f00b204e9800998ecf8427e"
+    ]
+   },
+   "sql1": [
+    "2801913179f6d906f2445d08613ffb92",
+    "24c13b4a2d06845ed9260779d02484ca"
+   ],
+   "sql3": [
+    "2801913179f6d906f2445d08613ffb92",
+    "24c13b4a2d06845ed9260779d02484ca"
+   ],
+   "sql4": [
+    "5790873eb67968733c7e986497f2c087",
+    "c06614811a25685fa5bdf4e156eadb8e",
+    "d41d8cd98f00b204e9800998ecf8427e",
+    "d41d8cd98f00b204e9800998ecf8427e"
+   ],
+   "sql3bis": [
+    "2801913179f6d906f2445d08613ffb92",
+    "24c13b4a2d06845ed9260779d02484ca"
+   ]
+  },
+  "quartiers-annemasse-ou-vivre-selon-profil": {
+   "avant": {
+    "texte": [
+     "769c602e49193a2564bd7f38fa624281",
+     "f1188fcebc2e4d599f816e33ea52e58f"
+    ],
+    "metas": [
+     "7897d015482cb20d9b4f47ceb3fd2bfb",
+     "fa891402f519a8fbce0ea6c375117992",
+     "d41d8cd98f00b204e9800998ecf8427e",
+     "d41d8cd98f00b204e9800998ecf8427e"
+    ]
+   },
+   "sql1": [
+    "bb5119ec81931787374591d2fe1ee47b",
+    "0fe7121d61ef6ab4827e564c11c33173"
+   ],
+   "sql3": [
+    "bb5119ec81931787374591d2fe1ee47b",
+    "0fe7121d61ef6ab4827e564c11c33173"
+   ],
+   "sql4": [
+    "7897d015482cb20d9b4f47ceb3fd2bfb",
+    "fa891402f519a8fbce0ea6c375117992",
+    "d41d8cd98f00b204e9800998ecf8427e",
+    "d41d8cd98f00b204e9800998ecf8427e"
+   ],
+   "sql3bis": [
+    "bb5119ec81931787374591d2fe1ee47b",
+    "0fe7121d61ef6ab4827e564c11c33173"
+   ]
+  },
+  "quitter-son-logement-guide-pratique": {
+   "avant": {
+    "texte": [
+     "0f1b830a2600c74c861455fab7a8473d",
+     "1b04f1a639970719e2c62340bd611c86"
+    ],
+    "metas": [
+     "8bd4ffef15a3704658fdac878fb0808d",
+     "a719258794645d96a95cc7e1f1b93e67",
+     "d41d8cd98f00b204e9800998ecf8427e",
+     "d41d8cd98f00b204e9800998ecf8427e"
+    ]
+   },
+   "sql1": [
+    "b0f42803cb35d813f52e89d8c7f5cfc2",
+    "fe5c8e24c82b863b4b85165dd9c3b905"
+   ],
+   "sql3": [
+    "b0f42803cb35d813f52e89d8c7f5cfc2",
+    "fe5c8e24c82b863b4b85165dd9c3b905"
+   ],
+   "sql4": [
+    "8bd4ffef15a3704658fdac878fb0808d",
+    "a719258794645d96a95cc7e1f1b93e67",
+    "d41d8cd98f00b204e9800998ecf8427e",
+    "d41d8cd98f00b204e9800998ecf8427e"
+   ],
+   "sql3bis": [
+    "b0f42803cb35d813f52e89d8c7f5cfc2",
+    "fe5c8e24c82b863b4b85165dd9c3b905"
+   ]
+  },
+  "salaire-suisse-net-frontalier-2026": {
+   "avant": {
+    "texte": [
+     "646cbc8c23a6e1c2de671c29597b9e91",
+     "8359c41ff235bfa5b979cbc7eea28a05"
+    ],
+    "metas": [
+     "cf1e3016ec53295e755b756b829a3ac2",
+     "a8435b3aa5c12322920e73af0e4e3daf",
+     "d41d8cd98f00b204e9800998ecf8427e",
+     "d41d8cd98f00b204e9800998ecf8427e"
+    ]
+   },
+   "sql1": [
+    "e9bd14b6195b739e7294f4e0ffa91b39",
+    "907147b3455433c0a7a3132f4d25b4d9"
+   ],
+   "sql3": [
+    "8e2e496dcec584cb96eeff60ef835537",
+    "3b21d2581b4eb9ba6258e251a56668dd"
+   ],
+   "sql4": [
+    "cf1e3016ec53295e755b756b829a3ac2",
+    "a8435b3aa5c12322920e73af0e4e3daf",
+    "d41d8cd98f00b204e9800998ecf8427e",
+    "d41d8cd98f00b204e9800998ecf8427e"
+   ],
+   "sql3bis": [
+    "22750bc4eaea6e2353f8a3a5b4108d37",
+    "6b7199efcade88f6f1ee47d1b54ff59f"
+   ]
+  },
+  "se-faire-reseau-geneve-arriver-seul": {
+   "avant": {
+    "texte": [
+     "723c8bef4ac1a90aced13a2c5552e410",
+     "2c95d64a69a2c2e728099e17bea8b4bb"
+    ],
+    "metas": [
+     "a190074514ea0552228f481abf7df96b",
+     "5419e76bfb69477c5eba8d1acf6a92ba",
+     "d41d8cd98f00b204e9800998ecf8427e",
+     "d41d8cd98f00b204e9800998ecf8427e"
+    ]
+   },
+   "sql1": [
+    "8a036e0762a5e0957f908ea71fd7a61d",
+    "324c3ceb6ddb74cdde2cb37492276091"
+   ],
+   "sql3": [
+    "8a036e0762a5e0957f908ea71fd7a61d",
+    "324c3ceb6ddb74cdde2cb37492276091"
+   ],
+   "sql4": [
+    "a190074514ea0552228f481abf7df96b",
+    "5419e76bfb69477c5eba8d1acf6a92ba",
+    "d41d8cd98f00b204e9800998ecf8427e",
+    "d41d8cd98f00b204e9800998ecf8427e"
+   ],
+   "sql3bis": [
+    "8a036e0762a5e0957f908ea71fd7a61d",
+    "324c3ceb6ddb74cdde2cb37492276091"
+   ]
+  },
+  "teletravail-frontalier-geneve-regles-2026": {
+   "avant": {
+    "texte": [
+     "f5d2af31d1eefabfd7d49bfa296f2b77",
+     "b3c4f1f3398fd75ef56ed790513df2ff"
+    ],
+    "metas": [
+     "c49beb3b62db2f068503f6f7e834e9d0",
+     "0ac383a0687e21dc79f9f417b3399e64",
+     "d41d8cd98f00b204e9800998ecf8427e",
+     "d41d8cd98f00b204e9800998ecf8427e"
+    ]
+   },
+   "sql1": [
+    "cfbdbcb63089873de1331273fa7c34b7",
+    "478143470199e347eafe5d0faea06a65"
+   ],
+   "sql3": [
+    "cfbdbcb63089873de1331273fa7c34b7",
+    "478143470199e347eafe5d0faea06a65"
+   ],
+   "sql4": [
+    "c49beb3b62db2f068503f6f7e834e9d0",
+    "0ac383a0687e21dc79f9f417b3399e64",
+    "d41d8cd98f00b204e9800998ecf8427e",
+    "d41d8cd98f00b204e9800998ecf8427e"
+   ],
+   "sql3bis": [
+    "cfbdbcb63089873de1331273fa7c34b7",
+    "478143470199e347eafe5d0faea06a65"
+   ]
+  },
+  "temps-trajet-annemasse-geneve-par-quartier": {
+   "avant": {
+    "texte": [
+     "4c65bd4464a1a82030dea6f6132a5235",
+     "66c12b60b7f787e952e4f87060f0d487"
+    ],
+    "metas": [
+     "4ad6b8a76756dd6e217ed823eaf61410",
+     "947f2c3c17983b1783ffb6586a1d9205",
+     "d41d8cd98f00b204e9800998ecf8427e",
+     "d41d8cd98f00b204e9800998ecf8427e"
+    ]
+   },
+   "sql1": [
+    "40d102b88a06f2c88d514f454d1acc90",
+    "349757faed493ea3167f9e4ae8e0421a"
+   ],
+   "sql3": [
+    "40d102b88a06f2c88d514f454d1acc90",
+    "349757faed493ea3167f9e4ae8e0421a"
+   ],
+   "sql4": [
+    "4ad6b8a76756dd6e217ed823eaf61410",
+    "947f2c3c17983b1783ffb6586a1d9205",
+    "d41d8cd98f00b204e9800998ecf8427e",
+    "d41d8cd98f00b204e9800998ecf8427e"
+   ],
+   "sql3bis": [
+    "40d102b88a06f2c88d514f454d1acc90",
+    "349757faed493ea3167f9e4ae8e0421a"
+   ]
+  },
+  "transport-annemasse-geneve-leman-express": {
+   "avant": {
+    "texte": [
+     "486ae9b9820973eb9a1b3c418a82108a",
+     "af2a5ab6b48a834cbc7fa02c27d9af87"
+    ],
+    "metas": [
+     "0572650917cfcccbf736bf1aa272e5ec",
+     "6d1953d5be77cfa7021b31c2d21c23e8",
+     "d41d8cd98f00b204e9800998ecf8427e",
+     "d41d8cd98f00b204e9800998ecf8427e"
+    ]
+   },
+   "sql1": [
+    "18d83d1451b3b6c5908f402cf8f946b0",
+    "dd20b78c727b9c27e2586a071c186921"
+   ],
+   "sql3": [
+    "18d83d1451b3b6c5908f402cf8f946b0",
+    "dd20b78c727b9c27e2586a071c186921"
+   ],
+   "sql4": [
+    "0572650917cfcccbf736bf1aa272e5ec",
+    "6d1953d5be77cfa7021b31c2d21c23e8",
+    "d41d8cd98f00b204e9800998ecf8427e",
+    "d41d8cd98f00b204e9800998ecf8427e"
+   ],
+   "sql3bis": [
+    "18d83d1451b3b6c5908f402cf8f946b0",
+    "dd20b78c727b9c27e2586a071c186921"
+   ]
+  },
+  "trouver-colocation-geneve-frontalier": {
+   "avant": {
+    "texte": [
+     "7c671d2a16ecac0e01a49898d4a735d2",
+     "724102ec36a0dfef29d1ecd1a78591bf"
+    ],
+    "metas": [
+     "0e67073ea8e6cef172656ab921a4e231",
+     "15beec781fafdca46029b5374915b1ea",
+     "d41d8cd98f00b204e9800998ecf8427e",
+     "d41d8cd98f00b204e9800998ecf8427e"
+    ]
+   },
+   "sql1": [
+    "773f0c73a15d9720a23c9be16e2c94ff",
+    "71e271481a0af753c2d838449fd63c7f"
+   ],
+   "sql3": [
+    "09c7833eb7ad14ef5888d9c00a7c909a",
+    "60cb9d017f042782e9e862b2ca008206"
+   ],
+   "sql4": [
+    "0e67073ea8e6cef172656ab921a4e231",
+    "15beec781fafdca46029b5374915b1ea",
+    "d41d8cd98f00b204e9800998ecf8427e",
+    "d41d8cd98f00b204e9800998ecf8427e"
+   ],
+   "sql3bis": [
+    "b3a74ad0ed4b5c3dec6059a92a1f2ea9",
+    "3a163b6681d7bbcb3dc55b9328203d28"
+   ]
+  },
+  "trouver-logement-avant-d-arriver-geneve": {
+   "avant": {
+    "texte": [
+     "6c8bf0fb53ac6124a84732ee1e6200b4",
+     "0e6e7095bfc535f14ec1321cc1c43247"
+    ],
+    "metas": [
+     "701145d8f0ddc68cc9b308215adf3d3d",
+     "2848917a3659ce4f26cacadfa561fdc6",
+     "d41d8cd98f00b204e9800998ecf8427e",
+     "d41d8cd98f00b204e9800998ecf8427e"
+    ]
+   },
+   "sql1": [
+    "5b8bcd10d38332e821756e60bf83bc83",
+    "af6641e2c883667ffff8b1103ed7130b"
+   ],
+   "sql3": [
+    "b35ff36de2a870581cd8d01bd9f61c79",
+    "89fb7a5326d1f46c38990419ed02fdde"
+   ],
+   "sql4": [
+    "701145d8f0ddc68cc9b308215adf3d3d",
+    "2848917a3659ce4f26cacadfa561fdc6",
+    "d41d8cd98f00b204e9800998ecf8427e",
+    "d41d8cd98f00b204e9800998ecf8427e"
+   ],
+   "sql3bis": [
+    "776c47ed3dd36ffebd406b5e6bae0b70",
+    "16e04c72f98037ba987174508fd3de2e"
+   ]
+  },
+  "vie-quotidienne-frontalier-courses-sport-sorties": {
+   "avant": {
+    "texte": [
+     "532520b28e04c7bd1f03dd76c8ae3442",
+     "519e43c6f1b4109000ae60a68fadf92b"
+    ],
+    "metas": [
+     "78192521421e73ec242516109c777e14",
+     "df84093c6202442c1091d1c4afeb40bf",
+     "d41d8cd98f00b204e9800998ecf8427e",
+     "d41d8cd98f00b204e9800998ecf8427e"
+    ]
+   },
+   "sql1": [
+    "af287b3519f955fd47e458883f4d7cc8",
+    "20e241df350d8d51965294041a85dc9e"
+   ],
+   "sql3": [
+    "af287b3519f955fd47e458883f4d7cc8",
+    "20e241df350d8d51965294041a85dc9e"
+   ],
+   "sql4": [
+    "78192521421e73ec242516109c777e14",
+    "df84093c6202442c1091d1c4afeb40bf",
+    "d41d8cd98f00b204e9800998ecf8427e",
+    "d41d8cd98f00b204e9800998ecf8427e"
+   ],
+   "sql3bis": [
+    "af287b3519f955fd47e458883f4d7cc8",
+    "20e241df350d8d51965294041a85dc9e"
+   ]
+  }
+ }
+}
