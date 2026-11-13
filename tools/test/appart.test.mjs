@@ -286,7 +286,8 @@ test('prix d\'appel et carte d\'un lieu : L\'Appart « dès 730 CHF » ; les mai
 });
 
 test('chargeur des gardes : chaque export des modules de L\'Appart est exposé, à la même valeur (aucun nom en double)', async () => {
-  for (const mod of ['./src/data/appart', './src/data/appartLocation', './src/data/appartFacts', './src/data/appartPhotos', './src/data/placeLocation', './src/lib/placeBridge']) {
+  // (Corrections du 13/11/2026) + appartTeaser.ts et appartCovers.ts, réexportés par appartFacts.ts et appartPhotos.ts.
+  for (const mod of ['./src/data/appart', './src/data/appartLocation', './src/data/appartFacts', './src/data/appartTeaser', './src/data/appartPhotos', './src/data/appartCovers', './src/data/placeLocation', './src/lib/placeBridge']) {
     const x = await bundle(`export * from '${mod}';`);
     const names = Object.keys(x);
     assert.ok(names.length > 0, mod);
@@ -296,4 +297,21 @@ test('chargeur des gardes : chaque export des modules de L\'Appart est exposé, 
       else assert.deepEqual(m[name], x[name], name);
     }
   }
+});
+
+test('modules légers (corrections du 13/11/2026, relecture technique) : le bloc statique et les cartes ne chargent ni appartFacts ni l\'album', () => {
+  const read = (f) => readFileSync(path.join(ROOT, f), 'utf8');
+  // Imports exécutés (les « import type » s'effacent à la compilation).
+  const runtimeImports = (f) => [...read(f).matchAll(/^import\s+(?!type\b)[^;]*?from\s+["']([^"']+)["']/gm)].map((x) => x[1]);
+  const heavy = /appartFacts|appartPhotos|appartPage|appartLocation/;
+  for (const f of ['src/components/appart/AppartTeaser.tsx', 'src/data/appartTeaser.ts', 'src/data/appartWords.ts', 'src/data/roomPhotos.ts']) {
+    for (const imp of runtimeImports(f)) assert.doesNotMatch(imp, heavy, `${f} importe ${imp}`);
+  }
+  assert.deepEqual(runtimeImports('src/data/appartCovers.ts'), [], 'appartCovers.ts : aucun import exécuté');
+  assert.deepEqual(runtimeImports('src/data/appartWords.ts'), [], 'appartWords.ts : aucun import exécuté');
+  // Le motif voit bien un import (le test ne passe pas à vide), et laisse passer un import de type.
+  assert.deepEqual(runtimeImports('src/data/appartPhotos.ts').filter((x) => x.includes('appartCovers')).length, 1);
+  assert.ok(runtimeImports('src/components/appart/AppartTeaser.tsx').includes('@/data/appartTeaser'));
+  // Les gardes lisent toujours le bloc par appartFacts.ts (réexport ; mêmes valeurs que appartTeaser.ts : test précédent).
+  for (const lang of LANGS) for (const r of m.APPART_TEASER_ROUTES) assert.ok(m.appartTeaser(r, lang).text.length > 0, `${lang} ${r}`);
 });

@@ -13,25 +13,21 @@
  *  - noms de fichiers neutres pour les deux pièces non confirmées (« cheminee », « placards », au lieu de « sejour » et
  *    « entree » : un nom de fichier est public).
  *
- * Module pur, sans import à l'exécution (le type vient de roomPhotos.ts et s'efface à la compilation).
+ * Module pur, zéro React. (Corrections du 13/11/2026, relecture technique) L'image du haut et celle des cartes vivent dans
+ * src/data/appartCovers.ts, réexporté ici (mêmes noms pour les gardes et les tests) : les pages des maisons et le bloc statique
+ * ne chargent plus l'album pour une seule image.
  */
-import type { RoomPhoto } from "./roomPhotos";
+import { LAPPART_CUISINE_2, LAPPART_HERO, LAPPART_ROOM_COVER, type AppartPhoto } from "./appartCovers";
+
+export * from "./appartCovers";
 
 const DIR = "/images/lappart";
-
-export type AppartPhotoCategory = "common" | "interior" | "exterior";
-export type AppartPhoto = RoomPhoto & { category: AppartPhotoCategory };
-/** Image avec son point focal (`object-position` conseillé pour un cadre très large). */
-export type AppartFramedPhoto = RoomPhoto & { focal: string };
 
 const kitchen1: AppartPhoto = {
   src: `${DIR}/lappart-cuisine-1.webp`, w: 1440, h: 1920, category: "common",
   alt: { fr: "Cuisine de L'Appart : meubles noirs, plan de travail en bois et quatre ampoules suspendues", en: "Kitchen at L'Appart: black units, wooden worktop and four pendant bulbs" },
 };
-const kitchen2: AppartPhoto = {
-  src: `${DIR}/lappart-cuisine-2.webp`, w: 1800, h: 1920, category: "common",
-  alt: { fr: "Cuisine de L'Appart : plaque de cuisson, grande suspension à facettes et plan de travail en bois", en: "Kitchen at L'Appart: hob, large faceted pendant and wooden worktop" },
-};
+const kitchen2: AppartPhoto = LAPPART_CUISINE_2;
 const kitchen3: AppartPhoto = {
   src: `${DIR}/lappart-cuisine-3.webp`, w: 1306, h: 1920, category: "common",
   alt: { fr: "Cuisine de L'Appart : plaque de cuisson, électroménager encastré et rangements noirs du sol au plafond", en: "Kitchen at L'Appart: hob, built-in appliances and floor-to-ceiling black units" },
@@ -62,23 +58,6 @@ export const LAPPART_ALBUM: readonly AppartPhoto[] = [kitchen1, kitchen2, kitche
 
 /** Les 6 vignettes de l'album, par `src`, dans l'ordre (propres à L'Appart, hors de ALBUM_COVERS des maisons). */
 export const LAPPART_ALBUM_COVERS: readonly string[] = [kitchen1.src, fireplace1.src, kitchen3.src, balcony1.src, cupboards1.src, showerRoom1.src];
-
-/** Image du haut : format large (tablette, ordinateur, partage og:image et JSON-LD, vignette « L'Appart » des autres pages)
- *  et format en hauteur (téléphone) — même cliché, côté plaque de cuisson (recommandation n° 46, à confirmer). */
-export const LAPPART_HERO: { readonly wide: AppartFramedPhoto; readonly tall: AppartFramedPhoto } = {
-  wide: {
-    src: `${DIR}/lappart-cuisine-5.webp`, w: 1920, h: 1080, focal: "66% 20%",
-    alt: { fr: "L'Appart, colocation à Annemasse, quartier de la gare : la cuisine au soleil, plaque de cuisson et grande suspension à facettes", en: "L'Appart, flatshare in Annemasse, near the station: the sunlit kitchen with its hob and large faceted pendant" },
-  },
-  tall: { ...kitchen2, focal: "65% 40%" },
-};
-
-/** Image des cartes de chambres de L'Appart (aucune photo de chambre) : la cuisine côté évier, avec SON texte alternatif et la
- *  légende « Photo de la chambre à venir » (RoomCard). Hors album (même cliché que cuisine-1). */
-export const LAPPART_ROOM_COVER: AppartFramedPhoto = {
-  src: `${DIR}/lappart-cuisine-4.webp`, w: 1920, h: 1080, focal: "42% 35%",
-  alt: { fr: "Cuisine ouverte de L'Appart : évier avec mitigeur noir, plan de travail en bois et rangements noirs", en: "Open kitchen at L'Appart: sink with black tap, wooden worktop and black units" },
-};
 
 /** Tous les fichiers publiés de L'Appart (10), pour les tests : chacun existe dans public/, aucun autre n'y est. Une fonction, et
  *  non une constante calculée : un calcul au chargement du module garderait l'album entier dans chaque morceau qui importe ce

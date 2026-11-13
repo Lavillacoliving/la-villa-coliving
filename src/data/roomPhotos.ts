@@ -5,7 +5,8 @@
 // sans galerie). Compléter au fil des shootings — mêmes règles que la LP :
 // dimensions RÉELLES obligatoires (le cadre est calculé du ratio, borné, sinon
 // les portraits sont recadrés de 40 %+).
-import { LAPPART_ROOM_COVER } from "./appartPhotos";
+// (Corrections du 13/11/2026) L'image des cartes de L'Appart seule (src/data/appartCovers.ts), pas tout l'album.
+import { LAPPART_ROOM_COVER } from "./appartCovers";
 import { assertNever, type PlaceKey } from "./places";
 
 export type RoomPhoto = {
@@ -15,7 +16,7 @@ export type RoomPhoto = {
   alt: { fr: string; en: string };
 };
 // (L'Appart, 13/11/2026) Ses photos (pièces communes seulement : les chambres, « photos à venir ») vivent dans
-// src/data/appartPhotos.ts ; ce manifeste n'a aucune clé « lappart:N » tant qu'aucune chambre n'est photographiée.
+// src/data/appartPhotos.ts (et src/data/appartCovers.ts) ; ce manifeste n'a aucune clé « lappart:N » tant qu'aucune chambre n'est photographiée.
 
 export const ROOM_PHOTOS: Record<string, RoomPhoto[]> = {
   "lavilla:8": [

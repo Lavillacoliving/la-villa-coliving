@@ -1,7 +1,7 @@
 /**
  * Bloc statique « L'Appart » des pages de la marque (accueil, /nos-maisons, /tarifs, /annemasse-colocation,
  * /chambre-a-louer-annemasse) : une photo, un texte propre à CHAQUE page et un lien vers /lappart (source des textes du
- * 13/11/2026, table du bloc statique ; `appartTeaser`, src/data/appartFacts.ts).
+ * 13/11/2026, table du bloc statique ; `appartTeaser`, src/data/appartTeaser.ts).
  *
  * Jamais une phrase canonique ici (critique A1/X2) : ces pages portent déjà la fiche de la marque, et la garde y compte chaque
  * phrase canonique exactement une fois. Statique : rien ne dépend de la base, le bloc est le même dans les deux états (L'Appart
@@ -16,8 +16,10 @@ import { ArrowRight } from "lucide-react";
 import { LocalizedLink } from "@/components/LocalizedLink";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { APPART } from "@/data/appart";
-import { appartTeaser, type AppartTeaserRoute } from "@/data/appartFacts";
-import { LAPPART_HERO } from "@/data/appartPhotos";
+// (Corrections du 13/11/2026, relecture technique) Modules légers : le texte du bloc et l'image du haut seulement, ni
+// appartFacts.ts ni l'album (l'accueil, « Nos maisons » et /tarifs n'en ont pas besoin).
+import { appartTeaser, type AppartTeaserRoute } from "@/data/appartTeaser";
+import { LAPPART_HERO } from "@/data/appartCovers";
 import { responsiveImage } from "@/lib/responsiveImage";
 
 export interface AppartTeaserProps {
