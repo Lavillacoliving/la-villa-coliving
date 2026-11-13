@@ -271,7 +271,8 @@ test('garde de gamme du prérendu (gammeMixIssues) : 0 constat sur les 4 pages, 
 });
 
 test('textes fixes de l\'état A : titres sans prix ; metas sans équipement, chaque gamme son « dès » là où la source réécrit la meta', () => {
-  const metaRewritten = ['/chambres-disponibles', '/colocation-geneve', '/chambre-a-louer-annemasse'];
+  // (Corrections du 13/11/2026) /chambre-a-louer-geneve : sa meta nomme aussi L'Appart (la page le présente dès 730 CHF).
+  const metaRewritten = ['/chambres-disponibles', '/colocation-geneve', '/chambre-a-louer-geneve', '/chambre-a-louer-annemasse'];
   for (const lang of LANGS) {
     for (const route of PAGES) {
       const { title, meta } = R.A[`${lang}:${route}`];
@@ -280,6 +281,14 @@ test('textes fixes de l\'état A : titres sans prix ; metas sans équipement, ch
       assert.doesNotMatch(d, HOUSE_AMENITY, `${lang} ${route} : équipement dans la meta`);
       assert.ok(d.length > 0 && d.length <= 160, `${lang} ${route} : meta de ${d.length} caractères`);
       if (metaRewritten.includes(route)) assert.ok(d.includes(m.APPART.name), `${lang} ${route} : la meta nomme L'Appart`);
+      // (Corrections du 13/11/2026, relecture « conformité ») Les « 20 min de Genève-Eaux-Vives » sont ceux des maisons : dans une
+      // même phrase, L'Appart ne vient jamais avant la formule (il en serait le sujet : « 3 maisons et L'Appart, à 20 min… »).
+      const distance = m.STATS_DISPLAY[lang].distance;
+      for (const s of d.split(/(?<=[.!?])\s+/)) {
+        if (s.includes(m.APPART.name) && s.includes(distance)) {
+          assert.ok(s.indexOf(m.APPART.name) > s.indexOf(distance), `${lang} ${route} : « ${distance} » appliqué à L'Appart — « ${s} »`);
+        }
+      }
     }
   }
 });

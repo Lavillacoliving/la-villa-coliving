@@ -122,9 +122,11 @@ export function ColocationGenevePage() {
         title={en ? "Shared housing in Geneva, French side: all-inclusive rooms" : "Colocation à Genève côté France : chambres tout inclus"}
         // (Lot L2, 09/10/2026) D1 : jamais « à N min du centre » sans destination nommée → STATS_DISPLAY.distance ; meta ≤ 155 c. (FR 154 / EN 152, mesuré).
         // (L'Appart, E4, S11.1) La page liste aussi L'Appart ; « Chambres tout inclus en CHF » retiré pour tenir dans 155 caractères.
+        // (Corrections du 13/11/2026, relecture « conformité ») Les « 20 min » sont ceux des maisons : L'Appart vient après la
+        // formule, jamais dans son sujet (même tournure que la ligne 3 de llms.txt ; FR 150 / EN 147 c.) — texte à relire par Jérôme.
         description={en
-          ? `Shared housing in Geneva, French side: ${STATS.totalHouses} coliving houses and ${APPART.name}, ${STATS_DISPLAY.en.distance}. Reply in 48 h.`
-          : `Colocation à Genève côté France : ${STATS.totalHouses} maisons de coliving et ${APPART.name}, à ${STATS_DISPLAY.fr.distance}. Réponse sous 48 h.`}
+          ? `Shared housing in Geneva, French side: ${STATS.totalHouses} coliving houses ${STATS_DISPLAY.en.distance}, and ${APPART.name}. Reply in 48 h.`
+          : `Colocation à Genève côté France : ${STATS.totalHouses} maisons de coliving à ${STATS_DISPLAY.fr.distance}, et ${APPART.name}. Réponse sous 48 h.`}
         url={PILLAR_URL}
         image="https://www.lavillacoliving.com/images/villa_portrait.webp"
         jsonLd={offerSchema}
