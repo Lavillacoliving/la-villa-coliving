@@ -8,7 +8,8 @@
  * absent ou présent dans v_public_rooms). `data-appart-teaser` porte la page (garde : un bloc par page de la liste, aucun ailleurs).
  *
  * Image : la cuisine côté plaque (image du haut de /lappart), cadrée sur son point focal ; chargement différé, dimensions
- * réelles (pas de décalage de mise en page), variantes responsive dès qu'elles existent (scripts/optimize-images.mjs).
+ * réelles (pas de décalage de mise en page), variantes responsive (scripts/optimize-images.mjs). Sauf sur l'accueil : « une
+ * bande courte […], pas d'image » (source des textes, SURFACES S9.3 ; réunion des étapes du 13/11/2026, à confirmer).
  * Mesure : `house_discover_click` (house « lappart », position « appart_teaser »), comme « Découvrir la maison ».
  */
 import { ArrowRight } from "lucide-react";
@@ -29,6 +30,15 @@ export interface AppartTeaserProps {
   className?: string;
 }
 
+/** Photo du bloc, par page hôte : aucune sur l'accueil (bande courte, source des textes S9.3). */
+const WITH_IMAGE: Record<AppartTeaserRoute, boolean> = {
+  "/": false,
+  "/nos-maisons": true,
+  "/tarifs": true,
+  "/annemasse-colocation": true,
+  "/chambre-a-louer-annemasse": true,
+};
+
 /** Nom GA4 de la page hôte (snake_case, le même en français et en anglais). */
 const GA_PAGE: Record<AppartTeaserRoute, string> = {
   "/": "home",
@@ -43,6 +53,7 @@ export function AppartTeaser({ page, lang, headingLevel = 2, className = "" }: A
   const L = lang ?? (language === "en" ? "en" : "fr");
   const t = appartTeaser(page, L);
   const img = LAPPART_HERO.wide;
+  const withImage = WITH_IMAGE[page];
   const Heading = headingLevel === 3 ? "h3" : "h2";
   const titleId = `appart-teaser-title-${GA_PAGE[page]}`;
 
@@ -56,20 +67,22 @@ export function AppartTeaser({ page, lang, headingLevel = 2, className = "" }: A
 
   return (
     <section data-appart-teaser={page} aria-labelledby={titleId} className={`not-prose ${className}`}>
-      <div className="grid md:grid-cols-5 overflow-hidden rounded-2xl border border-[#E7E5E4] bg-white">
-        <div className="relative h-52 sm:h-64 md:h-auto md:min-h-[280px] md:col-span-2">
-          <img
-            src={img.src}
-            {...responsiveImage(img.src, "(min-width: 768px) 40vw, 100vw")}
-            alt={img.alt[L]}
-            className="absolute inset-0 w-full h-full object-cover"
-            style={{ objectPosition: img.focal }}
-            loading="lazy"
-            width={img.w}
-            height={img.h}
-          />
-        </div>
-        <div className="p-6 md:p-8 md:col-span-3 flex flex-col">
+      <div className={`grid ${withImage ? "md:grid-cols-5" : ""} overflow-hidden rounded-2xl border border-[#E7E5E4] bg-white`}>
+        {withImage && (
+          <div className="relative h-52 sm:h-64 md:h-auto md:min-h-[280px] md:col-span-2">
+            <img
+              src={img.src}
+              {...responsiveImage(img.src, "(min-width: 768px) 40vw, 100vw")}
+              alt={img.alt[L]}
+              className="absolute inset-0 w-full h-full object-cover"
+              style={{ objectPosition: img.focal }}
+              loading="lazy"
+              width={img.w}
+              height={img.h}
+            />
+          </div>
+        )}
+        <div className={`p-6 md:p-8 ${withImage ? "md:col-span-3" : ""} flex flex-col`}>
           {t.eyebrow && <p className="text-xs font-semibold uppercase tracking-wider text-[#8A6508] mb-2">{t.eyebrow}</p>}
           <Heading
             id={titleId}

@@ -91,7 +91,9 @@ const PRICE_WHY_LINK_CLASS =
 // Légende posée sur la photo d'une carte sans photo de chambre (L'Appart) : lisible sur toute photo, retour à la ligne permis
 // dans la petite photo de la carte « compact ».
 const PHOTO_PENDING_CLASS = "absolute bottom-2 left-2 max-w-[calc(100%-1rem)] text-[11px] leading-tight font-medium px-2 py-1 rounded-md bg-black/65 text-white";
-const GAMME_BADGE_CLASS = "inline-block mb-1 text-[11px] font-semibold uppercase tracking-wider px-2 py-0.5 rounded-full bg-[#F5F0E8] text-[#7A5215]";
+// Badge de gamme (cartes de L'Appart) : `self-start`, sinon il s'étire sur toute la largeur dans les colonnes flex des variantes
+// « compact » et par défaut (captures de la réunion des étapes, 13/11/2026).
+const GAMME_BADGE_CLASS = "inline-block self-start mb-1 text-[11px] font-semibold uppercase tracking-wider px-2 py-0.5 rounded-full bg-[#F5F0E8] text-[#7A5215]";
 
 export function RoomCard<R extends PlaceRoom = PublicRoom>({ house, houseName, room, fallbackImage, showHouse = false, onOpenPhotos, onCtaClick, ctaParams, leaseStart, houseCta = false, onHouseClick, variant = "default", commune, showInclusions = true, onPriceWhyClick, showGammeBadge = false }: RoomCardProps<R>) {
   const { t, language } = useLanguage();

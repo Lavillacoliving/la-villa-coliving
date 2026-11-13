@@ -150,6 +150,21 @@ const LOFT_CH4_SOURCES = [
   '/images/le loft/rooms/Chambre 4/chambre-4-salle-eau.webp',
 ];
 for (const g of LOFT_CH4_SOURCES) if (!SOURCES.includes(g)) SOURCES.push(g);
+// L'Appart (13/11/2026, réunion des étapes ; liste de l'agent « photos ») — src/data/appartPhotos.ts : image du haut de /lappart
+// (format large : ordinateur et bloc statique des pages de la marque ; format en hauteur : téléphone), image des cartes de
+// chambres, 6 vignettes de l'album. Variantes tirées des WebP déjà propres (aucune métadonnée, test image-metadata).
+const LAPPART_SOURCES = [
+  '/images/lappart/lappart-cuisine-5.webp',    // haut de page (large), bloc statique
+  '/images/lappart/lappart-cuisine-2.webp',    // haut de page (téléphone), album
+  '/images/lappart/lappart-cuisine-4.webp',    // cartes des chambres (« Photo de la chambre à venir »)
+  '/images/lappart/lappart-cuisine-1.webp',    // vignettes de l'album
+  '/images/lappart/lappart-cheminee-1.webp',
+  '/images/lappart/lappart-cuisine-3.webp',
+  '/images/lappart/lappart-balcon-1.webp',
+  '/images/lappart/lappart-placards-1.webp',
+  '/images/lappart/lappart-salle-eau-1.webp',
+];
+for (const g of LAPPART_SOURCES) if (!SOURCES.includes(g)) SOURCES.push(g);
 
 
 // Héros plein écran sous voile dégradé (Scrim) : qualité plus basse invisible à l'œil.

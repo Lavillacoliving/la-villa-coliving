@@ -31,6 +31,7 @@ import { pickRelatedPosts } from "@/lib/relatedPosts";
 import { VerifyBlock } from "@/components/VerifyBlock";
 import { ArticleContactCta } from "@/components/ArticleContactCta";
 import { NO_OFFER_ARTICLES, UPDATED_ONLY_ARTICLES } from "@/data/verifyArticle";
+import { placeFromPath } from "@/data/places";
 
 // (Lot B, 01/10/2026) react-markdown neutralise les liens tel: (liste de protocoles sûrs) : on les
 // autorise pour les numéros utiles des guides, liés explicitement depuis que format-detection
@@ -408,7 +409,8 @@ export function BlogPostPage() {
         // pose les UTM virtuels de la session au clic. Zéro SQL sur les 40 articles.
         const [pathOnly, existingQuery = ""] = internalPath.split("?");
         const isCandidature = /^\/(en\/)?candidature$/.test(pathOnly);
-        const isHouse = /^\/(en\/)?(lavilla|leloft|lelodge)$/.test(pathOnly);
+        // (L'Appart, 13/11/2026) Page d'un lieu : les 3 maisons et L'Appart (placeFromPath, clés publiques de places.ts).
+        const isHouse = placeFromPath(pathOnly) !== null;
         if (isCandidature) {
           const params = new URLSearchParams(existingQuery);
           if (!params.has("src")) {

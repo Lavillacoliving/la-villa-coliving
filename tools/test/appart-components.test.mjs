@@ -84,13 +84,19 @@ test('<AppartIncluded/> : 15 lignes, la ligne « piscine » au caractère près 
   }
 });
 
-test('<AppartTeaser/> : un bloc par page, son texte, un lien vers /lappart, la photo du haut avec son texte alternatif', () => {
+test('<AppartTeaser/> : un bloc par page, son texte, un lien vers /lappart, la photo du haut avec son texte alternatif (sauf l\'accueil)', () => {
   for (const lang of ['fr', 'en']) for (const page of m.APPART_TEASER_ROUTES) {
     const html = B.teaser(lang, page), t = text(html), src = m.appartTeaser(page, lang);
     assert.ok(html.includes(`data-appart-teaser="${page}"`), page);
     for (const s of [src.title, src.text, src.link, ...(src.eyebrow ? [src.eyebrow] : [])]) assert.equal(count(t, s), 1, `${lang} ${page} : « ${s.slice(0, 40)}… »`);
     assert.ok(html.includes(`href="${lang === 'en' ? '/en' : ''}/lappart"`), `${lang} ${page} : lien`);
-    assert.ok(html.includes(m.LAPPART_HERO.wide.src) && html.includes('loading="lazy"'), `${lang} ${page} : image`);
+    if (page === '/') {
+      // Accueil : « une bande courte […], pas d'image » (source des textes, SURFACES S9.3 ; réunion des étapes du 13/11/2026).
+      assert.ok(!html.includes('<img'), `${lang} ${page} : aucune image`);
+    } else {
+      assert.ok(html.includes(m.LAPPART_HERO.wide.src) && html.includes('loading="lazy"') && html.includes(m.LAPPART_HERO.wide.alt[lang].replace(/'/g, '&#x27;')), `${lang} ${page} : image`);
+      assert.ok(html.includes('srcSet=') || html.includes('srcset='), `${lang} ${page} : variantes responsive`);
+    }
   }
 });
 

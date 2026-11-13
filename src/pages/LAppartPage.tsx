@@ -260,10 +260,19 @@ export function LAppartPage() {
       {/* Haut de page : la cuisine côté plaque (format en hauteur sur téléphone, large ailleurs), voile, titre, repères, prix. */}
       <section className="relative pt-16">
         <div className="relative h-[60vh] min-h-[520px] md:h-[70vh]">
+          {/* Variantes responsive des deux formats (scripts/optimize-images.mjs, réunion des étapes du 13/11/2026) : un téléphone
+              ne charge plus la photo de 1 800 px. */}
           <picture>
-            <source media="(max-width: 767px)" srcSet={encodeURI(LAPPART_HERO.tall.src)} width={LAPPART_HERO.tall.w} height={LAPPART_HERO.tall.h} />
+            <source
+              media="(max-width: 767px)"
+              srcSet={responsiveImage(LAPPART_HERO.tall.src, "100vw").srcSet ?? encodeURI(LAPPART_HERO.tall.src)}
+              sizes="100vw"
+              width={LAPPART_HERO.tall.w}
+              height={LAPPART_HERO.tall.h}
+            />
             <img
               src={LAPPART_HERO.wide.src}
+              {...responsiveImage(LAPPART_HERO.wide.src, "100vw")}
               alt={LAPPART_HERO.wide.alt[L]}
               className="w-full h-full object-cover"
               style={{ objectPosition: LAPPART_HERO.wide.focal }}

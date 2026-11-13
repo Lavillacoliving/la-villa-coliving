@@ -332,11 +332,11 @@ export function jsonLdGammeIssues(nodes, m) {
 // ── Blocs statiques « L'Appart » ─────────────────────────────────────────────────────────────────────────────────────────────
 
 /**
- * Bloc statique <AppartTeaser/> (data-appart-teaser) : tant que les étapes E4 et E5 ne l'ont pas posé sur ses 5 pages, la garde
- * accepte 0 ou 1 bloc sur chacune (jamais ailleurs, texte = source, FR et EN ensemble). À la réunion des étapes (E6), quand les
- * 5 blocs sont en place : passer à `true` — la garde exige alors exactement un bloc sur chaque page, FR et EN.
+ * Bloc statique <AppartTeaser/> (data-appart-teaser) : tant que les étapes E4 et E5 ne l'avaient pas posé sur ses 5 pages, la
+ * garde acceptait 0 ou 1 bloc sur chacune (jamais ailleurs, texte = source, FR et EN ensemble). Depuis la réunion des étapes
+ * (13/11/2026), les 5 blocs sont en place : la garde exige exactement un bloc sur chaque page, FR et EN.
  */
-export const APPART_TEASER_ALL_REQUIRED = false;
+export const APPART_TEASER_ALL_REQUIRED = true;
 
 /** Texte visible attendu d'un bloc statique : sur-titre, titre, texte, lien (source : appartTeaser). */
 export function appartTeaserExpectedText(route, lang, m) {

@@ -433,7 +433,8 @@ test('blocs statiques : le texte de la source sur sa page ; jamais sur une autre
   const canon = [{ route: '/', text: `${appartTeaserExpectedText('/', 'fr', m)} ${m.APPART_CANONICAL_SENTENCE.fr}` }];
   const r = appartTeaserIssues(canon, '/', 'fr', m);
   assert.ok(r.some((i) => /texte du bloc statique L'Appart ≠ source/.test(i)) && r.some((i) => /phrase canonique dans le bloc statique/.test(i)), r.join('\n'));
-  assert.equal(typeof APPART_TEASER_ALL_REQUIRED, 'boolean');
+  // Depuis la réunion des étapes (13/11/2026), les 5 blocs sont posés : la garde les exige tous, FR et EN.
+  assert.equal(APPART_TEASER_ALL_REQUIRED, true);
 });
 
 // ── Câblage ──────────────────────────────────────────────────────────────────────────────────────────────────────────────────
