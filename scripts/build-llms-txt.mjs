@@ -18,11 +18,14 @@ function factsLines(lang, m) {
   const std = lang === 'en' ? `CHF ${String(F.price.standardChf).replace(/\B(?=(\d{3})+(?!\d))/g, ',')}` : `${String(F.price.standardChf).replace(/\B(?=(\d{3})+(?!\d))/g, ' ')} CHF`;
   const stdEur = lang === 'en' ? `€${String(F.price.standardEur).replace(/\B(?=(\d{3})+(?!\d))/g, ',')}` : `${String(F.price.standardEur).replace(/\B(?=(\d{3})+(?!\d))/g, ' ')} €`;
   const villa = F.houses.find((h) => h.slug === 'lavilla');
+  // (13/11/2026) Trois paliers : le « dès » des maisons (F.price.fromChf / fromEur), le prix standard et son nombre de chambres,
+  // puis le détail des chambres de La Villa à salle d'eau partagée, chambre par chambre (sharedBathTiersText, src/data/stats.ts).
+  const privateRooms = F.totalRooms - villa.sharedBathRooms;
   if (lang === 'en') {
     return [
       `- ${F.totalRooms} private furnished rooms (${F.surfaces.min} to ${F.surfaces.max} m²) across ${F.totalHouses} houses (La Villa, Le Loft, Le Lodge)`,
       `- Location: Ville-la-Grand, Ambilly, Annemasse (Haute-Savoie, France) — ${F.commuteFormula.en}`,
-      `- Price: all-inclusive from ${F.price.en.fromChf}/month (contractual rent in euros: from ${F.price.en.fromEur}) for the ${villa.sharedBathRooms} La Villa rooms sharing a shower room between 2 rooms; ${std}/month (${stdEur}) with a private shower room`,
+      `- Price: all-inclusive from ${F.price.en.fromChf}/month (contractual rent in euros: from ${F.price.en.fromEur}); ${std}/month (${stdEur}) with a private shower room (${privateRooms} of ${F.totalRooms} rooms); at La Villa, ${villa.sharedBathRooms} rooms sharing a shower room between 2 rooms: ${m.sharedBathTiersText('en', { perMonth: true, eur: true })}`,
       `- Included: utilities, fibre up to ${F.fiberSpeed}, common-area cleaning ${F.cleaningPerWeek} times a week, pool, sauna, gym, streaming, yoga and events`,
       `- Target: Swiss cross-border workers, expats, young professionals working in Geneva`,
       `- ${F.lease.months}-month lease: free to leave at any time with ${F.lease.noticeMonths} month's notice`,
@@ -35,7 +38,7 @@ function factsLines(lang, m) {
   return [
     `- ${F.totalRooms} chambres meublées privées (${F.surfaces.min} à ${F.surfaces.max} m²) dans ${F.totalHouses} maisons (La Villa, Le Loft, Le Lodge)`,
     `- Localisation : Ville-la-Grand, Ambilly, Annemasse (Haute-Savoie, France) — ${F.commuteFormula.fr}`,
-    `- Prix : tout inclus dès ${F.price.fr.fromChf}/mois (loyer contractuel en euros : dès ${F.price.fr.fromEur}) pour les ${villa.sharedBathRooms} chambres de La Villa à salle d'eau partagée entre 2 chambres ; ${std}/mois (${stdEur}) avec salle d'eau privative`,
+    `- Prix : tout inclus dès ${F.price.fr.fromChf}/mois (loyer contractuel en euros : dès ${F.price.fr.fromEur}) ; ${std}/mois (${stdEur}) avec salle d'eau privative (${privateRooms} chambres sur ${F.totalRooms}) ; à La Villa, ${villa.sharedBathRooms} chambres à salle d'eau partagée entre 2 chambres : ${m.sharedBathTiersText('fr', { perMonth: true, eur: true })}`,
     `- Inclus : charges, fibre jusqu'à ${F.fiberSpeed}, ménage des espaces communs ${F.cleaningPerWeek} fois par semaine, piscine, sauna, salle de sport, streaming, yoga et événements`,
     `- Public : frontaliers Suisse, expats, jeunes professionnels qui travaillent à Genève`,
     `- Bail de ${F.lease.months} mois : libre de partir à tout moment avec ${F.lease.noticeMonths} mois de préavis`,

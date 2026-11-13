@@ -6,7 +6,10 @@
 //
 // ⚠️ Règles d'affichage (verrouillées) :
 //  - 1 360 = médiane ACTUELLE 2026 des loyers en cours (PAS une médiane historique),
-//    toujours étiquetée ainsi, JAMAIS juxtaposée aux prix d'entrée (1 370 / 1 430 depuis le 01/09/2026) sans étiquette.
+//    toujours étiquetée ainsi, JAMAIS juxtaposée aux prix d'entrée (de 1 290 à 1 430 CHF depuis le 13/11/2026) sans étiquette.
+//    Depuis le 13/11/2026, le palier d'entrée (1 290 CHF, chambres 7 et 8 de La Villa) est SOUS cette médiane : la méthodologie
+//    de l'Observatoire ne dit plus « les prix d'entrée sont au-dessus de la médiane » mais compte les chambres proposées au-dessus
+//    (rentMedianChfValue comparé aux paliers de src/data/stats.ts).
 //  - Ne JAMAIS écrire « moins cher que Genève » (l'angle honnête = tout-inclus / m²).
 //  - Caution = 2 mois (ne jamais écrire « 0 caution » ; le « 0 frais » = frais d'agence).
 //  - Durée de séjour publiée = « 13 mois en moyenne (9 mois hors longs séjours) »,
@@ -24,6 +27,7 @@ import { STATS, OCCUPANCY } from "@/data/stats";
 export const BAROMETRE = {
   // Le coût — la money-stat
   rentMedianChf: "1 360", // médiane actuelle 2026 des loyers en cours, tout inclus, facturés en CHF
+  rentMedianChfValue: 1360, // même médiane, en nombre : sert à compter les chambres dont le prix actuel la dépasse (méthodologie)
   m2PerResident: 38, // ≈ agrégé : surface habitable ÷ nb de résidents
   m2PerHouse: { lavilla: "37", lelodge: "37,5", leloft: "41,5" },
   chfPerM2AllIn: 36, // ≈ 1 360 / 38

@@ -25,6 +25,19 @@ mécaniquement après un bump de version), `npm run check:facts`, et un commit p
 ## Garde-fous à ne pas contourner
 
 - Prix : `CONTRACT_EUR` (maître, €) et `TAUX_BCE` figé → le CHF est dérivé (`chfAffiche`), arrondi à la dizaine inférieure.
+  Trois paliers depuis le 13/11/2026 (`standard`, `sharedBath` = chambres 3 et 4 de La Villa, `sharedBathSmall` = chambres 7 et 8) ;
+  le « dès » des maisons = `HOUSES_FROM` / `PRICE_FROM_*` (palier le plus bas), le détail des paliers = `sharedBathTiersText()`.
+- **Changer un prix** : (1) `CONTRACT_EUR` (et `SHARED_BATH_TIERS` si les chambres d'un palier changent : numéros, surface `approxM2`
+  citée par la FAQ des tarifs, gardée par `tierSurfaceIssues`), `ENTITY_FACTS_VERSION`,
+  `PRICE_FACTS_VERSION`, `OU_CHERCHER_VERSION`, puis `npm run build:llms` ; (2) dans le même créneau que la mise en ligne du code,
+  le SQL des chambres (`rooms.rent_eur` / `rent_chf`, `properties.price_chf`) — la garde `check:facts` compare chaque chambre de
+  `v_public_rooms` à son palier, base et code divergents = prérendu bloqué ; (3) les textes qui portent le prix EN CLAIR : metas et
+  posts Facebook des articles, réponses à prix de `knowledge_base` (bot), consigne du générateur d'articles (nouvelle version, l'ancienne
+  désactivée) ; (4) les chiffres calculés à partir du prix dans les articles (part du salaire, écart avec un studio, totaux de
+  budget) : à recalculer et réécrire par SQL ; (5) dans le texte des articles, le « dès » et la fourchette des maisons sont des jetons
+  (`{{PRIX_DES}}`, `{{PRIX_FOURCHETTE}}`… — `src/lib/contentTokens.ts`) et suivent seuls, mais les prix standard ou uniques écrits en
+  clair (Le Loft, Le Lodge, « 1 430 CHF » dans plusieurs articles) et les articles générés depuis (prix en clair, consigne du générateur)
+  se réécrivent par SQL. Modèle : `scripts/prix-chambres-7-8-*.edits.mjs` et les SQL `scripts/prix-chambres-7-8-*-2026-11-13.sql`.
 - Chambres : `ROOMS_BY_HOUSE` = `v_public_rooms` (garde CI) ; disponibilité **jamais** en dur (`src/lib/availability.ts`).
 - Chaînes plates, un nœud texte par phrase, jamais `toLocaleString` ni `Date` dans les textes rendus (anti-#418).
 - FR = tutoiement (sauf mentions légales et `/investisseurs`, registre B2B), EN = « you » ; parité FR/EN ; jamais un concurrent nommé.

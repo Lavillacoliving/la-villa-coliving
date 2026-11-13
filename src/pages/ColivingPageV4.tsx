@@ -6,7 +6,7 @@ import { colocGeneveHref } from "@/lib/siteLinks";
 import { SEO } from "@/components/SEO";
 import { FaqSection } from "@/components/FaqSection";
 import { colivingFaq } from "@/data/faq/colivingFaq";
-import { STATS, STATS_DISPLAY, PRICE_SHARED_CHF_FR, PRICE_SHARED_CHF_EN, GOOGLE_REVIEWS, GOOGLE_REVIEWS_LINK_LABEL } from "@/data/stats";
+import { STATS, STATS_DISPLAY, PRICE_FROM_CHF_FR, PRICE_FROM_CHF_EN, GOOGLE_REVIEWS, GOOGLE_REVIEWS_LINK_LABEL } from "@/data/stats";
 
 export function ColivingPageV4() {
   const { t, language } = useLanguage();
@@ -56,8 +56,8 @@ export function ColivingPageV4() {
         // à l'intention « c'est quoi » — title variante B (53 c., sans marque : le suffixe dépasserait 65 c.), pas de prix dans le title (S33).
         title={language === "en" ? "What is coliving? Differences, prices, who it's for" : "Le coliving, c'est quoi ? Différences, prix, pour qui"}
         description={language === "en"
-          ? `Coliving explained simply: how it differs from a flatshare, what it costs (from ${PRICE_SHARED_CHF_EN} all inclusive) and who it suits.`
-          : `Le coliving expliqué simplement : ce qui le distingue d'une colocation, ce que ça coûte (dès ${PRICE_SHARED_CHF_FR} tout inclus) et à qui ça convient.`}
+          ? `Coliving explained simply: how it differs from a flatshare, what it costs (from ${PRICE_FROM_CHF_EN} all inclusive) and who it suits.`
+          : `Le coliving expliqué simplement : ce qui le distingue d'une colocation, ce que ça coûte (dès ${PRICE_FROM_CHF_FR} tout inclus) et à qui ça convient.`}
         url="https://www.lavillacoliving.com/le-coliving"
       />
       {/* Hero avec image de fond */}
@@ -87,8 +87,8 @@ export function ColivingPageV4() {
             </h1>
             <p className="text-xl mb-8 text-white/90">
               {language === "en"
-                ? `Coliving is flatsharing with hotel-grade services included: furnished room, utilities, fiber, cleaning and shared spaces designed for community. At La Villa: 29 rooms, 3 houses near Geneva, from ${PRICE_SHARED_CHF_EN}/month.`
-                : `Le coliving, c'est la colocation avec services hôteliers inclus : chambre meublée, charges, fibre, ménage et espaces communs pensés pour la communauté. À La Villa : 29 chambres, 3 maisons près de Genève, dès ${PRICE_SHARED_CHF_FR}/mois.`}
+                ? `Coliving is flatsharing with hotel-grade services included: furnished room, utilities, fiber, cleaning and shared spaces designed for community. At La Villa: 29 rooms, 3 houses near Geneva, from ${PRICE_FROM_CHF_EN}/month.`
+                : `Le coliving, c'est la colocation avec services hôteliers inclus : chambre meublée, charges, fibre, ménage et espaces communs pensés pour la communauté. À La Villa : 29 chambres, 3 maisons près de Genève, dès ${PRICE_FROM_CHF_FR}/mois.`}
               {" "}
               {/* (Lot 4) Ancre exacte vers la home, URL championne sur « coliving genève ». */}
               {/* (Lot L2, 09/10/2026, D1) « 20 min » qualifié par STATS_DISPLAY.distance ; fin de phrase en un seul nœud texte (anti-#418). */}

@@ -94,8 +94,9 @@ export function CharteTransparencePage() {
 
               <Section title="One price — rooms are earned, not bought">
                 <p>
-                  All our rooms share the same price, in two simple tiers, depending on whether the
-                  bathroom is private or shared between two rooms. No premium for the view, no floor
+                  All our rooms share the same price, in three simple tiers: private bathroom,
+                  bathroom shared between two rooms and, among those, a lower price for the two
+                  smallest rooms. No premium for the view, no floor
                   upgrade, no yield management. And when a room becomes free, it's offered first to
                   current residents, by seniority: here, the best room doesn't cost more — you earn
                   it by staying.
@@ -197,8 +198,9 @@ export function CharteTransparencePage() {
 
               <Section title="Un tarif unique — les chambres s'obtiennent, elles ne s'achètent pas">
                 <p>
-                  Toutes nos chambres sont au même tarif, décliné en deux niveaux simplement, selon
-                  que la salle d'eau est privative ou partagée entre deux chambres. Pas de
+                  Toutes nos chambres sont au même tarif, décliné en trois niveaux simplement :
+                  salle d'eau privative, salle d'eau partagée entre deux chambres et, parmi ces
+                  dernières, un prix plus bas pour les deux plus petites. Pas de
                   supplément vue, pas d'option étage, pas de yield management. Et quand une chambre
                   se libère, elle est proposée d'abord aux résidents en place, par ancienneté : chez
                   nous, la meilleure chambre ne se paie pas plus cher — elle se gagne en restant.

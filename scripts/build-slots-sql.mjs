@@ -28,6 +28,11 @@
  *     simule l'application séquentielle (détecte les chevauchements) ; scanne chaque `replace` : chaînes interdites
  *     (« 15 min », promesse sur le garant, Gaillard, voiture, vouvoiement FR, placeholders) et concurrents (liste
  *     COMPETITOR_NAMES / scripts/competitors.local.json ; absente → avertissement, scan non exécuté) ;
+ *     (13/11/2026) JETONS : un `replace` peut porter les jetons connus du site ({{PRIX_DES}}, {{PRIX_FOURCHETTE}}… — liste
+ *     CONTENT_TOKENS de scripts/lib/article-checks.mjs, miroir de src/lib/contentTokens.ts), sous leur forme stricte
+ *     `{{NOM}}`, et SEULEMENT dans le texte de l'article (content_fr / content_en : TOKEN_COLUMNS), la seule colonne où le
+ *     site les résout (BlogPostPage). Partout ailleurs (titre, extrait, meta, post Facebook), et pour tout jeton inconnu,
+ *     la règle « placeholder » continue de refuser « {{ » ; le diff montre aussi le texte tel que le lecteur le verra ;
  *  4. écrit le SQL : en-tête, BEGIN, un UPDATE … replace() dollar-quoté par modification avec garde
  *     position(ancien) > 0 [AND position(nouveau) = 0], updated_at = now(), bloc « Aperçu des ancrages », COMMIT,
  *     bloc « Vérification » (une ligne par article), bloc « Retour arrière » (inverses, commentés).
@@ -38,7 +43,7 @@
 import fs from 'fs/promises';
 import path from 'path';
 import { fileURLToPath, pathToFileURL } from 'url';
-import { sqlDollar, sqlString } from './lib/article-checks.mjs';
+import { sqlDollar, sqlString, CONTENT_TOKENS, unknownTokens } from './lib/article-checks.mjs';
 import { buildMatchers, scanText, parseNamesEnv } from './lib/competitor-scan.mjs';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
@@ -59,6 +64,22 @@ export function columnOf(edit) {
   const col = edit.column ?? `content_${edit.lang}`;
   if (!COLUMNS.includes(col)) throw new Error(`${edit.slug} (${edit.lang}) : colonne « ${col} » inconnue (${COLUMNS.join(', ')})`);
   return col;
+}
+
+/**
+ * (13/11/2026) Colonnes où un jeton `{{NOM}}` est résolu au rendu : le texte de l'article, et lui seul (BlogPostPage →
+ * resolveContentTokens). Titres, extraits, metas et posts Facebook sont affichés bruts : un jeton y resterait visible.
+ */
+export const TOKEN_COLUMNS = ['content_fr', 'content_en'];
+/** Jetons connus sous leur forme stricte `{{NOM}}` (sans espace) — la seule que ce générateur écrit. */
+const KNOWN_TOKEN_RE = new RegExp(`\\{\\{(?:${CONTENT_TOKENS.join('|')})\\}\\}`, 'g');
+/** Le texte sans ses jetons connus (forme stricte) : ce qu'il reste de « {{ » est un placeholder ou un jeton inconnu. */
+export function stripKnownTokens(text) {
+  return String(text).replace(KNOWN_TOKEN_RE, '');
+}
+/** Jetons connus (forme stricte) portés par un texte, dans l'ordre, doublons compris. */
+export function knownTokensIn(text) {
+  return [...String(text).matchAll(KNOWN_TOKEN_RE)].map((x) => x[0]);
 }
 
 /** Occurrences non chevauchantes de `needle` dans `hay` (0 pour une aiguille vide). */
@@ -190,13 +211,27 @@ const VOUS_RE = /(?<![\p{L}-])(vous|votre|vos)(?![\p{L}])/iu;
 export function sentencesOf(text) {
   return String(text).split(/(?<=[.!?])\s+|\n+/).map((s) => s.trim()).filter(Boolean);
 }
-export function forbiddenIssues(text, lang) {
+/**
+ * `opts.column` (13/11/2026) : quand le texte est inséré dans le texte d'un article (TOKEN_COLUMNS), les jetons connus sous
+ * leur forme stricte `{{NOM}}` sont admis — le site les résout au rendu. Sans `column`, ou pour toute autre colonne, « {{ »
+ * reste un placeholder interdit (comportement d'origine : les lots précédents n'écrivent aucun jeton).
+ */
+export function forbiddenIssues(text, lang, opts = {}) {
   const out = [];
+  const tokensAllowed = TOKEN_COLUMNS.includes(opts.column);
+  const scanned = tokensAllowed ? stripKnownTokens(text) : String(text);
   for (const { re, label, statementsOnly } of FORBIDDEN) {
-    const hit = statementsOnly ? sentencesOf(text).some((s) => !s.endsWith('?') && re.test(s)) : re.test(text);
-    if (hit) out.push(label);
+    const hit = statementsOnly ? sentencesOf(scanned).some((s) => !s.endsWith('?') && re.test(s)) : re.test(scanned);
+    if (!hit) continue;
+    if (label === 'placeholder' && /\{\{/.test(scanned)) {
+      out.push(tokensAllowed
+        ? 'placeholder (jeton inconnu ou mal écrit : seuls les jetons de CONTENT_TOKENS, sous la forme {{NOM}}, sont admis)'
+        : opts.column
+          ? `placeholder (jeton {{…}} dans ${opts.column} : les jetons ne sont résolus que dans le texte de l'article)`
+          : label);
+    } else out.push(label);
   }
-  if (lang === 'fr' && VOUS_RE.test(text)) out.push('vouvoiement (FR commercial = tutoiement)');
+  if (lang === 'fr' && VOUS_RE.test(scanned)) out.push('vouvoiement (FR commercial = tutoiement)');
   return out;
 }
 
@@ -278,7 +313,7 @@ export function renderDryRun(rows, meta) {
   ];
   rows.forEach((e, i) => {
     const where = e.column && e.column !== `content_${e.lang}` ? `${e.lang}, \`${e.column}\`` : e.lang;
-    out.push('', `### ${i + 1}. \`${e.slug}\` (${where}) · ${e.mechanism}`, '', e.note, '', `Occurrences de l'ancre en base : ${e.count} (attendu 1) · nouveau texte déjà présent : ${e.replaceCount} (attendu ${countOccurrences(e.find, e.replace)}) · garde « nouveau absent » : ${e.find.includes(e.replace) ? 'non (suppression)' : 'oui'}`, '', '**Avant**', '', `${fence}text`, e.find, fence, '', '**Après**', '', `${fence}text`, e.replace, fence);
+    out.push('', `### ${i + 1}. \`${e.slug}\` (${where}) · ${e.mechanism}`, '', e.note, '', `Occurrences de l'ancre en base : ${e.count} (attendu 1) · nouveau texte déjà présent : ${e.replaceCount} (attendu ${countOccurrences(e.find, e.replace)}) · garde « nouveau absent » : ${e.find.includes(e.replace) ? 'non (suppression)' : 'oui'}`, '', '**Avant**', '', `${fence}text`, e.find, fence, '', '**Après**', '', `${fence}text`, e.replace, fence, ...(e.rendered !== undefined ? ['', '**Rendu sur le site** (jetons résolus par `src/lib/contentTokens.ts`)', '', `${fence}text`, e.rendered, fence] : []));
   });
   return out.join('\n') + '\n';
 }
@@ -336,7 +371,9 @@ async function main() {
   }
 
   // Chaînes interdites + concurrents dans les textes insérés.
-  for (const e of edits) for (const issue of forbiddenIssues(e.replace, e.lang)) failures.push(`${e.slug} (${e.lang}) · ${e.note} : ${issue} dans le nouveau texte`);
+  // (13/11/2026) La colonne décide si les jetons {{NOM}} sont admis (texte de l'article) ou refusés (tout le reste).
+  const safeColumn = (e) => { try { return columnOf(e); } catch { return undefined; } };
+  for (const e of edits) for (const issue of forbiddenIssues(e.replace, e.lang, { column: safeColumn(e) })) failures.push(`${e.slug} (${e.lang}) · ${e.note} : ${issue} dans le nouveau texte`);
   const names = await competitorNames();
   if (names.length === 0) warnings.push('aucune liste de concurrents (COMPETITOR_NAMES / scripts/competitors.local.json) : scan concurrents non exécuté');
   else {
@@ -366,7 +403,12 @@ async function main() {
   const enriched = edits.map((e) => {
     const live = bySlug.get(e.slug)?.[columnOf(e)];
     failures.push(...checkEdit(e, live));
-    return { ...e, count: typeof live === 'string' ? countOccurrences(live, e.find) : 0, replaceCount: typeof live === 'string' ? countOccurrences(live, e.replace) : 0 };
+    // (13/11/2026) Texte tel que le lecteur le verra : jetons résolus par la source du site (src/lib/contentTokens.ts).
+    const rendered = TOKEN_COLUMNS.includes(columnOf(e)) && knownTokensIn(e.replace).length && typeof m.resolveContentTokens === 'function'
+      ? m.resolveContentTokens(e.replace, e.lang)
+      : undefined;
+    if (rendered !== undefined && /\{\{/.test(rendered)) failures.push(`${e.slug} (${e.lang}) · ${e.note} : un jeton n'est pas résolu par src/lib/contentTokens.ts — « ${preview(rendered)} »`);
+    return { ...e, count: typeof live === 'string' ? countOccurrences(live, e.find) : 0, replaceCount: typeof live === 'string' ? countOccurrences(live, e.replace) : 0, ...(rendered !== undefined ? { rendered } : {}) };
   });
   for (const slug of slugs) for (const col of COLUMNS) {
     const live = bySlug.get(slug)?.[col];
@@ -375,6 +417,9 @@ async function main() {
     const sim = applyEdits(live, mine);
     failures.push(...sim.failures);
     for (const re of watch) if (re.test(sim.text)) warnings.push(`${slug} (${col}) : après application, le texte contient encore ${re} (passage hors du lot ?)`);
+    // (13/11/2026) Jetons du texte résultant : un jeton inconnu resterait affiché tel quel ; hors du texte de l'article, tout « {{ » aussi.
+    if (TOKEN_COLUMNS.includes(col)) { const unk = unknownTokens(sim.text); if (unk.length) warnings.push(`${slug} (${col}) : après application, jeton(s) inconnu(s) ${unk.map((t) => `{{${t}}}`).join(', ')} (affichés tels quels par le site)`); }
+    else if (/\{\{/.test(sim.text)) warnings.push(`${slug} (${col}) : après application, « {{ » dans une colonne où les jetons ne sont pas résolus`);
   }
 
   // Sortie.
@@ -393,6 +438,7 @@ async function main() {
       console.log(`  occurrences en base : ${e.count} (attendu 1) · nouveau déjà présent : ${e.replaceCount}`);
       console.log(`  − ${preview(e.find, 160)}`);
       console.log(`  + ${preview(e.replace, 160)}`);
+      if (e.rendered !== undefined) console.log(`  = ${preview(e.rendered, 160)}  (rendu des jetons)`);
     }
   }
   const perSlug = slugs.map((s) => `${s} fr=${edits.filter((e) => e.slug === s && e.lang === 'fr').length} en=${edits.filter((e) => e.slug === s && e.lang === 'en').length}`);

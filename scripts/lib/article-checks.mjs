@@ -7,7 +7,9 @@
  * change, changer l'autre (les scripts Node ne chargent pas le TS de l'app).
  */
 
-export const CONTENT_TOKENS = ['PRIX_DES', 'PRIX_PRIVATIF', 'PRIX_DES_EUR', 'PRIX_PRIVATIF_EUR', 'NB_CHAMBRES', 'NB_MAISONS', 'MIN_GENEVE', 'CAUTION_MOIS'];
+// (13/11/2026) + PRIX_FOURCHETTE (« 1 290 à 1 430 CHF » en prose) et PRIX_FOURCHETTE_TABLEAU (« 1 290 – 1 430 CHF » en cellule de
+// tableau) ; PRIX_DES / PRIX_DES_EUR = le « dès » des maisons. Le test tools/test/content-tokens.test.mjs compare ce miroir à la source.
+export const CONTENT_TOKENS = ['PRIX_DES', 'PRIX_PRIVATIF', 'PRIX_DES_EUR', 'PRIX_PRIVATIF_EUR', 'NB_CHAMBRES', 'NB_MAISONS', 'MIN_GENEVE', 'CAUTION_MOIS', 'PRIX_FOURCHETTE', 'PRIX_FOURCHETTE_TABLEAU'];
 export const ENTITY_FACTS_MARKER = '<!-- entity-facts -->';
 export const ENTITY_FACTS_MARKER_RE = /^[ \t]*<!--\s*entity-facts\s*-->[ \t]*$/gm;
 /** (Lot L1, 10/2026) Miroirs de src/lib/contentMarkers.ts : registre des marqueurs et lignes-commentaires. */

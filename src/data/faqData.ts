@@ -1,7 +1,7 @@
 // FAQ Data for SEO - Extensive question/answer database
 // Organized by categories for better SEO structure
 
-import { STATS, STATS_DISPLAY, TRANSIT, aOrAn, GENEVA_COMMUTE_FORMULA, PRICE_CHF_FR, PRICE_CHF_EN, PRICE_SHARED_EN_NUM, PRICE_SHARED_CHF_FR, PRICE_SHARED_CHF_EN } from "@/data/stats";
+import { STATS, STATS_DISPLAY, TRANSIT, aOrAn, GENEVA_COMMUTE_FORMULA, PRICE_CHF_FR, PRICE_CHF_EN, PRICE_FROM_EN_NUM, PRICE_FROM_CHF_FR, sharedBathTiersText } from "@/data/stats";
 import { situationsFaq } from "@/data/faq/situationsFaq";
 import { priceJustificationFaq } from "@/data/priceFacts";
 import { VERIFY_ARTICLE_PATH, VERIFY_LINK_LABEL } from "@/data/verifyArticle";
@@ -108,8 +108,8 @@ export const faqData: FAQItem[] = [
       fr: 'Le coliving est-il cher ?',
     },
     answer: {
-      en: `When you factor in all costs—rent, utilities, internet, furniture, gym membership, cleaning services, and entertainment—coliving is often more economical than traditional renting. At La Villa, our all-inclusive rates start from ${PRICE_SHARED_EN_NUM} CHF/month, which is competitive with Geneva studio prices while including: heated pool, gym, sauna, weekly yoga classes, parking, monthly Pizza Party, streaming subscriptions, and more.`,
-      fr: `Quand tu prends en compte tous les coûts—loyer, charges, internet, meubles, abonnement de salle de sport, services de ménage et divertissement—le coliving est souvent plus économique que la location traditionnelle. Chez La Villa, nos tarifs tout inclus commencent à ${PRICE_SHARED_CHF_FR}/mois, ce qui est compétitif avec les prix des studios à Genève tout en offrant beaucoup plus de valeur et d\'équipements.`,
+      en: `When you factor in all costs—rent, utilities, internet, furniture, gym membership, cleaning services, and entertainment—coliving is often more economical than traditional renting. At La Villa, our all-inclusive rates start from ${PRICE_FROM_EN_NUM} CHF/month, which is competitive with Geneva studio prices while including: heated pool, gym, sauna, weekly yoga classes, parking, monthly Pizza Party, streaming subscriptions, and more.`,
+      fr: `Quand tu prends en compte tous les coûts—loyer, charges, internet, meubles, abonnement de salle de sport, services de ménage et divertissement—le coliving est souvent plus économique que la location traditionnelle. Chez La Villa, nos tarifs tout inclus commencent à ${PRICE_FROM_CHF_FR}/mois, ce qui est compétitif avec les prix des studios à Genève tout en offrant beaucoup plus de valeur et d\'équipements.`,
     },
   },
 
@@ -294,8 +294,8 @@ export const faqData: FAQItem[] = [
       fr: 'Combien coûte une chambre chez La Villa Coliving ?',
     },
     answer: {
-      en: `A room at La Villa Coliving costs ${PRICE_CHF_EN} per month all-inclusive with a private bathroom, or ${PRICE_SHARED_CHF_EN} for the 4 rooms at our La Villa house with a shower room shared between 2 rooms (cleaned by our housekeeping team). No hidden fees and no application fee: utilities, fiber internet, cleaning of common areas three times a week, gym, sauna, pool, streaming and community events. Our three houses — La Villa (Ville-la-Grand), Le Loft (Ambilly) and Le Lodge (Annemasse) — are on the French side: ${GENEVA_COMMUTE_FORMULA.en}.`,
-      fr: `Une chambre chez La Villa Coliving coûte ${PRICE_CHF_FR} par mois tout inclus avec salle d'eau privative, ou ${PRICE_SHARED_CHF_FR} pour les 4 chambres de la maison La Villa dont la salle d'eau est partagée entre 2 chambres (entretien par notre équipe de ménage inclus). Sans frais cachés ni frais de dossier : charges, fibre, ménage des espaces communs trois fois par semaine, salle de sport, sauna, piscine, streaming et événements communautaires. Nos trois maisons — La Villa (Ville-la-Grand), Le Loft (Ambilly) et Le Lodge (Annemasse) — sont côté France : ${GENEVA_COMMUTE_FORMULA.fr}.`,
+      en: `A room at La Villa Coliving costs ${PRICE_CHF_EN} per month all-inclusive with a private bathroom. The 4 rooms at our La Villa house with a shower room shared between 2 rooms (cleaned by our housekeeping team) cost ${sharedBathTiersText("en")}. No hidden fees and no application fee: utilities, fiber internet, cleaning of common areas three times a week, gym, sauna, pool, streaming and community events. Our three houses — La Villa (Ville-la-Grand), Le Loft (Ambilly) and Le Lodge (Annemasse) — are on the French side: ${GENEVA_COMMUTE_FORMULA.en}.`,
+      fr: `Une chambre chez La Villa Coliving coûte ${PRICE_CHF_FR} par mois tout inclus avec salle d'eau privative. Les 4 chambres de la maison La Villa dont la salle d'eau est partagée entre 2 chambres (entretien par notre équipe de ménage inclus) coûtent ${sharedBathTiersText("fr")}. Sans frais cachés ni frais de dossier : charges, fibre, ménage des espaces communs trois fois par semaine, salle de sport, sauna, piscine, streaming et événements communautaires. Nos trois maisons — La Villa (Ville-la-Grand), Le Loft (Ambilly) et Le Lodge (Annemasse) — sont côté France : ${GENEVA_COMMUTE_FORMULA.fr}.`,
     },
   },
   {
@@ -421,8 +421,8 @@ export const faqData: FAQItem[] = [
       fr: 'Comment La Villa se compare-t-il à la location à Genève ?',
     },
     answer: {
-      en: `A studio apartment in Geneva typically costs 1,500-2,500 CHF/month, plus utilities (150-250 CHF), internet (50-80 CHF), gym membership (100-150 CHF), and you\'d need to buy furniture. At La Villa, starting from ${PRICE_SHARED_EN_NUM} CHF, you get a furnished private room, all utilities, internet, gym, pool, sauna, cleaning, and a built-in community. The value is exceptional.`,
-      fr: `Un studio à Genève coûte généralement 1\u00a0500-2\u00a0500 CHF/mois, plus les charges (150-250 CHF), internet (50-80 CHF), abonnement de salle de sport (100-150 CHF), et il faudrait acheter des meubles. Chez La Villa, à partir de ${PRICE_SHARED_CHF_FR}, tu obtiens une chambre privée meublée, tous les services, internet, salle de sport, piscine, sauna, ménage et une communauté intégrée. La valeur est exceptionnelle.`,
+      en: `A studio apartment in Geneva typically costs 1,500-2,500 CHF/month, plus utilities (150-250 CHF), internet (50-80 CHF), gym membership (100-150 CHF), and you\'d need to buy furniture. At La Villa, starting from ${PRICE_FROM_EN_NUM} CHF, you get a furnished private room, all utilities, internet, gym, pool, sauna, cleaning, and a built-in community. The value is exceptional.`,
+      fr: `Un studio à Genève coûte généralement 1\u00a0500-2\u00a0500 CHF/mois, plus les charges (150-250 CHF), internet (50-80 CHF), abonnement de salle de sport (100-150 CHF), et il faudrait acheter des meubles. Chez La Villa, à partir de ${PRICE_FROM_CHF_FR}, tu obtiens une chambre privée meublée, tous les services, internet, salle de sport, piscine, sauna, ménage et une communauté intégrée. La valeur est exceptionnelle.`,
     },
   },
 

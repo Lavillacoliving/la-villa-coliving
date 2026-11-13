@@ -192,7 +192,7 @@ test('normalizeNeedle / hasNeedle : blancs repliés des deux côtés, U+00A0 dis
   assert.equal(hasNeedle('1 370 CHF', '1\u00A0370 CHF'), false, 'espace normal ≠ insécable');
   assert.equal(hasNeedle('1&nbsp;370', '1\u00A0370'), false, 'hasNeedle ne décode pas : décoder avant (visibleText)');
   const needle = m.budgetRowLabel('fr');
-  const html = page(`<table><tr><td><strong>Chambre en coliving</strong> tout inclus côté France —\n <a href="/x">La Villa Coliving</a></td><td>1&nbsp;370 – 1&nbsp;430 CHF</td></tr></table>`);
+  const html = page(`<table><tr><td><strong>Chambre en coliving</strong> tout inclus côté France —\n <a href="/x">La Villa Coliving</a></td><td>${m.priceRangeCell('fr').replace(/\u00A0/g, '&nbsp;')}</td></tr></table>`);
   assert.equal(hasNeedle(visibleText(html), needle), true);
   assert.equal(hasNeedle(visibleText(html), m.priceRangeCell('fr')), true);
 });

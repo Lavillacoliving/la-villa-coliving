@@ -15,7 +15,7 @@ import {
   ArrowRight,
   Euro,
 } from "lucide-react";
-import { STATS, STATS_DISPLAY, HOUSE_SURFACES, thousands, PRICE_SHARED_CHF_FR, PRICE_SHARED_CHF_EN, TRANSIT } from "@/data/stats";
+import { STATS, STATS_DISPLAY, HOUSE_SURFACES, thousands, PRICE_FROM_CHF_FR, PRICE_FROM_CHF_EN, TRANSIT } from "@/data/stats";
 import { ENTITY_HOUSES, type EntityHouseSlug } from "@/data/entityFacts";
 import { houseCommuteNote } from "@/data/houseLocation";
 import { OuChercher } from "@/components/OuChercher";
@@ -105,8 +105,8 @@ export function AnnemasseColocationPage() {
         description={
           language === "en"
             // (D1, 09/10/2026 ; Lot L2) « 20 min » = libellé canonique STATS_DISPLAY.distance, jamais une variante ; meta ≤ 155 c. (FR 150 / EN 150, mesuré).
-            ? `Shared housing in Annemasse: ${STATS.totalRooms} rooms all inclusive from ${PRICE_SHARED_CHF_EN}/month, ${STATS_DISPLAY.en.distance}. No agency fee.`
-            : `Colocation Annemasse : ${STATS.totalRooms} chambres tout inclus dès ${PRICE_SHARED_CHF_FR}/mois, à ${STATS_DISPLAY.fr.distance}. Sans frais d'agence.`
+            ? `Shared housing in Annemasse: ${STATS.totalRooms} rooms all inclusive from ${PRICE_FROM_CHF_EN}/month, ${STATS_DISPLAY.en.distance}. No agency fee.`
+            : `Colocation Annemasse : ${STATS.totalRooms} chambres tout inclus dès ${PRICE_FROM_CHF_FR}/mois, à ${STATS_DISPLAY.fr.distance}. Sans frais d'agence.`
         }
         url="https://www.lavillacoliving.com/annemasse-colocation"
         image="https://www.lavillacoliving.com/images/le lodge/exterior/la villa coliving le lodge-14.webp"
@@ -123,8 +123,8 @@ export function AnnemasseColocationPage() {
             style={{ fontFamily: '"DM Serif Display", serif' }}
           >
             {language === "en"
-              ? `Shared housing in Annemasse — 29 premium rooms from ${PRICE_SHARED_CHF_EN}/mo`
-              : `Colocation à Annemasse — 29 chambres premium dès ${PRICE_SHARED_CHF_FR}/mois`}
+              ? `Shared housing in Annemasse — 29 premium rooms from ${PRICE_FROM_CHF_EN}/mo`
+              : `Colocation à Annemasse — 29 chambres premium dès ${PRICE_FROM_CHF_FR}/mois`}
           </h1>
           <p className="text-lg md:text-xl text-[#57534E] max-w-3xl mx-auto leading-relaxed mb-10 font-medium">
             {/* (Lot L2, 09/10/2026) D1 : destination nommée, libellé canonique STATS_DISPLAY.distance. */}
@@ -193,8 +193,8 @@ export function AnnemasseColocationPage() {
               </h3>
               <p className="text-[#57534E] leading-relaxed">
                 {language === "en"
-                  ? `You keep your Swiss salary and live on the French side, in a real house: ${STATS.livingSpacePerResidentMin}-${STATS.livingSpacePerResidentMax} m² of living space per housemate, pool, sauna and gym included, from ${PRICE_SHARED_CHF_EN}/month all-inclusive — no application or agency fees.`
-                  : `Tu gardes ton salaire suisse et tu vis côté France, dans une vraie maison : ${STATS.livingSpacePerResidentMin}-${STATS.livingSpacePerResidentMax} m² d'espace de vie par colocataire, piscine, sauna et salle de sport inclus, dès ${PRICE_SHARED_CHF_FR}/mois tout inclus — sans frais de dossier ni d'agence.`}
+                  ? `You keep your Swiss salary and live on the French side, in a real house: ${STATS.livingSpacePerResidentMin}-${STATS.livingSpacePerResidentMax} m² of living space per housemate, pool, sauna and gym included, from ${PRICE_FROM_CHF_EN}/month all-inclusive — no application or agency fees.`
+                  : `Tu gardes ton salaire suisse et tu vis côté France, dans une vraie maison : ${STATS.livingSpacePerResidentMin}-${STATS.livingSpacePerResidentMax} m² d'espace de vie par colocataire, piscine, sauna et salle de sport inclus, dès ${PRICE_FROM_CHF_FR}/mois tout inclus — sans frais de dossier ni d'agence.`}
               </p>
             </div>
             <div className="text-center">
@@ -356,7 +356,7 @@ export function AnnemasseColocationPage() {
             style={{ fontFamily: '"DM Serif Display", serif' }}
           >
             {/* Montant retiré du titre le 29/08 (demande Jérôme) : le prix standard
-                ici dissonait avec le « dès 1 370 » du même écran. */}
+                ici dissonait avec le « dès » (PRICE_FROM_*) du même écran. */}
             {language === "en" ? "What's included" : "Ce qui est inclus"}
           </h2>
           <p className="text-[#57534E] text-center max-w-3xl mx-auto mb-12">

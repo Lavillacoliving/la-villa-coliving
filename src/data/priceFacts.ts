@@ -16,27 +16,28 @@
  *
  * Règles : chaque nombre vient de stats.ts (jamais en dur) ; aucun concurrent nommé (les « résidences de coliving » restent anonymes,
  * repères MARKET_COMPARISON publiés sur /tarifs) ; CHF et € jamais dans la même phrase (deux phrases, comme answerSlots.ts — D0-ter) ;
- * la fourchette « 1 370 à 1 430 CHF » est autorisée ici comme dans le bloc « Où chercher » (D0 d) ; FR tutoiement, EN « you » ;
+ * la fourchette des maisons (« 1 290 à 1 430 CHF » depuis le 13/11/2026 : « dès » des maisons → prix standard) est autorisée ici
+ * comme dans le bloc « Où chercher » (D0 d) ; FR tutoiement, EN « you » ;
  * chaînes plates (un nœud texte par phrase, anti-#418) ; aucune minute, aucune date.
  */
 import type { QAPair } from "../lib/structuredData";
 import {
   STATS,
   MARKET_COMPARISON,
-  PRICE_SHARED_FR_NUM,
-  PRICE_SHARED_CHF_EN,
+  PRICE_FROM_FR_NUM,
+  PRICE_FROM_CHF_EN,
   PRICE_CHF_FR,
   PRICE_EN_NUM,
-  EUR_SHARED_FR_NUM,
+  EUR_FROM_FR_NUM,
   EUR_STANDARD_FR_NUM,
-  EUR_SHARED_EN_NUM,
+  EUR_FROM_EN_NUM,
   EUR_STANDARD_EN_NUM,
 } from "./stats";
 
 export type PriceLang = "fr" | "en";
 
 /** Bump à chaque changement de texte (sert aux docs et aux PR ; la garde compare les chaînes elles-mêmes). */
-export const PRICE_FACTS_VERSION = "2026-10-10";
+export const PRICE_FACTS_VERSION = "2026-11-13"; // 13/11/2026 : A.3 « 1 290 à 1 430 CHF », « 1 380 à 1 530 € » (palier des chambres 7 et 8 de La Villa)
 
 /** Pages qui portent la FAQ A.3 (FR + jumelle /en) — exactement une fois chacune ; 0 ailleurs. */
 export const PRICE_FAQ_ROUTES = [
@@ -81,8 +82,8 @@ export function priceJustificationFaq(lang: PriceLang): QAPair {
       a:
         "Because you are not buying the same thing. " +
         `In a coliving residence, the rent pays for a studio in a building of up to ${M.megaColivingMaxRooms} rooms, with under ${M.megaColivingCommonM2PerResident} m² of shared space per resident; in a standard flatshare, a ${M.classicRoomM2.min} to ${M.classicRoomM2.max} m² room with bills on top. ` +
-        `At La Villa, ${PRICE_SHARED_CHF_EN} to ${PRICE_EN_NUM} a month pays for a ${STATS.roomSizeMin} to ${STATS.roomSizeMax} m² room in a house of ${STATS.minResidentsPerHouse} to ${STATS.maxResidentsPerHouse} people, a pool, a sauna and a gym in the house, cleaning of the shared areas ${timesPerWeek("en")}, fibre, streaming and yoga classes. ` +
-        `The contractual rent is €${EUR_SHARED_EN_NUM} to ${EUR_STANDARD_EN_NUM} a month, with €0 in application or agency fees. ` +
+        `At La Villa, ${PRICE_FROM_CHF_EN} to ${PRICE_EN_NUM} a month pays for a ${STATS.roomSizeMin} to ${STATS.roomSizeMax} m² room in a house of ${STATS.minResidentsPerHouse} to ${STATS.maxResidentsPerHouse} people, a pool, a sauna and a gym in the house, cleaning of the shared areas ${timesPerWeek("en")}, fibre, streaming and yoga classes. ` +
+        `The contractual rent is €${EUR_FROM_EN_NUM} to ${EUR_STANDARD_EN_NUM} a month, with €0 in application or agency fees. ` +
         `Over ${STATS.leaseDurationMonths} months, part of the gap comes back through what you do not pay for separately: gym, variable bills, subscriptions, move-in fees. ` +
         `And the ${STATS.leaseDurationMonths}-month lease can be ended with ${noticeLabel("en")}.`,
     };
@@ -92,8 +93,8 @@ export function priceJustificationFaq(lang: PriceLang): QAPair {
     a:
       "Parce que tu n'achètes pas la même chose. " +
       `Dans une résidence de coliving, le loyer paie un studio dans un immeuble qui peut compter jusqu'à ${M.megaColivingMaxRooms} chambres, avec moins de ${M.megaColivingCommonM2PerResident} m² d'espaces communs par résident ; dans une colocation classique, une chambre de ${M.classicRoomM2.min} à ${M.classicRoomM2.max} m² et des charges à part. ` +
-      `Chez La Villa, ${PRICE_SHARED_FR_NUM} à ${PRICE_CHF_FR} par mois paient une chambre de ${STATS.roomSizeMin} à ${STATS.roomSizeMax} m² dans une maison de ${STATS.minResidentsPerHouse} à ${STATS.maxResidentsPerHouse} personnes, une piscine, un sauna et une salle de sport dans la maison, le ménage des espaces communs ${timesPerWeek("fr")}, la fibre, le streaming et les cours de yoga. ` +
-      `Le loyer contractuel est de ${EUR_SHARED_FR_NUM} à ${EUR_STANDARD_FR_NUM} € par mois, avec 0 € de frais de dossier ou d'agence. ` +
+      `Chez La Villa, ${PRICE_FROM_FR_NUM} à ${PRICE_CHF_FR} par mois paient une chambre de ${STATS.roomSizeMin} à ${STATS.roomSizeMax} m² dans une maison de ${STATS.minResidentsPerHouse} à ${STATS.maxResidentsPerHouse} personnes, une piscine, un sauna et une salle de sport dans la maison, le ménage des espaces communs ${timesPerWeek("fr")}, la fibre, le streaming et les cours de yoga. ` +
+      `Le loyer contractuel est de ${EUR_FROM_FR_NUM} à ${EUR_STANDARD_FR_NUM} € par mois, avec 0 € de frais de dossier ou d'agence. ` +
       `Sur ${STATS.leaseDurationMonths} mois, une partie de l'écart revient par ce qui n'est pas à payer à côté : salle de sport, charges variables, abonnements, frais d'entrée. ` +
       `Et le bail de ${STATS.leaseDurationMonths} mois se quitte avec ${noticeLabel("fr")}.`,
   };

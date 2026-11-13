@@ -9,7 +9,7 @@ import { SEO } from "@/components/SEO";
 import { FaqSection } from "@/components/FaqSection";
 import { FacebookGroupLine } from "@/components/FacebookGroupLine";
 import { maisonsFaq } from "@/data/faq/maisonsFaq";
-import { STATS, STATS_DISPLAY, HOUSE_SURFACES, thousands, PRICE_FR_NUM, PRICE_EN_NUM, PRICE_SHARED_FR_NUM, PRICE_SHARED_EN_NUM, PRICE_SHARED_CHF_FR, PRICE_SHARED_CHF_EN, EUR_STANDARD_FR_NUM, EUR_STANDARD_EN_NUM, EUR_SHARED_FR_NUM, EUR_SHARED_EN_NUM } from "@/data/stats";
+import { STATS, STATS_DISPLAY, HOUSE_SURFACES, thousands, PRICE_FR_NUM, PRICE_EN_NUM, PRICE_FROM_FR_NUM, PRICE_FROM_EN_NUM, PRICE_FROM_CHF_FR, PRICE_FROM_CHF_EN, EUR_STANDARD_FR_NUM, EUR_STANDARD_EN_NUM, EUR_FROM_FR_NUM, EUR_FROM_EN_NUM } from "@/data/stats";
 import { ENTITY_HOUSES, type EntityHouseSlug } from "@/data/entityFacts";
 import {
   useRoomAvailability,
@@ -151,8 +151,8 @@ export function HousesPageV4() {
     {
       label: language === "en" ? "Price" : "Tarif",
       values: language === "en"
-        ? [`${PRICE_SHARED_EN_NUM}–${PRICE_EN_NUM} CHF (€${EUR_SHARED_EN_NUM}–${EUR_STANDARD_EN_NUM})`, `${PRICE_EN_NUM} CHF (€${EUR_STANDARD_EN_NUM})`, `${PRICE_EN_NUM} CHF (€${EUR_STANDARD_EN_NUM})`]
-        : [`${PRICE_SHARED_FR_NUM}–${PRICE_FR_NUM} CHF (${EUR_SHARED_FR_NUM}–${EUR_STANDARD_FR_NUM} €)`, `${PRICE_FR_NUM} CHF (${EUR_STANDARD_FR_NUM} €)`, `${PRICE_FR_NUM} CHF (${EUR_STANDARD_FR_NUM} €)`],
+        ? [`${PRICE_FROM_EN_NUM}–${PRICE_EN_NUM} CHF (€${EUR_FROM_EN_NUM}–${EUR_STANDARD_EN_NUM})`, `${PRICE_EN_NUM} CHF (€${EUR_STANDARD_EN_NUM})`, `${PRICE_EN_NUM} CHF (€${EUR_STANDARD_EN_NUM})`]
+        : [`${PRICE_FROM_FR_NUM}–${PRICE_FR_NUM} CHF (${EUR_FROM_FR_NUM}–${EUR_STANDARD_FR_NUM} €)`, `${PRICE_FR_NUM} CHF (${EUR_STANDARD_FR_NUM} €)`, `${PRICE_FR_NUM} CHF (${EUR_STANDARD_FR_NUM} €)`],
     },
   ];
 
@@ -162,8 +162,8 @@ export function HousesPageV4() {
         title={language === "en" ? "3 coliving houses near Geneva" : "3 maisons de coliving près de Genève"}
         // (Lot L2, 09/10/2026) « 20 min » qualifié (STATS_DISPLAY.distance, D1) ; chambres = STATS.totalRooms ; meta ≤ 155 c. (FR 152 / EN 147, mesuré).
         description={language === "en"
-          ? `La Villa, Le Loft, Le Lodge: pool, sauna, gym, ${STATS_DISPLAY.en.distance}. ${STATS.totalRooms} rooms all inclusive from ${PRICE_SHARED_CHF_EN}.`
-          : `La Villa, Le Loft, Le Lodge : piscine, sauna, gym, à ${STATS_DISPLAY.fr.distance}. ${STATS.totalRooms} chambres tout inclus dès ${PRICE_SHARED_CHF_FR}.`}
+          ? `La Villa, Le Loft, Le Lodge: pool, sauna, gym, ${STATS_DISPLAY.en.distance}. ${STATS.totalRooms} rooms all inclusive from ${PRICE_FROM_CHF_EN}.`
+          : `La Villa, Le Loft, Le Lodge : piscine, sauna, gym, à ${STATS_DISPLAY.fr.distance}. ${STATS.totalRooms} chambres tout inclus dès ${PRICE_FROM_CHF_FR}.`}
         url="https://www.lavillacoliving.com/nos-maisons"
       />
       {/* Hero */}
@@ -277,7 +277,7 @@ export function HousesPageV4() {
                   {/* Price + CTA */}
                   <div className="mt-auto pt-5 border-t border-[#E7E5E4]">
                     <div className="flex items-baseline gap-2 mb-4">
-                      {/* La Villa : 4 chambres sur 10 à salle d'eau partagée → plancher 1 390 */}
+                      {/* La Villa : 4 chambres sur 10 à salle d'eau partagée → « dès » = palier le plus bas (HOUSES_FROM, stats.ts) */}
                       {house.name === "La Villa" && (
                         <span className="text-sm text-[#78716C]">
                           {language === "en" ? "from" : "dès"}
@@ -285,13 +285,13 @@ export function HousesPageV4() {
                       )}
                       <span className="text-2xl font-light text-[#D4A574]">
                         {house.name === "La Villa"
-                          ? (language === "en" ? PRICE_SHARED_EN_NUM : PRICE_SHARED_FR_NUM)
+                          ? (language === "en" ? PRICE_FROM_EN_NUM : PRICE_FROM_FR_NUM)
                           : house.price}{" "}
                         CHF
                       </span>
                       <span className="text-sm font-light text-[#78716C]">
                         {house.name === "La Villa"
-                          ? (language === "en" ? `(€${EUR_SHARED_EN_NUM})` : `(${EUR_SHARED_FR_NUM} €)`)
+                          ? (language === "en" ? `(€${EUR_FROM_EN_NUM})` : `(${EUR_FROM_FR_NUM} €)`)
                           : (language === "en" ? `(€${EUR_STANDARD_EN_NUM})` : `(${EUR_STANDARD_FR_NUM} €)`)}
                       </span>
                       <span className="text-sm text-[#78716C]">

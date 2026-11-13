@@ -12,7 +12,7 @@ import { WaitlistForm } from "@/components/WaitlistForm";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { HOUSES } from "@/data/houses";
 import { colocationGeneveFaq } from "@/data/faq/colocationGeneveFaq";
-import { STATS, STATS_DISPLAY, STATS_SHARED_BATH, PRICE_CHF_FR, PRICE_CHF_EN, PRICE_SHARED_CHF_FR, PRICE_SHARED_CHF_EN, TRANSIT, GOOGLE_REVIEWS, GOOGLE_REVIEWS_LINK_LABEL } from "@/data/stats";
+import { STATS, STATS_DISPLAY, HOUSES_FROM, PRICE_CHF_FR, PRICE_CHF_EN, PRICE_FROM_CHF_FR, PRICE_FROM_CHF_EN, TRANSIT, GOOGLE_REVIEWS, GOOGLE_REVIEWS_LINK_LABEL, sharedBathPricesText } from "@/data/stats";
 import { ENTITY_HOUSES } from "@/data/entityFacts";
 import { OuChercher } from "@/components/OuChercher";
 import { COLOC_GENEVE_ARTICLE, COLOC_GENEVE_PILLAR_EN, COLOC_GENEVE_PILLAR_FR } from "@/lib/siteLinks";
@@ -75,7 +75,7 @@ export function ColocationGenevePage() {
     description: en
       ? "All-inclusive furnished room: rent, utilities, fibre internet, cleaning of common areas 3x/week, shared spaces and community events."
       : "Chambre meublée tout inclus : loyer, charges, fibre, ménage des communs 3x/semaine, espaces communs et événements.",
-    price: String(STATS_SHARED_BATH.priceChf),
+    price: String(HOUSES_FROM.chf), // « dès » des maisons (palier le plus bas), comme le lowPrice des AggregateOffer
     priceCurrency: "CHF",
     priceValidUntil: "2026-12-31",
     availability: n > 0 ? "https://schema.org/InStock" : "https://schema.org/PreOrder",
@@ -131,8 +131,8 @@ export function ColocationGenevePage() {
           </h1>
           <p className="text-lg md:text-xl text-[#57534E] max-w-3xl mx-auto mb-8 leading-relaxed">
             {en
-              ? `Live on the French side, work in Geneva. ${STATS.totalRooms} furnished rooms in ${STATS.totalHouses} houses in Ville-la-Grand, Ambilly and Annemasse, all inclusive from ${PRICE_SHARED_CHF_EN}/month, ${STATS_DISPLAY.en.distance}. Real availability below, prices in CHF, reply within 48 h.`
-              : `Vis côté France, travaille à Genève. ${STATS.totalRooms} chambres meublées dans ${STATS.totalHouses} maisons à Ville-la-Grand, Ambilly et Annemasse, tout inclus dès ${PRICE_SHARED_CHF_FR}/mois, à ${STATS_DISPLAY.fr.distance}. Les disponibilités réelles ci-dessous, les prix en CHF, une réponse sous 48 h.`}
+              ? `Live on the French side, work in Geneva. ${STATS.totalRooms} furnished rooms in ${STATS.totalHouses} houses in Ville-la-Grand, Ambilly and Annemasse, all inclusive from ${PRICE_FROM_CHF_EN}/month, ${STATS_DISPLAY.en.distance}. Real availability below, prices in CHF, reply within 48 h.`
+              : `Vis côté France, travaille à Genève. ${STATS.totalRooms} chambres meublées dans ${STATS.totalHouses} maisons à Ville-la-Grand, Ambilly et Annemasse, tout inclus dès ${PRICE_FROM_CHF_FR}/mois, à ${STATS_DISPLAY.fr.distance}. Les disponibilités réelles ci-dessous, les prix en CHF, une réponse sous 48 h.`}
           </p>
           {/* (Retenue premium, lot 1 — décision Jérôme du 13/10/2026) casse normale, même traitement que la barre mobile. */}
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
@@ -162,7 +162,7 @@ export function ColocationGenevePage() {
             <span className="flex items-center gap-2"><Users className="w-4 h-4" /> {STATS.totalHouses} {en ? "houses" : "maisons"}</span>
             {/* (Lot L2, 09/10/2026) D1 : « 20 min de Genève » seul interdit → libellé canonique, un seul nœud texte (anti-#418). */}
             <span className="flex items-center gap-2"><Clock className="w-4 h-4" /> {STATS_DISPLAY[L].distance}</span>
-            <span className="flex items-center gap-2"><Euro className="w-4 h-4" /> {en ? `From ${PRICE_SHARED_CHF_EN}/month` : `Dès ${PRICE_SHARED_CHF_FR}/mois`}</span>
+            <span className="flex items-center gap-2"><Euro className="w-4 h-4" /> {en ? `From ${PRICE_FROM_CHF_EN}/month` : `Dès ${PRICE_FROM_CHF_FR}/mois`}</span>
           </div>
         </div>
       </section>
@@ -214,12 +214,12 @@ export function ColocationGenevePage() {
           </p>
           <div className="bg-white border border-[#E7E5E4] p-6 md:p-8 mb-6">
             <p className="text-2xl font-bold text-[#D4A574] mb-3">
-              {en ? `From ${PRICE_SHARED_CHF_EN}/month all inclusive at La Villa` : `Dès ${PRICE_SHARED_CHF_FR}/mois tout inclus chez La Villa`}
+              {en ? `From ${PRICE_FROM_CHF_EN}/month all inclusive at La Villa` : `Dès ${PRICE_FROM_CHF_FR}/mois tout inclus chez La Villa`}
             </p>
             <p className="text-[#57534E] leading-relaxed mb-4">
               {en
-                ? `${PRICE_SHARED_CHF_EN} for a room whose shower room is shared with one other room, ${PRICE_CHF_EN} with a private shower room. Same currency on both sides of the comparison, and here the figure is the total monthly cost, not a bare rent:`
-                : `${PRICE_SHARED_CHF_FR} pour une chambre dont la salle d'eau est partagée avec une seule autre chambre, ${PRICE_CHF_FR} avec salle d'eau privative. Même devise des deux côtés de la comparaison, et ici le chiffre est le coût mensuel total, pas un loyer nu :`}
+                ? `${sharedBathPricesText("en")} for a room whose shower room is shared with one other room, ${PRICE_CHF_EN} with a private shower room. Same currency on both sides of the comparison, and here the figure is the total monthly cost, not a bare rent:`
+                : `${sharedBathPricesText("fr")} pour une chambre dont la salle d'eau est partagée avec une seule autre chambre, ${PRICE_CHF_FR} avec salle d'eau privative. Même devise des deux côtés de la comparaison, et ici le chiffre est le coût mensuel total, pas un loyer nu :`}
             </p>
             <ul className="grid sm:grid-cols-2 gap-2 text-sm text-[#44403C]">
               {(en

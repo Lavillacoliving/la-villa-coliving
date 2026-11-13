@@ -11,7 +11,7 @@ import { HouseAvailabilityLine } from "@/components/HouseAvailabilityLine";
 import { WhatsAppButton } from "@/components/WhatsAppButton";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { HOUSES } from "@/data/houses";
-import { STATS, STATS_DISPLAY, PRICE_CHF_FR, PRICE_CHF_EN, PRICE_SHARED_CHF_FR, PRICE_SHARED_CHF_EN, TRANSIT } from "@/data/stats";
+import { STATS, STATS_DISPLAY, PRICE_CHF_FR, PRICE_CHF_EN, PRICE_FROM_CHF_FR, PRICE_FROM_CHF_EN, TRANSIT, sharedBathPricesText } from "@/data/stats";
 import { ENTITY_HOUSES } from "@/data/entityFacts";
 import { OuChercher } from "@/components/OuChercher";
 import { colocGeneveHref } from "@/lib/siteLinks";
@@ -24,7 +24,7 @@ import { useAllRooms, splitRooms, type HouseKey, type PublicRoom } from "@/lib/a
  * Blocs : liste des chambres → prix d'une chambre à Genève (PAA loyer moyen, coût total) → chambre meublée
  * prête à vivre → chez l'habitant, sous-location ou coliving ? → conditions pour louer → nos 3 maisons →
  * à N min de Genève → FAQ (FAQPage, 5 questions) → CTA. Pas de cible « étudiant » (décision 03/09).
- * Fact block : « dès 1 370 CHF », 16-24 m² (STATS.roomSizeMin/Max), 20 min porte à porte (décision Jérôme 04/09), caution 2 mois
+ * Fact block : « dès » des maisons (PRICE_FROM_*, 1 290 CHF depuis le 13/11/2026), 16-24 m² (STATS.roomSizeMin/Max), 20 min porte à porte (décision Jérôme 04/09), caution 2 mois
  * hors charges, 0 frais ; jamais « moins cher que Genève » : coût total et confort, CHF des deux côtés.
  * /chambre-a-louer-annemasse reste la page locale (inventaire du Lodge), liée en croisé.
  * (Lot L2, 09/10/2026) Le « 20 min » s'écrit uniquement par STATS_DISPLAY.distance — plus de constante MIN locale.
@@ -60,8 +60,8 @@ export function ChambreLouerGenevePage() {
         title={en ? "Rooms to rent near Geneva: furnished, all inclusive" : "Chambres à louer près de Genève : meublées, tout inclus"}
         // (D1, 09/10/2026 ; Lot L2) « 20 min » = libellé canonique STATS_DISPLAY.distance, jamais une variante — meta ≤ 155 caractères (FR 154 / EN 152, mesuré).
         description={en
-          ? `Furnished rooms, French side, ${STATS_DISPLAY.en.distance}. Bills, fibre, cleaning included, from ${PRICE_SHARED_CHF_EN}. Live dates.`
-          : `Chambres meublées côté France, à ${STATS_DISPLAY.fr.distance} : charges, fibre, ménage inclus, dès ${PRICE_SHARED_CHF_FR}. Dispo réelle.`}
+          ? `Furnished rooms, French side, ${STATS_DISPLAY.en.distance}. Bills, fibre, cleaning included, from ${PRICE_FROM_CHF_EN}. Live dates.`
+          : `Chambres meublées côté France, à ${STATS_DISPLAY.fr.distance} : charges, fibre, ménage inclus, dès ${PRICE_FROM_CHF_FR}. Dispo réelle.`}
         image="https://www.lavillacoliving.com/images/le loft/rooms/Chambre 5/chambre-5-vue-large.webp"
       />
 
@@ -76,8 +76,8 @@ export function ChambreLouerGenevePage() {
           </h1>
           <p className="text-lg md:text-xl text-[#57534E] max-w-3xl mx-auto leading-relaxed mb-8 font-medium">
             {en
-              ? `Looking for a room to rent in Geneva? Most affordable ones are on the French side, ${STATS_DISPLAY.en.distance}. Below: every room available in La Villa Coliving's ${STATS.totalHouses} houses, with date and price in CHF, all inclusive from ${PRICE_SHARED_CHF_EN}/month. Neither a room in someone's home nor a sublet: a lease in your name in a whole house.`
-              : `Tu cherches une chambre à louer à Genève ? La plupart des chambres abordables sont côté France, à ${STATS_DISPLAY.fr.distance}. Ci-dessous, toutes les chambres disponibles dans les ${STATS.totalHouses} maisons de La Villa Coliving, avec la date et le prix en CHF, tout inclus dès ${PRICE_SHARED_CHF_FR}/mois. Ni chambre chez l'habitant ni sous-location : un bail à ton nom dans une maison entière.`}
+              ? `Looking for a room to rent in Geneva? Most affordable ones are on the French side, ${STATS_DISPLAY.en.distance}. Below: every room available in La Villa Coliving's ${STATS.totalHouses} houses, with date and price in CHF, all inclusive from ${PRICE_FROM_CHF_EN}/month. Neither a room in someone's home nor a sublet: a lease in your name in a whole house.`
+              : `Tu cherches une chambre à louer à Genève ? La plupart des chambres abordables sont côté France, à ${STATS_DISPLAY.fr.distance}. Ci-dessous, toutes les chambres disponibles dans les ${STATS.totalHouses} maisons de La Villa Coliving, avec la date et le prix en CHF, tout inclus dès ${PRICE_FROM_CHF_FR}/mois. Ni chambre chez l'habitant ni sous-location : un bail à ton nom dans une maison entière.`}
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <a href="#chambres" className="inline-flex items-center gap-2 px-8 py-4 bg-[#1C1917] text-white font-semibold rounded-full hover:bg-[#44403C] transition-colors">
@@ -139,8 +139,8 @@ export function ChambreLouerGenevePage() {
           <h2 className={h2} style={serif}>{en ? "Price of a room to rent in Geneva" : "Prix d'une chambre à louer à Genève"}</h2>
           <p className="text-[#57534E] leading-relaxed mb-6">
             {en
-              ? `In Geneva itself, based on listings observed in 2026, a room usually rents for 1,000 to 1,500 CHF a month and a studio 1,800 to 2,500 CHF excluding charges, around 50 CHF/m² advertised according to our cross-border housing Observatory survey (June 2026); the vacancy rate is below 1% (OCSTAT). « Cheap room in Geneva »: compare the total cost, not the advertised rent. In Geneva you add bills, an internet subscription, cleaning and the furniture to buy to the bare rent; on the French side, at La Villa Coliving, the package from ${PRICE_SHARED_CHF_EN}/month includes everything: furnished room, bills, fibre, cleaning of the common areas, pool, sauna, gym. Comfort and space make the difference, not the lowest rent.`
-              : `À Genève même, d'après les annonces relevées en 2026, une chambre se loue le plus souvent entre 1\u00a0000 et 1\u00a0500 CHF par mois, et un studio 1\u00a0800 à 2\u00a0500 CHF hors charges, soit autour de 50 CHF/m² en annonce selon le relevé de notre Observatoire du logement frontalier (juin 2026) ; le taux de vacance est sous 1\u00a0% (OCSTAT). « Chambre pas chère à Genève » : compare le coût total, pas le loyer affiché. À Genève, au loyer nu s'ajoutent les charges, l'abonnement internet, le ménage et le mobilier à acheter ; côté France, chez La Villa Coliving, le forfait dès ${PRICE_SHARED_CHF_FR}/mois comprend tout : chambre meublée, charges, fibre, ménage des communs, piscine, sauna, salle de sport. Le confort et l'espace font la différence, pas le loyer le plus bas.`}
+              ? `In Geneva itself, based on listings observed in 2026, a room usually rents for 1,000 to 1,500 CHF a month and a studio 1,800 to 2,500 CHF excluding charges, around 50 CHF/m² advertised according to our cross-border housing Observatory survey (June 2026); the vacancy rate is below 1% (OCSTAT). « Cheap room in Geneva »: compare the total cost, not the advertised rent. In Geneva you add bills, an internet subscription, cleaning and the furniture to buy to the bare rent; on the French side, at La Villa Coliving, the package from ${PRICE_FROM_CHF_EN}/month includes everything: furnished room, bills, fibre, cleaning of the common areas, pool, sauna, gym. Comfort and space make the difference, not the lowest rent.`
+              : `À Genève même, d'après les annonces relevées en 2026, une chambre se loue le plus souvent entre 1\u00a0000 et 1\u00a0500 CHF par mois, et un studio 1\u00a0800 à 2\u00a0500 CHF hors charges, soit autour de 50 CHF/m² en annonce selon le relevé de notre Observatoire du logement frontalier (juin 2026) ; le taux de vacance est sous 1\u00a0% (OCSTAT). « Chambre pas chère à Genève » : compare le coût total, pas le loyer affiché. À Genève, au loyer nu s'ajoutent les charges, l'abonnement internet, le ménage et le mobilier à acheter ; côté France, chez La Villa Coliving, le forfait dès ${PRICE_FROM_CHF_FR}/mois comprend tout : chambre meublée, charges, fibre, ménage des communs, piscine, sauna, salle de sport. Le confort et l'espace font la différence, pas le loyer le plus bas.`}
           </p>
           <p className="text-sm text-[#78716C] mb-6">
             {en ? "Source and method: " : "Source et méthode : "}
@@ -148,11 +148,11 @@ export function ChambreLouerGenevePage() {
           </p>
           <div className="bg-white border border-[#E7E5E4] p-6 md:p-8 mb-6">
             <BedDouble className="w-8 h-8 text-[#D4A574] mb-3" />
-            <p className="text-2xl font-bold text-[#D4A574] mb-3">{en ? `From ${PRICE_SHARED_CHF_EN}/month, total monthly cost` : `Dès ${PRICE_SHARED_CHF_FR}/mois, coût mensuel total`}</p>
+            <p className="text-2xl font-bold text-[#D4A574] mb-3">{en ? `From ${PRICE_FROM_CHF_EN}/month, total monthly cost` : `Dès ${PRICE_FROM_CHF_FR}/mois, coût mensuel total`}</p>
             <p className="text-[#57534E] leading-relaxed mb-4">
               {en
-                ? `${PRICE_SHARED_CHF_EN} for a room whose shower room is shared with one other room, ${PRICE_CHF_EN} with a private shower room. Compare total cost with total cost, in CHF on both sides: here nothing is added at the end of the month.`
-                : `${PRICE_SHARED_CHF_FR} pour une chambre dont la salle d'eau est partagée avec une seule autre chambre, ${PRICE_CHF_FR} avec salle d'eau privative. Compare coût total et coût total, en CHF des deux côtés : ici, rien ne s'ajoute en fin de mois.`}
+                ? `${sharedBathPricesText("en")} for a room whose shower room is shared with one other room, ${PRICE_CHF_EN} with a private shower room. Compare total cost with total cost, in CHF on both sides: here nothing is added at the end of the month.`
+                : `${sharedBathPricesText("fr")} pour une chambre dont la salle d'eau est partagée avec une seule autre chambre, ${PRICE_CHF_FR} avec salle d'eau privative. Compare coût total et coût total, en CHF des deux côtés : ici, rien ne s'ajoute en fin de mois.`}
             </p>
             <ul className="grid sm:grid-cols-2 gap-2 text-sm text-[#44403C]">
               {(en

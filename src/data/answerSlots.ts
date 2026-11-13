@@ -17,8 +17,10 @@
  * toLocaleString : règle anti-#418), aucune date calculée, aucune donnée Supabase, imports RELATIFS et zéro React
  * (les scripts Node chargent ce module via esbuild). Une seule phrase garant (GUARANTOR_SENTENCE). Aucun concurrent
  * nommé ; les plateformes sont nommées comme canaux, jamais recommandées ni liées (D0b, D0b-bis). Fourchette des
- * chambres entre particuliers = MARKET_ROOM_EUR (700 à 1 000 €, source /tarifs). « 1 370 à 1 430 CHF » autorisé ici
- * (D0-ter) ; CHF et € dans deux phrases distinctes.
+ * chambres entre particuliers = MARKET_ROOM_EUR (700 à 1 000 €, source /tarifs). La fourchette des maisons (« 1 290 à
+ * 1 430 CHF » depuis le 13/11/2026 : du « dès » des maisons, PRICE_FROM_*, au prix standard) est autorisée ici (D0-ter) ;
+ * CHF et € dans deux phrases distinctes. priceRangeText() et priceRangeCell() sont aussi la valeur des jetons d'articles
+ * {{PRIX_FOURCHETTE}} et {{PRIX_FOURCHETTE_TABLEAU}} (src/lib/contentTokens.ts).
  */
 import {
   STATS,
@@ -26,8 +28,8 @@ import {
   ROOMS_BY_HOUSE,
   PRICE_FR_NUM,
   PRICE_EN_NUM,
-  PRICE_SHARED_FR_NUM,
-  PRICE_SHARED_EN_NUM,
+  PRICE_FROM_FR_NUM,
+  PRICE_FROM_EN_NUM,
   TRANSIT,
   MARKET_ROOM_EUR,
   FACEBOOK_GROUP,
@@ -37,7 +39,7 @@ import {
 import { ENTITY_HOUSES, GUARANTOR_SENTENCE, type EntityLang, type EntityHouseSlug } from "./entityFacts";
 
 /** Incrémenter à chaque changement de texte du bloc : porté par data-ou-chercher-version, comparé par la CI. */
-export const OU_CHERCHER_VERSION = "2026-10-12"; // 12/10 : canal 3 « règles publiées » (Jérôme : règles publiées, pas épinglées)
+export const OU_CHERCHER_VERSION = "2026-11-13"; // 13/11 : ligne opérateur « de 1 290 à 1 430 CHF par mois » (palier des chambres 7 et 8 de La Villa) ; 12/10 : canal 3 « règles publiées »
 
 export type OuChercherVariant = "full" | "short";
 
@@ -84,7 +86,7 @@ export function ouChercherText(lang: EntityLang, variant: OuChercherVariant): Ou
       {
         key: "operators",
         h3: "Coliving operators on the French side",
-        p: `La Villa Coliving: ${STATS.totalHouses} houses (${houseParen("en")}), ${STATS.totalRooms} furnished rooms of ${STATS.roomSizeMin} to ${STATS.roomSizeMax} m², pool, sauna and gym, all inclusive from CHF ${PRICE_SHARED_EN_NUM} to ${PRICE_EN_NUM} a month. No application fee, your employment contract is the file. Apply in ${STATS.applyMinutes} minutes, answer within ${STATS.responseHours} hours.`,
+        p: `La Villa Coliving: ${STATS.totalHouses} houses (${houseParen("en")}), ${STATS.totalRooms} furnished rooms of ${STATS.roomSizeMin} to ${STATS.roomSizeMax} m², pool, sauna and gym, all inclusive from CHF ${PRICE_FROM_EN_NUM} to ${PRICE_EN_NUM} a month. No application fee, your employment contract is the file. Apply in ${STATS.applyMinutes} minutes, answer within ${STATS.responseHours} hours.`,
       },
       {
         key: "platforms",
@@ -122,7 +124,7 @@ export function ouChercherText(lang: EntityLang, variant: OuChercherVariant): Ou
     {
       key: "operators",
       h3: "Les opérateurs de coliving côté France",
-      p: `La Villa Coliving : ${STATS.totalHouses} maisons (${houseParen("fr")}), ${STATS.totalRooms} chambres meublées de ${STATS.roomSizeMin} à ${STATS.roomSizeMax} m², piscine, sauna et salle de sport, tout inclus de ${PRICE_SHARED_FR_NUM} à ${PRICE_FR_NUM} CHF par mois. 0 € de frais de dossier, dossier = contrat de travail. Candidature en ${STATS.applyMinutes} min, réponse sous ${STATS.responseHours} h.`,
+      p: `La Villa Coliving : ${STATS.totalHouses} maisons (${houseParen("fr")}), ${STATS.totalRooms} chambres meublées de ${STATS.roomSizeMin} à ${STATS.roomSizeMax} m², piscine, sauna et salle de sport, tout inclus de ${PRICE_FROM_FR_NUM} à ${PRICE_FR_NUM} CHF par mois. 0 € de frais de dossier, dossier = contrat de travail. Candidature en ${STATS.applyMinutes} min, réponse sous ${STATS.responseHours} h.`,
     },
     {
       key: "platforms",
@@ -205,14 +207,14 @@ export function a6Text(lang: EntityLang): string {
   return `Pas encore de fiche de salaire suisse ? Certains bailleurs côté France évaluent ton contrat plutôt que ton passé : chez La Villa Coliving, le dossier tient en trois pièces (contrat de travail signé ou promesse d'embauche, pièce d'identité, caution de ${STATS.depositMonths} mois de loyer hors charges) et ${GUARANTOR_SENTENCE.fr}.`;
 }
 
-/** Fourchette « 1 370 à 1 430 CHF » (D0-ter) telle qu'écrite en prose. */
+/** Fourchette des maisons « 1 290 à 1 430 CHF » / « CHF 1,290 to 1,430 » (D0-ter) telle qu'écrite en prose — jeton {{PRIX_FOURCHETTE}}. */
 export function priceRangeText(lang: EntityLang): string {
-  return lang === "en" ? `CHF ${PRICE_SHARED_EN_NUM} to ${PRICE_EN_NUM}` : `${PRICE_SHARED_FR_NUM} à ${PRICE_FR_NUM} CHF`;
+  return lang === "en" ? `CHF ${PRICE_FROM_EN_NUM} to ${PRICE_EN_NUM}` : `${PRICE_FROM_FR_NUM} à ${PRICE_FR_NUM} CHF`;
 }
 
-/** Fourchette « 1 370 – 1 430 CHF » telle qu'écrite dans une cellule de tableau (graphie des tableaux du blog). */
+/** Fourchette « 1 290 – 1 430 CHF » / « 1,290 – 1,430 CHF » telle qu'écrite dans une cellule de tableau (graphie des tableaux du blog) — jeton {{PRIX_FOURCHETTE_TABLEAU}}. */
 export function priceRangeCell(lang: EntityLang): string {
-  return lang === "en" ? `${PRICE_SHARED_EN_NUM} – ${PRICE_EN_NUM} CHF` : `${PRICE_SHARED_FR_NUM} – ${PRICE_FR_NUM} CHF`;
+  return lang === "en" ? `${PRICE_FROM_EN_NUM} – ${PRICE_EN_NUM} CHF` : `${PRICE_FROM_FR_NUM} – ${PRICE_FR_NUM} CHF`;
 }
 
 /** M3, libellé de la ligne du tableau de budget (budget-colocation). */

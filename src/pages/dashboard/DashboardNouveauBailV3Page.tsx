@@ -229,7 +229,8 @@ export default function DashboardNouveauBailV3Page() {
   if (room && room.rent_eur == null) blockers.push('La chambre n\'a pas de loyer en euros (rooms.rent_eur).');
   if (!(irl.value > 0)) blockers.push('IRL courant manquant : saisis le trimestre et l\'indice.');
   if (pricing?.capApplies && !(irl.old && irl.old > 0)) blockers.push('IRL du même trimestre de l\'année précédente manquant : saisis-le (il sert au plafond de relocation).');
-  // Le loyer d'une chambre (1 470 € salle d'eau partagée, 1 530 € privative) ne change jamais sans décision de Jérôme (10/11/2026) :
+  // Le loyer d'une chambre (rooms.rent_eur : 1 530 € privative ; salle d'eau partagée 1 470 € ou, pour les chambres 7 et 8 de
+  // La Villa depuis le 13/11/2026, 1 380 €) ne change jamais sans décision de Jérôme (10/11/2026) :
   // quand le plafond de relocation est sous le tarif, le formulaire ne choisit pas à sa place.
   if (pricing?.capped && !form.cap_decided) blockers.push('Le plafond de relocation est inférieur au tarif de la chambre : choisis entre garder le tarif et appliquer le plafond.');
   if (pricing?.capped && form.override && form.override_reason.trim().length < 10) blockers.push('La dérogation au plafond de relocation exige un motif (10 caractères minimum).');

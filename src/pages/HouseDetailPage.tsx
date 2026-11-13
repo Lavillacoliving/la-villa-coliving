@@ -27,7 +27,7 @@ import {
   type LucideIcon,
 } from "lucide-react";
 import { useLanguage } from "@/contexts/LanguageContext";
-import { STATS, STATS_DISPLAY, HOUSE_SURFACES, ROOM_SURFACE_BY_HOUSE, TRANSIT, thousands, aOrAn, PRICE_FR_NUM, PRICE_EN_NUM, PRICE_CHF_FR, PRICE_CHF_EN, PRICE_SHARED_FR_NUM, PRICE_SHARED_EN_NUM, PRICE_SHARED_CHF_FR, PRICE_SHARED_CHF_EN, EUR_STANDARD_FR_NUM, EUR_STANDARD_EN_NUM, EUR_SHARED_FR_NUM, EUR_SHARED_EN_NUM } from "@/data/stats";
+import { STATS, STATS_DISPLAY, STATS_SHARED_BATH, HOUSE_SURFACES, ROOM_SURFACE_BY_HOUSE, TRANSIT, thousands, aOrAn, sharedBathTiersText, PRICE_FR_NUM, PRICE_EN_NUM, PRICE_CHF_FR, PRICE_CHF_EN, PRICE_FROM_FR_NUM, PRICE_FROM_EN_NUM, PRICE_FROM_CHF_FR, PRICE_FROM_CHF_EN, EUR_STANDARD_FR_NUM, EUR_STANDARD_EN_NUM, EUR_FROM_FR_NUM, EUR_FROM_EN_NUM } from "@/data/stats";
 // (Lot L2 « Emplacement et transport », 09/10/2026) Source unique des faits d'emplacement : plus aucune minute,
 // distance ou surface en dur dans cette page (règle D1/D6/D7 de Jérôme, recon L0.2a).
 import { ENTITY_HOUSES } from "@/data/entityFacts";
@@ -145,6 +145,10 @@ function houseNearbyCard(slug: HouseSlug, lang: L2Lang): string[] {
 
 function getHousesData(lang: string): Record<string, HouseData> {
   const isEn = lang === "en";
+  // (13/11/2026) Paliers des chambres à salle d'eau partagée de La Villa, du plus bas au plus haut (source : stats.ts).
+  const sharedTiers = [...STATS_SHARED_BATH.tiers].sort((a, b) => a.chf - b.chf);
+  const sharedLow = sharedTiers[0];
+  const sharedHigh = sharedTiers[sharedTiers.length - 1];
   const L: L2Lang = isEn ? "en" : "fr";
   const T = TRANSIT.byHouse;
   return {
@@ -156,8 +160,8 @@ function getHousesData(lang: string): Record<string, HouseData> {
       ? `${HOUSE_SURFACES.lavilla.livingM2} m² of designed living on a ${m2(HOUSE_SURFACES.lavilla.plotM2, "en")} estate bordering a nature reserve. Heated pool, sauna, gym, and 10 spacious rooms.`
       : `${HOUSE_SURFACES.lavilla.livingM2} m² de vie design sur un domaine de ${m2(HOUSE_SURFACES.lavilla.plotM2, "fr")} bordant une réserve naturelle. Piscine chauffée, sauna, salle de sport et 10 chambres spacieuses.`,
     longDescription: isEn
-      ? { lead: `Our flagship house, in Ville-la-Grand: ${commuteShort("lavilla", "en")}. ${HOUSE_SURFACES.lavilla.livingM2} m² for 10 housemates on a ${m2(HOUSE_SURFACES.lavilla.plotM2, "en")} estate bordering a nature reserve. Day to day: a heated 12×5 m pool, a 5-seat sauna, a fully equipped gym and 8 Gb/s fiber.`, rest: `All rooms are furnished with Emma or Tediber mattresses — 6 with a private en-suite bathroom at ${PRICE_CHF_EN}/month, 4 with 2 shower rooms each shared between just 2 rooms, at ${PRICE_SHARED_CHF_EN}/month (shower-room cleaning is included in the rent — no hassle!). All-inclusive rent covers utilities, fiber, cleaning of common areas three times a week, pool and garden upkeep. No application fee, reply within 48h.` }
-      : { lead: `Notre maison amirale, à Ville-la-Grand : ${commuteShort("lavilla", "fr")}. ${HOUSE_SURFACES.lavilla.livingM2} m² pour 10 colocataires, sur un domaine de ${m2(HOUSE_SURFACES.lavilla.plotM2, "fr")} en bordure de réserve naturelle. Au quotidien : piscine chauffée de 12×5 m, sauna 5 places, salle de sport équipée et fibre 8 Gb/s.`, rest: `Toutes les chambres sont meublées avec matelas Emma ou Tediber — 6 avec salle de bain privative à ${PRICE_CHF_FR}/mois, 4 avec 2 salles d'eau partagées, chacune entre 2 chambres seulement, à ${PRICE_SHARED_CHF_FR}/mois (leur ménage est inclus dans le loyer : pas de tracas !). Loyer tout inclus : charges, fibre, ménage 3×/semaine des espaces communs, entretien piscine et jardin. 0 frais de dossier, réponse sous 48 h.` },
+      ? { lead: `Our flagship house, in Ville-la-Grand: ${commuteShort("lavilla", "en")}. ${HOUSE_SURFACES.lavilla.livingM2} m² for 10 housemates on a ${m2(HOUSE_SURFACES.lavilla.plotM2, "en")} estate bordering a nature reserve. Day to day: a heated 12×5 m pool, a 5-seat sauna, a fully equipped gym and 8 Gb/s fiber.`, rest: `All rooms are furnished with Emma or Tediber mattresses — 6 with a private en-suite bathroom at ${PRICE_CHF_EN}/month, 4 with 2 shower rooms each shared between just 2 rooms: ${sharedBathTiersText("en", { perMonth: true })} (shower-room cleaning is included in the rent — no hassle!). All-inclusive rent covers utilities, fiber, cleaning of common areas three times a week, pool and garden upkeep. No application fee, reply within 48h.` }
+      : { lead: `Notre maison amirale, à Ville-la-Grand : ${commuteShort("lavilla", "fr")}. ${HOUSE_SURFACES.lavilla.livingM2} m² pour 10 colocataires, sur un domaine de ${m2(HOUSE_SURFACES.lavilla.plotM2, "fr")} en bordure de réserve naturelle. Au quotidien : piscine chauffée de 12×5 m, sauna 5 places, salle de sport équipée et fibre 8 Gb/s.`, rest: `Toutes les chambres sont meublées avec matelas Emma ou Tediber — 6 avec salle de bain privative à ${PRICE_CHF_FR}/mois, 4 avec 2 salles d'eau partagées, chacune entre 2 chambres seulement : ${sharedBathTiersText("fr", { perMonth: true })} (le ménage des salles d'eau est inclus dans le loyer : pas de tracas !). Loyer tout inclus : charges, fibre, ménage 3×/semaine des espaces communs, entretien piscine et jardin. 0 frais de dossier, réponse sous 48 h.` },
     image: "/images/la villa jardin.webp",
     gallery: [
       "/images/la villa/rooms/La Villa-92.webp",
@@ -458,8 +462,9 @@ function getHousesData(lang: string): Record<string, HouseData> {
       },
       {
         type: isEn ? "Room with shared bathroom" : "Chambre avec salle de bain partagée",
-        price: isEn ? `${PRICE_SHARED_EN_NUM} CHF` : `${PRICE_SHARED_FR_NUM} CHF`,
-        priceEur: isEn ? `€${EUR_SHARED_EN_NUM}` : `${EUR_SHARED_FR_NUM} €`,
+        // (13/11/2026) Deux paliers (chambres 7 et 8, chambres 3 et 4) : la carte de repli affiche leur fourchette, du plus bas au plus haut.
+        price: isEn ? `${sharedLow.en.chfNum} – ${sharedHigh.en.chfNum} CHF` : `${sharedLow.fr.chfNum} – ${sharedHigh.fr.chfNum} CHF`,
+        priceEur: isEn ? `€${sharedLow.en.eurNum} – ${sharedHigh.en.eurNum}` : `${sharedLow.fr.eurNum} – ${sharedHigh.fr.eurNum} €`,
         description: isEn
           // (Lot L2) Sous-fourchette des 4 chambres partagées non sourcée (v_public_rooms) → retirée, la fourchette maison suffit.
           ? "Comfortable private room with double Emma bed, workspace, and ample storage. Designer shower room shared with just one other room, cleaned by our housekeeping team."
@@ -1534,8 +1539,8 @@ export function HouseDetailPage() {
           const descs: Record<string, { en: string; fr: string }> = {
             // (Lot L2, 09/10/2026, D1) Libellé de marque unique STATS_DISPLAY.distance (jamais une variante) ; ≤ 155 c. (FR 151 / EN 147, mesuré).
             lavilla: {
-              en: `La Villa: 10 rooms in Ville-la-Grand. Pool, sauna, gym, all inclusive from ${PRICE_SHARED_CHF_EN}. ${STATS_DISPLAY.en.distance}.`,
-              fr: `La Villa : 10 chambres à Ville-la-Grand. Piscine, sauna, gym, tout inclus dès ${PRICE_SHARED_CHF_FR}. À ${STATS_DISPLAY.fr.distance}.`,
+              en: `La Villa: 10 rooms in Ville-la-Grand. Pool, sauna, gym, all inclusive from ${PRICE_FROM_CHF_EN}. ${STATS_DISPLAY.en.distance}.`,
+              fr: `La Villa : 10 chambres à Ville-la-Grand. Piscine, sauna, gym, tout inclus dès ${PRICE_FROM_CHF_FR}. À ${STATS_DISPLAY.fr.distance}.`,
             },
             leloft: {
               en: `Le Loft: 7 rooms in Ambilly. Indoor pool, urban design, Tram 17 to Geneva. All-inclusive: ${PRICE_CHF_EN}/month.`,
@@ -1663,11 +1668,11 @@ export function HouseDetailPage() {
                 <ArrowRight className="w-5 h-5" />
               </LocalizedLink>
               <span className="order-3 md:order-none text-sm font-semibold text-[#1C1917] bg-white/85 backdrop-blur px-4 py-2 rounded-full">
-                {/* La Villa : 4 chambres sur 10 à salle d'eau partagée → plancher 1 370 (dérivé, stats.ts) */}
+                {/* La Villa : 4 chambres sur 10 à salle d'eau partagée → « dès » = palier le plus bas (HOUSES_FROM, dérivé de stats.ts) */}
                 {id === "lavilla"
                   ? (language === "en"
-                      ? `All-inclusive: from ${PRICE_SHARED_CHF_EN}/month — no application fee`
-                      : `Tout inclus : dès ${PRICE_SHARED_CHF_FR}/mois — 0 frais de dossier`)
+                      ? `All-inclusive: from ${PRICE_FROM_CHF_EN}/month — no application fee`
+                      : `Tout inclus : dès ${PRICE_FROM_CHF_FR}/mois — 0 frais de dossier`)
                   : (language === "en"
                       ? `All-inclusive: ${PRICE_CHF_EN}/month — no application fee`
                       : `Tout inclus : ${PRICE_CHF_FR}/mois — 0 frais de dossier`)}
@@ -2003,7 +2008,7 @@ export function HouseDetailPage() {
               <div className="sticky top-24 space-y-6">
                 {/* Pricing Card */}
                 <div className="card-ultra bg-white rounded-2xl border border-[#E7E5E4] shadow-sm p-8">
-                  {/* La Villa : plancher 1 370 (4 ch. sur 10 à salle d'eau partagée). Loft/Lodge : prix unique 1 430. */}
+                  {/* La Villa : « à partir de » = palier le plus bas (HOUSES_FROM ; 4 ch. sur 10 à salle d'eau partagée). Loft/Lodge : prix unique 1 430. */}
                   <p className="text-sm text-[#78716C] mb-2 font-bold">
                     {id === "lavilla"
                       ? (language === "en" ? "From" : "À partir de")
@@ -2011,12 +2016,12 @@ export function HouseDetailPage() {
                   </p>
                   <p className="text-4xl font-black text-[#D4A574] mb-2">
                     {id === "lavilla"
-                      ? (language === "en" ? PRICE_SHARED_EN_NUM : PRICE_SHARED_FR_NUM)
+                      ? (language === "en" ? PRICE_FROM_EN_NUM : PRICE_FROM_FR_NUM)
                       : house.price}{" "}
                     CHF{" "}
                     <span className="text-xl font-light text-[#78716C]">
                       {id === "lavilla"
-                        ? (language === "en" ? `(€${EUR_SHARED_EN_NUM})` : `(${EUR_SHARED_FR_NUM} €)`)
+                        ? (language === "en" ? `(€${EUR_FROM_EN_NUM})` : `(${EUR_FROM_FR_NUM} €)`)
                         : (language === "en" ? `(€${EUR_STANDARD_EN_NUM})` : `(${EUR_STANDARD_FR_NUM} €)`)}
                     </span>
                   </p>
@@ -2160,8 +2165,8 @@ export function HouseDetailPage() {
                   (Lot L2, D1) Le « 20 min » de marque s'écrit toujours via STATS_DISPLAY.distance. */}
               <p className="text-sm text-[#78716C] leading-relaxed mb-8">
                 {language === "en"
-                  ? `${house.name} is one of the 3 La Villa Coliving houses: all-inclusive furnished rooms ${id === "lavilla" ? `from ${PRICE_SHARED_CHF_EN}` : `at ${PRICE_CHF_EN}`}/month — pool, sauna, gym and cleaning included, ${STATS_DISPLAY.en.distance}, no application fee.`
-                  : `${house.name} est l'une des 3 maisons La Villa Coliving : chambres meublées tout inclus ${id === "lavilla" ? `dès ${PRICE_SHARED_CHF_FR}` : `à ${PRICE_CHF_FR}`}/mois — piscine, sauna, salle de sport et ménage compris, à ${STATS_DISPLAY.fr.distance}, sans frais de dossier.`}
+                  ? `${house.name} is one of the 3 La Villa Coliving houses: all-inclusive furnished rooms ${id === "lavilla" ? `from ${PRICE_FROM_CHF_EN}` : `at ${PRICE_CHF_EN}`}/month — pool, sauna, gym and cleaning included, ${STATS_DISPLAY.en.distance}, no application fee.`
+                  : `${house.name} est l'une des 3 maisons La Villa Coliving : chambres meublées tout inclus ${id === "lavilla" ? `dès ${PRICE_FROM_CHF_FR}` : `à ${PRICE_CHF_FR}`}/mois — piscine, sauna, salle de sport et ménage compris, à ${STATS_DISPLAY.fr.distance}, sans frais de dossier.`}
               </p>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
@@ -2278,7 +2283,7 @@ export function HouseDetailPage() {
         const FAQ_DATA: Record<string, { fr: QA[]; en: QA[] }> = {
           lavilla: {
             fr: [
-              { q: "Quel est le loyer mensuel à La Villa et que comprend-il ?", a: `Les chambres de La Villa sont à ${PRICE_CHF_FR} par mois avec salle de bain privative, et à ${PRICE_SHARED_CHF_FR} pour les 4 chambres qui partagent une salle d'eau entre 2 chambres (son entretien par notre équipe de ménage est inclus). Tout inclus dans les deux cas : charges (eau, électricité, chauffage), internet fibre jusqu'à 8 Gb/s, ménage 3 fois par semaine des espaces communs, abonnements streaming, entretien piscine et jardin, cours de yoga / fitness privés, parure de linge fournie. Aucun supplément.` },
+              { q: "Quel est le loyer mensuel à La Villa et que comprend-il ?", a: `Les chambres de La Villa sont à ${PRICE_CHF_FR} par mois avec salle de bain privative. Les 4 chambres qui partagent une salle d'eau entre 2 chambres (son entretien par notre équipe de ménage est inclus) sont à ${sharedBathTiersText("fr")}. Tout inclus dans tous les cas : charges (eau, électricité, chauffage), internet fibre jusqu'à 8 Gb/s, ménage 3 fois par semaine des espaces communs, abonnements streaming, entretien piscine et jardin, cours de yoga / fitness privés, parure de linge fournie. Aucun supplément.` },
               { q: "Comment se rendre à Genève depuis La Villa à Ville-la-Grand ?", a: `${houseCommuteLong("lavilla", "fr")} En heure de pointe, un Léman Express part toutes les ${TRANSIT.peakHeadwayMin} min ; en alternative, l'arrêt de bus ${TB.lavilla.busStop.name} est à ${TB.lavilla.busStop.walkMin} min à pied. ${borderFr("lavilla")}` },
               { q: "Quelle est la durée minimale du bail à La Villa ?", a: "Aucune durée minimale imposée : ton bail est de 12 mois et tu peux partir quand tu veux avec 1 mois de préavis. Pratique pour une mission de quelques mois ou une période d'essai en CDI à Genève." },
               { q: "Y a-t-il une caution et des frais d'agence ?", a: depositA.fr },
@@ -2286,11 +2291,11 @@ export function HouseDetailPage() {
               { q: "Qui peut postuler pour vivre à La Villa ?", a: "Profil cible : frontaliers en CDI, jeunes professionnels, expatriés et résidents fiscaux français travaillant à Genève. Sélection sur dossier (justificatif de revenus, motivation, compatibilité avec la communauté). Pas de critère d'âge strict, mais la majorité des résidents ont entre 25 et 40 ans." },
               { q: "Où se trouve La Villa et à quelle distance de Genève ?", a: `La Villa se situe à Ville-la-Grand, côté France, à ${TB.lavilla.eauxVivesDoorToDoorMin} min porte-à-porte de Genève-Eaux-Vives en Léman Express (gare d'Annemasse à ${TB.lavilla.stationWalkMin} min à pied, puis ${TRANSIT.trainEauxVivesMin} min de train) et à ${TB.lavilla.riveDoorToDoorMin} min du centre de Genève (Rive). C'est l'une des trois maisons de coliving de La Villa Coliving, avec une piscine extérieure chauffée et ${m2(HOUSE_SURFACES.lavilla.plotM2, "fr")} de jardin en bordure du Foron, la rivière-frontière, et de sa zone naturelle.` },
               { q: "Combien de résidents vivent à La Villa ?", a: "La Villa accueille 10 résidents dans une maison de coliving à Ville-la-Grand, près de Genève. C'est une maison à taille humaine, pensée pour que les liens se créent naturellement, avec une chambre meublée privée pour chacun et de larges espaces communs." },
-              { q: "Quels équipements y a-t-il à La Villa ?", a: `La Villa, à Ville-la-Grand, dispose d'une piscine extérieure chauffée, d'un sauna infrarouge, d'une salle de sport accessible 24h/24, d'une salle de jeu, d'un espace home cinéma, de ${m2(HOUSE_SURFACES.lavilla.plotM2, "fr")} de jardin et d'espaces communs design. Tout est inclus dans le loyer tout compris, dès ${PRICE_SHARED_CHF_FR}/mois à La Villa.` },
+              { q: "Quels équipements y a-t-il à La Villa ?", a: `La Villa, à Ville-la-Grand, dispose d'une piscine extérieure chauffée, d'un sauna infrarouge, d'une salle de sport accessible 24h/24, d'une salle de jeu, d'un espace home cinéma, de ${m2(HOUSE_SURFACES.lavilla.plotM2, "fr")} de jardin et d'espaces communs design. Tout est inclus dans le loyer tout compris, dès ${PRICE_FROM_CHF_FR}/mois à La Villa.` },
               { q: "La Villa est-elle bien reliée à Genève ?", a: `Oui. Depuis La Villa, la gare d'Annemasse est à ${TB.lavilla.stationWalkMin} min à pied et le Léman Express direct rejoint Genève-Eaux-Vives en ${TRANSIT.trainEauxVivesMin} min — ${TB.lavilla.eauxVivesDoorToDoorMin} min porte-à-porte, ${TB.lavilla.cornavinDoorToDoorMin} min jusqu'à Cornavin. La maison combine ce bon accès avec un cadre verdoyant — ${m2(HOUSE_SURFACES.lavilla.plotM2, "fr")} de jardin et la zone naturelle du Foron, la rivière-frontière qui longe la rue.` },
             ],
             en: [
-              { q: "What is the monthly rent at La Villa and what does it include?", a: `Rooms at La Villa are ${PRICE_CHF_EN} per month with a private en-suite bathroom, and ${PRICE_SHARED_CHF_EN} for the 4 rooms that share a shower room between 2 rooms (cleaned by our housekeeping team, included in the rent). Both are all-inclusive: utilities (water, electricity, heating), fiber internet up to 8 Gb/s, common-area cleaning three times a week, streaming subscriptions, pool & garden upkeep, private yoga/fitness classes, bedding included. No add-on fees.` },
+              { q: "What is the monthly rent at La Villa and what does it include?", a: `Rooms at La Villa are ${PRICE_CHF_EN} per month with a private en-suite bathroom. The 4 rooms that share a shower room between 2 rooms (cleaned by our housekeeping team, included in the rent) are ${sharedBathTiersText("en")}. All are all-inclusive: utilities (water, electricity, heating), fiber internet up to 8 Gb/s, common-area cleaning three times a week, streaming subscriptions, pool & garden upkeep, private yoga/fitness classes, bedding included. No add-on fees.` },
               { q: "How do I get to Geneva from La Villa in Ville-la-Grand?", a: `${houseCommuteLong("lavilla", "en")} At peak time a Léman Express leaves every ${TRANSIT.peakHeadwayMin} minutes; alternatively, the ${TB.lavilla.busStop.name} bus stop is ${TB.lavilla.busStop.walkMin} minutes away on foot. ${borderEn("lavilla")}` },
               { q: "What is the minimum lease term at La Villa?", a: "No set minimum: your lease runs 12 months and you can leave whenever you want with 1 month's notice. Handy for a short assignment or a trial period in Geneva." },
               { q: "Is there a deposit and any agency fees?", a: depositA.en },
@@ -2298,7 +2303,7 @@ export function HouseDetailPage() {
               { q: "Who can apply to live at La Villa?", a: "Target profile: cross-border workers on CDI, young professionals, expatriates and French tax residents working in Geneva. Selection by application (income proof, motivation, fit with the community). No strict age limit, but most residents are 25-40 years old." },
               { q: "Where is La Villa and how far from Geneva?", a: `La Villa is in Ville-la-Grand, on the French side, ${TB.lavilla.eauxVivesDoorToDoorMin} minutes door to door from Geneva Eaux-Vives by Léman Express (Annemasse station is ${aOrAn(TB.lavilla.stationWalkMin)} ${TB.lavilla.stationWalkMin}-minute walk, then ${TRANSIT.trainEauxVivesMin} minutes by train) and ${TB.lavilla.riveDoorToDoorMin} minutes from the city centre (Rive). It's one of the three La Villa Coliving houses, with a heated outdoor pool and ${m2(HOUSE_SURFACES.lavilla.plotM2, "en")} of garden beside the Foron, the border river, and its nature area.` },
               { q: "How many residents live at La Villa?", a: "La Villa hosts 10 residents in a coliving house in Ville-la-Grand, near Geneva. It's a human-scale house, designed so connections form naturally, with a private furnished room for each resident and large common areas." },
-              { q: "What amenities are there at La Villa?", a: `La Villa, in Ville-la-Grand, has a heated outdoor pool, an infrared sauna, a gym open 24/7, a games room, a home cinema space, ${m2(HOUSE_SURFACES.lavilla.plotM2, "en")} of garden and designer common areas. Everything is included in the all-inclusive rent, from ${PRICE_SHARED_CHF_EN}/month at La Villa.` },
+              { q: "What amenities are there at La Villa?", a: `La Villa, in Ville-la-Grand, has a heated outdoor pool, an infrared sauna, a gym open 24/7, a games room, a home cinema space, ${m2(HOUSE_SURFACES.lavilla.plotM2, "en")} of garden and designer common areas. Everything is included in the all-inclusive rent, from ${PRICE_FROM_CHF_EN}/month at La Villa.` },
               { q: "Is La Villa well connected to Geneva?", a: `Yes. From La Villa, Annemasse station is ${aOrAn(TB.lavilla.stationWalkMin)} ${TB.lavilla.stationWalkMin}-minute walk and the direct Léman Express reaches Geneva Eaux-Vives in ${TRANSIT.trainEauxVivesMin} minutes — ${TB.lavilla.eauxVivesDoorToDoorMin} minutes door to door, ${TB.lavilla.cornavinDoorToDoorMin} minutes to Cornavin. The house combines this good access with green surroundings — ${m2(HOUSE_SURFACES.lavilla.plotM2, "en")} of garden and the Foron nature area, the border river running along the street.` },
             ],
           },
