@@ -30,15 +30,18 @@ import { useEffect, useSyncExternalStore } from "react";
 import { supabase } from "@/lib/supabase";
 import { readEmbeddedArray } from "@/lib/prerenderEmbeddedState";
 import { MONTHS_EN, MONTHS_FR } from "@/lib/dates";
+import { MAISON_KEYS, type MaisonKey, type PlaceKey } from "@/data/places";
+import { allMaisonRooms, embedRows, knownPlaceRows, placeRooms } from "@/lib/roomSelectors";
 
 export const AVAILABILITY_EMBED_ID = "__room_availability_data__";
 // (Lot 3) Lignes chambres de LA maison rendue, embarquées par sa page prérendue
 // (RoomsEmbed) — l'id est enregistré dans la liste de capture de src/main.tsx.
 export const ROOMS_EMBED_ID = "__rooms_level_data__";
 
-export type HouseKey = "lavilla" | "leloft" | "lelodge";
+/** Une des 3 maisons — alias historique de `MaisonKey` (src/data/places.ts, L'Appart du 12/11/2026). */
+export type HouseKey = MaisonKey;
 
-const HOUSE_KEYS: HouseKey[] = ["lavilla", "leloft", "lelodge"];
+const HOUSE_KEYS: readonly HouseKey[] = MAISON_KEYS;
 
 /** Résumé par maison — la forme embarquée dans le HTML (3 lignes, pas 29). */
 export type HouseSummary = {
@@ -96,9 +99,11 @@ type RoomRow = {
  * (Lot 3) Ligne chambre complète de `v_public_rooms` — cartes chambres des
  * pages maisons. `surface_m2` arrive en string (numeric PostgREST) : passer
  * par Number() à l'affichage.
+ * (L'Appart, 12/11/2026) Sans paramètre = chambre d'une MAISON (défaut sûr : une liste typée « maisons »
+ * n'accepte pas une chambre de L'Appart). `PublicRoom<"lappart">` = chambre de L'Appart ; `PlaceRoom` = l'une ou l'autre.
  */
-export type PublicRoom = {
-  house_slug: HouseKey;
+export type PublicRoom<K extends PlaceKey = MaisonKey> = {
+  house_slug: K;
   room_number: number;
   name: string | null;
   surface_m2: number | string | null;
@@ -133,20 +138,30 @@ export function roomsContentUpdatedAt(rooms: ReadonlyArray<Pick<PublicRoom, "con
   return best;
 }
 
+/** Ligne d'un lieu public quelconque : une maison OU L'Appart. */
+export type PlaceRoom = PublicRoom<PlaceKey>;
+
+/** Ligne telle qu'elle arrive (base ou HTML embarqué), avant le filtre des lieux connus. */
+type IncomingRoom = Omit<PlaceRoom, "house_slug"> & { house_slug: string };
+
 // Second canal du même store : les lignes chambres (Lot 3). Mêmes listeners,
 // même cycle de vie (embed → init synchrone → refresh partagé post-montage).
-let roomsSnapshot: PublicRoom[] | null = null;
+// (L'Appart, 12/11/2026) Ce canal ne garde que les lignes d'un lieu CONNU du code (knownPlaceRows), à l'arrivée du
+// fetch comme à la lecture de l'embed : une vue en avance sur le site n'atteint aucune page.
+let roomsSnapshot: PlaceRoom[] | null = null;
 let roomsInitialised = false;
 
-function getRoomsSnapshot(): PublicRoom[] | null {
+function getRoomsSnapshot(): PlaceRoom[] | null {
   if (!roomsInitialised) {
     roomsInitialised = true;
-    roomsSnapshot = readEmbeddedArray<PublicRoom>(ROOMS_EMBED_ID);
+    const embedded = readEmbeddedArray<IncomingRoom>(ROOMS_EMBED_ID);
+    const known = embedded ? knownPlaceRows(embedded) : [];
+    roomsSnapshot = known.length > 0 ? known : null;
   }
   return roomsSnapshot;
 }
 
-function publishRooms(rows: PublicRoom[]): void {
+function publishRooms(rows: PlaceRoom[]): void {
   // (Correctif 30/09/2026 — « Aucune chambre libre » en prod) Sur une page sans liste de chambres
   // (accueil, blog, tarifs…), le fetch du hero publiait les 29 lignes SANS marquer le canal comme
   // initialisé. Au clic « Chambres disponibles » (menu, navigation interne), le premier
@@ -223,7 +238,9 @@ async function refresh(): Promise<void> {
     // Vue vide = anomalie (elle rend 29 lignes) : traitée comme un échec → nouvelle tentative,
     // l'état embarqué reste affiché en attendant.
     if (!data || data.length === 0) throw new Error("v_public_rooms : aucune ligne");
-    const rooms = data as unknown as PublicRoom[];
+    // (L'Appart, 12/11/2026) Les lignes d'un lieu inconnu du code sont écartées ici ; aucune ligne connue = même anomalie.
+    const rooms = knownPlaceRows(data as unknown as IncomingRoom[]);
+    if (rooms.length === 0) throw new Error("v_public_rooms : aucune ligne d'un lieu connu");
     failedAttempts = 0;
     roomsLoadFailed = false; // notifié par les publish ci-dessous
     publish(summarise(rooms));
@@ -331,25 +348,24 @@ export function useAvailabilitySnapshot(): HouseSummary[] | null {
  * depuis le HTML prérendu de la page maison (ROOMS_EMBED_ID), puis même
  * rafraîchissement partagé que les résumés. `known: false` = aucune donnée →
  * l'appelant retombe sur ses cartes de types historiques (jamais de vide).
+ * (L'Appart, 12/11/2026) Générique sur le lieu : `useHouseRooms("lappart")` rend des `PublicRoom<"lappart">`,
+ * jamais une chambre de maison ; `known: false` tant que la vue n'a aucune ligne de L'Appart.
  */
-export function useHouseRooms(house: HouseKey): { known: boolean; rooms: PublicRoom[] } {
+export function useHouseRooms<K extends PlaceKey>(place: K): { known: boolean; rooms: PublicRoom<K>[] } {
   const rows = useSyncExternalStore(subscribe, getRoomsSnapshot, getRoomsSnapshot);
   useEffect(() => {
     void refresh();
   }, []);
-  if (!rows) return { known: false, rooms: [] };
-  const rooms = rows
-    .filter((r) => r.house_slug === house)
-    .sort((a, b) => a.room_number - b.room_number);
-  return { known: rooms.length > 0, rooms };
+  return placeRooms(rows, place);
 }
 
 /**
  * (Lot A — Q8, 02/09/2026) Partition des chambres d'une maison : les « candidates » (libres
  * maintenant, puis libérations datées par date) reçoivent une carte complète et un CTA ;
  * les autres (occupées sans date connue) une carte compacte sans CTA. Pure, déterministe.
+ * (L'Appart, 12/11/2026) Générique : rend des chambres du type reçu (une liste de maisons reste une liste de maisons).
  */
-export function splitRooms(rooms: PublicRoom[]): { candidates: PublicRoom[]; occupied: PublicRoom[] } {
+export function splitRooms<R extends PlaceRoom>(rooms: R[]): { candidates: R[]; occupied: R[] } {
   const available = rooms
     .filter((r) => r.availability === "available")
     .sort((a, b) => a.room_number - b.room_number);
@@ -372,13 +388,13 @@ const FLOOR_EN: Record<string, string> = {
 };
 
 /** Étage d'une chambre, FR tel quel / EN traduit — ou null si inconnu. */
-export function floorLabel(room: PublicRoom, lang: "fr" | "en"): string | null {
+export function floorLabel(room: PlaceRoom, lang: "fr" | "en"): string | null {
   if (!room.floor) return null;
   return lang === "en" ? (FLOOR_EN[room.floor] ?? room.floor) : room.floor;
 }
 
 /** « 23 m² · Étage 1 · SDB privative » — spécifications communes aux cartes complètes et compactes. */
-export function roomSpecs(room: PublicRoom, lang: "fr" | "en"): string {
+export function roomSpecs(room: PlaceRoom, lang: "fr" | "en"): string {
   const surface = roomSurface(room);
   return [surface !== null ? `${surface} m²` : null, floorLabel(room, lang), bathroomLabel(room, lang)]
     .filter(Boolean)
@@ -386,14 +402,14 @@ export function roomSpecs(room: PublicRoom, lang: "fr" | "en"): string {
 }
 
 /** (Lot A) Libellé salle de bain d'une chambre, FR/EN — ou null si inconnu. */
-export function bathroomLabel(room: PublicRoom, lang: "fr" | "en"): string | null {
+export function bathroomLabel(room: PlaceRoom, lang: "fr" | "en"): string | null {
   if (room.bathroom_type === "private") return lang === "en" ? "private bathroom" : "SDB privative";
   if (room.bathroom_type === "shared") return lang === "en" ? "shared shower room" : "salle d'eau partagée";
   return null;
 }
 
 /** (Lot A) Surface en m² entier, ou null si absente/invalide (numeric PostgREST → string). */
-export function roomSurface(room: PublicRoom): number | null {
+export function roomSurface(room: PlaceRoom): number | null {
   if (room.surface_m2 === null || room.surface_m2 === undefined) return null;
   const n = Number(room.surface_m2);
   return Number.isFinite(n) ? Math.round(n) : null;
@@ -404,6 +420,7 @@ export function roomSurface(room: PublicRoom): number | null {
  * maintenant » / « … · libre dès le 10 septembre », quand la maison a exactement UNE chambre
  * candidate. Sinon null → l'appelant garde le libellé maison (houseBadgeLabel). Mêmes règles
  * de pureté que les autres libellés (données de l'embed, formatFreeDate maison).
+ * (L'Appart, 12/11/2026) Réservée aux MAISONS (« Chambre N » écrit ici ; la suite de L'Appart s'appelle « Suite »).
  */
 export function roomHeroBadge(rooms: PublicRoom[], lang: "fr" | "en"): { label: string; tone: BadgeTone } | null {
   const { candidates } = splitRooms(rooms);
@@ -430,6 +447,8 @@ export function roomHeroBadge(rooms: PublicRoom[], lang: "fr" | "en"): { label: 
  * (Lot 3 SEO funnel — /chambres-disponibles) Toutes les chambres publiques, triées maison
  * (Villa → Loft → Lodge) puis n°. Même cycle de vie que useHouseRooms : init synchrone depuis
  * l'embed de la page (29 lignes), refresh partagé après montage. `known: false` = aucune donnée.
+ * (L'Appart, 12/11/2026) Les 3 MAISONS seulement, avant comme après l'arrivée de L'Appart dans la vue : totaux,
+ * compteurs et offre hiver restent ceux des maisons. Une page qui veut L'Appart le demande : useHouseRooms("lappart").
  */
 export function useAllRooms(): { known: boolean; rooms: PublicRoom[] } {
   const rows = useSyncExternalStore(subscribe, getRoomsSnapshot, getRoomsSnapshot);
@@ -440,11 +459,8 @@ export function useAllRooms(): { known: boolean; rooms: PublicRoom[] } {
   // Tant que le fetch n'a pas répondu, ne pas présenter ce morceau comme l'inventaire complet
   // (liste partielle, voire faux « aucune chambre libre ») → inconnu, les pages affichent leur
   // état neutre. Premier rendu inchangé : les pages « toutes maisons » embarquent les 29 lignes.
-  if (!rows || !HOUSE_KEYS.every((k) => rows.some((r) => r.house_slug === k))) return { known: false, rooms: [] };
-  const rooms = [...rows].sort(
-    (a, b) => HOUSE_KEYS.indexOf(a.house_slug) - HOUSE_KEYS.indexOf(b.house_slug) || a.room_number - b.room_number,
-  );
-  return { known: rooms.length > 0, rooms };
+  // Règle et tri : allMaisonRooms (src/lib/roomSelectors.ts, testé tel quel).
+  return allMaisonRooms(rows);
 }
 
 const getRoomsLoadFailed = () => roomsLoadFailed;
@@ -455,19 +471,18 @@ export function useRoomsLoadFailed(): boolean {
   return useSyncExternalStore(subscribe, getRoomsLoadFailed, getRoomsLoadFailedServer);
 }
 
-/** Snapshot brut pour RoomsEmbed : les lignes de `house`, ou TOUTES sans argument (null tant que rien n'est chargé). */
-export function useRoomsSnapshotFor(house?: HouseKey): PublicRoom[] | null {
+/** Snapshot brut pour RoomsEmbed : les lignes d'un lieu ou d'une liste de lieux, ou TOUTES sans argument
+ *  (null tant que rien n'est chargé). */
+export function useRoomsSnapshotFor(places?: PlaceKey | readonly PlaceKey[]): readonly PlaceRoom[] | null {
   const rows = useSyncExternalStore(subscribe, getRoomsSnapshot, getRoomsSnapshot);
-  if (!rows) return null;
-  const mine = house ? rows.filter((r) => r.house_slug === house) : rows;
-  return mine.length > 0 ? mine : null;
+  return embedRows(rows, places);
 }
 
 /**
  * (Lot 3) Badge d'une CHAMBRE — mêmes règles de pureté que le badge maison
  * (formatFreeDate maison, jamais de new Date() au premier rendu).
  */
-export function roomBadge(room: PublicRoom, lang: "fr" | "en"): { label: string; tone: BadgeTone } {
+export function roomBadge(room: PlaceRoom, lang: "fr" | "en"): { label: string; tone: BadgeTone } {
   if (room.availability === "available") {
     return { label: lang === "en" ? "Available now" : "Libre maintenant", tone: "available" };
   }

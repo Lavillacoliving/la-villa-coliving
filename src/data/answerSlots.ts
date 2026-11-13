@@ -37,6 +37,7 @@ import {
   aOrAn,
 } from "./stats";
 import { ENTITY_HOUSES, GUARANTOR_SENTENCE, type EntityLang, type EntityHouseSlug } from "./entityFacts";
+import { PLACE_PAGE_KEYS, type PlaceKey } from "./places";
 
 /** Incrémenter à chaque changement de texte du bloc : porté par data-ou-chercher-version, comparé par la CI. */
 export const OU_CHERCHER_VERSION = "2026-11-19"; // 19/11 : ligne opérateur « de 1 290 à 1 430 CHF par mois » (palier des chambres 7 et 8 de La Villa) ; 12/10 : canal 3 « règles publiées »
@@ -338,8 +339,9 @@ export const FACEBOOK_MENTION_ARTICLES: Readonly<Record<string, { fr: string; en
 };
 
 /** Pages prérendues qui portent l'encart A.8 (FR + /en) — exactement une fois chacune ; l'écran de confirmation de
- *  /candidature le porte aussi mais n'est pas prérendu (test unitaire seulement). */
-export const FACEBOOK_CALLOUT_ROUTES = ["/lavilla", "/leloft", "/lelodge"] as const;
+ *  /candidature le porte aussi mais n'est pas prérendu (test unitaire seulement). (L'Appart, 12/11/2026) Les pages de
+ *  lieu, dérivées de PLACE_PAGE_KEYS (src/data/places.ts) : les 3 maisons tant que la page de L'Appart n'existe pas. */
+export const FACEBOOK_CALLOUT_ROUTES: readonly `/${PlaceKey}`[] = PLACE_PAGE_KEYS.map((k) => `/${k}` as const);
 /** (13/10/2026, D2 du brief « conversion Ads », décision Jérôme) /chambres-disponibles ne porte l'encart que s'il n'y a
  *  AUCUNE chambre libre ni datée : 0 ou 1 encart, texte vérifié au caractère près s'il est affiché. */
 export const FACEBOOK_CALLOUT_OPTIONAL_ROUTES = ["/chambres-disponibles"] as const;

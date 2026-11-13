@@ -10,6 +10,7 @@ import { HOUSES } from "@/data/houses";
 import { ENTITY_FACTS, ENTITY_HOUSES } from "@/data/entityFacts";
 import { roomGallerySections, type GallerySectionKey, type RoomPhoto } from "@/data/roomPhotos";
 import { isRoomPageOpen, parseRoomPagePath, roomPagePath } from "@/data/roomPages";
+import { isMaisonKey } from "@/data/places";
 import { thousands } from "@/data/stats";
 import { lazyWithRetry } from "@/lib/lazyWithRetry";
 import { responsiveImage } from "@/lib/responsiveImage";
@@ -128,7 +129,9 @@ export function RoomDetailPage() {
   const en = language === "en";
   const L = en ? "en" as const : "fr" as const;
 
-  const parsed = parseRoomPagePath(pathname);
+  // (L'Appart, 12/11/2026) Page des fiches des MAISONS : la fiche d'un autre lieu n'est pas rendue ici.
+  const anyPlace = parseRoomPagePath(pathname);
+  const parsed = anyPlace && isMaisonKey(anyPlace.house) ? { house: anyPlace.house, roomNumber: anyPlace.roomNumber } : null;
   const house: HouseKey = parsed?.house ?? "lelodge";
   const n = parsed?.roomNumber ?? 0;
   const houseRooms = useHouseRooms(house);

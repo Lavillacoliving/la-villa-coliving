@@ -39,6 +39,10 @@ export async function loadEntityFacts() {
         // (13/11/2026) Jetons des articles (contentTokens.ts : CONTENT_TOKENS, resolveContentTokens) — le test compare la liste
         // miroir de scripts/lib/article-checks.mjs à la source, et les outils de SQL simulent le rendu d'un article à jetons.
         "export * from './src/lib/contentTokens';",
+        // (L'Appart, 12/11/2026) Lieux publics (places.ts : MAISON_KEYS, PLACE_KEYS, GAMME, PLACE_PAGE_KEYS, roomLabel…) —
+        // noms uniques parmi les modules ci-dessus (deux `export *` du même nom disparaissent sans message) : liste
+        // vérifiée par tools/test/places.test.mjs.
+        "export * from './src/data/places';",
         "export { ORG_ID, ORG_IDENTITY, LAVILLA_ALTERNATE_NAMES, LAVILLA_SAME_AS, GOOGLE_BUSINESS_PROFILE_URL, HOUSES, publicGeo, LAVILLA_NAP, houseLodgingId, buildHouseLodgingNode, buildAvailableRoomsItemList, buildLocalBusinessSchema, buildHomeLodgingBusinessSchema } from './src/lib/structuredData';",
         "export { STATS, STATS_DISPLAY, TRANSIT, aOrAn, GENEVA_COMMUTE_FORMULA, MARKET_ROOM_EUR, FACEBOOK_GROUP, HOUSE_SURFACES, ROOM_SURFACE_BY_HOUSE, GOOGLE_REVIEWS, GOOGLE_REVIEWS_LINK_LABEL, OCCUPANCY, OCCUPANCY_DISPLAY, STATS_SOURCE, MARKET_COMPARISON, CONTRACT_EUR, HOUSES_FROM, SHARED_BATH_TIERS, STATS_SHARED_BATH, sharedBathTiersText, sharedBathPricesText, thousands } from './src/data/stats';",
       ].join(' '),

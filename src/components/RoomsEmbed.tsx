@@ -1,4 +1,5 @@
 import { ROOMS_EMBED_ID, useRoomsSnapshotFor, type HouseKey } from "@/lib/availability";
+import type { PlaceKey } from "@/data/places";
 import { embedJson } from "@/lib/prerenderEmbeddedState";
 
 // (Lot 3) Extrémité ÉCRITURE de l'état chambres : la page maison sérialise SES
@@ -9,9 +10,15 @@ import { embedJson } from "@/lib/prerenderEmbeddedState";
 // « absent » et déclencherait un fetch au premier rendu).
 // ⚠️ ROOMS_EMBED_ID est enregistré dans la liste de capture de src/main.tsx —
 // ne pas renommer l'un sans l'autre.
-// Sans prop `house` (Lot 3 SEO funnel — /chambres-disponibles) : les 29 lignes, ≈ 10 Ko.
-export function RoomsEmbed({ house }: { house?: HouseKey }) {
-  const rows = useRoomsSnapshotFor(house);
+// Sans prop (Lot 3 SEO funnel — /chambres-disponibles) : toutes les lignes des lieux connus (29 aujourd'hui), ≈ 10 Ko.
+// (L'Appart, 12/11/2026) `places` : un lieu ou une liste de lieux (maison et L'Appart). `house` reste pour les pages
+// maisons, qui ne changent pas. Les deux props ne se combinent pas.
+type RoomsEmbedProps =
+  | { house?: HouseKey; places?: never }
+  | { places: PlaceKey | readonly PlaceKey[]; house?: never };
+
+export function RoomsEmbed({ house, places }: RoomsEmbedProps) {
+  const rows = useRoomsSnapshotFor(places ?? house);
   if (!rows) return null;
   return (
     <script

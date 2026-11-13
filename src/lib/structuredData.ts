@@ -3,6 +3,7 @@
 // buildFaqPageSchema() construit donc le FAQPage à partir des mêmes paires {q,a} affichées.
 
 import { STATS, HOUSES_FROM, ROOMS_BY_HOUSE, PRICE_FR_NUM, PRICE_EN_NUM, PRICE_FROM_FR_NUM, PRICE_FROM_EN_NUM, GENEVA_COMMUTE_FORMULA, GOOGLE_REVIEWS } from "@/data/stats";
+import type { MaisonKey } from "@/data/places";
 
 const SITE = "https://www.lavillacoliving.com";
 
@@ -82,7 +83,8 @@ export const LAVILLA_POSTAL_ADDRESS = {
 } as const;
 
 export interface HouseInfo {
-  slug: string;
+  /** (L'Appart, 12/11/2026) Une des 3 maisons : le nœud d'une maison (piscine, sauna, salle de sport) ne se construit pas pour un autre lieu. */
+  slug: MaisonKey;
   /** Libellé affiché du schema `department` (historique : « La Villa — Ville-la-Grand »). */
   name: string;
   /** (Lot L6.2) Nom court de la maison et commune — bases du nom et des alternateName du nœud LodgingBusiness. */
@@ -226,7 +228,7 @@ export function buildHouseLodgingNode(
   opts: { context?: boolean; description?: string; image?: string } = {},
 ): Record<string, unknown> {
   const en = language === "en";
-  const rooms = ROOMS_BY_HOUSE[h.slug as keyof typeof ROOMS_BY_HOUSE];
+  const rooms = ROOMS_BY_HOUSE[h.slug];
   const priceRange = h.slug === SHARED_BATH_HOUSE_SLUG
     ? (en ? `CHF ${PRICE_FROM_EN_NUM}–${PRICE_EN_NUM}/month` : `${PRICE_FROM_FR_NUM}–${PRICE_FR_NUM} CHF/mois`)
     : (en ? `CHF ${PRICE_EN_NUM}/month` : `${PRICE_FR_NUM} CHF/mois`);

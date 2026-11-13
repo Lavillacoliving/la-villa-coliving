@@ -40,9 +40,11 @@ import {
 } from "./stats";
 import { FOUNDERS, FOUNDING_DATE, LAVILLA_SAME_AS } from "../lib/structuredData";
 import { PRICE_KEY_SENTENCE } from "./priceFacts";
+import type { MaisonKey } from "./places";
 
 export type EntityLang = "fr" | "en";
-export type EntityHouseSlug = keyof typeof ROOMS_BY_HOUSE;
+/** Une des 3 maisons — alias de `MaisonKey` (src/data/places.ts) : ENTITY_HOUSES et la fiche ne décrivent que les maisons. */
+export type EntityHouseSlug = MaisonKey;
 
 /** Incrémenter à chaque changement de texte : porté par data-entity-facts-version, comparé par la CI. */
 // (Lot L1 « ingénierie des créneaux », 09/10/2026) Trajets réalignés sur TRANSIT (D1-L1), paragraphe sur la formule D1.

@@ -17,9 +17,10 @@ export const HOUSE_HAS_ENTRY_TIER: Record<HouseKey, boolean> = {
   lelodge: false,
 };
 
-/** Montant d'appel de la maison et s'il faut le précéder de « dès » / « from ». */
+/** Montant d'appel de la maison et s'il faut le précéder de « dès » / « from ».
+ *  (L'Appart, 12/11/2026) Maisons seulement : plus de repli `?? true` — un lieu inconnu aurait reçu le « dès » des maisons. */
 export function housePriceFrom(house: HouseKey, lang: "fr" | "en"): { amount: string; from: boolean } {
-  const from = HOUSE_HAS_ENTRY_TIER[house] ?? true;
+  const from = HOUSE_HAS_ENTRY_TIER[house];
   const amount = from
     ? (lang === "en" ? PRICE_FROM_CHF_EN : PRICE_FROM_CHF_FR)
     : (lang === "en" ? PRICE_CHF_EN : PRICE_CHF_FR);

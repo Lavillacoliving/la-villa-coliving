@@ -1,4 +1,5 @@
-import type { HouseKey, PublicRoom } from "@/lib/availability";
+import type { PublicRoom } from "@/lib/availability";
+import { PLACE_KEYS, roomFromPath, type PlaceKey } from "@/data/places";
 import ROOM_PAGES_JSON from "./roomPages.json";
 
 /**
@@ -13,15 +14,15 @@ import ROOM_PAGES_JSON from "./roomPages.json";
  * seraient de la génération de pages en masse au sens de CLAUDE.md §4 ; ce sont des pages de
  * conversion, pas des actifs SEO. L'intention « chambre disponible » est portée par
  * /chambres-disponibles et les pages maisons, qui renvoient vers ces fiches.
+ * (L'Appart, 12/11/2026) Par lieu public (src/data/places.ts) : L'Appart a sa liste, vide tant que le JSON n'a pas sa clé.
  */
-const HOUSE_KEYS: HouseKey[] = ["lavilla", "leloft", "lelodge"];
-
 const json = ROOM_PAGES_JSON as Record<string, unknown>;
-const listFor = (k: HouseKey): readonly number[] => (Array.isArray(json[k]) ? (json[k] as number[]) : []);
-export const ROOM_PAGES: Readonly<Record<HouseKey, readonly number[]>> = {
+const listFor = (k: PlaceKey): readonly number[] => (Array.isArray(json[k]) ? (json[k] as number[]) : []);
+export const ROOM_PAGES: Readonly<Record<PlaceKey, readonly number[]>> = {
   lavilla: listFor("lavilla"),
   leloft: listFor("leloft"),
   lelodge: listFor("lelodge"),
+  lappart: listFor("lappart"),
 };
 
 export function hasRoomPage(house: string, roomNumber: number): boolean {
@@ -39,18 +40,16 @@ export function isRoomPageOpen(house: string, room: Pick<PublicRoom, "room_numbe
 }
 
 /** Chemin FR (LocalizedLink ajoute /en). */
-export function roomPagePath(house: HouseKey, roomNumber: number): string {
+export function roomPagePath(house: PlaceKey, roomNumber: number): string {
   return `/${house}/chambre-${roomNumber}`;
 }
 
 /** Toutes les routes FR des fiches (App.tsx). */
-export const ROOM_PAGE_PATHS: string[] = HOUSE_KEYS.flatMap((k) => ROOM_PAGES[k].map((n) => roomPagePath(k, n)));
+export const ROOM_PAGE_PATHS: string[] = PLACE_KEYS.flatMap((k) => ROOM_PAGES[k].map((n) => roomPagePath(k, n)));
 
-/** Parse `/lelodge/chambre-4` ou `/en/lelodge/chambre-4` → { house, roomNumber } si la fiche existe. */
-export function parseRoomPagePath(pathname: string): { house: HouseKey; roomNumber: number } | null {
-  const m = pathname.replace(/\/+$/, "").match(/^(?:\/en)?\/(lavilla|leloft|lelodge)\/chambre-(\d{1,2})$/);
-  if (!m) return null;
-  const house = m[1] as HouseKey;
-  const roomNumber = Number(m[2]);
-  return hasRoomPage(house, roomNumber) ? { house, roomNumber } : null;
+/** Parse `/lelodge/chambre-4` ou `/en/lelodge/chambre-4` → { house, roomNumber } si la fiche existe. Lieu quelconque :
+ *  la page d'une maison (RoomDetailPage) n'accepte que les maisons. */
+export function parseRoomPagePath(pathname: string): { house: PlaceKey; roomNumber: number } | null {
+  const r = roomFromPath(pathname.replace(/\/+$/, ""));
+  return r && hasRoomPage(r.place, r.roomNumber) ? { house: r.place, roomNumber: r.roomNumber } : null;
 }

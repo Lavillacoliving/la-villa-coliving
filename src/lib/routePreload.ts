@@ -16,6 +16,7 @@
  */
 
 import { isChunkLoadError, recoverFromChunkError } from "@/lib/lazyWithRetry";
+import { isMaisonKey, roomFromPath } from "@/data/places";
 
 type Loader = () => Promise<unknown>;
 
@@ -58,8 +59,11 @@ export function preloadRouteModule(pathname: string): Promise<unknown> {
   if (p === "/en") p = "/";
   else if (p.startsWith("/en/")) p = p.slice(3);
 
+  // Fiche chambre d'une MAISON (L'Appart, 12/11/2026 : chemins lus par roomFromPath, src/data/places.ts ; la fiche
+  // d'un autre lieu n'est pas une page de RoomDetailPage).
+  const room = roomFromPath(p);
   const loader =
-    /^\/(lavilla|leloft|lelodge)\/chambre-\d+$/.test(p)
+    room && isMaisonKey(room.place)
       ? () => import("@/pages/RoomDetailPage")
       : p.startsWith("/blog/")
       ? () => import("@/pages/BlogPostPage")
