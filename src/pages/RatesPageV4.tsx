@@ -47,9 +47,11 @@ function priceScale(lang: "fr" | "en"): { header: readonly string[]; rows: Scale
   const privateRooms = STATS.totalRooms - STATS_SHARED_BATH.rooms;
   const perPerson = en ? `€${thousands(AP.suitePerPersonEur, ",")}` : `${thousands(AP.suitePerPersonEur, "\u00a0")} €`;
   return {
+    // (14/11/2026, V2-18) Les deux colonnes de prix juste après « Gamme » : sur téléphone (375 px), le tableau défile et les prix
+    // étaient hors de l'écran. Mêmes textes, autre ordre (l'en-tête et les cellules de chaque ligne, ci-dessous).
     header: en
-      ? ["Range", "Rooms", "Shower room", "CHF per month", "€ per month (rent on the lease)"]
-      : ["Gamme", "Chambres", "Salle d'eau", "CHF par mois", "€ par mois (loyer du bail)"],
+      ? ["Range", "CHF per month", "€ per month (rent on the lease)", "Rooms", "Shower room"]
+      : ["Gamme", "CHF par mois", "€ par mois (loyer du bail)", "Chambres", "Salle d'eau"],
     rows: [
       {
         range: houses,
@@ -636,10 +638,10 @@ export function RatesPageV4() {
                     {scale.rows.map((r) => (
                       <tr key={`${r.range}-${r.rooms}`} className="group">
                         <th scope="row" className="px-4 py-3 text-left font-medium text-[#1C1917] border-b border-[#E7E5E4] group-last:border-b-0">{r.range}</th>
-                        <td className="px-4 py-3 text-[#44403C] border-b border-[#E7E5E4] group-last:border-b-0">{r.rooms}</td>
-                        <td className="px-4 py-3 text-[#44403C] border-b border-[#E7E5E4] group-last:border-b-0">{r.bath}</td>
                         <td className="px-4 py-3 text-[#1C1917] font-semibold border-b border-[#E7E5E4] group-last:border-b-0 whitespace-nowrap">{r.chf}</td>
                         <td className="px-4 py-3 text-[#44403C] border-b border-[#E7E5E4] group-last:border-b-0 whitespace-nowrap">{r.eur}</td>
+                        <td className="px-4 py-3 text-[#44403C] border-b border-[#E7E5E4] group-last:border-b-0">{r.rooms}</td>
+                        <td className="px-4 py-3 text-[#44403C] border-b border-[#E7E5E4] group-last:border-b-0">{r.bath}</td>
                       </tr>
                     ))}
                   </tbody>
