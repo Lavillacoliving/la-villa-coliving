@@ -275,7 +275,7 @@ export function ChambreLouerGenevePage() {
             <LocalizedLink to={`/${APPART.key}`} className={link}>{APPART.name}</LocalizedLink>
             {en
               ? `, our flatshare in ${APPART.commune}: ${APPART.rooms.total} rooms near the station.`
-              : `, notre colocation à ${APPART.commune} : ${APPART.rooms.total} chambres près de la gare.`}
+              : `, notre colocation à ${APPART.commune} : ${APPART.rooms.total} chambres dans le quartier de la gare.`}
           </p>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {MAISON_KEYS.map((k) => (

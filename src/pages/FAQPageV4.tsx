@@ -217,7 +217,7 @@ export function FAQPageV4() {
                     {/* (L'Appart, E5) Page d'intention Annemasse : L'Appart ouvre la carte. */}
                     {language === "en"
                       ? `${APPART.name}, our flatshare near the station, and ${STATS.totalHouses} houses in Annemasse Agglo (Ville-la-Grand, Ambilly, Annemasse), direct Léman Express to Geneva. See the page →`
-                      : `${APPART.name}, notre colocation près de la gare, et ${STATS.totalHouses} maisons dans Annemasse Agglo (Ville-la-Grand, Ambilly, Annemasse), Léman Express direct vers Genève. Voir la page →`}
+                      : `${APPART.name}, notre colocation du quartier de la gare, et ${STATS.totalHouses} maisons dans Annemasse Agglo (Ville-la-Grand, Ambilly, Annemasse), Léman Express direct vers Genève. Voir la page →`}
                   </p>
                 </LocalizedLink>
 

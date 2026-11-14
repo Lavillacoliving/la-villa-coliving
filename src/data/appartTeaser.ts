@@ -79,11 +79,11 @@ export function appartTeaser(route: AppartTeaserRoute, lang: AppartLang): Appart
     case "/annemasse-colocation":
       return {
         eyebrow: null,
-        title: en ? `${A.name}: the flatshare near ${A.commune} station` : `${A.name} : la colocation près de la gare d'${A.commune}`,
+        title: en ? `${A.name}: the flatshare near ${A.commune} station` : `${A.name} : la colocation du quartier de la gare d'${A.commune}`,
         text: en
           ? `${capital(aOrAn(T.stationWalkMin))} ${T.stationWalkMin}-minute walk from ${A.commune} station and ${aOrAn(T.tramStop.walkMin)} ${T.tramStop.walkMin}-minute walk from tram 17: ${A.rooms.total} furnished rooms in a ${A.flat.surfaceM2} m² flat, with ${aOrAn(A.flat.livingKitchenM2)} ${A.flat.livingKitchenM2} m² living room and kitchen and a balcony. From ${P.from.en.chf} a month, ${included}. In euros: from ${P.from.en.eur}. Geneva Eaux-Vives is ${T.eauxVivesDoorToDoorMin} minutes door to door.`
           : `À ${T.stationWalkMin} min à pied de la gare d'${A.commune} et à ${T.tramStop.walkMin} min du tram 17 : ${A.rooms.total} chambres meublées dans un appartement de ${A.flat.surfaceM2} m², avec un séjour-cuisine de ${A.flat.livingKitchenM2} m² et un balcon. Dès ${P.from.fr.chf} par mois, ${included}. En euros : dès ${P.from.fr.eur}. Genève-Eaux-Vives est à ${T.eauxVivesDoorToDoorMin} min porte-à-porte.`,
-        link: en ? `${A.name}, our flatshare near the station` : `${A.name}, notre colocation près de la gare`,
+        link: en ? `${A.name}, our flatshare near the station` : `${A.name}, notre colocation du quartier de la gare`,
       };
     case "/chambre-a-louer-annemasse":
       return {

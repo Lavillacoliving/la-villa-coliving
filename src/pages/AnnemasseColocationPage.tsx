@@ -138,7 +138,7 @@ export function AnnemasseColocationPage() {
             {/* (Lot L2, 09/10/2026) D1 : destination nommée, libellé canonique STATS_DISPLAY.distance. */}
             {language === "en"
               ? `${APPART.name}, our flatshare near ${APPART.commune} station, and three premium coliving houses in Annemasse Agglo (Ville-la-Grand, Ambilly, Annemasse) — for cross-border workers who want a Swiss salary with French cost of living. ${STATS_DISPLAY.en.distance}.`
-              : `${APPART.name}, notre colocation près de la gare d'${APPART.commune}, et trois maisons de coliving premium dans Annemasse Agglo (Ville-la-Grand, Ambilly, Annemasse) — pour frontaliers qui veulent un salaire suisse avec le coût de la vie français. À ${STATS_DISPLAY.fr.distance}.`}
+              : `${APPART.name}, notre colocation du quartier de la gare d'${APPART.commune}, et trois maisons de coliving premium dans Annemasse Agglo (Ville-la-Grand, Ambilly, Annemasse) — pour frontaliers qui veulent un salaire suisse avec le coût de la vie français. À ${STATS_DISPLAY.fr.distance}.`}
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <LocalizedLink

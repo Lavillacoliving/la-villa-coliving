@@ -39,7 +39,7 @@ export const appartPriceFaq: { fr: QAPair[]; en: QAPair[] } = {
     },
     {
       q: `Existe-t-il une colocation à moins de ${BUDGET_QUESTION_EUR} € par mois près de Genève ?`,
-      a: `Oui, côté France. Sur les plateformes entre particuliers, une chambre en colocation se loue ${MARKET_ROOM_EUR.min} à ${thousands(MARKET_ROOM_EUR.max, "\u00a0")} € selon la commune, charges souvent en plus. Chez La Villa Coliving, les ${word(STD.numbers.length, "fr")} chambres de ${STD.surfaceM2} m² de ${A.name}, à ${A.commune}, près de la gare, sont à ${AP.room.fr.chf} par mois, charges, fibre, streaming et ménage des communs compris. En euros, le loyer du bail est de ${AP.room.fr.eur}. Genève-Eaux-Vives est à ${A.transit.eauxVivesDoorToDoorMin} min porte-à-porte en Léman Express.`,
+      a: `Oui, côté France. Sur les plateformes entre particuliers, une chambre en colocation se loue ${MARKET_ROOM_EUR.min} à ${thousands(MARKET_ROOM_EUR.max, "\u00a0")} € selon la commune, charges souvent en plus. Chez La Villa Coliving, les ${word(STD.numbers.length, "fr")} chambres de ${STD.surfaceM2} m² de ${A.name}, à ${A.commune}, dans le quartier de la gare, sont à ${AP.room.fr.chf} par mois, charges, fibre, streaming et ménage des communs compris. En euros, le loyer du bail est de ${AP.room.fr.eur}. Genève-Eaux-Vives est à ${A.transit.eauxVivesDoorToDoorMin} min porte-à-porte en Léman Express.`,
     },
   ],
   en: [

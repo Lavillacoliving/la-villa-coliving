@@ -29,7 +29,7 @@ export const annemasseColocationFaq: { fr: QAPair[]; en: QAPair[] } = {
   fr: [
     {
       q: "Combien coûte une colocation à Annemasse chez La Villa Coliving ?",
-      a: `À ${APPART.name}, notre colocation près de la gare d'${APPART.commune}, une chambre coûte à partir de ${APPART_FROM.fr.chf}/mois, charges, fibre, streaming et ménage des communs compris. Dans nos trois maisons de coliving d'Annemasse Agglo (Ville-la-Grand, Ambilly, Annemasse), les chambres sont à partir de ${PRICE_FROM_CHF_FR}/mois tout inclus. Le prix comprend le loyer, les charges (eau, électricité, chauffage), la fibre jusqu'à 8 Gb/s, le ménage ${STATS.cleaningPerWeek} fois par semaine des communs, l'accès à la piscine chauffée, à la salle de sport et au sauna, les cours de yoga et fitness privés hebdomadaires, et les événements communautaires mensuels. Pas de frais d'agence, pas de frais de dossier.`,
+      a: `À ${APPART.name}, notre colocation du quartier de la gare d'${APPART.commune}, une chambre coûte à partir de ${APPART_FROM.fr.chf}/mois, charges, fibre, streaming et ménage des communs compris. Dans nos trois maisons de coliving d'Annemasse Agglo (Ville-la-Grand, Ambilly, Annemasse), les chambres sont à partir de ${PRICE_FROM_CHF_FR}/mois tout inclus. Le prix comprend le loyer, les charges (eau, électricité, chauffage), la fibre jusqu'à 8 Gb/s, le ménage ${STATS.cleaningPerWeek} fois par semaine des communs, l'accès à la piscine chauffée, à la salle de sport et au sauna, les cours de yoga et fitness privés hebdomadaires, et les événements communautaires mensuels. Pas de frais d'agence, pas de frais de dossier.`,
     },
     {
       q: "Combien de temps pour aller à Genève depuis Annemasse ?",

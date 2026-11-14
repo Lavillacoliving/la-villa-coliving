@@ -3,7 +3,7 @@
 // faits de la marque (ENTITY_FACTS.appart / .brand), nœud JSON-LD et offres de /chambres-disponibles. Chargés comme les gardes.
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { existsSync, readFileSync } from 'node:fs';
+import { existsSync, readFileSync, readdirSync } from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { build } from 'esbuild';
@@ -314,4 +314,34 @@ test('modules légers (corrections du 13/11/2026, relecture technique) : le bloc
   assert.ok(runtimeImports('src/components/appart/AppartTeaser.tsx').includes('@/data/appartTeaser'));
   // Les gardes lisent toujours le bloc par appartFacts.ts (réexport ; mêmes valeurs que appartTeaser.ts : test précédent).
   for (const lang of LANGS) for (const r of m.APPART_TEASER_ROUTES) assert.ok(m.appartTeaser(r, lang).text.length > 0, `${lang} ${r}`);
+});
+
+test('« quartier de la gare » (V2-14 = CB-13, 14/11/2026) : en français, « près de la gare » ne reste que dans les 4 descriptions Google', () => {
+  // Décision V7 : le descripteur de L'Appart est « colocation à Annemasse, quartier de la gare ». La décision n° 15 garde « près de
+  // la gare » dans les seules descriptions Google (metas de /lappart avant et après l'ouverture, de /annemasse-colocation et de
+  // /chambre-a-louer-annemasse), qui suivent la recherche. L'anglais garde « near the station » (descripteur V7 en anglais).
+  for (const s of m.appartFactsAllStrings('fr')) assert.doesNotMatch(s, /près de la gare/, `« ${s.slice(0, 80)}… »`);
+  // Lignes de src/ qui parlent de L'Appart et disent « près de la gare » : les 4 descriptions, rien d'autre.
+  const hits = [];
+  const walk = (dir) => {
+    for (const e of readdirSync(path.join(ROOT, dir), { withFileTypes: true })) {
+      const rel = `${dir}/${e.name}`;
+      if (e.isDirectory()) { walk(rel); continue; }
+      if (!/\.(?:ts|tsx)$/.test(e.name)) continue;
+      const lines = readFileSync(path.join(ROOT, rel), 'utf8').split('\n');
+      lines.forEach((line, i) => {
+        if (!/près de la gare/.test(line) || !/APPART|L'Appart|\bA\.(?:name|commune)\b/.test(line)) return;
+        // Une description = la ligne est dans une prop `description` ou une fonction `…Description` (5 lignes au-dessus au plus).
+        const inDescription = lines.slice(Math.max(0, i - 5), i + 1).some((l) => /description/i.test(l));
+        hits.push(`${rel} : ${inDescription ? 'description' : line.trim().slice(0, 60)}`);
+      });
+    }
+  };
+  walk('src');
+  assert.deepEqual(hits.sort(), [
+    'src/data/appartPage.ts : description',
+    'src/data/appartPage.ts : description',
+    'src/pages/AnnemasseColocationPage.tsx : description',
+    'src/pages/ChambreLouerAnnemassePage.tsx : description',
+  ]);
 });
