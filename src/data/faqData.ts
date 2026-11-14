@@ -7,6 +7,7 @@ import { priceJustificationFaq } from "@/data/priceFacts";
 import { VERIFY_ARTICLE_PATH, VERIFY_LINK_LABEL } from "@/data/verifyArticle";
 import { appartPriceFaq } from "@/data/faq/tarifsFaq";
 import { APPART } from "@/data/appart";
+import { appartHousesFaq } from "@/data/appartHousesFaq";
 
 const PRICE_FAQ = { fr: priceJustificationFaq("fr"), en: priceJustificationFaq("en") };
 
@@ -314,6 +315,14 @@ export const faqData: FAQItem[] = [
     category: 'Pricing & Payments',
     question: { en: appartPriceFaq.en[i].q, fr: fr.q },
     answer: { en: appartPriceFaq.en[i].a, fr: fr.a },
+  })),
+  // (14/11/2026, CB-4) Les questions 3 (piscine) et 4 (différence avec les maisons) de /lappart, au caractère près : texte unique
+  // src/data/appartHousesFaq.ts (aussi sur /tarifs), à côté des deux questions de prix de L'Appart.
+  ...appartHousesFaq("fr").map((fr, i) => ({
+    id: ['lappart-pool', 'lappart-vs-houses'][i],
+    category: 'Pricing & Payments',
+    question: { en: appartHousesFaq("en")[i].q, fr: fr.q },
+    answer: { en: appartHousesFaq("en")[i].a, fr: fr.a },
   })),
   {
     id: 'why-higher-prices',

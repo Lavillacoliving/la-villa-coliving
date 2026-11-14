@@ -34,6 +34,8 @@ import {
 } from "./entityFacts";
 import { aOrAn } from "./stats";
 import { APPART_TEASER_ROUTES, appartTeaser } from "./appartTeaser";
+// (14/11/2026, CB-4) Questions 3 et 4 de la FAQ de /lappart, aussi sur /tarifs et /faq : texte unique, module léger.
+import { appartHousesFaq } from "./appartHousesFaq";
 // (Corrections du 13/11/2026) Nombres en lettres et fréquences : src/data/appartWords.ts, partagés avec le bloc statique.
 import {
   APPART_ORDINAL_EN as ORDINAL_EN,
@@ -224,15 +226,17 @@ type ExemptTexts = { [K in AppartGammeExemptId]: K extends "page.compris.tableau
  */
 export function appartGammeExempt(lang: AppartLang): ExemptTexts {
   const houses = R.houses.map((h) => (lang === "en" ? `${h.label} in ${h.commune}` : `${h.label} à ${h.commune}`)).join(", ");
+  // Questions 3 (piscine) et 4 (différence avec les maisons) de la FAQ : src/data/appartHousesFaq.ts, aussi lu par /tarifs et /faq.
+  const [pool, diff] = appartHousesFaq(lang);
   if (lang === "en") {
     return {
       "chambre.pas-compris.3": `Pool, sauna, gym: there aren't any at ${A.name}`,
       "page.chapeau.3": `What ${A.name} is not: a coliving house. No pool, no sauna, no gym here. A simple, well-placed flatshare with bills included.`,
       "page.complet.maisons": "In the meantime, here are the cheapest rooms available in our coliving houses, with pool, sauna and gym.",
       "page.compris.tableau.l13": ["Pool, sauna, gym", "No", `There aren't any at ${A.name}. ${MAISONS_CROSS_LINK.en}`],
-      "page.faq.3.q": `Does ${A.name} have a pool?`,
-      "page.faq.3.r": `No. ${A.name} has no pool, sauna or gym: it's a flatshare in a flat, not a coliving house. You do have access to the yoga and fitness classes held at La Villa Coliving's houses. And if you want a pool and a sauna at home, that's the houses, from ${R.from.en} a month.`,
-      "page.faq.4.r": `The houses are colivings: ${R.residents.min} to ${R.residents.max} housemates, rooms of ${R.surfaces.min} to ${R.surfaces.max} m², a pool, a sauna and a gym in every house, shared areas cleaned ${timesPerWeek(R.cleaningPerWeek, "en")}, from ${R.from.en} a month. ${A.name} is a flatshare: ${A.rooms.total} rooms in a ${A.flat.surfaceM2} m² flat near ${A.commune} station, rooms of ${A.rooms.surface.min} to ${A.rooms.surface.max} m², ${aOrAn(A.flat.livingKitchenM2)} ${A.flat.livingKitchenM2} m² living room and kitchen and a balcony, shared areas cleaned ${timesPerWeek(A.cleaningPerWeek, "en")}, from ${P.from.en.chf} a month. Same founders, same lease, same deposit, and no application fee either way.`,
+      "page.faq.3.q": pool.q,
+      "page.faq.3.r": pool.a,
+      "page.faq.4.r": diff.a,
       "page.maisons.h2": "Want a pool and a sauna?",
       "page.maisons.texte": `That's our ${word(R.totalHouses, "en")} coliving houses: ${houses}. A pool, a sauna and a gym in each, rooms of ${R.surfaces.min} to ${R.surfaces.max} m², from ${R.from.en} a month.`,
     };
@@ -242,9 +246,9 @@ export function appartGammeExempt(lang: AppartLang): ExemptTexts {
     "page.chapeau.3": `Ce que ${A.name} n'est pas : une maison de coliving. Ici, ni piscine, ni sauna, ni salle de sport. Une colocation simple, bien placée, charges comprises.`,
     "page.complet.maisons": "En attendant, voici les chambres disponibles les moins chères dans nos maisons de coliving, avec piscine, sauna et salle de sport.",
     "page.compris.tableau.l13": ["Piscine, sauna, salle de sport", "Non", `Il n'y en a pas à ${A.name}. ${MAISONS_CROSS_LINK.fr}`],
-    "page.faq.3.q": `${A.name} a-t-il une piscine ?`,
-    "page.faq.3.r": `Non. ${A.name} n'a ni piscine, ni sauna, ni salle de sport : c'est une colocation dans un appartement, pas une maison de coliving. Tu as accès aux cours de yoga et de sport organisés dans les maisons de La Villa Coliving. Et si tu veux la piscine et le sauna à domicile, ce sont les maisons, dès ${R.from.fr} par mois.`,
-    "page.faq.4.r": `Les maisons sont des colivings : ${R.residents.min} à ${R.residents.max} colocataires, des chambres de ${R.surfaces.min} à ${R.surfaces.max} m², une piscine, un sauna et une salle de sport dans chaque maison, le ménage des communs ${timesPerWeek(R.cleaningPerWeek, "fr")}, dès ${R.from.fr} par mois. ${A.name} est une colocation : ${A.rooms.total} chambres dans un appartement de ${A.flat.surfaceM2} m² dans le quartier de la gare d'${A.commune}, des chambres de ${A.rooms.surface.min} à ${A.rooms.surface.max} m², un séjour-cuisine de ${A.flat.livingKitchenM2} m² et un balcon, le ménage des communs ${timesPerWeek(A.cleaningPerWeek, "fr")}, dès ${P.from.fr.chf} par mois. Mêmes fondateurs, même bail, même caution, et 0 € de frais de dossier dans les deux cas.`,
+    "page.faq.3.q": pool.q,
+    "page.faq.3.r": pool.a,
+    "page.faq.4.r": diff.a,
     "page.maisons.h2": "Tu veux piscine et sauna ?",
     "page.maisons.texte": `Ce sont nos ${word(R.totalHouses, "fr")} maisons de coliving : ${houses}. Piscine, sauna et salle de sport dans chacune, des chambres de ${R.surfaces.min} à ${R.surfaces.max} m², dès ${R.from.fr} par mois.`,
   };
@@ -258,6 +262,10 @@ export function appartGammeExemptStrings(lang: AppartLang): string[] {
     return typeof v === "string" ? [v] : v.filter((cell) => HOUSE_AMENITY_RE.test(cell));
   });
 }
+
+// ── Questions 3 et 4 de la FAQ de /lappart, aussi sur /tarifs et /faq : src/data/appartHousesFaq.ts (14/11/2026), réexporté ici ──
+export { appartHousesFaq } from "./appartHousesFaq";
+export type { AppartHousesQA } from "./appartHousesFaq";
 
 // ── Bloc statique « L'Appart » des pages de la marque : src/data/appartTeaser.ts (corrections du 13/11/2026), réexporté ici ──
 export { APPART_TEASER_ROUTES, appartTeaser } from "./appartTeaser";

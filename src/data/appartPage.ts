@@ -23,7 +23,8 @@
  */
 import { APPART } from "./appart";
 import { appartCommuteLine } from "./appartLocation";
-import { appartFullTitle, appartGammeExempt, appartOpeningSentence, appartRoomPhotosSentence } from "./appartFacts";
+import { appartFullTitle, appartOpeningSentence, appartRoomPhotosSentence } from "./appartFacts";
+import { appartHousesFaq } from "./appartHousesFaq";
 import { ENTITY_FACTS_CTA, FEES_DEPOSIT_SENTENCE, GUARANTOR_SENTENCE, MAISONS_REFERRAL } from "./entityFacts";
 import { ANNEMASSE_TRAIN_MIN, aOrAn, thousands } from "./stats";
 import { APPART_SUITE_ROOM_NUMBER, roomCapacityLabel, roomLabel } from "./places";
@@ -369,7 +370,8 @@ export interface AppartQA {
 
 /**
  * Les questions 1, 2, 5 à 8 (textes propres à la page). Les questions 3 (« L'Appart a-t-il une piscine ? ») et 4 (différence avec
- * les maisons) nomment les équipements des maisons : la page les insère depuis appartGammeExempt (même source que la garde).
+ * les maisons) nomment les équipements des maisons : la page les insère depuis appartHousesFaq (src/data/appartHousesFaq.ts : aussi
+ * /tarifs et /faq ; la garde lit les mêmes chaînes par appartGammeExempt).
  * Ordre de la page : 1, 2, 3, 4, 5, 6, 7, 8 — `appartFaqOwn` rend les six autres, dans l'ordre, avec leur identifiant.
  */
 export function appartFaqOwn(lang: AppartPageLang): AppartQA[] {
@@ -400,25 +402,22 @@ export function appartFaqOwn(lang: AppartPageLang): AppartQA[] {
 
 /**
  * Les 8 questions de la page, dans l'ordre, pour la liste visible ET le FAQPage (un seul, construit depuis la même liste). Les
- * questions 3 et 4 : textes de appartGammeExempt (piscine, sauna, salle de sport nommés pour les nier ou renvoyer aux maisons),
- * sauf la question 4 elle-même, qui ne nomme aucun équipement.
+ * questions 3 et 4 (piscine, sauna, salle de sport nommés pour les nier ou renvoyer aux maisons) : src/data/appartHousesFaq.ts,
+ * texte unique aussi posé sur /tarifs et /faq (14/11/2026, CB-4), et lu par la garde (appartGammeExempt).
  */
 export function appartFaq(lang: AppartPageLang): AppartQA[] {
-  const ex = appartGammeExempt(lang);
   const own = new Map(appartFaqOwn(lang).map((x) => [x.id, x]));
   const pick = (id: string): AppartQA => {
     const qa = own.get(id);
     if (!qa) throw new Error(`appartFaq : question ${id} absente`);
     return qa;
   };
-  const q4 = lang === "en"
-    ? `What's the difference between ${A.name} and La Villa Coliving's houses?`
-    : `Quelle est la différence entre ${A.name} et les maisons de La Villa Coliving ?`;
+  const [pool, diff] = appartHousesFaq(lang);
   return [
     pick("page.faq.1"),
     pick("page.faq.2"),
-    { id: "page.faq.3", q: ex["page.faq.3.q"], a: ex["page.faq.3.r"] },
-    { id: "page.faq.4", q: q4, a: ex["page.faq.4.r"] },
+    { id: pool.id, q: pool.q, a: pool.a },
+    { id: diff.id, q: diff.q, a: diff.a },
     pick("page.faq.5"),
     pick("page.faq.6"),
     pick("page.faq.7"),

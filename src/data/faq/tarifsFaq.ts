@@ -2,6 +2,7 @@ import type { QAPair } from "@/lib/structuredData";
 import { STATS, STATS_SHARED_BATH, PRICE_CHF_FR, PRICE_CHF_EN, PRICE_FROM_CHF_FR, PRICE_FROM_CHF_EN, MARKET_ROOM_EUR, sharedBathTiersText, thousands } from "@/data/stats";
 import { priceJustificationFaq } from "@/data/priceFacts";
 import { APPART } from "@/data/appart";
+import { appartHousesFaq } from "@/data/appartHousesFaq";
 
 // §2 du playbook AEO — /tarifs (page canonique prix). Tutoiement, texte verbatim.
 // (Lot L2 « Emplacement et transport », 09/10/2026) Surfaces de chambres uniquement depuis STATS.roomSizeMin/Max
@@ -82,6 +83,9 @@ export const tarifsFaq: { fr: QAPair[]; en: QAPair[] } = {
     },
     // (L'Appart, E5) Deux questions nouvelles d'intention budget (aussi sur /faq).
     ...appartPriceFaq.fr,
+    // (14/11/2026, CB-4) Les questions 3 (« L'Appart a-t-il une piscine ? ») et 4 (différence avec les maisons) de /lappart, au
+    // caractère près : texte unique src/data/appartHousesFaq.ts (aussi sur /faq), jamais un prix de L'Appart à côté de la piscine.
+    ...appartHousesFaq("fr").map(({ q, a }) => ({ q, a })),
     {
       q: "Y a-t-il des frais cachés ou des suppléments en cours de séjour ?",
       a: `Non. Chez La Villa Coliving, le prix affiché est le prix payé : ton loyer mensuel dès ${PRICE_FROM_CHF_FR} couvre l'ensemble des services inclus. Pas d'option payante à ajouter, pas de charges de régularisation, pas de frais cachés. Le seul autre montant est la caution, qui t'est restituée à la fin.`,
@@ -118,6 +122,7 @@ export const tarifsFaq: { fr: QAPair[]; en: QAPair[] } = {
       a: `At La Villa Coliving, a room in the flatshare at ${A.name}, in ${A.commune}, starts at ${AP.from.en.chf}/month, with bills, fibre, streaming and cleaning of the shared areas included. In the coliving houses, a room starts at ${PRICE_FROM_CHF_EN}/month: utilities, fibre internet, cleaning and access to the pool, sauna and gym included. For comparison, a basic studio in Geneva often exceeds CHF 2,000 once all charges are added. A single payment, with no move-in fees.`,
     },
     ...appartPriceFaq.en,
+    ...appartHousesFaq("en").map(({ q, a }) => ({ q, a })),
     {
       q: "Are there hidden fees or extra charges during the stay?",
       a: `No. At La Villa Coliving the displayed price is the price you pay: your monthly rent from ${PRICE_FROM_CHF_EN} covers all included services. No paid add-ons, no year-end charge adjustments, no hidden fees. The only other amount is the deposit, which is returned to you at the end.`,

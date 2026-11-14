@@ -9,6 +9,7 @@ import { fileURLToPath } from 'node:url';
 import { build } from 'esbuild';
 import { loadEntityFacts } from '../../scripts/lib/load-entity-facts.mjs';
 import { scanGenericAddresses } from '../../scripts/lib/private-locations.mjs';
+import { gammeSentenceIssues } from '../../scripts/lib/gamme-rules.mjs';
 
 const ROOT = path.join(path.dirname(fileURLToPath(import.meta.url)), '..', '..');
 const m = await loadEntityFacts();
@@ -287,7 +288,8 @@ test('prix d\'appel et carte d\'un lieu : L\'Appart « dès 730 CHF » ; les mai
 
 test('chargeur des gardes : chaque export des modules de L\'Appart est exposé, à la même valeur (aucun nom en double)', async () => {
   // (Corrections du 13/11/2026) + appartTeaser.ts et appartCovers.ts, réexportés par appartFacts.ts et appartPhotos.ts.
-  for (const mod of ['./src/data/appart', './src/data/appartLocation', './src/data/appartFacts', './src/data/appartTeaser', './src/data/appartPhotos', './src/data/appartCovers', './src/data/placeLocation', './src/lib/placeBridge']) {
+  // (14/11/2026, CB-4) + appartHousesFaq.ts, réexporté par appartFacts.ts.
+  for (const mod of ['./src/data/appart', './src/data/appartLocation', './src/data/appartFacts', './src/data/appartTeaser', './src/data/appartHousesFaq', './src/data/appartPhotos', './src/data/appartCovers', './src/data/placeLocation', './src/lib/placeBridge']) {
     const x = await bundle(`export * from '${mod}';`);
     const names = Object.keys(x);
     assert.ok(names.length > 0, mod);
@@ -304,7 +306,9 @@ test('modules légers (corrections du 13/11/2026, relecture technique) : le bloc
   // Imports exécutés (les « import type » s'effacent à la compilation).
   const runtimeImports = (f) => [...read(f).matchAll(/^import\s+(?!type\b)[^;]*?from\s+["']([^"']+)["']/gm)].map((x) => x[1]);
   const heavy = /appartFacts|appartPhotos|appartPage|appartLocation/;
-  for (const f of ['src/components/appart/AppartTeaser.tsx', 'src/data/appartTeaser.ts', 'src/data/appartWords.ts', 'src/data/roomPhotos.ts']) {
+  // (14/11/2026, CB-4) + les questions 3 et 4 de /lappart (appartHousesFaq.ts) et les FAQ de /tarifs et /faq qui les posent :
+  // ces pages ne chargent pas appartFacts.ts pour deux réponses.
+  for (const f of ['src/components/appart/AppartTeaser.tsx', 'src/data/appartTeaser.ts', 'src/data/appartWords.ts', 'src/data/roomPhotos.ts', 'src/data/appartHousesFaq.ts', 'src/data/faq/tarifsFaq.ts', 'src/data/faqData.ts']) {
     for (const imp of runtimeImports(f)) assert.doesNotMatch(imp, heavy, `${f} importe ${imp}`);
   }
   assert.deepEqual(runtimeImports('src/data/appartCovers.ts'), [], 'appartCovers.ts : aucun import exécuté');
@@ -344,4 +348,35 @@ test('« quartier de la gare » (V2-14 = CB-13, 14/11/2026) : en français, « p
     'src/pages/AnnemasseColocationPage.tsx : description',
     'src/pages/ChambreLouerAnnemassePage.tsx : description',
   ]);
+});
+
+test('FAQ de /tarifs et /faq (CB-4, 14/11/2026) : les questions 3 et 4 de /lappart, au caractère près, une fois, après les questions de prix de L\'Appart', async () => {
+  // Source des textes : PAGE-LAPPART.md § 10 (questions 3 et 4) et SURFACES-LOT4.md S5.4 et S5.5, « une seule source pour les trois
+  // pages ». La garde lit les mêmes chaînes (exceptions « page.faq.3.q », « page.faq.3.r », « page.faq.4.r »).
+  const x = await bundle("export { tarifsFaq, appartPriceFaq } from './src/data/faq/tarifsFaq'; export { faqData } from './src/data/faqData'; export { appartFaq } from './src/data/appartPage';");
+  const qa = ({ q, a }) => ({ q, a });
+  for (const lang of LANGS) {
+    const shared = m.appartHousesFaq(lang);
+    assert.deepEqual(shared.map((s) => s.id), ['page.faq.3', 'page.faq.4']);
+    // /lappart : à leur place (3 et 4), les mêmes objets de texte.
+    assert.deepEqual(x.appartFaq(lang).slice(2, 4).map(qa), shared.map(qa), `${lang} : /lappart`);
+    // La garde : mêmes chaînes que ses exceptions.
+    const ex = m.appartGammeExempt(lang);
+    assert.deepEqual([ex['page.faq.3.q'], ex['page.faq.3.r'], ex['page.faq.4.r']], [shared[0].q, shared[0].a, shared[1].a], `${lang} : exceptions de la garde`);
+    // /tarifs : une fois chacune, juste après les deux questions de prix de L'Appart.
+    const t = x.tarifsFaq[lang].map(qa);
+    for (const s of shared) assert.equal(t.filter((y) => y.q === s.q).length, 1, `${lang} : /tarifs, « ${s.q} » une fois`);
+    const i = t.findIndex((y) => y.q === shared[0].q);
+    assert.deepEqual(t.slice(i - 2, i + 2), [...x.appartPriceFaq[lang].map(qa), ...shared.map(qa)], `${lang} : /tarifs, à côté des questions de prix de L'Appart`);
+    // /faq : même chose, dans la catégorie des prix.
+    const f = x.faqData.map((it) => ({ q: it.question[lang], a: it.answer[lang], category: it.category }));
+    for (const s of shared) assert.equal(f.filter((y) => y.q === s.q).length, 1, `${lang} : /faq, « ${s.q} » une fois`);
+    const j = f.findIndex((y) => y.q === shared[0].q);
+    assert.deepEqual(f.slice(j - 2, j + 2).map(qa), [...x.appartPriceFaq[lang].map(qa), ...shared.map(qa)], `${lang} : /faq, à côté des questions de prix de L'Appart`);
+    assert.ok(f.slice(j - 2, j + 2).every((y) => y.category === 'Pricing & Payments'), `${lang} : /faq, catégorie des prix`);
+    // V2, par phrase : jamais un prix de L'Appart à côté de piscine, sauna ou salle de sport (sur /tarifs et /faq, aucune exception).
+    const units = shared.flatMap((s) => [s.q, ...s.a.split(/(?<=[.!?;])\s+/)]);
+    assert.ok(units.some((u) => HOUSE_AMENITY.test(u)), 'le contrôle voit bien les équipements');
+    assert.deepEqual(gammeSentenceIssues(units, { ...m, appartGammeExemptStrings: () => [] }), [], `${lang} : prix de L'Appart et équipement dans une même phrase`);
+  }
 });
