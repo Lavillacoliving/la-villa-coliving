@@ -38,14 +38,11 @@ export function AppartIncluded({ lang, headingLevel = 2, className = "" }: Appar
       </Heading>
       <p className="text-[#57534E] mb-5">{t.intro}</p>
       <div className="overflow-x-auto rounded-lg border border-[#E7E5E4] bg-[#FAF9F6]">
-        {/* Largeurs fixées (34 / 18 / 48 %) : la colonne « Précision » porte les phrases les plus longues ; à 375 px, chaque
-            ligne tient en 2 ou 3 lignes de texte. */}
-        <table className="w-full table-fixed text-sm text-left text-[#44403C]">
-          <colgroup>
-            <col className="w-[34%]" />
-            <col className="w-[18%]" />
-            <col className="w-[48%]" />
-          </colgroup>
+        {/* Disposition automatique (recette du 14/11/2026) : chaque colonne prend au moins la largeur de son mot le plus long
+            (« demande », « INCLUDED? »). Avec des largeurs fixées (34 / 18 / 48 %), ces mots débordaient sur la colonne voisine de
+            320 à 414 px (« demandecandidature. », « INCLUDEDETAILS ») ; à 320 px, le cadre défile de quelques pixels plutôt que
+            de faire chevaucher deux textes. */}
+        <table className="w-full table-auto text-sm text-left text-[#44403C]">
           <thead>
             <tr className="border-b border-[#E7E5E4] text-xs uppercase tracking-wider text-[#78716C]">
               {t.header.map((h) => (
