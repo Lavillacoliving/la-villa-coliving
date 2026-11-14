@@ -135,10 +135,12 @@ export function AnnemasseColocationPage() {
               : `Colocation à Annemasse — ${APPART.name} dès ${APPART_FROM.fr.chf}/mois, trois maisons de coliving dès ${PRICE_FROM_CHF_FR}/mois`}
           </h1>
           <p className="text-lg md:text-xl text-[#57534E] max-w-3xl mx-auto leading-relaxed mb-10 font-medium">
-            {/* (Lot L2, 09/10/2026) D1 : destination nommée, libellé canonique STATS_DISPLAY.distance. */}
+            {/* (Lot L2, 09/10/2026) D1 : destination nommée, libellé canonique STATS_DISPLAY.distance.
+                (14/11/2026, V2-15 = CB-5) La phrase dit « les maisons » : après une phrase qui s'ouvre sur L'Appart (13 min), les 20 min
+                se liraient pour lui. Libellé canonique intact. */}
             {language === "en"
-              ? `${APPART.name}, our flatshare near ${APPART.commune} station, and three premium coliving houses in Annemasse Agglo (Ville-la-Grand, Ambilly, Annemasse) — for cross-border workers who want a Swiss salary with French cost of living. ${STATS_DISPLAY.en.distance}.`
-              : `${APPART.name}, notre colocation du quartier de la gare d'${APPART.commune}, et trois maisons de coliving premium dans Annemasse Agglo (Ville-la-Grand, Ambilly, Annemasse) — pour frontaliers qui veulent un salaire suisse avec le coût de la vie français. À ${STATS_DISPLAY.fr.distance}.`}
+              ? `${APPART.name}, our flatshare near ${APPART.commune} station, and three premium coliving houses in Annemasse Agglo (Ville-la-Grand, Ambilly, Annemasse) — for cross-border workers who want a Swiss salary with French cost of living. The houses are ${STATS_DISPLAY.en.distance}.`
+              : `${APPART.name}, notre colocation du quartier de la gare d'${APPART.commune}, et trois maisons de coliving premium dans Annemasse Agglo (Ville-la-Grand, Ambilly, Annemasse) — pour frontaliers qui veulent un salaire suisse avec le coût de la vie français. Les maisons sont à ${STATS_DISPLAY.fr.distance}.`}
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <LocalizedLink

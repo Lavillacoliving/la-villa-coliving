@@ -54,12 +54,14 @@ import { ColocationGenevePage } from "@/pages/ColocationGenevePage";
 import { ChambreLouerGenevePage } from "@/pages/ChambreLouerGenevePage";
 import { ChambreLouerAnnemassePage } from "@/pages/ChambreLouerAnnemassePage";
 import { OfferHiverPage } from "@/pages/OfferHiverPage";
+import { AnnemasseColocationPage } from "@/pages/AnnemasseColocationPage";
 const PAGES = {
   "/chambres-disponibles": ChambresDisponiblesPage,
   "/colocation-geneve": ColocationGenevePage,
   "/chambre-a-louer-geneve": ChambreLouerGenevePage,
   "/chambre-a-louer-annemasse": ChambreLouerAnnemassePage,
   "/offre-hiver": OfferHiverPage,
+  "/annemasse-colocation": AnnemasseColocationPage,
 };
 export function render(route, lang) {
   const Page = PAGES[route];
@@ -84,7 +86,7 @@ function renderState(state) {
   try {
     const P = require(out);
     const res = {};
-    for (const route of [...PAGES, '/offre-hiver']) for (const lang of LANGS) res[`${lang}:${route}`] = P.render(route, lang);
+    for (const route of [...PAGES, '/offre-hiver', '/annemasse-colocation']) for (const lang of LANGS) res[`${lang}:${route}`] = P.render(route, lang);
     return res;
   } finally {
     delete globalThis.window;
@@ -328,6 +330,29 @@ test('textes fixes de l\'état A : titres sans prix ; metas sans équipement, ch
         if (s.includes(m.APPART.name) && s.includes(distance)) {
           assert.ok(s.indexOf(m.APPART.name) > s.indexOf(distance), `${lang} ${route} : « ${distance} » appliqué à L'Appart — « ${s} »`);
         }
+      }
+    }
+  }
+});
+
+test('« 20 min de Genève-Eaux-Vives » rattachés aux maisons (V2-15 = CB-5) : repère de /colocation-geneve, sous-titre de /annemasse-colocation', () => {
+  // L'Appart est à 13 min (APPART.transit) : les 20 min sont l'agrégat des maisons. Le libellé canonique (STATS_DISPLAY.distance)
+  // reste entier ; seule sa tête change.
+  for (const state of ['A', 'B']) {
+    for (const lang of LANGS) {
+      const distance = m.STATS_DISPLAY[lang].distance;
+      // Repères du haut de /colocation-geneve : un <span> par repère (icône, puis un seul nœud texte).
+      const spans = [...R[state][`${lang}:/colocation-geneve`].html.matchAll(/<span class="flex items-center gap-2">([\s\S]*?)<\/span>/g)].map((x) => text(x[1]));
+      assert.ok(spans.includes(lang === 'en' ? `Houses ${distance}` : `Maisons à ${distance}`), `${state} ${lang} : repère des maisons — ${spans.join(' · ')}`);
+      assert.ok(!spans.includes(distance), `${state} ${lang} : plus de repère « ${distance} » seul après « 3 maisons et L'Appart »`);
+      // Sous-titre de /annemasse-colocation : le paragraphe qui suit le titre de la page.
+      const html = R[state][`${lang}:/annemasse-colocation`].html;
+      const after = html.slice(html.indexOf('</h1>'));
+      const sub = text(after.slice(after.indexOf('<p'), after.indexOf('</p>') + 4));
+      assert.ok(sub.startsWith(m.APPART.name), `${state} ${lang} : le sous-titre s'ouvre sur L'Appart — « ${sub.slice(0, 60)}… »`);
+      assert.ok(sub.endsWith(lang === 'en' ? ` The houses are ${distance}.` : ` Les maisons sont à ${distance}.`), `${state} ${lang} : « ${sub.slice(-120)} »`);
+      for (const s of sub.split(/(?<=[.!?])\s+/)) {
+        if (s.includes(distance)) assert.ok(!s.includes(m.APPART.name), `${state} ${lang} : « ${distance} » dans une phrase qui nomme L'Appart — « ${s} »`);
       }
     }
   }

@@ -178,8 +178,9 @@ export function ColocationGenevePage() {
           <div className="flex flex-wrap justify-center gap-8 mt-10 text-sm text-[#78716C]">
             <span className="flex items-center gap-2"><Home className="w-4 h-4" /> {en ? `${ENTITY_FACTS.brand.totalRooms} rooms` : `${ENTITY_FACTS.brand.totalRooms} chambres`}</span>
             <span className="flex items-center gap-2"><Users className="w-4 h-4" /> {en ? `${STATS.totalHouses} houses and ${APPART.name}` : `${STATS.totalHouses} maisons et ${APPART.name}`}</span>
-            {/* (Lot L2, 09/10/2026) D1 : « 20 min de Genève » seul interdit → libellé canonique, un seul nœud texte (anti-#418). */}
-            <span className="flex items-center gap-2"><Clock className="w-4 h-4" /> {STATS_DISPLAY[L].distance}</span>
+            {/* (Lot L2, 09/10/2026) D1 : « 20 min de Genève » seul interdit → libellé canonique, un seul nœud texte (anti-#418).
+                (14/11/2026, V2-15 = CB-5) Les 20 min sont celles des maisons (L'Appart : 13 min) : le repère le dit, sans toucher au libellé. */}
+            <span className="flex items-center gap-2"><Clock className="w-4 h-4" /> {en ? `Houses ${STATS_DISPLAY.en.distance}` : `Maisons à ${STATS_DISPLAY.fr.distance}`}</span>
             <span className="flex items-center gap-2"><Euro className="w-4 h-4" /> {en ? `Houses from ${PRICE_FROM_CHF_EN}/month` : `Maisons dès ${PRICE_FROM_CHF_FR}/mois`}</span>
             <span className="flex items-center gap-2"><Euro className="w-4 h-4" /> {en ? `${APPART.name} from ${APPART.price.from.en.chf}/month` : `${APPART.name} dès ${APPART.price.from.fr.chf}/mois`}</span>
           </div>
