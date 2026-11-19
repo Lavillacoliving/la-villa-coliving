@@ -119,7 +119,7 @@ The paradox is well known: we've never been so connected. What's less obvious is
 
 The American numbers, often a few years ahead of ours, set the tone. The time Americans spend each day with other people has [dropped from 45 to 35 minutes](https://www.axios.com/2026/07/05/americans-socializing-decline) in about twenty years. Among 15-to-24-year-olds, it has almost halved: from an hour a day to 35 minutes.
 
-Remote work has played its part too. In France, the government's labour research office (Dares) found that [the risk of isolation rises with how often people work from home](https://www.vie-publique.fr/en-bref/298096-teletravail-quels-risques-psychosociaux), especially for those who live alone. The office used to be a place where you met people. For many, it now only is part of the week.
+Remote work has played its part too. In France, the government's labour research office (Dares) found that [the risk of isolation rises with how often people work from home](https://www.vie-publique.fr/en-bref/298096-teletravail-quels-risques-psychosociaux), especially for those who live alone. The office used to be a place where you met people. For many, it's now only part of the week.
 
 But remote work is just the beginning.
 
