@@ -26,7 +26,7 @@ export type AppartLocLang = "fr" | "en";
 
 /** Incrémenter à chaque changement de texte ou de valeur (porté par data-house-location-version sur la page de L'Appart).
  *  19/11/2026 : phrase de quartier sans l'étage (V2-33). */
-export const APPART_LOCATION_VERSION = "2026-11-19";
+export const APPART_LOCATION_VERSION = "2026-11-21";
 
 const T = APPART.transit;
 const TRAIN = ANNEMASSE_TRAIN_MIN;
