@@ -299,12 +299,12 @@ function OfferActive({ en, L, title, description, labels }: { en: boolean; L: "f
   const fromChf = offerPrices.length > 0 ? Math.min(...offerPrices) : HOUSES_FROM.chf;
   const pricePrefix = offerPrices.length === 1 ? "" : en ? "from " : "dès ";
   const priceLabel = `${fmtChf(fromChf, en)}/${en ? "month" : "mois"}`;
-  // Lignes du tableau « Ce que ça donne concrètement » : TOUS les paliers des maisons, du plus bas au plus haut, dérivés de
-  // la source unique (src/data/stats.ts) — depuis le 13/11/2026 : 1 290 CHF (chambres 7 et 8 de La Villa, 645 CHF le premier
-  // mois), 1 370 CHF, 1 430 CHF. Décision de Jérôme du 13/11/2026 : la chambre 8 reste dans l'offre. Le tableau n'est rendu
-  // que tant que l'offre est ouverte (état « ended » plus haut).
+  // Lignes du tableau « Ce que ça donne concrètement » : le palier des chambres 3 et 4 de La Villa (1 370 CHF) et le prix
+  // standard (1 430 CHF), dérivés de la source unique (src/data/stats.ts). Le palier des chambres 7 et 8 (1 290 CHF) n'y est
+  // pas : aucune chambre de l'offre n'est à ce prix (19/11/2026). Le tableau n'est rendu que tant que
+  // l'offre est ouverte (état « ended » plus haut).
   const tiers = [
-    ...[...STATS_SHARED_BATH.tiers].sort((a, b) => a.chf - b.chf).map((t) => ({ chf: t.chf, eur: t.eur })),
+    ...STATS_SHARED_BATH.tiers.filter((t) => t.eur === CONTRACT_EUR.sharedBath).map((t) => ({ chf: t.chf, eur: t.eur })),
     { chf: standard, eur: CONTRACT_EUR.standard },
   ];
 

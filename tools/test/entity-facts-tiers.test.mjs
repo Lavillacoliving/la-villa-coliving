@@ -89,7 +89,8 @@ test('aucune phrase de palier ne réveille la garde « ancien prix en francs » 
     texts.push(Object.values(m.HOUSES_FROM[lang]).join(' | '));
   }
   for (const t of texts) assert.deepEqual(stale(t), [], t.slice(0, 80));
-  // Le tableau de /offre-hiver en anglais, tel que la garde le lit (cellules jointes par une espace) : « (€1,380) CHF 645 ».
+  // Le tableau de /offre-hiver en anglais avec une ligne du palier des chambres 7 et 8 (retirée le 19/11/2026 : aucune
+  // chambre de l'offre à ce prix ; elle peut revenir), tel que la garde le lirait (cellules jointes par une espace) : « (€1,380) CHF 645 ».
   assert.deepEqual(stale('CHF 1,290 (€1,380) CHF 645 (€690) CHF 1,370 (€1,470) CHF 685 (€735)'), []);
   // La règle elle-même reste vivante : l'ancien prix en francs est toujours refusé, dans les trois graphies.
   for (const old of [`1${NB}380 CHF`, '1 380 CHF', '1,380 CHF', 'CHF 1,380']) assert.equal(stale(`dès ${old} par mois`).length, 1, old);
