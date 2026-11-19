@@ -19,5 +19,16 @@
   ],
   "intent_bucket": "life",
   "consolidates": [],
-  "inbound": []
+  "inbound": [
+    {
+      "slug": "coliving-communaute-reels-amis-geneve-annemasse",
+      "anchor_fr": "l'isolement social devient un enjeu de santé publique majeur",
+      "anchor_en": "social isolation is becoming a major public health issue"
+    },
+    {
+      "slug": "se-faire-reseau-geneve-arriver-seul",
+      "anchor_fr": "L'isolement du nouveau frontalier",
+      "anchor_en": "The isolation of the new cross-border worker"
+    }
+  ]
 }
