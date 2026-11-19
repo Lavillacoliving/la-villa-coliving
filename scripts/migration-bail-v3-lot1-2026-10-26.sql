@@ -41,12 +41,18 @@ comment on column public.entities.trade_name is 'Enseigne (« La Villa Coliving 
 comment on column public.entities.registration is 'Immatriculation imprimée au bail (SIRET pour l''indivision, RCS + SIRET pour la SCI).';
 comment on column public.entities.vat_mention is 'Mention TVA imprimée au bail ; jamais de numéro de TVA (décision du 26/10/2026).';
 
+-- (13/11/2026, lot « sécurité des adresses ») Les deux rues de « siege » ci-dessous sont caviardées : le dépôt est public.
+-- Migration déjà appliquée le 26/10/2026 : les valeurs réelles sont en base (entities.siege). Les conditions
+-- « legal_form is null » empêchent ce fichier de réécrire le texte caviardé ; ne jamais le rejouer sans elles.
+-- Après un retour arrière (le fichier de retour arrière supprime ces colonnes), ne pas rejouer ce fichier tel quel :
+-- il écrirait le texte caviardé dans entities.siege, imprimé au bail. Remettre d'abord les valeurs réelles (base ou
+-- sauvegarde privée).
 update public.entities set
   legal_form = 'indivision',
   legal_name = 'Indivision Austin-Piot',
   trade_name = 'La Villa Coliving',
   registration = 'SIRET 898 236 518 00012',
-  siege = '34 rue du Foron, 74100 Ville-la-Grand'
+  siege = '[rue retirée du dépôt public le 13/11/2026 — valeur en base], 74100 Ville-la-Grand'
 where code = 'LMP' and legal_form is null;
 
 update public.entities set
@@ -55,7 +61,7 @@ update public.entities set
   trade_name = 'La Villa Coliving',
   registration = 'RCS Thonon-les-Bains 882 153 810 — SIRET 882 153 810 00016',
   capital_eur = 1000,
-  siege = '8 rue du Mont-Blanc, 74100 Annemasse'
+  siege = '[rue retirée du dépôt public le 13/11/2026 — valeur en base], 74100 Annemasse'
 where code = 'SCI' and legal_form is null;
 
 update public.entities set legal_form = 'autre' where code = 'MB' and legal_form is null;

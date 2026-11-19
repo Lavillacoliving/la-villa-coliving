@@ -153,9 +153,9 @@ export function pickTenantFiche<T extends { room_number: number | string | null;
 }
 
 /**
- * Lignes d'une adresse postale, sans le pays : « 34 rue du Foron – 74100 Ville-la-Grand – France » →
- * [« 34 rue du Foron », « 74100 Ville-la-Grand »]. Ne coupe que sur une virgule ou un tiret entouré d'espaces :
- * jamais dans « Ville-la-Grand » ni « Mont-Blanc » (l'ancien découpage de la quittance imprimait « 74100 Ville / la »).
+ * Lignes d'une adresse postale, sans le pays : « 1 rue des Exemples – 74100 Ville-la-Grand – France » →
+ * [« 1 rue des Exemples », « 74100 Ville-la-Grand »]. Ne coupe que sur une virgule ou un tiret entouré d'espaces :
+ * jamais dans « Ville-la-Grand » ni « Faux-Exemple » (l'ancien découpage de la quittance imprimait « 74100 Ville / la »).
  */
 export function addressLines(addr: string | null | undefined): string[] {
   return String(addr || "")

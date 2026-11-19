@@ -12,7 +12,7 @@ interface AttestationData {
   bailleur_name: string;        // "La Villa Coliving"
   bailleur_gerant: string;      // "Jérôme Austin"
   bailleur_structure: string;   // "La Villa LMP" ou "Sleep In SCI"
-  bailleur_address: string;     // "34 rue du Foron, 74100 Ville-la-Grand"
+  bailleur_address: string;     // "1 rue des Exemples, 74100 Ville-la-Grand"
   bailleur_siret: string;
   // Locataire
   locataire_civilite: string;   // "M." ou "Mme"
@@ -21,7 +21,7 @@ interface AttestationData {
   locataire_birth_place: string;// "Lyon"
   // Logement
   property_name: string;
-  property_address: string;     // "34 rue du Foron, 74100 Ville-la-Grand"
+  property_address: string;     // "1 rue des Exemples, 74100 Ville-la-Grand"
   room_number: string;
   is_coliving: boolean;
   // Bail
@@ -66,7 +66,7 @@ export function AttestationResidencePDF({ data }: { data: AttestationData }) {
     ? data.property_name + " \u2014 Chambre " + data.room_number
     : data.property_name;
 
-  // Parse address: "34 rue du Foron, 74100 Ville-la-Grand" → street + cityZip
+  // Parse address: "1 rue des Exemples, 74100 Ville-la-Grand" → street + cityZip
   const addrMatch = data.property_address.match(/^(.+?),\s*(\d{5}\s+.+)$/);
   const street = addrMatch ? addrMatch[1] : data.property_address;
   const cityZip = addrMatch ? addrMatch[2] : "";

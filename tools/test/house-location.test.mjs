@@ -4,6 +4,7 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { loadEntityFacts } from '../../scripts/lib/load-entity-facts.mjs';
+import { scanGenericAddresses } from '../../scripts/lib/private-locations.mjs';
 
 const m = await loadEntityFacts();
 const SLUGS = ['lavilla', 'leloft', 'lelodge'];
@@ -59,14 +60,15 @@ test('houseDirectionsUrl : itinéraire Google Maps en transports depuis le point
     const g = m.publicGeo(h);
     assert.ok(url.startsWith('https://www.google.com/maps/dir/?api=1&'), url);
     assert.ok(url.includes(`origin=${encodeURIComponent(`${g.lat},${g.lng}`)}`), `${slug}/${lang} : point public absent — ${url}`);
-    assert.ok(!url.includes(encodeURIComponent(m.houseAddressLine(slug))) && !url.includes(encodeURIComponent(h.streetAddress)), `${slug}/${lang} : adresse dans l'URL — ${url}`);
+    assert.deepEqual(scanGenericAddresses(url), [], `${slug}/${lang} : adresse dans l'URL — ${url}`);
     assert.ok(url.includes('travelmode=transit'), url);
     assert.match(url, /destination=[^&]*Eaux-Vives/, url);
     assert.doesNotMatch(url, /[  ]/, 'URL sans espace brut');
   }
   assert.equal(m.houseDirectionsLabel('fr'), 'Calculer mon trajet');
   assert.equal(m.houseDirectionsLabel('en'), 'Check my commute');
-  assert.match(m.houseAddressLine('leloft'), /^1 rue des Marronniers, 74100 Ambilly$/, 'D11 : adresse du Loft');
+  // (13/11/2026, lot « sécurité des adresses ») Plus de ligne d'adresse ni de rue dans la source d'emplacement.
+  assert.equal(m.houseAddressLine, undefined);
 });
 
 test('houseCommuteRows : Loft = ligne « Tram 17 » vers Rive ; Villa et Lodge = ligne Rive en transports ; les trois = Eaux-Vives, Champel, Cornavin, vélo Voie Verte, gare à pied — valeurs de TRANSIT', () => {
@@ -158,7 +160,7 @@ test('zone publiée (12/10/2026) : publicGeo = point public à 300-650 m de la m
       const z = m.houseZone(slug, lang);
       assert.ok(z.includes(h.addressLocality.replace(/^Ambilly$/, 'Ambilly')) && z.includes(h.postalCode), `${slug}/${lang} : ${z}`);
       assert.ok(!/\brue\b|street|\d+ rue/i.test(z), `${slug}/${lang} : zone avec rue — ${z}`);
-      assert.ok(!z.toLowerCase().includes(h.streetAddress.toLowerCase()), `${slug}/${lang} : ${z}`);
+      assert.deepEqual(scanGenericAddresses(z), [], `${slug}/${lang} : zone avec une adresse — ${z}`);
     }
   }
   assert.equal(m.houseExactAddressNote('fr'), "L'adresse exacte t'est communiquée à la prise de rendez-vous de visite.");

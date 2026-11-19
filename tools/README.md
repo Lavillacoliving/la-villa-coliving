@@ -70,6 +70,25 @@ Trois contrôles supplémentaires, exécutés en CI après le prérendu (`.githu
 - `npm run check:competitors` — aucun nom de concurrent dans le HTML prérendu ni `llms.txt`. La liste n'est jamais
   dans le repo : copier `scripts/competitors.example.json` en `scripts/competitors.local.json` (gitignoré) ; en CI,
   secret GitHub `COMPETITOR_NAMES` (noms séparés par des virgules). Sans liste : avertissement, pas de blocage.
+- `npm run check:locations` — aucune rue de maison dans le dépôt ni dans le site construit (lot « sécurité des
+  adresses », 11/2026). Deux parties : les rues réelles, cherchées dans tous les fichiers du dépôt et dans `dist/`
+  (JavaScript compris) ; puis le motif « numéro + rue / avenue / chemin… » dans `src/`, `scripts/` et le JavaScript
+  de `dist/`. Les rues ne sont jamais dans le repo : en CI, secret GitHub `LVC_PRIVATE_LOCATIONS` ; en local,
+  variable `LVC_PRIVATE_LOCATIONS_FILE` = chemin d'un fichier hors dépôt (format et emplacement du fichier :
+  `lavilla-docs`). Sans source : avertissement encadré, la seconde partie tourne quand même. À lancer **avant tout
+  push**, sur un arbre propre (`git status` vide), avec les deux options qui transforment un oubli en échec :
+  `npx vite build && LVC_PRIVATE_LOCATIONS_FILE=<fichier hors dépôt> npm run check:locations -- --require --require-dist`
+  (`--require` : source absente ou variable vide = échec ; `--require-dist` : `dist/` absent = échec, sinon le
+  JavaScript construit n'est pas contrôlé). Le dépôt est public, la CI passe après le push. La garde lit l'arbre de
+  travail, pas l'historique : une rue déjà committée, même retirée depuis, partirait avec le push ; réécrire d'abord
+  les commits locaux concernés. Un échec donne la clé du lieu, le fichier et la ligne, jamais la rue ; pour le siège social
+  de la société éditrice, il dit « siège social hors des emplacements prévus » et renvoie à
+  `HEAD_OFFICE_EXCEPTIONS` (à mettre à jour, avec son test, si seul le nom d'un fichier JavaScript a changé). Le
+  compte rendu dit combien de fichiers ne sont pas lus et nomme les PDF, documents et archives : ceux-là se
+  contrôlent à la main. Une option inconnue est refusée. Pour corriger : une adresse de maison se lit en base
+  (`src/lib/propertyAddress.ts`) ; dans `src/` et `scripts/`, une adresse d'exemple s'écrit « N rue des Exemples » ;
+  un faux positif stable s'ajoute à `GENERIC_ALLOW` avec sa raison. Tests :
+  `tools/test/private-locations.test.mjs`, `check-private-locations.test.mjs`, `property-address.test.mjs`.
 - `npm run article:sql -- <slug> --mode insert|update` — valide un brouillon `content/decision-pages/<slug>.*` et
   écrit le SQL de publication (voir `content/decision-pages/README.md`).
 - `npm run check:facts -- --strict` — fiche entité × `v_public_rooms` × HTML prérendu × `llms.txt`, plus (Lot L2
@@ -80,6 +99,6 @@ Trois contrôles supplémentaires, exécutés en CI après le prérendu (`.githu
   dernières règles bloquent en `--strict` (la CI), avertissent sinon. `node scripts/house-pages-check.mjs` vérifie en
   plus, par maison et par langue, la phrase de quartier (une fois), la ligne de trajet `ENTITY_HOUSES[].commute` dans
   les 1 500 premiers caractères après le H1, `data-house-location-version`, le lien « Calculer mon trajet » (Google
-  Maps depuis l'adresse de la maison) et `ROOM_SURFACE_BY_HOUSE` = min/max de `v_public_rooms.surface_m2`. Ces deux
+  Maps depuis le point public de la maison, jamais sa rue) et `ROOM_SURFACE_BY_HOUSE` = min/max de `v_public_rooms.surface_m2`. Ces deux
   gardes lisent `public/prerendered/` : après une modification de code, `npm run build:local` d'abord. Tests :
   `tools/test/location-rules.test.mjs`, `house-location.test.mjs`, `house-pages-check.test.mjs`.

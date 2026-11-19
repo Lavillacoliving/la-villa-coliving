@@ -20,9 +20,14 @@ alter table public.properties
   add column if not exists buildings_intro_en text;
 comment on column public.properties.buildings_intro_fr is 'Bail v3, article II 2.1 : phrase qui introduit la liste des bâtiments ; null = « Tènement immobilier sis …, constitué de N bâtiments distincts : ».';
 -- Le Loft (relecture Jérôme 29/10/2026) : maison de ville de 298 m² en deux bâtiments (238 m² habitables + annexe de 60 m²), 234 m² d'extérieurs et terrasses.
+-- (13/11/2026, lot « sécurité des adresses ») La rue des deux phrases d'introduction ci-dessous est caviardée : le dépôt est
+-- public. Migration déjà appliquée le 29/10/2026 ; ces deux colonnes sont vides aujourd'hui (le bail v3 construit la phrase
+-- depuis properties.address, lue en base). La condition « buildings_fr = '[]' » empêche ce fichier de réécrire le texte
+-- caviardé ; ne jamais le rejouer sans elle. Après un retour arrière, ne pas rejouer ce fichier tel quel : il écrirait
+-- le texte caviardé dans la phrase d'introduction du bail. Remettre d'abord la valeur réelle (base ou sauvegarde privée).
 update public.properties set
-  buildings_intro_fr = 'Maison de ville à usage d''habitation sise 1 rue des Marronniers, 74100 Ambilly, d''une surface totale de 298 m² répartie sur deux bâtiments :',
-  buildings_intro_en = 'Townhouse for residential use at 1 rue des Marronniers, 74100 Ambilly, with a total area of 298 m² spread over two buildings:',
+  buildings_intro_fr = 'Maison de ville à usage d''habitation sise [rue retirée du dépôt public le 13/11/2026 — valeur en base], 74100 Ambilly, d''une surface totale de 298 m² répartie sur deux bâtiments :',
+  buildings_intro_en = 'Townhouse for residential use at [rue retirée du dépôt public le 13/11/2026 — valeur en base], 74100 Ambilly, with a total area of 298 m² spread over two buildings:',
   buildings_fr = '["le bâtiment principal, d''une surface habitable de 238 m², comprenant 7 chambres louées séparément et des parties communes ;", "le bâtiment annexe, d''une surface de 60 m², comprenant une salle de sport, une salle TV, un sauna et une piscine intérieure."]'::jsonb,
   buildings_en = '["the main building, with a habitable area of 238 m², comprising 7 rooms let separately and common areas;", "the annex building, 60 m², comprising a gym, a TV room, a sauna and an indoor pool."]'::jsonb
 where slug = 'leloft' and buildings_fr = '[]'::jsonb;

@@ -21,8 +21,8 @@
 # Déploiement production (B4, 02/09/2026) : vercel.json "ignoreCommand" ignore le build du
 # push source (le bot déploie 10-15 min plus tard, bundle + HTML cohérents). Si le prérendu
 # n'a pas changé après un push, le bot pousse un commit vide pour déclencher ce déploiement.
-# Les deux gardes (pages maisons, hydratation) bloquent la publication ET le déploiement en
-# cas d'échec.
+# Les gardes (rues des maisons, pages maisons, fiche entité, créneaux, hydratation…) bloquent la
+# publication ET le déploiement en cas d'échec.
 #
 # Cost: $0 (GitHub Actions free for public repos, 2000 min/month for private)
 
@@ -86,6 +86,19 @@ jobs:
       - name: Pre-render all pages (Supabase sync + Puppeteer)
         run: node scripts/prerender.mjs
 
+      # Garde « aucune rue de maison » (lot « sécurité des adresses », 11/2026) : les rues réelles (secret
+      # LVC_PRIVATE_LOCATIONS, jamais dans le dépôt) sont cherchées dans tous les fichiers du dépôt, HTML tout juste
+      # prérendu compris, et dans dist/ (le JavaScript construit plus haut) ; le motif « numéro + voie » dans src/,
+      # scripts/ et le JavaScript de dist/. Un échec ne cite jamais la rue : clé du lieu, fichier, ligne.
+      # --require : sans secret, la garde échoue au lieu de se désactiver. Échec = pas de commit, donc pas de déploiement.
+      # Première des gardes : une rue arrête le run avant qu'une autre garde ne recopie un extrait de page dans le journal.
+      # Le dépôt est public et cette étape passe APRÈS le push : le même contrôle se lance en local AVANT tout push
+      # (CLAUDE.md §1).
+      - name: Vérifier l'absence de rue de maison
+        run: node scripts/check-private-locations.mjs --require --require-dist
+        env:
+          LVC_PRIVATE_LOCATIONS: ${{ secrets.LVC_PRIVATE_LOCATIONS }}
+
       # Garde Lot C0 (brief « Conquête IA », 09/2026) : redirections sans chaîne, aucune URL du
       # sitemap redirigée, paires de consolidation attendues (scripts/redirects.expected.json).
       # Étape 6 (audit indexation 07/10/2026) : aucune URL interne du HTML prérendu ni de llms.txt (liens,
@@ -105,8 +118,11 @@ jobs:
 
       # Garde Lot A (02/09/2026) : chaque maison de v_public_rooms a sa page FR+EN complète
       # (embed chambres, CTA contextuels, prix FR, marqueurs d'hydratation). Échec = pas de commit.
+      # (13/11/2026) Son contrôle « emplacement exact » lit les rues à la même source que la garde ci-dessus.
       - name: Vérifier les pages maisons
         run: node scripts/house-pages-check.mjs
+        env:
+          LVC_PRIVATE_LOCATIONS: ${{ secrets.LVC_PRIVATE_LOCATIONS }}
 
       # Garde Lot S1 (brief Socle entité, 05/09/2026) : fiche de faits canonique = base = HTML prérendu
       # = llms.txt (bloc présent une fois sur 14 pages money + 8 articles FR/EN, aucune chaîne périmée,

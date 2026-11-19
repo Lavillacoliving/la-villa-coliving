@@ -2,8 +2,13 @@
 // sur un prérendu synthétique bâti depuis la source unique (houseLocation.ts, ENTITY_HOUSES, ROOM_SURFACE_BY_HOUSE).
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
+import fs from 'node:fs/promises';
+import os from 'node:os';
+import path from 'node:path';
+import { fileURLToPath } from 'node:url';
 import { loadEntityFacts } from '../../scripts/lib/load-entity-facts.mjs';
-import { checkHouseLocation, checkRoomSurfaceByHouse, mainTextAfterH1, COMMUTE_WINDOW, exactLocationLeaks, checkFaqInHtml, checkHouseNameGrammar } from '../../scripts/house-pages-check.mjs';
+import { checkHouseLocation, checkRoomSurfaceByHouse, mainTextAfterH1, COMMUTE_WINDOW, exactLocationLeaks, checkNoExactLocation, loadStreetMatchers, checkFaqInHtml, checkHouseNameGrammar, successMessage } from '../../scripts/house-pages-check.mjs';
+import { buildStreetMatchers, HEAD_OFFICE_KEY, LOCATIONS_ENV, LEGAL_PRERENDERED_PAGES } from '../../scripts/lib/private-locations.mjs';
 
 const m = await loadEntityFacts();
 const SLUGS = ['lavilla', 'leloft', 'lelodge'];
@@ -99,14 +104,111 @@ test('checkRoomSurfaceByHouse : ROOM_SURFACE_BY_HOUSE = Math.round(min/max) de v
   assert.equal(Math.max(...Object.values(S).map((x) => x.max)), m.STATS.roomSizeMax);
 });
 
-test('exactLocationLeaks (12/10/2026, sécurité) : rue d\'une maison (casse, encodage d\'URL, « + ») ou coordonnées exactes = fuite ; zone et point arrondi = rien', () => {
+// (13/11/2026) Les rues ne sont plus dans le dépôt : la garde les reçoit d'une source hors dépôt. Ici, des lieux FICTIFS.
+// La clé que la source donne au siège social (« lieu-du-siege ») ne sort dans aucun message : « siège social ».
+const FICTIVE_PLACES = [
+  { key: 'maison-a', street: '12 rue des Exemples' },
+  { key: 'lieu-du-siege', street: '4 rue du Faux-Exemple', allowedOnLegalPages: true },
+];
+const FICTIVE_STREETS = buildStreetMatchers(FICTIVE_PLACES);
+
+test('exactLocationLeaks (12/10/2026, sécurité) : rue d\'une maison (casse, encodage d\'URL, « + », balise, sans numéro) ou coordonnées exactes = fuite ; zone et point arrondi = rien ; le résultat ne cite ni la rue ni la coordonnée', () => {
   const H = m.HOUSES;
-  assert.deepEqual(exactLocationLeaks('<p>Annemasse (74100), quartier de Romagny</p><script>{"latitude":46.19,"longitude":6.24}</script>', H), []);
-  assert.deepEqual(exactLocationLeaks(`<p>${H[2].streetAddress.toUpperCase()}</p>`, H), [H[2].streetAddress]);
-  assert.deepEqual(exactLocationLeaks(`<a href="https://www.google.com/maps/dir/?origin=${encodeURIComponent(H[0].streetAddress)}">x</a>`, H), [H[0].streetAddress]);
-  assert.deepEqual(exactLocationLeaks(`"latitude":${H[1].geo.lat},"longitude":${H[1].geo.lng}`, H), [String(H[1].geo.lat), String(H[1].geo.lng)]);
-  // Le siège social des mentions légales n'est pas une maison : jamais signalé.
-  assert.deepEqual(exactLocationLeaks('<p>Siège social : 8 rue du Mont Blanc, 74100 Annemasse</p>', H), []);
+  assert.deepEqual(exactLocationLeaks('<p>Annemasse (74100), quartier de Romagny</p><script>{"latitude":46.19,"longitude":6.24}</script>', H, FICTIVE_STREETS), []);
+  assert.deepEqual(exactLocationLeaks('<p>12 RUE DES EXEMPLES</p>', H, FICTIVE_STREETS), ['rue du lieu « maison-a »']);
+  assert.deepEqual(exactLocationLeaks(`<a href="https://www.google.com/maps/dir/?origin=${encodeURIComponent('12 rue des Exemples, 74100 Annemasse')}">x</a>`, H, FICTIVE_STREETS), ['rue du lieu « maison-a »']);
+  assert.deepEqual(exactLocationLeaks('<a href="https://www.google.com/maps?q=12+rue+des+Exemples">x</a>', H, FICTIVE_STREETS), ['rue du lieu « maison-a »']);
+  assert.deepEqual(exactLocationLeaks('<p>12 rue <strong>des Exemples</strong></p>', H, FICTIVE_STREETS), ['rue du lieu « maison-a »']);
+  assert.deepEqual(exactLocationLeaks('<p>La maison est rue des Exemples.</p><p>Encore : 12, rue des Exemples.</p>', H, FICTIVE_STREETS), ['rue du lieu « maison-a »'], 'un libellé par lieu, même trouvé deux fois');
+  const coords = exactLocationLeaks(`"latitude":${H[1].geo.lat},"longitude":${H[1].geo.lng}`, H, FICTIVE_STREETS);
+  assert.deepEqual(coords, [`latitude exacte de ${H[1].slug}`, `longitude exacte de ${H[1].slug}`]);
+  assert.ok(!coords.join(' ').includes(String(H[1].geo.lat)) && !coords.join(' ').includes(String(H[1].geo.lng)), 'jamais la coordonnée dans le message');
+  // Le siège social : toléré sur une page légale, fuite partout ailleurs.
+  const legal = '<p>Siège social : 4 rue du Faux-Exemple, 74100 Annemasse</p>';
+  assert.deepEqual(exactLocationLeaks(legal, H, FICTIVE_STREETS, { legalPage: true }), []);
+  assert.deepEqual(exactLocationLeaks(legal, H, FICTIVE_STREETS), ['siège social hors page légale']);
+  assert.doesNotMatch(exactLocationLeaks(legal, H, FICTIVE_STREETS).join(' '), /lieu-du-siege/, 'jamais la clé du lieu du siège');
+  assert.deepEqual(exactLocationLeaks('<p>12 rue des Exemples</p>', H, FICTIVE_STREETS, { legalPage: true }), ['rue du lieu « maison-a »'], 'une page légale ne couvre pas une rue de maison');
+  // Sans source (aucun détecteur) : seules les coordonnées restent contrôlées.
+  assert.deepEqual(exactLocationLeaks('<p>12 rue des Exemples</p>', H), []);
+  assert.equal(exactLocationLeaks(`{"latitude":${H[0].geo.lat}}`, H).length, 1);
+  for (const r of [exactLocationLeaks('<p>12 rue des Exemples</p>', H, FICTIVE_STREETS), exactLocationLeaks(legal, H, FICTIVE_STREETS)]) assert.doesNotMatch(r.join(' '), /exemple/i, 'jamais la rue dans le message');
+});
+
+test('checkNoExactLocation (13/11/2026) : toutes les pages d\'un dossier ; le siège n\'est toléré que sur les 4 pages légales', async () => {
+  const dir = await fs.mkdtemp(path.join(os.tmpdir(), 'lvc-house-pages-'));
+  const siege = '<html><body><p>Siège social : 4 rue du Faux-Exemple, 74100 Annemasse</p></body></html>';
+  const pages = {
+    'mentions-legales.html': siege,
+    'en-politique-de-confidentialite.html': siege,
+    'lelodge.html': siege,                                                              // siège hors page légale
+    'blog-mentions-legales.html': siege,                                                // nom voisin : pas une page légale
+    'index.html': '<html><body><p>Annemasse (74100), quartier de Romagny</p></body></html>',
+    'lavilla.html': '<html><body><a href="?q=12+rue+des+Exemples">x</a></body></html>', // rue d'une maison
+    'politique-de-confidentialite.html': '<html><body><p>12 rue des Exemples</p></body></html>', // une page légale ne couvre pas une maison
+    'notes.txt': '12 rue des Exemples',                                                 // pas une page
+  };
+  const log = console.log;
+  const lines = [];
+  try {
+    for (const [f, html] of Object.entries(pages)) await fs.writeFile(path.join(dir, f), html);
+    console.log = (...a) => lines.push(a.join(' '));
+    const failures = await checkNoExactLocation(m, FICTIVE_STREETS, dir);
+    assert.deepEqual(failures.map((f) => f.split(' : ')[0]).sort(), ['blog-mentions-legales.html', 'lavilla.html', 'lelodge.html', 'politique-de-confidentialite.html']);
+    assert.ok(failures.find((f) => f.startsWith('lelodge.html')).includes('siège social hors page légale'));
+    assert.ok(failures.find((f) => f.startsWith('lavilla.html')).includes('rue du lieu « maison-a »'));
+    assert.doesNotMatch(failures.join('\n'), /exemple|lieu-du-siege/i, 'ni la rue ni la clé du lieu du siège');
+    assert.match(lines.join('\n'), /❌ emplacement exact — rues et coordonnées exactes des maisons absentes des 7 pages prérendues/);
+    // Sans source : les rues ne sont pas contrôlées, et la garde le dit.
+    lines.length = 0;
+    assert.deepEqual(await checkNoExactLocation(m, [], dir), []);
+    assert.match(lines.join('\n'), /rues NON contrôlées : aucune source/);
+  } finally {
+    console.log = log;
+    await fs.rm(dir, { recursive: true, force: true });
+  }
+  assert.equal(LEGAL_PRERENDERED_PAGES.length, 4);
+});
+
+test('loadStreetMatchers (13/11/2026) : la source hors dépôt est bien chargée ; sans source, liste vide et avertissement', async () => {
+  const log = console.log;
+  const lines = [];
+  console.log = (...a) => lines.push(a.join(' '));
+  try {
+    const matchers = await loadStreetMatchers({ env: { [LOCATIONS_ENV]: JSON.stringify({ version: 1, places: FICTIVE_PLACES }) } });
+    assert.deepEqual(matchers.map((x) => x.key), ['maison-a', HEAD_OFFICE_KEY]);
+    assert.deepEqual(lines, [], 'avec une source : aucun avertissement');
+    assert.deepEqual(await loadStreetMatchers({ env: {} }), []);
+    assert.match(lines.join('\n'), /Rues des maisons NON contrôlées par cette garde : aucune source/);
+  } finally { console.log = log; }
+});
+
+test('câblage (13/11/2026) : main() charge la source des rues et la passe aux pages maisons et au contrôle de toutes les pages', async () => {
+  const src = await fs.readFile(path.join(path.dirname(fileURLToPath(import.meta.url)), '..', '..', 'scripts', 'house-pages-check.mjs'), 'utf8');
+  const main = src.slice(src.indexOf('async function main()'));
+  assert.match(main, /const \[byHouse, m, streetMatchers\] = await Promise\.all\(\[fetchRooms\(\), loadEntityFacts\(\), loadStreetMatchers\(\)\]\);/);
+  assert.match(main, /await checkHouse\(slug, rooms, m, streetMatchers\)/);
+  assert.match(main, /await checkNoExactLocation\(m, streetMatchers\)/);
+  assert.match(src, /failures\.push\(\.\.\.checkHouseLocation\(html, slug, lang, m, streetMatchers\)\);/);
+  // Le message final dépend de la source : sans elle, il redit que les rues n'ont pas été contrôlées.
+  assert.match(main, /console\.log\(`\\n🎉 \$\{successMessage\(streetMatchers\.length > 0\)\}\\n`\);/);
+  assert.doesNotMatch(main, /cohérentes avec la base/, 'aucun message final écrit en dur dans main()');
+});
+
+test('message final (13/11/2026) : sans source des rues, il dit que les rues ne sont pas contrôlées', () => {
+  assert.equal(successMessage(true), 'Pages maisons cohérentes avec la base et la source d\'emplacement (FR + EN).');
+  assert.equal(successMessage(false), 'Pages maisons cohérentes avec la base et la source d\'emplacement (FR + EN) — rues des maisons NON contrôlées : aucune source.');
+});
+
+test('checkHouseLocation (13/11/2026) : un lien « Calculer mon trajet » qui part d\'une rue → échec, et aucun message ne recopie le lien', () => {
+  const withStreet = { ...m, houseDirectionsUrl: () => 'https://www.google.com/maps/dir/?api=1&origin=12+rue+des+Exemples%2C+74100+Annemasse&destination=Gen%C3%A8ve-Eaux-Vives&travelmode=transit' };
+  const page = housePage('lelodge', 'fr');
+  const r = checkHouseLocation(page, 'lelodge', 'fr', withStreet, FICTIVE_STREETS);
+  assert.ok(r.some((f) => /houseDirectionsUrl contient la rue d'une maison/.test(f)), r.join('\n'));
+  assert.ok(r.some((f) => /ne part pas du point public/.test(f)), r.join('\n'));
+  assert.doesNotMatch(r.join('\n'), /exemples/i, 'le lien fautif n\'est jamais affiché');
+  // Sans détecteur (source absente), le contrôle du point public reste actif.
+  assert.ok(checkHouseLocation(page, 'lelodge', 'fr', withStreet).some((f) => /ne part pas du point public/.test(f)));
 });
 
 test('checkHouseLocation : zone absente ou lien « Calculer mon trajet » depuis l\'adresse → échec', () => {

@@ -42,7 +42,7 @@ function immeuble(input) {
 
 test('La Villa : surface habitable et surface totale intérieure, parc de 1 948 m² cité une seule fois', () => {
   const t = immeuble(m.CASES.LaVilla_2_indivision);
-  assert.match(t, new RegExp(`Maison individuelle à usage d'habitation sise 34 rue du Foron, 74100 Ville-la-Grand, d'une surface habitable totale de 365 m² et d'une surface totale intérieure de 380 m², comprenant 10 chambres louées séparément et des parties communes\\.`));
+  assert.match(t, new RegExp(`Maison individuelle à usage d'habitation sise 1 rue des Exemples, 74100 Ville-la-Grand, d'une surface habitable totale de 365 m² et d'une surface totale intérieure de 380 m², comprenant 10 chambres louées séparément et des parties communes\\.`));
   assert.equal((t.match(/1[ \u00a0]948/g) || []).length, 1, 'le parc doit apparaître exactement une fois');
   assert.ok(t.includes(`parc arboré de 1${NB}948 m²`), 'milliers en espace insécable');
   assert.ok(!/terrain arboré d'environ/.test(t), 'plus de « terrain arboré d’environ … » généré');
@@ -50,12 +50,12 @@ test('La Villa : surface habitable et surface totale intérieure, parc de 1 948 
 
 test('Le Lodge : tènement de quatre bâtiments, 380 m² habitables et 589 m² intérieurs', () => {
   const t = immeuble(m.CASES.LeLodge_1_SCI);
-  assert.ok(t.includes("Tènement immobilier sis 8 rue de Romagny, 74100 Annemasse, d'une surface habitable totale de 380 m² et d'une surface totale intérieure de 589 m², constitué de quatre bâtiments distincts :"), t);
+  assert.ok(t.includes("Tènement immobilier sis 3 rue des Exemples, 74100 Annemasse, d'une surface habitable totale de 380 m² et d'une surface totale intérieure de 589 m², constitué de quatre bâtiments distincts :"), t);
 });
 
 test('Le Loft : maison de ville sur deux bâtiments, 249 m² habitables et 309 m² intérieurs, plus de 298 m²', () => {
   const t = immeuble(m.CASES.LeLoft_6_SCI);
-  assert.ok(t.includes("Maison de ville à usage d'habitation sise 1 rue des Marronniers, 74100 Ambilly, d'une surface habitable totale de 249 m² et d'une surface totale intérieure de 309 m², répartie sur deux bâtiments :"), t);
+  assert.ok(t.includes("Maison de ville à usage d'habitation sise 2 rue des Exemples, 74100 Ambilly, d'une surface habitable totale de 249 m² et d'une surface totale intérieure de 309 m², répartie sur deux bâtiments :"), t);
   assert.ok(t.includes("le bâtiment principal, d'une surface habitable de 249 m²"));
   assert.ok(!t.includes('298'), 'l’ancienne surface de 298 m² ne doit plus apparaître');
 });
@@ -72,7 +72,7 @@ test('surface de la chambre : « salle d’eau comprise » seulement si la salle
 
 test('propertyToLease : la surface totale intérieure vient de properties.equipment.interior_total_m2', () => {
   const p = m.propertyToLease({
-    id: 'x', slug: 'leloft', name: 'Le Loft', address: '1 rue des Marronniers - 74100 Ambilly - France', city: 'Ambilly', room_count: 7,
+    id: 'x', slug: 'leloft', name: 'Le Loft', address: '2 rue des Exemples - 74100 Ambilly - France', city: 'Ambilly', room_count: 7,
     common_areas: [], entity_id: null, is_coliving: true, dpe_class: 'C', surface_total_m2: 249,
     equipment: { pool: 'indoor', sauna: true, gym: true, cinema: true, interior_total_m2: 309 },
     setting_clause_fr: null, zone_tendue: true, relocation_exception_default: null, buildings_fr: ['a', 'b'], buildings_intro_fr: null,
