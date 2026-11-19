@@ -1,0 +1,23 @@
+{
+  "slug": "ia-solitude-lien-social-coliving",
+  "format": "service",
+  "title_fr": "IA et solitude : demain, le vrai luxe sera humain",
+  "title_en": "AI and loneliness: tomorrow's real luxury is human",
+  "excerpt_fr": "L'IA devient l'intermédiaire de tout, et nos petites rencontres du quotidien disparaissent sans bruit. Ce qu'on y gagne, ce qu'on y perd, et pourquoi le lien humain va devenir le vrai luxe.",
+  "excerpt_en": "AI is becoming the go-between for everything, and our small everyday encounters are quietly disappearing. What we gain, what we lose, and why human connection is becoming the real luxury.",
+  "meta_description_fr": "L'IA fait de plus en plus à ta place, et tes rencontres du quotidien disparaissent. Les chiffres, ce qu'on y gagne, et comment recréer du lien.",
+  "meta_description_en": "AI does more and more for you, and your everyday encounters are fading. The numbers, what we gain, and how to rebuild real human connection.",
+  "author": "Jerome Austin",
+  "category": "community",
+  "image_url": "/images/ia-lien-social-coliving.webp",
+  "tags": [
+    "intelligence artificielle",
+    "solitude",
+    "lien social",
+    "communauté",
+    "coliving"
+  ],
+  "intent_bucket": "life",
+  "consolidates": [],
+  "inbound": []
+}
