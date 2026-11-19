@@ -99,10 +99,12 @@ const isoDay = (v) => (v === null || v === undefined || v === '' ? null : String
  *   - 0 ligne : état A (avant la bascule) → information, aucun échec ;
  *   - sinon : 4 lignes, numéros = APPART.rooms.numbers, jamais le n° 1 (il n'est jamais publié), loyer en euros et en
  *     francs, surface (Math.round, règle du Lot 7) et salle d'eau de chaque chambre ;
- *   - avant APPART.opensOn : aucune chambre « libre », et toute date de libération = APPART.opensOn ; à partir de cette date :
- *     plus de contrôle de date, un avertissement (retirer « dès février 2027 » des textes).
+ *   - jamais d'étage publié pour L'Appart (V2-33, décision de Jérôme du 19/11/2026) ;
+ *   - avant le mois d'ouverture (APPART.opensOn, « AAAA-MM » : le site ne publie que le mois, V2-22 du 19/11/2026) : aucune
+ *     chambre « libre », et toute date de libération tombe dans ce mois (la base y garde un jour, son repère technique) ; à
+ *     partir de ce mois : plus de contrôle de date, un avertissement (retirer « dès février 2027 » des textes).
  *     Cas limite connu (relecture technique du 13/11/2026) : un locataire entré avant l'ouverture dont la date de sortie est saisie
- *     avant le 1er février 2027 → la vue rend cette date, échec jusqu'à l'ouverture (changer opensOn n'y fait rien). Consigne
+ *     avant l'ouverture → la vue rend cette date, échec jusqu'à l'ouverture (changer opensOn n'y fait rien). Consigne
  *     (CLAUDE.md, « Date d'ouverture ») : pas de date de sortie pour un tel locataire avant l'ouverture.
  */
 export function appartDbIssues(rows, m, { today } = {}) {
@@ -132,18 +134,20 @@ export function appartDbIssues(rows, m, { today } = {}) {
     if (!Number.isFinite(s) || Math.round(s) !== tier.surfaceM2) failures.push(`base : ${where} à ${Number.isFinite(s) ? `${s} m²` : 'surface absente'}, le code dit ${tier.surfaceM2} m² (APPART.rooms)`);
     const shared = isShared(r);
     if (shared !== (tier.bathroom === 'shared')) failures.push(`base : ${where} — salle d'eau « ${r.bathroom_type ?? '?'} », le code dit « ${tier.bathroom} »`);
+    // (19/11/2026, V2-33) Le site écarte l'étage d'une ligne de L'Appart (publicAppartRows) ; la base ne doit pas le publier non plus.
+    if (r.floor !== null && r.floor !== undefined && String(r.floor).trim() !== '') failures.push(`base : ${where} — étage publié par v_public_rooms : jamais pour L'Appart (V2-33) — rooms.floor à NULL`);
   }
-  const day = isoDay(today) ?? new Date().toISOString().slice(0, 10);
-  if (day < A.opensOn) {
+  const month = (isoDay(today) ?? new Date().toISOString().slice(0, 10)).slice(0, 7);
+  if (month < A.opensOn) {
     for (const r of list) {
       const n = Number(r.room_number);
       if (n === 1 || !A.numbers.includes(n)) continue;
-      if (r.availability === 'available') failures.push(`base : ${name(n)} « libre » avant l'ouverture du ${A.opensOn} (APPART.opensOn) — jamais « disponible » avant l'ouverture`);
+      if (r.availability === 'available') failures.push(`base : ${name(n)} « libre » avant l'ouverture (mois ${A.opensOn}, APPART.opensOn) — jamais « disponible » avant l'ouverture`);
       const from = isoDay(r.available_from);
-      if (from && from !== A.opensOn) failures.push(`base : ${name(n)} libre le ${from}, le code dit ouverture le ${A.opensOn} (APPART.opensOn) — la date change dans le code et en base dans le même créneau`);
+      if (from && from.slice(0, 7) !== A.opensOn) failures.push(`base : ${name(n)} libre le ${from}, hors du mois d'ouverture du code (${A.opensOn}, APPART.opensOn) — la date change dans le code et en base dans le même créneau`);
     }
   } else {
-    warnings.push(`${A.name} : la date d'ouverture (${A.opensOn}) est passée — retirer les mentions « dès février 2027 » (description de la page, FAQ « Quand… », réponses du bot)`);
+    warnings.push(`${A.name} : le mois d'ouverture (${A.opensOn}) est arrivé — retirer les mentions « dès février 2027 » (description de la page, FAQ « Quand… », réponses du bot)`);
   }
   return { failures, warnings, infos };
 }

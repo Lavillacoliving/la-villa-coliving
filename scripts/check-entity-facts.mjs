@@ -750,7 +750,7 @@ export function dbFactsIssues(rows, m, { today } = {}) {
 
 async function checkDb(m) {
   const headers = { apikey: SUPABASE_ANON_KEY, Accept: 'application/json' };
-  const rows = await httpsGet(`${SUPABASE_URL}/rest/v1/v_public_rooms?select=house_slug,room_number,rent_chf,rent_eur,surface_m2,bathroom_type,availability,available_from`, headers);
+  const rows = await httpsGet(`${SUPABASE_URL}/rest/v1/v_public_rooms?select=house_slug,room_number,rent_chf,rent_eur,surface_m2,bathroom_type,floor,availability,available_from`, headers);
   if (!Array.isArray(rows) || rows.length === 0) throw new Error('v_public_rooms vide');
   const db = dbFactsIssues(rows, m, { today: new Date().toISOString().slice(0, 10) });
   const failures = [...db.failures];

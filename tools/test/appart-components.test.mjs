@@ -12,12 +12,15 @@ import { fileURLToPath } from 'node:url';
 import { createRequire } from 'node:module';
 import { build } from 'esbuild';
 import { loadEntityFacts } from '../../scripts/lib/load-entity-facts.mjs';
+import { publicAppartRows } from '../../src/lib/roomSelectors.ts';
 
 const ROOT = path.join(path.dirname(fileURLToPath(import.meta.url)), '..', '..');
 const m = await loadEntityFacts();
 const ROWS_B = JSON.parse(readFileSync(path.join(ROOT, 'tools/test/fixtures/v_public_rooms.etat-B.json'), 'utf8'));
 const rows = Array.isArray(ROWS_B) ? ROWS_B : ROWS_B.rows ?? ROWS_B.lignes;
-const appartRows = rows.filter((r) => r.house_slug === 'lappart').sort((a, b) => a.room_number - b.room_number);
+// (19/11/2026, V2-22 et V2-33) Les lignes de L'Appart telles que le magasin des chambres les donne aux pages (publicAppartRows :
+// mois d'ouverture, aucun étage) — le relevé, lui, porte un jour (fictif) comme la vue.
+const appartRows = publicAppartRows(rows.filter((r) => r.house_slug === 'lappart'), m.APPART.opensOn).sort((a, b) => a.room_number - b.room_number);
 const houseRow = rows.find((r) => r.house_slug === 'lelodge');
 const HOUSE_AMENITY = /piscine|sauna|salle de sport|\bpools?\b|\bgym\b/i;
 
@@ -124,8 +127,11 @@ test('<RoomCard/> sur les 4 chambres de L\'Appart (état B) : libellé, specs, p
     const label = m.roomLabel('lappart', room.room_number, lang);
     assert.ok(t.includes(label), `${lang} ${variant} ${label}`);
     assert.ok(t.includes(lang === 'en'
-      ? (suite ? '22 m² · 5th floor · private bathroom' : '12 m² · 5th floor · shared shower room')
-      : (suite ? '22 m² · Étage 5 · SDB privative' : "12 m² · Étage 5 · salle d'eau partagée")), `${lang} ${variant} specs`);
+      ? (suite ? '22 m² · private bathroom' : '12 m² · shared shower room')
+      : (suite ? '22 m² · SDB privative' : "12 m² · salle d'eau partagée")), `${lang} ${variant} specs`);
+    // (19/11/2026) Ni étage (V2-33), ni jour d'ouverture (V2-22) : la pastille dit le mois.
+    assert.doesNotMatch(t, /[ÉE]tage|\bfloor\b|\b15\b|févr\.|\bFeb\b/i, `${lang} ${variant} : ni étage ni jour`);
+    assert.ok(t.includes(lang === 'en' ? 'Available from February' : 'Libre dès février'), `${lang} ${variant} pastille au mois : ${t}`);
     const price = lang === 'en' ? (suite ? 'CHF 990 (€1,060) /month' : 'CHF 730 (€790) /month') : (suite ? '990 CHF (1\u00a0060 €) /mois' : '730 CHF (790 €) /mois');
     assert.ok(t.includes(price), `${lang} ${variant} prix : ${t}`);
     assert.equal(t.includes(lang === 'en' ? '1 or 2 people' : '1 ou 2 personnes'), suite, `${lang} ${variant} capacité`);

@@ -7,8 +7,9 @@
  * src/data/appartFacts.ts ; l'emplacement et les trajets dans src/data/appartLocation.ts.
  *
  * Règles :
- *  - aucun nombre tapé pour un fait de L'Appart : gabarits sur APPART (src/data/appart.ts) ; la date d'ouverture s'écrit
- *    « L'Appart ouvre à la location le 1er février 2027 » (décision n° 17), jamais « disponible » sans la date de la vue ;
+ *  - aucun nombre tapé pour un fait de L'Appart : gabarits sur APPART (src/data/appart.ts) ; l'ouverture s'écrit
+ *    « L'Appart ouvre à la location en février 2027 » (décision n° 17 ; le mois seulement, jamais le jour : V2-22, 19/11/2026),
+ *    jamais « disponible » sans la date de la vue ; jamais d'étage (V2-33) ;
  *  - les 9 textes qui nomment piscine, sauna ou salle de sport (pour les NIER ou RENVOYER aux maisons) ne sont pas ici : la
  *    page les rend par `appartGammeExempt(lang)[id]` — même source que la garde de mélange des gammes ;
  *  - jamais une preuve des maisons (note Google, « 100+ résidents », séjour moyen, occupation, formule de trajet de la marque) ;
@@ -19,12 +20,13 @@
  *    valeurs de la marque par tools/test/appart-page.test.mjs (la règle de frontière interdit à ce module de lire STATS).
  *
  * Module pur : zéro React, chaînes plates (un nœud texte chacune), aucune date calculée — rendu identique au prérendu et dans
- * le navigateur. Les dates d'une chambre viennent de la vue, formatées par l'appelant (formatFreeDate).
+ * le navigateur. Les dates d'une chambre viennent de la vue, mises en mots par appartDateWords (au mois près pour l'ouverture).
  */
 import { APPART } from "./appart";
 import { appartCommuteLine } from "./appartLocation";
 import { appartFullTitle, appartOpeningSentence, appartRoomPhotosSentence } from "./appartFacts";
 import { appartHousesFaq } from "./appartHousesFaq";
+import { cleaningSharedBath } from "./appartWords";
 import { ENTITY_FACTS_CTA, FEES_DEPOSIT_SENTENCE, GUARANTOR_SENTENCE, MAISONS_REFERRAL } from "./entityFacts";
 import { ANNEMASSE_TRAIN_MIN, aOrAn, thousands } from "./stats";
 import { APPART_SUITE_ROOM_NUMBER, roomCapacityLabel, roomLabel } from "./places";
@@ -52,13 +54,6 @@ const WORD_EN: Record<number, string> = { 1: "one", 2: "two", 3: "three", 4: "fo
 /** « trois » / « three » ; un nombre hors table s'écrit en chiffres (appartPageIssues le signale). */
 const word = (n: number, lang: AppartPageLang): string => (lang === "en" ? WORD_EN : WORD_FR)[n] ?? String(n);
 const capital = (s: string): string => s.charAt(0).toUpperCase() + s.slice(1);
-/** « 5e » / « 5th ». */
-const ordinal = (n: number, lang: AppartPageLang): string => {
-  if (lang === "fr") return n === 1 ? "1er" : `${n}e`;
-  const t = n % 100;
-  if (t >= 11 && t <= 13) return `${n}th`;
-  return `${n}${({ 1: "st", 2: "nd", 3: "rd" } as Record<number, string>)[n % 10] ?? "th"}`;
-};
 /** « une fois par semaine » / « once a week » (la table s'arrête à 3 : appartPageIssues le signale au-delà). */
 const timesPerWeek = (n: number, lang: AppartPageLang): string =>
   lang === "en"
@@ -70,12 +65,26 @@ const openingMonth = (lang: AppartPageLang): string => (lang === "en" ? MONTHS_E
 /** « 530 € » / « €530 » : la suite à deux, par personne — seulement dans la forme P5 (« soit 530 € par personne à deux »). */
 const perPerson = (lang: AppartPageLang): string =>
   lang === "en" ? `€${thousands(P.suitePerPersonEur, ",")}` : `${thousands(P.suitePerPersonEur, NBSP)} €`;
-/** Étage des chambres, tel que la vue l'écrit (« Étage 5 ») et tel que le site le traduit (« 5th floor », FLOOR_EN). */
-const floorText = (lang: AppartPageLang): string => (lang === "en" ? `${ordinal(A.flat.floor, "en")} floor` : `Étage ${A.flat.floor}`);
 /** La suite (n° 5) ou une chambre standard ? */
 export const isAppartSuite = (roomNumber: number): boolean => roomNumber === APPART_SUITE_ROOM_NUMBER;
-/** Date d'une chambre : « {date} » des gabarits, déjà formatée par l'appelant (formatFreeDate : « 1er février » / « February 1 »). */
+/** Date d'une chambre : « {date} » des gabarits « dès {date} » / « from {date} », déjà mise en mots par appartDateWords. */
 type MaybeDate = string | null | undefined;
+
+/**
+ * Date de la vue pour les gabarits « Libre dès {date} » / « Available from {date} » (19/11/2026, V2-22) : un mois seul
+ * (« AAAA-MM », l'ouverture de L'Appart telle que le site la garde : src/lib/roomSelectors.ts) → « février » / « February » ; un
+ * jour (une vraie libération, après l'ouverture) → « le 1er mars » / « March 1 ». "" si illisible. Pure, sans Date.
+ */
+export function appartDateWords(iso: string | null | undefined, lang: AppartPageLang): string {
+  const [y, m, d] = String(iso ?? "").split("-");
+  const month = Number(m) - 1;
+  if (!/^\d{4}$/.test(y ?? "") || !Number.isInteger(month) || month < 0 || month > 11) return "";
+  const name = lang === "en" ? MONTHS_EN[month] : MONTHS_FR[month];
+  if (d === undefined) return name;
+  const day = Number(d);
+  if (!Number.isInteger(day) || day < 1 || day > 31) return "";
+  return lang === "en" ? `${name} ${day}` : `le ${day === 1 ? "1er" : day} ${name}`;
+}
 
 // ── Balises de la page ─────────────────────────────────────────────────────────────────────────────────────────────────
 
@@ -145,13 +154,13 @@ export function appartPageLead(lang: AppartPageLang): { lead: string; price: str
   const f = A.flat;
   if (lang === "en") {
     return {
-      lead: `First, the commute: ${appartCommuteLine("en")}. Then the flat: ${f.surfaceM2} m² on the ${ordinal(f.floor, "en")} and top floor, with a lift, south-facing, solid oak floors in every room and an open view of the Salève. ${capital(word(A.rooms.total, "en"))} furnished rooms, ${aOrAn(f.livingKitchenM2)} ${f.livingKitchenM2} m² living room and kitchen, and a balcony.`,
-      price: `The price: from ${P.from.en.chf} a month, with bills, fibre, streaming and cleaning of the shared areas included. In euros: from ${P.from.en.eur}. ${A.name} opens for rent on ${A.opensOnLabel.en}, and you can apply now.`,
+      lead: `First, the commute: ${appartCommuteLine("en")}. Then the flat: ${f.surfaceM2} m² with a lift, south-facing, solid oak floors in every room and an open view of the Salève. ${capital(word(A.rooms.total, "en"))} furnished rooms, ${aOrAn(f.livingKitchenM2)} ${f.livingKitchenM2} m² living room and kitchen, and a balcony.`,
+      price: `The price: from ${P.from.en.chf} a month, with bills, fibre, streaming and cleaning of the shared areas included. In euros: from ${P.from.en.eur}. ${A.name} opens for rent in ${A.opensOnLabel.en}, and you can apply now.`,
     };
   }
   return {
-    lead: `D'abord le trajet : ${appartCommuteLine("fr")}. Ensuite le logement : un appartement de ${f.surfaceM2} m² au ${ordinal(f.floor, "fr")} et dernier étage, avec ascenseur, plein sud, parquet en chêne massif dans toutes les pièces et vue dégagée sur le Salève. ${capital(word(A.rooms.total, "fr"))} chambres meublées, un séjour-cuisine de ${f.livingKitchenM2} m² et un balcon.`,
-    price: `Le prix : dès ${P.from.fr.chf} par mois, charges, fibre, streaming et ménage des communs compris. En euros : dès ${P.from.fr.eur}. ${A.name} ouvre à la location le ${A.opensOnLabel.fr}, et tu peux candidater dès maintenant.`,
+    lead: `D'abord le trajet : ${appartCommuteLine("fr")}. Ensuite le logement : un appartement de ${f.surfaceM2} m² avec ascenseur, plein sud, parquet en chêne massif dans toutes les pièces et vue dégagée sur le Salève. ${capital(word(A.rooms.total, "fr"))} chambres meublées, un séjour-cuisine de ${f.livingKitchenM2} m² et un balcon.`,
+    price: `Le prix : dès ${P.from.fr.chf} par mois, charges, fibre, streaming et ménage des communs compris. En euros : dès ${P.from.fr.eur}. ${A.name} ouvre à la location en ${A.opensOnLabel.fr}, et tu peux candidater dès maintenant.`,
   };
 }
 
@@ -211,7 +220,7 @@ export interface AppartTypeCard {
   specs: string;
   /** Meubles (chambre) ; la suite les dit dans son intro de section. */
   furniture: string | null;
-  /** « Balcon · Entrée privée » (suite seulement ; décision n° 39 à confirmer). */
+  /** « Balcon · Entrée privée » (suite seulement ; décision n° 39, gardée par Jérôme le 19/11/2026, V2-29). */
   extras: string | null;
   /** « 1 ou 2 personnes » (suite seulement). */
   capacity: string | null;
@@ -230,7 +239,7 @@ export function appartTypeCards(lang: AppartPageLang): readonly [AppartTypeCard,
       kind: "room",
       name: en ? `${STD.surfaceM2} m² room` : `Chambre de ${STD.surfaceM2} m²`,
       count: en ? `${STD.numbers.length} rooms` : `${STD.numbers.length} chambres`,
-      specs: `${STD.surfaceM2} m² · ${floorText(lang)} · ${en ? "shared shower room" : "salle d'eau partagée"}`,
+      specs: `${STD.surfaceM2} m² · ${en ? "shared shower room" : "salle d'eau partagée"}`,
       furniture: en ? `${A.rooms.bedCm} cm double bed, desk, wardrobe` : `Lit de ${A.rooms.bedCm}, bureau, penderie`,
       extras: null,
       capacity: null,
@@ -243,7 +252,7 @@ export function appartTypeCards(lang: AppartPageLang): readonly [AppartTypeCard,
       kind: "suite",
       name: en ? `${SUITE.surfaceM2} m² suite` : `Suite de ${SUITE.surfaceM2} m²`,
       count: null,
-      specs: `${SUITE.surfaceM2} m² · ${floorText(lang)} · ${en ? "private bathroom" : "SDB privative"}`,
+      specs: `${SUITE.surfaceM2} m² · ${en ? "private bathroom" : "SDB privative"}`,
       furniture: null,
       extras: en ? "Balcony · Private entrance" : "Balcon · Entrée privée",
       capacity: roomCapacityLabel(A.key, SUITE.number, lang),
@@ -317,13 +326,13 @@ export function appartLivingSection(lang: AppartPageLang): { title: string; text
   if (lang === "en") {
     return {
       title: `The ${f.livingKitchenM2} m² living room and kitchen, and the balcony`,
-      text: `About ${f.commonM2} m² of shared space, including ${aOrAn(f.livingKitchenM2)} ${f.livingKitchenM2} m² open-plan living room and kitchen and ${aOrAn(f.balconyM2)} ${f.balconyM2} m² balcony. The flat faces south, on the ${ordinal(f.floor, "en")} and top floor, with an open view of the Salève. Solid oak floors in every room. You share all this with ${flatmates("en")} flatmates.`,
+      text: `About ${f.commonM2} m² of shared space, including ${aOrAn(f.livingKitchenM2)} ${f.livingKitchenM2} m² open-plan living room and kitchen and ${aOrAn(f.balconyM2)} ${f.balconyM2} m² balcony. The flat faces south, with an open view of the Salève. Solid oak floors in every room. You share all this with ${flatmates("en")} flatmates.`,
       album: (n) => `See the ${n} photos`,
     };
   }
   return {
     title: `Le séjour-cuisine de ${f.livingKitchenM2} m² et le balcon`,
-    text: `Environ ${f.commonM2} m² à partager, dont un séjour-cuisine ouvert de ${f.livingKitchenM2} m² et un balcon de ${f.balconyM2} m². L'appartement est plein sud, au ${ordinal(f.floor, "fr")} et dernier étage, avec une vue dégagée sur le Salève. Parquet en chêne massif dans toutes les pièces. Tu partages tout ça avec ${flatmates("fr")} colocataires.`,
+    text: `Environ ${f.commonM2} m² à partager, dont un séjour-cuisine ouvert de ${f.livingKitchenM2} m² et un balcon de ${f.balconyM2} m². L'appartement est plein sud, avec une vue dégagée sur le Salève. Parquet en chêne massif dans toutes les pièces. Tu partages tout ça avec ${flatmates("fr")} colocataires.`,
     album: (n) => `Voir les ${n} photos`,
   };
 }
@@ -380,10 +389,12 @@ export function appartFaqOwn(lang: AppartPageLang): AppartQA[] {
   // « Caution de 2 mois de loyer hors charges, payable en 1, 2 ou 3 fois selon ton dossier » : la phrase de la fiche des
   // maisons (deuxième phrase de FEES_DEPOSIT_SENTENCE), reformulée en tête de liste comme sur les fiches chambres.
   const deposit = appartDepositSentence(lang);
+  // (19/11/2026, V2-25) « une fois par semaine (salle d'eau et WC partagés compris) ».
+  const cleaning = `${timesPerWeek(A.cleaningPerWeek, lang)} ${cleaningSharedBath(lang)}`;
   if (lang === "en") {
     return [
-      { id: "page.faq.1", q: `How much does a room at ${A.name} cost?`, a: `${P.room.en.chf} a month for each of the ${word(STD.numbers.length, "en")} ${STD.surfaceM2} m² rooms, ${P.suite.en.chf} a month for the ${SUITE.surfaceM2} m² suite. In euros, the rent on the lease: ${P.room.en.eur} and ${P.suite.en.eur}. The rent covers bills (water, electricity, heating), fibre, streaming and cleaning of the shared areas ${timesPerWeek(A.cleaningPerWeek, "en")}. No application fee.` },
-      { id: "page.faq.2", q: "What does the rent include, and what doesn't it?", a: `Included: bills (water, electricity, heating), fibre, streaming, cleaning of the shared areas ${timesPerWeek(A.cleaningPerWeek, "en")}, and access to the yoga and fitness classes and the social evenings held at the houses. Not included: bed linen and towels, cleaning products and household supplies, parking (on request) and your home insurance.` },
+      { id: "page.faq.1", q: `How much does a room at ${A.name} cost?`, a: `${P.room.en.chf} a month for each of the ${word(STD.numbers.length, "en")} ${STD.surfaceM2} m² rooms, ${P.suite.en.chf} a month for the ${SUITE.surfaceM2} m² suite. In euros, the rent on the lease: ${P.room.en.eur} and ${P.suite.en.eur}. The rent covers bills (water, electricity, heating), fibre, streaming and cleaning of the shared areas ${cleaning}. No application fee.` },
+      { id: "page.faq.2", q: "What does the rent include, and what doesn't it?", a: `Included: bills (water, electricity, heating), fibre, streaming, cleaning of the shared areas ${cleaning}, and access to the yoga and fitness classes and the social evenings held at the houses. Not included: bed linen and towels, cleaning products and household supplies, parking (on request) and your home insurance.` },
       { id: "page.faq.5", q: "Can two people rent together?", a: `Yes, in the suite: it's the only room at La Villa Coliving let to one or two people. It's ${SUITE.surfaceM2} m², with its own shower room and toilet, a private balcony and its own door onto the landing. The rent is ${P.suite.en.eur} a month, or ${perPerson("en")} each for two. The bed is ${A.rooms.bedCm} cm wide, as in the other rooms. The ${word(STD.numbers.length, "en")} ${STD.surfaceM2} m² rooms are for one person each.` },
       { id: "page.faq.6", q: `When can I move in to ${A.name}?`, a: `${appartOpeningSentence("en")} You can apply now to reserve a room or the suite: the application takes ${B.applyMinutes} minutes and we reply within ${B.responseHours} hours.` },
       { id: "page.faq.7", q: `How long does it take to get to Geneva from ${A.name}?`, a: `${A.commune} station is ${aOrAn(T.stationWalkMin)} ${T.stationWalkMin}-minute walk away. From there the Léman Express reaches Geneva Eaux-Vives in ${TRAIN.eauxVives} minutes and Cornavin in ${TRAIN.cornavin}, with no change. Door to door, allow ${T.eauxVivesDoorToDoorMin} minutes to Geneva Eaux-Vives, ${T.riveDoorToDoorMin} minutes to Rive, in the city centre, and ${T.cornavinDoorToDoorMin} minutes to Cornavin. Tram 17 is ${aOrAn(T.tramStop.walkMin)} ${T.tramStop.walkMin}-minute walk away, at the ${T.tramStop.name} stop.` },
@@ -391,8 +402,8 @@ export function appartFaqOwn(lang: AppartPageLang): AppartQA[] {
     ];
   }
   return [
-    { id: "page.faq.1", q: `Combien coûte une chambre à ${A.name} ?`, a: `${P.room.fr.chf} par mois pour chacune des ${word(STD.numbers.length, "fr")} chambres de ${STD.surfaceM2} m², ${P.suite.fr.chf} par mois pour la suite de ${SUITE.surfaceM2} m². En euros, le loyer du bail : ${P.room.fr.eur} et ${P.suite.fr.eur}. Le loyer comprend les charges (eau, électricité, chauffage), la fibre, le streaming et le ménage des parties communes ${timesPerWeek(A.cleaningPerWeek, "fr")}. 0 € de frais de dossier.` },
-    { id: "page.faq.2", q: "Qu'est-ce qui est compris dans le loyer, et qu'est-ce qui ne l'est pas ?", a: `Compris : les charges (eau, électricité, chauffage), la fibre, le streaming, le ménage des parties communes ${timesPerWeek(A.cleaningPerWeek, "fr")}, l'accès aux cours de yoga et de sport des maisons et l'accès aux soirées des maisons. Pas compris : le linge de lit et les serviettes, les produits d'entretien et les fournitures, le parking (sur demande) et ton assurance habitation.` },
+    { id: "page.faq.1", q: `Combien coûte une chambre à ${A.name} ?`, a: `${P.room.fr.chf} par mois pour chacune des ${word(STD.numbers.length, "fr")} chambres de ${STD.surfaceM2} m², ${P.suite.fr.chf} par mois pour la suite de ${SUITE.surfaceM2} m². En euros, le loyer du bail : ${P.room.fr.eur} et ${P.suite.fr.eur}. Le loyer comprend les charges (eau, électricité, chauffage), la fibre, le streaming et le ménage des parties communes ${cleaning}. 0 € de frais de dossier.` },
+    { id: "page.faq.2", q: "Qu'est-ce qui est compris dans le loyer, et qu'est-ce qui ne l'est pas ?", a: `Compris : les charges (eau, électricité, chauffage), la fibre, le streaming, le ménage des parties communes ${cleaning}, l'accès aux cours de yoga et de sport des maisons et l'accès aux soirées des maisons. Pas compris : le linge de lit et les serviettes, les produits d'entretien et les fournitures, le parking (sur demande) et ton assurance habitation.` },
     { id: "page.faq.5", q: "Peut-on louer à deux ?", a: `Oui, dans la suite : c'est la seule chambre de La Villa Coliving qui se loue à une ou deux personnes. Elle fait ${SUITE.surfaceM2} m², avec sa salle d'eau, son WC, un balcon privatif et une porte indépendante sur le palier. Son loyer est de ${P.suite.fr.eur} par mois, soit ${perPerson("fr")} par personne à deux. Le lit fait ${A.rooms.bedCm} cm, comme dans les autres chambres. Les ${word(STD.numbers.length, "fr")} chambres de ${STD.surfaceM2} m² sont pour une personne.` },
     { id: "page.faq.6", q: `Quand peut-on emménager à ${A.name} ?`, a: `${appartOpeningSentence("fr")} Tu peux candidater dès maintenant pour réserver une chambre ou la suite : la candidature prend ${B.applyMinutes} minutes et on te répond sous ${B.responseHours} h.` },
     { id: "page.faq.7", q: `Combien de temps pour aller à Genève depuis ${A.name} ?`, a: `La gare d'${A.commune} est à ${T.stationWalkMin} min à pied. De là, le Léman Express rejoint Genève-Eaux-Vives en ${TRAIN.eauxVives} min et Cornavin en ${TRAIN.cornavin} min, sans changement. Porte-à-porte, compte ${T.eauxVivesDoorToDoorMin} min jusqu'à Genève-Eaux-Vives, ${T.riveDoorToDoorMin} min jusqu'à Rive, au centre, et ${T.cornavinDoorToDoorMin} min jusqu'à Cornavin. Le tram 17 passe à ${T.tramStop.walkMin} min à pied, à l'arrêt ${T.tramStop.name}.` },
@@ -473,17 +484,18 @@ export function appartRoomBreadcrumb(roomNumber: number, lang: AppartPageLang): 
 }
 
 /**
- * Description de la fiche (partage : annonces, WhatsApp). `date` = date de la vue déjà formatée (état B), sinon la date
- * d'ouverture fixe, dans sa forme unique (« L'Appart ouvre à la location le 1er février 2027 »).
+ * Description de la fiche (partage : annonces, WhatsApp). `date` = date de la vue mise en mots par appartDateWords (état B :
+ * « février », le mois d'ouverture), sinon l'ouverture fixe, dans sa forme unique (« L'Appart ouvre à la location en février
+ * 2027 »). Jamais le jour d'ouverture (V2-22, 19/11/2026).
  * (Corrections du 13/11/2026, relecture technique) `availableNow` = la vue dit la chambre libre (après l'ouverture) : la phrase de
- * la pastille (« Libre maintenant », roomBadge) prend la place de « Libre dès le … », jamais la date d'ouverture passée — variante
+ * la pastille (« Libre maintenant », roomBadge) prend la place de « Libre dès … », jamais la date d'ouverture passée — variante
  * absente de la source, à relire par Jérôme.
  */
 export function appartRoomDescription(roomNumber: number, lang: AppartPageLang, date?: MaybeDate, availableNow = false): string {
   const B = BRAND_TERMS;
   const status = availableNow
     ? (lang === "en" ? "Available now" : "Libre maintenant")
-    : date ? (lang === "en" ? `Available from ${date}` : `Libre dès le ${date}`) : null;
+    : date ? (lang === "en" ? `Available from ${date}` : `Libre dès ${date}`) : null;
   if (isAppartSuite(roomNumber)) {
     if (lang === "en") {
       return status
@@ -523,8 +535,9 @@ export function appartRoomPhotoNote(lang: AppartPageLang): string {
     : `Photo de la chambre à venir. Les photos ci-dessus montrent les pièces communes de ${A.name}.`;
 }
 
-/** Statut sous le prix : date de la vue (état B) — sinon l'ouverture fixe (état A, fiche statique). `availableNow` (la vue dit
- *  « libre » : après l'ouverture) : la phrase des fiches des maisons, reprise telle quelle. */
+/** Statut sous le prix : date de la vue (état B, mise en mots par appartDateWords : « février ») — sinon l'ouverture fixe (état
+ *  A, fiche statique), au mois. `availableNow` (la vue dit « libre » : après l'ouverture) : la phrase des fiches des maisons,
+ *  reprise telle quelle. */
 export function appartRoomStatus(lang: AppartPageLang, date?: MaybeDate, availableNow = false): string {
   const B = BRAND_TERMS;
   if (availableNow) {
@@ -535,11 +548,11 @@ export function appartRoomStatus(lang: AppartPageLang, date?: MaybeDate, availab
   if (date) {
     return lang === "en"
       ? `It's available from ${date}: apply today to reserve it — reply within ${B.responseHours} h.`
-      : `Elle est disponible le ${date} : candidate dès aujourd'hui pour la réserver, réponse sous ${B.responseHours} h.`;
+      : `Elle est disponible dès ${date} : candidate dès aujourd'hui pour la réserver, réponse sous ${B.responseHours} h.`;
   }
   return lang === "en"
-    ? `${A.name} opens for rent on ${A.opensOnLabel.en}: apply today to reserve this room — reply within ${B.responseHours} h.`
-    : `${A.name} ouvre à la location le ${A.opensOnLabel.fr} : candidate dès aujourd'hui pour réserver cette chambre, réponse sous ${B.responseHours} h.`;
+    ? `${A.name} opens for rent in ${A.opensOnLabel.en}: apply today to reserve this room — reply within ${B.responseHours} h.`
+    : `${A.name} ouvre à la location en ${A.opensOnLabel.fr} : candidate dès aujourd'hui pour réserver cette chambre, réponse sous ${B.responseHours} h.`;
 }
 
 /** Prix d'une chambre (offre : APPART, jamais la vue) en trois morceaux, et sa note « Tout compris · loyer contractuel … ». */
@@ -556,13 +569,13 @@ export function appartRoomPrice(roomNumber: number, lang: AppartPageLang): { chf
   };
 }
 
-/** Caractéristiques (libellés existants des fiches chambres : Surface, Étage, Salle d'eau, Meublée). */
-export function appartRoomSpecs(roomNumber: number, lang: AppartPageLang): { label: string; value: string; kind: "size" | "floor" | "bath" | "furniture" }[] {
+/** Caractéristiques (libellés existants des fiches chambres : Surface, Salle d'eau, Meublée). Jamais l'étage (V2-33, décision de
+ *  Jérôme du 19/11/2026). */
+export function appartRoomSpecs(roomNumber: number, lang: AppartPageLang): { label: string; value: string; kind: "size" | "bath" | "furniture" }[] {
   const en = lang === "en";
   const suite = isAppartSuite(roomNumber);
   return [
     { kind: "size", label: en ? "Size" : "Surface", value: `${suite ? SUITE.surfaceM2 : STD.surfaceM2} m²` },
-    { kind: "floor", label: en ? "Floor" : "Étage", value: floorText(lang) },
     {
       kind: "bath",
       label: en ? "Bathroom" : "Salle d'eau",
@@ -580,7 +593,8 @@ export function appartRoomSpecs(roomNumber: number, lang: AppartPageLang): { lab
  * l'insère depuis appartGammeExempt (« chambre.pas-compris.3 »), à sa place.
  */
 export function appartRoomIncluded(lang: AppartPageLang): { title: string; included: string[]; notIncludedBefore: string[]; notIncludedAfter: string[] } {
-  const cleaning = timesPerWeek(A.cleaningPerWeek, lang);
+  // (19/11/2026, V2-25) « une fois par semaine (salle d'eau et WC partagés compris) ».
+  const cleaning = `${timesPerWeek(A.cleaningPerWeek, lang)} ${cleaningSharedBath(lang)}`;
   if (lang === "en") {
     return {
       title: "What's included, and what isn't",
@@ -670,7 +684,7 @@ export function appartRoomUnavailable(roomNumber: number, lang: AppartPageLang):
   };
 }
 
-/** Message WhatsApp prérempli d'une fiche ; avec la date seulement si la vue la donne. */
+/** Message WhatsApp prérempli d'une fiche ; avec la date seulement si la vue la donne (mise en mots par appartDateWords). */
 export function appartRoomWhatsapp(roomNumber: number, lang: AppartPageLang, date?: MaybeDate): string {
   const suite = isAppartSuite(roomNumber);
   if (lang === "en") {
@@ -678,7 +692,7 @@ export function appartRoomWhatsapp(roomNumber: number, lang: AppartPageLang, dat
     return date ? `Hi! I'm interested in ${what} (available from ${date}).` : `Hi! I'm interested in ${what}.`;
   }
   const what = suite ? `La suite de ${A.name}` : `La chambre ${roomNumber} de ${A.name}`;
-  return date ? `Bonjour ! ${what} m'intéresse (disponible le ${date}).` : `Bonjour ! ${what} m'intéresse.`;
+  return date ? `Bonjour ! ${what} m'intéresse (disponible dès ${date}).` : `Bonjour ! ${what} m'intéresse.`;
 }
 
 /** Bouton de la fiche (libellé existant des fiches chambres) et libellé de la visionneuse. */
@@ -690,7 +704,14 @@ export function appartRoomLabels(lang: AppartPageLang): { apply: string; whatsap
 
 // ── Contrôles internes (sans base) ───────────────────────────────────────────────────────────────────────────────────────
 
-/** Incohérences détectables sans base : nombres écrits en lettres hors table, « dès 530 », « au / du L'Appart », placeholders. */
+/** Un jour accolé à un mois, en français ou en anglais (« 1er mars », « 15 mars », « March 15 », « 3 May »). */
+const DAY_MONTH_RE = new RegExp(
+  `\\b(?:1er|[1-9]|[12]\\d|3[01])\\s+(?:${[...MONTHS_FR, ...MONTHS_EN].join("|")})\\b|\\b(?:${MONTHS_EN.join("|")})\\s+(?:[1-9]|[12]\\d|3[01])\\b`,
+  "i",
+);
+
+/** Incohérences détectables sans base : nombres écrits en lettres hors table, « dès 530 », « au / du L'Appart », placeholders,
+ *  étage, jour d'une date. */
 export function appartPageIssues(): string[] {
   const issues: string[] = [];
   for (const n of [A.rooms.total, A.rooms.total - 1, STD.numbers.length, STD.sharedBathBetween, MAISONS_REFERRAL.totalHouses]) {
@@ -721,6 +742,9 @@ export function appartPageIssues(): string[] {
   }
   for (const s of all) {
     const at = `« ${s.slice(0, 70)}… »`;
+    // (19/11/2026) Ni l'étage (V2-33), ni un jour devant ou derrière un mois (V2-22 : « février 2027 », jamais le jour).
+    if (/[ÉE]tage|\bfloor\b/i.test(s)) issues.push(`étage de L'Appart (V2-33 : jamais) — ${at}`);
+    if (DAY_MONTH_RE.test(s)) issues.push(`jour d'une date (V2-22 : le mois seulement) — ${at}`);
     if (/\b(?:dès|from)\s+(?:€\s?)?530\b/i.test(s)) issues.push(`« dès 530 » (P5 : jamais) — ${at}`);
     if (/\b(?:au|du|le) L'Appart\b/.test(s)) issues.push(`« au / du / le L'Appart » — ${at}`);
     if (/\{\{|\[FAIT À CONFIRMER|undefined|NaN|\[object|…/.test(s)) issues.push(`placeholder — ${at}`);

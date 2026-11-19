@@ -584,7 +584,7 @@
     "room_number": 2,
     "name": "L'Appart 2",
     "surface_m2": 12,
-    "floor": "Étage 5",
+    "floor": null,
     "location_detail": null,
     "description": "Chambre meublée incluant salle d'eau partagée",
     "bathroom_type": "shared",
@@ -596,7 +596,7 @@
     "rent_eur": 790,
     "rent_chf": 730,
     "availability": "occupied",
-    "available_from": "2027-02-01",
+    "available_from": "2027-02-15",
     "content_updated_at": "2026-11-20T10:00:00+00:00"
   },
   {
@@ -604,7 +604,7 @@
     "room_number": 3,
     "name": "L'Appart 3",
     "surface_m2": 12,
-    "floor": "Étage 5",
+    "floor": null,
     "location_detail": null,
     "description": "Chambre meublée incluant salle d'eau partagée",
     "bathroom_type": "shared",
@@ -616,7 +616,7 @@
     "rent_eur": 790,
     "rent_chf": 730,
     "availability": "occupied",
-    "available_from": "2027-02-01",
+    "available_from": "2027-02-15",
     "content_updated_at": "2026-11-20T10:00:00+00:00"
   },
   {
@@ -624,7 +624,7 @@
     "room_number": 4,
     "name": "L'Appart 4",
     "surface_m2": 12,
-    "floor": "Étage 5",
+    "floor": null,
     "location_detail": null,
     "description": "Chambre meublée incluant salle d'eau partagée",
     "bathroom_type": "shared",
@@ -636,7 +636,7 @@
     "rent_eur": 790,
     "rent_chf": 730,
     "availability": "occupied",
-    "available_from": "2027-02-01",
+    "available_from": "2027-02-15",
     "content_updated_at": "2026-11-20T10:00:00+00:00"
   },
   {
@@ -644,7 +644,7 @@
     "room_number": 5,
     "name": "L'Appart Suite",
     "surface_m2": 22,
-    "floor": "Étage 5",
+    "floor": null,
     "location_detail": null,
     "description": "Suite meublée pour une ou deux personnes incluant salle d'eau privative",
     "bathroom_type": "private",
@@ -656,7 +656,7 @@
     "rent_eur": 1060,
     "rent_chf": 990,
     "availability": "occupied",
-    "available_from": "2027-02-01",
+    "available_from": "2027-02-15",
     "content_updated_at": "2026-11-20T10:00:00+00:00"
   }
 ]

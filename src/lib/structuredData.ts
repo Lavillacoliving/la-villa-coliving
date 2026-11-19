@@ -401,7 +401,11 @@ export function buildAvailableRoomsItemList(candidates: readonly RoomOfferInput[
               }
             : {}),
           availability: r.availability === "available" ? "https://schema.org/InStock" : "https://schema.org/PreOrder",
-          ...(r.available_from ? { availabilityStarts: r.available_from } : {}),
+          // (19/11/2026, V2-22) Seulement un jour complet, et jamais pour L'Appart dans son mois d'ouverture : l'ouverture n'est
+          // publiée qu'au mois (« AAAA-MM », src/lib/roomSelectors.ts) — pas de date au jour près, pas de date inventée.
+          ...(r.available_from && /^\d{4}-\d{2}-\d{2}$/.test(r.available_from) && !(r.house_slug === APPART_KEY && r.available_from.slice(0, 7) === APPART.opensOn)
+            ? { availabilityStarts: r.available_from }
+            : {}),
           businessFunction: "http://purl.org/goodrelations/v1#LeaseOut",
           offeredBy: { "@id": ORG_ID },
           itemOffered: {
@@ -448,8 +452,9 @@ const brandPriceRange = (en: boolean): string =>
   en ? `CHF ${BRAND_LOW.en.chfNum}–${thousands(BRAND_HIGH_CHF, ",")}/month` : `${BRAND_LOW.fr.chfNum}–${thousands(BRAND_HIGH_CHF, " ")} CHF/mois`;
 
 /** Les deux offres agrégées de la marque, une par gamme (textes du 13/11/2026, « à confirmer ») : maisons 1 290–1 430 CHF
- *  (29 chambres), L'Appart 730–990 CHF (4 chambres, ouverture APPART.opensOn — `availabilityStarts`, aucune disponibilité
- *  affirmée : elle se lit chambre par chambre dans v_public_rooms). Jamais un équipement des maisons dans l'offre de L'Appart. */
+ *  (29 chambres), L'Appart 730–990 CHF (4 chambres ; aucune disponibilité affirmée : elle se lit chambre par chambre dans
+ *  v_public_rooms ; pas d'`availabilityStarts` : l'ouverture n'est publiée qu'au mois, V2-22 du 19/11/2026). Jamais un
+ *  équipement des maisons dans l'offre de L'Appart. */
 function brandOffers(language: "fr" | "en"): Record<string, unknown>[] {
   const en = language === "en";
   const A = APPART;
@@ -481,7 +486,6 @@ function brandOffers(language: "fr" | "en"): Record<string, unknown>[] {
       highPrice: String(appartHigh.chf),
       priceCurrency: "CHF",
       offerCount: A.rooms.total,
-      availabilityStarts: A.opensOn,
       url,
       seller,
     },

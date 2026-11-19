@@ -6,10 +6,11 @@
  *    écartée dès l'arrivée : elle n'atteint aucune page, ni l'état embarqué dans le HTML prérendu.
  *  - Défaut = maisons : l'inventaire « toutes les chambres » est celui des 3 maisons (totaux, compteurs, offre hiver).
  *    L'Appart ne sort que pour qui le demande par sa clé (`placeRooms(rows, "lappart")`).
+ *  - (19/11/2026) Lignes de L'Appart publiées sans jour d'ouverture ni étage (`publicAppartRows`).
  *
- * Aucun React, aucune date, import relatif avec extension : chargé tel quel par Node 24 (tools/test/room-selectors.test.mjs).
+ * Aucun React, aucune date calculée, import relatif avec extension : chargé tel quel par Node 24 (tools/test/room-selectors.test.mjs).
  */
-import { MAISON_KEYS, PLACE_KEYS, isMaisonKey, isPlaceKey, type MaisonKey, type PlaceKey } from "../data/places.ts";
+import { MAISON_KEYS, PLACE_KEYS, isAppartKey, isMaisonKey, isPlaceKey, type MaisonKey, type PlaceKey } from "../data/places.ts";
 
 /** Ce que les sélecteurs lisent d'une ligne : son lieu et son numéro. */
 type RoomRef = { house_slug: string; room_number: number };
@@ -17,6 +18,31 @@ type RoomRef = { house_slug: string; room_number: number };
 /** Lignes d'un lieu connu du code (maison ou L'Appart), dans l'ordre reçu. */
 export function knownPlaceRows<R extends { house_slug: string }>(rows: readonly R[]): (R & { house_slug: PlaceKey })[] {
   return rows.filter((r): r is R & { house_slug: PlaceKey } => isPlaceKey(r.house_slug));
+}
+
+/** Une date « au mois près » (« AAAA-MM ») : l'ouverture de L'Appart telle que le site la publie (V2-22). Pure. */
+export function isMonthOnly(iso: string | null | undefined): boolean {
+  return typeof iso === "string" && /^\d{4}-(?:0[1-9]|1[0-2])$/.test(iso);
+}
+
+/**
+ * (19/11/2026, réponses V2-22 et V2-33 de Jérôme) Lignes de L'Appart telles que le site les publie, appliqué dès l'arrivée (fetch
+ * et état embarqué, src/lib/availability.ts) :
+ *  - la date d'ouverture se publie AU MOIS : la vue rend le jour posé en base (`rooms.opens_on`, repère technique) ; une ligne de
+ *    L'Appart datée dans le mois d'ouverture (`openingMonth`, « AAAA-MM » = APPART.opensOn) ne garde que ce mois. Une date d'un
+ *    autre mois (une vraie libération, après l'ouverture) passe telle quelle, comme pour les maisons ;
+ *  - jamais d'étage (V2-33, décision de Jérôme du 19/11/2026).
+ * Les lignes des maisons ne bougent pas. Pure, idempotente (l'état embarqué relu donne les mêmes lignes).
+ */
+export function publicAppartRows<R extends { house_slug: string; available_from: string | null; floor: string | null }>(
+  rows: readonly R[],
+  openingMonth: string,
+): R[] {
+  return rows.map((r) => {
+    if (!isAppartKey(r.house_slug)) return r;
+    const from = typeof r.available_from === "string" && r.available_from.slice(0, 7) === openingMonth ? openingMonth : r.available_from;
+    return from === r.available_from && r.floor === null ? r : { ...r, available_from: from, floor: null };
+  });
 }
 
 /** Lignes des 3 maisons seulement, dans l'ordre reçu. */

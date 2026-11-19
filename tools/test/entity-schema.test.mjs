@@ -42,7 +42,9 @@ test('(L\'Appart, E5) fiches de la marque : 33 chambres = ENTITY_FACTS.brand, pr
       const [maisons, appart] = node.makesOffer;
       assert.deepEqual([maisons.lowPrice, maisons.highPrice, maisons.offerCount], [String(F.price.fromChf), String(F.price.standardChf), F.totalRooms]);
       assert.deepEqual([appart.lowPrice, appart.highPrice, appart.offerCount], [String(A.price.fromChf), String(A.price.toChf), A.rooms]);
-      assert.equal(appart.availabilityStarts, A.opensOn);
+      // (19/11/2026, V2-22) L'ouverture n'est publiée qu'au mois : pas d'availabilityStarts (ni jour, ni date inventée).
+      assert.equal(appart.availabilityStarts, undefined);
+      assert.doesNotMatch(JSON.stringify(appart), /\d{4}-\d{2}-\d{2}/);
       assert.equal(appart.availability, undefined, 'aucune disponibilité affirmée pour L\'Appart (elle se lit chambre par chambre)');
       assert.doesNotMatch(`${appart.name} ${appart.description}`, /piscine|sauna|salle de sport|\bpool\b|\bgym\b/i);
       // Les équipements des maisons vivent sur leurs nœuds, jamais sur la fiche de la marque.

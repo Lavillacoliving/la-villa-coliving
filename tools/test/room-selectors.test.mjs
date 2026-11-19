@@ -1,16 +1,18 @@
 // Sélecteurs de chambres (L'Appart, brief du 12/11/2026) : src/lib/roomSelectors.ts, chargé tel quel par Node 24, sur
 // les deux relevés de la vue (tools/test/fixtures/v_public_rooms.etat-A.json : avant L'Appart ; etat-B.json : après la
-// bascule, 4 lignes de L'Appart datées du 01/02/2027).
+// bascule, 4 lignes de L'Appart datées dans le mois d'ouverture — jour fictif, sans étage).
 // 1. Entrée filtrée : une ligne d'un lieu inconnu du code n'atteint aucune page.
 // 2. Défaut = maisons : l'inventaire « toutes les chambres » (useAllRooms) est le même avant et après la bascule —
 //    pages de listes, compteurs et offre hiver ne voient jamais L'Appart.
 // 3. L'Appart se demande par sa clé (useHouseRooms("lappart")) ; l'état embarqué suit les lieux demandés.
 // 4. Câblage : le magasin (src/lib/availability.ts) et /offre-hiver passent bien par ces sélecteurs.
+// 5. (19/11/2026, V2-22 et V2-33) Lignes de L'Appart publiées au mois d'ouverture, sans étage (publicAppartRows).
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 import * as S from '../../src/lib/roomSelectors.ts';
 import { MAISON_KEYS, PLACE_KEYS } from '../../src/data/places.ts';
+import { formatShortDate } from '../../src/lib/dates.ts';
 import { isOfferRoom } from '../../src/data/offer.ts';
 
 const read = (rel) => readFileSync(new URL(`../../${rel}`, import.meta.url), 'utf8');
@@ -105,9 +107,10 @@ test('câblage : le magasin des chambres passe par les sélecteurs (entrée filt
   assert.match(body(src, 'useAllRooms'), /\n\s+return allMaisonRooms\(rows\);\n\}$/);
   assert.match(body(src, 'useHouseRooms'), /\n\s+return placeRooms\(rows, place\);\n\}$/);
   assert.match(body(src, 'useRoomsSnapshotFor'), /\n\s+return embedRows\(rows, places\);\n\}$/);
-  // Les deux entrées du canal des chambres : le fetch et l'état embarqué.
-  assert.match(src, /const rooms = knownPlaceRows\(data as unknown as IncomingRoom\[\]\);/);
-  assert.match(src, /const known = embedded \? knownPlaceRows\(embedded\) : \[\];/);
+  // Les deux entrées du canal des chambres : le fetch et l'état embarqué — filtrées, puis ramenées à ce que le site publie de
+  // L'Appart (mois d'ouverture, aucun étage : 19/11/2026).
+  assert.match(src, /const rooms = publicAppartRows\(knownPlaceRows\(data as unknown as IncomingRoom\[\]\), APPART\.opensOn\);/);
+  assert.match(src, /const known = embedded \? publicAppartRows\(knownPlaceRows\(embedded\), APPART\.opensOn\) : \[\];/);
   assert.equal((src.match(/publishRooms\(/g) ?? []).length, 2, 'une seule publication des lignes (après le filtre)');
 });
 
@@ -116,4 +119,38 @@ test('câblage : /offre-hiver lit l\'inventaire des maisons (useAllRooms), jamai
   assert.match(src, /const all = useAllRooms\(\);/);
   assert.match(src, /splitRooms\(all\.rooms\)\.candidates\.filter\(isOfferRoom\)/);
   assert.doesNotMatch(src, /useHouseRooms|useRoomsSnapshotFor|lappart/);
+});
+
+test('(19/11/2026, V2-22 et V2-33) publicAppartRows : L\'Appart au mois d\'ouverture et sans étage ; les maisons intactes', () => {
+  const month = '2027-02';
+  const out = S.publicAppartRows(B, month);
+  assert.equal(out.length, B.length);
+  assert.deepEqual(out.slice(0, 29), B.slice(0, 29), 'lignes des maisons inchangées (mêmes objets)');
+  for (let i = 0; i < 29; i += 1) assert.equal(out[i], B[i]);
+  const appart = out.filter((r) => r.house_slug === 'lappart');
+  assert.equal(appart.length, 4);
+  for (const r of appart) {
+    assert.equal(r.available_from, month, `chambre ${r.room_number} : le mois seul`);
+    assert.equal(r.floor, null, `chambre ${r.room_number} : aucun étage`);
+    assert.equal(S.isMonthOnly(r.available_from), true);
+  }
+  // Le relevé n'est pas modifié (fonction pure), et la fonction est idempotente (l'état embarqué relu donne les mêmes lignes).
+  assert.ok(B.filter((r) => r.house_slug === 'lappart').every((r) => /^\d{4}-\d{2}-\d{2}$/.test(r.available_from)));
+  assert.deepEqual(S.publicAppartRows(out, month), out);
+  // Une base qui publierait un étage pour L'Appart : le site l'écarte quand même ; une date d'un autre mois (après l'ouverture,
+  // une vraie libération) passe telle quelle ; une maison garde son étage et son jour.
+  const mixed = [
+    row('lappart', 2, { floor: 'Étage 3', available_from: '2027-02-28' }),
+    row('lappart', 3, { floor: null, available_from: '2027-08-15' }),
+    row('lappart', 5, { floor: null, available_from: null }),
+    row('lavilla', 7, { floor: 'Étage 1', available_from: '2027-02-10' }),
+  ];
+  assert.deepEqual(S.publicAppartRows(mixed, month).map((r) => [r.house_slug, r.floor, r.available_from]), [
+    ['lappart', null, '2027-02'], ['lappart', null, '2027-08-15'], ['lappart', null, null], ['lavilla', 'Étage 1', '2027-02-10'],
+  ]);
+  // Mois seul : la pastille courte des cartes compactes ne lit pas de jour (RoomCard retombe alors sur roomBadge).
+  assert.equal(formatShortDate('2027-02', 'fr'), '');
+  assert.equal(formatShortDate('2027-02', 'en'), '');
+  for (const x of ['2027-02', '2027-12']) assert.equal(S.isMonthOnly(x), true, x);
+  for (const x of [`${month}-01`, '2027-13', '2027-2', '', null, undefined]) assert.equal(S.isMonthOnly(x), false, String(x));
 });

@@ -7,11 +7,13 @@
  *  - aucune photo de chambre : « Photo de la chambre à venir » sur les cartes (la carte montre une pièce commune, avec SON
  *    texte alternatif — jamais « Chambre 2 — L'Appart » sur une photo de cuisine) ;
  *  - les textes alternatifs ne disent que ce qui se voit, ne nomment pas une pièce non confirmée et ne citent ni la rue, ni
- *    la façade, ni la vue côté rue ; la ville et le quartier une seule fois, sur l'image du haut ;
+ *    la façade, ni la vue côté rue ; la ville et le quartier une seule fois, sur l'image du haut. Pièces confirmées par Jérôme
+ *    le 19/11/2026 (V2-30) : la cheminée est au séjour, les placards dans l'entrée — leurs textes les nomment ; le balcon, la
+ *    salle d'eau et le WC restent sans nom de pièce (ni « commun », ni « de la suite ») ;
  *  - deux paires de clichés identiques (cuisine-5 / cuisine-2, cuisine-4 / cuisine-1) : jamais les deux d'une paire dans
  *    l'album ;
- *  - noms de fichiers neutres pour les deux pièces non confirmées (« cheminee », « placards », au lieu de « sejour » et
- *    « entree » : un nom de fichier est public).
+ *  - noms de fichiers neutres (« cheminee », « placards ») : gardés tels quels après la confirmation du 19/11/2026 (un nom de
+ *    fichier est public et déjà dans les liens).
  *
  * Module pur, zéro React. (Corrections du 13/11/2026, relecture technique) L'image du haut et celle des cartes vivent dans
  * src/data/appartCovers.ts, réexporté ici (mêmes noms pour les gardes et les tests) : les pages des maisons et le bloc statique
@@ -34,7 +36,7 @@ const kitchen3: AppartPhoto = {
 };
 const fireplace1: AppartPhoto = {
   src: `${DIR}/lappart-cheminee-1.webp`, w: 1920, h: 1087, category: "common",
-  alt: { fr: "L'Appart : cheminée aux portes vitrées à cadre laiton et parquet en chêne", en: "L'Appart: fireplace with brass-framed glass doors and oak floor" },
+  alt: { fr: "Séjour de L'Appart : cheminée aux portes vitrées à cadre laiton et parquet en chêne", en: "Living room at L'Appart: fireplace with brass-framed glass doors and oak floor" },
 };
 const balcony1: AppartPhoto = {
   src: `${DIR}/lappart-balcon-1.webp`, w: 679, h: 913, category: "exterior",
@@ -42,7 +44,7 @@ const balcony1: AppartPhoto = {
 };
 const cupboards1: AppartPhoto = {
   src: `${DIR}/lappart-placards-1.webp`, w: 1920, h: 1440, category: "interior",
-  alt: { fr: "L'Appart : placards intégrés blancs et noirs, banquette et parquet en chêne", en: "L'Appart: built-in white and black cupboards, bench seat and oak floor" },
+  alt: { fr: "Entrée de L'Appart : placards intégrés blancs et noirs, banquette et parquet en chêne", en: "Entrance hall at L'Appart: built-in white and black cupboards, bench seat and oak floor" },
 };
 const showerRoom1: AppartPhoto = {
   src: `${DIR}/lappart-salle-eau-1.webp`, w: 1112, h: 1482, category: "interior",

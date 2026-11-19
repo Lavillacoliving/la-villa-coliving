@@ -46,15 +46,20 @@ test('prix : saisis en euros, francs dérivés au taux figé (790 € → 730 CH
   assert.equal(m.HOUSES_FROM.eur, 1380);
 });
 
-test('faits : 4 chambres n° 2 à 5 (jamais le n° 1), suite n° 5 « Suite », 12 et 22 m², 151 m², ouverture au 1er février 2027', () => {
+test('faits : 4 chambres n° 2 à 5 (jamais le n° 1), suite n° 5 « Suite », 12 et 22 m², 151 m², ouverture en février 2027 (le mois, jamais le jour), pas d\'étage', () => {
   const A = m.APPART;
   assert.equal(A.key, 'lappart');
   assert.equal(A.name, "L'Appart");
   assert.deepEqual([...A.rooms.numbers], [2, 3, 4, 5]);
   assert.equal(A.rooms.suite.number, m.APPART_SUITE_ROOM_NUMBER);
   assert.deepEqual([A.rooms.standard.surfaceM2, A.rooms.suite.surfaceM2, A.flat.surfaceM2], [12, 22, 151]);
-  assert.equal(A.opensOn, '2027-02-01');
-  assert.deepEqual(A.opensOnLabel, { fr: '1er février 2027', en: '1 February 2027' });
+  // (19/11/2026, V2-22) Le mois seulement : « 2027-02 », « février 2027 » ; (V2-33) aucun étage dans les faits.
+  assert.equal(A.opensOn, '2027-02');
+  assert.deepEqual(A.opensOnLabel, { fr: 'février 2027', en: 'February 2027' });
+  assert.equal('floor' in A.flat, false);
+  assert.doesNotMatch(JSON.stringify({ ...A, transit: undefined }), /"floor"|étage|\d{4}-\d{2}-\d{2}/i, 'ni étage, ni jour (hors date du relevé des trajets)');
+  assert.equal(m.appartOpeningSentence('fr'), "L'Appart ouvre à la location en février 2027.");
+  assert.equal(m.appartOpeningSentence('en'), "L'Appart opens for rent in February 2027.");
   assert.equal(m.roomLabel('lappart', 5, 'fr'), 'Suite');
   assert.equal(m.roomCapacityLabel('lappart', 5, 'fr'), '1 ou 2 personnes');
   assert.equal(m.roomCapacityLabel('lappart', 5, 'en'), '1 or 2 people');
@@ -75,7 +80,7 @@ test('marque : 4 adresses, 33 chambres, de 730 à 1 430 CHF (790 à 1 530 €) ;
   assert.deepEqual(A.surfaces, { min: 12, max: 22 });
   assert.deepEqual({ ...A.price, tiers: undefined }, { fromChf: 730, fromEur: 790, toChf: 990, toEur: 1060, tiers: undefined });
   assert.deepEqual(A.price.tiers.map((t) => [[...t.rooms], t.eur, t.chf, t.surfaceM2, t.bathroom]), [[[2, 3, 4], 790, 730, 12, 'shared'], [[5], 1060, 990, 22, 'private']]);
-  assert.equal(A.opensOn, '2027-02-01');
+  assert.equal(A.opensOn, '2027-02');
 });
 
 test('phrases canoniques de L\'Appart et de la marque : texte de la source, au caractère près (insécables comprises)', () => {
@@ -224,15 +229,22 @@ test('JSON-LD : nœud de L\'Appart (4 chambres, 730–990 CHF, ses équipements,
     assert.deepEqual([n.geo.latitude, n.geo.longitude], [m.publicGeo(m.APPART_PLACE).lat, m.publicGeo(m.APPART_PLACE).lng]);
     assert.equal(n.currenciesAccepted, undefined); assert.equal(n.aggregateRating, undefined); assert.equal(n.makesOffer, undefined);
     assert.equal(m.buildAppartLodgingNode(lang, { context: true })['@context'], 'https://schema.org');
+    // (19/11/2026, V2-22) L'ouverture se publie au mois : jamais d'availabilityStarts pour L'Appart dans son mois d'ouverture,
+    // qu'il arrive au mois (« 2027-02 », la forme du site) ou, par erreur, avec un jour (fictif ici) ; une maison datée garde le sien.
     const list = m.buildAvailableRoomsItemList([
-      { house_slug: 'lappart', room_number: 5, rent_chf: 990, rent_eur: '1060.00', availability: 'occupied', available_from: '2027-02-01', surface_m2: '22.0' },
+      { house_slug: 'lappart', room_number: 5, rent_chf: 990, rent_eur: '1060.00', availability: 'occupied', available_from: '2027-02', surface_m2: '22.0' },
       { house_slug: 'lavilla', room_number: 7, rent_chf: 1290, rent_eur: 1380, availability: 'available', available_from: null, surface_m2: 16 },
+      { house_slug: 'lappart', room_number: 2, rent_chf: 730, rent_eur: '790.00', availability: 'occupied', available_from: '2027-02-15', surface_m2: '12.0' },
+      { house_slug: 'lelodge', room_number: 4, rent_chf: 1430, rent_eur: 1530, availability: 'occupied', available_from: '2026-12-02', surface_m2: 18 },
     ], lang);
-    const [suite, villa] = list.itemListElement.map((x) => x.item);
+    const [suite, villa, room2, lodge] = list.itemListElement.map((x) => x.item);
     assert.equal(suite.name, "L'Appart — Suite");
     assert.equal(suite.itemOffered.name, "Suite — L'Appart");
     assert.equal(suite.itemOffered.containedInPlace['@id'], m.placeLodgingId('lappart'));
-    assert.equal(suite.availabilityStarts, '2027-02-01');
+    assert.equal(suite.availability, 'https://schema.org/PreOrder');
+    assert.equal(suite.availabilityStarts, undefined);
+    assert.equal(room2.availabilityStarts, undefined);
+    assert.equal(lodge.availabilityStarts, '2026-12-02');
     assert.deepEqual(suite.priceSpecification.map((p) => [p.price, p.priceCurrency, p.unitCode]), [[990, 'CHF', 'MON'], [1060, 'EUR', 'MON']]);
     assert.equal(villa.name, `La Villa — ${lang === 'en' ? 'Room' : 'Chambre'} 7`);
     assert.deepEqual(villa.priceSpecification.map((p) => [p.price, p.priceCurrency]), [[1290, 'CHF'], [1380, 'EUR']]);
@@ -252,14 +264,24 @@ test('photos : 10 fichiers publiés, tous présents ; album de 8 sans les deux c
   assert.equal(m.LAPPART_ALBUM_COVERS.length, 6);
   for (const c of m.LAPPART_ALBUM_COVERS) assert.ok(album.includes(c), c);
   assert.equal(m.APPART_PLACE.image, m.LAPPART_HERO.wide.src);
-  // Noms neutres pour les pièces non confirmées ; aucun texte alternatif ne nomme séjour, entrée ni chambre.
+  // Noms de fichiers neutres, gardés (V2-30, 19/11/2026) ; pièces confirmées par Jérôme : la cheminée au séjour, les placards
+  // dans l'entrée — seuls ces deux textes nomment une pièce ; le balcon, la salle d'eau et le WC restent sans pièce rattachée
+  // (ni « commun », ni « de la suite ») ; aucun texte ne nomme une chambre, une rue ou un étage.
+  const named = new Map([
+    ['/images/lappart/lappart-cheminee-1.webp', { fr: "Séjour de L'Appart : ", en: "Living room at L'Appart: " }],
+    ['/images/lappart/lappart-placards-1.webp', { fr: "Entrée de L'Appart : ", en: "Entrance hall at L'Appart: " }],
+  ]);
   for (const p of [m.LAPPART_HERO.wide, m.LAPPART_HERO.tall, m.LAPPART_ROOM_COVER, ...m.LAPPART_ALBUM]) {
     assert.doesNotMatch(p.src, /sejour|entree|chambre/);
     for (const lang of LANGS) {
-      assert.doesNotMatch(p.alt[lang], /séjour|entrée|living room|entrance|chambre|bedroom|\brue\b|street/i, p.alt[lang]);
+      const room = named.get(p.src);
+      if (room) assert.ok(p.alt[lang].startsWith(room[lang]), p.alt[lang]);
+      else assert.doesNotMatch(p.alt[lang], /séjour|entrée|living room|entrance/i, p.alt[lang]);
+      assert.doesNotMatch(p.alt[lang], /chambre|bedroom|\brue\b|street|étage|top\sfloor|\d+(?:st|nd|rd|th) floor|commun|shared|suite/i, p.alt[lang]);
       assert.deepEqual(scanGenericAddresses(p.alt[lang]), []);
     }
   }
+  assert.equal(named.size, [...named.keys()].filter((src) => m.LAPPART_ALBUM.some((p) => p.src === src)).length, 'les deux photos nommées sont dans l\'album');
 });
 
 test('pont des clés : la clé interne n\'existe que là ; une clé inconnue passe telle quelle ; aucun texte de L\'Appart ne la porte', () => {

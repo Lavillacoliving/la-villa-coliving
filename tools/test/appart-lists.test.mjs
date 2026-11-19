@@ -1,10 +1,10 @@
 // L'Appart dans les pages de listes (étape E4) : /chambres-disponibles, /colocation-geneve, /chambre-a-louer-geneve,
 // /chambre-a-louer-annemasse — et /offre-hiver, qui ne doit pas changer. Les pages sont rendues par react-dom/server (comme un
 // premier rendu), l'état embarqué des chambres pris dans les relevés de la vue : « état A » (29 lignes, sans L'Appart) et
-// « état B » (les mêmes + les 4 chambres de L'Appart, datées du 01/02/2027). La chaîne réelle (prérendu, gardes, hydratation)
+// « état B » (les mêmes + les 4 chambres de L'Appart, datées dans le mois d'ouverture). La chaîne réelle (prérendu, gardes, hydratation)
 // tourne au banc d'essai ; ce test fige ce que chaque état doit montrer, sans base ni navigateur.
 // Contrôles : section L'Appart à part (repli en A, cartes en B), compteurs du haut de page inchangés (maisons), aucune
-// carte de L'Appart qui nomme piscine, sauna ou salle de sport, JSON-LD (offres PreOrder datées), garde de gamme du prérendu.
+// carte de L'Appart qui nomme piscine, sauna ou salle de sport, JSON-LD (offres PreOrder, sans jour d'ouverture), garde de gamme du prérendu.
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { mkdtempSync, rmSync, readFileSync } from 'node:fs';
@@ -113,7 +113,8 @@ test('relevés : l\'état B = l\'état A + les 4 chambres de L\'Appart, datées 
   assert.equal(maisons(ROWS.A), maisons(ROWS.B));
   assert.equal(ROWS.A.filter((r) => r.house_slug === KEY).length, 0);
   assert.deepEqual(appartRowsB.map((r) => r.room_number), [...m.APPART.rooms.numbers]);
-  for (const r of appartRowsB) assert.ok(r.availability !== 'available' && r.available_from === m.APPART.opensOn, `chambre ${r.room_number}`);
+  // La vue rend un jour (repère technique de la base ; fictif dans le relevé) dans le mois d'ouverture, et aucun étage.
+  for (const r of appartRowsB) assert.ok(r.availability !== 'available' && r.available_from.slice(0, 7) === m.APPART.opensOn && r.floor === null, `chambre ${r.room_number}`);
 });
 
 test('état A : le repli remplace les cartes sur les 3 listes de la marque ; rien sur Annemasse, qui porte le bloc statique', () => {
@@ -247,7 +248,7 @@ test('/offre-hiver : aucune carte ni lien de L\'Appart, en A comme en B (useAllR
   }
 });
 
-test('JSON-LD de /chambres-disponibles : en B, les offres de L\'Appart après celles des maisons, PreOrder datées, CHF et EUR', () => {
+test('JSON-LD de /chambres-disponibles : en B, les offres de L\'Appart après celles des maisons, PreOrder sans jour d\'ouverture, CHF et EUR', () => {
   for (const lang of LANGS) {
     const a = itemList(R.A[`${lang}:/chambres-disponibles`].scripts);
     const b = itemList(R.B[`${lang}:/chambres-disponibles`].scripts);
@@ -259,7 +260,9 @@ test('JSON-LD de /chambres-disponibles : en B, les offres de L\'Appart après ce
       const r = appartRowsB[i];
       assert.equal(o.url, `https://www.lavillacoliving.com${prefixOf(lang)}/${KEY}`);
       assert.equal(o.availability, 'https://schema.org/PreOrder');
-      assert.equal(o.availabilityStarts, m.APPART.opensOn);
+      // (19/11/2026, V2-22) L'ouverture n'est publiée qu'au mois : aucune date au jour près, aucune date inventée.
+      assert.equal(o.availabilityStarts, undefined);
+      assert.doesNotMatch(JSON.stringify(o), /\d{4}-\d{2}-\d{2}/);
       assert.deepEqual(o.priceSpecification.map((p) => [p.price, p.priceCurrency]), [[r.rent_chf, 'CHF'], [Number(r.rent_eur), 'EUR']]);
       assert.equal(o.itemOffered.containedInPlace['@id'], `https://www.lavillacoliving.com/${KEY}#lodging`);
       assert.doesNotMatch(JSON.stringify(o), HOUSE_AMENITY);

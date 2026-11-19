@@ -1,5 +1,5 @@
 // Page de L'Appart et ses fiches chambres (étape E3, 13/11/2026) : LAppartPage et AppartRoomPage rendues (react-dom/server, comme
-// un premier rendu) dans les DEUX états de la base — A (la vue n'a pas encore L'Appart) et B (4 lignes datées du 1er février 2027,
+// un premier rendu) dans les DEUX états de la base — A (la vue n'a pas encore L'Appart) et B (4 lignes datées dans le mois d'ouverture,
 // relevé tools/test/fixtures/v_public_rooms.etat-B.json) — puis passées aux gardes du prérendu (fonctions pures de
 // scripts/check-entity-facts.mjs, scripts/house-pages-check.mjs, scripts/check-answer-slots.mjs). Plus les textes de
 // src/data/appartPage.ts : conditions communes épinglées à la marque, aucune preuve des maisons, aucune phrase de la fiche recopiée.
@@ -88,6 +88,10 @@ rmSync(dir, { recursive: true, force: true });
 /** Une page complète comme le prérendu la sert (en-tête et pied de page omis : ils ne sont pas dans <main>). */
 const html = (body) => `<!DOCTYPE html><html><head><title>t</title></head><body><header>La Villa Coliving</header>${body}<footer>f</footer></body></html>`;
 const appartRows = (rows) => rows.filter((r) => r.house_slug === 'lappart').sort((a, b) => a.room_number - b.room_number);
+/** (19/11/2026) Un jour accolé au mois d'ouverture, avant ou après lui, en français (« 1er », « 15 » suivis du mois, abrégé ou non)
+ *  comme en anglais (le jour avant ou après « February »), ou un étage (V2-22, V2-33).
+ *  « février 2027 » (le mois et l'année) passe. */
+const NO_DAY_NO_FLOOR = /\b(?:1er|[1-9]|[12]\d|3[01])\s+(?:février|févr|February|Feb)\b|\b(?:February|Feb)\s+(?:[1-9]|[12]\d|3[01])\b|[ÉE]tage|\bfloor\b/i;
 
 // ── Textes (src/data/appartPage.ts) ───────────────────────────────────────────────────────────────────────────────────────────
 
@@ -131,7 +135,7 @@ function pageStrings(P, lang) {
   return [P.appartPageTitle(lang), P.appartPageDescription(lang), P.appartPageDescriptionAfterOpening(lang), h.eyebrow, h.h1, ...h.markers, h.pricePill,
     lead.lead, lead.price, P.appartPageDpe(lang), ...Object.values(r), ...Object.values(w), full.title, full.text, liv.title, liv.text,
     s.title, s.text, c.title, c.intro, c.profiles, ...P.appartFaqOwn(lang).flatMap((x) => [x.q, x.a]), P.appartHousesLink(lang), fin.title, fin.text,
-    ...[2, 5].flatMap((n) => [P.appartRoomTitle(n, lang), P.appartRoomH1(n, lang), P.appartRoomDescription(n, lang), P.appartRoomDescription(n, lang, '1er février'),
+    ...[2, 5].flatMap((n) => [P.appartRoomTitle(n, lang), P.appartRoomH1(n, lang), P.appartRoomDescription(n, lang), P.appartRoomDescription(n, lang, P.appartDateWords(m.APPART.opensOn, lang)),
       P.appartRoomIntro(n, lang), P.appartRoomUnavailable(n, lang).description, P.appartRoomUnavailable(n, lang).text])];
 }
 
@@ -204,11 +208,15 @@ test('/lappart, état B : les 4 chambres de la vue (Chambre 2, 3, 4, Suite), pas
       assert.ok(t.includes(m.roomLabel('lappart', r.room_number, lang)), `${lang} ${r.room_number}`);
       assert.ok(page.includes(`property_interest=lappart&amp;room_interest=chambre-${r.room_number}`), `${lang} ${r.room_number}`);
     }
-    assert.ok(t.includes(lang === 'en' ? 'Available from February 1' : 'Libre dès le 1er février'), lang);
+    // (19/11/2026) La pastille dit le mois d'ouverture (V2-22), jamais le jour ; aucun étage (V2-33) — ni dans le texte, ni dans
+    // l'état embarqué (le relevé, lui, porte un jour et pas d'étage : le site le ramène au mois dès l'arrivée).
+    assert.ok(t.includes(lang === 'en' ? 'Available from February' : 'Libre dès février'), lang);
+    assert.doesNotMatch(t, NO_DAY_NO_FLOOR, lang);
     assert.ok(!t.includes(lang === 'en' ? 'Below are the two types of room' : 'Ci-dessous, les deux types de chambres'), lang);
     const embed = JSON.parse(/<script type="application\/json" id="__rooms_level_data__">([\s\S]*?)<\/script>/.exec(page)[1]);
     assert.deepEqual(embed.map((r) => r.room_number).sort(), [2, 3, 4, 5], lang);
     assert.ok(embed.every((r) => r.house_slug === 'lappart'), lang);
+    assert.ok(embed.every((r) => r.available_from === m.APPART.opensOn && r.floor === null), `${lang} : état embarqué au mois, sans étage`);
     // Cartes de la page du lieu : ni ligne « tout compris », ni badge de gamme.
     assert.equal(count(page, 'data-all-inclusive'), 0, lang);
     assert.equal(count(page, 'data-gamme-badge'), 0, lang);
@@ -260,30 +268,36 @@ test('/lappart, état complet (B+) : liste d\'attente en tête, chambres sans bo
 test('description d\'une fiche : sans date et datée = la source au caractère près ; libre maintenant = la pastille, jamais la date d\'ouverture', async () => {
   const P = await bundleData();
   const nb = (s) => s.replace(/[  ]/g, ' ');
-  // Source du 13/11/2026 (chambre.meta.*) : {numero} = 2, {date} = « 1er février » / « February 1 ».
+  // Source (chambre.meta.*, 19/11/2026 : le mois d'ouverture, jamais le jour) : {numero} = 2, {date} = « février » / « February ».
   const want = {
     fr: {
-      2: ["Chambre 2 de L'Appart à Annemasse : 12 m², salle d'eau partagée. L'Appart ouvre à la location le 1er février 2027. Tout compris, 0 frais de dossier.",
-        "Chambre 2 de L'Appart à Annemasse : 12 m², salle d'eau partagée. Libre dès le 1er février. Tout compris, 0 frais de dossier, réponse sous 48 h."],
-      5: ["La suite de L'Appart à Annemasse : 22 m², salle d'eau et WC privés, pour une ou deux personnes. L'Appart ouvre à la location le 1er février 2027.",
-        "La suite de L'Appart à Annemasse : 22 m², salle d'eau et WC privés, pour une ou deux personnes. Libre dès le 1er février. Tout compris."],
+      2: ["Chambre 2 de L'Appart à Annemasse : 12 m², salle d'eau partagée. L'Appart ouvre à la location en février 2027. Tout compris, 0 frais de dossier.",
+        "Chambre 2 de L'Appart à Annemasse : 12 m², salle d'eau partagée. Libre dès février. Tout compris, 0 frais de dossier, réponse sous 48 h."],
+      5: ["La suite de L'Appart à Annemasse : 22 m², salle d'eau et WC privés, pour une ou deux personnes. L'Appart ouvre à la location en février 2027.",
+        "La suite de L'Appart à Annemasse : 22 m², salle d'eau et WC privés, pour une ou deux personnes. Libre dès février. Tout compris."],
     },
     en: {
-      2: ["Room 2 at L'Appart in Annemasse: 12 m², shared shower room. L'Appart opens for rent on 1 February 2027. All-inclusive, no application fee.",
-        "Room 2 at L'Appart in Annemasse: 12 m², shared shower room. Available from February 1. All-inclusive, no application fee, reply within 48 h."],
-      5: ["The suite at L'Appart in Annemasse: 22 m², private shower room and toilet, for one or two people. L'Appart opens for rent on 1 February 2027.",
-        "The suite at L'Appart in Annemasse: 22 m², private shower room and toilet, for one or two people. Available from February 1. All-inclusive."],
+      2: ["Room 2 at L'Appart in Annemasse: 12 m², shared shower room. L'Appart opens for rent in February 2027. All-inclusive, no application fee.",
+        "Room 2 at L'Appart in Annemasse: 12 m², shared shower room. Available from February. All-inclusive, no application fee, reply within 48 h."],
+      5: ["The suite at L'Appart in Annemasse: 22 m², private shower room and toilet, for one or two people. L'Appart opens for rent in February 2027.",
+        "The suite at L'Appart in Annemasse: 22 m², private shower room and toilet, for one or two people. Available from February. All-inclusive."],
     },
   };
+  // appartDateWords : le mois seul (l'ouverture) ; un jour (une vraie libération, après l'ouverture) garde « le » en français.
+  assert.deepEqual(LANGS.map((l) => P.appartDateWords(m.APPART.opensOn, l)), ['février', 'February']);
+  assert.deepEqual(LANGS.map((l) => P.appartDateWords('2027-03-15', l)), ['le 15 mars', 'March 15']);
+  assert.deepEqual(LANGS.map((l) => P.appartDateWords('2027-04-01', l)), ['le 1er avril', 'April 1']);
+  for (const bad of [null, undefined, '', 'x', '2027-13', '2027-02-40']) assert.equal(P.appartDateWords(bad, 'fr'), '', String(bad));
+  assert.equal(nb(P.appartRoomDescription(2, 'fr', P.appartDateWords('2027-03-15', 'fr'))), "Chambre 2 de L'Appart à Annemasse : 12 m², salle d'eau partagée. Libre dès le 15 mars. Tout compris, 0 frais de dossier, réponse sous 48 h.");
   for (const lang of LANGS) {
-    const date = lang === 'en' ? 'February 1' : '1er février';
+    const date = P.appartDateWords(m.APPART.opensOn, lang);
     for (const n of [2, 5]) {
       const at = `${lang}, n° ${n}`;
       assert.equal(nb(P.appartRoomDescription(n, lang)), want[lang][n][0], `${at}, sans date`);
       assert.equal(nb(P.appartRoomDescription(n, lang, date)), want[lang][n][1], `${at}, datée`);
       // (Corrections du 13/11/2026) Libre maintenant (après l'ouverture) : la phrase de la pastille à la place de la date.
       const now = nb(P.appartRoomDescription(n, lang, null, true));
-      assert.equal(now, want[lang][n][1].replace(lang === 'en' ? `Available from ${date}` : `Libre dès le ${date}`, lang === 'en' ? 'Available now' : 'Libre maintenant'), `${at}, libre maintenant`);
+      assert.equal(now, want[lang][n][1].replace(lang === 'en' ? `Available from ${date}` : `Libre dès ${date}`, lang === 'en' ? 'Available now' : 'Libre maintenant'), `${at}, libre maintenant`);
       assert.ok(!now.includes('2027'), `${at} : date d'ouverture dans la description d'une chambre libre`);
     }
   }
@@ -306,12 +320,16 @@ test('fiches /lappart/chambre-N (2 à 5), états A et B : page complète, statiq
         assert.deepEqual(checkHouseNameGrammar(page, `lappart-chambre-${n}.html`), [], at);
         assert.ok(t.includes(lang === 'en' ? 'Pool, sauna, gym: there aren\'t any at L\'Appart' : 'Piscine, sauna, salle de sport : il n\'y en a pas à L\'Appart'), at);
         assert.doesNotMatch(t, /Bed linen and towels provided|Linge de lit et serviettes fournis|3 fois par semaine|three times a week|Visite en visio|Video tour/, at);
+        // (19/11/2026) Ni jour d'ouverture (V2-22), ni étage (V2-33) ; le ménage de la semaine comprend la salle d'eau et le WC
+        // partagés (V2-25), dans « Ce qui est compris ».
+        assert.doesNotMatch(t, NO_DAY_NO_FLOOR, at);
+        assert.ok(t.includes(lang === 'en' ? 'Cleaning of the shared areas once a week (shared shower room and toilet included)' : 'Ménage des parties communes une fois par semaine (salle d\'eau et WC partagés compris)'), at);
         if (state === 'A') {
-          assert.ok(t.includes(lang === 'en' ? 'opens for rent on 1 February 2027' : 'ouvre à la location le 1er février 2027'), at);
+          assert.ok(t.includes(lang === 'en' ? 'opens for rent in February 2027' : 'ouvre à la location en février 2027'), at);
           assert.doesNotMatch(t, /Libre dès|Available from/, at);
         } else {
-          assert.ok(t.includes(lang === 'en' ? 'Available from February 1' : 'Libre dès le 1er février'), at);
-          assert.ok(t.includes(lang === 'en' ? "It's available from February 1" : 'Elle est disponible le 1er février'), at);
+          assert.ok(t.includes(lang === 'en' ? 'Available from February' : 'Libre dès février'), at);
+          assert.ok(t.includes(lang === 'en' ? "It's available from February" : 'Elle est disponible dès février'), at);
         }
         if (n === 5) assert.ok(t.includes(lang === 'en' ? 'or €530 each for two' : 'soit 530 € par personne à deux'), at);
       }

@@ -1,6 +1,6 @@
 import { lazy, Suspense, useState } from "react";
 import { useLocation } from "react-router-dom";
-import { ArrowRight, BedDouble, Check, ChevronRight, Images, Layers, MapPin, Maximize, Minus, ShowerHead } from "lucide-react";
+import { ArrowRight, BedDouble, Check, ChevronRight, Images, MapPin, Maximize, Minus, ShowerHead } from "lucide-react";
 import { SEO } from "@/components/SEO";
 import { LocalizedLink } from "@/components/LocalizedLink";
 import { RoomsEmbed } from "@/components/RoomsEmbed";
@@ -26,6 +26,7 @@ import {
   appartRoomTitle,
   appartRoomUnavailable,
   appartRoomWhatsapp,
+  appartDateWords,
   appartTypeCards,
   isAppartSuite,
 } from "@/data/appartPage";
@@ -37,7 +38,6 @@ import { LAVILLA_PHONE } from "@/lib/structuredData";
 import {
   BADGE_PANEL_CLASS,
   BADGE_DOT_CLASS,
-  formatFreeDate,
   roomBadge,
   splitRooms,
   useAllRooms,
@@ -52,11 +52,12 @@ import {
  *
  * Une page à part : la fiche des maisons (RoomDetailPage) écrit « linge fourni », « ménage 3 fois par semaine » et les
  * équipements des maisons, faux ici. Textes : src/data/appartPage.ts (source du 13/11/2026, au caractère près).
- * Faits de l'offre (prix, surface, étage, salle d'eau) : APPART — la fiche est complète même quand la vue n'a pas encore
+ * Faits de l'offre (prix, surface, salle d'eau ; jamais l'étage, V2-33) : APPART — la fiche est complète même quand la vue n'a pas encore
  * L'Appart (état A : une route qui échoue fait échouer tout le prérendu). Disponibilité (pastille, date) : la vue seulement.
  * Chambre occupée sans date (état B+) : la fiche dit « pas disponible » et renvoie vers /lappart, comme pour les maisons.
  *
- * Hydratation : état embarqué des lignes de L'Appart (RoomsEmbed), dates par formatFreeDate (pure). Balises SEO posées UNE fois,
+ * Hydratation : état embarqué des lignes de L'Appart (RoomsEmbed), dates par appartDateWords (pure ; au mois pour l'ouverture,
+ * V2-22 du 19/11/2026 : jamais le jour). Balises SEO posées UNE fois,
  * quand l'état est connu (la vue chargée) : des balises Helmet qui changent entre deux rendus laissent un doublon au prérendu
  * (piège du 08/10/2026, mêmes précautions que les fiches des maisons) ; le HTML prérendu les porte déjà au premier rendu.
  */
@@ -71,7 +72,7 @@ function track(event: string, params: Record<string, unknown>) {
   } catch { /* noop — l'analytics ne bloque jamais l'UI */ }
 }
 
-const SPEC_ICONS = { size: Maximize, floor: Layers, bath: ShowerHead, furniture: BedDouble } as const;
+const SPEC_ICONS = { size: Maximize, bath: ShowerHead, furniture: BedDouble } as const;
 
 export function AppartRoomPage() {
   const { pathname } = useLocation();
@@ -109,7 +110,7 @@ export function AppartRoomPage() {
   const photos = [...LAPPART_ALBUM];
   // Date de la vue (état B) : seulement si la chambre n'est pas libre maintenant ; jamais calculée.
   const availableNow = room?.availability === "available";
-  const date = room && !availableNow && room.available_from ? formatFreeDate(room.available_from, L) : null;
+  const date = room && !availableNow && room.available_from ? appartDateWords(room.available_from, L) || null : null;
   const badge = room ? roomBadge(room, L) : null;
   const price = appartRoomPrice(n, L);
   const specsLine = appartTypeCards(L)[suite ? 1 : 0].specs;

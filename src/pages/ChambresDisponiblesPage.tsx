@@ -210,8 +210,8 @@ export function ChambresDisponiblesPage() {
 
   // (Lot L6.5) JSON-LD ItemList d'Offer — dérivé du même snapshot que le rendu, sans filtre (identique au prérendu et au premier
   // rendu client) ; construit par buildAvailableRoomsItemList (structuredData.ts) : prix mensuel, LeaseOut, offeredBy, maison par @id.
-  // (L'Appart, E4) Les maisons d'abord, puis les chambres de L'Appart (PreOrder et availabilityStarts tant qu'elles sont datées) ;
-  // rien de plus dans l'état A.
+  // (L'Appart, E4) Les maisons d'abord, puis les chambres de L'Appart (PreOrder tant qu'elles sont datées ; sans availabilityStarts
+  // avant l'ouverture, publiée au mois seulement — V2-22 du 19/11/2026) ; rien de plus dans l'état A.
   const itemList = buildAvailableRoomsItemList([...candidates, ...appartCandidates], L);
 
   // (Lot L2, 09/10/2026) « 20 min » toujours qualifié : STATS_DISPLAY.distance (D1).

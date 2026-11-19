@@ -45,6 +45,7 @@ import {
   APPART_WORD_EN as WORD_EN,
   APPART_WORD_FR as WORD_FR,
   capital,
+  cleaningSharedBath,
   timesPerWeek,
   word,
 } from "./appartWords";
@@ -59,9 +60,10 @@ const P = A.price;
 
 // ── Phrases courtes, réutilisées ─────────────────────────────────────────────────────────────────────────────────────────
 
-/** Date d'ouverture, forme unique des textes fixes (décision n° 17) : vraie même si une chambre est louée avant. */
+/** Ouverture, forme unique des textes fixes (décision n° 17) : vraie même si une chambre est louée avant. Le mois seulement,
+ *  jamais le jour (V2-22, 19/11/2026) : « L'Appart ouvre à la location en février 2027. » */
 export function appartOpeningSentence(lang: AppartLang): string {
-  return lang === "en" ? `${A.name} opens for rent on ${A.opensOnLabel.en}.` : `${A.name} ouvre à la location le ${A.opensOnLabel.fr}.`;
+  return lang === "en" ? `${A.name} opens for rent in ${A.opensOnLabel.en}.` : `${A.name} ouvre à la location en ${A.opensOnLabel.fr}.`;
 }
 /** « Photos des chambres à venir. » (décision de Jérôme du 12/11). */
 export function appartRoomPhotosSentence(lang: AppartLang): string {
@@ -87,8 +89,9 @@ export function appartCommuneSentence(lang: AppartLang, opts: { following?: bool
 
 // ── Fiche « L'Appart — l'essentiel » ──────────────────────────────────────────────────────────────────────────────────────
 
-/** Incrémenter à chaque changement de texte : porté par data-appart-facts-version (garde check:facts, étape E2g). */
-export const APPART_FACTS_VERSION = "2026-11-13";
+/** Incrémenter à chaque changement de texte : porté par data-appart-facts-version (garde check:facts, étape E2g). 19/11/2026 :
+ *  « Compris » dit que le ménage comprend la salle d'eau et le WC partagés (V2-25). */
+export const APPART_FACTS_VERSION = "2026-11-19";
 /** Pages qui portent la fiche de L'Appart (exactement une fois ; jamais ailleurs). */
 export const APPART_FACTS_ROUTES: readonly string[] = ["/lappart"];
 
@@ -105,7 +108,8 @@ export interface AppartFactsText {
  *  garant, puis la phrase de la marque. Bail, caution, garant et phrases canoniques : importés de entityFacts.ts, jamais retapés. */
 export function appartFactsText(lang: AppartLang): AppartFactsText {
   const std = A.rooms.standard, suite = A.rooms.suite;
-  const cleaning = timesPerWeek(A.cleaningPerWeek, lang);
+  // (19/11/2026, V2-25) « une fois par semaine (salle d'eau et WC partagés compris) ».
+  const cleaning = `${timesPerWeek(A.cleaningPerWeek, lang)} ${cleaningSharedBath(lang)}`;
   if (lang === "en") {
     return {
       title: `${A.name} — the essentials`,
@@ -176,9 +180,10 @@ export function appartIncluded(lang: AppartLang): AppartIncludedTable {
       en ? { item: "Bills: water, electricity, heating", status: "Yes", detail: "In the rent." } : { item: "Charges : eau, électricité, chauffage", status: "Oui", detail: "Dans le loyer." },
       { item: "Fibre", status: en ? "Yes" : "Oui", detail: "" },
       { item: "Streaming", status: en ? "Yes" : "Oui", detail: "" },
+      // (19/11/2026, V2-25) « Une fois par semaine (salle d'eau et WC partagés compris). »
       en
-        ? { item: "Cleaning of the shared areas", status: "Yes", detail: `${capital(timesPerWeek(A.cleaningPerWeek, "en"))}.` }
-        : { item: "Ménage des parties communes", status: "Oui", detail: `${capital(timesPerWeek(A.cleaningPerWeek, "fr"))}.` },
+        ? { item: "Cleaning of the shared areas", status: "Yes", detail: `${capital(timesPerWeek(A.cleaningPerWeek, "en"))} ${cleaningSharedBath("en")}.` }
+        : { item: "Ménage des parties communes", status: "Oui", detail: `${capital(timesPerWeek(A.cleaningPerWeek, "fr"))} ${cleaningSharedBath("fr")}.` },
       en
         ? { item: "Furniture in your room", status: "Yes", detail: `${A.rooms.bedCm} cm double bed, desk, wardrobe.` }
         : { item: "Meubles de ta chambre", status: "Oui", detail: `Lit de ${A.rooms.bedCm}, bureau, penderie.` },

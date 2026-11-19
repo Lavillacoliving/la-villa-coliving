@@ -6,7 +6,8 @@
  * Règles (en plus de celles des maisons : destination nommée, jamais de voiture ni d'aéroport, jamais « 15 min », deux
  * ancres de transport — Léman Express et tram 17) :
  *  - les MINUTES, jamais les mètres ni les kilomètres (décision n° 27 : deux distances courtes, l'étage et l'orientation
- *    situeraient l'immeuble) — y compris dans le code, le dépôt étant public ;
+ *    situeraient l'immeuble) — y compris dans le code, le dépôt étant public ; jamais l'étage (V2-33, décision de Jérôme du
+ *    19/11/2026) ;
  *  - la carte, le lien « Calculer mon trajet » et le JSON-LD partent de la gare d'Annemasse (point public, décision n° 28) :
  *    la page le dit (légende de la carte, phrase sous le lien) ;
  *  - commerces à pied : pas encore relevés — la section ne s'affiche pas (appartNearby() est vide) ;
@@ -23,17 +24,12 @@ import { APPART_PLACE, publicGeo } from "../lib/structuredData";
 
 export type AppartLocLang = "fr" | "en";
 
-/** Incrémenter à chaque changement de texte ou de valeur (porté par data-house-location-version sur la page de L'Appart). */
-export const APPART_LOCATION_VERSION = "2026-11-13";
+/** Incrémenter à chaque changement de texte ou de valeur (porté par data-house-location-version sur la page de L'Appart).
+ *  19/11/2026 : phrase de quartier sans l'étage (V2-33). */
+export const APPART_LOCATION_VERSION = "2026-11-19";
 
 const T = APPART.transit;
 const TRAIN = ANNEMASSE_TRAIN_MIN;
-/** « 5th » : ordinal anglais (étage). */
-const ordinalEn = (n: number): string => {
-  const t = n % 100;
-  if (t >= 11 && t <= 13) return `${n}th`;
-  return `${n}${({ 1: "st", 2: "nd", 3: "rd" } as Record<number, string>)[n % 10] ?? "th"}`;
-};
 
 /** Titres de la section « Localisation » de la page. */
 export function appartLocationHeadings(lang: AppartLocLang): { title: string; neighbourhood: string } {
@@ -44,10 +40,9 @@ export function appartLocationHeadings(lang: AppartLocLang): { title: string; ne
 
 /** Phrase de quartier (exactement une fois sur la page, garde des pages de lieu). Aucun commerce : le relevé à pied n'est pas fait. */
 export function appartNeighbourhood(lang: AppartLocLang): string {
-  const f = APPART.flat.floor;
   return lang === "en"
-    ? `The station district of ${APPART.commune}: the Léman Express ${aOrAn(T.stationWalkMin)} ${T.stationWalkMin}-minute walk away, tram 17 ${aOrAn(T.tramStop.walkMin)} ${T.tramStop.walkMin}-minute walk away. ${APPART.name} is on the ${ordinalEn(f)} and top floor with a lift, south-facing, with an open view of the Salève.`
-    : `Le quartier de la gare d'${APPART.commune} : le Léman Express à ${T.stationWalkMin} min à pied, le tram 17 à ${T.tramStop.walkMin} min. ${APPART.name} est au ${f}e et dernier étage avec ascenseur, plein sud, avec une vue dégagée sur le Salève.`;
+    ? `The station district of ${APPART.commune}: the Léman Express ${aOrAn(T.stationWalkMin)} ${T.stationWalkMin}-minute walk away, tram 17 ${aOrAn(T.tramStop.walkMin)} ${T.tramStop.walkMin}-minute walk away. ${APPART.name} is south-facing, with a lift and an open view of the Salève.`
+    : `Le quartier de la gare d'${APPART.commune} : le Léman Express à ${T.stationWalkMin} min à pied, le tram 17 à ${T.tramStop.walkMin} min. ${APPART.name} est plein sud, avec ascenseur et vue dégagée sur le Salève.`;
 }
 
 /** Zone publiée à la place de l'adresse : « Annemasse (74100), quartier de la gare ». */
@@ -179,6 +174,7 @@ export function appartLocationIssues(): string[] {
       if (/\btram \d+,\s*(?:place|rue|avenue)\b/i.test(s)) issues.push(`ligne de tram suivie d'une virgule et d'une voie (garde des adresses : écrire « Tram 17 (… stop) ») — ${at}`);
       if (/\[FAIT À CONFIRMER|\{\{|undefined|NaN/.test(s)) issues.push(`placeholder — ${at}`);
       if (EN_ARTICLE_ISSUE.test(s)) issues.push(`article ou pluriel anglais faux — ${at}`);
+      if (/[ÉE]tage|\bfloor\b/i.test(s)) issues.push(`étage de L'Appart (V2-33 : jamais) — ${at}`);
     }
   }
   return issues;

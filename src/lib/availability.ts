@@ -31,7 +31,8 @@ import { supabase } from "@/lib/supabase";
 import { readEmbeddedArray } from "@/lib/prerenderEmbeddedState";
 import { MONTHS_EN, MONTHS_FR } from "@/lib/dates";
 import { MAISON_KEYS, type MaisonKey, type PlaceKey } from "@/data/places";
-import { allMaisonRooms, embedRows, knownPlaceRows, placeRooms } from "@/lib/roomSelectors";
+import { APPART } from "@/data/appart";
+import { allMaisonRooms, embedRows, isMonthOnly, knownPlaceRows, placeRooms, publicAppartRows } from "@/lib/roomSelectors";
 
 export const AVAILABILITY_EMBED_ID = "__room_availability_data__";
 // (Lot 3) Lignes chambres de LA maison rendue, embarquées par sa page prérendue
@@ -155,7 +156,8 @@ function getRoomsSnapshot(): PlaceRoom[] | null {
   if (!roomsInitialised) {
     roomsInitialised = true;
     const embedded = readEmbeddedArray<IncomingRoom>(ROOMS_EMBED_ID);
-    const known = embedded ? knownPlaceRows(embedded) : [];
+    // (19/11/2026, V2-22 et V2-33) Lignes de L'Appart telles que le site les publie : ouverture au mois, jamais d'étage.
+    const known = embedded ? publicAppartRows(knownPlaceRows(embedded), APPART.opensOn) : [];
     roomsSnapshot = known.length > 0 ? known : null;
   }
   return roomsSnapshot;
@@ -239,7 +241,10 @@ async function refresh(): Promise<void> {
     // l'état embarqué reste affiché en attendant.
     if (!data || data.length === 0) throw new Error("v_public_rooms : aucune ligne");
     // (L'Appart, 12/11/2026) Les lignes d'un lieu inconnu du code sont écartées ici ; aucune ligne connue = même anomalie.
-    const rooms = knownPlaceRows(data as unknown as IncomingRoom[]);
+    // (19/11/2026, V2-22 et V2-33) Celles de L'Appart sont ramenées à ce que le site publie dès l'arrivée : la vue rend le jour
+    // d'ouverture (repère technique de la base) et le site n'en garde que le mois ; jamais d'étage. Ni une page, ni l'état
+    // embarqué dans le HTML prérendu, ni le JSON-LD ne voient le jour ou l'étage.
+    const rooms = publicAppartRows(knownPlaceRows(data as unknown as IncomingRoom[]), APPART.opensOn);
     if (rooms.length === 0) throw new Error("v_public_rooms : aucune ligne d'un lieu connu");
     failedAttempts = 0;
     roomsLoadFailed = false; // notifié par les publish ci-dessous
@@ -380,13 +385,12 @@ export function splitRooms<R extends PlaceRoom>(rooms: R[]): { candidates: R[]; 
 
 // (Lot 3 SEO funnel — extraction RoomCard) `floor` arrive en français de v_public_rooms :
 // mapping EN minimal, partagé par la carte chambre et le panneau compact des pages maisons.
+// (19/11/2026, V2-33) Les chambres de L'Appart n'ont jamais d'étage publié (publicAppartRows, src/lib/roomSelectors.ts).
 const FLOOR_EN: Record<string, string> = {
   "RDC": "Ground floor",
   "Étage 1": "1st floor",
   "Étage 2": "2nd floor",
   "Étage 3": "3rd floor",
-  // (L'Appart, 13/11/2026) Ses 4 chambres sont au 5e étage (valeur de la base après la bascule : « Étage 5 »).
-  "Étage 5": "5th floor",
 };
 
 /** Étage d'une chambre, FR tel quel / EN traduit — ou null si inconnu. */
@@ -490,8 +494,9 @@ export function roomBadge(room: PlaceRoom, lang: "fr" | "en"): { label: string; 
   }
   if (room.available_from) {
     const date = formatFreeDate(room.available_from, lang);
+    // (19/11/2026, V2-22) Au mois près (l'ouverture de L'Appart) : « Libre dès février » / « Available from February ».
     return {
-      label: lang === "en" ? `Available from ${date}` : `Libre dès le ${date}`,
+      label: lang === "en" ? `Available from ${date}` : isMonthOnly(room.available_from) ? `Libre dès ${date}` : `Libre dès le ${date}`,
       tone: "upcoming",
     };
   }
@@ -506,10 +511,12 @@ export function roomBadge(room: PlaceRoom, lang: "fr" | "en"): { label: string; 
  * « 10 septembre » / « September 10 » à partir de « YYYY-MM-DD ».
  * Formatage maison volontaire : `toLocaleDateString` peut différer entre l'ICU
  * de Puppeteer (prérendu) et celui du navigateur → mismatch d'hydratation.
+ * (19/11/2026, V2-22) « YYYY-MM » (l'ouverture de L'Appart, publiée au mois) → « février » / « February », sans jour.
  */
 export function formatFreeDate(iso: string, lang: "fr" | "en"): string {
   const [, m, d] = iso.split("-");
   const monthIndex = Number(m) - 1;
+  if (isMonthOnly(iso)) return lang === "en" ? MONTHS_EN[monthIndex] : MONTHS_FR[monthIndex];
   const day = Number(d);
   if (!Number.isFinite(day) || monthIndex < 0 || monthIndex > 11) return "";
   return lang === "en"

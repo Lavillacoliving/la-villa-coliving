@@ -16,7 +16,7 @@
 import { APPART } from "./appart";
 import { MAISONS_REFERRAL } from "./entityFacts";
 import { aOrAn } from "./stats";
-import { timesPerWeek } from "./appartWords";
+import { cleaningSharedBath, timesPerWeek } from "./appartWords";
 
 type AppartLang = "fr" | "en";
 
@@ -40,7 +40,7 @@ export function appartHousesFaq(lang: AppartLang): readonly [AppartHousesQA, App
       {
         id: "page.faq.4",
         q: `What's the difference between ${A.name} and La Villa Coliving's houses?`,
-        a: `The houses are colivings: ${R.residents.min} to ${R.residents.max} housemates, rooms of ${R.surfaces.min} to ${R.surfaces.max} m², a pool, a sauna and a gym in every house, shared areas cleaned ${timesPerWeek(R.cleaningPerWeek, "en")}, from ${R.from.en} a month. ${A.name} is a flatshare: ${A.rooms.total} rooms in a ${A.flat.surfaceM2} m² flat near ${A.commune} station, rooms of ${A.rooms.surface.min} to ${A.rooms.surface.max} m², ${aOrAn(A.flat.livingKitchenM2)} ${A.flat.livingKitchenM2} m² living room and kitchen and a balcony, shared areas cleaned ${timesPerWeek(A.cleaningPerWeek, "en")}, from ${P.from.en.chf} a month. Same founders, same lease, same deposit, and no application fee either way.`,
+        a: `The houses are colivings: ${R.residents.min} to ${R.residents.max} housemates, rooms of ${R.surfaces.min} to ${R.surfaces.max} m², a pool, a sauna and a gym in every house, shared areas cleaned ${timesPerWeek(R.cleaningPerWeek, "en")}, from ${R.from.en} a month. ${A.name} is a flatshare: ${A.rooms.total} rooms in a ${A.flat.surfaceM2} m² flat near ${A.commune} station, rooms of ${A.rooms.surface.min} to ${A.rooms.surface.max} m², ${aOrAn(A.flat.livingKitchenM2)} ${A.flat.livingKitchenM2} m² living room and kitchen and a balcony, shared areas cleaned ${timesPerWeek(A.cleaningPerWeek, "en")} ${cleaningSharedBath("en")}, from ${P.from.en.chf} a month. Same founders, same lease, same deposit, and no application fee either way.`,
       },
     ];
   }
@@ -53,7 +53,7 @@ export function appartHousesFaq(lang: AppartLang): readonly [AppartHousesQA, App
     {
       id: "page.faq.4",
       q: `Quelle est la différence entre ${A.name} et les maisons de La Villa Coliving ?`,
-      a: `Les maisons sont des colivings : ${R.residents.min} à ${R.residents.max} colocataires, des chambres de ${R.surfaces.min} à ${R.surfaces.max} m², une piscine, un sauna et une salle de sport dans chaque maison, le ménage des communs ${timesPerWeek(R.cleaningPerWeek, "fr")}, dès ${R.from.fr} par mois. ${A.name} est une colocation : ${A.rooms.total} chambres dans un appartement de ${A.flat.surfaceM2} m² dans le quartier de la gare d'${A.commune}, des chambres de ${A.rooms.surface.min} à ${A.rooms.surface.max} m², un séjour-cuisine de ${A.flat.livingKitchenM2} m² et un balcon, le ménage des communs ${timesPerWeek(A.cleaningPerWeek, "fr")}, dès ${P.from.fr.chf} par mois. Mêmes fondateurs, même bail, même caution, et 0 € de frais de dossier dans les deux cas.`,
+      a: `Les maisons sont des colivings : ${R.residents.min} à ${R.residents.max} colocataires, des chambres de ${R.surfaces.min} à ${R.surfaces.max} m², une piscine, un sauna et une salle de sport dans chaque maison, le ménage des communs ${timesPerWeek(R.cleaningPerWeek, "fr")}, dès ${R.from.fr} par mois. ${A.name} est une colocation : ${A.rooms.total} chambres dans un appartement de ${A.flat.surfaceM2} m² dans le quartier de la gare d'${A.commune}, des chambres de ${A.rooms.surface.min} à ${A.rooms.surface.max} m², un séjour-cuisine de ${A.flat.livingKitchenM2} m² et un balcon, le ménage des communs ${timesPerWeek(A.cleaningPerWeek, "fr")} ${cleaningSharedBath("fr")}, dès ${P.from.fr.chf} par mois. Mêmes fondateurs, même bail, même caution, et 0 € de frais de dossier dans les deux cas.`,
     },
   ];
 }

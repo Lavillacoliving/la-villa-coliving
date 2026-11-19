@@ -15,4 +15,6 @@ déjà, ni adresse, ni nom de personne, ni clé), pour les sélecteurs de chambr
   13/11/2026 (chambres 7 et 8 de La Villa à 1 380 € / 1 290 CHF). Disponibilités du 13/11/2026 : un test qui a besoin
   d'un état précis le fixe lui-même.
 - `v_public_rooms.etat-B.json` : la même, puis les 4 lignes de L'Appart après la bascule (chambres 2, 3, 4 et la suite
-  n° 5 ; occupées, libres le 1er février 2027). Lignes simulées, pas encore en base.
+  n° 5 ; occupées, libres dans le mois d'ouverture, sans étage). Lignes simulées, pas encore en base. Leur jour
+  (`available_from`) est FICTIF : le site ne publie que le mois d'ouverture (V2-22, 19/11/2026) ; un jour qui fuirait dans
+  une page se lirait dans les tests.

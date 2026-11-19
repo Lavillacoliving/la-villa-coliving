@@ -77,13 +77,14 @@ import {
  * (<AppartFacts/>, décision n° 13), jamais la fiche de la marque.
  *
  * Textes : src/data/appartPage.ts (page), appartFacts.ts (fiche, tableau compris / pas compris, exceptions), appartLocation.ts
- * (emplacement) — source des textes du 13/11/2026, au caractère près. Faits : APPART (prix, surfaces, date d'ouverture) ;
+ * (emplacement) — source des textes du 13/11/2026, au caractère près. Faits : APPART (prix, surfaces, mois d'ouverture) ;
  * disponibilité d'une chambre : SEULEMENT la vue v_public_rooms (pastille, date, cartes).
  *
  * Deux états de la base (ARCHITECTURE § 3) :
  *  - A (la vue n'a pas encore L'Appart) : deux cartes « types » tirées d'APPART, boutons sans numéro de chambre, aucune
  *    pastille, aucun état embarqué de chambres ;
- *  - B (4 lignes datées) : les cartes de la vue (pastille « Libre dès le … »), boutons à deux paramètres, état embarqué ;
+ *  - B (4 lignes datées) : les cartes de la vue (pastille « Libre dès février » : le mois d'ouverture, jamais le jour — V2-22),
+ *    boutons à deux paramètres, état embarqué ;
  *  - B+ complet (4 lignes occupées sans date) : prix toujours publiés, liste d'attente en tête, et les chambres candidates les
  *    moins chères des maisons en cartes compactes SANS ligne « tout compris » (elle nomme piscine et sauna).
  * Hydratation (#418) : tout le rendu dépend de l'état embarqué (le même au prérendu et au premier rendu du navigateur) ;

@@ -1,8 +1,8 @@
 /**
  * L'Appart — faits canoniques (brief « Points d'entrée prix, L'Appart » du 12/11/2026, Lots 3 et 4 ; décisions V5, V7, V8,
- * V9 de Jérôme ; numéros, date d'ouverture et surface « à confirmer » — Q10, Q11, Q14).
+ * V9 de Jérôme ; numéros et surface « à confirmer » — Q10, Q14 ; mois d'ouverture : réponse V2-22 du 19/11/2026).
  *
- * SOURCE UNIQUE des faits de L'Appart : nom, descripteur, commune, surfaces, chambres et numéro de la suite, date
+ * SOURCE UNIQUE des faits de L'Appart : nom, descripteur, commune, surfaces, chambres et numéro de la suite, mois
  * d'ouverture, loyers (saisis en EUROS, francs dérivés par priceTier comme pour les maisons), ménage, DPE, trajets.
  * Aucune page, aucun texte, aucune garde n'écrit un de ces faits en dur : les textes de L'Appart (src/data/appartFacts.ts,
  * src/data/appartLocation.ts) sont des gabarits sur cette constante.
@@ -13,8 +13,9 @@
  *
  * Ce que le code ne porte PAS, exprès (le dépôt est public) : aucune rue, aucune coordonnée du logement, aucune distance
  * en mètres ni en kilomètres (décision 27 : deux distances courtes, l'étage et l'orientation situeraient l'immeuble ; on
- * publie les minutes), aucune date de diagnostic (DPE daté + classe + surface + commune = une seule fiche dans la base
- * publique des diagnostics), aucune clé interne de la base (un seul fichier la connaît : src/lib/placeBridge.ts).
+ * publie les minutes), aucun étage (V2-33, décision de Jérôme du 19/11/2026), aucun jour d'ouverture (V2-22 : le mois
+ * seulement), aucune date de diagnostic (DPE daté + classe + surface + commune = une seule fiche dans la base publique des
+ * diagnostics), aucune clé interne de la base (un seul fichier la connaît : src/lib/placeBridge.ts).
  *
  * Module pur : imports relatifs, zéro React, chaînes plates, aucune date calculée à l'exécution.
  */
@@ -29,13 +30,16 @@ export const APPART_CONTRACT_EUR = { room: 790, suite: 1060 } as const;
 const ROOM_TIER: PriceTier = priceTier(APPART_CONTRACT_EUR.room); //   790 € →   730 CHF
 const SUITE_TIER: PriceTier = priceTier(APPART_CONTRACT_EUR.suite); // 1 060 € → 990 CHF
 
-/** « 1er février 2027 » / « 1 February 2027 » — forme des dates fixes du site (l'anglais : jour, mois, année). Pure. */
-function fixedDateLabel(iso: string, lang: "fr" | "en"): string {
-  const [y, m, d] = iso.split("-").map(Number);
-  return lang === "en" ? `${d} ${MONTHS_EN[m - 1]} ${y}` : `${d === 1 ? "1er" : d} ${MONTHS_FR[m - 1]} ${y}`;
+/** « février 2027 » / « February 2027 » : un mois « AAAA-MM », sans jour (V2-22). Pure. */
+function monthLabel(month: string, lang: "fr" | "en"): string {
+  const [y, m] = month.split("-").map(Number);
+  return lang === "en" ? `${MONTHS_EN[m - 1]} ${y}` : `${MONTHS_FR[m - 1]} ${y}`;
 }
 
-const OPENS_ON = "2027-02-01";
+/** Mois d'ouverture à la location, « AAAA-MM » (V2-22, Jérôme le 19/11/2026 : « on garde juste février sans préciser de
+ *  date »). La base garde un jour (rooms.opens_on, repère technique de la vue) : la garde check:facts vérifie qu'il tombe dans
+ *  ce mois, et le site n'en publie que le mois (src/lib/roomSelectors.ts). */
+const OPENS_ON = "2027-02";
 
 export const APPART = {
   key: APPART_KEY as AppartKey,
@@ -47,12 +51,13 @@ export const APPART = {
   signature: { fr: "la coloc de La Villa Coliving", en: "La Villa Coliving's flatshare" },
   commune: "Annemasse",
   postalCode: "74100",
-  /** Ouverture à la location (Q11, à confirmer) : une seule valeur, égale à `rooms.opens_on` en base (garde check:facts). */
+  /** Mois d'ouverture à la location, « AAAA-MM » (V2-22) : `rooms.opens_on` en base tombe dans ce mois (garde check:facts). */
   opensOn: OPENS_ON,
-  opensOnLabel: { fr: fixedDateLabel(OPENS_ON, "fr"), en: fixedDateLabel(OPENS_ON, "en") },
-  /** L'appartement (Q14 : 151 m², surface du diagnostic) : 5e et dernier étage, communs d'environ 90 m² dont un séjour-cuisine
-   *  de 80 m² et un balcon de 8 m². */
-  flat: { surfaceM2: 151, floor: 5, commonM2: 90, livingKitchenM2: 80, balconyM2: 8 },
+  /** « février 2027 » / « February 2027 » : la seule forme publiée (« L'Appart ouvre à la location en février 2027 »). */
+  opensOnLabel: { fr: monthLabel(OPENS_ON, "fr"), en: monthLabel(OPENS_ON, "en") },
+  /** L'appartement (Q14 : 151 m², surface du diagnostic) : communs d'environ 90 m² dont un séjour-cuisine de 80 m² et un balcon
+   *  de 8 m². Pas d'étage (V2-33). */
+  flat: { surfaceM2: 151, commonM2: 90, livingKitchenM2: 80, balconyM2: 8 },
   rooms: {
     total: 4,
     /** Numéros publics (Q10, à confirmer) : le n° 1 est réservé en base, jamais public. */
@@ -72,7 +77,8 @@ export const APPART = {
     /** Suite à deux : « 1 060 € par mois, soit 530 € par personne à deux » — jamais « dès 530 € » (P5). */
     suitePerPersonEur: APPART_CONTRACT_EUR.suite / APPART_SUITE_MAX_OCCUPANTS,
   },
-  /** Ménage des parties communes : une fois par semaine (les maisons : trois). */
+  /** Ménage des parties communes : une fois par semaine (les maisons : trois), salle d'eau et WC partagés compris (V2-25,
+   *  Jérôme le 19/11/2026 ; textes : appartFacts.ts, appartPage.ts, appartHousesFaq.ts). */
   cleaningPerWeek: 1,
   /** Classe énergie du diagnostic (surface du diagnostic = flat.surfaceM2) ; la date du diagnostic n'est pas publiée. */
   dpe: { class: "D" },
@@ -112,8 +118,8 @@ export function appartIssues(): string[] {
   if (A.price.from.eur !== Math.min(A.price.room.eur, A.price.suite.eur)) issues.push("« dès » ≠ palier le plus bas");
   if (A.price.from.chf >= 1000 || A.price.room.chf >= 1000 || A.price.suite.chf >= 1000) issues.push("un loyer de L'Appart ≥ 1 000 CHF : revoir les motifs bornés de la garde de gamme");
   if (A.price.suitePerPersonEur * A.rooms.suite.maxOccupants !== A.price.suite.eur) issues.push("prix par personne de la suite ≠ loyer / occupants");
-  if (!/^\d{4}-\d{2}-\d{2}$/.test(A.opensOn)) issues.push("date d'ouverture : AAAA-MM-JJ attendu");
-  if (A.opensOnLabel.fr !== fixedDateLabel(A.opensOn, "fr") || A.opensOnLabel.en !== fixedDateLabel(A.opensOn, "en")) issues.push("libellé de la date ≠ opensOn");
+  if (!/^\d{4}-(0[1-9]|1[0-2])$/.test(A.opensOn)) issues.push("mois d'ouverture : AAAA-MM attendu (V2-22 : jamais le jour)");
+  if (A.opensOnLabel.fr !== monthLabel(A.opensOn, "fr") || A.opensOnLabel.en !== monthLabel(A.opensOn, "en")) issues.push("libellé du mois ≠ opensOn");
   // Textes écrits en lettres (src/data/appartFacts.ts) : « une ou deux personnes », « une fois par semaine », « chaque semaine ».
   if (A.rooms.suite.maxOccupants !== 2) issues.push("la suite n'accueille plus 2 personnes : revoir « une ou deux personnes » (appartFacts.ts)");
   if (A.cleaningPerWeek !== 1) issues.push("le ménage n'est plus hebdomadaire : revoir « une fois par semaine » / « chaque semaine » (appartFacts.ts, allInclusive.ts)");

@@ -109,21 +109,34 @@ test('anomalie 4 — un loyer faux (en euros ou en francs), une surface ou une s
   assert.ok(moved.failures.some((f) => /Suite \(n° 5\) absente/.test(f)) && moved.failures.some((f) => /n° 6 n'est pas une chambre de L'Appart/.test(f)), moved.failures.join('\n'));
 });
 
-test('anomalie 5 — date de libération ≠ date d\'ouverture du code, avant l\'ouverture : échec', () => {
+test('anomalie 5 — date de libération hors du mois d\'ouverture du code, avant l\'ouverture : échec', () => {
   const r = dbFactsIssues(patchRoom(ROWS_B, 2, { available_from: '2027-03-01' }), m, { today: BEFORE });
-  assert.deepEqual(r.failures, ['base : L\'Appart Chambre 2 libre le 2027-03-01, le code dit ouverture le 2027-02-01 (APPART.opensOn) — la date change dans le code et en base dans le même créneau']);
+  assert.deepEqual(r.failures, ['base : L\'Appart Chambre 2 libre le 2027-03-01, hors du mois d\'ouverture du code (2027-02, APPART.opensOn) — la date change dans le code et en base dans le même créneau']);
   assert.deepEqual(dbFactsIssues(patchRoom(ROWS_B, 2, { available_from: null }), m, { today: BEFORE }).failures, [], 'occupée sans date (un bail signé avant l\'ouverture) : permis');
+  // (19/11/2026, V2-22) Le code ne connaît que le mois : tout jour de ce mois en base passe (la base garde son repère technique).
+  // Jours calculés depuis APPART.opensOn : le dépôt public n'écrit aucun jour d'ouverture, même dans un test.
+  for (const day of [`${m.APPART.opensOn}-01`, `${m.APPART.opensOn}-28`]) assert.deepEqual(dbFactsIssues(patchRoom(ROWS_B, 2, { available_from: day }), m, { today: BEFORE }).failures, [], day);
+  assert.equal(dbFactsIssues(patchRoom(ROWS_B, 2, { available_from: '2027-01-31' }), m, { today: BEFORE }).failures.length, 1, 'la veille du mois : échec');
 });
 
 test('anomalie 6 — une chambre « libre » avant l\'ouverture : échec ; après l\'ouverture : plus de contrôle de date, un avertissement', () => {
   const r = dbFactsIssues(patchRoom(ROWS_B, 5, { availability: 'available', available_from: null }), m, { today: BEFORE });
-  assert.deepEqual(r.failures, ['base : L\'Appart Suite « libre » avant l\'ouverture du 2027-02-01 (APPART.opensOn) — jamais « disponible » avant l\'ouverture']);
+  assert.deepEqual(r.failures, ['base : L\'Appart Suite « libre » avant l\'ouverture (mois 2027-02, APPART.opensOn) — jamais « disponible » avant l\'ouverture']);
+  assert.equal(dbFactsIssues(patchRoom(ROWS_B, 5, { availability: 'available', available_from: null }), m, { today: '2027-01-31' }).failures.length, 1, 'la veille du mois : encore avant');
   const open = ROWS_B.map((x) => (x.house_slug === 'lappart' ? { ...x, availability: 'available', available_from: null } : x));
   const after = dbFactsIssues(open, m, { today: AFTER });
   assert.deepEqual(after.failures, []);
   assert.equal(after.warnings.length, 1);
-  assert.match(after.warnings[0], /la date d'ouverture \(2027-02-01\) est passée — retirer les mentions « dès février 2027 »/);
+  assert.match(after.warnings[0], /le mois d'ouverture \(2027-02\) est arrivé — retirer les mentions « dès février 2027 »/);
   assert.deepEqual(appartDbIssues([], m, { today: AFTER }).warnings, [], 'L\'Appart absent : rien à dire de la date');
+});
+
+test('anomalie 7 (19/11/2026, V2-33) — un étage publié pour L\'Appart : échec qui nomme la chambre, jamais la valeur de l\'étage', () => {
+  const r = dbFactsIssues(patchRoom(ROWS_B, 3, { floor: 'Étage 9' }), m, { today: BEFORE });
+  assert.deepEqual(r.failures, ['base : L\'Appart Chambre 3 — étage publié par v_public_rooms : jamais pour L\'Appart (V2-33) — rooms.floor à NULL']);
+  assert.ok(!r.failures.join('\n').includes('9'), 'le message ne recopie pas l\'étage');
+  assert.deepEqual(dbFactsIssues(patchRoom(ROWS_B, 3, { floor: '' }), m, { today: BEFORE }).failures, [], 'chaîne vide = pas d\'étage');
+  assert.deepEqual(dbFactsIssues(ROWS_B.map((x) => (x.house_slug === 'lavilla' ? { ...x, floor: 'Étage 1' } : x)), m, { today: BEFORE }).failures, [], 'les maisons gardent leurs étages');
 });
 
 test('surfaces de L\'Appart (garde des pages) : Math.round du min / max = APPART.rooms.surface ; rien sans ligne', () => {
@@ -443,7 +456,7 @@ test('câblage : la garde des faits passe par les règles par gamme (base, HTML,
   const src = readFileSync(path.join(ROOT, 'scripts/check-entity-facts.mjs'), 'utf8');
   const fn = (name) => src.slice(src.indexOf(`async function ${name}(`), src.indexOf('\n}\n', src.indexOf(`async function ${name}(`)));
   assert.match(fn('checkDb'), /dbFactsIssues\(rows, m, \{ today: new Date\(\)\.toISOString\(\)\.slice\(0, 10\) \}\)/);
-  assert.match(fn('checkDb'), /select=house_slug,room_number,rent_chf,rent_eur,surface_m2,bathroom_type,availability,available_from/);
+  assert.match(fn('checkDb'), /select=house_slug,room_number,rent_chf,rent_eur,surface_m2,bathroom_type,floor,availability,available_from/);
   assert.match(fn('checkHtml'), /gammeMixIssues\(html, f, m, nodes\)/);
   assert.match(fn('checkHtml'), /appartFactsBlockIssues\(html, appartFactsLang, m, text\)/);
   assert.match(fn('checkHtml'), /appartTeaserIssues\(teaserBlocks,/);

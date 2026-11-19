@@ -523,7 +523,7 @@ export function RatesPageV4() {
             highPrice: String(APPART_HIGH.chf),
             priceCurrency: "CHF",
             offerCount: APPART.rooms.total,
-            availabilityStarts: APPART.opensOn,
+            // (19/11/2026, V2-22) Pas d'availabilityStarts : l'ouverture n'est publiée qu'au mois (« février 2027 »).
             url: `https://www.lavillacoliving.com${language === "en" ? "/en" : ""}/tarifs#${APPART_ANCHOR}`,
             seller: { "@type": "Organization", name: "La Villa Coliving", url: "https://www.lavillacoliving.com" },
           }],
