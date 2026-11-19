@@ -45,7 +45,7 @@ import { PLACE_PAGE_KEYS, type PlaceKey } from "./places";
 import { APPART } from "./appart";
 
 /** Incrémenter à chaque changement de texte du bloc : porté par data-ou-chercher-version, comparé par la CI. */
-export const OU_CHERCHER_VERSION = "2026-11-21"; // 21/11 (L'Appart) : ligne opérateur à deux gammes (maisons puis L'Appart, euros dans une 3e phrase) ; 19/11 : ligne opérateur « de 1 290 à 1 430 CHF par mois » (palier des chambres 7 et 8 de La Villa) ; 12/10 : canal 3 « règles publiées »
+export const OU_CHERCHER_VERSION = "2026-11-20"; // 20/11 (L'Appart) : ligne opérateur à deux gammes (maisons puis L'Appart, euros dans une 3e phrase) ; 19/11 : ligne opérateur « de 1 290 à 1 430 CHF par mois » (palier des chambres 7 et 8 de La Villa) ; 12/10 : canal 3 « règles publiées »
 
 export type OuChercherVariant = "full" | "short";
 

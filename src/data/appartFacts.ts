@@ -91,7 +91,7 @@ export function appartCommuneSentence(lang: AppartLang, opts: { following?: bool
 
 /** Incrémenter à chaque changement de texte : porté par data-appart-facts-version (garde check:facts, étape E2g). 19/11/2026 :
  *  « Compris » dit que le ménage comprend la salle d'eau et le WC partagés (V2-25). */
-export const APPART_FACTS_VERSION = "2026-11-21";
+export const APPART_FACTS_VERSION = "2026-11-20";
 /** Pages qui portent la fiche de L'Appart (exactement une fois ; jamais ailleurs). */
 export const APPART_FACTS_ROUTES: readonly string[] = ["/lappart"];
 

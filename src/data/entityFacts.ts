@@ -68,7 +68,7 @@ export type EntityHouseSlug = MaisonKey;
 // trajets, « 100+ résidents accueillis dans les maisons ». Version du jour de la mise en ligne de L'Appart : si elle glisse,
 // redater ENTITY_FACTS_VERSION, OU_CHERCHER_VERSION, PRICE_FACTS_VERSION, APPART_FACTS_VERSION et APPART_LOCATION_VERSION,
 // puis npm run build:llms.
-export const ENTITY_FACTS_VERSION = "2026-11-21";
+export const ENTITY_FACTS_VERSION = "2026-11-20";
 
 /**
  * Phrase garant canonique (D0 amendement b, Jérôme 09/10/2026) — la SEULE formulation admise sur le site :

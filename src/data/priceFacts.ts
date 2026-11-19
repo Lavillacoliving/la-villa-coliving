@@ -40,7 +40,7 @@ import { APPART } from "./appart";
 export type PriceLang = "fr" | "en";
 
 /** Bump à chaque changement de texte (sert aux docs et aux PR ; la garde compare les chaînes elles-mêmes). */
-export const PRICE_FACTS_VERSION = "2026-11-21"; // 21/11/2026 (L'Appart) : phrase P3 de L'Appart et lien « Voir L'Appart » ; 19/11/2026 : A.3 « 1 290 à 1 430 CHF », « 1 380 à 1 530 € » (palier des chambres 7 et 8 de La Villa)
+export const PRICE_FACTS_VERSION = "2026-11-20"; // 20/11/2026 (L'Appart) : phrase P3 de L'Appart et lien « Voir L'Appart » ; 19/11/2026 : A.3 « 1 290 à 1 430 CHF », « 1 380 à 1 530 € » (palier des chambres 7 et 8 de La Villa)
 
 /** Pages qui portent la FAQ A.3 (FR + jumelle /en) — exactement une fois chacune ; 0 ailleurs. */
 export const PRICE_FAQ_ROUTES = [
