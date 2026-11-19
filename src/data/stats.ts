@@ -7,9 +7,9 @@
 // d'une date choisie et figée, arrondie à la dizaine INFÉRIEURE (le CHF affiché
 // n'excède jamais la conversion réelle). Avec le taux ci-dessous :
 //   1 530 € × 0,9366 = 1 433,00 → 1 430 CHF ; 1 470 € × 0,9366 = 1 376,80 → 1 370 CHF ;
-//   1 380 € × 0,9366 = 1 292,51 → 1 290 CHF (chambres 7 et 8 de La Villa, depuis le 13/11/2026)
+//   1 380 € × 0,9366 = 1 292,51 → 1 290 CHF (chambres 7 et 8 de La Villa, depuis le 19/11/2026)
 // ⚠️ Actualiser le taux change les prix publics ET doit entraîner la mise à jour
-// des littéraux du blog/knowledge_base (cf. SQL de bascule du 31/08). Depuis le 13/11/2026, le « dès » et la
+// des littéraux du blog/knowledge_base (cf. SQL de bascule du 31/08). Depuis le 19/11/2026, le « dès » et la
 // fourchette des maisons s'écrivent par jeton dans le texte des articles ({{PRIX_DES}}, {{PRIX_FOURCHETTE}}… —
 // src/lib/contentTokens.ts) et suivent seuls. Restent en clair, à réécrire par SQL à chaque changement de tarif : le
 // prix standard ou unique (Le Loft, Le Lodge) dans plusieurs articles, les articles générés (consigne du générateur),
@@ -107,7 +107,7 @@ export const STATS = {
 // Le tarif se change en modifiant CONTRACT_EUR (et/ou TAUX_BCE) en tête de
 // fichier : le CHF suit par dérivation et tout le site se met à jour
 // (hero, SEO, FAQ, pages maisons, blocs offre du blog…).
-// Trois paliers depuis le 13/11/2026 (deux du 01/09 au 12/11/2026) : 1 430 CHF (salle d'eau privative, 25 ch.),
+// Trois paliers depuis le 19/11/2026 (deux du 01/09 au 18/11/2026) : 1 430 CHF (salle d'eau privative, 25 ch.),
 // 1 370 CHF (La Villa, chambres 3 et 4) et 1 290 CHF (La Villa, chambres 7 et 8) — ces quatre chambres partagent
 // une salle d'eau entre 2 chambres, entretien par l'équipe de ménage inclus. Le Loft / Le Lodge : 100 % privatif.
 // Le « dès » des maisons (prose, metas, JSON-LD) = le palier le plus bas : HOUSES_FROM / PRICE_FROM_* ci-dessous.

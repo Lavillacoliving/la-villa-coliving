@@ -8,7 +8,7 @@
  * reste du site (séparateurs déterministes, jamais de toLocaleString : règle anti-#418).
  *
  * (13/11/2026) `PRIX_DES` / `PRIX_DES_EUR` = le « dès » des MAISONS (HOUSES_FROM : palier le plus bas, 1 290 CHF / 1 380 €
- * depuis le 13/11/2026), plus jamais « le prix des chambres à salle d'eau partagée ». Deux jetons de FOURCHETTE s'ajoutent
+ * depuis le 19/11/2026), plus jamais « le prix des chambres à salle d'eau partagée ». Deux jetons de FOURCHETTE s'ajoutent
  * (décision de Jérôme du 13/11/2026) : `PRIX_FOURCHETTE` = la fourchette des maisons telle qu'écrite en prose (« 1 290 à
  * 1 430 CHF » / « CHF 1,290 to 1,430 ») et `PRIX_FOURCHETTE_TABLEAU` = sa graphie de cellule de tableau (« 1 290 – 1 430 CHF » /
  * « 1,290 – 1,430 CHF ») — mêmes chaînes, au caractère près, que priceRangeText() / priceRangeCell() de src/data/answerSlots.ts

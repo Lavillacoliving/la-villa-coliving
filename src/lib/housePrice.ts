@@ -3,7 +3,7 @@ import { PRICE_CHF_EN, PRICE_CHF_FR, PRICE_FROM_CHF_EN, PRICE_FROM_CHF_FR } from
 
 // Prix d'appel PAR MAISON — décision Jérôme du 03/09/2026 (plan SEO funnel, Q1), paliers du 13/11/2026 :
 //   • La Villa : 4 chambres sur 10 à salle d'eau partagée (chambres 3 et 4, chambres 7 et 8) → « dès » le palier le
-//     plus bas, soit « dès 1 290 CHF » depuis le 13/11/2026 (« dès 1 370 CHF » avant)
+//     plus bas, soit « dès 1 290 CHF » depuis le 19/11/2026 (« dès 1 370 CHF » avant)
 //   • Le Loft et Le Lodge : 100 % salle d'eau privative, prix unique → « 1 430 CHF »
 //     (jamais « dès » : toutes leurs chambres sont au prix standard)
 //   • site entier (home, FAQ, pages Annemasse, meta) : le même « dès » — PRICE_FROM_* (HOUSES_FROM, src/data/stats.ts)

@@ -24,7 +24,7 @@ import { useAllRooms, splitRooms, type HouseKey, type PublicRoom } from "@/lib/a
  * Blocs : liste des chambres → prix d'une chambre à Genève (PAA loyer moyen, coût total) → chambre meublée
  * prête à vivre → chez l'habitant, sous-location ou coliving ? → conditions pour louer → nos 3 maisons →
  * à N min de Genève → FAQ (FAQPage, 5 questions) → CTA. Pas de cible « étudiant » (décision 03/09).
- * Fact block : « dès » des maisons (PRICE_FROM_*, 1 290 CHF depuis le 13/11/2026), 16-24 m² (STATS.roomSizeMin/Max), 20 min porte à porte (décision Jérôme 04/09), caution 2 mois
+ * Fact block : « dès » des maisons (PRICE_FROM_*, 1 290 CHF depuis le 19/11/2026), 16-24 m² (STATS.roomSizeMin/Max), 20 min porte à porte (décision Jérôme 04/09), caution 2 mois
  * hors charges, 0 frais ; jamais « moins cher que Genève » : coût total et confort, CHF des deux côtés.
  * /chambre-a-louer-annemasse reste la page locale (inventaire du Lodge), liée en croisé.
  * (Lot L2, 09/10/2026) Le « 20 min » s'écrit uniquement par STATS_DISPLAY.distance — plus de constante MIN locale.

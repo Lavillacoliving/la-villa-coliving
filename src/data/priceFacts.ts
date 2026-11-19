@@ -16,7 +16,7 @@
  *
  * Règles : chaque nombre vient de stats.ts (jamais en dur) ; aucun concurrent nommé (les « résidences de coliving » restent anonymes,
  * repères MARKET_COMPARISON publiés sur /tarifs) ; CHF et € jamais dans la même phrase (deux phrases, comme answerSlots.ts — D0-ter) ;
- * la fourchette des maisons (« 1 290 à 1 430 CHF » depuis le 13/11/2026 : « dès » des maisons → prix standard) est autorisée ici
+ * la fourchette des maisons (« 1 290 à 1 430 CHF » depuis le 19/11/2026 : « dès » des maisons → prix standard) est autorisée ici
  * comme dans le bloc « Où chercher » (D0 d) ; FR tutoiement, EN « you » ;
  * chaînes plates (un nœud texte par phrase, anti-#418) ; aucune minute, aucune date.
  */
@@ -37,7 +37,7 @@ import {
 export type PriceLang = "fr" | "en";
 
 /** Bump à chaque changement de texte (sert aux docs et aux PR ; la garde compare les chaînes elles-mêmes). */
-export const PRICE_FACTS_VERSION = "2026-11-13"; // 13/11/2026 : A.3 « 1 290 à 1 430 CHF », « 1 380 à 1 530 € » (palier des chambres 7 et 8 de La Villa)
+export const PRICE_FACTS_VERSION = "2026-11-19"; // 19/11/2026 : A.3 « 1 290 à 1 430 CHF », « 1 380 à 1 530 € » (palier des chambres 7 et 8 de La Villa)
 
 /** Pages qui portent la FAQ A.3 (FR + jumelle /en) — exactement une fois chacune ; 0 ailleurs. */
 export const PRICE_FAQ_ROUTES = [

@@ -205,7 +205,7 @@ export function buildFaqPageSchema(items: QAPair[]): Record<string, unknown> {
 }
 
 /** (Lot L6.2) Maison des chambres à salle d'eau partagée : son priceRange va du « dès » des maisons (HOUSES_FROM, le palier
- *  le plus bas — chambres 7 et 8 depuis le 13/11/2026) au prix standard ; les autres maisons n'ont que le standard. */
+ *  le plus bas — chambres 7 et 8 depuis le 19/11/2026) au prix standard ; les autres maisons n'ont que le standard. */
 const SHARED_BATH_HOUSE_SLUG = "lavilla";
 
 /** Identifiant stable du nœud LodgingBusiness d'une maison (référencé par @id depuis l'ItemList des chambres). */
@@ -360,7 +360,7 @@ export function buildHomeLodgingBusinessSchema(language: "fr" | "en" = "fr"): Re
     priceRange: en ? `CHF ${PRICE_FROM_EN_NUM}–${PRICE_EN_NUM}/month` : `${PRICE_FROM_FR_NUM}–${PRICE_FR_NUM} CHF/mois`,
     // Offre citable par les moteurs et les IA (AI Overviews cite déjà nos prix —
     // autant qu'ils viennent d'une donnée structurée exacte). Prix via STATS :
-    // trois paliers depuis le 13/11/2026 → AggregateOffer 1 290–1 430 (HOUSES_FROM, le « dès » des maisons → STATS.priceChf).
+    // trois paliers depuis le 19/11/2026 → AggregateOffer 1 290–1 430 (HOUSES_FROM, le « dès » des maisons → STATS.priceChf).
     makesOffer: {
       "@type": "AggregateOffer",
       name: en

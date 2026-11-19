@@ -504,7 +504,7 @@ export function RatesPageV4() {
         </div>
       </section>
 
-      {/* (Lot S1) Fiche de faits canonique — le détail des paliers (trois depuis le 13/11/2026) reste dans le hero ci-dessus (page tarifs). */}
+      {/* (Lot S1) Fiche de faits canonique — le détail des paliers (trois depuis le 19/11/2026) reste dans le hero ci-dessus (page tarifs). */}
       <section className="py-10 bg-white">
         <div className="max-w-3xl mx-auto px-6"><EntityFacts page="tarifs" /></div>
       </section>

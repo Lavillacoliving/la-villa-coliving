@@ -25,7 +25,7 @@ mécaniquement après un bump de version), `npm run check:facts`, et un commit p
 ## Garde-fous à ne pas contourner
 
 - Prix : `CONTRACT_EUR` (maître, €) et `TAUX_BCE` figé → le CHF est dérivé (`chfAffiche`), arrondi à la dizaine inférieure.
-  Trois paliers depuis le 13/11/2026 (`standard`, `sharedBath` = chambres 3 et 4 de La Villa, `sharedBathSmall` = chambres 7 et 8) ;
+  Trois paliers depuis le 19/11/2026 (`standard`, `sharedBath` = chambres 3 et 4 de La Villa, `sharedBathSmall` = chambres 7 et 8) ;
   le « dès » des maisons = `HOUSES_FROM` / `PRICE_FROM_*` (palier le plus bas), le détail des paliers = `sharedBathTiersText()`.
 - **Changer un prix** : (1) `CONTRACT_EUR` (et `SHARED_BATH_TIERS` si les chambres d'un palier changent : numéros, surface `approxM2`
   citée par la FAQ des tarifs, gardée par `tierSurfaceIssues`), `ENTITY_FACTS_VERSION`,

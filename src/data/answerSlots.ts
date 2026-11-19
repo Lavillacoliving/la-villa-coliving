@@ -18,7 +18,7 @@
  * (les scripts Node chargent ce module via esbuild). Une seule phrase garant (GUARANTOR_SENTENCE). Aucun concurrent
  * nommé ; les plateformes sont nommées comme canaux, jamais recommandées ni liées (D0b, D0b-bis). Fourchette des
  * chambres entre particuliers = MARKET_ROOM_EUR (700 à 1 000 €, source /tarifs). La fourchette des maisons (« 1 290 à
- * 1 430 CHF » depuis le 13/11/2026 : du « dès » des maisons, PRICE_FROM_*, au prix standard) est autorisée ici (D0-ter) ;
+ * 1 430 CHF » depuis le 19/11/2026 : du « dès » des maisons, PRICE_FROM_*, au prix standard) est autorisée ici (D0-ter) ;
  * CHF et € dans deux phrases distinctes. priceRangeText() et priceRangeCell() sont aussi la valeur des jetons d'articles
  * {{PRIX_FOURCHETTE}} et {{PRIX_FOURCHETTE_TABLEAU}} (src/lib/contentTokens.ts).
  */
@@ -39,7 +39,7 @@ import {
 import { ENTITY_HOUSES, GUARANTOR_SENTENCE, type EntityLang, type EntityHouseSlug } from "./entityFacts";
 
 /** Incrémenter à chaque changement de texte du bloc : porté par data-ou-chercher-version, comparé par la CI. */
-export const OU_CHERCHER_VERSION = "2026-11-13"; // 13/11 : ligne opérateur « de 1 290 à 1 430 CHF par mois » (palier des chambres 7 et 8 de La Villa) ; 12/10 : canal 3 « règles publiées »
+export const OU_CHERCHER_VERSION = "2026-11-19"; // 19/11 : ligne opérateur « de 1 290 à 1 430 CHF par mois » (palier des chambres 7 et 8 de La Villa) ; 12/10 : canal 3 « règles publiées »
 
 export type OuChercherVariant = "full" | "short";
 

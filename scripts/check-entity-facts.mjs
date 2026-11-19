@@ -4,7 +4,7 @@
  * Compare la SOURCE (src/data/entityFacts.ts, chargée via esbuild) à :
  *   a) la BASE : v_public_rooms (clé anon, lecture seule) — chambres par maison et total, min/max rent_chf
  *      et rent_eur, chambres à salle d'eau partagée, surfaces = Math.round(min/max) (règle du Lot 7) ; depuis le
- *      13/11/2026 (trois paliers de prix), CHAQUE chambre est comparée à son palier (roomPriceIssues) : une chambre
+ *      19/11/2026 (trois paliers de prix), CHAQUE chambre est comparée à son palier (roomPriceIssues) : une chambre
  *      à salle d'eau partagée au loyer de son palier (ENTITY_FACTS.price.sharedBathTiers), toute autre au prix standard ;
  *      et la surface du palier le moins cher (« les plus petites des quatre, environ 16 m² » de la FAQ des tarifs, tierSurfaceIssues) ;
  *   b) le HTML prérendu : le bloc <aside id="entity-facts"> présent EXACTEMENT une fois sur les 14 pages

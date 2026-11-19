@@ -21,8 +21,8 @@
  * D5 « Bail de 12 mois : tu es libre de partir à tout moment avec 1 mois de préavis. » (révisée le 29/09/2026, plus d'engagement minimum) ·
  * D6 aucune promesse sur le garant, seule la caution (2 mois hors charges) · D7 loyer contractuel en € ·
  * D9 16-24 m² (bornes de v_public_rooms) · D10 Instagram la_villa_coliving_geneva, pas de Facebook ·
- * D12 le bloc ne cite que le prix d'appel des maisons, « dès 1 290 CHF » depuis le 13/11/2026 (HOUSES_FROM, src/data/stats.ts ;
- * « dès 1 370 CHF » du 01/09 au 12/11/2026) — jamais 1 430, jamais le détail des paliers.
+ * D12 le bloc ne cite que le prix d'appel des maisons, « dès 1 290 CHF » depuis le 19/11/2026 (HOUSES_FROM, src/data/stats.ts ;
+ * « dès 1 370 CHF » du 01/09 au 18/11/2026) — jamais 1 430, jamais le détail des paliers.
  * (Lot L3, D4 Jérôme 09/10/2026) Puce « Avis : 4,8/5 sur Google (36 avis). » = GOOGLE_REVIEWS via STATS_DISPLAY.googleRating ;
  * jamais d'aggregateRating. Le lien « Voir les avis » vit dans les pages (hero, /candidature…), pas dans la fiche (chaînes plates).
  */
@@ -55,8 +55,8 @@ export type EntityHouseSlug = keyof typeof ROOMS_BY_HOUSE;
 // (12/11/2026, décision Jérôme) Trajets : gare à pied 9 / 9 / 8 min, porte-à-porte Eaux-Vives 17 / 17 / 16, formule « 16 à 17 min ».
 // (12/11/2026, décision Jérôme, lot « borne basse », suffixe « b ») Formule : « 25 min jusqu'au centre » (30 avant) — Le Lodge à 25 min de Rive.
 // (13/11/2026, décision Jérôme du 12/11) Prix d'appel des maisons : « dès 1 290 CHF/mois (loyer contractuel en euros : dès 1 380 €) » —
-// chambres 7 et 8 de La Villa (1 370 CHF / 1 470 € avant). À REDATER au jour de la mise en ligne si elle n'a pas lieu le 13/11.
-export const ENTITY_FACTS_VERSION = "2026-11-13";
+// chambres 7 et 8 de La Villa (1 370 CHF / 1 470 € avant). Mise en ligne retenue : le 19/11/2026 ; si la séance glisse, redater ENTITY_FACTS_VERSION, OU_CHERCHER_VERSION et PRICE_FACTS_VERSION, puis npm run build:llms.
+export const ENTITY_FACTS_VERSION = "2026-11-19";
 
 /**
  * Phrase garant canonique (D0 amendement b, Jérôme 09/10/2026) — la SEULE formulation admise sur le site :
@@ -162,7 +162,7 @@ export const ENTITY_FACTS = {
   totalRooms: STATS.totalRooms,
   surfaces: { min: STATS.roomSizeMin, max: STATS.roomSizeMax },
   price: {
-    // « Dès » des maisons = palier le plus bas (HOUSES_FROM : chambres 7 et 8 de La Villa depuis le 13/11/2026).
+    // « Dès » des maisons = palier le plus bas (HOUSES_FROM : chambres 7 et 8 de La Villa depuis le 19/11/2026).
     fromChf: HOUSES_FROM.chf,
     fromEur: HOUSES_FROM.eur,
     standardChf: STATS.priceChf,
