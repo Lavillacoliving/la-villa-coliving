@@ -1,6 +1,6 @@
 # Prix des chambres 7 et 8 — SQL 3 bis : fourchettes en jetons (13/11/2026)
 
-Généré le 2026-11-13T07:35:38.173Z par `scripts/build-slots-sql.mjs` · ancres vérifiées sur le fichier posts-apres-bascule.json (HORS LIGNE — ne pas appliquer ce SQL, régénérer sans --posts-json) · 30 modifications sur 11 articles · SQL : `scripts/prix-chambres-7-8-sql3bis-fourchettes-2026-11-13.sql`.
+Généré le 2026-11-19T10:18:07.427Z par `scripts/build-slots-sql.mjs` · ancres vérifiées sur le fichier posts-apres-bascule.json (HORS LIGNE — ne pas appliquer ce SQL, régénérer sans --posts-json) · 30 modifications sur 11 articles · SQL : `scripts/prix-chambres-7-8-sql3bis-fourchettes-2026-11-13.sql`.
 
 Légende : « Avant » = texte posé par le SQL 3 ; « Après » = le même texte avec le jeton ; « Rendu sur le site » = identique à « Avant ».
 
@@ -15,7 +15,7 @@ Légende : « Avant » = texte posé par le SQL 3 ; « Après » = le même text
 | `fiscalite-frontalier-geneve-impots-2026` | 1 (jeton) | 1 (jeton) | 2026-11-12T21:48:49.13221+00:00 | 10725 / 10067 |
 | `guide-ressources-frontalier-geneve` | 1 (jeton) | 1 (jeton) | 2026-11-12T21:48:49.13221+00:00 | 40438 / 37285 |
 | `organisations-internationales-geneve-ou-habiter` | 1 (jeton) | 1 (jeton) | 2026-11-12T21:48:49.13221+00:00 | 7446 / 6824 |
-| `ou-habiter-en-france-quand-on-travaille-a-geneve` | 1 (jeton) | 1 (jeton) | 2026-11-12T21:48:49.13221+00:00 | 14930 / 14749 |
+| `ou-habiter-en-france-quand-on-travaille-a-geneve` | 1 (jeton) | 1 (jeton) | 2026-11-12T21:48:49.13221+00:00 | 14931 / 14749 |
 | `salaire-suisse-net-frontalier-2026` | 1 (jeton) | 1 (jeton) | 2026-11-12T21:48:49.13221+00:00 | 13931 / 11229 |
 | `trouver-colocation-geneve-frontalier` | 1 (jeton) | 1 (jeton) | 2026-11-12T21:48:49.13221+00:00 | 5981 / 5597 |
 | `trouver-logement-avant-d-arriver-geneve` | 1 (jeton) | 1 (jeton) | 2026-11-12T21:48:49.13221+00:00 | 14606 / 14108 |
@@ -415,19 +415,19 @@ Occurrences de l'ancre en base : 1 (attendu 1) · nouveau texte déjà présent 
 **Avant**
 
 ````text
-pour une personne à 1 290 à 1 430 CHF par mois tout inclus
+pour une personne de 1 290 à 1 430 CHF par mois tout inclus
 ````
 
 **Après**
 
 ````text
-pour une personne à {{PRIX_FOURCHETTE}} par mois tout inclus
+pour une personne de {{PRIX_FOURCHETTE}} par mois tout inclus
 ````
 
 **Rendu sur le site** (jetons résolus par `src/lib/contentTokens.ts`)
 
 ````text
-pour une personne à 1 290 à 1 430 CHF par mois tout inclus
+pour une personne de 1 290 à 1 430 CHF par mois tout inclus
 ````
 
 ### 18. `ou-habiter-en-france-quand-on-travaille-a-geneve` (en) · jeton

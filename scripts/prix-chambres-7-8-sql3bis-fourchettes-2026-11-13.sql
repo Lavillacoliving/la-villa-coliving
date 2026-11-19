@@ -1,6 +1,6 @@
 -- ============================================================================
 -- Prix des chambres 7 et 8 de La Villa (décision de Jérôme du 12/11/2026) — SQL 3 bis : les fourchettes écrites en clair par le SQL 3 deviennent les jetons {{PRIX_FOURCHETTE}} et {{PRIX_FOURCHETTE_TABLEAU}}
--- Généré le 2026-11-13T07:35:38.173Z par scripts/build-slots-sql.mjs depuis scripts/prix-chambres-7-8-fourchettes.edits.mjs
+-- Généré le 2026-11-19T10:18:07.427Z par scripts/build-slots-sql.mjs depuis scripts/prix-chambres-7-8-fourchettes.edits.mjs
 --   · source unique de la branche feat/prix-chambres-7-8 (src/data/stats.ts : CONTRACT_EUR, HOUSES_FROM ; src/data/answerSlots.ts : priceRangeText, priceRangeCell ; src/lib/contentTokens.ts) ; textes « Avant » lus en base le 13/11/2026
 --   · ancres vérifiées sur le fichier posts-apres-bascule.json (HORS LIGNE — ne pas appliquer ce SQL, régénérer sans --posts-json) : exactement 1 occurrence de chaque ancien texte, nouveau texte absent
 -- À appliquer APRÈS la mise en ligne du code de la branche feat/prix-chambres-7-8 (le site doit connaître les deux jetons), sans urgence : aucun changement visible. Contrôle : le prérendu suivant (check:slots).
@@ -14,7 +14,7 @@
 --   fiscalite-frontalier-geneve-impots-2026 · 2026-11-12T21:48:49.13221+00:00 · 10725 / 10067
 --   guide-ressources-frontalier-geneve · 2026-11-12T21:48:49.13221+00:00 · 40438 / 37285
 --   organisations-internationales-geneve-ou-habiter · 2026-11-12T21:48:49.13221+00:00 · 7446 / 6824
---   ou-habiter-en-france-quand-on-travaille-a-geneve · 2026-11-12T21:48:49.13221+00:00 · 14930 / 14749
+--   ou-habiter-en-france-quand-on-travaille-a-geneve · 2026-11-12T21:48:49.13221+00:00 · 14931 / 14749
 --   salaire-suisse-net-frontalier-2026 · 2026-11-12T21:48:49.13221+00:00 · 13931 / 11229
 --   trouver-colocation-geneve-frontalier · 2026-11-12T21:48:49.13221+00:00 · 5981 / 5597
 --   trouver-logement-avant-d-arriver-geneve · 2026-11-12T21:48:49.13221+00:00 · 14606 / 14108
@@ -152,11 +152,11 @@ WHERE slug = 'organisations-internationales-geneve-ou-habiter'
 
 -- [17/30] ou-habiter-en-france-quand-on-travaille-a-geneve (fr) · jeton · fourchette en clair → jeton (phrase du guide)
 UPDATE blog_posts
-SET content_fr = replace(content_fr, $f$pour une personne à 1 290 à 1 430 CHF par mois tout inclus$f$, $r$pour une personne à {{PRIX_FOURCHETTE}} par mois tout inclus$r$),
+SET content_fr = replace(content_fr, $f$pour une personne de 1 290 à 1 430 CHF par mois tout inclus$f$, $r$pour une personne de {{PRIX_FOURCHETTE}} par mois tout inclus$r$),
     updated_at = now()
 WHERE slug = 'ou-habiter-en-france-quand-on-travaille-a-geneve'
-  AND position($f$pour une personne à 1 290 à 1 430 CHF par mois tout inclus$f$ IN content_fr) > 0
-  AND position($r$pour une personne à {{PRIX_FOURCHETTE}} par mois tout inclus$r$ IN content_fr) = 0;
+  AND position($f$pour une personne de 1 290 à 1 430 CHF par mois tout inclus$f$ IN content_fr) > 0
+  AND position($r$pour une personne de {{PRIX_FOURCHETTE}} par mois tout inclus$r$ IN content_fr) = 0;
 
 -- [18/30] ou-habiter-en-france-quand-on-travaille-a-geneve (en) · jeton · fourchette en clair → jeton (phrase du guide)
 UPDATE blog_posts
@@ -279,7 +279,7 @@ WHERE slug = 'cout-de-la-vie-suisse-france-frontalier-2026'
 -- [14] fiscalite-frontalier-geneve-impots-2026/en · jeton : « (at La Villa Coliving, CHF 1,290 to 1,430 a month for a room » → « (at La Villa Coliving, {{PRIX_FOURCHETTE}} a month for a room »
 -- [15] organisations-internationales-geneve-ou-habiter/fr · jeton : « (La Villa Coliving) | 1 290 – 1 430 CHF, tout inclus | » → « (La Villa Coliving) | {{PRIX_FOURCHETTE_TABLEAU}}, tout inclus | »
 -- [16] organisations-internationales-geneve-ou-habiter/en · jeton : « (La Villa Coliving) | 1,290 – 1,430 CHF, all inclusive | » → « (La Villa Coliving) | {{PRIX_FOURCHETTE_TABLEAU}}, all inclusive | »
--- [17] ou-habiter-en-france-quand-on-travaille-a-geneve/fr · jeton : « pour une personne à 1 290 à 1 430 CHF par mois tout inclus » → « pour une personne à {{PRIX_FOURCHETTE}} par mois tout inclus »
+-- [17] ou-habiter-en-france-quand-on-travaille-a-geneve/fr · jeton : « pour une personne de 1 290 à 1 430 CHF par mois tout inclus » → « pour une personne de {{PRIX_FOURCHETTE}} par mois tout inclus »
 -- [18] ou-habiter-en-france-quand-on-travaille-a-geneve/en · jeton : « furnished single rooms at CHF 1,290 to 1,430 a month, all inclusive » → « furnished single rooms at {{PRIX_FOURCHETTE}} a month, all inclusive »
 -- [19] salaire-suisse-net-frontalier-2026/fr · jeton : « coliving tout inclus (1 290 à 1 430 CHF par mois) » → « coliving tout inclus ({{PRIX_FOURCHETTE}} par mois) »
 -- [20] salaire-suisse-net-frontalier-2026/en · jeton : « all-inclusive coliving (CHF 1,290 to 1,430 a month) » → « all-inclusive coliving ({{PRIX_FOURCHETTE}} a month) »
@@ -310,7 +310,7 @@ SELECT slug,
     WHEN 'fiscalite-frontalier-geneve-impots-2026' THEN (position($f$(chez La Villa Coliving, 1 290 à 1 430 CHF par mois pour une chambre$f$ IN content_fr) = 0)
     WHEN 'guide-ressources-frontalier-geneve' THEN (position($f$— coûte de 1 290 à 1 430 CHF par mois.)*$f$ IN content_fr) = 0)
     WHEN 'organisations-internationales-geneve-ou-habiter' THEN (position($f$(La Villa Coliving) | 1 290 – 1 430 CHF, tout inclus |$f$ IN content_fr) = 0)
-    WHEN 'ou-habiter-en-france-quand-on-travaille-a-geneve' THEN (position($f$pour une personne à 1 290 à 1 430 CHF par mois tout inclus$f$ IN content_fr) = 0)
+    WHEN 'ou-habiter-en-france-quand-on-travaille-a-geneve' THEN (position($f$pour une personne de 1 290 à 1 430 CHF par mois tout inclus$f$ IN content_fr) = 0)
     WHEN 'salaire-suisse-net-frontalier-2026' THEN (position($f$coliving tout inclus (1 290 à 1 430 CHF par mois)$f$ IN content_fr) = 0)
     WHEN 'trouver-colocation-geneve-frontalier' THEN (position($f$ou de 1 290 à 1 430 CHF tout inclus en coliving premium$f$ IN content_fr) = 0)
     WHEN 'trouver-logement-avant-d-arriver-geneve' THEN (position($f$porte-à-porte, pour 1 290 à 1 430 CHF par mois tout inclus$f$ IN content_fr) = 0)
@@ -432,11 +432,11 @@ WHERE slug = 'ou-habiter-en-france-quand-on-travaille-a-geneve'
   AND position($f$furnished single rooms at CHF 1,290 to 1,430 a month, all inclusive$f$ IN content_en) = 0;
 
 UPDATE blog_posts
-SET content_fr = replace(content_fr, $r$pour une personne à {{PRIX_FOURCHETTE}} par mois tout inclus$r$, $f$pour une personne à 1 290 à 1 430 CHF par mois tout inclus$f$),
+SET content_fr = replace(content_fr, $r$pour une personne de {{PRIX_FOURCHETTE}} par mois tout inclus$r$, $f$pour une personne de 1 290 à 1 430 CHF par mois tout inclus$f$),
     updated_at = now()
 WHERE slug = 'ou-habiter-en-france-quand-on-travaille-a-geneve'
-  AND position($r$pour une personne à {{PRIX_FOURCHETTE}} par mois tout inclus$r$ IN content_fr) > 0
-  AND position($f$pour une personne à 1 290 à 1 430 CHF par mois tout inclus$f$ IN content_fr) = 0;
+  AND position($r$pour une personne de {{PRIX_FOURCHETTE}} par mois tout inclus$r$ IN content_fr) > 0
+  AND position($f$pour une personne de 1 290 à 1 430 CHF par mois tout inclus$f$ IN content_fr) = 0;
 
 UPDATE blog_posts
 SET content_en = replace(content_en, $r$(La Villa Coliving) | {{PRIX_FOURCHETTE_TABLEAU}}, all inclusive |$r$, $f$(La Villa Coliving) | 1,290 – 1,430 CHF, all inclusive |$f$),

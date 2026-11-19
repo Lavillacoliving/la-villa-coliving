@@ -238,7 +238,11 @@ export function editsBascule(m, { ranges = 'clair' } = {}) {
   const oldFr = `${frNb(OLD.fromChf)} CHF`;
 
   // ── Fourchettes (9 articles) : même phrase, seule la fourchette change ────────────────────────────────────────────────
-  /** [slug, mécanisme, note, ancre FR, ancre EN] — `¤` = fourchette en prose, `▦` = fourchette en cellule de tableau. */
+  /**
+   * [slug, mécanisme, note, ancre FR, ancre EN, tournure ?] — `¤` = fourchette en prose, `▦` = fourchette en cellule de tableau.
+   * 6e élément facultatif, par langue : [nouveau texte, raison] quand la phrase change aussi autour de la fourchette ; sans
+   * lui, le nouveau texte est l'ancre elle-même, seule la fourchette change.
+   */
   const RANGE_SPOTS = [
     ['budget-colocation-geneve-guide-complet', 'fourchette', 'ligne « coliving » du tableau des loyers', 'La Villa Coliving | — | — | ▦ |', 'La Villa Coliving | — | — | ▦ |'],
     ['budget-colocation-geneve-guide-complet', 'fourchette', 'créneau vérifié par check:slots (budgetVariantText)', 'Chambre en coliving côté France : ¤ tout inclus chez La Villa Coliving', 'Coliving room on the French side: ¤ all inclusive at La Villa Coliving'],
@@ -248,13 +252,17 @@ export function editsBascule(m, { ranges = 'clair' } = {}) {
     ['dossier-location-frontalier-suisse-france', 'fourchette', 'créneau vérifié par check:slots (adminSlot:dossier)', 'Ambilly et Annemasse, ¤ par mois tout inclus), le dossier', 'Ambilly and Annemasse, ¤ a month all inclusive), the file'],
     ['fiscalite-frontalier-geneve-impots-2026', 'fourchette', 'créneau vérifié par check:slots (adminSlot:fiscalite)', '(chez La Villa Coliving, ¤ par mois pour une chambre', '(at La Villa Coliving, ¤ a month for a room'],
     ['organisations-internationales-geneve-ou-habiter', 'fourchette', 'ligne « coliving » du tableau des options', '(La Villa Coliving) | ▦, tout inclus |', '(La Villa Coliving) | ▦, all inclusive |'],
-    ['ou-habiter-en-france-quand-on-travaille-a-geneve', 'fourchette', 'phrase du guide', 'pour une personne à ¤ par mois tout inclus', 'furnished single rooms at ¤ a month, all inclusive'],
+    // « pour une personne à 1 370 à 1 430 CHF » : la tournure « à … à … » devient « de … à … » (décision de Jérôme du 19/11/2026) ;
+    // l'anglais « at CHF 1,290 to 1,430 » reste tel quel.
+    ['ou-habiter-en-france-quand-on-travaille-a-geneve', 'fourchette', 'phrase du guide', 'pour une personne à ¤ par mois tout inclus', 'furnished single rooms at ¤ a month, all inclusive',
+      { fr: ['pour une personne de ¤ par mois tout inclus', '« à … à … » devient « de … à … »'] }],
     ['salaire-suisse-net-frontalier-2026', 'fourchette', 'phrase du coliving tout inclus', 'coliving tout inclus (¤ par mois)', 'all-inclusive coliving (¤ a month)'],
     ['trouver-logement-avant-d-arriver-geneve', 'fourchette', 'phrase du guide', 'porte-à-porte, pour ¤ par mois tout inclus', 'door to door, for ¤ a month all inclusive'],
   ];
-  for (const [slug, mechanism, note, fr, enAnchor] of RANGE_SPOTS) {
+  for (const [slug, mechanism, note, fr, enAnchor, reworded = {}] of RANGE_SPOTS) {
     for (const [lang, anchor] of [['fr', fr], ['en', enAnchor]]) {
-      add(slug, lang, mechanism, note, anchor.replace('¤', oldR[lang]).replace('▦', oldC[lang]), anchor.replace('¤', R(lang)).replace('▦', C(lang)));
+      const [after, why] = reworded[lang] ?? [anchor, null];
+      add(slug, lang, mechanism, why ? `${note} ; tournure : ${why}` : note, anchor.replace('¤', oldR[lang]).replace('▦', oldC[lang]), after.replace('¤', R(lang)).replace('▦', C(lang)));
     }
   }
   // budget : « Tiens compte du taux de change » — fourchette en francs, puis loyer contractuel en euros (jetons existants).
@@ -401,7 +409,8 @@ export function editsFourchettes(m) {
     const tokenised = e.replace.split(text).join('{{PRIX_FOURCHETTE}}').split(cell).join('{{PRIX_FOURCHETTE_TABLEAU}}');
     // Même rendu avant et après (les autres jetons du passage, déjà posés par la bascule, sont résolus des deux côtés).
     if (m.resolveContentTokens(tokenised, e.lang) !== m.resolveContentTokens(e.replace, e.lang)) throw new Error(`prix-chambres-7-8 (fourchettes) : ${e.slug} (${e.lang}) — le jeton ne rend pas le texte posé par la bascule`);
-    add(e.slug, e.lang, 'jeton', `fourchette en clair → jeton (${e.note})`, e.replace, tokenised);
+    // Une tournure changée par la bascule est déjà en place : la note ne la reprend pas.
+    add(e.slug, e.lang, 'jeton', `fourchette en clair → jeton (${e.note.split(' ; tournure : ')[0]})`, e.replace, tokenised);
   }
   return E;
 }

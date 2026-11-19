@@ -50,6 +50,8 @@ test('SQL 3 — bascule : fourchette en clair par défaut, même rendu avec les 
     assert.equal(m.resolveContentTokens(jet[i].replace, e.lang), m.resolveContentTokens(e.replace, e.lang), `${e.slug} (${e.lang}) : les deux modes rendent le même texte`);
     assert.equal(jet[i].find, e.find);
     assert.deepEqual(forbiddenIssues(e.replace, e.lang, { column: columnOf(e) }), []);
+    // Tournure : « de 1 290 à 1 430 CHF », jamais « à 1 290 à 1 430 CHF ».
+    if (e.lang === 'fr') assert.ok(!m.resolveContentTokens(e.replace, 'fr').includes(`à ${m.priceRangeText('fr')}`), `${e.slug} : « à » devant la fourchette`);
   });
   assert.ok(jet.some((e) => RANGE_TOKEN.test(e.replace)));
   for (const s of slugsOf(clair)) assert.ok(slugsOf(editsJetons(m)).has(s), `${s} : touché par le SQL 3 donc d'abord par le SQL 1`);

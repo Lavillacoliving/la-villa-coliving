@@ -79,7 +79,7 @@ BEGIN
 
   -- 1 article(s) - content_fr : 1 - content_en : 1
   UPDATE public.blog_posts
-  SET content_fr = replace(content_fr, ('pour une personne à 1' || chr(160) || '370 à 1' || chr(160) || '430 CHF par mois tout inclus'), ('pour une personne à 1' || chr(160) || '290 à 1' || chr(160) || '430 CHF par mois tout inclus')),
+  SET content_fr = replace(content_fr, ('pour une personne à 1' || chr(160) || '370 à 1' || chr(160) || '430 CHF par mois tout inclus'), ('pour une personne de 1' || chr(160) || '290 à 1' || chr(160) || '430 CHF par mois tout inclus')),
       content_en = replace(content_en, 'furnished single rooms at CHF 1,370 to 1,430 a month, all inclusive', 'furnished single rooms at CHF 1,290 to 1,430 a month, all inclusive')
   WHERE slug IN ('ou-habiter-en-france-quand-on-travaille-a-geneve');
 
@@ -111,7 +111,7 @@ BEGIN
     ('fiscalite-frontalier-geneve-impots-2026', '1336874d38afd114a2baf48ff0751768', 'a7d4fb8be31f004f499995c2380c9cec'),
     ('guide-ressources-frontalier-geneve', 'f25f8fb40f376358cb816759a31f338b', 'd02c624f42363d0a5b00e228374e1d6a'),
     ('organisations-internationales-geneve-ou-habiter', '2e19ccf7568ba9b69559efcdd47708f9', '7d18ca6b6b35a1c17d22b321b76ceba3'),
-    ('ou-habiter-en-france-quand-on-travaille-a-geneve', 'c71270a8aa651923e88314960024af7f', 'fda4cb660eeb3cbee73db442c499f876'),
+    ('ou-habiter-en-france-quand-on-travaille-a-geneve', 'e40a8416887c089c81fe6a24a8da4b45', 'fda4cb660eeb3cbee73db442c499f876'),
     ('salaire-suisse-net-frontalier-2026', '8e2e496dcec584cb96eeff60ef835537', '3b21d2581b4eb9ba6258e251a56668dd'),
     ('trouver-colocation-geneve-frontalier', '09c7833eb7ad14ef5888d9c00a7c909a', '60cb9d017f042782e9e862b2ca008206'),
     ('trouver-logement-avant-d-arriver-geneve', 'b35ff36de2a870581cd8d01bd9f61c79', '89fb7a5326d1f46c38990419ed02fdde')

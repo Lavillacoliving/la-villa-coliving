@@ -1,6 +1,6 @@
 # Prix des chambres 7 et 8 — SQL 3 : fourchettes, chiffres dérivés et libellés (13/11/2026)
 
-Généré le 2026-11-13T07:35:37.535Z par `scripts/build-slots-sql.mjs` · ancres vérifiées sur le contenu vivant de blog_posts (REST anon, lecture seule) le 2026-11-13T07:35:37.531Z · 64 modifications sur 12 articles · SQL : `scripts/prix-chambres-7-8-sql3-bascule-2026-11-13.sql`.
+Généré le 2026-11-19T10:18:00.525Z par `scripts/build-slots-sql.mjs` · ancres vérifiées sur le contenu vivant de blog_posts (REST anon, lecture seule) le 2026-11-19T10:18:00.520Z · 64 modifications sur 12 articles · SQL : `scripts/prix-chambres-7-8-sql3-bascule-2026-11-13.sql`.
 
 Légende : « Avant » = texte en base au 13/11/2026 ; « Après » = texte calculé depuis la source unique de la branche (les chiffres dérivés sont recalculés par scripts/prix-chambres-7-8.edits.mjs) ; « Rendu sur le site » = jetons résolus par le code de la branche.
 
@@ -313,7 +313,7 @@ Occurrences de l'ancre en base : 1 (attendu 1) · nouveau texte déjà présent 
 
 ### 17. `ou-habiter-en-france-quand-on-travaille-a-geneve` (fr) · fourchette
 
-phrase du guide
+phrase du guide ; tournure : « à … à … » devient « de … à … »
 
 Occurrences de l'ancre en base : 1 (attendu 1) · nouveau texte déjà présent : 0 (attendu 0) · garde « nouveau absent » : oui
 
@@ -326,7 +326,7 @@ pour une personne à 1 370 à 1 430 CHF par mois tout inclus
 **Après**
 
 ````text
-pour une personne à 1 290 à 1 430 CHF par mois tout inclus
+pour une personne de 1 290 à 1 430 CHF par mois tout inclus
 ````
 
 ### 18. `ou-habiter-en-france-quand-on-travaille-a-geneve` (en) · fourchette

@@ -29,7 +29,7 @@ Trois zones collent à ce profil :
 
 Arriver seul, c'est aussi arriver sans réseau. Une colocation ou un coliving règle les deux problèmes d'un coup : un logement meublé dès le premier soir, et des gens avec qui dîner. [Se faire un réseau à Genève](/blog/se-faire-reseau-geneve-arriver-seul) donne d'autres pistes pour les premières semaines.
 
-C'est pour ce profil qu'on a pensé La Villa Coliving : trois maisons à Ville-la-Grand, Ambilly et Annemasse, à 20 min de Genève-Eaux-Vives en Léman Express, porte-à-porte, avec des chambres meublées pour une personne à {{PRIX_FOURCHETTE}} par mois tout inclus. Le dossier tient en trois pièces : contrat de travail signé ou promesse d'embauche, pièce d'identité, caution de 2 mois de loyer hors charges. 0 € de frais de dossier, 0 € de frais d'agence, et la caution peut se régler en 2 ou 3 fois selon ton dossier.
+C'est pour ce profil qu'on a pensé La Villa Coliving : trois maisons à Ville-la-Grand, Ambilly et Annemasse, à 20 min de Genève-Eaux-Vives en Léman Express, porte-à-porte, avec des chambres meublées pour une personne de {{PRIX_FOURCHETTE}} par mois tout inclus. Le dossier tient en trois pièces : contrat de travail signé ou promesse d'embauche, pièce d'identité, caution de 2 mois de loyer hors charges. 0 € de frais de dossier, 0 € de frais d'agence, et la caution peut se régler en 2 ou 3 fois selon ton dossier.
 
 ## Profil 2 — Tu as une voiture et tu travailles rive droite, aux Nations ou à l'aéroport
 

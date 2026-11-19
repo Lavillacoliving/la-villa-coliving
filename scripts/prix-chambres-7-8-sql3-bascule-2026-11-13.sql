@@ -1,8 +1,8 @@
 -- ============================================================================
 -- Prix des chambres 7 et 8 de La Villa (décision de Jérôme du 12/11/2026) — SQL 3 : fourchette des maisons « 1 290 à 1 430 CHF » (9 articles), chiffres calculés à partir du prix (5 articles), libellés sans « dès » (3 articles)
--- Généré le 2026-11-13T07:35:37.535Z par scripts/build-slots-sql.mjs depuis scripts/prix-chambres-7-8-bascule.edits.mjs
+-- Généré le 2026-11-19T10:18:00.525Z par scripts/build-slots-sql.mjs depuis scripts/prix-chambres-7-8-bascule.edits.mjs
 --   · source unique de la branche feat/prix-chambres-7-8 (src/data/stats.ts : CONTRACT_EUR, HOUSES_FROM ; src/data/answerSlots.ts : priceRangeText, priceRangeCell ; src/lib/contentTokens.ts) ; textes « Avant » lus en base le 13/11/2026
---   · ancres vérifiées sur le contenu vivant de blog_posts (REST anon, lecture seule) le 2026-11-13T07:35:37.531Z : exactement 1 occurrence de chaque ancien texte, nouveau texte absent
+--   · ancres vérifiées sur le contenu vivant de blog_posts (REST anon, lecture seule) le 2026-11-19T10:18:00.520Z : exactement 1 occurrence de chaque ancien texte, nouveau texte absent
 -- À appliquer DANS LE MÊME CRÉNEAU que la fusion de la branche feat/prix-chambres-7-8, juste avant elle et après le SQL 1 : la garde check:slots de la branche exige « 1 290 à 1 430 CHF » dans 4 articles. La fourchette est écrite en clair (ses jetons ne sont connus que du nouveau code) ; le SQL 3 bis la convertit en jetons après la mise en ligne.
 -- Idempotent : chaque UPDATE est gardé par position(ancien) > 0 [AND position(nouveau) = 0 quand le nouveau texte n'est pas un fragment de l'ancien] — relancer le fichier est sans effet.
 -- Fichier UTF-8 : il contient des espaces insécables (U+00A0, « 1 370 ») et des tirets cadratins — ne pas le faire transiter par un éditeur qui normalise les espaces. La forme à exécuter en séance (un seul bloc, littéraux ASCII) est le fichier .seance.sql du même nom.
@@ -151,13 +151,13 @@ WHERE slug = 'organisations-internationales-geneve-ou-habiter'
   AND position($f$(La Villa Coliving) | 1,370 – 1,430 CHF, all inclusive |$f$ IN content_en) > 0
   AND position($r$(La Villa Coliving) | 1,290 – 1,430 CHF, all inclusive |$r$ IN content_en) = 0;
 
--- [17/64] ou-habiter-en-france-quand-on-travaille-a-geneve (fr) · fourchette · phrase du guide
+-- [17/64] ou-habiter-en-france-quand-on-travaille-a-geneve (fr) · fourchette · phrase du guide ; tournure : « à … à … » devient « de … à … »
 UPDATE blog_posts
-SET content_fr = replace(content_fr, $f$pour une personne à 1 370 à 1 430 CHF par mois tout inclus$f$, $r$pour une personne à 1 290 à 1 430 CHF par mois tout inclus$r$),
+SET content_fr = replace(content_fr, $f$pour une personne à 1 370 à 1 430 CHF par mois tout inclus$f$, $r$pour une personne de 1 290 à 1 430 CHF par mois tout inclus$r$),
     updated_at = now()
 WHERE slug = 'ou-habiter-en-france-quand-on-travaille-a-geneve'
   AND position($f$pour une personne à 1 370 à 1 430 CHF par mois tout inclus$f$ IN content_fr) > 0
-  AND position($r$pour une personne à 1 290 à 1 430 CHF par mois tout inclus$r$ IN content_fr) = 0;
+  AND position($r$pour une personne de 1 290 à 1 430 CHF par mois tout inclus$r$ IN content_fr) = 0;
 
 -- [18/64] ou-habiter-en-france-quand-on-travaille-a-geneve (en) · fourchette · phrase du guide
 UPDATE blog_posts
@@ -552,7 +552,7 @@ WHERE slug = 'cout-de-la-vie-suisse-france-frontalier-2026'
 -- [14] fiscalite-frontalier-geneve-impots-2026/en · fourchette : « (at La Villa Coliving, CHF 1,370 to 1,430 a month for a room » → « (at La Villa Coliving, CHF 1,290 to 1,430 a month for a room »
 -- [15] organisations-internationales-geneve-ou-habiter/fr · fourchette : « (La Villa Coliving) | 1 370 – 1 430 CHF, tout inclus | » → « (La Villa Coliving) | 1 290 – 1 430 CHF, tout inclus | »
 -- [16] organisations-internationales-geneve-ou-habiter/en · fourchette : « (La Villa Coliving) | 1,370 – 1,430 CHF, all inclusive | » → « (La Villa Coliving) | 1,290 – 1,430 CHF, all inclusive | »
--- [17] ou-habiter-en-france-quand-on-travaille-a-geneve/fr · fourchette : « pour une personne à 1 370 à 1 430 CHF par mois tout inclus » → « pour une personne à 1 290 à 1 430 CHF par mois tout inclus »
+-- [17] ou-habiter-en-france-quand-on-travaille-a-geneve/fr · fourchette : « pour une personne à 1 370 à 1 430 CHF par mois tout inclus » → « pour une personne de 1 290 à 1 430 CHF par mois tout inclus »
 -- [18] ou-habiter-en-france-quand-on-travaille-a-geneve/en · fourchette : « furnished single rooms at CHF 1,370 to 1,430 a month, all inclusive » → « furnished single rooms at CHF 1,290 to 1,430 a month, all inclusive »
 -- [19] salaire-suisse-net-frontalier-2026/fr · fourchette : « coliving tout inclus (1 370 à 1 430 CHF par mois) » → « coliving tout inclus (1 290 à 1 430 CHF par mois) »
 -- [20] salaire-suisse-net-frontalier-2026/en · fourchette : « all-inclusive coliving (CHF 1,370 to 1,430 a month) » → « all-inclusive coliving (CHF 1,290 to 1,430 a month) »
@@ -1011,10 +1011,10 @@ WHERE slug = 'ou-habiter-en-france-quand-on-travaille-a-geneve'
   AND position($f$furnished single rooms at CHF 1,370 to 1,430 a month, all inclusive$f$ IN content_en) = 0;
 
 UPDATE blog_posts
-SET content_fr = replace(content_fr, $r$pour une personne à 1 290 à 1 430 CHF par mois tout inclus$r$, $f$pour une personne à 1 370 à 1 430 CHF par mois tout inclus$f$),
+SET content_fr = replace(content_fr, $r$pour une personne de 1 290 à 1 430 CHF par mois tout inclus$r$, $f$pour une personne à 1 370 à 1 430 CHF par mois tout inclus$f$),
     updated_at = now()
 WHERE slug = 'ou-habiter-en-france-quand-on-travaille-a-geneve'
-  AND position($r$pour une personne à 1 290 à 1 430 CHF par mois tout inclus$r$ IN content_fr) > 0
+  AND position($r$pour une personne de 1 290 à 1 430 CHF par mois tout inclus$r$ IN content_fr) > 0
   AND position($f$pour une personne à 1 370 à 1 430 CHF par mois tout inclus$f$ IN content_fr) = 0;
 
 UPDATE blog_posts

@@ -20,7 +20,7 @@ BEGIN
     ('fiscalite-frontalier-geneve-impots-2026', '1336874d38afd114a2baf48ff0751768', 'a7d4fb8be31f004f499995c2380c9cec'),
     ('guide-ressources-frontalier-geneve', 'f25f8fb40f376358cb816759a31f338b', 'd02c624f42363d0a5b00e228374e1d6a'),
     ('organisations-internationales-geneve-ou-habiter', '2e19ccf7568ba9b69559efcdd47708f9', '7d18ca6b6b35a1c17d22b321b76ceba3'),
-    ('ou-habiter-en-france-quand-on-travaille-a-geneve', 'c71270a8aa651923e88314960024af7f', 'fda4cb660eeb3cbee73db442c499f876'),
+    ('ou-habiter-en-france-quand-on-travaille-a-geneve', 'e40a8416887c089c81fe6a24a8da4b45', 'fda4cb660eeb3cbee73db442c499f876'),
     ('salaire-suisse-net-frontalier-2026', '8e2e496dcec584cb96eeff60ef835537', '3b21d2581b4eb9ba6258e251a56668dd'),
     ('trouver-colocation-geneve-frontalier', '09c7833eb7ad14ef5888d9c00a7c909a', '60cb9d017f042782e9e862b2ca008206'),
     ('trouver-logement-avant-d-arriver-geneve', 'b35ff36de2a870581cd8d01bd9f61c79', '89fb7a5326d1f46c38990419ed02fdde')
@@ -72,7 +72,7 @@ BEGIN
 
   -- 1 article(s) - content_fr : 1 - content_en : 1
   UPDATE public.blog_posts
-  SET content_fr = replace(content_fr, ('pour une personne à 1' || chr(160) || '290 à 1' || chr(160) || '430 CHF par mois tout inclus'), 'pour une personne à {{PRIX_FOURCHETTE}} par mois tout inclus'),
+  SET content_fr = replace(content_fr, ('pour une personne de 1' || chr(160) || '290 à 1' || chr(160) || '430 CHF par mois tout inclus'), 'pour une personne de {{PRIX_FOURCHETTE}} par mois tout inclus'),
       content_en = replace(content_en, 'furnished single rooms at CHF 1,290 to 1,430 a month, all inclusive', 'furnished single rooms at {{PRIX_FOURCHETTE}} a month, all inclusive')
   WHERE slug IN ('ou-habiter-en-france-quand-on-travaille-a-geneve');
 
@@ -103,7 +103,7 @@ BEGIN
     ('fiscalite-frontalier-geneve-impots-2026', '66e071d1a76a875e1cfd14f2f15f2d48', '97d11ac02770348b1e15e0332667b1c6'),
     ('guide-ressources-frontalier-geneve', 'e0374d23d1d65f565a3d64ecee0efc0f', '1f99bba7865030ecaca3e2132406c5b1'),
     ('organisations-internationales-geneve-ou-habiter', 'aa8c3e47ba6f02e6b75c63acc3bfc403', '0153c8d996c3fcc27f099f0fd17d62f5'),
-    ('ou-habiter-en-france-quand-on-travaille-a-geneve', 'fa39c5377ca02f7d6e5102e84e1e9b9e', '5ecaa0538e65e5c345296feed6a53c41'),
+    ('ou-habiter-en-france-quand-on-travaille-a-geneve', '027cc8bfc052722349fc776873aefaa4', '5ecaa0538e65e5c345296feed6a53c41'),
     ('salaire-suisse-net-frontalier-2026', '22750bc4eaea6e2353f8a3a5b4108d37', '6b7199efcade88f6f1ee47d1b54ff59f'),
     ('trouver-colocation-geneve-frontalier', 'b3a74ad0ed4b5c3dec6059a92a1f2ea9', '3a163b6681d7bbcb3dc55b9328203d28'),
     ('trouver-logement-avant-d-arriver-geneve', '776c47ed3dd36ffebd406b5e6bae0b70', '16e04c72f98037ba987174508fd3de2e')
