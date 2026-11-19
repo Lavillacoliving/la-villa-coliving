@@ -5,6 +5,7 @@ import { LocalizedLink } from "@/components/LocalizedLink";
 import { SEO } from "@/components/SEO";
 import { FaqSection } from "@/components/FaqSection";
 import { RoomCard } from "@/components/RoomCard";
+import { trackPriceWhyClick, type PriceWhyVariant } from "@/data/allInclusive";
 import { RoomsEmbed } from "@/components/RoomsEmbed";
 import { HouseAvailabilityLine } from "@/components/HouseAvailabilityLine";
 import { WaitlistForm } from "@/components/WaitlistForm";
@@ -55,6 +56,9 @@ export function ColocationGenevePage() {
       });
     } catch { /* noop */ }
   };
+  // (13/11/2026) Lien « Ce que comprend le prix » des cartes : événement price_why_click, distinct de cta_click.
+  const trackPriceWhy = (room: PublicRoom, variant: PriceWhyVariant) =>
+    trackPriceWhyClick({ house: room.house_slug, roomNumber: room.room_number, variant, page: "colocation_geneve", language: L });
 
   // (Correctif 08/10/2026) Offer émis SEULEMENT une fois l'inventaire connu (v_public_rooms chargée).
   // react-helmet (react-side-effect) enregistre chaque instance dès UNSAFE_componentWillMount : quand
@@ -179,7 +183,7 @@ export function ColocationGenevePage() {
           {n > 0 && (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
               {candidates.map((room) => (
-                <RoomCard key={`${room.house_slug}:${room.room_number}`} house={room.house_slug} houseName={HOUSES[room.house_slug].label} room={room} fallbackImage={HOUSES[room.house_slug].img} showHouse onCtaClick={trackRoomCta} />
+                <RoomCard key={`${room.house_slug}:${room.room_number}`} house={room.house_slug} houseName={HOUSES[room.house_slug].label} room={room} fallbackImage={HOUSES[room.house_slug].img} showHouse onCtaClick={trackRoomCta} onPriceWhyClick={trackPriceWhy} />
               ))}
             </div>
           )}

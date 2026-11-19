@@ -25,6 +25,7 @@ import { HOUSES } from "@/data/houses";
 // la valeur de la maison »), jamais le « 20 min » générique ; minutes depuis TRANSIT (D1-L1, relevés du 08/10/2026).
 const LODGE = TRANSIT.byHouse.lelodge;
 import { RoomCard } from "@/components/RoomCard";
+import { trackPriceWhyClick, type PriceWhyVariant } from "@/data/allInclusive";
 import { RoomsEmbed } from "@/components/RoomsEmbed";
 import { HouseAvailabilityLine } from "@/components/HouseAvailabilityLine";
 import { useHouseRooms, splitRooms, type PublicRoom } from "@/lib/availability";
@@ -45,6 +46,9 @@ export function ChambreLouerAnnemassePage() {
       });
     } catch { /* noop */ }
   };
+  // (13/11/2026) Lien « Ce que comprend le prix » des cartes : événement price_why_click, distinct de cta_click.
+  const trackPriceWhy = (room: PublicRoom, variant: PriceWhyVariant) =>
+    trackPriceWhyClick({ house: room.house_slug, roomNumber: room.room_number, variant, page: "chambre_a_louer_annemasse", language: L });
 
 
   return (
@@ -125,7 +129,7 @@ export function ChambreLouerAnnemassePage() {
           {candidates.length > 0 && (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
               {candidates.map((room) => (
-                <RoomCard key={room.room_number} house="lelodge" houseName={HOUSES.lelodge.label} room={room} fallbackImage={HOUSES.lelodge.img} onCtaClick={trackRoomCta} />
+                <RoomCard key={room.room_number} house="lelodge" houseName={HOUSES.lelodge.label} room={room} fallbackImage={HOUSES.lelodge.img} onCtaClick={trackRoomCta} onPriceWhyClick={trackPriceWhy} />
               ))}
             </div>
           )}

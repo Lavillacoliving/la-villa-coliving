@@ -5,6 +5,7 @@ import { SEO } from "@/components/SEO";
 import { FaqSection } from "@/components/FaqSection";
 import { chambreGeneveFaq } from "@/data/faq/chambreGeneveFaq";
 import { RoomCard } from "@/components/RoomCard";
+import { trackPriceWhyClick, type PriceWhyVariant } from "@/data/allInclusive";
 import { RoomsEmbed } from "@/components/RoomsEmbed";
 import { HouseAvailabilityLine } from "@/components/HouseAvailabilityLine";
 import { WhatsAppButton } from "@/components/WhatsAppButton";
@@ -44,6 +45,9 @@ export function ChambreLouerGenevePage() {
       });
     } catch { /* noop */ }
   };
+  // (13/11/2026) Lien « Ce que comprend le prix » des cartes : événement price_why_click, distinct de cta_click.
+  const trackPriceWhy = (room: PublicRoom, variant: PriceWhyVariant) =>
+    trackPriceWhyClick({ house: room.house_slug, roomNumber: room.room_number, variant, page: "chambre_a_louer_geneve", language: L });
   const link = "text-[#1C1917] underline underline-offset-4 hover:text-[#D4A574]";
   const h2 = "text-3xl md:text-4xl font-light text-[#1C1917] mb-6";
   const serif = { fontFamily: '"DM Serif Display", serif' } as const;
@@ -106,7 +110,7 @@ export function ChambreLouerGenevePage() {
           {n > 0 && (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
               {candidates.map((room) => (
-                <RoomCard key={`${room.house_slug}:${room.room_number}`} house={room.house_slug} houseName={HOUSES[room.house_slug].label} room={room} fallbackImage={HOUSES[room.house_slug].img} showHouse onCtaClick={trackRoomCta} />
+                <RoomCard key={`${room.house_slug}:${room.room_number}`} house={room.house_slug} houseName={HOUSES[room.house_slug].label} room={room} fallbackImage={HOUSES[room.house_slug].img} showHouse onCtaClick={trackRoomCta} onPriceWhyClick={trackPriceWhy} />
               ))}
             </div>
           )}
