@@ -9,7 +9,7 @@ import { RoomsEmbed } from "@/components/RoomsEmbed";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { useHydrated } from "@/hooks/useHydrated";
 import { HOUSES } from "@/data/houses";
-import { STATS, STATS_SHARED_BATH, CONTRACT_EUR, PRICE_SHARED_CHF_EN, PRICE_SHARED_CHF_FR, thousands } from "@/data/stats";
+import { STATS, STATS_SHARED_BATH, HOUSES_FROM, CONTRACT_EUR, PRICE_FROM_CHF_EN, PRICE_FROM_CHF_FR, thousands } from "@/data/stats";
 import { markOffer } from "@/lib/attribution";
 import { readPrerenderFlag } from "@/lib/prerenderEmbeddedState";
 import type { QAPair } from "@/lib/structuredData";
@@ -198,20 +198,20 @@ export function OfferHiverPage() {
 
   if (ended) {
     // (Décision A de Jérôme, 02/11/2026) Une page « terminée » qui explique : ce qui ne change pas, avec ou sans offre.
-    // Valeurs des constantes (STATS, PRICE_SHARED_CHF_*), aucun chiffre nouveau ; title/description propres à cet état.
+    // Valeurs des constantes (STATS, PRICE_FROM_CHF_*), aucun chiffre nouveau ; title/description propres à cet état.
     const endedTitle = en ? "This offer has ended" : "Cette offre est terminée";
     const endedDescription = en
       ? `“${T.name}” closed on ${endLabel} ${year}. What stays the same: all-inclusive rent, ${STATS.leaseDurationMonths}-month lease, no fees, deposit payable in 1, 2 or 3 instalments depending on your application.`
       : `L'offre « ${T.name} » s'est terminée le ${endLabel} ${year}. Ce qui ne change pas : loyer tout inclus, bail de ${STATS.leaseDurationMonths} mois, 0 frais, caution payable en 1, 2 ou 3 fois selon ton dossier.`;
     const stays = en
       ? [
-          `All-inclusive rent from ${PRICE_SHARED_CHF_EN}/month: utilities, fibre, common-area cleaning, pool, sauna and gym included.`,
+          `All-inclusive rent from ${PRICE_FROM_CHF_EN}/month: utilities, fibre, common-area cleaning, pool, sauna and gym included.`,
           `${STATS.leaseDurationMonths}-month lease: you're free to leave at any time with ${STATS.noticePeriodMonths} month's notice.`,
           `No application fee, no agency fee. Deposit: ${STATS.depositMonths} months' rent excluding charges, payable in 1, 2 or 3 instalments depending on your application.`,
           "Visit on site or by video call, as you prefer.",
         ]
       : [
-          `Loyer tout inclus dès ${PRICE_SHARED_CHF_FR}/mois : charges, fibre, ménage des espaces communs, piscine, sauna et salle de sport compris.`,
+          `Loyer tout inclus dès ${PRICE_FROM_CHF_FR}/mois : charges, fibre, ménage des espaces communs, piscine, sauna et salle de sport compris.`,
           `Bail de ${STATS.leaseDurationMonths} mois : tu es libre de partir à tout moment avec ${STATS.noticePeriodMonths} mois de préavis.`,
           `0 € de frais de dossier, 0 € de frais d'agence. Caution : ${STATS.depositMonths} mois de loyer hors charges, payable en 1, 2 ou 3 fois selon ton dossier.`,
           "Visite sur place ou en visio, au choix.",
@@ -290,18 +290,21 @@ function OfferActive({ en, L, title, description, labels }: { en: boolean; L: "f
     trackPriceWhyClick({ house: room.house_slug, roomNumber: room.room_number, variant, page: "offre_hiver", language: L });
   useOfferSectionViews(L);
 
-  const shared = STATS_SHARED_BATH.priceChf; // 1 370
   const standard = STATS.priceChf; // 1 430
 
   // Prix de la ligne « produit » du hero (brief du 19/10/2026, §2.A) : le plus bas des chambres de l'offre — même liste,
   // même source et même hydratation que le compteur. « dès » / « from » seulement s'il y a plusieurs prix (règle de
   // Jérôme du 14/10) ; liste inconnue ou vide → prix d'appel du site, avec « dès ».
   const offerPrices = [...new Set(rooms.map((r) => Number(r.rent_chf)).filter((n) => Number.isFinite(n) && n > 0))];
-  const fromChf = offerPrices.length > 0 ? Math.min(...offerPrices) : shared;
+  const fromChf = offerPrices.length > 0 ? Math.min(...offerPrices) : HOUSES_FROM.chf;
   const pricePrefix = offerPrices.length === 1 ? "" : en ? "from " : "dès ";
   const priceLabel = `${fmtChf(fromChf, en)}/${en ? "month" : "mois"}`;
+  // Lignes du tableau « Ce que ça donne concrètement » : le palier des chambres 3 et 4 de La Villa (1 370 CHF) et le prix
+  // standard (1 430 CHF), dérivés de la source unique (src/data/stats.ts). Le palier des chambres 7 et 8 (1 290 CHF) n'y est
+  // pas : aucune chambre de l'offre n'est à ce prix (19/11/2026). Le tableau n'est rendu que tant que
+  // l'offre est ouverte (état « ended » plus haut).
   const tiers = [
-    { chf: shared, eur: CONTRACT_EUR.sharedBath },
+    ...STATS_SHARED_BATH.tiers.filter((t) => t.eur === CONTRACT_EUR.sharedBath).map((t) => ({ chf: t.chf, eur: t.eur })),
     { chf: standard, eur: CONTRACT_EUR.standard },
   ];
 

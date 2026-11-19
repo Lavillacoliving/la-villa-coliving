@@ -1,5 +1,5 @@
 import type { QAPair } from "@/lib/structuredData";
-import { STATS, STATS_DISPLAY, PRICE_SHARED_CHF_FR, PRICE_SHARED_CHF_EN, TRANSIT } from "@/data/stats";
+import { STATS, STATS_DISPLAY, PRICE_FROM_CHF_FR, PRICE_FROM_CHF_EN, TRANSIT } from "@/data/stats";
 import { GUARANTOR_SENTENCE } from "@/data/entityFacts";
 
 // (Lot L1 « ingénierie des créneaux », 10/2026) Trajets depuis TRANSIT (D1-L1), « 20 min » toujours qualifié
@@ -26,11 +26,11 @@ export const homeFaq: { fr: QAPair[]; en: QAPair[] } = {
     },
     {
       q: "Y a-t-il du coliving près de Genève ?",
-      a: `Oui. La Villa Coliving gère trois maisons de coliving côté France, à ${STATS_DISPLAY.fr.distance} : La Villa à Ville-la-Grand, Le Loft à Ambilly et Le Lodge à Annemasse. Chacune propose des chambres meublées de ${STATS.roomSizeMin} à ${STATS.roomSizeMax} m², tout inclus dès ${PRICE_SHARED_CHF_FR}/mois, avec piscine, sauna et salle de sport.`,
+      a: `Oui. La Villa Coliving gère trois maisons de coliving côté France, à ${STATS_DISPLAY.fr.distance} : La Villa à Ville-la-Grand, Le Loft à Ambilly et Le Lodge à Annemasse. Elles proposent des chambres meublées de ${STATS.roomSizeMin} à ${STATS.roomSizeMax} m², tout inclus dès ${PRICE_FROM_CHF_FR}/mois, avec piscine, sauna et salle de sport.`,
     },
     {
       q: "Combien coûte une chambre en coliving à Genève ?",
-      a: `Chez La Villa Coliving, le loyer tout inclus démarre à ${PRICE_SHARED_CHF_FR}/mois : chambre meublée de ${STATS.roomSizeMin} à ${STATS.roomSizeMax} m², toutes les charges, internet fibre jusqu'à 8 Gb/s, ménage des parties communes trois fois par semaine, piscine, sauna, salle de sport, cours de yoga et événements. Un seul paiement par mois, sans frais cachés.`,
+      a: `Chez La Villa Coliving, le loyer tout inclus démarre à ${PRICE_FROM_CHF_FR}/mois : chambre meublée de ${STATS.roomSizeMin} à ${STATS.roomSizeMax} m², toutes les charges, internet fibre jusqu'à 8 Gb/s, ménage des parties communes trois fois par semaine, piscine, sauna, salle de sport, cours de yoga et événements. Un seul paiement par mois, sans frais cachés.`,
     },
     {
       q: "Y a-t-il des frais de dossier ou d'agence ?",
@@ -52,11 +52,11 @@ export const homeFaq: { fr: QAPair[]; en: QAPair[] } = {
     },
     {
       q: "Is there coliving near Geneva?",
-      a: `Yes. La Villa Coliving runs three coliving houses on the French side, ${STATS_DISPLAY.en.distance}: La Villa in Ville-la-Grand, Le Loft in Ambilly and Le Lodge in Annemasse. Each offers furnished rooms of ${STATS.roomSizeMin} to ${STATS.roomSizeMax} m², all inclusive from ${PRICE_SHARED_CHF_EN}/month, with a pool, sauna and gym.`,
+      a: `Yes. La Villa Coliving runs three coliving houses on the French side, ${STATS_DISPLAY.en.distance}: La Villa in Ville-la-Grand, Le Loft in Ambilly and Le Lodge in Annemasse. They offer furnished rooms of ${STATS.roomSizeMin} to ${STATS.roomSizeMax} m², all inclusive from ${PRICE_FROM_CHF_EN}/month, with a pool, sauna and gym.`,
     },
     {
       q: "How much does a coliving room near Geneva cost?",
-      a: `At La Villa Coliving, all-inclusive rent starts at ${PRICE_SHARED_CHF_EN}/month: a furnished room of ${STATS.roomSizeMin} to ${STATS.roomSizeMax} m², all utilities, fibre internet up to 8 Gb/s, cleaning of common areas three times a week, pool, sauna, gym, yoga classes and events. One single monthly payment, no hidden costs.`,
+      a: `At La Villa Coliving, all-inclusive rent starts at ${PRICE_FROM_CHF_EN}/month: a furnished room of ${STATS.roomSizeMin} to ${STATS.roomSizeMax} m², all utilities, fibre internet up to 8 Gb/s, cleaning of common areas three times a week, pool, sauna, gym, yoga classes and events. One single monthly payment, no hidden costs.`,
     },
     {
       q: "Are there application or agency fees?",

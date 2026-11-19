@@ -77,8 +77,8 @@ export function BlocOffre({ variant, slug, bucket }: BlocOffreProps) {
   const availability = useRoomAvailability();
   const availabilityBadge = houseBadgeLabel(availability.byHouse[house], availability.known, L);
   const availabilityTone = houseBadgeTone(availability.byHouse[house], availability.known);
-  // Prix d'appel DE LA MAISON mise en avant (Lot 2, décision Q1 du 03/09) : « dès 1 370 »
-  // à la Villa (palier salle d'eau partagée), « à 1 430 » au Loft et au Lodge (prix unique —
+  // Prix d'appel DE LA MAISON mise en avant (Lot 2, décision Q1 du 03/09) : « dès 1 290 » à la Villa depuis le
+  // 19/11/2026 (palier le plus bas des chambres à salle d'eau partagée), « à 1 430 » au Loft et au Lodge (prix unique —
   // un « dès » y serait faux). Constantes pures : identique au prérendu, zéro #418.
   const { amount: price, from: priceFrom } = housePriceFrom(house, L);
   const to = CANDIDATURE_REF(slug, variant);

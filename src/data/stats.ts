@@ -6,18 +6,29 @@
 // indépendante mais la conversion des prix contractuels en euros, au taux BCE
 // d'une date choisie et figée, arrondie à la dizaine INFÉRIEURE (le CHF affiché
 // n'excède jamais la conversion réelle). Avec le taux ci-dessous :
-//   1 530 € × 0,9366 = 1 433,00 → 1 430 CHF ; 1 470 € × 0,9366 = 1 376,80 → 1 370 CHF
+//   1 530 € × 0,9366 = 1 433,00 → 1 430 CHF ; 1 470 € × 0,9366 = 1 376,80 → 1 370 CHF ;
+//   1 380 € × 0,9366 = 1 292,51 → 1 290 CHF (chambres 7 et 8 de La Villa, depuis le 19/11/2026)
 // ⚠️ Actualiser le taux change les prix publics ET doit entraîner la mise à jour
-// des littéraux du blog/knowledge_base (cf. SQL de bascule du 31/08).
+// des littéraux du blog/knowledge_base (cf. SQL de bascule du 31/08). Depuis le 19/11/2026, le « dès » et la
+// fourchette des maisons s'écrivent par jeton dans le texte des articles ({{PRIX_DES}}, {{PRIX_FOURCHETTE}}… —
+// src/lib/contentTokens.ts) et suivent seuls. Restent en clair, à réécrire par SQL à chaque changement de tarif : le
+// prix standard ou unique (Le Loft, Le Lodge) dans plusieurs articles, les articles générés (consigne du générateur),
+// les chiffres calculés à partir du prix, les titres, extraits, metas, posts Facebook et la base du bot (CLAUDE.md § 4).
 export const TAUX_BCE = {
   eurChf: 0.9366,
   dateFr: "12 août 2026",
   dateEn: "12 August 2026",
 } as const;
 
-/** Loyer contractuel en euros (prix maître depuis le 01/09/2026).
- *  Phase B (post-01/09) : ces valeurs seront servies par la table pricing_current. */
-export const CONTRACT_EUR = { standard: 1530, sharedBath: 1470, rateLabelFr: "août 2026", rateLabelEn: "August 2026" } as const; // 1 530/1 470 € (Jérôme 13/08)
+/** Loyer contractuel en euros (prix maître depuis le 01/09/2026) — LA SEULE saisie de prix du site : trois paliers.
+ *  Phase B (post-01/09) : ces valeurs seront servies par la table pricing_current.
+ *   · standard        1 530 € : salle d'eau privative (25 chambres sur 29) ;
+ *   · sharedBath      1 470 € : La Villa, chambres 3 et 4 — salle d'eau partagée entre 2 chambres (Jérôme 13/08/2026) ;
+ *   · sharedBathSmall 1 380 € : La Villa, chambres 7 et 8 — salle d'eau partagée entre 2 chambres, les deux plus
+ *     petites de ces quatre chambres (15,5 et 16 m²) : décision de Jérôme du 12/11/2026.
+ *  Les numéros de chambre de chaque palier vivent dans SHARED_BATH_TIERS (plus bas) ; la garde check-entity-facts
+ *  compare chaque chambre de v_public_rooms à son palier : base et code changent dans le même créneau. */
+export const CONTRACT_EUR = { standard: 1530, sharedBath: 1470, sharedBathSmall: 1380, rateLabelFr: "août 2026", rateLabelEn: "August 2026" } as const;
 
 // Conversion affichée : euro × taux BCE figé, arrondi à la dizaine inférieure.
 const chfAffiche = (eur: number): number => Math.floor((eur * TAUX_BCE.eurChf) / 10) * 10;
@@ -96,9 +107,10 @@ export const STATS = {
 // Le tarif se change en modifiant CONTRACT_EUR (et/ou TAUX_BCE) en tête de
 // fichier : le CHF suit par dérivation et tout le site se met à jour
 // (hero, SEO, FAQ, pages maisons, blocs offre du blog…).
-// Deux niveaux depuis le 01/09/2026 : 1 430 CHF (salle d'eau privative, 25 ch.)
-// et 1 370 CHF (les 4 chambres de La Villa à salle d'eau partagée entre 2 chambres,
-// entretien par l'équipe de ménage inclus). Le Loft / Le Lodge : 100 % privatif.
+// Trois paliers depuis le 19/11/2026 (deux du 01/09 au 18/11/2026) : 1 430 CHF (salle d'eau privative, 25 ch.),
+// 1 370 CHF (La Villa, chambres 3 et 4) et 1 290 CHF (La Villa, chambres 7 et 8) — ces quatre chambres partagent
+// une salle d'eau entre 2 chambres, entretien par l'équipe de ménage inclus. Le Loft / Le Lodge : 100 % privatif.
+// Le « dès » des maisons (prose, metas, JSON-LD) = le palier le plus bas : HOUSES_FROM / PRICE_FROM_* ci-dessous.
 // Séparateurs déterministes (pas de toLocaleString : l'ICU peut différer
 // entre le build Puppeteer du prérendu et le navigateur → hydration mismatch).
 // Exporté : les cartes chambres formatent des loyers PAR CHAMBRE (RoomCard, v_public_rooms),
@@ -121,17 +133,84 @@ export const PRICE_EN_NUM = thousands(STATS.priceChf, ",");      // « 1,430 »
 export const PRICE_CHF_FR = `${PRICE_FR_NUM} CHF`;               // « 1 430 CHF »
 export const PRICE_CHF_EN = `CHF ${PRICE_EN_NUM}`;               // « CHF 1,430 »
 
-// Second niveau — les 4 chambres de La Villa à salle d'eau partagée (entre 2 chambres).
-export const STATS_SHARED_BATH = { priceChf: chfAffiche(CONTRACT_EUR.sharedBath), rooms: 4, house: "La Villa" } as const; // 1 370 — dérivé
-export const PRICE_SHARED_FR_NUM = thousands(STATS_SHARED_BATH.priceChf, " "); // « 1 370 »
-export const PRICE_SHARED_EN_NUM = thousands(STATS_SHARED_BATH.priceChf, ","); // « 1,370 »
-export const PRICE_SHARED_CHF_FR = `${PRICE_SHARED_FR_NUM} CHF`;               // « 1 370 CHF »
-export const PRICE_SHARED_CHF_EN = `CHF ${PRICE_SHARED_EN_NUM}`;               // « CHF 1,370 »
-
-export const EUR_STANDARD_FR_NUM = thousands(CONTRACT_EUR.standard, " "); // « 1 530 »
-export const EUR_SHARED_FR_NUM = thousands(CONTRACT_EUR.sharedBath, " ");   // « 1 470 »
+export const EUR_STANDARD_FR_NUM = thousands(CONTRACT_EUR.standard, "\u00a0"); // « 1 530 »
 export const EUR_STANDARD_EN_NUM = thousands(CONTRACT_EUR.standard, ",");      // « 1,530 »
-export const EUR_SHARED_EN_NUM = thousands(CONTRACT_EUR.sharedBath, ",");      // « 1,470 »
+
+// ── Paliers de prix (13/11/2026) ───────────────────────────────────────────────────────────────────────────────
+/** Un palier : loyer contractuel en euros, CHF affiché DÉRIVÉ (jamais saisi), et ses graphies FR / EN.
+ *  FR : milliers en espace insécable U+00A0, unité après (« 1 290 CHF », « 1 380 € ») ; EN : virgule, unité avant
+ *  (« CHF 1,290 », « €1,380 »). ⚠️ Ne jamais écrire le loyer en euros du palier d'entrée suivi de « CHF » : la garde
+ *  check-entity-facts refuse cette suite de signes (c'était l'ancien prix en francs d'avant le 01/09/2026). */
+export interface PriceTier {
+  eur: number;
+  chf: number;
+  fr: { chfNum: string; chf: string; eurNum: string; eur: string };
+  en: { chfNum: string; chf: string; eurNum: string; eur: string };
+}
+function priceTier(eur: number): PriceTier {
+  const chf = chfAffiche(eur);
+  return {
+    eur,
+    chf,
+    fr: { chfNum: thousands(chf, "\u00a0"), chf: `${thousands(chf, "\u00a0")} CHF`, eurNum: thousands(eur, "\u00a0"), eur: `${thousands(eur, "\u00a0")} €` },
+    en: { chfNum: thousands(chf, ","), chf: `CHF ${thousands(chf, ",")}`, eurNum: thousands(eur, ","), eur: `€${thousands(eur, ",")}` },
+  };
+}
+
+/** Les chambres à salle d'eau partagée (entre 2 chambres), toutes à La Villa, par palier : numéros de chambre = ceux de
+ *  la base (rooms.room_number) et des cartes du site (« Chambre 7 »). Ordre : du palier le plus haut au plus bas.
+ *  `approxM2` (palier le plus bas seulement) = la surface que cite la FAQ des tarifs (« les plus petites des quatre, environ
+ *  16 m² ») : Math.round de v_public_rooms.surface_m2 de chaque chambre du palier (15,5 et 16 m²). La garde check-entity-facts
+ *  (tierSurfaceIssues) la compare à la base et vérifie que ces chambres restent les plus petites des quatre (FAQ, Charte). */
+export const SHARED_BATH_TIERS: readonly (PriceTier & { rooms: readonly number[]; approxM2?: number })[] = [
+  { rooms: [3, 4], ...priceTier(CONTRACT_EUR.sharedBath) },                    // 1 470 € → 1 370 CHF
+  { rooms: [7, 8], approxM2: 16, ...priceTier(CONTRACT_EUR.sharedBathSmall) }, // 1 380 € → 1 290 CHF
+];
+/** Les 4 chambres de La Villa à salle d'eau partagée — `rooms` est la SOMME des paliers (plus une saisie). */
+export const STATS_SHARED_BATH = {
+  rooms: SHARED_BATH_TIERS.reduce((n, t) => n + t.rooms.length, 0),
+  house: "La Villa",
+  tiers: SHARED_BATH_TIERS,
+} as const;
+
+/** « Dès » des maisons : le palier le plus bas de CONTRACT_EUR (1 380 € → 1 290 CHF). chfAffiche() est croissante : le
+ *  minimum en euros donne le minimum en francs — le « dès » CHF et le « dès » € ne peuvent pas diverger. C'est LA valeur
+ *  de tout « dès » / « à partir de » / borne basse de fourchette du site (prose, metas, JSON-LD, jetons d'articles). */
+export const HOUSES_FROM: PriceTier = priceTier(Math.min(CONTRACT_EUR.standard, CONTRACT_EUR.sharedBath, CONTRACT_EUR.sharedBathSmall));
+export const PRICE_FROM_FR_NUM = HOUSES_FROM.fr.chfNum; // « 1 290 »
+export const PRICE_FROM_EN_NUM = HOUSES_FROM.en.chfNum; // « 1,290 »
+export const PRICE_FROM_CHF_FR = HOUSES_FROM.fr.chf;    // « 1 290 CHF »
+export const PRICE_FROM_CHF_EN = HOUSES_FROM.en.chf;    // « CHF 1,290 »
+export const EUR_FROM_FR_NUM = HOUSES_FROM.fr.eurNum;   // « 1 380 »
+export const EUR_FROM_EN_NUM = HOUSES_FROM.en.eurNum;   // « 1,380 »
+
+/**
+ * Le détail des paliers à salle d'eau partagée, en UNE formule (source unique des phrases « 3 et 4 à 1 370 CHF ; 7 et 8 à
+ * 1 290 CHF ») : FR « 1 370 CHF pour les chambres 3 et 4 et 1 290 CHF pour les chambres 7 et 8 » · EN « CHF 1,370 for
+ * rooms 3 and 4 and CHF 1,290 for rooms 7 and 8 ». `perMonth` ajoute « /mois » / « /month » après chaque prix ; `eur`
+ * ajoute le loyer contractuel entre parenthèses (« 1 370 CHF/mois (1 470 €) ») — réservé aux surfaces où CHF et € ont
+ * le droit de partager une phrase (/tarifs, llms.txt). Numéros et prix viennent de SHARED_BATH_TIERS, jamais du texte.
+ */
+export function sharedBathTiersText(lang: "fr" | "en", opts: { perMonth?: boolean; eur?: boolean } = {}): string {
+  const parts = SHARED_BATH_TIERS.map((t) => {
+    const L = t[lang];
+    const month = opts.perMonth ? (lang === "en" ? "/month" : "/mois") : "";
+    const eur = opts.eur ? ` (${L.eur})` : "";
+    const rooms = lang === "en" ? `for rooms ${t.rooms.join(" and ")}` : `pour les chambres ${t.rooms.join(" et ")}`;
+    return `${L.chf}${month}${eur} ${rooms}`;
+  });
+  return parts.join(lang === "en" ? " and " : " et ");
+}
+
+/**
+ * Forme courte, SANS numéro de chambre, des prix à salle d'eau partagée, du plus bas au plus haut : FR « 1 290 ou 1 370 CHF » ·
+ * EN « CHF 1,290 or 1,370 » — pour les pages qui ne parlent pas d'une maison en particulier (/colocation-geneve,
+ * /chambre-a-louer-geneve) ; le détail par chambre reste sharedBathTiersText().
+ */
+export function sharedBathPricesText(lang: "fr" | "en"): string {
+  const nums = [...SHARED_BATH_TIERS].sort((a, b) => a.chf - b.chf).map((t) => t[lang].chfNum);
+  return lang === "en" ? `CHF ${nums.join(" or ")}` : `${nums.join(" ou ")} CHF`;
+}
 
 export function formatPriceChf(lang: "fr" | "en"): string {
   return lang === "en" ? PRICE_CHF_EN : PRICE_CHF_FR;

@@ -5,7 +5,7 @@ import { Scrim } from "@/components/Scrim";
 import { ArrowRight, ChevronDown, Home, Users, Heart, MapPin } from "lucide-react";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { RatingStars } from "@/components/RatingStars";
-import { STATS, STATS_DISPLAY, PRICE_SHARED_CHF_FR, PRICE_SHARED_CHF_EN, GOOGLE_REVIEWS, GOOGLE_REVIEWS_LINK_LABEL } from "@/data/stats";
+import { STATS, STATS_DISPLAY, PRICE_FROM_CHF_FR, PRICE_FROM_CHF_EN, GOOGLE_REVIEWS, GOOGLE_REVIEWS_LINK_LABEL } from "@/data/stats";
 import { ENTITY_HOUSES } from "@/data/entityFacts";
 import { useRoomAvailability, globalAvailabilityLabel } from "@/lib/availability";
 
@@ -87,8 +87,8 @@ export function HeroV7() {
               dossier » ; pas de temps de train ici (il vit dans la fiche entité). Une seule chaîne = un seul nœud texte. */}
           <p className="text-base md:text-lg text-white max-w-xl mb-6 leading-relaxed font-light [text-shadow:0_2px_10px_rgba(0,0,0,0.55)]">
             {language === "en"
-              ? `Your private room at La Villa Coliving: ${STATS.totalHouses} houses with pool, sauna and gym in ${HERO_COMMUNES.en}, on the French side, ${STATS_DISPLAY.en.distance}. From ${PRICE_SHARED_CHF_EN}/month, all inclusive, no application fee.`
-              : `Ta chambre privée chez La Villa Coliving : ${STATS.totalHouses} maisons avec piscine, sauna et salle de sport à ${HERO_COMMUNES.fr}, côté France, à ${STATS_DISPLAY.fr.distance}. Dès ${PRICE_SHARED_CHF_FR}/mois tout inclus, sans frais de dossier.`}
+              ? `Your private room at La Villa Coliving: ${STATS.totalHouses} houses with pool, sauna and gym in ${HERO_COMMUNES.en}, on the French side, ${STATS_DISPLAY.en.distance}. From ${PRICE_FROM_CHF_EN}/month, all inclusive, no application fee.`
+              : `Ta chambre privée chez La Villa Coliving : ${STATS.totalHouses} maisons avec piscine, sauna et salle de sport à ${HERO_COMMUNES.fr}, côté France, à ${STATS_DISPLAY.fr.distance}. Dès ${PRICE_FROM_CHF_FR}/mois tout inclus, sans frais de dossier.`}
           </p>
 
           {/* CTAs — remontés au-dessus de la réassurance/preuve sociale : GA4 montre que
@@ -171,7 +171,7 @@ export function HeroV7() {
                 label: language === "en" ? "Private rooms" : "Chambres privées",
               },
               {
-                value: language === "en" ? `from ${PRICE_SHARED_CHF_EN}` : `dès ${PRICE_SHARED_CHF_FR}`,
+                value: language === "en" ? `from ${PRICE_FROM_CHF_EN}` : `dès ${PRICE_FROM_CHF_FR}`,
                 label: language === "en" ? "All inclusive / month" : "Tout inclus / mois",
               },
               {

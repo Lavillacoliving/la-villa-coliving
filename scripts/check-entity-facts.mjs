@@ -3,7 +3,10 @@
  *
  * Compare la SOURCE (src/data/entityFacts.ts, chargée via esbuild) à :
  *   a) la BASE : v_public_rooms (clé anon, lecture seule) — chambres par maison et total, min/max rent_chf
- *      et rent_eur, chambres à salle d'eau partagée, surfaces = Math.round(min/max) (règle du Lot 7) ;
+ *      et rent_eur, chambres à salle d'eau partagée, surfaces = Math.round(min/max) (règle du Lot 7) ; depuis le
+ *      19/11/2026 (trois paliers de prix), CHAQUE chambre est comparée à son palier (roomPriceIssues) : une chambre
+ *      à salle d'eau partagée au loyer de son palier (ENTITY_FACTS.price.sharedBathTiers), toute autre au prix standard ;
+ *      et la surface du palier le moins cher (« les plus petites des quatre, environ 16 m² » de la FAQ des tarifs, tierSurfaceIssues) ;
  *   b) le HTML prérendu : le bloc <aside id="entity-facts"> présent EXACTEMENT une fois sur les 14 pages
  *      money + 8 articles (FR et EN), version identique, chaque phrase canonique présente une fois ;
  *      0 bloc ailleurs ; aucune chaîne périmée (1 380 CHF, ménage 2×, 25-35 min, séjour 2 mois, bail 1 à
@@ -468,11 +471,68 @@ export function jsonLdConflicts(html) {
   return { failures, warnings };
 }
 
+/**
+ * (13/11/2026, trois paliers de prix) Chaque chambre de v_public_rooms contre SON palier — fonction pure, testée dans
+ * tools/test/entity-facts-tiers.test.mjs. `F` = ENTITY_FACTS : F.price.sharedBathTiers = [{ house, rooms, eur, chf }] (chambres à
+ * salle d'eau partagée, par numéro), toutes les autres chambres = F.price.standardEur / standardChf. Le minimum et le maximum
+ * seuls laissaient passer une base à moitié mise à jour (une seule des deux chambres du palier d'entrée changée, ou le CHF
+ * sans l'euro). rent_eur absent (null) : seul le CHF est comparé, comme le fait déjà le contrôle des bornes.
+ */
+export function roomPriceIssues(rows, F) {
+  const issues = [];
+  const tiers = F.price.sharedBathTiers ?? [];
+  const tierOf = (r) => tiers.find((t) => t.house === r.house_slug && t.rooms.includes(Number(r.room_number)));
+  const isShared = (r) => /shared|partag/i.test(String(r.bathroom_type ?? ''));
+  for (const r of rows) {
+    const where = `${r.house_slug} chambre ${r.room_number}`;
+    const tier = tierOf(r);
+    if (isShared(r) && !tier) issues.push(`base : ${where} a une salle d'eau partagée mais n'est dans aucun palier de la fiche (STATS_SHARED_BATH.tiers)`);
+    if (!isShared(r) && tier) issues.push(`base : ${where} est dans un palier « salle d'eau partagée » de la fiche, la base dit « ${r.bathroom_type ?? '?'} »`);
+    const want = tier ?? { eur: F.price.standardEur, chf: F.price.standardChf };
+    const chf = Number(r.rent_chf);
+    const eur = r.rent_eur === null || r.rent_eur === undefined ? null : Number(r.rent_eur);
+    if (chf !== want.chf || (eur !== null && eur !== want.eur)) {
+      issues.push(`base : ${where} à ${eur ?? '?'} € / ${Number.isFinite(chf) ? chf : '?'} CHF, la fiche dit ${want.eur} € / ${want.chf} CHF${tier ? ' (palier salle d\'eau partagée)' : ' (prix standard)'}`);
+    }
+  }
+  for (const t of tiers) for (const n of t.rooms) {
+    if (!rows.some((r) => r.house_slug === t.house && Number(r.room_number) === n)) issues.push(`base : ${t.house} chambre ${n} (palier ${t.eur} € / ${t.chf} CHF) absente de v_public_rooms`);
+  }
+  return issues;
+}
+
+/**
+ * (13/11/2026) Surface du palier le moins cher, telle que le site la dit : FAQ des tarifs « les chambres 7 et 8 sont les plus
+ * petites des quatre, environ 16 m² » (`approxM2` du palier, SHARED_BATH_TIERS de src/data/stats.ts) et Charte « les deux plus
+ * petites ». Fonction pure, testée dans tools/test/entity-facts-tiers.test.mjs : pour un palier qui porte approxM2, chacune de
+ * ses chambres vaut approxM2 au mètre carré près (Math.round de surface_m2, règle du Lot 7) ; les chambres du palier le moins
+ * cher sont strictement plus petites que les autres chambres à salle d'eau partagée. Surface absente = échec (phrase invérifiable).
+ */
+export function tierSurfaceIssues(rows, F) {
+  const issues = [];
+  const tiers = F.price.sharedBathTiers ?? [];
+  if (tiers.length === 0) return issues;
+  const roomsOf = (t) => rows.filter((r) => r.house_slug === t.house && t.rooms.includes(Number(r.room_number)));
+  const m2 = (r) => (r.surface_m2 === null || r.surface_m2 === undefined || r.surface_m2 === '' ? NaN : Number(r.surface_m2));
+  for (const t of tiers) for (const r of roomsOf(t)) {
+    const s = m2(r);
+    if (!Number.isFinite(s) || s <= 0) issues.push(`base : ${r.house_slug} chambre ${r.room_number} sans surface (surface_m2) : la surface de son palier ne peut pas être vérifiée`);
+    else if (t.approxM2 != null && Math.round(s) !== t.approxM2) issues.push(`base : ${r.house_slug} chambre ${r.room_number} à ${s} m² (Math.round ${Math.round(s)}) ≠ « environ ${t.approxM2} m² » de la fiche (SHARED_BATH_TIERS, FAQ des tarifs)`);
+  }
+  const lowest = [...tiers].sort((a, b) => a.chf - b.chf)[0];
+  const small = roomsOf(lowest).map(m2).filter((n) => Number.isFinite(n) && n > 0);
+  const others = tiers.filter((t) => t !== lowest).flatMap(roomsOf).map(m2).filter((n) => Number.isFinite(n) && n > 0);
+  if (small.length && others.length && Math.max(...small) >= Math.min(...others)) {
+    issues.push(`base : les chambres ${lowest.rooms.join(' et ')} (palier le moins cher) ne sont plus les plus petites des chambres à salle d'eau partagée (${Math.max(...small)} m² ≥ ${Math.min(...others)} m²) : la FAQ des tarifs et la Charte disent le contraire`);
+  }
+  return issues;
+}
+
 async function checkDb(m) {
   const failures = [];
   const F = m.ENTITY_FACTS;
   const headers = { apikey: SUPABASE_ANON_KEY, Accept: 'application/json' };
-  const rows = await httpsGet(`${SUPABASE_URL}/rest/v1/v_public_rooms?select=house_slug,rent_chf,rent_eur,surface_m2,bathroom_type`, headers);
+  const rows = await httpsGet(`${SUPABASE_URL}/rest/v1/v_public_rooms?select=house_slug,room_number,rent_chf,rent_eur,surface_m2,bathroom_type`, headers);
   if (!Array.isArray(rows) || rows.length === 0) throw new Error('v_public_rooms vide');
   const byHouse = new Map();
   for (const r of rows) { if (!byHouse.has(r.house_slug)) byHouse.set(r.house_slug, []); byHouse.get(r.house_slug).push(r); }
@@ -490,6 +550,9 @@ async function checkDb(m) {
   if (Math.max(...chf) !== F.price.standardChf) failures.push(`base : loyer CHF maximum ${Math.max(...chf)} ≠ ${F.price.standardChf}`);
   if (eur.length && Math.min(...eur) !== F.price.fromEur) failures.push(`base : loyer € minimum ${Math.min(...eur)} ≠ ${F.price.fromEur}`);
   if (eur.length && Math.max(...eur) !== F.price.standardEur) failures.push(`base : loyer € maximum ${Math.max(...eur)} ≠ ${F.price.standardEur}`);
+  // (13/11/2026) Trois paliers : chambre par chambre, pas seulement les bornes ; surface du palier le moins cher (FAQ, Charte).
+  failures.push(...roomPriceIssues(rows, F));
+  failures.push(...tierSurfaceIssues(rows, F));
   if (m2.length) {
     const lo = Math.round(Math.min(...m2)), hi = Math.round(Math.max(...m2));
     if (lo !== F.surfaces.min || hi !== F.surfaces.max) failures.push(`base : surfaces ${lo}-${hi} m² (Math.round de v_public_rooms) ≠ fiche ${F.surfaces.min}-${F.surfaces.max}`);

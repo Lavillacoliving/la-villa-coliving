@@ -3,7 +3,7 @@ import { useLocation } from "react-router-dom";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { buildLocalBusinessSchema } from "@/lib/structuredData";
 import { HREFLANG_NO_ALTERNATES } from "@/lib/siteLinks";
-import { STATS, PRICE_SHARED_EN_NUM, PRICE_SHARED_CHF_FR } from "@/data/stats";
+import { STATS, PRICE_FROM_EN_NUM, PRICE_FROM_CHF_FR } from "@/data/stats";
 
 interface SEOProps {
   title?: string;
@@ -52,8 +52,8 @@ export function SEO({
 
   const defaultDescription =
     language === "en"
-      ? `Premium coliving near Geneva. ${STATS.totalRooms} furnished rooms, all-inclusive from ${PRICE_SHARED_EN_NUM} CHF/month. Heated pool, gym, sauna, fiber internet. Ideal for expats, cross-border workers & young professionals.`
-      : `Colocation et coliving premium près de Genève. ${STATS.totalRooms} chambres meublées tout inclus dès ${PRICE_SHARED_CHF_FR}/mois. Piscine chauffée, salle de sport, sauna, fibre optique. Idéal frontaliers, expats et jeunes professionnels.`;
+      ? `Premium coliving near Geneva. ${STATS.totalRooms} furnished rooms, all-inclusive from ${PRICE_FROM_EN_NUM} CHF/month. Heated pool, gym, sauna, fiber internet. Ideal for expats, cross-border workers & young professionals.`
+      : `Colocation et coliving premium près de Genève. ${STATS.totalRooms} chambres meublées tout inclus dès ${PRICE_FROM_CHF_FR}/mois. Piscine chauffée, salle de sport, sauna, fibre optique. Idéal frontaliers, expats et jeunes professionnels.`;
 
   // B2: append the brand suffix only while the title stays within the SERP display limit (~65 chars);
   // beyond that, use the bare descriptive title to avoid truncation. 65 (not 60) keeps the brand on

@@ -1,5 +1,5 @@
 import type { QAPair } from "@/lib/structuredData";
-import { STATS, PRICE_SHARED_CHF_FR, PRICE_SHARED_CHF_EN, TRANSIT, aOrAn } from "@/data/stats";
+import { STATS, PRICE_FROM_CHF_FR, PRICE_FROM_CHF_EN, TRANSIT, aOrAn } from "@/data/stats";
 import { pickSituations } from "@/data/faq/situationsFaq";
 import { communeSentence } from "@/data/answerSlots";
 
@@ -22,7 +22,7 @@ export const annemasseColocationFaq: { fr: QAPair[]; en: QAPair[] } = {
   fr: [
     {
       q: "Combien coûte une colocation à Annemasse chez La Villa Coliving ?",
-      a: `Nos chambres privatives à Annemasse Agglo (Ville-la-Grand, Ambilly, Annemasse) sont à partir de ${PRICE_SHARED_CHF_FR}/mois tout inclus. Le prix comprend le loyer, les charges (eau, électricité, chauffage), la fibre jusqu'à 8 Gb/s, le ménage ${STATS.cleaningPerWeek} fois par semaine des communs, l'accès à la piscine chauffée, à la salle de sport et au sauna, les cours de yoga et fitness privés hebdomadaires, et les événements communautaires mensuels. Pas de frais d'agence, pas de frais de dossier.`,
+      a: `Nos chambres privatives à Annemasse Agglo (Ville-la-Grand, Ambilly, Annemasse) sont à partir de ${PRICE_FROM_CHF_FR}/mois tout inclus. Le prix comprend le loyer, les charges (eau, électricité, chauffage), la fibre jusqu'à 8 Gb/s, le ménage ${STATS.cleaningPerWeek} fois par semaine des communs, l'accès à la piscine chauffée, à la salle de sport et au sauna, les cours de yoga et fitness privés hebdomadaires, et les événements communautaires mensuels. Pas de frais d'agence, pas de frais de dossier.`,
     },
     {
       q: "Combien de temps pour aller à Genève depuis Annemasse ?",
@@ -54,7 +54,7 @@ export const annemasseColocationFaq: { fr: QAPair[]; en: QAPair[] } = {
   en: [
     {
       q: "How much does a flatshare room in Annemasse cost at La Villa Coliving?",
-      a: `Our private rooms in Annemasse Agglo (Ville-la-Grand, Ambilly, Annemasse) start at ${PRICE_SHARED_CHF_EN}/month all inclusive. The price covers rent, bills (water, electricity, heating), fibre up to 8 Gb/s, cleaning of the common areas ${STATS.cleaningPerWeek} times a week, access to the heated pool, gym and sauna, weekly private yoga and fitness classes, and monthly community events. No agency fee, no application fee.`,
+      a: `Our private rooms in Annemasse Agglo (Ville-la-Grand, Ambilly, Annemasse) start at ${PRICE_FROM_CHF_EN}/month all inclusive. The price covers rent, bills (water, electricity, heating), fibre up to 8 Gb/s, cleaning of the common areas ${STATS.cleaningPerWeek} times a week, access to the heated pool, gym and sauna, weekly private yoga and fitness classes, and monthly community events. No agency fee, no application fee.`,
     },
     {
       q: "How long does it take to get to Geneva from Annemasse?",

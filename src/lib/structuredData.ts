@@ -2,7 +2,7 @@
 // Règle d'or AEO : le texte d'une réponse balisée doit être IDENTIQUE au texte visible.
 // buildFaqPageSchema() construit donc le FAQPage à partir des mêmes paires {q,a} affichées.
 
-import { STATS, STATS_SHARED_BATH, ROOMS_BY_HOUSE, PRICE_FR_NUM, PRICE_EN_NUM, PRICE_SHARED_FR_NUM, PRICE_SHARED_EN_NUM, GENEVA_COMMUTE_FORMULA, GOOGLE_REVIEWS } from "@/data/stats";
+import { STATS, HOUSES_FROM, ROOMS_BY_HOUSE, PRICE_FR_NUM, PRICE_EN_NUM, PRICE_FROM_FR_NUM, PRICE_FROM_EN_NUM, GENEVA_COMMUTE_FORMULA, GOOGLE_REVIEWS } from "@/data/stats";
 
 const SITE = "https://www.lavillacoliving.com";
 
@@ -204,7 +204,8 @@ export function buildFaqPageSchema(items: QAPair[]): Record<string, unknown> {
   };
 }
 
-/** (Lot L6.2) Maison des chambres à salle d'eau partagée : son priceRange couvre les deux paliers, les autres n'ont que le standard. */
+/** (Lot L6.2) Maison des chambres à salle d'eau partagée : son priceRange va du « dès » des maisons (HOUSES_FROM, le palier
+ *  le plus bas — chambres 7 et 8 depuis le 19/11/2026) au prix standard ; les autres maisons n'ont que le standard. */
 const SHARED_BATH_HOUSE_SLUG = "lavilla";
 
 /** Identifiant stable du nœud LodgingBusiness d'une maison (référencé par @id depuis l'ItemList des chambres). */
@@ -215,7 +216,7 @@ export const houseLodgingId = (slug: string): string => `${SITE}/${slug}#lodging
  * `department[]` des deux fiches d'organisation ET par la page maison (ex-bloc écrit à la main dans HouseDetailPage) — sinon
  * Google fusionne deux nœuds contradictoires. @id `<url>#lodging`, rattachement à l'entité (`parentOrganization`),
  * `numberOfRooms` de ROOMS_BY_HOUSE, `priceRange` par maison, `amenityFeature` par maison, adresse + geo (BAN), `sameAs` de
- * la maison. Jamais d'AggregateOffer par maison (la garde exige 1 370-1 430 sur chaque nœud), jamais de `currenciesAccepted`
+ * la maison. Jamais d'AggregateOffer par maison (la garde exige « dès » – standard, soit 1 290-1 430, sur chaque nœud), jamais de `currenciesAccepted`
  * (le loyer contractuel est en euros, l'affichage en CHF : la propriété induisait en erreur). `opts.context` ajoute @context
  * (bloc autonome de la page maison) ; `opts.description` / `opts.image` remplacent le texte et l'image par défaut.
  */
@@ -227,7 +228,7 @@ export function buildHouseLodgingNode(
   const en = language === "en";
   const rooms = ROOMS_BY_HOUSE[h.slug as keyof typeof ROOMS_BY_HOUSE];
   const priceRange = h.slug === SHARED_BATH_HOUSE_SLUG
-    ? (en ? `CHF ${PRICE_SHARED_EN_NUM}–${PRICE_EN_NUM}/month` : `${PRICE_SHARED_FR_NUM}–${PRICE_FR_NUM} CHF/mois`)
+    ? (en ? `CHF ${PRICE_FROM_EN_NUM}–${PRICE_EN_NUM}/month` : `${PRICE_FROM_FR_NUM}–${PRICE_FR_NUM} CHF/mois`)
     : (en ? `CHF ${PRICE_EN_NUM}/month` : `${PRICE_FR_NUM} CHF/mois`);
   return {
     ...(opts.context ? { "@context": "https://schema.org" } : {}),
@@ -356,10 +357,10 @@ export function buildHomeLodgingBusinessSchema(language: "fr" | "en" = "fr"): Re
     image: `${SITE}/images/villa_portrait.webp`,
     telephone: LAVILLA_PHONE,
     email: LAVILLA_EMAIL,
-    priceRange: en ? `CHF ${PRICE_SHARED_EN_NUM}–${PRICE_EN_NUM}/month` : `${PRICE_SHARED_FR_NUM}–${PRICE_FR_NUM} CHF/mois`,
+    priceRange: en ? `CHF ${PRICE_FROM_EN_NUM}–${PRICE_EN_NUM}/month` : `${PRICE_FROM_FR_NUM}–${PRICE_FR_NUM} CHF/mois`,
     // Offre citable par les moteurs et les IA (AI Overviews cite déjà nos prix —
     // autant qu'ils viennent d'une donnée structurée exacte). Prix via STATS :
-    // deux niveaux depuis le 01/09/2026 → AggregateOffer 1 370–1 430 (STATS_SHARED_BATH → STATS).
+    // trois paliers depuis le 19/11/2026 → AggregateOffer 1 290–1 430 (HOUSES_FROM, le « dès » des maisons → STATS.priceChf).
     makesOffer: {
       "@type": "AggregateOffer",
       name: en
@@ -368,7 +369,7 @@ export function buildHomeLodgingBusinessSchema(language: "fr" | "en" = "fr"): Re
       description: en
         ? `Furnished room of ${STATS.roomSizeMin} to ${STATS.roomSizeMax} m², all utilities, fibre internet, cleaning, pool, sauna and gym included. No application fee.`
         : `Chambre meublée de ${STATS.roomSizeMin} à ${STATS.roomSizeMax} m², charges, internet fibre, ménage, piscine, sauna et salle de sport inclus. Sans frais de dossier.`,
-      lowPrice: String(STATS_SHARED_BATH.priceChf),
+      lowPrice: String(HOUSES_FROM.chf),
       highPrice: String(STATS.priceChf),
       priceCurrency: "CHF",
       offerCount: STATS.totalRooms,
@@ -431,7 +432,7 @@ export function buildLocalBusinessSchema(language: "fr" | "en", description: str
     description,
     telephone: LAVILLA_PHONE,
     email: LAVILLA_EMAIL,
-    priceRange: en ? `CHF ${PRICE_SHARED_EN_NUM}–${PRICE_EN_NUM}/month` : `${PRICE_SHARED_FR_NUM}–${PRICE_FR_NUM} CHF/mois`,
+    priceRange: en ? `CHF ${PRICE_FROM_EN_NUM}–${PRICE_EN_NUM}/month` : `${PRICE_FROM_FR_NUM}–${PRICE_FR_NUM} CHF/mois`,
     address: LAVILLA_POSTAL_ADDRESS,
     geo: { "@type": "GeoCoordinates", latitude: publicGeo(HOUSES[0]).lat, longitude: publicGeo(HOUSES[0]).lng },
     areaServed: ["Genève", "Annemasse", "Ville-la-Grand", "Ambilly", "Grand Genève"],
@@ -439,7 +440,7 @@ export function buildLocalBusinessSchema(language: "fr" | "en", description: str
     makesOffer: {
       "@type": "AggregateOffer",
       name: en ? "All-inclusive furnished room in coliving near Geneva" : "Chambre meublée tout inclus en coliving près de Genève",
-      lowPrice: String(STATS_SHARED_BATH.priceChf),
+      lowPrice: String(HOUSES_FROM.chf),
       highPrice: String(STATS.priceChf),
       priceCurrency: "CHF",
       offerCount: STATS.totalRooms,
@@ -622,14 +623,14 @@ export function buildBreadcrumbSchema(items: { name: string; url: string }[]): R
   };
 }
 
-/** Offre agrégée « chambres tout inclus » — deux niveaux depuis le 01/09/2026, prix sourcés depuis STATS (single source). */
+/** Offre agrégée « chambres tout inclus » — du « dès » des maisons (HOUSES_FROM) au prix standard, sourcés depuis stats.ts (single source). */
 export function buildRoomsAggregateOfferSchema(opts: { name: string; description: string; url: string }): Record<string, unknown> {
   return {
     "@context": "https://schema.org",
     "@type": "AggregateOffer",
     name: opts.name,
     description: opts.description,
-    lowPrice: String(STATS_SHARED_BATH.priceChf),
+    lowPrice: String(HOUSES_FROM.chf),
     highPrice: String(STATS.priceChf),
     priceCurrency: "CHF",
     offerCount: STATS.totalRooms,

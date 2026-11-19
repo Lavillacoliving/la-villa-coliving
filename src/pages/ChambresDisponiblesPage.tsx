@@ -18,7 +18,7 @@ import { ENTITY_HOUSES } from "@/data/entityFacts";
 import { MONTHS_FR, MONTHS_EN, formatShortDate } from "@/lib/dates";
 import { responsiveImage } from "@/lib/responsiveImage";
 import { roomGallery } from "@/data/roomPhotos";
-import { STATS, STATS_DISPLAY, PRICE_SHARED_CHF_FR, PRICE_SHARED_CHF_EN } from "@/data/stats";
+import { STATS, STATS_DISPLAY, PRICE_FROM_CHF_FR, PRICE_FROM_CHF_EN } from "@/data/stats";
 import { tarifsFaq } from "@/data/faq/tarifsFaq";
 import { maisonsFaq } from "@/data/faq/maisonsFaq";
 import {
@@ -185,8 +185,8 @@ export function ChambresDisponiblesPage() {
   // (Lot L6.5, 10/10/2026) La page est la « plateforme » de La Villa pour les assistants : titre explicite (3 maisons, prix, dates — jamais un montant dans le titre).
   const title = en ? `Available rooms near Geneva — ${STATS.totalHouses} houses, prices, dates` : `Chambres disponibles près de Genève — ${STATS.totalHouses} maisons, prix, dates`;
   const description = en
-    ? `Every room free now or opening soon in our ${STATS.totalHouses} houses near Geneva, with date and all-inclusive price from ${PRICE_SHARED_CHF_EN}. Reply within 48 h.`
-    : `Toutes les chambres libres ou à libérer dans nos ${STATS.totalHouses} maisons près de Genève, avec date et prix tout inclus dès ${PRICE_SHARED_CHF_FR}. Réponse sous 48 h.`;
+    ? `Every room free now or opening soon in our ${STATS.totalHouses} houses near Geneva, with date and all-inclusive price from ${PRICE_FROM_CHF_EN}. Reply within 48 h.`
+    : `Toutes les chambres libres ou à libérer dans nos ${STATS.totalHouses} maisons près de Genève, avec date et prix tout inclus dès ${PRICE_FROM_CHF_FR}. Réponse sous 48 h.`;
 
   // (Lot L6.5) JSON-LD ItemList d'Offer — dérivé du même snapshot que le rendu, sans filtre (identique au prérendu et au premier
   // rendu client) ; construit par buildAvailableRoomsItemList (structuredData.ts) : prix mensuel, LeaseOut, offeredBy, maison par @id.
@@ -253,8 +253,8 @@ export function ChambresDisponiblesPage() {
               réassurance — règle permanente depuis le 02/11/2026). */}
           <p className="mt-3 text-[#57534E] max-w-2xl">
             {en
-              ? `Furnished private rooms in ${STATS.totalHouses} coliving houses on the French side of Geneva, ${STATS_DISPLAY.en.distance}. All inclusive from ${PRICE_SHARED_CHF_EN}/month, no agency or application fee.`
-              : `Chambres privées meublées dans ${STATS.totalHouses} maisons de coliving côté France, à ${STATS_DISPLAY.fr.distance}. Tout inclus dès ${PRICE_SHARED_CHF_FR}/mois, 0 frais d'agence ni de dossier.`}
+              ? `Furnished private rooms in ${STATS.totalHouses} coliving houses on the French side of Geneva, ${STATS_DISPLAY.en.distance}. All inclusive from ${PRICE_FROM_CHF_EN}/month, no agency or application fee.`
+              : `Chambres privées meublées dans ${STATS.totalHouses} maisons de coliving côté France, à ${STATS_DISPLAY.fr.distance}. Tout inclus dès ${PRICE_FROM_CHF_FR}/mois, 0 frais d'agence ni de dossier.`}
           </p>
         </div>
       </section>

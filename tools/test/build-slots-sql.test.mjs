@@ -3,7 +3,9 @@ import assert from 'node:assert/strict';
 import {
   countOccurrences, pickTag, quoteEdit, renderUpdate, renderRollback, appliedCondition, renderVerification,
   renderRollbackBlock, checkEdit, applyEdits, forbiddenIssues, renderSql, renderDryRun, preview, TABLE,
+  COLUMNS, TOKEN_COLUMNS, stripKnownTokens, knownTokensIn,
 } from '../../scripts/build-slots-sql.mjs';
+import { CONTENT_TOKENS } from '../../scripts/lib/article-checks.mjs';
 import { buildEdits, FOOTER_SLUGS, FOOTER_EN_HEAD_BY_SLUG, NB, MINUS } from '../../scripts/l1-slots.edits.mjs';
 import { loadEntityFacts } from '../../scripts/lib/load-entity-facts.mjs';
 
@@ -123,6 +125,45 @@ test('forbiddenIssues : 15 min, promesses garant, Gaillard, voiture, vouvoiement
   assert.match(forbiddenIssues('dès {{PRIX_DES}}', 'fr').join(), /placeholder/);
   assert.match(forbiddenIssues('a $$ b', 'fr').join(), /\$\$/);
   assert.match(forbiddenIssues('<br>', 'fr').join(), /balise/);
+});
+
+// (13/11/2026, lot « prix des chambres 7 et 8 ») Les jetons connus du site sont admis dans le texte d'un article, et là seulement.
+test('forbiddenIssues + jetons : {{NOM}} connu admis dans content_fr / content_en ; refusé ailleurs, inconnu ou mal écrit', () => {
+  assert.deepEqual(TOKEN_COLUMNS, ['content_fr', 'content_en']);
+  for (const col of TOKEN_COLUMNS) {
+    assert.deepEqual(forbiddenIssues('une chambre coûte à partir de {{PRIX_DES}}/mois', 'fr', { column: col }), [], col);
+    for (const t of CONTENT_TOKENS) assert.deepEqual(forbiddenIssues(`avant {{${t}}} après`, 'en', { column: col }), [], `${t} dans ${col}`);
+  }
+  // Sans colonne (appels d'origine) : comportement inchangé, « {{ » = placeholder.
+  assert.match(forbiddenIssues('dès {{PRIX_DES}}', 'fr').join(), /^placeholder$/);
+  // Colonnes où le site affiche le texte brut : le jeton y resterait visible.
+  for (const col of COLUMNS.filter((c) => !TOKEN_COLUMNS.includes(c))) {
+    assert.match(forbiddenIssues('dès {{PRIX_DES}}', 'fr', { column: col }).join(), /placeholder \(jeton \{\{…\}\} dans /, col);
+  }
+  // Jeton inconnu, jeton avec espaces, placeholder de rédaction : toujours refusés, même dans le texte de l'article.
+  assert.match(forbiddenIssues('dès {{PRIX_INCONNU}}', 'fr', { column: 'content_fr' }).join(), /jeton inconnu ou mal écrit/);
+  assert.match(forbiddenIssues('dès {{ PRIX_DES }}', 'fr', { column: 'content_fr' }).join(), /jeton inconnu ou mal écrit/);
+  assert.match(forbiddenIssues('[À VÉRIFIER] {{PRIX_DES}}', 'fr', { column: 'content_fr' }).join(), /placeholder/);
+  // Les autres règles regardent toujours le texte autour du jeton.
+  assert.match(forbiddenIssues('Vous payez {{PRIX_DES}}', 'fr', { column: 'content_fr' }).join(), /vouvoiement/);
+  assert.match(forbiddenIssues('{{PRIX_DES}} sans garant', 'fr', { column: 'content_fr' }).join(), /garant/);
+  assert.equal(stripKnownTokens('de {{PRIX_FOURCHETTE}} par mois'), 'de  par mois');
+  assert.deepEqual(knownTokensIn('{{PRIX_DES}}/{{PRIX_DES_EUR}} puis {{X}} et {{ PRIX_DES }}'), ['{{PRIX_DES}}', '{{PRIX_DES_EUR}}']);
+});
+
+test('jetons : renderUpdate / renderRollback les écrivent tels quels (dollar-quoting), le diff montre le rendu', () => {
+  const tok = { slug: 'mon-article', lang: 'fr', mechanism: 'jeton', note: 'pied commun', find: `coûte à partir de 1${NB}370 CHF/mois`, replace: 'coûte à partir de {{PRIX_DES}}/mois', rendered: `coûte à partir de 1${NB}290 CHF/mois`, count: 1, replaceCount: 0 };
+  const up = renderUpdate(tok);
+  assert.ok(up.includes('$r$coûte à partir de {{PRIX_DES}}/mois$r$'), up);
+  assert.ok(up.includes('AND position($r$coûte à partir de {{PRIX_DES}}/mois$r$ IN content_fr) = 0'));
+  const back = renderRollback(tok);
+  assert.ok(back.includes(`replace(content_fr, $r$coûte à partir de {{PRIX_DES}}/mois$r$, $f$coûte à partir de 1${NB}370 CHF/mois$f$)`), back);
+  assert.deepEqual(checkEdit(tok, `Une chambre coûte à partir de 1${NB}370 CHF/mois.`), []);
+  const sim = applyEdits(`Une chambre coûte à partir de 1${NB}370 CHF/mois.`, [tok]);
+  assert.equal(sim.text, 'Une chambre coûte à partir de {{PRIX_DES}}/mois.');
+  const md = renderDryRun([tok], meta);
+  assert.match(md, /\*\*Rendu sur le site\*\* \(jetons résolus par `src\/lib\/contentTokens\.ts`\)\n\n````text\ncoûte à partir de 1\u00a0290 CHF\/mois\n````/);
+  assert.doesNotMatch(renderDryRun([sub], meta), /Rendu sur le site/, 'pas de bloc « Rendu » sans jeton');
 });
 
 test('renderVerification : une ligne par slug, CASE par langue, NULL quand la langue n\'est pas touchée', () => {

@@ -13,7 +13,7 @@ import { nextMonthValue, useRenderMonth } from "@/lib/renderMonth";
 import { FaqSection } from "@/components/FaqSection";
 import { tarifsFaq } from "@/data/faq/tarifsFaq";
 import { buildBreadcrumbSchema, buildRoomsAggregateOfferSchema, homeUrl } from "@/lib/structuredData";
-import { STATS, HOUSE_SURFACES, PRICE_FR_NUM, PRICE_EN_NUM, PRICE_CHF_FR, PRICE_CHF_EN, PRICE_SHARED_FR_NUM, PRICE_SHARED_EN_NUM, PRICE_SHARED_CHF_FR, PRICE_SHARED_CHF_EN, CONTRACT_EUR, EUR_STANDARD_FR_NUM, EUR_SHARED_FR_NUM, EUR_STANDARD_EN_NUM, EUR_SHARED_EN_NUM, MARKET_ROOM_EUR, thousands, MARKET_COMPARISON } from "@/data/stats";
+import { STATS, STATS_SHARED_BATH, HOUSE_SURFACES, PRICE_FR_NUM, PRICE_EN_NUM, PRICE_CHF_FR, PRICE_CHF_EN, PRICE_FROM_FR_NUM, PRICE_FROM_EN_NUM, PRICE_FROM_CHF_FR, PRICE_FROM_CHF_EN, CONTRACT_EUR, EUR_STANDARD_FR_NUM, EUR_FROM_FR_NUM, EUR_STANDARD_EN_NUM, EUR_FROM_EN_NUM, MARKET_ROOM_EUR, thousands, MARKET_COMPARISON, sharedBathTiersText } from "@/data/stats";
 import { PRICE_KEY_SENTENCE } from "@/data/priceFacts";
 import {
   MONTHLY_SAVINGS_CHF,
@@ -257,8 +257,8 @@ export function RatesPageV4() {
       location: "Ville-la-Grand",
       image: "/images/villa_portrait.webp",
       alt: language === "en"
-        ? `La Villa coliving Ville-la-Grand — all-inclusive furnished rooms from ${PRICE_SHARED_EN_NUM} CHF near Geneva`
-        : `La Villa coliving Ville-la-Grand — chambres meublées tout inclus dès ${PRICE_SHARED_CHF_FR} près de Genève`,
+        ? `La Villa coliving Ville-la-Grand — all-inclusive furnished rooms from ${PRICE_FROM_EN_NUM} CHF near Geneva`
+        : `La Villa coliving Ville-la-Grand — chambres meublées tout inclus dès ${PRICE_FROM_CHF_FR} près de Genève`,
       description:
         language === "en"
           ? "Elegant villa with pool & garden"
@@ -321,8 +321,8 @@ export function RatesPageV4() {
         en: `€${MARKET_ROOM_EUR.min}-${thousands(MARKET_ROOM_EUR.max, ",")}`,
       },
       villa: {
-        fr: `dès ${PRICE_SHARED_CHF_FR} tout inclus`,
-        en: `from ${PRICE_SHARED_CHF_EN} all inclusive`,
+        fr: `dès ${PRICE_FROM_CHF_FR} tout inclus`,
+        en: `from ${PRICE_FROM_CHF_EN} all inclusive`,
       },
       studio: { fr: "1\u00a0800-2\u00a0500 CHF + charges", en: "CHF 1,800-2,500 + utilities" },
     },
@@ -423,8 +423,8 @@ export function RatesPageV4() {
         // Prix retiré du title le 15/08/2026 (doctrine A6/S33) — il reste en meta description.
         title={language === "en" ? "Rates: one all-inclusive rent near Geneva" : "Tarifs : un loyer tout compris près de Genève"}
         description={language === "en"
-          ? `All-inclusive coliving near Geneva from ${PRICE_SHARED_EN_NUM} CHF/month — no application or agency fees. Rent, utilities, gym, pool, WiFi, cleaning included.`
-          : `Tarifs colocation tout inclus près de Genève dès ${PRICE_SHARED_CHF_FR}/mois, sans frais de dossier ni d'agence. Loyer, charges, gym, piscine, WiFi, ménage compris.`}
+          ? `All-inclusive coliving near Geneva from ${PRICE_FROM_EN_NUM} CHF/month — no application or agency fees. Rent, utilities, gym, pool, WiFi, cleaning included.`
+          : `Tarifs colocation tout inclus près de Genève dès ${PRICE_FROM_CHF_FR}/mois, sans frais de dossier ni d'agence. Loyer, charges, gym, piscine, WiFi, ménage compris.`}
         url="https://www.lavillacoliving.com/tarifs"
       />
       <Helmet>
@@ -436,8 +436,8 @@ export function RatesPageV4() {
         <script type="application/ld+json">{JSON.stringify(buildRoomsAggregateOfferSchema({
           name: language === "en" ? "All-inclusive furnished room near Geneva" : "Chambre meublée tout inclus près de Genève",
           description: language === "en"
-            ? `All-inclusive coliving room from ${PRICE_SHARED_CHF_EN} to ${PRICE_CHF_EN}/month near Geneva — utilities, fiber, cleaning, pool, sauna, gym included.`
-            : `Chambre de coliving tout inclus de ${PRICE_SHARED_CHF_FR} à ${PRICE_CHF_FR}/mois près de Genève — charges, fibre, ménage, piscine, sauna, salle de sport compris.`,
+            ? `All-inclusive coliving room from ${PRICE_FROM_CHF_EN} to ${PRICE_CHF_EN}/month near Geneva — utilities, fiber, cleaning, pool, sauna, gym included.`
+            : `Chambre de coliving tout inclus de ${PRICE_FROM_CHF_FR} à ${PRICE_CHF_FR}/mois près de Genève — charges, fibre, ménage, piscine, sauna, salle de sport compris.`,
           url: `https://www.lavillacoliving.com${language === "en" ? "/en" : ""}/tarifs`,
         }))}</script>
       </Helmet>
@@ -468,13 +468,13 @@ export function RatesPageV4() {
           </p>
           <p className="text-xl text-[#57534E] max-w-2xl mx-auto mb-4">
             {language === "en"
-              ? `from ${PRICE_SHARED_EN_NUM} CHF/month (€${EUR_SHARED_EN_NUM}/month) — All inclusive`
-              : `dès ${PRICE_SHARED_CHF_FR}/mois (${EUR_SHARED_FR_NUM} €/mois) — Tout inclus`}
+              ? `from ${PRICE_FROM_EN_NUM} CHF/month (€${EUR_FROM_EN_NUM}/month) — All inclusive`
+              : `dès ${PRICE_FROM_CHF_FR}/mois (${EUR_FROM_FR_NUM} €/mois) — Tout inclus`}
           </p>
           <p className="text-lg text-[#78716C]">
             {language === "en"
-              ? `At La Villa Coliving, rooms with a private shower room cost ${PRICE_CHF_EN}/month (€${EUR_STANDARD_EN_NUM}) all-inclusive. Those with a shared bathroom cost ${PRICE_SHARED_CHF_EN}/month (€${EUR_SHARED_EN_NUM}): rent, utilities, fiber, cleaning three times a week, gym, pool, streaming. No application or agency fees — deposit of 2 months' rent (excluding utilities).`
-              : `À La Villa Coliving, les chambres avec salle d'eau privée coûtent ${PRICE_CHF_FR}/mois (${EUR_STANDARD_FR_NUM} €) tout compris. Celles avec salle de bain partagée coûtent ${PRICE_SHARED_CHF_FR}/mois (${EUR_SHARED_FR_NUM} €) : loyer, charges, fibre, ménage 3x/semaine, salle de sport, piscine, streaming. Sans frais de dossier ni d'agence — caution de 2 mois de loyer (hors charges).`}
+              ? `At La Villa Coliving, rooms with a private shower room cost ${PRICE_CHF_EN}/month (€${EUR_STANDARD_EN_NUM}) all-inclusive. The ${STATS_SHARED_BATH.rooms} rooms at our La Villa house with a shower room shared between 2 rooms cost ${sharedBathTiersText("en", { perMonth: true, eur: true })}: rent, utilities, fiber, cleaning three times a week, gym, pool, streaming. No application or agency fees — deposit of 2 months' rent (excluding utilities).`
+              : `À La Villa Coliving, les chambres avec salle d'eau privée coûtent ${PRICE_CHF_FR}/mois (${EUR_STANDARD_FR_NUM} €) tout compris. Les ${STATS_SHARED_BATH.rooms} chambres de la maison La Villa à salle d'eau partagée entre 2 chambres coûtent ${sharedBathTiersText("fr", { perMonth: true, eur: true })} : loyer, charges, fibre, ménage 3x/semaine, salle de sport, piscine, streaming. Sans frais de dossier ni d'agence — caution de 2 mois de loyer (hors charges).`}
           </p>
           <div className="mt-8 flex flex-wrap justify-center gap-2">
             {(language === "en"
@@ -492,8 +492,8 @@ export function RatesPageV4() {
           {/* Mention contractuelle euro (prix maître depuis le 01/09/2026) — montants via CONTRACT_EUR */}
           <p className="mt-6 max-w-2xl mx-auto text-xs text-[#78716C]">
             {language === "en"
-              ? `Contractual rent in euros: €${EUR_SHARED_EN_NUM}–€${EUR_STANDARD_EN_NUM}/month depending on the room. CHF shown for guidance — ${CONTRACT_EUR.rateLabelEn} rate.`
-              : `Loyer contractuel en euros : de ${EUR_SHARED_FR_NUM} à ${EUR_STANDARD_FR_NUM} €/mois selon la chambre. Affichage en CHF indicatif — taux d'${CONTRACT_EUR.rateLabelFr}.`}{" "}
+              ? `Contractual rent in euros: €${EUR_FROM_EN_NUM}–€${EUR_STANDARD_EN_NUM}/month depending on the room. CHF shown for guidance — ${CONTRACT_EUR.rateLabelEn} rate.`
+              : `Loyer contractuel en euros : de ${EUR_FROM_FR_NUM} à ${EUR_STANDARD_FR_NUM} €/mois selon la chambre. Affichage en CHF indicatif — taux d'${CONTRACT_EUR.rateLabelFr}.`}{" "}
             <LocalizedLink
               to="/charte-transparence"
               className="underline underline-offset-4 hover:text-[#1C1917] transition-colors"
@@ -504,7 +504,7 @@ export function RatesPageV4() {
         </div>
       </section>
 
-      {/* (Lot S1) Fiche de faits canonique — le détail des deux paliers reste dans le hero ci-dessus (page tarifs). */}
+      {/* (Lot S1) Fiche de faits canonique — le détail des paliers (trois depuis le 19/11/2026) reste dans le hero ci-dessus (page tarifs). */}
       <section className="py-10 bg-white">
         <div className="max-w-3xl mx-auto px-6"><EntityFacts page="tarifs" /></div>
       </section>
@@ -1192,7 +1192,7 @@ export function RatesPageV4() {
                   </p>
 
                   <div className="mb-8">
-                    {/* La Villa : 4 chambres sur 10 à salle d'eau partagée → plancher 1 370 */}
+                    {/* La Villa : 4 chambres sur 10 à salle d'eau partagée → « dès » = palier le plus bas (HOUSES_FROM, stats.ts) */}
                     {house.name === "La Villa" && (
                       <span className="text-[#78716C] mr-1">
                         {language === "en" ? "from" : "dès"}
@@ -1200,7 +1200,7 @@ export function RatesPageV4() {
                     )}
                     <span className="text-4xl font-light text-[#D4A574]">
                       {house.name === "La Villa"
-                        ? (language === "en" ? PRICE_SHARED_EN_NUM : PRICE_SHARED_FR_NUM)
+                        ? (language === "en" ? PRICE_FROM_EN_NUM : PRICE_FROM_FR_NUM)
                         : (language === "en" ? PRICE_EN_NUM : PRICE_FR_NUM)}
                     </span>
                     <span className="text-[#78716C]">

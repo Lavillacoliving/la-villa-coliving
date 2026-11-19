@@ -50,7 +50,8 @@ test('L6.2 : un nœud LodgingBusiness par maison — @id, nom, numberOfRooms, pr
       const fromFacts = eh.amenities[lang].split(' · ').map((x) => x.trim().toLowerCase());
       const first3 = n.amenityFeature.slice(0, 3).map((a) => a.name.toLowerCase());
       assert.deepEqual(first3, fromFacts, `${h.slug} ${lang} : équipements ≠ fiche entité`);
-      if (h.slug === 'lavilla') assert.match(n.priceRange, lang === 'en' ? /^CHF 1,370–1,430\/month$/ : /^1[\u00A0 ]370–1[\u00A0 ]430 CHF\/mois$/);
+      // (13/11/2026) La Villa : du « dès » des maisons (1 290 CHF, chambres 7 et 8) au prix standard.
+      if (h.slug === 'lavilla') assert.match(n.priceRange, lang === 'en' ? /^CHF 1,290–1,430\/month$/ : /^1[\u00A0 ]290–1[\u00A0 ]430 CHF\/mois$/);
       else assert.match(n.priceRange, lang === 'en' ? /^CHF 1,430\/month$/ : /^1[\u00A0 ]430 CHF\/mois$/);
     }
   }

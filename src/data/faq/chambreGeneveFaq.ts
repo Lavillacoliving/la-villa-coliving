@@ -1,6 +1,6 @@
 import type { QAPair } from "@/lib/structuredData";
 import { pickSituations } from "@/data/faq/situationsFaq";
-import { STATS, STATS_DISPLAY, PRICE_CHF_FR, PRICE_CHF_EN, PRICE_SHARED_CHF_FR, PRICE_SHARED_CHF_EN } from "@/data/stats";
+import { STATS, STATS_DISPLAY, PRICE_CHF_FR, PRICE_CHF_EN, PRICE_FROM_CHF_FR, PRICE_FROM_CHF_EN } from "@/data/stats";
 import { priceJustificationFaq } from "@/data/priceFacts";
 
 // FAQ de /chambre-a-louer-geneve — 5 questions du Lot 6 SEO funnel (04/09/2026, sorties de la page le 07/09
@@ -15,7 +15,7 @@ export const chambreGeneveFaq: { fr: QAPair[]; en: QAPair[] } = {
     },
     {
       q: `Combien coûte une chambre meublée près de Genève chez La Villa Coliving ?`,
-      a: `Dès ${PRICE_SHARED_CHF_FR}/mois tout inclus pour une chambre dont la salle d'eau est partagée avec une seule autre chambre, ${PRICE_CHF_FR}/mois avec salle d'eau privative. Le montant est le coût mensuel total : loyer, charges, fibre jusqu'à 8 Gb/s, ménage des communs 3 fois par semaine, espaces communs (piscine, sauna, salle de sport selon la maison) et événements. 0 frais de dossier, 0 frais d'agence, caution de ${STATS.depositMonths} mois de loyer hors charges, payable en 1, 2 ou 3 fois selon ton dossier.`,
+      a: `Dès ${PRICE_FROM_CHF_FR}/mois tout inclus pour une chambre dont la salle d'eau est partagée avec une seule autre chambre, ${PRICE_CHF_FR}/mois avec salle d'eau privative. Le montant est le coût mensuel total : loyer, charges, fibre jusqu'à 8 Gb/s, ménage des communs 3 fois par semaine, espaces communs (piscine, sauna, salle de sport selon la maison) et événements. 0 frais de dossier, 0 frais d'agence, caution de ${STATS.depositMonths} mois de loyer hors charges, payable en 1, 2 ou 3 fois selon ton dossier.`,
     },
     // (Lot L4, D8 — 10/10/2026) FAQ A.3 de justification du prix — texte unique src/data/priceFacts.ts.
     priceJustificationFaq("fr"),
@@ -41,7 +41,7 @@ export const chambreGeneveFaq: { fr: QAPair[]; en: QAPair[] } = {
     },
     {
       q: "How much is a furnished room near Geneva at La Villa Coliving?",
-      a: `From ${PRICE_SHARED_CHF_EN}/month all inclusive for a room whose shower room is shared with one other room, ${PRICE_CHF_EN}/month with a private shower room. The figure is the total monthly cost: rent, bills, fibre up to 8 Gb/s, cleaning of the common areas 3 times a week, shared spaces (pool, sauna, gym depending on the house) and events. No application or agency fee, deposit of ${STATS.depositMonths} months' rent excluding charges, payable in 1, 2 or 3 instalments depending on your application.`,
+      a: `From ${PRICE_FROM_CHF_EN}/month all inclusive for a room whose shower room is shared with one other room, ${PRICE_CHF_EN}/month with a private shower room. The figure is the total monthly cost: rent, bills, fibre up to 8 Gb/s, cleaning of the common areas 3 times a week, shared spaces (pool, sauna, gym depending on the house) and events. No application or agency fee, deposit of ${STATS.depositMonths} months' rent excluding charges, payable in 1, 2 or 3 instalments depending on your application.`,
     },
     priceJustificationFaq("en"),
     {

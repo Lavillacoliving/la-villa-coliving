@@ -107,7 +107,7 @@ export function leaseStartOf(
   return { kind: "within" };
 }
 
-/** Premier mois après la remise (arrondi au franc / à l'euro) : 1 370 → 685, 1 430 → 715 ; 1 470 → 735, 1 530 → 765. */
+/** Premier mois après la remise (arrondi au franc / à l'euro) : 1 290 → 645, 1 370 → 685, 1 430 → 715 ; en euros 1 380 → 690, 1 470 → 735, 1 530 → 765. */
 export function discountedFirstMonth(amount: number): number {
   return Math.round(amount * (100 - OFFER_DISCOUNT_PERCENT) / 100);
 }

@@ -29,7 +29,7 @@ Three areas fit this profile:
 
 Arriving alone also means arriving without a network. A flatshare or a coliving solves both at once: a furnished place from the first night, and people to have dinner with. [Building a network in Geneva](/en/blog/se-faire-reseau-geneve-arriver-seul) has more ideas for the first few weeks.
 
-This is the profile we had in mind for La Villa Coliving: three houses in Ville-la-Grand, Ambilly and Annemasse, 20 min from Geneva Eaux-Vives by Léman Express, door to door, with furnished single rooms at CHF 1,370 to 1,430 a month, all inclusive. The file comes down to three items: a signed employment contract or job offer, an ID, and a deposit of two months' rent excluding bills. No application fee, no agency fee, and the deposit can be paid in 2 or 3 instalments depending on your application.
+This is the profile we had in mind for La Villa Coliving: three houses in Ville-la-Grand, Ambilly and Annemasse, 20 min from Geneva Eaux-Vives by Léman Express, door to door, with furnished single rooms at {{PRIX_FOURCHETTE}} a month, all inclusive. The file comes down to three items: a signed employment contract or job offer, an ID, and a deposit of two months' rent excluding bills. No application fee, no agency fee, and the deposit can be paid in 2 or 3 instalments depending on your application.
 
 ## Profile 2: you have a car and you work on the right bank, in the UN district or at the airport
 
@@ -140,4 +140,4 @@ On the French side, you choose a commute first, then a town. For a job in Eaux-V
 
 ---
 
-👉 **Looking for a place on the French side?** At **La Villa Coliving** (Ville-la-Grand, Ambilly and Annemasse), a fully furnished all-inclusive room costs from **CHF 1,370/month** — utilities, fiber and cleaning included, no application fee. Geneva Eaux-Vives in 7 minutes by Léman Express from Annemasse station — 16 to 17 minutes door to door depending on the house, 25 minutes to the city centre. → [Our houses on the French side](/en/colocation-geneve)
+👉 **Looking for a place on the French side?** At **La Villa Coliving** (Ville-la-Grand, Ambilly and Annemasse), a fully furnished all-inclusive room costs from **{{PRIX_DES}}/month** — utilities, fiber and cleaning included, no application fee. Geneva Eaux-Vives in 7 minutes by Léman Express from Annemasse station — 16 to 17 minutes door to door depending on the house, 25 minutes to the city centre. → [Our houses on the French side](/en/colocation-geneve)

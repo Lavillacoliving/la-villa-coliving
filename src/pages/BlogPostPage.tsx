@@ -14,7 +14,7 @@ import { getIntentBucket } from "@/data/blogIntentBuckets";
 import { BlocOffre } from "@/components/BlocOffre";
 import { markInternalRef } from "@/lib/attribution";
 import { WhatsAppButton } from "@/components/WhatsAppButton";
-import { PRICE_SHARED_CHF_FR, PRICE_SHARED_CHF_EN, STATS_DISPLAY } from "@/data/stats";
+import { PRICE_FROM_CHF_FR, PRICE_FROM_CHF_EN, STATS_DISPLAY } from "@/data/stats";
 import { YmylNotice, YmylPosture, AuthorBox } from "@/components/YmylNotice";
 import { isYmyl } from "@/lib/ymyl";
 import { resolveContentTokens } from "@/lib/contentTokens";
@@ -690,10 +690,10 @@ export function BlogPostPage() {
             {language === "en"
               ? noOffer
                 ? `Three premium coliving houses on the French side, ${STATS_DISPLAY.en.distance}.`
-                : `Three premium coliving houses on the French side, ${STATS_DISPLAY.en.distance}, all-inclusive from ${PRICE_SHARED_CHF_EN}/month.`
+                : `Three premium coliving houses on the French side, ${STATS_DISPLAY.en.distance}, all-inclusive from ${PRICE_FROM_CHF_EN}/month.`
               : noOffer
                 ? `Trois maisons de coliving premium côté France, à ${STATS_DISPLAY.fr.distance}.`
-                : `Trois maisons de coliving premium côté France, à ${STATS_DISPLAY.fr.distance}, tout inclus dès ${PRICE_SHARED_CHF_FR}/mois.`}
+                : `Trois maisons de coliving premium côté France, à ${STATS_DISPLAY.fr.distance}, tout inclus dès ${PRICE_FROM_CHF_FR}/mois.`}
           </p>
           <div className="grid md:grid-cols-3 gap-6">
             {[

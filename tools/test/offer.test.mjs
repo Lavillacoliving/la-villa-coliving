@@ -56,6 +56,9 @@ test('offer.ts : dates, début (15/10 0 h) et fin d\'offre (25/11 inclus, heure 
   assert.equal(O.isOfferActive(Date.parse('2026-11-25T23:30:00+01:00')), true);
   assert.equal(O.isOfferActive(Date.parse('2026-11-26T00:00:00+01:00')), false);
   assert.equal(O.isOfferActive(DURING), true);
+  // (13/11/2026) Palier des chambres 7 et 8 de La Villa : 1 290 CHF → 645 CHF le premier mois (1 380 € → 690 €).
+  assert.equal(O.discountedFirstMonth(1290), 645);
+  assert.equal(O.discountedFirstMonth(1380), 690);
   assert.equal(O.discountedFirstMonth(1370), 685);
   assert.equal(O.discountedFirstMonth(1430), 715);
   assert.equal(O.discountedFirstMonth(1470), 735);

@@ -1,5 +1,5 @@
 import type { QAPair } from "@/lib/structuredData";
-import { STATS, PRICE_CHF_FR, PRICE_CHF_EN, PRICE_SHARED_CHF_FR, PRICE_SHARED_CHF_EN, TRANSIT, aOrAn } from "@/data/stats";
+import { STATS, PRICE_CHF_FR, PRICE_CHF_EN, PRICE_FROM_CHF_FR, PRICE_FROM_CHF_EN, TRANSIT, aOrAn } from "@/data/stats";
 import { GUARANTOR_SENTENCE } from "@/data/entityFacts";
 
 const T = TRANSIT;
@@ -80,12 +80,12 @@ export const situationsFaq: SituationFaq[] = [
     id: "studio-vs-room",
     fr: {
       q: "Studio à Genève ou chambre chez La Villa : qu'est-ce qui revient le moins cher, tout compris ?",
-      a: `Compare le coût total, pas le loyer affiché. Un studio à Genève se loue 1\u00a0200 à 2\u00a0500 CHF par mois hors charges d'après les annonces relevées en 2026, auxquels s'ajoutent charges, internet, meubles et souvent une liste d'attente. Chez nous, une chambre meublée de ${STATS.roomSizeMin} à ${STATS.roomSizeMax} m² coûte dès ${PRICE_SHARED_CHF_FR}/mois (${PRICE_CHF_FR} avec salle d'eau privative), charges, fibre, ménage des communs, piscine, sauna et salle de sport compris, avec ${STATS.livingSpacePerResidentMin} à ${STATS.livingSpacePerResidentMax} m² d'espace de vie par colocataire. Le studio garde un avantage : être seul chez soi. À toi de voir ce que tu achètes.`,
+      a: `Compare le coût total, pas le loyer affiché. Un studio à Genève se loue 1\u00a0200 à 2\u00a0500 CHF par mois hors charges d'après les annonces relevées en 2026, auxquels s'ajoutent charges, internet, meubles et souvent une liste d'attente. Chez nous, une chambre meublée de ${STATS.roomSizeMin} à ${STATS.roomSizeMax} m² coûte dès ${PRICE_FROM_CHF_FR}/mois (${PRICE_CHF_FR} avec salle d'eau privative), charges, fibre, ménage des communs, piscine, sauna et salle de sport compris, avec ${STATS.livingSpacePerResidentMin} à ${STATS.livingSpacePerResidentMax} m² d'espace de vie par colocataire. Le studio garde un avantage : être seul chez soi. À toi de voir ce que tu achètes.`,
       more: { href: "/blog/coliving-colocation-ou-studio-geneve-comparatif", label: "Coliving, colocation ou studio : le comparatif par profil" },
     },
     en: {
       q: "Studio in Geneva or a room with you: which costs less, all included?",
-      a: `Compare the total cost, not the advertised rent. A studio in Geneva rents for 1,200 to 2,500 CHF a month excluding charges based on listings observed in 2026, plus bills, internet, furniture and often a waiting list. With us, a furnished room of ${STATS.roomSizeMin} to ${STATS.roomSizeMax} m² costs from ${PRICE_SHARED_CHF_EN}/month (${PRICE_CHF_EN} with a private shower room), bills, fibre, cleaning of the common areas, pool, sauna and gym included, with ${STATS.livingSpacePerResidentMin} to ${STATS.livingSpacePerResidentMax} m² of living space per flatmate. The studio keeps one advantage: being alone at home. You decide what you're paying for.`,
+      a: `Compare the total cost, not the advertised rent. A studio in Geneva rents for 1,200 to 2,500 CHF a month excluding charges based on listings observed in 2026, plus bills, internet, furniture and often a waiting list. With us, a furnished room of ${STATS.roomSizeMin} to ${STATS.roomSizeMax} m² costs from ${PRICE_FROM_CHF_EN}/month (${PRICE_CHF_EN} with a private shower room), bills, fibre, cleaning of the common areas, pool, sauna and gym included, with ${STATS.livingSpacePerResidentMin} to ${STATS.livingSpacePerResidentMax} m² of living space per flatmate. The studio keeps one advantage: being alone at home. You decide what you're paying for.`,
       more: { href: "/blog/coliving-colocation-ou-studio-geneve-comparatif", label: "Coliving, flatshare or studio: the comparison by profile" },
     },
   },

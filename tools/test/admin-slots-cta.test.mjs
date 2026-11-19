@@ -81,9 +81,12 @@ test('lot B : aucune phrase garant (la formule canonique est déjà au § 7 de d
   }
 });
 
-test('calculs : part du loyer 20-27 % du net (1 370 / 7 000 ; 1 430 / 5 300), écart avec le studio ≈ 500-800 CHF', () => {
-  assert.deepEqual(rentShareOfNet(m), { low: 20, high: 27 });
-  assert.deepEqual(studioPremiumChf(m), { low: 500, high: 800 });
+// (13/11/2026) Le « dès » des maisons passe de 1 370 à 1 290 CHF (chambres 7 et 8 de La Villa) : 20-27 % devient 18-27 % et
+// 500-800 CHF devient 400-800 CHF. Les deux articles (fiscalité, organisations internationales) sont mis à jour par le SQL du
+// lot « prix des chambres 7 et 8 » (scripts/prix-chambres-7-8.edits.mjs), qui lit ces deux fonctions.
+test('calculs : part du loyer 18-27 % du net (1 290 / 7 000 ; 1 430 / 5 300), écart avec le studio ≈ 400-800 CHF', () => {
+  assert.deepEqual(rentShareOfNet(m), { low: 18, high: 27 });
+  assert.deepEqual(studioPremiumChf(m), { low: 400, high: 800 });
 });
 
 test('dropColumn : retire la colonne demandée de chaque ligne, séparateur compris', () => {
