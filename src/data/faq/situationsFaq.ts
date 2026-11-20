@@ -1,8 +1,14 @@
 import type { QAPair } from "@/lib/structuredData";
 import { STATS, PRICE_CHF_FR, PRICE_CHF_EN, PRICE_FROM_CHF_FR, PRICE_FROM_CHF_EN, TRANSIT, aOrAn } from "@/data/stats";
 import { GUARANTOR_SENTENCE } from "@/data/entityFacts";
+import { APPART } from "@/data/appart";
 
 const T = TRANSIT;
+// (L'Appart, Lot 4, étape E5 — textes du 13/11/2026, « à confirmer ») Trois réponses nomment aussi L'Appart : disponibilités
+// (« des 3 maisons et de L'Appart »), studio ou chambre (son prix, dans sa phrase), coliving ou colocation (« les deux », un nom
+// sur chacune). Nombres de L'Appart lus dans APPART ; jamais un de ses prix dans la phrase de la piscine (règle V2).
+const AP = APPART.price;
+const STD_M2 = APPART.rooms.standard.surfaceM2;
 
 /**
  * Lot C2 « FAQ offensive » (brief Conquête IA du 04/09/2026, plan validé par Jérôme) : les 10 questions
@@ -40,12 +46,12 @@ export const situationsFaq: SituationFaq[] = [
     id: "job-in-a-month",
     fr: {
       q: "Je commence un job à Genève dans un mois : je peux avoir une chambre en 30 jours ?",
-      a: `Oui, si une chambre est libre à ta date : candidature en ligne en 2 minutes, réponse sous ${H} h, visite sur place ou en visio, bail signé en ligne. Le délai médian entre la candidature et l'emménagement chez nous est de 30 jours (données 2026), et 72 h suffisent dès ton premier contact quand une chambre est disponible. Les disponibilités réelles des ${STATS.totalHouses} maisons sont affichées en temps réel sur la page des chambres disponibles ; s'il n'y a rien à ta date, la liste d'attente te prévient dès qu'une chambre se libère.`,
+      a: `Oui, si une chambre est libre à ta date : candidature en ligne en 2 minutes, réponse sous ${H} h, visite sur place ou en visio, bail signé en ligne. Le délai médian entre la candidature et l'emménagement chez nous est de 30 jours (données 2026), et 72 h suffisent dès ton premier contact quand une chambre est disponible. Les disponibilités réelles des ${STATS.totalHouses} maisons et de ${APPART.name} sont affichées en temps réel sur la page des chambres disponibles ; s'il n'y a rien à ta date, la liste d'attente te prévient dès qu'une chambre se libère.`,
       more: { href: "/chambres-disponibles", label: "Voir les chambres disponibles" },
     },
     en: {
       q: "I start a job in Geneva in a month: can I get a room with you within 30 days?",
-      a: `Yes, if a room is free on your date: two-minute online application, reply within ${H} h, visit on site or by video, lease signed online. The median time between application and move-in at La Villa is 30 days (2026 data), and 72 h from your first contact is enough when a room is available. Live availability for the ${STATS.totalHouses} houses is shown on the available rooms page; if nothing matches your date, the waiting list alerts you as soon as a room frees up.`,
+      a: `Yes, if a room is free on your date: two-minute online application, reply within ${H} h, visit on site or by video, lease signed online. The median time between application and move-in at La Villa is 30 days (2026 data), and 72 h from your first contact is enough when a room is available. Live availability for the ${STATS.totalHouses} houses and ${APPART.name} is shown on the available rooms page; if nothing matches your date, the waiting list alerts you as soon as a room frees up.`,
       more: { href: "/chambres-disponibles", label: "See available rooms" },
     },
   },
@@ -80,12 +86,12 @@ export const situationsFaq: SituationFaq[] = [
     id: "studio-vs-room",
     fr: {
       q: "Studio à Genève ou chambre chez La Villa : qu'est-ce qui revient le moins cher, tout compris ?",
-      a: `Compare le coût total, pas le loyer affiché. Un studio à Genève se loue 1\u00a0200 à 2\u00a0500 CHF par mois hors charges d'après les annonces relevées en 2026, auxquels s'ajoutent charges, internet, meubles et souvent une liste d'attente. Chez nous, une chambre meublée de ${STATS.roomSizeMin} à ${STATS.roomSizeMax} m² coûte dès ${PRICE_FROM_CHF_FR}/mois (${PRICE_CHF_FR} avec salle d'eau privative), charges, fibre, ménage des communs, piscine, sauna et salle de sport compris, avec ${STATS.livingSpacePerResidentMin} à ${STATS.livingSpacePerResidentMax} m² d'espace de vie par colocataire. Le studio garde un avantage : être seul chez soi. À toi de voir ce que tu achètes.`,
+      a: `Compare le coût total, pas le loyer affiché. Un studio à Genève se loue 1\u00a0200 à 2\u00a0500 CHF par mois hors charges d'après les annonces relevées en 2026, auxquels s'ajoutent charges, internet, meubles et souvent une liste d'attente. Dans nos maisons, une chambre meublée de ${STATS.roomSizeMin} à ${STATS.roomSizeMax} m² coûte dès ${PRICE_FROM_CHF_FR}/mois (${PRICE_CHF_FR} avec salle d'eau privative), charges, fibre, ménage des communs, piscine, sauna et salle de sport compris, avec ${STATS.livingSpacePerResidentMin} à ${STATS.livingSpacePerResidentMax} m² d'espace de vie par colocataire. Et à ${APPART.name}, notre colocation à ${APPART.commune}, une chambre de ${STD_M2} m² coûte ${AP.room.fr.chf} par mois, charges, fibre et streaming compris. Le studio garde un avantage : être seul chez soi. À toi de voir ce que tu achètes.`,
       more: { href: "/blog/coliving-colocation-ou-studio-geneve-comparatif", label: "Coliving, colocation ou studio : le comparatif par profil" },
     },
     en: {
       q: "Studio in Geneva or a room with you: which costs less, all included?",
-      a: `Compare the total cost, not the advertised rent. A studio in Geneva rents for 1,200 to 2,500 CHF a month excluding charges based on listings observed in 2026, plus bills, internet, furniture and often a waiting list. With us, a furnished room of ${STATS.roomSizeMin} to ${STATS.roomSizeMax} m² costs from ${PRICE_FROM_CHF_EN}/month (${PRICE_CHF_EN} with a private shower room), bills, fibre, cleaning of the common areas, pool, sauna and gym included, with ${STATS.livingSpacePerResidentMin} to ${STATS.livingSpacePerResidentMax} m² of living space per flatmate. The studio keeps one advantage: being alone at home. You decide what you're paying for.`,
+      a: `Compare the total cost, not the advertised rent. A studio in Geneva rents for 1,200 to 2,500 CHF a month excluding charges based on listings observed in 2026, plus bills, internet, furniture and often a waiting list. In our houses, a furnished room of ${STATS.roomSizeMin} to ${STATS.roomSizeMax} m² costs from ${PRICE_FROM_CHF_EN}/month (${PRICE_CHF_EN} with a private shower room), bills, fibre, cleaning of the common areas, pool, sauna and gym included, with ${STATS.livingSpacePerResidentMin} to ${STATS.livingSpacePerResidentMax} m² of living space per flatmate. And at ${APPART.name}, our flatshare in ${APPART.commune}, a ${STD_M2} m² room costs ${AP.room.en.chf} a month, with bills, fibre and streaming included. The studio keeps one advantage: being alone at home. You decide what you're paying for.`,
       more: { href: "/blog/coliving-colocation-ou-studio-geneve-comparatif", label: "Coliving, flatshare or studio: the comparison by profile" },
     },
   },
@@ -148,12 +154,12 @@ export const situationsFaq: SituationFaq[] = [
     id: "coliving-or-flatshare",
     fr: {
       q: "La Villa, c'est un coliving ou une colocation ?",
-      a: `Les deux, selon le mot que tu utilises : tu vis en colocation, dans une maison partagée avec 7 à 12 colocataires, mais tout est déjà organisé comme dans un coliving. Chambre meublée à toi, bail meublé à ton nom, un seul loyer qui inclut charges, fibre, ménage des communs ${STATS.cleaningPerWeek} fois par semaine, piscine, sauna, salle de sport et événements ; ${STATS.totalRooms} chambres dans ${STATS.totalHouses} maisons, gérées en direct par les fondateurs, sans agence. Ce que tu n'as pas à faire : chercher des colocataires, répartir les factures, meubler.`,
+      a: `Les deux. Nos ${STATS.totalHouses} maisons sont des colivings : tu vis dans une maison partagée avec ${STATS.minResidentsPerHouse} à ${STATS.maxResidentsPerHouse} colocataires, avec un seul loyer qui inclut charges, fibre, ménage des communs ${STATS.cleaningPerWeek} fois par semaine, piscine, sauna, salle de sport et événements. ${APPART.name} est une colocation : ${APPART.rooms.total} chambres dans un appartement à ${APPART.commune}, avec les charges, la fibre, le streaming et le ménage des communs dans le loyer. Dans les deux cas : une chambre meublée à toi, un bail meublé à ton nom, une gestion en direct par les fondateurs, sans agence. Ce que tu n'as pas à faire : chercher des colocataires, répartir les factures, meubler.`,
       more: { href: "/blog/coliving-colocation-ou-studio-geneve-comparatif", label: "Coliving ou colocation : le comparatif par profil" },
     },
     en: {
       q: "Are you a coliving or a flatshare?",
-      a: `Both, depending on the word you use: you live in a flatshare, in a house shared with 7 to 12 flatmates, but everything is already organised the way a coliving is. A furnished room of your own, a furnished lease in your name, one rent that includes bills, fibre, cleaning of the common areas ${STATS.cleaningPerWeek} times a week, pool, sauna, gym and events; ${STATS.totalRooms} rooms in ${STATS.totalHouses} houses, run directly by the founders, no agency. What you don't have to do: find flatmates, split bills, buy furniture.`,
+      a: `Both. Our ${STATS.totalHouses} houses are colivings: you live in a house shared with ${STATS.minResidentsPerHouse} to ${STATS.maxResidentsPerHouse} flatmates, with one rent that includes bills, fibre, cleaning of the common areas ${STATS.cleaningPerWeek} times a week, pool, sauna, gym and events. ${APPART.name} is a flatshare: ${APPART.rooms.total} rooms in a flat in ${APPART.commune}, with bills, fibre, streaming and cleaning of the shared areas in the rent. Either way: a furnished room of your own, a furnished lease in your name, run directly by the founders, no agency. What you don't have to do: find flatmates, split bills, buy furniture.`,
       more: { href: "/blog/coliving-colocation-ou-studio-geneve-comparatif", label: "Coliving or flatshare: the comparison by profile" },
     },
   },

@@ -1,5 +1,5 @@
 // Ligne « tout compris » des cartes chambres (décisions de Jérôme des 12 et 13/11/2026).
-// 1. src/data/allInclusive.ts (aucun import à l'exécution, chargé tel quel par Node) : textes validés, parité FR/EN,
+// 1. src/data/allInclusive.ts (seul import : src/data/places.ts ; chargé tel quel par Node) : textes validés, parité FR/EN,
 //    sélection de la gamme, ce que chaque variante de carte affiche, lien vers /tarifs, événement GA4.
 // 2. Deux gammes, jamais fondues : aucune ligne de L'Appart ne parle de piscine, de sauna ni de salle de sport, et
 //    aucune carte de L'Appart ne reçoit la ligne des maisons ni le lien. Aucune carte L'Appart n'existe encore sur le
@@ -9,6 +9,7 @@ import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync, readdirSync } from 'node:fs';
 import * as AI from '../../src/data/allInclusive.ts';
+import * as P from '../../src/data/places.ts';
 import { localizePath } from '../../src/lib/localizedPath.ts';
 import { forbiddenIssues, visibleText } from '../../scripts/check-entity-facts.mjs';
 
@@ -153,13 +154,18 @@ test('gamme : les trois maisons, L\'Appart sous son nom public, rien pour un lie
   }
 });
 
-test('gamme : chaque lieu du type HouseKey (src/lib/availability.ts) a une gamme', () => {
-  const m = /export type HouseKey = ([^;]+);/.exec(read('src/lib/availability.ts'));
-  assert.ok(m, 'type HouseKey introuvable');
-  const keys = [...m[1].matchAll(/"([^"]+)"/g)].map((x) => x[1]);
-  assert.ok(keys.length >= 3, `HouseKey : ${keys.join(', ')}`);
-  for (const key of keys) assert.notEqual(AI.gammeOf(key), null, `« ${key} » n'a pas de gamme`);
-  for (const slug of MAISONS) assert.ok(keys.includes(slug), slug);
+// (L'Appart, 12/11/2026) Les clés et les gammes vivent dans src/data/places.ts ; HouseKey (src/lib/availability.ts) est
+// l'alias de MaisonKey. allInclusive.ts lit la table GAMME : plus de seconde table à tenir synchronisée.
+test('gamme : chaque lieu public (src/data/places.ts) a une gamme, celle de GAMME ; HouseKey = les 3 maisons', () => {
+  assert.match(read('src/lib/availability.ts'), /export type HouseKey = MaisonKey;/);
+  assert.deepEqual([...P.MAISON_KEYS], MAISONS);
+  assert.ok(P.PLACE_KEYS.length >= 4, P.PLACE_KEYS.join(', '));
+  for (const key of P.PLACE_KEYS) {
+    assert.notEqual(AI.gammeOf(key), null, `« ${key} » n'a pas de gamme`);
+    assert.equal(AI.gammeOf(key), P.GAMME[key], key);
+  }
+  assert.equal(AI.APPART_HOUSE_SLUG, P.APPART_KEY);
+  assert.deepEqual(Object.keys(AI.ALL_INCLUSIVE_LINE).sort(), [...new Set(Object.values(P.GAMME))].sort());
 });
 
 test('cartes des maisons : ligne longue et lien sur featured et default, ligne courte sans lien sur compact', () => {
@@ -454,6 +460,18 @@ test('pages maisons : la carte ne reçoit ni ligne ni lien (showInclusions={fals
   assert.doesNotMatch(cards[0], /onPriceWhyClick/);
 });
 
+test('page de L\'Appart (étape E3) : ses cartes ne reçoivent ni ligne ni lien (showInclusions={false}), comme les pages maisons', () => {
+  // Ses chambres (pas de ligne « tout compris » sur la page du lieu, D4 du Lot 5) et, quand L'Appart est complet, les chambres des
+  // maisons (leur ligne nommerait piscine et sauna sur une page de L'Appart : garde de gamme).
+  const src = read('src/pages/LAppartPage.tsx');
+  const cards = [...src.matchAll(/<RoomCard\b[\s\S]*?\/>/g)].map((m) => m[0]);
+  assert.equal(cards.length, 2, 'ses chambres, et les chambres des maisons quand L\'Appart est complet');
+  for (const card of cards) {
+    assert.match(card, /\bshowInclusions=\{false\}/);
+    assert.doesNotMatch(card, /onPriceWhyClick/);
+  }
+});
+
 test('pages à cartes : le lien est mesuré partout où il s\'affiche, avec un nom de page propre', () => {
   const pages = {
     'src/pages/ChambresDisponiblesPage.tsx': 'chambres_disponibles',
@@ -474,9 +492,10 @@ test('pages à cartes : le lien est mesuré partout où il s\'affiche, avec un n
       assert.doesNotMatch(card, /showInclusions/, file);
     }
   }
-  // Inventaire : tout fichier qui monte une carte chambre est soit mesuré ci-dessus, soit une page maison (sans ligne).
+  // Inventaire : tout fichier qui monte une carte chambre est soit mesuré ci-dessus, soit une page de lieu (sans ligne : les
+  // pages maisons et, depuis l'étape E3 du 13/11/2026, la page de L'Appart).
   // Une nouvelle page à cartes doit choisir : ligne et lien mesurés, ou `showInclusions={false}` — puis s'ajouter ici.
-  const known = [...Object.keys(pages), 'src/pages/HouseDetailPage.tsx'].sort();
+  const known = [...Object.keys(pages), 'src/pages/HouseDetailPage.tsx', 'src/pages/LAppartPage.tsx'].sort();
   const users = sourceFiles('src').filter((file) => /<RoomCard\b/.test(read(file))).sort();
   assert.deepEqual(users, known);
 });

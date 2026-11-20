@@ -15,39 +15,59 @@ import {
   Calendar,
   Sparkles,
 } from "lucide-react";
-import { PRICE_CHF_FR, PRICE_CHF_EN, TRANSIT, aOrAn } from "@/data/stats";
-import { ENTITY_HOUSES } from "@/data/entityFacts";
+import { PRICE_CHF_FR, PRICE_CHF_EN, ROOMS_BY_HOUSE, TRANSIT, aOrAn } from "@/data/stats";
+import { ENTITY_FACTS, ENTITY_HOUSES } from "@/data/entityFacts";
 import { communeSentences } from "@/data/answerSlots";
 import { OuChercher } from "@/components/OuChercher";
-import { HOUSES } from "@/data/houses";
+import { HOUSES, placeCard } from "@/data/houses";
+import { APPART } from "@/data/appart";
+import type { PlaceKey } from "@/data/places";
 
 // (Lot L1 « ingénierie des créneaux », 10/2026) Page scopée Lodge : la valeur de LA maison (D1 : « pages maisons :
 // la valeur de la maison »), jamais le « 20 min » générique ; minutes depuis TRANSIT (D1-L1, relevés du 08/10/2026).
 const LODGE = TRANSIT.byHouse.lelodge;
+// (L'Appart, E4) Trajets de L'Appart : APPART.transit (relevé du 12/11/2026), jamais TRANSIT.byHouse (fourchettes des maisons).
+const APPART_TRANSIT = APPART.transit;
+// Carte de L'Appart (nom, vignette) : jamais la description « piscine · jardin » d'une maison (src/data/houses.ts).
+const APPART_CARD = placeCard(APPART.key);
+// État embarqué de la page : les lignes du Lodge ET de L'Appart (rien de plus tant que la vue n'a pas L'Appart).
+const EMBED_PLACES: readonly PlaceKey[] = ["lelodge", APPART.key];
 import { RoomCard } from "@/components/RoomCard";
 import { trackPriceWhyClick, type PriceWhyVariant } from "@/data/allInclusive";
 import { RoomsEmbed } from "@/components/RoomsEmbed";
 import { HouseAvailabilityLine } from "@/components/HouseAvailabilityLine";
-import { useHouseRooms, splitRooms, type PublicRoom } from "@/lib/availability";
+import { AppartRooms } from "@/components/appart/AppartRooms";
+import { AppartTeaser } from "@/components/appart/AppartTeaser";
+import { useHouseRooms, splitRooms, type PlaceRoom } from "@/lib/availability";
 
 
+/**
+ * (L'Appart, étape E4 — P1 et décision n° 31, à confirmer) Page d'intention Annemasse : L'Appart ouvre (titre, chapeau, meta
+ * ouverte par son « dès »), puis le Lodge. En tête, après le haut de page : le bloc statique de L'Appart (<AppartTeaser/>, les
+ * deux états de la base) et, quand la vue a ses chambres (état B), leur section à part (<AppartRooms/>), avant l'inventaire du
+ * Lodge — dont le titre, le compteur et la liste d'attente ne changent pas.
+ */
 export function ChambreLouerAnnemassePage() {
   const { language } = useLanguage();
   // (Lot 6 SEO funnel, addendum 04/09) Page re-scopée : l'inventaire du Lodge uniquement (Annemasse),
   // les deux autres maisons vivent sur /chambre-a-louer-geneve. Même store que les pages maisons.
   const lodgeRooms = useHouseRooms("lelodge");
   const { candidates, occupied } = splitRooms(lodgeRooms.rooms);
+  // (L'Appart, E4) Ses chambres, à part ; `known` = la vue a des lignes de L'Appart (état B).
+  const appart = useHouseRooms(APPART.key);
+  const { candidates: appartCandidates } = splitRooms(appart.rooms);
   const L: "fr" | "en" = language === "en" ? "en" : "fr";
-  const trackRoomCta = (room: PublicRoom) => {
+  // (L'Appart, E4) Mesure commune aux cartes du Lodge et de L'Appart : `house` = la clé PUBLIQUE du lieu de la carte.
+  const trackRoomCta = (room: PlaceRoom) => {
     try {
       (window as unknown as { gtag?: (...a: unknown[]) => void }).gtag?.("event", "cta_click", {
-        cta_position: "chambre_annemasse_room_card", cta_target: "/candidature", house: "lelodge",
+        cta_position: "chambre_annemasse_room_card", cta_target: "/candidature", house: room.house_slug,
         room_id: `chambre-${room.room_number}`, language,
       });
     } catch { /* noop */ }
   };
   // (13/11/2026) Lien « Ce que comprend le prix » des cartes : événement price_why_click, distinct de cta_click.
-  const trackPriceWhy = (room: PublicRoom, variant: PriceWhyVariant) =>
+  const trackPriceWhy = (room: PlaceRoom, variant: PriceWhyVariant) =>
     trackPriceWhyClick({ house: room.house_slug, roomNumber: room.room_number, variant, page: "chambre_a_louer_annemasse", language: L });
 
 
@@ -58,9 +78,9 @@ export function ChambreLouerAnnemassePage() {
         title={language === "en" ? "Rooms for rent in Annemasse, all inclusive" : "Chambre à louer à Annemasse, tout inclus"}
         description={
           language === "en"
-            // (D1, 09/10/2026) Valeur du Lodge, qualifiée (Genève-Eaux-Vives, Léman Express) ; meta ≤ 155 caractères.
-            ? `Furnished rooms to rent in Annemasse: the Lodge's 12 rooms, ${PRICE_CHF_EN}/month all inclusive, Geneva Eaux-Vives in ${LODGE.eauxVivesDoorToDoorMin} min door to door by Léman Express.`
-            : `Chambre meublée à louer à Annemasse : les 12 chambres du Lodge, ${PRICE_CHF_FR}/mois tout inclus, Genève-Eaux-Vives en ${LODGE.eauxVivesDoorToDoorMin} min porte-à-porte en Léman Express.`
+            // (L'Appart, E4, S10.7) Meta ouverte par le « dès » de L'Appart (front CONQUÊTE), puis le Lodge ; ≤ 155 caractères.
+            ? `Furnished rooms to rent in Annemasse from ${APPART.price.from.en.chf}/month: ${APPART.name}'s ${APPART.rooms.total} rooms, near the station, and the Lodge's ${ROOMS_BY_HOUSE.lelodge} rooms, ${PRICE_CHF_EN}/month all inclusive.`
+            : `Chambre meublée à louer à Annemasse dès ${APPART.price.from.fr.chf}/mois : les ${APPART.rooms.total} chambres de ${APPART.name}, près de la gare, et les ${ROOMS_BY_HOUSE.lelodge} du Lodge, ${PRICE_CHF_FR}/mois tout inclus.`
         }
         url="https://www.lavillacoliving.com/chambre-a-louer-annemasse"
         image="https://www.lavillacoliving.com/images/le lodge/rooms/la villa coliving le lodge-78.webp"
@@ -69,21 +89,22 @@ export function ChambreLouerAnnemassePage() {
       {/* ===== HERO ===== */}
       <section className="relative py-24 lg:py-32 bg-gradient-to-b from-white to-[#FAF9F6]">
         <div className="max-w-5xl mx-auto px-6 text-center">
+          {/* (L'Appart, E4, S10.8) La page des deux adresses d'Annemasse, L'Appart devant (P1) ; chaque gamme dans sa phrase. */}
           <span className="text-xs text-[#D4A574] uppercase tracking-[0.3em] mb-4 block font-medium">
-            {language === "en" ? "Furnished rooms · Le Lodge, Annemasse 74100" : "Chambres meublées · Le Lodge, Annemasse 74100"}
+            {language === "en" ? `Furnished rooms · ${APPART.name} and Le Lodge, Annemasse 74100` : `Chambres meublées · ${APPART.name} et Le Lodge, Annemasse 74100`}
           </span>
           <h1
             className="text-4xl md:text-6xl font-light text-[#1C1917] mb-6 leading-tight"
             style={{ fontFamily: '"DM Serif Display", serif' }}
           >
             {language === "en"
-              ? "Rooms to rent in Annemasse: the Lodge's 12 furnished rooms, all inclusive"
-              : "Chambres à louer à Annemasse : les 12 chambres du Lodge, meublées et tout inclus"}
+              ? `Rooms to rent in Annemasse: ${APPART.name}'s ${APPART.rooms.total} rooms and the Lodge's ${ROOMS_BY_HOUSE.lelodge} rooms`
+              : `Chambres à louer à Annemasse : les ${APPART.rooms.total} chambres de ${APPART.name} et les ${ROOMS_BY_HOUSE.lelodge} chambres du Lodge`}
           </h1>
           <p className="text-lg md:text-xl text-[#57534E] max-w-3xl mx-auto leading-relaxed mb-10 font-medium">
             {language === "en"
-              ? `12 furnished rooms with private shower room at the Lodge, in Annemasse Romagny, ${PRICE_CHF_EN}/month all inclusive. Annemasse station is ${aOrAn(LODGE.stationWalkMin)} ${LODGE.stationWalkMin}-minute walk, then the Léman Express reaches Geneva Eaux-Vives in ${TRANSIT.trainEauxVivesMin} minutes: ${LODGE.eauxVivesDoorToDoorMin} minutes door to door. Renting a room made simpler than a furnished studio: bed, desk, fibre, bills and cleaning included, and a whole house to live in.`
-              : `12 chambres meublées avec salle d'eau privative au Lodge, à Annemasse Romagny, ${PRICE_CHF_FR}/mois tout inclus. La gare d'Annemasse est à ${LODGE.stationWalkMin} min à pied, puis le Léman Express rejoint Genève-Eaux-Vives en ${TRANSIT.trainEauxVivesMin} min : ${LODGE.eauxVivesDoorToDoorMin} min porte-à-porte. Une location de chambre plus simple qu'un studio meublé : lit, bureau, fibre, charges et ménage compris, et une maison entière pour vivre.`}
+              ? `At ${APPART.name}, our flatshare near the station: ${APPART.rooms.total} furnished rooms from ${APPART.price.from.en.chf}/month, with bills, fibre, streaming and cleaning of the shared areas included, ${aOrAn(APPART_TRANSIT.stationWalkMin)} ${APPART_TRANSIT.stationWalkMin}-minute walk from ${APPART.commune} station — Geneva Eaux-Vives in ${APPART_TRANSIT.eauxVivesDoorToDoorMin} minutes door to door. At the Lodge, in Annemasse Romagny: ${ROOMS_BY_HOUSE.lelodge} furnished rooms with private shower room, ${PRICE_CHF_EN}/month all inclusive. Annemasse station is ${aOrAn(LODGE.stationWalkMin)} ${LODGE.stationWalkMin}-minute walk, then the Léman Express reaches Geneva Eaux-Vives in ${TRANSIT.trainEauxVivesMin} minutes: ${LODGE.eauxVivesDoorToDoorMin} minutes door to door. Either way, renting a room made simpler than a furnished studio: bed, desk, fibre and bills included.`
+              : `À ${APPART.name}, notre colocation du quartier de la gare : ${APPART.rooms.total} chambres meublées dès ${APPART.price.from.fr.chf}/mois, charges, fibre, streaming et ménage des communs compris, à ${APPART_TRANSIT.stationWalkMin} min à pied de la gare d'${APPART.commune} — Genève-Eaux-Vives en ${APPART_TRANSIT.eauxVivesDoorToDoorMin} min porte-à-porte. Au Lodge, à Annemasse Romagny : ${ROOMS_BY_HOUSE.lelodge} chambres meublées avec salle d'eau privative, ${PRICE_CHF_FR}/mois tout inclus. La gare d'Annemasse est à ${LODGE.stationWalkMin} min à pied, puis le Léman Express rejoint Genève-Eaux-Vives en ${TRANSIT.trainEauxVivesMin} min : ${LODGE.eauxVivesDoorToDoorMin} min porte-à-porte. Dans les deux cas, une location de chambre plus simple qu'un studio meublé : lit, bureau, fibre et charges compris.`}
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <LocalizedLink
@@ -100,6 +121,24 @@ export function ChambreLouerAnnemassePage() {
               {language === "en" ? "See pricing" : "Voir les tarifs"}
             </LocalizedLink>
           </div>
+        </div>
+      </section>
+
+      {/* (L'Appart, étape E4 — S10.9, P1) En tête, avant le Lodge : le bloc statique de L'Appart (texte propre à cette page,
+          jamais une phrase canonique ; les deux états de la base), puis, quand la vue a ses chambres (état B), leur section
+          à part — cartes standard avec le badge de gamme, liste d'attente de L'Appart. Aucun repli ici : le bloc le porte. */}
+      <section className="py-16 lg:py-20 bg-white">
+        <div className="max-w-6xl mx-auto px-6">
+          <AppartTeaser page="/chambre-a-louer-annemasse" />
+          <AppartRooms known={appart.known} full={appartCandidates.length === 0} page="chambre_a_louer_annemasse" headingLevel={3} className="mt-12">
+            {appartCandidates.length > 0 && (
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {appartCandidates.map((room) => (
+                  <RoomCard key={`${room.house_slug}:${room.room_number}`} house={room.house_slug} houseName={APPART_CARD.label} room={room} fallbackImage={APPART_CARD.img} onCtaClick={trackRoomCta} onPriceWhyClick={trackPriceWhy} showGammeBadge />
+                ))}
+              </div>
+            )}
+          </AppartRooms>
         </div>
       </section>
 
@@ -358,10 +397,11 @@ export function ChambreLouerAnnemassePage() {
               ? "Check current room availability"
               : "Voir les chambres disponibles maintenant"}
           </h2>
+          {/* (L'Appart, E4, S10.9) Les chambres de la marque (33 : ENTITY_FACTS.brand), plus un nombre en dur. */}
           <p className="text-lg text-white/80 mb-10 leading-relaxed">
             {language === "en"
-              ? "Availability changes every week across our 29 rooms. Fill the form, we get back within 48h with the rooms that match your move-in date and profile."
-              : "Les disponibilités évoluent chaque semaine sur nos 29 chambres. Remplis le formulaire, on revient sous 48h avec les chambres qui matchent ta date d'emménagement et ton profil."}
+              ? `Availability changes every week across our ${ENTITY_FACTS.brand.totalRooms} rooms. Fill the form, we get back within 48h with the rooms that match your move-in date and profile.`
+              : `Les disponibilités évoluent chaque semaine sur nos ${ENTITY_FACTS.brand.totalRooms} chambres. Remplis le formulaire, on revient sous 48h avec les chambres qui matchent ta date d'emménagement et ton profil.`}
           </p>
           <LocalizedLink
             to="/candidature"
@@ -414,8 +454,8 @@ export function ChambreLouerAnnemassePage() {
         </div>
       </section>
       <WhatsAppButton context={language === "en" ? "Rooms for rent Annemasse" : "Chambre à louer Annemasse"} />
-      {/* (Lot 6) État chambres du Lodge embarqué au prérendu — instance unique par page. */}
-      <RoomsEmbed house="lelodge" />
+      {/* (Lot 6) État chambres du Lodge embarqué au prérendu — instance unique par page. (L'Appart, E4) + celles de L'Appart. */}
+      <RoomsEmbed places={EMBED_PLACES} />
     </main>
   );
 }

@@ -61,6 +61,9 @@ function walk(dir, acc = []) {
     try {
       const buf = fs.readFileSync(src);
       await sharp(buf)
+        // Apply the EXIF orientation to the pixels first (phone photos): the tag is dropped with the rest of the
+        // metadata, so without this a portrait shot comes out lying on its side.
+        .rotate()
         // Cap the LONGEST side to MAX_WIDTH (fit inside the box) so tall portraits
         // (e.g. 1920x2560) are also downscaled, not just wide landscapes.
         .resize({ width: MAX_WIDTH, height: MAX_WIDTH, fit: 'inside', withoutEnlargement: true })

@@ -22,6 +22,7 @@ import { LocalizedLink } from "@/components/LocalizedLink";
 import { SEO } from "@/components/SEO";
 import { FaqSection } from "@/components/FaqSection";
 import { servicesFaq } from "@/data/faq/servicesFaq";
+import { APPART } from "@/data/appart";
 
 export function ServicesPageV4() {
   const { t, language } = useLanguage();
@@ -312,6 +313,12 @@ export function ServicesPageV4() {
                 ? "Everything you need"
                 : "Tout ce dont tu as besoin"}
             </h2>
+            {/* (L'Appart, Lot 4, étape E5 — texte du 13/11/2026 « à confirmer ») Ces services sont ceux des maisons ; ce que comprend L'Appart. */}
+            <p className="mt-4 text-[#57534E] max-w-2xl mx-auto leading-relaxed">
+              {language === "en"
+                ? `These services are those of our ${STATS.totalHouses} coliving houses. At ${APPART.name}, our flatshare in ${APPART.commune}, the rent covers bills, fibre, streaming and cleaning of the shared areas once a week, plus access to the yoga and fitness classes held at the houses.`
+                : `Ces services sont ceux de nos ${STATS.totalHouses} maisons de coliving. À ${APPART.name}, notre colocation à ${APPART.commune}, le loyer comprend les charges, la fibre, le streaming et le ménage des communs une fois par semaine, plus l'accès aux cours de yoga et de sport des maisons.`}
+            </p>
           </div>
 
           {serviceCategories.map((category, catIndex) => (

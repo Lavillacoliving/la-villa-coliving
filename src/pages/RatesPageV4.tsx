@@ -13,7 +13,7 @@ import { nextMonthValue, useRenderMonth } from "@/lib/renderMonth";
 import { FaqSection } from "@/components/FaqSection";
 import { tarifsFaq } from "@/data/faq/tarifsFaq";
 import { buildBreadcrumbSchema, buildRoomsAggregateOfferSchema, homeUrl } from "@/lib/structuredData";
-import { STATS, STATS_SHARED_BATH, HOUSE_SURFACES, PRICE_FR_NUM, PRICE_EN_NUM, PRICE_CHF_FR, PRICE_CHF_EN, PRICE_FROM_FR_NUM, PRICE_FROM_EN_NUM, PRICE_FROM_CHF_FR, PRICE_FROM_CHF_EN, CONTRACT_EUR, EUR_STANDARD_FR_NUM, EUR_FROM_FR_NUM, EUR_STANDARD_EN_NUM, EUR_FROM_EN_NUM, MARKET_ROOM_EUR, thousands, MARKET_COMPARISON, sharedBathTiersText } from "@/data/stats";
+import { STATS, STATS_SHARED_BATH, SHARED_BATH_TIERS, HOUSE_SURFACES, PRICE_FR_NUM, PRICE_EN_NUM, PRICE_CHF_FR, PRICE_CHF_EN, PRICE_FROM_FR_NUM, PRICE_FROM_EN_NUM, PRICE_FROM_CHF_FR, PRICE_FROM_CHF_EN, CONTRACT_EUR, EUR_STANDARD_FR_NUM, EUR_FROM_FR_NUM, EUR_STANDARD_EN_NUM, EUR_FROM_EN_NUM, MARKET_ROOM_EUR, thousands, MARKET_COMPARISON, sharedBathTiersText } from "@/data/stats";
 import { PRICE_KEY_SENTENCE } from "@/data/priceFacts";
 import {
   MONTHLY_SAVINGS_CHF,
@@ -22,6 +22,71 @@ import {
 } from "@/data/pricingComparison";
 import { PRICE_INCLUDES_ANCHOR } from "@/data/allInclusive";
 import { mirrorPath } from "@/lib/localizedPath";
+import { APPART } from "@/data/appart";
+import { AppartTeaser } from "@/components/appart/AppartTeaser";
+
+/**
+ * (L'Appart, Lot 4, étape E5 — § 3.3 du brief, textes du 13/11/2026 « à confirmer ») /tarifs détaille les DEUX gammes : une ligne
+ * sous le prix d'appel du haut de page (lien vers l'ancre #lappart), l'échelle de tous les prix chambre par chambre après la fiche,
+ * puis le bloc statique de L'Appart (#lappart) avant l'argumentaire et la grille des services, qui restent ceux des maisons.
+ * Tous les nombres viennent des sources (STATS, CONTRACT_EUR, SHARED_BATH_TIERS, APPART) ; jamais un prix de L'Appart dans une
+ * phrase ou une ligne de tableau qui nomme piscine, sauna ou salle de sport (règle V2, garde check:facts).
+ */
+const APPART_ANCHOR = "lappart";
+const AP = APPART.price;
+const A_STD = APPART.rooms.standard;
+const A_SUITE = APPART.rooms.suite;
+const APPART_HIGH = AP.room.chf >= AP.suite.chf ? AP.room : AP.suite;
+const A_WORD_EN: Record<number, string> = { 2: "two", 3: "three", 4: "four" };
+type ScaleRow = { range: string; rooms: string; bath: string; chf: string; eur: string };
+/** L'échelle des prix, du plus cher au moins cher : chambres à salle d'eau privative, paliers de La Villa, suite et chambres de L'Appart. */
+function priceScale(lang: "fr" | "en"): { header: readonly string[]; rows: ScaleRow[]; note: string } {
+  const en = lang === "en";
+  const houses = en ? "Houses" : "Maisons";
+  const villa = en ? `Houses, ${STATS_SHARED_BATH.house}` : `Maisons, ${STATS_SHARED_BATH.house}`;
+  const privateRooms = STATS.totalRooms - STATS_SHARED_BATH.rooms;
+  const perPerson = en ? `€${thousands(AP.suitePerPersonEur, ",")}` : `${thousands(AP.suitePerPersonEur, "\u00a0")} €`;
+  return {
+    // (14/11/2026, V2-18) Les deux colonnes de prix juste après « Gamme » : sur téléphone (375 px), le tableau défile et les prix
+    // étaient hors de l'écran. Mêmes textes, autre ordre (l'en-tête et les cellules de chaque ligne, ci-dessous).
+    header: en
+      ? ["Range", "CHF per month", "€ per month (rent on the lease)", "Rooms", "Shower room"]
+      : ["Gamme", "CHF par mois", "€ par mois (loyer du bail)", "Chambres", "Salle d'eau"],
+    rows: [
+      {
+        range: houses,
+        rooms: en ? `${privateRooms} rooms of ${STATS.roomSizeMin} to ${STATS.roomSizeMax} m²` : `${privateRooms} chambres de ${STATS.roomSizeMin} à ${STATS.roomSizeMax} m²`,
+        bath: en ? "private" : "privative",
+        chf: en ? PRICE_CHF_EN : PRICE_CHF_FR,
+        eur: en ? `€${EUR_STANDARD_EN_NUM}` : `${EUR_STANDARD_FR_NUM} €`,
+      },
+      ...SHARED_BATH_TIERS.map((t) => ({
+        range: villa,
+        rooms: en ? `rooms ${t.rooms.join(" and ")}` : `chambres ${t.rooms.join(" et ")}`,
+        bath: en ? "shared between 2 rooms" : "partagée entre 2 chambres",
+        chf: t[lang].chf,
+        eur: t[lang].eur,
+      })),
+      {
+        range: APPART.name,
+        rooms: en ? `${A_SUITE.surfaceM2} m² suite, one or two people` : `suite de ${A_SUITE.surfaceM2} m², une ou deux personnes`,
+        bath: en ? "private shower room and toilet" : "salle d'eau et WC privés",
+        chf: AP.suite[lang].chf,
+        eur: AP.suite[lang].eur,
+      },
+      {
+        range: APPART.name,
+        rooms: en ? `${A_WORD_EN[A_STD.numbers.length] ?? A_STD.numbers.length} ${A_STD.surfaceM2} m² rooms` : `${A_STD.numbers.length} chambres de ${A_STD.surfaceM2} m²`,
+        bath: en ? `shower room and toilet shared between the ${A_STD.sharedBathBetween} rooms` : `salle d'eau et WC partagés entre les ${A_STD.sharedBathBetween} chambres`,
+        chf: AP.room[lang].chf,
+        eur: AP.room[lang].eur,
+      },
+    ],
+    note: en
+      ? `Two people in the suite at ${APPART.name}: ${AP.suite.en.eur} a month, or ${perPerson} each for two.`
+      : `À deux dans la suite de ${APPART.name} : ${AP.suite.fr.eur} par mois, soit ${perPerson} par personne à deux.`,
+  };
+}
 
 /**
  * Arrivée sur /tarifs#objection-prix — lien « Ce que comprend le prix » des cartes chambres (13/11/2026).
@@ -422,9 +487,10 @@ export function RatesPageV4() {
       <SEO
         // Prix retiré du title le 15/08/2026 (doctrine A6/S33) — il reste en meta description.
         title={language === "en" ? "Rates: one all-inclusive rent near Geneva" : "Tarifs : un loyer tout compris près de Genève"}
+        // (L'Appart, E5) Deux gammes, deux phrases : la piscine dans celle des maisons, jamais dans celle de L'Appart (règle V2).
         description={language === "en"
-          ? `All-inclusive coliving near Geneva from ${PRICE_FROM_EN_NUM} CHF/month — no application or agency fees. Rent, utilities, gym, pool, WiFi, cleaning included.`
-          : `Tarifs colocation tout inclus près de Genève dès ${PRICE_FROM_CHF_FR}/mois, sans frais de dossier ni d'agence. Loyer, charges, gym, piscine, WiFi, ménage compris.`}
+          ? `Rates: coliving houses with pool and sauna, from ${PRICE_FROM_CHF_EN}/month. ${APPART.name}, a flatshare in ${APPART.commune}, from ${AP.from.en.chf}/month. No application fee.`
+          : `Tarifs : maisons de coliving avec piscine et sauna, dès ${PRICE_FROM_CHF_FR}/mois. ${APPART.name}, colocation à ${APPART.commune}, dès ${AP.from.fr.chf}/mois. 0 frais de dossier.`}
         url="https://www.lavillacoliving.com/tarifs"
       />
       <Helmet>
@@ -440,6 +506,28 @@ export function RatesPageV4() {
             : `Chambre de coliving tout inclus de ${PRICE_FROM_CHF_FR} à ${PRICE_CHF_FR}/mois près de Genève — charges, fibre, ménage, piscine, sauna, salle de sport compris.`,
           url: `https://www.lavillacoliving.com${language === "en" ? "/en" : ""}/tarifs`,
         }))}</script>
+        {/* (L'Appart, E5) L'offre agrégée de L'Appart, sœur de celle des maisons, IMBRIQUÉE dans un catalogue : un seul bloc
+            AggregateOffer de premier niveau par page (garde jsonLdConflicts : l'injection ne sert que le premier de chaque type). */}
+        <script type="application/ld+json">{JSON.stringify({
+          "@context": "https://schema.org",
+          "@type": "OfferCatalog",
+          name: `${APPART.name}, ${language === "en" ? APPART.descriptor.en : APPART.descriptor.fr}`,
+          url: `https://www.lavillacoliving.com${language === "en" ? "/en" : ""}/tarifs#${APPART_ANCHOR}`,
+          itemListElement: [{
+            "@type": "AggregateOffer",
+            name: language === "en" ? `Furnished room in a flatshare in ${APPART.commune} (${APPART.name})` : `Chambre meublée en colocation à ${APPART.commune} (${APPART.name})`,
+            description: language === "en"
+              ? `Furnished room in a ${APPART.descriptor.en}, from ${AP.from.en.chf} to ${APPART_HIGH.en.chf}/month — bills, fibre, streaming and cleaning of the shared areas included.`
+              : `Chambre meublée en ${APPART.descriptor.fr}, de ${AP.from.fr.chf} à ${APPART_HIGH.fr.chf}/mois — charges, fibre, streaming et ménage des communs compris.`,
+            lowPrice: String(AP.from.chf),
+            highPrice: String(APPART_HIGH.chf),
+            priceCurrency: "CHF",
+            offerCount: APPART.rooms.total,
+            // (19/11/2026, V2-22) Pas d'availabilityStarts : l'ouverture n'est publiée qu'au mois (« février 2027 »).
+            url: `https://www.lavillacoliving.com${language === "en" ? "/en" : ""}/tarifs#${APPART_ANCHOR}`,
+            seller: { "@type": "Organization", name: "La Villa Coliving", url: "https://www.lavillacoliving.com" },
+          }],
+        })}</script>
       </Helmet>
       {/* Hero */}
       <section className="py-24 lg:py-32 bg-white">
@@ -470,6 +558,15 @@ export function RatesPageV4() {
             {language === "en"
               ? `from ${PRICE_FROM_EN_NUM} CHF/month (€${EUR_FROM_EN_NUM}/month) — All inclusive`
               : `dès ${PRICE_FROM_CHF_FR}/mois (${EUR_FROM_FR_NUM} €/mois) — Tout inclus`}
+          </p>
+          {/* (L'Appart, E5) Le « dès » de L'Appart, sous celui des maisons, et le lien vers son bloc plus bas (#lappart). */}
+          <p className="text-base text-[#57534E] max-w-2xl mx-auto mb-4">
+            {language === "en"
+              ? `On a tighter budget? ${APPART.name}, our flatshare in ${APPART.commune}: from ${AP.from.en.chf}/month (${AP.from.en.eur}).`
+              : `Budget plus serré ? ${APPART.name}, notre colocation à ${APPART.commune} : dès ${AP.from.fr.chf}/mois (${AP.from.fr.eur}).`}{" "}
+            <a href={`#${APPART_ANCHOR}`} className="underline underline-offset-4 text-[#1C1917] hover:text-[#b8860b] transition-colors">
+              {language === "en" ? `See ${APPART.name}'s prices` : `Voir les prix de ${APPART.name}`}
+            </a>
           </p>
           <p className="text-lg text-[#78716C]">
             {language === "en"
@@ -507,6 +604,58 @@ export function RatesPageV4() {
       {/* (Lot S1) Fiche de faits canonique — le détail des paliers (trois depuis le 19/11/2026) reste dans le hero ci-dessus (page tarifs). */}
       <section className="py-10 bg-white">
         <div className="max-w-3xl mx-auto px-6"><EntityFacts page="tarifs" /></div>
+      </section>
+
+      {/* (L'Appart, Lot 4, étape E5) Échelle de prix des deux gammes, chambre par chambre (§ 3.3 du brief) : une devise par colonne. */}
+      {(() => {
+        const L = language === "en" ? "en" : "fr";
+        const scale = priceScale(L);
+        return (
+          <section className="py-10 bg-white" aria-labelledby="echelle-prix-title">
+            <div className="max-w-5xl mx-auto px-6">
+              <h2
+                id="echelle-prix-title"
+                className="text-3xl md:text-4xl font-light text-[#1C1917] mb-4"
+                style={{ fontFamily: '"DM Serif Display", serif' }}
+              >
+                {L === "en" ? "Every price, room by room" : "Tous les prix, chambre par chambre"}
+              </h2>
+              <p className="text-[#44403C] leading-relaxed mb-6">
+                {L === "en"
+                  ? `Two ranges. The coliving houses have a pool, a sauna and a gym. ${APPART.name} is a flatshare in ${APPART.commune}, without them.`
+                  : `Deux gammes. Les maisons de coliving ont une piscine, un sauna et une salle de sport. ${APPART.name} est une colocation à ${APPART.commune}, sans ces équipements.`}
+              </p>
+              <div className="overflow-x-auto rounded-2xl border border-[#E7E5E4] bg-white">
+                <table className="w-full min-w-[640px] border-separate border-spacing-0 text-sm">
+                  <thead>
+                    <tr className="bg-[#FAF9F6] text-[#1C1917]">
+                      {scale.header.map((h) => (
+                        <th key={h} scope="col" className="px-4 py-3 text-left font-semibold border-b border-[#E7E5E4]">{h}</th>
+                      ))}
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {scale.rows.map((r) => (
+                      <tr key={`${r.range}-${r.rooms}`} className="group">
+                        <th scope="row" className="px-4 py-3 text-left font-medium text-[#1C1917] border-b border-[#E7E5E4] group-last:border-b-0">{r.range}</th>
+                        <td className="px-4 py-3 text-[#1C1917] font-semibold border-b border-[#E7E5E4] group-last:border-b-0 whitespace-nowrap">{r.chf}</td>
+                        <td className="px-4 py-3 text-[#44403C] border-b border-[#E7E5E4] group-last:border-b-0 whitespace-nowrap">{r.eur}</td>
+                        <td className="px-4 py-3 text-[#44403C] border-b border-[#E7E5E4] group-last:border-b-0">{r.rooms}</td>
+                        <td className="px-4 py-3 text-[#44403C] border-b border-[#E7E5E4] group-last:border-b-0">{r.bath}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+              <p className="mt-3 text-sm text-[#57534E]">{scale.note}</p>
+            </div>
+          </section>
+        );
+      })()}
+
+      {/* (L'Appart, Lot 4, étape E5) Bloc statique de L'Appart, ancre #lappart (lien du haut de page) — texte propre à /tarifs. */}
+      <section id={APPART_ANCHOR} className="py-10 bg-white scroll-mt-[calc(4rem+var(--lvc-banner-h,0px))]">
+        <div className="max-w-5xl mx-auto px-6"><AppartTeaser page="/tarifs" /></div>
       </section>
 
       {/* OBJECTION PRIX — « Oui, nos prix sont plus élevés » + tableau comparatif 3 colonnes.
@@ -779,7 +928,8 @@ export function RatesPageV4() {
                       scope="col"
                       className="px-4 py-4 text-left font-bold bg-[#D4A574]"
                     >
-                      La Villa Coliving
+                      {/* (L'Appart, E5) La colonne décrit les maisons (16-24 m², piscine) : elle le dit. */}
+                      {language === "en" ? "La Villa Coliving, houses" : "La Villa Coliving, maisons"}
                     </th>
                     <th scope="col" className="px-4 py-4 text-left font-medium">
                       {language === "en" ? "Geneva studio" : "Studio Genève"}
@@ -819,6 +969,12 @@ export function RatesPageV4() {
               {language === "en"
                 ? `"Standard flatshare" and "Geneva studio" columns: market observations (indicative ranges). La Villa column: contractual facts. La Villa price per m²: contractual rent of €${EUR_STANDARD_EN_NUM} (${PRICE_CHF_EN}) ÷ 37-42 m² of living space per flatmate.`
                 : `Colonnes « Colocation classique » et « Studio Genève » : observations de marché (fourchettes indicatives). Colonne La Villa : faits contractuels. Prix du m² La Villa : loyer contractuel de ${EUR_STANDARD_FR_NUM} € (${PRICE_CHF_FR}) ÷ 37-42 m² d'espace de vie par colocataire.`}
+            </p>
+            {/* (L'Appart, E5) Note du tableau : L'Appart est une colocation, avec ses prix plus haut (#lappart, échelle des prix). */}
+            <p className="mt-2 text-center text-xs text-[#78716C]">
+              {language === "en"
+                ? `The middle column describes our coliving houses. For ${APPART.name}, our flatshare in ${APPART.commune}, prices are further up this page.`
+                : `La colonne du milieu décrit nos maisons de coliving. Pour ${APPART.name}, notre colocation à ${APPART.commune}, les prix sont plus haut sur cette page.`}
             </p>
 
             {/* Encadré méga-résidences — chiffres publics, concurrent non nommé */}

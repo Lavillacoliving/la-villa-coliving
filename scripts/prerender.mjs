@@ -57,6 +57,8 @@ const STATIC_ROUTES_FR = [
   '/lavilla',
   '/leloft',
   '/lelodge',
+  // (L'Appart, étape E3, 13/11/2026) Sa page, à part des maisons (fil d'Ariane « Accueil > L'Appart », hors de HOUSE_SLUGS).
+  '/lappart',
   '/investisseurs',
   '/observatoire-logement-frontalier-geneve',
   '/qui-sommes-nous',
@@ -408,6 +410,7 @@ const BREADCRUMB_LABELS = {
     lavilla: 'La Villa',
     leloft: 'Le Loft',
     lelodge: 'Le Lodge',
+    lappart: "L'Appart",
     services: 'Services',
     tarifs: 'Tarifs',
     faq: 'FAQ',
@@ -427,6 +430,7 @@ const BREADCRUMB_LABELS = {
     lavilla: 'La Villa',
     leloft: 'Le Loft',
     lelodge: 'Le Lodge',
+    lappart: "L'Appart",
     services: 'Services',
     tarifs: 'Pricing',
     faq: 'FAQ',
@@ -438,6 +442,7 @@ const BREADCRUMB_LABELS = {
 };
 
 // Pages that live under /nos-maisons in the breadcrumb tree (even though their URL is flat /lavilla).
+// (L'Appart, décision n° 29) L'Appart n'y est pas : son fil d'Ariane est « Accueil > L'Appart » (route générique à un segment).
 const HOUSE_SLUGS = new Set(['lavilla', 'leloft', 'lelodge']);
 
 function extractTitleFromHtml(html) {
@@ -740,6 +745,7 @@ const STATIC_PAGE_CONFIG = {
   '/lavilla': { priority: '0.8', changefreq: 'weekly' },
   '/leloft': { priority: '0.8', changefreq: 'weekly' },
   '/lelodge': { priority: '0.8', changefreq: 'weekly' },
+  '/lappart': { priority: '0.8', changefreq: 'weekly' },
   '/services': { priority: '0.7', changefreq: 'monthly' },
   '/tarifs': { priority: '0.7', changefreq: 'monthly' },
   '/faq': { priority: '0.7', changefreq: 'monthly' },

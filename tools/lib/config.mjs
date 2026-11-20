@@ -8,11 +8,12 @@ export const SITE = 'https://www.lavillacoliving.com';
 // Pages « money » (transactionnelles + maisons + piliers), FR puis jumelles EN.
 // `/colocation-geneve` (FR) n'est dans le sitemap qu'après le revert du 25/08 :
 // le graphe ne l'analyse que s'il est présent — rien à changer ici ce jour-là.
+// (L'Appart, Lot 4, étape E5) + /lappart et /en/lappart (clé PUBLIQUE de la page, jamais la clé interne de la base).
 export const MONEY_ROUTES = [
   '/', '/annemasse-colocation', '/chambre-a-louer-annemasse', '/chambre-a-louer-geneve', '/colocation-geneve',
-  '/tarifs', '/candidature', '/nos-maisons', '/lavilla', '/leloft', '/lelodge', '/le-coliving',
+  '/tarifs', '/candidature', '/nos-maisons', '/lavilla', '/leloft', '/lelodge', '/lappart', '/le-coliving',
   '/en', '/en/colocation-geneve', '/en/annemasse-colocation', '/en/chambre-a-louer-annemasse', '/en/chambre-a-louer-geneve',
-  '/en/tarifs', '/en/candidature', '/en/nos-maisons', '/en/lavilla', '/en/leloft', '/en/lelodge', '/en/le-coliving',
+  '/en/tarifs', '/en/candidature', '/en/nos-maisons', '/en/lavilla', '/en/leloft', '/en/lelodge', '/en/lappart', '/en/le-coliving',
 ];
 
 // Mots-clés « exact » par cible (texte d'ancre normalisé : minuscules, sans accents).
@@ -29,6 +30,8 @@ export const MONEY_KEYWORDS = {
   '/lavilla': ['la villa'],
   '/leloft': ['le loft'],
   '/lelodge': ['le lodge'],
+  // (L'Appart, E5) Son nom est une ancre de marque (BRAND_RE) ; l'exact-match = la colocation près de la gare d'Annemasse.
+  '/lappart': ["l'appart", 'colocation annemasse gare', "colocation pres de la gare d'annemasse", "colocation quartier de la gare d'annemasse"],
   '/le-coliving': ['coliving geneve', 'le coliving', 'coliving a geneve'],
   '/en': ['home'],
   '/en/colocation-geneve': ['shared housing geneva', 'shared housing near geneva', 'flatshare geneva', 'room for rent geneva', 'rooms for rent geneva'],
@@ -41,12 +44,14 @@ export const MONEY_KEYWORDS = {
   '/en/lavilla': ['la villa'],
   '/en/leloft': ['le loft'],
   '/en/lelodge': ['le lodge'],
+  '/en/lappart': ["l'appart", 'flatshare annemasse station', 'flatshare near annemasse station'],
   '/en/le-coliving': ['coliving geneva', 'the coliving'],
 };
 
 // Ancre « marque » (maisons incluses : leur nom est la marque). Depuis le 04/09/2026 le test marque prime
 // sur exact/partiel dans classifyAnchor : « La Villa Coliving près de Genève » = marque, pas partiel.
-export const BRAND_RE = /la ?villa( coliving)?|lavillacoliving|villa coliving|le loft|le lodge/i;
+// (L'Appart, E5) + « L'Appart » (texte normalisé : « l'appart ») ; « l'appartement » n'en est pas une (borne de fin de mot).
+export const BRAND_RE = /la ?villa( coliving)?|lavillacoliving|villa coliving|le loft|le lodge|\bl'?appart\b/i;
 
 // Signature des liens éditoriaux (markdown du blog → <LocalizedLink className=…>,
 // voir src/pages/BlogPostPage.tsx mdComponents.a). À mettre à jour si la classe change.
@@ -73,6 +78,7 @@ export const MENTION_PATTERNS = {
     '/lelodge': /\ble lodge\b/gi,
     '/leloft': /\ble loft\b/gi,
     '/lavilla': /\bla villa\b(?! coliving| team)/gi,
+    '/lappart': /\bl['’]appart\b/gi, // (L'Appart, E5) « l'appartement » ne compte pas (borne de fin de mot)
     '/nos-maisons': /nos (?:3 |trois )?maisons|les 3 maisons/gi,
     '/observatoire-logement-frontalier-geneve': /observatoire du logement|observatoire frontalier|notre observatoire/gi,
   },
@@ -84,6 +90,7 @@ export const MENTION_PATTERNS = {
     '/en/lelodge': /\ble lodge\b/gi,
     '/en/leloft': /\ble loft\b/gi,
     '/en/lavilla': /\bla villa\b(?! coliving| team)/gi,
+    '/en/lappart': /\bl['’]appart\b/gi,
     '/en/nos-maisons': /our (?:3 |three )?houses/gi,
     '/en/observatoire-logement-frontalier-geneve': /observatory/gi,
   },

@@ -16,6 +16,12 @@
  * le prix standard ou unique écrit en clair (Le Loft, Le Lodge), les chiffres calculés à partir du prix et les articles
  * générés (prix en clair, consigne du générateur) se réécrivent encore par SQL (CLAUDE.md § 4).
  *
+ * (L'Appart, 14/11/2026 — CB-6, contenu/BLOG.md § 1) Deux jetons pour la deuxième gamme : `PRIX_APPART_DES` = le « dès » de
+ * L'Appart en francs (« 730 CHF » / « CHF 730 ») et `PRIX_APPART_DES_EUR` = son loyer contractuel en euros (« 790 € » / « €790 »),
+ * lus dans APPART.price.from (src/data/appart.ts : APPART_CONTRACT_EUR, francs dérivés par priceTier), jamais tapés. Aucun
+ * article ne les porte encore : les phrases d'articles de L'Appart (SQL n° 10, après la bascule) les porteront, et ce code doit
+ * être en ligne avant ce SQL (la garde check:facts refuse tout jeton non résolu). Prix de la suite et par personne : hors jeton.
+ *
  * Règles :
  *  - autorisés UNIQUEMENT dans `content_fr` / `content_en` (jamais dans les extraits, les metas ni les posts
  *    Facebook, affichés bruts ; jamais dans la base du bot ni la consigne du générateur d'articles, lues hors du site) ;
@@ -32,6 +38,7 @@ import {
   PRICE_CHF_FR,
 } from "@/data/stats";
 import { priceRangeCell, priceRangeText } from "@/data/answerSlots";
+import { APPART } from "@/data/appart";
 
 export type ContentLang = "fr" | "en";
 
@@ -46,6 +53,8 @@ export const CONTENT_TOKENS = [
   "CAUTION_MOIS",
   "PRIX_FOURCHETTE",
   "PRIX_FOURCHETTE_TABLEAU",
+  "PRIX_APPART_DES",
+  "PRIX_APPART_DES_EUR",
 ] as const;
 
 export type ContentToken = (typeof CONTENT_TOKENS)[number];
@@ -75,6 +84,11 @@ function tokenValue(token: ContentToken, lang: ContentLang): string {
       return priceRangeText(lang);
     case "PRIX_FOURCHETTE_TABLEAU":
       return priceRangeCell(lang);
+    // (L'Appart) « Dès » de la deuxième gamme : « 730 CHF » / « CHF 730 », et son loyer contractuel en euros, « 790 € » / « €790 ».
+    case "PRIX_APPART_DES":
+      return APPART.price.from[lang].chf;
+    case "PRIX_APPART_DES_EUR":
+      return APPART.price.from[lang].eur;
   }
 }
 

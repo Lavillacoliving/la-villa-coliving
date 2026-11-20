@@ -1,6 +1,6 @@
 # Prix des chambres 7 et 8 — SQL 3 bis : fourchettes en jetons (13/11/2026)
 
-Généré le 2026-11-19T10:18:07.427Z par `scripts/build-slots-sql.mjs` · ancres vérifiées sur le fichier posts-apres-bascule.json (HORS LIGNE — ne pas appliquer ce SQL, régénérer sans --posts-json) · 30 modifications sur 11 articles · SQL : `scripts/prix-chambres-7-8-sql3bis-fourchettes-2026-11-13.sql`.
+Généré le 2026-11-19T16:45:25.843Z par `scripts/build-slots-sql.mjs` · ancres vérifiées sur le contenu vivant de blog_posts (REST anon, lecture seule) le 2026-11-19T16:45:25.840Z · 30 modifications sur 11 articles · SQL : `scripts/prix-chambres-7-8-sql3bis-fourchettes-2026-11-20.sql`.
 
 Légende : « Avant » = texte posé par le SQL 3 ; « Après » = le même texte avec le jeton ; « Rendu sur le site » = identique à « Avant ».
 
@@ -8,17 +8,17 @@ Légende : « Avant » = texte posé par le SQL 3 ; « Après » = le même text
 
 | Article | FR | EN | updated_at en base | fr / en (caractères) |
 |---|---|---|---|---|
-| `budget-colocation-geneve-guide-complet` | 4 (jeton, jeton, jeton, jeton) | 4 (jeton, jeton, jeton, jeton) | 2026-11-12T21:48:49.13221+00:00 | 18773 / 14790 |
-| `colocation-annemasse-ville-la-grand-ambilly` | 1 (jeton) | 1 (jeton) | 2026-11-12T14:44:18.845333+00:00 | 8746 / 7815 |
-| `cout-de-la-vie-suisse-france-frontalier-2026` | 2 (jeton, jeton) | 2 (jeton, jeton) | 2026-11-12T21:48:49.13221+00:00 | 13257 / 11925 |
-| `dossier-location-frontalier-suisse-france` | 1 (jeton) | 1 (jeton) | 2026-10-30T17:15:30.671729+00:00 | 9011 / 8361 |
-| `fiscalite-frontalier-geneve-impots-2026` | 1 (jeton) | 1 (jeton) | 2026-11-12T21:48:49.13221+00:00 | 10725 / 10067 |
-| `guide-ressources-frontalier-geneve` | 1 (jeton) | 1 (jeton) | 2026-11-12T21:48:49.13221+00:00 | 40438 / 37285 |
-| `organisations-internationales-geneve-ou-habiter` | 1 (jeton) | 1 (jeton) | 2026-11-12T21:48:49.13221+00:00 | 7446 / 6824 |
-| `ou-habiter-en-france-quand-on-travaille-a-geneve` | 1 (jeton) | 1 (jeton) | 2026-11-12T21:48:49.13221+00:00 | 14931 / 14749 |
-| `salaire-suisse-net-frontalier-2026` | 1 (jeton) | 1 (jeton) | 2026-11-12T21:48:49.13221+00:00 | 13931 / 11229 |
-| `trouver-colocation-geneve-frontalier` | 1 (jeton) | 1 (jeton) | 2026-11-12T21:48:49.13221+00:00 | 5981 / 5597 |
-| `trouver-logement-avant-d-arriver-geneve` | 1 (jeton) | 1 (jeton) | 2026-11-12T21:48:49.13221+00:00 | 14606 / 14108 |
+| `budget-colocation-geneve-guide-complet` | 4 (jeton, jeton, jeton, jeton) | 4 (jeton, jeton, jeton, jeton) | 2026-11-19T14:26:48.508096+00:00 | 18773 / 14790 |
+| `colocation-annemasse-ville-la-grand-ambilly` | 1 (jeton) | 1 (jeton) | 2026-11-19T14:26:48.508096+00:00 | 8746 / 7815 |
+| `cout-de-la-vie-suisse-france-frontalier-2026` | 2 (jeton, jeton) | 2 (jeton, jeton) | 2026-11-19T14:26:48.508096+00:00 | 13257 / 11925 |
+| `dossier-location-frontalier-suisse-france` | 1 (jeton) | 1 (jeton) | 2026-11-19T14:26:48.508096+00:00 | 9011 / 8361 |
+| `fiscalite-frontalier-geneve-impots-2026` | 1 (jeton) | 1 (jeton) | 2026-11-19T14:26:48.508096+00:00 | 10725 / 10067 |
+| `guide-ressources-frontalier-geneve` | 1 (jeton) | 1 (jeton) | 2026-11-19T14:26:48.508096+00:00 | 40438 / 37285 |
+| `organisations-internationales-geneve-ou-habiter` | 1 (jeton) | 1 (jeton) | 2026-11-19T14:26:48.508096+00:00 | 7446 / 6824 |
+| `ou-habiter-en-france-quand-on-travaille-a-geneve` | 1 (jeton) | 1 (jeton) | 2026-11-19T14:26:48.508096+00:00 | 14931 / 14749 |
+| `salaire-suisse-net-frontalier-2026` | 1 (jeton) | 1 (jeton) | 2026-11-19T14:26:48.508096+00:00 | 13931 / 11229 |
+| `trouver-colocation-geneve-frontalier` | 1 (jeton) | 1 (jeton) | 2026-11-19T14:26:48.508096+00:00 | 5981 / 5597 |
+| `trouver-logement-avant-d-arriver-geneve` | 1 (jeton) | 1 (jeton) | 2026-11-19T14:26:48.508096+00:00 | 14606 / 14108 |
 
 ## Détail
 

@@ -30,8 +30,11 @@
  */
 import { STATS, TRANSIT, HOUSE_SURFACES, thousands, aOrAn } from "./stats";
 import { HOUSES, publicGeo } from "../lib/structuredData";
+import { MAISON_KEYS, assertNever, type MaisonKey } from "./places";
 
-export type HouseSlug = keyof typeof TRANSIT.byHouse;
+/** Une des 3 maisons — alias de `MaisonKey` (src/data/places.ts). (L'Appart, 12/11/2026) Les fonctions de ce module sont
+ *  celles des MAISONS : chaque `switch` nomme les 3 maisons, un lieu ajouté sans sa branche ne compile pas. */
+export type HouseSlug = MaisonKey;
 export type LocLang = "fr" | "en";
 
 /** Incrémenter à chaque changement de texte ou de valeur (porté par data-house-location-version sur les pages maisons) :
@@ -39,7 +42,7 @@ export type LocLang = "fr" | "en";
  *  Le Lodge à 25 min de Rive et 32 min de Cornavin). */
 export const HOUSE_LOCATION_VERSION = "2026-11-12b";
 
-export const HOUSE_SLUGS: readonly HouseSlug[] = ["lavilla", "leloft", "lelodge"] as const;
+export const HOUSE_SLUGS: readonly HouseSlug[] = MAISON_KEYS;
 
 const T = TRANSIT.byHouse;
 
@@ -105,61 +108,78 @@ export function houseNearby(slug: HouseSlug, lang: LocLang): string[] {
 /* ── Phrase de quartier (A.2, D6) ─────────────────────────────────────────────────────────────────────────── */
 
 export function houseNeighbourhood(slug: HouseSlug, lang: LocLang): string {
-  if (slug === "lavilla") {
-    const plot = HOUSE_SURFACES.lavilla.plotM2;
-    return lang === "en"
-      ? `A quiet residential street in Ville-la-Grand, beside the Foron — the river that marks the Swiss border — and its nature reserve. A ${thousands(plot, ",")} m² garden, Annemasse station ${aOrAn(T.lavilla.stationWalkMin)} ${T.lavilla.stationWalkMin}-minute walk away, a supermarket ${nearbyMin("lavilla", "supermarket")} minutes away.`
-      : `Rue résidentielle calme de Ville-la-Grand, en bordure du Foron — la rivière qui marque la frontière suisse — et de sa zone naturelle. Jardin de ${thousands(plot, " ")} m², gare d'Annemasse à ${T.lavilla.stationWalkMin} min à pied, supermarché à ${nearbyMin("lavilla", "supermarket")} min.`;
+  switch (slug) {
+    case "lavilla": {
+      const plot = HOUSE_SURFACES.lavilla.plotM2;
+      return lang === "en"
+        ? `A quiet residential street in Ville-la-Grand, beside the Foron — the river that marks the Swiss border — and its nature reserve. A ${thousands(plot, ",")} m² garden, Annemasse station ${aOrAn(T.lavilla.stationWalkMin)} ${T.lavilla.stationWalkMin}-minute walk away, a supermarket ${nearbyMin("lavilla", "supermarket")} minutes away.`
+        : `Rue résidentielle calme de Ville-la-Grand, en bordure du Foron — la rivière qui marque la frontière suisse — et de sa zone naturelle. Jardin de ${thousands(plot, " ")} m², gare d'Annemasse à ${T.lavilla.stationWalkMin} min à pied, supermarché à ${nearbyMin("lavilla", "supermarket")} min.`;
+    }
+    case "leloft":
+      return lang === "en"
+        ? `In the centre of Ambilly, the town right on the border: town hall ${nearbyMin("leloft", "townhall")} minutes on foot, Carrefour Express ${nearbyMin("leloft", "supermarket")} minutes, tram 17 in ${T.leloft.tramWalkMin} minutes, Parc Montessuit and the banks of the Foron under 10 minutes away.`
+        : `Au centre d'Ambilly, la commune collée à la frontière : mairie à ${nearbyMin("leloft", "townhall")} min à pied, Carrefour Express à ${nearbyMin("leloft", "supermarket")} min, tram 17 à ${T.leloft.tramWalkMin} min, parc Montessuit et berges du Foron à moins de 10 min.`;
+    case "lelodge": {
+      const shops = Math.max(nearbyMin("lelodge", "lidl"), nearbyMin("lelodge", "supermarket"));
+      return lang === "en"
+        ? `The residential Romagny district of Annemasse: quiet streets of houses, Lidl and Carrefour Market ${shops} minutes on foot, the station ${T.lelodge.stationWalkMin} minutes and the town centre ${nearbyMin("lelodge", "centre")} minutes away.`
+        : `Quartier résidentiel de Romagny, à Annemasse : rues calmes de maisons, Lidl et Carrefour Market à ${shops} min à pied, gare à ${T.lelodge.stationWalkMin} min, centre-ville à ${nearbyMin("lelodge", "centre")} min.`;
+    }
+    default:
+      return assertNever(slug);
   }
-  if (slug === "leloft") {
-    return lang === "en"
-      ? `In the centre of Ambilly, the town right on the border: town hall ${nearbyMin("leloft", "townhall")} minutes on foot, Carrefour Express ${nearbyMin("leloft", "supermarket")} minutes, tram 17 in ${T.leloft.tramWalkMin} minutes, Parc Montessuit and the banks of the Foron under 10 minutes away.`
-      : `Au centre d'Ambilly, la commune collée à la frontière : mairie à ${nearbyMin("leloft", "townhall")} min à pied, Carrefour Express à ${nearbyMin("leloft", "supermarket")} min, tram 17 à ${T.leloft.tramWalkMin} min, parc Montessuit et berges du Foron à moins de 10 min.`;
-  }
-  const shops = Math.max(nearbyMin("lelodge", "lidl"), nearbyMin("lelodge", "supermarket"));
-  return lang === "en"
-    ? `The residential Romagny district of Annemasse: quiet streets of houses, Lidl and Carrefour Market ${shops} minutes on foot, the station ${T.lelodge.stationWalkMin} minutes and the town centre ${nearbyMin("lelodge", "centre")} minutes away.`
-    : `Quartier résidentiel de Romagny, à Annemasse : rues calmes de maisons, Lidl et Carrefour Market à ${shops} min à pied, gare à ${T.lelodge.stationWalkMin} min, centre-ville à ${nearbyMin("lelodge", "centre")} min.`;
 }
 
 /* ── Frontière suisse (une seule formulation par maison, D6) ──────────────────────────────────────────────── */
 
 /** Phrase « frontière » de la maison ; undefined pour Le Lodge (aucune mesure à pied/vélo : on ne promet rien). */
 export function houseBorder(slug: HouseSlug, lang: LocLang): string | undefined {
-  if (slug === "lavilla") {
-    const b = T.lavilla.border;
-    return lang === "en"
-      ? `The Swiss border: the Foron, the border river, runs along the street; the Puplinge road crossing is ${aOrAn(b.puplingeWalkMin)} ${b.puplingeWalkMin}-minute walk (${formatDistance(b.puplingeDistanceM, "en")}), the Moillesulaz crossing ${formatDistance(b.moillesulazM, "en")} away (${b.moillesulazBikeMin} minutes by bike).`
-      : `La frontière suisse : le Foron, la rivière-frontière, longe la rue ; passage routier de Puplinge à ${b.puplingeWalkMin} min à pied (${formatDistance(b.puplingeDistanceM, "fr")}), douane de Moillesulaz à ${formatDistance(b.moillesulazM, "fr")} (${b.moillesulazBikeMin} min à vélo).`;
+  switch (slug) {
+    case "lavilla": {
+      const b = T.lavilla.border;
+      return lang === "en"
+        ? `The Swiss border: the Foron, the border river, runs along the street; the Puplinge road crossing is ${aOrAn(b.puplingeWalkMin)} ${b.puplingeWalkMin}-minute walk (${formatDistance(b.puplingeDistanceM, "en")}), the Moillesulaz crossing ${formatDistance(b.moillesulazM, "en")} away (${b.moillesulazBikeMin} minutes by bike).`
+        : `La frontière suisse : le Foron, la rivière-frontière, longe la rue ; passage routier de Puplinge à ${b.puplingeWalkMin} min à pied (${formatDistance(b.puplingeDistanceM, "fr")}), douane de Moillesulaz à ${formatDistance(b.moillesulazM, "fr")} (${b.moillesulazBikeMin} min à vélo).`;
+    }
+    case "leloft": {
+      const b = T.leloft.border;
+      return lang === "en"
+        ? `The Swiss border (the Foron river) is ${formatDistance(b.foronDistanceM, "en")} away, ${aOrAn(b.foronWalkMin)} ${b.foronWalkMin}-minute walk; the Moillesulaz crossing is ${formatDistance(b.moillesulazM, "en")} away (a ${b.moillesulazWalkMin}-minute walk).`
+        : `La frontière suisse (le Foron) est à ${formatDistance(b.foronDistanceM, "fr")}, ${b.foronWalkMin} min à pied ; la douane de Moillesulaz à ${formatDistance(b.moillesulazM, "fr")} (${b.moillesulazWalkMin} min à pied).`;
+    }
+    case "lelodge":
+      return undefined;
+    default:
+      return assertNever(slug);
   }
-  if (slug === "leloft") {
-    const b = T.leloft.border;
-    return lang === "en"
-      ? `The Swiss border (the Foron river) is ${formatDistance(b.foronDistanceM, "en")} away, ${aOrAn(b.foronWalkMin)} ${b.foronWalkMin}-minute walk; the Moillesulaz crossing is ${formatDistance(b.moillesulazM, "en")} away (a ${b.moillesulazWalkMin}-minute walk).`
-      : `La frontière suisse (le Foron) est à ${formatDistance(b.foronDistanceM, "fr")}, ${b.foronWalkMin} min à pied ; la douane de Moillesulaz à ${formatDistance(b.moillesulazM, "fr")} (${b.moillesulazWalkMin} min à pied).`;
-  }
-  return undefined;
 }
 
 /* ── Ligne de transport canonique longue (A.1, sans voiture) ──────────────────────────────────────────────── */
 
 export function houseCommuteLong(slug: HouseSlug, lang: LocLang): string {
   const tr = TRANSIT;
-  if (slug === "leloft") {
-    const h = T.leloft;
-    // (09/10/2026) Règle D1.3 sur la phrase gare aussi : temps de train fixe + porte-à-porte, deux nombres.
-    return lang === "en"
-      ? `Tram 17 is ${aOrAn(h.tramWalkMin)} ${h.tramWalkMin}-minute walk (${h.tramStop.name} stop, ${formatDistance(h.tramStop.distanceM, "en")}): Rive in ${h.tramStop.tramToRiveMin} minutes by tram, ${h.riveDoorToDoorMin} minutes door to door. Annemasse station is ${aOrAn(h.stationWalkMin)} ${h.stationWalkMin}-minute walk (${formatDistance(h.stationDistanceM, "en")}): Geneva Eaux-Vives in ${tr.trainEauxVivesMin} minutes by Léman Express, ${h.eauxVivesDoorToDoorMin} minutes door to door. By bike: central Geneva (Rive) in ${h.bikeToRiveMin} minutes on the Voie Verte.`
-      : `Tram 17 à ${h.tramWalkMin} min à pied (arrêt ${h.tramStop.name}, ${formatDistance(h.tramStop.distanceM, "fr")}) : Rive en ${h.tramStop.tramToRiveMin} min de tram, ${h.riveDoorToDoorMin} min porte-à-porte. Gare d'Annemasse à ${h.stationWalkMin} min à pied (${formatDistance(h.stationDistanceM, "fr")}) : Genève-Eaux-Vives en ${tr.trainEauxVivesMin} min de Léman Express, ${h.eauxVivesDoorToDoorMin} min porte-à-porte. Vélo : centre de Genève (Rive) en ${h.bikeToRiveMin} min par la Voie Verte.`;
+  switch (slug) {
+    case "leloft": {
+      const h = T.leloft;
+      // (09/10/2026) Règle D1.3 sur la phrase gare aussi : temps de train fixe + porte-à-porte, deux nombres.
+      return lang === "en"
+        ? `Tram 17 is ${aOrAn(h.tramWalkMin)} ${h.tramWalkMin}-minute walk (${h.tramStop.name} stop, ${formatDistance(h.tramStop.distanceM, "en")}): Rive in ${h.tramStop.tramToRiveMin} minutes by tram, ${h.riveDoorToDoorMin} minutes door to door. Annemasse station is ${aOrAn(h.stationWalkMin)} ${h.stationWalkMin}-minute walk (${formatDistance(h.stationDistanceM, "en")}): Geneva Eaux-Vives in ${tr.trainEauxVivesMin} minutes by Léman Express, ${h.eauxVivesDoorToDoorMin} minutes door to door. By bike: central Geneva (Rive) in ${h.bikeToRiveMin} minutes on the Voie Verte.`
+        : `Tram 17 à ${h.tramWalkMin} min à pied (arrêt ${h.tramStop.name}, ${formatDistance(h.tramStop.distanceM, "fr")}) : Rive en ${h.tramStop.tramToRiveMin} min de tram, ${h.riveDoorToDoorMin} min porte-à-porte. Gare d'Annemasse à ${h.stationWalkMin} min à pied (${formatDistance(h.stationDistanceM, "fr")}) : Genève-Eaux-Vives en ${tr.trainEauxVivesMin} min de Léman Express, ${h.eauxVivesDoorToDoorMin} min porte-à-porte. Vélo : centre de Genève (Rive) en ${h.bikeToRiveMin} min par la Voie Verte.`;
+    }
+    case "lavilla":
+    case "lelodge": {
+      const h = T[slug];
+      // (12/11/2026) Le Lodge : tram 17 depuis le prolongement du 17/10/2026 (arrêt Barbusse, place de l'Étoile) ; plus d'arrêt de bus.
+      const ts = T.lelodge.tramStop;
+      const extraFr = slug === "lelodge" ? ` Tram 17 à ${ts.walkMin} min à pied (arrêt ${ts.name}, ${ts.place.fr}, ${formatDistance(ts.distanceM, "fr")}).` : "";
+      const extraEn = slug === "lelodge" ? ` Tram 17 is ${aOrAn(ts.walkMin)} ${ts.walkMin}-minute walk (${ts.name} stop, ${ts.place.en}, ${formatDistance(ts.distanceM, "en")}).` : "";
+      return lang === "en"
+        ? `Annemasse station is ${aOrAn(h.stationWalkMin)} ${h.stationWalkMin}-minute walk (${formatDistance(h.stationDistanceM, "en")}). Direct Léman Express trains: Geneva Eaux-Vives in ${tr.trainEauxVivesMin} minutes, Champel in ${tr.trainChampelMin}, Cornavin in ${tr.trainCornavinMin} — ${h.eauxVivesDoorToDoorMin} minutes door to door to Eaux-Vives, ${h.riveDoorToDoorMin} minutes to the city centre (Rive).${extraEn} By bike: central Geneva (Rive) in ${h.bikeToRiveMin} minutes on the Voie Verte.`
+        : `Gare d'Annemasse à ${h.stationWalkMin} min à pied (${formatDistance(h.stationDistanceM, "fr")}). Léman Express direct : Genève-Eaux-Vives en ${tr.trainEauxVivesMin} min, Champel en ${tr.trainChampelMin} min, Cornavin en ${tr.trainCornavinMin} min — ${h.eauxVivesDoorToDoorMin} min porte-à-porte jusqu'aux Eaux-Vives, ${h.riveDoorToDoorMin} min jusqu'au centre (Rive).${extraFr} Vélo : centre de Genève (Rive) en ${h.bikeToRiveMin} min par la Voie Verte.`;
+    }
+    default:
+      return assertNever(slug);
   }
-  const h = T[slug];
-  // (12/11/2026) Le Lodge : tram 17 depuis le prolongement du 17/10/2026 (arrêt Barbusse, place de l'Étoile) ; plus d'arrêt de bus.
-  const ts = T.lelodge.tramStop;
-  const extraFr = slug === "lelodge" ? ` Tram 17 à ${ts.walkMin} min à pied (arrêt ${ts.name}, ${ts.place.fr}, ${formatDistance(ts.distanceM, "fr")}).` : "";
-  const extraEn = slug === "lelodge" ? ` Tram 17 is ${aOrAn(ts.walkMin)} ${ts.walkMin}-minute walk (${ts.name} stop, ${ts.place.en}, ${formatDistance(ts.distanceM, "en")}).` : "";
-  return lang === "en"
-    ? `Annemasse station is ${aOrAn(h.stationWalkMin)} ${h.stationWalkMin}-minute walk (${formatDistance(h.stationDistanceM, "en")}). Direct Léman Express trains: Geneva Eaux-Vives in ${tr.trainEauxVivesMin} minutes, Champel in ${tr.trainChampelMin}, Cornavin in ${tr.trainCornavinMin} — ${h.eauxVivesDoorToDoorMin} minutes door to door to Eaux-Vives, ${h.riveDoorToDoorMin} minutes to the city centre (Rive).${extraEn} By bike: central Geneva (Rive) in ${h.bikeToRiveMin} minutes on the Voie Verte.`
-    : `Gare d'Annemasse à ${h.stationWalkMin} min à pied (${formatDistance(h.stationDistanceM, "fr")}). Léman Express direct : Genève-Eaux-Vives en ${tr.trainEauxVivesMin} min, Champel en ${tr.trainChampelMin} min, Cornavin en ${tr.trainCornavinMin} min — ${h.eauxVivesDoorToDoorMin} min porte-à-porte jusqu'aux Eaux-Vives, ${h.riveDoorToDoorMin} min jusqu'au centre (Rive).${extraFr} Vélo : centre de Genève (Rive) en ${h.bikeToRiveMin} min par la Voie Verte.`;
 }
 
 /* ── Tableau commun « à pied / en train / à vélo » (question §8.2 du brief : tableau commun, décision Jérôme) ── */
@@ -181,18 +201,26 @@ export function houseCommuteRows(slug: HouseSlug, lang: LocLang): CommuteRow[] {
     destination: en ? "Annemasse station" : "Gare d'Annemasse",
     value: en ? `${h.stationWalkMin} min (${formatDistance(h.stationDistanceM, "en")})` : `${h.stationWalkMin} min (${formatDistance(h.stationDistanceM, "fr")})`,
   });
-  if (slug === "leloft") {
-    const s = T.leloft.tramStop;
-    rows.push({ mode: en ? "On foot" : "À pied", destination: en ? `Tram 17, ${s.name} stop` : `Tram 17, arrêt ${s.name}`, value: `${s.walkMin} min (${formatDistance(s.distanceM, lang)})` });
-  }
-  if (slug === "lelodge") {
-    // (12/11/2026, décision Jérôme) Arrêt Barbusse, place de l'Étoile (tram 17 prolongé le 17/10/2026) ; ligne de bus retirée.
-    const s = T.lelodge.tramStop;
-    rows.push({ mode: en ? "On foot" : "À pied", destination: en ? `Tram 17, ${s.name} stop, ${s.place.en}` : `Tram 17, arrêt ${s.name}, ${s.place.fr}`, value: `${s.walkMin} min (${formatDistance(s.distanceM, lang)})` });
-  }
-  if (slug === "lavilla") {
-    const b = T.lavilla.busStop;
-    rows.push({ mode: en ? "On foot" : "À pied", destination: en ? `${b.name} bus stop` : `Arrêt de bus ${b.name}`, value: `${b.walkMin} min (${formatDistance(b.distanceM, lang)})` });
+  // Arrêt le plus proche, à pied : une branche par maison.
+  switch (slug) {
+    case "leloft": {
+      const s = T.leloft.tramStop;
+      rows.push({ mode: en ? "On foot" : "À pied", destination: en ? `Tram 17, ${s.name} stop` : `Tram 17, arrêt ${s.name}`, value: `${s.walkMin} min (${formatDistance(s.distanceM, lang)})` });
+      break;
+    }
+    case "lelodge": {
+      // (12/11/2026, décision Jérôme) Arrêt Barbusse, place de l'Étoile (tram 17 prolongé le 17/10/2026) ; ligne de bus retirée.
+      const s = T.lelodge.tramStop;
+      rows.push({ mode: en ? "On foot" : "À pied", destination: en ? `Tram 17, ${s.name} stop, ${s.place.en}` : `Tram 17, arrêt ${s.name}, ${s.place.fr}`, value: `${s.walkMin} min (${formatDistance(s.distanceM, lang)})` });
+      break;
+    }
+    case "lavilla": {
+      const b = T.lavilla.busStop;
+      rows.push({ mode: en ? "On foot" : "À pied", destination: en ? `${b.name} bus stop` : `Arrêt de bus ${b.name}`, value: `${b.walkMin} min (${formatDistance(b.distanceM, lang)})` });
+      break;
+    }
+    default:
+      assertNever(slug);
   }
   rows.push({
     mode: "Léman Express",
@@ -209,11 +237,19 @@ export function houseCommuteRows(slug: HouseSlug, lang: LocLang): CommuteRow[] {
     destination: en ? "Geneva Cornavin" : "Genève Cornavin",
     value: en ? `${tr.trainCornavinMin} min by train · ${h.cornavinDoorToDoorMin} min door to door` : `${tr.trainCornavinMin} min de train · ${h.cornavinDoorToDoorMin} min porte-à-porte`,
   });
-  if (slug === "leloft") {
-    const s = T.leloft.tramStop;
-    rows.push({ mode: "Tram 17", destination: en ? "Rive (city centre)" : "Rive (centre de Genève)", value: en ? `${s.tramToRiveMin} min by tram · ${h.riveDoorToDoorMin} min door to door` : `${s.tramToRiveMin} min de tram · ${h.riveDoorToDoorMin} min porte-à-porte` });
-  } else {
-    rows.push({ mode: en ? "Public transport" : "Transports", destination: en ? "City centre (Rive)" : "Centre de Genève (Rive)", value: en ? `${h.riveDoorToDoorMin} min door to door` : `${h.riveDoorToDoorMin} min porte-à-porte` });
+  // Centre de Genève (Rive) : en tram 17 depuis Le Loft, en transports depuis les deux autres maisons.
+  switch (slug) {
+    case "leloft": {
+      const s = T.leloft.tramStop;
+      rows.push({ mode: "Tram 17", destination: en ? "Rive (city centre)" : "Rive (centre de Genève)", value: en ? `${s.tramToRiveMin} min by tram · ${h.riveDoorToDoorMin} min door to door` : `${s.tramToRiveMin} min de tram · ${h.riveDoorToDoorMin} min porte-à-porte` });
+      break;
+    }
+    case "lavilla":
+    case "lelodge":
+      rows.push({ mode: en ? "Public transport" : "Transports", destination: en ? "City centre (Rive)" : "Centre de Genève (Rive)", value: en ? `${h.riveDoorToDoorMin} min door to door` : `${h.riveDoorToDoorMin} min porte-à-porte` });
+      break;
+    default:
+      assertNever(slug);
   }
   rows.push({
     mode: en ? "Bike (Voie Verte)" : "Vélo (Voie Verte)",

@@ -1,5 +1,8 @@
 import type { HouseKey } from "@/lib/availability";
 import { ENTITY_HOUSES } from "@/data/entityFacts";
+import { APPART } from "@/data/appart";
+import { APPART_PLACE } from "@/lib/structuredData";
+import { assertNever, type PlaceKey } from "@/data/places";
 
 // Fiche minimale par maison, clé = slug canonique properties.slug SANS tiret
 // (« lavilla », « leloft », « lelodge ») — le même qui circule dans
@@ -38,3 +41,28 @@ export const HOUSES: Record<HouseKey, { label: string; img: string; descFr: stri
     descEn: desc("lelodge", "en", "sauna · gym"),
   },
 };
+
+/** (L'Appart, 13/11/2026) Carte minimale d'un lieu public, maison ou L'Appart : nom, image de vignette, commune. */
+export interface PlaceCard {
+  label: string;
+  img: string;
+  commune: string;
+}
+
+/**
+ * Carte d'un lieu public (en-tête contextuel de /candidature, sections « L'Appart » des listes). Les maisons : HOUSES et
+ * ENTITY_HOUSES, inchangés. L'Appart : son nom, sa vignette (la cuisine côté plaque, image du haut de sa page) et sa commune —
+ * jamais la description « piscine · jardin » d'une maison.
+ */
+export function placeCard(place: PlaceKey): PlaceCard {
+  switch (place) {
+    case "lavilla":
+    case "leloft":
+    case "lelodge":
+      return { label: HOUSES[place].label, img: HOUSES[place].img, commune: facts(place).commune };
+    case "lappart":
+      return { label: APPART.name, img: APPART_PLACE.image, commune: APPART.commune };
+    default:
+      return assertNever(place);
+  }
+}

@@ -19,6 +19,8 @@ import { STATS, STATS_DISPLAY, HOUSE_SURFACES, thousands, PRICE_FROM_CHF_FR, PRI
 import { ENTITY_HOUSES, type EntityHouseSlug } from "@/data/entityFacts";
 import { houseCommuteNote } from "@/data/houseLocation";
 import { OuChercher } from "@/components/OuChercher";
+import { AppartTeaser } from "@/components/appart/AppartTeaser";
+import { APPART } from "@/data/appart";
 import {
   useRoomAvailability,
   houseBadgeLabel,
@@ -66,6 +68,11 @@ const dtdRange = (min: number, max: number, en: boolean): string =>
 const [RIVE_DTD_MIN, RIVE_DTD_MAX] = houseRange((h) => h.riveDoorToDoorMin);
 const [BIKE_RIVE_MIN, BIKE_RIVE_MAX] = houseRange((h) => h.bikeToRiveMin);
 const TRAM_TO_RIVE = TRANSIT.byHouse.leloft.tramStop.tramToRiveMin;
+// (L'Appart, Lot 4, étape E5 — textes du 13/11/2026, « à confirmer ») Page d'intention Annemasse : L'Appart OUVRE (meta, titre de
+// page, sous-titre, bouton, bloc statique avant les maisons) ; « Ce qui est inclus » est dit « dans les maisons », avec la ligne
+// de L'Appart ; ses trajets (APPART.transit, relevé du 12/11) sous le tableau des maisons, hors de leurs fourchettes.
+const AT = APPART.transit;
+const APPART_FROM = APPART.price.from;
 
 
 export function AnnemasseColocationPage() {
@@ -105,8 +112,8 @@ export function AnnemasseColocationPage() {
         description={
           language === "en"
             // (D1, 09/10/2026 ; Lot L2) « 20 min » = libellé canonique STATS_DISPLAY.distance, jamais une variante ; meta ≤ 155 c. (FR 150 / EN 150, mesuré).
-            ? `Shared housing in Annemasse: ${STATS.totalRooms} rooms all inclusive from ${PRICE_FROM_CHF_EN}/month, ${STATS_DISPLAY.en.distance}. No agency fee.`
-            : `Colocation Annemasse : ${STATS.totalRooms} chambres tout inclus dès ${PRICE_FROM_CHF_FR}/mois, à ${STATS_DISPLAY.fr.distance}. Sans frais d'agence.`
+            ? `Shared housing in Annemasse from ${APPART_FROM.en.chf}/month at ${APPART.name}, near the station, bills included. Plus ${STATS.totalHouses} coliving houses with a pool, from ${PRICE_FROM_CHF_EN}/month.`
+            : `Colocation à Annemasse dès ${APPART_FROM.fr.chf}/mois : ${APPART.name}, près de la gare, charges comprises. Et ${STATS.totalHouses} maisons de coliving avec piscine, dès ${PRICE_FROM_CHF_FR}/mois.`
         }
         url="https://www.lavillacoliving.com/annemasse-colocation"
         image="https://www.lavillacoliving.com/images/le lodge/exterior/la villa coliving le lodge-14.webp"
@@ -122,15 +129,18 @@ export function AnnemasseColocationPage() {
             className="text-4xl md:text-6xl font-light text-[#1C1917] mb-6 leading-tight"
             style={{ fontFamily: '"DM Serif Display", serif' }}
           >
+            {/* (L'Appart, E5 — décision n° 22 à confirmer) Chaque gamme son « dès », L'Appart d'abord ; aucun équipement dans le titre. */}
             {language === "en"
-              ? `Shared housing in Annemasse — 29 premium rooms from ${PRICE_FROM_CHF_EN}/mo`
-              : `Colocation à Annemasse — 29 chambres premium dès ${PRICE_FROM_CHF_FR}/mois`}
+              ? `Shared housing in Annemasse — ${APPART.name} from ${APPART_FROM.en.chf}/month, three coliving houses from ${PRICE_FROM_CHF_EN}/month`
+              : `Colocation à Annemasse — ${APPART.name} dès ${APPART_FROM.fr.chf}/mois, trois maisons de coliving dès ${PRICE_FROM_CHF_FR}/mois`}
           </h1>
           <p className="text-lg md:text-xl text-[#57534E] max-w-3xl mx-auto leading-relaxed mb-10 font-medium">
-            {/* (Lot L2, 09/10/2026) D1 : destination nommée, libellé canonique STATS_DISPLAY.distance. */}
+            {/* (Lot L2, 09/10/2026) D1 : destination nommée, libellé canonique STATS_DISPLAY.distance.
+                (14/11/2026, V2-15 = CB-5) La phrase dit « les maisons » : après une phrase qui s'ouvre sur L'Appart (13 min), les 20 min
+                se liraient pour lui. Libellé canonique intact. */}
             {language === "en"
-              ? `Three premium coliving houses in Annemasse Agglo (Ville-la-Grand, Ambilly, Annemasse) — for cross-border workers who want a Swiss salary with French cost of living. ${STATS_DISPLAY.en.distance}.`
-              : `Trois maisons coliving premium dans Annemasse Agglo (Ville-la-Grand, Ambilly, Annemasse) — pour frontaliers qui veulent un salaire suisse avec le coût de la vie français. À ${STATS_DISPLAY.fr.distance}.`}
+              ? `${APPART.name}, our flatshare near ${APPART.commune} station, and three premium coliving houses in Annemasse Agglo (Ville-la-Grand, Ambilly, Annemasse) — for cross-border workers who want a Swiss salary with French cost of living. The houses are ${STATS_DISPLAY.en.distance}.`
+              : `${APPART.name}, notre colocation du quartier de la gare d'${APPART.commune}, et trois maisons de coliving premium dans Annemasse Agglo (Ville-la-Grand, Ambilly, Annemasse) — pour frontaliers qui veulent un salaire suisse avec le coût de la vie français. Les maisons sont à ${STATS_DISPLAY.fr.distance}.`}
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <LocalizedLink
@@ -145,6 +155,13 @@ export function AnnemasseColocationPage() {
               className="inline-flex items-center gap-2 px-8 py-4 border-2 border-[#1C1917] text-[#1C1917] font-semibold rounded-full hover:bg-[#1C1917] hover:text-white transition-colors"
             >
               {language === "en" ? "See the 3 houses" : "Voir les 3 maisons"}
+            </LocalizedLink>
+            {/* (L'Appart, E5) Troisième bouton, vers la page de L'Appart. */}
+            <LocalizedLink
+              to={`/${APPART.key}`}
+              className="inline-flex items-center gap-2 px-8 py-4 border-2 border-[#1C1917] text-[#1C1917] font-semibold rounded-full hover:bg-[#1C1917] hover:text-white transition-colors"
+            >
+              {language === "en" ? `See ${APPART.name}` : `Voir ${APPART.name}`}
             </LocalizedLink>
           </div>
           {houseChips.length > 0 && (
@@ -232,6 +249,9 @@ export function AnnemasseColocationPage() {
       {/* ===== 3 RÉSIDENCES ===== */}
       <section className="py-24 lg:py-32 bg-[#FAF9F6]">
         <div className="max-w-6xl mx-auto px-6">
+          {/* (L'Appart, Lot 4, étape E5) Bloc statique de L'Appart AVANT « Nos 3 maisons » (page d'intention Annemasse, P1) : texte propre
+              à cette page, jamais une phrase canonique ; même HTML que la vue ait ou non ses chambres. */}
+          <div className="mb-16 md:mb-20"><AppartTeaser page="/annemasse-colocation" /></div>
           <h2
             className="text-3xl md:text-4xl font-light text-[#1C1917] mb-4 text-center"
             style={{ fontFamily: '"DM Serif Display", serif' }}
@@ -343,6 +363,12 @@ export function AnnemasseColocationPage() {
               </tbody>
             </table>
           </div>
+          {/* (L'Appart, E5) Ses trajets à lui (APPART.transit), sous le tableau « selon la maison » : jamais dans ses fourchettes. */}
+          <p className="mt-6 text-sm text-[#57534E] text-center">
+            {language === "en"
+              ? `From ${APPART.name}: Geneva Eaux-Vives in ${AT.eauxVivesDoorToDoorMin} minutes door to door, Rive in ${AT.riveDoorToDoorMin} minutes, Cornavin in ${AT.cornavinDoorToDoorMin} minutes.`
+              : `Depuis ${APPART.name} : Genève-Eaux-Vives en ${AT.eauxVivesDoorToDoorMin} min porte-à-porte, Rive en ${AT.riveDoorToDoorMin} min, Cornavin en ${AT.cornavinDoorToDoorMin} min.`}
+          </p>
           {/* (Lot L2, 09/10/2026) Note de méthode (D1.5 : on laisse vérifier) — source unique houseLocation.ts. */}
           <p className="mt-4 text-xs text-[#78716C] text-center">{houseCommuteNote(L)}</p>
         </div>
@@ -357,7 +383,8 @@ export function AnnemasseColocationPage() {
           >
             {/* Montant retiré du titre le 29/08 (demande Jérôme) : le prix standard
                 ici dissonait avec le « dès » (PRICE_FROM_*) du même écran. */}
-            {language === "en" ? "What's included" : "Ce qui est inclus"}
+            {/* (L'Appart, E5) La liste ci-dessous est celle des maisons (piscine, linge fourni, ménage 3 fois par semaine) : le titre le dit. */}
+            {language === "en" ? "What's included in the houses" : "Ce qui est inclus dans les maisons"}
           </h2>
           <p className="text-[#57534E] text-center max-w-3xl mx-auto mb-12">
             {language === "en"
@@ -399,6 +426,12 @@ export function AnnemasseColocationPage() {
               </div>
             ))}
           </div>
+          {/* (L'Appart, E5) Ce que comprend le loyer de L'Appart, sous la liste des maisons : le linge n'y est pas fourni. */}
+          <p className="mt-10 text-center text-[#57534E] max-w-3xl mx-auto">
+            {language === "en"
+              ? `At ${APPART.name}: bills, fibre, streaming and cleaning of the shared areas once a week. Bed linen is not provided.`
+              : `À ${APPART.name} : charges, fibre, streaming et ménage des communs une fois par semaine. Le linge de lit n'est pas fourni.`}
+          </p>
         </div>
       </section>
 

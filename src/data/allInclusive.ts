@@ -12,35 +12,26 @@
  * La gamme se déduit du `house_slug` de la chambre. Une carte de L'Appart ne reçoit jamais la ligne des maisons, et un
  * lieu inconnu ne reçoit rien : on préfère une carte sans ligne à une piscine annoncée à tort.
  *
- * Aucun import à l'exécution (les tests chargent le module tel quel), chaînes plates rendues en un seul nœud texte,
+ * Seul import à l'exécution : src/data/places.ts (module feuille, clés et gammes des lieux), par un chemin relatif
+ * avec extension — les tests chargent ce module tel quel sous Node. Chaînes plates rendues en un seul nœud texte,
  * rien qui dépende d'une date ou de la base. Le texte ne dépend que de la gamme et de la langue : il est le même au
  * prérendu et dans le navigateur. Seule `trackPriceWhyClick` touche au navigateur (GA4).
  */
-import type { HouseKey } from "../lib/availability";
+import { APPART_KEY, GAMME, isPlaceKey, type Gamme } from "./places.ts";
 
+export type { Gamme };
 export type InclusiveLang = "fr" | "en";
-export type Gamme = "maisons" | "appart";
 export type InclusiveLength = "long" | "short";
 /** Variantes de `RoomCard`. */
 export type InclusiveCardVariant = "default" | "featured" | "compact";
 
-/** Nom public de L'Appart dans les données du site (`house_slug`). */
-export const APPART_HOUSE_SLUG = "lappart";
+/** Nom public de L'Appart dans les données du site (`house_slug`) — APPART_KEY de src/data/places.ts. */
+export const APPART_HOUSE_SLUG = APPART_KEY;
 
-// Un `HouseKey` ajouté sans gamme ne compile pas : aucun lieu connu du site ne reçoit une ligne par défaut.
-const GAMME_BY_HOUSE_SLUG: Readonly<Record<HouseKey | typeof APPART_HOUSE_SLUG, Gamme>> = {
-  lavilla: "maisons",
-  leloft: "maisons",
-  lelodge: "maisons",
-  [APPART_HOUSE_SLUG]: "appart",
-};
-
-/** Gamme d'un lieu d'après son `house_slug` ; `null` pour un lieu inconnu. */
+/** Gamme d'un lieu d'après son `house_slug` (table GAMME de src/data/places.ts : un lieu ajouté sans gamme ne compile
+ *  pas, aucun lieu connu ne reçoit une ligne par défaut) ; `null` pour un lieu inconnu. */
 export function gammeOf(houseSlug: string | null | undefined): Gamme | null {
-  if (typeof houseSlug !== "string") return null;
-  return Object.prototype.hasOwnProperty.call(GAMME_BY_HOUSE_SLUG, houseSlug)
-    ? GAMME_BY_HOUSE_SLUG[houseSlug as keyof typeof GAMME_BY_HOUSE_SLUG]
-    : null;
+  return isPlaceKey(houseSlug) ? GAMME[houseSlug] : null;
 }
 
 /**

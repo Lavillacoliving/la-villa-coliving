@@ -9,13 +9,16 @@ import { trackPriceWhyClick, type PriceWhyVariant } from "@/data/allInclusive";
 import { RoomsEmbed } from "@/components/RoomsEmbed";
 import { HouseAvailabilityLine } from "@/components/HouseAvailabilityLine";
 import { WhatsAppButton } from "@/components/WhatsAppButton";
+import { AppartRooms } from "@/components/appart/AppartRooms";
 import { useLanguage } from "@/contexts/LanguageContext";
-import { HOUSES } from "@/data/houses";
+import { HOUSES, placeCard } from "@/data/houses";
 import { STATS, STATS_DISPLAY, PRICE_CHF_FR, PRICE_CHF_EN, PRICE_FROM_CHF_FR, PRICE_FROM_CHF_EN, TRANSIT, sharedBathPricesText } from "@/data/stats";
-import { ENTITY_HOUSES } from "@/data/entityFacts";
+import { ENTITY_FACTS, ENTITY_HOUSES } from "@/data/entityFacts";
+import { APPART } from "@/data/appart";
+import { MAISON_KEYS } from "@/data/places";
 import { OuChercher } from "@/components/OuChercher";
 import { colocGeneveHref } from "@/lib/siteLinks";
-import { useAllRooms, splitRooms, type HouseKey, type PublicRoom } from "@/lib/availability";
+import { useAllRooms, useHouseRooms, splitRooms, type PlaceRoom } from "@/lib/availability";
 
 /**
  * /chambre-a-louer-geneve · /en/chambre-a-louer-geneve — Lot 6 du plan SEO funnel, spécification révisée
@@ -28,7 +31,12 @@ import { useAllRooms, splitRooms, type HouseKey, type PublicRoom } from "@/lib/a
  * hors charges, 0 frais ; jamais « moins cher que Genève » : coût total et confort, CHF des deux côtés.
  * /chambre-a-louer-annemasse reste la page locale (inventaire du Lodge), liée en croisé.
  * (Lot L2, 09/10/2026) Le « 20 min » s'écrit uniquement par STATS_DISPLAY.distance — plus de constante MIN locale.
+ * (L'Appart, étape E4 — décision n° 31, à confirmer) Ses chambres ont leur sous-section, après celles des maisons
+ * (<AppartRooms/>) : cartes standard avec le badge de gamme (état B), ou un repli vers /lappart (état A). Le titre « N
+ * chambres… » et les lignes de disponibilité restent ceux des maisons.
  */
+// Carte de L'Appart (nom, vignette) : jamais la description « piscine · jardin » d'une maison (src/data/houses.ts).
+const APPART_CARD = placeCard(APPART.key);
 
 export function ChambreLouerGenevePage() {
   const { language } = useLanguage();
@@ -37,7 +45,11 @@ export function ChambreLouerGenevePage() {
   const allRooms = useAllRooms();
   const { candidates } = splitRooms(allRooms.rooms);
   const n = candidates.length;
-  const trackRoomCta = (room: PublicRoom) => {
+  // (L'Appart, E4) Ses chambres, à part : `known` = la vue a des lignes de L'Appart (état B), sinon le repli (état A).
+  const appart = useHouseRooms(APPART.key);
+  const { candidates: appartCandidates } = splitRooms(appart.rooms);
+  // (L'Appart, E4) Mesure commune aux cartes des maisons et de L'Appart : `house` = la clé PUBLIQUE du lieu.
+  const trackRoomCta = (room: PlaceRoom) => {
     try {
       (window as unknown as { gtag?: (...a: unknown[]) => void }).gtag?.("event", "cta_click", {
         cta_position: "chambre_geneve_room_card", cta_target: "/candidature", house: room.house_slug,
@@ -46,7 +58,7 @@ export function ChambreLouerGenevePage() {
     } catch { /* noop */ }
   };
   // (13/11/2026) Lien « Ce que comprend le prix » des cartes : événement price_why_click, distinct de cta_click.
-  const trackPriceWhy = (room: PublicRoom, variant: PriceWhyVariant) =>
+  const trackPriceWhy = (room: PlaceRoom, variant: PriceWhyVariant) =>
     trackPriceWhyClick({ house: room.house_slug, roomNumber: room.room_number, variant, page: "chambre_a_louer_geneve", language: L });
   const link = "text-[#1C1917] underline underline-offset-4 hover:text-[#D4A574]";
   const h2 = "text-3xl md:text-4xl font-light text-[#1C1917] mb-6";
@@ -58,10 +70,13 @@ export function ChambreLouerGenevePage() {
         // §6 variante B : pas de prix dans le title (Q8, confirmé le 04/09) ; meta sans « 3 mois minimum » (Q13, confirmé le 04/09).
         // (ajustement Jérôme 04/09) pluriel aligné sur le H1 + « tout inclus », sans prix (Q8) ; > 65 c. avec la marque → pas de suffixe (S33).
         title={en ? "Rooms to rent near Geneva: furnished, all inclusive" : "Chambres à louer près de Genève : meublées, tout inclus"}
-        // (D1, 09/10/2026 ; Lot L2) « 20 min » = libellé canonique STATS_DISPLAY.distance, jamais une variante — meta ≤ 155 caractères (FR 154 / EN 152, mesuré).
+        // (D1, 09/10/2026 ; Lot L2) « 20 min » = libellé canonique STATS_DISPLAY.distance, jamais une variante — meta ≤ 155 caractères.
+        // (Corrections du 13/11/2026, relecture « conformité ») La page présente aussi L'Appart, dès 730 CHF : chaque gamme garde son
+        // « dès », maisons d'abord, sur le modèle de /chambres-disponibles ; les « 20 min » des maisons sortent (155 caractères ne
+        // suffisent pas aux deux) — FR 149 / EN 148 c., texte nouveau à relire par Jérôme (la source n'en prévoyait pas).
         description={en
-          ? `Furnished rooms, French side, ${STATS_DISPLAY.en.distance}. Bills, fibre, cleaning included, from ${PRICE_FROM_CHF_EN}. Live dates.`
-          : `Chambres meublées côté France, à ${STATS_DISPLAY.fr.distance} : charges, fibre, ménage inclus, dès ${PRICE_FROM_CHF_FR}. Dispo réelle.`}
+          ? `Furnished rooms, French side, all inclusive: our ${STATS.totalHouses} coliving houses from ${PRICE_FROM_CHF_EN}, and ${APPART.name}, a flatshare in ${APPART.commune}, from ${APPART.price.from.en.chf}. Live dates.`
+          : `Chambres meublées côté France, tout inclus : nos ${STATS.totalHouses} maisons de coliving dès ${PRICE_FROM_CHF_FR}, et ${APPART.name}, colocation à ${APPART.commune}, dès ${APPART.price.from.fr.chf}. Dispo réelle.`}
         image="https://www.lavillacoliving.com/images/le loft/rooms/Chambre 5/chambre-5-vue-large.webp"
       />
 
@@ -74,10 +89,11 @@ export function ChambreLouerGenevePage() {
           <h1 className="text-4xl md:text-6xl font-light text-[#1C1917] mb-6 leading-tight" style={serif}>
             {en ? "Rooms to rent near Geneva, furnished and all inclusive" : "Chambres à louer près de Genève, meublées et tout inclus"}
           </h1>
+          {/* (L'Appart, E4, S11.5) Chaque gamme garde son « dès », maisons d'abord ; « dans une maison entière » disparaît (faux pour L'Appart). */}
           <p className="text-lg md:text-xl text-[#57534E] max-w-3xl mx-auto leading-relaxed mb-8 font-medium">
             {en
-              ? `Looking for a room to rent in Geneva? Most affordable ones are on the French side, ${STATS_DISPLAY.en.distance}. Below: every room available in La Villa Coliving's ${STATS.totalHouses} houses, with date and price in CHF, all inclusive from ${PRICE_FROM_CHF_EN}/month. Neither a room in someone's home nor a sublet: a lease in your name in a whole house.`
-              : `Tu cherches une chambre à louer à Genève ? La plupart des chambres abordables sont côté France, à ${STATS_DISPLAY.fr.distance}. Ci-dessous, toutes les chambres disponibles dans les ${STATS.totalHouses} maisons de La Villa Coliving, avec la date et le prix en CHF, tout inclus dès ${PRICE_FROM_CHF_FR}/mois. Ni chambre chez l'habitant ni sous-location : un bail à ton nom dans une maison entière.`}
+              ? `Looking for a room to rent in Geneva? Most affordable ones are on the French side, ${STATS_DISPLAY.en.distance}. Below: every room available in La Villa Coliving's ${STATS.totalHouses} houses, all inclusive from ${PRICE_FROM_CHF_EN}/month, and at ${APPART.name}, its flatshare in ${APPART.commune}, from ${APPART.price.from.en.chf}/month, with date and price in CHF. Neither a room in someone's home nor a sublet: a lease in your name.`
+              : `Tu cherches une chambre à louer à Genève ? La plupart des chambres abordables sont côté France, à ${STATS_DISPLAY.fr.distance}. Ci-dessous, toutes les chambres disponibles dans les ${STATS.totalHouses} maisons de La Villa Coliving, tout inclus dès ${PRICE_FROM_CHF_FR}/mois, et à ${APPART.name}, sa colocation à ${APPART.commune}, dès ${APPART.price.from.fr.chf}/mois, avec la date et le prix en CHF. Ni chambre chez l'habitant ni sous-location : un bail à ton nom.`}
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <a href="#chambres" className="inline-flex items-center gap-2 px-8 py-4 bg-[#1C1917] text-white font-semibold rounded-full hover:bg-[#44403C] transition-colors">
@@ -102,10 +118,11 @@ export function ChambreLouerGenevePage() {
               ? (en ? `${n} furnished room${n > 1 ? "s" : ""} to rent near Geneva, all inclusive` : `${n} chambre${n > 1 ? "s" : ""} à louer près de Genève, meublée${n > 1 ? "s" : ""} et tout inclus`)
               : (en ? "Next rooms opening near Geneva, house by house" : "Prochaines chambres près de Genève, maison par maison")}
           </h2>
+          {/* (L'Appart, E4, S11.4) « … nos 3 maisons et de L'Appart » ; le reste de la phrase ne bouge pas. */}
           <p className="text-[#57534E] mb-8 max-w-2xl">
             {en
-              ? "Sorted by opening date. Real availability of our 3 houses on the French side, read from the same data as our bookings: size, bathroom, price in CHF, date. Each room has its own application."
-              : "Triées par date de libération. La dispo réelle de nos 3 maisons côté France, lue sur la même source que nos réservations : surface, salle d'eau, prix en CHF, date. Chaque chambre a sa propre candidature."}
+              ? `Sorted by opening date. Real availability of our ${STATS.totalHouses} houses and ${APPART.name} on the French side, read from the same data as our bookings: size, bathroom, price in CHF, date. Each room has its own application.`
+              : `Triées par date de libération. La dispo réelle de nos ${STATS.totalHouses} maisons et de ${APPART.name} côté France, lue sur la même source que nos réservations : surface, salle d'eau, prix en CHF, date. Chaque chambre a sa propre candidature.`}
           </p>
           {n > 0 && (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
@@ -115,13 +132,26 @@ export function ChambreLouerGenevePage() {
             </div>
           )}
           <div className="flex flex-col gap-2 mb-6">
-            {(["lavilla", "leloft", "lelodge"] as HouseKey[]).map((k) => <HouseAvailabilityLine key={k} house={k} />)}
+            {MAISON_KEYS.map((k) => <HouseAvailabilityLine key={k} house={k} />)}
           </div>
           <p className="text-sm text-[#57534E]">
             {en ? "Nothing at your date? " : "Rien à ta date ? "}
             <LocalizedLink to="/chambres-disponibles" className={link}>{en ? "Join a waiting list on the available rooms page" : "Rejoins une liste d'attente sur la page des chambres disponibles"}</LocalizedLink>
             {en ? " — we reply within 48 h." : " — on te répond sous 48 h."}
           </p>
+          {/* (L'Appart, étape E4 — décision n° 31, à confirmer) Sous-section à part, après les maisons : cartes standard avec le
+              badge de gamme (état B), ou le repli vers /lappart (état A). Rendue une fois les chambres chargées, comme les cartes. */}
+          {allRooms.known && (
+            <AppartRooms known={appart.known} fallback discoverLink full={appartCandidates.length === 0} page="chambre_a_louer_geneve" headingLevel={3} className="mt-12 pt-10 border-t border-[#E7E5E4]">
+              {appartCandidates.length > 0 && (
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                  {appartCandidates.map((room) => (
+                    <RoomCard key={`${room.house_slug}:${room.room_number}`} house={room.house_slug} houseName={APPART_CARD.label} room={room} fallbackImage={APPART_CARD.img} onCtaClick={trackRoomCta} onPriceWhyClick={trackPriceWhy} showGammeBadge />
+                  ))}
+                </div>
+              )}
+            </AppartRooms>
+          )}
         </div>
       </section>
 
@@ -239,8 +269,16 @@ export function ChambreLouerGenevePage() {
       <section className="py-20 lg:py-24 bg-[#FAF9F6]">
         <div className="max-w-6xl mx-auto px-6">
           <h2 className={h2} style={serif}>{en ? "Our 3 houses" : "Nos 3 maisons"}</h2>
+          {/* (L'Appart, E4, S11.6) Sous le titre, qui ne change pas : une ligne pour L'Appart, son nom mène à sa page. */}
+          <p className="-mt-2 mb-8 text-[#57534E]">
+            {en ? "And " : "Et "}
+            <LocalizedLink to={`/${APPART.key}`} className={link}>{APPART.name}</LocalizedLink>
+            {en
+              ? `, our flatshare in ${APPART.commune}: ${APPART.rooms.total} rooms near the station.`
+              : `, notre colocation à ${APPART.commune} : ${APPART.rooms.total} chambres dans le quartier de la gare.`}
+          </p>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            {(["lavilla", "leloft", "lelodge"] as HouseKey[]).map((k) => (
+            {MAISON_KEYS.map((k) => (
               <div key={k} className="bg-white border border-[#E7E5E4] rounded-2xl overflow-hidden flex flex-col">
                 <LocalizedLink to={`/${k}`} className="block relative aspect-[16/10] overflow-hidden">
                   <img src={HOUSES[k].img} alt={HOUSES[k].label} className="w-full h-full object-cover" loading="lazy" width={800} height={500} />
@@ -293,8 +331,9 @@ export function ChambreLouerGenevePage() {
         <div className="max-w-3xl mx-auto px-6 text-center">
           <Calendar className="w-12 h-12 text-[#D4A574] mx-auto mb-6" />
           <h2 className="text-3xl md:text-4xl font-light mb-6" style={serif}>{en ? "See the rooms available right now" : "Voir les chambres disponibles maintenant"}</h2>
+          {/* (L'Appart, E4, S11.6) Les chambres de la marque (33 : ENTITY_FACTS.brand). */}
           <p className="text-lg text-white/80 mb-10 leading-relaxed">
-            {en ? `Availability changes every week across our ${STATS.totalRooms} rooms. Pick a room or join a waiting list: we reply within 48 h.` : `Les disponibilités évoluent chaque semaine sur nos ${STATS.totalRooms} chambres. Choisis une chambre ou rejoins une liste d'attente : on te répond sous 48 h.`}
+            {en ? `Availability changes every week across our ${ENTITY_FACTS.brand.totalRooms} rooms. Pick a room or join a waiting list: we reply within 48 h.` : `Les disponibilités évoluent chaque semaine sur nos ${ENTITY_FACTS.brand.totalRooms} chambres. Choisis une chambre ou rejoins une liste d'attente : on te répond sous 48 h.`}
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <LocalizedLink to="/chambres-disponibles" className="inline-flex items-center gap-2 px-8 py-4 bg-white text-[#1C1917] font-semibold rounded-full hover:bg-gray-100 transition-colors">{en ? "Available rooms" : "Chambres disponibles"}<ArrowRight className="w-5 h-5" /></LocalizedLink>

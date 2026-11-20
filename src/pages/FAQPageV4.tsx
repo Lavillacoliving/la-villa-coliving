@@ -13,7 +13,8 @@ import {
 import { faqData, faqCategories } from "@/data/faqData";
 import { Search, MessageCircle } from "lucide-react";
 import { SEO } from "@/components/SEO";
-import { PRICE_FROM_CHF_FR, PRICE_FROM_CHF_EN } from "@/data/stats";
+import { STATS } from "@/data/stats";
+import { APPART } from "@/data/appart";
 
 export function FAQPageV4() {
   const { language } = useLanguage();
@@ -179,9 +180,11 @@ export function FAQPageV4() {
                       : "Colocation Genève"}
                   </h4>
                   <p className="text-sm text-[#57534E]">
+                    {/* (L'Appart, Lot 4, étape E5 — texte du 13/11/2026 « à confirmer ») Une liste mixte n'a pas un seul « dès » : la carte
+                        compte les deux gammes, sans prix. */}
                     {language === "en"
-                      ? `29 furnished rooms, all-inclusive from ${PRICE_FROM_CHF_EN}/mo. See the full guide →`
-                      : `29 chambres meublées, tout inclus dès ${PRICE_FROM_CHF_FR}/mois. Voir le guide complet →`}
+                      ? `${STATS.totalRooms + APPART.rooms.total} furnished rooms, in ${STATS.totalHouses} coliving houses and one flatshare. See the full guide →`
+                      : `${STATS.totalRooms + APPART.rooms.total} chambres meublées, dans ${STATS.totalHouses} maisons de coliving et une colocation. Voir le guide complet →`}
                   </p>
                 </LocalizedLink>
 
@@ -211,9 +214,10 @@ export function FAQPageV4() {
                     {language === "en" ? "Annemasse Agglo, La Villa Coliving side" : "Annemasse Agglo, côté La Villa Coliving"}
                   </h4>
                   <p className="text-sm text-[#57534E]">
+                    {/* (L'Appart, E5) Page d'intention Annemasse : L'Appart ouvre la carte. */}
                     {language === "en"
-                      ? "3 houses in Annemasse Agglo (Ville-la-Grand, Ambilly, Annemasse), direct Léman Express to Geneva. See the page →"
-                      : "3 maisons dans Annemasse Agglo (Ville-la-Grand, Ambilly, Annemasse), Léman Express direct vers Genève. Voir la page →"}
+                      ? `${APPART.name}, our flatshare near the station, and ${STATS.totalHouses} houses in Annemasse Agglo (Ville-la-Grand, Ambilly, Annemasse), direct Léman Express to Geneva. See the page →`
+                      : `${APPART.name}, notre colocation du quartier de la gare, et ${STATS.totalHouses} maisons dans Annemasse Agglo (Ville-la-Grand, Ambilly, Annemasse), Léman Express direct vers Genève. Voir la page →`}
                   </p>
                 </LocalizedLink>
 
