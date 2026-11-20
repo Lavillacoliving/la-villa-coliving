@@ -65,6 +65,10 @@
       "destination": "/prerendered/lelodge.html"
     },
     {
+      "source": "/lappart",
+      "destination": "/prerendered/lappart.html"
+    },
+    {
       "source": "/investisseurs",
       "destination": "/prerendered/investisseurs.html"
     },
@@ -153,6 +157,10 @@
       "destination": "/prerendered/en-lelodge.html"
     },
     {
+      "source": "/en/lappart",
+      "destination": "/prerendered/en-lappart.html"
+    },
+    {
       "source": "/en/investisseurs",
       "destination": "/prerendered/en-investisseurs.html"
     },
@@ -209,12 +217,12 @@
       "destination": "/prerendered/blog-lodge-annemasse-coliving-premium-portes-geneve.html"
     },
     {
-      "source": "/blog/temps-trajet-annemasse-geneve-par-quartier",
-      "destination": "/prerendered/blog-temps-trajet-annemasse-geneve-par-quartier.html"
-    },
-    {
       "source": "/blog/coliving-communaute-reels-amis-geneve-annemasse",
       "destination": "/prerendered/blog-coliving-communaute-reels-amis-geneve-annemasse.html"
+    },
+    {
+      "source": "/blog/temps-trajet-annemasse-geneve-par-quartier",
+      "destination": "/prerendered/blog-temps-trajet-annemasse-geneve-par-quartier.html"
     },
     {
       "source": "/blog/quitter-son-logement-guide-pratique",
@@ -381,12 +389,12 @@
       "destination": "/prerendered/en-blog-lodge-annemasse-coliving-premium-portes-geneve.html"
     },
     {
-      "source": "/en/blog/temps-trajet-annemasse-geneve-par-quartier",
-      "destination": "/prerendered/en-blog-temps-trajet-annemasse-geneve-par-quartier.html"
-    },
-    {
       "source": "/en/blog/coliving-communaute-reels-amis-geneve-annemasse",
       "destination": "/prerendered/en-blog-coliving-communaute-reels-amis-geneve-annemasse.html"
+    },
+    {
+      "source": "/en/blog/temps-trajet-annemasse-geneve-par-quartier",
+      "destination": "/prerendered/en-blog-temps-trajet-annemasse-geneve-par-quartier.html"
     },
     {
       "source": "/en/blog/quitter-son-logement-guide-pratique",
@@ -573,6 +581,22 @@
       "destination": "/prerendered/leloft-chambre-4.html"
     },
     {
+      "source": "/lappart/chambre-2",
+      "destination": "/prerendered/lappart-chambre-2.html"
+    },
+    {
+      "source": "/lappart/chambre-3",
+      "destination": "/prerendered/lappart-chambre-3.html"
+    },
+    {
+      "source": "/lappart/chambre-4",
+      "destination": "/prerendered/lappart-chambre-4.html"
+    },
+    {
+      "source": "/lappart/chambre-5",
+      "destination": "/prerendered/lappart-chambre-5.html"
+    },
+    {
       "source": "/en/lelodge/chambre-1",
       "destination": "/prerendered/en-lelodge-chambre-1.html"
     },
@@ -623,6 +647,22 @@
     {
       "source": "/en/leloft/chambre-4",
       "destination": "/prerendered/en-leloft-chambre-4.html"
+    },
+    {
+      "source": "/en/lappart/chambre-2",
+      "destination": "/prerendered/en-lappart-chambre-2.html"
+    },
+    {
+      "source": "/en/lappart/chambre-3",
+      "destination": "/prerendered/en-lappart-chambre-3.html"
+    },
+    {
+      "source": "/en/lappart/chambre-4",
+      "destination": "/prerendered/en-lappart-chambre-4.html"
+    },
+    {
+      "source": "/en/lappart/chambre-5",
+      "destination": "/prerendered/en-lappart-chambre-5.html"
     },
     {
       "source": "/offre-hiver",
