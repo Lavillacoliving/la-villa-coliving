@@ -16,6 +16,7 @@
  */
 
 import { isChunkLoadError, recoverFromChunkError } from "@/lib/lazyWithRetry";
+import { isAppartKey, isMaisonKey, roomFromPath } from "@/data/places";
 
 type Loader = () => Promise<unknown>;
 
@@ -42,6 +43,8 @@ const STATIC_LOADERS: Record<string, Loader> = {
   "/lavilla": () => import("@/pages/HouseDetailPage"),
   "/leloft": () => import("@/pages/HouseDetailPage"),
   "/lelodge": () => import("@/pages/HouseDetailPage"),
+  // (L'Appart, étape E3) Sa page (FR et /en) ; ses fiches chambres : ci-dessous, par roomFromPath.
+  "/lappart": () => import("@/pages/LAppartPage"),
   "/investisseurs": () => import("@/pages/InvestisseursPage"),
   "/observatoire-logement-frontalier-geneve": () => import("@/pages/ObservatoireLogementFrontalierPage"),
   "/qui-sommes-nous": () => import("@/pages/QuiSommesNousPage"),
@@ -58,9 +61,14 @@ export function preloadRouteModule(pathname: string): Promise<unknown> {
   if (p === "/en") p = "/";
   else if (p.startsWith("/en/")) p = p.slice(3);
 
+  // Fiche chambre (L'Appart, 12/11/2026 : chemins lus par roomFromPath, src/data/places.ts) : celle d'une MAISON est une page
+  // de RoomDetailPage, celle de L'Appart une page d'AppartRoomPage (étape E3 ; même aiguillage que App.tsx).
+  const room = roomFromPath(p);
   const loader =
-    /^\/(lavilla|leloft|lelodge)\/chambre-\d+$/.test(p)
+    room && isMaisonKey(room.place)
       ? () => import("@/pages/RoomDetailPage")
+      : room && isAppartKey(room.place)
+      ? () => import("@/pages/AppartRoomPage")
       : p.startsWith("/blog/")
       ? () => import("@/pages/BlogPostPage")
       : (STATIC_LOADERS[p] ??

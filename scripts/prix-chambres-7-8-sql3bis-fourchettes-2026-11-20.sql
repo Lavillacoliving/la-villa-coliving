@@ -1,23 +1,23 @@
 -- ============================================================================
 -- Prix des chambres 7 et 8 de La Villa (décision de Jérôme du 12/11/2026) — SQL 3 bis : les fourchettes écrites en clair par le SQL 3 deviennent les jetons {{PRIX_FOURCHETTE}} et {{PRIX_FOURCHETTE_TABLEAU}}
--- Généré le 2026-11-19T10:18:07.427Z par scripts/build-slots-sql.mjs depuis scripts/prix-chambres-7-8-fourchettes.edits.mjs
+-- Généré le 2026-11-19T16:45:25.843Z par scripts/build-slots-sql.mjs depuis scripts/prix-chambres-7-8-fourchettes.edits.mjs
 --   · source unique de la branche feat/prix-chambres-7-8 (src/data/stats.ts : CONTRACT_EUR, HOUSES_FROM ; src/data/answerSlots.ts : priceRangeText, priceRangeCell ; src/lib/contentTokens.ts) ; textes « Avant » lus en base le 13/11/2026
---   · ancres vérifiées sur le fichier posts-apres-bascule.json (HORS LIGNE — ne pas appliquer ce SQL, régénérer sans --posts-json) : exactement 1 occurrence de chaque ancien texte, nouveau texte absent
+--   · ancres vérifiées sur le contenu vivant de blog_posts (REST anon, lecture seule) le 2026-11-19T16:45:25.840Z : exactement 1 occurrence de chaque ancien texte, nouveau texte absent
 -- À appliquer APRÈS la mise en ligne du code de la branche feat/prix-chambres-7-8 (le site doit connaître les deux jetons), sans urgence : aucun changement visible. Contrôle : le prérendu suivant (check:slots).
 -- Idempotent : chaque UPDATE est gardé par position(ancien) > 0 [AND position(nouveau) = 0 quand le nouveau texte n'est pas un fragment de l'ancien] — relancer le fichier est sans effet.
 -- Fichier UTF-8 : il contient des espaces insécables (U+00A0, « 1 370 ») et des tirets cadratins — ne pas le faire transiter par un éditeur qui normalise les espaces. La forme à exécuter en séance (un seul bloc, littéraux ASCII) est le fichier .seance.sql du même nom.
 -- 30 modifications · 11 articles · état en base à la génération (updated_at · longueur fr / en) :
---   budget-colocation-geneve-guide-complet · 2026-11-12T21:48:49.13221+00:00 · 18773 / 14790
---   colocation-annemasse-ville-la-grand-ambilly · 2026-11-12T14:44:18.845333+00:00 · 8746 / 7815
---   cout-de-la-vie-suisse-france-frontalier-2026 · 2026-11-12T21:48:49.13221+00:00 · 13257 / 11925
---   dossier-location-frontalier-suisse-france · 2026-10-30T17:15:30.671729+00:00 · 9011 / 8361
---   fiscalite-frontalier-geneve-impots-2026 · 2026-11-12T21:48:49.13221+00:00 · 10725 / 10067
---   guide-ressources-frontalier-geneve · 2026-11-12T21:48:49.13221+00:00 · 40438 / 37285
---   organisations-internationales-geneve-ou-habiter · 2026-11-12T21:48:49.13221+00:00 · 7446 / 6824
---   ou-habiter-en-france-quand-on-travaille-a-geneve · 2026-11-12T21:48:49.13221+00:00 · 14931 / 14749
---   salaire-suisse-net-frontalier-2026 · 2026-11-12T21:48:49.13221+00:00 · 13931 / 11229
---   trouver-colocation-geneve-frontalier · 2026-11-12T21:48:49.13221+00:00 · 5981 / 5597
---   trouver-logement-avant-d-arriver-geneve · 2026-11-12T21:48:49.13221+00:00 · 14606 / 14108
+--   budget-colocation-geneve-guide-complet · 2026-11-19T14:26:48.508096+00:00 · 18773 / 14790
+--   colocation-annemasse-ville-la-grand-ambilly · 2026-11-19T14:26:48.508096+00:00 · 8746 / 7815
+--   cout-de-la-vie-suisse-france-frontalier-2026 · 2026-11-19T14:26:48.508096+00:00 · 13257 / 11925
+--   dossier-location-frontalier-suisse-france · 2026-11-19T14:26:48.508096+00:00 · 9011 / 8361
+--   fiscalite-frontalier-geneve-impots-2026 · 2026-11-19T14:26:48.508096+00:00 · 10725 / 10067
+--   guide-ressources-frontalier-geneve · 2026-11-19T14:26:48.508096+00:00 · 40438 / 37285
+--   organisations-internationales-geneve-ou-habiter · 2026-11-19T14:26:48.508096+00:00 · 7446 / 6824
+--   ou-habiter-en-france-quand-on-travaille-a-geneve · 2026-11-19T14:26:48.508096+00:00 · 14931 / 14749
+--   salaire-suisse-net-frontalier-2026 · 2026-11-19T14:26:48.508096+00:00 · 13931 / 11229
+--   trouver-colocation-geneve-frontalier · 2026-11-19T14:26:48.508096+00:00 · 5981 / 5597
+--   trouver-logement-avant-d-arriver-geneve · 2026-11-19T14:26:48.508096+00:00 · 14606 / 14108
 -- ============================================================================
 
 BEGIN;

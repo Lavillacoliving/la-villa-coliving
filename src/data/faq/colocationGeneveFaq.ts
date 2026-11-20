@@ -2,6 +2,12 @@ import type { QAPair } from "@/lib/structuredData";
 import { pickSituations } from "@/data/faq/situationsFaq";
 import { STATS, STATS_DISPLAY, PRICE_CHF_FR, PRICE_CHF_EN, PRICE_FROM_CHF_FR, PRICE_FROM_CHF_EN } from "@/data/stats";
 import { priceJustificationFaq } from "@/data/priceFacts";
+import { APPART } from "@/data/appart";
+
+// (L'Appart, Lot 4, étape E5 — textes du 13/11/2026, « à confirmer ») La page listera L'Appart : la définition de la marque dans
+// « le meilleur site » compte ses deux gammes (33 chambres), les disponibilités nomment L'Appart, et « colocation ou coliving »
+// le situe entre les deux. Nombres lus dans STATS et APPART.
+const BRAND_ROOMS = STATS.totalRooms + APPART.rooms.total;
 
 // FAQ de /colocation-geneve — spécification révisée du 04/09/2026 (Lot 5, gel levé) : les 4 questions
 // « Autres questions posées » de la SERP « colocation genève » + « colocation ou coliving ? » + « quel délai ? ».
@@ -28,15 +34,15 @@ export const colocationGeneveFaq: { fr: QAPair[]; en: QAPair[] } = {
     {
       q: "Quel est le meilleur site pour trouver une colocation à Genève ?",
       // (Lot L1, 10/2026) Aligné sur le bloc « Où chercher » de la page : quatre canaux, La Villa Coliving nommée dans le créneau « opérateurs de coliving », sans redupliquer la liste.
-      a: `Il n'y en a pas un seul. Côté France, quatre canaux couvrent l'essentiel : les opérateurs de coliving comme La Villa Coliving (${STATS.totalHouses} maisons, ${STATS.totalRooms} chambres, tout inclus), les plateformes de colocation entre particuliers, les groupes Facebook et la bourse du logement du CAGI pour les employés des organisations internationales. Ce que nous ajoutons : une chambre prête à vivre, une communauté déjà là, un seul loyer tout compris et une réponse sous ${STATS.responseHours} h. Notre guide « Trouver une colocation à Genève » explique comment chercher, étape par étape.`,
+      a: `Il n'y en a pas un seul. Côté France, quatre canaux couvrent l'essentiel : les opérateurs de coliving comme La Villa Coliving (${STATS.totalHouses} maisons de coliving et ${APPART.name}, une colocation à ${APPART.commune} : ${BRAND_ROOMS} chambres, tout compris), les plateformes de colocation entre particuliers, les groupes Facebook et la bourse du logement du CAGI pour les employés des organisations internationales. Ce que nous ajoutons : une chambre prête à vivre, une communauté déjà là, un seul loyer tout compris et une réponse sous ${STATS.responseHours} h. Notre guide « Trouver une colocation à Genève » explique comment chercher, étape par étape.`,
     },
     {
       q: "Colocation ou coliving : quelle différence ?",
-      a: `La colocation classique, c'est un appartement que tu trouves et que tu gères à plusieurs : meubles, charges, internet, ménage. Le coliving, c'est une maison déjà équipée, avec des espaces communs pensés pour vivre ensemble (cuisine, salon, jardin, piscine ou salle de sport selon la maison) et un seul loyer. Chez La Villa, ${STATS.totalRooms} chambres dans ${STATS.totalHouses} maisons, ${STATS.livingSpacePerResidentMin} à ${STATS.livingSpacePerResidentMax} m² d'espace de vie par colocataire.`,
+      a: `La colocation classique, c'est un appartement que tu trouves et que tu gères à plusieurs : meubles, charges, internet, ménage. Le coliving, c'est une maison déjà équipée, avec des espaces communs pensés pour vivre ensemble (cuisine, salon, jardin, piscine ou salle de sport selon la maison) et un seul loyer. Chez La Villa, ${STATS.totalRooms} chambres dans ${STATS.totalHouses} maisons, ${STATS.livingSpacePerResidentMin} à ${STATS.livingSpacePerResidentMax} m² d'espace de vie par colocataire. Entre les deux, il y a ${APPART.name} : une colocation dans un appartement, mais meublée, avec les charges, la fibre et le ménage des communs dans le loyer.`,
     },
     {
       q: "Quel délai pour emménager ?",
-      a: `Candidature en ligne en 2 minutes, réponse sous 48 h, visite sur place ou en visio, bail signé en ligne : tu peux emménager en 72 h dès ton premier contact si une chambre est disponible. Les disponibilités réelles des ${STATS.totalHouses} maisons sont affichées sur cette page et sur la page des chambres disponibles ; s'il n'y a rien à ta date, la liste d'attente te prévient dès qu'une chambre se libère.`,
+      a: `Candidature en ligne en 2 minutes, réponse sous 48 h, visite sur place ou en visio, bail signé en ligne : tu peux emménager en 72 h dès ton premier contact si une chambre est disponible. Les disponibilités réelles des ${STATS.totalHouses} maisons et de ${APPART.name} sont affichées sur cette page et sur la page des chambres disponibles ; s'il n'y a rien à ta date, la liste d'attente te prévient dès qu'une chambre se libère.`,
     },
     // Lot C2 (07/09/2026) : 4 des 10 « situations réelles » (P17, P14, garant, P1)
     ...pickSituations(["studio-vs-room", "no-swiss-payslip", "guarantor", "job-in-a-month"], "fr"),
@@ -58,15 +64,15 @@ export const colocationGeneveFaq: { fr: QAPair[]; en: QAPair[] } = {
     },
     {
       q: "What is the best website to find a flatshare in Geneva?",
-      a: `There is no single one. On the French side, four channels cover most of it: coliving operators such as La Villa Coliving (${STATS.totalHouses} houses, ${STATS.totalRooms} rooms, all inclusive), peer-to-peer flatshare platforms, Facebook groups and the CAGI housing exchange for employees of international organisations. What we add: a room ready to live in, a community already there, a single all-inclusive rent and a reply within ${STATS.responseHours} h. Our guide « Finding a flatshare in Geneva » explains how to search, step by step.`,
+      a: `There is no single one. On the French side, four channels cover most of it: coliving operators such as La Villa Coliving (${STATS.totalHouses} coliving houses and ${APPART.name}, a flatshare in ${APPART.commune}: ${BRAND_ROOMS} rooms, all inclusive), peer-to-peer flatshare platforms, Facebook groups and the CAGI housing exchange for employees of international organisations. What we add: a room ready to live in, a community already there, a single all-inclusive rent and a reply within ${STATS.responseHours} h. Our guide « Finding a flatshare in Geneva » explains how to search, step by step.`,
     },
     {
       q: "Flatshare or coliving: what is the difference?",
-      a: `A classic flatshare is a flat you find and run together: furniture, bills, internet, cleaning. Coliving is a house already equipped, with shared spaces designed for living together (kitchen, living room, garden, pool or gym depending on the house) and a single rent. At La Villa, ${STATS.totalRooms} rooms in ${STATS.totalHouses} houses, ${STATS.livingSpacePerResidentMin} to ${STATS.livingSpacePerResidentMax} m² of living space per flatmate.`,
+      a: `A classic flatshare is a flat you find and run together: furniture, bills, internet, cleaning. Coliving is a house already equipped, with shared spaces designed for living together (kitchen, living room, garden, pool or gym depending on the house) and a single rent. At La Villa, ${STATS.totalRooms} rooms in ${STATS.totalHouses} houses, ${STATS.livingSpacePerResidentMin} to ${STATS.livingSpacePerResidentMax} m² of living space per flatmate. In between, there's ${APPART.name}: a flatshare in a flat, but furnished, with bills, fibre and cleaning of the shared areas in the rent.`,
     },
     {
       q: "How quickly can you move in?",
-      a: `Online application in 2 minutes, reply within 48 h, visit on site or by video, lease signed online: you can move in within 72 h of your first contact if a room is available. Real availability across the ${STATS.totalHouses} houses is shown on this page and on the available rooms page; if nothing matches your date, the waiting list tells you as soon as a room opens up.`,
+      a: `Online application in 2 minutes, reply within 48 h, visit on site or by video, lease signed online: you can move in within 72 h of your first contact if a room is available. Live availability for the ${STATS.totalHouses} houses and ${APPART.name} is shown on this page and on the available rooms page; if nothing matches your date, the waiting list tells you as soon as a room opens up.`,
     },
     ...pickSituations(["studio-vs-room", "no-swiss-payslip", "guarantor", "job-in-a-month"], "en"),
   ],

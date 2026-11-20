@@ -4,6 +4,12 @@
  *
  * - Convertit tous les JPG et PNG dans public/images/ en WebP
  * - Qualité 80, largeur max 1920px
+ * - Redresse la photo : l'orientation EXIF (téléphone tenu debout) est appliquée aux pixels avant la réduction.
+ *   Sans cela la photo sort couchée, car la balise d'orientation disparaît avec les autres métadonnées.
+ * - Ne recopie aucune métadonnée dans le WebP : ni EXIF (dont la position GPS, l'appareil, la date), ni XMP, ni IPTC,
+ *   ni profil ICC (les couleurs sont converties en sRGB). C'est le comportement par défaut de sharp ; il est vérifié
+ *   après chaque écriture, et un fichier qui en porterait est supprimé. Ne jamais ajouter .withMetadata(),
+ *   .keepMetadata(), .keepExif() ni .keepIccProfile() : la position de la prise de vue partirait en ligne.
  * - Conserve les originaux sur le disque (ne les supprime pas) ; ils sont ignorés par git (.gitignore) :
  *   seul le .webp part en déploiement
  * - Les pages référencent le .webp ; un ancien lien .jpg reçoit le .webp (rewrite de secours, scripts/prerender.mjs)
@@ -38,6 +44,14 @@ async function findImages(dir) {
   return results;
 }
 
+/** Métadonnées encore présentes dans un fichier écrit. Liste vide = fichier propre. */
+async function metadataLeftovers(file) {
+  const meta = await sharp(file).metadata();
+  const found = ['exif', 'xmp', 'iptc', 'icc', 'tifftagPhotoshop'].filter((key) => meta[key]);
+  if (meta.orientation && meta.orientation !== 1) found.push(`orientation ${meta.orientation}`);
+  return found;
+}
+
 async function convertImage(inputPath) {
   const outputPath = inputPath.replace(/\.(jpg|jpeg|png)$/i, '.webp');
 
@@ -56,9 +70,17 @@ async function convertImage(inputPath) {
     const inputSize = inputStats.size;
 
     await sharp(inputPath)
+      .rotate() // sans argument : applique l'orientation EXIF aux pixels, puis retire la balise
       .resize({ width: MAX_WIDTH, withoutEnlargement: true })
       .webp({ quality: QUALITY })
       .toFile(outputPath);
+
+    // Garde : rien de la prise de vue ne part en ligne (position GPS, appareil, date).
+    const leftovers = await metadataLeftovers(outputPath);
+    if (leftovers.length > 0) {
+      fs.unlinkSync(outputPath);
+      throw new Error(`métadonnées restantes (${leftovers.join(', ')}) — fichier supprimé`);
+    }
 
     const outputStats = fs.statSync(outputPath);
     const outputSize = outputStats.size;
@@ -95,6 +117,8 @@ async function main() {
   console.log(`⏭ Skippées: ${skipped}`);
   console.log(`✗ Erreurs: ${errors}`);
   console.log(`💾 Espace économisé: ${(totalSavedBytes / 1024 / 1024).toFixed(1)} Mo`);
+  // Une erreur (image illisible, métadonnées restantes) doit se voir : code de sortie 1.
+  if (errors > 0) process.exitCode = 1;
 }
 
 main().catch(console.error);

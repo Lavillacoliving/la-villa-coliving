@@ -1,4 +1,4 @@
-import type { HouseKey } from "@/lib/availability";
+import { PLACE_PAGE_KEYS, placeFromPath, type PlaceKey } from "@/data/places";
 
 /**
  * Contexte « maison » dérivé de l'URL (Lot A — A3/Q9, 02/09/2026).
@@ -9,12 +9,11 @@ import type { HouseKey } from "@/lib/availability";
  * pathname (identique au prérendu et au premier rendu client) : aucun risque d'hydratation.
  */
 
-const HOUSE_PATH_RE = /^(?:\/en)?\/(lavilla|leloft|lelodge)\/?$/;
-
-/** `lavilla` | `leloft` | `lelodge` si le chemin est une page maison (FR ou EN), sinon null. */
-export function houseSlugFromPath(pathname: string): HouseKey | null {
-  const match = pathname.match(HOUSE_PATH_RE);
-  return match ? (match[1] as HouseKey) : null;
+/** Clé du lieu si le chemin est la page d'un lieu qui A une page (FR ou EN), sinon null. (L'Appart, 12/11/2026)
+ *  Lieux = PLACE_PAGE_KEYS (src/data/places.ts) : les 3 maisons tant que la page de L'Appart n'existe pas. */
+export function houseSlugFromPath(pathname: string): PlaceKey | null {
+  const place = placeFromPath(pathname);
+  return place && PLACE_PAGE_KEYS.includes(place) ? place : null;
 }
 
 /** Cible du CTA « Candidater » : contextualisée sur une page maison, générique ailleurs. */

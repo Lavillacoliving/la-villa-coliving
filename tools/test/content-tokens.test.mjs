@@ -13,6 +13,7 @@ const R = (md, lang) => m.resolveContentTokens(md, lang);
 test('liste miroir de scripts/lib/article-checks.mjs = CONTENT_TOKENS de la source, dans le même ordre', () => {
   assert.deepEqual([...m.CONTENT_TOKENS], MIRROR);
   assert.ok(MIRROR.includes('PRIX_FOURCHETTE') && MIRROR.includes('PRIX_FOURCHETTE_TABLEAU'));
+  assert.ok(MIRROR.includes('PRIX_APPART_DES') && MIRROR.includes('PRIX_APPART_DES_EUR'), 'les deux jetons de L\'Appart (14/11/2026)');
   assert.equal(new Set(MIRROR).size, MIRROR.length, 'aucun doublon');
 });
 
@@ -57,6 +58,23 @@ test('PRIX_FOURCHETTE / PRIX_FOURCHETTE_TABLEAU = priceRangeText() / priceRangeC
   assert.ok(m.priceRangeText('fr').startsWith(m.HOUSES_FROM.fr.chfNum) && m.priceRangeText('en').includes(m.HOUSES_FROM.en.chfNum));
 });
 
+test('PRIX_APPART_DES / PRIX_APPART_DES_EUR = le « dès » de L\'Appart (APPART.price.from), jamais celui des maisons', () => {
+  // (L'Appart, 14/11/2026 — CB-6) Jetons des phrases d'articles de L'Appart (contenu/BLOG.md § 1 et § 4, SQL n° 10, après la
+  // bascule) : la source est APPART.price.from (src/data/appart.ts), comme les cartes et la fiche de L'Appart.
+  for (const lang of ['fr', 'en']) {
+    assert.equal(R('{{PRIX_APPART_DES}}', lang), m.APPART.price.from[lang].chf);
+    assert.equal(R('{{PRIX_APPART_DES_EUR}}', lang), m.APPART.price.from[lang].eur);
+    assert.notEqual(R('{{PRIX_APPART_DES}}', lang), R('{{PRIX_DES}}', lang), 'deux gammes, deux « dès »');
+  }
+  // Valeurs figées (voulu : un changement de loyer de L'Appart doit être vu ici). Articles ordinaires : francs dans une phrase,
+  // euros dans la suivante (CLAUDE.md § 4) ; pages de décision : forme compacte « 730 CHF/790 € ».
+  assert.equal(R('dès {{PRIX_APPART_DES}} par mois. En euros : dès {{PRIX_APPART_DES_EUR}}.', 'fr'), 'dès 730 CHF par mois. En euros : dès 790 €.');
+  assert.equal(R('from {{PRIX_APPART_DES}} a month. In euros: from {{PRIX_APPART_DES_EUR}}.', 'en'), 'from CHF 730 a month. In euros: from €790.');
+  assert.equal(R('des chambres dès {{PRIX_APPART_DES}}/{{PRIX_APPART_DES_EUR}} par mois', 'fr'), 'des chambres dès 730 CHF/790 € par mois');
+  assert.equal(R('rooms from {{PRIX_APPART_DES}}/{{PRIX_APPART_DES_EUR}} a month', 'en'), 'rooms from CHF 730/€790 a month');
+  assert.deepEqual(unknownTokens('{{PRIX_APPART_DES}} {{PRIX_APPART_DES_EUR}}'), [], 'connus du miroir des scripts (build-slots-sql)');
+});
+
 test('créneaux vérifiés par check:slots : écrits avec un jeton en base, ils se rendent comme la phrase canonique', () => {
   for (const lang of ['fr', 'en']) {
     const range = m.priceRangeText(lang);
@@ -71,7 +89,7 @@ test('créneaux vérifiés par check:slots : écrits avec un jeton en base, ils 
 });
 
 test('le rendu des jetons de prix ne contient jamais l\'ancien prix en francs (garde check:facts), ni un séparateur de milliers ordinaire en français', () => {
-  const all = ['PRIX_DES', 'PRIX_DES_EUR', 'PRIX_PRIVATIF', 'PRIX_PRIVATIF_EUR', 'PRIX_FOURCHETTE', 'PRIX_FOURCHETTE_TABLEAU'];
+  const all = ['PRIX_DES', 'PRIX_DES_EUR', 'PRIX_PRIVATIF', 'PRIX_PRIVATIF_EUR', 'PRIX_FOURCHETTE', 'PRIX_FOURCHETTE_TABLEAU', 'PRIX_APPART_DES', 'PRIX_APPART_DES_EUR'];
   for (const lang of ['fr', 'en']) {
     const out = all.map((t) => R(`{{${t}}}`, lang)).join(' | ');
     assert.doesNotMatch(out, /1[\u00A0\u202F ]?380 CHF|1,380 CHF|CHF 1,380/, out);

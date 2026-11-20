@@ -22,6 +22,8 @@ import { buildHomeLodgingBusinessSchema } from '@/lib/structuredData';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { PRICE_FROM_CHF_FR, PRICE_FROM_CHF_EN, STATS_DISPLAY } from '@/data/stats';
 import { homeFaq } from '@/data/faq/homeFaq';
+import { AppartTeaser } from '@/components/appart/AppartTeaser';
+import { APPART } from '@/data/appart';
 import { useSectionViewTracking } from '@/lib/sectionViewTracking';
 
 export function HomePage() {
@@ -101,6 +103,12 @@ export function HomePage() {
           </div>
         </div>
       </div>
+      {/* (L'Appart, Lot 4, étape E5) Bloc statique « Aussi chez La Villa Coliving » sous la grille des maisons : texte propre à
+          l'accueil (jamais une phrase canonique), même HTML que la vue ait ou non les chambres de L'Appart. Hauteur fixe de la
+          photo, chargement différé : aucun décalage de la page. Mesure : section_view « appart_teaser » + house_discover_click. */}
+      <div data-home-section="appart_teaser" className="bg-white">
+        <div className="max-w-5xl mx-auto px-6 py-10 md:py-14"><AppartTeaser page="/" /></div>
+      </div>
       {/* features_paiement = la section « Ce que ton loyer comprend » (ex-« Un seul paiement. Zéro surprise. », lot 2 du 16/10/2026)
           (FeaturesV7) — métrique d'atteinte du Lot 2 (réf. ~16 % [EST]),
           remontée juste sous la grille par le réordonnancement du Lot 2. */}
@@ -124,10 +132,11 @@ export function HomePage() {
           id="faq-coliving-geneve"
           intro={
             <p>
-              {/* (Lot L2, 09/10/2026) « 20 min » toujours qualifié : STATS_DISPLAY.distance (D1). */}
+              {/* (Lot L2, 09/10/2026) « 20 min » toujours qualifié : STATS_DISPLAY.distance (D1). (L'Appart, E5) Deux gammes, deux
+                  phrases : jamais le prix de L'Appart dans la phrase de la piscine (règle V2). */}
               {language === "en"
-                ? `La Villa Coliving: 29 all-inclusive furnished rooms from ${PRICE_FROM_CHF_EN}/month in 3 houses with pool, sauna and gym, ${STATS_DISPLAY.en.distance} — no application fee.`
-                : `La Villa Coliving : 29 chambres meublées tout inclus dès ${PRICE_FROM_CHF_FR}/mois dans 3 maisons avec piscine, sauna et salle de sport, à ${STATS_DISPLAY.fr.distance} — sans frais de dossier.`}
+                ? `La Villa Coliving: 29 all-inclusive furnished rooms from ${PRICE_FROM_CHF_EN}/month in 3 houses with pool, sauna and gym, ${STATS_DISPLAY.en.distance} — no application fee. And ${APPART.name}, a ${APPART.descriptor.en}: ${APPART.rooms.total} rooms from ${APPART.price.from.en.chf}/month, with bills, fibre, streaming and cleaning of the shared areas included.`
+                : `La Villa Coliving : 29 chambres meublées tout inclus dès ${PRICE_FROM_CHF_FR}/mois dans 3 maisons avec piscine, sauna et salle de sport, à ${STATS_DISPLAY.fr.distance} — sans frais de dossier. Et ${APPART.name}, ${APPART.descriptor.fr} : ${APPART.rooms.total} chambres dès ${APPART.price.from.fr.chf}/mois, charges, fibre, streaming et ménage des communs compris.`}
             </p>
           }
         />

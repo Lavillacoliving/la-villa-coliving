@@ -10,6 +10,7 @@ import { HOUSES } from "@/data/houses";
 import { ENTITY_FACTS, ENTITY_HOUSES } from "@/data/entityFacts";
 import { roomGallerySections, type GallerySectionKey, type RoomPhoto } from "@/data/roomPhotos";
 import { isRoomPageOpen, parseRoomPagePath, roomPagePath } from "@/data/roomPages";
+import { isAppartKey, isMaisonKey } from "@/data/places";
 import { thousands } from "@/data/stats";
 import { lazyWithRetry } from "@/lib/lazyWithRetry";
 import { responsiveImage } from "@/lib/responsiveImage";
@@ -42,6 +43,9 @@ import {
  * Faits (caution, bail, inclusions, trajets) : src/data/entityFacts.ts — jamais en dur ici.
  */
 const PhotoLightbox = lazyWithRetry(() => import("@/components/PhotoLightbox"), "PhotoLightbox");
+// (L'Appart, étape E3) La fiche d'une chambre de L'Appart a sa propre page (App.tsx l'y route directement) : si un de ses chemins
+// arrive ici, on la rend — chargée à la demande, jamais dans le morceau des fiches des maisons.
+const AppartRoomPage = lazyWithRetry(() => import("@/pages/AppartRoomPage").then((m) => ({ default: m.AppartRoomPage })), "AppartRoomPage");
 
 const SITE = "https://www.lavillacoliving.com";
 
@@ -128,7 +132,9 @@ export function RoomDetailPage() {
   const en = language === "en";
   const L = en ? "en" as const : "fr" as const;
 
-  const parsed = parseRoomPagePath(pathname);
+  // (L'Appart, 12/11/2026) Page des fiches des MAISONS : la fiche d'un autre lieu n'est pas rendue ici.
+  const anyPlace = parseRoomPagePath(pathname);
+  const parsed = anyPlace && isMaisonKey(anyPlace.house) ? { house: anyPlace.house, roomNumber: anyPlace.roomNumber } : null;
   const house: HouseKey = parsed?.house ?? "lelodge";
   const n = parsed?.roomNumber ?? 0;
   const houseRooms = useHouseRooms(house);
@@ -144,6 +150,8 @@ export function RoomDetailPage() {
     for (const s of sections ?? []) { if (s.key === key) return i; i += s.photos.length; }
     return 0;
   };
+
+  if (anyPlace && isAppartKey(anyPlace.house)) return <AppartRoomPage />;
 
   if (!parsed) {
     return (

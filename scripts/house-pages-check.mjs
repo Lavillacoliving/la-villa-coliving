@@ -31,6 +31,14 @@
  * (Lot 2 « retenue premium », sous-lot A — 11/2026) La FAQ d'une page maison n'affiche plus que ses 5 premières questions,
  * les suivantes sont repliées sous un bouton : checkFaqInHtml vérifie que TOUTES les questions du JSON-LD FAQPage restent
  * dans le texte du HTML prérendu (un repli masque, il ne retire jamais).
+ *
+ * (L'Appart, brief du 12/11/2026, étape E2g) Par LIEU, plus seulement par maison. Chaque ligne de la vue est classée (scripts/lib/
+ * gamme-rules.mjs) : une maison, L'Appart, ou un lieu INCONNU du site (échec : la vue est en avance sur le code). Chaque lieu qui a
+ * une page (PLACE_PAGE_KEYS, src/data/places.ts) est contrôlé en deux parties : STATIQUE, même sans ligne dans la vue (fichiers FR
+ * et EN, emplacement — placeLocation.ts pour L'Appart —, FAQ, liens contextuels, formats, grammaire « à L'Appart ») ; CHAMBRES,
+ * seulement si la vue rend ses lignes (état embarqué, libellé de chaque chambre — la n° 5 de L'Appart s'appelle « Suite » —,
+ * bouton de chaque chambre candidate). Un lieu qui a des lignes sans page = échec (la page part avant la bascule). Surfaces :
+ * ROOM_SURFACE_BY_HOUSE pour les maisons, APPART.rooms.surface pour L'Appart ; la fourchette de /tarifs reste celle des maisons.
  */
 
 import fs from 'fs/promises';
@@ -40,6 +48,7 @@ import { fileURLToPath, pathToFileURL } from 'url';
 import { loadEntityFacts } from './lib/load-entity-facts.mjs';
 import { visibleText } from './check-entity-facts.mjs';
 import { loadPrivateLocations, buildStreetMatchers, scanStreets, PrivateLocationsError, LOCATIONS_ENV, LOCATIONS_FILE_ENV, LEGAL_PRERENDERED_PAGES, HEAD_OFFICE_KEY } from './lib/private-locations.mjs';
+import { classifyViewRows, unknownPlaceMessage, appartSurfaceIssues, isInternalKey, placeKeyLabel } from './lib/gamme-rules.mjs';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const PRERENDERED = path.join(__dirname, '..', 'public', 'prerendered');
@@ -104,31 +113,38 @@ export function mainTextAfterH1(html) {
  * commute » pointe vers google.com/maps/dir/ depuis le point public de la maison (houseDirectionsUrl), jamais depuis sa rue.
  * `streetMatchers` (facultatif) : détecteurs des rues, bâtis depuis la source hors dépôt — un lien qui en contient une
  * n'est jamais recopié dans un message.
+ * (L'Appart, E2g) Page de L'Appart : mêmes règles, sources de src/data/placeLocation.ts (appartLocation.ts) — phrase de quartier,
+ * ligne de trajet (le chapeau la porte), version, zone, lien « Calculer mon trajet » depuis son point public (APPART_PLACE : la
+ * gare d'Annemasse).
  */
 export function checkHouseLocation(html, slug, lang, m, streetMatchers = []) {
   const file = lang === 'fr' ? `${slug}.html` : `en-${slug}.html`;
-  const house = m.ENTITY_HOUSES.find((h) => h.slug === slug);
-  if (!house) return [`${file} : ${slug} absent de ENTITY_HOUSES — nouvelle maison ? → src/data/stats.ts (ROOMS_BY_HOUSE, TRANSIT, ROOM_SURFACE_BY_HOUSE), entityFacts.ts, houseLocation.ts`];
+  const appart = slug === m.APPART_KEY;
+  const house = appart ? null : m.ENTITY_HOUSES.find((h) => h.slug === slug);
+  if (!appart && !house) return [`${file} : ${slug} absent de ENTITY_HOUSES — nouvelle maison ? → src/data/stats.ts (ROOMS_BY_HOUSE, TRANSIT, ROOM_SURFACE_BY_HOUSE), entityFacts.ts, houseLocation.ts`];
+  // Sources de la page : houseLocation.ts pour une maison (messages d'avant L'Appart, inchangés), placeLocation.ts pour L'Appart.
+  const src = appart
+    ? { neighbourhood: m.placeNeighbourhood(slug, lang), commute: m.placeCommuteLine(slug, lang), version: m.placeLocationVersion(slug), url: m.placeDirectionsUrl(slug, lang), label: m.placeDirectionsLabel(lang), zone: m.placeZone(slug, lang), point: m.publicGeo(m.APPART_PLACE), fn: { nb: 'placeNeighbourhood', url: 'placeDirectionsUrl', zone: 'placeZone' }, lead: 'le chapeau doit la porter en tête', what: "d'un lieu" }
+    : { neighbourhood: m.houseNeighbourhood(slug, lang), commute: house.commute[lang], version: m.HOUSE_LOCATION_VERSION, url: m.houseDirectionsUrl(slug, lang), label: m.houseDirectionsLabel(lang), zone: m.houseZone(slug, lang), point: m.publicGeo(m.HOUSES.find((x) => x.slug === slug)), fn: { nb: 'houseNeighbourhood', url: 'houseDirectionsUrl', zone: 'houseZone' }, lead: 'longDescription doit la porter en tête', what: "d'une maison" };
   const failures = [];
   const text = visibleText(html);
-  const neighbourhood = m.houseNeighbourhood(slug, lang);
+  const neighbourhood = src.neighbourhood;
   const n = count(text, neighbourhood);
-  if (n !== 1) failures.push(`${file} : phrase de quartier (houseNeighbourhood) présente ${n} fois dans le texte visible (attendu exactement 1) — « ${neighbourhood.slice(0, 60)}… »`);
-  const commute = house.commute[lang];
-  if (!mainTextAfterH1(html).slice(0, COMMUTE_WINDOW).includes(commute)) failures.push(`${file} : ligne de trajet « ${commute} » absente des ${COMMUTE_WINDOW} premiers caractères après le H1 (longDescription doit la porter en tête)`);
-  const versionAttr = `data-house-location-version="${m.HOUSE_LOCATION_VERSION}"`;
+  if (n !== 1) failures.push(`${file} : phrase de quartier (${src.fn.nb}) présente ${n} fois dans le texte visible (attendu exactement 1) — « ${neighbourhood.slice(0, 60)}… »`);
+  const commute = src.commute;
+  if (!mainTextAfterH1(html).slice(0, COMMUTE_WINDOW).includes(commute)) failures.push(`${file} : ligne de trajet « ${commute} » absente des ${COMMUTE_WINDOW} premiers caractères après le H1 (${src.lead})`);
+  const versionAttr = `data-house-location-version="${src.version}"`;
   const v = count(html, versionAttr);
   if (v !== 1) failures.push(`${file} : ${versionAttr} présent ${v} fois (attendu 1)`);
-  const url = m.houseDirectionsUrl(slug, lang);
-  const label = m.houseDirectionsLabel(lang);
-  const h = m.HOUSES.find((x) => x.slug === slug);
-  const g = m.publicGeo(h);
+  const url = src.url;
+  const label = src.label;
+  const g = src.point;
   const urlHasStreet = scanStreets(url, streetMatchers).length > 0;
   const shownUrl = urlHasStreet ? '(lien non affiché : il contient une rue)' : url;
-  if (!url.startsWith('https://www.google.com/maps/dir/') || !url.includes(`origin=${encodeURIComponent(`${g.lat},${g.lng}`)}`)) failures.push(`${file} : houseDirectionsUrl ne part pas du point public arrondi (publicGeo) — ${shownUrl}`);
-  if (urlHasStreet) failures.push(`${file} : houseDirectionsUrl contient la rue d'une maison — l'itinéraire part du point public (publicGeo)`);
-  const zone = m.houseZone(slug, lang);
-  if (!text.includes(zone)) failures.push(`${file} : zone « ${zone} » (houseZone) absente du texte visible`);
+  if (!url.startsWith('https://www.google.com/maps/dir/') || !url.includes(`origin=${encodeURIComponent(`${g.lat},${g.lng}`)}`)) failures.push(`${file} : ${src.fn.url} ne part pas du point public arrondi (publicGeo) — ${shownUrl}`);
+  if (urlHasStreet) failures.push(`${file} : ${src.fn.url} contient la rue ${src.what} — l'itinéraire part du point public (publicGeo)`);
+  const zone = src.zone;
+  if (!text.includes(zone)) failures.push(`${file} : zone « ${zone} » (${src.fn.zone}) absente du texte visible`);
   if (!html.replace(/&amp;/g, '&').includes(`href="${url}"`)) failures.push(`${file} : lien « ${label} » absent (href attendu : ${shownUrl})`);
   if (!text.includes(label)) failures.push(`${file} : libellé « ${label} » absent du texte visible`);
   return failures;
@@ -154,19 +170,27 @@ export function checkFaqInHtml(html, file) {
  * (11/11/2026) Accord du nom des maisons en français : « du Loft », « du Lodge », « au Loft », jamais « de Le Loft » ni
  * « à Le Lodge » (les titres « À propos de Le Loft » et « Prêt à faire de Le Lodge ton chez-toi ? » étaient en production).
  * Dans le code : ofHouseFr() de HouseDetailPage.tsx. Pur ; renvoie les échecs.
+ * (L'Appart, E2g) Et jamais « au L'Appart », « du L'Appart », « le L'Appart » : « à L'Appart », « de L'Appart ».
  */
 export function checkHouseNameGrammar(html, file) {
-  const found = [...new Set(visibleText(html).match(/(?:\bde|à) Le (?:Loft|Lodge)\b/g) ?? [])];
-  return found.map((f) => `${file} : « ${f} » dans le texte visible — écrire « du Loft », « du Lodge », « au Loft », « au Lodge » (ofHouseFr)`);
+  const found = [...new Set(visibleText(html).match(/(?:\bde|à) Le (?:Loft|Lodge)\b|\b(?:[Aa]u|[Dd]u|[Ll]e) L['’]Appart\b/g) ?? [])];
+  return found.map((f) => (/Appart/.test(f)
+    ? `${file} : « ${f} » dans le texte visible — écrire « à L'Appart », « de L'Appart » (le nom garde son article)`
+    : `${file} : « ${f} » dans le texte visible — écrire « du Loft », « du Lodge », « au Loft », « au Lodge » (ofHouseFr)`));
 }
 
-/** ROOM_SURFACE_BY_HOUSE (src/data/stats.ts) = Math.round(min / max de v_public_rooms.surface_m2) pour chaque maison publique. */
+/**
+ * ROOM_SURFACE_BY_HOUSE (src/data/stats.ts) = Math.round(min / max de v_public_rooms.surface_m2) pour chaque maison publique.
+ * (L'Appart, E2g) Les lignes de L'Appart se comparent à APPART.rooms.surface (rien tant que la vue ne les rend pas) ; un lieu
+ * inconnu reste signalé, jamais sous sa clé interne.
+ */
 export function checkRoomSurfaceByHouse(byHouse, m) {
   const failures = [];
   const src = m.ROOM_SURFACE_BY_HOUSE;
   for (const [slug, rooms] of byHouse) {
+    if (slug === m.APPART_KEY) { failures.push(...appartSurfaceIssues(rooms, m)); continue; }
     const exp = src[slug];
-    if (!exp) { failures.push(`${slug} : absent de ROOM_SURFACE_BY_HOUSE (src/data/stats.ts) — nouvelle maison ?`); continue; }
+    if (!exp) { failures.push(`${isInternalKey(slug, m) ? placeKeyLabel(slug, m) : slug} : absent de ROOM_SURFACE_BY_HOUSE (src/data/stats.ts) — nouvelle maison ?`); continue; }
     const sizes = rooms.map((r) => Number(r.surface_m2)).filter((n) => Number.isFinite(n) && n > 0);
     if (sizes.length === 0) continue; // surface_m2 absent : la garde /tarifs l'a déjà signalé
     const min = Math.round(Math.min(...sizes)), max = Math.round(Math.max(...sizes));
@@ -176,9 +200,15 @@ export function checkRoomSurfaceByHouse(byHouse, m) {
   return failures;
 }
 
+/**
+ * Page d'un LIEU (maison ou L'Appart), FR et EN. (L'Appart, E2g) Deux parties : « chambres » (1, 2, 6) seulement si la vue rend des
+ * lignes pour ce lieu — L'Appart avant la bascule n'en a pas ; « statique » (3 à 5, 7 à 9) toujours. Pour une maison, qui a
+ * toujours ses lignes, rien ne change.
+ */
 async function checkHouse(slug, rooms, m, streetMatchers = []) {
   const failures = [];
   const candidates = rooms.filter((r) => r.availability === 'available' || !!r.available_from);
+  const appart = slug === m.APPART_KEY;
   for (const lang of ['fr', 'en']) {
     const file = lang === 'fr' ? `${slug}.html` : `en-${slug}.html`;
     const prefix = lang === 'fr' ? '' : '/en';
@@ -186,24 +216,31 @@ async function checkHouse(slug, rooms, m, streetMatchers = []) {
     try {
       html = await fs.readFile(path.join(PRERENDERED, file), 'utf-8');
     } catch {
-      failures.push(`${file} : page prérendue ABSENTE (nouvelle maison ? → STATIC_ROUTES de scripts/prerender.mjs, App.tsx, routePreload.ts, HouseDetailPage.tsx)`);
+      failures.push(appart
+        ? `${file} : page prérendue ABSENTE (L'Appart a sa page dans PLACE_PAGE_KEYS → STATIC_ROUTES de scripts/prerender.mjs, App.tsx, routePreload.ts, LAppartPage.tsx)`
+        : `${file} : page prérendue ABSENTE (nouvelle maison ? → STATIC_ROUTES de scripts/prerender.mjs, App.tsx, routePreload.ts, HouseDetailPage.tsx)`);
       continue;
     }
-    // 1. Embed chambres : toutes les lignes de la maison, sérialisées au prérendu.
-    const embed = extractEmbed(html, '__rooms_level_data__');
-    const mine = Array.isArray(embed) ? embed.filter((r) => r.house_slug === slug) : [];
-    if (mine.length !== rooms.length) failures.push(`${file} : embed __rooms_level_data__ = ${mine.length} chambre(s), base = ${rooms.length}`);
-    // 2. Chaque chambre est nommée ; chaque chambre candidate a son CTA à deux paramètres.
-    for (const r of rooms) {
-      const name = lang === 'fr' ? `Chambre ${r.room_number}` : `Room ${r.room_number}`;
-      if (!html.includes(name)) failures.push(`${file} : « ${name} » introuvable`);
+    if (rooms.length > 0) {
+      // 1. Embed chambres : toutes les lignes du lieu, sérialisées au prérendu.
+      const embed = extractEmbed(html, '__rooms_level_data__');
+      const mine = Array.isArray(embed) ? embed.filter((r) => r.house_slug === slug) : [];
+      if (mine.length !== rooms.length) failures.push(`${file} : embed __rooms_level_data__ = ${mine.length} chambre(s), base = ${rooms.length}`);
+      // 2. Chaque chambre est nommée (roomLabel : « Chambre N » / « Room N », la n° 5 de L'Appart « Suite ») ; chaque chambre
+      //    candidate a son CTA à deux paramètres.
+      for (const r of rooms) {
+        const name = m.roomLabel(slug, Number(r.room_number), lang);
+        if (!html.includes(name)) failures.push(`${file} : « ${name} » introuvable`);
+      }
+      for (const r of candidates) {
+        const cta = `href="${prefix}/candidature?property_interest=${slug}&amp;room_interest=chambre-${r.room_number}"`;
+        const ctaRaw = cta.replace('&amp;', '&');
+        if (!html.includes(cta) && !html.includes(ctaRaw)) failures.push(`${file} : CTA chambre ${r.room_number} (candidate) sans property_interest+room_interest`);
+      }
+      // 6. Pas de dispo chiffrée en dur : le badge doit venir de l'embed résumé.
+      if (!extractEmbed(html, '__room_availability_data__')) failures.push(`${file} : embed __room_availability_data__ absent`);
     }
-    for (const r of candidates) {
-      const cta = `href="${prefix}/candidature?property_interest=${slug}&amp;room_interest=chambre-${r.room_number}"`;
-      const ctaRaw = cta.replace('&amp;', '&');
-      if (!html.includes(cta) && !html.includes(ctaRaw)) failures.push(`${file} : CTA chambre ${r.room_number} (candidate) sans property_interest+room_interest`);
-    }
-    // 3. Tous les CTA de candidature de la page portent la maison (hero, pricing, final, sticky, nav ×2, footer).
+    // 3. Tous les CTA de candidature de la page portent le lieu (hero, pricing, final, sticky, nav ×2, footer).
     const contextual = count(html, `property_interest=${slug}`);
     if (contextual < 7) failures.push(`${file} : seulement ${contextual} lien(s) property_interest=${slug} (attendu ≥ 7)`);
     const bare = count(html, `href="${prefix}/candidature"`);
@@ -213,13 +250,11 @@ async function checkHouse(slug, rooms, m, streetMatchers = []) {
     if (/1[  ]380 CHF|1,380 CHF/.test(html)) failures.push(`${file} : montant périmé 1 380 CHF`);
     // 5. Marqueurs d'hydratation posés par scripts/prerender.mjs.
     if (!html.includes('<!--$-->') || !html.includes('<!--/$-->')) failures.push(`${file} : marqueurs Suspense <!--$--> absents (hydratation #418 garantie)`);
-    // 6. Pas de dispo chiffrée en dur : le badge doit venir de l'embed résumé.
-    if (!extractEmbed(html, '__room_availability_data__')) failures.push(`${file} : embed __room_availability_data__ absent`);
-    // 7. (Lot L2, 09/10/2026) Section Localisation = source unique houseLocation.ts.
+    // 7. (Lot L2, 09/10/2026) Section Localisation = source unique houseLocation.ts (L'Appart : placeLocation.ts).
     failures.push(...checkHouseLocation(html, slug, lang, m, streetMatchers));
     // 8. (Lot 2 — sous-lot A, 11/2026) FAQ repliée : toutes les questions du FAQPage restent dans le HTML.
     failures.push(...checkFaqInHtml(html, file));
-    // 9. (11/11/2026) Accord du nom des maisons : jamais « de Le Loft » ni « à Le Lodge » sur une page française.
+    // 9. (11/11/2026) Accord du nom des maisons : jamais « de Le Loft » ni « à Le Lodge » sur une page française (ni « au L'Appart »).
     if (lang === 'fr') failures.push(...checkHouseNameGrammar(html, file));
   }
   return failures;
@@ -357,25 +392,37 @@ export function successMessage(streetsChecked) {
 }
 
 async function main() {
-  console.log('\n🏠 Garde pages maisons — v_public_rooms × public/prerendered/ × houseLocation.ts\n');
+  console.log('\n🏠 Garde pages des lieux (maisons, L\'Appart) — v_public_rooms × public/prerendered/ × houseLocation.ts / appartLocation.ts\n');
   const [byHouse, m, streetMatchers] = await Promise.all([fetchRooms(), loadEntityFacts(), loadStreetMatchers()]);
   let total = 0;
+  // (L'Appart, E2g) Chaque ligne de la vue : une maison, L'Appart, ou un lieu inconnu du site (la vue en avance sur le code).
+  const { byPlace, unknown } = classifyViewRows([...byHouse.values()].flat(), m);
+  for (const u of unknown) { total++; console.log(`❌ ${unknownPlaceMessage(u)}`); }
   const surfaceFailures = checkRoomSurfaceByHouse(byHouse, m);
   total += surfaceFailures.length;
-  console.log(`${surfaceFailures.length === 0 ? '✅' : '❌'} ROOM_SURFACE_BY_HOUSE (stats.ts) = v_public_rooms par maison`);
+  console.log(`${surfaceFailures.length === 0 ? '✅' : '❌'} ROOM_SURFACE_BY_HOUSE (stats.ts) = v_public_rooms par maison ; APPART.rooms.surface pour L'Appart`);
   for (const f of surfaceFailures) console.log(`   • ${f}`);
-  for (const [slug, rooms] of byHouse) {
+  // Chaque lieu qui a une page (PLACE_PAGE_KEYS) : partie statique toujours, partie « chambres » s'il a des lignes. Un lieu qui a
+  // des lignes sans page = échec ; sans ligne ni page (L'Appart avant l'étape E3) = rien à contrôler.
+  for (const slug of m.PLACE_KEYS) {
+    const rooms = byPlace.get(slug) ?? [];
+    if (!m.PLACE_PAGE_KEYS.includes(slug)) {
+      if (rooms.length) { total++; console.log(`❌ ${slug} — ${rooms.length} chambre(s) dans v_public_rooms, mais pas de page pour ce lieu (PLACE_PAGE_KEYS, src/data/places.ts) : la page part en ligne AVANT la bascule`); }
+      else console.log(`ℹ️  ${slug} — absent de v_public_rooms et pas encore de page (PLACE_PAGE_KEYS) : rien à contrôler`);
+      continue;
+    }
     const failures = await checkHouse(slug, rooms, m, streetMatchers);
     total += failures.length;
     const candidates = rooms.filter((r) => r.availability === 'available' || !!r.available_from).length;
-    console.log(`${failures.length === 0 ? '✅' : '❌'} ${slug} — ${rooms.length} chambres, ${candidates} candidate(s)`);
+    console.log(`${failures.length === 0 ? '✅' : '❌'} ${slug} — ${rooms.length} chambres, ${candidates} candidate(s)${rooms.length ? '' : ' (absent de v_public_rooms : partie « chambres » sautée, partie statique contrôlée)'}`);
     for (const f of failures) console.log(`   • ${f}`);
   }
-  const pageFailures = await checkAvailablePage(byHouse);
+  const pageFailures = await checkAvailablePage(byPlace);
   total += pageFailures.length;
   console.log(`${pageFailures.length === 0 ? '✅' : '❌'} /chambres-disponibles — FR + EN`);
   for (const f of pageFailures) console.log(`   • ${f}`);
-  const sizeFailures = await checkRoomSizeRange([...byHouse.values()].flat());
+  // La fourchette de surfaces de /tarifs (STATS.roomSizeMin/Max) est celle des MAISONS : L'Appart n'y entre pas.
+  const sizeFailures = await checkRoomSizeRange((m.MAISON_KEYS ?? []).flatMap((k) => byPlace.get(k) ?? []));
   total += sizeFailures.length;
   for (const f of sizeFailures) console.log(`   • ${f}`);
   const leakFailures = await checkNoExactLocation(m, streetMatchers);

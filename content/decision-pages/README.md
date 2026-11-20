@@ -12,8 +12,11 @@ FAQPage, byline, fil d'Ariane) est celui de tous les articles ; trois extensions
 2. **Tokens de faits** (jamais de prix en dur) : `{{PRIX_DES}}` (le « dès » des maisons : 1 290 CHF depuis le 19/11/2026)
    et `{{PRIX_DES_EUR}}` (1 380 €), `{{PRIX_PRIVATIF}}` (1 430 CHF) et `{{PRIX_PRIVATIF_EUR}}`, `{{PRIX_FOURCHETTE}}`
    (« 1 290 à 1 430 CHF » en prose) et `{{PRIX_FOURCHETTE_TABLEAU}}` (« 1 290 – 1 430 CHF » en cellule de tableau),
-   `{{NB_CHAMBRES}}`, `{{NB_MAISONS}}`, `{{MIN_GENEVE}}`, `{{CAUTION_MOIS}}` — uniquement dans le contenu
-   (pas dans les titres, extraits ni metas). Source : `src/lib/contentTokens.ts` ← `src/data/stats.ts`.
+   `{{PRIX_APPART_DES}}` (le « dès » de L'Appart : 730 CHF) et `{{PRIX_APPART_DES_EUR}}` (790 €), en forme compacte
+   `{{PRIX_APPART_DES}}/{{PRIX_APPART_DES_EUR}}` dans une page de décision (14/11/2026 ; phrases du SQL n° 10, après la
+   bascule de L'Appart), `{{NB_CHAMBRES}}`, `{{NB_MAISONS}}`, `{{MIN_GENEVE}}`, `{{CAUTION_MOIS}}` — uniquement dans le contenu
+   (pas dans les titres, extraits ni metas). Source : `src/lib/contentTokens.ts` ← `src/data/stats.ts` (L'Appart :
+   `src/data/appart.ts`).
 3. **Tableau d'options** (GFM) à colonnes imposées : `| Option | Prix | Délai réaliste | Dossier demandé | Durée minimum |`
    (EN : `| Option | Price | Realistic timeline | Paperwork required | Minimum stay |`), 4 catégories anonymes
    (studio en ville, colocation classique, coliving côté France, résidence/appart'hôtel) + éventuellement la ligne

@@ -6,6 +6,7 @@ import { SEO } from "@/components/SEO";
 import { buildBreadcrumbSchema, HOUSES, LAVILLA_EMAIL, LAVILLA_PHONE, LAVILLA_POSTAL_ADDRESS, LAVILLA_SAME_AS, ORG_ID, LAVILLA_ALTERNATE_NAMES } from "@/lib/structuredData";
 import { STATS, STATS_DISPLAY, PRICE_FROM_CHF_FR, PRICE_FROM_CHF_EN, MARKET_COMPARISON } from "@/data/stats";
 import { VERIFY_ARTICLE_PATH, VERIFY_LINK_LABEL } from "@/data/verifyArticle";
+import { APPART } from "@/data/appart";
 import {
   Linkedin,
   Mail,
@@ -71,9 +72,10 @@ export function QuiSommesNousPage() {
       address: LAVILLA_POSTAL_ADDRESS,
       areaServed: ["Genève", "Annemasse", "Grand Genève"],
       // (Lot L2, 09/10/2026, D1) « 20 min » qualifié par STATS_DISPLAY.distance, jamais « 20 minutes de Genève » seul.
+      // (L'Appart, Lot 4, étape E5 — texte du 13/11/2026 « à confirmer ») Les deux gammes, chacune avec son « dès ».
       description: en
-        ? `Premium coliving under direct management: ${STATS.totalHouses} houses, ${STATS.totalRooms} furnished rooms all-inclusive from ${PRICE_FROM_CHF_EN}/month, on the French side, ${STATS_DISPLAY.en.distance}.`
-        : `Coliving premium en gestion directe : ${STATS.totalHouses} maisons, ${STATS.totalRooms} chambres meublées tout inclus dès ${PRICE_FROM_CHF_FR}/mois, côté France, à ${STATS_DISPLAY.fr.distance}.`,
+        ? `Coliving and flatshare under direct management, on the French side, on the Geneva border: ${STATS.totalHouses} coliving houses (${STATS.totalRooms} furnished rooms, all inclusive from ${PRICE_FROM_CHF_EN}/month) and ${APPART.name}, a ${APPART.rooms.total}-room flatshare in ${APPART.commune} (from ${APPART.price.from.en.chf}/month).`
+        : `Coliving et colocation en gestion directe, côté France, à la frontière de Genève : ${STATS.totalHouses} maisons de coliving (${STATS.totalRooms} chambres meublées, tout inclus dès ${PRICE_FROM_CHF_FR}/mois) et ${APPART.name}, une colocation de ${APPART.rooms.total} chambres à ${APPART.commune} (dès ${APPART.price.from.fr.chf}/mois).`,
       founder: [
         {
           "@type": "Person",
@@ -163,8 +165,9 @@ export function QuiSommesNousPage() {
         title={en ? "Who we are — Jérôme & Fanny, founders" : "Qui sommes-nous — Jérôme & Fanny, fondateurs"}
         description={
           en
-            ? `Two co-founders, ${STATS.totalHouses} houses, ${STATS.totalResidents}+ residents since October ${STATS.foundedYear}. La Villa Coliving runs its colivings near Geneva with no agency and no hidden fees.`
-            : `Deux co-fondateurs, ${STATS.totalHouses} maisons, ${STATS.totalResidents}+ résidents depuis octobre ${STATS.foundedYear}. La Villa Coliving gère ses colivings près de Genève sans agence ni frais cachés.`
+            // (L'Appart, E5) « 100+ résidents » rattachés aux maisons dans la phrase (preuve des maisons, jamais de L'Appart).
+            ? `Two co-founders, ${STATS.totalResidents}+ residents since October ${STATS.foundedYear} in ${STATS.totalHouses} coliving houses, and a flatshare in ${APPART.commune}. Everything is run directly, with no agency.`
+            : `Deux co-fondateurs, ${STATS.totalResidents}+ résidents depuis octobre ${STATS.foundedYear} dans ${STATS.totalHouses} maisons de coliving, et une colocation à ${APPART.commune}. Tout est géré en direct, sans agence.`
         }
         image={`${SITE}${IMG_HISTOIRE}`}
         jsonLd={aboutSchema}
@@ -214,8 +217,8 @@ export function QuiSommesNousPage() {
                 <p>
                   {/* (Lot L2, 09/10/2026, D1) « 20 min » qualifié par STATS_DISPLAY.distance, jamais « du centre de Genève ». */}
                   {en
-                    ? `October ${STATS.foundedYear}: the first house opened in Ville-la-Grand, with a simple conviction — a coliving should be a living space designed around its community, not just an upgraded flatshare. Today, La Villa Coliving brings together ${STATS.totalHouses} houses — La Villa in Ville-la-Grand, Le Loft in Ambilly, Le Lodge in Annemasse — ${STATS.totalRooms} furnished rooms, all-inclusive from ${PRICE_FROM_CHF_EN}/month, ${STATS_DISPLAY.en.distance}.`
-                    : `Octobre ${STATS.foundedYear} : la première maison ouvre à Ville-la-Grand, avec une conviction simple — un coliving doit être un lieu de vie pensé pour sa communauté, pas une colocation améliorée. Aujourd'hui, La Villa Coliving réunit ${STATS.totalHouses} maisons — La Villa à Ville-la-Grand, Le Loft à Ambilly, Le Lodge à Annemasse — soit ${STATS.totalRooms} chambres meublées tout inclus dès ${PRICE_FROM_CHF_FR}/mois, à ${STATS_DISPLAY.fr.distance}.`}
+                    ? `October ${STATS.foundedYear}: the first house opened in Ville-la-Grand, with a simple conviction — a coliving should be a living space designed around its community, not just an upgraded flatshare. Today, La Villa Coliving brings together ${STATS.totalHouses} houses — La Villa in Ville-la-Grand, Le Loft in Ambilly, Le Lodge in Annemasse — ${STATS.totalRooms} furnished rooms, all-inclusive from ${PRICE_FROM_CHF_EN}/month, ${STATS_DISPLAY.en.distance}. Alongside them now is ${APPART.name}, in ${APPART.commune}, near the station. That one is a flatshare, and we say so: ${APPART.rooms.total} rooms, no pool, a tighter budget.`
+                    : `Octobre ${STATS.foundedYear} : la première maison ouvre à Ville-la-Grand, avec une conviction simple — un coliving doit être un lieu de vie pensé pour sa communauté, pas une colocation améliorée. Aujourd'hui, La Villa Coliving réunit ${STATS.totalHouses} maisons — La Villa à Ville-la-Grand, Le Loft à Ambilly, Le Lodge à Annemasse — soit ${STATS.totalRooms} chambres meublées tout inclus dès ${PRICE_FROM_CHF_FR}/mois, à ${STATS_DISPLAY.fr.distance}. S'y ajoute ${APPART.name}, à ${APPART.commune}, dans le quartier de la gare. Lui est une colocation, et on l'assume : ${APPART.rooms.total} chambres, pas de piscine, un budget plus serré.`}
                 </p>
                 <p>
                   {en

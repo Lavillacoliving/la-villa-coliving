@@ -19,11 +19,39 @@ test('D11 : alternateName identiques sur les fiches d\'organisation (LocalBusine
       assert.ok(node.sameAs.includes(m.GOOGLE_BUSINESS_PROFILE_URL));
       assert.ok(!node.sameAs.some((u) => /share\.google/.test(u)), 'plus de lien court share.google');
       assert.ok(!node.sameAs.some((u) => /facebook\.com/.test(u)), 'jamais Facebook dans sameAs (D10)');
-      assert.equal(node.department.length, 3);
+      // (L'Appart, étape E5) La marque : les 3 maisons puis L'Appart dans `department`.
+      assert.equal(node.department.length, 4);
+      assert.deepEqual(node.department.map((d) => d['@id']), [...m.HOUSES.map((h) => `${h.url}#lodging`), m.placeLodgingId(m.APPART_KEY)]);
       for (const d of node.department) { assert.match(d['@id'], /#lodging$/); assert.equal(d.parentOrganization['@id'], m.ORG_ID); }
     }
   }
   assert.equal(m.GOOGLE_BUSINESS_PROFILE_URL, m.GOOGLE_REVIEWS.url);
+});
+
+test('(L\'Appart, E5) fiches de la marque : 33 chambres = ENTITY_FACTS.brand, priceRange de la marque, une offre par gamme, aucun équipement des maisons', () => {
+  const NB = '\u00A0';
+  const B = m.ENTITY_FACTS.brand, A = m.ENTITY_FACTS.appart, F = m.ENTITY_FACTS;
+  for (const lang of LANGS) {
+    for (const node of [m.buildLocalBusinessSchema(lang, 'desc'), m.buildHomeLodgingBusinessSchema(lang)]) {
+      assert.equal(node.numberOfRooms, B.totalRooms);
+      assert.equal(node.numberOfRooms, node.department.reduce((n, d) => n + d.numberOfRooms, 0), 'somme des lieux');
+      assert.equal(node.priceRange, lang === 'en' ? `CHF ${B.price.fromChf}–1,430/month` : `${B.price.fromChf}–1${NB}430 CHF/mois`);
+      assert.equal(B.price.toChf, 1430);
+      // Deux offres, une par gamme, jamais 730–1 430 sur une seule.
+      assert.ok(Array.isArray(node.makesOffer) && node.makesOffer.length === 2);
+      const [maisons, appart] = node.makesOffer;
+      assert.deepEqual([maisons.lowPrice, maisons.highPrice, maisons.offerCount], [String(F.price.fromChf), String(F.price.standardChf), F.totalRooms]);
+      assert.deepEqual([appart.lowPrice, appart.highPrice, appart.offerCount], [String(A.price.fromChf), String(A.price.toChf), A.rooms]);
+      // (19/11/2026, V2-22) L'ouverture n'est publiée qu'au mois : pas d'availabilityStarts (ni jour, ni date inventée).
+      assert.equal(appart.availabilityStarts, undefined);
+      assert.doesNotMatch(JSON.stringify(appart), /\d{4}-\d{2}-\d{2}/);
+      assert.equal(appart.availability, undefined, 'aucune disponibilité affirmée pour L\'Appart (elle se lit chambre par chambre)');
+      assert.doesNotMatch(`${appart.name} ${appart.description}`, /piscine|sauna|salle de sport|\bpool\b|\bgym\b/i);
+      // Les équipements des maisons vivent sur leurs nœuds, jamais sur la fiche de la marque.
+      for (const a of node.amenityFeature ?? []) assert.doesNotMatch(a.name, /piscine|sauna|salle de sport|\bpool\b|\bgym\b/i, a.name);
+      for (const a of node.amenityFeature ?? []) assert.ok(!a.name.includes(m.STATS.fiberSpeed), `débit de fibre des maisons sur la fiche de la marque : ${a.name}`);
+    }
+  }
 });
 
 test('L6.2 : un nœud LodgingBusiness par maison — @id, nom, numberOfRooms, priceRange, amenityFeature = ENTITY_HOUSES.amenities, sameAs bookmycoliving, pas de currenciesAccepted', () => {
@@ -59,7 +87,7 @@ test('L6.2 : un nœud LodgingBusiness par maison — @id, nom, numberOfRooms, pr
 
 test('L6.5 : ItemList des chambres — Offer mensuelle, LeaseOut, offeredBy, Accommodation rattachée à sa maison, jamais numberOfRooms ; vide → undefined', () => {
   const rooms = [
-    { house_slug: 'lavilla', room_number: 3, rent_chf: 1370, availability: 'available', available_from: null, surface_m2: '16' },
+    { house_slug: 'lavilla', room_number: 3, rent_chf: 1370, rent_eur: '1470.00', availability: 'available', available_from: null, surface_m2: '16' },
     { house_slug: 'lelodge', room_number: 11, rent_chf: 1430, availability: 'soon', available_from: '2026-11-01', surface_m2: 18 },
     { house_slug: 'leloft', room_number: 2, rent_chf: null, availability: 'soon', available_from: null, surface_m2: null },
   ];
@@ -68,7 +96,10 @@ test('L6.5 : ItemList des chambres — Offer mensuelle, LeaseOut, offeredBy, Acc
     const list = m.buildAvailableRoomsItemList(rooms, lang);
     assert.equal(list['@type'], 'ItemList'); assert.equal(list.numberOfItems, 3);
     const offers = list.itemListElement.map((x) => x.item);
-    assert.equal(offers[0].priceSpecification.unitCode, 'MON'); assert.equal(offers[0].price, 1370);
+    // (L'Appart, 13/11/2026) Deux spécifications de prix quand le loyer contractuel en euros est connu : CHF (affiché) puis EUR.
+    assert.deepEqual(offers[0].priceSpecification.map((p) => [p['@type'], p.price, p.priceCurrency, p.unitCode]), [['UnitPriceSpecification', 1370, 'CHF', 'MON'], ['UnitPriceSpecification', 1470, 'EUR', 'MON']]);
+    assert.equal(offers[0].price, 1370); assert.equal(offers[0].priceCurrency, 'CHF');
+    assert.deepEqual(offers[1].priceSpecification.map((p) => p.priceCurrency), ['CHF'], 'sans loyer en euros : CHF seul');
     assert.equal(offers[0].availability, 'https://schema.org/InStock'); assert.equal(offers[1].availability, 'https://schema.org/PreOrder');
     assert.equal(offers[1].availabilityStarts, '2026-11-01');
     assert.equal(offers[2].price, undefined, 'sans loyer connu, pas de prix');
@@ -95,6 +126,32 @@ test('garde entityGraphIssues : fiche sans alternateName, nœud maison sans pare
   assert.deepEqual(entityGraphIssues(flatten(page), 'leloft.html', m), []);
   assert.ok(entityGraphIssues(flatten([org]), 'leloft.html', m).some((i) => /0 bloc\(s\) LodgingBusiness autonome/.test(i)));
   assert.ok(entityGraphIssues(flatten([m.buildHouseLodgingNode(m.HOUSES[0], 'fr', { context: true }), org]), 'leloft.html', m).some((i) => /autonome/.test(i)), 'bloc d\'une autre maison = échec');
+});
+
+test('(L\'Appart, E2g) entityGraphIssues par lieu : le nœud de L\'Appart est reconnu (4 chambres) ; sa page porte son bloc autonome dès qu\'elle existe', () => {
+  for (const lang of LANGS) {
+    // Fiche de la marque (étape E5) : les 3 maisons et L'Appart dans `department`.
+    const brand = m.buildLocalBusinessSchema(lang, 'd');
+    assert.deepEqual(entityGraphIssues(flatten(brand), 'tarifs.html', m), []);
+    const wrong = JSON.parse(JSON.stringify(brand)); wrong.department[3].numberOfRooms = 5;
+    assert.deepEqual(entityGraphIssues(flatten(wrong), 'tarifs.html', m), ['lappart : numberOfRooms=5 ≠ 4']);
+    const orphan = JSON.parse(JSON.stringify(brand)); delete orphan.department[3].parentOrganization;
+    assert.deepEqual(entityGraphIssues(flatten(orphan), 'tarifs.html', m), ['lappart : nœud #lodging sans parentOrganization @id de l\'entité']);
+  }
+  const node = m.buildAppartLodgingNode('fr', { context: true });
+  const org = m.buildLocalBusinessSchema('fr', 'd');
+  // Tant que L'Appart n'a pas de page (PLACE_PAGE_KEYS = les 3 maisons), rien n'est exigé sur lappart.html ; depuis l'étape E3
+  // (13/11/2026), la valeur réelle l'exige.
+  assert.deepEqual(entityGraphIssues(flatten([org]), 'lappart.html', { ...m, PLACE_PAGE_KEYS: m.MAISON_KEYS }), []);
+  assert.deepEqual(entityGraphIssues(flatten([org]), 'lappart.html', m), ['0 bloc(s) LodgingBusiness autonome(s) du lieu lappart (attendu 1)']);
+  // Dès l'étape E3 (PLACE_PAGE_KEYS = les 4 lieux) : exactement un bloc autonome de L'Appart, sur sa page FR et EN.
+  const e3 = { ...m, PLACE_PAGE_KEYS: m.PLACE_KEYS };
+  assert.deepEqual(entityGraphIssues(flatten([node, org]), 'lappart.html', e3), []);
+  assert.deepEqual(entityGraphIssues(flatten([m.buildAppartLodgingNode('en', { context: true }), m.buildLocalBusinessSchema('en', 'd')]), 'en-lappart.html', e3), []);
+  assert.deepEqual(entityGraphIssues(flatten([org]), 'lappart.html', e3), ['0 bloc(s) LodgingBusiness autonome(s) du lieu lappart (attendu 1)']);
+  assert.deepEqual(entityGraphIssues(flatten([node, node, org]), 'lappart.html', e3), ['2 bloc(s) LodgingBusiness autonome(s) du lieu lappart (attendu 1)']);
+  // Les pages des maisons, inchangées.
+  assert.deepEqual(entityGraphIssues(flatten([m.buildHouseLodgingNode(m.HOUSES[1], 'fr', { context: true }), org]), 'leloft.html', e3), []);
 });
 
 test('L6.6 : NAP — nom, téléphone affiché et E.164 ; plus aucune adresse dans le code (13/11/2026 : base et documentation privée)', () => {

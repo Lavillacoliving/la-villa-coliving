@@ -3,6 +3,7 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import fs from 'node:fs/promises';
+import { readFileSync } from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -250,4 +251,80 @@ test('checkHouseNameGrammar : « de Le Loft » ou « à Le Lodge » → un éche
   assert.equal(r.length, 2);
   assert.match(r[0], /de Le Loft/);
   assert.match(r[1], /à Le Lodge/);
+});
+
+// ── (L'Appart, étape E2g) La page de L'Appart : mêmes règles, sources de placeLocation.ts ; lignes de la vue par gamme ──────────
+
+/** Miroir minimal de la future page de L'Appart (étape E3) : H1, chapeau ouvert par la ligne de trajet, Localisation. */
+function appartPage(lang, { commute = true, neighbourhoodTimes = 1, link = true, before = '' } = {}) {
+  const nb = enc(m.placeNeighbourhood('lappart', lang));
+  const url = m.placeDirectionsUrl('lappart', lang).replace(/&/g, '&amp;');
+  const lead = `${before}${commute ? m.placeCommuteLine('lappart', lang) : 'voir plus bas'}. ${'Lorem ipsum. '.repeat(20)}`;
+  return `<!DOCTYPE html><html lang="${lang}"><head><title>t</title></head><body><nav>La Villa Coliving</nav><main>` +
+    `<h1>L&#x27;Appart, la colocation de La Villa Coliving à Annemasse</h1><p>${enc(lead)}</p><h2>Chambres</h2><p>${'Chambre 2. '.repeat(150)}</p>` +
+    `<section data-house-location-version="${m.placeLocationVersion('lappart')}"><h2>Localisation</h2>${Array(neighbourhoodTimes).fill(`<p>${nb}</p>`).join('')}` +
+    `<p>${enc(m.placeZone('lappart', lang))}</p>${link ? `<a href="${url}" target="_blank" rel="noopener noreferrer">${m.placeDirectionsLabel(lang)}</a>` : ''}</section></main></body></html>`;
+}
+
+test('checkHouseLocation, L\'Appart : page conforme (FR/EN) → aucun échec ; l\'itinéraire part de son point public (la gare)', () => {
+  for (const lang of LANGS) assert.deepEqual(checkHouseLocation(appartPage(lang), 'lappart', lang, m), [], lang);
+  const g = m.publicGeo(m.APPART_PLACE);
+  assert.ok(m.placeDirectionsUrl('lappart', 'fr').includes(`origin=${encodeURIComponent(`${g.lat},${g.lng}`)}`));
+});
+
+test('checkHouseLocation, L\'Appart : quartier absent ou en double, trajet hors du chapeau, lien absent → échecs nommés (sources placeLocation.ts)', () => {
+  const zero = checkHouseLocation(appartPage('fr', { neighbourhoodTimes: 0 }), 'lappart', 'fr', m);
+  assert.deepEqual(zero.map((x) => x.split(' — ')[0]), ['lappart.html : phrase de quartier (placeNeighbourhood) présente 0 fois dans le texte visible (attendu exactement 1)']);
+  assert.match(checkHouseLocation(appartPage('en', { neighbourhoodTimes: 2 }), 'lappart', 'en', m)[0], /^en-lappart\.html : phrase de quartier \(placeNeighbourhood\) présente 2 fois/);
+  const far = checkHouseLocation(appartPage('fr', { before: 'Un long préambule. '.repeat(90) }), 'lappart', 'fr', m);
+  assert.equal(far.length, 1, far.join('\n'));
+  assert.match(far[0], /^lappart\.html : ligne de trajet « gare d'Annemasse à 5 min à pied, .* absente des 1500 premiers caractères après le H1 \(le chapeau doit la porter en tête\)$/);
+  const noLink = checkHouseLocation(appartPage('en', { link: false }), 'lappart', 'en', m);
+  assert.equal(noLink.length, 2, noLink.join('\n'));
+  assert.match(noLink[0], /^en-lappart\.html : lien « Check my commute » absent/);
+  const wrong = appartPage('fr').replace(/origin=[^&"]+/, 'origin=Annemasse');
+  assert.ok(checkHouseLocation(wrong, 'lappart', 'fr', m).some((x) => /lien « Calculer mon trajet » absent/.test(x)));
+  const oldVersion = appartPage('fr').replace(`data-house-location-version="${m.placeLocationVersion('lappart')}"`, 'data-house-location-version="1999-01-01"');
+  assert.ok(checkHouseLocation(oldVersion, 'lappart', 'fr', m).some((x) => /data-house-location-version=".*" présent 0 fois/.test(x)));
+  // Une rue dans l'itinéraire de L'Appart : échec, et le lien n'est jamais recopié.
+  const withStreet = { ...m, placeDirectionsUrl: () => 'https://www.google.com/maps/dir/?api=1&origin=12+rue+des+Exemples%2C+74100+Annemasse' };
+  const r = checkHouseLocation(appartPage('fr'), 'lappart', 'fr', withStreet, FICTIVE_STREETS);
+  assert.ok(r.some((f) => /placeDirectionsUrl contient la rue d'un lieu/.test(f)), r.join('\n'));
+  assert.doesNotMatch(r.join('\n'), /exemples/i);
+});
+
+const fixtureRows = (s) => { const j = JSON.parse(readFileSync(path.join(path.dirname(fileURLToPath(import.meta.url)), 'fixtures', `v_public_rooms.etat-${s}.json`), 'utf8')); return Array.isArray(j) ? j : j.rows; };
+const byHouseOf = (rows) => { const out = new Map(); for (const r of rows) { if (!out.has(r.house_slug)) out.set(r.house_slug, []); out.get(r.house_slug).push(r); } return out; };
+
+test('checkRoomSurfaceByHouse (E2g) : état A et état B passent — L\'Appart se compare à APPART.rooms.surface, pas à une maison', () => {
+  assert.deepEqual(checkRoomSurfaceByHouse(byHouseOf(fixtureRows('A')), m), []);
+  assert.deepEqual(checkRoomSurfaceByHouse(byHouseOf(fixtureRows('B')), m), []);
+  const big = byHouseOf(fixtureRows('B').map((r) => (r.house_slug === 'lappart' && r.room_number === 5 ? { ...r, surface_m2: 25 } : r)));
+  assert.deepEqual(checkRoomSurfaceByHouse(big, m), ['lappart : APPART.rooms.surface = 12-22 m², v_public_rooms = 12-25 m² (Math.round du min/max de surface_m2)']);
+  // Un lieu inconnu qui porterait la clé interne : signalé, jamais sous sa clé.
+  const [internal] = m.INTERNAL_ONLY_KEYS;
+  const leak = byHouseOf([...fixtureRows('A'), { house_slug: internal, room_number: 2, surface_m2: 12 }]);
+  const r = checkRoomSurfaceByHouse(leak, m);
+  assert.deepEqual(r, ['clé interne (masquée) : absent de ROOM_SURFACE_BY_HOUSE (src/data/stats.ts) — nouvelle maison ?']);
+  assert.ok(!r.join('\n').toLowerCase().includes(String(internal).toLowerCase()));
+});
+
+test('checkHouseNameGrammar (E2g) : « à L\'Appart », « de L\'Appart » passent ; « au L\'Appart », « du L\'Appart », « le L\'Appart » → échec', () => {
+  const ok = '<html><body><main><p>Bienvenue à L&#x27;Appart. Les chambres de L&#x27;Appart. L&#x27;Appart ouvre à la location. Les maisons ou L\'Appart.</p></main></body></html>';
+  assert.deepEqual(checkHouseNameGrammar(ok, 'lappart.html'), []);
+  const bad = '<html><body><main><p>Bienvenue au L&#x27;Appart. Les chambres du L’Appart. Le L\'Appart est neuf.</p></main></body></html>';
+  const r = checkHouseNameGrammar(bad, 'lappart.html');
+  assert.equal(r.length, 3, r.join('\n'));
+  assert.match(r[0], /« au L'Appart » dans le texte visible — écrire « à L'Appart », « de L'Appart »/);
+});
+
+test('câblage (E2g) : main() classe les lignes de la vue, contrôle chaque lieu de PLACE_PAGE_KEYS, garde la fourchette de /tarifs aux maisons', async () => {
+  const src = await fs.readFile(path.join(path.dirname(fileURLToPath(import.meta.url)), '..', '..', 'scripts', 'house-pages-check.mjs'), 'utf8');
+  const main = src.slice(src.indexOf('async function main()'));
+  assert.match(main, /classifyViewRows\(\[\.\.\.byHouse\.values\(\)\]\.flat\(\), m\)/);
+  assert.match(main, /for \(const slug of m\.PLACE_KEYS\)/);
+  assert.match(main, /if \(!m\.PLACE_PAGE_KEYS\.includes\(slug\)\)/);
+  assert.match(main, /checkAvailablePage\(byPlace\)/);
+  assert.match(main, /checkRoomSizeRange\(\(m\.MAISON_KEYS \?\? \[\]\)\.flatMap/);
+  assert.match(src, /const name = m\.roomLabel\(slug, Number\(r\.room_number\), lang\);/);
 });

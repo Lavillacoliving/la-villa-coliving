@@ -28,6 +28,21 @@
  *      propre site). Base : v_social_proof (resident_history ∪ tenants, dédoublonnés) — mode adaptatif : avertissement tant
  *      que la vue n'existe pas (migration scripts/resident-history-2026-10-09.sql à appliquer par Jérôme), échec si elle
  *      existe et que distinct_residents_since_opening < STATS.totalResidents. Fonctions pures : tools/test/social-proof-rules.test.mjs.
+ *   f) (L'Appart, brief du 12/11/2026, étape E2g) deux gammes, jamais fondues — règles pures dans scripts/lib/gamme-rules.mjs :
+ *      base PAR GAMME (dbFactsIssues : un lieu inconnu de la vue = échec ; les contrôles des maisons portent sur les seules
+ *      lignes des maisons ; L'Appart absent = information, présent = comparé à APPART, date d'ouverture comprise) ; fiche
+ *      « L'Appart — l'essentiel » (id="appart-facts") exactement 1× sur APPART_FACTS_ROUTES dès que L'Appart a sa page
+ *      (PLACE_PAGE_KEYS), 0× ailleurs ; bloc statique L'Appart (data-appart-teaser) : texte de la source, seulement sur ses
+ *      5 pages ; gammeMixIssues : sur les pages de L'Appart, aucune preuve des maisons et piscine, sauna, salle de sport
+ *      seulement dans les textes qui les nient ou renvoient aux maisons ; partout (et dans llms.txt), jamais un montant de
+ *      L'Appart et un équipement des maisons dans la même phrase ; JSON-LD par gamme (numberOfRooms, AggregateOffer, nœud de
+ *      L'Appart). Garde « aucune clé interne » (scripts/lib/internal-keys.mjs) sur tout ce qui est publié.
+ *   g) (L'Appart, Lot 4, étape E5) les trois phrases canoniques (marque, maisons, L'Appart — src/data/entityFacts.ts) : chacune
+ *      1× sur une page de la fiche de la marque, 1× de plus (marque, L'Appart) sur la page de la fiche « L'Appart — l'essentiel »,
+ *      0× ailleurs (canonicalSentenceIssues), et 1× dans chaque llms.txt, sans jeton {{…}} non résolu ; la fiche de la marque
+ *      (nœud #organization qui porte L'Appart) n'a aucun équipement des maisons ni leur débit de fibre dans amenityFeature
+ *      (brandAmenityIssues) ;
+ *      chaînes interdites : « dès 530 € » (P5) et « au L'Appart » / « du L'Appart » (nom propre, V7).
  * Options : --no-db (hors ligne) · --strict (règle des minutes, règles L2 et vouvoiement en échec, pas en avertissement)
  * (Lot L4 « Justification du prix », D8, 10/10/2026) FAQ A.3 exactement 1× sur PRICE_FAQ_ROUTES (FR/EN), 0× ailleurs ; phrase-clé A.4
  * 2× sur /tarifs (chapeau + fiche), 1× sur les autres pages de la fiche ; l'ancienne question « pourquoi plus élevés » est interdite.
@@ -42,6 +57,12 @@ import { fileURLToPath, pathToFileURL } from 'url';
 import { loadEntityFacts, ROOT } from './lib/load-entity-facts.mjs';
 import { renderLlms, LLMS_FILES } from './build-llms-txt.mjs';
 import { jsonLdContents, jsonLdServedKey } from './lib/prerendered-extract.mjs';
+import {
+  classifyViewRows, unknownPlaceMessage, appartDbIssues, isAppartPageFile, appartPageFiles, appartPageTextIssues,
+  gammeSentenceIssues, llmsGammeIssues, jsonLdGammeIssues, appartTeaserExpectedText, appartInclusionLineIssues, APPART_TEASER_ALL_REQUIRED,
+  HOUSE_AMENITY_RE,
+} from './lib/gamme-rules.mjs';
+import { internalKeySurfaceIssues } from './lib/internal-keys.mjs';
 
 const PRERENDERED = path.join(ROOT, 'public', 'prerendered');
 const args = process.argv.slice(2);
@@ -125,6 +146,12 @@ const FORBIDDEN = [
   // ── (Lot L4 « Justification du prix », D8 de Jérôme du 09/10/2026) l'ancienne FAQ « pourquoi plus élevés » (tarifsFaq index 1 et
   // faqData why-higher-prices) est remplacée par la FAQ A.3 de src/data/priceFacts.ts : la question périmée ne doit réapparaître nulle part.
   { re: /Pourquoi les prix sont-ils plus élevés qu['’]une colocation classique|Why are your prices higher than a standard flatshare/i, label: 'ancienne FAQ « pourquoi plus élevés » (D8 : remplacée par la FAQ A.3, src/data/priceFacts.ts)' },
+  // ── (L'Appart, Lot 4, étape E5) ──
+  // P5 : la suite de L'Appart à deux = « 1 060 € par mois, soit 530 € par personne à deux » ; 530 € n'est jamais un « dès » (le « dès »
+  // de L'Appart = son palier bas, APPART.price.from). Borné : « dès 1 530 € » (loyer des maisons) ne matche pas.
+  { re: /(?<![\p{L}\p{N}])(?:dès|à partir de|from|starting (?:at|from))[\u00A0\u202F ]+(?:530[\u00A0\u202F ]?(?:€|EUR(?![\p{L}])|euros?(?![\p{L}]))|(?:€|EUR)[\u00A0\u202F ]?530(?!\d))/iu, label: '« dès 530 € » (P5 : 530 € = la suite de L\'Appart à deux, par personne ; jamais un « dès »)' },
+  // V7 : « L'Appart » est un nom propre — « à L'Appart », « de L'Appart », jamais « au L'Appart » ni « du L'Appart » (« l'appartement » passe).
+  { re: /(?<![\p{L}])(?:[Aa]u|[Dd]u)[\u00A0\u202F ]+L['’]Appart(?![\p{L}])/u, label: '« au L\'Appart » / « du L\'Appart » (nom propre : « à L\'Appart », « de L\'Appart »)' },
 ];
 /** (Lot L3) Demi-largeur, en caractères, de la fenêtre de contexte des règles `near`. */
 export const NEAR_WINDOW = 120;
@@ -230,10 +257,11 @@ const count = (hay, needle) => (needle ? hay.split(needle).length - 1 : 0);
  * microcopie (« Réponse sous 48 h ») : hors du comptage « exactement 1× par page » — ces mots vivent aussi dans la barre
  * fixée, les cartes chambres et la réassurance —, vérifiés DANS le bloc <aside id="entity-facts"> : exactement un lien
  * dont le texte est `t.cta`, la microcopie `t.ctaNote` présente une fois. Pur ; `t` = entityFactsText(lang).
+ * (L'Appart, E2g) `id` : la fiche de L'Appart (`appart-facts`, `t` = appartFactsText(lang)) suit la même règle.
  */
-export function entityFactsCtaIssues(html, t) {
-  const block = String(html).match(/<aside[^>]*\sid="entity-facts"[\s\S]*?<\/aside>/);
-  if (!block) return ['bloc entité introuvable : bouton et microcopie non vérifiés'];
+export function entityFactsCtaIssues(html, t, id = 'entity-facts') {
+  const block = String(html).match(new RegExp(`<aside[^>]*\\sid="${id}"[\\s\\S]*?</aside>`));
+  if (!block) return [`bloc ${id === 'entity-facts' ? 'entité' : id} introuvable : bouton et microcopie non vérifiés`];
   const issues = [];
   const linkTexts = [...block[0].matchAll(/<a\b[^>]*>([\s\S]*?)<\/a>/g)]
     .map((m) => norm(decodeEntities(m[1].replace(/<!--[\s\S]*?-->/g, '').replace(/<[^>]+>/g, ' '))));
@@ -241,6 +269,48 @@ export function entityFactsCtaIssues(html, t) {
   if (nCta !== 1) issues.push(`bouton de la fiche « ${t.cta} » présent ${nCta} fois dans le bloc (attendu 1)`);
   const nNote = count(visibleText(block[0]), norm(t.ctaNote));
   if (nNote !== 1) issues.push(`microcopie du bouton « ${t.ctaNote} » présente ${nNote} fois dans le bloc (attendu 1)`);
+  return issues;
+}
+
+/**
+ * (L'Appart, Lot 4, étape E5) Les trois phrases canoniques de src/data/entityFacts.ts, comptées dans le texte visible d'une page :
+ * chacune 1× sur une page de la fiche de la marque (`brandFiche` : puce ou paragraphe de la fiche) ; la marque et L'Appart 1× de
+ * plus sur une page de la fiche « L'Appart — l'essentiel » (`appartFiche`, /lappart) ; 0× ailleurs — une phrase canonique ne se
+ * recopie jamais dans un autre bloc (bloc statique, FAQ, pied de page). Comparaison au caractère près (espaces normalisés). Pure.
+ */
+export function canonicalSentenceIssues(text, lang, { brandFiche = false, appartFiche = false } = {}, m) {
+  const both = (brandFiche ? 1 : 0) + (appartFiche ? 1 : 0);
+  const want = [
+    ['de la marque', m.BRAND_CANONICAL_SENTENCE[lang], both],
+    ['des maisons', m.MAISONS_CANONICAL_SENTENCE[lang], brandFiche ? 1 : 0],
+    [`de ${m.APPART.name}`, m.APPART_CANONICAL_SENTENCE[lang], both],
+  ];
+  const issues = [];
+  for (const [label, sentence, expected] of want) {
+    const n = count(text, norm(sentence));
+    if (n !== expected) issues.push(`phrase canonique ${label} présente ${n} fois (attendu ${expected}) — « ${norm(sentence).slice(0, 70)}… »`);
+  }
+  return issues;
+}
+
+/**
+ * (L'Appart, Lot 4, étape E5) Fiche de la MARQUE = nœud @id #organization qui porte L'Appart (numberOfRooms de la marque, ou le
+ * nœud de L'Appart dans `department`) : aucun équipement des maisons dans `amenityFeature`. La marque porte deux gammes ; piscine,
+ * sauna, salle de sport et le débit de fibre des maisons restent sur le nœud de chaque maison (department), jamais sur ce qui
+ * décrit aussi L'Appart. Pure.
+ */
+export function brandAmenityIssues(nodes, m) {
+  const B = m.ENTITY_FACTS.brand, appartId = m.placeLodgingId(m.APPART_KEY);
+  // Le débit de la fibre des maisons (« 8 Gb/s ») est un fait des maisons, faux pour L'Appart (CLAUDE.md § 1) : même règle.
+  const speed = m.ENTITY_FACTS.fiberSpeed;
+  const issues = [];
+  for (const n of nodes ?? []) {
+    if (!n || typeof n !== 'object' || typeof n['@id'] !== 'string' || !n['@id'].endsWith('#organization')) continue;
+    const dept = Array.isArray(n.department) ? n.department : [];
+    if (Number(n.numberOfRooms) !== B.totalRooms && !dept.some((d) => d?.['@id'] === appartId)) continue;
+    const names = (Array.isArray(n.amenityFeature) ? n.amenityFeature : []).map((a) => String(a?.name ?? ''));
+    for (const s of names.filter((x) => HOUSE_AMENITY_RE.test(x) || (speed && x.includes(speed)))) issues.push(`fiche de la marque (${[].concat(n['@type']).join('/')}) : équipement des maisons « ${s} » dans amenityFeature — il appartient au nœud de chaque maison (department)`);
+  }
   return issues;
 }
 
@@ -321,14 +391,20 @@ export function carPromiseIssues(html) {
     { label: '« autoroute A40 » (jamais de promesse routière, D1)', test: (s) => s.match(A40_RE)?.[0] },
   ]);
 }
-/** (Lot L6) Règles pures sur les nœuds JSON-LD aplatis d'une page (collectTypes). */
+/**
+ * (Lot L6) Règles pures sur les nœuds JSON-LD aplatis d'une page (collectTypes).
+ * (L'Appart, E2g) Par LIEU : les nœuds #lodging des maisons (HOUSES) et celui de L'Appart (APPART_PLACE, ENTITY_FACTS.appart.rooms
+ * chambres) ; chaque page de PLACE_PAGE_KEYS porte exactement un bloc autonome de son lieu.
+ */
 export function entityGraphIssues(nodes, file, m) {
   const issues = [];
   const alt = m.LAVILLA_ALTERNATE_NAMES ? [...m.LAVILLA_ALTERNATE_NAMES] : null;
-  const houses = m.HOUSES ?? [];
+  const houses = [...(m.HOUSES ?? []), ...(m.APPART_PLACE ? [m.APPART_PLACE] : [])];
   const bySlug = new Map(houses.map((h) => [h.slug, h]));
   const lodgingIds = new Map(houses.map((h) => [`${h.url}#lodging`, h]));
-  const houseFile = /^(en-)?(lavilla|leloft|lelodge)\.html$/.exec(file);
+  const expectedRooms = (slug) => (slug === m.APPART_KEY ? m.ENTITY_FACTS.appart?.rooms : m.ENTITY_FACTS.houses.find((x) => x.slug === slug)?.rooms);
+  const pageKeys = m.PLACE_PAGE_KEYS ?? ['lavilla', 'leloft', 'lelodge'];
+  const houseFile = new RegExp(`^(en-)?(${pageKeys.join('|')})\\.html$`).exec(file);
   let ownLodging = 0;
   for (const n of nodes) {
     if (!n || typeof n !== 'object') continue;
@@ -342,7 +418,7 @@ export function entityGraphIssues(nodes, file, m) {
       if (!h) issues.push(`LodgingBusiness de maison sans @id <url>#lodging connu (${id || 'sans @id'})`);
       else {
         if (n.parentOrganization?.['@id'] !== m.ORG_ID) issues.push(`${h.slug} : nœud #lodging sans parentOrganization @id de l'entité`);
-        const expected = m.ENTITY_FACTS.houses.find((x) => x.slug === h.slug)?.rooms;
+        const expected = expectedRooms(h.slug);
         if (expected !== undefined && Number(n.numberOfRooms) !== expected) issues.push(`${h.slug} : numberOfRooms=${n.numberOfRooms} ≠ ${expected}`);
         if (houseFile && houseFile[2] === h.slug && !n.department) ownLodging++;
       }
@@ -353,9 +429,10 @@ export function entityGraphIssues(nodes, file, m) {
     if (n['@type'] === 'Accommodation' && n.numberOfRooms !== undefined) issues.push('numberOfRooms sur une Accommodation (chambre)');
   }
   // Une page maison porte son propre nœud #lodging au premier niveau (bloc autonome) : exactement 1 nœud de SA maison hors department.
+  // (L'Appart, E2g) Même règle pour toute page de lieu (PLACE_PAGE_KEYS) : /lappart porte le nœud de L'Appart dès sa page (E3).
   if (houseFile) {
     const own = nodes.filter((n) => n && n['@type'] === 'LodgingBusiness' && n['@id'] === `${bySlug.get(houseFile[2])?.url}#lodging` && n['@context']).length;
-    if (own !== 1) issues.push(`${own} bloc(s) LodgingBusiness autonome(s) de la maison ${houseFile[2]} (attendu 1)`);
+    if (own !== 1) issues.push(`${own} bloc(s) LodgingBusiness autonome(s) ${houseFile[2] === m.APPART_KEY ? 'du lieu' : 'de la maison'} ${houseFile[2]} (attendu 1)`);
   }
   return issues;
 }
@@ -384,6 +461,95 @@ export function ratingMarkupIssues(html, nodes = collectTypes(jsonLdBlocks(html)
   if (/aggregateRating/.test(html)) out.push('aggregateRating interdit (D4 : la note Google se lit sur la fiche, jamais balisée sur son propre site)');
   if (nodes.some((n) => hasType(n, 'Review')) || /"@type"\s*:\s*"Review"/.test(html)) out.push('« "@type": "Review" » interdit en JSON-LD (D4 : aucun avis balisé, un lien « Voir les avis » vers la fiche Google)');
   return out;
+}
+
+// ── (L'Appart, étape E2g) Deux gammes, jamais fondues — extraction du HTML ; les règles sont dans scripts/lib/gamme-rules.mjs ──
+
+/** Titre et descriptions d'une page (balises du <head>) : ce que lisent les moteurs à côté du texte visible. Pur. */
+export function headTexts(html) {
+  const head = String(html).match(/<head\b[\s\S]*?<\/head>/i)?.[0] ?? '';
+  const out = [];
+  const title = head.match(/<title\b[^>]*>([\s\S]*?)<\/title>/i)?.[1];
+  if (title) out.push(decodeEntities(title));
+  for (const tag of head.match(/<meta\b[^>]*>/gi) ?? []) {
+    const key = /\b(?:name|property)="([^"]+)"/i.exec(tag)?.[1];
+    const content = /\bcontent="([^"]*)"/i.exec(tag)?.[1];
+    if (key && content !== undefined && /^(?:description|og:description|twitter:description|og:title|twitter:title)$/i.test(key)) out.push(decodeEntities(content));
+  }
+  return [...new Set(out.map(norm))].filter(Boolean);
+}
+
+/** HTML du <main> d'une page ; null s'il n'y en a pas. */
+const mainHtml = (html) => String(html).match(/<main\b[\s\S]*?<\/main>/i)?.[0] ?? null;
+
+/**
+ * Garde de mélange des gammes d'une page (ARCHITECTURE § 4.6, règles de scripts/lib/gamme-rules.mjs) :
+ *   a, b — page de L'Appart (sa page et ses fiches chambres, FR et EN) : sur le texte visible du <main> (le pied de page, commun à
+ *          toutes les pages, parle des maisons), le titre et les descriptions : aucune preuve des maisons ; piscine, sauna, salle de
+ *          sport (et les surfaces des chambres des maisons) seulement dans les textes de la source qui les nient ou y renvoient ;
+ *   c    — toute page : aucune phrase, ligne de tableau, titre ou description qui porte un montant de L'Appart et un équipement
+ *          des maisons ; aucune ligne « tout compris » d'une carte de L'Appart (data-all-inclusive="appart") qui en nomme un ;
+ *   d    — JSON-LD : numberOfRooms, AggregateOffer et nœud de L'Appart par gamme.
+ * Pur ; `nodes` = nœuds JSON-LD déjà collectés (évite une relecture).
+ */
+export function gammeMixIssues(html, file, m, nodes = collectTypes(jsonLdBlocks(html))) {
+  const out = [];
+  const head = headTexts(html);
+  if (isAppartPageFile(file, m)) {
+    const main = mainHtml(html);
+    if (!main) out.push('page de L\'Appart sans <main> : la garde de gamme ne peut pas isoler le contenu de la page');
+    else out.push(...appartPageTextIssues(visibleText(main), m, { html: main }));
+    for (const t of head) out.push(...appartPageTextIssues(t, m).map((i) => `${i} (titre ou description)`));
+  }
+  out.push(...gammeSentenceIssues(sentences(html).concat(head.flatMap((t) => t.split(/(?<=[.!?;])\s+/))), m));
+  // Ligne « tout compris » des cartes de L'Appart (RoomCard, data-all-inclusive="appart") : jamais un équipement des maisons.
+  const appartLines = [...String(html).matchAll(/<([a-z][a-z0-9]*)\b[^>]*\bdata-all-inclusive="appart"[^>]*>([\s\S]*?)<\/\1>/gi)].map((x) => visibleText(x[2]));
+  out.push(...appartInclusionLineIssues(appartLines));
+  out.push(...jsonLdGammeIssues(nodes, m));
+  return out;
+}
+
+/**
+ * Fiche « L'Appart — l'essentiel » (<AppartFacts/>) sur une page qui doit la porter (APPART_FACTS_ROUTES, dès que L'Appart a sa
+ * page) : exactement un bloc id="appart-facts", à la version de la source, chaque phrase de appartFactsStrings(lang) exactement une
+ * fois sur la page (aucune phrase canonique répétée ailleurs), bouton et microcopie dans le bloc. Pur.
+ */
+export function appartFactsBlockIssues(html, lang, m, text = visibleText(html)) {
+  const issues = [];
+  const n = count(html, 'id="appart-facts"');
+  if (n !== 1) issues.push(`${n} fiche(s) L'Appart (id="appart-facts" ; attendu exactement 1)`);
+  if (!html.includes(`data-appart-facts-version="${m.APPART_FACTS_VERSION}"`)) issues.push(`version de la fiche L'Appart ≠ ${m.APPART_FACTS_VERSION} (APPART_FACTS_VERSION)`);
+  for (const s of m.appartFactsStrings(lang).map(norm)) {
+    const k = count(text, s);
+    if (k !== 1) issues.push(`phrase de la fiche L'Appart présente ${k} fois (attendu 1) — « ${s.slice(0, 70)}… »`);
+  }
+  issues.push(...entityFactsCtaIssues(html, m.appartFactsText(lang), 'appart-facts'));
+  return issues;
+}
+
+/** Blocs statiques <AppartTeaser/> d'une page : [{ route (attribut data-appart-teaser), text (texte visible du bloc) }]. Pur. */
+export function appartTeaserBlocks(html) {
+  return [...String(html).matchAll(/<section\b[^>]*\bdata-appart-teaser="([^"]*)"[^>]*>([\s\S]*?)<\/section>/g)]
+    .map((x) => ({ route: decodeEntities(x[1]), text: norm(visibleText(x[2])) }));
+}
+
+/**
+ * Blocs statiques d'une page : `route` = la page de APPART_TEASER_ROUTES qu'elle est (null : une autre page, où tout bloc est de
+ * trop). Au plus un bloc ; son attribut nomme la page ; son texte est celui de la source au caractère près (appartTeaser) ; jamais
+ * une phrase canonique (ces pages portent déjà la fiche de la marque — critique A1). Pur.
+ */
+export function appartTeaserIssues(blocks, route, lang, m) {
+  if (!route) return blocks.length ? [`${blocks.length} bloc(s) statique(s) L'Appart hors de leurs pages (APPART_TEASER_ROUTES)`] : [];
+  const issues = [];
+  if (blocks.length > 1) issues.push(`${blocks.length} blocs statiques L'Appart (au plus 1 par page)`);
+  const expected = appartTeaserExpectedText(route, lang, m);
+  const canon = [m.APPART_CANONICAL_SENTENCE[lang], m.BRAND_CANONICAL_SENTENCE[lang], ...m.appartFactsStrings(lang)].map(norm);
+  for (const b of blocks) {
+    if (b.route !== route) issues.push(`bloc statique L'Appart de la page « ${b.route} » posé sur « ${route} »`);
+    if (b.text !== expected) issues.push(`texte du bloc statique L'Appart ≠ source (appartTeaser) — « ${b.text.slice(0, 90)}… »`);
+    for (const c of canon) if (b.text.includes(c)) issues.push(`phrase canonique dans le bloc statique L'Appart (jamais : critique A1) — « ${c.slice(0, 60)}… »`);
+  }
+  return issues;
 }
 
 // ── (Lot L3, D3 Jérôme 09/10/2026) « 100+ résidents » soutenu par la base ─────────────────────────────────────────────
@@ -528,12 +694,14 @@ export function tierSurfaceIssues(rows, F) {
   return issues;
 }
 
-async function checkDb(m) {
+/**
+ * Les MAISONS dans v_public_rooms contre la fiche — les contrôles de l'ancien checkDb, mêmes règles : chambres et salles d'eau
+ * partagées par maison, total (le message dit désormais « dans les maisons »), loyers minimum et maximum, chaque chambre à son
+ * palier, surface du palier le moins cher, bornes des surfaces. `rows` = les lignes des 3 maisons seulement (dbFactsIssues les
+ * trie). Pur.
+ */
+export function maisonDbIssues(rows, F) {
   const failures = [];
-  const F = m.ENTITY_FACTS;
-  const headers = { apikey: SUPABASE_ANON_KEY, Accept: 'application/json' };
-  const rows = await httpsGet(`${SUPABASE_URL}/rest/v1/v_public_rooms?select=house_slug,room_number,rent_chf,rent_eur,surface_m2,bathroom_type`, headers);
-  if (!Array.isArray(rows) || rows.length === 0) throw new Error('v_public_rooms vide');
   const byHouse = new Map();
   for (const r of rows) { if (!byHouse.has(r.house_slug)) byHouse.set(r.house_slug, []); byHouse.get(r.house_slug).push(r); }
   for (const h of F.houses) {
@@ -542,12 +710,12 @@ async function checkDb(m) {
     const shared = rs.filter((r) => /shared|partag/i.test(String(r.bathroom_type ?? ''))).length;
     if (shared !== h.sharedBathRooms) failures.push(`base : ${h.slug} a ${shared} chambre(s) à salle d'eau partagée, la fiche dit ${h.sharedBathRooms}`);
   }
-  if (rows.length !== F.totalRooms) failures.push(`base : ${rows.length} chambres publiques, la fiche dit ${F.totalRooms}`);
+  if (rows.length !== F.totalRooms) failures.push(`base : ${rows.length} chambres publiques dans les maisons, la fiche dit ${F.totalRooms}`);
   const chf = rows.map((r) => Number(r.rent_chf)).filter(Number.isFinite);
   const eur = rows.map((r) => Number(r.rent_eur)).filter(Number.isFinite);
   const m2 = rows.map((r) => Number(r.surface_m2)).filter((n) => Number.isFinite(n) && n > 0);
-  if (Math.min(...chf) !== F.price.fromChf) failures.push(`base : loyer CHF minimum ${Math.min(...chf)} ≠ prix d'appel ${F.price.fromChf}`);
-  if (Math.max(...chf) !== F.price.standardChf) failures.push(`base : loyer CHF maximum ${Math.max(...chf)} ≠ ${F.price.standardChf}`);
+  if (chf.length && Math.min(...chf) !== F.price.fromChf) failures.push(`base : loyer CHF minimum ${Math.min(...chf)} ≠ prix d'appel ${F.price.fromChf}`);
+  if (chf.length && Math.max(...chf) !== F.price.standardChf) failures.push(`base : loyer CHF maximum ${Math.max(...chf)} ≠ ${F.price.standardChf}`);
   if (eur.length && Math.min(...eur) !== F.price.fromEur) failures.push(`base : loyer € minimum ${Math.min(...eur)} ≠ ${F.price.fromEur}`);
   if (eur.length && Math.max(...eur) !== F.price.standardEur) failures.push(`base : loyer € maximum ${Math.max(...eur)} ≠ ${F.price.standardEur}`);
   // (13/11/2026) Trois paliers : chambre par chambre, pas seulement les bornes ; surface du palier le moins cher (FAQ, Charte).
@@ -557,13 +725,42 @@ async function checkDb(m) {
     const lo = Math.round(Math.min(...m2)), hi = Math.round(Math.max(...m2));
     if (lo !== F.surfaces.min || hi !== F.surfaces.max) failures.push(`base : surfaces ${lo}-${hi} m² (Math.round de v_public_rooms) ≠ fiche ${F.surfaces.min}-${F.surfaces.max}`);
   }
+  return failures;
+}
+
+/**
+ * (L'Appart, E2g, ARCHITECTURE § 4.1) v_public_rooms contre le code, PAR GAMME — fonction pure, testée dans
+ * tools/test/gamme-rules.test.mjs sur les relevés « état A » et « état B ». Trois temps :
+ *   1. classer chaque ligne : maison, L'Appart ou lieu INCONNU du site (échec : la vue est en avance sur le code) ;
+ *   2. maisons : les contrôles d'avant (maisonDbIssues) sur leurs seules lignes — 29 chambres, paliers, surfaces 16-24 ;
+ *   3. L'Appart (appartDbIssues) : aucune ligne = état A (information) ; sinon 4 chambres, numéros, loyers, surfaces, salle d'eau,
+ *      date d'ouverture (échec avant, avertissement après).
+ * `today` = AAAA-MM-JJ (date du passage). Renvoie { failures, warnings, infos, counts }.
+ */
+export function dbFactsIssues(rows, m, { today } = {}) {
+  const { byPlace, unknown } = classifyViewRows(rows, m);
+  const failures = unknown.map((u) => `base : ${unknownPlaceMessage(u)}`);
+  const maisonRows = (m.MAISON_KEYS ?? []).flatMap((k) => byPlace.get(k) ?? []);
+  failures.push(...maisonDbIssues(maisonRows, m.ENTITY_FACTS));
+  const appartRows = byPlace.get(m.APPART_KEY) ?? [];
+  const a = appartDbIssues(appartRows, m, { today });
+  failures.push(...a.failures);
+  return { failures, warnings: a.warnings, infos: a.infos, counts: { maisons: maisonRows.length, appart: appartRows.length, unknown: unknown.reduce((n, u) => n + u.count, 0) } };
+}
+
+async function checkDb(m) {
+  const headers = { apikey: SUPABASE_ANON_KEY, Accept: 'application/json' };
+  const rows = await httpsGet(`${SUPABASE_URL}/rest/v1/v_public_rooms?select=house_slug,room_number,rent_chf,rent_eur,surface_m2,bathroom_type,floor,availability,available_from`, headers);
+  if (!Array.isArray(rows) || rows.length === 0) throw new Error('v_public_rooms vide');
+  const db = dbFactsIssues(rows, m, { today: new Date().toISOString().slice(0, 10) });
+  const failures = [...db.failures];
   // (Lot L3, D3) « 100+ résidents » : v_social_proof (resident_history ∪ tenants, dédoublonnés sur le nom normalisé). La vue
   // n'existe pas tant que Jérôme n'a pas appliqué la migration → socialProofVerdict la traite en avertissement, pas en échec.
   const sp = await httpsGet(`${SUPABASE_URL}/rest/v1/${SOCIAL_PROOF_VIEW}?select=distinct_residents_since_opening,first_move_in,current_residents,occupancy_pct_all,computed_on`, headers)
     .then((r) => ({ rows: r })).catch((e) => ({ error: e.message }));
   const social = socialProofVerdict(sp, m.STATS.totalResidents);
   failures.push(...social.failures);
-  return { failures, warnings: social.warnings, rooms: rows.length, social: social.info };
+  return { failures, warnings: [...db.warnings, ...social.warnings], infos: db.infos, rooms: rows.length, counts: db.counts, social: social.info };
 }
 
 /** Slugs des pages de décision versionnées dans content/decision-pages/ (hors gabarit `_TEMPLATE`). */
@@ -617,7 +814,20 @@ async function checkHtml(m) {
   const keyRoute = m.PRICE_KEY_SENTENCE_ROUTE ?? '/tarifs';
   const keyFiles = new Set([routeToFile(keyRoute, 'fr'), routeToFile(keyRoute, 'en')]);
   for (const f of priceScope.keys()) if (!files.includes(f)) failures.push(`${f} : page prérendue ABSENTE (périmètre de la FAQ prix A.3)`);
-  let blocks = 0, minuteWarnings = 0, locationIssues = 0, vousPages = 0;
+  // (L'Appart, E2g) Pages de L'Appart et fiche « L'Appart — l'essentiel » : exigées dès que L'Appart a sa page (PLACE_PAGE_KEYS,
+  // étape E3) ; avant, aucune page de L'Appart et aucune fiche nulle part. Blocs statiques : par page de APPART_TEASER_ROUTES.
+  const roomPages = JSON.parse(await fs.readFile(path.join(ROOT, 'src', 'data', 'roomPages.json'), 'utf8'));
+  for (const f of appartPageFiles(m, roomPages)) if (!files.includes(f)) failures.push(`${f} : page prérendue ABSENTE (pages de L'Appart : PLACE_PAGE_KEYS, src/data/roomPages.json)`);
+  const appartFactsScope = new Map(); // file → lang
+  if ((m.PLACE_PAGE_KEYS ?? []).includes(m.APPART_KEY)) for (const r of m.APPART_FACTS_ROUTES) { appartFactsScope.set(routeToFile(r, 'fr'), 'fr'); appartFactsScope.set(routeToFile(r, 'en'), 'en'); }
+  for (const f of appartFactsScope.keys()) if (!files.includes(f)) failures.push(`${f} : page prérendue ABSENTE (périmètre de la fiche L'Appart)`);
+  const teaserScope = new Map(); // file → { route, lang }
+  const teaserSeen = new Map(); // route → { fr, en } (nombre de blocs ; null = page absente)
+  for (const r of m.APPART_TEASER_ROUTES) {
+    teaserSeen.set(r, { fr: null, en: null });
+    for (const l of ['fr', 'en']) teaserScope.set(routeToFile(r, l), { route: r, lang: l });
+  }
+  let blocks = 0, minuteWarnings = 0, locationIssues = 0, vousPages = 0, appartPages = 0, appartFactsBlocks = 0;
   for (const f of files) {
     const html = await fs.readFile(path.join(PRERENDERED, f), 'utf8');
     const text = visibleText(html);
@@ -664,16 +874,30 @@ async function checkHtml(m) {
     if (faq > 1) failures.push(`${f} : ${faq} blocs FAQPage (un seul attendu)`);
     // (Lot L3, D4) 0 aggregateRating, 0 Review : la note Google n'est jamais balisée sur son propre site.
     for (const issue of ratingMarkupIssues(html, nodes)) failures.push(`${f} : ${issue}`);
-    for (const n of nodes) if (n.numberOfRooms !== undefined) {
-      const ok = [F.totalRooms, ...F.houses.map((h) => h.rooms)].includes(Number(n.numberOfRooms));
-      if (!ok) failures.push(`${f} : numberOfRooms=${n.numberOfRooms} hors {${[F.totalRooms, ...F.houses.map((h) => h.rooms)].join(',')}}`);
-    }
-    for (const n of nodes) if (n['@type'] === 'AggregateOffer' && (String(n.lowPrice) !== String(F.price.fromChf) || String(n.highPrice) !== String(F.price.standardChf))) failures.push(`${f} : AggregateOffer ${n.lowPrice}-${n.highPrice} ≠ ${F.price.fromChf}-${F.price.standardChf}`);
+    // (L'Appart, E2g) Deux gammes : pages de L'Appart (preuves et équipements des maisons), toute page (montant de L'Appart et
+    // équipement des maisons dans une phrase), JSON-LD par gamme — numberOfRooms (29, 33 sur la fiche de l'organisation seulement,
+    // chaque lieu le sien) et AggregateOffer (fourchette d'une gamme) y compris : gammeMixIssues remplace les deux contrôles d'avant.
+    if (isAppartPageFile(f, m)) appartPages++;
+    for (const issue of gammeMixIssues(html, f, m, nodes)) failures.push(`${f} : ${issue}`);
+    // (L'Appart, E2g) Fiche « L'Appart — l'essentiel » : sur son périmètre seulement ; blocs statiques : sur leurs pages seulement.
+    const appartFactsLang = appartFactsScope.get(f);
+    const nAppartFacts = count(html, 'id="appart-facts"');
+    if (appartFactsLang) { appartFactsBlocks++; for (const issue of appartFactsBlockIssues(html, appartFactsLang, m, text)) failures.push(`${f} : ${issue}`); }
+    else if (nAppartFacts > 0) failures.push(`${f} : fiche L'Appart hors périmètre (${nAppartFacts}) — seulement sur ${m.APPART_FACTS_ROUTES.join(', ')}, quand L'Appart a sa page`);
+    const teaser = teaserScope.get(f);
+    const teaserBlocks = appartTeaserBlocks(html);
+    for (const issue of appartTeaserIssues(teaserBlocks, teaser?.route ?? null, teaser?.lang ?? (f.startsWith('en-') ? 'en' : 'fr'), m)) failures.push(`${f} : ${issue}`);
+    if (teaser) teaserSeen.get(teaser.route)[teaser.lang] = teaserBlocks.length;
     // (Lot L6, 10/10/2026) Entité : chaque fiche d'organisation (@id #organization) porte les alternateName D11 et le sameAs de la
     // source ; chaque LodgingBusiness de maison (department ou bloc de page maison) a l'@id <url>#lodging, parentOrganization et le
     // numberOfRooms de sa maison ; `currenciesAccepted` interdit ; une page maison porte exactement 1 nœud #lodging de SA maison ;
     // les Offer d'un ItemList sont rattachées (offeredBy @id) et n'ont jamais numberOfRooms.
     for (const issue of entityGraphIssues(nodes, f, m)) failures.push(`${f} : ${issue}`);
+    // (L'Appart, E5) Fiche de la marque sans équipement des maisons ; trois phrases canoniques : 1× par fiche, 0× ailleurs.
+    for (const issue of brandAmenityIssues(nodes, m)) failures.push(`${f} : ${issue}`);
+    // Langue de la page : celle du périmètre quand il y en a une (l'accueil anglais est « en.html », sans tiret), sinon le préfixe.
+    const pageLang = lang ?? appartFactsLang ?? (f === 'en.html' || f.startsWith('en-') ? 'en' : 'fr');
+    if (!legal) for (const issue of canonicalSentenceIssues(text, pageLang, { brandFiche: Boolean(lang), appartFiche: Boolean(appartFactsLang) }, m)) failures.push(`${f} : ${issue}`);
     const conflicts = jsonLdConflicts(html);
     failures.push(...conflicts.failures.map((c) => `${f} : ${c}`));
     warnings.push(...conflicts.warnings.map((c) => `${f} : ${c}`));
@@ -687,7 +911,15 @@ async function checkHtml(m) {
       if (hits > 0) { vousPages++; warnings.push(`${f} : ${hits} forme(s) de vouvoiement`); } // toujours en avertissement, même en --strict (S4 = garde anti-régression)
     }
   }
-  return { failures, warnings, files: files.length, blocks, minuteWarnings, locationIssues, vousPages };
+  // (L'Appart, E2g) Blocs statiques : FR et EN ensemble ; « exactement 1 » sur les 5 pages quand APPART_TEASER_ALL_REQUIRED (réunion).
+  const teaserPending = [];
+  for (const [route, seen] of teaserSeen) {
+    if (seen.fr === null || seen.en === null) continue; // page absente : signalée par le périmètre de la fiche entité
+    if ((seen.fr > 0) !== (seen.en > 0)) failures.push(`bloc statique L'Appart de ${route} : ${seen.fr} en français, ${seen.en} en anglais (les deux langues ensemble)`);
+    else if (APPART_TEASER_ALL_REQUIRED && (seen.fr !== 1 || seen.en !== 1)) failures.push(`bloc statique L'Appart absent de ${route} (FR ${seen.fr}, EN ${seen.en} ; attendu 1 et 1)`);
+    else if (seen.fr === 0) teaserPending.push(route);
+  }
+  return { failures, warnings, files: files.length, blocks, minuteWarnings, locationIssues, vousPages, appartPages, appartFactsBlocks, teaserPending };
 }
 
 async function checkLlms(m) {
@@ -696,6 +928,12 @@ async function checkLlms(m) {
     const expected = await renderLlms(lang, m);
     const actual = await fs.readFile(LLMS_FILES[lang], 'utf8').catch(() => '');
     if (expected !== actual) failures.push(`${path.relative(ROOT, LLMS_FILES[lang])} : périmé par rapport à la source — lance « npm run build:llms »`);
+    // (L'Appart, E2g) Règle c : jamais un montant de L'Appart et un équipement des maisons dans la même phrase ou ligne de tableau.
+    for (const issue of llmsGammeIssues(actual, m)) failures.push(`${path.relative(ROOT, LLMS_FILES[lang])} : ${issue}`);
+    // (L'Appart, E5) Les trois phrases canoniques, une fois chacune (faits clés 1 à 3) ; aucun jeton du gabarit laissé tel quel.
+    for (const issue of canonicalSentenceIssues(actual, lang, { brandFiche: true }, m)) failures.push(`${path.relative(ROOT, LLMS_FILES[lang])} : ${issue}`);
+    const token = actual.match(/\{\{[A-Z_]+\}\}/);
+    if (token) failures.push(`${path.relative(ROOT, LLMS_FILES[lang])} : jeton ${token[0]} non résolu (scripts/build-llms-txt.mjs, renderLlms)`);
   }
   return failures;
 }
@@ -712,7 +950,9 @@ async function main() {
       const db = await checkDb(m); failures.push(...db.failures);
       // (Lot L3) v_social_proof : chiffre affiché quand la vue existe ; sinon l'avertissement « migration à appliquer » suit.
       const social = db.social ? ` · ${db.social.distinct} résidents distincts depuis ${db.social.since ?? '?'} (${SOCIAL_PROOF_VIEW}, ≥ ${m.STATS.totalResidents} attendu)` : '';
-      console.log(`${db.failures.length ? '❌' : '✅'} base : ${db.rooms} chambres publiques comparées${social}`);
+      const split = `maisons ${db.counts.maisons}, ${m.ENTITY_FACTS.appart.name} ${db.counts.appart}${db.counts.unknown ? `, lieu inconnu ${db.counts.unknown}` : ''}`;
+      console.log(`${db.failures.length ? '❌' : '✅'} base : ${db.rooms} chambres publiques comparées par gamme (${split})${social}`);
+      for (const i of db.infos) console.log(`   ℹ️  ${i}`);
       for (const w of db.warnings) console.log(`   ⚠️  ${w}`);
     }
     catch (e) { console.log(`⚠️  base injoignable (${e.message}) — comparaison ignorée`); }
@@ -731,6 +971,16 @@ async function main() {
   console.log(`${h.failures.length ? '❌' : '✅'} HTML : ${h.files} fichiers, ${h.blocks} pages en périmètre (bloc attendu), ${h.minuteWarnings} minute(s) non canonique(s), ${h.locationIssues} règle(s) d'emplacement L2 (15 min Genève, voiture, aéroport, A40${STRICT ? ' — bloquantes' : ' — avertissements, --strict pour bloquer'}), ${h.vousPages} page(s) FR avec vouvoiement`);
   for (const w of h.warnings.slice(0, args.includes('--tutoiement') || args.includes('--verbose') ? 500 : 12)) console.log(`   ⚠️  ${w}`);
   if (h.warnings.length > 12 && !args.includes('--verbose') && !args.includes('--tutoiement')) console.log(`   ⚠️  … ${h.warnings.length - 12} avertissement(s) de plus (--verbose)`);
+  // (L'Appart, E2g) Deux gammes : résumé de ce que checkHtml a contrôlé (les échecs sont dans la liste ci-dessous).
+  const placePage = (m.PLACE_PAGE_KEYS ?? []).includes(m.APPART_KEY);
+  console.log(`   gammes : ${h.appartPages} page(s) de L'Appart (preuves et équipements des maisons)${placePage ? `, ${h.appartFactsBlocks} page(s) avec la fiche L'Appart` : ' — L\'Appart n\'a pas encore de page (PLACE_PAGE_KEYS)'} ; toutes les pages : montant de L'Appart + équipement des maisons, JSON-LD par gamme`);
+  if (h.teaserPending.length) console.log(`   ℹ️  bloc statique L'Appart pas encore posé sur : ${h.teaserPending.join(', ')} (exigé à la réunion des étapes : APPART_TEASER_ALL_REQUIRED, scripts/lib/gamme-rules.mjs)`);
+  // (L'Appart, E2g) Aucune clé interne de la base dans ce qui est publié (pages, llms.txt, plan du site, noms de fichiers de public/,
+  // index.html, vercel.json, clés de roomPages.json) — scripts/lib/internal-keys.mjs. Échec, même hors --strict.
+  const k = await internalKeySurfaceIssues({ root: ROOT, keys: m.INTERNAL_ONLY_KEYS ?? [] });
+  failures.push(...k.failures);
+  console.log(k.skipped ? '⚠️  clé interne : aucune clé à chercher (INTERNAL_ONLY_KEYS vide)' : `${k.failures.length ? '❌' : '✅'} clé interne : ${k.failures.length ? `${k.failures.length} fuite(s)` : 'absente'} — ${k.read} fichiers publiés lus (public/, index.html, vercel.json), ${k.names} noms sous public/, clés de roomPages.json`);
+  for (const w of k.warnings) console.log(`   ⚠️  ${w}`);
   // (A2, 11/10/2026) CSV public de l'Observatoire = même occupation que la source — contrôle local, hors base (indépendant de --no-db).
   try { failures.push(...observatoireCsvIssues(await fs.readFile(path.join(ROOT, 'public', 'data', 'observatoire-lavilla-2026.csv'), 'utf8'), m)); }
   catch (e) { failures.push(`CSV Observatoire illisible : ${e.message}`); }

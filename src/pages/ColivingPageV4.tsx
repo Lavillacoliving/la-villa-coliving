@@ -4,6 +4,7 @@ import { Users, Zap, Heart, Check, ArrowRight, Star } from "lucide-react";
 import { LocalizedLink } from "@/components/LocalizedLink";
 import { colocGeneveHref } from "@/lib/siteLinks";
 import { SEO } from "@/components/SEO";
+import { APPART } from "@/data/appart";
 import { FaqSection } from "@/components/FaqSection";
 import { colivingFaq } from "@/data/faq/colivingFaq";
 import { STATS, STATS_DISPLAY, PRICE_FROM_CHF_FR, PRICE_FROM_CHF_EN, GOOGLE_REVIEWS, GOOGLE_REVIEWS_LINK_LABEL } from "@/data/stats";
@@ -95,6 +96,11 @@ export function ColivingPageV4() {
               {language === "en"
                 ? <>Our <LocalizedLink to="/" className="underline decoration-[#D4A574] decoration-2 underline-offset-4 hover:text-white transition-colors">coliving Geneva</LocalizedLink>{` is on the French side, ${STATS_DISPLAY.en.distance}.`}</>
                 : <>Notre <LocalizedLink to="/" className="underline decoration-[#D4A574] decoration-2 underline-offset-4 hover:text-white transition-colors">coliving Genève</LocalizedLink>{` se vit côté France, à ${STATS_DISPLAY.fr.distance}.`}</>}
+              {/* (L'Appart, Lot 4, étape E5 — texte du 13/11/2026 « à confirmer ») La colocation de la marque, sa phrase à elle. */}
+              {" "}
+              {language === "en"
+                ? `And for a simpler flatshare: ${APPART.name}, in ${APPART.commune}, ${APPART.rooms.total} rooms from ${APPART.price.from.en.chf}/month.`
+                : `Et pour une colocation plus simple : ${APPART.name}, à ${APPART.commune}, ${APPART.rooms.total} chambres dès ${APPART.price.from.fr.chf}/mois.`}
             </p>
             <LocalizedLink
               to="/nos-maisons"

@@ -899,5 +899,89 @@ export const RESPONSIVE_IMAGES: Record<string, { original: number; widths: numbe
       1024
     ],
     "reencoded": false
+  },
+  "/images/lappart/lappart-cuisine-5.webp": {
+    "original": 1920,
+    "widths": [
+      480,
+      768,
+      1024,
+      1440
+    ],
+    "reencoded": false
+  },
+  "/images/lappart/lappart-cuisine-2.webp": {
+    "original": 1800,
+    "widths": [
+      480,
+      768,
+      1024,
+      1440
+    ],
+    "reencoded": false
+  },
+  "/images/lappart/lappart-cuisine-4.webp": {
+    "original": 1920,
+    "widths": [
+      480,
+      768,
+      1024,
+      1440
+    ],
+    "reencoded": false
+  },
+  "/images/lappart/lappart-cuisine-1.webp": {
+    "original": 1440,
+    "widths": [
+      480,
+      768,
+      1024
+    ],
+    "reencoded": false
+  },
+  "/images/lappart/lappart-cheminee-1.webp": {
+    "original": 1920,
+    "widths": [
+      480,
+      768,
+      1024,
+      1440
+    ],
+    "reencoded": false
+  },
+  "/images/lappart/lappart-cuisine-3.webp": {
+    "original": 1306,
+    "widths": [
+      480,
+      768,
+      1024
+    ],
+    "reencoded": false
+  },
+  "/images/lappart/lappart-balcon-1.webp": {
+    "original": 679,
+    "widths": [
+      480
+    ],
+    "reencoded": false
+  },
+  "/images/lappart/lappart-placards-1.webp": {
+    "original": 1920,
+    "widths": [
+      480,
+      768,
+      1024,
+      1440
+    ],
+    "reencoded": false
+  },
+  "/images/lappart/lappart-salle-eau-1.webp": {
+    "original": 1112,
+    "widths": [
+      480,
+      768,
+      1024
+    ],
+    "reencoded": false
   }
 };

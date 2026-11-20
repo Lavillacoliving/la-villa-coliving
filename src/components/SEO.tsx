@@ -3,7 +3,8 @@ import { useLocation } from "react-router-dom";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { buildLocalBusinessSchema } from "@/lib/structuredData";
 import { HREFLANG_NO_ALTERNATES } from "@/lib/siteLinks";
-import { STATS, PRICE_FROM_EN_NUM, PRICE_FROM_CHF_FR } from "@/data/stats";
+import { STATS, PRICE_FROM_CHF_EN, PRICE_FROM_CHF_FR } from "@/data/stats";
+import { APPART } from "@/data/appart";
 
 interface SEOProps {
   title?: string;
@@ -50,10 +51,12 @@ export function SEO({
       ? "La Villa Coliving | Premium Coliving Near Geneva"
       : "Colocation & Coliving Premium près de Genève | La Villa Coliving";
 
+  // (L'Appart, Lot 4, étape E5 — texte du 13/11/2026 « à confirmer ») Repli des pages sans description propre ET description de la
+  // fiche d'entreprise de ces pages : deux gammes, deux phrases (jamais le prix de L'Appart dans la phrase de la piscine).
   const defaultDescription =
     language === "en"
-      ? `Premium coliving near Geneva. ${STATS.totalRooms} furnished rooms, all-inclusive from ${PRICE_FROM_EN_NUM} CHF/month. Heated pool, gym, sauna, fiber internet. Ideal for expats, cross-border workers & young professionals.`
-      : `Colocation et coliving premium près de Genève. ${STATS.totalRooms} chambres meublées tout inclus dès ${PRICE_FROM_CHF_FR}/mois. Piscine chauffée, salle de sport, sauna, fibre optique. Idéal frontaliers, expats et jeunes professionnels.`;
+      ? `Coliving and flatshare near Geneva, on the French side. ${STATS.totalHouses} coliving houses with a pool, sauna and gym: from ${PRICE_FROM_CHF_EN}/month, all inclusive. ${APPART.name}, a flatshare in ${APPART.commune}: from ${APPART.price.from.en.chf}/month.`
+      : `Coliving et colocation près de Genève, côté France. ${STATS.totalHouses} maisons de coliving avec piscine, sauna et salle de sport : dès ${PRICE_FROM_CHF_FR}/mois tout compris. ${APPART.name}, colocation à ${APPART.commune} : dès ${APPART.price.from.fr.chf}/mois.`;
 
   // B2: append the brand suffix only while the title stays within the SERP display limit (~65 chars);
   // beyond that, use the bare descriptive title to avoid truncation. 65 (not 60) keeps the brand on

@@ -9,7 +9,8 @@
 
 // (13/11/2026) + PRIX_FOURCHETTE (« 1 290 à 1 430 CHF » en prose) et PRIX_FOURCHETTE_TABLEAU (« 1 290 – 1 430 CHF » en cellule de
 // tableau) ; PRIX_DES / PRIX_DES_EUR = le « dès » des maisons. Le test tools/test/content-tokens.test.mjs compare ce miroir à la source.
-export const CONTENT_TOKENS = ['PRIX_DES', 'PRIX_PRIVATIF', 'PRIX_DES_EUR', 'PRIX_PRIVATIF_EUR', 'NB_CHAMBRES', 'NB_MAISONS', 'MIN_GENEVE', 'CAUTION_MOIS', 'PRIX_FOURCHETTE', 'PRIX_FOURCHETTE_TABLEAU'];
+// (L'Appart, 14/11/2026) + PRIX_APPART_DES / PRIX_APPART_DES_EUR = le « dès » de L'Appart (730 CHF / 790 €, APPART.price.from).
+export const CONTENT_TOKENS = ['PRIX_DES', 'PRIX_PRIVATIF', 'PRIX_DES_EUR', 'PRIX_PRIVATIF_EUR', 'NB_CHAMBRES', 'NB_MAISONS', 'MIN_GENEVE', 'CAUTION_MOIS', 'PRIX_FOURCHETTE', 'PRIX_FOURCHETTE_TABLEAU', 'PRIX_APPART_DES', 'PRIX_APPART_DES_EUR'];
 export const ENTITY_FACTS_MARKER = '<!-- entity-facts -->';
 export const ENTITY_FACTS_MARKER_RE = /^[ \t]*<!--\s*entity-facts\s*-->[ \t]*$/gm;
 /** (Lot L1, 10/2026) Miroirs de src/lib/contentMarkers.ts : registre des marqueurs et lignes-commentaires. */
@@ -37,8 +38,9 @@ export const AUTHOR_DUO = 'Jerome Austin & Fanny Bela';
 export const FORMATS = ['decision', 'service'];
 export const SERVICE_WORDS = { min: 800, max: 2200 };
 
-/** Pages money (au moins un lien sortant obligatoire). */
-export const MONEY_PAGES = ['/colocation-geneve', '/chambre-a-louer-geneve', '/chambres-disponibles', '/annemasse-colocation', '/chambre-a-louer-annemasse', '/tarifs', '/nos-maisons', '/lavilla', '/leloft', '/lelodge', '/le-coliving'];
+/** Pages money (au moins un lien sortant obligatoire). (L'Appart, Lot 4, étape E5) + /lappart : un lien vers L'Appart compte comme
+ *  un lien vers une page money (clé PUBLIQUE de la page, APPART.key — jamais la clé interne de la base). */
+export const MONEY_PAGES = ['/colocation-geneve', '/chambre-a-louer-geneve', '/chambres-disponibles', '/annemasse-colocation', '/chambre-a-louer-annemasse', '/tarifs', '/nos-maisons', '/lavilla', '/leloft', '/lelodge', '/le-coliving', '/lappart'];
 /** Piliers éditoriaux (au moins un lien sortant obligatoire). */
 export const PILLAR_ARTICLES = ['/blog/trouver-colocation-geneve-frontalier', '/blog/budget-colocation-geneve-guide-complet', '/blog/ou-habiter-frontalier-suisse-villes-france-pas-cher', '/blog/living-in-france-working-in-geneva', '/blog/guide-ressources-frontalier-geneve', '/blog/dossier-location-frontalier-suisse-france', '/blog/colocation-annemasse-ville-la-grand-ambilly'];
 

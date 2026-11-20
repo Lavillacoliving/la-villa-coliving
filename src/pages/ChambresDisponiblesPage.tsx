@@ -12,9 +12,12 @@ import { RoomCard } from "@/components/RoomCard";
 import { trackPriceWhyClick, type PriceWhyVariant } from "@/data/allInclusive";
 import { RoomsEmbed } from "@/components/RoomsEmbed";
 import { WhatsAppButton } from "@/components/WhatsAppButton";
+import { AppartRooms } from "@/components/appart/AppartRooms";
 import { useLanguage } from "@/contexts/LanguageContext";
-import { HOUSES } from "@/data/houses";
-import { ENTITY_HOUSES } from "@/data/entityFacts";
+import { HOUSES, placeCard } from "@/data/houses";
+import { ENTITY_FACTS, ENTITY_HOUSES } from "@/data/entityFacts";
+import { APPART } from "@/data/appart";
+import { MAISON_KEYS, isMaisonKey } from "@/data/places";
 import { MONTHS_FR, MONTHS_EN, formatShortDate } from "@/lib/dates";
 import { responsiveImage } from "@/lib/responsiveImage";
 import { roomGallery } from "@/data/roomPhotos";
@@ -23,6 +26,7 @@ import { tarifsFaq } from "@/data/faq/tarifsFaq";
 import { maisonsFaq } from "@/data/faq/maisonsFaq";
 import {
   useAllRooms,
+  useHouseRooms,
   useRoomAvailability,
   useRoomsLoadFailed,
   splitRooms,
@@ -31,6 +35,7 @@ import {
   BADGE_DOT_CLASS,
   type BadgeTone,
   type HouseKey,
+  type PlaceRoom,
   type PublicRoom,
 } from "@/lib/availability";
 
@@ -45,14 +50,20 @@ import {
  * `<RoomsEmbed />` (29 lignes) de façon SYNCHRONE : premier rendu client = HTML prérendu,
  * zéro #418. Les filtres (?maison=, ?sdb=) ne sont appliqués qu'APRÈS hydratation (effet),
  * pour la même raison. Remplace la LP payante /chambres-septembre (301 dans vercel.json).
+ *
+ * (L'Appart, étape E4 — décision n° 31, à confirmer) Les chambres de L'Appart ont leur section à part, après « Bientôt
+ * disponibles » (<AppartRooms/>) : pastilles, « Prochaines entrées », filtre « Maison » et listes d'attente par maison
+ * restent ceux des 3 maisons (useAllRooms) ; la section L'Appart se masque quand un filtre de maison est actif, le filtre
+ * « Salle d'eau » s'applique aussi à ses cartes. Tant que la vue n'a pas L'Appart (état A) : un repli vers /lappart.
+ * L'état embarqué (<RoomsEmbed />, sans prop) porte toutes les lignes connues : 33 après la bascule.
  */
 const PhotoLightbox = lazy(() => import("@/components/PhotoLightbox"));
 
-const HOUSE_ORDER: HouseKey[] = ["lavilla", "leloft", "lelodge"];
 type BathFilter = "privative" | "partagee";
-const isHouseKey = (v: string | null): v is HouseKey => v === "lavilla" || v === "leloft" || v === "lelodge";
 const isBathFilter = (v: string | null): v is BathFilter => v === "privative" || v === "partagee";
 const COMMUNE: Record<HouseKey, string> = Object.fromEntries(ENTITY_HOUSES.map((h) => [h.slug, h.commune])) as Record<HouseKey, string>;
+// Carte de L'Appart (nom, commune, vignette) : jamais la description « piscine · jardin » d'une maison (src/data/houses.ts).
+const APPART_CARD = placeCard(APPART.key);
 
 // `true` seulement après hydratation (src/hooks/useHydrated.ts) : pendant l'hydratation React lit
 // le snapshot serveur (false) → premier rendu client = HTML prérendu (liste complète), puis re-rendu filtré.
@@ -75,13 +86,16 @@ export function ChambresDisponiblesPage() {
   // prérendu inchangé : l'embed porte les 29 lignes, `known` est vrai.
   const loadFailed = useRoomsLoadFailed();
   const { candidates } = splitRooms(all.rooms);
+  // (L'Appart, E4) Ses chambres, à part : `known` = la vue a des lignes de L'Appart (état B), sinon le repli (état A).
+  const appart = useHouseRooms(APPART.key);
+  const { candidates: appartCandidates } = splitRooms(appart.rooms);
 
   // Filtres pilotés par l'URL (Q4) — l'URL EST l'état ; lus après hydratation seulement.
   const [searchParams, setSearchParams] = useSearchParams();
   const hydrated = useHydrated();
   const maisonParam = searchParams.get("maison");
   const sdbParam = searchParams.get("sdb");
-  const houseFilter: HouseKey | null = hydrated && isHouseKey(maisonParam) ? maisonParam : null;
+  const houseFilter: HouseKey | null = hydrated && isMaisonKey(maisonParam) ? maisonParam : null;
   const bathFilter: BathFilter | null = hydrated && isBathFilter(sdbParam) ? sdbParam : null;
   const applyFilter = (next: { maison?: HouseKey | null; sdb?: BathFilter | null }) => {
     const params = new URLSearchParams(searchParams);
@@ -92,11 +106,14 @@ export function ChambresDisponiblesPage() {
     setSearchParams(params, { replace: true });
     track("filter_change", { page: "chambres_disponibles", maison: maison ?? "all", sdb: sdb ?? "all", language });
   };
-  const shown = candidates.filter((r) =>
-    (!houseFilter || r.house_slug === houseFilter) &&
-    (!bathFilter || (bathFilter === "privative" ? r.bathroom_type === "private" : r.bathroom_type !== "private")),
-  );
+  const bathMatches = (r: PlaceRoom) => !bathFilter || (bathFilter === "privative" ? r.bathroom_type === "private" : r.bathroom_type !== "private");
+  const shown = candidates.filter((r) => (!houseFilter || r.house_slug === houseFilter) && bathMatches(r));
   const filtered = houseFilter !== null || bathFilter !== null;
+  // (L'Appart, E4) Même règle d'affichage que pour les maisons : libres maintenant en grandes cartes, libérations datées en
+  // cartes compactes ; le filtre « Maison » masque la section (rendu plus bas), le filtre « Salle d'eau » trie ses cartes.
+  const appartShown = appartCandidates.filter(bathMatches);
+  const appartAvailableShown = appartShown.filter((r) => r.availability === "available");
+  const appartSoonShown = appartShown.filter((r) => r.availability !== "available");
   // (12/10/2026, maquette validée par Jérôme) Les chambres libres maintenant en avant (grandes cartes), les libérations
   // datées en retrait (cartes compactes, triées par date par splitRooms). Même source que la liste : premier rendu = prérendu.
   const availableShown = shown.filter((r) => r.availability === "available");
@@ -137,7 +154,8 @@ export function ChambresDisponiblesPage() {
       room_id: `chambre-${room.room_number}`, property_interest: room.house_slug, photo_index: photoIndex, page: "chambres_disponibles",
     });
   };
-  const onRoomCta = (room: PublicRoom) => {
+  // (L'Appart, E4) Mesure commune aux cartes des maisons et de L'Appart : `house` = la clé PUBLIQUE du lieu.
+  const onRoomCta = (room: PlaceRoom) => {
     track("cta_click", {
       cta_position: "available_room_card", cta_target: "/candidature", house: room.house_slug,
       room_id: `chambre-${room.room_number}`, room_status: room.availability === "available" ? "available" : "upcoming", language,
@@ -146,7 +164,7 @@ export function ChambresDisponiblesPage() {
 
   // (12/10/2026, demande Jérôme) « Découvrir la maison » : événement DISTINCT de cta_click, pour ne pas gonfler
   // les clics vers /candidature dans les rapports.
-  const onHouseDiscover = (room: PublicRoom) => {
+  const onHouseDiscover = (room: PlaceRoom) => {
     track("house_discover_click", {
       house: room.house_slug, room_id: `chambre-${room.room_number}`,
       room_status: room.availability === "available" ? "available" : "upcoming", page: "chambres_disponibles", language,
@@ -154,7 +172,7 @@ export function ChambresDisponiblesPage() {
   };
 
   // (13/11/2026) Lien « Ce que comprend le prix » des cartes : événement price_why_click, distinct de cta_click.
-  const onPriceWhy = (room: PublicRoom, variant: PriceWhyVariant) =>
+  const onPriceWhy = (room: PlaceRoom, variant: PriceWhyVariant) =>
     trackPriceWhyClick({ house: room.house_slug, roomNumber: room.room_number, variant, page: "chambres_disponibles", language: L });
 
   // Prochaines disponibilités par maison (résumés embarqués) — jamais « complet ».
@@ -182,20 +200,26 @@ export function ChambresDisponiblesPage() {
     return { tone: "full", text: en ? "no date announced yet — join the waiting list" : "pas de date annoncée pour l'instant — rejoins la liste d'attente" };
   };
 
-  // (Lot L6.5, 10/10/2026) La page est la « plateforme » de La Villa pour les assistants : titre explicite (3 maisons, prix, dates — jamais un montant dans le titre).
-  const title = en ? `Available rooms near Geneva — ${STATS.totalHouses} houses, prices, dates` : `Chambres disponibles près de Genève — ${STATS.totalHouses} maisons, prix, dates`;
+  // (Lot L6.5, 10/10/2026) La page est la « plateforme » de La Villa pour les assistants : titre explicite (lieux, prix, dates — jamais un montant dans le titre).
+  // (L'Appart, E4 — source des textes du 13/11/2026, S7.1-S7.2) La page liste les 4 adresses ; chaque gamme garde son « dès »,
+  // maisons d'abord, aucun équipement dans la meta. « 4 adresses » = ENTITY_FACTS.brand (fait de l'offre, pas un compteur).
+  const title = en ? `Available rooms near Geneva — ${ENTITY_FACTS.brand.places} locations, prices, dates` : `Chambres disponibles près de Genève — ${ENTITY_FACTS.brand.places} adresses, prix, dates`;
   const description = en
-    ? `Every room free now or opening soon in our ${STATS.totalHouses} houses near Geneva, with date and all-inclusive price from ${PRICE_FROM_CHF_EN}. Reply within 48 h.`
-    : `Toutes les chambres libres ou à libérer dans nos ${STATS.totalHouses} maisons près de Genève, avec date et prix tout inclus dès ${PRICE_FROM_CHF_FR}. Réponse sous 48 h.`;
+    ? `Rooms free now or opening soon in our ${STATS.totalHouses} coliving houses, from ${PRICE_FROM_CHF_EN}, and at ${APPART.name}, our flatshare in ${APPART.commune}, from ${APPART.price.from.en.chf}. Live dates and prices.`
+    : `Chambres libres ou à libérer dans nos ${STATS.totalHouses} maisons de coliving, dès ${PRICE_FROM_CHF_FR}, et à ${APPART.name}, colocation à ${APPART.commune}, dès ${APPART.price.from.fr.chf}. Dates et prix en direct.`;
 
   // (Lot L6.5) JSON-LD ItemList d'Offer — dérivé du même snapshot que le rendu, sans filtre (identique au prérendu et au premier
   // rendu client) ; construit par buildAvailableRoomsItemList (structuredData.ts) : prix mensuel, LeaseOut, offeredBy, maison par @id.
-  const itemList = buildAvailableRoomsItemList(candidates, L);
+  // (L'Appart, E4) Les maisons d'abord, puis les chambres de L'Appart (PreOrder tant qu'elles sont datées ; sans availabilityStarts
+  // avant l'ouverture, publiée au mois seulement — V2-22 du 19/11/2026) ; rien de plus dans l'état A.
+  const itemList = buildAvailableRoomsItemList([...candidates, ...appartCandidates], L);
 
   // (Lot L2, 09/10/2026) « 20 min » toujours qualifié : STATS_DISPLAY.distance (D1).
+  // (L'Appart, E4, S7.5) Les deux lignes qui décrivent les maisons le disent : sous une carte de L'Appart, elles se liraient
+  // comme les siennes.
   const reassurance = en
-    ? ["No agency fee, no application fee", "Reply within 48 hours", "Video tour available", `${STATS.totalResidents}+ residents since ${STATS.foundedYear}`, "All inclusive: bills, fibre, cleaning, pool, sauna, gym", STATS_DISPLAY.en.distance]
-    : ["0 frais d'agence ni de dossier", "Réponse sous 48 h", "Visite en visio possible", `${STATS.totalResidents}+ résidents depuis ${STATS.foundedYear}`, "Tout inclus : charges, fibre, ménage, piscine, sauna, gym", STATS_DISPLAY.fr.distance];
+    ? ["No agency fee, no application fee", "Reply within 48 hours", "Video tour available", `${STATS.totalResidents}+ residents in the houses since ${STATS.foundedYear}`, "In the houses: bills, fibre, cleaning, pool, sauna, gym included", STATS_DISPLAY.en.distance]
+    : ["0 frais d'agence ni de dossier", "Réponse sous 48 h", "Visite en visio possible", `${STATS.totalResidents}+ résidents dans les maisons depuis ${STATS.foundedYear}`, "Dans les maisons : charges, fibre, ménage, piscine, sauna, gym compris", STATS_DISPLAY.fr.distance];
 
   // (02/11/2026, brief « caution permanente ») La caution en 2 ou 3 fois est une règle permanente (D3-bis : « selon ton
   // dossier »), plus un avantage de l'offre : la ligne vit en permanence dans la liste de réassurance, sans condition
@@ -220,8 +244,9 @@ export function ChambresDisponiblesPage() {
       {/* (Lot 2 — C1) Marges resserrées sur mobile : avec les filtres sur une ligne, la première carte passe sous la ligne de flottaison à 390 × 844. */}
       <section className="pt-32 pb-9 md:pb-14 lg:pt-40 lg:pb-20 bg-[#F5F2ED]">
         <div className="container-custom">
+          {/* (L'Appart, E4, S7.3) Fait de l'offre (33 chambres, 4 adresses : ENTITY_FACTS.brand), pas un compteur de disponibilité. */}
           <span className="text-xs text-[#78716C] uppercase tracking-[0.3em] mb-4 block">
-            {en ? `${STATS.totalRooms} rooms · ${STATS.totalHouses} houses` : `${STATS.totalRooms} chambres · ${STATS.totalHouses} maisons`}
+            {en ? `${ENTITY_FACTS.brand.totalRooms} rooms · ${ENTITY_FACTS.brand.places} locations` : `${ENTITY_FACTS.brand.totalRooms} chambres · ${ENTITY_FACTS.brand.places} adresses`}
           </span>
           <h1 className="text-4xl md:text-5xl lg:text-6xl font-light text-[#1C1917] mb-5" style={{ fontFamily: '"DM Serif Display", serif' }}>
             {en ? "Available rooms near Geneva" : "Chambres disponibles près de Genève"}
@@ -251,10 +276,15 @@ export function ChambresDisponiblesPage() {
           )}
           {/* (13/10/2026, D3) La caution n'ouvre plus la page : elle vit sous les cartes (fiche entité et liste de
               réassurance — règle permanente depuis le 02/11/2026). */}
+          {/* (L'Appart, E4, S7.4) Chaque gamme dans sa phrase, maisons d'abord ; le nom de L'Appart mène à sa page (C6). */}
           <p className="mt-3 text-[#57534E] max-w-2xl">
             {en
-              ? `Furnished private rooms in ${STATS.totalHouses} coliving houses on the French side of Geneva, ${STATS_DISPLAY.en.distance}. All inclusive from ${PRICE_FROM_CHF_EN}/month, no agency or application fee.`
-              : `Chambres privées meublées dans ${STATS.totalHouses} maisons de coliving côté France, à ${STATS_DISPLAY.fr.distance}. Tout inclus dès ${PRICE_FROM_CHF_FR}/mois, 0 frais d'agence ni de dossier.`}
+              ? `Furnished private rooms in ${STATS.totalHouses} coliving houses on the French side of Geneva, ${STATS_DISPLAY.en.distance}: all inclusive from ${PRICE_FROM_CHF_EN}/month. And at `
+              : `Chambres privées meublées dans ${STATS.totalHouses} maisons de coliving côté France, à ${STATS_DISPLAY.fr.distance} : tout inclus dès ${PRICE_FROM_CHF_FR}/mois. Et à `}
+            <LocalizedLink to={`/${APPART.key}`} className="underline underline-offset-4 hover:text-[#1C1917]">{APPART.name}</LocalizedLink>
+            {en
+              ? `, our flatshare in ${APPART.commune}: from ${APPART.price.from.en.chf}/month, bills included. No agency or application fee.`
+              : `, notre colocation à ${APPART.commune} : dès ${APPART.price.from.fr.chf}/mois, charges comprises. 0 frais d'agence ni de dossier.`}
           </p>
         </div>
       </section>
@@ -269,7 +299,7 @@ export function ChambresDisponiblesPage() {
           <button type="button" className={chip(houseFilter === null)} onClick={() => applyFilter({ maison: null })}>
             {en ? "All" : "Toutes"}
           </button>
-          {HOUSE_ORDER.map((k) => (
+          {MAISON_KEYS.map((k) => (
             <button key={k} type="button" className={chip(houseFilter === k)} onClick={() => applyFilter({ maison: houseFilter === k ? null : k })}>
               {HOUSES[k].label}
             </button>
@@ -421,6 +451,56 @@ export function ChambresDisponiblesPage() {
         </section>
       )}
 
+      {/* (L'Appart, étape E4 — décision n° 31, à confirmer) Section à part, après les maisons : ses cartes (état B) ou le repli
+          vers /lappart (état A). Rendue une fois les chambres chargées (comme les cartes), masquée par un filtre de maison. */}
+      {all.known && houseFilter === null && (
+        <div className="py-12 lg:py-16 bg-white border-t border-[#E7E5E4]">
+          <div className="container-custom">
+            <AppartRooms known={appart.known} fallback full={appartCandidates.length === 0} page="chambres_disponibles">
+              {appartAvailableShown.length > 0 && (
+                <div className="space-y-6 mb-6">
+                  {appartAvailableShown.map((room) => (
+                    <RoomCard
+                      key={`${room.house_slug}:${room.room_number}`}
+                      variant="featured"
+                      house={room.house_slug}
+                      houseName={APPART_CARD.label}
+                      commune={APPART_CARD.commune}
+                      room={room}
+                      fallbackImage={APPART_CARD.img}
+                      onCtaClick={onRoomCta}
+                      houseCta
+                      onHouseClick={onHouseDiscover}
+                      onPriceWhyClick={onPriceWhy}
+                      showGammeBadge
+                    />
+                  ))}
+                </div>
+              )}
+              {appartSoonShown.length > 0 && (
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                  {appartSoonShown.map((room) => (
+                    <RoomCard
+                      key={`${room.house_slug}:${room.room_number}`}
+                      variant="compact"
+                      house={room.house_slug}
+                      houseName={APPART_CARD.label}
+                      commune={APPART_CARD.commune}
+                      room={room}
+                      fallbackImage={APPART_CARD.img}
+                      onCtaClick={onRoomCta}
+                      houseCta
+                      onHouseClick={onHouseDiscover}
+                      showGammeBadge
+                    />
+                  ))}
+                </div>
+              )}
+            </AppartRooms>
+          </div>
+        </div>
+      )}
+
       {/* Prochaines disponibilités et liste d'attente par maison (Q3) — toujours présent :
           la page vend la PROCHAINE libération, pas l'occupation du jour. */}
       <section className="py-14 lg:py-20 bg-[#FAF9F6] border-y border-[#E7E5E4]">
@@ -434,7 +514,7 @@ export function ChambresDisponiblesPage() {
               : "Pas la bonne chambre, ou pas la bonne date ? Laisse tes coordonnées pour une maison : tu seras prévenu en premier dès qu'une chambre se libère."}
           </p>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            {HOUSE_ORDER.map((k) => {
+            {MAISON_KEYS.map((k) => {
               const line = houseLine(k);
               return (
                 <div key={k} className="bg-white border border-[#E7E5E4] rounded-2xl overflow-hidden flex flex-col">
@@ -494,8 +574,10 @@ export function ChambresDisponiblesPage() {
           </p>
           {/* (Lot L5, D10) Encart A.8 — le groupe Facebook comme ressource quand aucune date ne convient. (13/10/2026, D2 du
               brief « conversion Ads ») Seulement s'il n'y a AUCUNE chambre libre ni datée (listes non filtrées : même
-              rendu au prérendu et à l'hydratation) ; garde check:slots : 0 ou 1 encart sur cette page. */}
-          {all.known && candidates.length === 0 && (
+              rendu au prérendu et à l'hydratation) ; garde check:slots : 0 ou 1 encart sur cette page.
+              (Corrections du 13/11/2026, relecture technique) « Aucune » compte aussi les chambres de L'Appart (libres ou
+              datées, même état embarqué) : l'encart ne se pose jamais sous ses cartes. */}
+          {all.known && candidates.length === 0 && appartCandidates.length === 0 && (
             <FacebookGroupCallout position="chambres_disponibles" className="mt-10 max-w-3xl mx-auto" />
           )}
         </div>

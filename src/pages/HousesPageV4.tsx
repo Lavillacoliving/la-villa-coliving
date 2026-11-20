@@ -9,6 +9,7 @@ import { SEO } from "@/components/SEO";
 import { FaqSection } from "@/components/FaqSection";
 import { FacebookGroupLine } from "@/components/FacebookGroupLine";
 import { maisonsFaq } from "@/data/faq/maisonsFaq";
+import { AppartTeaser } from "@/components/appart/AppartTeaser";
 import { STATS, STATS_DISPLAY, HOUSE_SURFACES, thousands, PRICE_FR_NUM, PRICE_EN_NUM, PRICE_FROM_FR_NUM, PRICE_FROM_EN_NUM, PRICE_FROM_CHF_FR, PRICE_FROM_CHF_EN, EUR_STANDARD_FR_NUM, EUR_STANDARD_EN_NUM, EUR_FROM_FR_NUM, EUR_FROM_EN_NUM } from "@/data/stats";
 import { ENTITY_HOUSES, type EntityHouseSlug } from "@/data/entityFacts";
 import {
@@ -339,6 +340,9 @@ export function HousesPageV4() {
               </div>
             ))}
           </div>
+          {/* (L'Appart, Lot 4, étape E5 — Q16) Section distincte, après les trois maisons et avant « Comparer » : L'Appart n'est pas une
+              quatrième maison (son texte le dit d'emblée) ; le titre « Trois Maisons. » et le tableau à 3 colonnes restent vrais. */}
+          <div className="mt-12 md:mt-16"><AppartTeaser page="/nos-maisons" /></div>
         </div>
       </section>
 
