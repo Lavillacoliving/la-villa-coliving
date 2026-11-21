@@ -56,6 +56,8 @@ Two things to keep in mind:
 
 Compare total cost, not rent: a cheap studio you have to furnish, equip and connect to every utility can cost more in the first year than an all-inclusive room.
 
+If your budget is really tight, have a look at [L'Appart](/en/lappart), La Villa Coliving's flatshare in Annemasse, near the station: rooms from {{PRIX_APPART_DES}}/{{PRIX_APPART_DES_EUR}} a month, with bills, fibre, streaming and cleaning of the shared areas included.
+
 For a first job, two traps come up again and again: agency and application fees, and the guarantor in France that agencies often ask for when your file has no French payslips. [What application fees really cost](/en/blog/coliving-frais-dossier-geneve-annemasse) and [the cross-border rental file](/en/blog/dossier-location-frontalier-suisse-france) help you prepare for both.
 
 A simple benchmark: total housing costs under 30% of your net salary leave you room to breathe. [The real cost of a flatshare near Geneva](/en/blog/budget-colocation-geneve-guide-complet) goes through every line, and the ballpark figures are further down this page.
@@ -79,7 +81,7 @@ We'd rather tell you before you sign: here are four cases where the place you're
 - **The wrong side of Geneva.** Annemasse for a job at CERN, or Ferney-Voltaire for a job in Champel: you cross the city morning and evening.
 - **A listing that looks too good.** Rent well below the market, a landlord "abroad", payment requested before a viewing: [housing scams near Geneva](/en/blog/arnaques-logement-frontalier-geneve-eviter) shows the cases we come across.
 
-And if you're coming as a family, or as a couple who want a place of your own, our format isn't the right one: with us, each room is for one person (a couple can take two). Look for a one- or two-bedroom flat instead, and plan on the longer timelines in the table below.
+And if you're coming as a family, or as a couple who want a place of your own, our format isn't the right one: in our houses, each room is for one person (a couple can take two), and at L'Appart only the suite is let to two people. Look for a one- or two-bedroom flat instead, and plan on the longer timelines in the table below.
 
 ## Rents on the French side: ballpark figures
 
