@@ -63,10 +63,36 @@ function stripHeroPreload(html) {
 }
 
 /**
+ * (22/10/2026) Balises <meta>/<link> du <head> prérendu rendues par react-helmet (data-react-helmet), en clés
+ * `name:robots`, `property:og:title`, `canonical`, `hreflang:fr`. Même règle que les JSON-LD (lot L6, 10/10/2026) :
+ * l'injection ne remet l'attribut que sur ces balises, et Helmet les remplace à l'hydratation au lieu d'AJOUTER une
+ * seconde série à côté (DOM rendu de production constaté le 22/10/2026 : 2 robots, 2 canonical, 2 description,
+ * 2× hreflang sur les pages money). Une balise du pipeline (défauts OG/Twitter, hreflang calculés) reste sans l'attribut.
+ */
+function helmetHeadKeys(html) {
+  const headEnd = html.indexOf('</head>');
+  const head = headEnd === -1 ? '' : html.substring(0, headEnd);
+  const keys = new Set();
+  for (const [tag] of head.matchAll(/<(?:meta|link)\b[^>]*>/gi)) {
+    if (!/data-react-helmet/.test(tag)) continue;
+    const attr = (name) => (tag.match(new RegExp(`\\s${name}="([^"]*)"`, 'i')) || [])[1];
+    const rel = attr('rel');
+    if (rel === 'canonical') keys.add('canonical');
+    else if (rel === 'alternate' && attr('hreflang')) keys.add(`hreflang:${attr('hreflang').toLowerCase()}`);
+    else if (attr('name')) keys.add(`name:${attr('name')}`);
+    else if (attr('property')) keys.add(`property:${attr('property')}`);
+  }
+  return keys;
+}
+
+const helmetAttr = (helmetKeys, key) => (helmetKeys.has(key) ? ' data-react-helmet="true"' : '');
+
+/**
  * Build the SEO head tags string from extracted data + route info
  */
-function buildSeoHeadTags(seo, route) {
+function buildSeoHeadTags(seo, route, helmetKeys = new Set()) {
   const tags = [];
+  const rh = (key) => helmetAttr(helmetKeys, key);
   // (28/09/2026) Page noindex (fiches chambres) : ni canonical ni hreflang — mais les balises
   // OG/Twitter restent, c'est elles que WhatsApp et Instagram lisent pour l'aperçu du lien.
   const noindex = /noindex/i.test(seo.metaName?.robots ?? '');
@@ -75,13 +101,13 @@ function buildSeoHeadTags(seo, route) {
   // (06/10/2026) Page noindex qui porte quand même une canonical dans son HTML prérendu (composant SEO,
   // prop selfCanonical — /offre-hiver) : conservée telle quelle. Les fiches chambres n'en émettent pas.
   const canonicalUrl = seo.canonical || `${SITE_URL}${route}`;
-  if (!noindex || seo.canonical) tags.push(`<link rel="canonical" href="${canonicalUrl}" />`);
+  if (!noindex || seo.canonical) tags.push(`<link rel="canonical" href="${canonicalUrl}"${seo.canonical ? rh('canonical') : ''} />`);
 
   // Meta name tags (keywords, robots, author, language)
   for (const [name, content] of Object.entries(seo.metaName || {})) {
     // Skip description — handled separately via replace
     if (name === 'description') continue;
-    tags.push(`<meta name="${name}" content="${content}" />`);
+    tags.push(`<meta name="${name}" content="${content}"${rh(`name:${name}`)} />`);
   }
 
   // OG tags
@@ -101,7 +127,7 @@ function buildSeoHeadTags(seo, route) {
   )};
 
   for (const [prop, content] of Object.entries(ogTags)) {
-    if (content) tags.push(`<meta property="${prop}" content="${content}" />`);
+    if (content) tags.push(`<meta property="${prop}" content="${content}"${rh(`property:${prop}`)} />`);
   }
 
   // Twitter cards
@@ -118,7 +144,7 @@ function buildSeoHeadTags(seo, route) {
   )};
 
   for (const [prop, content] of Object.entries(twitterTags)) {
-    if (content) tags.push(`<meta property="${prop}" content="${content}" />`);
+    if (content) tags.push(`<meta property="${prop}" content="${content}"${rh(`property:${prop}`)} />`);
   }
 
   // Hreflang tags (from pre-rendered or computed from route).
@@ -128,7 +154,7 @@ function buildSeoHeadTags(seo, route) {
     // rien
   } else if (seo.hreflang && seo.hreflang.length > 0) {
     for (const { lang, href } of seo.hreflang) {
-      tags.push(`<link rel="alternate" hreflang="${lang}" href="${href}" />`);
+      tags.push(`<link rel="alternate" hreflang="${lang}" href="${href}"${rh(`hreflang:${lang.toLowerCase()}`)} />`);
     }
   } else {
     // Compute hreflang from route
@@ -159,11 +185,11 @@ function buildSeoHeadTags(seo, route) {
  * must carry no canonical, no hreflang, no OG/Twitter URL and no JSON-LD —
  * only the meta name tags (robots noindex, author...) extracted from prerender.
  */
-function buildSeoHeadTags404(seo) {
+function buildSeoHeadTags404(seo, helmetKeys = new Set()) {
   const tags = [];
   for (const [name, content] of Object.entries(seo.metaName || {})) {
     if (name === 'description') continue; // handled via replace
-    tags.push(`<meta name="${name}" content="${content}" />`);
+    tags.push(`<meta name="${name}" content="${content}"${helmetAttr(helmetKeys, `name:${name}`)} />`);
   }
   if (!seo.metaName?.robots) {
     tags.push('<meta name="robots" content="noindex, follow" />');
@@ -251,6 +277,7 @@ async function main() {
 
     // Extract ALL SEO tags from pre-rendered HTML
     const seo = extractSeoTags(prerenderedHtml);
+    const helmetKeys = helmetHeadKeys(prerenderedHtml);
 
     // Determine route for this file
     const destFile = `/prerendered/${file}`;
@@ -287,7 +314,7 @@ async function main() {
 
     // 3. Replace meta description if page has a specific one
     if (seo.metaName?.description) {
-      const metaTag = `<meta name="description" content="${seo.metaName.description}" />`;
+      const metaTag = `<meta name="description" content="${seo.metaName.description}"${helmetAttr(helmetKeys, 'name:description')} />`;
       if (/<meta\s+name="description"\s+content="[^"]*"[^>]*>/.test(result)) {
         result = result.replace(/<meta\s+name="description"\s+content="[^"]*"[^>]*>/, metaTag);
       } else {
@@ -298,7 +325,7 @@ async function main() {
     }
 
     // 4. Build and inject all SEO tags (canonical, OG, Twitter, hreflang, JSON-LD)
-    const seoHeadTags = is404 ? buildSeoHeadTags404(seo) : buildSeoHeadTags(seo, route);
+    const seoHeadTags = is404 ? buildSeoHeadTags404(seo, helmetKeys) : buildSeoHeadTags(seo, route, helmetKeys);
     result = result.replace('</head>', `    ${seoHeadTags}\n  </head>`);
     const tagCount = (seoHeadTags.match(/<(meta|link|script)/g) || []).length;
     seoTagCount += tagCount;
