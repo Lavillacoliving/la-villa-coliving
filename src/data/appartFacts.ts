@@ -65,9 +65,13 @@ const P = A.price;
 export function appartOpeningSentence(lang: AppartLang): string {
   return lang === "en" ? `${A.name} opens for rent in ${A.opensOnLabel.en}.` : `${A.name} ouvre à la location en ${A.opensOnLabel.fr}.`;
 }
-/** « Photos des chambres à venir. » (décision de Jérôme du 12/11). */
+/** (21/11/2026, photos de Jérôme : « chambre type de 12 m² », la suite, vrais meubles ; remplace « Photos des chambres à venir. »)
+ *  Dit pourquoi trois cartes portent la même photo. */
 export function appartRoomPhotosSentence(lang: AppartLang): string {
-  return lang === "en" ? "Room photos coming soon." : "Photos des chambres à venir.";
+  const std = A.rooms.standard.surfaceM2;
+  return lang === "en"
+    ? `The photos show a ${std} m² room (all three are alike) and the suite.`
+    : `Les photos montrent une chambre de ${std} m² (les trois se ressemblent) et la suite.`;
 }
 /** « L'Appart n'a ni piscine, ni sauna, ni salle de sport. » — hors des pages de L'Appart (sur ces pages, seules les exceptions
  *  de appartGammeExemptStrings peuvent nommer ces équipements). */

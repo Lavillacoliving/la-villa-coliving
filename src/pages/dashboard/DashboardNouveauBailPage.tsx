@@ -8,6 +8,7 @@ import { logAudit } from '@/lib/auditLog';
 import { getBailleurLines } from '@/lib/entities';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { numberInWordsFr } from '@/lib/frenchNumbers';
+import { leaseDesignationHtml, readLeaseDesignation } from '@/lib/leaseDesignation';
 import {
   depositSchedule, discountError, discountMonth, entersMidMonth, firstPaymentAfterDiscount, installmentDueLabel,
   installmentsInWords, monthLabelFr, normalizeDiscount, normalizeInstallments, type DepositInstallment, type DepositInstallments,
@@ -33,6 +34,8 @@ interface Property {
   entity_id: string | null;
   manager_name: string;
   is_coliving: boolean;
+  /** Désignation du logement pour un bail de logement entier (bloc A-B-C), lue en base : voir src/lib/leaseDesignation.ts. */
+  lease_designation?: unknown;
 }
 
 interface Room {
@@ -561,19 +564,7 @@ function generateContractHTML(data: ContractData): string {
             ${room.has_terrace ? '<li><strong>Terrasse :</strong> Oui</li>' : ''}
             ${room.has_private_entrance ? `<li><strong>Entrée privée :</strong> Oui</li>` : ''}
           </ul>` : `
-          <h3>A. Consistance du logement</h3>
-          <p>Localisation du logement : 8 rue du Mont-Blanc - Annemasse, 5ème étage droite et face.</p>
-          <p>Surface habitable : 150 m2. Comprenant : 1 Double Salon, 3 chambres, 2 salles d'eau, 2 WC dont un avec lave main, cuisines équipée 2 balcons. Chauffage et eau chaude collective. Appartement meublé : référence à l'état des Lieux d'entrée.</p>
-          <p>Figurant ainsi au cadastre : Section N° Lieudit Surface - A 4276 Rue du Mont Blanc 00 ha 40 a 08 ca. Les lots de copropriété suivants :</p>
-          <ul>
-            <li>Lot numéro trente-huit (38) — Un parking situé au rez-de-chaussée portant le numéro 8 au plan, et les quatre/dix millièmes (4/10000èmes) des parties communes générales.</li>
-            <li>Lot numéro quatre cent trente-sept (437) — Et les quatre-vingt-treize/dix millièmes (93/10000èmes) des parties communes générales.</li>
-            <li>Lot numéro quatre cent trente-huit (438) — Et les soixante-deux/dix millièmes (62/10000èmes) des parties communes générales.</li>
-            <li>Identifiant fiscal du logement : 740120062912</li>
-          </ul>
-          <h3>B. Destination des locaux : usage d'habitation</h3>
-          <h3>C. Désignation des locaux et équipements accessoires de l'immeuble à usage privatif du locataire :</h3>
-          <p>Place de Parking Numéro 8 (Identifiant fiscal: 740120062917)</p>`}
+          ${leaseDesignationHtml(readLeaseDesignation(property.lease_designation))}`}
           ${(!property.is_coliving && room.furniture_inventory && room.furniture_inventory.length > 0) ? `
           <p><strong>Inventaire du mobilier fourni :</strong></p>
           <ul>

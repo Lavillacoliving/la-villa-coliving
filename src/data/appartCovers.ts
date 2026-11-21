@@ -32,8 +32,33 @@ export const LAPPART_HERO: { readonly wide: AppartFramedPhoto; readonly tall: Ap
   tall: { ...LAPPART_CUISINE_2, focal: "65% 40%" },
 };
 
-/** Image des cartes de chambres de L'Appart (aucune photo de chambre) : la cuisine côté évier, avec SON texte alternatif et la
- *  légende « Photo de la chambre à venir » (RoomCard). Hors album (même cliché que cuisine-1). */
+/** (21/11/2026, photos de Jérôme) La chambre de 12 m², photo TYPE : les chambres 2, 3 et 4 se ressemblent, la même photo sert
+ *  aux trois (décision de Jérôme du 21/11 : « chambre type de 12 m² », vrais meubles). Texte alternatif générique : jamais
+ *  « Chambre 2 » sur une photo partagée par trois chambres. */
+export const LAPPART_ROOM_STANDARD_PHOTO: RoomPhoto = {
+  src: `${DIR}/lappart-chambre-1.webp`, w: 1170, h: 1504,
+  alt: { fr: "Chambre de 12 m² de L'Appart : lit double, tête de lit grise, lampe de chevet et parquet en chêne", en: "12 m² room at L'Appart: double bed, grey headboard, bedside lamp and oak floor" },
+};
+
+/** (21/11/2026, photos de Jérôme) La suite (n° 5), vrais meubles. */
+export const LAPPART_SUITE_PHOTO: RoomPhoto = {
+  src: `${DIR}/lappart-suite-1.webp`, w: 1170, h: 1543,
+  alt: { fr: "Suite de L'Appart : grand lit, deux lampes de chevet dorées, rideaux et parquet en chêne", en: "The suite at L'Appart: large bed, two gold bedside lamps, curtains and oak floor" },
+};
+
+/** Photos par chambre de L'Appart, au format du manifeste des maisons (clé `lappart:N`, src/data/roomPhotos.ts) : la carte et la
+ *  fiche de chaque chambre montrent la chambre. Numéros = APPART.rooms (chambres 2 à 4 standard, 5 la suite) : le test
+ *  tools/test/appart.test.mjs vérifie qu'ils couvrent exactement les chambres de la source. */
+export const LAPPART_ROOM_PHOTOS: Record<string, RoomPhoto[]> = {
+  "lappart:2": [LAPPART_ROOM_STANDARD_PHOTO],
+  "lappart:3": [LAPPART_ROOM_STANDARD_PHOTO],
+  "lappart:4": [LAPPART_ROOM_STANDARD_PHOTO],
+  "lappart:5": [LAPPART_SUITE_PHOTO],
+};
+
+/** Image de secours des cartes de L'Appart, pour une chambre SANS photo (aucune depuis le 21/11/2026 : filet de sécurité si un
+ *  numéro de chambre nouveau apparaît) : la cuisine côté évier, avec SON texte alternatif et la légende « Photo de la chambre à
+ *  venir » (RoomCard). Hors album (même cliché que cuisine-1). */
 export const LAPPART_ROOM_COVER: AppartFramedPhoto = {
   src: `${DIR}/lappart-cuisine-4.webp`, w: 1920, h: 1080, focal: "42% 35%",
   alt: { fr: "Cuisine ouverte de L'Appart : évier avec mitigeur noir, plan de travail en bois et rangements noirs", en: "Open kitchen at L'Appart: sink with black tap, wooden worktop and black units" },

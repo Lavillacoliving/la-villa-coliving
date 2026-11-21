@@ -56,6 +56,8 @@ Deux points à garder en tête :
 
 Compare en coût total, pas en loyer : un studio pas cher qu'il faut meubler, équiper et abonner à tout peut coûter plus cher, la première année, qu'une chambre tout inclus.
 
+Si ton budget est vraiment serré, regarde [L'Appart](/lappart), la colocation de La Villa Coliving à Annemasse, quartier de la gare : des chambres dès {{PRIX_APPART_DES}}/{{PRIX_APPART_DES_EUR}} par mois, charges, fibre, streaming et ménage des communs compris.
+
 Pour un premier poste, deux pièges reviennent : les frais d'agence et de dossier, et le garant en France que demandent souvent les agences quand ton dossier n'a pas de fiche de paie française. [Ce que coûtent les frais de dossier](/blog/coliving-frais-dossier-geneve-annemasse) et [le dossier de location frontalier](/blog/dossier-location-frontalier-suisse-france) t'aident à préparer les deux.
 
 Un repère simple : un total logement sous 30 % de ton salaire net te laisse de la marge. [Le vrai budget d'une colocation près de Genève](/blog/budget-colocation-geneve-guide-complet) détaille chaque ligne, et les ordres de grandeur sont plus bas dans cet article.
@@ -79,7 +81,7 @@ On préfère te le dire avant que tu signes : voici quatre cas où l'adresse que
 - **Le mauvais côté de Genève.** Annemasse pour un poste au CERN, ou Ferney-Voltaire pour un poste à Champel : tu traverses la ville matin et soir.
 - **Une annonce trop belle.** Loyer bien sous le marché, propriétaire « à l'étranger », paiement demandé avant la visite : [les arnaques au logement près de Genève](/blog/arnaques-logement-frontalier-geneve-eviter) montrent les cas qu'on voit passer.
 
-Et si tu viens en famille, ou en couple qui veut son propre logement, notre formule n'est pas la bonne : chez nous, une chambre accueille une seule personne (un couple peut en prendre deux). Cherche plutôt un T2 ou un T3, et prévois les délais les plus longs du tableau ci-dessous.
+Et si tu viens en famille, ou en couple qui veut son propre logement, notre formule n'est pas la bonne : dans nos maisons, une chambre accueille une seule personne (un couple peut en prendre deux), et à L'Appart, seule la suite se loue à deux. Cherche plutôt un T2 ou un T3, et prévois les délais les plus longs du tableau ci-dessous.
 
 ## Loyers côté France : les ordres de grandeur
 

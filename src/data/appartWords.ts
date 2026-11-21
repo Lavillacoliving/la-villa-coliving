@@ -24,8 +24,9 @@ export const timesPerWeek = (n: number, lang: AppartWordLang): string =>
   lang === "en" ? `${APPART_TIMES_EN[n] ?? `${n} times`} a week` : `${APPART_TIMES_FR[n] ?? `${n} fois`} par semaine`;
 /**
  * (19/11/2026, V2-25, réponse de Jérôme) Le ménage de la semaine comprend la salle d'eau et le WC partagés : forme courte, entre
- * parenthèses, posée juste après « une fois par semaine » sur /lappart (fiche, tableau, FAQ) et sur ses fiches chambres — jamais
- * ailleurs, et rien de plus (la salle d'eau de la suite est privée : elle n'est pas nommée).
+ * parenthèses, posée juste après « une fois par semaine » sur /lappart (fiche, tableau, FAQ) et sur ses fiches chambres, et (20/11/2026,
+ * reco 3 acceptée par Jérôme) dans llms.txt et les annonces de L'Appart — jamais sur /tarifs ni dans la FAQ générale, et rien de
+ * plus (la salle d'eau de la suite est privée : elle n'est pas nommée).
  */
 export const cleaningSharedBath = (lang: AppartWordLang): string =>
   lang === "en" ? "(shared shower room and toilet included)" : "(salle d'eau et WC partagés compris)";

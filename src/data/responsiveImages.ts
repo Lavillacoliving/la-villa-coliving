@@ -930,6 +930,24 @@ export const RESPONSIVE_IMAGES: Record<string, { original: number; widths: numbe
     ],
     "reencoded": false
   },
+  "/images/lappart/lappart-chambre-1.webp": {
+    "original": 1170,
+    "widths": [
+      480,
+      768,
+      1024
+    ],
+    "reencoded": false
+  },
+  "/images/lappart/lappart-suite-1.webp": {
+    "original": 1170,
+    "widths": [
+      480,
+      768,
+      1024
+    ],
+    "reencoded": false
+  },
   "/images/lappart/lappart-cuisine-1.webp": {
     "original": 1440,
     "widths": [
@@ -939,13 +957,12 @@ export const RESPONSIVE_IMAGES: Record<string, { original: number; widths: numbe
     ],
     "reencoded": false
   },
-  "/images/lappart/lappart-cheminee-1.webp": {
-    "original": 1920,
+  "/images/lappart/lappart-sejour-1.webp": {
+    "original": 1170,
     "widths": [
       480,
       768,
-      1024,
-      1440
+      1024
     ],
     "reencoded": false
   },

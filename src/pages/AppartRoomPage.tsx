@@ -30,7 +30,7 @@ import {
   appartTypeCards,
   isAppartSuite,
 } from "@/data/appartPage";
-import { LAPPART_ALBUM, LAPPART_HERO } from "@/data/appartPhotos";
+import { LAPPART_ALBUM, LAPPART_HERO, LAPPART_ROOM_PHOTOS } from "@/data/appartPhotos";
 import { isRoomPageOpen, parseRoomPagePath, roomPagePath } from "@/data/roomPages";
 import { isAppartKey, roomLabel } from "@/data/places";
 import { responsiveImage } from "@/lib/responsiveImage";
@@ -107,7 +107,8 @@ export function AppartRoomPage() {
   const labels = appartRoomLabels(L);
   const crumbs = appartRoomBreadcrumb(n, L);
   const eyebrow = `${APPART.name} · ${APPART.commune}`;
-  const photos = [...LAPPART_ALBUM];
+  // (21/11/2026) La chambre d'abord (photo type pour les chambres de 12 m², la suite pour la 5), puis les pièces communes.
+  const photos = [...(LAPPART_ROOM_PHOTOS[`${APPART.key}:${n}`] ?? []), ...LAPPART_ALBUM];
   // Date de la vue (état B) : seulement si la chambre n'est pas libre maintenant ; jamais calculée.
   const availableNow = room?.availability === "available";
   const date = room && !availableNow && room.available_from ? appartDateWords(room.available_from, L) || null : null;
@@ -280,7 +281,7 @@ export function AppartRoomPage() {
         </div>
       </section>
 
-      {/* Galerie : les pièces communes (aucune photo de chambre : « Photo de la chambre à venir »). */}
+      {/* Galerie : la chambre, puis les pièces communes (21/11/2026). */}
       <section className="pb-10">
         <div className="container-custom">
           <div className="relative md:grid md:grid-cols-4 md:grid-rows-2 md:gap-2 md:h-[460px] lg:h-[520px] rounded-2xl overflow-hidden">
@@ -315,7 +316,7 @@ export function AppartRoomPage() {
               {labels.photos(photos.length)}
             </button>
           </div>
-          <p className="mt-3 text-sm text-[#78716C]">{appartRoomPhotoNote(L)}</p>
+          <p className="mt-3 text-sm text-[#78716C]">{appartRoomPhotoNote(n, L)}</p>
         </div>
       </section>
 

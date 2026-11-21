@@ -79,7 +79,7 @@ test('photos de L\'Appart : WebP sans métadonnée, ≤ 1 920 px de large, taill
   const m = await loadEntityFacts();
   const dir = path.join(ROOT, 'public', 'images', 'lappart');
   const onDisk = readdirSync(dir).filter((f) => !f.startsWith('.')).map((f) => `/images/lappart/${f}`).sort();
-  // Les 10 photos déclarées et, à côté, leurs variantes responsive (`-w{largeur}.webp`, scripts/optimize-images.mjs, réunion
+  // Les 12 photos déclarées (10, puis 12 le 21/11/2026) et, à côté, leurs variantes responsive (`-w{largeur}.webp`, scripts/optimize-images.mjs, réunion
   // des étapes du 13/11/2026) : exactement celles du manifeste src/data/responsiveImages.ts, rien d'autre.
   const responsive = JSON.parse(read('src/data/responsiveImages.ts').replace(/^[\s\S]*?=\s*/, '').replace(/;\s*$/, ''));
   const variantOf = new Map();
@@ -87,7 +87,7 @@ test('photos de L\'Appart : WebP sans métadonnée, ≤ 1 920 px de large, taill
     for (const w of responsive[src]?.widths ?? []) variantOf.set(src.replace(/\.webp$/i, `-w${w}.webp`), { src, w });
   }
   assert.deepEqual(onDisk, [...m.lappartPhotoFiles(), ...variantOf.keys()].sort());
-  const declared = new Map([m.LAPPART_HERO.wide, m.LAPPART_HERO.tall, m.LAPPART_ROOM_COVER, ...m.LAPPART_ALBUM].map((p) => [p.src, p]));
+  const declared = new Map([m.LAPPART_HERO.wide, m.LAPPART_HERO.tall, m.LAPPART_ROOM_COVER, m.LAPPART_ROOM_STANDARD_PHOTO, m.LAPPART_SUITE_PHOTO, ...m.LAPPART_ALBUM].map((p) => [p.src, p]));
   for (const src of onDisk) {
     const info = webpInfo(readFileSync(path.join(ROOT, 'public', src)));
     assert.ok(info, `${src} : pas un WebP`);

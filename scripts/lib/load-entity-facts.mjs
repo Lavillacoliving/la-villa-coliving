@@ -50,6 +50,8 @@ export async function loadEntityFacts() {
         "export * from './src/data/appart';",
         "export * from './src/data/appartLocation';",
         "export * from './src/data/appartFacts';",
+        // (20/11/2026, reco 3 acceptée par Jérôme) parenthèse du ménage de L'Appart, reprise dans llms.txt (build-llms-txt.mjs).
+        "export { cleaningSharedBath } from './src/data/appartWords';",
         "export * from './src/data/appartPhotos';",
         "export * from './src/data/placeLocation';",
         "export * from './src/lib/placeBridge';",

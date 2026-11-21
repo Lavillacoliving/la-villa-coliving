@@ -156,9 +156,11 @@ for (const g of LOFT_CH4_SOURCES) if (!SOURCES.includes(g)) SOURCES.push(g);
 const LAPPART_SOURCES = [
   '/images/lappart/lappart-cuisine-5.webp',    // haut de page (large), bloc statique
   '/images/lappart/lappart-cuisine-2.webp',    // haut de page (téléphone), album
-  '/images/lappart/lappart-cuisine-4.webp',    // cartes des chambres (« Photo de la chambre à venir »)
+  '/images/lappart/lappart-cuisine-4.webp',    // carte de secours d'une chambre sans photo (« Photo de la chambre à venir »)
+  '/images/lappart/lappart-chambre-1.webp',    // (21/11/2026) cartes et fiches des chambres 2 à 4 (chambre de 12 m² type)
+  '/images/lappart/lappart-suite-1.webp',      // (21/11/2026) carte et fiche de la suite
   '/images/lappart/lappart-cuisine-1.webp',    // vignettes de l'album
-  '/images/lappart/lappart-cheminee-1.webp',
+  '/images/lappart/lappart-sejour-1.webp',     // (21/11/2026) remplace lappart-cheminee-1
   '/images/lappart/lappart-cuisine-3.webp',
   '/images/lappart/lappart-balcon-1.webp',
   '/images/lappart/lappart-placards-1.webp',

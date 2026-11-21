@@ -9,6 +9,7 @@ import {
 } from "@react-pdf/renderer";
 import { getBailleurLines } from "@/lib/entities";
 import { numberInWordsFr } from "@/lib/frenchNumbers";
+import { LEASE_DESIGNATION_MISSING, readLeaseDesignation } from "@/lib/leaseDesignation";
 import { computeFraisEntree } from "./bailFrais";
 import { entersMidMonth, installmentDueLabel, installmentsInWords, monthLabelFr, type DepositInstallment, type DepositInstallments } from "@/lib/leaseTerms";
 
@@ -24,6 +25,8 @@ interface Property {
   common_areas: string[];
   contract_building_desc: string;
   is_coliving: boolean;
+  /** Désignation du logement pour un bail de logement entier (bloc A-B-C), lue en base : voir src/lib/leaseDesignation.ts. */
+  lease_designation?: unknown;
   manager_name: string | null;
   deposit_months: number;
   entity_id: string | null;
@@ -351,6 +354,7 @@ export function BailPDF({ data }: { data: BailPDFData }) {
   const ville = property.siege_social?.split(",")[0]?.trim() || "[Ville]";
   const frais = computeFraisEntree(room.surface_m2, form.frais_dossier_m2, form.frais_edl_m2);
   const hasClausesParticulieres = !!form.clauses_particulieres?.trim();
+  const designation = readLeaseDesignation(property.lease_designation);
 
   // Bloc signatures, rattaché au dernier article (annexes ou clauses particulières)
   // dans le même bloc insécable : il ne se retrouve jamais seul en dernière page.
@@ -459,22 +463,17 @@ export function BailPDF({ data }: { data: BailPDFData }) {
           </View>
           <View>
             <Text style={s.subTitle}>{"A. Consistance du logement"}</Text>
-            <Text style={s.body}>
-              {"Localisation du logement : 8 rue du Mont-Blanc - Annemasse, 5\u00E8me \u00E9tage droite et face."}
-            </Text>
-            <Text style={s.body}>
-              {"Surface habitable : 150 m2. Comprenant : 1 Double Salon, 3 chambres, 2 salles d\u2019eau, 2 WC dont un avec lave main, cuisines \u00E9quip\u00E9e 2 balcons. Chauffage et eau chaude collective. Appartement meubl\u00E9 : r\u00E9f\u00E9rence \u00E0 l\u2019\u00E9tat des Lieux d\u2019entr\u00E9e."}
-            </Text>
-            <Text style={s.body}>
-              {"Figurant ainsi au cadastre : Section N\u00B0 Lieudit Surface - A 4276 Rue du Mont Blanc 00 ha 40 a 08 ca. Les lots de copropri\u00E9t\u00E9 suivants :"}
-            </Text>
-            <Bullet>{"Lot num\u00E9ro trente-huit (38) \u2014 Un parking situ\u00E9 au rez-de-chauss\u00E9e portant le num\u00E9ro 8 au plan, et les quatre/dix milli\u00E8mes (4/10000\u00E8mes) des parties communes g\u00E9n\u00E9rales."}</Bullet>
-            <Bullet>{"Lot num\u00E9ro quatre cent trente-sept (437) \u2014 Et les quatre-vingt-treize/dix milli\u00E8mes (93/10000\u00E8mes) des parties communes g\u00E9n\u00E9rales."}</Bullet>
-            <Bullet>{"Lot num\u00E9ro quatre cent trente-huit (438) \u2014 Et les soixante-deux/dix milli\u00E8mes (62/10000\u00E8mes) des parties communes g\u00E9n\u00E9rales."}</Bullet>
-            <Bullet>{"Identifiant fiscal du logement : 740120062912"}</Bullet>
+            {(designation?.consistance.length ? designation.consistance : [`[${LEASE_DESIGNATION_MISSING.consistance}]`]).map((t, i) => (
+              <Text key={`consistance-${i}`} style={s.body}>{t}</Text>
+            ))}
+            {(designation?.lots ?? []).map((t, i) => (
+              <Bullet key={`lot-${i}`}>{t}</Bullet>
+            ))}
             <Text style={s.subTitle}>{"B. Destination des locaux : usage d\u2019habitation"}</Text>
             <Text style={s.subTitle}>{"C. D\u00E9signation des locaux et \u00E9quipements accessoires de l\u2019immeuble \u00E0 usage privatif du locataire :"}</Text>
-            <Text style={s.body}>{"Place de Parking Num\u00E9ro 8 (Identifiant fiscal: 740120062917)"}</Text>
+            {(designation?.accessoires.length ? designation.accessoires : [`[${LEASE_DESIGNATION_MISSING.accessoires}]`]).map((t, i) => (
+              <Text key={`accessoire-${i}`} style={s.body}>{t}</Text>
+            ))}
           </View>
           </>
         )}
