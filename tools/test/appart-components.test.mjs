@@ -136,8 +136,10 @@ test('<RoomCard/> sur les 4 chambres de L\'Appart (état B) : libellé, specs, p
     assert.ok(t.includes(price), `${lang} ${variant} prix : ${t}`);
     assert.equal(t.includes(lang === 'en' ? '1 or 2 people' : '1 ou 2 personnes'), suite, `${lang} ${variant} capacité`);
     assert.equal(t.includes(lang === 'en' ? 'Balcony · Private entrance' : 'Balcon · Entrée privée'), suite, `${lang} ${variant} équipements`);
-    assert.ok(t.includes(lang === 'en' ? 'Room photo coming soon' : 'Photo de la chambre à venir'), `${lang} ${variant} légende`);
-    assert.ok(html.includes(`src="${m.LAPPART_ROOM_COVER.src}"`) && html.includes(`alt="${m.LAPPART_ROOM_COVER.alt[lang].replace(/'/g, '&#x27;')}"`), `${lang} ${variant} photo et texte alternatif`);
+    // (21/11/2026) La carte montre la chambre : photo type de 12 m² (chambres 2 à 4) ou la suite, sans légende « à venir ».
+    const photo = suite ? m.LAPPART_SUITE_PHOTO : m.LAPPART_ROOM_STANDARD_PHOTO;
+    assert.ok(!html.includes('data-photo-pending'), `${lang} ${variant} : plus de légende « photo à venir »`);
+    assert.ok(html.includes(`src="${photo.src}"`) && html.includes(`alt="${photo.alt[lang].replace(/'/g, '&#x27;')}"`), `${lang} ${variant} photo et texte alternatif`);
     assert.ok(!html.includes(`alt="${label} — L&#x27;Appart"`), `${lang} ${variant} : jamais « ${label} — L'Appart » sur une photo de cuisine`);
     if (variant !== 'default') {
       assert.ok(t.includes("L'Appart · Annemasse"), `${lang} ${variant} sur-titre`);

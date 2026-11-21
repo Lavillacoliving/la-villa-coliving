@@ -251,9 +251,9 @@ test('JSON-LD : nœud de L\'Appart (4 chambres, 730–990 CHF, ses équipements,
   }
 });
 
-test('photos : 10 fichiers publiés, tous présents ; album de 8 sans les deux clichés en double ; vignette du JSON-LD = image du haut', () => {
+test('photos : 12 fichiers publiés, tous présents ; album de 8 sans les deux clichés en double ; vignette du JSON-LD = image du haut', () => {
   const files = m.lappartPhotoFiles();
-  assert.equal(files.length, 10);
+  assert.equal(files.length, 12);
   for (const src of files) {
     assert.ok(existsSync(path.join(ROOT, 'public', src)), src);
     assert.match(src, /^\/images\/lappart\/lappart-[a-z0-9-]+\.webp$/, src);
@@ -266,13 +266,14 @@ test('photos : 10 fichiers publiés, tous présents ; album de 8 sans les deux c
   assert.equal(m.APPART_PLACE.image, m.LAPPART_HERO.wide.src);
   // Noms de fichiers neutres, gardés (V2-30, 19/11/2026) ; pièces confirmées par Jérôme : la cheminée au séjour, les placards
   // dans l'entrée — seuls ces deux textes nomment une pièce ; le balcon, la salle d'eau et le WC restent sans pièce rattachée
-  // (ni « commun », ni « de la suite ») ; aucun texte ne nomme une chambre, une rue ou un étage.
+  // (ni « commun », ni « de la suite ») ; aucun texte ne nomme une chambre, une rue ou un étage. (21/11/2026) Le séjour a une
+  // nouvelle photo, fichier nouveau : son nom dit la pièce confirmée (« sejour ») ; les chambres ont leurs photos hors album.
   const named = new Map([
-    ['/images/lappart/lappart-cheminee-1.webp', { fr: "Séjour de L'Appart : ", en: "Living room at L'Appart: " }],
+    ['/images/lappart/lappart-sejour-1.webp', { fr: "Séjour de L'Appart : ", en: "Living room at L'Appart: " }],
     ['/images/lappart/lappart-placards-1.webp', { fr: "Entrée de L'Appart : ", en: "Entrance hall at L'Appart: " }],
   ]);
   for (const p of [m.LAPPART_HERO.wide, m.LAPPART_HERO.tall, m.LAPPART_ROOM_COVER, ...m.LAPPART_ALBUM]) {
-    assert.doesNotMatch(p.src, /sejour|entree|chambre/);
+    assert.doesNotMatch(p.src, p.src.endsWith('/lappart-sejour-1.webp') ? /entree|chambre/ : /sejour|entree|chambre/);
     for (const lang of LANGS) {
       const room = named.get(p.src);
       if (room) assert.ok(p.alt[lang].startsWith(room[lang]), p.alt[lang]);
@@ -282,6 +283,25 @@ test('photos : 10 fichiers publiés, tous présents ; album de 8 sans les deux c
     }
   }
   assert.equal(named.size, [...named.keys()].filter((src) => m.LAPPART_ALBUM.some((p) => p.src === src)).length, 'les deux photos nommées sont dans l\'album');
+});
+
+test('photos des chambres (21/11/2026) : une par chambre de la source, photo TYPE pour les 12 m², la suite pour la suite ; textes sans numéro ni rue', () => {
+  const A = m.APPART;
+  const keys = Object.keys(m.LAPPART_ROOM_PHOTOS).sort();
+  assert.deepEqual(keys, [...A.rooms.standard.numbers, A.rooms.suite.number].map((n) => `lappart:${n}`).sort());
+  for (const n of A.rooms.standard.numbers) assert.deepEqual(m.LAPPART_ROOM_PHOTOS[`lappart:${n}`], [m.LAPPART_ROOM_STANDARD_PHOTO], `chambre ${n}`);
+  assert.deepEqual(m.LAPPART_ROOM_PHOTOS[`lappart:${A.rooms.suite.number}`], [m.LAPPART_SUITE_PHOTO]);
+  for (const p of [m.LAPPART_ROOM_STANDARD_PHOTO, m.LAPPART_SUITE_PHOTO]) {
+    assert.ok(m.lappartPhotoFiles().includes(p.src), p.src);
+    assert.ok(!m.LAPPART_ALBUM.some((x) => x.src === p.src), `${p.src} hors album`);
+    for (const lang of LANGS) {
+      // Photo partagée par trois chambres : jamais un numéro de chambre ; ni rue, ni étage, ni équipement des maisons.
+      assert.doesNotMatch(p.alt[lang], /\b(?:chambre|room)\s*\d|\brue\b|street|étage|top\sfloor|\d+(?:st|nd|rd|th) floor|piscine|pool|sauna|gym|salle de sport/i, p.alt[lang]);
+      assert.deepEqual(scanGenericAddresses(p.alt[lang]), []);
+    }
+  }
+  assert.ok(m.LAPPART_ROOM_STANDARD_PHOTO.alt.fr.startsWith(`Chambre de ${A.rooms.standard.surfaceM2} m² de L'Appart : `));
+  assert.ok(m.LAPPART_SUITE_PHOTO.alt.fr.startsWith("Suite de L'Appart : "));
 });
 
 test('pont des clés : la clé interne n\'existe que là ; une clé inconnue passe telle quelle ; aucun texte de L\'Appart ne la porte', () => {

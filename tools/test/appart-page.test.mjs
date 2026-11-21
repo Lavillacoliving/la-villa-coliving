@@ -194,7 +194,9 @@ test('/lappart, état A : deux cartes « types » (12 m², suite), boutons sans 
     assert.doesNotMatch(page, /room_interest=chambre-/, lang);
     assert.doesNotMatch(t, /Libre dès|Available from|Libre maintenant|Available now/, lang);
     assert.equal(count(page, 'id="__rooms_level_data__"'), 0, lang);
-    assert.equal(count(page, 'data-photo-pending'), 2, lang);
+    // (21/11/2026) Les deux cartes types montrent la chambre (photos de Jérôme) : plus de légende « photo à venir ».
+    assert.equal(count(page, 'data-photo-pending'), 0, lang);
+    assert.ok(page.includes('/images/lappart/lappart-chambre-1') && page.includes('/images/lappart/lappart-suite-1'), `${lang} photos des cartes types`);
   }
 });
 

@@ -6,7 +6,7 @@
 // dimensions RÉELLES obligatoires (le cadre est calculé du ratio, borné, sinon
 // les portraits sont recadrés de 40 %+).
 // (Corrections du 13/11/2026) L'image des cartes de L'Appart seule (src/data/appartCovers.ts), pas tout l'album.
-import { LAPPART_ROOM_COVER } from "./appartCovers";
+import { LAPPART_ROOM_COVER, LAPPART_ROOM_PHOTOS } from "./appartCovers";
 import { assertNever, type PlaceKey } from "./places";
 
 export type RoomPhoto = {
@@ -15,8 +15,9 @@ export type RoomPhoto = {
   h: number;
   alt: { fr: string; en: string };
 };
-// (L'Appart, 13/11/2026) Ses photos (pièces communes seulement : les chambres, « photos à venir ») vivent dans
-// src/data/appartPhotos.ts (et src/data/appartCovers.ts) ; ce manifeste n'a aucune clé « lappart:N » tant qu'aucune chambre n'est photographiée.
+// (L'Appart, 13/11/2026) Ses photos vivent dans src/data/appartPhotos.ts (album des pièces communes) et src/data/appartCovers.ts.
+// (21/11/2026, photos de Jérôme) Ses chambres ont leur photo : clés « lappart:2 » à « lappart:5 » (LAPPART_ROOM_PHOTOS), ajoutées
+// en fin de manifeste — une chambre de 12 m² type pour les chambres 2 à 4, la suite pour la 5.
 
 export const ROOM_PHOTOS: Record<string, RoomPhoto[]> = {
   "lavilla:8": [
@@ -138,6 +139,8 @@ export const ROOM_PHOTOS: Record<string, RoomPhoto[]> = {
   ],
   // (28/09/2026) Le Lodge n'a plus de pack dédié : décision Jérôme, TOUTES les chambres utilisent le pack
   // standardisé ci-dessous (les photos de l'ancien pack chambre 4 restent dans public/, non référencées).
+  // (21/11/2026) L'Appart : la photo de sa chambre (src/data/appartCovers.ts).
+  ...LAPPART_ROOM_PHOTOS,
 };
 
 // ── Le Loft : communs intérieurs et extérieurs (shooting du 03/09/2026, PHOTOS/LOFT CH5) ──────

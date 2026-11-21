@@ -197,7 +197,7 @@ export function appartRoomsSection(lang: AppartPageLang): AppartRoomsSection {
       frank: `${STD.surfaceM2} m² is the size of a room in a standard flatshare. The space is on the other side of the door: ${aOrAn(A.flat.livingKitchenM2)} ${A.flat.livingKitchenM2} m² living room and kitchen.`,
       stateA: `Below are the two types of room: the ${STD.surfaceM2} m² room, of which there are ${word(n, "en")}, and the suite.`,
       suitePrice: `The suite: ${P.suite.en.chf} a month, for one or two people. In euros: ${P.suite.en.eur} a month, or ${perPerson("en")} each for two.`,
-      photos: `${appartRoomPhotosSentence("en")} We'd rather wait and show you the rooms as you'll find them in ${openingMonth("en")} than post a picture that doesn't look like them.`,
+      photos: appartRoomPhotosSentence("en"),
     };
   }
   return {
@@ -207,7 +207,7 @@ export function appartRoomsSection(lang: AppartPageLang): AppartRoomsSection {
     frank: `${STD.surfaceM2} m², c'est la taille d'une chambre de colocation classique. La place est de l'autre côté de la porte : ${A.flat.livingKitchenM2} m² de séjour-cuisine.`,
     stateA: `Ci-dessous, les deux types de chambres : la chambre de ${STD.surfaceM2} m², il y en a ${word(n, "fr")}, et la suite.`,
     suitePrice: `La suite : ${P.suite.fr.chf} par mois, pour une ou deux personnes. En euros : ${P.suite.fr.eur} par mois, soit ${perPerson("fr")} par personne à deux.`,
-    photos: `${appartRoomPhotosSentence("fr")} On préfère attendre de te montrer les chambres telles que tu les trouveras en ${openingMonth("fr")} plutôt que de publier une photo qui ne leur ressemble pas.`,
+    photos: appartRoomPhotosSentence("fr"),
   };
 }
 
@@ -262,11 +262,6 @@ export function appartTypeCards(lang: AppartPageLang): readonly [AppartTypeCard,
       cta: en ? "Apply for the suite" : "Candidater pour la suite",
     },
   ];
-}
-
-/** Légende posée sur la photo d'une carte sans photo de chambre (même texte que les cartes de la vue, RoomCard). */
-export function appartPhotoPendingLegend(lang: AppartPageLang): string {
-  return lang === "en" ? "Room photo coming soon" : "Photo de la chambre à venir";
 }
 
 /** Bouton de la section « À deux : la suite » (et de la carte type de la suite). */
@@ -528,11 +523,17 @@ export function appartRoomIntro(roomNumber: number, lang: AppartPageLang): strin
     : `Une chambre meublée de ${STD.surfaceM2} m² à ${A.name}, la colocation de La Villa Coliving à ${A.commune}, dans le quartier de la gare : lit de ${A.rooms.bedCm}, bureau, penderie. La salle d'eau et le WC sont partagés entre les ${word(STD.sharedBathBetween, "fr")} chambres.`;
 }
 
-/** Sous la galerie des pièces communes. */
-export function appartRoomPhotoNote(lang: AppartPageLang): string {
+/** Sous la galerie de la fiche (21/11/2026) : la 1re photo est la chambre (photo type pour les chambres de 12 m²), les autres
+ *  les pièces communes. */
+export function appartRoomPhotoNote(n: number, lang: AppartPageLang): string {
+  if (isAppartSuite(n)) {
+    return lang === "en"
+      ? `The first photo shows the suite; the others show ${A.name}'s shared spaces.`
+      : `La première photo montre la suite ; les suivantes, les pièces communes de ${A.name}.`;
+  }
   return lang === "en"
-    ? `Room photo coming soon. The photos above show ${A.name}'s shared spaces.`
-    : `Photo de la chambre à venir. Les photos ci-dessus montrent les pièces communes de ${A.name}.`;
+    ? `The first photo shows a ${STD.surfaceM2} m² room (all three are alike); the others show ${A.name}'s shared spaces.`
+    : `La première photo montre une chambre de ${STD.surfaceM2} m² (les trois se ressemblent) ; les suivantes, les pièces communes de ${A.name}.`;
 }
 
 /** Statut sous le prix : date de la vue (état B, mise en mots par appartDateWords : « février ») — sinon l'ouverture fixe (état
@@ -737,7 +738,7 @@ export function appartPageIssues(): string[] {
         ...appartRoomSpecs(n, lang).map((x) => x.value), u.title, u.description, u.h1, u.text, u.cta, appartRoomWhatsapp(n, lang), appartRoomWhatsapp(n, lang, "x"));
     }
     const inc = appartRoomIncluded(lang), lease = appartRoomLease(lang), place = appartRoomPlace(lang);
-    all.push(appartRoomPhotoNote(lang), inc.title, ...inc.included, ...inc.notIncludedBefore, ...inc.notIncludedAfter, lease.lease, lease.deposit,
+    all.push(appartRoomPhotoNote(STD.numbers[0], lang), appartRoomPhotoNote(SUITE.number, lang), inc.title, ...inc.included, ...inc.notIncludedBefore, ...inc.notIncludedAfter, lease.lease, lease.deposit,
       ...appartRoomReassurance(lang), place.title, place.text, place.cta, ...place.commute, appartRoomOthersTitle(lang));
   }
   for (const s of all) {

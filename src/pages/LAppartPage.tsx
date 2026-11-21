@@ -40,7 +40,6 @@ import {
   appartPageLead,
   appartPageTitle,
   appartPageWhatsapp,
-  appartPhotoPendingLegend,
   appartRoomsSection,
   appartSuiteCta,
   appartSuiteSection,
@@ -49,7 +48,7 @@ import {
   isAppartSuite,
   type AppartTypeCard,
 } from "@/data/appartPage";
-import { LAPPART_ALBUM, LAPPART_ALBUM_COVERS, LAPPART_HERO, LAPPART_ROOM_COVER } from "@/data/appartPhotos";
+import { LAPPART_ALBUM, LAPPART_ALBUM_COVERS, LAPPART_HERO, LAPPART_ROOM_COVER, LAPPART_ROOM_STANDARD_PHOTO, LAPPART_SUITE_PHOTO } from "@/data/appartPhotos";
 import { placeCard } from "@/data/houses";
 import { MAISON_KEYS, PLACE_KEYS, PLACE_LABEL, roomLabel } from "@/data/places";
 import { thousands } from "@/data/stats";
@@ -107,9 +106,9 @@ function track(event: string, params: Record<string, unknown>) {
 const heading = { fontFamily: '"DM Serif Display", serif' };
 
 /** Carte « type » (état A) : même habillage que la carte d'une chambre (RoomCard « default »), sans pastille de disponibilité ni
- *  lien vers une fiche ; la photo est une pièce commune, avec SON texte alternatif et la légende « Photo de la chambre à venir ». */
+ *  lien vers une fiche ; la photo est celle de la chambre (21/11/2026 : chambre de 12 m² type, ou la suite). */
 function TypeCard({ card, lang, onApply }: { card: AppartTypeCard; lang: "fr" | "en"; onApply: () => void }) {
-  const cover = LAPPART_ROOM_COVER;
+  const cover = card.kind === "suite" ? LAPPART_SUITE_PHOTO : LAPPART_ROOM_STANDARD_PHOTO;
   return (
     <div className="card-ultra bg-white rounded-2xl border border-[#E7E5E4] shadow-sm overflow-hidden flex flex-col">
       <div className="relative h-48 w-full overflow-hidden">
@@ -118,14 +117,10 @@ function TypeCard({ card, lang, onApply }: { card: AppartTypeCard; lang: "fr" | 
           {...responsiveImage(cover.src, "(min-width: 768px) 50vw, 100vw")}
           alt={cover.alt[lang]}
           className="w-full h-full object-cover"
-          style={{ objectPosition: cover.focal }}
           loading="lazy"
           width={cover.w}
           height={cover.h}
         />
-        <span data-photo-pending className="absolute bottom-2 left-2 max-w-[calc(100%-1rem)] text-[11px] leading-tight font-medium px-2 py-1 rounded-md bg-black/65 text-white">
-          {appartPhotoPendingLegend(lang)}
-        </span>
       </div>
       <div className="p-6 flex flex-col flex-1">
         <h3 className="text-lg font-black text-[#1C1917] mb-1">{card.name}</h3>
