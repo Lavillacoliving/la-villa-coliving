@@ -137,10 +137,11 @@ export const HEAD_OFFICE_EXCEPTIONS = [
   // Pages légales — JavaScript construit.
   { file: /^dist\/assets\/entityFacts-[\w-]+\.js$/, max: 1, why: 'JavaScript des mentions légales' },
   { file: /^dist\/assets\/PolitiqueConfidentialitePage-[\w-]+\.js$/, max: 2, why: 'JavaScript de la politique de confidentialité' },
-  // Générateur de bail v2 : conservé tel quel (décision du 13/11/2026), il imprime le siège social du bailleur.
-  { file: /^src\/pages\/dashboard\/BailPDF\.tsx$/, max: 3, why: 'générateur de bail v2' },
-  { file: /^src\/pages\/dashboard\/DashboardNouveauBailPage\.tsx$/, max: 3, why: 'générateur de bail v2' },
-  { file: /^dist\/assets\/DashboardNouveauBailPage-[\w-]+\.js$/, max: 6, why: 'JavaScript du générateur de bail v2' },
+  // Générateur de bail v2 : conservé (décision du 13/11/2026), il imprime le siège social du bailleur — une fois par fichier
+  // depuis le 20/11/2026 : la désignation du logement entier (qui le citait deux fois) est lue en base (« tout le bloc », Jérôme).
+  { file: /^src\/pages\/dashboard\/BailPDF\.tsx$/, max: 1, why: 'générateur de bail v2' },
+  { file: /^src\/pages\/dashboard\/DashboardNouveauBailPage\.tsx$/, max: 1, why: 'générateur de bail v2' },
+  { file: /^dist\/assets\/DashboardNouveauBailPage-[\w-]+\.js$/, max: 2, why: 'JavaScript du générateur de bail v2' },
 ];
 
 /**

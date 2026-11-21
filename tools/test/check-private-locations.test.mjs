@@ -52,13 +52,13 @@ test('exceptions du siège social : emplacements et plafonds FIGÉS (les relever
     ['^(?:public|dist)\\/prerendered\\/(?:mentions-legales\\.html|en-mentions-legales\\.html|politique-de-confidentialite\\.html|en-politique-de-confidentialite\\.html)$', Infinity],
     ['^dist\\/assets\\/entityFacts-[\\w-]+\\.js$', 1],
     ['^dist\\/assets\\/PolitiqueConfidentialitePage-[\\w-]+\\.js$', 2],
-    ['^src\\/pages\\/dashboard\\/BailPDF\\.tsx$', 3],
-    ['^src\\/pages\\/dashboard\\/DashboardNouveauBailPage\\.tsx$', 3],
-    ['^dist\\/assets\\/DashboardNouveauBailPage-[\\w-]+\\.js$', 6],
+    ['^src\\/pages\\/dashboard\\/BailPDF\\.tsx$', 1],
+    ['^src\\/pages\\/dashboard\\/DashboardNouveauBailPage\\.tsx$', 1],
+    ['^dist\\/assets\\/DashboardNouveauBailPage-[\\w-]+\\.js$', 2],
   ]);
   // Chaque plafond est une vraie limite : une occurrence de plus dans le fichier = fuite.
   const cases = [['src/data/entityFacts.ts', 1], ['src/pages/PolitiqueConfidentialitePage.tsx', 2], ['dist/assets/entityFacts-abc12345.js', 1], ['dist/assets/PolitiqueConfidentialitePage-abc12345.js', 2],
-    ['src/pages/dashboard/BailPDF.tsx', 3], ['src/pages/dashboard/DashboardNouveauBailPage.tsx', 3], ['dist/assets/DashboardNouveauBailPage-abc12345.js', 6]];
+    ['src/pages/dashboard/BailPDF.tsx', 1], ['src/pages/dashboard/DashboardNouveauBailPage.tsx', 1], ['dist/assets/DashboardNouveauBailPage-abc12345.js', 2]];
   for (const [file, max] of cases) {
     assert.equal(auditFile(file, Array(max).fill(`"${HEAD_OFFICE}"`).join('\n'), M).exact.length, 0, `${file} : ${max} toléré(s)`);
     assert.equal(auditFile(file, Array(max + 1).fill(`"${HEAD_OFFICE}"`).join('\n'), M).exact.length, max + 1, `${file} : ${max + 1} = fuite`);
@@ -112,8 +112,8 @@ test('siège social : toléré aux emplacements prévus dans la limite du fichie
   }
   // Page légale prérendue : sans limite de nombre ; JavaScript construit : limite du fichier.
   assert.equal(auditFile('public/prerendered/mentions-legales.html', `<p>${HEAD_OFFICE}</p><p>${HEAD_OFFICE}</p><p>${HEAD_OFFICE}</p>`, M).exact.length, 0);
-  assert.equal(auditFile('dist/assets/DashboardNouveauBailPage-Cm46GLeX.js', Array(6).fill(`"${HEAD_OFFICE}"`).join(','), M).exact.length, 0);
-  assert.equal(auditFile('dist/assets/DashboardNouveauBailPage-Cm46GLeX.js', Array(7).fill(`"${HEAD_OFFICE}"`).join(','), M).exact.length, 1, 'JavaScript minifié : une ligne, sept occurrences');
+  assert.equal(auditFile('dist/assets/DashboardNouveauBailPage-Cm46GLeX.js', Array(2).fill(`"${HEAD_OFFICE}"`).join(','), M).exact.length, 0);
+  assert.equal(auditFile('dist/assets/DashboardNouveauBailPage-Cm46GLeX.js', Array(3).fill(`"${HEAD_OFFICE}"`).join(','), M).exact.length, 1, 'JavaScript minifié : une ligne, trois occurrences');
 });
 
 test('partie générique : adresse inconnue de la source dans src/, scripts/ ou le JavaScript de dist/ ; liste blanche ; hors périmètre', () => {
