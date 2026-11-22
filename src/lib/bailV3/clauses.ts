@@ -10,6 +10,7 @@ import type { LegalForm, RelocationException, Signatory } from "./types";
 import { computePricing, type Pricing } from "./pricing";
 import { fEUR, fCHF, fRate, fDate, monthLabel, addMonths, addDays, roman } from "./format";
 import { depositSchedule } from "../leaseTerms";
+import { firstYearSchedule, FIRST_YEAR_TRANSFER_DAYS } from "./firstYearOffer";
 
 export interface LeaseV3Entity {
   legal_form: LegalForm;
@@ -62,6 +63,9 @@ export interface LeaseV3Terms {
   irl_label: string; irl_value: number; irl_old_value: number;
   eur_chf: number; eur_chf_date: string;
   discount_eur: number | null; deposit_installments: 1 | 2 | 3;
+  /** (Offre « Ta première année », brief du 21/11/2026) Cochée : remise de 200 € sur le 1er mois complet et clause des quatre
+   *  paliers (src/lib/bailV3/firstYearOffer.ts) à la place de la clause de remise unique. Absente ou false : bail inchangé. */
+  first_year_offer?: boolean;
   services_version: string;
   edl_tool: string;                    // « Etadly »
   rgpd_email: string;
@@ -108,6 +112,35 @@ export type AnnexKey = (typeof ANNEX_ORDER)[number];
 const A = (k: AnnexKey) => `annexe ${ANNEX_ORDER.indexOf(k) + 1}`;
 
 const QUALITY = { private: "privative", shared: "partagée avec une autre chambre" };
+
+const ORDINAL_MONTH: Record<number, string> = { 1: "premier", 4: "quatrième", 7: "septième", 13: "treizième" };
+const DIX: Record<number, string> = { 10: "dix" };
+
+/**
+ * (Offre « Ta première année », brief du 21/11/2026, § 6 — version « virement » acceptée par Jérôme à 10 h 38 ; relecture de
+ * l'avocat à sa main, D7) La clause des quatre paliers, avec les mois calculés depuis la date d'entrée (firstYearSchedule : même
+ * règle que la remise du premier mois). Remplace la clause « Remise commerciale sur le premier mois complet » quand l'option est
+ * cochée ; la remise de 200 € reste portée par first_month_discount_* (déclencheur des paiements inchangé).
+ */
+export function firstYearOfferBlocks(startIso: string, entersMidMonth: boolean): Block[] {
+  const steps = firstYearSchedule(startIso);
+  if (!steps) return [];
+  const [s1, s4, s7, s13] = steps;
+  const ord = (rank: number) => ORDINAL_MONTH[rank];
+  return [
+    { t: "sub", text: "Offre « Ta première année » :" },
+    { t: "p", text: "À titre de geste commercial, le bailleur consent au locataire les avantages suivants :" },
+    { t: "bullets", items: [
+      `une remise de ${fEUR(s1.eur)}, charges comprises, sur le loyer du ${ord(1)} mois complet de location, soit le mois de ${monthLabel(s1.referenceMonth)} ;`,
+      `un remboursement de ${fEUR(s4.eur)} lié au ${ord(4)} mois complet, soit le mois de ${monthLabel(s4.referenceMonth)} ;`,
+      `un remboursement de ${fEUR(s7.eur)} lié au ${ord(7)} mois complet, soit le mois de ${monthLabel(s7.referenceMonth)} ;`,
+      `un remboursement de ${fEUR(s13.eur)} lié au ${ord(13)} mois complet, soit le mois de ${monthLabel(s13.referenceMonth)}.`,
+    ] },
+    { t: "p", text: "La remise du premier mois est acquise à la signature. Chaque remboursement est acquis si, à la date d'exigibilité du loyer du mois concerné, le bail est en cours, aucun congé n'a été délivré par l'une ou l'autre des parties et le locataire est à jour de ses loyers. À défaut, il n'est pas dû ; les avantages déjà accordés restent acquis au locataire." },
+    { t: "p", text: `Chaque remboursement est versé par virement bancaire sur le compte désigné par le locataire, dans les ${DIX[FIRST_YEAR_TRANSFER_DAYS] ?? FIRST_YEAR_TRANSFER_DAYS} jours qui suivent l'encaissement du loyer du mois concerné, sous réserve que le locataire ait communiqué ses coordonnées bancaires.` },
+    { t: "p", text: `Ces avantages ne modifient pas le loyer fixé au présent article, dû en totalité chaque mois hors la remise du premier mois, et n'ont d'effet ni sur la révision annuelle du loyer, ni sur le montant du dépôt de garantie.${entersMidMonth ? " Le prorata dû pour le mois d'entrée n'est pas concerné." : ""}` },
+  ];
+}
 
 export function buildLeaseV3(input: LeaseV3Input): LeaseDoc {
   const { entity: e, property: p, room: r, tenant: t, terms: k } = input;
@@ -230,7 +263,7 @@ export function buildLeaseV3(input: LeaseV3Input): LeaseDoc {
     { t: "p", small: true, text: `Forfait établi d'après les charges récupérables de l'exercice ${k.forfait_year} de la maison (${k.forfait_method}), réparties à parts égales entre les ${p.room_count} chambres et rapportées au mois (article 25-10 de la loi du 6 juillet 1989 ; décret n° 87-713). Il ne donne lieu à aucune régularisation et est révisé dans les mêmes conditions que le loyer ; l'état récapitulatif des charges est tenu à la disposition du Locataire.` },
     { t: "kv", headers: ["Catégorie", "EUR"], rows: [["Loyer hors charges", fEUR(pr.hc)], ["Forfait de charges récupérables", fEUR(k.forfait)]], totals: [["TOTAL MENSUEL", fEUR(pr.total)]] },
     { t: "p", small: true, text: "Le forfait couvre exclusivement : eau froide et chaude, chauffage et production d'eau chaude, fourniture d'énergie, produits et personnel d'entretien et ménage des parties communes, entretien des espaces verts, consommables des parties communes, entretien courant de la chaudière, désinsectisation, taxe d'enlèvement des ordures ménagères, redevance d'assainissement. Ni l'accès internet, ni l'exploitation de la piscine, ni aucune prestation de services n'y figurent." },
-    ...(discount ? [
+    ...(k.first_year_offer ? firstYearOfferBlocks(k.start, !!pr.prorataDays) : discount ? [
       { t: "sub", text: "Remise commerciale sur le premier mois complet :" } as Block,
       { t: "p", text: `**À titre de geste commercial, le Bailleur consent au Locataire une remise de ${fEUR(discount)}** sur le loyer et le forfait du premier mois complet de location, soit ${monthLabel(firstFullMonth)} (montant habituel : ${fEUR(pr.total)}). Le montant à verser pour ce mois est donc de ${fEUR(pr.total - discount)}.${pr.prorataDays ? " Le prorata dû pour le mois d'entrée n'est pas concerné par cette remise." : ""} Cette remise est accordée une seule fois ; elle ne modifie ni le loyer, ni sa révision, ni le dépôt de garantie.` } as Block,
     ] : []),

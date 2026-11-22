@@ -101,3 +101,17 @@ export function installmentsInWords(n: number): string {
 export function nextInstallment(schedule: DepositInstallment[], received: number): DepositInstallment | null {
   return schedule[Math.max(0, Math.floor(received))] ?? null;
 }
+
+/**
+ * Date de signature du bail (« AAAA-MM-JJ », jour de Paris) → horodatage de `leases.signed_at`, saisi au passage à « Signé »
+ * dans la fiche locataire (offre « Ta première année », décision 5 de Jérôme du 22/11/2026 : la date de signature fait foi).
+ * 11 h UTC = midi ou 13 h à Paris : relu à Paris, c'est toujours le même jour. null si la date est illisible, impossible
+ * (31/11) ou postérieure à `todayIso` (le jour de Paris). Pur.
+ */
+export function signedAtFromDate(dayIso: string, todayIso: string): string | null {
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(String(dayIso))) return null;
+  const at = new Date(`${dayIso}T11:00:00Z`);
+  if (Number.isNaN(at.getTime()) || at.toISOString().slice(0, 10) !== dayIso) return null;
+  if (dayIso > todayIso) return null;
+  return at.toISOString();
+}

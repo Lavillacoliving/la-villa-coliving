@@ -3,7 +3,9 @@ import { supabase } from '@/lib/supabase';
 import { useToast } from '@/components/ui/Toast';
 import { filterByEntity } from '@/lib/entities';
 import { logAudit } from '@/lib/auditLog';
-import { depositSchedule, installmentDueLabel, monthLabelFr, nextInstallment, normalizeInstallments } from '@/lib/leaseTerms';
+import { depositSchedule, installmentDueLabel, monthLabelFr, nextInstallment, normalizeInstallments, signedAtFromDate } from '@/lib/leaseTerms';
+import { parisIsoDate } from '@/lib/dates';
+import { FIRST_YEAR_SIGN_FROM, FIRST_YEAR_SIGN_TO, isFirstYearSignDate } from '@/lib/bailV3/firstYearOffer';
 import IRLRevisionCard from '@/components/dashboard/IRLRevisionCard';
 
 type LeaseStatus = 'draft' | 'sent_yousign' | 'signed' | 'active' | 'cancelled';
@@ -45,6 +47,10 @@ const LEASE_STATUS_META: Record<LeaseStatus, { label: string; color: string; bg:
 };
 
 function fmt(n: number) { return n.toLocaleString('fr-FR',{minimumFractionDigits:2,maximumFractionDigits:2})+' €'; }
+/** « AAAA-MM-JJ » → « JJ/MM/AAAA ». */
+const frDay = (iso: string) => iso.split('-').reverse().join('/');
+/** Jour de Paris (« AAAA-MM-JJ »). */
+const todayParis = () => parisIsoDate(new Date().toISOString());
 
 const EMPTY_TENANT: Partial<Tenant> = {
   first_name:'',last_name:'',email:'',phone:'',room_number:0,current_rent:0,
@@ -78,6 +84,10 @@ export default function DashboardLocatairesPage() {
   const [exitSurvey, setExitSurvey] = useState<ExitSurvey|null>(null);
   const [sendingSurvey, setSendingSurvey] = useState(false);
   const [surveyByTenant, setSurveyByTenant] = useState<Record<string, ExitSurvey>>({});
+  // (22/11/2026, offre « Ta première année », décision 5 de Jérôme) Date de signature du bail : saisie au passage à « Signé »
+  // (vide = aujourd'hui), enregistrée dans `leases.signed_at` (colonne existante, jamais remplie jusque-là) et relue à l'ouverture.
+  const [signedOn, setSignedOn] = useState('');
+  const [leaseSignedAt, setLeaseSignedAt] = useState<string|null>(null);
   // Parrainage : état du crédit du parrain pour le filleul ouvert dans le modal.
   // creditedDate non null = avoir déjà versé (l'UUID du filleul dans le label du
   // ledger EST le mécanisme d'idempotence — jamais le nom, à cause des homonymes).
@@ -122,6 +132,14 @@ export default function DashboardLocatairesPage() {
     setExitSurvey((data as ExitSurvey) || null);
   }, []);
 
+  // Date de signature du dernier bail signé de ce locataire (null = jamais renseignée).
+  const loadLeaseSignature = useCallback(async (tenantId: string) => {
+    setLeaseSignedAt(null);
+    const { data } = await supabase.from('leases').select('signed_at').eq('tenant_id', tenantId)
+      .not('signed_at', 'is', null).order('signed_at', { ascending: false }).limit(1);
+    setLeaseSignedAt((data?.[0]?.signed_at as string | undefined) ?? null);
+  }, []);
+
   const filtered = filterByEntity(
     tenants
       .filter(t => statusFilter==='all' ? true : statusFilter==='active' ? t.is_active : !t.is_active)
@@ -152,11 +170,12 @@ export default function DashboardLocatairesPage() {
 
   const openModal = (tenant?: Tenant) => {
     if (tenant) {
-      setModal({...tenant}); setIsNew(false); loadTenantDocs(tenant.id); loadExitSurvey(tenant.id);
+      setModal({...tenant}); setIsNew(false); loadTenantDocs(tenant.id); loadExitSurvey(tenant.id); loadLeaseSignature(tenant.id);
       if (tenant.referred_by_tenant_id) checkReferralCredit(tenant.id, tenant.referred_by_tenant_id);
       else setReferralCheck({loading:false, creditedDate:null, error:false});
     }
-    else { setModal({...EMPTY_TENANT}); setIsNew(true); setTenantDocs([]); setExitSurvey(null); }
+    else { setModal({...EMPTY_TENANT}); setIsNew(true); setTenantDocs([]); setExitSurvey(null); setLeaseSignedAt(null); }
+    setSignedOn('');
     setRefundMode(false);
     setReferralConfirm(false);
     setActiveTab('info');
@@ -244,6 +263,19 @@ export default function DashboardLocatairesPage() {
   const transitionLeaseStatus = async (next: LeaseStatus) => {
     if (!modal?.id) return;
     const prev = modal.lease_status || 'active';
+    // (22/11/2026, décision 5 de Jérôme) Au passage à « Signé », la date de signature (saisie, sinon aujourd'hui) va dans
+    // `leases.signed_at` : c'est elle qui fait foi pour l'offre « Ta première année » (bail signé du 26/11 au 31/12/2026).
+    const signedDay = next === 'signed' ? (signedOn || todayParis()) : '';
+    const signedAt = next === 'signed' ? signedAtFromDate(signedDay, todayParis()) : null;
+    if (next === 'signed') {
+      if (!signedAt) { toast.error('Date de signature invalide : elle ne peut pas être dans le futur.'); return; }
+      if (!isFirstYearSignDate(signedDay)) {
+        // Bail sous l'offre (remboursements créés avec le bail) signé hors de la fenêtre : on demande confirmation.
+        // Table absente (migration pas encore appliquée) = erreur ignorée, aucun avertissement.
+        const { count } = await supabase.from('offer_rewards').select('id', { count: 'exact', head: true }).eq('tenant_id', modal.id);
+        if ((count ?? 0) > 0 && !window.confirm(`Ce bail porte l'offre « Ta première année », mais la date de signature (${frDay(signedDay)}) est hors de la fenêtre du ${frDay(FIRST_YEAR_SIGN_FROM)} au ${frDay(FIRST_YEAR_SIGN_TO)}. Marquer signé quand même ?`)) return;
+      }
+    }
     // Si on passe à 'active', on s'assure que la caution est marquée reçue
     const extra: any = { lease_status: next, updated_at: new Date().toISOString() };
     if (next === 'cancelled') {
@@ -255,18 +287,22 @@ export default function DashboardLocatairesPage() {
     const { error } = await supabase.from('tenants').update(extra).eq('id', modal.id);
     if (error) { toast.error('Erreur: ' + error.message); return; }
     // (23/10/2026) La fiche du bail (`leases`) suit le statut : le portail « Mon bail » ne montre que le bail actif.
-    const leaseSync = next === 'signed' ? { status: 'signed', from: ['draft'] }
+    const leaseSync = next === 'signed' ? { status: 'signed', signed_at: signedAt, from: ['draft'] }
       : next === 'active' ? { status: 'active', is_active: true, from: ['draft', 'signed'] }
       : next === 'cancelled' ? { status: 'terminated', is_active: false, from: ['draft', 'signed', 'active'] }
       : null;
     if (leaseSync) {
       const { from, ...upd } = leaseSync;
-      const { error: leaseErr } = await supabase.from('leases').update(upd).eq('tenant_id', modal.id).in('status', from);
+      const { data: leaseRows, error: leaseErr } = await supabase.from('leases').update(upd).eq('tenant_id', modal.id).in('status', from).select('id');
       if (leaseErr) toast.warning('Statut du locataire enregistré, mais la fiche du bail n\'a pas suivi : ' + leaseErr.message);
+      else if (next === 'signed') {
+        if ((leaseRows?.length ?? 0) > 0) setLeaseSignedAt(signedAt);
+        else toast.warning('Aucune fiche de bail en brouillon pour ce locataire : la date de signature n\'est pas enregistrée.');
+      }
     }
-    await logAudit('lease_status_changed', 'tenant', modal.id, { from: prev, to: next, name: `${modal.first_name} ${modal.last_name}` });
+    await logAudit('lease_status_changed', 'tenant', modal.id, { from: prev, to: next, name: `${modal.first_name} ${modal.last_name}`, ...(next === 'signed' ? { signed_on: signedDay } : {}) });
     setModal({ ...modal, lease_status: next, is_active: next==='cancelled' ? false : next==='active' ? true : (modal.is_active!==false) });
-    toast.success(`Statut bail → ${LEASE_STATUS_META[next].label}`);
+    toast.success(`Statut bail → ${LEASE_STATUS_META[next].label}${next === 'signed' ? ` (signé le ${frDay(signedDay)})` : ''}`);
     load();
   };
 
@@ -644,6 +680,10 @@ export default function DashboardLocatairesPage() {
                       )}
                       {modal.lease_status === 'sent_yousign' && (
                         <>
+                          <label style={{display:'flex',alignItems:'center',gap:'6px',fontSize:'12px',color:'#374151'}}>
+                            Signé le
+                            <input type="date" value={signedOn || todayParis()} max={todayParis()} onChange={e=>setSignedOn(e.target.value)} style={{padding:'4px 6px',border:'1px solid #ddd',borderRadius:'6px',fontSize:'12px'}}/>
+                          </label>
                           <button onClick={()=>transitionLeaseStatus('signed')} style={{padding:'6px 12px',background:'#0d9488',color:'#fff',border:'none',borderRadius:'6px',cursor:'pointer',fontSize:'12px'}}>✓ Marquer signé</button>
                           <button onClick={()=>transitionLeaseStatus('draft')} style={{padding:'6px 12px',background:'#fff',color:'#6b7280',border:'1px solid #ddd',borderRadius:'6px',cursor:'pointer',fontSize:'12px'}}>↩ Retour brouillon</button>
                           <button onClick={()=>transitionLeaseStatus('cancelled')} style={{padding:'6px 12px',background:'#fff',color:'#dc2626',border:'1px solid #fecaca',borderRadius:'6px',cursor:'pointer',fontSize:'12px'}}>✕ Annuler</button>
@@ -662,6 +702,9 @@ export default function DashboardLocatairesPage() {
                         <button onClick={()=>transitionLeaseStatus('draft')} style={{padding:'6px 12px',background:'#fff',color:'#7c3aed',border:'1px solid #ddd6fe',borderRadius:'6px',cursor:'pointer',fontSize:'12px'}}>↻ Réactiver en brouillon</button>
                       )}
                     </div>
+                    {leaseSignedAt && (
+                      <div style={{marginTop:'8px',fontSize:'12px',color:'#374151'}}>Bail signé le {frDay(parisIsoDate(leaseSignedAt))}</div>
+                    )}
                     <div style={{marginTop:'8px',fontSize:'11px',color:'#9ca3af',lineHeight:1.4}}>
                       Brouillon → Envoyé en signature → Signé → Actif. La caution se confirme séparément (champ ci-dessus).
                     </div>

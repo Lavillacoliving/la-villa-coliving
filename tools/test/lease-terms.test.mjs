@@ -62,3 +62,17 @@ test('libellés du bail', () => {
   assert.equal(L.nextInstallment(s, 1)?.index, 2);
   assert.equal(L.nextInstallment(s, 3), null);
 });
+
+test('date de signature → leases.signed_at : même jour à Paris, jamais dans le futur', () => {
+  const at = L.signedAtFromDate('2026-11-26', '2026-11-27');
+  assert.equal(at, '2026-11-26T11:00:00.000Z');
+  // Relu à Paris (hiver comme été), c'est toujours le jour saisi.
+  const paris = (iso) => new Intl.DateTimeFormat('fr-CA', { timeZone: 'Europe/Paris' }).format(new Date(iso));
+  assert.equal(paris(at), '2026-11-26');
+  assert.equal(paris(L.signedAtFromDate('2027-07-01', '2027-07-01')), '2027-07-01');
+  assert.equal(L.signedAtFromDate('2026-11-27', '2026-11-27'), '2026-11-27T11:00:00.000Z'); // le jour même
+  assert.equal(L.signedAtFromDate('2026-11-28', '2026-11-27'), null); // futur
+  assert.equal(L.signedAtFromDate('2026-11-31', '2026-12-31'), null); // date impossible
+  assert.equal(L.signedAtFromDate('', '2026-11-27'), null);
+  assert.equal(L.signedAtFromDate('27/11/2026', '2026-11-27'), null);
+});
