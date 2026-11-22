@@ -5,13 +5,19 @@
 ## Faits clés
 {{FACTS}}
 
+## Le prix, expliqué
+{{PREMIUM}}
+
+**{{PRICE_FAQ_Q}}**
+{{PRICE_FAQ_A}}
+
 ## Propriétés
 {{HOUSES}}
 
 {{OU_CHERCHER}}
 
 ## Avantages pour les frontaliers
-- Dans les maisons : ≈ 36 CHF/m² tout compris ({{LIVING_SPACE}}), quand les annonces de studios à Genève tournent autour de 50 CHF/m² hors charges (source : Observatoire 2026)
+- Dans les maisons : {{HOUSES_CHF_PER_M2}} tout compris ({{LIVING_SPACE}}), quand les annonces de studios à Genève tournent autour de 50 CHF/m² hors charges (source : Observatoire 2026)
 - Adresse fiscale en France (avantages frontalier)
 - Tout inclus = pas de frais cachés, pas de caution sur les charges
 - Communauté internationale, aide à l'installation

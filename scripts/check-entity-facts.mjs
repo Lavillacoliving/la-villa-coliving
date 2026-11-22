@@ -146,6 +146,9 @@ const FORBIDDEN = [
   // ── (Lot L4 « Justification du prix », D8 de Jérôme du 09/10/2026) l'ancienne FAQ « pourquoi plus élevés » (tarifsFaq index 1 et
   // faqData why-higher-prices) est remplacée par la FAQ A.3 de src/data/priceFacts.ts : la question périmée ne doit réapparaître nulle part.
   { re: /Pourquoi les prix sont-ils plus élevés qu['’]une colocation classique|Why are your prices higher than a standard flatshare/i, label: 'ancienne FAQ « pourquoi plus élevés » (D8 : remplacée par la FAQ A.3, src/data/priceFacts.ts)' },
+  // (21/11/2026, lot « élevé, pas cher ») La question A.3 du 09/10 se lisait comme un aveu (« coûte plus cher ») : remplacée par
+  // « La Villa Coliving est-elle chère ? » (PRICE_FAQ_RETIRED_QUESTIONS, src/data/priceFacts.ts) — elle ne doit réapparaître nulle part.
+  { re: /Pourquoi La Villa co[uû]te-t-elle plus cher|Why does La Villa cost more than a coliving residence/i, label: 'ancienne question A.3 « Pourquoi La Villa coûte-t-elle plus cher… » (remplacée le 21/11/2026 par « La Villa Coliving est-elle chère ? »)' },
   // ── (L'Appart, Lot 4, étape E5) ──
   // P5 : la suite de L'Appart à deux = « 1 060 € par mois, soit 530 € par personne à deux » ; 530 € n'est jamais un « dès » (le « dès »
   // de L'Appart = son palier bas, APPART.price.from). Borné : « dès 1 530 € » (loyer des maisons) ne matche pas.
@@ -847,7 +850,8 @@ async function checkHtml(m) {
     } else if (nBlocks > 0) failures.push(`${f} : bloc entité hors périmètre (${nBlocks})`);
     // (Lot L4, D8) FAQ A.3 — texte identique au caractère près sur les pages du périmètre, absente ailleurs.
     if (priceFaq) {
-      const pl = f.startsWith('en-') ? 'en' : 'fr';
+      // (21/11/2026) L'accueil anglais s'appelle en.html (pas en-…) : il porte la FAQ prix depuis que « / » est dans PRICE_FAQ_ROUTES.
+      const pl = f === 'en.html' || f.startsWith('en-') ? 'en' : 'fr';
       const nQ = count(text, norm(priceFaq[pl].q)), nA = count(text, norm(priceFaq[pl].a));
       if (priceScope.has(f)) {
         if (nQ !== 1 || nA !== 1) failures.push(`${f} : FAQ prix A.3 — question ${nQ}×, réponse ${nA}× (attendu 1 et 1)`);

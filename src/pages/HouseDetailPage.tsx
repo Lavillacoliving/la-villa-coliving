@@ -818,7 +818,7 @@ function getHousesData(lang: string): Record<string, HouseData> {
       "Finnish sauna (2 seats) in the pool area",
       "Fully equipped modern gym, open 24/7",
       "Large south-facing terraces",
-      "XXL outdoor kitchen with TV",
+      "XXL outdoor kitchen with professional barbecue and TV", // (21/11/2026, Jérôme : barbecue professionnel au Loft)
       "Parking included",
       "In-house laundry room",
       "fiber internet up to 8 Gb/s",
@@ -829,7 +829,7 @@ function getHousesData(lang: string): Record<string, HouseData> {
       "Sauna finlandais (2 places) dans l'espace piscine",
       "Salle de sport moderne équipée, accessible 24h/24",
       "Grandes terrasses plein sud",
-      "Cuisine extérieure XXL avec TV",
+      "Cuisine extérieure XXL avec barbecue professionnel et TV", // (21/11/2026, Jérôme : barbecue professionnel au Loft)
       "Parking inclus",
       "Buanderie intégrée",
       "Internet fibre jusqu'à 8 Gb/s",

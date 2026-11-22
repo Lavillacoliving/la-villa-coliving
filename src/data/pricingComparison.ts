@@ -4,7 +4,7 @@
 // src/data/stats.ts (dérivé des euros contractuels au taux BCE figé).
 // Toute mise à jour du comparatif se fait ICI, jamais en littéral dans le JSX
 // de RatesPageV4 — le total et les économies affichées en dérivent.
-import { STATS, thousands } from "@/data/stats";
+import { STATS, thousands, HOUSES_EUR_PER_M2, MARKET_CLASSIC_EUR_PER_M2, GENEVA_LISTING_CHF_PER_M2 } from "@/data/stats";
 
 /** Postes mensuels du « studio à Genève » type (CHF). L'ordre documente la carte de /tarifs. */
 export const GENEVA_STUDIO_COSTS = {
@@ -41,8 +41,12 @@ export const YEARLY_SAVINGS_CHF = MONTHLY_SAVINGS_CHF * 12; // 9 780
 export const YEARLY_SAVINGS_FR_NUM = thousands(YEARLY_SAVINGS_CHF, " "); // « 9 780 »
 export const YEARLY_SAVINGS_EN_NUM = thousands(YEARLY_SAVINGS_CHF, ","); // « 9,780 »
 
-// Ratio €/m² La Villa du tableau « objection prix » : loyer contractuel standard
-// (1 530 €) ÷ 37-42 m² d'espace de vie par colocataire, fourchette communiquée.
-// Chaîne figée à la main : la recalculer suit une décision éditoriale, pas le code.
-export const VILLA_EUR_PER_M2_FR = "~37-42 €/m²";
-export const VILLA_EUR_PER_M2_EN = "~€37-42/m²";
+// (21/11/2026, lot « élevé, pas cher ») Ligne « Prix du m² » du tableau « objection prix » : CALCULÉE dans stats.ts, plus figée à
+// la main (l'ancienne chaîne « ~37-42 €/m² » recopiait la surface par personne). Maisons = tout compris ; colocation classique =
+// loyer seul ; studio = annonces genevoises, hors charges (Observatoire 2026, même chiffre que llms.txt).
+export const VILLA_EUR_PER_M2_FR = `${HOUSES_EUR_PER_M2.min}-${HOUSES_EUR_PER_M2.max} €/m² tout compris`;
+export const VILLA_EUR_PER_M2_EN = `€${HOUSES_EUR_PER_M2.min}-${HOUSES_EUR_PER_M2.max}/m², everything included`;
+export const CLASSIC_EUR_PER_M2_FR = `~${MARKET_CLASSIC_EUR_PER_M2.min}-${MARKET_CLASSIC_EUR_PER_M2.max} €/m², loyer seul`;
+export const CLASSIC_EUR_PER_M2_EN = `~€${MARKET_CLASSIC_EUR_PER_M2.min}-${MARKET_CLASSIC_EUR_PER_M2.max}/m², rent alone`;
+export const STUDIO_CHF_PER_M2_FR = `~${GENEVA_LISTING_CHF_PER_M2} CHF/m² + charges (annonces)`;
+export const STUDIO_CHF_PER_M2_EN = `~CHF ${GENEVA_LISTING_CHF_PER_M2}/m² + utilities (listings)`;

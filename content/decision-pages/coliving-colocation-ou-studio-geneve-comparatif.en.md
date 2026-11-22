@@ -13,7 +13,7 @@ What each format changes day to day for a single person working in Geneva, in Se
 |---|---|---|---|---|
 | Moving in | 4 to 8 weeks without a Swiss rental record, furniture to buy | 2 to 6 weeks, room usually furnished, equipment varies | 72 h from your first contact if a room is available, with your suitcase | contact within 24 to 48 h after pre-booking, furnished unit |
 | Making friends | built alone, through work and clubs | depends on the flatmates you find through listings | from the first evening, in a house of 7 to 12 selected residents who work in Geneva | several hundred residents: students, young professionals and travellers |
-| Living space | the whole studio, no shared space | a room and a share of the flat | room of 16 to 24 m², 37 to 42 m² of living space per flatmate, garden | room in a flatshare of 10 to 17 m², mini studio of 14 m², studio of 16 to 35 m² (rental portals, September 2026) |
+| Living space | the whole studio, no shared space | a room and a share of the flat | room of 16 to 24 m², 38 to 49 m² of living space per flatmate, garden | room in a flatshare of 10 to 17 m², mini studio of 14 m², studio of 16 to 35 m² (rental portals, September 2026) |
 | Facilities | those of the building, often a laundry room | those of the flat | a pool in every house (indoor and heated year-round at Le Loft, outdoor from mid-April to the end of September at La Villa, where it is heated, and at Le Lodge), sauna, gym, a dedicated home-cinema room in every house, garden, barbecue | gym, cinema room, karaoke, bar, music and podcast studio, yoga room; wellness area with sauna announced as "coming soon"; no pool |
 | Cleaning and services | you, plus everything else to sign up for | split between flatmates | common areas cleaned 3 times a week, everyday products, sheets and towels provided, fibre up to 8 Gb/s; cleaning of your room as an option | common areas maintained. PAID OPTIONS: cleaning of your unit, linen and laundry |
 | Community life | none | depends on the flatmates | private yoga and fitness classes every week, a pizza party every month | events programme included |
@@ -33,7 +33,7 @@ Read the premium coliving column from top to bottom: if a room is available, you
 
 **You want to make friends.** Verdict: coliving. Arriving alone in a city where everyone already has their friends is the hardest part of moving abroad. With us, you have dinner on the first evening with selected flatmates who work in Geneva like you, and the monthly pizza party does the rest.
 
-**You want a premium lifestyle.** Verdict: coliving. A house, not an apartment block: a furnished and decorated room of 16 to 24 m², a private shower room if you choose it, 37 to 42 m² of living space per flatmate, and services a Geneva studio almost never includes. The entry price is higher than a classic flatshare, and so is the standard.
+**You want a premium lifestyle.** Verdict: coliving. A house, not an apartment block: a furnished and decorated room of 16 to 24 m², a private shower room if you choose it, 38 to 49 m² of living space per flatmate, and services a Geneva studio almost never includes. The entry price is higher than a classic flatshare, and so is the standard.
 
 **You want a human-scale way of life.** Verdict: coliving. Pool, gym, sauna and garden shared between residents, like in a condo, but in a human-sized house, with international flatmates, 20 minutes door to door from Geneva Eaux-Vives by Léman Express.
 
