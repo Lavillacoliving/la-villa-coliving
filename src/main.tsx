@@ -85,7 +85,11 @@ if (rootElement.querySelector("main[data-not-found]")) prerenderState.__not_foun
 // l'offre (dans le <header>) et l'état de /offre-hiver (active / terminée). Le premier rendu client
 // doit reproduire ce HTML, quelle que soit la date du lecteur ou sa fermeture du bandeau (localStorage) ;
 // OfferBanner et OfferPage lisent ces deux repères pendant l'hydratation, puis se resynchronisent.
-if (rootElement.querySelector(".lvc-offer-banner")) prerenderState.__offer_banner__ = "1";
+// (21/11/2026, offre « Ta première année avec nous ») Deux offres datées : le repère du bandeau porte l'offre du bandeau
+// prérendu (`data-offer-id`, « 1 » pour un HTML d'avant ce marquage = l'hiver), celui de la page son état
+// (active = hiver / premiere-annee / ended).
+const offerBanner = rootElement.querySelector(".lvc-offer-banner");
+if (offerBanner) prerenderState.__offer_banner__ = offerBanner.getAttribute("data-offer-id") || "1";
 const offerMain = rootElement.querySelector("main[data-offer-state]");
 if (offerMain) prerenderState.__offer_state__ = offerMain.getAttribute("data-offer-state") ?? "";
 // (Rebrief −50 %, 12/10/2026) Jour de Paris utilisé par le prérendu pour les lignes « Bail au … » des cartes de l'offre.

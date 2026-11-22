@@ -1,4 +1,10 @@
 // Supabase Edge Function — send-candidature-email
+// v21 — 21/11/2026 — Offre « Ta première année avec nous » (brief Jérôme du 21/11/2026, lot 1) : `premiere-annee` ajoutée à
+//   OFFER_LABELS (« Ta première année (jusqu'à 1 400 € remboursés, bail signé du 26/11 au 31/12/2026) ») ; « hiver » inchangée.
+//   AUCUN autre changement : même validation (valeur hors liste ignorée sans erreur), mêmes notes, email et form_submissions.offer
+//   que la v20. Le site envoie l'offre EN COURS (src/data/offer.ts, normalizeOffer) : « premiere-annee » à partir du 26/11 à 0 h,
+//   y compris pour un lien `?offre=hiver` (D2). À déployer AVANT le 26/11 à 0 h (sinon la note arrive sans la ligne de l'offre,
+//   sans erreur). Tests : tools/test/edge-candidature.test.mjs.
 // v20 — 06/10/2026, libellé révisé le 12/10/2026 — Offre « Pose tes valises avant l'hiver » (brief Jérôme du 06/10,
 //   rebrief −50 % du 12/10 : bail signé du 15/10 au 25/11 inclus, démarrage à la libération ; mise en ligne 14/10)
 //   CHANGEMENTS vs v19 :
@@ -258,8 +264,10 @@ const CONTACT_PREFERENCE_PHRASES: Record<"fr" | "en", Record<string, string>> = 
 };
 // (v20) Offres commerciales — clés = valeurs du paramètre `?offre=` du site (src/data/offer.ts).
 // Libellé = la ligne écrite dans prospects.notes et en tête de la notification admin (brief §1).
+// (v21, 21/11/2026) + « premiere-annee » (offre « Ta première année avec nous », bail signé du 26/11 au 31/12/2026).
 const OFFER_LABELS: Record<string, string> = {
   "hiver": "Pose tes valises (−50 % 1er mois, bail signé ≤ 25/11, démarrage à la libération)",
+  "premiere-annee": "Ta première année (jusqu'à 1 400 € remboursés, bail signé du 26/11 au 31/12/2026)",
 };
 
 /** Lecture d'une table de libellés sans jamais remonter au prototype (« constructor »…). */
