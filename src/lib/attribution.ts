@@ -385,9 +385,13 @@ export function isTestSession(): boolean {
 // maison avant de soumettre garde son offre. La visite de /offre-hiver elle-même la pose aussi
 // (OfferPage) — un candidat venu de la campagne qui candidate ensuite depuis une page maison est
 // quand même rattaché à l'offre. Valeur inconnue : ignorée en silence, jamais écrite.
+// (21/11/2026, offre « Ta première année avec nous ») + `premiere-annee`. La valeur BRUTE est mémorisée : c'est le formulaire
+// qui la ramène à l'offre en cours au moment de l'envoi (normalizeOffer, src/data/offer.ts — D2 : `?offre=hiver` compte pour
+// la nouvelle offre à partir du 26/11). Liste = KNOWN_OFFER_IDS de src/data/offer.ts, recopiée (ce module reste sans import
+// de données), tenue synchronisée par tools/test/offer.test.mjs.
 
 export const OFFER_STORAGE_KEY = "lvc_offer";
-const KNOWN_OFFERS = ["hiver"] as const;
+export const KNOWN_OFFERS = ["hiver", "premiere-annee"] as const;
 
 /** Mémorise l'offre `value` si elle est connue. Renvoie la valeur écrite, ou "". */
 export function markOffer(value: string | null | undefined): string {

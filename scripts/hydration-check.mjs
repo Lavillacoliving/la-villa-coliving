@@ -75,6 +75,10 @@ const QUERY_ROUTES = [
   '/candidature?offre=hiver',
   '/en/candidature?offre=hiver&property_interest=lelodge&room_interest=chambre-4',
   '/candidature?offre=xyz',
+  // (21/11/2026) Offre « Ta première année avec nous » : sa ligne aussi après l'hydratation seulement ; une valeur connue compte
+  // pour l'offre en cours (D2 : `?offre=hiver` → « Ta première année » à partir du 26/11).
+  '/candidature?offre=premiere-annee',
+  '/en/candidature?offre=premiere-annee&property_interest=leloft&room_interest=chambre-1',
   // (L'Appart, étape E3) En-tête de L'Appart (chambre, suite, liste d'attente), offre hiver exclue (D5), tuiles des maisons
   // masquées (D4) : tout après l'hydratation, jamais au premier rendu.
   '/candidature?property_interest=lappart&room_interest=chambre-2',
@@ -99,6 +103,11 @@ const CLOCK_SHIFT_DAYS = 95;
 // (le bandeau prérendu doit s'hydrater tel quel, puis disparaître, quelle que soit la date du lecteur).
 // (L'Appart, étape E3) + /lappart : sa liste d'attente embarque son mois de référence, comme les pages maisons.
 const CLOCK_SHIFT_ROUTES = ['/', '/tarifs', '/en/tarifs', '/candidature?property_interest=lelodge', '/offre-hiver', '/en/winter-offer', '/chambres-disponibles', '/lappart'];
+// (21/11/2026, offre « Ta première année avec nous ») Horloge FIXÉE juste après les bascules des offres (src/data/offer.ts,
+// heure de Paris) : le HTML prérendu, quelle que soit l'offre qu'il porte, s'hydrate tel quel ; la page et le bandeau passent
+// ensuite à l'offre du moment (26/11 : « Ta première année » ; 01/01/2027 : page « terminée », plus de bandeau).
+const CLOCK_AT = ['2026-11-26T00:01:00+01:00', '2027-01-01T00:01:00+01:00'];
+const CLOCK_AT_ROUTES = ['/', '/offre-hiver', '/en/winter-offer'];
 
 const NOT_FOUND_ROUTES = [
   '/blog/article-inexistant-garde-hydratation',
@@ -195,28 +204,30 @@ async function main() {
     mobile: { viewport: { width: 390, height: 844, deviceScaleFactor: 2, isMobile: true, hasTouch: true }, ua: 'Mozilla/5.0 (Linux; Android 13; SM-S911B) AppleWebKit/537.36 (KHTML, like Gecko) SamsungBrowser/23.0 Chrome/115.0.0.0 Mobile Safari/537.36' },
     desktop: { viewport: { width: 1440, height: 900 }, ua: 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/128.0 Safari/537.36 Edg/128.0' },
   };
-  console.log(`\n💧 Garde hydratation — ${routes.length} routes × ${Object.keys(DEVICES).length} profils + ${CLOCK_SHIFT_ROUTES.length} routes à l'horloge +${CLOCK_SHIFT_DAYS} j\n`);
+  console.log(`\n💧 Garde hydratation — ${routes.length} routes × ${Object.keys(DEVICES).length} profils + ${CLOCK_SHIFT_ROUTES.length} routes à l'horloge +${CLOCK_SHIFT_DAYS} j + ${CLOCK_AT_ROUTES.length} routes × ${CLOCK_AT.length} horloges fixées\n`);
   const failures = await checkLanguageLinks();
   const runs = [
     ...routes.flatMap((route) => Object.keys(DEVICES).map((device) => ({ route, device, shift: 0 }))),
     ...CLOCK_SHIFT_ROUTES.map((route) => ({ route, device: 'desktop', shift: CLOCK_SHIFT_DAYS })),
+    ...CLOCK_AT.flatMap((at) => CLOCK_AT_ROUTES.map((route) => ({ route, device: 'desktop', shift: 0, at }))),
   ];
-  for (const { route, device: profile, shift } of runs) {
+  for (const { route, device: profile, shift, at } of runs) {
     const cfg = DEVICES[profile];
-    const device = shift ? `${profile}, horloge +${shift} j` : profile;
+    const device = at ? `${profile}, horloge au ${at}` : shift ? `${profile}, horloge +${shift} j` : profile;
     const page = await browser.newPage();
     await page.setViewport(cfg.viewport);
     await page.setUserAgent(cfg.ua);
-    if (shift) {
-      // Date décalée AVANT tout script de la page (new Date(), Date.now()).
-      await page.evaluateOnNewDocument((ms) => {
+    if (shift || at) {
+      // Date décalée (ou fixée à `at`, puis qui avance) AVANT tout script de la page (new Date(), Date.now()).
+      await page.evaluateOnNewDocument((ms, fixedMs) => {
         const RealDate = Date;
+        const offset = fixedMs ? fixedMs - RealDate.now() : ms;
         class ShiftedDate extends RealDate {
-          constructor(...args) { if (args.length === 0) super(RealDate.now() + ms); else super(...args); }
-          static now() { return RealDate.now() + ms; }
+          constructor(...args) { if (args.length === 0) super(RealDate.now() + offset); else super(...args); }
+          static now() { return RealDate.now() + offset; }
         }
         globalThis.Date = ShiftedDate;
-      }, shift * 86400000);
+      }, shift * 86400000, at ? Date.parse(at) : 0);
     }
     // Lot C (01/10/2026) : aucun hit GA4/Clarity (ex-« 390×844 » et « 1440×900 » de GA4).
     await blockAnalytics(page);

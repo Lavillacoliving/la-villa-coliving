@@ -113,24 +113,31 @@
     </script>
     <!-- (Offre « Pose tes valises avant l'hiver », 06/10/2026) Bandeau de l'offre, rendu dans le <header>
          fixe du HTML prérendu : AVANT la première peinture, ce script décide s'il doit être visible
-         (page du bandeau, offre commencée et encore ouverte, pas fermé depuis moins de 7 jours) et pose html.lvc-offer-on
+         (page du bandeau, une offre en cours, pas fermé depuis moins de 7 jours) et pose html.lvc-offer-on
          — hauteur réservée + compensation des pages (src/index.css). Sans la classe, le bandeau est masqué
-         dès la première peinture ; OfferBanner (React) prend le relais après l'hydratation. Dates, pages
-         et clé = src/data/offer.ts, tenus synchronisés par tools/test/offer.test.mjs. ES5, sans marqueur
+         dès la première peinture ; OfferBanner (React) prend le relais après l'hydratation.
+         (21/11/2026, offre « Ta première année avec nous ») Une fenêtre par offre [début, fin exclusive, clé de
+         fermeture] : la fenêtre en cours décide, avec SA clé (qui a fermé le bandeau d'hiver voit le nouveau) ;
+         bascule à 0 h, heure de Paris, sans trou. Fenêtres, pages et clés = OFFER_WINDOWS et OFFER_BANNER_PATHS
+         de src/data/offer.ts, tenus synchronisés par tools/test/offer.test.mjs. ES5, sans marqueur
          de commentaire HTML. -->
     <script id="lvc-offer">
       (function (w, d, l) {
-        var START = Date.parse("2026-10-15T00:00:00+02:00");
-        var END = Date.parse("2026-11-26T00:00:00+01:00");
-        var KEY = "lvc_offer_hiver_closed";
+        var OFFERS = [
+          ["2026-10-15T00:00:00+02:00", "2026-11-26T00:00:00+01:00", "lvc_offer_hiver_closed"],
+          ["2026-11-26T00:00:00+01:00", "2027-01-01T00:00:00+01:00", "lvc_offer_premiere_annee_closed"]
+        ];
         var DAYS = 7 * 864e5;
         var p = l.pathname.replace(/^\/en(?=\/|$)/, "") || "/";
         p = p.replace(/\/+$/, "") || "/";
         if (!/^\/(chambres-disponibles|lavilla|leloft|lelodge|tarifs|colocation-geneve|chambre-a-louer-geneve|annemasse-colocation)$|^\/$/.test(p)) return;
-        var now = Date.now();
-        if (now < START || now >= END) return;
+        var now = Date.now(), key = "", i;
+        for (i = 0; i < OFFERS.length; i++) {
+          if (now >= Date.parse(OFFERS[i][0]) && now < Date.parse(OFFERS[i][1])) key = OFFERS[i][2];
+        }
+        if (!key) return;
         var closed = 0;
-        try { closed = Number(w.localStorage.getItem(KEY) || 0); } catch (e) {}
+        try { closed = Number(w.localStorage.getItem(key) || 0); } catch (e) {}
         if (closed > 0 && now - closed < DAYS) return;
         d.documentElement.classList.add("lvc-offer-on");
       })(window, document, location);

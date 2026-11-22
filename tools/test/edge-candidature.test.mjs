@@ -409,6 +409,44 @@ test('offer inconnue (xyz, constructor, vide) : ignorée sans erreur, corps iden
   assert.equal(fsBodies(be)[0].offer, 'hiver');
 });
 
+// ── v21 — offre « Ta première année avec nous » (brief Jérôme du 21/11/2026) ─────────────────────
+const FIRST_YEAR_LINE = 'Offre : Ta première année (jusqu\'à 1 400 € remboursés, bail signé du 26/11 au 31/12/2026)';
+
+test('v21 — offer=premiere-annee : ligne « Offre : Ta première année … » en tête des notes et de l\'email, form_submissions.offer', async () => {
+  const be = backend();
+  const r = await call(be, candidate({ offer: 'premiere-annee', contact_preference: 'whatsapp', source: 'facebook', property_interest: 'leloft', room_interest: 'chambre-1' }));
+  assert.equal(r.status, 200);
+  assert.equal(r.body.success, true);
+  const p = onlyProspect(be);
+  assert.equal(p.notes.split('\n')[0], FIRST_YEAR_LINE);
+  assert.equal(p.source, 'facebook'); // le canal déclaré n'est jamais surchargé par l'offre
+  const html = text(adminMail(be).html);
+  assert.ok(html.includes(`<strong>${FIRST_YEAR_LINE}</strong>`), 'ligne de l\'offre en tête de la notification');
+  assert.ok(html.indexOf(FIRST_YEAR_LINE) < html.indexOf('Prénom'));
+  assert.doesNotMatch(autoReply(be).html, /Offre/); // l'auto-réponse candidat ne change pas
+  const bodies = fsBodies(be);
+  assert.equal(bodies.length, 1);
+  assert.equal(bodies[0].offer, 'premiere-annee');
+  // casse et espaces normalisés, comme pour « hiver »
+  const be2 = backend();
+  await call(be2, candidate({ offer: ' Premiere-Annee ' }));
+  assert.equal(onlyProspect(be2).notes, FIRST_YEAR_LINE);
+  assert.equal(fsBodies(be2)[0].offer, 'premiere-annee');
+});
+
+test('v21 — « hiver » inchangée ; variantes inconnues de la nouvelle offre ignorées sans erreur', async () => {
+  const be = backend();
+  await call(be, candidate({ offer: 'hiver' }));
+  assert.equal(onlyProspect(be).notes, OFFER_LINE);
+  for (const value of ['premiere_annee', 'première-année', 'premiere-annee-2027', 'premiere annee']) {
+    const b = backend();
+    const r = await call(b, candidate({ offer: value }));
+    assert.equal(r.status, 200, value);
+    assert.equal(onlyProspect(b).notes, null, value);
+    assert.ok(!('offer' in fsBodies(b)[0]), value);
+  }
+});
+
 test('sans offer : aucun changement (ni notes, ni email, ni clé dans form_submissions)', async () => {
   const be = backend();
   await call(be, candidate());

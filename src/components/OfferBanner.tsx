@@ -6,42 +6,56 @@ import { useLanguage } from "@/contexts/LanguageContext";
 import { useHydrated } from "@/hooks/useHydrated";
 import { readPrerenderFlag } from "@/lib/prerenderEmbeddedState";
 import {
-  OFFER_BANNER_DISMISS_KEY,
+  KNOWN_OFFER_IDS,
   OFFER_BANNER_DISMISS_MS,
+  OFFER_ID,
   OFFER_PATH_FR,
-  OFFER_TEXTS,
-  isOfferActive,
+  OFFER_TEXTS_BY_ID,
+  OFFER_WINDOWS,
   isOfferBannerPath,
-  isOfferStarted,
+  offerAt,
   trackOfferCta,
+  type OfferId,
 } from "@/data/offer";
 
 /**
- * Bandeau fin de l'offre « Pose tes valises avant l'hiver » (brief Jérôme du 06/10/2026, §3).
- * Rendu DANS le <header> fixe de NavbarV7, au-dessus de la barre de navigation, sur les pages de
- * OFFER_BANNER_PATHS (FR + miroirs EN) ; fermable (localStorage, 7 jours) ; n'apparaît qu'à partir d'OFFER_START
- * (15/10 à 0 h, heure de Paris — décision Jérôme du 12/10) et disparaît après OFFER_END.
+ * Bandeau de l'offre en cours (offre « Pose tes valises avant l'hiver », brief Jérôme du 06/10/2026, §3 ; depuis le
+ * 21/11/2026, l'offre « Ta première année avec nous » prend le relais le 26/11 à 0 h, heure de Paris — offerAt(),
+ * src/data/offer.ts). Rendu DANS le <header> fixe de NavbarV7, au-dessus de la barre de navigation, sur les pages de
+ * OFFER_BANNER_PATHS (FR + miroirs EN) ; fermable (localStorage, 7 jours, une clé PAR OFFRE : qui a fermé le bandeau d'hiver
+ * voit le nouveau) ; n'apparaît que pendant une offre (fenêtres OFFER_WINDOWS).
  *
  * Zéro décalage à l'hydratation (même logique que le correctif #418 du Lot B) :
- *  - le HTML prérendu contient le bandeau (le prérendu tourne pendant l'offre, sans localStorage) ;
- *  - AVANT la première peinture, le script inline #lvc-offer d'index.html décide (date + fermeture) et
+ *  - le HTML prérendu contient le bandeau de l'offre en cours au prérendu (sans localStorage), marqué `data-offer-id` ;
+ *  - AVANT la première peinture, le script inline #lvc-offer d'index.html décide (fenêtre en cours + sa fermeture) et
  *    pose html.lvc-offer-on : la hauteur du bandeau est réservée (variable --lvc-banner-h, src/index.css)
  *    et les pages à `main.pt-16` reçoivent leur compensation dès le premier rendu ; sans la classe, le
  *    bandeau est masqué en CSS — jamais un bandeau qui apparaît puis disparaît ;
- *  - pendant l'hydratation, ce composant reproduit le HTML (repère `__offer_banner__` capturé par
- *    main.tsx) ; une fois hydraté, il rend l'état réel (page, date, fermeture) et tient la classe à jour
- *    (navigation SPA, fermeture). Le <header> étant fixe, monter/démonter le bandeau ne déplace jamais le
- *    contenu de la page : seule la classe (compensation) compte, et elle est posée avant la peinture.
+ *  - pendant l'hydratation, ce composant reproduit le HTML (repère `__offer_banner__` capturé par main.tsx = l'offre
+ *    du bandeau prérendu ; « 1 » = HTML d'avant le 21/11, toujours l'hiver) ; une fois hydraté, il rend l'état réel (page,
+ *    offre en cours, fermeture) et tient la classe à jour (navigation SPA, fermeture). Le <header> étant fixe,
+ *    monter/démonter le bandeau ne déplace jamais le contenu de la page : seule la classe (compensation) compte, et elle
+ *    est posée avant la peinture. Le 26/11 à 0 h, tant que le robot n'a pas refait le prérendu, le bandeau d'hiver prérendu
+ *    s'affiche le temps de l'hydratation, puis le texte de la nouvelle offre le remplace (même hauteur, même lien).
  */
 
-function dismissedRecently(now: number = Date.now()): boolean {
+function dismissedRecently(key: string, now: number = Date.now()): boolean {
   try {
-    const at = Number(window.localStorage.getItem(OFFER_BANNER_DISMISS_KEY) ?? 0);
+    const at = Number(window.localStorage.getItem(key) ?? 0);
     return at > 0 && now - at < OFFER_BANNER_DISMISS_MS;
   } catch {
     return false;
   }
 }
+
+/** Offre du bandeau prérendu (repère de main.tsx) : un identifiant connu, « 1 » (HTML d'avant le 21/11 = l'hiver), sinon null. */
+function prerenderedBannerOffer(): OfferId | null {
+  const flag = readPrerenderFlag("__offer_banner__");
+  if (flag === "1") return OFFER_ID;
+  return (KNOWN_OFFER_IDS as readonly string[]).includes(flag ?? "") ? (flag as OfferId) : null;
+}
+
+const dismissKeyOf = (id: OfferId): string => OFFER_WINDOWS.find((w) => w.id === id)?.dismissKey ?? "";
 
 export function OfferBanner() {
   const { language } = useLanguage();
@@ -50,10 +64,11 @@ export function OfferBanner() {
   const hydrated = useHydrated();
   const [closed, setClosed] = useState(false);
 
-  // État réel (après hydratation, et dès le premier rendu en navigation SPA ou au prérendu).
-  const live = isOfferBannerPath(pathname) && !closed && isOfferStarted() && isOfferActive() && !dismissedRecently();
+  // État réel (après hydratation, et dès le premier rendu en navigation SPA ou au prérendu) : l'offre en cours, sa clé.
+  const current = offerAt();
+  const live = !!current && isOfferBannerPath(pathname) && !closed && !dismissedRecently(current.dismissKey);
   // Pendant l'hydratation : ce que le HTML prérendu contient, ni plus ni moins.
-  const visible = hydrated ? live : readPrerenderFlag("__offer_banner__") === "1";
+  const shown: OfferId | null = hydrated ? (live && current ? current.id : null) : prerenderedBannerOffer();
 
   // La classe de compensation suit l'état RÉEL seulement (jamais l'état de l'hydratation : le script
   // inline l'a déjà posée correctement avant la peinture — la toucher ici ferait clignoter la page).
@@ -64,31 +79,32 @@ export function OfferBanner() {
     return () => root.classList.remove("lvc-offer-on");
   }, [hydrated, live]);
 
-  if (!visible) return null;
+  if (!shown) return null;
+  const texts = OFFER_TEXTS_BY_ID[shown][L];
 
   const dismiss = () => {
     setClosed(true);
     try {
-      window.localStorage.setItem(OFFER_BANNER_DISMISS_KEY, String(Date.now()));
+      window.localStorage.setItem(dismissKeyOf(shown), String(Date.now()));
     } catch {
       /* stockage indisponible : fermé pour cette page seulement */
     }
   };
 
   return (
-    <div className="lvc-offer-banner bg-[#1C1917] text-white">
+    <div className="lvc-offer-banner bg-[#1C1917] text-white" data-offer-id={shown}>
       <div className="container-custom h-full flex items-center justify-center gap-2 sm:gap-4">
         <LocalizedLink
           to={OFFER_PATH_FR}
           onClick={() => trackOfferCta("banner", { language: L, page_path: pathname })}
           className="text-xs sm:text-sm font-medium text-center leading-snug hover:text-[#D4A574] transition-colors"
         >
-          {OFFER_TEXTS[L].banner}
+          {texts.banner}
         </LocalizedLink>
         <button
           type="button"
           onClick={dismiss}
-          aria-label={OFFER_TEXTS[L].bannerClose}
+          aria-label={texts.bannerClose}
           className="shrink-0 p-1.5 -mr-1.5 rounded text-[#A8A29E] hover:text-white transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#D4A574]"
         >
           <X className="w-4 h-4" aria-hidden="true" />

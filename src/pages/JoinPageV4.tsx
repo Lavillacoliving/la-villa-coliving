@@ -20,7 +20,7 @@ import { toInternalPropertySlug } from "@/lib/placeBridge";
 import { CandidatureDetails } from "@/components/CandidatureDetails";
 import { FacebookGroupCallout } from "@/components/FacebookGroupCallout";
 import { useHydrated } from "@/hooks/useHydrated";
-import { OFFER_QUERY_KEY, OFFER_TEXTS, normalizeOffer } from "@/data/offer";
+import { OFFER_QUERY_KEY, OFFER_TEXTS_BY_ID, normalizeOffer } from "@/data/offer";
 
 type FormStatus = "idle" | "submitting" | "success" | "error";
 
@@ -131,6 +131,9 @@ export function JoinPageV4() {
   // pas d'<input hidden>, dont la valeur différerait du HTML prérendu (même règle que `arrival`).
   // (L'Appart, D5 / décision n° 32, à confirmer) L'offre ne concerne que les maisons : pour une candidature de L'Appart, ni la ligne
   // de l'offre, ni le champ `offer` envoyé à l'Edge, ni la dimension GA4.
+  // (21/11/2026, offre « Ta première année avec nous ») Deux offres datées : une valeur connue (`hiver` ou `premiere-annee`)
+  // devient l'identifiant de l'offre EN COURS (D2 : `?offre=hiver` compte pour la nouvelle offre à partir du 26/11 à 0 h ;
+  // plus rien à partir du 01/01/2027) — la ligne, le champ `offer` et la dimension GA4 suivent.
   const refOffer = refProperty === APPART_KEY ? "" : normalizeOffer(searchParams.get(OFFER_QUERY_KEY)) || normalizeOffer(storedOffer());
   // (Lot A) Jeton du mode « compléments » (edge v19), reçu au succès ; absent → pas de bloc.
   const [detailsToken, setDetailsToken] = useState<string | null>(null);
@@ -222,7 +225,7 @@ export function JoinPageV4() {
     if (refRoom) payload.room_interest = refRoom;
     // (Lot A) Période pré-choisie sur une page maison, transmise sans être affichée.
     if (refArrival) payload.arrival = refArrival;
-    // Offre commerciale (06/10/2026) : champ `offer` ∈ {hiver} — l'edge v20 l'écrit dans prospects.notes
+    // Offre commerciale (06/10/2026) : champ `offer` ∈ {hiver, premiere-annee} (offre en cours, 21/11/2026) — l'edge l'écrit dans prospects.notes
     // (« Offre : … »), en tête de la notification admin et dans form_submissions.offer.
     if (refOffer) payload.offer = refOffer;
     if (isTest) payload.isTest = "1";
@@ -690,13 +693,15 @@ export function JoinPageV4() {
 
             {/* Offre « Pose tes valises » (06/10/2026) — une ligne au-dessus du bouton quand
                 ?offre=hiver est présent (ou mémorisé pour la session). Rendue APRÈS l'hydratation :
-                le HTML prérendu de /candidature est commun à toutes les query strings (règle du Lot B). */}
-            {hydrated && refOffer === "hiver" && (
+                le HTML prérendu de /candidature est commun à toutes les query strings (règle du Lot B).
+                (21/11/2026) La ligne de l'offre EN COURS (refOffer, normalisé) : « Ta première année » à partir du 26/11. */}
+            {hydrated && refOffer && (
               <p
                 data-offer-line
+                data-offer-id={refOffer}
                 className="mb-4 px-4 py-3 bg-[#FAF9F6] border border-[#D4A574] text-sm text-[#1C1917] text-center"
               >
-                {OFFER_TEXTS[L].formLine}
+                {OFFER_TEXTS_BY_ID[refOffer][L].formLine}
               </p>
             )}
 
