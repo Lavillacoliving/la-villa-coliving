@@ -13,12 +13,16 @@ import { nextMonthValue, useRenderMonth } from "@/lib/renderMonth";
 import { FaqSection } from "@/components/FaqSection";
 import { tarifsFaq } from "@/data/faq/tarifsFaq";
 import { buildBreadcrumbSchema, buildRoomsAggregateOfferSchema, homeUrl } from "@/lib/structuredData";
-import { STATS, STATS_SHARED_BATH, SHARED_BATH_TIERS, HOUSE_SURFACES, PRICE_FR_NUM, PRICE_EN_NUM, PRICE_CHF_FR, PRICE_CHF_EN, PRICE_FROM_FR_NUM, PRICE_FROM_EN_NUM, PRICE_FROM_CHF_FR, PRICE_FROM_CHF_EN, CONTRACT_EUR, EUR_STANDARD_FR_NUM, EUR_FROM_FR_NUM, EUR_STANDARD_EN_NUM, EUR_FROM_EN_NUM, MARKET_ROOM_EUR, thousands, MARKET_COMPARISON, sharedBathTiersText } from "@/data/stats";
+import { STATS, STATS_SHARED_BATH, SHARED_BATH_TIERS, HOUSE_SURFACES, MARKET_CLASSIC_LIVING_M2, PRICE_FR_NUM, PRICE_EN_NUM, PRICE_CHF_FR, PRICE_CHF_EN, PRICE_FROM_FR_NUM, PRICE_FROM_EN_NUM, PRICE_FROM_CHF_FR, PRICE_FROM_CHF_EN, CONTRACT_EUR, EUR_STANDARD_FR_NUM, EUR_FROM_FR_NUM, EUR_STANDARD_EN_NUM, EUR_FROM_EN_NUM, MARKET_ROOM_EUR, thousands, MARKET_COMPARISON, sharedBathTiersText } from "@/data/stats";
 import { PRICE_KEY_SENTENCE } from "@/data/priceFacts";
 import {
   MONTHLY_SAVINGS_CHF,
   VILLA_EUR_PER_M2_FR,
   VILLA_EUR_PER_M2_EN,
+  CLASSIC_EUR_PER_M2_FR,
+  CLASSIC_EUR_PER_M2_EN,
+  STUDIO_CHF_PER_M2_FR,
+  STUDIO_CHF_PER_M2_EN,
 } from "@/data/pricingComparison";
 import { PRICE_INCLUDES_ANCHOR } from "@/data/allInclusive";
 import { mirrorPath } from "@/lib/localizedPath";
@@ -374,6 +378,8 @@ export function RatesPageV4() {
     label: { fr: string; en: string };
     classic: { fr: string; en: string };
     villa: { fr: string; en: string };
+    /** (21/11/2026, lot « élevé, pas cher ») Colonne L'Appart : la réponse de la marque à « moins de 1 000 € ». */
+    appart: { fr: string; en: string };
     studio: { fr: string; en: string };
     highlight?: boolean;
   }> = [
@@ -389,6 +395,7 @@ export function RatesPageV4() {
         fr: `dès ${PRICE_FROM_CHF_FR} tout inclus`,
         en: `from ${PRICE_FROM_CHF_EN} all inclusive`,
       },
+      appart: { fr: `dès ${AP.from.fr.chf} charges comprises`, en: `from ${AP.from.en.chf}, bills included` },
       studio: { fr: "1\u00a0800-2\u00a0500 CHF + charges", en: "CHF 1,800-2,500 + utilities" },
     },
     {
@@ -398,6 +405,10 @@ export function RatesPageV4() {
         fr: `${STATS.roomSizeMin}-${STATS.roomSizeMax} m²`,
         en: `${STATS.roomSizeMin}-${STATS.roomSizeMax} m²`,
       },
+      appart: {
+        fr: `${APPART.rooms.standard.surfaceM2} m² (suite : ${APPART.rooms.suite.surfaceM2} m²)`,
+        en: `${APPART.rooms.standard.surfaceM2} m² (suite: ${APPART.rooms.suite.surfaceM2} m²)`,
+      },
       studio: { fr: "20-30 m² (logement entier)", en: "20-30 m² (entire studio)" },
     },
     {
@@ -406,14 +417,15 @@ export function RatesPageV4() {
         en: "Living space per flatmate",
       },
       classic: {
-        fr: "22-28 m² (relevé août 2026)",
-        en: "22-28 m² (surveyed August 2026)",
+        fr: `${MARKET_CLASSIC_LIVING_M2.min}-${MARKET_CLASSIC_LIVING_M2.max} m² (relevé août 2026)`,
+        en: `${MARKET_CLASSIC_LIVING_M2.min}-${MARKET_CLASSIC_LIVING_M2.max} m² (surveyed August 2026)`,
       },
       villa: {
         // (Lot L2, 09/10/2026) Terrain de La Villa lu dans HOUSE_SURFACES (D2), espace de vie dans STATS — plus de surface en dur ; milliers FR = U+00A0.
         fr: `${STATS.livingSpacePerResidentMin}-${STATS.livingSpacePerResidentMax} m² + extérieurs jusqu'à ${thousands(HOUSE_SURFACES.lavilla.plotM2, " ")} m²`,
         en: `${STATS.livingSpacePerResidentMin}-${STATS.livingSpacePerResidentMax} m² + outdoor areas up to ${thousands(HOUSE_SURFACES.lavilla.plotM2, ",")} m²`,
       },
+      appart: { fr: `appartement de ${APPART.flat.surfaceM2} m²`, en: `${APPART.flat.surfaceM2} m² flat` },
       studio: {
         fr: "tout le logement, mais seul",
         en: "the entire flat, but alone",
@@ -421,21 +433,24 @@ export function RatesPageV4() {
     },
     {
       label: { fr: "Prix du m²", en: "Price per m²" },
-      classic: { fr: "~25-45 €/m²", en: "~€25-45/m²" },
+      classic: { fr: CLASSIC_EUR_PER_M2_FR, en: CLASSIC_EUR_PER_M2_EN },
       villa: { fr: VILLA_EUR_PER_M2_FR, en: VILLA_EUR_PER_M2_EN },
-      studio: { fr: "~85-110 CHF/m² + charges", en: "~CHF 85-110/m² + utilities" },
+      appart: { fr: "—", en: "—" },
+      studio: { fr: STUDIO_CHF_PER_M2_FR, en: STUDIO_CHF_PER_M2_EN },
       highlight: true,
     },
     {
       label: { fr: "Charges, fibre, streaming", en: "Utilities, fibre, streaming" },
       classic: { fr: "rarement incluses", en: "rarely included" },
       villa: { fr: "incluses", en: "included" },
+      appart: { fr: "incluses", en: "included" },
       studio: { fr: "200-400 CHF en plus", en: "CHF 200-400 on top" },
     },
     {
       label: { fr: "Piscine, sauna, salle de sport", en: "Pool, sauna, gym" },
       classic: { fr: "✗", en: "✗" },
       villa: { fr: "✓ dans chaque maison", en: "✓ in every house" },
+      appart: { fr: "✗ (cours de yoga et de sport des maisons ouverts)", en: "✗ (the houses' yoga and sport classes are open to you)" },
       studio: { fr: "✗ (gym : 80-150 CHF/mois)", en: "✗ (gym: CHF 80-150/month)" },
     },
     {
@@ -445,6 +460,7 @@ export function RatesPageV4() {
         fr: "✓ 3×/sem",
         en: "✓ 3×/week",
       },
+      appart: { fr: `✓ communs ${APPART.cleaningPerWeek}×/sem`, en: `✓ shared areas ${APPART.cleaningPerWeek}×/week` },
       studio: { fr: "✗", en: "✗" },
     },
     {
@@ -457,24 +473,31 @@ export function RatesPageV4() {
         fr: "✓ équipe dédiée, réponse < 48 h",
         en: "✓ dedicated team, answer < 48 h",
       },
+      appart: { fr: "propriétaire en direct", en: "landlord, directly" },
       studio: { fr: "à ta charge", en: "up to you" },
     },
     {
       label: { fr: "Événements & communauté", en: "Events & community" },
       classic: { fr: "selon la chance", en: "luck of the draw" },
       villa: { fr: "✓ organisés chaque mois", en: "✓ organised every month" },
+      appart: { fr: "✓ soirées des maisons ouvertes", en: "✓ the houses' events are open to you" },
       studio: { fr: "✗", en: "✗" },
     },
     {
       label: { fr: "Frais d'entrée (dossier, agence)", en: "Move-in fees (application, agency)" },
       classic: { fr: "200-700 € fréquents", en: "€200-700 common" },
       villa: { fr: "0 €", en: "€0" },
+      appart: { fr: "0 €", en: "€0" },
       studio: { fr: "souvent élevés", en: "often high" },
     },
     {
       label: { fr: "Caution", en: "Deposit" },
       classic: { fr: "variable", en: "varies" },
       villa: {
+        fr: `${STATS.depositMonths} mois hors charges, en 1, 2 ou 3 fois`,
+        en: `${STATS.depositMonths} months excluding utilities, in 1, 2 or 3 instalments`,
+      },
+      appart: {
         fr: `${STATS.depositMonths} mois hors charges, en 1, 2 ou 3 fois`,
         en: `${STATS.depositMonths} months excluding utilities, in 1, 2 or 3 instalments`,
       },
@@ -695,7 +718,7 @@ export function RatesPageV4() {
                       A standard flatshare room is usually {MARKET_COMPARISON.classicRoomM2.min}-{MARKET_COMPARISON.classicRoomM2.max} m². Ours are{" "}
                       <strong>{STATS.roomSizeMin}-{STATS.roomSizeMax} m²</strong> — up to twice that.
                       And it does not stop at your door: counting the common areas, each housemate
-                      has <strong>37-42 m² of living space</strong>, again about twice what a classic
+                      has <strong>{STATS.livingSpacePerResidentMin}-{STATS.livingSpacePerResidentMax} m² of living space</strong>, again about twice what a classic
                       flatshare leaves you.
                     </>
                   ) : (
@@ -704,7 +727,7 @@ export function RatesPageV4() {
                       font <strong>{STATS.roomSizeMin} à {STATS.roomSizeMax} m²</strong> — jusqu'à
                       deux fois plus. Et ça ne s'arrête pas à ta porte : espaces communs compris,
                       chaque colocataire dispose de{" "}
-                      <strong>37 à 42 m² de surface de vie</strong>, là encore près du double de ce
+                      <strong>{STATS.livingSpacePerResidentMin} à {STATS.livingSpacePerResidentMax} m² de surface de vie</strong>, là encore près du double de ce
                       que laisse une coloc classique.
                     </>
                   )}
@@ -903,11 +926,11 @@ export function RatesPageV4() {
                 : "Fais défiler pour comparer →"}
             </p>
             <div className="overflow-x-auto rounded-2xl border border-[#E7E5E4] bg-white shadow-sm">
-              <table className="w-full min-w-[680px] border-separate border-spacing-0 text-sm">
+              <table className="w-full min-w-[860px] border-separate border-spacing-0 text-sm">
                 <caption className="sr-only">
                   {language === "en"
-                    ? "Price and services comparison: standard flatshare, La Villa Coliving, Geneva studio"
-                    : "Comparaison prix et services : colocation classique, La Villa Coliving, studio à Genève"}
+                    ? `Price and services comparison: standard flatshare, La Villa Coliving houses, ${APPART.name}, Geneva studio`
+                    : `Comparaison prix et services : colocation classique, maisons de La Villa Coliving, ${APPART.name}, studio à Genève`}
                 </caption>
                 <thead>
                   <tr className="bg-[#1C1917] text-white">
@@ -930,6 +953,10 @@ export function RatesPageV4() {
                     >
                       {/* (L'Appart, E5) La colonne décrit les maisons (16-24 m², piscine) : elle le dit. */}
                       {language === "en" ? "La Villa Coliving, houses" : "La Villa Coliving, maisons"}
+                    </th>
+                    {/* (21/11/2026, lot « élevé, pas cher ») L'Appart à côté des maisons : la marque a aussi une réponse sous 1 000 €. */}
+                    <th scope="col" className="px-4 py-4 text-left font-semibold bg-[#44403C]">
+                      {language === "en" ? `${APPART.name}, flatshare in ${APPART.commune}` : `${APPART.name}, colocation à ${APPART.commune}`}
                     </th>
                     <th scope="col" className="px-4 py-4 text-left font-medium">
                       {language === "en" ? "Geneva studio" : "Studio Genève"}
@@ -957,6 +984,9 @@ export function RatesPageV4() {
                       >
                         {pick(row.villa)}
                       </td>
+                      <td className="border-b border-[#E7E5E4] group-last:border-b-0 px-4 py-3 align-top text-[#1C1917] font-medium">
+                        {pick(row.appart)}
+                      </td>
                       <td className="border-b border-[#E7E5E4] group-last:border-b-0 px-4 py-3 align-top text-[#57534E]">
                         {pick(row.studio)}
                       </td>
@@ -967,15 +997,10 @@ export function RatesPageV4() {
             </div>
             <p className="mt-3 text-center text-xs text-[#78716C]">
               {language === "en"
-                ? `"Standard flatshare" and "Geneva studio" columns: market observations (indicative ranges). La Villa column: contractual facts. La Villa price per m²: contractual rent of €${EUR_STANDARD_EN_NUM} (${PRICE_CHF_EN}) ÷ 37-42 m² of living space per flatmate.`
-                : `Colonnes « Colocation classique » et « Studio Genève » : observations de marché (fourchettes indicatives). Colonne La Villa : faits contractuels. Prix du m² La Villa : loyer contractuel de ${EUR_STANDARD_FR_NUM} € (${PRICE_CHF_FR}) ÷ 37-42 m² d'espace de vie par colocataire.`}
+                ? `"Standard flatshare" and "Geneva studio" columns: market observations (indicative ranges). La Villa Coliving and ${APPART.name} columns: contractual facts. Price per m² in the houses: each lease rent (€${EUR_FROM_EN_NUM} to €${EUR_STANDARD_EN_NUM}) ÷ the indoor space per person of its house (${STATS.livingSpacePerResidentMin} to ${STATS.livingSpacePerResidentMax} m²), everything included. Standard flatshare: rent alone ÷ ${MARKET_CLASSIC_LIVING_M2.min} to ${MARKET_CLASSIC_LIVING_M2.max} m² per flatmate, bills on top.`
+                : `Colonnes « Colocation classique » et « Studio Genève » : observations de marché (fourchettes indicatives). Colonnes La Villa Coliving et ${APPART.name} : faits contractuels. Prix du m² des maisons : chaque loyer du bail (${EUR_FROM_FR_NUM} à ${EUR_STANDARD_FR_NUM} €) ÷ la surface intérieure par personne de sa maison (${STATS.livingSpacePerResidentMin} à ${STATS.livingSpacePerResidentMax} m²), tout compris. Colocation classique : loyer seul ÷ ${MARKET_CLASSIC_LIVING_M2.min} à ${MARKET_CLASSIC_LIVING_M2.max} m² par colocataire, charges en plus.`}
             </p>
-            {/* (L'Appart, E5) Note du tableau : L'Appart est une colocation, avec ses prix plus haut (#lappart, échelle des prix). */}
-            <p className="mt-2 text-center text-xs text-[#78716C]">
-              {language === "en"
-                ? `The middle column describes our coliving houses. For ${APPART.name}, our flatshare in ${APPART.commune}, prices are further up this page.`
-                : `La colonne du milieu décrit nos maisons de coliving. Pour ${APPART.name}, notre colocation à ${APPART.commune}, les prix sont plus haut sur cette page.`}
-            </p>
+            {/* (21/11/2026) L'ancienne note « La colonne du milieu décrit nos maisons… » est retirée : L'Appart a sa colonne. */}
 
             {/* Encadré méga-résidences — chiffres publics, concurrent non nommé */}
             <aside className="mt-10 max-w-3xl mx-auto bg-white border border-[#E7E5E4] border-l-4 border-l-[#D4A574] rounded-xl p-6 md:p-8">

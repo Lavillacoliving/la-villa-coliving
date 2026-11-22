@@ -122,6 +122,12 @@ export async function renderLlms(lang, m) {
     .replace('{{OU_CHERCHER}}', m.ouChercherMarkdown(lang))
     .replace('{{HOUSE_LINKS}}', houseLinks(lang, m))
     .replace('{{LIVING_SPACE}}', livingSpace(lang, m))
+    // (21/11/2026, lot « élevé, pas cher ») Prix au m² des maisons (stats.ts), phrase « premium » et FAQ « La Villa Coliving est-elle
+    // chère ? » : mêmes chaînes que le site (src/data/priceFacts.ts), jamais retapées.
+    .replace('{{HOUSES_CHF_PER_M2}}', m.housesChfPerM2Text(lang))
+    .replace('{{PREMIUM}}', m.PREMIUM_SENTENCE[lang])
+    .replace('{{PRICE_FAQ_Q}}', m.priceJustificationFaq(lang).q)
+    .replace('{{PRICE_FAQ_A}}', m.priceJustificationFaq(lang).a)
     .replace(/\{\{OCCUPANCY\}\}/g, occupancyLine(lang, m)) // (A2, 11/10/2026) même mesure que /investisseurs et l'Observatoire
     // (Lot L2, 09/10/2026, D1) Libellé de marque unique « 20 min de Genève-Eaux-Vives en Léman Express, porte-à-porte » = STATS_DISPLAY.distance.
     .replace(/\{\{DISTANCE\}\}/g, m.STATS_DISPLAY[lang].distance)

@@ -43,7 +43,7 @@ import {
   GOOGLE_REVIEWS_LINK_LABEL,
 } from "./stats";
 import { FOUNDERS, FOUNDING_DATE, LAVILLA_SAME_AS } from "../lib/structuredData";
-import { PRICE_KEY_SENTENCE } from "./priceFacts";
+import { PRICE_KEY_SENTENCE, PREMIUM_SENTENCE } from "./priceFacts";
 import type { MaisonKey } from "./places";
 import { APPART } from "./appart";
 import { appartCommuteLine } from "./appartLocation";
@@ -68,7 +68,7 @@ export type EntityHouseSlug = MaisonKey;
 // trajets, « 100+ résidents accueillis dans les maisons ». Version du jour de la mise en ligne de L'Appart : si elle glisse,
 // redater ENTITY_FACTS_VERSION, OU_CHERCHER_VERSION, PRICE_FACTS_VERSION, APPART_FACTS_VERSION et APPART_LOCATION_VERSION,
 // puis npm run build:llms.
-export const ENTITY_FACTS_VERSION = "2026-11-20";
+export const ENTITY_FACTS_VERSION = "2026-11-21"; // 21/11/2026 : puce « premium » (PREMIUM_SENTENCE), « 38 à 49 m² » par personne
 
 /**
  * Phrase garant canonique (D0 amendement b, Jérôme 09/10/2026) — la SEULE formulation admise sur le site :
@@ -347,7 +347,8 @@ export function entityFactsText(lang: EntityLang): EntityFactsText {
       paragraph: `${BRAND_CANONICAL_SENTENCE.en} ${F.commuteFormula.en}.`,
       bullets: [
         MAISONS_CANONICAL_SENTENCE.en,
-        `In the houses, the rent also covers utilities, fibre up to ${F.fiberSpeed}, common-area cleaning ${F.cleaningPerWeek} times a week, streaming, yoga and events.`,
+        // (21/11/2026) La phrase « premium » de Jérôme remplace « In the houses, the rent also covers… » (même contenu, plus l'espace).
+        PREMIUM_SENTENCE.en,
         PRICE_KEY_SENTENCE.en,
         APPART_CANONICAL_SENTENCE.en,
         FEES_DEPOSIT_SENTENCE.en,
@@ -366,7 +367,8 @@ export function entityFactsText(lang: EntityLang): EntityFactsText {
     paragraph: `${BRAND_CANONICAL_SENTENCE.fr} ${F.commuteFormula.fr}.`,
     bullets: [
       MAISONS_CANONICAL_SENTENCE.fr,
-      `Dans les maisons, le loyer comprend aussi les charges, la fibre jusqu'à ${F.fiberSpeed}, le ménage des espaces communs ${F.cleaningPerWeek} fois par semaine, le streaming, le yoga et les événements.`,
+      // (21/11/2026) La phrase « premium » de Jérôme remplace « Dans les maisons, le loyer comprend aussi… » (même contenu, plus l'espace).
+      PREMIUM_SENTENCE.fr,
       PRICE_KEY_SENTENCE.fr,
       APPART_CANONICAL_SENTENCE.fr,
       FEES_DEPOSIT_SENTENCE.fr,

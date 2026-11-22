@@ -60,6 +60,19 @@ export const ROOM_SURFACE_BY_HOUSE = {
   lelodge: { min: 18, max: 20 },
 } as const satisfies Record<MaisonKey, { min: number; max: number }>;
 
+// (Lot « élevé, pas cher », décisions de Jérôme du 21/11/2026) Surface intérieure TOTALE de chaque maison = ligne « Surface Totale
+// Intérieure » du classeur du bail v3 validé le 10/11/2026 (= properties.equipment.interior_total_m2 en base : 380, 309 et 589 m²,
+// dépendances comprises : pool house et chalet de fitness du Lodge). Elle sert UNIQUEMENT à la surface par personne publiée (« de 38
+// à 49 m² de surface intérieure par personne », STATS.livingSpacePerResidentMin/Max) et au prix au m² des maisons (HOUSES_EUR_PER_M2).
+// Les surfaces des pages maisons (HOUSE_SURFACES : 370, 300 et 500 m²) sont justes et NE changent PAS (Jérôme, 21/11/2026).
+// Relevé en base le 21/11/2026 (lecture d'administration : `properties` n'est pas lisible par la clé publique, pas de garde CI) :
+// si le classeur change, base et code changent dans le même créneau.
+export const HOUSE_INTERIOR_TOTAL_M2 = { lavilla: 380, leloft: 309, lelodge: 589 } as const satisfies Record<MaisonKey, number>;
+const HOUSE_KEYS = Object.keys(HOUSE_INTERIOR_TOTAL_M2) as MaisonKey[];
+/** m² de surface intérieure par personne dans une maison (une personne par chambre dans les maisons). */
+export const interiorM2PerResident = (k: MaisonKey): number => HOUSE_INTERIOR_TOTAL_M2[k] / ROOMS_BY_HOUSE[k];
+const PER_RESIDENT_M2 = HOUSE_KEYS.map(interiorM2PerResident); // 38,0 · 44,1 · 49,1
+
 export const STATS = {
   // (Lot L3, D3 Jérôme 09/10/2026) « 100+ » conservé, désormais soutenu par la base : 119 résidents distincts (lecture réelle de la vue le 10/10/2026) depuis le
   // 17/09/2021 (resident_history ∪ tenants, vue v_social_proof — cf. STATS_SOURCE). Jamais « 150 ».
@@ -91,8 +104,10 @@ export const STATS = {
   roomSizeMin: 16,
   // (Lot 6 SEO funnel, 04/09/2026) Fact block CLAUDE.md §1 : séjour moyen et espace de vie par colocataire.
   averageStayMonths: 13,
-  livingSpacePerResidentMin: 37,
-  livingSpacePerResidentMax: 42,
+  // (21/11/2026, décision de Jérôme) « de 38 à 49 m² par personne » = surface intérieure totale ÷ chambres, maison par maison
+  // (HOUSE_INTERIOR_TOTAL_M2), arrondie à l'unité inférieure — dérivée, plus saisie (37 et 42 avant, calculés sur HOUSE_SURFACES).
+  livingSpacePerResidentMin: Math.floor(Math.min(...PER_RESIDENT_M2)), // 38 (La Villa)
+  livingSpacePerResidentMax: Math.floor(Math.max(...PER_RESIDENT_M2)), // 49 (Le Lodge)
   roomSizeMax: 24,
   cleaningPerWeek: 3, // 3×/semaine dans les 3 maisons depuis le 01/09/2026 (vote des résidents).
   // Consommée par /tarifs et par la fiche entité (src/data/entityFacts.ts) ; les autres mentions
@@ -188,6 +203,24 @@ export const PRICE_FROM_CHF_FR = HOUSES_FROM.fr.chf;    // « 1 290 CHF »
 export const PRICE_FROM_CHF_EN = HOUSES_FROM.en.chf;    // « CHF 1,290 »
 export const EUR_FROM_FR_NUM = HOUSES_FROM.fr.eurNum;   // « 1 380 »
 export const EUR_FROM_EN_NUM = HOUSES_FROM.en.eurNum;   // « 1,380 »
+
+/** (Lot « élevé, pas cher », 21/11/2026) Paliers de loyer présents dans chaque maison : les paliers à salle d'eau partagée
+ *  (SHARED_BATH_TIERS) sont tous à La Villa ; Le Loft et Le Lodge n'ont que le palier standard. */
+const RENT_TIERS_BY_HOUSE: Record<MaisonKey, readonly PriceTier[]> = {
+  lavilla: [priceTier(CONTRACT_EUR.standard), ...SHARED_BATH_TIERS],
+  leloft: [priceTier(CONTRACT_EUR.standard)],
+  lelodge: [priceTier(CONTRACT_EUR.standard)],
+};
+const perM2 = (pick: (t: PriceTier) => number): { min: number; max: number } => {
+  const v = HOUSE_KEYS.flatMap((k) => RENT_TIERS_BY_HOUSE[k].map((t) => pick(t) / interiorM2PerResident(k)));
+  return { min: Math.round(Math.min(...v)), max: Math.round(Math.max(...v)) };
+};
+/** Prix au m² des maisons, TOUT COMPRIS (par mois et par m² de surface intérieure par personne) : chaque loyer ÷ la surface par
+ *  personne de sa maison, arrondi à l'unité — 31 à 40 € au 21/11/2026 (Le Lodge 1 530 € ÷ 49,1 m² ; La Villa 1 530 € ÷ 38 m²),
+ *  29 à 38 CHF (loyers affichés en francs). Source unique de la FAQ « La Villa Coliving est-elle chère ? », du tableau de /tarifs
+ *  et de llms.txt : jamais un prix au m² des maisons tapé ailleurs. */
+export const HOUSES_EUR_PER_M2 = perM2((t) => t.eur);
+export const HOUSES_CHF_PER_M2 = perM2((t) => t.chf);
 
 /**
  * Le détail des paliers à salle d'eau partagée, en UNE formule (source unique des phrases « 3 et 4 à 1 370 CHF ; 7 et 8 à
@@ -325,6 +358,17 @@ export const GENEVA_COMMUTE_FORMULA = {
 // Fourchette publiée d'une chambre en colocation classique entre particuliers côté France (D0 amendement c,
 // 09/10/2026) : source unique pour /tarifs (tableau « objection prix ») et le bloc « Où chercher ».
 export const MARKET_ROOM_EUR = { min: 700, max: 1000 } as const;
+/** (Lot « élevé, pas cher », 21/11/2026) Espace de vie par colocataire d'une colocation classique (relevé d'août 2026, publié dans le
+ *  tableau de /tarifs) et son prix au m², LOYER SEUL, hors charges : MARKET_ROOM_EUR ÷ cet espace (700 € ÷ 28 m² = 25 € ;
+ *  1 000 € ÷ 22 m² = 45 €). Comparé au prix au m² TOUT COMPRIS des maisons (HOUSES_EUR_PER_M2) : « moins cher qu'il n'y paraît ». */
+export const MARKET_CLASSIC_LIVING_M2 = { min: 22, max: 28 } as const;
+export const MARKET_CLASSIC_EUR_PER_M2 = {
+  min: Math.round(MARKET_ROOM_EUR.min / MARKET_CLASSIC_LIVING_M2.max),
+  max: Math.round(MARKET_ROOM_EUR.max / MARKET_CLASSIC_LIVING_M2.min),
+} as const;
+/** Annonces de studios à Genève, au m², hors charges : « environ 50 CHF/m² » (Observatoire du logement frontalier 2026, déjà cité par
+ *  llms.txt, /colocation-geneve et /chambre-a-louer-geneve). Remplace le « ~85-110 CHF/m² » du tableau de /tarifs (21/11/2026). */
+export const GENEVA_LISTING_CHF_PER_M2 = 50;
 
 // Groupe Facebook public animé par l'équipe (D5, brief 10/2026 ; mise à jour n° 1 de Jérôme du 09/10/2026 14 h).
 // Nommé comme canal dans le bloc « Où chercher » (L1) et, au lot L5, en mention A.7 et encart A.8. Jamais dans

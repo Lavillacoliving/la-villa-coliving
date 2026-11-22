@@ -5,13 +5,19 @@
 ## Key Facts
 {{FACTS}}
 
+## The price, explained
+{{PREMIUM}}
+
+**{{PRICE_FAQ_Q}}**
+{{PRICE_FAQ_A}}
+
 ## Properties
 {{HOUSES}}
 
 {{OU_CHERCHER}}
 
 ## Benefits for Cross-Border Workers & Expats
-- In the houses: ≈ CHF 36/m² all-in ({{LIVING_SPACE}}), while Geneva studio listings run around CHF 50/m² excluding charges (source: our 2026 Housing Observatory)
+- In the houses: {{HOUSES_CHF_PER_M2}} all-in ({{LIVING_SPACE}}), while Geneva studio listings run around CHF 50/m² excluding charges (source: our 2026 Housing Observatory)
 - French tax address (cross-border worker advantages)
 - All-inclusive = no hidden fees, no utility deposit
 - International community, help with settling in — residents from 15+ nationalities

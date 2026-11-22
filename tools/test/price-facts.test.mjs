@@ -14,20 +14,35 @@ test('priceFactsIssues() : aucune incohérence interne', () => {
   assert.deepEqual(m.priceFactsIssues(), []);
 });
 
-test('A.3 : question + réponse FR/EN, marque nommée, nombres de la source unique, pas de « 37 à 42 m² » (D8)', () => {
+test('A.3 « La Villa Coliving est-elle chère ? » (21/11/2026) : marque nommée, nombres de la source unique, « moins cher qu\'il n\'y paraît »', () => {
   for (const lang of LANGS) {
     const faq = m.priceJustificationFaq(lang);
-    assert.match(faq.q, /La Villa/);
-    assert.match(faq.a, /La Villa/);
-    assert.ok(faq.a.includes(String(m.MARKET_COMPARISON.megaColivingMaxRooms)), `${lang} : 776`);
-    assert.ok(faq.a.includes(`${m.MARKET_COMPARISON.megaColivingCommonM2PerResident} m²`), `${lang} : 4 m²`);
-    assert.ok(faq.a.includes(`${m.STATS.roomSizeMin} ${lang === 'en' ? 'to' : 'à'} ${m.STATS.roomSizeMax} m²`), `${lang} : 16 à 24 m²`);
-    assert.ok(faq.a.includes(`${m.STATS.minResidentsPerHouse} ${lang === 'en' ? 'to' : 'à'} ${m.STATS.maxResidentsPerHouse}`), `${lang} : 7 à 12`);
-    assert.ok(faq.a.includes(`${m.STATS.leaseDurationMonths}`), `${lang} : bail 12 mois`);
-    assert.doesNotMatch(faq.a, /37\s?(?:à|-|–|to)\s?42/, `${lang} : 37-42 m² retiré de A.3 (D8)`);
+    const to = lang === 'en' ? 'to' : 'à';
+    assert.equal(faq.q, lang === 'en' ? 'Is La Villa Coliving expensive?' : 'La Villa Coliving est-elle chère ?');
+    assert.notEqual(faq.q, m.PRICE_FAQ_RETIRED_QUESTIONS[lang]);
+    assert.match(faq.a, /La Villa Coliving/);
+    assert.ok(faq.a.includes(`${m.STATS.roomSizeMin} ${to} ${m.STATS.roomSizeMax} m²`), `${lang} : 16 à 24 m²`);
+    assert.ok(faq.a.includes(`${m.STATS.livingSpacePerResidentMin} ${to} ${m.STATS.livingSpacePerResidentMax} m²`), `${lang} : surface par personne`);
+    assert.equal(m.STATS.livingSpacePerResidentMin, 38, 'décision de Jérôme du 21/11 : de 38…');
+    assert.equal(m.STATS.livingSpacePerResidentMax, 49, '… à 49 m² par personne');
+    assert.ok(faq.a.includes(lang === 'en' ? '€31 to €40' : '31 à 40 €'), `${lang} : prix au m² des maisons`);
+    assert.ok(faq.a.includes(lang === 'en' ? '€25 to €45' : '25 à 45 €'), `${lang} : prix au m² de la colocation classique`);
+    assert.ok(faq.a.includes(lang === 'en' ? "It's cheaper than it looks." : "C'est moins cher qu'il n'y paraît."));
+    assert.doesNotMatch(faq.a, lang === 'en' ? /\bcheaper\b(?! than it looks)/ : /moins cher(?! qu'il n'y paraît)/, `${lang} : jamais « moins cher » tout court`);
+    assert.ok(faq.a.endsWith(m.appartBudgetSentences(lang)), `${lang} : L'Appart sous 1 000 € finit la réponse`);
+    assert.ok(m.appartBudgetSentences(lang).includes(lang === 'en' ? '€1,000' : '1\u00a0000 €'), `${lang} : budget sous 1 000 €`);
     assert.doesNotMatch(faq.a, /\b\d{1,3}\s?min\b/i, `${lang} : aucune minute`);
     if (lang === 'fr') assert.doesNotMatch(faq.a + faq.q, /\b(vous|votre|vos)\b/i, 'tutoiement');
-    if (lang === 'en') assert.match(faq.a, /\byou\b/);
+  }
+});
+
+test('phrase « premium » (21/11/2026) : FR/EN, sans prix, surfaces de la source unique, dans la fiche entité', () => {
+  for (const lang of LANGS) {
+    const s = m.PREMIUM_SENTENCE[lang];
+    assert.ok(s.startsWith(lang === 'en' ? "Premium, for us, doesn't mean expensive." : 'Premium, chez nous, ne veut pas dire cher.'));
+    assert.doesNotMatch(s, /CHF|€/);
+    assert.ok(s.includes(`${m.STATS.livingSpacePerResidentMin} ${lang === 'en' ? 'to' : 'à'} ${m.STATS.livingSpacePerResidentMax} m²`));
+    assert.equal(m.entityFactsStrings(lang).filter((x) => x === s).length, 1, `${lang} : une puce de la fiche`);
   }
 });
 
@@ -59,7 +74,7 @@ test('consommateurs : tarifsFaq[1] = A.3 ; la fiche entité porte A.4 une fois p
     assert.equal(m.priceFactsStrings(lang).length, 3);
     assert.equal(m.priceFactsStrings(lang)[2], m.PRICE_KEY_SENTENCE[lang]);
   }
-  assert.deepEqual([...m.PRICE_FAQ_ROUTES].sort(), ['/chambre-a-louer-geneve', '/chambres-disponibles', '/colocation-geneve', '/faq', '/le-coliving', '/tarifs']);
+  assert.deepEqual([...m.PRICE_FAQ_ROUTES].sort(), ['/', '/chambre-a-louer-geneve', '/chambres-disponibles', '/colocation-geneve', '/faq', '/le-coliving', '/tarifs']);
   assert.equal(m.PRICE_KEY_SENTENCE_ROUTE, '/tarifs');
 });
 
@@ -69,6 +84,11 @@ test('garde : l\'ancienne question « pourquoi plus élevés » est interdite (F
   const oldEn = page('Why are your prices higher than a standard flatshare?');
   assert.ok(forbiddenIssues(oldFr, visibleText(oldFr), 'tarifs.html').some((i) => /pourquoi plus élevés/.test(i)));
   assert.ok(forbiddenIssues(oldEn, visibleText(oldEn), 'en-tarifs.html').some((i) => /pourquoi plus élevés/.test(i)));
+  // (21/11/2026) La question A.3 du 09/10 (« Pourquoi La Villa coûte-t-elle plus cher… ») est retirée à son tour.
+  for (const lang of LANGS) {
+    const retired = page(m.PRICE_FAQ_RETIRED_QUESTIONS[lang]);
+    assert.ok(forbiddenIssues(retired, visibleText(retired), lang === 'en' ? 'en-tarifs.html' : 'tarifs.html').some((i) => /ancienne question A\.3/.test(i)), `${lang} : question retirée interdite`);
+  }
   for (const lang of LANGS) {
     const html = page(m.priceJustificationFaq(lang).q + ' ' + m.priceJustificationFaq(lang).a + ' ' + m.PRICE_KEY_SENTENCE[lang]);
     assert.deepEqual(forbiddenIssues(html, visibleText(html), lang === 'en' ? 'en-tarifs.html' : 'tarifs.html'), [], `${lang} : A.3/A.4 ne déclenchent aucune chaîne interdite`);
