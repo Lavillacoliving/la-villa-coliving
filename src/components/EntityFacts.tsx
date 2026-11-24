@@ -16,7 +16,8 @@
  * de contexte propre à la page (pages de décision), rendue hors des chaînes canoniques.
  * Attribution : porte interne `entity_facts` (src/lib/attribution.ts), même mécanique que BlocOffre.
  *
- * `collapseOnMobile` (sous-lot A, décision Jérôme du 11/11/2026 — pages maisons seulement) : sur mobile, la fiche
+ * `collapseOnMobile` (sous-lot A, décision Jérôme du 11/11/2026 — pages maisons ; étendu à /nos-maisons, où la fiche passe sous
+ * la FAQ, par le lot 1 de la refonte des pages de vente, décision de Jérôme du 24/11/2026) : sur mobile, la fiche
  * s'arrête après son premier paragraphe, sous un bouton « Voir tout l'essentiel ». Le reste (phrase de contexte, puces,
  * bouton, microcopie) est masqué en CSS et reste dans le HTML : la garde check:facts lit toujours les mêmes phrases.
  * Replié au prérendu comme au premier rendu du navigateur (aucun écart d'hydratation) ; toujours déplié à partir de md.
@@ -33,7 +34,7 @@ export interface EntityFactsProps {
   houseSlug?: HouseKey;
   children?: ReactNode;
   className?: string;
-  /** Sur mobile, replie la fiche après son premier paragraphe (tout reste dans le HTML). Pages maisons. */
+  /** Sur mobile, replie la fiche après son premier paragraphe (tout reste dans le HTML). Pages maisons et /nos-maisons. */
   collapseOnMobile?: boolean;
 }
 

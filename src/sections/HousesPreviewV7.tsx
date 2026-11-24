@@ -112,7 +112,19 @@ export function HousesPreviewV7() {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           {houses.map((house, index) => (
             <div key={index} className="flex flex-col gap-3">
-            <LocalizedLink to={`/${house.id}`} className="group block bg-white rounded-2xl border border-[#E7E5E4] overflow-hidden hover:border-[#44403C]/20 hover:shadow-[0_4px_24px_rgba(0,0,0,0.06)] hover:translate-y-[-2px] transition-all duration-300">
+            {/* (Lot 1 de la refonte des pages de vente, 24/11/2026) Mesure du passage principal du parcours (accueil → maison) :
+                `house_discover_click`, comme « Découvrir L'Appart ». Jamais bloquant. */}
+            <LocalizedLink
+              to={`/${house.id}`}
+              onClick={() => {
+                try {
+                  (window as unknown as { gtag?: (...a: unknown[]) => void }).gtag?.("event", "house_discover_click", {
+                    house: house.id, cta_position: "home_houses", page: "home", language: L,
+                  });
+                } catch { /* noop */ }
+              }}
+              className="group block bg-white rounded-2xl border border-[#E7E5E4] overflow-hidden hover:border-[#44403C]/20 hover:shadow-[0_4px_24px_rgba(0,0,0,0.06)] hover:translate-y-[-2px] transition-all duration-300"
+            >
               {/* Photo */}
               <div className="relative aspect-[16/10] overflow-hidden">
                 <img

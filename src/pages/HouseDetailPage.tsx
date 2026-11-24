@@ -1455,6 +1455,21 @@ export function HouseDetailPage() {
       });
     } catch { /* noop */ }
   };
+  // (Lot 1 de la refonte des pages de vente, 24/11/2026) La pastille du haut de page mène aux chambres (#chambres). Défilement
+  // sans changer l'adresse (pas d'entrée d'historique, pas de page vue en double) ; sans JavaScript, le lien #chambres suffit.
+  // Même événement que les boutons, cible distincte (`cta_target` = « #chambres ») pour ne pas la compter avec les candidatures.
+  const goToRooms = (e: { preventDefault(): void }) => {
+    const target = document.getElementById("chambres");
+    if (target) {
+      e.preventDefault();
+      target.scrollIntoView({ behavior: "smooth", block: "start" });
+    }
+    try {
+      (window as unknown as { gtag?: (...a: unknown[]) => void }).gtag?.("event", "cta_click", {
+        cta_position: "house_hero_badge", cta_target: "#chambres", house: id, language,
+      });
+    } catch { /* noop */ }
+  };
 
   // (Lot 3) Chambres réelles de la maison + visionneuse photos (patterns LP).
   const houseRooms = useHouseRooms(id as HouseKey);
@@ -1466,9 +1481,9 @@ export function HouseDetailPage() {
   const heroBadgeLabel = heroBadge?.label ?? availabilityBadge;
   const heroBadgeTone = heroBadge?.tone ?? badgeTone;
   const [roomViewer, setRoomViewer] = useState<{ key: string; roomNumber: number; index: number } | null>(null);
-  // (Lot 2 — sous-lot A) Replis de la page (intro, autres chambres, suite de la FAQ) : fermés au prérendu comme au premier
-  // rendu du navigateur — aucun écart d'hydratation ; le contenu replié reste dans le HTML.
-  const [introOpen, setIntroOpen] = useState(false);
+  // (Lot 2 — sous-lot A) Replis de la page (autres chambres, suite de la FAQ) : fermés au prérendu comme au premier
+  // rendu du navigateur — aucun écart d'hydratation ; le contenu replié reste dans le HTML. (Lot 1 de la refonte,
+  // 24/11/2026) La description n'est plus repliée.
   const [othersOpen, setOthersOpen] = useState(false);
   const [faqOpen, setFaqOpen] = useState(false);
   // (11/11/2026) Flèches du carrousel du haut de page. En dessous de xl, elles sont dans la rangée du bouton « Candidater »
@@ -1502,6 +1517,27 @@ export function HouseDetailPage() {
       });
     } catch { /* noop */ }
   };
+  // (Lot A — Q8, décision Jérôme 02/09) Chambres CANDIDATES (libres maintenant, puis libérations datées) et occupées sans date.
+  // (Lot 1 de la refonte, 24/11/2026) Calculé une fois : les deux parties de la section chambres s'en servent.
+  const roomSplit = houseRooms.known ? splitRooms(houseRooms.rooms) : null;
+  // Bloc « Une chambre se libère ? » : sous « Localisation » quand une chambre candidate est affichée en haut (titre h2, il
+  // ouvre la section), sinon dans la section « Chambres » (titre h3). Une seule instance par page (mois embarqué au prérendu).
+  const renderPipeline = (headingLevel: 2 | 3, hasCandidates: boolean) => (
+    <RoomPipeline
+      house={id as HouseKey}
+      houseName={house?.name ?? ""}
+      en={language === "en"}
+      hasCandidates={hasCandidates}
+      headingLevel={headingLevel}
+      onApplyClick={(month) => {
+        try {
+          (window as unknown as { gtag?: (...a: unknown[]) => void }).gtag?.("event", "cta_click", {
+            cta_position: "pipeline_month", cta_target: "/candidature", house: id, month, language,
+          });
+        } catch { /* noop */ }
+      }}
+    />
+  );
 
   if (!house) {
     return (
@@ -1610,9 +1646,15 @@ export function HouseDetailPage() {
         <div className="absolute bottom-0 left-0 right-0 pb-8 pt-20">
           <div className="container-custom">
             <div className="flex flex-wrap items-center gap-3 mb-4">
+              {/* (Lot 1 de la refonte des pages de vente, décisions de Jérôme du 24/11/2026) La pastille mène aux chambres
+                  (#chambres) : le visiteur pressé y va en un geste. Elle passe à la ligne : sur /lavilla, le libellé d'une
+                  chambre identifiée (« Chambre 4 · 18 m² · salle d'eau partagée · libre dès le … ») élargissait la page à 415 px. */}
               {heroBadgeLabel && heroBadgeTone && (
-                <Badge className={`font-extrabold backdrop-blur-sm ${BADGE_CHIP_CLASS[heroBadgeTone]}`}>
-                  {heroBadgeLabel}
+                <Badge asChild className={`font-extrabold backdrop-blur-sm whitespace-normal text-left max-w-full ${BADGE_CHIP_CLASS[heroBadgeTone]}`}>
+                  <a href="#chambres" onClick={goToRooms}>
+                    {heroBadgeLabel}
+                    <ChevronDown aria-hidden="true" />
+                  </a>
                 </Badge>
               )}
               {/* DPE déplacé hors du hero (décision 2026-06-11) : la mention reste
@@ -1704,12 +1746,15 @@ export function HouseDetailPage() {
         </div>
       </section>
 
-      {/* (Lot 2 « retenue premium », sous-lot A — cadrage D1 à D5 validé par Jérôme le 16/10/2026, décisions du 10/11/2026)
-          Ordre de la page : hero → intro courte → Chambres → album compact → « Ce qui est inclus » → Localisation →
-          fiche « l'essentiel » → FAQ → comparer → encart final. Sur mobile, la page mesurait 24,7 écrans (390 × 844) et les
-          chambres n'arrivaient qu'au 7ᵉ. Rien n'est retiré du HTML : textes repliés ou masqués en CSS, mêmes H2, même FAQPage. */}
-      {/* Intro courte : les premières phrases (la ligne de trajet reste en tête — garde house-pages-check), puis « Lire la
-          suite » sur mobile. Le texte complet est toujours dans le HTML, et toujours affiché à partir de md. */}
+      {/* (Lot 2 « retenue premium », sous-lot A — cadrage D1 à D5 validé par Jérôme le 16/10/2026, décisions du 10/11/2026 ;
+          puis lot 1 de la refonte des pages de vente, décisions de Jérôme du 24/11/2026)
+          Ordre de la page : hero (pastille → #chambres) → description dépliée → album → Chambres (types + carte de la
+          chambre libre) → « Ce qui est inclus » → Localisation → « Une chambre se libère ? », autres chambres, encart
+          Facebook → FAQ → fiche « l'essentiel » → comparer → encart final. Rien n'est retiré du HTML : textes repliés ou
+          masqués en CSS, même FAQPage. */}
+      {/* Description : la ligne de trajet reste en tête (garde house-pages-check : 1 500 premiers caractères après le H1).
+          (Lot 1 de la refonte, 24/11/2026) Dépliée en entier, sur mobile aussi : « montrer la description des maisons et
+          surtout leurs photos assez tôt » (Jérôme). Un seul nœud texte. */}
       <section className="py-8 md:py-16 relative bg-white">
         <div className="container-custom">
           <h2
@@ -1721,18 +1766,8 @@ export function HouseDetailPage() {
               : `À propos ${ofHouseFr(house.name)}`}
           </h2>
           <p className="text-base md:text-lg text-[#57534E] leading-relaxed font-medium max-w-3xl">
-            {house.longDescription.lead}
-            <span className={introOpen ? undefined : "hidden md:inline"}>{` ${house.longDescription.rest}`}</span>
+            {[house.longDescription.lead, house.longDescription.rest].filter(Boolean).join(" ")}
           </p>
-          {!introOpen && (
-            <button
-              type="button"
-              onClick={() => { setIntroOpen(true); trackFold("intro", true); }}
-              className="md:hidden mt-2 text-sm font-semibold text-[#1C1917] underline underline-offset-4"
-            >
-              {language === "en" ? "Read more" : "Lire la suite"}
-            </button>
-          )}
           <p className="text-sm text-[#78716C] mt-4 md:mt-6 flex items-center gap-2">
             <Zap size={14} className="text-[#78716C]" />
             {language === "en"
@@ -1741,6 +1776,11 @@ export function HouseDetailPage() {
           </p>
         </div>
       </section>
+
+      {/* (Lot 2 — sous-lot A, D1) Album compact : 6 vignettes et « Voir les N photos » (visionneuse plein écran).
+          (Lot 1 de la refonte des pages de vente, 24/11/2026) Juste après la description, avant les chambres : les photos
+          d'abord. */}
+      <HouseGallery images={house.photoGallery} cover={ALBUM_COVERS[id]} featured={[house.image, ...house.gallery]} houseName={house.name} />
 
       {/* Rooms — (Lot 3) cartes RÉELLES depuis v_public_rooms (source unique de
           dispo et de prix, design arbitré rapport §3.B). Les descriptions de
@@ -1751,8 +1791,13 @@ export function HouseDetailPage() {
           90 % des visiteurs atteignent 25 % de la page, la section transactionnelle
           doit y être. Sans données (vue vide, vieux HTML prérendu) : repli sur les
           cartes de types — jamais de section vide. Interdit : cloner le modèle
-          fichier-statique de l'ancienne LP (supprimée le 03/09, Lot 3 SEO funnel). */}
-      <section className="py-8 md:py-20 relative bg-[#FAF9F6]">
+          fichier-statique de l'ancienne LP (supprimée le 03/09, Lot 3 SEO funnel).
+          (Lot 1 de la refonte des pages de vente, décisions de Jérôme du 24/11/2026) Section coupée en deux. Ici, après
+          l'album : les types de chambres et la carte de la chambre libre ou datée — 88 à 92 % des visiteurs au téléphone
+          voyaient les chambres (Clarity, 30 jours) : elle reste haut, et la pastille du haut de page y mène (#chambres).
+          Sous « Localisation » : « Une chambre se libère ? », les autres chambres et l'encart Facebook. Sans chambre
+          candidate, « Une chambre se libère ? » reste ici : c'est alors la seule proposition de la section. */}
+      <section id="chambres" className="py-8 md:py-20 relative bg-[#FAF9F6] scroll-mt-24">
         <div className="container-custom">
           <h2
             className="text-3xl md:text-4xl mb-6 text-[#1C1917]"
@@ -1772,146 +1817,31 @@ export function HouseDetailPage() {
             ))}
           </div>
 
-          {houseRooms.known ? (() => {
-            // (Lot A — Q8, décision Jérôme 02/09) Option 2 : les chambres CANDIDATES (libres
-            // maintenant, puis libérations datées) en carte complète avec photo, prix et CTA ;
-            // les occupées sans date en cartes compactes SANS photo ni CTA, et un seul CTA
-            // « Rejoindre la liste d'attente » sous la liste. Pourquoi : sans photos attribuées
-            // par chambre (mapping reporté aux plans des maisons), 7 cartes portaient la même
-            // photo de type et 6 « Complet » — le motif du rollback du 02/09 14:06.
-            const { candidates, occupied } = splitRooms(houseRooms.rooms);
-            return (
-              <>
-                {candidates.length > 0 ? (
-                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
-                    {candidates.map((room) => (
-                      // (Lot 3 SEO funnel) Carte partagée avec /chambres-disponibles — JSX extrait
-                      // à l'identique. Repli déterministe sur la photo de TYPE (pureté d'hydratation :
-                      // room_number est stable, jamais d'aléatoire au rendu).
-                      // (13/11/2026, décision Jérôme) `showInclusions={false}` : ni ligne « tout compris » ni lien sur
-                      // les cartes des pages maisons — la pastille du haut de page dit déjà « Tout inclus » avec le prix.
-                      <RoomCard
-                        key={room.room_number}
-                        house={id as HouseKey}
-                        houseName={house.name}
-                        room={room}
-                        fallbackImage={house.rooms[(room.room_number - 1) % house.rooms.length].image}
-                        onOpenPhotos={openRoomViewer}
-                        onCtaClick={trackRoomCta}
-                        showInclusions={false}
-                      />
-                    ))}
-                  </div>
-                ) : null}
-
-                {/* Bloc pipeline (Option 2, GO Jérôme 03/09) : la page vend la PROCHAINE
-                    libération, pas l'occupation du jour. */}
-                <RoomPipeline
-                  house={id as HouseKey}
-                  houseName={house.name}
-                  en={language === "en"}
-                  hasCandidates={candidates.length > 0}
-                  onApplyClick={(month) => {
-                    try {
-                      (window as unknown as { gtag?: (...a: unknown[]) => void }).gtag?.("event", "cta_click", {
-                        cta_position: "pipeline_month", cta_target: "/candidature", house: id, month, language,
-                      });
-                    } catch { /* noop */ }
-                  }}
-                />
-
-                {occupied.length > 0 && (
-                  <>
-                    {/* (Lot 2 — sous-lot A, décision Jérôme du 10/11/2026) Sur mobile, quand des chambres candidates sont affichées
-                        au-dessus, la liste des autres chambres se replie sous un bouton (≈ un demi-écran). Elle reste dans le
-                        HTML (garde : chaque « Chambre N » nommée) et toujours dépliée à partir de md. Sans chambre candidate,
-                        elle reste visible : c'est alors la seule vue des chambres. */}
-                    {candidates.length > 0 && (
-                      <h3 className="md:hidden mb-4">
-                        <button
-                          type="button"
-                          aria-expanded={othersOpen}
-                          aria-controls="autres-chambres"
-                          onClick={() => { trackFold("other_rooms", !othersOpen); setOthersOpen((v) => !v); }}
-                          className="w-full flex items-center justify-between gap-3 px-5 py-3.5 bg-white border border-[#E7E5E4] rounded-2xl text-left text-base font-bold text-[#1C1917]"
-                        >
-                          {language === "en"
-                            ? `See the other ${occupied.length} rooms at ${house.name}`
-                            : `Voir les ${occupied.length} autres chambres ${ofHouseFr(house.name)}`}
-                          <ChevronDown className={`w-5 h-5 shrink-0 text-[#57534E] transition-transform ${othersOpen ? "rotate-180" : ""}`} aria-hidden="true" />
-                        </button>
-                      </h3>
-                    )}
-                    <h3 className={`text-lg font-black text-[#1C1917] mb-4${candidates.length > 0 ? " hidden md:block" : ""}`}>
-                      {language === "en"
-                        ? (candidates.length > 0 ? `The other ${occupied.length} rooms at ${house.name}` : `The ${occupied.length} rooms at ${house.name}`)
-                        : (candidates.length > 0 ? `Les ${occupied.length} autres chambres ${ofHouseFr(house.name)}` : `Les ${occupied.length} chambres ${ofHouseFr(house.name)}`)}
-                    </h3>
-                    {/* Panneau structuré (retour Jérôme 03/09 : les lignes « flottaient ») : cadre,
-                        lignes séparées, en-tête de colonnes à partir de md, CTA rattaché au pied. */}
-                    <div id="autres-chambres" className={`${candidates.length > 0 && !othersOpen ? "hidden md:block " : ""}bg-white border border-[#E7E5E4] rounded-2xl overflow-hidden shadow-sm`}>
-                      <div className="hidden md:grid md:grid-cols-[1.4fr_0.7fr_0.9fr_1.3fr] gap-4 px-5 py-3 bg-[#FAF9F6] border-b border-[#E7E5E4] text-xs font-semibold uppercase tracking-wider text-[#78716C]">
-                        <span>{language === "en" ? "Room" : "Chambre"}</span>
-                        <span>{language === "en" ? "Size" : "Surface"}</span>
-                        <span>{language === "en" ? "Floor" : "Étage"}</span>
-                        <span>{language === "en" ? "Bathroom" : "Salle de bain"}</span>
-                      </div>
-                      <ul className="divide-y divide-[#E7E5E4]">
-                        {(() => {
-                          // (28/09/2026, demande Jérôme) Miniature par chambre — SEULEMENT si chaque
-                          // chambre de la liste a sa propre photo (au Lodge : sa photo principale,
-                          // toutes différentes, cf. LODGE_HERO_ORDER). Jamais la photo de TYPE
-                          // répétée : c'est le motif du rollback du 02/09 rappelé plus haut.
-                          const thumbs = occupied.map((room) => roomGallery(id, room.room_number)?.[0]);
-                          const showThumbs = thumbs.every(Boolean);
-                          return occupied.map((room, i) => {
-                            const surface = roomSurface(room);
-                            const floor = floorLabel(room, uiLang);
-                            const bath = bathroomLabel(room, uiLang);
-                            const specs = roomSpecs(room, uiLang);
-                            const thumb = showThumbs ? thumbs[i] : undefined;
-                            return (
-                              <li
-                                key={room.room_number}
-                                className="px-5 py-3.5 flex items-center justify-between gap-4 md:grid md:grid-cols-[1.4fr_0.7fr_0.9fr_1.3fr]"
-                              >
-                                <div className="min-w-0 flex items-center gap-4">
-                                  {thumb && (
-                                    <img
-                                      src={thumb.src}
-                                      alt={thumb.alt[uiLang]}
-                                      width={thumb.w}
-                                      height={thumb.h}
-                                      loading="lazy"
-                                      decoding="async"
-                                      className="w-16 h-12 md:w-20 md:h-14 shrink-0 rounded-lg object-cover bg-[#F5F2ED]"
-                                      {...responsiveImage(thumb.src, "80px")}
-                                    />
-                                  )}
-                                  <div className="min-w-0">
-                                    <p className="font-black text-[#1C1917]">
-                                      {language === "en" ? `Room ${room.room_number}` : `Chambre ${room.room_number}`}
-                                    </p>
-                                    {specs && <p className="text-sm text-[#78716C] md:hidden">{specs}</p>}
-                                    {language !== "en" && room.location_detail && (
-                                      <p className="text-xs text-[#78716C]">{room.location_detail.trim()}</p>
-                                    )}
-                                  </div>
-                                </div>
-                                <span className="hidden md:block text-sm text-[#57534E]">{surface !== null ? `${surface} m²` : "—"}</span>
-                                <span className="hidden md:block text-sm text-[#57534E]">{floor ?? "—"}</span>
-                                <span className="hidden md:block text-sm text-[#57534E]">{bath ?? "—"}</span>
-                              </li>
-                            );
-                          });
-                        })()}
-                      </ul>
-                    </div>
-                  </>
-                )}
-              </>
-            );
-          })() : (
+          {roomSplit ? (
+            roomSplit.candidates.length > 0 ? (
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {roomSplit.candidates.map((room) => (
+                  // (Lot 3 SEO funnel) Carte partagée avec /chambres-disponibles — JSX extrait
+                  // à l'identique. Repli déterministe sur la photo de TYPE (pureté d'hydratation :
+                  // room_number est stable, jamais d'aléatoire au rendu).
+                  // (13/11/2026, décision Jérôme) `showInclusions={false}` : ni ligne « tout compris » ni lien sur
+                  // les cartes des pages maisons — la pastille du haut de page dit déjà « Tout inclus » avec le prix.
+                  <RoomCard
+                    key={room.room_number}
+                    house={id as HouseKey}
+                    houseName={house.name}
+                    room={room}
+                    fallbackImage={house.rooms[(room.room_number - 1) % house.rooms.length].image}
+                    onOpenPhotos={openRoomViewer}
+                    onCtaClick={trackRoomCta}
+                    showInclusions={false}
+                  />
+                ))}
+              </div>
+            ) : (
+              renderPipeline(3, false)
+            )
+          ) : (
             <>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
               {house.rooms.map((room, index) => (
@@ -1954,9 +1884,6 @@ export function HouseDetailPage() {
             </div>
             </>
           )}
-          {/* (Lot L5, D10 Jérôme 09/10/2026) Encart A.8 sous la liste des chambres — texte unique answerSlots.ts, hors du
-              ternaire (présent que la liste vienne de la base ou du repli statique). */}
-          <FacebookGroupCallout position="house_rooms" house={id} className="mt-10" />
         </div>
       </section>
 
@@ -1976,10 +1903,6 @@ export function HouseDetailPage() {
           />
         </Suspense>
       )}
-
-      {/* (Lot 2 — sous-lot A, D1) Album compact, dans sa propre section après les chambres : 6 vignettes et « Voir les N photos »
-          (visionneuse plein écran). Il était inséré au milieu de la section Chambres avec 20 vignettes. */}
-      <HouseGallery images={house.photoGallery} cover={ALBUM_COVERS[id]} featured={[house.image, ...house.gallery]} houseName={house.name} />
 
       {/* « Ce qui est inclus » (D2) : caractéristiques, services, communauté et mode de vie réunis sous un seul titre.
           Sur mobile, quatre volets repliés (aperçu de deux lignes, liste complète au toucher) ; à partir de md, les listes
@@ -2254,15 +2177,113 @@ export function HouseDetailPage() {
         );
       })()}
 
-      {/* (Lot S1) Fiche de faits canonique — CTA avec property_interest (garde house-pages-check).
-          (Lot 2 — sous-lot A, D1) Après la localisation : elle précédait les chambres (près de 2 écrans sur mobile). */}
-      <section className="pb-8 md:pb-20 relative bg-white">
-        <div className="container-custom max-w-3xl">
-          <EntityFacts page={id} houseSlug={id as HouseKey} className="!my-0 text-[15px] md:text-base" collapseOnMobile>
-            {language === "en"
-              ? `This page is about ${house.name}; the three houses share the same all-inclusive package.`
-              : `Cette page décrit ${house.name} ; les trois maisons partagent le même tout-inclus.`}
-          </EntityFacts>
+      {/* (Lot 1 de la refonte des pages de vente, décisions de Jérôme du 24/11/2026) Suite de la section chambres, sous
+          « Localisation » : « Une chambre se libère ? » quand une chambre candidate est affichée plus haut, la liste des
+          autres chambres, puis l'encart Facebook A.8 (toujours « sous la liste des chambres »). Titres en h2 : cette partie
+          suit « Localisation », pas « Chambres ». */}
+      <section className="py-8 md:py-20 relative bg-[#FAF9F6]">
+        <div className="container-custom">
+          {roomSplit ? (() => {
+            const { candidates, occupied } = roomSplit;
+            return (
+              <>
+                {candidates.length > 0 && renderPipeline(2, true)}
+
+                {occupied.length > 0 && (
+                  <>
+                    {/* (Lot 2 — sous-lot A, décision Jérôme du 10/11/2026) Sur mobile, quand des chambres candidates sont affichées
+                        au-dessus, la liste des autres chambres se replie sous un bouton (≈ un demi-écran). Elle reste dans le
+                        HTML (garde : chaque « Chambre N » nommée) et toujours dépliée à partir de md. Sans chambre candidate,
+                        elle reste visible : c'est alors la seule vue des chambres. */}
+                    {candidates.length > 0 && (
+                      <h2 className="md:hidden mb-4">
+                        <button
+                          type="button"
+                          aria-expanded={othersOpen}
+                          aria-controls="autres-chambres"
+                          onClick={() => { trackFold("other_rooms", !othersOpen); setOthersOpen((v) => !v); }}
+                          className="w-full flex items-center justify-between gap-3 px-5 py-3.5 bg-white border border-[#E7E5E4] rounded-2xl text-left text-base font-bold text-[#1C1917]"
+                        >
+                          {language === "en"
+                            ? `See the other ${occupied.length} rooms at ${house.name}`
+                            : `Voir les ${occupied.length} autres chambres ${ofHouseFr(house.name)}`}
+                          <ChevronDown className={`w-5 h-5 shrink-0 text-[#57534E] transition-transform ${othersOpen ? "rotate-180" : ""}`} aria-hidden="true" />
+                        </button>
+                      </h2>
+                    )}
+                    <h2 className={`text-lg font-black text-[#1C1917] mb-4${candidates.length > 0 ? " hidden md:block" : ""}`}>
+                      {language === "en"
+                        ? (candidates.length > 0 ? `The other ${occupied.length} rooms at ${house.name}` : `The ${occupied.length} rooms at ${house.name}`)
+                        : (candidates.length > 0 ? `Les ${occupied.length} autres chambres ${ofHouseFr(house.name)}` : `Les ${occupied.length} chambres ${ofHouseFr(house.name)}`)}
+                    </h2>
+                    {/* Panneau structuré (retour Jérôme 03/09 : les lignes « flottaient ») : cadre,
+                        lignes séparées, en-tête de colonnes à partir de md, CTA rattaché au pied. */}
+                    <div id="autres-chambres" className={`${candidates.length > 0 && !othersOpen ? "hidden md:block " : ""}bg-white border border-[#E7E5E4] rounded-2xl overflow-hidden shadow-sm`}>
+                      <div className="hidden md:grid md:grid-cols-[1.4fr_0.7fr_0.9fr_1.3fr] gap-4 px-5 py-3 bg-[#FAF9F6] border-b border-[#E7E5E4] text-xs font-semibold uppercase tracking-wider text-[#78716C]">
+                        <span>{language === "en" ? "Room" : "Chambre"}</span>
+                        <span>{language === "en" ? "Size" : "Surface"}</span>
+                        <span>{language === "en" ? "Floor" : "Étage"}</span>
+                        <span>{language === "en" ? "Bathroom" : "Salle de bain"}</span>
+                      </div>
+                      <ul className="divide-y divide-[#E7E5E4]">
+                        {(() => {
+                          // (28/09/2026, demande Jérôme) Miniature par chambre — SEULEMENT si chaque
+                          // chambre de la liste a sa propre photo (au Lodge : sa photo principale,
+                          // toutes différentes, cf. LODGE_HERO_ORDER). Jamais la photo de TYPE
+                          // répétée : c'est le motif du rollback du 02/09 rappelé plus haut.
+                          const thumbs = occupied.map((room) => roomGallery(id, room.room_number)?.[0]);
+                          const showThumbs = thumbs.every(Boolean);
+                          return occupied.map((room, i) => {
+                            const surface = roomSurface(room);
+                            const floor = floorLabel(room, uiLang);
+                            const bath = bathroomLabel(room, uiLang);
+                            const specs = roomSpecs(room, uiLang);
+                            const thumb = showThumbs ? thumbs[i] : undefined;
+                            return (
+                              <li
+                                key={room.room_number}
+                                className="px-5 py-3.5 flex items-center justify-between gap-4 md:grid md:grid-cols-[1.4fr_0.7fr_0.9fr_1.3fr]"
+                              >
+                                <div className="min-w-0 flex items-center gap-4">
+                                  {thumb && (
+                                    <img
+                                      src={thumb.src}
+                                      alt={thumb.alt[uiLang]}
+                                      width={thumb.w}
+                                      height={thumb.h}
+                                      loading="lazy"
+                                      decoding="async"
+                                      className="w-16 h-12 md:w-20 md:h-14 shrink-0 rounded-lg object-cover bg-[#F5F2ED]"
+                                      {...responsiveImage(thumb.src, "80px")}
+                                    />
+                                  )}
+                                  <div className="min-w-0">
+                                    <p className="font-black text-[#1C1917]">
+                                      {language === "en" ? `Room ${room.room_number}` : `Chambre ${room.room_number}`}
+                                    </p>
+                                    {specs && <p className="text-sm text-[#78716C] md:hidden">{specs}</p>}
+                                    {language !== "en" && room.location_detail && (
+                                      <p className="text-xs text-[#78716C]">{room.location_detail.trim()}</p>
+                                    )}
+                                  </div>
+                                </div>
+                                <span className="hidden md:block text-sm text-[#57534E]">{surface !== null ? `${surface} m²` : "—"}</span>
+                                <span className="hidden md:block text-sm text-[#57534E]">{floor ?? "—"}</span>
+                                <span className="hidden md:block text-sm text-[#57534E]">{bath ?? "—"}</span>
+                              </li>
+                            );
+                          });
+                        })()}
+                      </ul>
+                    </div>
+                  </>
+                )}
+              </>
+            );
+          })() : null}
+          {/* (Lot L5, D10 Jérôme 09/10/2026) Encart A.8 sous la liste des chambres — texte unique answerSlots.ts, présent que la
+              liste vienne de la base ou du repli statique (cartes de types, plus haut). */}
+          <FacebookGroupCallout position="house_rooms" house={id} className={roomSplit && roomSplit.occupied.length > 0 ? "mt-10" : ""} />
         </div>
       </section>
 
@@ -2418,6 +2439,19 @@ export function HouseDetailPage() {
           </>
         );
       })()}
+
+      {/* (Lot S1) Fiche de faits canonique — CTA avec property_interest (garde house-pages-check).
+          (Lot 1 de la refonte des pages de vente, décision de Jérôme du 24/11/2026) Sous la FAQ : le résumé de fin, replié
+          sur mobile. Pas de marge basse : celle de « Compare avec nos autres maisons » suffit. */}
+      <section className="pt-8 md:pt-20 relative bg-white">
+        <div className="container-custom max-w-3xl">
+          <EntityFacts page={id} houseSlug={id as HouseKey} className="!my-0 text-[15px] md:text-base" collapseOnMobile>
+            {language === "en"
+              ? `This page is about ${house.name}; the three houses share the same all-inclusive package.`
+              : `Cette page décrit ${house.name} ; les trois maisons partagent le même tout-inclus.`}
+          </EntityFacts>
+        </div>
+      </section>
 
       {/* Cross-house discovery — GA4 path data shows visitors loop back through
           /nos-maisons to compare; link the siblings directly to shorten the loop. */}

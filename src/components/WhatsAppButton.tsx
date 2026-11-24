@@ -124,16 +124,21 @@ export function WhatsAppBarLink({ context, message: customMessage }: { context?:
 /**
  * (Article « C'est réel ? », 16/10/2026) Bouton secondaire en texte « Nous écrire sur WhatsApp » / « Message us on WhatsApp »
  * (ArticleContactCta). Même lien et même événement `whatsapp_click` (même `context`) que la bulle flottante.
+ * `onDark` (lot 1 de la refonte des pages de vente, 24/11/2026) : bordure et texte blancs, pour un fond sombre (dernier bloc
+ * de /nos-maisons).
  */
-export function WhatsAppTextLink({ context, className = "" }: { context?: string; className?: string }) {
+export function WhatsAppTextLink({ context, className = "", onDark = false }: { context?: string; className?: string; onDark?: boolean }) {
   const { en, href, trackClick } = useWhatsApp(context, undefined);
+  const tone = onDark
+    ? "border-white text-white hover:bg-white hover:text-[#1C1917]"
+    : "border-[#1C1917] text-[#1C1917] hover:bg-[#1C1917] hover:text-white";
   return (
     <a
       href={href}
       target="_blank"
       rel="noopener noreferrer"
       onClick={trackClick}
-      className={`inline-flex items-center justify-center gap-2 px-6 py-3 rounded-lg border border-[#1C1917] text-[#1C1917] text-sm font-semibold hover:bg-[#1C1917] hover:text-white transition-colors ${className}`}
+      className={`inline-flex items-center justify-center gap-2 px-6 py-3 rounded-lg border ${tone} text-sm font-semibold transition-colors ${className}`}
     >
       <WhatsAppGlyph className="w-5 h-5 text-[#25D366]" />
       {en ? "Message us on WhatsApp" : "Nous écrire sur WhatsApp"}

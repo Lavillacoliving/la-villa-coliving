@@ -49,6 +49,10 @@ type RoomPipelineProps = {
   /** Une chambre est libre ou datée juste au-dessus : on parle des suivantes. */
   hasCandidates: boolean;
   onApplyClick: (month: string) => void;
+  /** Niveau du titre : h3 sous un H2 « Chambres » (défaut) ; h2 quand le bloc ouvre sa propre section (pages maisons, sous
+   *  « Localisation » — lot 1 de la refonte des pages de vente, 24/11/2026). Même taille et même police ; seul l'interlettrage
+   *  du style global des h2 (index.css) est un peu plus serré. */
+  headingLevel?: 2 | 3;
 } & (
   | { house: MaisonKey; texts?: undefined; fromMonth?: undefined }
   | {
@@ -111,7 +115,8 @@ function track(event: string, params: Record<string, unknown>): void {
   }
 }
 
-export function RoomPipeline({ house, houseName, en, hasCandidates, onApplyClick, texts, fromMonth }: RoomPipelineProps) {
+export function RoomPipeline({ house, houseName, en, hasCandidates, onApplyClick, texts, fromMonth, headingLevel = 3 }: RoomPipelineProps) {
+  const Heading = headingLevel === 2 ? "h2" : "h3";
   // Mois de référence : celui embarqué par le prérendu (hydratation identique), sinon le
   // mois courant (prérendu lui-même, ou navigation SPA sans HTML prérendu).
   const [refMonth, setRefMonth] = useState<string>(
@@ -177,12 +182,12 @@ export function RoomPipeline({ house, houseName, en, hasCandidates, onApplyClick
       <div className="flex items-start gap-4">
         <CalendarClock className="text-[#D4A574] mt-1 shrink-0 hidden sm:block" size={28} />
         <div className="flex-1 min-w-0">
-          <h3
+          <Heading
             className="text-2xl md:text-3xl text-[#1C1917] mb-3"
             style={{ fontFamily: '"DM Serif Display", serif' }}
           >
             {texts ? texts.title : (en ? "A room frees up? You're told first." : "Une chambre se libère ? Tu es prévenu en premier.")}
-          </h3>
+          </Heading>
           <p className="text-[#57534E] font-medium leading-relaxed max-w-2xl">
             {texts
               ? texts.text

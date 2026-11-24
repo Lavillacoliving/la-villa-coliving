@@ -337,7 +337,7 @@ export function adminSlotSentence(key: AdminSlotKey, lang: EntityLang): string {
 // retirées », A.8 en forme courte « animé et modéré par l'équipe de La Villa Coliving (règles publiées, annonces douteuses retirées) » (D5 du brief
 // du 05/11/2026 : « notre équipe » ne se rattache pas à la marque pour un robot ; avant : option B « par notre équipe »).
 // A.9 (brief du 05/11/2026, D1-D4) : une phrase + un lien (<FacebookGroupLine/>, jamais d'encart) sur l'accueil (sous la section maisons) et
-// sur /nos-maisons (fin de page, avant la phrase d'appel), FR + EN. « Annonces vérifiées » / « verified listings » reste INTERDIT (on retire ce qui est douteux, on ne vérifie
+// sur /nos-maisons (fin de la FAQ, avant la fiche et la phrase d'appel), FR + EN. « Annonces vérifiées » / « verified listings » reste INTERDIT (on retire ce qui est douteux, on ne vérifie
 // pas chaque logement). Lien normal (jamais nofollow), nouvel onglet. Jamais dans sameAs (D10 du socle).
 
 /** Incrémenter à chaque changement de texte A.7/A.8 : porté par data-facebook-group-version. */
