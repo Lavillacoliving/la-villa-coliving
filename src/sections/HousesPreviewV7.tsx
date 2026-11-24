@@ -1,5 +1,4 @@
 import { LocalizedLink } from "@/components/LocalizedLink";
-import { colocGeneveHref } from "@/lib/siteLinks";
 import { HouseAvailabilityLine } from "@/components/HouseAvailabilityLine";
 import { responsiveImage } from "@/lib/responsiveImage";
 import { ArrowRight, MapPin, Users } from "lucide-react";
@@ -87,10 +86,11 @@ export function HousesPreviewV7() {
   ];
 
   return (
-    <section className="py-24 md:py-32 bg-[#F5F2ED]">
+    // (Lot 2 de la refonte, 24/11/2026) Marges réduites sur mobile (la section mesurait plus de 2 écrans) ; ordinateur inchangé.
+    <section className="py-12 md:py-32 bg-[#F5F2ED]">
       <div className="container-custom">
         {/* Header */}
-        <div className="flex flex-col md:flex-row md:items-end md:justify-between mb-14 md:mb-16">
+        <div className="flex flex-col md:flex-row md:items-end md:justify-between mb-8 md:mb-16">
           <div>
             <span className="text-[#78716C] text-[13px] font-semibold tracking-[0.1em] uppercase">
               {language === "en" ? "OUR HOUSES" : "NOS MAISONS"}
@@ -184,24 +184,23 @@ export function HousesPreviewV7() {
           ))}
         </div>
 
-        {/* R5 (checkpoint 21/08) — front Annemasse : /annemasse-colocation et
-            /chambre-a-louer-annemasse n'avaient aucun lien entrant depuis les
-            pages fortes (home, maisons, tarifs, FAQ). */}
-        <p className="mt-8 text-sm text-[#57534E]">
-          {language === "en" ? "Focused on Annemasse Agglo? " : "Tu vises Annemasse Agglo ? "}
-          <LocalizedLink to="/annemasse-colocation" className="underline underline-offset-4 hover:text-[#1C1917]">
-            {language === "en" ? "Annemasse, with Le Lodge" : "Annemasse, avec Le Lodge"}
-          </LocalizedLink>
-          {" · "}
-          <LocalizedLink to="/chambre-a-louer-annemasse" className="underline underline-offset-4 hover:text-[#1C1917]">
-            {language === "en" ? "Le Lodge, our house in Annemasse" : "Le Lodge, notre maison d'Annemasse"}
-          </LocalizedLink>
-          {" · "}
-          {/* (Lot 5 SEO funnel) Page money « colocation Genève », chambres et dates en temps réel. */}
-          <LocalizedLink to={colocGeneveHref(language)} className="underline underline-offset-4 hover:text-[#1C1917]">
-            {language === "en" ? "Shared housing in Geneva, French side" : "Colocation à Genève côté France"}
-          </LocalizedLink>
-        </p>
+        {/* (Lot 2 de la refonte des pages de vente, 24/11/2026) « Compare-les » juste sous les cartes (il était dans une bande à
+            part, avec « Tout inclus, un seul loyer », remplacé par « Voir tous les tarifs » dans « Le prix, expliqué »). La ligne
+            d'ancrages Annemasse / Genève (R5) descend dans « Autres options » (HomeArgumentsV8), mêmes mots. */}
+        <LocalizedLink
+          to="/nos-maisons"
+          onClick={() => {
+            try {
+              (window as unknown as { gtag?: (...a: unknown[]) => void }).gtag?.("event", "cta_click", {
+                cta_position: "houses_compare", cta_target: "/nos-maisons", language,
+              });
+            } catch { /* noop */ }
+          }}
+          className="mt-6 md:mt-10 flex md:inline-flex items-center justify-center gap-2 text-sm md:text-base text-[#44403C] text-center hover:text-[#1C1917] transition-colors"
+        >
+          {language === "en" ? "Torn between the three? Compare them" : "Tu hésites entre les trois ? Compare-les"}
+          <ArrowRight className="w-4 h-4 flex-none text-[#D4A574]" />
+        </LocalizedLink>
       </div>
     </section>
   );
