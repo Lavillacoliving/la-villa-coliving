@@ -10,7 +10,8 @@ import { FaqSection } from "@/components/FaqSection";
 import { FacebookGroupLine } from "@/components/FacebookGroupLine";
 import { maisonsFaq } from "@/data/faq/maisonsFaq";
 import { AppartTeaser } from "@/components/appart/AppartTeaser";
-import { STATS, STATS_DISPLAY, HOUSE_SURFACES, thousands, PRICE_FR_NUM, PRICE_EN_NUM, PRICE_FROM_FR_NUM, PRICE_FROM_EN_NUM, PRICE_FROM_CHF_FR, PRICE_FROM_CHF_EN, EUR_STANDARD_FR_NUM, EUR_STANDARD_EN_NUM, EUR_FROM_FR_NUM, EUR_FROM_EN_NUM } from "@/data/stats";
+import { WhatsAppTextLink } from "@/components/WhatsAppButton";
+import { STATS, STATS_DISPLAY, HOUSE_SURFACES, ROOMS_BY_HOUSE, thousands, PRICE_FR_NUM, PRICE_EN_NUM, PRICE_FROM_FR_NUM, PRICE_FROM_EN_NUM, PRICE_FROM_CHF_FR, PRICE_FROM_CHF_EN, EUR_STANDARD_FR_NUM, EUR_STANDARD_EN_NUM, EUR_FROM_FR_NUM, EUR_FROM_EN_NUM } from "@/data/stats";
 import { ENTITY_HOUSES, type EntityHouseSlug } from "@/data/entityFacts";
 import {
   useRoomAvailability,
@@ -30,6 +31,16 @@ const commuteOf = (slug: EntityHouseSlug, lang: "fr" | "en") => {
 };
 /** Majuscule initiale pour une cellule de tableau (la ligne courte A.1 commence en minuscule) — comme HousesPreviewV7. */
 const cap = (s: string) => s.charAt(0).toUpperCase() + s.slice(1);
+/** (Lot 1 de la refonte, 24/11/2026) « de 7 à 12 résidents » : bornes lues dans ROOMS_BY_HOUSE (une chambre = un résident). */
+const RESIDENTS_MIN = Math.min(...Object.values(ROOMS_BY_HOUSE));
+const RESIDENTS_MAX = Math.max(...Object.values(ROOMS_BY_HOUSE));
+
+/** Mesure GA4 (lot 1 de la refonte, 24/11/2026) : quel élément de la carte mène à la maison — jamais bloquant. */
+function track(event: string, params: Record<string, unknown>): void {
+  try {
+    (window as unknown as { gtag?: (...a: unknown[]) => void }).gtag?.("event", event, params);
+  } catch { /* noop */ }
+}
 
 export function HousesPageV4() {
   const { language } = useLanguage();
@@ -167,11 +178,13 @@ export function HousesPageV4() {
           : `La Villa, Le Loft, Le Lodge : piscine, sauna, gym, à ${STATS_DISPLAY.fr.distance}. ${STATS.totalRooms} chambres tout inclus dès ${PRICE_FROM_CHF_FR}.`}
         url="https://www.lavillacoliving.com/nos-maisons"
       />
-      {/* Hero */}
-      <section className="py-24 lg:py-32 bg-[#F5F2ED]">
+      {/* Hero — (Lot 1 de la refonte des pages de vente, décisions de Jérôme du 24/11/2026) Deux phrases qui vendent et les
+          trois maisons en lien, au lieu du paragraphe d'ancrages (ses trois liens descendent sous le tableau « Côte à côte ») ;
+          la fiche « l'essentiel » passe sous la FAQ. Marges réduites sur mobile : la première maison arrive au 2ᵉ écran. */}
+      <section className="py-16 md:py-24 lg:py-32 bg-[#F5F2ED]">
         <div className="container-custom text-center">
           <span className="text-xs text-[#78716C] uppercase tracking-[0.3em] mb-4 block">
-            {language === "en" ? "Our Homes" : "Nos Maisons"}
+            {language === "en" ? "Our Homes" : "Nos maisons"}
           </span>
           <h1
             className="text-5xl md:text-6xl lg:text-7xl font-light text-[#1C1917] mb-6"
@@ -183,26 +196,22 @@ export function HousesPageV4() {
               </>
             ) : (
               <>
-                Trois Maisons<span className="text-[#D4A574]">.</span>
+                Trois maisons<span className="text-[#D4A574]">.</span>
               </>
             )}
           </h1>
-          <p className="text-xl text-[#57534E] max-w-2xl mx-auto">
-            {/* (Lot 4 SEO funnel) Ancre exacte vers la home, URL championne sur « coliving genève ». */}
+          {/* Faits lus dans les sources : ROOMS_BY_HOUSE (résidents), STATS_DISPLAY.distance (trajet toujours qualifié, D1),
+              HOUSES_FROM (« dès » des maisons). Aucun prix de L'Appart ici (deux gammes). */}
+          <p className="text-lg md:text-xl text-[#57534E] max-w-2xl mx-auto">
             {language === "en"
-              ? <>Three houses in premium coliving near Geneva — each designed for modern community living. Together they form our <LocalizedLink to="/" className="underline underline-offset-4 hover:text-[#1C1917]">coliving Geneva</LocalizedLink>, on the French side. Rooms and dates in real time on our <LocalizedLink to={colocGeneveHref(language)} className="underline underline-offset-4 hover:text-[#1C1917]">shared housing in Geneva, French side</LocalizedLink> page, or straight to a <LocalizedLink to="/chambre-a-louer-geneve" className="underline underline-offset-4 hover:text-[#1C1917]">room to rent near Geneva</LocalizedLink>, furnished and all inclusive.</>
-              : <>Trois maisons en colocation premium près de Genève — chacune pensée pour la vie communautaire moderne. Ensemble, elles forment notre <LocalizedLink to="/" className="underline underline-offset-4 hover:text-[#1C1917]">coliving Genève</LocalizedLink>, côté France. Chambres et dates en temps réel sur notre page <LocalizedLink to={colocGeneveHref(language)} className="underline underline-offset-4 hover:text-[#1C1917]">colocation à Genève côté France</LocalizedLink>, ou directement une <LocalizedLink to="/chambre-a-louer-geneve" className="underline underline-offset-4 hover:text-[#1C1917]">chambre à louer près de Genève</LocalizedLink>, meublée et tout inclus.</>}
+              ? <>{`Three houses for ${RESIDENTS_MIN} to ${RESIDENTS_MAX} residents, each with a pool, sauna and gym, ${STATS_DISPLAY.en.distance}. All-inclusive furnished rooms from ${PRICE_FROM_CHF_EN} a month: `}<LocalizedLink to="/lavilla" onClick={() => track("house_discover_click", { house: "lavilla", cta_position: "nos_maisons_intro", page: "nos-maisons", language: L })} className="underline underline-offset-4 hover:text-[#1C1917]">La Villa</LocalizedLink>{", "}<LocalizedLink to="/leloft" onClick={() => track("house_discover_click", { house: "leloft", cta_position: "nos_maisons_intro", page: "nos-maisons", language: L })} className="underline underline-offset-4 hover:text-[#1C1917]">Le Loft</LocalizedLink>{" and "}<LocalizedLink to="/lelodge" onClick={() => track("house_discover_click", { house: "lelodge", cta_position: "nos_maisons_intro", page: "nos-maisons", language: L })} className="underline underline-offset-4 hover:text-[#1C1917]">Le Lodge</LocalizedLink>{"."}</>
+              : <>{`Trois maisons de ${RESIDENTS_MIN} à ${RESIDENTS_MAX} résidents, chacune avec piscine, sauna et salle de sport, à ${STATS_DISPLAY.fr.distance}. Chambres meublées tout inclus dès ${PRICE_FROM_CHF_FR} par mois : `}<LocalizedLink to="/lavilla" onClick={() => track("house_discover_click", { house: "lavilla", cta_position: "nos_maisons_intro", page: "nos-maisons", language: L })} className="underline underline-offset-4 hover:text-[#1C1917]">La Villa</LocalizedLink>{", "}<LocalizedLink to="/leloft" onClick={() => track("house_discover_click", { house: "leloft", cta_position: "nos_maisons_intro", page: "nos-maisons", language: L })} className="underline underline-offset-4 hover:text-[#1C1917]">Le Loft</LocalizedLink>{" et "}<LocalizedLink to="/lelodge" onClick={() => track("house_discover_click", { house: "lelodge", cta_position: "nos_maisons_intro", page: "nos-maisons", language: L })} className="underline underline-offset-4 hover:text-[#1C1917]">Le Lodge</LocalizedLink>{"."}</>}
           </p>
         </div>
       </section>
 
-      {/* (Lot S1) Fiche de faits canonique — remplace l'ancienne « phrase citable » (même contenu, même source). */}
-      <section className="py-10 bg-[#F5F2ED]">
-        <div className="max-w-3xl mx-auto px-6"><EntityFacts page="nos-maisons" /></div>
-      </section>
-
       {/* Houses Cards */}
-      <section className="py-24 lg:py-32 bg-[#FAF9F6]">
+      <section className="py-12 md:py-24 lg:py-32 bg-[#FAF9F6]">
         <div className="container-custom">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {houses.map((house) => (
@@ -211,7 +220,11 @@ export function HousesPageV4() {
                 className="bg-white rounded-2xl border border-[#E7E5E4] overflow-hidden hover:border-[#44403C]/20 hover:shadow-[0_4px_24px_rgba(0,0,0,0.06)] hover:translate-y-[-2px] transition-all duration-300 flex flex-col"
               >
                 {/* Photo */}
-                <LocalizedLink to={`/${house.id}`} className="block relative aspect-[16/10] overflow-hidden group">
+                <LocalizedLink
+                  to={`/${house.id}`}
+                  onClick={() => track("house_discover_click", { house: house.id, cta_position: "nos_maisons_photo", page: "nos-maisons", language: L })}
+                  className="block relative aspect-[16/10] overflow-hidden group"
+                >
                   <img
                     src={house.image}
                     alt={house.alt}
@@ -300,19 +313,23 @@ export function HousesPageV4() {
                       </span>
                     </div>
 
-                    <div className="flex gap-3">
+                    {/* (24/11/2026, § 4.7) « Programmer une visite » est plus long que « Postuler » : les deux boutons passent à la
+                        ligne quand ils ne tiennent pas côte à côte (flex-wrap + flex-auto), sans jamais couper un libellé. */}
+                    <div className="flex flex-wrap gap-3">
                       <LocalizedLink
                         to={`/${house.id}`}
-                        className="flex-1 inline-flex items-center justify-center gap-2 px-5 py-3 bg-[#1C1917] text-white text-sm font-semibold rounded-lg hover:bg-[#D4A574] transition-colors"
+                        onClick={() => track("house_discover_click", { house: house.id, cta_position: "nos_maisons_button", page: "nos-maisons", language: L })}
+                        className="flex-auto whitespace-nowrap inline-flex items-center justify-center gap-2 px-5 py-3 bg-[#1C1917] text-white text-sm font-semibold rounded-lg hover:bg-[#D4A574] transition-colors"
                       >
                         {language === "en" ? "Discover" : "Découvrir"}
                         <ArrowRight className="w-4 h-4" />
                       </LocalizedLink>
                       <LocalizedLink
                         to={`/candidature?property_interest=${house.id}`}
-                        className="inline-flex items-center justify-center px-5 py-3 border border-[#1C1917] text-[#1C1917] text-sm font-semibold rounded-lg hover:bg-[#1C1917] hover:text-white transition-colors"
+                        onClick={() => track("cta_click", { cta_position: "nos_maisons_card", cta_target: "/candidature", house: house.id, language: L })}
+                        className="flex-auto whitespace-nowrap inline-flex items-center justify-center px-5 py-3 border border-[#1C1917] text-[#1C1917] text-sm font-semibold rounded-lg hover:bg-[#1C1917] hover:text-white transition-colors"
                       >
-                        {language === "en" ? "Apply" : "Postuler"}
+                        {language === "en" ? "Book a visit" : "Programmer une visite"}
                       </LocalizedLink>
                     </div>
                     {house.id === "lelodge" ? (
@@ -328,6 +345,7 @@ export function HousesPageV4() {
                     ) : (
                       <LocalizedLink
                         to={`/${house.id}`}
+                        onClick={() => track("house_discover_click", { house: house.id, cta_position: "nos_maisons_link", page: "nos-maisons", language: L })}
                         className="mt-3 inline-block text-sm text-[#78716C] underline hover:text-[#D4A574] transition-colors"
                       >
                         {language === "en" ? `Flatshare in ${house.location}` : `Colocation à ${house.location}`}
@@ -357,7 +375,7 @@ export function HousesPageV4() {
               className="text-3xl md:text-4xl font-light text-[#1C1917]"
               style={{ fontFamily: '"DM Serif Display", serif' }}
             >
-              {language === "en" ? "Side by Side" : "Côte à Côte"}
+              {language === "en" ? "Side by Side" : "Côte à côte"}
             </h2>
           </div>
 
@@ -400,6 +418,22 @@ export function HousesPageV4() {
               </tbody>
             </table>
           </div>
+          {/* (Lot 1 de la refonte, 24/11/2026) Les trois liens de l'ancien paragraphe d'ouverture, mêmes ancres (Lot 4 SEO funnel :
+              ancre exacte vers la home, URL championne sur « coliving genève ») : déplacés, ni ajoutés ni retirés. */}
+          <p className="mt-8 text-sm text-[#57534E] text-center">
+            {language === "en" ? "See also: " : "Voir aussi : "}
+            <LocalizedLink to="/" className="underline underline-offset-4 hover:text-[#1C1917]">
+              {language === "en" ? "coliving Geneva" : "coliving Genève"}
+            </LocalizedLink>
+            {" · "}
+            <LocalizedLink to={colocGeneveHref(language)} className="underline underline-offset-4 hover:text-[#1C1917]">
+              {language === "en" ? "shared housing in Geneva, French side" : "colocation à Genève côté France"}
+            </LocalizedLink>
+            {" · "}
+            <LocalizedLink to="/chambre-a-louer-geneve" className="underline underline-offset-4 hover:text-[#1C1917]">
+              {language === "en" ? "room to rent near Geneva" : "chambre à louer près de Genève"}
+            </LocalizedLink>
+          </p>
         </div>
       </section>
 
@@ -407,11 +441,19 @@ export function HousesPageV4() {
         title={language === "en" ? "Our houses — frequently asked questions" : "Nos maisons — questions fréquentes"}
         items={maisonsFaq[language === "en" ? "en" : "fr"]}
         emitSchema
-        // (Brief du 05/11/2026, D2) Groupe Facebook nommé et attribué, en fin de page, avant la phrase d'appel.
+        // (Brief du 05/11/2026, D2) Groupe Facebook nommé et attribué, en fin de FAQ, avant la fiche et la phrase d'appel.
         outro={<FacebookGroupLine position="nos_maisons_end" />}
       />
 
-      {/* CTA */}
+      {/* (Lot S1) Fiche de faits canonique — même contenu, même source.
+          (Lot 1 de la refonte des pages de vente, décision de Jérôme du 24/11/2026) Sous la FAQ et repliée sur mobile, comme sur
+          les pages maisons : en tête de page, elle repoussait la première maison à l'écran 5. Tout reste dans le HTML. */}
+      <section className="py-12 md:py-16 bg-white">
+        <div className="max-w-3xl mx-auto px-6"><EntityFacts page="nos-maisons" className="!my-0" collapseOnMobile /></div>
+      </section>
+
+      {/* CTA — (Lot 1 de la refonte, 24/11/2026) Le dernier bloc propose d'écrire ou de programmer une visite, au lieu de renvoyer
+          vers la FAQ qu'on vient de lire. Libellé « Programmer une visite » (étape 1 bis), comme le reste du site et le formulaire. */}
       <section className="py-24 bg-[#1C1917]">
         <div className="container-custom text-center">
           <h2
@@ -422,17 +464,22 @@ export function HousesPageV4() {
               ? "Not Sure Which One?"
               : "Pas certain de ton choix ?"}
           </h2>
-          <p className="text-lg text-white/60 max-w-xl mx-auto mb-8">
+          <p className="text-lg text-white/80 max-w-xl mx-auto mb-8">
             {language === "en"
-              ? "Contact us and we'll help you find the perfect home for your lifestyle."
-              : "Contacte-nous et on t'aidera à trouver la maison parfaite pour ton style de vie."}
+              ? `Message us on WhatsApp and we'll help you choose. Or book a visit, on site or by video: reply within ${STATS.responseHours}\u00a0h.`
+              : `Écris-nous sur WhatsApp, on t'aide à choisir. Ou programme une visite, sur place ou en vidéo : réponse sous ${STATS.responseHours}\u00a0h.`}
           </p>
-          <LocalizedLink
-            to="/faq"
-            className="inline-flex items-center gap-2 px-8 py-4 border border-white text-white font-bold hover:bg-white hover:text-[#1C1917] transition-colors"
-          >
-            {language === "en" ? "VISIT OUR FAQ" : "CONSULTER NOTRE FAQ"}
-          </LocalizedLink>
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
+            <LocalizedLink
+              to="/candidature"
+              onClick={() => track("cta_click", { cta_position: "nos_maisons_footer", cta_target: "/candidature", language: L })}
+              className="inline-flex items-center gap-2 px-8 py-4 bg-white text-[#1C1917] font-bold rounded-lg hover:bg-[#F5F2ED] transition-colors"
+            >
+              {language === "en" ? "Book a visit" : "Programmer une visite"}
+              <ArrowRight className="w-5 h-5" />
+            </LocalizedLink>
+            <WhatsAppTextLink context={language === "en" ? "Our houses" : "Nos maisons"} onDark />
+          </div>
         </div>
       </section>
     </main>

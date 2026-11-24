@@ -1,6 +1,6 @@
 /**
  * Ligne A.9 « Tu cherches aussi ailleurs ? » (brief de Jérôme du 05/11/2026, D1-D4) : le groupe Facebook nommé ET attribué à
- * « l'équipe de La Villa Coliving » sur l'accueil (sous la section maisons) et sur /nos-maisons (fin de page, avant la phrase
+ * « l'équipe de La Villa Coliving » sur l'accueil (« Autres options », après L'Appart, depuis le lot 2 de la refonte) et sur /nos-maisons (fin de page, avant la phrase
  * d'appel). ChatGPT ne lit pas Facebook : il ne connaît le groupe que par les pages qui le nomment.
  *
  * Retenue premium : une phrase, aucun bouton ni encart, le nom du groupe une fois. Texte unique : src/data/answerSlots.ts

@@ -33,6 +33,12 @@ export async function loadEntityFacts() {
         "export * from './src/lib/contentMarkers';",
         "export * from './src/data/houseLocation';",
         "export * from './src/data/priceFacts';",
+        // (24/11/2026, brief « budget réel ») Relevé d'annonces du 23/11/2026 : tableau du bloc 2, repères de la fiche, llms.txt.
+        "export * from './src/data/budgetReel';",
+        // (24/11/2026, brief « budget réel », lot 2) Section « Budget réel » de llms.txt : tableau et ligne « Méthode » du bloc 2 de
+        // /tarifs (tarifsTexts.ts) et trois questions de comparaison de sa FAQ (tarifsFaq.ts) — mêmes chaînes que la page.
+        "export { budgetBlock, BUDGET_GUIDE_PATH } from './src/data/tarifsTexts';",
+        "export { tarifsPageFaq } from './src/data/faq/tarifsFaq';",
         // (16/10/2026) Règle d'affichage des milliers des articles (typography.ts) : check-answer-slots cherche les créneaux
         // des articles tels que le lecteur les voit.
         "export * from './src/lib/typography';",

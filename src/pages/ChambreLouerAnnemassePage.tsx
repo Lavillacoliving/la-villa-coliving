@@ -335,8 +335,8 @@ export function ChambreLouerAnnemassePage() {
             {[
               {
                 num: "1",
-                title_fr: "Candidature en ligne",
-                title_en: "Online application",
+                title_fr: "Demande de visite en ligne",
+                title_en: "Online visit request",
                 desc_fr: "2 minutes : tes coordonnées ; ta date d'emménagement et la durée, si tu les connais, juste après l'envoi.",
                 desc_en: "2 minutes: your contact details; your move-in date and length of stay, if you know them, right after sending.",
               },
@@ -407,7 +407,7 @@ export function ChambreLouerAnnemassePage() {
             to="/candidature"
             className="inline-flex items-center gap-2 px-8 py-4 bg-white text-[#1C1917] font-semibold rounded-full hover:bg-gray-100 transition-colors"
           >
-            {language === "en" ? "Apply now" : "Candidater maintenant"}
+            {language === "en" ? "Book a visit" : "Programmer une visite"}
             <ArrowRight className="w-5 h-5" />
           </LocalizedLink>
         </div>

@@ -147,7 +147,7 @@ export function AnnemasseColocationPage() {
               to="/candidature"
               className="inline-flex items-center gap-2 px-8 py-4 bg-[#1C1917] text-white font-semibold rounded-full hover:bg-[#44403C] transition-colors"
             >
-              {language === "en" ? "Apply now" : "Candidater"}
+              {language === "en" ? "Book a visit" : "Programmer une visite"}
               <ArrowRight className="w-5 h-5" />
             </LocalizedLink>
             <LocalizedLink
@@ -510,7 +510,7 @@ export function AnnemasseColocationPage() {
               to="/candidature"
               className="inline-flex items-center gap-2 px-8 py-4 bg-white text-[#1C1917] font-semibold rounded-full hover:bg-gray-100 transition-colors"
             >
-              {language === "en" ? "Apply now" : "Candidater"}
+              {language === "en" ? "Book a visit" : "Programmer une visite"}
               <ArrowRight className="w-5 h-5" />
             </LocalizedLink>
             <LocalizedLink

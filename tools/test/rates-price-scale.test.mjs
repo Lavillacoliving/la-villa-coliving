@@ -52,9 +52,10 @@ function scaleRows(html) {
     .map((r) => [...r[1].matchAll(/<(t[hd])\b([^>]*)>([\s\S]*?)<\/t[hd]>/g)].map((c) => ({ tag: c[1], attrs: c[2], text: text(c[3]) })));
 }
 
+// (24/11/2026, brief « budget réel », bloc 5 de /tarifs, annexes A et B) Nouvel en-tête du tableau « Les prix, chambre par chambre ».
 const HEADER = {
-  fr: ['Gamme', 'CHF par mois', '€ par mois (loyer du bail)', 'Chambres', "Salle d'eau"],
-  en: ['Range', 'CHF per month', '€ per month (rent on the lease)', 'Rooms', 'Shower room'],
+  fr: ['Chambre', 'Prix par mois, tout compris', 'Loyer du bail', 'Nombre de chambres', "Salle d'eau"],
+  en: ['Room', 'Price per month, all-inclusive', 'Rent on the lease', 'Number of rooms', 'Bathroom'],
 };
 const CHF = { fr: /^\d{1,3}(?:[   ]\d{3})* CHF$/, en: /^CHF \d{1,3}(?:,\d{3})*$/ };
 const EUR = { fr: /^\d{1,3}(?:[   ]\d{3})* €$/, en: /^€\d{1,3}(?:,\d{3})*$/ };

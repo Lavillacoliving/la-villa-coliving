@@ -26,7 +26,7 @@ export function ArticleContactCta({ slug, bucket, context }: { slug: string; buc
 
   return (
     <section
-      aria-label={en ? "Apply or message us" : "Candidater ou nous écrire"}
+      aria-label={en ? "Book a visit or message us" : "Programmer une visite ou nous écrire"}
       className="not-prose my-12 rounded-lg border border-[#E7E5E4] bg-[#FAF9F6] p-6 md:p-8 text-center"
     >
       <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-center gap-3">
@@ -35,7 +35,7 @@ export function ArticleContactCta({ slug, bucket, context }: { slug: string; buc
           onClick={track}
           className="inline-flex items-center justify-center px-6 py-3 rounded-lg bg-[#1C1917] text-white text-sm font-semibold hover:bg-[#44403C] transition-colors"
         >
-          {en ? "Apply" : "Candidater"}
+          {en ? "Book a visit" : "Programmer une visite"}
         </LocalizedLink>
         <WhatsAppTextLink context={context} />
       </div>

@@ -17,13 +17,13 @@ export function NotFoundPage({ article = false }: { article?: boolean }) {
       ? [
           { to: "/en/colocation-geneve", label: "Shared Housing Geneva" },
           { to: "/en/tarifs", label: "Pricing" },
-          { to: "/en/candidature", label: "Apply" },
+          { to: "/en/candidature", label: "Book a visit" },
           { to: "/en/blog", label: "Blog" },
         ]
       : [
           { to: COLOC_GENEVE_PILLAR_FR, label: "Colocation Genève" },
           { to: "/tarifs", label: "Tarifs" },
-          { to: "/candidature", label: "Candidater" },
+          { to: "/candidature", label: "Programmer une visite" },
           { to: "/blog", label: "Blog" },
         ];
 

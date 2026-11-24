@@ -46,6 +46,16 @@ export const HOUSE_SLUGS: readonly HouseSlug[] = MAISON_KEYS;
 
 const T = TRANSIT.byHouse;
 
+/** (Lot 2 de la refonte des pages de vente, 24/11/2026) Marche jusqu'à la gare d'Annemasse pour les trois maisons, en une
+ *  formule — « 8 ou 9 min » / « 8 or 9 min » — pour l'accueil (raison « 20 min de Genève-Eaux-Vives »). Valeurs de TRANSIT. */
+export function housesStationWalk(lang: LocLang): string {
+  const v = HOUSE_SLUGS.map((s) => T[s].stationWalkMin);
+  const min = Math.min(...v);
+  const max = Math.max(...v);
+  if (min === max) return `${min} min`;
+  return lang === "en" ? `${min} or ${max} min` : `${min} ou ${max} min`;
+}
+
 /** Distance lisible : 750 → « 750 m », 1000 → « 1 km », 1300 → « 1,3 km » (FR) / « 1.3 km » (EN). */
 export function formatDistance(meters: number, lang: LocLang): string {
   if (meters < 1000) return `${meters} m`;

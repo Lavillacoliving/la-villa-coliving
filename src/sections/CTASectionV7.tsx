@@ -5,70 +5,63 @@ import { STATS } from '@/data/stats';
 
 /**
  * VERSION 9: STONE & BRASS — CONDO PREMIUM
- * CTA section — dark bg, brass accent button, white outline secondary
+ * CTA section — dark bg, brass accent button.
+ *
+ * (Lot 2 de la refonte des pages de vente, maquette validée par Jérôme le 24/11/2026) Dernier appel : « Programmer une
+ * visite » (rapport § 4.7) et WhatsApp. Le second bouton « Découvrir La Villa, Le Loft, Le Lodge » est retiré : les maisons
+ * sont présentées plus haut, avec « Compare-les ».
  */
-
 export function CTASectionV7() {
   const { language } = useLanguage();
+  // Même garde que les autres boutons : la mesure (GA4 `cta_click`) ne bloque jamais l'interface.
+  const track = () => {
+    try {
+      (window as unknown as { gtag?: (...a: unknown[]) => void }).gtag?.("event", "cta_click", {
+        cta_position: "cta_final", cta_target: "/candidature", language,
+      });
+    } catch { /* noop */ }
+  };
 
   return (
-    <section className="py-24 bg-[#1C1917]">
+    <section className="py-16 md:py-24 bg-[#1C1917]">
       <div className="container-custom">
         <div className="max-w-3xl mx-auto text-center">
-          {/* Eyebrow */}
-          <span className="text-[13px] font-semibold tracking-wider uppercase text-[#E0BB8A] mb-5 block">
-            {language === 'en' ? 'READY TO JOIN?' : 'PRÊT À NOUS REJOINDRE ?'}
-          </span>
-
           {/* Heading */}
-          <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-white tracking-tight mb-6">
+          <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-white tracking-tight mb-5">
             {language === 'en' ? 'Your next home is waiting' : 'Ta prochaine maison t\'attend'}
           </h2>
 
           {/* Subtitle */}
-          <p className="text-white/60 text-lg leading-relaxed mb-12 max-w-xl mx-auto">
+          <p className="text-white/70 text-lg leading-relaxed mb-8 max-w-xl mx-auto">
             {/* (Retenue premium, lot 1, T9 — 13/10/2026) Une seule phrase : les équipements et le trajet sont dits plus haut. */}
             {language === 'en'
               ? `Over ${STATS.totalResidents} residents have chosen our houses since ${STATS.foundedYear}.`
               : `Plus de ${STATS.totalResidents} résidents ont choisi nos maisons depuis ${STATS.foundedYear}.`}
           </p>
 
-          {/* CTAs */}
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-            <LocalizedLink
-              to="/candidature"
-              className="group inline-flex items-center gap-3 px-10 py-4 bg-[#D4A574] text-[#1C1917] font-semibold rounded-lg hover:bg-[#E0BB8A] transition-all duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#D4A574] focus-visible:ring-offset-2 focus-visible:ring-offset-[#1C1917]"
-            >
-              {language === 'en' ? 'Apply now' : 'Rejoindre La Villa'}
-              <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform duration-300" />
-            </LocalizedLink>
-
-            <LocalizedLink
-              to="/nos-maisons"
-              className="inline-flex items-center gap-3 px-10 py-4 border border-white/30 text-white font-semibold rounded-lg hover:border-white hover:bg-white/5 transition-all duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-[#1C1917]"
-            >
-              {language === 'en' ? 'Explore La Villa, Le Loft, Le Lodge' : 'Découvrir La Villa, Le Loft, Le Lodge'}
-            </LocalizedLink>
-          </div>
-
-          {/* Trust text */}
-          <p className="mt-10 text-sm text-white/40">
-            {language === 'en'
-              ? '2-minute application — no commitment'
-              : 'Candidature en 2 minutes — sans engagement'}
-          </p>
+          {/* CTA */}
+          <LocalizedLink
+            to="/candidature"
+            onClick={track}
+            className="group inline-flex items-center gap-3 px-10 py-4 bg-[#D4A574] text-[#1C1917] font-semibold rounded-lg hover:bg-[#E0BB8A] transition-all duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#D4A574] focus-visible:ring-offset-2 focus-visible:ring-offset-[#1C1917]"
+          >
+            {language === 'en' ? 'Book a visit' : 'Programmer une visite'}
+            <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform duration-300" />
+          </LocalizedLink>
 
           {/* WhatsApp CTA */}
-          <a
-            href="https://wa.me/33664315134"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="mt-4 inline-block text-sm text-white/40 hover:text-[#E0BB8A] transition-colors duration-300"
-          >
-            {language === 'en'
-              ? 'Or ask us a question directly on WhatsApp →'
-              : 'Ou pose-nous directement une question sur WhatsApp →'}
-          </a>
+          <div className="mt-6">
+            <a
+              href="https://wa.me/33664315134"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-block text-sm text-white/60 hover:text-[#E0BB8A] transition-colors duration-300"
+            >
+              {language === 'en'
+                ? 'Or ask us a question directly on WhatsApp →'
+                : 'Ou pose-nous directement une question sur WhatsApp →'}
+            </a>
+          </div>
         </div>
       </div>
     </section>

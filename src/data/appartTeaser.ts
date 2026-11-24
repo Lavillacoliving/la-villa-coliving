@@ -12,7 +12,7 @@
  */
 import { APPART } from "./appart";
 import { MAISONS_REFERRAL } from "./entityFacts";
-import { aOrAn, thousands } from "./stats";
+import { aOrAn } from "./stats";
 import { capital, ordinal, timesPerWeek, word } from "./appartWords";
 
 type AppartLang = "fr" | "en";
@@ -34,14 +34,14 @@ export interface AppartTeaserText {
   title: string;
   text: string;
   link: string;
+  /** (24/11/2026, /tarifs) Le même texte en paragraphes, quand la page le rend en plusieurs <p> ; `text` = leur jonction. */
+  paragraphs?: readonly string[];
 }
 
 /** Le texte du bloc, propre à chaque page (jamais une phrase canonique : critique A1/X2). */
 export function appartTeaser(route: AppartTeaserRoute, lang: AppartLang): AppartTeaserText {
   const en = lang === "en";
   const P = A.price;
-  /** « 530 € » / « €530 » : la suite à deux, par personne — seulement dans la forme P5 (« soit 530 € par personne à deux »). */
-  const perPerson = { fr: `${thousands(P.suitePerPersonEur, "\u00a0")} €`, en: `€${thousands(P.suitePerPersonEur, ",")}` };
   const T = A.transit, std = A.rooms.standard, suite = A.rooms.suite;
   const discover = en ? `Discover ${A.name}` : `Découvrir ${A.name}`;
   const also = en ? "Also at La Villa Coliving" : "Aussi chez La Villa Coliving";
@@ -67,15 +67,27 @@ export function appartTeaser(route: AppartTeaserRoute, lang: AppartLang): Appart
           : `${A.name} n'est pas une ${ordinal(R.totalHouses + 1, "fr")} maison : c'est un appartement en colocation, à ${A.commune}, dans le quartier de la gare. ${A.rooms.total} chambres meublées de ${A.rooms.surface.min} à ${A.rooms.surface.max} m², un séjour-cuisine de ${A.flat.livingKitchenM2} m², un balcon. Dès ${P.from.fr.chf} par mois, ${included}. Pas de piscine, de sauna ni de salle de sport sur place : pour ça, ce sont les ${word(R.totalHouses, "fr")} maisons ci-dessus.`,
         link: discover,
       };
-    case "/tarifs":
+    case "/tarifs": {
+      // (24/11/2026, brief « budget réel », bloc 7 de /tarifs — annexes A et B validées par Jérôme le 23/11/2026) Deux gammes : aucun
+      // prix de L'Appart dans la phrase de la piscine. Date d'ouverture retirée (Jérôme, 24/11/2026 : « restons flous sur la date »).
+      // Source unique : /tarifs rend ces paragraphes (src/data/tarifsTexts.ts, appartBlock) ; la garde compare la section à ce texte.
+      const paragraphs = en
+        ? [
+            `${A.name} is our flatshare in ${A.commune}, in the station district: ${A.rooms.total} rooms in a ${A.flat.surfaceM2} m² flat. ${capital(word(std.numbers.length, "en"))} ${std.surfaceM2} m² rooms at ${P.room.en.chf} a month (${P.room.en.eur}) and a ${suite.surfaceM2} m² suite, for one or two people, at ${P.suite.en.chf} a month (${P.suite.en.eur}).`,
+            `The price covers utilities, fibre, streaming and cleaning of the shared areas ${timesPerWeek(A.cleaningPerWeek, "en")}, and gives access to the yoga and fitness classes held in the houses. It does not cover linen or cleaning products. ${A.name} has no pool, sauna or gym.`,
+          ]
+        : [
+            `${A.name} est notre colocation à ${A.commune}, dans le quartier de la gare : ${A.rooms.total} chambres dans un appartement de ${A.flat.surfaceM2} m². ${capital(word(std.numbers.length, "fr"))} chambres de ${std.surfaceM2} m² à ${P.room.fr.chf} par mois (${P.room.fr.eur}) et une suite de ${suite.surfaceM2} m², pour une ou deux personnes, à ${P.suite.fr.chf} par mois (${P.suite.fr.eur}).`,
+            `Le prix comprend les charges, la fibre, le streaming et le ménage des parties communes ${timesPerWeek(A.cleaningPerWeek, "fr")}, et donne accès aux cours de yoga et de sport des maisons. Il ne comprend ni le linge, ni les produits d'entretien. ${A.name} n'a ni piscine, ni sauna, ni salle de sport.`,
+          ];
       return {
         eyebrow: null,
-        title: en ? `${A.name}: the flatshare, from ${P.from.en.chf} a month` : `${A.name} : la colocation, dès ${P.from.fr.chf} par mois`,
-        text: en
-          ? `${A.name} is our flatshare in ${A.commune}, near the station: ${A.rooms.total} rooms in a ${A.flat.surfaceM2} m² flat. ${capital(word(std.numbers.length, "en"))} ${std.surfaceM2} m² rooms at ${P.room.en.chf} a month (${P.room.en.eur}) and a ${suite.surfaceM2} m² suite, for one or two people, at ${P.suite.en.chf} a month (${P.suite.en.eur}, or ${perPerson.en} each for two). The rent covers bills, fibre, streaming and cleaning of the shared areas ${timesPerWeek(A.cleaningPerWeek, "en")}. It doesn't cover bed linen, towels or cleaning products. ${A.name} has no pool, sauna or gym: the list of ${R.includedItems} services further down is the houses'.`
-          : `${A.name} est notre colocation à ${A.commune}, dans le quartier de la gare : ${A.rooms.total} chambres dans un appartement de ${A.flat.surfaceM2} m². ${capital(word(std.numbers.length, "fr"))} chambres de ${std.surfaceM2} m² à ${P.room.fr.chf} par mois (${P.room.fr.eur}) et une suite de ${suite.surfaceM2} m², pour une ou deux personnes, à ${P.suite.fr.chf} par mois (${P.suite.fr.eur}, soit ${perPerson.fr} par personne à deux). Le loyer comprend les charges, la fibre, le streaming et le ménage des parties communes ${timesPerWeek(A.cleaningPerWeek, "fr")}. Il ne comprend pas le linge de lit, les serviettes ni les produits d'entretien. ${A.name} n'a ni piscine, ni sauna, ni salle de sport : la liste des ${R.includedItems} services, plus bas, est celle des maisons.`,
+        title: en ? `Another option: ${A.name}, our flatshare` : `Une autre formule : ${A.name}, notre colocation`,
+        text: paragraphs.join(" "),
         link: en ? `See ${A.name} and its ${A.rooms.total} rooms` : `Voir ${A.name} et ses ${A.rooms.total} chambres`,
+        paragraphs,
       };
+    }
     case "/annemasse-colocation":
       return {
         eyebrow: null,

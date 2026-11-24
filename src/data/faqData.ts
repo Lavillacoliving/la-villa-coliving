@@ -365,8 +365,8 @@ export const faqData: FAQItem[] = [
       fr: 'Y a-t-il des frais de dossier ?',
     },
     answer: {
-      en: 'No, €0. Applying to La Villa is entirely free: no application fee to apply, to be selected, or to sign your lease. On the coliving market, these move-in fees often range from €200 to €700; here, it\'s zero.',
-      fr: 'Non, 0 €. Candidater chez La Villa est entièrement gratuit : aucun frais de dossier pour postuler, être sélectionné ou signer ton bail. Sur le marché du coliving, ces frais d\'entrée vont souvent de 200 à 700 € ; chez nous, c\'est zéro.',
+      en: 'No, €0. Requesting a visit at La Villa is entirely free: no application fee to visit, to be selected, or to sign your lease. On the coliving market, these move-in fees often range from €200 to €700; here, it\'s zero.',
+      fr: 'Non, 0 €. Demander une visite chez La Villa est entièrement gratuit : aucun frais de dossier pour visiter, être sélectionné ou signer ton bail. Sur le marché du coliving, ces frais d\'entrée vont souvent de 200 à 700 € ; chez nous, c\'est zéro.',
     },
   },
   {
@@ -718,20 +718,20 @@ export const faqData: FAQItem[] = [
     id: 'how-to-apply',
     category: 'Application Process',
     question: {
-      en: 'How do I apply to live at La Villa?',
-      fr: 'Comment puis-je candidater pour vivre à La Villa ?',
+      en: 'How do I book a visit to live at La Villa?',
+      fr: 'Comment programmer une visite pour vivre à La Villa ?',
     },
     answer: {
-      en: 'The application process is simple: 1) Fill out the online application form with your details, 2) Schedule a video call with us, 3) Have a 20-minute conversation to get to know each other, 4) Visit the house and meet your potential housemates, 5) If approved, sign your lease and move in!',
-      fr: 'Le processus de candidature est simple : 1) Remplis le formulaire de candidature en ligne avec tes coordonnées, 2) Planifie un appel vidéo avec nous, 3) On fait connaissance en 20 minutes, 4) Visite la maison et rencontre tes futurs colocataires, 5) Si c\'est validé, signe ton bail et emménage !',
+      en: 'It\'s simple: 1) Fill in the “Book a visit” form with your details (2 minutes), 2) We call you within 48 h to get to know each other and set the visit, 3) Visit the house, on site or by video, and meet your potential housemates, 4) If approved, sign your lease and move in!',
+      fr: 'C\'est simple : 1) Remplis le formulaire « Programmer une visite » avec tes coordonnées (2 minutes), 2) On t\'appelle sous 48 h pour faire connaissance et caler la visite, 3) Visite la maison, sur place ou en vidéo, et rencontre tes futurs colocataires, 4) Si c\'est validé, signe ton bail et emménage !',
     },
   },
   {
     id: 'application-requirements',
     category: 'Application Process',
     question: {
-      en: 'What are the requirements to apply?',
-      fr: 'Quelles sont les exigences pour candidater ?',
+      en: 'What are the requirements to live at La Villa?',
+      fr: 'Quelles sont les conditions pour vivre à La Villa ?',
     },
     answer: {
       en: 'We look for open-minded, respectful individuals who share our community values. You should be employed or have a stable income source, plan to settle in rather than stay a few nights, and be excited about community living. We welcome applicants from all backgrounds and nationalities.',
@@ -742,24 +742,24 @@ export const faqData: FAQItem[] = [
     id: 'application-timeline',
     category: 'Application Process',
     question: {
-      en: 'How long does the application process take?',
-      fr: 'Combien de temps dure le processus de candidature ?',
+      en: 'How long from the visit request to move-in?',
+      fr: 'Combien de temps entre la demande de visite et l\'emménagement ?',
     },
     answer: {
-      en: 'If a room is available, you can move in within 72 h of your first contact. That includes the video call, the house visit (on site or by video), the application review and the lease signing. If your timing is tight, let us know and we\'ll do our best to accommodate.',
-      fr: 'Si une chambre est disponible, tu peux emménager en 72 h dès ton premier contact. Ce délai inclut l\'appel vidéo, la visite de la maison (sur place ou en visio), l\'examen de la candidature et la signature du bail. Si ton calendrier est serré, dis-le-nous : on fera de notre mieux pour s\'adapter.',
+      en: 'If a room is available, you can move in within 72 h of your first contact. That includes the call, the house visit (on site or by video), the review of your file and the lease signing. If your timing is tight, let us know and we\'ll do our best to accommodate.',
+      fr: 'Si une chambre est disponible, tu peux emménager en 72 h dès ton premier contact. Ce délai inclut l\'appel, la visite de la maison (sur place ou en visio), l\'examen de ton dossier et la signature du bail. Si ton calendrier est serré, dis-le-nous : on fera de notre mieux pour s\'adapter.',
     },
   },
   {
     id: 'visit-before-applying',
     category: 'Application Process',
     question: {
-      en: 'Can I visit before applying?',
-      fr: 'Puis-je visiter avant de candidater ?',
+      en: 'Can I visit before committing?',
+      fr: 'Puis-je visiter avant de m\'engager ?',
     },
     answer: {
-      en: 'We typically schedule house visits after the initial video call as part of the application process. This allows us to get to know you first and ensures the visit is productive for both parties. Virtual tours are also available on our website.',
-      fr: 'Nous planifions généralement les visites de maison après l\'appel vidéo initial dans le cadre du processus de candidature. Cela nous permet de faire ta connaissance d\'abord et d\'assurer que la visite est productive pour les deux parties. Des visites virtuelles sont également disponibles sur notre site web.',
+      en: 'Yes, it\'s even the first step: you book a visit, on site or by video, and we call you within 48 h to set it. That way we get to know each other before anyone decides. Virtual tours are also available on our website.',
+      fr: 'Oui, c\'est même la première étape : tu programmes une visite, sur place ou en vidéo, et on t\'appelle sous 48 h pour la caler. On fait ainsi connaissance avant toute décision. Des visites virtuelles sont également disponibles sur notre site web.',
     },
   },
   {

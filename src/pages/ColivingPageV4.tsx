@@ -424,7 +424,7 @@ export function ColivingPageV4() {
                 to="/candidature"
                 className="inline-flex items-center gap-2 mt-10 px-8 py-4 bg-[#D4A574] text-white font-bold hover:bg-[#1C1917] transition-colors"
               >
-                {language === "en" ? "Apply Now" : "Candidater"}
+                {language === "en" ? "Book a visit" : "Programmer une visite"}
                 <ArrowRight className="w-5 h-5" />
               </LocalizedLink>
             </div>

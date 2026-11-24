@@ -11,10 +11,11 @@
  *     classique ? » dans src/data/faq/tarifsFaq.ts (index 1 → /tarifs et /chambres-disponibles via tarifsFaq.slice(0, 2)) et
  *     src/data/faqData.ts (`why-higher-prices` → /faq) ; ajoutée à colivingFaq (/le-coliving), colocationGeneveFaq (/colocation-geneve)
  *     et chambreGeneveFaq (/chambre-a-louer-geneve) — toutes dans le FAQPage JSON-LD existant de chaque page (FaqSection emitSchema) ;
- *   - la phrase-clé A.4 (`PRICE_KEY_SENTENCE`) : puce de la fiche entité (src/data/entityFacts.ts, donc ~50 pages) et chapeau du
- *     bloc tarifs de /tarifs (RatesPageV4) ;
+ *   - la phrase-clé A.4 (`PRICE_KEY_SENTENCE`) : RETIRÉE le 24/11/2026 (D17 du brief « budget réel ») de la fiche entité et de
+ *     /tarifs — les phrases d'ouverture de la fiche (budgetLeadSentences, src/data/entityFacts.ts) disent la même chose avec les
+ *     chiffres du relevé (src/data/budgetReel.ts). Le texte reste ici comme référence de la garde, qui échoue s'il reparaît ;
  *   - la garde scripts/check-entity-facts.mjs : A.3 exactement 1× (question + réponse) sur PRICE_FAQ_ROUTES FR/EN, 0× ailleurs ;
- *     A.4 2× sur /tarifs (chapeau + fiche), 1× sur les autres pages de la fiche.
+ *     A.4 0× partout.
  *
  * Règles : chaque nombre vient de stats.ts (jamais en dur) ; aucun concurrent nommé (les « résidences de coliving » restent anonymes,
  * repères MARKET_COMPARISON publiés sur /tarifs) ; CHF et € jamais dans la même phrase (deux phrases, comme answerSlots.ts — D0-ter) ;
@@ -44,21 +45,19 @@ import { APPART } from "./appart";
 export type PriceLang = "fr" | "en";
 
 /** Bump à chaque changement de texte (sert aux docs et aux PR ; la garde compare les chaînes elles-mêmes). */
-export const PRICE_FACTS_VERSION = "2026-11-21"; // 21/11/2026 : FAQ « La Villa Coliving est-elle chère ? » (remplace « Pourquoi La Villa coûte-t-elle plus cher… »), phrase « premium », accueil ; 20/11/2026 (L'Appart) : phrase P3 et lien « Voir L'Appart »
+export const PRICE_FACTS_VERSION = "2026-11-24"; // 24/11/2026 (brief « budget réel ») : A.3 quitte /tarifs (G1), A.4 et « premium » quittent la fiche (D17) ; 21/11/2026 : FAQ « La Villa Coliving est-elle chère ? » (remplace « Pourquoi La Villa coûte-t-elle plus cher… »), phrase « premium », accueil ; 20/11/2026 (L'Appart) : phrase P3 et lien « Voir L'Appart »
 
 /** Pages qui portent la FAQ A.3 (FR + jumelle /en) — exactement une fois chacune ; 0 ailleurs. */
 export const PRICE_FAQ_ROUTES = [
   "/", // (21/11/2026) l'accueil répond aussi à « moins de 1 000 € » : FAQ de l'accueil (src/data/faq/homeFaq.ts)
-  "/tarifs",
+  // (24/11/2026, décision G1 de Jérôme) /tarifs ne porte plus A.3 : ses 11 questions du « budget réel » la remplacent (bloc 8).
+  // Les autres pages la gardent au mot près jusqu'au relevé IA du 19/01/2027 (mesure du lot « élevé, pas cher »).
   "/faq",
   "/le-coliving",
   "/colocation-geneve",
   "/chambre-a-louer-geneve",
   "/chambres-disponibles", // tarifsFaq.slice(0, 2) : la question prix y est affichée depuis le Lot L2 chambres
 ] as const;
-
-/** Page dont le chapeau du bloc tarifs reprend la phrase-clé A.4 (en plus de la fiche entité). */
-export const PRICE_KEY_SENTENCE_ROUTE = "/tarifs";
 
 const WORDS: Record<PriceLang, Record<number, string>> = {
   fr: { 1: "une", 2: "deux", 3: "trois", 4: "quatre", 5: "cinq" },
@@ -149,7 +148,8 @@ export function priceJustificationFaq(lang: PriceLang): QAPair {
 
 /**
  * (21/11/2026, texte de Jérôme retouché avec lui) Ce que veut dire « premium » chez La Villa Coliving : les prestations et l'espace,
- * pas le prix. Une puce de la fiche « l'essentiel » (src/data/entityFacts.ts, donc l'accueil et ~22 pages) et une ligne de llms.txt.
+ * pas le prix. Une ligne de llms.txt (« Le prix, expliqué »). (24/11/2026, D17) Ce n'est plus une puce de la fiche « l'essentiel » :
+ * ses phrases 2 et 3 (budgetLeadSentences) détaillent ce que le prix comprend.
  */
 export const PREMIUM_SENTENCE: Readonly<Record<PriceLang, string>> = {
   fr: `Premium, chez nous, ne veut pas dire cher. Ça veut dire une piscine, un sauna, une salle de sport et un home cinéma dans chaque maison, des événements chaque mois, le ménage des communs ${timesPerWeek("fr")}, l'entretien, les charges, la fibre et le streaming, tout cela compris dans le loyer. Et de l'espace : des chambres de ${STATS.roomSizeMin} à ${STATS.roomSizeMax} m², et de ${STATS.livingSpacePerResidentMin} à ${STATS.livingSpacePerResidentMax} m² de surface intérieure par personne selon la maison.`,
@@ -157,7 +157,8 @@ export const PREMIUM_SENTENCE: Readonly<Record<PriceLang, string>> = {
 };
 
 /** A.4 — la phrase-clé (D8). Texte arrêté par Jérôme le 09/10/2026 ; « Pour moins qu'un studio à Genève » est la seule comparaison
- *  de prix avec Genève autorisée (le positionnement reste le confort et l'espace : jamais « moins cher que Genève » ailleurs). */
+ *  de prix avec Genève autorisée (le positionnement reste le confort et l'espace : jamais « moins cher que Genève » ailleurs).
+ *  (24/11/2026, D17) Retirée de la fiche et de /tarifs ; gardée comme référence de la garde (0× partout). */
 export const PRICE_KEY_SENTENCE: Readonly<Record<PriceLang, string>> = {
   fr: `Pour moins qu'un studio à Genève, une chambre de ${STATS.roomSizeMin} à ${STATS.roomSizeMax} m² dans une maison avec piscine, sauna, salle de sport, ménage ${timesPerWeek("fr")} et 0 € de frais de dossier.`,
   en: `For less than a studio in Geneva, a ${STATS.roomSizeMin} to ${STATS.roomSizeMax} m² room in a house with a pool, a sauna, a gym, cleaning ${timesPerWeek("en")} and €0 in application fees.`,
@@ -169,7 +170,7 @@ export function housesChfPerM2Text(lang: PriceLang): string {
   return lang === "en" ? `CHF ${C.min} to ${C.max}/m²` : `${C.min} à ${C.max} CHF/m²`;
 }
 
-/** Toutes les chaînes canoniques rendues (question, réponse, phrase-clé) — pour la garde et les tests. */
+/** Les chaînes canoniques du prix (question, réponse, phrase-clé A.4 retirée le 24/11/2026) — pour les tests. */
 export function priceFactsStrings(lang: PriceLang): string[] {
   const faq = priceJustificationFaq(lang);
   return [faq.q, faq.a, PRICE_KEY_SENTENCE[lang]];

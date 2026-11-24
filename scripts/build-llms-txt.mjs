@@ -29,10 +29,15 @@ function factsLines(lang, m) {
   const A = m.APPART, AP = A.price, STD = A.rooms.standard, SUITE = A.rooms.suite;
   const nStd = STD.numbers.length;
   const perPerson = lang === 'en' ? `€${m.thousands(AP.suitePerPersonEur, ',')}` : `${m.thousands(AP.suitePerPersonEur, ' ')} €`;
+  // (24/11/2026, brief « budget réel », lot 2) « Faits clés » commence par les six phrases d'ouverture de la fiche, mot pour mot ;
+  // « Voir le calcul » y devient l'adresse complète du bloc 2 de /tarifs. La ligne « maisons » est retirée (D17).
+  const lead = m.budgetLeadSentences(lang).map((s, i) => (i === 4
+    ? `- ${s} ${m.BUDGET_CALC_LINK[lang].label}${lang === 'en' ? ':' : ' :'} https://www.lavillacoliving.com${m.BUDGET_CALC_LINK[lang].path}#${m.BUDGET_CALC_LINK.anchor}`
+    : `- ${s}`));
   if (lang === 'en') {
     return [
+      ...lead,
       `- ${m.BRAND_CANONICAL_SENTENCE.en}`,
-      `- ${m.MAISONS_CANONICAL_SENTENCE.en}`,
       `- ${m.APPART_CANONICAL_SENTENCE.en}`,
       `- Location of the houses: Ville-la-Grand, Ambilly, Annemasse (Haute-Savoie, France) — ${F.commuteFormula.en}`,
       `- Location of ${A.name}: ${A.commune}, near the station — ${m.appartCommuteLine('en')}`,
@@ -50,8 +55,8 @@ function factsLines(lang, m) {
     ].join('\n');
   }
   return [
+    ...lead,
     `- ${m.BRAND_CANONICAL_SENTENCE.fr}`,
-    `- ${m.MAISONS_CANONICAL_SENTENCE.fr}`,
     `- ${m.APPART_CANONICAL_SENTENCE.fr}`,
     `- Localisation des maisons : Ville-la-Grand, Ambilly, Annemasse (Haute-Savoie, France) — ${F.commuteFormula.fr}`,
     `- Localisation de ${A.name} : ${A.commune}, quartier de la gare — ${m.appartCommuteLine('fr')}`,
@@ -110,6 +115,47 @@ function occupancyLine(lang, m) {
     : `${d.value} des jours-chambre hors les ${o.rampUpWeeks} premières semaines de chaque maison (${o.sinceLabel.fr} → ${o.measuredOnLabel.fr})`;
 }
 
+/**
+ * (24/11/2026, brief « budget réel », lot 2, § 4 « llms.txt » point 2) Section « Budget réel : ce qui s'ajoute à un loyer (relevé du
+ * 23 novembre 2026) » : le tableau du bloc 2 de /tarifs en texte, sa ligne « Méthode » (le lien « notre guide du budget » devient
+ * l'adresse complète) et les trois questions de comparaison de la FAQ de /tarifs (budget de 1 000 à 1 100 CHF ; plus chère qu'une
+ * colocation ; studio à Genève). Chaînes de la page (budgetBlock, tarifsPageFaq), jamais retapées ; jamais l'offre.
+ */
+const BUDGET_FAQ_PICK = [
+  { fr: /^J'ai un budget de .+ CHF pour mon loyer/, en: /^My rent budget is CHF / },
+  { fr: /^La Villa Coliving est-elle plus chère qu'une colocation \?$/, en: /^Is La Villa Coliving more expensive than a flatshare\?$/ },
+  { fr: /^Comment La Villa Coliving se compare-t-elle à un studio à Genève \?$/, en: /^How does La Villa Coliving compare with a studio in Geneva\?$/ },
+];
+export function budgetReelSection(lang, m) {
+  const b = m.budgetBlock(lang);
+  const S = m.BUDGET_SURVEY;
+  const site = 'https://www.lavillacoliving.com';
+  const guide = `${site}${lang === 'en' ? '/en' : ''}${m.BUDGET_GUIDE_PATH}`;
+  const cell = (s) => String(s).replace(/\|/g, '/');
+  const faq = m.tarifsPageFaq[lang];
+  const picked = BUDGET_FAQ_PICK.map((p) => {
+    const hit = faq.filter((x) => p[lang].test(x.q));
+    if (hit.length !== 1) throw new Error(`build-llms-txt : question de comparaison introuvable ou en double dans tarifsPageFaq.${lang} (${p[lang]})`);
+    return hit[0];
+  });
+  return [
+    lang === 'en'
+      ? `## Real budget: what comes on top of a rent (survey of ${S.dayLabel.en})`
+      : `## Budget réel : ce qui s'ajoute à un loyer (relevé du ${S.dayLabel.fr})`,
+    '',
+    `**${b.tableTitle}** (${b.caption})`,
+    '',
+    `| ${b.header.map(cell).join(' | ')} |`,
+    `|${b.header.map(() => '---').join('|')}|`,
+    ...b.rows.map((r) => `| ${r.cells.map(cell).join(' | ')} |`),
+    '',
+    // L'adresse finit la ligne, sans le point de la phrase : collé, il serait lu comme une partie de l'URL (lint:seo, contrôle 10).
+    `${b.method.before}${b.method.label}${lang === 'en' ? ': ' : ' : '}${guide}`,
+    '',
+    ...picked.flatMap((x) => [`**${x.q}**`, x.a, '']),
+  ].join('\n').trimEnd();
+}
+
 /** Rendu complet d'un llms.txt (pur : même sortie pour une même source). */
 export async function renderLlms(lang, m) {
   const tpl = await fs.readFile(path.join(__dirname, `llms-template.${lang}.md`), 'utf8');
@@ -128,6 +174,7 @@ export async function renderLlms(lang, m) {
     .replace('{{PREMIUM}}', m.PREMIUM_SENTENCE[lang])
     .replace('{{PRICE_FAQ_Q}}', m.priceJustificationFaq(lang).q)
     .replace('{{PRICE_FAQ_A}}', m.priceJustificationFaq(lang).a)
+    .replace('{{BUDGET_REEL}}', budgetReelSection(lang, m))
     .replace(/\{\{OCCUPANCY\}\}/g, occupancyLine(lang, m)) // (A2, 11/10/2026) même mesure que /investisseurs et l'Observatoire
     // (Lot L2, 09/10/2026, D1) Libellé de marque unique « 20 min de Genève-Eaux-Vives en Léman Express, porte-à-porte » = STATS_DISPLAY.distance.
     .replace(/\{\{DISTANCE\}\}/g, m.STATS_DISPLAY[lang].distance)

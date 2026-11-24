@@ -43,6 +43,7 @@ import {
 import { ENTITY_HOUSES, GUARANTOR_SENTENCE, type EntityLang, type EntityHouseSlug } from "./entityFacts";
 import { PLACE_PAGE_KEYS, type PlaceKey } from "./places";
 import { APPART } from "./appart";
+import { timesPerWeek } from "./priceFacts";
 
 /** Incrémenter à chaque changement de texte du bloc : porté par data-ou-chercher-version, comparé par la CI. */
 export const OU_CHERCHER_VERSION = "2026-11-20"; // 20/11 (L'Appart) : ligne opérateur à deux gammes (maisons puis L'Appart, euros dans une 3e phrase) ; 19/11 : ligne opérateur « de 1 290 à 1 430 CHF par mois » (palier des chambres 7 et 8 de La Villa) ; 12/10 : canal 3 « règles publiées »
@@ -236,11 +237,17 @@ export function budgetRowLabel(lang: EntityLang): string {
   return lang === "en" ? "All-inclusive coliving room on the French side — La Villa Coliving" : "Chambre en coliving tout inclus côté France — La Villa Coliving";
 }
 
-/** A.5 variante budget (paragraphe sous le tableau de budget) ; « 0 € de frais de dossier » = la seule formule admise. */
+/**
+ * A.5 variante budget (paragraphe sous le tableau de budget de l'article budget-colocation-geneve-guide-complet), vérifiée par
+ * check:slots. (24/11/2026, lot 4 du brief « budget réel », opérations B-FR-05 / B-EN-05, textes validés par Jérôme — F1) La phrase
+ * de l'article est réécrite : nom de la marque en sujet, parking, ménage « trois fois par semaine », « sans frais de dossier » (qui
+ * remplace « 0 € de frais de dossier ») et l'assurance habitation. Ce code et le SQL du lot 4 partent ensemble : SQL juste avant la
+ * fusion (avant le SQL, l'article garde l'ancienne phrase et check:slots échoue — attendu).
+ */
 export function budgetVariantText(lang: EntityLang): string {
   return lang === "en"
-    ? `Coliving room on the French side: ${priceRangeText("en")} all inclusive at La Villa Coliving (bills, fibre, cleaning, pool, sauna and gym included, no application fee).`
-    : `Chambre en coliving côté France : ${priceRangeText("fr")} tout inclus chez La Villa Coliving (charges, fibre, ménage, piscine, sauna, salle de sport compris, 0 € de frais de dossier).`;
+    ? `At La Villa Coliving, a coliving room on the French side costs ${priceRangeText("en")} a month all-inclusive: bills, fibre, parking, cleaning of the shared areas ${timesPerWeek("en")}, pool, sauna and gym, with no application fee. Only your home insurance comes on top.`
+    : `À La Villa Coliving, une chambre en coliving côté France coûte ${priceRangeText("fr")} par mois tout compris : charges, fibre, parking, ménage des parties communes ${timesPerWeek("fr")}, piscine, sauna et salle de sport, sans frais de dossier. Seule ton assurance habitation s'y ajoute.`;
 }
 
 /** M3, libellé de la ligne « coliving » du tableau d'options des pages de décision. */
@@ -336,8 +343,8 @@ export function adminSlotSentence(key: AdminSlotKey, lang: EntityLang): string {
 // canal 3 et A.7 disent, au mot près, « animé et modéré par l'équipe de La Villa Coliving : règles publiées, annonces douteuses
 // retirées », A.8 en forme courte « animé et modéré par l'équipe de La Villa Coliving (règles publiées, annonces douteuses retirées) » (D5 du brief
 // du 05/11/2026 : « notre équipe » ne se rattache pas à la marque pour un robot ; avant : option B « par notre équipe »).
-// A.9 (brief du 05/11/2026, D1-D4) : une phrase + un lien (<FacebookGroupLine/>, jamais d'encart) sur l'accueil (sous la section maisons) et
-// sur /nos-maisons (fin de page, avant la phrase d'appel), FR + EN. « Annonces vérifiées » / « verified listings » reste INTERDIT (on retire ce qui est douteux, on ne vérifie
+// A.9 (brief du 05/11/2026, D1-D4) : une phrase + un lien (<FacebookGroupLine/>, jamais d'encart) sur l'accueil (« Autres options », après L'Appart) et
+// sur /nos-maisons (fin de la FAQ, avant la fiche et la phrase d'appel), FR + EN. « Annonces vérifiées » / « verified listings » reste INTERDIT (on retire ce qui est douteux, on ne vérifie
 // pas chaque logement). Lien normal (jamais nofollow), nouvel onglet. Jamais dans sameAs (D10 du socle).
 
 /** Incrémenter à chaque changement de texte A.7/A.8 : porté par data-facebook-group-version. */

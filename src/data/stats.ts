@@ -113,9 +113,9 @@ export const STATS = {
   // Consommée par /tarifs et par la fiche entité (src/data/entityFacts.ts) ; les autres mentions
   // de fréquence restent des littéraux — remplacement progressif (Lot S2).
   fiberSpeed: "8 Gb/s",
-  // Nombre de services affichés dans la grille « Ce Qui Est Vraiment Inclus » de /tarifs.
-  // ⚠️ Maintenu à la main jusqu'à la mise en base (septembre) : doit TOUJOURS égaler le nombre
-  // d'items réellement listés sur /tarifs (24 depuis le retrait du panier repas au 01/09/2026).
+  // Nombre de services de l'ancienne grille « Ce Qui Est Vraiment Inclus » de /tarifs. (24/11/2026, brief « budget réel ») /tarifs
+  // n'affiche plus de compteur (bloc 4, listes de src/data/inclus.ts) : la valeur ne sert plus que sur /services, et « 24 services »
+  // disparaît au lot 3 du brief (§ 5, n° 6 : « le compte disparaît »).
   includedItems: 24,
   // (Lot L3, D4, 09/10/2026) L'ancienne note interne (`rating`, NPS résidents) est RETIRÉE : la seule note publiée est
   // GOOGLE_REVIEWS (fiche Google), rendue par STATS_DISPLAY.googleRating.
@@ -408,14 +408,17 @@ export const MARKET_COMPARISON = {
 } as const;
 
 export const GOOGLE_REVIEWS = {
-  rating: "4,8", // graphie FR (virgule)
-  ratingEn: "4.8", // graphie EN (point)
-  value: 4.8, // (A9, 11/10/2026) nombre pour les étoiles proportionnelles (RatingStars) — = ratingEn
-  count: 36,
+  // (Brief « budget réel » du 23/11/2026, D12 de Jérôme) Relevé de la fiche Google du 23/11/2026 : 4,9/5, 35 avis. La note se
+  // publie toujours DATÉE (« au 23 novembre 2026 ») ; garde check:facts (googleRatingIssues) : aucune autre note dans le HTML.
+  rating: "4,9", // graphie FR (virgule)
+  ratingEn: "4.9", // graphie EN (point)
+  value: 4.9, // (A9, 11/10/2026) nombre pour les étoiles proportionnelles (RatingStars) — = ratingEn
+  count: 35,
   /** Fiche Google (avis lisibles) — lien stable par cid. Le lien « ÉCRIRE un avis » (g.page/r/…/review) reste dans
    *  QuestionnaireDepartPage : ce n'est pas le même usage. */
   url: "https://maps.google.com/?cid=14514002506022967350",
-  checkedOn: "2026-10-08",
+  checkedOn: "2026-11-23",
+  checkedOnLabel: { fr: "23 novembre 2026", en: "23 November 2026" },
 } as const;
 export const GOOGLE_REVIEWS_LINK_LABEL = { fr: "Voir les avis", en: "See the reviews" } as const;
 
@@ -488,8 +491,8 @@ export const STATS_DISPLAY = {
     // (Lot L3, D4, 09/10/2026) Note Google, toujours étiquetée « on Google » ; `googleRatingValue` + `googleRatingLabel`
     // = les deux moitiés pour les tuiles (valeur en gros, étiquette dessous), `googleRating` = la phrase entière.
     googleRatingValue: `${GOOGLE_REVIEWS.ratingEn}/5`,
-    googleRatingLabel: `on Google (${GOOGLE_REVIEWS.count} reviews)`,
-    googleRating: `${GOOGLE_REVIEWS.ratingEn}/5 on Google (${GOOGLE_REVIEWS.count} reviews)`,
+    googleRatingLabel: `on Google (${GOOGLE_REVIEWS.count} reviews, as of ${GOOGLE_REVIEWS.checkedOnLabel.en})`,
+    googleRating: `${GOOGLE_REVIEWS.ratingEn}/5 on Google (${GOOGLE_REVIEWS.count} reviews, as of ${GOOGLE_REVIEWS.checkedOnLabel.en})`,
   },
   fr: {
     residents: `${STATS.totalResidents}+ résidents depuis ${STATS.foundedYear}`,
@@ -498,7 +501,7 @@ export const STATS_DISPLAY = {
     roomSize: `Chambres de ${STATS.roomSizeMin} à ${STATS.roomSizeMax} m²`,
     price: `${PRICE_CHF_FR}/mois — tout inclus`,
     googleRatingValue: `${GOOGLE_REVIEWS.rating}/5`,
-    googleRatingLabel: `sur Google (${GOOGLE_REVIEWS.count} avis)`,
-    googleRating: `${GOOGLE_REVIEWS.rating}/5 sur Google (${GOOGLE_REVIEWS.count} avis)`,
+    googleRatingLabel: `sur Google (${GOOGLE_REVIEWS.count} avis, au ${GOOGLE_REVIEWS.checkedOnLabel.fr})`,
+    googleRating: `${GOOGLE_REVIEWS.rating}/5 sur Google (${GOOGLE_REVIEWS.count} avis, au ${GOOGLE_REVIEWS.checkedOnLabel.fr})`,
   },
 } as const;

@@ -48,14 +48,14 @@ const SUBMISSION_KEY_STORAGE = "candidature_submission_key";
 // Chiffres : STATS / PRICE_* / EUR_* (fibre et ménage lus dans STATS ; prix introduit par « dès », règle du socle).
 const JOIN_FAQ: Array<{ q_fr: string; q_en: string; a_fr: string; a_en: string }> = [
   {
-    q_fr: "Qui peut postuler ? Y a-t-il un profil type ?",
-    q_en: "Who can apply? Is there a typical profile?",
+    q_fr: "Qui peut vivre chez nous ? Y a-t-il un profil type ?",
+    q_en: "Who can live with us? Is there a typical profile?",
     a_fr: "Notre communauté est principalement composée de frontaliers en CDI à Genève, de jeunes professionnels et d'expats. Nous sélectionnons sur dossier (justificatif de revenus, motivation, compatibilité avec la communauté). Pas de critère d'âge strict, mais la majorité de nos résidents ont entre 25 et 40 ans.",
     a_en: "Our community is mainly cross-border workers on permanent contracts (CDI) in Geneva, young professionals and expats. We select based on application (income proof, motivation, fit with community). No strict age limit, but most residents are 25-40 years old.",
   },
   {
-    q_fr: "Combien de temps entre la candidature et l'emménagement ?",
-    q_en: "How long from application to move-in?",
+    q_fr: "Combien de temps entre la demande de visite et l'emménagement ?",
+    q_en: "How long from visit request to move-in?",
     a_fr: "72 h dès ton premier contact si une chambre est disponible. Étape 1 : réponse sous 48 h. Étape 2 : appel vidéo (30 min). Étape 3 : visite physique ou virtuelle. Étape 4 : signature en ligne du bail + caution. Étape 5 : emménagement avec une valise.",
     a_en: "Within 72 h of your first contact if a room is available. Step 1: reply within 48 h. Step 2: video call (30 min). Step 3: physical or virtual tour. Step 4: online lease signing + deposit. Step 5: move in with a suitcase.",
   },
@@ -81,8 +81,8 @@ const JOIN_FAQ: Array<{ q_fr: string; q_en: string; a_fr: string; a_en: string }
     // (Lot A, 01/10/2026) Le formulaire ne demande plus la date : réponse alignée.
     q_fr: "Et si je ne connais pas encore ma date d'arrivée ?",
     q_en: "What if I don't know my arrival date yet?",
-    a_fr: "Aucun souci : le formulaire ne te la demande pas. Juste après l'envoi, tu peux nous indiquer une période si tu la connais déjà ; sinon, on cale ensemble une date au premier échange. Candidater ne t'engage à rien.",
-    a_en: "No problem: the form doesn't ask for it. Right after sending, you can tell us a rough period if you already know it; otherwise, we'll set a date together on our first call. Applying doesn't commit you to anything.",
+    a_fr: "Aucun souci : le formulaire ne te la demande pas. Juste après l'envoi, tu peux nous indiquer une période si tu la connais déjà ; sinon, on cale ensemble une date au premier échange. Demander une visite ne t'engage à rien.",
+    a_en: "No problem: the form doesn't ask for it. Right after sending, you can tell us a rough period if you already know it; otherwise, we'll set a date together on our first call. Requesting a visit doesn't commit you to anything.",
   },
 ];
 
@@ -333,10 +333,10 @@ export function JoinPageV4() {
   return (
     <main className="relative pt-16">
       <SEO
-        title={language === "en" ? "Apply in 2 minutes, reply within 48 h" : "Candidater en 2 minutes, réponse sous 48 h"}
+        title={language === "en" ? "Book a visit, reply within 48 h" : "Programmer une visite, réponse sous 48 h"}
         description={language === "en"
-          ? "Apply in 2 minutes: reply within 48 h, move in within 72 h of your first contact if a room is available. Furnished all-inclusive rooms near Geneva."
-          : "Candidate en 2 minutes. Réponse sous 48 h, emménagement en 72 h dès le premier contact si une chambre est disponible. Chambres meublées près de Genève."}
+          ? "Book a visit, on site or by video. Reply within 48 h, move in within 72 h of your first contact if a room is available, near Geneva."
+          : "Programme une visite, sur place ou en vidéo. Réponse sous 48 h, emménagement en 72 h dès le premier contact si une chambre est disponible, près de Genève."}
         url="https://www.lavillacoliving.com/candidature"
         jsonLd={buildFaqPageSchema(faqItems)}
       />
@@ -350,13 +350,15 @@ export function JoinPageV4() {
             className="text-4xl md:text-5xl lg:text-6xl font-light text-[#1C1917] mb-4"
             style={{ fontFamily: '"DM Serif Display", serif' }}
           >
+            {/* (24/11/2026, refonte des pages de vente § 4.7) « Candidater » devient « Programmer une visite » : le formulaire
+                s'appelle « Viens nous rencontrer ». L'adresse /candidature, les événements GA4 et la logique d'envoi ne changent pas. */}
             {language === "en" ? (
               <>
-                Join <span className="text-[#D4A574]">La Villa</span>
+                Come and <span className="text-[#D4A574]">meet us</span>
               </>
             ) : (
               <>
-                Rejoindre <span className="text-[#D4A574]">La Villa</span>
+                Viens nous <span className="text-[#D4A574]">rencontrer</span>
               </>
             )}
           </h1>
@@ -406,7 +408,7 @@ export function JoinPageV4() {
                   );
                 })() : (
                   <p className="text-sm text-[#1C1917]">
-                    {L === "en" ? "Your application is for: " : "Ta candidature concerne : "}
+                    {L === "en" ? "Your visit is about: " : "Ta visite concerne : "}
                     <strong>
                       {contextHouse.label}
                       {refRoom
@@ -422,8 +424,8 @@ export function JoinPageV4() {
                     {contextIsAppart
                       ? appartCandidatureRoomGone(L)
                       : L === "en"
-                      ? "This room has just been taken — send your application anyway, we'll offer you the next one in this house."
-                      : "Cette chambre vient de partir — envoie quand même ta candidature, on te propose la prochaine libération dans cette maison."}
+                      ? "This room has just been taken — request your visit anyway, we'll offer you the next one in this house."
+                      : "Cette chambre vient de partir — demande quand même ta visite, on te propose la prochaine libération dans cette maison."}
                   </p>
                 )}
                 <p className="text-xs text-[#57534E] mt-1">
@@ -469,12 +471,14 @@ export function JoinPageV4() {
                 className="text-3xl md:text-4xl font-light text-[#1C1917] mb-4"
                 style={{ fontFamily: '"DM Serif Display", serif' }}
               >
-                {language === "en" ? "Application received!" : "Candidature reçue !"}
+                {contextIsAppart
+                  ? (language === "en" ? "Application received!" : "Candidature reçue !")
+                  : (language === "en" ? "Request received!" : "Demande reçue !")}
               </h2>
               <p className="text-lg text-[#57534E] mb-2">
                 {language === "en"
-                  ? "Thank you for your application."
-                  : "Merci pour ta candidature."}
+                  ? (contextIsAppart ? "Thank you for your application." : "Thank you for your visit request.")
+                  : (contextIsAppart ? "Merci pour ta candidature." : "Merci pour ta demande de visite.")}
               </p>
               <p className="text-[#78716C] mb-8">
                 {language === "en"
@@ -503,7 +507,9 @@ export function JoinPageV4() {
                 onClick={() => { setDetailsToken(null); setStatus("idle"); }}
                 className={`text-sm text-[#78716C] underline hover:text-[#1C1917] transition-colors${detailsToken ? " mt-8" : ""}`}
               >
-                {language === "en" ? "Submit another application" : "Envoyer une autre candidature"}
+                {contextIsAppart
+                  ? (language === "en" ? "Submit another application" : "Envoyer une autre candidature")
+                  : (language === "en" ? "Send another request" : "Envoyer une autre demande")}
               </button>
             </div>
           ) : (
@@ -724,21 +730,23 @@ export function JoinPageV4() {
                 </>
               ) : (
                 <>
-                  {language === "en"
-                    ? "SEND MY APPLICATION"
-                    : "ENVOYER MA CANDIDATURE"}
+                  {/* (24/11/2026) L'Appart ne se visite pas avant son ouverture (Jérôme) : arrivé de L'Appart, le formulaire garde
+                      « ENVOYER MA CANDIDATURE » (après l'hydratation, contextIsAppart). */}
+                  {contextIsAppart
+                    ? (language === "en" ? "SEND MY APPLICATION" : "ENVOYER MA CANDIDATURE")
+                    : (language === "en" ? "REQUEST MY VISIT" : "DEMANDER MA VISITE")}
                   <ArrowRight className="w-5 h-5" />
                 </>
               )}
             </button>
-            {/* (Lot A, 01/10/2026) Juste sous le bouton : visible avec lui à 390 px. */}
-            <p className="text-xs text-[#57534E] text-center mt-3">
-              {language === "en"
-                ? "Early applicants are the first to know when a room becomes available."
-                : "Les premiers candidats sont les premiers prévenus quand une chambre se libère."}
-            </p>
-            <p className="text-sm text-[#78716C] text-center mt-3">
-              {language === "en" ? "30 seconds, no commitment" : "30 secondes, sans engagement"}
+            {/* (Lot A, 01/10/2026) Juste sous le bouton : visible avec lui à 390 px. (24/11/2026, § 4.7) La ligne décidée pour la
+                visite remplace « Les premiers candidats sont les premiers prévenus… » et « 30 secondes, sans engagement ». */}
+            <p className="text-sm text-[#57534E] text-center mt-3">
+              {contextIsAppart
+                ? (language === "en" ? "No commitment · Reply within 48\u00a0h" : "Sans engagement · Réponse sous 48\u00a0h")
+                : (language === "en"
+                  ? "On site or by video · No commitment · Reply within 48\u00a0h"
+                  : "Sur place ou en vidéo · Sans engagement · Réponse sous 48\u00a0h")}
             </p>
             <p className="text-xs text-[#78716C] text-center mt-1">
               {language === "en" ? "Your data remains confidential." : "Tes données restent confidentielles."}
@@ -833,7 +841,7 @@ export function JoinPageV4() {
         </div>
       </section>
 
-      {/* Steps — après le form (S33) : explique la suite, Candidater ✓ → Rencontrer → Emménager */}
+      {/* Steps — après le form (S33) : explique la suite. (24/11/2026, § 4.7) Demande ta visite → Visite, sur place ou en vidéo → Emménage */}
       <section className="py-24 lg:py-32 bg-white">
         <div className="container-custom">
           <div className="text-center mb-16">
@@ -849,7 +857,8 @@ export function JoinPageV4() {
           </div>
 
           <div className="grid md:grid-cols-3 gap-px bg-[#E7E5E4]">
-            {[
+            {(contextIsAppart ? [
+              // (24/11/2026) Arrivé de L'Appart (qui ne se visite pas avant son ouverture) : les étapes d'avant le 24/11.
               {
                 number: "01",
                 title: language === "en" ? "Apply" : "Candidater",
@@ -874,7 +883,32 @@ export function JoinPageV4() {
                     ? "Refundable deposit, and that's it — zero application fee. Welcome home!"
                     : "Caution remboursable, et c'est tout — zéro frais de dossier. Bienvenue chez toi !",
               },
-            ].map((step, index) => (
+            ] : [
+              {
+                number: "01",
+                title: language === "en" ? "Request your visit (2 min)" : "Demande ta visite (2 min)",
+                description:
+                  language === "en"
+                    ? "Fill out the form with your details: we reply within 48\u00a0h."
+                    : "Remplis le formulaire avec tes coordonnées : on te répond sous 48\u00a0h.",
+              },
+              {
+                number: "02",
+                title: language === "en" ? "Visit, on site or by video" : "Visite, sur place ou en vidéo",
+                description:
+                  language === "en"
+                    ? "We call you to set the visit and get to know you better."
+                    : "On t'appelle pour caler la visite et mieux te connaître.",
+              },
+              {
+                number: "03",
+                title: language === "en" ? "Move in" : "Emménage",
+                description:
+                  language === "en"
+                    ? "Refundable deposit, and that's it — zero application fee. Welcome home!"
+                    : "Caution remboursable, et c'est tout — zéro frais de dossier. Bienvenue chez toi !",
+              },
+            ]).map((step, index) => (
               <div key={index} className="bg-white p-10 text-center">
                 <span className="text-6xl font-light text-[#E7E5E4] block mb-6">
                   {step.number}
@@ -966,7 +1000,9 @@ export function JoinPageV4() {
           {/* FAQ contextuelle — réduit les abandons du form */}
           <div className="text-center mb-8">
             <span className="text-xs text-[#78716C] uppercase tracking-[0.3em] mb-4 block">
-              {language === "en" ? "Before you apply" : "Avant de candidater"}
+              {contextIsAppart
+                ? (language === "en" ? "Before you apply" : "Avant de candidater")
+                : (language === "en" ? "Before your visit" : "Avant ta visite")}
             </span>
             <h2
               className="text-3xl md:text-4xl font-light text-[#1C1917]"

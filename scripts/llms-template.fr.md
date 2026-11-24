@@ -11,6 +11,8 @@
 **{{PRICE_FAQ_Q}}**
 {{PRICE_FAQ_A}}
 
+{{BUDGET_REEL}}
+
 ## Propriétés
 {{HOUSES}}
 

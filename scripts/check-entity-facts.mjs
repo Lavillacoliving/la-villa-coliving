@@ -44,8 +44,8 @@
  *      (brandAmenityIssues) ;
  *      chaînes interdites : « dès 530 € » (P5) et « au L'Appart » / « du L'Appart » (nom propre, V7).
  * Options : --no-db (hors ligne) · --strict (règle des minutes, règles L2 et vouvoiement en échec, pas en avertissement)
- * (Lot L4 « Justification du prix », D8, 10/10/2026) FAQ A.3 exactement 1× sur PRICE_FAQ_ROUTES (FR/EN), 0× ailleurs ; phrase-clé A.4
- * 2× sur /tarifs (chapeau + fiche), 1× sur les autres pages de la fiche ; l'ancienne question « pourquoi plus élevés » est interdite.
+ * (Lot L4 « Justification du prix », D8, 10/10/2026) FAQ A.3 exactement 1× sur PRICE_FAQ_ROUTES (FR/EN), 0× ailleurs (/tarifs n'y est
+ * plus depuis le 24/11/2026, G1) ; phrase-clé A.4 retirée partout le 24/11/2026 (D17) ; l'ancienne question « pourquoi plus élevés » est interdite.
  *           --json-ld /route (dump des blocs JSON-LD d'une page dans tools/out/) · --tutoiement (rapport)
  * Modèle : scripts/house-pages-check.mjs (collecte, impression, exit 1). Exécuté par prerender.yml après
  * house-pages-check et avant hydration-check. En local : `npm run check:facts` après `npm run build:local`.
@@ -127,9 +127,9 @@ const FORBIDDEN = [
   // « autoroute A40 » n'est PAS ici : un article peut conseiller d'éviter ses abords (bruit) ; sur une page en code,
   // c'est une promesse routière → règle « promesse en voiture » (carPromiseIssues, A40_RE).
   // ── (Lot L3 « Note Google et preuves », décisions D3/D4 de Jérôme du 09/10/2026) preuves sociales, toutes pages sauf légales ──
-  // D4 — la seule note publiée est GOOGLE_REVIEWS (« 4,8/5 sur Google (36 avis) », STATS_DISPLAY.googleRating, src/data/stats.ts) ;
-  // l'ancienne note interne « 4,9/5 (enquêtes résidents) » disparaît de toutes les pages (12 pages + 2 articles en base).
-  { re: /(?<![\d,.])4[,.]9[   ]?(?:\/[   ]?5\b|(?:sur|out of)[   ]5\b)/i, label: '« 4,9/5 » (ancienne note interne — D4 : la seule note est GOOGLE_REVIEWS, étiquetée « sur Google »)' },
+  // D4 — la seule note publiée est GOOGLE_REVIEWS (STATS_DISPLAY.googleRating, src/data/stats.ts). (24/11/2026, D12 du brief
+  // « budget réel ») La règle « 4,9/5 interdit » (ancienne note interne) est remplacée par googleRatingIssues : toute note
+  // « x,y/5 sur Google » (et toute « 4,9/5 ») doit être la valeur ET l'étiquette datée de la constante.
   { re: /enquêtes? résidents?|resident surveys?/i, label: '« enquêtes résidents » / « resident surveys » (D4 : la note est celle de Google, étiquetée « sur Google »)' },
   // D3 — « 100+ résidents » est la seule formule (STATS.totalResidents, soutenue par v_social_proof) : jamais 150, jamais « 50+ par an ».
   // Le nombre n'est pas la fin d'un autre (« 1 150 résidents » du marché : séparateur de milliers normal ou insécable).
@@ -256,7 +256,7 @@ const norm = (s) => s.replace(/[ \t\r\n]+/g, ' ').trim();
 const count = (hay, needle) => (needle ? hay.split(needle).length - 1 : 0);
 
 /**
- * (Retenue premium, lot 1, T13 — décision Jérôme du 13/10/2026) Bouton de la fiche (« Candidater » / « Apply ») et sa
+ * (Retenue premium, lot 1, T13 — décision Jérôme du 13/10/2026) Bouton de la fiche (« Programmer une visite » / « Book a visit » depuis le 24/11/2026, ex-« Candidater ») et sa
  * microcopie (« Réponse sous 48 h ») : hors du comptage « exactement 1× par page » — ces mots vivent aussi dans la barre
  * fixée, les cartes chambres et la réassurance —, vérifiés DANS le bloc <aside id="entity-facts"> : exactement un lien
  * dont le texte est `t.cta`, la microcopie `t.ctaNote` présente une fois. Pur ; `t` = entityFactsText(lang).
@@ -281,11 +281,39 @@ export function entityFactsCtaIssues(html, t, id = 'entity-facts') {
  * plus sur une page de la fiche « L'Appart — l'essentiel » (`appartFiche`, /lappart) ; 0× ailleurs — une phrase canonique ne se
  * recopie jamais dans un autre bloc (bloc statique, FAQ, pied de page). Comparaison au caractère près (espaces normalisés). Pure.
  */
+/**
+ * (24/11/2026, D12 du brief « budget réel » du 23/11/2026) Une seule note publiée : GOOGLE_REVIEWS, écrite « 4,9/5 sur Google
+ * (35 avis, au 23 novembre 2026) » / « 4.9/5 on Google (35 reviews, as of 23 November 2026) » (STATS_DISPLAY.googleRatingValue +
+ * googleRatingLabel ; une tuile peut séparer la valeur et l'étiquette, d'où la lecture sur le texte visible aplati). Toute note
+ * « x,y/5 » suivie de « sur Google » / « on Google », et toute « 4,9/5 », doit avoir exactement la valeur et l'étiquette datée de
+ * la constante : un ancien relevé ou une note écrite en dur échoue. Les autres notes (hors Google) ne sont pas visées. Pur.
+ */
+export function googleRatingIssues(text, m) {
+  const out = [];
+  const forms = ['fr', 'en'].map((l) => ({ value: norm(m.STATS_DISPLAY[l].googleRatingValue), label: norm(m.STATS_DISPLAY[l].googleRatingLabel) }));
+  const re = /(?<![\d,.])(\d)[,.](\d)\s?(?:\/\s?5\b|(?:sur|out of)\s5\b)/gi;
+  for (const mt of text.matchAll(re)) {
+    const end = mt.index + mt[0].length;
+    const after = norm(text.slice(end, end + 140)).replace(/^\s+/, '');
+    const google = /^(?:sur|on) Google\b/.test(after);
+    const internal = mt[1] === '4' && mt[2] === '9';
+    if (!google && !internal) continue;
+    const value = norm(mt[0]).replace(/[   ]/g, '');
+    const ok = forms.some((fm) => value === fm.value.replace(/[   ]/g, '') && after.startsWith(fm.label));
+    // La forme attendue dans la langue de la note lue : virgule = français, point = anglais.
+    const shown = forms[mt[0].includes(',') ? 0 : 1];
+    if (!ok) out.push(`note « ${mt[0]} » hors de GOOGLE_REVIEWS (attendu « ${shown.value} ${shown.label} ») — « …${norm(text.slice(Math.max(0, mt.index - 40), end + 70))}… »`);
+  }
+  return out;
+}
+
 export function canonicalSentenceIssues(text, lang, { brandFiche = false, appartFiche = false } = {}, m) {
   const both = (brandFiche ? 1 : 0) + (appartFiche ? 1 : 0);
   const want = [
     ['de la marque', m.BRAND_CANONICAL_SENTENCE[lang], both],
-    ['des maisons', m.MAISONS_CANONICAL_SENTENCE[lang], brandFiche ? 1 : 0],
+    // (24/11/2026, D17 du brief « budget réel ») La phrase des maisons a quitté la fiche (les phrases d'ouverture la remplacent) :
+    // 0 partout, fiche et llms.txt compris.
+    ['des maisons', m.MAISONS_CANONICAL_SENTENCE[lang], 0],
     [`de ${m.APPART.name}`, m.APPART_CANONICAL_SENTENCE[lang], both],
   ];
   const issues = [];
@@ -808,14 +836,13 @@ async function checkHtml(m) {
   }
   for (const f of inScope.keys()) if (!files.includes(f)) failures.push(`${f} : page prérendue ABSENTE (périmètre du bloc entité)`);
   const strings = { fr: m.entityFactsStrings('fr').map(norm), en: m.entityFactsStrings('en').map(norm) };
-  // (Lot L4, D8) FAQ A.3 : 1× (question + réponse) sur PRICE_FAQ_ROUTES FR/EN, 0× ailleurs ; phrase-clé A.4 : 2× sur /tarifs
-  // (chapeau du bloc tarifs + puce de la fiche entité), 1× sur toute autre page de la fiche (comparaison générique ci-dessous).
+  // (Lot L4, D8) FAQ A.3 : 1× (question + réponse) sur PRICE_FAQ_ROUTES FR/EN, 0× ailleurs.
   const priceScope = new Map();
   for (const r of m.PRICE_FAQ_ROUTES ?? []) { priceScope.set(routeToFile(r, 'fr'), 'fr'); priceScope.set(routeToFile(r, 'en'), 'en'); }
   const priceFaq = m.priceJustificationFaq ? { fr: m.priceJustificationFaq('fr'), en: m.priceJustificationFaq('en') } : null;
+  // (24/11/2026, D17 du brief « budget réel ») La phrase-clé A.4 « Pour moins qu'un studio à Genève… » est retirée de la fiche et
+  // de /tarifs : elle ne doit plus apparaître nulle part (les comparaisons avec Genève viennent du relevé, src/data/budgetReel.ts).
   const keySentence = m.PRICE_KEY_SENTENCE ? { fr: norm(m.PRICE_KEY_SENTENCE.fr), en: norm(m.PRICE_KEY_SENTENCE.en) } : null;
-  const keyRoute = m.PRICE_KEY_SENTENCE_ROUTE ?? '/tarifs';
-  const keyFiles = new Set([routeToFile(keyRoute, 'fr'), routeToFile(keyRoute, 'en')]);
   for (const f of priceScope.keys()) if (!files.includes(f)) failures.push(`${f} : page prérendue ABSENTE (périmètre de la FAQ prix A.3)`);
   // (L'Appart, E2g) Pages de L'Appart et fiche « L'Appart — l'essentiel » : exigées dès que L'Appart a sa page (PLACE_PAGE_KEYS,
   // étape E3) ; avant, aucune page de L'Appart et aucune fiche nulle part. Blocs statiques : par page de APPART_TEASER_ROUTES.
@@ -842,8 +869,7 @@ async function checkHtml(m) {
       if (!html.includes(`data-entity-facts-version="${F.version}"`)) failures.push(`${f} : version du bloc ≠ ${F.version}`);
       for (const s of strings[lang]) {
         const n = count(text, s);
-        const expected = keySentence && s === keySentence[lang] && keyFiles.has(f) ? 2 : 1; // A.4 : chapeau + fiche sur /tarifs
-        if (n !== expected) failures.push(`${f} : phrase canonique présente ${n} fois (attendu ${expected}) — « ${s.slice(0, 70)}… »`);
+        if (n !== 1) failures.push(`${f} : phrase canonique présente ${n} fois (attendu 1) — « ${s.slice(0, 70)}… »`);
       }
       // (T13, 13/10/2026) Bouton et microcopie : une fois DANS le bloc (pas un comptage sur la page).
       for (const issue of entityFactsCtaIssues(html, m.entityFactsText(lang))) failures.push(`${f} : ${issue}`);
@@ -856,12 +882,14 @@ async function checkHtml(m) {
       if (priceScope.has(f)) {
         if (nQ !== 1 || nA !== 1) failures.push(`${f} : FAQ prix A.3 — question ${nQ}×, réponse ${nA}× (attendu 1 et 1)`);
       } else if (nQ + nA > 0) failures.push(`${f} : FAQ prix A.3 hors périmètre (question ${nQ}×, réponse ${nA}×)`);
-      if (keySentence && !lang && count(text, keySentence[pl]) > 0) failures.push(`${f} : phrase-clé A.4 hors fiche entité`);
+      if (keySentence && count(text, keySentence[pl]) > 0) failures.push(`${f} : phrase-clé A.4 « Pour moins qu'un studio… » retirée le 24/11/2026 (D17), encore présente`);
     }
     const legal = /^(en-)?(mentions-legales|politique-de-confidentialite)\.html$/.test(f);
     // Chaînes périmées ou interdites (texte visible) — dont les formulations D6/D7 du lot L2 et les preuves sociales du lot L3
     // (le nom du fichier porte l'exemption de l'Observatoire pour « 99 % »).
     if (!legal) for (const issue of forbiddenIssues(html, text, f)) failures.push(`${f} : ${issue}`);
+    // (24/11/2026, D12) Note Google : la constante datée, jamais une autre valeur ni l'ancien relevé (articles du blog compris).
+    if (!legal) for (const issue of googleRatingIssues(text, m)) failures.push(`${f} : ${issue}`);
     // (Lot L2, 09/10/2026) « 15 min » + Genève (toutes pages) ; promesse en voiture / aéroport (pages en code seulement).
     // Même régime que la règle des minutes : échec en --strict, avertissement sinon.
     if (!legal) {

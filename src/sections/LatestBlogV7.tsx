@@ -66,7 +66,7 @@ export function LatestBlogV7() {
   if (posts.length === 0) return null;
 
   return (
-    <section className="py-24 lg:py-32 bg-white" data-section="latest-blog">
+    <section className="py-12 md:py-24 lg:py-32 bg-white" data-section="latest-blog">
       <div className="max-w-6xl mx-auto px-6">
         <div className="text-center mb-16">
           <span className="text-xs text-[#78716C] uppercase tracking-[0.3em] mb-4 block">

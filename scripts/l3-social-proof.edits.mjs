@@ -16,6 +16,9 @@
  *  - `replace` est une FONCTION de la source unique `m` (scripts/lib/load-entity-facts.mjs → STATS, STATS_DISPLAY,
  *    GOOGLE_REVIEWS, GOOGLE_REVIEWS_LINK_LABEL de src/data/stats.ts) : AUCUNE note, nombre d'avis, nombre de résidents ni
  *    année en dur ici — les seuls littéraux sont les ancres `find` et la prose sans chiffre.
+ *  - (24/11/2026) Lot HISTORIQUE, en base depuis le 10/10/2026. La source porte désormais la note datée « 4,9/5 sur Google
+ *    (35 avis, au 23 novembre 2026) », que le lot G3 du brief « budget réel » pose dans ces deux articles : ce module refuse
+ *    cette forme (assertSource) et son test le rejoue avec la note de l'époque (tools/test/social-proof-rules.test.mjs).
  *  - D4 : la note s'écrit toujours « 4,8/5 sur Google (36 avis) » / « 4.8/5 on Google (36 reviews) »
  *    (STATS_DISPLAY[lang].googleRating), étiquetée « sur Google », et toujours accompagnée du lien « Voir les avis » /
  *    « See the reviews » (GOOGLE_REVIEWS_LINK_LABEL, initiale en minuscule dans la prose après un tiret) vers la fiche Google

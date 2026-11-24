@@ -416,7 +416,7 @@ const BREADCRUMB_LABELS = {
     services: 'Services',
     tarifs: 'Tarifs',
     faq: 'FAQ',
-    candidature: 'Candidature',
+    candidature: 'Programmer une visite', // (24/11/2026, § 4.7 de la refonte des pages de vente) ex-« Candidature »
     blog: 'Blog',
     investisseurs: 'Investisseurs',
     'observatoire-logement-frontalier-geneve': 'Observatoire logement frontalier',
@@ -436,7 +436,7 @@ const BREADCRUMB_LABELS = {
     services: 'Services',
     tarifs: 'Pricing',
     faq: 'FAQ',
-    candidature: 'Apply',
+    candidature: 'Book a visit',
     blog: 'Blog',
     investisseurs: 'Investors',
     'observatoire-logement-frontalier-geneve': 'Cross-border housing observatory',

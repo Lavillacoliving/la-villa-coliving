@@ -24,6 +24,8 @@ interface FaqSectionProps {
   intro?: ReactNode;
   /** (05/11/2026) Ligne facultative sous les questions (ex. groupe Facebook A.9 de /nos-maisons) — hors JSON-LD FAQPage. */
   outro?: ReactNode;
+  /** Marges verticales de la section (défaut inchangé) — l'accueil les réduit sur mobile (lot 2 de la refonte, 24/11/2026). */
+  padding?: string;
 }
 
 /**
@@ -41,10 +43,11 @@ export function FaqSection({
   className = "",
   intro,
   outro,
+  padding = "py-24 lg:py-32",
 }: FaqSectionProps) {
   if (!items?.length) return null;
   return (
-    <section id={id} className={`py-24 lg:py-32 bg-[#FAF9F6] ${className}`}>
+    <section id={id} className={`${padding} bg-[#FAF9F6] ${className}`}>
       {emitSchema && (
         <Helmet>
           <script type="application/ld+json">

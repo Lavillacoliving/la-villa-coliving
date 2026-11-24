@@ -248,7 +248,11 @@ export function RoomCard<R extends PlaceRoom = PublicRoom>({ house, houseName, r
                 onClick={() => onCtaClick?.(room)}
                 className="inline-flex items-center justify-center gap-2 min-h-[48px] px-6 bg-[#D4A574] text-[#1C1917] text-sm font-semibold rounded-lg hover:bg-[#E0BB8A] transition-colors"
               >
-                {en ? "Apply for this room" : "Candidater pour cette chambre"}
+                {/* (24/11/2026) « Programmer une visite » pour les maisons ; L'Appart, qui ne se visite pas avant son ouverture
+                    (Jérôme), garde « Candidater pour cette chambre ». */}
+                {isAppartKey(house)
+                  ? (en ? "Apply for this room" : "Candidater pour cette chambre")
+                  : (en ? "Book a visit" : "Programmer une visite")}
                 <ArrowRight className="w-4 h-4" />
               </LocalizedLink>
               {pageOpen && (
@@ -413,7 +417,9 @@ export function RoomCard<R extends PlaceRoom = PublicRoom>({ house, houseName, r
             onClick={() => onCtaClick?.(room)}
             className="w-full inline-flex items-center justify-center gap-2 px-5 py-2.5 bg-[#D4A574] text-[#1C1917] text-sm font-semibold rounded-lg hover:bg-[#E0BB8A] transition-colors"
           >
-            {language === "en" ? "Apply" : "Candidater"}
+            {isAppartKey(house)
+              ? (language === "en" ? "Apply" : "Candidater")
+              : (language === "en" ? "Book a visit" : "Programmer une visite")}
             <ArrowRight className="w-4 h-4" />
           </LocalizedLink>
           {isRoomPageOpen(house, room) && (

@@ -92,7 +92,7 @@ test('phrases canoniques de L\'Appart et de la marque : texte de la source, au c
   assert.equal(m.MAISONS_CROSS_LINK.en, 'Want a pool and a sauna? The houses, from CHF 1,290.');
 });
 
-test('fiche de L\'Appart : 9 chaînes ; paragraphe et dernière puce = phrases canoniques ; bail, caution, bouton = ceux de la fiche de la marque', () => {
+test('fiche de L\'Appart : 9 chaînes ; paragraphe et dernière puce = phrases canoniques ; bail, caution, microcopie = ceux de la fiche de la marque ; bouton « Candidater » (24/11/2026)', () => {
   for (const lang of LANGS) {
     const t = m.appartFactsText(lang), brand = m.entityFactsText(lang);
     assert.equal(m.appartFactsStrings(lang).length, 9);
@@ -102,7 +102,11 @@ test('fiche de L\'Appart : 9 chaînes ; paragraphe et dernière puce = phrases c
     assert.ok(brand.bullets.includes(t.bullets[4]) && t.bullets[4] === m.FEES_DEPOSIT_SENTENCE[lang], `${lang} : caution et frais`);
     assert.ok(t.bullets[5].endsWith(`${m.GUARANTOR_SENTENCE[lang]}.`), `${lang} : garant`);
     assert.equal(t.bullets[2], `${lang === 'en' ? 'Commute: ' : 'Trajet : '}${m.appartCommuteLine(lang)}.`);
-    assert.deepEqual([t.cta, t.ctaNote], [brand.cta, brand.ctaNote]);
+    // (24/11/2026) Les maisons disent « Programmer une visite » ; L'Appart, qui ne se visite pas avant son ouverture (Jérôme),
+    // garde « Candidater » / « Apply ». La microcopie reste celle des fiches.
+    assert.equal(t.cta, lang === 'en' ? 'Apply' : 'Candidater');
+    assert.notEqual(t.cta, brand.cta);
+    assert.equal(t.ctaNote, brand.ctaNote);
     // Ni preuve des maisons, ni équipement des maisons, ni formule de trajet de la marque.
     for (const s of m.appartFactsStrings(lang)) {
       assert.doesNotMatch(s, HOUSE_AMENITY, s);

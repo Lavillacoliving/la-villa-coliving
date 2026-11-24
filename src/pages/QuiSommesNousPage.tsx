@@ -427,7 +427,7 @@ export function QuiSommesNousPage() {
               to="/candidature"
               className="inline-flex items-center gap-2 bg-[#D4A574] text-white px-6 py-3 text-sm uppercase tracking-wider hover:bg-[#44403C] transition-colors"
             >
-              {en ? "Apply" : "Candidater"}
+              {en ? "Book a visit" : "Programmer une visite"}
               <ArrowRight className="w-4 h-4" />
             </LocalizedLink>
           </div>

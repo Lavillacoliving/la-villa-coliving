@@ -3,44 +3,43 @@ import { EntityFacts } from "@/components/EntityFacts";
 // Palette: Sauge + Terracotta doux + Crème frais
 import {
   Hero,
-  TrustBadges,
-  WhyChooseUs,
-  Features,
   HousesPreview,
-  TestimonialsCarousel,
-  HowToJoin,
   CTASection
 } from '@/sections/HomeSectionsV7';
+import {
+  HomeStats,
+  HomeWhy,
+  HomePrice,
+  HomeVisit,
+  HomeGoogleRating,
+  HomeOtherOptions,
+} from '@/sections/HomeArgumentsV8';
 import { LatestBlogV7 } from '@/sections/LatestBlogV7';
-import { LocalizedLink } from '@/components/LocalizedLink';
-import { ArrowRight } from 'lucide-react';
 import { WhatsAppButton } from "@/components/WhatsAppButton";
 import { SEO } from '@/components/SEO';
-import { FacebookGroupLine } from "@/components/FacebookGroupLine";
 import { FaqSection } from '@/components/FaqSection';
 import { buildHomeLodgingBusinessSchema } from '@/lib/structuredData';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { PRICE_FROM_CHF_FR, PRICE_FROM_CHF_EN, STATS_DISPLAY } from '@/data/stats';
 import { homeFaq } from '@/data/faq/homeFaq';
-import { AppartTeaser } from '@/components/appart/AppartTeaser';
 import { APPART } from '@/data/appart';
 import { useSectionViewTracking } from '@/lib/sectionViewTracking';
 
+/**
+ * Accueil — (lot 2 de la refonte des pages de vente, maquette téléphone validée par Jérôme le 24/11/2026 ; rapport « Pages qui
+ * vendent », § 4.1) une argumentation : promesse → quatre chiffres → maisons → « Une communauté, pas un immeuble » → le prix,
+ * expliqué → « Viens nous rencontrer » → note Google → autres options (L'Appart, groupe Facebook) → FAQ → fiche « l'essentiel »
+ * (repliée sur mobile) → derniers articles → dernier appel. Clarity (30 jours, téléphones) : 38 % des visiteurs ne défilaient
+ * pas, 30 % voyaient les maisons et 5 % le premier « Candidater » (écran 14). Rien de ce que lisent les IA n'est retiré :
+ * FAQ et FAQPage, introduction de la FAQ, fiche, bloc L'Appart, ligne Facebook et JSON-LD restent dans le HTML.
+ */
 export function HomePage() {
   const { language } = useLanguage();
-  // section_view (Lot 1b) : ids posés ICI dans des wrappers neutres, PAS dans les
-  // composants V7 — le Lot 2 réordonnera les sections sans casser la mesure.
+  // section_view (Lot 1b) : ids posés ICI dans des wrappers neutres, PAS dans les composants — on réordonne les sections
+  // sans casser la mesure. (Lot 2 de la refonte) Mêmes noms pour les blocs qui restent (comparaison avant / après) :
+  // hero, houses_preview, why_choose_us, how_to_join, appart_teaser, faq, entity_facts, latest_blog, cta_final ; nouveaux :
+  // home_stats, price_explained, google_rating, other_options. Retirés : post_grid, features_paiement, trust_badges, testimonials.
   useSectionViewTracking();
-
-  // Même pattern gtag que BlocOffre : l'analytics ne bloque jamais l'UI.
-  const trackPostGrid = (target: string) => {
-    try {
-      (window as unknown as { gtag?: (...a: unknown[]) => void }).gtag?.("event", "cta_click", {
-        cta_position: "post_grid",
-        cta_target: target,
-      });
-    } catch { /* noop */ }
-  };
 
   return (
     <main>
@@ -65,63 +64,15 @@ export function HomePage() {
         omitLocalBusiness
       />
       <div data-home-section="hero"><Hero /></div>
-      {/* Nos maisons remonté juste après le bandeau "Piscine, sauna & salle de sport"
-          (fin du Hero) : le couloir Nos 3 Maisons -> maison -> candidature génère
-          ~46 % des candidatures (GA4). */}
+      <div data-home-section="home_stats"><HomeStats /></div>
+      {/* Les maisons, juste après la promesse : le couloir accueil → maison → candidature est le premier du site (GA4). */}
       <div data-home-section="houses_preview"><HousesPreview /></div>
-      {/* Rangée post-grille (Lot 2) : rattrape ceux qui sortent de la grille sans
-          cliquer une maison — deux sorties utiles (comparer / tarifs). Bande
-          discrète, PAS un deuxième hero ; aucune image → zéro CLS. (Retenue premium, lot 1, T10 — 13/10/2026)
-          liens en casse normale, sans capitales espacées. */}
-      <div data-home-section="post_grid">
-        <div className="bg-white border-b border-[#E7E5E4] py-6 md:py-8">
-          <div className="max-w-6xl mx-auto px-6 flex flex-col sm:flex-row items-center justify-center gap-4 sm:gap-12">
-            <LocalizedLink
-              to="/nos-maisons"
-              onClick={() => trackPostGrid("/nos-maisons")}
-              className="inline-flex items-center gap-2 text-sm text-[#57534E] text-center hover:text-[#1C1917] transition-colors"
-            >
-              {language === "en"
-                ? "Torn between the three? Compare them"
-                : "Tu hésites entre les trois ? Compare-les"}
-              <ArrowRight className="w-4 h-4 flex-none text-[#D4A574]" />
-            </LocalizedLink>
-            <LocalizedLink
-              to="/tarifs"
-              onClick={() => trackPostGrid("/tarifs")}
-              className="inline-flex items-center gap-2 text-sm text-[#57534E] text-center hover:text-[#1C1917] transition-colors"
-            >
-              {language === "en"
-                ? "All inclusive, one single rent"
-                : "Tout inclus, un seul loyer"}
-              <ArrowRight className="w-4 h-4 flex-none text-[#D4A574]" />
-            </LocalizedLink>
-          </div>
-          {/* (Brief du 05/11/2026, D1) Groupe Facebook nommé et attribué, sous la section maisons : une phrase + un lien, sans encart. */}
-          <div className="max-w-2xl mx-auto px-6 mt-5 text-center">
-            <FacebookGroupLine position="home_houses" />
-          </div>
-        </div>
-      </div>
-      {/* (L'Appart, Lot 4, étape E5) Bloc statique « Aussi chez La Villa Coliving » sous la grille des maisons : texte propre à
-          l'accueil (jamais une phrase canonique), même HTML que la vue ait ou non les chambres de L'Appart. Hauteur fixe de la
-          photo, chargement différé : aucun décalage de la page. Mesure : section_view « appart_teaser » + house_discover_click. */}
-      <div data-home-section="appart_teaser" className="bg-white">
-        <div className="max-w-5xl mx-auto px-6 py-10 md:py-14"><AppartTeaser page="/" /></div>
-      </div>
-      {/* features_paiement = la section « Ce que ton loyer comprend » (ex-« Un seul paiement. Zéro surprise. », lot 2 du 16/10/2026)
-          (FeaturesV7) — métrique d'atteinte du Lot 2 (réf. ~16 % [EST]),
-          remontée juste sous la grille par le réordonnancement du Lot 2. */}
-      <div data-home-section="features_paiement"><Features /></div>
-      <div data-home-section="trust_badges"><TrustBadges /></div>
-      <div data-home-section="why_choose_us"><WhyChooseUs /></div>
-      <div data-home-section="testimonials"><TestimonialsCarousel /></div>
-      <div data-home-section="how_to_join"><HowToJoin /></div>
-      <div data-home-section="latest_blog"><LatestBlogV7 /></div>
-      {/* (Lot S1, brief Socle entité) Fiche de faits canonique — même texte sur 14 pages money et 8 articles. */}
-      <div data-home-section="entity_facts" className="bg-white">
-        <div className="max-w-3xl mx-auto px-6 py-6"><EntityFacts page="home" /></div>
-      </div>
+      <div data-home-section="why_choose_us"><HomeWhy /></div>
+      <div data-home-section="price_explained"><HomePrice /></div>
+      <div data-home-section="how_to_join"><HomeVisit /></div>
+      <div data-home-section="google_rating"><HomeGoogleRating /></div>
+      {/* L'Appart (bloc statique, data-appart-teaser), ligne du groupe Facebook A.9 et liens Annemasse / Genève. */}
+      <div data-home-section="other_options"><HomeOtherOptions /></div>
       {/* FAQ visible + FAQPage schema (front A6 : PAA « coliving genève »).
           L'intro sert de phrase citable produit (extraction IA / AI Overviews). */}
       <div data-home-section="faq">
@@ -130,6 +81,7 @@ export function HomePage() {
           items={language === "en" ? homeFaq.en : homeFaq.fr}
           emitSchema
           id="faq-coliving-geneve"
+          padding="py-12 md:py-24 lg:py-32"
           intro={
             <p>
               {/* (Lot L2, 09/10/2026) « 20 min » toujours qualifié : STATS_DISPLAY.distance (D1). (L'Appart, E5) Deux gammes, deux
@@ -141,6 +93,12 @@ export function HomePage() {
           }
         />
       </div>
+      {/* (Lot S1, brief Socle entité) Fiche de faits canonique — même texte sur 14 pages money et 8 articles.
+          (Lot 2 de la refonte, décision de Jérôme du 24/11/2026) Sous la FAQ, repliée sur mobile : tout reste dans le HTML. */}
+      <div data-home-section="entity_facts" className="bg-white">
+        <div className="max-w-3xl mx-auto px-6 py-10 md:py-16"><EntityFacts page="home" className="!my-0" collapseOnMobile /></div>
+      </div>
+      <div data-home-section="latest_blog"><LatestBlogV7 /></div>
       <div data-home-section="cta_final"><CTASection /></div>
       <WhatsAppButton />
     </main>

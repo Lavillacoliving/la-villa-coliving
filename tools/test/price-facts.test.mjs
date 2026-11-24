@@ -36,13 +36,13 @@ test('A.3 « La Villa Coliving est-elle chère ? » (21/11/2026) : marque nommé
   }
 });
 
-test('phrase « premium » (21/11/2026) : FR/EN, sans prix, surfaces de la source unique, dans la fiche entité', () => {
+test('phrase « premium » (21/11/2026) : FR/EN, sans prix, surfaces de la source unique ; hors de la fiche entité depuis le 24/11/2026 (D17)', () => {
   for (const lang of LANGS) {
     const s = m.PREMIUM_SENTENCE[lang];
     assert.ok(s.startsWith(lang === 'en' ? "Premium, for us, doesn't mean expensive." : 'Premium, chez nous, ne veut pas dire cher.'));
     assert.doesNotMatch(s, /CHF|€/);
     assert.ok(s.includes(`${m.STATS.livingSpacePerResidentMin} ${lang === 'en' ? 'to' : 'à'} ${m.STATS.livingSpacePerResidentMax} m²`));
-    assert.equal(m.entityFactsStrings(lang).filter((x) => x === s).length, 1, `${lang} : une puce de la fiche`);
+    assert.equal(m.entityFactsStrings(lang).filter((x) => x === s).length, 0, `${lang} : plus une puce de la fiche (D17)`);
   }
 });
 
@@ -66,16 +66,16 @@ test('A.4 : phrase-clé FR/EN, surfaces et ménage depuis STATS, « 0 € » pr�
   assert.equal(m.timesPerWeek('fr'), m.STATS.cleaningPerWeek === 3 ? 'trois fois par semaine' : m.timesPerWeek('fr'));
 });
 
-test('consommateurs : tarifsFaq[1] = A.3 ; la fiche entité porte A.4 une fois par langue ; priceFactsStrings = 3 chaînes', () => {
-  // tarifsFaq n'est pas dans le chargeur : on vérifie par la fiche (puce) et la cohérence des chaînes exposées.
+test('consommateurs (24/11/2026) : A.4 hors de la fiche entité (D17) ; /tarifs hors de PRICE_FAQ_ROUTES (G1) ; priceFactsStrings = 3 chaînes', () => {
   for (const lang of LANGS) {
     const strings = m.entityFactsStrings(lang);
-    assert.equal(strings.filter((s) => s === m.PRICE_KEY_SENTENCE[lang]).length, 1, `${lang} : A.4 dans la fiche entité`);
+    assert.equal(strings.filter((s) => s === m.PRICE_KEY_SENTENCE[lang]).length, 0, `${lang} : A.4 retirée de la fiche entité`);
+    assert.ok(!strings.some((s) => s.includes(lang === 'en' ? 'For less than a studio' : "Pour moins qu'un studio")), `${lang} : aucune trace de A.4`);
     assert.equal(m.priceFactsStrings(lang).length, 3);
     assert.equal(m.priceFactsStrings(lang)[2], m.PRICE_KEY_SENTENCE[lang]);
   }
-  assert.deepEqual([...m.PRICE_FAQ_ROUTES].sort(), ['/', '/chambre-a-louer-geneve', '/chambres-disponibles', '/colocation-geneve', '/faq', '/le-coliving', '/tarifs']);
-  assert.equal(m.PRICE_KEY_SENTENCE_ROUTE, '/tarifs');
+  assert.deepEqual([...m.PRICE_FAQ_ROUTES].sort(), ['/', '/chambre-a-louer-geneve', '/chambres-disponibles', '/colocation-geneve', '/faq', '/le-coliving']);
+  assert.equal(m.PRICE_KEY_SENTENCE_ROUTE, undefined, 'plus de page « chapeau A.4 »');
 });
 
 test('garde : l\'ancienne question « pourquoi plus élevés » est interdite (FR et EN), la nouvelle ne l\'est pas', () => {

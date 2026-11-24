@@ -1,0 +1,781 @@
+{
+ "version": "2026-11-24",
+ "table": "blog_posts",
+ "cle": "slug",
+ "regles": [
+  "Chaque 'old', 'anchor', 'start' et 'end' doit se trouver exactement une fois dans le champ avant modification ; sinon, arrêt sans rien écrire.",
+  "replace : remplacer 'old' par 'new'.",
+  "insert_before : insérer 'text' juste avant 'anchor'.",
+  "replace_section : remplacer tout ce qui va du début de 'start' jusqu'au début de 'end' (non compris) par 'new'.",
+  "set_field : le champ entier vaut 'old' avant et 'new' après.",
+  "Les jetons {{...}} se copient tels quels.",
+  "Ne rien modifier d'autre dans ces lignes ; ne toucher à aucun autre article."
+ ],
+ "etat_attendu_au_2026-11-24": {
+  "budget-colocation-geneve-guide-complet": {
+   "updated_at": "2026-11-21 10:21:32.19045+00",
+   "content_fr": {
+    "longueur": 19107,
+    "md5_10": "6aae6eef3e"
+   },
+   "content_en": {
+    "longueur": 15119,
+    "md5_10": "b636768861"
+   }
+  },
+  "guide-ressources-frontalier-geneve": {
+   "updated_at": "2026-11-20 09:56:59.747586+00",
+   "content_fr": {
+    "longueur": 40439,
+    "md5_10": "e0374d23d1"
+   },
+   "content_en": {
+    "longueur": 37285,
+    "md5_10": "1f99bba786"
+   }
+  },
+  "quartiers-annemasse-ou-vivre-selon-profil": {
+   "updated_at": "2026-11-21 10:21:32.19045+00",
+   "content_fr": {
+    "longueur": 10346,
+    "md5_10": "924a4f7f54"
+   },
+   "content_en": {
+    "longueur": 9259,
+    "md5_10": "643d425fe7"
+   }
+  }
+ },
+ "chaines_retirees_article_budget": [
+  "500-700 €",
+  "500 – 700 €",
+  "€500-700",
+  "1 200 – 1 600",
+  "1 200-1 600",
+  "1,200 – 1,600",
+  "1,200-1,600",
+  "1 600 CHF/mois",
+  "1,600 CHF/month",
+  "moins de 24 heures",
+  "under 24 hours",
+  "statistique.ge.ch",
+  "{{PRIX_DES}}"
+ ],
+ "operations": [
+  {
+   "op": "set_field",
+   "slug": "budget-colocation-geneve-guide-complet",
+   "field": "meta_description_fr",
+   "id": "B-FR-00",
+   "why": "A1 : description de la page",
+   "old": "Une chambre en colocation coûte 1 200 à 1 600 CHF à Genève centre, bien moins côté France. Loyer, charges, caution, coût d'entrée : le vrai budget 2026.",
+   "new": "Chambre en colocation : 1 000 CHF en médiane à Genève, 800 € côté France. Charges, frais, parking : le budget réel grimpe. Le calcul 2026, poste par poste."
+  },
+  {
+   "op": "replace",
+   "slug": "budget-colocation-geneve-guide-complet",
+   "field": "content_fr",
+   "id": "B-FR-01",
+   "why": "E1 : attribution à la statistique cantonale retirée",
+   "old": "Vivre à Genève, c'est un budget conséquent. [Voici les chiffres moyens pour un studio ou un T2 en 2026](https://statistique.ge.ch/prestations/calcul_loyer.asp) :",
+   "new": "Vivre à Genève, c'est un budget conséquent. Voici les loyers affichés en 2026 ; pour les studios meublés et les chambres en colocation, ce sont ceux de notre relevé d'annonces de novembre 2026 (méthode plus bas) :"
+  },
+  {
+   "op": "replace",
+   "slug": "budget-colocation-geneve-guide-complet",
+   "field": "content_fr",
+   "id": "B-FR-02",
+   "why": "A3 : studio à Genève, valeur du relevé",
+   "old": "| Studio 25-30m² | 1 500 – 2 200 CHF | 1 400 – 1 700 CHF | 700 – 950 € |",
+   "new": "| Studio | 1 590 – 2 950 CHF (meublé, médiane 2 100) | 1 400 – 1 700 CHF | 700 – 950 € |"
+  },
+  {
+   "op": "replace",
+   "slug": "budget-colocation-geneve-guide-complet",
+   "field": "content_fr",
+   "id": "B-FR-03",
+   "why": "A1 et A2 : chambres en colocation, valeurs du relevé",
+   "old": "| Chambre en colocation | 1 200 – 1 600 CHF | 900 – 1 200 CHF | 500 – 700 € |",
+   "new": "| Chambre en colocation, entre particuliers | 820 – 1 500 CHF (médiane 1 090) | 600 – 1 600 CHF (médiane 980) | 640 – 890 € (médiane 800) |\n| Chambre en colocation gérée | 1 250 – 1 785 CHF (médiane 1 570) | — | 760 – 866 € (médiane 819) |"
+  },
+  {
+   "op": "replace",
+   "slug": "budget-colocation-geneve-guide-complet",
+   "field": "content_fr",
+   "id": "B-FR-04",
+   "why": "A1, A2, A3 : phrase d'écart",
+   "old": "**L'écart est brutal.** Un studio à Genève centre coûte en moyenne 1 600 CHF/mois — charges en sus. La même surface côté France ? 800 €, soit environ 800 CHF. Fais le calcul : **c'est près de 10 000 CHF d'économie par an**, juste sur le loyer.",
+   "new": "**L'écart est brutal pour un studio.** À Genève, un studio meublé s'affiche à 2 100 CHF par mois en médiane (13 annonces, novembre 2026), charges en sus ; côté France, un studio se loue 700 à 950 €. Pour une chambre en colocation, l'écart est plus faible qu'on ne le croit : **1 000 CHF en médiane à Genève** entre particuliers (47 annonces dans le canton), environ 800 € côté France (750 CHF en médiane, 27 annonces à Annemasse, Ambilly, Gaillard et Ville-la-Grand)."
+  },
+  {
+   "op": "replace",
+   "slug": "budget-colocation-geneve-guide-complet",
+   "field": "content_fr",
+   "id": "B-FR-05",
+   "why": "A8 : phrase de prix qui porte le nom ; parking et assurance",
+   "old": "Chambre en coliving côté France : {{PRIX_FOURCHETTE}} tout inclus chez La Villa Coliving (charges, fibre, ménage, piscine, sauna, salle de sport compris, 0 € de frais de dossier).",
+   "new": "À La Villa Coliving, une chambre en coliving côté France coûte {{PRIX_FOURCHETTE}} par mois tout compris : charges, fibre, parking, ménage des parties communes trois fois par semaine, piscine, sauna et salle de sport, sans frais de dossier. Seule ton assurance habitation s'y ajoute."
+  },
+  {
+   "op": "replace",
+   "slug": "budget-colocation-geneve-guide-complet",
+   "field": "content_fr",
+   "id": "B-FR-06",
+   "why": "A2 : titre",
+   "old": "### 2. Colocation traditionnelle (500-700 €/mois)",
+   "new": "### 2. Colocation traditionnelle (640-890 €/mois)"
+  },
+  {
+   "op": "replace",
+   "slug": "budget-colocation-geneve-guide-complet",
+   "field": "content_fr",
+   "id": "B-FR-07",
+   "why": "A2 : chiffres du relevé",
+   "old": "Tu partages un appartement avec 2-3 colocataires trouvés sur Leboncoin ou Facebook. Loyer divisé, charges partagées.",
+   "new": "Tu partages un appartement avec 2-3 colocataires trouvés sur Leboncoin ou Facebook. Loyer divisé, charges partagées. Dans notre relevé de novembre 2026, une chambre en colocation côté France s'affiche entre 640 et 890 € par mois, 800 € en médiane (27 annonces à Annemasse, Ambilly, Gaillard et Ville-la-Grand) ; en colocation gérée à Annemasse, entre 760 et 866 €, charges comprises."
+  },
+  {
+   "op": "replace",
+   "slug": "budget-colocation-geneve-guide-complet",
+   "field": "content_fr",
+   "id": "B-FR-08",
+   "why": "A8 : titre, fourchette",
+   "old": "### 3. Coliving premium (dès {{PRIX_DES}}/mois tout compris)",
+   "new": "### 3. Coliving premium ({{PRIX_FOURCHETTE}}/mois tout compris)"
+  },
+  {
+   "op": "replace",
+   "slug": "budget-colocation-geneve-guide-complet",
+   "field": "content_fr",
+   "id": "B-FR-09",
+   "why": "Inclus alignés sur les textes validés (cours mensuels, parking, assurance)",
+   "old": "Chez [La Villa Coliving](https://www.lavillacoliving.com/tarifs), tu as une chambre meublée dans une maison avec piscine chauffée, sauna, salle de sport, fibre optique, ménage 3 fois par semaine, cours de yoga et sport, et une vraie communauté. Zéro surprise sur la facture : tout est inclus.",
+   "new": "À [La Villa Coliving](https://www.lavillacoliving.com/tarifs), tu as une chambre meublée de 16 à 24 m² dans une maison avec piscine, sauna, salle de sport et home cinéma, la fibre, le parking, le ménage des parties communes trois fois par semaine, un cours de yoga et une séance de coaching sportif chaque mois, et une vraie communauté. Zéro surprise sur la facture : tout est compris, sauf ton assurance habitation."
+  },
+  {
+   "op": "replace",
+   "slug": "budget-colocation-geneve-guide-complet",
+   "field": "content_fr",
+   "id": "B-FR-10",
+   "why": "Écart chiffré à la place de la concession",
+   "old": "**Avantage** : zéro charge mentale, tout est géré. **Inconvénient** : prix plus élevé qu'une colocation basique (mais [pas forcément plus cher qu'un studio tout compris](/blog/coliving-colocation-ou-studio-geneve-comparatif)).",
+   "new": "**Avantage** : zéro charge mentale, tout est géré. **Inconvénient** : environ 470 CHF de plus par mois qu'une colocation gérée côté France, parking compris. C'est en revanche moins qu'une chambre en colocation gérée à Genève (1 570 CHF en médiane) et [moins qu'un studio meublé à Genève](/blog/coliving-colocation-ou-studio-geneve-comparatif)."
+  },
+  {
+   "op": "replace",
+   "slug": "budget-colocation-geneve-guide-complet",
+   "field": "content_fr",
+   "id": "B-FR-11",
+   "why": "A9 : internet, les deux cas",
+   "old": "- **Internet fibre** : 30-40 €/mois",
+   "new": "- **Internet fibre** : 30-40 €/mois pour un abonnement à toi ; en colocation, 8 à 16 € par personne côté France, 10 à 22 CHF à Genève"
+  },
+  {
+   "op": "replace",
+   "slug": "budget-colocation-geneve-guide-complet",
+   "field": "content_fr",
+   "id": "B-FR-12",
+   "why": "A9 : frais d'entrée ; postes de /tarifs ajoutés",
+   "old": "- **Frais d'agence** : jusqu'à 1 mois de loyer",
+   "new": "- **Frais de dossier ou d'agence** : 200 à 700 € à l'entrée, fréquents côté France\n- **Place de parking** : 120 à 350 CHF par mois à Genève, 40 à 155 € côté Annemasse\n- **En Suisse** : redevance radio-télévision (9 à 14 CHF par mois à deux ou trois) et garantie de loyer (jusqu'à 26 CHF par mois)\n- **Lessive, produits du quotidien, linge** : environ 40 CHF par mois"
+  },
+  {
+   "op": "replace",
+   "slug": "budget-colocation-geneve-guide-complet",
+   "field": "content_fr",
+   "id": "B-FR-13",
+   "why": "A4 : exemple tiré du relevé",
+   "old": "**Exemple concret** : un loyer affiché à 750 €/mois devient facilement **1 050 €/mois** une fois toutes les charges ajoutées. C'est 40% de plus que le chiffre de l'annonce — et c'est exactement ce que nos résidents nous racontent de leur ancien logement quand ils arrivent chez nous.",
+   "new": "**Exemple concret** : à Genève, une chambre affichée à 1 000 CHF par mois revient à **1 090–1 200 CHF** une fois les frais courants ajoutés, et à **1 290–1 400 CHF** avec une place de parking, soit 9 à 40 % de plus que le chiffre de l'annonce. Côté France, une chambre en colocation affichée à 750 CHF (environ 800 €) revient à 790 CHF sans voiture et à 860 CHF avec."
+  },
+  {
+   "op": "replace",
+   "slug": "budget-colocation-geneve-guide-complet",
+   "field": "content_fr",
+   "id": "B-FR-14",
+   "why": "Phrase de prix qui porte le nom",
+   "old": "En coliving chez La Villa, le prix affiché est le prix payé. Point.",
+   "new": "À La Villa Coliving, le prix affiché est la dépense totale : {{PRIX_FOURCHETTE}} par mois selon la chambre, parking compris. Seule ton assurance habitation s'y ajoute."
+  },
+  {
+   "op": "replace",
+   "slug": "budget-colocation-geneve-guide-complet",
+   "field": "content_fr",
+   "id": "B-FR-15",
+   "why": "A8 : part du salaire sur la fourchette",
+   "old": "À 4 500 CHF net, le coliving dès {{PRIX_DES}} représente 29% — c'est serré mais tenable, surtout quand on considère qu'il n'y a aucune charge en plus. À 6 000 CHF, c'est 22% — très confortable. À 8 000 CHF, c'est 16% — le coliving devient un choix de confort et de communauté, pas un choix budgétaire.",
+   "new": "À 4 500 CHF net, une chambre à La Villa Coliving ({{PRIX_FOURCHETTE}} par mois selon la chambre) représente 29 à 32 % — c'est serré mais tenable, surtout quand on considère qu'il n'y a aucune charge en plus. À 6 000 CHF, c'est 22 à 24 % — très confortable. À 8 000 CHF, c'est 16 à 18 % — le coliving devient un choix de confort et de communauté, pas un choix budgétaire."
+  },
+  {
+   "op": "insert_before",
+   "slug": "budget-colocation-geneve-guide-complet",
+   "field": "content_fr",
+   "id": "B-FR-16",
+   "why": "E2 : section en forme de question",
+   "anchor": "## Budget total mensuel d'un frontalier à Genève",
+   "text": "## J'ai un budget de 1 000 à 1 100 CHF pour mon loyer : qu'est-ce que je peux louer près de Genève ?\n\nUn loyer de 1 000 CHF à Genève revient à 1 090–1 200 CHF par mois une fois les frais courants ajoutés, et à 1 290–1 400 CHF avec une place de parking (relevé de novembre 2026). À La Villa Coliving, une chambre coûte de {{PRIX_FOURCHETTE}} par mois tout compris, parking inclus. Avec une voiture, c'est le même budget. Sans voiture, une chambre à 1 370 CHF revient à 170–280 CHF de plus par mois, pour plus d'espace et les équipements de la maison.\n\nAvec ce budget, voici ce que tu trouves dans les annonces de novembre 2026 :\n\n- **Une chambre entre particuliers à Genève** : 1 000 CHF affichés en médiane pour 14 m², soit 1 090 à 1 400 CHF tout compté.\n- **Une chambre en colocation côté France** : 750 CHF affichés en médiane (environ 800 €), soit 790 à 860 CHF tout compté.\n- **Une chambre en colocation gérée côté France** : 770 CHF affichés (825 €), soit 830 à 900 CHF tout compté.\n\nUne chambre en colocation gérée à Genève (1 570 CHF en médiane) et un studio meublé (2 100 CHF) sont au-dessus de ce budget. Le détail du calcul est plus bas, poste par poste.\n\n"
+  },
+  {
+   "op": "replace",
+   "slug": "budget-colocation-geneve-guide-complet",
+   "field": "content_fr",
+   "id": "B-FR-17",
+   "why": "Tableau des communes : date des chiffres",
+   "old": "Au-delà des fourchettes par zone, voici les prix réels constatés début 2026 commune par commune, pour une personne seule :",
+   "new": "Au-delà des fourchettes par zone, voici les prix constatés en 2026 commune par commune, pour une personne seule (studios à Genève centre et chambres en colocation : annonces de novembre 2026) :"
+  },
+  {
+   "op": "replace",
+   "slug": "budget-colocation-geneve-guide-complet",
+   "field": "content_fr",
+   "id": "B-FR-18",
+   "why": "A1, A3 : Genève centre",
+   "old": "| **Genève centre** (Plainpalais, Eaux-Vives) | 1 800 – 2 500 CHF | 2 200 – 3 000 CHF | 1 200 – 1 600 CHF | — |",
+   "new": "| **Genève centre** (Plainpalais, Eaux-Vives) | 1 590 – 2 950 CHF (meublé) | 2 200 – 3 000 CHF | 820 – 1 500 CHF | — |"
+  },
+  {
+   "op": "replace",
+   "slug": "budget-colocation-geneve-guide-complet",
+   "field": "content_fr",
+   "id": "B-FR-19",
+   "why": "A1 : Genève périphérie",
+   "old": "| **Genève périphérie** (Lancy, Onex, Vernier) | 1 400 – 1 800 CHF | 1 800 – 2 200 CHF | 900 – 1 200 CHF | — |",
+   "new": "| **Genève périphérie** (Lancy, Onex, Vernier) | 1 400 – 1 800 CHF | 1 800 – 2 200 CHF | 600 – 1 600 CHF | — |"
+  },
+  {
+   "op": "replace",
+   "slug": "budget-colocation-geneve-guide-complet",
+   "field": "content_fr",
+   "id": "B-FR-20",
+   "why": "A2 : Annemasse centre",
+   "old": "| **Annemasse centre** | 800 – 1 100 € | 950 – 1 300 € | 550 – 750 € | — |",
+   "new": "| **Annemasse centre** | 800 – 1 100 € | 950 – 1 300 € | 640 – 890 € | — |"
+  },
+  {
+   "op": "replace",
+   "slug": "budget-colocation-geneve-guide-complet",
+   "field": "content_fr",
+   "id": "B-FR-21",
+   "why": "A2 : Annemasse gare",
+   "old": "| **Annemasse gare (Léman Express)** | 850 – 1 150 € | 1 000 – 1 350 € | 600 – 800 € | 1 430 CHF |",
+   "new": "| **Annemasse gare (Léman Express)** | 850 – 1 150 € | 1 000 – 1 350 € | 640 – 890 € | 1 430 CHF |"
+  },
+  {
+   "op": "replace",
+   "slug": "budget-colocation-geneve-guide-complet",
+   "field": "content_fr",
+   "id": "B-FR-22",
+   "why": "A2 : Ville-la-Grand",
+   "old": "| **Ville-la-Grand** | 700 – 950 € | 900 – 1 200 € | 500 – 700 € | {{PRIX_FOURCHETTE_TABLEAU}} |",
+   "new": "| **Ville-la-Grand** | 700 – 950 € | 900 – 1 200 € | 660 – 860 € | {{PRIX_FOURCHETTE_TABLEAU}} |"
+  },
+  {
+   "op": "replace",
+   "slug": "budget-colocation-geneve-guide-complet",
+   "field": "content_fr",
+   "id": "B-FR-23",
+   "why": "A2 : Ambilly",
+   "old": "| **Ambilly** | 700 – 1 000 € | 900 – 1 250 € | 500 – 750 € | 1 430 CHF |",
+   "new": "| **Ambilly** | 700 – 1 000 € | 900 – 1 250 € | 660 – 860 € | 1 430 CHF |"
+  },
+  {
+   "op": "replace",
+   "slug": "budget-colocation-geneve-guide-complet",
+   "field": "content_fr",
+   "id": "B-FR-24",
+   "why": "A2 : Gaillard",
+   "old": "| **Gaillard** | 700 – 950 € | 900 – 1 200 € | 500 – 700 € | — |",
+   "new": "| **Gaillard** | 700 – 950 € | 900 – 1 200 € | 660 – 860 € | — |"
+  },
+  {
+   "op": "insert_before",
+   "slug": "budget-colocation-geneve-guide-complet",
+   "field": "content_fr",
+   "id": "B-FR-25",
+   "why": "Tableau des communes : d'où viennent les chiffres",
+   "anchor": "Quelques repères quartier par quartier :",
+   "text": "Chambres en colocation : Annemasse, 21 annonces ; Ville-la-Grand, Ambilly et Gaillard, 6 annonces à elles trois, d'où une fourchette commune ; Cranves-Sales et Vétraz-Monthoux, aucune annonce relevée en novembre, fourchettes de début 2026.\n\n"
+  },
+  {
+   "op": "replace_section",
+   "slug": "budget-colocation-geneve-guide-complet",
+   "field": "content_fr",
+   "id": "B-FR-26",
+   "why": "A5, A6, E2 : le comparatif devient le tableau du budget réel",
+   "start": "## Le comparatif complet : coûts fixes ET coûts d'entrée",
+   "end": "## Les économies invisibles : le temps et la charge mentale",
+   "new": "## Le comparatif complet : coûts fixes ET coûts d'entrée\n\nLe loyer ne dit pas tout. Voici ce que chaque logement coûte vraiment par mois, d'après les annonces relevées le 23 novembre 2026 :\n\n| Logement | Prix affiché | Ce qui s'ajoute, hors parking | Parking | Sans voiture | Avec voiture |\n|---|---|---|---|---|---|\n| **La Villa Coliving**, chambre à 1 370 CHF | 1 370 | rien | compris | 1 370 | 1 370 |\n| Chambre entre particuliers à Genève | 1 000 | 90 à 200 | 200 | 1 090 à 1 200 | 1 290 à 1 400 |\n| Chambre à Genève, annonce « charges comprises » | 1 230 | 90 | 200 | 1 320 | 1 520 |\n| Colocation gérée à Genève | 1 570 | 80 | 200 | 1 650 | 1 850 |\n| Studio meublé à Genève | 2 100 | 200 | 200 | 2 300 | 2 500 |\n| Chambre en colocation côté France | 750 (800 €) | 40 | 70 | 790 | 860 |\n| Colocation gérée côté France | 770 (825 €) | 60 | 70 | 830 | 900 |\n| Chambre en résidence côté France | 700 (745 €) | 140 | 70 | 840 | 910 |\n| Mini studio en résidence côté France | 900 (960 €) | 160 | 70 | 1 060 | 1 120 |\n| Studio en résidence côté France | 990 (1 055 €) | 160 | 70 | 1 150 | 1 210 |\n\n*CHF par mois, arrondis à la dizaine ; totaux calculés avant arrondi.*\n\nÀ La Villa Coliving, une chambre à 1 290 CHF coûte 80 CHF de moins que la référence du tableau ; une chambre avec salle d'eau privative, à 1 430 CHF, 60 CHF de plus. Seule ton assurance habitation s'ajoute au prix affiché.\n\nFace à une colocation gérée côté France, La Villa Coliving coûte environ 470 CHF de plus par mois avec une voiture. L'écart correspond à 44 m² de surface intérieure par personne en moyenne contre 26 m², à des chambres de 16 à 24 m² contre 11 à 16 m², et à la piscine, au sauna et à la salle de sport de chaque maison.\n\n**Ce qui s'ajoute à un loyer, poste par poste**\n\n| Poste | À Genève (CHF par mois) | Côté France (€ par mois) |\n|---|---|---|\n| Chauffage, eau, électricité, quand le loyer est annoncé hors charges | 80 à 110 | 80 à 110 |\n| Internet, part d'un abonnement partagé à trois | 10 à 22 | 8 à 16 |\n| Redevance radio-télévision, à deux ou trois | 9 à 14 | — |\n| Garantie de loyer | jusqu'à 26 | — |\n| Lessive, quand les machines de l'immeuble sont payantes | jusqu'à 25 | — |\n| Produits du quotidien | 15 à 30 | 15 à 30 |\n| Linge (parure et serviette, sur 12 mois) | 4 à 10 | 4 à 10 |\n| Frais de dossier ou d'agence, sur 12 mois | — | jusqu'à 58 (200 à 700 € à l'entrée) |\n| Un abonnement de streaming | 23 | 15 |\n| Place de parking | 120 à 350 (médiane 200) | 40 à 155 (médiane 80) |\n\nLe tableau ne compte ni les meubles, ni le ménage : les logements relevés sont meublés, et le ménage des parties communes, fait trois fois par semaine par une entreprise à La Villa Coliving, n'a pas d'équivalent chiffré ailleurs.\n\n**Les coûts d'entrée, à part.** À Genève, la garantie de loyer peut atteindre trois mois de loyer : jusqu'à 3 000 CHF pour une chambre à 1 000 CHF, 6 300 CHF pour un studio meublé à 2 100 CHF. Côté France, compte le dépôt de garantie (jusqu'à deux mois de loyer hors charges pour un meublé) et, souvent, 200 à 700 € de frais de dossier ou d'agence ; dans la résidence relevée, les frais de dossier vont de 800 à 990 €. À La Villa Coliving : une caution de deux mois de loyer hors charges, payable en une, deux ou trois fois selon ton dossier, et aucun frais d'entrée — ni dossier, ni agence, ni état des lieux. Tu arrives avec tes valises.\n\n**Méthode et sources.** Prix relevés le 23 novembre 2026 sur des sites d'annonces et des sites d'opérateurs : à Genève, 47 chambres louées entre particuliers, 16 chambres en colocation gérée et 13 studios meublés ; côté France, 27 chambres en colocation à Annemasse, Ambilly, Gaillard et Ville-la-Grand, 15 colocations gérées et une résidence. Médianes. Les prix du côté France affichés en CHF par les plateformes sont convertis au taux utilisé sur ce site. Parking : médiane de 11 annonces à Genève et de 12 annonces à Annemasse. Postes ajoutés : redevance radio-télévision de 335 CHF par an et par ménage (Office fédéral de la communication), garantie de loyer, prix public d'un abonnement de streaming et des abonnements internet. Non comptés : l'abonnement de transport, la salle de sport et l'assurance habitation. La Villa Coliving est comptée à 1 370 CHF, le prix intermédiaire de ses chambres.\n\n"
+  },
+  {
+   "op": "replace",
+   "slug": "budget-colocation-geneve-guide-complet",
+   "field": "content_fr",
+   "id": "B-FR-27",
+   "why": "A7 : délai de réponse, texte validé",
+   "old": "Chez La Villa, le temps de réponse moyen pour un problème technique est de moins de 24 heures.",
+   "new": "À La Villa Coliving, les réparations sont prises en charge, avec une réponse sous 48 heures ouvrées."
+  },
+  {
+   "op": "replace",
+   "slug": "budget-colocation-geneve-guide-complet",
+   "field": "content_fr",
+   "id": "B-FR-28",
+   "why": "A1, A3 : dernière section",
+   "old": "À Genève même, un budget de 1 500 CHF limite vite le choix : les studios s'affichent à 1 800-2 200 CHF et même une chambre en colocation coûte souvent 1 200-1 600 CHF. Côté France, le même budget ouvre trois portes :",
+   "new": "À Genève même, un budget de 1 500 CHF limite vite le choix : un studio meublé s'affiche à 2 100 CHF en médiane, une chambre en colocation gérée à 1 570 CHF, et une chambre entre particuliers à 1 000 CHF, soit 1 090 à 1 400 CHF une fois les frais et le parking ajoutés (annonces de novembre 2026). Côté France, le même budget ouvre trois portes :"
+  },
+  {
+   "op": "replace",
+   "slug": "budget-colocation-geneve-guide-complet",
+   "field": "content_fr",
+   "id": "B-FR-29",
+   "why": "A2 : dernière section",
+   "old": "- **Colocation traditionnelle (500-700 €/mois)**",
+   "new": "- **Colocation traditionnelle (640-890 €/mois)**"
+  },
+  {
+   "op": "replace",
+   "slug": "budget-colocation-geneve-guide-complet",
+   "field": "content_fr",
+   "id": "B-FR-30",
+   "why": "A8 : fourchette ; parking",
+   "old": "- **Coliving tout inclus (dès {{PRIX_DES}}/mois)** : à **La Villa Coliving** (Ville-la-Grand, Ambilly et Annemasse), ce loyer unique couvre chambre meublée, charges, fibre, ménage 3x/semaine, salle de sport et piscine — sans frais de dossier, à 20 minutes de Genève-Eaux-Vives en Léman Express, porte-à-porte.",
+   "new": "- **Coliving tout inclus ({{PRIX_FOURCHETTE}}/mois)** : à **La Villa Coliving** (Ville-la-Grand, Ambilly et Annemasse), ce prix unique couvre chambre meublée, charges, fibre, parking, ménage des parties communes trois fois par semaine, salle de sport, piscine et sauna — sans frais de dossier, à 20 minutes de Genève-Eaux-Vives en Léman Express, porte-à-porte."
+  },
+  {
+   "op": "replace",
+   "slug": "budget-colocation-geneve-guide-complet",
+   "field": "content_fr",
+   "id": "B-FR-32",
+   "why": "A8 : appel final",
+   "old": "une chambre meublée tout inclus coûte à partir de **{{PRIX_DES}}/mois** — charges, fibre et ménage compris, sans frais de dossier.",
+   "new": "une chambre meublée coûte **{{PRIX_FOURCHETTE}} par mois tout compris** — charges, fibre, parking et ménage des parties communes compris, sans frais de dossier."
+  },
+  {
+   "op": "set_field",
+   "slug": "budget-colocation-geneve-guide-complet",
+   "field": "meta_description_en",
+   "id": "B-EN-00",
+   "why": "A1",
+   "old": "A flatshare room costs CHF 1,200 to 1,600 in central Geneva, far less on the French side. Rent, bills, deposit, move-in costs: the real 2026 budget.",
+   "new": "A flatshare room: median CHF 1,000 in Geneva, about €800 on the French side. Bills, fees, parking: the real budget climbs. The 2026 numbers, item by item."
+  },
+  {
+   "op": "replace",
+   "slug": "budget-colocation-geneve-guide-complet",
+   "field": "content_en",
+   "id": "B-EN-01",
+   "why": "E1",
+   "old": "Living in Geneva means a significant budget. [Here are the average figures for a studio or one-bedroom in 2026](https://statistique.ge.ch/prestations/calcul_loyer.asp):",
+   "new": "Living in Geneva means a significant budget. Here are listed rents in 2026; for furnished studios and flatshare rooms, they come from our November 2026 survey of listings (method below):"
+  },
+  {
+   "op": "replace",
+   "slug": "budget-colocation-geneve-guide-complet",
+   "field": "content_en",
+   "id": "B-EN-02",
+   "why": "A3",
+   "old": "| Studio 25-30m² | 1,500 – 2,200 CHF | 1,400 – 1,700 CHF | 700 – 950 € |",
+   "new": "| Studio | 1,590 – 2,950 CHF (furnished, median 2,100) | 1,400 – 1,700 CHF | 700 – 950 € |"
+  },
+  {
+   "op": "replace",
+   "slug": "budget-colocation-geneve-guide-complet",
+   "field": "content_en",
+   "id": "B-EN-03",
+   "why": "A1, A2",
+   "old": "| Room in shared flat | 1,200 – 1,600 CHF | 900 – 1,200 CHF | 500 – 700 € |",
+   "new": "| Flatshare room, private landlord | 820 – 1,500 CHF (median 1,090) | 600 – 1,600 CHF (median 980) | 640 – 890 € (median 800) |\n| Room in a managed flatshare | 1,250 – 1,785 CHF (median 1,570) | — | 760 – 866 € (median 819) |"
+  },
+  {
+   "op": "replace",
+   "slug": "budget-colocation-geneve-guide-complet",
+   "field": "content_en",
+   "id": "B-EN-04",
+   "why": "A1, A2, A3",
+   "old": "**The gap is brutal.** A studio in central Geneva costs an average of 1,600 CHF/month — utilities extra. The same space on the French side? 800 €, or about 800 CHF. Do the math: **that's nearly 10,000 CHF saved per year**, just on rent.",
+   "new": "**The gap is brutal for a studio.** In Geneva, a furnished studio is listed at a median of CHF 2,100 a month (13 listings, November 2026), utilities extra; on the French side, a studio rents for €700 to €950. For a flatshare room, the gap is smaller than people think: **a median of CHF 1,000 in Geneva** from a private landlord (47 listings across the canton), about €800 on the French side (median CHF 750, 27 listings in Annemasse, Ambilly, Gaillard and Ville-la-Grand)."
+  },
+  {
+   "op": "replace",
+   "slug": "budget-colocation-geneve-guide-complet",
+   "field": "content_en",
+   "id": "B-EN-05",
+   "why": "A8",
+   "old": "Coliving room on the French side: {{PRIX_FOURCHETTE}} all inclusive at La Villa Coliving (bills, fibre, cleaning, pool, sauna and gym included, no application fee).",
+   "new": "At La Villa Coliving, a coliving room on the French side costs {{PRIX_FOURCHETTE}} a month all-inclusive: bills, fibre, parking, cleaning of the shared areas three times a week, pool, sauna and gym, with no application fee. Only your home insurance comes on top."
+  },
+  {
+   "op": "replace",
+   "slug": "budget-colocation-geneve-guide-complet",
+   "field": "content_en",
+   "id": "B-EN-06",
+   "why": "A2",
+   "old": "### 2. Traditional flatshare (500-700 €/month)",
+   "new": "### 2. Traditional flatshare (640-890 €/month)"
+  },
+  {
+   "op": "replace",
+   "slug": "budget-colocation-geneve-guide-complet",
+   "field": "content_en",
+   "id": "B-EN-07",
+   "why": "A2",
+   "old": "Sharing with 2-3 flatmates found on Leboncoin or Facebook. Divided rent and shared bills. Cheapest option, but unpredictable quality.",
+   "new": "Sharing with 2-3 flatmates found on Leboncoin or Facebook. Divided rent and shared bills. Cheapest option, but unpredictable quality. In our November 2026 survey, a flatshare room on the French side is listed at €640 to €890 a month, with a median of €800 (27 listings in Annemasse, Ambilly, Gaillard and Ville-la-Grand); in a managed flatshare in Annemasse, €760 to €866, bills included."
+  },
+  {
+   "op": "replace",
+   "slug": "budget-colocation-geneve-guide-complet",
+   "field": "content_en",
+   "id": "B-EN-08",
+   "why": "A8",
+   "old": "### 3. Premium coliving (from {{PRIX_DES}}/month all-inclusive)",
+   "new": "### 3. Premium coliving ({{PRIX_FOURCHETTE}}/month all-inclusive)"
+  },
+  {
+   "op": "replace",
+   "slug": "budget-colocation-geneve-guide-complet",
+   "field": "content_en",
+   "id": "B-EN-09",
+   "why": "Inclus alignés ; écart chiffré",
+   "old": "At [La Villa Coliving](https://www.lavillacoliving.com/en/tarifs), you get a furnished room in a house with heated pool, sauna, gym, fiber internet, cleaning three times a week, yoga and fitness classes, and a real community. Zero surprise bills.",
+   "new": "At [La Villa Coliving](https://www.lavillacoliving.com/en/tarifs), you get a furnished room of 16 to 24 m² in a house with a pool, a sauna, a gym and a home cinema, fibre internet, parking, cleaning of the shared areas three times a week, a yoga class and a fitness coaching session each month, and a real community. Zero surprise bills: everything is included except your home insurance. It costs about CHF 470 more a month than a managed flatshare on the French side, parking included, and less than a room in a managed flatshare in Geneva (median CHF 1,570)."
+  },
+  {
+   "op": "replace",
+   "slug": "budget-colocation-geneve-guide-complet",
+   "field": "content_en",
+   "id": "B-EN-10",
+   "why": "A9",
+   "old": "The listed rent is never the real cost. Here are the items nobody mentions: electricity (50-120 €/month), internet (30-40 €), home insurance (15-25 €), furniture (2,000-5,000 € for an empty studio), deposit (2 months excluding charges in France vs 3 in Switzerland), agency fees (up to 1 month's rent), transport (Léman Express ~80 CHF/month or car costs).",
+   "new": "The listed rent is never the real cost. Here are the items nobody mentions: electricity (50-120 €/month), internet (30-40 € for a line of your own; in a flatshare, €8 to €16 per person on the French side, CHF 10 to 22 in Geneva), home insurance (15-25 €), furniture (2,000-5,000 € for an empty studio), deposit (2 months excluding charges in France vs 3 in Switzerland), application or agency fees (often €200 to €700 on the French side), a parking space (CHF 120 to 350 a month in Geneva, €40 to €155 around Annemasse), in Switzerland the radio and TV licence fee (CHF 9 to 14 a month shared between two or three) and a rental deposit guarantee (up to CHF 26 a month), laundry, everyday supplies and linen (about CHF 40 a month), transport (Léman Express ~80 CHF/month or car costs)."
+  },
+  {
+   "op": "replace",
+   "slug": "budget-colocation-geneve-guide-complet",
+   "field": "content_en",
+   "id": "B-EN-11",
+   "why": "A4",
+   "old": "**Real example:** a listed rent of 750 €/month easily becomes **1,050 €/month** once all charges are added. That's 40% more than the ad price — and it's exactly what our residents tell us about their previous housing when they move in. In coliving at La Villa, the listed price is the price you pay. Period.",
+   "new": "**Real example:** in Geneva, a room listed at CHF 1,000 a month comes to **CHF 1,090–1,200** once running costs are added, and **CHF 1,290–1,400** with a parking space: 9 to 40% more than the ad price. On the French side, a flatshare room listed at CHF 750 (about €800) comes to CHF 790 without a car and CHF 860 with one. At La Villa Coliving, the listed price is your total spend: {{PRIX_FOURCHETTE}} a month depending on the room, parking included. Only your home insurance comes on top."
+  },
+  {
+   "op": "replace",
+   "slug": "budget-colocation-geneve-guide-complet",
+   "field": "content_en",
+   "id": "B-EN-12",
+   "why": "A8",
+   "old": "At 6,000 CHF net, coliving from {{PRIX_DES}} represents just 22% — very comfortable.",
+   "new": "At 6,000 CHF net, a room at La Villa Coliving ({{PRIX_FOURCHETTE}} a month depending on the room) represents 22 to 24% — very comfortable."
+  },
+  {
+   "op": "insert_before",
+   "slug": "budget-colocation-geneve-guide-complet",
+   "field": "content_en",
+   "id": "B-EN-13",
+   "why": "E2",
+   "anchor": "## Total Monthly Budget for a Cross-Border Worker in Geneva",
+   "text": "## My rent budget is CHF 1,000 to 1,100: what can I rent near Geneva?\n\nA CHF 1,000 rent in Geneva comes to CHF 1,090–1,200 a month once running costs are added, and CHF 1,290–1,400 with a parking space (November 2026 survey). At La Villa Coliving, a room costs {{PRIX_FOURCHETTE}} a month all-inclusive, parking included. With a car, it is the same budget. Without a car, a room at CHF 1,370 comes to CHF 170–280 more a month, for more space and the house's facilities.\n\nWith that budget, here is what the November 2026 listings offer:\n\n- **A room from a private landlord in Geneva**: listed at a median of CHF 1,000 for 14 m², or CHF 1,090 to 1,400 all told.\n- **A flatshare room on the French side**: listed at a median of CHF 750 (about €800), or CHF 790 to 860 all told.\n- **A room in a managed flatshare on the French side**: listed at CHF 770 (€825), or CHF 830 to 900 all told.\n\nA room in a managed flatshare in Geneva (median CHF 1,570) and a furnished studio (CHF 2,100) are above that budget. The detailed calculation is further down, item by item.\n\n"
+  },
+  {
+   "op": "replace",
+   "slug": "budget-colocation-geneve-guide-complet",
+   "field": "content_en",
+   "id": "B-EN-14",
+   "why": "Tableau des communes : date",
+   "old": "Beyond the zone-by-zone ranges, here are the real prices recorded in early 2026, town by town, for a single person:",
+   "new": "Beyond the zone-by-zone ranges, here are the prices recorded in 2026, town by town, for a single person (studios in Geneva centre and flatshare rooms: November 2026 listings):"
+  },
+  {
+   "op": "replace",
+   "slug": "budget-colocation-geneve-guide-complet",
+   "field": "content_en",
+   "id": "B-EN-15",
+   "why": "A1, A3",
+   "old": "| **Geneva center** (Plainpalais, Eaux-Vives) | 1,800–2,500 CHF | 2,200–3,000 CHF | 1,200–1,600 CHF | — |",
+   "new": "| **Geneva center** (Plainpalais, Eaux-Vives) | 1,590–2,950 CHF (furnished) | 2,200–3,000 CHF | 820–1,500 CHF | — |"
+  },
+  {
+   "op": "replace",
+   "slug": "budget-colocation-geneve-guide-complet",
+   "field": "content_en",
+   "id": "B-EN-16",
+   "why": "A1",
+   "old": "| **Geneva outskirts** (Lancy, Onex, Vernier) | 1,400–1,800 CHF | 1,800–2,200 CHF | 900–1,200 CHF | — |",
+   "new": "| **Geneva outskirts** (Lancy, Onex, Vernier) | 1,400–1,800 CHF | 1,800–2,200 CHF | 600–1,600 CHF | — |"
+  },
+  {
+   "op": "replace",
+   "slug": "budget-colocation-geneve-guide-complet",
+   "field": "content_en",
+   "id": "B-EN-17",
+   "why": "A2",
+   "old": "| **Annemasse center** | 800–1,100 € | 950–1,300 € | 550–750 € | — |",
+   "new": "| **Annemasse center** | 800–1,100 € | 950–1,300 € | 640–890 € | — |"
+  },
+  {
+   "op": "replace",
+   "slug": "budget-colocation-geneve-guide-complet",
+   "field": "content_en",
+   "id": "B-EN-18",
+   "why": "A2",
+   "old": "| **Annemasse station (Léman Express)** | 850–1,150 € | 1,000–1,350 € | 600–800 € | 1,430 CHF |",
+   "new": "| **Annemasse station (Léman Express)** | 850–1,150 € | 1,000–1,350 € | 640–890 € | 1,430 CHF |"
+  },
+  {
+   "op": "replace",
+   "slug": "budget-colocation-geneve-guide-complet",
+   "field": "content_en",
+   "id": "B-EN-19",
+   "why": "A2",
+   "old": "| **Ville-la-Grand** | 700–950 € | 900–1,200 € | 500–700 € | {{PRIX_FOURCHETTE_TABLEAU}} |",
+   "new": "| **Ville-la-Grand** | 700–950 € | 900–1,200 € | 660–860 € | {{PRIX_FOURCHETTE_TABLEAU}} |"
+  },
+  {
+   "op": "replace",
+   "slug": "budget-colocation-geneve-guide-complet",
+   "field": "content_en",
+   "id": "B-EN-20",
+   "why": "A2",
+   "old": "| **Ambilly** | 700–1,000 € | 900–1,250 € | 500–750 € | 1,430 CHF |",
+   "new": "| **Ambilly** | 700–1,000 € | 900–1,250 € | 660–860 € | 1,430 CHF |"
+  },
+  {
+   "op": "replace",
+   "slug": "budget-colocation-geneve-guide-complet",
+   "field": "content_en",
+   "id": "B-EN-21",
+   "why": "A2",
+   "old": "| **Gaillard** | 700–950 € | 900–1,200 € | 500–700 € | — |",
+   "new": "| **Gaillard** | 700–950 € | 900–1,200 € | 660–860 € | — |"
+  },
+  {
+   "op": "insert_before",
+   "slug": "budget-colocation-geneve-guide-complet",
+   "field": "content_en",
+   "id": "B-EN-22",
+   "why": "Tableau des communes : sources",
+   "anchor": "A few neighborhood pointers:",
+   "text": "Flatshare rooms: Annemasse, 21 listings; Ville-la-Grand, Ambilly and Gaillard, 6 listings between them, hence a shared range; Cranves-Sales and Vétraz-Monthoux, no listing surveyed in November, early-2026 ranges.\n\n"
+  },
+  {
+   "op": "replace_section",
+   "slug": "budget-colocation-geneve-guide-complet",
+   "field": "content_en",
+   "id": "B-EN-23",
+   "why": "A5, A6, E2",
+   "start": "## The Full Comparison: Fixed Costs AND Move-In Costs",
+   "end": "## Invisible Savings: Time and Mental Load",
+   "new": "## The Full Comparison: Fixed Costs AND Move-In Costs\n\nRent doesn't tell the whole story. Here is what each type of housing really costs per month, based on listings surveyed on 23 November 2026:\n\n| Housing | Listed price | Added costs, excluding parking | Parking | Without a car | With a car |\n|---|---|---|---|---|---|\n| **La Villa Coliving**, room at CHF 1,370 | 1,370 | none | included | 1,370 | 1,370 |\n| Room from a private landlord in Geneva | 1,000 | 90 to 200 | 200 | 1,090 to 1,200 | 1,290 to 1,400 |\n| Room in Geneva, listing says \"bills included\" | 1,230 | 90 | 200 | 1,320 | 1,520 |\n| Managed flatshare in Geneva | 1,570 | 80 | 200 | 1,650 | 1,850 |\n| Furnished studio in Geneva | 2,100 | 200 | 200 | 2,300 | 2,500 |\n| Flatshare room on the French side | 750 (€800) | 40 | 70 | 790 | 860 |\n| Managed flatshare on the French side | 770 (€825) | 60 | 70 | 830 | 900 |\n| Room in a residence on the French side | 700 (€745) | 140 | 70 | 840 | 910 |\n| Mini studio in a residence on the French side | 900 (€960) | 160 | 70 | 1,060 | 1,120 |\n| Studio in a residence on the French side | 990 (€1,055) | 160 | 70 | 1,150 | 1,210 |\n\n*CHF a month, rounded to the nearest ten; totals calculated before rounding.*\n\nAt La Villa Coliving, a room at CHF 1,290 costs CHF 80 less than the reference in the table; a room with a private bathroom, at CHF 1,430, costs CHF 60 more. Only your home insurance comes on top of the listed price.\n\nCompared with a managed flatshare on the French side, La Villa Coliving costs about CHF 470 more a month with a car. The gap pays for 44 m² of indoor space per person on average instead of 26 m², rooms of 16 to 24 m² instead of 11 to 16 m², and the pool, sauna and gym in each house.\n\n**What comes on top of a rent, item by item**\n\n| Item | In Geneva (CHF a month) | French side (€ a month) |\n|---|---|---|\n| Heating, water and electricity, when the rent is quoted without charges | 80 to 110 | 80 to 110 |\n| Internet, your share of a line split three ways | 10 to 22 | 8 to 16 |\n| Radio and TV licence fee, shared between two or three | 9 to 14 | — |\n| Rental deposit guarantee | up to 26 | — |\n| Laundry, when the building's machines are coin-operated | up to 25 | — |\n| Everyday supplies | 15 to 30 | 15 to 30 |\n| Linen (bedding set and towel, spread over 12 months) | 4 to 10 | 4 to 10 |\n| Application or agency fees, spread over 12 months | — | up to 58 (€200 to €700 when you move in) |\n| A streaming subscription | 23 | 15 |\n| Parking space | 120 to 350 (median 200) | 40 to 155 (median 80) |\n\nThe table counts neither furniture nor cleaning: the housing surveyed is furnished, and cleaning of the shared areas, done three times a week by a company at La Villa Coliving, has no priced equivalent elsewhere.\n\n**Move-in costs, separately.** In Geneva, the rental deposit can reach three months' rent: up to CHF 3,000 for a CHF 1,000 room, CHF 6,300 for a furnished studio at CHF 2,100. On the French side, plan for the deposit (up to two months' rent excluding charges for furnished housing) and, often, €200 to €700 in application or agency fees; in the residence we surveyed, application fees run from €800 to €990. At La Villa Coliving: a deposit of two months' rent excluding charges, payable in one, two or three instalments depending on your application, and no move-in fees — no application, agency or inventory fee. You arrive with your suitcases.\n\n**Method and sources.** Prices collected on 23 November 2026 from listing and operator websites: in Geneva, 47 rooms from private landlords, 16 rooms in managed flatshares and 13 furnished studios; on the French side, 27 flatshare rooms in Annemasse, Ambilly, Gaillard and Ville-la-Grand, 15 managed flatshares and one residence. Medians. French-side prices shown in CHF by the platforms are converted at the rate used on this site. Parking: median of 11 listings in Geneva and 12 listings in Annemasse. Added items: radio and TV licence fee of CHF 335 a year per household (Federal Office of Communications), rental deposit guarantee, list price of a streaming subscription and of internet plans. Not counted: a public transport pass, a gym membership and home insurance. La Villa Coliving is counted at CHF 1,370, the middle price of its rooms.\n\n"
+  },
+  {
+   "op": "replace",
+   "slug": "budget-colocation-geneve-guide-complet",
+   "field": "content_en",
+   "id": "B-EN-24",
+   "why": "A7",
+   "old": "At La Villa, the average response time for a technical issue is under 24 hours.",
+   "new": "At La Villa Coliving, repairs are taken care of, with a reply within 48 working hours."
+  },
+  {
+   "op": "replace",
+   "slug": "budget-colocation-geneve-guide-complet",
+   "field": "content_en",
+   "id": "B-EN-25",
+   "why": "A1, A3",
+   "old": "In Geneva itself, a CHF 1,500 budget quickly narrows the field: studios list at CHF 1,800-2,200 and even a room in a flatshare often runs CHF 1,200-1,600. On the French side, the same budget opens three doors:",
+   "new": "In Geneva itself, a CHF 1,500 budget quickly narrows the field: a furnished studio is listed at a median of CHF 2,100, a room in a managed flatshare at CHF 1,570, and a room from a private landlord at CHF 1,000, which comes to CHF 1,090 to 1,400 once fees and parking are added (November 2026 listings). On the French side, the same budget opens three doors:"
+  },
+  {
+   "op": "replace",
+   "slug": "budget-colocation-geneve-guide-complet",
+   "field": "content_en",
+   "id": "B-EN-26",
+   "why": "A2",
+   "old": "- **Traditional flatshare (€500-700/month)**",
+   "new": "- **Traditional flatshare (€640-890/month)**"
+  },
+  {
+   "op": "replace",
+   "slug": "budget-colocation-geneve-guide-complet",
+   "field": "content_en",
+   "id": "B-EN-27",
+   "why": "A8",
+   "old": "- **All-inclusive coliving (from {{PRIX_DES}}/month)**: at **La Villa Coliving** (Ville-la-Grand, Ambilly and Annemasse), one rent covers a furnished room, utilities, fiber, cleaning three times a week, gym and pool — no application fee, 20 minutes door to door from Geneva Eaux-Vives by Léman Express.",
+   "new": "- **All-inclusive coliving ({{PRIX_FOURCHETTE}}/month)**: at **La Villa Coliving** (Ville-la-Grand, Ambilly and Annemasse), one price covers a furnished room, utilities, fibre, parking, cleaning of the shared areas three times a week, gym, pool and sauna — no application fee, 20 minutes door to door from Geneva Eaux-Vives by Léman Express."
+  },
+  {
+   "op": "replace",
+   "slug": "budget-colocation-geneve-guide-complet",
+   "field": "content_en",
+   "id": "B-EN-29",
+   "why": "A8",
+   "old": "a fully furnished all-inclusive room costs from **{{PRIX_DES}}/month** — utilities, fiber and cleaning included, no application fee.",
+   "new": "a furnished room costs **{{PRIX_FOURCHETTE}} a month all-inclusive** — utilities, fibre, parking and cleaning of the shared areas included, no application fee."
+  },
+  {
+   "op": "replace",
+   "slug": "guide-ressources-frontalier-geneve",
+   "field": "content_fr",
+   "id": "G-FR-01",
+   "why": "Date des chiffres",
+   "old": "Voici les ordres de grandeur relevés début 2026, pour une personne seule :",
+   "new": "Voici les ordres de grandeur relevés en 2026, pour une personne seule (studios à Genève centre et chambres en colocation : annonces de novembre 2026) :"
+  },
+  {
+   "op": "replace",
+   "slug": "guide-ressources-frontalier-geneve",
+   "field": "content_fr",
+   "id": "G-FR-02",
+   "why": "A1, A3",
+   "old": "| Genève centre (Eaux-Vives, Plainpalais) | 1 800 – 2 500 CHF | 1 200 – 1 600 CHF |",
+   "new": "| Genève centre (Eaux-Vives, Plainpalais) | 1 590 – 2 950 CHF (meublé) | 820 – 1 500 CHF |"
+  },
+  {
+   "op": "replace",
+   "slug": "guide-ressources-frontalier-geneve",
+   "field": "content_fr",
+   "id": "G-FR-03",
+   "why": "A1",
+   "old": "| Genève périphérie (Lancy, Onex, Vernier) | 1 400 – 1 800 CHF | 900 – 1 200 CHF |",
+   "new": "| Genève périphérie (Lancy, Onex, Vernier) | 1 400 – 1 800 CHF | 600 – 1 600 CHF |"
+  },
+  {
+   "op": "replace",
+   "slug": "guide-ressources-frontalier-geneve",
+   "field": "content_fr",
+   "id": "G-FR-04",
+   "why": "A2",
+   "old": "| Annemasse centre / gare (Léman Express) | 800 – 1 150 € | 550 – 800 € |",
+   "new": "| Annemasse centre / gare (Léman Express) | 800 – 1 150 € | 640 – 890 € |"
+  },
+  {
+   "op": "replace",
+   "slug": "guide-ressources-frontalier-geneve",
+   "field": "content_fr",
+   "id": "G-FR-05",
+   "why": "A2",
+   "old": "| Ville-la-Grand · Ambilly | 700 – 1 000 € | 500 – 750 € |",
+   "new": "| Ville-la-Grand · Ambilly | 700 – 1 000 € | 660 – 860 € |"
+  },
+  {
+   "op": "replace",
+   "slug": "guide-ressources-frontalier-geneve",
+   "field": "content_fr",
+   "id": "G-FR-06",
+   "why": "A2",
+   "old": "| Gaillard | 700 – 950 € | 500 – 700 € |",
+   "new": "| Gaillard | 700 – 950 € | 660 – 860 € |"
+  },
+  {
+   "op": "replace",
+   "slug": "guide-ressources-frontalier-geneve",
+   "field": "content_en",
+   "id": "G-EN-01",
+   "why": "Date des chiffres",
+   "old": "Here are the orders of magnitude observed in early 2026, for a single person:",
+   "new": "Here are the orders of magnitude observed in 2026, for a single person (studios in Geneva centre and flatshare rooms: November 2026 listings):"
+  },
+  {
+   "op": "replace",
+   "slug": "guide-ressources-frontalier-geneve",
+   "field": "content_en",
+   "id": "G-EN-02",
+   "why": "A1, A3",
+   "old": "| Geneva centre (Eaux-Vives, Plainpalais) | 1,800 – 2,500 CHF | 1,200 – 1,600 CHF |",
+   "new": "| Geneva centre (Eaux-Vives, Plainpalais) | 1,590 – 2,950 CHF (furnished) | 820 – 1,500 CHF |"
+  },
+  {
+   "op": "replace",
+   "slug": "guide-ressources-frontalier-geneve",
+   "field": "content_en",
+   "id": "G-EN-03",
+   "why": "A1",
+   "old": "| Geneva outskirts (Lancy, Onex, Vernier) | 1,400 – 1,800 CHF | 900 – 1,200 CHF |",
+   "new": "| Geneva outskirts (Lancy, Onex, Vernier) | 1,400 – 1,800 CHF | 600 – 1,600 CHF |"
+  },
+  {
+   "op": "replace",
+   "slug": "guide-ressources-frontalier-geneve",
+   "field": "content_en",
+   "id": "G-EN-04",
+   "why": "A2",
+   "old": "| Annemasse centre / station (Léman Express) | €800 – 1,150 | €550 – 800 |",
+   "new": "| Annemasse centre / station (Léman Express) | €800 – 1,150 | €640 – 890 |"
+  },
+  {
+   "op": "replace",
+   "slug": "guide-ressources-frontalier-geneve",
+   "field": "content_en",
+   "id": "G-EN-05",
+   "why": "A2",
+   "old": "| Ville-la-Grand · Ambilly | €700 – 1,000 | €500 – 750 |",
+   "new": "| Ville-la-Grand · Ambilly | €700 – 1,000 | €660 – 860 |"
+  },
+  {
+   "op": "replace",
+   "slug": "guide-ressources-frontalier-geneve",
+   "field": "content_en",
+   "id": "G-EN-06",
+   "why": "A2",
+   "old": "| Gaillard | €700 – 950 | €500 – 700 |",
+   "new": "| Gaillard | €700 – 950 | €660 – 860 |"
+  },
+  {
+   "op": "replace",
+   "slug": "quartiers-annemasse-ou-vivre-selon-profil",
+   "field": "content_fr",
+   "id": "Q-FR-01",
+   "why": "A2",
+   "old": "| Chambre en colocation | — | 500–700 € |",
+   "new": "| Chambre en colocation | — | 640–890 € |"
+  },
+  {
+   "op": "replace",
+   "slug": "quartiers-annemasse-ou-vivre-selon-profil",
+   "field": "content_fr",
+   "id": "Q-FR-02",
+   "why": "A2 ; inclus alignés",
+   "old": "> **À lire honnêtement :** une chambre en colocation classique démarre vers 500-700 €, mais **hors charges, internet, ménage et équipements**. Un coliving tout inclus (type le nôtre, dès {{PRIX_DES}}/mois) se situe plus haut en ligne brute, mais englobe loyer + charges + fibre + ménage + accès piscine/sauna/gym + cours fitness + abonnements.",
+   "new": "> **À lire honnêtement :** à Annemasse et dans les communes voisines, une chambre en colocation s'affiche entre 640 et 890 € par mois, 800 € en médiane (27 annonces relevées en novembre 2026), et 26 annonces sur 27 ne disent pas si les charges sont comprises. À La Villa Coliving, une chambre coûte {{PRIX_FOURCHETTE}} par mois tout compris : charges, fibre, parking, ménage des parties communes trois fois par semaine, piscine, sauna, salle de sport, cours de yoga et de coaching sportif, streaming."
+  },
+  {
+   "op": "replace",
+   "slug": "quartiers-annemasse-ou-vivre-selon-profil",
+   "field": "content_en",
+   "id": "Q-EN-01",
+   "why": "A2",
+   "old": "| Room in a shared flat | — | €500–700 |",
+   "new": "| Room in a shared flat | — | €640–890 |"
+  },
+  {
+   "op": "replace",
+   "slug": "quartiers-annemasse-ou-vivre-selon-profil",
+   "field": "content_en",
+   "id": "Q-EN-02",
+   "why": "A2 ; inclus alignés",
+   "old": "> **Read honestly:** a classic shared room starts around €500-700, but **excluding utilities, internet, cleaning and amenities**. An all-inclusive coliving (like ours, from {{PRIX_DES}}/month) sits higher in raw terms, but bundles rent + utilities + fiber + cleaning + pool/sauna/gym access + fitness classes + subscriptions.",
+   "new": "> **Read honestly:** in Annemasse and the neighbouring towns, a room in a shared flat is listed at €640 to €890 a month, with a median of €800 (27 listings surveyed in November 2026), and 26 of the 27 listings do not say whether bills are included. At La Villa Coliving, a room costs {{PRIX_FOURCHETTE}} a month all-inclusive: bills, fibre, parking, cleaning of the shared areas three times a week, pool, sauna, gym, yoga and fitness coaching classes, and streaming."
+  }
+ ],
+ "amendements": [
+  {
+   "date": "2026-11-24",
+   "decision": "Jérôme, 24/11/2026 : « restons flous sur la date » — pas de date d'ouverture de L'Appart (la décision D11 est annulée).",
+   "retire": [
+    {
+     "id": "B-FR-31",
+     "slug": "budget-colocation-geneve-guide-complet",
+     "field": "content_fr",
+     "why": "L'Appart : date de disponibilité (validée pour /tarifs)"
+    },
+    {
+     "id": "B-EN-28",
+     "slug": "budget-colocation-geneve-guide-complet",
+     "field": "content_en",
+     "why": "L'Appart : date"
+    }
+   ]
+  }
+ ]
+}

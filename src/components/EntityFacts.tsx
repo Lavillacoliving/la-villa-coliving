@@ -16,7 +16,8 @@
  * de contexte propre à la page (pages de décision), rendue hors des chaînes canoniques.
  * Attribution : porte interne `entity_facts` (src/lib/attribution.ts), même mécanique que BlocOffre.
  *
- * `collapseOnMobile` (sous-lot A, décision Jérôme du 11/11/2026 — pages maisons seulement) : sur mobile, la fiche
+ * `collapseOnMobile` (sous-lot A, décision Jérôme du 11/11/2026 — pages maisons ; étendu à /nos-maisons et à l'accueil, où la
+ * fiche passe sous la FAQ, par les lots 1 et 2 de la refonte des pages de vente, décisions de Jérôme du 24/11/2026) : sur mobile, la fiche
  * s'arrête après son premier paragraphe, sous un bouton « Voir tout l'essentiel ». Le reste (phrase de contexte, puces,
  * bouton, microcopie) est masqué en CSS et reste dans le HTML : la garde check:facts lit toujours les mêmes phrases.
  * Replié au prérendu comme au premier rendu du navigateur (aucun écart d'hydratation) ; toujours déplié à partir de md.
@@ -33,7 +34,7 @@ export interface EntityFactsProps {
   houseSlug?: HouseKey;
   children?: ReactNode;
   className?: string;
-  /** Sur mobile, replie la fiche après son premier paragraphe (tout reste dans le HTML). Pages maisons. */
+  /** Sur mobile, replie la fiche après son premier paragraphe (tout reste dans le HTML). Pages maisons, /nos-maisons et accueil. */
   collapseOnMobile?: boolean;
 }
 
@@ -59,6 +60,14 @@ export function EntityFacts({ page, houseSlug, children, className = "", collaps
       });
     } catch { /* noop */ }
   };
+  // (24/11/2026, brief « budget réel ») « Voir le calcul » : lien simple (chargement complet, le navigateur descend à l'ancre du HTML
+  // prérendu) vers le bloc 2 de /tarifs ; sur /tarifs, une ancre dans la page. Événement `essentiel_calcul_click` (page d'origine).
+  const calcHref = page === "tarifs" ? `#${t.calcLink.anchor}` : `${t.calcLink.path}#${t.calcLink.anchor}`;
+  const trackCalc = () => {
+    try {
+      (window as unknown as { gtag?: (...a: unknown[]) => void }).gtag?.("event", "essentiel_calcul_click", { page, language });
+    } catch { /* noop */ }
+  };
 
   return (
     <aside
@@ -74,7 +83,8 @@ export function EntityFacts({ page, houseSlug, children, className = "", collaps
       >
         {t.title}
       </h2>
-      <p className="leading-relaxed mb-4">{t.paragraph}</p>
+      {/* (24/11/2026, budget réel) Les six phrases d'ouverture ; la 1re (le prix) reste visible quand la fiche est repliée. */}
+      <p className="leading-relaxed mb-4">{t.lead[0]}</p>
       {folded ? (
         <button
           type="button"
@@ -94,6 +104,20 @@ export function EntityFacts({ page, houseSlug, children, className = "", collaps
         </button>
       ) : null}
       <div id="entity-facts-more" className={folded ? "hidden md:block" : undefined}>
+      {t.lead.slice(1).map((s, i) =>
+        i === 3 ? (
+          // Phrase 5 (repères de Genève) : la phrase = un nœud texte dans son <span>, puis une espace et le lien (anti-#418).
+          <p key={i} className="leading-relaxed mb-4">
+            <span>{s}</span>{" "}
+            <a href={calcHref} onClick={trackCalc} className="underline underline-offset-4 text-[#1C1917] hover:text-[#D4A574] transition-colors">
+              {t.calcLink.label}
+            </a>
+          </p>
+        ) : (
+          <p key={i} className="leading-relaxed mb-4">{s}</p>
+        ),
+      )}
+      <p className="leading-relaxed mb-4">{t.paragraph}</p>
       {children ? <p className="leading-relaxed mb-4 text-[#57534E]">{children}</p> : null}
       <ul className="list-disc pl-6 space-y-2 mb-6">
         {t.bullets.map((b, i) => (

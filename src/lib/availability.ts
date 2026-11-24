@@ -596,8 +596,8 @@ export const BADGE_DOT_CLASS: Record<BadgeTone, string> = {
 export function globalAvailabilityLabel(a: SiteAvailability, lang: "fr" | "en"): string {
   if (!a.known) {
     return lang === "en"
-      ? "Rooms are opening up — apply now"
-      : "Des chambres se libèrent — candidate maintenant";
+      ? "Rooms are opening up — book a visit"
+      : "Des chambres se libèrent — programme une visite";
   }
 
   const rooms = (n: number) =>
@@ -633,8 +633,8 @@ export function globalAvailabilityLabel(a: SiteAvailability, lang: "fr" | "en"):
 export function shortAvailabilityLabel(a: SiteAvailability, lang: "fr" | "en"): string {
   if (!a.known) {
     return lang === "en"
-      ? "Rooms are opening up — apply now"
-      : "Des chambres se libèrent — candidate maintenant";
+      ? "Rooms are opening up — book a visit"
+      : "Des chambres se libèrent — programme une visite";
   }
   if (a.totalAvailable === 1) {
     return lang === "en" ? "1 room available now" : "1 chambre libre maintenant";
