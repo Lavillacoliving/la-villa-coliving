@@ -108,7 +108,7 @@ Once the town is chosen, the format remains, in 2026 orders of magnitude.
 
 <!-- entity-facts -->
 
-Our three houses cover the first three towns in this guide: Le Lodge in Annemasse for the train, Le Loft in Ambilly for the tram and the border on foot, La Villa in Ville-la-Grand for quiet and a garden. The [available rooms](/en/chambres-disponibles) are shown live and the [application takes two minutes](/en/candidature); if you arrive without a Swiss payslip, read [the cross-border rental file](/en/blog/dossier-location-frontalier-suisse-france) first.
+Our three houses cover the first three towns in this guide: Le Lodge in Annemasse for the train, Le Loft in Ambilly for the tram and the border on foot, La Villa in Ville-la-Grand for quiet and a garden. The [available rooms](/en/chambres-disponibles) are shown live and the [visit request takes two minutes](/en/candidature); if you arrive without a Swiss payslip, read [the cross-border rental file](/en/blog/dossier-location-frontalier-suisse-france) first.
 
 For a standard flatshare, the public Facebook group ["Coliving & Colocation à Genève et alentours !"](https://www.facebook.com/groups/1035429495275120/) (about 1,600 members, around a hundred listings a month covering Geneva and the French border area) gathers room and flatmate listings. It is run and moderated by the La Villa Coliving team: published rules, suspicious listings removed.
 

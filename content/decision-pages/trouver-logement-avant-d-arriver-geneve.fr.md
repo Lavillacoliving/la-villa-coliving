@@ -66,7 +66,7 @@ Toutes, mais pas avec le même dossier ni le même délai.
 
 <!-- entity-facts -->
 
-Pour un poste qui commence en janvier, la bonne fenêtre, c'est maintenant : nos [chambres libres](/chambres-disponibles) s'affichent en direct avec leur date de disponibilité, et [la candidature se remplit à distance](/candidature), avant même la première visite.
+Pour un poste qui commence en janvier, la bonne fenêtre, c'est maintenant : nos [chambres libres](/chambres-disponibles) s'affichent en direct avec leur date de disponibilité, et [la visite peut se faire en vidéo](/candidature), avant même ton arrivée.
 
 ## J-15 : la checklist déménagement
 

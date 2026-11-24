@@ -96,7 +96,7 @@ On the French side, allow €650 to €820 excluding bills for a furnished studi
 
 <!-- entity-facts -->
 
-To follow prices over time, [the cross-border housing observatory](/en/observatoire-logement-frontalier-geneve) publishes the rents found in listings on the French side. And if coliving appeals, our [available rooms](/en/chambres-disponibles) are shown live with their availability date, and [you can apply remotely](/en/candidature).
+To follow prices over time, [the cross-border housing observatory](/en/observatoire-logement-frontalier-geneve) publishes the rents found in listings on the French side. And if coliving appeals, our [available rooms](/en/chambres-disponibles) are shown live with their availability date, and [you can visit by video](/en/candidature).
 
 ## FAQ
 

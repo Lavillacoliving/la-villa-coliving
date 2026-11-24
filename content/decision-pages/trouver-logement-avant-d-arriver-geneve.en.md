@@ -66,7 +66,7 @@ All of them, but not with the same paperwork or on the same timeline.
 
 <!-- entity-facts -->
 
-If your job starts in January, now is the window: our [available rooms](/en/chambres-disponibles) are shown live with their availability date, and [the application can be done remotely](/en/candidature), before you've even had a viewing.
+If your job starts in January, now is the window: our [available rooms](/en/chambres-disponibles) are shown live with their availability date, and [the visit can be done by video](/en/candidature), before you even arrive.
 
 ## D-15: the moving checklist
 

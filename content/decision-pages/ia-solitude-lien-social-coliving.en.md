@@ -88,4 +88,4 @@ AI is going to save us a huge amount of time. That's great news, on one conditio
 
 Home is no longer just the place where we sleep. It can become the place where we get back what the rest of our days slowly takes away: other people. Choosing where you live is also choosing who you live with.
 
-If this speaks to you, [discover our houses](/en/nos-maisons) or [apply online](/en/candidature): we'll get back to you within 48 hours.
+If this speaks to you, [discover our houses](/en/nos-maisons) or [book a visit online](/en/candidature): we'll get back to you within 48 hours.

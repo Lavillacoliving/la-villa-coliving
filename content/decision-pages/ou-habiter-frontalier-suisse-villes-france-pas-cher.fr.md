@@ -108,7 +108,7 @@ Une fois la ville choisie, reste le format, en ordres de grandeur 2026.
 
 <!-- entity-facts -->
 
-Nos trois maisons couvrent les trois premières villes de ce guide : Le Lodge à Annemasse pour le train, Le Loft à Ambilly pour le tram et la frontière à pied, La Villa à Ville-la-Grand pour le calme et le jardin. Les [chambres libres](/chambres-disponibles) sont visibles en direct et la [candidature prend deux minutes](/candidature) ; si tu arrives sans fiche de salaire suisse, lis d'abord [le dossier de location du frontalier](/blog/dossier-location-frontalier-suisse-france).
+Nos trois maisons couvrent les trois premières villes de ce guide : Le Lodge à Annemasse pour le train, Le Loft à Ambilly pour le tram et la frontière à pied, La Villa à Ville-la-Grand pour le calme et le jardin. Les [chambres libres](/chambres-disponibles) sont visibles en direct et la [demande de visite prend deux minutes](/candidature) ; si tu arrives sans fiche de salaire suisse, lis d'abord [le dossier de location du frontalier](/blog/dossier-location-frontalier-suisse-france).
 
 Pour une colocation classique, le groupe Facebook public [« Coliving & Colocation à Genève et alentours ! »](https://www.facebook.com/groups/1035429495275120/) (environ 1 600 membres, une centaine d'annonces par mois sur Genève et la France voisine) regroupe des annonces de chambres et de colocataires. Il est animé et modéré par l'équipe de La Villa Coliving : règles publiées, annonces douteuses retirées.
 

@@ -96,7 +96,7 @@ Côté France, compte 650 à 820 € hors charges pour un studio meublé à Anne
 
 <!-- entity-facts -->
 
-Pour suivre les prix dans la durée, [l'Observatoire du logement frontalier](/observatoire-logement-frontalier-geneve) publie les loyers relevés dans les annonces côté France. Et si le coliving te tente, [nos chambres disponibles](/chambres-disponibles) s'affichent en direct avec leur date de libération, et [la candidature se fait à distance](/candidature).
+Pour suivre les prix dans la durée, [l'Observatoire du logement frontalier](/observatoire-logement-frontalier-geneve) publie les loyers relevés dans les annonces côté France. Et si le coliving te tente, [nos chambres disponibles](/chambres-disponibles) s'affichent en direct avec leur date de libération, et [la visite peut se faire en vidéo](/candidature).
 
 ## Questions fréquentes
 

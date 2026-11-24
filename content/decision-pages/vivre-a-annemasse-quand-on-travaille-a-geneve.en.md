@@ -66,7 +66,7 @@ What does not go down: your salary remains taxed at source in Geneva, health ins
 
 <!-- entity-facts -->
 
-Each of our three houses answers one district of this guide: Le Lodge in Romagny for the train (station an 8-minute walk away), Le Loft in Ambilly for the tram and the border on foot, La Villa in Ville-la-Grand for quiet and the garden. The [free rooms](/en/chambres-disponibles) are visible live, the [application takes two minutes](/en/candidature), and if you first want to compare the districts by lifestyle, read our [guide to Annemasse's districts by profile](/en/blog/quartiers-annemasse-ou-vivre-selon-profil).
+Each of our three houses answers one district of this guide: Le Lodge in Romagny for the train (station an 8-minute walk away), Le Loft in Ambilly for the tram and the border on foot, La Villa in Ville-la-Grand for quiet and the garden. The [free rooms](/en/chambres-disponibles) are visible live, the [visit request takes two minutes](/en/candidature), and if you first want to compare the districts by lifestyle, read our [guide to Annemasse's districts by profile](/en/blog/quartiers-annemasse-ou-vivre-selon-profil).
 
 ## When it is not the right choice
 
