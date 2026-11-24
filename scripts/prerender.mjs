@@ -102,7 +102,7 @@ const ROOM_PAGE_ROUTES_FR = Object.entries(ROOM_PAGES)
 // (06/10/2026) Offre « Pose tes valises avant l'hiver » : page temporaire noindex (elle ne doit pas
 // concurrencer /chambres-disponibles), prérendue (liens Facebook/Ads → LCP), canonical auto-référente
 // émise par le composant SEO (selfCanonical), hors sitemap. Slug EN différent : /en/winter-offer.
-// (21/11/2026) Mêmes adresses pour l'offre « Ta première année avec nous » (26/11 → 31/12/2026, D1) : la page choisit son état
+// (21/11/2026) Mêmes adresses pour l'offre « Ta première année avec nous » (24/11 → 31/12/2026, D1) : la page choisit son état
 // à la date du prérendu, puis à celle du lecteur (offerPageState, src/data/offer.ts). Après FIRST_YEAR_END la page reste servie
 // avec « Cette offre est terminée » — pas de 301.
 const OFFER_ROUTES = ['/offre-hiver', '/en/winter-offer'];

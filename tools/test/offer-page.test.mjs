@@ -94,7 +94,7 @@ const BRIEF = {
       '300 € après 3 mois, 400 € après 6 mois, 500 € après 1 an : remboursés par virement, une fois ton 4e, ton 7e et ton 13e loyer réglés.',
       'Un palier est acquis si ton bail est en cours, sans préavis donné, et tes loyers à jour à l\'échéance du loyer concerné. Ce que tu as déjà reçu te reste acquis.',
       'Ton loyer ne change pas : tu le paies normalement, on te rembourse à part.',
-      'Pour tout bail signé du 26 novembre au 31 décembre 2026, à La Villa, au Loft ou au Lodge.',
+      'Pour tout bail signé du 24 novembre au 31 décembre 2026, à La Villa, au Loft ou au Lodge.',
     ],
     always: ['0 € de frais de dossier', 'caution de 2 mois de loyer hors charges, payable en 1, 2 ou 3 fois (le nombre de versements est décidé par le bailleur selon ton dossier)', 'Visite sur place ou en visio'],
     faq: [
@@ -119,7 +119,7 @@ const BRIEF = {
       '€300 after 3 months, €400 after 6 months, €500 after a year: paid back by bank transfer once your 4th, 7th and 13th rents are paid.',
       'A step is earned if, when that rent is due, your lease is running, no notice has been given and your rent is up to date. What you have already received stays yours.',
       'Your rent stays the same: you pay it as usual, and we pay you back separately.',
-      'For any lease signed between 26 November and 31 December 2026, at La Villa, Le Loft or Le Lodge.',
+      'For any lease signed between 24 November and 31 December 2026, at La Villa, Le Loft or Le Lodge.',
     ],
     always: ['No application fee', 'Visit on site or by video call'],
     faq: [

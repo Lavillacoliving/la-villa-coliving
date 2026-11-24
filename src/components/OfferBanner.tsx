@@ -20,7 +20,7 @@ import {
 
 /**
  * Bandeau de l'offre en cours (offre « Pose tes valises avant l'hiver », brief Jérôme du 06/10/2026, §3 ; depuis le
- * 21/11/2026, l'offre « Ta première année avec nous » prend le relais le 26/11 à 0 h, heure de Paris — offerAt(),
+ * 21/11/2026, l'offre « Ta première année avec nous » prend le relais le 24/11 à 0 h, heure de Paris — offerAt(),
  * src/data/offer.ts). Rendu DANS le <header> fixe de NavbarV7, au-dessus de la barre de navigation, sur les pages de
  * OFFER_BANNER_PATHS (FR + miroirs EN) ; fermable (localStorage, 7 jours, une clé PAR OFFRE : qui a fermé le bandeau d'hiver
  * voit le nouveau) ; n'apparaît que pendant une offre (fenêtres OFFER_WINDOWS).
@@ -35,7 +35,7 @@ import {
  *    du bandeau prérendu ; « 1 » = HTML d'avant le 21/11, toujours l'hiver) ; une fois hydraté, il rend l'état réel (page,
  *    offre en cours, fermeture) et tient la classe à jour (navigation SPA, fermeture). Le <header> étant fixe,
  *    monter/démonter le bandeau ne déplace jamais le contenu de la page : seule la classe (compensation) compte, et elle
- *    est posée avant la peinture. Le 26/11 à 0 h, tant que le robot n'a pas refait le prérendu, le bandeau d'hiver prérendu
+ *    est posée avant la peinture. À la bascule, tant que le robot n'a pas refait le prérendu, le bandeau d'hiver prérendu
  *    s'affiche le temps de l'hydratation, puis le texte de la nouvelle offre le remplace (même hauteur, même lien).
  */
 

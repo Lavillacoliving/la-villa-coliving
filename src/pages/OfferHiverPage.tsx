@@ -56,7 +56,7 @@ import {
  *
  * (21/11/2026, brief « Ta première année avec nous », D1 à D15 de Jérôme) Mêmes adresses (D1 : tous les liens publiés y
  * mènent), trois états marqués sur <main> (`data-offer-state` + `data-offer-id`) et choisis par offerPageState()
- * (src/data/offer.ts) : « active » = l'offre d'hiver, identique jusqu'au 25/11 à 23 h 59 ; « premiere-annee » du 26/11 à 0 h
+ * (src/data/offer.ts) : « active » = l'offre d'hiver, identique jusqu'à sa sortie du site (24/11 à 0 h) ; « premiere-annee » du 24/11 à 0 h
  * (heure de Paris, bascule automatique, D8) au 31/12 inclus — jusqu'à 1 400 € remboursés en quatre paliers, textes du brief
  * §5 ; « ended » à partir du 01/01/2027 (page « terminée » au nom de la nouvelle offre). Jamais « loyer réduit », aucun prix
  * barré, le loyer affiché ne change nulle part, aucun « −50 % » hors de l'état « active ».
@@ -72,7 +72,7 @@ import {
  * Hydratation : l'état dépend de la date du lecteur. Pendant l'hydratation le premier rendu
  * reproduit le HTML prérendu (repère `__offer_state__` capturé par main.tsx sur <main data-offer-state>),
  * puis la page se resynchronise sur la date réelle (useHydrated) — même modèle que les filtres de
- * /chambres-disponibles. Le 26/11 à 0 h, tant que le robot n'a pas refait le prérendu, le HTML d'hiver s'hydrate tel quel
+ * /chambres-disponibles. À la bascule, tant que le robot n'a pas refait le prérendu, le HTML d'hiver s'hydrate tel quel
  * puis la nouvelle offre le remplace. Les chambres viennent de l'embed de la page (RoomsEmbed, 29 lignes) et du
  * composant partagé RoomCard, filtrées (pur) sur « libre maintenant ou datée » (rebrief D5 : la ch. 4 du
  * Loft, libre le 16/12, en fait partie ; D9 : inchangé pour la nouvelle offre). Le compteur du hero (D7) = la longueur de
@@ -494,7 +494,7 @@ function OfferEnded({ en, L }: { en: boolean; L: "fr" | "en" }) {
 
 type Labels = { endLabel: string; startLabel: string; year: string };
 
-/** Offre d'hiver (état « active ») — inchangée jusqu'au 25/11 à 23 h 59. */
+/** Offre d'hiver (état « active ») — inchangée jusqu'à sa sortie du site, le 24/11 à 0 h (décision du 24/11/2026). */
 function OfferActive({
   en,
   L,
@@ -716,7 +716,7 @@ function ordinal(n: number, L: "fr" | "en"): string {
 }
 
 /**
- * Offre « Ta première année avec nous » (état « premiere-annee », du 26/11 à 0 h au 31/12/2026 inclus, heure de Paris).
+ * Offre « Ta première année avec nous » (état « premiere-annee », du 24/11 à 0 h au 31/12/2026 inclus, heure de Paris).
  * Textes du brief du 21/11/2026 §5, verbatim (H1, sous-titre, échéance, conditions, « Toujours vrai », FAQ) ; montants,
  * rangs et dates calculés depuis src/data/offer.ts. Propositions à relire par Jérôme (décisions n° 1 à 4 de la recon) :
  * title, surtitre, ligne CHF (D4 : à part, jamais dans la phrase de l'accroche), « Comment ça marche », « Pour qui ? »

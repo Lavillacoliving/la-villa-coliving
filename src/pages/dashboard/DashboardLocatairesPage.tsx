@@ -264,7 +264,7 @@ export default function DashboardLocatairesPage() {
     if (!modal?.id) return;
     const prev = modal.lease_status || 'active';
     // (22/11/2026, décision 5 de Jérôme) Au passage à « Signé », la date de signature (saisie, sinon aujourd'hui) va dans
-    // `leases.signed_at` : c'est elle qui fait foi pour l'offre « Ta première année » (bail signé du 26/11 au 31/12/2026).
+    // `leases.signed_at` : c'est elle qui fait foi pour l'offre « Ta première année » (bail signé du 24/11 au 31/12/2026).
     const signedDay = next === 'signed' ? (signedOn || todayParis()) : '';
     const signedAt = next === 'signed' ? signedAtFromDate(signedDay, todayParis()) : null;
     if (next === 'signed') {

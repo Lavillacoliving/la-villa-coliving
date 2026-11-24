@@ -410,7 +410,7 @@ test('offer inconnue (xyz, constructor, vide) : ignorée sans erreur, corps iden
 });
 
 // ── v21 — offre « Ta première année avec nous » (brief Jérôme du 21/11/2026) ─────────────────────
-const FIRST_YEAR_LINE = 'Offre : Ta première année (jusqu\'à 1 400 € remboursés, bail signé du 26/11 au 31/12/2026)';
+const FIRST_YEAR_LINE = 'Offre : Ta première année (jusqu\'à 1 400 € remboursés, bail signé du 24/11 au 31/12/2026)';
 
 test('v21 — offer=premiere-annee : ligne « Offre : Ta première année … » en tête des notes et de l\'email, form_submissions.offer', async () => {
   const be = backend();

@@ -1,5 +1,6 @@
 // Offres datées du site (src/data/offer.ts) : « Pose tes valises avant l'hiver » (brief Jérôme du 06/10/2026, rebrief −50 %
-// du 12/10/2026), puis « Ta première année avec nous » (brief du 21/11/2026, bascule automatique le 26/11 à 0 h, D8).
+// du 12/10/2026), puis « Ta première année avec nous » (brief du 21/11/2026, bascule automatique à 0 h, D8 ; avancée du 26/11
+// au 24/11 par décision de Jérôme du 24/11/2026).
 // 1. src/data/offer.ts (sans import, chargé tel quel par Node 24) : fenêtres sans trou, état de la page, offre en cours,
 //    normalisation du paramètre (D2), paliers et total, textes verbatim, filtre des chambres, remise de l'hiver, mesure GA4.
 // 2. Le script inline #lvc-offer d'index.html (bandeau avant la première peinture) doit rester identique à offer.ts
@@ -22,10 +23,10 @@ const DURING = Date.parse('2026-10-20T10:00:00+02:00');
 const AT = {
   before: Date.parse('2026-10-14T23:59:00+02:00'),
   hiverStart: Date.parse('2026-10-15T00:00:00+02:00'),
-  hiverLast: Date.parse('2026-11-25T23:59:00+01:00'),
-  hiverLastSecond: Date.parse('2026-11-25T23:59:59+01:00'),
-  switch: Date.parse('2026-11-26T00:00:00+01:00'),
-  switch1: Date.parse('2026-11-26T00:01:00+01:00'),
+  hiverLast: Date.parse('2026-11-23T23:59:00+01:00'),
+  hiverLastSecond: Date.parse('2026-11-23T23:59:59+01:00'),
+  switch: Date.parse('2026-11-24T00:00:00+01:00'),
+  switch1: Date.parse('2026-11-24T00:01:00+01:00'),
   firstYearLast: Date.parse('2026-12-31T23:59:00+01:00'),
   end: Date.parse('2027-01-01T00:00:00+01:00'),
   end1: Date.parse('2027-01-01T00:01:00+01:00'),
@@ -61,7 +62,7 @@ function run(url, { now = DURING, local = new MemoryStorage(), storageThrows = f
   return classes.has('lvc-offer-on');
 }
 
-test('offer.ts : offre d\'hiver — dates, début (15/10 0 h) et fin (25/11 inclus, heure de Paris), remise de 50 %', () => {
+test('offer.ts : offre d\'hiver — dates, début (15/10 0 h), promesse (bail signé d\'ici le 25/11), sortie du site le 24/11 à 0 h, remise de 50 %', () => {
   assert.equal(O.OFFER_ID, 'hiver');
   assert.equal(O.OFFER_START, '2026-10-15');
   assert.equal(O.OFFER_END, '2026-11-25');
@@ -70,8 +71,9 @@ test('offer.ts : offre d\'hiver — dates, début (15/10 0 h) et fin (25/11 incl
   assert.equal(O.OFFER_DISCOUNT_PERCENT, 50);
   assert.equal(O.isOfferStarted(AT.before), false);
   assert.equal(O.isOfferStarted(AT.hiverStart), true);
-  assert.equal(O.isOfferActive(Date.parse('2026-11-25T23:30:00+01:00')), true);
+  assert.equal(O.isOfferActive(Date.parse('2026-11-23T23:30:00+01:00')), true);
   assert.equal(O.isOfferActive(AT.switch), false);
+  assert.equal(O.isOfferActive(Date.parse('2026-11-25T23:30:00+01:00')), false, 'sortie du site avancée au 24/11 (décision du 24/11/2026)');
   assert.equal(O.isOfferActive(DURING), true);
   // (13/11/2026) Palier des chambres 7 et 8 de La Villa : 1 290 CHF → 645 CHF le premier mois (1 380 € → 690 €).
   assert.equal(O.discountedFirstMonth(1290), 645);
@@ -85,10 +87,10 @@ test('offer.ts : offre d\'hiver — dates, début (15/10 0 h) et fin (25/11 incl
   assert.equal(O.formatOfferDate('2026-12-01', 'fr'), '1ᵉʳ décembre');
 });
 
-test('offer.ts : « Ta première année » — fenêtre du 26/11 0 h au 31/12 inclus, sans trou avec l\'hiver, clé de fermeture propre', () => {
+test('offer.ts : « Ta première année » — fenêtre du 24/11 0 h au 31/12 inclus, sans trou avec l\'hiver, clé de fermeture propre', () => {
   assert.equal(O.FIRST_YEAR_OFFER_ID, 'premiere-annee');
   assert.equal(O.FIRST_YEAR_QUERY, 'offre=premiere-annee');
-  assert.equal(O.FIRST_YEAR_START, '2026-11-26');
+  assert.equal(O.FIRST_YEAR_START, '2026-11-24');
   assert.equal(O.FIRST_YEAR_END, '2026-12-31');
   assert.equal(O.FIRST_YEAR_START_MS, O.OFFER_END_EXCLUSIVE_MS, 'aucun trou : la fin exclusive de l\'hiver est le début de la nouvelle offre');
   assert.equal(O.FIRST_YEAR_START_MS, AT.switch);
@@ -128,10 +130,10 @@ test('offer.ts : offre en cours (offerAt) et état de la page (offerPageState) a
   assert.equal(id(AT.before), null, 'avant le 15/10 : aucune offre (le bandeau attend)');
   assert.equal(id(AT.hiverStart), 'hiver');
   assert.equal(id(DURING), 'hiver');
-  assert.equal(id(AT.hiverLast), 'hiver', '25/11 à 23 h 59');
-  assert.equal(id(AT.hiverLastSecond), 'hiver', '25/11 à 23 h 59 min 59 s');
-  assert.equal(id(AT.switch), 'premiere-annee', '26/11 à 0 h 00');
-  assert.equal(id(AT.switch1), 'premiere-annee', '26/11 à 0 h 01');
+  assert.equal(id(AT.hiverLast), 'hiver', '23/11 à 23 h 59');
+  assert.equal(id(AT.hiverLastSecond), 'hiver', '23/11 à 23 h 59 min 59 s');
+  assert.equal(id(AT.switch), 'premiere-annee', '24/11 à 0 h 00');
+  assert.equal(id(AT.switch1), 'premiere-annee', '24/11 à 0 h 01');
   assert.equal(id(AT.firstYearLast), 'premiere-annee', '31/12 à 23 h 59');
   assert.equal(id(AT.end), null, '01/01/2027 à 0 h 00');
   assert.equal(id(AT.end1), null, '01/01/2027 à 0 h 01');
@@ -155,7 +157,7 @@ test('offer.ts : offre en cours (offerAt) et état de la page (offerPageState) a
 test('offer.ts : normalizeOffer — une offre connue devient l\'offre EN COURS (D2), rien après le 31/12, valeur inconnue ignorée', () => {
   assert.equal(O.normalizeOffer('hiver', DURING), 'hiver');
   assert.equal(O.normalizeOffer(' Hiver ', DURING), 'hiver');
-  assert.equal(O.normalizeOffer('premiere-annee', DURING), 'hiver', 'avant le 26/11 : l\'offre en cours est l\'hiver');
+  assert.equal(O.normalizeOffer('premiere-annee', DURING), 'hiver', 'avant le 24/11 : l\'offre en cours est l\'hiver');
   assert.equal(O.normalizeOffer('hiver', AT.hiverLast), 'hiver');
   assert.equal(O.normalizeOffer('hiver', AT.switch), 'premiere-annee', 'D2 : un lien ?offre=hiver compte pour la nouvelle offre');
   assert.equal(O.normalizeOffer('hiver', AT.switch1), 'premiere-annee');
@@ -206,7 +208,7 @@ test('offer.ts : textes de « Ta première année » (brief du 21/11 §5, verbat
 test('offer.ts : jour de Paris et ligne de démarrage du bail (date à venir, chambre libre, date passée ou du jour)', () => {
   assert.equal(O.parisDateIso(Date.parse('2026-10-14T22:30:00Z')), '2026-10-15'); // 0 h 30 à Paris (UTC+2)
   assert.equal(O.parisDateIso(Date.parse('2026-11-25T22:59:00Z')), '2026-11-25'); // 23 h 59 à Paris (UTC+1)
-  assert.equal(O.parisDateIso(AT.switch1), '2026-11-26');
+  assert.equal(O.parisDateIso(AT.switch1), '2026-11-24');
   assert.equal(O.parisDateIso(AT.end1), '2027-01-01');
   const today = '2026-10-15';
   const loft4 = { availability: 'occupied', available_from: '2026-12-16' };
@@ -292,7 +294,7 @@ test('index.html #lvc-offer : fermé depuis moins de 7 jours → masqué ; plus 
   assert.equal(run('/tarifs', { now: AT.switch1, storageThrows: true }), true);
 });
 
-test('index.html #lvc-offer : bascule à 0 h — 25/11 23 h 59, 26/11 0 h 00 / 0 h 01, 31/12 23 h 59, 01/01/2027 0 h 01, avec et sans fermeture', () => {
+test('index.html #lvc-offer : bascule à 0 h — 23/11 23 h 59, 24/11 0 h 00 / 0 h 01, 31/12 23 h 59, 01/01/2027 0 h 01, avec et sans fermeture', () => {
   const H = O.OFFER_BANNER_DISMISS_KEY;
   const F = O.FIRST_YEAR_BANNER_DISMISS_KEY;
   const closed = (key, at) => new MemoryStorage({ [key]: String(at) });
@@ -306,8 +308,8 @@ test('index.html #lvc-offer : bascule à 0 h — 25/11 23 h 59, 26/11 0 h 00 / 0
   assert.equal(run('/', { now: AT.end }), false);
   assert.equal(run('/', { now: AT.end1 }), false);
   assert.equal(run('/chambres-disponibles', { now: DURING + 95 * DAY }), false); // horloge décalée de la garde d'hydratation
-  // Bandeau d'hiver fermé le 25/11 à 22 h : masqué à 23 h 59, mais le NOUVEAU bandeau s'affiche à 0 h 00 / 0 h 01 (autre clé).
-  const hiverClosed = closed(H, Date.parse('2026-11-25T22:00:00+01:00'));
+  // Bandeau d'hiver fermé le 23/11 à 22 h : masqué à 23 h 59, mais le NOUVEAU bandeau s'affiche à 0 h 00 / 0 h 01 (autre clé).
+  const hiverClosed = closed(H, Date.parse('2026-11-23T22:00:00+01:00'));
   assert.equal(run('/', { now: AT.hiverLast, local: hiverClosed }), false);
   assert.equal(run('/', { now: AT.switch, local: hiverClosed }), true);
   assert.equal(run('/', { now: AT.switch1, local: hiverClosed }), true);
