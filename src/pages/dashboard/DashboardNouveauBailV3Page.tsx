@@ -21,6 +21,7 @@ import { entityToLease, propertyToLease, roomToLease, previousLeaseFacts, type P
 import type { CurrentChargesRow, EntityLegalRow, EntityRow, RelocationException, ServiceCatalogRow } from '@/lib/bailV3/types';
 import { BAIL_SERVICES, BAIL_SERVICES_VERSION } from '@/data/bailServices';
 import { NOTICE_INFORMATION_2023, NOTICE_SOURCE, NOTICE_TITLE } from '@/data/noticeInformation2023';
+import { FIRST_YEAR_DISCOUNT_EUR, FIRST_YEAR_SIGN_FROM, FIRST_YEAR_SIGN_TO, FIRST_YEAR_TOTAL_EUR, firstYearSchedule, isFirstYearSignDate, offerRewardsPayload } from '@/lib/bailV3/firstYearOffer';
 
 const NOTICE = { title: NOTICE_TITLE, source: NOTICE_SOURCE, sections: NOTICE_INFORMATION_2023 };
 
@@ -33,6 +34,7 @@ interface FormState {
   nom: string; prenom: string; dob: string; birthplace: string; nationality: string; previous_address: string; email: string; phone: string; profession: string; employer: string;
   entry_date: string; lease_duration_months: number;
   discount_eur: number; deposit_installments: DepositInstallments;
+  first_year_offer: boolean;         // (21/11/2026) offre « Ta première année » : 200 € au 1er mois complet + 300/400/500 € remboursés
   prev_hc: string; prev_paid_on: string; prev_revision: string; prev_departure: string; prev_works: string;
   relocation_exception: '' | RelocationException; override: boolean; override_reason: string;
   cap_decided: boolean;              // plafond de relocation sous le tarif : Jérôme a choisi (tarif ou plafond), jamais de choix par défaut
@@ -43,7 +45,7 @@ interface FormState {
 }
 const EMPTY_FORM: FormState = {
   property_id: '', room_id: '', nom: '', prenom: '', dob: '', birthplace: '', nationality: '', previous_address: '', email: '', phone: '', profession: '', employer: '',
-  entry_date: '', lease_duration_months: 12, discount_eur: 0, deposit_installments: 1,
+  entry_date: '', lease_duration_months: 12, discount_eur: 0, deposit_installments: 1, first_year_offer: false,
   prev_hc: '', prev_paid_on: '', prev_revision: '', prev_departure: '', prev_works: 'néant',
   relocation_exception: '', override: false, override_reason: '', cap_decided: false, forfait_manual: '', signatory_index: 0, particular_clauses: '', total_cc_manual: '',
 };
@@ -177,7 +179,9 @@ export default function DashboardNouveauBailV3Page() {
     zoneTendue: property?.zone_tendue !== false, exception: form.relocation_exception || null, override: form.override,
     surfaceM2: Number(room.surface_m2), startIso: form.entry_date || todayISO(), eurChf: rate.eurChf || 0,
   }) : null;
-  const discount = normalizeDiscount(form.discount_eur);
+  // (Offre « Ta première année », 21/11/2026) Cochée, la remise du premier mois complet vaut 200 € (palier 1), non modifiable.
+  const discount = form.first_year_offer ? FIRST_YEAR_DISCOUNT_EUR : normalizeDiscount(form.discount_eur);
+  const firstYear = form.first_year_offer && form.entry_date ? firstYearSchedule(form.entry_date) : null;
   const installments = normalizeInstallments(form.deposit_installments);
   const endIso = form.entry_date ? addMonthsISO(form.entry_date, form.lease_duration_months || 12) : '';
 
@@ -211,6 +215,7 @@ export default function DashboardNouveauBailV3Page() {
         irl_label: irl.label, irl_value: irl.value, irl_old_value: irl.old || irl.value,
         eur_chf: rate.eurChf || 0, eur_chf_date: fDateLong(rate.dateIso),
         discount_eur: discount || null, deposit_installments: installments, services_version: catalog[0]?.version || BAIL_SERVICES_VERSION,
+        first_year_offer: form.first_year_offer || undefined,
         edl_tool: EDL_TOOL, rgpd_email: RGPD_EMAIL, zone_tendue: property.zone_tendue !== false,
       },
       services: lines,
@@ -262,7 +267,7 @@ export default function DashboardNouveauBailV3Page() {
           previous_tenant_rent_eur: prevHc, previous_tenant_departure_date: form.prev_departure || null,
           first_month_discount_eur: discount > 0 ? discount : null, first_month_discount_month: discount > 0 ? (Number(form.entry_date.slice(8, 10)) === 1 ? form.entry_date.slice(0, 7) : addMonthsISO(form.entry_date.slice(0, 7) + '-01', 1).slice(0, 7)) : null,
           deposit_installments: installments,
-          notes: `Bail v3 généré le ${new Date().toLocaleDateString('fr-FR')}` + (discount > 0 ? ` · remise 1er mois complet ${discount} €` : '') + (installments > 1 ? ` · caution en ${installments} fois` : '') + (form.override ? ' · dérogation au plafond de relocation' : ''),
+          notes: `Bail v3 généré le ${new Date().toLocaleDateString('fr-FR')}` + (form.first_year_offer ? ` · offre Ta première année (${FIRST_YEAR_TOTAL_EUR} € sur 4 paliers)` : discount > 0 ? ` · remise 1er mois complet ${discount} €` : '') + (installments > 1 ? ` · caution en ${installments} fois` : '') + (form.override ? ' · dérogation au plafond de relocation' : ''),
         },
         lease: {
           lease_version: 'v3', property_id: property.id, room_number: room.room_number,
@@ -280,10 +285,16 @@ export default function DashboardNouveauBailV3Page() {
           first_month_discount_month: discount > 0 ? (Number(form.entry_date.slice(8, 10)) === 1 ? form.entry_date.slice(0, 7) : addMonthsISO(form.entry_date.slice(0, 7) + '-01', 1).slice(0, 7)) : null,
           deposit_installments: installments, status: 'draft',
         },
+        // (Offre « Ta première année ») Les 3 remboursements (paliers 2 à 4) naissent dans la même transaction que le bail
+        // (create_lease_v3, migration scripts/migration-offre-premiere-annee-2026-11-21.sql). Sans l'option : rien.
+        ...(form.first_year_offer ? { offer_rewards: offerRewardsPayload(form.entry_date) } : {}),
       };
       const { data: created, error } = await supabase.rpc('create_lease_v3', { p: payload });
       if (error) throw error;
       const tenantId: string = created?.tenant_id; const leaseId: string = created?.lease_id;
+      if (form.first_year_offer && Number(created?.offer_rewards) !== 3) {
+        toast.warning('Bail enregistré, mais les 3 remboursements de l\'offre n\'ont pas été créés (migration du lot 2 non appliquée ?) : à ajouter avant le premier rappel.');
+      }
       // PDF → Storage → fiche du bail et documents du locataire
       let documentUrl: string | null = null;
       try {
@@ -307,6 +318,7 @@ export default function DashboardNouveauBailV3Page() {
         total_eur: pricing.total, room_reference_total_eur: roomReferenceCc, rent_overridden: totalCc !== roomReferenceCc, rent_hc_eur: pricing.hc, forfait_eur: forfait, deposit_eur: pricing.deposit, entry_date: form.entry_date,
         relocation_cap: pricing.cap, capped: pricing.capped, override: form.override, exposed_premium_eur: pricing.exposedPremium,
         discount_eur: discount, deposit_installments: installments, document_url: documentUrl, annexe_files_uploaded: uploaded,
+        first_year_offer: form.first_year_offer, offer_rewards_created: Number(created?.offer_rewards) || 0,
       });
       if (form.override && pricing.capped) {
         logAudit('relocation_override', 'tenant', tenantId, { lease_id: leaseId, room: `${property.name} ${room.room_number}`, cap_hc_eur: pricing.cap, hc_eur: pricing.hc, exposed_premium_eur: pricing.exposedPremium, reason: form.override_reason });
@@ -374,8 +386,20 @@ export default function DashboardNouveauBailV3Page() {
         <label style={label}>Durée (mois) — 12 par défaut, tacite reconduction</label>
         <input type="number" min={1} max={60} value={form.lease_duration_months} onChange={(e) => set('lease_duration_months', Math.max(1, Math.min(60, Number(e.target.value) || 12)))} style={input} />
         {endIso && <div style={hint}>Fin de la période initiale : {fDateLong(addMonthsISO(endIso, 0) === endIso ? new Date(new Date(endIso).getTime() - 86400000).toISOString().slice(0, 10) : endIso)}</div>}
-        <label style={label}>Remise sur le premier mois complet (€, 0 = aucune)</label>
-        <input type="number" min={0} value={form.discount_eur} onChange={(e) => set('discount_eur', Number(e.target.value) || 0)} style={input} />
+        <label style={{ ...label, display: 'flex', alignItems: 'center', gap: '8px' }}>
+          <input type="checkbox" checked={form.first_year_offer} onChange={(e) => set('first_year_offer', e.target.checked)} />
+          Offre « Ta première année » — bail signé du {fDateLong(FIRST_YEAR_SIGN_FROM)} au {fDateLong(FIRST_YEAR_SIGN_TO)}
+        </label>
+        {form.first_year_offer && (
+          <div style={hint}>
+            {firstYear
+              ? firstYear.map((s) => `${s.kind === 'discount' ? 'remise' : 'remboursement'} ${fEUR(s.eur)} — ${fDateLong(s.referenceMonth).replace(/^1(er)? /, '')}`).join(' · ')
+              : 'Renseigne la date d\'entrée pour voir les mois des quatre paliers.'}
+            {!isFirstYearSignDate(todayISO()) && <><br /><strong>Attention :</strong> aujourd'hui est hors de la fenêtre de signature de l'offre. C'est la date de signature, saisie dans la fiche locataire au passage à « Signé », qui fait foi.</>}
+          </div>
+        )}
+        <label style={label}>Remise sur le premier mois complet (€, 0 = aucune){form.first_year_offer ? ` — fixée à ${FIRST_YEAR_DISCOUNT_EUR} € par l'offre` : ''}</label>
+        <input type="number" min={0} value={form.first_year_offer ? FIRST_YEAR_DISCOUNT_EUR : form.discount_eur} disabled={form.first_year_offer} onChange={(e) => set('discount_eur', Number(e.target.value) || 0)} style={input} />
         <label style={label}>Dépôt de garantie versé en</label>
         <select value={form.deposit_installments} onChange={(e) => set('deposit_installments', normalizeInstallments(e.target.value))} style={input}>
           <option value={1}>1 fois (à la signature)</option><option value={2}>2 fois</option><option value={3}>3 fois</option>
