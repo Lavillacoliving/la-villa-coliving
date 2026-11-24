@@ -5,6 +5,7 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { randomUUID } from 'node:crypto';
+import { loadEntityFacts } from '../../scripts/lib/load-entity-facts.mjs';
 
 const ENV = {
   RESEND_API_KEY: 're_test_key',
@@ -16,11 +17,14 @@ let handler;
 globalThis.Deno = { env: { get: (k) => ENV[k] }, serve: (h) => { handler = h; } };
 await import('../../supabase/functions/send-candidature-email/index.ts');
 assert.equal(typeof handler, 'function', 'Deno.serve non appelé');
+// (v23) Sources du site (places.ts, appart.ts, placeBridge.ts) : la clé INTERNE de L'Appart est lue dans le pont, jamais
+// écrite ici (garde « aucune clé interne » des sources, tools/test/internal-keys.test.mjs).
+const facts = await loadEntityFacts();
 
 const ADMIN = 'jerome@lavillacoliving.com';
 
-/** Faux Supabase + Resend + n8n. */
-function backend({ dupRecent = false, fsConflict = false, fsRejectsOffer = false, adminEmailFails = false, beforePatch } = {}) {
+/** Faux Supabase + Resend + n8n. (v23) `fsFails` : form_submissions refuse tout (500) → rien n'est enregistré. */
+function backend({ dupRecent = false, fsConflict = false, fsRejectsOffer = false, fsFails = false, adminEmailFails = false, beforePatch } = {}) {
   const prospects = new Map();
   const emails = [];
   const calls = [];
@@ -49,6 +53,7 @@ function backend({ dupRecent = false, fsConflict = false, fsRejectsOffer = false
       const table = url.pathname.replace('/rest/v1/', '');
       const q = url.searchParams;
       if (table === 'form_submissions' && method === 'POST') {
+        if (fsFails) return json(500, { message: 'down' });
         if (fsConflict) return new Response('{"code":"23505","message":"duplicate key value violates unique constraint submission_key"}', { status: 409 });
         // (v20) Migration `offer` pas encore appliquée : PostgREST refuse la colonne inconnue.
         if (fsRejectsOffer && body && 'offer' in body) return new Response('{"code":"PGRST204","message":"Could not find the \'offer\' column of \'form_submissions\' in the schema cache"}', { status: 400 });
@@ -471,4 +476,195 @@ test('colonne form_submissions.offer absente (migration non appliquée) : rejou�
   assert.equal(bodies[1].landing_page, '/offre-hiver');
   assert.equal(onlyProspect(be).notes.split('\n')[0], OFFER_LINE);
   assert.equal(be.emails.length, 2);
+});
+
+// ── v23 — « Programmer une visite » (plan « visite hors site » du 24/11/2026, lot 1) ───────────────────────────────
+// Maisons et formulaire sans maison : « demande de visite ». L'Appart (clé interne lue dans le pont) : « candidature ».
+const APPART_INTERNAL = facts.toInternalPropertySlug(facts.APPART_KEY);
+const APPART_UUID = '57ecaa58-81e3-4c8c-8681-d5ac50b0d437'; // properties.id de L'Appart (table PROPERTIES de l'Edge, inchangée)
+/** Texte visible d'un email : sans <head>, balises retirées, entités décodées, espaces resserrés (l'insécable reste). */
+const visible = (html) => text(html.replace(/<head>[\s\S]*?<\/head>/, '').replace(/<[^>]+>/g, ' ')).replace(/[ \t\r\n]+/g, ' ').trim();
+/** Règle des deux gammes (docs/claude/lappart.md) : jamais un équipement des maisons, un prix ni une date dans un texte de L'Appart. */
+function assertAppartSafe(label, t) {
+  assert.doesNotMatch(t, /piscine|sauna|salle de sport|\bpool\b|\bgym\b/i, `${label} : équipement des maisons`);
+  assert.doesNotMatch(t, /€|\bCHF\b|\bEUR\b/, `${label} : prix`);
+  assert.doesNotMatch(t, /\b20\d\d\b|\b(janvier|février|mars|avril|mai|juin|juillet|août|septembre|octobre|novembre|décembre|january|february|april|june|july|august|september|october|november|december)\b/i, `${label} : date`);
+}
+
+test('v23 — maison, FR : « demande de visite » partout, le reste de l\'email inchangé ; notification « Nouvelle demande de visite » + ligne « Demande », objet inchangé', async () => {
+  const be = backend();
+  const r = await call(be, candidate({ property_interest: 'leloft', room_interest: 'chambre-3' }));
+  assert.equal(r.status, 200);
+  const mail = autoReply(be);
+  assert.equal(mail.subject, 'Ta demande de visite — bien reçue');
+  assert.deepEqual(mail.to, ['marie@example.com']);
+  assert.equal(mail.reply_to, ADMIN);
+  assert.match(mail.html, /<html lang="fr">/);
+  assert.match(mail.html, /<title>Ta demande de visite<\/title>/);
+  const v = visible(mail.html);
+  for (const s of [
+    'Marie, ravis d\'avoir reçu ta demande de visite.',
+    'on prend le temps de bien faire les choses. Toute l\'équipe a hâte de te rencontrer.',
+    'Et maintenant ? Demande bien reçue ! On regarde ce que tu cherches, pour te montrer les chambres qui te correspondent.',
+    // titre de l'étape 2 (espace insécable dans « 48 h »), texte de l'étape 2 inchangé
+    'On te recontacte sous 48\u00a0h pour caler ta visite. Par email ou téléphone, pour faire connaissance autour d\'un échange — sans pression, sans engagement.',
+    'Tu visites, sur place ou en vidéo. Et tu rencontreras peut-être déjà certains de tes futurs colocataires.',
+    'En attendant La Villa, ce n\'est pas une colocation comme les autres. C\'est une maison, une vraie',
+    'Découvrir La Villa Instagram Une question avant qu\'on se parle ?',
+    'À très vite, Jérôme & l\'équipe de La Villa',
+    'Cet email t\'a été envoyé suite à ta demande de visite. Tes données restent strictement confidentielles.',
+  ]) assert.ok(v.includes(s), s);
+  assert.doesNotMatch(v, /candidat|on te fait visiter|découvrir ton profil|qui tu es/i);
+  // liens inchangés
+  assert.match(mail.html, /<a href="https:\/\/lavillacoliving\.com" style=/);
+  assert.match(mail.html, /<a href="https:\/\/www\.instagram\.com\/la_villa_coliving_geneva" style=/);
+  // notification : objet inchangé, bandeau et ligne « Demande » en tête du tableau
+  const admin = adminMail(be);
+  assert.equal(admin.subject, '[Candidature] Marie Dupont');
+  assert.equal(admin.reply_to, 'marie@example.com');
+  assert.match(visible(admin.html), /^Nouvelle demande de visite Marie Dupont Demande Visite — Le Loft, chambre 3 Prénom Marie /);
+  assert.doesNotMatch(admin.html, /Nouvelle candidature/);
+  // base inchangée
+  const fs = fsBodies(be)[0];
+  assert.equal(fs.form_type, 'candidature');
+  assert.equal(fs.property_interest, '177ebcb2-6852-461c-8150-d416aa62ecf1');
+  assert.equal(fs.room_interest, 'chambre-3');
+  assert.equal(onlyProspect(be).property_interest, '177ebcb2-6852-461c-8150-d416aa62ecf1');
+  // l'email « Compléments » garde son objet et son fil
+  await call(be, { mode: 'details', details_token: r.body.details_token, duration: '3-6', language: 'fr' });
+  assert.equal(detailsMail(be).subject, 'Re: [Candidature] Marie Dupont');
+  assert.match(detailsMail(be).html, /Compléments de candidature/);
+});
+
+test('v23 — maison, EN : « visit request » partout, le reste inchangé (canal préféré compris) ; liste d\'attente dans la ligne « Demande »', async () => {
+  const be = backend();
+  await call(be, candidate({ language: 'en', property_interest: 'lelodge', room_interest: 'liste-attente', contact_preference: 'call' }));
+  const mail = autoReply(be);
+  assert.equal(mail.subject, 'Your visit request — received');
+  assert.match(mail.html, /<html lang="en">/);
+  assert.match(mail.html, /<title>Your visit request<\/title>/);
+  const v = visible(mail.html);
+  for (const s of [
+    'Marie, we\'re delighted to have received your visit request.',
+    'we take the time to do things right. The whole team is looking forward to meeting you.',
+    'What happens next? Request received! We look at what you\'re looking for, so we can show you the rooms that suit you.',
+    'We\'ll get back to you within 48\u00a0h to set up your visit. Fanny will reach out by phone to get to know you — no pressure, no commitment.',
+    'You visit, on site or by video. And you might already meet some of your future housemates.',
+    'In the meantime La Villa isn\'t your average flatshare. It\'s a house — a real one',
+    'See you very soon, Jérôme & the La Villa team',
+    'This email was sent to you following your visit request. Your data remains strictly confidential.',
+  ]) assert.ok(v.includes(s), s);
+  assert.doesNotMatch(v, /applica|candidat|show you around|discovering your profile|who you are/i);
+  // la notification reste en français, objet inchangé
+  const admin = adminMail(be);
+  assert.equal(admin.subject, '[Candidature] Marie Dupont');
+  assert.match(visible(admin.html), /^Nouvelle demande de visite Marie Dupont Demande Visite — Le Lodge, liste d'attente Prénom Marie /);
+  assert.equal(fsBodies(be)[0].language, 'en');
+});
+
+test('v23 — L\'Appart, FR (clé interne lue dans le pont) : « candidature » gardée, corrections Q1 ; ni visite, ni équipement des maisons, ni prix, ni date', async () => {
+  assert.notEqual(APPART_INTERNAL, facts.APPART_KEY, 'le site envoie la clé interne, pas la clé publique');
+  assert.ok(facts.INTERNAL_ONLY_KEYS.includes(APPART_INTERNAL));
+  const be = backend();
+  const r = await call(be, candidate({ property_interest: APPART_INTERNAL, room_interest: 'liste-attente' }));
+  assert.equal(r.status, 200);
+  const mail = autoReply(be);
+  assert.equal(mail.subject, 'Ta candidature à L\'Appart — bien reçue');
+  assert.match(mail.html, /<title>Ta candidature à L'Appart<\/title>/);
+  const v = visible(mail.html);
+  for (const s of [
+    'Marie, ravis d\'avoir reçu ta candidature.',
+    'Toute l\'équipe a hâte de découvrir ton profil.',
+    'Candidature bien reçue ! On regarde qui tu es, ce que tu cherches, et si L\'Appart correspond à ce dont tu as besoin.',
+    'On te recontacte sous 48h. Par email ou téléphone, pour faire connaissance autour d\'un échange — sans pression, sans engagement.',
+    'Si tout est aligné, tu réserves ta chambre. On te tient au courant jusqu\'à l\'ouverture de L\'Appart.',
+    'En attendant L\'Appart, c\'est une colocation à Annemasse, quartier de la gare : quatre chambres, les communs entretenus chaque semaine, et l\'accès aux soirées des maisons.',
+    'Cet email t\'a été envoyé suite à ta candidature. Tes données restent strictement confidentielles.',
+  ]) assert.ok(v.includes(s), s);
+  // les faits viennent de la source de L'Appart (src/data/appart.ts) : à revoir ici s'ils changent
+  assert.ok(v.includes(`c'est une ${facts.APPART.descriptor.fr} :`), 'descripteur de L\'Appart');
+  assert.equal(facts.APPART.rooms.total, 4, '« quatre chambres »');
+  assert.doesNotMatch(v, /visit|demande de visite|La Villa, ce n'est pas|une maison, une vraie|à La Villa/i);
+  assertAppartSafe('auto-réponse', `${mail.subject} ${v}`);
+  // notification : objet inchangé, bandeau et ligne « Demande » de L'Appart
+  const admin = adminMail(be);
+  assert.equal(admin.subject, '[Candidature] Marie Dupont');
+  assert.match(visible(admin.html), /^Nouvelle candidature — L'Appart Marie Dupont Demande Candidature — L'Appart, liste d'attente Prénom Marie /);
+  assertAppartSafe('notification', visible(admin.html));
+  // base inchangée ; la clé interne n'est recopiée dans aucun email
+  assert.equal(fsBodies(be)[0].form_type, 'candidature');
+  assert.equal(fsBodies(be)[0].property_interest, APPART_UUID);
+  assert.equal(onlyProspect(be).property_interest, APPART_UUID);
+  for (const e of be.emails) assert.ok(!JSON.stringify(e).toLowerCase().includes(APPART_INTERNAL), 'clé interne dans un email');
+});
+
+test('v23 — L\'Appart, EN : « application » gardée, corrections Q1 ; ni visite, ni équipement des maisons, ni prix, ni date', async () => {
+  const be = backend();
+  await call(be, candidate({ language: 'en', property_interest: APPART_INTERNAL, room_interest: 'chambre-5', contact_preference: 'whatsapp' }));
+  const mail = autoReply(be);
+  assert.equal(mail.subject, 'Your application to L\'Appart — received');
+  assert.match(mail.html, /<title>Your application to L'Appart<\/title>/);
+  const v = visible(mail.html);
+  for (const s of [
+    'Marie, we\'re delighted to have received your application.',
+    'The whole team is looking forward to discovering your profile.',
+    'Application received! We look at who you are, what you\'re looking for, and whether L\'Appart matches what you need.',
+    'We\'ll get back to you within 48h. Fanny will reach out on WhatsApp to get to know you — no pressure, no commitment.',
+    'If everything lines up, you reserve your room. We\'ll keep you posted until L\'Appart opens.',
+    'In the meantime L\'Appart is a flatshare in Annemasse, near the station: four rooms, shared areas cleaned every week, and access to the houses\' evenings.',
+    'This email was sent to you following your application. Your data remains strictly confidential.',
+  ]) assert.ok(v.includes(s), s);
+  assert.ok(v.includes(`L'Appart is a ${facts.APPART.descriptor.en}:`), 'descripteur de L\'Appart');
+  assert.doesNotMatch(v, /visit|La Villa isn't your average|a real one|to La Villa/i);
+  assertAppartSafe('auto-réponse EN', `${mail.subject} ${v}`);
+  const admin = adminMail(be);
+  assert.equal(admin.subject, '[Candidature] Marie Dupont');
+  assert.match(visible(admin.html), /^Nouvelle candidature — L'Appart Marie Dupont Demande Candidature — L'Appart, chambre 5 Prénom Marie /);
+  assertAppartSafe('notification EN', visible(admin.html));
+});
+
+test('v23 — rien n\'a pu être enregistré (502) : « demande » pour une visite, « candidature » pour L\'Appart, FR et EN ; aucun email', async () => {
+  const cases = [
+    [{}, 'fr', 'Ta demande n\'a pas pu être enregistrée. Réessaie dans un instant, ou écris-nous directement.'],
+    [{ property_interest: 'lavilla' }, 'en', 'Your request couldn\'t be saved. Please try again in a moment, or contact us directly.'],
+    [{ property_interest: APPART_INTERNAL }, 'fr', 'Ta candidature n\'a pas pu être enregistrée. Réessaie dans un instant, ou écris-nous directement.'],
+    [{ property_interest: APPART_INTERNAL }, 'en', 'Your application couldn\'t be saved. Please try again in a moment, or contact us directly.'],
+  ];
+  for (const [extra, language, message] of cases) {
+    const be = backend({ fsFails: true });
+    const r = await call(be, candidate({ ...extra, language }));
+    assert.equal(r.status, 502, message);
+    assert.deepEqual(r.body, { error: message });
+    assert.equal(be.emails.length, 0, 'aucun email quand rien n\'est enregistré');
+    assert.equal(be.prospects.size, 0);
+  }
+});
+
+test('v23 — sans maison (lien général), lieu inconnu ou « constructor » : email « visite », « Visite (maison non précisée) » ; chambre seule, valeur libre échappée', async () => {
+  for (const extra of [{}, { property_interest: '' }, { property_interest: 'xyz' }, { property_interest: 'constructor' }]) {
+    const be = backend();
+    const r = await call(be, candidate(extra));
+    assert.equal(r.status, 200, JSON.stringify(extra));
+    assert.equal(autoReply(be).subject, 'Ta demande de visite — bien reçue', JSON.stringify(extra));
+    assert.match(visible(adminMail(be).html), /^Nouvelle demande de visite Marie Dupont Demande Visite \(maison non précisée\) Prénom Marie /, JSON.stringify(extra));
+  }
+  const be = backend();
+  await call(be, candidate({ room_interest: 'chambre-2' }));
+  assert.match(visible(adminMail(be).html), /Demande Visite \(maison non précisée\), chambre 2 Prénom/);
+  const be2 = backend();
+  await call(be2, candidate({ property_interest: 'lavilla', room_interest: '<b>suite</b>' }));
+  assert.match(adminMail(be2).html, /Visite — La Villa, &lt;b&gt;suite&lt;\/b&gt;/);
+});
+
+test('v23 — les 3 maisons : nom du site (PLACE_LABEL) dans la ligne « Demande » et email « visite » ; L\'Appart seul en « candidature »', async () => {
+  for (const key of facts.MAISON_KEYS) {
+    const be = backend();
+    await call(be, candidate({ property_interest: facts.toInternalPropertySlug(key) }));
+    assert.equal(autoReply(be).subject, 'Ta demande de visite — bien reçue', key);
+    assert.match(visible(adminMail(be).html), new RegExp(`^Nouvelle demande de visite Marie Dupont Demande Visite — ${facts.PLACE_LABEL[key]} Prénom`), key);
+  }
+  const be = backend();
+  await call(be, candidate({ property_interest: APPART_INTERNAL }));
+  assert.equal(autoReply(be).subject, `Ta candidature à ${facts.PLACE_LABEL[facts.APPART_KEY]} — bien reçue`);
+  assert.match(visible(adminMail(be).html), new RegExp(`Demande Candidature — ${facts.PLACE_LABEL[facts.APPART_KEY]} Prénom`));
 });
