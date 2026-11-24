@@ -62,12 +62,12 @@ test('entityFactsText(lang).paragraph se termine par GENEVA_COMMUTE_FORMULA[lang
 //    bouton et microcopie hors du comptage « 1× par page », vérifiés une fois DANS le bloc ──
 import { entityFactsCtaIssues } from '../../scripts/check-entity-facts.mjs';
 
-test('T13 : « Candidater » / « Apply » + microcopie 48 h, hors entityFactsStrings, vérifiés dans le bloc', async () => {
+test('T13 : « Programmer une visite » / « Book a visit » (§ 4.7, 24/11/2026) + microcopie 48 h, hors entityFactsStrings, vérifiés dans le bloc', async () => {
   const m = await loadEntityFacts();
   for (const lang of ['fr', 'en']) {
     const t = m.entityFactsText(lang);
     const h = m.ENTITY_FACTS.responseHours;
-    assert.equal(t.cta, lang === 'fr' ? 'Candidater' : 'Apply');
+    assert.equal(t.cta, lang === 'fr' ? 'Programmer une visite' : 'Book a visit');
     assert.equal(t.ctaNote, lang === 'fr' ? `Réponse sous ${h} h` : `Reply within ${h} h`);
     assert.doesNotMatch(t.cta, /\d|réponse|reply/i, `${lang} : aucune promesse dans le libellé du bouton`);
     assert.ok(!m.entityFactsStrings(lang).includes(t.cta), `${lang} : le bouton n'est pas compté 1× par page`);

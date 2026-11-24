@@ -6,7 +6,7 @@ import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { readFile } from 'node:fs/promises';
 import {
-  observatoireCsvIssues, forbiddenIssues, nearWindow, NEAR_WINDOW, ratingMarkupIssues, socialProofVerdict, SOCIAL_PROOF_VIEW, SOCIAL_PROOF_MIGRATION, visibleText } from '../../scripts/check-entity-facts.mjs';
+  observatoireCsvIssues, forbiddenIssues, googleRatingIssues, nearWindow, NEAR_WINDOW, ratingMarkupIssues, socialProofVerdict, SOCIAL_PROOF_VIEW, SOCIAL_PROOF_MIGRATION, visibleText } from '../../scripts/check-entity-facts.mjs';
 import { buildEdits, sqlDoc, POST_STATE_WATCH } from '../../scripts/l3-social-proof.edits.mjs';
 import { forbiddenIssues as insertedForbidden, applyEdits, checkEdit } from '../../scripts/build-slots-sql.mjs';
 import { loadEntityFacts } from '../../scripts/lib/load-entity-facts.mjs';
@@ -18,29 +18,41 @@ const p = (...sentences) => page(sentences.map((s) => `<p>${s}</p>`).join(''));
 const tile = (value, label) => page(`<div class="grid"><div><div class="v">${value}</div><div class="l">${label}</div></div></div>`);
 const only = (issues, re) => { assert.equal(issues.length, 1, issues.join('\n') || '(aucun message)'); assert.match(issues[0], re); };
 
-test('D4 : « 4,9/5 » et « enquêtes résidents » / « resident surveys » interdits, dans toutes leurs graphies', () => {
-  const r = forbiddenIssues(p('★ 4,9/5 (enquêtes résidents) · 100+ résidents depuis 2021'));
-  assert.equal(r.length, 2, r.join('\n'));
-  assert.ok(r.some((x) => /4,9\/5/.test(x)) && r.some((x) => /enquêtes résidents/.test(x)));
-  const en = forbiddenIssues(p('4.9/5 — resident surveys 2021-2026'));
-  assert.equal(en.length, 2, en.join('\n'));
-  only(forbiddenIssues(p('Note 4,9 / 5 · 100 avis')), /4,9\/5/);
-  only(forbiddenIssues(p('une note moyenne de 4,9 sur 5')), /4,9\/5/);
-  only(forbiddenIssues(p('rated 4.9 out of 5 by residents')), /4,9\/5/);
+// (24/11/2026, D12 du brief « budget réel ») La note Google passe à 4,9/5 (35 avis), datée : l'ancienne règle « 4,9/5 interdit »
+// devient googleRatingIssues — toute note « x,y/5 » de Google (et toute 4,9/5) doit être la constante datée, au caractère près.
+test('D4 : « enquêtes résidents » interdit ; toute note hors de GOOGLE_REVIEWS datée échoue (googleRatingIssues), tuile comprise', async () => {
+  const m = await loadEntityFacts();
+  only(forbiddenIssues(p('★ 4,9/5 (enquêtes résidents) · 100+ résidents depuis 2021')), /enquêtes résidents/);
+  only(forbiddenIssues(p('4.9/5 — resident surveys 2021-2026')), /resident surveys/);
   only(forbiddenIssues(p("Note moyenne — enquête résidents 2021-2026")), /enquêtes résidents/);
   only(forbiddenIssues(p('our resident survey says')), /resident surveys/);
+  const g = (html) => googleRatingIssues(visibleText(html), m);
+  only(g(p('★ 4,9/5 (enquêtes résidents)')), /4,9\/5/);
+  only(g(p('Note 4,9 / 5 · 100 avis')), /4,9/);
+  only(g(p('une note moyenne de 4,9 sur 5')), /4,9 sur 5/);
+  only(g(p('rated 4.9 out of 5 by residents')), /4\.9 out of 5/);
+  only(g(p('4,8/5 sur Google (36 avis) — Voir les avis')), /4,8\/5/);
+  only(g(p('4.8/5 on Google (36 reviews)')), /4\.8\/5/);
+  only(g(p('4,9/5 sur Google (35 avis)')), /4,9\/5/);
+  assert.deepEqual(g(p(`Avis : ${m.STATS_DISPLAY.fr.googleRating}.`, `Reviews: ${m.STATS_DISPLAY.en.googleRating}.`)), []);
+  assert.deepEqual(g(tile(m.STATS_DISPLAY.fr.googleRatingValue, m.STATS_DISPLAY.fr.googleRatingLabel)), [], 'tuile : valeur et étiquette dans deux blocs');
+  assert.deepEqual(g(p('un loyer de 1 490 CHF', '4,95 % de taux', '14,9/5 n\'existe pas', 'une note de 4,5/5 ailleurs')), []);
 });
 
-test('D4 : la note Google « 4,8/5 sur Google (36 avis) » et son lien passent ; « des dizaines d\'avis Google » (vrai) passe', () => {
-  assert.deepEqual(forbiddenIssues(p(
-    '4,8/5 sur Google (36 avis) — <a href="https://maps.google.com/?cid=14514002506022967350" target="_blank" rel="noopener noreferrer">Voir les avis</a>',
-    '4.8/5 on Google (36 reviews) — See the reviews',
-    'Avis : 4,8/5 sur Google (36 avis).',
+test('D4 : la note datée de la source et son lien passent les deux gardes ; « des dizaines d\'avis Google » (vrai) passe', async () => {
+  const m = await loadEntityFacts();
+  const fr = m.STATS_DISPLAY.fr.googleRating, en = m.STATS_DISPLAY.en.googleRating;
+  const html = p(
+    `${fr} — <a href="${m.GOOGLE_REVIEWS.url}" target="_blank" rel="noopener noreferrer">Voir les avis</a>`,
+    `${en} — See the reviews`,
+    `Avis : ${fr}.`,
     'Nous sommes une entreprise établie depuis 2021, avec des dizaines d\'avis Google vérifiables et une adresse physique que tu peux visiter.',
     'with dozens of verifiable Google reviews and a physical address you can visit',
-    'La Villa Coliving affiche une note de 4,8/5 sur Google (36 avis) et un séjour moyen de 13 mois (9 mois hors longs séjours) : on reste parce qu\'on s\'y sent bien — voir les avis.',
+    `La Villa Coliving affiche une note de ${fr} et un séjour moyen de 13 mois (9 mois hors longs séjours) : on reste parce qu'on s'y sent bien — voir les avis.`,
     'un loyer de 1 490 CHF', 'depuis 2019, 5 ans', '4,95 % de taux', '14,9/5 n\'existe pas',
-  )), []);
+  );
+  assert.deepEqual(forbiddenIssues(html), []);
+  assert.deepEqual(googleRatingIssues(visibleText(html), m), []);
 });
 
 test('D3 : « 150 résidents » / « 150+ residents » / « more than 150 residents » et « 50+ personnes par an » interdits ; « 100+ » et « 250+ » passent', () => {
@@ -71,8 +83,9 @@ test('A2 (11/10/2026) : l\'Observatoire n\'est plus exempté — « 98-99 % » y
   const m = await loadEntityFacts();
   const obs = p('Taux d\'occupation observé : 98-99 % sur les trois maisons (méthodologie first-party, relevé daté).');
   for (const f of ['observatoire-logement-frontalier-geneve.html', 'en-observatoire-logement-frontalier-geneve.html', 'blog-observatoire-x.html']) only(forbiddenIssues(obs, undefined, f), /99 %/, f);
+  // (24/11/2026) La note « 4,9/5 » relève désormais de googleRatingIssues (D12) : il reste « enquêtes résidents » et « 98-99 % ».
   const r = forbiddenIssues(p('4,9/5 (enquêtes résidents)', 'occupation 98-99 %'), undefined, 'observatoire-logement-frontalier-geneve.html');
-  assert.equal(r.length, 3, r.join('\n'));
+  assert.equal(r.length, 2, r.join('\n'));
   for (const lang of ['fr', 'en']) {
     const html = `<html><body><main><p>${m.OCCUPANCY_DISPLAY[lang].value} ${lang === 'en' ? 'occupancy excluding ramp-up since Oct. 2021' : 'occupation hors montée en charge depuis oct. 2021'}</p></main></body></html>`;
     assert.deepEqual(forbiddenIssues(html, undefined, `${lang === 'en' ? 'en-' : ''}observatoire-logement-frontalier-geneve.html`), [], `${lang} : la tuile Observatoire passe`);
@@ -147,8 +160,22 @@ const LIVE = {
   },
 };
 
-test('buildEdits(source réelle) : 10 modifications, 2 articles, parité FR/EN, textes insérés = source (note Google + lien), rien de l\'ancien monde', async () => {
-  const m = await loadEntityFacts();
+// (24/11/2026) Le lot L3 est en base depuis le 10/10/2026. La source porte désormais la note datée « 4,9/5 sur Google (35 avis, au
+// 23 novembre 2026) » (D12 du brief « budget réel »), que le lot G3 pose dans les deux mêmes articles : le lot L3 se rejoue donc
+// avec la note de son époque (le reste de la source est la source réelle).
+function sourceAtL3(m) {
+  return {
+    ...m,
+    GOOGLE_REVIEWS: { ...m.GOOGLE_REVIEWS, rating: '4,8', ratingEn: '4.8', value: 4.8, count: 36 },
+    STATS_DISPLAY: {
+      fr: { ...m.STATS_DISPLAY.fr, googleRating: '4,8/5 sur Google (36 avis)' },
+      en: { ...m.STATS_DISPLAY.en, googleRating: '4.8/5 on Google (36 reviews)' },
+    },
+  };
+}
+
+test('buildEdits(source du 10/10/2026) : 10 modifications, 2 articles, parité FR/EN, textes insérés = source (note Google + lien), rien de l\'ancien monde', async () => {
+  const m = sourceAtL3(await loadEntityFacts());
   const edits = buildEdits(m);
   assert.equal(edits.length, 10);
   assert.deepEqual([...new Set(edits.map((e) => e.slug))].sort(), ['coliving-communaute-reels-amis-geneve-annemasse', 'lodge-annemasse-coliving-premium-portes-geneve']);

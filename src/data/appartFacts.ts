@@ -99,6 +99,10 @@ export const APPART_FACTS_VERSION = "2026-11-20";
 /** Pages qui portent la fiche de L'Appart (exactement une fois ; jamais ailleurs). */
 export const APPART_FACTS_ROUTES: readonly string[] = ["/lappart"];
 
+/** (24/11/2026, Jérôme) L'Appart ne se visite pas avant son ouverture : sa fiche garde « Candidater » / « Apply », quand les
+ *  maisons disent « Programmer une visite » (ENTITY_FACTS_CTA). La microcopie reste celle des fiches (ENTITY_FACTS_CTA.note). */
+const APPART_FACTS_CTA = { fr: "Candidater", en: "Apply" } as const;
+
 export interface AppartFactsText {
   title: string;
   paragraph: string;
@@ -127,7 +131,7 @@ export function appartFactsText(lang: AppartLang): AppartFactsText {
         `Guarantor: ${GUARANTOR_SENTENCE.en}.`,
         BRAND_CANONICAL_SENTENCE.en,
       ],
-      cta: ENTITY_FACTS_CTA.en.cta,
+      cta: APPART_FACTS_CTA.en,
       ctaNote: ENTITY_FACTS_CTA.en.note,
     };
   }
@@ -143,7 +147,7 @@ export function appartFactsText(lang: AppartLang): AppartFactsText {
       `Garant : ${GUARANTOR_SENTENCE.fr}.`,
       BRAND_CANONICAL_SENTENCE.fr,
     ],
-    cta: ENTITY_FACTS_CTA.fr.cta,
+    cta: APPART_FACTS_CTA.fr,
     ctaNote: ENTITY_FACTS_CTA.fr.note,
   };
 }

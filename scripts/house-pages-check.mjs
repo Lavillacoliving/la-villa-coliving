@@ -317,10 +317,13 @@ async function checkRoomSizeRange(rooms) {
   const min = Math.round(Math.min(...sizes)), max = Math.round(Math.max(...sizes));
   const dir = path.join(path.dirname(fileURLToPath(import.meta.url)), '..', 'public', 'prerendered');
   for (const file of ['tarifs.html', 'en-tarifs.html']) {
-    const needle = `${min}-${max} m²`;
+    // (24/11/2026, brief « budget réel ») /tarifs écrit la fourchette en toutes lettres, « de 16 à 24 m² » / « 16 to 24 m² »
+    // (annexes A et B) : les deux graphies passent, espaces insécables ramenées à l'espace simple.
+    const needles = file.startsWith('en-') ? [`${min}-${max} m²`, `${min} to ${max} m²`] : [`${min}-${max} m²`, `${min} à ${max} m²`];
     let html;
     try { html = await fs.readFile(path.join(dir, file), 'utf8'); } catch { continue; }
-    if (!html.includes(needle)) failures.push(`${file} : « ${needle} » absent — STATS.roomSizeMin/Max ≠ v_public_rooms (min ${min}, max ${max})`);
+    const flat = html.replace(/&nbsp;|&#160;|&#xa0;|\u00a0|\u202f/gi, ' ');
+    if (!needles.some((n) => flat.includes(n))) failures.push(`${file} : « ${needles.join(' » ou « ')} » absent — STATS.roomSizeMin/Max ≠ v_public_rooms (min ${min}, max ${max})`);
   }
   console.log(`${failures.length === 0 ? '✅' : '❌'} surface des chambres — ${min}-${max} m² (v_public_rooms) sur /tarifs FR + EN`);
   return failures;

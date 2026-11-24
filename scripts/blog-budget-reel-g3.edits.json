@@ -1,0 +1,63 @@
+{
+  "version": "2026-11-24",
+  "lot": "G3 — note Google en clair dans deux articles (décision de Jérôme du 24/11/2026 : « dans la même séance SQL » que le lot 4 « budget réel »). Liste SÉPARÉE des 79 opérations du fichier JSON du brief : elle n'en fait pas partie.",
+  "valeurs": "Relevé de la fiche Google du 23/11/2026 : 4,9/5, 35 avis. Même chaîne que STATS_DISPLAY.googleRating (src/data/stats.ts, GOOGLE_REVIEWS.checkedOn = 2026-11-23) : « 4,9/5 sur Google (35 avis, au 23 novembre 2026) » / « 4.9/5 on Google (35 reviews, as of 23 November 2026) ».",
+  "recherche": "Lecture seule du 24/11/2026 (REST anon sur les 43 articles publiés + SELECT sur les 64 lignes, brouillons compris) : la note n'est écrite en clair que dans content_fr / content_en de ces deux articles, une fois par champ ; aucun titre, extrait, meta ni post Facebook ne la porte. Dans les deux articles, le lien « voir les avis » / « see the reviews » vers la fiche Google suit déjà la note (règle D4) : il ne change pas.",
+  "table": "blog_posts",
+  "cle": "slug",
+  "regles": [
+    "Mêmes règles que le fichier JSON du lot 4 : chaque 'old' se trouve exactement une fois dans le champ avant modification ; sinon, arrêt sans rien écrire.",
+    "replace : remplacer 'old' par 'new'.",
+    "Ne rien modifier d'autre dans ces lignes ; ne toucher à aucun autre article."
+  ],
+  "etat_attendu_au_2026-11-24": {
+    "coliving-communaute-reels-amis-geneve-annemasse": {
+      "updated_at": "2026-11-19 16:37:46.768178+00",
+      "content_fr": { "longueur": 11057, "md5_10": "41d9520cef" },
+      "content_en": { "longueur": 9677, "md5_10": "6d366ced10" }
+    },
+    "lodge-annemasse-coliving-premium-portes-geneve": {
+      "updated_at": "2026-11-19 14:27:12.782459+00",
+      "content_fr": { "longueur": 15210, "md5_10": "c611f41f82" },
+      "content_en": { "longueur": 13537, "md5_10": "96bcbe9ef3" }
+    }
+  },
+  "operations": [
+    {
+      "op": "replace",
+      "slug": "coliving-communaute-reels-amis-geneve-annemasse",
+      "field": "content_fr",
+      "id": "G3-FR-01",
+      "why": "G3 : note Google du relevé du 23/11/2026 (phrase « La Villa Coliving affiche une note de … et un séjour moyen de 13 mois »)",
+      "old": "4,8/5 sur Google (36 avis)",
+      "new": "4,9/5 sur Google (35 avis, au 23 novembre 2026)"
+    },
+    {
+      "op": "replace",
+      "slug": "coliving-communaute-reels-amis-geneve-annemasse",
+      "field": "content_en",
+      "id": "G3-EN-01",
+      "why": "G3 : note Google du relevé du 23/11/2026 (phrase anglaise « La Villa Coliving is rated …, with an average stay of 13 months »)",
+      "old": "4.8/5 on Google (36 reviews)",
+      "new": "4.9/5 on Google (35 reviews, as of 23 November 2026)"
+    },
+    {
+      "op": "replace",
+      "slug": "lodge-annemasse-coliving-premium-portes-geneve",
+      "field": "content_fr",
+      "id": "G3-FR-02",
+      "why": "G3 : note Google du relevé du 23/11/2026 (phrase « Depuis 2021, plus de 100 résidents … avec une note de … — voir les avis »)",
+      "old": "4,8/5 sur Google (36 avis)",
+      "new": "4,9/5 sur Google (35 avis, au 23 novembre 2026)"
+    },
+    {
+      "op": "replace",
+      "slug": "lodge-annemasse-coliving-premium-portes-geneve",
+      "field": "content_en",
+      "id": "G3-EN-02",
+      "why": "G3 : note Google du relevé du 23/11/2026 (phrase anglaise « Since 2021, more than 100 residents … rated … — see the reviews »)",
+      "old": "4.8/5 on Google (36 reviews)",
+      "new": "4.9/5 on Google (35 reviews, as of 23 November 2026)"
+    }
+  ]
+}

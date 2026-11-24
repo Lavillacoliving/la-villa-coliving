@@ -392,8 +392,8 @@ export function ChambresDisponiblesPage() {
             ) : (
               <p className="text-lg text-[#44403C] max-w-2xl">
                 {en
-                  ? "No room is free today: here are the next openings. You can already apply for the date that suits you."
-                  : "Pas de chambre libre aujourd'hui : voici les prochaines libérations. Tu peux déjà candidater pour la date qui te convient."}
+                  ? "No room is free today: here are the next openings. You can already book a visit for the move-in date that suits you."
+                  : "Pas de chambre libre aujourd'hui : voici les prochaines libérations. Tu peux déjà programmer une visite pour la date d'entrée qui te convient."}
               </p>
             )
           ) : (
@@ -427,7 +427,7 @@ export function ChambresDisponiblesPage() {
                 {en ? "Opening soon" : "Bientôt disponibles"}
               </h2>
               <p className="text-sm text-[#57534E]">
-                {en ? "Discover the house, then apply for the date that suits you." : "Découvre la maison, puis candidate pour la date qui te convient."}
+                {en ? "Discover the house, then book a visit for the move-in date that suits you." : "Découvre la maison, puis programme une visite pour la date d'entrée qui te convient."}
               </p>
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
@@ -559,7 +559,7 @@ export function ChambresDisponiblesPage() {
             ))}
           </ul>
           <p className="mt-10 text-center text-[#57534E]">
-            {en ? "A question before applying? " : "Une question avant de candidater ? "}
+            {en ? "A question before your visit? " : "Une question avant ta visite ? "}
             <LocalizedLink to="/faq" className="underline underline-offset-4 hover:text-[#1C1917]">
               {en ? "Read the FAQ" : "Lis la FAQ"}
             </LocalizedLink>

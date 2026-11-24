@@ -313,11 +313,13 @@ export function HousesPageV4() {
                       </span>
                     </div>
 
-                    <div className="flex gap-3">
+                    {/* (24/11/2026, § 4.7) « Programmer une visite » est plus long que « Postuler » : les deux boutons passent à la
+                        ligne quand ils ne tiennent pas côte à côte (flex-wrap + flex-auto), sans jamais couper un libellé. */}
+                    <div className="flex flex-wrap gap-3">
                       <LocalizedLink
                         to={`/${house.id}`}
                         onClick={() => track("house_discover_click", { house: house.id, cta_position: "nos_maisons_button", page: "nos-maisons", language: L })}
-                        className="flex-1 inline-flex items-center justify-center gap-2 px-5 py-3 bg-[#1C1917] text-white text-sm font-semibold rounded-lg hover:bg-[#D4A574] transition-colors"
+                        className="flex-auto whitespace-nowrap inline-flex items-center justify-center gap-2 px-5 py-3 bg-[#1C1917] text-white text-sm font-semibold rounded-lg hover:bg-[#D4A574] transition-colors"
                       >
                         {language === "en" ? "Discover" : "Découvrir"}
                         <ArrowRight className="w-4 h-4" />
@@ -325,9 +327,9 @@ export function HousesPageV4() {
                       <LocalizedLink
                         to={`/candidature?property_interest=${house.id}`}
                         onClick={() => track("cta_click", { cta_position: "nos_maisons_card", cta_target: "/candidature", house: house.id, language: L })}
-                        className="inline-flex items-center justify-center px-5 py-3 border border-[#1C1917] text-[#1C1917] text-sm font-semibold rounded-lg hover:bg-[#1C1917] hover:text-white transition-colors"
+                        className="flex-auto whitespace-nowrap inline-flex items-center justify-center px-5 py-3 border border-[#1C1917] text-[#1C1917] text-sm font-semibold rounded-lg hover:bg-[#1C1917] hover:text-white transition-colors"
                       >
-                        {language === "en" ? "Apply" : "Postuler"}
+                        {language === "en" ? "Book a visit" : "Programmer une visite"}
                       </LocalizedLink>
                     </div>
                     {house.id === "lelodge" ? (
@@ -450,9 +452,8 @@ export function HousesPageV4() {
         <div className="max-w-3xl mx-auto px-6"><EntityFacts page="nos-maisons" className="!my-0" collapseOnMobile /></div>
       </section>
 
-      {/* CTA — (Lot 1 de la refonte, 24/11/2026) Le dernier bloc propose d'écrire ou de candidater, au lieu de renvoyer vers la
-          FAQ qu'on vient de lire. Libellé « Candidater » comme le reste du site : il change avec l'étape 1 bis (« Programmer une
-          visite »), en même temps que le formulaire. */}
+      {/* CTA — (Lot 1 de la refonte, 24/11/2026) Le dernier bloc propose d'écrire ou de programmer une visite, au lieu de renvoyer
+          vers la FAQ qu'on vient de lire. Libellé « Programmer une visite » (étape 1 bis), comme le reste du site et le formulaire. */}
       <section className="py-24 bg-[#1C1917]">
         <div className="container-custom text-center">
           <h2
@@ -465,8 +466,8 @@ export function HousesPageV4() {
           </h2>
           <p className="text-lg text-white/80 max-w-xl mx-auto mb-8">
             {language === "en"
-              ? `Message us on WhatsApp and we'll help you choose. Or apply in ${STATS.applyMinutes} minutes: reply within ${STATS.responseHours} h.`
-              : `Écris-nous sur WhatsApp, on t'aide à choisir. Ou candidate en ${STATS.applyMinutes} minutes : réponse sous ${STATS.responseHours} h.`}
+              ? `Message us on WhatsApp and we'll help you choose. Or book a visit, on site or by video: reply within ${STATS.responseHours}\u00a0h.`
+              : `Écris-nous sur WhatsApp, on t'aide à choisir. Ou programme une visite, sur place ou en vidéo : réponse sous ${STATS.responseHours}\u00a0h.`}
           </p>
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
             <LocalizedLink
@@ -474,7 +475,7 @@ export function HousesPageV4() {
               onClick={() => track("cta_click", { cta_position: "nos_maisons_footer", cta_target: "/candidature", language: L })}
               className="inline-flex items-center gap-2 px-8 py-4 bg-white text-[#1C1917] font-bold rounded-lg hover:bg-[#F5F2ED] transition-colors"
             >
-              {language === "en" ? "Apply" : "Candidater"}
+              {language === "en" ? "Book a visit" : "Programmer une visite"}
               <ArrowRight className="w-5 h-5" />
             </LocalizedLink>
             <WhatsAppTextLink context={language === "en" ? "Our houses" : "Nos maisons"} onDark />

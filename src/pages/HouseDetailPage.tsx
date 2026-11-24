@@ -2309,7 +2309,7 @@ export function HouseDetailPage() {
               { q: "Quelle est la durée minimale du bail à La Villa ?", a: "Aucune durée minimale imposée : ton bail est de 12 mois et tu peux partir quand tu veux avec 1 mois de préavis. Pratique pour une mission de quelques mois ou une période d'essai en CDI à Genève." },
               { q: "Y a-t-il une caution et des frais d'agence ?", a: depositA.fr },
               { q: "Combien de chambres y a-t-il à La Villa et sont-elles meublées ?", a: "10 chambres privatives, toutes meublées (lit, bureau ergonomique, placard) : 6 avec salle de bain privative, 4 avec accès à 2 salles d'eau partagées (ménage inclus dans le loyer). Chaque chambre offre une vue sur le jardin ou la réserve naturelle. Cuisine, salon, salle de sport, sauna et piscine chauffée 12×5 m sont partagés." },
-              { q: "Qui peut postuler pour vivre à La Villa ?", a: "Profil cible : frontaliers en CDI, jeunes professionnels, expatriés et résidents fiscaux français travaillant à Genève. Sélection sur dossier (justificatif de revenus, motivation, compatibilité avec la communauté). Pas de critère d'âge strict, mais la majorité des résidents ont entre 25 et 40 ans." },
+              { q: "Qui peut vivre à La Villa ?", a: "Profil cible : frontaliers en CDI, jeunes professionnels, expatriés et résidents fiscaux français travaillant à Genève. Sélection sur dossier (justificatif de revenus, motivation, compatibilité avec la communauté). Pas de critère d'âge strict, mais la majorité des résidents ont entre 25 et 40 ans." },
               { q: "Où se trouve La Villa et à quelle distance de Genève ?", a: `La Villa se situe à Ville-la-Grand, côté France, à ${TB.lavilla.eauxVivesDoorToDoorMin} min porte-à-porte de Genève-Eaux-Vives en Léman Express (gare d'Annemasse à ${TB.lavilla.stationWalkMin} min à pied, puis ${TRANSIT.trainEauxVivesMin} min de train) et à ${TB.lavilla.riveDoorToDoorMin} min du centre de Genève (Rive). C'est l'une des trois maisons de coliving de La Villa Coliving, avec une piscine extérieure chauffée et ${m2(HOUSE_SURFACES.lavilla.plotM2, "fr")} de jardin en bordure du Foron, la rivière-frontière, et de sa zone naturelle.` },
               { q: "Combien de résidents vivent à La Villa ?", a: "La Villa accueille 10 résidents dans une maison de coliving à Ville-la-Grand, près de Genève. C'est une maison à taille humaine, pensée pour que les liens se créent naturellement, avec une chambre meublée privée pour chacun et de larges espaces communs." },
               { q: "Quels équipements y a-t-il à La Villa ?", a: `La Villa, à Ville-la-Grand, dispose d'une piscine extérieure chauffée, d'un sauna infrarouge, d'une salle de sport accessible 24h/24, d'une salle de jeu, d'un espace home cinéma, de ${m2(HOUSE_SURFACES.lavilla.plotM2, "fr")} de jardin et d'espaces communs design. Tout est inclus dans le loyer tout compris, dès ${PRICE_FROM_CHF_FR}/mois à La Villa.` },
@@ -2321,7 +2321,7 @@ export function HouseDetailPage() {
               { q: "What is the minimum lease term at La Villa?", a: "No set minimum: your lease runs 12 months and you can leave whenever you want with 1 month's notice. Handy for a short assignment or a trial period in Geneva." },
               { q: "Is there a deposit and any agency fees?", a: depositA.en },
               { q: "How many rooms are there at La Villa and are they furnished?", a: "10 private rooms, all furnished (bed, ergonomic desk, wardrobe): 6 with a private en-suite bathroom, 4 with access to 2 shared designer shower rooms (cleaning included in the rent). Each room has a view of the garden or the nature reserve. Kitchen, living room, gym, sauna and 12×5 m heated pool are shared." },
-              { q: "Who can apply to live at La Villa?", a: "Target profile: cross-border workers on CDI, young professionals, expatriates and French tax residents working in Geneva. Selection by application (income proof, motivation, fit with the community). No strict age limit, but most residents are 25-40 years old." },
+              { q: "Who can live at La Villa?", a: "Target profile: cross-border workers on CDI, young professionals, expatriates and French tax residents working in Geneva. Selection by application (income proof, motivation, fit with the community). No strict age limit, but most residents are 25-40 years old." },
               { q: "Where is La Villa and how far from Geneva?", a: `La Villa is in Ville-la-Grand, on the French side, ${TB.lavilla.eauxVivesDoorToDoorMin} minutes door to door from Geneva Eaux-Vives by Léman Express (Annemasse station is ${aOrAn(TB.lavilla.stationWalkMin)} ${TB.lavilla.stationWalkMin}-minute walk, then ${TRANSIT.trainEauxVivesMin} minutes by train) and ${TB.lavilla.riveDoorToDoorMin} minutes from the city centre (Rive). It's one of the three La Villa Coliving houses, with a heated outdoor pool and ${m2(HOUSE_SURFACES.lavilla.plotM2, "en")} of garden beside the Foron, the border river, and its nature area.` },
               { q: "How many residents live at La Villa?", a: "La Villa hosts 10 residents in a coliving house in Ville-la-Grand, near Geneva. It's a human-scale house, designed so connections form naturally, with a private furnished room for each resident and large common areas." },
               { q: "What amenities are there at La Villa?", a: `La Villa, in Ville-la-Grand, has a heated outdoor pool, an infrared sauna, a gym open 24/7, a games room, a home cinema space, ${m2(HOUSE_SURFACES.lavilla.plotM2, "en")} of garden and designer common areas. Everything is included in the all-inclusive rent, from ${PRICE_FROM_CHF_EN}/month at La Villa.` },
@@ -2336,7 +2336,7 @@ export function HouseDetailPage() {
               { q: "Y a-t-il une caution et des frais d'agence ?", a: depositA.fr },
               { q: "Combien de chambres y a-t-il au Loft et sont-elles meublées ?", a: "7 chambres privatives meublées (lit, bureau, placard), toutes avec salle de bain privative. Espaces communs design : cuisine ouverte, salon, terrasse, piscine intérieure chauffée toute l'année." },
               // (Lot L2, 09/10/2026, D6) Frontière du Loft = fait mesuré (TRANSIT), plus de « proximité immédiate ».
-              { q: "Qui peut postuler pour vivre au Loft ?", a: `Profil cible : frontaliers en CDI, jeunes professionnels, expatriés. Sélection sur dossier (justificatif de revenus, motivation, compatibilité avec la communauté). La frontière à ${TB.leloft.border.foronWalkMin} min à pied fait du Loft un favori des frontaliers qui vont au bureau à pied ou en vélo.` },
+              { q: "Qui peut vivre au Loft ?", a: `Profil cible : frontaliers en CDI, jeunes professionnels, expatriés. Sélection sur dossier (justificatif de revenus, motivation, compatibilité avec la communauté). La frontière à ${TB.leloft.border.foronWalkMin} min à pied fait du Loft un favori des frontaliers qui vont au bureau à pied ou en vélo.` },
               { q: "Où se trouve Le Loft et à quelle distance de Genève ?", a: `Le Loft se situe au centre d'Ambilly, côté France, à ${TB.leloft.riveDoorToDoorMin} min porte-à-porte du centre de Genève (Rive) par le tram 17 (arrêt ${TB.leloft.tramStop.name} à ${TB.leloft.tramStop.walkMin} min à pied, ${TB.leloft.tramStop.tramToRiveMin} min de tram) et à ${TB.leloft.eauxVivesDoorToDoorMin} min de Genève-Eaux-Vives en Léman Express. C'est l'une des trois maisons de coliving de La Villa Coliving, avec une piscine intérieure chauffée toute l'année et un sauna finlandais.` },
               { q: "Combien de résidents vivent au Loft ?", a: "Le Loft accueille 7 résidents, ce qui en fait la plus intime des maisons de La Villa Coliving. Située à Ambilly, près de Genève, elle offre une chambre meublée privée à chacun et une ambiance très conviviale à taille réduite." },
               { q: "Quels équipements y a-t-il au Loft ?", a: `Le Loft, à Ambilly, dispose d'une piscine intérieure chauffée utilisable toute l'année, d'un sauna finlandais, d'une salle de sport accessible 24h/24, d'un espace home cinéma et de chambres spacieuses de ${ROOM_SURFACE_BY_HOUSE.leloft.min} à ${ROOM_SURFACE_BY_HOUSE.leloft.max} m². Tout est inclus dans le loyer tout compris de ${PRICE_CHF_FR}/mois.` },
@@ -2348,7 +2348,7 @@ export function HouseDetailPage() {
               { q: "What is the minimum lease term at Le Loft?", a: "No set minimum: a 12-month lease, and 1 month's notice whenever you decide to leave — useful for cross-border workers on assignment or on a trial period in Geneva." },
               { q: "Is there a deposit and any agency fees?", a: depositA.en },
               { q: "How many rooms are there at Le Loft and are they furnished?", a: "7 private furnished rooms (bed, desk, wardrobe), all with a private en-suite bathroom. Designer common spaces: open kitchen, living room, terrace, year-round heated indoor pool." },
-              { q: "Who can apply to live at Le Loft?", a: `Target profile: cross-border workers on CDI, young professionals, expats. Selection by application (income proof, motivation, fit with community). The border, an ${TB.leloft.border.foronWalkMin}-minute walk away, makes Le Loft a favourite among cross-border workers who walk or bike to the office.` },
+              { q: "Who can live at Le Loft?", a: `Target profile: cross-border workers on CDI, young professionals, expats. Selection by application (income proof, motivation, fit with community). The border, an ${TB.leloft.border.foronWalkMin}-minute walk away, makes Le Loft a favourite among cross-border workers who walk or bike to the office.` },
               { q: "Where is Le Loft and how far from Geneva?", a: `Le Loft is in the centre of Ambilly, on the French side, ${TB.leloft.riveDoorToDoorMin} minutes door to door from central Geneva (Rive) by tram 17 (${TB.leloft.tramStop.name} stop ${aOrAn(TB.leloft.tramStop.walkMin)} ${TB.leloft.tramStop.walkMin}-minute walk away, ${TB.leloft.tramStop.tramToRiveMin} minutes by tram) and ${TB.leloft.eauxVivesDoorToDoorMin} minutes from Geneva Eaux-Vives by Léman Express. It's one of the three La Villa Coliving houses, with an indoor pool heated year-round and a Finnish sauna.` },
               { q: "How many residents live at Le Loft?", a: "Le Loft hosts 7 residents, making it the most intimate of the La Villa Coliving houses. Located in Ambilly, near Geneva, it offers a private furnished room for each resident and a very convivial small-scale atmosphere." },
               { q: "What amenities are there at Le Loft?", a: `Le Loft, in Ambilly, has an indoor pool heated and usable year-round, a Finnish sauna, a gym open 24/7, a home cinema space and spacious rooms of ${ROOM_SURFACE_BY_HOUSE.leloft.min} to ${ROOM_SURFACE_BY_HOUSE.leloft.max} m². Everything is included in the all-inclusive rent of ${PRICE_CHF_EN}/month.` },
@@ -2522,8 +2522,8 @@ export function HouseDetailPage() {
           {/* (Retenue premium, lot 1, T11 — 13/10/2026) Un fait plutôt qu'un superlatif. */}
           <p className="text-lg text-white/90 max-w-2xl mx-auto font-bold mb-8">
             {language === "en"
-              ? `${STATS.applyMinutes}-minute application, reply within ${STATS.responseHours} h.`
-              : `Candidature en ${STATS.applyMinutes} minutes, réponse sous ${STATS.responseHours} h.`}
+              ? `On site or by video · No commitment · Reply within ${STATS.responseHours}\u00a0h.`
+              : `Sur place ou en vidéo · Sans engagement · Réponse sous ${STATS.responseHours}\u00a0h.`}
           </p>
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
             <LocalizedLink
@@ -2546,7 +2546,8 @@ export function HouseDetailPage() {
       </section>
 
       {/* Funnel P1 — CTA collante MOBILE (cachée en desktop), visible pendant tout le scroll.
-          (Retenue premium, lot 1, D3 — Jérôme 13/10/2026) « Candidater » sans promesse dans le libellé, et l'icône
+          (Retenue premium, lot 1, D3 — Jérôme 13/10/2026) « Candidater » sans promesse dans le libellé — « Programmer une visite »
+          depuis le 24/11/2026 (§ 4.7 de la refonte des pages de vente) —, et l'icône
           WhatsApp DANS la barre, à droite : un seul élément flottant sur mobile (la bulle y est masquée). */}
       <div className="md:hidden h-16" aria-hidden="true" />
       <div className="md:hidden fixed bottom-0 inset-x-0 z-40 bg-white/95 backdrop-blur border-t border-[#E7E5E4] px-4 py-3">
@@ -2556,7 +2557,7 @@ export function HouseDetailPage() {
             onClick={() => trackCta("sticky_mobile")}
             className="flex-1 flex items-center justify-center gap-2 bg-[#D4A574] text-[#1C1917] py-3 rounded-lg text-sm font-semibold"
           >
-            {language === "en" ? "Apply" : "Candidater"}
+            {language === "en" ? "Book a visit" : "Programmer une visite"}
             <ArrowRight className="w-4 h-4" />
           </LocalizedLink>
           <WhatsAppBarLink context={house.name} />

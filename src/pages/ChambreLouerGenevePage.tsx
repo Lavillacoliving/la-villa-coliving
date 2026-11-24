@@ -121,8 +121,8 @@ export function ChambreLouerGenevePage() {
           {/* (L'Appart, E4, S11.4) « … nos 3 maisons et de L'Appart » ; le reste de la phrase ne bouge pas. */}
           <p className="text-[#57534E] mb-8 max-w-2xl">
             {en
-              ? `Sorted by opening date. Real availability of our ${STATS.totalHouses} houses and ${APPART.name} on the French side, read from the same data as our bookings: size, bathroom, price in CHF, date. Each room has its own application.`
-              : `Triées par date de libération. La dispo réelle de nos ${STATS.totalHouses} maisons et de ${APPART.name} côté France, lue sur la même source que nos réservations : surface, salle d'eau, prix en CHF, date. Chaque chambre a sa propre candidature.`}
+              ? `Sorted by opening date. Real availability of our ${STATS.totalHouses} houses and ${APPART.name} on the French side, read from the same data as our bookings: size, bathroom, price in CHF, date. Each room has its own button to ask for it.`
+              : `Triées par date de libération. La dispo réelle de nos ${STATS.totalHouses} maisons et de ${APPART.name} côté France, lue sur la même source que nos réservations : surface, salle d'eau, prix en CHF, date. Chaque chambre a son propre bouton pour la demander.`}
           </p>
           {n > 0 && (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
@@ -250,7 +250,7 @@ export function ChambreLouerGenevePage() {
           </p>
           <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
             {[
-              { num: "1", fr: ["Candidature en ligne", "2 minutes : tes coordonnées ; ta date d'arrivée et la durée, si tu les connais, juste après l'envoi."], en: ["Online application", "2 minutes: your contact details; your move-in date and length of stay, if you know them, right after sending."] },
+              { num: "1", fr: ["Demande de visite en ligne", "2 minutes : tes coordonnées ; ta date d'arrivée et la durée, si tu les connais, juste après l'envoi."], en: ["Online visit request", "2 minutes: your contact details; your move-in date and length of stay, if you know them, right after sending."] },
               { num: "2", fr: ["Dossier", "Contrat de travail ou promesse d'embauche, pièce d'identité. Aucun historique locatif suisse demandé."], en: ["File", "Employment contract or job offer, ID. No Swiss rental history required."] },
               { num: "3", fr: ["Réponse sous 48 h et visite", "Sur place ou en visio, de la maison et de la chambre."], en: ["Reply within 48 h and visit", "On site or by video, of the house and the room."] },
               { num: "4", fr: ["Bail et emménagement", `Bail meublé à ton nom signé en ligne, caution de ${STATS.depositMonths} mois hors charges payable en 1, 2 ou 3 fois selon ton dossier, tu arrives avec ta valise.`], en: ["Lease and move-in", `Furnished lease in your name signed online, ${STATS.depositMonths}-month deposit excluding charges payable in 1, 2 or 3 instalments depending on your application, you arrive with your suitcase.`] },
@@ -337,7 +337,7 @@ export function ChambreLouerGenevePage() {
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <LocalizedLink to="/chambres-disponibles" className="inline-flex items-center gap-2 px-8 py-4 bg-white text-[#1C1917] font-semibold rounded-full hover:bg-gray-100 transition-colors">{en ? "Available rooms" : "Chambres disponibles"}<ArrowRight className="w-5 h-5" /></LocalizedLink>
-            <LocalizedLink to="/candidature" className="inline-flex items-center gap-2 px-8 py-4 border border-white/40 text-white font-semibold rounded-full hover:bg-white hover:text-[#1C1917] transition-colors">{en ? "Apply" : "Candidater"}</LocalizedLink>
+            <LocalizedLink to="/candidature" className="inline-flex items-center gap-2 px-8 py-4 border border-white/40 text-white font-semibold rounded-full hover:bg-white hover:text-[#1C1917] transition-colors">{en ? "Book a visit" : "Programmer une visite"}</LocalizedLink>
           </div>
         </div>
       </section>

@@ -3,7 +3,7 @@ import { STATS } from "@/data/stats";
 import { ArrowRight, BellRing, CalendarClock } from "lucide-react";
 import { LocalizedLink } from "@/components/LocalizedLink";
 import { supabase } from "@/lib/supabase";
-import type { AppartKey, MaisonKey } from "@/data/places";
+import { isAppartKey, type AppartKey, type MaisonKey } from "@/data/places";
 import { toInternalPropertySlug } from "@/lib/placeBridge";
 import { embedJson, readEmbeddedArray } from "@/lib/prerenderEmbeddedState";
 
@@ -216,9 +216,13 @@ export function RoomPipeline({ house, houseName, en, hasCandidates, onApplyClick
               onClick={() => onApplyClick(month)}
               className="inline-flex items-center justify-center gap-2 px-7 py-3.5 bg-[#D4A574] text-[#1C1917] font-bold rounded-full hover:bg-[#E0BB8A] transition-colors"
             >
-              {monthLabel
-                ? (en ? `Apply for ${monthLabel}` : `Candidater pour ${monthLabel}`)
-                : (en ? "Apply" : "Candidater")}
+              {/* (24/11/2026, § 4.7) Maisons : « Programmer une visite » (le mois choisi reste dans la liste à côté et part avec le
+                  lien, ?arrival=). L'Appart ne se visite pas avant son ouverture (Jérôme) : « Candidater pour <mois> », comme avant. */}
+              {isAppartKey(house)
+                ? (monthLabel
+                  ? (en ? `Apply for ${monthLabel}` : `Candidater pour ${monthLabel}`)
+                  : (en ? "Apply" : "Candidater"))
+                : (en ? "Book a visit" : "Programmer une visite")}
               <ArrowRight className="w-5 h-5" />
             </LocalizedLink>
             {!showAlert && status === "idle" && (

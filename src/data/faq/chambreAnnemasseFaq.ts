@@ -35,7 +35,7 @@ export const chambreAnnemasseFaq: { fr: QAPair[]; en: QAPair[] } = {
     },
     {
       q: "Comment se passe la visite avant de signer ?",
-      a: `Après ta candidature, on organise une visite sur place ou en visio du Lodge et de la chambre disponible : tour de la maison, présentation des espaces communs et des services, et un échange avec un résident actuel. Réponse sous ${STATS.responseHours} h, bail signé en ligne.`,
+      a: `Après ta demande, on organise une visite sur place ou en visio du Lodge et de la chambre disponible : tour de la maison, présentation des espaces communs et des services, et un échange avec un résident actuel. Réponse sous ${STATS.responseHours} h, bail signé en ligne.`,
     },
     ...pickSituations(["annemasse-safe", "minimum-duration", "studio-vs-room", "how-to-apply"], "fr"),
   ],
@@ -62,7 +62,7 @@ export const chambreAnnemasseFaq: { fr: QAPair[]; en: QAPair[] } = {
     },
     {
       q: "How does the visit work before signing?",
-      a: `After your application, we organise a visit on site or by video of the Lodge and the available room: a tour of the house, a presentation of the common areas and services, and a chat with a current resident. Reply within ${STATS.responseHours} h, lease signed online.`,
+      a: `After your request, we organise a visit on site or by video of the Lodge and the available room: a tour of the house, a presentation of the common areas and services, and a chat with a current resident. Reply within ${STATS.responseHours} h, lease signed online.`,
     },
     ...pickSituations(["annemasse-safe", "minimum-duration", "studio-vs-room", "how-to-apply"], "en"),
   ],

@@ -98,8 +98,8 @@ function roomStatus(room: PublicRoom | undefined, en: boolean): Status {
   const neutral: Status = {
     tone: "upcoming",
     badge: "",
-    lead: en ? `Apply and we reply within ${hours} h.` : `Candidate, on te répond sous ${hours} h.`,
-    cta: en ? "Apply for this room" : "Candidater pour cette chambre",
+    lead: en ? `Book a visit and we reply within ${hours} h.` : `Programme une visite, on te répond sous ${hours} h.`,
+    cta: en ? "Book a visit" : "Programmer une visite",
   };
   // Données pas encore chargées (navigation client avant le fetch) : état neutre, pas de
   // pastille. Au prérendu la chambre est toujours connue.
@@ -108,8 +108,8 @@ function roomStatus(room: PublicRoom | undefined, en: boolean): Status {
     return {
       tone: "available",
       badge: en ? "Available now" : "Libre maintenant",
-      lead: en ? `It's free right now: apply and we reply within ${hours} h.` : `Elle est libre dès maintenant : candidate, on te répond sous ${hours} h.`,
-      cta: en ? "Apply for this room" : "Candidater pour cette chambre",
+      lead: en ? `It's free right now: book a visit and we reply within ${hours} h.` : `Elle est libre dès maintenant : programme une visite, on te répond sous ${hours} h.`,
+      cta: en ? "Book a visit" : "Programmer une visite",
     };
   }
   if (room.available_from) {
@@ -118,9 +118,9 @@ function roomStatus(room: PublicRoom | undefined, en: boolean): Status {
       tone: "upcoming",
       badge: en ? `Available from ${date}` : `Libre dès le ${date}`,
       lead: en
-        ? `It frees up on ${date}: apply today to reserve it — reply within ${hours} h.`
-        : `Elle se libère le ${date} : candidate dès aujourd'hui pour la réserver, réponse sous ${hours} h.`,
-      cta: en ? "Apply for this room" : "Candidater pour cette chambre",
+        ? `It frees up on ${date}: book a visit today to reserve it — reply within ${hours} h.`
+        : `Elle se libère le ${date} : programme une visite dès aujourd'hui pour la réserver, réponse sous ${hours} h.`,
+      cta: en ? "Book a visit" : "Programmer une visite",
     };
   }
   return neutral;
@@ -341,8 +341,8 @@ export function RoomDetailPage() {
             </h1>
             <p className="text-[#57534E] leading-relaxed max-w-2xl">
               {en
-                ? `${roomName} at ${houseLabel} is occupied. Have a look at the rooms that are free now or soon — you can apply today to reserve one.`
-                : `La ${roomName.toLowerCase()} ${ofHouse(houseLabel)} est occupée. Regarde les chambres libres maintenant ou bientôt\u00a0: tu peux candidater dès aujourd'hui pour en réserver une.`}
+                ? `${roomName} at ${houseLabel} is occupied. Have a look at the rooms that are free now or soon — you can book a visit today to reserve one.`
+                : `La ${roomName.toLowerCase()} ${ofHouse(houseLabel)} est occupée. Regarde les chambres libres maintenant ou bientôt\u00a0: tu peux programmer une visite dès aujourd'hui pour en réserver une.`}
             </p>
             <div className="mt-8 flex flex-col sm:flex-row gap-3">
               <LocalizedLink

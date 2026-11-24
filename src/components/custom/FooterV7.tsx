@@ -7,7 +7,7 @@ import { LanguageSwitchLink } from "@/components/LanguageSwitchLink";
 import { Instagram, Mail, MapPin, Phone } from "lucide-react";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { colocGeneveHref } from "@/lib/siteLinks";
-import { applyHref, trackApplyClick } from "@/lib/houseContext";
+import { applyHref, applyLabel, trackApplyClick } from "@/lib/houseContext";
 import { RenderMonthEmbed, useRenderMonth } from "@/lib/renderMonth";
 import { VERIFY_ARTICLE_PATH, VERIFY_LINK_LABEL } from "@/data/verifyArticle";
 
@@ -52,7 +52,7 @@ export function FooterV7() {
     { path: "/faq", label: "FAQ" },
     {
       path: applyTo,
-      label: language === "en" ? "Apply" : "Candidater",
+      label: applyLabel(location.pathname, language === "en" ? "en" : "fr"),
     },
     { path: "/blog", label: "Blog" },
     {
@@ -186,7 +186,7 @@ export function FooterV7() {
               onClick={() => trackApplyClick("footer", location.pathname, language)}
               className="inline-flex items-center gap-2 mt-6 px-5 py-2.5 bg-[#D4A574] text-[#1C1917] text-sm font-semibold rounded-lg hover:bg-[#E0BB8A] transition-all duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#D4A574] focus-visible:ring-offset-2 focus-visible:ring-offset-[#1C1917]"
             >
-              {language === "en" ? "Apply now" : "Candidater"}
+              {applyLabel(location.pathname, language === "en" ? "en" : "fr")}
             </LocalizedLink>
           </div>
         </div>

@@ -61,10 +61,13 @@ test('fiche entité : prix d\'appel = « dès » des maisons ; paliers à salle 
   const villa = F.houses.find((h) => h.slug === 'lavilla');
   assert.equal(villa.sharedBathRooms, 4);
   assert.equal(F.price.sharedBathTiers.reduce((n, t) => n + t.rooms.length, 0), villa.sharedBathRooms);
+  // (24/11/2026, D17 du brief « budget réel ») Le prix de la fiche n'est plus la puce « 3 maisons… dès 1 290 CHF/mois » (retirée) :
+  // c'est la 1re phrase d'ouverture, la fourchette du « dès » au prix standard, en francs puis en euros du bail.
   for (const lang of ['fr', 'en']) {
-    const bullets = m.entityFactsText(lang).bullets.join('\n');
-    assert.ok(bullets.includes(lang === 'en' ? 'from CHF 1,290/month (contractual rent in euros: from €1,380)' : `dès 1${NB}290 CHF/mois (loyer contractuel en euros : dès 1${NB}380 €)`), `${lang} : puce prix`);
-    assert.doesNotMatch(bullets, /1[\u00A0 ,]?370|1[\u00A0 ,]?470/, `${lang} : la fiche ne détaille pas les paliers (D12)`);
+    const t = m.entityFactsText(lang);
+    assert.ok(t.lead[0].includes(lang === 'en' ? 'costs CHF 1,290 to 1,430 a month depending on the room, all-inclusive (the lease is in euros: €1,380 to €1,530)' : `coûte de 1${NB}290 à 1${NB}430 CHF par mois selon la chambre, tout compris (loyer du bail en euros : de 1${NB}380 à 1${NB}530 €)`), `${lang} : phrase prix`);
+    assert.ok(!t.bullets.some((b) => /dès 1[\u00A0 ]?290|from CHF 1,290/.test(b)), `${lang} : plus de puce « 3 maisons » (D17)`);
+    assert.doesNotMatch([...t.lead, ...t.bullets].join('\n'), /1[\u00A0 ,]?370|1[\u00A0 ,]?470/, `${lang} : la fiche ne détaille pas les paliers (D12)`);
   }
 });
 

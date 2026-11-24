@@ -340,7 +340,9 @@ test('page de L\'Appart d\'exemple (vraies briques, 4 cartes de l\'état B, text
 test('règle a : la fiche de la MARQUE (note Google, 100+ résidents, 29 chambres, formule de trajet) sur une page de L\'Appart = échec', () => {
   for (const lang of LANGS) {
     const r = gammeMixIssues(appartPage(lang, { main: B.brandFacts(lang) }), lang === 'en' ? 'en-lappart.html' : 'lappart.html', m);
-    for (const l of ['note Google des maisons', `« ${m.STATS.totalResidents}+ résidents »`, 'formule de trajet de la marque', `« ${m.STATS.totalRooms} chambres » (maisons)`]) {
+    // (24/11/2026, D17) « 29 chambres » venait de la phrase des maisons, retirée de la fiche : la note, les 100+ résidents, la formule
+    // de trajet et les équipements (phrases d'ouverture) suffisent à faire échouer la fiche de la marque sur une page de L'Appart.
+    for (const l of ['note Google des maisons', `« ${m.STATS.totalResidents}+ résidents »`, 'formule de trajet de la marque']) {
       assert.ok(r.some((i) => i.startsWith(`preuve des maisons sur une page de L'Appart (${l}) — `)), `${lang} : ${l} — ${r.join(' | ')}`);
     }
     assert.ok(r.some((i) => /piscine, sauna ou salle de sport sur une page de L'Appart hors des textes/.test(i)), `${lang} : la fiche nomme piscine, sauna, salle de sport`);
@@ -428,6 +430,8 @@ test('fiche L\'Appart sur sa page : un bloc, la version, chaque phrase une fois,
   assert.ok(appartFactsBlockIssues(chapeau, 'fr', m).some((i) => /présente 2 fois/.test(i)));
   const old = appartPage('fr').replace(`data-appart-facts-version="${m.APPART_FACTS_VERSION}"`, 'data-appart-facts-version="1999-01-01"');
   assert.ok(appartFactsBlockIssues(old, 'fr', m).includes(`version de la fiche L'Appart ≠ ${m.APPART_FACTS_VERSION} (APPART_FACTS_VERSION)`));
+  // (24/11/2026) La fiche de L'Appart garde « Candidater » (pas de visite avant l'ouverture, Jérôme) ; les maisons disent
+  // « Programmer une visite ».
   const noCta = appartPage('fr').replace(/(<aside id="appart-facts"[\s\S]*?)<a\b[^>]*>Candidater<\/a>/, '$1');
   assert.ok(appartFactsBlockIssues(noCta, 'fr', m).some((i) => /bouton de la fiche « Candidater » présent 0 fois/.test(i)));
 });

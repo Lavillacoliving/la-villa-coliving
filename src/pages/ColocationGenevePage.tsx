@@ -157,7 +157,7 @@ export function ColocationGenevePage() {
               <ArrowRight className="w-4 h-4" />
             </a>
             <LocalizedLink to="/candidature" className="inline-flex items-center gap-2 border border-[#1C1917] text-[#1C1917] px-8 py-4 text-sm font-semibold hover:bg-[#1C1917] hover:text-white transition-colors">
-              {en ? "Apply" : "Candidater"}
+              {en ? "Book a visit" : "Programmer une visite"}
             </LocalizedLink>
           </div>
           {/* (Lot L3, D4 Jérôme 09/10/2026) Note Google (STATS_DISPLAY.googleRating) + lien « Voir les avis » ; l'ancienne
@@ -198,8 +198,8 @@ export function ColocationGenevePage() {
           {/* (L'Appart, E4, S11.4) « … nos 3 maisons et de L'Appart » ; le reste de la phrase ne bouge pas. */}
           <p className="text-[#57534E] mb-8 max-w-2xl">
             {en
-              ? `Real availability of our ${STATS.totalHouses} houses and ${APPART.name}, read from the same data as our bookings: room, size, bathroom, price in CHF, opening date. Each room has its own application.`
-              : `La dispo réelle de nos ${STATS.totalHouses} maisons et de ${APPART.name}, lue sur la même source que nos réservations : chambre, surface, salle d'eau, prix en CHF, date de libération. Chaque chambre a sa propre candidature.`}
+              ? `Real availability of our ${STATS.totalHouses} houses and ${APPART.name}, read from the same data as our bookings: room, size, bathroom, price in CHF, opening date. Each room has its own button to ask for it.`
+              : `La dispo réelle de nos ${STATS.totalHouses} maisons et de ${APPART.name}, lue sur la même source que nos réservations : chambre, surface, salle d'eau, prix en CHF, date de libération. Chaque chambre a son propre bouton pour la demander.`}
           </p>
           {n > 0 && (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
@@ -301,7 +301,7 @@ export function ColocationGenevePage() {
           </div>
           <p className="text-[#57534E] leading-relaxed mt-8">
             {en ? "Shared housing in Geneva as a Swiss resident, or as a cross-border worker: the address is in France, the job in Geneva, the community in the house. " : "Colocation à Genève en résident suisse, ou colocation à Genève en frontalier : l'adresse est en France, le travail à Genève, la communauté dans la maison. "}
-            <LocalizedLink to="/candidature" className={link}>{en ? "Apply in 2 minutes" : "Candidate en 2 minutes"}</LocalizedLink>
+            <LocalizedLink to="/candidature" className={link}>{en ? "Book a visit" : "Programme une visite"}</LocalizedLink>
           </p>
         </div>
       </section>
@@ -401,7 +401,7 @@ export function ColocationGenevePage() {
         <div className="max-w-3xl mx-auto px-6 text-center">
           <h2 className="text-3xl md:text-4xl font-light mb-6" style={serif}>{en ? "Ready to find your room near Geneva?" : "Prêt à trouver ta chambre près de Genève ?"}</h2>
           <p className="text-[#78716C] text-lg mb-10 max-w-xl mx-auto">
-            {en ? "Apply in 2 minutes. Reply within 48 h. Move in within 72 h of your first contact if a room is available." : "Candidate en 2 minutes. Réponse sous 48 h. Emménagement en 72 h dès le premier contact si une chambre est disponible."}
+            {en ? "Book a visit, on site or by video. Reply within 48 h. Move in within 72 h of your first contact if a room is available." : "Programme une visite, sur place ou en vidéo. Réponse sous 48 h. Emménagement en 72 h dès le premier contact si une chambre est disponible."}
           </p>
           {/* (Retenue premium, lot 1 — GO de Jérôme du 13/10/2026) casse normale, même traitement que le haut de page et la barre. */}
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
@@ -410,7 +410,7 @@ export function ColocationGenevePage() {
               <ArrowRight className="w-4 h-4" />
             </LocalizedLink>
             <LocalizedLink to="/candidature" className="inline-flex items-center gap-2 border border-white/30 text-white px-8 py-4 text-sm font-semibold hover:bg-white hover:text-[#1C1917] transition-colors">
-              {en ? "Apply" : "Candidater"}
+              {en ? "Book a visit" : "Programmer une visite"}
             </LocalizedLink>
           </div>
         </div>

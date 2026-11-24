@@ -46,12 +46,12 @@ export const situationsFaq: SituationFaq[] = [
     id: "job-in-a-month",
     fr: {
       q: "Je commence un job à Genève dans un mois : je peux avoir une chambre en 30 jours ?",
-      a: `Oui, si une chambre est libre à ta date : candidature en ligne en 2 minutes, réponse sous ${H} h, visite sur place ou en visio, bail signé en ligne. Le délai médian entre la candidature et l'emménagement chez nous est de 30 jours (données 2026), et 72 h suffisent dès ton premier contact quand une chambre est disponible. Les disponibilités réelles des ${STATS.totalHouses} maisons et de ${APPART.name} sont affichées en temps réel sur la page des chambres disponibles ; s'il n'y a rien à ta date, la liste d'attente te prévient dès qu'une chambre se libère.`,
+      a: `Oui, si une chambre est libre à ta date : demande de visite en ligne en 2 minutes, réponse sous ${H} h, visite sur place ou en visio, bail signé en ligne. Le délai médian entre la demande et l'emménagement chez nous est de 30 jours (données 2026), et 72 h suffisent dès ton premier contact quand une chambre est disponible. Les disponibilités réelles des ${STATS.totalHouses} maisons et de ${APPART.name} sont affichées en temps réel sur la page des chambres disponibles ; s'il n'y a rien à ta date, la liste d'attente te prévient dès qu'une chambre se libère.`,
       more: { href: "/chambres-disponibles", label: "Voir les chambres disponibles" },
     },
     en: {
       q: "I start a job in Geneva in a month: can I get a room with you within 30 days?",
-      a: `Yes, if a room is free on your date: two-minute online application, reply within ${H} h, visit on site or by video, lease signed online. The median time between application and move-in at La Villa is 30 days (2026 data), and 72 h from your first contact is enough when a room is available. Live availability for the ${STATS.totalHouses} houses and ${APPART.name} is shown on the available rooms page; if nothing matches your date, the waiting list alerts you as soon as a room frees up.`,
+      a: `Yes, if a room is free on your date: two-minute online visit request, reply within ${H} h, visit on site or by video, lease signed online. The median time between the request and move-in at La Villa is 30 days (2026 data), and 72 h from your first contact is enough when a room is available. Live availability for the ${STATS.totalHouses} houses and ${APPART.name} is shown on the available rooms page; if nothing matches your date, the waiting list alerts you as soon as a room frees up.`,
       more: { href: "/chambres-disponibles", label: "See available rooms" },
     },
   },
@@ -60,12 +60,12 @@ export const situationsFaq: SituationFaq[] = [
     fr: {
       q: "Je n'ai pas encore de fiche de salaire suisse : mon dossier passe quand même ?",
       a: `Oui. Pour un premier contrat en Suisse, on ne peut pas te demander ce que tu n'as pas encore : ton dossier, c'est ton contrat de travail signé ou ta promesse d'embauche, et une pièce d'identité. Aucun historique locatif suisse n'est demandé. Tu règles ton premier loyer et la caution (${STATS.depositMonths} mois de loyer hors charges, payable en 1, 2 ou 3 fois selon ton dossier), et rien d'autre : ni frais de dossier ni frais d'agence.`,
-      more: { href: "/candidature", label: "Candidater en 2 minutes" },
+      more: { href: "/candidature", label: "Programmer une visite" },
     },
     en: {
       q: "I don't have a Swiss payslip yet: will my application still go through?",
       a: `Yes. For a first contract in Switzerland we can't ask for what you don't have yet: your file is your signed employment contract or job offer, plus an ID. No Swiss rental history is required. You pay your first month's rent and the deposit (${STATS.depositMonths} months' rent excluding charges, payable in 1, 2 or 3 instalments depending on your application), nothing else: no application fee, no agency fee.`,
-      more: { href: "/candidature", label: "Apply in 2 minutes" },
+      more: { href: "/candidature", label: "Book a visit" },
     },
   },
   {
@@ -166,14 +166,14 @@ export const situationsFaq: SituationFaq[] = [
   {
     id: "how-to-apply",
     fr: {
-      q: "Comment candidater, et en combien de temps j'ai une réponse ?",
+      q: "Comment programmer une visite, et en combien de temps j'ai une réponse ?",
       a: `Le formulaire en ligne prend 2 minutes : ton nom, ton email et ton téléphone (et, si tu veux, ton canal de contact préféré). Juste après l'envoi, deux questions facultatives : quand tu veux arriver et pour combien de temps. On te répond sous ${H} h, par e-mail puis par téléphone ou WhatsApp, pour caler une visite sur place ou en visio. Si une chambre disponible te plaît, le bail se signe en ligne et tu peux emménager en 72 h dès ton premier contact. Aucun frais à aucune étape.`,
-      more: { href: "/candidature", label: "Remplir le formulaire" },
+      more: { href: "/candidature", label: "Programmer une visite" },
     },
     en: {
-      q: "How do I apply, and how fast do I get an answer?",
+      q: "How do I book a visit, and how fast do I get an answer?",
       a: `The online form takes 2 minutes: your name, email and phone number (and, if you like, how you'd prefer to be reached). Right after sending, two optional questions: when you want to arrive and for how long. We reply within ${H} h, by email then phone or WhatsApp, to set up a visit on site or by video. If you like an available room, the lease is signed online and you can move in within 72 h of your first contact. No fees at any step.`,
-      more: { href: "/candidature", label: "Fill in the form" },
+      more: { href: "/candidature", label: "Book a visit" },
     },
   },
 ];

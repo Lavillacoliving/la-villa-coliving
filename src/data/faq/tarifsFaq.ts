@@ -1,9 +1,24 @@
 import type { QAPair } from "@/lib/structuredData";
-import { STATS, STATS_SHARED_BATH, PRICE_CHF_FR, PRICE_CHF_EN, PRICE_FROM_CHF_FR, PRICE_FROM_CHF_EN, MARKET_ROOM_EUR, sharedBathTiersText, thousands } from "@/data/stats";
-import { priceJustificationFaq } from "@/data/priceFacts";
+import { STATS, STATS_SHARED_BATH, PRICE_CHF_FR, PRICE_CHF_EN, PRICE_FROM_CHF_FR, PRICE_FROM_CHF_EN, MARKET_ROOM_EUR, sharedBathTiersText, thousands, HOUSES_FROM, CONTRACT_EUR } from "@/data/stats";
+import { priceJustificationFaq, timesPerWeek } from "@/data/priceFacts";
 import { APPART } from "@/data/appart";
 import { appartHousesFaq } from "@/data/appartHousesFaq";
+import {
+  BUDGET_FRANCE,
+  BUDGET_GAPS,
+  BUDGET_GENEVA,
+  BUDGET_REFERENCE_ROOM_CHF,
+  BUDGET_SURVEY,
+  HOUSES_AVERAGE_M2_PER_RESIDENT,
+  budgetNum,
+} from "@/data/budgetReel";
 
+// ── Deux listes dans ce fichier (24/11/2026, brief « budget réel » du 23/11/2026, décision G1 de Jérôme) ─────────────────────
+//  - `tarifsPageFaq` (en bas) : les onze questions du bloc 8 de /tarifs et /en/tarifs, et leur FAQPage. C'est LA FAQ de la page.
+//  - `tarifsFaq` (ci-dessous, inchangée) : l'ancienne FAQ de /tarifs. Elle n'est plus rendue sur /tarifs ; seule
+//    /chambres-disponibles en lit encore les deux premières questions (`tarifsFaq[L].slice(0, 2)` : « Qu'est-ce qui est inclus… »
+//    et la FAQ A.3 « La Villa Coliving est-elle chère ? », que G1 garde partout sauf sur /tarifs). `appartPriceFaq` (inchangée)
+//    reste lue par /faq (src/data/faqData.ts).
 // §2 du playbook AEO — /tarifs (page canonique prix). Tutoiement, texte verbatim.
 // (Lot L2 « Emplacement et transport », 09/10/2026) Surfaces de chambres uniquement depuis STATS.roomSizeMin/Max
 // (« 17 et 25 », « 17 to 25 », « 17 and 23 m² » en dur : retirés).
@@ -137,3 +152,161 @@ export const tarifsFaq: { fr: QAPair[]; en: QAPair[] } = {
     },
   ],
 };
+
+// ── (24/11/2026) Bloc 8 de /tarifs : les onze questions du « budget réel » ──────────────────────────────────────────────────────
+// Brief « Page /tarifs et encadré « l'essentiel » : le budget réel » du 23/11/2026, annexes A et B (bloc 8), textes validés par
+// Jérôme le 23/11/2026 ; décisions D11 (onze questions, « budget de 1 000 à 1 100 CHF », L'Appart « à partir du 1er février
+// 2027 ») et G1 (la FAQ A.3 n'est plus sur /tarifs). Les réponses se posent MOT POUR MOT : chacune garde son sujet (« La Villa
+// Coliving »), son chiffre, son unité et sa date — une IA cite souvent la réponse seule. Le FAQPage de /tarifs est construit à
+// partir de CE tableau (FaqSection emitSchema) : mêmes mots, même nombre que les questions visibles, en français sur /tarifs et
+// en anglais sur /en/tarifs. Chiffres : relevé du 23/11/2026 (src/data/budgetReel.ts), prix et chambres (src/data/stats.ts),
+// L'Appart (src/data/appart.ts) ; littéraux de l'annexe : le budget de la question 3 (ci-dessous), « 30 jours » et « deux mois »
+// de la restitution de la caution, « trois pièces » du dossier. Jamais l'offre en cours ici (absente du FAQPage, brief § 3).
+
+/** Budget de la question 3 : la requête des prospects (« un logement à 1 000 ou 1 100 CHF », § 1 du brief), pas un fait du site. */
+export const BUDGET_QUESTION_CHF = { min: 1000, max: 1100 } as const;
+
+type FaqLang = "fr" | "en";
+const FAQ_WORDS: Record<FaqLang, Record<number, string>> = {
+  fr: { 1: "un", 2: "deux", 3: "trois" },
+  en: { 1: "one", 2: "two", 3: "three" },
+};
+const inWords = (n: number, lang: FaqLang): string => FAQ_WORDS[lang][n] ?? String(n);
+const capitalize = (s: string): string => s.charAt(0).toUpperCase() + s.slice(1);
+
+function budgetFaq(lang: FaqLang): QAPair[] {
+  const n = (x: number) => budgetNum(x, lang);
+  const G = BUDGET_GENEVA, FR = BUDGET_FRANCE.managedFlatshare, GAP = BUDGET_GAPS, S = BUDGET_SURVEY;
+  const from = HOUSES_FROM.chf, std = STATS.priceChf, ref = BUDGET_REFERENCE_ROOM_CHF;
+  const privateRooms = STATS.totalRooms - STATS_SHARED_BATH.rooms;
+  const A = APPART;
+  if (lang === "en") {
+    return [
+      {
+        q: "How much does a room at La Villa Coliving cost?",
+        a: `CHF ${n(from)} to ${n(std)} a month, all-inclusive, depending on the room (€${n(HOUSES_FROM.eur)} to €${n(CONTRACT_EUR.standard)} on the lease). ${privateRooms} rooms out of ${STATS.totalRooms} have a private bathroom and cost CHF ${n(std)}.`,
+      },
+      {
+        q: "What is included in the price at La Villa Coliving?",
+        a: `Utilities (water, electricity, heating), fibre, parking, cleaning of the shared areas ${timesPerWeek("en")}, the laundry room, everyday supplies, streaming on the shared screen, and access to the house's pool, sauna and gym. Only your home insurance comes on top.`,
+      },
+      {
+        q: `My rent budget is CHF ${n(BUDGET_QUESTION_CHF.min)} to ${n(BUDGET_QUESTION_CHF.max)}: can I afford La Villa Coliving?`,
+        a: `A CHF ${n(G.privateRoom.median)} rent in Geneva comes to CHF ${n(G.privateRoom.withoutCarMin)}–${n(G.privateRoom.withoutCarMax)} a month once running costs are added, and CHF ${n(G.privateRoom.withCarMin)}–${n(G.privateRoom.withCarMax)} with a parking space (${S.monthLabel.en} survey). At La Villa Coliving, a room costs CHF ${n(from)} to ${n(std)} all-inclusive, parking included. With a car, it is the same budget. Without a car, a room at CHF ${n(ref)} comes to CHF ${n(GAP.genevaPrivateWithoutCarMin)}–${n(GAP.genevaPrivateWithoutCarMax)} more a month, for more space and the house's facilities.`,
+      },
+      {
+        q: "Is La Villa Coliving more expensive than a flatshare?",
+        a: `It depends on the flatshare. In Geneva, a room in a managed flatshare is listed at a median of CHF ${n(G.managedFlatshare.median)} a month: La Villa Coliving costs less. On the French side, a managed flatshare comes to about CHF ${n(FR.withCar)} a month with a car: the gap is about CHF ${n(GAP.franceManagedWithCar)}. It pays for ${HOUSES_AVERAGE_M2_PER_RESIDENT} m² per person instead of ${FR.perPersonM2}, rooms of ${STATS.roomSizeMin} to ${STATS.roomSizeMax} m², the pool, the sauna, the gym and cleaning of the shared areas ${timesPerWeek("en")}.`,
+      },
+      {
+        q: "How does La Villa Coliving compare with a studio in Geneva?",
+        a: `A furnished studio in Geneva is listed at a median of CHF ${n(G.furnishedStudio.median)} a month (${S.monthLabel.en}). With charges, electricity, internet and running costs, it comes to about CHF ${n(G.furnishedStudio.withoutCar)}, and CHF ${n(G.furnishedStudio.withCar)} with a parking space. A room at La Villa Coliving costs CHF ${n(from)} to ${n(std)}, all-inclusive.`,
+      },
+      {
+        q: "Are there any application or agency fees at La Villa Coliving?",
+        a: "No, none: no application fee, agency fee, booking fee or inventory fee. We let our houses directly.",
+      },
+      {
+        q: "How much is the deposit?",
+        a: `${capitalize(inWords(STATS.depositMonths, "en"))} months' rent excluding charges. It can be paid in one, two or three instalments; the number is set when your application is approved. It is returned within 30 days of your departure, or within two months if damage has to be deducted.`,
+      },
+      {
+        q: "Do I need a guarantor or a Swiss payslip?",
+        a: "Not as a rule. The application takes three things: a signed employment contract or job offer, ID, and the deposit. A guarantor is only requested case by case, when the contract does not cover the rent.",
+      },
+      {
+        q: "How long am I committing for?",
+        a: `The lease is for ${STATS.leaseDurationMonths} months, but you can leave at any time with ${inWords(STATS.noticePeriodMonths, "en")} month's notice. You can move in on any date.`,
+      },
+      {
+        q: "How is the rent paid?",
+        a: "By bank transfer, once a month. The lease is in euros; the CHF prices on the site are indicative.",
+      },
+      {
+        q: "Is there a cheaper option?",
+        // Deux gammes : le prix de L'Appart et « no pool, sauna or gym » dans deux phrases distinctes (règle V2, par phrase).
+        a: `Yes: ${A.name}, our flatshare in ${A.commune}, from ${A.price.from.en.chf} a month. It has no pool, sauna or gym.`,
+      },
+    ];
+  }
+  return [
+    {
+      q: "Combien coûte une chambre à La Villa Coliving ?",
+      a: `De ${n(from)} à ${n(std)} CHF par mois, tout compris, selon la chambre (de ${n(HOUSES_FROM.eur)} à ${n(CONTRACT_EUR.standard)} € au bail). ${privateRooms} chambres sur ${STATS.totalRooms} ont une salle d'eau privative et coûtent ${n(std)} CHF.`,
+    },
+    {
+      q: "Qu'est-ce qui est compris dans le prix à La Villa Coliving ?",
+      a: `Les charges (eau, électricité, chauffage), la fibre, le parking, le ménage des parties communes ${timesPerWeek("fr")}, la buanderie, les produits du quotidien, le streaming sur l'écran commun, et l'accès à la piscine, au sauna et à la salle de sport de la maison. Seule ton assurance habitation s'y ajoute.`,
+    },
+    {
+      q: `J'ai un budget de ${n(BUDGET_QUESTION_CHF.min)} à ${n(BUDGET_QUESTION_CHF.max)} CHF pour mon loyer : La Villa Coliving est-elle dans mes moyens ?`,
+      a: `Un loyer de ${n(G.privateRoom.median)} CHF à Genève revient à ${n(G.privateRoom.withoutCarMin)}–${n(G.privateRoom.withoutCarMax)} CHF par mois une fois les frais courants ajoutés, et à ${n(G.privateRoom.withCarMin)}–${n(G.privateRoom.withCarMax)} CHF avec une place de parking (relevé de ${S.monthLabel.fr}). À La Villa Coliving, une chambre coûte de ${n(from)} à ${n(std)} CHF tout compris, parking inclus. Avec une voiture, c'est le même budget. Sans voiture, une chambre à ${n(ref)} CHF revient à ${n(GAP.genevaPrivateWithoutCarMin)}–${n(GAP.genevaPrivateWithoutCarMax)} CHF de plus par mois, pour plus d'espace et les équipements de la maison.`,
+    },
+    {
+      q: "La Villa Coliving est-elle plus chère qu'une colocation ?",
+      a: `Cela dépend de la colocation. À Genève, une chambre en colocation gérée s'affiche à ${n(G.managedFlatshare.median)} CHF par mois en médiane : La Villa Coliving coûte moins. Côté France, une colocation gérée revient à environ ${n(FR.withCar)} CHF par mois avec une voiture : l'écart est d'environ ${n(GAP.franceManagedWithCar)} CHF. Il paie ${HOUSES_AVERAGE_M2_PER_RESIDENT} m² par personne au lieu de ${FR.perPersonM2}, des chambres de ${STATS.roomSizeMin} à ${STATS.roomSizeMax} m², la piscine, le sauna, la salle de sport et le ménage des parties communes ${timesPerWeek("fr")}.`,
+    },
+    {
+      q: "Comment La Villa Coliving se compare-t-elle à un studio à Genève ?",
+      a: `Un studio meublé à Genève s'affiche à ${n(G.furnishedStudio.median)} CHF par mois en médiane (${S.monthLabel.fr}). Avec les charges, l'électricité, internet et les frais courants, il revient à environ ${n(G.furnishedStudio.withoutCar)} CHF, et ${n(G.furnishedStudio.withCar)} CHF avec une place de parking. Une chambre à La Villa Coliving coûte de ${n(from)} à ${n(std)} CHF, tout compris.`,
+    },
+    {
+      q: "Y a-t-il des frais de dossier ou d'agence à La Villa Coliving ?",
+      a: "Non, aucun : ni frais de dossier, ni honoraires d'agence, ni frais de réservation, ni frais d'état des lieux. Nous louons nos maisons en direct.",
+    },
+    {
+      q: "Quel est le montant de la caution ?",
+      a: `${capitalize(inWords(STATS.depositMonths, "fr"))} mois de loyer hors charges. Elle se paie en une, deux ou trois fois ; le nombre de versements est fixé quand ton dossier est validé. Elle t'est rendue sous 30 jours après ton départ, sous deux mois s'il y a des dégâts à déduire.`,
+    },
+    {
+      q: "Faut-il un garant ou une fiche de salaire suisse ?",
+      a: "Pas d'office. Le dossier tient en trois pièces : contrat de travail signé ou promesse d'embauche, pièce d'identité, caution. Un garant n'est demandé qu'au cas par cas, quand le contrat ne couvre pas le loyer.",
+    },
+    {
+      q: "Pour combien de temps est-ce que je m'engage ?",
+      a: `Le bail est de ${STATS.leaseDurationMonths} mois, mais tu peux partir à tout moment avec ${inWords(STATS.noticePeriodMonths, "fr")} mois de préavis. Tu peux entrer à n'importe quelle date.`,
+    },
+    {
+      q: "Comment se règle le loyer ?",
+      a: "Par virement, une fois par mois. Le bail est en euros ; les prix en CHF du site sont indicatifs.",
+    },
+    {
+      q: "Existe-t-il une formule moins chère ?",
+      // Deux gammes : le prix de L'Appart et « ni piscine, ni sauna, ni salle de sport » dans deux phrases (règle V2, par phrase).
+      // « à partir du 1er février 2027 » : décision D11 / F1-h de Jérôme (le jour est un littéral de l'annexe, mois = APPART.opensOn).
+      a: `Oui : ${A.name}, notre colocation à ${A.commune}, dès ${A.price.from.fr.chf} par mois. Elle n'a ni piscine, ni sauna, ni salle de sport.`,
+    },
+  ];
+}
+
+/** Les onze questions du bloc 8 de /tarifs (FR et EN), dans l'ordre de l'annexe ; le FAQPage de la page en est construit. */
+export const tarifsPageFaq: { fr: QAPair[]; en: QAPair[] } = { fr: budgetFaq("fr"), en: budgetFaq("en") };
+
+/** Montants de L'Appart (loyers en CHF et en euros, prix par personne de la suite), BORNÉS : « 530 » ne se lit pas dans « 1 530 ». */
+const APPART_AMOUNT_RE = new RegExp(
+  `(?<!\\d[\\s\\u00a0\\u202f,.]?)(?:${[AP.room.chf, AP.room.eur, AP.suite.chf, AP.suite.eur, AP.suitePerPersonEur]
+    .map((v) => (v < 1000 ? String(v) : `${String(v).slice(0, -3)}[\\s\\u00a0\\u202f,.]?${String(v).slice(-3)}`))
+    .join("|")})(?![\\s\\u00a0\\u202f,.]?\\d)`,
+);
+
+/** Incohérences internes (vide = OK) : onze questions par langue, parité, prémisses des comparaisons, aucune offre, aucun « dès 530 ». */
+export function tarifsPageFaqIssues(): string[] {
+  const out: string[] = [];
+  for (const lang of ["fr", "en"] as const) {
+    const faq = tarifsPageFaq[lang];
+    if (faq.length !== 11) out.push(`${lang} : ${faq.length} questions (attendu 11, D11)`);
+    for (const { q, a } of faq) {
+      if (/undefined|NaN|\{\{/.test(q + a)) out.push(`${lang} : valeur manquante — « ${q} »`);
+      if (/première année|first year|rembours|money back|\bback\b/i.test(q + a)) out.push(`${lang} : l'offre en cours n'entre jamais dans la FAQ — « ${q} »`);
+      if (q === priceJustificationFaq(lang).q) out.push(`${lang} : la FAQ A.3 n'est plus sur /tarifs (G1)`);
+      for (const sentence of a.split(/(?<=[.!?;])\s+/)) {
+        if (APPART_AMOUNT_RE.test(sentence) && /piscine|sauna|salle de sport|\bpool\b|\bgym\b/i.test(sentence)) out.push(`${lang} : prix de L'Appart et équipement des maisons dans la même phrase — « ${sentence.slice(0, 60)} »`);
+      }
+    }
+  }
+  // « La Villa Coliving coûte moins » (question 4) n'est vrai que si la médiane genevoise dépasse le prix standard des maisons.
+  if (BUDGET_GENEVA.managedFlatshare.median <= STATS.priceChf) out.push("question 4 : la colocation gérée genevoise ne coûte plus davantage que La Villa Coliving — revoir « coûte moins »");
+  // Question 3 : « Avec une voiture, c'est le même budget » — la fourchette « avec parking » doit couvrir les prix des maisons.
+  if (BUDGET_GENEVA.privateRoom.withCarMin > HOUSES_FROM.chf || BUDGET_GENEVA.privateRoom.withCarMax < BUDGET_REFERENCE_ROOM_CHF) out.push("question 3 : « le même budget » avec une voiture n'est plus vrai");
+  return out;
+}

@@ -186,7 +186,7 @@ export function BlocOffre({ variant, slug, bucket }: BlocOffreProps) {
             >
               {isVille
                 ? (L === "en" ? `Discover ${h.label}` : `Découvrir ${h.label}`)
-                : (L === "en" ? "Apply — 2 min, free" : "Candidater — 2 min, gratuit")}
+                : (L === "en" ? "Book a visit" : "Programmer une visite")}
               <ArrowRight className="w-4 h-4" />
             </LocalizedLink>
             {isVille ? (
@@ -195,7 +195,7 @@ export function BlocOffre({ variant, slug, bucket }: BlocOffreProps) {
                 onClick={() => track(to, "secondary")}
                 className="block mt-2.5 text-sm text-[#57534E] underline decoration-[#D4A574] underline-offset-4 hover:text-[#1C1917] transition-colors"
               >
-                {L === "en" ? "Apply — 2 min, free" : "Candidater — 2 min, gratuit"}
+                {L === "en" ? "Book a visit" : "Programmer une visite"}
               </LocalizedLink>
             ) : (
               showSecondary && (
@@ -261,7 +261,7 @@ export function BlocOffre({ variant, slug, bucket }: BlocOffreProps) {
               >
                 {isVille
                   ? (L === "en" ? houseCta.labelEn : houseCta.labelFr)
-                  : (L === "en" ? "Apply — 2 min, free" : "Candidater — 2 min, gratuit")}
+                  : (L === "en" ? "Book a visit" : "Programmer une visite")}
                 <ArrowRight className="w-4 h-4" />
               </LocalizedLink>
               {isVille ? (
@@ -270,7 +270,7 @@ export function BlocOffre({ variant, slug, bucket }: BlocOffreProps) {
                   onClick={() => track(to, "secondary")}
                   className="inline-flex items-center justify-center gap-2 px-6 py-3 border border-[#E7E5E4] text-[#44403C] text-sm font-medium rounded-lg hover:border-[#D4A574] transition-all duration-300"
                 >
-                  {L === "en" ? "Apply — 2 min, free" : "Candidater — 2 min, gratuit"}
+                  {L === "en" ? "Book a visit" : "Programmer une visite"}
                 </LocalizedLink>
               ) : (
                 showSecondary && (

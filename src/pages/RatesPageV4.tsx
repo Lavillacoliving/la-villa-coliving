@@ -1,96 +1,66 @@
 import { useEffect, useLayoutEffect } from "react";
 import { useLocation } from "react-router-dom";
-import { EntityFacts } from "@/components/EntityFacts";
-import { useLanguage } from "@/contexts/LanguageContext";
-import { WhatsAppButton } from "@/components/WhatsAppButton";
-import { Check, ArrowRight, Home, Sparkles, X, Droplets } from "lucide-react";
-import { LocalizedLink } from "@/components/LocalizedLink";
-import { colocGeneveHref } from "@/lib/siteLinks";
 import { Helmet } from "react-helmet";
-import { SEO } from "@/components/SEO";
-import { MONTHS_EN, MONTHS_FR } from "@/lib/dates";
-import { nextMonthValue, useRenderMonth } from "@/lib/renderMonth";
+import { ArrowRight, Check, Minus } from "lucide-react";
+import { EntityFacts } from "@/components/EntityFacts";
 import { FaqSection } from "@/components/FaqSection";
-import { tarifsFaq } from "@/data/faq/tarifsFaq";
+import { LocalizedLink } from "@/components/LocalizedLink";
+import { SEO } from "@/components/SEO";
+import { WhatsAppButton } from "@/components/WhatsAppButton";
+import { useLanguage } from "@/contexts/LanguageContext";
+import { useHydrated } from "@/hooks/useHydrated";
 import { buildBreadcrumbSchema, buildRoomsAggregateOfferSchema, homeUrl } from "@/lib/structuredData";
-import { STATS, STATS_SHARED_BATH, SHARED_BATH_TIERS, HOUSE_SURFACES, MARKET_CLASSIC_LIVING_M2, PRICE_FR_NUM, PRICE_EN_NUM, PRICE_CHF_FR, PRICE_CHF_EN, PRICE_FROM_FR_NUM, PRICE_FROM_EN_NUM, PRICE_FROM_CHF_FR, PRICE_FROM_CHF_EN, CONTRACT_EUR, EUR_STANDARD_FR_NUM, EUR_FROM_FR_NUM, EUR_STANDARD_EN_NUM, EUR_FROM_EN_NUM, MARKET_ROOM_EUR, thousands, MARKET_COMPARISON, sharedBathTiersText } from "@/data/stats";
-import { PRICE_KEY_SENTENCE } from "@/data/priceFacts";
-import {
-  MONTHLY_SAVINGS_CHF,
-  VILLA_EUR_PER_M2_FR,
-  VILLA_EUR_PER_M2_EN,
-  CLASSIC_EUR_PER_M2_FR,
-  CLASSIC_EUR_PER_M2_EN,
-  STUDIO_CHF_PER_M2_FR,
-  STUDIO_CHF_PER_M2_EN,
-} from "@/data/pricingComparison";
-import { PRICE_INCLUDES_ANCHOR } from "@/data/allInclusive";
 import { mirrorPath } from "@/lib/localizedPath";
+import { responsiveImage } from "@/lib/responsiveImage";
+import { PRICE_CHF_EN, PRICE_CHF_FR, PRICE_FROM_CHF_EN, PRICE_FROM_CHF_FR } from "@/data/stats";
+import { PRICE_INCLUDES_ANCHOR } from "@/data/allInclusive";
 import { APPART } from "@/data/appart";
-import { AppartTeaser } from "@/components/appart/AppartTeaser";
+import { LAPPART_HERO } from "@/data/appartCovers";
+import { offerAt } from "@/data/offer";
+import { inclusGroups } from "@/data/inclus";
+import { tarifsPageFaq } from "@/data/faq/tarifsFaq";
+import {
+  BUDGET_GUIDE_PATH,
+  TARIFS_ANCHORS,
+  TARIFS_FAQ_TITLE,
+  appartBlock,
+  applyBlock,
+  budgetBlock,
+  firstYearOfferBlock,
+  houseCards,
+  includedBlock,
+  pricesBlock,
+  tarifsDescription,
+  tarifsOfferShownNow,
+  valueBlock,
+  type TarifsLang,
+} from "@/data/tarifsTexts";
 
 /**
- * (L'Appart, Lot 4, étape E5 — § 3.3 du brief, textes du 13/11/2026 « à confirmer ») /tarifs détaille les DEUX gammes : une ligne
- * sous le prix d'appel du haut de page (lien vers l'ancre #lappart), l'échelle de tous les prix chambre par chambre après la fiche,
- * puis le bloc statique de L'Appart (#lappart) avant l'argumentaire et la grille des services, qui restent ceux des maisons.
- * Tous les nombres viennent des sources (STATS, CONTRACT_EUR, SHARED_BATH_TIERS, APPART) ; jamais un prix de L'Appart dans une
- * phrase ou une ligne de tableau qui nomme piscine, sauna ou salle de sport (règle V2, garde check:facts).
+ * /tarifs et /en/tarifs — la page construite comme une seule histoire (brief « Page /tarifs et encadré « l'essentiel » : le budget
+ * réel » du 23/11/2026, lot 1 ; textes des annexes A et B validés par Jérôme le 23/11/2026, décisions D15 à D21, G1 et G2 du
+ * 24/11/2026) : le prix → ce qu'un loyer coûte vraiment ailleurs → ce que la différence paie → tout ce qui est compris → les
+ * chambres et les conditions. Neuf blocs, dans cet ordre, sous le H1 (inchangé) :
+ *   1. la fiche « l'essentiel » (EntityFacts, page="tarifs" : son lien « Voir le calcul » y devient une ancre dans la page) ;
+ *   2. #calcul — le budget réel : trois paragraphes de réponse, les postes qui s'ajoutent à un loyer, le tableau (vrai <table>) ;
+ *   3. #objection-prix — ce que la différence paie : quatre H3 numérotés, le tableau des maisons, les trois cartes (D18) ;
+ *   4. #inclus — trois listes (src/data/inclus.ts), sans compteur ;
+ *   5. #echelle-prix — trois prix, chambre par chambre, puis les conditions (L'Appart n'est plus dans ce tableau) ;
+ *   6. #offre — l'offre « Ta première année avec nous », dans le navigateur seulement, après l'hydratation, pendant l'offre ;
+ *   7. #lappart — L'Appart, après l'argument des maisons (D1) ; ses données structurées restent ;
+ *   8. #faq — les onze questions du « budget réel » (tarifsPageFaq) et leur FAQPage (la FAQ A.3 n'est plus ici : G1) ;
+ *   9. « Prêt à nous rejoindre ? » — sans chiffre (D11), deux boutons.
+ * Textes : src/data/tarifsTexts.ts (blocs 2 à 7, 9), src/data/inclus.ts (bloc 4), src/data/faq/tarifsFaq.ts (bloc 8). Ici, aucun
+ * texte ni nombre : la mise en page seulement. Une phrase ou un paragraphe = un nœud texte (aucun séparateur du prérendu dans une
+ * phrase). Tableaux : à 375 px, chacun défile dans son cadre (première colonne figée), la page ne défile jamais en largeur.
  */
-const APPART_ANCHOR = "lappart";
-const AP = APPART.price;
-const A_STD = APPART.rooms.standard;
-const A_SUITE = APPART.rooms.suite;
-const APPART_HIGH = AP.room.chf >= AP.suite.chf ? AP.room : AP.suite;
-const A_WORD_EN: Record<number, string> = { 2: "two", 3: "three", 4: "four" };
-type ScaleRow = { range: string; rooms: string; bath: string; chf: string; eur: string };
-/** L'échelle des prix, du plus cher au moins cher : chambres à salle d'eau privative, paliers de La Villa, suite et chambres de L'Appart. */
-function priceScale(lang: "fr" | "en"): { header: readonly string[]; rows: ScaleRow[]; note: string } {
-  const en = lang === "en";
-  const houses = en ? "Houses" : "Maisons";
-  const villa = en ? `Houses, ${STATS_SHARED_BATH.house}` : `Maisons, ${STATS_SHARED_BATH.house}`;
-  const privateRooms = STATS.totalRooms - STATS_SHARED_BATH.rooms;
-  const perPerson = en ? `€${thousands(AP.suitePerPersonEur, ",")}` : `${thousands(AP.suitePerPersonEur, "\u00a0")} €`;
-  return {
-    // (14/11/2026, V2-18) Les deux colonnes de prix juste après « Gamme » : sur téléphone (375 px), le tableau défile et les prix
-    // étaient hors de l'écran. Mêmes textes, autre ordre (l'en-tête et les cellules de chaque ligne, ci-dessous).
-    header: en
-      ? ["Range", "CHF per month", "€ per month (rent on the lease)", "Rooms", "Shower room"]
-      : ["Gamme", "CHF par mois", "€ par mois (loyer du bail)", "Chambres", "Salle d'eau"],
-    rows: [
-      {
-        range: houses,
-        rooms: en ? `${privateRooms} rooms of ${STATS.roomSizeMin} to ${STATS.roomSizeMax} m²` : `${privateRooms} chambres de ${STATS.roomSizeMin} à ${STATS.roomSizeMax} m²`,
-        bath: en ? "private" : "privative",
-        chf: en ? PRICE_CHF_EN : PRICE_CHF_FR,
-        eur: en ? `€${EUR_STANDARD_EN_NUM}` : `${EUR_STANDARD_FR_NUM} €`,
-      },
-      ...SHARED_BATH_TIERS.map((t) => ({
-        range: villa,
-        rooms: en ? `rooms ${t.rooms.join(" and ")}` : `chambres ${t.rooms.join(" et ")}`,
-        bath: en ? "shared between 2 rooms" : "partagée entre 2 chambres",
-        chf: t[lang].chf,
-        eur: t[lang].eur,
-      })),
-      {
-        range: APPART.name,
-        rooms: en ? `${A_SUITE.surfaceM2} m² suite, one or two people` : `suite de ${A_SUITE.surfaceM2} m², une ou deux personnes`,
-        bath: en ? "private shower room and toilet" : "salle d'eau et WC privés",
-        chf: AP.suite[lang].chf,
-        eur: AP.suite[lang].eur,
-      },
-      {
-        range: APPART.name,
-        rooms: en ? `${A_WORD_EN[A_STD.numbers.length] ?? A_STD.numbers.length} ${A_STD.surfaceM2} m² rooms` : `${A_STD.numbers.length} chambres de ${A_STD.surfaceM2} m²`,
-        bath: en ? `shower room and toilet shared between the ${A_STD.sharedBathBetween} rooms` : `salle d'eau et WC partagés entre les ${A_STD.sharedBathBetween} chambres`,
-        chf: AP.room[lang].chf,
-        eur: AP.room[lang].eur,
-      },
-    ],
-    note: en
-      ? `Two people in the suite at ${APPART.name}: ${AP.suite.en.eur} a month, or ${perPerson} each for two.`
-      : `À deux dans la suite de ${APPART.name} : ${AP.suite.fr.eur} par mois, soit ${perPerson} par personne à deux.`,
-  };
-}
+
+/** Marge de défilement des sections ancrées : barre de 4rem + bandeau de l'offre (--lvc-banner-h, src/index.css). */
+const SCROLL_MT = "scroll-mt-[calc(4rem+var(--lvc-banner-h,0px))]";
+const SERIF = { fontFamily: '"DM Serif Display", serif' } as const;
+const H2 = "text-3xl md:text-4xl font-light text-[#1C1917] mb-6";
+const H3 = "text-lg font-semibold text-[#1C1917] mb-2";
+const LINK = "underline underline-offset-4 text-[#1C1917] hover:text-[#b8860b] transition-colors";
 
 /**
  * Arrivée sur /tarifs#objection-prix — lien « Ce que comprend le prix » des cartes chambres (13/11/2026).
@@ -182,387 +152,479 @@ function usePriceAnchorArrival(): void {
   }, [pathname, wanted, key]);
 }
 
+/**
+ * (24/11/2026, brief « budget réel », § 9 : les ancres « répondent ») Même arrivée pour les autres sections de la page — d'abord
+ * #calcul, cible du lien « Voir le calcul » de la fiche « l'essentiel » des 9 pages : au chargement complet de /tarifs#calcul,
+ * ScrollToTop ramènerait sinon la page en haut. usePriceAnchorArrival reste tel quel (ses tests le figent) et note seul le départ
+ * de la page (bascule de langue), que ce hook lit aussi.
+ */
+const SECTION_ANCHORS: readonly string[] = [TARIFS_ANCHORS.calcul, TARIFS_ANCHORS.inclus, TARIFS_ANCHORS.prices, TARIFS_ANCHORS.lappart, TARIFS_ANCHORS.faq];
+
+function useSectionAnchorArrival(): void {
+  const { pathname, hash, key } = useLocation();
+  const anchor = SECTION_ANCHORS.find((a) => hash === `#${a}`) ?? null;
+  useLayoutEffect(() => {
+    if (!anchor || isLanguageSwitchArrival(pathname, key)) return;
+    const target = document.getElementById(anchor);
+    if (target) alignToAnchor(target);
+  }, [pathname, anchor, key]);
+  useEffect(() => {
+    if (!anchor || isLanguageSwitchArrival(pathname, key)) return;
+    const target = document.getElementById(anchor);
+    return target ? holdInView(target) : undefined;
+  }, [pathname, anchor, key]);
+}
+
+// ── Mesure (GA4) : même garde que le reste du site, jamais bloquante ─────────────────────────────────────────────────────────
+
+function gtagEvent(name: string, params: Record<string, string>): void {
+  try {
+    (window as unknown as { gtag?: (...a: unknown[]) => void }).gtag?.("event", name, params);
+  } catch { /* l'analytics ne bloque jamais l'UI */ }
+}
+
+/** `cta_click` (positions existantes : tarifs_climax, tarifs_footer ; nouvelle : tarifs_footer_rooms). */
+const trackCta = (position: string, target: string, language: TarifsLang) =>
+  gtagEvent("cta_click", { cta_position: position, cta_target: target, language });
+
+/** `offer_cta_click` de l'offre en cours, emplacement « tarifs » (offer.ts n'est pas modifié : son type OfferPlacement ne le
+ *  connaît pas, l'événement est donc envoyé ici, avec les mêmes paramètres que trackOfferCta). */
+const trackOfferClick = (language: TarifsLang, pagePath: string) =>
+  gtagEvent("offer_cta_click", { offer: offerAt()?.id ?? "none", placement: "tarifs", language, page_path: pagePath });
+
+// ── Blocs ───────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+
+const TABLE_FRAME = "overflow-x-auto rounded-2xl border border-[#E7E5E4] bg-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#b8860b]";
+const TH_COL = "px-4 py-3 text-left font-semibold text-[#1C1917] border-b border-[#E7E5E4] align-bottom";
+/** En-tête de ligne figé à gauche quand le tableau défile (téléphone). */
+const TH_ROW = "sticky left-0 z-[1] px-4 py-3 text-left text-[#1C1917] border-b border-r border-[#E7E5E4] group-last:border-b-0 align-top w-[150px] min-w-[150px] md:w-auto md:min-w-[200px]";
+const TD = "px-4 py-3 align-top border-b border-[#E7E5E4] group-last:border-b-0";
+
+/**
+ * (24/11/2026, décision de Jérôme : « fiches au téléphone ») Sous md, chaque ligne d'un tableau devient une fiche : en-têtes de
+ * colonnes masqués, chaque cellule affiche le nom de sa colonne (attribut data-label) au-dessus de sa valeur. Un seul <table> reste
+ * dans la page (Google, assistants IA, gardes, lecteurs d'écran sur ordinateur) ; seule la mise en forme change au téléphone.
+ */
+const FRAME_CARDS = "max-md:overflow-visible max-md:rounded-none max-md:border-0 max-md:bg-transparent";
+const TABLE_CARDS = "max-md:block";
+const THEAD_CARDS = "max-md:hidden";
+const TBODY_CARDS = "max-md:block max-md:space-y-3";
+/** Fiche « ticket » (budget, prix) : une valeur par ligne, le nom de la colonne à gauche, la valeur à droite — la plus compacte. */
+const TR_CARD = "max-md:grid max-md:grid-cols-1 max-md:gap-y-1.5 max-md:rounded-xl max-md:border max-md:border-[#E7E5E4] max-md:p-4";
+const TD_CARD_ROW = "max-md:flex max-md:items-baseline max-md:justify-between max-md:gap-4 max-md:border-0 max-md:bg-transparent max-md:p-0 max-md:whitespace-normal max-md:text-right max-md:before:text-left max-md:before:text-sm max-md:before:font-normal max-md:before:text-[#78716C] max-md:before:content-[attr(data-label)]";
+const TR_CARD_1COL = "max-md:grid max-md:grid-cols-1 max-md:gap-y-3 max-md:rounded-xl max-md:border max-md:border-[#E7E5E4] max-md:bg-white max-md:p-4";
+const TH_CARD = "max-md:static max-md:order-first max-md:col-span-full max-md:mb-1 max-md:w-auto max-md:min-w-0 max-md:border-0 max-md:bg-transparent max-md:p-0 max-md:text-base";
+const TD_CARD = "max-md:block max-md:border-0 max-md:bg-transparent max-md:p-0 max-md:whitespace-normal max-md:before:block max-md:before:mb-0.5 max-md:before:text-xs max-md:before:font-normal max-md:before:text-[#78716C] max-md:before:content-[attr(data-label)]";
+
+/** Bloc 2 — « Chambre à Genève ou côté France : quel budget prévoir en plus du loyer ? » (#calcul). */
+function BudgetSection({ L }: { L: TarifsLang }) {
+  const T = budgetBlock(L);
+  return (
+    <section id={TARIFS_ANCHORS.calcul} aria-labelledby="calcul-title" className={`py-16 lg:py-20 bg-[#FAF9F6] ${SCROLL_MT}`}>
+      <div className="max-w-3xl mx-auto px-6">
+        <h2 id="calcul-title" className={H2} style={SERIF}>{T.title}</h2>
+        {/* Les trois paragraphes de réponse, sans rien entre le titre et eux. */}
+        <div className="space-y-4 text-[#44403C] leading-relaxed">
+          {T.answers.map((p) => <p key={p}>{p}</p>)}
+        </div>
+        <h3 className={`${H3} mt-10`}>{T.itemsTitle}</h3>
+        <ul className="list-disc pl-6 space-y-1.5 text-[#44403C] leading-relaxed">
+          {T.items.map((item) => <li key={item}>{item}</li>)}
+        </ul>
+        <h3 id="calcul-tableau-title" className={`${H3} mt-10`}>{T.tableTitle}</h3>
+        {/* Légende visible (unité + D20) ; la même, pour les lecteurs d'écran, dans le <caption> : un <caption> visible prendrait
+            la largeur du tableau et sortirait de l'écran à 375 px. */}
+        <p aria-hidden="true" className="mb-3 text-sm text-[#57534E]">{T.caption}</p>
+      </div>
+      <div className="max-w-5xl mx-auto px-6">
+        <div className={`${TABLE_FRAME} ${FRAME_CARDS}`} role="region" aria-labelledby="calcul-tableau-title" tabIndex={0}>
+          <table className={`w-full md:min-w-[640px] border-separate border-spacing-0 text-sm ${TABLE_CARDS}`} data-budget-table="">
+            <caption className="sr-only">{T.caption}</caption>
+            <thead className={THEAD_CARDS}>
+              <tr className="bg-[#FAF9F6]">
+                {T.header.map((h, i) => (
+                  <th key={h} scope="col" className={i === 0 ? `${TH_COL} sticky left-0 z-[1] bg-[#FAF9F6] border-r` : `${TH_COL} whitespace-nowrap`}>
+                    {h}
+                  </th>
+                ))}
+              </tr>
+            </thead>
+            <tbody className={TBODY_CARDS}>
+              {T.rows.map((r) => {
+                const bg = r.ours ? "bg-[#F8EFE4]" : "bg-white";
+                return (
+                  <tr key={r.key} className={`group ${TR_CARD} ${r.ours ? "max-md:bg-[#F8EFE4]" : "max-md:bg-white"}`} data-ours={r.ours ? "true" : undefined}>
+                    <th scope="row" className={`${TH_ROW} ${bg} ${r.ours ? "font-semibold" : "font-medium"} ${TH_CARD}`}>{r.cells[0]}</th>
+                    {r.cells.slice(1).map((c, i) => (
+                      // Au téléphone, « Sans voiture » et « Avec voiture » (les deux dernières colonnes) viennent en premier, en gras.
+                      <td
+                        key={T.header[i + 1]}
+                        data-label={T.header[i + 1]}
+                        className={`${TD} ${bg} whitespace-nowrap ${r.ours ? "font-semibold text-[#1C1917]" : "text-[#44403C]"} ${TD_CARD_ROW} ${i >= 3 ? "max-md:order-1 max-md:font-semibold max-md:text-[#1C1917]" : "max-md:order-2"}`}
+                      >
+                        {c}
+                      </td>
+                    ))}
+                  </tr>
+                );
+              })}
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div className="max-w-3xl mx-auto px-6 mt-6 space-y-4 text-[#44403C] leading-relaxed">
+        <p>{T.gaps}</p>
+        <p>
+          {T.france.before}
+          <a href={`#${PRICE_INCLUDES_ANCHOR}`} className={LINK}>{T.france.label}</a>
+          {T.france.after}
+        </p>
+        <p className="text-sm text-[#57534E]">
+          {T.method.before}
+          <LocalizedLink to={BUDGET_GUIDE_PATH} className={LINK}>{T.method.label}</LocalizedLink>
+          {T.method.after}
+        </p>
+      </div>
+    </section>
+  );
+}
+
+/** Bloc 3 — « Ce que La Villa Coliving offre de plus qu'une colocation » (#objection-prix, cible du lien des cartes chambres). */
+function ValueSection({ L }: { L: TarifsLang }) {
+  const T = valueBlock(L);
+  const cards = houseCards(L);
+  const [space, house, nothing, life] = T.points;
+  return (
+    <section className="py-16 lg:py-20 bg-white scroll-mt-[calc(4rem+var(--lvc-banner-h,0px))]" id={PRICE_INCLUDES_ANCHOR}>
+      <div className="max-w-3xl mx-auto px-6">
+        <h2 className={H2} style={SERIF}>{T.title}</h2>
+        <p className="text-[#44403C] leading-relaxed">{T.intro}</p>
+        <div className="mt-10 space-y-10 text-[#44403C] leading-relaxed">
+          <div>
+            <h3 className={H3}>{space.title}</h3>
+            <p>{space.text}</p>
+          </div>
+          <div>
+            <h3 id="maisons-equipees-title" className={H3}>{house.title}</h3>
+            <p>{house.text}</p>
+            <div className={`mt-6 ${TABLE_FRAME} ${FRAME_CARDS}`} role="region" aria-labelledby="maisons-equipees-title" tabIndex={0}>
+              <table className={`w-full md:min-w-[600px] border-separate border-spacing-0 text-sm ${TABLE_CARDS}`} aria-labelledby="maisons-equipees-title">
+                <thead className={THEAD_CARDS}>
+                  <tr className="bg-[#FAF9F6]">
+                    <td className="sticky left-0 z-[1] bg-[#FAF9F6] border-b border-r border-[#E7E5E4]" />
+                    {T.houses.map((h) => (
+                      <th key={h.slug} scope="col" className={TH_COL}>
+                        <LocalizedLink to={`/${h.slug}`} className={LINK}>{h.name}</LocalizedLink>
+                        {`, ${h.commune}`}
+                      </th>
+                    ))}
+                  </tr>
+                </thead>
+                <tbody className={TBODY_CARDS}>
+                  {T.houseRows.map((r) => (
+                    <tr key={r.label} className={`group ${TR_CARD_1COL}`}>
+                      <th scope="row" className={`${TH_ROW} bg-white font-medium ${TH_CARD}`}>{r.label}</th>
+                      {r.cells.map((c, i) => (
+                        <td key={T.houses[i].slug} data-label={`${T.houses[i].name}, ${T.houses[i].commune}`} className={`${TD} bg-white text-[#44403C] ${TD_CARD}`}>{c}</td>
+                      ))}
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+            {/* (D18) Les trois maisons : photo, nom, commune, lien vers la page — ni prix, ni texte. */}
+            <ul className="mt-6 grid gap-4 sm:grid-cols-3">
+              {cards.map((c) => (
+                <li key={c.slug}>
+                  <LocalizedLink to={`/${c.slug}`} className="group block overflow-hidden rounded-2xl border border-[#E7E5E4] bg-white hover:shadow-lg transition-shadow">
+                    <div className="relative aspect-[4/3] overflow-hidden">
+                      <img
+                        src={c.image}
+                        {...responsiveImage(c.image, "(min-width: 640px) 33vw, 100vw")}
+                        alt={c.alt}
+                        loading="lazy"
+                        className="absolute inset-0 h-full w-full object-cover group-hover:scale-105 transition-transform duration-500"
+                      />
+                    </div>
+                    <div className="px-4 py-3">
+                      <p className="font-medium text-[#1C1917]">{c.name}</p>
+                      <p className="text-sm text-[#57534E]">{c.commune}</p>
+                    </div>
+                  </LocalizedLink>
+                </li>
+              ))}
+            </ul>
+          </div>
+          <div>
+            <h3 className={H3}>{nothing.title}</h3>
+            <p>{nothing.text}</p>
+          </div>
+          <div>
+            <h3 className={H3}>{life.title}</h3>
+            <p>{life.text}</p>
+          </div>
+          <p className="font-medium text-[#1C1917]">
+            {T.visit.before}
+            <LocalizedLink to="/candidature" onClick={() => trackCta("tarifs_climax", "/candidature", L)} className={LINK}>{T.visit.label}</LocalizedLink>
+            {T.visit.after}
+          </p>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+/** Bloc 4 — « Tout ce qui est compris dans le prix » (#inclus) : trois listes, aucun compteur. */
+function IncludedSection({ L }: { L: TarifsLang }) {
+  const T = includedBlock(L);
+  return (
+    <section id={TARIFS_ANCHORS.inclus} aria-labelledby="inclus-title" className={`py-16 lg:py-20 bg-[#FAF9F6] ${SCROLL_MT}`}>
+      <div className="max-w-5xl mx-auto px-6">
+        <h2 id="inclus-title" className={H2} style={SERIF}>{T.title}</h2>
+        <p className="text-[#44403C] leading-relaxed max-w-3xl">{T.intro}</p>
+        <div className="mt-8 grid gap-6 lg:grid-cols-3">
+          {inclusGroups(L).map((g) => (
+            <div key={g.id} className="rounded-2xl border border-[#E7E5E4] bg-white p-6">
+              <h3 className={`${H3} mb-4`}>{g.title}</h3>
+              <ul className="space-y-2.5 text-sm text-[#44403C] leading-relaxed">
+                {g.items.map((item) => (
+                  <li key={item} className="flex items-start gap-3">
+                    {g.included
+                      ? <Check className="w-4 h-4 mt-0.5 shrink-0 text-[#b8860b]" aria-hidden="true" />
+                      : <Minus className="w-4 h-4 mt-0.5 shrink-0 text-[#78716C]" aria-hidden="true" />}
+                    <span>{item}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+/** Bloc 5 — « Les prix, chambre par chambre » (#echelle-prix ; le titre garde son id historique echelle-prix-title). */
+function PricesSection({ L }: { L: TarifsLang }) {
+  const T = pricesBlock(L);
+  return (
+    <section id={TARIFS_ANCHORS.prices} aria-labelledby={TARIFS_ANCHORS.pricesTitle} className={`py-16 lg:py-20 bg-white ${SCROLL_MT}`}>
+      <div className="max-w-5xl mx-auto px-6">
+        <h2 id={TARIFS_ANCHORS.pricesTitle} className={H2} style={SERIF}>{T.title}</h2>
+        <p className="text-[#44403C] leading-relaxed max-w-3xl mb-6">{T.intro}</p>
+        <div className={`${TABLE_FRAME} ${FRAME_CARDS}`} role="region" aria-labelledby={TARIFS_ANCHORS.pricesTitle} tabIndex={0}>
+          <table className={`w-full md:min-w-[640px] border-separate border-spacing-0 text-sm ${TABLE_CARDS}`}>
+            <thead className={THEAD_CARDS}>
+              <tr className="bg-[#FAF9F6]">
+                {T.header.map((h, i) => (
+                  <th key={h} scope="col" className={i === 0 ? `${TH_COL} sticky left-0 z-[1] bg-[#FAF9F6] border-r` : TH_COL}>{h}</th>
+                ))}
+              </tr>
+            </thead>
+            <tbody className={TBODY_CARDS}>
+              {T.rows.map((r) => (
+                <tr key={r.key} className={`group ${TR_CARD} max-md:bg-white`}>
+                  <th scope="row" className={`${TH_ROW} bg-white font-medium ${TH_CARD}`}>{r.room}</th>
+                  <td data-label={T.header[1]} className={`${TD} font-semibold text-[#1C1917] whitespace-nowrap ${TD_CARD_ROW}`}>{r.chf}</td>
+                  <td data-label={T.header[2]} className={`${TD} text-[#44403C] whitespace-nowrap ${TD_CARD_ROW}`}>{r.eur}</td>
+                  <td data-label={T.header[3]} className={`${TD} text-[#44403C] ${TD_CARD_ROW}`}>{r.count}</td>
+                  <td data-label={T.header[4]} className={`${TD} text-[#44403C] ${TD_CARD_ROW}`}>{r.bath}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+        <div className="mt-6 max-w-3xl space-y-3 text-[#44403C] leading-relaxed">
+          <p>
+            {T.rooms.before}
+            <LocalizedLink to="/chambres-disponibles" className={LINK}>{T.rooms.label}</LocalizedLink>
+            {T.rooms.after}
+          </p>
+          <p className="text-sm text-[#57534E]">{T.lease}</p>
+        </div>
+        <h3 className={`${H3} mt-10`}>{T.termsTitle}</h3>
+        <ul className="max-w-3xl list-disc pl-6 space-y-2 text-[#44403C] leading-relaxed">
+          {T.terms.map((t) => <li key={t}>{t}</li>)}
+        </ul>
+      </div>
+    </section>
+  );
+}
+
+/**
+ * Bloc 6 — l'offre en cours (#offre). Rendu DANS LE NAVIGATEUR SEULEMENT : pendant l'hydratation, useHydrated vaut false (le
+ * premier rendu client est le HTML prérendu, sans le bloc : aucun écart d'hydratation), puis le bloc paraît si l'offre « Ta
+ * première année avec nous » est en cours (offerAt) et si le navigateur n'est pas automatisé — le prérendu Puppeteer
+ * (navigator.webdriver) ne le capture donc jamais. Le 1er janvier 2027 à 0 h (heure de Paris), il disparaît sans déploiement.
+ * Ni dans le FAQPage, ni dans les données structurées, ni dans llms.txt.
+ */
+function OfferSection({ L }: { L: TarifsLang }) {
+  const hydrated = useHydrated();
+  const { pathname } = useLocation();
+  if (!hydrated || !tarifsOfferShownNow()) return null;
+  const T = firstYearOfferBlock(L);
+  return (
+    <section id={TARIFS_ANCHORS.offer} aria-labelledby="offre-title" data-tarifs-offer="" className={`py-12 bg-white ${SCROLL_MT}`}>
+      <div className="max-w-3xl mx-auto px-6">
+        <div className="rounded-2xl border border-[#D4A574] bg-[#FAF9F6] p-6 md:p-8">
+          <h2 id="offre-title" className="text-2xl md:text-3xl font-light text-[#1C1917] mb-2" style={SERIF}>{T.title}</h2>
+          <p className="mb-4 text-sm text-[#78716C]">{T.chf}</p>
+          <p className="text-[#44403C] leading-relaxed mb-3">{T.subtitle}</p>
+          <p className="text-[#44403C] leading-relaxed mb-6">{T.deadline}</p>
+          <LocalizedLink
+            to={T.path}
+            onClick={() => trackOfferClick(L, pathname)}
+            className="inline-flex items-center gap-2 min-h-[44px] text-sm font-semibold text-[#1C1917] underline underline-offset-4 hover:text-[#b8860b] transition-colors"
+          >
+            {T.link}
+            <ArrowRight className="w-4 h-4" aria-hidden="true" />
+          </LocalizedLink>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+/**
+ * Bloc 7 — « Une autre formule : L'Appart, notre colocation » (#lappart). C'est le bloc statique de L'Appart de /tarifs
+ * (data-appart-teaser="/tarifs", garde check:facts) : texte de l'annexe (src/data/tarifsTexts.ts, appartBlock), photo et lien comme
+ * <AppartTeaser/>, mesure `house_discover_click` inchangée. Aucun prix de L'Appart dans la phrase de la piscine.
+ */
+function AppartSection({ L }: { L: TarifsLang }) {
+  const T = appartBlock(L);
+  const img = LAPPART_HERO.wide;
+  const track = () => gtagEvent("house_discover_click", { house: APPART.key, cta_position: "appart_teaser", page: "tarifs", language: L });
+  return (
+    <section id={TARIFS_ANCHORS.lappart} data-appart-teaser="/tarifs" aria-labelledby="lappart-title" className={`py-16 lg:py-20 bg-white border-t border-[#E7E5E4] ${SCROLL_MT}`}>
+      <div className="max-w-5xl mx-auto px-6">
+        <div className="grid md:grid-cols-5 overflow-hidden rounded-2xl border border-[#E7E5E4] bg-white">
+          <div className="relative h-52 sm:h-64 md:h-auto md:min-h-[280px] md:col-span-2">
+            <img
+              src={img.src}
+              {...responsiveImage(img.src, "(min-width: 768px) 40vw, 100vw")}
+              alt={img.alt[L]}
+              className="absolute inset-0 w-full h-full object-cover"
+              style={{ objectPosition: img.focal }}
+              loading="lazy"
+              width={img.w}
+              height={img.h}
+            />
+          </div>
+          <div className="p-6 md:p-8 md:col-span-3 flex flex-col">
+            <h2 id="lappart-title" className="text-2xl md:text-3xl font-light text-[#1C1917] leading-tight" style={SERIF}>{T.title}</h2>
+            {T.paragraphs.map((p) => <p key={p} className="mt-3 text-[#44403C] leading-relaxed">{p}</p>)}
+            <LocalizedLink
+              to={`/${APPART.key}`}
+              onClick={track}
+              className="mt-5 self-start inline-flex items-center gap-2 min-h-[44px] text-sm font-semibold text-[#1C1917] underline underline-offset-4 hover:text-[#b8860b] transition-colors"
+            >
+              {T.link}
+              <ArrowRight className="w-4 h-4" aria-hidden="true" />
+            </LocalizedLink>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+/** Bloc 9 — « Prêt à nous rejoindre ? » : sans chiffre d'économie ni « places limitées » (D11), deux boutons. */
+function ApplySection({ L }: { L: TarifsLang }) {
+  const T = applyBlock(L);
+  return (
+    <section className="py-20 lg:py-24 bg-[#D4A574]">
+      <div className="container-custom text-center">
+        <h2 className="text-3xl md:text-4xl font-light text-white mb-4" style={SERIF}>{T.title}</h2>
+        <p className="text-lg text-white/90 max-w-xl mx-auto mb-8">{T.text}</p>
+        <div className="flex flex-col sm:flex-row gap-4 justify-center">
+          <LocalizedLink
+            to="/chambres-disponibles"
+            onClick={() => trackCta("tarifs_footer_rooms", "/chambres-disponibles", L)}
+            className="inline-flex items-center justify-center gap-2 px-8 py-4 border border-white text-white font-semibold hover:bg-white hover:text-[#1C1917] transition-colors"
+          >
+            {T.rooms}
+          </LocalizedLink>
+          <LocalizedLink
+            to="/candidature"
+            onClick={() => trackCta("tarifs_footer", "/candidature", L)}
+            className="inline-flex items-center justify-center gap-2 px-8 py-4 bg-white text-[#1C1917] font-semibold hover:bg-[#1C1917] hover:text-white transition-colors"
+          >
+            {T.apply}
+            <ArrowRight className="w-5 h-5" aria-hidden="true" />
+          </LocalizedLink>
+        </div>
+      </div>
+    </section>
+  );
+}
+
 export function RatesPageV4() {
   const { language } = useLanguage();
   usePriceAnchorArrival();
-  // (Lot B, 01/10/2026) « Places limitées pour <mois prochain> » : calculé depuis le mois embarqué
-  // par le prérendu (pied de page), plus avec new Date() + toLocaleDateString au rendu — #418 chaque
-  // 1ᵉʳ du mois entre minuit et le prérendu de 05:00 UTC. Resynchronisé après l'hydratation.
-  const nextMonth = nextMonthValue(useRenderMonth());
-
-  const includedItems = [
-    language === "en"
-      ? "Rent & utilities (electricity, water, heating)"
-      : "Loyer & charges (électricité, eau, chauffage)",
-    language === "en"
-      ? "High-speed Pro fiber internet"
-      : "Internet fibre Pro haut débit",
-    language === "en" ? "Housekeeping three times a week" : "Ménage 3 fois par semaine",
-    language === "en"
-      ? "Pool & garden maintenance"
-      : "Entretien piscine & jardin",
-    language === "en"
-      ? "Gym, sauna & wellness area"
-      : "Salle de sport, sauna & espace bien-être",
-    language === "en"
-      ? "Weekly yoga & fitness classes"
-      : "Cours de yoga & fitness hebdomadaires",
-    language === "en" ? "Streaming subscriptions" : "Abonnements streaming",
-    language === "en" ? "Community events" : "Événements communautaires",
-    language === "en"
-      ? "Monthly essentials delivery"
-      : "Livraison essentiels mensuels",
-    language === "en" ? "WhatsApp support" : "Support WhatsApp",
-  ];
-
-  // Detailed services data
-  const detailedServices = [
-    {
-      category: language === "en" ? "Water & Energy" : "Eau & Énergie",
-      icon: "water",
-      items:
-        language === "en"
-          ? [
-              "Electricity, heating & hot water",
-              "Water for common areas & garden maintenance",
-              "Pool water treatment & maintenance",
-              "All repairs & technical interventions",
-              "Boiler maintenance & servicing",
-            ]
-          : [
-              "Électricité, chauffage & eau chaude",
-              "Eau pour entretien parties communes & jardin",
-              "Traitement & maintenance eau piscine",
-              "Toutes réparations & interventions techniques",
-              "Entretien chaudière & maintenance",
-            ],
-    },
-    {
-      category:
-        language === "en" ? "Cleaning & Maintenance" : "Ménage & Entretien",
-      icon: "clean",
-      items:
-        language === "en"
-          ? [
-              "Common areas cleaned 3x per week",
-              "Room cleaning available as option",
-              "Pool & garden maintenance",
-              "Basic supplies delivered monthly",
-              "Waste management & recycling",
-            ]
-          : [
-              "Parties communes nettoyées 3x par semaine",
-              "Ménage chambre disponible en option",
-              "Entretien piscine & jardin",
-              "Fournitures de base livrées mensuellement",
-              "Gestion des déchets & recyclage",
-            ],
-    },
-    {
-      category:
-        language === "en" ? "Community & Wellness" : "Communauté & Bien-être",
-      icon: "wellness",
-      items:
-        language === "en"
-          ? [
-              "Yoga classes included",
-              "Fitness coaching sessions",
-              "Community dinners & events",
-              "WhatsApp support < 48h response",
-            ]
-          : [
-              "Cours de yoga inclus",
-              "Séances de coaching sportif",
-              "Dîners communautaires & événements",
-              "Support WhatsApp",
-            ],
-    },
-    {
-      category: language === "en" ? "Subscriptions" : "Abonnements",
-      icon: "subscriptions",
-      items:
-        language === "en"
-          ? [
-              "High-speed fiber internet",
-              "Netflix & streaming services",
-              "Home insurance guidance",
-              "No agency fees",
-              "No hidden charges",
-            ]
-          : [
-              "Internet fibre haut débit",
-              "Netflix & services streaming",
-              "Assistance assurance habitation",
-              "Sans frais d'agence",
-              "Sans charges cachées",
-            ],
-    },
-    {
-      category: language === "en" ? "Taxes & Fees" : "Taxes & Frais",
-      icon: "taxes",
-      items:
-        language === "en"
-          ? [
-              "Garbage collection tax",
-              "Street cleaning tax",
-              "Sewage & sanitation charges",
-              "Property management included",
-              "Move-in/move-out support",
-            ]
-          : [
-              "Taxe enlèvement ordures ménagères",
-              "Taxe de balayage",
-              "Redevance assainissement",
-              "Gestion immobilière incluse",
-              "Accompagnement entrée/sortie",
-            ],
-    },
-  ];
-
-  // Houses data with images
-  const houses = [
-    {
-      name: "La Villa",
-      location: "Ville-la-Grand",
-      image: "/images/villa_portrait.webp",
-      alt: language === "en"
-        ? `La Villa coliving Ville-la-Grand — all-inclusive furnished rooms from ${PRICE_FROM_EN_NUM} CHF near Geneva`
-        : `La Villa coliving Ville-la-Grand — chambres meublées tout inclus dès ${PRICE_FROM_CHF_FR} près de Genève`,
-      description:
-        language === "en"
-          ? "Elegant villa with pool & garden"
-          : "Villa élégante avec piscine & jardin",
-    },
-    {
-      name: "Le Loft",
-      location: "Ambilly",
-      image: "/images/le loft jardin.webp",
-      alt: language === "en"
-        ? `Le Loft coliving Ambilly — all-inclusive furnished rooms at ${PRICE_EN_NUM} CHF near Geneva`
-        : `Le Loft coliving Ambilly — chambres meublées tout inclus à ${PRICE_CHF_FR} près de Genève`,
-      description:
-        language === "en"
-          ? "Modern loft with big rooms"
-          : "Loft moderne avec grandes chambres",
-    },
-    {
-      name: "Le Lodge",
-      location: "Annemasse",
-      image: "/images/le lodge piscine.webp",
-      alt: language === "en"
-        ? `Le Lodge coliving Annemasse — all-inclusive furnished rooms at ${PRICE_EN_NUM} CHF near Geneva`
-        : `Le Lodge coliving Annemasse — chambres meublées tout inclus à ${PRICE_CHF_FR} près de Genève`,
-      description:
-        language === "en"
-          ? "Pool house, full fitness chalet with sauna & arcade"
-          : "Pool house, chalet fitness complet avec sauna et jeu d'arcade",
-    },
-  ];
-
-  // Comparatif marché : montants et économies centralisés dans src/data/pricingComparison.ts.
-
-  // Même pattern gtag gardé que HouseDetailPage / WhatsAppButton : mesurer la
-  // position du CTA qui convertit, sans jamais bloquer l'UI sur l'analytics.
-  const trackCta = (position: string) => {
-    try {
-      (window as unknown as { gtag?: (...a: unknown[]) => void }).gtag?.("event", "cta_click", {
-        cta_position: position, cta_target: "/candidature", language,
-      });
-    } catch { /* noop */ }
-  };
-
-  // Tableau « objection prix » — 3 colonnes, La Villa au centre.
-  // Colonnes marché = observations (fourchettes, « le plus souvent ») ; colonne La Villa = faits contractuels.
-  const pick = (t: { fr: string; en: string }) => (language === "en" ? t.en : t.fr);
-  const objectionRows: Array<{
-    label: { fr: string; en: string };
-    classic: { fr: string; en: string };
-    villa: { fr: string; en: string };
-    /** (21/11/2026, lot « élevé, pas cher ») Colonne L'Appart : la réponse de la marque à « moins de 1 000 € ». */
-    appart: { fr: string; en: string };
-    studio: { fr: string; en: string };
-    highlight?: boolean;
-  }> = [
-    {
-      label: { fr: "Loyer mensuel", en: "Monthly rent" },
-      // Fourchette publiée = MARKET_ROOM_EUR (source unique, D0 amendement c du 09/10/2026 ; reprise par le bloc « Où chercher »).
-      // (Lot L2, 09/10/2026) Milliers FR = espace insécable U+00A0.
-      classic: {
-        fr: `${MARKET_ROOM_EUR.min}-${thousands(MARKET_ROOM_EUR.max, " ")} €`,
-        en: `€${MARKET_ROOM_EUR.min}-${thousands(MARKET_ROOM_EUR.max, ",")}`,
-      },
-      villa: {
-        fr: `dès ${PRICE_FROM_CHF_FR} tout inclus`,
-        en: `from ${PRICE_FROM_CHF_EN} all inclusive`,
-      },
-      appart: { fr: `dès ${AP.from.fr.chf} charges comprises`, en: `from ${AP.from.en.chf}, bills included` },
-      studio: { fr: "1\u00a0800-2\u00a0500 CHF + charges", en: "CHF 1,800-2,500 + utilities" },
-    },
-    {
-      label: { fr: "Surface chambre", en: "Room size" },
-      classic: { fr: `${MARKET_COMPARISON.classicRoomM2.min}-${MARKET_COMPARISON.classicRoomM2.max} m² (le plus souvent)`, en: `${MARKET_COMPARISON.classicRoomM2.min}-${MARKET_COMPARISON.classicRoomM2.max} m² (most often)` },
-      villa: {
-        fr: `${STATS.roomSizeMin}-${STATS.roomSizeMax} m²`,
-        en: `${STATS.roomSizeMin}-${STATS.roomSizeMax} m²`,
-      },
-      appart: {
-        fr: `${APPART.rooms.standard.surfaceM2} m² (suite : ${APPART.rooms.suite.surfaceM2} m²)`,
-        en: `${APPART.rooms.standard.surfaceM2} m² (suite: ${APPART.rooms.suite.surfaceM2} m²)`,
-      },
-      studio: { fr: "20-30 m² (logement entier)", en: "20-30 m² (entire studio)" },
-    },
-    {
-      label: {
-        fr: "Espace de vie par colocataire",
-        en: "Living space per flatmate",
-      },
-      classic: {
-        fr: `${MARKET_CLASSIC_LIVING_M2.min}-${MARKET_CLASSIC_LIVING_M2.max} m² (relevé août 2026)`,
-        en: `${MARKET_CLASSIC_LIVING_M2.min}-${MARKET_CLASSIC_LIVING_M2.max} m² (surveyed August 2026)`,
-      },
-      villa: {
-        // (Lot L2, 09/10/2026) Terrain de La Villa lu dans HOUSE_SURFACES (D2), espace de vie dans STATS — plus de surface en dur ; milliers FR = U+00A0.
-        fr: `${STATS.livingSpacePerResidentMin}-${STATS.livingSpacePerResidentMax} m² + extérieurs jusqu'à ${thousands(HOUSE_SURFACES.lavilla.plotM2, " ")} m²`,
-        en: `${STATS.livingSpacePerResidentMin}-${STATS.livingSpacePerResidentMax} m² + outdoor areas up to ${thousands(HOUSE_SURFACES.lavilla.plotM2, ",")} m²`,
-      },
-      appart: { fr: `appartement de ${APPART.flat.surfaceM2} m²`, en: `${APPART.flat.surfaceM2} m² flat` },
-      studio: {
-        fr: "tout le logement, mais seul",
-        en: "the entire flat, but alone",
-      },
-    },
-    {
-      label: { fr: "Prix du m²", en: "Price per m²" },
-      classic: { fr: CLASSIC_EUR_PER_M2_FR, en: CLASSIC_EUR_PER_M2_EN },
-      villa: { fr: VILLA_EUR_PER_M2_FR, en: VILLA_EUR_PER_M2_EN },
-      appart: { fr: "—", en: "—" },
-      studio: { fr: STUDIO_CHF_PER_M2_FR, en: STUDIO_CHF_PER_M2_EN },
-      highlight: true,
-    },
-    {
-      label: { fr: "Charges, fibre, streaming", en: "Utilities, fibre, streaming" },
-      classic: { fr: "rarement incluses", en: "rarely included" },
-      villa: { fr: "incluses", en: "included" },
-      appart: { fr: "incluses", en: "included" },
-      studio: { fr: "200-400 CHF en plus", en: "CHF 200-400 on top" },
-    },
-    {
-      label: { fr: "Piscine, sauna, salle de sport", en: "Pool, sauna, gym" },
-      classic: { fr: "✗", en: "✗" },
-      villa: { fr: "✓ dans chaque maison", en: "✓ in every house" },
-      appart: { fr: "✗ (cours de yoga et de sport des maisons ouverts)", en: "✗ (the houses' yoga and sport classes are open to you)" },
-      studio: { fr: "✗ (gym : 80-150 CHF/mois)", en: "✗ (gym: CHF 80-150/month)" },
-    },
-    {
-      label: { fr: "Ménage professionnel", en: "Professional cleaning" },
-      classic: { fr: "✗ (à ta charge)", en: "✗ (up to you)" },
-      villa: {
-        fr: "✓ 3×/sem",
-        en: "✓ 3×/week",
-      },
-      appart: { fr: `✓ communs ${APPART.cleaningPerWeek}×/sem`, en: `✓ shared areas ${APPART.cleaningPerWeek}×/week` },
-      studio: { fr: "✗", en: "✗" },
-    },
-    {
-      label: {
-        fr: "Entretien (jardinier, pisciniste, réparations)",
-        en: "Upkeep (gardener, pool technician, repairs)",
-      },
-      classic: { fr: "propriétaire à relancer", en: "landlord to chase" },
-      villa: {
-        fr: "✓ équipe dédiée, réponse < 48 h",
-        en: "✓ dedicated team, answer < 48 h",
-      },
-      appart: { fr: "propriétaire en direct", en: "landlord, directly" },
-      studio: { fr: "à ta charge", en: "up to you" },
-    },
-    {
-      label: { fr: "Événements & communauté", en: "Events & community" },
-      classic: { fr: "selon la chance", en: "luck of the draw" },
-      villa: { fr: "✓ organisés chaque mois", en: "✓ organised every month" },
-      appart: { fr: "✓ soirées des maisons ouvertes", en: "✓ the houses' events are open to you" },
-      studio: { fr: "✗", en: "✗" },
-    },
-    {
-      label: { fr: "Frais d'entrée (dossier, agence)", en: "Move-in fees (application, agency)" },
-      classic: { fr: "200-700 € fréquents", en: "€200-700 common" },
-      villa: { fr: "0 €", en: "€0" },
-      appart: { fr: "0 €", en: "€0" },
-      studio: { fr: "souvent élevés", en: "often high" },
-    },
-    {
-      label: { fr: "Caution", en: "Deposit" },
-      classic: { fr: "variable", en: "varies" },
-      villa: {
-        fr: `${STATS.depositMonths} mois hors charges, en 1, 2 ou 3 fois`,
-        en: `${STATS.depositMonths} months excluding utilities, in 1, 2 or 3 instalments`,
-      },
-      appart: {
-        fr: `${STATS.depositMonths} mois hors charges, en 1, 2 ou 3 fois`,
-        en: `${STATS.depositMonths} months excluding utilities, in 1, 2 or 3 instalments`,
-      },
-      studio: { fr: "3 mois usuels", en: "3 months customary" },
-    },
-  ];
+  useSectionAnchorArrival();
+  const L: TarifsLang = language === "en" ? "en" : "fr";
+  const en = L === "en";
+  const pageUrl = `https://www.lavillacoliving.com${en ? "/en" : ""}/tarifs`;
+  const AP = APPART.price;
+  const appartHigh = AP.room.chf >= AP.suite.chf ? AP.room : AP.suite;
 
   return (
     <main className="relative pt-16">
       <SEO
-        // Prix retiré du title le 15/08/2026 (doctrine A6/S33) — il reste en meta description.
-        title={language === "en" ? "Rates: one all-inclusive rent near Geneva" : "Tarifs : un loyer tout compris près de Genève"}
-        // (L'Appart, E5) Deux gammes, deux phrases : la piscine dans celle des maisons, jamais dans celle de L'Appart (règle V2).
-        description={language === "en"
-          ? `Rates: coliving houses with pool and sauna, from ${PRICE_FROM_CHF_EN}/month. ${APPART.name}, a flatshare in ${APPART.commune}, from ${AP.from.en.chf}/month. No application fee.`
-          : `Tarifs : maisons de coliving avec piscine et sauna, dès ${PRICE_FROM_CHF_FR}/mois. ${APPART.name}, colocation à ${APPART.commune}, dès ${AP.from.fr.chf}/mois. 0 frais de dossier.`}
+        // Prix retiré du title le 15/08/2026 (doctrine A6/S33) — il reste en meta description. Title et H1 inchangés (brief § 3).
+        title={en ? "Rates: one all-inclusive rent near Geneva" : "Tarifs : un loyer tout compris près de Genève"}
+        // (D19) La description de la fiche LocalBusiness suit : SEO la reprend (buildLocalBusinessSchema) ; priceRange inchangé (D21).
+        description={tarifsDescription(L)}
         url="https://www.lavillacoliving.com/tarifs"
       />
       <Helmet>
         {/* URLs localisées (…/en/tarifs en anglais) — même pattern que HouseDetailPage/BlogPostPage */}
         <script type="application/ld+json">{JSON.stringify(buildBreadcrumbSchema([
-          { name: language === "en" ? "Home" : "Accueil", url: homeUrl(language) },
-          { name: language === "en" ? "Rates" : "Tarifs", url: `https://www.lavillacoliving.com${language === "en" ? "/en" : ""}/tarifs` },
+          { name: en ? "Home" : "Accueil", url: homeUrl(L) },
+          { name: en ? "Rates" : "Tarifs", url: pageUrl },
         ]))}</script>
+        {/* Les deux AggregateOffer, inchangées (brief § 3) : les maisons, puis L'Appart imbriquée dans un catalogue (un seul bloc
+            AggregateOffer de premier niveau par page : garde jsonLdConflicts). Aucun aggregateRating, aucun Review. */}
         <script type="application/ld+json">{JSON.stringify(buildRoomsAggregateOfferSchema({
-          name: language === "en" ? "All-inclusive furnished room near Geneva" : "Chambre meublée tout inclus près de Genève",
-          description: language === "en"
+          name: en ? "All-inclusive furnished room near Geneva" : "Chambre meublée tout inclus près de Genève",
+          description: en
             ? `All-inclusive coliving room from ${PRICE_FROM_CHF_EN} to ${PRICE_CHF_EN}/month near Geneva — utilities, fiber, cleaning, pool, sauna, gym included.`
             : `Chambre de coliving tout inclus de ${PRICE_FROM_CHF_FR} à ${PRICE_CHF_FR}/mois près de Genève — charges, fibre, ménage, piscine, sauna, salle de sport compris.`,
-          url: `https://www.lavillacoliving.com${language === "en" ? "/en" : ""}/tarifs`,
+          url: pageUrl,
         }))}</script>
-        {/* (L'Appart, E5) L'offre agrégée de L'Appart, sœur de celle des maisons, IMBRIQUÉE dans un catalogue : un seul bloc
-            AggregateOffer de premier niveau par page (garde jsonLdConflicts : l'injection ne sert que le premier de chaque type). */}
         <script type="application/ld+json">{JSON.stringify({
           "@context": "https://schema.org",
           "@type": "OfferCatalog",
-          name: `${APPART.name}, ${language === "en" ? APPART.descriptor.en : APPART.descriptor.fr}`,
-          url: `https://www.lavillacoliving.com${language === "en" ? "/en" : ""}/tarifs#${APPART_ANCHOR}`,
+          name: `${APPART.name}, ${en ? APPART.descriptor.en : APPART.descriptor.fr}`,
+          url: `${pageUrl}#${TARIFS_ANCHORS.lappart}`,
           itemListElement: [{
             "@type": "AggregateOffer",
-            name: language === "en" ? `Furnished room in a flatshare in ${APPART.commune} (${APPART.name})` : `Chambre meublée en colocation à ${APPART.commune} (${APPART.name})`,
-            description: language === "en"
-              ? `Furnished room in a ${APPART.descriptor.en}, from ${AP.from.en.chf} to ${APPART_HIGH.en.chf}/month — bills, fibre, streaming and cleaning of the shared areas included.`
-              : `Chambre meublée en ${APPART.descriptor.fr}, de ${AP.from.fr.chf} à ${APPART_HIGH.fr.chf}/mois — charges, fibre, streaming et ménage des communs compris.`,
+            name: en ? `Furnished room in a flatshare in ${APPART.commune} (${APPART.name})` : `Chambre meublée en colocation à ${APPART.commune} (${APPART.name})`,
+            description: en
+              ? `Furnished room in a ${APPART.descriptor.en}, from ${AP.from.en.chf} to ${appartHigh.en.chf}/month — bills, fibre, streaming and cleaning of the shared areas included.`
+              : `Chambre meublée en ${APPART.descriptor.fr}, de ${AP.from.fr.chf} à ${appartHigh.fr.chf}/mois — charges, fibre, streaming et ménage des communs compris.`,
             lowPrice: String(AP.from.chf),
-            highPrice: String(APPART_HIGH.chf),
+            highPrice: String(appartHigh.chf),
             priceCurrency: "CHF",
             offerCount: APPART.rooms.total,
             // (19/11/2026, V2-22) Pas d'availabilityStarts : l'ouverture n'est publiée qu'au mois (« février 2027 »).
-            url: `https://www.lavillacoliving.com${language === "en" ? "/en" : ""}/tarifs#${APPART_ANCHOR}`,
+            url: `${pageUrl}#${TARIFS_ANCHORS.lappart}`,
             seller: { "@type": "Organization", name: "La Villa Coliving", url: "https://www.lavillacoliving.com" },
           }],
         })}</script>
       </Helmet>
-      {/* Hero */}
-      <section className="py-24 lg:py-32 bg-white">
+
+      {/* En-tête : le H1 inchangé. */}
+      <section className="pt-14 pb-2 lg:pt-20 bg-white">
         <div className="container-custom text-center">
           <span className="text-xs text-[#78716C] uppercase tracking-[0.3em] mb-4 block">
-            {language === "en" ? "Pricing" : "Tarification"}
+            {en ? "Pricing" : "Tarification"}
           </span>
           <h1
-            className="text-5xl md:text-6xl lg:text-7xl font-light text-[#1C1917] mb-6"
+            className="text-5xl md:text-6xl lg:text-7xl font-light text-[#1C1917]"
             style={{ fontFamily: '"DM Serif Display", serif' }}
           >
-            {language === "en" ? (
+            {en ? (
               <>
                 Transparent <span className="text-[#D4A574]">Pricing</span>
               </>
@@ -572,875 +634,27 @@ export function RatesPageV4() {
               </>
             )}
           </h1>
-          {/* (Lot L4, D8 — 10/10/2026) Phrase-clé A.4 en chapeau du bloc tarifs — texte unique src/data/priceFacts.ts,
-              repris en puce de la fiche entité ci-dessous (la garde l'attend 2× sur cette page). Un seul nœud texte. */}
-          <p className="text-lg text-[#44403C] max-w-2xl mx-auto mb-4">
-            {PRICE_KEY_SENTENCE[language === "en" ? "en" : "fr"]}
-          </p>
-          <p className="text-xl text-[#57534E] max-w-2xl mx-auto mb-4">
-            {language === "en"
-              ? `from ${PRICE_FROM_EN_NUM} CHF/month (€${EUR_FROM_EN_NUM}/month) — All inclusive`
-              : `dès ${PRICE_FROM_CHF_FR}/mois (${EUR_FROM_FR_NUM} €/mois) — Tout inclus`}
-          </p>
-          {/* (L'Appart, E5) Le « dès » de L'Appart, sous celui des maisons, et le lien vers son bloc plus bas (#lappart). */}
-          <p className="text-base text-[#57534E] max-w-2xl mx-auto mb-4">
-            {language === "en"
-              ? `On a tighter budget? ${APPART.name}, our flatshare in ${APPART.commune}: from ${AP.from.en.chf}/month (${AP.from.en.eur}).`
-              : `Budget plus serré ? ${APPART.name}, notre colocation à ${APPART.commune} : dès ${AP.from.fr.chf}/mois (${AP.from.fr.eur}).`}{" "}
-            <a href={`#${APPART_ANCHOR}`} className="underline underline-offset-4 text-[#1C1917] hover:text-[#b8860b] transition-colors">
-              {language === "en" ? `See ${APPART.name}'s prices` : `Voir les prix de ${APPART.name}`}
-            </a>
-          </p>
-          <p className="text-lg text-[#78716C]">
-            {language === "en"
-              ? `At La Villa Coliving, rooms with a private shower room cost ${PRICE_CHF_EN}/month (€${EUR_STANDARD_EN_NUM}) all-inclusive. The ${STATS_SHARED_BATH.rooms} rooms at our La Villa house with a shower room shared between 2 rooms cost ${sharedBathTiersText("en", { perMonth: true, eur: true })}: rent, utilities, fiber, cleaning three times a week, gym, pool, streaming. No application or agency fees — deposit of 2 months' rent (excluding utilities).`
-              : `À La Villa Coliving, les chambres avec salle d'eau privée coûtent ${PRICE_CHF_FR}/mois (${EUR_STANDARD_FR_NUM} €) tout compris. Les ${STATS_SHARED_BATH.rooms} chambres de la maison La Villa à salle d'eau partagée entre 2 chambres coûtent ${sharedBathTiersText("fr", { perMonth: true, eur: true })} : loyer, charges, fibre, ménage 3x/semaine, salle de sport, piscine, streaming. Sans frais de dossier ni d'agence — caution de 2 mois de loyer (hors charges).`}
-          </p>
-          <div className="mt-8 flex flex-wrap justify-center gap-2">
-            {(language === "en"
-              ? ["€0 application fee", "€0 agency fee", "€0 check-in fee"]
-              : ["0 € de frais de dossier", "0 € d'honoraires d'agence", "0 € de frais d'état des lieux"]
-            ).map((label) => (
-              <span
-                key={label}
-                className="inline-flex items-center px-4 py-2 bg-[#1C1917] text-white text-sm md:text-base font-semibold rounded-full"
-              >
-                {label}
-              </span>
-            ))}
-          </div>
-          {/* Mention contractuelle euro (prix maître depuis le 01/09/2026) — montants via CONTRACT_EUR */}
-          <p className="mt-6 max-w-2xl mx-auto text-xs text-[#78716C]">
-            {language === "en"
-              ? `Contractual rent in euros: €${EUR_FROM_EN_NUM}–€${EUR_STANDARD_EN_NUM}/month depending on the room. CHF shown for guidance — ${CONTRACT_EUR.rateLabelEn} rate.`
-              : `Loyer contractuel en euros : de ${EUR_FROM_FR_NUM} à ${EUR_STANDARD_FR_NUM} €/mois selon la chambre. Affichage en CHF indicatif — taux d'${CONTRACT_EUR.rateLabelFr}.`}{" "}
-            <LocalizedLink
-              to="/charte-transparence"
-              className="underline underline-offset-4 hover:text-[#1C1917] transition-colors"
-            >
-              {language === "en" ? "Read our transparency charter" : "Lire notre charte de transparence"}
-            </LocalizedLink>
-          </p>
         </div>
       </section>
 
-      {/* (Lot S1) Fiche de faits canonique — le détail des paliers (trois depuis le 19/11/2026) reste dans le hero ci-dessus (page tarifs). */}
-      <section className="py-10 bg-white">
+      {/* 1. La fiche « l'essentiel » (lot 2) : son lien « Voir le calcul » mène au bloc 2, une ancre dans la page. */}
+      <section className="py-2 bg-white">
         <div className="max-w-3xl mx-auto px-6"><EntityFacts page="tarifs" /></div>
       </section>
 
-      {/* (L'Appart, Lot 4, étape E5) Échelle de prix des deux gammes, chambre par chambre (§ 3.3 du brief) : une devise par colonne. */}
-      {(() => {
-        const L = language === "en" ? "en" : "fr";
-        const scale = priceScale(L);
-        return (
-          <section className="py-10 bg-white" aria-labelledby="echelle-prix-title">
-            <div className="max-w-5xl mx-auto px-6">
-              <h2
-                id="echelle-prix-title"
-                className="text-3xl md:text-4xl font-light text-[#1C1917] mb-4"
-                style={{ fontFamily: '"DM Serif Display", serif' }}
-              >
-                {L === "en" ? "Every price, room by room" : "Tous les prix, chambre par chambre"}
-              </h2>
-              <p className="text-[#44403C] leading-relaxed mb-6">
-                {L === "en"
-                  ? `Two ranges. The coliving houses have a pool, a sauna and a gym. ${APPART.name} is a flatshare in ${APPART.commune}, without them.`
-                  : `Deux gammes. Les maisons de coliving ont une piscine, un sauna et une salle de sport. ${APPART.name} est une colocation à ${APPART.commune}, sans ces équipements.`}
-              </p>
-              <div className="overflow-x-auto rounded-2xl border border-[#E7E5E4] bg-white">
-                <table className="w-full min-w-[640px] border-separate border-spacing-0 text-sm">
-                  <thead>
-                    <tr className="bg-[#FAF9F6] text-[#1C1917]">
-                      {scale.header.map((h) => (
-                        <th key={h} scope="col" className="px-4 py-3 text-left font-semibold border-b border-[#E7E5E4]">{h}</th>
-                      ))}
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {scale.rows.map((r) => (
-                      <tr key={`${r.range}-${r.rooms}`} className="group">
-                        <th scope="row" className="px-4 py-3 text-left font-medium text-[#1C1917] border-b border-[#E7E5E4] group-last:border-b-0">{r.range}</th>
-                        <td className="px-4 py-3 text-[#1C1917] font-semibold border-b border-[#E7E5E4] group-last:border-b-0 whitespace-nowrap">{r.chf}</td>
-                        <td className="px-4 py-3 text-[#44403C] border-b border-[#E7E5E4] group-last:border-b-0 whitespace-nowrap">{r.eur}</td>
-                        <td className="px-4 py-3 text-[#44403C] border-b border-[#E7E5E4] group-last:border-b-0">{r.rooms}</td>
-                        <td className="px-4 py-3 text-[#44403C] border-b border-[#E7E5E4] group-last:border-b-0">{r.bath}</td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
-              <p className="mt-3 text-sm text-[#57534E]">{scale.note}</p>
-            </div>
-          </section>
-        );
-      })()}
+      <BudgetSection L={L} />
+      <ValueSection L={L} />
+      <IncludedSection L={L} />
+      <PricesSection L={L} />
+      <OfferSection L={L} />
+      <AppartSection L={L} />
 
-      {/* (L'Appart, Lot 4, étape E5) Bloc statique de L'Appart, ancre #lappart (lien du haut de page) — texte propre à /tarifs. */}
-      <section id={APPART_ANCHOR} className="py-10 bg-white scroll-mt-[calc(4rem+var(--lvc-banner-h,0px))]">
-        <div className="max-w-5xl mx-auto px-6"><AppartTeaser page="/tarifs" /></div>
-      </section>
+      {/* 8. Les onze questions ; le FAQPage est construit à partir du même tableau (mêmes mots, même nombre). */}
+      <FaqSection title={TARIFS_FAQ_TITLE[L]} items={tarifsPageFaq[L]} emitSchema className={SCROLL_MT} />
 
-      {/* OBJECTION PRIX — « Oui, nos prix sont plus élevés » + tableau comparatif 3 colonnes.
-          (13/11/2026) Cible du lien « Ce que comprend le prix » des cartes chambres : la marge de défilement cale la section
-          sous l'en-tête fixe (barre de 4rem + bandeau de l'offre, variable --lvc-banner-h de src/index.css). */}
-      <section className="py-20 bg-[#FAF9F6] scroll-mt-[calc(4rem+var(--lvc-banner-h,0px))]" id={PRICE_INCLUDES_ANCHOR}>
-        <div className="container-custom">
-          <div className="max-w-3xl mx-auto">
-            <h2
-              className="text-3xl md:text-4xl font-light text-[#1C1917] mb-8"
-              style={{ fontFamily: '"DM Serif Display", serif' }}
-            >
-              {language === "en"
-                ? "Yes, our prices are higher. Here's why — and what you get for it."
-                : "Oui, nos prix sont plus élevés. Voici pourquoi — et ce que tu obtiens en échange."}
-            </h2>
-            {/* Argumentaire réécrit en 4 points (demande Jérôme 29/08) : surface,
-                ménage, tout-inclus jusqu'aux fournitures, équipements premium.
-                Jamais de concurrent nommé — on parle du « marché » et de la
-                « colocation classique ». Chiffres via STATS (source unique). */}
-            <div className="space-y-8 text-[#44403C] leading-relaxed">
-              <p>
-                {language === "en"
-                  ? "A room in a standard flatshare costs less. Here is precisely what the difference buys you."
-                  : "Une chambre en colocation classique coûte moins cher. Voici précisément ce que la différence t'achète."}
-              </p>
-
-              <div>
-                <h3 className="text-lg font-semibold text-[#1C1917] mb-2">
-                  {language === "en"
-                    ? "1. Rooms up to twice as big — and twice the space to live in"
-                    : "1. Des chambres jusqu'à deux fois plus grandes — et deux fois plus d'espace à vivre"}
-                </h3>
-                <p>
-                  {language === "en" ? (
-                    <>
-                      A standard flatshare room is usually {MARKET_COMPARISON.classicRoomM2.min}-{MARKET_COMPARISON.classicRoomM2.max} m². Ours are{" "}
-                      <strong>{STATS.roomSizeMin}-{STATS.roomSizeMax} m²</strong> — up to twice that.
-                      And it does not stop at your door: counting the common areas, each housemate
-                      has <strong>{STATS.livingSpacePerResidentMin}-{STATS.livingSpacePerResidentMax} m² of living space</strong>, again about twice what a classic
-                      flatshare leaves you.
-                    </>
-                  ) : (
-                    <>
-                      Une chambre en colocation classique fait le plus souvent {MARKET_COMPARISON.classicRoomM2.min} à {MARKET_COMPARISON.classicRoomM2.max} m². Les nôtres
-                      font <strong>{STATS.roomSizeMin} à {STATS.roomSizeMax} m²</strong> — jusqu'à
-                      deux fois plus. Et ça ne s'arrête pas à ta porte : espaces communs compris,
-                      chaque colocataire dispose de{" "}
-                      <strong>{STATS.livingSpacePerResidentMin} à {STATS.livingSpacePerResidentMax} m² de surface de vie</strong>, là encore près du double de ce
-                      que laisse une coloc classique.
-                    </>
-                  )}
-                </p>
-              </div>
-
-              <div>
-                <h3 className="text-lg font-semibold text-[#1C1917] mb-2">
-                  {language === "en"
-                    ? `2. Housekeeping ${STATS.cleaningPerWeek}× a week`
-                    : `2. Le ménage ${STATS.cleaningPerWeek} fois par semaine`}
-                </h3>
-                <p>
-                  {language === "en" ? (
-                    <>
-                      <strong>{STATS.cleaningPerWeek} visits a week</strong> from a professional team
-                      across every shared space — kitchen, lounges, shared shower rooms. No cleaning
-                      rota to negotiate, no chore to split: you come home, it is clean.
-                    </>
-                  ) : (
-                    <>
-                      <strong>{STATS.cleaningPerWeek} passages par semaine</strong> d'une équipe
-                      professionnelle dans tous les espaces partagés — cuisine, salons, salles d'eau
-                      communes. Aucun planning de ménage à négocier, aucune corvée à répartir : tu
-                      rentres, c'est propre.
-                    </>
-                  )}
-                </p>
-              </div>
-
-              <div>
-                <h3 className="text-lg font-semibold text-[#1C1917] mb-2">
-                  {language === "en"
-                    ? "3. 100% of costs included, zero surprises"
-                    : "3. 100\u00a0% des frais inclus, zéro surprise"}
-                </h3>
-                <p>
-                  {language === "en" ? (
-                    <>
-                      One payment a month. It covers the rent, all utilities (water, electricity,
-                      heating), fibre up to {STATS.fiberSpeed} and the streaming subscriptions — plus
-                      everything nobody thinks to count:{" "}
-                      <strong>
-                        bedding and towels provided, cleaning products, cloths, and the basics —
-                        toilet paper, laundry detergent, salt, pepper, oil
-                      </strong>
-                      . No application fee, no agency fee, no paid extras. You know your monthly cost
-                      in advance, to the franc.
-                    </>
-                  ) : (
-                    <>
-                      Un seul paiement par mois. Il comprend le loyer, toutes les charges (eau,
-                      électricité, chauffage), la fibre jusqu'à {STATS.fiberSpeed} et les abonnements
-                      streaming — plus tout ce qu'on ne pense jamais à compter :{" "}
-                      <strong>
-                        parure de lit et serviettes fournies, produits d'entretien, chiffons, et les
-                        fournitures de base — papier toilette, lessive, sel, poivre, huile
-                      </strong>
-                      . Aucun frais de dossier, aucun honoraire d'agence, aucune option payante. Tu
-                      connais ta dépense du mois à l'avance, au franc près.
-                    </>
-                  )}
-                </p>
-              </div>
-
-              <div>
-                <h3 className="text-lg font-semibold text-[#1C1917] mb-2">
-                  {language === "en"
-                    ? "4. Premium amenities and services"
-                    : "4. Des équipements et des services premium"}
-                </h3>
-                <p>
-                  {language === "en" ? (
-                    <>
-                      <strong>Pool, sauna, gym and landscaped outdoor areas</strong> in every house.
-                      Private <strong>yoga and fitness classes every week</strong>, a{" "}
-                      <strong>pizza night every month</strong>, and events all year round. These are
-                      services no classic flatshare offers — and here, they are part of the rent.
-                    </>
-                  ) : (
-                    <>
-                      <strong>Piscine, sauna, salle de sport et extérieurs aménagés</strong> dans
-                      chaque maison. Des{" "}
-                      <strong>cours privés de yoga et de fitness chaque semaine</strong>, une{" "}
-                      <strong>soirée pizza tous les mois</strong>, et des événements toute l'année.
-                      Ce sont des services qu'aucune colocation classique ne propose — et ici, ils
-                      sont compris dans le loyer.
-                    </>
-                  )}
-                </p>
-              </div>
-
-              <p>
-                {language === "en"
-                  ? "If you are after the lowest rent in the area, that unfortunately will not be us. If you compare what every franc buys you, then come and visit a house!"
-                  : "Si tu cherches le loyer le plus bas de l'agglomération, ce ne sera malheureusement pas nous. Si tu compares ce que chaque franc t'apporte, alors viens visiter une maison !"}
-              </p>
-            </div>
-          </div>
-
-          {/* CTA climax (Lot 2b) — conservé après la suppression du comparatif
-              Genève : c'est le point de conversion au pic de conviction. */}
-          <div className="mt-12 text-center">
-            <LocalizedLink
-              to="/candidature"
-              onClick={() => trackCta("tarifs_climax")}
-              className="inline-flex items-center gap-2 px-8 py-4 bg-[#D4A574] text-white font-semibold rounded-lg hover:bg-[#E0BB8A] transition-colors duration-300"
-            >
-              {language === "en" ? "Apply — 2 min, free" : "Candidater — 2 min, gratuit"}
-              <ArrowRight className="w-5 h-5" />
-            </LocalizedLink>
-          </div>
-        </div>
-      </section>
-
-      {/* What's Included - Quick List */}
-      <section className="py-24 lg:py-32 bg-[#FAF9F6]">
-        <div className="container-custom">
-          <div className="grid lg:grid-cols-2 gap-16">
-            <div>
-              <span className="text-xs text-[#78716C] uppercase tracking-[0.3em] mb-4 block">
-                {language === "en" ? "Quick Overview" : "Aperçu Rapide"}
-              </span>
-              <h2
-                className="text-4xl md:text-5xl font-light text-[#1C1917] mb-8"
-                style={{ fontFamily: '"DM Serif Display", serif' }}
-              >
-                {language === "en"
-                  ? "Everything You Need"
-                  : "Tout ce dont tu as besoin"}
-              </h2>
-              <p className="text-lg text-[#57534E] leading-relaxed">
-                {language === "en"
-                  ? "One monthly payment covers absolutely everything. No hidden costs, no surprise bills."
-                  : "Un paiement mensuel couvre absolument tout. Pas de coûts cachés, pas de factures surprises."}
-              </p>
-            </div>
-
-            <div className="space-y-4">
-              {includedItems.map((item, index) => (
-                <div
-                  key={index}
-                  className="flex items-start gap-4 bg-white p-4 rounded-xl border border-[#E7E5E4]"
-                >
-                  <div className="w-6 h-6 bg-[#D4A574]/10 border border-[#D4A574] flex items-center justify-center flex-shrink-0 mt-0.5 rounded">
-                    <Check className="w-4 h-4 text-[#D4A574]" />
-                  </div>
-                  <span className="text-[#1C1917] font-medium">{item}</span>
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Social proof + colocation-geneve link */}
-      <section className="py-16 bg-white border-t border-[#E7E5E4]">
-        <div className="container-custom max-w-3xl text-center">
-          <p className="text-[#57534E] italic text-lg mb-2">
-            {language === "en"
-              ? `"I was paying CHF 2,200 for a tiny studio in Geneva. Here everything's included — pool, gym, and an amazing community."`
-              : `"Je payais 2\u00a0200 CHF pour un petit studio à Genève. Ici, tout est inclus — piscine, gym et une communauté incroyable."`}
-          </p>
-          <p className="text-sm text-[#78716C] mb-6">
-            — Marie L., {language === "en" ? "Consultant, cross-border worker" : "Consultante, frontalière"}
-          </p>
-          <LocalizedLink
-            to={colocGeneveHref(language)}
-            className="inline-flex items-center gap-2 text-[#D4A574] font-medium hover:underline"
-          >
-            {language === "en" ? "Learn more about shared housing near Geneva" : "En savoir plus sur la colocation près de Genève"}
-            <ArrowRight className="w-4 h-4" />
-          </LocalizedLink>
-        </div>
-      </section>
-
-      {/* Tableau comparatif « vs colocation classique » — section propre depuis
-          le 29/08 : l'aperçu « Tout ce dont tu as besoin » passe avant lui. */}
-      <section className="py-20 bg-[#FAF9F6]">
-        <div className="container-custom">
-          <div className="max-w-5xl mx-auto mt-16">
-            <h3
-              className="text-2xl md:text-3xl font-light text-[#1C1917] mb-8 text-center"
-              style={{ fontFamily: '"DM Serif Display", serif' }}
-            >
-              {language === "en"
-                ? "La Villa Coliving compared with a standard flatshare"
-                : "La Villa Coliving comparé à la colocation classique"}
-            </h3>
-            <p
-              className="md:hidden text-xs text-[#78716C] mb-2 text-right pr-1"
-              aria-hidden="true"
-            >
-              {language === "en"
-                ? "Swipe to compare →"
-                : "Fais défiler pour comparer →"}
-            </p>
-            <div className="overflow-x-auto rounded-2xl border border-[#E7E5E4] bg-white shadow-sm">
-              <table className="w-full min-w-[860px] border-separate border-spacing-0 text-sm">
-                <caption className="sr-only">
-                  {language === "en"
-                    ? `Price and services comparison: standard flatshare, La Villa Coliving houses, ${APPART.name}, Geneva studio`
-                    : `Comparaison prix et services : colocation classique, maisons de La Villa Coliving, ${APPART.name}, studio à Genève`}
-                </caption>
-                <thead>
-                  <tr className="bg-[#1C1917] text-white">
-                    <th
-                      scope="col"
-                      className="sticky left-0 z-[1] bg-[#1C1917] px-4 py-4 text-left font-medium w-[150px] min-w-[150px] md:w-auto md:min-w-[200px]"
-                    >
-                      <span className="sr-only">
-                        {language === "en" ? "Criterion" : "Critère"}
-                      </span>
-                    </th>
-                    <th scope="col" className="px-4 py-4 text-left font-medium">
-                      {language === "en"
-                        ? "Standard flatshare (local area)"
-                        : "Colocation classique (agglo)"}
-                    </th>
-                    <th
-                      scope="col"
-                      className="px-4 py-4 text-left font-bold bg-[#D4A574]"
-                    >
-                      {/* (L'Appart, E5) La colonne décrit les maisons (16-24 m², piscine) : elle le dit. */}
-                      {language === "en" ? "La Villa Coliving, houses" : "La Villa Coliving, maisons"}
-                    </th>
-                    {/* (21/11/2026, lot « élevé, pas cher ») L'Appart à côté des maisons : la marque a aussi une réponse sous 1 000 €. */}
-                    <th scope="col" className="px-4 py-4 text-left font-semibold bg-[#44403C]">
-                      {language === "en" ? `${APPART.name}, flatshare in ${APPART.commune}` : `${APPART.name}, colocation à ${APPART.commune}`}
-                    </th>
-                    <th scope="col" className="px-4 py-4 text-left font-medium">
-                      {language === "en" ? "Geneva studio" : "Studio Genève"}
-                    </th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {objectionRows.map((row) => (
-                    <tr key={row.label.fr} className="group">
-                      <th
-                        scope="row"
-                        className={`sticky left-0 z-[1] bg-white border-r border-b border-[#E7E5E4] group-last:border-b-0 px-4 py-3 text-left align-top text-[#1C1917] w-[150px] min-w-[150px] md:w-auto md:min-w-[200px] ${
-                          row.highlight ? "font-bold" : "font-medium"
-                        }`}
-                      >
-                        {pick(row.label)}
-                      </th>
-                      <td className="border-b border-[#E7E5E4] group-last:border-b-0 px-4 py-3 align-top text-[#57534E]">
-                        {pick(row.classic)}
-                      </td>
-                      <td
-                        className={`border-b border-[#E7E5E4] group-last:border-b-0 px-4 py-3 align-top bg-[#F8EFE4] text-[#1C1917] ${
-                          row.highlight ? "font-bold" : "font-semibold"
-                        }`}
-                      >
-                        {pick(row.villa)}
-                      </td>
-                      <td className="border-b border-[#E7E5E4] group-last:border-b-0 px-4 py-3 align-top text-[#1C1917] font-medium">
-                        {pick(row.appart)}
-                      </td>
-                      <td className="border-b border-[#E7E5E4] group-last:border-b-0 px-4 py-3 align-top text-[#57534E]">
-                        {pick(row.studio)}
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-            <p className="mt-3 text-center text-xs text-[#78716C]">
-              {language === "en"
-                ? `"Standard flatshare" and "Geneva studio" columns: market observations (indicative ranges). La Villa Coliving and ${APPART.name} columns: contractual facts. Price per m² in the houses: each lease rent (€${EUR_FROM_EN_NUM} to €${EUR_STANDARD_EN_NUM}) ÷ the indoor space per person of its house (${STATS.livingSpacePerResidentMin} to ${STATS.livingSpacePerResidentMax} m²), everything included. Standard flatshare: rent alone ÷ ${MARKET_CLASSIC_LIVING_M2.min} to ${MARKET_CLASSIC_LIVING_M2.max} m² per flatmate, bills on top.`
-                : `Colonnes « Colocation classique » et « Studio Genève » : observations de marché (fourchettes indicatives). Colonnes La Villa Coliving et ${APPART.name} : faits contractuels. Prix du m² des maisons : chaque loyer du bail (${EUR_FROM_FR_NUM} à ${EUR_STANDARD_FR_NUM} €) ÷ la surface intérieure par personne de sa maison (${STATS.livingSpacePerResidentMin} à ${STATS.livingSpacePerResidentMax} m²), tout compris. Colocation classique : loyer seul ÷ ${MARKET_CLASSIC_LIVING_M2.min} à ${MARKET_CLASSIC_LIVING_M2.max} m² par colocataire, charges en plus.`}
-            </p>
-            {/* (21/11/2026) L'ancienne note « La colonne du milieu décrit nos maisons… » est retirée : L'Appart a sa colonne. */}
-
-            {/* Encadré méga-résidences — chiffres publics, concurrent non nommé */}
-            <aside className="mt-10 max-w-3xl mx-auto bg-white border border-[#E7E5E4] border-l-4 border-l-[#D4A574] rounded-xl p-6 md:p-8">
-              <p className="text-xs font-medium tracking-wider uppercase text-[#D4A574] mb-2">
-                {language === "en" ? "Large residences" : "Grandes résidences"}
-              </p>
-              <h3
-                className="text-xl md:text-2xl font-medium text-[#1C1917] mb-3"
-                style={{ fontFamily: '"DM Serif Display", serif' }}
-              >
-                {language === "en"
-                  ? "And compared to the new large coliving residences?"
-                  : "Et face aux nouvelles grandes résidences de coliving ?"}
-              </h3>
-              <p className="text-[#44403C] leading-relaxed">
-                {language === "en" ? (
-                  <>
-                    Near Geneva, recent large coliving residences house up to {MARKET_COMPARISON.megaColivingMaxRooms} rooms in a
-                    single building, with around 3,000 m² of shared spaces —{" "}
-                    <strong>
-                      less than {MARKET_COMPARISON.megaColivingCommonM2PerResident} m² of common areas per resident
-                    </strong>
-                    . Here: {STATS.minResidentsPerHouse} to{" "}
-                    {STATS.maxResidentsPerHouse} flatmates per house,{" "}
-                    <strong>15 to 20 m² of indoor common areas each</strong>,
-                    plus the gardens, terraces and pools. At a comparable price,
-                    it's not the same product: there, you rent a studio in a
-                    service tower; here, you share a house.
-                  </>
-                ) : (
-                  <>
-                    Près de Genève, les grandes résidences de coliving récentes logent jusqu'à {MARKET_COMPARISON.megaColivingMaxRooms}
-                    chambres dans un même bâtiment, avec environ 3&nbsp;000 m²
-                    d'espaces partagés —{" "}
-                    <strong>
-                      soit moins de {MARKET_COMPARISON.megaColivingCommonM2PerResident} m² d'espaces communs par résident
-                    </strong>
-                    . Chez nous : {STATS.minResidentsPerHouse} à{" "}
-                    {STATS.maxResidentsPerHouse} colocataires par maison,{" "}
-                    <strong>15 à 20 m² d'espaces communs intérieurs chacun</strong>,
-                    plus les jardins, terrasses et piscines. À prix comparable, ce
-                    n'est pas le même produit : là-bas tu loues un studio dans une
-                    tour de services ; ici tu partages une maison.
-                  </>
-                )}
-              </p>
-            </aside>
-          </div>
-        </div>
-      </section>
-
-
-      {/* MOVE-IN FEES COMPARISON — Et les frais pour emménager ? */}
-      <section className="py-20 bg-[#1C1917] border-t border-[#333]">
-        <div className="container-custom">
-          <div className="text-center mb-16">
-            <span className="inline-flex items-center gap-2 px-4 py-2 bg-[#D4A574]/20 text-[#E0BB8A] text-sm font-medium rounded-full mb-4">
-              <Sparkles className="w-4 h-4" />{" "}
-              {language === "en" ? "Move-in fees" : "Frais d'entrée"}
-            </span>
-            <h2 className="text-3xl md:text-4xl font-light text-white mb-4">
-              {language === "en"
-                ? "At La Villa Coliving, zero move-in fees"
-                : "À La Villa Coliving, 0 € de frais d'emménagement"}
-            </h2>
-            <p className="text-[#b3b2b2] max-w-2xl mx-auto">
-              {language === "en"
-                ? "The cost you're often only shown at the end. Here, there isn't one."
-                : "Le coût qu'on ne te montre souvent qu'à la fin. Chez nous, il n'y en a pas."}
-            </p>
-          </div>
-
-          <div className="grid md:grid-cols-2 gap-8 max-w-5xl mx-auto">
-            {/* Market — neutral, anonymous */}
-            <div className="bg-[#1C1917] rounded-2xl p-8 border border-[#333]">
-              <div className="flex items-center gap-3 mb-6">
-                <div className="w-12 h-12 rounded-full bg-[#666]/20 flex items-center justify-center">
-                  <Home className="w-6 h-6 text-[#b3b2b2]" />
-                </div>
-                <div>
-                  <h3 className="text-xl font-medium text-white">
-                    {language === "en"
-                      ? "Most coliving or shared-housing operators"
-                      : "Ailleurs sur le marché du coliving ou de la colocation"}
-                  </h3>
-                  <p className="text-sm text-[#b3b2b2]">
-                    {language === "en"
-                      ? "Fees before you get the key"
-                      : "Des frais avant même la clé"}
-                  </p>
-                </div>
-              </div>
-
-              <div className="space-y-3 mb-6 text-sm">
-                <div className="flex justify-between text-[#b3b2b2]">
-                  <span className="flex items-center gap-2">
-                    <X className="w-3 h-3" />{" "}
-                    {language === "en" ? "Application fee" : "Frais de dossier"}
-                  </span>
-                  <span>{language === "en" ? "€200 to €700" : "de 200 à 700 €"}</span>
-                </div>
-                <div className="flex justify-between text-[#b3b2b2]">
-                  <span className="flex items-center gap-2">
-                    <X className="w-3 h-3" />{" "}
-                    {language === "en" ? "Agency fee" : "Honoraires d'agence"}
-                  </span>
-                  <span>{language === "en" ? "depends on size" : "selon la surface"}</span>
-                </div>
-                <div className="flex justify-between text-[#b3b2b2]">
-                  <span className="flex items-center gap-2">
-                    <X className="w-3 h-3" />{" "}
-                    {language === "en" ? "Booking fee" : "Frais de réservation"}
-                  </span>
-                  <span>{language === "en" ? "at signing" : "à la signature"}</span>
-                </div>
-                <div className="flex justify-between text-[#b3b2b2]">
-                  <span className="flex items-center gap-2">
-                    <X className="w-3 h-3" />{" "}
-                    {language === "en" ? "Check-in fee" : "Frais d'état des lieux"}
-                  </span>
-                  <span>{language === "en" ? "extra" : "en supplément"}</span>
-                </div>
-              </div>
-
-              <div className="border-t border-[#333] pt-4">
-                <div className="flex justify-between items-center">
-                  <span className="text-[#d5d5d5]">
-                    {language === "en" ? "Total to move in" : "Total à l'entrée"}
-                  </span>
-                  <span className="text-2xl font-medium text-[#d5d5d5]">
-                    {language === "en" ? "€200 to €700" : "de 200 à 700 €"}
-                  </span>
-                </div>
-                <p className="text-xs text-[#a8a29e] mt-2">
-                  {language === "en"
-                    ? "(on top of the security deposit)"
-                    : "(en plus du dépôt de garantie)"}
-                </p>
-              </div>
-            </div>
-
-            {/* La Villa — highlighted */}
-            <div className="bg-white rounded-2xl p-8 relative overflow-hidden border border-[#E7E5E4] shadow-lg">
-              <div className="absolute top-4 right-4 bg-[#D4A574] text-white text-xs font-bold px-3 py-1 rounded-full">
-                {language === "en" ? "€0 TO MOVE IN" : "0 € À L'ENTRÉE"}
-              </div>
-
-              <div className="flex items-center gap-3 mb-6">
-                <div className="w-12 h-12 rounded-full bg-[#FAF9F6] flex items-center justify-center">
-                  <Sparkles className="w-6 h-6 text-[#D4A574]" />
-                </div>
-                <div>
-                  <h3 className="text-xl font-medium text-[#1C1917]">
-                    {language === "en" ? "At La Villa" : "Chez La Villa"}
-                  </h3>
-                  <p className="text-base text-[#57534E]">
-                    {language === "en"
-                      ? "Direct owner, no agency"
-                      : "Propriétaire en direct, pas d'agence"}
-                  </p>
-                </div>
-              </div>
-
-              <div className="space-y-3 mb-6 text-sm">
-                <div className="flex justify-between text-[#44403C]">
-                  <span className="flex items-center gap-2">
-                    <Check className="w-4 h-4 text-[#D4A574]" />{" "}
-                    {language === "en" ? "Application fee" : "Frais de dossier"}
-                  </span>
-                  <span className="text-[#D4A574] font-bold">{language === "en" ? "€0" : "0 €"}</span>
-                </div>
-                <div className="flex justify-between text-[#44403C]">
-                  <span className="flex items-center gap-2">
-                    <Check className="w-4 h-4 text-[#D4A574]" />{" "}
-                    {language === "en" ? "Agency fee" : "Honoraires d'agence"}
-                  </span>
-                  <span className="text-[#D4A574] font-bold">{language === "en" ? "€0" : "0 €"}</span>
-                </div>
-                <div className="flex justify-between text-[#44403C]">
-                  <span className="flex items-center gap-2">
-                    <Check className="w-4 h-4 text-[#D4A574]" />{" "}
-                    {language === "en" ? "Booking fee" : "Frais de réservation"}
-                  </span>
-                  <span className="text-[#D4A574] font-bold">{language === "en" ? "€0" : "0 €"}</span>
-                </div>
-                <div className="flex justify-between text-[#44403C]">
-                  <span className="flex items-center gap-2">
-                    <Check className="w-4 h-4 text-[#D4A574]" />{" "}
-                    {language === "en" ? "Check-in fee" : "Frais d'état des lieux"}
-                  </span>
-                  <span className="text-[#D4A574] font-bold">{language === "en" ? "€0" : "0 €"}</span>
-                </div>
-              </div>
-
-              <div className="border-t border-[#E7E5E4] pt-4">
-                <span className="text-[#57534E] text-sm block mb-1">
-                  {language === "en" ? "Total to move in" : "Total à l'entrée"}
-                </span>
-                <span className="text-lg font-bold text-[#1C1917]">
-                  {language === "en"
-                    ? "Your first month's rent + a refundable deposit, which you can pay in 2 or 3 instalments depending on your application. That's it."
-                    : "Ton 1er loyer + une caution remboursable, que tu peux payer en 2 ou 3 fois selon ton dossier. C'est tout."}
-                </span>
-              </div>
-            </div>
-          </div>
-
-          {/* Note + CTA */}
-          <div className="mt-12 max-w-3xl mx-auto text-center">
-            <p className="text-[#b3b2b2] leading-relaxed">
-              {language === "en"
-                ? "Not a promo — it's our model. We rent our houses directly, with no agency, so there are no move-in fees to charge."
-                : "Pas une promo — notre modèle. On loue nos maisons en direct, sans agence : il n'y a donc aucun frais d'entrée à facturer."}
-            </p>
-            <LocalizedLink
-              to="/candidature"
-              onClick={() => trackCta("tarifs_mid")}
-              className="mt-6 inline-flex items-center gap-2 px-8 py-4 bg-[#D4A574] text-white font-semibold rounded-lg hover:bg-[#E0BB8A] transition-colors duration-300"
-            >
-              {language === "en" ? "Apply — it's free" : "Candidater — c'est gratuit"}
-              <ArrowRight className="w-5 h-5" />
-            </LocalizedLink>
-            <p className="mt-5 text-sm">
-              <LocalizedLink
-                to={language === "en" ? "/en/blog/coliving-frais-dossier-geneve-annemasse" : "/blog/coliving-frais-dossier-geneve-annemasse"}
-                className="text-[#D4A574] hover:text-[#E0BB8A] underline underline-offset-4 transition-colors"
-              >
-                {language === "en"
-                  ? "Application fees in a flat-share: what the law allows →"
-                  : "Frais de dossier en colocation : ce que dit la loi →"}
-              </LocalizedLink>
-            </p>
-            <p className="mt-2 text-sm">
-              <LocalizedLink
-                to="/annemasse-colocation"
-                className="text-[#D4A574] hover:text-[#E0BB8A] underline underline-offset-4 transition-colors"
-              >
-                {language === "en"
-                  ? "Looking on the Annemasse side? Le Lodge, our house there →"
-                  : "Tu cherches côté Annemasse ? Le Lodge, notre maison là-bas →"}
-              </LocalizedLink>
-            </p>
-          </div>
-        </div>
-      </section>
-
-
-      {/* DETAILED SERVICES SECTION */}
-      <section className="py-24 lg:py-32 bg-white">
-        <div className="container-custom">
-          <div className="text-center mb-16">
-            <span className="text-xs text-[#78716C] uppercase tracking-[0.3em] mb-4 block">
-              {language === "en" ? "Detailed Breakdown" : "Détail Complet"}
-            </span>
-            <h2
-              className="text-4xl md:text-5xl font-light text-[#1C1917] mb-4"
-              style={{ fontFamily: '"DM Serif Display", serif' }}
-            >
-              {language === "en"
-                ? "What's Really Included"
-                : "Ce qui est inclus"}
-            </h2>
-            <p className="text-lg text-[#57534E] max-w-2xl mx-auto">
-              {language === "en"
-                ? "Every detail of our all-inclusive service. No surprises, no hidden costs."
-                : "Chaque détail de notre service tout-inclus. Pas de surprises, pas de frais cachés."}
-            </p>
-          </div>
-
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {detailedServices.map((service, index) => (
-              <div
-                key={index}
-                className="bg-[#FAF9F6] rounded-2xl p-8 border border-[#E7E5E4] hover:border-[#D4A574]/30 transition-colors"
-              >
-                <div className="w-10 h-10 bg-[#F5F2ED] rounded-xl flex items-center justify-center mb-4">
-                  <Droplets className="w-5 h-5 text-[#44403C]" />
-                </div>
-                <h3 className="text-xl font-medium text-[#1C1917] mb-4">
-                  {service.category}
-                </h3>
-                <ul className="space-y-3">
-                  {service.items.map((item, i) => (
-                    <li
-                      key={i}
-                      className="flex items-start gap-3 text-sm text-[#57534E]"
-                    >
-                      <Check className="w-4 h-4 text-[#D4A574] mt-0.5 flex-shrink-0" />
-                      <span>{item}</span>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-
-      {/* Additional Info */}
-      <section className="py-24 lg:py-32 bg-white">
-        <div className="container-custom">
-          <div className="grid md:grid-cols-2 gap-px bg-[#E7E5E4]">
-            <div className="bg-[#FAF9F6] p-10">
-              <h3 className="text-xl font-medium text-[#1C1917] mb-4">
-                {language === "en" ? "Security Deposit" : "Caution"}
-              </h3>
-              <p className="text-[#57534E] leading-relaxed">
-                {language === "en"
-                  ? "We require a security deposit equivalent to two months' rent excluding charges (standard in France). It can be paid in one go, in 2 instalments (half at signing, half with your 2nd month's rent) or in 3 (a third at signing, then a third with your 2nd and 3rd month's rent); La Villa sets the number of instalments when your application is approved, based on your financial situation. It is returned within 30 days of move-out if there is no damage, otherwise within 2 months, minus any deductions for damages. A refundable deposit, yes — non-refundable move-in fees, never."
-                  : "Nous demandons une caution de deux mois de loyer hors charges (standard en France). Elle se paie en une fois, en 2 fois (la moitié à la signature, l'autre avec ton 2ᵉ loyer) ou en 3 fois (un tiers à la signature, puis un tiers avec tes 2ᵉ et 3ᵉ loyers) ; le nombre de versements est fixé par La Villa au moment de valider ton dossier, en fonction de ta situation financière. Elle est restituée sous 30 jours après ton départ si aucune dégradation n'est constatée, sinon sous 2 mois, déduction faite des éventuels dommages. Une caution remboursable, oui — des frais d'entrée non remboursables, jamais."}
-              </p>
-            </div>
-            <div className="bg-[#FAF9F6] p-10">
-              <h3 className="text-xl font-medium text-[#1C1917] mb-4">
-                {language === "en" ? "Direct owner, not an agency" : "Propriétaire, pas agence"}
-              </h3>
-              <p className="text-[#57534E] leading-relaxed">
-                {language === "en"
-                  ? "We rent our houses directly, with no middleman. That's why there are no move-in fees to charge — and why what you see is what you pay, at move-in and every month."
-                  : "Nous louons nos maisons en direct, sans intermédiaire. C'est pour ça qu'il n'y a aucun frais d'entrée à facturer — et que ce que tu vois est ce que tu paies, à l'entrée comme chaque mois."}
-              </p>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Price Cards WITH IMAGES */}
-      <section className="py-24 lg:py-32 bg-[#FAF9F6]">
-        <div className="container-custom">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl font-light text-[#1C1917] mb-4">
-              {language === "en" ? "Our Houses" : "Nos maisons"}
-            </h2>
-            <p className="text-[#57534E]">
-              {language === "en"
-                ? "Same premium experience, three unique locations"
-                : "Même expérience premium, trois lieux uniques"}
-            </p>
-          </div>
-
-          <div className="grid md:grid-cols-3 gap-8">
-            {houses.map((house, index) => (
-              <div
-                key={index}
-                className="bg-white border border-[#E7E5E4] overflow-hidden hover:shadow-xl transition-all duration-300 group"
-              >
-                {/* Image Container */}
-                <div className="relative h-64 overflow-hidden">
-                  <img
-                    src={house.image}
-                    alt={house.alt}
-                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" loading="lazy"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
-                  <div className="absolute bottom-4 left-4">
-                    <h3 className="text-2xl font-medium mb-1 text-white drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)]">
-                      {house.name}
-                    </h3>
-                    <p className="text-sm text-white drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)]">
-                      {house.location}
-                    </p>
-                  </div>
-                </div>
-
-                {/* Content */}
-                <div className="p-8">
-                  <p className="text-[#57534E] text-sm mb-6">
-                    {house.description}
-                  </p>
-
-                  <div className="mb-8">
-                    {/* La Villa : 4 chambres sur 10 à salle d'eau partagée → « dès » = palier le plus bas (HOUSES_FROM, stats.ts) */}
-                    {house.name === "La Villa" && (
-                      <span className="text-[#78716C] mr-1">
-                        {language === "en" ? "from" : "dès"}
-                      </span>
-                    )}
-                    <span className="text-4xl font-light text-[#D4A574]">
-                      {house.name === "La Villa"
-                        ? (language === "en" ? PRICE_FROM_EN_NUM : PRICE_FROM_FR_NUM)
-                        : (language === "en" ? PRICE_EN_NUM : PRICE_FR_NUM)}
-                    </span>
-                    <span className="text-[#78716C]">
-                      {" "}
-                      CHF/{language === "en" ? "mo" : "mois"}
-                    </span>
-                  </div>
-
-                  <LocalizedLink
-                    to={`/${house.name.toLowerCase().replace(/\s+/g, "")}`}
-                    className="block w-full py-4 bg-[#1C1917] text-white text-center font-bold hover:bg-[#D4A574] transition-colors"
-                  >
-                    {language === "en" ? "VIEW DETAILS" : "VOIR LES DÉTAILS"}
-                  </LocalizedLink>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      <FaqSection
-        title={language === "en" ? "Pricing — frequently asked questions" : "Questions fréquentes sur les tarifs"}
-        items={tarifsFaq[language === "en" ? "en" : "fr"]}
-        emitSchema
-      />
-
-      {/* CTA */}
-      <section className="py-24 bg-[#D4A574]">
-        <div className="container-custom text-center">
-          <h2
-            className="text-3xl md:text-4xl font-light text-white mb-4"
-            style={{ fontFamily: '"DM Serif Display", serif' }}
-          >
-            {language === "en"
-              ? "Ready to Join?"
-              : "Prêt à nous rejoindre ?"}
-          </h2>
-          <p className="text-lg text-white/80 max-w-xl mx-auto mb-8">
-            {(() => {
-              const monthFr = `${MONTHS_FR[nextMonth.monthIndex]} ${nextMonth.year}`;
-              const monthEn = `${MONTHS_EN[nextMonth.monthIndex]} ${nextMonth.year}`;
-              return language === "en"
-                ? `Save ${MONTHLY_SAVINGS_CHF} CHF/month and join ${STATS.totalResidents}+ happy residents. Limited spots for ${monthEn}.`
-                : `Économise ${MONTHLY_SAVINGS_CHF} CHF/mois et rejoins ${STATS.totalResidents}+ résidents heureux. Places limitées pour ${monthFr}.`;
-            })()}
-          </p>
-          <LocalizedLink
-            to="/candidature"
-            onClick={() => trackCta("tarifs_footer")}
-            className="inline-flex items-center gap-2 px-8 py-4 bg-white text-[#D4A574] font-bold hover:bg-[#1C1917] hover:text-white transition-colors"
-          >
-            {language === "en" ? "APPLY NOW" : "CANDIDATER"}
-            <ArrowRight className="w-5 h-5" />
-          </LocalizedLink>
-        </div>
-      </section>
+      <ApplySection L={L} />
       {/* R3 (checkpoint 21/08) : canal court sur une page d'entrée — pas sur /candidature (71 % de complétion, on ne détourne pas). */}
-      <WhatsAppButton context={language === "en" ? "Rates" : "Tarifs"} />
+      <WhatsAppButton context={en ? "Rates" : "Tarifs"} />
     </main>
   );
 }

@@ -162,7 +162,7 @@ export function CandidatureDetails({ token, language, arrivalKnown, endpoint, an
           : `${questions === 1 ? "1 question" : "2 questions"} pour préparer ton échange`}
       </h3>
       <p className="text-sm text-[#78716C] mb-6">
-        {en ? "Optional — your application is already saved." : "Facultatif — ta candidature est déjà enregistrée."}
+        {en ? "Optional — your request is already saved." : "Facultatif — ta demande est déjà enregistrée."}
       </p>
       <div className="grid gap-4">
         {!arrivalKnown && (

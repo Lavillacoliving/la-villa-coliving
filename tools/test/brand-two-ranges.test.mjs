@@ -16,20 +16,23 @@ const LANGS = ['fr', 'en'];
 const page = (s) => `<html><head><title>t</title></head><body><main><p>${s}</p></main></body></html>`;
 const flatten = (node, acc = []) => { if (node && typeof node === 'object') { if (node['@type']) acc.push(node); for (const v of Object.values(node)) { if (Array.isArray(v)) v.forEach((x) => flatten(x, acc)); else if (v && typeof v === 'object') flatten(v, acc); } } return acc; };
 
-test('fiche de la marque : 9 puces, les trois phrases canoniques une fois chacune, aucune incohérence interne', () => {
+// (24/11/2026, brief « budget réel », D17) Six phrases d'ouverture, puis le paragraphe de la marque et six puces ; la phrase des
+// maisons, la phrase « premium » et la phrase-clé A.4 ont quitté la fiche.
+test('fiche de la marque : six phrases d\'ouverture, six puces, phrases canoniques de la marque et de L\'Appart une fois, celle des maisons absente', () => {
   assert.deepEqual(m.entityFactsIssues(), []);
   for (const lang of LANGS) {
     const t = m.entityFactsText(lang);
-    assert.equal(t.bullets.length, 9);
-    const all = [t.title, t.paragraph, ...t.bullets].join(' ');
-    for (const s of [m.BRAND_CANONICAL_SENTENCE[lang], m.MAISONS_CANONICAL_SENTENCE[lang], m.APPART_CANONICAL_SENTENCE[lang]]) {
+    assert.equal(t.lead.length, 6);
+    assert.equal(t.bullets.length, 6);
+    const all = [t.title, ...t.lead, t.paragraph, ...t.bullets].join(' ');
+    for (const s of [m.BRAND_CANONICAL_SENTENCE[lang], m.APPART_CANONICAL_SENTENCE[lang]]) {
       assert.equal(all.split(s).length - 1, 1, `${lang} : « ${s.slice(0, 40)}… » une fois`);
     }
+    assert.equal(all.split(m.MAISONS_CANONICAL_SENTENCE[lang]).length - 1, 0, `${lang} : la phrase des maisons n'est plus dans la fiche (D17)`);
     assert.ok(t.paragraph.startsWith(m.BRAND_CANONICAL_SENTENCE[lang]), 'le paragraphe s\'ouvre sur la phrase de la marque');
-    assert.equal(t.bullets[0], m.MAISONS_CANONICAL_SENTENCE[lang]);
-    assert.equal(t.bullets[3], m.APPART_CANONICAL_SENTENCE[lang]);
+    assert.equal(t.bullets[0], m.APPART_CANONICAL_SENTENCE[lang]);
     // V2, par phrase : aucune phrase de la fiche ne porte un montant de L'Appart et un équipement des maisons.
-    assert.deepEqual(gammeSentenceIssues([t.paragraph, ...t.bullets].flatMap((b) => b.split(/(?<=[.!?;])\s+/)), m), []);
+    assert.deepEqual(gammeSentenceIssues([...t.lead, t.paragraph, ...t.bullets].flatMap((b) => b.split(/(?<=[.!?;])\s+/)), m), []);
   }
 });
 
@@ -37,10 +40,11 @@ test('canonicalSentenceIssues : 1× sur la fiche de la marque, +1 (marque, L\'Ap
   for (const lang of LANGS) {
     const fiche = visibleText(page(m.entityFactsStrings(lang).join(' ')));
     assert.deepEqual(canonicalSentenceIssues(fiche, lang, { brandFiche: true }, m), []);
-    assert.equal(canonicalSentenceIssues(fiche, lang, {}, m).length, 3, 'fiche de la marque hors périmètre : 3 écarts');
+    assert.equal(canonicalSentenceIssues(fiche, lang, {}, m).length, 2, 'fiche de la marque hors périmètre : 2 écarts (marque, L\'Appart)');
     assert.deepEqual(canonicalSentenceIssues('aucune phrase', lang, {}, m), []);
-    const twice = `${fiche} ${m.MAISONS_CANONICAL_SENTENCE[lang]}`;
-    assert.match(canonicalSentenceIssues(twice, lang, { brandFiche: true }, m).join(), /des maisons présente 2 fois \(attendu 1\)/);
+    // (D17, 24/11/2026) La phrase des maisons n'est attendue nulle part : sa présence est un écart, même sur la fiche de la marque.
+    const withMaisons = `${fiche} ${m.MAISONS_CANONICAL_SENTENCE[lang]}`;
+    assert.match(canonicalSentenceIssues(withMaisons, lang, { brandFiche: true }, m).join(), /des maisons présente 1 fois \(attendu 0\)/);
     const appartPage = `${m.APPART_CANONICAL_SENTENCE[lang]} … ${m.BRAND_CANONICAL_SENTENCE[lang]}`;
     assert.deepEqual(canonicalSentenceIssues(appartPage, lang, { appartFiche: true }, m), []);
   }
