@@ -1,4 +1,13 @@
 // Supabase Edge Function — send-candidature-email
+// v23 — 24/11/2026 — « Programmer une visite » (refonte des pages de vente § 4.7 ; plan « visite hors site » du 24/11, lot 1) :
+//   le bouton du site dit « Programmer une visite », l'email du candidat suit. Deux jeux de textes, choisis selon le lieu envoyé
+//   par le site (`property_interest`, table PROPERTIES) : maisons ET formulaire sans maison = « demande de visite » (objet,
+//   onglet, titre, fin de l'intro, étapes 1 à 3, bas de l'email, message d'erreur 502) ; L'Appart (clé INTERNE de la base, posée
+//   par src/lib/placeBridge.ts) garde « candidature », avec « à L'Appart », l'étape 3 et « En attendant » corrigés (Q1).
+//   Notification admin : bandeau « Nouvelle demande de visite » (L'Appart : « Nouvelle candidature — L'Appart ») et ligne
+//   « Demande » (lieu, chambre) en tête du tableau ; son OBJET « [Candidature] Prénom Nom » ne change pas (fil Gmail, « Compléments »).
+//   AUCUN autre changement : écriture puis emails, idempotence, doublons, destinataires, reply-to, liens, `form_type = candidature`,
+//   colonnes, mode test, email « Compléments », CORS, verify_jwt. Tests : tools/test/edge-candidature.test.mjs.
 // v22 — 24/11/2026 — Offre « Ta première année » mise en ligne dès le 24/11 au lieu du 26/11 (décision de Jérôme du 24/11) :
 //   seul le libellé de `premiere-annee` change dans OFFER_LABELS (« bail signé du 24/11 au 31/12/2026 »). Aucun autre changement.
 // v21 — 21/11/2026 — Offre « Ta première année avec nous » (brief Jérôme du 21/11/2026, lot 1) : `premiere-annee` ajoutée à
@@ -272,9 +281,42 @@ const OFFER_LABELS: Record<string, string> = {
   "premiere-annee": "Ta première année (jusqu'à 1 400 € remboursés, bail signé du 24/11 au 31/12/2026)",
 };
 
-/** Lecture d'une table de libellés sans jamais remonter au prototype (« constructor »…). */
-function own(map: Record<string, string>, key: string): string | null {
+/** Lecture d'une table de libellés sans jamais remonter au prototype (« constructor »…). (v23) Générique : aussi PROPERTIES. */
+function own<T>(map: Record<string, T>, key: string): T | null {
   return Object.prototype.hasOwnProperty.call(map, key) ? map[key] : null;
+}
+
+/** (v23) Un lieu de la table PROPERTIES (handler) : uuid `properties.id`, nom affiché, et `appart: true` pour L'Appart. */
+interface Place {
+  id: string;
+  name: string;
+  appart?: true;
+}
+
+/** (v23) `room_interest` lisible par Fanny : « chambre-3 » → « chambre 3 », « liste-attente » → « liste d'attente », sinon tel quel. */
+function roomLabel(raw: string | null): string | null {
+  const v = (raw ?? "").trim();
+  if (!v) return null;
+  const n = /^chambre-?(\d{1,3})$/i.exec(v)?.[1];
+  if (n) return `chambre ${Number(n)}`;
+  if (v.toLowerCase() === "liste-attente") return "liste d'attente";
+  return v;
+}
+
+/**
+ * (v23) Ce que la personne demande, pour Fanny : le bandeau et la ligne « Demande » de la notification, tirés du lieu et de la
+ * chambre que le site envoie déjà. Lieu absent ou inconnu = formulaire ouvert sans maison (lien général) : une visite.
+ * Ex. « Visite — Le Loft, chambre 3 », « Visite (maison non précisée) », « Candidature — L'Appart, liste d'attente ».
+ */
+function adminRequest(place: Place | null, room: string | null): { banner: string; line: string } {
+  const head = place?.appart
+    ? `Candidature — ${place.name}`
+    : place ? `Visite — ${place.name}` : "Visite (maison non précisée)";
+  const roomText = roomLabel(room);
+  return {
+    banner: place?.appart ? `Nouvelle candidature — ${place.name}` : "Nouvelle demande de visite",
+    line: roomText ? `${head}, ${roomText}` : head,
+  };
 }
 
 /**
@@ -370,7 +412,12 @@ function durationLabel(raw: string): string | null {
   return own(DURATION_LABELS, v) ?? v;
 }
 
-function buildAdminEmail(data: Record<string, string>, contactPref: string | null = null, offerLabel: string | null = null): string {
+function buildAdminEmail(
+  data: Record<string, string>,
+  contactPref: string | null = null,
+  offerLabel: string | null = null,
+  request: { banner: string; line: string } = adminRequest(null, null),
+): string {
   const arrival = arrivalLabel(data.arrival ?? "");
   const duration = durationLabel(data.duration ?? "");
   const stayRows: Array<[string, string]> = arrival || duration
@@ -382,6 +429,8 @@ function buildAdminEmail(data: Record<string, string>, contactPref: string | nul
   const prefLabel = contactPref ? own(CONTACT_PREFERENCE_LABELS, contactPref) : null;
   // Valeurs déjà échappées : le canal préféré est mis en gras, accolé au téléphone (v19).
   const rows: Array<[string, string]> = [
+    // (v23) En tête : le lieu et la chambre demandés — Fanny cale la visite sans ouvrir le tableau de bord.
+    ["Demande", escapeHtml(request.line)],
     ["Prénom", escapeHtml(data.firstName)],
     ["Nom", escapeHtml(data.lastName)],
     ["Email", escapeHtml(data.email)],
@@ -407,7 +456,7 @@ function buildAdminEmail(data: Record<string, string>, contactPref: string | nul
   <table cellspacing="0" cellpadding="0" border="0" align="center" width="100%" style="max-width:640px;margin:0 auto;background:#FFFFFF;border:1px solid #E7E5E4;">
     <tr>
       <td style="padding:24px 30px;background:#1C1917;color:#FFFFFF;">
-        <p style="margin:0;font-size:11px;letter-spacing:3px;text-transform:uppercase;color:#D4A574;">Nouvelle candidature</p>
+        <p style="margin:0;font-size:11px;letter-spacing:3px;text-transform:uppercase;color:#D4A574;">${escapeHtml(request.banner)}</p>
         <h1 style="margin:4px 0 0 0;font-size:20px;font-weight:500;">${escapeHtml(data.firstName)} ${escapeHtml(data.lastName)}</h1>
       </td>
     </tr>
@@ -430,18 +479,23 @@ function buildAdminEmail(data: Record<string, string>, contactPref: string | nul
 
 // Textes de l'auto-réponse candidat, FR (tutoiement — aligné sur le site,
 // décision Jérôme 28/08/2026) + EN. Le HTML est unique : seule la langue des chaînes change.
+// (v23) Deux jeux : AUTORESPONSE_TEXTS = « demande de visite » (maisons, et formulaire ouvert sans maison : c'est ce que la
+// personne a vu à l'écran) ; APPART_AUTORESPONSE_TEXTS (plus bas) = L'Appart, qui garde « candidature ». L'objet de l'email
+// (`subject`, texte brut) vit désormais ici ; les autres chaînes sont insérées telles quelles dans le HTML.
 const AUTORESPONSE_TEXTS = {
   fr: {
     htmlLang: "fr",
-    title: "Ta candidature à La Villa",
-    heading: (name: string) => `${name}, ravis d'avoir reçu ta candidature.`,
-    intro: "Tu viens peut-être de faire le premier pas vers un autre quotidien — et chez nous, on prend le temps de bien faire les choses. Toute l'équipe a hâte de découvrir ton profil.",
+    subject: "Ta demande de visite — bien reçue",
+    title: "Ta demande de visite",
+    heading: (name: string) => `${name}, ravis d'avoir reçu ta demande de visite.`,
+    intro: "Tu viens peut-être de faire le premier pas vers un autre quotidien — et chez nous, on prend le temps de bien faire les choses. Toute l'équipe a hâte de te rencontrer.",
     nextLabel: "Et maintenant ?",
-    step1Title: "Candidature bien reçue !",
-    step1Body: "On regarde qui tu es, ce que tu cherches, et si La Villa correspond à ce dont tu as besoin.",
-    step2Title: "On te recontacte sous 48h.",
+    step1Title: "Demande bien reçue !",
+    step1Body: "On regarde ce que tu cherches, pour te montrer les chambres qui te correspondent.",
+    // Espace insécable dans « 48 h », comme les étapes de /candidature (JoinPageV4).
+    step2Title: "On te recontacte sous 48\u00a0h pour caler ta visite.",
     step2Body: "Par email ou téléphone, pour faire connaissance autour d'un échange — sans pression, sans engagement.",
-    step3Title: "Si tout est aligné, on te fait visiter.",
+    step3Title: "Tu visites, sur place ou en vidéo.",
     step3Body: "Et tu rencontreras peut-être déjà certains de tes futurs colocataires.",
     meanwhileLabel: "En attendant",
     meanwhileBody: "La Villa, ce n'est pas une colocation comme les autres. C'est une maison, une vraie, avec ses pièces de vie, ses moments partagés, et des gens qui ont choisi de ne pas vivre seuls.",
@@ -449,19 +503,20 @@ const AUTORESPONSE_TEXTS = {
     questionBlock: "Une question avant qu'on se parle ?<br>Réponds simplement à cet email, on est là.",
     signoff: "À très vite,",
     team: "Jérôme &amp; l'équipe de La Villa",
-    footerNote: "Cet email t'a été envoyé suite à ta candidature.<br>Tes données restent strictement confidentielles.",
+    footerNote: "Cet email t'a été envoyé suite à ta demande de visite.<br>Tes données restent strictement confidentielles.",
   },
   en: {
     htmlLang: "en",
-    title: "Your application to La Villa",
-    heading: (name: string) => `${name}, we're delighted to have received your application.`,
-    intro: "You may have just taken the first step towards a different everyday life — and here, we take the time to do things right. The whole team is looking forward to discovering your profile.",
+    subject: "Your visit request — received",
+    title: "Your visit request",
+    heading: (name: string) => `${name}, we're delighted to have received your visit request.`,
+    intro: "You may have just taken the first step towards a different everyday life — and here, we take the time to do things right. The whole team is looking forward to meeting you.",
     nextLabel: "What happens next?",
-    step1Title: "Application received!",
-    step1Body: "We look at who you are, what you're looking for, and whether La Villa matches what you need.",
-    step2Title: "We'll get back to you within 48h.",
+    step1Title: "Request received!",
+    step1Body: "We look at what you're looking for, so we can show you the rooms that suit you.",
+    step2Title: "We'll get back to you within 48\u00a0h to set up your visit.",
     step2Body: "By email or phone, to get to know each other — no pressure, no commitment.",
-    step3Title: "If everything lines up, we'll show you around.",
+    step3Title: "You visit, on site or by video.",
     step3Body: "And you might already meet some of your future housemates.",
     meanwhileLabel: "In the meantime",
     meanwhileBody: "La Villa isn't your average flatshare. It's a house — a real one — with shared living spaces, shared moments, and people who chose not to live alone.",
@@ -469,15 +524,69 @@ const AUTORESPONSE_TEXTS = {
     questionBlock: "A question before we talk?<br>Just reply to this email, we're here.",
     signoff: "See you very soon,",
     team: "Jérôme &amp; the La Villa team",
+    footerNote: "This email was sent to you following your visit request.<br>Your data remains strictly confidential.",
+  },
+} as const;
+
+// (v23) L'Appart garde « candidature » (il ne se visite pas avant son ouverture ; le site y dit « Candidater ») : les textes
+// d'avant la v23, avec les corrections Q1 du plan du 24/11/2026 — « à L'Appart » (objet, onglet), L'Appart à l'étape 1, l'étape 3
+// et « En attendant » (c'est un appartement, pas une maison). Faits de src/data/appart.ts (descripteur, 4 chambres, ménage des
+// communs une fois par semaine, soirées des maisons) : ni prix, ni équipement des maisons, ni date (docs/claude/lappart.md).
+// Tout le reste est partagé avec AUTORESPONSE_TEXTS.
+const APPART_AUTORESPONSE_TEXTS = {
+  fr: {
+    ...AUTORESPONSE_TEXTS.fr,
+    subject: "Ta candidature à L'Appart — bien reçue",
+    title: "Ta candidature à L'Appart",
+    heading: (name: string) => `${name}, ravis d'avoir reçu ta candidature.`,
+    intro: "Tu viens peut-être de faire le premier pas vers un autre quotidien — et chez nous, on prend le temps de bien faire les choses. Toute l'équipe a hâte de découvrir ton profil.",
+    step1Title: "Candidature bien reçue !",
+    step1Body: "On regarde qui tu es, ce que tu cherches, et si L'Appart correspond à ce dont tu as besoin.",
+    step2Title: "On te recontacte sous 48h.",
+    step3Title: "Si tout est aligné, tu réserves ta chambre.",
+    step3Body: "On te tient au courant jusqu'à l'ouverture de L'Appart.",
+    meanwhileBody: "L'Appart, c'est une colocation à Annemasse, quartier de la gare : quatre chambres, les communs entretenus chaque semaine, et l'accès aux soirées des maisons.",
+    footerNote: "Cet email t'a été envoyé suite à ta candidature.<br>Tes données restent strictement confidentielles.",
+  },
+  en: {
+    ...AUTORESPONSE_TEXTS.en,
+    subject: "Your application to L'Appart — received",
+    title: "Your application to L'Appart",
+    heading: (name: string) => `${name}, we're delighted to have received your application.`,
+    intro: "You may have just taken the first step towards a different everyday life — and here, we take the time to do things right. The whole team is looking forward to discovering your profile.",
+    step1Title: "Application received!",
+    step1Body: "We look at who you are, what you're looking for, and whether L'Appart matches what you need.",
+    step2Title: "We'll get back to you within 48h.",
+    step3Title: "If everything lines up, you reserve your room.",
+    step3Body: "We'll keep you posted until L'Appart opens.",
+    meanwhileBody: "L'Appart is a flatshare in Annemasse, near the station: four rooms, shared areas cleaned every week, and access to the houses' evenings.",
     footerNote: "This email was sent to you following your application.<br>Your data remains strictly confidential.",
   },
 } as const;
 
-function buildAutoresponseEmail(firstName: string, language: "fr" | "en", contactPref: string | null = null): string {
+/** (v23) Jeu de textes de l'auto-réponse : « candidature » pour L'Appart, « demande de visite » sinon. */
+function autoresponseTexts(language: "fr" | "en", appart: boolean) {
+  return appart ? APPART_AUTORESPONSE_TEXTS[language] : AUTORESPONSE_TEXTS[language];
+}
+
+// (v23) Message affiché par le site quand rien n'a pu être enregistré (502) : « demande » pour une visite (maisons, formulaire
+// sans maison), « candidature » pour L'Appart.
+const SAVE_ERROR_TEXTS = {
+  visit: {
+    fr: "Ta demande n'a pas pu être enregistrée. Réessaie dans un instant, ou écris-nous directement.",
+    en: "Your request couldn't be saved. Please try again in a moment, or contact us directly.",
+  },
+  appart: {
+    fr: "Ta candidature n'a pas pu être enregistrée. Réessaie dans un instant, ou écris-nous directement.",
+    en: "Your application couldn't be saved. Please try again in a moment, or contact us directly.",
+  },
+} as const;
+
+function buildAutoresponseEmail(firstName: string, language: "fr" | "en", contactPref: string | null = null, appart = false): string {
   const safeFirstName = escapeHtml(firstName);
-  const T = AUTORESPONSE_TEXTS[language];
-  // (v19) Canal choisi par le candidat → l'étape 2 dit comment Fanny le contacte (sous le titre
-  // « On te recontacte sous 48h. », inchangé). Sans canal : texte historique.
+  const T = autoresponseTexts(language, appart);
+  // (v19) Canal choisi par le candidat → le texte de l'étape 2 dit comment Fanny le contacte, sous
+  // le titre de l'étape (v23 : celui du jeu de textes). Sans canal : texte historique.
   const phrase = contactPref ? own(CONTACT_PREFERENCE_PHRASES[language], contactPref) : null;
   const step2Body = phrase
     ? (language === "en"
@@ -929,18 +1038,26 @@ Deno.serve(async (req: Request) => {
   // properties.id — figés, relevés en production le 24/08/2026. Une table de
   // correspondance côté serveur garantit que la valeur écrite satisfait TOUJOURS la
   // clé étrangère : un slug inconnu donne null, jamais un uuid inventé.
-  const PROPERTY_IDS: Record<string, string> = {
-    lavilla: "d39d074a-ad6d-471c-b7c7-0e576521730e",
-    leloft: "177ebcb2-6852-461c-8150-d416aa62ecf1",
-    lelodge: "45175bde-8b94-446a-9dd4-e6dee4b5a509",
-    montblanc: "57ecaa58-81e3-4c8c-8681-d5ac50b0d437",
+  // (v23) Chaque lieu porte aussi son nom (ligne « Demande » de la notification) ; `appart: true` = L'Appart, que le site envoie
+  // sous sa clé INTERNE de la base (src/lib/placeBridge.ts) et qui garde l'email « candidature ». Les clés ne sont écrites qu'ici
+  // (garde « aucune clé interne », scripts/lib/internal-keys.mjs) ; PROPERTY_IDS en est dérivée, valeurs inchangées.
+  const PROPERTIES: Record<string, Place> = {
+    lavilla: { id: "d39d074a-ad6d-471c-b7c7-0e576521730e", name: "La Villa" },
+    leloft: { id: "177ebcb2-6852-461c-8150-d416aa62ecf1", name: "Le Loft" },
+    lelodge: { id: "45175bde-8b94-446a-9dd4-e6dee4b5a509", name: "Le Lodge" },
+    montblanc: { id: "57ecaa58-81e3-4c8c-8681-d5ac50b0d437", name: "L'Appart", appart: true },
   };
+  const PROPERTY_IDS: Record<string, string> = Object.fromEntries(Object.entries(PROPERTIES).map(([slug, p]) => [slug, p.id]));
   const INTEREST_KEYS = ["property_interest", "room_interest"] as const;
   const propertySlug = String(data.property_interest ?? "").trim().toLowerCase();
   const interest: Record<string, string | null> = {
     property_interest: PROPERTY_IDS[propertySlug] ?? null,
     room_interest: String(data.room_interest ?? "").trim().slice(0, 256) || null,
   };
+  // (v23) Lieu demandé, lu sans remonter au prototype : il choisit les textes des emails (« demande de visite » pour une maison
+  // ou un formulaire ouvert sans maison, « candidature » pour L'Appart) et la ligne « Demande » de la notification.
+  const place = own(PROPERTIES, propertySlug);
+  const isAppart = place?.appart === true;
   const hasInterest = Object.values(interest).some((v) => v !== null);
   const interestFields: Record<string, string | null> = hasInterest ? interest : {};
   const withoutInterest = (body: Record<string, unknown>): Record<string, unknown> =>
@@ -972,9 +1089,12 @@ Deno.serve(async (req: Request) => {
     to: [ADMIN_EMAIL, ...extraRecipients.to],
     ...(extraRecipients.cc.length > 0 ? { cc: extraRecipients.cc } : {}),
     reply_to: data.email,
+    // (v23) Objet INCHANGÉ, visite comme candidature : « [Candidature] » range l'email « Compléments » dans le même fil
+    // (et un filtre Gmail s'en sert peut-être).
     subject: `${isTest ? "[TEST] " : ""}[Candidature] ${data.firstName} ${data.lastName}`,
     // (v20) La ligne « Offre : … » en tête de l'email quand une offre est présente.
-    html: buildAdminEmail(data, contactPref, offerLabel),
+    // (v23) Bandeau et ligne « Demande » : le lieu et la chambre demandés.
+    html: buildAdminEmail(data, contactPref, offerLabel, adminRequest(place, interest.room_interest)),
   };
 
   // 2. Auto-réponse au candidat (dans sa langue)
@@ -982,11 +1102,10 @@ Deno.serve(async (req: Request) => {
     from: FROM_AUTORESPONSE,
     to: [data.email],
     reply_to: ADMIN_EMAIL,
-    subject: language === "en"
-      ? "Your application to La Villa — received"
-      // Tutoiement (v15) — aligné sur AUTORESPONSE_TEXTS.fr, décision Jérôme 28/08.
-      : "Ta candidature à La Villa — bien reçue",
-    html: buildAutoresponseEmail(data.firstName, language, contactPref),
+    // Tutoiement (v15), décision Jérôme 28/08. (v23) Objet du jeu de textes : « Ta demande de visite — bien reçue »
+    // (maisons, formulaire sans maison) ou « Ta candidature à L'Appart — bien reçue ».
+    subject: autoresponseTexts(language, isAppart).subject,
+    html: buildAutoresponseEmail(data.firstName, language, contactPref, isAppart),
   };
 
   // (v15) Les emails partent EN DERNIER, après les écritures — voir plus bas.
@@ -1089,12 +1208,10 @@ Deno.serve(async (req: Request) => {
 
   // Échec total d'écriture alors que la base était joignable : rien n'est sauvé,
   // le candidat doit réessayer (retry sûr grâce à la clé). Message localisé,
-  // sans détail technique.
+  // sans détail technique. (v23) « demande » pour une visite, « candidature » pour L'Appart.
   if (loggingAvailable && !submissionSaved) {
     return new Response(JSON.stringify({
-      error: language === "en"
-        ? "Your application couldn't be saved. Please try again in a moment, or contact us directly."
-        : "Ta candidature n'a pas pu être enregistrée. Réessaie dans un instant, ou écris-nous directement.",
+      error: SAVE_ERROR_TEXTS[isAppart ? "appart" : "visit"][language],
     }), {
       status: 502,
       headers: { ...cors, "Content-Type": "application/json" },

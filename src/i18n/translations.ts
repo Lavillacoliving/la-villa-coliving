@@ -5,6 +5,8 @@ import { STATS_DISPLAY } from "@/data/stats";
 // (Lot 2 — B4, 16/10/2026) Les 14 sections mortes (nav, hero, trustBadges, whyChooseUs, testimonials, about, features, houses,
 // howToJoin, cta, footer, ratesPage, faqPage, joinPage) sont supprimées : les pages V7/V4 portent leurs textes. Restent
 // colivingPage (/le-coliving), servicesPage (/services) et houseDetail (pages maisons).
+// (24/11/2026, lot 3 du brief « budget réel ») servicesPage part à son tour : ses dix cartes sont dans src/pages/ServicesPageV4.tsx
+// (son `hero` n'était plus lu). Restent colivingPage et houseDetail.
 
 export const translations = {
   en: {
@@ -78,65 +80,8 @@ export const translations = {
       },
     },
 
-    // Services Page - Enhanced with visual descriptions
-    servicesPage: {
-      hero: {
-        title: "All-Inclusive Living",
-        subtitle: "Everything you need. Nothing you don't.",
-        description:
-          "At La Villa, we've thought of every detail so you can focus on what matters—living fully.",
-      },
-      services: {
-        allInclusive: {
-          title: "Truly All-Inclusive",
-          description:
-            "Rent, utilities, maintenance, and replacements—all covered. One payment. Zero surprises.",
-        },
-        housekeeping: {
-          title: "Effortless Upkeep",
-          description:
-            "Professional housekeeping of all common areas three times a week, including one deep clean. Your home stays pristine, effortlessly.",
-        },
-        internet: {
-          title: "High-Speed Fiber",
-          description:
-            "Professional-grade fiber optic internet throughout the house. Work, stream, connect—without limits.",
-        },
-        pool: {
-          title: "Pool & Garden",
-          description:
-            "Heated swimming pool, BBQ area, garden furniture, and outdoor spaces designed for relaxation and gatherings.",
-        },
-        wellness: {
-          title: "Wellness Included",
-          description: "Fully equipped gym (24/7 access) and sauna, because balance matters.",
-        },
-        entertainment: {
-          title: "Entertainment Hub",
-          description:
-            "Cinema room with streaming subscriptions, gaming consoles, and spaces designed for connection.",
-        },
-        transport: {
-          title: "Private Yoga & Fitness Classes",
-          description: "Weekly private yoga and fitness classes included in your rent. Stay active without leaving home.",
-        },
-        supplies: {
-          title: "Monthly Essentials",
-          description:
-            "Basic supplies delivered monthly—cleaning products, paper goods, and household essentials.",
-        },
-        community: {
-          title: "Community Events",
-          description:
-            "Monthly pizza parties and seasonal events. Real connections, zero obligations.",
-        },
-        support: {
-          title: "Always Here for You",
-          description:
-            "Direct WhatsApp support for quick responses. We're just a message away.",
-        },
-      },
-    },
+    // (24/11/2026, lot 3 du brief « budget réel ») servicesPage retiré : les cartes de /services vivent dans
+    // src/pages/ServicesPageV4.tsx (elles lisent src/data/inclus.ts, qui n'a pas à entrer dans ce morceau d'entrée).
 
     // House Detail Pages - Enhanced
     houseDetail: {
@@ -235,67 +180,7 @@ export const translations = {
       },
     },
 
-    // Services Page - Enhanced
-    servicesPage: {
-      hero: {
-        title: "Vie Tout Inclusive",
-        subtitle: "Tout ce dont tu as besoin. Rien de superflu.",
-        description:
-          "Chez La Villa, nous avons pensé à chaque détail pour que tu puisses te concentrer sur l'essentiel — vivre pleinement.",
-      },
-      services: {
-        allInclusive: {
-          title: "Vraiment Tout Inclus",
-          description:
-            "Loyer, charges, entretien et remplacements — tout est couvert. Un paiement. Zéro surprise.",
-        },
-        housekeeping: {
-          title: "Entretien Sans Effort",
-          description:
-            "Ménage professionnel des communs 3 fois par semaine, dont un nettoyage approfondi hebdomadaire. Ta maison reste impeccable, sans effort.",
-        },
-        internet: {
-          title: "Fibre Haut Débit",
-          description:
-            "Internet fibre optique professionnel dans toute la maison. Travaille, streame, connecte-toi — sans limites.",
-        },
-        pool: {
-          title: "Piscine & Jardin",
-          description:
-            "Piscine chauffée, espace BBQ, mobilier de jardin et espaces extérieurs conçus pour la détente et les rassemblements.",
-        },
-        wellness: {
-          title: "Bien-être Inclus",
-          description:
-            "Salle de sport équipée (accès 24h/24) et sauna, parce que l'équilibre compte.",
-        },
-        entertainment: {
-          title: "Espace Divertissement",
-          description:
-            "Salle cinéma avec abonnements streaming, consoles de jeu et espaces conçus pour la connexion.",
-        },
-        transport: {
-          title: "Cours de Yoga & Fitness Privés",
-          description:
-            "Cours de yoga et de fitness privés chaque semaine, inclus dans ton loyer. Reste en forme sans quitter la maison.",
-        },
-        supplies: {
-          title: "Essentiels Mensuels",
-          description:
-            "Fournitures de base livrées mensuellement — produits d'entretien, papeterie et essentiels domestiques.",
-        },
-        community: {
-          title: "Événements Communautaires",
-          description:
-            "Pizza Party mensuelle et événements saisonniers. De vraies connexions, zéro obligation.",
-        },
-        support: {
-          title: "Toujours Là pour Toi",
-          description:
-            "Support WhatsApp direct pour des réponses rapides. Nous sommes à un message.",
-        },
-      },
-    },
+    // (24/11/2026) servicesPage retiré, comme en anglais : cartes de /services dans src/pages/ServicesPageV4.tsx.
 
     // House Detail Pages - Enhanced
     houseDetail: {

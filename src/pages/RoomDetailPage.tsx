@@ -12,6 +12,7 @@ import { roomGallerySections, type GallerySectionKey, type RoomPhoto } from "@/d
 import { isRoomPageOpen, parseRoomPagePath, roomPagePath } from "@/data/roomPages";
 import { isAppartKey, isMaisonKey } from "@/data/places";
 import { thousands } from "@/data/stats";
+import { capitalFirst, inclusPhrases } from "@/data/inclus";
 import { lazyWithRetry } from "@/lib/lazyWithRetry";
 import { responsiveImage } from "@/lib/responsiveImage";
 import { LAVILLA_PHONE } from "@/lib/structuredData";
@@ -200,9 +201,12 @@ export function RoomDetailPage() {
 
   const amenities = facts.amenities[L].split(" · ");
   const amenitiesLine = amenities.map((a, i) => (i === 0 ? a.charAt(0).toUpperCase() + a.slice(1) : a)).join(", ");
+  // (24/11/2026, lot 3 du brief « budget réel ») Fibre Orange Pro (src/data/inclus.ts) et parking sur place (au Lodge, sans place
+  // attribuée), comme le bloc 4 de /tarifs.
+  const fibre = capitalFirst(inclusPhrases(L).fibreSpeed);
   const included = en
-    ? ["Bills: water, electricity, heating", `Fibre internet up to ${ENTITY_FACTS.fiberSpeed}`, `Common-area cleaning ${ENTITY_FACTS.cleaningPerWeek} times a week`, amenitiesLine, "Streaming, yoga and community events", "Bed linen and towels provided"]
-    : ["Charges : eau, électricité, chauffage", `Internet fibre jusqu'à ${ENTITY_FACTS.fiberSpeed}`, `Ménage des espaces communs ${ENTITY_FACTS.cleaningPerWeek} fois par semaine`, amenitiesLine, "Streaming, yoga et événements", "Linge de lit et serviettes fournis"];
+    ? ["Bills: water, electricity, heating", fibre, house === "lelodge" ? "On-site parking, no allocated space" : "On-site parking", `Common-area cleaning ${ENTITY_FACTS.cleaningPerWeek} times a week`, amenitiesLine, "Streaming, yoga and community events", "Bed linen and towels provided"]
+    : ["Charges : eau, électricité, chauffage", fibre, house === "lelodge" ? "Parking sur place, sans place attribuée" : "Parking sur place", `Ménage des espaces communs ${ENTITY_FACTS.cleaningPerWeek} fois par semaine`, amenitiesLine, "Streaming, yoga et événements", "Linge de lit et serviettes fournis"];
   const reassurance = en
     ? ["No application or agency fee", `Deposit: ${ENTITY_FACTS.depositMonths} months' rent excluding charges, payable in 1, 2 or 3 instalments depending on your application`, `Reply within ${ENTITY_FACTS.responseHours} hours`, "Video tour available"]
     : ["0 € de frais de dossier et d'agence", `Caution : ${ENTITY_FACTS.depositMonths} mois de loyer hors charges, payable en 1, 2 ou 3 fois selon ton dossier`, `Réponse sous ${ENTITY_FACTS.responseHours} h`, "Visite en visio possible"];

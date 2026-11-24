@@ -66,7 +66,7 @@ Ce qui ne baisse pas : ton salaire reste imposé à la source à Genève, l'assu
 
 <!-- entity-facts -->
 
-Nos trois maisons répondent chacune à un quartier de ce guide : Le Lodge à Romagny pour le train (gare à 8 minutes à pied), Le Loft à Ambilly pour le tram et la frontière à pied, La Villa à Ville-la-Grand pour le calme et le jardin. Les [chambres libres](/chambres-disponibles) sont visibles en direct, la [candidature prend deux minutes](/candidature), et si tu veux d'abord comparer les quartiers selon ton mode de vie, lis notre [guide des quartiers d'Annemasse par profil](/blog/quartiers-annemasse-ou-vivre-selon-profil).
+Nos trois maisons répondent chacune à un quartier de ce guide : Le Lodge à Romagny pour le train (gare à 8 minutes à pied), Le Loft à Ambilly pour le tram et la frontière à pied, La Villa à Ville-la-Grand pour le calme et le jardin. Les [chambres libres](/chambres-disponibles) sont visibles en direct, la [demande de visite prend deux minutes](/candidature), et si tu veux d'abord comparer les quartiers selon ton mode de vie, lis notre [guide des quartiers d'Annemasse par profil](/blog/quartiers-annemasse-ou-vivre-selon-profil).
 
 ## Quand ce n'est pas le bon choix
 

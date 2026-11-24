@@ -21,6 +21,7 @@ import { communeSentences } from "@/data/answerSlots";
 import { OuChercher } from "@/components/OuChercher";
 import { HOUSES, placeCard } from "@/data/houses";
 import { APPART } from "@/data/appart";
+import { capitalFirst, inclusPhrases } from "@/data/inclus";
 import type { PlaceKey } from "@/data/places";
 
 // (Lot L1 « ingénierie des créneaux », 10/2026) Page scopée Lodge : la valeur de LA maison (D1 : « pages maisons :
@@ -49,6 +50,8 @@ import { useHouseRooms, splitRooms, type PlaceRoom } from "@/lib/availability";
  */
 export function ChambreLouerAnnemassePage() {
   const { language } = useLanguage();
+  // (24/11/2026, lot 3 du brief « budget réel ») Fibre Orange Pro, parking, cours : phrases du bloc 4 de /tarifs (src/data/inclus.ts).
+  const IP = inclusPhrases(language === "en" ? "en" : "fr");
   // (Lot 6 SEO funnel, addendum 04/09) Page re-scopée : l'inventaire du Lodge uniquement (Annemasse),
   // les deux autres maisons vivent sur /chambre-a-louer-geneve. Même store que les pages maisons.
   const lodgeRooms = useHouseRooms("lelodge");
@@ -193,12 +196,13 @@ export function ChambreLouerAnnemassePage() {
               </p>
               <p className="text-sm text-white/80 leading-relaxed mb-6">
                 {language === "en"
-                  ? "One price for the Lodge's 12 rooms, each with its own shower room. The figure is the total monthly cost: rent, bills, fibre, cleaning of the common areas, shared spaces and events. Nothing is added at the end of the month."
-                  : "Un seul prix pour les 12 chambres du Lodge, chacune avec sa salle d'eau. Le montant est le coût mensuel total : loyer, charges, fibre, ménage des communs, espaces communs et événements. Rien ne s'ajoute en fin de mois."}
+                  ? "One price for the Lodge's 12 rooms, each with its own shower room. The figure is the total monthly cost: rent, bills, fibre, parking with no allocated space, cleaning of the common areas, shared spaces and events. Nothing is added at the end of the month."
+                  : "Un seul prix pour les 12 chambres du Lodge, chacune avec sa salle d'eau. Le montant est le coût mensuel total : loyer, charges, fibre, parking sans place attribuée, ménage des communs, espaces communs et événements. Rien ne s'ajoute en fin de mois."}
               </p>
               <ul className="space-y-2 text-sm text-white/80">
                 <li className="flex items-start gap-2"><Check className="w-4 h-4 text-[#D4A574] mt-0.5 flex-shrink-0" /> {language === "en" ? "Designer furniture, private shower room" : "Mobilier design, salle d'eau privative"}</li>
-                <li className="flex items-start gap-2"><Check className="w-4 h-4 text-[#D4A574] mt-0.5 flex-shrink-0" /> {language === "en" ? "8 Gb/s fibre" : "Fibre 8 Gb/s"}</li>
+                <li className="flex items-start gap-2"><Check className="w-4 h-4 text-[#D4A574] mt-0.5 flex-shrink-0" /> {capitalFirst(IP.fibreSpeed)}</li>
+                <li className="flex items-start gap-2"><Check className="w-4 h-4 text-[#D4A574] mt-0.5 flex-shrink-0" /> {language === "en" ? "On-site parking, no allocated space" : "Parking sur place, sans place attribuée"}</li>
                 <li className="flex items-start gap-2"><Check className="w-4 h-4 text-[#D4A574] mt-0.5 flex-shrink-0" /> {language === "en" ? "Bills included" : "Charges comprises"}</li>
                 <li className="flex items-start gap-2"><Check className="w-4 h-4 text-[#D4A574] mt-0.5 flex-shrink-0" /> {language === "en" ? "Housekeeping 3×/week" : "Ménage 3×/semaine"}</li>
                 <li className="flex items-start gap-2"><Check className="w-4 h-4 text-[#D4A574] mt-0.5 flex-shrink-0" /> {language === "en" ? "Sauna, gym, pool and garden" : "Sauna, salle de sport, piscine et jardin"}</li>
@@ -248,9 +252,10 @@ export function ChambreLouerAnnemassePage() {
                   "Move in within 72 h of your first contact if a room is available (no paperwork friction)",
                   `Léman Express direct: Geneva Eaux-Vives in ${TRANSIT.trainEauxVivesMin} min by train, ${LODGE.eauxVivesDoorToDoorMin} min door to door`,
                   "Sauna, gym, pool and garden at the Lodge",
-                  "fiber internet up to 8 Gb/s",
+                  IP.lines.fibreSpeed, // (24/11/2026, lot 3) fibre Orange Pro, parking du Lodge, cours un de chaque par mois
+                  "On-site parking, no allocated space",
                   "Cleaning three times a week of common areas",
-                  "Weekly yoga and fitness classes included",
+                  `${capitalFirst(IP.classes)}, ${IP.openToAll}`,
                   "Monthly community events",
                   "No agency fees, no application fees",
                   "Flexible 12-month lease, 1-month notice",
@@ -261,9 +266,10 @@ export function ChambreLouerAnnemassePage() {
                   "Emménagement en 72 h dès le premier contact si une chambre est disponible (zéro friction administrative)",
                   `Léman Express direct : Genève-Eaux-Vives en ${TRANSIT.trainEauxVivesMin} min de train, ${LODGE.eauxVivesDoorToDoorMin} min porte-à-porte`,
                   "Sauna, salle de sport, piscine et jardin au Lodge",
-                  "Internet fibre jusqu'à 8 Gb/s",
+                  IP.lines.fibreSpeed,
+                  "Parking sur place, sans place attribuée",
                   "Ménage 3 fois par semaine des espaces communs",
-                  "Cours hebdomadaires yoga et fitness inclus",
+                  `${capitalFirst(IP.classes)}, ${IP.openToAll}`,
                   "Événements communautaires mensuels",
                   "Aucun frais d'agence, aucun frais de dossier",
                   "Bail flexible 12 mois, préavis 1 mois",

@@ -291,7 +291,7 @@ export function ColivingPageV4() {
               <div className="relative aspect-[4/3] bg-[#F5F2ED]">
                 <img
                   src="/images/la villa yoga.webp"
-                  alt={language === "en" ? "Yoga class at La Villa Coliving — weekly wellness included in colocation near Geneva" : "Cours de yoga à La Villa Coliving — bien-être hebdomadaire inclus en colocation près de Genève"}
+                  alt={language === "en" ? "Yoga class at La Villa Coliving — one class a month in each house, included in the rent" : "Cours de yoga à La Villa Coliving — un cours par mois dans chaque maison, compris dans le loyer"}
                   className="w-full h-full object-cover" loading="lazy"
                 />
               </div>

@@ -23,9 +23,49 @@ import { SEO } from "@/components/SEO";
 import { FaqSection } from "@/components/FaqSection";
 import { servicesFaq } from "@/data/faq/servicesFaq";
 import { APPART } from "@/data/appart";
+import { STREAMING_SERVICES, capitalFirst, inclusPhrases, type InclusLang } from "@/data/inclus";
+
+type ServiceKey = "allInclusive" | "housekeeping" | "internet" | "pool" | "wellness" | "entertainment" | "transport" | "supplies" | "community" | "support";
+
+/**
+ * Les dix cartes de /services (titre, texte), en français et en anglais. (24/11/2026, lot 3 du brief « budget réel ») Sorties de
+ * src/i18n/translations.ts, qui est chargé par toutes les pages : les cartes lisent désormais ce que comprend le prix des maisons
+ * dans src/data/inclus.ts (cours un de chaque par mois, panier de base, six services de streaming, fibre Orange Pro, ménage par une
+ * entreprise trois fois par semaine, soirée commune, parking), sans que ce module entre dans le morceau d'entrée. Les autres
+ * textes sont repris tels quels ; « nettoyage approfondi hebdomadaire » est retiré (aucune source).
+ */
+function serviceCards(lang: InclusLang): Record<ServiceKey, { title: string; description: string }> {
+  const P = inclusPhrases(lang);
+  if (lang === "en") {
+    return {
+      allInclusive: { title: "Truly All-Inclusive", description: "Rent, utilities, on-site parking, maintenance and replacements—all covered. One payment. Zero surprises." },
+      housekeeping: { title: "Effortless Upkeep", description: `${P.lines.cleaning}. Your home stays pristine, effortlessly.` },
+      internet: { title: capitalFirst(P.fibre), description: `${P.lines.fibreSpeed}. Work, stream, connect—without limits.` },
+      pool: { title: "Pool & Garden", description: "Heated swimming pool, BBQ area, garden furniture, and outdoor spaces designed for relaxation and gatherings." },
+      wellness: { title: "Wellness Included", description: "Fully equipped gym (24/7 access) and sauna, because balance matters." },
+      entertainment: { title: "Entertainment Hub", description: `Home cinema with ${P.streamingOnScreen}, gaming consoles, and spaces designed for connection.` },
+      transport: { title: "Yoga & fitness coaching", description: `${capitalFirst(P.classesOpenToAll)}, included in your rent. Stay active without leaving home.` },
+      supplies: { title: "Monthly essentials", description: `${P.lines.basket}.` },
+      community: { title: "Community Events", description: `${P.lines.getTogether} and seasonal events. Real connections, zero obligations.` },
+      support: { title: "Always Here for You", description: "Direct WhatsApp support for quick responses. We're just a message away." },
+    };
+  }
+  return {
+    allInclusive: { title: "Vraiment Tout Inclus", description: "Loyer, charges, parking sur place, entretien et remplacements — tout est couvert. Un paiement. Zéro surprise." },
+    housekeeping: { title: "Entretien Sans Effort", description: `${P.lines.cleaning}. Ta maison reste impeccable, sans effort.` },
+    internet: { title: capitalFirst(P.fibre), description: `${P.lines.fibreSpeed}. Travaille, streame, connecte-toi — sans limites.` },
+    pool: { title: "Piscine & Jardin", description: "Piscine chauffée, espace BBQ, mobilier de jardin et espaces extérieurs conçus pour la détente et les rassemblements." },
+    wellness: { title: "Bien-être Inclus", description: "Salle de sport équipée (accès 24h/24) et sauna, parce que l'équilibre compte." },
+    entertainment: { title: "Espace Divertissement", description: `Home cinéma avec ${P.streamingOnScreen}, consoles de jeu et espaces conçus pour la connexion.` },
+    transport: { title: "Cours de yoga et coaching sportif", description: `${capitalFirst(P.classesOpenToAll)}, compris dans ton loyer. Reste en forme sans quitter la maison.` },
+    supplies: { title: "Panier de base mensuel", description: `${P.lines.basket}.` },
+    community: { title: "Événements Communautaires", description: `${P.lines.getTogether} et des événements saisonniers. De vraies connexions, zéro obligation.` },
+    support: { title: "Toujours Là pour Toi", description: "Support WhatsApp direct pour des réponses rapides. Nous sommes à un message." },
+  };
+}
 
 export function ServicesPageV4() {
-  const { t, language } = useLanguage();
+  const { language } = useLanguage();
 
   const serviceCategories = [
     {
@@ -68,13 +108,14 @@ export function ServicesPageV4() {
           icon: Wifi,
           image:
             "https://images.unsplash.com/photo-1451187580459-43490279c0fa?w=600&q=80",
-          highlight: "Fiber Pro",
+          highlight: STATS.fiberOperator, // (24/11/2026, lot 3) « Orange Pro » (était « Fiber Pro »)
         },
         {
           key: "entertainment",
           icon: Tv,
           image: "/images/le loft home_cinema.webp",
-          highlight: "Netflix & more",
+          // (24/11/2026, lot 3) Nombre = longueur de STREAMING_SERVICES (était « Netflix & more »).
+          highlight: language === "en" ? `${STREAMING_SERVICES.length} streaming services` : `${STREAMING_SERVICES.length} services de streaming`,
         },
         {
           key: "support",
@@ -113,18 +154,19 @@ export function ServicesPageV4() {
           key: "community",
           icon: UtensilsCrossed,
           image: "/images/la villa event.webp",
-          highlight: language === "en" ? "Yoga, Pizza Party & more" : "Yoga, Pizza Party & plus",
+          highlight: language === "en" ? "Yoga, get-togethers & more" : "Yoga, soirées & plus", // (24/11/2026, lot 3) soirée commune
         },
       ],
     },
   ];
 
-  const serviceData = t.servicesPage.services;
+  const serviceData = serviceCards(language === "en" ? "en" : "fr");
 
   const stats = [
     {
-      value: `${STATS.includedItems}`,
-      label: language === "en" ? "Services included" : "Services inclus",
+      // (24/11/2026, lot 3 du brief « budget réel », décision L3-g) « 24 · Services inclus » : le compte disparaît.
+      value: language === "en" ? "All-inclusive" : "Tout compris",
+      label: language === "en" ? "one single rent" : "un seul loyer",
       icon: Star,
     },
     {
@@ -267,10 +309,11 @@ export function ServicesPageV4() {
                 icon: Clock,
                 title:
                   language === "en" ? "Time given back" : "Du temps retrouvé",
+                // (24/11/2026, lot 3, L3-e) « 10+ heures par semaine » retiré : aucune source, et jamais un nombre d'heures.
                 desc:
                   language === "en"
-                    ? "No chores, no bills to manage, no maintenance headaches. Reclaim 10+ hours per week."
-                    : "Pas de corvées, pas de factures à gérer, pas de tracas de maintenance. Récupère 10+ heures par semaine.",
+                    ? "No chores, no bills to manage, no maintenance headaches."
+                    : "Pas de corvées, pas de factures à gérer, pas de tracas de maintenance.",
               },
               {
                 icon: Users,
@@ -448,14 +491,7 @@ export function ServicesPageV4() {
                   className="w-full h-full object-cover" loading="lazy"
                 />
               </div>
-              <div className="absolute -bottom-6 -right-6 bg-white p-6 rounded-2xl border border-[#E7E5E4] shadow-[0_4px_24px_rgba(0,0,0,0.06)]">
-                <div className="text-4xl font-bold text-[#D4A574]">3+</div>
-                <div className="text-sm text-[#78716C]">
-                  {language === "en" ? "hours saved" : "heures gagnées"}
-                  <br />
-                  {language === "en" ? "per week" : "par semaine"}
-                </div>
-              </div>
+              {/* (24/11/2026, lot 3, L3-e) Pastille « 3+ heures gagnées par semaine » retirée : aucune source, jamais un nombre d'heures. */}
             </div>
           </div>
         </div>

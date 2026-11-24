@@ -32,7 +32,7 @@ La Villa Coliving, c'est nous : Jérôme et Fanny. On a ouvert la première mais
 
 ## Le parcours, dans l'ordre
 
-1. Tu [candidates en ligne](/candidature), ou tu nous écris.
+1. Tu [demandes une visite en ligne](/candidature), ou tu nous écris.
 2. Réponse sous 48 h, puis un appel vidéo pour faire connaissance.
 3. Tu visites — sur place ou en visio en direct.
 4. On valide ton dossier.
@@ -55,6 +55,6 @@ Pour les autres pièges (faux bail, frais illégaux, sous-location, fausses plat
 
 Si tu es arrivé jusqu'ici, tu sais tout ce qu'il faut pour vérifier qu'on existe et pour ne pas te faire avoir ailleurs. Il reste une chose que l'article ne peut pas faire : te faire visiter. Ça, c'est notre équipe sur place.
 
-Avant de candidater, trois lectures utiles : [ton dossier de location](/blog/dossier-location-frontalier-suisse-france), [où chercher entre Annemasse, Ville-la-Grand et Ambilly](/blog/colocation-annemasse-ville-la-grand-ambilly), et [la vie dans nos maisons](/blog/coliving-communaute-reels-amis-geneve-annemasse).
+Avant ta visite, trois lectures utiles : [ton dossier de location](/blog/dossier-location-frontalier-suisse-france), [où chercher entre Annemasse, Ville-la-Grand et Ambilly](/blog/colocation-annemasse-ville-la-grand-ambilly), et [la vie dans nos maisons](/blog/coliving-communaute-reels-amis-geneve-annemasse).
 
 *Jérôme et Fanny*

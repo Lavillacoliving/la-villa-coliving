@@ -1,5 +1,6 @@
 import { useLanguage } from "@/contexts/LanguageContext";
 import { SEO } from "@/components/SEO";
+import { timesPerWeek } from "@/data/priceFacts";
 
 // Contenu fourni par Jérôme (ADDENDUM_3_Services_et_Charte.md, annexes 1 et 2, 2026-08-06).
 // ⚠️ TEXTE VERBATIM — ne pas reformuler, ne pas « améliorer », ne pas ajouter de mention.
@@ -9,8 +10,11 @@ import { SEO } from "@/components/SEO";
 //    d'unification éditoriale qui voudrait la basculer au vouvoiement.
 // La version française fait foi ; l'anglais est la traduction fournie par Jérôme.
 // Date en dur, à mettre à jour à chaque modification substantielle.
-const LAST_UPDATED_FR = "29 septembre 2026";
-const LAST_UPDATED_EN = "September 29, 2026";
+// (24/11/2026, lot 3 du brief « budget réel », décision L3-f de Jérôme) Seule réécriture autorisée du texte verbatim : les deux
+// passages sur un ménage de chambre payant (« Un seul prix, tout compris », « Aucun service imposé »), qui n'existe pas. L'exception
+// nommée est l'assurance habitation (bloc 4 de /tarifs) ; le ménage des parties communes s'écrit en passages (timesPerWeek).
+const LAST_UPDATED_FR = "24 novembre 2026";
+const LAST_UPDATED_EN = "November 24, 2026";
 
 function Section({ title, children }: { title: string; children: React.ReactNode }) {
   return (
@@ -58,13 +62,8 @@ export function CharteTransparencePage() {
             <>
               <Section title="One price, everything included">
                 <p>
-                  <strong>Your monthly payment covers absolutely everything</strong>: your room,
-                  the shared spaces and amenities of the house (depending on the house: pool, sauna,
-                  gym, garden), water, energy, internet and the upkeep of common areas — and many
-                  services come at no charge. There is nothing else to pay — not before, not during,
-                  not after. One single exception, and we'd rather name it: having your own room
-                  cleaned, if you want it. The price is given to you upfront, you take it if you
-                  like, you stop it whenever you like.
+                  <strong>Your monthly payment covers absolutely everything</strong>
+                  {`: your room, the shared spaces and amenities of the house (depending on the house: pool, sauna, gym, garden), water, energy, internet and the upkeep of common areas — and many services come at no charge. There is nothing else to pay — not before, not during, not after. One single exception, and we'd rather name it: your home insurance. Cleaning your own room and bathroom is up to you; the shared areas are cleaned ${timesPerWeek("en")} by a cleaning company.`}
                 </p>
               </Section>
 
@@ -106,10 +105,8 @@ export function CharteTransparencePage() {
               <Section title="No imposed services">
                 <p>
                   No compulsory "package", no hidden options, no service billed on top that would be
-                  a condition of your tenancy. The one paid option we do offer — having your own
-                  room cleaned — is visible, priced upfront and commitment-free: nobody needs it to
-                  live here. The amenities of the house are part of the place: they're included, for
-                  everyone, full stop.
+                  a condition of your tenancy. In fact, we offer no paid option at all. The amenities
+                  of the house are part of the place: they're included, for everyone, full stop.
                 </p>
               </Section>
 
@@ -162,12 +159,8 @@ export function CharteTransparencePage() {
             <>
               <Section title="Un seul prix, tout compris">
                 <p>
-                  <strong>Ta mensualité couvre absolument tout</strong> : ta chambre, les espaces
-                  et équipements de la maison, l'eau, l'énergie, internet et l'entretien des
-                  communs, et de nombreux services te sont offerts. Il n'y a rien d'autre à payer —
-                  ni avant, ni pendant, ni après. Une seule exception, et nous préférons te la
-                  nommer : le ménage de ta chambre, si tu le souhaites. Son tarif t'est donné à
-                  l'avance, tu le prends si tu veux, tu l'arrêtes quand tu veux.
+                  <strong>Ta mensualité couvre absolument tout</strong>
+                  {` : ta chambre, les espaces et équipements de la maison, l'eau, l'énergie, internet et l'entretien des communs, et de nombreux services te sont offerts. Il n'y a rien d'autre à payer — ni avant, ni pendant, ni après. Une seule exception, et nous préférons te la nommer : ton assurance habitation. Le ménage de ta chambre et de ta salle d'eau reste à ta charge ; les parties communes, elles, sont nettoyées ${timesPerWeek("fr")} par une entreprise.`}
                 </p>
               </Section>
 
@@ -210,10 +203,9 @@ export function CharteTransparencePage() {
               <Section title="Aucun service imposé">
                 <p>
                   Aucun « pack » obligatoire, aucune option cachée, aucun service facturé en
-                  supplément qui conditionnerait ta location. La seule option payante qui existe
-                  chez nous — le ménage de ta chambre — est visible, tarifée d'avance et sans
-                  engagement : personne n'en a besoin pour vivre ici. Les équipements de la maison,
-                  eux, font partie du lieu : ils sont inclus, pour tout le monde, point.
+                  supplément qui conditionnerait ta location. Il n'existe d'ailleurs aucune option
+                  payante chez nous. Les équipements de la maison, eux, font partie du lieu : ils
+                  sont inclus, pour tout le monde, point.
                 </p>
               </Section>
 

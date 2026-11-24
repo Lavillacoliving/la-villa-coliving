@@ -25,7 +25,7 @@ Read the premium coliving column from top to bottom: if a room is available, you
 
 ## Decision by profile: six reasons to choose a room with us
 
-**You want to focus on your new job.** Verdict: coliving. Your first weeks belong at the office, not in a furniture store: a two-minute application, a reply within 48 h, a visit on site or by video, and if a room is available, you move in 72 h after your first contact. On Monday, you can give your employer 100%.
+**You want to focus on your new job.** Verdict: coliving. Your first weeks belong at the office, not in a furniture store: a two-minute request, a reply within 48 h, a visit on site or by video, and if a room is available, you move in 72 h after your first contact. On Monday, you can give your employer 100%.
 
 **You are short on time.** Verdict: coliving. Common areas cleaned three times a week, everyday products in the cupboard, sheets and towels provided, fibre that works, a single point of contact when something goes wrong: your evenings and weekends stay yours.
 
@@ -49,7 +49,7 @@ Read the premium coliving column from top to bottom: if a room is available, you
 
 <!-- entity-facts -->
 
-In practice, for a new job in a month: [a two-minute application](/en/candidature), a reply within 48 h, a visit on site or by video, a lease signed online. If a room is available, you move in 72 h after your first contact. [Available rooms](/en/chambres-disponibles) are shown live, what the rent includes is detailed on the [rates page](/en/tarifs), and the three houses with their commute are on [our page for flatshares in Geneva, French side](/en/colocation-geneve).
+In practice, for a new job in a month: [a two-minute request](/en/candidature), a reply within 48 h, a visit on site or by video, a lease signed online. If a room is available, you move in 72 h after your first contact. [Available rooms](/en/chambres-disponibles) are shown live, what the rent includes is detailed on the [rates page](/en/tarifs), and the three houses with their commute are on [our page for flatshares in Geneva, French side](/en/colocation-geneve).
 
 ## When a studio in Geneva is the right choice
 
@@ -75,7 +75,7 @@ Yes, and quickly, because the house is designed for it. With us, you live with 6
 
 **How quickly can I move in with La Villa Coliving?**
 
-Within 72 h of your first contact, if a room is available: a two-minute application, a reply within 48 h, a visit on site or by video, a lease signed online, and you arrive with your suitcase in a furnished room, sheets and towels provided. Available rooms and rooms opening up soon are shown live on the site.
+Within 72 h of your first contact, if a room is available: a two-minute request, a reply within 48 h, a visit on site or by video, a lease signed online, and you arrive with your suitcase in a furnished room, sheets and towels provided. Available rooms and rooms opening up soon are shown live on the site.
 
 **How long does it take to get to work in Geneva from the houses?**
 

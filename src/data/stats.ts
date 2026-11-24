@@ -113,10 +113,11 @@ export const STATS = {
   // Consommée par /tarifs et par la fiche entité (src/data/entityFacts.ts) ; les autres mentions
   // de fréquence restent des littéraux — remplacement progressif (Lot S2).
   fiberSpeed: "8 Gb/s",
-  // Nombre de services de l'ancienne grille « Ce Qui Est Vraiment Inclus » de /tarifs. (24/11/2026, brief « budget réel ») /tarifs
-  // n'affiche plus de compteur (bloc 4, listes de src/data/inclus.ts) : la valeur ne sert plus que sur /services, et « 24 services »
-  // disparaît au lot 3 du brief (§ 5, n° 6 : « le compte disparaît »).
-  includedItems: 24,
+  // (24/11/2026, brief « budget réel », lot 3) Opérateur de la fibre des maisons (annexe : « Fibre Orange Pro ») : une seule
+  // constante, à côté du débit. Lue par src/data/inclus.ts (phrases des pages) et par les données structurées des maisons.
+  fiberOperator: "Orange Pro",
+  // (24/11/2026, lot 3 du brief « budget réel », § 5 n° 6) `includedItems` (« 24 services ») est retiré : le compte disparaît
+  // partout, aucun nombre de services n'est plus écrit (src/data/inclus.ts).
   // (Lot L3, D4, 09/10/2026) L'ancienne note interne (`rating`, NPS résidents) est RETIRÉE : la seule note publiée est
   // GOOGLE_REVIEWS (fiche Google), rendue par STATS_DISPLAY.googleRating.
 } as const;

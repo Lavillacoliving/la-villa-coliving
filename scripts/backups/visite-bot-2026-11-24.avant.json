@@ -1,0 +1,116 @@
+[
+  {
+    "md5": "4cd6a19e8aff0e49f9a901045f15265b",
+    "row": {
+      "id": "d982fcfa-79ed-4d02-8492-0ec9f13c6da0",
+      "category": "conditions",
+      "subcategory": "Application Process",
+      "property": "all",
+      "question": "Comment puis-je candidater pour vivre à La Villa ?",
+      "answer": "Le processus est simple : 1) Vous nous écrivez ou remplissez le formulaire de candidature, 2) On planifie un appel de 30 minutes pour faire connaissance et comprendre votre projet, 3) Vous visitez la maison (sur place ou en visio) et rencontrez vos futurs colocataires, 4) Vous nous envoyez votre dossier, 5) Une fois validé, vous signez le bail en ligne, versez le dépôt de garantie et nous transmettez votre attestation d'assurance — et les clés vous sont remises le jour de l'état des lieux.",
+      "keywords": [],
+      "priority": 10,
+      "active": true,
+      "source_url": null,
+      "created_at": "2026-02-19T06:50:02.906856+00:00",
+      "updated_at": "2026-09-03T12:36:48.448522+00:00",
+      "question_en": "How do I apply to live at La Villa?",
+      "answer_en": "The application process is simple: 1) Fill out the online application form with your details, 2) Schedule a video call with us, 3) Have a 20-minute conversation to get to know each other, 4) Visit the house and meet your potential housemates, 5) If approved, sign your lease and move in!",
+      "slug": "how-to-apply"
+    }
+  },
+  {
+    "md5": "d7212dde5a20b756532ed9f55e205e92",
+    "row": {
+      "id": "e02e0dd7-bb70-437b-98eb-0ee908f847e8",
+      "category": "conditions",
+      "subcategory": "Application Process",
+      "property": "all",
+      "question": "Puis-je visiter avant de candidater ?",
+      "answer": "Nous planifions généralement les visites de maison après l'appel vidéo initial dans le cadre du processus de candidature. Cela nous permet de faire votre connaissance d'abord et d'assurer que la visite est productive pour les deux parties. Des visites virtuelles sont également disponibles sur notre site web.",
+      "keywords": [],
+      "priority": 10,
+      "active": true,
+      "source_url": null,
+      "created_at": "2026-02-19T06:50:02.906856+00:00",
+      "updated_at": "2026-02-19T06:50:02.906856+00:00",
+      "question_en": "Can I visit before applying?",
+      "answer_en": "We typically schedule house visits after the initial video call as part of the application process. This allows us to get to know you first and ensures the visit is productive for both parties. Virtual tours are also available on our website.",
+      "slug": "visit-before-applying"
+    }
+  },
+  {
+    "md5": "cf451cd4a99e847e69774f8671f87b65",
+    "row": {
+      "id": "dc45d539-ce43-4125-aa29-d02cedf5128f",
+      "category": "conditions",
+      "subcategory": "Application Process",
+      "property": "all",
+      "question": "Combien de temps dure le processus de candidature ?",
+      "answer": "Si une chambre est disponible, l'emménagement peut se faire en 72 h dès le premier contact. Ce délai inclut l'appel vidéo, la visite de la maison (sur place ou en visio), l'examen de la candidature et la signature du bail. Si vous avez une date d'arrivée précise, indiquez-la dès votre premier message.",
+      "keywords": [],
+      "priority": 10,
+      "active": true,
+      "source_url": null,
+      "created_at": "2026-02-19T06:50:02.906856+00:00",
+      "updated_at": "2026-09-30T07:43:18.866905+00:00",
+      "question_en": "How long does the application process take?",
+      "answer_en": "If a room is available, you can move in within 72 h of your first contact. That includes the video call, the house visit (on site or by video), the application review and the lease signing. If you have a specific arrival date, mention it in your first message.",
+      "slug": "application-timeline"
+    }
+  },
+  {
+    "md5": "49726659026a6bbc2a4f20a54fcd0cd4",
+    "row": {
+      "id": "9b4f4fd4-5e95-4ea1-95ad-2c00f03edef9",
+      "category": "conditions",
+      "subcategory": "Application Process",
+      "property": "all",
+      "question": "Quelles sont les exigences pour candidater ?",
+      "answer": "Nous recherchons des personnes ouvertes d'esprit et respectueuses qui partagent nos valeurs communautaires. Vous devriez être employé ou avoir une source de revenus stable, venir pour vous installer plutôt que pour quelques nuits, et être enthousiaste à l'idée de la vie communautaire. Nous accueillons des candidats de tous horizons et nationalités.",
+      "keywords": [],
+      "priority": 10,
+      "active": true,
+      "source_url": null,
+      "created_at": "2026-02-19T06:50:02.906856+00:00",
+      "updated_at": "2026-09-30T07:43:18.866905+00:00",
+      "question_en": "What are the requirements to apply?",
+      "answer_en": "We look for open-minded, respectful individuals who share our community values. You should be employed or have a stable income source, be looking to settle in rather than stay a few nights, and be excited about community living. We welcome applicants from all backgrounds and nationalities.",
+      "slug": "application-requirements"
+    }
+  },
+  {
+    "md5": "a5be739af3be2ab09422c35b601e9d04",
+    "row": {
+      "id": "9ccd37c3-f9be-4e91-baf3-523e3e9dbe0e",
+      "category": "vie_commune",
+      "subcategory": null,
+      "property": "all",
+      "question": "Comment fonctionne le programme de parrainage ?",
+      "answer": "Tu connais quelqu'un qui serait bien chez nous ? Si tu nous présentes un futur colocataire et qu'il signe un bail, tu reçois 150 € de crédit sur ton prochain loyer. Concrètement : la personne candidate sur le site lavillacoliving.com en choisissant « Un résident m'a recommandé » et en indiquant ton prénom. Fanny valide le rattachement lors de son appel avec le candidat, et le crédit est appliqué sur ton loyer après la signature du bail. Ça marche aussi si tu es en préavis ! Limite : 3 parrainages par an et par personne, un seul crédit par filleul.",
+      "keywords": [
+        "parrainage",
+        "parrainer",
+        "recommander",
+        "recommandation",
+        "filleul",
+        "referral",
+        "refer",
+        "150",
+        "credit",
+        "prime",
+        "ami",
+        "friend",
+        "recommend"
+      ],
+      "priority": 10,
+      "active": true,
+      "source_url": null,
+      "created_at": "2026-07-28T13:30:18.849935+00:00",
+      "updated_at": "2026-07-28T13:30:18.849935+00:00",
+      "question_en": "How does the referral program work?",
+      "answer_en": "Know someone who would be a great fit? If you refer a future housemate and they sign a lease, you get a €150 credit on your next rent. How it works: they apply on lavillacoliving.com, select \"A resident referred me\" and mention your first name. Fanny confirms the match during her call with the candidate, and the credit is applied to your rent once the lease is signed. It also works if you are in your notice period! Limit: 3 referrals per year per person, one credit per referred person.",
+      "slug": "referral-program"
+    }
+  }
+]

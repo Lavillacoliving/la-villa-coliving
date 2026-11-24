@@ -1017,8 +1017,8 @@ export function ObservatoireLogementFrontalierPage() {
               </p>
               <div className="flex flex-wrap justify-center gap-2">
                 {(en
-                  ? ["rent", "charges", "furnished", "fiber internet", "cleaning", "pool", "sauna", "gym", "home cinema", "garden", "community events"]
-                  : ["loyer", "charges", "meublé", "fibre", "ménage", "piscine", "sauna", "salle de sport", "home cinema", "jardin", "événements"]
+                  ? ["rent", "charges", "furnished", "fiber internet", "parking", "cleaning", "pool", "sauna", "gym", "home cinema", "garden", "community events"]
+                  : ["loyer", "charges", "meublé", "fibre", "parking", "ménage", "piscine", "sauna", "salle de sport", "home cinema", "jardin", "événements"]
                 ).map((item) => (
                   <span
                     key={item}

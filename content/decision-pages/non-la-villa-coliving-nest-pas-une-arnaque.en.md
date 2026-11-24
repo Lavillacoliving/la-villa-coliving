@@ -32,7 +32,7 @@ La Villa Coliving is us: Jérôme and Fanny. We opened the first house in 2021 a
 
 ## The steps, in order
 
-1. You [apply online](/en/candidature), or you message us.
+1. You [book a visit online](/en/candidature), or you message us.
 2. Reply within 48 h, then a video call to get to know each other.
 3. You view the house — on site or by live video.
 4. We approve your application.
@@ -55,6 +55,6 @@ For the other traps (fake leases, illegal fees, subletting, fake platforms) and 
 
 If you've read this far, you know everything you need to check that we exist and to avoid getting caught out elsewhere. There's one thing this article can't do: show you around. That's our team on site.
 
-Before you apply, three useful reads: [your rental application file](/en/blog/dossier-location-frontalier-suisse-france), [where to look between Annemasse, Ville-la-Grand and Ambilly](/en/blog/colocation-annemasse-ville-la-grand-ambilly), and [life in our houses](/en/blog/coliving-communaute-reels-amis-geneve-annemasse).
+Before your visit, three useful reads: [your rental application file](/en/blog/dossier-location-frontalier-suisse-france), [where to look between Annemasse, Ville-la-Grand and Ambilly](/en/blog/colocation-annemasse-ville-la-grand-ambilly), and [life in our houses](/en/blog/coliving-communaute-reels-amis-geneve-annemasse).
 
 *Jérôme and Fanny*

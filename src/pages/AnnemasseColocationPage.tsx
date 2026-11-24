@@ -21,6 +21,7 @@ import { houseCommuteNote } from "@/data/houseLocation";
 import { OuChercher } from "@/components/OuChercher";
 import { AppartTeaser } from "@/components/appart/AppartTeaser";
 import { APPART } from "@/data/appart";
+import { capitalFirst, inclusPhrases } from "@/data/inclus";
 import {
   useRoomAvailability,
   houseBadgeLabel,
@@ -77,6 +78,8 @@ const APPART_FROM = APPART.price.from;
 
 export function AnnemasseColocationPage() {
   const { language } = useLanguage();
+  // (24/11/2026, lot 3 du brief « budget réel ») Ce que comprend le prix des maisons : phrases du bloc 4 de /tarifs (src/data/inclus.ts).
+  const IP = inclusPhrases(language === "en" ? "en" : "fr");
 
   // R5 (checkpoint 21/08) — la page devient une destination : dispo réelle des
   // 3 maisons d'Annemasse Agglo (v_public_rooms via useRoomAvailability, jamais
@@ -238,8 +241,8 @@ export function AnnemasseColocationPage() {
               </h3>
               <p className="text-[#57534E] leading-relaxed">
                 {language === "en"
-                  ? "29 housemates selected by application — mostly cross-border professionals, young pros and expats working in Geneva. Monthly events, weekly private yoga and fitness, shared meals."
-                  : "29 colocataires sélectionnés sur dossier — majoritairement frontaliers, jeunes pros et expats travaillant à Genève. Événements mensuels, cours de yoga et fitness privés hebdomadaires, repas partagés."}
+                  ? `${STATS.totalRooms} housemates selected by application — mostly cross-border professionals, young pros and expats working in Geneva. ${capitalFirst(IP.getTogether)}, ${IP.classesEachHouse}, shared meals.`
+                  : `${STATS.totalRooms} colocataires sélectionnés sur dossier — majoritairement frontaliers, jeunes pros et expats travaillant à Genève. ${capitalFirst(IP.getTogether)}, ${IP.classesEachHouse}, repas partagés.`}
               </p>
             </div>
           </div>
@@ -399,11 +402,13 @@ export function AnnemasseColocationPage() {
                   // Ménage remonté juste après les charges (demande Jérôme 29/08) :
                   // c'est un argument fort, il ne doit pas se perdre en milieu de liste.
                   "Cleaning three times a week",
-                  "fiber internet up to 8 Gb/s",
+                  // (24/11/2026, lot 3) Fibre Orange Pro, parking, cours, streaming et soirée : lignes du bloc 4 de /tarifs.
+                  IP.lines.fibreSpeed,
+                  IP.lines.parking,
                   "Heated pool, sauna and gym access",
-                  "Private weekly yoga and fitness classes",
-                  "Streaming subscriptions (Netflix, Canal+, etc.)",
-                  "Monthly pizza party",
+                  IP.lines.classes,
+                  IP.lines.streaming,
+                  IP.lines.getTogether,
                   "Pool, garden and property maintenance",
                   "Bedding and towels provided",
                 ]
@@ -411,11 +416,12 @@ export function AnnemasseColocationPage() {
                   "Chambre privée meublée avec lit qualité et bureau ergonomique",
                   "Toutes charges (eau, électricité, chauffage)",
                   "Ménage 3 fois par semaine",
-                  "Internet fibre jusqu'à 8 Gb/s",
+                  IP.lines.fibreSpeed,
+                  IP.lines.parking,
                   "Accès piscine chauffée, sauna et salle de sport",
-                  "Cours privés de yoga et fitness hebdomadaires",
-                  "Abonnements streaming (Netflix, Canal+, etc.)",
-                  "Pizza party mensuelle",
+                  IP.lines.classes,
+                  IP.lines.streaming,
+                  IP.lines.getTogether,
                   "Entretien piscine, jardin et propriété",
                   "Parure de linge et serviettes fournies",
                 ]

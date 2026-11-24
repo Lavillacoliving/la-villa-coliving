@@ -15,6 +15,8 @@ import { HOUSES, placeCard } from "@/data/houses";
 import { STATS, STATS_DISPLAY, PRICE_CHF_FR, PRICE_CHF_EN, PRICE_FROM_CHF_FR, PRICE_FROM_CHF_EN, TRANSIT, sharedBathPricesText } from "@/data/stats";
 import { ENTITY_FACTS, ENTITY_HOUSES } from "@/data/entityFacts";
 import { APPART } from "@/data/appart";
+import { timesPerWeek } from "@/data/priceFacts";
+import { inclusPhrases } from "@/data/inclus";
 import { MAISON_KEYS } from "@/data/places";
 import { OuChercher } from "@/components/OuChercher";
 import { colocGeneveHref } from "@/lib/siteLinks";
@@ -41,6 +43,8 @@ const APPART_CARD = placeCard(APPART.key);
 export function ChambreLouerGenevePage() {
   const { language } = useLanguage();
   const en = language === "en";
+  // (24/11/2026, lot 3 du brief « budget réel ») Fibre Orange Pro, cours, soirée : phrases du bloc 4 de /tarifs (src/data/inclus.ts).
+  const IP = inclusPhrases(en ? "en" : "fr");
   const L = en ? "en" as const : "fr" as const;
   const allRooms = useAllRooms();
   const { candidates } = splitRooms(allRooms.rooms);
@@ -169,8 +173,8 @@ export function ChambreLouerGenevePage() {
           <h2 className={h2} style={serif}>{en ? "Price of a room to rent in Geneva" : "Prix d'une chambre à louer à Genève"}</h2>
           <p className="text-[#57534E] leading-relaxed mb-6">
             {en
-              ? `In Geneva itself, based on listings observed in 2026, a room usually rents for 1,000 to 1,500 CHF a month and a studio 1,800 to 2,500 CHF excluding charges, around 50 CHF/m² advertised according to our cross-border housing Observatory survey (June 2026); the vacancy rate is below 1% (OCSTAT). « Cheap room in Geneva »: compare the total cost, not the advertised rent. In Geneva you add bills, an internet subscription, cleaning and the furniture to buy to the bare rent; on the French side, at La Villa Coliving, the package from ${PRICE_FROM_CHF_EN}/month includes everything: furnished room, bills, fibre, cleaning of the common areas, pool, sauna, gym. Comfort and space make the difference, not the lowest rent.`
-              : `À Genève même, d'après les annonces relevées en 2026, une chambre se loue le plus souvent entre 1\u00a0000 et 1\u00a0500 CHF par mois, et un studio 1\u00a0800 à 2\u00a0500 CHF hors charges, soit autour de 50 CHF/m² en annonce selon le relevé de notre Observatoire du logement frontalier (juin 2026) ; le taux de vacance est sous 1\u00a0% (OCSTAT). « Chambre pas chère à Genève » : compare le coût total, pas le loyer affiché. À Genève, au loyer nu s'ajoutent les charges, l'abonnement internet, le ménage et le mobilier à acheter ; côté France, chez La Villa Coliving, le forfait dès ${PRICE_FROM_CHF_FR}/mois comprend tout : chambre meublée, charges, fibre, ménage des communs, piscine, sauna, salle de sport. Le confort et l'espace font la différence, pas le loyer le plus bas.`}
+              ? `In Geneva itself, based on listings observed in 2026, a room usually rents for 1,000 to 1,500 CHF a month and a studio 1,800 to 2,500 CHF excluding charges, around 50 CHF/m² advertised according to our cross-border housing Observatory survey (June 2026); the vacancy rate is below 1% (OCSTAT). « Cheap room in Geneva »: compare the total cost, not the advertised rent. In Geneva you add bills, an internet subscription, cleaning and the furniture to buy to the bare rent; on the French side, at La Villa Coliving, the package from ${PRICE_FROM_CHF_EN}/month includes everything: furnished room, bills, fibre, parking, cleaning of the common areas, pool, sauna, gym. Comfort and space make the difference, not the lowest rent.`
+              : `À Genève même, d'après les annonces relevées en 2026, une chambre se loue le plus souvent entre 1\u00a0000 et 1\u00a0500 CHF par mois, et un studio 1\u00a0800 à 2\u00a0500 CHF hors charges, soit autour de 50 CHF/m² en annonce selon le relevé de notre Observatoire du logement frontalier (juin 2026) ; le taux de vacance est sous 1\u00a0% (OCSTAT). « Chambre pas chère à Genève » : compare le coût total, pas le loyer affiché. À Genève, au loyer nu s'ajoutent les charges, l'abonnement internet, le ménage et le mobilier à acheter ; côté France, chez La Villa Coliving, le forfait dès ${PRICE_FROM_CHF_FR}/mois comprend tout : chambre meublée, charges, fibre, parking, ménage des communs, piscine, sauna, salle de sport. Le confort et l'espace font la différence, pas le loyer le plus bas.`}
           </p>
           <p className="text-sm text-[#78716C] mb-6">
             {en ? "Source and method: " : "Source et méthode : "}
@@ -186,8 +190,8 @@ export function ChambreLouerGenevePage() {
             </p>
             <ul className="grid sm:grid-cols-2 gap-2 text-sm text-[#44403C]">
               {(en
-                ? [`Furnished room, ${STATS.roomSizeMin}-${STATS.roomSizeMax} m²`, "Bills, water, heating, fibre up to 8 Gb/s", "Cleaning of common areas 3×/week", "Pool, sauna, gym depending on the house", "No agency fee, no application fee", `Deposit: ${STATS.depositMonths} months' rent excluding charges, payable in 1, 2 or 3 instalments depending on your application`]
-                : [`Chambre meublée, ${STATS.roomSizeMin} à ${STATS.roomSizeMax} m²`, "Charges, eau, chauffage, fibre jusqu'à 8 Gb/s", "Ménage des communs 3×/semaine", "Piscine, sauna, salle de sport selon la maison", "0 frais d'agence, 0 frais de dossier", `Caution : ${STATS.depositMonths} mois de loyer hors charges, payable en 1, 2 ou 3 fois selon ton dossier`]
+                ? [`Furnished room, ${STATS.roomSizeMin}-${STATS.roomSizeMax} m²`, `Bills, water, heating, ${IP.fibreSpeed}`, "On-site parking", "Cleaning of common areas 3×/week", "Pool, sauna, gym depending on the house", "No agency fee, no application fee", `Deposit: ${STATS.depositMonths} months' rent excluding charges, payable in 1, 2 or 3 instalments depending on your application`]
+                : [`Chambre meublée, ${STATS.roomSizeMin} à ${STATS.roomSizeMax} m²`, `Charges, eau, chauffage, ${IP.fibreSpeed}`, "Parking sur place", "Ménage des communs 3×/semaine", "Piscine, sauna, salle de sport selon la maison", "0 frais d'agence, 0 frais de dossier", `Caution : ${STATS.depositMonths} mois de loyer hors charges, payable en 1, 2 ou 3 fois selon ton dossier`]
               ).map((item) => <li key={item} className="flex items-start gap-2"><Check className="w-4 h-4 text-[#D4A574] mt-0.5 flex-shrink-0" />{item}</li>)}
             </ul>
           </div>
@@ -204,16 +208,16 @@ export function ChambreLouerGenevePage() {
               <h3 className="text-lg font-medium text-[#1C1917] mb-2">{en ? "In the room" : "Dans la chambre"}</h3>
               <p className="text-sm text-[#57534E] leading-relaxed">
                 {en
-                  ? `${STATS.roomSizeMin} to ${STATS.roomSizeMax} m², a double bed with linen, a desk, storage, fibre up to 8 Gb/s, and a shower room that is private or shared with a single other room. You arrive with a suitcase.`
-                  : `${STATS.roomSizeMin} à ${STATS.roomSizeMax} m², un lit double avec sa parure, un bureau, des rangements, la fibre jusqu'à 8 Gb/s, et une salle d'eau privative ou partagée avec une seule autre chambre. Tu arrives avec une valise.`}
+                  ? `${STATS.roomSizeMin} to ${STATS.roomSizeMax} m², a double bed with linen, a desk, storage, ${IP.fibreSpeed}, and a shower room that is private or shared with a single other room. You arrive with a suitcase.`
+                  : `${STATS.roomSizeMin} à ${STATS.roomSizeMax} m², un lit double avec sa parure, un bureau, des rangements, la ${IP.fibreSpeed}, et une salle d'eau privative ou partagée avec une seule autre chambre. Tu arrives avec une valise.`}
               </p>
             </div>
             <div>
               <h3 className="text-lg font-medium text-[#1C1917] mb-2">{en ? "In the house" : "Dans la maison"}</h3>
               <p className="text-sm text-[#57534E] leading-relaxed">
                 {en
-                  ? `A kitchen, a living room, a garden, and depending on the house a pool, a sauna or a gym: ${STATS.livingSpacePerResidentMin} to ${STATS.livingSpacePerResidentMax} m² of living space per resident. Common areas cleaned 3 times a week, weekly yoga, monthly events, and 7 to 12 flatmates who work in Geneva like you.`
-                  : `Une cuisine, un salon, un jardin, et selon la maison une piscine, un sauna ou une salle de sport : ${STATS.livingSpacePerResidentMin} à ${STATS.livingSpacePerResidentMax} m² d'espace de vie par résident. Communs entretenus 3 fois par semaine, yoga hebdomadaire, événements mensuels, et 7 à 12 colocataires qui travaillent à Genève comme toi.`}
+                  ? `A kitchen, a living room, a garden, a pool, a sauna and a gym: ${STATS.livingSpacePerResidentMin} to ${STATS.livingSpacePerResidentMax} m² of living space per resident. Common areas cleaned ${timesPerWeek("en")}, ${IP.classes}, ${IP.getTogether}, and ${STATS.minResidentsPerHouse} to ${STATS.maxResidentsPerHouse} flatmates who work in Geneva like you.`
+                  : `Une cuisine, un salon, un jardin, une piscine, un sauna et une salle de sport : ${STATS.livingSpacePerResidentMin} à ${STATS.livingSpacePerResidentMax} m² d'espace de vie par résident. Communs entretenus ${timesPerWeek("fr")}, ${IP.classes}, ${IP.getTogether}, et ${STATS.minResidentsPerHouse} à ${STATS.maxResidentsPerHouse} colocataires qui travaillent à Genève comme toi.`}
               </p>
             </div>
           </div>

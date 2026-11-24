@@ -1,7 +1,8 @@
 import type { QAPair } from "@/lib/structuredData";
 import { STATS, STATS_DISPLAY, PRICE_FROM_CHF_FR, PRICE_FROM_CHF_EN, TRANSIT } from "@/data/stats";
 import { GUARANTOR_SENTENCE } from "@/data/entityFacts";
-import { priceJustificationFaq } from "@/data/priceFacts";
+import { priceJustificationFaq, timesPerWeek } from "@/data/priceFacts";
+import { inclusPhrases } from "@/data/inclus";
 
 // (Lot L1 « ingénierie des créneaux », 10/2026) Trajets depuis TRANSIT (D1-L1), « 20 min » toujours qualifié
 // (STATS_DISPLAY.distance), réponse A.6 (dossier en trois pièces + phrase garant canonique) dans « Comment se
@@ -9,6 +10,8 @@ import { priceJustificationFaq } from "@/data/priceFacts";
 // (Lot L2 « Emplacement et transport », 09/10/2026) Cadence de pointe (TRANSIT.peakHeadwayMin) et vélo Voie Verte
 // (min/max de TRANSIT.byHouse.*.bikeToRiveMin) depuis la source ; aucune promesse en voiture (D1).
 const T = TRANSIT;
+// (24/11/2026, lot 3 du brief « budget réel ») Réponse « Combien coûte une chambre… » : fibre Orange Pro et parking (src/data/inclus.ts).
+const IP = { fr: inclusPhrases("fr"), en: inclusPhrases("en") };
 const BIKE_TO_RIVE = Object.values(T.byHouse).map((h) => h.bikeToRiveMin);
 const BIKE_MIN = Math.min(...BIKE_TO_RIVE);
 const BIKE_MAX = Math.max(...BIKE_TO_RIVE);
@@ -31,7 +34,7 @@ export const homeFaq: { fr: QAPair[]; en: QAPair[] } = {
     },
     {
       q: "Combien coûte une chambre en coliving à Genève ?",
-      a: `Chez La Villa Coliving, le loyer tout inclus démarre à ${PRICE_FROM_CHF_FR}/mois : chambre meublée de ${STATS.roomSizeMin} à ${STATS.roomSizeMax} m², toutes les charges, internet fibre jusqu'à 8 Gb/s, ménage des parties communes trois fois par semaine, piscine, sauna, salle de sport, cours de yoga et événements. Un seul paiement par mois, sans frais cachés.`,
+      a: `Chez La Villa Coliving, le loyer tout inclus démarre à ${PRICE_FROM_CHF_FR}/mois : chambre meublée de ${STATS.roomSizeMin} à ${STATS.roomSizeMax} m², toutes les charges, ${IP.fr.fibreSpeed}, parking sur place, ménage des parties communes ${timesPerWeek("fr")}, piscine, sauna, salle de sport, cours de yoga et événements. Un seul paiement par mois, sans frais cachés.`,
     },
     // (21/11/2026) « La Villa Coliving est-elle chère ? » : même texte que /tarifs et les pages de prix (src/data/priceFacts.ts).
     priceJustificationFaq("fr"),
@@ -59,7 +62,7 @@ export const homeFaq: { fr: QAPair[]; en: QAPair[] } = {
     },
     {
       q: "How much does a coliving room near Geneva cost?",
-      a: `At La Villa Coliving, all-inclusive rent starts at ${PRICE_FROM_CHF_EN}/month: a furnished room of ${STATS.roomSizeMin} to ${STATS.roomSizeMax} m², all utilities, fibre internet up to 8 Gb/s, cleaning of common areas three times a week, pool, sauna, gym, yoga classes and events. One single monthly payment, no hidden costs.`,
+      a: `At La Villa Coliving, all-inclusive rent starts at ${PRICE_FROM_CHF_EN}/month: a furnished room of ${STATS.roomSizeMin} to ${STATS.roomSizeMax} m², all utilities, ${IP.en.fibreSpeed}, on-site parking, cleaning of common areas ${timesPerWeek("en")}, pool, sauna, gym, yoga classes and events. One single monthly payment, no hidden costs.`,
     },
     // (21/11/2026) « La Villa Coliving est-elle chère ? » : même texte que /tarifs et les pages de prix (src/data/priceFacts.ts).
     priceJustificationFaq("en"),

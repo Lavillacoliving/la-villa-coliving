@@ -1,15 +1,22 @@
 // FAQ Data for SEO - Extensive question/answer database
 // Organized by categories for better SEO structure
 
-import { STATS, STATS_DISPLAY, TRANSIT, aOrAn, GENEVA_COMMUTE_FORMULA, PRICE_CHF_FR, PRICE_CHF_EN, PRICE_FROM_EN_NUM, PRICE_FROM_CHF_FR, sharedBathTiersText, thousands } from "@/data/stats";
+import { STATS, STATS_DISPLAY, TRANSIT, aOrAn, GENEVA_COMMUTE_FORMULA, PRICE_CHF_FR, PRICE_CHF_EN, PRICE_FROM_EN_NUM, PRICE_FROM_CHF_FR, PRICE_FROM_CHF_EN, sharedBathTiersText, thousands } from "@/data/stats";
 import { situationsFaq } from "@/data/faq/situationsFaq";
-import { priceJustificationFaq } from "@/data/priceFacts";
+import { priceJustificationFaq, timesPerWeek } from "@/data/priceFacts";
 import { VERIFY_ARTICLE_PATH, VERIFY_LINK_LABEL } from "@/data/verifyArticle";
-import { appartPriceFaq } from "@/data/faq/tarifsFaq";
+import { appartPriceFaq, tarifsPageFaq } from "@/data/faq/tarifsFaq";
+import { inclusPhrases } from "@/data/inclus";
 import { APPART } from "@/data/appart";
 import { appartHousesFaq } from "@/data/appartHousesFaq";
 
 const PRICE_FAQ = { fr: priceJustificationFaq("fr"), en: priceJustificationFaq("en") };
+
+// (24/11/2026, lot 3 du brief « budget réel ») Ce que comprend le prix des maisons, comme sur /tarifs : cours (un de chaque par mois),
+// streaming (six services, écran commun), panier de base, buanderie commune, fibre Orange Pro — phrases de src/data/inclus.ts.
+// « Qu'est-ce qui est compris dans le prix ? » = la question 2 du bloc 8 de /tarifs, mot pour mot (tarifsPageFaq, pas de recopie).
+const IP = { fr: inclusPhrases("fr"), en: inclusPhrases("en") };
+const INCLUDED_QA = { fr: tarifsPageFaq.fr[1], en: tarifsPageFaq.en[1] };
 
 // (L'Appart, Lot 4, étape E5 — textes du 13/11/2026, « à confirmer ») Réponses de prix à deux gammes, chacune dans sa phrase
 // (règle V2) ; nombres de L'Appart lus dans APPART, jamais tapés. La suite à deux : forme P5 (« 1 060 € par mois, soit 530 € par
@@ -118,7 +125,7 @@ export const faqData: FAQItem[] = [
       fr: 'Le coliving est-il cher ?',
     },
     answer: {
-      en: `When you factor in all costs—rent, utilities, internet, furniture, gym membership, cleaning services, and entertainment—coliving is often more economical than traditional renting. At La Villa, our all-inclusive rates start from ${PRICE_FROM_EN_NUM} CHF/month, which is competitive with Geneva studio prices while including: heated pool, gym, sauna, weekly yoga classes, parking, monthly Pizza Party, streaming subscriptions, and more.`,
+      en: `When you factor in all costs—rent, utilities, internet, furniture, gym membership, cleaning services, and entertainment—coliving is often more economical than traditional renting. At La Villa, our all-inclusive rates start from ${PRICE_FROM_CHF_EN}/month, which is competitive with Geneva studio prices while offering much more value and amenities.`,
       fr: `Quand tu prends en compte tous les coûts—loyer, charges, internet, meubles, abonnement de salle de sport, services de ménage et divertissement—le coliving est souvent plus économique que la location traditionnelle. Chez La Villa, nos tarifs tout inclus commencent à ${PRICE_FROM_CHF_FR}/mois, ce qui est compétitif avec les prix des studios à Genève tout en offrant beaucoup plus de valeur et d\'équipements.`,
     },
   },
@@ -242,8 +249,8 @@ export const faqData: FAQItem[] = [
       fr: 'Puis-je utiliser la cuisine ?',
     },
     answer: {
-      en: 'Yes, all residents have full access to our professional-grade kitchens. They\'re fully equipped with appliances, cookware, dishes, and utensils. You can cook your own meals, store food in designated areas, and many residents enjoy cooking together for community dinners.',
-      fr: 'Oui, tous les résidents ont un accès complet à nos cuisines de qualité professionnelle. Elles sont entièrement équipées avec des appareils électroménagers, des ustensiles de cuisine, de la vaisselle et des couverts. Tu peux cuisiner tes propres repas, stocker de la nourriture dans des zones désignées, et de nombreux résidents aiment cuisiner ensemble pour les dîners communautaires.',
+      en: 'Yes, all residents have full access to our professional-grade kitchens. They\'re fully equipped with appliances, cookware, dishes, and utensils. You can cook your own meals, store food in designated areas, and many residents enjoy cooking together and sharing a meal.',
+      fr: 'Oui, tous les résidents ont un accès complet à nos cuisines de qualité professionnelle. Elles sont entièrement équipées avec des appareils électroménagers, des ustensiles de cuisine, de la vaisselle et des couverts. Tu peux cuisiner tes propres repas, stocker de la nourriture dans des zones désignées, et de nombreux résidents aiment cuisiner ensemble et partager un repas.',
     },
   },
   {
@@ -266,8 +273,10 @@ export const faqData: FAQItem[] = [
       fr: 'Un parking est-il disponible ?',
     },
     answer: {
-      en: 'Yes, all our houses have parking available for residents. La Villa, Le Lodge and Le Loft offer on-site parking. Please let us know your parking needs when applying so we can ensure availability.',
-      fr: 'Oui, toutes nos maisons disposent d\'un parking pour les résidents. La Villa, Le Lodge et Le Loft offrent un parking sur place. Signale-nous tes besoins de parking lors de ta candidature pour qu\'on t\'assure une place.',
+      // (24/11/2026, lot 3, T-f ; réponse de Jérôme à L3-d (2) : à La Villa et au Loft, une place « si une place est dispo »)
+      // Plus de place promise ; au Lodge, pas de place attribuée ; on en parle à la demande de visite.
+      en: `Yes. On-site parking is included in the price in all ${IP.en.houses} houses, and each house has outdoor bike parking. At La Villa and Le Loft, we save you a space if one is free; at Le Lodge, spaces aren't allocated. If you're bringing a car, let us know when you book your visit.`,
+      fr: `Oui. Le parking sur place est compris dans le prix, dans les ${IP.fr.houses} maisons, et chaque maison a un parking à vélos extérieur. À La Villa et au Loft, on te réserve une place s'il en reste une ; au Lodge, les places ne sont pas attribuées. Si tu viens avec une voiture, dis-le-nous quand tu demandes ta visite.`,
     },
   },
   {
@@ -278,8 +287,8 @@ export const faqData: FAQItem[] = [
       fr: 'Des installations de buanderie sont-elles disponibles ?',
     },
     answer: {
-      en: 'Yes, all our houses have laundry facilities with washing machines and dryers available for resident use. Some rooms also have private laundry facilities. Detergent and supplies are typically included in our monthly essentials delivery.',
-      fr: 'Oui, toutes nos maisons disposent d\'installations de buanderie avec machines à laver et sèche-linges disponibles pour les résidents. Certaines chambres disposent également d\'installations de buanderie privées. La lessive et les fournitures sont généralement incluses dans notre livraison mensuelle d\'essentiels.',
+      en: `Yes. Each house has a shared laundry room: ${IP.en.laundry}. Detergent is part of the essentials basket delivered each month.`,
+      fr: `Oui. Chaque maison a une buanderie commune : ${IP.fr.laundry}. La lessive fait partie du panier de base livré chaque mois.`,
     },
   },
 
@@ -287,14 +296,9 @@ export const faqData: FAQItem[] = [
   {
     id: 'what-is-included',
     category: 'Pricing & Payments',
-    question: {
-      en: 'What is included in the monthly rent?',
-      fr: 'Qu\'est-ce qui est inclus dans le loyer mensuel ?',
-    },
-    answer: {
-      en: 'Your monthly rent includes: private furnished bedroom, all utilities (electricity, water, heating), high-speed fiber internet, housekeeping of common areas three times a week, pool and garden maintenance, gym and sauna access, weekly yoga and fitness classes, streaming subscriptions, community events, monthly essentials delivery (cleaning supplies, paper goods), and WhatsApp support. It\'s truly all-inclusive.',
-      fr: 'Ton loyer mensuel inclut : chambre privée meublée, tous les services (électricité, eau, chauffage), internet fibre haut débit, ménage des espaces communs trois fois par semaine, entretien de la piscine et du jardin, accès à la salle de sport et au sauna, cours de yoga et fitness hebdomadaires, abonnements streaming, événements communautaires, livraison mensuelle d\'essentiels (produits d\'entretien, articles en papier), et support WhatsApp. C\'est vraiment tout inclus.',
-    },
+    // (24/11/2026, lot 3) Question et réponse validées du bloc 8 de /tarifs (question 2), lues dans tarifsPageFaq.
+    question: { en: INCLUDED_QA.en.q, fr: INCLUDED_QA.fr.q },
+    answer: { en: INCLUDED_QA.en.a, fr: INCLUDED_QA.fr.a },
   },
   {
     id: 'monthly-cost',
@@ -305,8 +309,8 @@ export const faqData: FAQItem[] = [
     },
     answer: {
       // (L'Appart, E5) « Dans les maisons » en tête, L'Appart à la fin (paliers : question de prix, décision n° 24 à confirmer).
-      en: `In La Villa Coliving's houses, a room costs ${PRICE_CHF_EN} per month all-inclusive with a private bathroom. The 4 rooms at our La Villa house with a shower room shared between 2 rooms (cleaned by our housekeeping team) cost ${sharedBathTiersText("en")}. No hidden fees and no application fee: utilities, fiber internet, cleaning of common areas three times a week, gym, sauna, pool, streaming and community events. Our three houses — La Villa (Ville-la-Grand), Le Loft (Ambilly) and Le Lodge (Annemasse) — are on the French side: ${GENEVA_COMMUTE_FORMULA.en}. At ${APPART.name}, our flatshare in ${APPART.commune}, a ${APPART.rooms.standard.surfaceM2} m² room costs ${AP.room.en.chf} a month and the ${SUITE_M2} m² suite ${AP.suite.en.chf}, with bills, fibre, streaming and cleaning of the shared areas included.`,
-      fr: `Dans les maisons de La Villa Coliving, une chambre coûte ${PRICE_CHF_FR} par mois tout inclus avec salle d'eau privative. Les 4 chambres de la maison La Villa dont la salle d'eau est partagée entre 2 chambres (entretien par notre équipe de ménage inclus) coûtent ${sharedBathTiersText("fr")}. Sans frais cachés ni frais de dossier : charges, fibre, ménage des espaces communs trois fois par semaine, salle de sport, sauna, piscine, streaming et événements communautaires. Nos trois maisons — La Villa (Ville-la-Grand), Le Loft (Ambilly) et Le Lodge (Annemasse) — sont côté France : ${GENEVA_COMMUTE_FORMULA.fr}. À ${APPART.name}, notre colocation à ${APPART.commune}, une chambre de ${APPART.rooms.standard.surfaceM2} m² coûte ${AP.room.fr.chf} par mois et la suite de ${SUITE_M2} m² ${AP.suite.fr.chf}, charges, fibre, streaming et ménage des communs compris.`,
+      en: `In La Villa Coliving's houses, a room costs ${PRICE_CHF_EN} per month all-inclusive with a private bathroom. The 4 rooms at our La Villa house with a shower room shared between 2 rooms (cleaned by our housekeeping team) cost ${sharedBathTiersText("en")}. No hidden fees and no application fee: utilities, fiber internet, parking, cleaning of common areas three times a week, gym, sauna, pool, streaming and community events. Our three houses — La Villa (Ville-la-Grand), Le Loft (Ambilly) and Le Lodge (Annemasse) — are on the French side: ${GENEVA_COMMUTE_FORMULA.en}. At ${APPART.name}, our flatshare in ${APPART.commune}, a ${APPART.rooms.standard.surfaceM2} m² room costs ${AP.room.en.chf} a month and the ${SUITE_M2} m² suite ${AP.suite.en.chf}, with bills, fibre, streaming and cleaning of the shared areas included.`,
+      fr: `Dans les maisons de La Villa Coliving, une chambre coûte ${PRICE_CHF_FR} par mois tout inclus avec salle d'eau privative. Les 4 chambres de la maison La Villa dont la salle d'eau est partagée entre 2 chambres (entretien par notre équipe de ménage inclus) coûtent ${sharedBathTiersText("fr")}. Sans frais cachés ni frais de dossier : charges, fibre, parking, ménage des espaces communs trois fois par semaine, salle de sport, sauna, piscine, streaming et événements communautaires. Nos trois maisons — La Villa (Ville-la-Grand), Le Loft (Ambilly) et Le Lodge (Annemasse) — sont côté France : ${GENEVA_COMMUTE_FORMULA.fr}. À ${APPART.name}, notre colocation à ${APPART.commune}, une chambre de ${APPART.rooms.standard.surfaceM2} m² coûte ${AP.room.fr.chf} par mois et la suite de ${SUITE_M2} m² ${AP.suite.fr.chf}, charges, fibre, streaming et ménage des communs compris.`,
     },
   },
   // (L'Appart, E5) Deux questions nouvelles d'intention budget, texte unique src/data/faq/tarifsFaq.ts (aussi sur /tarifs).
@@ -547,8 +551,8 @@ export const faqData: FAQItem[] = [
       fr: 'L\'alcool est-il autorisé ?',
     },
     answer: {
-      en: 'Yes, responsible alcohol consumption is allowed. Many residents enjoy a glass of wine during community dinners or social gatherings. We simply ask that all consumption be done responsibly and in accordance with house guidelines.',
-      fr: 'Oui, la consommation responsable d\'alcool est autorisée. De nombreux résidents apprécient un verre de vin lors des dîners communautaires ou des rassemblements sociaux. Nous demandons simplement que toute consommation se fasse de manière responsable et conformément aux directives de la maison.',
+      en: 'Yes, responsible alcohol consumption is allowed. Many residents enjoy a glass of wine at the house get-togethers or social gatherings. We simply ask that all consumption be done responsibly and in accordance with house guidelines.',
+      fr: 'Oui, la consommation responsable d\'alcool est autorisée. De nombreux résidents apprécient un verre de vin lors des soirées communes ou des moments partagés. Nous demandons simplement que toute consommation se fasse de manière responsable et conformément aux directives de la maison.',
     },
   },
 
@@ -573,8 +577,8 @@ export const faqData: FAQItem[] = [
       fr: 'Quelle est la vitesse de l\'internet ?',
     },
     answer: {
-      en: 'We provide professional-grade Orange fiber, up to 8 Gb/s symmetric on the line. Over WiFi, each device typically gets 300 Mbps to 1 Gbps depending on the house and distance to the router — plenty for video calls, streaming, gaming, and demanding remote work. We also use mesh WiFi systems to ensure strong coverage throughout the house.',
-      fr: 'Nous fournissons une fibre optique professionnelle Orange, pouvant atteindre 8 Gb/s symétrique sur la ligne. En WiFi, chaque appareil reçoit généralement entre 300 Mbps et 1 Gbps selon la maison et la distance à la box — largement de quoi gérer les appels vidéo, le streaming, le gaming et le télétravail exigeant. Nous avons également des systèmes WiFi mesh pour assurer une couverture forte dans toute la maison.',
+      en: `We provide ${IP.en.fibre}, up to ${STATS.fiberSpeed} symmetric on the line. Over WiFi, each device typically gets 300 Mbps to 1 Gbps depending on the house and distance to the router — plenty for video calls, streaming, gaming, and demanding remote work. We also use mesh WiFi systems to ensure strong coverage throughout the house.`,
+      fr: `Nous fournissons la ${IP.fr.fibre}, pouvant atteindre ${STATS.fiberSpeed} symétrique sur la ligne. En WiFi, chaque appareil reçoit généralement entre 300 Mbps et 1 Gbps selon la maison et la distance à la box — largement de quoi gérer les appels vidéo, le streaming, le gaming et le télétravail exigeant. Nous avons également des systèmes WiFi mesh pour assurer une couverture forte dans toute la maison.`,
     },
   },
   {
@@ -601,18 +605,7 @@ export const faqData: FAQItem[] = [
       fr: 'Oui, nous comprenons le besoin d\'intimité pendant les appels professionnels. Nos maisons disposent de zones calmes désignées et certaines ont des cabines d\'appel privées ou de petites salles de réunion. Tu peux aussi utiliser ta chambre privée pour les appels, car toutes les chambres sont bien insonorisées.',
     },
   },
-  {
-    id: 'printer-access',
-    category: 'Work & Productivity',
-    question: {
-      en: 'Is there a printer available?',
-      fr: 'Une imprimante est-elle disponible ?',
-    },
-    answer: {
-      en: 'Yes, all our houses have printers available for resident use. Basic printing is typically included, though we may charge for excessive use or specialized printing needs.',
-      fr: 'Oui, toutes nos maisons disposent d\'imprimantes disponibles pour les résidents. L\'impression de base est généralement incluse, bien que nous puissions facturer une utilisation excessive ou des besoins d\'impression spécialisés.',
-    },
-  },
+  // (24/11/2026, lot 3 du brief « budget réel ») Question « Une imprimante est-elle disponible ? » retirée : il n'y a pas d'imprimante.
   {
     id: 'business-address',
     category: 'Work & Productivity',
@@ -671,20 +664,22 @@ export const faqData: FAQItem[] = [
       fr: 'Puis-je amener ma voiture ?',
     },
     answer: {
-      en: 'Yes, all our houses have parking available. La Villa, Le Lodge and Le Loft offer on-site parking. If you plan to bring a car, please let us know when applying so we can ensure a parking spot is available.',
-      fr: 'Oui, toutes nos maisons disposent d\'un parking. La Villa, Le Lodge et Le Loft offrent un parking sur place. Si tu prévois de venir avec une voiture, dis-le-nous lors de ta candidature pour que nous puissions assurer la disponibilité d\'une place.',
+      // (24/11/2026, lot 3, T-g ; réponse de Jérôme à L3-d (2) : une place à La Villa et au Loft « si une place est dispo »)
+      en: `Yes. On-site parking is included in the price in all ${IP.en.houses} houses. At La Villa and Le Loft, we save you a space if one is free; at Le Lodge, spaces aren't allocated. Let us know you're bringing a car when you book your visit.`,
+      fr: `Oui. Le parking sur place est compris dans le prix, dans les ${IP.fr.houses} maisons. À La Villa et au Loft, on te réserve une place s'il en reste une ; au Lodge, les places ne sont pas attribuées. Dis-nous que tu viens avec une voiture quand tu demandes ta visite.`,
     },
   },
   {
     id: 'bike-storage',
     category: 'Location & Transport',
+    // (24/11/2026, lot 3) Parking à vélos extérieur dans chaque maison : ni « sécurisé » ni outils d'entretien (aucune source).
     question: {
-      en: 'Is there bike storage?',
-      fr: 'Y a-t-il un rangement pour vélos ?',
+      en: 'Is there bike parking?',
+      fr: 'Y a-t-il un parking à vélos ?',
     },
     answer: {
-      en: 'Yes, all our houses have secure bike storage available. The Geneva area is very bike-friendly, and many residents enjoy cycling to work or for leisure. We also provide bike maintenance tools at some locations.',
-      fr: 'Oui, toutes nos maisons disposent d\'un rangement sécurisé pour vélos. La région de Genève est très favorable aux vélos, et de nombreux résidents aiment faire du vélo pour aller travailler ou pour le loisir. Nous fournissons également des outils d\'entretien de vélos dans certains emplacements.',
+      en: 'Yes: each house has outdoor bike parking. The Geneva area is very bike-friendly, and many residents enjoy cycling to work or for leisure.',
+      fr: 'Oui : chaque maison a un parking à vélos extérieur. La région de Genève est très favorable aux vélos, et de nombreux résidents aiment faire du vélo pour aller travailler ou pour le loisir.',
     },
   },
   {
@@ -758,8 +753,8 @@ export const faqData: FAQItem[] = [
       fr: 'Puis-je visiter avant de m\'engager ?',
     },
     answer: {
-      en: 'Yes, it\'s even the first step: you book a visit, on site or by video, and we call you within 48 h to set it. That way we get to know each other before anyone decides. Virtual tours are also available on our website.',
-      fr: 'Oui, c\'est même la première étape : tu programmes une visite, sur place ou en vidéo, et on t\'appelle sous 48 h pour la caler. On fait ainsi connaissance avant toute décision. Des visites virtuelles sont également disponibles sur notre site web.',
+      en: 'Yes, it\'s even the first step: you book a visit, on site or by video, and we call you within 48 h to set it. That way we get to know each other before anyone decides.',
+      fr: 'Oui, c\'est même la première étape : tu programmes une visite, sur place ou en vidéo, et on t\'appelle sous 48 h pour la caler. On fait ainsi connaissance avant toute décision.',
     },
   },
   {
@@ -846,8 +841,10 @@ export const faqData: FAQItem[] = [
       fr: 'Ma chambre est-elle également nettoyée ?',
     },
     answer: {
-      en: 'Bedroom cleaning is typically the resident\'s responsibility, though we can arrange additional cleaning services for an extra fee if desired. Your private space remains private, and you maintain it as you prefer.',
-      fr: 'Le nettoyage de la chambre est généralement la responsabilité du résident, bien que nous puissions organiser des services de nettoyage supplémentaires pour un supplément si désiré. Ton espace privé reste privé, et tu l\'entretiens comme tu préfères.',
+      // (24/11/2026, lot 3) Pas de ménage de chambre payant : il n'existe pas (bloc 4 de /tarifs, « Ce qui n'est pas compris »).
+      // Réponse de Jérôme à L3-a (« oui, évidemment ») : l'entreprise entretient aussi les deux salles d'eau partagées de La Villa.
+      en: `No. Cleaning your room and bathroom is up to you. The shared areas are cleaned ${timesPerWeek("en")} by a cleaning company, and that is included in the price. At La Villa, the two shower rooms shared between two rooms are also cleaned by the company.`,
+      fr: `Non. Le ménage de ta chambre et de ta salle d'eau est à ta charge. Les parties communes, elles, sont nettoyées ${timesPerWeek("fr")} par une entreprise, et c'est compris dans le prix. À La Villa, les deux salles d'eau partagées entre deux chambres sont aussi entretenues par l'entreprise.`,
     },
   },
   {
@@ -944,8 +941,8 @@ export const faqData: FAQItem[] = [
       fr: 'Les cours de yoga sont-ils vraiment inclus ?',
     },
     answer: {
-      en: 'Yes! We offer weekly yoga and fitness classes led by professional instructors. These are included in your rent and are a great way to stay fit and meet fellow residents. Class schedules vary by house and season.',
-      fr: 'Oui ! Nous proposons des cours de yoga et fitness hebdomadaires animés par des instructeurs professionnels. Ils sont inclus dans ton loyer et sont un excellent moyen de rester en forme et de rencontrer d\'autres résidents. Les horaires des cours varient selon la maison et la saison.',
+      en: `Yes. Every month, each house hosts a yoga class and a fitness coaching session, ${IP.en.openToAll}. They are included in the price, and they are a good way to stay fit and meet the other residents.`,
+      fr: `Oui. Chaque mois, chaque maison accueille un cours de yoga et une séance de coaching sportif, ${IP.fr.openToAll}. Ils sont compris dans le prix, et c'est une bonne façon de rester en forme et de rencontrer les autres résidents.`,
     },
   },
   {
@@ -956,8 +953,8 @@ export const faqData: FAQItem[] = [
       fr: 'Quels services de streaming sont inclus ?',
     },
     answer: {
-      en: 'We provide subscriptions to major streaming services like Netflix, allowing residents to enjoy movies and shows in our entertainment areas or on their personal devices. Specific services may vary by house.',
-      fr: 'Nous fournissons des abonnements aux principaux services de streaming comme Netflix, permettant aux résidents de profiter de films et séries dans nos espaces de divertissement ou sur leurs appareils personnels. Les services spécifiques peuvent varier selon la maison.',
+      en: `At La Villa Coliving, ${IP.en.streaming} are included, on the shared screen in all ${IP.en.houses} houses: ${IP.en.streamingList}.`,
+      fr: `À La Villa Coliving, ${IP.fr.streaming} sont compris, sur l'écran commun des ${IP.fr.houses} maisons : ${IP.fr.streamingList}.`,
     },
   },
   {
@@ -988,13 +985,14 @@ export const faqData: FAQItem[] = [
   {
     id: 'monthly-essentials',
     category: 'Services & Amenities',
+    // (24/11/2026, lot 3) « Panier de base mensuel » : la liste du bloc 4 de /tarifs (src/data/inclus.ts).
     question: {
-      en: 'What are monthly essentials?',
-      fr: 'Que sont les essentiels mensuels ?',
+      en: 'What are the monthly essentials?',
+      fr: 'Qu\'est-ce que le panier de base mensuel ?',
     },
     answer: {
-      en: 'Monthly essentials include household supplies like cleaning products, paper towels, toilet paper, trash bags, and other consumables. These are delivered to the house so residents don\'t have to worry about running out of basics.',
-      fr: 'Les essentiels mensuels incluent des fournitures ménagères comme des produits d\'entretien, essuie-tout, papier toilette, sacs poubelle et autres consommables. Ceux-ci sont livrés à la maison pour que les résidents n\'aient pas à s\'inquiéter de manquer de produits de base.',
+      en: `It's the essentials basket delivered to each house every month: ${IP.en.basket}. You don't have to buy these basics yourself.`,
+      fr: `C'est le panier de base livré chaque mois dans chaque maison : ${IP.fr.basket}. Tu n'as pas à racheter ces produits de base.`,
     },
   },
   {

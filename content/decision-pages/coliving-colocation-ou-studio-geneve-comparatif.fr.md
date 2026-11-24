@@ -25,7 +25,7 @@ Lis la colonne du coliving premium : si une chambre est disponible, tu emménage
 
 ## Décision par profil : six raisons de choisir une chambre chez nous
 
-**Tu veux te consacrer à ton nouveau job.** Verdict : coliving. Les premières semaines se jouent au bureau, pas dans un magasin de meubles : candidature en deux minutes, réponse sous 48 h, visite sur place ou en visio, et si une chambre est disponible, tu emménages 72 h après ton premier contact. Le lundi, tu es à 100 % pour ton employeur.
+**Tu veux te consacrer à ton nouveau job.** Verdict : coliving. Les premières semaines se jouent au bureau, pas dans un magasin de meubles : demande en deux minutes, réponse sous 48 h, visite sur place ou en visio, et si une chambre est disponible, tu emménages 72 h après ton premier contact. Le lundi, tu es à 100 % pour ton employeur.
 
 **Tu manques de temps.** Verdict : coliving. Ménage des communs trois fois par semaine, produits du quotidien dans le placard, draps et serviettes fournis, fibre qui marche, un seul interlocuteur quand quelque chose cloche : tes soirées et tes week-ends restent à toi.
 
@@ -49,7 +49,7 @@ Lis la colonne du coliving premium : si une chambre est disponible, tu emménage
 
 <!-- entity-facts -->
 
-Concrètement, pour un nouveau job dans un mois : [candidature en deux minutes](/candidature), réponse sous 48 h, visite sur place ou en visio, bail signé en ligne. Si une chambre est disponible, tu emménages 72 h après ton premier contact. Les [chambres disponibles](/chambres-disponibles) sont visibles en direct, ce que le loyer inclut est détaillé sur la [page des tarifs](/tarifs), et les trois maisons avec leur trajet sont sur [notre page colocation à Genève côté France](/colocation-geneve).
+Concrètement, pour un nouveau job dans un mois : [demande en deux minutes](/candidature), réponse sous 48 h, visite sur place ou en visio, bail signé en ligne. Si une chambre est disponible, tu emménages 72 h après ton premier contact. Les [chambres disponibles](/chambres-disponibles) sont visibles en direct, ce que le loyer inclut est détaillé sur la [page des tarifs](/tarifs), et les trois maisons avec leur trajet sont sur [notre page colocation à Genève côté France](/colocation-geneve).
 
 ## Quand le studio à Genève est le bon choix
 
@@ -75,7 +75,7 @@ Oui, et vite : la maison est pensée pour ça. Chez nous, tu vis avec 6 à 11 co
 
 **En combien de temps peut-on emménager chez La Villa ?**
 
-En 72 h dès ton premier contact, si une chambre est disponible : candidature en deux minutes, réponse sous 48 h, visite sur place ou en visio, bail signé en ligne, et tu arrives avec ta valise dans une chambre meublée, draps et serviettes fournis. Les chambres disponibles et les prochaines libérations sont affichées en direct sur le site.
+En 72 h dès ton premier contact, si une chambre est disponible : demande en deux minutes, réponse sous 48 h, visite sur place ou en visio, bail signé en ligne, et tu arrives avec ta valise dans une chambre meublée, draps et serviettes fournis. Les chambres disponibles et les prochaines libérations sont affichées en direct sur le site.
 
 **Combien de temps pour aller travailler à Genève depuis les maisons ?**
 

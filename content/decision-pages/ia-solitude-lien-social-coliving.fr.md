@@ -88,4 +88,4 @@ L'IA va nous faire gagner un temps considérable. C'est une excellente nouvelle,
 
 Le logement n'est plus seulement l'endroit où l'on dort. Il peut devenir l'endroit où l'on retrouve ce que le reste de nos journées nous retire peu à peu : les autres. Choisir où l'on vit, c'est aussi choisir avec qui l'on vit.
 
-Si ça te parle, [découvre nos maisons](/nos-maisons) ou [candidate en ligne](/candidature) : on te répond sous 48 h.
+Si ça te parle, [découvre nos maisons](/nos-maisons) ou [demande une visite en ligne](/candidature) : on te répond sous 48 h.

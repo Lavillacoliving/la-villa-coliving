@@ -202,8 +202,7 @@ export const MAISONS_REFERRAL = {
   surfaces: { min: STATS.roomSizeMin, max: STATS.roomSizeMax },
   residents: { min: STATS.minResidentsPerHouse, max: STATS.maxResidentsPerHouse },
   cleaningPerWeek: STATS.cleaningPerWeek,
-  /** Nombre de services de l'ancienne grille de /tarifs (24/11/2026 : plus lu par /tarifs ni par le bloc L'Appart de /tarifs). */
-  includedItems: STATS.includedItems,
+  // (24/11/2026, lot 3 du brief « budget réel ») `includedItems` (« 24 services ») retiré avec STATS.includedItems : plus aucun lecteur.
   from: { fr: HOUSES_FROM.fr.chf, en: HOUSES_FROM.en.chf },
 } as const;
 

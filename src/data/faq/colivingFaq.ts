@@ -25,7 +25,7 @@ export const colivingFaq: { fr: QAPair[]; en: QAPair[] } = {
     },
     {
       q: "Le coliving est-il adapté si je suis plutôt introverti ?",
-      a: "Oui. Chez La Villa Coliving, tu gardes ta chambre privée pour ton intimité, et la vie commune reste une invitation, jamais une obligation. Les événements — dîners, pizza party, cours de sport — sont optionnels. Les maisons à taille humaine de 7 à 12 résidents rendent les liens plus naturels et moins intimidants qu'un grand immeuble.",
+      a: "Oui. Chez La Villa Coliving, tu gardes ta chambre privée pour ton intimité, et la vie commune reste une invitation, jamais une obligation. Les événements — la soirée commune du mois, les cours de yoga et de sport — sont optionnels. Les maisons à taille humaine de 7 à 12 résidents rendent les liens plus naturels et moins intimidants qu'un grand immeuble.",
     },
     {
       q: "Quels sont les inconvénients du coliving ?",
@@ -61,7 +61,7 @@ export const colivingFaq: { fr: QAPair[]; en: QAPair[] } = {
     },
     {
       q: "Is coliving suitable if I'm rather introverted?",
-      a: "Yes. At La Villa Coliving you keep your private room for your privacy, and shared life remains an invitation, never an obligation. Events — dinners, pizza parties, sport classes — are optional. The human-scale houses of 7 to 12 residents make connections more natural and less intimidating than a large building.",
+      a: "Yes. At La Villa Coliving you keep your private room for your privacy, and shared life remains an invitation, never an obligation. Events — the monthly get-together, yoga and fitness classes — are optional. The human-scale houses of 7 to 12 residents make connections more natural and less intimidating than a large building.",
     },
     {
       q: "What are the downsides of coliving?",
