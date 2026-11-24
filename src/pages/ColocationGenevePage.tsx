@@ -16,6 +16,7 @@ import { colocationGeneveFaq } from "@/data/faq/colocationGeneveFaq";
 import { STATS, STATS_DISPLAY, HOUSES_FROM, PRICE_CHF_FR, PRICE_CHF_EN, PRICE_FROM_CHF_FR, PRICE_FROM_CHF_EN, TRANSIT, GOOGLE_REVIEWS, GOOGLE_REVIEWS_LINK_LABEL, sharedBathPricesText } from "@/data/stats";
 import { ENTITY_FACTS, ENTITY_HOUSES } from "@/data/entityFacts";
 import { APPART } from "@/data/appart";
+import { inclusPhrases } from "@/data/inclus";
 import { MAISON_KEYS } from "@/data/places";
 import { OuChercher } from "@/components/OuChercher";
 import { COLOC_GENEVE_ARTICLE, COLOC_GENEVE_PILLAR_EN, COLOC_GENEVE_PILLAR_FR } from "@/lib/siteLinks";
@@ -51,6 +52,8 @@ const APPART_CARD = placeCard(APPART.key);
 export function ColocationGenevePage() {
   const { language } = useLanguage();
   const en = language === "en";
+  // (24/11/2026, lot 3 du brief « budget réel ») Fibre Orange Pro (src/data/inclus.ts) ; parking ajouté à ce que comprend le prix.
+  const IP = inclusPhrases(en ? "en" : "fr");
   const L = en ? "en" as const : "fr" as const;
   const PILLAR_URL = `https://www.lavillacoliving.com${en ? COLOC_GENEVE_PILLAR_EN : COLOC_GENEVE_PILLAR_FR}`;
   const allRooms = useAllRooms();
@@ -85,8 +88,8 @@ export function ColocationGenevePage() {
     "@type": "Offer",
     name: en ? "Furnished room in shared housing near Geneva, French side" : "Chambre meublée en colocation près de Genève, côté France",
     description: en
-      ? "All-inclusive furnished room: rent, utilities, fibre internet, cleaning of common areas 3x/week, shared spaces and community events."
-      : "Chambre meublée tout inclus : loyer, charges, fibre, ménage des communs 3x/semaine, espaces communs et événements.",
+      ? "All-inclusive furnished room: rent, utilities, fibre internet, parking, cleaning of common areas 3x/week, shared spaces and community events."
+      : "Chambre meublée tout inclus : loyer, charges, fibre, parking, ménage des communs 3x/semaine, espaces communs et événements.",
     price: String(HOUSES_FROM.chf), // « dès » des maisons (palier le plus bas), comme le lowPrice des AggregateOffer
     priceCurrency: "CHF",
     priceValidUntil: "2026-12-31",
@@ -257,8 +260,8 @@ export function ColocationGenevePage() {
             </p>
             <ul className="grid sm:grid-cols-2 gap-2 text-sm text-[#44403C]">
               {(en
-                ? [`Furnished room, ${STATS.roomSizeMin}-${STATS.roomSizeMax} m²`, "Utilities, water, heating, fibre up to 8 Gb/s", "Cleaning of common areas 3×/week", "Pool, sauna, gym depending on the house", "Yoga, events, community", "No agency fee, no application fee"]
-                : [`Chambre meublée, ${STATS.roomSizeMin} à ${STATS.roomSizeMax} m²`, "Charges, eau, chauffage, fibre jusqu'à 8 Gb/s", "Ménage des communs 3×/semaine", "Piscine, sauna, salle de sport selon la maison", "Yoga, événements, communauté", "0 frais d'agence, 0 frais de dossier"]
+                ? [`Furnished room, ${STATS.roomSizeMin}-${STATS.roomSizeMax} m²`, `Utilities, water, heating, ${IP.fibreSpeed}`, "On-site parking", "Cleaning of common areas 3×/week", "Pool, sauna, gym depending on the house", "Yoga, events, community", "No agency fee, no application fee"]
+                : [`Chambre meublée, ${STATS.roomSizeMin} à ${STATS.roomSizeMax} m²`, `Charges, eau, chauffage, ${IP.fibreSpeed}`, "Parking sur place", "Ménage des communs 3×/semaine", "Piscine, sauna, salle de sport selon la maison", "Yoga, événements, communauté", "0 frais d'agence, 0 frais de dossier"]
               ).map((item) => <li key={item} className="flex items-start gap-2"><Check className="w-4 h-4 text-[#D4A574] mt-0.5 flex-shrink-0" />{item}</li>)}
             </ul>
           </div>

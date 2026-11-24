@@ -218,8 +218,8 @@ export function ChambresDisponiblesPage() {
   // (L'Appart, E4, S7.5) Les deux lignes qui décrivent les maisons le disent : sous une carte de L'Appart, elles se liraient
   // comme les siennes.
   const reassurance = en
-    ? ["No agency fee, no application fee", "Reply within 48 hours", "Video tour available", `${STATS.totalResidents}+ residents in the houses since ${STATS.foundedYear}`, "In the houses: bills, fibre, cleaning, pool, sauna, gym included", STATS_DISPLAY.en.distance]
-    : ["0 frais d'agence ni de dossier", "Réponse sous 48 h", "Visite en visio possible", `${STATS.totalResidents}+ résidents dans les maisons depuis ${STATS.foundedYear}`, "Dans les maisons : charges, fibre, ménage, piscine, sauna, gym compris", STATS_DISPLAY.fr.distance];
+    ? ["No agency fee, no application fee", "Reply within 48 hours", "Video tour available", `${STATS.totalResidents}+ residents in the houses since ${STATS.foundedYear}`, "In the houses: bills, fibre, parking, cleaning, pool, sauna, gym included", STATS_DISPLAY.en.distance]
+    : ["0 frais d'agence ni de dossier", "Réponse sous 48 h", "Visite en visio possible", `${STATS.totalResidents}+ résidents dans les maisons depuis ${STATS.foundedYear}`, "Dans les maisons : charges, fibre, parking, ménage, piscine, sauna, salle de sport compris", STATS_DISPLAY.fr.distance];
 
   // (02/11/2026, brief « caution permanente ») La caution en 2 ou 3 fois est une règle permanente (D3-bis : « selon ton
   // dossier »), plus un avantage de l'offre : la ligne vit en permanence dans la liste de réassurance, sans condition

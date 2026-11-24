@@ -1,16 +1,22 @@
 import type { QAPair } from "@/lib/structuredData";
-import { STATS, PRICE_FROM_CHF_FR, PRICE_FROM_CHF_EN } from "@/data/stats";
+import { PRICE_FROM_CHF_FR, PRICE_FROM_CHF_EN } from "@/data/stats";
+import { timesPerWeek } from "@/data/priceFacts";
+import { inclusPhrases } from "@/data/inclus";
 
 // §10 du playbook AEO — /services (détail des prestations incluses). Tutoiement, texte verbatim.
+// (24/11/2026, lot 3 du brief « budget réel ») Plus de « 24 services » ni de cours « chaque semaine » : ce que comprend le prix des
+// maisons se lit dans src/data/inclus.ts (bloc 4 de /tarifs) ; la soirée commune remplace « pizza party et dîners communautaires ».
+const FR = inclusPhrases("fr");
+const EN = inclusPhrases("en");
 export const servicesFaq: { fr: QAPair[]; en: QAPair[] } = {
   fr: [
     {
       q: "Quels services sont inclus dans le loyer chez La Villa ?",
-      a: `Chez La Villa Coliving, ${STATS.includedItems} services sont inclus dans un loyer unique dès ${PRICE_FROM_CHF_FR}/mois : charges, internet fibre jusqu'à 8 Gb/s, ménage des communs trois fois par semaine, piscine, sauna, salle de sport, cours de yoga et fitness, streaming, événements communautaires et livraison d'essentiels mensuels.`,
+      a: `Chez La Villa Coliving, un seul loyer, dès ${PRICE_FROM_CHF_FR}/mois, comprend les charges, la ${FR.fibreSpeed}, le parking sur place, le ménage des communs ${timesPerWeek("fr")}, la buanderie, le panier de base livré chaque mois, ${FR.streaming}, la piscine, le sauna et la salle de sport, ${FR.classesEachHouse}, et ${FR.getTogether}.`,
     },
     {
       q: "Les cours de yoga et de fitness sont-ils vraiment inclus ?",
-      a: "Oui. Chez La Villa Coliving, les cours de yoga et de fitness sont inclus dans ton loyer et organisés chaque semaine dans les maisons. Ils restent optionnels : tu y participes quand tu veux, sans supplément.",
+      a: `Oui. Chez La Villa Coliving, chaque maison accueille chaque mois un cours de yoga et une séance de coaching sportif, ${FR.openToAll}, compris dans ton loyer. Ils restent optionnels : tu y participes quand tu veux, sans supplément.`,
     },
     {
       q: "Le sauna est-il inclus ?",
@@ -26,17 +32,17 @@ export const servicesFaq: { fr: QAPair[]; en: QAPair[] } = {
     },
     {
       q: "La nourriture est-elle incluse dans le loyer ?",
-      a: "Non, la nourriture n'est pas incluse chez La Villa Coliving : tu disposes d'une cuisine équipée, souvent double, pour cuisiner librement. En revanche, des moments conviviaux comme la pizza party mensuelle et les dîners communautaires sont organisés et inclus.",
+      a: "Non, la nourriture n'est pas incluse chez La Villa Coliving : tu disposes d'une cuisine équipée, souvent double, pour cuisiner librement. En revanche, une soirée commune est organisée chaque mois dans chaque maison, et elle est comprise dans le loyer.",
     },
   ],
   en: [
     {
       q: "What services are included in the rent at La Villa?",
-      a: `At La Villa Coliving, ${STATS.includedItems} services are included in a single rent from ${PRICE_FROM_CHF_EN}/month: utilities, fibre internet up to 8 Gb/s, cleaning of common areas three times a week, pool, sauna, gym, yoga and fitness classes, streaming, community events and monthly delivery of essentials.`,
+      a: `At La Villa Coliving, a single rent, from ${PRICE_FROM_CHF_EN}/month, covers utilities, ${EN.fibreSpeed}, on-site parking, cleaning of the shared areas ${timesPerWeek("en")}, the laundry room, the monthly essentials basket, ${EN.streaming}, the pool, the sauna and the gym, ${EN.classesEachHouse}, and ${EN.getTogether}.`,
     },
     {
       q: "Are the yoga and fitness classes really included?",
-      a: "Yes. At La Villa Coliving, yoga and fitness classes are included in your rent and held every week in the houses. They remain optional: you join whenever you want, at no extra cost.",
+      a: `Yes. At La Villa Coliving, each house hosts a yoga class and a fitness coaching session every month, ${EN.openToAll}, included in your rent. They remain optional: you join whenever you want, at no extra cost.`,
     },
     {
       q: "Is the sauna included?",
@@ -52,7 +58,7 @@ export const servicesFaq: { fr: QAPair[]; en: QAPair[] } = {
     },
     {
       q: "Is food included in the rent?",
-      a: "No, food is not included at La Villa Coliving: you have an equipped kitchen, often double, to cook freely. However, convivial moments like the monthly pizza party and community dinners are organised and included.",
+      a: "No, food is not included at La Villa Coliving: you have an equipped kitchen, often double, to cook freely. However, each house hosts a get-together every month, included in the rent.",
     },
   ],
 };

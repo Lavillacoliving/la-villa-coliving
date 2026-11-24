@@ -3,6 +3,7 @@ import { STATS, STATS_SHARED_BATH, PRICE_CHF_FR, PRICE_CHF_EN, PRICE_FROM_CHF_FR
 import { priceJustificationFaq, timesPerWeek } from "@/data/priceFacts";
 import { APPART } from "@/data/appart";
 import { appartHousesFaq } from "@/data/appartHousesFaq";
+import { inclusPhrases } from "@/data/inclus";
 import {
   BUDGET_FRANCE,
   BUDGET_GAPS,
@@ -75,7 +76,7 @@ export const tarifsFaq: { fr: QAPair[]; en: QAPair[] } = {
     {
       q: "Qu'est-ce qui est inclus dans le loyer chez La Villa Coliving ?",
       // (L'Appart, E5) Les deux gammes : sous la liste des chambres disponibles, L'Appart a ses cartes — la piscine n'y est pas comprise.
-      a: `Dans les maisons de La Villa Coliving, ton loyer tout inclus dès ${PRICE_FROM_CHF_FR}/mois couvre la chambre meublée de ${STATS.roomSizeMin} à ${STATS.roomSizeMax} m², toutes les charges, l'internet fibre jusqu'à 8 Gb/s, le ménage des parties communes trois fois par semaine, l'accès à la piscine, au sauna et à la salle de sport, les cours de yoga et fitness et les événements. À ${A.name}, notre colocation à ${A.commune}, le loyer dès ${AP.from.fr.chf}/mois couvre la chambre meublée, les charges, la fibre, le streaming et le ménage des parties communes une fois par semaine ; le linge de lit et les produits d'entretien ne sont pas compris. Un seul paiement par mois, sans frais de dossier, sans frais cachés.`,
+      a: `Dans les maisons de La Villa Coliving, ton loyer tout inclus dès ${PRICE_FROM_CHF_FR}/mois couvre la chambre meublée de ${STATS.roomSizeMin} à ${STATS.roomSizeMax} m², toutes les charges, la ${inclusPhrases("fr").fibreSpeed}, le parking sur place, le ménage des parties communes ${timesPerWeek("fr")}, l'accès à la piscine, au sauna et à la salle de sport, les cours de yoga et fitness et les événements. À ${A.name}, notre colocation à ${A.commune}, le loyer dès ${AP.from.fr.chf}/mois couvre la chambre meublée, les charges, la fibre, le streaming et le ménage des parties communes une fois par semaine ; le linge de lit et les produits d'entretien ne sont pas compris. Un seul paiement par mois, sans frais de dossier, sans frais cachés.`,
     },
     // (Lot L4, D8 — 10/10/2026) FAQ A.3 de justification du prix : texte unique src/data/priceFacts.ts (aussi /faq, /le-coliving,
     // /colocation-geneve, /chambre-a-louer-geneve ; /chambres-disponibles via tarifsFaq.slice(0, 2)).
@@ -117,7 +118,7 @@ export const tarifsFaq: { fr: QAPair[]; en: QAPair[] } = {
   en: [
     {
       q: "What's included in the rent at La Villa Coliving?",
-      a: `In La Villa Coliving's houses, your all-inclusive rent from ${PRICE_FROM_CHF_EN}/month covers a furnished room of ${STATS.roomSizeMin} to ${STATS.roomSizeMax} m², all utilities, fibre internet up to 8 Gb/s, cleaning of common areas three times a week, access to the pool, sauna and gym, yoga and fitness classes and community events. At ${A.name}, our flatshare in ${A.commune}, the rent from ${AP.from.en.chf}/month covers the furnished room, bills, fibre, streaming and cleaning of the shared areas once a week; bed linen and cleaning products are not included. A single monthly payment, with no application fees and no hidden costs.`,
+      a: `In La Villa Coliving's houses, your all-inclusive rent from ${PRICE_FROM_CHF_EN}/month covers a furnished room of ${STATS.roomSizeMin} to ${STATS.roomSizeMax} m², all utilities, ${inclusPhrases("en").fibreSpeed}, on-site parking, cleaning of common areas ${timesPerWeek("en")}, access to the pool, sauna and gym, yoga and fitness classes and community events. At ${A.name}, our flatshare in ${A.commune}, the rent from ${AP.from.en.chf}/month covers the furnished room, bills, fibre, streaming and cleaning of the shared areas once a week; bed linen and cleaning products are not included. A single monthly payment, with no application fees and no hidden costs.`,
     },
     priceJustificationFaq("en"),
     {

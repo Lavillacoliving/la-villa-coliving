@@ -4,11 +4,15 @@ import { pickSituations } from "@/data/faq/situationsFaq";
 import { communeSentence } from "@/data/answerSlots";
 import { APPART } from "@/data/appart";
 import { appartCommuneSentence } from "@/data/appartFacts";
+import { timesPerWeek } from "@/data/priceFacts";
+import { inclusPhrases } from "@/data/inclus";
 
 // (L'Appart, Lot 4, étape E5 — textes du 13/11/2026, « à confirmer ») Page d'intention Annemasse : L'Appart ouvre la réponse de prix
 // (sa phrase, puis celle des trois maisons de coliving, chacune avec son « dès ») ; la réponse « Quel quartier » ajoute la phrase de
 // commune de L'Appart, forme « à la suite » (après celle du Lodge) — vérifiée par check:slots sur cette page (appartCommune:suite).
 const APPART_FROM = APPART.price.from;
+// (24/11/2026, lot 3 du brief « budget réel ») Ce que comprend le prix des maisons, comme sur /tarifs (src/data/inclus.ts).
+const IP = { fr: inclusPhrases("fr"), en: inclusPhrases("en") };
 
 // (Lot L1 « ingénierie des créneaux », 10/2026) Minutes depuis TRANSIT (D1-L1) ; la réponse « Quel quartier » =
 // les trois phrases de commune (M2, A.5) de src/data/answerSlots.ts — Perplexity reconstruit son tableau de quartiers
@@ -29,7 +33,7 @@ export const annemasseColocationFaq: { fr: QAPair[]; en: QAPair[] } = {
   fr: [
     {
       q: "Combien coûte une colocation à Annemasse chez La Villa Coliving ?",
-      a: `À ${APPART.name}, notre colocation du quartier de la gare d'${APPART.commune}, une chambre coûte à partir de ${APPART_FROM.fr.chf}/mois, charges, fibre, streaming et ménage des communs compris. Dans nos trois maisons de coliving d'Annemasse Agglo (Ville-la-Grand, Ambilly, Annemasse), les chambres sont à partir de ${PRICE_FROM_CHF_FR}/mois tout inclus. Le prix comprend le loyer, les charges (eau, électricité, chauffage), la fibre jusqu'à 8 Gb/s, le ménage ${STATS.cleaningPerWeek} fois par semaine des communs, l'accès à la piscine chauffée, à la salle de sport et au sauna, les cours de yoga et fitness privés hebdomadaires, et les événements communautaires mensuels. Pas de frais d'agence, pas de frais de dossier.`,
+      a: `À ${APPART.name}, notre colocation du quartier de la gare d'${APPART.commune}, une chambre coûte à partir de ${APPART_FROM.fr.chf}/mois, charges, fibre, streaming et ménage des communs compris. Dans nos trois maisons de coliving d'Annemasse Agglo (Ville-la-Grand, Ambilly, Annemasse), les chambres sont à partir de ${PRICE_FROM_CHF_FR}/mois tout inclus. Le prix comprend les charges (eau, électricité, chauffage), la ${IP.fr.fibreSpeed}, le parking sur place, le ménage des communs ${timesPerWeek("fr")}, l'accès à la piscine, au sauna et à la salle de sport de la maison, ${IP.fr.classesEachHouse}, et ${IP.fr.getTogether}. Pas de frais d'agence, pas de frais de dossier.`,
     },
     {
       q: "Combien de temps pour aller à Genève depuis Annemasse ?",
@@ -50,7 +54,7 @@ export const annemasseColocationFaq: { fr: QAPair[]; en: QAPair[] } = {
     },
     {
       q: "Quelle différence entre colocation classique et coliving à Annemasse ?",
-      a: `Une colocation classique implique généralement de gérer soi-même les charges (électricité, eau, internet), le ménage, l'entretien, et de meubler sa chambre. Notre coliving à Annemasse inclut tout dans un seul loyer : charges, fibre, ménage ${STATS.cleaningPerWeek}x/semaine, mobilier design, accès aux espaces premium (piscine, gym, sauna), événements communautaires. Le prix au mètre carré reste cohérent avec une colocation classique haut de gamme à Annemasse, mais sans aucune mauvaise surprise.`,
+      a: `Une colocation classique implique généralement de gérer soi-même les charges (électricité, eau, internet), le ménage, l'entretien, et de meubler sa chambre. Notre coliving à Annemasse inclut tout dans un seul loyer : charges, fibre, parking, ménage ${STATS.cleaningPerWeek}x/semaine, mobilier design, accès aux espaces premium (piscine, gym, sauna), événements communautaires. Le prix au mètre carré reste cohérent avec une colocation classique haut de gamme à Annemasse, mais sans aucune mauvaise surprise.`,
     },
     {
       q: "Comment réserver une chambre à Annemasse ?",
@@ -61,7 +65,7 @@ export const annemasseColocationFaq: { fr: QAPair[]; en: QAPair[] } = {
   en: [
     {
       q: "How much does a flatshare room in Annemasse cost at La Villa Coliving?",
-      a: `At ${APPART.name}, our flatshare near ${APPART.commune} station, a room costs from ${APPART_FROM.en.chf}/month, with bills, fibre, streaming and cleaning of the shared areas included. In our three coliving houses in Annemasse Agglo (Ville-la-Grand, Ambilly, Annemasse), rooms start at ${PRICE_FROM_CHF_EN}/month all inclusive. The price covers rent, bills (water, electricity, heating), fibre up to 8 Gb/s, cleaning of the common areas ${STATS.cleaningPerWeek} times a week, access to the heated pool, gym and sauna, weekly private yoga and fitness classes, and monthly community events. No agency fee, no application fee.`,
+      a: `At ${APPART.name}, our flatshare near ${APPART.commune} station, a room costs from ${APPART_FROM.en.chf}/month, with bills, fibre, streaming and cleaning of the shared areas included. In our three coliving houses in Annemasse Agglo (Ville-la-Grand, Ambilly, Annemasse), rooms start at ${PRICE_FROM_CHF_EN}/month all inclusive. The price covers utilities (water, electricity, heating), ${IP.en.fibreSpeed}, on-site parking, cleaning of the common areas ${timesPerWeek("en")}, access to the house's pool, sauna and gym, ${IP.en.classesEachHouse}, and ${IP.en.getTogether}. No agency fee, no application fee.`,
     },
     {
       q: "How long does it take to get to Geneva from Annemasse?",
@@ -82,7 +86,7 @@ export const annemasseColocationFaq: { fr: QAPair[]; en: QAPair[] } = {
     },
     {
       q: "What is the difference between a classic flatshare and coliving in Annemasse?",
-      a: `In a classic flatshare you usually manage the bills (electricity, water, internet), the cleaning and the upkeep yourself, and furnish your room. Our coliving in Annemasse includes everything in one rent: bills, fibre, cleaning ${STATS.cleaningPerWeek} times a week, designer furniture, access to the premium spaces (pool, gym, sauna), community events. The price per square metre stays in line with a high-end classic flatshare in Annemasse, with no nasty surprises.`,
+      a: `In a classic flatshare you usually manage the bills (electricity, water, internet), the cleaning and the upkeep yourself, and furnish your room. Our coliving in Annemasse includes everything in one rent: bills, fibre, parking, cleaning ${STATS.cleaningPerWeek} times a week, designer furniture, access to the premium spaces (pool, gym, sauna), community events. The price per square metre stays in line with a high-end classic flatshare in Annemasse, with no nasty surprises.`,
     },
     {
       q: "How do I book a room in Annemasse?",

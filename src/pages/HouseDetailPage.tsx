@@ -31,6 +31,9 @@ import { STATS, STATS_DISPLAY, STATS_SHARED_BATH, HOUSE_SURFACES, ROOM_SURFACE_B
 // (Lot L2 « Emplacement et transport », 09/10/2026) Source unique des faits d'emplacement : plus aucune minute,
 // distance ou surface en dur dans cette page (règle D1/D6/D7 de Jérôme, recon L0.2a).
 import { ENTITY_HOUSES } from "@/data/entityFacts";
+// (24/11/2026, lot 3 du brief « budget réel ») Ce que comprend le prix (cours, streaming, fibre, soirée) : mêmes phrases que /tarifs.
+import { inclusPhrases } from "@/data/inclus";
+import { timesPerWeek } from "@/data/priceFacts";
 import { ALBUM_COVERS } from "@/data/albumCovers";
 import {
   HOUSE_LOCATION_VERSION,
@@ -151,6 +154,8 @@ function getHousesData(lang: string): Record<string, HouseData> {
   const sharedHigh = sharedTiers[sharedTiers.length - 1];
   const L: L2Lang = isEn ? "en" : "fr";
   const T = TRANSIT.byHouse;
+  // (24/11/2026, lot 3 du brief « budget réel ») Faits du bloc 4 de /tarifs, dans la langue de la page (src/data/inclus.ts).
+  const IP = inclusPhrases(L);
   return {
   lavilla: {
     name: "La Villa",
@@ -160,8 +165,8 @@ function getHousesData(lang: string): Record<string, HouseData> {
       ? `${HOUSE_SURFACES.lavilla.livingM2} m² of designed living on a ${m2(HOUSE_SURFACES.lavilla.plotM2, "en")} estate bordering a nature reserve. Heated pool, sauna, gym, and 10 spacious rooms.`
       : `${HOUSE_SURFACES.lavilla.livingM2} m² de vie design sur un domaine de ${m2(HOUSE_SURFACES.lavilla.plotM2, "fr")} bordant une réserve naturelle. Piscine chauffée, sauna, salle de sport et 10 chambres spacieuses.`,
     longDescription: isEn
-      ? { lead: `Our flagship house, in Ville-la-Grand: ${commuteShort("lavilla", "en")}. ${HOUSE_SURFACES.lavilla.livingM2} m² for 10 housemates on a ${m2(HOUSE_SURFACES.lavilla.plotM2, "en")} estate bordering a nature reserve. Day to day: a heated 12×5 m pool, a 5-seat sauna, a fully equipped gym and 8 Gb/s fiber.`, rest: `All rooms are furnished with Emma or Tediber mattresses — 6 with a private en-suite bathroom at ${PRICE_CHF_EN}/month, 4 with 2 shower rooms each shared between just 2 rooms: ${sharedBathTiersText("en", { perMonth: true })} (shower-room cleaning is included in the rent — no hassle!). All-inclusive rent covers utilities, fiber, cleaning of common areas three times a week, pool and garden upkeep. No application fee, reply within 48h.` }
-      : { lead: `Notre maison amirale, à Ville-la-Grand : ${commuteShort("lavilla", "fr")}. ${HOUSE_SURFACES.lavilla.livingM2} m² pour 10 colocataires, sur un domaine de ${m2(HOUSE_SURFACES.lavilla.plotM2, "fr")} en bordure de réserve naturelle. Au quotidien : piscine chauffée de 12×5 m, sauna 5 places, salle de sport équipée et fibre 8 Gb/s.`, rest: `Toutes les chambres sont meublées avec matelas Emma ou Tediber — 6 avec salle de bain privative à ${PRICE_CHF_FR}/mois, 4 avec 2 salles d'eau partagées, chacune entre 2 chambres seulement : ${sharedBathTiersText("fr", { perMonth: true })} (le ménage des salles d'eau est inclus dans le loyer : pas de tracas !). Loyer tout inclus : charges, fibre, ménage 3×/semaine des espaces communs, entretien piscine et jardin. 0 frais de dossier, réponse sous 48 h.` },
+      ? { lead: `Our flagship house, in Ville-la-Grand: ${commuteShort("lavilla", "en")}. ${HOUSE_SURFACES.lavilla.livingM2} m² for 10 housemates on a ${m2(HOUSE_SURFACES.lavilla.plotM2, "en")} estate bordering a nature reserve. Day to day: a heated 12×5 m pool, a 5-seat sauna, a fully equipped gym and ${IP.fibreSpeed}.`, rest: `All rooms are furnished with Emma or Tediber mattresses — 6 with a private en-suite bathroom at ${PRICE_CHF_EN}/month, 4 with 2 shower rooms each shared between just 2 rooms: ${sharedBathTiersText("en", { perMonth: true })} (shower-room cleaning is included in the rent — no hassle!). All-inclusive rent covers utilities, fibre, parking, cleaning of common areas ${timesPerWeek("en")}, pool and garden upkeep. No application fee, reply within 48h.` }
+      : { lead: `Notre maison amirale, à Ville-la-Grand : ${commuteShort("lavilla", "fr")}. ${HOUSE_SURFACES.lavilla.livingM2} m² pour 10 colocataires, sur un domaine de ${m2(HOUSE_SURFACES.lavilla.plotM2, "fr")} en bordure de réserve naturelle. Au quotidien : piscine chauffée de 12×5 m, sauna 5 places, salle de sport équipée et ${IP.fibreSpeed}.`, rest: `Toutes les chambres sont meublées avec matelas Emma ou Tediber — 6 avec salle de bain privative à ${PRICE_CHF_FR}/mois, 4 avec 2 salles d'eau partagées, chacune entre 2 chambres seulement : ${sharedBathTiersText("fr", { perMonth: true })} (le ménage des salles d'eau est inclus dans le loyer : pas de tracas !). Loyer tout inclus : charges, fibre, parking, ménage des espaces communs ${timesPerWeek("fr")}, entretien de la piscine et du jardin. 0 frais de dossier, réponse sous 48 h.` },
     image: "/images/la villa jardin.webp",
     gallery: [
       "/images/la villa/rooms/La Villa-92.webp",
@@ -412,9 +417,11 @@ function getHousesData(lang: string): Record<string, HouseData> {
       "TV & gaming room (PS5, PS4 & Switch)",
       "XXL barbecue & multiple terraces",
       "Volleyball court",
-      "Parking included",
+      // (24/11/2026, lot 3 du brief « budget réel ») Parking sur place et parking à vélos ; fibre : opérateur et Wi-Fi (bloc 4 de /tarifs).
+      "On-site parking included",
+      "Outdoor bike parking",
       "Laundry & storage room",
-      "fiber internet up to 8 Gb/s",
+      IP.lines.fibreSpeed,
       "Vegetable garden & outdoor terraces",
       "Double equipped kitchen",
     ] : [
@@ -424,29 +431,31 @@ function getHousesData(lang: string): Record<string, HouseData> {
       "Salle TV & gaming (PS5, PS4 & Switch)",
       "BBQ XXL & terrasses multiples",
       "Terrain de volley",
-      "Parking inclus",
+      "Parking sur place inclus",
+      "Parking à vélos extérieur",
       "Buanderie & espace rangement",
-      "Internet fibre jusqu'à 8 Gb/s",
+      IP.lines.fibreSpeed,
       "Potager & terrasses extérieures",
       "Double cuisine équipée",
     ],
+    // (24/11/2026, lot 3) Cours (un de chaque par mois), soirée commune, six services de streaming : lignes du bloc 4 de /tarifs.
     services: isEn ? [
       "Housekeeping three times a week",
-      "Weekly private yoga & fitness classes",
-      "Monthly pizza party",
+      IP.lines.classes,
+      IP.lines.getTogether,
       "Seasonal community events",
       "WhatsApp direct support",
       "Pool, sauna & garden maintenance",
-      "Streaming subscriptions (Netflix, Canal+, etc.)",
+      IP.lines.streaming,
       "Bed linen set & towels provided",
     ] : [
       "Ménage des communs 3 fois par semaine",
-      "Cours de yoga & fitness privés hebdomadaires",
-      "Pizza Party mensuelle",
+      IP.lines.classes,
+      IP.lines.getTogether,
       "Événements communautaires saisonniers",
       "Support WhatsApp direct",
       "Entretien piscine, sauna & jardin",
-      "Abonnements streaming (Netflix, Canal+, etc.)",
+      IP.lines.streaming,
       "Parure de linge de lit et serviettes fournie",
     ],
     rooms: [
@@ -477,14 +486,14 @@ function getHousesData(lang: string): Record<string, HouseData> {
     nearby: houseNearbyCard("lavilla", L),
     lifestyle: isEn ? [
       "Morning yoga by the pool",
-      "Community BBQ dinners",
+      "Residents' barbecues", // (24/11/2026, lot 3) plus de « dîners communautaires » (ambiance, organisée par les résidents)
       "Weekend volleyball tournaments",
       "Garden-to-table cooking",
       "Movie nights in the TV room",
       "Nature walks along the reserve",
     ] : [
       "Yoga matinal au bord de la piscine",
-      "Dîners BBQ communautaires",
+      "Barbecues entre résidents",
       "Tournois de volley le week-end",
       "Cuisine du potager à l'assiette",
       "Soirées cinéma dans la salle TV",
@@ -819,9 +828,10 @@ function getHousesData(lang: string): Record<string, HouseData> {
       "Fully equipped modern gym, open 24/7",
       "Large south-facing terraces",
       "XXL outdoor kitchen with professional barbecue and TV", // (21/11/2026, Jérôme : barbecue professionnel au Loft)
-      "Parking included",
+      "On-site parking included", // (24/11/2026, lot 3) parking sur place, parking à vélos, fibre (bloc 4 de /tarifs)
+      "Outdoor bike parking",
       "In-house laundry room",
-      "fiber internet up to 8 Gb/s",
+      IP.lines.fibreSpeed,
       "Designer kitchen",
       "Foosball table",
     ] : [
@@ -830,29 +840,30 @@ function getHousesData(lang: string): Record<string, HouseData> {
       "Salle de sport moderne équipée, accessible 24h/24",
       "Grandes terrasses plein sud",
       "Cuisine extérieure XXL avec barbecue professionnel et TV", // (21/11/2026, Jérôme : barbecue professionnel au Loft)
-      "Parking inclus",
+      "Parking sur place inclus",
+      "Parking à vélos extérieur",
       "Buanderie intégrée",
-      "Internet fibre jusqu'à 8 Gb/s",
+      IP.lines.fibreSpeed,
       "Cuisine design",
       "Babyfoot",
     ],
     services: isEn ? [
       "Housekeeping three times a week",
-      "Weekly private yoga & fitness classes",
-      "Monthly pizza party",
+      IP.lines.classes,
+      IP.lines.getTogether,
       "Seasonal community events",
       "WhatsApp direct support",
       "Pool & sauna maintenance",
-      "Streaming subscriptions (Netflix, Canal+, etc.)",
+      IP.lines.streaming,
       "Bed linen set & towels provided",
     ] : [
       "Ménage des communs 3 fois par semaine",
-      "Cours de yoga & fitness privés hebdomadaires",
-      "Pizza Party mensuelle",
+      IP.lines.classes,
+      IP.lines.getTogether,
       "Événements communautaires saisonniers",
       "Support WhatsApp direct",
       "Entretien piscine & sauna",
-      "Abonnements streaming (Netflix, Canal+, etc.)",
+      IP.lines.streaming,
       "Parure de linge de lit et serviettes fournie",
     ],
     rooms: [
@@ -905,8 +916,8 @@ function getHousesData(lang: string): Record<string, HouseData> {
       ? `Our newest and largest home, open since January 2026. ${HOUSE_SURFACES.lelodge.livingM2} m² on ${m2(HOUSE_SURFACES.lelodge.plotM2, "en")}, pool house, full fitness chalet with sauna & arcade.`
       : `Notre maison la plus récente et la plus grande, ouverte depuis janvier 2026. ${HOUSE_SURFACES.lelodge.livingM2} m² sur ${m2(HOUSE_SURFACES.lelodge.plotM2, "fr")}, pool house, chalet fitness complet avec sauna et jeu d'arcade.`,
     longDescription: isEn
-      ? { lead: `Le Lodge is our newest coliving in Annemasse, opened January 2026 in the quiet residential Romagny district: ${commuteShort("lelodge", "en")}. Within ${HOUSE_SURFACES.lelodge.livingM2} m² spread across 4 buildings at the heart of ${m2(HOUSE_SURFACES.lelodge.plotM2, "en")} of gardens, 12 housemates share a dedicated fitness chalet with Finnish sauna, a pool house with full outdoor kitchen, and a main residence designed to combine privacy and community living.`, rest: `Each furnished room has its own en-suite bathroom, ergonomic desk and fiber internet. Direct Léman Express from Annemasse station: Geneva Eaux-Vives in ${TRANSIT.trainEauxVivesMin} minutes, Champel in ${TRANSIT.trainChampelMin}, Cornavin in ${TRANSIT.trainCornavinMin}, no transfer — a train every ${TRANSIT.peakHeadwayMin} minutes at peak time. Ideal for cross-border workers commuting daily, and young professionals who value a real community over a faceless apartment block. All-inclusive rent (utilities, fiber, common cleaning three times a week, private fitness classes) at ${PRICE_CHF_EN}/month. No agency fees.` }
-      : { lead: `Le Lodge est notre coliving le plus récent à Annemasse, ouvert en janvier 2026 dans le quartier résidentiel calme de Romagny : ${commuteShort("lelodge", "fr")}. Dans ${HOUSE_SURFACES.lelodge.livingM2} m² répartis sur 4 bâtiments au cœur de ${m2(HOUSE_SURFACES.lelodge.plotM2, "fr")} de jardins, 12 colocataires partagent un chalet fitness dédié avec sauna finlandais, un pool house avec cuisine d'été complète et une résidence principale conçue pour combiner intimité et vie communautaire.`, rest: `Chaque chambre meublée dispose de sa salle de bain privative, d'un bureau ergonomique et de la fibre. Léman Express direct depuis la gare d'Annemasse : Genève-Eaux-Vives en ${TRANSIT.trainEauxVivesMin} min, Champel en ${TRANSIT.trainChampelMin} min, Cornavin en ${TRANSIT.trainCornavinMin} min, sans correspondance — un train toutes les ${TRANSIT.peakHeadwayMin} min en heure de pointe. Idéal pour les frontaliers qui font le trajet quotidien, et les jeunes pros qui valorisent une vraie communauté plutôt qu'un immeuble anonyme. Loyer tout inclus (charges, fibre, ménage commun 3 fois par semaine, cours de fitness privés) : ${PRICE_CHF_FR}/mois. Sans frais d'agence.` },
+      ? { lead: `Le Lodge is our newest coliving in Annemasse, opened January 2026 in the quiet residential Romagny district: ${commuteShort("lelodge", "en")}. Within ${HOUSE_SURFACES.lelodge.livingM2} m² spread across 4 buildings at the heart of ${m2(HOUSE_SURFACES.lelodge.plotM2, "en")} of gardens, 12 housemates share a dedicated fitness chalet with Finnish sauna, a pool house with full outdoor kitchen, and a main residence designed to combine privacy and community living.`, rest: `Each furnished room has its own en-suite bathroom, ergonomic desk and fiber internet. Direct Léman Express from Annemasse station: Geneva Eaux-Vives in ${TRANSIT.trainEauxVivesMin} minutes, Champel in ${TRANSIT.trainChampelMin}, Cornavin in ${TRANSIT.trainCornavinMin}, no transfer — a train every ${TRANSIT.peakHeadwayMin} minutes at peak time. Ideal for cross-border workers commuting daily, and young professionals who value a real community over a faceless apartment block. All-inclusive rent (utilities, fibre, parking with no allocated space, cleaning of the shared areas ${timesPerWeek("en")}, yoga and fitness coaching classes) at ${PRICE_CHF_EN}/month. No agency fees.` }
+      : { lead: `Le Lodge est notre coliving le plus récent à Annemasse, ouvert en janvier 2026 dans le quartier résidentiel calme de Romagny : ${commuteShort("lelodge", "fr")}. Dans ${HOUSE_SURFACES.lelodge.livingM2} m² répartis sur 4 bâtiments au cœur de ${m2(HOUSE_SURFACES.lelodge.plotM2, "fr")} de jardins, 12 colocataires partagent un chalet fitness dédié avec sauna finlandais, un pool house avec cuisine d'été complète et une résidence principale conçue pour combiner intimité et vie communautaire.`, rest: `Chaque chambre meublée dispose de sa salle de bain privative, d'un bureau ergonomique et de la fibre. Léman Express direct depuis la gare d'Annemasse : Genève-Eaux-Vives en ${TRANSIT.trainEauxVivesMin} min, Champel en ${TRANSIT.trainChampelMin} min, Cornavin en ${TRANSIT.trainCornavinMin} min, sans correspondance — un train toutes les ${TRANSIT.peakHeadwayMin} min en heure de pointe. Idéal pour les frontaliers qui font le trajet quotidien, et les jeunes pros qui valorisent une vraie communauté plutôt qu'un immeuble anonyme. Loyer tout inclus (charges, fibre, parking sans place attribuée, ménage des communs ${timesPerWeek("fr")}, cours de yoga et de coaching sportif) : ${PRICE_CHF_FR}/mois. Sans frais d'agence.` },
     image: "/images/le lodge/exterior/la villa coliving le lodge-14.webp",
     gallery: [
       "/images/le lodge/rooms/la villa coliving le lodge-104.webp",
@@ -1268,8 +1279,9 @@ function getHousesData(lang: string): Record<string, HouseData> {
       "Ping pong, arcade machine, pétanque",
       "Shuffleboard & foosball",
       "Beautiful gardens & expansive outdoor spaces",
-      "Parking included",
-      "fiber internet up to 8 Gb/s",
+      "On-site parking included, no allocated space", // (24/11/2026, lot 3) au Lodge, sans place attribuée (bloc 4 de /tarifs)
+      "Outdoor bike parking",
+      IP.lines.fibreSpeed,
       `${HOUSE_SURFACES.lelodge.atticM2} m² attic storage`,
       "DPE B energy rating",
     ] : [
@@ -1279,28 +1291,29 @@ function getHousesData(lang: string): Record<string, HouseData> {
       "Ping pong, jeu d'arcade, pétanque",
       "Jeux de palets & babyfoot",
       "Grands jardins & vastes espaces extérieurs",
-      "Parking inclus",
-      "Internet fibre jusqu'à 8 Gb/s",
+      "Parking sur place inclus, sans place attribuée",
+      "Parking à vélos extérieur",
+      IP.lines.fibreSpeed,
       `Grenier de stockage ${HOUSE_SURFACES.lelodge.atticM2} m²`,
       "DPE B (performance énergétique)",
     ],
     services: isEn ? [
       "Housekeeping three times a week",
-      "Weekly private yoga & fitness classes",
-      "Monthly pizza party",
+      IP.lines.classes,
+      IP.lines.getTogether,
       "Seasonal community events",
       "WhatsApp direct support",
       "Full property, garden & pool maintenance",
-      "Streaming subscriptions (Netflix, Canal+, etc.)",
+      IP.lines.streaming,
       "Bed linen set & towels provided",
     ] : [
       "Ménage des communs 3 fois par semaine",
-      "Cours de yoga & fitness privés hebdomadaires",
-      "Pizza Party mensuelle",
+      IP.lines.classes,
+      IP.lines.getTogether,
       "Événements communautaires saisonniers",
       "Support WhatsApp direct",
       "Entretien complet propriété, jardin & piscine",
-      "Abonnements streaming (Netflix, Canal+, etc.)",
+      IP.lines.streaming,
       "Parure de linge de lit et serviettes fournie",
     ],
     rooms: [
@@ -2014,11 +2027,16 @@ export function HouseDetailPage() {
                     </div>
                     <div className="flex items-center gap-3 text-[#57534E]">
                       <Wifi size={18} className="text-[#D4A574]" />
-                      <span className="text-sm">{language === "en" ? "Fiber up to 8 Gb/s" : "Fibre jusqu'à 8 Gb/s"}</span>
+                      {/* (24/11/2026, lot 3 du brief « budget réel ») Opérateur nommé ; parking compris (au Lodge, sans place attribuée). */}
+                      <span className="text-sm">{capitalize(inclusPhrases(language === "en" ? "en" : "fr").fibreSpeed)}</span>
                     </div>
                     <div className="flex items-center gap-3 text-[#57534E]">
                       <Car size={18} className="text-[#78716C]" />
-                      <span className="text-sm">{language === "en" ? "Parking Available" : "Parking disponible"}</span>
+                      <span className="text-sm">
+                        {language === "en"
+                          ? (id === "lelodge" ? "Parking included, no allocated space" : "Parking included")
+                          : (id === "lelodge" ? "Parking compris, sans place attribuée" : "Parking compris")}
+                      </span>
                     </div>
                     <div className="flex items-center gap-3 text-[#57534E]">
                       <Coffee size={18} className="text-[#D4A574]" />
@@ -2088,8 +2106,8 @@ export function HouseDetailPage() {
                   (Lot L2, D1) Le « 20 min » de marque s'écrit toujours via STATS_DISPLAY.distance. */}
               <p className="text-sm text-[#78716C] leading-relaxed mb-8">
                 {language === "en"
-                  ? `${house.name} is one of the 3 La Villa Coliving houses: all-inclusive furnished rooms ${id === "lavilla" ? `from ${PRICE_FROM_CHF_EN}` : `at ${PRICE_CHF_EN}`}/month — pool, sauna, gym and cleaning included, ${STATS_DISPLAY.en.distance}, no application fee.`
-                  : `${house.name} est l'une des 3 maisons La Villa Coliving : chambres meublées tout inclus ${id === "lavilla" ? `dès ${PRICE_FROM_CHF_FR}` : `à ${PRICE_CHF_FR}`}/mois — piscine, sauna, salle de sport et ménage compris, à ${STATS_DISPLAY.fr.distance}, sans frais de dossier.`}
+                  ? `${house.name} is one of the 3 La Villa Coliving houses: all-inclusive furnished rooms ${id === "lavilla" ? `from ${PRICE_FROM_CHF_EN}` : `at ${PRICE_CHF_EN}`}/month — pool, sauna, gym, cleaning and parking included, ${STATS_DISPLAY.en.distance}, no application fee.`
+                  : `${house.name} est l'une des 3 maisons La Villa Coliving : chambres meublées tout inclus ${id === "lavilla" ? `dès ${PRICE_FROM_CHF_FR}` : `à ${PRICE_CHF_FR}`}/mois — piscine, sauna, salle de sport, ménage et parking compris, à ${STATS_DISPLAY.fr.distance}, sans frais de dossier.`}
               </p>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
@@ -2301,10 +2319,14 @@ export function HouseDetailPage() {
           fr: "Oui : 2 mois de loyer hors charges. Elle peut se payer en une fois, en 2 fois (la moitié à la signature, l'autre avec ton 2ᵉ loyer) ou en 3 fois (un tiers à la signature, puis un tiers avec tes 2ᵉ et 3ᵉ loyers). Le nombre de versements est fixé par La Villa au moment de valider ton dossier, en fonction de ta situation financière. La caution t'est restituée sous 30 jours après l'état des lieux de sortie si rien n'est abîmé, sinon sous 2 mois. Aucun frais d'agence ni de dossier.",
           en: "Yes: 2 months' rent excluding charges. It can be paid in one go, in 2 instalments (half at signing, half with your 2nd month's rent) or in 3 (a third at signing, then a third with your 2nd and 3rd month's rent). La Villa sets the number of instalments when your application is approved, based on your financial situation. It's returned within 30 days of the move-out inspection if nothing is damaged, otherwise within 2 months. No agency fee, no application fee.",
         };
+        // (24/11/2026, lot 3 du brief « budget réel ») Réponses « loyer » : fibre Orange Pro, parking sur place (au Lodge, sans place
+        // attribuée), six services de streaming, cours un de chaque par mois, soirée commune — phrases de src/data/inclus.ts.
+        const IPfr = inclusPhrases("fr");
+        const IPen = inclusPhrases("en");
         const FAQ_DATA: Record<string, { fr: QA[]; en: QA[] }> = {
           lavilla: {
             fr: [
-              { q: "Quel est le loyer mensuel à La Villa et que comprend-il ?", a: `Les chambres de La Villa sont à ${PRICE_CHF_FR} par mois avec salle de bain privative. Les 4 chambres qui partagent une salle d'eau entre 2 chambres (son entretien par notre équipe de ménage est inclus) sont à ${sharedBathTiersText("fr")}. Tout inclus dans tous les cas : charges (eau, électricité, chauffage), internet fibre jusqu'à 8 Gb/s, ménage 3 fois par semaine des espaces communs, abonnements streaming, entretien piscine et jardin, cours de yoga / fitness privés, parure de linge fournie. Aucun supplément.` },
+              { q: "Quel est le loyer mensuel à La Villa et que comprend-il ?", a: `Les chambres de La Villa sont à ${PRICE_CHF_FR} par mois avec salle de bain privative. Les 4 chambres qui partagent une salle d'eau entre 2 chambres (son entretien par notre équipe de ménage est inclus) sont à ${sharedBathTiersText("fr")}. Tout inclus dans tous les cas : charges (eau, électricité, chauffage), ${IPfr.fibreSpeed}, parking sur place, ménage des espaces communs ${timesPerWeek("fr")}, ${IPfr.streaming}, entretien de la piscine et du jardin, ${IPfr.classes}, parure de linge fournie. Aucun supplément.` },
               { q: "Comment se rendre à Genève depuis La Villa à Ville-la-Grand ?", a: `${houseCommuteLong("lavilla", "fr")} En heure de pointe, un Léman Express part toutes les ${TRANSIT.peakHeadwayMin} min ; en alternative, l'arrêt de bus ${TB.lavilla.busStop.name} est à ${TB.lavilla.busStop.walkMin} min à pied. ${borderFr("lavilla")}` },
               { q: "Quelle est la durée minimale du bail à La Villa ?", a: "Aucune durée minimale imposée : ton bail est de 12 mois et tu peux partir quand tu veux avec 1 mois de préavis. Pratique pour une mission de quelques mois ou une période d'essai en CDI à Genève." },
               { q: "Y a-t-il une caution et des frais d'agence ?", a: depositA.fr },
@@ -2316,7 +2338,7 @@ export function HouseDetailPage() {
               { q: "La Villa est-elle bien reliée à Genève ?", a: `Oui. Depuis La Villa, la gare d'Annemasse est à ${TB.lavilla.stationWalkMin} min à pied et le Léman Express direct rejoint Genève-Eaux-Vives en ${TRANSIT.trainEauxVivesMin} min — ${TB.lavilla.eauxVivesDoorToDoorMin} min porte-à-porte, ${TB.lavilla.cornavinDoorToDoorMin} min jusqu'à Cornavin. La maison combine ce bon accès avec un cadre verdoyant — ${m2(HOUSE_SURFACES.lavilla.plotM2, "fr")} de jardin et la zone naturelle du Foron, la rivière-frontière qui longe la rue.` },
             ],
             en: [
-              { q: "What is the monthly rent at La Villa and what does it include?", a: `Rooms at La Villa are ${PRICE_CHF_EN} per month with a private en-suite bathroom. The 4 rooms that share a shower room between 2 rooms (cleaned by our housekeeping team, included in the rent) are ${sharedBathTiersText("en")}. All are all-inclusive: utilities (water, electricity, heating), fiber internet up to 8 Gb/s, common-area cleaning three times a week, streaming subscriptions, pool & garden upkeep, private yoga/fitness classes, bedding included. No add-on fees.` },
+              { q: "What is the monthly rent at La Villa and what does it include?", a: `Rooms at La Villa are ${PRICE_CHF_EN} per month with a private en-suite bathroom. The 4 rooms that share a shower room between 2 rooms (cleaned by our housekeeping team, included in the rent) are ${sharedBathTiersText("en")}. All are all-inclusive: utilities (water, electricity, heating), ${IPen.fibreSpeed}, on-site parking, common-area cleaning ${timesPerWeek("en")}, ${IPen.streaming}, pool and garden upkeep, ${IPen.classes}, bedding included. No add-on fees.` },
               { q: "How do I get to Geneva from La Villa in Ville-la-Grand?", a: `${houseCommuteLong("lavilla", "en")} At peak time a Léman Express leaves every ${TRANSIT.peakHeadwayMin} minutes; alternatively, the ${TB.lavilla.busStop.name} bus stop is ${TB.lavilla.busStop.walkMin} minutes away on foot. ${borderEn("lavilla")}` },
               { q: "What is the minimum lease term at La Villa?", a: "No set minimum: your lease runs 12 months and you can leave whenever you want with 1 month's notice. Handy for a short assignment or a trial period in Geneva." },
               { q: "Is there a deposit and any agency fees?", a: depositA.en },
@@ -2330,7 +2352,7 @@ export function HouseDetailPage() {
           },
           leloft: {
             fr: [
-              { q: "Quel est le loyer mensuel au Loft et que comprend-il ?", a: `Les chambres du Loft sont à ${PRICE_CHF_FR} par mois tout inclus : charges, internet fibre jusqu'à 8 Gb/s, ménage 3 fois par semaine des communs, abonnements streaming, piscine intérieure, jardin, parure de linge. Pas de supplément caché.` },
+              { q: "Quel est le loyer mensuel au Loft et que comprend-il ?", a: `Les chambres du Loft sont à ${PRICE_CHF_FR} par mois tout inclus : charges, ${IPfr.fibreSpeed}, parking sur place, ménage des communs ${timesPerWeek("fr")}, ${IPfr.streaming}, piscine intérieure, jardin, parure de linge. Pas de supplément caché.` },
               { q: "Comment se rendre à Genève depuis Le Loft à Ambilly ?", a: `${houseCommuteLong("leloft", "fr")} ${borderFr("leloft")}` },
               { q: "Quelle est la durée minimale du bail au Loft ?", a: "Aucune durée minimale imposée : bail de 12 mois, et 1 mois de préavis pour partir quand tu veux — pratique pour les frontaliers en mission ou en période d'essai à Genève." },
               { q: "Y a-t-il une caution et des frais d'agence ?", a: depositA.fr },
@@ -2343,7 +2365,7 @@ export function HouseDetailPage() {
               { q: "Peut-on nager toute l'année au Loft ?", a: "Oui. Le Loft, à Ambilly, est la maison de La Villa Coliving dotée d'une piscine intérieure chauffée, accessible toute l'année quelle que soit la saison, ainsi que d'un sauna finlandais. C'est inclus dans ton loyer, comme l'ensemble des services." },
             ],
             en: [
-              { q: "What is the monthly rent at Le Loft and what does it include?", a: `Rooms at Le Loft are ${PRICE_CHF_EN} per month all-inclusive: utilities, fiber internet up to 8 Gb/s, common-area cleaning three times a week, streaming subscriptions, indoor pool, garden, bedding included. No hidden fees.` },
+              { q: "What is the monthly rent at Le Loft and what does it include?", a: `Rooms at Le Loft are ${PRICE_CHF_EN} per month all-inclusive: utilities, ${IPen.fibreSpeed}, on-site parking, common-area cleaning ${timesPerWeek("en")}, ${IPen.streaming}, indoor pool, garden, bedding included. No hidden fees.` },
               { q: "How do I get to Geneva from Le Loft in Ambilly?", a: `${houseCommuteLong("leloft", "en")} ${borderEn("leloft")}` },
               { q: "What is the minimum lease term at Le Loft?", a: "No set minimum: a 12-month lease, and 1 month's notice whenever you decide to leave — useful for cross-border workers on assignment or on a trial period in Geneva." },
               { q: "Is there a deposit and any agency fees?", a: depositA.en },
@@ -2357,7 +2379,7 @@ export function HouseDetailPage() {
           },
           lelodge: {
             fr: [
-              { q: "Quel est le loyer mensuel au Lodge et que comprend-il ?", a: `Les chambres du Lodge sont à ${PRICE_CHF_FR} par mois tout inclus : charges (eau, électricité, chauffage), internet fibre jusqu'à 8 Gb/s, ménage 3 fois par semaine des communs, abonnements streaming, entretien piscine et jardin, cours de yoga / fitness privés, parure de linge fournie, dîner communautaire mensuel. Pas de supplément.` },
+              { q: "Quel est le loyer mensuel au Lodge et que comprend-il ?", a: `Les chambres du Lodge sont à ${PRICE_CHF_FR} par mois tout inclus : charges (eau, électricité, chauffage), ${IPfr.fibreSpeed}, parking sur place sans place attribuée, ménage des communs ${timesPerWeek("fr")}, ${IPfr.streaming}, entretien de la piscine et du jardin, ${IPfr.classes}, parure de linge fournie, ${IPfr.houseGetTogether}. Pas de supplément.` },
               { q: "Comment se rendre à Genève depuis Le Lodge à Annemasse ?", a: `${houseCommuteLong("lelodge", "fr")} En heure de pointe, un train part toutes les ${TRANSIT.peakHeadwayMin} min, sans correspondance.` },
               { q: "Quelle est la durée minimale du bail au Lodge ?", a: "Aucune durée minimale imposée : ton bail est de 12 mois, et 1 mois de préavis suffit pour partir. Pas de séjour à la semaine : nos maisons accueillent des gens qui s'installent." },
               { q: "Y a-t-il une caution et des frais d'agence ?", a: depositA.fr },
@@ -2369,7 +2391,7 @@ export function HouseDetailPage() {
               { q: "Y a-t-il du coliving à Annemasse ?", a: `Oui. Le Lodge est la maison de coliving de La Villa Coliving à Annemasse : 12 résidents, chambres meublées de ${ROOM_SURFACE_BY_HOUSE.lelodge.min} à ${ROOM_SURFACE_BY_HOUSE.lelodge.max} m², pool house, chalet fitness et sauna, le tout à ${TB.lelodge.eauxVivesDoorToDoorMin} min porte-à-porte de Genève-Eaux-Vives en Léman Express. Tout inclus à ${PRICE_CHF_FR}/mois.` },
             ],
             en: [
-              { q: "What is the monthly rent at Le Lodge and what does it include?", a: `Rooms at Le Lodge are ${PRICE_CHF_EN} per month all-inclusive: utilities (water, electricity, heating), fiber internet up to 8 Gb/s, common-area cleaning three times a week, streaming subscriptions, pool & garden upkeep, private yoga/fitness classes, bedding included, monthly community dinner. No add-on fees.` },
+              { q: "What is the monthly rent at Le Lodge and what does it include?", a: `Rooms at Le Lodge are ${PRICE_CHF_EN} per month all-inclusive: utilities (water, electricity, heating), ${IPen.fibreSpeed}, on-site parking with no allocated space, common-area cleaning ${timesPerWeek("en")}, ${IPen.streaming}, pool and garden upkeep, ${IPen.classes}, bedding included, ${IPen.houseGetTogether}. No add-on fees.` },
               { q: "How do I get to Geneva from Le Lodge in Annemasse?", a: `${houseCommuteLong("lelodge", "en")} At peak time a train leaves every ${TRANSIT.peakHeadwayMin} minutes, no transfer.` },
               { q: "What is the minimum lease term at Le Lodge?", a: "No set minimum: your lease runs 12 months, and 1 month's notice is all it takes to leave. No weekly stays: our houses are for people who settle in." },
               { q: "Is there a deposit and any agency fees?", a: depositA.en },

@@ -7,6 +7,7 @@ import { buildBreadcrumbSchema, HOUSES, LAVILLA_EMAIL, LAVILLA_PHONE, LAVILLA_PO
 import { STATS, STATS_DISPLAY, PRICE_FROM_CHF_FR, PRICE_FROM_CHF_EN, MARKET_COMPARISON } from "@/data/stats";
 import { VERIFY_ARTICLE_PATH, VERIFY_LINK_LABEL } from "@/data/verifyArticle";
 import { APPART } from "@/data/appart";
+import { inclusPhrases } from "@/data/inclus";
 import {
   Linkedin,
   Mail,
@@ -49,6 +50,7 @@ const HOUSE_IMAGES: Record<string, string> = {
 export function QuiSommesNousPage() {
   const { language } = useLanguage();
   const en = language === "en";
+  const IP = inclusPhrases(en ? "en" : "fr");
 
   const pageUrl = `${SITE}${en ? "/en" : ""}/qui-sommes-nous`;
 
@@ -132,9 +134,10 @@ export function QuiSommesNousPage() {
     {
       icon: Users,
       title: en ? "Community, our reason for being" : "La communauté, notre raison d'être",
+      // (24/11/2026, lot 3 du brief « budget réel ») Soirée commune et cours un de chaque par mois (src/data/inclus.ts).
       text: en
-        ? "We don't rent out rooms, we bring houses to life: a community dinner every month, yoga and sport every week, events all year round. Selecting housemates is only the first chapter — what happens next is what makes La Villa."
-        : "On ne loue pas des chambres, on fait vivre des maisons : dîner communautaire chaque mois, yoga et sport chaque semaine, événements toute l'année. La sélection des colocataires n'est que le premier chapitre — c'est ce qui se passe après qui fait La Villa.",
+        ? `We don't rent out rooms, we bring houses to life: ${IP.getTogether}, ${IP.classesEachHouse}, events all year round. Selecting housemates is only the first chapter — what happens next is what makes La Villa.`
+        : `On ne loue pas des chambres, on fait vivre des maisons : ${IP.getTogether}, ${IP.classesEachHouse}, des événements toute l'année. La sélection des colocataires n'est que le premier chapitre — c'est ce qui se passe après qui fait La Villa.`,
     },
     {
       icon: HeartHandshake,

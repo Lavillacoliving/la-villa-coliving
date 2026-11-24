@@ -129,6 +129,13 @@ export function publicGeo(h: { publicPoint: { lat: number; lng: number } }): { l
   return { lat: h.publicPoint.lat, lng: h.publicPoint.lng };
 }
 
+/** (24/11/2026, lot 3 du brief « budget réel ») Équipements communs aux trois maisons dans leur `amenityFeature` : la fibre avec
+ *  son opérateur et son débit (STATS.fiberOperator, STATS.fiberSpeed) et le parking sur place (compris ; au Lodge, sans place
+ *  attribuée). Jamais sur la fiche de la marque, qui porte aussi L'Appart (garde brandAmenityIssues). Écrits ici, et non lus dans
+ *  src/data/inclus.ts : ce module est dans le morceau d'entrée de toutes les pages. */
+const HOUSE_FIBRE = { fr: `Fibre ${STATS.fiberOperator} jusqu'à ${STATS.fiberSpeed}`, en: `${STATS.fiberOperator} fibre up to ${STATS.fiberSpeed}` } as const;
+const HOUSE_PARKING = { fr: "Parking sur place", en: "On-site parking" } as const;
+
 /** Les 3 maisons — source unique pour le schema (commune, code postal, zone et point public ; aucune rue, geo BAN rooftop). */
 export const HOUSES: HouseInfo[] = [
   {
@@ -144,8 +151,8 @@ export const HOUSES: HouseInfo[] = [
     publicPoint: { lat: 46.2015, lng: 6.237 },
     image: "/images/la villa jardin.webp",
     amenityFeatures: {
-      fr: ["Piscine extérieure chauffée", "Sauna", "Salle de sport", `Internet fibre jusqu'à ${STATS.fiberSpeed}`, "Ménage des parties communes inclus"],
-      en: ["Heated outdoor pool", "Sauna", "Gym", `Fibre internet up to ${STATS.fiberSpeed}`, "Common areas cleaning included"],
+      fr: ["Piscine extérieure chauffée", "Sauna", "Salle de sport", HOUSE_FIBRE.fr, "Ménage des parties communes inclus", HOUSE_PARKING.fr],
+      en: ["Heated outdoor pool", "Sauna", "Gym", HOUSE_FIBRE.en, "Common areas cleaning included", HOUSE_PARKING.en],
     },
     // Fiches de la maison : coliving.com (« Foron Residence », hôte Fanny — la marque ne peut pas figurer dans le titre public,
     // politique de la plateforme, support du 09/10/2026), bookmycoliving (URL Jérôme 09/10) et annonce Roomlala (07/09).
@@ -168,8 +175,8 @@ export const HOUSES: HouseInfo[] = [
     publicPoint: { lat: 46.1985, lng: 6.231 },
     image: "/images/la villa coliving le loft piscine.webp",
     amenityFeatures: {
-      fr: ["Piscine intérieure chauffée", "Sauna", "Salle de sport", `Internet fibre jusqu'à ${STATS.fiberSpeed}`, "Ménage des parties communes inclus"],
-      en: ["Heated indoor pool", "Sauna", "Gym", `Fibre internet up to ${STATS.fiberSpeed}`, "Common areas cleaning included"],
+      fr: ["Piscine intérieure chauffée", "Sauna", "Salle de sport", HOUSE_FIBRE.fr, "Ménage des parties communes inclus", HOUSE_PARKING.fr],
+      en: ["Heated indoor pool", "Sauna", "Gym", HOUSE_FIBRE.en, "Common areas cleaning included", HOUSE_PARKING.en],
     },
     // Le slug Roomlala « a-15-min-de-geneve » est celui de la plateforme (titre réécrit le 09/10, slug inchangé côté Roomlala).
     sameAs: [
@@ -190,8 +197,8 @@ export const HOUSES: HouseInfo[] = [
     publicPoint: { lat: 46.19, lng: 6.24 },
     image: "/images/le lodge/exterior/la villa coliving le lodge-14.webp",
     amenityFeatures: {
-      fr: ["Piscine", "Sauna", "Chalet fitness", `Internet fibre jusqu'à ${STATS.fiberSpeed}`, "Ménage des parties communes inclus"],
-      en: ["Pool", "Sauna", "Fitness chalet", `Fibre internet up to ${STATS.fiberSpeed}`, "Common areas cleaning included"],
+      fr: ["Piscine", "Sauna", "Chalet fitness", HOUSE_FIBRE.fr, "Ménage des parties communes inclus", HOUSE_PARKING.fr],
+      en: ["Pool", "Sauna", "Fitness chalet", HOUSE_FIBRE.en, "Common areas cleaning included", HOUSE_PARKING.en],
     },
     sameAs: [
       "https://bookmycoliving.com/property/la-villa-coliving-le-lodge-annemasse-cmq59ryiz0009jv04z0896pzr",
@@ -466,8 +473,8 @@ function brandOffers(language: "fr" | "en"): Record<string, unknown>[] {
       "@type": "AggregateOffer",
       name: en ? "Furnished room in a coliving house near Geneva" : "Chambre meublée en maison de coliving près de Genève",
       description: en
-        ? `Furnished room of ${STATS.roomSizeMin} to ${STATS.roomSizeMax} m² in a coliving house: all utilities, fibre internet, cleaning of the common areas, pool, sauna and gym included. No application fee.`
-        : `Chambre meublée de ${STATS.roomSizeMin} à ${STATS.roomSizeMax} m² dans une maison de coliving : charges, internet fibre, ménage des communs, piscine, sauna et salle de sport inclus. Sans frais de dossier.`,
+        ? `Furnished room of ${STATS.roomSizeMin} to ${STATS.roomSizeMax} m² in a coliving house: all utilities, fibre internet, parking, cleaning of the common areas, pool, sauna and gym included. No application fee.`
+        : `Chambre meublée de ${STATS.roomSizeMin} à ${STATS.roomSizeMax} m² dans une maison de coliving : charges, internet fibre, parking, ménage des communs, piscine, sauna et salle de sport inclus. Sans frais de dossier.`,
       lowPrice: String(HOUSES_FROM.chf),
       highPrice: String(STATS.priceChf),
       priceCurrency: "CHF",

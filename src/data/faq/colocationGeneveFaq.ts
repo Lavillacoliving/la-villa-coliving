@@ -18,7 +18,7 @@ export const colocationGeneveFaq: { fr: QAPair[]; en: QAPair[] } = {
   fr: [
     {
       q: "Combien coûte une colocation à Genève ?",
-      a: `À Genève même, d'après les annonces relevées en 2026, une chambre en colocation se loue le plus souvent entre 1\u00a0000 et 1\u00a0500 CHF par mois, charges et internet souvent en plus, et il faut trouver la colocation. Côté France, chez La Villa Coliving, une chambre meublée en maison coûte dès ${PRICE_FROM_CHF_FR}/mois tout inclus (${PRICE_CHF_FR} avec salle d'eau privative) : charges, fibre, ménage des communs, piscine, sauna, salle de sport et événements compris, à ${STATS_DISPLAY.fr.distance}.`,
+      a: `À Genève même, d'après les annonces relevées en 2026, une chambre en colocation se loue le plus souvent entre 1\u00a0000 et 1\u00a0500 CHF par mois, charges et internet souvent en plus, et il faut trouver la colocation. Côté France, chez La Villa Coliving, une chambre meublée en maison coûte dès ${PRICE_FROM_CHF_FR}/mois tout inclus (${PRICE_CHF_FR} avec salle d'eau privative) : charges, fibre, parking, ménage des communs, piscine, sauna, salle de sport et événements compris, à ${STATS_DISPLAY.fr.distance}.`,
     },
     {
       q: "Quel est le loyer moyen à Genève ?",
@@ -50,7 +50,7 @@ export const colocationGeneveFaq: { fr: QAPair[]; en: QAPair[] } = {
   en: [
     {
       q: "How much does a flatshare cost in Geneva?",
-      a: `In Geneva itself, based on listings observed in 2026, a room in a shared flat usually rents for 1,000 to 1,500 CHF per month, often with utilities and internet on top, and you still have to find the flatshare. On the French side, at La Villa Coliving, a furnished room in a house costs from ${PRICE_FROM_CHF_EN}/month all inclusive (${PRICE_CHF_EN} with a private shower room): utilities, fibre, cleaning of the common areas, pool, sauna, gym and events included, ${STATS_DISPLAY.en.distance}.`,
+      a: `In Geneva itself, based on listings observed in 2026, a room in a shared flat usually rents for 1,000 to 1,500 CHF per month, often with utilities and internet on top, and you still have to find the flatshare. On the French side, at La Villa Coliving, a furnished room in a house costs from ${PRICE_FROM_CHF_EN}/month all inclusive (${PRICE_CHF_EN} with a private shower room): utilities, fibre, parking, cleaning of the common areas, pool, sauna, gym and events included, ${STATS_DISPLAY.en.distance}.`,
     },
     {
       q: "What is the average rent in Geneva?",

@@ -21,6 +21,7 @@ import { CandidatureDetails } from "@/components/CandidatureDetails";
 import { FacebookGroupCallout } from "@/components/FacebookGroupCallout";
 import { useHydrated } from "@/hooks/useHydrated";
 import { OFFER_QUERY_KEY, OFFER_TEXTS_BY_ID, normalizeOffer } from "@/data/offer";
+import { inclusPhrases } from "@/data/inclus";
 
 type FormStatus = "idle" | "submitting" | "success" | "error";
 
@@ -62,8 +63,8 @@ const JOIN_FAQ: Array<{ q_fr: string; q_en: string; a_fr: string; a_en: string }
   {
     q_fr: "Quel est le loyer et que comprend-il vraiment ?",
     q_en: "What is the rent and what does it really include?",
-    a_fr: `Dès ${PRICE_FROM_CHF_FR}/mois tout inclus : chambre meublée, charges (eau, électricité, chauffage), fibre jusqu'à ${STATS.fiberSpeed}, ménage des espaces communs ${STATS.cleaningPerWeek} fois par semaine, accès piscine/sauna/gym, cours de yoga et fitness privés, abonnements streaming, événements communautaires mensuels. Caution : 2 mois de loyer hors charges, payable en 1, 2 ou 3 fois selon ton dossier. Aucun frais d'agence, aucun frais de dossier. Le loyer contractuel est libellé en euros : de ${EUR_FROM_FR_NUM} à ${EUR_STANDARD_FR_NUM} €/mois selon la chambre. Les montants en CHF affichés sur le site sont indicatifs (taux d'${CONTRACT_EUR.rateLabelFr}).`,
-    a_en: `From ${PRICE_FROM_CHF_EN}/month all-inclusive: furnished room, utilities (water, electricity, heating), fibre up to ${STATS.fiberSpeed}, common-area cleaning ${STATS.cleaningPerWeek} times a week, pool/sauna/gym access, private yoga and fitness classes, streaming subscriptions, monthly community events. Deposit: 2 months' rent excluding charges, payable in 1, 2 or 3 instalments depending on your application. No agency fees, no application fees. The contractual rent is set in euros: €${EUR_FROM_EN_NUM}–€${EUR_STANDARD_EN_NUM}/month depending on the room. CHF amounts shown on the site are indicative (${CONTRACT_EUR.rateLabelEn} rate).`,
+    a_fr: `Dès ${PRICE_FROM_CHF_FR}/mois tout inclus : chambre meublée, charges (eau, électricité, chauffage), ${inclusPhrases("fr").fibreSpeed}, parking sur place, ménage des espaces communs ${STATS.cleaningPerWeek} fois par semaine, accès piscine/sauna/gym, cours de yoga et fitness privés, abonnements streaming, événements communautaires mensuels. Caution : 2 mois de loyer hors charges, payable en 1, 2 ou 3 fois selon ton dossier. Aucun frais d'agence, aucun frais de dossier. Le loyer contractuel est libellé en euros : de ${EUR_FROM_FR_NUM} à ${EUR_STANDARD_FR_NUM} €/mois selon la chambre. Les montants en CHF affichés sur le site sont indicatifs (taux d'${CONTRACT_EUR.rateLabelFr}).`,
+    a_en: `From ${PRICE_FROM_CHF_EN}/month all-inclusive: furnished room, utilities (water, electricity, heating), ${inclusPhrases("en").fibreSpeed}, on-site parking, common-area cleaning ${STATS.cleaningPerWeek} times a week, pool/sauna/gym access, private yoga and fitness classes, streaming subscriptions, monthly community events. Deposit: 2 months' rent excluding charges, payable in 1, 2 or 3 instalments depending on your application. No agency fees, no application fees. The contractual rent is set in euros: €${EUR_FROM_EN_NUM}–€${EUR_STANDARD_EN_NUM}/month depending on the room. CHF amounts shown on the site are indicative (${CONTRACT_EUR.rateLabelEn} rate).`,
   },
   {
     q_fr: "Quelle est la durée minimale du bail ?",
