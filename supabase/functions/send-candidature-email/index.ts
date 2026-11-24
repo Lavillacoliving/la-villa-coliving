@@ -1,4 +1,6 @@
 // Supabase Edge Function — send-candidature-email
+// v22 — 24/11/2026 — Offre « Ta première année » mise en ligne dès le 24/11 au lieu du 26/11 (décision de Jérôme du 24/11) :
+//   seul le libellé de `premiere-annee` change dans OFFER_LABELS (« bail signé du 24/11 au 31/12/2026 »). Aucun autre changement.
 // v21 — 21/11/2026 — Offre « Ta première année avec nous » (brief Jérôme du 21/11/2026, lot 1) : `premiere-annee` ajoutée à
 //   OFFER_LABELS (« Ta première année (jusqu'à 1 400 € remboursés, bail signé du 26/11 au 31/12/2026) ») ; « hiver » inchangée.
 //   AUCUN autre changement : même validation (valeur hors liste ignorée sans erreur), mêmes notes, email et form_submissions.offer
@@ -264,10 +266,10 @@ const CONTACT_PREFERENCE_PHRASES: Record<"fr" | "en", Record<string, string>> = 
 };
 // (v20) Offres commerciales — clés = valeurs du paramètre `?offre=` du site (src/data/offer.ts).
 // Libellé = la ligne écrite dans prospects.notes et en tête de la notification admin (brief §1).
-// (v21, 21/11/2026) + « premiere-annee » (offre « Ta première année avec nous », bail signé du 26/11 au 31/12/2026).
+// (v21, 21/11/2026) + « premiere-annee » (offre « Ta première année avec nous ») ; v22 (24/11/2026) : bail signé du 24/11 au 31/12/2026.
 const OFFER_LABELS: Record<string, string> = {
   "hiver": "Pose tes valises (−50 % 1er mois, bail signé ≤ 25/11, démarrage à la libération)",
-  "premiere-annee": "Ta première année (jusqu'à 1 400 € remboursés, bail signé du 26/11 au 31/12/2026)",
+  "premiere-annee": "Ta première année (jusqu'à 1 400 € remboursés, bail signé du 24/11 au 31/12/2026)",
 };
 
 /** Lecture d'une table de libellés sans jamais remonter au prototype (« constructor »…). */

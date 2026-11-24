@@ -12,8 +12,11 @@
 
 /** Identifiant de l'offre (même valeur que le site, src/data/offer.ts, et que offer_rewards.offer_id). */
 export const FIRST_YEAR_OFFER_ID = "premiere-annee";
-/** Fenêtre de SIGNATURE du bail (heure de Paris, bornes incluses) : c'est la date de signature qui compte, pas l'entrée. */
-export const FIRST_YEAR_SIGN_FROM = "2026-11-26";
+/**
+ * Fenêtre de SIGNATURE du bail (heure de Paris, bornes incluses) : c'est la date de signature qui compte, pas l'entrée.
+ * Début avancé du 26/11 au 24/11 (décision de Jérôme du 24/11/2026), comme FIRST_YEAR_START de src/data/offer.ts.
+ */
+export const FIRST_YEAR_SIGN_FROM = "2026-11-24";
 export const FIRST_YEAR_SIGN_TO = "2026-12-31";
 /** Délai du virement après l'encaissement du loyer du mois concerné (D12). */
 export const FIRST_YEAR_TRANSFER_DAYS = 10;

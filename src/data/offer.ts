@@ -6,10 +6,13 @@
 // 1. Offre A « Pose tes valises avant l'hiver » — brief Jérôme du 06/10/2026, rebrief du 12/10/2026 (−50 % sur le
 //    premier mois, bail signé du 15/10 au 25/11 inclus, bail démarrant à la libération). (02/11/2026, brief « caution
 //    permanente ») La caution en 1, 2 ou 3 fois est une règle permanente, plus un avantage de l'offre : src/data/entityFacts.ts.
-//    Ses exports gardent leurs noms d'origine (OFFER_*, sans préfixe) : la page d'hiver reste identique jusqu'au 25/11 à 23 h 59.
+//    Ses exports gardent leurs noms d'origine (OFFER_*, sans préfixe) : la page d'hiver est restée identique jusqu'à sa sortie
+//    du site, le 24/11 à 0 h (au lieu du 26/11 : décision de Jérôme du 24/11/2026).
 // 2. (21/11/2026, brief « Ta première année avec nous », décisions D1 à D15 de Jérôme) Offre « Ta première année avec nous » :
 //    jusqu'à 1 400 € remboursés — 200 € déduits du premier loyer complet, puis 300, 400 et 500 € par virement, liés aux 4ᵉ,
-//    7ᵉ et 13ᵉ loyers complets ; tout bail signé du 26/11 au 31/12/2026 inclus, dans les trois maisons. Exports FIRST_YEAR_*.
+//    7ᵉ et 13ᵉ loyers complets ; tout bail signé du 24/11 au 31/12/2026 inclus, dans les trois maisons. Exports FIRST_YEAR_*.
+//    (24/11/2026) Mise en ligne avancée du 26/11 au 24/11, décision de Jérôme (« Oui, tout aujourd'hui ») : début de l'offre,
+//    fin de l'hiver sur le site et fenêtre de signature du bail (src/lib/bailV3/firstYearOffer.ts) passent au 24/11.
 // Bascule AUTOMATIQUE à 0 h, heure de Paris (D8) : la fin exclusive de l'hiver est le début de la nouvelle offre (aucun trou,
 // testé). offerAt() = l'offre en cours (bandeau, ligne du formulaire, mesure) ; offerPageState() = l'état de la page.
 // D2 : un lien `?offre=hiver` reste accepté et compte pour l'offre en cours (normalizeOffer).
@@ -25,13 +28,17 @@ export const OFFER_QUERY_KEY = "offre";
 export const OFFER_QUERY = `${OFFER_QUERY_KEY}=${OFFER_ID}`;
 
 // Dates en configuration, jamais en dur dans les textes (brief §2). Calendrier de Paris.
-// Critère de l'offre (rebrief D3) : la DATE DE SIGNATURE du bail, du 15/10 au 25/11/2026 inclus.
+// Critère de l'offre (rebrief D3) : la DATE DE SIGNATURE du bail, du 15/10 au 25/11/2026 inclus. C'est la promesse faite aux
+// candidats arrivés par l'offre d'hiver : elle reste due après la sortie de l'offre du site (OFFER_END_EXCLUSIVE_MS).
 export const OFFER_START = "2026-10-15";
 export const OFFER_END = "2026-11-25";
 /** Premier instant de l'offre (15/10 à 0 h, heure de Paris = UTC+2 en octobre) : le bandeau n'apparaît pas avant. */
 export const OFFER_START_MS = Date.parse("2026-10-15T00:00:00+02:00");
-/** Premier instant APRÈS l'offre (le 25/11 inclus, heure de Paris = UTC+1 en novembre). */
-export const OFFER_END_EXCLUSIVE_MS = Date.parse("2026-11-26T00:00:00+01:00");
+/**
+ * Premier instant APRÈS l'offre d'hiver SUR LE SITE : le 24/11 à 0 h, heure de Paris = UTC+1 (décision de Jérôme du 24/11/2026 :
+ * « Ta première année » mise en ligne dès le 24/11 au lieu du 26/11). La promesse d'OFFER_END ne change pas.
+ */
+export const OFFER_END_EXCLUSIVE_MS = Date.parse("2026-11-24T00:00:00+01:00");
 /** Chambre déjà libre : le bail démarre dans les N jours suivant la signature (rebrief D4). */
 export const ALREADY_FREE_START_DAYS = 7;
 
@@ -62,7 +69,7 @@ export const OFFER_SESSION_KEY = "lvc_offer";
 /** Remise sur le premier mois (loyer + forfait de charges, geste commercial), en pourcentage. */
 export const OFFER_DISCOUNT_PERCENT = 50;
 
-/** `true` tant que l'offre d'hiver n'est pas terminée (jusqu'au 25/11 inclus, heure de Paris). Pur. */
+/** `true` tant que l'offre d'hiver est sur le site (jusqu'au 23/11 inclus, heure de Paris : sortie avancée au 24/11). Pur. */
 export function isOfferActive(nowMs: number = Date.now()): boolean {
   return nowMs < OFFER_END_EXCLUSIVE_MS;
 }
@@ -76,11 +83,12 @@ export function isOfferStarted(nowMs: number = Date.now()): boolean {
 /** Valeur du paramètre d'URL `?offre=` et du champ `offer` envoyé à l'edge pour la nouvelle offre (D2). */
 export const FIRST_YEAR_OFFER_ID = "premiere-annee";
 export const FIRST_YEAR_QUERY = `${OFFER_QUERY_KEY}=${FIRST_YEAR_OFFER_ID}`;
-// Critère (brief §1) : la DATE DE SIGNATURE du bail, du 26/11 au 31/12/2026 inclus, quelle que soit la date d'entrée.
-export const FIRST_YEAR_START = "2026-11-26";
+// Critère (brief §1) : la DATE DE SIGNATURE du bail, du 24/11 au 31/12/2026 inclus, quelle que soit la date d'entrée
+// (26/11 avancé au 24/11, décision de Jérôme du 24/11/2026).
+export const FIRST_YEAR_START = "2026-11-24";
 export const FIRST_YEAR_END = "2026-12-31";
-/** Premier instant de l'offre (26/11 à 0 h, heure de Paris = UTC+1) = premier instant APRÈS l'offre d'hiver (test). */
-export const FIRST_YEAR_START_MS = Date.parse("2026-11-26T00:00:00+01:00");
+/** Premier instant de l'offre (24/11 à 0 h, heure de Paris = UTC+1) = premier instant APRÈS l'offre d'hiver (test). */
+export const FIRST_YEAR_START_MS = Date.parse("2026-11-24T00:00:00+01:00");
 /** Premier instant APRÈS l'offre (le 31/12 inclus, heure de Paris = UTC+1). */
 export const FIRST_YEAR_END_EXCLUSIVE_MS = Date.parse("2027-01-01T00:00:00+01:00");
 /** Fermeture du bandeau : clé propre à l'offre — qui a fermé le bandeau d'hiver voit celui-ci (brief §3.3). */
@@ -135,7 +143,7 @@ export function offerAt(nowMs: number = Date.now()): OfferWindow | null {
 export type OfferPageState = "active" | typeof FIRST_YEAR_OFFER_ID | "ended";
 /**
  * État de /offre-hiver · /en/winter-offer (D1 : mêmes adresses pour les deux offres) : « active » = l'offre d'hiver (aussi
- * AVANT le 15/10, pour la relecture des annonces) ; « premiere-annee » dès la fin de l'hiver (26/11 à 0 h) et jusqu'au
+ * AVANT le 15/10, pour la relecture des annonces) ; « premiere-annee » dès la fin de l'hiver (24/11 à 0 h) et jusqu'au
  * 31/12 inclus ; « ended » ensuite. Pur.
  */
 export function offerPageState(nowMs: number = Date.now()): OfferPageState {
@@ -150,7 +158,7 @@ export function parseOfferPageState(raw: string | null | undefined): OfferPageSt
 
 /**
  * Identifiant de l'offre EN COURS si `raw` est une offre connue (« hiver » ou « premiere-annee », casse et espaces
- * ignorés), sinon "" — une valeur inconnue est ignorée en silence. D2 : à partir du 26/11 à 0 h, un lien `?offre=hiver`
+ * ignorés), sinon "" — une valeur inconnue est ignorée en silence. D2 : à partir du 24/11 à 0 h, un lien `?offre=hiver`
  * compte pour « Ta première année » ; à partir du 01/01/2027, plus aucune offre (""). Pur.
  */
 export function normalizeOffer(raw: string | null | undefined, nowMs: number = Date.now()): OfferId | "" {

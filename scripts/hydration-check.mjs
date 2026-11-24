@@ -76,7 +76,7 @@ const QUERY_ROUTES = [
   '/en/candidature?offre=hiver&property_interest=lelodge&room_interest=chambre-4',
   '/candidature?offre=xyz',
   // (21/11/2026) Offre « Ta première année avec nous » : sa ligne aussi après l'hydratation seulement ; une valeur connue compte
-  // pour l'offre en cours (D2 : `?offre=hiver` → « Ta première année » à partir du 26/11).
+  // pour l'offre en cours (D2 : `?offre=hiver` → « Ta première année » à partir du 24/11).
   '/candidature?offre=premiere-annee',
   '/en/candidature?offre=premiere-annee&property_interest=leloft&room_interest=chambre-1',
   // (L'Appart, étape E3) En-tête de L'Appart (chambre, suite, liste d'attente), offre hiver exclue (D5), tuiles des maisons
@@ -105,8 +105,8 @@ const CLOCK_SHIFT_DAYS = 95;
 const CLOCK_SHIFT_ROUTES = ['/', '/tarifs', '/en/tarifs', '/candidature?property_interest=lelodge', '/offre-hiver', '/en/winter-offer', '/chambres-disponibles', '/lappart'];
 // (21/11/2026, offre « Ta première année avec nous ») Horloge FIXÉE juste après les bascules des offres (src/data/offer.ts,
 // heure de Paris) : le HTML prérendu, quelle que soit l'offre qu'il porte, s'hydrate tel quel ; la page et le bandeau passent
-// ensuite à l'offre du moment (26/11 : « Ta première année » ; 01/01/2027 : page « terminée », plus de bandeau).
-const CLOCK_AT = ['2026-11-26T00:01:00+01:00', '2027-01-01T00:01:00+01:00'];
+// ensuite à l'offre du moment (24/11 : « Ta première année » ; 01/01/2027 : page « terminée », plus de bandeau).
+const CLOCK_AT = ['2026-11-24T00:01:00+01:00', '2027-01-01T00:01:00+01:00'];
 const CLOCK_AT_ROUTES = ['/', '/offre-hiver', '/en/winter-offer'];
 
 const NOT_FOUND_ROUTES = [

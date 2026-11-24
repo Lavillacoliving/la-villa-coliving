@@ -132,7 +132,7 @@ export function JoinPageV4() {
   // (L'Appart, D5 / décision n° 32, à confirmer) L'offre ne concerne que les maisons : pour une candidature de L'Appart, ni la ligne
   // de l'offre, ni le champ `offer` envoyé à l'Edge, ni la dimension GA4.
   // (21/11/2026, offre « Ta première année avec nous ») Deux offres datées : une valeur connue (`hiver` ou `premiere-annee`)
-  // devient l'identifiant de l'offre EN COURS (D2 : `?offre=hiver` compte pour la nouvelle offre à partir du 26/11 à 0 h ;
+  // devient l'identifiant de l'offre EN COURS (D2 : `?offre=hiver` compte pour la nouvelle offre à partir du 24/11 à 0 h ;
   // plus rien à partir du 01/01/2027) — la ligne, le champ `offer` et la dimension GA4 suivent.
   const refOffer = refProperty === APPART_KEY ? "" : normalizeOffer(searchParams.get(OFFER_QUERY_KEY)) || normalizeOffer(storedOffer());
   // (Lot A) Jeton du mode « compléments » (edge v19), reçu au succès ; absent → pas de bloc.
@@ -694,7 +694,7 @@ export function JoinPageV4() {
             {/* Offre « Pose tes valises » (06/10/2026) — une ligne au-dessus du bouton quand
                 ?offre=hiver est présent (ou mémorisé pour la session). Rendue APRÈS l'hydratation :
                 le HTML prérendu de /candidature est commun à toutes les query strings (règle du Lot B).
-                (21/11/2026) La ligne de l'offre EN COURS (refOffer, normalisé) : « Ta première année » à partir du 26/11. */}
+                (21/11/2026) La ligne de l'offre EN COURS (refOffer, normalisé) : « Ta première année » à partir du 24/11. */}
             {hydrated && refOffer && (
               <p
                 data-offer-line

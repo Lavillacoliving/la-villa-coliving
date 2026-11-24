@@ -67,9 +67,9 @@ test('les 3 lignes offer_rewards envoyées à create_lease_v3', () => {
   assert.equal(m.offerRewardsPayload(''), null);
 });
 
-test('fenêtre de signature : du 26/11 au 31/12/2026 inclus', () => {
-  assert.equal(m.isFirstYearSignDate('2026-11-25'), false);
-  assert.equal(m.isFirstYearSignDate('2026-11-26'), true);
+test('fenêtre de signature : du 24/11 au 31/12/2026 inclus (avancée du 26/11, décision du 24/11/2026)', () => {
+  assert.equal(m.isFirstYearSignDate('2026-11-23'), false);
+  assert.equal(m.isFirstYearSignDate('2026-11-24'), true);
   assert.equal(m.isFirstYearSignDate('2026-12-31'), true);
   assert.equal(m.isFirstYearSignDate('2027-01-01'), false);
 });
