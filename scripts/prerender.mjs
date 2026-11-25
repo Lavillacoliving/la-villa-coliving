@@ -63,8 +63,6 @@ const STATIC_ROUTES_FR = [
   '/observatoire-logement-frontalier-geneve',
   '/qui-sommes-nous',
   '/charte-transparence',
-  // (25/11/2026) Liens retour des annuaires (Plan Autorité, Pilier 2) ; seul accès : le bas du pied de page.
-  '/partenaires',
   '/mentions-legales',
   '/politique-de-confidentialite',
 ];
@@ -757,7 +755,6 @@ const STATIC_PAGE_CONFIG = {
   '/blog': { priority: '0.7', changefreq: 'weekly' },
   '/investisseurs': { priority: '0.6', changefreq: 'monthly' },
   '/observatoire-logement-frontalier-geneve': { priority: '0.8', changefreq: 'monthly' },
-  '/partenaires': { priority: '0.3', changefreq: 'monthly' },
   '/mentions-legales': { priority: '0.3', changefreq: 'yearly' },
   '/politique-de-confidentialite': { priority: '0.3', changefreq: 'yearly' },
 };

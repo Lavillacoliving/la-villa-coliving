@@ -45,7 +45,6 @@ const ObservatoireLogementPage = lazyWithRetry(() => import("@/pages/Observatoir
 const QuiSommesNousPage = lazyWithRetry(() => import("@/pages/QuiSommesNousPage").then(m => ({ default: m.QuiSommesNousPage })), "QuiSommesNousPage");
 const NotFoundPage = lazyWithRetry(() => import("@/pages/NotFoundPage").then(m => ({ default: m.NotFoundPage })), "NotFoundPage");
 const CharteTransparencePage = lazyWithRetry(() => import("@/pages/CharteTransparencePage").then(m => ({ default: m.CharteTransparencePage })), "CharteTransparencePage");
-const PartenairesPage = lazyWithRetry(() => import("@/pages/PartenairesPage").then(m => ({ default: m.PartenairesPage })), "PartenairesPage");
 const MentionsLegalesPage = lazyWithRetry(() => import("@/pages/MentionsLegalesPage").then(m => ({ default: m.MentionsLegalesPage })), "MentionsLegalesPage");
 const PolitiqueConfidentialitePage = lazyWithRetry(() => import("@/pages/PolitiqueConfidentialitePage").then(m => ({ default: m.PolitiqueConfidentialitePage })), "PolitiqueConfidentialitePage");
 const QuestionnaireDepartPage = lazyWithRetry(() => import("@/pages/QuestionnaireDepartPage").then(m => ({ default: m.QuestionnaireDepartPage })), "QuestionnaireDepartPage");
@@ -152,7 +151,6 @@ function AppContent() {
         <Route path="/observatoire-logement-frontalier-geneve" element={<ObservatoireLogementPage />} />
         <Route path="/qui-sommes-nous" element={<QuiSommesNousPage />} />
         <Route path="/charte-transparence" element={<CharteTransparencePage />} />
-        <Route path="/partenaires" element={<PartenairesPage />} />
         <Route path="/mentions-legales" element={<MentionsLegalesPage />} />
         <Route path="/politique-de-confidentialite" element={<PolitiqueConfidentialitePage />} />
         {/* EN routes — same components, language detected from /en prefix */}
@@ -182,7 +180,6 @@ function AppContent() {
         <Route path="/en/observatoire-logement-frontalier-geneve" element={<ObservatoireLogementPage />} />
         <Route path="/en/qui-sommes-nous" element={<QuiSommesNousPage />} />
         <Route path="/en/charte-transparence" element={<CharteTransparencePage />} />
-        <Route path="/en/partenaires" element={<PartenairesPage />} />
         <Route path="/en/mentions-legales" element={<MentionsLegalesPage />} />
         <Route path="/en/politique-de-confidentialite" element={<PolitiqueConfidentialitePage />} />
         <Route path="/reset-password" element={<ResetPasswordPage />} />
