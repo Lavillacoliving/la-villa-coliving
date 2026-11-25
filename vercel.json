@@ -85,10 +85,6 @@
       "destination": "/prerendered/charte-transparence.html"
     },
     {
-      "source": "/partenaires",
-      "destination": "/prerendered/partenaires.html"
-    },
-    {
       "source": "/mentions-legales",
       "destination": "/prerendered/mentions-legales.html"
     },
@@ -179,10 +175,6 @@
     {
       "source": "/en/charte-transparence",
       "destination": "/prerendered/en-charte-transparence.html"
-    },
-    {
-      "source": "/en/partenaires",
-      "destination": "/prerendered/en-partenaires.html"
     },
     {
       "source": "/en/mentions-legales",
