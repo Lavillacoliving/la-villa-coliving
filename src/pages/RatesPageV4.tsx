@@ -40,8 +40,12 @@ import {
  * /tarifs et /en/tarifs — la page construite comme une seule histoire (brief « Page /tarifs et encadré « l'essentiel » : le budget
  * réel » du 23/11/2026, lot 1 ; textes des annexes A et B validés par Jérôme le 23/11/2026, décisions D15 à D21, G1 et G2 du
  * 24/11/2026) : le prix → ce qu'un loyer coûte vraiment ailleurs → ce que la différence paie → tout ce qui est compris → les
- * chambres et les conditions. Neuf blocs, dans cet ordre, sous le H1 (inchangé) :
- *   1. la fiche « l'essentiel » (EntityFacts, page="tarifs" : son lien « Voir le calcul » y devient une ancre dans la page) ;
+ * chambres et les conditions. Neuf blocs ; leurs numéros (ceux du brief, repris par les textes et les tests) ne suivent plus
+ * l'ordre d'affichage depuis le 25/11/2026 (décision de Jérôme : les prix et l'offre en haut, puis ce que La Villa Coliving offre
+ * de plus qu'une colocation, la fiche « l'essentiel » en bas de page). Sous le H1 (inchangé), on lit donc : 5, 6, 3, 2, 4, 7, 8,
+ * 1, 9. Les fonds alternent toujours (blanc, beige) : le bloc 3 passe en beige, le bloc 2 en blanc.
+ *   1. la fiche « l'essentiel » (EntityFacts, page="tarifs" : son lien « Voir le calcul » y devient une ancre dans la page),
+ *      sous la FAQ et repliée au téléphone comme partout ;
  *   2. #calcul — le budget réel : trois paragraphes de réponse, les postes qui s'ajoutent à un loyer, le tableau (vrai <table>) ;
  *   3. #objection-prix — ce que la différence paie : quatre H3 numérotés, le tableau des maisons, les trois cartes (D18) ;
  *   4. #inclus — trois listes (src/data/inclus.ts), sans compteur ;
@@ -220,7 +224,7 @@ const TD_CARD = "max-md:block max-md:border-0 max-md:bg-transparent max-md:p-0 m
 function BudgetSection({ L }: { L: TarifsLang }) {
   const T = budgetBlock(L);
   return (
-    <section id={TARIFS_ANCHORS.calcul} aria-labelledby="calcul-title" className={`py-16 lg:py-20 bg-[#FAF9F6] ${SCROLL_MT}`}>
+    <section id={TARIFS_ANCHORS.calcul} aria-labelledby="calcul-title" className={`py-16 lg:py-20 bg-white ${SCROLL_MT}`}>
       <div className="max-w-3xl mx-auto px-6">
         <h2 id="calcul-title" className={H2} style={SERIF}>{T.title}</h2>
         {/* Les trois paragraphes de réponse, sans rien entre le titre et eux. */}
@@ -295,7 +299,7 @@ function ValueSection({ L }: { L: TarifsLang }) {
   const cards = houseCards(L);
   const [space, house, nothing, life] = T.points;
   return (
-    <section className="py-16 lg:py-20 bg-white scroll-mt-[calc(4rem+var(--lvc-banner-h,0px))]" id={PRICE_INCLUDES_ANCHOR}>
+    <section className="py-16 lg:py-20 bg-[#FAF9F6] scroll-mt-[calc(4rem+var(--lvc-banner-h,0px))]" id={PRICE_INCLUDES_ANCHOR}>
       <div className="max-w-3xl mx-auto px-6">
         <h2 className={H2} style={SERIF}>{T.title}</h2>
         <p className="text-[#44403C] leading-relaxed">{T.intro}</p>
@@ -637,20 +641,21 @@ export function RatesPageV4() {
         </div>
       </section>
 
-      {/* 1. La fiche « l'essentiel » (lot 2) : son lien « Voir le calcul » mène au bloc 2, une ancre dans la page. */}
-      <section className="py-2 bg-white">
-        <div className="max-w-3xl mx-auto px-6"><EntityFacts page="tarifs" /></div>
-      </section>
-
-      <BudgetSection L={L} />
-      <ValueSection L={L} />
-      <IncludedSection L={L} />
+      {/* (25/11/2026, décision de Jérôme) Les prix et l'offre d'abord, puis ce que La Villa Coliving offre de plus qu'une colocation. */}
       <PricesSection L={L} />
       <OfferSection L={L} />
+      <ValueSection L={L} />
+      <BudgetSection L={L} />
+      <IncludedSection L={L} />
       <AppartSection L={L} />
 
       {/* 8. Les onze questions ; le FAQPage est construit à partir du même tableau (mêmes mots, même nombre). */}
       <FaqSection title={TARIFS_FAQ_TITLE[L]} items={tarifsPageFaq[L]} emitSchema className={SCROLL_MT} />
+
+      {/* 1. La fiche « l'essentiel », en bas de page (25/11/2026), repliée au téléphone : son lien « Voir le calcul » mène au bloc 2. */}
+      <section className="py-10 md:py-16 bg-white">
+        <div className="max-w-3xl mx-auto px-6"><EntityFacts page="tarifs" className="!my-0" /></div>
+      </section>
 
       <ApplySection L={L} />
       {/* R3 (checkpoint 21/08) : canal court sur une page d'entrée — pas sur /candidature (71 % de complétion, on ne détourne pas). */}

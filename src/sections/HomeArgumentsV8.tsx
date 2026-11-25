@@ -27,6 +27,7 @@ import {
 } from "@/data/stats";
 import { housesChfPerM2Text, timesPerWeek } from "@/data/priceFacts";
 import { housesStationWalk } from "@/data/houseLocation";
+import { PRICE_INCLUDES_LINK } from "@/data/allInclusive";
 
 /** Mesure GA4 — même garde que les autres boutons du site : jamais bloquant. */
 function track(event: string, params: Record<string, unknown>): void {
@@ -180,9 +181,11 @@ export function HomePrice() {
           </p>
           <p>{en ? "No application or agency fees." : "Aucun frais de dossier ni d'agence."}</p>
         </div>
+        {/* (25/11/2026, décision de Jérôme) Le lien mène à « Ce que La Villa Coliving offre de plus qu'une colocation » de /tarifs
+            (#objection-prix, même cible que le lien « Ce que comprend le prix » des cartes chambres ; arrivée gérée par la page). */}
         <LocalizedLink
-          to="/tarifs"
-          onClick={() => track("cta_click", { cta_position: "price_explained", cta_target: "/tarifs", language })}
+          to={PRICE_INCLUDES_LINK.to}
+          onClick={() => track("cta_click", { cta_position: "price_explained", cta_target: PRICE_INCLUDES_LINK.to, language })}
           className={`${TEXT_LINK} mt-6`}
         >
           {en ? "See all prices" : "Voir tous les tarifs"}
