@@ -777,75 +777,13 @@ export function JoinPageV4() {
         </div>
       </section>
 
-      {/* Testimonials — réassurance post-form (S33) */}
-      <section className="py-20 lg:py-24 bg-white">
-        <div className="container-custom max-w-5xl">
-          <div className="text-center mb-12">
-            <span className="text-xs text-[#78716C] uppercase tracking-[0.3em] mb-4 block">
-              {language === "en" ? "What our residents say" : "Ce que disent nos résidents"}
-            </span>
-            <h2
-              className="text-3xl md:text-4xl font-light text-[#1C1917]"
-              style={{ fontFamily: '"DM Serif Display", serif' }}
-            >
-              {language === "en" ? "They took the leap" : "Ils ont sauté le pas"}
-            </h2>
-          </div>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            {[
-              {
-                initials: "SM",
-                name: "Sarah M.",
-                role_fr: "Responsable Marketing · 8 mois au Lodge",
-                role_en: "Marketing Manager · 8 months at Le Lodge",
-                quote_fr: "Le processus de candidature était super simple. J'ai emménagé 2 semaines après. La communauté est exactement ce que je cherchais en arrivant à Genève.",
-                quote_en: "The application process was super simple. I moved in 2 weeks later. The community is exactly what I was looking for when arriving in Geneva.",
-              },
-              {
-                initials: "TL",
-                name: "Thomas L.",
-                role_fr: "Ingénieur frontalier · 1 an à La Villa",
-                role_en: "Cross-border engineer · 1 year at La Villa",
-                quote_fr: "Je voulais éviter la galère de chercher un studio à Genève. Ici, tout est inclus et la piscine après le boulot, c'est priceless.",
-                quote_en: "I wanted to skip the hassle of finding a studio in Geneva. Everything is included here, and the pool after work is priceless.",
-              },
-              {
-                initials: "CD",
-                name: "Camille D.",
-                role_fr: "Chargée de projet OI · 6 mois au Loft",
-                role_en: "International org. project lead · 6 months at Le Loft",
-                quote_fr: "Atterrir à Genève seule était stressant. Le Loft m'a donné un réseau social en 2 semaines. Je recommande à toutes les expats qui arrivent.",
-                quote_en: "Landing in Geneva alone was stressful. Le Loft gave me a social network in 2 weeks. I recommend it to every expat arriving.",
-              },
-            ].map((t, i) => (
-              <div key={i} className="bg-[#FAF9F6] border border-[#E7E5E4] p-6">
-                <div className="flex items-center gap-3 mb-4">
-                  <div className="w-12 h-12 rounded-full bg-[#D4A574] text-white flex items-center justify-center font-medium">
-                    {t.initials}
-                  </div>
-                  <div>
-                    <p className="text-sm font-medium text-[#1C1917]">{t.name}</p>
-                    <p className="text-xs text-[#78716C]">{language === "en" ? t.role_en : t.role_fr}</p>
-                  </div>
-                </div>
-                <div className="flex gap-1 mb-3">
-                  {[1, 2, 3, 4, 5].map((s) => (
-                    <Star key={s} className="w-3.5 h-3.5 fill-[#D4A574] text-[#D4A574]" />
-                  ))}
-                </div>
-                <p className="text-sm text-[#57534E] italic leading-relaxed">
-                  "{language === "en" ? t.quote_en : t.quote_fr}"
-                </p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
+      {/* (25/11/2026, décision de Jérôme) Le bloc « Ce que disent nos résidents — Ils ont sauté le pas » (trois témoignages) est
+          retiré, et les blocs sous le formulaire sont resserrés en hauteur : marges des sections, des étapes et de l'encart WhatsApp. */}
 
       {/* Steps — après le form (S33) : explique la suite. (24/11/2026, § 4.7) Demande ta visite → Visite, sur place ou en vidéo → Emménage */}
-      <section className="py-24 lg:py-32 bg-white">
+      <section className="py-12 lg:py-16 bg-white">
         <div className="container-custom">
-          <div className="text-center mb-16">
+          <div className="text-center mb-8 lg:mb-10">
             <span className="text-xs text-[#78716C] uppercase tracking-[0.3em] mb-4 block">
               {language === "en" ? "The Process" : "Le Processus"}
             </span>
@@ -882,7 +820,7 @@ export function JoinPageV4() {
                 description:
                   language === "en"
                     ? "Refundable deposit, and that's it — zero application fee. Welcome home!"
-                    : "Caution remboursable, et c'est tout — zéro frais de dossier. Bienvenue chez toi !",
+                    : "Caution remboursable, et c'est tout — zéro frais de dossier. Bienvenue chez toi !",
               },
             ] : [
               {
@@ -907,14 +845,14 @@ export function JoinPageV4() {
                 description:
                   language === "en"
                     ? "Refundable deposit, and that's it — zero application fee. Welcome home!"
-                    : "Caution remboursable, et c'est tout — zéro frais de dossier. Bienvenue chez toi !",
+                    : "Caution remboursable, et c'est tout — zéro frais de dossier. Bienvenue chez toi !",
               },
             ]).map((step, index) => (
-              <div key={index} className="bg-white p-10 text-center">
-                <span className="text-6xl font-light text-[#E7E5E4] block mb-6">
+              <div key={index} className="bg-white px-6 py-6 md:p-8 text-center">
+                <span className="text-5xl md:text-6xl font-light text-[#E7E5E4] block mb-3">
                   {step.number}
                 </span>
-                <h3 className="text-xl font-medium text-[#1C1917] mb-4">
+                <h3 className="text-xl font-medium text-[#1C1917] mb-2">
                   {step.title}
                 </h3>
                 <p className="text-[#57534E]">{step.description}</p>
@@ -972,10 +910,10 @@ export function JoinPageV4() {
       )}
 
       {/* WhatsApp alternative + FAQ contextuelle (CRO wins #4 + #8) */}
-      <section className="py-20 lg:py-24 bg-white">
+      <section className="py-12 lg:py-16 bg-white">
         <div className="container-custom max-w-3xl">
           {/* WhatsApp CTA */}
-          <div className="bg-[#FAF9F6] border border-[#E7E5E4] p-6 md:p-8 text-center mb-12">
+          <div className="bg-[#FAF9F6] border border-[#E7E5E4] p-6 md:p-8 text-center mb-10">
             <MessageCircle className="w-10 h-10 text-[#25D366] mx-auto mb-4" />
             <h2 className="text-xl md:text-2xl font-medium text-[#1C1917] mb-2">
               {language === "en"

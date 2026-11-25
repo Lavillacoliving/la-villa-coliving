@@ -730,15 +730,17 @@ test('sources : contrôles internes vides (relevé, textes, inclus, FAQ)', () =>
   if (E.BUDGET_CALC_LINK) assert.equal(E.BUDGET_CALC_LINK.anchor, T.TARIFS_ANCHORS.calcul);
 });
 
-test('ordre des neuf blocs (H1 inchangé, puis la fiche, le calcul, la différence, les inclus, les prix, L\'Appart, la FAQ, candidater) et ancres', () => {
+// (25/11/2026, décision de Jérôme) Ordre d'affichage : les prix, puis l'offre (navigateur seulement, absente ici), ce que La Villa
+// Coliving offre de plus qu'une colocation, le calcul, les inclus, L'Appart, la FAQ, la fiche « l'essentiel » en bas de page, candidater.
+test('ordre des neuf blocs (H1 inchangé, puis les prix, la différence, le calcul, les inclus, L\'Appart, la FAQ, la fiche, candidater) et ancres', () => {
   for (const lang of LANGS) {
     const html = main(lang);
     const A = ANNEX[lang];
     assert.deepEqual(elements(html, 'h1'), [lang === 'en' ? 'Transparent Pricing' : 'Tarifs Transparents'], `${lang} : H1`);
     const h2 = elements(html, 'h2');
-    assert.deepEqual(h2, [KEPT[lang].essentials, A.block2.title, A.block3.title, A.block4.title, A.block5.title, A.block7.title, KEPT[lang].faq, KEPT[lang].apply], `${lang} : titres des blocs`);
+    assert.deepEqual(h2, [A.block5.title, A.block3.title, A.block2.title, A.block4.title, A.block7.title, KEPT[lang].faq, KEPT[lang].essentials, KEPT[lang].apply], `${lang} : titres des blocs`);
     // Ancres : nouvelles (calcul, inclus), conservées (objection-prix, echelle-prix + son titre, lappart, faq), l'offre absente.
-    const ids = ['entity-facts', 'calcul', 'objection-prix', 'inclus', 'echelle-prix', 'echelle-prix-title', 'lappart', 'faq'];
+    const ids = ['echelle-prix', 'echelle-prix-title', 'objection-prix', 'calcul', 'inclus', 'lappart', 'faq', 'entity-facts'];
     let last = -1;
     for (const id of ids) {
       const at = html.indexOf(`id="${id}"`);

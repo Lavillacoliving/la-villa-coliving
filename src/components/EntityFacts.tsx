@@ -21,6 +21,9 @@
  * s'arrête après son premier paragraphe, sous un bouton « Voir tout l'essentiel ». Le reste (phrase de contexte, puces,
  * bouton, microcopie) est masqué en CSS et reste dans le HTML : la garde check:facts lit toujours les mêmes phrases.
  * Replié au prérendu comme au premier rendu du navigateur (aucun écart d'hydratation) ; toujours déplié à partir de md.
+ * (25/11/2026, décision de Jérôme : « sur de nombreuses pages le bloc n'est pas fermé ») Replié PARTOUT par défaut : les 14 pages
+ * et les 8 articles qui portent la fiche, comme les pages maisons, /nos-maisons et l'accueil. `collapseOnMobile={false}` reste
+ * possible, aucune page ne s'en sert.
  */
 import { useState, type ReactNode } from "react";
 import { LocalizedLink } from "@/components/LocalizedLink";
@@ -34,11 +37,11 @@ export interface EntityFactsProps {
   houseSlug?: HouseKey;
   children?: ReactNode;
   className?: string;
-  /** Sur mobile, replie la fiche après son premier paragraphe (tout reste dans le HTML). Pages maisons, /nos-maisons et accueil. */
+  /** Sur mobile, replie la fiche après son premier paragraphe (tout reste dans le HTML). Vrai par défaut depuis le 25/11/2026 : partout. */
   collapseOnMobile?: boolean;
 }
 
-export function EntityFacts({ page, houseSlug, children, className = "", collapseOnMobile = false }: EntityFactsProps) {
+export function EntityFacts({ page, houseSlug, children, className = "", collapseOnMobile = true }: EntityFactsProps) {
   const { language } = useLanguage();
   const L = language === "en" ? "en" : "fr";
   const t = entityFactsText(L);
