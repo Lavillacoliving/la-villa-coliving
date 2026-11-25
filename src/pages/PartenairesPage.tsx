@@ -4,12 +4,18 @@ import { SEO } from "@/components/SEO";
 // (25/11/2026) Page « Partenaires » : regroupe les liens retour demandés par les annuaires où le site
 // est inscrit (Plan Autorité, Pilier 2). Seul accès depuis le site : le lien « Partenaires » du bas du
 // pied de page, pour que ces liens ne pèsent sur aucune page de vente.
-// Chaque lien reprend le code fourni par l'annuaire tel quel (même href, même ancre, sans nofollow) :
-// le modérateur le vérifie avant de valider la fiche. Annuaire suivant = une ligne de plus dans PARTNERS.
+// Quand l'annuaire fournit un code de lien retour, il est repris tel quel (même href, même ancre, sans
+// nofollow) : le modérateur le vérifie avant de valider la fiche. Sinon, lien vers notre fiche, ancre de
+// marque. Annuaire suivant = une ligne de plus dans PARTNERS.
 const PARTNERS: { href: string; anchor: string }[] = [
   {
     href: "https://www.haute-savoie.net/",
     anchor: "ANNUAIRE HAUTE SAVOIE 74, Referencement Gratuit Annecy Chamonix Thonon",
+  },
+  {
+    // (25/11/2026) Notre fiche Hoodspot ; l'adresse redirige (301) vers annuaire.petitesaffiches.fr.
+    href: "https://hoodspot.fr/location-biens-immobiliers-terrains/la-villa-coliving-88215381000016/",
+    anchor: "La Villa Coliving sur Hoodspot",
   },
 ];
 
