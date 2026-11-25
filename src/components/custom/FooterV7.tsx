@@ -218,6 +218,15 @@ export function FooterV7() {
                   {language === "en" ? "Privacy" : "Confidentialité"}
                 </LocalizedLink>
               </li>
+              {/* (25/11/2026) Seul accès à /partenaires (liens retour des annuaires), volontairement ici et pas dans « Explorer ». */}
+              <li>
+                <LocalizedLink
+                  to="/partenaires"
+                  className="text-[#A8A29E] hover:text-[#E0BB8A] transition-colors duration-300 text-sm"
+                >
+                  {language === "en" ? "Partners" : "Partenaires"}
+                </LocalizedLink>
+              </li>
               {/* Lien texte vers la version miroir (08/10/2026) : chemin d'exploration FR ↔ EN depuis
                   chaque page, en plus du sélecteur de la barre de navigation. */}
               <li>
