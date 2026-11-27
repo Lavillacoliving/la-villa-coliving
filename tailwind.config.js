@@ -4,7 +4,23 @@ module.exports = {
   content: ['./index.html', './src/**/*.{js,ts,jsx,tsx}'],
   theme: {
     extend: {
+      // (Lot 2a, 27/11/2026, §0.5 et §0.9) Système graphique : une seule source, les variables --lvc-* de src/index.css.
+      fontFamily: {
+        display: ["'DM Serif Display'", "Georgia", "serif"],
+      },
       colors: {
+        lvc: {
+          ink: "var(--lvc-ink)",
+          text: "var(--lvc-text)",
+          muted: "var(--lvc-muted)",
+          page: "var(--lvc-page)",
+          accent: "var(--lvc-accent)",
+          tint: "var(--lvc-tint)",
+          sand: "var(--lvc-sand)",
+          gold: "var(--lvc-gold)",
+          "gold-soft": "var(--lvc-gold-soft)",
+          line: "var(--lvc-line)",
+        },
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",
         ring: "hsl(var(--ring))",

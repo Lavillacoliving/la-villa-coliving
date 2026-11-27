@@ -189,3 +189,101 @@ html.lvc-offer-on #root > div > main > section.pt-16:first-child {
 html.lvc-offer-on #root > div > main > [data-home-section="hero"] > section.pt-24 {
   padding-top: calc(6rem + var(--lvc-banner-h));
 }
+
+/* ─────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+   Système graphique (lot 2a, brief « Accueil : récit, avis, photos » du 27/11/2026, §0.5 et §0.9, D7, D8, D13, D25).
+   SOCLE seulement : jetons de couleur et classes communes, à poser composant par composant. Les styles de base des
+   éléments (h1, h2, h3, p) ne sont PAS modifiés ici : ils changeraient toutes les pages d'un coup (commit séparé, après
+   vérification de leur portée sur le dashboard et le portail — point 5 de Jérôme, 27/11).
+   Contrastes (27/11) : accent sur fond de page 7,2:1, sur teinte 6,2:1, sur sable 6,5:1 ; encre sur doré 7,9:1 ;
+   doré sur fond clair 2,1:1 → le doré n'est JAMAIS une couleur de texte sur fond clair (bouton principal et étoiles).
+   ───────────────────────────────────────────────────────────────────────────────────────────────────────────────────── */
+:root {
+  --lvc-ink: #1C1917;        /* titres, texte fort */
+  --lvc-text: #44403C;       /* paragraphes */
+  --lvc-muted: #57534E;      /* légendes, mentions */
+  --lvc-page: #FBFAF9;       /* fond de page */
+  --lvc-accent: #2F5D50;     /* « jardin » (D25) : surtitres, italique du H1, chiffres, pastilles, auteurs d'avis */
+  --lvc-tint: #E3EDE4;       /* teinte (D25) : pastilles, fond de la section Avis */
+  --lvc-sand: #F5EEE3;       /* sable : fond de la section Récit */
+  --lvc-gold: #D4A574;       /* doré : bouton principal, étoiles, bandeau d'offre (texte encre) */
+  --lvc-gold-soft: #E0BB8A;  /* doré clair : survol du bouton, italique du H1 sur photo sombre */
+  --lvc-line: #E7E5E4;       /* filets */
+}
+
+@layer components {
+  /* Titres H1/H2 en DM Serif Display 400 — la police n'existe qu'en 400 : aucun faux gras (D7). */
+  .lvc-display {
+    font-family: 'DM Serif Display', Georgia, serif;
+    font-weight: 400;
+    font-synthesis: none;
+    letter-spacing: -0.01em;
+  }
+  /* Mot ou groupe de mots en italique dans le H1 (D13) : accent sur fond clair ; `--on-photo` = doré sur photo sombre. */
+  .lvc-h1-accent {
+    font-style: italic;
+    color: var(--lvc-accent);
+  }
+  .lvc-h1-accent--on-photo {
+    color: var(--lvc-gold-soft);
+  }
+  /* Surtitre de section : Inter 600, 12 px, capitales espacées, couleur d'accent (§0.5). */
+  .lvc-eyebrow {
+    display: block;
+    font-family: 'Inter', system-ui, sans-serif;
+    font-size: 12px;
+    font-weight: 600;
+    line-height: 1.4;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--lvc-accent);
+  }
+  /* Pastille : fond teinte, texte accent. */
+  .lvc-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    border-radius: 9999px;
+    background: var(--lvc-tint);
+    color: var(--lvc-accent);
+    font-weight: 600;
+    line-height: 1.3;
+  }
+  /* Bouton principal unique (D8) : doré, texte encre, rayon 12 px, casse normale. */
+  .lvc-btn-primary,
+  .lvc-btn-secondary {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    border-radius: 12px;
+    font-family: 'Inter', system-ui, sans-serif;
+    font-weight: 600;
+    line-height: 1.2;
+    text-transform: none;
+    letter-spacing: normal;
+    transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease;
+  }
+  .lvc-btn-primary {
+    background: var(--lvc-gold);
+    color: var(--lvc-ink);
+  }
+  .lvc-btn-primary:hover {
+    background: var(--lvc-gold-soft);
+  }
+  /* Bouton secondaire : bordure, fond transparent, même rayon. */
+  .lvc-btn-secondary {
+    border: 1px solid var(--lvc-ink);
+    background: transparent;
+    color: var(--lvc-ink);
+  }
+  .lvc-btn-secondary:hover {
+    background: rgba(28, 25, 23, 0.05);
+  }
+  /* Anneau de focus visible sur fond clair comme sur fond sombre (liseré clair + anneau encre). */
+  .lvc-btn-primary:focus-visible,
+  .lvc-btn-secondary:focus-visible {
+    outline: none;
+    box-shadow: 0 0 0 2px var(--lvc-page), 0 0 0 4px var(--lvc-ink);
+  }
+}
