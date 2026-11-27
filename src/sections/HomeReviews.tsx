@@ -21,7 +21,7 @@ function track(params: Record<string, unknown>): void {
   } catch { /* noop */ }
 }
 
-const quote = (text: string, lang: "fr" | "en") => (lang === "fr" ? `« ${text} »` : `“${text}”`);
+const quote = (text: string, lang: "fr" | "en") => (lang === "fr" ? `«\u00a0${text}\u00a0»` : `“${text}”`);
 const author = (r: ReviewExcerpt, lang: "fr" | "en") => (r.context[lang] ? `${r.firstName} · ${r.context[lang]}` : r.firstName);
 
 export function HomeReviews() {

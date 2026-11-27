@@ -69,12 +69,11 @@ export function LatestBlogV7() {
     <section className="py-12 md:py-24 lg:py-32 bg-white" data-section="latest-blog">
       <div className="max-w-6xl mx-auto px-6">
         <div className="text-center mb-16">
-          <span className="text-xs text-[#78716C] uppercase tracking-[0.3em] mb-4 block">
+          <span className="lvc-eyebrow mb-4">
             {language === "en" ? "From our blog" : "Notre blog"}
           </span>
           <h2
-            className="text-3xl md:text-4xl font-light text-[#1C1917] mb-4"
-            style={{ fontFamily: '"DM Serif Display", serif' }}
+            className="lvc-display text-[30px] md:text-[42px] leading-[1.1] text-[#1C1917] mb-4"
           >
             {language === "en" ? "Latest Articles" : "Derniers articles"}
           </h2>
@@ -107,12 +106,11 @@ export function LatestBlogV7() {
                 )}
               </div>
               <div className="p-6">
-                <span className="inline-block text-xs uppercase tracking-widest text-[#D4A574] font-medium mb-3">
+                <span className="inline-block text-xs uppercase tracking-widest text-lvc-accent font-semibold mb-3">
                   {CL[post.category]?.[language] || post.category}
                 </span>
                 <h3
-                  className="text-lg font-medium text-[#1C1917] mb-2 line-clamp-2 group-hover:text-[#D4A574] transition-colors"
-                  style={{ fontFamily: '"DM Serif Display", serif' }}
+                  className="text-lg font-semibold text-[#1C1917] mb-2 line-clamp-2 group-hover:text-lvc-accent transition-colors"
                 >
                   {typoFr(gT(post))}
                 </h3>

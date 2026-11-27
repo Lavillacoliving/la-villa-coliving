@@ -57,8 +57,7 @@ export function FaqSection({
       )}
       <div className="max-w-3xl mx-auto px-6">
         <h2
-          className="text-3xl md:text-4xl font-light text-[#1C1917] mb-6 text-center"
-          style={{ fontFamily: '"DM Serif Display", serif' }}
+          className="lvc-display text-3xl md:text-4xl text-[#1C1917] mb-6 text-center"
         >
           {title}
         </h2>

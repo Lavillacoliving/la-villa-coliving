@@ -81,8 +81,7 @@ export function EntityFacts({ page, houseSlug, children, className = "", collaps
     >
       <h2
         id="entity-facts-title"
-        className="text-2xl md:text-3xl font-light text-[#1C1917] mb-4"
-        style={{ fontFamily: '"DM Serif Display", serif' }}
+        className="lvc-display text-2xl md:text-3xl text-[#1C1917] mb-4"
       >
         {t.title}
       </h2>

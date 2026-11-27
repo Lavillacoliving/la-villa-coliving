@@ -33,13 +33,13 @@ function track(event: string, params: Record<string, unknown>): void {
   } catch { /* noop */ }
 }
 
-const EYEBROW = "block text-[#44403C] text-[13px] font-semibold tracking-[0.1em] uppercase";
-const H2 = "text-3xl md:text-4xl font-bold text-[#1C1917] mt-3 mb-6 md:mb-10";
-const H2_STYLE = { letterSpacing: "-0.025em" } as const;
+// (Lot 2a, 27/11/2026, §0.5) Classes communes du système graphique : surtitre en accent, H2 en DM Serif Display 400.
+const EYEBROW = "lvc-eyebrow";
+const H2 = "lvc-display text-[30px] md:text-[42px] leading-[1.1] text-lvc-ink mt-3 mb-6 md:mb-10";
 const TEXT_LINK =
   "inline-flex items-center gap-1.5 font-semibold text-[#44403C] underline decoration-[#D4A574] decoration-2 underline-offset-4 hover:text-[#1C1917] transition-colors";
-const PRIMARY_BUTTON =
-  "inline-flex items-center justify-center gap-2 bg-[#D4A574] text-[#1C1917] px-8 py-4 rounded-lg font-bold text-base hover:bg-[#E0BB8A] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#44403C] focus-visible:ring-offset-2";
+// Bouton principal unique (D8) : doré, texte encre, rayon 12 px, casse normale.
+const PRIMARY_BUTTON = "lvc-btn-primary px-8 py-4 text-base";
 
 /** Quatre chiffres, juste sous la promesse (ils étaient sur la photo du haut de page). */
 export function HomeStats() {
@@ -127,12 +127,12 @@ export function HomeWhy() {
     <section className="py-12 md:py-24 bg-[#F5F2ED]">
       <div className="max-w-5xl mx-auto px-6">
         <span className={EYEBROW}>{en ? "WHY LA VILLA" : "POURQUOI LA VILLA"}</span>
-        <h2 className={H2} style={H2_STYLE}>{en ? "A community, not a building." : "Une communauté, pas un immeuble."}</h2>
+        <h2 className={H2}>{en ? "A community, not a building." : "Une communauté, pas un immeuble."}</h2>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-x-10 gap-y-6">
           {reasons.map((r) => (
             <div key={r.key} className="flex gap-4">
               <span className="w-11 h-11 shrink-0 rounded-xl bg-white border border-[#E7E5E4] flex items-center justify-center" aria-hidden="true">
-                <r.icon className="w-5 h-5 text-[#8A6508]" />
+                <r.icon className="w-5 h-5 text-lvc-accent" />
               </span>
               <div className="min-w-0">
                 <h3 className="text-base md:text-lg font-semibold text-[#1C1917] mb-1">{r.title}</h3>
@@ -165,7 +165,7 @@ export function HomePrice() {
     <section className="py-12 md:py-24 bg-white">
       <div className="max-w-3xl mx-auto px-6">
         <span className={EYEBROW}>{en ? "THE PRICE, EXPLAINED" : "LE PRIX, EXPLIQUÉ"}</span>
-        <h2 className={H2} style={H2_STYLE}>
+        <h2 className={H2}>
           {en ? "More complete than a regular flatshare. All inclusive." : "Plus complet qu'une coloc classique. Tout compris."}
         </h2>
         <div className="space-y-3 text-base md:text-lg text-[#44403C] leading-relaxed">
@@ -222,10 +222,11 @@ export function HomeVisit() {
     },
   ];
   return (
-    <section id="visite" className="pt-12 pb-6 md:pt-24 md:pb-10 bg-[#F5F2ED] scroll-mt-24">
+    // (Lot 2a) Marge du bas rétablie : la note Google qui suivait sur le même fond est passée dans la section Avis.
+    <section id="visite" className="py-12 md:py-24 bg-[#F5F2ED] scroll-mt-24">
       <div className="max-w-3xl mx-auto px-6">
         <span className={EYEBROW}>{en ? "HOW IT WORKS" : "COMMENT ÇA SE PASSE"}</span>
-        <h2 className={H2} style={H2_STYLE}>{en ? "Come and meet us" : "Viens nous rencontrer"}</h2>
+        <h2 className={H2}>{en ? "Come and meet us" : "Viens nous rencontrer"}</h2>
         <ol className="space-y-5">
           {steps.map((s, i) => (
             <li key={s.key} className="flex gap-4">
