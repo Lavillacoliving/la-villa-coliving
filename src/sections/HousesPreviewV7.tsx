@@ -94,7 +94,8 @@ export function HousesPreviewV7() {
 
   return (
     // (Lot 2a, 27/11/2026, version B §0.9) Cartes sans bordure ni fond : photo 3:2, pastilles, nom et commune, trajet, texte.
-    <section className="py-10 md:py-[72px] bg-lvc-page">
+    // pb-16 sur mobile : « Compare-les » hors de la zone de la bulle WhatsApp en fin de section (§0.6, D10).
+    <section className="pt-10 pb-16 md:py-[72px] bg-lvc-page">
       <div className="mx-auto max-w-[1280px] px-5 md:px-8">
         {/* Header */}
         <div className="flex flex-col md:flex-row md:items-end md:justify-between mb-6 md:mb-8">

@@ -47,7 +47,8 @@ export function HeroV7() {
   };
 
   return (
-    <section className="pt-24 pb-10 md:pb-14 bg-lvc-page">
+    // pb-[72px] sur mobile : marge de sécurité sous la pastille de disponibilité pour la bulle WhatsApp (§0.6, D10).
+    <section className="pt-24 pb-[72px] md:pb-14 bg-lvc-page">
       <div className="lvc-hero-grid mx-auto max-w-[1280px] px-5 md:px-8">
         {/* Pastille */}
         <div className="lvc-hero-pill">

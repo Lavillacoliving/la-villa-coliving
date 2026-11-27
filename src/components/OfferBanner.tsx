@@ -92,12 +92,14 @@ export function OfferBanner() {
   };
 
   return (
-    <div className="lvc-offer-banner bg-[#1C1917] text-white" data-offer-id={shown}>
+    // (Lot 2a, 27/11/2026, décision de Jérôme) Fond doré comme le bouton principal ; texte, flèche et croix en encre (7,9:1).
+    // Texte, lien et événement offer_cta_click inchangés. Composant partagé : vaut pour toutes les pages du bandeau.
+    <div className="lvc-offer-banner bg-lvc-gold text-lvc-ink" data-offer-id={shown}>
       <div className="container-custom h-full flex items-center justify-center gap-2 sm:gap-4">
         <LocalizedLink
           to={OFFER_PATH_FR}
           onClick={() => trackOfferCta("banner", { language: L, page_path: pathname })}
-          className="text-xs sm:text-sm font-medium text-center leading-snug hover:text-[#D4A574] transition-colors"
+          className="text-sm font-medium text-center leading-snug text-lvc-ink underline-offset-4 hover:underline"
         >
           {texts.banner}
         </LocalizedLink>
@@ -105,7 +107,7 @@ export function OfferBanner() {
           type="button"
           onClick={dismiss}
           aria-label={texts.bannerClose}
-          className="shrink-0 p-1.5 -mr-1.5 rounded text-[#A8A29E] hover:text-white transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#D4A574]"
+          className="shrink-0 p-1.5 -mr-1.5 rounded text-lvc-ink hover:opacity-70 transition-opacity focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-lvc-ink"
         >
           <X className="w-4 h-4" aria-hidden="true" />
         </button>

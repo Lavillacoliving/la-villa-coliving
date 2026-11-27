@@ -99,7 +99,8 @@ export function HomePage() {
           items={language === "en" ? homeFaq.en : homeFaq.fr}
           emitSchema
           id="faq-coliving-geneve"
-          padding="py-12 md:py-24 lg:py-32"
+          // (Lot 2a, §0.6) pb-16 sur mobile : la dernière question reste hors de la zone de la bulle WhatsApp.
+          padding="pt-12 pb-16 md:py-24 lg:py-32"
           intro={
             <p>
               {/* (Lot L2, 09/10/2026) « 20 min » toujours qualifié : STATS_DISPLAY.distance (D1). (L'Appart, E5) Deux gammes, deux
