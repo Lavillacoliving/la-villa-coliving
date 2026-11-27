@@ -211,10 +211,55 @@ html.lvc-offer-on #root > div > main > [data-home-section="hero"] > section.pt-2
   --lvc-line: #E7E5E4;       /* filets */
 }
 
+/* Police de repli calée sur DM Serif Display (Georgia locale, mêmes montante, descendante et chasse — mesurées dans Chrome le
+   27/11/2026) : au chargement de la police web, le texte des titres ne bouge plus (sinon la boîte de texte de Georgia, plus
+   basse en haut, remontait de ≈ 5 px sur un H1 de 38 px et le CLS de l'accueil dépassait sa valeur de départ). */
+@font-face {
+  font-family: 'DM Serif Display Fallback';
+  src: local('Georgia');
+  font-style: normal;
+  font-weight: 400;
+  size-adjust: 99.6%;
+  ascent-override: 104.4%;
+  descent-override: 34.1%;
+  line-gap-override: 0%;
+}
+@font-face {
+  font-family: 'DM Serif Display Fallback';
+  src: local('Georgia Italic'), local('Georgia-Italic');
+  font-style: italic;
+  font-weight: 400;
+  size-adjust: 94.6%;
+  ascent-override: 109.9%;
+  descent-override: 35.9%;
+  line-gap-override: 0%;
+}
+
+/* Même principe pour Inter (Arial locale calée sur Inter 400 et 600, mesurée le 27/11/2026) : utilisée seulement par le haut de
+   page de l'accueil et les classes communes ci-dessous (le texte du premier écran ne bouge plus à l'arrivée d'Inter). */
+@font-face {
+  font-family: 'Inter Fallback';
+  src: local('Arial'), local('ArialMT');
+  font-weight: 400;
+  size-adjust: 106.37%;
+  ascent-override: 91.19%;
+  descent-override: 22.56%;
+  line-gap-override: 0%;
+}
+@font-face {
+  font-family: 'Inter Fallback';
+  src: local('Arial Bold'), local('Arial-BoldMT');
+  font-weight: 600 700;
+  size-adjust: 101.29%;
+  ascent-override: 95.76%;
+  descent-override: 23.69%;
+  line-gap-override: 0%;
+}
+
 @layer components {
   /* Titres H1/H2 en DM Serif Display 400 — la police n'existe qu'en 400 : aucun faux gras (D7). */
   .lvc-display {
-    font-family: 'DM Serif Display', Georgia, serif;
+    font-family: 'DM Serif Display', 'DM Serif Display Fallback', Georgia, serif;
     font-weight: 400;
     font-synthesis: none;
     letter-spacing: -0.01em;
@@ -230,7 +275,7 @@ html.lvc-offer-on #root > div > main > [data-home-section="hero"] > section.pt-2
   /* Surtitre de section : Inter 600, 12 px, capitales espacées, couleur d'accent (§0.5). */
   .lvc-eyebrow {
     display: block;
-    font-family: 'Inter', system-ui, sans-serif;
+    font-family: 'Inter', 'Inter Fallback', system-ui, sans-serif;
     font-size: 12px;
     font-weight: 600;
     line-height: 1.4;
@@ -257,7 +302,7 @@ html.lvc-offer-on #root > div > main > [data-home-section="hero"] > section.pt-2
     justify-content: center;
     gap: 0.5rem;
     border-radius: 12px;
-    font-family: 'Inter', system-ui, sans-serif;
+    font-family: 'Inter', 'Inter Fallback', system-ui, sans-serif;
     font-weight: 600;
     line-height: 1.2;
     text-transform: none;
@@ -292,12 +337,15 @@ html.lvc-offer-on #root > div > main > [data-home-section="hero"] > section.pt-2
    Mobile et tablette (< 1024 px) : pastille, H1, photo, puis le reste du texte, empilés.
    Bureau : texte à gauche (≈ 46 %), photo à droite (≈ 54 %), centrées verticalement, écart de 56 px. */
 .lvc-hero-grid {
+  font-family: 'Inter', 'Inter Fallback', system-ui, -apple-system, sans-serif;
   display: grid;
   grid-template-columns: minmax(0, 1fr);
   grid-template-areas: "pill" "title" "photo" "body";
   row-gap: 20px;
 }
-.lvc-hero-pill { grid-area: pill; }
+/* display: flex : pas de ligne de texte implicite autour de la pastille (inline-flex), sinon sa hauteur suit les métriques de
+   la police de repli puis d'Inter et le H1 bouge de 4 à 5 px à l'arrivée des polices (CLS, mesuré le 27/11/2026). */
+.lvc-hero-pill { grid-area: pill; display: flex; }
 .lvc-hero-title { grid-area: title; }
 .lvc-hero-photo { grid-area: photo; }
 .lvc-hero-body { grid-area: body; }

@@ -6,7 +6,7 @@ module.exports = {
     extend: {
       // (Lot 2a, 27/11/2026, §0.5 et §0.9) Système graphique : une seule source, les variables --lvc-* de src/index.css.
       fontFamily: {
-        display: ["'DM Serif Display'", "Georgia", "serif"],
+        display: ["'DM Serif Display'", "'DM Serif Display Fallback'", "Georgia", "serif"],
       },
       colors: {
         lvc: {
