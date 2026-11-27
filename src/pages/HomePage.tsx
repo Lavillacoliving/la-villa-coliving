@@ -26,6 +26,7 @@ import { PRICE_FROM_CHF_FR, PRICE_FROM_CHF_EN, STATS_DISPLAY } from '@/data/stat
 import { homeFaq } from '@/data/faq/homeFaq';
 import { APPART } from '@/data/appart';
 import { useSectionViewTracking } from '@/lib/sectionViewTracking';
+import { useReveal } from '@/lib/useReveal';
 
 /**
  * Accueil — (lot 2 de la refonte des pages de vente, maquette téléphone validée par Jérôme le 24/11/2026 ; rapport « Pages qui
@@ -49,6 +50,8 @@ export function HomePage() {
   // (Lot 2a, 27/11/2026, point 7 de Jérôme) Nouveaux : story, life, reviews ; « reviews » remplace « google_rating » (la note
   // Google vit dans la section Avis). Date de bascule = date de mise en ligne du lot (rapport final).
   useSectionViewTracking();
+  // (Lot 2a, §0.9) Apparition au défilement des blocs [data-reveal] sous l'écran — posée après l'hydratation, jamais au prérendu.
+  useReveal();
 
   return (
     <main>

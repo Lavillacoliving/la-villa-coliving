@@ -91,7 +91,8 @@ export function WhatsAppButton({ context, bottomClass = "bottom-6", message: cus
         onClick={trackClick}
       >
         {/* Pulse ring */}
-        <span className="absolute inset-0 rounded-full bg-[#25D366] animate-ping opacity-20" />
+        {/* (Lot 2a, 27/11/2026, §0.9) Coupé avec prefers-reduced-motion. */}
+        <span className="absolute inset-0 rounded-full bg-[#25D366] motion-safe:animate-ping opacity-20" />
 
         {/* WhatsApp SVG icon */}
         <WhatsAppGlyph className="w-7 h-7 relative z-10 text-white" />

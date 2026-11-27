@@ -312,3 +312,26 @@ html.lvc-offer-on #root > div > main > [data-home-section="hero"] > section.pt-2
   }
   .lvc-hero-photo { align-self: center; }
 }
+
+/* (Lot 2a, 27/11/2026, §0.9 « Mouvement ») Apparition au défilement, une seule fois, sur les blocs [data-reveal] situés sous
+   l'écran (src/lib/useReveal.ts pose la classe après l'hydratation : le HTML prérendu et la page sans JavaScript montrent
+   tout). Zoom de 1,03 au survol des photos des cartes maisons et des vignettes, au pointeur seulement. transform et opacity
+   seulement ; rien dans le haut de page ; prefers-reduced-motion: reduce coupe tout. */
+@media (prefers-reduced-motion: no-preference) {
+  .lvc-reveal-pending {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+  .lvc-reveal-in {
+    transition: opacity 500ms ease-out, transform 500ms ease-out;
+  }
+}
+@media (hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference) {
+  .lvc-zoom img {
+    transition: transform 600ms ease;
+  }
+  .group:hover .lvc-zoom img,
+  .lvc-zoom:hover img {
+    transform: scale(1.03);
+  }
+}
