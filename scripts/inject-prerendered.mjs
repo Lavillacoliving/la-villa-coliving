@@ -54,6 +54,24 @@ function usesHeroImageEagerly(rootContent) {
 }
 
 /**
+ * (Lot 2a, brief « Accueil : récit, avis, photos » du 27/11/2026, §4) Préchargement de la photo du haut de page de
+ * l'accueil, recopié de l'<img data-preload="hero"> du HTML prérendu : MÊMES srcset et sizes, donc le navigateur choisit la
+ * même variante pour le préchargement et pour l'image — une seule requête (point 6b de Jérôme). Pas de href : un navigateur
+ * sans imagesrcset ne précharge rien plutôt que de télécharger une seconde variante. Noms de fichiers sans espace : pas de
+ * ré-encodage %20 → %2520 (cause du retrait du préchargement le 21/08/2026). Seules les pages qui portent l'attribut (/ et
+ * /en) reçoivent la balise.
+ */
+function heroImagePreloadTag(rootContent) {
+  const img = rootContent.match(/<img\b[^>]*\bdata-preload="hero"[^>]*>/);
+  if (!img) return null;
+  const attr = (name) => (img[0].match(new RegExp(`\\s${name}="([^"]*)"`)) || [])[1];
+  const srcset = attr('srcset');
+  const sizes = attr('sizes');
+  if (!srcset || !sizes) return null;
+  return `<link rel="preload" as="image" imagesrcset="${srcset}" imagesizes="${sizes}" fetchpriority="high" />`;
+}
+
+/**
  * Remove the hero preload <link> (and its comment) from a copy of index.html
  */
 function stripHeroPreload(html) {
@@ -236,6 +254,7 @@ async function main() {
   let seoTagCount = 0;
   const skippedFiles = [];
   const heroPreloadKept = [];
+  const homeHeroPreload = [];
 
   for (const file of htmlFiles) {
     const filePath = path.join(PRERENDERED_DIR, file);
@@ -272,6 +291,15 @@ async function main() {
       heroPreloadKept.push(file);
     } else {
       result = stripHeroPreload(result);
+    }
+
+    // 0ter. (Lot 2a) Préchargement de la photo du haut de page de l'accueil (/ et /en), avant les polices.
+    const heroImagePreload = heroImagePreloadTag(rootContent);
+    if (heroImagePreload) {
+      const anchor = '<link rel="preconnect" href="https://fonts.googleapis.com"';
+      if (!result.includes(anchor)) throw new Error(`${file} : ancre du préchargement introuvable dans index.html`);
+      result = result.replace(anchor, `${heroImagePreload}\n    ${anchor}`);
+      homeHeroPreload.push(file);
     }
 
     // 1. Inject pre-rendered content into <div id="root">
@@ -343,6 +371,7 @@ async function main() {
   console.log(`\n  📦 Renamed dist/index.html → dist/_spa.html (hero preload stripped)`);
 
   console.log(`  🖼  Hero preload kept on ${heroPreloadKept.length}/${htmlFiles.length} pages: ${heroPreloadKept.join(', ')}`);
+  console.log(`  🖼  Préchargement de la photo de l'accueil (imagesrcset) : ${homeHeroPreload.join(', ') || 'aucune page'}`);
   console.log(`\n🎉 Injection complete! ${successCount}/${htmlFiles.length} pages updated, ${seoTagCount} total SEO tags injected.\n`);
 }
 

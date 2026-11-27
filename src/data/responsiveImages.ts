@@ -1000,5 +1000,116 @@ export const RESPONSIVE_IMAGES: Record<string, { original: number; widths: numbe
       1024
     ],
     "reencoded": false
+  },
+  "/images/accueil/hero-la-villa.webp": {
+    "original": 1600,
+    "widths": [
+      480,
+      960
+    ],
+    "reencoded": false
+  },
+  "/images/accueil/carte-la-villa.webp": {
+    "original": 542,
+    "widths": [
+      480
+    ],
+    "reencoded": false
+  },
+  "/images/accueil/carte-le-loft.webp": {
+    "original": 960,
+    "widths": [
+      480
+    ],
+    "reencoded": false
+  },
+  "/images/accueil/carte-le-lodge.webp": {
+    "original": 960,
+    "widths": [
+      480
+    ],
+    "reencoded": false
+  },
+  "/images/accueil/recit-chambre-lodge.webp": {
+    "original": 1600,
+    "widths": [
+      480,
+      960
+    ],
+    "reencoded": false
+  },
+  "/images/accueil/recit-cuisine-loft.webp": {
+    "original": 1600,
+    "widths": [
+      480,
+      960
+    ],
+    "reencoded": false
+  },
+  "/images/accueil/recit-salon-lodge.webp": {
+    "original": 1600,
+    "widths": [
+      480,
+      960
+    ],
+    "reencoded": false
+  },
+  "/images/accueil/bande-sauna-air-hockey-lodge.webp": {
+    "original": 1600,
+    "widths": [
+      480,
+      960
+    ],
+    "reencoded": false
+  },
+  "/images/accueil/avis-diner-piscine-la-villa.webp": {
+    "original": 960,
+    "widths": [
+      480,
+      960
+    ],
+    "reencoded": true
+  },
+  "/images/accueil/vie-yoga-la-villa.webp": {
+    "original": 960,
+    "widths": [
+      480
+    ],
+    "reencoded": false
+  },
+  "/images/accueil/vie-soiree-pizza.webp": {
+    "original": 939,
+    "widths": [
+      480
+    ],
+    "reencoded": false
+  },
+  "/images/accueil/vie-tartiflette.webp": {
+    "original": 960,
+    "widths": [
+      480
+    ],
+    "reencoded": false
+  },
+  "/images/accueil/vie-halloween-loft.webp": {
+    "original": 960,
+    "widths": [
+      480
+    ],
+    "reencoded": false
+  },
+  "/images/accueil/vie-barbecue.webp": {
+    "original": 960,
+    "widths": [
+      480
+    ],
+    "reencoded": false
+  },
+  "/images/accueil/vie-coaching-la-villa.webp": {
+    "original": 960,
+    "widths": [
+      480
+    ],
+    "reencoded": false
   }
 };

@@ -287,3 +287,28 @@ html.lvc-offer-on #root > div > main > [data-home-section="hero"] > section.pt-2
     box-shadow: 0 0 0 2px var(--lvc-page), 0 0 0 4px var(--lvc-ink);
   }
 }
+
+/* (Lot 2a, 27/11/2026, version B §0.9) Haut de page de l'accueil : une seule grille à zones, une seule <img>.
+   Mobile et tablette (< 1024 px) : pastille, H1, photo, puis le reste du texte, empilés.
+   Bureau : texte à gauche (≈ 46 %), photo à droite (≈ 54 %), centrées verticalement, écart de 56 px. */
+.lvc-hero-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  grid-template-areas: "pill" "title" "photo" "body";
+  row-gap: 20px;
+}
+.lvc-hero-pill { grid-area: pill; }
+.lvc-hero-title { grid-area: title; }
+.lvc-hero-photo { grid-area: photo; }
+.lvc-hero-body { grid-area: body; }
+@media (min-width: 1024px) {
+  .lvc-hero-grid {
+    grid-template-columns: minmax(0, 46fr) minmax(0, 54fr);
+    grid-template-areas: "pill photo" "title photo" "body photo";
+    grid-template-rows: auto auto 1fr;
+    column-gap: 56px;
+    row-gap: 22px;
+    align-items: start;
+  }
+  .lvc-hero-photo { align-self: center; }
+}

@@ -62,15 +62,18 @@ export function HomeStats() {
       label: en ? "average stay" : "de séjour en moyenne",
     },
   ];
+  // (Lot 2a, 27/11/2026, version B §0.9) Une ligne entre deux filets ; chiffres en DM Serif Display, couleur d'accent.
   return (
-    <section className="bg-white border-b border-[#E7E5E4]">
-      <div className="max-w-6xl mx-auto px-6 py-6 md:py-10 grid grid-cols-2 md:grid-cols-4 gap-x-6 gap-y-5">
-        {stats.map((s) => (
-          <div key={s.key}>
-            <p className="text-xl md:text-2xl font-bold text-[#1C1917]">{s.value}</p>
-            <p className="text-xs md:text-sm text-[#78716C] mt-1">{s.label}</p>
-          </div>
-        ))}
+    <section className="bg-lvc-page">
+      <div className="mx-auto max-w-[1280px] px-5 md:px-8">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-x-6 gap-y-5 border-y border-lvc-line py-6 md:py-7">
+          {stats.map((s) => (
+            <div key={s.key}>
+              <p className="lvc-display text-2xl md:text-[34px] leading-none text-lvc-accent">{s.value}</p>
+              <p className="text-sm text-lvc-muted mt-2 leading-snug">{s.label}</p>
+            </div>
+          ))}
+        </div>
       </div>
     </section>
   );
