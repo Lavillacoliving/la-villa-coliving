@@ -94,7 +94,8 @@ const LP_LIGHTBOX_SOURCES = [
   "/images/le lodge/exterior/lodge-hamac-jardin.webp",
   "/images/le lodge/common areas/lodge-salle-a-manger.webp",
   "/images/le lodge/amenities/la villa coliving le lodge-57.webp",   // sauna finlandais
-  "/images/le lodge/amenities/la villa coliving le lodge-121.webp",  // salle de sport
+  "/images/le lodge/amenities/le-lodge-chalet-fitness-1.webp",        // salle de sport (photo réelle, D15 du 27/11/2026)
+  "/images/le lodge/amenities/le-lodge-chalet-fitness-2.webp",        // chalet fitness, vignette de l'album (D15)
   "/images/le lodge/amenities/la villa coliving le lodge-96.webp",   // home cinéma
   "/images/le lodge/interior/la villa coliving le lodge-85.webp",    // baby-foot
   // Chambre 8 · La Villa

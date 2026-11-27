@@ -732,10 +732,10 @@ export function JoinPageV4() {
               ) : (
                 <>
                   {/* (24/11/2026) L'Appart ne se visite pas avant son ouverture (Jérôme) : arrivé de L'Appart, le formulaire garde
-                      « ENVOYER MA CANDIDATURE » (après l'hydratation, contextIsAppart). */}
+                      « Envoyer ma candidature » (après l'hydratation, contextIsAppart). (Lot 2a, 27/11/2026, D8) Casse normale. */}
                   {contextIsAppart
-                    ? (language === "en" ? "SEND MY APPLICATION" : "ENVOYER MA CANDIDATURE")
-                    : (language === "en" ? "REQUEST MY VISIT" : "DEMANDER MA VISITE")}
+                    ? (language === "en" ? "Send my application" : "Envoyer ma candidature")
+                    : (language === "en" ? "Request my visit" : "Demander ma visite")}
                   <ArrowRight className="w-5 h-5" />
                 </>
               )}

@@ -634,7 +634,7 @@ export function RatesPageV4() {
               </>
             ) : (
               <>
-                Tarifs <span className="text-[#D4A574]">Transparents</span>
+                Tarifs <span className="text-[#D4A574]">transparents</span>
               </>
             )}
           </h1>

@@ -475,7 +475,17 @@ export const RESPONSIVE_IMAGES: Record<string, { original: number; widths: numbe
     ],
     "reencoded": false
   },
-  "/images/le lodge/amenities/la villa coliving le lodge-121.webp": {
+  "/images/le lodge/amenities/le-lodge-chalet-fitness-1.webp": {
+    "original": 1536,
+    "widths": [
+      480,
+      768,
+      1024,
+      1440
+    ],
+    "reencoded": false
+  },
+  "/images/le lodge/amenities/le-lodge-chalet-fitness-2.webp": {
     "original": 1536,
     "widths": [
       480,

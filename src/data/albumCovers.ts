@@ -32,7 +32,8 @@ export const ALBUM_COVERS: Record<string, string[]> = {
     "/images/le lodge/exterior/le lodge piscine.webp",
     "/images/le lodge/common areas/la villa coliving le lodge-39.webp",
     "/images/le lodge/rooms/la villa coliving le lodge-67.webp",
-    "/images/le lodge/amenities/la villa coliving le lodge-122.webp",
+    // (Lot 2a, 27/11/2026, D15) Photo réelle du chalet fitness, à la place de l'image générée de la galerie (§0.8).
+    "/images/le lodge/amenities/le-lodge-chalet-fitness-2.webp",
     "/images/le lodge/amenities/la villa coliving le lodge-57.webp",
     "/images/le lodge/amenities/la villa coliving le lodge-29.webp",
   ],

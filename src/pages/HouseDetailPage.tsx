@@ -1194,14 +1194,16 @@ function getHousesData(lang: string): Record<string, HouseData> {
         category: "room",
       },
       // Amenities
+      // (Lot 2a, brief du 27/11/2026, §0.8, D15) Les deux images générées de la galerie (signature C2PA « OpenAI »,
+      // trainedAlgorithmicMedia) sont remplacées par les photos réelles du chalet fitness (PHOTOS/LE LODGE/1-39.jpg et 1-38.jpg).
       {
-        src: "/images/le lodge/amenities/la villa coliving le lodge-122.webp",
-        alt: "Le Lodge swimming pool",
+        src: "/images/le lodge/amenities/le-lodge-chalet-fitness-2.webp",
+        alt: "Le Lodge fitness chalet: treadmill, rowing machine and punching bag",
         category: "amenity",
       },
       {
-        src: "/images/le lodge/amenities/la villa coliving le lodge-121.webp",
-        alt: "Le Lodge fitness chalet",
+        src: "/images/le lodge/amenities/le-lodge-chalet-fitness-1.webp",
+        alt: "Le Lodge fitness chalet: power rack, weight bench and exercise bike",
         category: "amenity",
       },
       {
