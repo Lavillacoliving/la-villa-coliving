@@ -2,8 +2,8 @@
  * Accueil — les blocs de l'argumentation (lot 2 de la refonte des pages de vente ; maquette téléphone validée par Jérôme le
  * 24/11/2026, rapport « Pages qui vendent », § 4.1).
  *
- * Ordre de la page (HomePage.tsx) : promesse → quatre chiffres → maisons → « Une communauté, pas un immeuble » → le prix,
- * expliqué → « Viens nous rencontrer » → note Google → autres options → FAQ → fiche « l'essentiel » → articles → dernier appel.
+ * Ordre de la page : voir HomePage.tsx (lot 2a du 27/11/2026 : récit, rangée de vie et avis s'intercalent après les maisons ;
+ * la note Google passe dans la section Avis).
  * Ces blocs remplacent « Ce que ton loyer comprend », les quatre badges, « Une maison, pas un immeuble », les témoignages et
  * « Nous rejoindre est simple » : chaque fait n'est dit qu'une fois, lu dans les sources (stats.ts, priceFacts.ts, TRANSIT).
  * Une phrase = un nœud texte (chaînes construites d'un tenant) ; les liens sont des éléments à part (anti-#418).
@@ -12,14 +12,11 @@
 import type { ComponentType } from "react";
 import { ArrowRight, CircleCheck, Home, TrainFront, Waves } from "lucide-react";
 import { LocalizedLink } from "@/components/LocalizedLink";
-import { RatingStars } from "@/components/RatingStars";
 import { FacebookGroupLine } from "@/components/FacebookGroupLine";
 import { AppartTeaser } from "@/components/appart/AppartTeaser";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { colocGeneveHref } from "@/lib/siteLinks";
 import {
-  GOOGLE_REVIEWS,
-  GOOGLE_REVIEWS_LINK_LABEL,
   PRICE_FROM_CHF_EN,
   PRICE_FROM_CHF_FR,
   STATS,
@@ -262,39 +259,8 @@ export function HomeVisit() {
   );
 }
 
-/** Note Google, juste sous « Viens nous rencontrer » (décision de Jérôme du 24/11/2026 : pas d'extraits d'avis). Toujours
- *  « sur Google » avec le lien « Voir les avis » (GOOGLE_REVIEWS, stats.ts). */
-export function HomeGoogleRating() {
-  const { language } = useLanguage();
-  const L = language === "en" ? "en" : "fr";
-  return (
-    <section className="pt-2 pb-12 md:pb-24 bg-[#F5F2ED]">
-      <div className="max-w-md mx-auto px-6">
-        <div className="bg-white border border-[#E7E5E4] rounded-2xl p-5 flex items-center gap-4">
-          <p className="text-4xl font-bold text-[#1C1917] shrink-0">{STATS_DISPLAY[L].googleRatingValue}</p>
-          <div className="min-w-0 flex flex-col gap-1">
-            <RatingStars lang={L} className="w-4 h-4 text-[#D4A574]" emptyClassName="text-[#E7E5E4]" />
-            <span className="text-sm text-[#44403C]">{STATS_DISPLAY[L].googleRatingLabel}</span>
-            <a
-              href={GOOGLE_REVIEWS.url}
-              target="_blank"
-              rel="noopener noreferrer"
-              onClick={() => track("cta_click", { cta_position: "google_rating", cta_target: "google_reviews", language: L })}
-              className="self-start text-sm font-semibold text-[#1C1917] underline underline-offset-4 hover:text-[#8A6508] transition-colors"
-            >
-              {GOOGLE_REVIEWS_LINK_LABEL[L]}
-            </a>
-          </div>
-        </div>
-        <p className="mt-3 text-sm text-[#57534E] text-center">
-          {L === "en"
-            ? `${STATS_DISPLAY.en.residents} · ${STATS.averageStayMonths}-month average stay`
-            : `${STATS_DISPLAY.fr.residents} · ${STATS.averageStayMonths} mois de séjour en moyenne`}
-        </p>
-      </div>
-    </section>
-  );
-}
+/* (Lot 2a, 27/11/2026) La note Google et la ligne « 100+ résidents… » de l'ancienne section `google_rating` vivent dans la
+   section Avis (src/sections/HomeReviews.tsx), mêmes textes et même événement `cta_click` / `google_rating`. */
 
 /** Autres options : L'Appart (bloc statique de l'accueil, texte propre à la page, sans image), la ligne du groupe Facebook
  *  (A.9, texte inchangé) et les liens d'ancrage Annemasse / Genève (descendus de la section maisons, mêmes mots — R5). */
