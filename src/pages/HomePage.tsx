@@ -16,6 +16,7 @@ import {
 } from '@/sections/HomeArgumentsV8';
 import { LatestBlogV7 } from '@/sections/LatestBlogV7';
 import { HomeStory } from '@/sections/HomeStory';
+import { HomeLifeBand } from '@/sections/HomeLifeBand';
 import { WhatsAppButton } from "@/components/WhatsAppButton";
 import { SEO } from '@/components/SEO';
 import { FaqSection } from '@/components/FaqSection';
@@ -70,6 +71,8 @@ export function HomePage() {
       <div data-home-section="houses_preview"><HousesPreview /></div>
       {/* (Lot 2a, 27/11/2026) Récit « Tu arrives sans connaître personne. Ça ne dure pas. » (§0.3 A). */}
       <div data-home-section="story"><HomeStory /></div>
+      {/* (Lot 2a) Bande « Ce qui ne se vit qu'ici » et rangée de vie (§0.3 B, six vignettes légendées). */}
+      <div data-home-section="life"><HomeLifeBand /></div>
       <div data-home-section="why_choose_us"><HomeWhy /></div>
       <div data-home-section="price_explained"><HomePrice /></div>
       <div data-home-section="how_to_join"><HomeVisit /></div>
