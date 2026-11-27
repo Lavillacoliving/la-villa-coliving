@@ -129,7 +129,7 @@ export function LatestBlogV7() {
         <div className="text-center mt-12">
           <LocalizedLink
             to="/blog"
-            className="inline-flex items-center gap-2 text-[#D4A574] font-medium hover:underline"
+            className="inline-flex items-center gap-2 text-lvc-accent font-semibold underline-offset-4 hover:underline"
           >
             {language === "en" ? "View all articles" : "Voir tous les articles"}
             <ArrowRight className="w-4 h-4" />
