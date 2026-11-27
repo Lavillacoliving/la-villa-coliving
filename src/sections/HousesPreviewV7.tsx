@@ -1,22 +1,35 @@
 import { LocalizedLink } from "@/components/LocalizedLink";
 import { HouseAvailabilityLine } from "@/components/HouseAvailabilityLine";
 import { responsiveImage } from "@/lib/responsiveImage";
-import { ArrowRight, MapPin, Users } from "lucide-react";
+import { ArrowRight } from "lucide-react";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { STATS_DISPLAY, HOUSE_SURFACES, thousands } from "@/data/stats";
 import { ENTITY_HOUSES, type EntityHouseSlug } from "@/data/entityFacts";
+import { HOME_PHOTOS } from "@/data/homePhotos";
 import {
   useRoomAvailability,
   houseBadgeLabel,
   houseBadgeTone,
-  BADGE_CHIP_CLASS,
+  type BadgeTone,
   type HouseKey,
 } from "@/lib/availability";
 
 /**
  * VERSION 9: STONE & BRASS
  * Houses preview — photo cards, tags overlay, CTA link
+ *
+ * (Lot 2a, brief « Accueil : récit, avis, photos » du 27/11/2026, §0.2 et §0.9) Vraies photos n° 2, 3 et 4 (La Villa : fichier
+ * de 640 px, D18), cartes sans bordure ni fond. Décisions de Jérôme du 27/11 (A10) : l'étiquette de trajet passe sous la
+ * photo (mêmes textes), la commune à droite du nom, le nombre de résidents seulement dans la pastille (la ligne d'icônes
+ * commune + résidents, doublon, est retirée). Textes, liens et événements inchangés.
  */
+
+/** Pastille de disponibilité sur la photo : teinte et accent (version B) ; « liste d'attente » reste neutre. */
+const CARD_CHIP_CLASS: Record<BadgeTone, string> = {
+  available: "bg-lvc-tint text-lvc-accent",
+  upcoming: "bg-lvc-tint text-lvc-accent",
+  full: "bg-white text-lvc-text",
+};
 
 // (Lot L2, 09/10/2026) Chaque carte ouvre sur la ligne courte A.1 de SA maison (ENTITY_HOUSES, dérivée de TRANSIT — D1) ;
 // le badge porte le « 20 min » de marque, toujours qualifié (STATS_DISPLAY.distance). Plus de « CEVA » ni de surface en dur.
@@ -43,13 +56,11 @@ export function HousesPreviewV7() {
       name: "La Villa",
       location: "Ville-la-Grand",
       residents: "10",
-      image: "/images/villa_portrait.webp",
+      photo: HOME_PHOTOS.cardLaVilla,
+      focal: "50% 50%",
       description: language === "en"
         ? `${cap(commuteOf("lavilla", "en"))}. Heated pool, ${plotVilla} m² garden, nature reserve.`
         : `${cap(commuteOf("lavilla", "fr"))}. Piscine chauffée, ${plotVilla} m² de jardin, réserve naturelle.`,
-      alt: language === "en"
-        ? "La Villa — premium coliving house with garden and pool in Ville-la-Grand, near Geneva"
-        : "La Villa — maison de colocation premium avec jardin et piscine à Ville-la-Grand, près de Genève",
       availability: badge("lavilla"),
       tone: tone("lavilla"),
     },
@@ -58,13 +69,11 @@ export function HousesPreviewV7() {
       name: "Le Loft",
       location: "Ambilly",
       residents: "7",
-      image: "/images/la villa coliving le loft piscine.webp",
+      photo: HOME_PHOTOS.cardLeLoft,
+      focal: "50% 60%",
       description: language === "en"
         ? `${cap(commuteOf("leloft", "en"))}. Year-round heated indoor pool, Finnish sauna.`
         : `${cap(commuteOf("leloft", "fr"))}. Piscine intérieure chauffée toute l'année, sauna finlandais.`,
-      alt: language === "en"
-        ? "Le Loft — urban coliving house with indoor pool in Ambilly, near Geneva"
-        : "Le Loft — colocation urbaine avec piscine intérieure à Ambilly, près de Genève",
       availability: badge("leloft"),
       tone: tone("leloft"),
     },
@@ -73,45 +82,43 @@ export function HousesPreviewV7() {
       name: "Le Lodge",
       location: "Annemasse",
       residents: "12",
-      image: "/images/le lodge piscine.webp",
+      photo: HOME_PHOTOS.cardLeLodge,
+      focal: "50% 62%",
       description: language === "en"
         ? `${cap(commuteOf("lelodge", "en"))}. The largest: pool house, full fitness chalet with sauna & arcade.`
         : `${cap(commuteOf("lelodge", "fr"))}. Le plus grand : pool house, chalet fitness complet avec sauna et jeu d'arcade.`,
-      alt: language === "en"
-        ? "Le Lodge — coliving house with pool and gym in Annemasse, near Geneva"
-        : "Le Lodge — maison de colocation avec piscine et salle de sport à Annemasse, près de Genève",
       availability: badge("lelodge"),
       tone: tone("lelodge"),
     },
   ];
 
   return (
-    // (Lot 2 de la refonte, 24/11/2026) Marges réduites sur mobile (la section mesurait plus de 2 écrans) ; ordinateur inchangé.
-    <section className="py-12 md:py-32 bg-[#F5F2ED]">
-      <div className="container-custom">
+    // (Lot 2a, 27/11/2026, version B §0.9) Cartes sans bordure ni fond : photo 3:2, pastilles, nom et commune, trajet, texte.
+    <section className="py-10 md:py-[72px] bg-lvc-page">
+      <div className="mx-auto max-w-[1280px] px-5 md:px-8">
         {/* Header */}
-        <div className="flex flex-col md:flex-row md:items-end md:justify-between mb-8 md:mb-16">
+        <div className="flex flex-col md:flex-row md:items-end md:justify-between mb-6 md:mb-8">
           <div>
-            <span className="text-[#78716C] text-[13px] font-semibold tracking-[0.1em] uppercase">
+            <span className="lvc-eyebrow">
               {language === "en" ? "OUR HOUSES" : "NOS MAISONS"}
             </span>
-            <h2 className="text-3xl md:text-4xl font-bold text-[#1C1917] mt-4" style={{ letterSpacing: '-0.025em' }}>
+            <h2 className="lvc-display text-[30px] md:text-[42px] leading-[1.1] text-lvc-ink mt-3">
               {language === "en" ? "3 houses, 3 personalities" : "3 maisons, 3 personnalités"}
             </h2>
           </div>
           <LocalizedLink
             to="/nos-maisons"
-            className="group mt-6 md:mt-0 inline-flex items-center gap-2 text-[#44403C] font-semibold text-sm hover:gap-3 transition-all duration-300 focus-visible:ring-2 focus-visible:ring-[#44403C] focus-visible:ring-offset-2 rounded-lg"
+            className="group mt-4 md:mt-0 inline-flex items-center gap-2 text-lvc-ink font-semibold text-[15px] hover:gap-3 transition-all duration-300 focus-visible:ring-2 focus-visible:ring-lvc-ink focus-visible:ring-offset-2 rounded-lg"
           >
             {language === "en" ? "See all houses" : "Voir toutes les maisons"}
             <ArrowRight className="w-4 h-4" />
           </LocalizedLink>
         </div>
 
-        {/* Houses grid */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          {houses.map((house, index) => (
-            <div key={index} className="flex flex-col gap-3">
+        {/* Houses grid — trois colonnes tant que chaque carte garde 300 px (§0.9). */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-7 gap-y-10">
+          {houses.map((house) => (
+            <div key={house.id} data-reveal className="flex flex-col gap-3">
             {/* (Lot 1 de la refonte des pages de vente, 24/11/2026) Mesure du passage principal du parcours (accueil → maison) :
                 `house_discover_click`, comme « Découvrir L'Appart ». Jamais bloquant. */}
             <LocalizedLink
@@ -123,84 +130,79 @@ export function HousesPreviewV7() {
                   });
                 } catch { /* noop */ }
               }}
-              className="group block bg-white rounded-2xl border border-[#E7E5E4] overflow-hidden hover:border-[#44403C]/20 hover:shadow-[0_4px_24px_rgba(0,0,0,0.06)] hover:translate-y-[-2px] transition-all duration-300"
+              className="group block rounded-[22px] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-lvc-ink focus-visible:ring-offset-4"
             >
               {/* Photo */}
-              <div className="relative aspect-[16/10] overflow-hidden">
+              <div className="lvc-zoom relative aspect-[3/2] overflow-hidden rounded-[22px]">
                 <img
-                  src={house.image}
-                  alt={house.alt}
-                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" loading="lazy"
-                  {...responsiveImage(house.image, "(min-width: 768px) 33vw, 100vw")}
+                  src={house.photo.src}
+                  alt={house.photo.alt[L]}
+                  width={house.photo.width}
+                  height={house.photo.height}
+                  className="w-full h-full object-cover"
+                  style={{ objectPosition: house.focal }}
+                  loading="lazy"
+                  decoding="async"
+                  {...responsiveImage(house.photo.src, "(min-width: 1280px) 387px, (min-width: 1024px) 30vw, (min-width: 640px) 46vw, calc(100vw - 40px)")}
                 />
                 {/* Tag résidents */}
-                <span className="absolute top-4 left-4 bg-white/90 backdrop-blur-sm text-[#1C1917] text-xs font-semibold px-3 py-1.5 rounded-lg">
+                <span className="absolute top-3.5 left-3.5 bg-white text-lvc-ink text-[13px] font-semibold px-3 py-1.5 rounded-full">
                   {house.residents} {language === "en" ? "residents" : "résidents"}
-                </span>
-                {/* Tag transport — (Lot L2, 09/10/2026) libellé canonique D1 dès sm ; sur mobile, forme courte SANS minute
-                    (destination + mode, pas de « 20 min » hors libellé canonique) : le libellé complet tenait sur 3 lignes à 375 px. */}
-                <span className="absolute top-4 right-4 max-w-[60%] text-right bg-black/60 backdrop-blur-sm text-white text-xs font-medium px-3 py-1.5 rounded-lg">
-                  <span className="hidden sm:inline">{STATS_DISPLAY[L].distance}</span>
-                  <span className="sm:hidden">{L === "en" ? "Geneva Eaux-Vives by Léman Express" : "Genève-Eaux-Vives en Léman Express"}</span>
                 </span>
                 {/* Availability badge — couleur dérivée de la dispo réelle, pas du libellé.
                     Libellé null (dispo inconnue) = pas de badge, jamais de chiffre inventé. */}
                 {house.availability && house.tone && (
-                  <span className={`absolute bottom-4 left-4 backdrop-blur-sm text-xs font-semibold px-3 py-1.5 rounded-lg ${BADGE_CHIP_CLASS[house.tone]}`}>
+                  <span className={`absolute bottom-3.5 left-3.5 text-[13px] font-semibold px-3 py-1.5 rounded-full ${CARD_CHIP_CLASS[house.tone]}`}>
                     {house.availability}
                   </span>
                 )}
               </div>
 
               {/* Content */}
-              <div className="p-5 md:p-6">
-                <h3 className="text-lg font-bold text-[#1C1917] mb-2 group-hover:text-[#44403C] transition-colors duration-300">
-                  {house.name}
-                </h3>
-                <p className="text-[#78716C] text-sm mb-4">
+              <div className="pt-4 px-1">
+                <div className="flex items-baseline justify-between gap-3">
+                  <h3 className="text-2xl font-semibold text-lvc-ink">{house.name}</h3>
+                  <span className="text-sm text-lvc-muted">{house.location}</span>
+                </div>
+                {/* Ligne de trajet — (Lot L2, 09/10/2026) libellé canonique D1 dès sm ; sur mobile, forme courte SANS minute
+                    (destination + mode, pas de « 20 min » hors libellé canonique). Textes de l'ancienne étiquette, inchangés. */}
+                <p className="mt-1.5 text-[13px] font-semibold leading-snug text-lvc-accent">
+                  <span className="hidden sm:inline">{STATS_DISPLAY[L].distance}</span>
+                  <span className="sm:hidden">{L === "en" ? "Geneva Eaux-Vives by Léman Express" : "Genève-Eaux-Vives en Léman Express"}</span>
+                </p>
+                <p className="mt-2 text-[15px] leading-relaxed text-lvc-text">
                   {house.description}
                 </p>
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-4 text-xs text-[#78716C]">
-                    <span className="flex items-center gap-1.5">
-                      <MapPin className="w-3.5 h-3.5" />
-                      {house.location}
-                    </span>
-                    <span className="flex items-center gap-1.5">
-                      <Users className="w-3.5 h-3.5" />
-                      {house.residents}
-                    </span>
-                  </div>
-                  <span className="inline-flex items-center gap-1.5 text-[13px] font-semibold text-[#44403C] group-hover:gap-2.5 transition-all duration-300">
-                    {language === "en" ? "Discover" : "Découvrir"}
-                    <ArrowRight className="w-3.5 h-3.5" />
-                  </span>
-                </div>
+                <span className="mt-3 inline-flex items-center gap-1.5 text-[15px] font-semibold text-lvc-ink group-hover:gap-2.5 transition-all duration-300">
+                  {language === "en" ? "Discover" : "Découvrir"}
+                  <ArrowRight className="w-4 h-4" />
+                </span>
               </div>
             </LocalizedLink>
               {/* (Lot 3 SEO funnel — 3.3) Porte vers /chambres-disponibles?maison=… */}
-              <HouseAvailabilityLine house={house.id as HouseKey} className="px-1" />
+              <HouseAvailabilityLine house={house.id as HouseKey} className="px-1" linkClassName="text-lvc-accent" />
             </div>
           ))}
         </div>
 
-        {/* (Lot 2 de la refonte des pages de vente, 24/11/2026) « Compare-les » juste sous les cartes (il était dans une bande à
-            part, avec « Tout inclus, un seul loyer », remplacé par « Voir tous les tarifs » dans « Le prix, expliqué »). La ligne
-            d'ancrages Annemasse / Genève (R5) descend dans « Autres options » (HomeArgumentsV8), mêmes mots. */}
-        <LocalizedLink
-          to="/nos-maisons"
-          onClick={() => {
-            try {
-              (window as unknown as { gtag?: (...a: unknown[]) => void }).gtag?.("event", "cta_click", {
-                cta_position: "houses_compare", cta_target: "/nos-maisons", language,
-              });
-            } catch { /* noop */ }
-          }}
-          className="mt-6 md:mt-10 flex md:inline-flex items-center justify-center gap-2 text-sm md:text-base text-[#44403C] text-center hover:text-[#1C1917] transition-colors"
-        >
-          {language === "en" ? "Torn between the three? Compare them" : "Tu hésites entre les trois ? Compare-les"}
-          <ArrowRight className="w-4 h-4 flex-none text-[#D4A574]" />
-        </LocalizedLink>
+        {/* (Lot 2 de la refonte des pages de vente, 24/11/2026) « Compare-les » juste sous les cartes. La ligne d'ancrages
+            Annemasse / Genève (R5) est dans « Autres options » (HomeArgumentsV8), mêmes mots. */}
+        <div className="mt-8 md:mt-10 text-center">
+          <LocalizedLink
+            to="/nos-maisons"
+            onClick={() => {
+              try {
+                (window as unknown as { gtag?: (...a: unknown[]) => void }).gtag?.("event", "cta_click", {
+                  cta_position: "houses_compare", cta_target: "/nos-maisons", language,
+                });
+              } catch { /* noop */ }
+            }}
+            className="inline-flex items-center justify-center gap-2 text-sm md:text-base text-lvc-ink underline underline-offset-4 decoration-[#A8A29E] hover:decoration-lvc-ink transition-colors"
+          >
+            {language === "en" ? "Torn between the three? Compare them" : "Tu hésites entre les trois ? Compare-les"}
+            <ArrowRight className="w-4 h-4 flex-none" />
+          </LocalizedLink>
+        </div>
       </div>
     </section>
   );

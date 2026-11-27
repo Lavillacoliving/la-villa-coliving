@@ -11,7 +11,13 @@ import { BADGE_DOT_CLASS, formatFreeDate, useRoomAvailability, type BadgeTone, t
  * jamais de chiffre inventé (dispo inconnue = rien). Jamais le mot « complet » : sans chambre
  * ni date, la maison propose la liste d'attente.
  */
-export function HouseAvailabilityLine({ house, className = "" }: { house: HouseKey; className?: string }) {
+/** Couleur du « voir → » : doré (#B8860B) par défaut ; l'accueil version B (lot 2a, 27/11/2026) passe la couleur d'accent —
+ *  le doré sur fond clair est sous le contraste minimal (§4). Les autres pages ne changent pas dans ce lot. */
+export function HouseAvailabilityLine({
+  house,
+  className = "",
+  linkClassName = "text-[#B8860B]",
+}: { house: HouseKey; className?: string; linkClassName?: string }) {
   const { language } = useLanguage();
   const L = language === "en" ? "en" as const : "fr" as const;
   const availability = useRoomAvailability();
@@ -51,7 +57,7 @@ export function HouseAvailabilityLine({ house, className = "" }: { house: HouseK
       <span>
         <span className="font-semibold">{HOUSES[house].label}</span> : {text}
       </span>
-      <span className="inline-flex items-center gap-1 font-semibold text-[#B8860B]">
+      <span className={`inline-flex items-center gap-1 font-semibold ${linkClassName}`}>
         {L === "en" ? "see" : "voir"}
         <ArrowRight className="w-3.5 h-3.5" />
       </span>
