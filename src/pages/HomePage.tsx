@@ -15,6 +15,7 @@ import {
   HomeOtherOptions,
 } from '@/sections/HomeArgumentsV8';
 import { LatestBlogV7 } from '@/sections/LatestBlogV7';
+import { HomeStory } from '@/sections/HomeStory';
 import { WhatsAppButton } from "@/components/WhatsAppButton";
 import { SEO } from '@/components/SEO';
 import { FaqSection } from '@/components/FaqSection';
@@ -67,6 +68,8 @@ export function HomePage() {
       <div data-home-section="home_stats"><HomeStats /></div>
       {/* Les maisons, juste après la promesse : le couloir accueil → maison → candidature est le premier du site (GA4). */}
       <div data-home-section="houses_preview"><HousesPreview /></div>
+      {/* (Lot 2a, 27/11/2026) Récit « Tu arrives sans connaître personne. Ça ne dure pas. » (§0.3 A). */}
+      <div data-home-section="story"><HomeStory /></div>
       <div data-home-section="why_choose_us"><HomeWhy /></div>
       <div data-home-section="price_explained"><HomePrice /></div>
       <div data-home-section="how_to_join"><HomeVisit /></div>
