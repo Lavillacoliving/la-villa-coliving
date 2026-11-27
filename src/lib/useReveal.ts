@@ -8,12 +8,16 @@ import { useEffect } from "react";
  * - le HTML prérendu ne change pas et tout reste visible sans JavaScript : l'état de départ (`lvc-reveal-pending`) est posé ici,
  *   côté client, après l'hydratation, et seulement sur les blocs hors écran (jamais rien qui apparaît puis disparaît) ;
  * - `prefers-reduced-motion: reduce` ou pas d'IntersectionObserver : rien n'est posé ;
+ * - navigateur piloté par un robot (`navigator.webdriver`, comme la garde des mesures d'audience d'index.html) : rien n'est
+ *   posé — sinon le robot du prérendu (Puppeteer) figeait `lvc-reveal-pending` dans le HTML servi, et sans JavaScript les
+ *   blocs seraient restés invisibles (constaté au point d'étape du 27/11/2026) ;
  * - `transform` et `opacity` seulement (aucun décalage de mise en page, CLS inchangé) ; aucune bibliothèque.
  */
 export function useReveal(selector = "[data-reveal]") {
   useEffect(() => {
     if (typeof window === "undefined" || typeof IntersectionObserver === "undefined") return;
     if (window.matchMedia?.("(prefers-reduced-motion: reduce)").matches) return;
+    if (navigator.webdriver) return;
     const fold = window.innerHeight;
     const nodes = Array.from(document.querySelectorAll<HTMLElement>(selector)).filter(
       (el) => el.getBoundingClientRect().top > fold,
