@@ -286,7 +286,9 @@ export function LAppartPage() {
               <ChevronRight className="w-4 h-4" aria-hidden="true" />
               <span className="text-white">{APPART.name}</span>
             </nav>
-            <p className="lvc-eyebrow text-[#E8C9A0] mb-3">{hero.eyebrow}</p>
+            {/* (Lot 2a, 28/11/2026) Interlettrage d'avant gardé : avec celui du surtitre commun, ce libellé tient sur une ligne
+                en Inter et sur deux avec la police de repli, et le haut de page (ancré en bas) sautait à l'arrivée des polices. */}
+            <p className="lvc-eyebrow tracking-[0.2em] text-[#E8C9A0] mb-3">{hero.eyebrow}</p>
             {heroBadge && (
               <div className="mb-4">
                 <Badge className={`font-extrabold backdrop-blur-sm ${BADGE_CHIP_CLASS[heroBadge.tone]}`}>{heroBadge.label}</Badge>

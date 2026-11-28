@@ -623,16 +623,18 @@ export function RatesPageV4() {
           <span className="lvc-eyebrow mb-4">
             {en ? "Pricing" : "Tarification"}
           </span>
+          {/* (Lot 2a, 28/11/2026) Sur mobile, le mot en italique sur sa propre ligne : à 412 px le titre tenait sur une ligne
+              avec DM Serif et sur deux avec la police de repli, et la section des prix sautait à l'arrivée des polices (CLS). */}
           <h1
             className="text-5xl md:text-6xl lg:text-7xl text-[#1C1917]"
           >
             {en ? (
               <>
-                <em className="lvc-h1-accent">Transparent</em> Pricing
+                <em className="lvc-h1-accent block sm:inline">Transparent</em> Pricing
               </>
             ) : (
               <>
-                Tarifs <em className="lvc-h1-accent">transparents</em>
+                Tarifs <em className="lvc-h1-accent block sm:inline">transparents</em>
               </>
             )}
           </h1>
