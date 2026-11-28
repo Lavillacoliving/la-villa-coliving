@@ -193,7 +193,7 @@ export function BlocOffre({ variant, slug, bucket }: BlocOffreProps) {
               <LocalizedLink
                 to={to}
                 onClick={() => track(to, "secondary")}
-                className="block mt-2.5 text-sm text-[#57534E] underline decoration-[#D4A574] underline-offset-4 hover:text-[#1C1917] transition-colors"
+                className="block mt-2.5 text-sm text-[#57534E] underline decoration-lvc-accent underline-offset-4 hover:text-[#1C1917] transition-colors"
               >
                 {L === "en" ? "Book a visit" : "Programmer une visite"}
               </LocalizedLink>
@@ -202,7 +202,7 @@ export function BlocOffre({ variant, slug, bucket }: BlocOffreProps) {
                 <LocalizedLink
                   to={secondary.to}
                   onClick={() => track(secondary.to, "secondary")}
-                  className="block mt-2.5 text-sm text-[#57534E] underline decoration-[#D4A574] underline-offset-4 hover:text-[#1C1917] transition-colors"
+                  className="block mt-2.5 text-sm text-[#57534E] underline decoration-lvc-accent underline-offset-4 hover:text-[#1C1917] transition-colors"
                 >
                   {secondary.label}
                 </LocalizedLink>
@@ -242,13 +242,13 @@ export function BlocOffre({ variant, slug, bucket }: BlocOffreProps) {
             </h2>
             <p className="text-lg text-[#1C1917] font-semibold mb-4">
               {L === "en"
-                ? <>All-inclusive {priceFrom ? "from" : "at"} <span className="text-[#D4A574]">{price}</span>/month</>
-                : <>Tout inclus {priceFrom ? "dès" : "à"} <span className="text-[#D4A574]">{price}</span>/mois</>}
+                ? <>All-inclusive {priceFrom ? "from" : "at"} <span className="text-lvc-accent">{price}</span>/month</>
+                : <>Tout inclus {priceFrom ? "dès" : "à"} <span className="text-lvc-accent">{price}</span>/mois</>}
             </p>
             <ul className="space-y-1.5 mb-6">
               {proofs.map((p) => (
                 <li key={p.fr} className="flex items-start gap-2 text-sm text-[#57534E]">
-                  <Check className="w-4 h-4 text-[#D4A574] mt-0.5 flex-none" />
+                  <Check className="w-4 h-4 text-lvc-accent mt-0.5 flex-none" />
                   {p[L]}
                 </li>
               ))}

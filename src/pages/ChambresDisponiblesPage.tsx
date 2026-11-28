@@ -268,7 +268,7 @@ export function ChambresDisponiblesPage() {
             </div>
           ) : (
             <p className="text-lg text-[#44403C] max-w-2xl inline-flex items-center gap-2">
-              <span className="w-2 h-2 bg-[#B8860B] rounded-full animate-pulse shrink-0" aria-hidden="true" />
+              <span className="w-2 h-2 bg-lvc-accent rounded-full animate-pulse shrink-0" aria-hidden="true" />
               {globalAvailabilityLabel(availability, L)}
             </p>
           )}
@@ -554,7 +554,7 @@ export function ChambresDisponiblesPage() {
           <ul className="mx-auto grid max-w-4xl gap-4 sm:grid-cols-2 lg:grid-cols-3">
             {reassurance.map((item) => (
               <li key={item} className="flex items-start gap-3 rounded-xl border border-[#E7E5E4] bg-white px-5 py-4">
-                <Check className="mt-0.5 h-5 w-5 shrink-0 text-[#b8860b]" />
+                <Check className="mt-0.5 h-5 w-5 shrink-0 text-lvc-accent" />
                 <span className="text-sm text-[#44403C]">{item}</span>
               </li>
             ))}

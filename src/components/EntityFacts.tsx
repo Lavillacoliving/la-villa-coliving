@@ -111,7 +111,7 @@ export function EntityFacts({ page, houseSlug, children, className = "", collaps
           // Phrase 5 (repères de Genève) : la phrase = un nœud texte dans son <span>, puis une espace et le lien (anti-#418).
           <p key={i} className="leading-relaxed mb-4">
             <span>{s}</span>{" "}
-            <a href={calcHref} onClick={trackCalc} className="underline underline-offset-4 text-[#1C1917] hover:text-[#D4A574] transition-colors">
+            <a href={calcHref} onClick={trackCalc} className="underline underline-offset-4 text-[#1C1917] hover:text-lvc-accent transition-colors">
               {t.calcLink.label}
             </a>
           </p>
@@ -133,7 +133,7 @@ export function EntityFacts({ page, houseSlug, children, className = "", collaps
                   href={t.reviewsLink.href}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="underline underline-offset-4 text-[#1C1917] hover:text-[#D4A574] transition-colors"
+                  className="underline underline-offset-4 text-[#1C1917] hover:text-lvc-accent transition-colors"
                 >
                   {t.reviewsLink.label}
                 </a>

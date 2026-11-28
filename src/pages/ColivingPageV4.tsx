@@ -94,8 +94,8 @@ export function ColivingPageV4() {
               {/* (Lot 4) Ancre exacte vers la home, URL championne sur « coliving genève ». */}
               {/* (Lot L2, 09/10/2026, D1) « 20 min » qualifié par STATS_DISPLAY.distance ; fin de phrase en un seul nœud texte (anti-#418). */}
               {language === "en"
-                ? <>Our <LocalizedLink to="/" className="underline decoration-[#D4A574] decoration-2 underline-offset-4 hover:text-white transition-colors">coliving Geneva</LocalizedLink>{` is on the French side, ${STATS_DISPLAY.en.distance}.`}</>
-                : <>Notre <LocalizedLink to="/" className="underline decoration-[#D4A574] decoration-2 underline-offset-4 hover:text-white transition-colors">coliving Genève</LocalizedLink>{` se vit côté France, à ${STATS_DISPLAY.fr.distance}.`}</>}
+                ? <>Our <LocalizedLink to="/" className="underline decoration-[#E0BB8A] decoration-2 underline-offset-4 hover:text-white transition-colors">coliving Geneva</LocalizedLink>{` is on the French side, ${STATS_DISPLAY.en.distance}.`}</>
+                : <>Notre <LocalizedLink to="/" className="underline decoration-[#E0BB8A] decoration-2 underline-offset-4 hover:text-white transition-colors">coliving Genève</LocalizedLink>{` se vit côté France, à ${STATS_DISPLAY.fr.distance}.`}</>}
               {/* (L'Appart, Lot 4, étape E5 — texte du 13/11/2026 « à confirmer ») La colocation de la marque, sa phrase à elle. */}
               {" "}
               {language === "en"
@@ -217,7 +217,7 @@ export function ColivingPageV4() {
               return (
                 <div key={index} className="bg-white p-10 text-center">
                   <div className="w-16 h-16 border border-[#E7E5E4] flex items-center justify-center mx-auto mb-6">
-                    <Icon size={28} className="text-[#D4A574]" />
+                    <Icon size={28} className="text-lvc-accent" />
                   </div>
                   <h3 className="text-xl text-[#1C1917] mb-3">
                     {value.title}
@@ -247,8 +247,8 @@ export function ColivingPageV4() {
               <div className="space-y-4">
                 {benefits.map((benefit, index) => (
                   <div key={index} className="flex items-start gap-4">
-                    <div className="w-6 h-6 border border-[#D4A574] flex items-center justify-center flex-shrink-0 mt-0.5">
-                      <Check className="w-4 h-4 text-[#D4A574]" />
+                    <div className="w-6 h-6 border border-lvc-accent flex items-center justify-center flex-shrink-0 mt-0.5">
+                      <Check className="w-4 h-4 text-lvc-accent" />
                     </div>
                     <span className="text-[#57534E]">{benefit}</span>
                   </div>
@@ -256,7 +256,7 @@ export function ColivingPageV4() {
               </div>
 
               {/* Propriétaire, pas agence — narratif premium */}
-              <div className="mt-8 bg-[#FAF9F6] border border-[#D4A574]/30 rounded-2xl p-6">
+              <div className="mt-8 bg-[#FAF9F6] border border-[#2F5D50]/30 rounded-2xl p-6">
                 <p className="text-[#57534E] leading-relaxed">
                   {language === "en"
                     ? "Unlike an agency, we rent our houses directly. No middleman, no agency fees, no application fee: you deal directly with the owners, who want you to feel at home, for a long time."
@@ -334,7 +334,7 @@ export function ColivingPageV4() {
                   l'ancienne note interne (NPS) n'est plus publiée. */}
               <div className="flex flex-wrap items-center gap-x-8 gap-y-3 mb-6">
                 <div className="flex items-center gap-2">
-                  <Users className="w-5 h-5 text-[#D4A574]" />
+                  <Users className="w-5 h-5 text-lvc-accent" />
                   <span className="text-sm text-[#57534E]">
                     {language === "en"
                       ? `${STATS.totalResidents}+ happy residents`
@@ -348,7 +348,7 @@ export function ColivingPageV4() {
                     href={GOOGLE_REVIEWS.url}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="text-sm text-[#D4A574] underline underline-offset-4 hover:text-[#1C1917] transition-colors"
+                    className="text-sm text-lvc-accent underline underline-offset-4 hover:text-[#1C1917] transition-colors"
                   >
                     {GOOGLE_REVIEWS_LINK_LABEL[L]}
                   </a>
@@ -357,7 +357,7 @@ export function ColivingPageV4() {
 
               <LocalizedLink
                 to="/candidature"
-                className="inline-flex items-center gap-2 text-[#D4A574] font-bold hover:text-[#1C1917] transition-colors"
+                className="inline-flex items-center gap-2 text-lvc-accent font-bold hover:text-[#1C1917] transition-colors"
               >
                 {language === "en"
                   ? "Join our community"
@@ -400,8 +400,8 @@ export function ColivingPageV4() {
               <div className="space-y-4">
                 {profiles.map((profile, index) => (
                   <div key={index} className="flex items-center gap-4">
-                    <div className="w-8 h-8 border border-[#D4A574] flex items-center justify-center flex-shrink-0">
-                      <Star className="w-4 h-4 text-[#D4A574]" />
+                    <div className="w-8 h-8 border border-lvc-accent flex items-center justify-center flex-shrink-0">
+                      <Star className="w-4 h-4 text-lvc-accent" />
                     </div>
                     <span className="text-[#1C1917]">{profile}</span>
                   </div>
@@ -411,8 +411,8 @@ export function ColivingPageV4() {
               {/* (Lot 4) Conclusion : ancre variante marque vers la home (l'exacte est en intro) + porte vers les chambres disponibles (Lot 3). */}
               <p className="mt-8 text-[#57534E] leading-relaxed">
                 {language === "en"
-                  ? <>Ready to see it for yourself? Browse <LocalizedLink to="/" className="underline decoration-[#D4A574] decoration-2 underline-offset-4 hover:text-[#1C1917] transition-colors">La Villa Coliving near Geneva</LocalizedLink> and the <LocalizedLink to="/chambres-disponibles" className="underline decoration-[#D4A574] decoration-2 underline-offset-4 hover:text-[#1C1917] transition-colors">available rooms</LocalizedLink> right now, or our <LocalizedLink to={colocGeneveHref(language)} className="underline decoration-[#D4A574] decoration-2 underline-offset-4 hover:text-[#1C1917] transition-colors">shared housing in Geneva, French side</LocalizedLink> page.</>
-                  : <>Envie de voir par toi-même ? Découvre <LocalizedLink to="/" className="underline decoration-[#D4A574] decoration-2 underline-offset-4 hover:text-[#1C1917] transition-colors">La Villa Coliving près de Genève</LocalizedLink> et les <LocalizedLink to="/chambres-disponibles" className="underline decoration-[#D4A574] decoration-2 underline-offset-4 hover:text-[#1C1917] transition-colors">chambres disponibles</LocalizedLink> en ce moment, ou notre page <LocalizedLink to={colocGeneveHref(language)} className="underline decoration-[#D4A574] decoration-2 underline-offset-4 hover:text-[#1C1917] transition-colors">colocation à Genève côté France</LocalizedLink>.</>}
+                  ? <>Ready to see it for yourself? Browse <LocalizedLink to="/" className="underline decoration-lvc-accent decoration-2 underline-offset-4 hover:text-[#1C1917] transition-colors">La Villa Coliving near Geneva</LocalizedLink> and the <LocalizedLink to="/chambres-disponibles" className="underline decoration-lvc-accent decoration-2 underline-offset-4 hover:text-[#1C1917] transition-colors">available rooms</LocalizedLink> right now, or our <LocalizedLink to={colocGeneveHref(language)} className="underline decoration-lvc-accent decoration-2 underline-offset-4 hover:text-[#1C1917] transition-colors">shared housing in Geneva, French side</LocalizedLink> page.</>
+                  : <>Envie de voir par toi-même ? Découvre <LocalizedLink to="/" className="underline decoration-lvc-accent decoration-2 underline-offset-4 hover:text-[#1C1917] transition-colors">La Villa Coliving près de Genève</LocalizedLink> et les <LocalizedLink to="/chambres-disponibles" className="underline decoration-lvc-accent decoration-2 underline-offset-4 hover:text-[#1C1917] transition-colors">chambres disponibles</LocalizedLink> en ce moment, ou notre page <LocalizedLink to={colocGeneveHref(language)} className="underline decoration-lvc-accent decoration-2 underline-offset-4 hover:text-[#1C1917] transition-colors">colocation à Genève côté France</LocalizedLink>.</>}
               </p>
               <LocalizedLink
                 to="/candidature"
@@ -436,16 +436,16 @@ export function ColivingPageV4() {
             {language === "en" ? (
               <>
                 "La Villa isn't just a place to live—it's a{" "}
-                <span className="text-[#D4A574]">community</span>{" "}
+                <span className="text-[#E0BB8A]">community</span>{" "}
                 that becomes{" "}
-                <span className="text-[#D4A574]">family</span>."
+                <span className="text-[#E0BB8A]">family</span>."
               </>
             ) : (
               <>
                 "La Villa n'est pas qu'un lieu de vie—c'est une{" "}
-                <span className="text-[#D4A574]">communauté</span>{" "}
+                <span className="text-[#E0BB8A]">communauté</span>{" "}
                 qui devient{" "}
-                <span className="text-[#D4A574]">famille</span>."
+                <span className="text-[#E0BB8A]">famille</span>."
               </>
             )}
           </p>
@@ -461,9 +461,9 @@ export function ColivingPageV4() {
           <p>
             {/* (Lot L2, 09/10/2026, D1) « 20 min » qualifié par STATS_DISPLAY.distance ; fin de phrase en un seul nœud texte (anti-#418). */}
             {language === "en" ? (
-              <>Looking for <LocalizedLink to="/" className="underline decoration-[#D4A574] decoration-2 underline-offset-4 hover:text-[#1C1917] transition-colors">coliving in Geneva</LocalizedLink>{`? Our three houses are on the French side, ${STATS_DISPLAY[L].distance}.`}</>
+              <>Looking for <LocalizedLink to="/" className="underline decoration-lvc-accent decoration-2 underline-offset-4 hover:text-[#1C1917] transition-colors">coliving in Geneva</LocalizedLink>{`? Our three houses are on the French side, ${STATS_DISPLAY[L].distance}.`}</>
             ) : (
-              <>Tu cherches un <LocalizedLink to="/" className="underline decoration-[#D4A574] decoration-2 underline-offset-4 hover:text-[#1C1917] transition-colors">coliving à Genève</LocalizedLink>{` ? Nos trois maisons sont côté France, à ${STATS_DISPLAY[L].distance}.`}</>
+              <>Tu cherches un <LocalizedLink to="/" className="underline decoration-lvc-accent decoration-2 underline-offset-4 hover:text-[#1C1917] transition-colors">coliving à Genève</LocalizedLink>{` ? Nos trois maisons sont côté France, à ${STATS_DISPLAY[L].distance}.`}</>
             )}
           </p>
         }

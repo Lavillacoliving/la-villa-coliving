@@ -173,14 +173,14 @@ export function RoomPipeline({ house, houseName, en, hasCandidates, onApplyClick
   };
 
   const inputClass =
-    "w-full px-4 py-3 rounded-xl border border-[#E7E5E4] bg-white focus:border-[#D4A574] focus:outline-none transition-colors";
+    "w-full px-4 py-3 rounded-xl border border-[#E7E5E4] bg-white focus:border-lvc-accent focus:outline-none transition-colors";
 
   return (
-    <div className="bg-white rounded-2xl border border-[#E7E5E4] border-l-4 border-l-[#D4A574] shadow-sm p-6 md:p-8 mb-10">
+    <div className="bg-white rounded-2xl border border-[#E7E5E4] border-l-4 border-l-lvc-accent shadow-sm p-6 md:p-8 mb-10">
       {/* Mois de référence sérialisé au prérendu — relu à l'init du state ci-dessus. */}
       <script type="application/json" id={PIPELINE_EMBED_ID} dangerouslySetInnerHTML={{ __html: embedJson([refMonth]) }} />
       <div className="flex items-start gap-4">
-        <CalendarClock className="text-[#D4A574] mt-1 shrink-0 hidden sm:block" size={28} />
+        <CalendarClock className="text-lvc-accent mt-1 shrink-0 hidden sm:block" size={28} />
         <div className="flex-1 min-w-0">
           <Heading
             className="lvc-display text-2xl md:text-3xl text-[#1C1917] mb-3"
@@ -228,7 +228,7 @@ export function RoomPipeline({ house, houseName, en, hasCandidates, onApplyClick
               <button
                 type="button"
                 onClick={() => { setShowAlert(true); track("waitlist_open", { house, page_path: window.location.pathname }); }}
-                className="inline-flex items-center gap-2 text-sm font-semibold text-[#1C1917] underline underline-offset-4 hover:text-[#D4A574] transition-colors sm:ml-2"
+                className="inline-flex items-center gap-2 text-sm font-semibold text-[#1C1917] underline underline-offset-4 hover:text-lvc-accent transition-colors sm:ml-2"
               >
                 <BellRing size={16} />
                 {en ? "Just let me know" : "Juste me prévenir"}

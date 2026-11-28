@@ -204,8 +204,8 @@ export function AnnemasseColocationPage() {
           </h2>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             <div className="text-center">
-              <div className="w-14 h-14 bg-[#D4A574]/10 rounded-full flex items-center justify-center mx-auto mb-4">
-                <Euro className="w-7 h-7 text-[#D4A574]" />
+              <div className="w-14 h-14 bg-lvc-tint rounded-full flex items-center justify-center mx-auto mb-4">
+                <Euro className="w-7 h-7 text-lvc-accent" />
               </div>
               <h3 className="text-xl text-[#1C1917] mb-3">
                 {language === "en" ? "Same Swiss salary, real living space" : "Le même salaire suisse, un vrai espace de vie"}
@@ -217,8 +217,8 @@ export function AnnemasseColocationPage() {
               </p>
             </div>
             <div className="text-center">
-              <div className="w-14 h-14 bg-[#D4A574]/10 rounded-full flex items-center justify-center mx-auto mb-4">
-                <Train className="w-7 h-7 text-[#D4A574]" />
+              <div className="w-14 h-14 bg-lvc-tint rounded-full flex items-center justify-center mx-auto mb-4">
+                <Train className="w-7 h-7 text-lvc-accent" />
               </div>
               <h3 className="text-xl text-[#1C1917] mb-3">
                 {/* (D1, 09/10/2026) « 20 min » qualifié ; minutes depuis TRANSIT ; deux ancres : Léman Express et tram 17 (D7).
@@ -232,8 +232,8 @@ export function AnnemasseColocationPage() {
               </p>
             </div>
             <div className="text-center">
-              <div className="w-14 h-14 bg-[#D4A574]/10 rounded-full flex items-center justify-center mx-auto mb-4">
-                <Users className="w-7 h-7 text-[#D4A574]" />
+              <div className="w-14 h-14 bg-lvc-tint rounded-full flex items-center justify-center mx-auto mb-4">
+                <Users className="w-7 h-7 text-lvc-accent" />
               </div>
               <h3 className="text-xl text-[#1C1917] mb-3">
                 {language === "en" ? "A real community" : "Une vraie communauté"}
@@ -275,12 +275,12 @@ export function AnnemasseColocationPage() {
                 className="bg-white p-8 hover:shadow-xl transition-shadow group"
               >
                 <h3 className="text-2xl text-[#1C1917] mb-2">{h.label}</h3>
-                <p className="text-sm text-[#D4A574] uppercase tracking-wider mb-4">
+                <p className="text-sm text-lvc-accent uppercase tracking-wider mb-4">
                   {`${h.commune} · ${h.rooms} ${language === "en" ? "rooms" : "chambres"}`}
                 </p>
                 <p className="text-[#57534E] leading-relaxed mb-3">{HOUSE_INTRO[h.slug][L]}</p>
                 <p className="text-[#57534E] leading-relaxed mb-6">{`${cap(h.commute[L])}.`}</p>
-                <span className="inline-flex items-center gap-2 text-[#D4A574] font-medium group-hover:gap-3 transition-all">
+                <span className="inline-flex items-center gap-2 text-lvc-accent font-medium group-hover:gap-3 transition-all">
                   {language === "en" ? `Discover ${h.label}` : `Découvrir ${h.label}`}
                   <ArrowRight className="w-4 h-4" />
                 </span>
@@ -356,7 +356,7 @@ export function AnnemasseColocationPage() {
                 ].map(([dest, time, mode], i) => (
                   <tr key={i} className={i % 2 === 0 ? "bg-white" : "bg-[#FAF9F6]"}>
                     <td className="border border-[#E7E5E4] px-6 py-3 font-medium text-[#1C1917]">{dest}</td>
-                    <td className="border border-[#E7E5E4] px-6 py-3 text-[#D4A574] font-bold">{time}</td>
+                    <td className="border border-[#E7E5E4] px-6 py-3 text-lvc-accent font-bold">{time}</td>
                     <td className="border border-[#E7E5E4] px-6 py-3 text-[#57534E]">{mode}</td>
                   </tr>
                 ))}
@@ -423,7 +423,7 @@ export function AnnemasseColocationPage() {
                 ]
             ).map((item, i) => (
               <div key={i} className="flex items-start gap-3">
-                <Check className="text-[#D4A574] mt-1 flex-shrink-0" size={20} />
+                <Check className="text-lvc-accent mt-1 flex-shrink-0" size={20} />
                 <span className="text-[#57534E] font-medium">{item}</span>
               </div>
             ))}
@@ -447,7 +447,7 @@ export function AnnemasseColocationPage() {
           </h2>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8 text-center">
             <div>
-              <Home className="w-10 h-10 text-[#D4A574] mx-auto mb-4" />
+              <Home className="w-10 h-10 text-lvc-accent mx-auto mb-4" />
               <h3 className="text-lg text-[#1C1917] mb-2">
                 {language === "en" ? "Cross-border workers" : "Frontaliers"}
               </h3>
@@ -458,7 +458,7 @@ export function AnnemasseColocationPage() {
               </p>
             </div>
             <div>
-              <Users className="w-10 h-10 text-[#D4A574] mx-auto mb-4" />
+              <Users className="w-10 h-10 text-lvc-accent mx-auto mb-4" />
               <h3 className="text-lg text-[#1C1917] mb-2">
                 {language === "en" ? "Young professionals" : "Jeunes professionnels"}
               </h3>
@@ -469,7 +469,7 @@ export function AnnemasseColocationPage() {
               </p>
             </div>
             <div>
-              <MapPin className="w-10 h-10 text-[#D4A574] mx-auto mb-4" />
+              <MapPin className="w-10 h-10 text-lvc-accent mx-auto mb-4" />
               <h3 className="text-lg text-[#1C1917] mb-2">
                 {language === "en" ? "Expats and OI staff" : "Expats et personnel OI"}
               </h3>
@@ -541,8 +541,8 @@ export function AnnemasseColocationPage() {
               { fr: "Les espaces verts du coliving Le Lodge à Annemasse", en: "Green spaces at Le Lodge coliving in Annemasse", slug: "espaces-verts-coliving-lodge-annemasse" },
             ].map((item) => (
               <li key={item.slug} className="flex items-start gap-2">
-                <span className="text-[#D4A574]">→</span>
-                <LocalizedLink to={`/blog/${item.slug}`} className="text-[#1C1917] hover:text-[#D4A574] hover:underline transition-colors">
+                <span className="text-lvc-accent">→</span>
+                <LocalizedLink to={`/blog/${item.slug}`} className="text-[#1C1917] hover:text-lvc-accent hover:underline transition-colors">
                   {language === "en" ? item.en : item.fr}
                 </LocalizedLink>
               </li>
@@ -563,8 +563,8 @@ export function AnnemasseColocationPage() {
                 frontalières nommées, « 20 min » au libellé canonique. */}
             {/* Fin de phrase après le lien en un seul nœud texte (anti-#418). */}
             {language === "en"
-              ? <>Only one of our houses is in Annemasse itself, Le Lodge; La Villa and Le Loft are in Ville-la-Grand and Ambilly, two border towns in Annemasse Agglo. All three make up our <LocalizedLink to={colocGeneveHref(language)} className="text-[#1C1917] underline hover:text-[#D4A574]">shared housing in Geneva, French side</LocalizedLink>{`: same services, same community, ${STATS_DISPLAY.en.distance}.`}</>
-              : <>Une seule de nos maisons est à Annemasse même, Le Lodge ; La Villa et Le Loft sont à Ville-la-Grand et à Ambilly, deux communes frontalières d'Annemasse Agglo. Les trois forment notre <LocalizedLink to={colocGeneveHref(language)} className="text-[#1C1917] underline hover:text-[#D4A574]">colocation à Genève côté France</LocalizedLink>{` : mêmes services, même communauté, à ${STATS_DISPLAY.fr.distance}.`}</>}
+              ? <>Only one of our houses is in Annemasse itself, Le Lodge; La Villa and Le Loft are in Ville-la-Grand and Ambilly, two border towns in Annemasse Agglo. All three make up our <LocalizedLink to={colocGeneveHref(language)} className="text-[#1C1917] underline hover:text-lvc-accent">shared housing in Geneva, French side</LocalizedLink>{`: same services, same community, ${STATS_DISPLAY.en.distance}.`}</>
+              : <>Une seule de nos maisons est à Annemasse même, Le Lodge ; La Villa et Le Loft sont à Ville-la-Grand et à Ambilly, deux communes frontalières d'Annemasse Agglo. Les trois forment notre <LocalizedLink to={colocGeneveHref(language)} className="text-[#1C1917] underline hover:text-lvc-accent">colocation à Genève côté France</LocalizedLink>{` : mêmes services, même communauté, à ${STATS_DISPLAY.fr.distance}.`}</>}
           </p>
         </div>
       </section>
@@ -576,32 +576,32 @@ export function AnnemasseColocationPage() {
             {language === "en" ? "Related pages" : "Pages liées"}
           </p>
           <div className="flex flex-wrap gap-4 justify-center text-sm">
-            <LocalizedLink to={colocGeneveHref(language)} className="text-[#1C1917] underline hover:text-[#D4A574]">
+            <LocalizedLink to={colocGeneveHref(language)} className="text-[#1C1917] underline hover:text-lvc-accent">
               {language === "en" ? "Shared housing Geneva" : "Colocation Genève"}
             </LocalizedLink>
             <span className="text-[#E7E5E4]">·</span>
-            <LocalizedLink to="/le-coliving" className="text-[#1C1917] underline hover:text-[#D4A574]">
+            <LocalizedLink to="/le-coliving" className="text-[#1C1917] underline hover:text-lvc-accent">
               {language === "en" ? "What is coliving" : "Le coliving"}
             </LocalizedLink>
             <span className="text-[#E7E5E4]">·</span>
             {/* (Lot 6 SEO funnel) Chambre à louer, côté Genève. */}
-            <LocalizedLink to="/chambre-a-louer-geneve" className="text-[#1C1917] underline hover:text-[#D4A574]">
+            <LocalizedLink to="/chambre-a-louer-geneve" className="text-[#1C1917] underline hover:text-lvc-accent">
               {language === "en" ? "lavillacoliving.com/en/chambre-a-louer-geneve" : "lavillacoliving.com/chambre-a-louer-geneve"}
             </LocalizedLink>
             <span className="text-[#E7E5E4]">·</span>
-            <LocalizedLink to="/nos-maisons" className="text-[#1C1917] underline hover:text-[#D4A574]">
+            <LocalizedLink to="/nos-maisons" className="text-[#1C1917] underline hover:text-lvc-accent">
               {language === "en" ? "Our 3 houses" : "Nos 3 maisons"}
             </LocalizedLink>
             <span className="text-[#E7E5E4]">·</span>
-            <LocalizedLink to="/tarifs" className="text-[#1C1917] underline hover:text-[#D4A574]">
+            <LocalizedLink to="/tarifs" className="text-[#1C1917] underline hover:text-lvc-accent">
               {language === "en" ? "Pricing" : "Tarifs"}
             </LocalizedLink>
             <span className="text-[#E7E5E4]">·</span>
-            <LocalizedLink to="/chambre-a-louer-annemasse" className="text-[#1C1917] underline hover:text-[#D4A574]">
+            <LocalizedLink to="/chambre-a-louer-annemasse" className="text-[#1C1917] underline hover:text-lvc-accent">
               {language === "en" ? "See the Lodge's availability" : "Voir les disponibilités du Lodge"}
             </LocalizedLink>
             <span className="text-[#E7E5E4]">·</span>
-            <LocalizedLink to="/blog/quartiers-annemasse-ou-vivre-selon-profil" className="text-[#1C1917] underline hover:text-[#D4A574]">
+            <LocalizedLink to="/blog/quartiers-annemasse-ou-vivre-selon-profil" className="text-[#1C1917] underline hover:text-lvc-accent">
               {language === "en" ? "Annemasse neighbourhoods: where to live" : "Quartiers d'Annemasse : où vivre"}
             </LocalizedLink>
           </div>

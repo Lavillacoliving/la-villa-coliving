@@ -63,7 +63,7 @@ export function HouseMap({ name, zone, lat, lng, en }: HouseMapProps) {
           />
           <div
             aria-hidden="true"
-            className="pointer-events-none absolute left-1/2 top-1/2 h-[220px] w-[220px] -translate-x-1/2 -translate-y-1/2 rounded-full border-2 border-[#B8860B] bg-[#D4A574]/20"
+            className="pointer-events-none absolute left-1/2 top-1/2 h-[220px] w-[220px] -translate-x-1/2 -translate-y-1/2 rounded-full border-2 border-lvc-accent bg-[#2F5D50]/20"
           />
           <p className="pointer-events-none absolute left-3 top-3 rounded-full bg-white/90 px-3 py-1 text-xs font-semibold text-[#1C1917] shadow-sm">
             {en ? "Approximate area" : "Zone approximative"}
@@ -71,7 +71,7 @@ export function HouseMap({ name, zone, lat, lng, en }: HouseMapProps) {
         </div>
       ) : (
         <div className="h-72 md:h-96 bg-[#FAF9F6] flex flex-col items-center justify-center text-center px-6">
-          <MapPin className="text-[#D4A574] mb-3" size={32} />
+          <MapPin className="text-lvc-accent mb-3" size={32} />
           <p className="font-black text-[#1C1917] mb-1">{name}</p>
           <p className="text-sm text-[#57534E] mb-5">{zone}</p>
           <button
@@ -95,7 +95,7 @@ export function HouseMap({ name, zone, lat, lng, en }: HouseMapProps) {
           href={areaLink}
           target="_blank"
           rel="noopener noreferrer"
-          className="inline-flex items-center gap-2 font-semibold text-[#1C1917] hover:text-[#D4A574] transition-colors"
+          className="inline-flex items-center gap-2 font-semibold text-[#1C1917] hover:text-lvc-accent transition-colors"
         >
           <ExternalLink size={16} />
           {en ? "See the area in Google Maps" : "Voir le quartier dans Google Maps"}

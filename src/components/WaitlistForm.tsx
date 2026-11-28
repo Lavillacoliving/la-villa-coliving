@@ -72,9 +72,9 @@ export function WaitlistForm() {
 
   if (status === "success") {
     return (
-      <div className="max-w-xl mx-auto bg-white border border-[#D4A574]/40 rounded-2xl p-8 text-center">
-        <div className="w-12 h-12 rounded-full bg-[#D4A574]/15 flex items-center justify-center mx-auto mb-4">
-          <Check className="w-6 h-6 text-[#D4A574]" />
+      <div className="max-w-xl mx-auto bg-white border border-[#2F5D50]/40 rounded-2xl p-8 text-center">
+        <div className="w-12 h-12 rounded-full bg-lvc-tint flex items-center justify-center mx-auto mb-4">
+          <Check className="w-6 h-6 text-lvc-accent" />
         </div>
         <h3 className="text-xl text-[#1C1917] mb-2">{en ? "You're on the list!" : "Tu es sur la liste !"}</h3>
         <p className="text-[#57534E] text-sm">
@@ -86,7 +86,7 @@ export function WaitlistForm() {
     );
   }
 
-  const field = "w-full px-4 py-3 bg-white border border-[#E7E5E4] rounded-lg text-[#1C1917] focus:outline-none focus:border-[#D4A574] transition-colors";
+  const field = "w-full px-4 py-3 bg-white border border-[#E7E5E4] rounded-lg text-[#1C1917] focus:outline-none focus:border-lvc-accent transition-colors";
   return (
     <form onSubmit={handleSubmit} {...telemetry.formProps} className="max-w-xl mx-auto bg-white border border-[#E7E5E4] rounded-2xl p-6 md:p-8 space-y-4 text-left">
       <div className="grid sm:grid-cols-2 gap-4">

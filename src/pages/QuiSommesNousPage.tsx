@@ -185,7 +185,7 @@ export function QuiSommesNousPage() {
         <div className="flex items-center">
           <div className="max-w-5xl mx-auto w-full px-6 sm:px-10 lg:px-14">
             <div className="max-w-xl py-12 lg:py-24 text-white">
-              <span className="lvc-eyebrow text-[#D4A574] mb-3">
+              <span className="lvc-eyebrow text-[#E0BB8A] mb-3">
                 La Villa Coliving
               </span>
               <h1
@@ -246,7 +246,7 @@ export function QuiSommesNousPage() {
               <LocalizedLink
                 key={h.slug}
                 to={`/${h.slug}`}
-                className="group bg-white border border-[#E7E5E4] rounded-2xl overflow-hidden hover:border-[#D4A574] transition-colors"
+                className="group bg-white border border-[#E7E5E4] rounded-2xl overflow-hidden hover:border-lvc-accent transition-colors"
               >
                 <img
                   src={HOUSE_IMAGES[h.slug]}
@@ -283,7 +283,7 @@ export function QuiSommesNousPage() {
                     target="_blank"
                     rel="noopener"
                     aria-label={`LinkedIn — ${f.firstName}`}
-                    className="inline-flex items-center justify-center w-10 h-10 rounded-full border border-[#E7E5E4] text-[#57534E] hover:border-[#D4A574] hover:text-[#A0623C] transition-colors mt-4"
+                    className="inline-flex items-center justify-center w-10 h-10 rounded-full border border-[#E7E5E4] text-[#57534E] hover:border-lvc-accent hover:text-[#A0623C] transition-colors mt-4"
                   >
                     <Linkedin className="w-4 h-4" />
                   </a>
@@ -303,7 +303,7 @@ export function QuiSommesNousPage() {
           <div className="grid sm:grid-cols-2 gap-5">
             {values.map((v) => (
               <div key={v.title} className="bg-[#FAF9F6] border border-[#E7E5E4] rounded-2xl p-6">
-                <div className="w-10 h-10 rounded-full bg-[#D4A574]/15 text-[#A0623C] flex items-center justify-center mb-4">
+                <div className="w-10 h-10 rounded-full bg-lvc-tint text-lvc-accent flex items-center justify-center mb-4">
                   <v.icon className="w-5 h-5" />
                 </div>
                 <h3 className="text-base font-semibold text-[#1C1917] mb-2">{v.title}</h3>
@@ -333,7 +333,7 @@ export function QuiSommesNousPage() {
       <section className="py-14 lg:py-20 bg-[#FAF9F6]">
         <div className="max-w-4xl mx-auto px-6">
           <div className="bg-white border border-[#E7E5E4] rounded-2xl overflow-hidden shadow-sm">
-            <div className="h-1.5 bg-[#D4A574]" />
+            <div className="h-1.5 bg-lvc-accent" />
             <div className="p-6 sm:p-9">
               <h2 className="text-2xl md:text-3xl text-[#1C1917] mb-7 text-center">
                 {en ? "Why you can trust us" : "Pourquoi tu peux nous faire confiance"}
@@ -379,9 +379,9 @@ export function QuiSommesNousPage() {
       {/* ===== NOS DONNÉES (allégée) + presse en une ligne ===== */}
       <section className="py-12 lg:py-16 bg-white">
         <div className="max-w-4xl mx-auto px-6">
-          <div className="border-l-4 border-[#D4A574] bg-[#FAF9F6] rounded-r-xl p-5 sm:p-6">
+          <div className="border-l-4 border-lvc-accent bg-[#FAF9F6] rounded-r-xl p-5 sm:p-6">
             <h2 className="text-lg text-[#1C1917] mb-2 flex items-center gap-2">
-              <Database className="w-4 h-4 text-[#D4A574]" />
+              <Database className="w-4 h-4 text-lvc-accent" />
               {en ? "Our data" : "Nos données"}
             </h2>
             <p className="text-sm text-[#57534E] leading-relaxed">

@@ -133,7 +133,7 @@ export function VerifyBlock({ variant }: { variant: VerifyBlockVariant }) {
       <aside
         data-verify-block="short"
         aria-labelledby="verify-short-title"
-        className="not-prose my-8 rounded-lg border border-[#D4A574]/50 bg-[#FAF9F6] p-5 text-[#44403C]"
+        className="not-prose my-8 rounded-lg border border-[#2F5D50]/50 bg-[#FAF9F6] p-5 text-[#44403C]"
       >
         <p id="verify-short-title" className="text-xs uppercase tracking-widest text-[#A0623C] font-semibold mb-3">
           {t.short.title}
@@ -156,7 +156,7 @@ export function VerifyBlock({ variant }: { variant: VerifyBlockVariant }) {
   }
 
   const card = "rounded-lg border border-[#E7E5E4] bg-white p-5 md:p-6";
-  const num = "flex-shrink-0 w-8 h-8 rounded-full bg-[#1C1917] text-[#D4A574] flex items-center justify-center text-sm font-semibold";
+  const num = "flex-shrink-0 w-8 h-8 rounded-full bg-[#1C1917] text-[#E0BB8A] flex items-center justify-center text-sm font-semibold";
   const h3 = "text-lg font-semibold text-[#1C1917] mb-2";
   return (
     // scroll-mt : l'ancre #verifier laisse visible le titre « ## » qui précède le bloc dans le markdown (barre de navigation fixe comprise).

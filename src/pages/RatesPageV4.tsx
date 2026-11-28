@@ -63,7 +63,7 @@ import {
 const SCROLL_MT = "scroll-mt-[calc(4rem+var(--lvc-banner-h,0px))]";
 const H2 = "text-3xl md:text-4xl text-[#1C1917] mb-6";
 const H3 = "text-lg font-semibold text-[#1C1917] mb-2";
-const LINK = "underline underline-offset-4 text-[#1C1917] hover:text-[#b8860b] transition-colors";
+const LINK = "underline underline-offset-4 text-[#1C1917] hover:text-lvc-accent transition-colors";
 
 /**
  * Arrivée sur /tarifs#objection-prix — lien « Ce que comprend le prix » des cartes chambres (13/11/2026).
@@ -197,7 +197,7 @@ const trackOfferClick = (language: TarifsLang, pagePath: string) =>
 
 // ── Blocs ───────────────────────────────────────────────────────────────────────────────────────────────────────────────────
 
-const TABLE_FRAME = "overflow-x-auto rounded-2xl border border-[#E7E5E4] bg-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#b8860b]";
+const TABLE_FRAME = "overflow-x-auto rounded-2xl border border-[#E7E5E4] bg-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-lvc-ink";
 const TH_COL = "px-4 py-3 text-left font-semibold text-[#1C1917] border-b border-[#E7E5E4] align-bottom";
 /** En-tête de ligne figé à gauche quand le tableau défile (téléphone). */
 const TH_ROW = "sticky left-0 z-[1] px-4 py-3 text-left text-[#1C1917] border-b border-r border-[#E7E5E4] group-last:border-b-0 align-top w-[150px] min-w-[150px] md:w-auto md:min-w-[200px]";
@@ -393,7 +393,7 @@ function IncludedSection({ L }: { L: TarifsLang }) {
                 {g.items.map((item) => (
                   <li key={item} className="flex items-start gap-3">
                     {g.included
-                      ? <Check className="w-4 h-4 mt-0.5 shrink-0 text-[#b8860b]" aria-hidden="true" />
+                      ? <Check className="w-4 h-4 mt-0.5 shrink-0 text-lvc-accent" aria-hidden="true" />
                       : <Minus className="w-4 h-4 mt-0.5 shrink-0 text-[#78716C]" aria-hidden="true" />}
                     <span>{item}</span>
                   </li>
@@ -469,7 +469,7 @@ function OfferSection({ L }: { L: TarifsLang }) {
   return (
     <section id={TARIFS_ANCHORS.offer} aria-labelledby="offre-title" data-tarifs-offer="" className={`py-12 bg-white ${SCROLL_MT}`}>
       <div className="max-w-3xl mx-auto px-6">
-        <div className="rounded-2xl border border-[#D4A574] bg-[#FAF9F6] p-6 md:p-8">
+        <div className="rounded-2xl border border-lvc-accent bg-[#FAF9F6] p-6 md:p-8">
           <h2 id="offre-title" className="text-2xl md:text-3xl text-[#1C1917] mb-2">{T.title}</h2>
           <p className="mb-4 text-sm text-[#78716C]">{T.chf}</p>
           <p className="text-[#44403C] leading-relaxed mb-3">{T.subtitle}</p>
@@ -477,7 +477,7 @@ function OfferSection({ L }: { L: TarifsLang }) {
           <LocalizedLink
             to={T.path}
             onClick={() => trackOfferClick(L, pathname)}
-            className="inline-flex items-center gap-2 min-h-[44px] text-sm font-semibold text-[#1C1917] underline underline-offset-4 hover:text-[#b8860b] transition-colors"
+            className="inline-flex items-center gap-2 min-h-[44px] text-sm font-semibold text-[#1C1917] underline underline-offset-4 hover:text-lvc-accent transition-colors"
           >
             {T.link}
             <ArrowRight className="w-4 h-4" aria-hidden="true" />
@@ -519,7 +519,7 @@ function AppartSection({ L }: { L: TarifsLang }) {
             <LocalizedLink
               to={`/${APPART.key}`}
               onClick={track}
-              className="mt-5 self-start inline-flex items-center gap-2 min-h-[44px] text-sm font-semibold text-[#1C1917] underline underline-offset-4 hover:text-[#b8860b] transition-colors"
+              className="mt-5 self-start inline-flex items-center gap-2 min-h-[44px] text-sm font-semibold text-[#1C1917] underline underline-offset-4 hover:text-lvc-accent transition-colors"
             >
               {T.link}
               <ArrowRight className="w-4 h-4" aria-hidden="true" />

@@ -129,7 +129,7 @@ function TypeCard({ card, lang, onApply }: { card: AppartTypeCard; lang: "fr" | 
         {card.extras && <p className="text-sm text-[#78716C] mb-1">{card.extras}</p>}
         {card.capacity && <p className="text-sm text-[#78716C] mb-1">{card.capacity}</p>}
         <div className="mt-auto pt-3">
-          <p className="text-xl font-black text-[#D4A574] mb-4">
+          <p className="text-xl font-black text-lvc-accent mb-4">
             {card.chf}
             <span className="text-sm font-light text-[#78716C]">{` (${card.eur})`}</span>
             <span className="text-sm font-light text-[#78716C]">{` ${card.perMonth}`}</span>
@@ -298,8 +298,8 @@ export function LAppartPage() {
               {h1Accent(hero.h1, APPART.commune, true)}
             </h1>
             <div className="flex flex-wrap items-center gap-x-6 gap-y-2 text-white/90 font-medium">
-              <span className="flex items-center gap-2"><MapPin size={18} className="text-[#D4A574]" />{hero.markers[0]}</span>
-              <span className="flex items-center gap-2"><Users size={18} className="text-[#D4A574]" />{hero.markers[1]}</span>
+              <span className="flex items-center gap-2"><MapPin size={18} className="text-[#E0BB8A]" />{hero.markers[0]}</span>
+              <span className="flex items-center gap-2"><Users size={18} className="text-[#E0BB8A]" />{hero.markers[1]}</span>
               <span className="flex items-center gap-2"><Maximize size={18} className="text-white/80" />{hero.markers[2]}</span>
             </div>
             <div className="mt-6 flex flex-wrap items-center gap-4">
@@ -453,7 +453,7 @@ export function LAppartPage() {
                   </div>
                 </>
               )}
-              <LocalizedLink to="/chambres-disponibles" className="inline-flex items-center gap-2 font-semibold text-[#1C1917] underline underline-offset-4 hover:text-[#B8860B]">
+              <LocalizedLink to="/chambres-disponibles" className="inline-flex items-center gap-2 font-semibold text-[#1C1917] underline underline-offset-4 hover:text-lvc-accent">
                 {fullText.link}
                 <ArrowRight className="w-4 h-4" />
               </LocalizedLink>
@@ -540,7 +540,7 @@ export function LAppartPage() {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-2">
             <div>
               <h3 className="text-xl mb-4 text-[#1C1917] flex items-center gap-2">
-                <MapPin size={20} className="text-[#D4A574]" />
+                <MapPin size={20} className="text-lvc-accent" />
                 {locHeadings.neighbourhood}
               </h3>
               <p className="text-[#57534E] mb-1">{appartZone(L)}</p>
@@ -548,7 +548,7 @@ export function LAppartPage() {
             </div>
             <div>
               <h3 className="text-xl mb-4 text-[#1C1917] flex items-center gap-2">
-                <Clock size={20} className="text-[#D4A574]" />
+                <Clock size={20} className="text-lvc-accent" />
                 {en ? "Transport & travel times" : "Transport & temps de trajet"}
               </h3>
               <HouseCommuteTable slug={APPART.key} content={appartCommuteTable} lang={L} />
@@ -603,7 +603,7 @@ export function LAppartPage() {
                 aria-expanded={faqOpen}
                 aria-controls="faq-suite"
                 onClick={() => { trackFold("faq_more", !faqOpen); setFaqOpen((v) => !v); }}
-                className="mt-4 md:mt-6 w-full flex items-center justify-between gap-3 px-5 py-4 md:px-6 bg-white border border-[#E7E5E4] rounded-2xl text-left font-bold text-[#1C1917] hover:border-[#D4A574] transition-colors"
+                className="mt-4 md:mt-6 w-full flex items-center justify-between gap-3 px-5 py-4 md:px-6 bg-white border border-[#E7E5E4] rounded-2xl text-left font-bold text-[#1C1917] hover:border-lvc-accent transition-colors"
               >
                 {faqHeading.more(faqs.length - FAQ_VISIBLE)}
                 <ChevronDown className={`w-5 h-5 shrink-0 text-[#57534E] transition-transform ${faqOpen ? "rotate-180" : ""}`} aria-hidden="true" />
@@ -624,7 +624,7 @@ export function LAppartPage() {
           <LocalizedLink
             to="/nos-maisons"
             onClick={() => track("house_discover_click", { house: "maisons", cta_position: "lappart_houses", language })}
-            className="mt-5 inline-flex items-center gap-2 font-semibold text-[#1C1917] underline underline-offset-4 hover:text-[#B8860B]"
+            className="mt-5 inline-flex items-center gap-2 font-semibold text-[#1C1917] underline underline-offset-4 hover:text-lvc-accent"
           >
             {appartHousesLink(L)}
             <ArrowRight className="w-4 h-4" />

@@ -5,7 +5,7 @@
  * Composant PUR : il ne lit que src/data/houseLocation.ts (source unique, nombres de TRANSIT) — aucune donnée
  * Supabase, aucune date calculée : HTML prérendu = premier rendu client (anti-#418). Chaque cellule est UN nœud
  * texte, donc les gardes peuvent comparer le texte au caractère près (houseLocationStrings).
- * Rendu sobre, cohérent avec <EntityFacts/> : bordures #E7E5E4, fond #FAF9F6, lien or #b8860b.
+ * Rendu sobre, cohérent avec <EntityFacts/> : bordures #E7E5E4, fond #FAF9F6, lien en couleur d'accent (lot « couleurs », 28/11/2026).
  * D1.5 (« on laisse vérifier ») : note de méthode sous le tableau + lien « Calculer mon trajet » (Google Maps,
  * transports, depuis le point public de la maison — jamais sa rue, 12/10/2026), nouvel onglet.
  * (L'Appart, 13/11/2026) Le composant sert aussi à L'Appart : sa page lui fournit le contenu (`content`, src/data/appartLocation.ts :
@@ -92,7 +92,7 @@ export function HouseCommuteTable(props: HouseCommuteTableProps) {
         href={c.directionsUrl}
         target="_blank"
         rel="noopener noreferrer"
-        className="inline-flex items-center mt-2 text-sm font-semibold text-[#b8860b] underline underline-offset-4 hover:text-[#1C1917] transition-colors"
+        className="inline-flex items-center mt-2 text-sm font-semibold text-lvc-accent underline underline-offset-4 hover:text-[#1C1917] transition-colors"
       >
         {houseDirectionsLabel(L)}
       </a>

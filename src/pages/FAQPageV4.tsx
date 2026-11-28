@@ -117,7 +117,7 @@ export function FAQPageV4() {
               }
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full pl-12 pr-4 py-4 border border-[#E7E5E4] focus:border-[#D4A574] focus:outline-none transition-colors text-[#1C1917]"
+              className="w-full pl-12 pr-4 py-4 border border-[#E7E5E4] focus:border-lvc-accent focus:outline-none transition-colors text-[#1C1917]"
             />
           </div>
         </div>
@@ -145,7 +145,7 @@ export function FAQPageV4() {
                     onClick={() => setActiveCategory(null)}
                     className={`w-full text-left px-5 py-4 border transition-all ${
                       activeCategory === null
-                        ? "border-[#D4A574] bg-[#D4A574] text-white"
+                        ? "border-lvc-ink bg-lvc-ink text-white"
                         : "border-[#E7E5E4] text-[#57534E] hover:border-[#1C1917] hover:text-[#1C1917]"
                     }`}
                   >
@@ -159,7 +159,7 @@ export function FAQPageV4() {
                       onClick={() => setActiveCategory(categoryKey)}
                       className={`w-full text-left px-5 py-4 border transition-all ${
                         activeCategory === categoryKey
-                          ? "border-[#D4A574] bg-[#D4A574] text-white"
+                          ? "border-lvc-ink bg-lvc-ink text-white"
                           : "border-[#E7E5E4] text-[#57534E] hover:border-[#1C1917] hover:text-[#1C1917]"
                       }`}
                     >
@@ -171,9 +171,9 @@ export function FAQPageV4() {
                 {/* Colocation Genève link — SEO maillage */}
                 <LocalizedLink
                   to={colocGeneveHref(language)}
-                  className="mt-8 block p-6 bg-[#FAF9F6] border border-[#E7E5E4] hover:border-[#D4A574]/40 transition-colors group"
+                  className="mt-8 block p-6 bg-[#FAF9F6] border border-[#E7E5E4] hover:border-[#2F5D50]/40 transition-colors group"
                 >
-                  <h4 className="font-medium text-[#1C1917] mb-2 group-hover:text-[#D4A574] transition-colors">
+                  <h4 className="font-medium text-[#1C1917] mb-2 group-hover:text-lvc-accent transition-colors">
                     {language === "en"
                       ? "Shared Housing Geneva"
                       : "Colocation Genève"}
@@ -190,9 +190,9 @@ export function FAQPageV4() {
                 {/* Frais d'entrée article — SEO maillage */}
                 <LocalizedLink
                   to={language === "en" ? "/en/blog/coliving-frais-dossier-geneve-annemasse" : "/blog/coliving-frais-dossier-geneve-annemasse"}
-                  className="mt-4 block p-6 bg-[#FAF9F6] border border-[#E7E5E4] hover:border-[#D4A574]/40 transition-colors group"
+                  className="mt-4 block p-6 bg-[#FAF9F6] border border-[#E7E5E4] hover:border-[#2F5D50]/40 transition-colors group"
                 >
-                  <h4 className="font-medium text-[#1C1917] mb-2 group-hover:text-[#D4A574] transition-colors">
+                  <h4 className="font-medium text-[#1C1917] mb-2 group-hover:text-lvc-accent transition-colors">
                     {language === "en"
                       ? "Move-in fees explained"
                       : "Frais d'entrée : le guide"}
@@ -207,9 +207,9 @@ export function FAQPageV4() {
                 {/* Front Annemasse — R5 checkpoint 21/08 */}
                 <LocalizedLink
                   to="/annemasse-colocation"
-                  className="mt-4 block p-6 bg-[#FAF9F6] border border-[#E7E5E4] hover:border-[#D4A574]/40 transition-colors group"
+                  className="mt-4 block p-6 bg-[#FAF9F6] border border-[#E7E5E4] hover:border-[#2F5D50]/40 transition-colors group"
                 >
-                  <h4 className="font-medium text-[#1C1917] mb-2 group-hover:text-[#D4A574] transition-colors">
+                  <h4 className="font-medium text-[#1C1917] mb-2 group-hover:text-lvc-accent transition-colors">
                     {language === "en" ? "Annemasse Agglo, La Villa Coliving side" : "Annemasse Agglo, côté La Villa Coliving"}
                   </h4>
                   <p className="text-sm text-[#57534E]">
@@ -222,7 +222,7 @@ export function FAQPageV4() {
 
                 {/* Contact CTA */}
                 <div className="mt-4 p-6 bg-white border border-[#E7E5E4]">
-                  <MessageCircle className="w-6 h-6 text-[#D4A574] mb-4" />
+                  <MessageCircle className="w-6 h-6 text-lvc-accent mb-4" />
                   <h4 className="font-medium text-[#1C1917] mb-2">
                     {language === "en"
                       ? "Still have questions?"
@@ -235,7 +235,7 @@ export function FAQPageV4() {
                   </p>
                   <a
                     href="mailto:hello@lavillacoliving.com"
-                    className="text-[#D4A574] font-medium hover:underline"
+                    className="text-lvc-accent font-medium hover:underline"
                   >
                     {language === "en" ? "Contact us" : "Contacte-nous"}
                   </a>
@@ -280,7 +280,7 @@ export function FAQPageV4() {
                               <p className="mt-3">
                                 <LocalizedLink
                                   to={item.more.href}
-                                  className="text-[#b8860b] underline underline-offset-4 hover:text-[#1C1917]"
+                                  className="text-lvc-accent underline underline-offset-4 hover:text-[#1C1917]"
                                 >
                                   {item.more.label[language]} →
                                 </LocalizedLink>

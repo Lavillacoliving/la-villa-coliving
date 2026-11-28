@@ -101,7 +101,7 @@ export function ServicesPageV4() {
     {
       title: language === "en" ? "Connect" : "Connecter",
       subtitle: language === "en" ? "Stay connected" : "Reste connecté",
-      color: "bg-[#D4A574]",
+      color: "bg-lvc-accent",
       services: [
         {
           key: "internet",
@@ -280,7 +280,7 @@ export function ServicesPageV4() {
               {language === "en"
                 ? "Not just services."
                 : "Pas juste des services."}
-              <span className="text-[#D4A574]">
+              <span className="text-lvc-accent">
                 {" "}
                 {language === "en" ? "A lifestyle." : "Un mode de vie."}
               </span>

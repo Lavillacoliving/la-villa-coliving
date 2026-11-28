@@ -96,7 +96,7 @@ export function AppartTeaser({ page, lang, headingLevel = 2, className = "" }: A
           <LocalizedLink
             to={`/${APPART.key}`}
             onClick={track}
-            className="mt-5 self-start inline-flex items-center gap-2 min-h-[44px] text-sm font-semibold text-[#1C1917] underline underline-offset-4 hover:text-[#b8860b] transition-colors"
+            className="mt-5 self-start inline-flex items-center gap-2 min-h-[44px] text-sm font-semibold text-[#1C1917] underline underline-offset-4 hover:text-lvc-accent transition-colors"
           >
             {t.link}
             <ArrowRight className="w-4 h-4" aria-hidden="true" />

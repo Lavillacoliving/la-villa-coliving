@@ -89,7 +89,7 @@ export function LatestBlogV7() {
             <LocalizedLink
               to={`/blog/${post.slug}`}
               key={post.id}
-              className="group bg-[#FAF9F6] border border-[#E7E5E4] overflow-hidden transition-all duration-300 hover:border-[#D4A574]/30 hover:shadow-lg"
+              className="group bg-[#FAF9F6] border border-[#E7E5E4] overflow-hidden transition-all duration-300 hover:border-[#2F5D50]/30 hover:shadow-lg"
             >
               <div className="aspect-[16/10] overflow-hidden bg-[#F5F2ED]">
                 {post.image_url ? (

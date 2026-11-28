@@ -14,7 +14,8 @@ Si `../lavilla-docs/` est absent : `git clone git@github.com:Lavillacoliving/lav
 ## Rappels critiques (détail dans lavilla-docs)
 
 - `src/lib/entities.ts` = source unique des IDs/constantes ; slugs de propriétés SANS tirets (`lavilla`, `leloft`, `lelodge`, `montblanc`)
-- `logAudit()` obligatoire sur toute action CRUD critique ; design gold `#b8860b` ; bilingue FR/EN
+- `logAudit()` obligatoire sur toute action CRUD critique ; design gold `#b8860b` (dashboard, portail) ; bilingue FR/EN
+- Pages publiques (lot « couleurs », 28/11/2026, §0.5 du brief v8) : le doré `#D4A574` ne sert qu'au bouton principal, au bandeau d'offre et aux étoiles de note, jamais à un texte ni à une icône sur fond clair (2,2:1) ; sur fond clair, accent `#2F5D50` (`text-lvc-accent`), sur fond sombre ou photo, doré clair `#E0BB8A` ; onglet actif = encre `lvc-ink` + texte blanc. Opacité : `[#2F5D50]/NN`, jamais `lvc-accent/NN` (classe non générée, sans erreur)
 - CI stricte : valider avec `tsc -b` (pas `--noEmit`) avant commit ; build complet local = `npm run build:local`
 - `git pull --rebase` avant tout push (le bot prerender committe en parallèle)
 - **Push sur `main` = déploiement production immédiat** (Vercel). Jamais sans GO explicite de Jérôme.
