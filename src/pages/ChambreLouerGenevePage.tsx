@@ -21,6 +21,7 @@ import { MAISON_KEYS } from "@/data/places";
 import { OuChercher } from "@/components/OuChercher";
 import { colocGeneveHref } from "@/lib/siteLinks";
 import { useAllRooms, useHouseRooms, splitRooms, type PlaceRoom } from "@/lib/availability";
+import { h1Accent } from "@/lib/h1Accent";
 
 /**
  * /chambre-a-louer-geneve · /en/chambre-a-louer-geneve — Lot 6 du plan SEO funnel, spécification révisée
@@ -91,7 +92,9 @@ export function ChambreLouerGenevePage() {
             {en ? "Furnished rooms · French side of Geneva" : "Chambres meublées · côté France de Genève"}
           </span>
           <h1 className="text-4xl md:text-6xl text-[#1C1917] mb-6 leading-tight" style={serif}>
-            {en ? "Rooms to rent near Geneva, furnished and all inclusive" : "Chambres à louer près de Genève, meublées et tout inclus"}
+            {en
+              ? h1Accent("Rooms to rent near Geneva, furnished and all inclusive", "furnished and all inclusive")
+              : h1Accent("Chambres à louer près de Genève, meublées et tout inclus", "meublées et tout inclus")}
           </h1>
           {/* (L'Appart, E4, S11.5) Chaque gamme garde son « dès », maisons d'abord ; « dans une maison entière » disparaît (faux pour L'Appart). */}
           <p className="text-lg md:text-xl text-[#57534E] max-w-3xl mx-auto leading-relaxed mb-8">

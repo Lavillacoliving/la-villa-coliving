@@ -38,6 +38,7 @@ import {
   type PlaceRoom,
   type PublicRoom,
 } from "@/lib/availability";
+import { h1Accent } from "@/lib/h1Accent";
 
 /**
  * /chambres-disponibles · /en/chambres-disponibles — Lot 3 du plan SEO funnel (02/09/2026,
@@ -249,7 +250,7 @@ export function ChambresDisponiblesPage() {
             {en ? `${ENTITY_FACTS.brand.totalRooms} rooms · ${ENTITY_FACTS.brand.places} locations` : `${ENTITY_FACTS.brand.totalRooms} chambres · ${ENTITY_FACTS.brand.places} adresses`}
           </span>
           <h1 className="text-4xl md:text-5xl lg:text-6xl text-[#1C1917] mb-5" style={{ fontFamily: '"DM Serif Display", serif' }}>
-            {en ? "Available rooms near Geneva" : "Chambres disponibles près de Genève"}
+            {en ? h1Accent("Available rooms near Geneva", "Available") : h1Accent("Chambres disponibles près de Genève", "disponibles")}
           </h1>
           {pillNow || pillSoon ? (
             <div className="flex flex-wrap gap-3">

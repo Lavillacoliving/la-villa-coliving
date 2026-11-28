@@ -94,7 +94,7 @@ export function BlogPage() {
             {language==="en"?"Insights & Stories":"Articles & R\u00e9cits"}
           </span>
           <h1 className="text-5xl md:text-6xl lg:text-7xl text-[#1C1917] mb-6" style={{fontFamily: '"DM Serif Display", serif'}}>
-            {language==="en"?<>Our <span className="text-[#D4A574]">Blog</span></>:<>Notre <span className="text-[#D4A574]">Blog</span></>}
+            {language==="en"?<>Our <em className="lvc-h1-accent">Blog</em></>:<>Notre <em className="lvc-h1-accent">Blog</em></>}
           </h1>
           <p className="text-lg text-[#57534E] max-w-2xl mx-auto mb-10">
             {language==="en"

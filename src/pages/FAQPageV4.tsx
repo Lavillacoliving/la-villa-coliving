@@ -92,11 +92,11 @@ export function FAQPageV4() {
           >
             {language === "en" ? (
               <>
-                FAQ — Coliving &amp; shared housing near Geneva
+                FAQ — Coliving &amp; shared housing <em className="lvc-h1-accent">near Geneva</em>
               </>
             ) : (
               <>
-                FAQ — Coliving &amp; colocation près de Genève
+                FAQ — Coliving &amp; colocation <em className="lvc-h1-accent">près de Genève</em>
               </>
             )}
           </h1>

@@ -87,6 +87,7 @@ import {
   CarouselPrevious,
   type CarouselApi,
 } from "@/components/ui/carousel";
+import { h1Accent } from "@/lib/h1Accent";
 
 interface GalleryImage {
   src: string;
@@ -1696,7 +1697,10 @@ export function HouseDetailPage() {
                     fr: "Le Lodge — Coliving 12 chambres à Annemasse",
                   },
                 };
-                return h1[id]?.[language === "en" ? "en" : "fr"] ?? house.name;
+                const text = h1[id]?.[language === "en" ? "en" : "fr"] ?? house.name;
+                // (Lot 2a, commit 12, D13) Signature : la commune (ENTITY_HOUSES) en italique, doré clair sur la photo.
+                const commune = ENTITY_HOUSES.find((h) => h.slug === id)?.commune;
+                return commune ? h1Accent(text, commune, true) : text;
               })()}
             </h1>
             <div className="flex flex-wrap items-center gap-6 text-white/90 font-medium">

@@ -29,6 +29,7 @@ import {
   BADGE_CHIP_CLASS,
   type HouseKey,
 } from "@/lib/availability";
+import { h1Accent } from "@/lib/h1Accent";
 
 // (Lot L1, 10/2026) Phrase d'accroche de chaque carte maison ; le trajet vient de ENTITY_HOUSES[].commute
 // (source unique, D1-L1). Plus de « frontière mitoyenne » (D6) ni de minutes en dur.
@@ -134,8 +135,8 @@ export function AnnemasseColocationPage() {
           >
             {/* (L'Appart, E5 — décision n° 22 à confirmer) Chaque gamme son « dès », L'Appart d'abord ; aucun équipement dans le titre. */}
             {language === "en"
-              ? `Shared housing in Annemasse — ${APPART.name} from ${APPART_FROM.en.chf}/month, three coliving houses from ${PRICE_FROM_CHF_EN}/month`
-              : `Colocation à Annemasse — ${APPART.name} dès ${APPART_FROM.fr.chf}/mois, trois maisons de coliving dès ${PRICE_FROM_CHF_FR}/mois`}
+              ? h1Accent(`Shared housing in Annemasse — ${APPART.name} from ${APPART_FROM.en.chf}/month, three coliving houses from ${PRICE_FROM_CHF_EN}/month`, APPART.commune)
+              : h1Accent(`Colocation à Annemasse — ${APPART.name} dès ${APPART_FROM.fr.chf}/mois, trois maisons de coliving dès ${PRICE_FROM_CHF_FR}/mois`, APPART.commune)}
           </h1>
           <p className="text-lg md:text-xl text-[#57534E] max-w-3xl mx-auto leading-relaxed mb-10">
             {/* (Lot L2, 09/10/2026) D1 : destination nommée, libellé canonique STATS_DISPLAY.distance.

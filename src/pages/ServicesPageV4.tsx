@@ -219,14 +219,14 @@ export function ServicesPageV4() {
               {language === "en" ? (
                 <>
                   We handle{" "}
-                  <em className="text-[#E0BB8A] not-italic" style={{ fontFamily: "'DM Serif Display', serif", fontStyle: 'italic' }}>everything</em>.
+                  <em className="lvc-h1-accent lvc-h1-accent--on-photo">everything</em>.
                   <br />
                   You just live.
                 </>
               ) : (
                 <>
                   On gère{" "}
-                  <em className="text-[#E0BB8A] not-italic" style={{ fontFamily: "'DM Serif Display', serif", fontStyle: 'italic' }}>tout</em>.
+                  <em className="lvc-h1-accent lvc-h1-accent--on-photo">tout</em>.
                   <br />
                   Tu vis sans soucis.
                 </>

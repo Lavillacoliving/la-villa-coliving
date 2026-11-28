@@ -65,6 +65,7 @@ import {
   useHouseRooms,
   type PublicRoom,
 } from "@/lib/availability";
+import { h1Accent } from "@/lib/h1Accent";
 
 /**
  * Page de L'Appart — /lappart et /en/lappart (brief « Points d'entrée prix, L'Appart » du 12/11/2026, Lot 3 ; étape E3).
@@ -294,7 +295,7 @@ export function LAppartPage() {
               </div>
             )}
             <h1 className="text-3xl md:text-6xl mb-4 text-white [text-shadow:0_2px_12px_rgba(0,0,0,0.55)] max-w-4xl" style={heading}>
-              {hero.h1}
+              {h1Accent(hero.h1, APPART.commune, true)}
             </h1>
             <div className="flex flex-wrap items-center gap-x-6 gap-y-2 text-white/90 font-medium">
               <span className="flex items-center gap-2"><MapPin size={18} className="text-[#D4A574]" />{hero.markers[0]}</span>

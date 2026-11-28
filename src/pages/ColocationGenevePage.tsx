@@ -22,6 +22,7 @@ import { OuChercher } from "@/components/OuChercher";
 import { COLOC_GENEVE_ARTICLE, COLOC_GENEVE_PILLAR_EN, COLOC_GENEVE_PILLAR_FR } from "@/lib/siteLinks";
 import { useAllRooms, useHouseRooms, splitRooms, roomsContentUpdatedAt, type PlaceRoom } from "@/lib/availability";
 import { formatLongDate, parisIsoDate } from "@/lib/dates";
+import { h1Accent } from "@/lib/h1Accent";
 
 /**
  * /colocation-geneve · /en/colocation-geneve — Lot 5 du plan SEO funnel, spécification révisée du
@@ -145,7 +146,9 @@ export function ColocationGenevePage() {
             {en ? "Shared housing · Greater Geneva" : "Colocation · Grand Genève"}
           </span>
           <h1 className="text-4xl md:text-5xl lg:text-6xl text-[#1C1917] mb-6 leading-tight" style={serif}>
-            {en ? "Shared housing in Geneva, the French-side version" : "Colocation à Genève, version côté France"}
+            {en
+              ? h1Accent("Shared housing in Geneva, the French-side version", "the French-side version")
+              : h1Accent("Colocation à Genève, version côté France", "version côté France")}
           </h1>
           {/* (L'Appart, E4, S11.2) Chaque gamme dans sa phrase, maisons d'abord ; aucun équipement à côté d'un prix de L'Appart. */}
           <p className="text-lg md:text-xl text-[#57534E] max-w-3xl mx-auto mb-8 leading-relaxed">

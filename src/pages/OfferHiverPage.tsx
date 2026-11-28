@@ -46,6 +46,7 @@ import {
   type OfferPageState,
   type OfferSection,
 } from "@/data/offer";
+import { h1Accent } from "@/lib/h1Accent";
 
 /**
  * /offre-hiver · /en/winter-offer — Offre A « Pose tes valises avant l'hiver » (brief Jérôme du
@@ -452,7 +453,7 @@ function OfferEnded({ en, L }: { en: boolean; L: "fr" | "en" }) {
       <section className="py-20 lg:py-28 bg-[#F5F2ED]">
         <div className="container-custom max-w-2xl text-center">
           <h1 className="text-4xl md:text-5xl text-[#1C1917] mb-5" style={SERIF}>
-            {endedTitle}
+            {h1Accent(endedTitle, en ? "ended" : "terminée")}
           </h1>
           <p className="text-lg text-[#44403C] mb-8">
             {en
@@ -570,7 +571,7 @@ function OfferActive({
         <div className="container-custom max-w-3xl text-center">
           <p className="lvc-eyebrow mb-3">{nameLabel}</p>
           <h1 className="text-4xl md:text-5xl lg:text-6xl text-[#1C1917] mb-4" style={SERIF}>
-            {en ? "Half price on your first month" : "Ton premier mois à moitié prix"}
+            {en ? h1Accent("Half price on your first month", "Half price") : h1Accent("Ton premier mois à moitié prix", "à moitié prix")}
           </h1>
           <OfferProductLine en={en} rooms={rooms} className="text-lg md:text-xl text-[#1C1917] mb-3" />
           <p className="text-base md:text-lg text-[#44403C] mb-6">
@@ -860,7 +861,7 @@ function OfferFirstYear({ en, L }: { en: boolean; L: "fr" | "en" }) {
             {en ? `Offer until ${endLabel}` : `Offre jusqu'au ${endLabel}`}
           </p>
           <h1 className="text-[2rem] leading-tight sm:text-4xl md:text-5xl lg:text-6xl text-[#1C1917] mb-2" style={SERIF}>
-            {headline}
+            {h1Accent(headline, en ? "back" : "remboursés")}
           </h1>
           <p data-offer-chf className="mb-4 text-sm text-[#78716C]">{chfLine}</p>
           <p className="text-base md:text-lg text-[#44403C] mb-3">{subtitle}</p>

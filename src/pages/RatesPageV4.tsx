@@ -630,11 +630,11 @@ export function RatesPageV4() {
           >
             {en ? (
               <>
-                Transparent <span className="text-[#D4A574]">Pricing</span>
+                <em className="lvc-h1-accent">Transparent</em> Pricing
               </>
             ) : (
               <>
-                Tarifs <span className="text-[#D4A574]">transparents</span>
+                Tarifs <em className="lvc-h1-accent">transparents</em>
               </>
             )}
           </h1>

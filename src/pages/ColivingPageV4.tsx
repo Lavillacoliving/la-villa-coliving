@@ -8,6 +8,7 @@ import { APPART } from "@/data/appart";
 import { FaqSection } from "@/components/FaqSection";
 import { colivingFaq } from "@/data/faq/colivingFaq";
 import { STATS, STATS_DISPLAY, PRICE_FROM_CHF_FR, PRICE_FROM_CHF_EN, GOOGLE_REVIEWS, GOOGLE_REVIEWS_LINK_LABEL } from "@/data/stats";
+import { h1Accent } from "@/lib/h1Accent";
 
 export function ColivingPageV4() {
   const { t, language } = useLanguage();
@@ -84,7 +85,7 @@ export function ColivingPageV4() {
               className="text-5xl md:text-6xl lg:text-7xl mb-8 text-white"
               style={{ fontFamily: '"DM Serif Display", serif' }}
             >
-              {t.colivingPage.hero.h1}
+              {h1Accent(t.colivingPage.hero.h1, "coliving", true)}
             </h1>
             <p className="text-xl mb-8 text-white/90">
               {language === "en"

@@ -20,6 +20,7 @@ import {
   HeartHandshake,
   CheckCircle2,
 } from "lucide-react";
+import { h1Accent } from "@/lib/h1Accent";
 
 // ──────────────────────────────────────────────────────────────────────────
 // Qui sommes-nous — v2 (brief correction 07/2026) : page image-led pour le public
@@ -191,7 +192,7 @@ export function QuiSommesNousPage() {
                 className="text-4xl md:text-5xl mb-4 leading-tight"
                 style={{ fontFamily: '"DM Serif Display", serif' }}
               >
-                {en ? "Who we are" : "Qui sommes-nous"}
+                {en ? h1Accent("Who we are", "we", true) : h1Accent("Qui sommes-nous", "nous", true)}
               </h1>
               <p className="text-base md:text-lg text-white/85 leading-relaxed">
                 {en

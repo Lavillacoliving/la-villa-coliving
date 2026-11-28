@@ -13,6 +13,7 @@ import {
   Award,
   Check,
 } from "lucide-react";
+import { h1Accent } from "@/lib/h1Accent";
 
 export function InvestisseursPage() {
   const { language } = useLanguage();
@@ -58,8 +59,8 @@ export function InvestisseursPage() {
             style={{ fontFamily: '"DM Serif Display", serif' }}
           >
             {language === "en"
-              ? "Grow your assets with premium coliving"
-              : "Développez votre patrimoine avec le coliving premium"}
+              ? h1Accent("Grow your assets with premium coliving", "premium coliving", true)
+              : h1Accent("Développez votre patrimoine avec le coliving premium", "le coliving premium", true)}
           </h1>
           <p className="text-lg text-stone-300 max-w-2xl mx-auto mb-10">
             {language === "en"

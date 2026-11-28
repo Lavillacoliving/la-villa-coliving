@@ -40,6 +40,7 @@ import { HouseAvailabilityLine } from "@/components/HouseAvailabilityLine";
 import { AppartRooms } from "@/components/appart/AppartRooms";
 import { AppartTeaser } from "@/components/appart/AppartTeaser";
 import { useHouseRooms, splitRooms, type PlaceRoom } from "@/lib/availability";
+import { h1Accent } from "@/lib/h1Accent";
 
 
 /**
@@ -101,8 +102,8 @@ export function ChambreLouerAnnemassePage() {
             style={{ fontFamily: '"DM Serif Display", serif' }}
           >
             {language === "en"
-              ? `Rooms to rent in Annemasse: ${APPART.name}'s ${APPART.rooms.total} rooms and the Lodge's ${ROOMS_BY_HOUSE.lelodge} rooms`
-              : `Chambres à louer à Annemasse : les ${APPART.rooms.total} chambres de ${APPART.name} et les ${ROOMS_BY_HOUSE.lelodge} chambres du Lodge`}
+              ? h1Accent(`Rooms to rent in Annemasse: ${APPART.name}'s ${APPART.rooms.total} rooms and the Lodge's ${ROOMS_BY_HOUSE.lelodge} rooms`, APPART.commune)
+              : h1Accent(`Chambres à louer à Annemasse : les ${APPART.rooms.total} chambres de ${APPART.name} et les ${ROOMS_BY_HOUSE.lelodge} chambres du Lodge`, APPART.commune)}
           </h1>
           <p className="text-lg md:text-xl text-[#57534E] max-w-3xl mx-auto leading-relaxed mb-10">
             {language === "en"

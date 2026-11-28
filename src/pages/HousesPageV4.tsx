@@ -192,11 +192,11 @@ export function HousesPageV4() {
           >
             {language === "en" ? (
               <>
-                Three Homes<span className="text-[#D4A574]">.</span>
+                Three <em className="lvc-h1-accent">Homes</em>.
               </>
             ) : (
               <>
-                Trois maisons<span className="text-[#D4A574]">.</span>
+                Trois <em className="lvc-h1-accent">maisons</em>.
               </>
             )}
           </h1>

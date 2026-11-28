@@ -355,11 +355,11 @@ export function JoinPageV4() {
                 s'appelle « Viens nous rencontrer ». L'adresse /candidature, les événements GA4 et la logique d'envoi ne changent pas. */}
             {language === "en" ? (
               <>
-                Come and <span className="text-[#D4A574]">meet us</span>
+                Come and <em className="lvc-h1-accent">meet us</em>
               </>
             ) : (
               <>
-                Viens nous <span className="text-[#D4A574]">rencontrer</span>
+                Viens nous <em className="lvc-h1-accent">rencontrer</em>
               </>
             )}
           </h1>

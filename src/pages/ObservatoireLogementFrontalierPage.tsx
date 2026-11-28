@@ -276,7 +276,7 @@ export function ObservatoireLogementFrontalierPage() {
             style={{ fontFamily: '"DM Serif Display", serif' }}
           >
             {en ? "Where to live near Geneva " : "Où se loger près de Genève "}
-            <span className="text-[#D4A574]">{en ? "without straying far?" : "sans s'éloigner ?"}</span>
+            <em className="lvc-h1-accent lvc-h1-accent--on-photo">{en ? "without straying far?" : "sans s'éloigner ?"}</em>
           </h1>
           <p className="text-base md:text-lg text-white/70 max-w-3xl mx-auto leading-relaxed">
             {en
