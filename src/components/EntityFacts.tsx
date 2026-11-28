@@ -81,8 +81,7 @@ export function EntityFacts({ page, houseSlug, children, className = "", collaps
     >
       <h2
         id="entity-facts-title"
-        className="text-2xl md:text-3xl font-light text-[#1C1917] mb-4"
-        style={{ fontFamily: '"DM Serif Display", serif' }}
+        className="lvc-display text-2xl md:text-3xl text-[#1C1917] mb-4"
       >
         {t.title}
       </h2>
@@ -149,7 +148,7 @@ export function EntityFacts({ page, houseSlug, children, className = "", collaps
       <LocalizedLink
         to={to}
         onClick={track}
-        className="inline-flex items-center px-6 py-3 border border-[#1C1917] text-[#1C1917] text-sm font-semibold rounded-lg hover:bg-[#1C1917] hover:text-white transition-colors"
+        className="lvc-btn-secondary inline-flex items-center px-6 py-3 text-sm"
       >
         {t.cta}
       </LocalizedLink>

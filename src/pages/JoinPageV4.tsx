@@ -344,22 +344,21 @@ export function JoinPageV4() {
       {/* Hero compacté (S33) : ≤ 0,8 écran, le formulaire doit arriver vite. */}
       <section className="py-10 md:py-14 bg-white">
         <div className="container-custom text-center">
-          <span className="text-xs text-[#78716C] uppercase tracking-[0.3em] mb-4 block">
+          <span className="lvc-eyebrow mb-4">
             {language === "en" ? "Get Started" : "Commencer"}
           </span>
           <h1
-            className="text-4xl md:text-5xl lg:text-6xl font-light text-[#1C1917] mb-4"
-            style={{ fontFamily: '"DM Serif Display", serif' }}
+            className="text-4xl md:text-5xl lg:text-6xl text-[#1C1917] mb-4"
           >
             {/* (24/11/2026, refonte des pages de vente § 4.7) « Candidater » devient « Programmer une visite » : le formulaire
                 s'appelle « Viens nous rencontrer ». L'adresse /candidature, les événements GA4 et la logique d'envoi ne changent pas. */}
             {language === "en" ? (
               <>
-                Come and <span className="text-[#D4A574]">meet us</span>
+                Come and <em className="lvc-h1-accent">meet us</em>
               </>
             ) : (
               <>
-                Viens nous <span className="text-[#D4A574]">rencontrer</span>
+                Viens nous <em className="lvc-h1-accent">rencontrer</em>
               </>
             )}
           </h1>
@@ -469,8 +468,7 @@ export function JoinPageV4() {
                 <Check className="w-8 h-8 text-white" strokeWidth={3} />
               </div>
               <h2
-                className="text-3xl md:text-4xl font-light text-[#1C1917] mb-4"
-                style={{ fontFamily: '"DM Serif Display", serif' }}
+                className="text-3xl md:text-4xl text-[#1C1917] mb-4"
               >
                 {contextIsAppart
                   ? (language === "en" ? "Application received!" : "Candidature reçue !")
@@ -541,7 +539,7 @@ export function JoinPageV4() {
 
             {/* Personal Info */}
             <div className="mb-10">
-              <h2 className="text-xs uppercase tracking-widest text-[#78716C] mb-6">
+              <h2 className="lvc-eyebrow mb-6">
                 {language === "en"
                   ? "Personal Information"
                   : "Informations Personnelles"}
@@ -722,7 +720,7 @@ export function JoinPageV4() {
                 const pref = choice && "value" in choice ? String(choice.value || "") : "";
                 telemetry.trackSubmitClick({ contact_pref: pref || "none" });
               }}
-              className="w-full py-4 bg-[#1C1917] text-white font-bold hover:bg-[#D4A574] transition-colors flex items-center justify-center gap-2 disabled:opacity-60 disabled:cursor-not-allowed"
+              className="lvc-btn-primary w-full py-4 flex items-center justify-center gap-2 disabled:opacity-60 disabled:cursor-not-allowed"
             >
               {status === "submitting" ? (
                 <>
@@ -732,10 +730,10 @@ export function JoinPageV4() {
               ) : (
                 <>
                   {/* (24/11/2026) L'Appart ne se visite pas avant son ouverture (Jérôme) : arrivé de L'Appart, le formulaire garde
-                      « ENVOYER MA CANDIDATURE » (après l'hydratation, contextIsAppart). */}
+                      « Envoyer ma candidature » (après l'hydratation, contextIsAppart). (Lot 2a, 27/11/2026, D8) Casse normale. */}
                   {contextIsAppart
-                    ? (language === "en" ? "SEND MY APPLICATION" : "ENVOYER MA CANDIDATURE")
-                    : (language === "en" ? "REQUEST MY VISIT" : "DEMANDER MA VISITE")}
+                    ? (language === "en" ? "Send my application" : "Envoyer ma candidature")
+                    : (language === "en" ? "Request my visit" : "Demander ma visite")}
                   <ArrowRight className="w-5 h-5" />
                 </>
               )}
@@ -784,12 +782,11 @@ export function JoinPageV4() {
       <section className="py-12 lg:py-16 bg-white">
         <div className="container-custom">
           <div className="text-center mb-8 lg:mb-10">
-            <span className="text-xs text-[#78716C] uppercase tracking-[0.3em] mb-4 block">
+            <span className="lvc-eyebrow mb-4">
               {language === "en" ? "The Process" : "Le Processus"}
             </span>
             <h2
-              className="text-4xl md:text-5xl font-light text-[#1C1917]"
-              style={{ fontFamily: '"DM Serif Display", serif' }}
+              className="text-4xl md:text-5xl text-[#1C1917]"
             >
               {language === "en" ? "How It Works" : "Comment ça marche"}
             </h2>
@@ -852,7 +849,7 @@ export function JoinPageV4() {
                 <span className="text-5xl md:text-6xl font-light text-[#E7E5E4] block mb-3">
                   {step.number}
                 </span>
-                <h3 className="text-xl font-medium text-[#1C1917] mb-2">
+                <h3 className="text-xl text-[#1C1917] mb-2">
                   {step.title}
                 </h3>
                 <p className="text-[#57534E]">{step.description}</p>
@@ -873,7 +870,7 @@ export function JoinPageV4() {
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-4xl mx-auto text-center">
               <div className="flex flex-col items-center">
                 <Users className="w-8 h-8 text-[#D4A574] mb-3" />
-                <p className="text-3xl font-light text-[#1C1917] mb-1" style={{ fontFamily: '"DM Serif Display", serif' }}>
+                <p className="text-3xl text-[#1C1917] mb-1" style={{ fontFamily: '"DM Serif Display", serif' }}>
                   {`${STATS.totalResidents}+`}
                 </p>
                 <p className="text-sm text-[#57534E]">
@@ -882,7 +879,7 @@ export function JoinPageV4() {
               </div>
               <div className="flex flex-col items-center">
                 <Calendar className="w-8 h-8 text-[#D4A574] mb-3" />
-                <p className="text-3xl font-light text-[#1C1917] mb-1" style={{ fontFamily: '"DM Serif Display", serif' }}>
+                <p className="text-3xl text-[#1C1917] mb-1" style={{ fontFamily: '"DM Serif Display", serif' }}>
                   {language === "en" ? `${STATS.averageStayMonths} months` : `${STATS.averageStayMonths} mois`}
                 </p>
                 <p className="text-sm text-[#57534E]">
@@ -891,7 +888,7 @@ export function JoinPageV4() {
               </div>
               <div className="flex flex-col items-center">
                 <Star className="w-8 h-8 text-[#D4A574] mb-3 fill-[#D4A574]" />
-                <p className="text-3xl font-light text-[#1C1917] mb-1" style={{ fontFamily: '"DM Serif Display", serif' }}>
+                <p className="text-3xl text-[#1C1917] mb-1" style={{ fontFamily: '"DM Serif Display", serif' }}>
                   {STATS_DISPLAY[L].googleRatingValue}
                 </p>
                 <p className="text-sm text-[#57534E]">{STATS_DISPLAY[L].googleRatingLabel}</p>
@@ -915,7 +912,7 @@ export function JoinPageV4() {
           {/* WhatsApp CTA */}
           <div className="bg-[#FAF9F6] border border-[#E7E5E4] p-6 md:p-8 text-center mb-10">
             <MessageCircle className="w-10 h-10 text-[#25D366] mx-auto mb-4" />
-            <h2 className="text-xl md:text-2xl font-medium text-[#1C1917] mb-2">
+            <h2 className="text-xl md:text-2xl text-[#1C1917] mb-2">
               {language === "en"
                 ? "Prefer to chat first? Reach us on WhatsApp"
                 : "Tu préfères discuter d'abord ? Joins-nous sur WhatsApp"}
@@ -938,14 +935,13 @@ export function JoinPageV4() {
 
           {/* FAQ contextuelle — réduit les abandons du form */}
           <div className="text-center mb-8">
-            <span className="text-xs text-[#78716C] uppercase tracking-[0.3em] mb-4 block">
+            <span className="lvc-eyebrow mb-4">
               {contextIsAppart
                 ? (language === "en" ? "Before you apply" : "Avant de candidater")
                 : (language === "en" ? "Before your visit" : "Avant ta visite")}
             </span>
             <h2
-              className="text-3xl md:text-4xl font-light text-[#1C1917]"
-              style={{ fontFamily: '"DM Serif Display", serif' }}
+              className="text-3xl md:text-4xl text-[#1C1917]"
             >
               {language === "en" ? "Frequently asked questions" : "Questions fréquentes"}
             </h2>

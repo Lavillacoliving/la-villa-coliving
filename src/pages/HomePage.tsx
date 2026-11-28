@@ -11,10 +11,12 @@ import {
   HomeWhy,
   HomePrice,
   HomeVisit,
-  HomeGoogleRating,
   HomeOtherOptions,
 } from '@/sections/HomeArgumentsV8';
 import { LatestBlogV7 } from '@/sections/LatestBlogV7';
+import { HomeStory } from '@/sections/HomeStory';
+import { HomeLifeBand } from '@/sections/HomeLifeBand';
+import { HomeReviews } from '@/sections/HomeReviews';
 import { WhatsAppButton } from "@/components/WhatsAppButton";
 import { SEO } from '@/components/SEO';
 import { FaqSection } from '@/components/FaqSection';
@@ -24,14 +26,20 @@ import { PRICE_FROM_CHF_FR, PRICE_FROM_CHF_EN, STATS_DISPLAY } from '@/data/stat
 import { homeFaq } from '@/data/faq/homeFaq';
 import { APPART } from '@/data/appart';
 import { useSectionViewTracking } from '@/lib/sectionViewTracking';
+import { useReveal } from '@/lib/useReveal';
 
 /**
  * Accueil — (lot 2 de la refonte des pages de vente, maquette téléphone validée par Jérôme le 24/11/2026 ; rapport « Pages qui
- * vendent », § 4.1) une argumentation : promesse → quatre chiffres → maisons → « Une communauté, pas un immeuble » → le prix,
- * expliqué → « Viens nous rencontrer » → note Google → autres options (L'Appart, groupe Facebook) → FAQ → fiche « l'essentiel »
- * (repliée sur mobile) → derniers articles → dernier appel. Clarity (30 jours, téléphones) : 38 % des visiteurs ne défilaient
- * pas, 30 % voyaient les maisons et 5 % le premier « Candidater » (écran 14). Rien de ce que lisent les IA n'est retiré :
- * FAQ et FAQPage, introduction de la FAQ, fiche, bloc L'Appart, ligne Facebook et JSON-LD restent dans le HTML.
+ * vendent », § 4.1) une argumentation. Clarity (30 jours, téléphones) : 38 % des visiteurs ne défilaient pas, 30 % voyaient
+ * les maisons et 5 % le premier « Candidater » (écran 14).
+ *
+ * (Lot 2a, brief « Accueil : récit, avis, photos » du 27/11/2026, §0.1, version B §0.9) L'accueil raconte ce que vivent les
+ * résidents, avec de vraies photos : promesse → quatre chiffres → maisons → Récit → bande « Ce qui ne se vit qu'ici » et
+ * rangée de vie → Avis (extraits d'avis Google, note Google et « 100+ résidents » — V2 du 27/11 remplace « pas d'extraits
+ * d'avis » du 24/11) → « Une communauté, pas un immeuble » → « Le prix, expliqué » (D14) → « Viens nous rencontrer » →
+ * autres options (L'Appart, groupe Facebook) → FAQ → fiche « l'essentiel » (repliée sur mobile) → derniers articles →
+ * dernier appel. On ajoute et on réordonne : rien de ce que lisent Google et les IA n'est retiré ni réécrit (FAQ et FAQPage,
+ * introduction de la FAQ, fiche, bloc L'Appart, ligne Facebook et JSON-LD restent dans le HTML).
  */
 export function HomePage() {
   const { language } = useLanguage();
@@ -39,7 +47,11 @@ export function HomePage() {
   // sans casser la mesure. (Lot 2 de la refonte) Mêmes noms pour les blocs qui restent (comparaison avant / après) :
   // hero, houses_preview, why_choose_us, how_to_join, appart_teaser, faq, entity_facts, latest_blog, cta_final ; nouveaux :
   // home_stats, price_explained, google_rating, other_options. Retirés : post_grid, features_paiement, trust_badges, testimonials.
+  // (Lot 2a, 27/11/2026, point 7 de Jérôme) Nouveaux : story, life, reviews ; « reviews » remplace « google_rating » (la note
+  // Google vit dans la section Avis). Date de bascule = date de mise en ligne du lot (rapport final).
   useSectionViewTracking();
+  // (Lot 2a, §0.9) Apparition au défilement des blocs [data-reveal] sous l'écran — posée après l'hydratation, jamais au prérendu.
+  useReveal();
 
   return (
     <main>
@@ -67,10 +79,16 @@ export function HomePage() {
       <div data-home-section="home_stats"><HomeStats /></div>
       {/* Les maisons, juste après la promesse : le couloir accueil → maison → candidature est le premier du site (GA4). */}
       <div data-home-section="houses_preview"><HousesPreview /></div>
+      {/* (Lot 2a, 27/11/2026) Récit « Tu arrives sans connaître personne. Ça ne dure pas. » (§0.3 A). */}
+      <div data-home-section="story"><HomeStory /></div>
+      {/* (Lot 2a) Bande « Ce qui ne se vit qu'ici » et rangée de vie (§0.3 B, six vignettes légendées). */}
+      <div data-home-section="life"><HomeLifeBand /></div>
+      {/* (Lot 2a) Avis : extraits Google + note Google + « 100+ résidents » (ancienne section google_rating). */}
+      <div data-home-section="reviews"><HomeReviews /></div>
+      {/* Textes inchangés ; « Le prix, expliqué » après les avis (D14). */}
       <div data-home-section="why_choose_us"><HomeWhy /></div>
       <div data-home-section="price_explained"><HomePrice /></div>
       <div data-home-section="how_to_join"><HomeVisit /></div>
-      <div data-home-section="google_rating"><HomeGoogleRating /></div>
       {/* L'Appart (bloc statique, data-appart-teaser), ligne du groupe Facebook A.9 et liens Annemasse / Genève. */}
       <div data-home-section="other_options"><HomeOtherOptions /></div>
       {/* FAQ visible + FAQPage schema (front A6 : PAA « coliving genève »).
@@ -81,7 +99,8 @@ export function HomePage() {
           items={language === "en" ? homeFaq.en : homeFaq.fr}
           emitSchema
           id="faq-coliving-geneve"
-          padding="py-12 md:py-24 lg:py-32"
+          // (Lot 2a, §0.6) pb-20 sur mobile : la dernière question reste hors de la zone de la bulle WhatsApp.
+          padding="pt-12 pb-20 md:py-24 lg:py-32"
           intro={
             <p>
               {/* (Lot L2, 09/10/2026) « 20 min » toujours qualifié : STATS_DISPLAY.distance (D1). (L'Appart, E5) Deux gammes, deux

@@ -2,8 +2,8 @@
  * Accueil — les blocs de l'argumentation (lot 2 de la refonte des pages de vente ; maquette téléphone validée par Jérôme le
  * 24/11/2026, rapport « Pages qui vendent », § 4.1).
  *
- * Ordre de la page (HomePage.tsx) : promesse → quatre chiffres → maisons → « Une communauté, pas un immeuble » → le prix,
- * expliqué → « Viens nous rencontrer » → note Google → autres options → FAQ → fiche « l'essentiel » → articles → dernier appel.
+ * Ordre de la page : voir HomePage.tsx (lot 2a du 27/11/2026 : récit, rangée de vie et avis s'intercalent après les maisons ;
+ * la note Google passe dans la section Avis).
  * Ces blocs remplacent « Ce que ton loyer comprend », les quatre badges, « Une maison, pas un immeuble », les témoignages et
  * « Nous rejoindre est simple » : chaque fait n'est dit qu'une fois, lu dans les sources (stats.ts, priceFacts.ts, TRANSIT).
  * Une phrase = un nœud texte (chaînes construites d'un tenant) ; les liens sont des éléments à part (anti-#418).
@@ -12,14 +12,11 @@
 import type { ComponentType } from "react";
 import { ArrowRight, CircleCheck, Home, TrainFront, Waves } from "lucide-react";
 import { LocalizedLink } from "@/components/LocalizedLink";
-import { RatingStars } from "@/components/RatingStars";
 import { FacebookGroupLine } from "@/components/FacebookGroupLine";
 import { AppartTeaser } from "@/components/appart/AppartTeaser";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { colocGeneveHref } from "@/lib/siteLinks";
 import {
-  GOOGLE_REVIEWS,
-  GOOGLE_REVIEWS_LINK_LABEL,
   PRICE_FROM_CHF_EN,
   PRICE_FROM_CHF_FR,
   STATS,
@@ -36,13 +33,13 @@ function track(event: string, params: Record<string, unknown>): void {
   } catch { /* noop */ }
 }
 
-const EYEBROW = "block text-[#44403C] text-[13px] font-semibold tracking-[0.1em] uppercase";
-const H2 = "text-3xl md:text-4xl font-bold text-[#1C1917] mt-3 mb-6 md:mb-10";
-const H2_STYLE = { letterSpacing: "-0.025em" } as const;
+// (Lot 2a, 27/11/2026, §0.5) Classes communes du système graphique : surtitre en accent, H2 en DM Serif Display 400.
+const EYEBROW = "lvc-eyebrow";
+const H2 = "lvc-display text-[30px] md:text-[42px] leading-[1.1] text-lvc-ink mt-3 mb-6 md:mb-10";
 const TEXT_LINK =
   "inline-flex items-center gap-1.5 font-semibold text-[#44403C] underline decoration-[#D4A574] decoration-2 underline-offset-4 hover:text-[#1C1917] transition-colors";
-const PRIMARY_BUTTON =
-  "inline-flex items-center justify-center gap-2 bg-[#D4A574] text-[#1C1917] px-8 py-4 rounded-lg font-bold text-base hover:bg-[#E0BB8A] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#44403C] focus-visible:ring-offset-2";
+// Bouton principal unique (D8) : doré, texte encre, rayon 12 px, casse normale.
+const PRIMARY_BUTTON = "lvc-btn-primary px-8 py-4 text-base";
 
 /** Quatre chiffres, juste sous la promesse (ils étaient sur la photo du haut de page). */
 export function HomeStats() {
@@ -62,15 +59,18 @@ export function HomeStats() {
       label: en ? "average stay" : "de séjour en moyenne",
     },
   ];
+  // (Lot 2a, 27/11/2026, version B §0.9) Une ligne entre deux filets ; chiffres en DM Serif Display, couleur d'accent.
   return (
-    <section className="bg-white border-b border-[#E7E5E4]">
-      <div className="max-w-6xl mx-auto px-6 py-6 md:py-10 grid grid-cols-2 md:grid-cols-4 gap-x-6 gap-y-5">
-        {stats.map((s) => (
-          <div key={s.key}>
-            <p className="text-xl md:text-2xl font-bold text-[#1C1917]">{s.value}</p>
-            <p className="text-xs md:text-sm text-[#78716C] mt-1">{s.label}</p>
-          </div>
-        ))}
+    <section className="bg-lvc-page">
+      <div className="mx-auto max-w-[1280px] px-5 md:px-8">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-x-6 gap-y-5 border-y border-lvc-line py-6 md:py-7">
+          {stats.map((s) => (
+            <div key={s.key}>
+              <p className="lvc-display text-2xl md:text-[34px] leading-none text-lvc-accent">{s.value}</p>
+              <p className="text-sm text-lvc-muted mt-2 leading-snug">{s.label}</p>
+            </div>
+          ))}
+        </div>
       </div>
     </section>
   );
@@ -127,12 +127,12 @@ export function HomeWhy() {
     <section className="py-12 md:py-24 bg-[#F5F2ED]">
       <div className="max-w-5xl mx-auto px-6">
         <span className={EYEBROW}>{en ? "WHY LA VILLA" : "POURQUOI LA VILLA"}</span>
-        <h2 className={H2} style={H2_STYLE}>{en ? "A community, not a building." : "Une communauté, pas un immeuble."}</h2>
+        <h2 className={H2}>{en ? "A community, not a building." : "Une communauté, pas un immeuble."}</h2>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-x-10 gap-y-6">
           {reasons.map((r) => (
             <div key={r.key} className="flex gap-4">
               <span className="w-11 h-11 shrink-0 rounded-xl bg-white border border-[#E7E5E4] flex items-center justify-center" aria-hidden="true">
-                <r.icon className="w-5 h-5 text-[#8A6508]" />
+                <r.icon className="w-5 h-5 text-lvc-accent" />
               </span>
               <div className="min-w-0">
                 <h3 className="text-base md:text-lg font-semibold text-[#1C1917] mb-1">{r.title}</h3>
@@ -165,7 +165,7 @@ export function HomePrice() {
     <section className="py-12 md:py-24 bg-white">
       <div className="max-w-3xl mx-auto px-6">
         <span className={EYEBROW}>{en ? "THE PRICE, EXPLAINED" : "LE PRIX, EXPLIQUÉ"}</span>
-        <h2 className={H2} style={H2_STYLE}>
+        <h2 className={H2}>
           {en ? "More complete than a regular flatshare. All inclusive." : "Plus complet qu'une coloc classique. Tout compris."}
         </h2>
         <div className="space-y-3 text-base md:text-lg text-[#44403C] leading-relaxed">
@@ -222,10 +222,11 @@ export function HomeVisit() {
     },
   ];
   return (
-    <section id="visite" className="pt-12 pb-6 md:pt-24 md:pb-10 bg-[#F5F2ED] scroll-mt-24">
+    // (Lot 2a) Marge du bas rétablie : la note Google qui suivait sur le même fond est passée dans la section Avis.
+    <section id="visite" className="py-12 md:py-24 bg-[#F5F2ED] scroll-mt-24">
       <div className="max-w-3xl mx-auto px-6">
         <span className={EYEBROW}>{en ? "HOW IT WORKS" : "COMMENT ÇA SE PASSE"}</span>
-        <h2 className={H2} style={H2_STYLE}>{en ? "Come and meet us" : "Viens nous rencontrer"}</h2>
+        <h2 className={H2}>{en ? "Come and meet us" : "Viens nous rencontrer"}</h2>
         <ol className="space-y-5">
           {steps.map((s, i) => (
             <li key={s.key} className="flex gap-4">
@@ -259,39 +260,8 @@ export function HomeVisit() {
   );
 }
 
-/** Note Google, juste sous « Viens nous rencontrer » (décision de Jérôme du 24/11/2026 : pas d'extraits d'avis). Toujours
- *  « sur Google » avec le lien « Voir les avis » (GOOGLE_REVIEWS, stats.ts). */
-export function HomeGoogleRating() {
-  const { language } = useLanguage();
-  const L = language === "en" ? "en" : "fr";
-  return (
-    <section className="pt-2 pb-12 md:pb-24 bg-[#F5F2ED]">
-      <div className="max-w-md mx-auto px-6">
-        <div className="bg-white border border-[#E7E5E4] rounded-2xl p-5 flex items-center gap-4">
-          <p className="text-4xl font-bold text-[#1C1917] shrink-0">{STATS_DISPLAY[L].googleRatingValue}</p>
-          <div className="min-w-0 flex flex-col gap-1">
-            <RatingStars lang={L} className="w-4 h-4 text-[#D4A574]" emptyClassName="text-[#E7E5E4]" />
-            <span className="text-sm text-[#44403C]">{STATS_DISPLAY[L].googleRatingLabel}</span>
-            <a
-              href={GOOGLE_REVIEWS.url}
-              target="_blank"
-              rel="noopener noreferrer"
-              onClick={() => track("cta_click", { cta_position: "google_rating", cta_target: "google_reviews", language: L })}
-              className="self-start text-sm font-semibold text-[#1C1917] underline underline-offset-4 hover:text-[#8A6508] transition-colors"
-            >
-              {GOOGLE_REVIEWS_LINK_LABEL[L]}
-            </a>
-          </div>
-        </div>
-        <p className="mt-3 text-sm text-[#57534E] text-center">
-          {L === "en"
-            ? `${STATS_DISPLAY.en.residents} · ${STATS.averageStayMonths}-month average stay`
-            : `${STATS_DISPLAY.fr.residents} · ${STATS.averageStayMonths} mois de séjour en moyenne`}
-        </p>
-      </div>
-    </section>
-  );
-}
+/* (Lot 2a, 27/11/2026) La note Google et la ligne « 100+ résidents… » de l'ancienne section `google_rating` vivent dans la
+   section Avis (src/sections/HomeReviews.tsx), mêmes textes et même événement `cta_click` / `google_rating`. */
 
 /** Autres options : L'Appart (bloc statique de l'accueil, texte propre à la page, sans image), la ligne du groupe Facebook
  *  (A.9, texte inchangé) et les liens d'ancrage Annemasse / Genève (descendus de la section maisons, mêmes mots — R5). */

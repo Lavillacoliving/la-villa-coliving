@@ -13,6 +13,7 @@ import {
   Award,
   Check,
 } from "lucide-react";
+import { h1Accent } from "@/lib/h1Accent";
 
 export function InvestisseursPage() {
   const { language } = useLanguage();
@@ -48,18 +49,17 @@ export function InvestisseursPage() {
       {/* ============================================ */}
       <section className="bg-[#1C1917] py-24 lg:py-32">
         <div className="container-custom text-center">
-          <span className="text-xs uppercase tracking-[0.3em] text-[#D4A574] mb-4 block">
+          <span className="lvc-eyebrow text-[#D4A574] mb-4">
             {language === "en"
               ? "PARTNERS & INVESTORS"
               : "PARTENAIRES & INVESTISSEURS"}
           </span>
           <h1
-            className="text-4xl md:text-5xl lg:text-6xl font-light text-white mb-6 max-w-4xl mx-auto"
-            style={{ fontFamily: '"DM Serif Display", serif' }}
+            className="text-4xl md:text-5xl lg:text-6xl text-white mb-6 max-w-4xl mx-auto"
           >
             {language === "en"
-              ? "Grow your assets with premium coliving"
-              : "Développez votre patrimoine avec le coliving premium"}
+              ? h1Accent("Grow your assets with premium coliving", "premium coliving", true)
+              : h1Accent("Développez votre patrimoine avec le coliving premium", "le coliving premium", true)}
           </h1>
           <p className="text-lg text-stone-300 max-w-2xl mx-auto mb-10">
             {language === "en"
@@ -69,14 +69,14 @@ export function InvestisseursPage() {
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
             <button
               onClick={() => scrollTo("contact")}
-              className="inline-flex items-center gap-2 px-8 py-4 bg-[#D4A574] text-white font-semibold rounded-xl hover:bg-[#E0BB8A] transition-colors"
+              className="lvc-btn-primary inline-flex items-center gap-2 px-8 py-4"
             >
               {language === "en" ? "Book a meeting" : "Prendre rendez-vous"}
               <ArrowRight className="w-5 h-5" />
             </button>
             <button
               onClick={() => scrollTo("modele")}
-              className="inline-flex items-center gap-2 px-8 py-4 border border-white text-white font-semibold rounded-xl hover:bg-white/10 transition-colors"
+              className="lvc-btn-secondary lvc-btn-secondary--on-dark inline-flex items-center gap-2 px-8 py-4"
             >
               {language === "en" ? "Discover the model" : "Découvrir le modèle"}
             </button>
@@ -119,12 +119,11 @@ export function InvestisseursPage() {
       {/* ============================================ */}
       <section className="bg-[#FAF9F6] py-24 lg:py-32">
         <div className="container-custom">
-          <span className="text-xs uppercase tracking-[0.3em] text-[#D4A574] mb-4 block">
+          <span className="lvc-eyebrow mb-4">
             {language === "en" ? "THE MARKET" : "LE MARCHÉ"}
           </span>
           <h2
-            className="text-3xl md:text-4xl lg:text-5xl font-light text-[#1C1917] mb-12"
-            style={{ fontFamily: '"DM Serif Display", serif' }}
+            className="text-3xl md:text-4xl lg:text-5xl text-[#1C1917] mb-12"
           >
             {language === "en"
               ? "Premium coliving, a booming market"
@@ -173,12 +172,11 @@ export function InvestisseursPage() {
       <section id="modele" className="bg-[#1C1917] py-24 lg:py-32">
         <div className="container-custom">
           <div className="text-center mb-16">
-            <span className="text-xs uppercase tracking-[0.3em] text-[#D4A574] mb-4 block">
+            <span className="lvc-eyebrow text-[#D4A574] mb-4">
               {language === "en" ? "OUR MODEL" : "NOTRE MODÈLE"}
             </span>
             <h2
-              className="text-3xl md:text-4xl lg:text-5xl font-light text-white mb-6"
-              style={{ fontFamily: '"DM Serif Display", serif' }}
+              className="text-3xl md:text-4xl lg:text-5xl text-white mb-6"
             >
               {language === "en"
                 ? "You are the owner. We are the operators."
@@ -298,12 +296,11 @@ export function InvestisseursPage() {
       <section className="bg-[#FAF9F6] py-24 lg:py-32">
         <div className="container-custom">
           <div className="text-center mb-16">
-            <span className="text-xs uppercase tracking-[0.3em] text-[#D4A574] mb-4 block">
+            <span className="lvc-eyebrow mb-4">
               {language === "en" ? "WHY US" : "POURQUOI NOUS"}
             </span>
             <h2
-              className="text-3xl md:text-4xl lg:text-5xl font-light text-[#1C1917]"
-              style={{ fontFamily: '"DM Serif Display", serif' }}
+              className="text-3xl md:text-4xl lg:text-5xl text-[#1C1917]"
             >
               {language === "en"
                 ? "What makes us unique"
@@ -318,7 +315,7 @@ export function InvestisseursPage() {
                 <TrendingUp className="w-8 h-8 text-[#D4A574]" />
               </div>
               <p
-                className="text-4xl font-bold text-[#1C1917] mb-1"
+                className="text-4xl text-[#1C1917] mb-1"
                 style={{ fontFamily: '"DM Serif Display", serif' }}
               >
                 {occ.value}
@@ -339,7 +336,7 @@ export function InvestisseursPage() {
                 <Heart className="w-8 h-8 text-[#D4A574]" />
               </div>
               <p
-                className="text-4xl font-bold text-[#1C1917] mb-1"
+                className="text-4xl text-[#1C1917] mb-1"
                 style={{ fontFamily: '"DM Serif Display", serif' }}
               >
                 {language === "en" ? "Community" : "Communauté"}
@@ -362,7 +359,7 @@ export function InvestisseursPage() {
                 <Award className="w-8 h-8 text-[#D4A574]" />
               </div>
               <p
-                className="text-4xl font-bold text-[#1C1917] mb-1"
+                className="text-4xl text-[#1C1917] mb-1"
                 style={{ fontFamily: '"DM Serif Display", serif' }}
               >
                 {language === "en" ? `${YEARS_IN_OPERATION} years` : `${YEARS_IN_OPERATION} ans`}
@@ -385,12 +382,11 @@ export function InvestisseursPage() {
       {/* ============================================ */}
       <section className="bg-stone-50 py-24 lg:py-32">
         <div className="container-custom">
-          <span className="text-xs uppercase tracking-[0.3em] text-[#D4A574] mb-4 block">
+          <span className="lvc-eyebrow mb-4">
             {language === "en" ? "CRITERIA" : "CRITÈRES"}
           </span>
           <h2
-            className="text-3xl md:text-4xl lg:text-5xl font-light text-[#1C1917] mb-12"
-            style={{ fontFamily: '"DM Serif Display", serif' }}
+            className="text-3xl md:text-4xl lg:text-5xl text-[#1C1917] mb-12"
           >
             {language === "en"
               ? "The ideal property for La Villa coliving"
@@ -458,14 +454,13 @@ export function InvestisseursPage() {
       <section id="contact" className="bg-[#1C1917] py-24 lg:py-32">
         <div className="container-custom">
           <div className="text-center mb-12">
-            <span className="text-xs uppercase tracking-[0.3em] text-[#D4A574] mb-4 block">
+            <span className="lvc-eyebrow text-[#D4A574] mb-4">
               {language === "en"
                 ? "LET'S TALK ABOUT YOUR PROJECT"
                 : "PARLONS DE VOTRE PROJET"}
             </span>
             <h2
-              className="text-3xl md:text-4xl lg:text-5xl font-light text-white mb-4"
-              style={{ fontFamily: '"DM Serif Display", serif' }}
+              className="text-3xl md:text-4xl lg:text-5xl text-white mb-4"
             >
               {language === "en" ? "Book a meeting" : "Prendre rendez-vous"}
             </h2>
@@ -603,7 +598,7 @@ export function InvestisseursPage() {
                 {/* Submit */}
                 <button
                   type="submit"
-                  className="w-full py-4 bg-[#D4A574] text-white font-semibold rounded-xl hover:bg-[#E0BB8A] transition-colors flex items-center justify-center gap-2"
+                  className="lvc-btn-primary w-full py-4 flex items-center justify-center gap-2"
                 >
                   {language === "en"
                     ? "Send my request"

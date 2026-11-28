@@ -26,7 +26,7 @@ export function YmylPosture({ slug }: { slug: string }) {
   const notUs = YMYL_NOT_US[domain][fr ? "fr" : "en"];
   return (
     <aside className="mb-10 p-5 bg-[#FBF7F0] border border-[#E7D9C2] rounded-lg text-sm text-[#57534E]">
-      <p className="font-medium text-[#1C1917] mb-1">{fr ? "Notre posture" : "Where we stand"}</p>
+      <p className="font-semibold text-[#1C1917] mb-1">{fr ? "Notre posture" : "Where we stand"}</p>
       <p>
         {fr ? (
           <>
@@ -58,7 +58,7 @@ export function YmylNotice({ content }: { content: string }) {
     <aside className="mt-12 p-5 bg-[#FBF7F0] border border-[#E7D9C2] rounded-lg text-sm text-[#57534E]">
       {sources.length > 0 && (
         <>
-          <p className="font-medium text-[#1C1917] mb-2">
+          <p className="font-semibold text-[#1C1917] mb-2">
             {fr ? "Sources officielles" : "Official sources"}
           </p>
           <ul className="space-y-1 mb-3">

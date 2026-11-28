@@ -8,6 +8,7 @@ import { APPART } from "@/data/appart";
 import { FaqSection } from "@/components/FaqSection";
 import { colivingFaq } from "@/data/faq/colivingFaq";
 import { STATS, STATS_DISPLAY, PRICE_FROM_CHF_FR, PRICE_FROM_CHF_EN, GOOGLE_REVIEWS, GOOGLE_REVIEWS_LINK_LABEL } from "@/data/stats";
+import { h1Accent } from "@/lib/h1Accent";
 
 export function ColivingPageV4() {
   const { t, language } = useLanguage();
@@ -77,14 +78,13 @@ export function ColivingPageV4() {
         <div className="container-custom relative z-10">
           <div className="max-w-4xl">
             {/* Tout le contenu en blanc explicitement */}
-            <span className="text-xs uppercase tracking-[0.3em] mb-6 block text-white">
+            <span className="lvc-eyebrow mb-6 text-white">
               {language === "en" ? "Coliving, explained" : "Le coliving, expliqué"}
             </span>
             <h1
-              className="text-5xl md:text-6xl lg:text-7xl font-light mb-8 text-white"
-              style={{ fontFamily: '"DM Serif Display", serif' }}
+              className="text-5xl md:text-6xl lg:text-7xl mb-8 text-white"
             >
-              {t.colivingPage.hero.h1}
+              {h1Accent(t.colivingPage.hero.h1, "coliving", true)}
             </h1>
             <p className="text-xl mb-8 text-white/90">
               {language === "en"
@@ -104,7 +104,7 @@ export function ColivingPageV4() {
             </p>
             <LocalizedLink
               to="/nos-maisons"
-              className="inline-flex items-center gap-2 px-8 py-4 bg-white text-[#1C1917] font-bold hover:bg-[#D4A574] hover:text-white transition-colors"
+              className="lvc-btn-primary inline-flex items-center gap-2 px-8 py-4"
             >
               {language === "en"
                 ? "Explore Our Houses"
@@ -125,12 +125,11 @@ export function ColivingPageV4() {
         <div className="container-custom">
           <div className="grid lg:grid-cols-2 gap-16 items-center">
             <div>
-              <span className="text-xs text-[#78716C] uppercase tracking-[0.3em] mb-4 block">
+              <span className="lvc-eyebrow mb-4">
                 {language === "en" ? "The Concept" : "Le Concept"}
               </span>
               <h2
-                className="text-4xl md:text-5xl font-light text-[#1C1917] mb-6"
-                style={{ fontFamily: '"DM Serif Display", serif' }}
+                className="text-4xl md:text-5xl text-[#1C1917] mb-6"
               >
                 {t.colivingPage.whatIs.title}
               </h2>
@@ -171,14 +170,13 @@ export function ColivingPageV4() {
               </div>
             </div>
             <div className="order-1 lg:order-2">
-              <span className="text-xs text-[#78716C] uppercase tracking-[0.3em] mb-4 block">
+              <span className="lvc-eyebrow mb-4">
                 {language === "en"
                   ? "Understanding the Difference"
                   : "Comprendre la Différence"}
               </span>
               <h2
-                className="text-4xl md:text-5xl font-light text-[#1C1917] mb-6"
-                style={{ fontFamily: '"DM Serif Display", serif' }}
+                className="text-4xl md:text-5xl text-[#1C1917] mb-6"
               >
                 {t.colivingPage.notColocation.title}
               </h2>
@@ -197,14 +195,13 @@ export function ColivingPageV4() {
       <section className="py-24 lg:py-32 bg-[#FAF9F6]">
         <div className="container-custom">
           <div className="text-center max-w-3xl mx-auto mb-16">
-            <span className="text-xs text-[#78716C] uppercase tracking-[0.3em] mb-4 block">
+            <span className="lvc-eyebrow mb-4">
               {language === "en"
                 ? "What Makes Us Different"
                 : "Ce qui nous différencie"}
             </span>
             <h2
-              className="text-4xl md:text-5xl font-light text-[#1C1917] mb-6"
-              style={{ fontFamily: '"DM Serif Display", serif' }}
+              className="text-4xl md:text-5xl text-[#1C1917] mb-6"
             >
               {t.colivingPage.difference.title}
             </h2>
@@ -222,7 +219,7 @@ export function ColivingPageV4() {
                   <div className="w-16 h-16 border border-[#E7E5E4] flex items-center justify-center mx-auto mb-6">
                     <Icon size={28} className="text-[#D4A574]" />
                   </div>
-                  <h3 className="text-xl font-medium text-[#1C1917] mb-3">
+                  <h3 className="text-xl text-[#1C1917] mb-3">
                     {value.title}
                   </h3>
                   <p className="text-[#57534E]">{value.description}</p>
@@ -238,12 +235,11 @@ export function ColivingPageV4() {
         <div className="container-custom">
           <div className="grid lg:grid-cols-2 gap-16 items-center">
             <div>
-              <span className="text-xs text-[#78716C] uppercase tracking-[0.3em] mb-4 block">
+              <span className="lvc-eyebrow mb-4">
                 {language === "en" ? "Why Choose Us" : "Pourquoi nous choisir"}
               </span>
               <h2
-                className="text-4xl md:text-5xl font-light text-[#1C1917] mb-8"
-                style={{ fontFamily: '"DM Serif Display", serif' }}
+                className="text-4xl md:text-5xl text-[#1C1917] mb-8"
               >
                 {t.colivingPage.benefits.title}
               </h2>
@@ -270,7 +266,7 @@ export function ColivingPageV4() {
 
               <LocalizedLink
                 to="/nos-maisons"
-                className="inline-flex items-center gap-2 mt-10 px-8 py-4 bg-[#1C1917] text-white font-bold hover:bg-[#D4A574] transition-colors"
+                className="lvc-btn-primary inline-flex items-center gap-2 mt-10 px-8 py-4"
               >
                 {language === "en"
                   ? "Explore Our Houses"
@@ -318,12 +314,11 @@ export function ColivingPageV4() {
 
             {/* Texte */}
             <div>
-              <span className="text-xs text-[#78716C] uppercase tracking-[0.3em] mb-4 block">
+              <span className="lvc-eyebrow mb-4">
                 {language === "en" ? "Real Connections" : "Vraies Connexions"}
               </span>
               <h2
-                className="text-4xl md:text-5xl font-light text-[#1C1917] mb-6"
-                style={{ fontFamily: '"DM Serif Display", serif' }}
+                className="text-4xl md:text-5xl text-[#1C1917] mb-6"
               >
                 {language === "en"
                   ? "More Than Roommates"
@@ -390,12 +385,11 @@ export function ColivingPageV4() {
             </div>
 
             <div className="order-1 lg:order-2">
-              <span className="text-xs text-[#78716C] uppercase tracking-[0.3em] mb-4 block">
+              <span className="lvc-eyebrow mb-4">
                 {language === "en" ? "For You?" : "Pour toi ?"}
               </span>
               <h2
-                className="text-4xl md:text-5xl font-light text-[#1C1917] mb-6"
-                style={{ fontFamily: '"DM Serif Display", serif' }}
+                className="text-4xl md:text-5xl text-[#1C1917] mb-6"
               >
                 {t.colivingPage.whoIsItFor.title}
               </h2>
@@ -422,7 +416,7 @@ export function ColivingPageV4() {
               </p>
               <LocalizedLink
                 to="/candidature"
-                className="inline-flex items-center gap-2 mt-10 px-8 py-4 bg-[#D4A574] text-white font-bold hover:bg-[#1C1917] transition-colors"
+                className="lvc-btn-primary inline-flex items-center gap-2 mt-10 px-8 py-4"
               >
                 {language === "en" ? "Book a visit" : "Programmer une visite"}
                 <ArrowRight className="w-5 h-5" />
@@ -436,22 +430,22 @@ export function ColivingPageV4() {
       <section className="py-24 bg-[#1C1917]">
         <div className="container-custom text-center">
           <p
-            className="text-2xl md:text-3xl font-light text-white max-w-3xl mx-auto leading-relaxed"
+            className="text-2xl md:text-3xl text-white max-w-3xl mx-auto leading-relaxed"
             style={{ fontFamily: '"DM Serif Display", serif' }}
           >
             {language === "en" ? (
               <>
                 "La Villa isn't just a place to live—it's a{" "}
-                <span className="text-[#D4A574] font-medium">community</span>{" "}
+                <span className="text-[#D4A574]">community</span>{" "}
                 that becomes{" "}
-                <span className="text-[#D4A574] font-medium">family</span>."
+                <span className="text-[#D4A574]">family</span>."
               </>
             ) : (
               <>
                 "La Villa n'est pas qu'un lieu de vie—c'est une{" "}
-                <span className="text-[#D4A574] font-medium">communauté</span>{" "}
+                <span className="text-[#D4A574]">communauté</span>{" "}
                 qui devient{" "}
-                <span className="text-[#D4A574] font-medium">famille</span>."
+                <span className="text-[#D4A574]">famille</span>."
               </>
             )}
           </p>

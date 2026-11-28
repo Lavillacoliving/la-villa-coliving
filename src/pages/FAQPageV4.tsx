@@ -83,20 +83,19 @@ export function FAQPageV4() {
       {/* Hero */}
       <section className="py-24 lg:py-32 bg-white">
         <div className="container-custom text-center">
-          <span className="text-xs text-[#78716C] uppercase tracking-[0.3em] mb-4 block">
+          <span className="lvc-eyebrow mb-4">
             {language === "en" ? "Help Center" : "Centre d'Aide"}
           </span>
           <h1
-            className="text-3xl md:text-4xl lg:text-5xl font-light text-[#1C1917] mb-6"
-            style={{ fontFamily: '"DM Serif Display", serif' }}
+            className="text-3xl md:text-4xl lg:text-5xl text-[#1C1917] mb-6"
           >
             {language === "en" ? (
               <>
-                FAQ — Coliving &amp; shared housing near Geneva
+                FAQ — Coliving &amp; shared housing <em className="lvc-h1-accent">near Geneva</em>
               </>
             ) : (
               <>
-                FAQ — Coliving &amp; colocation près de Genève
+                FAQ — Coliving &amp; colocation <em className="lvc-h1-accent">près de Genève</em>
               </>
             )}
           </h1>
@@ -261,8 +260,7 @@ export function FAQPageV4() {
                     id={category.toLowerCase().replace(/\s+/g, "-")}
                   >
                     <h2
-                      className="text-2xl font-light text-[#1C1917] mb-6"
-                      style={{ fontFamily: '"DM Serif Display", serif' }}
+                      className="text-2xl text-[#1C1917] mb-6"
                     >
                       {categoryDisplayName(category)}
                     </h2>

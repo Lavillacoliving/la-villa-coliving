@@ -158,7 +158,7 @@ export function RoomDetailPage() {
     return (
       <main className="pt-32 pb-20 bg-white">
         <div className="container-custom text-center">
-          <h1 className="text-3xl mb-4 text-[#1C1917]" style={{ fontFamily: '"DM Serif Display", serif' }}>
+          <h1 className="text-3xl mb-4 text-[#1C1917]">
             {en ? "Room not found" : "Chambre introuvable"}
           </h1>
           <LocalizedLink to="/chambres-disponibles" className="text-[#B8860B] font-semibold underline underline-offset-4">
@@ -223,7 +223,6 @@ export function RoomDetailPage() {
     ...(room?.has_parking ? [{ icon: Car, label: "Parking", value: en ? "Parking right in the property" : "Droit de parking dans la propriété" }] : []),
   ];
 
-  const heading = { fontFamily: '"DM Serif Display", serif' };
   const cover = photos[0];
 
   const priceCard = (
@@ -248,7 +247,7 @@ export function RoomDetailPage() {
       <LocalizedLink
         to={applyTo}
         onClick={() => onApply("room_page")}
-        className="mt-5 w-full inline-flex items-center justify-center gap-2 px-6 py-3.5 bg-[#D4A574] text-[#1C1917] font-bold rounded-xl hover:bg-[#E0BB8A] transition-colors"
+        className="lvc-btn-primary mt-5 w-full inline-flex items-center justify-center gap-2 px-6 py-3.5"
       >
         {status.cta}
         <ArrowRight className="w-5 h-5" />
@@ -258,7 +257,7 @@ export function RoomDetailPage() {
         target="_blank"
         rel="noopener noreferrer"
         onClick={() => track("whatsapp_click", { page_path: pathname, context: `room_page:${house}:${n}`, language })}
-        className="mt-3 w-full inline-flex items-center justify-center gap-2 px-6 py-3 border border-[#E7E5E4] text-[#1C1917] text-sm font-semibold rounded-xl hover:border-[#1C1917] transition-colors"
+        className="lvc-btn-secondary mt-3 w-full inline-flex items-center justify-center gap-2 px-6 py-3 text-sm"
       >
         {en ? "Ask a question on WhatsApp" : "Poser une question sur WhatsApp"}
       </a>
@@ -279,7 +278,7 @@ export function RoomDetailPage() {
       <div className="container-custom">
         {others.length > 0 && (
           <>
-            <h2 className="text-2xl md:text-3xl text-[#1C1917] mb-6" style={heading}>{title}</h2>
+            <h2 className="text-2xl md:text-3xl text-[#1C1917] mb-6">{title}</h2>
             <ul className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 mb-8">
               {others.map((r) => {
                 const st = roomStatus(r, en);
@@ -339,8 +338,8 @@ export function RoomDetailPage() {
               <ChevronRight className="w-4 h-4" aria-hidden="true" />
               <span className="text-[#1C1917]">{roomName}</span>
             </nav>
-            <p className="text-xs font-semibold uppercase tracking-[0.2em] text-[#B8860B] mb-2">{houseLabel} · {facts.commune}</p>
-            <h1 className="text-3xl md:text-4xl text-[#1C1917] mb-4 max-w-3xl" style={heading}>
+            <p className="lvc-eyebrow mb-2">{houseLabel} · {facts.commune}</p>
+            <h1 className="text-3xl md:text-4xl text-[#1C1917] mb-4 max-w-3xl">
               {en ? "This room isn't available right now" : "Cette chambre n'est pas disponible pour le moment"}
             </h1>
             <p className="text-[#57534E] leading-relaxed max-w-2xl">
@@ -351,14 +350,14 @@ export function RoomDetailPage() {
             <div className="mt-8 flex flex-col sm:flex-row gap-3">
               <LocalizedLink
                 to={`/${house}`}
-                className="inline-flex items-center justify-center gap-2 px-6 py-3.5 bg-[#D4A574] text-[#1C1917] font-bold rounded-xl hover:bg-[#E0BB8A] transition-colors"
+                className="lvc-btn-primary inline-flex items-center justify-center gap-2 px-6 py-3.5"
               >
                 {en ? `See the rooms at ${houseLabel}` : `Voir les chambres ${ofHouse(houseLabel)}`}
                 <ArrowRight className="w-5 h-5" />
               </LocalizedLink>
               <LocalizedLink
                 to="/chambres-disponibles"
-                className="inline-flex items-center justify-center gap-2 px-6 py-3.5 border border-[#E7E5E4] text-[#1C1917] font-semibold rounded-xl hover:border-[#1C1917] transition-colors"
+                className="lvc-btn-secondary inline-flex items-center justify-center gap-2 px-6 py-3.5"
               >
                 {en ? "Every available room" : "Toutes les chambres disponibles"}
               </LocalizedLink>
@@ -397,8 +396,8 @@ export function RoomDetailPage() {
             <ChevronRight className="w-4 h-4" aria-hidden="true" />
             <span className="text-[#1C1917]">{roomName}</span>
           </nav>
-          <p className="text-xs font-semibold uppercase tracking-[0.2em] text-[#B8860B] mb-2">{houseLabel} · {facts.commune}</p>
-          <h1 className="text-4xl md:text-5xl text-[#1C1917] mb-3" style={heading}>
+          <p className="lvc-eyebrow mb-2">{houseLabel} · {facts.commune}</p>
+          <h1 className="text-4xl md:text-5xl text-[#1C1917] mb-3">
             {en ? `${roomName} at ${houseLabel}` : `${roomName} ${atHouse(houseLabel)}`}
           </h1>
           <div className="flex flex-wrap items-center gap-3">
@@ -483,7 +482,7 @@ export function RoomDetailPage() {
             <div className="lg:hidden">{priceCard}</div>
 
             <div>
-              <h2 className="text-2xl md:text-3xl text-[#1C1917] mb-4" style={heading}>{en ? "The room" : "La chambre"}</h2>
+              <h2 className="text-2xl md:text-3xl text-[#1C1917] mb-4">{en ? "The room" : "La chambre"}</h2>
               <p className="text-[#57534E] leading-relaxed max-w-2xl">{roomIntro(house, n, facts.rooms, en)}</p>
               <dl className="mt-6 grid grid-cols-1 sm:grid-cols-2 gap-3">
                 {specs.map(({ icon: Icon, label, value }) => (
@@ -499,7 +498,7 @@ export function RoomDetailPage() {
             </div>
 
             <div>
-              <h2 className="text-2xl md:text-3xl text-[#1C1917] mb-4" style={heading}>{en ? "Everything is included" : "Tout est inclus dans le loyer"}</h2>
+              <h2 className="text-2xl md:text-3xl text-[#1C1917] mb-4">{en ? "Everything is included" : "Tout est inclus dans le loyer"}</h2>
               <ul className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 {included.map((item) => (
                   <li key={item} className="flex items-start gap-3 text-[#44403C]">
@@ -511,7 +510,7 @@ export function RoomDetailPage() {
             </div>
 
             <div>
-              <h2 className="text-2xl md:text-3xl text-[#1C1917] mb-4" style={heading}>{en ? "Lease and conditions" : "Bail et conditions"}</h2>
+              <h2 className="text-2xl md:text-3xl text-[#1C1917] mb-4">{en ? "Lease and conditions" : "Bail et conditions"}</h2>
               <p className="text-[#57534E] leading-relaxed max-w-2xl">{lease}</p>
               <p className="text-[#57534E] leading-relaxed max-w-2xl mt-2">
                 {en
@@ -521,7 +520,7 @@ export function RoomDetailPage() {
             </div>
 
             <div>
-              <h2 className="text-2xl md:text-3xl text-[#1C1917] mb-4" style={heading}>
+              <h2 className="text-2xl md:text-3xl text-[#1C1917] mb-4">
                 {en ? `The house: ${houseLabel}` : `La maison : ${houseLabel}`}
               </h2>
               <p className="text-[#57534E] leading-relaxed max-w-2xl">
@@ -576,7 +575,7 @@ export function RoomDetailPage() {
           <LocalizedLink
             to={applyTo}
             onClick={() => onApply("sticky_mobile_room")}
-            className="flex-1 flex items-center justify-center gap-3 bg-[#D4A574] text-[#1C1917] px-4 py-2.5 rounded-lg"
+            className="lvc-btn-primary flex-1 flex items-center justify-center gap-3 px-4 py-2.5"
           >
             <span className="flex flex-col items-center leading-tight">
               <span className="text-sm font-semibold">{status.cta}</span>

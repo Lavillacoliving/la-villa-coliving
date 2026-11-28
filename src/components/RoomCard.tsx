@@ -200,7 +200,7 @@ export function RoomCard<R extends PlaceRoom = PublicRoom>({ house, houseName, r
           <div>
             {gammeBadge && <p data-gamme-badge className={GAMME_BADGE_CLASS}>{gammeBadge}</p>}
             <p className="text-xs font-semibold uppercase tracking-wider text-[#8A6508] mb-1">{eyebrow}</p>
-            <h3 className="text-3xl text-[#1C1917] leading-tight" style={{ fontFamily: '"DM Serif Display", serif' }}>
+            <h3 className="text-3xl text-[#1C1917] leading-tight">
               {pageOpen ? (
                 <LocalizedLink to={roomPagePath(house, room.room_number)} className="hover:text-[#8A6508] transition-colors">{label}</LocalizedLink>
               ) : label}
@@ -236,7 +236,7 @@ export function RoomCard<R extends PlaceRoom = PublicRoom>({ house, houseName, r
                 to={`/${house}`}
                 onClick={() => onHouseClick?.(room)}
                 data-house-cta
-                className="inline-flex items-center justify-center gap-2 min-h-[48px] px-6 bg-[#1C1917] text-white text-sm font-semibold rounded-lg hover:bg-[#44403C] transition-colors"
+                className="lvc-btn-secondary inline-flex items-center justify-center gap-2 min-h-[48px] px-6 text-sm"
               >
                 {placeDiscoverLabel(house, uiLang)}
                 <ArrowRight className="w-4 h-4" />
@@ -246,7 +246,7 @@ export function RoomCard<R extends PlaceRoom = PublicRoom>({ house, houseName, r
               <LocalizedLink
                 to={ctaHref}
                 onClick={() => onCtaClick?.(room)}
-                className="inline-flex items-center justify-center gap-2 min-h-[48px] px-6 bg-[#D4A574] text-[#1C1917] text-sm font-semibold rounded-lg hover:bg-[#E0BB8A] transition-colors"
+                className="lvc-btn-primary inline-flex items-center justify-center gap-2 min-h-[48px] px-6 text-sm"
               >
                 {/* (24/11/2026) « Programmer une visite » pour les maisons ; L'Appart, qui ne se visite pas avant son ouverture
                     (Jérôme), garde « Candidater pour cette chambre ». */}
@@ -258,7 +258,7 @@ export function RoomCard<R extends PlaceRoom = PublicRoom>({ house, houseName, r
               {pageOpen && (
                 <LocalizedLink
                   to={roomPagePath(house, room.room_number)}
-                  className="inline-flex items-center justify-center gap-2 min-h-[48px] px-5 border border-[#D6D3CE] text-[#1C1917] text-sm font-semibold rounded-lg hover:border-[#1C1917] transition-colors"
+                  className="lvc-btn-secondary inline-flex items-center justify-center gap-2 min-h-[48px] px-5 text-sm"
                 >
                   {en ? "See the room's page" : "Voir la fiche"}
                 </LocalizedLink>
@@ -300,7 +300,7 @@ export function RoomCard<R extends PlaceRoom = PublicRoom>({ house, houseName, r
         <div className="p-3 md:p-4 flex flex-col gap-1 min-w-0 flex-1">
           {gammeBadge && <p data-gamme-badge className={GAMME_BADGE_CLASS}>{gammeBadge}</p>}
           <p className="text-[11px] font-semibold uppercase tracking-wider text-[#78716C]">{eyebrow}</p>
-          <h3 className="text-lg text-[#1C1917] leading-snug" style={{ fontFamily: '"DM Serif Display", serif' }}>
+          <h3 className="text-lg text-[#1C1917] leading-snug">
             {pageOpen ? (
               <LocalizedLink to={roomPagePath(house, room.room_number)} className="hover:text-[#8A6508] transition-colors">{label}</LocalizedLink>
             ) : label}
@@ -364,7 +364,7 @@ export function RoomCard<R extends PlaceRoom = PublicRoom>({ house, houseName, r
         {showHouse && (
           <p className="text-xs font-semibold uppercase tracking-wider text-[#B8860B] mb-1">{houseName}</p>
         )}
-        <h3 className="text-lg font-black text-[#1C1917] mb-1">
+        <h3 className="text-lg text-[#1C1917] mb-1">
           {/* (28/09/2026) Fiche chambre quand elle existe ET est consultable (roomPages.ts). */}
           {isRoomPageOpen(house, room) ? (
             <LocalizedLink to={roomPagePath(house, room.room_number)} className="hover:text-[#B8860B] transition-colors">
@@ -415,7 +415,7 @@ export function RoomCard<R extends PlaceRoom = PublicRoom>({ house, houseName, r
           <LocalizedLink
             to={`/candidature?${ctaParams ? `${ctaParams}&` : ""}property_interest=${house}&room_interest=chambre-${room.room_number}`}
             onClick={() => onCtaClick?.(room)}
-            className="w-full inline-flex items-center justify-center gap-2 px-5 py-2.5 bg-[#D4A574] text-[#1C1917] text-sm font-semibold rounded-lg hover:bg-[#E0BB8A] transition-colors"
+            className="lvc-btn-primary w-full inline-flex items-center justify-center gap-2 px-5 py-2.5 text-sm"
           >
             {isAppartKey(house)
               ? (language === "en" ? "Apply" : "Candidater")

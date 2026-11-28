@@ -61,8 +61,7 @@ import {
 
 /** Marge de défilement des sections ancrées : barre de 4rem + bandeau de l'offre (--lvc-banner-h, src/index.css). */
 const SCROLL_MT = "scroll-mt-[calc(4rem+var(--lvc-banner-h,0px))]";
-const SERIF = { fontFamily: '"DM Serif Display", serif' } as const;
-const H2 = "text-3xl md:text-4xl font-light text-[#1C1917] mb-6";
+const H2 = "text-3xl md:text-4xl text-[#1C1917] mb-6";
 const H3 = "text-lg font-semibold text-[#1C1917] mb-2";
 const LINK = "underline underline-offset-4 text-[#1C1917] hover:text-[#b8860b] transition-colors";
 
@@ -226,7 +225,7 @@ function BudgetSection({ L }: { L: TarifsLang }) {
   return (
     <section id={TARIFS_ANCHORS.calcul} aria-labelledby="calcul-title" className={`py-16 lg:py-20 bg-white ${SCROLL_MT}`}>
       <div className="max-w-3xl mx-auto px-6">
-        <h2 id="calcul-title" className={H2} style={SERIF}>{T.title}</h2>
+        <h2 id="calcul-title" className={H2}>{T.title}</h2>
         {/* Les trois paragraphes de réponse, sans rien entre le titre et eux. */}
         <div className="space-y-4 text-[#44403C] leading-relaxed">
           {T.answers.map((p) => <p key={p}>{p}</p>)}
@@ -301,7 +300,7 @@ function ValueSection({ L }: { L: TarifsLang }) {
   return (
     <section className="py-16 lg:py-20 bg-[#FAF9F6] scroll-mt-[calc(4rem+var(--lvc-banner-h,0px))]" id={PRICE_INCLUDES_ANCHOR}>
       <div className="max-w-3xl mx-auto px-6">
-        <h2 className={H2} style={SERIF}>{T.title}</h2>
+        <h2 className={H2}>{T.title}</h2>
         <p className="text-[#44403C] leading-relaxed">{T.intro}</p>
         <div className="mt-10 space-y-10 text-[#44403C] leading-relaxed">
           <div>
@@ -351,7 +350,7 @@ function ValueSection({ L }: { L: TarifsLang }) {
                       />
                     </div>
                     <div className="px-4 py-3">
-                      <p className="font-medium text-[#1C1917]">{c.name}</p>
+                      <p className="font-semibold text-[#1C1917]">{c.name}</p>
                       <p className="text-sm text-[#57534E]">{c.commune}</p>
                     </div>
                   </LocalizedLink>
@@ -367,7 +366,7 @@ function ValueSection({ L }: { L: TarifsLang }) {
             <h3 className={H3}>{life.title}</h3>
             <p>{life.text}</p>
           </div>
-          <p className="font-medium text-[#1C1917]">
+          <p className="font-semibold text-[#1C1917]">
             {T.visit.before}
             <LocalizedLink to="/candidature" onClick={() => trackCta("tarifs_climax", "/candidature", L)} className={LINK}>{T.visit.label}</LocalizedLink>
             {T.visit.after}
@@ -384,7 +383,7 @@ function IncludedSection({ L }: { L: TarifsLang }) {
   return (
     <section id={TARIFS_ANCHORS.inclus} aria-labelledby="inclus-title" className={`py-16 lg:py-20 bg-[#FAF9F6] ${SCROLL_MT}`}>
       <div className="max-w-5xl mx-auto px-6">
-        <h2 id="inclus-title" className={H2} style={SERIF}>{T.title}</h2>
+        <h2 id="inclus-title" className={H2}>{T.title}</h2>
         <p className="text-[#44403C] leading-relaxed max-w-3xl">{T.intro}</p>
         <div className="mt-8 grid gap-6 lg:grid-cols-3">
           {inclusGroups(L).map((g) => (
@@ -414,7 +413,7 @@ function PricesSection({ L }: { L: TarifsLang }) {
   return (
     <section id={TARIFS_ANCHORS.prices} aria-labelledby={TARIFS_ANCHORS.pricesTitle} className={`py-16 lg:py-20 bg-white ${SCROLL_MT}`}>
       <div className="max-w-5xl mx-auto px-6">
-        <h2 id={TARIFS_ANCHORS.pricesTitle} className={H2} style={SERIF}>{T.title}</h2>
+        <h2 id={TARIFS_ANCHORS.pricesTitle} className={H2}>{T.title}</h2>
         <p className="text-[#44403C] leading-relaxed max-w-3xl mb-6">{T.intro}</p>
         <div className={`${TABLE_FRAME} ${FRAME_CARDS}`} role="region" aria-labelledby={TARIFS_ANCHORS.pricesTitle} tabIndex={0}>
           <table className={`w-full md:min-w-[640px] border-separate border-spacing-0 text-sm ${TABLE_CARDS}`}>
@@ -471,7 +470,7 @@ function OfferSection({ L }: { L: TarifsLang }) {
     <section id={TARIFS_ANCHORS.offer} aria-labelledby="offre-title" data-tarifs-offer="" className={`py-12 bg-white ${SCROLL_MT}`}>
       <div className="max-w-3xl mx-auto px-6">
         <div className="rounded-2xl border border-[#D4A574] bg-[#FAF9F6] p-6 md:p-8">
-          <h2 id="offre-title" className="text-2xl md:text-3xl font-light text-[#1C1917] mb-2" style={SERIF}>{T.title}</h2>
+          <h2 id="offre-title" className="text-2xl md:text-3xl text-[#1C1917] mb-2">{T.title}</h2>
           <p className="mb-4 text-sm text-[#78716C]">{T.chf}</p>
           <p className="text-[#44403C] leading-relaxed mb-3">{T.subtitle}</p>
           <p className="text-[#44403C] leading-relaxed mb-6">{T.deadline}</p>
@@ -515,7 +514,7 @@ function AppartSection({ L }: { L: TarifsLang }) {
             />
           </div>
           <div className="p-6 md:p-8 md:col-span-3 flex flex-col">
-            <h2 id="lappart-title" className="text-2xl md:text-3xl font-light text-[#1C1917] leading-tight" style={SERIF}>{T.title}</h2>
+            <h2 id="lappart-title" className="text-2xl md:text-3xl text-[#1C1917] leading-tight">{T.title}</h2>
             {T.paragraphs.map((p) => <p key={p} className="mt-3 text-[#44403C] leading-relaxed">{p}</p>)}
             <LocalizedLink
               to={`/${APPART.key}`}
@@ -536,22 +535,22 @@ function AppartSection({ L }: { L: TarifsLang }) {
 function ApplySection({ L }: { L: TarifsLang }) {
   const T = applyBlock(L);
   return (
-    <section className="py-20 lg:py-24 bg-[#D4A574]">
+    <section className="py-20 lg:py-24 bg-[#1C1917]">
       <div className="container-custom text-center">
-        <h2 className="text-3xl md:text-4xl font-light text-white mb-4" style={SERIF}>{T.title}</h2>
-        <p className="text-lg text-white/90 max-w-xl mx-auto mb-8">{T.text}</p>
+        <h2 className="text-3xl md:text-4xl text-white mb-4">{T.title}</h2>
+        <p className="text-lg text-white/85 max-w-xl mx-auto mb-8">{T.text}</p>
         <div className="flex flex-col sm:flex-row gap-4 justify-center">
           <LocalizedLink
             to="/chambres-disponibles"
             onClick={() => trackCta("tarifs_footer_rooms", "/chambres-disponibles", L)}
-            className="inline-flex items-center justify-center gap-2 px-8 py-4 border border-white text-white font-semibold hover:bg-white hover:text-[#1C1917] transition-colors"
+            className="lvc-btn-secondary lvc-btn-secondary--on-dark inline-flex items-center justify-center gap-2 px-8 py-4"
           >
             {T.rooms}
           </LocalizedLink>
           <LocalizedLink
             to="/candidature"
             onClick={() => trackCta("tarifs_footer", "/candidature", L)}
-            className="inline-flex items-center justify-center gap-2 px-8 py-4 bg-white text-[#1C1917] font-semibold hover:bg-[#1C1917] hover:text-white transition-colors"
+            className="lvc-btn-primary inline-flex items-center justify-center gap-2 px-8 py-4"
           >
             {T.apply}
             <ArrowRight className="w-5 h-5" aria-hidden="true" />
@@ -621,20 +620,21 @@ export function RatesPageV4() {
       {/* En-tête : le H1 inchangé. */}
       <section className="pt-14 pb-2 lg:pt-20 bg-white">
         <div className="container-custom text-center">
-          <span className="text-xs text-[#78716C] uppercase tracking-[0.3em] mb-4 block">
+          <span className="lvc-eyebrow mb-4">
             {en ? "Pricing" : "Tarification"}
           </span>
+          {/* (Lot 2a, 28/11/2026) Sur mobile, le mot en italique sur sa propre ligne : à 412 px le titre tenait sur une ligne
+              avec DM Serif et sur deux avec la police de repli, et la section des prix sautait à l'arrivée des polices (CLS). */}
           <h1
-            className="text-5xl md:text-6xl lg:text-7xl font-light text-[#1C1917]"
-            style={{ fontFamily: '"DM Serif Display", serif' }}
+            className="text-5xl md:text-6xl lg:text-7xl text-[#1C1917]"
           >
             {en ? (
               <>
-                Transparent <span className="text-[#D4A574]">Pricing</span>
+                <em className="lvc-h1-accent block sm:inline">Transparent</em> Pricing
               </>
             ) : (
               <>
-                Tarifs <span className="text-[#D4A574]">Transparents</span>
+                Tarifs <em className="lvc-h1-accent block sm:inline">transparents</em>
               </>
             )}
           </h1>

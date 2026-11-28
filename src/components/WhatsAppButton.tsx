@@ -66,12 +66,14 @@ function WhatsAppGlyph({ className }: { className: string }) {
   );
 }
 
-export function WhatsAppButton({ context, bottomClass = "bottom-6", message: customMessage, hideOnMobile = false }: WhatsAppButtonProps) {
+export function WhatsAppButton({ context, bottomClass = "bottom-4 md:bottom-6", message: customMessage, hideOnMobile = false }: WhatsAppButtonProps) {
   const [showTooltip, setShowTooltip] = useState(false);
   const { en, href, trackClick, label } = useWhatsApp(context, customMessage);
 
   return (
-    <div className={`fixed ${bottomClass} right-6 z-50 ${hideOnMobile ? "hidden md:flex" : "flex"} items-center gap-3`}>
+    // (Lot 2a, brief du 27/11/2026, §0.6, D10) Bulle verte gardée (canal de candidature), réduite à 48 px, à 16 px du bord sur
+    // mobile ; whatsapp_click inchangé.
+    <div className={`fixed ${bottomClass} right-4 md:right-6 z-50 ${hideOnMobile ? "hidden md:flex" : "flex"} items-center gap-3`}>
       {/* Tooltip */}
       {showTooltip && (
         <span className="bg-[#1C1917] text-white text-sm font-medium px-4 py-2 rounded-lg shadow-lg whitespace-nowrap animate-fade-in">
@@ -85,16 +87,17 @@ export function WhatsAppButton({ context, bottomClass = "bottom-6", message: cus
         target="_blank"
         rel="noopener noreferrer"
         aria-label={label}
-        className="relative w-14 h-14 bg-[#25D366] rounded-full flex items-center justify-center shadow-[0_4px_20px_rgba(37,211,102,0.4)] hover:shadow-[0_6px_28px_rgba(37,211,102,0.5)] hover:scale-105 transition-all duration-300"
+        className="relative w-12 h-12 bg-[#25D366] rounded-full flex items-center justify-center shadow-[0_4px_16px_rgba(37,211,102,0.35)] hover:shadow-[0_6px_24px_rgba(37,211,102,0.45)] motion-safe:hover:scale-105 transition-all duration-300"
         onMouseEnter={() => setShowTooltip(true)}
         onMouseLeave={() => setShowTooltip(false)}
         onClick={trackClick}
       >
         {/* Pulse ring */}
-        <span className="absolute inset-0 rounded-full bg-[#25D366] animate-ping opacity-20" />
+        {/* (Lot 2a, 27/11/2026, §0.9) Coupé avec prefers-reduced-motion. */}
+        <span className="absolute inset-0 rounded-full bg-[#25D366] motion-safe:animate-ping opacity-20" />
 
         {/* WhatsApp SVG icon */}
-        <WhatsAppGlyph className="w-7 h-7 relative z-10 text-white" />
+        <WhatsAppGlyph className="w-6 h-6 relative z-10 text-white" />
       </a>
     </div>
   );
@@ -129,16 +132,15 @@ export function WhatsAppBarLink({ context, message: customMessage }: { context?:
  */
 export function WhatsAppTextLink({ context, className = "", onDark = false }: { context?: string; className?: string; onDark?: boolean }) {
   const { en, href, trackClick } = useWhatsApp(context, undefined);
-  const tone = onDark
-    ? "border-white text-white hover:bg-white hover:text-[#1C1917]"
-    : "border-[#1C1917] text-[#1C1917] hover:bg-[#1C1917] hover:text-white";
+  // (Lot 2a, commit 11, 28/11/2026) Bouton secondaire du système graphique (variante claire sur fond sombre).
+  const tone = onDark ? "lvc-btn-secondary lvc-btn-secondary--on-dark" : "lvc-btn-secondary";
   return (
     <a
       href={href}
       target="_blank"
       rel="noopener noreferrer"
       onClick={trackClick}
-      className={`inline-flex items-center justify-center gap-2 px-6 py-3 rounded-lg border ${tone} text-sm font-semibold transition-colors ${className}`}
+      className={`${tone} inline-flex items-center justify-center gap-2 px-6 py-3 text-sm ${className}`}
     >
       <WhatsAppGlyph className="w-5 h-5 text-[#25D366]" />
       {en ? "Message us on WhatsApp" : "Nous écrire sur WhatsApp"}

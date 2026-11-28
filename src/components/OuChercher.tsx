@@ -27,19 +27,17 @@ export interface OuChercherProps {
   className?: string;
 }
 
-const SERIF = { fontFamily: '"DM Serif Display", serif' } as const;
-
 export function OuChercher({ variant, page, tone = "page", className = "" }: OuChercherProps) {
   const { language } = useLanguage();
   const L = language === "en" ? "en" : "fr";
   const t = ouChercherText(L, variant);
   const article = tone === "article";
   const h2Class = article
-    ? "text-2xl md:text-3xl font-semibold text-[#1C1917] mt-12 mb-4"
-    : "text-3xl md:text-4xl font-light text-[#1C1917] mb-6";
+    ? "text-2xl md:text-3xl text-[#1C1917] mt-12 mb-4"
+    : "text-3xl md:text-4xl text-[#1C1917] mb-6";
   const h3Class = article
     ? "text-xl md:text-2xl font-semibold text-[#1C1917] mt-8 mb-3"
-    : "text-xl md:text-2xl font-medium text-[#1C1917] mt-8 mb-3";
+    : "text-xl md:text-2xl font-semibold text-[#1C1917] mt-8 mb-3";
   const pClass = article ? "mb-6 leading-relaxed" : "text-[#57534E] leading-relaxed mb-6";
 
   return (
@@ -51,10 +49,10 @@ export function OuChercher({ variant, page, tone = "page", className = "" }: OuC
       aria-labelledby="ou-chercher-title"
       className={className}
     >
-      <h2 id="ou-chercher-title" className={h2Class} style={SERIF}>{t.title}</h2>
+      <h2 id="ou-chercher-title" className={h2Class}>{t.title}</h2>
       {t.sections.map((s) => (
         <Fragment key={s.key}>
-          <h3 className={h3Class} style={SERIF}>{s.h3}</h3>
+          <h3 className={h3Class}>{s.h3}</h3>
           <p className={pClass}>{s.p}</p>
         </Fragment>
       ))}

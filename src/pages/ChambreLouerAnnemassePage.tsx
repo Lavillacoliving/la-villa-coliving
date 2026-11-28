@@ -40,6 +40,7 @@ import { HouseAvailabilityLine } from "@/components/HouseAvailabilityLine";
 import { AppartRooms } from "@/components/appart/AppartRooms";
 import { AppartTeaser } from "@/components/appart/AppartTeaser";
 import { useHouseRooms, splitRooms, type PlaceRoom } from "@/lib/availability";
+import { h1Accent } from "@/lib/h1Accent";
 
 
 /**
@@ -93,18 +94,17 @@ export function ChambreLouerAnnemassePage() {
       <section className="relative py-24 lg:py-32 bg-gradient-to-b from-white to-[#FAF9F6]">
         <div className="max-w-5xl mx-auto px-6 text-center">
           {/* (L'Appart, E4, S10.8) La page des deux adresses d'Annemasse, L'Appart devant (P1) ; chaque gamme dans sa phrase. */}
-          <span className="text-xs text-[#D4A574] uppercase tracking-[0.3em] mb-4 block font-medium">
+          <span className="lvc-eyebrow mb-4">
             {language === "en" ? `Furnished rooms · ${APPART.name} and Le Lodge, Annemasse 74100` : `Chambres meublées · ${APPART.name} et Le Lodge, Annemasse 74100`}
           </span>
           <h1
-            className="text-4xl md:text-6xl font-light text-[#1C1917] mb-6 leading-tight"
-            style={{ fontFamily: '"DM Serif Display", serif' }}
+            className="text-4xl md:text-6xl text-[#1C1917] mb-6 leading-tight"
           >
             {language === "en"
-              ? `Rooms to rent in Annemasse: ${APPART.name}'s ${APPART.rooms.total} rooms and the Lodge's ${ROOMS_BY_HOUSE.lelodge} rooms`
-              : `Chambres à louer à Annemasse : les ${APPART.rooms.total} chambres de ${APPART.name} et les ${ROOMS_BY_HOUSE.lelodge} chambres du Lodge`}
+              ? h1Accent(`Rooms to rent in Annemasse: ${APPART.name}'s ${APPART.rooms.total} rooms and the Lodge's ${ROOMS_BY_HOUSE.lelodge} rooms`, APPART.commune)
+              : h1Accent(`Chambres à louer à Annemasse : les ${APPART.rooms.total} chambres de ${APPART.name} et les ${ROOMS_BY_HOUSE.lelodge} chambres du Lodge`, APPART.commune)}
           </h1>
-          <p className="text-lg md:text-xl text-[#57534E] max-w-3xl mx-auto leading-relaxed mb-10 font-medium">
+          <p className="text-lg md:text-xl text-[#57534E] max-w-3xl mx-auto leading-relaxed mb-10">
             {language === "en"
               ? `At ${APPART.name}, our flatshare near the station: ${APPART.rooms.total} furnished rooms from ${APPART.price.from.en.chf}/month, with bills, fibre, streaming and cleaning of the shared areas included, ${aOrAn(APPART_TRANSIT.stationWalkMin)} ${APPART_TRANSIT.stationWalkMin}-minute walk from ${APPART.commune} station — Geneva Eaux-Vives in ${APPART_TRANSIT.eauxVivesDoorToDoorMin} minutes door to door. At the Lodge, in Annemasse Romagny: ${ROOMS_BY_HOUSE.lelodge} furnished rooms with private shower room, ${PRICE_CHF_EN}/month all inclusive. Annemasse station is ${aOrAn(LODGE.stationWalkMin)} ${LODGE.stationWalkMin}-minute walk, then the Léman Express reaches Geneva Eaux-Vives in ${TRANSIT.trainEauxVivesMin} minutes: ${LODGE.eauxVivesDoorToDoorMin} minutes door to door. Either way, renting a room made simpler than a furnished studio: bed, desk, fibre and bills included.`
               : `À ${APPART.name}, notre colocation du quartier de la gare : ${APPART.rooms.total} chambres meublées dès ${APPART.price.from.fr.chf}/mois, charges, fibre, streaming et ménage des communs compris, à ${APPART_TRANSIT.stationWalkMin} min à pied de la gare d'${APPART.commune} — Genève-Eaux-Vives en ${APPART_TRANSIT.eauxVivesDoorToDoorMin} min porte-à-porte. Au Lodge, à Annemasse Romagny : ${ROOMS_BY_HOUSE.lelodge} chambres meublées avec salle d'eau privative, ${PRICE_CHF_FR}/mois tout inclus. La gare d'Annemasse est à ${LODGE.stationWalkMin} min à pied, puis le Léman Express rejoint Genève-Eaux-Vives en ${TRANSIT.trainEauxVivesMin} min : ${LODGE.eauxVivesDoorToDoorMin} min porte-à-porte. Dans les deux cas, une location de chambre plus simple qu'un studio meublé : lit, bureau, fibre et charges compris.`}
@@ -112,14 +112,14 @@ export function ChambreLouerAnnemassePage() {
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <LocalizedLink
               to="/candidature"
-              className="inline-flex items-center gap-2 px-8 py-4 bg-[#1C1917] text-white font-semibold rounded-full hover:bg-[#44403C] transition-colors"
+              className="lvc-btn-primary inline-flex items-center gap-2 px-8 py-4"
             >
               {language === "en" ? "Check availability" : "Voir les disponibilités"}
               <ArrowRight className="w-5 h-5" />
             </LocalizedLink>
             <LocalizedLink
               to="/tarifs"
-              className="inline-flex items-center gap-2 px-8 py-4 border-2 border-[#1C1917] text-[#1C1917] font-semibold rounded-full hover:bg-[#1C1917] hover:text-white transition-colors"
+              className="lvc-btn-secondary inline-flex items-center gap-2 px-8 py-4"
             >
               {language === "en" ? "See pricing" : "Voir les tarifs"}
             </LocalizedLink>
@@ -154,8 +154,7 @@ export function ChambreLouerAnnemassePage() {
       <section className="py-20 lg:py-24 bg-white">
         <div className="max-w-6xl mx-auto px-6">
           <h2
-            className="text-3xl md:text-4xl font-light text-[#1C1917] mb-3"
-            style={{ fontFamily: '"DM Serif Display", serif' }}
+            className="text-3xl md:text-4xl text-[#1C1917] mb-3"
           >
             {candidates.length > 0
               ? (language === "en"
@@ -210,7 +209,7 @@ export function ChambreLouerAnnemassePage() {
             </div>
             <div className="bg-[#FAF9F6] p-8">
               <Sparkles className="w-10 h-10 text-[#D4A574] mb-4" />
-              <h3 className="text-xl font-medium text-[#1C1917] mb-2">
+              <h3 className="text-xl text-[#1C1917] mb-2">
                 {language === "en" ? "What about a classic studio in Annemasse?" : "Et un studio classique à Annemasse ?"}
               </h3>
               <p className="text-2xl font-bold text-[#78716C] mb-4">{language === "en" ? "700-950 €/mo +" : "700-950 €/mois +"}</p>
@@ -224,7 +223,7 @@ export function ChambreLouerAnnemassePage() {
           <div className="text-center mt-12">
             <LocalizedLink
               to="/tarifs"
-              className="inline-flex items-center gap-2 px-8 py-4 bg-[#1C1917] text-white font-semibold rounded-full hover:bg-[#44403C] transition-colors"
+              className="lvc-btn-primary inline-flex items-center gap-2 px-8 py-4"
             >
               {language === "en" ? "See what's included in the rent" : "Voir le détail des tarifs"}
               <ArrowRight className="w-5 h-5" />
@@ -237,8 +236,7 @@ export function ChambreLouerAnnemassePage() {
       <section className="py-24 lg:py-32 bg-[#FAF9F6]">
         <div className="max-w-5xl mx-auto px-6">
           <h2
-            className="text-3xl md:text-4xl font-light text-[#1C1917] mb-12 text-center"
-            style={{ fontFamily: '"DM Serif Display", serif' }}
+            className="text-3xl md:text-4xl text-[#1C1917] mb-12 text-center"
           >
             {language === "en"
               ? "Why rent your room at the Lodge, Annemasse"
@@ -290,8 +288,7 @@ export function ChambreLouerAnnemassePage() {
         <div className="max-w-4xl mx-auto px-6">
           <Train className="w-12 h-12 text-[#D4A574] mx-auto mb-6" />
           <h2
-            className="text-3xl md:text-4xl font-light text-[#1C1917] mb-6 text-center"
-            style={{ fontFamily: '"DM Serif Display", serif' }}
+            className="text-3xl md:text-4xl text-[#1C1917] mb-6 text-center"
           >
             {language === "en"
               ? "Annemasse, Ville-la-Grand, Ambilly: La Villa Coliving's three houses and their commutes to Geneva"
@@ -332,8 +329,7 @@ export function ChambreLouerAnnemassePage() {
       <section className="py-24 lg:py-32 bg-[#FAF9F6]">
         <div className="max-w-5xl mx-auto px-6">
           <h2
-            className="text-3xl md:text-4xl font-light text-[#1C1917] mb-12 text-center"
-            style={{ fontFamily: '"DM Serif Display", serif' }}
+            className="text-3xl md:text-4xl text-[#1C1917] mb-12 text-center"
           >
             {language === "en" ? "How to rent your room — 4 steps" : "Comment louer ta chambre — 4 étapes"}
           </h2>
@@ -372,7 +368,7 @@ export function ChambreLouerAnnemassePage() {
                 <div className="w-12 h-12 rounded-full bg-[#1C1917] text-white font-bold text-lg flex items-center justify-center mx-auto mb-4">
                   {step.num}
                 </div>
-                <h3 className="text-lg font-medium text-[#1C1917] mb-2">
+                <h3 className="text-lg text-[#1C1917] mb-2">
                   {language === "en" ? step.title_en : step.title_fr}
                 </h3>
                 <p className="text-sm text-[#57534E] leading-relaxed">
@@ -396,8 +392,7 @@ export function ChambreLouerAnnemassePage() {
         <div className="max-w-3xl mx-auto px-6 text-center">
           <Calendar className="w-12 h-12 text-[#D4A574] mx-auto mb-6" />
           <h2
-            className="text-3xl md:text-4xl font-light mb-6"
-            style={{ fontFamily: '"DM Serif Display", serif' }}
+            className="text-3xl md:text-4xl text-white mb-6"
           >
             {language === "en"
               ? "Check current room availability"
@@ -411,7 +406,7 @@ export function ChambreLouerAnnemassePage() {
           </p>
           <LocalizedLink
             to="/candidature"
-            className="inline-flex items-center gap-2 px-8 py-4 bg-white text-[#1C1917] font-semibold rounded-full hover:bg-gray-100 transition-colors"
+            className="lvc-btn-primary inline-flex items-center gap-2 px-8 py-4"
           >
             {language === "en" ? "Book a visit" : "Programmer une visite"}
             <ArrowRight className="w-5 h-5" />

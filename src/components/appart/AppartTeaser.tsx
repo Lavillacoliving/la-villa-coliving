@@ -85,11 +85,10 @@ export function AppartTeaser({ page, lang, headingLevel = 2, className = "" }: A
           </div>
         )}
         <div className={`p-6 md:p-8 ${withImage ? "md:col-span-3" : ""} flex flex-col`}>
-          {t.eyebrow && <p className="text-xs font-semibold uppercase tracking-wider text-[#8A6508] mb-2">{t.eyebrow}</p>}
+          {t.eyebrow && <p className="lvc-eyebrow mb-2">{t.eyebrow}</p>}
           <Heading
             id={titleId}
-            className="text-2xl md:text-3xl font-light text-[#1C1917] leading-tight"
-            style={{ fontFamily: '"DM Serif Display", serif' }}
+            className="lvc-display text-2xl md:text-3xl text-[#1C1917] leading-tight"
           >
             {t.title}
           </Heading>

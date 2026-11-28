@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useLocation } from "react-router-dom";
 import { Menu, X } from "lucide-react";
 import { useLanguage } from "@/contexts/LanguageContext";
@@ -31,6 +31,43 @@ export function NavbarV7() {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
+  // (Lot 2a, brief du 27/11/2026, §0.6, D9) Sur mobile (< 768 px), le bandeau d'offre défile avec la page et le menu reste
+  // épinglé : l'en-tête fixe remonte de la hauteur du bandeau, au plus, à mesure qu'on défile (transform seulement, posé sur
+  // le DOM après l'hydratation : ni décalage de mise en page, ni écart avec le HTML prérendu ; le script #lvc-offer et la
+  // compensation --lvc-banner-h ne changent pas). Sur ordinateur, rien ne change.
+  const headerRef = useRef<HTMLElement>(null);
+  useEffect(() => {
+    const header = headerRef.current;
+    if (!header) return;
+    const mobile = window.matchMedia("(max-width: 767px)");
+    let frame = 0;
+    const apply = () => {
+      frame = 0;
+      const banner = header.querySelector<HTMLElement>(".lvc-offer-banner");
+      const bannerH = mobile.matches && banner && document.documentElement.classList.contains("lvc-offer-on") ? banner.offsetHeight : 0;
+      const shift = Math.min(Math.max(window.scrollY, 0), bannerH);
+      header.style.transform = shift > 0 ? `translateY(-${shift}px)` : "";
+    };
+    const schedule = () => {
+      if (!frame) frame = window.requestAnimationFrame(apply);
+    };
+    apply();
+    window.addEventListener("scroll", schedule, { passive: true });
+    window.addEventListener("resize", schedule);
+    mobile.addEventListener?.("change", schedule);
+    // Le bandeau peut disparaître (fermeture, navigation) : la classe html.lvc-offer-on suit, on recalcule.
+    const observer = new MutationObserver(schedule);
+    observer.observe(document.documentElement, { attributes: true, attributeFilter: ["class"] });
+    return () => {
+      window.removeEventListener("scroll", schedule);
+      window.removeEventListener("resize", schedule);
+      mobile.removeEventListener?.("change", schedule);
+      observer.disconnect();
+      if (frame) window.cancelAnimationFrame(frame);
+      header.style.transform = "";
+    };
+  }, []);
+
   const navLinks = [
     {
       // FR → article élu par Google (consolidation 07/07) ; EN → pilier conservé.
@@ -58,7 +95,8 @@ export function NavbarV7() {
 
   return (
     <header
-      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${
+      ref={headerRef}
+      className={`fixed top-0 left-0 right-0 z-50 transition-[background-color,border-color,box-shadow] duration-500 ${
         isScrolled
           ? "bg-white/95 backdrop-blur-md border-b border-[#E7E5E4] shadow-sm"
           : "bg-white/60 backdrop-blur-lg"

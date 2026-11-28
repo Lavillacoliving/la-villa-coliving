@@ -93,7 +93,6 @@ export function HouseGallery({ images, houseName, cover, featured = [] }: HouseG
       <div className="container-custom">
         <h2
           className="text-3xl md:text-4xl mb-2 text-[#1C1917]"
-          style={{ fontFamily: '"DM Serif Display", serif' }}
         >
           {L === 'en' ? `Explore ${houseName}` : `Découvre ${houseName}`}
         </h2>
@@ -133,7 +132,7 @@ export function HouseGallery({ images, houseName, cover, featured = [] }: HouseG
           <button
             type="button"
             onClick={() => open(0, 'button')}
-            className="w-full md:w-auto inline-flex items-center justify-center gap-2 px-7 py-3.5 border border-[#1C1917] text-[#1C1917] font-semibold rounded-xl hover:bg-[#1C1917] hover:text-white transition-colors"
+            className="lvc-btn-secondary w-full md:w-auto inline-flex items-center justify-center gap-2 px-7 py-3.5"
           >
             <Grid3X3 className="w-4 h-4" aria-hidden="true" />
             {L === 'en' ? `See all ${images.length} photos` : `Voir les ${images.length} photos`}

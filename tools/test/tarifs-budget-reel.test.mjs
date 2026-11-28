@@ -736,7 +736,8 @@ test('ordre des neuf blocs (H1 inchangé, puis les prix, la différence, le calc
   for (const lang of LANGS) {
     const html = main(lang);
     const A = ANNEX[lang];
-    assert.deepEqual(elements(html, 'h1'), [lang === 'en' ? 'Transparent Pricing' : 'Tarifs Transparents'], `${lang} : H1`);
+    // (Lot 2a, 27/11/2026, T1 / D11 validée par Jérôme) « Tarifs transparents » : casse seulement ; EN inchangé.
+    assert.deepEqual(elements(html, 'h1'), [lang === 'en' ? 'Transparent Pricing' : 'Tarifs transparents'], `${lang} : H1`);
     const h2 = elements(html, 'h2');
     assert.deepEqual(h2, [A.block5.title, A.block3.title, A.block2.title, A.block4.title, A.block7.title, KEPT[lang].faq, KEPT[lang].essentials, KEPT[lang].apply], `${lang} : titres des blocs`);
     // Ancres : nouvelles (calcul, inclus), conservées (objection-prix, echelle-prix + son titre, lappart, faq), l'offre absente.

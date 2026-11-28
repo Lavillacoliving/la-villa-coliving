@@ -76,7 +76,7 @@ export function WaitlistForm() {
         <div className="w-12 h-12 rounded-full bg-[#D4A574]/15 flex items-center justify-center mx-auto mb-4">
           <Check className="w-6 h-6 text-[#D4A574]" />
         </div>
-        <h3 className="text-xl font-medium text-[#1C1917] mb-2">{en ? "You're on the list!" : "Tu es sur la liste !"}</h3>
+        <h3 className="text-xl text-[#1C1917] mb-2">{en ? "You're on the list!" : "Tu es sur la liste !"}</h3>
         <p className="text-[#57534E] text-sm">
           {en
             ? "We'll reach out the moment a room matching your profile opens up."
@@ -113,7 +113,7 @@ export function WaitlistForm() {
       <button
         type="submit"
         disabled={status === "submitting"}
-        className="w-full inline-flex items-center justify-center gap-2 bg-[#D4A574] text-white px-8 py-4 text-sm font-semibold uppercase tracking-wider rounded-lg hover:bg-[#44403C] transition-colors disabled:opacity-60"
+        className="lvc-btn-primary w-full inline-flex items-center justify-center gap-2 px-8 py-4 text-sm disabled:opacity-60"
       >
         {status === "submitting" ? (en ? "Sending…" : "Envoi…") : en ? "Join the priority list" : "Rejoindre la liste prioritaire"}
         <ArrowRight className="w-4 h-4" />

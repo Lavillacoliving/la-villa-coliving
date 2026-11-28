@@ -183,20 +183,19 @@ export function HousesPageV4() {
           la fiche « l'essentiel » passe sous la FAQ. Marges réduites sur mobile : la première maison arrive au 2ᵉ écran. */}
       <section className="py-16 md:py-24 lg:py-32 bg-[#F5F2ED]">
         <div className="container-custom text-center">
-          <span className="text-xs text-[#78716C] uppercase tracking-[0.3em] mb-4 block">
+          <span className="lvc-eyebrow mb-4">
             {language === "en" ? "Our Homes" : "Nos maisons"}
           </span>
           <h1
-            className="text-5xl md:text-6xl lg:text-7xl font-light text-[#1C1917] mb-6"
-            style={{ fontFamily: '"DM Serif Display", serif' }}
+            className="text-5xl md:text-6xl lg:text-7xl text-[#1C1917] mb-6"
           >
             {language === "en" ? (
               <>
-                Three Homes<span className="text-[#D4A574]">.</span>
+                Three <em className="lvc-h1-accent">Homes</em>.
               </>
             ) : (
               <>
-                Trois maisons<span className="text-[#D4A574]">.</span>
+                Trois <em className="lvc-h1-accent">maisons</em>.
               </>
             )}
           </h1>
@@ -268,8 +267,7 @@ export function HousesPageV4() {
                   </div>
 
                   <h2
-                    className="text-2xl font-light text-[#1C1917] mb-3"
-                    style={{ fontFamily: '"DM Serif Display", serif' }}
+                    className="text-2xl text-[#1C1917] mb-3"
                   >
                     {house.name}
                   </h2>
@@ -319,7 +317,7 @@ export function HousesPageV4() {
                       <LocalizedLink
                         to={`/${house.id}`}
                         onClick={() => track("house_discover_click", { house: house.id, cta_position: "nos_maisons_button", page: "nos-maisons", language: L })}
-                        className="flex-auto whitespace-nowrap inline-flex items-center justify-center gap-2 px-5 py-3 bg-[#1C1917] text-white text-sm font-semibold rounded-lg hover:bg-[#D4A574] transition-colors"
+                        className="lvc-btn-primary flex-auto whitespace-nowrap inline-flex items-center justify-center gap-2 px-5 py-3 text-sm"
                       >
                         {language === "en" ? "Discover" : "Découvrir"}
                         <ArrowRight className="w-4 h-4" />
@@ -327,7 +325,7 @@ export function HousesPageV4() {
                       <LocalizedLink
                         to={`/candidature?property_interest=${house.id}`}
                         onClick={() => track("cta_click", { cta_position: "nos_maisons_card", cta_target: "/candidature", house: house.id, language: L })}
-                        className="flex-auto whitespace-nowrap inline-flex items-center justify-center px-5 py-3 border border-[#1C1917] text-[#1C1917] text-sm font-semibold rounded-lg hover:bg-[#1C1917] hover:text-white transition-colors"
+                        className="lvc-btn-secondary flex-auto whitespace-nowrap inline-flex items-center justify-center px-5 py-3 text-sm"
                       >
                         {language === "en" ? "Book a visit" : "Programmer une visite"}
                       </LocalizedLink>
@@ -368,12 +366,11 @@ export function HousesPageV4() {
       <section className="py-24 lg:py-32 bg-white">
         <div className="container-custom">
           <div className="text-center mb-12">
-            <span className="text-xs text-[#78716C] uppercase tracking-[0.3em] mb-4 block">
+            <span className="lvc-eyebrow mb-4">
               {language === "en" ? "Compare" : "Comparer"}
             </span>
             <h2
-              className="text-3xl md:text-4xl font-light text-[#1C1917]"
-              style={{ fontFamily: '"DM Serif Display", serif' }}
+              className="text-3xl md:text-4xl text-[#1C1917]"
             >
               {language === "en" ? "Side by Side" : "Côte à côte"}
             </h2>
@@ -388,7 +385,7 @@ export function HousesPageV4() {
                   </th>
                   {houses.map((house) => (
                     <th key={house.id} className="py-4 px-4 text-center w-1/4">
-                      <span className="text-lg font-medium text-[#1C1917]" style={{ fontFamily: '"DM Serif Display", serif' }}>
+                      <span className="text-lg font-normal text-[#1C1917]" style={{ fontFamily: '"DM Serif Display", serif' }}>
                         {house.name}
                       </span>
                       <span className="block text-xs text-[#78716C] mt-1">{house.location}</span>
@@ -457,8 +454,7 @@ export function HousesPageV4() {
       <section className="py-24 bg-[#1C1917]">
         <div className="container-custom text-center">
           <h2
-            className="text-3xl md:text-4xl font-light text-white mb-4"
-            style={{ fontFamily: '"DM Serif Display", serif' }}
+            className="text-3xl md:text-4xl text-white mb-4"
           >
             {language === "en"
               ? "Not Sure Which One?"
@@ -473,7 +469,7 @@ export function HousesPageV4() {
             <LocalizedLink
               to="/candidature"
               onClick={() => track("cta_click", { cta_position: "nos_maisons_footer", cta_target: "/candidature", language: L })}
-              className="inline-flex items-center gap-2 px-8 py-4 bg-white text-[#1C1917] font-bold rounded-lg hover:bg-[#F5F2ED] transition-colors"
+              className="lvc-btn-primary inline-flex items-center gap-2 px-8 py-4"
             >
               {language === "en" ? "Book a visit" : "Programmer une visite"}
               <ArrowRight className="w-5 h-5" />

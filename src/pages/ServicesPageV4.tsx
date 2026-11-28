@@ -219,14 +219,14 @@ export function ServicesPageV4() {
               {language === "en" ? (
                 <>
                   We handle{" "}
-                  <em className="text-[#E0BB8A] not-italic" style={{ fontFamily: "'DM Serif Display', serif", fontStyle: 'italic' }}>everything</em>.
+                  <em className="lvc-h1-accent lvc-h1-accent--on-photo">everything</em>.
                   <br />
                   You just live.
                 </>
               ) : (
                 <>
                   On gère{" "}
-                  <em className="text-[#E0BB8A] not-italic" style={{ fontFamily: "'DM Serif Display', serif", fontStyle: 'italic' }}>tout</em>.
+                  <em className="lvc-h1-accent lvc-h1-accent--on-photo">tout</em>.
                   <br />
                   Tu vis sans soucis.
                 </>
@@ -276,7 +276,7 @@ export function ServicesPageV4() {
             </p>
           </aside>
           <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-bold text-[#1C1917] mb-4 tracking-tight">
+            <h2 className="text-3xl md:text-4xl text-[#1C1917] mb-4 tracking-tight">
               {language === "en"
                 ? "Not just services."
                 : "Pas juste des services."}
@@ -348,10 +348,10 @@ export function ServicesPageV4() {
       <section className="py-24 bg-white">
         <div className="container-custom">
           <div className="text-center mb-16">
-            <span className="text-[13px] font-semibold tracking-wider uppercase text-[#78716C] mb-4 block">
+            <span className="lvc-eyebrow mb-4">
               {language === "en" ? "What's Included" : "Ce qui est inclus"}
             </span>
-            <h2 className="text-3xl md:text-4xl font-bold text-[#1C1917] tracking-tight">
+            <h2 className="text-3xl md:text-4xl text-[#1C1917] tracking-tight">
               {language === "en"
                 ? "Everything you need"
                 : "Tout ce dont tu as besoin"}
@@ -427,12 +427,12 @@ export function ServicesPageV4() {
         <div className="container-custom">
           <div className="grid lg:grid-cols-2 gap-16 items-center">
             <div>
-              <span className="text-[13px] font-semibold tracking-wider uppercase text-[#78716C] mb-4 block">
+              <span className="lvc-eyebrow mb-4">
                 {language === "en"
                   ? "The La Villa Difference"
                   : "La différence La Villa"}
               </span>
-              <h2 className="text-3xl md:text-4xl font-bold text-[#1C1917] mb-6 tracking-tight">
+              <h2 className="text-3xl md:text-4xl text-[#1C1917] mb-6 tracking-tight">
                 {language === "en" ? "Say goodbye to" : "Dis adieu aux"}{" "}
                 <span className="text-[#78716C] line-through">
                   {language === "en" ? "chores" : "corvées"}
@@ -506,10 +506,10 @@ export function ServicesPageV4() {
       {/* CTA FINAL */}
       <section className="py-24 bg-[#1C1917]">
         <div className="container-custom text-center">
-          <span className="text-[13px] font-semibold tracking-wider uppercase text-[#E0BB8A] mb-5 block">
+          <span className="lvc-eyebrow text-[#E0BB8A] mb-5">
             {language === "en" ? "Ready?" : "Prêt ?"}
           </span>
-          <h2 className="text-3xl md:text-4xl font-bold text-white mb-6 tracking-tight">
+          <h2 className="text-3xl md:text-4xl text-white mb-6 tracking-tight">
             {language === "en"
               ? "Ready to live lighter?"
               : "Prêt à vivre plus léger ?"}
@@ -522,14 +522,14 @@ export function ServicesPageV4() {
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <LocalizedLink
               to="/tarifs"
-              className="inline-flex items-center justify-center gap-2 px-8 py-4 bg-[#D4A574] text-[#1C1917] font-semibold rounded-lg hover:bg-[#E0BB8A] transition-all duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#D4A574] focus-visible:ring-offset-2 focus-visible:ring-offset-[#1C1917]"
+              className="lvc-btn-primary inline-flex items-center justify-center gap-2 px-8 py-4"
             >
               {language === "en" ? "View Rates" : "Voir les Tarifs"}
               <ArrowRight className="w-5 h-5" />
             </LocalizedLink>
             <LocalizedLink
               to="/candidature"
-              className="inline-flex items-center justify-center gap-2 px-8 py-4 border border-white/30 text-white font-semibold rounded-lg hover:border-white hover:bg-white/5 transition-all duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-[#1C1917]"
+              className="lvc-btn-secondary lvc-btn-secondary--on-dark inline-flex items-center justify-center gap-2 px-8 py-4"
             >
               {language === "en" ? "Book a visit" : "Programmer une visite"}
             </LocalizedLink>

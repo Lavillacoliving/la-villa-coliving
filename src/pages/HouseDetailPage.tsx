@@ -87,6 +87,7 @@ import {
   CarouselPrevious,
   type CarouselApi,
 } from "@/components/ui/carousel";
+import { h1Accent } from "@/lib/h1Accent";
 
 interface GalleryImage {
   src: string;
@@ -1194,14 +1195,16 @@ function getHousesData(lang: string): Record<string, HouseData> {
         category: "room",
       },
       // Amenities
+      // (Lot 2a, brief du 27/11/2026, §0.8, D15) Les deux images générées de la galerie (signature C2PA « OpenAI »,
+      // trainedAlgorithmicMedia) sont remplacées par les photos réelles du chalet fitness (PHOTOS/LE LODGE/1-39.jpg et 1-38.jpg).
       {
-        src: "/images/le lodge/amenities/la villa coliving le lodge-122.webp",
-        alt: "Le Lodge swimming pool",
+        src: "/images/le lodge/amenities/le-lodge-chalet-fitness-2.webp",
+        alt: "Le Lodge fitness chalet: treadmill, rowing machine and punching bag",
         category: "amenity",
       },
       {
-        src: "/images/le lodge/amenities/la villa coliving le lodge-121.webp",
-        alt: "Le Lodge fitness chalet",
+        src: "/images/le lodge/amenities/le-lodge-chalet-fitness-1.webp",
+        alt: "Le Lodge fitness chalet: power rack, weight bench and exercise bike",
         category: "amenity",
       },
       {
@@ -1390,7 +1393,7 @@ function IncludedGroup({ panelId, title, items, icon: Icon, iconClass, last = fa
   const [open, setOpen] = useState(false);
   return (
     <div className={`rounded-2xl border border-[#E7E5E4] bg-white p-4 md:rounded-none md:border-0 md:bg-transparent md:p-0${last ? "" : " md:mb-12"}`}>
-      <h3 className="text-base font-bold text-[#1C1917] md:text-2xl md:font-black md:mb-6">
+      <h3 className="text-base text-[#1C1917] md:text-2xl md:mb-6">
         <button
           type="button"
           aria-expanded={open}
@@ -1675,7 +1678,6 @@ export function HouseDetailPage() {
             </div>
             <h1
               className="text-4xl md:text-7xl mb-4 text-white [text-shadow:0_2px_12px_rgba(0,0,0,0.55)]"
-              style={{ fontFamily: '"DM Serif Display", serif' }}
             >
               {(() => {
                 // SEO H1 par maison : capture le keyword principal de la page
@@ -1694,7 +1696,10 @@ export function HouseDetailPage() {
                     fr: "Le Lodge — Coliving 12 chambres à Annemasse",
                   },
                 };
-                return h1[id]?.[language === "en" ? "en" : "fr"] ?? house.name;
+                const text = h1[id]?.[language === "en" ? "en" : "fr"] ?? house.name;
+                // (Lot 2a, commit 12, D13) Signature : la commune (ENTITY_HOUSES) en italique, doré clair sur la photo.
+                const commune = ENTITY_HOUSES.find((h) => h.slug === id)?.commune;
+                return commune ? h1Accent(text, commune, true) : text;
               })()}
             </h1>
             <div className="flex flex-wrap items-center gap-6 text-white/90 font-medium">
@@ -1717,7 +1722,7 @@ export function HouseDetailPage() {
               <LocalizedLink
                 to={`/candidature?property_interest=${id}`}
                 onClick={() => trackCta("house_hero")}
-                className="inline-flex items-center gap-2 px-7 py-3.5 bg-[#D4A574] text-[#1C1917] font-bold rounded-full hover:bg-[#E0BB8A] transition-colors shadow-sharp"
+                className="lvc-btn-primary inline-flex items-center gap-2 px-7 py-3.5"
               >
                 {t.houseDetail.apply}
                 <ArrowRight className="w-5 h-5" />
@@ -1772,13 +1777,12 @@ export function HouseDetailPage() {
         <div className="container-custom">
           <h2
             className="text-3xl md:text-4xl mb-4 md:mb-6 text-[#1C1917]"
-            style={{ fontFamily: '"DM Serif Display", serif' }}
           >
             {language === "en"
               ? `About ${house.name}`
               : `À propos ${ofHouseFr(house.name)}`}
           </h2>
-          <p className="text-base md:text-lg text-[#57534E] leading-relaxed font-medium max-w-3xl">
+          <p className="text-base md:text-lg text-[#57534E] leading-relaxed max-w-3xl">
             {[house.longDescription.lead, house.longDescription.rest].filter(Boolean).join(" ")}
           </p>
           <p className="text-sm text-[#78716C] mt-4 md:mt-6 flex items-center gap-2">
@@ -1814,7 +1818,6 @@ export function HouseDetailPage() {
         <div className="container-custom">
           <h2
             className="text-3xl md:text-4xl mb-6 text-[#1C1917]"
-            style={{ fontFamily: '"DM Serif Display", serif' }}
           >
             {t.houseDetail.rooms}
           </h2>
@@ -1873,11 +1876,11 @@ export function HouseDetailPage() {
                   <div className="p-8">
                     <div className="flex items-center gap-3 mb-4">
                       <BedDouble className="text-[#D4A574]" size={28} />
-                      <h3 className="text-xl font-black text-[#1C1917]">
+                      <h3 className="text-xl text-[#1C1917]">
                         {room.type}
                       </h3>
                     </div>
-                    <p className="text-[#78716C] mb-6 font-medium">
+                    <p className="text-[#78716C] mb-6">
                       {room.description}
                     </p>
                     <div className="flex items-center justify-between">
@@ -1926,7 +1929,6 @@ export function HouseDetailPage() {
             <div className="lg:col-span-2">
               <h2
                 className="text-3xl md:text-4xl mb-5 md:mb-8 text-[#1C1917]"
-                style={{ fontFamily: '"DM Serif Display", serif' }}
               >
                 {language === "en" ? "What's included" : "Ce qui est inclus"}
               </h2>
@@ -1961,7 +1963,7 @@ export function HouseDetailPage() {
                         : (language === "en" ? `(€${EUR_STANDARD_EN_NUM})` : `(${EUR_STANDARD_FR_NUM} €)`)}
                     </span>
                   </p>
-                  <p className="text-[#78716C] mb-4 font-medium">
+                  <p className="text-[#78716C] mb-4">
                     {t.houseDetail.perMonth}
                   </p>
 
@@ -1986,7 +1988,7 @@ export function HouseDetailPage() {
                     <LocalizedLink
                       to={`/candidature?property_interest=${id}`}
                       onClick={() => trackCta("house_sidebar")}
-                      className="w-full inline-flex items-center justify-center gap-2 px-6 py-3 bg-[#1C1917] text-white font-semibold rounded-xl hover:bg-[#D4A574] transition-colors"
+                      className="lvc-btn-primary w-full inline-flex items-center justify-center gap-2 px-6 py-3"
                     >
                       {canApplyNow
                         ? t.houseDetail.apply
@@ -2091,16 +2093,15 @@ export function HouseDetailPage() {
             <div className="container-custom max-w-5xl">
               <h2
                 className="text-3xl md:text-4xl mb-6 text-[#1C1917]"
-                style={{ fontFamily: '"DM Serif Display", serif' }}
               >
                 {language === "en"
                   ? `Location: ${house.name} in ${house.location.split(',')[0]}`
                   : `Localisation : ${house.name} à ${house.location.split(',')[0]}`}
               </h2>
               {/* Phrase de quartier (A.2) puis, quand elle existe, la seule formulation de la frontière (D6) — un nœud texte par phrase. */}
-              <p className="text-base md:text-lg text-[#57534E] leading-relaxed mb-4 font-medium">{data.intro}</p>
+              <p className="text-base md:text-lg text-[#57534E] leading-relaxed mb-4">{data.intro}</p>
               {data.border ? (
-                <p className="text-[#57534E] leading-relaxed mb-4 font-medium">{data.border}</p>
+                <p className="text-[#57534E] leading-relaxed mb-4">{data.border}</p>
               ) : null}
               {/* Phrase citable produit (extraction IA / AI Overviews) — 1 par page, motif commun aux money pages.
                   (Lot L2, D1) Le « 20 min » de marque s'écrit toujours via STATS_DISPLAY.distance. */}
@@ -2112,14 +2113,14 @@ export function HouseDetailPage() {
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
                 <div>
-                  <h3 className="text-xl font-black mb-4 text-[#1C1917] flex items-center gap-2">
+                  <h3 className="text-xl mb-4 text-[#1C1917] flex items-center gap-2">
                     <MapPin size={20} className="text-[#D4A574]" />
                     {language === "en" ? "Neighbourhood" : "Quartier"}
                   </h3>
-                  <p className="text-[#57534E] font-medium mb-1">{data.address}</p>
+                  <p className="text-[#57534E] mb-1">{data.address}</p>
                   <p className="text-sm text-[#78716C] mb-6">{houseExactAddressNote(language === "en" ? "en" : "fr")}</p>
 
-                  <h3 className="text-xl font-black mb-4 text-[#1C1917] flex items-center gap-2">
+                  <h3 className="text-xl mb-4 text-[#1C1917] flex items-center gap-2">
                     <Clock size={20} className="text-[#D4A574]" />
                     {language === "en" ? "Transport & travel times" : "Transport & temps de trajet"}
                   </h3>
@@ -2159,7 +2160,7 @@ export function HouseDetailPage() {
                 </div>
 
                 <div>
-                  <h3 className="text-xl font-black mb-4 text-[#1C1917] flex items-center gap-2">
+                  <h3 className="text-xl mb-4 text-[#1C1917] flex items-center gap-2">
                     <Coffee size={20} className="text-[#D4A574]" />
                     {language === "en" ? "Nearby shops & services" : "Commerces & services à proximité"}
                   </h3>
@@ -2214,7 +2215,7 @@ export function HouseDetailPage() {
                         HTML (garde : chaque « Chambre N » nommée) et toujours dépliée à partir de md. Sans chambre candidate,
                         elle reste visible : c'est alors la seule vue des chambres. */}
                     {candidates.length > 0 && (
-                      <h2 className="md:hidden mb-4">
+                      <h2 className="md:hidden mb-4 lvc-ui-heading">
                         <button
                           type="button"
                           aria-expanded={othersOpen}
@@ -2229,7 +2230,7 @@ export function HouseDetailPage() {
                         </button>
                       </h2>
                     )}
-                    <h2 className={`text-lg font-black text-[#1C1917] mb-4${candidates.length > 0 ? " hidden md:block" : ""}`}>
+                    <h2 className={`text-lg text-[#1C1917] mb-4${candidates.length > 0 ? " hidden md:block" : ""}`}>
                       {language === "en"
                         ? (candidates.length > 0 ? `The other ${occupied.length} rooms at ${house.name}` : `The ${occupied.length} rooms at ${house.name}`)
                         : (candidates.length > 0 ? `Les ${occupied.length} autres chambres ${ofHouseFr(house.name)}` : `Les ${occupied.length} chambres ${ofHouseFr(house.name)}`)}
@@ -2428,7 +2429,6 @@ export function HouseDetailPage() {
               <div className="container-custom max-w-3xl">
                 <h2
                   className="text-3xl md:text-4xl mb-5 md:mb-8 text-[#1C1917]"
-                  style={{ fontFamily: '"DM Serif Display", serif' }}
                 >
                   {language === "en" ? "Frequently asked questions" : "Questions fréquentes"}
                 </h2>
@@ -2481,7 +2481,6 @@ export function HouseDetailPage() {
         <div className="container-custom">
           <h2
             className="text-3xl md:text-4xl mb-5 md:mb-8 text-[#1C1917]"
-            style={{ fontFamily: '"DM Serif Display", serif' }}
           >
             {language === "en" ? "Compare with our other houses" : "Compare avec nos autres maisons"}
           </h2>
@@ -2510,11 +2509,10 @@ export function HouseDetailPage() {
                       <div>
                         <h3
                           className="text-xl text-[#1C1917] mb-1 group-hover:text-[#D4A574] transition-colors"
-                          style={{ fontFamily: '"DM Serif Display", serif' }}
                         >
                           {other.name}
                         </h3>
-                        <p className="text-sm text-[#57534E] font-medium">
+                        <p className="text-sm text-[#57534E]">
                           {other.location} · {other.capacity}
                         </p>
                       </div>
@@ -2534,8 +2532,7 @@ export function HouseDetailPage() {
 
         <div className="container-custom relative text-center">
           <h2
-            className="text-3xl md:text-4xl mb-4 text-white font-black"
-            style={{ fontFamily: '"DM Serif Display", serif' }}
+            className="text-3xl md:text-4xl mb-4 text-white"
           >
             {language === "en"
               ? `Ready to make ${house.name} your home?`
@@ -2551,14 +2548,14 @@ export function HouseDetailPage() {
             <LocalizedLink
               to={`/candidature?property_interest=${id}`}
               onClick={() => trackCta("house_footer")}
-              className="inline-flex items-center gap-2 px-8 py-4 bg-white text-[#1C1917] font-bold rounded-full hover:bg-gray-100 transition-colors"
+              className="lvc-btn-primary inline-flex items-center gap-2 px-8 py-4"
             >
               {t.houseDetail.apply}
               <ArrowRight className="w-5 h-5" />
             </LocalizedLink>
             <LocalizedLink
               to={colocGeneveHref(language)}
-              className="inline-flex items-center gap-2 px-8 py-4 border border-white/30 text-white font-medium rounded-full hover:bg-white/10 transition-colors"
+              className="lvc-btn-secondary lvc-btn-secondary--on-dark inline-flex items-center gap-2 px-8 py-4"
             >
               {language === "en" ? "Shared housing Geneva" : "Colocation Genève"}
               <ArrowRight className="w-5 h-5" />
@@ -2577,7 +2574,7 @@ export function HouseDetailPage() {
           <LocalizedLink
             to={`/candidature?property_interest=${id}`}
             onClick={() => trackCta("sticky_mobile")}
-            className="flex-1 flex items-center justify-center gap-2 bg-[#D4A574] text-[#1C1917] py-3 rounded-lg text-sm font-semibold"
+            className="lvc-btn-primary flex-1 flex items-center justify-center gap-2 py-3 text-sm"
           >
             {language === "en" ? "Book a visit" : "Programmer une visite"}
             <ArrowRight className="w-4 h-4" />

@@ -27,7 +27,7 @@ export function CTASectionV7() {
       <div className="container-custom">
         <div className="max-w-3xl mx-auto text-center">
           {/* Heading */}
-          <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-white tracking-tight mb-5">
+          <h2 className="lvc-display text-[30px] md:text-[42px] lg:text-5xl leading-[1.1] text-white mb-5">
             {language === 'en' ? 'Your next home is waiting' : 'Ta prochaine maison t\'attend'}
           </h2>
 
@@ -43,7 +43,7 @@ export function CTASectionV7() {
           <LocalizedLink
             to="/candidature"
             onClick={track}
-            className="group inline-flex items-center gap-3 px-10 py-4 bg-[#D4A574] text-[#1C1917] font-semibold rounded-lg hover:bg-[#E0BB8A] transition-all duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#D4A574] focus-visible:ring-offset-2 focus-visible:ring-offset-[#1C1917]"
+            className="group lvc-btn-primary gap-3 px-10 py-4 text-base"
           >
             {language === 'en' ? 'Book a visit' : 'Programmer une visite'}
             <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform duration-300" />

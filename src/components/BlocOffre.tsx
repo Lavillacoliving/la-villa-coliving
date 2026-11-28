@@ -171,7 +171,7 @@ export function BlocOffre({ variant, slug, bucket }: BlocOffreProps) {
             />
           </div>
           <div className="p-5 flex-1">
-            <p className="text-[#1C1917] font-medium mb-1" style={{ fontFamily: '"DM Serif Display", serif' }}>
+            <p className="text-[#1C1917] mb-1" style={{ fontFamily: '"DM Serif Display", serif' }}>
               {HEADLINES[bucket][L]}
             </p>
             <p className="text-sm text-[#57534E] mb-3">
@@ -182,7 +182,7 @@ export function BlocOffre({ variant, slug, bucket }: BlocOffreProps) {
             <LocalizedLink
               to={isVille ? houseCta.to : to}
               onClick={() => track(isVille ? houseCta.to : to, "primary")}
-              className="inline-flex items-center gap-2 px-5 py-2.5 bg-[#D4A574] text-[#1C1917] text-sm font-semibold rounded-lg hover:bg-[#E0BB8A] transition-all duration-300"
+              className="lvc-btn-primary inline-flex items-center gap-2 px-5 py-2.5 text-sm"
             >
               {isVille
                 ? (L === "en" ? `Discover ${h.label}` : `Découvrir ${h.label}`)
@@ -234,13 +234,13 @@ export function BlocOffre({ variant, slug, bucket }: BlocOffreProps) {
             )}
           </div>
           <div className="p-6 md:p-8">
-            <p className="text-xs uppercase tracking-[0.2em] text-[#D4A574] font-semibold mb-2">
+            <p className="lvc-eyebrow mb-2">
               La Villa Coliving · {h.label}
             </p>
-            <h2 className="text-xl md:text-2xl font-light text-[#1C1917] mb-2" style={{ fontFamily: '"DM Serif Display", serif' }}>
+            <h2 className="text-xl md:text-2xl text-[#1C1917] mb-2">
               {HEADLINES[bucket][L]}
             </h2>
-            <p className="text-lg text-[#1C1917] font-medium mb-4">
+            <p className="text-lg text-[#1C1917] font-semibold mb-4">
               {L === "en"
                 ? <>All-inclusive {priceFrom ? "from" : "at"} <span className="text-[#D4A574]">{price}</span>/month</>
                 : <>Tout inclus {priceFrom ? "dès" : "à"} <span className="text-[#D4A574]">{price}</span>/mois</>}
@@ -257,7 +257,7 @@ export function BlocOffre({ variant, slug, bucket }: BlocOffreProps) {
               <LocalizedLink
                 to={isVille ? houseCta.to : to}
                 onClick={() => track(isVille ? houseCta.to : to, "primary")}
-                className="inline-flex items-center justify-center gap-2 px-6 py-3 bg-[#D4A574] text-[#1C1917] text-sm font-semibold rounded-lg hover:bg-[#E0BB8A] transition-all duration-300"
+                className="lvc-btn-primary inline-flex items-center justify-center gap-2 px-6 py-3 text-sm"
               >
                 {isVille
                   ? (L === "en" ? houseCta.labelEn : houseCta.labelFr)
@@ -268,7 +268,7 @@ export function BlocOffre({ variant, slug, bucket }: BlocOffreProps) {
                 <LocalizedLink
                   to={to}
                   onClick={() => track(to, "secondary")}
-                  className="inline-flex items-center justify-center gap-2 px-6 py-3 border border-[#E7E5E4] text-[#44403C] text-sm font-medium rounded-lg hover:border-[#D4A574] transition-all duration-300"
+                  className="lvc-btn-secondary inline-flex items-center justify-center gap-2 px-6 py-3 text-sm"
                 >
                   {L === "en" ? "Book a visit" : "Programmer une visite"}
                 </LocalizedLink>
@@ -277,7 +277,7 @@ export function BlocOffre({ variant, slug, bucket }: BlocOffreProps) {
                   <LocalizedLink
                     to={secondary.to}
                     onClick={() => track(secondary.to, "secondary")}
-                    className="inline-flex items-center justify-center gap-2 px-6 py-3 border border-[#E7E5E4] text-[#44403C] text-sm font-medium rounded-lg hover:border-[#D4A574] transition-all duration-300"
+                    className="lvc-btn-secondary inline-flex items-center justify-center gap-2 px-6 py-3 text-sm"
                   >
                     {secondary.label}
                   </LocalizedLink>

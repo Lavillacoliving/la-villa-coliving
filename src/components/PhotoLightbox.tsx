@@ -226,7 +226,7 @@ export default function PhotoLightbox({
               <p className="mx-auto max-w-2xl text-sm text-white/85">
                 {en ? current.alt.en : current.alt.fr}
               </p>
-              <p className="mt-1.5 text-xs font-medium tracking-wide text-white/55">
+              <p className="mt-1.5 text-xs tracking-wide text-white/55">
                 {(index ?? 0) + 1} / {photos.length}
               </p>
             </div>

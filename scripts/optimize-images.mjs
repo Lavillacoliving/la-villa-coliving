@@ -94,7 +94,8 @@ const LP_LIGHTBOX_SOURCES = [
   "/images/le lodge/exterior/lodge-hamac-jardin.webp",
   "/images/le lodge/common areas/lodge-salle-a-manger.webp",
   "/images/le lodge/amenities/la villa coliving le lodge-57.webp",   // sauna finlandais
-  "/images/le lodge/amenities/la villa coliving le lodge-121.webp",  // salle de sport
+  "/images/le lodge/amenities/le-lodge-chalet-fitness-1.webp",        // salle de sport (photo réelle, D15 du 27/11/2026)
+  "/images/le lodge/amenities/le-lodge-chalet-fitness-2.webp",        // chalet fitness, vignette de l'album (D15)
   "/images/le lodge/amenities/la villa coliving le lodge-96.webp",   // home cinéma
   "/images/le lodge/interior/la villa coliving le lodge-85.webp",    // baby-foot
   // Chambre 8 · La Villa
@@ -168,12 +169,37 @@ const LAPPART_SOURCES = [
 ];
 for (const g of LAPPART_SOURCES) if (!SOURCES.includes(g)) SOURCES.push(g);
 
+// (Lot 2a, brief « Accueil : récit, avis, photos » du 27/11/2026, §0.2 et §4) Photos de l'accueil, importées du dossier PHOTOS
+// par scripts/import-home-photos.mjs (WebP sans métadonnée, 1600 px au plus). Variantes 480 et 960 (+ le fichier lui-même,
+// 1600 px au plus) : jamais au-delà de la largeur d'origine.
+const HOME_SOURCES = [
+  '/images/accueil/hero-la-villa.webp',
+  '/images/accueil/carte-la-villa.webp',
+  '/images/accueil/carte-le-loft.webp',
+  '/images/accueil/carte-le-lodge.webp',
+  '/images/accueil/recit-chambre-lodge.webp',
+  '/images/accueil/recit-cuisine-loft.webp',
+  '/images/accueil/recit-salon-lodge.webp',
+  '/images/accueil/bande-sauna-air-hockey-lodge.webp',
+  '/images/accueil/avis-diner-piscine-la-villa.webp',
+  '/images/accueil/vie-yoga-la-villa.webp',
+  '/images/accueil/vie-soiree-pizza.webp',
+  '/images/accueil/vie-tartiflette.webp',
+  '/images/accueil/vie-halloween-loft.webp',
+  '/images/accueil/vie-barbecue.webp',
+  '/images/accueil/vie-coaching-la-villa.webp',
+];
+for (const g of HOME_SOURCES) if (!SOURCES.includes(g)) SOURCES.push(g);
+const HOME_WIDTHS = [480, 960];
+
 
 // Héros plein écran sous voile dégradé (Scrim) : qualité plus basse invisible à l'œil.
 const QUALITY_OVERRIDES = {
   '/images/la villa jardin.webp': 58,
   '/images/le lodge/exterior/la villa coliving le lodge-14.webp': 58,
   '/images/la villa coliving le loft piscine.webp': 62,
+  // (Lot 2a) Haut de page de l'accueil : budgets du §4 (480 px ≤ 90 Ko ; le fichier 1600 px ≤ 200 Ko, encodé à l'import).
+  '/images/accueil/hero-la-villa.webp': 55,
 };
 const WIDTHS = [480, 768, 1024, 1440];
 // Miniatures (28/09/2026) : la liste des chambres occupées des pages maisons affiche la photo
@@ -194,7 +220,7 @@ for (const src of SOURCES) {
   let meta, stat;
   try { meta = await sharp(abs).metadata(); stat = await fs.stat(abs); }
   catch (e) { console.error(`✗ ${src} introuvable (${e.message})`); process.exitCode = 1; continue; }
-  const widths = [...(THUMB_SOURCES.has(src) ? [THUMB_WIDTH] : []), ...WIDTHS].filter(w => w < meta.width);
+  const widths = [...(THUMB_SOURCES.has(src) ? [THUMB_WIDTH] : []), ...(HOME_SOURCES.includes(src) ? HOME_WIDTHS : WIDTHS)].filter(w => w < meta.width);
   if (stat.size / 1024 > REENCODE_OVER_KB && !widths.includes(meta.width)) widths.push(meta.width);
   const done = [];
   for (const w of widths) {

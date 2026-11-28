@@ -268,15 +268,14 @@ export function ObservatoireLogementFrontalierPage() {
       {/* ===== HERO — plein contraste, le chiffre-choc en très grand (brief staging 07/2026) ===== */}
       <section className="bg-[#1C1917] text-white">
         <div className="max-w-5xl mx-auto px-6 pt-16 pb-14 lg:pt-24 lg:pb-16 text-center">
-          <span className="text-xs text-[#D4A574] uppercase tracking-[0.3em] mb-4 block font-medium">
+          <span className="lvc-eyebrow text-[#D4A574] mb-4">
             {en ? "Cross-border housing observatory · Edition 1" : "Observatoire du logement frontalier · Édition 1"}
           </span>
           <h1
-            className="text-4xl md:text-5xl font-light mb-4 leading-tight"
-            style={{ fontFamily: '"DM Serif Display", serif' }}
+            className="text-4xl md:text-5xl mb-4 leading-tight"
           >
             {en ? "Where to live near Geneva " : "Où se loger près de Genève "}
-            <span className="text-[#D4A574]">{en ? "without straying far?" : "sans s'éloigner ?"}</span>
+            <em className="lvc-h1-accent lvc-h1-accent--on-photo">{en ? "without straying far?" : "sans s'éloigner ?"}</em>
           </h1>
           <p className="text-base md:text-lg text-white/70 max-w-3xl mx-auto leading-relaxed">
             {en
@@ -287,7 +286,7 @@ export function ObservatoireLogementFrontalierPage() {
           {/* Le chiffre-choc, énorme */}
           <div className="grid sm:grid-cols-[1fr_auto_1fr] items-center gap-4 sm:gap-8 max-w-3xl mx-auto mt-12">
             <div className="text-center sm:text-right">
-              <div className="text-5xl md:text-6xl font-light whitespace-nowrap" style={{ fontFamily: '"DM Serif Display", serif' }}>
+              <div className="text-5xl md:text-6xl whitespace-nowrap" style={{ fontFamily: '"DM Serif Display", serif' }}>
                 ≈ {GENEVA_EAUXVIVES_CHF}<span className="text-2xl md:text-3xl ml-2 text-white/70">CHF</span>
               </div>
               <div className="text-sm text-white/60 mt-2">
@@ -300,7 +299,7 @@ export function ObservatoireLogementFrontalierPage() {
               <ArrowRight className="w-5 h-5 rotate-90 sm:rotate-0" />
             </div>
             <div className="text-center sm:text-left">
-              <div className="text-5xl md:text-6xl font-light whitespace-nowrap" style={{ fontFamily: '"DM Serif Display", serif' }}>
+              <div className="text-5xl md:text-6xl whitespace-nowrap" style={{ fontFamily: '"DM Serif Display", serif' }}>
                 ≈ {hub.mois}<span className="text-2xl md:text-3xl ml-2 text-white/70">€</span>
               </div>
               <div className="text-sm text-white/60 mt-2">
@@ -328,7 +327,7 @@ export function ObservatoireLogementFrontalierPage() {
       {/* ===== LES CHIFFRES À RETENIR — 4 stat-cards « lift-and-quote » ===== */}
       <section className="py-10 lg:py-12 bg-white border-b border-[#F0EEE9]">
         <div className="max-w-5xl mx-auto px-6">
-          <h2 className="text-sm font-semibold uppercase tracking-[0.2em] text-[#A0623C] text-center mb-6">
+          <h2 className="lvc-eyebrow text-center mb-6">
             {en ? "The figures to remember" : "Les chiffres à retenir"}
           </h2>
           <div className="grid sm:grid-cols-3 gap-3">
@@ -353,7 +352,7 @@ export function ObservatoireLogementFrontalierPage() {
               },
             ].map((s) => (
               <div key={s.fig} className="bg-[#FAF9F6] rounded-xl p-4 sm:p-5 text-center">
-                <p className="text-2xl sm:text-3xl font-medium text-[#1C1917] whitespace-nowrap">{s.fig}</p>
+                <p className="text-2xl sm:text-3xl font-semibold text-[#1C1917] whitespace-nowrap">{s.fig}</p>
                 <p className="text-xs text-[#57534E] mt-1.5 leading-snug">{s.label}</p>
               </div>
             ))}
@@ -372,12 +371,11 @@ export function ObservatoireLogementFrontalierPage() {
           <div className="bg-white border border-[#E7E5E4] rounded-2xl overflow-hidden shadow-sm">
             <div className="h-1.5 bg-[#D4A574]" />
             <div className="p-6 sm:p-9">
-              <span className="text-xs text-[#A0623C] uppercase tracking-[0.2em] font-medium">
+              <span className="lvc-eyebrow">
                 {en ? "Key finding" : "Constat principal"}
               </span>
               <h2
-                className="text-2xl md:text-3xl font-light text-[#1C1917] mt-2 mb-5 leading-snug"
-                style={{ fontFamily: '"DM Serif Display", serif' }}
+                className="text-2xl md:text-3xl text-[#1C1917] mt-2 mb-5 leading-snug"
               >
                 {en ? "A two-speed market" : "Un marché à deux vitesses"}
               </h2>
@@ -484,7 +482,7 @@ export function ObservatoireLogementFrontalierPage() {
       {/* ===== LA DESSERTE, PAS LA DISTANCE — graphique signature (insight annoté) + paliers ===== */}
       <section className="py-12 lg:py-16 bg-white">
         <div className="max-w-4xl mx-auto px-6">
-          <h2 className="text-2xl md:text-3xl font-light text-[#1C1917] mb-3 text-center" style={{ fontFamily: '"DM Serif Display", serif' }}>
+          <h2 className="text-2xl md:text-3xl text-[#1C1917] mb-3 text-center">
             {en ? "The deciding factor is rail service, not distance" : "Le facteur déterminant : la desserte, pas la distance"}
           </h2>
           <p className="text-sm text-[#57534E] text-center mb-8 max-w-2xl mx-auto leading-relaxed">
@@ -574,7 +572,7 @@ export function ObservatoireLogementFrontalierPage() {
               return (
                 <div key={band.label} className="bg-[#FAF9F6] rounded-xl p-5 text-center">
                   <p className="text-xs text-[#A8A29E] uppercase tracking-wider">{band.label}</p>
-                  <p className="text-3xl font-medium text-[#1C1917] my-1">{avg} €</p>
+                  <p className="text-3xl font-semibold text-[#1C1917] my-1">{avg} €</p>
                   <p className="text-xs text-[#57534E]">
                     {en ? "avg. studio · " : "studio moyen · "}
                     {list.length} {en ? "towns" : "communes"}
@@ -600,12 +598,11 @@ export function ObservatoireLogementFrontalierPage() {
       <section className="py-12 lg:py-16 bg-[#FAF9F6]">
         <div className="max-w-4xl mx-auto px-6">
           {/* Intro de l'outil interactif */}
-          <p className="text-xs font-semibold uppercase tracking-[0.2em] text-[#A0623C] text-center mb-2">
+          <p className="lvc-eyebrow text-center mb-2">
             {en ? "The exploration tool" : "L'outil d'exploration"}
           </p>
           <h2
-            className="text-2xl md:text-3xl font-light text-[#1C1917] mb-3 text-center"
-            style={{ fontFamily: '"DM Serif Display", serif' }}
+            className="text-2xl md:text-3xl text-[#1C1917] mb-3 text-center"
           >
             {en ? "Find your town in three steps" : "Trouve ta commune en trois gestes"}
           </h2>
@@ -790,12 +787,11 @@ export function ObservatoireLogementFrontalierPage() {
             <div className="h-1.5 bg-[#D4A574]" />
             <div className="bg-[#FAF9F6] p-5 sm:p-8">
           <div className="text-center mb-8">
-            <span className="text-xs text-[#A0623C] uppercase tracking-[0.2em] font-medium">
+            <span className="lvc-eyebrow">
               {en ? "First-party data" : "Données first-party"}
             </span>
             <h2
-              className="text-2xl md:text-3xl font-light text-[#1C1917] mt-2 mb-3"
-              style={{ fontFamily: '"DM Serif Display", serif' }}
+              className="text-2xl md:text-3xl text-[#1C1917] mt-2 mb-3"
             >
               {en ? "Seen from our houses" : "Vu de nos maisons"}
             </h2>
@@ -838,7 +834,7 @@ export function ObservatoireLogementFrontalierPage() {
                 },
               ].map((s) => (
                 <div key={s.label} className="bg-white border border-[#E7E5E4] rounded-xl p-3 sm:p-4 text-center">
-                  <p className="text-lg sm:text-2xl font-medium text-[#1C1917] whitespace-nowrap">{s.fig}</p>
+                  <p className="text-lg sm:text-2xl font-semibold text-[#1C1917] whitespace-nowrap">{s.fig}</p>
                   <p className="text-xs text-[#57534E] mt-1 leading-snug">{s.label}</p>
                 </div>
               ))}
@@ -857,7 +853,7 @@ export function ObservatoireLogementFrontalierPage() {
 
           {/* A — Le m² tout compris (finding) + spectre 4 barres */}
           <div className="bg-white border border-[#E7E5E4] rounded-xl p-6 sm:p-8 mb-6">
-            <h3 className="text-xl md:text-2xl font-light text-[#1C1917] mb-4" style={{ fontFamily: '"DM Serif Display", serif' }}>
+            <h3 className="text-xl md:text-2xl text-[#1C1917] mb-4">
               {en ? "The all-inclusive square metre" : "Le mètre carré tout compris"}
             </h3>
             <p className="text-sm text-[#44403C] leading-relaxed">
@@ -921,7 +917,7 @@ export function ObservatoireLogementFrontalierPage() {
 
           {/* B — Le coût complet, ligne à ligne (hypothèses affichées) */}
           <div className="bg-white border border-[#E7E5E4] rounded-xl p-6 sm:p-8 mb-6">
-            <h3 className="text-xl md:text-2xl font-light text-[#1C1917] mb-4" style={{ fontFamily: '"DM Serif Display", serif' }}>
+            <h3 className="text-xl md:text-2xl text-[#1C1917] mb-4">
               {en ? "The full monthly cost, line by line" : "Le coût mensuel complet, ligne à ligne"}
             </h3>
             <p className="text-sm text-[#57534E] leading-relaxed mb-4">
@@ -1049,7 +1045,7 @@ export function ObservatoireLogementFrontalierPage() {
 
           {/* C — Le résident-type + la tension */}
           <div className="bg-white border border-[#E7E5E4] rounded-xl p-6 sm:p-8">
-            <h3 className="text-xl md:text-2xl font-light text-[#1C1917] mb-4 flex items-center gap-2.5" style={{ fontFamily: '"DM Serif Display", serif' }}>
+            <h3 className="text-xl md:text-2xl text-[#1C1917] mb-4 flex items-center gap-2.5">
               <Users className="w-6 h-6 text-[#D4A574] shrink-0" />
               {en ? "Who lives in coliving — the typical resident" : "Qui vit en coliving — le résident-type"}
             </h3>
@@ -1068,7 +1064,7 @@ export function ObservatoireLogementFrontalierPage() {
                 { v: en ? "Spanish & Italian" : "Espagnols & Italiens", l: en ? "top nationalities (excl. FR/CH)" : "premières nationalités (hors FR/CH)" },
               ].map((c) => (
                 <div key={c.l} className="bg-[#FAF9F6] rounded-lg p-4 text-center">
-                  <p className="text-base font-medium text-[#1C1917] leading-snug">{c.v}</p>
+                  <p className="text-base font-semibold text-[#1C1917] leading-snug">{c.v}</p>
                   <p className="text-xs text-[#78716C] mt-1 leading-snug">{c.l}</p>
                 </div>
               ))}
@@ -1170,7 +1166,7 @@ export function ObservatoireLogementFrontalierPage() {
       {/* ===== PRESSE & TÉLÉCHARGEMENTS + CTA (brief staging §5) ===== */}
       <section className="py-14 lg:py-20 bg-white border-t border-[#E7E5E4]">
         <div className="max-w-4xl mx-auto px-6">
-          <h2 className="text-2xl md:text-3xl font-light text-[#1C1917] mb-6 text-center" style={{ fontFamily: '"DM Serif Display", serif' }}>
+          <h2 className="text-2xl md:text-3xl text-[#1C1917] mb-6 text-center">
             {en ? "Press & downloads" : "Presse & téléchargements"}
           </h2>
           {/* À citer */}
@@ -1188,7 +1184,7 @@ export function ObservatoireLogementFrontalierPage() {
             <a
               href={CSV_URL}
               download="observatoire-loyer-trajet-geneve-2026.csv"
-              className="inline-flex items-center gap-2 bg-[#1C1917] text-white px-5 py-3 text-xs sm:text-sm uppercase tracking-wider hover:bg-[#44403C] transition-colors rounded-md"
+              className="lvc-btn-primary inline-flex items-center gap-2 px-5 py-3 text-xs sm:text-sm"
             >
               <Download className="w-4 h-4" />
               {en ? "France corridor (CSV)" : "Corridor France (CSV)"}
@@ -1196,7 +1192,7 @@ export function ObservatoireLogementFrontalierPage() {
             <a
               href={CSV_GENEVA_URL}
               download="observatoire-geneve-deux-vitesses-2026.csv"
-              className="inline-flex items-center gap-2 border border-[#1C1917] text-[#1C1917] px-5 py-3 text-xs sm:text-sm uppercase tracking-wider hover:bg-[#1C1917] hover:text-white transition-colors rounded-md"
+              className="lvc-btn-secondary inline-flex items-center gap-2 px-5 py-3 text-xs sm:text-sm"
             >
               <Download className="w-4 h-4" />
               {en ? "Geneva two-speed (CSV)" : "Genève deux vitesses (CSV)"}
@@ -1204,7 +1200,7 @@ export function ObservatoireLogementFrontalierPage() {
             <a
               href={CSV_LAVILLA_URL}
               download="observatoire-lavilla-first-party-2026.csv"
-              className="inline-flex items-center gap-2 border border-[#1C1917] text-[#1C1917] px-5 py-3 text-xs sm:text-sm uppercase tracking-wider hover:bg-[#1C1917] hover:text-white transition-colors rounded-md"
+              className="lvc-btn-secondary inline-flex items-center gap-2 px-5 py-3 text-xs sm:text-sm"
             >
               <Download className="w-4 h-4" />
               {en ? "La Villa first-party (CSV)" : "La Villa first-party (CSV)"}
@@ -1212,7 +1208,7 @@ export function ObservatoireLogementFrontalierPage() {
             <button
               type="button"
               onClick={downloadScatterSvg}
-              className="inline-flex items-center gap-2 border border-[#D4A574] text-[#A0623C] px-5 py-3 text-xs sm:text-sm uppercase tracking-wider hover:bg-[#D4A574] hover:text-white transition-colors rounded-md"
+              className="lvc-btn-secondary inline-flex items-center gap-2 px-5 py-3 text-xs sm:text-sm"
             >
               <ImageDown className="w-4 h-4" />
               {en ? "Rent × commute chart (SVG)" : "Graphique loyer × trajet (SVG)"}
@@ -1220,7 +1216,7 @@ export function ObservatoireLogementFrontalierPage() {
             <a
               href="/images/observatoire-loyer-trajet-2026.png"
               download="observatoire-la-villa-coliving-2026.png"
-              className="inline-flex items-center gap-2 border border-[#D4A574] text-[#A0623C] px-5 py-3 text-xs sm:text-sm uppercase tracking-wider hover:bg-[#D4A574] hover:text-white transition-colors rounded-md"
+              className="lvc-btn-secondary inline-flex items-center gap-2 px-5 py-3 text-xs sm:text-sm"
             >
               <ImageDown className="w-4 h-4" />
               {en ? "Press visual +44% (PNG)" : "Visuel presse +44\u00a0% (PNG)"}
@@ -1243,13 +1239,13 @@ export function ObservatoireLogementFrontalierPage() {
             <div className="flex flex-col sm:flex-row gap-3 justify-center">
               <LocalizedLink
                 to={colocGeneveHref(language)}
-                className="inline-flex items-center gap-2 border border-[#1C1917] text-[#1C1917] px-6 py-3 text-sm uppercase tracking-wider hover:bg-[#1C1917] hover:text-white transition-colors"
+                className="lvc-btn-secondary inline-flex items-center gap-2 px-6 py-3 text-sm"
               >
                 {en ? "Shared housing in Geneva" : "La colocation à Genève"}
               </LocalizedLink>
               <LocalizedLink
                 to="/candidature"
-                className="inline-flex items-center gap-2 bg-[#D4A574] text-white px-6 py-3 text-sm uppercase tracking-wider hover:bg-[#44403C] transition-colors"
+                className="lvc-btn-primary inline-flex items-center gap-2 px-6 py-3 text-sm"
               >
                 {en ? "Book a visit" : "Programmer une visite"}
                 <ArrowRight className="w-4 h-4" />

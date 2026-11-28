@@ -46,6 +46,7 @@ import {
   type OfferPageState,
   type OfferSection,
 } from "@/data/offer";
+import { h1Accent } from "@/lib/h1Accent";
 
 /**
  * /offre-hiver · /en/winter-offer — Offre A « Pose tes valises avant l'hiver » (brief Jérôme du
@@ -89,7 +90,6 @@ import {
 
 const fmtChf = (n: number, en: boolean) => (en ? `CHF ${thousands(n, ",")}` : `${thousands(n, "\u00a0")} CHF`);
 const fmtEur = (n: number, en: boolean) => (en ? `€${thousands(n, ",")}` : `${thousands(n, "\u00a0")} €`);
-const SERIF = { fontFamily: '"DM Serif Display", serif' };
 
 /** Bouton « Je candidate » → /candidature?offre=… (offre affichée), mesuré en `offer_cta_click` (placement = landing, sticky pour la barre mobile). */
 function ApplyButton({
@@ -111,7 +111,7 @@ function ApplyButton({
     <LocalizedLink
       to={`/candidature?${query}`}
       onClick={() => trackOfferCta(placement, { language: L })}
-      className={`inline-flex items-center justify-center gap-2 ${compact ? "px-6 py-3 text-sm" : "px-8 py-4"} bg-[#1C1917] text-white font-semibold rounded-lg hover:bg-[#44403C] transition-colors ${className}`}
+      className={`lvc-btn-primary inline-flex items-center justify-center gap-2 ${compact ? "px-6 py-3 text-sm" : "px-8 py-4"} ${className}`}
     >
       {en ? "Apply now" : "Je candidate"}
       <ArrowRight className={compact ? "w-4 h-4" : "w-5 h-5"} />
@@ -283,7 +283,7 @@ function OfferRoomGrid({
         <button
           type="button"
           onClick={() => window.location.reload()}
-          className="mt-5 inline-flex items-center justify-center gap-2 px-5 py-2.5 bg-[#1C1917] text-white text-sm font-semibold rounded-lg hover:bg-[#44403C] transition-colors"
+          className="lvc-btn-primary mt-5 inline-flex items-center justify-center gap-2 px-5 py-2.5 text-sm"
         >
           {en ? "Reload the page" : "Recharger la page"}
         </button>
@@ -363,7 +363,7 @@ function IncludedSection({ en }: { en: boolean }) {
   return (
     <section className="py-14 lg:py-20">
       <div className="container-custom max-w-3xl">
-        <h2 className="text-2xl md:text-3xl font-light text-[#1C1917] mb-6" style={SERIF}>
+        <h2 className="text-2xl md:text-3xl text-[#1C1917] mb-6">
           {en ? "What's included" : "Ce qui est inclus"}
         </h2>
         <ul className="grid gap-3 sm:grid-cols-2">
@@ -451,8 +451,8 @@ function OfferEnded({ en, L }: { en: boolean; L: "fr" | "en" }) {
       <SEO title={endedTitle} description={endedDescription} noindex selfCanonical />
       <section className="py-20 lg:py-28 bg-[#F5F2ED]">
         <div className="container-custom max-w-2xl text-center">
-          <h1 className="text-4xl md:text-5xl font-light text-[#1C1917] mb-5" style={SERIF}>
-            {endedTitle}
+          <h1 className="text-4xl md:text-5xl text-[#1C1917] mb-5">
+            {h1Accent(endedTitle, en ? "ended" : "terminée")}
           </h1>
           <p className="text-lg text-[#44403C] mb-8">
             {en
@@ -461,7 +461,7 @@ function OfferEnded({ en, L }: { en: boolean; L: "fr" | "en" }) {
           </p>
           <LocalizedLink
             to="/chambres-disponibles"
-            className="inline-flex items-center justify-center gap-2 px-7 py-4 bg-[#1C1917] text-white font-semibold rounded-lg hover:bg-[#44403C] transition-colors"
+            className="lvc-btn-primary inline-flex items-center justify-center gap-2 px-7 py-4"
           >
             {en ? "See available rooms" : "Voir les chambres disponibles"}
             <ArrowRight className="w-5 h-5" />
@@ -470,7 +470,7 @@ function OfferEnded({ en, L }: { en: boolean; L: "fr" | "en" }) {
       </section>
       <section className="py-16 lg:py-20 bg-white">
         <div className="container-custom max-w-2xl">
-          <h2 className="text-2xl md:text-3xl font-light text-[#1C1917] mb-6 text-center" style={SERIF}>
+          <h2 className="text-2xl md:text-3xl text-[#1C1917] mb-6 text-center">
             {en ? "What stays the same, offer or not" : "Ce qui ne change pas, avec ou sans offre"}
           </h2>
           <ul className="space-y-3 text-[#44403C] leading-relaxed">
@@ -568,9 +568,9 @@ function OfferActive({
           Brief du 19/10 : ligne « produit » sous le H1 (quoi, combien, où), puis les conditions en une phrase. */}
       <section id="offre-hero" className="py-10 md:py-16 lg:py-20 bg-[#F5F2ED]">
         <div className="container-custom max-w-3xl text-center">
-          <p className="mb-3 text-xs sm:text-sm font-semibold uppercase tracking-[0.18em] text-[#9A5B08]">{nameLabel}</p>
-          <h1 className="text-4xl md:text-5xl lg:text-6xl font-light text-[#1C1917] mb-4" style={SERIF}>
-            {en ? "Half price on your first month" : "Ton premier mois à moitié prix"}
+          <p className="lvc-eyebrow mb-3">{nameLabel}</p>
+          <h1 className="text-4xl md:text-5xl lg:text-6xl text-[#1C1917] mb-4">
+            {en ? h1Accent("Half price on your first month", "Half price") : h1Accent("Ton premier mois à moitié prix", "à moitié prix")}
           </h1>
           <OfferProductLine en={en} rooms={rooms} className="text-lg md:text-xl text-[#1C1917] mb-3" />
           <p className="text-base md:text-lg text-[#44403C] mb-6">
@@ -578,7 +578,7 @@ function OfferActive({
               ? `Sign by ${endLabel}: half of your first month is on us. Your rent stays the same.`
               : `Signe d'ici le ${endLabel} : la moitié de ton premier mois est offerte. Ton loyer, lui, ne change pas.`}
           </p>
-          <p className="inline-flex items-center gap-2 px-4 py-2 bg-white border border-[#D4A574] rounded-full text-xs sm:text-sm font-medium text-[#1C1917]">
+          <p className="inline-flex items-center gap-2 px-4 py-2 bg-white border border-[#D4A574] rounded-full text-xs sm:text-sm font-semibold text-[#1C1917]">
             <span className="w-2 h-2 bg-[#B8860B] rounded-full shrink-0" aria-hidden="true" />
             {en ? `Offer valid for any lease signed by ${endLabel}` : `Offre valable pour tout bail signé jusqu'au ${endLabel}`}
           </p>
@@ -603,7 +603,7 @@ function OfferActive({
           sous le hero le 19/10 : les photos disent en une seconde ce qu'on vend. */}
       <section id="chambres-offre" className="py-14 lg:py-20 scroll-mt-20">
         <div className="container-custom">
-          <h2 className="text-2xl md:text-3xl font-light text-[#1C1917] mb-2" style={SERIF}>
+          <h2 className="text-2xl md:text-3xl text-[#1C1917] mb-2">
             {en ? "The rooms included in the offer" : "Les chambres concernées"}
           </h2>
           <p className="text-[#57534E] mb-8">
@@ -624,7 +624,7 @@ function OfferActive({
       {/* 3. Pour qui — trois cas, une ligne chacun (pas d'autre cible). Filet en haut depuis qu'il suit les chambres. */}
       <section className="py-12 lg:py-16 border-t border-[#E7E5E4]">
         <div className="container-custom max-w-3xl">
-          <h2 className="text-2xl md:text-3xl font-light text-[#1C1917] mb-6" style={SERIF}>
+          <h2 className="text-2xl md:text-3xl text-[#1C1917] mb-6">
             {en ? "Who it's for" : "Pour qui ?"}
           </h2>
           <CheckList items={whoFor} />
@@ -634,7 +634,7 @@ function OfferActive({
       {/* 4. Concrètement — tableau simple et honnête ; le loyer contractuel reste visible tel quel. */}
       <section id="concretement-offre" className="py-14 lg:py-20 bg-[#FAF9F6] border-y border-[#E7E5E4]">
         <div className="container-custom max-w-3xl">
-          <h2 className="text-2xl md:text-3xl font-light text-[#1C1917] mb-6" style={SERIF}>
+          <h2 className="text-2xl md:text-3xl text-[#1C1917] mb-6">
             {en ? "What it means in practice" : "Ce que ça donne concrètement"}
           </h2>
           <div className="overflow-hidden rounded-2xl border border-[#E7E5E4] bg-white">
@@ -691,7 +691,7 @@ function OfferActive({
       {/* 7. Rappel du bouton (D2 du 13/10/2026 : plus de ligne « premier servi » ici, elle reste dans les conditions). */}
       <section id="offre-rappel" className="py-16 lg:py-24 bg-white">
         <div className="container-custom max-w-3xl text-center">
-          <h2 className="text-2xl md:text-3xl font-light text-[#1C1917] mb-6" style={SERIF}>
+          <h2 className="text-2xl md:text-3xl text-[#1C1917] mb-6">
             {en ? `Settle in before winter: sign by ${endLabel}` : `Pose tes valises avant l'hiver : signe d'ici le ${endLabel}`}
           </h2>
           <ApplyButton en={en} L={L} className="w-full sm:w-auto" />
@@ -847,7 +847,7 @@ function OfferFirstYear({ en, L }: { en: boolean; L: "fr" | "en" }) {
         { q: "C'est cumulable avec le parrainage ?", a: "Oui : le résident qui te recommande garde son avantage." },
       ];
 
-  const h2 = "text-2xl md:text-3xl font-light text-[#1C1917] mb-6";
+  const h2 = "text-2xl md:text-3xl text-[#1C1917] mb-6";
   return (
     <main data-offer-state={FIRST_YEAR_OFFER_ID} data-offer-id={FIRST_YEAR_OFFER_ID} data-offer-today={todayIso} className="relative pt-16 bg-white">
       <SEO title={title} description={description} noindex selfCanonical />
@@ -856,16 +856,16 @@ function OfferFirstYear({ en, L }: { en: boolean; L: "fr" | "en" }) {
           situation (celle de l'hiver), échéance, compteur, bouton. */}
       <section id="offre-hero" className="py-10 md:py-16 lg:py-20 bg-[#F5F2ED]">
         <div className="container-custom max-w-3xl text-center">
-          <p className="mb-3 text-xs sm:text-sm font-semibold uppercase tracking-[0.18em] text-[#9A5B08]">
+          <p className="lvc-eyebrow mb-3">
             {en ? `Offer until ${endLabel}` : `Offre jusqu'au ${endLabel}`}
           </p>
-          <h1 className="text-[2rem] leading-tight sm:text-4xl md:text-5xl lg:text-6xl font-light text-[#1C1917] mb-2" style={SERIF}>
-            {headline}
+          <h1 className="text-[2rem] leading-tight sm:text-4xl md:text-5xl lg:text-6xl text-[#1C1917] mb-2">
+            {h1Accent(headline, en ? "back" : "remboursés")}
           </h1>
           <p data-offer-chf className="mb-4 text-sm text-[#78716C]">{chfLine}</p>
           <p className="text-base md:text-lg text-[#44403C] mb-3">{subtitle}</p>
           <OfferProductLine en={en} rooms={rooms} className="text-base md:text-lg text-[#1C1917] mb-5" />
-          <p data-offer-deadline className="inline-flex items-center gap-2 px-4 py-2 bg-white border border-[#D4A574] rounded-2xl text-xs sm:text-sm font-medium text-[#1C1917] text-left sm:text-center">
+          <p data-offer-deadline className="inline-flex items-center gap-2 px-4 py-2 bg-white border border-[#D4A574] rounded-2xl text-xs sm:text-sm font-semibold text-[#1C1917] text-left sm:text-center">
             <span className="w-2 h-2 bg-[#B8860B] rounded-full shrink-0" aria-hidden="true" />
             <span>{deadline}</span>
           </p>
@@ -889,7 +889,7 @@ function OfferFirstYear({ en, L }: { en: boolean; L: "fr" | "en" }) {
           maintenant » au lieu de « dans les 7 jours suivant la signature ». */}
       <section id="chambres-offre" className="py-14 lg:py-20 scroll-mt-20">
         <div className="container-custom">
-          <h2 className="text-2xl md:text-3xl font-light text-[#1C1917] mb-2" style={SERIF}>
+          <h2 className="text-2xl md:text-3xl text-[#1C1917] mb-2">
             {en ? "The rooms included in the offer" : "Les chambres concernées"}
           </h2>
           <p className="text-[#57534E] mb-8">
@@ -912,7 +912,7 @@ function OfferFirstYear({ en, L }: { en: boolean; L: "fr" | "en" }) {
       {/* 3. Pour qui ? — adapté (voir plus haut). */}
       <section className="py-12 lg:py-16 border-t border-[#E7E5E4]">
         <div className="container-custom max-w-3xl">
-          <h2 className={h2} style={SERIF}>
+          <h2 className={h2}>
             {en ? "Who it's for" : "Pour qui ?"}
           </h2>
           <CheckList items={whoFor} />
@@ -922,7 +922,7 @@ function OfferFirstYear({ en, L }: { en: boolean; L: "fr" | "en" }) {
       {/* 4. Comment ça marche — les quatre paliers (proposition), id de la section « concretely » de la mesure. */}
       <section id="concretement-offre" className="py-14 lg:py-20 bg-[#FAF9F6] border-y border-[#E7E5E4]">
         <div className="container-custom max-w-3xl">
-          <h2 className={h2} style={SERIF}>
+          <h2 className={h2}>
             {en ? "How it works" : "Comment ça marche"}
           </h2>
           <ol data-offer-steps className="space-y-3">
@@ -947,7 +947,7 @@ function OfferFirstYear({ en, L }: { en: boolean; L: "fr" | "en" }) {
       {/* 5. Conditions (brief §5, verbatim). */}
       <section className="py-14 lg:py-20">
         <div className="container-custom max-w-3xl">
-          <h2 className={h2} style={SERIF}>
+          <h2 className={h2}>
             {en ? "Conditions" : "Conditions"}
           </h2>
           <CheckList items={conditions} />
@@ -957,7 +957,7 @@ function OfferFirstYear({ en, L }: { en: boolean; L: "fr" | "en" }) {
       {/* 6. Ce qui est permanent (brief §5 : tout inclus, 0 frais, caution — un acquis, pas un avantage de l'offre). */}
       <section className="py-14 lg:py-20 bg-[#FAF9F6] border-y border-[#E7E5E4]">
         <div className="container-custom max-w-3xl">
-          <h2 className={h2} style={SERIF}>
+          <h2 className={h2}>
             {en ? "Always true, offer or not" : "Toujours vrai, avec ou sans offre"}
           </h2>
           <CheckList items={always} />
@@ -973,14 +973,14 @@ function OfferFirstYear({ en, L }: { en: boolean; L: "fr" | "en" }) {
       {/* 9. Rappel final (proposition). */}
       <section id="offre-rappel" className="py-16 lg:py-24 bg-white">
         <div className="container-custom max-w-3xl text-center">
-          <h2 className={h2} style={SERIF}>
+          <h2 className={h2}>
             {en ? `${headline}, for any lease signed by ${endLabel}` : `${headline}, pour tout bail signé d'ici le ${endLabel}`}
           </h2>
           <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
             <ApplyButton en={en} L={L} className="w-full sm:w-auto" query={FIRST_YEAR_QUERY} />
             <a
               href="#chambres-offre"
-              className="inline-flex w-full sm:w-auto items-center justify-center gap-2 px-8 py-4 border border-[#1C1917] text-[#1C1917] font-semibold rounded-lg hover:bg-[#F5F2ED] transition-colors"
+              className="lvc-btn-secondary inline-flex w-full sm:w-auto items-center justify-center gap-2 px-8 py-4"
             >
               {en ? "See the rooms" : "Voir les chambres"}
             </a>

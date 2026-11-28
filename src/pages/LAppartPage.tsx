@@ -65,6 +65,7 @@ import {
   useHouseRooms,
   type PublicRoom,
 } from "@/lib/availability";
+import { h1Accent } from "@/lib/h1Accent";
 
 /**
  * Page de L'Appart — /lappart et /en/lappart (brief « Points d'entrée prix, L'Appart » du 12/11/2026, Lot 3 ; étape E3).
@@ -103,8 +104,6 @@ function track(event: string, params: Record<string, unknown>) {
   } catch { /* noop — l'analytics ne bloque jamais l'UI */ }
 }
 
-const heading = { fontFamily: '"DM Serif Display", serif' };
-
 /** Carte « type » (état A) : même habillage que la carte d'une chambre (RoomCard « default »), sans pastille de disponibilité ni
  *  lien vers une fiche ; la photo est celle de la chambre (21/11/2026 : chambre de 12 m² type, ou la suite). */
 function TypeCard({ card, lang, onApply }: { card: AppartTypeCard; lang: "fr" | "en"; onApply: () => void }) {
@@ -123,7 +122,7 @@ function TypeCard({ card, lang, onApply }: { card: AppartTypeCard; lang: "fr" | 
         />
       </div>
       <div className="p-6 flex flex-col flex-1">
-        <h3 className="text-lg font-black text-[#1C1917] mb-1">{card.name}</h3>
+        <h3 className="text-lg text-[#1C1917] mb-1">{card.name}</h3>
         {card.count && <p className="text-sm font-semibold text-[#57534E] mb-1">{card.count}</p>}
         <p className="text-sm text-[#78716C] mb-1">{card.specs}</p>
         {card.furniture && <p className="text-sm text-[#78716C] mb-1">{card.furniture}</p>}
@@ -138,7 +137,7 @@ function TypeCard({ card, lang, onApply }: { card: AppartTypeCard; lang: "fr" | 
           <LocalizedLink
             to={`/candidature?property_interest=${APPART.key}`}
             onClick={onApply}
-            className="w-full inline-flex items-center justify-center gap-2 px-5 py-2.5 bg-[#D4A574] text-[#1C1917] text-sm font-semibold rounded-lg hover:bg-[#E0BB8A] transition-colors"
+            className="lvc-btn-primary w-full inline-flex items-center justify-center gap-2 px-5 py-2.5 text-sm"
           >
             {card.cta}
             <ArrowRight className="w-4 h-4" />
@@ -287,14 +286,16 @@ export function LAppartPage() {
               <ChevronRight className="w-4 h-4" aria-hidden="true" />
               <span className="text-white">{APPART.name}</span>
             </nav>
-            <p className="text-xs font-semibold uppercase tracking-[0.2em] text-[#E8C9A0] mb-3">{hero.eyebrow}</p>
+            {/* (Lot 2a, 28/11/2026) Interlettrage d'avant gardé : avec celui du surtitre commun, ce libellé tient sur une ligne
+                en Inter et sur deux avec la police de repli, et le haut de page (ancré en bas) sautait à l'arrivée des polices. */}
+            <p className="lvc-eyebrow tracking-[0.2em] text-[#E8C9A0] mb-3">{hero.eyebrow}</p>
             {heroBadge && (
               <div className="mb-4">
                 <Badge className={`font-extrabold backdrop-blur-sm ${BADGE_CHIP_CLASS[heroBadge.tone]}`}>{heroBadge.label}</Badge>
               </div>
             )}
-            <h1 className="text-3xl md:text-6xl mb-4 text-white [text-shadow:0_2px_12px_rgba(0,0,0,0.55)] max-w-4xl" style={heading}>
-              {hero.h1}
+            <h1 className="text-3xl md:text-6xl mb-4 text-white [text-shadow:0_2px_12px_rgba(0,0,0,0.55)] max-w-4xl">
+              {h1Accent(hero.h1, APPART.commune, true)}
             </h1>
             <div className="flex flex-wrap items-center gap-x-6 gap-y-2 text-white/90 font-medium">
               <span className="flex items-center gap-2"><MapPin size={18} className="text-[#D4A574]" />{hero.markers[0]}</span>
@@ -305,7 +306,7 @@ export function LAppartPage() {
               <LocalizedLink
                 to={applyTo}
                 onClick={() => trackCta("lappart_hero")}
-                className="inline-flex items-center gap-2 px-7 py-3.5 bg-[#D4A574] text-[#1C1917] font-bold rounded-full hover:bg-[#E0BB8A] transition-colors shadow-sharp"
+                className="lvc-btn-primary inline-flex items-center gap-2 px-7 py-3.5"
               >
                 {hero.apply}
                 <ArrowRight className="w-5 h-5" />
@@ -320,7 +321,7 @@ export function LAppartPage() {
           le premier paragraphe, puis « Lire la suite » ; le reste est toujours dans le HTML et toujours affiché à partir de md. */}
       <section className="py-8 md:py-16 relative bg-white">
         <div className="container-custom">
-          <div className="max-w-3xl space-y-4 text-base md:text-lg text-[#57534E] leading-relaxed font-medium">
+          <div className="max-w-3xl space-y-4 text-base md:text-lg text-[#57534E] leading-relaxed">
             <p>{lead.lead}</p>
             <div className={introOpen ? "space-y-4" : "hidden md:block space-y-4"}>
               <p>{lead.price}</p>
@@ -346,7 +347,7 @@ export function LAppartPage() {
       {/* Les 4 chambres. État A : deux cartes « types » ; état B : les cartes de la vue ; complet : liste d'attente en tête. */}
       <section className="py-8 md:py-20 relative bg-[#FAF9F6]">
         <div className="container-custom">
-          <h2 className="text-3xl md:text-4xl mb-4 text-[#1C1917]" style={heading}>{roomsText.title}</h2>
+          <h2 className="text-3xl md:text-4xl mb-4 text-[#1C1917]">{roomsText.title}</h2>
           <div className="mb-8 space-y-3 max-w-3xl text-[15px] md:text-base text-[#57534E]">
             {/* (Corrections du 13/11/2026) « … Tu peux candidater dès maintenant » appartient aux états A et B (PAGE-LAPPART § 12.1) :
                 jamais au-dessus du bloc « complet » (§ 12.3), qui le remplace. */}
@@ -358,7 +359,7 @@ export function LAppartPage() {
 
           {full && (
             <div className="mb-8 max-w-3xl">
-              <h3 className="text-2xl text-[#1C1917] mb-2" style={heading}>{fullText.title}</h3>
+              <h3 className="text-2xl text-[#1C1917] mb-2">{fullText.title}</h3>
               <p className="text-[#57534E] leading-relaxed">{fullText.text}</p>
             </div>
           )}
@@ -470,8 +471,8 @@ export function LAppartPage() {
       {/* Le séjour-cuisine de 80 m² et le balcon : album des pièces communes (6 vignettes, visionneuse sur les 8 photos). */}
       <section id="galerie" className="py-8 md:py-20 bg-white relative scroll-mt-24">
         <div className="container-custom">
-          <h2 className="text-3xl md:text-4xl mb-4 text-[#1C1917]" style={heading}>{living.title}</h2>
-          <p className="text-base md:text-lg text-[#57534E] leading-relaxed font-medium max-w-3xl mb-6 md:mb-8">{living.text}</p>
+          <h2 className="text-3xl md:text-4xl mb-4 text-[#1C1917]">{living.title}</h2>
+          <p className="text-base md:text-lg text-[#57534E] leading-relaxed max-w-3xl mb-6 md:mb-8">{living.text}</p>
           <div className="grid grid-cols-2 md:grid-cols-3 gap-2 md:gap-4">
             {LAPPART_ALBUM_COVERS.map((src) => {
               const index = LAPPART_ALBUM.findIndex((p) => p.src === src);
@@ -503,7 +504,7 @@ export function LAppartPage() {
             <button
               type="button"
               onClick={() => openAlbum(0, "button")}
-              className="w-full md:w-auto inline-flex items-center justify-center gap-2 px-7 py-3.5 border border-[#1C1917] text-[#1C1917] font-semibold rounded-xl hover:bg-[#1C1917] hover:text-white transition-colors"
+              className="lvc-btn-secondary w-full md:w-auto inline-flex items-center justify-center gap-2 px-7 py-3.5"
             >
               <Grid3X3 className="w-4 h-4" aria-hidden="true" />
               {living.album(LAPPART_ALBUM.length)}
@@ -534,19 +535,19 @@ export function LAppartPage() {
       {/* Emplacement et trajets : phrase de quartier (1 fois), zone, note, tableau (minutes seulement), carte sur la gare. */}
       <section className="py-8 md:py-20 relative bg-white" data-house-location-version={APPART_LOCATION_VERSION}>
         <div className="container-custom max-w-5xl">
-          <h2 className="text-3xl md:text-4xl mb-6 text-[#1C1917]" style={heading}>{locHeadings.title}</h2>
-          <p className="text-base md:text-lg text-[#57534E] leading-relaxed mb-8 font-medium">{appartNeighbourhood(L)}</p>
+          <h2 className="text-3xl md:text-4xl mb-6 text-[#1C1917]">{locHeadings.title}</h2>
+          <p className="text-base md:text-lg text-[#57534E] leading-relaxed mb-8">{appartNeighbourhood(L)}</p>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-2">
             <div>
-              <h3 className="text-xl font-black mb-4 text-[#1C1917] flex items-center gap-2">
+              <h3 className="text-xl mb-4 text-[#1C1917] flex items-center gap-2">
                 <MapPin size={20} className="text-[#D4A574]" />
                 {locHeadings.neighbourhood}
               </h3>
-              <p className="text-[#57534E] font-medium mb-1">{appartZone(L)}</p>
+              <p className="text-[#57534E] mb-1">{appartZone(L)}</p>
               <p className="text-sm text-[#78716C] mb-6">{appartExactAddressNote(L)}</p>
             </div>
             <div>
-              <h3 className="text-xl font-black mb-4 text-[#1C1917] flex items-center gap-2">
+              <h3 className="text-xl mb-4 text-[#1C1917] flex items-center gap-2">
                 <Clock size={20} className="text-[#D4A574]" />
                 {en ? "Transport & travel times" : "Transport & temps de trajet"}
               </h3>
@@ -561,12 +562,12 @@ export function LAppartPage() {
       {/* À deux : la suite (P5 : « 1 060 € par mois, soit 530 € par personne à deux »). */}
       <section className="py-8 md:py-16 relative bg-[#FAF9F6]">
         <div className="container-custom max-w-3xl">
-          <h2 className="text-3xl md:text-4xl mb-4 text-[#1C1917]" style={heading}>{suite.title}</h2>
-          <p className="text-base md:text-lg text-[#57534E] leading-relaxed font-medium">{suite.text}</p>
+          <h2 className="text-3xl md:text-4xl mb-4 text-[#1C1917]">{suite.title}</h2>
+          <p className="text-base md:text-lg text-[#57534E] leading-relaxed">{suite.text}</p>
           <LocalizedLink
             to={suiteIsCandidate ? `${applyTo}&room_interest=chambre-${suiteRow?.room_number}` : applyTo}
             onClick={() => trackCta("lappart_suite", suiteIsCandidate ? { room_id: `chambre-${suiteRow?.room_number}` } : {})}
-            className="mt-6 inline-flex items-center gap-2 px-6 py-3 border border-[#1C1917] text-[#1C1917] text-sm font-semibold rounded-lg hover:bg-[#1C1917] hover:text-white transition-colors"
+            className="lvc-btn-secondary mt-6 inline-flex items-center gap-2 px-6 py-3 text-sm"
           >
             {appartSuiteCta(L)}
             <ArrowRight className="w-4 h-4" />
@@ -577,9 +578,9 @@ export function LAppartPage() {
       {/* Conditions : bail, caution, frais et garant sont dans la fiche juste en dessous (une seule fois par page). */}
       <section className="pt-8 md:pt-20 relative bg-white">
         <div className="container-custom max-w-3xl">
-          <h2 className="text-3xl md:text-4xl mb-4 text-[#1C1917]" style={heading}>{conditions.title}</h2>
-          <p className="text-base md:text-lg text-[#57534E] leading-relaxed font-medium">{conditions.intro}</p>
-          <p className="mt-3 text-base md:text-lg text-[#57534E] leading-relaxed font-medium">{conditions.profiles}</p>
+          <h2 className="text-3xl md:text-4xl mb-4 text-[#1C1917]">{conditions.title}</h2>
+          <p className="text-base md:text-lg text-[#57534E] leading-relaxed">{conditions.intro}</p>
+          <p className="mt-3 text-base md:text-lg text-[#57534E] leading-relaxed">{conditions.profiles}</p>
         </div>
       </section>
 
@@ -593,7 +594,7 @@ export function LAppartPage() {
       {/* FAQ : 8 questions, un seul FAQPage (ci-dessus) ; les 5 premières dépliées, les suivantes dans le HTML sous un bouton. */}
       <section className="py-8 md:py-20 relative bg-[#FAF9F6]">
         <div className="container-custom max-w-3xl">
-          <h2 className="text-3xl md:text-4xl mb-5 md:mb-8 text-[#1C1917]" style={heading}>{faqHeading.title}</h2>
+          <h2 className="text-3xl md:text-4xl mb-5 md:mb-8 text-[#1C1917]">{faqHeading.title}</h2>
           <dl className="space-y-4 md:space-y-6">{faqs.slice(0, FAQ_VISIBLE).map(faqCard)}</dl>
           {faqs.length > FAQ_VISIBLE && (
             <>
@@ -618,8 +619,8 @@ export function LAppartPage() {
       {/* « Tu veux piscine et sauna ? » : le renvoi vers les maisons (titre et texte = exceptions de gamme de la source). */}
       <section className="py-8 md:py-16 relative bg-white">
         <div className="container-custom max-w-3xl">
-          <h2 className="text-3xl md:text-4xl mb-4 text-[#1C1917]" style={heading}>{ex["page.maisons.h2"]}</h2>
-          <p className="text-base md:text-lg text-[#57534E] leading-relaxed font-medium">{ex["page.maisons.texte"]}</p>
+          <h2 className="text-3xl md:text-4xl mb-4 text-[#1C1917]">{ex["page.maisons.h2"]}</h2>
+          <p className="text-base md:text-lg text-[#57534E] leading-relaxed">{ex["page.maisons.texte"]}</p>
           <LocalizedLink
             to="/nos-maisons"
             onClick={() => track("house_discover_click", { house: "maisons", cta_position: "lappart_houses", language })}
@@ -634,13 +635,13 @@ export function LAppartPage() {
       {/* Appel final. */}
       <section className="py-14 md:py-20 relative bg-[#1C1917] overflow-hidden">
         <div className="container-custom relative text-center">
-          <h2 className="text-3xl md:text-4xl mb-4 text-white font-black" style={heading}>{finalCta.title}</h2>
+          <h2 className="text-3xl md:text-4xl mb-4 text-white">{finalCta.title}</h2>
           <p className="text-lg text-white/90 max-w-2xl mx-auto font-bold mb-8">{finalCta.text}</p>
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
             <LocalizedLink
               to={applyTo}
               onClick={() => trackCta("lappart_footer")}
-              className="inline-flex items-center gap-2 px-8 py-4 bg-white text-[#1C1917] font-bold rounded-full hover:bg-gray-100 transition-colors"
+              className="lvc-btn-primary inline-flex items-center gap-2 px-8 py-4"
             >
               {finalCta.apply}
               <ArrowRight className="w-5 h-5" />
@@ -650,7 +651,7 @@ export function LAppartPage() {
               target="_blank"
               rel="noopener noreferrer"
               onClick={() => track("whatsapp_click", { page_path: en ? `/en/${APPART.key}` : `/${APPART.key}`, context: `lappart_footer`, language })}
-              className="inline-flex items-center gap-2 px-8 py-4 border border-white/30 text-white font-medium rounded-full hover:bg-white/10 transition-colors"
+              className="lvc-btn-secondary lvc-btn-secondary--on-dark inline-flex items-center gap-2 px-8 py-4"
             >
               {finalCta.whatsapp}
             </a>
@@ -665,7 +666,7 @@ export function LAppartPage() {
           <LocalizedLink
             to={applyTo}
             onClick={() => trackCta("sticky_mobile")}
-            className="flex-1 flex items-center justify-center gap-2 bg-[#D4A574] text-[#1C1917] py-3 rounded-lg text-sm font-semibold"
+            className="lvc-btn-primary flex-1 flex items-center justify-center gap-2 py-3 text-sm"
           >
             {hero.apply}
             <ArrowRight className="w-4 h-4" />

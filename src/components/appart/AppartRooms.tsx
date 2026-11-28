@@ -69,7 +69,7 @@ export function AppartRooms({ known, fallback = false, discoverLink = false, pag
 
   return (
     <section data-appart-rooms={known ? "chambres" : "repli"} aria-labelledby={TITLE_ID} className={className}>
-      <Heading id={TITLE_ID} className="text-2xl md:text-3xl font-light text-[#1C1917] leading-tight" style={{ fontFamily: '"DM Serif Display", serif' }}>
+      <Heading id={TITLE_ID} className="lvc-display text-2xl md:text-3xl text-[#1C1917] leading-tight">
         {t.title}
       </Heading>
       {known ? (
@@ -81,7 +81,7 @@ export function AppartRooms({ known, fallback = false, discoverLink = false, pag
             <LocalizedLink
               to={WAITLIST_PATH}
               onClick={() => track("cta_click", { cta_position: "waitlist", cta_target: "/candidature" })}
-              className="inline-flex items-center justify-center gap-2 min-h-[44px] px-5 border border-[#1C1917] text-[#1C1917] text-sm font-semibold rounded-lg hover:bg-[#1C1917] hover:text-white transition-colors"
+              className="lvc-btn-secondary inline-flex items-center justify-center gap-2 min-h-[44px] px-5 text-sm"
             >
               {t.waitlist}
               <ArrowRight className="w-4 h-4" aria-hidden="true" />

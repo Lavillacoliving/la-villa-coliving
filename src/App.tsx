@@ -102,9 +102,12 @@ function AppContent() {
   const isQuestionnaire = location.pathname.startsWith('/questionnaire-depart');
   // Langue de l'écran d'erreur (ErrorBoundary est une classe : pas de hook, on dérive de l'URL).
   const isEn = location.pathname === '/en' || location.pathname.startsWith('/en/');
+  // (Lot 2a, commit 10, 28/11/2026) Routes publiques : elles reçoivent les règles de titres du
+  // système graphique (`.lvc-site`, src/index.css). Même condition que le menu et le pied de page.
+  const isPublic = !isDashboard && !isPortail && !isResetPw && !isQuestionnaire;
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className={isPublic ? "lvc-site min-h-screen bg-background" : "min-h-screen bg-background"}>
       {!isDashboard && !isPortail && !isResetPw && !isQuestionnaire && <Navbar />}
       {/* Filet Lot C : keyé par le chemin pour se réinitialiser à chaque navigation ; ne rend
           aucun élément DOM en fonctionnement normal (shell [header…footer] inchangé pour

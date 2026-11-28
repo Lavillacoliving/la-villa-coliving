@@ -20,8 +20,7 @@ function Section({ title, children }: { title: string; children: React.ReactNode
   return (
     <section className="mb-10">
       <h2
-        className="text-2xl font-bold text-[#1C1917] mb-4"
-        style={{ fontFamily: '"DM Serif Display", serif' }}
+        className="text-2xl text-[#1C1917] mb-4"
       >
         {title}
       </h2>
@@ -47,8 +46,7 @@ export function MentionsLegalesPage() {
       <div className="bg-white">
         <div className="container-custom max-w-3xl py-20">
           <h1
-            className="text-4xl md:text-5xl font-bold text-[#1C1917] mb-6"
-            style={{ fontFamily: '"DM Serif Display", serif' }}
+            className="text-4xl md:text-5xl text-[#1C1917] mb-6"
           >
             {isEn ? "Legal Notice" : "Mentions légales"}
           </h1>
