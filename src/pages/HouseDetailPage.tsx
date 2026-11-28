@@ -1704,11 +1704,11 @@ export function HouseDetailPage() {
             </h1>
             <div className="flex flex-wrap items-center gap-6 text-white/90 font-medium">
               <span className="flex items-center gap-2">
-                <MapPin size={18} className="text-lvc-accent" />
+                <MapPin size={18} className="text-[#E0BB8A]" />
                 {house.location}
               </span>
               <span className="flex items-center gap-2">
-                <Users size={18} className="text-lvc-accent" />
+                <Users size={18} className="text-[#E0BB8A]" />
                 {house.capacity}
               </span>
               <span className="flex items-center gap-2">

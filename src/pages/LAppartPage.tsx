@@ -298,8 +298,8 @@ export function LAppartPage() {
               {h1Accent(hero.h1, APPART.commune, true)}
             </h1>
             <div className="flex flex-wrap items-center gap-x-6 gap-y-2 text-white/90 font-medium">
-              <span className="flex items-center gap-2"><MapPin size={18} className="text-lvc-accent" />{hero.markers[0]}</span>
-              <span className="flex items-center gap-2"><Users size={18} className="text-lvc-accent" />{hero.markers[1]}</span>
+              <span className="flex items-center gap-2"><MapPin size={18} className="text-[#E0BB8A]" />{hero.markers[0]}</span>
+              <span className="flex items-center gap-2"><Users size={18} className="text-[#E0BB8A]" />{hero.markers[1]}</span>
               <span className="flex items-center gap-2"><Maximize size={18} className="text-white/80" />{hero.markers[2]}</span>
             </div>
             <div className="mt-6 flex flex-wrap items-center gap-4">
