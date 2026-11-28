@@ -55,9 +55,29 @@ test('Offer et AggregateOffer de premier niveau contradictoires (deux @type, tou
   assert.match(failures[0], /InStock \/ PreOrder/);
 });
 
-test('deux blocs différents d\'un autre @type : avertissement seulement', () => {
-  const { failures, warnings } = jsonLdConflicts(page(ld({ '@type': 'WebPage', name: 'a' }), ld({ '@type': 'WebPage', name: 'b' })));
-  assert.deepEqual(failures, []);
-  assert.equal(warnings.length, 1);
-  assert.match(warnings[0], /« WebPage »/);
+// (28/11/2026) Cas réel : public/prerendered/colocation-geneve.html du bot 4cf95f81e (ordre LocalBusiness, WebPage, FAQPage,
+// Offer, WebPage, BreadcrumbList) — WebPage fantôme au repli éditorial, puis celui à la date de l'inventaire.
+const webPage = (dateModified) => ({ '@context': 'https://schema.org', '@type': 'WebPage', url: 'https://www.lavillacoliving.com/colocation-geneve', inLanguage: 'fr', datePublished: '2026-02-17', dateModified });
+
+test('deux WebPage différents (cas /colocation-geneve du 10 au 28/11/2026) : échec, et l\'injection servait le premier', () => {
+  const html = page(ld(localBusiness), ld(webPage('2026-09-04')), ld({ '@type': 'FAQPage' }), ld(offer('InStock')), ld(webPage('2026-11-24')));
+  const { failures, warnings } = jsonLdConflicts(html);
+  assert.equal(failures.length, 1);
+  assert.match(failures[0], /2 blocs JSON-LD « WebPage » différents/);
+  assert.deepEqual(warnings, []);
+  const served = extractSeoTags(html).jsonLd.filter((j) => j.includes('"@type":"WebPage"'));
+  assert.equal(served.length, 1);
+  assert.match(served[0], /"dateModified":"2026-09-04"/);
+});
+
+test('un seul WebPage, ou deux WebPage identiques (servis une fois, sans perte) : rien à signaler', () => {
+  assert.deepEqual(jsonLdConflicts(page(ld(localBusiness), ld(webPage('2026-11-24')), ld(offer('InStock')))), { failures: [], warnings: [] });
+  assert.deepEqual(jsonLdConflicts(page(ld(webPage('2026-11-24')), ld(webPage('2026-11-24')))), { failures: [], warnings: [] });
+});
+
+test('deux blocs différents de tout autre @type : échec', () => {
+  const { failures, warnings } = jsonLdConflicts(page(ld({ '@type': 'FAQPage', name: 'a' }), ld({ '@type': 'FAQPage', name: 'b' })));
+  assert.equal(failures.length, 1);
+  assert.match(failures[0], /« FAQPage »/);
+  assert.deepEqual(warnings, []);
 });

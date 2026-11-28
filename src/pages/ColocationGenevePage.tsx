@@ -104,7 +104,12 @@ export function ColocationGenevePage() {
   const editorialIso = `${PAGE_LAST_UPDATED}T12:00:00Z`;
   const roomsUpdatedIso = roomsContentUpdatedAt([...allRooms.rooms, ...appart.rooms]);
   const lastUpdatedIso = roomsUpdatedIso && Date.parse(roomsUpdatedIso) > Date.parse(editorialIso) ? roomsUpdatedIso : editorialIso;
-  const webPageSchema = {
+  // (Correctif 28/11/2026) WebPage émis SEULEMENT une fois l'inventaire connu, même idiome que l'Offer ci-dessus : son
+  // dateModified dépend de v_public_rooms. Le rendu abandonné à 0 chambre laissait une instance react-helmet fantôme au
+  // repli éditorial (2026-09-04) À CÔTÉ du bloc à la date de l'inventaire : 32 prérendus du bot sur 40 du 10 au 28/11, et
+  // l'injection servait le premier, le mauvais, sous un « Mis à jour le 24 novembre 2026 » affiché. Garde CI :
+  // check-entity-facts (deux blocs JSON-LD de même @type au contenu différent = échec).
+  const webPageSchema = allRooms.known ? {
     "@context": "https://schema.org",
     "@type": "WebPage",
     url: PILLAR_URL,
@@ -112,7 +117,7 @@ export function ColocationGenevePage() {
     inLanguage: en ? "en" : "fr",
     datePublished: PAGE_FIRST_PUBLISHED,
     dateModified: parisIsoDate(lastUpdatedIso) || PAGE_LAST_UPDATED,
-  };
+  } : undefined;
   const lastUpdatedLabel = formatLongDate(lastUpdatedIso, L);
   const h2 = "text-3xl md:text-4xl text-[#1C1917] mb-6";
   const link = "text-[#1C1917] underline underline-offset-4 hover:text-lvc-accent";
@@ -134,9 +139,11 @@ export function ColocationGenevePage() {
         image="https://www.lavillacoliving.com/images/villa_portrait.webp"
         jsonLd={offerSchema}
       />
-      <Helmet>
-        <script type="application/ld+json">{JSON.stringify(webPageSchema)}</script>
-      </Helmet>
+      {webPageSchema && (
+        <Helmet>
+          <script type="application/ld+json">{JSON.stringify(webPageSchema)}</script>
+        </Helmet>
+      )}
 
       {/* ===== HERO ===== */}
       <section className="relative py-20 lg:py-28 bg-gradient-to-b from-white to-[#FAF9F6]">
