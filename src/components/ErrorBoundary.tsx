@@ -64,7 +64,7 @@ export class ErrorBoundary extends Component<Props, State> {
           >
             {en ? "This page didn't load" : "Cette page n'a pas pu se charger"}
           </h1>
-          <p className="text-[#57534E] font-medium mb-6">
+          <p className="text-[#57534E] mb-6">
             {chunk
               ? en
                 ? "A new version of the site has just been published. Reload the page to get it."

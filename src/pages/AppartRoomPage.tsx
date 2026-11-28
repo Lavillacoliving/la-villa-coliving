@@ -176,7 +176,7 @@ export function AppartRoomPage() {
         <section className="pt-28 pb-14 lg:pt-32 lg:pb-20">
           <div className="container-custom">
             {breadcrumb}
-            <p className="text-xs font-semibold uppercase tracking-[0.2em] text-[#B8860B] mb-2">{eyebrow}</p>
+            <p className="lvc-eyebrow mb-2">{eyebrow}</p>
             <h1 className="text-3xl md:text-4xl text-[#1C1917] mb-4 max-w-3xl" style={heading}>{u.h1}</h1>
             <p className="text-[#57534E] leading-relaxed max-w-2xl">{u.text}</p>
             <div className="mt-8 flex flex-col sm:flex-row gap-3">
@@ -267,7 +267,7 @@ export function AppartRoomPage() {
       <section className="pt-28 pb-6 lg:pt-32">
         <div className="container-custom">
           {breadcrumb}
-          <p className="text-xs font-semibold uppercase tracking-[0.2em] text-[#B8860B] mb-2">{eyebrow}</p>
+          <p className="lvc-eyebrow mb-2">{eyebrow}</p>
           <h1 className="text-4xl md:text-5xl text-[#1C1917] mb-3" style={heading}>{appartRoomH1(n, L)}</h1>
           <div className="flex flex-wrap items-center gap-3">
             <p className="text-[#57534E]">{specsLine}</p>

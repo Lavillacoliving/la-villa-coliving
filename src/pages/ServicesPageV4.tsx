@@ -276,7 +276,7 @@ export function ServicesPageV4() {
             </p>
           </aside>
           <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-bold text-[#1C1917] mb-4 tracking-tight">
+            <h2 className="text-3xl md:text-4xl text-[#1C1917] mb-4 tracking-tight">
               {language === "en"
                 ? "Not just services."
                 : "Pas juste des services."}
@@ -348,10 +348,10 @@ export function ServicesPageV4() {
       <section className="py-24 bg-white">
         <div className="container-custom">
           <div className="text-center mb-16">
-            <span className="text-[13px] font-semibold tracking-wider uppercase text-[#78716C] mb-4 block">
+            <span className="lvc-eyebrow mb-4">
               {language === "en" ? "What's Included" : "Ce qui est inclus"}
             </span>
-            <h2 className="text-3xl md:text-4xl font-bold text-[#1C1917] tracking-tight">
+            <h2 className="text-3xl md:text-4xl text-[#1C1917] tracking-tight">
               {language === "en"
                 ? "Everything you need"
                 : "Tout ce dont tu as besoin"}
@@ -427,12 +427,12 @@ export function ServicesPageV4() {
         <div className="container-custom">
           <div className="grid lg:grid-cols-2 gap-16 items-center">
             <div>
-              <span className="text-[13px] font-semibold tracking-wider uppercase text-[#78716C] mb-4 block">
+              <span className="lvc-eyebrow mb-4">
                 {language === "en"
                   ? "The La Villa Difference"
                   : "La différence La Villa"}
               </span>
-              <h2 className="text-3xl md:text-4xl font-bold text-[#1C1917] mb-6 tracking-tight">
+              <h2 className="text-3xl md:text-4xl text-[#1C1917] mb-6 tracking-tight">
                 {language === "en" ? "Say goodbye to" : "Dis adieu aux"}{" "}
                 <span className="text-[#78716C] line-through">
                   {language === "en" ? "chores" : "corvées"}
@@ -506,10 +506,10 @@ export function ServicesPageV4() {
       {/* CTA FINAL */}
       <section className="py-24 bg-[#1C1917]">
         <div className="container-custom text-center">
-          <span className="text-[13px] font-semibold tracking-wider uppercase text-[#E0BB8A] mb-5 block">
+          <span className="lvc-eyebrow text-[#E0BB8A] mb-5">
             {language === "en" ? "Ready?" : "Prêt ?"}
           </span>
-          <h2 className="text-3xl md:text-4xl font-bold text-white mb-6 tracking-tight">
+          <h2 className="text-3xl md:text-4xl text-white mb-6 tracking-tight">
             {language === "en"
               ? "Ready to live lighter?"
               : "Prêt à vivre plus léger ?"}

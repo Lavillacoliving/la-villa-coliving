@@ -183,12 +183,11 @@ export function RoomPipeline({ house, houseName, en, hasCandidates, onApplyClick
         <CalendarClock className="text-[#D4A574] mt-1 shrink-0 hidden sm:block" size={28} />
         <div className="flex-1 min-w-0">
           <Heading
-            className="text-2xl md:text-3xl text-[#1C1917] mb-3"
-            style={{ fontFamily: '"DM Serif Display", serif' }}
+            className="lvc-display text-2xl md:text-3xl text-[#1C1917] mb-3"
           >
             {texts ? texts.title : (en ? "A room frees up? You're told first." : "Une chambre se libère ? Tu es prévenu en premier.")}
           </Heading>
-          <p className="text-[#57534E] font-medium leading-relaxed max-w-2xl">
+          <p className="text-[#57534E] leading-relaxed max-w-2xl">
             {texts
               ? texts.text
               : en

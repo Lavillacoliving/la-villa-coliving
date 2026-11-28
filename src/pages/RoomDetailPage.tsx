@@ -339,7 +339,7 @@ export function RoomDetailPage() {
               <ChevronRight className="w-4 h-4" aria-hidden="true" />
               <span className="text-[#1C1917]">{roomName}</span>
             </nav>
-            <p className="text-xs font-semibold uppercase tracking-[0.2em] text-[#B8860B] mb-2">{houseLabel} · {facts.commune}</p>
+            <p className="lvc-eyebrow mb-2">{houseLabel} · {facts.commune}</p>
             <h1 className="text-3xl md:text-4xl text-[#1C1917] mb-4 max-w-3xl" style={heading}>
               {en ? "This room isn't available right now" : "Cette chambre n'est pas disponible pour le moment"}
             </h1>
@@ -397,7 +397,7 @@ export function RoomDetailPage() {
             <ChevronRight className="w-4 h-4" aria-hidden="true" />
             <span className="text-[#1C1917]">{roomName}</span>
           </nav>
-          <p className="text-xs font-semibold uppercase tracking-[0.2em] text-[#B8860B] mb-2">{houseLabel} · {facts.commune}</p>
+          <p className="lvc-eyebrow mb-2">{houseLabel} · {facts.commune}</p>
           <h1 className="text-4xl md:text-5xl text-[#1C1917] mb-3" style={heading}>
             {en ? `${roomName} at ${houseLabel}` : `${roomName} ${atHouse(houseLabel)}`}
           </h1>

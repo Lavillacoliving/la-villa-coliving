@@ -1392,7 +1392,7 @@ function IncludedGroup({ panelId, title, items, icon: Icon, iconClass, last = fa
   const [open, setOpen] = useState(false);
   return (
     <div className={`rounded-2xl border border-[#E7E5E4] bg-white p-4 md:rounded-none md:border-0 md:bg-transparent md:p-0${last ? "" : " md:mb-12"}`}>
-      <h3 className="text-base font-bold text-[#1C1917] md:text-2xl md:font-black md:mb-6">
+      <h3 className="text-base text-[#1C1917] md:text-2xl md:mb-6">
         <button
           type="button"
           aria-expanded={open}
@@ -1780,7 +1780,7 @@ export function HouseDetailPage() {
               ? `About ${house.name}`
               : `À propos ${ofHouseFr(house.name)}`}
           </h2>
-          <p className="text-base md:text-lg text-[#57534E] leading-relaxed font-medium max-w-3xl">
+          <p className="text-base md:text-lg text-[#57534E] leading-relaxed max-w-3xl">
             {[house.longDescription.lead, house.longDescription.rest].filter(Boolean).join(" ")}
           </p>
           <p className="text-sm text-[#78716C] mt-4 md:mt-6 flex items-center gap-2">
@@ -1875,11 +1875,11 @@ export function HouseDetailPage() {
                   <div className="p-8">
                     <div className="flex items-center gap-3 mb-4">
                       <BedDouble className="text-[#D4A574]" size={28} />
-                      <h3 className="text-xl font-black text-[#1C1917]">
+                      <h3 className="text-xl text-[#1C1917]">
                         {room.type}
                       </h3>
                     </div>
-                    <p className="text-[#78716C] mb-6 font-medium">
+                    <p className="text-[#78716C] mb-6">
                       {room.description}
                     </p>
                     <div className="flex items-center justify-between">
@@ -1963,7 +1963,7 @@ export function HouseDetailPage() {
                         : (language === "en" ? `(€${EUR_STANDARD_EN_NUM})` : `(${EUR_STANDARD_FR_NUM} €)`)}
                     </span>
                   </p>
-                  <p className="text-[#78716C] mb-4 font-medium">
+                  <p className="text-[#78716C] mb-4">
                     {t.houseDetail.perMonth}
                   </p>
 
@@ -2100,9 +2100,9 @@ export function HouseDetailPage() {
                   : `Localisation : ${house.name} à ${house.location.split(',')[0]}`}
               </h2>
               {/* Phrase de quartier (A.2) puis, quand elle existe, la seule formulation de la frontière (D6) — un nœud texte par phrase. */}
-              <p className="text-base md:text-lg text-[#57534E] leading-relaxed mb-4 font-medium">{data.intro}</p>
+              <p className="text-base md:text-lg text-[#57534E] leading-relaxed mb-4">{data.intro}</p>
               {data.border ? (
-                <p className="text-[#57534E] leading-relaxed mb-4 font-medium">{data.border}</p>
+                <p className="text-[#57534E] leading-relaxed mb-4">{data.border}</p>
               ) : null}
               {/* Phrase citable produit (extraction IA / AI Overviews) — 1 par page, motif commun aux money pages.
                   (Lot L2, D1) Le « 20 min » de marque s'écrit toujours via STATS_DISPLAY.distance. */}
@@ -2114,14 +2114,14 @@ export function HouseDetailPage() {
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
                 <div>
-                  <h3 className="text-xl font-black mb-4 text-[#1C1917] flex items-center gap-2">
+                  <h3 className="text-xl mb-4 text-[#1C1917] flex items-center gap-2">
                     <MapPin size={20} className="text-[#D4A574]" />
                     {language === "en" ? "Neighbourhood" : "Quartier"}
                   </h3>
-                  <p className="text-[#57534E] font-medium mb-1">{data.address}</p>
+                  <p className="text-[#57534E] mb-1">{data.address}</p>
                   <p className="text-sm text-[#78716C] mb-6">{houseExactAddressNote(language === "en" ? "en" : "fr")}</p>
 
-                  <h3 className="text-xl font-black mb-4 text-[#1C1917] flex items-center gap-2">
+                  <h3 className="text-xl mb-4 text-[#1C1917] flex items-center gap-2">
                     <Clock size={20} className="text-[#D4A574]" />
                     {language === "en" ? "Transport & travel times" : "Transport & temps de trajet"}
                   </h3>
@@ -2161,7 +2161,7 @@ export function HouseDetailPage() {
                 </div>
 
                 <div>
-                  <h3 className="text-xl font-black mb-4 text-[#1C1917] flex items-center gap-2">
+                  <h3 className="text-xl mb-4 text-[#1C1917] flex items-center gap-2">
                     <Coffee size={20} className="text-[#D4A574]" />
                     {language === "en" ? "Nearby shops & services" : "Commerces & services à proximité"}
                   </h3>
@@ -2231,7 +2231,7 @@ export function HouseDetailPage() {
                         </button>
                       </h2>
                     )}
-                    <h2 className={`text-lg font-black text-[#1C1917] mb-4${candidates.length > 0 ? " hidden md:block" : ""}`}>
+                    <h2 className={`text-lg text-[#1C1917] mb-4${candidates.length > 0 ? " hidden md:block" : ""}`}>
                       {language === "en"
                         ? (candidates.length > 0 ? `The other ${occupied.length} rooms at ${house.name}` : `The ${occupied.length} rooms at ${house.name}`)
                         : (candidates.length > 0 ? `Les ${occupied.length} autres chambres ${ofHouseFr(house.name)}` : `Les ${occupied.length} chambres ${ofHouseFr(house.name)}`)}
@@ -2512,11 +2512,10 @@ export function HouseDetailPage() {
                       <div>
                         <h3
                           className="text-xl text-[#1C1917] mb-1 group-hover:text-[#D4A574] transition-colors"
-                          style={{ fontFamily: '"DM Serif Display", serif' }}
                         >
                           {other.name}
                         </h3>
-                        <p className="text-sm text-[#57534E] font-medium">
+                        <p className="text-sm text-[#57534E]">
                           {other.location} · {other.capacity}
                         </p>
                       </div>
@@ -2536,7 +2535,7 @@ export function HouseDetailPage() {
 
         <div className="container-custom relative text-center">
           <h2
-            className="text-3xl md:text-4xl mb-4 text-white font-black"
+            className="text-3xl md:text-4xl mb-4 text-white"
             style={{ fontFamily: '"DM Serif Display", serif' }}
           >
             {language === "en"

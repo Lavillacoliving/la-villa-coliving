@@ -125,11 +125,11 @@ export function AnnemasseColocationPage() {
       {/* ===== HERO ===== */}
       <section className="relative py-24 lg:py-32 bg-gradient-to-b from-white to-[#FAF9F6]">
         <div className="max-w-5xl mx-auto px-6 text-center">
-          <span className="text-xs text-[#D4A574] uppercase tracking-[0.3em] mb-4 block font-medium">
+          <span className="lvc-eyebrow mb-4">
             {language === "en" ? "Shared housing Annemasse Agglo" : "Colocation Annemasse Agglo"}
           </span>
           <h1
-            className="text-4xl md:text-6xl font-light text-[#1C1917] mb-6 leading-tight"
+            className="text-4xl md:text-6xl text-[#1C1917] mb-6 leading-tight"
             style={{ fontFamily: '"DM Serif Display", serif' }}
           >
             {/* (L'Appart, E5 — décision n° 22 à confirmer) Chaque gamme son « dès », L'Appart d'abord ; aucun équipement dans le titre. */}
@@ -137,7 +137,7 @@ export function AnnemasseColocationPage() {
               ? `Shared housing in Annemasse — ${APPART.name} from ${APPART_FROM.en.chf}/month, three coliving houses from ${PRICE_FROM_CHF_EN}/month`
               : `Colocation à Annemasse — ${APPART.name} dès ${APPART_FROM.fr.chf}/mois, trois maisons de coliving dès ${PRICE_FROM_CHF_FR}/mois`}
           </h1>
-          <p className="text-lg md:text-xl text-[#57534E] max-w-3xl mx-auto leading-relaxed mb-10 font-medium">
+          <p className="text-lg md:text-xl text-[#57534E] max-w-3xl mx-auto leading-relaxed mb-10">
             {/* (Lot L2, 09/10/2026) D1 : destination nommée, libellé canonique STATS_DISPLAY.distance.
                 (14/11/2026, V2-15 = CB-5) La phrase dit « les maisons » : après une phrase qui s'ouvre sur L'Appart (13 min), les 20 min
                 se liraient pour lui. Libellé canonique intact. */}
@@ -196,7 +196,7 @@ export function AnnemasseColocationPage() {
       <section className="py-24 lg:py-32 bg-white">
         <div className="max-w-6xl mx-auto px-6">
           <h2
-            className="text-3xl md:text-4xl font-light text-[#1C1917] mb-12 text-center"
+            className="text-3xl md:text-4xl text-[#1C1917] mb-12 text-center"
             style={{ fontFamily: '"DM Serif Display", serif' }}
           >
             {language === "en"
@@ -208,7 +208,7 @@ export function AnnemasseColocationPage() {
               <div className="w-14 h-14 bg-[#D4A574]/10 rounded-full flex items-center justify-center mx-auto mb-4">
                 <Euro className="w-7 h-7 text-[#D4A574]" />
               </div>
-              <h3 className="text-xl font-medium text-[#1C1917] mb-3">
+              <h3 className="text-xl text-[#1C1917] mb-3">
                 {language === "en" ? "Same Swiss salary, real living space" : "Le même salaire suisse, un vrai espace de vie"}
               </h3>
               <p className="text-[#57534E] leading-relaxed">
@@ -221,7 +221,7 @@ export function AnnemasseColocationPage() {
               <div className="w-14 h-14 bg-[#D4A574]/10 rounded-full flex items-center justify-center mx-auto mb-4">
                 <Train className="w-7 h-7 text-[#D4A574]" />
               </div>
-              <h3 className="text-xl font-medium text-[#1C1917] mb-3">
+              <h3 className="text-xl text-[#1C1917] mb-3">
                 {/* (D1, 09/10/2026) « 20 min » qualifié ; minutes depuis TRANSIT ; deux ancres : Léman Express et tram 17 (D7).
                     (Lot L2) Libellé canonique STATS_DISPLAY.distance, jamais une variante ; tram 17 = depuis Ambilly, sans bus. */}
                 {language === "en" ? STATS_DISPLAY.en.distance : `À ${STATS_DISPLAY.fr.distance}`}
@@ -236,7 +236,7 @@ export function AnnemasseColocationPage() {
               <div className="w-14 h-14 bg-[#D4A574]/10 rounded-full flex items-center justify-center mx-auto mb-4">
                 <Users className="w-7 h-7 text-[#D4A574]" />
               </div>
-              <h3 className="text-xl font-medium text-[#1C1917] mb-3">
+              <h3 className="text-xl text-[#1C1917] mb-3">
                 {language === "en" ? "A real community" : "Une vraie communauté"}
               </h3>
               <p className="text-[#57534E] leading-relaxed">
@@ -256,7 +256,7 @@ export function AnnemasseColocationPage() {
               à cette page, jamais une phrase canonique ; même HTML que la vue ait ou non ses chambres. */}
           <div className="mb-16 md:mb-20"><AppartTeaser page="/annemasse-colocation" /></div>
           <h2
-            className="text-3xl md:text-4xl font-light text-[#1C1917] mb-4 text-center"
+            className="text-3xl md:text-4xl text-[#1C1917] mb-4 text-center"
             style={{ fontFamily: '"DM Serif Display", serif' }}
           >
             {language === "en"
@@ -276,7 +276,7 @@ export function AnnemasseColocationPage() {
                 to={`/${h.slug}`}
                 className="bg-white p-8 hover:shadow-xl transition-shadow group"
               >
-                <h3 className="text-2xl font-medium text-[#1C1917] mb-2">{h.label}</h3>
+                <h3 className="text-2xl text-[#1C1917] mb-2">{h.label}</h3>
                 <p className="text-sm text-[#D4A574] uppercase tracking-wider mb-4">
                   {`${h.commune} · ${h.rooms} ${language === "en" ? "rooms" : "chambres"}`}
                 </p>
@@ -304,7 +304,7 @@ export function AnnemasseColocationPage() {
       <section className="py-24 lg:py-32 bg-white">
         <div className="max-w-5xl mx-auto px-6">
           <h2
-            className="text-3xl md:text-4xl font-light text-[#1C1917] mb-12 text-center"
+            className="text-3xl md:text-4xl text-[#1C1917] mb-12 text-center"
             style={{ fontFamily: '"DM Serif Display", serif' }}
           >
             {language === "en"
@@ -381,7 +381,7 @@ export function AnnemasseColocationPage() {
       <section className="py-24 lg:py-32 bg-[#FAF9F6]">
         <div className="max-w-5xl mx-auto px-6">
           <h2
-            className="text-3xl md:text-4xl font-light text-[#1C1917] mb-4 text-center"
+            className="text-3xl md:text-4xl text-[#1C1917] mb-4 text-center"
             style={{ fontFamily: '"DM Serif Display", serif' }}
           >
             {/* Montant retiré du titre le 29/08 (demande Jérôme) : le prix standard
@@ -445,7 +445,7 @@ export function AnnemasseColocationPage() {
       <section className="py-24 lg:py-32 bg-white">
         <div className="max-w-5xl mx-auto px-6">
           <h2
-            className="text-3xl md:text-4xl font-light text-[#1C1917] mb-12 text-center"
+            className="text-3xl md:text-4xl text-[#1C1917] mb-12 text-center"
             style={{ fontFamily: '"DM Serif Display", serif' }}
           >
             {language === "en" ? "Who lives at our Annemasse coliving" : "Qui habite notre coliving à Annemasse"}
@@ -453,7 +453,7 @@ export function AnnemasseColocationPage() {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8 text-center">
             <div>
               <Home className="w-10 h-10 text-[#D4A574] mx-auto mb-4" />
-              <h3 className="text-lg font-medium text-[#1C1917] mb-2">
+              <h3 className="text-lg text-[#1C1917] mb-2">
                 {language === "en" ? "Cross-border workers" : "Frontaliers"}
               </h3>
               <p className="text-[#57534E] text-sm leading-relaxed">
@@ -464,7 +464,7 @@ export function AnnemasseColocationPage() {
             </div>
             <div>
               <Users className="w-10 h-10 text-[#D4A574] mx-auto mb-4" />
-              <h3 className="text-lg font-medium text-[#1C1917] mb-2">
+              <h3 className="text-lg text-[#1C1917] mb-2">
                 {language === "en" ? "Young professionals" : "Jeunes professionnels"}
               </h3>
               <p className="text-[#57534E] text-sm leading-relaxed">
@@ -475,7 +475,7 @@ export function AnnemasseColocationPage() {
             </div>
             <div>
               <MapPin className="w-10 h-10 text-[#D4A574] mx-auto mb-4" />
-              <h3 className="text-lg font-medium text-[#1C1917] mb-2">
+              <h3 className="text-lg text-[#1C1917] mb-2">
                 {language === "en" ? "Expats and OI staff" : "Expats et personnel OI"}
               </h3>
               <p className="text-[#57534E] text-sm leading-relaxed">
@@ -499,7 +499,7 @@ export function AnnemasseColocationPage() {
       <section className="py-24 lg:py-32 bg-[#1C1917] text-white">
         <div className="max-w-3xl mx-auto px-6 text-center">
           <h2
-            className="text-3xl md:text-4xl font-light mb-6"
+            className="text-3xl md:text-4xl mb-6"
             style={{ fontFamily: '"DM Serif Display", serif' }}
           >
             {language === "en"
@@ -532,7 +532,7 @@ export function AnnemasseColocationPage() {
       {/* ===== INTERNAL LINKING — Essentials guides for un-crawled articles ===== */}
       <section className="py-12 lg:py-16 bg-[#FAF9F6]">
         <div className="max-w-5xl mx-auto px-6">
-          <h2 className="text-2xl md:text-3xl font-light text-[#1C1917] mb-8 text-center" style={{ fontFamily: '"DM Serif Display", serif' }}>
+          <h2 className="text-2xl md:text-3xl text-[#1C1917] mb-8 text-center" style={{ fontFamily: '"DM Serif Display", serif' }}>
             {language === "en" ? "Essential reads for cross-border workers" : "Lectures essentielles pour les frontaliers"}
           </h2>
           <ul className="grid grid-cols-1 md:grid-cols-2 gap-3 text-sm max-w-3xl mx-auto">
@@ -561,7 +561,7 @@ export function AnnemasseColocationPage() {
           est à Annemasse même (Le Lodge), les deux autres sont dans l'agglo ; ancre exacte vers /colocation-geneve. ===== */}
       <section className="py-12 lg:py-16 bg-white">
         <div className="max-w-3xl mx-auto px-6">
-          <h2 className="text-2xl md:text-3xl font-light text-[#1C1917] mb-4" style={{ fontFamily: '"DM Serif Display", serif' }}>
+          <h2 className="text-2xl md:text-3xl text-[#1C1917] mb-4" style={{ fontFamily: '"DM Serif Display", serif' }}>
             {language === "en" ? "And on the Geneva side?" : "Et côté Genève ?"}
           </h2>
           <p className="text-[#57534E] leading-relaxed">

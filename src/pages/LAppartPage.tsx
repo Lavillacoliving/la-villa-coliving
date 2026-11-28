@@ -123,7 +123,7 @@ function TypeCard({ card, lang, onApply }: { card: AppartTypeCard; lang: "fr" | 
         />
       </div>
       <div className="p-6 flex flex-col flex-1">
-        <h3 className="text-lg font-black text-[#1C1917] mb-1">{card.name}</h3>
+        <h3 className="text-lg text-[#1C1917] mb-1">{card.name}</h3>
         {card.count && <p className="text-sm font-semibold text-[#57534E] mb-1">{card.count}</p>}
         <p className="text-sm text-[#78716C] mb-1">{card.specs}</p>
         {card.furniture && <p className="text-sm text-[#78716C] mb-1">{card.furniture}</p>}
@@ -287,7 +287,7 @@ export function LAppartPage() {
               <ChevronRight className="w-4 h-4" aria-hidden="true" />
               <span className="text-white">{APPART.name}</span>
             </nav>
-            <p className="text-xs font-semibold uppercase tracking-[0.2em] text-[#E8C9A0] mb-3">{hero.eyebrow}</p>
+            <p className="lvc-eyebrow text-[#E8C9A0] mb-3">{hero.eyebrow}</p>
             {heroBadge && (
               <div className="mb-4">
                 <Badge className={`font-extrabold backdrop-blur-sm ${BADGE_CHIP_CLASS[heroBadge.tone]}`}>{heroBadge.label}</Badge>
@@ -358,7 +358,7 @@ export function LAppartPage() {
 
           {full && (
             <div className="mb-8 max-w-3xl">
-              <h3 className="text-2xl text-[#1C1917] mb-2" style={heading}>{fullText.title}</h3>
+              <h3 className="text-2xl text-[#1C1917] mb-2">{fullText.title}</h3>
               <p className="text-[#57534E] leading-relaxed">{fullText.text}</p>
             </div>
           )}
@@ -471,7 +471,7 @@ export function LAppartPage() {
       <section id="galerie" className="py-8 md:py-20 bg-white relative scroll-mt-24">
         <div className="container-custom">
           <h2 className="text-3xl md:text-4xl mb-4 text-[#1C1917]" style={heading}>{living.title}</h2>
-          <p className="text-base md:text-lg text-[#57534E] leading-relaxed font-medium max-w-3xl mb-6 md:mb-8">{living.text}</p>
+          <p className="text-base md:text-lg text-[#57534E] leading-relaxed max-w-3xl mb-6 md:mb-8">{living.text}</p>
           <div className="grid grid-cols-2 md:grid-cols-3 gap-2 md:gap-4">
             {LAPPART_ALBUM_COVERS.map((src) => {
               const index = LAPPART_ALBUM.findIndex((p) => p.src === src);
@@ -535,18 +535,18 @@ export function LAppartPage() {
       <section className="py-8 md:py-20 relative bg-white" data-house-location-version={APPART_LOCATION_VERSION}>
         <div className="container-custom max-w-5xl">
           <h2 className="text-3xl md:text-4xl mb-6 text-[#1C1917]" style={heading}>{locHeadings.title}</h2>
-          <p className="text-base md:text-lg text-[#57534E] leading-relaxed mb-8 font-medium">{appartNeighbourhood(L)}</p>
+          <p className="text-base md:text-lg text-[#57534E] leading-relaxed mb-8">{appartNeighbourhood(L)}</p>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-2">
             <div>
-              <h3 className="text-xl font-black mb-4 text-[#1C1917] flex items-center gap-2">
+              <h3 className="text-xl mb-4 text-[#1C1917] flex items-center gap-2">
                 <MapPin size={20} className="text-[#D4A574]" />
                 {locHeadings.neighbourhood}
               </h3>
-              <p className="text-[#57534E] font-medium mb-1">{appartZone(L)}</p>
+              <p className="text-[#57534E] mb-1">{appartZone(L)}</p>
               <p className="text-sm text-[#78716C] mb-6">{appartExactAddressNote(L)}</p>
             </div>
             <div>
-              <h3 className="text-xl font-black mb-4 text-[#1C1917] flex items-center gap-2">
+              <h3 className="text-xl mb-4 text-[#1C1917] flex items-center gap-2">
                 <Clock size={20} className="text-[#D4A574]" />
                 {en ? "Transport & travel times" : "Transport & temps de trajet"}
               </h3>
@@ -562,7 +562,7 @@ export function LAppartPage() {
       <section className="py-8 md:py-16 relative bg-[#FAF9F6]">
         <div className="container-custom max-w-3xl">
           <h2 className="text-3xl md:text-4xl mb-4 text-[#1C1917]" style={heading}>{suite.title}</h2>
-          <p className="text-base md:text-lg text-[#57534E] leading-relaxed font-medium">{suite.text}</p>
+          <p className="text-base md:text-lg text-[#57534E] leading-relaxed">{suite.text}</p>
           <LocalizedLink
             to={suiteIsCandidate ? `${applyTo}&room_interest=chambre-${suiteRow?.room_number}` : applyTo}
             onClick={() => trackCta("lappart_suite", suiteIsCandidate ? { room_id: `chambre-${suiteRow?.room_number}` } : {})}
@@ -578,8 +578,8 @@ export function LAppartPage() {
       <section className="pt-8 md:pt-20 relative bg-white">
         <div className="container-custom max-w-3xl">
           <h2 className="text-3xl md:text-4xl mb-4 text-[#1C1917]" style={heading}>{conditions.title}</h2>
-          <p className="text-base md:text-lg text-[#57534E] leading-relaxed font-medium">{conditions.intro}</p>
-          <p className="mt-3 text-base md:text-lg text-[#57534E] leading-relaxed font-medium">{conditions.profiles}</p>
+          <p className="text-base md:text-lg text-[#57534E] leading-relaxed">{conditions.intro}</p>
+          <p className="mt-3 text-base md:text-lg text-[#57534E] leading-relaxed">{conditions.profiles}</p>
         </div>
       </section>
 
@@ -619,7 +619,7 @@ export function LAppartPage() {
       <section className="py-8 md:py-16 relative bg-white">
         <div className="container-custom max-w-3xl">
           <h2 className="text-3xl md:text-4xl mb-4 text-[#1C1917]" style={heading}>{ex["page.maisons.h2"]}</h2>
-          <p className="text-base md:text-lg text-[#57534E] leading-relaxed font-medium">{ex["page.maisons.texte"]}</p>
+          <p className="text-base md:text-lg text-[#57534E] leading-relaxed">{ex["page.maisons.texte"]}</p>
           <LocalizedLink
             to="/nos-maisons"
             onClick={() => track("house_discover_click", { house: "maisons", cta_position: "lappart_houses", language })}
@@ -634,7 +634,7 @@ export function LAppartPage() {
       {/* Appel final. */}
       <section className="py-14 md:py-20 relative bg-[#1C1917] overflow-hidden">
         <div className="container-custom relative text-center">
-          <h2 className="text-3xl md:text-4xl mb-4 text-white font-black" style={heading}>{finalCta.title}</h2>
+          <h2 className="text-3xl md:text-4xl mb-4 text-white" style={heading}>{finalCta.title}</h2>
           <p className="text-lg text-white/90 max-w-2xl mx-auto font-bold mb-8">{finalCta.text}</p>
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
             <LocalizedLink

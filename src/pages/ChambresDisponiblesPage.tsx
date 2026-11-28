@@ -245,10 +245,10 @@ export function ChambresDisponiblesPage() {
       <section className="pt-32 pb-9 md:pb-14 lg:pt-40 lg:pb-20 bg-[#F5F2ED]">
         <div className="container-custom">
           {/* (L'Appart, E4, S7.3) Fait de l'offre (33 chambres, 4 adresses : ENTITY_FACTS.brand), pas un compteur de disponibilité. */}
-          <span className="text-xs text-[#78716C] uppercase tracking-[0.3em] mb-4 block">
+          <span className="lvc-eyebrow mb-4">
             {en ? `${ENTITY_FACTS.brand.totalRooms} rooms · ${ENTITY_FACTS.brand.places} locations` : `${ENTITY_FACTS.brand.totalRooms} chambres · ${ENTITY_FACTS.brand.places} adresses`}
           </span>
-          <h1 className="text-4xl md:text-5xl lg:text-6xl font-light text-[#1C1917] mb-5" style={{ fontFamily: '"DM Serif Display", serif' }}>
+          <h1 className="text-4xl md:text-5xl lg:text-6xl text-[#1C1917] mb-5" style={{ fontFamily: '"DM Serif Display", serif' }}>
             {en ? "Available rooms near Geneva" : "Chambres disponibles près de Genève"}
           </h1>
           {pillNow || pillSoon ? (
@@ -272,7 +272,7 @@ export function ChambresDisponiblesPage() {
             </p>
           )}
           {nextEntriesLine && (
-            <p data-next-entries className="mt-4 text-sm font-medium text-[#44403C]">{nextEntriesLine}</p>
+            <p data-next-entries className="mt-4 text-sm text-[#44403C]">{nextEntriesLine}</p>
           )}
           {/* (13/10/2026, D3) La caution n'ouvre plus la page : elle vit sous les cartes (fiche entité et liste de
               réassurance — règle permanente depuis le 02/11/2026). */}
@@ -324,7 +324,7 @@ export function ChambresDisponiblesPage() {
           {!all.known ? (
             loadFailed ? (
               <div role="alert" className="bg-[#FAF9F6] border border-[#E7E5E4] rounded-2xl p-8 md:p-10 text-center">
-                <h2 className="text-2xl md:text-3xl font-light text-[#1C1917] mb-3" style={{ fontFamily: '"DM Serif Display", serif' }}>
+                <h2 className="text-2xl md:text-3xl text-[#1C1917] mb-3" style={{ fontFamily: '"DM Serif Display", serif' }}>
                   {en ? "The rooms didn't load" : "Les chambres ne se sont pas chargées"}
                 </h2>
                 <p className="text-[#57534E] max-w-xl mx-auto">
@@ -363,7 +363,7 @@ export function ChambresDisponiblesPage() {
             availableShown.length > 0 ? (
               <>
                 <div className="flex flex-wrap items-baseline justify-between gap-x-6 gap-y-1 mb-5 md:mb-8">
-                  <h2 className="text-3xl md:text-4xl font-light text-[#1C1917]" style={{ fontFamily: '"DM Serif Display", serif' }}>
+                  <h2 className="text-3xl md:text-4xl text-[#1C1917]" style={{ fontFamily: '"DM Serif Display", serif' }}>
                     {en ? "Free now" : "Libre maintenant"}
                   </h2>
                   <p className="text-sm text-[#57534E]">
@@ -398,7 +398,7 @@ export function ChambresDisponiblesPage() {
             )
           ) : (
             <div className="bg-[#FAF9F6] border border-[#E7E5E4] rounded-2xl p-8 md:p-10 text-center">
-              <h2 className="text-2xl md:text-3xl font-light text-[#1C1917] mb-3" style={{ fontFamily: '"DM Serif Display", serif' }}>
+              <h2 className="text-2xl md:text-3xl text-[#1C1917] mb-3" style={{ fontFamily: '"DM Serif Display", serif' }}>
                 {filtered
                   ? (en ? "No room matches this filter right now" : "Aucune chambre ne correspond à ce filtre pour l'instant")
                   : (en ? "No room is free right this moment" : "Aucune chambre libre à l'instant même")}
@@ -423,7 +423,7 @@ export function ChambresDisponiblesPage() {
         <section id="bientot" aria-labelledby="bientot-titre" className="py-12 lg:py-16 bg-[#EFEBE4] border-t border-[#E7E5E4] scroll-mt-24">
           <div className="container-custom">
             <div className="flex flex-wrap items-baseline justify-between gap-x-6 gap-y-1 mb-6">
-              <h2 id="bientot-titre" className="text-2xl md:text-[1.7rem] font-light text-[#44403C]" style={{ fontFamily: '"DM Serif Display", serif' }}>
+              <h2 id="bientot-titre" className="text-2xl md:text-[1.7rem] text-[#44403C]" style={{ fontFamily: '"DM Serif Display", serif' }}>
                 {en ? "Opening soon" : "Bientôt disponibles"}
               </h2>
               <p className="text-sm text-[#57534E]">
@@ -505,7 +505,7 @@ export function ChambresDisponiblesPage() {
           la page vend la PROCHAINE libération, pas l'occupation du jour. */}
       <section className="py-14 lg:py-20 bg-[#FAF9F6] border-y border-[#E7E5E4]">
         <div className="container-custom">
-          <h2 className="text-2xl md:text-3xl font-light text-[#1C1917] mb-2" style={{ fontFamily: '"DM Serif Display", serif' }}>
+          <h2 className="text-2xl md:text-3xl text-[#1C1917] mb-2" style={{ fontFamily: '"DM Serif Display", serif' }}>
             {en ? "No room on your date? Join your house's waiting list" : "Pas de chambre à ta date ? Rejoins la liste d'attente de ta maison"}
           </h2>
           <p className="text-[#57534E] mb-8">
@@ -523,7 +523,7 @@ export function ChambresDisponiblesPage() {
                     <img src={HOUSES[k].img} {...responsiveImage(HOUSES[k].img, "(min-width: 768px) 33vw, 100vw")} alt={HOUSES[k].label} className="w-full h-full object-cover" loading="lazy" width={800} height={450} />
                   </LocalizedLink>
                   <div className="p-6 flex flex-col flex-1">
-                    <h3 className="text-lg font-black text-[#1C1917]">{HOUSES[k].label}</h3>
+                    <h3 className="text-lg text-[#1C1917]">{HOUSES[k].label}</h3>
                     <p className="text-xs text-[#78716C] mb-3">{en ? HOUSES[k].descEn : HOUSES[k].descFr}</p>
                     {line && (
                       <p className="text-sm text-[#44403C] inline-flex items-start gap-2 mb-5">

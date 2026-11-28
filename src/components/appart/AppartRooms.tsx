@@ -69,7 +69,7 @@ export function AppartRooms({ known, fallback = false, discoverLink = false, pag
 
   return (
     <section data-appart-rooms={known ? "chambres" : "repli"} aria-labelledby={TITLE_ID} className={className}>
-      <Heading id={TITLE_ID} className="text-2xl md:text-3xl font-light text-[#1C1917] leading-tight" style={{ fontFamily: '"DM Serif Display", serif' }}>
+      <Heading id={TITLE_ID} className="lvc-display text-2xl md:text-3xl text-[#1C1917] leading-tight">
         {t.title}
       </Heading>
       {known ? (

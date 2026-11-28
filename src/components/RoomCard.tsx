@@ -200,7 +200,7 @@ export function RoomCard<R extends PlaceRoom = PublicRoom>({ house, houseName, r
           <div>
             {gammeBadge && <p data-gamme-badge className={GAMME_BADGE_CLASS}>{gammeBadge}</p>}
             <p className="text-xs font-semibold uppercase tracking-wider text-[#8A6508] mb-1">{eyebrow}</p>
-            <h3 className="text-3xl text-[#1C1917] leading-tight" style={{ fontFamily: '"DM Serif Display", serif' }}>
+            <h3 className="text-3xl text-[#1C1917] leading-tight">
               {pageOpen ? (
                 <LocalizedLink to={roomPagePath(house, room.room_number)} className="hover:text-[#8A6508] transition-colors">{label}</LocalizedLink>
               ) : label}
@@ -300,7 +300,7 @@ export function RoomCard<R extends PlaceRoom = PublicRoom>({ house, houseName, r
         <div className="p-3 md:p-4 flex flex-col gap-1 min-w-0 flex-1">
           {gammeBadge && <p data-gamme-badge className={GAMME_BADGE_CLASS}>{gammeBadge}</p>}
           <p className="text-[11px] font-semibold uppercase tracking-wider text-[#78716C]">{eyebrow}</p>
-          <h3 className="text-lg text-[#1C1917] leading-snug" style={{ fontFamily: '"DM Serif Display", serif' }}>
+          <h3 className="text-lg text-[#1C1917] leading-snug">
             {pageOpen ? (
               <LocalizedLink to={roomPagePath(house, room.room_number)} className="hover:text-[#8A6508] transition-colors">{label}</LocalizedLink>
             ) : label}
@@ -364,7 +364,7 @@ export function RoomCard<R extends PlaceRoom = PublicRoom>({ house, houseName, r
         {showHouse && (
           <p className="text-xs font-semibold uppercase tracking-wider text-[#B8860B] mb-1">{houseName}</p>
         )}
-        <h3 className="text-lg font-black text-[#1C1917] mb-1">
+        <h3 className="text-lg text-[#1C1917] mb-1">
           {/* (28/09/2026) Fiche chambre quand elle existe ET est consultable (roomPages.ts). */}
           {isRoomPageOpen(house, room) ? (
             <LocalizedLink to={roomPagePath(house, room.room_number)} className="hover:text-[#B8860B] transition-colors">

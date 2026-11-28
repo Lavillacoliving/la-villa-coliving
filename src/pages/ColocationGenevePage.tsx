@@ -113,7 +113,7 @@ export function ColocationGenevePage() {
     dateModified: parisIsoDate(lastUpdatedIso) || PAGE_LAST_UPDATED,
   };
   const lastUpdatedLabel = formatLongDate(lastUpdatedIso, L);
-  const h2 = "text-3xl md:text-4xl font-light text-[#1C1917] mb-6";
+  const h2 = "text-3xl md:text-4xl text-[#1C1917] mb-6";
   const serif = { fontFamily: "DM Serif Display, serif" } as const;
   const link = "text-[#1C1917] underline underline-offset-4 hover:text-[#D4A574]";
 
@@ -141,10 +141,10 @@ export function ColocationGenevePage() {
       {/* ===== HERO ===== */}
       <section className="relative py-20 lg:py-28 bg-gradient-to-b from-white to-[#FAF9F6]">
         <div className="max-w-5xl mx-auto px-6 text-center">
-          <span className="text-xs text-[#D4A574] uppercase tracking-[0.3em] mb-4 block font-medium">
+          <span className="lvc-eyebrow mb-4">
             {en ? "Shared housing · Greater Geneva" : "Colocation · Grand Genève"}
           </span>
-          <h1 className="text-4xl md:text-5xl lg:text-6xl font-light text-[#1C1917] mb-6 leading-tight" style={serif}>
+          <h1 className="text-4xl md:text-5xl lg:text-6xl text-[#1C1917] mb-6 leading-tight" style={serif}>
             {en ? "Shared housing in Geneva, the French-side version" : "Colocation à Genève, version côté France"}
           </h1>
           {/* (L'Appart, E4, S11.2) Chaque gamme dans sa phrase, maisons d'abord ; aucun équipement à côté d'un prix de L'Appart. */}
@@ -297,7 +297,7 @@ export function ColocationGenevePage() {
                 ]
             ).map(([t, d]) => (
               <div key={t} className="bg-[#FAF9F6] p-6">
-                <h3 className="text-lg font-medium text-[#1C1917] mb-2">{t}</h3>
+                <h3 className="text-lg text-[#1C1917] mb-2">{t}</h3>
                 <p className="text-sm text-[#57534E] leading-relaxed">{d}</p>
               </div>
             ))}
@@ -325,7 +325,7 @@ export function ColocationGenevePage() {
                   <img src={HOUSES[k].img} alt={HOUSES[k].label} className="w-full h-full object-cover" loading="lazy" width={800} height={500} />
                 </LocalizedLink>
                 <div className="p-6 flex flex-col flex-1 gap-3">
-                  <h3 className="text-xl font-medium text-[#1C1917]">{HOUSES[k].label}</h3>
+                  <h3 className="text-xl text-[#1C1917]">{HOUSES[k].label}</h3>
                   <p className="text-sm text-[#78716C]">{en ? HOUSES[k].descEn : HOUSES[k].descFr}</p>
                   <HouseAvailabilityLine house={k} />
                   <LocalizedLink to={`/${k}`} className="mt-auto inline-flex items-center gap-2 text-sm font-semibold text-[#1C1917] hover:text-[#D4A574]">
@@ -354,7 +354,7 @@ export function ColocationGenevePage() {
           </p>
           <div className="grid sm:grid-cols-3 gap-4 text-sm text-[#44403C]">
             {ENTITY_HOUSES.map((h) => [`${h.label} · ${h.commune}`, h.commute[L]]).map(([t, d]) => (
-              <div key={t} className="bg-[#FAF9F6] p-5"><p className="font-medium text-[#1C1917] mb-1">{t}</p><p>{d}</p></div>
+              <div key={t} className="bg-[#FAF9F6] p-5"><p className="font-semibold text-[#1C1917] mb-1">{t}</p><p>{d}</p></div>
             ))}
           </div>
         </div>
@@ -390,7 +390,7 @@ export function ColocationGenevePage() {
       {/* ===== LISTE D'ATTENTE ===== */}
       <section id="liste" className="py-20 lg:py-24 bg-white border-t border-[#E7E5E4]">
         <div className="max-w-3xl mx-auto px-6 text-center">
-          <span className="text-xs text-[#D4A574] uppercase tracking-[0.3em] mb-4 block font-medium">{en ? "Waiting list" : "Liste d'attente"}</span>
+          <span className="lvc-eyebrow mb-4">{en ? "Waiting list" : "Liste d'attente"}</span>
           <h2 className={h2} style={serif}>{en ? "No room at your date? Be first in line." : "Pas de chambre à ta date ? Sois prioritaire."}</h2>
           <p className="text-[#57534E] max-w-xl mx-auto mb-10">
             {en ? "Rooms open up all year round. Leave your details: we contact you as soon as a room matching your profile frees up." : "Des chambres se libèrent toute l'année. Laisse tes coordonnées : on te contacte dès qu'une chambre correspondant à ton profil se libère."}
@@ -402,7 +402,7 @@ export function ColocationGenevePage() {
       {/* ===== CTA FINAL ===== */}
       <section className="py-24 lg:py-32 bg-[#1C1917] text-white">
         <div className="max-w-3xl mx-auto px-6 text-center">
-          <h2 className="text-3xl md:text-4xl font-light mb-6" style={serif}>{en ? "Ready to find your room near Geneva?" : "Prêt à trouver ta chambre près de Genève ?"}</h2>
+          <h2 className="text-3xl md:text-4xl mb-6" style={serif}>{en ? "Ready to find your room near Geneva?" : "Prêt à trouver ta chambre près de Genève ?"}</h2>
           <p className="text-[#78716C] text-lg mb-10 max-w-xl mx-auto">
             {en ? "Book a visit, on site or by video. Reply within 48 h. Move in within 72 h of your first contact if a room is available." : "Programme une visite, sur place ou en vidéo. Réponse sous 48 h. Emménagement en 72 h dès le premier contact si une chambre est disponible."}
           </p>

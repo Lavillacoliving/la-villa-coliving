@@ -31,8 +31,7 @@ export function AppartIncluded({ lang, headingLevel = 2, className = "" }: Appar
     <section data-appart-included aria-labelledby="appart-included-title" className={`not-prose ${className}`}>
       <Heading
         id="appart-included-title"
-        className="text-2xl md:text-3xl font-light text-[#1C1917] mb-2"
-        style={{ fontFamily: '"DM Serif Display", serif' }}
+        className="lvc-display text-2xl md:text-3xl text-[#1C1917] mb-2"
       >
         {t.title}
       </Heading>

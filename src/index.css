@@ -75,6 +75,30 @@
     line-height: 1.7;
     color: #78716C;
   }
+
+  /* (Lot 2a, commit 10, 28/11/2026, brief v8 §0.5) Titres des pages publiques : H1 et H2 en DM Serif
+     Display 400, H3 en Inter 600, jamais de faux gras. `.lvc-site` est posé par App.tsx sur le conteneur
+     des seules routes publiques : le dashboard, le portail, /reset-password et le questionnaire de départ
+     gardent les règles ci-dessus. `:where()` garde la spécificité d'un simple sélecteur d'élément, pour
+     que les classes posées sur un titre (taille, couleur, surtitre) l'emportent comme avant. */
+  .lvc-site {
+    font-synthesis-weight: none;
+  }
+
+  :where(.lvc-site) h1,
+  :where(.lvc-site) h2 {
+    font-family: 'DM Serif Display', 'DM Serif Display Fallback', Georgia, serif;
+    font-weight: 400;
+  }
+
+  :where(.lvc-site) h2 {
+    letter-spacing: -0.01em;
+  }
+
+  :where(.lvc-site) h3 {
+    font-family: 'Inter', 'Inter Fallback', system-ui, -apple-system, sans-serif;
+    font-weight: 600;
+  }
 }
 
 @layer components {

@@ -54,7 +54,7 @@ export function AppartFacts({ className = "", lang }: AppartFactsProps) {
     >
       <h2
         id="appart-facts-title"
-        className="text-2xl md:text-3xl font-light text-[#1C1917] mb-4"
+        className="text-2xl md:text-3xl text-[#1C1917] mb-4"
         style={{ fontFamily: '"DM Serif Display", serif' }}
       >
         {t.title}

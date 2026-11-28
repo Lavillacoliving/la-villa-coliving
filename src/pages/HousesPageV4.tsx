@@ -183,11 +183,11 @@ export function HousesPageV4() {
           la fiche « l'essentiel » passe sous la FAQ. Marges réduites sur mobile : la première maison arrive au 2ᵉ écran. */}
       <section className="py-16 md:py-24 lg:py-32 bg-[#F5F2ED]">
         <div className="container-custom text-center">
-          <span className="text-xs text-[#78716C] uppercase tracking-[0.3em] mb-4 block">
+          <span className="lvc-eyebrow mb-4">
             {language === "en" ? "Our Homes" : "Nos maisons"}
           </span>
           <h1
-            className="text-5xl md:text-6xl lg:text-7xl font-light text-[#1C1917] mb-6"
+            className="text-5xl md:text-6xl lg:text-7xl text-[#1C1917] mb-6"
             style={{ fontFamily: '"DM Serif Display", serif' }}
           >
             {language === "en" ? (
@@ -268,7 +268,7 @@ export function HousesPageV4() {
                   </div>
 
                   <h2
-                    className="text-2xl font-light text-[#1C1917] mb-3"
+                    className="text-2xl text-[#1C1917] mb-3"
                     style={{ fontFamily: '"DM Serif Display", serif' }}
                   >
                     {house.name}
@@ -368,11 +368,11 @@ export function HousesPageV4() {
       <section className="py-24 lg:py-32 bg-white">
         <div className="container-custom">
           <div className="text-center mb-12">
-            <span className="text-xs text-[#78716C] uppercase tracking-[0.3em] mb-4 block">
+            <span className="lvc-eyebrow mb-4">
               {language === "en" ? "Compare" : "Comparer"}
             </span>
             <h2
-              className="text-3xl md:text-4xl font-light text-[#1C1917]"
+              className="text-3xl md:text-4xl text-[#1C1917]"
               style={{ fontFamily: '"DM Serif Display", serif' }}
             >
               {language === "en" ? "Side by Side" : "Côte à côte"}
@@ -388,7 +388,7 @@ export function HousesPageV4() {
                   </th>
                   {houses.map((house) => (
                     <th key={house.id} className="py-4 px-4 text-center w-1/4">
-                      <span className="text-lg font-medium text-[#1C1917]" style={{ fontFamily: '"DM Serif Display", serif' }}>
+                      <span className="text-lg text-[#1C1917]" style={{ fontFamily: '"DM Serif Display", serif' }}>
                         {house.name}
                       </span>
                       <span className="block text-xs text-[#78716C] mt-1">{house.location}</span>
@@ -457,7 +457,7 @@ export function HousesPageV4() {
       <section className="py-24 bg-[#1C1917]">
         <div className="container-custom text-center">
           <h2
-            className="text-3xl md:text-4xl font-light text-white mb-4"
+            className="text-3xl md:text-4xl text-white mb-4"
             style={{ fontFamily: '"DM Serif Display", serif' }}
           >
             {language === "en"
