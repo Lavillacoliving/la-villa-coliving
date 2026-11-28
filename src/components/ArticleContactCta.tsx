@@ -33,7 +33,7 @@ export function ArticleContactCta({ slug, bucket, context }: { slug: string; buc
         <LocalizedLink
           to={to}
           onClick={track}
-          className="inline-flex items-center justify-center px-6 py-3 rounded-lg bg-[#1C1917] text-white text-sm font-semibold hover:bg-[#44403C] transition-colors"
+          className="lvc-btn-primary inline-flex items-center justify-center px-6 py-3 text-sm"
         >
           {en ? "Book a visit" : "Programmer une visite"}
         </LocalizedLink>

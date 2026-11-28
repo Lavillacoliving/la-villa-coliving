@@ -77,7 +77,7 @@ export function HouseMap({ name, zone, lat, lng, en }: HouseMapProps) {
           <button
             type="button"
             onClick={showMap}
-            className="inline-flex items-center gap-2 px-6 py-3 bg-[#1C1917] text-white font-semibold rounded-full hover:bg-[#D4A574] hover:text-[#1C1917] transition-colors"
+            className="lvc-btn-primary inline-flex items-center gap-2 px-6 py-3"
           >
             <MapPin size={18} />
             {en ? "Show the area" : "Afficher le quartier"}

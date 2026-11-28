@@ -722,7 +722,7 @@ export function JoinPageV4() {
                 const pref = choice && "value" in choice ? String(choice.value || "") : "";
                 telemetry.trackSubmitClick({ contact_pref: pref || "none" });
               }}
-              className="w-full py-4 bg-[#1C1917] text-white font-bold hover:bg-[#D4A574] transition-colors flex items-center justify-center gap-2 disabled:opacity-60 disabled:cursor-not-allowed"
+              className="lvc-btn-primary w-full py-4 flex items-center justify-center gap-2 disabled:opacity-60 disabled:cursor-not-allowed"
             >
               {status === "submitting" ? (
                 <>

@@ -112,14 +112,14 @@ export function ChambreLouerAnnemassePage() {
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <LocalizedLink
               to="/candidature"
-              className="inline-flex items-center gap-2 px-8 py-4 bg-[#1C1917] text-white font-semibold rounded-full hover:bg-[#44403C] transition-colors"
+              className="lvc-btn-primary inline-flex items-center gap-2 px-8 py-4"
             >
               {language === "en" ? "Check availability" : "Voir les disponibilités"}
               <ArrowRight className="w-5 h-5" />
             </LocalizedLink>
             <LocalizedLink
               to="/tarifs"
-              className="inline-flex items-center gap-2 px-8 py-4 border-2 border-[#1C1917] text-[#1C1917] font-semibold rounded-full hover:bg-[#1C1917] hover:text-white transition-colors"
+              className="lvc-btn-secondary inline-flex items-center gap-2 px-8 py-4"
             >
               {language === "en" ? "See pricing" : "Voir les tarifs"}
             </LocalizedLink>
@@ -224,7 +224,7 @@ export function ChambreLouerAnnemassePage() {
           <div className="text-center mt-12">
             <LocalizedLink
               to="/tarifs"
-              className="inline-flex items-center gap-2 px-8 py-4 bg-[#1C1917] text-white font-semibold rounded-full hover:bg-[#44403C] transition-colors"
+              className="lvc-btn-primary inline-flex items-center gap-2 px-8 py-4"
             >
               {language === "en" ? "See what's included in the rent" : "Voir le détail des tarifs"}
               <ArrowRight className="w-5 h-5" />
@@ -411,7 +411,7 @@ export function ChambreLouerAnnemassePage() {
           </p>
           <LocalizedLink
             to="/candidature"
-            className="inline-flex items-center gap-2 px-8 py-4 bg-white text-[#1C1917] font-semibold rounded-full hover:bg-gray-100 transition-colors"
+            className="lvc-btn-primary inline-flex items-center gap-2 px-8 py-4"
           >
             {language === "en" ? "Book a visit" : "Programmer une visite"}
             <ArrowRight className="w-5 h-5" />

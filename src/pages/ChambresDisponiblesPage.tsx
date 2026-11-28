@@ -254,13 +254,13 @@ export function ChambresDisponiblesPage() {
           {pillNow || pillSoon ? (
             <div className="flex flex-wrap gap-3">
               {pillNow && (
-                <a href="#libre-maintenant" className="inline-flex items-center gap-2.5 min-h-[44px] px-4 rounded-full bg-[#1C1917] text-white text-sm font-semibold hover:bg-[#44403C] transition-colors">
-                  <span className="w-2 h-2 bg-[#D4A574] rounded-full animate-pulse shrink-0" aria-hidden="true" />
+                <a href="#libre-maintenant" className="lvc-btn-primary inline-flex items-center gap-2.5 min-h-[44px] px-4 text-sm">
+                  <span className="w-2 h-2 bg-lvc-accent rounded-full motion-safe:animate-pulse shrink-0" aria-hidden="true" />
                   {pillNow}
                 </a>
               )}
               {pillSoon && (
-                <a href="#bientot" className="inline-flex items-center min-h-[44px] px-4 rounded-full bg-white border border-[#D6D3CE] text-[#44403C] text-sm font-medium hover:border-[#1C1917] transition-colors">
+                <a href="#bientot" className="lvc-btn-secondary inline-flex items-center min-h-[44px] px-4 text-sm">
                   {pillSoon}
                 </a>
               )}
@@ -335,7 +335,7 @@ export function ChambresDisponiblesPage() {
                 <button
                   type="button"
                   onClick={() => window.location.reload()}
-                  className="mt-5 inline-flex items-center justify-center gap-2 px-5 py-2.5 bg-[#1C1917] text-white text-sm font-semibold rounded-lg hover:bg-[#44403C] transition-colors"
+                  className="lvc-btn-primary mt-5 inline-flex items-center justify-center gap-2 px-5 py-2.5 text-sm"
                 >
                   {en ? "Reload the page" : "Recharger la page"}
                 </button>
@@ -534,7 +534,7 @@ export function ChambresDisponiblesPage() {
                     <LocalizedLink
                       to={`/candidature?property_interest=${k}&room_interest=liste-attente`}
                       onClick={() => track("cta_click", { cta_position: "waitlist", cta_target: "/candidature", house: k, language })}
-                      className="mt-auto inline-flex items-center justify-center gap-2 px-5 py-2.5 border border-[#1C1917] text-[#1C1917] text-sm font-semibold rounded-lg hover:bg-[#1C1917] hover:text-white transition-colors"
+                      className="lvc-btn-secondary mt-auto inline-flex items-center justify-center gap-2 px-5 py-2.5 text-sm"
                     >
                       {en ? "Join the waiting list" : "Rejoindre la liste d'attente"}
                       <ArrowRight className="w-4 h-4" />

@@ -155,11 +155,11 @@ export function ColocationGenevePage() {
           </p>
           {/* (Retenue premium, lot 1 — décision Jérôme du 13/10/2026) casse normale, même traitement que la barre mobile. */}
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <a href="#chambres" className="inline-flex items-center gap-2 bg-[#D4A574] text-[#1C1917] px-8 py-4 text-sm font-semibold hover:bg-[#44403C] hover:text-white transition-colors">
+            <a href="#chambres" className="lvc-btn-primary inline-flex items-center gap-2 px-8 py-4 text-sm">
               {en ? "See available rooms" : "Voir les chambres disponibles"}
               <ArrowRight className="w-4 h-4" />
             </a>
-            <LocalizedLink to="/candidature" className="inline-flex items-center gap-2 border border-[#1C1917] text-[#1C1917] px-8 py-4 text-sm font-semibold hover:bg-[#1C1917] hover:text-white transition-colors">
+            <LocalizedLink to="/candidature" className="lvc-btn-secondary inline-flex items-center gap-2 px-8 py-4 text-sm">
               {en ? "Book a visit" : "Programmer une visite"}
             </LocalizedLink>
           </div>
@@ -408,11 +408,11 @@ export function ColocationGenevePage() {
           </p>
           {/* (Retenue premium, lot 1 — GO de Jérôme du 13/10/2026) casse normale, même traitement que le haut de page et la barre. */}
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <LocalizedLink to="/chambres-disponibles" className="inline-flex items-center gap-2 bg-[#D4A574] text-[#1C1917] px-8 py-4 text-sm font-semibold hover:bg-[#44403C] hover:text-white transition-colors">
+            <LocalizedLink to="/chambres-disponibles" className="lvc-btn-primary inline-flex items-center gap-2 px-8 py-4 text-sm">
               {en ? "See available rooms" : "Voir les chambres disponibles"}
               <ArrowRight className="w-4 h-4" />
             </LocalizedLink>
-            <LocalizedLink to="/candidature" className="inline-flex items-center gap-2 border border-white/30 text-white px-8 py-4 text-sm font-semibold hover:bg-white hover:text-[#1C1917] transition-colors">
+            <LocalizedLink to="/candidature" className="lvc-btn-secondary lvc-btn-secondary--on-dark inline-flex items-center gap-2 px-8 py-4 text-sm">
               {en ? "Book a visit" : "Programmer une visite"}
             </LocalizedLink>
           </div>
@@ -444,7 +444,7 @@ export function ColocationGenevePage() {
       {/* CTA collante mobile. (Retenue premium, lot 1 — décision Jérôme du 13/10/2026) casse normale, sans promesse dans le
           libellé ; même style que les barres des pages maisons. */}
       <div className="md:hidden fixed bottom-0 inset-x-0 z-40 bg-white/95 backdrop-blur border-t border-[#E7E5E4] px-4 py-3">
-        <LocalizedLink to="/chambres-disponibles" className="flex items-center justify-center gap-2 w-full bg-[#D4A574] text-[#1C1917] py-3 rounded-lg text-sm font-semibold">
+        <LocalizedLink to="/chambres-disponibles" className="lvc-btn-primary flex items-center justify-center gap-2 w-full py-3 text-sm">
           {en ? "Available rooms" : "Chambres disponibles"}
           <ArrowRight className="w-4 h-4" />
         </LocalizedLink>

@@ -422,13 +422,13 @@ export function QuiSommesNousPage() {
           <div className="flex flex-col sm:flex-row gap-3 justify-center">
             <LocalizedLink
               to="/nos-maisons"
-              className="inline-flex items-center gap-2 border border-[#1C1917] text-[#1C1917] px-6 py-3 text-sm uppercase tracking-wider hover:bg-[#1C1917] hover:text-white transition-colors"
+              className="lvc-btn-secondary inline-flex items-center gap-2 px-6 py-3 text-sm"
             >
               {en ? "Our houses" : "Nos maisons"}
             </LocalizedLink>
             <LocalizedLink
               to="/candidature"
-              className="inline-flex items-center gap-2 bg-[#D4A574] text-white px-6 py-3 text-sm uppercase tracking-wider hover:bg-[#44403C] transition-colors"
+              className="lvc-btn-primary inline-flex items-center gap-2 px-6 py-3 text-sm"
             >
               {en ? "Book a visit" : "Programmer une visite"}
               <ArrowRight className="w-4 h-4" />

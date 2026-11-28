@@ -148,21 +148,21 @@ export function AnnemasseColocationPage() {
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <LocalizedLink
               to="/candidature"
-              className="inline-flex items-center gap-2 px-8 py-4 bg-[#1C1917] text-white font-semibold rounded-full hover:bg-[#44403C] transition-colors"
+              className="lvc-btn-primary inline-flex items-center gap-2 px-8 py-4"
             >
               {language === "en" ? "Book a visit" : "Programmer une visite"}
               <ArrowRight className="w-5 h-5" />
             </LocalizedLink>
             <LocalizedLink
               to="/nos-maisons"
-              className="inline-flex items-center gap-2 px-8 py-4 border-2 border-[#1C1917] text-[#1C1917] font-semibold rounded-full hover:bg-[#1C1917] hover:text-white transition-colors"
+              className="lvc-btn-secondary inline-flex items-center gap-2 px-8 py-4"
             >
               {language === "en" ? "See the 3 houses" : "Voir les 3 maisons"}
             </LocalizedLink>
             {/* (L'Appart, E5) Troisième bouton, vers la page de L'Appart. */}
             <LocalizedLink
               to={`/${APPART.key}`}
-              className="inline-flex items-center gap-2 px-8 py-4 border-2 border-[#1C1917] text-[#1C1917] font-semibold rounded-full hover:bg-[#1C1917] hover:text-white transition-colors"
+              className="lvc-btn-secondary inline-flex items-center gap-2 px-8 py-4"
             >
               {language === "en" ? `See ${APPART.name}` : `Voir ${APPART.name}`}
             </LocalizedLink>
@@ -514,14 +514,14 @@ export function AnnemasseColocationPage() {
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <LocalizedLink
               to="/candidature"
-              className="inline-flex items-center gap-2 px-8 py-4 bg-white text-[#1C1917] font-semibold rounded-full hover:bg-gray-100 transition-colors"
+              className="lvc-btn-primary inline-flex items-center gap-2 px-8 py-4"
             >
               {language === "en" ? "Book a visit" : "Programmer une visite"}
               <ArrowRight className="w-5 h-5" />
             </LocalizedLink>
             <LocalizedLink
               to={colocGeneveHref(language)}
-              className="inline-flex items-center gap-2 px-8 py-4 border-2 border-white text-white font-semibold rounded-full hover:bg-white hover:text-[#1C1917] transition-colors"
+              className="lvc-btn-secondary lvc-btn-secondary--on-dark inline-flex items-center gap-2 px-8 py-4"
             >
               {language === "en" ? "See Geneva-side option" : "Voir l'option côté Genève"}
             </LocalizedLink>

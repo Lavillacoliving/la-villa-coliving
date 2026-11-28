@@ -213,7 +213,7 @@ export function RoomPipeline({ house, houseName, en, hasCandidates, onApplyClick
             <LocalizedLink
               to={applyHref}
               onClick={() => onApplyClick(month)}
-              className="inline-flex items-center justify-center gap-2 px-7 py-3.5 bg-[#D4A574] text-[#1C1917] font-bold rounded-full hover:bg-[#E0BB8A] transition-colors"
+              className="lvc-btn-primary inline-flex items-center justify-center gap-2 px-7 py-3.5"
             >
               {/* (24/11/2026, § 4.7) Maisons : « Programmer une visite » (le mois choisi reste dans la liste à côté et part avec le
                   lien, ?arrival=). L'Appart ne se visite pas avant son ouverture (Jérôme) : « Candidater pour <mois> », comme avant. */}
@@ -280,7 +280,7 @@ export function RoomPipeline({ house, houseName, en, hasCandidates, onApplyClick
                 <button
                   type="submit"
                   disabled={status === "sending"}
-                  className="inline-flex items-center justify-center gap-2 px-6 py-3 bg-[#1C1917] text-white font-semibold rounded-xl hover:bg-[#D4A574] hover:text-[#1C1917] transition-colors disabled:opacity-60"
+                  className="lvc-btn-primary inline-flex items-center justify-center gap-2 px-6 py-3 disabled:opacity-60"
                 >
                   <BellRing size={16} />
                   {status === "sending" ? (en ? "Sending…" : "Envoi…") : (en ? "Notify me" : "Me prévenir")}

@@ -100,11 +100,11 @@ export function ChambreLouerGenevePage() {
               : `Tu cherches une chambre à louer à Genève ? La plupart des chambres abordables sont côté France, à ${STATS_DISPLAY.fr.distance}. Ci-dessous, toutes les chambres disponibles dans les ${STATS.totalHouses} maisons de La Villa Coliving, tout inclus dès ${PRICE_FROM_CHF_FR}/mois, et à ${APPART.name}, sa colocation à ${APPART.commune}, dès ${APPART.price.from.fr.chf}/mois, avec la date et le prix en CHF. Ni chambre chez l'habitant ni sous-location : un bail à ton nom.`}
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <a href="#chambres" className="inline-flex items-center gap-2 px-8 py-4 bg-[#1C1917] text-white font-semibold rounded-full hover:bg-[#44403C] transition-colors">
+            <a href="#chambres" className="lvc-btn-primary inline-flex items-center gap-2 px-8 py-4">
               {en ? "See the rooms" : "Voir les chambres"}
               <ArrowRight className="w-5 h-5" />
             </a>
-            <LocalizedLink to="/tarifs" className="inline-flex items-center gap-2 px-8 py-4 border-2 border-[#1C1917] text-[#1C1917] font-semibold rounded-full hover:bg-[#1C1917] hover:text-white transition-colors">
+            <LocalizedLink to="/tarifs" className="lvc-btn-secondary inline-flex items-center gap-2 px-8 py-4">
               {en ? "See pricing" : "Voir les tarifs"}
             </LocalizedLink>
           </div>
@@ -340,8 +340,8 @@ export function ChambreLouerGenevePage() {
             {en ? `Availability changes every week across our ${ENTITY_FACTS.brand.totalRooms} rooms. Pick a room or join a waiting list: we reply within 48 h.` : `Les disponibilités évoluent chaque semaine sur nos ${ENTITY_FACTS.brand.totalRooms} chambres. Choisis une chambre ou rejoins une liste d'attente : on te répond sous 48 h.`}
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <LocalizedLink to="/chambres-disponibles" className="inline-flex items-center gap-2 px-8 py-4 bg-white text-[#1C1917] font-semibold rounded-full hover:bg-gray-100 transition-colors">{en ? "Available rooms" : "Chambres disponibles"}<ArrowRight className="w-5 h-5" /></LocalizedLink>
-            <LocalizedLink to="/candidature" className="inline-flex items-center gap-2 px-8 py-4 border border-white/40 text-white font-semibold rounded-full hover:bg-white hover:text-[#1C1917] transition-colors">{en ? "Book a visit" : "Programmer une visite"}</LocalizedLink>
+            <LocalizedLink to="/chambres-disponibles" className="lvc-btn-primary inline-flex items-center gap-2 px-8 py-4">{en ? "Available rooms" : "Chambres disponibles"}<ArrowRight className="w-5 h-5" /></LocalizedLink>
+            <LocalizedLink to="/candidature" className="lvc-btn-secondary lvc-btn-secondary--on-dark inline-flex items-center gap-2 px-8 py-4">{en ? "Book a visit" : "Programmer une visite"}</LocalizedLink>
           </div>
         </div>
       </section>

@@ -1188,7 +1188,7 @@ export function ObservatoireLogementFrontalierPage() {
             <a
               href={CSV_URL}
               download="observatoire-loyer-trajet-geneve-2026.csv"
-              className="inline-flex items-center gap-2 bg-[#1C1917] text-white px-5 py-3 text-xs sm:text-sm uppercase tracking-wider hover:bg-[#44403C] transition-colors rounded-md"
+              className="lvc-btn-primary inline-flex items-center gap-2 px-5 py-3 text-xs sm:text-sm"
             >
               <Download className="w-4 h-4" />
               {en ? "France corridor (CSV)" : "Corridor France (CSV)"}
@@ -1196,7 +1196,7 @@ export function ObservatoireLogementFrontalierPage() {
             <a
               href={CSV_GENEVA_URL}
               download="observatoire-geneve-deux-vitesses-2026.csv"
-              className="inline-flex items-center gap-2 border border-[#1C1917] text-[#1C1917] px-5 py-3 text-xs sm:text-sm uppercase tracking-wider hover:bg-[#1C1917] hover:text-white transition-colors rounded-md"
+              className="lvc-btn-secondary inline-flex items-center gap-2 px-5 py-3 text-xs sm:text-sm"
             >
               <Download className="w-4 h-4" />
               {en ? "Geneva two-speed (CSV)" : "Genève deux vitesses (CSV)"}
@@ -1204,7 +1204,7 @@ export function ObservatoireLogementFrontalierPage() {
             <a
               href={CSV_LAVILLA_URL}
               download="observatoire-lavilla-first-party-2026.csv"
-              className="inline-flex items-center gap-2 border border-[#1C1917] text-[#1C1917] px-5 py-3 text-xs sm:text-sm uppercase tracking-wider hover:bg-[#1C1917] hover:text-white transition-colors rounded-md"
+              className="lvc-btn-secondary inline-flex items-center gap-2 px-5 py-3 text-xs sm:text-sm"
             >
               <Download className="w-4 h-4" />
               {en ? "La Villa first-party (CSV)" : "La Villa first-party (CSV)"}
@@ -1212,7 +1212,7 @@ export function ObservatoireLogementFrontalierPage() {
             <button
               type="button"
               onClick={downloadScatterSvg}
-              className="inline-flex items-center gap-2 border border-[#D4A574] text-[#A0623C] px-5 py-3 text-xs sm:text-sm uppercase tracking-wider hover:bg-[#D4A574] hover:text-white transition-colors rounded-md"
+              className="lvc-btn-secondary inline-flex items-center gap-2 px-5 py-3 text-xs sm:text-sm"
             >
               <ImageDown className="w-4 h-4" />
               {en ? "Rent × commute chart (SVG)" : "Graphique loyer × trajet (SVG)"}
@@ -1220,7 +1220,7 @@ export function ObservatoireLogementFrontalierPage() {
             <a
               href="/images/observatoire-loyer-trajet-2026.png"
               download="observatoire-la-villa-coliving-2026.png"
-              className="inline-flex items-center gap-2 border border-[#D4A574] text-[#A0623C] px-5 py-3 text-xs sm:text-sm uppercase tracking-wider hover:bg-[#D4A574] hover:text-white transition-colors rounded-md"
+              className="lvc-btn-secondary inline-flex items-center gap-2 px-5 py-3 text-xs sm:text-sm"
             >
               <ImageDown className="w-4 h-4" />
               {en ? "Press visual +44% (PNG)" : "Visuel presse +44\u00a0% (PNG)"}
@@ -1243,13 +1243,13 @@ export function ObservatoireLogementFrontalierPage() {
             <div className="flex flex-col sm:flex-row gap-3 justify-center">
               <LocalizedLink
                 to={colocGeneveHref(language)}
-                className="inline-flex items-center gap-2 border border-[#1C1917] text-[#1C1917] px-6 py-3 text-sm uppercase tracking-wider hover:bg-[#1C1917] hover:text-white transition-colors"
+                className="lvc-btn-secondary inline-flex items-center gap-2 px-6 py-3 text-sm"
               >
                 {en ? "Shared housing in Geneva" : "La colocation à Genève"}
               </LocalizedLink>
               <LocalizedLink
                 to="/candidature"
-                className="inline-flex items-center gap-2 bg-[#D4A574] text-white px-6 py-3 text-sm uppercase tracking-wider hover:bg-[#44403C] transition-colors"
+                className="lvc-btn-primary inline-flex items-center gap-2 px-6 py-3 text-sm"
               >
                 {en ? "Book a visit" : "Programmer une visite"}
                 <ArrowRight className="w-4 h-4" />

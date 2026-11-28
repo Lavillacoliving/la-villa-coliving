@@ -184,7 +184,7 @@ export function FooterV7() {
             <LocalizedLink
               to={applyTo}
               onClick={() => trackApplyClick("footer", location.pathname, language)}
-              className="inline-flex items-center gap-2 mt-6 px-5 py-2.5 bg-[#D4A574] text-[#1C1917] text-sm font-semibold rounded-lg hover:bg-[#E0BB8A] transition-all duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#D4A574] focus-visible:ring-offset-2 focus-visible:ring-offset-[#1C1917]"
+              className="lvc-btn-primary inline-flex items-center gap-2 mt-6 px-5 py-2.5 text-sm"
             >
               {applyLabel(location.pathname, language === "en" ? "en" : "fr")}
             </LocalizedLink>

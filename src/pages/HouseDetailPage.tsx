@@ -1719,7 +1719,7 @@ export function HouseDetailPage() {
               <LocalizedLink
                 to={`/candidature?property_interest=${id}`}
                 onClick={() => trackCta("house_hero")}
-                className="inline-flex items-center gap-2 px-7 py-3.5 bg-[#D4A574] text-[#1C1917] font-bold rounded-full hover:bg-[#E0BB8A] transition-colors shadow-sharp"
+                className="lvc-btn-primary inline-flex items-center gap-2 px-7 py-3.5"
               >
                 {t.houseDetail.apply}
                 <ArrowRight className="w-5 h-5" />
@@ -1988,7 +1988,7 @@ export function HouseDetailPage() {
                     <LocalizedLink
                       to={`/candidature?property_interest=${id}`}
                       onClick={() => trackCta("house_sidebar")}
-                      className="w-full inline-flex items-center justify-center gap-2 px-6 py-3 bg-[#1C1917] text-white font-semibold rounded-xl hover:bg-[#D4A574] transition-colors"
+                      className="lvc-btn-primary w-full inline-flex items-center justify-center gap-2 px-6 py-3"
                     >
                       {canApplyNow
                         ? t.houseDetail.apply
@@ -2552,14 +2552,14 @@ export function HouseDetailPage() {
             <LocalizedLink
               to={`/candidature?property_interest=${id}`}
               onClick={() => trackCta("house_footer")}
-              className="inline-flex items-center gap-2 px-8 py-4 bg-white text-[#1C1917] font-bold rounded-full hover:bg-gray-100 transition-colors"
+              className="lvc-btn-primary inline-flex items-center gap-2 px-8 py-4"
             >
               {t.houseDetail.apply}
               <ArrowRight className="w-5 h-5" />
             </LocalizedLink>
             <LocalizedLink
               to={colocGeneveHref(language)}
-              className="inline-flex items-center gap-2 px-8 py-4 border border-white/30 text-white font-medium rounded-full hover:bg-white/10 transition-colors"
+              className="lvc-btn-secondary lvc-btn-secondary--on-dark inline-flex items-center gap-2 px-8 py-4"
             >
               {language === "en" ? "Shared housing Geneva" : "Colocation Genève"}
               <ArrowRight className="w-5 h-5" />
@@ -2578,7 +2578,7 @@ export function HouseDetailPage() {
           <LocalizedLink
             to={`/candidature?property_interest=${id}`}
             onClick={() => trackCta("sticky_mobile")}
-            className="flex-1 flex items-center justify-center gap-2 bg-[#D4A574] text-[#1C1917] py-3 rounded-lg text-sm font-semibold"
+            className="lvc-btn-primary flex-1 flex items-center justify-center gap-2 py-3 text-sm"
           >
             {language === "en" ? "Book a visit" : "Programmer une visite"}
             <ArrowRight className="w-4 h-4" />

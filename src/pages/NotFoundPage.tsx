@@ -70,14 +70,14 @@ export function NotFoundPage({ article = false }: { article?: boolean }) {
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-10">
             <LocalizedLink
               to={language === "en" ? "/en" : "/"}
-              className="inline-flex items-center gap-2 px-6 py-3 bg-[#44403C] text-white font-medium rounded-lg hover:bg-[#57534E] transition-colors"
+              className="lvc-btn-primary inline-flex items-center gap-2 px-6 py-3"
             >
               <Home size={18} />
               {language === "en" ? "Back to Home" : "Retour à l'accueil"}
             </LocalizedLink>
             <LocalizedLink
               to={language === "en" ? "/en/nos-maisons" : "/nos-maisons"}
-              className="inline-flex items-center gap-2 px-6 py-3 border-2 border-[#E7E5E4] text-[#1C1917] font-medium rounded-lg hover:border-[#44403C] transition-colors"
+              className="lvc-btn-secondary inline-flex items-center gap-2 px-6 py-3"
             >
               <ArrowLeft size={18} />
               {language === "en" ? "View Our Houses" : "Voir nos maisons"}

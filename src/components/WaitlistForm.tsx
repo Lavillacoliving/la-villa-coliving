@@ -113,7 +113,7 @@ export function WaitlistForm() {
       <button
         type="submit"
         disabled={status === "submitting"}
-        className="w-full inline-flex items-center justify-center gap-2 bg-[#D4A574] text-white px-8 py-4 text-sm font-semibold uppercase tracking-wider rounded-lg hover:bg-[#44403C] transition-colors disabled:opacity-60"
+        className="lvc-btn-primary w-full inline-flex items-center justify-center gap-2 px-8 py-4 text-sm disabled:opacity-60"
       >
         {status === "submitting" ? (en ? "Sending…" : "Envoi…") : en ? "Join the priority list" : "Rejoindre la liste prioritaire"}
         <ArrowRight className="w-4 h-4" />

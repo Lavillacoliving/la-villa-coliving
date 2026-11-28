@@ -349,6 +349,14 @@ html.lvc-offer-on #root > div > main > [data-home-section="hero"] > section.pt-2
   .lvc-btn-secondary:hover {
     background: rgba(28, 25, 23, 0.05);
   }
+  /* (Lot 2a, commit 11, 28/11/2026) Secondaire sur fond sombre : même forme, bordure et texte clairs. */
+  .lvc-btn-secondary--on-dark {
+    border-color: rgba(255, 255, 255, 0.75);
+    color: #fff;
+  }
+  .lvc-btn-secondary--on-dark:hover {
+    background: rgba(255, 255, 255, 0.1);
+  }
   /* Anneau de focus visible sur fond clair comme sur fond sombre (liseré clair + anneau encre). */
   .lvc-btn-primary:focus-visible,
   .lvc-btn-secondary:focus-visible {

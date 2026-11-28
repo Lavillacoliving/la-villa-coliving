@@ -76,7 +76,7 @@ export class ErrorBoundary extends Component<Props, State> {
           <button
             type="button"
             onClick={() => window.location.reload()}
-            className="inline-flex items-center justify-center gap-2 px-7 py-3.5 bg-[#D4A574] text-[#1C1917] font-bold rounded-full hover:bg-[#E0BB8A] transition-colors"
+            className="lvc-btn-primary inline-flex items-center justify-center gap-2 px-7 py-3.5"
           >
             {en ? "Reload the page" : "Recharger la page"}
           </button>

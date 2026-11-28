@@ -319,7 +319,7 @@ export function HousesPageV4() {
                       <LocalizedLink
                         to={`/${house.id}`}
                         onClick={() => track("house_discover_click", { house: house.id, cta_position: "nos_maisons_button", page: "nos-maisons", language: L })}
-                        className="flex-auto whitespace-nowrap inline-flex items-center justify-center gap-2 px-5 py-3 bg-[#1C1917] text-white text-sm font-semibold rounded-lg hover:bg-[#D4A574] transition-colors"
+                        className="lvc-btn-primary flex-auto whitespace-nowrap inline-flex items-center justify-center gap-2 px-5 py-3 text-sm"
                       >
                         {language === "en" ? "Discover" : "Découvrir"}
                         <ArrowRight className="w-4 h-4" />
@@ -327,7 +327,7 @@ export function HousesPageV4() {
                       <LocalizedLink
                         to={`/candidature?property_interest=${house.id}`}
                         onClick={() => track("cta_click", { cta_position: "nos_maisons_card", cta_target: "/candidature", house: house.id, language: L })}
-                        className="flex-auto whitespace-nowrap inline-flex items-center justify-center px-5 py-3 border border-[#1C1917] text-[#1C1917] text-sm font-semibold rounded-lg hover:bg-[#1C1917] hover:text-white transition-colors"
+                        className="lvc-btn-secondary flex-auto whitespace-nowrap inline-flex items-center justify-center px-5 py-3 text-sm"
                       >
                         {language === "en" ? "Book a visit" : "Programmer une visite"}
                       </LocalizedLink>
@@ -473,7 +473,7 @@ export function HousesPageV4() {
             <LocalizedLink
               to="/candidature"
               onClick={() => track("cta_click", { cta_position: "nos_maisons_footer", cta_target: "/candidature", language: L })}
-              className="inline-flex items-center gap-2 px-8 py-4 bg-white text-[#1C1917] font-bold rounded-lg hover:bg-[#F5F2ED] transition-colors"
+              className="lvc-btn-primary inline-flex items-center gap-2 px-8 py-4"
             >
               {language === "en" ? "Book a visit" : "Programmer une visite"}
               <ArrowRight className="w-5 h-5" />

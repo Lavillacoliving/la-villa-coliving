@@ -68,7 +68,7 @@ export function AppartFacts({ className = "", lang }: AppartFactsProps) {
       <LocalizedLink
         to={to}
         onClick={track}
-        className="inline-flex items-center px-6 py-3 border border-[#1C1917] text-[#1C1917] text-sm font-semibold rounded-lg hover:bg-[#1C1917] hover:text-white transition-colors"
+        className="lvc-btn-secondary inline-flex items-center px-6 py-3 text-sm"
       >
         {t.cta}
       </LocalizedLink>

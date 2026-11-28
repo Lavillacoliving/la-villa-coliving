@@ -133,7 +133,7 @@ export function HouseGallery({ images, houseName, cover, featured = [] }: HouseG
           <button
             type="button"
             onClick={() => open(0, 'button')}
-            className="w-full md:w-auto inline-flex items-center justify-center gap-2 px-7 py-3.5 border border-[#1C1917] text-[#1C1917] font-semibold rounded-xl hover:bg-[#1C1917] hover:text-white transition-colors"
+            className="lvc-btn-secondary w-full md:w-auto inline-flex items-center justify-center gap-2 px-7 py-3.5"
           >
             <Grid3X3 className="w-4 h-4" aria-hidden="true" />
             {L === 'en' ? `See all ${images.length} photos` : `Voir les ${images.length} photos`}

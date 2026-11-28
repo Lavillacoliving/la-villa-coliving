@@ -132,16 +132,15 @@ export function WhatsAppBarLink({ context, message: customMessage }: { context?:
  */
 export function WhatsAppTextLink({ context, className = "", onDark = false }: { context?: string; className?: string; onDark?: boolean }) {
   const { en, href, trackClick } = useWhatsApp(context, undefined);
-  const tone = onDark
-    ? "border-white text-white hover:bg-white hover:text-[#1C1917]"
-    : "border-[#1C1917] text-[#1C1917] hover:bg-[#1C1917] hover:text-white";
+  // (Lot 2a, commit 11, 28/11/2026) Bouton secondaire du système graphique (variante claire sur fond sombre).
+  const tone = onDark ? "lvc-btn-secondary lvc-btn-secondary--on-dark" : "lvc-btn-secondary";
   return (
     <a
       href={href}
       target="_blank"
       rel="noopener noreferrer"
       onClick={trackClick}
-      className={`inline-flex items-center justify-center gap-2 px-6 py-3 rounded-lg border ${tone} text-sm font-semibold transition-colors ${className}`}
+      className={`${tone} inline-flex items-center justify-center gap-2 px-6 py-3 text-sm ${className}`}
     >
       <WhatsAppGlyph className="w-5 h-5 text-[#25D366]" />
       {en ? "Message us on WhatsApp" : "Nous écrire sur WhatsApp"}

@@ -138,7 +138,7 @@ function TypeCard({ card, lang, onApply }: { card: AppartTypeCard; lang: "fr" | 
           <LocalizedLink
             to={`/candidature?property_interest=${APPART.key}`}
             onClick={onApply}
-            className="w-full inline-flex items-center justify-center gap-2 px-5 py-2.5 bg-[#D4A574] text-[#1C1917] text-sm font-semibold rounded-lg hover:bg-[#E0BB8A] transition-colors"
+            className="lvc-btn-primary w-full inline-flex items-center justify-center gap-2 px-5 py-2.5 text-sm"
           >
             {card.cta}
             <ArrowRight className="w-4 h-4" />
@@ -305,7 +305,7 @@ export function LAppartPage() {
               <LocalizedLink
                 to={applyTo}
                 onClick={() => trackCta("lappart_hero")}
-                className="inline-flex items-center gap-2 px-7 py-3.5 bg-[#D4A574] text-[#1C1917] font-bold rounded-full hover:bg-[#E0BB8A] transition-colors shadow-sharp"
+                className="lvc-btn-primary inline-flex items-center gap-2 px-7 py-3.5"
               >
                 {hero.apply}
                 <ArrowRight className="w-5 h-5" />
@@ -503,7 +503,7 @@ export function LAppartPage() {
             <button
               type="button"
               onClick={() => openAlbum(0, "button")}
-              className="w-full md:w-auto inline-flex items-center justify-center gap-2 px-7 py-3.5 border border-[#1C1917] text-[#1C1917] font-semibold rounded-xl hover:bg-[#1C1917] hover:text-white transition-colors"
+              className="lvc-btn-secondary w-full md:w-auto inline-flex items-center justify-center gap-2 px-7 py-3.5"
             >
               <Grid3X3 className="w-4 h-4" aria-hidden="true" />
               {living.album(LAPPART_ALBUM.length)}
@@ -566,7 +566,7 @@ export function LAppartPage() {
           <LocalizedLink
             to={suiteIsCandidate ? `${applyTo}&room_interest=chambre-${suiteRow?.room_number}` : applyTo}
             onClick={() => trackCta("lappart_suite", suiteIsCandidate ? { room_id: `chambre-${suiteRow?.room_number}` } : {})}
-            className="mt-6 inline-flex items-center gap-2 px-6 py-3 border border-[#1C1917] text-[#1C1917] text-sm font-semibold rounded-lg hover:bg-[#1C1917] hover:text-white transition-colors"
+            className="lvc-btn-secondary mt-6 inline-flex items-center gap-2 px-6 py-3 text-sm"
           >
             {appartSuiteCta(L)}
             <ArrowRight className="w-4 h-4" />
@@ -640,7 +640,7 @@ export function LAppartPage() {
             <LocalizedLink
               to={applyTo}
               onClick={() => trackCta("lappart_footer")}
-              className="inline-flex items-center gap-2 px-8 py-4 bg-white text-[#1C1917] font-bold rounded-full hover:bg-gray-100 transition-colors"
+              className="lvc-btn-primary inline-flex items-center gap-2 px-8 py-4"
             >
               {finalCta.apply}
               <ArrowRight className="w-5 h-5" />
@@ -650,7 +650,7 @@ export function LAppartPage() {
               target="_blank"
               rel="noopener noreferrer"
               onClick={() => track("whatsapp_click", { page_path: en ? `/en/${APPART.key}` : `/${APPART.key}`, context: `lappart_footer`, language })}
-              className="inline-flex items-center gap-2 px-8 py-4 border border-white/30 text-white font-medium rounded-full hover:bg-white/10 transition-colors"
+              className="lvc-btn-secondary lvc-btn-secondary--on-dark inline-flex items-center gap-2 px-8 py-4"
             >
               {finalCta.whatsapp}
             </a>
@@ -665,7 +665,7 @@ export function LAppartPage() {
           <LocalizedLink
             to={applyTo}
             onClick={() => trackCta("sticky_mobile")}
-            className="flex-1 flex items-center justify-center gap-2 bg-[#D4A574] text-[#1C1917] py-3 rounded-lg text-sm font-semibold"
+            className="lvc-btn-primary flex-1 flex items-center justify-center gap-2 py-3 text-sm"
           >
             {hero.apply}
             <ArrowRight className="w-4 h-4" />

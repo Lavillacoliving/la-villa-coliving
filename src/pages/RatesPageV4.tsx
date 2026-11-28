@@ -544,14 +544,14 @@ function ApplySection({ L }: { L: TarifsLang }) {
           <LocalizedLink
             to="/chambres-disponibles"
             onClick={() => trackCta("tarifs_footer_rooms", "/chambres-disponibles", L)}
-            className="inline-flex items-center justify-center gap-2 px-8 py-4 border border-white text-white font-semibold hover:bg-white hover:text-[#1C1917] transition-colors"
+            className="lvc-btn-secondary lvc-btn-secondary--on-dark inline-flex items-center justify-center gap-2 px-8 py-4"
           >
             {T.rooms}
           </LocalizedLink>
           <LocalizedLink
             to="/candidature"
             onClick={() => trackCta("tarifs_footer", "/candidature", L)}
-            className="inline-flex items-center justify-center gap-2 px-8 py-4 bg-white text-[#1C1917] font-semibold hover:bg-[#1C1917] hover:text-white transition-colors"
+            className="lvc-btn-primary inline-flex items-center justify-center gap-2 px-8 py-4"
           >
             {T.apply}
             <ArrowRight className="w-5 h-5" aria-hidden="true" />

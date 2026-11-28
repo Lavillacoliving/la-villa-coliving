@@ -248,7 +248,7 @@ export function RoomDetailPage() {
       <LocalizedLink
         to={applyTo}
         onClick={() => onApply("room_page")}
-        className="mt-5 w-full inline-flex items-center justify-center gap-2 px-6 py-3.5 bg-[#D4A574] text-[#1C1917] font-bold rounded-xl hover:bg-[#E0BB8A] transition-colors"
+        className="lvc-btn-primary mt-5 w-full inline-flex items-center justify-center gap-2 px-6 py-3.5"
       >
         {status.cta}
         <ArrowRight className="w-5 h-5" />
@@ -258,7 +258,7 @@ export function RoomDetailPage() {
         target="_blank"
         rel="noopener noreferrer"
         onClick={() => track("whatsapp_click", { page_path: pathname, context: `room_page:${house}:${n}`, language })}
-        className="mt-3 w-full inline-flex items-center justify-center gap-2 px-6 py-3 border border-[#E7E5E4] text-[#1C1917] text-sm font-semibold rounded-xl hover:border-[#1C1917] transition-colors"
+        className="lvc-btn-secondary mt-3 w-full inline-flex items-center justify-center gap-2 px-6 py-3 text-sm"
       >
         {en ? "Ask a question on WhatsApp" : "Poser une question sur WhatsApp"}
       </a>
@@ -351,14 +351,14 @@ export function RoomDetailPage() {
             <div className="mt-8 flex flex-col sm:flex-row gap-3">
               <LocalizedLink
                 to={`/${house}`}
-                className="inline-flex items-center justify-center gap-2 px-6 py-3.5 bg-[#D4A574] text-[#1C1917] font-bold rounded-xl hover:bg-[#E0BB8A] transition-colors"
+                className="lvc-btn-primary inline-flex items-center justify-center gap-2 px-6 py-3.5"
               >
                 {en ? `See the rooms at ${houseLabel}` : `Voir les chambres ${ofHouse(houseLabel)}`}
                 <ArrowRight className="w-5 h-5" />
               </LocalizedLink>
               <LocalizedLink
                 to="/chambres-disponibles"
-                className="inline-flex items-center justify-center gap-2 px-6 py-3.5 border border-[#E7E5E4] text-[#1C1917] font-semibold rounded-xl hover:border-[#1C1917] transition-colors"
+                className="lvc-btn-secondary inline-flex items-center justify-center gap-2 px-6 py-3.5"
               >
                 {en ? "Every available room" : "Toutes les chambres disponibles"}
               </LocalizedLink>
@@ -576,7 +576,7 @@ export function RoomDetailPage() {
           <LocalizedLink
             to={applyTo}
             onClick={() => onApply("sticky_mobile_room")}
-            className="flex-1 flex items-center justify-center gap-3 bg-[#D4A574] text-[#1C1917] px-4 py-2.5 rounded-lg"
+            className="lvc-btn-primary flex-1 flex items-center justify-center gap-3 px-4 py-2.5"
           >
             <span className="flex flex-col items-center leading-tight">
               <span className="text-sm font-semibold">{status.cta}</span>

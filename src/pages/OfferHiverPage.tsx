@@ -111,7 +111,7 @@ function ApplyButton({
     <LocalizedLink
       to={`/candidature?${query}`}
       onClick={() => trackOfferCta(placement, { language: L })}
-      className={`inline-flex items-center justify-center gap-2 ${compact ? "px-6 py-3 text-sm" : "px-8 py-4"} bg-[#1C1917] text-white font-semibold rounded-lg hover:bg-[#44403C] transition-colors ${className}`}
+      className={`lvc-btn-primary inline-flex items-center justify-center gap-2 ${compact ? "px-6 py-3 text-sm" : "px-8 py-4"} ${className}`}
     >
       {en ? "Apply now" : "Je candidate"}
       <ArrowRight className={compact ? "w-4 h-4" : "w-5 h-5"} />
@@ -283,7 +283,7 @@ function OfferRoomGrid({
         <button
           type="button"
           onClick={() => window.location.reload()}
-          className="mt-5 inline-flex items-center justify-center gap-2 px-5 py-2.5 bg-[#1C1917] text-white text-sm font-semibold rounded-lg hover:bg-[#44403C] transition-colors"
+          className="lvc-btn-primary mt-5 inline-flex items-center justify-center gap-2 px-5 py-2.5 text-sm"
         >
           {en ? "Reload the page" : "Recharger la page"}
         </button>
@@ -461,7 +461,7 @@ function OfferEnded({ en, L }: { en: boolean; L: "fr" | "en" }) {
           </p>
           <LocalizedLink
             to="/chambres-disponibles"
-            className="inline-flex items-center justify-center gap-2 px-7 py-4 bg-[#1C1917] text-white font-semibold rounded-lg hover:bg-[#44403C] transition-colors"
+            className="lvc-btn-primary inline-flex items-center justify-center gap-2 px-7 py-4"
           >
             {en ? "See available rooms" : "Voir les chambres disponibles"}
             <ArrowRight className="w-5 h-5" />
@@ -980,7 +980,7 @@ function OfferFirstYear({ en, L }: { en: boolean; L: "fr" | "en" }) {
             <ApplyButton en={en} L={L} className="w-full sm:w-auto" query={FIRST_YEAR_QUERY} />
             <a
               href="#chambres-offre"
-              className="inline-flex w-full sm:w-auto items-center justify-center gap-2 px-8 py-4 border border-[#1C1917] text-[#1C1917] font-semibold rounded-lg hover:bg-[#F5F2ED] transition-colors"
+              className="lvc-btn-secondary inline-flex w-full sm:w-auto items-center justify-center gap-2 px-8 py-4"
             >
               {en ? "See the rooms" : "Voir les chambres"}
             </a>

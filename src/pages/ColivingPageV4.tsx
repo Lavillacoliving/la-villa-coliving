@@ -104,7 +104,7 @@ export function ColivingPageV4() {
             </p>
             <LocalizedLink
               to="/nos-maisons"
-              className="inline-flex items-center gap-2 px-8 py-4 bg-white text-[#1C1917] font-bold hover:bg-[#D4A574] hover:text-white transition-colors"
+              className="lvc-btn-primary inline-flex items-center gap-2 px-8 py-4"
             >
               {language === "en"
                 ? "Explore Our Houses"
@@ -270,7 +270,7 @@ export function ColivingPageV4() {
 
               <LocalizedLink
                 to="/nos-maisons"
-                className="inline-flex items-center gap-2 mt-10 px-8 py-4 bg-[#1C1917] text-white font-bold hover:bg-[#D4A574] transition-colors"
+                className="lvc-btn-primary inline-flex items-center gap-2 mt-10 px-8 py-4"
               >
                 {language === "en"
                   ? "Explore Our Houses"
@@ -422,7 +422,7 @@ export function ColivingPageV4() {
               </p>
               <LocalizedLink
                 to="/candidature"
-                className="inline-flex items-center gap-2 mt-10 px-8 py-4 bg-[#D4A574] text-white font-bold hover:bg-[#1C1917] transition-colors"
+                className="lvc-btn-primary inline-flex items-center gap-2 mt-10 px-8 py-4"
               >
                 {language === "en" ? "Book a visit" : "Programmer une visite"}
                 <ArrowRight className="w-5 h-5" />
